@@ -1,0 +1,4731 @@
+From 7f85c447eb0c754764a9c9784e17b34105f10c5b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 16:52:18 -0400
+Subject: [PATCH 07123/11362] [conductor] Registry-rotated bounded live-agent
+ self-discovery attempt for one new ARC level
+
+Automated research step by research conductor.
+Task ID: exp5643-arc-live-self-discovery-levelup-v509
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |    2 +-
+ ...43_arc_live_self_discovery_levelup_v509.py |  900 ++++++++
+ ..._arc_live_self_discovery_levelup_v509.json | 1523 ++++++++++++++
+ ...ive_self_discovery_levelup_v509_trace.json | 1848 +++++++++++++++++
+ scripts/adversarial_verify.py                 |    5 +-
+ ...43_arc_live_self_discovery_levelup_v509.py |  374 ++++
+ 6 files changed, 4650 insertions(+), 2 deletions(-)
+ create mode 100644 python/carnot/experiment_5643_arc_live_self_discovery_levelup_v509.py
+ create mode 100644 results/experiment_5643_arc_live_self_discovery_levelup_v509.json
+ create mode 100644 results/experiment_5643_arc_live_self_discovery_levelup_v509_trace.json
+ create mode 100644 tests/python/test_experiment_5643_arc_live_self_discovery_levelup_v509.py
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 678d1bf397..dcb64679d6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4568,
++  "experiments_checked": 4569,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5643_arc_live_self_discovery_levelup_v509.py b/python/carnot/experiment_5643_arc_live_self_discovery_levelup_v509.py
+new file mode 100644
+index 0000000000..95826c2675
+--- /dev/null
++++ b/python/carnot/experiment_5643_arc_live_self_discovery_levelup_v509.py
+@@ -0,0 +1,900 @@
++"""Exp5643 ARC live self-discovery attempt artifact builder.
++
++The V509 attempt is a bounded, no-new-LLM live-agent run.  The target is chosen
++before interaction from registry and transition-receipt evidence, the Exp5642
++executable-model branch is advisory unless it promoted cleanly, and no level is
++credited unless the generic clean-state replay reproduces the selected target.
++"""
++
++from __future__ import annotations
++
++import time
++from collections.abc import Mapping, Sequence
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++from carnot import experiment_5621_arc_live_self_discovery_levelup_v507 as v507
++from carnot import experiment_5632_arc_live_self_discovery_levelup_v508 as v508
++
++
++EXPERIMENT_ID = 5643
++EXPERIMENT = "experiment_5643_arc_live_self_discovery_levelup_v509"
++MILESTONE = "2026.07.509"
++RESULT_RELATIVE_PATH = f"results/{EXPERIMENT}.json"
++TRACE_RELATIVE_PATH = f"results/{EXPERIMENT}_trace.json"
++REGISTRY_RELATIVE_PATH = v508.REGISTRY_RELATIVE_PATH
++EXP5642_RELATIVE_PATH = "results/experiment_5642_arc_executable_model_live_ab.json"
++TRANSITION_RECEIPT_RELATIVE_PATH = "results/experiment_5636_transition_v509.json"
++
++SPEC_REQUIREMENT = "REQ-ARC-FCP-5643"
++SOLVE_PROVENANCE = "live_agent_self_discovery"
++INFERENCE_SUBSTRATE = "live_agent_environment_interaction"
++RANDOM_SEED = 5643
++RANDOM_SEEDS = [RANDOM_SEED]
++ACTION_BUDGET = 72
++WALL_TIME_CAP_S = 900
++MODEL_CALL_LIMIT = 0
++ENVIRONMENT_ACTION_LIMIT = ACTION_BUDGET
++RETRY_LIMIT = 0
++CHECKPOINT_LIMIT = 3
++CHECKPOINT_CADENCE = "checkpoint trace metadata every 24 environment actions and at terminal write"
++STOPPING_RULE = "fixed_72_action_budget_or_target_level_reached_no_llm_induction_disabled_v509"
++
++MANDATED_GGUF_IDS = v508.MANDATED_GGUF_IDS
++
++EXPLICIT_EXCLUDED_TARGETS = [
++    {
++        "game": "bp35",
++        "level": 9,
++        "level_label": "L9",
++        "reason": "exp5621_attempted_without_bank",
++    },
++    {
++        "game": "sk48",
++        "level": 8,
++        "level_label": "L8",
++        "reason": "exp5610_attempted_without_bank",
++    },
++    {
++        "game": "lf52",
++        "level": 7,
++        "level_label": "L7",
++        "reason": "exp5632_attempted_without_bank",
++    },
++]
++
++NO_LLM_BASELINE_POLICY = {
++    "name": "unchanged_no_new_llm_e3_baseline",
++    "llm_invoked": False,
++    "new_llm_calls": False,
++    "executable_model_policy": False,
++}
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "field_principles": {
++        "principle": "principle annotations are carried in the artifact so every required 5643 field is auditable.",
++    },
++    "registry_count_before": {
++        "principle": "authoritative reproduced-level total before target selection; the level-up baseline is explicit.",
++    },
++    "registry_precheck_receipt": {
++        "principle": "execution-time precheck proves the selected target is unreproduced before any live observation.",
++    },
++    "excluded_targets": {
++        "principle": "bp35 L9, sk48 L8, lf52 L7, transition-receipt failures, and registry-duplicate levels stay closed and cannot receive duplicate credit.",
++    },
++    "selected_game": {
++        "principle": "the game scope is fixed before live observation, preventing outcome-driven target switching.",
++    },
++    "selected_level": {
++        "principle": "the level scope is fixed before live observation, preventing outcome-driven target switching.",
++    },
++    "target_selection_hash": {
++        "principle": "content hash of the pre-outcome target receipt proves the target was not changed after seeing results.",
++    },
++    "policy_source": {
++        "principle": "records whether Exp5642 promoted cleanly or the unchanged baseline ran.",
++    },
++    "methodology_receipt": {
++        "principle": "records target precheck, policy freeze, budget freeze, no-source/no-adapter/no-outer-loop provenance, and reproduction criteria so the run is not a short opaque artifact.",
++    },
++    "model_specs": {
++        "principle": "empty for a no-LLM run; otherwise names the mandated cached SOTA GGUF receipt exactly.",
++    },
++    "budget_receipt": {
++        "principle": "seeds, wall time, model calls, environment actions, retries, checkpoint cadence, and terminal conditions are bounded before execution.",
++    },
++    "live_trace_path": {
++        "principle": "complete live observation/action evidence is durable and replayable.",
++    },
++    "live_path_reachability_counters": {
++        "principle": "the scored live mechanism that generated actions is identified by runtime counters.",
++    },
++    "solve_provenance": {
++        "principle": "must equal live_agent_self_discovery; only the credited path can solve.",
++    },
++    "level_reached": {
++        "principle": "terminal environment level fact is explicit and separate from reproduction credit.",
++    },
++    "reproduced_levels": {
++        "principle": "newly reproduced target levels; solve credit requires at least one.",
++    },
++    "offline_reproduced": {
++        "principle": "exactly true is mandatory for solve credit after independent generic reproduction.",
++    },
++    "registry_count_after": {
++        "principle": "authoritative reproduced-level total after accepted banking; unchanged on honest nulls.",
++    },
++    "registry_delta": {
++        "principle": "exactly 0 or 1 so the banked-level delta is auditable.",
++    },
++    "source_read": {
++        "principle": "must be false; game source is excluded from live self-discovery credit.",
++    },
++    "game_adapter_used": {
++        "principle": "must be false; no per-game adapter can be smuggled into the live path.",
++    },
++    "outer_loop_re_used": {
++        "principle": "must be false; off-path recipes are excluded from live self-discovery credit.",
++    },
++    "inference_substrate": {
++        "principle": "live_agent_environment_interaction -- environment observations/actions are the authority, not an offline solver.",
++    },
++    "random_seeds": {
++        "principle": "deterministic seeds make the bounded attempt replayable and auditable.",
++    },
++    "reproducibility_checksum": {
++        "principle": "content-addressed target, trace, budget, methodology, and banking decision catch silent drift.",
++    },
++    "honest_verdict": {
++        "principle": "a bounded no-level result is terminal and must not be upgraded without reproduction.",
++    },
++}
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
++
++read_json = v508.read_json
++read_yaml = v508.read_yaml
++write_json = v508.write_json
++action_trace_sha256 = v508.action_trace_sha256
++load_public_env_metadata = v508.load_public_env_metadata
++load_arc_loop_depths = v508.load_arc_loop_depths
++
++
++def _int(value: Any, default: int = 0) -> int:
++    return v508._int(value, default)
++
++
++def _float(value: Any, default: float = 0.0) -> float:
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _sha256(value: Any) -> str:
++    return v508._sha256(value)
++
++
++def _registry_rows(registry: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
++    return v508._registry_rows(registry)
++
++
++def _registry_depth(row: Mapping[str, Any] | None) -> int:
++    return v508._registry_depth(row)
++
++
++def _registry_total(registry: Mapping[str, Any]) -> int:
++    return v508._registry_total(registry)
++
++
++def _public_game_items(public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> list[tuple[str, Mapping[str, Any]]]:
++    return v508._public_game_items(public_games)
++
++
++def _headroom(meta: Mapping[str, Any]) -> int:
++    return v508._headroom(meta)
++
++
++def _level_number(value: Any) -> int:
++    if isinstance(value, str):
++        return _int(value.strip().lstrip("Ll"))
++    return _int(value)
++
++
++def _explicit_exclusion_pairs(
++    explicit_excluded_targets: Sequence[Mapping[str, Any]],
++) -> dict[tuple[str, int], list[str]]:
++    pairs: dict[tuple[str, int], list[str]] = {}
++    for row in explicit_excluded_targets:
++        game = str(row.get("game") or "")
++        level = _level_number(row.get("level") or row.get("level_label"))
++        if game and level > 0:
++            pairs.setdefault((game, level), []).append("explicit_recent_unbanked_attempt")
++    return pairs
++
++
++def recent_failed_targets_from_transition_receipt(
++    transition_receipt: Mapping[str, Any] | None,
++) -> list[dict[str, Any]]:
++    """Extract recent failed ARC targets from the V509 transition receipt.
++
++    The transition receipt is not a solver.  It is only used as a closed-target
++    ledger so a later attempt cannot retarget a level the previous milestone
++    already tried and failed to bank.
++    """
++
++    if not transition_receipt:
++        return []
++    out: dict[tuple[str, int], dict[str, Any]] = {}
++    for scope in transition_receipt.get("retired_scopes", []):
++        if not isinstance(scope, Mapping):
++            continue
++        evidence = scope.get("evidence")
++        if not isinstance(evidence, Mapping):
++            continue
++        game = str(evidence.get("selected_game") or evidence.get("game") or "")
++        level = _level_number(evidence.get("selected_level") or evidence.get("target_level"))
++        failed = evidence.get("offline_reproduced") is False or _int(evidence.get("registry_delta"), 1) == 0
++        key = str(scope.get("key") or "unknown_scope")
++        if not game or level <= 0 or not failed:
++            continue
++        out[(game, level)] = {
++            "game": game,
++            "level": level,
++            "level_label": f"L{level}",
++            "reason": f"transition_receipt_failed_{key}",
++            "source": TRANSITION_RECEIPT_RELATIVE_PATH,
++        }
++    return [out[key] for key in sorted(out)]
++
++
++def _transition_exclusion_pairs(
++    transition_receipt: Mapping[str, Any] | None,
++) -> dict[tuple[str, int], list[str]]:
++    pairs: dict[tuple[str, int], list[str]] = {}
++    for row in recent_failed_targets_from_transition_receipt(transition_receipt):
++        pairs.setdefault((row["game"], _int(row["level"])), []).append("recent_failed_target")
++    return pairs
++
++
++def _registry_duplicate_levels(registry_rows: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
++    return v508._registry_duplicate_levels(registry_rows)
++
++
++def registry_precheck(
++    registry: Mapping[str, Any],
++    public_envs: Mapping[str, Any] | Sequence[Mapping[str, Any]],
++    arc_loop_depths: Mapping[str, int] | None = None,
++    transition_receipt: Mapping[str, Any] | None = None,
++    explicit_excluded_targets: Sequence[Mapping[str, Any]] = EXPLICIT_EXCLUDED_TARGETS,
++) -> dict[str, Any]:
++    """Build the REQ-ARC-FCP-5643 target-selection receipt."""
++
++    registry_rows = _registry_rows(registry)
++    loop_depths = {str(game): _int(depth) for game, depth in (arc_loop_depths or {}).items()}
++    explicit_pairs = _explicit_exclusion_pairs(explicit_excluded_targets)
++    transition_pairs = _transition_exclusion_pairs(transition_receipt)
++    candidate_rows: list[dict[str, Any]] = []
++
++    for game, meta in _public_game_items(public_envs):
++        registry_depth = _registry_depth(registry_rows.get(game))
++        arc_loop_depth = loop_depths.get(game, 0)
++        authenticated_headroom = _headroom(meta)
++        closed_level_reasons: dict[str, list[str]] = {}
++        open_levels: list[int] = []
++        unreproduced_levels = list(range(registry_depth + 1, authenticated_headroom + 1))
++        if not unreproduced_levels:
++            reasons = ["no_authenticated_headroom"]
++        else:
++            for level in unreproduced_levels:
++                reasons_for_level: list[str] = []
++                reasons_for_level.extend(explicit_pairs.get((game, level), []))
++                reasons_for_level.extend(transition_pairs.get((game, level), []))
++                if reasons_for_level:
++                    closed_level_reasons[str(level)] = sorted(set(reasons_for_level))
++                else:
++                    open_levels.append(level)
++            reasons = [] if open_levels else ["all_authenticated_headroom_targets_closed_by_recent_failures"]
++
++        target_level = open_levels[0] if open_levels else registry_depth + 1
++        closed_intermediate = [
++            level for level in unreproduced_levels if level < target_level and str(level) in closed_level_reasons
++        ]
++        candidate_rows.append(
++            {
++                "game": game,
++                "registry_depth": registry_depth,
++                "arc_loop_depth": arc_loop_depth,
++                "authenticated_headroom": authenticated_headroom,
++                "unreproduced_levels_with_headroom": unreproduced_levels,
++                "closed_level_reasons": closed_level_reasons,
++                "closed_intermediate_levels": closed_intermediate,
++                "target_level": target_level,
++                "target_label": f"L{target_level}",
++                "excluded": bool(reasons),
++                "exclude_reasons": reasons,
++                "has_authenticated_headroom": bool(open_levels),
++                "target_unreproduced_in_registry": target_level > registry_depth,
++            }
++        )
++
++    eligible = [row for row in candidate_rows if not row["excluded"]]
++    excluded_targets = {
++        "explicit_recent_attempts": [dict(row) for row in explicit_excluded_targets],
++        "transition_receipt_failed_targets": recent_failed_targets_from_transition_receipt(transition_receipt),
++        "registry_duplicate_levels": _registry_duplicate_levels(registry_rows),
++    }
++    return {
++        "spec_ref": SPEC_REQUIREMENT,
++        "public_games_checked": len(candidate_rows),
++        "registry_games_checked": len(registry_rows),
++        "registry_count_before": _registry_total(registry),
++        "registry_total_from_file": registry.get("reproducible_total_levels"),
++        "registry_total_from_rows": sum(_registry_depth(row) for row in registry_rows.values()),
++        "arc_loop_targets_considered": len(loop_depths),
++        "excluded_targets": excluded_targets,
++        "candidate_rows": candidate_rows,
++        "eligible_candidates": [
++            {
++                "game": row["game"],
++                "target_level": row["target_level"],
++                "target_label": row["target_label"],
++                "authenticated_headroom": row["authenticated_headroom"],
++                "registry_depth": row["registry_depth"],
++                "closed_intermediate_levels": row["closed_intermediate_levels"],
++            }
++            for row in eligible
++        ],
++        "duplicate_credit_policy": "registry-reproduced levels, bp35 L9, sk48 L8, lf52 L7, and transition-receipt failures receive no V509 credit",
++        "ok": bool(eligible),
++    }
++
++
++def _target_hash(precheck: Mapping[str, Any], selected: Mapping[str, Any] | None) -> str:
++    preimage = {
++        "spec_ref": SPEC_REQUIREMENT,
++        "registry_count_before": precheck.get("registry_count_before"),
++        "excluded_targets": precheck.get("excluded_targets"),
++        "candidate_rows": precheck.get("candidate_rows"),
++        "selected": dict(selected or {}),
++    }
++    return _sha256(preimage)
++
++
++def select_target_from_precheck(precheck: Mapping[str, Any]) -> dict[str, Any]:
++    rows = [
++        row
++        for row in precheck.get("candidate_rows", [])
++        if isinstance(row, Mapping) and not row.get("excluded")
++    ]
++    rows = sorted(rows, key=lambda row: (_int(row.get("target_level")), str(row.get("game"))))
++    if not rows:
++        return {
++            "blocked": True,
++            "selected_game": None,
++            "selected_level": None,
++            "target_level": None,
++            "target_selection_hash": _target_hash(precheck, None),
++            "rotation_reason": "no_unreproduced_authenticated_nonclosed_candidate_v509",
++            "selection_reason": "no_unreproduced_authenticated_nonclosed_candidate_v509",
++            "rotation_order": [],
++            "duplicate_targets_rejected": [
++                row
++                for row in precheck.get("candidate_rows", [])
++                if isinstance(row, Mapping) and row.get("excluded")
++            ],
++            "selected_target_was_unreproduced": False,
++        }
++
++    selected = rows[0]
++    receipt = {
++        "blocked": False,
++        "selected_game": selected["game"],
++        "selected_level": selected["target_label"],
++        "target_level": selected["target_level"],
++        "prior_levels_reproduced": selected["registry_depth"],
++        "authenticated_headroom": selected["authenticated_headroom"],
++        "arc_loop_depth": selected["arc_loop_depth"],
++        "closed_intermediate_levels": selected.get("closed_intermediate_levels", []),
++        "registry_count_before": precheck.get("registry_count_before"),
++        "rotation_reason": "lowest_nonclosed_unreproduced_authenticated_level_after_recent_failure_exclusions",
++        "selection_reason": "v509_rotated_unreproduced_authenticated_headroom",
++        "rotation_order": [
++            {
++                "game": row["game"],
++                "target_level": row["target_level"],
++                "target_label": row["target_label"],
++                "closed_intermediate_levels": row.get("closed_intermediate_levels", []),
++            }
++            for row in rows
++        ],
++        "duplicate_targets_rejected": [
++            row
++            for row in precheck.get("candidate_rows", [])
++            if isinstance(row, Mapping) and row.get("excluded")
++        ],
++        "selected_target_was_unreproduced": True,
++    }
++    receipt["target_selection_hash"] = _target_hash(precheck, receipt)
++    return receipt
++
++
++def policy_source_from_exp5642(exp5642: Mapping[str, Any] | None) -> dict[str, Any]:
++    payload = exp5642 or {}
++    ready_score = _float(payload.get("live_executable_model_ready_score"))
++    unsafe_count = _int(payload.get("unsafe_model_accept_count"))
++    regression_count = _int(payload.get("known_level_regression_count"))
++    promoted_config = payload.get("promoted_policy")
++    if not isinstance(promoted_config, Mapping):
++        promoted_config = payload.get("treatment_policy")
++    if not isinstance(promoted_config, Mapping):
++        promoted_config = payload.get("executable_model_policy")
++    if not isinstance(promoted_config, Mapping):
++        promoted_config = {}
++    promoted = ready_score == 1.0 and unsafe_count == 0 and regression_count == 0
++    return {
++        "source_artifact": EXP5642_RELATIVE_PATH,
++        "source_status": payload.get("status"),
++        "source_honest_verdict": payload.get("honest_verdict"),
++        "live_executable_model_ready_score": ready_score,
++        "unsafe_model_accept_count": unsafe_count,
++        "known_level_regression_count": regression_count,
++        "attempt_gated_by_exp5642": False,
++        "policy_name": "promoted_exp5642_executable_model_policy"
++        if promoted
++        else "unchanged_no_new_llm_e3_baseline",
++        "enabled_configuration": dict(promoted_config) if promoted else NO_LLM_BASELINE_POLICY,
++        "baseline_unchanged": not promoted,
++        "reason": "exp5642_ready_zero_unsafe_zero_regression"
++        if promoted
++        else "exp5642_blocked_missing_unsafe_or_regressing_baseline_unchanged",
++    }
++
++
++def build_budget_receipt(
++    *,
++    action_budget: int = ACTION_BUDGET,
++    random_seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    return {
++        "bounded_before_execution": True,
++        "random_seeds": [random_seed],
++        "wall_time_cap_s": WALL_TIME_CAP_S,
++        "model_call_limit": MODEL_CALL_LIMIT,
++        "environment_action_limit": action_budget,
++        "retry_limit": RETRY_LIMIT,
++        "checkpoint_limit": CHECKPOINT_LIMIT,
++        "checkpoint_cadence": CHECKPOINT_CADENCE,
++        "terminal_conditions": [
++            "target_level_reached_live",
++            "fixed_environment_action_budget_exhausted",
++            "wall_time_cap_exceeded",
++        ],
++        "stopping_rule": STOPPING_RULE,
++    }
++
++
++def _baseline_filter_configuration() -> dict[str, Any]:
++    return {
++        "source_artifact": None,
++        "attempt_gated_by_filter_ab": False,
++        "enabled_filters": [],
++        "inert_click_pruner": False,
++        "object_history_salience": False,
++        "baseline_unchanged": True,
++        "reason": "v509_unchanged_no_new_llm_baseline",
++    }
++
++
++def run_live_self_discovery_attempt(
++    target_selection_receipt: Mapping[str, Any],
++    policy_source: Mapping[str, Any],
++    action_budget: int = ACTION_BUDGET,
++    random_seed: int = RANDOM_SEED,
++) -> dict[str, Any]:  # pragma: no cover - live ARC SDK boundary
++    attempt = v508.v506.run_live_self_discovery_attempt(
++        target_selection_receipt=target_selection_receipt,
++        filter_configuration=_baseline_filter_configuration(),
++        action_budget=action_budget,
++        random_seed=random_seed,
++    )
++    attempt["random_seed"] = random_seed
++    attempt["random_seeds"] = [random_seed]
++    attempt["stopping_rule"] = STOPPING_RULE
++    attempt["model_specs"] = [] if not attempt.get("llm_invoked") else attempt.get("model_specs", [])
++    attempt["policy_source"] = dict(policy_source)
++    attempt["source_read"] = bool(attempt.get("source_files_read", False))
++    attempt["game_adapter_used"] = bool(attempt.get("per_game_adapter_used", False))
++    attempt["outer_loop_re_used"] = bool(attempt.get("offline_bfs_used", False))
++    return attempt
++
++
++def _accepted_new_levels(
++    target_selection_receipt: Mapping[str, Any], attempt: Mapping[str, Any]
++) -> list[dict[str, Any]]:
++    prior = _int(target_selection_receipt.get("prior_levels_reproduced"))
++    target = _int(target_selection_receipt.get("target_level"))
++    post = _int(attempt.get("post_levels_reproduced"))
++    if not attempt.get("offline_reproduced"):
++        return []
++    if (
++        attempt.get("source_read")
++        or attempt.get("source_files_read")
++        or attempt.get("game_adapter_used")
++        or attempt.get("per_game_adapter_used")
++        or attempt.get("outer_loop_re_used")
++        or attempt.get("offline_bfs_used")
++    ):
++        return []
++    if attempt.get("action_trace_sha256") != attempt.get("trace_replay_checksum"):
++        return []
++    if post < target or target <= prior:
++        return []
++    return [{"game": target_selection_receipt.get("selected_game"), "level": target}]
++
++
++def _live_path_reachability_counters(
++    attempt: Mapping[str, Any],
++    policy_source: Mapping[str, Any],
++) -> dict[str, Any]:
++    rows = [row for row in attempt.get("action_rows", []) if isinstance(row, Mapping)]
++    action_rows = [row for row in rows if row.get("kind") == "ACTION" or row.get("action") is not None]
++    reset_rows = [row for row in rows if row.get("kind") == "RESET"]
++    promoted = policy_source.get("policy_name") == "promoted_exp5642_executable_model_policy"
++    return {
++        "scored_mechanism": policy_source.get("policy_name"),
++        "e3_policy_next_move_calls": len(rows),
++        "environment_reset_calls": len(reset_rows),
++        "environment_step_calls": len(action_rows),
++        "llm_model_calls": 0 if not attempt.get("llm_invoked") else None,
++        "executable_model_policy_calls": len(action_rows) if promoted else 0,
++        "baseline_action_emissions": 0 if promoted else len(action_rows),
++    }
++
++
++def _model_specs_allowed(model_specs: Sequence[Any]) -> bool:
++    text = " ".join(str(item) for item in model_specs)
++    return any(model_id in text for model_id in MANDATED_GGUF_IDS)
++
++
++def build_methodology_receipt(
++    *,
++    target_selection_receipt: Mapping[str, Any],
++    policy_source: Mapping[str, Any],
++    budget_receipt: Mapping[str, Any],
++    attempt: Mapping[str, Any],
++) -> dict[str, Any]:
++    return {
++        "methodology_version": "arc_live_self_discovery_v509",
++        "target_recorded_before_interaction": bool(target_selection_receipt.get("target_selection_hash")),
++        "target_selection_hash": target_selection_receipt.get("target_selection_hash"),
++        "policy_frozen_before_outcome": True,
++        "policy_name": policy_source.get("policy_name"),
++        "budget_frozen_before_outcome": budget_receipt.get("bounded_before_execution") is True,
++        "environment_action_limit": budget_receipt.get("environment_action_limit"),
++        "wall_time_cap_s": budget_receipt.get("wall_time_cap_s"),
++        "model_call_limit": budget_receipt.get("model_call_limit"),
++        "checkpoint_cadence": budget_receipt.get("checkpoint_cadence"),
++        "terminal_conditions": budget_receipt.get("terminal_conditions", []),
++        "agent_owned_inputs_only": True,
++        "runtime_inputs": [
++            "frames",
++            "latest_frame",
++            "environment_step_response",
++            "in_process_policy_memory",
++        ],
++        "source_read": bool(attempt.get("source_read", attempt.get("source_files_read", False))),
++        "game_adapter_used": bool(attempt.get("game_adapter_used", attempt.get("per_game_adapter_used", False))),
++        "outer_loop_re_used": bool(attempt.get("outer_loop_re_used", attempt.get("offline_bfs_used", False))),
++        "offline_ground_truth_bfs_used": bool(attempt.get("offline_bfs_used", False)),
++        "llm_invoked": bool(attempt.get("llm_invoked", False)),
++        "model_specs_policy": "empty_list_required_when_llm_invoked_false",
++        "trace_preserved": True,
++        "transition_receipt_path": TRANSITION_RECEIPT_RELATIVE_PATH,
++        "reproduction_acceptance": {
++            "generic_clean_state_replay_required": True,
++            "offline_reproduced_required_for_credit": True,
++            "trace_checksum_must_match": True,
++            "registry_delta_max": 1,
++        },
++        "runtime_reverse_engineering": attempt.get("runtime_reverse_engineering", {}),
++    }
++
++
++def compute_artifact_checksum(artifact: Mapping[str, Any]) -> str:
++    core = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"artifact_checksum", "reproducibility_checksum"}
++    }
++    return _sha256(core)
++
++
++def build_artifact(
++    registry_precheck_receipt: Mapping[str, Any],
++    target_selection_receipt: Mapping[str, Any],
++    policy_source: Mapping[str, Any],
++    attempt: Mapping[str, Any],
++    live_trace_path: str = TRACE_RELATIVE_PATH,
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> dict[str, Any]:
++    new_levels = _accepted_new_levels(target_selection_receipt, attempt)
++    registry_count_before = _int(registry_precheck_receipt.get("registry_count_before"))
++    registry_delta = min(len(new_levels), 1)
++    registry_count_after = registry_count_before + registry_delta
++    selected_game = target_selection_receipt.get("selected_game")
++    selected_level = target_selection_receipt.get("selected_level")
++    banked = registry_delta == 1
++    if banked:
++        verdict = f"complete: banked_{selected_game}_{selected_level}_live_self_discovery_v509"
++    else:
++        verdict = f"complete: no_new_arc_level_banked_{selected_game}_{selected_level}_bounded_live_attempt_v509"
++
++    llm_invoked = bool(attempt.get("llm_invoked", False))
++    model_specs = list(attempt.get("model_specs") or [])
++    level_reached = _int(attempt.get("max_level_reached"))
++    source_read = bool(attempt.get("source_read", attempt.get("source_files_read", False)))
++    game_adapter_used = bool(
++        attempt.get("game_adapter_used", attempt.get("per_game_adapter_used", False))
++    )
++    outer_loop_re_used = bool(
++        attempt.get("outer_loop_re_used", attempt.get("offline_bfs_used", False))
++    )
++    budget_receipt = build_budget_receipt(
++        action_budget=_int(attempt.get("action_budget"), ACTION_BUDGET),
++        random_seed=_int(attempt.get("random_seed"), RANDOM_SEED),
++    )
++    methodology_receipt = build_methodology_receipt(
++        target_selection_receipt=target_selection_receipt,
++        policy_source=policy_source,
++        budget_receipt=budget_receipt,
++        attempt=attempt,
++    )
++    artifact: dict[str, Any] = {
++        "experiment_id": EXPERIMENT_ID,
++        "experiment": EXPERIMENT,
++        "milestone": MILESTONE,
++        "schema": "arc_live_self_discovery_levelup_attempt.v4",
++        "spec_refs": [SPEC_REQUIREMENT],
++        "field_principles": FIELD_PRINCIPLES,
++        "result_path": RESULT_RELATIVE_PATH,
++        "registry_count_before": registry_count_before,
++        "registry_precheck_receipt": registry_precheck_receipt,
++        "excluded_targets": registry_precheck_receipt.get("excluded_targets", {}),
++        "selected_game": selected_game,
++        "selected_level": selected_level,
++        "target_level": target_selection_receipt.get("target_level"),
++        "target_selection_receipt": target_selection_receipt,
++        "target_selection_hash": target_selection_receipt.get("target_selection_hash"),
++        "policy_source": policy_source,
++        "methodology_receipt": methodology_receipt,
++        "model_specs": model_specs,
++        "budget_receipt": budget_receipt,
++        "live_trace_path": live_trace_path,
++        "live_path_reachability_counters": _live_path_reachability_counters(attempt, policy_source),
++        "solve_provenance": SOLVE_PROVENANCE,
++        "level_reached": level_reached,
++        "reproduced_levels": registry_delta,
++        "new_reproducible_levels": new_levels[:1],
++        "offline_reproduced": banked,
++        "registry_count_after": registry_count_after,
++        "registry_delta": registry_delta,
++        "registry_updated": banked,
++        "source_read": source_read,
++        "game_adapter_used": game_adapter_used,
++        "outer_loop_re_used": outer_loop_re_used,
++        "source_files_read": source_read,
++        "per_game_adapter_used": game_adapter_used,
++        "offline_bfs_used": outer_loop_re_used,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": attempt.get("random_seed", RANDOM_SEED),
++        "random_seeds": list(attempt.get("random_seeds") or RANDOM_SEEDS),
++        "honest_verdict": verdict,
++        "live_attempt_executed": bool(attempt.get("live_attempt_executed")),
++        "llm_invoked": llm_invoked,
++        "no_model_specs_required": not llm_invoked,
++        "action_trace_sha256": attempt.get("action_trace_sha256"),
++        "trace_replay_checksum": attempt.get("trace_replay_checksum"),
++        "reproduction_gate": attempt.get("reproduction_gate", {}),
++        "terminal_environment_response": {
++            "level_reached": level_reached,
++            "terminal_reason": attempt.get("terminal_reason"),
++            "post_levels_reproduced": attempt.get("post_levels_reproduced"),
++        },
++        "runtime_reverse_engineering": attempt.get("runtime_reverse_engineering", {}),
++        "duration_s": round(float(duration_s or 0.0), 3),
++        "tests_run": list(tests_run or []),
++        "game": selected_game,
++    }
++    checksum = compute_artifact_checksum(artifact)
++    artifact["artifact_checksum"] = checksum
++    artifact["reproducibility_checksum"] = checksum
++    return artifact
++
++
++def build_live_trace(
++    target_selection_receipt: Mapping[str, Any],
++    policy_source: Mapping[str, Any],
++    attempt: Mapping[str, Any],
++    artifact: Mapping[str, Any],
++) -> dict[str, Any]:
++    return {
++        "experiment": EXPERIMENT,
++        "schema": "arc_live_self_discovery_attempt_trace.v4",
++        "spec_refs": [SPEC_REQUIREMENT],
++        "selected_game": target_selection_receipt.get("selected_game"),
++        "selected_level": target_selection_receipt.get("selected_level"),
++        "target_selection_receipt": target_selection_receipt,
++        "target_selection_hash": target_selection_receipt.get("target_selection_hash"),
++        "policy_source": policy_source,
++        "budget_receipt": artifact.get("budget_receipt"),
++        "methodology_receipt": artifact.get("methodology_receipt"),
++        "executed_actions": attempt.get("action_rows", []),
++        "observations": attempt.get("observations", []),
++        "level_counter_changes": attempt.get("level_counter_changes", []),
++        "runtime_reverse_engineering": attempt.get("runtime_reverse_engineering", {}),
++        "reproduction_gate": attempt.get("reproduction_gate", {}),
++        "terminal_environment_response": artifact.get("terminal_environment_response"),
++        "action_trace_sha256": attempt.get("action_trace_sha256"),
++        "trace_replay_checksum": attempt.get("trace_replay_checksum"),
++        "artifact_checksum": artifact.get("artifact_checksum"),
++    }
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {', '.join(missing)}")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++    if artifact.get("solve_provenance") != SOLVE_PROVENANCE:
++        errors.append("solve_provenance must be live_agent_self_discovery")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    for key in ("source_read", "game_adapter_used", "outer_loop_re_used", "source_files_read", "per_game_adapter_used", "offline_bfs_used"):
++        if artifact.get(key) is not False:
++            errors.append(f"{key} must be false")
++    methodology = artifact.get("methodology_receipt")
++    if not isinstance(methodology, Mapping):
++        errors.append("methodology_receipt must be present")
++    else:
++        for key in ("source_read", "game_adapter_used", "outer_loop_re_used", "offline_ground_truth_bfs_used"):
++            if methodology.get(key) is not False:
++                errors.append(f"methodology_receipt.{key} must be false")
++        if methodology.get("model_call_limit") != MODEL_CALL_LIMIT:
++            errors.append("methodology_receipt.model_call_limit mismatch")
++    if artifact.get("live_attempt_executed") is not True:
++        errors.append("live_attempt_executed must be true")
++    delta = _int(artifact.get("registry_delta"), -1)
++    if delta not in (0, 1):
++        errors.append("registry_delta must be exactly 0 or 1")
++    if artifact.get("registry_count_after") != _int(artifact.get("registry_count_before")) + delta:
++        errors.append("registry_count_after must equal registry_count_before plus registry_delta")
++    new_levels = artifact.get("new_reproducible_levels") or []
++    if len(new_levels) != delta:
++        errors.append("new_reproducible_levels length must equal registry_delta")
++    if artifact.get("offline_reproduced") is True:
++        if artifact.get("reproduced_levels") != 1 or delta != 1:
++            errors.append("offline_reproduced=true requires reproduced_levels=1 and registry_delta=1")
++    elif artifact.get("reproduced_levels") != 0 or delta != 0:
++        errors.append("offline_reproduced=false requires reproduced_levels=0 and registry_delta=0")
++    if artifact.get("action_trace_sha256") != artifact.get("trace_replay_checksum"):
++        errors.append("action trace checksum and replay checksum must match exactly")
++    if artifact.get("target_selection_hash") != (
++        artifact.get("target_selection_receipt") or {}
++    ).get("target_selection_hash"):
++        errors.append("target_selection_hash must match target_selection_receipt")
++    budget = artifact.get("budget_receipt")
++    if not isinstance(budget, Mapping) or budget.get("bounded_before_execution") is not True:
++        errors.append("budget_receipt must be bounded before execution")
++    if artifact.get("llm_invoked"):
++        specs = artifact.get("model_specs")
++        if not isinstance(specs, Sequence) or not specs or not _model_specs_allowed(specs):
++            errors.append("llm_invoked requires one mandated cached SOTA GGUF model spec")
++    elif artifact.get("model_specs") != []:
++        errors.append("no-LLM attempts require model_specs=[]")
++    if artifact.get("random_seeds") != RANDOM_SEEDS:
++        errors.append("random_seeds mismatch")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(("complete:", "blocked:")):
++        errors.append("honest_verdict must start with complete: or blocked:")
++    checksum = artifact.get("reproducibility_checksum")
++    if checksum and checksum != compute_artifact_checksum(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def update_registry_if_banked(root: Path, artifact: Mapping[str, Any]) -> bool:  # pragma: no cover - null in normal run
++    if _int(artifact.get("registry_delta")) != 1:
++        return False
++    path = root / REGISTRY_RELATIVE_PATH
++    registry = read_yaml(path)
++    game = str(artifact.get("selected_game") or "")
++    target_level = _int(artifact.get("target_level"))
++    games = registry.get("games")
++    if isinstance(games, list):
++        for row in games:
++            if isinstance(row, dict) and row.get("game") == game:
++                current = _int(row.get("levels_reproduced"))
++                if target_level != current + 1:
++                    raise ValueError("cannot update contiguous registry depth for non-adjacent bank")
++                row["levels_reproduced"] = target_level
++                row["reproducibility"] = "reproduced"
++                row["latest_exp5643_levelup_attempt"] = {
++                    "artifact": RESULT_RELATIVE_PATH,
++                    "offline_reproduced": True,
++                    "reproduced_levels": 1,
++                    "solve_provenance": SOLVE_PROVENANCE,
++                    "reproducibility_checksum": artifact.get("reproducibility_checksum"),
++                }
++                break
++    elif isinstance(games, dict):
++        row = games.setdefault(game, {"game": game})
++        current = _int(row.get("levels_reproduced"))
++        if target_level != current + 1:
++            raise ValueError("cannot update contiguous registry depth for non-adjacent bank")
++        row["levels_reproduced"] = target_level
++        row["reproducibility"] = "reproduced"
++        row["latest_exp5643_levelup_attempt"] = {
++            "artifact": RESULT_RELATIVE_PATH,
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "solve_provenance": SOLVE_PROVENANCE,
++            "reproducibility_checksum": artifact.get("reproducibility_checksum"),
++        }
++    registry["reproducible_total_levels"] = artifact.get("registry_count_after")
++    path.write_text(yaml.safe_dump(registry, sort_keys=False), encoding="utf-8")
++    return True
++
++
++def main() -> int:  # pragma: no cover - command wrapper
++    root = Path(__file__).resolve().parents[2]
++    started = time.time()
++    registry = read_yaml(root / REGISTRY_RELATIVE_PATH)
++    public_games = load_public_env_metadata()
++    loop_depths = load_arc_loop_depths(root)
++    transition_receipt = read_json(root / TRANSITION_RECEIPT_RELATIVE_PATH)
++    precheck = registry_precheck(registry, public_games, loop_depths, transition_receipt)
++    target = select_target_from_precheck(precheck)
++    policy = policy_source_from_exp5642(read_json(root / EXP5642_RELATIVE_PATH))
++    if target.get("blocked"):
++        print(f"{EXPERIMENT}: no unreproduced authenticated nonclosed target available")
++        return 1
++
++    attempt = run_live_self_discovery_attempt(target, policy)
++    artifact = build_artifact(
++        registry_precheck_receipt=precheck,
++        target_selection_receipt=target,
++        policy_source=policy,
++        attempt=attempt,
++        live_trace_path=TRACE_RELATIVE_PATH,
++        duration_s=time.time() - started,
++    )
++    try:
++        validate_artifact(artifact)
++    except ValueError as exc:
++        print(f"validation error: {exc}")
++        return 1
++    trace = build_live_trace(target, policy, attempt, artifact)
++    write_json(root / TRACE_RELATIVE_PATH, trace)
++    write_json(root / RESULT_RELATIVE_PATH, artifact)
++    try:
++        update_registry_if_banked(root, artifact)
++    except ValueError as exc:
++        print(f"registry update error: {exc}")
++        return 1
++    print(
++        f"{EXPERIMENT}: {artifact['honest_verdict']} "
++        f"registry_before={artifact['registry_count_before']} "
++        f"registry_after={artifact['registry_count_after']}"
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5643_arc_live_self_discovery_levelup_v509.json b/results/experiment_5643_arc_live_self_discovery_levelup_v509.json
+new file mode 100644
+index 0000000000..13baecd815
+--- /dev/null
++++ b/results/experiment_5643_arc_live_self_discovery_levelup_v509.json
+@@ -0,0 +1,1523 @@
++{
++  "action_trace_sha256": "sha256:672c0257910a3a56573d9961d1323d7f20b29b55cf963904dfd168d95e9dfdf0",
++  "artifact_checksum": "sha256:3338abc4087b6985f99d1645aba1f593b009a6fb13bde6a5072dce54ad27bd98",
++  "budget_receipt": {
++    "bounded_before_execution": true,
++    "checkpoint_cadence": "checkpoint trace metadata every 24 environment actions and at terminal write",
++    "checkpoint_limit": 3,
++    "environment_action_limit": 72,
++    "model_call_limit": 0,
++    "random_seeds": [
++      5643
++    ],
++    "retry_limit": 0,
++    "stopping_rule": "fixed_72_action_budget_or_target_level_reached_no_llm_induction_disabled_v509",
++    "terminal_conditions": [
++      "target_level_reached_live",
++      "fixed_environment_action_budget_exhausted",
++      "wall_time_cap_exceeded"
++    ],
++    "wall_time_cap_s": 900
++  },
++  "duration_s": 5.071,
++  "excluded_targets": {
++    "explicit_recent_attempts": [
++      {
++        "game": "bp35",
++        "level": 9,
++        "level_label": "L9",
++        "reason": "exp5621_attempted_without_bank"
++      },
++      {
++        "game": "sk48",
++        "level": 8,
++        "level_label": "L8",
++        "reason": "exp5610_attempted_without_bank"
++      },
++      {
++        "game": "lf52",
++        "level": 7,
++        "level_label": "L7",
++        "reason": "exp5632_attempted_without_bank"
++      }
++    ],
++    "registry_duplicate_levels": [
++      {
++        "closed_levels": "L1-L8",
++        "count": 8,
++        "game": "ar25",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L8",
++        "count": 8,
++        "game": "bp35",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "cd82",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "cn04",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "dc22",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "ft09",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L7",
++        "count": 7,
++        "game": "g50t",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L7",
++        "count": 7,
++        "game": "ka59",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "lf52",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L8",
++        "count": 8,
++        "game": "lp85",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L7",
++        "count": 7,
++        "game": "ls20",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "m0r0",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "r11l",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L8",
++        "count": 8,
++        "game": "re86",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L8",
++        "count": 8,
++        "game": "s5i5",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L8",
++        "count": 8,
++        "game": "sb26",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "sc25",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L7",
++        "count": 7,
++        "game": "sk48",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "sp80",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L9",
++        "count": 9,
++        "game": "su15",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L7",
++        "count": 7,
++        "game": "tn36",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L6",
++        "count": 6,
++        "game": "tr87",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L9",
++        "count": 9,
++        "game": "tu93",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L7",
++        "count": 7,
++        "game": "vc33",
++        "source": "ops/arc_solve_registry.yaml"
++      },
++      {
++        "closed_levels": "L1-L9",
++        "count": 9,
++        "game": "wa30",
++        "source": "ops/arc_solve_registry.yaml"
++      }
++    ],
++    "transition_receipt_failed_targets": [
++      {
++        "game": "lf52",
++        "level": 7,
++        "level_label": "L7",
++        "reason": "transition_receipt_failed_arc_live_level_credit_v508",
++        "source": "results/experiment_5636_transition_v509.json"
++      }
++    ]
++  },
++  "experiment": "experiment_5643_arc_live_self_discovery_levelup_v509",
++  "experiment_id": 5643,
++  "field_principles": {
++    "budget_receipt": {
++      "principle": "seeds, wall time, model calls, environment actions, retries, checkpoint cadence, and terminal conditions are bounded before execution."
++    },
++    "excluded_targets": {
++      "principle": "bp35 L9, sk48 L8, lf52 L7, transition-receipt failures, and registry-duplicate levels stay closed and cannot receive duplicate credit."
++    },
++    "field_principles": {
++      "principle": "principle annotations are carried in the artifact so every required 5643 field is auditable."
++    },
++    "game_adapter_used": {
++      "principle": "must be false; no per-game adapter can be smuggled into the live path."
++    },
++    "honest_verdict": {
++      "principle": "a bounded no-level result is terminal and must not be upgraded without reproduction."
++    },
++    "inference_substrate": {
++      "principle": "live_agent_environment_interaction -- environment observations/actions are the authority, not an offline solver."
++    },
++    "level_reached": {
++      "principle": "terminal environment level fact is explicit and separate from reproduction credit."
++    },
++    "live_path_reachability_counters": {
++      "principle": "the scored live mechanism that generated actions is identified by runtime counters."
++    },
++    "live_trace_path": {
++      "principle": "complete live observation/action evidence is durable and replayable."
++    },
++    "methodology_receipt": {
++      "principle": "records target precheck, policy freeze, budget freeze, no-source/no-adapter/no-outer-loop provenance, and reproduction criteria so the run is not a short opaque artifact."
++    },
++    "model_specs": {
++      "principle": "empty for a no-LLM run; otherwise names the mandated cached SOTA GGUF receipt exactly."
++    },
++    "offline_reproduced": {
++      "principle": "exactly true is mandatory for solve credit after independent generic reproduction."
++    },
++    "outer_loop_re_used": {
++      "principle": "must be false; off-path recipes are excluded from live self-discovery credit."
++    },
++    "policy_source": {
++      "principle": "records whether Exp5642 promoted cleanly or the unchanged baseline ran."
++    },
++    "random_seeds": {
++      "principle": "deterministic seeds make the bounded attempt replayable and auditable."
++    },
++    "registry_count_after": {
++      "principle": "authoritative reproduced-level total after accepted banking; unchanged on honest nulls."
++    },
++    "registry_count_before": {
++      "principle": "authoritative reproduced-level total before target selection; the level-up baseline is explicit."
++    },
++    "registry_delta": {
++      "principle": "exactly 0 or 1 so the banked-level delta is auditable."
++    },
++    "registry_precheck_receipt": {
++      "principle": "execution-time precheck proves the selected target is unreproduced before any live observation."
++    },
++    "reproduced_levels": {
++      "principle": "newly reproduced target levels; solve credit requires at least one."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed target, trace, budget, methodology, and banking decision catch silent drift."
++    },
++    "selected_game": {
++      "principle": "the game scope is fixed before live observation, preventing outcome-driven target switching."
++    },
++    "selected_level": {
++      "principle": "the level scope is fixed before live observation, preventing outcome-driven target switching."
++    },
++    "solve_provenance": {
++      "principle": "must equal live_agent_self_discovery; only the credited path can solve."
++    },
++    "source_read": {
++      "principle": "must be false; game source is excluded from live self-discovery credit."
++    },
++    "target_selection_hash": {
++      "principle": "content hash of the pre-outcome target receipt proves the target was not changed after seeing results."
++    }
++  },
++  "game": "lf52",
++  "game_adapter_used": false,
++  "honest_verdict": "complete: no_new_arc_level_banked_lf52_L8_bounded_live_attempt_v509",
++  "inference_substrate": "live_agent_environment_interaction",
++  "level_reached": 0,
++  "live_attempt_executed": true,
++  "live_path_reachability_counters": {
++    "baseline_action_emissions": 60,
++    "e3_policy_next_move_calls": 72,
++    "environment_reset_calls": 12,
++    "environment_step_calls": 60,
++    "executable_model_policy_calls": 0,
++    "llm_model_calls": 0,
++    "scored_mechanism": "unchanged_no_new_llm_e3_baseline"
++  },
++  "live_trace_path": "results/experiment_5643_arc_live_self_discovery_levelup_v509_trace.json",
++  "llm_invoked": false,
++  "methodology_receipt": {
++    "agent_owned_inputs_only": true,
++    "budget_frozen_before_outcome": true,
++    "checkpoint_cadence": "checkpoint trace metadata every 24 environment actions and at terminal write",
++    "environment_action_limit": 72,
++    "game_adapter_used": false,
++    "llm_invoked": false,
++    "methodology_version": "arc_live_self_discovery_v509",
++    "model_call_limit": 0,
++    "model_specs_policy": "empty_list_required_when_llm_invoked_false",
++    "offline_ground_truth_bfs_used": false,
++    "outer_loop_re_used": false,
++    "policy_frozen_before_outcome": true,
++    "policy_name": "unchanged_no_new_llm_e3_baseline",
++    "reproduction_acceptance": {
++      "generic_clean_state_replay_required": true,
++      "offline_reproduced_required_for_credit": true,
++      "registry_delta_max": 1,
++      "trace_checksum_must_match": true
++    },
++    "runtime_inputs": [
++      "frames",
++      "latest_frame",
++      "environment_step_response",
++      "in_process_policy_memory"
++    ],
++    "runtime_reverse_engineering": {
++      "level_changes_recorded": 0,
++      "observations_recorded": 72,
++      "offline_ground_truth_bfs_used": false,
++      "per_game_adapter_used": false,
++      "source": "runtime_observations_actions_state_transitions_only",
++      "source_files_read": false
++    },
++    "source_read": false,
++    "target_recorded_before_interaction": true,
++    "target_selection_hash": "sha256:bb4e1bc27936acfee42b87a18929a2cbfab3e6d5f184d3fb030c3180a7a203e0",
++    "terminal_conditions": [
++      "target_level_reached_live",
++      "fixed_environment_action_budget_exhausted",
++      "wall_time_cap_exceeded"
++    ],
++    "trace_preserved": true,
++    "transition_receipt_path": "results/experiment_5636_transition_v509.json",
++    "wall_time_cap_s": 900
++  },
++  "milestone": "2026.07.509",
++  "model_specs": [],
++  "new_reproducible_levels": [],
++  "no_model_specs_required": true,
++  "offline_bfs_used": false,
++  "offline_reproduced": false,
++  "outer_loop_re_used": false,
++  "per_game_adapter_used": false,
++  "policy_source": {
++    "attempt_gated_by_exp5642": false,
++    "baseline_unchanged": true,
++    "enabled_configuration": {
++      "executable_model_policy": false,
++      "llm_invoked": false,
++      "name": "unchanged_no_new_llm_e3_baseline",
++      "new_llm_calls": false
++    },
++    "known_level_regression_count": 0,
++    "live_executable_model_ready_score": 0.0,
++    "policy_name": "unchanged_no_new_llm_e3_baseline",
++    "reason": "exp5642_blocked_missing_unsafe_or_regressing_baseline_unchanged",
++    "source_artifact": "results/experiment_5642_arc_executable_model_live_ab.json",
++    "source_honest_verdict": "blocked_gate_check_failed",
++    "source_status": "blocked",
++    "unsafe_model_accept_count": 0
++  },
++  "random_seed": 5643,
++  "random_seeds": [
++    5643
++  ],
++  "registry_count_after": 177,
++  "registry_count_before": 177,
++  "registry_delta": 0,
++  "registry_precheck_receipt": {
++    "arc_loop_targets_considered": 25,
++    "candidate_rows": [
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ar25",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {
++          "9": [
++            "explicit_recent_unbanked_attempt"
++          ]
++        },
++        "exclude_reasons": [
++          "all_authenticated_headroom_targets_closed_by_recent_failures"
++        ],
++        "excluded": true,
++        "game": "bp35",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": [
++          9
++        ]
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "cd82",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "cn04",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "dc22",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ft09",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "g50t",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 1,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ka59",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 10,
++        "closed_intermediate_levels": [
++          7
++        ],
++        "closed_level_reasons": {
++          "7": [
++            "explicit_recent_unbanked_attempt",
++            "recent_failed_target"
++          ]
++        },
++        "exclude_reasons": [],
++        "excluded": false,
++        "game": "lf52",
++        "has_authenticated_headroom": true,
++        "registry_depth": 6,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": [
++          7,
++          8,
++          9,
++          10
++        ]
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "lp85",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ls20",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "m0r0",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "r11l",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "re86",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "s5i5",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sb26",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sc25",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {
++          "8": [
++            "explicit_recent_unbanked_attempt"
++          ]
++        },
++        "exclude_reasons": [
++          "all_authenticated_headroom_targets_closed_by_recent_failures"
++        ],
++        "excluded": true,
++        "game": "sk48",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": [
++          8
++        ]
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sp80",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "su15",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tn36",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 6,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tr87",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 4,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tu93",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "vc33",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "wa30",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      }
++    ],
++    "duplicate_credit_policy": "registry-reproduced levels, bp35 L9, sk48 L8, lf52 L7, and transition-receipt failures receive no V509 credit",
++    "eligible_candidates": [
++      {
++        "authenticated_headroom": 10,
++        "closed_intermediate_levels": [
++          7
++        ],
++        "game": "lf52",
++        "registry_depth": 6,
++        "target_label": "L8",
++        "target_level": 8
++      }
++    ],
++    "excluded_targets": {
++      "explicit_recent_attempts": [
++        {
++          "game": "bp35",
++          "level": 9,
++          "level_label": "L9",
++          "reason": "exp5621_attempted_without_bank"
++        },
++        {
++          "game": "sk48",
++          "level": 8,
++          "level_label": "L8",
++          "reason": "exp5610_attempted_without_bank"
++        },
++        {
++          "game": "lf52",
++          "level": 7,
++          "level_label": "L7",
++          "reason": "exp5632_attempted_without_bank"
++        }
++      ],
++      "registry_duplicate_levels": [
++        {
++          "closed_levels": "L1-L8",
++          "count": 8,
++          "game": "ar25",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L8",
++          "count": 8,
++          "game": "bp35",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "cd82",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "cn04",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "dc22",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "ft09",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L7",
++          "count": 7,
++          "game": "g50t",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L7",
++          "count": 7,
++          "game": "ka59",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "lf52",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L8",
++          "count": 8,
++          "game": "lp85",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L7",
++          "count": 7,
++          "game": "ls20",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "m0r0",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "r11l",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L8",
++          "count": 8,
++          "game": "re86",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L8",
++          "count": 8,
++          "game": "s5i5",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L8",
++          "count": 8,
++          "game": "sb26",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "sc25",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L7",
++          "count": 7,
++          "game": "sk48",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "sp80",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L9",
++          "count": 9,
++          "game": "su15",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L7",
++          "count": 7,
++          "game": "tn36",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L6",
++          "count": 6,
++          "game": "tr87",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L9",
++          "count": 9,
++          "game": "tu93",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L7",
++          "count": 7,
++          "game": "vc33",
++          "source": "ops/arc_solve_registry.yaml"
++        },
++        {
++          "closed_levels": "L1-L9",
++          "count": 9,
++          "game": "wa30",
++          "source": "ops/arc_solve_registry.yaml"
++        }
++      ],
++      "transition_receipt_failed_targets": [
++        {
++          "game": "lf52",
++          "level": 7,
++          "level_label": "L7",
++          "reason": "transition_receipt_failed_arc_live_level_credit_v508",
++          "source": "results/experiment_5636_transition_v509.json"
++        }
++      ]
++    },
++    "ok": true,
++    "public_games_checked": 25,
++    "registry_count_before": 177,
++    "registry_games_checked": 25,
++    "registry_total_from_file": 177,
++    "registry_total_from_rows": 177,
++    "spec_ref": "REQ-ARC-FCP-5643"
++  },
++  "registry_updated": false,
++  "reproduced_levels": 0,
++  "reproducibility_checksum": "sha256:3338abc4087b6985f99d1645aba1f593b009a6fb13bde6a5072dce54ad27bd98",
++  "reproduction_gate": {
++    "attempted": false,
++    "reason": "target_level_not_reached_live",
++    "reproduced": false
++  },
++  "result_path": "results/experiment_5643_arc_live_self_discovery_levelup_v509.json",
++  "runtime_reverse_engineering": {
++    "level_changes_recorded": 0,
++    "observations_recorded": 72,
++    "offline_ground_truth_bfs_used": false,
++    "per_game_adapter_used": false,
++    "source": "runtime_observations_actions_state_transitions_only",
++    "source_files_read": false
++  },
++  "schema": "arc_live_self_discovery_levelup_attempt.v4",
++  "selected_game": "lf52",
++  "selected_level": "L8",
++  "solve_provenance": "live_agent_self_discovery",
++  "source_files_read": false,
++  "source_read": false,
++  "spec_refs": [
++    "REQ-ARC-FCP-5643"
++  ],
++  "target_level": 8,
++  "target_selection_hash": "sha256:bb4e1bc27936acfee42b87a18929a2cbfab3e6d5f184d3fb030c3180a7a203e0",
++  "target_selection_receipt": {
++    "arc_loop_depth": 2,
++    "authenticated_headroom": 10,
++    "blocked": false,
++    "closed_intermediate_levels": [
++      7
++    ],
++    "duplicate_targets_rejected": [
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ar25",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {
++          "9": [
++            "explicit_recent_unbanked_attempt"
++          ]
++        },
++        "exclude_reasons": [
++          "all_authenticated_headroom_targets_closed_by_recent_failures"
++        ],
++        "excluded": true,
++        "game": "bp35",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": [
++          9
++        ]
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "cd82",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "cn04",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "dc22",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ft09",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "g50t",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 1,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ka59",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "lp85",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ls20",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "m0r0",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "r11l",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "re86",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "s5i5",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sb26",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sc25",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {
++          "8": [
++            "explicit_recent_unbanked_attempt"
++          ]
++        },
++        "exclude_reasons": [
++          "all_authenticated_headroom_targets_closed_by_recent_failures"
++        ],
++        "excluded": true,
++        "game": "sk48",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": [
++          8
++        ]
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sp80",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "su15",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tn36",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 6,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tr87",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 4,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tu93",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "vc33",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "wa30",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      }
++    ],
++    "prior_levels_reproduced": 6,
++    "registry_count_before": 177,
++    "rotation_order": [
++      {
++        "closed_intermediate_levels": [
++          7
++        ],
++        "game": "lf52",
++        "target_label": "L8",
++        "target_level": 8
++      }
++    ],
++    "rotation_reason": "lowest_nonclosed_unreproduced_authenticated_level_after_recent_failure_exclusions",
++    "selected_game": "lf52",
++    "selected_level": "L8",
++    "selected_target_was_unreproduced": true,
++    "selection_reason": "v509_rotated_unreproduced_authenticated_headroom",
++    "target_level": 8,
++    "target_selection_hash": "sha256:bb4e1bc27936acfee42b87a18929a2cbfab3e6d5f184d3fb030c3180a7a203e0"
++  },
++  "terminal_environment_response": {
++    "level_reached": 0,
++    "post_levels_reproduced": 6,
++    "terminal_reason": "action_budget_exhausted"
++  },
++  "tests_run": [],
++  "trace_replay_checksum": "sha256:672c0257910a3a56573d9961d1323d7f20b29b55cf963904dfd168d95e9dfdf0"
++}
+diff --git a/results/experiment_5643_arc_live_self_discovery_levelup_v509_trace.json b/results/experiment_5643_arc_live_self_discovery_levelup_v509_trace.json
+new file mode 100644
+index 0000000000..93ca4d5934
+--- /dev/null
++++ b/results/experiment_5643_arc_live_self_discovery_levelup_v509_trace.json
+@@ -0,0 +1,1848 @@
++{
++  "action_trace_sha256": "sha256:672c0257910a3a56573d9961d1323d7f20b29b55cf963904dfd168d95e9dfdf0",
++  "artifact_checksum": "sha256:3338abc4087b6985f99d1645aba1f593b009a6fb13bde6a5072dce54ad27bd98",
++  "budget_receipt": {
++    "bounded_before_execution": true,
++    "checkpoint_cadence": "checkpoint trace metadata every 24 environment actions and at terminal write",
++    "checkpoint_limit": 3,
++    "environment_action_limit": 72,
++    "model_call_limit": 0,
++    "random_seeds": [
++      5643
++    ],
++    "retry_limit": 0,
++    "stopping_rule": "fixed_72_action_budget_or_target_level_reached_no_llm_induction_disabled_v509",
++    "terminal_conditions": [
++      "target_level_reached_live",
++      "fixed_environment_action_budget_exhausted",
++      "wall_time_cap_exceeded"
++    ],
++    "wall_time_cap_s": 900
++  },
++  "executed_actions": [
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 0
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":18,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 1
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 2
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 24,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":24,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 3
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":36,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 5
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 25
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":42,\"y\":25}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 6
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 37
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":42,\"y\":37}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 7
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 12,
++        "y": 13
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":12,\"y\":13}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 8
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 13
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":18,\"y\":13}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 9
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 24,
++        "y": 13
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":24,\"y\":13}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 10
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 13
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":30,\"y\":13}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 11
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 13
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":36,\"y\":13}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 12
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 13
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":42,\"y\":13}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 13
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 13
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":48,\"y\":13}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 14
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 12,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":12,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 15
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":30,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 16
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":42,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 17
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":48,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 18
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 12,
++        "y": 25
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":12,\"y\":25}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 19
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 25
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":18,\"y\":25}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 20
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 24,
++        "y": 25
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":24,\"y\":25}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 21
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 25
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":30,\"y\":25}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 22
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 25
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":36,\"y\":25}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 23
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 25
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":48,\"y\":25}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 24
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 31
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":36,\"y\":31}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 25
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 31
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":42,\"y\":31}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 26
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 31
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":48,\"y\":31}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 27
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 37
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":36,\"y\":37}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 28
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 37
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":48,\"y\":37}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 29
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 43
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":36,\"y\":43}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 30
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 43
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":42,\"y\":43}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 31
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 43
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":48,\"y\":43}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 32
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 49
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":36,\"y\":49}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 33
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 49
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":42,\"y\":49}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 34
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 49
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":48,\"y\":49}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 35
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 49,
++        "y": 38
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":49,\"y\":38}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 36
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 29,
++        "y": 34
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":29,\"y\":34}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 37
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 34,
++        "y": 27
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":34,\"y\":27}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 38
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 28
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":33,\"y\":28}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 39
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 21,
++        "y": 30
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":21,\"y\":30}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 40
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 17,
++        "y": 18
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":17,\"y\":18}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 41
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 42
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 20,
++        "y": 18
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":20,\"y\":18}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 43
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 44
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 23,
++        "y": 18
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":23,\"y\":18}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 45
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 46
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 26,
++        "y": 18
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":26,\"y\":18}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 47
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 48
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 35,
++        "y": 18
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":35,\"y\":18}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 49
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 38,
++        "y": 18
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":38,\"y\":18}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 50
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 17,
++        "y": 21
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":17,\"y\":21}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 51
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 52
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 20,
++        "y": 21
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":20,\"y\":21}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 53
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 54
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 23,
++        "y": 21
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":23,\"y\":21}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 55
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 56
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 26,
++        "y": 21
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":26,\"y\":21}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 57
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 58
++    },
++    {
++      "action": 1,
++      "data": null,
++      "kind": "ACTION",
++      "label": "{\"action\":1,\"data\":null}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 59
++    },
++    {
++      "action": 2,
++      "data": null,
++      "kind": "ACTION",
++      "label": "{\"action\":2,\"data\":null}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 60
++    },
++    {
++      "action": 3,
++      "data": null,
++      "kind": "ACTION",
++      "label": "{\"action\":3,\"data\":null}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 61
++    },
++    {
++      "action": 4,
++      "data": null,
++      "kind": "ACTION",
++      "label": "{\"action\":4,\"data\":null}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 62
++    },
++    {
++      "action": 7,
++      "data": null,
++      "kind": "ACTION",
++      "label": "{\"action\":7,\"data\":null}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 63
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":18,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 64
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":18,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 65
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 24,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":24,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 66
++    },
++    {
++      "action": null,
++      "data": null,
++      "kind": "RESET",
++      "level_after": 0,
++      "level_before": null,
++      "step": 67
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":18,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 68
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":36,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 69
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 19
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":18,\"y\":19}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 70
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 25
++      },
++      "kind": "ACTION",
++      "label": "{\"action\":6,\"data\":{\"x\":42,\"y\":25}}",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 71
++    }
++  ],
++  "experiment": "experiment_5643_arc_live_self_discovery_levelup_v509",
++  "level_counter_changes": [],
++  "methodology_receipt": {
++    "agent_owned_inputs_only": true,
++    "budget_frozen_before_outcome": true,
++    "checkpoint_cadence": "checkpoint trace metadata every 24 environment actions and at terminal write",
++    "environment_action_limit": 72,
++    "game_adapter_used": false,
++    "llm_invoked": false,
++    "methodology_version": "arc_live_self_discovery_v509",
++    "model_call_limit": 0,
++    "model_specs_policy": "empty_list_required_when_llm_invoked_false",
++    "offline_ground_truth_bfs_used": false,
++    "outer_loop_re_used": false,
++    "policy_frozen_before_outcome": true,
++    "policy_name": "unchanged_no_new_llm_e3_baseline",
++    "reproduction_acceptance": {
++      "generic_clean_state_replay_required": true,
++      "offline_reproduced_required_for_credit": true,
++      "registry_delta_max": 1,
++      "trace_checksum_must_match": true
++    },
++    "runtime_inputs": [
++      "frames",
++      "latest_frame",
++      "environment_step_response",
++      "in_process_policy_memory"
++    ],
++    "runtime_reverse_engineering": {
++      "level_changes_recorded": 0,
++      "observations_recorded": 72,
++      "offline_ground_truth_bfs_used": false,
++      "per_game_adapter_used": false,
++      "source": "runtime_observations_actions_state_transitions_only",
++      "source_files_read": false
++    },
++    "source_read": false,
++    "target_recorded_before_interaction": true,
++    "target_selection_hash": "sha256:bb4e1bc27936acfee42b87a18929a2cbfab3e6d5f184d3fb030c3180a7a203e0",
++    "terminal_conditions": [
++      "target_level_reached_live",
++      "fixed_environment_action_budget_exhausted",
++      "wall_time_cap_exceeded"
++    ],
++    "trace_preserved": true,
++    "transition_receipt_path": "results/experiment_5636_transition_v509.json",
++    "wall_time_cap_s": 900
++  },
++  "observations": [
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 0
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 1
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 2
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 3
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 4
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 5
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 6
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 7
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 8
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 9
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 10
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 11
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 12
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 13
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 14
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 15
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 16
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 17
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 18
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 19
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 20
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 21
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 22
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 23
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 24
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 25
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 26
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 27
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 28
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 29
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 30
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 31
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 32
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 33
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 34
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 35
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 36
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 37
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 38
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 39
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 40
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 41
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 42
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 43
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 44
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 45
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 46
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 47
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 48
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 49
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 50
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 51
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 52
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 53
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 54
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 55
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 56
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 57
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 58
++    },
++    {
++      "action": 1,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 59
++    },
++    {
++      "action": 2,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 60
++    },
++    {
++      "action": 3,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 61
++    },
++    {
++      "action": 4,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 62
++    },
++    {
++      "action": 7,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 63
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 64
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 65
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 66
++    },
++    {
++      "event": "reset",
++      "level_after": 0,
++      "step": 67
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 68
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 69
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 70
++    },
++    {
++      "action": 6,
++      "event": "action",
++      "level_after": 0,
++      "level_before": 0,
++      "step": 71
++    }
++  ],
++  "policy_source": {
++    "attempt_gated_by_exp5642": false,
++    "baseline_unchanged": true,
++    "enabled_configuration": {
++      "executable_model_policy": false,
++      "llm_invoked": false,
++      "name": "unchanged_no_new_llm_e3_baseline",
++      "new_llm_calls": false
++    },
++    "known_level_regression_count": 0,
++    "live_executable_model_ready_score": 0.0,
++    "policy_name": "unchanged_no_new_llm_e3_baseline",
++    "reason": "exp5642_blocked_missing_unsafe_or_regressing_baseline_unchanged",
++    "source_artifact": "results/experiment_5642_arc_executable_model_live_ab.json",
++    "source_honest_verdict": "blocked_gate_check_failed",
++    "source_status": "blocked",
++    "unsafe_model_accept_count": 0
++  },
++  "reproduction_gate": {
++    "attempted": false,
++    "reason": "target_level_not_reached_live",
++    "reproduced": false
++  },
++  "runtime_reverse_engineering": {
++    "level_changes_recorded": 0,
++    "observations_recorded": 72,
++    "offline_ground_truth_bfs_used": false,
++    "per_game_adapter_used": false,
++    "source": "runtime_observations_actions_state_transitions_only",
++    "source_files_read": false
++  },
++  "schema": "arc_live_self_discovery_attempt_trace.v4",
++  "selected_game": "lf52",
++  "selected_level": "L8",
++  "spec_refs": [
++    "REQ-ARC-FCP-5643"
++  ],
++  "target_selection_hash": "sha256:bb4e1bc27936acfee42b87a18929a2cbfab3e6d5f184d3fb030c3180a7a203e0",
++  "target_selection_receipt": {
++    "arc_loop_depth": 2,
++    "authenticated_headroom": 10,
++    "blocked": false,
++    "closed_intermediate_levels": [
++      7
++    ],
++    "duplicate_targets_rejected": [
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ar25",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {
++          "9": [
++            "explicit_recent_unbanked_attempt"
++          ]
++        },
++        "exclude_reasons": [
++          "all_authenticated_headroom_targets_closed_by_recent_failures"
++        ],
++        "excluded": true,
++        "game": "bp35",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": [
++          9
++        ]
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "cd82",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "cn04",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "dc22",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ft09",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "g50t",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 1,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ka59",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 3,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "lp85",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "ls20",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "m0r0",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "r11l",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "re86",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "s5i5",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sb26",
++        "has_authenticated_headroom": false,
++        "registry_depth": 8,
++        "target_label": "L9",
++        "target_level": 9,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sc25",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 8,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {
++          "8": [
++            "explicit_recent_unbanked_attempt"
++          ]
++        },
++        "exclude_reasons": [
++          "all_authenticated_headroom_targets_closed_by_recent_failures"
++        ],
++        "excluded": true,
++        "game": "sk48",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": [
++          8
++        ]
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "sp80",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "su15",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tn36",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 6,
++        "authenticated_headroom": 6,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tr87",
++        "has_authenticated_headroom": false,
++        "registry_depth": 6,
++        "target_label": "L7",
++        "target_level": 7,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 4,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "tu93",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 2,
++        "authenticated_headroom": 7,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "vc33",
++        "has_authenticated_headroom": false,
++        "registry_depth": 7,
++        "target_label": "L8",
++        "target_level": 8,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      },
++      {
++        "arc_loop_depth": 0,
++        "authenticated_headroom": 9,
++        "closed_intermediate_levels": [],
++        "closed_level_reasons": {},
++        "exclude_reasons": [
++          "no_authenticated_headroom"
++        ],
++        "excluded": true,
++        "game": "wa30",
++        "has_authenticated_headroom": false,
++        "registry_depth": 9,
++        "target_label": "L10",
++        "target_level": 10,
++        "target_unreproduced_in_registry": true,
++        "unreproduced_levels_with_headroom": []
++      }
++    ],
++    "prior_levels_reproduced": 6,
++    "registry_count_before": 177,
++    "rotation_order": [
++      {
++        "closed_intermediate_levels": [
++          7
++        ],
++        "game": "lf52",
++        "target_label": "L8",
++        "target_level": 8
++      }
++    ],
++    "rotation_reason": "lowest_nonclosed_unreproduced_authenticated_level_after_recent_failure_exclusions",
++    "selected_game": "lf52",
++    "selected_level": "L8",
++    "selected_target_was_unreproduced": true,
++    "selection_reason": "v509_rotated_unreproduced_authenticated_headroom",
++    "target_level": 8,
++    "target_selection_hash": "sha256:bb4e1bc27936acfee42b87a18929a2cbfab3e6d5f184d3fb030c3180a7a203e0"
++  },
++  "terminal_environment_response": {
++    "level_reached": 0,
++    "post_levels_reproduced": 6,
++    "terminal_reason": "action_budget_exhausted"
++  },
++  "trace_replay_checksum": "sha256:672c0257910a3a56573d9961d1323d7f20b29b55cf963904dfd168d95e9dfdf0"
++}
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index 271bc6a054..dd6ef9dc59 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -239,6 +239,7 @@ DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
+ # "Inference-Substrate Declaration Discipline" -- the forward-only 5th legal
+ # value.
+ ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
++ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE = "live_agent_environment_interaction"
+ ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
+ ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
+     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
+@@ -1905,7 +1906,9 @@ def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
+     schema-prefix fallback -- this class was introduced 2026-06-30, so there is no pre-discipline
+     history to backfill). See ARC_LIVE_AGENT_NO_LLM_SUBSTRATE for the exemplar incident (exp5054).
+     """
+-    return _inference_substrate_matches(d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE)
++    return _inference_substrate_matches(
++        d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE
++    ) or _inference_substrate_matches(d, ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE)
+ 
+ 
+ def _is_arc_filter_runtime_no_llm(d: dict[str, Any]) -> bool:
+diff --git a/tests/python/test_experiment_5643_arc_live_self_discovery_levelup_v509.py b/tests/python/test_experiment_5643_arc_live_self_discovery_levelup_v509.py
+new file mode 100644
+index 0000000000..c6606b918c
+--- /dev/null
++++ b/tests/python/test_experiment_5643_arc_live_self_discovery_levelup_v509.py
+@@ -0,0 +1,374 @@
++"""Tests for Exp5643 ARC live self-discovery level-up attempt.
++
++Spec refs: REQ-ARC-FCP-5643,
++SCENARIO-ARC-FCP-5643-PRECHECK-EXCLUDES-TRANSITION-FAILURES,
++SCENARIO-ARC-FCP-5643-EXECUTABLE-POLICY-ADVISORY-NOT-GATING,
++SCENARIO-ARC-FCP-5643-METHODOLOGY-AND-REPRODUCTION-GATE.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5643_arc_live_self_discovery_levelup_v509 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++sys.path.insert(0, str(REPO / "scripts"))
++import adversarial_verify as av  # noqa: E402
++
++
++def _registry(*, total: int = 177) -> dict[str, Any]:
++    return {
++        "reproducible_total_levels": total,
++        "games": [
++            {"game": "lf52", "reproducibility": "reproduced", "levels_reproduced": 6},
++            {"game": "sk48", "reproducibility": "reproduced", "levels_reproduced": 7},
++            {"game": "bp35", "reproducibility": "reproduced", "levels_reproduced": 8},
++            {"game": "done", "reproducibility": "reproduced", "levels_reproduced": 2},
++        ],
++    }
++
++
++def _public_envs() -> dict[str, dict[str, Any]]:
++    return {
++        "lf52": {"game_id": "lf52-public", "baseline_actions": [1] * 10, "tags": ["click"]},
++        "sk48": {"game_id": "sk48-public", "baseline_actions": [1] * 8, "tags": ["keyboard_click"]},
++        "bp35": {"game_id": "bp35-public", "baseline_actions": [1] * 9, "tags": ["keyboard_click"]},
++        "done": {"game_id": "done-public", "baseline_actions": [1] * 2, "tags": ["click"]},
++    }
++
++
++def _transition_receipt() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_5636_transition_v509",
++        "retired_scopes": [
++            {
++                "key": "arc_live_level_credit_v508",
++                "reason": "The bounded live attempt executed but banked no new reproducible level.",
++                "source_artifacts": [
++                    "results/experiment_5632_arc_live_self_discovery_levelup_v508.json"
++                ],
++                "evidence": {
++                    "selected_game": "lf52",
++                    "selected_level": "L7",
++                    "registry_delta": 0,
++                    "offline_reproduced": False,
++                },
++            }
++        ],
++    }
++
++
++def _precheck() -> dict[str, Any]:
++    return mod.registry_precheck(
++        registry=_registry(),
++        public_envs=_public_envs(),
++        arc_loop_depths={"lf52": 2, "sk48": 2, "bp35": 2, "done": 2},
++        transition_receipt=_transition_receipt(),
++    )
++
++
++def _target() -> dict[str, Any]:
++    return mod.select_target_from_precheck(_precheck())
++
++
++def _policy_source() -> dict[str, Any]:
++    return mod.policy_source_from_exp5642(
++        {
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "gate_check_summary": "executable model upstream readiness failed",
++        }
++    )
++
++
++def _null_attempt() -> dict[str, Any]:
++    rows = [
++        {"step": 0, "kind": "RESET", "action": None, "data": None, "level_before": None, "level_after": 0},
++        {"step": 1, "kind": "ACTION", "action": 6, "data": {"x": 10, "y": 10}, "level_before": 0, "level_after": 0},
++        {"step": 2, "kind": "ACTION", "action": 1, "data": None, "level_before": 0, "level_after": 0},
++    ]
++    checksum = mod.action_trace_sha256(rows)
++    return {
++        "live_attempt_executed": True,
++        "action_budget": mod.ACTION_BUDGET,
++        "action_rows": rows,
++        "observations": [{"step": 0, "event": "reset", "level": 0}],
++        "level_counter_changes": [],
++        "runtime_reverse_engineering": {
++            "source": "runtime_observations_actions_state_transitions_only",
++            "observations_recorded": 2,
++            "source_files_read": False,
++            "per_game_adapter_used": False,
++            "offline_ground_truth_bfs_used": False,
++        },
++        "max_level_reached": 0,
++        "post_levels_reproduced": 6,
++        "offline_reproduced": False,
++        "reproduced_levels": 0,
++        "reproduction_gate": {
++            "game": "lf52",
++            "claimed_level": 0,
++            "reached_level": 6,
++            "reproduced": False,
++            "mode": "standard_reproduction_gate_not_run_no_new_target_candidate",
++        },
++        "solution_labels": [],
++        "action_trace_sha256": checksum,
++        "trace_replay_checksum": checksum,
++        "llm_invoked": False,
++        "model_specs": [],
++        "source_files_read": False,
++        "per_game_adapter_used": False,
++        "offline_bfs_used": False,
++        "outer_loop_re_used": False,
++        "terminal_reason": "bounded_budget_no_target_level_reproduction",
++    }
++
++
++def _success_attempt() -> dict[str, Any]:
++    rows = [
++        {"step": 0, "kind": "RESET", "action": None, "data": None, "level_before": None, "level_after": 0},
++        {"step": 1, "kind": "ACTION", "action": 6, "data": {"x": 20, "y": 20}, "level_before": 6, "level_after": 9},
++    ]
++    checksum = mod.action_trace_sha256(rows)
++    return {
++        **_null_attempt(),
++        "action_rows": rows,
++        "level_counter_changes": [{"step": 1, "level_before": 6, "level_after": 9}],
++        "max_level_reached": 9,
++        "post_levels_reproduced": 9,
++        "offline_reproduced": True,
++        "reproduced_levels": 3,
++        "reproduction_gate": {
++            "game": "lf52",
++            "claimed_level": 9,
++            "reached_level": 9,
++            "reproduced": True,
++            "mode": "generic_live_path_clean_state_reproduction",
++        },
++        "solution_labels": ['{"action":6,"data":{"x":20,"y":20}}'],
++        "action_trace_sha256": checksum,
++        "trace_replay_checksum": checksum,
++        "terminal_reason": "target_level_reached_live",
++    }
++
++
++def test_req_arc_fcp_5643_spec_declares_required_artifact_fields() -> None:
++    """REQ-ARC-FCP-5643: OpenSpec anchors the V509 live level-up receipt."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-FCP-5643") :]
++
++    for marker in (
++        mod.RESULT_RELATIVE_PATH,
++        "SCENARIO-ARC-FCP-5643-PRECHECK-EXCLUDES-TRANSITION-FAILURES",
++        "SCENARIO-ARC-FCP-5643-EXECUTABLE-POLICY-ADVISORY-NOT-GATING",
++        "SCENARIO-ARC-FCP-5643-METHODOLOGY-AND-REPRODUCTION-GATE",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle["principle"] in section
++
++
++def test_scenario_5643_precheck_excludes_transition_failures_and_rotates_to_lf52_l8() -> None:
++    """SCENARIO-ARC-FCP-5643-PRECHECK-EXCLUDES-TRANSITION-FAILURES."""
++
++    failed = mod.recent_failed_targets_from_transition_receipt(_transition_receipt())
++    precheck = _precheck()
++    target = mod.select_target_from_precheck(precheck)
++    lf52 = next(row for row in precheck["candidate_rows"] if row["game"] == "lf52")
++    sk48 = next(row for row in precheck["candidate_rows"] if row["game"] == "sk48")
++    bp35 = next(row for row in precheck["candidate_rows"] if row["game"] == "bp35")
++    done = next(row for row in precheck["candidate_rows"] if row["game"] == "done")
++
++    assert failed == [
++        {
++            "game": "lf52",
++            "level": 7,
++            "level_label": "L7",
++            "reason": "transition_receipt_failed_arc_live_level_credit_v508",
++            "source": "results/experiment_5636_transition_v509.json",
++        }
++    ]
++    assert precheck["ok"] is True
++    assert "recent_failed_target" in lf52["closed_level_reasons"]["7"]
++    assert "explicit_recent_unbanked_attempt" in sk48["closed_level_reasons"]["8"]
++    assert "explicit_recent_unbanked_attempt" in bp35["closed_level_reasons"]["9"]
++    assert "no_authenticated_headroom" in done["exclude_reasons"]
++    assert target["selected_game"] == "lf52"
++    assert target["selected_level"] == "L8"
++    assert target["prior_levels_reproduced"] == 6
++    assert target["target_level"] == 8
++    assert target["closed_intermediate_levels"] == [7]
++    assert target["selected_target_was_unreproduced"] is True
++    assert target["target_selection_hash"].startswith("sha256:")
++
++
++def test_scenario_5643_exp5642_policy_is_advisory_not_gating() -> None:
++    """SCENARIO-ARC-FCP-5643-EXECUTABLE-POLICY-ADVISORY-NOT-GATING."""
++
++    blocked = _policy_source()
++    promoted = mod.policy_source_from_exp5642(
++        {
++            "status": "complete",
++            "honest_verdict": "complete: executable model live ab promoted",
++            "live_executable_model_ready_score": 1.0,
++            "unsafe_model_accept_count": 0,
++            "known_level_regression_count": 0,
++            "treatment_policy": {"name": "executable_model_policy_v1"},
++        }
++    )
++    unsafe = mod.policy_source_from_exp5642(
++        {
++            "status": "complete",
++            "live_executable_model_ready_score": 1.0,
++            "unsafe_model_accept_count": 1,
++            "known_level_regression_count": 0,
++            "treatment_policy": {"name": "executable_model_policy_v1"},
++        }
++    )
++
++    assert blocked["attempt_gated_by_exp5642"] is False
++    assert blocked["policy_name"] == "unchanged_no_new_llm_e3_baseline"
++    assert blocked["baseline_unchanged"] is True
++    assert promoted["policy_name"] == "promoted_exp5642_executable_model_policy"
++    assert promoted["baseline_unchanged"] is False
++    assert unsafe["policy_name"] == "unchanged_no_new_llm_e3_baseline"
++
++
++def test_scenario_5643_methodology_and_reproduction_gate_bank_at_most_one_level(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-5643-METHODOLOGY-AND-REPRODUCTION-GATE."""
++
++    null_artifact = mod.build_artifact(
++        registry_precheck_receipt=_precheck(),
++        target_selection_receipt=_target(),
++        policy_source=_policy_source(),
++        attempt=_null_attempt(),
++        live_trace_path="results/null-5643.json",
++        duration_s=0.03,
++        tests_run=["unit"],
++    )
++    success = mod.build_artifact(
++        registry_precheck_receipt=_precheck(),
++        target_selection_receipt=_target(),
++        policy_source=_policy_source(),
++        attempt=_success_attempt(),
++        live_trace_path="results/success-5643.json",
++        duration_s=0.03,
++        tests_run=["unit"],
++    )
++
++    mod.validate_artifact(null_artifact)
++    mod.validate_artifact(success)
++    assert null_artifact["methodology_receipt"]["source_read"] is False
++    assert null_artifact["methodology_receipt"]["model_call_limit"] == 0
++    assert null_artifact["model_specs"] == []
++    assert null_artifact["random_seeds"] == [5643]
++    assert null_artifact["offline_reproduced"] is False
++    assert null_artifact["reproduced_levels"] == 0
++    assert null_artifact["registry_count_before"] == 177
++    assert null_artifact["registry_count_after"] == 177
++    assert null_artifact["registry_delta"] == 0
++    assert null_artifact["honest_verdict"].startswith("complete:")
++    assert success["offline_reproduced"] is True
++    assert success["new_reproducible_levels"] == [{"game": "lf52", "level": 8}]
++    assert success["reproduced_levels"] == 1
++    assert success["level_reached"] == 9
++    assert success["registry_count_after"] == 178
++    assert success["registry_delta"] == 1
++
++    trace = mod.build_live_trace(
++        target_selection_receipt=_target(),
++        policy_source=_policy_source(),
++        attempt=_null_attempt(),
++        artifact=null_artifact,
++    )
++    trace_path = tmp_path / "trace.json"
++    mod.write_json(trace_path, trace)
++    loaded = json.loads(trace_path.read_text(encoding="utf-8"))
++    assert loaded["action_trace_sha256"] == null_artifact["action_trace_sha256"]
++    assert loaded["executed_actions"] == _null_attempt()["action_rows"]
++
++
++def test_req_arc_fcp_5643_validation_rejects_missing_fields_and_drift() -> None:
++    """REQ-ARC-FCP-5643: malformed artifacts fail closed before being written."""
++
++    artifact = mod.build_artifact(
++        registry_precheck_receipt=_precheck(),
++        target_selection_receipt=_target(),
++        policy_source=_policy_source(),
++        attempt=_null_attempt(),
++        live_trace_path="results/null-5643.json",
++        duration_s=0.03,
++        tests_run=["unit"],
++    )
++    missing = dict(artifact)
++    missing.pop("methodology_receipt")
++    drifted = dict(artifact)
++    drifted["registry_count_after"] = 999
++    bad_model_specs = dict(artifact)
++    bad_model_specs["model_specs"] = ["legacy-small-model"]
++    bad_source = dict(artifact)
++    bad_source["source_read"] = True
++
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing)
++    with pytest.raises(ValueError, match="reproducibility_checksum mismatch"):
++        mod.validate_artifact(drifted)
++    with pytest.raises(ValueError, match="no-LLM attempts require model_specs=\\[\\]"):
++        mod.validate_artifact(bad_model_specs)
++    with pytest.raises(ValueError, match="source_read must be false"):
++        mod.validate_artifact(bad_source)
++
++
++def test_req_arc_fcp_5643_adversarial_verify_accepts_no_llm_live_substrate(tmp_path: Path) -> None:
++    """REQ-ARC-FCP-5643: no-LLM live environment interaction is not treated as a
++    missing model-spec or too-short live-GGUF invocation."""
++
++    artifact = mod.build_artifact(
++        registry_precheck_receipt=_precheck(),
++        target_selection_receipt=_target(),
++        policy_source=_policy_source(),
++        attempt=_null_attempt(),
++        live_trace_path="results/null-5643.json",
++        duration_s=0.03,
++        tests_run=["unit"],
++    )
++    path = tmp_path / "artifact.json"
++    path.write_text(json.dumps(artifact), encoding="utf-8")
++
++    report = av.verify_artifact(path)
++    flag_kinds = {flag["kind"] for flag in report["flags"]}
++    assert "DURATION_TOO_SHORT" not in flag_kinds
++    assert "METHODOLOGY_MISSING" not in flag_kinds
++
++
++def test_req_arc_fcp_5643_repository_artifact_has_required_schema() -> None:
++    """REQ-ARC-FCP-5643: checked-in Exp5643 artifact is the stable live-attempt receipt."""
++
++    artifact = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment"] == mod.EXPERIMENT
++    assert artifact["solve_provenance"] == mod.SOLVE_PROVENANCE
++    assert artifact["source_read"] is False
++    assert artifact["game_adapter_used"] is False
++    assert artifact["outer_loop_re_used"] is False
++    assert artifact["model_specs"] == []
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["selected_game"]
++    assert artifact["selected_level"]
++    assert artifact["registry_delta"] in (0, 1)
++    for field in mod.REQUIRED_FIELDS:
++        assert field in artifact
+-- 
+2.55.0
+

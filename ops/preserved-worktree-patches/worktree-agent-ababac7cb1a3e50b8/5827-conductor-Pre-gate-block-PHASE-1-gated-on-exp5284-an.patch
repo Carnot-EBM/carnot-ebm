@@ -1,0 +1,61 @@
+From 4aa9b20b60332ec148fdfc8d9be4cbbd962614b9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 5 Jul 2026 21:34:15 -0400
+Subject: [PATCH 05827/11362] [conductor] Pre-gate block: PHASE 1 gated on
+ exp5284 and exp5287 -- SOTA trace DSL extraction retry
+
+1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repair-v483.sota_offload_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_5288_sota_trace_dsl_extraction_gated_v483.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6b1c3a8b0b..3a60377f5a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 128, "phase": "iteration_start", "last_beat": "2026-07-06T01:31:16Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 129, "phase": "iteration_start", "last_beat": "2026-07-06T01:34:15Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c63d15ab1d..e2ad6ce3b1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10364,3 +10364,4 @@ web search: |
+ | 2026-07-06 01:07 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
+ | 2026-07-06 01:10 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
+ | 2026-07-06 01:29 UTC | PHASE 1 fixture -- VeryTrace-style compilable trac | OK | 89 passed, 1 warning in 8.64s |
++| 2026-07-06 01:32 UTC | PHASE 1 gated on exp5284 and exp5287 -- SOTA trace | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 95ecedf0d2..338bca579b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 128, "phase": "iteration_start", "started_at": "2026-07-06T01:31:16Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 129, "phase": "iteration_start", "started_at": "2026-07-06T01:34:15Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5288_sota_trace_dsl_extraction_gated_v483.json b/results/experiment_5288_sota_trace_dsl_extraction_gated_v483.json
+index 7c0c79f54a..c0507c8fd0 100644
+--- a/results/experiment_5288_sota_trace_dsl_extraction_gated_v483.json
++++ b/results/experiment_5288_sota_trace_dsl_extraction_gated_v483.json
+@@ -2,8 +2,8 @@
+   "experiment": 5288,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-06",
+-  "started_at": "2026-07-06T01:32:13.354712+00:00",
+-  "finished_at": "2026-07-06T01:32:13.354712+00:00",
++  "started_at": "2026-07-06T01:34:15.198706+00:00",
++  "finished_at": "2026-07-06T01:34:15.198706+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "PHASE 1 gated on exp5284 and exp5287 -- SOTA trace DSL extraction retry",
+-- 
+2.55.0
+

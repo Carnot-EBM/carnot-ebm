@@ -1,0 +1,57 @@
+From 5c0d8b5cbff8d9d042c85279bac079d0457d7ce7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 03:21:29 -0400
+Subject: [PATCH 09628/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 362975dca0..18c5e3c7fd 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -3,5 +3,5 @@
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T06:51:35Z"
++ "last_scan_utc": "2026-08-23T07:21:25Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index acef21cb7e..4ffd838b9c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3481641, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-08-23T06:51:27Z"}
+\ No newline at end of file
++{"pid": 3481641, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-08-23T07:21:25Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7667eb79a9..fdf79db60e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16314,3 +16314,5 @@ code |
+ | 2026-08-23 06:11 UTC | V565 activation manifest and V564 evidence eligibi | OK | 88 passed, 1 warning in 14.38s |
+ | 2026-08-23 06:37 UTC | Execution-time V565 source, model, and method cont | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6528_v565_so |
+ | 2026-08-23 06:49 UTC | Execution-time V565 source, model, and method cont | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6528_v565_so |
++| 2026-08-23 07:19 UTC | Execution-time V565 source, model, and method cont | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6528_v565_so |
++| 2026-08-23 07:21 UTC | Content-pinned DRIFT-Bench intake and exact replay | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6528-v565-source-model-method-contract) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 700a903aed..5c42ef863b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3481641, "iteration": 9, "phase": "iteration_start", "started_at": "2026-08-23T06:51:27Z"}
+\ No newline at end of file
++{"pid": 3481641, "iteration": 10, "phase": "iteration_start", "started_at": "2026-08-23T07:21:25Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

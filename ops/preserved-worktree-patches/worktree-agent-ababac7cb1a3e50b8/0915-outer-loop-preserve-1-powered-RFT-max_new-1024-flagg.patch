@@ -1,0 +1,367 @@
+From a66e608d67d5c96d08585daa54c289964b4f0cf6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 8 Jun 2026 08:02:37 -0400
+Subject: [PATCH 00915/11362] [outer-loop] preserve #1 powered RFT
+ (max_new=1024) flagged run + gitignore ARC SDK cache
+
+3-seed powered on-policy SC-RFT, 5h16m. Gold control passes (+0.262 mean -> RFT teaches).
+process_weighted +0.091 mean (largest non-gold lift, > sc_weighted +0.027) BUT 2/3 seeds
+TRUNCATION_INVALID (seed0 0.093, seed1 0.067; seed2 clean 0.047) -> verbosity confound.
+Preserved as *_maxnew1024.json; canonical names will carry the clean 4096-eval rerun.
+Also gitignore environment_files/ + recordings/ (arc-agi SDK local cache).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .gitignore                                    |  4 +
+ ...ghted_sft_onpolicy_powered_maxnew1024.json | 90 +++++++++++++++++++
+ ...eighted_sft_onpolicy_seed0_maxnew1024.json | 71 +++++++++++++++
+ ...eighted_sft_onpolicy_seed1_maxnew1024.json | 71 +++++++++++++++
+ ...eighted_sft_onpolicy_seed2_maxnew1024.json | 71 +++++++++++++++
+ 5 files changed, 307 insertions(+)
+ create mode 100644 results/process_reward_weighted_sft_onpolicy_powered_maxnew1024.json
+ create mode 100644 results/process_reward_weighted_sft_onpolicy_seed0_maxnew1024.json
+ create mode 100644 results/process_reward_weighted_sft_onpolicy_seed1_maxnew1024.json
+ create mode 100644 results/process_reward_weighted_sft_onpolicy_seed2_maxnew1024.json
+
+diff --git a/.gitignore b/.gitignore
+index 3ef589c291..9cb91a746b 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -168,3 +168,7 @@ results/*.safetensors
+ results/*.bin
+ results/*.gguf
+ results/*.ckpt
++
++# ARC-AGI-3 SDK local cache (downloaded game envs + recordings) — not source
++environment_files/
++recordings/
+diff --git a/results/process_reward_weighted_sft_onpolicy_powered_maxnew1024.json b/results/process_reward_weighted_sft_onpolicy_powered_maxnew1024.json
+new file mode 100644
+index 0000000000..da5be343fb
+--- /dev/null
++++ b/results/process_reward_weighted_sft_onpolicy_powered_maxnew1024.json
+@@ -0,0 +1,90 @@
++{
++  "K": 6,
++  "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/gsm8k_powered_600.jsonl",
++  "delta_by_regime": {
++    "gold": {
++      "lower_1sigma": 0.2484,
++      "mean_delta": 0.2622,
++      "n_seeds": 3,
++      "per_seed": [
++        0.2733,
++        0.2467,
++        0.2667
++      ],
++      "std_delta": 0.0139
++    },
++    "process_plus_sc": {
++      "lower_1sigma": -0.0444,
++      "mean_delta": 0.0133,
++      "n_seeds": 3,
++      "per_seed": [
++        -0.02,
++        0.08,
++        -0.02
++      ],
++      "std_delta": 0.0577
++    },
++    "process_weighted": {
++      "lower_1sigma": 0.0336,
++      "mean_delta": 0.0911,
++      "n_seeds": 3,
++      "per_seed": [
++        0.08,
++        0.1533,
++        0.04
++      ],
++      "std_delta": 0.0575
++    },
++    "sc_weighted": {
++      "lower_1sigma": -0.0806,
++      "mean_delta": 0.0267,
++      "n_seeds": 3,
++      "per_seed": [
++        0.0133,
++        0.14,
++        -0.0733
++      ],
++      "std_delta": 0.1073
++    },
++    "unweighted": {
++      "lower_1sigma": -0.0553,
++      "mean_delta": 0.0423,
++      "n_seeds": 3,
++      "per_seed": [
++        0.0267,
++        0.1467,
++        -0.0466
++      ],
++      "std_delta": 0.0976
++    }
++  },
++  "duration_s": 18949.5,
++  "experiment": "process_reward_weighted_sft_onpolicy_powered",
++  "gen_truncation_rate_by_seed": [
++    0.2111,
++    0.2,
++    0.1778
++  ],
++  "gold_control_ok_all_seeds": true,
++  "honest_verdict": "complete: powered_onpolicy_sft_TRUNCATION_INVALID_base0.231_procplussc_d0.0133pm0.0577_gold_d0.2622_nseed3",
++  "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
++  "interpretation": "TEACHES iff a verifier-weighted regime's per-seed mean delta-vs-base clears zero at the lower 1-sigma band AND gold>=base each seed (control) AND trunc<5% each seed. process_plus_sc is the registry candidate; sc_weighted isolates the cheap self-consistency signal; if sc_weighted teaches but process_weighted doesn't, the lift is self-consistency (free) not the verifier (the honest moat question).",
++  "mean_base_accuracy": 0.2311,
++  "n_seeds_completed": 3,
++  "partial": false,
++  "principle_random_seed": "seeded generation makes the teaching signal reproducible per seed",
++  "seeds": [
++    0,
++    1,
++    2
++  ],
++  "status": "TRUNCATION_INVALID",
++  "teaching_by_regime": {
++    "process_plus_sc": false,
++    "process_weighted": false,
++    "sc_weighted": false
++  },
++  "temperature": 0.4,
++  "title": "powered_onpolicy_verifier_self_improvement_reward",
++  "truncation_ok_all_seeds": false
++}
+diff --git a/results/process_reward_weighted_sft_onpolicy_seed0_maxnew1024.json b/results/process_reward_weighted_sft_onpolicy_seed0_maxnew1024.json
+new file mode 100644
+index 0000000000..057a56ce9d
+--- /dev/null
++++ b/results/process_reward_weighted_sft_onpolicy_seed0_maxnew1024.json
+@@ -0,0 +1,71 @@
++{
++  "accuracy_by_regime": {
++    "base": {
++      "acc": 0.24,
++      "no_answer_rate": 0.0067,
++      "truncation_rate": 0.0333
++    },
++    "gold": {
++      "acc": 0.5133,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0067
++    },
++    "gold_n_examples": 819,
++    "process_plus_sc": {
++      "acc": 0.22,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.06
++    },
++    "process_plus_sc_n_examples": 2700,
++    "process_weighted": {
++      "acc": 0.32,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0933
++    },
++    "process_weighted_n_examples": 2534,
++    "sc_weighted": {
++      "acc": 0.2533,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0333
++    },
++    "sc_weighted_n_examples": 2700,
++    "unweighted": {
++      "acc": 0.2667,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0067
++    },
++    "unweighted_n_examples": 2700
++  },
++  "caveat": "DRAFT, ON-POLICY (MiniCPM trains on its OWN verifier-scored traces -> no off-policy style/truncation asymmetry). 1 seed, small corpus -> ORDERING is the result. own_sample_correct_rate = the headroom the self-improvement bootstraps from (must be >0 and <1). Gates: gold>=base, max_trunc<0.05.",
++  "delta_gold_upper_bound": 0.2733,
++  "delta_process_weighted": 0.08,
++  "duration_s": 6535.1979768276215,
++  "eval_truncation_rate_by_arm": {
++    "base": 0.0333,
++    "gold": 0.0067,
++    "process_plus_sc": 0.06,
++    "process_weighted": 0.0933,
++    "sc_weighted": 0.0333,
++    "unweighted": 0.0067
++  },
++  "experiment": "process_reward_weighted_sft_onpolicy_draft",
++  "generation_meta": {
++    "K": 6,
++    "gen_truncation_rate": 0.2111,
++    "own_sample_correct_rate": 0.3033,
++    "temperature": 0.4
++  },
++  "gold_control_ok": true,
++  "honest_verdict": "complete: onpolicy_process_reward_sft_TRUNCATION_INVALID_base0.240_pw0.32_gold0.513_goldfrac0.293_maxtrunc0.093",
++  "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
++  "max_eval_truncation_rate": 0.0933,
++  "model_id": "openbmb/MiniCPM5-1B",
++  "n_eval_questions": 150,
++  "n_train_questions": 450,
++  "policy": "ON_POLICY_minicpm_generates_own_traces",
++  "process_weighted_frac_of_gold_lift": 0.293,
++  "random_seed": 0,
++  "smoke": false,
++  "title": "onpolicy_process_reward_weighted_sft",
++  "truncation_ok": false
++}
+diff --git a/results/process_reward_weighted_sft_onpolicy_seed1_maxnew1024.json b/results/process_reward_weighted_sft_onpolicy_seed1_maxnew1024.json
+new file mode 100644
+index 0000000000..27c5ee00ee
+--- /dev/null
++++ b/results/process_reward_weighted_sft_onpolicy_seed1_maxnew1024.json
+@@ -0,0 +1,71 @@
++{
++  "accuracy_by_regime": {
++    "base": {
++      "acc": 0.2,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.02
++    },
++    "gold": {
++      "acc": 0.4467,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0133
++    },
++    "gold_n_examples": 895,
++    "process_plus_sc": {
++      "acc": 0.28,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0
++    },
++    "process_plus_sc_n_examples": 2700,
++    "process_weighted": {
++      "acc": 0.3533,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0267
++    },
++    "process_weighted_n_examples": 2525,
++    "sc_weighted": {
++      "acc": 0.34,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0133
++    },
++    "sc_weighted_n_examples": 2700,
++    "unweighted": {
++      "acc": 0.3467,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0667
++    },
++    "unweighted_n_examples": 2700
++  },
++  "caveat": "DRAFT, ON-POLICY (MiniCPM trains on its OWN verifier-scored traces -> no off-policy style/truncation asymmetry). 1 seed, small corpus -> ORDERING is the result. own_sample_correct_rate = the headroom the self-improvement bootstraps from (must be >0 and <1). Gates: gold>=base, max_trunc<0.05.",
++  "delta_gold_upper_bound": 0.2467,
++  "delta_process_weighted": 0.1533,
++  "duration_s": 6191.932585000992,
++  "eval_truncation_rate_by_arm": {
++    "base": 0.02,
++    "gold": 0.0133,
++    "process_plus_sc": 0.0,
++    "process_weighted": 0.0267,
++    "sc_weighted": 0.0133,
++    "unweighted": 0.0667
++  },
++  "experiment": "process_reward_weighted_sft_onpolicy_draft",
++  "generation_meta": {
++    "K": 6,
++    "gen_truncation_rate": 0.2,
++    "own_sample_correct_rate": 0.3315,
++    "temperature": 0.4
++  },
++  "gold_control_ok": true,
++  "honest_verdict": "complete: onpolicy_process_reward_sft_TRUNCATION_INVALID_base0.200_pw0.353_gold0.447_goldfrac0.621_maxtrunc0.067",
++  "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
++  "max_eval_truncation_rate": 0.0667,
++  "model_id": "openbmb/MiniCPM5-1B",
++  "n_eval_questions": 150,
++  "n_train_questions": 450,
++  "policy": "ON_POLICY_minicpm_generates_own_traces",
++  "process_weighted_frac_of_gold_lift": 0.621,
++  "random_seed": 1,
++  "smoke": false,
++  "title": "onpolicy_process_reward_weighted_sft",
++  "truncation_ok": false
++}
+diff --git a/results/process_reward_weighted_sft_onpolicy_seed2_maxnew1024.json b/results/process_reward_weighted_sft_onpolicy_seed2_maxnew1024.json
+new file mode 100644
+index 0000000000..64d257b867
+--- /dev/null
++++ b/results/process_reward_weighted_sft_onpolicy_seed2_maxnew1024.json
+@@ -0,0 +1,71 @@
++{
++  "accuracy_by_regime": {
++    "base": {
++      "acc": 0.2533,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0333
++    },
++    "gold": {
++      "acc": 0.52,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0267
++    },
++    "gold_n_examples": 820,
++    "process_plus_sc": {
++      "acc": 0.2333,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0067
++    },
++    "process_plus_sc_n_examples": 2700,
++    "process_weighted": {
++      "acc": 0.2933,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0133
++    },
++    "process_weighted_n_examples": 2535,
++    "sc_weighted": {
++      "acc": 0.18,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0133
++    },
++    "sc_weighted_n_examples": 2700,
++    "unweighted": {
++      "acc": 0.2067,
++      "no_answer_rate": 0.0,
++      "truncation_rate": 0.0467
++    },
++    "unweighted_n_examples": 2700
++  },
++  "caveat": "DRAFT, ON-POLICY (MiniCPM trains on its OWN verifier-scored traces -> no off-policy style/truncation asymmetry). 1 seed, small corpus -> ORDERING is the result. own_sample_correct_rate = the headroom the self-improvement bootstraps from (must be >0 and <1). Gates: gold>=base, max_trunc<0.05.",
++  "delta_gold_upper_bound": 0.2667,
++  "delta_process_weighted": 0.04,
++  "duration_s": 6221.532696247101,
++  "eval_truncation_rate_by_arm": {
++    "base": 0.0333,
++    "gold": 0.0267,
++    "process_plus_sc": 0.0067,
++    "process_weighted": 0.0133,
++    "sc_weighted": 0.0133,
++    "unweighted": 0.0467
++  },
++  "experiment": "process_reward_weighted_sft_onpolicy_draft",
++  "generation_meta": {
++    "K": 6,
++    "gen_truncation_rate": 0.1778,
++    "own_sample_correct_rate": 0.3037,
++    "temperature": 0.4
++  },
++  "gold_control_ok": true,
++  "honest_verdict": "complete: onpolicy_process_reward_sft_TEACHES_base0.253_pw0.293_gold0.52_goldfrac0.15_maxtrunc0.047",
++  "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
++  "max_eval_truncation_rate": 0.0467,
++  "model_id": "openbmb/MiniCPM5-1B",
++  "n_eval_questions": 150,
++  "n_train_questions": 450,
++  "policy": "ON_POLICY_minicpm_generates_own_traces",
++  "process_weighted_frac_of_gold_lift": 0.15,
++  "random_seed": 2,
++  "smoke": false,
++  "title": "onpolicy_process_reward_weighted_sft",
++  "truncation_ok": true
++}
+-- 
+2.55.0
+

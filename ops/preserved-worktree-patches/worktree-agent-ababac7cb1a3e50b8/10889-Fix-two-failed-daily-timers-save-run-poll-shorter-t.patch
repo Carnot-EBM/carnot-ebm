@@ -1,0 +1,352 @@
+From cf10ba7c61337400c9b3b8b2e9ff0a208c73f472 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 08:53:46 -0400
+Subject: [PATCH 10889/11362] Fix two failed daily timers: save-run poll
+ shorter than the save-run, news-watch timeout shorter than the check
+
+carnot-arc-daily-prep.service failed exit 1 on every unattended run. The
+save-run poll was 24 x 15s (6 min); the v53 save-run took ~770s on Kaggle.
+The poll always expired first, wrote the ambiguous save_run='?', and the
+prep exited 1 while Kaggle finished fine minutes later -- the false alarm
+already hand-verified on kernel versions 9, 22, 27, and 37. Fix: extract
+poll_save_run() with a 3600s budget at 30s intervals, injectable
+sleep/clock for tests, and an explicit still_running_after_<N>s verdict on
+expiry (REQ-HARNESS-6054 + 4 regression tests). ops/arc-daily-prep-status.json
+corrected to v53 ground truth per the v9/v37 precedent (save-run COMPLETE,
+submission.parquet present, 2648 bytes, 1x4). The unit was deliberately NOT
+started: its default mode re-versions the Kaggle dataset and re-pushes the
+public kernel, which is operator-gated. Verified instead by --dry-run with
+the unit's exact interpreter and cwd (exit 0) plus read-only kernels
+status/output checks.
+
+arc-news-watch.service failed on 7 of its last 12 daily runs with
+CHECK_TIMED_OUT: the codex web-search check exceeded its 300s timeout,
+while successful checks take 4-8 minutes wall. Fix: raise the timeout to
+900s and name the budget in the timeout log message. Rejected: swallowing
+the timeout (exit 0) -- the unit should stay red when the check really
+fails.
+
+Also diagnosed why journalctl --user had no entries for either failure:
+the conductor logs full file diffs to the user journal, rotating a 6.4MB
+journal file every ~5 minutes against a ~44MB cap, so retention is ~40
+minutes. Not fixed here; proposed StandardOutput=append: for the conductor
+unit or raised journald caps (root) instead.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   | 38 ++++++++
+ ops/arc-daily-prep-status.json                |  8 +-
+ ops/changelog.md                              | 28 ++++++
+ scripts/arc_news_watch.py                     |  8 +-
+ scripts/kaggle/prep_daily_submission.py       | 44 +++++++--
+ tests/python/test_prep_daily_poll_window.py   | 93 +++++++++++++++++++
+ 6 files changed, 203 insertions(+), 16 deletions(-)
+ create mode 100644 tests/python/test_prep_daily_poll_window.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 40cf81c7e1..e440593b17 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -10188,3 +10188,41 @@ terminal-blocked write) cannot be measured retroactively; doctrine and the
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-CONDUCTOR-FINISHED-1 | Implemented (`scripts/research_conductor.py`: `_artifact_is_finished`, blocked-status verdict-first branch) | Implemented (`tests/python/test_conductor_terminal_blocked_finished.py`, 6 tests; mutations: override disabled -> RED, empty-verdict requirement dropped -> RED, scope widened past "blocked" -> RED; restore byte-identical via cmp) |
++
++## REQ-HARNESS-6054: An Unattended Save-Run Validation Poll MUST Outlast The Save-Run It Validates, And Time Out Honestly
++
++`scripts/kaggle/prep_daily_submission.py` validates the pushed kernel by polling
++`kaggle kernels status` until the save-run finishes. The poll budget MUST exceed
++the save-run's known runtime. An expired budget MUST be recorded as an explicit
++still-running state, never as an ambiguous placeholder.
++
++Origin: the original poll was 24 x 15s (6 minutes). The kernel's save-run starts
++a vLLM server that alone takes ~7 minutes to come up. So the poll always expired
++first, `save_run` was recorded as `"?"`, and the prep exited 1. The daily
++`carnot-arc-daily-prep.service` unit therefore showed FAILED on every unattended
++run while the Kaggle side finished fine minutes later. The false alarm was
++hand-verified on kernel versions 9, 22, 27, 37, and 53 (see the `note` trail in
++`ops/arc-daily-prep-status.json`).
++
++### SCENARIO-HARNESS-6054-1: completion inside the budget returns complete
++- GIVEN the status feed reports "running" twice and then the real CLI string
++  `KernelWorkerStatus.COMPLETE`
++- THEN `poll_save_run` returns "complete" and slept only between polls
++
++### SCENARIO-HARNESS-6054-2: a save-run error is reported as error
++- GIVEN the status feed reports an error status
++- THEN `poll_save_run` returns "error" without waiting out the budget
++
++### SCENARIO-HARNESS-6054-3: budget expiry is honest, not ambiguous
++- GIVEN the status feed never leaves "running" and the clock passes the budget
++- THEN `poll_save_run` returns "still_running_after_<N>s" — never "?"
++
++### SCENARIO-HARNESS-6054-4: the default budget outlasts the known save-run runtime
++- GIVEN the documented ~7-minute vLLM startup inside the save-run
++- THEN the default poll budget is at least 30 minutes
++
++## Implementation Status (REQ-HARNESS-6054)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-HARNESS-6054 | Implemented (`scripts/kaggle/prep_daily_submission.py:poll_save_run` — default budget 3600s at a 30s interval, injectable sleep + clock so the poll is testable without Kaggle) | Implemented (`tests/python/test_prep_daily_poll_window.py`) |
+diff --git a/ops/arc-daily-prep-status.json b/ops/arc-daily-prep-status.json
+index 190b56af5c..d7dbd7b9c4 100644
+--- a/ops/arc-daily-prep-status.json
++++ b/ops/arc-daily-prep-status.json
+@@ -1,7 +1,7 @@
+ {
+   "kernel_version": "53",
+-  "note": "v37 verified by hand after the prep script's own short poll exited with save_run='?' and parquet=MISSING -- the same false alarm seen on v9/v22/v27, where the script's wait is shorter than the kernel's runtime. Ground truth from `kaggle kernels status` (COMPLETE) and `kaggle kernels output` (submission.parquet present, 2648 bytes, 1x4, columns row_id/game_id/end_of_game/score). Stack validated in the same run: vLLM server up in 425s, admission exact at max_model_len 155472, 8/8 concurrent requests round-tripped through the llama.cpp response translation, server config max_num_seqs=8, flashinfer AOT cache staged, CUDA 13 toolchain resolved. Prepared only -- submission is operator-only per CLAUDE.md Operator-Only External Publication.",
+-  "parquet_ok": false,
++  "note": "v53 verified by hand (2026-09-03) after the prep script's own short poll exited with save_run='?' and parquet=MISSING -- the same false alarm seen on v9/v22/v27/v37. Ground truth from `kaggle kernels status` (COMPLETE) and `kaggle kernels output` (submission.parquet present, 2648 bytes, 1x4, columns row_id/game_id/end_of_game/score). The kernel log shows the save-run took ~770s, so the old 24x15s (6 min) poll could never see it finish. Root cause fixed the same day: poll_save_run now waits up to 3600s and records an explicit still_running_after_<N>s instead of '?' (REQ-HARNESS-6054). Prepared only -- submission is operator-only per CLAUDE.md Operator-Only External Publication.",
++  "parquet_ok": true,
+   "prepped_at": "2026-09-02T13:37Z",
+   "prior_submission_scores": {
+     "2026-06-30": 0.08,
+@@ -9,8 +9,8 @@
+     "2026-08-10": 0.02,
+     "2026-08-11": 0.09
+   },
+-  "ready_for_operator_submit": false,
+-  "save_run": "?",
++  "ready_for_operator_submit": true,
++  "save_run": "complete",
+   "submission_history": [
+     {
+       "description": "carnot daily 2026-08-19",
+diff --git a/ops/changelog.md b/ops/changelog.md
+index fd1d1c8d6e..7d34dbe392 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,33 @@
+ # Carnot — Changelog
+ 
++## 2026-09-03 — Two failed daily timers repaired (carnot-arc-daily-prep, arc-news-watch)
++
++- `carnot-arc-daily-prep.service` failed with exit 1 on every unattended run.
++  Root cause: the save-run poll was 24 x 15s (6 min), but the v53 save-run took
++  ~770s on Kaggle. The poll always expired first and recorded `save_run: "?"`.
++  The prep itself had SUCCEEDED (dataset re-versioned, kernel v53 pushed,
++  save-run COMPLETE) — the same false alarm hand-verified on v9/v22/v27/v37.
++  Fix: `poll_save_run` waits up to 3600s at 30s intervals and records an
++  explicit `still_running_after_<N>s` on expiry (REQ-HARNESS-6054, 4 new tests
++  in `tests/python/test_prep_daily_poll_window.py`). The unit was NOT started:
++  starting it runs the Kaggle push path, which is operator-gated. Verified via
++  `--dry-run` with the unit's exact interpreter and cwd (exit 0), plus
++  read-only `kaggle kernels status` / `kernels output` ground-truth checks.
++- `ops/arc-daily-prep-status.json` corrected to v53 ground truth per the
++  v9/v37 precedent: save-run COMPLETE, submission.parquet present (2648 bytes,
++  1x4, row_id/game_id/end_of_game/score). Ready for operator-approved submit.
++- `arc-news-watch.service` failed on 7 of its last 12 daily runs with
++  CHECK_TIMED_OUT: the codex web-search check exceeded its 300s timeout, while
++  successful checks take 4-8 minutes wall. Fix: timeout raised to 900s; the
++  timeout log message now names the budget. Unit restarted; the run appends
++  its own outcome to `docs/research-notes/arc-agi3-news-watch.md`.
++- Why `journalctl --user -u <unit>` showed "No entries" for both failures: the
++  user journal works, but the conductor logs full file diffs to it, rotating a
++  6.4MB journal file every ~5 minutes against a ~44MB cap. Retention is ~40
++  minutes, so yesterday's failures were long gone. Proposed fix, NOT applied
++  (needs care around the running conductor): route conductor stdout to a file
++  via `StandardOutput=append:` in its user unit, or raise journald caps (root).
++
+ ## 2026-09-01 — Exp6852 deterministic substrate classification
+ 
+ - Registered `deterministic CPU independent reduction` as deterministic-verifier
+diff --git a/scripts/arc_news_watch.py b/scripts/arc_news_watch.py
+index 2af299e101..2b63009c13 100755
+--- a/scripts/arc_news_watch.py
++++ b/scripts/arc_news_watch.py
+@@ -36,7 +36,11 @@ from pathlib import Path
+ REPO_ROOT = Path(__file__).resolve().parents[1]
+ STATE_PATH = REPO_ROOT / "ops" / ".arc_news_watch_state.json"
+ LOG_PATH = REPO_ROOT / "docs" / "research-notes" / "arc-agi3-news-watch.md"
+-CODEX_TIMEOUT_S = 300
++# 300s timed out on 7 of the 12 daily runs 2026-08-22..09-02 (log entries
++# "CHECK_TIMED_OUT" in docs/research-notes/arc-agi3-news-watch.md), while
++# successful checks took 4-8 minutes wall. 900s covers the slow tail of the
++# codex web-search runs; a daily oneshot can afford the wait.
++CODEX_TIMEOUT_S = 900
+ CODEX_MODEL = "gpt-5.6-sol"
+ 
+ KNOWN_BASELINE = """\
+@@ -121,7 +125,7 @@ def _run_codex_check(prior_findings: str) -> tuple[str, int]:
+             cwd=REPO_ROOT,
+         )
+     except subprocess.TimeoutExpired:
+-        return "CHECK_TIMED_OUT", 1
++        return f"CHECK_TIMED_OUT_{CODEX_TIMEOUT_S}s", 1
+     except FileNotFoundError:
+         return "CODEX_CLI_NOT_FOUND", 1
+     if proc.returncode != 0:
+diff --git a/scripts/kaggle/prep_daily_submission.py b/scripts/kaggle/prep_daily_submission.py
+index 340948bce4..e45de61083 100644
+--- a/scripts/kaggle/prep_daily_submission.py
++++ b/scripts/kaggle/prep_daily_submission.py
+@@ -30,6 +30,7 @@ import shutil
+ import subprocess
+ import sys
+ import time
++from collections.abc import Callable
+ from datetime import UTC, datetime
+ from pathlib import Path
+ from carnot.paths import repo_root
+@@ -99,6 +100,38 @@ def kaggle(*args: str, check: bool = False) -> subprocess.CompletedProcess:
+     return subprocess.run(["kaggle", *args], capture_output=True, text=True, check=check)
+ 
+ 
++# Save-run poll budget. The kernel's save-run starts a vLLM server that alone
++# takes ~7 minutes to come up, so the original 6-minute poll (24 x 15s) always
++# expired first: every unattended prep exited 1 with save_run='?' while Kaggle
++# finished fine minutes later. That false alarm was hand-verified on kernel
++# versions 9, 22, 27, 37, and 53. Real save-runs complete well inside an hour.
++SAVE_RUN_POLL_TIMEOUT_S = 3600.0
++SAVE_RUN_POLL_INTERVAL_S = 30.0
++
++
++def poll_save_run(
++    timeout_s: float = SAVE_RUN_POLL_TIMEOUT_S,
++    interval_s: float = SAVE_RUN_POLL_INTERVAL_S,
++    sleep: Callable[[float], None] = time.sleep,
++    clock: Callable[[], float] = time.monotonic,
++) -> str:
++    """Poll the kernel save-run until it completes, errors, or the budget runs out.
++
++    Returns "complete", "error", or "still_running_after_<N>s". Never the old
++    ambiguous "?": the status file must record WHY validation is missing.
++    """
++    deadline = clock() + timeout_s
++    while True:
++        s = kaggle("kernels", "status", KERNEL).stdout.lower()
++        if "complete" in s:
++            return "complete"
++        if "error" in s:
++            return "error"
++        if clock() >= deadline:
++            return f"still_running_after_{int(timeout_s)}s"
++        sleep(interval_s)
++
++
+ def stage_dataset() -> None:
+     """Download the current dataset, overlay the repo's latest python/carnot + ops files,
+     strip junk, and run the safety guards. Leaves a ready-to-version dir at STAGE."""
+@@ -244,16 +277,7 @@ def prep() -> None:
+     kver = m.group(1) if m else "?"
+ 
+     print("[prep] waiting for kernel save-run ...")
+-    status = "?"
+-    for _ in range(24):
+-        s = kaggle("kernels", "status", KERNEL).stdout.lower()
+-        if "complete" in s:
+-            status = "complete"
+-            break
+-        if "error" in s:
+-            status = "error"
+-            break
+-        time.sleep(15)
++    status = poll_save_run()
+ 
+     out = Path("/tmp/daily_sub_out")
+     shutil.rmtree(out, ignore_errors=True)
+diff --git a/tests/python/test_prep_daily_poll_window.py b/tests/python/test_prep_daily_poll_window.py
+new file mode 100644
+index 0000000000..be3c9cd74f
+--- /dev/null
++++ b/tests/python/test_prep_daily_poll_window.py
+@@ -0,0 +1,93 @@
++"""REQ-HARNESS-6054 regression tests for `poll_save_run` — the daily-prep save-run poll.
++
++THE INCIDENT (recurring through 2026-09-02). The prep script polled the kernel
++save-run for 24 x 15s = 6 minutes, but the save-run starts a vLLM server that
++alone takes ~7 minutes to come up. The poll always expired first, recorded the
++ambiguous `save_run: "?"`, and exited 1 — so `carnot-arc-daily-prep.service`
++failed on every unattended run while the Kaggle side finished fine minutes
++later. Hand-verified false alarms: kernel versions 9, 22, 27, 37, and 53 (the
++`note` trail in `ops/arc-daily-prep-status.json`).
++"""
++
++from __future__ import annotations
++
++import importlib.util
++from pathlib import Path
++from types import SimpleNamespace
++
++_SPEC = importlib.util.spec_from_file_location(
++    "prep_daily_submission_poll",
++    Path(__file__).resolve().parents[2] / "scripts" / "kaggle" / "prep_daily_submission.py",
++)
++assert _SPEC is not None and _SPEC.loader is not None
++prep = importlib.util.module_from_spec(_SPEC)
++_SPEC.loader.exec_module(prep)
++
++
++class _StatusFeed:
++    """Fake `kaggle` CLI: returns each queued status once, then repeats the last."""
++
++    def __init__(self, statuses: list[str]) -> None:
++        self.statuses = list(statuses)
++        self.calls = 0
++
++    def __call__(self, *args: str, **kwargs: object) -> SimpleNamespace:
++        self.calls += 1
++        status = self.statuses.pop(0) if len(self.statuses) > 1 else self.statuses[0]
++        return SimpleNamespace(stdout=status)
++
++
++class _FakeTime:
++    """Deterministic clock: sleeping advances it; nothing else does."""
++
++    def __init__(self) -> None:
++        self.now = 0.0
++        self.sleeps: list[float] = []
++
++    def clock(self) -> float:
++        return self.now
++
++    def sleep(self, seconds: float) -> None:
++        self.sleeps.append(seconds)
++        self.now += seconds
++
++
++def test_complete_inside_budget_returns_complete(monkeypatch) -> None:
++    # SCENARIO-HARNESS-6054-1: two "running" polls, then the real CLI string.
++    feed = _StatusFeed(["running", "running", 'has status "KernelWorkerStatus.COMPLETE"'])
++    monkeypatch.setattr(prep, "kaggle", feed)
++    ft = _FakeTime()
++    result = prep.poll_save_run(timeout_s=3600, interval_s=30, sleep=ft.sleep, clock=ft.clock)
++    assert result == "complete"
++    assert feed.calls == 3
++    assert ft.sleeps == [30, 30]
++
++
++def test_error_status_reported_as_error(monkeypatch) -> None:
++    # SCENARIO-HARNESS-6054-2: an error breaks out immediately.
++    feed = _StatusFeed(['has status "KernelWorkerStatus.ERROR"'])
++    monkeypatch.setattr(prep, "kaggle", feed)
++    ft = _FakeTime()
++    result = prep.poll_save_run(timeout_s=3600, interval_s=30, sleep=ft.sleep, clock=ft.clock)
++    assert result == "error"
++    assert ft.sleeps == []
++
++
++def test_budget_expiry_is_honest_not_ambiguous(monkeypatch) -> None:
++    # SCENARIO-HARNESS-6054-3: a never-finishing save-run yields an explicit
++    # still-running verdict, never the old ambiguous "?".
++    feed = _StatusFeed(["running"])
++    monkeypatch.setattr(prep, "kaggle", feed)
++    ft = _FakeTime()
++    result = prep.poll_save_run(timeout_s=100, interval_s=30, sleep=ft.sleep, clock=ft.clock)
++    assert result == "still_running_after_100s"
++    assert "?" not in result
++    # The poll kept trying until the clock passed the budget.
++    assert feed.calls >= 3
++    assert ft.now >= 100
++
++
++def test_default_budget_outlasts_known_save_run_runtime() -> None:
++    # SCENARIO-HARNESS-6054-4: vLLM startup alone is ~7 minutes; the old
++    # 6-minute budget could never see the truth. Require at least 30 minutes.
++    assert prep.SAVE_RUN_POLL_TIMEOUT_S >= 1800
+-- 
+2.55.0
+

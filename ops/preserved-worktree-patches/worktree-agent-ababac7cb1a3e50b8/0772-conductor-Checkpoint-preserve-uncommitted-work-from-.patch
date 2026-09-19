@@ -1,0 +1,43 @@
+From f06692c45f0dc6cd6b1fa589ac733c4f5771902b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 00:38:52 -0400
+Subject: [PATCH 00772/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7fe7385e48..fbe2818734 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 563504, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-06-07T04:23:19Z"}
+\ No newline at end of file
++{"pid": 563504, "iteration": 22, "phase": "iteration_start", "last_beat": "2026-06-07T04:38:51Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7d8313985f..f5e27a393f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7963,3 +7963,4 @@ ERROR: {
+ | 2026-06-07 03:45 UTC | Capstone .360 — aggregate the harness-first verdic | OK | 87 passed in 4.89s |
+ | 2026-06-07 04:19 UTC | Plan milestone 2026.06.361 | OK | 11 tasks proposed |
+ | 2026-06-07 04:21 UTC | Milestone 2026.06.361 activated | OK | 11 tasks queued |
++| 2026-06-07 04:36 UTC | Archive .360 -> activate .361; GREEN-GATE de-risk: | OK | 109 passed in 4.64s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 80eab98f0f..5fb95b433a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 563504, "iteration": 21, "phase": "iteration_start", "started_at": "2026-06-07T04:23:19Z"}
+\ No newline at end of file
++{"pid": 563504, "iteration": 22, "phase": "iteration_start", "started_at": "2026-06-07T04:38:51Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

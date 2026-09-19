@@ -1,0 +1,44 @@
+From e0b6c154e73da27be269ac855c0419b451268bb3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 08:29:01 -0400
+Subject: [PATCH 11236/11362] Correct ed77b95d8a: the foreign edits' write
+ window is 12:15:44Z-12:25:05Z, author unidentified
+
+The message of ed77b95d8a says the two edits "landed at 12:25:54Z" in "one
+write". That timestamp is the pre-commit stash restore (both files share it
+to the nanosecond because one restore wrote them back), not the authoring
+write. Pre-commit's stash patches bound the real window: clean at 12:15:44Z
+(patch1788610544 held only spec.md and dogfood-memory.json), modified by
+12:25:05Z (patch1788611105 held both files too). Nobody has evidenced the
+author. This note appends the correction; the earlier commit is left as
+written per the never-prune rule. No code changes.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/changelog.md | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 1926ea18fe..cdec9ceed8 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -68,6 +68,15 @@
+   and armed a `[NOT this run]` marker on the script. Cleared by restoring the
+   path from HEAD in index and worktree so the gate retired the marker itself,
+   then re-applying the edit byte-identically. No marker was deleted by hand.
++- Correction (12:30Z) to commit `ed77b95d8a`: its message says two foreign
++  edits to `scripts/memory_index_drift.py` and the capacity test "landed at
++  12:25:54Z" in "one write". That time is the pre-commit stash RESTORE, which
++  is why both files share it to the nanosecond; it is not the authoring
++  write. The pre-commit stash patches bound the real window: at 12:15:44Z
++  the two files were clean, at 12:25:05Z they were modified. Author
++  unidentified. The change itself is unchanged: behaviour-preserving,
++  committed rather than reverted. Lesson: a shared nanosecond mtime across
++  files is evidence of one tool restore, not of one edit.
+ 
+ ## 2026-09-05 — Memory index drift is now a check, not prose (REQ-INFRA-6975)
+ 
+-- 
+2.55.0
+

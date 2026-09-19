@@ -1,0 +1,78 @@
+From 3986181688ed08196554361ace2490d7c840c96d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 18:12:43 -0400
+Subject: [PATCH 08488/11362] [conductor] Pre-gate block: One-shot held
+ executable-code internal-state selection gated on Exp6204 freeze
+
+1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selector_ready_score (upstream artifact not found for task id 'exp6204-calibration-code-selector-v2')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...xperiment_6205_held_code_selection_v2.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6205_held_code_selection_v2.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 69dac16741..357a8d68c8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 105, "phase": "iteration_start", "last_beat": "2026-08-07T22:10:40Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 106, "phase": "iteration_start", "last_beat": "2026-08-07T22:12:43Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dc636b1971..f02dc06ee4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15487,3 +15487,5 @@ Still active  |
+ | 2026-08-07 22:08 UTC | Executable-code headroom audit gated on Exp6201 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6201-livecodebench-k8-pool-v2) |
+ | 2026-08-07 22:08 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6202-livecodebench-headroom-v2.headroom |
+ | 2026-08-07 22:10 UTC | Executable-code headroom audit gated on Exp6201 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6201-livecodebench-k8-pool-v2) |
++| 2026-08-07 22:10 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6202-livecodebench-headroom-v2.headroom |
++| 2026-08-07 22:12 UTC | Calibration-only CLUE and residualized linear sele | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6203-matching-base-code-hidden-state-v2) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b498a29cd5..3cf1ec346b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 105, "phase": "iteration_start", "started_at": "2026-08-07T22:10:40Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 106, "phase": "iteration_start", "started_at": "2026-08-07T22:12:43Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6205_held_code_selection_v2.json b/results/experiment_6205_held_code_selection_v2.json
+new file mode 100644
+index 0000000000..060ef341d1
+--- /dev/null
++++ b/results/experiment_6205_held_code_selection_v2.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6205,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-07",
++  "started_at": "2026-08-07T22:12:43.202791+00:00",
++  "finished_at": "2026-08-07T22:12:43.202791+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "One-shot held executable-code internal-state selection gated on Exp6204 freeze",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selector_ready_score (upstream artifact not found for task id 'exp6204-calibration-code-selector-v2')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6204-calibration-code-selector-v2",
++      "artifact_field": "selector_ready_score",
++      "op": "==",
++      "expected": 1,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6204-calibration-code-selector-v2'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

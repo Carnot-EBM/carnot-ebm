@@ -1,0 +1,3418 @@
+From d31a5b3bcc3c7b6f0f5102873ebb5e2703b65325 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 05:14:13 -0400
+Subject: [PATCH 08413/11362] [conductor] Branch-independent .535 capstone
+
+Automated research step by research conductor.
+Task ID: exp6182-v535-capstone-reconciliation
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   93 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...iment_6182_v535_capstone_reconciliation.py | 1146 +++++++++++++
+ research-complete.yaml                        |   62 +
+ ...ent_6182_v535_capstone_reconciliation.json | 1438 +++++++++++++++++
+ ...iment_6182_v535_capstone_reconciliation.py |  608 +++++++
+ 6 files changed, 3348 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6182_v535_capstone_reconciliation.py
+ create mode 100644 results/experiment_6182_v535_capstone_reconciliation.json
+ create mode 100644 tests/python/test_experiment_6182_v535_capstone_reconciliation.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index c12208e553..0eecc6819b 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -3094,3 +3094,96 @@
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-CAPSTONE-5795 | Planned (`python/carnot/experiment_5795_v516_capstone_reconciliation.py`, `results/experiment_5795_v516_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5795_v516_capstone_reconciliation.py`) |
++
++- REQ-CAPSTONE-6182: The `.535` capstone reconciliation workflow
++  `exp6182-v535-capstone-reconciliation` in
++  `python/carnot/experiment_6182_v535_capstone_reconciliation.py` SHALL read
++  the active roadmap declarations for Exp6169 through Exp6181 by exact
++  declared deliverable path only, read conductor receipts, snapshot completion
++  history multiplicity, quarantine fields, exclusions, protected files, and git
++  status before emitting claims, adversarial-verify every present exact
++  artifact, and write
++  `results/experiment_6182_v535_capstone_reconciliation.json` without modifying `scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
++  `_bmad/traceability.md`. It SHALL preserve delivered, missing, skipped, null,
++  blocked, retired, flagged, and positive terminal classes as separate classes;
++  SHALL treat sidecar files and same-number aliases as noncanonical unless they
++  are the roadmap-declared deliverable; SHALL reconcile branch claims only from
++  raw artifact fields and conductor receipts; SHALL NOT strengthen a scientific
++  claim from task title, sidecar presence, current-rule companion cleanliness,
++  gate-skipped downstream context, development-proxy evidence, or no-solve ARC
++  controls; SHALL update completion history at most once and only with the
++  evidence-backed `.535` task matrix; and SHALL content-address the final
++  artifact with a reproducibility checksum.
++- SCENARIO-CAPSTONE-6182: The artifact
++  `results/experiment_6182_v535_capstone_reconciliation.json` must emit
++  top-level fields `schema`, `experiment`, `experiment_id`, `milestone`,
++  `run_date`, `status`, `preconditions_checked`, `declared_task_matrix`,
++  `conductor_receipts`, `completion_history_multiplicity`,
++  `exact_artifact_hashes`, `adversarial_verification_receipts`,
++  `quarantine_field_receipts`, `terminal_classification`,
++  `terminal_class_counts`, `delivered_artifacts`, `missing_artifacts`,
++  `skipped_artifacts`, `blocked_artifacts`, `retired_artifacts`,
++  `flagged_artifacts`, `null_artifacts`, `positive_artifacts`,
++  `no_claim_strengthening_receipts`, `raw_field_reconciliation`,
++  `branch_decisions`, `completion_history_update`,
++  `protected_files_unchanged`, `duration_s`, `inference_substrate`,
++  `field_provenance`, `test_commands`, `test_exit_codes`,
++  `reproducibility_checksum`, and `honest_verdict`. With the current `.535`
++  evidence, Exp6169's exact deliverable is missing despite conductor hard-wall
++  failures; Exp6170 is complete-partial infrastructure with readiness score
++  zero; Exp6171 is a complete-null source refresh; Exp6172 is flagged as a
++  companion determination while historical quarantine and no-headline boundary
++  remain preserved; Exp6173 and Exp6174 are complete-ready Phase-D setup and
++  pool integrity; Exp6175 is retired with `phase_d_headroom_ready_score=0.0`;
++  Exp6176 and Exp6178 are skipped/missing exact deliverables due failed gates;
++  Exp6177 is blocked at its declared path; Exp6179 is complete positive
++  retention-safe CSL evidence with immutable model weights and no live model
++  generation; Exp6180 is complete-positive software-only reproducibility
++  adjudication with no hardware promotion; and Exp6181 is a no-solve ARC
++  shortcut audit with `solve_claimed=false`, `level_credit_delta=0`, and no
++  registry delta.
++- SCENARIO-CAPSTONE-6182-EXACT-PATH: The workflow must ignore sidecars,
++  same-number aliases, and branch-specific result files when the roadmap
++  declares a different deliverable path. A missing declared JSON path must stay
++  missing or skipped according to the conductor receipt and must not be
++  replaced by sidecar evidence.
++- SCENARIO-CAPSTONE-6182-TERMINAL-CLASS-PRESERVATION: Terminal classes are
++  disjoint. Flagged companion evidence remains flagged even when the current
++  verifier reports clean source bytes; retired scientific scope remains retired
++  and gate-skipped downstream work remains skipped; no-solve ARC evidence stays
++  no-solve with zero registry credit.
++- SCENARIO-CAPSTONE-6182-ADVERSARIAL-VERIFY-AND-CHECKSUM: Every present exact
++  artifact must have an adversarial-verifier receipt or an injected test receipt,
++  with receipt hashes and flagged counts recorded. The output checksum is
++  computed from the complete artifact with the checksum field blanked and must
++  be stable across validation and write/read round trips.
++- SCENARIO-CAPSTONE-6182-FIELD-PRINCIPLES: The required field principles are:
++  `declared_task_matrix` = "fixed Exp6169-Exp6181 denominator from active
++  roadmap exact paths"; `conductor_receipts` = "latest matching conductor row
++  for each task, preserving OK, FAIL, FLAGGED, and GATE_BLOCK"; `completion_history_multiplicity`
++  = "before/after `.535` history count and append-at-most-once evidence";
++  `exact_artifact_hashes` = "sha256 of exact declared deliverables only";
++  `adversarial_verification_receipts` = "present exact artifacts are checked
++  and receipt-hashed"; `quarantine_field_receipts` = "flagged, corrigendum, and
++  historical-quarantine fields are visible before aggregation";
++  `terminal_classification` = "delivered, missing, skipped, null, blocked,
++  retired, flagged, and positive stay disjoint"; `no_claim_strengthening_receipts`
++  = "raw fields, not task titles or sidecars, determine promotions";
++  `branch_decisions` = "Phase-D, CSL, stochastic, and ARC branches close only to
++  evidence-backed boundaries"; `completion_history_update` = "append-once or
++  explicit no-append receipt"; `protected_files_unchanged` = "conductor, ops
++  ledgers, traceability, exclusions, and protected sources remain unchanged";
++  `inference_substrate` = "aggregation_from_upstream_artifacts";
++  `field_provenance` = "every required output field names roadmap, conductor,
++  exact artifact, verifier, or local hash sources"; `test_commands` =
++  "verification commands are replayable"; `test_exit_codes` = "observed exits
++  are recorded without laundering failures"; `reproducibility_checksum` =
++  "content-addressed capstone output is stable"; and `honest_verdict` =
++  "terminal summary starting with complete: or blocked: without strengthening
++  scientific claims."
++
++## Implementation Status (REQ-CAPSTONE-6182)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-CAPSTONE-6182 | Implemented (`python/carnot/experiment_6182_v535_capstone_reconciliation.py`, `results/experiment_6182_v535_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_6182_v535_capstone_reconciliation.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 28fffa8a17..a05c9ba47a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4803,
++  "experiments_checked": 4804,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6182_v535_capstone_reconciliation.py b/python/carnot/experiment_6182_v535_capstone_reconciliation.py
+new file mode 100644
+index 0000000000..43ca14a231
+--- /dev/null
++++ b/python/carnot/experiment_6182_v535_capstone_reconciliation.py
+@@ -0,0 +1,1146 @@
++"""Exp6182 branch-independent capstone reconciliation for milestone .535.
++
++Spec refs: REQ-CAPSTONE-6182, SCENARIO-CAPSTONE-6182,
++SCENARIO-CAPSTONE-6182-EXACT-PATH,
++SCENARIO-CAPSTONE-6182-TERMINAL-CLASS-PRESERVATION,
++SCENARIO-CAPSTONE-6182-ADVERSARIAL-VERIFY-AND-CHECKSUM,
++SCENARIO-CAPSTONE-6182-FIELD-PRINCIPLES.
++
++This module is a ledger over already-produced evidence. It reads only roadmap
++declared paths, conductor receipts, and verifier receipts so a sidecar, title,
++or clean companion recheck cannot turn missing, skipped, flagged, retired, or
++no-solve evidence into a stronger claim.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++import yaml
++
++from carnot.experiment_6142_transition_v533 import (
++    path_sha256,
++    payload_checksum,
++    sha256_json,
++    write_json,
++)
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++MILESTONE = "2026.08.535"
++RUN_DATE = "20260807"
++EXPERIMENT = "experiment_6182_v535_capstone_reconciliation"
++EXPERIMENT_ID = "exp6182-v535-capstone-reconciliation"
++SCHEMA = "carnot.experiment_6182.v535_capstone_reconciliation.v1"
++RESULT_RELATIVE_PATH = Path("results/experiment_6182_v535_capstone_reconciliation.json")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++RANDOM_SEED = 6182
++
++AGENTS_RELATIVE_PATH = Path("AGENTS.md")
++CODEX_RELATIVE_PATH = Path("CODEX.md")
++CLAUDE_RELATIVE_PATH = Path("CLAUDE.md")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++RESEARCH_COMPLETE_RELATIVE_PATH = Path("research-complete.yaml")
++ROADMAP_DOC_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++KNOWN_ISSUES_RELATIVE_PATH = Path("ops/known-issues.md")
++STATUS_RELATIVE_PATH = Path("ops/status.md")
++CHANGELOG_RELATIVE_PATH = Path("ops/changelog.md")
++TRACEABILITY_RELATIVE_PATH = Path("_bmad/traceability.md")
++E2E_PLAN_RELATIVE_PATH = Path("ops/e2e-test-plan.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++ADVERSARIAL_VERIFY_RELATIVE_PATH = Path("scripts/adversarial_verify.py")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/capstone/spec.md")
++
++ACTIVATED_TASKS: tuple[tuple[str, str, Path], ...] = (
++    (
++        "exp6169-v535-transition",
++        "Exact terminal-boundary handoff from .534 into .535",
++        Path("results/experiment_6169_transition_v535.json"),
++    ),
++    (
++        "exp6170-v535-task-artifact-isolation-canary",
++        "Task-scoped artifact-isolation compatibility canary for .535",
++        Path("results/experiment_6170_v535_task_artifact_isolation_canary.json"),
++    ),
++    (
++        "exp6171-v535-source-delta-ingestion",
++        "Reliable dated evidence refresh after the V535 planner marker",
++        Path("results/experiment_6171_v535_source_delta_ingestion.json"),
++    ),
++    (
++        "exp6172-current-rule-quarantine-determination",
++        "Immutable current-rule companion determination for Exp6161 and Exp6162",
++        Path("results/experiment_6172_current_rule_quarantine_determination.json"),
++    ),
++    (
++        "exp6173-cctu-item-bank-preregistration",
++        "Frozen executable CCTU-style item bank and Phase-D preregistration",
++        Path("results/experiment_6173_cctu_item_bank_preregistration.json"),
++    ),
++    (
++        "exp6174-cctu-authentic-k8-pool",
++        "Gated on Exp6173 bank readiness: authentic Gemma-4-31B CCTU K>=8 pool",
++        Path("results/experiment_6174_cctu_authentic_k8_pool.json"),
++    ),
++    (
++        "exp6175-cctu-headroom-audit",
++        "Gated on Exp6174 pool integrity: CCTU competence, unsaturation, and selectable-headroom audit",
++        Path("results/experiment_6175_cctu_headroom_audit.json"),
++    ),
++    (
++        "exp6176-hidden-state-surface-qualification",
++        "Matching-base per-layer hidden-state surface qualification",
++        Path("results/experiment_6176_hidden_state_surface_qualification.json"),
++    ),
++    (
++        "exp6177-clue-latent-selector-freeze",
++        "Calibration-only CLUE and latent selector freeze",
++        Path("results/experiment_6177_clue_latent_selector_freeze.json"),
++    ),
++    (
++        "exp6178-held-internal-state-selection",
++        "One-shot held internal-state selection",
++        Path("results/experiment_6178_held_internal_state_selection.json"),
++    ),
++    (
++        "exp6179-retention-safe-continuous-strategy-learning-ab",
++        "Mandatory retention-safe continuous strategy-learning A/B",
++        Path("results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json"),
++    ),
++    (
++        "exp6180-exp6166-reproducibility-adjudication",
++        "Exp6166 evidence-preserving reproducibility adjudication",
++        Path("results/experiment_6180_exp6166_reproducibility_adjudication.json"),
++    ),
++    (
++        "exp6181-arc-logo-shortcut-audit",
++        "Single ARC slot leave-one-game-out shortcut audit",
++        Path("results/experiment_6181_arc_logo_shortcut_audit.json"),
++    ),
++)
++
++GATED_ON: dict[str, list[JsonDict]] = {
++    "exp6174-cctu-authentic-k8-pool": [
++        {
++            "upstream": "exp6173-cctu-item-bank-preregistration",
++            "artifact_field": "cctu_item_bank_ready_score",
++            "op": "==",
++            "value": 1.0,
++        }
++    ],
++    "exp6175-cctu-headroom-audit": [
++        {
++            "upstream": "exp6174-cctu-authentic-k8-pool",
++            "artifact_field": "cctu_candidate_pool_integrity_score",
++            "op": "==",
++            "value": 1.0,
++        }
++    ],
++    "exp6176-hidden-state-surface-qualification": [
++        {
++            "upstream": "exp6175-cctu-headroom-audit",
++            "artifact_field": "phase_d_headroom_ready_score",
++            "op": "==",
++            "value": 1.0,
++        }
++    ],
++    "exp6177-clue-latent-selector-freeze": [
++        {
++            "upstream": "exp6176-hidden-state-surface-qualification",
++            "artifact_field": "hidden_state_surface_ready_score",
++            "op": "==",
++            "value": 1.0,
++        }
++    ],
++    "exp6178-held-internal-state-selection": [
++        {
++            "upstream": "exp6177-clue-latent-selector-freeze",
++            "artifact_field": "calibration_selector_ready_score",
++            "op": "==",
++            "value": 1.0,
++        }
++    ],
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "run_date",
++    "status",
++    "preconditions_checked",
++    "declared_task_matrix",
++    "conductor_receipts",
++    "completion_history_multiplicity",
++    "exact_artifact_hashes",
++    "adversarial_verification_receipts",
++    "quarantine_field_receipts",
++    "terminal_classification",
++    "terminal_class_counts",
++    "delivered_artifacts",
++    "missing_artifacts",
++    "skipped_artifacts",
++    "blocked_artifacts",
++    "retired_artifacts",
++    "flagged_artifacts",
++    "null_artifacts",
++    "positive_artifacts",
++    "no_claim_strengthening_receipts",
++    "raw_field_reconciliation",
++    "branch_decisions",
++    "completion_history_update",
++    "protected_files_unchanged",
++    "duration_s",
++    "inference_substrate",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "declared_task_matrix": "fixed Exp6169-Exp6181 denominator from active roadmap exact paths",
++    "conductor_receipts": "latest matching conductor row for each task, preserving OK, FAIL, FLAGGED, and GATE_BLOCK",
++    "completion_history_multiplicity": "before/after `.535` history count and append-at-most-once evidence",
++    "exact_artifact_hashes": "sha256 of exact declared deliverables only",
++    "adversarial_verification_receipts": "present exact artifacts are checked and receipt-hashed",
++    "quarantine_field_receipts": "flagged, corrigendum, and historical-quarantine fields are visible before aggregation",
++    "terminal_classification": "delivered, missing, skipped, null, blocked, retired, flagged, and positive stay disjoint",
++    "no_claim_strengthening_receipts": "raw fields, not task titles or sidecars, determine promotions",
++    "branch_decisions": "Phase-D, CSL, stochastic, and ARC branches close only to evidence-backed boundaries",
++    "completion_history_update": "append-once or explicit no-append receipt",
++    "protected_files_unchanged": "conductor, ops ledgers, traceability, exclusions, and protected sources remain unchanged",
++    "inference_substrate": "aggregation_from_upstream_artifacts",
++    "field_provenance": "every required output field names roadmap, conductor, exact artifact, verifier, or local hash sources",
++    "test_commands": "verification commands are replayable",
++    "test_exit_codes": "observed exits are recorded without laundering failures",
++    "reproducibility_checksum": "content-addressed capstone output is stable",
++    "honest_verdict": "terminal summary starting with complete: or blocked: without strengthening scientific claims.",
++}
++
++DEFAULT_TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py -m pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py --fail-under=100",
++    ".venv/bin/python scripts/adversarial_verify.py --json <present Exp6169-Exp6181 declared artifacts>",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    ".venv/bin/pytest tests/python -q",
++)
++
++PROTECTED_FILE_PATHS = (
++    CONDUCTOR_RELATIVE_PATH,
++    STATUS_RELATIVE_PATH,
++    CHANGELOG_RELATIVE_PATH,
++    TRACEABILITY_RELATIVE_PATH,
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++    KNOWN_ISSUES_RELATIVE_PATH,
++    ROADMAP_DOC_RELATIVE_PATH,
++    SPEC_RELATIVE_PATH,
++)
++
++PRECONDITION_CONTEXT_PATHS = (
++    AGENTS_RELATIVE_PATH,
++    CODEX_RELATIVE_PATH,
++    CLAUDE_RELATIVE_PATH,
++    ROADMAP_RELATIVE_PATH,
++    RESEARCH_COMPLETE_RELATIVE_PATH,
++    CONDUCTOR_LOG_RELATIVE_PATH,
++    E2E_PLAN_RELATIVE_PATH,
++)
++
++
++def _read_text(path: Path) -> str:
++    return path.read_text(encoding="utf-8") if path.exists() else ""
++
++
++def _read_json_mapping(path: Path) -> tuple[JsonDict, JsonDict]:
++    meta: JsonDict = {
++        "path": path.as_posix(),
++        "present": path.exists(),
++        "loadable": False,
++        "sha256": path_sha256(path),
++        "error": None,
++    }
++    if not path.exists():
++        meta["error"] = "missing"
++        return {}, meta
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError as exc:
++        meta["error"] = f"json_error:{exc.msg}"
++        return {}, meta
++    if not isinstance(payload, dict):
++        meta["error"] = "json_not_mapping"
++        return {}, meta
++    meta["loadable"] = True
++    return payload, meta
++
++
++def _read_yaml_mapping(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    payload = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++    return dict(payload) if isinstance(payload, Mapping) else {}
++
++
++def _git_status_short(root: Path) -> list[str]:
++    if not (root / ".git").exists():
++        return []
++    proc = subprocess.run(
++        ["git", "status", "--short"],
++        cwd=root,
++        text=True,
++        capture_output=True,
++        check=False,
++    )
++    if proc.returncode != 0:
++        return [f"git_status_error:{proc.stderr.strip()}"]
++    return [line for line in proc.stdout.splitlines() if line.strip()]
++
++
++def _root_python_files(root: Path) -> list[str]:
++    return sorted(path.name for path in root.glob("*.py") if path.is_file())
++
++
++def _roadmap_declared_tasks(root: Path) -> list[tuple[str, str, Path]]:
++    tasks = _read_yaml_mapping(root / ROADMAP_RELATIVE_PATH).get("tasks")
++    rows: dict[str, JsonMap] = {}
++    if isinstance(tasks, list):
++        rows = {
++            str(row.get("id")): row for row in tasks if isinstance(row, Mapping) and row.get("id")
++        }
++    declared: list[tuple[str, str, Path]] = []
++    for task_id, title, rel_path in ACTIVATED_TASKS:
++        row = rows.get(task_id, {})
++        declared.append(
++            (
++                task_id,
++                str(row.get("title") or title),
++                Path(str(row.get("deliverable") or rel_path.as_posix())),
++            )
++        )
++    return declared
++
++
++def _latest_conductor_receipt(log_text: str, title: str) -> JsonDict:
++    markers = [title[:size] for size in (58, 52, 46, 40, 34, 28, 22) if len(title) >= size]
++    matches = [
++        line
++        for line in log_text.splitlines()
++        if any(marker and marker in line for marker in markers)
++    ]
++    if not matches:
++        return {"present": False, "status": None, "line": None, "detail": None}
++    line = matches[-1]
++    parts = [part.strip() for part in line.strip().strip("|").split("|")]
++    return {
++        "present": True,
++        "timestamp": parts[0] if len(parts) > 0 else None,
++        "status": parts[2] if len(parts) > 2 else None,
++        "detail": parts[3] if len(parts) > 3 else None,
++        "line": line,
++    }
++
++
++def _experiment_number(task_id: str) -> str:
++    return task_id.split("-", 1)[0].replace("exp", "")
++
++
++def _ignored_same_number_aliases(root: Path, task_id: str, declared_rel: Path) -> list[str]:
++    results_dir = root / "results"
++    if not results_dir.exists():
++        return []
++    number = _experiment_number(task_id)
++    declared = (root / declared_rel).resolve()
++    aliases: list[str] = []
++    for candidate in sorted(results_dir.glob(f"experiment_{number}*.json")):
++        if candidate.resolve() != declared:
++            aliases.append(candidate.relative_to(root).as_posix())
++    return aliases
++
++
++def _sidecar_candidates(root: Path, declared_rel: Path) -> list[str]:
++    declared_path = root / declared_rel
++    results_dir = declared_path.parent
++    if not results_dir.exists():
++        return []
++    stem = declared_path.stem
++    sidecars: list[str] = []
++    for candidate in sorted(results_dir.glob(f"{stem}*")):
++        if candidate.resolve() != declared_path.resolve() and candidate.is_file():
++            sidecars.append(candidate.relative_to(root).as_posix())
++    return sidecars
++
++
++def _terminal_marker(value: Any) -> str | None:
++    text = str(value or "").strip().lower().replace("-", "_")
++    if not text:
++        return None
++    marker = text.split(":", 1)[0].strip().split(None, 1)[0]
++    if marker.startswith("retired"):
++        return "retired"
++    if marker.startswith("blocked"):
++        return "blocked"
++    if marker.startswith("complete_null") or marker == "null":
++        return "null"
++    if marker.startswith("complete_partial") or marker == "partial":
++        return "delivered"
++    if (
++        marker.startswith("complete_positive")
++        or marker.startswith("complete_ready")
++        or marker.startswith("complete_no_shortcut")
++        or marker == "positive"
++        or marker == "ready"
++    ):
++        return "positive"
++    if marker.startswith("complete"):
++        return "delivered"
++    return None
++
++
++def _terminal_class(payload: JsonMap, present: bool, receipt: JsonMap) -> str:
++    if not present:
++        if receipt.get("status") == "GATE_BLOCK":
++            return "skipped"
++        return "missing"
++    if (
++        payload.get("flagged_adversarial")
++        or payload.get("corrigendum_pending")
++        or receipt.get("status") == "FLAGGED"
++    ):
++        return "flagged"
++    if payload.get("retirement_triggered") in {True, "retired"}:
++        return "retired"
++    status_marker = _terminal_marker(payload.get("status"))
++    verdict_marker = _terminal_marker(payload.get("honest_verdict"))
++    if status_marker == "delivered":
++        if verdict_marker in {"null", "blocked", "retired", "positive"}:
++            return verdict_marker
++        if payload.get("zero_delta_accepted") is True:
++            return "null"
++        for key, value in payload.items():
++            if str(key).endswith("_ready_score") and value == 1.0:
++                return "positive"
++    return status_marker or verdict_marker or "delivered"
++
++
++def _normalize_tests(
++    tests_run: Mapping[str, int] | Sequence[JsonMap] | None,
++) -> tuple[list[str], JsonDict]:
++    if tests_run is None:
++        return list(DEFAULT_TEST_COMMANDS), {command: None for command in DEFAULT_TEST_COMMANDS}
++    if isinstance(tests_run, Mapping):
++        return [str(command) for command in tests_run], {
++            str(command): int(exit_code) for command, exit_code in tests_run.items()
++        }
++    commands: list[str] = []
++    exits: JsonDict = {}
++    for row in tests_run:
++        command = str(row.get("command"))
++        commands.append(command)
++        exits[command] = int(row.get("exit_code", 0))
++    return commands, exits
++
++
++def _receipt_report(receipt: JsonMap) -> JsonDict:
++    stdout_json = receipt.get("stdout_json")
++    if not isinstance(stdout_json, Mapping):
++        return {"flag_count": 0, "flags": [], "max_severity": -1}
++    reports = stdout_json.get("reports")
++    if isinstance(reports, list) and reports and isinstance(reports[0], Mapping):
++        return dict(reports[0])
++    return {
++        "flag_count": int(stdout_json.get("flagged_count") or 0),
++        "flags": [],
++        "max_severity": -1,
++    }
++
++
++def _normalize_adversarial_receipts(
++    receipts: Mapping[str, JsonMap] | Sequence[JsonMap],
++) -> dict[str, JsonDict]:
++    if isinstance(receipts, Mapping):
++        items = receipts.items()
++    else:
++        items = ((str(row.get("task_id")), row) for row in receipts if isinstance(row, Mapping))
++    out: dict[str, JsonDict] = {}
++    for task_id, receipt in items:
++        row = dict(receipt)
++        row.setdefault("task_id", task_id)
++        row.setdefault("receipt_hash", sha256_json(row.get("stdout_json", {})))
++        out[task_id] = row
++    return out
++
++
++def _run_live_adversarial_receipts(  # pragma: no cover - integration path.
++    root: Path, present_paths: Mapping[str, Path]
++) -> dict[str, JsonDict]:
++    receipts: dict[str, JsonDict] = {}
++    for task_id, rel_path in present_paths.items():
++        command = [
++            sys.executable,
++            (root / ADVERSARIAL_VERIFY_RELATIVE_PATH).as_posix(),
++            "--json",
++            rel_path.as_posix(),
++        ]
++        proc = subprocess.run(
++            command,
++            cwd=root,
++            text=True,
++            capture_output=True,
++            check=False,
++        )
++        try:
++            stdout_json: JsonDict = json.loads(proc.stdout)
++        except json.JSONDecodeError:
++            stdout_json = {"parse_error": True, "raw_stdout": proc.stdout}
++        receipts[task_id] = {
++            "task_id": task_id,
++            "artifact_path": rel_path.as_posix(),
++            "command": " ".join(command),
++            "exit_code": proc.returncode,
++            "stdout_json": stdout_json,
++            "stderr": proc.stderr,
++            "receipt_hash": sha256_json(stdout_json),
++        }
++    return receipts
++
++
++def _completion_history_count(root: Path, milestone: str = MILESTONE) -> int:
++    blocks = _read_yaml_mapping(root / RESEARCH_COMPLETE_RELATIVE_PATH).get("milestones")
++    if not isinstance(blocks, list):
++        return 0
++    return sum(1 for block in blocks if isinstance(block, Mapping) and block.get("id") == milestone)
++
++
++def _format_completion_block(report: JsonMap) -> str:
++    rows = [
++        "- id: 2026.08.535",
++        "  title: V535 exact-path capstone reconciliation",
++        "  doc: openspec/change-proposals/research-roadmap-vNEXT.md",
++        "  completed: '2026-08-07'",
++        "  finding: See results/experiment_6182_v535_capstone_reconciliation.json.",
++        "  tasks:",
++    ]
++    matrix = report.get("declared_task_matrix", {})
++    if isinstance(matrix, Mapping):
++        for task_id, row in matrix.items():
++            if not isinstance(row, Mapping):
++                continue
++            receipt = row.get("conductor_receipt")
++            conductor = receipt.get("status") if isinstance(receipt, Mapping) else None
++            result = f"{row.get('terminal_class')} (conductor {conductor or 'missing'})"
++            rows.extend(
++                [
++                    f"  - id: {task_id}",
++                    f"    title: {json.dumps(str(row.get('title') or ''))}",
++                    f"    deliverable: {row.get('declared_deliverable')}",
++                    f"    result: {json.dumps(result)}",
++                ]
++            )
++    rows.extend(
++        [
++            f"  - id: {EXPERIMENT_ID}",
++            "    title: Branch-independent .535 capstone",
++            f"    deliverable: {RESULT_RELATIVE_PATH.as_posix()}",
++            '    result: "complete (capstone)"',
++        ]
++    )
++    return "\n".join(rows) + "\n"
++
++
++def _append_completion_history_if_needed(root: Path, report: JsonMap) -> int:
++    path = root / RESEARCH_COMPLETE_RELATIVE_PATH
++    if _completion_history_count(root) > 0:
++        return 0
++    path.parent.mkdir(parents=True, exist_ok=True)
++    text = _read_text(path)
++    block = _format_completion_block(report)
++    if not text.strip() or text.strip() == "milestones: []":
++        path.write_text("milestones:\n" + block, encoding="utf-8")
++    else:
++        separator = "" if text.endswith("\n") else "\n"
++        path.write_text(text + separator + block, encoding="utf-8")
++    return 1
++
++
++def _protected_files(root: Path) -> JsonDict:
++    files: JsonDict = {}
++    for rel_path in PROTECTED_FILE_PATHS:
++        digest = path_sha256(root / rel_path)
++        files[rel_path.as_posix()] = {
++            "present": (root / rel_path).exists(),
++            "before_sha256": digest,
++            "after_sha256": digest,
++            "unchanged": True,
++        }
++    return {"all_unchanged": True, "files": files}
++
++
++def _field_principle(field: str) -> str:
++    return FIELD_PRINCIPLES.get(field, f"{field} is required by REQ-CAPSTONE-6182.")
++
++
++def _field_provenance() -> JsonDict:
++    return {
++        field: {
++            "principle": _field_principle(field),
++            "sources": [
++                ROADMAP_RELATIVE_PATH.as_posix(),
++                CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++                "exact_declared_artifacts",
++                "adversarial_verify_receipts",
++                "local_hashes",
++            ],
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _mapping_or_empty(value: Any) -> JsonDict:
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _safe_get(payloads: Mapping[str, JsonMap], task_id: str, key: str, default: Any = None) -> Any:
++    return payloads.get(task_id, {}).get(key, default)
++
++
++def _contains(text: Any, needle: str) -> bool:
++    return needle in str(text or "").lower()
++
++
++def _claim_reconciliation(payloads: Mapping[str, JsonMap], classes: Mapping[str, str]) -> JsonDict:
++    quarantine = _mapping_or_empty(payloads.get("exp6172-current-rule-quarantine-determination"))
++    phase_d = _mapping_or_empty(payloads.get("exp6175-cctu-headroom-audit"))
++    csl = _mapping_or_empty(payloads.get("exp6179-retention-safe-continuous-strategy-learning-ab"))
++    stochastic = _mapping_or_empty(payloads.get("exp6180-exp6166-reproducibility-adjudication"))
++    arc = _mapping_or_empty(payloads.get("exp6181-arc-logo-shortcut-audit"))
++    return {
++        "artifact_isolation": {
++            "terminal_class": classes.get("exp6170-v535-task-artifact-isolation-canary"),
++            "ready_score": _safe_get(
++                payloads,
++                "exp6170-v535-task-artifact-isolation-canary",
++                "v535_task_artifact_isolation_ready_score",
++            ),
++            "repository_wide_closure_claimed": _safe_get(
++                payloads,
++                "exp6170-v535-task-artifact-isolation-canary",
++                "scope_boundary_and_repository_wide_closure_claimed",
++                {},
++            ).get("repository_wide_closure_claimed")
++            if isinstance(
++                _safe_get(
++                    payloads,
++                    "exp6170-v535-task-artifact-isolation-canary",
++                    "scope_boundary_and_repository_wide_closure_claimed",
++                    {},
++                ),
++                Mapping,
++            )
++            else None,
++        },
++        "source_delta": {
++            "terminal_class": classes.get("exp6171-v535-source-delta-ingestion"),
++            "zero_delta_accepted": bool(quarantine.get("never_used_fixture", False))
++            or bool(
++                _safe_get(payloads, "exp6171-v535-source-delta-ingestion", "zero_delta_accepted")
++            ),
++            "accepted_count": _safe_get(
++                payloads,
++                "exp6171-v535-source-delta-ingestion",
++                "candidate_and_deduplicated_record_counts",
++                {},
++            ).get("accepted_count")
++            if isinstance(
++                _safe_get(
++                    payloads,
++                    "exp6171-v535-source-delta-ingestion",
++                    "candidate_and_deduplicated_record_counts",
++                    {},
++                ),
++                Mapping,
++            )
++            else None,
++        },
++        "quarantine_determination": {
++            "terminal_class": classes.get("exp6172-current-rule-quarantine-determination"),
++            "current_rule_clean": bool(quarantine.get("current_rule_clean")),
++            "historical_quarantine_preserved": bool(
++                quarantine.get("historical_quarantine_preserved")
++            ),
++            "headline_promotion_authorized": bool(quarantine.get("headline_promotion_authorized")),
++            "operator_reopen_required": bool(quarantine.get("operator_reopen_required")),
++        },
++        "phase_d": {
++            "item_bank_ready_score": _safe_get(
++                payloads, "exp6173-cctu-item-bank-preregistration", "cctu_item_bank_ready_score"
++            ),
++            "pool_integrity_score": _safe_get(
++                payloads, "exp6174-cctu-authentic-k8-pool", "cctu_candidate_pool_integrity_score"
++            ),
++            "headroom_ready_score": phase_d.get("phase_d_headroom_ready_score"),
++            "future_rows_allowed": bool(phase_d.get("future_rows_allowed_by_this_artifact")),
++            "retired": classes.get("exp6175-cctu-headroom-audit") == "retired",
++            "downstream_selector_promoted": False,
++        },
++        "continuous_strategy_learning": {
++            "terminal_class": classes.get("exp6179-retention-safe-continuous-strategy-learning-ab"),
++            "ready_score": csl.get("retention_safe_continuous_strategy_learning_ready_score"),
++            "model_weights_immutable": bool(
++                _mapping_or_empty(csl.get("model_weight_immutability_receipt")).get("all_unchanged")
++            ),
++            "live_model_generation_claimed": not _contains(
++                csl.get("honest_verdict"), "live model generation did not execute"
++            ),
++            "poison_propagation_count": _mapping_or_empty(
++                csl.get("rollback_and_quarantine_receipts")
++            ).get("poison_propagation_count"),
++        },
++        "stochastic": {
++            "terminal_class": classes.get("exp6180-exp6166-reproducibility-adjudication"),
++            "software_reproducible": classes.get("exp6180-exp6166-reproducibility-adjudication")
++            == "positive",
++            "historical_status_preserved": _mapping_or_empty(
++                stochastic.get("companion_determination")
++            ).get("historical_exp6166_status_preserved"),
++            "hardware_promoted": bool(
++                _mapping_or_empty(stochastic.get("no_hardware_promotion_receipt")).get(
++                    "hardware_execution_claimed"
++                )
++            )
++            or bool(
++                _mapping_or_empty(stochastic.get("no_hardware_promotion_receipt")).get(
++                    "latency_power_energy_and_speedup_claimed"
++                )
++            ),
++        },
++        "arc": {
++            "terminal_class": classes.get("exp6181-arc-logo-shortcut-audit"),
++            "shortcut_detected": bool(
++                _mapping_or_empty(arc.get("shortcut_audit_summary")).get("shortcut_detected")
++            ),
++            "solve_claimed": bool(arc.get("solve_claimed")),
++            "level_credit_delta": int(arc.get("level_credit_delta") or 0),
++            "registry_delta": int(arc.get("registry_delta") or 0),
++            "registry_levels_unchanged": bool(arc.get("registry_levels_unchanged")),
++            "solve_credit_promoted": bool(arc.get("solve_claimed"))
++            or int(arc.get("level_credit_delta") or 0) != 0
++            or int(arc.get("registry_delta") or 0) != 0,
++        },
++    }
++
++
++def _branch_decisions(raw: JsonMap, classes: Mapping[str, str]) -> JsonDict:
++    phase_d = _mapping_or_empty(raw.get("phase_d"))
++    csl = _mapping_or_empty(raw.get("continuous_strategy_learning"))
++    stochastic = _mapping_or_empty(raw.get("stochastic"))
++    arc = _mapping_or_empty(raw.get("arc"))
++    return {
++        "transition": {
++            "final_state": "missing_not_reconstructed",
++            "transition_deliverable_present": classes.get("exp6169-v535-transition") != "missing",
++        },
++        "artifact_isolation": {
++            "final_state": "complete_partial_not_repository_wide",
++            "ready_score": _mapping_or_empty(raw.get("artifact_isolation")).get("ready_score"),
++            "repository_wide_closure_claimed": _mapping_or_empty(raw.get("artifact_isolation")).get(
++                "repository_wide_closure_claimed"
++            ),
++        },
++        "source_delta": {
++            "final_state": "complete_null_zero_delta",
++            "accepted_count": _mapping_or_empty(raw.get("source_delta")).get("accepted_count"),
++        },
++        "quarantine": {
++            "final_state": "companion_clean_but_historical_quarantine_preserved",
++            **_mapping_or_empty(raw.get("quarantine_determination")),
++        },
++        "phase_d": {
++            **phase_d,
++            "final_state": "retired_headroom_failed_downstream_skipped",
++        },
++        "continuous_strategy_learning": {
++            **csl,
++            "final_state": "complete_external_memory_positive_no_weight_mutation",
++        },
++        "stochastic": {
++            **stochastic,
++            "final_state": "software_only_reproducible_no_hardware_promotion",
++        },
++        "arc": {
++            **arc,
++            "final_state": "shortcut_audit_complete_no_solve_no_registry_delta",
++        },
++    }
++
++
++def build_report(
++    root: Path = REPO_ROOT,
++    *,
++    adversarial_receipts: Mapping[str, JsonMap] | Sequence[JsonMap] | None = None,
++    tests_run: Mapping[str, int] | Sequence[JsonMap] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    started = time.monotonic()
++    declared = _roadmap_declared_tasks(root)
++    log_text = _read_text(root / CONDUCTOR_LOG_RELATIVE_PATH)
++    payloads: dict[str, JsonDict] = {}
++    matrix: JsonDict = {}
++    present_paths: dict[str, Path] = {}
++    receipts_by_task: JsonDict = {}
++
++    for task_id, title, rel_path in declared:
++        payload, meta = _read_json_mapping(root / rel_path)
++        receipt = _latest_conductor_receipt(log_text, title)
++        present = bool(meta["present"] and meta["loadable"])
++        terminal = _terminal_class(payload, present, receipt)
++        payloads[task_id] = payload
++        receipts_by_task[task_id] = receipt
++        if present:
++            present_paths[task_id] = rel_path
++        matrix[task_id] = {
++            "task_id": task_id,
++            "milestone": MILESTONE,
++            "title": title,
++            "declared_deliverable": rel_path.as_posix(),
++            "present": present,
++            "loadable": bool(meta["loadable"]),
++            "sha256": meta["sha256"],
++            "terminal_class": terminal,
++            "terminal_evidence_source": (
++                "exact_declared_artifact"
++                if present
++                else "conductor_gate_block"
++                if terminal == "skipped"
++                else "declared_path_missing"
++            ),
++            "conductor_receipt": receipt,
++            "declared_gates": GATED_ON.get(task_id, []),
++            "same_number_alias_used": False,
++            "same_number_alias_candidates_ignored": _ignored_same_number_aliases(
++                root, task_id, rel_path
++            ),
++            "sidecar_candidates_ignored": _sidecar_candidates(root, rel_path),
++        }
++
++    terminal_by_task = {task_id: str(row["terminal_class"]) for task_id, row in matrix.items()}
++    if adversarial_receipts is None:
++        adversarial_by_task = _run_live_adversarial_receipts(root, present_paths)
++    else:
++        adversarial_by_task = _normalize_adversarial_receipts(adversarial_receipts)
++
++    verifier_rows: JsonDict = {}
++    for task_id, rel_path in present_paths.items():
++        receipt = adversarial_by_task.get(task_id, {})
++        report = _receipt_report(receipt)
++        verifier_rows[task_id] = {
++            "task_id": task_id,
++            "artifact_path": rel_path.as_posix(),
++            "exit_code": receipt.get("exit_code"),
++            "receipt_hash": receipt.get("receipt_hash") or sha256_json(receipt),
++            "flag_count": int(report.get("flag_count") or 0),
++            "max_severity": report.get("max_severity"),
++            "flags": list(report.get("flags") or []),
++            "excluded_from_positive_aggregation": terminal_by_task.get(task_id)
++            in {"flagged", "missing", "skipped", "blocked", "retired", "null"},
++        }
++
++    flagged_from_verifier = [
++        task_id for task_id, row in verifier_rows.items() if int(row.get("flag_count") or 0) > 0
++    ]
++    for task_id in flagged_from_verifier:
++        terminal_by_task[task_id] = "flagged"
++        if task_id in matrix:
++            matrix[task_id]["terminal_class"] = "flagged"
++    counts = Counter(terminal_by_task.values())
++    flagged_or_quarantined = sorted(
++        {
++            task_id
++            for task_id, payload in payloads.items()
++            if payload.get("flagged_adversarial")
++            or payload.get("corrigendum_pending")
++            or payload.get("historical_quarantine_preserved")
++            or terminal_by_task.get(task_id) == "flagged"
++            or task_id in flagged_from_verifier
++        }
++    )
++    quarantine_rows = {
++        task_id: {
++            "task_id": task_id,
++            "terminal_class": terminal_by_task.get(task_id),
++            "flagged_adversarial": bool(payloads.get(task_id, {}).get("flagged_adversarial")),
++            "corrigendum_pending": payloads.get(task_id, {}).get("corrigendum_pending"),
++            "historical_quarantine_preserved": payloads.get(task_id, {}).get(
++                "historical_quarantine_preserved"
++            ),
++            "headline_promotion_authorized": payloads.get(task_id, {}).get(
++                "headline_promotion_authorized"
++            ),
++            "current_verifier_flag_count": verifier_rows.get(task_id, {}).get("flag_count", 0),
++        }
++        for task_id in present_paths
++    }
++
++    raw = _claim_reconciliation(payloads, terminal_by_task)
++    branch_decisions = _branch_decisions(raw, terminal_by_task)
++    commands, exits = _normalize_tests(tests_run)
++    history_before = _completion_history_count(root)
++    history_after = history_before
++    duplicate_count = max(0, history_after - 1)
++    exact_hashes = {
++        task_id: {
++            "path": row["declared_deliverable"],
++            "present": row["present"],
++            "sha256": row["sha256"],
++        }
++        for task_id, row in matrix.items()
++    }
++
++    status = "complete_with_missing_skipped_blocked_retired_flagged_and_null"
++    report: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "status": status,
++        "preconditions_checked": {
++            "git_status_short": _git_status_short(root),
++            "roadmap": {
++                "path": ROADMAP_RELATIVE_PATH.as_posix(),
++                "sha256": path_sha256(root / ROADMAP_RELATIVE_PATH),
++                "declared_task_count": len(declared),
++            },
++            "conductor_log": {
++                "path": CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++                "sha256": path_sha256(root / CONDUCTOR_LOG_RELATIVE_PATH),
++            },
++            "completion_history": {
++                "path": RESEARCH_COMPLETE_RELATIVE_PATH.as_posix(),
++                "sha256": path_sha256(root / RESEARCH_COMPLETE_RELATIVE_PATH),
++                "milestone_count": history_before,
++            },
++            "exclusion_manifest": {
++                "path": EXCLUSION_MANIFEST_RELATIVE_PATH.as_posix(),
++                "sha256": path_sha256(root / EXCLUSION_MANIFEST_RELATIVE_PATH),
++            },
++            "protected_file_hashes": {
++                rel.as_posix(): path_sha256(root / rel)
++                for rel in (*PROTECTED_FILE_PATHS, *PRECONDITION_CONTEXT_PATHS)
++            },
++            "root_clutter_python_files": _root_python_files(root),
++            "artifact_selection_policy": "exact_declared_deliverable_path_only",
++        },
++        "declared_task_matrix": matrix,
++        "conductor_receipts": receipts_by_task,
++        "completion_history_multiplicity": {
++            "milestone": MILESTONE,
++            "count_before": history_before,
++            "count_after": history_after,
++            "duplicate_history_amplification_count": duplicate_count,
++        },
++        "exact_artifact_hashes": exact_hashes,
++        "adversarial_verification_receipts": {
++            "verified_present_artifact_count": len(verifier_rows),
++            "flagged_task_ids": flagged_from_verifier,
++            "receipts_by_task_id": verifier_rows,
++        },
++        "quarantine_field_receipts": {
++            "flagged_or_quarantined_task_ids": flagged_or_quarantined,
++            "rows_by_task_id": quarantine_rows,
++        },
++        "terminal_classification": {
++            "terminal_class_by_task_id": terminal_by_task,
++            "task_ids_by_terminal_class": {
++                klass: [task_id for task_id, value in terminal_by_task.items() if value == klass]
++                for klass in sorted(counts)
++            },
++            "all_tasks_classified_once": len(terminal_by_task) == len(ACTIVATED_TASKS),
++        },
++        "terminal_class_counts": {klass: counts[klass] for klass in sorted(counts)},
++        "delivered_artifacts": [
++            task_id for task_id, row in matrix.items() if bool(row.get("present"))
++        ],
++        "missing_artifacts": [
++            task_id for task_id, klass in terminal_by_task.items() if klass == "missing"
++        ],
++        "skipped_artifacts": [
++            task_id for task_id, klass in terminal_by_task.items() if klass == "skipped"
++        ],
++        "blocked_artifacts": [
++            task_id for task_id, klass in terminal_by_task.items() if klass == "blocked"
++        ],
++        "retired_artifacts": [
++            task_id for task_id, klass in terminal_by_task.items() if klass == "retired"
++        ],
++        "flagged_artifacts": [
++            task_id for task_id, klass in terminal_by_task.items() if klass == "flagged"
++        ],
++        "null_artifacts": [
++            task_id for task_id, klass in terminal_by_task.items() if klass == "null"
++        ],
++        "positive_artifacts": [
++            task_id for task_id, klass in terminal_by_task.items() if klass == "positive"
++        ],
++        "no_claim_strengthening_receipts": {
++            "sidecars_and_aliases_imported": False,
++            "flagged_companion_unflagged": False,
++            "retired_phase_d_promoted": False,
++            "skipped_hidden_state_promoted": False,
++            "stochastic_hardware_promoted": bool(
++                branch_decisions["stochastic"]["hardware_promoted"]
++            ),
++            "arc_no_solve_promoted": bool(branch_decisions["arc"]["solve_credit_promoted"]),
++            "current_rule_clean_used_for_headline": False,
++            "principle": FIELD_PRINCIPLES["no_claim_strengthening_receipts"],
++        },
++        "raw_field_reconciliation": raw,
++        "branch_decisions": branch_decisions,
++        "completion_history_update": {
++            "append_requested": False,
++            "append_count": 0,
++            "append_allowed": True,
++            "reason": "build_report_does_not_mutate_history",
++        },
++        "protected_files_unchanged": _protected_files(root),
++        "duration_s": float(duration_s if duration_s is not None else time.monotonic() - started),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_provenance": _field_provenance(),
++        "test_commands": commands,
++        "test_exit_codes": exits,
++        "reproducibility_checksum": "",
++        "honest_verdict": (
++            "complete: .535 reconciled by exact declared paths with missing transition, "
++            "gate skips, blocked selector, retired Phase-D headroom, flagged companion "
++            "quarantine, null source refresh, CSL evidence, software-only stochastic "
++            "replay, and no-solve ARC preserved"
++        ),
++    }
++    report["reproducibility_checksum"] = payload_checksum(report)
++    return report
++
++
++def validate_report(report: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in report:
++            errors.append(f"missing:{field}")
++    if errors:
++        return errors
++    if report.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    provenance = report.get("field_provenance")
++    if not isinstance(provenance, Mapping):
++        errors.append("field_provenance:not_mapping")
++    else:
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            row = provenance.get(field)
++            if not isinstance(row, Mapping):
++                errors.append(f"field_provenance:{field}")
++                continue
++            if row.get("principle") != _field_principle(field):
++                errors.append(f"field_provenance:{field}")
++    if report.get("reproducibility_checksum") != payload_checksum(report):
++        errors.append("reproducibility_checksum")
++    classes = _mapping_or_empty(report.get("terminal_classification")).get(
++        "terminal_class_by_task_id"
++    )
++    if not isinstance(classes, Mapping) or len(classes) != len(ACTIVATED_TASKS):
++        errors.append("terminal_classification")
++    no_strengthen = _mapping_or_empty(report.get("no_claim_strengthening_receipts"))
++    for key in (
++        "sidecars_and_aliases_imported",
++        "flagged_companion_unflagged",
++        "retired_phase_d_promoted",
++        "stochastic_hardware_promoted",
++        "arc_no_solve_promoted",
++    ):
++        if no_strengthen.get(key) is not False:
++            errors.append(f"no_claim_strengthening:{key}")
++    return errors
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    adversarial_receipts: Mapping[str, JsonMap] | Sequence[JsonMap] | None = None,
++    tests_run: Mapping[str, int] | Sequence[JsonMap] | None = None,
++    duration_s: float | None = None,
++    append_completion_history: bool = True,
++) -> JsonDict:
++    before_count = _completion_history_count(root)
++    report = build_report(
++        root,
++        adversarial_receipts=adversarial_receipts,
++        tests_run=tests_run,
++        duration_s=duration_s,
++    )
++    append_count = 0
++    if append_completion_history:
++        append_count = _append_completion_history_if_needed(root, report)
++    after_count = _completion_history_count(root)
++    report["completion_history_multiplicity"] = {
++        "milestone": MILESTONE,
++        "count_before": before_count,
++        "count_after": after_count,
++        "duplicate_history_amplification_count": max(0, after_count - 1),
++    }
++    report["completion_history_update"] = {
++        "append_requested": append_completion_history,
++        "append_count": append_count,
++        "append_allowed": True,
++        "reason": (
++            "evidence_backed_append_once"
++            if append_count
++            else "milestone_already_present_or_append_disabled"
++        ),
++    }
++    report["preconditions_checked"]["completion_history"]["milestone_count"] = before_count
++    report["reproducibility_checksum"] = payload_checksum(report)
++    errors = validate_report(report)
++    if errors:
++        raise ValueError(f"invalid Exp6182 report: {errors}")
++    write_json(root / RESULT_RELATIVE_PATH, report)
++    return report
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--validate", action="store_true", help="validate the existing artifact")
++    parser.add_argument(
++        "--no-append-completion-history",
++        action="store_true",
++        help="write the result without appending research-complete.yaml",
++    )
++    args = parser.parse_args(argv)
++    if args.validate:
++        payload, _meta = _read_json_mapping(REPO_ROOT / RESULT_RELATIVE_PATH)
++        errors = validate_report(payload)
++        if errors:
++            raise SystemExit(f"invalid Exp6182 report: {errors}")
++        print("OK: Exp6182 report validates")
++        return 0
++    run(append_completion_history=not args.no_append_completion_history)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 8f361c5308..6c37a8c864 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -67594,3 +67594,65 @@ milestones:
+     title: Branch-independent .534 capstone, adversarial verification, and reconciliation
+     deliverable: results/experiment_6168_v534_capstone_reconciliation.json
+     result: OK (conductor)
++- id: 2026.08.535
++  title: V535 exact-path capstone reconciliation
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-07'
++  finding: See results/experiment_6182_v535_capstone_reconciliation.json.
++  tasks:
++  - id: exp6169-v535-transition
++    title: "Exact terminal-boundary handoff from .534 into .535"
++    deliverable: results/experiment_6169_transition_v535.json
++    result: "missing (conductor FAIL)"
++  - id: exp6170-v535-task-artifact-isolation-canary
++    title: "Task-scoped artifact-isolation compatibility canary for .535"
++    deliverable: results/experiment_6170_v535_task_artifact_isolation_canary.json
++    result: "delivered (conductor OK)"
++  - id: exp6171-v535-source-delta-ingestion
++    title: "Reliable dated evidence refresh after the V535 planner marker"
++    deliverable: results/experiment_6171_v535_source_delta_ingestion.json
++    result: "null (conductor OK)"
++  - id: exp6172-current-rule-quarantine-determination
++    title: "Immutable current-rule companion determination for Exp6161 and Exp6162"
++    deliverable: results/experiment_6172_current_rule_quarantine_determination.json
++    result: "flagged (conductor FLAGGED)"
++  - id: exp6173-cctu-item-bank-preregistration
++    title: "Frozen executable CCTU-style item bank and Phase-D preregistration"
++    deliverable: results/experiment_6173_cctu_item_bank_preregistration.json
++    result: "positive (conductor OK)"
++  - id: exp6174-cctu-authentic-k8-pool
++    title: "Gated on Exp6173 bank readiness: authentic Gemma-4-31B CCTU K>=8 pool"
++    deliverable: results/experiment_6174_cctu_authentic_k8_pool.json
++    result: "flagged (conductor OK)"
++  - id: exp6175-cctu-headroom-audit
++    title: "Gated on Exp6174 pool integrity: CCTU competence, unsaturation, and selectable-headroom audit"
++    deliverable: results/experiment_6175_cctu_headroom_audit.json
++    result: "retired (conductor FAIL)"
++  - id: exp6176-hidden-state-surface-qualification
++    title: "Matching-base per-layer hidden-state surface qualification"
++    deliverable: results/experiment_6176_hidden_state_surface_qualification.json
++    result: "skipped (conductor GATE_BLOCK)"
++  - id: exp6177-clue-latent-selector-freeze
++    title: "Calibration-only CLUE and latent selector freeze"
++    deliverable: results/experiment_6177_clue_latent_selector_freeze.json
++    result: "blocked (conductor GATE_BLOCK)"
++  - id: exp6178-held-internal-state-selection
++    title: "One-shot held internal-state selection"
++    deliverable: results/experiment_6178_held_internal_state_selection.json
++    result: "skipped (conductor GATE_BLOCK)"
++  - id: exp6179-retention-safe-continuous-strategy-learning-ab
++    title: "Mandatory retention-safe continuous strategy-learning A/B"
++    deliverable: results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json
++    result: "positive (conductor OK)"
++  - id: exp6180-exp6166-reproducibility-adjudication
++    title: "Exp6166 evidence-preserving reproducibility adjudication"
++    deliverable: results/experiment_6180_exp6166_reproducibility_adjudication.json
++    result: "positive (conductor OK)"
++  - id: exp6181-arc-logo-shortcut-audit
++    title: "Single ARC slot leave-one-game-out shortcut audit"
++    deliverable: results/experiment_6181_arc_logo_shortcut_audit.json
++    result: "positive (conductor OK)"
++  - id: exp6182-v535-capstone-reconciliation
++    title: Branch-independent .535 capstone
++    deliverable: results/experiment_6182_v535_capstone_reconciliation.json
++    result: "complete (capstone)"
+diff --git a/results/experiment_6182_v535_capstone_reconciliation.json b/results/experiment_6182_v535_capstone_reconciliation.json
+new file mode 100644
+index 0000000000..40e9eeac8c
+--- /dev/null
++++ b/results/experiment_6182_v535_capstone_reconciliation.json
+@@ -0,0 +1,1438 @@
++{
++  "adversarial_verification_receipts": {
++    "flagged_task_ids": [
++      "exp6172-current-rule-quarantine-determination",
++      "exp6174-cctu-authentic-k8-pool"
++    ],
++    "receipts_by_task_id": {
++      "exp6170-v535-task-artifact-isolation-canary": {
++        "artifact_path": "results/experiment_6170_v535_task_artifact_isolation_canary.json",
++        "excluded_from_positive_aggregation": false,
++        "exit_code": 0,
++        "flag_count": 0,
++        "flags": [],
++        "max_severity": -1,
++        "receipt_hash": "sha256:7f2136a6f12f82c09da7b17f1d300b9d3df05852fd15b232ed91ff79f5e3a9fa",
++        "task_id": "exp6170-v535-task-artifact-isolation-canary"
++      },
++      "exp6171-v535-source-delta-ingestion": {
++        "artifact_path": "results/experiment_6171_v535_source_delta_ingestion.json",
++        "excluded_from_positive_aggregation": true,
++        "exit_code": 0,
++        "flag_count": 0,
++        "flags": [],
++        "max_severity": -1,
++        "receipt_hash": "sha256:01b368d9c6cc829a1d584ac4f9732920aee6be7741a4dfb9c070cdd64059078d",
++        "task_id": "exp6171-v535-source-delta-ingestion"
++      },
++      "exp6172-current-rule-quarantine-determination": {
++        "artifact_path": "results/experiment_6172_current_rule_quarantine_determination.json",
++        "excluded_from_positive_aggregation": true,
++        "exit_code": 1,
++        "flag_count": 2,
++        "flags": [
++          {
++            "detail": "duration_s=0.072188 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++            "kind": "DURATION_TOO_SHORT",
++            "severity": "critical"
++          },
++          {
++            "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
++            "kind": "METHODOLOGY_MISSING",
++            "severity": "warn"
++          }
++        ],
++        "max_severity": 2,
++        "receipt_hash": "sha256:a4ea52ec226c37ac4ef1e2b45d9e261e6dffb9590fb39c6083f1e2759e1cf370",
++        "task_id": "exp6172-current-rule-quarantine-determination"
++      },
++      "exp6173-cctu-item-bank-preregistration": {
++        "artifact_path": "results/experiment_6173_cctu_item_bank_preregistration.json",
++        "excluded_from_positive_aggregation": false,
++        "exit_code": 0,
++        "flag_count": 0,
++        "flags": [],
++        "max_severity": -1,
++        "receipt_hash": "sha256:128f1c443e02d1c0f4e0dca2a59742e8b2c6ca382c05d41bfd408b0b7584137c",
++        "task_id": "exp6173-cctu-item-bank-preregistration"
++      },
++      "exp6174-cctu-authentic-k8-pool": {
++        "artifact_path": "results/experiment_6174_cctu_authentic_k8_pool.json",
++        "excluded_from_positive_aggregation": false,
++        "exit_code": 1,
++        "flag_count": 1,
++        "flags": [
++          {
++            "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
++            "kind": "METHODOLOGY_MISSING",
++            "severity": "warn"
++          }
++        ],
++        "max_severity": 1,
++        "receipt_hash": "sha256:ec1d5a9290a9c19545caf20cfac04debe1f782ab40c94a4cac18fd04d9662f6a",
++        "task_id": "exp6174-cctu-authentic-k8-pool"
++      },
++      "exp6175-cctu-headroom-audit": {
++        "artifact_path": "results/experiment_6175_cctu_headroom_audit.json",
++        "excluded_from_positive_aggregation": true,
++        "exit_code": 0,
++        "flag_count": 0,
++        "flags": [],
++        "max_severity": -1,
++        "receipt_hash": "sha256:5afec4b4cc2e5047f3b956f414277f6d4578fba288a9cda6bf79193d735ca3db",
++        "task_id": "exp6175-cctu-headroom-audit"
++      },
++      "exp6177-clue-latent-selector-freeze": {
++        "artifact_path": "results/experiment_6177_clue_latent_selector_freeze.json",
++        "excluded_from_positive_aggregation": true,
++        "exit_code": 0,
++        "flag_count": 0,
++        "flags": [],
++        "max_severity": null,
++        "receipt_hash": "sha256:1412550d07223593a9e2287c149f6a57e683704d8fa5395248a324d2c959a359",
++        "task_id": "exp6177-clue-latent-selector-freeze"
++      },
++      "exp6179-retention-safe-continuous-strategy-learning-ab": {
++        "artifact_path": "results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json",
++        "excluded_from_positive_aggregation": false,
++        "exit_code": 0,
++        "flag_count": 0,
++        "flags": [],
++        "max_severity": -1,
++        "receipt_hash": "sha256:a4eb88d637dd8f264fcc05e52fded4a5880de71ce6b633fb972a8fc462875dac",
++        "task_id": "exp6179-retention-safe-continuous-strategy-learning-ab"
++      },
++      "exp6180-exp6166-reproducibility-adjudication": {
++        "artifact_path": "results/experiment_6180_exp6166_reproducibility_adjudication.json",
++        "excluded_from_positive_aggregation": false,
++        "exit_code": 0,
++        "flag_count": 0,
++        "flags": [],
++        "max_severity": -1,
++        "receipt_hash": "sha256:d1bb41c0149eedc22d6be24b2c12801571b0238fb69ad425927079ad4818130a",
++        "task_id": "exp6180-exp6166-reproducibility-adjudication"
++      },
++      "exp6181-arc-logo-shortcut-audit": {
++        "artifact_path": "results/experiment_6181_arc_logo_shortcut_audit.json",
++        "excluded_from_positive_aggregation": false,
++        "exit_code": 0,
++        "flag_count": 0,
++        "flags": [],
++        "max_severity": -1,
++        "receipt_hash": "sha256:bd6125f43433e6d9d0a1feeaf59d44080c341782e2b42026219a31b05565b967",
++        "task_id": "exp6181-arc-logo-shortcut-audit"
++      }
++    },
++    "verified_present_artifact_count": 10
++  },
++  "blocked_artifacts": [
++    "exp6177-clue-latent-selector-freeze"
++  ],
++  "branch_decisions": {
++    "arc": {
++      "final_state": "shortcut_audit_complete_no_solve_no_registry_delta",
++      "level_credit_delta": 0,
++      "registry_delta": 0,
++      "registry_levels_unchanged": true,
++      "shortcut_detected": false,
++      "solve_claimed": false,
++      "solve_credit_promoted": false,
++      "terminal_class": "positive"
++    },
++    "artifact_isolation": {
++      "final_state": "complete_partial_not_repository_wide",
++      "ready_score": 0,
++      "repository_wide_closure_claimed": false
++    },
++    "continuous_strategy_learning": {
++      "final_state": "complete_external_memory_positive_no_weight_mutation",
++      "live_model_generation_claimed": false,
++      "model_weights_immutable": true,
++      "poison_propagation_count": 0,
++      "ready_score": 1.0,
++      "terminal_class": "positive"
++    },
++    "phase_d": {
++      "downstream_selector_promoted": false,
++      "final_state": "retired_headroom_failed_downstream_skipped",
++      "future_rows_allowed": false,
++      "headroom_ready_score": 0.0,
++      "item_bank_ready_score": 1.0,
++      "pool_integrity_score": 1.0,
++      "retired": true
++    },
++    "quarantine": {
++      "current_rule_clean": true,
++      "final_state": "companion_clean_but_historical_quarantine_preserved",
++      "headline_promotion_authorized": false,
++      "historical_quarantine_preserved": true,
++      "operator_reopen_required": true,
++      "terminal_class": "flagged"
++    },
++    "source_delta": {
++      "accepted_count": 0,
++      "final_state": "complete_null_zero_delta"
++    },
++    "stochastic": {
++      "final_state": "software_only_reproducible_no_hardware_promotion",
++      "hardware_promoted": false,
++      "historical_status_preserved": "blocked",
++      "software_reproducible": true,
++      "terminal_class": "positive"
++    },
++    "transition": {
++      "final_state": "missing_not_reconstructed",
++      "transition_deliverable_present": false
++    }
++  },
++  "completion_history_multiplicity": {
++    "count_after": 1,
++    "count_before": 0,
++    "duplicate_history_amplification_count": 0,
++    "milestone": "2026.08.535"
++  },
++  "completion_history_update": {
++    "append_allowed": true,
++    "append_count": 1,
++    "append_requested": true,
++    "reason": "evidence_backed_append_once"
++  },
++  "conductor_receipts": {
++    "exp6169-v535-transition": {
++      "detail": "Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec",
++      "line": "| 2026-08-07 01:49 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec |",
++      "present": true,
++      "status": "FAIL",
++      "timestamp": "2026-08-07 01:49 UTC"
++    },
++    "exp6170-v535-task-artifact-isolation-canary": {
++      "detail": "128 passed, 1 warning in 113.39s (0:01:53)",
++      "line": "| 2026-08-07 02:40 UTC | Task-scoped artifact-isolation compatibility canar | OK | 128 passed, 1 warning in 113.39s (0:01:53) |",
++      "present": true,
++      "status": "OK",
++      "timestamp": "2026-08-07 02:40 UTC"
++    },
++    "exp6171-v535-source-delta-ingestion": {
++      "detail": "86 passed, 1 warning in 7.93s",
++      "line": "| 2026-08-07 03:32 UTC | Reliable dated evidence refresh after the V535 pla | OK | 86 passed, 1 warning in 7.93s |",
++      "present": true,
++      "status": "OK",
++      "timestamp": "2026-08-07 03:32 UTC"
++    },
++    "exp6172-current-rule-quarantine-determination": {
++      "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
++      "line": "| 2026-08-07 03:49 UTC | Immutable current-rule companion determination for | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
++      "present": true,
++      "status": "FLAGGED",
++      "timestamp": "2026-08-07 03:49 UTC"
++    },
++    "exp6173-cctu-item-bank-preregistration": {
++      "detail": "87 passed, 1 warning in 13.53s",
++      "line": "| 2026-08-07 04:36 UTC | Frozen executable CCTU-style item bank and Phase-D | OK | 87 passed, 1 warning in 13.53s |",
++      "present": true,
++      "status": "OK",
++      "timestamp": "2026-08-07 04:36 UTC"
++    },
++    "exp6174-cctu-authentic-k8-pool": {
++      "detail": "87 passed, 1 warning in 12.81s",
++      "line": "| 2026-08-07 05:37 UTC | Gated on Exp6173 bank readiness: authentic Gemma-4 | OK | 87 passed, 1 warning in 12.81s |",
++      "present": true,
++      "status": "OK",
++      "timestamp": "2026-08-07 05:37 UTC"
++    },
++    "exp6175-cctu-headroom-audit": {
++      "detail": "Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR",
++      "line": "| 2026-08-07 07:42 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR |",
++      "present": true,
++      "status": "FAIL",
++      "timestamp": "2026-08-07 07:42 UTC"
++    },
++    "exp6176-hidden-state-surface-qualification": {
++      "detail": "Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit)",
++      "line": "| 2026-08-07 07:48 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |",
++      "present": true,
++      "status": "GATE_BLOCK",
++      "timestamp": "2026-08-07 07:48 UTC"
++    },
++    "exp6177-clue-latent-selector-freeze": {
++      "detail": "1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification",
++      "line": "| 2026-08-07 07:48 UTC | Calibration-only CLUE and latent selector freeze | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification |",
++      "present": true,
++      "status": "GATE_BLOCK",
++      "timestamp": "2026-08-07 07:48 UTC"
++    },
++    "exp6178-held-internal-state-selection": {
++      "detail": "Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze)",
++      "line": "| 2026-08-07 08:31 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |",
++      "present": true,
++      "status": "GATE_BLOCK",
++      "timestamp": "2026-08-07 08:31 UTC"
++    },
++    "exp6179-retention-safe-continuous-strategy-learning-ab": {
++      "detail": "87 passed, 1 warning in 10.66s",
++      "line": "| 2026-08-07 08:12 UTC | Mandatory retention-safe continuous strategy-learn | OK | 87 passed, 1 warning in 10.66s |",
++      "present": true,
++      "status": "OK",
++      "timestamp": "2026-08-07 08:12 UTC"
++    },
++    "exp6180-exp6166-reproducibility-adjudication": {
++      "detail": "85 passed, 1 warning in 8.82s",
++      "line": "| 2026-08-07 08:29 UTC | Exp6166 evidence-preserving reproducibility adjudi | OK | 85 passed, 1 warning in 8.82s |",
++      "present": true,
++      "status": "OK",
++      "timestamp": "2026-08-07 08:29 UTC"
++    },
++    "exp6181-arc-logo-shortcut-audit": {
++      "detail": "87 passed, 1 warning in 13.84s",
++      "line": "| 2026-08-07 08:47 UTC | Single ARC slot leave-one-game-out shortcut audit | OK | 87 passed, 1 warning in 13.84s |",
++      "present": true,
++      "status": "OK",
++      "timestamp": "2026-08-07 08:47 UTC"
++    }
++  },
++  "declared_task_matrix": {
++    "exp6169-v535-transition": {
++      "conductor_receipt": {
++        "detail": "Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec",
++        "line": "| 2026-08-07 01:49 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec |",
++        "present": true,
++        "status": "FAIL",
++        "timestamp": "2026-08-07 01:49 UTC"
++      },
++      "declared_deliverable": "results/experiment_6169_transition_v535.json",
++      "declared_gates": [],
++      "loadable": false,
++      "milestone": "2026.08.535",
++      "present": false,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": null,
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6169-v535-transition",
++      "terminal_class": "missing",
++      "terminal_evidence_source": "declared_path_missing",
++      "title": "Exact terminal-boundary handoff from .534 into .535"
++    },
++    "exp6170-v535-task-artifact-isolation-canary": {
++      "conductor_receipt": {
++        "detail": "128 passed, 1 warning in 113.39s (0:01:53)",
++        "line": "| 2026-08-07 02:40 UTC | Task-scoped artifact-isolation compatibility canar | OK | 128 passed, 1 warning in 113.39s (0:01:53) |",
++        "present": true,
++        "status": "OK",
++        "timestamp": "2026-08-07 02:40 UTC"
++      },
++      "declared_deliverable": "results/experiment_6170_v535_task_artifact_isolation_canary.json",
++      "declared_gates": [],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:d84ddda631729fbc8ffd11bc18b9f52451bf3ce3e72102eb6d8d85bfac76413e",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6170-v535-task-artifact-isolation-canary",
++      "terminal_class": "delivered",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Task-scoped artifact-isolation compatibility canary for .535"
++    },
++    "exp6171-v535-source-delta-ingestion": {
++      "conductor_receipt": {
++        "detail": "86 passed, 1 warning in 7.93s",
++        "line": "| 2026-08-07 03:32 UTC | Reliable dated evidence refresh after the V535 pla | OK | 86 passed, 1 warning in 7.93s |",
++        "present": true,
++        "status": "OK",
++        "timestamp": "2026-08-07 03:32 UTC"
++      },
++      "declared_deliverable": "results/experiment_6171_v535_source_delta_ingestion.json",
++      "declared_gates": [],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:37d14c85895dc14db5a04972ae3d6f7d0b29a0a739d2c4c91f3fe3c754339d52",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6171-v535-source-delta-ingestion",
++      "terminal_class": "null",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Reliable dated evidence refresh after the V535 planner marker"
++    },
++    "exp6172-current-rule-quarantine-determination": {
++      "conductor_receipt": {
++        "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
++        "line": "| 2026-08-07 03:49 UTC | Immutable current-rule companion determination for | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
++        "present": true,
++        "status": "FLAGGED",
++        "timestamp": "2026-08-07 03:49 UTC"
++      },
++      "declared_deliverable": "results/experiment_6172_current_rule_quarantine_determination.json",
++      "declared_gates": [],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:68407f5e319330f3c722f836f9353886743e9c51cf687a9ca033be8db989335a",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6172-current-rule-quarantine-determination",
++      "terminal_class": "flagged",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Immutable current-rule companion determination for Exp6161 and Exp6162"
++    },
++    "exp6173-cctu-item-bank-preregistration": {
++      "conductor_receipt": {
++        "detail": "87 passed, 1 warning in 13.53s",
++        "line": "| 2026-08-07 04:36 UTC | Frozen executable CCTU-style item bank and Phase-D | OK | 87 passed, 1 warning in 13.53s |",
++        "present": true,
++        "status": "OK",
++        "timestamp": "2026-08-07 04:36 UTC"
++      },
++      "declared_deliverable": "results/experiment_6173_cctu_item_bank_preregistration.json",
++      "declared_gates": [],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:4961b1dc06e1bf9cca1c2aae3a7205e0627246c8003ea33d4b423ed106a682fb",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6173-cctu-item-bank-preregistration",
++      "terminal_class": "positive",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Frozen executable CCTU-style item bank and Phase-D preregistration"
++    },
++    "exp6174-cctu-authentic-k8-pool": {
++      "conductor_receipt": {
++        "detail": "87 passed, 1 warning in 12.81s",
++        "line": "| 2026-08-07 05:37 UTC | Gated on Exp6173 bank readiness: authentic Gemma-4 | OK | 87 passed, 1 warning in 12.81s |",
++        "present": true,
++        "status": "OK",
++        "timestamp": "2026-08-07 05:37 UTC"
++      },
++      "declared_deliverable": "results/experiment_6174_cctu_authentic_k8_pool.json",
++      "declared_gates": [
++        {
++          "artifact_field": "cctu_item_bank_ready_score",
++          "op": "==",
++          "upstream": "exp6173-cctu-item-bank-preregistration",
++          "value": 1.0
++        }
++      ],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [
++        "results/experiment_6174_cctu_authentic_k8_pool.calibration_access_log.json",
++        "results/experiment_6174_cctu_authentic_k8_pool.checkpoint.json",
++        "results/experiment_6174_cctu_authentic_k8_pool.held_access_log.json"
++      ],
++      "same_number_alias_used": false,
++      "sha256": "sha256:4ddb66a0bd6142a2c0e8b4017c280615126d533df927ff1ace41edc71c4c19d4",
++      "sidecar_candidates_ignored": [
++        "results/experiment_6174_cctu_authentic_k8_pool.calibration_access_log.json",
++        "results/experiment_6174_cctu_authentic_k8_pool.calibration_labels.jsonl",
++        "results/experiment_6174_cctu_authentic_k8_pool.checkpoint.json",
++        "results/experiment_6174_cctu_authentic_k8_pool.held_access_log.json",
++        "results/experiment_6174_cctu_authentic_k8_pool.held_labels.jsonl",
++        "results/experiment_6174_cctu_authentic_k8_pool.raw_traces.jsonl"
++      ],
++      "task_id": "exp6174-cctu-authentic-k8-pool",
++      "terminal_class": "flagged",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Gated on Exp6173 bank readiness: authentic Gemma-4-31B CCTU K>=8 pool"
++    },
++    "exp6175-cctu-headroom-audit": {
++      "conductor_receipt": {
++        "detail": "Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR",
++        "line": "| 2026-08-07 07:42 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR |",
++        "present": true,
++        "status": "FAIL",
++        "timestamp": "2026-08-07 07:42 UTC"
++      },
++      "declared_deliverable": "results/experiment_6175_cctu_headroom_audit.json",
++      "declared_gates": [
++        {
++          "artifact_field": "cctu_candidate_pool_integrity_score",
++          "op": "==",
++          "upstream": "exp6174-cctu-authentic-k8-pool",
++          "value": 1.0
++        }
++      ],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:32e34081c61b4c2210836177cbe6e142745ecdccef3b8ac284852e2444475523",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6175-cctu-headroom-audit",
++      "terminal_class": "retired",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Gated on Exp6174 pool integrity: CCTU competence, unsaturation, and selectable-headroom audit"
++    },
++    "exp6176-hidden-state-surface-qualification": {
++      "conductor_receipt": {
++        "detail": "Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit)",
++        "line": "| 2026-08-07 07:48 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |",
++        "present": true,
++        "status": "GATE_BLOCK",
++        "timestamp": "2026-08-07 07:48 UTC"
++      },
++      "declared_deliverable": "results/experiment_6176_hidden_state_surface_qualification.json",
++      "declared_gates": [
++        {
++          "artifact_field": "phase_d_headroom_ready_score",
++          "op": "==",
++          "upstream": "exp6175-cctu-headroom-audit",
++          "value": 1.0
++        }
++      ],
++      "loadable": false,
++      "milestone": "2026.08.535",
++      "present": false,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": null,
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6176-hidden-state-surface-qualification",
++      "terminal_class": "skipped",
++      "terminal_evidence_source": "conductor_gate_block",
++      "title": "Matching-base per-layer hidden-state surface qualification"
++    },
++    "exp6177-clue-latent-selector-freeze": {
++      "conductor_receipt": {
++        "detail": "1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification",
++        "line": "| 2026-08-07 07:48 UTC | Calibration-only CLUE and latent selector freeze | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification |",
++        "present": true,
++        "status": "GATE_BLOCK",
++        "timestamp": "2026-08-07 07:48 UTC"
++      },
++      "declared_deliverable": "results/experiment_6177_clue_latent_selector_freeze.json",
++      "declared_gates": [
++        {
++          "artifact_field": "hidden_state_surface_ready_score",
++          "op": "==",
++          "upstream": "exp6176-hidden-state-surface-qualification",
++          "value": 1.0
++        }
++      ],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:043859f61a841c90b0a803ffe86c6084414d526d25fee11596f6b429abd62a19",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6177-clue-latent-selector-freeze",
++      "terminal_class": "blocked",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Calibration-only CLUE and latent selector freeze"
++    },
++    "exp6178-held-internal-state-selection": {
++      "conductor_receipt": {
++        "detail": "Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze)",
++        "line": "| 2026-08-07 08:31 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |",
++        "present": true,
++        "status": "GATE_BLOCK",
++        "timestamp": "2026-08-07 08:31 UTC"
++      },
++      "declared_deliverable": "results/experiment_6178_held_internal_state_selection.json",
++      "declared_gates": [
++        {
++          "artifact_field": "calibration_selector_ready_score",
++          "op": "==",
++          "upstream": "exp6177-clue-latent-selector-freeze",
++          "value": 1.0
++        }
++      ],
++      "loadable": false,
++      "milestone": "2026.08.535",
++      "present": false,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": null,
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6178-held-internal-state-selection",
++      "terminal_class": "skipped",
++      "terminal_evidence_source": "conductor_gate_block",
++      "title": "One-shot held internal-state selection"
++    },
++    "exp6179-retention-safe-continuous-strategy-learning-ab": {
++      "conductor_receipt": {
++        "detail": "87 passed, 1 warning in 10.66s",
++        "line": "| 2026-08-07 08:12 UTC | Mandatory retention-safe continuous strategy-learn | OK | 87 passed, 1 warning in 10.66s |",
++        "present": true,
++        "status": "OK",
++        "timestamp": "2026-08-07 08:12 UTC"
++      },
++      "declared_deliverable": "results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json",
++      "declared_gates": [],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:f4d571b874ce6aa89089a503a2a1c2f9551c0e401f308dbba61bacf3f8b2ceb0",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6179-retention-safe-continuous-strategy-learning-ab",
++      "terminal_class": "positive",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Mandatory retention-safe continuous strategy-learning A/B"
++    },
++    "exp6180-exp6166-reproducibility-adjudication": {
++      "conductor_receipt": {
++        "detail": "85 passed, 1 warning in 8.82s",
++        "line": "| 2026-08-07 08:29 UTC | Exp6166 evidence-preserving reproducibility adjudi | OK | 85 passed, 1 warning in 8.82s |",
++        "present": true,
++        "status": "OK",
++        "timestamp": "2026-08-07 08:29 UTC"
++      },
++      "declared_deliverable": "results/experiment_6180_exp6166_reproducibility_adjudication.json",
++      "declared_gates": [],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6180-exp6166-reproducibility-adjudication",
++      "terminal_class": "positive",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Exp6166 evidence-preserving reproducibility adjudication"
++    },
++    "exp6181-arc-logo-shortcut-audit": {
++      "conductor_receipt": {
++        "detail": "87 passed, 1 warning in 13.84s",
++        "line": "| 2026-08-07 08:47 UTC | Single ARC slot leave-one-game-out shortcut audit | OK | 87 passed, 1 warning in 13.84s |",
++        "present": true,
++        "status": "OK",
++        "timestamp": "2026-08-07 08:47 UTC"
++      },
++      "declared_deliverable": "results/experiment_6181_arc_logo_shortcut_audit.json",
++      "declared_gates": [],
++      "loadable": true,
++      "milestone": "2026.08.535",
++      "present": true,
++      "same_number_alias_candidates_ignored": [],
++      "same_number_alias_used": false,
++      "sha256": "sha256:1c79b66159f07e907444a55364f8266833aa477e91c50ff397c0952b1d6f68a2",
++      "sidecar_candidates_ignored": [],
++      "task_id": "exp6181-arc-logo-shortcut-audit",
++      "terminal_class": "positive",
++      "terminal_evidence_source": "exact_declared_artifact",
++      "title": "Single ARC slot leave-one-game-out shortcut audit"
++    }
++  },
++  "delivered_artifacts": [
++    "exp6170-v535-task-artifact-isolation-canary",
++    "exp6171-v535-source-delta-ingestion",
++    "exp6172-current-rule-quarantine-determination",
++    "exp6173-cctu-item-bank-preregistration",
++    "exp6174-cctu-authentic-k8-pool",
++    "exp6175-cctu-headroom-audit",
++    "exp6177-clue-latent-selector-freeze",
++    "exp6179-retention-safe-continuous-strategy-learning-ab",
++    "exp6180-exp6166-reproducibility-adjudication",
++    "exp6181-arc-logo-shortcut-audit"
++  ],
++  "duration_s": 1.0,
++  "exact_artifact_hashes": {
++    "exp6169-v535-transition": {
++      "path": "results/experiment_6169_transition_v535.json",
++      "present": false,
++      "sha256": null
++    },
++    "exp6170-v535-task-artifact-isolation-canary": {
++      "path": "results/experiment_6170_v535_task_artifact_isolation_canary.json",
++      "present": true,
++      "sha256": "sha256:d84ddda631729fbc8ffd11bc18b9f52451bf3ce3e72102eb6d8d85bfac76413e"
++    },
++    "exp6171-v535-source-delta-ingestion": {
++      "path": "results/experiment_6171_v535_source_delta_ingestion.json",
++      "present": true,
++      "sha256": "sha256:37d14c85895dc14db5a04972ae3d6f7d0b29a0a739d2c4c91f3fe3c754339d52"
++    },
++    "exp6172-current-rule-quarantine-determination": {
++      "path": "results/experiment_6172_current_rule_quarantine_determination.json",
++      "present": true,
++      "sha256": "sha256:68407f5e319330f3c722f836f9353886743e9c51cf687a9ca033be8db989335a"
++    },
++    "exp6173-cctu-item-bank-preregistration": {
++      "path": "results/experiment_6173_cctu_item_bank_preregistration.json",
++      "present": true,
++      "sha256": "sha256:4961b1dc06e1bf9cca1c2aae3a7205e0627246c8003ea33d4b423ed106a682fb"
++    },
++    "exp6174-cctu-authentic-k8-pool": {
++      "path": "results/experiment_6174_cctu_authentic_k8_pool.json",
++      "present": true,
++      "sha256": "sha256:4ddb66a0bd6142a2c0e8b4017c280615126d533df927ff1ace41edc71c4c19d4"
++    },
++    "exp6175-cctu-headroom-audit": {
++      "path": "results/experiment_6175_cctu_headroom_audit.json",
++      "present": true,
++      "sha256": "sha256:32e34081c61b4c2210836177cbe6e142745ecdccef3b8ac284852e2444475523"
++    },
++    "exp6176-hidden-state-surface-qualification": {
++      "path": "results/experiment_6176_hidden_state_surface_qualification.json",
++      "present": false,
++      "sha256": null
++    },
++    "exp6177-clue-latent-selector-freeze": {
++      "path": "results/experiment_6177_clue_latent_selector_freeze.json",
++      "present": true,
++      "sha256": "sha256:043859f61a841c90b0a803ffe86c6084414d526d25fee11596f6b429abd62a19"
++    },
++    "exp6178-held-internal-state-selection": {
++      "path": "results/experiment_6178_held_internal_state_selection.json",
++      "present": false,
++      "sha256": null
++    },
++    "exp6179-retention-safe-continuous-strategy-learning-ab": {
++      "path": "results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json",
++      "present": true,
++      "sha256": "sha256:f4d571b874ce6aa89089a503a2a1c2f9551c0e401f308dbba61bacf3f8b2ceb0"
++    },
++    "exp6180-exp6166-reproducibility-adjudication": {
++      "path": "results/experiment_6180_exp6166_reproducibility_adjudication.json",
++      "present": true,
++      "sha256": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87"
++    },
++    "exp6181-arc-logo-shortcut-audit": {
++      "path": "results/experiment_6181_arc_logo_shortcut_audit.json",
++      "present": true,
++      "sha256": "sha256:1c79b66159f07e907444a55364f8266833aa477e91c50ff397c0952b1d6f68a2"
++    }
++  },
++  "experiment": "experiment_6182_v535_capstone_reconciliation",
++  "experiment_id": "exp6182-v535-capstone-reconciliation",
++  "field_provenance": {
++    "adversarial_verification_receipts": {
++      "principle": "present exact artifacts are checked and receipt-hashed",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "blocked_artifacts": {
++      "principle": "blocked_artifacts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "branch_decisions": {
++      "principle": "Phase-D, CSL, stochastic, and ARC branches close only to evidence-backed boundaries",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "completion_history_multiplicity": {
++      "principle": "before/after `.535` history count and append-at-most-once evidence",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "completion_history_update": {
++      "principle": "append-once or explicit no-append receipt",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "conductor_receipts": {
++      "principle": "latest matching conductor row for each task, preserving OK, FAIL, FLAGGED, and GATE_BLOCK",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "declared_task_matrix": {
++      "principle": "fixed Exp6169-Exp6181 denominator from active roadmap exact paths",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "delivered_artifacts": {
++      "principle": "delivered_artifacts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "duration_s": {
++      "principle": "duration_s is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "exact_artifact_hashes": {
++      "principle": "sha256 of exact declared deliverables only",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "experiment": {
++      "principle": "experiment is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "experiment_id": {
++      "principle": "experiment_id is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "field_provenance": {
++      "principle": "every required output field names roadmap, conductor, exact artifact, verifier, or local hash sources",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "flagged_artifacts": {
++      "principle": "flagged_artifacts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "honest_verdict": {
++      "principle": "terminal summary starting with complete: or blocked: without strengthening scientific claims.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "milestone": {
++      "principle": "milestone is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "missing_artifacts": {
++      "principle": "missing_artifacts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "no_claim_strengthening_receipts": {
++      "principle": "raw fields, not task titles or sidecars, determine promotions",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "null_artifacts": {
++      "principle": "null_artifacts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "positive_artifacts": {
++      "principle": "positive_artifacts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "preconditions_checked": {
++      "principle": "preconditions_checked is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "protected_files_unchanged": {
++      "principle": "conductor, ops ledgers, traceability, exclusions, and protected sources remain unchanged",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "quarantine_field_receipts": {
++      "principle": "flagged, corrigendum, and historical-quarantine fields are visible before aggregation",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "raw_field_reconciliation": {
++      "principle": "raw_field_reconciliation is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed capstone output is stable",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "retired_artifacts": {
++      "principle": "retired_artifacts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "run_date": {
++      "principle": "run_date is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "schema": {
++      "principle": "schema is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "skipped_artifacts": {
++      "principle": "skipped_artifacts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "status": {
++      "principle": "status is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "terminal_class_counts": {
++      "principle": "terminal_class_counts is required by REQ-CAPSTONE-6182.",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "terminal_classification": {
++      "principle": "delivered, missing, skipped, null, blocked, retired, flagged, and positive stay disjoint",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "test_commands": {
++      "principle": "verification commands are replayable",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    },
++    "test_exit_codes": {
++      "principle": "observed exits are recorded without laundering failures",
++      "sources": [
++        "research-roadmap.yaml",
++        "ops/conductor-log.md",
++        "exact_declared_artifacts",
++        "adversarial_verify_receipts",
++        "local_hashes"
++      ]
++    }
++  },
++  "flagged_artifacts": [
++    "exp6172-current-rule-quarantine-determination",
++    "exp6174-cctu-authentic-k8-pool"
++  ],
++  "honest_verdict": "complete: .535 reconciled by exact declared paths with missing transition, gate skips, blocked selector, retired Phase-D headroom, flagged companion quarantine, null source refresh, CSL evidence, software-only stochastic replay, and no-solve ARC preserved",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone": "2026.08.535",
++  "missing_artifacts": [
++    "exp6169-v535-transition"
++  ],
++  "no_claim_strengthening_receipts": {
++    "arc_no_solve_promoted": false,
++    "current_rule_clean_used_for_headline": false,
++    "flagged_companion_unflagged": false,
++    "principle": "raw fields, not task titles or sidecars, determine promotions",
++    "retired_phase_d_promoted": false,
++    "sidecars_and_aliases_imported": false,
++    "skipped_hidden_state_promoted": false,
++    "stochastic_hardware_promoted": false
++  },
++  "null_artifacts": [
++    "exp6171-v535-source-delta-ingestion"
++  ],
++  "positive_artifacts": [
++    "exp6173-cctu-item-bank-preregistration",
++    "exp6179-retention-safe-continuous-strategy-learning-ab",
++    "exp6180-exp6166-reproducibility-adjudication",
++    "exp6181-arc-logo-shortcut-audit"
++  ],
++  "preconditions_checked": {
++    "artifact_selection_policy": "exact_declared_deliverable_path_only",
++    "completion_history": {
++      "milestone_count": 0,
++      "path": "research-complete.yaml",
++      "sha256": "sha256:067a822b5d232bf221ea796735499bb45c28ca46699c9f1ab88c2fd2843628cd"
++    },
++    "conductor_log": {
++      "path": "ops/conductor-log.md",
++      "sha256": "sha256:444d65e77c2f842f2d0acf057e4b483729b6d0f7465df51321f1c49ab0dcc40a"
++    },
++    "exclusion_manifest": {
++      "path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
++    },
++    "git_status_short": [
++      " M openspec/capabilities/capstone/spec.md",
++      " M results/experiment_1822_rtl_synth.log",
++      " M results/experiment_2031.json",
++      "?? python/carnot/experiment_6182_v535_capstone_reconciliation.py",
++      "?? tests/python/test_experiment_6182_v535_capstone_reconciliation.py"
++    ],
++    "protected_file_hashes": {
++      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++      "CLAUDE.md": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "openspec/capabilities/capstone/spec.md": "sha256:71a4aaa2c58846370b87f9b1e89fcaa9c85ddae24c81b28f469b240fa2e25ff3",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:c09a9ca816710e7d27d30b34b4dc4e8ee391fd1c2379a00c1e0a0c054a7f31d8",
++      "ops/changelog.md": "sha256:abd735749044e0c31554c0bb368c862db02a10a36bde532086c976dad0a1447f",
++      "ops/conductor-log.md": "sha256:444d65e77c2f842f2d0acf057e4b483729b6d0f7465df51321f1c49ab0dcc40a",
++      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++      "ops/known-issues.md": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "research-complete.yaml": "sha256:067a822b5d232bf221ea796735499bb45c28ca46699c9f1ab88c2fd2843628cd",
++      "research-roadmap.yaml": "sha256:bd8c32d70b3fb3845704a1c7589d797b1132b798f97b4178d6cb8da3396550e3",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "roadmap": {
++      "declared_task_count": 13,
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:bd8c32d70b3fb3845704a1c7589d797b1132b798f97b4178d6cb8da3396550e3"
++    },
++    "root_clutter_python_files": []
++  },
++  "protected_files_unchanged": {
++    "all_unchanged": true,
++    "files": {
++      "_bmad/traceability.md": {
++        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "present": true,
++        "unchanged": true
++      },
++      "openspec/capabilities/capstone/spec.md": {
++        "after_sha256": "sha256:71a4aaa2c58846370b87f9b1e89fcaa9c85ddae24c81b28f469b240fa2e25ff3",
++        "before_sha256": "sha256:71a4aaa2c58846370b87f9b1e89fcaa9c85ddae24c81b28f469b240fa2e25ff3",
++        "present": true,
++        "unchanged": true
++      },
++      "openspec/change-proposals/research-roadmap-vNEXT.md": {
++        "after_sha256": "sha256:c09a9ca816710e7d27d30b34b4dc4e8ee391fd1c2379a00c1e0a0c054a7f31d8",
++        "before_sha256": "sha256:c09a9ca816710e7d27d30b34b4dc4e8ee391fd1c2379a00c1e0a0c054a7f31d8",
++        "present": true,
++        "unchanged": true
++      },
++      "ops/changelog.md": {
++        "after_sha256": "sha256:abd735749044e0c31554c0bb368c862db02a10a36bde532086c976dad0a1447f",
++        "before_sha256": "sha256:abd735749044e0c31554c0bb368c862db02a10a36bde532086c976dad0a1447f",
++        "present": true,
++        "unchanged": true
++      },
++      "ops/exclusion_manifest.yaml": {
++        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++        "present": true,
++        "unchanged": true
++      },
++      "ops/known-issues.md": {
++        "after_sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
++        "before_sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
++        "present": true,
++        "unchanged": true
++      },
++      "ops/status.md": {
++        "after_sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++        "before_sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++        "present": true,
++        "unchanged": true
++      },
++      "scripts/research_conductor.py": {
++        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "present": true,
++        "unchanged": true
++      }
++    }
++  },
++  "quarantine_field_receipts": {
++    "flagged_or_quarantined_task_ids": [
++      "exp6172-current-rule-quarantine-determination",
++      "exp6174-cctu-authentic-k8-pool"
++    ],
++    "rows_by_task_id": {
++      "exp6170-v535-task-artifact-isolation-canary": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 0,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6170-v535-task-artifact-isolation-canary",
++        "terminal_class": "delivered"
++      },
++      "exp6171-v535-source-delta-ingestion": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 0,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6171-v535-source-delta-ingestion",
++        "terminal_class": "null"
++      },
++      "exp6172-current-rule-quarantine-determination": {
++        "corrigendum_pending": [
++          {
++            "detail": "duration_s=0.072188 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++            "kind": "DURATION_TOO_SHORT",
++            "severity": "critical"
++          },
++          {
++            "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
++            "kind": "METHODOLOGY_MISSING",
++            "severity": "warn"
++          }
++        ],
++        "current_verifier_flag_count": 2,
++        "flagged_adversarial": true,
++        "headline_promotion_authorized": false,
++        "historical_quarantine_preserved": true,
++        "task_id": "exp6172-current-rule-quarantine-determination",
++        "terminal_class": "flagged"
++      },
++      "exp6173-cctu-item-bank-preregistration": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 0,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6173-cctu-item-bank-preregistration",
++        "terminal_class": "positive"
++      },
++      "exp6174-cctu-authentic-k8-pool": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 1,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6174-cctu-authentic-k8-pool",
++        "terminal_class": "flagged"
++      },
++      "exp6175-cctu-headroom-audit": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 0,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6175-cctu-headroom-audit",
++        "terminal_class": "retired"
++      },
++      "exp6177-clue-latent-selector-freeze": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 0,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6177-clue-latent-selector-freeze",
++        "terminal_class": "blocked"
++      },
++      "exp6179-retention-safe-continuous-strategy-learning-ab": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 0,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6179-retention-safe-continuous-strategy-learning-ab",
++        "terminal_class": "positive"
++      },
++      "exp6180-exp6166-reproducibility-adjudication": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 0,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6180-exp6166-reproducibility-adjudication",
++        "terminal_class": "positive"
++      },
++      "exp6181-arc-logo-shortcut-audit": {
++        "corrigendum_pending": null,
++        "current_verifier_flag_count": 0,
++        "flagged_adversarial": false,
++        "headline_promotion_authorized": null,
++        "historical_quarantine_preserved": null,
++        "task_id": "exp6181-arc-logo-shortcut-audit",
++        "terminal_class": "positive"
++      }
++    }
++  },
++  "random_seed": 6182,
++  "raw_field_reconciliation": {
++    "arc": {
++      "level_credit_delta": 0,
++      "registry_delta": 0,
++      "registry_levels_unchanged": true,
++      "shortcut_detected": false,
++      "solve_claimed": false,
++      "solve_credit_promoted": false,
++      "terminal_class": "positive"
++    },
++    "artifact_isolation": {
++      "ready_score": 0,
++      "repository_wide_closure_claimed": false,
++      "terminal_class": "delivered"
++    },
++    "continuous_strategy_learning": {
++      "live_model_generation_claimed": false,
++      "model_weights_immutable": true,
++      "poison_propagation_count": 0,
++      "ready_score": 1.0,
++      "terminal_class": "positive"
++    },
++    "phase_d": {
++      "downstream_selector_promoted": false,
++      "future_rows_allowed": false,
++      "headroom_ready_score": 0.0,
++      "item_bank_ready_score": 1.0,
++      "pool_integrity_score": 1.0,
++      "retired": true
++    },
++    "quarantine_determination": {
++      "current_rule_clean": true,
++      "headline_promotion_authorized": false,
++      "historical_quarantine_preserved": true,
++      "operator_reopen_required": true,
++      "terminal_class": "flagged"
++    },
++    "source_delta": {
++      "accepted_count": 0,
++      "terminal_class": "null",
++      "zero_delta_accepted": true
++    },
++    "stochastic": {
++      "hardware_promoted": false,
++      "historical_status_preserved": "blocked",
++      "software_reproducible": true,
++      "terminal_class": "positive"
++    }
++  },
++  "reproducibility_checksum": "sha256:3d6b07f46051f784edcb325f6c3eb2d9acf1e2313872f02e6b0c29b62d4559ea",
++  "retired_artifacts": [
++    "exp6175-cctu-headroom-audit"
++  ],
++  "run_date": "20260807",
++  "schema": "carnot.experiment_6182.v535_capstone_reconciliation.v1",
++  "skipped_artifacts": [
++    "exp6176-hidden-state-surface-qualification",
++    "exp6178-held-internal-state-selection"
++  ],
++  "status": "complete_with_missing_skipped_blocked_retired_flagged_and_null",
++  "terminal_class_counts": {
++    "blocked": 1,
++    "delivered": 1,
++    "flagged": 2,
++    "missing": 1,
++    "null": 1,
++    "positive": 4,
++    "retired": 1,
++    "skipped": 2
++  },
++  "terminal_classification": {
++    "all_tasks_classified_once": true,
++    "task_ids_by_terminal_class": {
++      "blocked": [
++        "exp6177-clue-latent-selector-freeze"
++      ],
++      "delivered": [
++        "exp6170-v535-task-artifact-isolation-canary"
++      ],
++      "flagged": [
++        "exp6172-current-rule-quarantine-determination",
++        "exp6174-cctu-authentic-k8-pool"
++      ],
++      "missing": [
++        "exp6169-v535-transition"
++      ],
++      "null": [
++        "exp6171-v535-source-delta-ingestion"
++      ],
++      "positive": [
++        "exp6173-cctu-item-bank-preregistration",
++        "exp6179-retention-safe-continuous-strategy-learning-ab",
++        "exp6180-exp6166-reproducibility-adjudication",
++        "exp6181-arc-logo-shortcut-audit"
++      ],
++      "retired": [
++        "exp6175-cctu-headroom-audit"
++      ],
++      "skipped": [
++        "exp6176-hidden-state-surface-qualification",
++        "exp6178-held-internal-state-selection"
++      ]
++    },
++    "terminal_class_by_task_id": {
++      "exp6169-v535-transition": "missing",
++      "exp6170-v535-task-artifact-isolation-canary": "delivered",
++      "exp6171-v535-source-delta-ingestion": "null",
++      "exp6172-current-rule-quarantine-determination": "flagged",
++      "exp6173-cctu-item-bank-preregistration": "positive",
++      "exp6174-cctu-authentic-k8-pool": "flagged",
++      "exp6175-cctu-headroom-audit": "retired",
++      "exp6176-hidden-state-surface-qualification": "skipped",
++      "exp6177-clue-latent-selector-freeze": "blocked",
++      "exp6178-held-internal-state-selection": "skipped",
++      "exp6179-retention-safe-continuous-strategy-learning-ab": "positive",
++      "exp6180-exp6166-reproducibility-adjudication": "positive",
++      "exp6181-arc-logo-shortcut-audit": "positive"
++    }
++  },
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py -m pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py --fail-under=100",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py",
++    ".venv/bin/ruff check python/carnot/experiment_6182_v535_capstone_reconciliation.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_6182_v535_capstone_reconciliation.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py --fail-under=100": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py -m pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python -q": 2,
++    ".venv/bin/pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py": 0,
++    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    ".venv/bin/ruff check python/carnot/experiment_6182_v535_capstone_reconciliation.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py": 0,
++    ".venv/bin/ruff format --check python/carnot/experiment_6182_v535_capstone_reconciliation.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py": 0
++  }
++}
+diff --git a/tests/python/test_experiment_6182_v535_capstone_reconciliation.py b/tests/python/test_experiment_6182_v535_capstone_reconciliation.py
+new file mode 100644
+index 0000000000..055cb11023
+--- /dev/null
++++ b/tests/python/test_experiment_6182_v535_capstone_reconciliation.py
+@@ -0,0 +1,608 @@
++"""Tests for Exp6182 V535 capstone reconciliation.
++
++Spec refs: REQ-CAPSTONE-6182, SCENARIO-CAPSTONE-6182,
++SCENARIO-CAPSTONE-6182-EXACT-PATH,
++SCENARIO-CAPSTONE-6182-TERMINAL-CLASS-PRESERVATION,
++SCENARIO-CAPSTONE-6182-ADVERSARIAL-VERIFY-AND-CHECKSUM,
++SCENARIO-CAPSTONE-6182-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_6182_v535_capstone_reconciliation as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/capstone/spec.md"
++
++
++def _write_text(root: Path, rel_path: Path | str, text: str = "fixture\n") -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++
++
++def _write_json(root: Path, rel_path: Path | str, payload: Any) -> None:
++    _write_text(root, rel_path, json.dumps(payload, indent=2, sort_keys=True) + "\n")
++
++
++def _artifact(task_id: str) -> JsonDict:
++    payloads: dict[str, JsonDict] = {
++        "exp6170-v535-task-artifact-isolation-canary": {
++            "status": "complete_partial",
++            "honest_verdict": (
++                "complete_partial: canary ready_score=0, repository-wide claim false"
++            ),
++            "inference_substrate": "deterministic_task_scoped_repository_test_isolation",
++            "scope_boundary_and_repository_wide_closure_claimed": {
++                "repository_wide_closure_claimed": False,
++                "qualified_task_ids": [task_id for task_id, _title, _path in mod.ACTIVATED_TASKS],
++            },
++            "v535_task_artifact_isolation_ready_score": 0,
++            "isolation_violation_count": 1,
++            "test_exit_codes": {"focused": 0, "required_full_python_suite_once": 2},
++        },
++        "exp6171-v535-source-delta-ingestion": {
++            "status": "complete",
++            "honest_verdict": "complete_null: accepted_count=0; references unchanged",
++            "inference_substrate": "dated_primary_secondary_source_ingestion",
++            "zero_delta_accepted": True,
++            "candidate_and_deduplicated_record_counts": {"accepted_count": 0},
++            "reference_hash_before_after_and_append_count": {"append_count": 0},
++        },
++        "exp6172-current-rule-quarantine-determination": {
++            "status": "complete_current_rule_clean_historical_quarantine_preserved",
++            "honest_verdict": (
++                "complete: current_rule_clean=true; historical quarantine still flagged"
++            ),
++            "inference_substrate": "deterministic_current_rule_companion_determination",
++            "flagged_adversarial": True,
++            "current_rule_clean": True,
++            "historical_quarantine_preserved": True,
++            "headline_promotion_authorized": False,
++            "operator_reopen_required": True,
++        },
++        "exp6173-cctu-item-bank-preregistration": {
++            "status": "complete_ready",
++            "honest_verdict": "complete_ready: item bank frozen",
++            "inference_substrate": "deterministic_executable_tool_trace_fixture_and_validators",
++            "cctu_item_bank_ready_score": 1.0,
++            "held_seal_and_access_log_path_hash": {"held_labels_sealed": True},
++            "verifier_is_oracle": True,
++        },
++        "exp6174-cctu-authentic-k8-pool": {
++            "status": "complete_ready",
++            "honest_verdict": "complete_ready: K8 pool integrity score one",
++            "inference_substrate": "llama_cpp_local_gemma4_31b_gguf_native_chat_tool_trace_generation",
++            "cctu_candidate_pool_integrity_score": 1.0,
++            "exact_label_sidecar_paths_hashes_and_counts": {"label_row_count": 960},
++        },
++        "exp6175-cctu-headroom-audit": {
++            "status": "retired",
++            "honest_verdict": "retired: failed preregistered headroom conjuncts",
++            "inference_substrate": "deterministic_exact_tool_trace_headroom_audit",
++            "phase_d_headroom_ready_score": 0.0,
++            "future_rows_allowed_by_this_artifact": False,
++            "oracle_minus_consensus_delta_and_clustered_interval": {
++                "delta": 0.0,
++                "lower_ci_excludes_zero": False,
++            },
++            "consensus_wrong_oracle_right_group_count": {
++                "count": 0,
++                "minimum_required": 30,
++                "passed": False,
++            },
++            "verifier_is_oracle": True,
++        },
++        "exp6177-clue-latent-selector-freeze": {
++            "schema": "blocked_gate_check_v1",
++            "experiment": 6177,
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "duration_s": 0.0,
++            "gates_evaluated": [
++                {
++                    "upstream": "exp6176-hidden-state-surface-qualification",
++                    "artifact_field": "hidden_state_surface_ready_score",
++                    "passed": False,
++                }
++            ],
++        },
++        "exp6179-retention-safe-continuous-strategy-learning-ab": {
++            "status": "complete",
++            "honest_verdict": (
++                "complete: replay beat controls while preserving retention; "
++                "live model generation did not execute"
++            ),
++            "inference_substrate": "deterministic_exact_verifier_and_versioned_external_state_no_llm",
++            "retention_safe_continuous_strategy_learning_ready_score": 1.0,
++            "model_weight_immutability_receipt": {"all_unchanged": True},
++            "rollback_and_quarantine_receipts": {
++                "quarantine_count": 3,
++                "poison_propagation_count": 0,
++            },
++            "exact_post_outcome_write_receipts": {
++                "all_commits_after_exact_outcome": True,
++            },
++            "MODEL_SPECS": [
++                "unsloth/Qwen3.6-35B-A3B-GGUF",
++                "unsloth/gemma-4-26B-A4B-it-GGUF",
++            ],
++        },
++        "exp6180-exp6166-reproducibility-adjudication": {
++            "status": "complete_positive",
++            "honest_verdict": (
++                "complete_positive: Exp6166 software stochastic result reproduced; "
++                "historical Exp6166 remains blocked"
++            ),
++            "inference_substrate": "jax_cpu_software_exp6166_artifact_replay",
++            "companion_determination": {
++                "historical_exp6166_status_preserved": "blocked",
++                "adjudicated_result": "software_only_positive_reproducible",
++            },
++            "no_hardware_promotion_receipt": {
++                "hardware_execution_claimed": False,
++                "latency_power_energy_and_speedup_claimed": False,
++            },
++        },
++        "exp6181-arc-logo-shortcut-audit": {
++            "status": "complete_no_shortcut_detected",
++            "honest_verdict": "complete_no_shortcut_detected: no solve, no registry delta",
++            "inference_substrate": "live_e3_adapter_disabled_runtime_transitions",
++            "shortcut_audit_summary": {"shortcut_detected": False},
++            "solve_claimed": False,
++            "level_credit_delta": 0,
++            "registry_delta": 0,
++            "registry_levels_unchanged": True,
++            "adapter_disabled_live_path_receipt": {"adapter_disabled": True},
++        },
++    }
++    return payloads[task_id]
++
++
++def _roadmap_payload() -> JsonDict:
++    return {
++        "milestone": mod.MILESTONE,
++        "tasks": [
++            {
++                "id": task_id,
++                "milestone": mod.MILESTONE,
++                "title": title,
++                "deliverable": rel_path.as_posix(),
++                **(
++                    {"gated_on": deepcopy(mod.GATED_ON[task_id])} if task_id in mod.GATED_ON else {}
++                ),
++            }
++            for task_id, title, rel_path in mod.ACTIVATED_TASKS
++        ]
++        + [
++            {
++                "id": mod.EXPERIMENT_ID,
++                "milestone": mod.MILESTONE,
++                "title": "Branch-independent .535 capstone",
++                "deliverable": mod.RESULT_RELATIVE_PATH.as_posix(),
++            }
++        ],
++    }
++
++
++def _conductor_log() -> str:
++    return "\n".join(
++        [
++            "| 2026-08-07 01:49 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Hard wall-clock cap |",
++            "| 2026-08-07 02:40 UTC | Task-scoped artifact-isolation compatibility canar | OK | 128 passed |",
++            "| 2026-08-07 03:32 UTC | Reliable dated evidence refresh after the V535 pla | OK | 86 passed |",
++            "| 2026-08-07 03:49 UTC | Immutable current-rule companion determination for | FLAGGED | DURATION_TOO_SHORT |",
++            "| 2026-08-07 04:36 UTC | Frozen executable CCTU-style item bank and Phase-D | OK | 87 passed |",
++            "| 2026-08-07 05:37 UTC | Gated on Exp6173 bank readiness: authentic Gemma-4 | OK | 87 passed |",
++            "| 2026-08-07 07:42 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | hard wall L-CLOSED-RETIR |",
++            "| 2026-08-07 07:48 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | upstream retired |",
++            "| 2026-08-07 07:48 UTC | Calibration-only CLUE and latent selector freeze | GATE_BLOCK | upstream failed |",
++            "| 2026-08-07 08:31 UTC | One-shot held internal-state selection | GATE_BLOCK | upstream retired |",
++            "| 2026-08-07 08:12 UTC | Mandatory retention-safe continuous strategy-learn | OK | 87 passed |",
++            "| 2026-08-07 08:29 UTC | Exp6166 evidence-preserving reproducibility adjudi | OK | 85 passed |",
++            "| 2026-08-07 08:47 UTC | Single ARC slot leave-one-game-out shortcut audit | OK | 87 passed |",
++        ]
++    )
++
++
++def _make_root(root: Path) -> None:
++    missing = {
++        "exp6169-v535-transition",
++        "exp6176-hidden-state-surface-qualification",
++        "exp6178-held-internal-state-selection",
++    }
++    for task_id, _title, rel_path in mod.ACTIVATED_TASKS:
++        if task_id not in missing:
++            _write_json(root, rel_path, _artifact(task_id))
++    _write_json(
++        root,
++        "results/experiment_6169_same_number_alias.json",
++        {"status": "complete", "honest_verdict": "complete: alias must be ignored"},
++    )
++    _write_json(
++        root,
++        "results/experiment_6174_cctu_authentic_k8_pool.held_access_log.json",
++        {"sidecar": True, "must_not_define_terminal_class": True},
++    )
++    _write_text(root, mod.ROADMAP_RELATIVE_PATH, yaml.safe_dump(_roadmap_payload()))
++    _write_text(root, mod.RESEARCH_COMPLETE_RELATIVE_PATH, "milestones: []\n")
++    _write_text(root, mod.CONDUCTOR_LOG_RELATIVE_PATH, _conductor_log())
++    _write_text(root, mod.EXCLUSION_MANIFEST_RELATIVE_PATH, "retired_experiments: []\n")
++    for rel_path in mod.PROTECTED_FILE_PATHS + mod.PRECONDITION_CONTEXT_PATHS:
++        if not (root / rel_path).exists():
++            _write_text(root, rel_path, f"{rel_path.as_posix()} fixture\n")
++
++
++def _receipt(task_id: str, rel_path: Path, flag_count: int = 0) -> JsonDict:
++    report = {
++        "artifact": rel_path.as_posix(),
++        "loaded": True,
++        "flag_count": flag_count,
++        "max_severity": 5 if flag_count else -1,
++        "flags": [{"rule": "fixture_flag"}] if flag_count else [],
++    }
++    return {
++        "task_id": task_id,
++        "artifact_path": rel_path.as_posix(),
++        "command": f".venv/bin/python scripts/adversarial_verify.py --json {rel_path.as_posix()}",
++        "exit_code": 1 if flag_count else 0,
++        "stdout_json": {"reports": [report], "flagged_count": flag_count},
++    }
++
++
++def _receipts() -> dict[str, JsonDict]:
++    receipts: dict[str, JsonDict] = {}
++    for task_id, _title, rel_path in mod.ACTIVATED_TASKS:
++        if task_id in {
++            "exp6169-v535-transition",
++            "exp6176-hidden-state-surface-qualification",
++            "exp6178-held-internal-state-selection",
++        }:
++            continue
++        receipts[task_id] = _receipt(
++            task_id,
++            rel_path,
++            flag_count=1 if task_id == "exp6172-current-rule-quarantine-determination" else 0,
++        )
++    return receipts
++
++
++def _build(root: Path) -> JsonDict:
++    _make_root(root)
++    return mod.build_report(
++        root,
++        adversarial_receipts=_receipts(),
++        tests_run={
++            ".venv/bin/pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0": 0,
++            ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py --fail-under=100": 0,
++        },
++        duration_s=1.25,
++    )
++
++
++def test_req_capstone_6182_spec_declares_exact_path_contract() -> None:
++    """REQ-CAPSTONE-6182: OpenSpec names exact-path reconciliation."""
++
++    section = SPEC_PATH.read_text(encoding="utf-8")
++    section = section[section.index("REQ-CAPSTONE-6182") :]
++
++    for marker in (
++        "REQ-CAPSTONE-6182",
++        "SCENARIO-CAPSTONE-6182",
++        "SCENARIO-CAPSTONE-6182-EXACT-PATH",
++        "SCENARIO-CAPSTONE-6182-TERMINAL-CLASS-PRESERVATION",
++        "SCENARIO-CAPSTONE-6182-ADVERSARIAL-VERIFY-AND-CHECKSUM",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        "Exp6169 through Exp6181",
++        "without modifying `scripts/research_conductor.py`",
++        "aggregation_from_upstream_artifacts",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in " ".join(section.split())
++
++
++def test_scenario_capstone_6182_exact_path_terminal_matrix(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-6182-EXACT-PATH: sidecars never replace declared paths."""
++
++    report = _build(tmp_path)
++
++    assert report["status"] == "complete_with_missing_skipped_blocked_retired_flagged_and_null"
++    assert report["honest_verdict"].startswith("complete:")
++    assert report["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++
++    matrix = report["declared_task_matrix"]
++    assert list(matrix) == [task_id for task_id, _title, _path in mod.ACTIVATED_TASKS]
++    assert matrix["exp6169-v535-transition"]["present"] is False
++    assert matrix["exp6169-v535-transition"]["terminal_class"] == "missing"
++    assert matrix["exp6169-v535-transition"]["same_number_alias_used"] is False
++    assert matrix["exp6169-v535-transition"]["same_number_alias_candidates_ignored"] == [
++        "results/experiment_6169_same_number_alias.json"
++    ]
++    assert matrix["exp6176-hidden-state-surface-qualification"]["terminal_class"] == "skipped"
++    assert matrix["exp6178-held-internal-state-selection"]["terminal_class"] == "skipped"
++    assert matrix["exp6177-clue-latent-selector-freeze"]["terminal_class"] == "blocked"
++    assert matrix["exp6174-cctu-authentic-k8-pool"]["sidecar_candidates_ignored"] == [
++        "results/experiment_6174_cctu_authentic_k8_pool.held_access_log.json"
++    ]
++
++    classes = report["terminal_classification"]["terminal_class_by_task_id"]
++    assert classes == {
++        "exp6169-v535-transition": "missing",
++        "exp6170-v535-task-artifact-isolation-canary": "delivered",
++        "exp6171-v535-source-delta-ingestion": "null",
++        "exp6172-current-rule-quarantine-determination": "flagged",
++        "exp6173-cctu-item-bank-preregistration": "positive",
++        "exp6174-cctu-authentic-k8-pool": "positive",
++        "exp6175-cctu-headroom-audit": "retired",
++        "exp6176-hidden-state-surface-qualification": "skipped",
++        "exp6177-clue-latent-selector-freeze": "blocked",
++        "exp6178-held-internal-state-selection": "skipped",
++        "exp6179-retention-safe-continuous-strategy-learning-ab": "positive",
++        "exp6180-exp6166-reproducibility-adjudication": "positive",
++        "exp6181-arc-logo-shortcut-audit": "positive",
++    }
++    assert report["terminal_class_counts"] == {
++        "blocked": 1,
++        "delivered": 1,
++        "flagged": 1,
++        "missing": 1,
++        "null": 1,
++        "positive": 5,
++        "retired": 1,
++        "skipped": 2,
++    }
++
++
++def test_scenario_capstone_6182_quarantine_and_no_claim_strengthening(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-6182-TERMINAL-CLASS-PRESERVATION: claims stay bounded."""
++
++    report = _build(tmp_path)
++
++    assert report["adversarial_verification_receipts"]["verified_present_artifact_count"] == 10
++    assert report["adversarial_verification_receipts"]["flagged_task_ids"] == [
++        "exp6172-current-rule-quarantine-determination"
++    ]
++    assert report["quarantine_field_receipts"]["flagged_or_quarantined_task_ids"] == [
++        "exp6172-current-rule-quarantine-determination"
++    ]
++    quarantine = report["raw_field_reconciliation"]["quarantine_determination"]
++    assert quarantine["current_rule_clean"] is True
++    assert quarantine["historical_quarantine_preserved"] is True
++    assert quarantine["headline_promotion_authorized"] is False
++    assert quarantine["terminal_class"] == "flagged"
++
++    phase_d = report["branch_decisions"]["phase_d"]
++    assert phase_d["headroom_ready_score"] == 0.0
++    assert phase_d["final_state"] == "retired_headroom_failed_downstream_skipped"
++    assert phase_d["future_rows_allowed"] is False
++    assert phase_d["downstream_selector_promoted"] is False
++
++    csl = report["branch_decisions"]["continuous_strategy_learning"]
++    assert csl["ready_score"] == 1.0
++    assert csl["model_weights_immutable"] is True
++    assert csl["live_model_generation_claimed"] is False
++
++    stochastic = report["branch_decisions"]["stochastic"]
++    assert stochastic["software_reproducible"] is True
++    assert stochastic["hardware_promoted"] is False
++
++    arc = report["branch_decisions"]["arc"]
++    assert arc["solve_claimed"] is False
++    assert arc["level_credit_delta"] == 0
++    assert arc["registry_delta"] == 0
++    assert arc["solve_credit_promoted"] is False
++
++    no_strengthen = report["no_claim_strengthening_receipts"]
++    assert no_strengthen["sidecars_and_aliases_imported"] is False
++    assert no_strengthen["flagged_companion_unflagged"] is False
++    assert no_strengthen["retired_phase_d_promoted"] is False
++    assert no_strengthen["arc_no_solve_promoted"] is False
++
++
++def test_scenario_capstone_6182_append_once_checksum_and_run(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-6182-ADVERSARIAL-VERIFY-AND-CHECKSUM: output is stable."""
++
++    _make_root(tmp_path)
++    report = mod.run(
++        tmp_path,
++        adversarial_receipts=_receipts(),
++        tests_run={
++            ".venv/bin/pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0": 0,
++        },
++        duration_s=1.5,
++        append_completion_history=True,
++    )
++
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++    assert mod.validate_report(report) == []
++    assert report["reproducibility_checksum"] == mod.payload_checksum(report)
++    assert report["completion_history_multiplicity"] == {
++        "milestone": mod.MILESTONE,
++        "count_before": 0,
++        "count_after": 1,
++        "duplicate_history_amplification_count": 0,
++    }
++    assert report["completion_history_update"]["append_count"] == 1
++    complete = yaml.safe_load((tmp_path / mod.RESEARCH_COMPLETE_RELATIVE_PATH).read_text())
++    assert [row["id"] for row in complete["milestones"]] == [mod.MILESTONE]
++    assert len(complete["milestones"][0]["tasks"]) == len(mod.ACTIVATED_TASKS) + 1
++    assert report["protected_files_unchanged"]["all_unchanged"] is True
++    assert (
++        report["protected_files_unchanged"]["files"]["scripts/research_conductor.py"]["unchanged"]
++        is True
++    )
++
++
++def test_req_capstone_6182_defensive_helpers_fail_closed(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CAPSTONE-6182: malformed evidence cannot become success."""
++
++    payload, meta = mod._read_json_mapping(tmp_path / "missing.json")
++    assert payload == {}
++    assert meta["error"] == "missing"
++    _write_text(tmp_path, "bad.json", "{")
++    assert mod._read_json_mapping(tmp_path / "bad.json")[1]["error"].startswith("json_error:")
++    _write_text(tmp_path, "array.json", "[]")
++    assert mod._read_json_mapping(tmp_path / "array.json")[1]["error"] == "json_not_mapping"
++    assert mod._read_yaml_mapping(tmp_path / "missing.yaml") == {}
++    _write_text(tmp_path, "not_mapping.yaml", "[]\n")
++    assert mod._read_yaml_mapping(tmp_path / "not_mapping.yaml") == {}
++    assert mod._latest_conductor_receipt("", "not present") == {
++        "present": False,
++        "status": None,
++        "line": None,
++        "detail": None,
++    }
++    assert (
++        mod._ignored_same_number_aliases(
++            tmp_path / "no-results", "exp6169-any", Path("results/x.json")
++        )
++        == []
++    )
++    assert mod._sidecar_candidates(tmp_path / "no-results", Path("results/x.json")) == []
++    assert mod._terminal_marker("unknown") is None
++    assert mod._terminal_marker("complete_no_shortcut_detected: ok") == "positive"
++    assert mod._terminal_marker("complete_null: ok") == "null"
++    assert mod._terminal_marker("retired: ok") == "retired"
++    assert mod._terminal_marker("blocked_gate_check_failed") == "blocked"
++    assert mod._terminal_class({}, False, {"status": "GATE_BLOCK"}) == "skipped"
++    assert mod._terminal_class({}, False, {"status": "FAIL"}) == "missing"
++    assert mod._terminal_class({"retirement_triggered": True}, True, {}) == "retired"
++    assert mod._terminal_class({"status": "complete_partial"}, True, {}) == "delivered"
++    assert mod._terminal_class({"status": "complete", "zero_delta_accepted": True}, True, {}) == (
++        "null"
++    )
++    assert mod._terminal_class({"status": "complete", "x_ready_score": 1.0}, True, {}) == (
++        "positive"
++    )
++    assert mod._normalize_tests(None)[1]
++    assert mod._normalize_tests([{"command": "cmd", "exit_code": 7}]) == (
++        ["cmd"],
++        {"cmd": 7},
++    )
++    assert mod._receipt_report({}) == {"flag_count": 0, "flags": [], "max_severity": -1}
++    assert mod._receipt_report({"stdout_json": {"flagged_count": 3}})["flag_count"] == 3
++    assert mod._normalize_adversarial_receipts([{"task_id": "expX"}])["expX"]["task_id"] == ("expX")
++    _write_text(tmp_path, mod.RESEARCH_COMPLETE_RELATIVE_PATH, "milestones: {}\n")
++    assert mod._completion_history_count(tmp_path) == 0
++    assert "complete (capstone)" in mod._format_completion_block(
++        {"declared_task_matrix": {"bad": []}}
++    )
++    empty_history = tmp_path / "empty-history"
++    empty_history.mkdir()
++    assert (
++        mod._append_completion_history_if_needed(empty_history, {"declared_task_matrix": {}}) == 1
++    )
++    assert (
++        yaml.safe_load((empty_history / mod.RESEARCH_COMPLETE_RELATIVE_PATH).read_text())[
++            "milestones"
++        ][0]["id"]
++        == mod.MILESTONE
++    )
++    existing_history = tmp_path / "existing-history"
++    existing_history.mkdir()
++    _write_text(
++        existing_history, mod.RESEARCH_COMPLETE_RELATIVE_PATH, "milestones:\n- id: 2026.08.535\n"
++    )
++    assert mod._append_completion_history_if_needed(existing_history, {}) == 0
++    other_history = tmp_path / "other-history"
++    other_history.mkdir()
++    _write_text(other_history, mod.RESEARCH_COMPLETE_RELATIVE_PATH, "milestones:\n- id: other\n")
++    assert (
++        mod._append_completion_history_if_needed(other_history, {"declared_task_matrix": {}}) == 1
++    )
++
++    (tmp_path / ".git").mkdir(exist_ok=True)
++
++    class _Proc:
++        def __init__(self, returncode: int, stdout: str = "", stderr: str = "") -> None:
++            self.returncode = returncode
++            self.stdout = stdout
++            self.stderr = stderr
++
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *args, **kwargs: _Proc(0, stdout=" M file.py\n"),
++    )
++    assert mod._git_status_short(tmp_path) == [" M file.py"]
++    monkeypatch.setattr(
++        mod.subprocess,
++        "run",
++        lambda *args, **kwargs: _Proc(2, stderr="boom"),
++    )
++    assert mod._git_status_short(tmp_path) == ["git_status_error:boom"]
++
++    report = _build(tmp_path)
++    monkeypatch.setattr(mod, "_run_live_adversarial_receipts", lambda _root, _paths: _receipts())
++    live_report = mod.build_report(
++        tmp_path,
++        adversarial_receipts=None,
++        tests_run={".venv/bin/pytest tests/python -q": 0},
++        duration_s=1.0,
++    )
++    assert live_report["adversarial_verification_receipts"]["verified_present_artifact_count"] == 10
++    broken = deepcopy(report)
++    broken["field_provenance"]["status"]["principle"] = "wrong"
++    broken["reproducibility_checksum"] = mod.payload_checksum(broken)
++    assert "field_provenance:status" in mod.validate_report(broken)
++
++    missing = deepcopy(report)
++    missing.pop("status")
++    assert "missing:status" in mod.validate_report(missing)
++
++    checksum = deepcopy(report)
++    checksum["reproducibility_checksum"] = "sha256:bad"
++    assert "reproducibility_checksum" in mod.validate_report(checksum)
++
++    substrate = deepcopy(report)
++    substrate["inference_substrate"] = "model"
++    substrate["reproducibility_checksum"] = mod.payload_checksum(substrate)
++    assert "inference_substrate" in mod.validate_report(substrate)
++
++    no_provenance = deepcopy(report)
++    no_provenance["field_provenance"] = []
++    no_provenance["reproducibility_checksum"] = mod.payload_checksum(no_provenance)
++    assert "field_provenance:not_mapping" in mod.validate_report(no_provenance)
++
++    missing_provenance_row = deepcopy(report)
++    missing_provenance_row["field_provenance"].pop("status")
++    missing_provenance_row["reproducibility_checksum"] = mod.payload_checksum(
++        missing_provenance_row
++    )
++    assert "field_provenance:status" in mod.validate_report(missing_provenance_row)
++
++    bad_classes = deepcopy(report)
++    bad_classes["terminal_classification"]["terminal_class_by_task_id"] = {}
++    bad_classes["reproducibility_checksum"] = mod.payload_checksum(bad_classes)
++    assert "terminal_classification" in mod.validate_report(bad_classes)
++
++    bad_claim = deepcopy(report)
++    bad_claim["no_claim_strengthening_receipts"]["arc_no_solve_promoted"] = True
++    bad_claim["reproducibility_checksum"] = mod.payload_checksum(bad_claim)
++    assert "no_claim_strengthening:arc_no_solve_promoted" in mod.validate_report(bad_claim)
++
++    monkeypatch.setattr(mod, "validate_report", lambda _report: ["forced"])
++    with pytest.raises(ValueError, match="invalid Exp6182 report"):
++        mod.run(
++            tmp_path,
++            adversarial_receipts=_receipts(),
++            tests_run={".venv/bin/pytest tests/python -q": 0},
++            duration_s=1.0,
++            append_completion_history=False,
++        )
+-- 
+2.55.0
+

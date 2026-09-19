@@ -1,0 +1,23 @@
+From 9f59677340ea58e7d5c4e2a19a6a40f65a71fe42 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 10:40:31 -0400
+Subject: [PATCH 06226/11362] [conductor] In-process docs for ARC live CoEx
+ landmark level-up attempt on unbanked frontier
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index bf9408a258..0fa1152f3d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11132,3 +11132,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-08: Gated p-bit hardware-transfer preflight after Exp5419 scale-up (✅ Complete) — honest_verdict=complete: p-bit/QUBO workload has hash-matched repeated CPU and PolarFire preflight receipts for Exp5424 timing; hardware_speedup_claim=false; results/experiment_5420_pbit_hardware_transfer_preflight_v493.json
+ - 2026-07-08: Continuous self-learning evidence-reliance drift and hidden-forgetting diagnostic (✅ Complete) — honest_verdict=complete: evidence-reliance CSL detected hidden forgetting under stable accuracy, retained raw episodes, deflected unsafe reliance, verified rollback, and did not mutate weights; results/experiment_5421_evidence_reliance_csl_v493.json
+ - 2026-07-08: Gated CSL promotion scale-up with reliance and risk thresholds (✅ Complete) — honest_verdict=complete: gated CSL promotion scale-up promoted only threshold-passing fragments, retained rejected and abstained fragments inactive, verified rollback, and did not mutate weights; results/experiment_5422_csl_promotion_reliance_scale_v493.json
++- 2026-07-08: ARC live CoEx landmark level-up attempt on unbanked frontier (⚠️ Research Finding) — honest_verdict=honest_null: lf52 L3 bounded_budget_no_levelup; results/experiment_5423_arc_coex_landmark_levelup_v493.json
+-- 
+2.55.0
+

@@ -1,0 +1,62 @@
+From b3f425b7531ada91c66294e3829832ad9bcfae2d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 03:46:46 -0400
+Subject: [PATCH 08401/11362] [conductor] Pre-gate block: Calibration-only CLUE
+ and latent selector freeze
+
+1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification.hidden_state_surface_ready_score (upstream artifact not found for task id 'exp6176-hidden-state-surface-qualification')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                             | 2 +-
+ ops/conductor-log.md                                     | 2 ++
+ ops/conductor-state.json                                 | 2 +-
+ results/experiment_6177_clue_latent_selector_freeze.json | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b37ff8ccd2..d84ca02b3d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 65, "phase": "iteration_start", "last_beat": "2026-08-07T07:44:42Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 66, "phase": "iteration_start", "last_beat": "2026-08-07T07:46:46Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 522f6ccea5..8bb86b8bc8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15433,3 +15433,5 @@ Still active  |
+ | 2026-08-07 06:19 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6175_cctu_he |
+ | 2026-08-07 07:42 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR |
+ | 2026-08-07 07:44 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |
++| 2026-08-07 07:44 UTC | Calibration-only CLUE and latent selector freeze | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification |
++| 2026-08-07 07:46 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e86601eb5c..ba962e364c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 65, "phase": "iteration_start", "started_at": "2026-08-07T07:44:42Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 66, "phase": "iteration_start", "started_at": "2026-08-07T07:46:46Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6177_clue_latent_selector_freeze.json b/results/experiment_6177_clue_latent_selector_freeze.json
+index 741609275f..1c57e6ccb4 100644
+--- a/results/experiment_6177_clue_latent_selector_freeze.json
++++ b/results/experiment_6177_clue_latent_selector_freeze.json
+@@ -2,8 +2,8 @@
+   "experiment": 6177,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-07",
+-  "started_at": "2026-08-07T07:44:42.712148+00:00",
+-  "finished_at": "2026-08-07T07:44:42.712148+00:00",
++  "started_at": "2026-08-07T07:46:46.088449+00:00",
++  "finished_at": "2026-08-07T07:46:46.088449+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Calibration-only CLUE and latent selector freeze",
+-- 
+2.55.0
+

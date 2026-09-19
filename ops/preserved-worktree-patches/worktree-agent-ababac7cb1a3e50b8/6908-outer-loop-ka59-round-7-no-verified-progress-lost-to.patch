@@ -1,0 +1,65 @@
+From 323a05a98a86c70fe565ebe6b788a593ffed93db Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 13:42:15 -0400
+Subject: [PATCH 06908/11362] [outer-loop] ka59: round 7 no verified progress,
+ lost to offline search churn
+
+Round-7 gpt-5.6-sol session confirmed the banked L6 prefix, then chose
+to trace the game's own Python source into an abstract state-space
+model and ran an offline A* search rather than continuing direct live
+exploration. The offline search succeeded (a 22-move plan found in
+~97.5s), but the session then spent its remaining budget repeatedly
+rewriting the translation/execution driver instead of settling on one
+version and running it against the live env -- the same tooling-churn
+failure mode as dc22's round 6, but rooted in over-investing in
+offline simulation instead of live verification.
+
+No new level was live-confirmed; the recovered 490-label candidate
+sequence (prefix + 132-action tail) replays cleanly to level=6,
+state=GameState.NOT_FINISHED, no win. No new level banked; frontier
+stays at level 6. Next attempt should either continue round 6's
+"what other launch source" live-exploration hypothesis directly, or
+hard-budget the offline-search-to-live-execution handoff if retried.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 1d99120596..95cdf264a3 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -3607,6 +3607,28 @@ games:
+     all inert. No fresh reproduction gate run (the 358-call prefix alone
+     exceeded the remaining budget). No new level banked; frontier stays
+     at level 6.'
++  - 'L7 attempt round 7, NO VERIFIED PROGRESS -- session lost to offline
++    search without live execution (2026-07-12, gpt-5.6-sol via codex,
++    round-7 breadth campaign): confirmed the banked 358-action L6-
++    verified prefix reaches frame_level=6 cleanly, then chose to trace
++    the game''s own Python source into an abstract state-space model
++    and ran an offline A* search over it rather than continuing direct
++    live env.step() exploration. The offline search DID succeed (a
++    22-move plan found in ~97.5s / ~22k node expansions over a
++    12-tuple coordinate state), but the session then spent its
++    remaining budget repeatedly rewriting the translation/execution
++    driver to replay that plan against the live environment rather
++    than settling on one version and running it -- the same tooling-
++    churn failure mode as dc22''s round 6, but rooted in over-investing
++    in offline simulation instead of live verification. No new level
++    was live-confirmed; the recovered candidate action sequence (490
++    labels, prefix + 132-action tail) replays cleanly to level=6,
++    state=GameState.NOT_FINISHED with no win. No new level banked;
++    frontier stays at level 6. Next attempt should EITHER continue
++    round 6''s "what other launch source" live-exploration hypothesis
++    directly, OR (if returning to offline search) budget hard limits
++    for translating a found abstract plan into real actions and
++    executing it live BEFORE the session ends, not after.'
+ - game: ft09
+   reproducibility: reproduced
+   levels_reproduced: 6
+-- 
+2.55.0
+

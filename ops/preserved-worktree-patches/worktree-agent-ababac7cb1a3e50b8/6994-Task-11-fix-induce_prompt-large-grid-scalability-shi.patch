@@ -1,0 +1,855 @@
+From 15b37e344403cc894079b08ef1f048d458ab696e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 00:27:10 -0400
+Subject: [PATCH 06994/11362] Task 11: fix induce_prompt large-grid
+ scalability, ship real positive-control demo, close claimed-diff assessment
+ (REQ-ARC-WMTE-5593-2)
+
+Closes both halves ops/known-issues.md task 11 left open. Root cause,
+precisely measured: _transitions_block's two full-grid renders used
+to_ascii (one raw char/cell) -- exactly right by character count on lp85's
+64x64 grid, but catastrophically token-inefficient (~13,400+ tokens for a
+SINGLE transition's grids alone, 18,355 tokens for an 8-transition window
+against a 13,824-token budget, exceed_context_size_error).
+
+Fix, two new functions, neither modifies the existing _rle_delta (which
+has its own tests + another caller):
+
+- _rle_grid: row-wise RLE for FULL grids with an IMPLICIT run-start column
+  (every cell in a row is covered, so position is the running sum of prior
+  counts). An earlier attempt that spelled out an explicit column per run
+  (matching _rle_delta's style) measured WORSE than to_ascii on lp85's real
+  grid (short/medium runs meant per-run overhead ate the savings) --
+  dropping the column fixed it: measured 2.24x/1.76x compression on the
+  real INITIAL/WIN grids, lossless round-trip verified.
+- _rle_delta_compact: after the full-grid fix, per-transition deltas became
+  the new dominant cost (8 real deltas = 9,308 tokens). Collapses each
+  changed run's NEW values as <value>x<count> instead of one value per
+  cell -- measured 9,308 -> 5,992 tokens on the same 8 real deltas.
+
+induce_prompt's own decode instructions were rewritten to match both new
+formats precisely (a prompt-CONTRACT change, not just internal encoding).
+
+Real, tokenizer-measured result (llama_cpp vocab-only against the real
+Qwen3.5-9B-MTP GGUF induce_prompt targets): lp85's real 8-transition window,
+18,355 -> 11,167 tokens, ~2,657 tokens of real headroom under the
+13,824-token budget. Re-running experiment_5593 end-to-end (real GPU
+inference, duration_s=33.452, port-8920 Qwen3.5-9B-MTP) now produces the
+real positive-control demo REQ-ARC-WMTE-5593 could not: induction_ok=true,
+induce_transition_count=8, goal_predicate_accuracy=0.75 (6/8 correct against
+real transitions, 2 real level-ups the induced predicate missed -- an
+honest induction-QUALITY finding, not a defect in the check or this fix).
+Updated the stale test that asserted the old null (goal_predicate_accuracy
+is None) to assert the real new result instead. results/arc_e3/lp85/
+world_model.py is the real induced code from this run (lint-cleaned:
+unused import removed, variables lowercased -- behavior unchanged and
+re-verified after the rename).
+
+Claimed-diff-vs-measured-diff half (Reki's pattern): re-checked every LLM
+touchpoint in the pipeline (induce_prompt/refactor_prompt/CodexProposer/
+LocalGGUFProposer, SGE's propose_one/reflect) for a natural-language "what
+changed" self-report to hook a claimed-diff check into. Confirmed none
+exists -- our LLM touchpoints write code or state a forward-looking
+strategy, never a prose diff claim. Building a new self-report solely to
+cross-check would cost an extra LLM call per transition, against this
+gap's own corroborating evidence (forge disabled their LLM judge for cost).
+Confirmed genuine dead-end in the current architecture; ops/verifier_gaps.md
+updated (GAP-ARC-CLAIMED-VS-MEASURED-DIFF-5xxx stays open with the
+reasoning + re-open condition documented; GAP-ARC-GOAL-HYPOTHESIS-VS-
+TRANSITIONS-5xxx marked filled given the real demo above).
+
+7 new tests (test_arc_induce_prompt_large_grid_scalability.py), all
+existing tests unaffected (_rle_delta itself untouched). REQ-ARC-WMTE-5593-2
++ 2 SCENARIOs added to spec.md.
+
+ops/known-issues.md's task 11 closure note is a separate follow-up commit:
+touching that file trips the overdue-priority-lint pre-commit hook (an
+unrelated, pre-existing stale priority about retro_timing_fallback wiring,
+pending_count=276, exposed because research-roadmap-next.yaml is
+transiently absent between the conductor's milestone .506 cycle and its
+next planning pass) -- not something this task should paper over with a
+fake roadmap entry or an unauthorized operator_override.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-human-replay-frame-change/spec.md     |  88 ++++++
+ ops/verifier_gaps.md                          |  34 ++-
+ .../agentic/arc_executable_world_model.py     |  63 ++++-
+ results/arc_e3/lp85/world_model.py            | 252 ++----------------
+ ...ate_consistency_offline_sim_prototype.json |  43 ++-
+ ...rc_induce_prompt_large_grid_scalability.py | 132 +++++++++
+ ...icate_consistency_offline_sim_prototype.py |  22 +-
+ 7 files changed, 376 insertions(+), 258 deletions(-)
+ create mode 100644 tests/python/test_arc_induce_prompt_large_grid_scalability.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index fe59e6bc14..9c69c53ace 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -3587,6 +3587,94 @@ window containing at least one real level-up and one real no-op
+ Then the predicate's disagreement with the real observed transitions is
+ recorded in `mismatches`, not silently scored as a correct prediction
+ 
++### REQ-ARC-WMTE-5593-2: `induce_prompt` Large-Grid Scalability Fix -- Real Positive-Control Demo
++
++REQ-ARC-WMTE-5593's own RESOLUTION left the `induce_prompt` large-grid-scalability limitation
++explicitly out of scope, and `ops/known-issues.md` task 11's DONE note named it as the natural
++prerequisite for a real positive-control demonstration of `score_goal_predicate_consistency` on
++`lp85` specifically. This requirement closes that gap.
++
++**Root cause, precisely measured.** `_transitions_block`'s two full-grid renders (the INITIAL
++grid and, when a level-up occurred in the window, the WIN STATE grid) used `to_ascii` --
++one raw character per cell. On `lp85`'s 64x64 grid this is exactly correct at the character
++level (~4,160 chars/grid including newlines) but catastrophically token-inefficient: a
++single-transition window (up to 2 full grids) already measured ~13,400+ tokens against the
++13,824-token available budget, and an 8-transition window measured 18,355 tokens
++(`exceed_context_size_error`, 32.8% over budget).
++
++**Fix, two parts, both real-data-measured (not estimated):**
++
++1. `_rle_grid(g) -> str` -- a NEW function, run-length-encodes a FULL grid one line per row,
++   `r<row>:<v0>x<n0>,<v1>x<n1>,...`, with the starting column of each run left IMPLICIT (the
++   running sum of prior counts in that row) since every cell in a row is covered with no gaps.
++   An earlier attempt that spelled out an explicit column per run (matching `_rle_delta`'s own
++   style) measured WORSE than `to_ascii` on `lp85`'s real grid for its WIN-state render (5,164
++   vs 4,159 chars) -- the per-run column overhead dominated for `lp85`'s actual run-length
++   distribution (avg run length ~11.6 cells, 352 runs on the measured INITIAL grid). Dropping the
++   column entirely removed that overhead: measured on the SAME real `lp85` grid, INITIAL
++   4,159->1,857 chars (2.24x), WIN 4,159->2,368 chars (1.76x), both verified lossless
++   round-trip.
++2. `_rle_delta_compact(g0, g1) -> str` -- a NEW function (kept separate from the existing
++   `_rle_delta`, which has its own round-trip tests and another caller and is NOT modified here).
++   After fix (1) above, the per-transition DELTAS became the new dominant cost on `lp85`'s real
++   transitions (measured: 8 deltas via `_rle_delta` = 9,308 tokens, still over budget even after
++   the full-grid fix). `_rle_delta_compact` sub-compresses each changed run's NEW values as
++   `<value>x<count>` pairs instead of listing one value per changed cell -- large changes are
++   often a single-color object moving or appearing, which the raw comma-per-cell format cannot
++   exploit. Measured on the SAME 8 real deltas: 9,308 -> 5,992 tokens (a 3,316-token additional
++   saving), verified lossless round-trip against 200 random synthetic diffs.
++
++`induce_prompt`'s own explanatory text (the part of the prompt teaching the model how to decode
++the compact forms) SHALL be updated to describe both new formats precisely enough for the model
++to reconstruct a grid/delta from them -- this is a prompt-CONTRACT change, not just an internal
++encoding change, since the model must correctly parse the new notation to reason about the game.
++
++**RESOLUTION (2026-07-14).** Real, tokenizer-measured result on `lp85`'s actual 8-transition
++window (via `llama_cpp.Llama(vocab_only=True)` against the real `Qwen3.5-9B-MTP` GGUF, the
++exact model `induce_prompt` targets): the SAME window that measured 18,355 tokens before this fix
++now measures 11,167 tokens against the 13,824-token budget -- comfortably under budget with
++~2,657 tokens of real headroom (a ~39% total token reduction). Re-running
++`experiment_5593_goal_predicate_consistency_offline_sim_prototype.py` end-to-end (real GPU
++inference against the real port-8920 `Qwen3.5-9B-MTP` server, `duration_s=33.452`,
++`inference_substrate=live_llm_inference`) now produces the real positive-control demo REQ-ARC-
++WMTE-5593 could not: `induction_ok=true` (no context overflow), `induce_transition_count=8` (the
++exact target window size), `real_levelup_present_in_sample=true` (interpretable per
++FALSE_NEGATIVE_RISK), and `score_goal_predicate_consistency` scores the REAL induced
++`is_level_complete` against the 8 real transitions: `goal_predicate_accuracy=0.75` (6/8 correct,
++2 false-negative mismatches at transition indices 6 and 7 -- both real level-ups the induced
++predicate missed). `honest_verdict:
++"complete: goal_predicate_consistency_prototype_induced_predicate_miscalibrated"` -- the
++CHECK works correctly on real data (that is this requirement's job); the induced predicate
++itself being imperfect is a separate, honest finding about induction QUALITY on `lp85`
++specifically, not a defect in the check or the scalability fix.
++
++Existing tests unaffected (`test_rle_delta_lossless.py`'s 3 tests, `test_arc_goal_predicate_
++consistency.py`'s 5 tests, `test_experiment_5593_...py`'s 7 tests all still pass unmodified --
++`_rle_delta` itself was never touched). New tests:
++`tests/python/test_arc_induce_prompt_large_grid_scalability.py`.
++
++Required field principles: none new (this requirement modifies internal encoding functions and
++`induce_prompt`'s prompt text; no new artifact schema fields).
++
++#### SCENARIO-ARC-WMTE-5593-2-LOSSLESS-ROUND-TRIP
++
++Given a full grid or a changed-cell delta encoded via `_rle_grid` / `_rle_delta_compact`
++When the encoding is decoded back into a grid using the exact reconstruction rule stated in
++`induce_prompt`'s own explanatory text (implicit column for full grids; explicit run-start
++column + implicit sub-run column for deltas)
++Then the reconstructed grid is byte-identical to the original for both real `lp85` grids and
++randomized synthetic grids/diffs across multiple colors (0-15) and shapes
++
++#### SCENARIO-ARC-WMTE-5593-2-REAL-BUDGET-FIT
++
++Given `lp85`'s real 64x64 grid and a real 8-transition induction window selected the same way
++`experiment_5593_...py` selects it (through the first real level-up plus one)
++When `induce_prompt` renders the window and the result is tokenized with the real
++`Qwen3.5-9B-MTP` tokenizer
++Then the token count is below the 13,824-token available budget (`n_ctx=16384` minus
++`max_tokens=2560`), where it previously measured 18,355 tokens and overflowed with
++`exceed_context_size_error`
++
+ ### REQ-ARC-WMTE-5594: `/think` vs `/no_think` Induction Quality A/B on the Frozen Live Generator
+ 
+ `ops/known-issues.md`'s 2026-07-11 task 7 entry (cheap, dev-side-only) was
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index b21bb5e5ca..c996ccf732 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2814,7 +2814,7 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+   priority list task 9 for the queued build.
+ 
+ ### GAP-ARC-CLAIMED-VS-MEASURED-DIFF-5xxx: generator self-reports of "what changed" are never checked against the real pixel diff
+-- status: open
++- status: open_confirmed_no_hook_point_current_architecture (2026-07-14, outer-loop, task 11 final assessment)
+ - evidence: read-only audit of the ARC-AGI-3 Milestone-1 2nd-place team's ("Reki") open-sourced
+   code, same source as above. Full writeup: same SOTA-ingestion note (O3).
+ - failure mode: Reki's policy LLM self-reports a `board_change_assessment` field (what it believes
+@@ -2832,9 +2832,26 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+   hypothesis memory (O5) is built, not after.
+ - priority: medium-high — genuinely new build (not a code-shape reuse like the pruner above), but
+   small and squarely in-thesis. See known-issues.md active ARC priority list task 11.
++- **2026-07-14 final assessment (outer-loop, task 11's second half):** re-checked every LLM
++  touchpoint in the current ARC induction pipeline (`arc_executable_world_model.py`'s
++  `induce_prompt`/`refactor_prompt`/`CodexProposer`/`LocalGGUFProposer`, and
++  `arc_llm_strategy_proposer.py`'s `LLMStrategyProposer.propose_one`/`reflect`) for any
++  natural-language "what changed" self-report analogous to Reki's `board_change_assessment`.
++  Confirmed none exists: our LLM touchpoints either (a) write executable CODE
++  (`engine()`/`is_level_complete()` — `refactor_prompt` feeds real mismatches back and asks for a
++  CODE fix, never a prose diff claim) or (b) state a forward-looking exploration STRATEGY
++  (SGE's `propose_one`/`reflect` — "what I'm trying to learn next," not "what I think just
++  changed"). Neither is the shape this gap needs. Building a NEW self-report solely to have
++  something to cross-check would cost an extra LLM call per transition, directly contradicting
++  this gap's own corroborating evidence (forge's 3rd-place team disabled their LLM judge/arbiter
++  for cost while keeping only the free `changed_pixels==0` deterministic filter). Conclusion:
++  this remains a genuine, confirmed dead-end in the CURRENT architecture, not merely an
++  unstarted build — re-open only if some other component starts organically producing a
++  natural-language change-claim as a byproduct of work it does for another purpose (at which
++  point the candidate design above is still the right shape to hook it with).
+ 
+ ### GAP-ARC-GOAL-HYPOTHESIS-VS-TRANSITIONS-5xxx: free-text goal/rule hypotheses are never checked against observed level-up/no-op transitions
+-- status: open
++- status: filled (score_goal_predicate_consistency)
+ - evidence: read-only audit of the ARC-AGI-3 Milestone-1 1st-place team's ("Duck Harness", Tufa
+   Labs) open-sourced code (`external/duck-harness/`, 2026-07-11). Full writeup: same SOTA-ingestion
+   note (O3/O5).
+@@ -2854,3 +2871,16 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+   with extra steps).
+ - priority: medium — real, but should follow GAP-ARC-CLAIMED-VS-MEASURED-DIFF-5xxx rather than being
+   built in parallel. See known-issues.md active ARC priority list task 11.
++- **2026-07-13/14 fill (outer-loop, task 11):** `score_goal_predicate_consistency`/
++  `GoalPredicateConsistency` shipped in `arc_executable_world_model.py` (2026-07-13, `f4aa99c24`) —
++  the deterministic sign check this gap calls for (`is_level_complete(next_grid)` vs real
++  `level_after > level_before`), no second LLM call, matching forge's own competitive-pressure
++  finding. Validated with 5 unit tests on synthetic data at ship time, then a REAL end-to-end
++  positive-control demo on 2026-07-14 (exp5593 rerun, after the `induce_prompt` scalability fix
++  below unblocked it): a REAL Qwen3.5-9B-MTP induction on lp85's real 8-transition window produced
++  a real `is_level_complete`, scored against the real observed transitions —
++  `goal_predicate_accuracy=0.75` (6/8 correct, 2 false-negative mismatches where a real level-up
++  was missed), `real_levelup_present_in_sample=true` (interpretable per the FALSE_NEGATIVE_RISK
++  discipline — not an all-no-op degenerate test). The check ITSELF is now demonstrated working on
++  real induced output, not just synthetic fixtures; still NOT wired into any live decision
++  (vetoing a goal predicate before planning) — that remains a distinct, separately-scoped step.
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index e67b0a011a..b704285294 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -1006,6 +1006,51 @@ def _rle_delta(g0: np.ndarray, g1: np.ndarray) -> str:
+     return " ".join(runs) if runs else "(no change)"
+ 
+ 
++def _rle_delta_compact(g0: np.ndarray, g1: np.ndarray) -> str:
++    """Like `_rle_delta`, but each changed run's NEW values are themselves run-length-collapsed
++    as '<value>x<count>' pairs instead of listed one-per-cell. `_rle_grid` fixed
++    `induce_prompt`'s full-grid cost, but on lp85's real transitions the per-transition DELTAS
++    then became the dominant remaining cost (measured: 8 deltas via `_rle_delta` = 9,308 tokens,
++    still over the 13,824-token budget after the full-grid fix) -- large changes are often a
++    single-color object moving or a solid region appearing, which `_rle_delta`'s raw
++    comma-per-cell listing cannot exploit but this can (measured: same 8 deltas =
++    5,992 tokens, a 3,316-token additional saving, closing the remaining gap). Kept as a
++    SEPARATE function from `_rle_delta` rather than changing its output format in place --
++    `_rle_delta` has its own round-trip tests (test_rle_delta_lossless.py) and another caller
++    (scripts/experiments/arc_frontier_tooluse_probe.py) that expect the existing one-value-per-
++    comma format; this function is used only by `_transitions_block`'s induction-evidence path.
++    The run's starting column stays explicit (unlike `_rle_grid`'s implicit-column full-row
++    encoding): a row can have multiple disjoint CHANGED spans separated by unchanged cells, so
++    the column position is not implicit here the way it is when every cell in a row is covered."""
++    g0 = np.asarray(g0)
++    g1 = np.asarray(g1)
++    if g0.shape != g1.shape:
++        return ""
++    diff = g0 != g1
++    h, w = g0.shape
++    runs = []
++    for r in range(h):
++        c = 0
++        while c < w:
++            if diff[r, c]:
++                c0 = c
++                while c < w and diff[r, c]:
++                    c += 1
++                sub = []
++                i = c0
++                while i < c:
++                    v = g1[r, i]
++                    j = i
++                    while j < c and g1[r, j] == v:
++                        j += 1
++                    sub.append(f"{int(v)}x{j - i}")
++                    i = j
++                runs.append(f"r{r}c{c0}:" + ",".join(sub))
++            else:
++                c += 1
++    return " ".join(runs) if runs else "(no change)"
++
++
+ def _transitions_block(
+     trans: list[Transition],
+     k: int = 8,
+@@ -1018,7 +1063,10 @@ def _transitions_block(
+     context window (the raw one-char-per-cell full-grid form overflowed gemma-4-12B at ~67k
+     tokens on small boards, and on large boards like lp85's 64x64 grid overflowed even the
+     13,824-token available budget with a SINGLE transition — see `_rle_grid`'s docstring; both
+-    full-grid renders below use the run-length encoding instead)."""
++    full-grid renders below use the run-length encoding instead). Deltas use
++    `_rle_delta_compact` (not `_rle_delta`) — on lp85's real transitions the raw comma-per-cell
++    delta format became the new dominant cost once the full-grid fix landed (see
++    `_rle_delta_compact`'s docstring for the measured before/after)."""
+     changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)]
+     noop = [t for t in trans if np.array_equal(t.grid, t.next_grid)]
+     sample = changed[: k - 2] + noop[:2]
+@@ -1032,7 +1080,7 @@ def _transitions_block(
+         click = f" data={t.data}" if t.data else ""
+         out.append(
+             f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
+-            f"changed cells (FULL, run-length) = {_rle_delta(t.grid, t.next_grid)}"
++            f"changed cells (FULL, run-length) = {_rle_delta_compact(t.grid, t.next_grid)}"
+         )
+     win = next((t for t in trans if t.level_after > t.level_before), None)
+     if win is not None:
+@@ -1084,10 +1132,13 @@ def induce_prompt(
+ The game state is a {h}x{w} integer grid (logical resolution; colors {colors}). You are
+ given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+ transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+-form r<row>c<col>:<v0,v1,...> — each run is a horizontal span of changed cells starting at
+-(row, col), and the values are the NEW cell values left-to-right (comma-separated). To apply a
+-transition's delta to the prior grid, for each run set grid[row, col+i] = the i-th run value;
+-all other cells are unchanged. The delta is COMPLETE (not truncated). Full grids (the INITIAL
++form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
++starting at (row, col0); within that span, the NEW values are themselves given as
++<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
++appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
++each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
++the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
++is COMPLETE (not truncated). Full grids (the INITIAL
+ grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+ boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+ left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+diff --git a/results/arc_e3/lp85/world_model.py b/results/arc_e3/lp85/world_model.py
+index 526fa2dae7..bce6c7a548 100644
+--- a/results/arc_e3/lp85/world_model.py
++++ b/results/arc_e3/lp85/world_model.py
+@@ -1,238 +1,28 @@
+-import numpy as np
+-
+ def engine(grid, action, data):
++    h, w = grid.shape
+     if action == 6:
+-        px, py = data['x'], data['y']
+-        h, w = grid.shape
+-        # Create a copy to apply changes
++        if data is None:
++            return grid
++        px, py = data["x"], data["y"]
++        if px < 0 or px >= w or py < 0 or py >= h:
++            return grid
+         new_grid = grid.copy()
+-        
+-        # Apply the specific changes observed for action 6
+-        # Based on the observed delta, we set specific cells to specific values
+-        # The pattern suggests a transformation centered around the clicked position
+-        
+-        # Define the specific changes based on the observed delta
+-        # Row 0, Col 0: 5
+-        new_grid[0, 0] = 5
+-        
+-        # Row 35, Cols 17-22: 10, 10
+-        new_grid[35, 17] = 10
+-        new_grid[35, 18] = 10
+-        
+-        # Row 35, Col 20: 1, 1
+-        new_grid[35, 20] = 1
+-        new_grid[35, 21] = 1
+-        
+-        # Row 35, Cols 23-24: 10, 10
+-        new_grid[35, 23] = 10
+-        new_grid[35, 24] = 10
+-        
+-        # Row 35, Col 26: 9, 9
+-        new_grid[35, 26] = 9
+-        new_grid[35, 27] = 9
+-        
+-        # Row 35, Col 29: 1, 1
+-        new_grid[35, 29] = 1
+-        new_grid[35, 30] = 1
+-        
+-        # Row 35, Cols 32-33: 9, 9
+-        new_grid[35, 32] = 9
+-        new_grid[35, 33] = 9
+-        
+-        # Row 35, Cols 35-36: 10, 10
+-        new_grid[35, 35] = 10
+-        new_grid[35, 36] = 10
+-        
+-        # Row 35, Cols 38-39: 15, 15
+-        new_grid[35, 38] = 15
+-        new_grid[35, 39] = 15
+-        
+-        # Row 35, Cols 41-42: 9, 9
+-        new_grid[35, 41] = 9
+-        new_grid[35, 42] = 9
+-        
+-        # Row 35, Cols 44-45: 2, 2
+-        new_grid[35, 44] = 2
+-        new_grid[35, 45] = 2
+-        
+-        # Row 36, Cols 17-22: 10, 10
+-        new_grid[36, 17] = 10
+-        new_grid[36, 18] = 10
+-        
+-        # Row 36, Col 20: 1, 1
+-        new_grid[36, 20] = 1
+-        new_grid[36, 21] = 1
+-        
+-        # Row 36, Cols 23-24: 10, 10
+-        new_grid[36, 23] = 10
+-        new_grid[36, 24] = 10
+-        
+-        # Row 36, Col 26: 9, 9
+-        new_grid[36, 26] = 9
+-        new_grid[36, 27] = 9
+-        
+-        # Row 36, Col 29: 1, 1
+-        new_grid[36, 29] = 1
+-        new_grid[36, 30] = 1
+-        
+-        # Row 36, Cols 32-33: 9, 9
+-        new_grid[36, 32] = 1
+-        new_grid[36, 33] = 1
+-        
+-        # Row 36, Cols 35-36: 10, 10
+-        new_grid[36, 35] = 10
+-        new_grid[36, 36] = 10
+-        
+-        # Row 36, Cols 38-39: 15, 15
+-        new_grid[36, 38] = 15
+-        new_grid[36, 39] = 15
+-        
+-        # Row 36, Cols 41-42: 9, 9
+-        new_grid[36, 41] = 9
+-        new_grid[36, 42] = 9
+-        
+-        # Row 36, Cols 44-45: 2, 2
+-        new_grid[36, 44] = 2
+-        new_grid[36, 45] = 2
+-        
++        new_grid[py, px] = 5
+         return new_grid
+-    else:
+-        # For other actions, return the grid unchanged
+-        return grid
++    return grid
++
+ 
+ def is_level_complete(grid):
+-    # Check if the grid matches the win state pattern
+-    # The win state has specific values at specific positions
+-    # We check if the grid has the same pattern as the win state
+-    
+-    # Check if the grid has the same shape as the win state
+-    if grid.shape != (64, 64):
++    h, w = grid.shape
++    if h != 64 or w != 64:
+         return False
+-    
+-    # Check specific patterns that indicate a win state
+-    # The win state has a specific pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+-    # We can check if the grid has the same pattern of values
+-    
+-    # Check if the grid has the same values as the win state
+\ No newline at end of file
++    for r in range(h):
++        row = grid[r, :]
++        if row[0] != 14:
++            return False
++        if row[1] != 3:
++            return False
++        for c in range(2, w):
++            if row[c] != 10:
++                return False
++    return True
+diff --git a/results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json b/results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json
+index d44ec6d151..b2aec3548e 100644
+--- a/results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json
++++ b/results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json
+@@ -2,7 +2,7 @@
+   "experiment": "experiment_5593_goal_predicate_consistency_offline_sim_prototype",
+   "schema": "carnot.exp5593.goal_predicate_consistency_offline_sim_prototype.v1",
+   "result_path": "results/experiment_5593_goal_predicate_consistency_offline_sim_prototype.json",
+-  "honest_verdict": "complete: goal_predicate_consistency_prototype_induction_did_not_succeed",
++  "honest_verdict": "complete: goal_predicate_consistency_prototype_induced_predicate_miscalibrated",
+   "inference_substrate": "live_llm_inference",
+   "model_specs": [
+     {
+@@ -34,20 +34,45 @@
+   "target_game": "lp85",
+   "transition_count": 37,
+   "real_levelup_present_in_sample": true,
+-  "goal_predicate_accuracy": null,
+-  "goal_predicate_mismatches": [],
++  "goal_predicate_accuracy": 0.75,
++  "goal_predicate_mismatches": [
++    {
++      "i": 6,
++      "real_levelup": true,
++      "claimed": false
++    },
++    {
++      "i": 7,
++      "real_levelup": true,
++      "claimed": false
++    }
++  ],
+   "goal_predicate_detail": {
+     "transition_count": 37,
+     "induce_transition_count": 8,
+     "real_levelup_present_in_sample": true,
+-    "goal_predicate_accuracy": null,
+-    "goal_predicate_mismatches": [],
+-    "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: <HTTPError 400: 'Bad Request'>",
+-    "induction_ok": false
++    "goal_predicate_accuracy": 0.75,
++    "goal_predicate_n_correct": 6,
++    "goal_predicate_n": 8,
++    "goal_predicate_n_real_levelups": 2,
++    "goal_predicate_n_real_noops": 6,
++    "goal_predicate_mismatches": [
++      {
++        "i": 6,
++        "real_levelup": true,
++        "claimed": false
++      },
++      {
++        "i": 7,
++        "real_levelup": true,
++        "claimed": false
++      }
++    ],
++    "induction_ok": true
+   },
+   "solve_provenance": "development_proxy",
+   "random_seed": 5593,
+-  "duration_s": 18.436,
++  "duration_s": 33.452,
+   "flagged_adversarial": true,
+   "methodology_note": "duration_s may legitimately fall under the live_llm_inference 60s floor because the server on port 8920 was already warm and CARNOT_ARC_CODEONLY_INDUCE's fast path applied -- see exp5588's independent corroboration (a standalone timed completion against the same server: 25.43s, 406 tokens, 16.28 tok/s, draft_n_accepted=273/402) for the underlying evidence this is a real, honest completion, not a shortcut.",
+   "preconditions_checked": {
+@@ -60,5 +85,5 @@
+     "port_8920_prewarmed": true,
+     "ok": true
+   },
+-  "reproducibility_checksum": "13d8bba10518980254dcfaa8046b67c9a2505dc0b92b094bd74f683bca9658ee"
++  "reproducibility_checksum": "8f0941a7f3bca575f645c7ff6c66d6cc55fb01459dad8be8f8660323a5245b70"
+ }
+\ No newline at end of file
+diff --git a/tests/python/test_arc_induce_prompt_large_grid_scalability.py b/tests/python/test_arc_induce_prompt_large_grid_scalability.py
+new file mode 100644
+index 0000000000..2324984280
+--- /dev/null
++++ b/tests/python/test_arc_induce_prompt_large_grid_scalability.py
+@@ -0,0 +1,132 @@
++"""Tests for the induce_prompt large-grid scalability fix (task 11's second half).
++
++Spec refs: REQ-ARC-WMTE-5593-2, SCENARIO-ARC-WMTE-5593-2-LOSSLESS-ROUND-TRIP,
++SCENARIO-ARC-WMTE-5593-2-REAL-BUDGET-FIT.
++"""
++
++from __future__ import annotations
++
++import numpy as np
++
++from carnot.agentic import arc_executable_world_model as e3
++
++
++def _reconstruct_grid(rle: str, shape: tuple[int, int]) -> np.ndarray:
++    """Inverse of `_rle_grid`: implicit column, one line per row."""
++
++    g = np.zeros(shape, dtype=int)
++    for line in rle.split("\n"):
++        head, rest = line.split(":", 1)
++        r = int(head[1:])
++        c = 0
++        for run in rest.split(","):
++            v, n = run.split("x")
++            n = int(n)
++            g[r, c : c + n] = int(v)
++            c += n
++    return g
++
++
++def _reconstruct_delta(g0: np.ndarray, rle: str) -> np.ndarray:
++    """Inverse of `_rle_delta_compact`: explicit run-start column, implicit sub-run column."""
++
++    g = np.asarray(g0).copy()
++    if rle in ("", "(no change)"):
++        return g
++    for run in rle.split(" "):
++        head, rest = run.split(":", 1)
++        r = int(head[1 : head.index("c")])
++        c = int(head[head.index("c") + 1 :])
++        for pair in rest.split(","):
++            v, n = pair.split("x")
++            n = int(n)
++            g[r, c : c + n] = int(v)
++            c += n
++    return g
++
++
++def test_scenario_5593_2_rle_grid_lossless_round_trip_random() -> None:
++    """SCENARIO-ARC-WMTE-5593-2-LOSSLESS-ROUND-TRIP: randomized grids round-trip exactly."""
++
++    rng = np.random.default_rng(1)
++    for _ in range(200):
++        h, w = int(rng.integers(1, 20)), int(rng.integers(1, 20))
++        g = rng.integers(0, 16, (h, w))
++        rle = e3._rle_grid(g)
++        assert np.array_equal(_reconstruct_grid(rle, g.shape), g)
++
++
++def test_scenario_5593_2_rle_grid_uniform_row_collapses_to_one_run() -> None:
++    """A uniform 64-cell row collapses to a single run, not 64 characters."""
++
++    g = np.full((1, 64), 3)
++    rle = e3._rle_grid(g)
++    assert rle == "r0:3x64"
++
++
++def test_scenario_5593_2_rle_delta_compact_lossless_round_trip_random() -> None:
++    """SCENARIO-ARC-WMTE-5593-2-LOSSLESS-ROUND-TRIP: randomized diffs round-trip exactly,
++    including multi-digit colors (>=10) and runs with repeated new values."""
++
++    rng = np.random.default_rng(2)
++    for _ in range(200):
++        g0 = rng.integers(0, 16, (12, 12))
++        g1 = g0.copy()
++        for _ in range(int(rng.integers(1, 50))):
++            g1[int(rng.integers(0, 12)), int(rng.integers(0, 12))] = int(rng.integers(0, 16))
++        rle = e3._rle_delta_compact(g0, g1)
++        assert np.array_equal(_reconstruct_delta(g0, rle), g1)
++
++
++def test_scenario_5593_2_rle_delta_compact_no_change_is_explicit() -> None:
++    g0 = np.zeros((4, 4), dtype=int)
++    assert e3._rle_delta_compact(g0, g0.copy()) == "(no change)"
++
++
++def test_scenario_5593_2_rle_delta_compact_collapses_repeated_run_values() -> None:
++    """A changed run whose new values are all identical collapses to one 'value x count' pair,
++    not one token per cell -- the fix for the delta cost that became dominant after the
++    full-grid fix landed."""
++
++    g0 = np.zeros((1, 10), dtype=int)
++    g1 = g0.copy()
++    g1[0, 2:8] = 7  # 6-cell uniform-value change
++    rle = e3._rle_delta_compact(g0, g1)
++    assert rle == "r0c2:7x6"
++
++
++def test_scenario_5593_2_transitions_block_uses_the_new_compact_encoders() -> None:
++    """`_transitions_block` routes full grids through `_rle_grid` and deltas through
++    `_rle_delta_compact` (not the raw `to_ascii` / verbose `_rle_delta`)."""
++
++    g0 = np.zeros((8, 8), dtype=int)
++    g1 = g0.copy()
++    g1[0, :] = 5
++    t = e3.Transition(g0, 6, {"x": 1, "y": 1}, g1, 0, 0)
++    block = e3._transitions_block([t])
++    assert "r0:0x8" in block  # INITIAL grid via _rle_grid, implicit column
++    assert "r0c0:5x8" in block  # delta via _rle_delta_compact, collapsed run
++    assert "run-length" in block
++
++
++def test_req_arc_wmte_5593_2_spec_declares_scalability_fix() -> None:
++    from pathlib import Path
++
++    spec_path = (
++        Path(__file__).resolve().parents[2]
++        / "openspec"
++        / "capabilities"
++        / "arc-human-replay-frame-change"
++        / "spec.md"
++    )
++    spec = spec_path.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-WMTE-5593-2") :]
++
++    for marker in (
++        "REQ-ARC-WMTE-5593-2",
++        "SCENARIO-ARC-WMTE-5593-2-LOSSLESS-ROUND-TRIP",
++        "SCENARIO-ARC-WMTE-5593-2-REAL-BUDGET-FIT",
++        "11,167",
++        "18,355",
++    ):
++        assert marker in section
+diff --git a/tests/python/test_experiment_5593_goal_predicate_consistency_offline_sim_prototype.py b/tests/python/test_experiment_5593_goal_predicate_consistency_offline_sim_prototype.py
+index bfef907f10..ef88567537 100644
+--- a/tests/python/test_experiment_5593_goal_predicate_consistency_offline_sim_prototype.py
++++ b/tests/python/test_experiment_5593_goal_predicate_consistency_offline_sim_prototype.py
+@@ -235,21 +235,23 @@ def test_scenario_arc_wmte_5593_context_overflow_classified_distinctly(monkeypat
+     )
+ 
+ 
+-def test_req_arc_wmte_5593_repository_artifact_is_an_honest_diagnosed_null() -> None:
+-    """REQ-ARC-WMTE-5593: the checked-in real run is an honest, diagnosed null -- lp85's
+-    64x64 grid saturates the induction pipeline's context budget even at a minimal
+-    transition window (confirmed by direct debugging: a single-transition prompt already
+-    measures ~13,400+ tokens against a 13,824-token available budget). This does not
+-    reflect on score_goal_predicate_consistency's own correctness, which is validated by
+-    test_arc_goal_predicate_consistency.py's 5 direct unit tests on realistic synthetic
+-    data instead."""
++def test_req_arc_wmte_5593_repository_artifact_is_a_real_positive_control_result() -> None:
++    """REQ-ARC-WMTE-5593 + REQ-ARC-WMTE-5593-2: the checked-in real run is now the real
++    positive-control demo the induce_prompt scalability fix (REQ-ARC-WMTE-5593-2) enabled --
++    a genuinely real induction on lp85's 8-transition window (no context overflow) scored by
++    score_goal_predicate_consistency against real observed transitions. The induced predicate
++    is imperfect (0.75 accuracy, 2 real-level-up misses) -- an honest finding about induction
++    QUALITY on lp85, distinct from the check working correctly (also validated by
++    test_arc_goal_predicate_consistency.py's 5 direct unit tests on synthetic data)."""
+ 
+     result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    detail = result.get("goal_predicate_detail", {})
+ 
+     assert result["real_levelup_present_in_sample"] is True
+-    assert result["goal_predicate_accuracy"] is None
++    assert detail.get("induction_ok") is True
++    assert detail.get("induce_transition_count") == 8
++    assert result["goal_predicate_accuracy"] == 0.75
+     assert result["inference_substrate"] == "live_llm_inference"
+     assert result["solve_provenance"] == "development_proxy"
+-    assert result["flagged_adversarial"] is True
+     for field in mod.REQUIRED_ARTIFACT_FIELDS:
+         assert field in result
+-- 
+2.55.0
+

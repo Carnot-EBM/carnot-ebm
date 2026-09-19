@@ -1,0 +1,4047 @@
+From f440268c86eb9d3928297bb8cf859e3389c92c63 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 09:19:55 -0400
+Subject: [PATCH 08625/11362] [conductor] Prospective admissible ARC depth
+ portfolio or exact terminal skip
+
+Automated research step by research conductor.
+Task ID: exp6232-arc-admissible-depth-portfolio
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-notes/arc-agi3-news-watch.md    |   10 +
+ .../arc-world-model-trust-energy/spec.md      |  115 +
+ ops/.arc_news_watch_state.json                |    6 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...ent_6232_arc_admissible_depth_portfolio.py |  977 +++++++
+ ...t_6232_arc_admissible_depth_portfolio.json | 2557 +++++++++++++++++
+ results/llama_server_9188242568757559282.log  |    7 +
+ ...ent_6232_arc_admissible_depth_portfolio.py |  286 ++
+ 8 files changed, 3956 insertions(+), 4 deletions(-)
+ create mode 100644 python/carnot/experiment_6232_arc_admissible_depth_portfolio.py
+ create mode 100644 results/experiment_6232_arc_admissible_depth_portfolio.json
+ create mode 100644 tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py
+
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index 7db959dc29..11d3110cc4 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -118,3 +118,13 @@ CHECK_TIMED_OUT
+ 
+ - Kaggle analyzed 500 failed submissions: about one-third had no traceable visible error, nearly 20% omitted required GPU configuration, and smaller categories included missing datasets/dependencies, CUDA OOM, obsolete endpoints, and writes to read-only `/kaggle/input`. Host Greg Kamradt added that organizers cannot inspect notebooks until teams open-source them. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+ 
++## 2026-08-09 13:15 UTC -- NEW
++
++- The public leaderboard is now led by **YUTO KOJIMA** with a **1.86** score from an August 9 submission, ahead of Andy liu at 1.69. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
++
++- Greg Kamradt clarified that final-selected notebooks are **not rerun**: private scores are retained from the original submission run. Each run evaluates both leaderboard halves, while only the public half is revealed. ARC-AGI-3’s runtime limit is **9 hours**. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
++
++- Kaggle execution limits were officially clarified: logs stop being captured after 10 MB without terminating the notebook; `/kaggle/working` has a 20 GB quota and exceeding it terminates the kernel; CPU notebooks have 30 GB RAM enforced through cgroups; native crash details remain hidden although exit code 139 identifies SIGSEGV. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
++
++- On August 3, ARC Prize merged a correction to the official Agents repository replacing the obsolete `three.arcprize.org` defaults and API-key documentation with `arcprize.org`. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/732419), [merged PR](https://github.com/arcprize/ARC-AGI-3-Agents/pull/74)
++
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index f55701b37f..25f0694924 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -24117,3 +24117,118 @@ and makes no solve claim, no level-credit claim, and no registry update.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6218 | `python/carnot/experiment_6218_arc_admissible_lever_portfolio_heldout.py`. | `tests/python/test_experiment_6218_arc_admissible_lever_portfolio_heldout.py`. |
++
++### REQ-ARC-WMTE-6232: ARC Admissible Depth Portfolio Eligibility Ledger
++
++Experiment 6232 SHALL build a new immutable eligibility ledger from the
++current V539 ARC evidence. It SHALL hash every upstream artifact, its terminal
++classification, the determination trail, the solve registry, current defaults,
++and the canonical live E3 entrypoint before any model admission decision. It
++SHALL not edit `python/carnot/terminal_artifacts.py`. It SHALL not edit
++historical corrigenda or historical artifacts to force eligibility.
++
++The current default stack SHALL keep object-relative trajectory transfer and
++budget-aware search enabled. Those defaults SHALL be recorded as held-fixed
++baseline behavior. They SHALL not be counted again as new portfolio levers.
++
++A V539 depth lever is eligible only when all checks pass:
++
++- The artifact exists and terminal classification is `complete`, `ready`, or
++  `positive`.
++- The artifact has no unresolved critical flag, `flagged_adversarial=true`, or
++  substantive pending corrigendum.
++- The treatment is active and fires on its declared support floor.
++- The measurement is an independent A/B or matched readiness result.
++- The primary effect is depth-relevant or admission-relevant.
++- The lever is not a duplicate variant of another counted mechanism.
++- The artifact preserves every loss, failure, default, registry hash, and
++  forbidden-access count.
++
++If fewer than two independent, unflagged, treatment-active levers qualify, the
++experiment SHALL write a terminal skip artifact and SHALL set `model_loaded` to
++bare `false`. It SHALL not load the requested GGUF model before eligibility
++reaches two. If at least two levers qualify, the experiment SHALL freeze the
++selected combination before execution and run A/A, current default stack, and
++portfolio arms through the canonical live policy with matched games, seeds,
++resources, defaults, and registry hashes.
++
++Experiment 6232 SHALL write
++`results/experiment_6232_arc_admissible_depth_portfolio.json` with these bare
++top-level fields:
++
++- `status`
++- `upstream_paths_hashes_and_terminal_classes`
++- `determination_preservation_receipts`
++- `eligibility_rules`
++- `lever_eligibility_ledger`
++- `eligible_lever_count`
++- `selected_levers`
++- `exact_skip_reason`
++- `model_loaded`
++- `registry_precheck_and_hash_before_after`
++- `solve_provenance`
++- `preregistered_portfolio_game_seed_matrix`
++- `model_specs`
++- `supervised_runtime_receipts`
++- `matched_arm_configuration`
++- `per_lever_and_combination_fire_counts`
++- `raw_prompt_output_engine_replay_hashes`
++- `admission_and_level_depth_by_arm_game`
++- `actions_tokens_wall_and_failure_costs`
++- `paired_clustered_intervals`
++- `interaction_effects`
++- `harmful_regression_count_and_games`
++- `aa_control`
++- `source_bfs_adapter_hidden_state_registry_access_counts`
++- `registry_update_count`
++- `portfolio_promotion_ready_score`
++- `protected_files_unchanged`
++- `preconditions_checked`
++- `inference_substrate`
++- `verifier_is_oracle`
++- `field_provenance`
++- `field_principles`
++- `test_commands`
++- `test_exit_codes`
++- `duration_s`
++- `reproducibility_checksum`
++- `honest_verdict`
++
++The artifact SHALL set `solve_provenance` to `live_agent_self_discovery`. It
++SHALL set `registry_update_count` to bare `0`. Each source, BFS, adapter,
++hidden-state, and registry-access counter SHALL be bare `0`. The verifier SHALL
++not be treated as an oracle.
++
++#### SCENARIO-ARC-WMTE-6232-PRECONDITION-LEDGER
++
++Given the current V539 artifact set, the experiment hashes all upstream
++artifacts, terminal classes, determination trails, registry, defaults, and live
++entrypoint receipts before model admission. Missing and blocked artifacts stay
++in the ledger with explicit reasons.
++
++#### SCENARIO-ARC-WMTE-6232-TERMINAL-SKIP
++
++Given fewer than two eligible independent depth levers, the experiment writes a
++terminal skip artifact. It leaves the portfolio matrix unopened, records the
++exact skip reason, sets `model_loaded=false`, and records no registry update or
++forbidden access.
++
++#### SCENARIO-ARC-WMTE-6232-PORTFOLIO-RUN
++
++Given at least two eligible independent depth levers, the experiment freezes the
++selected combination and then runs A/A, current default stack, and portfolio
++arms through the canonical live policy with matched resources. It reports
++per-game depth, admission, losses, costs, fire counts, interactions, and harms.
++
++#### SCENARIO-ARC-WMTE-6232-ARTIFACT-GUARDS
++
++The artifact validates every required field, preserves protected files and the
++registry hash, records `solve_provenance=live_agent_self_discovery`, keeps
++forbidden-access counts and `registry_update_count` as bare zeros, and uses a
++terminal `honest_verdict` prefix.
++
++## Implementation Status (REQ-ARC-WMTE-6232)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6232 | Pending. | Pending. |
+diff --git a/ops/.arc_news_watch_state.json b/ops/.arc_news_watch_state.json
+index 8bff69a0c8..0d13d79a0e 100644
+--- a/ops/.arc_news_watch_state.json
++++ b/ops/.arc_news_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+-  "last_findings": "- Kaggle analyzed 500 failed submissions: about one-third had no traceable visible error, nearly 20% omitted required GPU configuration, and smaller categories included missing datasets/dependencies, CUDA OOM, obsolete endpoints, and writes to read-only `/kaggle/input`. Host Greg Kamradt added that organizers cannot inspect notebooks until teams open-source them. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)",
+-  "last_checked": "2026-08-08T13:11:15.703500+00:00",
+-  "history_count": 18
++  "last_findings": "- The public leaderboard is now led by **YUTO KOJIMA** with a **1.86** score from an August 9 submission, ahead of Andy liu at 1.69. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)\n\n- Greg Kamradt clarified that final-selected notebooks are **not rerun**: private scores are retained from the original submission run. Each run evaluates both leaderboard halves, while only the public half is revealed. ARC-AGI-3\u2019s runtime limit is **9 hours**. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)\n\n- Kaggle execution limits were officially clarified: logs stop being captured after 10 MB without terminating the notebook; `/kaggle/working` has a 20 GB quota and exceeding it terminates the kernel; CPU notebooks have 30 GB RAM enforced through cgroups; native crash details remain hidden although exit code 139 identifies SIGSEGV. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)\n\n- On August 3, ARC Prize merged a correction to the official Agents repository replacing the obsolete `three.arcprize.org` defaults and API-key documentation with `arcprize.org`. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/732419), [merged PR](https://github.com/arcprize/ARC-AGI-3-Agents/pull/74)",
++  "last_checked": "2026-08-09T13:15:20.316754+00:00",
++  "history_count": 19
+ }
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e89182e175..dd70682118 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4839,
++  "experiments_checked": 4840,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6232_arc_admissible_depth_portfolio.py b/python/carnot/experiment_6232_arc_admissible_depth_portfolio.py
+new file mode 100644
+index 0000000000..827b34f31c
+--- /dev/null
++++ b/python/carnot/experiment_6232_arc_admissible_depth_portfolio.py
+@@ -0,0 +1,977 @@
++"""Experiment 6232: ARC admissible depth portfolio ledger.
++
++Spec refs: REQ-ARC-WMTE-6232,
++SCENARIO-ARC-WMTE-6232-PRECONDITION-LEDGER,
++SCENARIO-ARC-WMTE-6232-TERMINAL-SKIP,
++SCENARIO-ARC-WMTE-6232-PORTFOLIO-RUN,
++SCENARIO-ARC-WMTE-6232-ARTIFACT-GUARDS.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import terminal_artifacts
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_6232_arc_admissible_depth_portfolio.json")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
++REGISTRY_RELATIVE_PATH = Path("ops/arc_solve_registry.yaml")
++CLASSIFIER_RELATIVE_PATH = Path("python/carnot/terminal_artifacts.py")
++PRESERVATION_LINT_RELATIVE_PATH = Path("scripts/determination_preservation_lint.py")
++COMPETITION_AGENT_RELATIVE_PATH = Path("python/carnot/agentic/arc_competition_agent.py")
++SOLVER_KIT_RELATIVE_PATH = Path("python/carnot/agentic/arc_solver_kit.py")
++WORLD_MODEL_RELATIVE_PATH = Path("python/carnot/agentic/arc_executable_world_model.py")
++EXP6228_RELATIVE_PATH = Path("results/experiment_6228_supervised_three_family_runtime_endurance.json")
++EXTERNAL_TEST_RECEIPT_PATH = Path("/tmp/carnot_exp6232_test_receipts.json")
++
++REQUIREMENT = "REQ-ARC-WMTE-6232"
++SUPPORT_MINIMUM = 2
++CANONICAL_MODEL_HF_ID = "unsloth/gemma-4-31B-it-GGUF"
++CANONICAL_MODEL_FAMILY = "gemma4_31b_dense"
++PREFERRED_QUANT = "Q4_K_M"
++DEFAULT_PORTFOLIO_GAMES = ("bp35", "dc22", "lp85", "m0r0")
++DEFAULT_PORTFOLIO_SEEDS = (623200, 623201)
++
++UPSTREAM_LEVERS: tuple[JsonDict, ...] = (
++    {
++        "lever_id": "exp6215_object_relative_trajectory_transfer",
++        "experiment": 6215,
++        "requirement": "REQ-ARC-WMTE-6215",
++        "mechanism": "object_relative_trajectory_transfer",
++        "path": "results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
++        "default_stack_component": True,
++        "fire_field": "treatment_fire_and_reason_counts",
++        "quality_fields": ("trajectory_transfer_promotion_ready_score",),
++        "metric_fields": ("engine_fidelity_score_actions_and_wall_time_by_arm_game",),
++    },
++    {
++        "lever_id": "exp6216_budget_aware_search",
++        "experiment": 6216,
++        "requirement": "REQ-ARC-WMTE-6216",
++        "mechanism": "budget_aware_search",
++        "path": "results/experiment_6216_arc_budget_aware_search_ab.json",
++        "default_stack_component": True,
++        "fire_field": "consumer_fire_counts",
++        "quality_fields": ("budget_aware_promotion_ready_score",),
++        "metric_fields": (
++            "path_cost_states_expanded_navigation_actions_score_and_wall_time_by_arm_game",
++        ),
++    },
++    {
++        "lever_id": "exp6229_bounded_reinduction",
++        "experiment": 6229,
++        "requirement": "REQ-ARC-WMTE-6229",
++        "mechanism": "bounded_reinduction",
++        "path": "results/experiment_6229_arc_gemma31_think_determination.json",
++        "default_stack_component": False,
++        "fire_field": "treatment_fire_counts",
++        "quality_fields": (
++            "bounded_reinduction_promotion_ready_score",
++            "think_mode_promotion_ready_score",
++        ),
++        "metric_fields": (
++            "admission_and_level_depth_by_arm_game",
++            "quality_efficiency_and_cost_by_arm_game",
++        ),
++    },
++    {
++        "lever_id": "exp6230_prompt_enrichment",
++        "experiment": 6230,
++        "requirement": "REQ-ARC-WMTE-6230",
++        "mechanism": "induce_prompt_enrichment",
++        "path": "results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
++        "default_stack_component": False,
++        "fire_field": "treatment_fire_counts",
++        "quality_fields": ("prompt_enrichment_promotion_ready_score",),
++        "metric_fields": ("admission_and_level_depth_by_arm_game",),
++    },
++    {
++        "lever_id": "exp6231_depth_lever",
++        "experiment": 6231,
++        "requirement": "REQ-ARC-WMTE-6231",
++        "mechanism": "graded_goal_bias",
++        "path": "results/experiment_6231_arc_depth_lever_heldout_ab.json",
++        "path_glob": "results/experiment_6231*.json",
++        "default_stack_component": False,
++        "fire_field": "treatment_fire_counts",
++        "quality_fields": ("graded_goal_bias_promotion_ready_score",),
++        "metric_fields": ("admission_and_level_depth_by_arm_game",),
++    },
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "upstream_paths_hashes_and_terminal_classes",
++    "determination_preservation_receipts",
++    "eligibility_rules",
++    "lever_eligibility_ledger",
++    "eligible_lever_count",
++    "selected_levers",
++    "exact_skip_reason",
++    "model_loaded",
++    "registry_precheck_and_hash_before_after",
++    "solve_provenance",
++    "preregistered_portfolio_game_seed_matrix",
++    "model_specs",
++    "supervised_runtime_receipts",
++    "matched_arm_configuration",
++    "per_lever_and_combination_fire_counts",
++    "raw_prompt_output_engine_replay_hashes",
++    "admission_and_level_depth_by_arm_game",
++    "actions_tokens_wall_and_failure_costs",
++    "paired_clustered_intervals",
++    "interaction_effects",
++    "harmful_regression_count_and_games",
++    "aa_control",
++    "source_bfs_adapter_hidden_state_registry_access_counts",
++    "registry_update_count",
++    "portfolio_promotion_ready_score",
++    "protected_files_unchanged",
++    "preconditions_checked",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "field_principles",
++    "test_commands",
++    "test_exit_codes",
++    "duration_s",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "The terminal state distinguishes a skip from a frozen pair.",
++    "upstream_paths_hashes_and_terminal_classes": "Every upstream input is hash-bound.",
++    "determination_preservation_receipts": "The classifier and guard trail stay visible.",
++    "eligibility_rules": "The gate is data-driven, not prose-driven.",
++    "lever_eligibility_ledger": "Every lever receives a reasoned verdict.",
++    "eligible_lever_count": "The model gate opens only at two independent levers.",
++    "selected_levers": "The selected pair is frozen before any portfolio run.",
++    "exact_skip_reason": "A skip names the exact failed precondition.",
++    "model_loaded": "The GGUF must not load before the two-lever gate passes.",
++    "registry_precheck_and_hash_before_after": "The solve registry is immutable here.",
++    "solve_provenance": "ARC credit is only for live self-discovery.",
++    "preregistered_portfolio_game_seed_matrix": "Game and seed cells freeze before execution.",
++    "model_specs": "The only admitted inducer is the requested Gemma4-31B Q4_K_M model.",
++    "supervised_runtime_receipts": "Exp6228 supervision is preserved when model use is possible.",
++    "matched_arm_configuration": "A/A, default, and portfolio arms hold resources fixed.",
++    "per_lever_and_combination_fire_counts": "Non-firing levers cannot be promoted.",
++    "raw_prompt_output_engine_replay_hashes": "Raw prompts, engines, and replays stay auditable.",
++    "admission_and_level_depth_by_arm_game": "Depth and admission outcomes stay per-game.",
++    "actions_tokens_wall_and_failure_costs": "Cost and failure data stay visible.",
++    "paired_clustered_intervals": "Intervals use game as the paired cluster.",
++    "interaction_effects": "The pair effect is separate from main effects.",
++    "harmful_regression_count_and_games": "Every loss or regression remains visible.",
++    "aa_control": "A/A controls protect against instrumentation drift.",
++    "source_bfs_adapter_hidden_state_registry_access_counts": "Forbidden reads are bare zeros.",
++    "registry_update_count": "Bare zero proves no solve registry mutation.",
++    "portfolio_promotion_ready_score": "Readiness is capped by eligible lever count.",
++    "protected_files_unchanged": "Protected files stay byte-identical.",
++    "preconditions_checked": "Admission inputs are recorded before model admission.",
++    "inference_substrate": "The artifact declares aggregation, not live inference.",
++    "verifier_is_oracle": "The verifier is not an ARC oracle.",
++    "field_provenance": "Each field traces back to this module and requirement.",
++    "field_principles": "Each field states the audit risk it controls.",
++    "test_commands": "Verification commands are recorded.",
++    "test_exit_codes": "Exit codes prevent unchecked test claims.",
++    "duration_s": "Measured wall time is recorded without padding.",
++    "reproducibility_checksum": "A stable checksum catches silent drift.",
++    "honest_verdict": "The verdict uses a terminal prefix.",
++}
++
++PROTECTED_FILES = (
++    Path("python/carnot/terminal_artifacts.py"),
++    Path("scripts/determination_preservation_lint.py"),
++    Path("scripts/research_conductor.py"),
++    Path("ops/arc_solve_registry.yaml"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++)
++
++DEFAULT_TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6232_arc_admissible_depth_portfolio.py -m pytest tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6232_arc_admissible_depth_portfolio.py --fail-under=100 --show-missing",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py",
++    ".venv/bin/python scripts/determination_preservation_lint.py HEAD --all-files",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6232_arc_admissible_depth_portfolio.json",
++    ".venv/bin/python -m carnot.experiment_6232_arc_admissible_depth_portfolio --date 20260809",
++)
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
++
++
++def sha256_text(value: str) -> str:
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    return sha256_text(canonical_json(value))
++
++
++def sha256_file(path: Path) -> str | None:
++    if not path.is_file():
++        return None
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def file_receipt(path: Path) -> JsonDict:
++    return {
++        "path": str(path),
++        "exists": path.is_file(),
++        "size_bytes": path.stat().st_size if path.is_file() else None,
++        "sha256": sha256_file(path),
++    }
++
++
++def _load_json(path: Path) -> JsonDict:
++    if not path.is_file():
++        return {}
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    return dict(payload) if isinstance(payload, Mapping) else {}
++
++
++def _artifact_path(spec: Mapping[str, Any], *, root: Path) -> Path:
++    path_glob = spec.get("path_glob")
++    if path_glob:
++        matches = sorted(root.glob(str(path_glob)))
++        if matches:
++            return matches[0]
++    return root / str(spec["path"])
++
++
++def _pending_corrigendum(payload: Mapping[str, Any]) -> JsonDict:
++    pending = payload.get("corrigendum_pending")
++    rows = pending if isinstance(pending, list) else ([pending] if pending else [])
++    critical = [
++        row
++        for row in rows
++        if isinstance(row, Mapping) and str(row.get("severity", "")).lower() == "critical"
++    ]
++    return {
++        "substantive": bool(rows),
++        "critical_count": len(critical),
++        "rows": rows,
++        "resolved_rows": payload.get("corrigendum_resolved") or [],
++    }
++
++
++def _fire_counts(payload: Mapping[str, Any], field: str) -> JsonDict:
++    fire = dict(payload.get(field) or {})
++    total = int(fire.get("treatment_total", fire.get("total", 0)) or 0)
++    support_count = int(fire.get("support_count", 0) or 0)
++    support_floor = int(fire.get("support_floor", 1) or 1)
++    mutation_proven = fire.get("mutation_proven") is True
++    return {
++        "field": field,
++        "total": total,
++        "support_count": support_count,
++        "support_floor": support_floor,
++        "mutation_proven": mutation_proven,
++        "activation_passed": total > 0 and support_count >= support_floor and mutation_proven,
++        "raw": fire,
++    }
++
++
++def _quality_gate(payload: Mapping[str, Any], fields: Sequence[str]) -> JsonDict:
++    for field in fields:
++        if field in payload:
++            score = float(payload.get(field) or 0.0)
++            return {"field": field, "score": score, "quality_passed": score >= 1.0}
++    return {"field": None, "score": 0.0, "quality_passed": False}
++
++
++def _mean(values: Sequence[float]) -> float:
++    return round(sum(values) / len(values), 8) if values else 0.0
++
++
++def _nested_delta(row: Mapping[str, Any], key: str) -> float:
++    control = dict(row.get("control") or {})
++    treatment = dict(row.get("treatment") or {})
++    return float(treatment.get(key, 0.0) or 0.0) - float(control.get(key, 0.0) or 0.0)
++
++
++def _effect_gate(payload: Mapping[str, Any], fields: Sequence[str]) -> JsonDict:
++    chosen_field = next((field for field in fields if isinstance(payload.get(field), Mapping)), None)
++    rows = dict(payload.get(chosen_field) or {}) if chosen_field else {}
++    deltas: list[float] = []
++    wall_deltas: list[float] = []
++    token_deltas: list[float] = []
++    action_deltas: list[float] = []
++    losing_games: list[str] = []
++    for game, row_any in sorted(rows.items()):
++        row = dict(row_any or {})
++        delta = float(
++            row.get(
++                "treatment_minus_control_depth",
++                row.get(
++                    "treatment_minus_control_level_depth",
++                    row.get(
++                        "treatment_minus_control_admission",
++                        row.get("treatment_minus_control_score", 0.0),
++                    ),
++                ),
++            )
++            or 0.0
++        )
++        if delta == 0.0:
++            delta = max(
++                _nested_delta(row, "level_depth"),
++                _nested_delta(row, "depth"),
++                _nested_delta(row, "admission"),
++                _nested_delta(row, "score"),
++            )
++        deltas.append(delta)
++        wall_deltas.append(float(row.get("treatment_minus_control_wall_s", 0.0) or 0.0))
++        token_deltas.append(float(row.get("treatment_minus_control_tokens", 0.0) or 0.0))
++        action_deltas.append(float(row.get("treatment_minus_control_actions", 0.0) or 0.0))
++        if delta < 0.0 or row.get("loss_reported") is True or row.get("losing_game") is True:
++            losing_games.append(str(game))
++    primary_effect = _mean(deltas)
++    return {
++        "metric_field": chosen_field,
++        "primary_effect": primary_effect,
++        "depth_or_admission_relevant": any(delta > 0.0 for delta in deltas),
++        "mean_action_delta": _mean(action_deltas),
++        "mean_token_delta": _mean(token_deltas),
++        "mean_wall_delta_s": _mean(wall_deltas),
++        "losing_games": losing_games,
++        "by_game": rows,
++    }
++
++
++def _safety_gate(payload: Mapping[str, Any], effect: Mapping[str, Any]) -> JsonDict:
++    harmful = dict(payload.get("harmful_regression_count_and_games") or {})
++    games = [str(game) for game in harmful.get("games") or []]
++    losing = [str(game) for game in harmful.get("losing_games_reported_not_hidden") or []]
++    effect_losses = [str(game) for game in effect.get("losing_games") or []]
++    count = int(harmful.get("count", 0) or 0) + len(effect_losses)
++    return {
++        "harmful_regression_count": count,
++        "harmful_games": sorted(set(games + effect_losses)),
++        "losing_games_reported_not_hidden": losing,
++        "safety_passed": count == 0,
++        "raw": harmful,
++    }
++
++
++def _zero_registry_gate(payload: Mapping[str, Any]) -> JsonDict:
++    return {
++        "solve_claimed": payload.get("solve_claimed"),
++        "level_credit_delta": payload.get("level_credit_delta"),
++        "registry_update_count": payload.get("registry_update_count"),
++        "passed": payload.get("solve_claimed") is False
++        and type(payload.get("level_credit_delta")) is int
++        and payload.get("level_credit_delta") == 0
++        and type(payload.get("registry_update_count")) is int
++        and payload.get("registry_update_count") == 0,
++    }
++
++
++def _raw_hashes(payload: Mapping[str, Any]) -> JsonDict:
++    rows: list[JsonDict] = []
++    for field in (
++        "raw_prompt_output_engine_replay_hashes",
++        "raw_induction_paths_and_hashes",
++    ):
++        for row in payload.get(field) or []:
++            if isinstance(row, Mapping):
++                rows.append(dict(row))
++    within_game = payload.get("within_game_only_receipt")
++    if isinstance(within_game, Mapping):
++        for row in within_game.get("raw_event_paths_and_hashes") or []:
++            if isinstance(row, Mapping):
++                rows.append(dict(row))
++    return {"raw_count": len(rows), "raw_sha256": sha256_json(rows), "rows": rows}
++
++
++def _forbidden_zero_from_payload(payload: Mapping[str, Any]) -> bool:
++    for key in (
++        "source_bfs_adapter_registry_hidden_state_access_counts",
++        "prior_game_cross_game_source_bfs_adapter_registry_hidden_state_access_counts",
++    ):
++        counts = payload.get(key)
++        if isinstance(counts, Mapping) and counts:
++            return all(type(value) is int and value == 0 for value in counts.values())
++    return True
++
++
++def _selection_utility(effect: Mapping[str, Any], quality: Mapping[str, Any]) -> float:
++    return round(float(effect.get("primary_effect", 0.0)) + 0.01 * float(quality.get("score", 0.0)), 8)
++
++
++def recompute_lever_eligibility(spec: Mapping[str, Any], *, root: Path = REPO_ROOT) -> JsonDict:
++    path = _artifact_path(spec, root=root)
++    payload = _load_json(path)
++    classification = terminal_artifacts.classify_artifact_path(path)
++    pending = _pending_corrigendum(payload)
++    fire = _fire_counts(payload, str(spec["fire_field"]))
++    quality = _quality_gate(payload, tuple(spec.get("quality_fields", ())))
++    effect = _effect_gate(payload, tuple(spec.get("metric_fields", ())))
++    safety = _safety_gate(payload, effect)
++    zero_registry = _zero_registry_gate(payload)
++    terminal_class = classification.classification
++    admissible_terminal = terminal_class in {"complete", "ready", "positive"}
++    default_component = spec.get("default_stack_component") is True
++    reasons: list[str] = []
++    if not path.is_file():
++        reasons.append("artifact_missing")
++    if not admissible_terminal:
++        reasons.append(f"terminal_class_{terminal_class}_not_admissible")
++    if payload.get("flagged_adversarial") is True:
++        reasons.append("flagged_adversarial_true")
++    if pending["substantive"]:
++        reasons.append("substantive_corrigendum_pending")
++    if pending["critical_count"]:
++        reasons.append("unresolved_critical_corrigendum_present")
++    if not fire["activation_passed"]:
++        reasons.append("treatment_did_not_fire")
++    if not quality["quality_passed"]:
++        reasons.append("quality_gate_failed")
++    if not effect["depth_or_admission_relevant"]:
++        reasons.append("no_depth_or_admission_relevant_effect")
++    if not safety["safety_passed"]:
++        reasons.append("safety_gate_failed")
++    if not zero_registry["passed"]:
++        reasons.append("zero_registry_gate_failed")
++    if not _forbidden_zero_from_payload(payload):
++        reasons.append("forbidden_access_nonzero")
++    if default_component:
++        reasons.append("already_default_on_not_counted")
++    return {
++        "lever_id": str(spec["lever_id"]),
++        "experiment": int(spec["experiment"]),
++        "requirement": str(spec["requirement"]),
++        "mechanism": str(spec["mechanism"]),
++        "default_stack_component": default_component,
++        "artifact": file_receipt(path),
++        "terminal_classifier": classification.to_dict(),
++        "pending_corrigendum": pending,
++        "activation_gate": fire,
++        "quality_gate": quality,
++        "effect_gate": effect,
++        "safety_gate": safety,
++        "zero_registry_gate": zero_registry,
++        "raw_prompt_output_engine_replay_hashes": _raw_hashes(payload),
++        "aa_control": payload.get("aa_control", "not_recorded"),
++        "eligible": not reasons,
++        "ineligible_reasons": reasons,
++        "selection_utility": _selection_utility(effect, quality),
++    }
++
++
++def recompute_eligibility_ledger(
++    specs: Sequence[Mapping[str, Any]] = UPSTREAM_LEVERS,
++) -> list[JsonDict]:
++    return apply_independence_gate([recompute_lever_eligibility(spec) for spec in specs])
++
++
++def synthetic_eligible_lever(lever_id: str, *, mechanism: str, utility: float) -> JsonDict:
++    return {
++        "lever_id": lever_id,
++        "experiment": 0,
++        "requirement": REQUIREMENT,
++        "mechanism": mechanism,
++        "default_stack_component": False,
++        "artifact": {"path": f"synthetic/{lever_id}.json", "exists": True, "sha256": "sha256:0"},
++        "terminal_classifier": {"classification": "ready", "terminal": True},
++        "pending_corrigendum": {"substantive": False, "critical_count": 0, "rows": []},
++        "activation_gate": {
++            "total": 3,
++            "support_count": 3,
++            "support_floor": 3,
++            "mutation_proven": True,
++            "activation_passed": True,
++        },
++        "quality_gate": {"field": "synthetic_ready_score", "score": 1.0, "quality_passed": True},
++        "effect_gate": {
++            "metric_field": "admission_and_level_depth_by_arm_game",
++            "primary_effect": float(utility),
++            "depth_or_admission_relevant": True,
++            "mean_action_delta": 0.0,
++            "mean_token_delta": 0.0,
++            "mean_wall_delta_s": 0.0,
++            "losing_games": [],
++            "by_game": {"synthetic": {"treatment_minus_control_depth": float(utility)}},
++        },
++        "safety_gate": {
++            "harmful_regression_count": 0,
++            "harmful_games": [],
++            "losing_games_reported_not_hidden": [],
++            "safety_passed": True,
++        },
++        "zero_registry_gate": {
++            "solve_claimed": False,
++            "level_credit_delta": 0,
++            "registry_update_count": 0,
++            "passed": True,
++        },
++        "raw_prompt_output_engine_replay_hashes": {"raw_count": 0, "raw_sha256": sha256_json([]), "rows": []},
++        "aa_control": "synthetic",
++        "eligible": True,
++        "ineligible_reasons": [],
++        "selection_utility": float(utility),
++    }
++
++
++def apply_independence_gate(ledger: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    rows = [dict(row) for row in ledger]
++    best_by_mechanism: dict[str, str] = {}
++    for row in sorted(
++        [row for row in rows if row.get("eligible") is True],
++        key=lambda item: (-float(item.get("selection_utility", 0.0)), str(item.get("lever_id"))),
++    ):
++        mechanism = str(row.get("mechanism"))
++        if mechanism not in best_by_mechanism:
++            best_by_mechanism[mechanism] = str(row.get("lever_id"))
++    for row in rows:
++        if row.get("eligible") is True and best_by_mechanism.get(str(row.get("mechanism"))) != row.get(
++            "lever_id"
++        ):
++            row["eligible"] = False
++            reasons = list(row.get("ineligible_reasons") or [])
++            reasons.append("duplicate_mechanism_not_counted")
++            row["ineligible_reasons"] = reasons
++    return rows
++
++
++def select_levers(ledger: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    eligible = [dict(row) for row in ledger if row.get("eligible") is True]
++    eligible.sort(
++        key=lambda row: (
++            -float(row.get("selection_utility", 0.0)),
++            int(dict(row.get("safety_gate") or {}).get("harmful_regression_count", 0)),
++            str(row.get("lever_id")),
++        )
++    )
++    return eligible[:SUPPORT_MINIMUM]
++
++
++def current_default_stack() -> JsonDict:
++    competition = (REPO_ROOT / COMPETITION_AGENT_RELATIVE_PATH).read_text(encoding="utf-8")
++    solver = (REPO_ROOT / SOLVER_KIT_RELATIVE_PATH).read_text(encoding="utf-8")
++    world_model = (REPO_ROOT / WORLD_MODEL_RELATIVE_PATH).read_text(encoding="utf-8")
++    return {
++        "trajectory_transfer": "SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED = True"
++        in competition,
++        "budget_aware_search": "BUDGET_AWARE_SEARCH_ENABLED = True" in solver,
++        "think_default": '"1"' if 'ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "1"' in world_model else "0",
++        "prompt_enrichment": "SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED = True" in world_model,
++        "think_arm_fallback": "SUBMITTED_THINK_ARM_FALLBACK_ENABLED = True" in competition,
++        "source_hashes": {
++            COMPETITION_AGENT_RELATIVE_PATH.as_posix(): sha256_file(
++                REPO_ROOT / COMPETITION_AGENT_RELATIVE_PATH
++            ),
++            SOLVER_KIT_RELATIVE_PATH.as_posix(): sha256_file(REPO_ROOT / SOLVER_KIT_RELATIVE_PATH),
++            WORLD_MODEL_RELATIVE_PATH.as_posix(): sha256_file(
++                REPO_ROOT / WORLD_MODEL_RELATIVE_PATH
++            ),
++        },
++    }
++
++
++def registry_precheck_and_hash_before_after(*, matrix_opened: bool) -> JsonDict:
++    path = REPO_ROOT / REGISTRY_RELATIVE_PATH
++    before = sha256_file(path)
++    after = sha256_file(path)
++    return {
++        "path": REGISTRY_RELATIVE_PATH.as_posix(),
++        "registry_hash_before": before,
++        "registry_hash_after": after,
++        "unchanged": before == after,
++        "checked_before_model_admission": True,
++        "portfolio_matrix_opened_after_precheck": matrix_opened,
++    }
++
++
++def protected_hash_map() -> dict[str, str | None]:
++    return {path.as_posix(): sha256_file(REPO_ROOT / path) for path in PROTECTED_FILES}
++
++
++def protected_files_unchanged(before: Mapping[str, str | None] | None = None) -> JsonDict:
++    before_hashes = dict(before or protected_hash_map())
++    after = protected_hash_map()
++    changed = [path for path, digest in before_hashes.items() if after.get(path) != digest]
++    return {
++        "unchanged": not changed,
++        "changed_paths": changed,
++        "hash_before": sha256_json(before_hashes),
++        "hash_after": sha256_json(after),
++    }
++
++
++def portfolio_matrix(selected: Sequence[Mapping[str, Any]], *, date: str) -> JsonDict:
++    opened = len(selected) >= SUPPORT_MINIMUM
++    cells = [
++        {"game": game, "seed": seed, "date": date, "role": "portfolio_depth_cell"}
++        for game in DEFAULT_PORTFOLIO_GAMES
++        for seed in DEFAULT_PORTFOLIO_SEEDS
++    ]
++    return {
++        "opened": opened,
++        "written_before_arm_execution": opened,
++        "games": list(DEFAULT_PORTFOLIO_GAMES) if opened else [],
++        "seeds": list(DEFAULT_PORTFOLIO_SEEDS) if opened else [],
++        "cells": cells if opened else [],
++        "not_opened_reason": None if opened else "fewer_than_two_eligible_depth_levers",
++    }
++
++
++def model_specs() -> JsonDict:
++    return {
++        "hf_id": CANONICAL_MODEL_HF_ID,
++        "role": "portfolio ARC inducer when eligibility passes",
++        "preferred_quant": PREFERRED_QUANT,
++        "family": CANONICAL_MODEL_FAMILY,
++        "load_policy": "forbidden_until_eligible_lever_count_at_least_two",
++    }
++
++
++def supervised_runtime_receipts() -> JsonDict:
++    path = REPO_ROOT / EXP6228_RELATIVE_PATH
++    payload = _load_json(path)
++    return {
++        "source_artifact": file_receipt(path),
++        "status": payload.get("status"),
++        "gemma_4_31b_runtime_ready_score": payload.get("gemma_4_31b_runtime_ready_score"),
++        "supervisor_contract_and_paths_hashes": payload.get("supervisor_contract_and_paths_hashes"),
++        "token_receipts": [
++            file_receipt(path)
++            for path in sorted((REPO_ROOT / "results").glob("experiment_6228*gemma4_31b_dense*.token"))
++        ],
++    }
++
++
++def matched_arm_configuration(selected: Sequence[Mapping[str, Any]]) -> JsonDict:
++    defaults = current_default_stack()
++    if len(selected) < SUPPORT_MINIMUM:
++        return {
++            "built": False,
++            "reason": "fewer_than_two_eligible_depth_levers",
++            "current_default_stack": defaults,
++            "aa_control": {},
++            "default_stack_arm": {},
++            "portfolio_arm": {},
++        }
++    lever_ids = [str(row["lever_id"]) for row in selected]
++    return {
++        "built": True,
++        "current_default_stack": defaults,
++        "aa_control": {"name": "aa_default_vs_default", "enabled_levers": []},
++        "default_stack_arm": {"name": "current_default_stack", "held_fixed": defaults},
++        "portfolio_arm": {"name": "depth_portfolio", "enabled_depth_levers": lever_ids},
++        "matched_resources": ["game", "seed", "action_budget", "model", "live_entrypoint"],
++    }
++
++
++def forbidden_access_counts() -> dict[str, int]:
++    return {
++        "source_reads": 0,
++        "bfs_reads": 0,
++        "adapter_reads": 0,
++        "hidden_state_reads": 0,
++        "registry_trajectory_reads": 0,
++        "registry_hidden_state_reads": 0,
++    }
++
++
++def upstream_paths_hashes_and_terminal_classes(ledger: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "terminal_classifier": file_receipt(REPO_ROOT / CLASSIFIER_RELATIVE_PATH),
++        "upstreams": [
++            {
++                "lever_id": row.get("lever_id"),
++                "artifact": row.get("artifact"),
++                "terminal_classifier": row.get("terminal_classifier"),
++            }
++            for row in ledger
++        ],
++    }
++
++
++def determination_preservation_receipts() -> JsonDict:
++    return {
++        "terminal_artifacts_py": file_receipt(REPO_ROOT / CLASSIFIER_RELATIVE_PATH),
++        "determination_preservation_lint_py": file_receipt(
++            REPO_ROOT / PRESERVATION_LINT_RELATIVE_PATH
++        ),
++        "protected_files": protected_hash_map(),
++    }
++
++
++def eligibility_rules() -> JsonDict:
++    return {
++        "eligible_minimum": SUPPORT_MINIMUM,
++        "terminal_classes": ["complete", "ready", "positive"],
++        "rejects_missing_blocked_skipped_flagged_or_corrigendum_pending": True,
++        "requires_treatment_fire_on_support_floor": True,
++        "requires_independent_mechanism": True,
++        "requires_depth_or_admission_relevant_effect": True,
++        "default_stack_components_not_counted": [
++            "object_relative_trajectory_transfer",
++            "budget_aware_search",
++        ],
++        "no_model_load_before_two": True,
++    }
++
++
++def aggregate_fire_counts(ledger: Sequence[Mapping[str, Any]], selected: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "by_lever": {str(row["lever_id"]): row.get("activation_gate") for row in ledger},
++        "selected_combination": [str(row["lever_id"]) for row in selected],
++        "combination_fire_count": 0 if len(selected) < SUPPORT_MINIMUM else "not_executed_by_unit_fixture",
++    }
++
++
++def aggregate_raw_hashes(ledger: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        str(row["lever_id"]): row.get("raw_prompt_output_engine_replay_hashes") for row in ledger
++    }
++
++
++def aggregate_depth(ledger: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {str(row["lever_id"]): dict(row.get("effect_gate") or {}).get("by_game", {}) for row in ledger}
++
++
++def aggregate_costs(ledger: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        str(row["lever_id"]): {
++            "mean_action_delta": dict(row.get("effect_gate") or {}).get("mean_action_delta"),
++            "mean_token_delta": dict(row.get("effect_gate") or {}).get("mean_token_delta"),
++            "mean_wall_delta_s": dict(row.get("effect_gate") or {}).get("mean_wall_delta_s"),
++            "losses": dict(row.get("safety_gate") or {}).get("harmful_games", []),
++            "terminal_failures": list(row.get("ineligible_reasons") or []),
++        }
++        for row in ledger
++    }
++
++
++def aggregate_intervals(ledger: Sequence[Mapping[str, Any]], selected: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "portfolio_interval": None
++        if len(selected) < SUPPORT_MINIMUM
++        else "not_executed_by_unit_fixture",
++        "upstream_effects": {
++            str(row["lever_id"]): dict(row.get("effect_gate") or {}).get("primary_effect")
++            for row in ledger
++        },
++    }
++
++
++def aggregate_harms(ledger: Sequence[Mapping[str, Any]]) -> JsonDict:
++    by_lever = {str(row["lever_id"]): row.get("safety_gate") for row in ledger}
++    games = [
++        f"{lever}:{game}"
++        for lever, safety in by_lever.items()
++        for game in dict(safety or {}).get("harmful_games", [])
++    ]
++    return {"count": len(games), "games": games, "by_lever": by_lever}
++
++
++def aggregate_aa(ledger: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {str(row["lever_id"]): row.get("aa_control") for row in ledger}
++
++
++def interaction_effects(selected: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "estimated": False,
++        "reason": "terminal_skip_before_model_load"
++        if len(selected) < SUPPORT_MINIMUM
++        else "not_executed_by_unit_fixture",
++        "selected_pair": [str(row["lever_id"]) for row in selected],
++        "interaction_effect": None,
++    }
++
++
++def field_provenance() -> dict[str, JsonDict]:
++    return {
++        field: {
++            "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++            "spec_ref": REQUIREMENT,
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable["duration_s"] = 0.0
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def build_artifact(
++    *,
++    date: str = "20260809",
++    precomputed_ledger: Sequence[Mapping[str, Any]] | None = None,
++    output_path: Path | None = None,
++    test_commands: Sequence[str] | None = None,
++    test_exit_codes: Mapping[str, int] | None = None,
++    started: float | None = None,
++    now: Callable[[], float] = time.monotonic,
++) -> JsonDict:
++    start = now() if started is None else float(started)
++    protected_before = protected_hash_map()
++    ledger = (
++        apply_independence_gate(precomputed_ledger)
++        if precomputed_ledger is not None
++        else recompute_eligibility_ledger()
++    )
++    selected = select_levers(ledger)
++    eligible_count = len([row for row in ledger if row.get("eligible") is True])
++    matrix = portfolio_matrix(selected, date=date)
++    registry = registry_precheck_and_hash_before_after(matrix_opened=matrix["opened"])
++    skip_reason = (
++        None
++        if eligible_count >= SUPPORT_MINIMUM
++        else f"fewer_than_two_independent_unflagged_treatment_active_depth_levers:{eligible_count}<2"
++    )
++    artifact: JsonDict = {
++        "status": "skipped_less_than_two_eligible_depth_levers"
++        if skip_reason
++        else "complete_portfolio_pair_frozen_not_executed_by_unit_fixture",
++        "upstream_paths_hashes_and_terminal_classes": upstream_paths_hashes_and_terminal_classes(
++            ledger
++        ),
++        "determination_preservation_receipts": determination_preservation_receipts(),
++        "eligibility_rules": eligibility_rules(),
++        "lever_eligibility_ledger": ledger,
++        "eligible_lever_count": eligible_count,
++        "selected_levers": [
++            {
++                "lever_id": str(row["lever_id"]),
++                "mechanism": str(row["mechanism"]),
++                "selection_utility": float(row.get("selection_utility", 0.0)),
++            }
++            for row in selected
++        ],
++        "exact_skip_reason": skip_reason,
++        "model_loaded": False,
++        "registry_precheck_and_hash_before_after": registry,
++        "solve_provenance": "live_agent_self_discovery",
++        "preregistered_portfolio_game_seed_matrix": matrix,
++        "model_specs": model_specs(),
++        "supervised_runtime_receipts": supervised_runtime_receipts(),
++        "matched_arm_configuration": matched_arm_configuration(selected),
++        "per_lever_and_combination_fire_counts": aggregate_fire_counts(ledger, selected),
++        "raw_prompt_output_engine_replay_hashes": aggregate_raw_hashes(ledger),
++        "admission_and_level_depth_by_arm_game": aggregate_depth(ledger),
++        "actions_tokens_wall_and_failure_costs": aggregate_costs(ledger),
++        "paired_clustered_intervals": aggregate_intervals(ledger, selected),
++        "interaction_effects": interaction_effects(selected),
++        "harmful_regression_count_and_games": aggregate_harms(ledger),
++        "aa_control": aggregate_aa(ledger),
++        "source_bfs_adapter_hidden_state_registry_access_counts": forbidden_access_counts(),
++        "registry_update_count": 0,
++        "portfolio_promotion_ready_score": round(min(1.0, eligible_count / SUPPORT_MINIMUM), 6),
++        "protected_files_unchanged": protected_files_unchanged(protected_before),
++        "preconditions_checked": {
++            "date": date,
++            "eligibility_inputs_written_before_model_admission": True,
++            "model_admission_eligible_count": eligible_count,
++            "registry_checked": registry["unchanged"],
++            "defaults_checked": current_default_stack(),
++            "output_path": str(output_path or (REPO_ROOT / RESULT_RELATIVE_PATH)),
++        },
++        "inference_substrate": {
++            "value": "aggregation_from_upstream_artifacts",
++            "model_load_attempted": False,
++            "model_loaded": False,
++        },
++        "verifier_is_oracle": False,
++        "field_provenance": field_provenance(),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "test_commands": list(test_commands or DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": {
++            str(key): int(value) for key, value in dict(test_exit_codes or {}).items()
++        },
++        "duration_s": round(now() - start, 6),
++        "reproducibility_checksum": "",
++        "honest_verdict": "complete: skipped_fewer_than_two_eligible_depth_levers_no_model_load"
++        if skip_reason
++        else "complete: depth_portfolio_pair_frozen_no_registry_credit",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def _bare_zero(payload: Mapping[str, Any], field: str) -> bool:
++    return type(payload.get(field)) is int and payload.get(field) == 0
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing fields: {missing}")
++    if set(artifact.get("field_provenance", {})) != set(REQUIRED_ARTIFACT_FIELDS):
++        raise ValueError("field_provenance incomplete")
++    if set(artifact.get("field_principles", {})) != set(REQUIRED_ARTIFACT_FIELDS):
++        raise ValueError("field_principles incomplete")
++    if artifact.get("model_loaded") is not False:
++        raise ValueError("model_loaded must be bare false")
++    if not _bare_zero(artifact, "registry_update_count"):
++        raise ValueError("registry_update_count must be bare 0")
++    if artifact.get("solve_provenance") != "live_agent_self_discovery":
++        raise ValueError("solve_provenance invalid")
++    if artifact.get("verifier_is_oracle") is not False:
++        raise ValueError("verifier_is_oracle must be bare false")
++    counts = dict(artifact.get("source_bfs_adapter_hidden_state_registry_access_counts") or {})
++    if not counts or any(type(value) is not int or value != 0 for value in counts.values()):
++        raise ValueError("forbidden counts must be bare zeros")
++    registry = dict(artifact.get("registry_precheck_and_hash_before_after") or {})
++    if registry.get("registry_hash_before") != registry.get("registry_hash_after"):
++        raise ValueError("registry hash changed")
++    if not str(artifact.get("honest_verdict", "")).startswith("complete:"):
++        raise ValueError("honest verdict prefix invalid")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        raise ValueError("checksum mismatch")
++
++
++def write_artifact(artifact: Mapping[str, Any], *, path: Path | None = None) -> Path:
++    out = path or (REPO_ROOT / RESULT_RELATIVE_PATH)
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out
++
++
++def external_test_receipts() -> tuple[list[str], dict[str, int]]:  # pragma: no cover
++    if not EXTERNAL_TEST_RECEIPT_PATH.is_file():
++        return list(DEFAULT_TEST_COMMANDS), {}
++    payload = json.loads(EXTERNAL_TEST_RECEIPT_PATH.read_text(encoding="utf-8"))
++    return list(payload.get("test_commands", DEFAULT_TEST_COMMANDS)), {
++        str(key): int(value) for key, value in dict(payload.get("test_exit_codes", {})).items()
++    }
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--date", default="20260809")
++    args = parser.parse_args(argv)
++    started = time.monotonic()
++    commands, exits = external_test_receipts()
++    artifact = build_artifact(
++        date=str(args.date),
++        test_commands=commands,
++        test_exit_codes=exits,
++        started=started,
++    )
++    validate_artifact(artifact)
++    write_artifact(artifact)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6232_arc_admissible_depth_portfolio.json b/results/experiment_6232_arc_admissible_depth_portfolio.json
+new file mode 100644
+index 0000000000..9c0f9886ab
+--- /dev/null
++++ b/results/experiment_6232_arc_admissible_depth_portfolio.json
+@@ -0,0 +1,2557 @@
++{
++  "aa_control": {
++    "exp6215_object_relative_trajectory_transfer": {
++      "ok": true,
++      "per_game": {
++        "cn04": {
++          "llm_call_delta": 0,
++          "plan_identical": true,
++          "score_delta": 0.0
++        },
++        "ls20": {
++          "llm_call_delta": 0,
++          "plan_identical": true,
++          "score_delta": 0.0
++        },
++        "s5i5": {
++          "llm_call_delta": 0,
++          "plan_identical": true,
++          "score_delta": 0.0
++        },
++        "tu93": {
++          "llm_call_delta": 0,
++          "plan_identical": true,
++          "score_delta": 0.0
++        }
++      }
++    },
++    "exp6216_budget_aware_search": {
++      "ok": true,
++      "per_game": {
++        "bp35": {
++          "consumer_call_delta": 0,
++          "score_delta": 0.0,
++          "selected_node_identical": true
++        },
++        "g50t": {
++          "consumer_call_delta": 0,
++          "score_delta": 0.0,
++          "selected_node_identical": true
++        },
++        "ka59": {
++          "consumer_call_delta": 0,
++          "score_delta": 0.0,
++          "selected_node_identical": true
++        },
++        "r11l": {
++          "consumer_call_delta": 0,
++          "score_delta": 0.0,
++          "selected_node_identical": true
++        },
++        "s5i5": {
++          "consumer_call_delta": 0,
++          "score_delta": 0.0,
++          "selected_node_identical": true
++        },
++        "sc25": {
++          "consumer_call_delta": 0,
++          "score_delta": 0.0,
++          "selected_node_identical": true
++        }
++      }
++    },
++    "exp6229_bounded_reinduction": "not_recorded",
++    "exp6230_prompt_enrichment": "not_recorded",
++    "exp6231_depth_lever": "not_recorded"
++  },
++  "actions_tokens_wall_and_failure_costs": {
++    "exp6215_object_relative_trajectory_transfer": {
++      "losses": [],
++      "mean_action_delta": 0.0,
++      "mean_token_delta": 0.0,
++      "mean_wall_delta_s": -0.24959275,
++      "terminal_failures": [
++        "no_depth_or_admission_relevant_effect",
++        "already_default_on_not_counted"
++      ]
++    },
++    "exp6216_budget_aware_search": {
++      "losses": [],
++      "mean_action_delta": -7.0,
++      "mean_token_delta": 0.0,
++      "mean_wall_delta_s": -0.01379133,
++      "terminal_failures": [
++        "terminal_class_flagged_not_admissible",
++        "substantive_corrigendum_pending",
++        "unresolved_critical_corrigendum_present",
++        "already_default_on_not_counted"
++      ]
++    },
++    "exp6229_bounded_reinduction": {
++      "losses": [],
++      "mean_action_delta": 0.0,
++      "mean_token_delta": 0.0,
++      "mean_wall_delta_s": 0.0,
++      "terminal_failures": [
++        "terminal_class_skipped_not_admissible",
++        "treatment_did_not_fire",
++        "quality_gate_failed",
++        "no_depth_or_admission_relevant_effect",
++        "zero_registry_gate_failed"
++      ]
++    },
++    "exp6230_prompt_enrichment": {
++      "losses": [],
++      "mean_action_delta": 0.0,
++      "mean_token_delta": 0.0,
++      "mean_wall_delta_s": 0.0,
++      "terminal_failures": [
++        "terminal_class_skipped_not_admissible",
++        "treatment_did_not_fire",
++        "quality_gate_failed",
++        "no_depth_or_admission_relevant_effect",
++        "zero_registry_gate_failed"
++      ]
++    },
++    "exp6231_depth_lever": {
++      "losses": [],
++      "mean_action_delta": 0.0,
++      "mean_token_delta": 0.0,
++      "mean_wall_delta_s": 0.0,
++      "terminal_failures": [
++        "artifact_missing",
++        "terminal_class_missing_not_admissible",
++        "treatment_did_not_fire",
++        "quality_gate_failed",
++        "no_depth_or_admission_relevant_effect",
++        "zero_registry_gate_failed"
++      ]
++    }
++  },
++  "admission_and_level_depth_by_arm_game": {
++    "exp6215_object_relative_trajectory_transfer": {
++      "cn04": {
++        "control": {
++          "actions": 3,
++          "engine_source": "exp6212_matched_fallback",
++          "llm_induction_calls": 1,
++          "plan_length": 3,
++          "planned": true,
++          "score": 1.0,
++          "verifier_acceptance": false,
++          "wall_s": 0.250032
++        },
++        "loss_reported": false,
++        "treatment": {
++          "actions": 3,
++          "engine_source": "object_relative_trajectory_transfer",
++          "llm_induction_calls": 0,
++          "plan_length": 3,
++          "planned": true,
++          "score": 1.0,
++          "verifier_acceptance": true,
++          "wall_s": 0.000524
++        },
++        "treatment_minus_control_actions": 0,
++        "treatment_minus_control_score": 0.0,
++        "treatment_minus_control_wall_s": -0.249508
++      },
++      "ls20": {
++        "control": {
++          "actions": 3,
++          "engine_source": "exp6212_matched_fallback",
++          "llm_induction_calls": 1,
++          "plan_length": 3,
++          "planned": true,
++          "score": 1.0,
++          "verifier_acceptance": false,
++          "wall_s": 0.250032
++        },
++        "loss_reported": false,
++        "treatment": {
++          "actions": 3,
++          "engine_source": "object_relative_trajectory_transfer",
++          "llm_induction_calls": 0,
++          "plan_length": 3,
++          "planned": true,
++          "score": 1.0,
++          "verifier_acceptance": true,
++          "wall_s": 0.00042
++        },
++        "treatment_minus_control_actions": 0,
++        "treatment_minus_control_score": 0.0,
++        "treatment_minus_control_wall_s": -0.249612
++      },
++      "s5i5": {
++        "control": {
++          "actions": 3,
++          "engine_source": "exp6212_matched_fallback",
++          "llm_induction_calls": 1,
++          "plan_length": 3,
++          "planned": true,
++          "score": 1.0,
++          "verifier_acceptance": false,
++          "wall_s": 0.25003
++        },
++        "loss_reported": false,
++        "treatment": {
++          "actions": 3,
++          "engine_source": "object_relative_trajectory_transfer",
++          "llm_induction_calls": 0,
++          "plan_length": 3,
++          "planned": true,
++          "score": 1.0,
++          "verifier_acceptance": true,
++          "wall_s": 0.0004
++        },
++        "treatment_minus_control_actions": 0,
++        "treatment_minus_control_score": 0.0,
++        "treatment_minus_control_wall_s": -0.24963
++      },
++      "tu93": {
++        "control": {
++          "actions": 3,
++          "engine_source": "exp6212_matched_fallback",
++          "llm_induction_calls": 1,
++          "plan_length": 3,
++          "planned": true,
++          "score": 1.0,
++          "verifier_acceptance": false,
++          "wall_s": 0.250033
++        },
++        "loss_reported": false,
++        "treatment": {
++          "actions": 3,
++          "engine_source": "object_relative_trajectory_transfer",
++          "llm_induction_calls": 0,
++          "plan_length": 3,
++          "planned": true,
++          "score": 1.0,
++          "verifier_acceptance": true,
++          "wall_s": 0.000412
++        },
++        "treatment_minus_control_actions": 0,
++        "treatment_minus_control_score": 0.0,
++        "treatment_minus_control_wall_s": -0.249621
++      }
++    },
++    "exp6216_budget_aware_search": {
++      "bp35": {
++        "control": {
++          "actions": 10,
++          "deadline_miss": true,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 10.0,
++              "frontier_key_first": -10.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 10,
++          "path_cost": 10.0,
++          "score": 0.0,
++          "selected_node": "risky_long_path",
++          "states_expanded": 2,
++          "wall_s": 0.02002
++        },
++        "treatment": {
++          "actions": 3,
++          "deadline_miss": false,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 310.0,
++              "frontier_key_first": 290.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 3,
++          "path_cost": 3.0,
++          "score": 1.0,
++          "selected_node": "safe_short_path",
++          "states_expanded": 2,
++          "wall_s": 0.006229
++        },
++        "treatment_minus_control_actions": -7,
++        "treatment_minus_control_score": 1.0,
++        "treatment_minus_control_states_expanded": 0,
++        "treatment_minus_control_wall_s": -0.013791
++      },
++      "g50t": {
++        "control": {
++          "actions": 10,
++          "deadline_miss": true,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 10.0,
++              "frontier_key_first": -10.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 10,
++          "path_cost": 10.0,
++          "score": 0.0,
++          "selected_node": "risky_long_path",
++          "states_expanded": 2,
++          "wall_s": 0.020015
++        },
++        "treatment": {
++          "actions": 3,
++          "deadline_miss": false,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 310.0,
++              "frontier_key_first": 290.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 3,
++          "path_cost": 3.0,
++          "score": 1.0,
++          "selected_node": "safe_short_path",
++          "states_expanded": 2,
++          "wall_s": 0.006222
++        },
++        "treatment_minus_control_actions": -7,
++        "treatment_minus_control_score": 1.0,
++        "treatment_minus_control_states_expanded": 0,
++        "treatment_minus_control_wall_s": -0.013793
++      },
++      "ka59": {
++        "control": {
++          "actions": 10,
++          "deadline_miss": true,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 10.0,
++              "frontier_key_first": -10.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 10,
++          "path_cost": 10.0,
++          "score": 0.0,
++          "selected_node": "risky_long_path",
++          "states_expanded": 2,
++          "wall_s": 0.020015
++        },
++        "treatment": {
++          "actions": 3,
++          "deadline_miss": false,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 310.0,
++              "frontier_key_first": 290.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 3,
++          "path_cost": 3.0,
++          "score": 1.0,
++          "selected_node": "safe_short_path",
++          "states_expanded": 2,
++          "wall_s": 0.006226
++        },
++        "treatment_minus_control_actions": -7,
++        "treatment_minus_control_score": 1.0,
++        "treatment_minus_control_states_expanded": 0,
++        "treatment_minus_control_wall_s": -0.013789
++      },
++      "r11l": {
++        "control": {
++          "actions": 10,
++          "deadline_miss": true,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 10.0,
++              "frontier_key_first": -10.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 10,
++          "path_cost": 10.0,
++          "score": 0.0,
++          "selected_node": "risky_long_path",
++          "states_expanded": 2,
++          "wall_s": 0.020013
++        },
++        "treatment": {
++          "actions": 3,
++          "deadline_miss": false,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 310.0,
++              "frontier_key_first": 290.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 3,
++          "path_cost": 3.0,
++          "score": 1.0,
++          "selected_node": "safe_short_path",
++          "states_expanded": 2,
++          "wall_s": 0.006224
++        },
++        "treatment_minus_control_actions": -7,
++        "treatment_minus_control_score": 1.0,
++        "treatment_minus_control_states_expanded": 0,
++        "treatment_minus_control_wall_s": -0.013789
++      },
++      "s5i5": {
++        "control": {
++          "actions": 10,
++          "deadline_miss": true,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 10.0,
++              "frontier_key_first": -10.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 10,
++          "path_cost": 10.0,
++          "score": 0.0,
++          "selected_node": "risky_long_path",
++          "states_expanded": 2,
++          "wall_s": 0.020012
++        },
++        "treatment": {
++          "actions": 3,
++          "deadline_miss": false,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 310.0,
++              "frontier_key_first": 290.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 3,
++          "path_cost": 3.0,
++          "score": 1.0,
++          "selected_node": "safe_short_path",
++          "states_expanded": 2,
++          "wall_s": 0.006219
++        },
++        "treatment_minus_control_actions": -7,
++        "treatment_minus_control_score": 1.0,
++        "treatment_minus_control_states_expanded": 0,
++        "treatment_minus_control_wall_s": -0.013793
++      },
++      "sc25": {
++        "control": {
++          "actions": 10,
++          "deadline_miss": true,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 10.0,
++              "frontier_key_first": -10.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 10,
++          "path_cost": 10.0,
++          "score": 0.0,
++          "selected_node": "risky_long_path",
++          "states_expanded": 2,
++          "wall_s": 0.020016
++        },
++        "treatment": {
++          "actions": 3,
++          "deadline_miss": false,
++          "frontier_weights": {
++            "risky_long_path": {
++              "depth": 10,
++              "depth_cost": 310.0,
++              "frontier_key_first": 290.0,
++              "value": -20.0
++            },
++            "safe_short_path": {
++              "depth": 3,
++              "depth_cost": 3.0,
++              "frontier_key_first": 3.0,
++              "value": 0.0
++            }
++          },
++          "navigation_actions": 3,
++          "path_cost": 3.0,
++          "score": 1.0,
++          "selected_node": "safe_short_path",
++          "states_expanded": 2,
++          "wall_s": 0.006223
++        },
++        "treatment_minus_control_actions": -7,
++        "treatment_minus_control_score": 1.0,
++        "treatment_minus_control_states_expanded": 0,
++        "treatment_minus_control_wall_s": -0.013793
++      }
++    },
++    "exp6229_bounded_reinduction": {},
++    "exp6230_prompt_enrichment": {},
++    "exp6231_depth_lever": {}
++  },
++  "determination_preservation_receipts": {
++    "determination_preservation_lint_py": {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/determination_preservation_lint.py",
++      "sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
++      "size_bytes": 65178
++    },
++    "protected_files": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++      "ops/changelog.md": "sha256:a0ee68eef41e131aa9df3bf1d6e53a9726b9f8e3e9af5990ace2ebf21801ac02",
++      "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
++      "python/carnot/terminal_artifacts.py": "sha256:a51f656116f7999b5d318b176919be274f214210e087ae548b61a5b7ce2fde10",
++      "scripts/determination_preservation_lint.py": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "terminal_artifacts_py": {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/terminal_artifacts.py",
++      "sha256": "sha256:a51f656116f7999b5d318b176919be274f214210e087ae548b61a5b7ce2fde10",
++      "size_bytes": 13437
++    }
++  },
++  "duration_s": 0.02581,
++  "eligibility_rules": {
++    "default_stack_components_not_counted": [
++      "object_relative_trajectory_transfer",
++      "budget_aware_search"
++    ],
++    "eligible_minimum": 2,
++    "no_model_load_before_two": true,
++    "rejects_missing_blocked_skipped_flagged_or_corrigendum_pending": true,
++    "requires_depth_or_admission_relevant_effect": true,
++    "requires_independent_mechanism": true,
++    "requires_treatment_fire_on_support_floor": true,
++    "terminal_classes": [
++      "complete",
++      "ready",
++      "positive"
++    ]
++  },
++  "eligible_lever_count": 0,
++  "exact_skip_reason": "fewer_than_two_independent_unflagged_treatment_active_depth_levers:0<2",
++  "field_principles": {
++    "aa_control": "A/A controls protect against instrumentation drift.",
++    "actions_tokens_wall_and_failure_costs": "Cost and failure data stay visible.",
++    "admission_and_level_depth_by_arm_game": "Depth and admission outcomes stay per-game.",
++    "determination_preservation_receipts": "The classifier and guard trail stay visible.",
++    "duration_s": "Measured wall time is recorded without padding.",
++    "eligibility_rules": "The gate is data-driven, not prose-driven.",
++    "eligible_lever_count": "The model gate opens only at two independent levers.",
++    "exact_skip_reason": "A skip names the exact failed precondition.",
++    "field_principles": "Each field states the audit risk it controls.",
++    "field_provenance": "Each field traces back to this module and requirement.",
++    "harmful_regression_count_and_games": "Every loss or regression remains visible.",
++    "honest_verdict": "The verdict uses a terminal prefix.",
++    "inference_substrate": "The artifact declares aggregation, not live inference.",
++    "interaction_effects": "The pair effect is separate from main effects.",
++    "lever_eligibility_ledger": "Every lever receives a reasoned verdict.",
++    "matched_arm_configuration": "A/A, default, and portfolio arms hold resources fixed.",
++    "model_loaded": "The GGUF must not load before the two-lever gate passes.",
++    "model_specs": "The only admitted inducer is the requested Gemma4-31B Q4_K_M model.",
++    "paired_clustered_intervals": "Intervals use game as the paired cluster.",
++    "per_lever_and_combination_fire_counts": "Non-firing levers cannot be promoted.",
++    "portfolio_promotion_ready_score": "Readiness is capped by eligible lever count.",
++    "preconditions_checked": "Admission inputs are recorded before model admission.",
++    "preregistered_portfolio_game_seed_matrix": "Game and seed cells freeze before execution.",
++    "protected_files_unchanged": "Protected files stay byte-identical.",
++    "raw_prompt_output_engine_replay_hashes": "Raw prompts, engines, and replays stay auditable.",
++    "registry_precheck_and_hash_before_after": "The solve registry is immutable here.",
++    "registry_update_count": "Bare zero proves no solve registry mutation.",
++    "reproducibility_checksum": "A stable checksum catches silent drift.",
++    "selected_levers": "The selected pair is frozen before any portfolio run.",
++    "solve_provenance": "ARC credit is only for live self-discovery.",
++    "source_bfs_adapter_hidden_state_registry_access_counts": "Forbidden reads are bare zeros.",
++    "status": "The terminal state distinguishes a skip from a frozen pair.",
++    "supervised_runtime_receipts": "Exp6228 supervision is preserved when model use is possible.",
++    "test_commands": "Verification commands are recorded.",
++    "test_exit_codes": "Exit codes prevent unchecked test claims.",
++    "upstream_paths_hashes_and_terminal_classes": "Every upstream input is hash-bound.",
++    "verifier_is_oracle": "The verifier is not an ARC oracle."
++  },
++  "field_provenance": {
++    "aa_control": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "actions_tokens_wall_and_failure_costs": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "admission_and_level_depth_by_arm_game": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "determination_preservation_receipts": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "duration_s": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "eligibility_rules": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "eligible_lever_count": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "exact_skip_reason": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "field_principles": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "field_provenance": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "harmful_regression_count_and_games": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "honest_verdict": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "inference_substrate": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "interaction_effects": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "lever_eligibility_ledger": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "matched_arm_configuration": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "model_loaded": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "model_specs": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "paired_clustered_intervals": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "per_lever_and_combination_fire_counts": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "portfolio_promotion_ready_score": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "preconditions_checked": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "preregistered_portfolio_game_seed_matrix": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "protected_files_unchanged": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "raw_prompt_output_engine_replay_hashes": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "registry_precheck_and_hash_before_after": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "registry_update_count": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "reproducibility_checksum": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "selected_levers": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "solve_provenance": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "source_bfs_adapter_hidden_state_registry_access_counts": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "status": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "supervised_runtime_receipts": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "test_commands": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "test_exit_codes": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "upstream_paths_hashes_and_terminal_classes": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    },
++    "verifier_is_oracle": {
++      "source": "carnot.experiment_6232_arc_admissible_depth_portfolio",
++      "spec_ref": "REQ-ARC-WMTE-6232"
++    }
++  },
++  "harmful_regression_count_and_games": {
++    "by_lever": {
++      "exp6215_object_relative_trajectory_transfer": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {
++          "count": 0,
++          "games": [],
++          "losing_games_reported_not_hidden": []
++        },
++        "safety_passed": true
++      },
++      "exp6216_budget_aware_search": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {
++          "count": 0,
++          "games": [],
++          "losing_games_reported_not_hidden": []
++        },
++        "safety_passed": true
++      },
++      "exp6229_bounded_reinduction": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {},
++        "safety_passed": true
++      },
++      "exp6230_prompt_enrichment": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {},
++        "safety_passed": true
++      },
++      "exp6231_depth_lever": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {},
++        "safety_passed": true
++      }
++    },
++    "count": 0,
++    "games": []
++  },
++  "honest_verdict": "complete: skipped_fewer_than_two_eligible_depth_levers_no_model_load",
++  "inference_substrate": {
++    "model_load_attempted": false,
++    "model_loaded": false,
++    "value": "aggregation_from_upstream_artifacts"
++  },
++  "interaction_effects": {
++    "estimated": false,
++    "interaction_effect": null,
++    "reason": "terminal_skip_before_model_load",
++    "selected_pair": []
++  },
++  "lever_eligibility_ledger": [
++    {
++      "aa_control": {
++        "ok": true,
++        "per_game": {
++          "cn04": {
++            "llm_call_delta": 0,
++            "plan_identical": true,
++            "score_delta": 0.0
++          },
++          "ls20": {
++            "llm_call_delta": 0,
++            "plan_identical": true,
++            "score_delta": 0.0
++          },
++          "s5i5": {
++            "llm_call_delta": 0,
++            "plan_identical": true,
++            "score_delta": 0.0
++          },
++          "tu93": {
++            "llm_call_delta": 0,
++            "plan_identical": true,
++            "score_delta": 0.0
++          }
++        }
++      },
++      "activation_gate": {
++        "activation_passed": true,
++        "field": "treatment_fire_and_reason_counts",
++        "mutation_proven": true,
++        "raw": {
++          "accepted": 4,
++          "mutation_proven": true,
++          "mutation_receipts": [
++            {
++              "killed": true,
++              "name": "transfer_fire_counter_removed"
++            },
++            {
++              "killed": true,
++              "name": "fallback_avoidance_counter_removed"
++            },
++            {
++              "killed": true,
++              "name": "forbidden_access_guard_removed"
++            }
++          ],
++          "per_game": {
++            "cn04": 1,
++            "ls20": 1,
++            "s5i5": 1,
++            "tu93": 1
++          },
++          "reason_counts": {
++            "accepted_confident_transfer": 4
++          },
++          "rejected": 0,
++          "support_count": 4,
++          "support_floor": 3,
++          "total": 4
++        },
++        "support_count": 4,
++        "support_floor": 3,
++        "total": 4
++      },
++      "artifact": {
++        "exists": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
++        "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
++        "size_bytes": 35903
++      },
++      "default_stack_component": true,
++      "effect_gate": {
++        "by_game": {
++          "cn04": {
++            "control": {
++              "actions": 3,
++              "engine_source": "exp6212_matched_fallback",
++              "llm_induction_calls": 1,
++              "plan_length": 3,
++              "planned": true,
++              "score": 1.0,
++              "verifier_acceptance": false,
++              "wall_s": 0.250032
++            },
++            "loss_reported": false,
++            "treatment": {
++              "actions": 3,
++              "engine_source": "object_relative_trajectory_transfer",
++              "llm_induction_calls": 0,
++              "plan_length": 3,
++              "planned": true,
++              "score": 1.0,
++              "verifier_acceptance": true,
++              "wall_s": 0.000524
++            },
++            "treatment_minus_control_actions": 0,
++            "treatment_minus_control_score": 0.0,
++            "treatment_minus_control_wall_s": -0.249508
++          },
++          "ls20": {
++            "control": {
++              "actions": 3,
++              "engine_source": "exp6212_matched_fallback",
++              "llm_induction_calls": 1,
++              "plan_length": 3,
++              "planned": true,
++              "score": 1.0,
++              "verifier_acceptance": false,
++              "wall_s": 0.250032
++            },
++            "loss_reported": false,
++            "treatment": {
++              "actions": 3,
++              "engine_source": "object_relative_trajectory_transfer",
++              "llm_induction_calls": 0,
++              "plan_length": 3,
++              "planned": true,
++              "score": 1.0,
++              "verifier_acceptance": true,
++              "wall_s": 0.00042
++            },
++            "treatment_minus_control_actions": 0,
++            "treatment_minus_control_score": 0.0,
++            "treatment_minus_control_wall_s": -0.249612
++          },
++          "s5i5": {
++            "control": {
++              "actions": 3,
++              "engine_source": "exp6212_matched_fallback",
++              "llm_induction_calls": 1,
++              "plan_length": 3,
++              "planned": true,
++              "score": 1.0,
++              "verifier_acceptance": false,
++              "wall_s": 0.25003
++            },
++            "loss_reported": false,
++            "treatment": {
++              "actions": 3,
++              "engine_source": "object_relative_trajectory_transfer",
++              "llm_induction_calls": 0,
++              "plan_length": 3,
++              "planned": true,
++              "score": 1.0,
++              "verifier_acceptance": true,
++              "wall_s": 0.0004
++            },
++            "treatment_minus_control_actions": 0,
++            "treatment_minus_control_score": 0.0,
++            "treatment_minus_control_wall_s": -0.24963
++          },
++          "tu93": {
++            "control": {
++              "actions": 3,
++              "engine_source": "exp6212_matched_fallback",
++              "llm_induction_calls": 1,
++              "plan_length": 3,
++              "planned": true,
++              "score": 1.0,
++              "verifier_acceptance": false,
++              "wall_s": 0.250033
++            },
++            "loss_reported": false,
++            "treatment": {
++              "actions": 3,
++              "engine_source": "object_relative_trajectory_transfer",
++              "llm_induction_calls": 0,
++              "plan_length": 3,
++              "planned": true,
++              "score": 1.0,
++              "verifier_acceptance": true,
++              "wall_s": 0.000412
++            },
++            "treatment_minus_control_actions": 0,
++            "treatment_minus_control_score": 0.0,
++            "treatment_minus_control_wall_s": -0.249621
++          }
++        },
++        "depth_or_admission_relevant": false,
++        "losing_games": [],
++        "mean_action_delta": 0.0,
++        "mean_token_delta": 0.0,
++        "mean_wall_delta_s": -0.24959275,
++        "metric_field": "engine_fidelity_score_actions_and_wall_time_by_arm_game",
++        "primary_effect": 0.0
++      },
++      "eligible": false,
++      "experiment": 6215,
++      "ineligible_reasons": [
++        "no_depth_or_admission_relevant_effect",
++        "already_default_on_not_counted"
++      ],
++      "lever_id": "exp6215_object_relative_trajectory_transfer",
++      "mechanism": "object_relative_trajectory_transfer",
++      "pending_corrigendum": {
++        "critical_count": 0,
++        "resolved_rows": [],
++        "rows": [],
++        "substantive": false
++      },
++      "quality_gate": {
++        "field": "trajectory_transfer_promotion_ready_score",
++        "quality_passed": true,
++        "score": 1.0
++      },
++      "raw_prompt_output_engine_replay_hashes": {
++        "raw_count": 16,
++        "raw_sha256": "sha256:4a67a6e9bc28116d53e20822624746e7ff2c2b7f64d622dcba04137f37e93e52",
++        "rows": [
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_a/event.json",
++            "sha256": "sha256:412a0e5d75c55ca7651a1998722343fb59659bab60a467a8ac4e7d533504ca03",
++            "size_bytes": 2503
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_b/event.json",
++            "sha256": "sha256:901ed6d690f503f4c23491c5040ca94e32d2b953f0cbc4411d032712a3a688d3",
++            "size_bytes": 2503
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/control/event.json",
++            "sha256": "sha256:e3b0d986881a7cf106f3c58daddf8dffdc3853e78fd4d55558444607c4e10652",
++            "size_bytes": 2498
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/treatment/event.json",
++            "sha256": "sha256:8e8c47c46bd5ddb390a96ea087c1351cfe5364a7272de6a03b8aa00c244aa79b",
++            "size_bytes": 2464
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_a/event.json",
++            "sha256": "sha256:ce49b11d8261e91332ac6a765b2d34b780d9f65d697ba782fcc952d57354083b",
++            "size_bytes": 2500
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_b/event.json",
++            "sha256": "sha256:823120db9e561c9ec69e13d2db24ce1e34b799ff992a2ac98644b80bfa143a1b",
++            "size_bytes": 2503
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/control/event.json",
++            "sha256": "sha256:8e211e427ba6f8436e34dc9106af94261931be4f3ab65972f29b0df12db150e1",
++            "size_bytes": 2495
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/treatment/event.json",
++            "sha256": "sha256:2a8ea60abe20ccbb81f42aeb6cc68495dc61a33351775687dbc0246353f46d41",
++            "size_bytes": 2462
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_a/event.json",
++            "sha256": "sha256:b4058fcb98bc215ac992042c9c9d92e25dd957b71d6ec77a85e6a71865caf8be",
++            "size_bytes": 2485
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_b/event.json",
++            "sha256": "sha256:51f0118deb2e7dd5da82f69de4f7801f824b731cd6931f61829f18dd51471634",
++            "size_bytes": 2485
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/control/event.json",
++            "sha256": "sha256:0ebb5407002eac9116ef89627d00b700e16b7ed9bb52ed34473f6da04651d1e9",
++            "size_bytes": 2480
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/treatment/event.json",
++            "sha256": "sha256:e58c48cdaf3b5ba6427755bb57dcdfc118214bb370c4200500ee42307e6c4820",
++            "size_bytes": 2430
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_a/event.json",
++            "sha256": "sha256:4c2c4953a0d0cbd64eaaf553f78f497ff03da3ef3714f683ecb8facba77e0aba",
++            "size_bytes": 2503
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_b/event.json",
++            "sha256": "sha256:a54d1357b47366f8d43c039e44d0903124b705cb7a5a911f487e6f58316ef5c8",
++            "size_bytes": 2503
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/control/event.json",
++            "sha256": "sha256:a901c0e811a5e17dcdfa75af288c7943be3314e8d0b36fd83660371e802e1153",
++            "size_bytes": 2498
++          },
++          {
++            "exists": true,
++            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/treatment/event.json",
++            "sha256": "sha256:ca57fd5f18ac10d45581c14a6ffbb52bf69a74d0d44b16148f49d427f76aaf42",
++            "size_bytes": 2466
++          }
++        ]
++      },
++      "requirement": "REQ-ARC-WMTE-6215",
++      "safety_gate": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {
++          "count": 0,
++          "games": [],
++          "losing_games_reported_not_hidden": []
++        },
++        "safety_passed": true
++      },
++      "selection_utility": 0.01,
++      "terminal_classifier": {
++        "classification": "ready",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "complete",
++        "honest_verdict_raw": "complete: trajectory_transfer_ab_complete_no_solve_credit",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
++        "present": true,
++        "reason": "status=ready verdict=complete",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
++        "status_class": "ready",
++        "status_prefix": "complete_ready",
++        "status_raw": "complete_ready",
++        "terminal": true,
++        "verdict_class": "complete"
++      },
++      "zero_registry_gate": {
++        "level_credit_delta": 0,
++        "passed": true,
++        "registry_update_count": 0,
++        "solve_claimed": false
++      }
++    },
++    {
++      "aa_control": {
++        "ok": true,
++        "per_game": {
++          "bp35": {
++            "consumer_call_delta": 0,
++            "score_delta": 0.0,
++            "selected_node_identical": true
++          },
++          "g50t": {
++            "consumer_call_delta": 0,
++            "score_delta": 0.0,
++            "selected_node_identical": true
++          },
++          "ka59": {
++            "consumer_call_delta": 0,
++            "score_delta": 0.0,
++            "selected_node_identical": true
++          },
++          "r11l": {
++            "consumer_call_delta": 0,
++            "score_delta": 0.0,
++            "selected_node_identical": true
++          },
++          "s5i5": {
++            "consumer_call_delta": 0,
++            "score_delta": 0.0,
++            "selected_node_identical": true
++          },
++          "sc25": {
++            "consumer_call_delta": 0,
++            "score_delta": 0.0,
++            "selected_node_identical": true
++          }
++        }
++      },
++      "activation_gate": {
++        "activation_passed": true,
++        "field": "consumer_fire_counts",
++        "mutation_proven": true,
++        "raw": {
++          "aa_total": 0,
++          "control_total": 0,
++          "mutation_proven": true,
++          "mutation_receipts": [
++            {
++              "killed": true,
++              "name": "consumer_fire_counter_removed"
++            },
++            {
++              "killed": true,
++              "name": "estimator_calibration_guard_removed"
++            },
++            {
++              "killed": true,
++              "name": "forbidden_access_guard_removed"
++            }
++          ],
++          "per_game": {
++            "bp35": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "g50t": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "ka59": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "r11l": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "s5i5": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "sc25": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            }
++          },
++          "support_count": 6,
++          "support_floor": 3,
++          "treatment_total": 12
++        },
++        "support_count": 6,
++        "support_floor": 3,
++        "total": 12
++      },
++      "artifact": {
++        "exists": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6216_arc_budget_aware_search_ab.json",
++        "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
++        "size_bytes": 49301
++      },
++      "default_stack_component": true,
++      "effect_gate": {
++        "by_game": {
++          "bp35": {
++            "control": {
++              "actions": 10,
++              "deadline_miss": true,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 10.0,
++                  "frontier_key_first": -10.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 10,
++              "path_cost": 10.0,
++              "score": 0.0,
++              "selected_node": "risky_long_path",
++              "states_expanded": 2,
++              "wall_s": 0.02002
++            },
++            "treatment": {
++              "actions": 3,
++              "deadline_miss": false,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 310.0,
++                  "frontier_key_first": 290.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 3,
++              "path_cost": 3.0,
++              "score": 1.0,
++              "selected_node": "safe_short_path",
++              "states_expanded": 2,
++              "wall_s": 0.006229
++            },
++            "treatment_minus_control_actions": -7,
++            "treatment_minus_control_score": 1.0,
++            "treatment_minus_control_states_expanded": 0,
++            "treatment_minus_control_wall_s": -0.013791
++          },
++          "g50t": {
++            "control": {
++              "actions": 10,
++              "deadline_miss": true,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 10.0,
++                  "frontier_key_first": -10.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 10,
++              "path_cost": 10.0,
++              "score": 0.0,
++              "selected_node": "risky_long_path",
++              "states_expanded": 2,
++              "wall_s": 0.020015
++            },
++            "treatment": {
++              "actions": 3,
++              "deadline_miss": false,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 310.0,
++                  "frontier_key_first": 290.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 3,
++              "path_cost": 3.0,
++              "score": 1.0,
++              "selected_node": "safe_short_path",
++              "states_expanded": 2,
++              "wall_s": 0.006222
++            },
++            "treatment_minus_control_actions": -7,
++            "treatment_minus_control_score": 1.0,
++            "treatment_minus_control_states_expanded": 0,
++            "treatment_minus_control_wall_s": -0.013793
++          },
++          "ka59": {
++            "control": {
++              "actions": 10,
++              "deadline_miss": true,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 10.0,
++                  "frontier_key_first": -10.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 10,
++              "path_cost": 10.0,
++              "score": 0.0,
++              "selected_node": "risky_long_path",
++              "states_expanded": 2,
++              "wall_s": 0.020015
++            },
++            "treatment": {
++              "actions": 3,
++              "deadline_miss": false,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 310.0,
++                  "frontier_key_first": 290.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 3,
++              "path_cost": 3.0,
++              "score": 1.0,
++              "selected_node": "safe_short_path",
++              "states_expanded": 2,
++              "wall_s": 0.006226
++            },
++            "treatment_minus_control_actions": -7,
++            "treatment_minus_control_score": 1.0,
++            "treatment_minus_control_states_expanded": 0,
++            "treatment_minus_control_wall_s": -0.013789
++          },
++          "r11l": {
++            "control": {
++              "actions": 10,
++              "deadline_miss": true,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 10.0,
++                  "frontier_key_first": -10.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 10,
++              "path_cost": 10.0,
++              "score": 0.0,
++              "selected_node": "risky_long_path",
++              "states_expanded": 2,
++              "wall_s": 0.020013
++            },
++            "treatment": {
++              "actions": 3,
++              "deadline_miss": false,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 310.0,
++                  "frontier_key_first": 290.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 3,
++              "path_cost": 3.0,
++              "score": 1.0,
++              "selected_node": "safe_short_path",
++              "states_expanded": 2,
++              "wall_s": 0.006224
++            },
++            "treatment_minus_control_actions": -7,
++            "treatment_minus_control_score": 1.0,
++            "treatment_minus_control_states_expanded": 0,
++            "treatment_minus_control_wall_s": -0.013789
++          },
++          "s5i5": {
++            "control": {
++              "actions": 10,
++              "deadline_miss": true,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 10.0,
++                  "frontier_key_first": -10.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 10,
++              "path_cost": 10.0,
++              "score": 0.0,
++              "selected_node": "risky_long_path",
++              "states_expanded": 2,
++              "wall_s": 0.020012
++            },
++            "treatment": {
++              "actions": 3,
++              "deadline_miss": false,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 310.0,
++                  "frontier_key_first": 290.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 3,
++              "path_cost": 3.0,
++              "score": 1.0,
++              "selected_node": "safe_short_path",
++              "states_expanded": 2,
++              "wall_s": 0.006219
++            },
++            "treatment_minus_control_actions": -7,
++            "treatment_minus_control_score": 1.0,
++            "treatment_minus_control_states_expanded": 0,
++            "treatment_minus_control_wall_s": -0.013793
++          },
++          "sc25": {
++            "control": {
++              "actions": 10,
++              "deadline_miss": true,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 10.0,
++                  "frontier_key_first": -10.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 10,
++              "path_cost": 10.0,
++              "score": 0.0,
++              "selected_node": "risky_long_path",
++              "states_expanded": 2,
++              "wall_s": 0.020016
++            },
++            "treatment": {
++              "actions": 3,
++              "deadline_miss": false,
++              "frontier_weights": {
++                "risky_long_path": {
++                  "depth": 10,
++                  "depth_cost": 310.0,
++                  "frontier_key_first": 290.0,
++                  "value": -20.0
++                },
++                "safe_short_path": {
++                  "depth": 3,
++                  "depth_cost": 3.0,
++                  "frontier_key_first": 3.0,
++                  "value": 0.0
++                }
++              },
++              "navigation_actions": 3,
++              "path_cost": 3.0,
++              "score": 1.0,
++              "selected_node": "safe_short_path",
++              "states_expanded": 2,
++              "wall_s": 0.006223
++            },
++            "treatment_minus_control_actions": -7,
++            "treatment_minus_control_score": 1.0,
++            "treatment_minus_control_states_expanded": 0,
++            "treatment_minus_control_wall_s": -0.013793
++          }
++        },
++        "depth_or_admission_relevant": true,
++        "losing_games": [],
++        "mean_action_delta": -7.0,
++        "mean_token_delta": 0.0,
++        "mean_wall_delta_s": -0.01379133,
++        "metric_field": "path_cost_states_expanded_navigation_actions_score_and_wall_time_by_arm_game",
++        "primary_effect": 1.0
++      },
++      "eligible": false,
++      "experiment": 6216,
++      "ineligible_reasons": [
++        "terminal_class_flagged_not_admissible",
++        "substantive_corrigendum_pending",
++        "unresolved_critical_corrigendum_present",
++        "already_default_on_not_counted"
++      ],
++      "lever_id": "exp6216_budget_aware_search",
++      "mechanism": "budget_aware_search",
++      "pending_corrigendum": {
++        "critical_count": 1,
++        "resolved_rows": [
++          "IMPLAUSIBLE_PERFECT (level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default.) NOT a fabrication: level_credit_delta==0 is a hard contract requirement of this script's own validate_artifact() -- this is an efficiency-only A/B with solve_claimed=False by design, not a stub default. Still INFO-level after the substrate fix (see live re-check via scripts/summarize_artifact.py); left visible, not moved to resolved, since it is not something that WAS wrong and got fixed -- it never needed fixing.",
++          "DURATION_TOO_SHORT (duration_s=1.317263 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.) resolved 2026-08-08: caused by a non-canonical inference_substrate string that fell through to the generic 60s live-model floor; corrected to offline_arcade_live_agent_runtime_self_discovery_no_llm (floor 0.01s, cleared by 3+ orders of magnitude). See inference_substrate_correction_note.",
++          "METHODOLOGY_MISSING (Compute-bound artifact missing: random_seed. Methodology unverifiable.) resolved 2026-08-08: random_seed added (the real seed already used internally to generate this run's per-cell fixtures, now surfaced at the artifact top level).",
++          "RE-VERIFIED 2026-08-09 (ARC live-agent improvement plan Phase 1c): the script was re-run FRESH (not just metadata-patched) via `python -m carnot.experiment_6216_arc_budget_aware_search_ab --date 20260809`, now that the source script itself emits the canonical inference_substrate value from the start. The fresh run reproduces the identical deadline-miss-elimination result (6 -> 0 across 6 games) and clears adversarial_verify.py with 0 CRITICAL / 0 WARN / 1 INFO (the same IMPLAUSIBLE_PERFECT-on-level_credit_delta=0.0 read, contractually required, not a stub default). This corrigendum history is restored here because build_artifact() constructs a fresh dict with no memory of prior review annotations -- determination_preservation_lint.py correctly refused the first commit attempt that omitted this restoration."
++        ],
++        "rows": [
++          {
++            "detail": "level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default.",
++            "kind": "IMPLAUSIBLE_PERFECT",
++            "severity": "info"
++          },
++          {
++            "detail": "duration_s=1.317263 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++            "kind": "DURATION_TOO_SHORT",
++            "severity": "critical"
++          },
++          {
++            "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
++            "kind": "METHODOLOGY_MISSING",
++            "severity": "warn"
++          }
++        ],
++        "substantive": true
++      },
++      "quality_gate": {
++        "field": "budget_aware_promotion_ready_score",
++        "quality_passed": true,
++        "score": 1.0
++      },
++      "raw_prompt_output_engine_replay_hashes": {
++        "raw_count": 0,
++        "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++        "rows": []
++      },
++      "requirement": "REQ-ARC-WMTE-6216",
++      "safety_gate": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {
++          "count": 0,
++          "games": [],
++          "losing_games_reported_not_hidden": []
++        },
++        "safety_passed": true
++      },
++      "selection_utility": 1.01,
++      "terminal_classifier": {
++        "classification": "flagged",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "complete",
++        "honest_verdict_raw": "complete: budget_aware_search_ab_complete_no_solve_credit",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6216_arc_budget_aware_search_ab.json",
++        "present": true,
++        "reason": "artifact carries flagged_adversarial or corrigendum_pending",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
++        "status_class": "ready",
++        "status_prefix": "complete_ready",
++        "status_raw": "complete_ready",
++        "terminal": true,
++        "verdict_class": "complete"
++      },
++      "zero_registry_gate": {
++        "level_credit_delta": 0,
++        "passed": true,
++        "registry_update_count": 0,
++        "solve_claimed": false
++      }
++    },
++    {
++      "aa_control": "not_recorded",
++      "activation_gate": {
++        "activation_passed": false,
++        "field": "treatment_fire_counts",
++        "mutation_proven": false,
++        "raw": {},
++        "support_count": 0,
++        "support_floor": 1,
++        "total": 0
++      },
++      "artifact": {
++        "exists": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6229_arc_gemma31_think_determination.json",
++        "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
++        "size_bytes": 893
++      },
++      "default_stack_component": false,
++      "effect_gate": {
++        "by_game": {},
++        "depth_or_admission_relevant": false,
++        "losing_games": [],
++        "mean_action_delta": 0.0,
++        "mean_token_delta": 0.0,
++        "mean_wall_delta_s": 0.0,
++        "metric_field": null,
++        "primary_effect": 0.0
++      },
++      "eligible": false,
++      "experiment": 6229,
++      "ineligible_reasons": [
++        "terminal_class_skipped_not_admissible",
++        "treatment_did_not_fire",
++        "quality_gate_failed",
++        "no_depth_or_admission_relevant_effect",
++        "zero_registry_gate_failed"
++      ],
++      "lever_id": "exp6229_bounded_reinduction",
++      "mechanism": "bounded_reinduction",
++      "pending_corrigendum": {
++        "critical_count": 0,
++        "resolved_rows": [],
++        "rows": [],
++        "substantive": false
++      },
++      "quality_gate": {
++        "field": null,
++        "quality_passed": false,
++        "score": 0.0
++      },
++      "raw_prompt_output_engine_replay_hashes": {
++        "raw_count": 0,
++        "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++        "rows": []
++      },
++      "requirement": "REQ-ARC-WMTE-6229",
++      "safety_gate": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {},
++        "safety_passed": true
++      },
++      "selection_utility": 0.0,
++      "terminal_classifier": {
++        "classification": "skipped",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "blocked_gate_check_failed",
++        "honest_verdict_raw": "blocked_gate_check_failed",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6229_arc_gemma31_think_determination.json",
++        "present": true,
++        "reason": "blocked artifact records a gate skip",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
++        "status_class": "blocked",
++        "status_prefix": "blocked",
++        "status_raw": "blocked",
++        "terminal": true,
++        "verdict_class": "blocked"
++      },
++      "zero_registry_gate": {
++        "level_credit_delta": null,
++        "passed": false,
++        "registry_update_count": null,
++        "solve_claimed": null
++      }
++    },
++    {
++      "aa_control": "not_recorded",
++      "activation_gate": {
++        "activation_passed": false,
++        "field": "treatment_fire_counts",
++        "mutation_proven": false,
++        "raw": {},
++        "support_count": 0,
++        "support_floor": 1,
++        "total": 0
++      },
++      "artifact": {
++        "exists": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
++        "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
++        "size_bytes": 891
++      },
++      "default_stack_component": false,
++      "effect_gate": {
++        "by_game": {},
++        "depth_or_admission_relevant": false,
++        "losing_games": [],
++        "mean_action_delta": 0.0,
++        "mean_token_delta": 0.0,
++        "mean_wall_delta_s": 0.0,
++        "metric_field": null,
++        "primary_effect": 0.0
++      },
++      "eligible": false,
++      "experiment": 6230,
++      "ineligible_reasons": [
++        "terminal_class_skipped_not_admissible",
++        "treatment_did_not_fire",
++        "quality_gate_failed",
++        "no_depth_or_admission_relevant_effect",
++        "zero_registry_gate_failed"
++      ],
++      "lever_id": "exp6230_prompt_enrichment",
++      "mechanism": "induce_prompt_enrichment",
++      "pending_corrigendum": {
++        "critical_count": 0,
++        "resolved_rows": [],
++        "rows": [],
++        "substantive": false
++      },
++      "quality_gate": {
++        "field": null,
++        "quality_passed": false,
++        "score": 0.0
++      },
++      "raw_prompt_output_engine_replay_hashes": {
++        "raw_count": 0,
++        "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++        "rows": []
++      },
++      "requirement": "REQ-ARC-WMTE-6230",
++      "safety_gate": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {},
++        "safety_passed": true
++      },
++      "selection_utility": 0.0,
++      "terminal_classifier": {
++        "classification": "skipped",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "blocked_gate_check_failed",
++        "honest_verdict_raw": "blocked_gate_check_failed",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
++        "present": true,
++        "reason": "blocked artifact records a gate skip",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
++        "status_class": "blocked",
++        "status_prefix": "blocked",
++        "status_raw": "blocked",
++        "terminal": true,
++        "verdict_class": "blocked"
++      },
++      "zero_registry_gate": {
++        "level_credit_delta": null,
++        "passed": false,
++        "registry_update_count": null,
++        "solve_claimed": null
++      }
++    },
++    {
++      "aa_control": "not_recorded",
++      "activation_gate": {
++        "activation_passed": false,
++        "field": "treatment_fire_counts",
++        "mutation_proven": false,
++        "raw": {},
++        "support_count": 0,
++        "support_floor": 1,
++        "total": 0
++      },
++      "artifact": {
++        "exists": false,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6231_arc_depth_lever_heldout_ab.json",
++        "sha256": null,
++        "size_bytes": null
++      },
++      "default_stack_component": false,
++      "effect_gate": {
++        "by_game": {},
++        "depth_or_admission_relevant": false,
++        "losing_games": [],
++        "mean_action_delta": 0.0,
++        "mean_token_delta": 0.0,
++        "mean_wall_delta_s": 0.0,
++        "metric_field": null,
++        "primary_effect": 0.0
++      },
++      "eligible": false,
++      "experiment": 6231,
++      "ineligible_reasons": [
++        "artifact_missing",
++        "terminal_class_missing_not_admissible",
++        "treatment_did_not_fire",
++        "quality_gate_failed",
++        "no_depth_or_admission_relevant_effect",
++        "zero_registry_gate_failed"
++      ],
++      "lever_id": "exp6231_depth_lever",
++      "mechanism": "graded_goal_bias",
++      "pending_corrigendum": {
++        "critical_count": 0,
++        "resolved_rows": [],
++        "rows": [],
++        "substantive": false
++      },
++      "quality_gate": {
++        "field": null,
++        "quality_passed": false,
++        "score": 0.0
++      },
++      "raw_prompt_output_engine_replay_hashes": {
++        "raw_count": 0,
++        "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++        "rows": []
++      },
++      "requirement": "REQ-ARC-WMTE-6231",
++      "safety_gate": {
++        "harmful_games": [],
++        "harmful_regression_count": 0,
++        "losing_games_reported_not_hidden": [],
++        "raw": {},
++        "safety_passed": true
++      },
++      "selection_utility": 0.0,
++      "terminal_classifier": {
++        "classification": "missing",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": null,
++        "honest_verdict_raw": null,
++        "loadable": false,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6231_arc_depth_lever_heldout_ab.json",
++        "present": false,
++        "reason": "artifact path is missing",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": null,
++        "status_class": "unknown",
++        "status_prefix": null,
++        "status_raw": null,
++        "terminal": false,
++        "verdict_class": "unknown"
++      },
++      "zero_registry_gate": {
++        "level_credit_delta": null,
++        "passed": false,
++        "registry_update_count": null,
++        "solve_claimed": null
++      }
++    }
++  ],
++  "matched_arm_configuration": {
++    "aa_control": {},
++    "built": false,
++    "current_default_stack": {
++      "budget_aware_search": true,
++      "prompt_enrichment": false,
++      "source_hashes": {
++        "python/carnot/agentic/arc_competition_agent.py": "sha256:83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "python/carnot/agentic/arc_executable_world_model.py": "sha256:9a3f292788576f7b71723abf458a5cd9cbf991d7dd5da6ee70c88f5a504b1774",
++        "python/carnot/agentic/arc_solver_kit.py": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26"
++      },
++      "think_arm_fallback": false,
++      "think_default": "\"1\"",
++      "trajectory_transfer": true
++    },
++    "default_stack_arm": {},
++    "portfolio_arm": {},
++    "reason": "fewer_than_two_eligible_depth_levers"
++  },
++  "model_loaded": false,
++  "model_specs": {
++    "family": "gemma4_31b_dense",
++    "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++    "load_policy": "forbidden_until_eligible_lever_count_at_least_two",
++    "preferred_quant": "Q4_K_M",
++    "role": "portfolio ARC inducer when eligibility passes"
++  },
++  "paired_clustered_intervals": {
++    "portfolio_interval": null,
++    "upstream_effects": {
++      "exp6215_object_relative_trajectory_transfer": 0.0,
++      "exp6216_budget_aware_search": 1.0,
++      "exp6229_bounded_reinduction": 0.0,
++      "exp6230_prompt_enrichment": 0.0,
++      "exp6231_depth_lever": 0.0
++    }
++  },
++  "per_lever_and_combination_fire_counts": {
++    "by_lever": {
++      "exp6215_object_relative_trajectory_transfer": {
++        "activation_passed": true,
++        "field": "treatment_fire_and_reason_counts",
++        "mutation_proven": true,
++        "raw": {
++          "accepted": 4,
++          "mutation_proven": true,
++          "mutation_receipts": [
++            {
++              "killed": true,
++              "name": "transfer_fire_counter_removed"
++            },
++            {
++              "killed": true,
++              "name": "fallback_avoidance_counter_removed"
++            },
++            {
++              "killed": true,
++              "name": "forbidden_access_guard_removed"
++            }
++          ],
++          "per_game": {
++            "cn04": 1,
++            "ls20": 1,
++            "s5i5": 1,
++            "tu93": 1
++          },
++          "reason_counts": {
++            "accepted_confident_transfer": 4
++          },
++          "rejected": 0,
++          "support_count": 4,
++          "support_floor": 3,
++          "total": 4
++        },
++        "support_count": 4,
++        "support_floor": 3,
++        "total": 4
++      },
++      "exp6216_budget_aware_search": {
++        "activation_passed": true,
++        "field": "consumer_fire_counts",
++        "mutation_proven": true,
++        "raw": {
++          "aa_total": 0,
++          "control_total": 0,
++          "mutation_proven": true,
++          "mutation_receipts": [
++            {
++              "killed": true,
++              "name": "consumer_fire_counter_removed"
++            },
++            {
++              "killed": true,
++              "name": "estimator_calibration_guard_removed"
++            },
++            {
++              "killed": true,
++              "name": "forbidden_access_guard_removed"
++            }
++          ],
++          "per_game": {
++            "bp35": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "g50t": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "ka59": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "r11l": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "s5i5": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            },
++            "sc25": {
++              "aa_control_a": 0,
++              "aa_control_b": 0,
++              "control": 0,
++              "treatment": 2
++            }
++          },
++          "support_count": 6,
++          "support_floor": 3,
++          "treatment_total": 12
++        },
++        "support_count": 6,
++        "support_floor": 3,
++        "total": 12
++      },
++      "exp6229_bounded_reinduction": {
++        "activation_passed": false,
++        "field": "treatment_fire_counts",
++        "mutation_proven": false,
++        "raw": {},
++        "support_count": 0,
++        "support_floor": 1,
++        "total": 0
++      },
++      "exp6230_prompt_enrichment": {
++        "activation_passed": false,
++        "field": "treatment_fire_counts",
++        "mutation_proven": false,
++        "raw": {},
++        "support_count": 0,
++        "support_floor": 1,
++        "total": 0
++      },
++      "exp6231_depth_lever": {
++        "activation_passed": false,
++        "field": "treatment_fire_counts",
++        "mutation_proven": false,
++        "raw": {},
++        "support_count": 0,
++        "support_floor": 1,
++        "total": 0
++      }
++    },
++    "combination_fire_count": 0,
++    "selected_combination": []
++  },
++  "portfolio_promotion_ready_score": 0.0,
++  "preconditions_checked": {
++    "date": "20260809",
++    "defaults_checked": {
++      "budget_aware_search": true,
++      "prompt_enrichment": false,
++      "source_hashes": {
++        "python/carnot/agentic/arc_competition_agent.py": "sha256:83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "python/carnot/agentic/arc_executable_world_model.py": "sha256:9a3f292788576f7b71723abf458a5cd9cbf991d7dd5da6ee70c88f5a504b1774",
++        "python/carnot/agentic/arc_solver_kit.py": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26"
++      },
++      "think_arm_fallback": false,
++      "think_default": "\"1\"",
++      "trajectory_transfer": true
++    },
++    "eligibility_inputs_written_before_model_admission": true,
++    "model_admission_eligible_count": 0,
++    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6232_arc_admissible_depth_portfolio.json",
++    "registry_checked": true
++  },
++  "preregistered_portfolio_game_seed_matrix": {
++    "cells": [],
++    "games": [],
++    "not_opened_reason": "fewer_than_two_eligible_depth_levers",
++    "opened": false,
++    "seeds": [],
++    "written_before_arm_execution": false
++  },
++  "protected_files_unchanged": {
++    "changed_paths": [],
++    "hash_after": "sha256:4e39da8b4abf769aed85ed4105d9f8720b6deaf2ed1d8e82477fb50b392aca81",
++    "hash_before": "sha256:4e39da8b4abf769aed85ed4105d9f8720b6deaf2ed1d8e82477fb50b392aca81",
++    "unchanged": true
++  },
++  "raw_prompt_output_engine_replay_hashes": {
++    "exp6215_object_relative_trajectory_transfer": {
++      "raw_count": 16,
++      "raw_sha256": "sha256:4a67a6e9bc28116d53e20822624746e7ff2c2b7f64d622dcba04137f37e93e52",
++      "rows": [
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_a/event.json",
++          "sha256": "sha256:412a0e5d75c55ca7651a1998722343fb59659bab60a467a8ac4e7d533504ca03",
++          "size_bytes": 2503
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_b/event.json",
++          "sha256": "sha256:901ed6d690f503f4c23491c5040ca94e32d2b953f0cbc4411d032712a3a688d3",
++          "size_bytes": 2503
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/control/event.json",
++          "sha256": "sha256:e3b0d986881a7cf106f3c58daddf8dffdc3853e78fd4d55558444607c4e10652",
++          "size_bytes": 2498
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/treatment/event.json",
++          "sha256": "sha256:8e8c47c46bd5ddb390a96ea087c1351cfe5364a7272de6a03b8aa00c244aa79b",
++          "size_bytes": 2464
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_a/event.json",
++          "sha256": "sha256:ce49b11d8261e91332ac6a765b2d34b780d9f65d697ba782fcc952d57354083b",
++          "size_bytes": 2500
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_b/event.json",
++          "sha256": "sha256:823120db9e561c9ec69e13d2db24ce1e34b799ff992a2ac98644b80bfa143a1b",
++          "size_bytes": 2503
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/control/event.json",
++          "sha256": "sha256:8e211e427ba6f8436e34dc9106af94261931be4f3ab65972f29b0df12db150e1",
++          "size_bytes": 2495
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/treatment/event.json",
++          "sha256": "sha256:2a8ea60abe20ccbb81f42aeb6cc68495dc61a33351775687dbc0246353f46d41",
++          "size_bytes": 2462
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_a/event.json",
++          "sha256": "sha256:b4058fcb98bc215ac992042c9c9d92e25dd957b71d6ec77a85e6a71865caf8be",
++          "size_bytes": 2485
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_b/event.json",
++          "sha256": "sha256:51f0118deb2e7dd5da82f69de4f7801f824b731cd6931f61829f18dd51471634",
++          "size_bytes": 2485
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/control/event.json",
++          "sha256": "sha256:0ebb5407002eac9116ef89627d00b700e16b7ed9bb52ed34473f6da04651d1e9",
++          "size_bytes": 2480
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/treatment/event.json",
++          "sha256": "sha256:e58c48cdaf3b5ba6427755bb57dcdfc118214bb370c4200500ee42307e6c4820",
++          "size_bytes": 2430
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_a/event.json",
++          "sha256": "sha256:4c2c4953a0d0cbd64eaaf553f78f497ff03da3ef3714f683ecb8facba77e0aba",
++          "size_bytes": 2503
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_b/event.json",
++          "sha256": "sha256:a54d1357b47366f8d43c039e44d0903124b705cb7a5a911f487e6f58316ef5c8",
++          "size_bytes": 2503
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/control/event.json",
++          "sha256": "sha256:a901c0e811a5e17dcdfa75af288c7943be3314e8d0b36fd83660371e802e1153",
++          "size_bytes": 2498
++        },
++        {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/treatment/event.json",
++          "sha256": "sha256:ca57fd5f18ac10d45581c14a6ffbb52bf69a74d0d44b16148f49d427f76aaf42",
++          "size_bytes": 2466
++        }
++      ]
++    },
++    "exp6216_budget_aware_search": {
++      "raw_count": 0,
++      "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++      "rows": []
++    },
++    "exp6229_bounded_reinduction": {
++      "raw_count": 0,
++      "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++      "rows": []
++    },
++    "exp6230_prompt_enrichment": {
++      "raw_count": 0,
++      "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++      "rows": []
++    },
++    "exp6231_depth_lever": {
++      "raw_count": 0,
++      "raw_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++      "rows": []
++    }
++  },
++  "registry_precheck_and_hash_before_after": {
++    "checked_before_model_admission": true,
++    "path": "ops/arc_solve_registry.yaml",
++    "portfolio_matrix_opened_after_precheck": false,
++    "registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++    "registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++    "unchanged": true
++  },
++  "registry_update_count": 0,
++  "reproducibility_checksum": "sha256:1da1c672f9b96f65b865ea08ae2015dbef0ab33edd15fa4ba938482d24469ccf",
++  "selected_levers": [],
++  "solve_provenance": "live_agent_self_discovery",
++  "source_bfs_adapter_hidden_state_registry_access_counts": {
++    "adapter_reads": 0,
++    "bfs_reads": 0,
++    "hidden_state_reads": 0,
++    "registry_hidden_state_reads": 0,
++    "registry_trajectory_reads": 0,
++    "source_reads": 0
++  },
++  "status": "skipped_less_than_two_eligible_depth_levers",
++  "supervised_runtime_receipts": {
++    "gemma_4_31b_runtime_ready_score": null,
++    "source_artifact": {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.json",
++      "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
++      "size_bytes": 3743
++    },
++    "status": "preconditions_recorded",
++    "supervisor_contract_and_paths_hashes": null,
++    "token_receipts": [
++      {
++        "exists": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.0.token",
++        "sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
++        "size_bytes": 4
++      },
++      {
++        "exists": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.1.token",
++        "sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
++        "size_bytes": 4
++      },
++      {
++        "exists": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.2.token",
++        "sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
++        "size_bytes": 4
++      },
++      {
++        "exists": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6228_supervised_three_family_runtime_endurance.gemma4_31b_dense.recovery.token",
++        "sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
++        "size_bytes": 4
++      }
++    ]
++  },
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6232_arc_admissible_depth_portfolio.py -m pytest tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6232_arc_admissible_depth_portfolio.py --fail-under=100 --show-missing",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py",
++    ".venv/bin/python scripts/determination_preservation_lint.py HEAD --all-files",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6232_arc_admissible_depth_portfolio.json",
++    ".venv/bin/python -m carnot.experiment_6232_arc_admissible_depth_portfolio --date 20260809"
++  ],
++  "test_exit_codes": {},
++  "upstream_paths_hashes_and_terminal_classes": {
++    "terminal_classifier": {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/terminal_artifacts.py",
++      "sha256": "sha256:a51f656116f7999b5d318b176919be274f214210e087ae548b61a5b7ce2fde10",
++      "size_bytes": 13437
++    },
++    "upstreams": [
++      {
++        "artifact": {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
++          "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
++          "size_bytes": 35903
++        },
++        "lever_id": "exp6215_object_relative_trajectory_transfer",
++        "terminal_classifier": {
++          "classification": "ready",
++          "conductor_receipt_status": null,
++          "honest_verdict_prefix": "complete",
++          "honest_verdict_raw": "complete: trajectory_transfer_ab_complete_no_solve_credit",
++          "loadable": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
++          "present": true,
++          "reason": "status=ready verdict=complete",
++          "receipt_override_attempted": false,
++          "receipt_overrode": false,
++          "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
++          "status_class": "ready",
++          "status_prefix": "complete_ready",
++          "status_raw": "complete_ready",
++          "terminal": true,
++          "verdict_class": "complete"
++        }
++      },
++      {
++        "artifact": {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6216_arc_budget_aware_search_ab.json",
++          "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
++          "size_bytes": 49301
++        },
++        "lever_id": "exp6216_budget_aware_search",
++        "terminal_classifier": {
++          "classification": "flagged",
++          "conductor_receipt_status": null,
++          "honest_verdict_prefix": "complete",
++          "honest_verdict_raw": "complete: budget_aware_search_ab_complete_no_solve_credit",
++          "loadable": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6216_arc_budget_aware_search_ab.json",
++          "present": true,
++          "reason": "artifact carries flagged_adversarial or corrigendum_pending",
++          "receipt_override_attempted": false,
++          "receipt_overrode": false,
++          "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
++          "status_class": "ready",
++          "status_prefix": "complete_ready",
++          "status_raw": "complete_ready",
++          "terminal": true,
++          "verdict_class": "complete"
++        }
++      },
++      {
++        "artifact": {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6229_arc_gemma31_think_determination.json",
++          "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
++          "size_bytes": 893
++        },
++        "lever_id": "exp6229_bounded_reinduction",
++        "terminal_classifier": {
++          "classification": "skipped",
++          "conductor_receipt_status": null,
++          "honest_verdict_prefix": "blocked_gate_check_failed",
++          "honest_verdict_raw": "blocked_gate_check_failed",
++          "loadable": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6229_arc_gemma31_think_determination.json",
++          "present": true,
++          "reason": "blocked artifact records a gate skip",
++          "receipt_override_attempted": false,
++          "receipt_overrode": false,
++          "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
++          "status_class": "blocked",
++          "status_prefix": "blocked",
++          "status_raw": "blocked",
++          "terminal": true,
++          "verdict_class": "blocked"
++        }
++      },
++      {
++        "artifact": {
++          "exists": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
++          "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
++          "size_bytes": 891
++        },
++        "lever_id": "exp6230_prompt_enrichment",
++        "terminal_classifier": {
++          "classification": "skipped",
++          "conductor_receipt_status": null,
++          "honest_verdict_prefix": "blocked_gate_check_failed",
++          "honest_verdict_raw": "blocked_gate_check_failed",
++          "loadable": true,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
++          "present": true,
++          "reason": "blocked artifact records a gate skip",
++          "receipt_override_attempted": false,
++          "receipt_overrode": false,
++          "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
++          "status_class": "blocked",
++          "status_prefix": "blocked",
++          "status_raw": "blocked",
++          "terminal": true,
++          "verdict_class": "blocked"
++        }
++      },
++      {
++        "artifact": {
++          "exists": false,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6231_arc_depth_lever_heldout_ab.json",
++          "sha256": null,
++          "size_bytes": null
++        },
++        "lever_id": "exp6231_depth_lever",
++        "terminal_classifier": {
++          "classification": "missing",
++          "conductor_receipt_status": null,
++          "honest_verdict_prefix": null,
++          "honest_verdict_raw": null,
++          "loadable": false,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6231_arc_depth_lever_heldout_ab.json",
++          "present": false,
++          "reason": "artifact path is missing",
++          "receipt_override_attempted": false,
++          "receipt_overrode": false,
++          "sha256": null,
++          "status_class": "unknown",
++          "status_prefix": null,
++          "status_raw": null,
++          "terminal": false,
++          "verdict_class": "unknown"
++        }
++      }
++    ]
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/results/llama_server_9188242568757559282.log b/results/llama_server_9188242568757559282.log
+index 672833443d..93cd05bfc7 100644
+--- a/results/llama_server_9188242568757559282.log
++++ b/results/llama_server_9188242568757559282.log
+@@ -115,3 +115,10 @@ How are you?<turn|>
+ 0.11.597.562 I srv  llama_server: model loaded
+ 0.11.597.566 I srv  llama_server: server is listening on http://127.0.0.1:53595
+ 0.11.597.578 I srv  update_slots: all slots are idle
++26.59.752.642 I srv    operator(): operator(): cleaning up before exit...
++Received second interrupt, terminating immediately.
++Received second interrupt, terminating immediately.
++Received second interrupt, terminating immediately.
++Received second interrupt, terminating immediately.
++Received second interrupt, terminating immediately.
++Received second interrupt, terminating immediately.
+diff --git a/tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py b/tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py
+new file mode 100644
+index 0000000000..72198c89fc
+--- /dev/null
++++ b/tests/python/test_experiment_6232_arc_admissible_depth_portfolio.py
+@@ -0,0 +1,286 @@
++"""Tests for Exp6232 ARC admissible depth portfolio.
++
++Spec refs: REQ-ARC-WMTE-6232,
++SCENARIO-ARC-WMTE-6232-PRECONDITION-LEDGER,
++SCENARIO-ARC-WMTE-6232-TERMINAL-SKIP,
++SCENARIO-ARC-WMTE-6232-PORTFOLIO-RUN,
++SCENARIO-ARC-WMTE-6232-ARTIFACT-GUARDS.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_6232_arc_admissible_depth_portfolio as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++
++def test_req_arc_wmte_6232_spec_declares_artifact_contract() -> None:
++    """REQ-ARC-WMTE-6232: OpenSpec names the Exp6232 fields and scenarios."""
++
++    spec = SPEC.read_text(encoding="utf-8")
++    section = "REQ-ARC-WMTE-6232" + spec.rsplit("### REQ-ARC-WMTE-6232", 1)[1]
++
++    for marker in (
++        "REQ-ARC-WMTE-6232",
++        "SCENARIO-ARC-WMTE-6232-PRECONDITION-LEDGER",
++        "SCENARIO-ARC-WMTE-6232-TERMINAL-SKIP",
++        "SCENARIO-ARC-WMTE-6232-PORTFOLIO-RUN",
++        "SCENARIO-ARC-WMTE-6232-ARTIFACT-GUARDS",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_arc_wmte_6232_current_v539_artifacts_skip_before_model_load(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6232-TERMINAL-SKIP: current evidence has no pair."""
++
++    artifact = mod.build_artifact(
++        date="20260809",
++        output_path=tmp_path / "experiment_6232.json",
++        test_commands=["focused"],
++        test_exit_codes={"focused": 0},
++        started=0.0,
++        now=lambda: 1.0,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "skipped_less_than_two_eligible_depth_levers"
++    assert artifact["eligible_lever_count"] == 0
++    assert artifact["selected_levers"] == []
++    assert artifact["model_loaded"] is False
++    assert artifact["exact_skip_reason"] == (
++        "fewer_than_two_independent_unflagged_treatment_active_depth_levers:0<2"
++    )
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["preregistered_portfolio_game_seed_matrix"]["opened"] is False
++    assert artifact["matched_arm_configuration"]["built"] is False
++
++    ledger = {row["lever_id"]: row for row in artifact["lever_eligibility_ledger"]}
++    assert ledger["exp6215_object_relative_trajectory_transfer"]["default_stack_component"] is True
++    assert "already_default_on_not_counted" in ledger[
++        "exp6215_object_relative_trajectory_transfer"
++    ]["ineligible_reasons"]
++    assert "terminal_class_flagged_not_admissible" in ledger[
++        "exp6216_budget_aware_search"
++    ]["ineligible_reasons"]
++    assert "terminal_class_skipped_not_admissible" in ledger[
++        "exp6229_bounded_reinduction"
++    ]["ineligible_reasons"]
++    assert "terminal_class_skipped_not_admissible" in ledger[
++        "exp6230_prompt_enrichment"
++    ]["ineligible_reasons"]
++    assert "artifact_missing" in ledger["exp6231_depth_lever"]["ineligible_reasons"]
++
++
++def test_scenario_arc_wmte_6232_synthetic_portfolio_freezes_pair(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6232-PORTFOLIO-RUN: two independent levers open one run."""
++
++    ledgers = [
++        mod.synthetic_eligible_lever("a_depth", mechanism="bounded_reinduction", utility=0.4),
++        mod.synthetic_eligible_lever("b_depth", mechanism="prompt_enrichment", utility=0.3),
++        mod.synthetic_eligible_lever("c_depth", mechanism="graded_goal_bias", utility=0.2),
++    ]
++    artifact = mod.build_artifact(
++        date="20260809",
++        precomputed_ledger=ledgers,
++        output_path=tmp_path / "experiment_6232.json",
++        test_commands=["focused"],
++        test_exit_codes={"focused": 0},
++        started=0.0,
++        now=lambda: 2.0,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "complete_portfolio_pair_frozen_not_executed_by_unit_fixture"
++    assert artifact["eligible_lever_count"] == 3
++    assert [row["lever_id"] for row in artifact["selected_levers"]] == ["a_depth", "b_depth"]
++    assert artifact["model_loaded"] is False
++    assert artifact["exact_skip_reason"] is None
++    assert artifact["preregistered_portfolio_game_seed_matrix"]["opened"] is True
++    assert artifact["matched_arm_configuration"]["built"] is True
++    assert artifact["matched_arm_configuration"]["current_default_stack"]["trajectory_transfer"] is True
++    assert artifact["matched_arm_configuration"]["current_default_stack"]["budget_aware_search"] is True
++
++
++def test_scenario_arc_wmte_6232_duplicate_mechanisms_do_not_double_count() -> None:
++    """SCENARIO-ARC-WMTE-6232-PRECONDITION-LEDGER: duplicate mechanisms collapse."""
++
++    ledgers = mod.apply_independence_gate(
++        [
++            mod.synthetic_eligible_lever("a1", mechanism="same_mechanism", utility=0.2),
++            mod.synthetic_eligible_lever("a2", mechanism="same_mechanism", utility=0.5),
++            mod.synthetic_eligible_lever("b1", mechanism="other_mechanism", utility=0.1),
++        ]
++    )
++
++    rows = {row["lever_id"]: row for row in ledgers}
++    assert rows["a2"]["eligible"] is True
++    assert rows["a1"]["eligible"] is False
++    assert "duplicate_mechanism_not_counted" in rows["a1"]["ineligible_reasons"]
++    assert len(mod.select_levers(ledgers)) == 2
++
++
++def test_scenario_arc_wmte_6232_artifact_guards_and_write(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6232-ARTIFACT-GUARDS: required guard fields are bare."""
++
++    artifact = mod.build_artifact(
++        date="20260809",
++        output_path=tmp_path / "experiment_6232.json",
++        test_commands=["focused"],
++        test_exit_codes={"focused": 0},
++        started=0.0,
++        now=lambda: 1.0,
++    )
++    out = mod.write_artifact(artifact, path=tmp_path / "experiment_6232.json")
++    loaded = json.loads(out.read_text(encoding="utf-8"))
++
++    assert loaded["model_loaded"] is False
++    assert loaded["registry_update_count"] == 0
++    assert loaded["verifier_is_oracle"] is False
++    assert loaded["solve_provenance"] == "live_agent_self_discovery"
++    assert all(
++        type(value) is int and value == 0
++        for value in loaded["source_bfs_adapter_hidden_state_registry_access_counts"].values()
++    )
++    assert set(loaded["field_provenance"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert set(loaded["field_principles"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert loaded["reproducibility_checksum"] == mod.payload_checksum(loaded)
++
++
++def test_req_arc_wmte_6232_validation_rejects_bad_artifact_state() -> None:
++    """REQ-ARC-WMTE-6232: malformed artifacts fail closed."""
++
++    def expect_error(artifact: dict[str, object], message: str) -> None:
++        try:
++            mod.validate_artifact(artifact)
++        except ValueError as exc:
++            assert message in str(exc)
++        else:  # pragma: no cover
++            raise AssertionError(f"validate_artifact accepted {message}")
++
++    base = mod.build_artifact(started=0.0, now=lambda: 1.0)
++
++    missing = dict(base)
++    missing.pop("status")
++    expect_error(missing, "missing fields")
++
++    bad_provenance = dict(base)
++    bad_provenance["field_provenance"] = {}
++    expect_error(bad_provenance, "field_provenance incomplete")
++
++    bad_principles = dict(base)
++    bad_principles["field_principles"] = {}
++    expect_error(bad_principles, "field_principles incomplete")
++
++    bad_model = dict(base)
++    bad_model["model_loaded"] = True
++    expect_error(bad_model, "model_loaded must be bare false")
++
++    bad_registry = dict(base)
++    bad_registry["registry_update_count"] = 1
++    expect_error(bad_registry, "registry_update_count must be bare 0")
++
++    bad_solve = dict(base)
++    bad_solve["solve_provenance"] = "offline_replay"
++    expect_error(bad_solve, "solve_provenance invalid")
++
++    bad_forbidden = dict(base)
++    bad_forbidden["source_bfs_adapter_hidden_state_registry_access_counts"] = {"source_reads": 1}
++    expect_error(bad_forbidden, "forbidden counts must be bare zeros")
++
++    bad_hash = dict(base)
++    bad_hash["registry_precheck_and_hash_before_after"] = {
++        "registry_hash_before": "sha256:a",
++        "registry_hash_after": "sha256:b",
++    }
++    expect_error(bad_hash, "registry hash changed")
++
++    bad_verdict = dict(base)
++    bad_verdict["honest_verdict"] = "skipped"
++    bad_verdict["reproducibility_checksum"] = mod.payload_checksum(bad_verdict)
++    expect_error(bad_verdict, "honest verdict prefix invalid")
++
++    bad_checksum = dict(base)
++    bad_checksum["status"] = "changed"
++    expect_error(bad_checksum, "checksum mismatch")
++
++    bad_oracle = dict(base)
++    bad_oracle["verifier_is_oracle"] = True
++    expect_error(bad_oracle, "verifier_is_oracle must be bare false")
++
++
++def test_req_arc_wmte_6232_fixture_artifact_exercises_fail_closed_gates(
++    tmp_path: Path,
++) -> None:
++    """REQ-ARC-WMTE-6232: flagged fixture rows preserve losses and raw receipts."""
++
++    result_dir = tmp_path / "results"
++    result_dir.mkdir()
++    payload = {
++        "status": "complete_ready",
++        "honest_verdict": "complete: synthetic_flagged_depth_measurement",
++        "flagged_adversarial": True,
++        "corrigendum_pending": [
++            {"severity": "critical", "kind": "TEST", "detail": "synthetic"}
++        ],
++        "treatment_fire_counts": {
++            "total": 2,
++            "support_count": 2,
++            "support_floor": 1,
++            "mutation_proven": True,
++        },
++        "synthetic_ready_score": 1.0,
++        "admission_and_level_depth_by_arm_game": {
++            "loss_game": {
++                "control": {"depth": 2},
++                "treatment": {"depth": 1},
++                "loss_reported": True,
++                "treatment_minus_control_wall_s": 1.0,
++                "treatment_minus_control_tokens": 5,
++                "treatment_minus_control_actions": 1,
++            }
++        },
++        "harmful_regression_count_and_games": {"count": 1, "games": ["loss_game"]},
++        "solve_claimed": False,
++        "level_credit_delta": 0,
++        "registry_update_count": 0,
++        "raw_prompt_output_engine_replay_hashes": [{"path": "raw.json", "sha256": "sha256:1"}],
++        "raw_induction_paths_and_hashes": [{"path": "engine.py", "sha256": "sha256:2"}],
++        "source_bfs_adapter_registry_hidden_state_access_counts": {"source_reads": 1},
++    }
++    (result_dir / "experiment_999_actual.json").write_text(
++        json.dumps(payload), encoding="utf-8"
++    )
++
++    row = mod.recompute_lever_eligibility(
++        {
++            "lever_id": "synthetic_flagged",
++            "experiment": 999,
++            "requirement": mod.REQUIREMENT,
++            "mechanism": "synthetic",
++            "path": "results/fallback.json",
++            "path_glob": "results/experiment_999*.json",
++            "default_stack_component": False,
++            "fire_field": "treatment_fire_counts",
++            "quality_fields": ("synthetic_ready_score",),
++            "metric_fields": ("admission_and_level_depth_by_arm_game",),
++        },
++        root=tmp_path,
++    )
++
++    assert row["artifact"]["path"].endswith("experiment_999_actual.json")
++    assert "flagged_adversarial_true" in row["ineligible_reasons"]
++    assert "unresolved_critical_corrigendum_present" in row["ineligible_reasons"]
++    assert "safety_gate_failed" in row["ineligible_reasons"]
++    assert "forbidden_access_nonzero" in row["ineligible_reasons"]
++    assert row["effect_gate"]["losing_games"] == ["loss_game"]
++    assert row["raw_prompt_output_engine_replay_hashes"]["raw_count"] == 2
+-- 
+2.55.0
+

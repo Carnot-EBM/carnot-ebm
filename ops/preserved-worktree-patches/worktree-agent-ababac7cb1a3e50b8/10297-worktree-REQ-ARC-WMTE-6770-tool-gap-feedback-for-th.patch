@@ -1,0 +1,2502 @@
+From 236ffb243c754f4a3d82b9cfed5f03cbd46472d5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 14:35:26 -0400
+Subject: [PATCH 10297/11362] [worktree] REQ-ARC-WMTE-6770: tool-gap feedback
+ for the induction tool loop, post-review
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Supersedes the unmerged a613f36bc7, split and reworked per coordinator
+directive after a hostile same-day review (12 findings; details in the
+spec amendment and the design note's appended section).
+
+The mechanism: the loop's dispatch layer used to refuse unknown tool
+calls and keep only a conflated counter (tool_call_parse_failures mixes
+unknown names with malformed JSON; 8 live rows carry it with no
+recoverable kind). Now the demanded IDENTITY survives — unknown_tool and
+bad_arguments events on the session, plus loose-extracted names from
+tool-call text both strict transports refuse — and rides the stats into
+harness rows, the repair record, AND the primary live induction's
+attempt["tool_gap"]. New tools enter as HUMAN-AUTHORED candidates via
+register_candidate_tool behind CARNOT_ARC_INDUCE_CANDIDATE_TOOLS,
+frozen per session, byte-identical when unset. The offline analyzer
+(scripts/arc_tool_gap_refine.py) keeps a durable ledger and emits
+human-only specifications in the ops/verifier_gaps.md convention; it
+never generates a tool.
+
+Review findings fixed here (owned per the Error Lifecycle):
+- F2 (premise-level): as first built, NO env configuration let the live
+  agent both run the loop and record gap events — the loop runs under
+  CARNOT_ARC_INDUCE_TOOL_LOOP "1"/"selfparse" and the only widened
+  record was on the mutually-exclusive "repair" branch. The primary
+  induce site now pre-clears the diagnostic and copies gap fields onto
+  the attempt; the stale-stats direction is pinned.
+- F3/F4: an unknown name with unparseable arguments was discarded
+  although the name needed no parse; unparsed tool-call text on either
+  transport held the demanded name and only a counter moved. Both
+  populations are captured now.
+- F5/F7: candidate enablement is frozen at session creation — payload,
+  prompt, dispatch, and the record read one snapshot; the cross-run
+  limit of the human-only boundary is disclosed in the spec instead of
+  asserted (in-process model-executed code can mutate the registry, and
+  no in-process guard survives that threat model).
+- F6/F9: a registered-but-dark candidate no longer alters XML coercion;
+  model-controlled event strings are capped before the durable ledger.
+- F8 corrigendum: the first cut claimed "Zero decorative rules" and the
+  review falsified it three ways (dropped-counter finalize proven only
+  at the session attribute, a tautological markdown assertion, refusal
+  text unbound from the active set). All three now have biting tests.
+- F10: the gap doc's no-demand null was over-generalized as "live"; the
+  corpus is entirely the server-lifted transport (selfparse_blocks_seen
+  0 throughout). Corrected append-style in ops/arc_tool_gaps.md.
+
+Mutation record, re-run in full after the fixes: 26 feature mutation runs
+(labels M1-M14 refreshed post-refactor, M17-M24 with M22 in two halves, M27-M28), each RED, each
+restore byte-identical. The freshness-lint rider's M15/M16/M25/M26 live
+in its own commit.
+
+Not merged to main; branch worktree-agent-a092d79bdf0704db3 only, per
+coordinator hold.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-tool-gap-feedback-2026-08-29.md       | 189 ++++
+ .../arc-world-model-trust-energy/spec.md      | 197 ++++
+ ops/arc_flag_ledger.yaml                      |   4 +
+ ops/arc_tool_gaps.md                          |  67 ++
+ ops/changelog.md                              |   3 +
+ ops/status.md                                 |  30 +
+ .../carnot/agentic/arc_competition_agent.py   |  29 +-
+ .../carnot/agentic/arc_induction_tool_loop.py |  73 +-
+ python/carnot/agentic/arc_induction_tools.py  | 245 ++++-
+ .../carnot/agentic/arc_tool_gap_refinement.py | 457 ++++++++++
+ scripts/arc_tool_gap_refine.py                |  19 +
+ tests/python/test_arc_tool_gap_feedback.py    | 854 ++++++++++++++++++
+ 12 files changed, 2160 insertions(+), 7 deletions(-)
+ create mode 100644 docs/research-notes/arc-tool-gap-feedback-2026-08-29.md
+ create mode 100644 ops/arc_tool_gaps.md
+ create mode 100644 python/carnot/agentic/arc_tool_gap_refinement.py
+ create mode 100644 scripts/arc_tool_gap_refine.py
+ create mode 100644 tests/python/test_arc_tool_gap_feedback.py
+
+diff --git a/docs/research-notes/arc-tool-gap-feedback-2026-08-29.md b/docs/research-notes/arc-tool-gap-feedback-2026-08-29.md
+new file mode 100644
+index 0000000000..0ef4310760
+--- /dev/null
++++ b/docs/research-notes/arc-tool-gap-feedback-2026-08-29.md
+@@ -0,0 +1,189 @@
++# Tool-Gap Feedback for the ARC Induction Tool Loop (2026-08-29)
++
++REQ-ARC-WMTE-6770. Design note for the mechanism that identifies tool gaps
++from live-run evidence and makes introducing new callable tools safe.
++
++## The problem
++
++The live agent's induction loop calls tools from `TOOL_SCHEMAS` in
++`python/carnot/agentic/arc_induction_tools.py`. That set is closed and
++hand-authored. Nothing observed live runs and asked: what tool did the model
++need and not have?
++
++The project already solved this shape once, for verifiers. The
++Missing-Verifier Gap Logging discipline turns each present-but-unselectable
++failure into a `ops/verifier_gaps.md` entry, and the gap ledger is a build
++backlog. This mechanism is the tool-side analogue, and it reuses that
++structure on purpose: `TOOL_SCHEMAS` is the registry of what exists;
++`ops/arc_tool_gaps.md` is the ledger of what is demanded and missing.
++
++## What signals exist versus what we wished existed
++
++Measured before design, over every readable tool-loop artifact
++(`results/arc_tool_loop_probe_20260817/*.json`,
++`results/holdout_equalized_ab_20260820/shard_tool.jsonl`,
++`results/tool_loop_compaction_ab_20260820/shard_{off,on}.jsonl`):
++
++- 633 dispatched tool calls. Every name is inside `TOOL_SCHEMAS`
++  (query_region 295, diff_grids 199, run_engine_on_transitions 100,
++  list_transitions 39). **No live run has yet demanded a nonexistent tool.**
++- 8 rows carry `tool_call_parse_failures: 1`. The counter conflates
++  "unknown tool" with "unparseable JSON arguments" and keeps NEITHER
++  identity. The kind of those 8 failures is unrecoverable. This is the
++  finding the brief predicted: the strongest gap signal was not actually
++  recorded. The capture had to ship before any mining could mean anything.
++- The supervisor's redirect ledger (`arm_outcomes`,
++  `stagnations_unredirected`) measures ARM demand, not TOOL demand. It
++  connects here in one place: the `tool_loop_reinduction` arm
++  (REQ-ARC-WMTE-6760) routes a stagnant level into the tool loop, and any
++  gap events from that escalation now land in the same stats rows.
++
++Signals chosen, because they are mechanically computable:
++
++1. `unknown_tool`: the dispatch layer refused a `<function=NAME>` whose NAME
++   is outside the active set. The name and the argument keys are the demand.
++2. `bad_arguments`: a TypeError calling a real tool — the model imagined a
++   signature the schema does not declare. Noisier: a TypeError raised inside
++   a tool body is indistinguishable at the dispatch seam, so the analyzer
++   labels this kind as weaker evidence.
++
++Signal rejected: "the model needed a tool it could not imagine." Not
++computable; not built.
++
++## The mechanism
++
++Three parts, closing the loop the way supervisor refinement does:
++
++1. **Capture (always-on telemetry, live path).** `dispatch_tool` — the
++   shared chokepoint both transports and every caller go through — records
++   bounded `tool_gap_events` on the session. The loop writes them into
++   `last_tool_loop_stats`, which every row consumer already copies, and the
++   live E3 policy's `record["tool_loop"]` subset was widened to carry them
++   (it was a fixed key list; the events would have died exactly on the
++   scored path otherwise). Keys are present-and-empty on clean runs, never
++   absent. Telemetry never alters a request payload — the same precedent as
++   the REQ-6540 counters.
++2. **Analysis (offline, recommends only).**
++   `scripts/arc_tool_gap_refine.py` ingests rows into a durable ledger
++   (`ops/arc_tool_gap_ledger.json`), with the supervisor-refinement tool's
++   own row hash, rows-document shape, and clone-pruned directory scan
++   (imported, not copied). Frozen contract: 3 events across 2 distinct rows
++   yields a written `tool_gap_specification` for a human, including a
++   ready-to-append `ops/arc_tool_gaps.md` entry. Below the floor it says
++   `insufficient_evidence` loudly. Rows that predate capture are a named
++   population (`no_capture_capable_rows`) — absence of evidence, not
++   evidence of absence.
++3. **Introduction (human-authored, default off, measurable).** A human
++   authors the tool and registers it via `register_candidate_tool`. It is
++   served only when named exactly in `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS`
++   (registered `unevaluated` in `ops/arc_flag_ledger.yaml`). Enabled, its
++   schema reaches the request payload AND the selfparse prompt text, its XML
++   calls coerce by its own schema, and its usage is measurable in
++   `tool_calls_by_name` — so an A/B can read it before anyone believes it.
++   Unset, `active_tool_schemas()` returns the `TOOL_SCHEMAS` object itself:
++   byte-identical default by construction. Promotion into `TOOL_SCHEMAS` is
++   a later human commit, on measurement.
++
++## The human-versus-machine boundary, and why
++
++CLAUDE.md's AVO rule: arm growth stays human on a 27B generator. The brief
++asks whether tools are different. Position taken: the DISTINCTION IS REAL
++BUT DOES NOT LICENSE GENERATION. A tool is bounded, typed, and offline
++testable where an arm is an open-ended strategy — which is why gap
++IDENTIFICATION can be fully mechanical here (the parser literally sees the
++demanded name) while arm gaps need `stagnations_unredirected` as a proxy.
++But tool INTRODUCTION is authoring live-path code that executes in-process
++on the scored path. Three reasons it stays human:
++
++1. Machine-added tools are machine-invented code shipping into the live
++   scored path — the exact failure the disciplines exist to stop.
++2. A demanded NAME is demand evidence, not a design. `get_full_grid` does
++   not bound the response, and an unbounded retrieval tool rebuilds the
++   prompt the tool set exists to shrink (the module's own thesis).
++3. The verifier-gap precedent works exactly this way and its vocabulary
++   transfers; a parallel convention would be invented for no gain.
++
++So: the machine identifies, aggregates, floors, and writes the
++specification; the human authors, enables, measures, and promotes. The same
++sentence REQ-6720 uses: a human applies changes, or nobody does.
++
++## What was deliberately NOT built
++
++- No auto-generation of tool schemas or implementations from gap evidence.
++- No automatic append to `ops/arc_tool_gaps.md` — the analyzer renders the
++  entry; a human pastes it.
++- No auto-promotion of candidates into `TOOL_SCHEMAS`.
++- No seeded candidate tool. The registry ships empty because the evidence
++  says no tool has been demanded yet; authoring one now would invert the
++  mechanism's own thesis (gap first, then tool). The registry paths are
++  proven by test-registered candidates driven through the real induce()
++  entry point, and by 14 mutations (all RED).
++- No mining of free-text model wishes; only refused calls count.
++
++## How it is measured
++
++- A candidate tool's value: enable it by env in a lever-harness or A/B run;
++  read `tool_calls_by_name` for uptake and the run's induction outcomes for
++  effect; the flag ledger holds the verdict before any default flip.
++- The capture itself: `tool_gap_events` totals across future rows tell
++  whether unknown-tool demand exists at all. If it stays zero for a long
++  window, the honest reading is that the schema prompt is sufficient and
++  this ledger stays empty — that null is a finding, not a failure.
++
++## Cross-references
++
++REQ-ARC-WMTE-6770 (spec) · REQ-ARC-WMTE-6720 (the arm-side sibling) ·
++REQ-ARC-WMTE-6760 (the supervisor arm that escalates into the tool loop) ·
++CLAUDE.md "Missing-Verifier Gap Logging" (the precedent) · CLAUDE.md
++"AVO-Method Adoption" (the human-growth constraint) · `ops/arc_tool_gaps.md`
++(the ledger) · `tests/python/test_arc_tool_gap_feedback.py` (entry-point
++tests + mutation targets).
++
++## Same-day adversarial review and fixes (appended, not rewritten)
++
++A hostile review of the first committed cut (a613f36bc7) returned 12
++findings; the coordinator ordered the freshness-lint rider split into its own
++commit and the premise-level defects fixed. Owned corrections:
++
++- **F2, the finding that mattered:** as first built, no env configuration let
++  the live agent both run the tool loop AND record gap events —
++  `CARNOT_ARC_INDUCE_TOOL_LOOP` runs the loop under "1"/"selfparse" and the
++  only widened record was on the "repair" branch of the same variable. The
++  claim above that stats reach "every row consumer" was false for the
++  primary live induction, which never read them. Fixed: `_induce_and_plan`
++  now clears the diagnostic, induces, and copies gap fields onto
++  `attempt["tool_gap"]`; the stale-stats direction is pinned by test.
++- **F3/F4 (the chokepoint was too narrow):** an unknown name with malformed
++  JSON was discarded although the name needed no parse; a tool-call block
++  the strict transports refuse held the demanded name in refused text. Both
++  now captured (`argument_keys: null`; `loose_tool_call_names` with
++  `source: "unparsed_text"`). The "not computable" boundary drawn above was
++  wrong for these two populations — they are refused CALLS, not imagined
++  wishes — and they are precisely where demand is likeliest to appear.
++- **F5/F7:** enablement is now FROZEN per session; within a run, prompt,
++  payload, dispatch, and the record read one snapshot. The cross-run limit
++  is disclosed in the spec amendment: in-process model-executed code can
++  mutate the registry/env, and no in-process guard survives that threat
++  model — the sandbox flag is the real containment.
++- **F6/F8/F9:** dark candidates no longer affect XML coercion; three
++  decorative assertions (dropped-counter finalize, a tautological markdown
++  assertion, unbound refusal text) were falsified by the review and replaced
++  with biting tests; model-controlled event strings are capped; the analyzer
++  surfaces `gap_events_dropped_total` so truncated counts read as floors.
++- **F10:** the bootstrap null was over-generalized as "live"; the corpus is
++  entirely the server-lifted transport (`selfparse_blocks_seen: 0`), which
++  constrains names structurally. Corrected in `ops/arc_tool_gaps.md`.
++- **R1/R2/R3 (freshness-lint rider, now its own commit):** the worktree
++  fallback could adopt an UNRELATED repo with colliding layout (fail-open on
++  a gate whose contract is fail-closed) — now gated on a shared root commit;
++  the block-deciding `_sha256_at_head` also needed the GIT_DIR strip; the
++  strip was narrowed to the four discovery overrides so GIT_CONFIG_*
++  injection keeps working. The first regression test PINNED the R1 bug and
++  was rewritten to assert the opposite.
++
++Accepted residuals, stated plainly: the loose-name extraction is best-effort
++(two regexes, bounded, deduped against parsed calls) and will miss shapes it
++has never seen; R3's keep-config direction cannot be mutation-proven in this
++environment (constructing a dubious-ownership repo needs root); and the
++earlier "Zero decorative rules" claim was false until this pass — the full
++mutation set was re-run (30 runs, labels M1-M28, all RED) after the fixes.
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 4319c0abe0..e4530b9ed3 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -28333,3 +28333,200 @@ both.
+ Implementation status: implemented 2026-08-29
+ (`python/carnot/agentic/arc_trajectory_supervisor.py`;
+ `tests/python/test_arc_trajectory_supervisor.py`, 34 tests, 4/4 mutations RED).
++
++### REQ-ARC-WMTE-6770: Tool-Gap Feedback — Live Runs Record Tool Demand; Tool Introduction Stays Curated, Default Off
++
++Origin: 2026-08-29 operator-directed follow-up to the supervisor-refinement
++loop (REQ-ARC-WMTE-6720) and the Missing-Verifier Gap Logging discipline
++(CLAUDE.md; `ops/verifier_gaps.md`). `TOOL_SCHEMAS` is a closed, hand-authored
++set. Before this requirement, a model call naming a tool outside that set was
++refused and then forgotten: only `tool_call_parse_failures` survived, and that
++counter also counts malformed JSON. Eight live rows carry the counter at 1
++with no way to say which kind fired, and no readable artifact records WHICH
++tool a model ever wanted. This requirement is the tool-side analogue of the
++verifier-gap ledger: the machine identifies demand; a human authors supply.
++
++1. **Capture keeps identity, at the shared dispatch chokepoint.**
++   `dispatch_tool` SHALL record a bounded `tool_gap_events` entry on the
++   session for: an `unknown_tool` call (the requested name plus the argument
++   keys), and a `bad_arguments` call (the tool plus the error text). The
++   bound is `MAX_TOOL_GAP_EVENTS`; overflow increments a visible
++   `tool_gap_events_dropped` counter, never silently discards.
++2. **Events ride the stats every consumer already copies.** The loop SHALL
++   initialize `tool_gap_events` (empty list), `tool_gap_events_dropped`,
++   `candidate_tools_enabled`, and `candidate_tools_rejected` on every run's
++   stats — present-and-empty, never absent — and finalize them from the
++   session at `_finish`. The live E3 policy's `record["tool_loop"]` subset
++   SHALL carry all four fields.
++3. **Introduction is curated selection, never generation.** A new tool
++   enters as a HUMAN-AUTHORED candidate via `register_candidate_tool`
++   (refusing core-name collisions), and is served only when named exactly in
++   `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` (comma-separated). An env name that is
++   not registered SHALL be visibly rejected in the stats, not silently
++   dropped. With the flag unset, `active_tool_schemas()` SHALL return the
++   `TOOL_SCHEMAS` object itself, so the default payload, prompt text, and
++   dispatch are byte-identical to before this requirement.
++4. **Both transports serve the same active set.** The server-lifted payload
++   (`tools` field), the selfparse prompt text
++   (`render_tool_schemas_for_prompt`), and XML parameter coercion SHALL all
++   derive from the active set, so an enabled candidate is callable on either
++   transport and a dark one on neither.
++5. **The offline analyzer only specifies; a human authors.**
++   `python/carnot/agentic/arc_tool_gap_refinement.py` (CLI
++   `scripts/arc_tool_gap_refine.py`) SHALL ingest rows into a durable
++   deduplicated ledger (`ops/arc_tool_gap_ledger.json`), find stats by the
++   capture key wherever a row nests them, count pre-capture rows as a named
++   population (absence of evidence, not evidence of absence), and apply a
++   frozen contract: a gap with `>= MIN_EVENTS_PER_GAP (3)` events across
++   `>= MIN_DISTINCT_ROWS (2)` rows yields a written `tool_gap_specification`
++   for a human, with a ready-to-append `ops/arc_tool_gaps.md` entry in the
++   verifier-gaps schema. The tool SHALL NOT generate a schema or an
++   implementation, SHALL NOT edit `TOOL_SCHEMAS`, and SHALL NOT write any
++   file other than its own ledger. Below the floors it says
++   `insufficient_evidence` loudly; IO or schema errors exit non-zero.
++
++#### SCENARIO-ARC-WMTE-6770-1 (default byte-identical)
++- GIVEN a registered candidate tool and the env flag unset
++- THEN `active_tool_schemas()` is the `TOOL_SCHEMAS` object, the request
++  payload carries no candidate schema, and calling the candidate is an
++  unknown-tool refusal that records a gap event.
++
++#### SCENARIO-ARC-WMTE-6770-2 (unknown-tool identity)
++- GIVEN a loop turn calling a tool name outside the active set, through the
++  real induce() entry point
++- THEN the run's stats carry a `tool_gap_events` entry with the requested
++  name and argument keys, and the legacy conflated counter still moves.
++
++#### SCENARIO-ARC-WMTE-6770-3 (bad-arguments identity)
++- GIVEN a call to an existing tool with an argument its schema lacks
++- THEN a `bad_arguments` event retains the tool and the error text.
++
++#### SCENARIO-ARC-WMTE-6770-4 (presence and bound)
++- GIVEN a clean run — THEN the gap keys are present and empty, never absent.
++- GIVEN more events than the bound — THEN the list caps at
++  `MAX_TOOL_GAP_EVENTS` and the overflow count is visible.
++
++#### SCENARIO-ARC-WMTE-6770-5 (curated introduction, measurable)
++- GIVEN a registered candidate named exactly in the env flag
++- THEN its schema reaches the request payload and the selfparse prompt text,
++  its XML calls coerce by its own schema, dispatch executes it, and its
++  usage appears in `tool_calls_by_name`.
++
++#### SCENARIO-ARC-WMTE-6770-6 (env typo visible)
++- GIVEN the env flag naming an unregistered tool
++- THEN the name appears in `candidate_tools_rejected` and the payload stays
++  byte-identical to the default.
++
++#### SCENARIO-ARC-WMTE-6770-7 (live path record)
++- GIVEN the live repair path runs the loop and its stats carry gap events
++- THEN `record["tool_loop"]` carries `tool_gap_events`,
++  `tool_gap_events_dropped`, `candidate_tools_enabled`, and
++  `candidate_tools_rejected`.
++
++#### SCENARIO-ARC-WMTE-6770-8 (analyzer contract)
++- GIVEN 3 events for one name across 2 distinct rows — THEN
++  `specification_available`, `recommendation_only: true`, a human-audience
++  specification with a `### TOOLGAP-` markdown entry, and no generated code.
++- GIVEN 3 events in one row, or 2 events across two rows — THEN
++  `insufficient_evidence` with the exact shortfalls named.
++- GIVEN only pre-capture rows — THEN `no_capture_capable_rows`.
++- GIVEN capture rows with zero events — THEN
++  `no_gap_events_nothing_to_specify`, the honest empty.
++
++#### SCENARIO-ARC-WMTE-6770-9 (durability and fail-loud)
++- GIVEN the same rows file twice — THEN one ledger entry and a visible
++  duplicate count.
++- GIVEN a nested repo clone with a rows.json — THEN it is pruned.
++- GIVEN the source deleted after ingest — THEN re-evaluation reproduces the
++  same totals.
++- GIVEN a missing input — THEN exit non-zero.
++
++## Implementation Status (REQ-ARC-WMTE-6770)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6770 | `python/carnot/agentic/arc_induction_tools.py` (`record_tool_gap`, session gap fields, `CANDIDATE_TOOLS` + `register_candidate_tool`, `_candidate_names_from_env`, `active_tool_schemas`, `_param_types_for`, dispatch capture + candidate dispatch); `python/carnot/agentic/arc_induction_tool_loop.py` (payload from `active_tool_schemas`, gap keys on every stats, finalize at `_finish`); `python/carnot/agentic/arc_competition_agent.py` (`record["tool_loop"]` widened); `python/carnot/agentic/arc_tool_gap_refinement.py` + `scripts/arc_tool_gap_refine.py` (ledger `ops/arc_tool_gap_ledger.json`); gap doc `ops/arc_tool_gaps.md`. | `tests/python/test_arc_tool_gap_feedback.py` (SCENARIO-ARC-WMTE-6770-1..9; mutation proofs re-run in full after the 2026-08-29 adversarial review — see the amendment below: 30 mutation runs, labels M1-M28, each RED then restored byte-identical, run in a PYTHONPATH-pinned worktree). |
++
++### Amendment to REQ-ARC-WMTE-6770 from the adversarial review of a613f36bc7 (2026-08-29, append-only)
++
++A hostile same-day review of the first cut found one premise-level defect and
++several silent-non-firing holes. The rules above stand; these clauses extend
++them. Each carries its review id and a regression test proven by deletion.
++
++1. **Rule 2 gains the PRIMARY live induction site (F2 — the finding that
++   mattered).** The first cut widened only the repair branch's record, but
++   `CARNOT_ARC_INDUCE_TOOL_LOOP` is one variable: "1"/"selfparse" runs the
++   loop, "repair" builds the widened record — mutually exclusive, so the live
++   path captured evidence and then overwrote it with no row written. The
++   primary induce site in `_induce_and_plan` SHALL clear
++   `last_tool_loop_stats` before inducing and, when the post-call stats carry
++   `tool_gap_events`, copy the gap fields onto `attempt["tool_gap"]`. The
++   pre-clear is load-bearing: without it a loop-less induction republishes a
++   stale run's events.
++2. **Rule 1 widens to name-first capture (F3, F4).** An unknown NAME with
++   unparseable or non-object arguments is still demand — the name needed no
++   parse — and SHALL be recorded with `argument_keys: null`. A tool-call
++   block the strict transports refuse (selfparse XML the regex cannot lift;
++   server-lift JSON left as text) SHALL yield best-effort loose-extracted
++   names (`loose_tool_call_names`, bounded), recorded with
++   `source: "unparsed_text"` when outside the active set. A malformed call
++   to a KNOWN tool stays transport noise, never demand.
++3. **Rule 3's enablement is FROZEN per session (F5, F7).**
++   `InductionToolSession` snapshots `(enabled, rejected)` at creation;
++   payload, prompt text, dispatch, and the stats record all read that one
++   snapshot (`active_tool_schemas_for`). A mid-run env or registry mutation —
++   including one made by model-executed tool code — changes nothing within
++   the run, and the record cannot disagree with what dispatched.
++   **Disclosed limit (F5):** across runs, code executed in-process by the
++   tools (full builtins, by design of `_exec_candidate`) can mutate the
++   registry and environment; no in-process guard can prevent that, because
++   the same execution could remove the guard. The human-only introduction
++   boundary is therefore a CONTRACT enforced within a run by the freeze,
++   across runs only by the same trust boundary as in-process exec itself
++   (`CARNOT_USE_SANDBOX` is the real containment for untrusted code). The
++   spec claims no more than this.
++4. **Rule 1 bounds model-controlled text (F9).** `requested_tool` is capped
++   at `MAX_TOOL_GAP_NAME_CHARS`; `argument_keys` at `MAX_TOOL_GAP_ARG_KEYS`
++   entries — the same discipline the `error` field already had.
++5. **Rule 5's coercion claim is now true as written (F6).**
++   `_param_types_for` consults the registry only for ENABLED names, so a
++   registered-but-dark candidate changes nothing, including XML coercion.
++6. **Rule 5 surfaces truncation (F8).** The analyzer sums
++   `tool_gap_events_dropped` into `evidence.gap_events_dropped_total`; a
++   non-zero value marks every per-gap count as a floor.
++
++#### SCENARIO-ARC-WMTE-6770-10 (primary live path records)
++- GIVEN the primary live induction runs the tool loop and events were captured
++- THEN `attempt["tool_gap"]` carries them.
++- GIVEN a later induction that never entered the loop
++- THEN no stale events are republished.
++
++#### SCENARIO-ARC-WMTE-6770-11 (name-first capture)
++- GIVEN an unknown-name call with unparseable JSON, and an unparsed
++  tool-call block naming a nonexistent tool on either transport
++- THEN the demanded name is recorded; a malformed call to a known tool is not.
++
++#### SCENARIO-ARC-WMTE-6770-12 (session freeze)
++- GIVEN a candidate registered and enabled AFTER a session was created
++- THEN that session refuses it and its schema list stays the core object.
++- GIVEN enablement at creation and the env cleared mid-run
++- THEN the session still serves it and the record says enabled.
++
++**Corrigendum (owned, per the Error Lifecycle).** The first cut's commit
++message claimed "Zero decorative rules." The review falsified it three ways:
++the dropped-counter finalize was proven only at the session attribute (a
++literal 0 stayed green), a markdown assertion (`"def " not in entry`) was a
++tautology, and nothing bound the refusal text to the active set. All three
++now have biting tests, and the mutation set was re-run in full: 30 mutation runs
++(labels M1-M28 with M6 and M22 in two halves each, including the review fixes and the split-out freshness-lint rider's
++M15/M16/M25/M26), each RED, each restore byte-identical. The review also
++corrected the gap doc's bootstrap null: the measured no-unknown-name corpus
++is entirely the SERVER-LIFTED transport (selfparse_blocks_seen == 0), where
++the server constrains names structurally — the null does not extend to the
++live selfparse transport, where unknown-name demand becomes possible.
++
++## Implementation Status (REQ-ARC-WMTE-6770 amendment)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6770 (amendment) | `python/carnot/agentic/arc_induction_tools.py` (session freeze fields + `active_tool_schemas_for`/`active_tool_names_for`, name-first capture in `dispatch_tool`, `_record_unknown_tool` caps, `loose_tool_call_names`, enablement-gated `_param_types_for`); `python/carnot/agentic/arc_induction_tool_loop.py` (frozen payload/prompt, loose-name capture on both transports, session-sourced stats); `python/carnot/agentic/arc_competition_agent.py` (`_induce_and_plan` pre-clear + `attempt["tool_gap"]`); `python/carnot/agentic/arc_tool_gap_refinement.py` (`gap_events_dropped_total`). | `tests/python/test_arc_tool_gap_feedback.py` (SCENARIO-ARC-WMTE-6770-10..12 plus the F3/F4/F6/F8/F9 regressions; 26 feature mutation runs RED). |
+diff --git a/ops/arc_flag_ledger.yaml b/ops/arc_flag_ledger.yaml
+index b738c33001..b8ade44bfa 100644
+--- a/ops/arc_flag_ledger.yaml
++++ b/ops/arc_flag_ledger.yaml
+@@ -355,6 +355,10 @@ flags:
+     discovered: '2026-08-14'
+     evidence: []
+     state: unevaluated
++  CARNOT_ARC_INDUCE_CANDIDATE_TOOLS:
++    discovered: '2026-08-29'
++    evidence: []
++    state: unevaluated
+   CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS:
+     discovered: '2026-08-14'
+     evidence: []
+diff --git a/ops/arc_tool_gaps.md b/ops/arc_tool_gaps.md
+new file mode 100644
+index 0000000000..db7edf7877
+--- /dev/null
++++ b/ops/arc_tool_gaps.md
+@@ -0,0 +1,67 @@
++# ARC Tool Gaps — the missing-tool backlog for the induction tool loop
++
++**WHY (REQ-ARC-WMTE-6770, 2026-08-29):** the live agent's induction loop can
++call tools, and `TOOL_SCHEMAS` in
++`python/carnot/agentic/arc_induction_tools.py` is the closed, hand-authored
++set it can call. When the model writes a call for a tool outside that set,
++the refusal is now retained with its identity (`tool_gap_events` in the loop
++stats). This file is the tool-side sibling of `ops/verifier_gaps.md`: the
++registry of tools we HAVE is `TOOL_SCHEMAS`; this ledger lists the tools the
++model DEMANDED and we lack, with the evidence, so a human can author them.
++
++**How a gap gets here.** Run
++`.venv/bin/python scripts/arc_tool_gap_refine.py <rows.json|dir> ...`.
++It ingests `tool_gap_events` into `ops/arc_tool_gap_ledger.json` and, when a
++gap crosses the frozen floor (3 events across 2 distinct rows), renders a
++ready-to-append entry in the schema below. A HUMAN appends it here and
++authors the tool (`register_candidate_tool`, default off behind
++`CARNOT_ARC_INDUCE_CANDIDATE_TOOLS`). The analyzer never writes this file
++and never generates a tool. Never-prune; close an entry with
++`status: filled (<tool name>)`, not deletion.
++
++**Schema (one entry per gap):**
++```
++### TOOLGAP-<KIND>-<name>: <short demand description>
++- status: open | building | filled (<tool name>)
++- evidence: <event count> events across <row count> distinct run rows (<ledger path>)
++- failure mode: <what the refusal cost the run>
++- missing capability: <the tool the model demanded; observed argument keys>
++- candidate design: HUMAN-AUTHORED via register_candidate_tool + CARNOT_ARC_INDUCE_CANDIDATE_TOOLS (default off)
++- priority: high | medium | low (by refused-call frequency)
++```
++
++---
++
++## Bootstrap evidence state (2026-08-29)
++
++No gap entries yet, and that is a measured statement, not an omission. All
++readable tool-loop artifacts were mined
++(`results/arc_tool_loop_probe_20260817/*.json`,
++`results/holdout_equalized_ab_20260820/shard_tool.jsonl`,
++`results/tool_loop_compaction_ab_20260820/shard_{off,on}.jsonl`): 633
++dispatched calls, every name inside `TOOL_SCHEMAS`
++(query_region 295, diff_grids 199, run_engine_on_transitions 100,
++list_transitions 39). Eight rows carry `tool_call_parse_failures: 1` whose
++KIND is unrecoverable — the pre-capture counter conflated unknown-tool with
++malformed-JSON and kept neither identity. That loss is the incident this
++ledger exists to end: from 2026-08-29 the loop records `tool_gap_events`
++with the requested name, so future entries here carry evidence, not guesses.
++
++**Correction, same day (adversarial review, F10 — appended, not rewritten).**
++An earlier draft of this section called the null a "live" measurement. The
++mined corpus shows `selfparse_blocks_seen: 0` in every row: all 633 calls
++went through the SERVER-LIFTED transport, where the server constrains call
++names to the declared schema set, so an unknown name was near-structurally
++impossible there. The null is real for that corpus and says nothing about
++the selfparse transport — the live scored one — where the model writes
++names freely and unknown-name demand becomes possible for the first time.
++Read the zero as "no evidence yet", not "no demand".
++
++## Open gaps
++
++*(none yet — the analyzer emits ready-to-append entries when live evidence
++crosses the floor)*
++
++## Filled gaps
++
++*(none yet)*
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 1bc4233f30..d6623686dc 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18223,3 +18223,6 @@ duration.
+ - 2026-08-29: Thermalizers-style factor-to-trajectory compiler fidelity (✅ Complete) — honest_verdict=complete: context matching reduced exact mean trajectory total variation; simulator-only compiler evidence; results/experiment_6751_thermalizer_factor_trajectory_fidelity.json
+ - 2026-08-29: Owned 32K live code-carrying ARC tool preflight (✅ Complete) — honest_verdict=complete_arc_context_tool_preflight_ready; results/experiment_6752_arc_code_carrying_tool_preflight.json
+ - 2026-08-29: Live ARC object-table fetch-on-demand paired comparison (⚠️ Blocked) — honest_verdict=complete_blocked_object_table_ab:cuda_device_available; results/experiment_6753_object_table_fetch_on_demand_ab.json
++- 2026-08-29: Tool-gap feedback for the induction tool loop (REQ-ARC-WMTE-6770, worktree agent) — dispatch now retains the identity of refused tool calls (`tool_gap_events`: unknown_tool + bad_arguments), the loop and the live E3 repair record carry them, and a curated candidate-tool registry (`register_candidate_tool` + `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS`, default off, byte-identical unset) makes human-authored tool introduction measurable. Offline analyzer `scripts/arc_tool_gap_refine.py` builds `ops/arc_tool_gap_ledger.json` and writes human-only specifications; gap ledger `ops/arc_tool_gaps.md` seeded with the measured bootstrap state (633 live calls, zero unknown-name demand, 8 unidentifiable pre-capture failures). 17 tests at the induce() entry point, 15 mutations all RED. Design: docs/research-notes/arc-tool-gap-feedback-2026-08-29.md
++- 2026-08-29: artifact_freshness_lint worktree fix (same session) — run from a session worktree, `_repo_relative` could not strip another checkout's absolute prefix, so `drift_is_pre_existing` fail-closed and refused worktree commits for backlog they did not cause (observed live: three artifacts, every drifted dependency already drifted at HEAD, classified caused-here). Fallback now relativizes via the git toplevel containing the recorded path with GIT_* env stripped (git-commit hooks export GIT_DIR, which hijacked rev-parse into reporting the probe dir as toplevel); /tmp scratch paths still drop; unresolvable paths still fail closed. Regression test in tests/python/test_artifact_freshness_pre_existing_backlog_20260811.py, proven by deletion (RED). Two PRE-EXISTING failures noted, not fixed here: test_the_live_repo_artifact_is_registered_and_fresh (arc_gateway_card artifact stale at HEAD) and test_the_three_real_acknowledgements_are_complete_and_current (27 vs 2 acknowledgements in a 20260727 artifact).
++- 2026-08-29 (later, same worktree session): tool-gap feedback reworked after hostile review + coordinator directive — the unmerged first cut (a613f36bc7) was split: the artifact_freshness_lint fix is now its own commit (relatedness-gated worktree fallback, R1; GIT_DIR strip on the block-deciding head hash, R2; narrowed env denylist, R3), and the feature commit fixes the review's premise finding F2 (the primary live induction never recorded gap evidence — loop transports "1"/"selfparse" vs the widened record's "repair" branch are mutually exclusive values of one env var; the primary site now records attempt["tool_gap"]), plus F3/F4 name-first capture on refused calls, F5/F7 per-session enablement freeze, F6 dark-candidate coercion gate, F8 three decorative assertions replaced with biting tests (corrigendum: the earlier "zero decorative rules" claim was false), F9 event-string caps, F10 the bootstrap null rescoped to the server-lifted corpus. 30 mutation runs, all RED. Not merged to main per coordinator hold.
+diff --git a/ops/status.md b/ops/status.md
+index 19ca576917..207f49af98 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -9056,3 +9056,33 @@ pytest collection leaked that guard into the core pipeline tests, producing the
+ exact `1 failed, 171 passed, 12 errors` gate result. The combined gate is green
+ after the repair, and scoped Exp6681 coverage remains `526/526` statements.
+ No test was skipped, weakened, deleted, or reverted.
++
++## 2026-08-29 (worktree agent) — Tool-gap feedback loop shipped (REQ-ARC-WMTE-6770)
++
++What works now: the induction tool loop records WHICH tool the model demanded
++and did not have (`tool_gap_events` in `last_tool_loop_stats` and in the live
++`record["tool_loop"]`), instead of a conflated counter. New tools enter as
++human-authored candidates behind `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS`
++(default off, flag-ledger `unevaluated`). `scripts/arc_tool_gap_refine.py`
++aggregates events cross-run into `ops/arc_tool_gap_ledger.json` and emits a
++ready-to-append `ops/arc_tool_gaps.md` entry when 3 events cross 2 rows.
++
++What's next: no live evidence of unknown-tool demand exists yet (633 calls,
++all in-schema), so the gap ledger is honestly empty. Future tool-loop runs
++carry the capture; run the analyzer over their rows dirs. A candidate tool
++should be authored only when a specification lands.
++
++## 2026-08-29 (worktree agent, later) — Tool-gap feedback survived its adversarial review; two commits, unmerged
++
++The review falsified the first cut's headline plumbing: no env
++configuration let the live agent both run the tool loop and record gap
++events. Fixed at the primary induce site (attempt["tool_gap"], stale-stats
++pre-clear pinned). Also fixed: name-first capture on refused calls (bad
++JSON + unparsed tool-call text on both transports), per-session candidate
++freeze, dark-candidate coercion, event-string caps, dropped-count
++visibility in the analyzer, and the freshness-lint rider split into its
++own commit with a related-repo gate (unrelated-checkout adoption was a
++fail-open on a fail-closed gate). Branch worktree-agent-a092d79bdf0704db3,
++NOT merged to main per coordinator hold. Next: coordinator review, then
++merge; first selfparse rows with tool_gap_events feed
++scripts/arc_tool_gap_refine.py.
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 24d4ad356f..0c4e7cf3cc 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -8159,12 +8159,33 @@ class E3AgentPolicy:
+             _induce_rows = active_transitions
+             if _cegis_accept_split_enabled():
+                 _induce_rows = _split_refinement_acceptance(active_transitions).refinable
+-            ok, _induce_note = self._proposer().induce(
++            _induce_prop = self._proposer()
++            # Cleared BEFORE the call so a non-empty dict after it is THIS
++            # induction's tool-loop stats, never a stale run's. Without this,
++            # the primary live path recorded no tool-gap evidence at all: the
++            # loop runs under "1"/"selfparse" but the only widened record was
++            # on the "repair" branch — same env var, mutually exclusive values
++            # (adversarial review 2026-08-29, F2). REQ-ARC-WMTE-6770 rule 2.
++            _induce_prop.last_tool_loop_stats = {}
++            ok, _induce_note = _induce_prop.induce(
+                 self.short,
+                 _induce_rows,
+                 self.cell,
+                 **_induce_kwargs,
+             )
++            _loop_stats = dict(getattr(_induce_prop, "last_tool_loop_stats", {}) or {})
++            if "tool_gap_events" in _loop_stats:
++                attempt["tool_gap"] = {
++                    k: _loop_stats.get(k)
++                    for k in (
++                        "tool_gap_events",
++                        "tool_gap_events_dropped",
++                        "candidate_tools_enabled",
++                        "candidate_tools_rejected",
++                        "terminated_by",
++                        "tool_calls_total",
++                    )
++                }
+             if not ok or _plan_start_grid is None:
+                 # SPLIT RECORD (REQ-ARC-WMTE-6610). The old single label
+                 # "proposer_failed_or_missing_root" conflated two different causes, and the
+@@ -8690,6 +8711,12 @@ class E3AgentPolicy:
+                     "seed_visible_mismatches",
+                     "decode_tokens_total",
+                     "tool_call_parse_failures",
++                    # REQ-ARC-WMTE-6770: without these the live record would be
++                    # blind to tool-gap demand on exactly the path that matters.
++                    "tool_gap_events",
++                    "tool_gap_events_dropped",
++                    "candidate_tools_enabled",
++                    "candidate_tools_rejected",
+                 )
+             }
+         else:
+diff --git a/python/carnot/agentic/arc_induction_tool_loop.py b/python/carnot/agentic/arc_induction_tool_loop.py
+index 5d11916fe6..e03fbf7dce 100644
+--- a/python/carnot/agentic/arc_induction_tool_loop.py
++++ b/python/carnot/agentic/arc_induction_tool_loop.py
+@@ -49,8 +49,12 @@ from carnot.agentic.arc_induction_compact_state import (
+ from carnot.agentic.arc_induction_tools import (
+     TOOL_SCHEMAS,
+     InductionToolSession,
++    active_tool_names_for,
++    active_tool_schemas_for,
+     dispatch_tool,
++    loose_tool_call_names,
+     parse_xml_tool_calls,
++    record_tool_gap,
+     render_tool_schemas_for_prompt,
+ )
+ 
+@@ -223,6 +227,7 @@ def _post_chat(
+     turn: int,
+     timeout_s: float,
+     selfparse: bool = False,
++    tools_payload: Optional[list[dict[str, Any]]] = None,
+ ) -> dict[str, Any]:
+     """One /v1/chat/completions request with the tool schemas attached.
+ 
+@@ -239,7 +244,10 @@ def _post_chat(
+         "cache_prompt": True,
+     }
+     if not selfparse:
+-        payload["tools"] = TOOL_SCHEMAS
++        # The SESSION-FROZEN active set (REQ-ARC-WMTE-6770): core tools plus
++        # candidates enabled when the session was created. With no candidates
++        # this IS the TOOL_SCHEMAS object, so the default payload cannot drift.
++        payload["tools"] = tools_payload if tools_payload is not None else TOOL_SCHEMAS
+         payload["tool_choice"] = "auto"
+     _sampling_overrides(payload)
+     # Per-turn seed via the proposer's own ladder helper, so a seeded run is
+@@ -413,7 +421,11 @@ def induce_with_tool_loop(
+     # the request will carry no `tools` field; everything else about the loop -- turn
+     # caps, budgets, dispatch, monotone accept -- is shared with the server-lifted mode.
+     selfparse = tool_loop_selfparse_enabled()
+-    schema_text = ("\n\n" + render_tool_schemas_for_prompt()) if selfparse else ""
++    # One frozen schema list serves the payload, the prompt text, and (via the
++    # session snapshot) dispatch, for the whole run (REQ-ARC-WMTE-6770).
++    session_schemas = active_tool_schemas_for(session)
++    active_names = set(active_tool_names_for(session))
++    schema_text = ("\n\n" + render_tool_schemas_for_prompt(session_schemas)) if selfparse else ""
+     extra = f"\n\n{extra_user_instruction.strip()}" if extra_user_instruction.strip() else ""
+     messages: list[dict[str, Any]] = [
+         {
+@@ -446,6 +458,16 @@ def induce_with_tool_loop(
+         "selfparse_blocks_unparsed": 0,
+         "candidates_scored": 0,
+         "force_engine_nudges": 0,
++        # Tool-gap capture (REQ-ARC-WMTE-6770). Keys present on EVERY run --
++        # an empty list must be visibly empty, never absent -- and finalized
++        # from the session at _finish. Enablement comes from the SESSION'S
++        # FROZEN snapshot, the same one dispatch and the payload serve, so the
++        # record cannot disagree with what ran. candidate_tools_rejected makes
++        # an env typo visible instead of silently disabling the tool.
++        "tool_gap_events": [],
++        "tool_gap_events_dropped": 0,
++        "candidate_tools_enabled": list(session.enabled_candidates),
++        "candidate_tools_rejected": list(session.rejected_candidates),
+         # REQ-ARC-WMTE-6540 counters. The first two record on every run: telemetry
+         # never alters a request payload, and the OFF arm of the A/B needs the same
+         # baseline. The last three only move when CARNOT_ARC_INDUCE_TOOL_COMPACT=1.
+@@ -476,6 +498,11 @@ def induce_with_tool_loop(
+         stats["terminated_by"] = reason
+         stats["turns_completed"] = stats["turns"]
+         stats["candidates_scored"] = len(session.candidates)
++        # Tool-gap evidence rides out on the stats every consumer already
++        # copies into rows, so the offline gap analyzer needs no new plumbing
++        # (REQ-ARC-WMTE-6770).
++        stats["tool_gap_events"] = list(session.tool_gap_events)
++        stats["tool_gap_events_dropped"] = int(session.tool_gap_events_dropped)
+         # Per-candidate trajectories, in submission order: is the loop CONVERGING
+         # (mismatches falling) or thrashing? This is the number that distinguishes
+         # "needs a tighter early-exit" from "cannot converge on this cell".
+@@ -578,12 +605,17 @@ def induce_with_tool_loop(
+                 ledger.note_compaction()
+                 compact.note_rebuild()
+         try:
++            # Under selfparse no `tools` field is ever sent, so the frozen
++            # payload kwarg is omitted there — which also keeps the stricter
++            # pre-existing test stubs for the selfparse transport valid.
++            _tools_kw = {} if selfparse else {"tools_payload": session_schemas}
+             raw = _post_chat(
+                 proposer,
+                 messages,
+                 turn=turn,
+                 timeout_s=min(float(proposer.timeout), max(1.0, remaining)),
+                 selfparse=selfparse,
++                **_tools_kw,
+             )
+         except Exception as exc:  # noqa: BLE001 - transport failure -> clean fallback
+             stats["transport_error"] = f"{type(exc).__name__}: {exc}"[:300]
+@@ -616,6 +648,27 @@ def induce_with_tool_loop(
+                 stats["selfparse_blocks_seen"] += n_blocks
+                 stats["selfparse_calls_parsed"] += len(tool_calls)
+                 stats["selfparse_blocks_unparsed"] += n_unparsed
++            if n_unparsed:
++                # A block the strict parser refused still holds the demanded
++                # NAME — the tool-gap signal (adversarial review 2026-08-29,
++                # F4). Names the active set serves, or that a parsed call in
++                # this same turn already carries, are transport noise, not
++                # demand, and are skipped.
++                parsed_names = {
++                    str((tc.get("function") or {}).get("name") or "") for tc in tool_calls
++                }
++                for lname in loose_tool_call_names(content):
++                    if lname in active_names or lname in parsed_names:
++                        continue
++                    record_tool_gap(
++                        session,
++                        {
++                            "kind": "unknown_tool",
++                            "requested_tool": lname,
++                            "argument_keys": None,
++                            "source": "unparsed_text",
++                        },
++                    )
+ 
+         if tool_calls:
+             if selfparse:
+@@ -731,6 +784,22 @@ def induce_with_tool_loop(
+             return _finish("final_answer")
+         if _looks_like_unparsed_tool_call(content):
+             stats["unparsed_tool_call_text_turns"] += 1
++            # Same F4 capture on the server-lifted transport: the server left
++            # the call as text, and the demanded name is in that text. Skipped
++            # under selfparse — the lift block above already captured there,
++            # and doing it twice would double-count one demand.
++            if not selfparse:
++                for lname in loose_tool_call_names(content):
++                    if lname not in active_names:
++                        record_tool_gap(
++                            session,
++                            {
++                                "kind": "unknown_tool",
++                                "requested_tool": lname,
++                                "argument_keys": None,
++                                "source": "unparsed_text",
++                            },
++                        )
+         stats["tool_calls_per_turn"].append([])  # keep the per-turn record aligned
+         # A turn with no tool call and no final answer is a stall turn too.
+         turns_since_submission += 1
+diff --git a/python/carnot/agentic/arc_induction_tools.py b/python/carnot/agentic/arc_induction_tools.py
+index 707f32bf03..1b418b6aa0 100644
+--- a/python/carnot/agentic/arc_induction_tools.py
++++ b/python/carnot/agentic/arc_induction_tools.py
+@@ -29,6 +29,7 @@ from __future__ import annotations
+ 
+ import ast
+ import json
++import os
+ import re
+ from dataclasses import dataclass, field
+ from typing import Any, Callable, Optional, Sequence
+@@ -51,6 +52,10 @@ MAX_PREDICATE_CODE_CHARS = 2048
+ MAX_FIND_OBJECT_RESPONSE_BYTES = 8192
+ FIND_OBJECT_PREDICATE_TIMEOUT_S = 0.25
+ 
++# Tool-gap capture bound (REQ-ARC-WMTE-6770). Events feed an offline ledger,
++# so the per-session record is capped and the overflow is counted, not lost.
++MAX_TOOL_GAP_EVENTS = 20
++
+ 
+ def _engine_source(full_source: str) -> str:
+     """Source segment of the top-level `engine` function ('' if absent/unparseable)."""
+@@ -180,11 +185,23 @@ class InductionToolSession:
+     coord_set: set[int] = field(init=False)
+     candidates: list[CandidateRecord] = field(default_factory=list)
+     calls: list[dict[str, Any]] = field(default_factory=list)
++    # Tool-gap evidence (REQ-ARC-WMTE-6770): the model asked for a capability
++    # the active tool set does not serve. See record_tool_gap for the kinds.
++    tool_gap_events: list[dict[str, Any]] = field(default_factory=list)
++    tool_gap_events_dropped: int = 0
++    # Candidate enablement FROZEN at session creation (adversarial review
++    # 2026-08-29, F5/F7): dispatch, payload, prompt, and stats all read this
++    # one snapshot, so a mid-run env or registry mutation — including one made
++    # by model-executed code — cannot change what this session serves or
++    # make the record disagree with what actually ran.
++    enabled_candidates: tuple[str, ...] = field(init=False)
++    rejected_candidates: tuple[str, ...] = field(init=False)
+ 
+     def __post_init__(self) -> None:
+         self.transitions = list(self.transitions)
+         self.visible, self.held_out = holdout_split(self.transitions)
+         self.coord_set = window_changed_coords(self.transitions)
++        self.enabled_candidates, self.rejected_candidates = _candidate_names_from_env()
+ 
+     # ---- tool: run_engine_on_transitions ---------------------------------------
+ 
+@@ -683,6 +700,132 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
+ 
+ TOOL_NAMES = tuple(s["function"]["name"] for s in TOOL_SCHEMAS)
+ 
++# ---------------------------------------------------------------------------------
++# Tool-gap capture + curated candidate tools (REQ-ARC-WMTE-6770).
++#
++# WHY. TOOL_SCHEMAS is a closed, hand-authored set. Before this block, a model
++# call naming a tool that does not exist was answered with an error and then
++# FORGOTTEN: only a conflated counter survived (tool_call_parse_failures mixes
++# unknown names with malformed JSON), so nobody could ask "what tool did the
++# model need and not have?". record_tool_gap keeps the identity of that demand.
++#
++# INTRODUCING a tool stays a HUMAN act. The gap ledger names the demand; a
++# human authors the tool and registers it here as a CANDIDATE, default off.
++# CARNOT_ARC_INDUCE_CANDIDATE_TOOLS (comma-separated exact names) enables
++# registered candidates for a measurement run; with it unset the active set is
++# the same TOOL_SCHEMAS object as before, byte-identical. This mirrors the
++# supervisor-arm rule: selection over a curated set, never model generation.
++# ---------------------------------------------------------------------------------
++
++CANDIDATE_TOOLS_ENV = "CARNOT_ARC_INDUCE_CANDIDATE_TOOLS"
++
++# name -> {"schema": OpenAI-format tool schema, "factory": session -> callable}.
++# Human-authored entries only. Empty is the honest starting state: no live run
++# has yet demanded a tool that does not exist (measured 2026-08-29 over 633
++# recorded calls; see docs/research-notes/arc-tool-gap-feedback-2026-08-29.md).
++CANDIDATE_TOOLS: dict[str, dict[str, Any]] = {}
++
++
++def register_candidate_tool(
++    schema: dict[str, Any],
++    factory: Callable[["InductionToolSession"], Callable[..., dict[str, Any]]],
++) -> str:
++    """Register one HUMAN-AUTHORED candidate tool. Returns its name.
++
++    Refuses a name collision with a core tool: shadowing a shipped tool would
++    silently change measured behaviour under a flag meant only to ADD."""
++    name = str(schema["function"]["name"])
++    if name in TOOL_NAMES:
++        raise ValueError(f"candidate tool {name!r} collides with a core tool")
++    CANDIDATE_TOOLS[name] = {"schema": schema, "factory": factory}
++    return name
++
++
++def _candidate_names_from_env() -> tuple[tuple[str, ...], tuple[str, ...]]:
++    """(enabled, rejected) candidate names from the env flag.
++
++    Rejected = named in the env but not registered. Returned rather than
++    dropped so a typo in the flag is visible in every run's stats instead of
++    silently disabling the tool it meant to enable."""
++    raw = os.environ.get(CANDIDATE_TOOLS_ENV, "")
++    wanted = tuple(n for n in (s.strip() for s in raw.split(",")) if n)
++    enabled = tuple(n for n in wanted if n in CANDIDATE_TOOLS)
++    rejected = tuple(n for n in wanted if n not in CANDIDATE_TOOLS)
++    return enabled, rejected
++
++
++def enabled_candidate_names() -> tuple[str, ...]:
++    return _candidate_names_from_env()[0]
++
++
++def active_tool_schemas() -> list[dict[str, Any]]:
++    """The tool set this process serves: core plus enabled candidates.
++
++    With the env flag unset this returns the TOOL_SCHEMAS object itself, so
++    the default request payload and prompt text cannot drift by construction."""
++    enabled = enabled_candidate_names()
++    if not enabled:
++        return TOOL_SCHEMAS
++    return [*TOOL_SCHEMAS, *(CANDIDATE_TOOLS[n]["schema"] for n in enabled)]
++
++
++def active_tool_names() -> tuple[str, ...]:
++    return tuple(s["function"]["name"] for s in active_tool_schemas())
++
++
++def active_tool_schemas_for(session: "InductionToolSession") -> list[dict[str, Any]]:
++    """The tool set for ONE session, from its frozen enablement snapshot.
++
++    The loop serves payload, prompt, and dispatch from this, so what a run
++    advertises is what it dispatches, for the whole run — a mid-run env or
++    registry mutation changes nothing (adversarial review 2026-08-29, F5/F7)."""
++    enabled = tuple(n for n in getattr(session, "enabled_candidates", ()) if n in CANDIDATE_TOOLS)
++    if not enabled:
++        return TOOL_SCHEMAS
++    return [*TOOL_SCHEMAS, *(CANDIDATE_TOOLS[n]["schema"] for n in enabled)]
++
++
++def active_tool_names_for(session: "InductionToolSession") -> tuple[str, ...]:
++    return tuple(s["function"]["name"] for s in active_tool_schemas_for(session))
++
++
++# Event-content bounds (adversarial review 2026-08-29, F9). The name and the
++# argument keys are MODEL-CONTROLLED text headed for a durable ledger and a
++# human-pasted markdown heading; the error field was already capped and these
++# were not — an asymmetry a single hostile call could exploit.
++MAX_TOOL_GAP_NAME_CHARS = 120
++MAX_TOOL_GAP_ARG_KEYS = 20
++
++
++def _record_unknown_tool(
++    session: "InductionToolSession", name: str, keys: Optional[list[str]]
++) -> None:
++    record_tool_gap(
++        session,
++        {
++            "kind": "unknown_tool",
++            "requested_tool": str(name)[:MAX_TOOL_GAP_NAME_CHARS],
++            "argument_keys": (
++                None
++                if keys is None
++                else [str(k)[:MAX_TOOL_GAP_NAME_CHARS] for k in keys[:MAX_TOOL_GAP_ARG_KEYS]]
++            ),
++        },
++    )
++
++
++def record_tool_gap(session: "InductionToolSession", event: dict[str, Any]) -> None:
++    """Retain one tool-gap event on the session, bounded.
++
++    Two kinds. "unknown_tool": the model called a name outside the active set
++    -- the strongest mechanical signal that a tool is missing. "bad_arguments":
++    the model imagined a different signature for a tool that exists."""
++    if len(session.tool_gap_events) >= MAX_TOOL_GAP_EVENTS:
++        session.tool_gap_events_dropped += 1
++        return
++    session.tool_gap_events.append(event)
++
++
+ # ---------------------------------------------------------------------------------
+ # SELFPARSE transport (REQ-ARC-WMTE-6730). The scored vLLM server is launched with no
+ # tool-parser flags: a request carrying a `tools` field returns HTTP 400, and with
+@@ -718,13 +861,31 @@ def _trim_param_value(value: str) -> str:
+     return value
+ 
+ 
++def _param_types_for(name: str) -> dict[str, str]:
++    """Parameter types for one tool: the core table first, then the candidate
++    registry, so an enabled candidate's XML calls coerce by its own schema.
++
++    Gated on ENABLEMENT, not mere registration (adversarial review 2026-08-29,
++    F6): a registered-but-dark candidate must not change coercion, or the
++    default path stops being byte-identical the moment anything registers."""
++    if name in _PARAM_TYPES:
++        return _PARAM_TYPES[name]
++    if name not in enabled_candidate_names():
++        return {}
++    entry = CANDIDATE_TOOLS.get(name)
++    if entry is None:
++        return {}
++    props = entry["schema"]["function"].get("parameters", {}).get("properties", {}) or {}
++    return {p: str(spec.get("type", "string")) for p, spec in props.items()}
++
++
+ def _coerce_param(name: str, param: str, value: str) -> Any:
+     """Schema-typed coercion of one XML parameter value.
+ 
+     The XML carries raw text; dispatch_tool expects JSON-typed arguments. A value
+     that fails coercion is passed through as text so dispatch reports the bad
+     argument back to the model -- a malformed call costs one turn, never the run."""
+-    kind = _PARAM_TYPES.get(name, {}).get(param, "string")
++    kind = _param_types_for(name).get(param, "string")
+     raw = _trim_param_value(value)
+     if kind == "integer":
+         try:
+@@ -783,14 +944,52 @@ def parse_xml_tool_calls(content: str) -> tuple[list[dict[str, Any]], int, int]:
+     return calls, n_blocks, n_unparsed
+ 
+ 
+-def render_tool_schemas_for_prompt() -> str:
++_LOOSE_NAME_RES = (
++    # <function=NAME>, <function="NAME">, <function NAME>, <function=NAME()> --
++    # the shapes the strict parser refuses but a demanded name still sits in.
++    re.compile(r"<function[=\s\"']+([\w.\-]+)"),
++    # Server-lifted failure shape left as text: {"name": "NAME", "arguments": ...}
++    re.compile(r"\"name\"\s*:\s*\"([\w.\-]+)\""),
++)
++
++MAX_LOOSE_NAMES = 5
++
++
++def loose_tool_call_names(content: str) -> list[str]:
++    """Tool names sitting in UNPARSED tool-call text, best-effort and bounded.
++
++    Adversarial review 2026-08-29 (F4): the strict transports count a block the
++    model wrote malformed, and the demanded name — the tool-gap signal — was in
++    the refused text the whole time. This never dispatches anything; it only
++    lets the loop keep the name as gap evidence. Text before the final
++    </think> is skipped for the same reason parse_xml_tool_calls skips it."""
++    if "</think>" in content:
++        content = content.rsplit("</think>", 1)[1]
++    names: list[str] = []
++    for rx in _LOOSE_NAME_RES:
++        for m in rx.finditer(content):
++            name = m.group(1)[:MAX_TOOL_GAP_NAME_CHARS]
++            if name and name not in names:
++                names.append(name)
++            if len(names) >= MAX_LOOSE_NAMES:
++                return names
++    return names
++
++
++def render_tool_schemas_for_prompt(schemas: Optional[list[dict[str, Any]]] = None) -> str:
+     """The tool schemas as PROMPT TEXT, plus the exact call format to write.
+ 
++    The loop passes its session's FROZEN schema list so prompt and dispatch
++    cannot disagree mid-run; with no argument this renders the env-derived
++    active set (the pre-freeze behaviour, kept for direct callers).
++
+     Rendered from TOOL_SCHEMAS so prompt and dispatch can never drift apart. This is
+     what lets a selfparse request omit the `tools` field entirely -- the only payload
+     shape the flag-less scored server accepts."""
+     lines = ["AVAILABLE TOOLS (schemas):"]
+-    for s in TOOL_SCHEMAS:
++    # Active set, not the bare core constant: an enabled candidate tool must be
++    # announced in the prompt, or the model can never call it (REQ-ARC-WMTE-6770).
++    for s in schemas if schemas is not None else active_tool_schemas():
+         fn = s["function"]
+         props = fn.get("parameters", {}).get("properties", {}) or {}
+         required = set(fn.get("parameters", {}).get("required", []) or [])
+@@ -822,11 +1021,19 @@ def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> d
+     Returns the tool's report dict, or {"ok": False, "error": ...} on a bad name or
+     unparseable arguments -- the error text goes back to the model as the tool result,
+     so a malformed call costs one turn, not the induction."""
++    known = name in TOOL_NAMES or name in getattr(session, "enabled_candidates", ())
+     try:
+         kwargs = json.loads(arguments) if arguments else {}
+         if not isinstance(kwargs, dict):
++            if not known:
++                _record_unknown_tool(session, name, None)
+             return {"ok": False, "error": "arguments must be a JSON object"}
+     except json.JSONDecodeError as exc:
++        # The NAME needed no parsing: an unknown name with malformed JSON is
++        # still tool demand, and improvising an unseen tool is exactly when a
++        # model writes malformed arguments (adversarial review 2026-08-29, F3).
++        if not known:
++            _record_unknown_tool(session, name, None)
+         return {"ok": False, "error": f"unparseable JSON arguments: {exc}"}
+     fn = {
+         "run_engine_on_transitions": session.run_engine_on_transitions,
+@@ -836,11 +1043,41 @@ def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> d
+         "find_objects": session.find_objects,
+         "list_transitions": session.list_transitions,
+     }.get(name)
++    if (
++        fn is None
++        and name in getattr(session, "enabled_candidates", ())
++        and name in CANDIDATE_TOOLS
++    ):
++        # Curated candidate tool, enabled for this SESSION (REQ-ARC-WMTE-6770;
++        # frozen snapshot, see enabled_candidates). The factory is
++        # human-authored code: a bug in it must cost one turn, never the
++        # induction -- same contract as a tool body below.
++        try:
++            fn = CANDIDATE_TOOLS[name]["factory"](session)
++        except Exception as exc:  # noqa: BLE001
++            return {
++                "ok": False,
++                "error": f"candidate tool {name} setup raised {type(exc).__name__}: {exc}",
++            }
+     if fn is None:
+-        return {"ok": False, "error": f"unknown tool {name!r}; available: {list(TOOL_NAMES)}"}
++        # THE tool-gap signal: the model wrote a call for a name the active set
++        # does not serve. Keep its identity; the count alone cannot say what
++        # tool was wanted (REQ-ARC-WMTE-6770).
++        _record_unknown_tool(session, name, sorted(kwargs))
++        return {
++            "ok": False,
++            "error": f"unknown tool {name!r}; available: {list(active_tool_names_for(session))}",
++        }
+     try:
+         return fn(**kwargs)
+     except TypeError as exc:
++        # The model imagined a different signature for a real tool. Retained as
++        # gap evidence; a TypeError raised INSIDE a tool body lands here too,
++        # so the offline analyzer treats this kind as noisier than unknown_tool.
++        record_tool_gap(
++            session,
++            {"kind": "bad_arguments", "tool": name, "error": str(exc)[:200]},
++        )
+         return {"ok": False, "error": f"bad arguments for {name}: {exc}"}
+     except Exception as exc:  # noqa: BLE001 - a tool bug must cost a turn, not the induction
+         return {"ok": False, "error": f"tool {name} raised {type(exc).__name__}: {exc}"}
+diff --git a/python/carnot/agentic/arc_tool_gap_refinement.py b/python/carnot/agentic/arc_tool_gap_refinement.py
+new file mode 100644
+index 0000000000..717504a6e7
+--- /dev/null
++++ b/python/carnot/agentic/arc_tool_gap_refinement.py
+@@ -0,0 +1,457 @@
++"""Cross-run tool-gap refinement over live tool-loop evidence (REQ-ARC-WMTE-6770).
++
++WHY. The induction tool loop serves a closed, hand-authored tool set. When the
++model calls a tool outside that set, the dispatch layer refuses it — and until
++2026-08-29 the refusal's IDENTITY (which tool was wanted) was discarded; only a
++counter that also mixes in malformed JSON survived. This module is the
++tool-side sibling of arc_supervisor_refinement.py: it ingests the loop's
++`tool_gap_events` from run rows into a durable ledger, applies a frozen
++evidence contract, and emits a written TOOL-GAP SPECIFICATION for a human.
++
++It never authors a tool. A demanded NAME is demand evidence, not a design:
++the model asking for `get_full_grid` does not bound the response, and an
++unbounded retrieval tool rebuilds the prompt the tool set exists to shrink.
++A human authors the tool via `register_candidate_tool` (default off, enabled
++per-run by CARNOT_ARC_INDUCE_CANDIDATE_TOOLS) — the same selection-over-a-
++curated-set boundary the supervisor's arm table keeps.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import os
++import sys
++from collections.abc import Sequence
++from datetime import UTC, datetime
++from pathlib import Path
++from typing import Any
++
++# Deliberate reuse: the rows-document shape, the row hash, and the
++# .git-pruned directory scan are the supervisor refinement tool's, so the two
++# refinement ledgers can never disagree about what a row or a scan is.
++from carnot.agentic.arc_supervisor_refinement import (
++    extract_rows,
++    receipt_id_for_row,
++    scan_inputs,
++)
++
++LEDGER_SCHEMA = "carnot.arc.tool_gap_ledger.v1"
++SPECIFICATION_SCHEMA = "carnot.arc.tool_gap_specification.v1"
++DEFAULT_LEDGER_PARTS = ("ops", "arc_tool_gap_ledger.json")
++GAPS_DOC = "ops/arc_tool_gaps.md"
++
++# Evidence floors, frozen. One hallucinated name in one turn is model noise;
++# the same nonexistent name demanded repeatedly across independent runs is a
++# missing capability. Three events across two distinct rows is the smallest
++# shape that cannot be a single turn's fixation inside one run.
++MIN_EVENTS_PER_GAP = 3
++MIN_DISTINCT_ROWS = 2
++MAX_EXAMPLES_PER_GAP = 5
++
++CAUSAL_CAVEAT = (
++    "A demanded tool name is demand evidence, not a design. bad_arguments "
++    "events are noisier than unknown_tool events: a TypeError raised inside "
++    "a tool body is indistinguishable at the dispatch seam from a signature "
++    "mismatch. A human authors any new tool, or nobody does."
++)
++
++STATUS_NO_ROWS = "no_rows_ingested"
++STATUS_NO_CAPTURE = "no_capture_capable_rows"
++STATUS_NO_EVENTS = "no_gap_events_nothing_to_specify"
++STATUS_INSUFFICIENT = "insufficient_evidence"
++STATUS_SPECIFICATION = "specification_available"
++
++
++def stats_dicts_in_row(row: dict[str, Any]) -> list[dict[str, Any]]:
++    """Every tool-loop stats dict a row carries, wherever the harness put it.
++
++    Rows in the wild hold stats under `tool_loop_stats`, `stats`, and the live
++    agent's `tool_loop` subset — a fixed key list here would be the
++    pattern-narrower-than-concept bug. So this walks the row and matches on
++    the capture key itself. It does not descend INTO a matched dict, so a
++    stats dict is counted once."""
++
++    found: list[dict[str, Any]] = []
++
++    def _walk(node: Any) -> None:
++        if isinstance(node, dict):
++            if isinstance(node.get("tool_gap_events"), list):
++                found.append(node)
++                return
++            for value in node.values():
++                _walk(value)
++        elif isinstance(node, list):
++            for value in node:
++                _walk(value)
++
++    _walk(row)
++    return found
++
++
++def _looks_like_loop_stats(node: Any) -> bool:
++    """Pre-capture-era stats: a dict with loop counters but no gap key."""
++
++    return isinstance(node, dict) and (
++        "tool_calls_by_name" in node or "tool_call_parse_failures" in node
++    )
++
++
++def row_has_pre_capture_stats(row: dict[str, Any]) -> bool:
++    def _walk(node: Any) -> bool:
++        if isinstance(node, dict):
++            if _looks_like_loop_stats(node) and "tool_gap_events" not in node:
++                return True
++            return any(_walk(value) for value in node.values())
++        if isinstance(node, list):
++            return any(_walk(value) for value in node)
++        return False
++
++    return _walk(row)
++
++
++def _events_from_row(row: dict[str, Any]) -> tuple[list[dict[str, Any]], int]:
++    """(events, dropped) for one row. Dropped rides along because a session
++    that truncated at the capture bound must not read as a complete count
++    downstream (adversarial review 2026-08-29, F8)."""
++    events: list[dict[str, Any]] = []
++    dropped = 0
++    for stats in stats_dicts_in_row(row):
++        for event in stats.get("tool_gap_events") or []:
++            if isinstance(event, dict) and event.get("kind") in ("unknown_tool", "bad_arguments"):
++                events.append(dict(event))
++        value = stats.get("tool_gap_events_dropped")
++        if isinstance(value, int) and value > 0:
++            dropped += value
++    return events, dropped
++
++
++def empty_ledger() -> dict[str, Any]:
++    return {
++        "schema": LEDGER_SCHEMA,
++        "created_at": None,
++        "updated_at": None,
++        "entries": {},
++        "specification": None,
++    }
++
++
++def load_ledger(path: Path) -> dict[str, Any]:
++    if not path.is_file():
++        return empty_ledger()
++    data = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(data, dict) or data.get("schema") != LEDGER_SCHEMA:
++        raise ValueError(f"unsupported ledger schema in {path}")
++    if not isinstance(data.get("entries"), dict):
++        raise ValueError(f"malformed ledger entries in {path}")
++    return data
++
++
++def save_ledger(ledger: dict[str, Any], path: Path) -> None:
++    """Atomic replace: a crash mid-write must not half-destroy the evidence."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    os.replace(tmp, path)
++
++
++def ingest_files(ledger: dict[str, Any], files: Sequence[Path], now_iso: str) -> dict[str, int]:
++    counts = {
++        "files_read": 0,
++        "rows_seen": 0,
++        "capture_rows_new": 0,
++        "capture_rows_duplicate": 0,
++        "pre_capture_rows": 0,
++        "rows_without_stats": 0,
++        "events_ingested": 0,
++    }
++    entries = ledger["entries"]
++    for file_path in files:
++        doc = json.loads(file_path.read_text(encoding="utf-8"))
++        counts["files_read"] += 1
++        for row in extract_rows(doc):
++            counts["rows_seen"] += 1
++            stats_dicts = stats_dicts_in_row(row)
++            if not stats_dicts:
++                # Distinguish "ran before capture existed" from "no loop ran":
++                # the first is a population limit worth naming, not a zero.
++                if row_has_pre_capture_stats(row):
++                    counts["pre_capture_rows"] += 1
++                else:
++                    counts["rows_without_stats"] += 1
++                continue
++            row_id = receipt_id_for_row(row)
++            if row_id in entries:
++                counts["capture_rows_duplicate"] += 1
++                continue
++            events, dropped = _events_from_row(row)
++            entries[row_id] = {
++                "row_id": row_id,
++                "source": str(file_path),
++                "game": row.get("game"),
++                "seed": row.get("seed"),
++                "ingested_at": now_iso,
++                "events": events,
++                "events_dropped": dropped,
++            }
++            counts["capture_rows_new"] += 1
++            counts["events_ingested"] += len(events)
++    return counts
++
++
++def _gap_key(event: dict[str, Any]) -> tuple[str, str]:
++    if event.get("kind") == "unknown_tool":
++        return ("unknown_tool", str(event.get("requested_tool")))
++    return ("bad_arguments", str(event.get("tool")))
++
++
++def render_markdown_entry(gap: dict[str, Any], ledger_path: str) -> str:
++    """A ready-to-append entry in the ops/verifier_gaps.md schema convention.
++
++    Rendered, never written: appending to the gaps doc stays a human act, the
++    same boundary REQ-ARC-WMTE-6720 keeps for arm-table changes."""
++
++    kind, name = gap["kind"], gap["name"]
++    if kind == "unknown_tool":
++        title = f"model demanded tool `{name}` which does not exist"
++        failure = (
++            "the generator wrote tool calls for a name outside the active set; "
++            "each refusal costs a loop turn and the capability stays unserved"
++        )
++        missing = (
++            f"a callable tool named `{name}`; observed argument keys: "
++            f"{sorted(gap['argument_keys']) or 'none captured'}"
++        )
++    else:
++        title = f"model repeatedly mis-calls `{name}` (signature mismatch)"
++        failure = (
++            f"calls to the existing tool `{name}` raise bad-arguments errors; "
++            "the model imagines a signature the schema does not declare"
++        )
++        missing = (
++            f"either a schema/description fix for `{name}`, or a variant tool "
++            f"matching the demanded signature; sample errors: {gap['examples'][:2]}"
++        )
++    return "\n".join(
++        [
++            f"### TOOLGAP-{kind.upper()}-{name}: {title}",
++            "- status: open",
++            (
++                f"- evidence: {gap['events']} events across {gap['distinct_rows']} "
++                f"distinct run rows ({ledger_path})"
++            ),
++            f"- failure mode: {failure}",
++            f"- missing capability: {missing}",
++            (
++                "- candidate design: HUMAN-AUTHORED, bounded, registered via "
++                "`arc_induction_tools.register_candidate_tool` and enabled per-run by "
++                "`CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` (default off); this analyzer "
++                "never generates one"
++            ),
++            "- priority: medium (rank by refused-call frequency)",
++        ]
++    )
++
++
++def evaluate(ledger: dict[str, Any], now_iso: str, ledger_path: str) -> dict[str, Any]:
++    """Apply the frozen contract to the whole ledger. Pure function of ledger
++    content, so re-evaluation after source deletion reproduces the answer."""
++
++    entries = list(ledger["entries"].values())
++    gaps: dict[tuple[str, str], dict[str, Any]] = {}
++    total_events = 0
++    for entry in entries:
++        for event in entry.get("events", []):
++            total_events += 1
++            key = _gap_key(event)
++            gap = gaps.setdefault(
++                key,
++                {
++                    "kind": key[0],
++                    "name": key[1],
++                    "events": 0,
++                    "rows": set(),
++                    "argument_keys": set(),
++                    "examples": [],
++                },
++            )
++            gap["events"] += 1
++            gap["rows"].add(entry["row_id"])
++            for arg in event.get("argument_keys") or []:
++                gap["argument_keys"].add(str(arg))
++            if len(gap["examples"]) < MAX_EXAMPLES_PER_GAP:
++                gap["examples"].append(str(event.get("error") or event.get("requested_tool")))
++
++    per_gap: list[dict[str, Any]] = []
++    specifications: list[dict[str, Any]] = []
++    for gap in sorted(gaps.values(), key=lambda g: (-g["events"], g["kind"], g["name"])):
++        row = {
++            "kind": gap["kind"],
++            "name": gap["name"],
++            "events": gap["events"],
++            "distinct_rows": len(gap["rows"]),
++            "argument_keys": sorted(gap["argument_keys"]),
++            "examples": gap["examples"],
++            "meets_floor": (
++                gap["events"] >= MIN_EVENTS_PER_GAP and len(gap["rows"]) >= MIN_DISTINCT_ROWS
++            ),
++            "events_shortfall": max(0, MIN_EVENTS_PER_GAP - gap["events"]),
++            "rows_shortfall": max(0, MIN_DISTINCT_ROWS - len(gap["rows"])),
++        }
++        per_gap.append(row)
++        if row["meets_floor"]:
++            specifications.append(
++                {
++                    "audience": "human",
++                    "instruction": (
++                        "Author ONE bounded tool for this demand and register it "
++                        "via register_candidate_tool in "
++                        "python/carnot/agentic/arc_induction_tools.py, default "
++                        "off behind CARNOT_ARC_INDUCE_CANDIDATE_TOOLS. This tool "
++                        "never generates a schema or an implementation."
++                    ),
++                    "gap": {k: row[k] for k in ("kind", "name", "events", "distinct_rows")},
++                    "markdown_entry": render_markdown_entry(row, ledger_path),
++                    "append_target": GAPS_DOC,
++                }
++            )
++
++    capture_rows = len(entries)
++    if capture_rows == 0:
++        counts = ledger.get("last_ingest_counts") or {}
++        pre_capture = int(counts.get("pre_capture_rows") or 0)
++        status = STATUS_NO_CAPTURE if pre_capture else STATUS_NO_ROWS
++    elif total_events == 0:
++        status = STATUS_NO_EVENTS
++    elif specifications:
++        status = STATUS_SPECIFICATION
++    else:
++        status = STATUS_INSUFFICIENT
++
++    return {
++        "schema": SPECIFICATION_SCHEMA,
++        "generated_at": now_iso,
++        "status": status,
++        "contract": {
++            "min_events_per_gap": MIN_EVENTS_PER_GAP,
++            "min_distinct_rows": MIN_DISTINCT_ROWS,
++            "rules": [
++                "specification: a gap with events >= floor across >= 2 distinct rows",
++                "below either floor: insufficient_evidence, said loudly",
++                "the analyzer renders a markdown entry; a human appends and authors",
++            ],
++        },
++        "recommendation_only": True,
++        "causal_caveat": CAUSAL_CAVEAT,
++        "evidence": {
++            "capture_rows": capture_rows,
++            "gap_events": total_events,
++            # Events lost to the per-session capture bound. Non-zero means
++            # every per-gap count below is a FLOOR, not a total (F8).
++            "gap_events_dropped_total": sum(
++                int(entry.get("events_dropped") or 0) for entry in entries
++            ),
++            "games": sorted({str(entry.get("game")) for entry in entries}),
++        },
++        "per_gap": per_gap,
++        "specifications": specifications,
++    }
++
++
++def render_report(spec: dict[str, Any]) -> str:
++    """Human report. Empty states are loud and honest, never padded."""
++
++    lines = ["ARC tool-gap refinement (REQ-ARC-WMTE-6770)"]
++    status = spec["status"]
++    if status == STATUS_NO_ROWS:
++        lines.append("NO ROWS INGESTED — nothing to analyze.")
++    elif status == STATUS_NO_CAPTURE:
++        lines.append(
++            "NO CAPTURE-CAPABLE ROWS — every ingested row predates tool-gap "
++            "capture. This is absence of evidence, not evidence of absence."
++        )
++    elif status == STATUS_NO_EVENTS:
++        lines.append(
++            "NO GAP EVENTS — capture ran and the model demanded nothing "
++            "outside the active tool set. This honest empty is the result."
++        )
++    elif status == STATUS_INSUFFICIENT:
++        lines.append(
++            "INSUFFICIENT EVIDENCE — gap events exist but no gap crosses the "
++            f"floor ({MIN_EVENTS_PER_GAP} events across {MIN_DISTINCT_ROWS} "
++            "distinct rows). No specification is emitted at these counts."
++        )
++    else:
++        lines.append("SPECIFICATION AVAILABLE — for a human to author; nothing is generated.")
++    evidence = spec["evidence"]
++    lines.append(
++        f"evidence: {evidence['capture_rows']} capture rows, "
++        f"{evidence['gap_events']} gap events "
++        f"({evidence['gap_events_dropped_total']} dropped at the capture bound — "
++        "counts are floors when non-zero), "
++        f"games={','.join(evidence['games']) or 'none'}"
++    )
++    for row in spec["per_gap"]:
++        lines.append(
++            f"  {row['kind']}:{row['name']}: events={row['events']} "
++            f"rows={row['distinct_rows']} "
++            f"shortfall=({row['events_shortfall']} events, {row['rows_shortfall']} rows)"
++        )
++    for item in spec["specifications"]:
++        lines.append(f"  SPECIFY {item['gap']['kind']}:{item['gap']['name']} — entry ready to")
++        lines.append(f"  append to {item['append_target']}:")
++        lines.append(item["markdown_entry"])
++    lines.append(f"caveat: {spec['causal_caveat']}")
++    return "\n".join(lines)
++
++
++def _default_ledger_path() -> Path:
++    from carnot.paths import repo_path
++
++    return repo_path(*DEFAULT_LEDGER_PARTS)
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(
++        description=(
++            "Unattended cross-run tool-gap refinement (REQ-ARC-WMTE-6770). "
++            "Ingests tool_gap_events from rows.json files or scan directories "
++            "into a durable ledger, then prints a specification for a human. "
++            "Never edits TOOL_SCHEMAS and never generates a tool."
++        )
++    )
++    parser.add_argument(
++        "inputs",
++        nargs="*",
++        help="rows.json files, or directories scanned for rows.json (repo clones pruned)",
++    )
++    parser.add_argument("--ledger", type=Path, default=None, help="ledger path override")
++    parser.add_argument("--json", action="store_true", help="print the specification as JSON")
++    args = parser.parse_args(argv)
++
++    ledger_path = args.ledger if args.ledger is not None else _default_ledger_path()
++    now_iso = datetime.now(UTC).isoformat(timespec="seconds")
++    try:
++        ledger = load_ledger(ledger_path)
++        files = scan_inputs(args.inputs)
++        counts = ingest_files(ledger, files, now_iso)
++        ledger["last_ingest_counts"] = counts
++        specification = evaluate(ledger, now_iso, str(ledger_path))
++        specification["ingest_counts"] = counts
++        ledger["specification"] = specification
++        if ledger["created_at"] is None:
++            ledger["created_at"] = now_iso
++        ledger["updated_at"] = now_iso
++        save_ledger(ledger, ledger_path)
++    except (OSError, ValueError) as exc:
++        # Fail loud: an unattended step that swallows an unreadable input
++        # would report clean without having looked.
++        print(f"ERROR: {exc}", file=sys.stderr)
++        return 1
++    if args.json:
++        print(json.dumps(specification, indent=2, sort_keys=True))
++    else:
++        print(render_report(specification))
++    print(f"ledger: {ledger_path}")
++    return 0
+diff --git a/scripts/arc_tool_gap_refine.py b/scripts/arc_tool_gap_refine.py
+new file mode 100644
+index 0000000000..f1d56ce040
+--- /dev/null
++++ b/scripts/arc_tool_gap_refine.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""CLI wrapper for the unattended tool-gap refinement step (REQ-ARC-WMTE-6770).
++
++WHY a wrapper: the logic lives in the importable package module so tests and
++the conductor can call it directly; this file only makes it invocable as
++`.venv/bin/python scripts/arc_tool_gap_refine.py [inputs ...]`.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "python"))
++
++from carnot.agentic.arc_tool_gap_refinement import main
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_arc_tool_gap_feedback.py b/tests/python/test_arc_tool_gap_feedback.py
+new file mode 100644
+index 0000000000..cf975e384e
+--- /dev/null
++++ b/tests/python/test_arc_tool_gap_feedback.py
+@@ -0,0 +1,854 @@
++"""Tool-gap feedback: capture, curated candidate tools, offline analyzer (REQ-ARC-WMTE-6770).
++
++Same discipline as test_arc_induction_tool_loop.py: the loop tests drive the REAL
++induce() entry point against a scripted fake HTTP layer, so a rule whose call site
++is deleted goes RED here, not only in a pure-helper test. The analyzer tests write
++only under tmp_path (Test-Run Record Integrity).
++"""
++
++from __future__ import annotations
++
++import json
++
++import numpy as np
++import pytest
++
++import carnot.agentic.arc_executable_world_model as e3
++import carnot.agentic.arc_induction_tool_loop as loop_mod
++import carnot.agentic.arc_induction_tools as tools_mod
++import carnot.agentic.arc_tool_gap_refinement as gap_mod
++from carnot.agentic.arc_competition_agent import E3AgentPolicy
++
++# ---------------------------------------------------------------------------
++# shared fixtures (mirrors test_arc_induction_tool_loop.py's fake HTTP layer)
++# ---------------------------------------------------------------------------
++
++
++class _T:
++    def __init__(self, grid, next_grid, action=1):
++        self.grid = np.asarray(grid)
++        self.next_grid = np.asarray(next_grid)
++        self.action = action
++        self.data = None
++        self.level_before = 0
++        self.level_after = 0
++
++
++def _mover_window(n=6):
++    """Action 1 moves the single 2 one column right on a 6x6 board."""
++    rows = []
++    for x in range(n):
++        a = np.zeros((6, 6), dtype=int)
++        a[2, x % 5] = 2
++        b = np.zeros((6, 6), dtype=int)
++        b[2, x % 5 + 1] = 2
++        rows.append(_T(a, b))
++    return rows
++
++
++GOOD_CODE = """import numpy as np
++
++def engine(grid, action, data):
++    g = grid.copy()
++    rs, cs = np.where(g == 2)
++    if action == 1 and len(rs):
++        g[rs[0], cs[0]] = 0
++        g[rs[0], min(g.shape[1] - 1, cs[0] + 1)] = 2
++    return g
++
++def is_level_complete(grid):
++    return False
++"""
++
++
++def _chat_reply(message, finish="stop", tokens=100):
++    return {
++        "choices": [{"message": message, "finish_reason": finish}],
++        "usage": {"completion_tokens": tokens},
++    }
++
++
++def _tool_call(name, arguments, call_id="c1"):
++    return {
++        "id": call_id,
++        "type": "function",
++        "function": {"name": name, "arguments": arguments},
++    }
++
++
++class _FakeHTTP:
++    def __init__(self, chat_replies=(), completion_replies=()):
++        self.chat_replies = list(chat_replies)
++        self.completion_replies = list(completion_replies)
++        self.chat_payloads = []
++        self.completion_payloads = []
++
++    def __call__(self, req, timeout=None):
++        url = req.full_url if hasattr(req, "full_url") else str(req)
++        body = json.loads(req.data.decode())
++        if "/v1/chat/completions" in url:
++            self.chat_payloads.append(body)
++            reply = self.chat_replies[min(len(self.chat_payloads) - 1, len(self.chat_replies) - 1)]
++        else:
++            self.completion_payloads.append(body)
++            reply = self.completion_replies[
++                min(len(self.completion_payloads) - 1, len(self.completion_replies) - 1)
++            ]
++
++        class _R:
++            def __enter__(self):
++                return self
++
++            def __exit__(self, *_a):
++                return False
++
++            def read(self):
++                return json.dumps(reply).encode()
++
++        return _R()
++
++
++@pytest.fixture(autouse=True)
++def _json_load(monkeypatch):
++    real = json.load
++    monkeypatch.setattr(json, "load", lambda r, *a, **k: json.loads(r.read()))
++    yield
++    monkeypatch.setattr(json, "load", real)
++
++
++@pytest.fixture(autouse=True)
++def _clean_candidate_registry(monkeypatch):
++    """Snapshot/restore the module-global registry, and start each test with
++    the candidate env flag unset so no state leaks between tests."""
++    monkeypatch.delenv(tools_mod.CANDIDATE_TOOLS_ENV, raising=False)
++    saved = dict(tools_mod.CANDIDATE_TOOLS)
++    yield
++    tools_mod.CANDIDATE_TOOLS.clear()
++    tools_mod.CANDIDATE_TOOLS.update(saved)
++
++
++@pytest.fixture
++def proposer(monkeypatch, tmp_path):
++    # E3_DIR -> tmp_path: a test must never write results/** (Test-Run Record Integrity).
++    monkeypatch.setattr(e3, "E3_DIR", tmp_path)
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
++    p = e3.LocalGGUFProposer()
++    monkeypatch.setattr(type(p), "_ensure_server", lambda _self: True)
++    monkeypatch.setattr(type(p), "_url", lambda _self: "http://127.0.0.1:1")
++    return p
++
++
++def _patch_http(monkeypatch, fake):
++    import urllib.request
++
++    monkeypatch.setattr(urllib.request, "urlopen", fake)
++
++
++COUNT_COLORS_SCHEMA = {
++    "type": "function",
++    "function": {
++        "name": "count_colors",
++        "description": "Count distinct colors in one observed grid.",
++        "parameters": {
++            "type": "object",
++            "properties": {
++                "t": {"type": "integer", "description": "transition index (0-based)"},
++                "which": {"type": "string", "enum": ["before", "after"]},
++            },
++            "required": ["t"],
++        },
++    },
++}
++
++
++def _count_colors_factory(session):
++    def count_colors(t, which="before"):
++        tr = session.visible[int(t)]
++        grid = np.asarray(tr.next_grid if which == "after" else tr.grid)
++        return {"ok": True, "t": int(t), "n_colors": int(len(np.unique(grid)))}
++
++    return count_colors
++
++
++def _session():
++    return tools_mod.InductionToolSession(_mover_window(), cell=1)
++
++
++# ---------------------------------------------------------------------------
++# Capture at the dispatch chokepoint (SCENARIO-ARC-WMTE-6770-2 / -3 / -4)
++# ---------------------------------------------------------------------------
++
++
++def test_unknown_tool_dispatch_records_gap_event():
++    """SCENARIO-ARC-WMTE-6770-2: the strongest gap signal keeps its identity."""
++    s = _session()
++    out = tools_mod.dispatch_tool(s, "get_full_grid", '{"t": 0, "which": "before"}')
++    assert out["ok"] is False and "unknown tool" in out["error"]
++    assert s.tool_gap_events == [
++        {
++            "kind": "unknown_tool",
++            "requested_tool": "get_full_grid",
++            "argument_keys": ["t", "which"],
++        }
++    ]
++
++
++def test_bad_arguments_dispatch_records_gap_event():
++    """SCENARIO-ARC-WMTE-6770-3: an imagined signature on a real tool is retained."""
++    s = _session()
++    out = tools_mod.dispatch_tool(s, "diff_grids", '{"t": 0, "layer": 2}')
++    assert out["ok"] is False and "bad arguments" in out["error"]
++    assert len(s.tool_gap_events) == 1
++    event = s.tool_gap_events[0]
++    assert event["kind"] == "bad_arguments" and event["tool"] == "diff_grids"
++    assert "layer" in event["error"]
++
++
++def test_gap_events_are_bounded_with_visible_overflow():
++    """SCENARIO-ARC-WMTE-6770-4 (bound half): capped at MAX_TOOL_GAP_EVENTS,
++    overflow counted rather than silently lost."""
++    s = _session()
++    for i in range(tools_mod.MAX_TOOL_GAP_EVENTS + 5):
++        tools_mod.dispatch_tool(s, f"phantom_{i}", "{}")
++    assert len(s.tool_gap_events) == tools_mod.MAX_TOOL_GAP_EVENTS
++    assert s.tool_gap_events_dropped == 5
++
++
++# ---------------------------------------------------------------------------
++# Entry point: the loop itself (SCENARIO-ARC-WMTE-6770-2 loop half, -4, -5, -6)
++# ---------------------------------------------------------------------------
++
++
++def _two_turn_fake(first_call):
++    return _FakeHTTP(
++        chat_replies=[
++            _chat_reply({"role": "assistant", "tool_calls": [first_call]}, tokens=60),
++            _chat_reply(
++                {
++                    "role": "assistant",
++                    "tool_calls": [
++                        _tool_call(
++                            "run_engine_on_transitions", json.dumps({"code": GOOD_CODE}), "c2"
++                        )
++                    ],
++                },
++                tokens=60,
++            ),
++        ]
++    )
++
++
++def test_loop_carries_unknown_tool_gap_event_into_stats(monkeypatch, proposer, tmp_path):
++    """SCENARIO-ARC-WMTE-6770-2 (loop half): an unknown-tool call made through the
++    REAL induce() entry point lands in last_tool_loop_stats, which every row
++    consumer already copies."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _two_turn_fake(_tool_call("get_full_grid", '{"t": 0}'))
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("gapgame", _mover_window(), 1)
++    assert ok
++    stats = proposer.last_tool_loop_stats
++    assert stats["tool_gap_events"] == [
++        {"kind": "unknown_tool", "requested_tool": "get_full_grid", "argument_keys": ["t"]}
++    ]
++    assert stats["tool_gap_events_dropped"] == 0
++    # The pre-existing conflated counter still moves; the event resolves it.
++    assert stats["tool_call_parse_failures"] == 1
++
++
++def test_clean_loop_run_reports_gap_keys_present_and_empty(monkeypatch, proposer, tmp_path):
++    """SCENARIO-ARC-WMTE-6770-4 (presence half): absence is not zero — a clean
++    run must say [] out loud, so an artifact reader can tell 'no demand' from
++    'capture never ran'."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _two_turn_fake(_tool_call("diff_grids", '{"t": 0}'))
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("cleangame", _mover_window(), 1)
++    assert ok
++    stats = proposer.last_tool_loop_stats
++    assert stats["tool_gap_events"] == []
++    assert stats["tool_gap_events_dropped"] == 0
++    assert stats["candidate_tools_enabled"] == []
++    assert stats["candidate_tools_rejected"] == []
++
++
++def test_registered_candidate_stays_dark_with_env_unset(monkeypatch, proposer, tmp_path):
++    """SCENARIO-ARC-WMTE-6770-1: default byte-identical. A registered candidate
++    with the env unset must not leak into the request payload, and calling it
++    is an unknown-tool refusal that records a gap event."""
++    tools_mod.register_candidate_tool(COUNT_COLORS_SCHEMA, _count_colors_factory)
++    assert tools_mod.active_tool_schemas() is tools_mod.TOOL_SCHEMAS
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _two_turn_fake(_tool_call("count_colors", '{"t": 0}'))
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("darkgame", _mover_window(), 1)
++    assert ok
++    assert fake.chat_payloads[0]["tools"] == tools_mod.TOOL_SCHEMAS
++    stats = proposer.last_tool_loop_stats
++    assert stats["tool_gap_events"] == [
++        {"kind": "unknown_tool", "requested_tool": "count_colors", "argument_keys": ["t"]}
++    ]
++
++
++def test_enabled_candidate_reaches_request_and_dispatch(monkeypatch, proposer, tmp_path):
++    """SCENARIO-ARC-WMTE-6770-5: the introduction path, end to end through the
++    REAL induce() entry point — schema in the payload, dispatch executed,
++    usage measurable in tool_calls_by_name."""
++    tools_mod.register_candidate_tool(COUNT_COLORS_SCHEMA, _count_colors_factory)
++    monkeypatch.setenv(tools_mod.CANDIDATE_TOOLS_ENV, "count_colors")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _two_turn_fake(_tool_call("count_colors", '{"t": 0}'))
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("candgame", _mover_window(), 1)
++    assert ok
++    assert fake.chat_payloads[0]["tools"] == [*tools_mod.TOOL_SCHEMAS, COUNT_COLORS_SCHEMA]
++    tool_msgs = [m for m in fake.chat_payloads[1]["messages"] if m["role"] == "tool"]
++    assert any("n_colors" in m["content"] for m in tool_msgs)
++    stats = proposer.last_tool_loop_stats
++    assert stats["tool_calls_by_name"]["count_colors"] == 1
++    assert stats["candidate_tools_enabled"] == ["count_colors"]
++    assert stats["tool_gap_events"] == []
++
++
++def test_unregistered_env_name_is_visibly_rejected(monkeypatch, proposer, tmp_path):
++    """SCENARIO-ARC-WMTE-6770-6: an env typo must be visible in the stats, not
++    silently disable the tool it meant to arm."""
++    monkeypatch.setenv(tools_mod.CANDIDATE_TOOLS_ENV, "no_such_tool")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _two_turn_fake(_tool_call("diff_grids", '{"t": 0}'))
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("typogame", _mover_window(), 1)
++    assert ok
++    assert fake.chat_payloads[0]["tools"] == tools_mod.TOOL_SCHEMAS
++    stats = proposer.last_tool_loop_stats
++    assert stats["candidate_tools_enabled"] == []
++    assert stats["candidate_tools_rejected"] == ["no_such_tool"]
++
++
++def test_selfparse_prompt_and_coercion_cover_enabled_candidate():
++    """SCENARIO-ARC-WMTE-6770-5 (selfparse half): the prompt text announces the
++    candidate and the XML parser coerces by its schema, so both transports
++    serve the same active set."""
++    import os
++
++    tools_mod.register_candidate_tool(COUNT_COLORS_SCHEMA, _count_colors_factory)
++    os.environ[tools_mod.CANDIDATE_TOOLS_ENV] = "count_colors"
++    try:
++        text = tools_mod.render_tool_schemas_for_prompt()
++        assert "- count_colors(" in text
++        calls, n_blocks, n_unparsed = tools_mod.parse_xml_tool_calls(
++            "<tool_call>\n<function=count_colors>\n<parameter=t>\n3\n</parameter>\n"
++            "</function>\n</tool_call>"
++        )
++        assert n_blocks == 1 and n_unparsed == 0
++        assert json.loads(calls[0]["function"]["arguments"]) == {"t": 3}
++    finally:
++        del os.environ[tools_mod.CANDIDATE_TOOLS_ENV]
++    # Unset again: the candidate must vanish from the rendered prompt.
++    assert "- count_colors(" not in tools_mod.render_tool_schemas_for_prompt()
++
++
++def test_register_candidate_refuses_core_name_collision():
++    """REQ-ARC-WMTE-6770 rule: a candidate must ADD, never shadow a core tool."""
++    bad = json.loads(json.dumps(COUNT_COLORS_SCHEMA))
++    bad["function"]["name"] = "diff_grids"
++    with pytest.raises(ValueError, match="collides"):
++        tools_mod.register_candidate_tool(bad, _count_colors_factory)
++
++
++# ---------------------------------------------------------------------------
++# Entry point: the LIVE agent's repair record (SCENARIO-ARC-WMTE-6770-7)
++# ---------------------------------------------------------------------------
++
++_IDENTITY_CODE = """import numpy as np
++
++def engine(grid, action, data):
++    return grid
++
++def is_level_complete(grid):
++    return False
++"""
++
++_RECOVER_CODE = """import numpy as np
++
++def engine(grid, action, data):
++    out = np.asarray(grid).copy()
++    out[:] = 5
++    return out
++
++def is_level_complete(grid):
++    return False
++"""
++
++
++def test_live_repair_record_carries_tool_gap_evidence(tmp_path, monkeypatch):
++    """SCENARIO-ARC-WMTE-6770-7: the live E3 policy's tool_loop record subset
++    must carry the gap fields — without this the mechanism is blind on
++    exactly the scored path."""
++    game = "gp01"
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "repair")
++    monkeypatch.delenv("CARNOT_ARC_RECALL_RESAMPLE", raising=False)
++    monkeypatch.delenv("CARNOT_ARC_TRUST_METRIC", raising=False)
++    monkeypatch.setattr(e3, "E3_DIR", tmp_path)
++    store = tmp_path / game / "world_model.py"
++    store.parent.mkdir(parents=True, exist_ok=True)
++    store.write_text(_IDENTITY_CODE)
++
++    trans = []
++    for i in range(4):
++        trans.append(
++            e3.Transition(
++                grid=np.zeros((4, 4), dtype=int),
++                action=1 + (i % 3),
++                data=None,
++                next_grid=np.full((4, 4), 5, dtype=int),
++                level_before=0,
++                level_after=0,
++            )
++        )
++    old_engine, old_is_done = e3.load_engine(game)
++    vr = e3.WorldModelVerifier(trans).score(old_engine)
++    assert vr.cell_recall == 0.0
++
++    events = [{"kind": "unknown_tool", "requested_tool": "get_full_grid", "argument_keys": []}]
++
++    def _fake_loop(prop, g, rows, cell, **kwargs):
++        prop.last_tool_loop_stats = {
++            "turns": 2,
++            "terminated_by": "zero_mismatches",
++            "candidates_scored": 2,
++            "best_visible_mismatches": 0,
++            "seed_visible_mismatches": 4,
++            "decode_tokens_total": 500,
++            "tool_call_parse_failures": 1,
++            "tool_gap_events": list(events),
++            "tool_gap_events_dropped": 0,
++            "candidate_tools_enabled": [],
++            "candidate_tools_rejected": [],
++        }
++        path = e3.E3_DIR / g / "world_model.py"
++        path.write_text(_RECOVER_CODE)
++        return True, "tool loop: zero_mismatches"
++
++    monkeypatch.setattr(loop_mod, "induce_with_tool_loop", _fake_loop)
++
++    class _FakeProposer:
++        last_tool_loop_stats: dict = {}
++
++        def induce(self, *a, **k):
++            raise AssertionError("blind induce must not run in repair mode")
++
++    policy = object.__new__(E3AgentPolicy)
++    policy.short = game
++    policy.cell = 1
++    policy.proposer = _FakeProposer()
++    attempt: dict = {}
++    policy._maybe_recall_gated_resample(
++        attempt=attempt,
++        transitions=trans,
++        hud_mask=None,
++        engine=old_engine,
++        is_done=old_is_done,
++        vr=vr,
++        induce_rows=trans,
++        induce_kwargs={},
++    )
++    record = attempt["recall_resample"]["tool_loop"]
++    assert record["tool_gap_events"] == events
++    assert record["tool_gap_events_dropped"] == 0
++    assert record["candidate_tools_enabled"] == []
++    assert record["candidate_tools_rejected"] == []
++
++
++# ---------------------------------------------------------------------------
++# The offline analyzer (SCENARIO-ARC-WMTE-6770-8 / -9)
++# ---------------------------------------------------------------------------
++
++
++def _row(game, seed, events, key="tool_loop_stats", extra=None, dropped=0):
++    stats = {
++        "tool_calls_by_name": {"diff_grids": 2},
++        "tool_call_parse_failures": len(events),
++        "tool_gap_events": events,
++        "tool_gap_events_dropped": dropped,
++    }
++    row = {"game": game, "seed": seed, key: stats}
++    if extra:
++        row.update(extra)
++    return row
++
++
++def _unknown(name, keys=("t",)):
++    return {"kind": "unknown_tool", "requested_tool": name, "argument_keys": list(keys)}
++
++
++def _run_cli(tmp_path, *inputs):
++    ledger = tmp_path / "ledger.json"
++    rc = gap_mod.main([*map(str, inputs), "--ledger", str(ledger)])
++    return rc, ledger
++
++
++def test_analyzer_specifies_above_floor_and_renders_markdown(tmp_path, capsys):
++    """SCENARIO-ARC-WMTE-6770-8: 3 events across 2 distinct rows crosses the
++    floor; the output is a HUMAN specification with a ready-to-append entry
++    in the ops/verifier_gaps.md schema convention — and no generated code."""
++    f1 = tmp_path / "a" / "rows.json"
++    f1.parent.mkdir()
++    f1.write_text(
++        json.dumps(
++            [
++                _row("tg01", 1, [_unknown("count_colors"), _unknown("count_colors")]),
++                _row("tg01", 2, [_unknown("count_colors")], key="stats"),
++            ]
++        )
++    )
++    rc, ledger_path = _run_cli(tmp_path, f1)
++    assert rc == 0
++    out = capsys.readouterr().out
++    ledger = json.loads(ledger_path.read_text())
++    spec = ledger["specification"]
++    assert spec["status"] == "specification_available"
++    assert spec["recommendation_only"] is True
++    (item,) = spec["specifications"]
++    assert item["audience"] == "human"
++    assert item["gap"] == {
++        "kind": "unknown_tool",
++        "name": "count_colors",
++        "events": 3,
++        "distinct_rows": 2,
++    }
++    assert "### TOOLGAP-UNKNOWN_TOOL-count_colors" in item["markdown_entry"]
++    assert "- status: open" in item["markdown_entry"]
++    assert "register_candidate_tool" in item["markdown_entry"]
++    # The entry carries the exact evidence, and the analyzer's own report
++    # names the gap. (An earlier cut asserted `"def " not in entry` here — a
++    # tautology no input could violate; replaced per the 2026-08-29 review.)
++    assert "3 events across 2 distinct run rows" in item["markdown_entry"]
++    assert "SPECIFY unknown_tool:count_colors" in out
++
++
++def test_analyzer_floors_are_exact(tmp_path):
++    """SCENARIO-ARC-WMTE-6770-8 (floor half): 3 events in ONE row, or 2 events
++    across two rows, are both insufficient — said loudly, not ranked."""
++    one_row = tmp_path / "one" / "rows.json"
++    one_row.parent.mkdir()
++    one_row.write_text(json.dumps([_row("tg01", 1, [_unknown("x"), _unknown("x"), _unknown("x")])]))
++    rc, ledger_path = _run_cli(tmp_path / "one", one_row)
++    assert rc == 0
++    spec = json.loads(ledger_path.read_text())["specification"]
++    assert spec["status"] == "insufficient_evidence"
++    assert spec["specifications"] == []
++    assert spec["per_gap"][0]["rows_shortfall"] == 1
++
++    two_rows = tmp_path / "two" / "rows.json"
++    two_rows.parent.mkdir()
++    two_rows.write_text(
++        json.dumps([_row("tg01", 1, [_unknown("x")]), _row("tg01", 2, [_unknown("x")])])
++    )
++    rc, ledger_path = _run_cli(tmp_path / "two", two_rows)
++    spec = json.loads(ledger_path.read_text())["specification"]
++    assert spec["status"] == "insufficient_evidence"
++    assert spec["per_gap"][0]["events_shortfall"] == 1
++
++
++def test_analyzer_empty_and_precapture_statuses(tmp_path):
++    """SCENARIO-ARC-WMTE-6770-8 (status half): pre-capture rows are absence of
++    evidence and say so; capture rows with zero events are the honest empty."""
++    rc, ledger_path = _run_cli(tmp_path / "e0")
++    assert rc == 0
++    assert json.loads(ledger_path.read_text())["specification"]["status"] == "no_rows_ingested"
++
++    pre = tmp_path / "pre" / "rows.json"
++    pre.parent.mkdir()
++    pre.write_text(
++        json.dumps([{"game": "tg01", "tool_loop_stats": {"tool_calls_by_name": {"x": 1}}}])
++    )
++    rc, ledger_path = _run_cli(tmp_path / "pre", pre)
++    spec = json.loads(ledger_path.read_text())["specification"]
++    assert spec["status"] == "no_capture_capable_rows"
++    assert spec["ingest_counts"]["pre_capture_rows"] == 1
++
++    clean = tmp_path / "clean" / "rows.json"
++    clean.parent.mkdir()
++    clean.write_text(json.dumps([_row("tg01", 1, [])]))
++    rc, ledger_path = _run_cli(tmp_path / "clean", clean)
++    spec = json.loads(ledger_path.read_text())["specification"]
++    assert spec["status"] == "no_gap_events_nothing_to_specify"
++
++
++def test_analyzer_dedupes_prunes_clones_and_fails_loud(tmp_path):
++    """SCENARIO-ARC-WMTE-6770-9: a byte-identical row ingests once; a nested
++    repo clone's rows.json is pruned; a missing input exits non-zero."""
++    scan = tmp_path / "scan"
++    good = scan / "run1"
++    good.mkdir(parents=True)
++    (good / "rows.json").write_text(json.dumps([_row("tg01", 1, [_unknown("x")])]))
++    clone = scan / "clone"
++    (clone / ".git").mkdir(parents=True)
++    (clone / "rows.json").write_text(json.dumps([_row("tg01", 9, [_unknown("cloned")])]))
++
++    ledger = tmp_path / "ledger.json"
++    assert gap_mod.main([str(scan), "--ledger", str(ledger)]) == 0
++    assert gap_mod.main([str(scan), "--ledger", str(ledger)]) == 0  # second pass: all dupes
++    data = json.loads(ledger.read_text())
++    assert len(data["entries"]) == 1
++    assert data["specification"]["ingest_counts"]["capture_rows_duplicate"] == 1
++    names = {g["name"] for g in data["specification"]["per_gap"]}
++    assert names == {"x"}  # the clone's event never entered
++
++    assert gap_mod.main([str(tmp_path / "missing"), "--ledger", str(ledger)]) == 1
++
++
++def test_analyzer_survives_source_deletion(tmp_path):
++    """SCENARIO-ARC-WMTE-6770-9 (durability half): the ledger stores the
++    events, so re-evaluation after the scratch source is gone reproduces the
++    same totals."""
++    f = tmp_path / "rows.json"
++    f.write_text(json.dumps([_row("tg01", 1, [_unknown("x")]), _row("tg01", 2, [_unknown("x")])]))
++    ledger = tmp_path / "ledger.json"
++    assert gap_mod.main([str(f), "--ledger", str(ledger)]) == 0
++    before = json.loads(ledger.read_text())["specification"]["per_gap"]
++    f.unlink()
++    assert gap_mod.main(["--ledger", str(ledger)]) == 0
++    after = json.loads(ledger.read_text())["specification"]["per_gap"]
++    assert after == before
++
++
++def test_candidate_factory_bug_costs_a_turn_not_the_induction(monkeypatch):
++    """REQ-ARC-WMTE-6770 rule 3 hardening: dispatch_tool must keep its
++    never-raises contract even when a human-authored candidate factory has a
++    bug — the error is the tool result, same as a tool-body failure."""
++    import os
++
++    schema = json.loads(json.dumps(COUNT_COLORS_SCHEMA))
++    schema["function"]["name"] = "broken_tool"
++
++    def _broken_factory(session):
++        raise RuntimeError("factory bug")
++
++    tools_mod.register_candidate_tool(schema, _broken_factory)
++    monkeypatch.setenv(tools_mod.CANDIDATE_TOOLS_ENV, "broken_tool")
++    out = tools_mod.dispatch_tool(_session(), "broken_tool", '{"t": 0}')
++    assert out["ok"] is False
++    assert "setup raised RuntimeError" in out["error"]
++
++
++# ---------------------------------------------------------------------------
++# Adversarial-review fixes, 2026-08-29 (R/F findings; REQ-ARC-WMTE-6770
++# amendment). Each test here is the regression for one review finding.
++# ---------------------------------------------------------------------------
++
++
++def test_unknown_tool_with_malformed_arguments_still_records_the_name():
++    """F3: the NAME needs no JSON parse. An unknown name with malformed or
++    non-object arguments is still demand; a KNOWN tool with malformed
++    arguments is transport noise, not demand."""
++    s = _session()
++    out = tools_mod.dispatch_tool(s, "warp_grid", "{t: 0}")
++    assert out["ok"] is False and "unparseable" in out["error"]
++    assert s.tool_gap_events == [
++        {"kind": "unknown_tool", "requested_tool": "warp_grid", "argument_keys": None}
++    ]
++    s2 = _session()
++    tools_mod.dispatch_tool(s2, "diff_grids", "{t: 0}")
++    assert s2.tool_gap_events == []
++    s3 = _session()
++    tools_mod.dispatch_tool(s3, "warp_grid", "[0]")
++    assert s3.tool_gap_events[0]["requested_tool"] == "warp_grid"
++
++
++def test_model_controlled_event_strings_are_bounded():
++    """F9: the name and argument keys are model-controlled text headed for a
++    durable ledger and a human-pasted heading; both are capped like `error`."""
++    s = _session()
++    big_args = json.dumps({f"k{i:04d}": 1 for i in range(500)})
++    tools_mod.dispatch_tool(s, "x" * 5000, big_args)
++    event = s.tool_gap_events[0]
++    assert len(event["requested_tool"]) == tools_mod.MAX_TOOL_GAP_NAME_CHARS
++    assert len(event["argument_keys"]) == tools_mod.MAX_TOOL_GAP_ARG_KEYS
++
++
++def test_session_freeze_pins_advertised_and_dispatched_set(monkeypatch):
++    """F5/F7: enablement is frozen at session creation. A mid-run env or
++    registry mutation - including one made by model-executed code - changes
++    neither what the session serves nor what its record claims; and a set
++    enabled at creation survives a mid-run env clear, so the record cannot
++    contradict what actually dispatched."""
++    s = _session()  # env unset at creation
++    tools_mod.register_candidate_tool(COUNT_COLORS_SCHEMA, _count_colors_factory)
++    monkeypatch.setenv(tools_mod.CANDIDATE_TOOLS_ENV, "count_colors")
++    out = tools_mod.dispatch_tool(s, "count_colors", '{"t": 0}')
++    assert out["ok"] is False and "unknown tool" in out["error"]
++    assert tools_mod.active_tool_schemas_for(s) is tools_mod.TOOL_SCHEMAS
++
++    s2 = _session()  # env set at creation
++    monkeypatch.delenv(tools_mod.CANDIDATE_TOOLS_ENV)
++    assert s2.enabled_candidates == ("count_colors",)
++    assert tools_mod.dispatch_tool(s2, "count_colors", '{"t": 0}')["ok"] is True
++
++
++def test_unknown_tool_error_names_the_session_active_set(monkeypatch):
++    """F8 (decorative-assertion fix): the refusal text must list the ACTIVE
++    set - reverting it to the bare core names would hide an enabled candidate
++    from the model that just failed to call it."""
++    tools_mod.register_candidate_tool(COUNT_COLORS_SCHEMA, _count_colors_factory)
++    monkeypatch.setenv(tools_mod.CANDIDATE_TOOLS_ENV, "count_colors")
++    out = tools_mod.dispatch_tool(_session(), "nope", "{}")
++    assert "count_colors" in out["error"]
++
++
++def test_dark_candidate_does_not_change_xml_coercion():
++    """F6: a registered-but-dark candidate must not change coercion - the
++    default path stays byte-identical until the env enables the tool."""
++    tools_mod.register_candidate_tool(COUNT_COLORS_SCHEMA, _count_colors_factory)
++    calls, n_blocks, n_unparsed = tools_mod.parse_xml_tool_calls(
++        "<tool_call>\n<function=count_colors>\n<parameter=t>\n3\n</parameter>\n"
++        "</function>\n</tool_call>"
++    )
++    assert n_blocks == 1 and n_unparsed == 0
++    # String passthrough, exactly as before the registry existed.
++    assert json.loads(calls[0]["function"]["arguments"]) == {"t": "3"}
++
++
++def test_loop_finalizes_the_dropped_counter(monkeypatch, proposer, tmp_path):
++    """F8: the dropped counter must reach the run's stats THROUGH the loop -
++    an earlier cut proved the session attribute only, and replacing the
++    finalize with a literal 0 stayed green."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    n = tools_mod.MAX_TOOL_GAP_EVENTS + 5
++    calls = [_tool_call(f"ph_{i}", "{}", f"c{i}") for i in range(n)]
++    fake = _FakeHTTP(
++        chat_replies=[
++            _chat_reply({"role": "assistant", "tool_calls": calls}, tokens=60),
++            _chat_reply(
++                {
++                    "role": "assistant",
++                    "tool_calls": [
++                        _tool_call(
++                            "run_engine_on_transitions", json.dumps({"code": GOOD_CODE}), "cz"
++                        )
++                    ],
++                },
++                tokens=60,
++            ),
++        ]
++    )
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("dropgame", _mover_window(), 1)
++    assert ok
++    stats = proposer.last_tool_loop_stats
++    assert len(stats["tool_gap_events"]) == tools_mod.MAX_TOOL_GAP_EVENTS
++    assert stats["tool_gap_events_dropped"] == 5
++
++
++def test_selfparse_unparsed_block_keeps_the_demanded_name(monkeypatch, proposer, tmp_path):
++    """F4 (selfparse half): a block the strict parser refuses still holds the
++    demanded name; the loop keeps it as gap evidence with its source marked."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "selfparse")
++    malformed = (
++        'thinking</think>\n<tool_call>\n<function="fetch_layers">\n'
++        "<parameter=t>\n0\n</parameter>\n</function>\n</tool_call>"
++    )
++    fake = _FakeHTTP(
++        chat_replies=[
++            _chat_reply({"role": "assistant", "content": malformed}, tokens=60),
++            _chat_reply({"role": "assistant", "content": f"```python\n{GOOD_CODE}```"}, tokens=60),
++        ]
++    )
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("loosegame", _mover_window(), 1)
++    assert ok
++    stats = proposer.last_tool_loop_stats
++    assert stats["selfparse_blocks_unparsed"] == 1
++    assert stats["tool_gap_events"] == [
++        {
++            "kind": "unknown_tool",
++            "requested_tool": "fetch_layers",
++            "argument_keys": None,
++            "source": "unparsed_text",
++        }
++    ]
++
++
++def test_server_lift_failure_text_keeps_the_demanded_name(monkeypatch, proposer, tmp_path):
++    """F4 (server-lifted half): tool-call JSON left as text still names the
++    demanded tool; a known-tool name in the same text is transport noise."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    text = '{"name": "fetch_layers", "arguments": {"t": 0}}'
++    fake = _FakeHTTP(
++        chat_replies=[
++            _chat_reply({"role": "assistant", "content": text}, tokens=60),
++            _chat_reply({"role": "assistant", "content": f"```python\n{GOOD_CODE}```"}, tokens=60),
++        ]
++    )
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("liftgame", _mover_window(), 1)
++    assert ok
++    stats = proposer.last_tool_loop_stats
++    assert stats["unparsed_tool_call_text_turns"] == 1
++    assert stats["tool_gap_events"] == [
++        {
++            "kind": "unknown_tool",
++            "requested_tool": "fetch_layers",
++            "argument_keys": None,
++            "source": "unparsed_text",
++        }
++    ]
++
++
++def test_primary_live_induce_records_tool_gap_evidence(monkeypatch):
++    """F2 - the finding that mattered most: the PRIMARY live induction (the
++    only branch that runs under the live '1'/'selfparse' transports) must
++    copy gap evidence onto the attempt record, and must never copy a STALE
++    run's stats."""
++    from types import SimpleNamespace
++
++    from carnot.agentic import arc_competition_agent as agent
++
++    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "0")
++    events = [{"kind": "unknown_tool", "requested_tool": "get_full_grid", "argument_keys": None}]
++    prop = SimpleNamespace(model_specs="stub")
++
++    def _induce(*_a, **_k):
++        prop.last_tool_loop_stats = {
++            "tool_gap_events": list(events),
++            "tool_gap_events_dropped": 0,
++            "candidate_tools_enabled": [],
++            "candidate_tools_rejected": [],
++            "terminated_by": "turn_cap",
++            "tool_calls_total": 3,
++        }
++        return (False, "no engine")
++
++    prop.induce = _induce
++    policy = agent.E3AgentPolicy("gaplive", proposer=prop, value_head=lambda _f: 0.0)
++    policy.transitions = [SimpleNamespace(grid=np.array([[0]]))]
++    policy.root_grid = np.array([[1]], dtype=np.int16)
++    policy._pending_induction_reason = "stall"
++    policy._induce_and_plan()
++    attempt = policy.induction_attempts[-1]
++    assert attempt["tool_gap"]["tool_gap_events"] == events
++    assert attempt["tool_gap"]["terminated_by"] == "turn_cap"
++
++    # Stale-stats guard: the site clears the diagnostic BEFORE inducing, so a
++    # loop-less induction must not inherit the previous run's events.
++    prop.induce = lambda *_a, **_k: (False, "no loop this time")
++    policy._pending_induction_reason = "stall"
++    policy._induce_and_plan()
++    assert "tool_gap" not in policy.induction_attempts[-1]
++
++
++def test_analyzer_writes_only_its_ledger_and_reports_dropped(tmp_path, monkeypatch):
++    """Spec rule 5, previously asserted by nobody: the analyzer writes its
++    ledger and NOTHING else; and dropped-at-capture counts surface in the
++    evidence so per-gap counts read as floors (F8)."""
++    monkeypatch.chdir(tmp_path)
++    rows = tmp_path / "rows.json"
++    rows.write_text(json.dumps([_row("tg01", 1, [_unknown("x")], dropped=3)]))
++    ledger = tmp_path / "led" / "ledger.json"
++    before = {p for p in tmp_path.rglob("*")}
++    assert gap_mod.main([str(rows), "--ledger", str(ledger)]) == 0
++    after = {p for p in tmp_path.rglob("*")}
++    assert after - before == {ledger.parent, ledger}
++    spec = json.loads(ledger.read_text())["specification"]
++    assert spec["evidence"]["gap_events_dropped_total"] == 3
+-- 
+2.55.0
+

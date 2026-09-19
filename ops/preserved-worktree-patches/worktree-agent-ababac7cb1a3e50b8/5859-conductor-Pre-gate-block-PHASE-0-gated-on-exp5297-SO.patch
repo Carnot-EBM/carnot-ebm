@@ -1,0 +1,47 @@
+From b2aba5f57df3f9e3c665fa16e168b53f99cf6cb4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 05:12:25 -0400
+Subject: [PATCH 05859/11362] [conductor] Pre-gate block: PHASE 0 gated on
+ exp5297 -- SOTA coherence and trace smoke on changed runtime
+
+1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gate-v484.changed_runtime_sota_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...sota_coherence_trace_smoke_gated_v484.json | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 results/experiment_5298_sota_coherence_trace_smoke_gated_v484.json
+
+diff --git a/results/experiment_5298_sota_coherence_trace_smoke_gated_v484.json b/results/experiment_5298_sota_coherence_trace_smoke_gated_v484.json
+new file mode 100644
+index 0000000000..c219e6eae0
+--- /dev/null
++++ b/results/experiment_5298_sota_coherence_trace_smoke_gated_v484.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5298,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-06",
++  "started_at": "2026-07-06T09:12:24.932406+00:00",
++  "finished_at": "2026-07-06T09:12:24.932406+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE 0 gated on exp5297 -- SOTA coherence and trace smoke on changed runtime",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gate-v484.changed_runtime_sota_ready (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5297-changed-runtime-sota-substrate-gate-v484",
++      "artifact_field": "changed_runtime_sota_ready",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

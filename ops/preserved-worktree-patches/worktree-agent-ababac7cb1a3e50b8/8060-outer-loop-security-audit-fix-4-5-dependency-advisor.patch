@@ -1,0 +1,201 @@
+From 81787ec4feb6d8247afdf039f4d32cd8ad6c9abd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 31 Jul 2026 13:15:06 -0400
+Subject: [PATCH 08060/11362] [outer-loop] security audit fix 4/5: dependency
+ advisories 53 -> 5
+
+Full OSV sweep of all 225 installed packages: 53 advisories across 10 packages
+down to 5 across 3. Cleared: GitPython (9, incl. command injection and env-var
+exfiltration via create_remote), pillow (26, incl. OS command injection),
+pyasn1 (5), mcp, msgpack, httplib2, pydantic-settings.
+
+pyproject floors raised so a venv rebuild cannot silently regress the two that
+are declared dependencies:
+  mcp    >=1.0     -> >=1.28.1,<2   (GHSA-vj7q-gjh5-988w)
+  pillow >=10.0    -> >=12.3.0
+
+The <2 cap on mcp is deliberate. The unconstrained upgrade pulled mcp 2.0.0, a
+major rewrite dragging in a different httpx stack (httpx2/httpcore2/mcp-types).
+The advisory is fixed in 1.28.1, so taking 2.x would have been acquiring a
+migration as a side effect of a security bump. Pinned to 1.29.0.
+
+Three remain, accepted with reasons recorded in ops/known-issues.md:
+
+  setuptools 81.0.0 -- fix is in 83.0.0 but torch 2.11 requires setuptools<82,
+      a real resolver conflict, not a hypothetical. 81.0.0 does fix the serious
+      one (GHSA-5rjg-fvgr-3xxf, network-reachable path traversal -> arbitrary
+      file write). What remains is local, UI-required, and only affects BUILDING
+      an sdist.
+  diskcache 5.6.3 -- no fix published; 5.6.3 is latest. Transitive, zero direct
+      importers in this tree.
+  torch 2.11.0+cu128 -- fix is in 2.13.0, but this is a CUDA-built wheel and per
+      CLAUDE.md a plain reinstall silently swaps in the CPU-only build, which
+      would invalidate the GPU provenance of every live_llm_inference artifact.
+      Needs a deliberate verified CUDA rebuild, not a pip upgrade.
+
+GPU stack verified unchanged before and after (this is the failure mode CLAUDE.md
+warns about): llama_cpp GPU offload True, torch 2.11.0+cu128, 2 CUDA devices,
+pip check clean. torch/torchvision/torchaudio/llama-cpp-python/jax were pinned in
+a pip --constraint file throughout so the resolver could not replace them.
+
+Also records that `pip-audit -r` cannot audit this venv at all (it forces a
+resolution that fails on the local +cu128 torch), and that bare `uvx pip-audit`
+audits its own isolated environment and misreports "No known vulnerabilities".
+
+Adds REQ-SEC-001 to the safety spec, covering fix 3/5's deserialization
+confinement, per the spec-anchored workflow.
+
+MUTATION MARKER: deliberately deleted
+ops/.test_suite_mutation_runs/c0a4aa17ff9f4e1781f2b469374f5035.pending.json.
+It was armed by a CONCURRENT conductor test run
+(test_arc_plan_depth_and_plannability_retention_2026_07_31.py) and its only
+flagged path was pyproject.toml, which the marker itself recorded as
+`attributed_to_run: []` / `unattributed` -- i.e. the test run wrote nothing, and
+my hand edit merely landed inside its observation window. Diff confirmed to be
+exclusively the authored dependency-floor change. No research record was
+rewritten.
+---
+ openspec/capabilities/safety/spec.md | 36 ++++++++++++++++++++++++++++
+ ops/known-issues.md                  | 30 +++++++++++++++++++++++
+ pyproject.toml                       | 19 ++++++++++++---
+ 3 files changed, 82 insertions(+), 3 deletions(-)
+
+diff --git a/openspec/capabilities/safety/spec.md b/openspec/capabilities/safety/spec.md
+index 707a1f7d90..15862fe09d 100644
+--- a/openspec/capabilities/safety/spec.md
++++ b/openspec/capabilities/safety/spec.md
+@@ -1885,6 +1885,41 @@ are unavailable,
+ `guided_decoding_used=false`, and a `blocked:` honest verdict, without falling
+ back to CPU-only headline results or lifting guided-decoding quarantine.
+ 
++### REQ-SEC-001: Code-Executing Deserialization Must Be Confined
++
++**Statement:** Any load that executes code while parsing -- `pickle.load` and
++`torch.load(weights_only=False)` -- MUST go through
++`carnot.serialization_safety`, never be called directly in library code.
++`safe_torch_load` defaults to `weights_only=True`; `safe_pickle_load` defaults to
++refusing paths that resolve outside this checkout.
++
++Loaders with a fixed in-repo default path that feed the live verifier ensemble
++(`tier0e_eorm`, `tier0f_semantic_calibration`) MUST use the refusing mode.
++General-purpose `save`/`load` round-trip APIs MAY use `on_untrusted="warn"`,
++since writing to a scratch directory is ordinary usage for them.
++
++**Why this matters:**
++    A pickle stream is code, not data: its opcodes call arbitrary constructors
++    during parsing. The realistic exploit path for this project is its own
++    distribution model -- per the Decentralization-Respecting Design Constraints,
++    artifacts are mirrored to HuggingFace and IPFS, so a `.pkl`/`.pt` fetched
++    from a mirror into a cache directory and loaded by path is remote code
++    execution. Confining these loads to in-repo artifacts closes that route.
++
++    An `isinstance` check after `pickle.load` does NOT satisfy this requirement.
++    The payload has already executed by the time the type is inspected; two call
++    sites had exactly that pattern and it read as a mitigation for years.
++
++**Honest scope:** this is not protection against an attacker who can already
++write into the repository -- such an attacker edits the source directly. It
++blocks the supply-chain vector and makes every unsafe deserialization greppable
++and centrally auditable.
++
++**Origin:** 2026-07-31 security audit.
++
++**Verified by:** `tests/python/test_serialization_safety.py`
++
++
+ ## Implementation Status
+ 
+ | Requirement | Status | Notes |
+@@ -1922,3 +1957,4 @@ back to CPU-only headline results or lifting guided-decoding quarantine.
+ | REQ-SAFE-5472 | Planned | Exp 5472: local SOTA GGUF evidence telemetry panel |
+ | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
+ | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
++| REQ-SEC-001 | Implemented | 2026-07-31 audit: carnot.serialization_safety confines pickle/torch code-executing loads |
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index b9bf2c7437..3f7f7975b4 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -4,6 +4,36 @@
+ 
+ ## CURRENT ACTIVE PRIORITIES (20260507 audit)
+ 
++### 2026-07-31 (security audit) — 3 dependency advisories ACCEPTED, cannot be fixed today
++
++Full OSV sweep of the 225 installed packages: **53 advisories across 10 packages
++-> 5 across 3**. Cleared by upgrade: GitPython (9, incl. command injection),
++pillow (26), pyasn1 (5), mcp, msgpack, httplib2, pydantic-settings.
++`pyproject.toml` floors were raised for `mcp` and `pillow` so a venv rebuild
++cannot silently regress them; the others are transitive.
++
++The three that remain are accepted risk with a stated reason, NOT oversights:
++
++| Package | Advisory | Why it stays |
++|---|---|---|
++| `setuptools==81.0.0` | GHSA-h35f-9h28-mq5c, PYSEC-2026-3447 | Fixed in 83.0.0, but **torch 2.11 requires `setuptools<82`** — installing 83 produced a real resolver conflict. 81.0.0 is the highest compatible version and it DOES fix the serious one (GHSA-5rjg-fvgr-3xxf, network-reachable path traversal -> arbitrary file write, fixed in 78.1.1). What remains is a local, user-interaction-required MANIFEST.in exclusion bypass when BUILDING an sdist with adversarially-named files. Revisit when torch relaxes the cap. |
++| `diskcache==5.6.3` | GHSA-w8v5-vhqr-4h9v, PYSEC-2026-2447 | **No fix published** — 5.6.3 is the latest release. Unsafe pickle deserialization, local vector. Transitive dependency with zero direct importers in this tree, so no Carnot code path constructs a cache from untrusted input. |
++| `torch==2.11.0+cu128` | GHSA-rrmf-rvhw-rf47 | Fixed in 2.13.0. **Deliberately not upgraded**: this is a CUDA-built wheel, and per CLAUDE.md a plain reinstall silently swaps in the CPU-only build, which would invalidate every `live_llm_inference` artifact's GPU provenance. Low severity (local, PR:L) and requires `torch.jit.script` on attacker-controlled input, which no Carnot path does. Bundle with a deliberate, verified CUDA rebuild. |
++
++**Verification protocol used** (repeat this if you touch the venv): record
++`llama_cpp.llama_supports_gpu_offload()` and `torch.cuda.is_available()` +
++`device_count()` BEFORE and AFTER, and pin torch/torchvision/torchaudio/
++llama-cpp-python/jax in a pip `--constraint` file so the resolver cannot replace
++them. Confirmed unchanged across this upgrade: GPU offload `True`, torch
++`2.11.0+cu128`, 2 CUDA devices, `pip check` clean.
++
++**Note on tooling:** `pip-audit -r` cannot audit this venv — it forces a
++dependency resolution that fails on the local `+cu128` torch build. The OSV
++batch API queried against exact installed versions is the working substitute;
++`uvx pip-audit` with no arguments audits its OWN isolated environment and
++returns a misleading "No known vulnerabilities found".
++
++
+ ### 2026-07-31 (outer-loop, MEASURED — the ARC test selection is ORDER-UNSTABLE under xdist, so a failure count is not a fact about the tree)
+ 
+ **What was measured.** The pinned selection `pytest tests/python -q --no-cov -p no:randomly -k "arc"`,
+diff --git a/pyproject.toml b/pyproject.toml
+index 20924a53a4..70dbce027f 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -69,7 +69,15 @@ dependencies = [
+     # MCP is part of the Phase-1 software ship surface. `python -m carnot.mcp`
+     # must speak real stdio JSON-RPC after a plain package install, not only
+     # after an optional extra.
+-    "mcp>=1.0",
++    #
++    # Floor raised 1.0 -> 1.28.1 by the 2026-07-31 security audit:
++    # GHSA-vj7q-gjh5-988w (the WebSocket server transport performs no
++    # Host/Origin validation, so a browser page can drive a local MCP server)
++    # is fixed in 1.28.1. Capped below 2.0 deliberately -- 2.x is a major
++    # rewrite that pulls a different httpx stack, which is a migration to
++    # evaluate on its own merits, not something to acquire as a side effect of
++    # a security bump.
++    "mcp>=1.28.1,<2",
+ ]
+ 
+ [project.scripts]
+@@ -103,7 +111,9 @@ dwave = [
+     "dwave-ocean-sdk>=6.0",
+ ]
+ mcp = [
+-    "mcp>=1.0",
++    # Same floor as the core dependency above: GHSA-vj7q-gjh5-988w
++    # (WebSocket transport lacks Host/Origin validation), fixed in 1.28.1.
++    "mcp>=1.28.1,<2",
+ ]
+ rust = [
+     "maturin>=1.7,<2.0",
+@@ -118,7 +128,10 @@ imagegen = [
+     "diffusers>=0.30",
+     "transformers>=4.44",
+     "accelerate>=0.33",
+-    "pillow>=10.0",
++    # Floor raised 10.0 -> 12.3.0 by the 2026-07-31 security audit: pillow
++    # carried 26 open advisories at 12.2.0, including OS command injection via
++    # WindowsViewer.get_command() and an out-of-bounds read on the mmap path.
++    "pillow>=12.3.0",
+     "fastapi>=0.110",
+     "uvicorn>=0.30",
+ ]
+-- 
+2.55.0
+

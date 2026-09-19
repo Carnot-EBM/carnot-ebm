@@ -1,0 +1,61 @@
+From a46a8ed4fadeef438b7098602ffd19989907e14f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 05:42:27 -0400
+Subject: [PATCH 10262/11362] [conductor] Pre-gate block: Diagnostic-energy
+ localized repair versus full regeneration
+
+1 of 2 gate(s) failed; first failure: exp6746-oracle-distinct-diagnostic-energy.heldout_reasoning_error_auroc (numeric comparison rejected because one side is None (actual=None, expected=0.65) -- upstream wrote 'heldout_reasoning_error_auroc' as null. Re-run the UPSTREAM task; re-running this one cannot help.)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...experiment_6747_diagnostic_energy_localized_repair_ab.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9562a18918..ae29f60e3f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-08-29T09:40:22Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-08-29T09:42:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9cd63b7e34..fc16e11a7c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16758,3 +16758,4 @@ The l |
+ | 2026-08-29 08:56 UTC | Hardness-controlled exact certificate stream with  | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT — result quarantined, |
+ | 2026-08-29 09:20 UTC | Three-model SOTA dual-encoding proof-carrying corp | OK | 108 passed, 1 warning in 6.96s |
+ | 2026-08-29 09:38 UTC | Held-family oracle-distinct dual-encoding diagnost | OK | 88 passed, 1 warning in 10.01s |
++| 2026-08-29 09:40 UTC | Diagnostic-energy localized repair versus full reg | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6746-oracle-distinct-diagnostic-energy. |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9017ca9347..655cf73a2c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 25, "phase": "iteration_start", "started_at": "2026-08-29T09:40:22Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 26, "phase": "iteration_start", "started_at": "2026-08-29T09:42:26Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6747_diagnostic_energy_localized_repair_ab.json b/results/experiment_6747_diagnostic_energy_localized_repair_ab.json
+index 1ef7b7707b..ce1bcb1482 100644
+--- a/results/experiment_6747_diagnostic_energy_localized_repair_ab.json
++++ b/results/experiment_6747_diagnostic_energy_localized_repair_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 6747,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-29",
+-  "started_at": "2026-08-29T09:40:23.669186+00:00",
+-  "finished_at": "2026-08-29T09:40:23.669186+00:00",
++  "started_at": "2026-08-29T09:42:26.938029+00:00",
++  "finished_at": "2026-08-29T09:42:26.938029+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Diagnostic-energy localized repair versus full regeneration",
+-- 
+2.55.0
+

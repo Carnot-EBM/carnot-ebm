@@ -1,0 +1,86 @@
+From 2b4f3411919c7ce5a221a2e83726e2bbd1b63e9c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 14:06:37 -0400
+Subject: [PATCH 07666/11362] [conductor] In-process docs for Accepted adaptive
+ operations ABI conformance
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      | 38 +++++++++++++++++++
+ ops/changelog.md                              |  1 +
+ tests/python/test_arc_greedy_direct_agent.py  |  4 ++
+ 3 files changed, 43 insertions(+)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 409008b38e..6c7c56bfef 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -16991,3 +16991,41 @@ actions=393`, all routed to a `program_editor` strategy that also never converge
+ independent mechanism confirming the null on these exact 3 games -- they are simply hard, deep-mechanic
+ games for every adapter-free approach tried so far, live or offline, not a gap specific to any one
+ mechanism.
++
++### REQ-ARC-WMTE-5829: Duck-Harness-Style Greedy-Direct Agent (Match the Leaderboard Leaders)
++
++**Origin:** 2026-07-23, operator directive: "the leaderboard top projects are using the 31B and 27B
++models. we should switch to match them as they are at the top of the leaderboard." The 2026-07-20
++winner audit (`docs/research-notes/arc-top-project-search-architecture-audit-2026-07-20.md`) established
++that all three Milestone-1 winners use a capable 27-31B model as a GREEDY, single-commit-per-turn DIRECT
++action generator -- no tree/beam/MCTS search, no induced world model. Carnot's own induce-then-plan
++architecture already NULLED with a 31B inducer swapped in (`experiment_5722`, `delta 0.0`) -- because it
++used the big model as a world-model INDUCER feeding our search, not the winners' way (the direct action
++decider). This requirement is the winner-faithful agent: the 27-31B model driving actions directly.
++
++`carnot.agentic.arc_greedy_direct_agent.run_greedy_direct` SHALL implement a greedy-direct loop against
++the offline arcade, adapter-free (no GameAdapter, `solve_provenance: live_agent_self_discovery`): per
++decision, up to `max_turns` tool-inspection turns (reusing the safe tool surface from
++`arc_tool_loop_lookahead`), then commit a SHORT SEQUENCE of 1..`max_seq` actions executed DIRECTLY on the
++real env (irreversible -- no search, no rollback, no induced model), re-orienting after the sequence, a
++level-up, or a game-over. It SHALL map the model's LOGICAL-grid click coordinates back to raw pixels
++(cell-block center, clamped to [0,63]) before `env.step` -- the earlier `arc_tool_loop_lookahead` fed
++logical coords straight to `env.step`, a latent coordinate mismatch this requirement fixes. The
++completion path SHALL be raw `/completion` with fence-priming (`ACTION: [`), smoke-verified for
++gemma-4-31B (raw-unprimed derails into gemma's reasoning channel; the chat-template endpoint returned
++empty; the primed raw path returns clean parseable JSON).
++
++### SCENARIO-ARC-WMTE-5829-COMMIT-WITHIN-BUDGET
++
++**Given** the generator emits a valid `ACTION: [...]` sequence within the orientation-turn budget
++**When** `decide_sequence` processes it
++**Then** it returns the validated action sequence (unavailable actions and coordinate-less clicks
++dropped) without consuming further turns.
++
++### SCENARIO-ARC-WMTE-5829-CLICK-COORD-MAPPING
++
++**Given** the model commits an action-6 click at logical grid coords `(x=col, y=row)` on a frame whose
++detected cell size is `c`
++**When** the greedy-direct loop executes it
++**Then** the raw pixel passed to `env.step` is the cell-block center `(col*c + c//2, row*c + c//2)`
++clamped to `[0,63]` -- never the raw logical index.
+diff --git a/ops/changelog.md b/ops/changelog.md
+index adad10e2d3..291525f2dc 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11759,3 +11759,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-23: Clean-upstream selective replay with hard-case negative-transfer accounting (⚠️ Research Finding) — honest_verdict=qualified: clean_lifecycle_signature_compatible_replay; results/experiment_5857_clean_transfer_selective_replay.json
+ - 2026-07-23: Reduced-oracle versioned constraint memory on sealed future streams (✅ Complete) — honest_verdict=ready: reduced_oracle_continuous_self_learning; results/experiment_5858_reduced_oracle_continuous_self_learning.json
+ - 2026-07-23: Accepted adaptive operations ABI conformance (⚠️ Blocked) — honest_verdict=blocked: adaptive_state_microkernel_conformance_incomplete; results/experiment_5859_adaptive_state_microkernel_parity.json
++- 2026-07-23: Accepted adaptive operations ABI conformance (⚠️ Blocked) — honest_verdict=blocked: adaptive_state_microkernel_conformance_incomplete; results/experiment_5859_adaptive_state_microkernel_parity.json
+diff --git a/tests/python/test_arc_greedy_direct_agent.py b/tests/python/test_arc_greedy_direct_agent.py
+index f45beb8d9e..9343160296 100644
+--- a/tests/python/test_arc_greedy_direct_agent.py
++++ b/tests/python/test_arc_greedy_direct_agent.py
+@@ -4,6 +4,10 @@
+ Covers the two error-prone pieces without a GPU: the primed-sequence parser and the
+ tool-inspection-then-commit orientation loop (scripted proposer). The full env loop
+ (run_greedy_direct) is validated separately by the real single-game smoke.
++
++Spec: REQ-ARC-WMTE-5829, SCENARIO-ARC-WMTE-5829-COMMIT-WITHIN-BUDGET,
++SCENARIO-ARC-WMTE-5829-CLICK-COORD-MAPPING
++(openspec/capabilities/arc-world-model-trust-energy/spec.md).
+ """
+ 
+ from __future__ import annotations
+-- 
+2.55.0
+

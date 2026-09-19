@@ -1,0 +1,43 @@
+From 8008bbda2951895dda9eeffd6d52ab8d3759ee47 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 23:06:29 -0400
+Subject: [PATCH 04951/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0f0bcee984..d1345f2ce8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 172, "phase": "iteration_start", "last_beat": "2026-06-30T02:46:22Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 173, "phase": "iteration_start", "last_beat": "2026-06-30T03:06:27Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f5c18976d0..dd7f026d98 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9620,3 +9620,4 @@ The contro |
+ | 2026-06-30 01:59 UTC | PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) - | OK | 88 passed, 1 warning in 6.60s |
+ | 2026-06-30 02:21 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE) -- TRAI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-30 02:44 UTC | PHASE D2 (VERIFIER MOAT; the published WIN-CONDITI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-30 03:04 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | OK | 87 passed, 1 warning in 7.88s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d2cdf7883f..867c6ea7d9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 172, "phase": "iteration_start", "started_at": "2026-06-30T02:46:22Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 173, "phase": "iteration_start", "started_at": "2026-06-30T03:06:27Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

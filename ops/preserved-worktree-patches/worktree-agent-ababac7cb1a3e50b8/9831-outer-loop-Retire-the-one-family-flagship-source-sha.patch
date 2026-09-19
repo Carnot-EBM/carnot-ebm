@@ -1,0 +1,126 @@
+From 613d227da18d1dab7ce7c56c4e2525490e74c3e4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 13:52:15 -0400
+Subject: [PATCH 09831/11362] [outer-loop] Retire the one-family flagship
+ source-shard scope (exp6581, exp6582)
+
+Operator directive: retire both flagship shard tasks to the exclusion
+manifest.
+
+Exp6581 (Qwen3.6) and Exp6582 (Gemma-4-31B) reach the identical verdict,
+blocked_precondition_failed_without_quality_claim, on two different model
+families. Neither fails fast at an admission gate. Both load a model and do
+real work first: Exp6581 ran 927s, Exp6582 ran 1109s and then 2411s on its
+re-run. Two families failing at the same point implicates the quality
+precondition, not either model.
+
+The conductor logged 10 poison-and-rerun events across these two tasks in
+four hours. Every part of that is individually correct. The artifact
+honestly declares verdict_class blocked, the poison guard correctly refuses
+to log a blocked artifact as OK, and it schedules a re-run. The re-run
+reproduces the same block. Together they form a loop with no exit, costing
+up to 40 minutes of live GPU per iteration. Retirement is the mechanism the
+Failed-Experiment Rerun Discipline provides for exactly this shape.
+
+TWO FILES, because there are two manifests and they are not synced. This
+matters more than the retirement itself:
+
+  ops/exclusion_manifest.yaml            read by exclusion_manifest_lint.py
+                                         at ACTIVATION -- blocks a future
+                                         roadmap, does nothing to a running
+                                         one.
+  scripts/conductor_exclusion_manifest.json
+                                         read by
+                                         _ensure_exclusion_manifest_loaded
+                                         at RUNTIME, per task launch.
+
+The JSON had not been touched since May 14. Writing only the YAML would have
+left the in-flight loop running while looking like the task was retired.
+Nothing generates one from the other, and no check compares them.
+
+Worth knowing about the runtime half: _task_is_excluded's own docstring says
+"Exclusion is a performance optimisation, not a safety gate", and it returns
+(False, "no id") when it cannot extract an integer id or the manifest fails
+to load. It fails open. So this retirement stops the loop only while the
+JSON parses and the task id keeps its exp<N>- shape.
+
+Verified through the real code path rather than by reading the file:
+ExclusionManifest.is_excluded() returns True for 6581 and 6582 and False for
+a control id. The activation lint stays clean on the current roadmap.
+
+Scope: this retires the one-family flagship source-shard runs at the current
+precondition. It does not retire flagship model use. Reopen once someone
+diagnoses why the quality precondition fails after a successful load, and
+says what changed. operator_reopen_required is set.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/exclusion_manifest.yaml               | 30 +++++++++++++++++++++++
+ scripts/conductor_exclusion_manifest.json | 12 ++++++++-
+ 2 files changed, 41 insertions(+), 1 deletion(-)
+
+diff --git a/ops/exclusion_manifest.yaml b/ops/exclusion_manifest.yaml
+index 66c6c9247b..5fcdc8b229 100644
+--- a/ops/exclusion_manifest.yaml
++++ b/ops/exclusion_manifest.yaml
+@@ -1049,3 +1049,33 @@ retired_extras:
+   blocked_patterns:
+   - licensed transfer promoted while Exp6301 activation-bus integrity is blocked
+   - retrieval-only or replay-only evidence counted as evidence-licensed transfer
++- id: exp6581_6582_one_family_flagship_source_shard_retired_v572
++  scope_key: one_family_flagship_source_shard_blocked_precondition_without_quality_claim
++  experiment_scope: One-family flagship GGUF source-shard runs that load a flagship model, run to completion, then fail a quality precondition and emit blocked_precondition_failed_without_quality_claim
++  reason: >-
++    retire_if_same_verdict: Exp6581 (Qwen3.6) and Exp6582 (Gemma-4-31B) reached the
++    identical blocked_precondition_failed_without_quality_claim verdict on two
++    different model families. The block is not a missing model and not a failed
++    admission gate. Both runs loaded a model and did real work first: Exp6581 ran
++    927s, Exp6582 ran 1109s and then 2411s on its re-run. Two families failing at
++    the same point points at the quality precondition itself, not at either model.
++    The conductor logged 10 poison-and-rerun events across these two tasks in four
++    hours. Each cycle is correct in isolation. The artifact honestly declares
++    verdict_class blocked, the poison guard correctly refuses to log it as OK, and
++    the re-run reproduces the same block. Together they form a loop with no exit,
++    and each iteration costs up to 40 minutes of live GPU. Retirement is the
++    mechanism the Failed-Experiment Rerun Discipline provides for exactly this.
++    This retires ONLY the one-family flagship source-shard scope at the current
++    precondition. It does not retire flagship model use in general. Reopen once
++    someone diagnoses why the quality precondition fails after a successful load,
++    and states what changed.
++  experiment_ids:
++  - exp6581-qwen36-flagship-source-shard
++  - exp6582-gemma4-31b-flagship-source-shard
++  retired_milestone: 2026.08.572
++  retired_by_artifact: results/experiment_6582_gemma4_31b_flagship_source_shard.json
++  operator_reopen_required: true
++  retire_if_same_verdict: true
++  blocked_patterns:
++  - one-family flagship source shard re-proposed without a diagnosed cause for the failing quality precondition
++  - flagship source shard retried after blocked_precondition_failed_without_quality_claim with no stated change
+diff --git a/scripts/conductor_exclusion_manifest.json b/scripts/conductor_exclusion_manifest.json
+index cbf84d3f9c..63ee6d2b64 100644
+--- a/scripts/conductor_exclusion_manifest.json
++++ b/scripts/conductor_exclusion_manifest.json
+@@ -167,6 +167,16 @@
+       "experiment_id": 2091,
+       "completed_milestone": "2026.05.164",
+       "reason": "gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries 2h+ wall time); LaTeX markup fix did not resolve. Retired pending agent-routing investigation."
++    },
++    {
++      "experiment_id": 6581,
++      "completed_milestone": "2026.08.572",
++      "reason": "retire_if_same_verdict: blocked_precondition_failed_without_quality_claim after a live 927s flagship load. Exp6582 reached the identical verdict on a different model family, so the quality precondition is the cause, not either model. The poison guard re-ran these tasks 10 times in four hours at up to 40 min GPU per cycle. See ops/exclusion_manifest.yaml entry exp6581_6582_one_family_flagship_source_shard_retired_v572."
++    },
++    {
++      "experiment_id": 6582,
++      "completed_milestone": "2026.08.572",
++      "reason": "retire_if_same_verdict: blocked_precondition_failed_without_quality_claim on two runs (1109s then 2411s live GPU), same verdict as Exp6581 on a different model family. Retires only the one-family flagship source-shard scope at the current precondition, not flagship model use in general. See ops/exclusion_manifest.yaml entry exp6581_6582_one_family_flagship_source_shard_retired_v572."
+     }
+   ]
+-}
+\ No newline at end of file
++}
+-- 
+2.55.0
+

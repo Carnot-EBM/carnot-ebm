@@ -1,0 +1,65 @@
+From 5e0eecbe7d62291baeee1b5726d9444eda521800 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 23:02:44 -0400
+Subject: [PATCH 05732/11362] [conductor] Update docs for PHASE 3 ARC live path
+ -- receipt-clean rerun or retire the .479 provenance patch
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md        | 3 +++
+ ops/changelog.md             | 1 +
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 5 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index e8d53ec53b..5071a77ebf 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1917,3 +1917,6 @@ legacy tests.
+ | SCENARIO-VERIFY-5251 | Fragment Gate Reports Bounded SOTA Delta | Implemented-Partial | Artifact records the bounded 8-fixture fragment gate panel and reports harm: gated_accuracy=0.75 vs baseline_accuracy=1.0, accuracy_change.value=-0.25, unsupported_claim_delta.value=1.0, deterministic_violation_delta.value=4.0, false_accepts.value=0; status remains ⚠️ Partial / Not Viable / Research Finding because the verdict says fragment self-checking was harmful. |
+ | REQ-VERIFY-5252 | HalluHard-Style Provenance-Memory Microbench | Implemented-Partial | `python/carnot/verify/halluhard_provenance_memory_microbench_v480.py`; `tests/python/test_experiment_5252_halluhard_provenance_memory_microbench_v480.py`; `openspec/capabilities/verification/spec.md`; `results/experiment_5252_halluhard_provenance_memory_microbench_v480.json`; honest_verdict={"principle":"Terminal verdict states whether provenance memory reduced","value":"complete: typed provenance memory did not reduce hallucination errors on this local microbench"}; status=<missing>; repeated_error_delta.value=0.0; citation_support_delta.value=0.0; unsupported_claim_rate_no_memory.value=0.0; unsupported_claim_rate_typed_memory.value=0.0; fixture_count.value=12; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; no provenance-memory improvement or retro closure is claimed. |
+ | SCENARIO-VERIFY-5252 | Typed Provenance Memory Reports Multi-Turn Support Delta | Implemented-Partial | Artifact records the 12-fixture local SOTA GGUF microbench with no-memory, raw-conversation-memory, and typed-provenance-memory arms; all arms reported unsupported_claim_rate=0.0, citation_support_rate=1.0, repeated_error_rate=0.0, over_refusal_rate=0.125, and missed_answer_rate=0.125, so the measured typed-memory deltas were repeated_error_delta.value=0.0 and citation_support_delta.value=0.0 rather than a hallucination-error reduction. |
++| REQ-REPORT-5253 | ARC live patch clean receipts or retirement | Implemented-Partial | `python/carnot/experiment_5253_arc_live_patch_clean_receipts_v480.py`; `tests/python/test_experiment_5253_arc_live_patch_clean_receipts_v480.py`; `openspec/capabilities/research-reporting/spec.md`; `results/experiment_5253_arc_live_patch_clean_receipts_v480.json`; honest_verdict={"principle":"Must start with complete: or blocked_ and state level_delta and patch decision.","value":"complete: level_delta=0 patch_decision=retire_current_provenance_patch solve_provenance=live_agent_self_discovery; clean_zero_delta_no_level_banked."}; status=null; level_delta.value=0; retire_current_provenance_patch.value=true; duplicate_solve_claimed.value=false; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; no banked solve or measured ARC improvement is claimed. |
++| SCENARIO-REPORT-5253-CLEAN-NO-BANK-RETIRE | Clean receipts retire a zero-delta patch | Implemented-Partial | Artifact records the live ARC-agent route reached the Exp 5240 provenance guard, `solve_provenance.value=live_agent_self_discovery`, `level_delta.value=0`, `levels_reproduced.value=[]`, `duplicate_solve_claimed.value=false`, and `retire_current_provenance_patch.value=true`; focused tests passed, but the result is zero-delta retirement rather than a solve win. |
++| SCENARIO-REPORT-5253-SOLVE-CREDIT-GATE | Solve credit requires live self-discovery | Scaffolding | Spec and tests define the future positive-delta gate, but this artifact followed the zero-delta retirement path; future solve credit still requires live self-discovery provenance, clean forbidden-method receipts, non-duplicate registry status, and a live route receipt before banking any level. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 5e9a4e075e..79d5775527 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10889,3 +10889,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-05: PHASE 2 Continuous Self-Learning -- cross-model typed memory transfer with local SOTA GGUFs (⚠️ Blocked) — honest_verdict={"principle":"Must start with complete: or blocked_ and state whether cross-model typed memory was useful.","value":"blocked_precondition_cross_model_memory_not_measured: cross-model memory usefulness not measured; blockers=blocked_llama_cpp_gpu_offload"}; status=null; blocker=blocked_llama_cpp_gpu_offload; cross-model memory usefulness not measured; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5249_cross_model_typed_memory_transfer_v480.json
+ - 2026-07-05: PHASE 2 Token-Guard/Carnot pilot -- fragment self-checking with energy and provenance gates (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"The terminal value must say whether fragment self-checking helped, was null, was harmful, or blocked before inference.","value":"complete: fragment self-checking was harmful on this bounded panel"}; status=<missing>; accuracy_change.value=-0.25; baseline_accuracy=1.0; gated_accuracy=0.75; unsupported_claim_delta.value=1.0; deterministic_violation_delta.value=4.0; false_accepts.value=0; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5251_token_guard_carnot_pilot_v480.json
+ - 2026-07-05: PHASE 2 HalluHard-style microbench -- multi-turn provenance memory with local SOTA GGUFs (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Terminal verdict states whether provenance memory reduced","value":"complete: typed provenance memory did not reduce hallucination errors on this local microbench"}; status=<missing>; repeated_error_delta.value=0.0; citation_support_delta.value=0.0; unsupported_claim_rate_no_memory.value=0.0; unsupported_claim_rate_typed_memory.value=0.0; fixture_count.value=12; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5252_halluhard_provenance_memory_microbench_v480.json
++- 2026-07-05: PHASE 3 ARC live path -- receipt-clean rerun or retire the .479 provenance patch (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Must start with complete: or blocked_ and state level_delta and patch decision.","value":"complete: level_delta=0 patch_decision=retire_current_provenance_patch solve_provenance=live_agent_self_discovery; clean_zero_delta_no_level_banked."}; status=null; level_delta.value=0; retire_current_provenance_patch.value=true; duplicate_solve_claimed.value=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5253_arc_live_patch_clean_receipts_v480.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fb8dcb8964..b6731ffc65 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 81, "phase": "iteration_start", "last_beat": "2026-07-05T02:44:02Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 82, "phase": "iteration_start", "last_beat": "2026-07-05T03:02:00Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b4103f5d4d..d5bd67f858 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10317,3 +10317,4 @@ web search: |
+ | 2026-07-05 01:26 UTC | PHASE 2 gated on exp5249 cross_model_memory_eligib | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5249-cross-model-typed-memory-transfer- |
+ | 2026-07-05 02:15 UTC | PHASE 2 Token-Guard/Carnot pilot -- fragment self- | OK | 93 passed, 1 warning in 12.91s |
+ | 2026-07-05 02:42 UTC | PHASE 2 HalluHard-style microbench -- multi-turn p | OK | 88 passed, 1 warning in 9.37s |
++| 2026-07-05 03:00 UTC | PHASE 3 ARC live path -- receipt-clean rerun or re | OK | 204 passed, 1 warning in 11.36s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f015cb63e9..b564912cfe 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 81, "phase": "iteration_start", "started_at": "2026-07-05T02:44:02Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 82, "phase": "iteration_start", "started_at": "2026-07-05T03:02:00Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

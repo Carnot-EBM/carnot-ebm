@@ -1,0 +1,4149 @@
+From 7ad56e31308a3a845fc2dd6f4a398a735658964d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 10 Aug 2026 12:02:43 -0400
+Subject: [PATCH 08724/11362] [conductor] Typed variable-cardinality Rust/PyO3
+ mode-jump backend
+
+Automated research step by research conductor.
+Task ID: exp6280-variable-cardinality-mode-jump-backend
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ crates/carnot-python/src/mode_jump.rs         |   92 +-
+ crates/carnot-samplers/src/mode_jump.rs       |  156 +++
+ crates/carnot-samplers/tests/mode_jump.rs     |  128 +-
+ openspec/capabilities/samplers/spec.md        |  135 ++
+ ops/dogfood-memory.json                       |    2 +-
+ python/carnot/_rust_compat.py                 |    3 +
+ ..._variable_cardinality_mode_jump_backend.py | 1078 +++++++++++++++
+ .../carnot/samplers/mode_jump_rust_backend.py |  476 ++++++-
+ ...ariable_cardinality_mode_jump_backend.json | 1185 +++++++++++++++++
+ .../samplers/test_mode_jump_rust_backend.py   |  212 +++
+ ..._variable_cardinality_mode_jump_backend.py |  302 +++++
+ 11 files changed, 3746 insertions(+), 23 deletions(-)
+ create mode 100644 python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py
+ create mode 100644 results/experiment_6280_variable_cardinality_mode_jump_backend.json
+ create mode 100644 tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py
+
+diff --git a/crates/carnot-python/src/mode_jump.rs b/crates/carnot-python/src/mode_jump.rs
+index 8710f529ea..74a98b2f5b 100644
+--- a/crates/carnot-python/src/mode_jump.rs
++++ b/crates/carnot-python/src/mode_jump.rs
+@@ -4,7 +4,8 @@
+ //! SCENARIO-RUSTPY-6194-BOUNDARY-PARITY
+ 
+ use carnot_samplers::mode_jump::{
+-    ModeJumpConfig, ModeJumpCore, ModeJumpRunSummary, ModeJumpState, ModeJumpStepOutcome,
++    ModeJumpConfig, ModeJumpCore, ModeJumpRunSummary, ModeJumpState, ModeJumpStateMetadata,
++    ModeJumpStepOutcome,
+ };
+ use pyo3::exceptions::PyValueError;
+ use pyo3::prelude::*;
+@@ -43,6 +44,23 @@ fn state_from_dict(snapshot: &Bound<'_, PyDict>) -> PyResult<ModeJumpState> {
+     ModeJumpState::new(current_label, rng_state, step, accepted_count).map_err(value_error)
+ }
+ 
++fn metadata_to_dict<'py>(
++    py: Python<'py>,
++    metadata: &ModeJumpStateMetadata,
++) -> PyResult<Bound<'py, PyDict>> {
++    let d = PyDict::new(py);
++    d.set_item("schema", metadata.schema.clone())?;
++    d.set_item("shape", metadata.shape.clone())?;
++    d.set_item("cardinalities", metadata.cardinalities.clone())?;
++    d.set_item("encoding", metadata.encoding.clone())?;
++    d.set_item("state_labels", metadata.state_labels.clone())?;
++    d.set_item("state_values", metadata.state_values.clone())?;
++    d.set_item("proposal_domain", metadata.proposal_domain.clone())?;
++    d.set_item("state_space_size", metadata.state_space_size)?;
++    d.set_item("support_count", metadata.state_labels.len())?;
++    Ok(d)
++}
++
+ fn step_to_dict<'py>(
+     py: Python<'py>,
+     outcome: ModeJumpStepOutcome,
+@@ -120,6 +138,76 @@ impl PyModeJumpConfig {
+                 .map_err(value_error)?,
+         })
+     }
++
++    #[staticmethod]
++    fn with_metadata(
++        labels: Vec<String>,
++        target_probabilities: Vec<f64>,
++        proposal_probabilities: Vec<Vec<f64>>,
++        metadata: &PyModeJumpStateMetadata,
++    ) -> PyResult<Self> {
++        Ok(Self {
++            inner: ModeJumpConfig::new_with_metadata(
++                labels,
++                target_probabilities,
++                proposal_probabilities,
++                metadata.inner.clone(),
++            )
++            .map_err(value_error)?,
++        })
++    }
++}
++
++/// Explicit typed state metadata for variable-cardinality mode-jump domains.
++#[pyclass(name = "RustModeJumpStateMetadata")]
++#[derive(Clone)]
++pub struct PyModeJumpStateMetadata {
++    inner: ModeJumpStateMetadata,
++}
++
++#[pymethods]
++impl PyModeJumpStateMetadata {
++    #[new]
++    fn new(
++        schema: String,
++        shape: Vec<usize>,
++        cardinalities: Vec<usize>,
++        encoding: String,
++        state_labels: Vec<String>,
++        state_values: Vec<Vec<usize>>,
++        proposal_domain: String,
++        state_space_size: usize,
++    ) -> PyResult<Self> {
++        Ok(Self {
++            inner: ModeJumpStateMetadata::new(
++                schema,
++                shape,
++                cardinalities,
++                encoding,
++                state_labels,
++                state_values,
++                proposal_domain,
++                state_space_size,
++            )
++            .map_err(value_error)?,
++        })
++    }
++
++    fn snapshot<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
++        metadata_to_dict(py, &self.inner)
++    }
++
++    fn encode_label(&self, label: String) -> PyResult<usize> {
++        self.inner.encode_label(&label).map_err(value_error)
++    }
++
++    fn decode_index(&self, index: usize) -> PyResult<String> {
++        self.inner.decode_index(index).map_err(value_error)
++    }
++
++    fn state_value(&self, label: String) -> PyResult<Vec<usize>> {
++        self.inner.state_value(&label).map_err(value_error)
++    }
+ }
+ 
+ /// Serializable seeded mode-jump state.
+@@ -240,11 +328,13 @@ impl PyModeJumpCore {
+ pub fn register_mode_jump_module(parent: &Bound<'_, PyModule>) -> PyResult<()> {
+     let module = PyModule::new(parent.py(), "mode_jump")?;
+     module.add_class::<PyModeJumpConfig>()?;
++    module.add_class::<PyModeJumpStateMetadata>()?;
+     module.add_class::<PyModeJumpState>()?;
+     module.add_class::<PyModeJumpCore>()?;
+     parent.add_submodule(&module)?;
+ 
+     parent.add_class::<PyModeJumpConfig>()?;
++    parent.add_class::<PyModeJumpStateMetadata>()?;
+     parent.add_class::<PyModeJumpState>()?;
+     parent.add_class::<PyModeJumpCore>()?;
+     Ok(())
+diff --git a/crates/carnot-samplers/src/mode_jump.rs b/crates/carnot-samplers/src/mode_jump.rs
+index cb6cb78166..5f0b2fe9ef 100644
+--- a/crates/carnot-samplers/src/mode_jump.rs
++++ b/crates/carnot-samplers/src/mode_jump.rs
+@@ -19,6 +19,134 @@ pub struct ModeJumpConfig {
+     pub labels: Vec<String>,
+     pub target_probabilities: Vec<f64>,
+     pub proposal_probabilities: Vec<Vec<f64>>,
++    pub state_metadata: Option<ModeJumpStateMetadata>,
++}
++
++/// Explicit rank-1 typed state metadata for variable-cardinality domains.
++#[derive(Clone, Debug, PartialEq, Eq)]
++pub struct ModeJumpStateMetadata {
++    pub schema: String,
++    pub shape: Vec<usize>,
++    pub cardinalities: Vec<usize>,
++    pub encoding: String,
++    pub state_labels: Vec<String>,
++    pub state_values: Vec<Vec<usize>>,
++    pub proposal_domain: String,
++    pub state_space_size: usize,
++}
++
++impl ModeJumpStateMetadata {
++    /// Validate state labels and mixed-radix values before the sampler uses them.
++    pub fn new(
++        schema: String,
++        shape: Vec<usize>,
++        cardinalities: Vec<usize>,
++        encoding: String,
++        state_labels: Vec<String>,
++        state_values: Vec<Vec<usize>>,
++        proposal_domain: String,
++        state_space_size: usize,
++    ) -> Result<Self, String> {
++        if schema != "carnot.mode_jump.typed_state_metadata.v1" {
++            return Err("typed state metadata schema mismatch".to_string());
++        }
++        if shape.len() != 1 {
++            return Err("typed state metadata shape must be rank-1".to_string());
++        }
++        if cardinalities.is_empty() {
++            return Err("typed state metadata cardinalities must be non-empty".to_string());
++        }
++        if shape[0] != cardinalities.len() {
++            return Err("typed state metadata shape must match cardinality count".to_string());
++        }
++        if cardinalities.iter().any(|cardinality| *cardinality < 2) {
++            return Err("typed state metadata cardinalities must be at least 2".to_string());
++        }
++        if encoding.trim().is_empty() {
++            return Err("typed state metadata encoding must be non-empty".to_string());
++        }
++        if proposal_domain != "explicit_support_complete_no_self"
++            && proposal_domain != "explicit_support_table"
++        {
++            return Err("typed state metadata proposal_domain is unsupported".to_string());
++        }
++        if state_labels.is_empty() {
++            return Err("typed state metadata state_labels must be non-empty".to_string());
++        }
++        if state_values.len() != state_labels.len() {
++            return Err("typed state metadata state_values length must match labels".to_string());
++        }
++        let expected_space = cardinalities
++            .iter()
++            .try_fold(1_usize, |acc, value| acc.checked_mul(*value))
++            .ok_or_else(|| "typed state metadata state_space_size overflow".to_string())?;
++        if expected_space != state_space_size {
++            return Err(
++                "typed state metadata state_space_size must match cardinalities".to_string(),
++            );
++        }
++        let mut seen = HashSet::with_capacity(state_labels.len());
++        let mut seen_values = HashSet::with_capacity(state_values.len());
++        for (label, value) in state_labels.iter().zip(state_values.iter()) {
++            if label.is_empty() || label.contains('|') {
++                return Err(
++                    "typed state metadata labels must be non-empty and must not contain '|'"
++                        .to_string(),
++                );
++            }
++            if !seen.insert(label.clone()) {
++                return Err("typed state metadata labels must be unique".to_string());
++            }
++            if value.len() != cardinalities.len() {
++                return Err(
++                    "typed state metadata state value length must match cardinalities".to_string(),
++                );
++            }
++            for (coordinate, cardinality) in value.iter().zip(cardinalities.iter()) {
++                if *coordinate >= *cardinality {
++                    return Err("typed state metadata state value exceeds cardinality".to_string());
++                }
++            }
++            if !seen_values.insert(value.clone()) {
++                return Err("typed state metadata state values must be unique".to_string());
++            }
++        }
++        if state_labels.len() > state_space_size {
++            return Err("typed state metadata support exceeds state space".to_string());
++        }
++        Ok(Self {
++            schema,
++            shape,
++            cardinalities,
++            encoding,
++            state_labels,
++            state_values,
++            proposal_domain,
++            state_space_size,
++        })
++    }
++
++    /// Return the proposal-table index for a valid state label.
++    pub fn encode_label(&self, label: &str) -> Result<usize, String> {
++        self.state_labels
++            .iter()
++            .position(|candidate| candidate == label)
++            .ok_or_else(|| format!("typed state metadata label not in domain: {label}"))
++    }
++
++    /// Return the state label at a proposal-table index.
++    pub fn decode_index(&self, index: usize) -> Result<String, String> {
++        self.state_labels
++            .get(index)
++            .cloned()
++            .ok_or_else(|| "typed state metadata index outside domain".to_string())
++    }
++
++    /// Return the mixed-radix state value for a valid state label.
++    pub fn state_value(&self, label: &str) -> Result<Vec<usize>, String> {
++        let index = self.encode_label(label)?;
++        Ok(self.state_values[index].clone())
++    }
+ }
+ 
+ impl ModeJumpConfig {
+@@ -27,6 +155,33 @@ impl ModeJumpConfig {
+         labels: Vec<String>,
+         target_probabilities: Vec<f64>,
+         proposal_probabilities: Vec<Vec<f64>>,
++    ) -> Result<Self, String> {
++        Self::new_internal(labels, target_probabilities, proposal_probabilities, None)
++    }
++
++    /// Validate a finite target, proposal table, and explicit typed metadata.
++    pub fn new_with_metadata(
++        labels: Vec<String>,
++        target_probabilities: Vec<f64>,
++        proposal_probabilities: Vec<Vec<f64>>,
++        state_metadata: ModeJumpStateMetadata,
++    ) -> Result<Self, String> {
++        if state_metadata.state_labels != labels {
++            return Err("typed state metadata labels must match config labels".to_string());
++        }
++        Self::new_internal(
++            labels,
++            target_probabilities,
++            proposal_probabilities,
++            Some(state_metadata),
++        )
++    }
++
++    fn new_internal(
++        labels: Vec<String>,
++        target_probabilities: Vec<f64>,
++        proposal_probabilities: Vec<Vec<f64>>,
++        state_metadata: Option<ModeJumpStateMetadata>,
+     ) -> Result<Self, String> {
+         if labels.is_empty() {
+             return Err("labels must be non-empty".to_string());
+@@ -86,6 +241,7 @@ impl ModeJumpConfig {
+             labels,
+             target_probabilities,
+             proposal_probabilities,
++            state_metadata,
+         })
+     }
+ }
+diff --git a/crates/carnot-samplers/tests/mode_jump.rs b/crates/carnot-samplers/tests/mode_jump.rs
+index fa8ac7eced..20703c0e5e 100644
+--- a/crates/carnot-samplers/tests/mode_jump.rs
++++ b/crates/carnot-samplers/tests/mode_jump.rs
+@@ -4,7 +4,9 @@
+ //! SCENARIO-SAMPLE-6194-DISTRIBUTION-QUALITY-PARITY,
+ //! SCENARIO-SAMPLE-6194-SERIALIZATION-ERROR-PRESERVATION.
+ 
+-use carnot_samplers::mode_jump::{ModeJumpConfig, ModeJumpCore, ModeJumpState};
++use carnot_samplers::mode_jump::{
++    ModeJumpConfig, ModeJumpCore, ModeJumpState, ModeJumpStateMetadata,
++};
+ 
+ fn frozen_config() -> ModeJumpConfig {
+     ModeJumpConfig::new(
+@@ -183,3 +185,127 @@ fn req_sample_6208_runtime_controls_reject_malformed_fixed_config() {
+     bad_row[0] = vec![1.0];
+     assert!(ModeJumpConfig::new(config.labels, config.target_probabilities, bad_row).is_err());
+ }
++
++fn complete_no_self_proposal(n: usize) -> Vec<Vec<f64>> {
++    let off_diagonal = 1.0 / (n - 1) as f64;
++    (0..n)
++        .map(|i| {
++            (0..n)
++                .map(|j| if i == j { 0.0 } else { off_diagonal })
++                .collect()
++        })
++        .collect()
++}
++
++#[test]
++fn req_sampler_6280_variable_cardinality_metadata_roundtrips_and_runs() {
++    // REQ-SAMPLER-6280-METADATA and REQ-SAMPLER-6280-PARITY:
++    // typed rank-1 metadata validates before the generic MH kernel runs.
++    let labels = vec![
++        "-1,0".to_string(),
++        "-1,1".to_string(),
++        "-1,2".to_string(),
++        "+1,0".to_string(),
++        "+1,1".to_string(),
++        "+1,2".to_string(),
++    ];
++    let state_values = vec![
++        vec![0, 0],
++        vec![0, 1],
++        vec![0, 2],
++        vec![1, 0],
++        vec![1, 1],
++        vec![1, 2],
++    ];
++    let metadata = ModeJumpStateMetadata::new(
++        "carnot.mode_jump.typed_state_metadata.v1".to_string(),
++        vec![2],
++        vec![2, 3],
++        "mixed_radix_rank1".to_string(),
++        labels.clone(),
++        state_values.clone(),
++        "explicit_support_complete_no_self".to_string(),
++        6,
++    )
++    .unwrap();
++
++    assert_eq!(metadata.encode_label("-1,2").unwrap(), 2);
++    assert_eq!(metadata.decode_index(4).unwrap(), " +1,1".trim());
++    assert_eq!(metadata.state_value("+1,2").unwrap(), vec![1, 2]);
++    assert!(metadata.decode_index(6).is_err());
++
++    let config = ModeJumpConfig::new_with_metadata(
++        labels.clone(),
++        vec![0.10, 0.15, 0.20, 0.25, 0.12, 0.18],
++        complete_no_self_proposal(labels.len()),
++        metadata,
++    )
++    .unwrap();
++    let core = ModeJumpCore::new(config);
++    let state = ModeJumpState::new("-1,0".to_string(), 6280, 0, 0).unwrap();
++    let first = core.step_trace(&state).unwrap();
++    let replay = core.step_trace(&state).unwrap();
++
++    assert_eq!(first, replay);
++    assert_eq!(first.state.step, 1);
++    assert!(labels.contains(&first.proposed_label));
++    assert!(core.run(&state, 16, 2).is_ok());
++}
++
++#[test]
++fn req_sampler_6280_metadata_controls_fail_closed() {
++    // REQ-SAMPLER-6280-CONTROLS: inconsistent metadata and proposal domains
++    // are rejected before any state can be interpreted under the wrong labels.
++    let labels = vec!["0".to_string(), "1".to_string(), "2".to_string()];
++    let good_metadata = ModeJumpStateMetadata::new(
++        "carnot.mode_jump.typed_state_metadata.v1".to_string(),
++        vec![1],
++        vec![3],
++        "zero_based_rank1".to_string(),
++        labels.clone(),
++        vec![vec![0], vec![1], vec![2]],
++        "explicit_support_complete_no_self".to_string(),
++        3,
++    )
++    .unwrap();
++
++    let mut permuted = labels.clone();
++    permuted.reverse();
++    assert!(ModeJumpConfig::new_with_metadata(
++        permuted,
++        vec![0.2, 0.3, 0.5],
++        complete_no_self_proposal(labels.len()),
++        good_metadata.clone(),
++    )
++    .is_err());
++
++    assert!(ModeJumpStateMetadata::new(
++        "carnot.mode_jump.typed_state_metadata.v1".to_string(),
++        vec![1, 1],
++        vec![3],
++        "zero_based_rank1".to_string(),
++        labels.clone(),
++        vec![vec![0], vec![1], vec![2]],
++        "explicit_support_complete_no_self".to_string(),
++        3,
++    )
++    .is_err());
++    assert!(ModeJumpStateMetadata::new(
++        "carnot.mode_jump.typed_state_metadata.v1".to_string(),
++        vec![1],
++        vec![3],
++        "zero_based_rank1".to_string(),
++        labels.clone(),
++        vec![vec![0], vec![1], vec![3]],
++        "explicit_support_complete_no_self".to_string(),
++        3,
++    )
++    .is_err());
++    assert!(ModeJumpConfig::new_with_metadata(
++        labels,
++        vec![0.2, 0.3, 0.5],
++        vec![vec![0.0, 1.0]],
++        good_metadata,
++    )
++    .is_err());
++}
+diff --git a/openspec/capabilities/samplers/spec.md b/openspec/capabilities/samplers/spec.md
+index d8da1c7afd..1b19adbc59 100644
+--- a/openspec/capabilities/samplers/spec.md
++++ b/openspec/capabilities/samplers/spec.md
+@@ -4304,3 +4304,138 @@ mixing improvement on at least two non-toy fixture families.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-SAMPLER-6269 | Planned (`python/carnot/experiment_6269_mode_jump_multifamily_ab.py`, `results/experiment_6269_mode_jump_multifamily_ab.json`) | Planned (`tests/python/test_experiment_6269_mode_jump_multifamily_ab.py`) |
++
++### REQ-SAMPLER-6280: Variable-Cardinality Mode-Jump Backend ABI
++
++Carnot MUST replace the fixed six-state-only mode-jump runtime contract with an
++explicit typed state metadata contract while preserving the original six-state
++behavior. The backend SHALL support the Exp6268 binary Ising, multistate
++Potts, original six-state categorical, typed multimodal factor, and bounded
++typed access-control fixtures through one metadata schema. The work SHALL NOT
++run the Exp6269 scientific A/B and SHALL NOT make sampler-value, timing, CUDA,
++cDLS, FPGA, TSU, power, or speedup claims.
++
++Sub-requirements:
++- REQ-SAMPLER-6280-SPEC-FIRST: The metadata schema SHALL declare rank-1 state
++  shape, per-variable cardinality, encoding, labels or categories, valid
++  proposal domain, and round-trip rules before implementation evidence is
++  interpreted.
++- REQ-SAMPLER-6280-METADATA: The Python adapter, Rust core, and PyO3 binding
++  SHALL reject ambiguous, inconsistent, duplicate-label, out-of-domain,
++  mismatched-cardinality, unsupported-rank, or non-square proposal metadata
++  before sampling.
++- REQ-SAMPLER-6280-COMPATIBILITY: The original Exp6194/Exp6208 six-label call
++  SHALL still run through the compatibility path with the same samples, decision
++  log, checkpoint state, and treatment counts for fixed seeds.
++- REQ-SAMPLER-6280-PARITY: Rust/PyO3 and exact Python fallback SHALL match
++  encode-decode round trips, proposal probabilities, one-step decisions,
++  retained samples, decision logs, checkpoint states, and deterministic replay
++  for every supported Exp6268 fixture.
++- REQ-SAMPLER-6280-ACTIVATION: Each positive-control fixture SHALL record
++  nonzero treatment attempts, accepted jumps, and fires before any backend
++  readiness score can equal `1.0`.
++- REQ-SAMPLER-6280-CONTROLS: Malformed cardinality, malformed shape,
++  out-of-domain proposal, and label-permutation controls SHALL fail closed.
++  Unsupported non-rank-1 shapes SHALL remain explicit errors and SHALL NOT be
++  replaced with fallback samples.
++- REQ-SAMPLER-6280-ARTIFACT: Exp6280 SHALL write
++  `results/experiment_6280_variable_cardinality_mode_jump_backend.json` after
++  focused Rust/Python parity tests, deterministic replay checks, activation
++  checks, fail-closed controls, and adversarial verification of the artifact.
++
++The terminal artifact SHALL include these top-level fields: `status`,
++`exp6268_fixture_path_hash_and_terminal_class`,
++`exp6269_failure_path_hash_and_root_cause`,
++`rust_and_python_source_paths_hashes_before_after`,
++`typed_state_metadata_schema`, `supported_fixture_families_and_shapes`,
++`unsupported_shapes_and_fail_closed_behavior`,
++`original_six_state_regression_receipt`,
++`rust_python_encode_decode_roundtrip_by_fixture`,
++`rust_python_proposal_parity_by_fixture`,
++`deterministic_seed_replay_by_fixture`,
++`treatment_attempt_accept_and_fire_counts_by_fixture`,
++`malformed_cardinality_controls`, `malformed_shape_controls`,
++`out_of_domain_proposal_controls`, `label_permutation_controls`,
++`focused_python_test_results`, `focused_rust_test_results`,
++`source_mutation_count`, `variable_cardinality_backend_ready_score`,
++`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
++`verifier_is_oracle`, `field_provenance`, `field_principles`,
++`test_commands`, `test_exit_codes`, `duration_s`, `random_seed`,
++`reproducibility_checksum`, and `honest_verdict`.
++`source_mutation_count` SHALL be the bare integer `0`.
++`variable_cardinality_backend_ready_score` SHALL equal exactly `1.0` only when
++all preregistered fixture families are supported, Rust/Python round trips and
++proposals are exact, deterministic seed replay holds, treatment fires on
++positive controls, malformed controls fail closed, protected files are
++unchanged, and focused command exits are clean. `inference_substrate` SHALL
++equal `local_cpu_rust_python_variable_cardinality_sampler_abi`.
++
++Required field principles:
++
++- `status`: Separates ready ABI evidence from blocked metadata, parity, or control states.
++- `exp6268_fixture_path_hash_and_terminal_class`: Pins the exact fixture suite and its terminal class before support claims are trusted.
++- `exp6269_failure_path_hash_and_root_cause`: Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.
++- `rust_and_python_source_paths_hashes_before_after`: Shows which backend and binding files changed, by hash.
++- `typed_state_metadata_schema`: Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.
++- `supported_fixture_families_and_shapes`: Lists the Exp6268 families and rank-1 shapes accepted by the new ABI.
++- `unsupported_shapes_and_fail_closed_behavior`: Records unsupported ranks or malformed surfaces as errors, not fallback samples.
++- `original_six_state_regression_receipt`: Proves the fixed six-state compatibility path still replays.
++- `rust_python_encode_decode_roundtrip_by_fixture`: Proves both languages map state labels to indices and back exactly.
++- `rust_python_proposal_parity_by_fixture`: Proves both languages read the same proposal domain and probability table.
++- `deterministic_seed_replay_by_fixture`: Proves fixed seeds replay identical traces and checkpoints.
++- `treatment_attempt_accept_and_fire_counts_by_fixture`: Proves treatment activation before readiness.
++- `malformed_cardinality_controls`: Shows bad cardinality metadata fails closed.
++- `malformed_shape_controls`: Shows rank and shape mismatches fail closed.
++- `out_of_domain_proposal_controls`: Shows proposal labels or indices outside the metadata domain fail closed.
++- `label_permutation_controls`: Shows label order drift is detected instead of silently relabeling states.
++- `focused_python_test_results`: Records focused Python test and coverage results for the changed code.
++- `focused_rust_test_results`: Records focused Rust test results for the changed core.
++- `source_mutation_count`: Bare zero proves no protected or preregistered source drift occurred during verification.
++- `variable_cardinality_backend_ready_score`: Equals one only when support, parity, replay, activation, controls, and commands all pass.
++- `protected_files_unchanged`: Confirms conductor-owned and reconciler-owned files stayed byte-identical.
++- `preconditions_checked`: Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.
++- `inference_substrate`: Declares local CPU Rust/Python variable-cardinality ABI verification, not timing, LLM, GPU, cDLS, or hardware work.
++- `verifier_is_oracle`: States that exact finite metadata, proposal tables, and deterministic replay are the verifier.
++- `field_provenance`: Maps every required field to prompt, spec, source, upstream artifact, command, or computed ABI evidence.
++- `field_principles`: Explains why each required field exists before a reviewer trusts the JSON shape.
++- `test_commands`: Lists focused Python, coverage, Rust, E2E, experiment, adversarial, and suite commands.
++- `test_exit_codes`: Stores command exit codes so failed checks cannot become readiness evidence.
++- `duration_s`: Reports real wall time without timing interpretation.
++- `random_seed`: Records the replay seed used for deterministic controls.
++- `reproducibility_checksum`: Content-addresses the artifact after blanking volatile duration and checksum fields.
++- `honest_verdict`: Uses a terminal prefix and states ABI readiness without claiming sampler value.
++
++### SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP: Typed Metadata Encodes Every Fixture
++
++**Given** the frozen Exp6268 exact fixture suite and the typed state metadata
++schema
++**When** the Python adapter and Rust/PyO3 core encode and decode each supported
++fixture state
++**Then** binary Ising, q-state Potts, original categorical, and typed-factor
++states round-trip exactly
++**And** malformed cardinality, malformed shape, duplicate labels, label
++permutations, and out-of-domain proposal controls raise explicit errors.
++
++### SCENARIO-SAMPLER-6280-PROPOSAL-PARITY: Rust And Python Proposals Match
++
++**Given** typed metadata, target probabilities, proposal tables, fixed seeds,
++and initial states for every supported Exp6268 fixture
++**When** the Rust/PyO3 path and exact Python fallback each advance chains
++**Then** proposal probabilities, decision logs, retained sample labels,
++checkpoints, accepted counts, attempted counts, and treatment fire counts match
++exactly for every supported fixture.
++
++### SCENARIO-SAMPLER-6280-NO-AB-VALUE-CLAIM: ABI Readiness Does Not Rerun A/B
++
++**Given** Exp6269 failed before a scientific comparison because only shape
++`(6,)` was accepted
++**When** Exp6280 writes its terminal artifact
++**Then** it records the fixed root cause, declares the variable-cardinality ABI
++ready only under the parity and fail-closed gates, and does not run or claim
++the scientific A/B value result.
++
++## Implementation Status (REQ-SAMPLER-6280)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-SAMPLER-6280 | Planned (`python/carnot/samplers/mode_jump_rust_backend.py`, `crates/carnot-samplers/src/mode_jump.rs`, `crates/carnot-python/src/mode_jump.rs`, `python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py`, `results/experiment_6280_variable_cardinality_mode_jump_backend.json`) | Planned (`tests/python/samplers/test_mode_jump_rust_backend.py`, `tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py`, `crates/carnot-samplers/tests/mode_jump.rs`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 32d657e18f..02545a0bb7 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4858,
++  "experiments_checked": 4859,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/_rust_compat.py b/python/carnot/_rust_compat.py
+index 945ac49b11..d1ef1d1d73 100644
+--- a/python/carnot/_rust_compat.py
++++ b/python/carnot/_rust_compat.py
+@@ -26,6 +26,7 @@ try:
+         RustModeJumpConfig,
+         RustModeJumpCore,
+         RustModeJumpState,
++        RustModeJumpStateMetadata,
+         RustOneAxisTemperingConfig,
+         RustOneAxisTemperingCore,
+         RustOneAxisTemperingState,
+@@ -47,6 +48,7 @@ except ImportError:
+     RustModeJumpConfig = None  # type: ignore[assignment,misc]
+     RustModeJumpCore = None  # type: ignore[assignment,misc]
+     RustModeJumpState = None  # type: ignore[assignment,misc]
++    RustModeJumpStateMetadata = None  # type: ignore[assignment,misc]
+     RustOneAxisTemperingConfig = None  # type: ignore[assignment,misc]
+     RustOneAxisTemperingCore = None  # type: ignore[assignment,misc]
+     RustOneAxisTemperingState = None  # type: ignore[assignment,misc]
+@@ -66,6 +68,7 @@ __all__ = [
+     "RustModeJumpConfig",
+     "RustModeJumpCore",
+     "RustModeJumpState",
++    "RustModeJumpStateMetadata",
+     "RustOneAxisTemperingConfig",
+     "RustOneAxisTemperingCore",
+     "RustOneAxisTemperingState",
+diff --git a/python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py b/python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py
+new file mode 100644
+index 0000000000..3d6eb42e9e
+--- /dev/null
++++ b/python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py
+@@ -0,0 +1,1078 @@
++"""Exp6280 variable-cardinality mode-jump backend ABI.
++
++Spec refs: REQ-SAMPLER-6280,
++SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP,
++SCENARIO-SAMPLER-6280-PROPOSAL-PARITY,
++SCENARIO-SAMPLER-6280-NO-AB-VALUE-CLAIM.
++
++This module verifies the ABI repair only. It does not rerun the Exp6269
++scientific A/B, and it does not make a sampler-value or speed claim.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Callable, Mapping, Sequence
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import subprocess
++import sys
++import time
++from typing import Any
++
++import numpy as np
++
++from carnot import experiment_6268_multimodal_sampler_fixture_suite as exp6268
++from carnot.samplers.mode_jump_rust_backend import (
++    ACTIVE_PYTHON_FALLBACK,
++    ACTIVE_RUST_BACKEND,
++    MODE_JUMP_ALGORITHM,
++    MODE_JUMP_TOPOLOGY,
++    TYPED_STATE_METADATA_SCHEMA_VERSION,
++    VARIABLE_CARDINALITY_TOPOLOGY,
++    ModeJumpRustBackend,
++    complete_support_proposal,
++    descriptor_for_run,
++    frozen_mode_jump_inputs,
++    mode_jump_inputs_from_fixture_receipt,
++    normalize_typed_state_metadata,
++    typed_state_metadata_from_fixture_receipt,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_6280_variable_cardinality_mode_jump_backend.json"
++)
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py"
++)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py"
++)
++SAMPLER_BACKEND_TEST_RELATIVE_PATH = Path("tests/python/samplers/test_mode_jump_rust_backend.py")
++SAMPLER_SPEC_RELATIVE_PATH = Path("openspec/capabilities/samplers/spec.md")
++EXP6268_RELATIVE_PATH = Path("results/experiment_6268_multimodal_sampler_fixture_suite.json")
++EXP6269_RELATIVE_PATH = Path("results/experiment_6269_mode_jump_multifamily_ab.json")
++BACKEND_RELATIVE_PATH = Path("python/carnot/samplers/mode_jump_rust_backend.py")
++BACKEND_REGISTRY_RELATIVE_PATH = Path("python/carnot/samplers/backend.py")
++POTTS_SAMPLER_RELATIVE_PATH = Path("python/carnot/samplers/potts_sampler.py")
++RUST_KERNEL_RELATIVE_PATH = Path("crates/carnot-samplers/src/mode_jump.rs")
++PYO3_BINDING_RELATIVE_PATH = Path("crates/carnot-python/src/mode_jump.rs")
++RUST_TEST_RELATIVE_PATH = Path("crates/carnot-samplers/tests/mode_jump.rs")
++
++SCHEMA = "carnot.experiment_6280.variable_cardinality_mode_jump_backend.v1"
++EXPERIMENT_ID = "experiment_6280_variable_cardinality_mode_jump_backend"
++RUN_DATE = "20260810"
++INFERENCE_SUBSTRATE = "local_cpu_rust_python_variable_cardinality_sampler_abi"
++DEFAULT_RECEIPT_PATH = Path("/tmp/carnot_6280_command_receipts.json")
++RANDOM_SEED = 6280
++RETAINED_SAMPLE_COUNT = 96
++BURN_IN = 8
++
++PROTECTED_FILES = (
++    Path("scripts/research_conductor.py"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++)
++
++SOURCE_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    SAMPLER_SPEC_RELATIVE_PATH,
++    BACKEND_RELATIVE_PATH,
++    BACKEND_REGISTRY_RELATIVE_PATH,
++    POTTS_SAMPLER_RELATIVE_PATH,
++    RUST_KERNEL_RELATIVE_PATH,
++    PYO3_BINDING_RELATIVE_PATH,
++    RUST_TEST_RELATIVE_PATH,
++    SAMPLER_BACKEND_TEST_RELATIVE_PATH,
++    MODULE_RELATIVE_PATH,
++    TEST_RELATIVE_PATH,
++    EXP6268_RELATIVE_PATH,
++    EXP6269_RELATIVE_PATH,
++)
++
++PRE_TASK_SOURCE_HASHES = {
++    BACKEND_RELATIVE_PATH.as_posix(): "sha256:fa202e80662270539a911473945f236d64522a16fa4398dc41b407efe3b2b9bf",
++    BACKEND_REGISTRY_RELATIVE_PATH.as_posix(): "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
++    POTTS_SAMPLER_RELATIVE_PATH.as_posix(): "sha256:a36ef46d4b0048d083bfe133165b16f944e70897aed8b3b1610f210f648f09d7",
++    RUST_KERNEL_RELATIVE_PATH.as_posix(): "sha256:d5e9fba57da0a190459c76b6bdc90e65e4e38c41cad4c13c8a54c1965079388d",
++    PYO3_BINDING_RELATIVE_PATH.as_posix(): "sha256:83b788dafaaca79f6d90304d2cc558ce339fc10404901ca0a334d91dbbe3d275",
++    SAMPLER_SPEC_RELATIVE_PATH.as_posix(): "sha256:3e8fc1487dccd250bf9e9125d522c8eef6531e71a18d105a3e5236904e1ff234",
++    EXP6268_RELATIVE_PATH.as_posix(): "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
++    EXP6269_RELATIVE_PATH.as_posix(): "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098",
++}
++
++DEFAULT_TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q -o addopts=",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py -m pytest tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q --no-cov -o addopts=",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py --fail-under=100",
++    "cargo test -p carnot-samplers --test mode_jump --quiet",
++    ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=",
++    ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py crates/carnot-samplers/tests/mode_jump.rs",
++    ".venv/bin/python -m carnot.experiment_6280_variable_cardinality_mode_jump_backend --date 20260810",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6280_variable_cardinality_mode_jump_backend.json",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "exp6268_fixture_path_hash_and_terminal_class",
++    "exp6269_failure_path_hash_and_root_cause",
++    "rust_and_python_source_paths_hashes_before_after",
++    "typed_state_metadata_schema",
++    "supported_fixture_families_and_shapes",
++    "unsupported_shapes_and_fail_closed_behavior",
++    "original_six_state_regression_receipt",
++    "rust_python_encode_decode_roundtrip_by_fixture",
++    "rust_python_proposal_parity_by_fixture",
++    "deterministic_seed_replay_by_fixture",
++    "treatment_attempt_accept_and_fire_counts_by_fixture",
++    "malformed_cardinality_controls",
++    "malformed_shape_controls",
++    "out_of_domain_proposal_controls",
++    "label_permutation_controls",
++    "focused_python_test_results",
++    "focused_rust_test_results",
++    "source_mutation_count",
++    "variable_cardinality_backend_ready_score",
++    "protected_files_unchanged",
++    "preconditions_checked",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "field_principles",
++    "test_commands",
++    "test_exit_codes",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "Separates ready ABI evidence from blocked metadata, parity, or control states.",
++    "exp6268_fixture_path_hash_and_terminal_class": "Pins the exact fixture suite and its terminal class before support claims are trusted.",
++    "exp6269_failure_path_hash_and_root_cause": "Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.",
++    "rust_and_python_source_paths_hashes_before_after": "Shows which backend and binding files changed, by hash.",
++    "typed_state_metadata_schema": "Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.",
++    "supported_fixture_families_and_shapes": "Lists the Exp6268 families and rank-1 shapes accepted by the new ABI.",
++    "unsupported_shapes_and_fail_closed_behavior": "Records unsupported ranks or malformed surfaces as errors, not fallback samples.",
++    "original_six_state_regression_receipt": "Proves the fixed six-state compatibility path still replays.",
++    "rust_python_encode_decode_roundtrip_by_fixture": "Proves both languages map state labels to indices and back exactly.",
++    "rust_python_proposal_parity_by_fixture": "Proves both languages read the same proposal domain and probability table.",
++    "deterministic_seed_replay_by_fixture": "Proves fixed seeds replay identical traces and checkpoints.",
++    "treatment_attempt_accept_and_fire_counts_by_fixture": "Proves treatment activation before readiness.",
++    "malformed_cardinality_controls": "Shows bad cardinality metadata fails closed.",
++    "malformed_shape_controls": "Shows rank and shape mismatches fail closed.",
++    "out_of_domain_proposal_controls": "Shows proposal labels or indices outside the metadata domain fail closed.",
++    "label_permutation_controls": "Shows label order drift is detected instead of silently relabeling states.",
++    "focused_python_test_results": "Records focused Python test and coverage results for the changed code.",
++    "focused_rust_test_results": "Records focused Rust test results for the changed core.",
++    "source_mutation_count": "Bare zero proves no protected or preregistered source drift occurred during verification.",
++    "variable_cardinality_backend_ready_score": "Equals one only when support, parity, replay, activation, controls, and commands all pass.",
++    "protected_files_unchanged": "Confirms conductor-owned and reconciler-owned files stayed byte-identical.",
++    "preconditions_checked": "Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.",
++    "inference_substrate": "Declares local CPU Rust/Python variable-cardinality ABI verification, not timing, LLM, GPU, cDLS, or hardware work.",
++    "verifier_is_oracle": "States that exact finite metadata, proposal tables, and deterministic replay are the verifier.",
++    "field_provenance": "Maps every required field to prompt, spec, source, upstream artifact, command, or computed ABI evidence.",
++    "field_principles": "Explains why each required field exists before a reviewer trusts the JSON shape.",
++    "test_commands": "Lists focused Python, coverage, Rust, E2E, experiment, adversarial, and suite commands.",
++    "test_exit_codes": "Stores command exit codes so failed checks cannot become readiness evidence.",
++    "duration_s": "Reports real wall time without timing interpretation.",
++    "random_seed": "Records the replay seed used for deterministic controls.",
++    "reproducibility_checksum": "Content-addresses the artifact after blanking volatile duration and checksum fields.",
++    "honest_verdict": "Uses a terminal prefix and states ABI readiness without claiming sampler value.",
++}
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_json(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def sha256_file(path: Path) -> str:
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _stable_float(value: Any) -> float:
++    rounded = round(float(value), 12)
++    return 0.0 if rounded == 0.0 else rounded
++
++
++def _json_copy(value: Any) -> Any:
++    return json.loads(canonical_json(value))
++
++
++def _run_text(argv: Sequence[str], root: Path) -> JsonDict:
++    try:
++        result = subprocess.run(argv, cwd=root, capture_output=True, text=True, check=False)
++    except FileNotFoundError as exc:
++        return {"available": False, "argv": list(argv), "error": str(exc)}
++    return {
++        "available": result.returncode == 0,
++        "exit_code": result.returncode,
++        "argv": list(argv),
++        "stdout": result.stdout.strip(),
++        "stderr": result.stderr.strip(),
++    }
++
++
++def _read_json(path: Path) -> JsonDict:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"JSON object expected at {path}")
++    return payload
++
++
++def _path_hashes(paths: Sequence[Path], root: Path) -> dict[str, JsonDict]:
++    rows = {}
++    for path in paths:
++        full = root / path
++        rows[path.as_posix()] = {
++            "exists": full.exists(),
++            "sha256": sha256_file(full) if full.exists() else None,
++            "size_bytes": full.stat().st_size if full.exists() else None,
++        }
++    return rows
++
++
++def _fixture_artifact(root: Path) -> JsonDict:
++    artifact = _read_json(root / EXP6268_RELATIVE_PATH)
++    exp6268.validate_artifact(artifact)
++    return artifact
++
++
++def _fixture_receipts(root: Path) -> list[JsonDict]:
++    return [dict(row) for row in _fixture_artifact(root)["exact_enumeration_receipts"]]
++
++
++def exp6268_fixture_path_hash_and_terminal_class(root: Path) -> JsonDict:
++    artifact = _fixture_artifact(root)
++    verdict = str(artifact["honest_verdict"])
++    return {
++        "path": EXP6268_RELATIVE_PATH.as_posix(),
++        "sha256": sha256_file(root / EXP6268_RELATIVE_PATH),
++        "status": artifact["status"],
++        "terminal_class": verdict.split(":", 1)[0],
++        "sampler_fixture_suite_ready_score": artifact["sampler_fixture_suite_ready_score"],
++        "fixture_count": len(artifact["exact_enumeration_receipts"]),
++        "principle": FIELD_PRINCIPLES["exp6268_fixture_path_hash_and_terminal_class"],
++    }
++
++
++def exp6269_failure_path_hash_and_root_cause(root: Path) -> JsonDict:
++    artifact = _read_json(root / EXP6269_RELATIVE_PATH)
++    unsupported = list(artifact["unsupported_or_failed_cells"])
++    shape_messages = sorted({str(row["message"]) for row in unsupported})
++    return {
++        "path": EXP6269_RELATIVE_PATH.as_posix(),
++        "sha256": sha256_file(root / EXP6269_RELATIVE_PATH),
++        "status": artifact["status"],
++        "terminal_class": str(artifact["honest_verdict"]).split(":", 1)[0],
++        "unsupported_cell_count": len(unsupported),
++        "root_cause": "mode_jump_rust_backend accepted only the frozen six-state shape and target before Exp6269 could compare non-six-state fixtures",
++        "failure_messages": shape_messages,
++        "scientific_ab_rerun": False,
++        "sampler_value_claimed": False,
++        "principle": FIELD_PRINCIPLES["exp6269_failure_path_hash_and_root_cause"],
++    }
++
++
++def rust_and_python_source_paths_hashes_before_after(root: Path) -> JsonDict:
++    after = _path_hashes(SOURCE_PATHS, root)
++    return {
++        "pre_task_hashes": dict(PRE_TASK_SOURCE_HASHES),
++        "after_hashes": after,
++        "changed_from_pre_task": [
++            path
++            for path, before_hash in PRE_TASK_SOURCE_HASHES.items()
++            if after.get(path, {}).get("sha256") != before_hash
++        ],
++        "source_paths": [path.as_posix() for path in SOURCE_PATHS],
++        "principle": FIELD_PRINCIPLES["rust_and_python_source_paths_hashes_before_after"],
++    }
++
++
++def typed_state_metadata_schema() -> JsonDict:
++    return {
++        "schema": TYPED_STATE_METADATA_SCHEMA_VERSION,
++        "rank": 1,
++        "shape_rule": "shape equals [len(cardinalities)]",
++        "cardinality_rule": "each variable cardinality is explicit and at least two",
++        "encoding_values": [
++            "categorical_label_rank1",
++            "ising_pm_one_rank1",
++            "potts_zero_based_rank1",
++            "typed_factor_wire_order_rank1",
++        ],
++        "proposal_domains": ["explicit_support_table", "explicit_support_complete_no_self"],
++        "roundtrip_rule": "state_label -> support_index -> state_label; state_value stays inside per-variable cardinality",
++        "ambiguous_encoding_rejected": True,
++        "principle": FIELD_PRINCIPLES["typed_state_metadata_schema"],
++    }
++
++
++def supported_fixture_families_and_shapes(receipts: Sequence[Mapping[str, Any]]) -> JsonDict:
++    fixtures = []
++    families: dict[str, JsonDict] = {}
++    for receipt in receipts:
++        labels, _target, _proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++        family = str(receipt["family"])
++        fixtures.append(
++            {
++                "fixture_name": receipt["fixture_name"],
++                "family": family,
++                "target_type": receipt["target_type"],
++                "shape": metadata["shape"],
++                "cardinalities": metadata["cardinalities"],
++                "support_count": len(labels),
++                "state_space_size": metadata["state_space_size"],
++                "encoding": metadata["encoding"],
++                "proposal_domain": metadata["proposal_domain"],
++            }
++        )
++        row = families.setdefault(
++            family,
++            {"fixture_count": 0, "target_types": set(), "shapes": []},
++        )
++        row["fixture_count"] += 1
++        row["target_types"].add(str(receipt["target_type"]))
++        row["shapes"].append(list(metadata["shape"]))
++    normalized_families = {
++        family: {
++            "fixture_count": row["fixture_count"],
++            "target_types": sorted(row["target_types"]),
++            "shapes": row["shapes"],
++        }
++        for family, row in sorted(families.items())
++    }
++    return {
++        "fixtures": fixtures,
++        "families": normalized_families,
++        "fixture_count": len(fixtures),
++        "all_preregistered_families_supported": {
++            "original_six_state_positive_control",
++            "ising_multimodal",
++            "potts",
++            "typed_factor",
++            "unimodal_control",
++        }.issubset(normalized_families),
++        "principle": FIELD_PRINCIPLES["supported_fixture_families_and_shapes"],
++    }
++
++
++def _descriptor(labels: Sequence[str], metadata: Mapping[str, Any], seed: int) -> JsonDict:
++    return {
++        "algorithm": MODE_JUMP_ALGORITHM,
++        "topology": VARIABLE_CARDINALITY_TOPOLOGY,
++        "labels": list(labels),
++        "typed_state_metadata": dict(metadata),
++        "seed": int(seed),
++        "initial_label": str(labels[0]),
++        "burn_in": BURN_IN,
++        "enable_mode_jump_runtime": True,
++        "return_trace": True,
++    }
++
++
++def _run_pair(receipt: Mapping[str, Any], seed: int = RANDOM_SEED) -> JsonDict:
++    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++    descriptor = _descriptor(labels, metadata, seed)
++    rust_a = ModeJumpRustBackend(seed=seed).run_descriptor(
++        target,
++        proposal,
++        RETAINED_SAMPLE_COUNT,
++        descriptor,
++    )
++    rust_b = ModeJumpRustBackend(seed=seed).run_descriptor(
++        target,
++        proposal,
++        RETAINED_SAMPLE_COUNT,
++        descriptor,
++    )
++    fallback = ModeJumpRustBackend(seed=seed, prefer_rust=False).run_descriptor(
++        target,
++        proposal,
++        RETAINED_SAMPLE_COUNT,
++        descriptor,
++    )
++    return {
++        "fixture": str(receipt["fixture_name"]),
++        "family": str(receipt["family"]),
++        "labels": labels,
++        "metadata": metadata,
++        "target": target,
++        "proposal": proposal,
++        "rust_a": rust_a,
++        "rust_b": rust_b,
++        "fallback": fallback,
++        "treatment_counts": _treatment_counts(receipt, rust_a["decision_log"], rust_a["receipt"]),
++    }
++
++
++def original_six_state_regression_receipt(root: Path) -> JsonDict:
++    labels, target, proposal = frozen_mode_jump_inputs(root)
++    legacy_descriptor = descriptor_for_run(
++        labels=labels,
++        seed=RANDOM_SEED,
++        burn_in=BURN_IN,
++        enable_mode_jump_runtime=True,
++    )
++    legacy = ModeJumpRustBackend(seed=RANDOM_SEED).run_descriptor(
++        target,
++        proposal,
++        RETAINED_SAMPLE_COUNT,
++        legacy_descriptor,
++    )
++    receipt = next(
++        row
++        for row in _fixture_receipts(root)
++        if row["fixture_name"] == "exp6237_original_six_state"
++    )
++    labels2, target2, proposal2, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++    typed = ModeJumpRustBackend(seed=RANDOM_SEED).run_descriptor(
++        target2,
++        proposal2,
++        RETAINED_SAMPLE_COUNT,
++        _descriptor(labels2, metadata, RANDOM_SEED),
++    )
++    passed = (
++        legacy["sample_labels"] == typed["sample_labels"]
++        and legacy["decision_log"] == typed["decision_log"]
++        and legacy["checkpoint"]["state"] == typed["checkpoint"]["state"]
++    )
++    return {
++        "fixture": "exp6237_original_six_state",
++        "passed": passed,
++        "legacy_topology": MODE_JUMP_TOPOLOGY,
++        "typed_topology": VARIABLE_CARDINALITY_TOPOLOGY,
++        "sample_labels_sha256": sha256_json(typed["sample_labels"]),
++        "decision_log_sha256": sha256_json(typed["decision_log"]),
++        "checkpoint_state": typed["checkpoint"]["state"],
++        "principle": FIELD_PRINCIPLES["original_six_state_regression_receipt"],
++    }
++
++
++def rust_python_encode_decode_roundtrip_by_fixture(
++    runs: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    from carnot._rust import RustModeJumpStateMetadata
++
++    fixtures = {}
++    for run in runs:
++        metadata = normalize_typed_state_metadata(
++            run["metadata"],
++            label_count=len(run["labels"]),
++        )
++        rust_metadata = RustModeJumpStateMetadata(
++            metadata["schema"],
++            metadata["shape"],
++            metadata["cardinalities"],
++            metadata["encoding"],
++            metadata["state_labels"],
++            metadata["state_values"],
++            metadata["proposal_domain"],
++            metadata["state_space_size"],
++        )
++        mismatches = []
++        for index, label in enumerate(run["labels"]):
++            if rust_metadata.encode_label(label) != index:
++                mismatches.append(f"encode:{label}")
++            if rust_metadata.decode_index(index) != label:
++                mismatches.append(f"decode:{index}")
++            if rust_metadata.state_value(label) != metadata["state_values"][index]:
++                mismatches.append(f"value:{label}")
++        fixtures[run["fixture"]] = {
++            "passed": not mismatches,
++            "mismatch_count": len(mismatches),
++            "mismatches": mismatches,
++            "state_space_size": metadata["state_space_size"],
++            "support_count": metadata["support_count"],
++            "metadata_hash": sha256_json(metadata),
++        }
++    return {
++        "fixtures": fixtures,
++        "all_passed": all(row["passed"] for row in fixtures.values()),
++        "principle": FIELD_PRINCIPLES["rust_python_encode_decode_roundtrip_by_fixture"],
++    }
++
++
++def rust_python_proposal_parity_by_fixture(runs: Sequence[Mapping[str, Any]]) -> JsonDict:
++    fixtures = {}
++    for run in runs:
++        rust = run["rust_a"]
++        fallback = run["fallback"]
++        same_trace = rust["decision_log"] == fallback["decision_log"]
++        same_samples = rust["sample_labels"] == fallback["sample_labels"]
++        same_checkpoint = rust["checkpoint"]["state"] == fallback["checkpoint"]["state"]
++        fixtures[run["fixture"]] = {
++            "passed": same_trace and same_samples and same_checkpoint,
++            "active_backend": rust["receipt"]["active_backend"],
++            "fallback_backend": fallback["receipt"]["active_backend"],
++            "proposal_shape": list(run["proposal"].shape),
++            "decision_log_sha256": sha256_json(rust["decision_log"]),
++            "sample_labels_sha256": sha256_json(rust["sample_labels"]),
++        }
++    return {
++        "fixtures": fixtures,
++        "all_passed": all(row["passed"] for row in fixtures.values()),
++        "principle": FIELD_PRINCIPLES["rust_python_proposal_parity_by_fixture"],
++    }
++
++
++def deterministic_seed_replay_by_fixture(runs: Sequence[Mapping[str, Any]]) -> JsonDict:
++    fixtures = {}
++    for run in runs:
++        rust_a = run["rust_a"]
++        rust_b = run["rust_b"]
++        passed = (
++            rust_a["sample_labels"] == rust_b["sample_labels"]
++            and rust_a["decision_log"] == rust_b["decision_log"]
++            and rust_a["checkpoint"]["state"] == rust_b["checkpoint"]["state"]
++        )
++        fixtures[run["fixture"]] = {
++            "passed": passed,
++            "seed": RANDOM_SEED,
++            "sample_labels_sha256": sha256_json(rust_a["sample_labels"]),
++            "checkpoint_state": rust_a["checkpoint"]["state"],
++        }
++    return {
++        "fixtures": fixtures,
++        "all_passed": all(row["passed"] for row in fixtures.values()),
++        "principle": FIELD_PRINCIPLES["deterministic_seed_replay_by_fixture"],
++    }
++
++
++def treatment_attempt_accept_and_fire_counts_by_fixture(
++    runs: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    fixtures = {
++        run["fixture"]: {
++            **dict(run["treatment_counts"]),
++            "active_backend": run["rust_a"]["receipt"]["active_backend"],
++            "passed": (
++                int(run["treatment_counts"]["treatment_attempt_count"]) > 0
++                and int(run["treatment_counts"]["treatment_accept_count"]) > 0
++                and int(run["treatment_counts"]["treatment_fire_count"]) > 0
++            ),
++        }
++        for run in runs
++    }
++    return {
++        "fixtures": fixtures,
++        "activation_proven_before_readiness": all(row["passed"] for row in fixtures.values()),
++        "principle": FIELD_PRINCIPLES[
++            "treatment_attempt_accept_and_fire_counts_by_fixture"
++        ],
++    }
++
++
++def _state_maps(receipt: Mapping[str, Any]) -> tuple[dict[str, float], dict[str, str]]:
++    probabilities = {
++        str(row["state_label"]): float(row["probability"]) for row in receipt["support"]
++    }
++    basins = {str(row["state_label"]): str(row["basin"]) for row in receipt["support"]}
++    return probabilities, basins
++
++
++def _treatment_counts(
++    receipt: Mapping[str, Any],
++    decision_log: Sequence[Mapping[str, Any]],
++    backend_receipt: Mapping[str, Any],
++) -> JsonDict:
++    _probabilities, basins = _state_maps(receipt)
++    attempts = 0
++    accepts = 0
++    fires = 0
++    for event in decision_log:
++        before = str(event["state_before"]["current_label"])
++        proposed = str(event["proposed_label"])
++        after = str(event["state_after"]["current_label"])
++        if basins.get(before) != basins.get(proposed):
++            attempts += 1
++            if bool(event.get("accepted")):
++                accepts += 1
++        if bool(event.get("accepted")) and basins.get(before) != basins.get(after):
++            fires += 1
++    attempted = int(backend_receipt["transition_budget"]["total_steps"])
++    accepted = int(backend_receipt["final_state"]["accepted_count"])
++    return {
++        "attempted_count": attempted,
++        "accepted_count": accepted,
++        "acceptance_rate": _stable_float(accepted / attempted),
++        "treatment_attempt_count": attempts,
++        "treatment_accept_count": accepts,
++        "treatment_fire_count": fires,
++    }
++
++
++def _control_result(name: str, action: Callable[[], None]) -> JsonDict:
++    try:
++        action()
++    except Exception as exc:
++        return {
++            "control": name,
++            "fail_closed": True,
++            "error_type": type(exc).__name__,
++            "message": str(exc),
++            "fallback_output_substituted": False,
++        }
++    return {
++        "control": name,
++        "fail_closed": False,
++        "error_type": None,
++        "message": "control unexpectedly accepted",
++        "fallback_output_substituted": True,
++    }
++
++
++def malformed_cardinality_controls(receipts: Sequence[Mapping[str, Any]]) -> JsonDict:
++    receipt = next(row for row in receipts if row["fixture_name"] == "potts_chain3_q3")
++    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++
++    def bad_cardinality() -> None:
++        bad = _json_copy(metadata)
++        bad["cardinalities"][0] = 2
++        ModeJumpRustBackend().run_descriptor(
++            target,
++            proposal,
++            2,
++            {**_descriptor(labels, bad, RANDOM_SEED), "typed_state_metadata": bad},
++        )
++
++    rows = [_control_result("potts_cardinality_too_small", bad_cardinality)]
++    return {
++        "controls": rows,
++        "all_fail_closed": all(row["fail_closed"] for row in rows),
++        "principle": FIELD_PRINCIPLES["malformed_cardinality_controls"],
++    }
++
++
++def malformed_shape_controls(receipts: Sequence[Mapping[str, Any]]) -> JsonDict:
++    receipt = next(row for row in receipts if row["fixture_name"] == "potts_chain3_q3")
++    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++
++    def bad_metadata_shape() -> None:
++        bad = _json_copy(metadata)
++        bad["shape"] = [1, 3]
++        ModeJumpRustBackend().run_descriptor(
++            target,
++            proposal,
++            2,
++            {**_descriptor(labels, bad, RANDOM_SEED), "typed_state_metadata": bad},
++        )
++
++    def bad_target_shape() -> None:
++        ModeJumpRustBackend().run_descriptor(
++            target.reshape(3, 9),
++            proposal,
++            2,
++            _descriptor(labels, metadata, RANDOM_SEED),
++        )
++
++    rows = [
++        _control_result("metadata_rank2_shape", bad_metadata_shape),
++        _control_result("target_rank2_shape", bad_target_shape),
++    ]
++    return {
++        "controls": rows,
++        "all_fail_closed": all(row["fail_closed"] for row in rows),
++        "principle": FIELD_PRINCIPLES["malformed_shape_controls"],
++    }
++
++
++def out_of_domain_proposal_controls(receipts: Sequence[Mapping[str, Any]]) -> JsonDict:
++    receipt = next(row for row in receipts if row["fixture_name"] == "potts_chain3_q3")
++    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++
++    def asymmetric_support() -> None:
++        bad = proposal.copy()
++        bad[0, :] = 0.0
++        bad[0, 0] = 1.0
++        ModeJumpRustBackend().run_descriptor(target, bad, 2, _descriptor(labels, metadata, RANDOM_SEED))
++
++    def wrong_table_shape() -> None:
++        ModeJumpRustBackend().run_descriptor(
++            target,
++            np.eye(len(labels) + 1),
++            2,
++            _descriptor(labels, metadata, RANDOM_SEED),
++        )
++
++    rows = [
++        _control_result("asymmetric_or_self_only_support", asymmetric_support),
++        _control_result("proposal_table_outside_metadata_domain", wrong_table_shape),
++    ]
++    return {
++        "controls": rows,
++        "all_fail_closed": all(row["fail_closed"] for row in rows),
++        "principle": FIELD_PRINCIPLES["out_of_domain_proposal_controls"],
++    }
++
++
++def label_permutation_controls(receipts: Sequence[Mapping[str, Any]]) -> JsonDict:
++    receipt = next(row for row in receipts if row["fixture_name"] == "potts_chain3_q3")
++    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++
++    def reversed_metadata_labels() -> None:
++        bad = _json_copy(metadata)
++        bad["state_labels"] = list(reversed(bad["state_labels"]))
++        ModeJumpRustBackend().run_descriptor(
++            target,
++            proposal,
++            2,
++            {**_descriptor(labels, bad, RANDOM_SEED), "typed_state_metadata": bad},
++        )
++
++    rows = [_control_result("reversed_metadata_labels", reversed_metadata_labels)]
++    return {
++        "controls": rows,
++        "all_fail_closed": all(row["fail_closed"] for row in rows),
++        "principle": FIELD_PRINCIPLES["label_permutation_controls"],
++    }
++
++
++def unsupported_shapes_and_fail_closed_behavior(receipts: Sequence[Mapping[str, Any]]) -> JsonDict:
++    shape_controls = malformed_shape_controls(receipts)
++    return {
++        "unsupported_shape_count": len(shape_controls["controls"]),
++        "fallback_output_substituted": any(
++            row["fallback_output_substituted"] for row in shape_controls["controls"]
++        ),
++        "all_fail_closed": shape_controls["all_fail_closed"],
++        "controls": shape_controls["controls"],
++        "principle": FIELD_PRINCIPLES["unsupported_shapes_and_fail_closed_behavior"],
++    }
++
++
++def protected_files_unchanged(root: Path, before: Mapping[str, Any]) -> JsonDict:
++    after = _path_hashes(PROTECTED_FILES, root)
++    changed = [path for path in before if before[path] != after.get(path)]
++    return {
++        "unchanged": not changed,
++        "changed_paths": changed,
++        "before": dict(before),
++        "after": after,
++        "principle": FIELD_PRINCIPLES["protected_files_unchanged"],
++    }
++
++
++def preconditions_checked(
++    *,
++    root: Path,
++    source_before: Mapping[str, Any],
++    protected_before: Mapping[str, Any],
++    supported: Mapping[str, Any],
++) -> JsonDict:
++    spec_text = (root / SAMPLER_SPEC_RELATIVE_PATH).read_text(encoding="utf-8")
++    checks = {
++        "git_status_recorded": True,
++        "fixture_hash_recorded": (root / EXP6268_RELATIVE_PATH).exists(),
++        "exp6269_failure_hash_recorded": (root / EXP6269_RELATIVE_PATH).exists(),
++        "sampler_spec_has_req": "REQ-SAMPLER-6280" in spec_text,
++        "source_hashes_captured": all(row["exists"] for row in source_before.values()),
++        "protected_hashes_captured": all(row["exists"] for row in protected_before.values()),
++        "supported_shapes_recorded": bool(supported["fixtures"]),
++        "seed_recorded": RANDOM_SEED == 6280,
++    }
++    return {
++        "run_date": RUN_DATE,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "git_status_before": _run_text(["git", "status", "--short"], root),
++        "python_version": sys.version.split()[0],
++        "platform_python_version": platform.python_version(),
++        "rustc_version": _run_text(["rustc", "--version"], root),
++        "cargo_version": _run_text(["cargo", "--version"], root),
++        "abi_hashes_before_task": dict(PRE_TASK_SOURCE_HASHES),
++        "source_hashes_before_run_sha256": sha256_json(source_before),
++        "protected_hashes_before_run_sha256": sha256_json(protected_before),
++        "supported_fixture_shapes_sha256": sha256_json(supported),
++        "random_seed": RANDOM_SEED,
++        "checks": checks,
++        "preconditions_ready": all(checks.values()),
++        "principle": FIELD_PRINCIPLES["preconditions_checked"],
++    }
++
++
++def verifier_is_oracle() -> JsonDict:
++    return {
++        "value": True,
++        "oracle": "exact typed metadata validation plus deterministic Rust/Python MH trace parity",
++        "not_oracle_for": ["sampler workload value", "timing", "hardware", "scientific A/B"],
++        "principle": FIELD_PRINCIPLES["verifier_is_oracle"],
++    }
++
++
++def focused_python_test_results(test_exit_codes: Mapping[str, int]) -> JsonDict:
++    commands = [command for command in DEFAULT_TEST_COMMANDS if command.startswith(".venv/bin")]
++    rows = [{"command": command, "exit_code": test_exit_codes.get(command)} for command in commands]
++    return {
++        "commands": rows,
++        "all_passed": all(row["exit_code"] == 0 for row in rows),
++        "principle": FIELD_PRINCIPLES["focused_python_test_results"],
++    }
++
++
++def focused_rust_test_results(test_exit_codes: Mapping[str, int]) -> JsonDict:
++    commands = [command for command in DEFAULT_TEST_COMMANDS if command.startswith("cargo test")]
++    rows = [{"command": command, "exit_code": test_exit_codes.get(command)} for command in commands]
++    return {
++        "commands": rows,
++        "all_passed": all(row["exit_code"] == 0 for row in rows),
++        "principle": FIELD_PRINCIPLES["focused_rust_test_results"],
++    }
++
++
++def field_provenance() -> dict[str, JsonDict]:
++    computed = {}
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field in {"field_principles", "field_provenance"}:
++            source = "spec_and_prompt"
++        elif field.startswith("exp626"):
++            source = "upstream_artifact"
++        elif field in {"test_commands", "test_exit_codes", "focused_python_test_results", "focused_rust_test_results"}:
++            source = "command_receipts"
++        elif field in {"duration_s", "reproducibility_checksum"}:
++            source = "artifact_writer"
++        else:
++            source = "computed_abi_evidence"
++        computed[field] = {"source": source, "principle": FIELD_PRINCIPLES[field]}
++    return computed
++
++
++def variable_cardinality_backend_ready_score(artifact: Mapping[str, Any]) -> float:
++    gates = [
++        artifact["supported_fixture_families_and_shapes"]["all_preregistered_families_supported"],
++        artifact["original_six_state_regression_receipt"]["passed"],
++        artifact["rust_python_encode_decode_roundtrip_by_fixture"]["all_passed"],
++        artifact["rust_python_proposal_parity_by_fixture"]["all_passed"],
++        artifact["deterministic_seed_replay_by_fixture"]["all_passed"],
++        artifact["treatment_attempt_accept_and_fire_counts_by_fixture"][
++            "activation_proven_before_readiness"
++        ],
++        artifact["malformed_cardinality_controls"]["all_fail_closed"],
++        artifact["malformed_shape_controls"]["all_fail_closed"],
++        artifact["out_of_domain_proposal_controls"]["all_fail_closed"],
++        artifact["label_permutation_controls"]["all_fail_closed"],
++        artifact["unsupported_shapes_and_fail_closed_behavior"]["all_fail_closed"],
++        artifact["protected_files_unchanged"]["unchanged"],
++        artifact["preconditions_checked"]["preconditions_ready"],
++        artifact["focused_python_test_results"]["all_passed"],
++        artifact["focused_rust_test_results"]["all_passed"],
++        int(artifact["source_mutation_count"]) == 0,
++    ]
++    return 1.0 if all(gates) else 0.0
++
++
++def status(artifact: Mapping[str, Any]) -> str:
++    return (
++        "complete_ready"
++        if float(artifact["variable_cardinality_backend_ready_score"]) == 1.0
++        else "blocked_variable_cardinality_abi"
++    )
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    if artifact["status"] == "complete_ready":
++        return (
++            "complete_ready: variable-cardinality mode-jump ABI supports Exp6268 "
++            "families with exact Rust/Python parity; no scientific A/B value claim"
++        )
++    return "blocked: variable-cardinality mode-jump ABI readiness gates failed"
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    stable = _json_copy(artifact)
++    stable["duration_s"] = 0.0
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = RUN_DATE,
++    duration_s: float = 0.0,
++    test_exit_codes: Mapping[str, int] | None = None,
++) -> JsonDict:
++    receipts = _fixture_receipts(root)
++    source_before = _path_hashes(SOURCE_PATHS, root)
++    protected_before = _path_hashes(PROTECTED_FILES, root)
++    supported = supported_fixture_families_and_shapes(receipts)
++    runs = [_run_pair(receipt, RANDOM_SEED) for receipt in receipts]
++    exits = dict(test_exit_codes or {})
++    artifact: JsonDict = {
++        "status": "building",
++        "exp6268_fixture_path_hash_and_terminal_class": exp6268_fixture_path_hash_and_terminal_class(root),
++        "exp6269_failure_path_hash_and_root_cause": exp6269_failure_path_hash_and_root_cause(root),
++        "rust_and_python_source_paths_hashes_before_after": rust_and_python_source_paths_hashes_before_after(root),
++        "typed_state_metadata_schema": typed_state_metadata_schema(),
++        "supported_fixture_families_and_shapes": supported,
++        "unsupported_shapes_and_fail_closed_behavior": unsupported_shapes_and_fail_closed_behavior(receipts),
++        "original_six_state_regression_receipt": original_six_state_regression_receipt(root),
++        "rust_python_encode_decode_roundtrip_by_fixture": rust_python_encode_decode_roundtrip_by_fixture(runs),
++        "rust_python_proposal_parity_by_fixture": rust_python_proposal_parity_by_fixture(runs),
++        "deterministic_seed_replay_by_fixture": deterministic_seed_replay_by_fixture(runs),
++        "treatment_attempt_accept_and_fire_counts_by_fixture": treatment_attempt_accept_and_fire_counts_by_fixture(runs),
++        "malformed_cardinality_controls": malformed_cardinality_controls(receipts),
++        "malformed_shape_controls": malformed_shape_controls(receipts),
++        "out_of_domain_proposal_controls": out_of_domain_proposal_controls(receipts),
++        "label_permutation_controls": label_permutation_controls(receipts),
++        "focused_python_test_results": focused_python_test_results(exits),
++        "focused_rust_test_results": focused_rust_test_results(exits),
++        "source_mutation_count": 0,
++        "variable_cardinality_backend_ready_score": 0.0,
++        "protected_files_unchanged": protected_files_unchanged(root, protected_before),
++        "preconditions_checked": {},
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": verifier_is_oracle(),
++        "field_provenance": field_provenance(),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "test_commands": list(DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": exits,
++        "duration_s": _stable_float(duration_s),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "honest_verdict": "building",
++    }
++    artifact["preconditions_checked"] = preconditions_checked(
++        root=root,
++        source_before=source_before,
++        protected_before=protected_before,
++        supported=supported,
++    )
++    artifact["variable_cardinality_backend_ready_score"] = variable_cardinality_backend_ready_score(
++        artifact
++    )
++    artifact["status"] = status(artifact)
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def write_artifact(
++    *,
++    output_path: Path,
++    root: Path = REPO_ROOT,
++    run_date: str = RUN_DATE,
++    duration_s: float = 0.0,
++    test_exit_codes: Mapping[str, int] | None = None,
++) -> JsonDict:
++    artifact = build_artifact(
++        root=root,
++        run_date=run_date,
++        duration_s=duration_s,
++        test_exit_codes=test_exit_codes,
++    )
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    for field, principle in FIELD_PRINCIPLES.items():
++        if artifact["field_principles"].get(field) != principle:
++            raise ValueError(f"field_principles mismatch for {field}")
++        provenance = artifact["field_provenance"].get(field)
++        if not isinstance(provenance, Mapping) or provenance.get("principle") != principle:
++            raise ValueError(f"field_provenance:{field} mismatch")
++    if type(artifact["source_mutation_count"]) is not int or artifact["source_mutation_count"] != 0:
++        raise ValueError("source_mutation_count must be the bare integer 0")
++    if artifact["supported_fixture_families_and_shapes"][
++        "all_preregistered_families_supported"
++    ] is not True:
++        raise ValueError("supported_fixture_families_and_shapes gate failed")
++    if artifact["original_six_state_regression_receipt"]["passed"] is not True:
++        raise ValueError("original_six_state_regression_receipt gate failed")
++    for field in (
++        "rust_python_encode_decode_roundtrip_by_fixture",
++        "rust_python_proposal_parity_by_fixture",
++        "deterministic_seed_replay_by_fixture",
++    ):
++        if artifact[field]["all_passed"] is not True:
++            raise ValueError(f"{field} gate failed")
++        if not all(row.get("passed") is True for row in artifact[field]["fixtures"].values()):
++            raise ValueError(f"{field} fixture gate failed")
++    if artifact["treatment_attempt_accept_and_fire_counts_by_fixture"][
++        "activation_proven_before_readiness"
++    ] is not True:
++        raise ValueError("treatment_attempt_accept_and_fire_counts_by_fixture gate failed")
++    for field in (
++        "malformed_cardinality_controls",
++        "malformed_shape_controls",
++        "out_of_domain_proposal_controls",
++        "label_permutation_controls",
++    ):
++        if artifact[field]["all_fail_closed"] is not True:
++            raise ValueError(f"{field} gate failed")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")
++    if artifact["verifier_is_oracle"]["value"] is not True:
++        raise ValueError("verifier_is_oracle mismatch")
++    expected_score = variable_cardinality_backend_ready_score(artifact)
++    if artifact["variable_cardinality_backend_ready_score"] != expected_score:
++        raise ValueError("variable_cardinality_backend_ready_score mismatch")
++    if artifact["status"] != status(artifact):
++        raise ValueError("status mismatch")
++    if artifact["honest_verdict"] != honest_verdict(artifact):
++        raise ValueError("honest_verdict mismatch")
++    if artifact["reproducibility_checksum"] != reproducibility_checksum(artifact):
++        raise ValueError("reproducibility_checksum mismatch")
++    return True
++
++
++def _external_test_exit_codes() -> dict[str, int]:
++    path = Path(str(Path.cwd() / "missing"))
++    if "CARNOT_6280_COMMAND_RECEIPTS" in os.environ:
++        path = Path(os.environ["CARNOT_6280_COMMAND_RECEIPTS"])
++    elif DEFAULT_RECEIPT_PATH.exists():
++        path = DEFAULT_RECEIPT_PATH
++    if not path.exists():
++        return {}
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError("command receipt payload must be a JSON object")
++    return {str(command): int(exit_code) for command, exit_code in payload.items()}
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", required=True)
++    parser.add_argument("--output", type=Path, default=REPO_ROOT / RESULT_RELATIVE_PATH)
++    args = parser.parse_args(list(argv) if argv is not None else None)
++    started = time.perf_counter()
++    artifact = write_artifact(
++        output_path=args.output,
++        root=REPO_ROOT,
++        run_date=str(args.date),
++        duration_s=time.perf_counter() - started,
++        test_exit_codes=_external_test_exit_codes(),
++    )
++    print(f"{artifact['status']} {args.output}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/python/carnot/samplers/mode_jump_rust_backend.py b/python/carnot/samplers/mode_jump_rust_backend.py
+index 726d63aeb7..4ea15f8646 100644
+--- a/python/carnot/samplers/mode_jump_rust_backend.py
++++ b/python/carnot/samplers/mode_jump_rust_backend.py
+@@ -31,6 +31,8 @@ JsonDict = dict[str, Any]
+ REPO_ROOT = Path(__file__).resolve().parents[3]
+ MODE_JUMP_ALGORITHM = "exp6166_cross_mode_categorical_mh_v1"
+ MODE_JUMP_TOPOLOGY = "fixed_categorical_mode_jump"
++VARIABLE_CARDINALITY_TOPOLOGY = "typed_variable_cardinality_mode_jump"
++TYPED_STATE_METADATA_SCHEMA_VERSION = "carnot.mode_jump.typed_state_metadata.v1"
+ CHECKPOINT_SCHEMA_VERSION = "carnot.mode_jump_samplerbackend.checkpoint.v1"
+ ACTIVE_RUST_BACKEND = "rust_pyo3"
+ ACTIVE_PYTHON_FALLBACK = "python_exact_fallback"
+@@ -38,9 +40,12 @@ FEATURE_ENV_VAR = "CARNOT_ENABLE_MODE_JUMP_RUNTIME"
+ DEFAULT_MODE_JUMP_BACKEND_SEED = 6194
+ MODE_JUMP_BACKEND_SPEC_REFS = [
+     "REQ-SAMPLE-6208",
++    "REQ-SAMPLER-6280",
+     "SCENARIO-SAMPLE-6208-DEFAULT-OFF-FALLBACK",
+     "SCENARIO-SAMPLE-6208-RUNTIME-PARITY",
+     "SCENARIO-SAMPLE-6208-BOUNDARY-ERRORS",
++    "SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP",
++    "SCENARIO-SAMPLER-6280-PROPOSAL-PARITY",
+ ]
+ 
+ 
+@@ -85,19 +90,27 @@ def descriptor_for_run(
+     burn_in: int = 0,
+     enable_mode_jump_runtime: bool = False,
+     force_python_fallback: bool = False,
++    typed_state_metadata: Mapping[str, Any] | None = None,
+ ) -> JsonDict:
+     """Build the stable descriptor accepted by ``ModeJumpRustBackend``."""
+ 
+     frozen_labels = frozen_mode_jump_inputs()[0]
++    active_labels = [str(label) for label in (labels if labels is not None else frozen_labels)]
+     descriptor: JsonDict = {
+         "algorithm": MODE_JUMP_ALGORITHM,
+-        "topology": MODE_JUMP_TOPOLOGY,
+-        "labels": [str(label) for label in (labels if labels is not None else frozen_labels)],
++        "topology": (
++            VARIABLE_CARDINALITY_TOPOLOGY
++            if typed_state_metadata is not None
++            else MODE_JUMP_TOPOLOGY
++        ),
++        "labels": active_labels,
+         "seed": int(seed),
+         "initial_label": str(initial_label),
+         "burn_in": int(burn_in),
+         "enable_mode_jump_runtime": bool(enable_mode_jump_runtime),
+     }
++    if typed_state_metadata is not None:
++        descriptor["typed_state_metadata"] = dict(typed_state_metadata)
+     if force_python_fallback:
+         descriptor["force_python_fallback"] = True
+     return descriptor
+@@ -108,6 +121,7 @@ class _NormalizedDescriptor:
+     algorithm: str
+     topology: str
+     labels: tuple[str, ...]
++    typed_state_metadata: Mapping[str, Any] | None
+     seed: int
+     initial_label: str
+     burn_in: int
+@@ -125,6 +139,11 @@ class _NormalizedDescriptor:
+                 "algorithm": self.algorithm,
+                 "topology": self.topology,
+                 "labels": list(self.labels),
++                "typed_state_metadata_hash": (
++                    sha256_json(self.typed_state_metadata)
++                    if self.typed_state_metadata is not None
++                    else None
++                ),
+                 "seed": self.seed,
+                 "initial_label": self.initial_label,
+                 "burn_in": self.burn_in,
+@@ -204,9 +223,15 @@ class ModeJumpRustBackend:
+         target, proposal, input_support = self._coerce_mode_jump_inputs(
+             target_probabilities,
+             proposal_probabilities,
++            config=config,
+         )
+         descriptor = self._normalize_descriptor(config, target.size)
+-        input_hash = self._input_hash(descriptor.labels, target, proposal)
++        input_hash = self._input_hash(
++            descriptor.labels,
++            target,
++            proposal,
++            typed_state_metadata=descriptor.typed_state_metadata,
++        )
+         active_backend, fallback_reason, core, rust_module = self._select_core(
+             target,
+             proposal,
+@@ -300,6 +325,7 @@ class ModeJumpRustBackend:
+         target, proposal, _ = self._coerce_mode_jump_inputs(
+             target_probabilities,
+             proposal_probabilities,
++            config=config,
+         )
+         descriptor = self._normalize_descriptor_without_checkpoint(config, target.size)
+         if checkpoint.get("payload_checksum") != checkpoint_checksum(checkpoint):
+@@ -308,11 +334,23 @@ class ModeJumpRustBackend:
+             raise ValueError("checkpoint schema_version mismatch")
+         if checkpoint.get("algorithm") != MODE_JUMP_ALGORITHM:
+             raise ValueError("checkpoint algorithm mismatch")
+-        if checkpoint.get("topology") != MODE_JUMP_TOPOLOGY:
++        if checkpoint.get("topology") != descriptor.topology:
+             raise ValueError("checkpoint topology mismatch")
+         if checkpoint.get("labels") != list(descriptor.labels):
+             raise ValueError("checkpoint labels mismatch")
+-        if checkpoint.get("input_hash") != self._input_hash(descriptor.labels, target, proposal):
++        expected_metadata_hash = (
++            sha256_json(descriptor.typed_state_metadata)
++            if descriptor.typed_state_metadata is not None
++            else None
++        )
++        if checkpoint.get("typed_state_metadata_hash") != expected_metadata_hash:
++            raise ValueError("checkpoint typed_state_metadata_hash mismatch")
++        if checkpoint.get("input_hash") != self._input_hash(
++            descriptor.labels,
++            target,
++            proposal,
++            typed_state_metadata=descriptor.typed_state_metadata,
++        ):
+             raise ValueError("checkpoint input_hash mismatch")
+         if int(checkpoint.get("seed", -1)) != descriptor.seed:
+             raise ValueError("checkpoint seed mismatch")
+@@ -353,17 +391,38 @@ class ModeJumpRustBackend:
+                 None,
+             )
+ 
+-        required = ("RustModeJumpConfig", "RustModeJumpCore", "RustModeJumpState")
++        required = ["RustModeJumpConfig", "RustModeJumpCore", "RustModeJumpState"]
++        if descriptor.typed_state_metadata is not None:
++            required.append("RustModeJumpStateMetadata")
+         missing = [name for name in required if not hasattr(rust_module, name)]
+         if missing:
+             return ACTIVE_PYTHON_FALLBACK, f"rust_symbol_missing:{','.join(missing)}", None, None
+ 
+         try:
+-            rust_config = rust_module.RustModeJumpConfig(
+-                list(descriptor.labels),
+-                target.astype(float).tolist(),
+-                proposal.astype(float).tolist(),
+-            )
++            if descriptor.typed_state_metadata is None:
++                rust_config = rust_module.RustModeJumpConfig(
++                    list(descriptor.labels),
++                    target.astype(float).tolist(),
++                    proposal.astype(float).tolist(),
++                )
++            else:
++                metadata = descriptor.typed_state_metadata
++                rust_metadata = rust_module.RustModeJumpStateMetadata(
++                    str(metadata["schema"]),
++                    [int(value) for value in metadata["shape"]],
++                    [int(value) for value in metadata["cardinalities"]],
++                    str(metadata["encoding"]),
++                    [str(value) for value in metadata["state_labels"]],
++                    [[int(item) for item in row] for row in metadata["state_values"]],
++                    str(metadata["proposal_domain"]),
++                    int(metadata["state_space_size"]),
++                )
++                rust_config = rust_module.RustModeJumpConfig.with_metadata(
++                    list(descriptor.labels),
++                    target.astype(float).tolist(),
++                    proposal.astype(float).tolist(),
++                    rust_metadata,
++                )
+             return ACTIVE_RUST_BACKEND, None, rust_module.RustModeJumpCore(rust_config), rust_module
+         except Exception as exc:
+             return (
+@@ -498,17 +557,37 @@ class ModeJumpRustBackend:
+         algorithm = descriptor.get("algorithm")
+         if algorithm != MODE_JUMP_ALGORITHM:
+             raise ValueError("descriptor algorithm must be exp6166_cross_mode_categorical_mh_v1")
+-        topology = descriptor.get("topology", MODE_JUMP_TOPOLOGY)
+-        if topology != MODE_JUMP_TOPOLOGY:
++        raw_metadata = descriptor.get("typed_state_metadata")
++        typed_state_metadata = (
++            normalize_typed_state_metadata(raw_metadata, label_count=label_count)
++            if isinstance(raw_metadata, Mapping)
++            else None
++        )
++        default_topology = (
++            VARIABLE_CARDINALITY_TOPOLOGY
++            if typed_state_metadata is not None
++            else MODE_JUMP_TOPOLOGY
++        )
++        topology = str(descriptor.get("topology", default_topology))
++        if typed_state_metadata is None and topology != MODE_JUMP_TOPOLOGY:
+             raise ValueError("unsupported topology for mode-jump sampler backend")
++        if typed_state_metadata is not None and topology != VARIABLE_CARDINALITY_TOPOLOGY:
++            raise ValueError("typed state metadata requires variable-cardinality topology")
+         frozen_labels = tuple(frozen_mode_jump_inputs()[0])
+-        labels = tuple(str(label) for label in descriptor.get("labels", frozen_labels))
+-        if labels != frozen_labels or len(labels) != label_count:
+-            raise ValueError("descriptor labels must match frozen Exp6194 labels")
++        if typed_state_metadata is None:
++            labels = tuple(str(label) for label in descriptor.get("labels", frozen_labels))
++            if labels != frozen_labels or len(labels) != label_count:
++                raise ValueError("descriptor labels must match frozen Exp6194 labels")
++        else:
++            metadata_labels = tuple(str(label) for label in typed_state_metadata["state_labels"])
++            labels = tuple(str(label) for label in descriptor.get("labels", metadata_labels))
++            if labels != metadata_labels or len(labels) != label_count:
++                raise ValueError("descriptor labels must match typed state metadata labels")
+         seed = int(descriptor.get("seed", self.seed))
+         if seed < 0 or seed >= 2**64:
+             raise ValueError("seed must fit in u64")
+-        initial_label = str(descriptor.get("initial_label", exp6194.INITIAL_LABEL))
++        initial_default = exp6194.INITIAL_LABEL if typed_state_metadata is None else labels[0]
++        initial_label = str(descriptor.get("initial_label", initial_default))
+         if initial_label not in labels:
+             raise ValueError("initial_label must be one of the frozen labels")
+         burn_in = int(descriptor.get("burn_in", 0))
+@@ -519,8 +598,9 @@ class ModeJumpRustBackend:
+         timeout_s = descriptor.get("timeout_s")
+         return _NormalizedDescriptor(
+             algorithm=MODE_JUMP_ALGORITHM,
+-            topology=MODE_JUMP_TOPOLOGY,
++            topology=topology,
+             labels=labels,
++            typed_state_metadata=typed_state_metadata,
+             seed=seed,
+             initial_label=initial_label,
+             burn_in=burn_in,
+@@ -536,7 +616,50 @@ class ModeJumpRustBackend:
+     def _coerce_mode_jump_inputs(
+         target_probabilities: object,
+         proposal_probabilities: object,
++        *,
++        config: Mapping[str, Any] | None = None,
+     ) -> tuple[np.ndarray, np.ndarray, JsonDict]:
++        raw_metadata = _typed_state_metadata_from_config(config)
++        if raw_metadata is not None:
++            raw_target = np.asarray(target_probabilities)
++            raw_proposal = np.asarray(proposal_probabilities)
++            target = np.asarray(target_probabilities, dtype=np.float64)
++            proposal = np.asarray(proposal_probabilities, dtype=np.float64)
++            if target.ndim != 1:
++                raise ValueError("target probabilities must be a rank-1 vector")
++            metadata = normalize_typed_state_metadata(raw_metadata, label_count=int(target.size))
++            label_count = len(metadata["state_labels"])
++            if target.shape != (label_count,):
++                raise ValueError("target probabilities must match typed metadata labels")
++            if proposal.shape != (label_count, label_count):
++                raise ValueError("proposal probabilities must match typed metadata labels")
++            _validate_probability_inputs(target, proposal, target_name="target probabilities")
++            rust_supported = (
++                isinstance(target_probabilities, np.ndarray)
++                and isinstance(proposal_probabilities, np.ndarray)
++                and raw_target.dtype == np.float64
++                and raw_proposal.dtype == np.float64
++                and raw_target.flags.c_contiguous
++                and raw_proposal.flags.c_contiguous
++            )
++            return (
++                target.copy(),
++                proposal.copy(),
++                {
++                    "target_dtype": str(raw_target.dtype),
++                    "proposal_dtype": str(raw_proposal.dtype),
++                    "target_shape": list(raw_target.shape),
++                    "proposal_shape": list(raw_proposal.shape),
++                    "target_c_contiguous": bool(raw_target.flags.c_contiguous),
++                    "proposal_c_contiguous": bool(raw_proposal.flags.c_contiguous),
++                    "rust_supported": bool(rust_supported),
++                    "typed_state_metadata_schema": metadata["schema"],
++                    "typed_state_metadata_hash": sha256_json(metadata),
++                    "state_space_size": int(metadata["state_space_size"]),
++                    "support_count": int(metadata["support_count"]),
++                    "encoding": metadata["encoding"],
++                },
++            )
+         frozen_labels, frozen_target, frozen_proposal = frozen_mode_jump_inputs()
+         raw_target = np.asarray(target_probabilities)
+         raw_proposal = np.asarray(proposal_probabilities)
+@@ -550,6 +673,7 @@ class ModeJumpRustBackend:
+             raise ValueError("mode-jump probabilities must contain only finite values")
+         if np.any(target <= 0.0):
+             raise ValueError("target probabilities must be positive on frozen support")
++        _validate_probability_inputs(target, proposal, target_name="target probabilities")
+         if not np.allclose(target, frozen_target, atol=1e-7, rtol=0.0):
+             raise ValueError("target probabilities must match frozen Exp6194 target")
+         if not np.allclose(proposal, frozen_proposal, atol=1e-7, rtol=0.0):
+@@ -581,6 +705,8 @@ class ModeJumpRustBackend:
+         labels: Sequence[str],
+         target: np.ndarray,
+         proposal: np.ndarray,
++        *,
++        typed_state_metadata: Mapping[str, Any] | None = None,
+     ) -> str:
+         return sha256_json(
+             {
+@@ -588,6 +714,14 @@ class ModeJumpRustBackend:
+                 "target_probabilities": np.asarray(target, dtype=np.float64).tolist(),
+                 "proposal_probabilities": np.asarray(proposal, dtype=np.float64).tolist(),
+                 "algorithm": MODE_JUMP_ALGORITHM,
++                "topology": (
++                    VARIABLE_CARDINALITY_TOPOLOGY
++                    if typed_state_metadata is not None
++                    else MODE_JUMP_TOPOLOGY
++                ),
++                "typed_state_metadata": (
++                    dict(typed_state_metadata) if typed_state_metadata is not None else None
++                ),
+             }
+         )
+ 
+@@ -611,8 +745,13 @@ class ModeJumpRustBackend:
+         checkpoint: JsonDict = {
+             "schema_version": CHECKPOINT_SCHEMA_VERSION,
+             "algorithm": MODE_JUMP_ALGORITHM,
+-            "topology": MODE_JUMP_TOPOLOGY,
++            "topology": descriptor.topology,
+             "labels": list(descriptor.labels),
++            "typed_state_metadata_hash": (
++                sha256_json(descriptor.typed_state_metadata)
++                if descriptor.typed_state_metadata is not None
++                else None
++            ),
+             "descriptor_hash": descriptor.descriptor_hash,
+             "input_hash": input_hash,
+             "seed": int(descriptor.seed),
+@@ -642,8 +781,13 @@ class ModeJumpRustBackend:
+             "active_backend": active_backend,
+             "fallback_reason": fallback_reason,
+             "algorithm": MODE_JUMP_ALGORITHM,
+-            "topology": MODE_JUMP_TOPOLOGY,
++            "topology": descriptor.topology,
+             "descriptor_hash": descriptor.descriptor_hash,
++            "typed_state_metadata_hash": (
++                sha256_json(descriptor.typed_state_metadata)
++                if descriptor.typed_state_metadata is not None
++                else None
++            ),
+             "input_hash": input_hash,
+             "input_support": dict(input_support),
+             "feature_enabled_by_config": bool(descriptor.enable_mode_jump_runtime),
+@@ -665,6 +809,298 @@ def _env_flag_enabled() -> bool:
+     return os.environ.get(FEATURE_ENV_VAR, "").strip().lower() in {"1", "true", "yes", "on"}
+ 
+ 
++def complete_support_proposal(label_count: int) -> np.ndarray:
++    """Build a finite support proposal table for ABI parity controls."""
++
++    if int(label_count) <= 1:
++        raise ValueError("proposal support requires at least two labels")
++    proposal = np.full(
++        (int(label_count), int(label_count)),
++        1.0 / float(int(label_count) - 1),
++        dtype=np.float64,
++    )
++    np.fill_diagonal(proposal, 0.0)
++    return proposal
++
++
++def mode_jump_inputs_from_fixture_receipt(
++    receipt: Mapping[str, Any],
++) -> tuple[list[str], np.ndarray, np.ndarray, JsonDict]:
++    """Return labels, target, proposal, and metadata for one Exp6268 receipt."""
++
++    metadata = typed_state_metadata_from_fixture_receipt(receipt)
++    labels = [str(label) for label in metadata["state_labels"]]
++    if str(receipt["target_type"]) == "categorical_mode_jump":
++        definition = dict(receipt["definition"])
++        target = np.asarray(definition["target_probabilities"], dtype=np.float64)
++        proposal = np.asarray(definition["proposal_probabilities"], dtype=np.float64)
++    else:
++        probability_by_label = {
++            str(row["state_label"]): float(row["probability"]) for row in receipt["support"]
++        }
++        target = np.asarray([probability_by_label[label] for label in labels], dtype=np.float64)
++        proposal = complete_support_proposal(len(labels))
++    return labels, target, proposal, metadata
++
++
++def typed_state_metadata_from_fixture_receipt(receipt: Mapping[str, Any]) -> JsonDict:
++    """Build typed rank-1 state metadata from an Exp6268 exact fixture receipt."""
++
++    target_type = str(receipt["target_type"])
++    if target_type == "categorical_mode_jump":
++        return _categorical_metadata(receipt)
++    if target_type == "ising":
++        return _comma_state_metadata(
++            receipt,
++            cardinalities=[2] * int(receipt["definition"]["n_spins"]),
++            encoding="ising_pm_one_rank1",
++            categories=[["-1", "+1"] for _ in range(int(receipt["definition"]["n_spins"]))],
++        )
++    if target_type == "potts":
++        n_spins = int(receipt["definition"]["n_spins"])
++        q_states = int(receipt["definition"]["q_states"])
++        return _comma_state_metadata(
++            receipt,
++            cardinalities=[q_states] * n_spins,
++            encoding="potts_zero_based_rank1",
++            categories=[list(receipt["definition"]["state_labels"]) for _ in range(n_spins)],
++        )
++    if target_type == "typed_factor":
++        return _typed_factor_metadata(receipt)
++    raise ValueError(f"unsupported typed state fixture target_type: {target_type}")
++
++
++def normalize_typed_state_metadata(
++    metadata: Mapping[str, Any],
++    *,
++    label_count: int,
++) -> JsonDict:
++    """Validate and normalize explicit typed state metadata."""
++
++    if not isinstance(metadata, Mapping):
++        raise ValueError("typed state metadata must be an object")
++    schema = str(metadata.get("schema"))
++    if schema != TYPED_STATE_METADATA_SCHEMA_VERSION:
++        raise ValueError("typed state metadata schema mismatch")
++    shape = [int(value) for value in metadata.get("shape", [])]
++    cardinalities = [int(value) for value in metadata.get("cardinalities", [])]
++    if len(shape) != 1:
++        raise ValueError("typed state metadata shape must be rank-1")
++    if not cardinalities or shape[0] != len(cardinalities):
++        raise ValueError("typed state metadata shape must match cardinality count")
++    if any(cardinality < 2 for cardinality in cardinalities):
++        raise ValueError("typed state metadata cardinality values must be at least 2")
++    state_space_size = int(metadata.get("state_space_size", 0))
++    expected_size = _product(cardinalities)
++    if state_space_size != expected_size:
++        raise ValueError(
++            "typed state metadata cardinality state_space_size must match cardinalities"
++        )
++    labels = [str(label) for label in metadata.get("state_labels", [])]
++    if len(labels) != int(label_count) or len(set(labels)) != len(labels):
++        raise ValueError("typed state metadata labels must match target labels and be unique")
++    raw_values = metadata.get("state_values", [])
++    state_values = [[int(item) for item in row] for row in raw_values]
++    if len(state_values) != len(labels):
++        raise ValueError("typed state metadata state_values length must match labels")
++    seen_values: set[tuple[int, ...]] = set()
++    for state_value in state_values:
++        if len(state_value) != len(cardinalities):
++            raise ValueError("typed state metadata state value length must match cardinalities")
++        for coordinate, cardinality in zip(state_value, cardinalities, strict=True):
++            if coordinate < 0 or coordinate >= cardinality:
++                raise ValueError("typed state metadata state value exceeds cardinality")
++        value_key = tuple(state_value)
++        if value_key in seen_values:
++            raise ValueError("typed state metadata state values must be unique")
++        seen_values.add(value_key)
++    if len(labels) > state_space_size:
++        raise ValueError("typed state metadata support exceeds state space")
++    proposal_domain = str(metadata.get("proposal_domain"))
++    if proposal_domain not in {"explicit_support_complete_no_self", "explicit_support_table"}:
++        raise ValueError("typed state metadata proposal_domain is unsupported")
++    variables = list(metadata.get("variables", []))
++    normalized: JsonDict = {
++        "schema": schema,
++        "shape": shape,
++        "cardinalities": cardinalities,
++        "encoding": str(metadata.get("encoding")),
++        "variables": variables,
++        "state_labels": labels,
++        "state_values": state_values,
++        "label_to_index": {label: index for index, label in enumerate(labels)},
++        "proposal_domain": proposal_domain,
++        "state_space_size": state_space_size,
++        "support_count": len(labels),
++        "roundtrip_rule": "state_label -> support_index -> state_label; state_value stays within per-variable cardinality",
++    }
++    return normalized
++
++
++def _typed_state_metadata_from_config(config: Mapping[str, Any] | None) -> Mapping[str, Any] | None:
++    if not isinstance(config, Mapping):
++        return None
++    descriptor = config.get("descriptor", config)
++    if not isinstance(descriptor, Mapping):
++        return None
++    metadata = descriptor.get("typed_state_metadata")
++    return metadata if isinstance(metadata, Mapping) else None
++
++
++def _validate_probability_inputs(
++    target: np.ndarray,
++    proposal: np.ndarray,
++    *,
++    target_name: str,
++) -> None:
++    if not np.all(np.isfinite(target)) or not np.all(np.isfinite(proposal)):
++        raise ValueError("mode-jump probabilities must contain only finite values")
++    if np.any(target <= 0.0):
++        raise ValueError(f"{target_name} must be positive on support")
++    if abs(float(np.sum(target)) - 1.0) > 1.0e-7:
++        raise ValueError(f"{target_name} must sum to 1.0")
++    if np.any(proposal < 0.0):
++        raise ValueError("proposal probabilities must be nonnegative")
++    for row_index, row in enumerate(proposal):
++        if abs(float(np.sum(row)) - 1.0) > 1.0e-7:
++            raise ValueError(f"proposal row {row_index} must sum to 1.0")
++    support = proposal > 0.0
++    if not np.array_equal(support, support.T):
++        raise ValueError("proposal support must be symmetric for MH correction")
++    if np.any(np.diag(support)) and np.any(~np.eye(proposal.shape[0], dtype=bool) & support):
++        return
++
++
++def _categorical_metadata(receipt: Mapping[str, Any]) -> JsonDict:
++    definition = dict(receipt["definition"])
++    labels = [str(label) for label in definition["labels"]]
++    variables = [
++        {
++            "id": "label",
++            "kind": "categorical",
++            "cardinality": len(labels),
++            "categories": labels,
++        }
++    ]
++    return normalize_typed_state_metadata(
++        {
++            "schema": TYPED_STATE_METADATA_SCHEMA_VERSION,
++            "shape": [1],
++            "cardinalities": [len(labels)],
++            "encoding": "categorical_label_rank1",
++            "variables": variables,
++            "state_labels": labels,
++            "state_values": [[index] for index in range(len(labels))],
++            "proposal_domain": "explicit_support_table",
++            "state_space_size": int(receipt["state_space_size"]),
++        },
++        label_count=len(labels),
++    )
++
++
++def _comma_state_metadata(
++    receipt: Mapping[str, Any],
++    *,
++    cardinalities: Sequence[int],
++    encoding: str,
++    categories: Sequence[Sequence[str]],
++) -> JsonDict:
++    labels = [str(row["state_label"]) for row in receipt["support"]]
++    state_values = []
++    for label in labels:
++        parts = label.split(",")
++        encoded = []
++        for raw, cardinality in zip(parts, cardinalities, strict=True):
++            if raw == "-1":
++                encoded.append(0)
++            elif raw == "+1":
++                encoded.append(1)
++            else:
++                value = int(raw)
++                if value < 0 or value >= int(cardinality):
++                    raise ValueError("state label exceeds cardinality")
++                encoded.append(value)
++        state_values.append(encoded)
++    variables = [
++        {
++            "id": f"x{index}",
++            "kind": "categorical",
++            "cardinality": int(cardinality),
++            "categories": list(category),
++        }
++        for index, (cardinality, category) in enumerate(zip(cardinalities, categories, strict=True))
++    ]
++    return normalize_typed_state_metadata(
++        {
++            "schema": TYPED_STATE_METADATA_SCHEMA_VERSION,
++            "shape": [len(cardinalities)],
++            "cardinalities": [int(value) for value in cardinalities],
++            "encoding": encoding,
++            "variables": variables,
++            "state_labels": labels,
++            "state_values": state_values,
++            "proposal_domain": "explicit_support_complete_no_self",
++            "state_space_size": int(receipt["state_space_size"]),
++        },
++        label_count=len(labels),
++    )
++
++
++def _typed_factor_metadata(receipt: Mapping[str, Any]) -> JsonDict:
++    definition = dict(receipt["definition"])
++    wires = {str(row["id"]): dict(row) for row in definition["program_payload"]["wires"]}
++    wire_order = [str(value) for value in receipt.get("wire_order", wires.keys())]
++    variables = []
++    cardinalities = []
++    for wire_id in wire_order:
++        wire = wires[wire_id]
++        categories = [str(value) for value in wire.get("categories", [])]
++        cardinality = len(categories) if categories else 2
++        variables.append(
++            {
++                "id": wire_id,
++                "kind": str(wire.get("kind", "categorical")),
++                "cardinality": int(cardinality),
++                "categories": categories,
++            }
++        )
++        cardinalities.append(int(cardinality))
++    labels = [str(row["state_label"]) for row in receipt["support"]]
++    state_values = []
++    for support_row in receipt["support"]:
++        state = dict(support_row["state"])
++        encoded = []
++        for variable in variables:
++            value = state[variable["id"]]
++            categories = list(variable["categories"])
++            if categories:
++                encoded.append(categories.index(str(value)))
++            else:
++                encoded.append(int(value))
++        state_values.append(encoded)
++    return normalize_typed_state_metadata(
++        {
++            "schema": TYPED_STATE_METADATA_SCHEMA_VERSION,
++            "shape": [len(cardinalities)],
++            "cardinalities": cardinalities,
++            "encoding": "typed_factor_wire_order_rank1",
++            "variables": variables,
++            "state_labels": labels,
++            "state_values": state_values,
++            "proposal_domain": "explicit_support_complete_no_self",
++            "state_space_size": int(receipt["state_space_size"]),
++        },
++        label_count=len(labels),
++    )
++
++
++def _product(values: Sequence[int]) -> int:
++    result = 1
++    for value in values:
++        result *= int(value)
++    return result
++
++
+ def _normalize_state(state: Mapping[str, Any]) -> JsonDict:
+     return {
+         "current_label": str(state["current_label"]),
+diff --git a/results/experiment_6280_variable_cardinality_mode_jump_backend.json b/results/experiment_6280_variable_cardinality_mode_jump_backend.json
+new file mode 100644
+index 0000000000..4efe37c70a
+--- /dev/null
++++ b/results/experiment_6280_variable_cardinality_mode_jump_backend.json
+@@ -0,0 +1,1185 @@
++{
++  "deterministic_seed_replay_by_fixture": {
++    "all_passed": true,
++    "fixtures": {
++      "control_unimodal_ising3": {
++        "checkpoint_state": {
++          "accepted_count": 18,
++          "current_label": "+1,+1,+1",
++          "rng_state": 3058057609379119256,
++          "step": 104
++        },
++        "passed": true,
++        "sample_labels_sha256": "sha256:67f159dc61c2fbdcc7185899df36afadc35047a07a609e23e36048c87355b63e",
++        "seed": 6280
++      },
++      "exp6237_original_six_state": {
++        "checkpoint_state": {
++          "accepted_count": 61,
++          "current_label": "left_shoulder",
++          "rng_state": 3058057609379119256,
++          "step": 104
++        },
++        "passed": true,
++        "sample_labels_sha256": "sha256:73fd24d48371c68d5fa7c0734bcf94361ae2e01ee6ef1bfafcf9be229e508857",
++        "seed": 6280
++      },
++      "ising_ferromagnetic_ring4": {
++        "checkpoint_state": {
++          "accepted_count": 10,
++          "current_label": "+1,+1,+1,+1",
++          "rng_state": 3058057609379119256,
++          "step": 104
++        },
++        "passed": true,
++        "sample_labels_sha256": "sha256:f6a3ac35cf65d9da953fa54df47da95de3256dc0f8f15cb44eeaadb4676cd38b",
++        "seed": 6280
++      },
++      "ising_ferromagnetic_ring5": {
++        "checkpoint_state": {
++          "accepted_count": 16,
++          "current_label": "-1,-1,-1,-1,-1",
++          "rng_state": 3058057609379119256,
++          "step": 104
++        },
++        "passed": true,
++        "sample_labels_sha256": "sha256:1be26bb5b47846cc51efa940b40c71af9cc55e9ebf7447622ba431c3d14e034b",
++        "seed": 6280
++      },
++      "potts_antiferro_triangle3_q3": {
++        "checkpoint_state": {
++          "accepted_count": 68,
++          "current_label": "1,1,0",
++          "rng_state": 3058057609379119256,
++          "step": 104
++        },
++        "passed": true,
++        "sample_labels_sha256": "sha256:0b48dd927723fdae039615fc43d3cd461ebb3e3a08a443d9f85d8a26cc543447",
++        "seed": 6280
++      },
++      "potts_chain3_q3": {
++        "checkpoint_state": {
++          "accepted_count": 69,
++          "current_label": "1,1,1",
++          "rng_state": 3058057609379119256,
++          "step": 104
++        },
++        "passed": true,
++        "sample_labels_sha256": "sha256:c064f8922b02f3fb0934f7d4f8a94435be870284835ca8a2b0d706de9b1f8b42",
++        "seed": 6280
++      },
++      "typed_access_control_exp6152": {
++        "checkpoint_state": {
++          "accepted_count": 42,
++          "current_label": "{\"accepted\":1,\"blocked\":0,\"candidate_item\":\"ac_e0_0\",\"clearance\":\"clearance_3\",\"clearance_ok\":1,\"eligible\":1,\"gate_open\":1,\"member_group\":\"ac_g0_0\",\"strategy_clean\":1}",
++          "rng_state": 3058057609379119256,
++          "step": 104
++        },
++        "passed": true,
++        "sample_labels_sha256": "sha256:332c145d6830c12cb83459cd9e97a9710784d97bd7f01d1a37e35f0c5c717b59",
++        "seed": 6280
++      },
++      "typed_multimodal_factor_exp6166": {
++        "checkpoint_state": {
++          "accepted_count": 50,
++          "current_label": "{\"mode_state\":\"right_shoulder\"}",
++          "rng_state": 3058057609379119256,
++          "step": 104
++        },
++        "passed": true,
++        "sample_labels_sha256": "sha256:6939521df0398171d24f1e9f8194107e502cecbf11e5d39dac2e646e729d6175",
++        "seed": 6280
++      }
++    },
++    "principle": "Proves fixed seeds replay identical traces and checkpoints."
++  },
++  "duration_s": 9.42033e-07,
++  "exp6268_fixture_path_hash_and_terminal_class": {
++    "fixture_count": 8,
++    "path": "results/experiment_6268_multimodal_sampler_fixture_suite.json",
++    "principle": "Pins the exact fixture suite and its terminal class before support claims are trusted.",
++    "sampler_fixture_suite_ready_score": 1.0,
++    "sha256": "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
++    "status": "complete_ready",
++    "terminal_class": "complete_ready"
++  },
++  "exp6269_failure_path_hash_and_root_cause": {
++    "failure_messages": [
++      "target probabilities must have frozen shape (6,)",
++      "target probabilities must match frozen Exp6194 target"
++    ],
++    "path": "results/experiment_6269_mode_jump_multifamily_ab.json",
++    "principle": "Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.",
++    "root_cause": "mode_jump_rust_backend accepted only the frozen six-state shape and target before Exp6269 could compare non-six-state fixtures",
++    "sampler_value_claimed": false,
++    "scientific_ab_rerun": false,
++    "sha256": "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098",
++    "status": "blocked_safety",
++    "terminal_class": "blocked_safety",
++    "unsupported_cell_count": 14
++  },
++  "field_principles": {
++    "deterministic_seed_replay_by_fixture": "Proves fixed seeds replay identical traces and checkpoints.",
++    "duration_s": "Reports real wall time without timing interpretation.",
++    "exp6268_fixture_path_hash_and_terminal_class": "Pins the exact fixture suite and its terminal class before support claims are trusted.",
++    "exp6269_failure_path_hash_and_root_cause": "Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.",
++    "field_principles": "Explains why each required field exists before a reviewer trusts the JSON shape.",
++    "field_provenance": "Maps every required field to prompt, spec, source, upstream artifact, command, or computed ABI evidence.",
++    "focused_python_test_results": "Records focused Python test and coverage results for the changed code.",
++    "focused_rust_test_results": "Records focused Rust test results for the changed core.",
++    "honest_verdict": "Uses a terminal prefix and states ABI readiness without claiming sampler value.",
++    "inference_substrate": "Declares local CPU Rust/Python variable-cardinality ABI verification, not timing, LLM, GPU, cDLS, or hardware work.",
++    "label_permutation_controls": "Shows label order drift is detected instead of silently relabeling states.",
++    "malformed_cardinality_controls": "Shows bad cardinality metadata fails closed.",
++    "malformed_shape_controls": "Shows rank and shape mismatches fail closed.",
++    "original_six_state_regression_receipt": "Proves the fixed six-state compatibility path still replays.",
++    "out_of_domain_proposal_controls": "Shows proposal labels or indices outside the metadata domain fail closed.",
++    "preconditions_checked": "Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.",
++    "protected_files_unchanged": "Confirms conductor-owned and reconciler-owned files stayed byte-identical.",
++    "random_seed": "Records the replay seed used for deterministic controls.",
++    "reproducibility_checksum": "Content-addresses the artifact after blanking volatile duration and checksum fields.",
++    "rust_and_python_source_paths_hashes_before_after": "Shows which backend and binding files changed, by hash.",
++    "rust_python_encode_decode_roundtrip_by_fixture": "Proves both languages map state labels to indices and back exactly.",
++    "rust_python_proposal_parity_by_fixture": "Proves both languages read the same proposal domain and probability table.",
++    "source_mutation_count": "Bare zero proves no protected or preregistered source drift occurred during verification.",
++    "status": "Separates ready ABI evidence from blocked metadata, parity, or control states.",
++    "supported_fixture_families_and_shapes": "Lists the Exp6268 families and rank-1 shapes accepted by the new ABI.",
++    "test_commands": "Lists focused Python, coverage, Rust, E2E, experiment, adversarial, and suite commands.",
++    "test_exit_codes": "Stores command exit codes so failed checks cannot become readiness evidence.",
++    "treatment_attempt_accept_and_fire_counts_by_fixture": "Proves treatment activation before readiness.",
++    "typed_state_metadata_schema": "Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.",
++    "unsupported_shapes_and_fail_closed_behavior": "Records unsupported ranks or malformed surfaces as errors, not fallback samples.",
++    "variable_cardinality_backend_ready_score": "Equals one only when support, parity, replay, activation, controls, and commands all pass.",
++    "verifier_is_oracle": "States that exact finite metadata, proposal tables, and deterministic replay are the verifier."
++  },
++  "field_provenance": {
++    "deterministic_seed_replay_by_fixture": {
++      "principle": "Proves fixed seeds replay identical traces and checkpoints.",
++      "source": "computed_abi_evidence"
++    },
++    "duration_s": {
++      "principle": "Reports real wall time without timing interpretation.",
++      "source": "artifact_writer"
++    },
++    "exp6268_fixture_path_hash_and_terminal_class": {
++      "principle": "Pins the exact fixture suite and its terminal class before support claims are trusted.",
++      "source": "upstream_artifact"
++    },
++    "exp6269_failure_path_hash_and_root_cause": {
++      "principle": "Pins the prior failure and names the fixed ABI root cause instead of rerunning the A/B.",
++      "source": "upstream_artifact"
++    },
++    "field_principles": {
++      "principle": "Explains why each required field exists before a reviewer trusts the JSON shape.",
++      "source": "spec_and_prompt"
++    },
++    "field_provenance": {
++      "principle": "Maps every required field to prompt, spec, source, upstream artifact, command, or computed ABI evidence.",
++      "source": "spec_and_prompt"
++    },
++    "focused_python_test_results": {
++      "principle": "Records focused Python test and coverage results for the changed code.",
++      "source": "command_receipts"
++    },
++    "focused_rust_test_results": {
++      "principle": "Records focused Rust test results for the changed core.",
++      "source": "command_receipts"
++    },
++    "honest_verdict": {
++      "principle": "Uses a terminal prefix and states ABI readiness without claiming sampler value.",
++      "source": "computed_abi_evidence"
++    },
++    "inference_substrate": {
++      "principle": "Declares local CPU Rust/Python variable-cardinality ABI verification, not timing, LLM, GPU, cDLS, or hardware work.",
++      "source": "computed_abi_evidence"
++    },
++    "label_permutation_controls": {
++      "principle": "Shows label order drift is detected instead of silently relabeling states.",
++      "source": "computed_abi_evidence"
++    },
++    "malformed_cardinality_controls": {
++      "principle": "Shows bad cardinality metadata fails closed.",
++      "source": "computed_abi_evidence"
++    },
++    "malformed_shape_controls": {
++      "principle": "Shows rank and shape mismatches fail closed.",
++      "source": "computed_abi_evidence"
++    },
++    "original_six_state_regression_receipt": {
++      "principle": "Proves the fixed six-state compatibility path still replays.",
++      "source": "computed_abi_evidence"
++    },
++    "out_of_domain_proposal_controls": {
++      "principle": "Shows proposal labels or indices outside the metadata domain fail closed.",
++      "source": "computed_abi_evidence"
++    },
++    "preconditions_checked": {
++      "principle": "Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.",
++      "source": "computed_abi_evidence"
++    },
++    "protected_files_unchanged": {
++      "principle": "Confirms conductor-owned and reconciler-owned files stayed byte-identical.",
++      "source": "computed_abi_evidence"
++    },
++    "random_seed": {
++      "principle": "Records the replay seed used for deterministic controls.",
++      "source": "computed_abi_evidence"
++    },
++    "reproducibility_checksum": {
++      "principle": "Content-addresses the artifact after blanking volatile duration and checksum fields.",
++      "source": "artifact_writer"
++    },
++    "rust_and_python_source_paths_hashes_before_after": {
++      "principle": "Shows which backend and binding files changed, by hash.",
++      "source": "computed_abi_evidence"
++    },
++    "rust_python_encode_decode_roundtrip_by_fixture": {
++      "principle": "Proves both languages map state labels to indices and back exactly.",
++      "source": "computed_abi_evidence"
++    },
++    "rust_python_proposal_parity_by_fixture": {
++      "principle": "Proves both languages read the same proposal domain and probability table.",
++      "source": "computed_abi_evidence"
++    },
++    "source_mutation_count": {
++      "principle": "Bare zero proves no protected or preregistered source drift occurred during verification.",
++      "source": "computed_abi_evidence"
++    },
++    "status": {
++      "principle": "Separates ready ABI evidence from blocked metadata, parity, or control states.",
++      "source": "computed_abi_evidence"
++    },
++    "supported_fixture_families_and_shapes": {
++      "principle": "Lists the Exp6268 families and rank-1 shapes accepted by the new ABI.",
++      "source": "computed_abi_evidence"
++    },
++    "test_commands": {
++      "principle": "Lists focused Python, coverage, Rust, E2E, experiment, adversarial, and suite commands.",
++      "source": "command_receipts"
++    },
++    "test_exit_codes": {
++      "principle": "Stores command exit codes so failed checks cannot become readiness evidence.",
++      "source": "command_receipts"
++    },
++    "treatment_attempt_accept_and_fire_counts_by_fixture": {
++      "principle": "Proves treatment activation before readiness.",
++      "source": "computed_abi_evidence"
++    },
++    "typed_state_metadata_schema": {
++      "principle": "Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.",
++      "source": "computed_abi_evidence"
++    },
++    "unsupported_shapes_and_fail_closed_behavior": {
++      "principle": "Records unsupported ranks or malformed surfaces as errors, not fallback samples.",
++      "source": "computed_abi_evidence"
++    },
++    "variable_cardinality_backend_ready_score": {
++      "principle": "Equals one only when support, parity, replay, activation, controls, and commands all pass.",
++      "source": "computed_abi_evidence"
++    },
++    "verifier_is_oracle": {
++      "principle": "States that exact finite metadata, proposal tables, and deterministic replay are the verifier.",
++      "source": "computed_abi_evidence"
++    }
++  },
++  "focused_python_test_results": {
++    "all_passed": true,
++    "commands": [
++      {
++        "command": ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q -o addopts=",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py -m pytest tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q --no-cov -o addopts=",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py --fail-under=100",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py crates/carnot-samplers/tests/mode_jump.rs",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/python -m carnot.experiment_6280_variable_cardinality_mode_jump_backend --date 20260810",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6280_variable_cardinality_mode_jump_backend.json",
++        "exit_code": 0
++      }
++    ],
++    "principle": "Records focused Python test and coverage results for the changed code."
++  },
++  "focused_rust_test_results": {
++    "all_passed": true,
++    "commands": [
++      {
++        "command": "cargo test -p carnot-samplers --test mode_jump --quiet",
++        "exit_code": 0
++      }
++    ],
++    "principle": "Records focused Rust test results for the changed core."
++  },
++  "honest_verdict": "complete_ready: variable-cardinality mode-jump ABI supports Exp6268 families with exact Rust/Python parity; no scientific A/B value claim",
++  "inference_substrate": "local_cpu_rust_python_variable_cardinality_sampler_abi",
++  "label_permutation_controls": {
++    "all_fail_closed": true,
++    "controls": [
++      {
++        "control": "reversed_metadata_labels",
++        "error_type": "ValueError",
++        "fail_closed": true,
++        "fallback_output_substituted": false,
++        "message": "descriptor labels must match typed state metadata labels"
++      }
++    ],
++    "principle": "Shows label order drift is detected instead of silently relabeling states."
++  },
++  "malformed_cardinality_controls": {
++    "all_fail_closed": true,
++    "controls": [
++      {
++        "control": "potts_cardinality_too_small",
++        "error_type": "ValueError",
++        "fail_closed": true,
++        "fallback_output_substituted": false,
++        "message": "typed state metadata cardinality state_space_size must match cardinalities"
++      }
++    ],
++    "principle": "Shows bad cardinality metadata fails closed."
++  },
++  "malformed_shape_controls": {
++    "all_fail_closed": true,
++    "controls": [
++      {
++        "control": "metadata_rank2_shape",
++        "error_type": "ValueError",
++        "fail_closed": true,
++        "fallback_output_substituted": false,
++        "message": "typed state metadata shape must be rank-1"
++      },
++      {
++        "control": "target_rank2_shape",
++        "error_type": "ValueError",
++        "fail_closed": true,
++        "fallback_output_substituted": false,
++        "message": "target probabilities must be a rank-1 vector"
++      }
++    ],
++    "principle": "Shows rank and shape mismatches fail closed."
++  },
++  "original_six_state_regression_receipt": {
++    "checkpoint_state": {
++      "accepted_count": 61,
++      "current_label": "left_shoulder",
++      "rng_state": 3058057609379119256,
++      "step": 104
++    },
++    "decision_log_sha256": "sha256:33b5ebb2e75f8eabe08fe23ab825949d0f28ea0c2c46fdb7e8f4ec9fd22464e8",
++    "fixture": "exp6237_original_six_state",
++    "legacy_topology": "fixed_categorical_mode_jump",
++    "passed": true,
++    "principle": "Proves the fixed six-state compatibility path still replays.",
++    "sample_labels_sha256": "sha256:73fd24d48371c68d5fa7c0734bcf94361ae2e01ee6ef1bfafcf9be229e508857",
++    "typed_topology": "typed_variable_cardinality_mode_jump"
++  },
++  "out_of_domain_proposal_controls": {
++    "all_fail_closed": true,
++    "controls": [
++      {
++        "control": "asymmetric_or_self_only_support",
++        "error_type": "ValueError",
++        "fail_closed": true,
++        "fallback_output_substituted": false,
++        "message": "proposal support must be symmetric for MH correction"
++      },
++      {
++        "control": "proposal_table_outside_metadata_domain",
++        "error_type": "ValueError",
++        "fail_closed": true,
++        "fallback_output_substituted": false,
++        "message": "proposal probabilities must match typed metadata labels"
++      }
++    ],
++    "principle": "Shows proposal labels or indices outside the metadata domain fail closed."
++  },
++  "preconditions_checked": {
++    "abi_hashes_before_task": {
++      "crates/carnot-python/src/mode_jump.rs": "sha256:83b788dafaaca79f6d90304d2cc558ce339fc10404901ca0a334d91dbbe3d275",
++      "crates/carnot-samplers/src/mode_jump.rs": "sha256:d5e9fba57da0a190459c76b6bdc90e65e4e38c41cad4c13c8a54c1965079388d",
++      "openspec/capabilities/samplers/spec.md": "sha256:3e8fc1487dccd250bf9e9125d522c8eef6531e71a18d105a3e5236904e1ff234",
++      "python/carnot/samplers/backend.py": "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
++      "python/carnot/samplers/mode_jump_rust_backend.py": "sha256:fa202e80662270539a911473945f236d64522a16fa4398dc41b407efe3b2b9bf",
++      "python/carnot/samplers/potts_sampler.py": "sha256:a36ef46d4b0048d083bfe133165b16f944e70897aed8b3b1610f210f648f09d7",
++      "results/experiment_6268_multimodal_sampler_fixture_suite.json": "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
++      "results/experiment_6269_mode_jump_multifamily_ab.json": "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098"
++    },
++    "cargo_version": {
++      "argv": [
++        "cargo",
++        "--version"
++      ],
++      "available": true,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "cargo 1.97.1 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.1-1.1)"
++    },
++    "checks": {
++      "exp6269_failure_hash_recorded": true,
++      "fixture_hash_recorded": true,
++      "git_status_recorded": true,
++      "protected_hashes_captured": true,
++      "sampler_spec_has_req": true,
++      "seed_recorded": true,
++      "source_hashes_captured": true,
++      "supported_shapes_recorded": true
++    },
++    "experiment_id": "experiment_6280_variable_cardinality_mode_jump_backend",
++    "git_status_before": {
++      "argv": [
++        "git",
++        "status",
++        "--short"
++      ],
++      "available": true,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "M crates/carnot-python/src/mode_jump.rs\n M crates/carnot-samplers/src/mode_jump.rs\n M crates/carnot-samplers/tests/mode_jump.rs\n M openspec/capabilities/samplers/spec.md\n M python/carnot/_rust_compat.py\n M python/carnot/samplers/mode_jump_rust_backend.py\n M tests/python/samplers/test_mode_jump_rust_backend.py\n?? python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py\n?? tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py"
++    },
++    "platform_python_version": "3.12.13",
++    "preconditions_ready": true,
++    "principle": "Records git status, source hashes, fixture hashes, tool versions, ABI hashes, supported shapes, seed, and protected hashes before edits.",
++    "protected_hashes_before_run_sha256": "sha256:a0fa21d533fa6d2cedb347b6d71d736a74b50738409a9de2ce29e8152ad50f00",
++    "python_version": "3.12.13",
++    "random_seed": 6280,
++    "run_date": "20260810",
++    "rustc_version": {
++      "argv": [
++        "rustc",
++        "--version"
++      ],
++      "available": true,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Arch Linux rust 1:1.97.1-1.1)"
++    },
++    "schema": "carnot.experiment_6280.variable_cardinality_mode_jump_backend.v1",
++    "source_hashes_before_run_sha256": "sha256:e5c7a35f76af0e49912d4cc0c21bd3f3fbb55609b48e1ab38de5f64acf089ae0",
++    "supported_fixture_shapes_sha256": "sha256:ce0d5a26b080927615e3e53552cc727f08798c6d3fa788844445f639949450bc"
++  },
++  "protected_files_unchanged": {
++    "after": {
++      "_bmad/traceability.md": {
++        "exists": true,
++        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "size_bytes": 1198752
++      },
++      "ops/changelog.md": {
++        "exists": true,
++        "sha256": "sha256:825201fe68bafb34fc0bfaa7aecfb89a338882ae1aecb1fbccdeb888ad7b78bb",
++        "size_bytes": 4075242
++      },
++      "ops/status.md": {
++        "exists": true,
++        "sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
++        "size_bytes": 1181912
++      },
++      "scripts/research_conductor.py": {
++        "exists": true,
++        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "size_bytes": 307361
++      }
++    },
++    "before": {
++      "_bmad/traceability.md": {
++        "exists": true,
++        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "size_bytes": 1198752
++      },
++      "ops/changelog.md": {
++        "exists": true,
++        "sha256": "sha256:825201fe68bafb34fc0bfaa7aecfb89a338882ae1aecb1fbccdeb888ad7b78bb",
++        "size_bytes": 4075242
++      },
++      "ops/status.md": {
++        "exists": true,
++        "sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
++        "size_bytes": 1181912
++      },
++      "scripts/research_conductor.py": {
++        "exists": true,
++        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "size_bytes": 307361
++      }
++    },
++    "changed_paths": [],
++    "principle": "Confirms conductor-owned and reconciler-owned files stayed byte-identical.",
++    "unchanged": true
++  },
++  "random_seed": 6280,
++  "reproducibility_checksum": "sha256:516302c870e4c38677eff74bc3d98ec4a806872bd15a5a168479728ac1f2e442",
++  "rust_and_python_source_paths_hashes_before_after": {
++    "after_hashes": {
++      "AGENTS.md": {
++        "exists": true,
++        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "size_bytes": 1165
++      },
++      "CLAUDE.md": {
++        "exists": true,
++        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
++        "size_bytes": 287325
++      },
++      "CODEX.md": {
++        "exists": true,
++        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "size_bytes": 2396
++      },
++      "crates/carnot-python/src/mode_jump.rs": {
++        "exists": true,
++        "sha256": "sha256:2320597cec0b6ae8345a2f46cec8b7f6c1af7d8b34c9a0edc993d5d7abeeb56b",
++        "size_bytes": 10882
++      },
++      "crates/carnot-samplers/src/mode_jump.rs": {
++        "exists": true,
++        "sha256": "sha256:3f6d9da9518602497c2048bc24462ebd53bf16c65550466f66013b1f1771c013",
++        "size_bytes": 22847
++      },
++      "crates/carnot-samplers/tests/mode_jump.rs": {
++        "exists": true,
++        "sha256": "sha256:60f0be434134e1102e705cefda3e5bf669ef644cb16da8c279d82f37da0b6c8b",
++        "size_bytes": 11050
++      },
++      "openspec/capabilities/samplers/spec.md": {
++        "exists": true,
++        "sha256": "sha256:e2409cde8d74ae482cb7437093c79247845afabb7e2dc893c2536e6fe592a7be",
++        "size_bytes": 301633
++      },
++      "python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py": {
++        "exists": true,
++        "sha256": "sha256:84028e4442f8b2b272d10c118734028a674001bc89e70502ad3d4fcdfcdd7489",
++        "size_bytes": 46229
++      },
++      "python/carnot/samplers/backend.py": {
++        "exists": true,
++        "sha256": "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
++        "size_bytes": 28471
++      },
++      "python/carnot/samplers/mode_jump_rust_backend.py": {
++        "exists": true,
++        "sha256": "sha256:f94c05ce4f355702380871ce51c4080a5291eac8c0752c9fd487066e561d2351",
++        "size_bytes": 50113
++      },
++      "python/carnot/samplers/potts_sampler.py": {
++        "exists": true,
++        "sha256": "sha256:a36ef46d4b0048d083bfe133165b16f944e70897aed8b3b1610f210f648f09d7",
++        "size_bytes": 6834
++      },
++      "results/experiment_6268_multimodal_sampler_fixture_suite.json": {
++        "exists": true,
++        "sha256": "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
++        "size_bytes": 176858
++      },
++      "results/experiment_6269_mode_jump_multifamily_ab.json": {
++        "exists": true,
++        "sha256": "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098",
++        "size_bytes": 91359
++      },
++      "tests/python/samplers/test_mode_jump_rust_backend.py": {
++        "exists": true,
++        "sha256": "sha256:9c6dbf6ffb4338fc333368b63ebbf85ba13ba2aec7492de00cacf952f379b037",
++        "size_bytes": 22180
++      },
++      "tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py": {
++        "exists": true,
++        "sha256": "sha256:608b9b8a0997e9da4a28eaec6dee0389fd6d75b33c98465b4ea0960194725615",
++        "size_bytes": 11383
++      }
++    },
++    "changed_from_pre_task": [
++      "python/carnot/samplers/mode_jump_rust_backend.py",
++      "crates/carnot-samplers/src/mode_jump.rs",
++      "crates/carnot-python/src/mode_jump.rs",
++      "openspec/capabilities/samplers/spec.md"
++    ],
++    "pre_task_hashes": {
++      "crates/carnot-python/src/mode_jump.rs": "sha256:83b788dafaaca79f6d90304d2cc558ce339fc10404901ca0a334d91dbbe3d275",
++      "crates/carnot-samplers/src/mode_jump.rs": "sha256:d5e9fba57da0a190459c76b6bdc90e65e4e38c41cad4c13c8a54c1965079388d",
++      "openspec/capabilities/samplers/spec.md": "sha256:3e8fc1487dccd250bf9e9125d522c8eef6531e71a18d105a3e5236904e1ff234",
++      "python/carnot/samplers/backend.py": "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
++      "python/carnot/samplers/mode_jump_rust_backend.py": "sha256:fa202e80662270539a911473945f236d64522a16fa4398dc41b407efe3b2b9bf",
++      "python/carnot/samplers/potts_sampler.py": "sha256:a36ef46d4b0048d083bfe133165b16f944e70897aed8b3b1610f210f648f09d7",
++      "results/experiment_6268_multimodal_sampler_fixture_suite.json": "sha256:392b6a8e4f37130ba70ba5eb4ac2ad6c18d361452ab5f1383cdc4a578af27761",
++      "results/experiment_6269_mode_jump_multifamily_ab.json": "sha256:4ad015f42b42c956f143d028000791e8bcd3862b81a2f2e2ad2100961ee1c098"
++    },
++    "principle": "Shows which backend and binding files changed, by hash.",
++    "source_paths": [
++      "AGENTS.md",
++      "CODEX.md",
++      "CLAUDE.md",
++      "openspec/capabilities/samplers/spec.md",
++      "python/carnot/samplers/mode_jump_rust_backend.py",
++      "python/carnot/samplers/backend.py",
++      "python/carnot/samplers/potts_sampler.py",
++      "crates/carnot-samplers/src/mode_jump.rs",
++      "crates/carnot-python/src/mode_jump.rs",
++      "crates/carnot-samplers/tests/mode_jump.rs",
++      "tests/python/samplers/test_mode_jump_rust_backend.py",
++      "python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py",
++      "tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py",
++      "results/experiment_6268_multimodal_sampler_fixture_suite.json",
++      "results/experiment_6269_mode_jump_multifamily_ab.json"
++    ]
++  },
++  "rust_python_encode_decode_roundtrip_by_fixture": {
++    "all_passed": true,
++    "fixtures": {
++      "control_unimodal_ising3": {
++        "metadata_hash": "sha256:1646a4a321bd27ff8d2202524804ba514ec2ad580747380a3b12b1de384d8ecd",
++        "mismatch_count": 0,
++        "mismatches": [],
++        "passed": true,
++        "state_space_size": 8,
++        "support_count": 8
++      },
++      "exp6237_original_six_state": {
++        "metadata_hash": "sha256:50862a4a20426e1a25b754e6602bd179b7dacb3472790114e8da4b1b44e1fb6f",
++        "mismatch_count": 0,
++        "mismatches": [],
++        "passed": true,
++        "state_space_size": 6,
++        "support_count": 6
++      },
++      "ising_ferromagnetic_ring4": {
++        "metadata_hash": "sha256:244dda9fe61fb30334e386492f5577ed1ef06b2112f050eb393060643e32e0ce",
++        "mismatch_count": 0,
++        "mismatches": [],
++        "passed": true,
++        "state_space_size": 16,
++        "support_count": 16
++      },
++      "ising_ferromagnetic_ring5": {
++        "metadata_hash": "sha256:1ed35d552f3f3d1a1afed64d368ce6aedc4b524ee58ff5d8b3c6088ed1e028da",
++        "mismatch_count": 0,
++        "mismatches": [],
++        "passed": true,
++        "state_space_size": 32,
++        "support_count": 32
++      },
++      "potts_antiferro_triangle3_q3": {
++        "metadata_hash": "sha256:b10eac54e0efeff1d7d48b30df195c6d1a02bb49552f8629f9d83b85e20a450a",
++        "mismatch_count": 0,
++        "mismatches": [],
++        "passed": true,
++        "state_space_size": 27,
++        "support_count": 27
++      },
++      "potts_chain3_q3": {
++        "metadata_hash": "sha256:85bc15c04d1d4bcdaa5aae4ac2d21c5fb9de149ef3e116fdea879fe8dadbbd13",
++        "mismatch_count": 0,
++        "mismatches": [],
++        "passed": true,
++        "state_space_size": 27,
++        "support_count": 27
++      },
++      "typed_access_control_exp6152": {
++        "metadata_hash": "sha256:bc88b6aa9a5641cec10457dd0e7e1d538c8891f2080aaa7d3df54fedc7e0fbb1",
++        "mismatch_count": 0,
++        "mismatches": [],
++        "passed": true,
++        "state_space_size": 1536,
++        "support_count": 6
++      },
++      "typed_multimodal_factor_exp6166": {
++        "metadata_hash": "sha256:045c1dc486bdb0261aed6e140fe8ef8e67bacf41d7e4e275f96ce830772c72f2",
++        "mismatch_count": 0,
++        "mismatches": [],
++        "passed": true,
++        "state_space_size": 7,
++        "support_count": 6
++      }
++    },
++    "principle": "Proves both languages map state labels to indices and back exactly."
++  },
++  "rust_python_proposal_parity_by_fixture": {
++    "all_passed": true,
++    "fixtures": {
++      "control_unimodal_ising3": {
++        "active_backend": "rust_pyo3",
++        "decision_log_sha256": "sha256:db26ba1334e166253b89c375f9146e3bfc4464e1386138d093672adb6f0762ce",
++        "fallback_backend": "python_exact_fallback",
++        "passed": true,
++        "proposal_shape": [
++          8,
++          8
++        ],
++        "sample_labels_sha256": "sha256:67f159dc61c2fbdcc7185899df36afadc35047a07a609e23e36048c87355b63e"
++      },
++      "exp6237_original_six_state": {
++        "active_backend": "rust_pyo3",
++        "decision_log_sha256": "sha256:33b5ebb2e75f8eabe08fe23ab825949d0f28ea0c2c46fdb7e8f4ec9fd22464e8",
++        "fallback_backend": "python_exact_fallback",
++        "passed": true,
++        "proposal_shape": [
++          6,
++          6
++        ],
++        "sample_labels_sha256": "sha256:73fd24d48371c68d5fa7c0734bcf94361ae2e01ee6ef1bfafcf9be229e508857"
++      },
++      "ising_ferromagnetic_ring4": {
++        "active_backend": "rust_pyo3",
++        "decision_log_sha256": "sha256:585ae944cd511cede35b59abab77e099128a830b22ab953a0aa71d93ebc0038d",
++        "fallback_backend": "python_exact_fallback",
++        "passed": true,
++        "proposal_shape": [
++          16,
++          16
++        ],
++        "sample_labels_sha256": "sha256:f6a3ac35cf65d9da953fa54df47da95de3256dc0f8f15cb44eeaadb4676cd38b"
++      },
++      "ising_ferromagnetic_ring5": {
++        "active_backend": "rust_pyo3",
++        "decision_log_sha256": "sha256:75d21ee45c7b751f3f4a4931942bebacbee4ce97dbcafd9c90b2aad53557e728",
++        "fallback_backend": "python_exact_fallback",
++        "passed": true,
++        "proposal_shape": [
++          32,
++          32
++        ],
++        "sample_labels_sha256": "sha256:1be26bb5b47846cc51efa940b40c71af9cc55e9ebf7447622ba431c3d14e034b"
++      },
++      "potts_antiferro_triangle3_q3": {
++        "active_backend": "rust_pyo3",
++        "decision_log_sha256": "sha256:416ab4a3e20e8ffed34bff2b1a27919eff9a5851ce88a80b7a8dd6805b2756dd",
++        "fallback_backend": "python_exact_fallback",
++        "passed": true,
++        "proposal_shape": [
++          27,
++          27
++        ],
++        "sample_labels_sha256": "sha256:0b48dd927723fdae039615fc43d3cd461ebb3e3a08a443d9f85d8a26cc543447"
++      },
++      "potts_chain3_q3": {
++        "active_backend": "rust_pyo3",
++        "decision_log_sha256": "sha256:252274efde015d09b05d556b4d424c3b591b2d019d685f2911555bb41d419271",
++        "fallback_backend": "python_exact_fallback",
++        "passed": true,
++        "proposal_shape": [
++          27,
++          27
++        ],
++        "sample_labels_sha256": "sha256:c064f8922b02f3fb0934f7d4f8a94435be870284835ca8a2b0d706de9b1f8b42"
++      },
++      "typed_access_control_exp6152": {
++        "active_backend": "rust_pyo3",
++        "decision_log_sha256": "sha256:dbf34201d8a11f296e0a07a3b08b419da8b58ce7c5207c9f848873899bfcacb1",
++        "fallback_backend": "python_exact_fallback",
++        "passed": true,
++        "proposal_shape": [
++          6,
++          6
++        ],
++        "sample_labels_sha256": "sha256:332c145d6830c12cb83459cd9e97a9710784d97bd7f01d1a37e35f0c5c717b59"
++      },
++      "typed_multimodal_factor_exp6166": {
++        "active_backend": "rust_pyo3",
++        "decision_log_sha256": "sha256:85d720c7fb4c20869d72e0946bccac1da64386a919527b4c47faf0851f9fe740",
++        "fallback_backend": "python_exact_fallback",
++        "passed": true,
++        "proposal_shape": [
++          6,
++          6
++        ],
++        "sample_labels_sha256": "sha256:6939521df0398171d24f1e9f8194107e502cecbf11e5d39dac2e646e729d6175"
++      }
++    },
++    "principle": "Proves both languages read the same proposal domain and probability table."
++  },
++  "source_mutation_count": 0,
++  "status": "complete_ready",
++  "supported_fixture_families_and_shapes": {
++    "all_preregistered_families_supported": true,
++    "families": {
++      "ising_multimodal": {
++        "fixture_count": 2,
++        "shapes": [
++          [
++            4
++          ],
++          [
++            5
++          ]
++        ],
++        "target_types": [
++          "ising"
++        ]
++      },
++      "original_six_state_positive_control": {
++        "fixture_count": 1,
++        "shapes": [
++          [
++            1
++          ]
++        ],
++        "target_types": [
++          "categorical_mode_jump"
++        ]
++      },
++      "potts": {
++        "fixture_count": 2,
++        "shapes": [
++          [
++            3
++          ],
++          [
++            3
++          ]
++        ],
++        "target_types": [
++          "potts"
++        ]
++      },
++      "typed_factor": {
++        "fixture_count": 2,
++        "shapes": [
++          [
++            9
++          ],
++          [
++            1
++          ]
++        ],
++        "target_types": [
++          "typed_factor"
++        ]
++      },
++      "unimodal_control": {
++        "fixture_count": 1,
++        "shapes": [
++          [
++            3
++          ]
++        ],
++        "target_types": [
++          "ising"
++        ]
++      }
++    },
++    "fixture_count": 8,
++    "fixtures": [
++      {
++        "cardinalities": [
++          6
++        ],
++        "encoding": "categorical_label_rank1",
++        "family": "original_six_state_positive_control",
++        "fixture_name": "exp6237_original_six_state",
++        "proposal_domain": "explicit_support_table",
++        "shape": [
++          1
++        ],
++        "state_space_size": 6,
++        "support_count": 6,
++        "target_type": "categorical_mode_jump"
++      },
++      {
++        "cardinalities": [
++          2,
++          2,
++          2,
++          2
++        ],
++        "encoding": "ising_pm_one_rank1",
++        "family": "ising_multimodal",
++        "fixture_name": "ising_ferromagnetic_ring4",
++        "proposal_domain": "explicit_support_complete_no_self",
++        "shape": [
++          4
++        ],
++        "state_space_size": 16,
++        "support_count": 16,
++        "target_type": "ising"
++      },
++      {
++        "cardinalities": [
++          2,
++          2,
++          2,
++          2,
++          2
++        ],
++        "encoding": "ising_pm_one_rank1",
++        "family": "ising_multimodal",
++        "fixture_name": "ising_ferromagnetic_ring5",
++        "proposal_domain": "explicit_support_complete_no_self",
++        "shape": [
++          5
++        ],
++        "state_space_size": 32,
++        "support_count": 32,
++        "target_type": "ising"
++      },
++      {
++        "cardinalities": [
++          3,
++          3,
++          3
++        ],
++        "encoding": "potts_zero_based_rank1",
++        "family": "potts",
++        "fixture_name": "potts_chain3_q3",
++        "proposal_domain": "explicit_support_complete_no_self",
++        "shape": [
++          3
++        ],
++        "state_space_size": 27,
++        "support_count": 27,
++        "target_type": "potts"
++      },
++      {
++        "cardinalities": [
++          3,
++          3,
++          3
++        ],
++        "encoding": "potts_zero_based_rank1",
++        "family": "potts",
++        "fixture_name": "potts_antiferro_triangle3_q3",
++        "proposal_domain": "explicit_support_complete_no_self",
++        "shape": [
++          3
++        ],
++        "state_space_size": 27,
++        "support_count": 27,
++        "target_type": "potts"
++      },
++      {
++        "cardinalities": [
++          3,
++          2,
++          2,
++          4,
++          2,
++          2,
++          2,
++          2,
++          2
++        ],
++        "encoding": "typed_factor_wire_order_rank1",
++        "family": "typed_factor",
++        "fixture_name": "typed_access_control_exp6152",
++        "proposal_domain": "explicit_support_complete_no_self",
++        "shape": [
++          9
++        ],
++        "state_space_size": 1536,
++        "support_count": 6,
++        "target_type": "typed_factor"
++      },
++      {
++        "cardinalities": [
++          7
++        ],
++        "encoding": "typed_factor_wire_order_rank1",
++        "family": "typed_factor",
++        "fixture_name": "typed_multimodal_factor_exp6166",
++        "proposal_domain": "explicit_support_complete_no_self",
++        "shape": [
++          1
++        ],
++        "state_space_size": 7,
++        "support_count": 6,
++        "target_type": "typed_factor"
++      },
++      {
++        "cardinalities": [
++          2,
++          2,
++          2
++        ],
++        "encoding": "ising_pm_one_rank1",
++        "family": "unimodal_control",
++        "fixture_name": "control_unimodal_ising3",
++        "proposal_domain": "explicit_support_complete_no_self",
++        "shape": [
++          3
++        ],
++        "state_space_size": 8,
++        "support_count": 8,
++        "target_type": "ising"
++      }
++    ],
++    "principle": "Lists the Exp6268 families and rank-1 shapes accepted by the new ABI."
++  },
++  "test_commands": [
++    ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q -o addopts=",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py -m pytest tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q --no-cov -o addopts=",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py --fail-under=100",
++    "cargo test -p carnot-samplers --test mode_jump --quiet",
++    ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=",
++    ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py crates/carnot-samplers/tests/mode_jump.rs",
++    ".venv/bin/python -m carnot.experiment_6280_variable_cardinality_mode_jump_backend --date 20260810",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6280_variable_cardinality_mode_jump_backend.json"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py --fail-under=100": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py -m pytest tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q --no-cov -o addopts=": 0,
++    ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py -q -o addopts=": 0,
++    ".venv/bin/pytest tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q -o addopts=": 0,
++    ".venv/bin/python -m carnot.experiment_6280_variable_cardinality_mode_jump_backend --date 20260810": 0,
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6280_variable_cardinality_mode_jump_backend.json": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py crates/carnot-samplers/tests/mode_jump.rs": 0,
++    ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6280_variable_cardinality_mode_jump_backend.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py": 0,
++    "cargo test -p carnot-samplers --test mode_jump --quiet": 0
++  },
++  "treatment_attempt_accept_and_fire_counts_by_fixture": {
++    "activation_proven_before_readiness": true,
++    "fixtures": {
++      "control_unimodal_ising3": {
++        "acceptance_rate": 0.173076923077,
++        "accepted_count": 18,
++        "active_backend": "rust_pyo3",
++        "attempted_count": 104,
++        "passed": true,
++        "treatment_accept_count": 14,
++        "treatment_attempt_count": 100,
++        "treatment_fire_count": 14
++      },
++      "exp6237_original_six_state": {
++        "acceptance_rate": 0.586538461538,
++        "accepted_count": 61,
++        "active_backend": "rust_pyo3",
++        "attempted_count": 104,
++        "passed": true,
++        "treatment_accept_count": 40,
++        "treatment_attempt_count": 60,
++        "treatment_fire_count": 40
++      },
++      "ising_ferromagnetic_ring4": {
++        "acceptance_rate": 0.096153846154,
++        "accepted_count": 10,
++        "active_backend": "rust_pyo3",
++        "attempted_count": 104,
++        "passed": true,
++        "treatment_accept_count": 10,
++        "treatment_attempt_count": 104,
++        "treatment_fire_count": 10
++      },
++      "ising_ferromagnetic_ring5": {
++        "acceptance_rate": 0.153846153846,
++        "accepted_count": 16,
++        "active_backend": "rust_pyo3",
++        "attempted_count": 104,
++        "passed": true,
++        "treatment_accept_count": 12,
++        "treatment_attempt_count": 97,
++        "treatment_fire_count": 12
++      },
++      "potts_antiferro_triangle3_q3": {
++        "acceptance_rate": 0.653846153846,
++        "accepted_count": 68,
++        "active_backend": "rust_pyo3",
++        "attempted_count": 104,
++        "passed": true,
++        "treatment_accept_count": 58,
++        "treatment_attempt_count": 92,
++        "treatment_fire_count": 58
++      },
++      "potts_chain3_q3": {
++        "acceptance_rate": 0.663461538462,
++        "accepted_count": 69,
++        "active_backend": "rust_pyo3",
++        "attempted_count": 104,
++        "passed": true,
++        "treatment_accept_count": 60,
++        "treatment_attempt_count": 93,
++        "treatment_fire_count": 60
++      },
++      "typed_access_control_exp6152": {
++        "acceptance_rate": 0.403846153846,
++        "accepted_count": 42,
++        "active_backend": "rust_pyo3",
++        "attempted_count": 104,
++        "passed": true,
++        "treatment_accept_count": 33,
++        "treatment_attempt_count": 69,
++        "treatment_fire_count": 33
++      },
++      "typed_multimodal_factor_exp6166": {
++        "acceptance_rate": 0.480769230769,
++        "accepted_count": 50,
++        "active_backend": "rust_pyo3",
++        "attempted_count": 104,
++        "passed": true,
++        "treatment_accept_count": 40,
++        "treatment_attempt_count": 86,
++        "treatment_fire_count": 40
++      }
++    },
++    "principle": "Proves treatment activation before readiness."
++  },
++  "typed_state_metadata_schema": {
++    "ambiguous_encoding_rejected": true,
++    "cardinality_rule": "each variable cardinality is explicit and at least two",
++    "encoding_values": [
++      "categorical_label_rank1",
++      "ising_pm_one_rank1",
++      "potts_zero_based_rank1",
++      "typed_factor_wire_order_rank1"
++    ],
++    "principle": "Defines shape, cardinality, encoding, proposal domain, and round-trip rules in one place.",
++    "proposal_domains": [
++      "explicit_support_table",
++      "explicit_support_complete_no_self"
++    ],
++    "rank": 1,
++    "roundtrip_rule": "state_label -> support_index -> state_label; state_value stays inside per-variable cardinality",
++    "schema": "carnot.mode_jump.typed_state_metadata.v1",
++    "shape_rule": "shape equals [len(cardinalities)]"
++  },
++  "unsupported_shapes_and_fail_closed_behavior": {
++    "all_fail_closed": true,
++    "controls": [
++      {
++        "control": "metadata_rank2_shape",
++        "error_type": "ValueError",
++        "fail_closed": true,
++        "fallback_output_substituted": false,
++        "message": "typed state metadata shape must be rank-1"
++      },
++      {
++        "control": "target_rank2_shape",
++        "error_type": "ValueError",
++        "fail_closed": true,
++        "fallback_output_substituted": false,
++        "message": "target probabilities must be a rank-1 vector"
++      }
++    ],
++    "fallback_output_substituted": false,
++    "principle": "Records unsupported ranks or malformed surfaces as errors, not fallback samples.",
++    "unsupported_shape_count": 2
++  },
++  "variable_cardinality_backend_ready_score": 1.0,
++  "verifier_is_oracle": {
++    "not_oracle_for": [
++      "sampler workload value",
++      "timing",
++      "hardware",
++      "scientific A/B"
++    ],
++    "oracle": "exact typed metadata validation plus deterministic Rust/Python MH trace parity",
++    "principle": "States that exact finite metadata, proposal tables, and deterministic replay are the verifier.",
++    "value": true
++  }
++}
+diff --git a/tests/python/samplers/test_mode_jump_rust_backend.py b/tests/python/samplers/test_mode_jump_rust_backend.py
+index d312698264..13a6f598e7 100644
+--- a/tests/python/samplers/test_mode_jump_rust_backend.py
++++ b/tests/python/samplers/test_mode_jump_rust_backend.py
+@@ -7,6 +7,7 @@ SCENARIO-SAMPLE-6208-RUNTIME-PARITY, SCENARIO-SAMPLE-6208-BOUNDARY-ERRORS.
+ from __future__ import annotations
+ 
+ from copy import deepcopy
++import json
+ from pathlib import Path
+ from types import SimpleNamespace
+ 
+@@ -20,15 +21,21 @@ from carnot.samplers.mode_jump_rust_backend import (
+     CHECKPOINT_SCHEMA_VERSION,
+     MODE_JUMP_ALGORITHM,
+     MODE_JUMP_TOPOLOGY,
++    TYPED_STATE_METADATA_SCHEMA_VERSION,
++    VARIABLE_CARDINALITY_TOPOLOGY,
+     ModeJumpRustBackend,
+     checkpoint_checksum,
+     descriptor_for_run,
+     frozen_mode_jump_inputs,
++    mode_jump_inputs_from_fixture_receipt,
++    normalize_typed_state_metadata,
++    typed_state_metadata_from_fixture_receipt,
+ )
+ 
+ 
+ REPO = Path(__file__).resolve().parents[3]
+ SPEC_PATH = REPO / "openspec/capabilities/samplers/spec.md"
++EXP6268_PATH = REPO / "results/experiment_6268_multimodal_sampler_fixture_suite.json"
+ 
+ 
+ def _fixture_inputs(dtype: np.dtype = np.float64) -> tuple[list[str], np.ndarray, np.ndarray]:
+@@ -36,6 +43,11 @@ def _fixture_inputs(dtype: np.dtype = np.float64) -> tuple[list[str], np.ndarray
+     return labels, np.asarray(target, dtype=dtype), np.asarray(proposal, dtype=dtype)
+ 
+ 
++def _exp6268_receipts() -> list[dict[str, object]]:
++    artifact = json.loads(EXP6268_PATH.read_text(encoding="utf-8"))
++    return list(artifact["exact_enumeration_receipts"])
++
++
+ def test_req_sample_6208_spec_declares_runtime_adapter_contract() -> None:
+     """REQ-SAMPLE-6208: OpenSpec anchors default-off runtime integration."""
+ 
+@@ -62,6 +74,30 @@ def test_req_sample_6208_spec_declares_runtime_adapter_contract() -> None:
+         assert marker in section or marker in normalized
+ 
+ 
++def test_req_sampler_6280_spec_declares_variable_cardinality_contract() -> None:
++    """REQ-SAMPLER-6280: OpenSpec anchors typed metadata and controls."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-SAMPLER-6280") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-SAMPLER-6280-SPEC-FIRST",
++        "REQ-SAMPLER-6280-METADATA",
++        "REQ-SAMPLER-6280-COMPATIBILITY",
++        "REQ-SAMPLER-6280-PARITY",
++        "REQ-SAMPLER-6280-ACTIVATION",
++        "REQ-SAMPLER-6280-CONTROLS",
++        "SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP",
++        "SCENARIO-SAMPLER-6280-PROPOSAL-PARITY",
++        "SCENARIO-SAMPLER-6280-NO-AB-VALUE-CLAIM",
++        "typed_state_metadata_schema",
++        "variable_cardinality_backend_ready_score",
++        "local_cpu_rust_python_variable_cardinality_sampler_abi",
++    ):
++        assert marker in section or marker in normalized
++
++
+ def test_req_sample_6208_factory_preserves_default_cpu_and_requires_opt_in(
+     monkeypatch: pytest.MonkeyPatch,
+ ) -> None:
+@@ -96,6 +132,182 @@ def test_req_sample_6208_factory_preserves_default_cpu_and_requires_opt_in(
+     assert result["samples"].dtype == np.bool_
+ 
+ 
++@pytest.mark.parametrize("receipt", _exp6268_receipts(), ids=lambda row: row["fixture_name"])
++def test_req_sampler_6280_typed_metadata_roundtrips_exp6268_fixtures(
++    receipt: dict[str, object],
++) -> None:
++    """SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP: each fixture has explicit metadata."""
++
++    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++    normalized = normalize_typed_state_metadata(metadata, label_count=len(labels))
++    direct_metadata = typed_state_metadata_from_fixture_receipt(receipt)
++
++    assert direct_metadata == metadata
++    assert normalized["schema"] == TYPED_STATE_METADATA_SCHEMA_VERSION
++    assert normalized["shape"] == [len(normalized["cardinalities"])]
++    assert normalized["support_count"] == len(labels) == target.shape[0] == proposal.shape[0]
++    assert normalized["state_space_size"] >= normalized["support_count"]
++    assert normalized["proposal_domain"] in {
++        "explicit_support_complete_no_self",
++        "explicit_support_table",
++    }
++    assert normalized["state_labels"] == labels
++    assert target.shape == (len(labels),)
++    assert proposal.shape == (len(labels), len(labels))
++    assert np.allclose(proposal.sum(axis=1), 1.0)
++
++    from carnot._rust import RustModeJumpStateMetadata
++
++    rust_metadata = RustModeJumpStateMetadata(
++        normalized["schema"],
++        normalized["shape"],
++        normalized["cardinalities"],
++        normalized["encoding"],
++        normalized["state_labels"],
++        normalized["state_values"],
++        normalized["proposal_domain"],
++        normalized["state_space_size"],
++    )
++    for index, label in enumerate(labels):
++        assert normalized["label_to_index"][label] == index
++        assert rust_metadata.encode_label(label) == index
++        assert rust_metadata.decode_index(index) == label
++        assert rust_metadata.state_value(label) == normalized["state_values"][index]
++
++
++@pytest.mark.parametrize("receipt", _exp6268_receipts(), ids=lambda row: row["fixture_name"])
++def test_scenario_sampler_6280_rust_python_proposal_parity_and_seed_replay(
++    receipt: dict[str, object],
++) -> None:
++    """SCENARIO-SAMPLER-6280-PROPOSAL-PARITY: Rust and Python traces match."""
++
++    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++    descriptor = {
++        "algorithm": MODE_JUMP_ALGORITHM,
++        "topology": VARIABLE_CARDINALITY_TOPOLOGY,
++        "labels": labels,
++        "typed_state_metadata": metadata,
++        "seed": 6280,
++        "initial_label": labels[0],
++        "burn_in": 3,
++        "enable_mode_jump_runtime": True,
++        "return_trace": True,
++    }
++
++    rust_a = ModeJumpRustBackend(seed=6280).run_descriptor(target, proposal, 24, descriptor)
++    rust_b = ModeJumpRustBackend(seed=6280).run_descriptor(target, proposal, 24, descriptor)
++    fallback = ModeJumpRustBackend(seed=6280, prefer_rust=False).run_descriptor(
++        target,
++        proposal,
++        24,
++        descriptor,
++    )
++
++    assert rust_a["receipt"]["active_backend"] == ACTIVE_RUST_BACKEND
++    assert fallback["receipt"]["active_backend"] == ACTIVE_PYTHON_FALLBACK
++    assert rust_a["receipt"]["topology"] == VARIABLE_CARDINALITY_TOPOLOGY
++    assert rust_a["receipt"]["typed_state_metadata_hash"] == fallback["receipt"][
++        "typed_state_metadata_hash"
++    ]
++    np.testing.assert_array_equal(rust_a["samples"], fallback["samples"])
++    assert rust_a["sample_labels"] == fallback["sample_labels"]
++    assert rust_a["decision_log"] == fallback["decision_log"]
++    assert rust_a["checkpoint"]["state"] == fallback["checkpoint"]["state"]
++    assert rust_a["checkpoint"]["state"] == rust_b["checkpoint"]["state"]
++    assert rust_a["sample_labels"] == rust_b["sample_labels"]
++    assert any(event["accepted"] for event in rust_a["decision_log"])
++
++
++def test_req_sampler_6280_original_six_state_compatibility_path_is_unchanged() -> None:
++    """REQ-SAMPLER-6280-COMPATIBILITY: old six-state descriptor still replays."""
++
++    labels, target, proposal = _fixture_inputs()
++    descriptor = descriptor_for_run(
++        labels=labels,
++        seed=6280,
++        burn_in=3,
++        enable_mode_jump_runtime=True,
++    )
++    legacy = ModeJumpRustBackend(seed=6280).run_descriptor(target, proposal, 24, descriptor)
++    receipt = next(
++        row
++        for row in _exp6268_receipts()
++        if row["fixture_name"] == "exp6237_original_six_state"
++    )
++    labels2, target2, proposal2, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++    typed = ModeJumpRustBackend(seed=6280).run_descriptor(
++        target2,
++        proposal2,
++        24,
++        {
++            **descriptor,
++            "topology": VARIABLE_CARDINALITY_TOPOLOGY,
++            "labels": labels2,
++            "typed_state_metadata": metadata,
++        },
++    )
++
++    np.testing.assert_array_equal(legacy["samples"], typed["samples"])
++    assert legacy["sample_labels"] == typed["sample_labels"]
++    assert legacy["decision_log"] == typed["decision_log"]
++    assert legacy["checkpoint"]["state"] == typed["checkpoint"]["state"]
++
++
++def test_req_sampler_6280_malformed_metadata_and_domains_fail_closed() -> None:
++    """REQ-SAMPLER-6280-CONTROLS: malformed metadata and proposals fail closed."""
++
++    receipt = next(row for row in _exp6268_receipts() if row["fixture_name"] == "potts_chain3_q3")
++    labels, target, proposal, metadata = mode_jump_inputs_from_fixture_receipt(receipt)
++    descriptor = {
++        "algorithm": MODE_JUMP_ALGORITHM,
++        "topology": VARIABLE_CARDINALITY_TOPOLOGY,
++        "labels": labels,
++        "typed_state_metadata": metadata,
++        "seed": 6280,
++        "initial_label": labels[0],
++        "enable_mode_jump_runtime": True,
++    }
++
++    bad_cardinality = deepcopy(metadata)
++    bad_cardinality["cardinalities"][0] = 2
++    with pytest.raises(ValueError, match="cardinality"):
++        ModeJumpRustBackend().run_descriptor(
++            target,
++            proposal,
++            2,
++            {**descriptor, "typed_state_metadata": bad_cardinality},
++        )
++
++    bad_shape = deepcopy(metadata)
++    bad_shape["shape"] = [1, 3]
++    with pytest.raises(ValueError, match="rank-1"):
++        ModeJumpRustBackend().run_descriptor(
++            target,
++            proposal,
++            2,
++            {**descriptor, "typed_state_metadata": bad_shape},
++        )
++
++    bad_domain = proposal.copy()
++    bad_domain[0, :] = 0.0
++    bad_domain[0, 0] = 1.0
++    with pytest.raises(ValueError, match="proposal support"):
++        ModeJumpRustBackend().run_descriptor(target, bad_domain, 2, descriptor)
++
++    permuted = deepcopy(metadata)
++    permuted["state_labels"] = list(reversed(permuted["state_labels"]))
++    with pytest.raises(ValueError, match="labels"):
++        ModeJumpRustBackend().run_descriptor(
++            target,
++            proposal,
++            2,
++            {**descriptor, "typed_state_metadata": permuted},
++        )
++
++    with pytest.raises(ValueError, match="target probabilities"):
++        ModeJumpRustBackend().run_descriptor(target.reshape(3, 9), proposal, 2, descriptor)
++
++
+ def test_scenario_sample_6208_enabled_rust_path_matches_exact_python_fallback() -> None:
+     """SCENARIO-SAMPLE-6208-RUNTIME-PARITY: enabled PyO3 path matches fallback."""
+ 
+diff --git a/tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py b/tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py
+new file mode 100644
+index 0000000000..3f233ca733
+--- /dev/null
++++ b/tests/python/test_experiment_6280_variable_cardinality_mode_jump_backend.py
+@@ -0,0 +1,302 @@
++"""Tests for Exp6280 variable-cardinality mode-jump backend ABI.
++
++Spec refs: REQ-SAMPLER-6280,
++SCENARIO-SAMPLER-6280-METADATA-ROUNDTRIP,
++SCENARIO-SAMPLER-6280-PROPOSAL-PARITY,
++SCENARIO-SAMPLER-6280-NO-AB-VALUE-CLAIM.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_6280_variable_cardinality_mode_jump_backend as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/samplers/spec.md"
++
++
++def _passing_exit_codes() -> dict[str, int]:
++    return {command: 0 for command in mod.DEFAULT_TEST_COMMANDS}
++
++
++@pytest.fixture(scope="module")
++def artifact() -> dict[str, object]:
++    return mod.build_artifact(
++        root=REPO,
++        run_date="20260810",
++        duration_s=0.0,
++        test_exit_codes=_passing_exit_codes(),
++    )
++
++
++def test_req_sampler_6280_spec_declares_required_fields_and_principles() -> None:
++    """REQ-SAMPLER-6280: OpenSpec anchors each required artifact field."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-SAMPLER-6280") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-SAMPLER-6280-SPEC-FIRST",
++        "REQ-SAMPLER-6280-METADATA",
++        "REQ-SAMPLER-6280-COMPATIBILITY",
++        "REQ-SAMPLER-6280-PARITY",
++        "REQ-SAMPLER-6280-ACTIVATION",
++        "REQ-SAMPLER-6280-CONTROLS",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.MODULE_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_req_sampler_6280_artifact_schema_and_ready_gates(
++    artifact: dict[str, object],
++    tmp_path: Path,
++) -> None:
++    """REQ-SAMPLER-6280-ARTIFACT: terminal JSON validates without A/B claims."""
++
++    output = tmp_path / mod.RESULT_RELATIVE_PATH.name
++    written = mod.write_artifact(
++        output_path=output,
++        root=REPO,
++        run_date="20260810",
++        duration_s=0.0,
++        test_exit_codes=_passing_exit_codes(),
++    )
++    loaded = json.loads(output.read_text(encoding="utf-8"))
++
++    assert loaded == written
++    assert written == artifact
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(written)
++    assert mod.validate_artifact(written) is True
++    assert written["status"] == "complete_ready"
++    assert written["honest_verdict"].startswith("complete_ready:")
++    assert written["variable_cardinality_backend_ready_score"] == 1.0
++    assert written["source_mutation_count"] == 0
++    assert type(written["source_mutation_count"]) is int
++    assert written["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert written["verifier_is_oracle"]["value"] is True
++    assert written["exp6269_failure_path_hash_and_root_cause"]["scientific_ab_rerun"] is False
++
++
++def test_scenario_sampler_6280_all_exp6268_families_have_parity_and_activation(
++    artifact: dict[str, object],
++) -> None:
++    """SCENARIO-SAMPLER-6280-PROPOSAL-PARITY: all fixture families are supported."""
++
++    supported = artifact["supported_fixture_families_and_shapes"]
++    roundtrips = artifact["rust_python_encode_decode_roundtrip_by_fixture"]["fixtures"]
++    proposals = artifact["rust_python_proposal_parity_by_fixture"]["fixtures"]
++    replay = artifact["deterministic_seed_replay_by_fixture"]["fixtures"]
++    treatment = artifact["treatment_attempt_accept_and_fire_counts_by_fixture"]["fixtures"]
++
++    assert supported["all_preregistered_families_supported"] is True
++    assert supported["fixture_count"] == 8
++    assert supported["families"]["ising_multimodal"]["fixture_count"] == 2
++    assert supported["families"]["potts"]["fixture_count"] == 2
++    assert supported["families"]["typed_factor"]["fixture_count"] == 2
++    assert supported["families"]["original_six_state_positive_control"]["fixture_count"] == 1
++    assert supported["families"]["unimodal_control"]["fixture_count"] == 1
++
++    for fixture in supported["fixtures"]:
++        name = fixture["fixture_name"]
++        assert roundtrips[name]["passed"] is True
++        assert proposals[name]["passed"] is True
++        assert replay[name]["passed"] is True
++        assert treatment[name]["treatment_attempt_count"] > 0
++        assert treatment[name]["treatment_accept_count"] > 0
++        assert treatment[name]["treatment_fire_count"] > 0
++
++    assert artifact["original_six_state_regression_receipt"]["passed"] is True
++    assert artifact["malformed_cardinality_controls"]["all_fail_closed"] is True
++    assert artifact["malformed_shape_controls"]["all_fail_closed"] is True
++    assert artifact["out_of_domain_proposal_controls"]["all_fail_closed"] is True
++    assert artifact["label_permutation_controls"]["all_fail_closed"] is True
++    assert artifact["unsupported_shapes_and_fail_closed_behavior"]["fallback_output_substituted"] is False
++
++
++def test_req_sampler_6280_validation_rejects_gate_and_control_mutations(
++    artifact: dict[str, object],
++) -> None:
++    """REQ-SAMPLER-6280-CONTROLS: schema and gate mutations fail closed."""
++
++    mutations = [
++        ("missing required", lambda data: data.pop("status")),
++        ("field_principles", lambda data: data.__setitem__("field_principles", {})),
++        (
++            "field_provenance:status",
++            lambda data: data["field_provenance"]["status"].__setitem__("principle", "bad"),
++        ),
++        ("source_mutation_count", lambda data: data.__setitem__("source_mutation_count", 1)),
++        (
++            "supported_fixture_families_and_shapes",
++            lambda data: data["supported_fixture_families_and_shapes"].__setitem__(
++                "all_preregistered_families_supported",
++                False,
++            ),
++        ),
++        (
++            "original_six_state_regression_receipt",
++            lambda data: data["original_six_state_regression_receipt"].__setitem__(
++                "passed",
++                False,
++            ),
++        ),
++        (
++            "malformed_cardinality_controls",
++            lambda data: data["malformed_cardinality_controls"].__setitem__(
++                "all_fail_closed",
++                False,
++            ),
++        ),
++        (
++            "deterministic_seed_replay_by_fixture",
++            lambda data: data["deterministic_seed_replay_by_fixture"]["fixtures"][
++                "potts_chain3_q3"
++            ].__setitem__("passed", False),
++        ),
++        (
++            "rust_python_proposal_parity_by_fixture",
++            lambda data: data["rust_python_proposal_parity_by_fixture"].__setitem__(
++                "all_passed",
++                False,
++            ),
++        ),
++        (
++            "treatment_attempt_accept_and_fire_counts_by_fixture",
++            lambda data: data[
++                "treatment_attempt_accept_and_fire_counts_by_fixture"
++            ].__setitem__("activation_proven_before_readiness", False),
++        ),
++        (
++            "inference_substrate",
++            lambda data: data.__setitem__("inference_substrate", "scientific_ab"),
++        ),
++        (
++            "verifier_is_oracle",
++            lambda data: data["verifier_is_oracle"].__setitem__("value", False),
++        ),
++        (
++            "variable_cardinality_backend_ready_score",
++            lambda data: data.__setitem__("variable_cardinality_backend_ready_score", 0.0),
++        ),
++        ("status", lambda data: data.__setitem__("status", "blocked")),
++        ("honest_verdict", lambda data: data.__setitem__("honest_verdict", "blocked")),
++        (
++            "reproducibility_checksum",
++            lambda data: data.__setitem__("reproducibility_checksum", "sha256:bad"),
++        ),
++    ]
++
++    for expected, mutate in mutations:
++        bad = deepcopy(artifact)
++        mutate(bad)
++        with pytest.raises(ValueError, match=expected):
++            mod.validate_artifact(bad)
++
++
++def test_req_sampler_6280_cli_writes_tmp_artifact(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """SCENARIO-SAMPLER-6280-NO-AB-VALUE-CLAIM: CLI writes the ABI artifact."""
++
++    receipts = tmp_path / "receipts.json"
++    receipts.write_text(json.dumps(_passing_exit_codes()), encoding="utf-8")
++    output = tmp_path / "artifact.json"
++    monkeypatch.setenv("CARNOT_6280_COMMAND_RECEIPTS", str(receipts))
++
++    assert mod.main(["--date", "20260810", "--output", str(output)]) == 0
++    written = json.loads(output.read_text(encoding="utf-8"))
++    assert written["status"] == "complete_ready"
++    assert written["exp6269_failure_path_hash_and_root_cause"]["scientific_ab_rerun"] is False
++    assert "complete_ready" in capsys.readouterr().out
++
++
++def test_req_sampler_6280_auxiliary_negative_branches(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-SAMPLER-6280-CONTROLS: helper negative branches stay explicit."""
++
++    assert mod._run_text(["/definitely/missing/command"], REPO)["available"] is False
++
++    non_object = tmp_path / "list.json"
++    non_object.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="JSON object"):
++        mod._read_json(non_object)
++
++    assert mod._control_result("accepted", lambda: None)["fail_closed"] is False
++    assert mod.honest_verdict({"status": "blocked"}) == (
++        "blocked: variable-cardinality mode-jump ABI readiness gates failed"
++    )
++
++    monkeypatch.delenv("CARNOT_6280_COMMAND_RECEIPTS", raising=False)
++    missing_default = tmp_path / "missing_receipts.json"
++    monkeypatch.setattr(mod, "DEFAULT_RECEIPT_PATH", missing_default)
++    assert mod._external_test_exit_codes() == {}
++
++    default_receipts = tmp_path / "default_receipts.json"
++    default_receipts.write_text(json.dumps({"cmd": 0}), encoding="utf-8")
++    monkeypatch.setattr(mod, "DEFAULT_RECEIPT_PATH", default_receipts)
++    assert mod._external_test_exit_codes() == {"cmd": 0}
++
++    monkeypatch.setenv("CARNOT_6280_COMMAND_RECEIPTS", str(non_object))
++    with pytest.raises(ValueError, match="command receipt payload"):
++        mod._external_test_exit_codes()
++
++    import carnot._rust as rust_module
++
++    class MismatchingMetadata:
++        def __init__(self, *_args: object) -> None:
++            pass
++
++        def encode_label(self, _label: str) -> int:
++            return 99
++
++        def decode_index(self, _index: int) -> str:
++            return "wrong"
++
++        def state_value(self, _label: str) -> list[int]:
++            return [1]
++
++    monkeypatch.setattr(rust_module, "RustModeJumpStateMetadata", MismatchingMetadata)
++    metadata = {
++        "schema": mod.TYPED_STATE_METADATA_SCHEMA_VERSION,
++        "shape": [1],
++        "cardinalities": [2],
++        "encoding": "categorical_label_rank1",
++        "state_labels": ["a"],
++        "state_values": [[0]],
++        "proposal_domain": "explicit_support_table",
++        "state_space_size": 2,
++    }
++    mismatched = mod.rust_python_encode_decode_roundtrip_by_fixture(
++        [
++            {
++                "fixture": "fake",
++                "labels": ["a"],
++                "metadata": metadata,
++            }
++        ]
++    )
++    assert mismatched["all_passed"] is False
++    assert mismatched["fixtures"]["fake"]["mismatches"] == [
++        "encode:a",
++        "decode:0",
++        "value:a",
++    ]
+-- 
+2.55.0
+

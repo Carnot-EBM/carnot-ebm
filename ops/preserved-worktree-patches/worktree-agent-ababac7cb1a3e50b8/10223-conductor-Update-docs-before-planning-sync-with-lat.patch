@@ -1,0 +1,60 @@
+From 389470a62944d32a57cb6e3b8b8e896a8ed8799d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 00:29:41 -0400
+Subject: [PATCH 10223/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 01db21c97f..308069b4f4 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,852</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,853</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ba71f3cb26..e90d3c26a1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-08-29T04:20:31Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-29T04:25:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dbea05e763..d594397df2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16729,3 +16729,4 @@ The l |
+ | 2026-08-29 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on harness_ |
+ | 2026-08-29 02:19 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 2492957 (port 8919) reparented to init, no live process references its |
+ | 2026-08-29 04:18 UTC | Milestone 2026.08.586 activated | OK | 1 tasks queued |
++| 2026-08-29 04:23 UTC | Object-table fetch-on-demand A/B against the measu | OK | cache hit: 81 passed, 1 warning in 6.37s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 94dcede361..6f57d4efef 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 2, "phase": "iteration_start", "started_at": "2026-08-29T04:20:31Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-29T04:25:02Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

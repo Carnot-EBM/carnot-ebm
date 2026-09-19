@@ -1,0 +1,1426 @@
+From 4349771e640e03260ef3ed98e5820a93d4ef6b08 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 09:10:52 -0400
+Subject: [PATCH 03224/11362] [conductor] PHASE A3 (ARC NORTH STAR; operator
+ MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank +1 NEW reproducible level:
+ deepen a shallow solved game (su15/cn04/sk48 L1->L2) via the standing
+ arc_loop_solve loop, OR first-contact rotation. Gate: offline_reproduced new
+ level.
+
+Automated research step by research conductor.
+Task ID: exp4546-a3
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  50 +++
+ ops/arc_router_ledger.json                    |  64 +--
+ ops/arc_solve_registry.yaml                   |  34 +-
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/agentic/arc_game_adapters.py    |  93 +++++
+ .../carnot/experiment_4546_levelup_attempt.py | 389 ++++++++++++++++++
+ results/arc_loop_solve_su15.json              | 267 +++++++++++-
+ results/experiment_4546_levelup_attempt.json  |  98 +++++
+ .../experiments/arc3_layerb_ar_model_test.py  |   3 +
+ .../test_experiment_4546_levelup_attempt.py   | 264 ++++++++++++
+ 10 files changed, 1213 insertions(+), 51 deletions(-)
+ create mode 100644 python/carnot/experiment_4546_levelup_attempt.py
+ create mode 100644 results/experiment_4546_levelup_attempt.json
+ create mode 100644 tests/python/test_experiment_4546_levelup_attempt.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 1de21cd8b7..600d07a899 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -583,6 +583,44 @@ level, the artifact SHALL use a `complete:` verdict, set
+ `reproduced_levels=0`, preserve the dead-end evidence, and SHALL NOT increment
+ the registry count.
+ 
++### REQ-ARC-WMTE-4546: ARC Sprint Rotation Level-Up Bank
++
++Experiment 4546 SHALL run the offline arcade precondition and bank at least one
++new reproducible ARC level independent of the A1 headline path. The workflow
++SHALL prefer a shallow game not recently deepened, SHALL select `su15`, SHALL
++derive only the L2 win/action/state delta from the offline environment, and
++SHALL use the standing ARC loop output plus `arc_solver_kit.reproduce` as the
++source of truth for the bank. A banked level SHALL require
++`offline_reproduced=true`, a reproduction gate whose `reached_level` is greater
++than the target game's prior registry level, and a persisted update to
++`ops/arc_solve_registry.yaml` that records the win condition, action model,
++solver module, gotchas, and dead-end evidence needed by the next attempt.
++
++Experiment 4546 SHALL write
++`results/experiment_4546_levelup_attempt.json` with bare top-level fields for
++`honest_verdict`, `inference_substrate`, `offline_reproduced`,
++`reproduced_levels`, `registry_updated`, `random_seed`,
++`reproducibility_checksum`, `preconditions_checked`, `target_game`,
++`reproduction_gate`, `solution_labels`, `dead_ends`, and `registry_update`.
++Required field principles SHALL be included for:
++
++- `honest_verdict`: principle "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load."
++- `offline_reproduced`: principle "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."
++- `reproduced_levels`: principle "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an attempted bank)."
++- `registry_updated`: principle "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "catches silent drift on replay."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
++A success artifact SHALL set `honest_verdict` to
++`success: su15_L2_offline_reproduced`, `offline_reproduced=true`,
++`reproduced_levels >= 1`, and `registry_updated=true`. If `su15` repeats the
++already registered L1, stalls at the prior level, or produces a non-reproducing
++delta, the artifact SHALL use a `complete:` verdict, set
++`reproduced_levels=0`, preserve the dead-end evidence, and SHALL NOT increment
++the registry count.
++
+ ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
+ 
+ Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
+@@ -790,6 +828,18 @@ the terminal artifact records the required field principles, computes a stable
+ count, records dead-end attempts, and reports success only when the offline
+ reproduction gate reaches level 2 with `offline_reproduced=true`.
+ 
++### SCENARIO-ARC-WMTE-4546: su15 Adapter Banks L2 Offline
++
++Given the prior reproduced `su15` L1 trajectory and offline L2 state exposing
++eight level-0 fruit pieces plus a level-3 target zone
++When experiment 4546 registers the `su15` `GameAdapter`, replays the standing
++loop to target level 2, and runs `arc_solver_kit.reproduce`
++Then the full L1+L2 label plan is replayed through the offline reproduction
++gate, the terminal artifact records `target_game=su15`,
++`offline_reproduced=true`, `reproduced_levels>=1`,
++`registry_updated=true`, and a stable `reproducibility_checksum`, and success
++is not reported unless the registry bank advances beyond the prior L1 row.
++
+ ### SCENARIO-ARC-WMTE-4526: Integration Wires Only Deeper-Level Winners
+ 
+ Given the A1 forward-walk artifact, the A2 reach-deeper-levels artifact, and the
+diff --git a/ops/arc_router_ledger.json b/ops/arc_router_ledger.json
+index d134106475..cd484c2fdb 100644
+--- a/ops/arc_router_ledger.json
++++ b/ops/arc_router_ledger.json
+@@ -226,38 +226,6 @@
+         }
+       }
+     },
+-    {
+-      "game": "su15",
+-      "mask_hud": false,
+-      "features": {
+-        "cell_impact": 20.0,
+-        "bfs_expansions": 1964.0,
+-        "start_wrong_cells": 256.0,
+-        "start_wrong_regions": 27.0,
+-        "solution_depth": 7.0,
+-        "action_type": "click",
+-        "spatial": true,
+-        "difficulty": "medium"
+-      },
+-      "winner": "cell_count",
+-      "outcomes": {
+-        "cell_count": {
+-          "reproduced": true,
+-          "actions": 7,
+-          "expansions": 1583
+-        },
+-        "region_count": {
+-          "reproduced": true,
+-          "actions": 7,
+-          "expansions": 1771
+-        },
+-        "bfs": {
+-          "reproduced": true,
+-          "actions": 7,
+-          "expansions": 1964
+-        }
+-      }
+-    },
+     {
+       "game": "vc33",
+       "mask_hud": false,
+@@ -385,6 +353,38 @@
+           "expansions": 485
+         }
+       }
++    },
++    {
++      "game": "su15",
++      "mask_hud": false,
++      "features": {
++        "cell_impact": 20.0,
++        "bfs_expansions": 1964.0,
++        "start_wrong_cells": 256.0,
++        "start_wrong_regions": 27.0,
++        "solution_depth": 7.0,
++        "action_type": "click",
++        "spatial": true,
++        "difficulty": "medium"
++      },
++      "winner": "cell_count",
++      "outcomes": {
++        "cell_count": {
++          "reproduced": true,
++          "actions": 7,
++          "expansions": 1583
++        },
++        "region_count": {
++          "reproduced": true,
++          "actions": 7,
++          "expansions": 1771
++        },
++        "bfs": {
++          "reproduced": true,
++          "actions": 7,
++          "expansions": 1964
++        }
++      }
+     }
+   ]
+ }
+\ No newline at end of file
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index c823c7b642..c62645aec5 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -272,14 +272,30 @@ games:
+     current adapter has no grounded L3 splitter-placement delta.
+ - game: su15
+   reproducibility: reproduced
+-  levels_reproduced: 1
+-  win_condition: "first-solve L1 adapter-free; click-to-connect \u2014 7 clicks along\
+-    \ a diagonal line (x up, y down)."
+-  action_model: click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates
+-    surfaced the object clicks the 12-cap would have dropped.
+-  solver: results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks).
+-  reproduce: re-gated reproduced=True L1.
+-  gotchas: []
++  levels_reproduced: 2
++  mechanic_class: drag_merge_fruit_target
++  win_condition: "L1 click-to-connect diagonal plus L2 staged drag/merge: merge
++    eight level-0 fruits into one level-3 fruit and drag its center into the
++    xkstxyqbs target zone centered near (33,27)."
++  action_model: "ACTION6 click-only; L2 tail uses 14 discovered drag/merge
++    clicks: (40,40),(17,40),(15,56),(48,55),(31,39),(24,39),(39,54),(31,54),
++    (23,54),(16,54),(20,47),(27,40),(33,33),(33,27)."
++  solver: GameAdapter _su15 in python/carnot/agentic/arc_game_adapters.py +
++    scripts/arc_loop_solve.py; results/arc_loop_solve_su15.json 21-label L2 gate.
++  reproduce: Exp4546 results/experiment_4546_levelup_attempt.json re-gated results/arc_loop_solve_su15.json
++    offline_reproduced=True, reached_level=2, banked +1 over the current L1
++    registry row, checksum 1b1702434993f3b26f1cf41595267aa8df107e403c5041d2373bd2b8962950fe.
++  gotchas:
++  - Click radius is 8 and each ACTION6 animates four drag ticks, so L2 requires
++    staged drag/merge clicks; pair-merge clicks alone do not combine distant
++    level-1 pieces.
++  - The win predicate counts the center of a level-3 fruit inside xkstxyqbs, not
++    merely creating a level-3 fruit elsewhere.
++  dead_ends:
++  - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a
++    gate because fresh-env replay per candidate was too noisy/expensive; the
++    banked route came from reverse-engineering the drag/merge radius and
++    constructive merge staging.
+ - game: tu93
+   reproducibility: reproduced
+   levels_reproduced: 5
+@@ -808,7 +824,7 @@ games:
+     reproduced_levels: 1
+     operator: bp35_goal_directed_navigation_solver
+     reproducibility_checksum: 523d69f1f23e3a248c19b8661979019ec394c1ef2ca0caade31fa877894c8c38
+-reproducible_total_levels: 51
++reproducible_total_levels: 52
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 077d503987..841269b719 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3563,
++  "experiments_checked": 3564,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_game_adapters.py b/python/carnot/agentic/arc_game_adapters.py
+index dca0ccbcf5..65f8e9e435 100644
+--- a/python/carnot/agentic/arc_game_adapters.py
++++ b/python/carnot/agentic/arc_game_adapters.py
+@@ -86,6 +86,42 @@ SP80_L2_TAIL_LABELS: tuple[str, ...] = (
+ SP80_L2_SOLUTION_LABELS: tuple[str, ...] = SP80_L1_LABELS + SP80_L2_TAIL_LABELS
+ 
+ 
++SU15_L1_LABELS: tuple[str, ...] = tuple(
++    _json_action_label(6, {"x": x, "y": y})
++    for x, y in (
++        (10, 53),
++        (16, 47),
++        (22, 41),
++        (28, 35),
++        (34, 29),
++        (40, 23),
++        (46, 17),
++    )
++)
++
++SU15_L2_TAIL_LABELS: tuple[str, ...] = tuple(
++    _json_action_label(6, {"x": x, "y": y})
++    for x, y in (
++        (40, 40),
++        (17, 40),
++        (15, 56),
++        (48, 55),
++        (31, 39),
++        (24, 39),
++        (39, 54),
++        (31, 54),
++        (23, 54),
++        (16, 54),
++        (20, 47),
++        (27, 40),
++        (33, 33),
++        (33, 27),
++    )
++)
++
++SU15_L2_SOLUTION_LABELS: tuple[str, ...] = SU15_L1_LABELS + SU15_L2_TAIL_LABELS
++
++
+ # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------
+ def _lp85():
+     from carnot.experiment_4179_arc_incremental_progress import (
+@@ -120,6 +156,62 @@ def _lp85():
+     )
+ 
+ 
++# ---------------- su15 (fruit drag/merge; L1 seed + L2 delta) ----------------
++def _su15():
++    """su15 -- click and staged fruit drag/merge puzzle.
++
++    L1 is the existing seven-click diagonal line. L2 preserves ACTION6 click-only input but changes
++    the win predicate to fruit construction: merge eight level-0 fruits into one level-3 fruit, then
++    drag its center into the xkstxyqbs target zone near (33,27). The L2 tail below is the offline
++    replay-gated delta from the L1 start state.
++    """
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++
++    def action_labels(env, frame=None, path=None):
++        level = kit.frame_level(frame) if frame is not None else 0
++        extension_index = len(path or ())
++        if level == 0 and extension_index < len(SU15_L1_LABELS):
++            return [SU15_L1_LABELS[extension_index]]
++        if level == 1 and extension_index < len(SU15_L2_TAIL_LABELS):
++            return [SU15_L2_TAIL_LABELS[extension_index]]
++        return []
++
++    def apply(env, label, frame):
++        step = json.loads(label)
++        return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
++
++    def _sprite_key(sprite):
++        pixels = getattr(sprite, "pixels", None)
++        shape = tuple(int(v) for v in getattr(pixels, "shape", ()) or ())
++        return (int(sprite.x), int(sprite.y), int(getattr(sprite, "width", 0)), int(getattr(sprite, "height", 0)), shape)
++
++    def state_key(game, frame=None):
++        level = kit.frame_level(frame) if frame is not None else -1
++        fruit_levels = getattr(game, "kqywaxhmsb", {})
++        fruits = tuple(
++            sorted(
++                (int(fruit_levels.get(sprite, 0)), *_sprite_key(sprite))
++                for sprite in getattr(game, "lkujttxgs", [])
++            )
++        )
++        targets = tuple(sorted(_sprite_key(sprite) for sprite in getattr(game, "powykypsm", [])))
++        step_counter = getattr(getattr(game, "step_counter_ui", None), "current_steps", 0)
++        return level, int(step_counter), fruits, targets
++
++    return GameAdapter(
++        game="su15",
++        action_labels=action_labels,
++        apply=apply,
++        state_key=state_key,
++        featurize=None,
++        hand_verifier=lambda _game, _frame=None: 0.0,
++        warmup_label=None,
++        depth_caps={1: len(SU15_L1_LABELS), 2: len(SU15_L2_TAIL_LABELS), 3: 80},
++        branch_mode="fresh_env",
++    )
++
++
+ # ---------------- sp80 (spill-splitter placement; L1 seed + L2 delta) ----------------
+ def _sp80():
+     """sp80 -- spill-splitter placement puzzle.
+@@ -635,6 +727,7 @@ def _m0r0():
+ 
+ 
+ _BUILDERS = {
++    "su15": _su15,
+     "sp80": _sp80,
+     "lp85": _lp85,
+     "tu93": _tu93,
+diff --git a/python/carnot/experiment_4546_levelup_attempt.py b/python/carnot/experiment_4546_levelup_attempt.py
+new file mode 100644
+index 0000000000..9cf5ec7056
+--- /dev/null
++++ b/python/carnot/experiment_4546_levelup_attempt.py
+@@ -0,0 +1,389 @@
++"""Experiment 4546: bank one ARC sprint rotation level-up guarantee level.
++
++Spec refs: REQ-ARC-WMTE-4546, SCENARIO-ARC-WMTE-4546.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++from pathlib import Path
++from typing import Any, Callable, Mapping
++
++import yaml
++
++from carnot.agentic.arc_game_adapters import SU15_L2_SOLUTION_LABELS
++
++
++EXPERIMENT = "experiment_4546_levelup_attempt"
++SCHEMA = "carnot.arc_levelup_attempt_4546.v1"
++TARGET_GAME = "su15"
++RESULT_RELATIVE_PATH = "results/experiment_4546_levelup_attempt.json"
++LOOP_RESULT_RELATIVE_PATH = "results/arc_loop_solve_su15.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++RANDOM_SEED = 4546
++SPEC_REFS = ["REQ-ARC-WMTE-4546", "SCENARIO-ARC-WMTE-4546"]
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: "
++        "<game>_delta_identified_no_bank (honest progress, not a bank)."
++    ),
++    "inference_substrate": (
++        "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load."
++    ),
++    "offline_reproduced": (
++        "a solve not reproducible offline is wasted effort -- only reproduced levels count toward "
++        "reproducible_total_levels."
++    ),
++    "reproduced_levels": (
++        "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an "
++        "attempted bank)."
++    ),
++    "registry_updated": (
++        "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt "
++        "reuses, not re-derives."
++    ),
++    "random_seed": "determinism precondition for reproducibility.",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++}
++
++DEFAULT_DEAD_ENDS = [
++    {
++        "game": "su15",
++        "attempt": "arc_loop_solve --game su15 before adapter registration",
++        "result": "reproduced_L1_only",
++        "why": (
++            "Adapter-free standing loop reproduced the already registered L1 seed but did not expose "
++            "the L2 drag/merge delta."
++        ),
++    },
++    {
++        "game": "su15",
++        "attempt": "unbounded fruit-relative best-first search from L2",
++        "result": "stalled_before_gate",
++        "why": (
++            "Fresh-env replay per candidate was too noisy/expensive; constructive reverse engineering "
++            "of the drag/merge radius and staged merges produced the reproducible L2 tail."
++        ),
++    },
++    {
++        "game": "su15",
++        "attempt": "arc_loop_solve --game su15 --target-level 3",
++        "result": "stopped_at_L2",
++        "why": "The registered adapter banks L2 only; L3 has a new fruit/target delta and remains unmodelled.",
++    },
++]
++
++
++def reproducibility_checksum(payload: Mapping[str, Any]) -> str:
++    """Return a stable content hash for JSON-compatible replay evidence."""
++
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _registry_row_sum(registry: Mapping[str, Any]) -> int:
++    return sum(
++        int(row.get("levels_reproduced") or 0)
++        for row in registry.get("games", [])
++        if row.get("reproducibility") == "reproduced"
++    )
++
++
++def _game_row(registry: Mapping[str, Any], game: str) -> Mapping[str, Any]:
++    for row in registry.get("games", []):
++        if row.get("game") == game:
++            return row
++    raise ValueError(f"registry missing game row: {game}")
++
++
++def _loop_reached_level(loop_result: Mapping[str, Any]) -> int:
++    gate = loop_result.get("reproduction_gate") or {}
++    return int(gate.get("reached_level") or loop_result.get("reached_level") or 0)
++
++
++def _loop_reproduced(loop_result: Mapping[str, Any]) -> bool:
++    gate = loop_result.get("reproduction_gate") or {}
++    return bool(loop_result.get("offline_reproduced") and gate.get("reproduced"))
++
++
++def _su15_registry_block(checksum: str, artifact_path: str) -> str:
++    return f"""- game: su15
++  reproducibility: reproduced
++  levels_reproduced: 2
++  mechanic_class: drag_merge_fruit_target
++  win_condition: "L1 click-to-connect diagonal plus L2 staged drag/merge: merge
++    eight level-0 fruits into one level-3 fruit and drag its center into the
++    xkstxyqbs target zone centered near (33,27)."
++  action_model: "ACTION6 click-only; L2 tail uses 14 discovered drag/merge
++    clicks: (40,40),(17,40),(15,56),(48,55),(31,39),(24,39),(39,54),(31,54),
++    (23,54),(16,54),(20,47),(27,40),(33,33),(33,27)."
++  solver: GameAdapter _su15 in python/carnot/agentic/arc_game_adapters.py +
++    scripts/arc_loop_solve.py; results/arc_loop_solve_su15.json 21-label L2 gate.
++  reproduce: Exp4546 {artifact_path} re-gated results/arc_loop_solve_su15.json
++    offline_reproduced=True, reached_level=2, banked +1 over the current L1
++    registry row, checksum {checksum}.
++  gotchas:
++  - Click radius is 8 and each ACTION6 animates four drag ticks, so L2 requires
++    staged drag/merge clicks; pair-merge clicks alone do not combine distant
++    level-1 pieces.
++  - The win predicate counts the center of a level-3 fruit inside xkstxyqbs, not
++    merely creating a level-3 fruit elsewhere.
++  dead_ends:
++  - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a
++    gate because fresh-env replay per candidate was too noisy/expensive; the
++    banked route came from reverse-engineering the drag/merge radius and
++    constructive merge staging."""
++
++
++def _replace_su15_block(registry_text: str, replacement: str) -> str:
++    start = registry_text.index("- game: su15")
++    end = registry_text.find("\n- game: ", start + len("- game: su15"))
++    if end == -1:
++        end = len(registry_text)
++    return f"{registry_text[:start]}{replacement}{registry_text[end:]}"
++
++
++def apply_su15_registry_bank(
++    registry_text: str,
++    *,
++    loop_result: Mapping[str, Any],
++    checksum: str,
++    artifact_path: str,
++) -> tuple[str, dict[str, Any]]:
++    """Apply the su15 L2 bank to registry text after validating the YAML state."""
++
++    registry = yaml.safe_load(registry_text)
++    prior_row = _game_row(registry, TARGET_GAME)
++    prior_level = int(prior_row.get("levels_reproduced") or 0)
++    prior_total_declared = int(registry.get("reproducible_total_levels") or 0)
++    prior_total_row_sum = _registry_row_sum(registry)
++    reached_level = _loop_reached_level(loop_result)
++    can_bank = (
++        loop_result.get("game") == TARGET_GAME
++        and _loop_reproduced(loop_result)
++        and reached_level > prior_level
++    )
++    banked_levels = max(0, reached_level - prior_level) if can_bank else 0
++
++    update = {
++        "updated": False,
++        "path": REGISTRY_RELATIVE_PATH,
++        "target_game": TARGET_GAME,
++        "prior_game_levels": prior_level,
++        "new_game_levels": prior_level,
++        "banked_levels": 0,
++        "prior_total_declared": prior_total_declared,
++        "prior_total_row_sum": prior_total_row_sum,
++        "new_total_declared": prior_total_declared,
++        "new_total_row_sum": prior_total_row_sum,
++        "reconciled_total_delta": 0,
++    }
++    if banked_levels < 1:
++        return registry_text, update
++
++    new_total = prior_total_row_sum + banked_levels
++    replacement = _su15_registry_block(checksum, artifact_path)
++    updated_text = _replace_su15_block(registry_text, replacement)
++    updated_text = re.sub(
++        r"(?m)^(reproducible_total_levels:\s*)\d+\s*$",
++        rf"\g<1>{new_total}",
++        updated_text,
++        count=1,
++    )
++    updated_registry = yaml.safe_load(updated_text)
++    update.update(
++        {
++            "updated": True,
++            "new_game_levels": reached_level,
++            "banked_levels": banked_levels,
++            "new_total_declared": int(updated_registry["reproducible_total_levels"]),
++            "new_total_row_sum": _registry_row_sum(updated_registry),
++            "reconciled_total_delta": int(updated_registry["reproducible_total_levels"])
++            - prior_total_declared,
++        }
++    )
++    return updated_text, update
++
++
++def build_artifact(
++    *,
++    loop_result: Mapping[str, Any],
++    registry_update: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    dead_ends: list[Mapping[str, Any]],
++) -> dict[str, Any]:
++    reached_level = _loop_reached_level(loop_result)
++    offline_reproduced = _loop_reproduced(loop_result)
++    banked_levels = int(registry_update.get("banked_levels") or 0)
++    registry_updated = bool(registry_update.get("updated"))
++    success = offline_reproduced and registry_updated and banked_levels >= 1
++    verdict = (
++        f"success: {TARGET_GAME}_L{reached_level}_offline_reproduced"
++        if success
++        else f"complete: {TARGET_GAME}_delta_identified_no_bank"
++    )
++    checksum_material = {
++        "target_game": TARGET_GAME,
++        "reproduction_gate": loop_result.get("reproduction_gate"),
++        "solution_labels": list(loop_result.get("solution_labels") or []),
++        "registry_update": dict(registry_update),
++        "random_seed": RANDOM_SEED,
++    }
++    artifact = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "target_game": TARGET_GAME,
++        "target_level": reached_level,
++        "offline_reproduced": bool(offline_reproduced),
++        "reproduced_levels": banked_levels if success else 0,
++        "registry_updated": registry_updated,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": reproducibility_checksum(checksum_material),
++        "preconditions_checked": dict(preconditions_checked),
++        "reproduction_gate": loop_result.get("reproduction_gate"),
++        "solution_labels": list(loop_result.get("solution_labels") or []),
++        "dead_ends": [dict(item) for item in dead_ends],
++        "registry_update": dict(registry_update),
++        "arc_loop_result_path": LOOP_RESULT_RELATIVE_PATH,
++    }
++    artifact["schema_errors"] = artifact_schema_errors(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in (
++        "honest_verdict",
++        "inference_substrate",
++        "offline_reproduced",
++        "reproduced_levels",
++        "registry_updated",
++        "random_seed",
++        "reproducibility_checksum",
++        "preconditions_checked",
++    ):
++        if field not in artifact:
++            errors.append(f"missing required field: {field}")
++    if artifact.get("experiment") != EXPERIMENT:
++        errors.append("experiment mismatch")
++    if artifact.get("schema") != SCHEMA:
++        errors.append("schema mismatch")
++    if artifact.get("spec_refs") != SPEC_REFS:
++        errors.append("spec_refs mismatch")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed mismatch")
++    checksum_material = {
++        "target_game": artifact.get("target_game"),
++        "reproduction_gate": artifact.get("reproduction_gate"),
++        "solution_labels": list(artifact.get("solution_labels") or []),
++        "registry_update": dict(artifact.get("registry_update") or {}),
++        "random_seed": artifact.get("random_seed"),
++    }
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(checksum_material):
++        errors.append("checksum mismatch")
++    if str(artifact.get("honest_verdict", "")).startswith("success:"):
++        if not (
++            artifact.get("offline_reproduced") is True
++            and int(artifact.get("reproduced_levels") or 0) >= 1
++            and artifact.get("registry_updated") is True
++        ):
++            errors.append("success artifact missing reproduced registry bank")
++    return errors
++
++
++def _read_json(path: Path) -> dict[str, Any]:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _spec_refs_present(root: Path) -> bool:
++    spec = (root / SPEC_RELATIVE_PATH).read_text(encoding="utf-8")
++    return all(ref in spec for ref in SPEC_REFS)
++
++
++def check_offline_arcade() -> bool:  # pragma: no cover - exercised by the required command.
++    from carnot.agentic import arc_solver_kit as solver_kit
++
++    solver_kit.offline_arcade()
++    return True
++
++
++def run_experiment(
++    *,
++    root: Path | None = None,
++    precondition_checker: Callable[[], bool] = check_offline_arcade,
++    instructions_checked: Mapping[str, bool] | None = None,
++) -> dict[str, Any]:
++    root = root or Path(__file__).resolve().parents[2]
++    instructions = dict(instructions_checked or {"AGENTS.md": True, "CODEX.md": True})
++    preconditions_checked = {
++        **instructions,
++        "offline_arcade_import_smoke": bool(precondition_checker()),
++        "spec_refs_present": _spec_refs_present(root),
++    }
++    loop_result = _read_json(root / LOOP_RESULT_RELATIVE_PATH)
++    checksum = reproducibility_checksum(
++        {
++            "target_game": TARGET_GAME,
++            "reproduction_gate": loop_result.get("reproduction_gate"),
++            "solution_labels": list(loop_result.get("solution_labels") or []),
++        }
++    )
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    registry_text = registry_path.read_text(encoding="utf-8")
++    updated_registry_text, registry_update = apply_su15_registry_bank(
++        registry_text,
++        loop_result=loop_result,
++        checksum=checksum,
++        artifact_path=RESULT_RELATIVE_PATH,
++    )
++    if registry_update["updated"]:
++        registry_path.write_text(updated_registry_text, encoding="utf-8")
++    artifact = build_artifact(
++        loop_result=loop_result,
++        registry_update=registry_update,
++        preconditions_checked=preconditions_checked,
++        dead_ends=DEFAULT_DEAD_ENDS,
++    )
++    _write_json(root / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper.
++    artifact = run_experiment()
++    print(
++        json.dumps(
++            {
++                key: artifact[key]
++                for key in (
++                    "honest_verdict",
++                    "offline_reproduced",
++                    "reproduced_levels",
++                    "registry_updated",
++                    "reproducibility_checksum",
++                )
++            },
++            indent=2,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/arc_loop_solve_su15.json b/results/arc_loop_solve_su15.json
+index baf0bb6eea..2ccdbdfacb 100644
+--- a/results/arc_loop_solve_su15.json
++++ b/results/arc_loop_solve_su15.json
+@@ -1,13 +1,262 @@
+ {
+   "game": "su15",
+-  "method": "graph_explore_adapter_free",
+-  "reached_level": 1,
+-  "moves": 7,
++  "reached_level": 2,
++  "moves": 21,
++  "states_expanded": 21,
++  "verifier_src": "hand_verifier_cold_start",
+   "offline_reproduced": true,
+-  "reproduced_levels": 1,
+-  "trajectory_seed": "results/arc_explore_trajectory_su15.json",
+-  "verifier_seed_checkpoint": "models/arc_verifier_su15.json",
+-  "heuristic_learned": "cell_count",
+-  "next": "register a GameAdapter from the seed for verifier-routed re-solving",
+-  "mode": "standing_arc_loop_graph_explore_no_quota"
++  "reproduced_levels": 2,
++  "learned_verifier_checkpoint": null,
++  "selected_generic_operators": [
++    {
++      "operator": "per_level_reinduction_operator",
++      "derived_from_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
++      "selector_tags": [
++        "reinduction",
++        "level_up",
++        "deepening",
++        "goal_bias",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "object_centric_digest",
++      "derived_from_games": [
++        "g50t",
++        "lp85",
++        "tn36",
++        "ka59"
++      ],
++      "purpose": "Connected-component object summary for routing, grounding, and active data.",
++      "selector_tags": [
++        "object",
++        "digest",
++        "program_editor",
++        "world_model"
++      ]
++    },
++    {
++      "operator": "active_data_collection",
++      "derived_from_games": [
++        "ar25",
++        "ka59",
++        "ft09",
++        "sc25"
++      ],
++      "purpose": "Balanced action/object coverage plan for offline transition collection.",
++      "selector_tags": [
++        "active_data",
++        "world_model",
++        "e3",
++        "transition"
++      ]
++    },
++    {
++      "operator": "graph_astar_action_cost",
++      "derived_from_games": [
++        "tu93",
++        "lp85",
++        "cd82",
++        "sp80",
++        "cn04",
++        "m0r0",
++        "sk48",
++        "su15"
++      ],
++      "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
++      "selector_tags": [
++        "graph_explore",
++        "astar",
++        "action_cost",
++        "keyboard",
++        "click"
++      ]
++    }
++  ],
++  "reproduction_gate": {
++    "game": "su15",
++    "reached_level": 2,
++    "claimed_level": 2,
++    "reproduced": true,
++    "mode": "offline_reproduction_gate_no_quota"
++  },
++  "solution_labels": [
++    "{\"action\":6,\"data\":{\"x\":10,\"y\":53}}",
++    "{\"action\":6,\"data\":{\"x\":16,\"y\":47}}",
++    "{\"action\":6,\"data\":{\"x\":22,\"y\":41}}",
++    "{\"action\":6,\"data\":{\"x\":28,\"y\":35}}",
++    "{\"action\":6,\"data\":{\"x\":34,\"y\":29}}",
++    "{\"action\":6,\"data\":{\"x\":40,\"y\":23}}",
++    "{\"action\":6,\"data\":{\"x\":46,\"y\":17}}",
++    "{\"action\":6,\"data\":{\"x\":40,\"y\":40}}",
++    "{\"action\":6,\"data\":{\"x\":17,\"y\":40}}",
++    "{\"action\":6,\"data\":{\"x\":15,\"y\":56}}",
++    "{\"action\":6,\"data\":{\"x\":48,\"y\":55}}",
++    "{\"action\":6,\"data\":{\"x\":31,\"y\":39}}",
++    "{\"action\":6,\"data\":{\"x\":24,\"y\":39}}",
++    "{\"action\":6,\"data\":{\"x\":39,\"y\":54}}",
++    "{\"action\":6,\"data\":{\"x\":31,\"y\":54}}",
++    "{\"action\":6,\"data\":{\"x\":23,\"y\":54}}",
++    "{\"action\":6,\"data\":{\"x\":16,\"y\":54}}",
++    "{\"action\":6,\"data\":{\"x\":20,\"y\":47}}",
++    "{\"action\":6,\"data\":{\"x\":27,\"y\":40}}",
++    "{\"action\":6,\"data\":{\"x\":33,\"y\":33}}",
++    "{\"action\":6,\"data\":{\"x\":33,\"y\":27}}"
++  ],
++  "solution": [
++    {
++      "action": 6,
++      "data": {
++        "x": 10,
++        "y": 53
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 16,
++        "y": 47
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 22,
++        "y": 41
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 28,
++        "y": 35
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 34,
++        "y": 29
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 40,
++        "y": 23
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 46,
++        "y": 17
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 40,
++        "y": 40
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 17,
++        "y": 40
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 15,
++        "y": 56
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 55
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 31,
++        "y": 39
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 24,
++        "y": 39
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 54
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 31,
++        "y": 54
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 23,
++        "y": 54
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 16,
++        "y": 54
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 20,
++        "y": 47
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 27,
++        "y": 40
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 27
++      }
++    }
++  ],
++  "mode": "standing_arc_loop_offline_no_quota"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4546_levelup_attempt.json b/results/experiment_4546_levelup_attempt.json
+new file mode 100644
+index 0000000000..911aa1a1d0
+--- /dev/null
++++ b/results/experiment_4546_levelup_attempt.json
+@@ -0,0 +1,98 @@
++{
++  "arc_loop_result_path": "results/arc_loop_solve_su15.json",
++  "dead_ends": [
++    {
++      "attempt": "arc_loop_solve --game su15 before adapter registration",
++      "game": "su15",
++      "result": "reproduced_L1_only",
++      "why": "Adapter-free standing loop reproduced the already registered L1 seed but did not expose the L2 drag/merge delta."
++    },
++    {
++      "attempt": "unbounded fruit-relative best-first search from L2",
++      "game": "su15",
++      "result": "stalled_before_gate",
++      "why": "Fresh-env replay per candidate was too noisy/expensive; constructive reverse engineering of the drag/merge radius and staged merges produced the reproducible L2 tail."
++    },
++    {
++      "attempt": "arc_loop_solve --game su15 --target-level 3",
++      "game": "su15",
++      "result": "stopped_at_L2",
++      "why": "The registered adapter banks L2 only; L3 has a new fruit/target delta and remains unmodelled."
++    }
++  ],
++  "experiment": "experiment_4546_levelup_attempt",
++  "field_principles": {
++    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve, no headline LLM load.",
++    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++    "random_seed": "determinism precondition for reproducibility.",
++    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
++    "reproduced_levels": "the integer new-level count banked this task (>=1 to satisfy the level-up guarantee on an attempted bank).",
++    "reproducibility_checksum": "catches silent drift on replay."
++  },
++  "honest_verdict": "success: su15_L2_offline_reproduced",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "offline_reproduced": true,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "offline_arcade_import_smoke": true,
++    "spec_refs_present": true
++  },
++  "random_seed": 4546,
++  "registry_update": {
++    "banked_levels": 1,
++    "new_game_levels": 2,
++    "new_total_declared": 52,
++    "new_total_row_sum": 52,
++    "path": "ops/arc_solve_registry.yaml",
++    "prior_game_levels": 1,
++    "prior_total_declared": 51,
++    "prior_total_row_sum": 51,
++    "reconciled_total_delta": 1,
++    "target_game": "su15",
++    "updated": true
++  },
++  "registry_updated": true,
++  "reproduced_levels": 1,
++  "reproducibility_checksum": "6fdbf3729d83286316909e8a3753857ec15f9dac1e38a13c6e6cd3f3de4e1867",
++  "reproduction_gate": {
++    "claimed_level": 2,
++    "game": "su15",
++    "mode": "offline_reproduction_gate_no_quota",
++    "reached_level": 2,
++    "reproduced": true
++  },
++  "schema": "carnot.arc_levelup_attempt_4546.v1",
++  "schema_errors": [],
++  "solution_labels": [
++    "{\"action\":6,\"data\":{\"x\":10,\"y\":53}}",
++    "{\"action\":6,\"data\":{\"x\":16,\"y\":47}}",
++    "{\"action\":6,\"data\":{\"x\":22,\"y\":41}}",
++    "{\"action\":6,\"data\":{\"x\":28,\"y\":35}}",
++    "{\"action\":6,\"data\":{\"x\":34,\"y\":29}}",
++    "{\"action\":6,\"data\":{\"x\":40,\"y\":23}}",
++    "{\"action\":6,\"data\":{\"x\":46,\"y\":17}}",
++    "{\"action\":6,\"data\":{\"x\":40,\"y\":40}}",
++    "{\"action\":6,\"data\":{\"x\":17,\"y\":40}}",
++    "{\"action\":6,\"data\":{\"x\":15,\"y\":56}}",
++    "{\"action\":6,\"data\":{\"x\":48,\"y\":55}}",
++    "{\"action\":6,\"data\":{\"x\":31,\"y\":39}}",
++    "{\"action\":6,\"data\":{\"x\":24,\"y\":39}}",
++    "{\"action\":6,\"data\":{\"x\":39,\"y\":54}}",
++    "{\"action\":6,\"data\":{\"x\":31,\"y\":54}}",
++    "{\"action\":6,\"data\":{\"x\":23,\"y\":54}}",
++    "{\"action\":6,\"data\":{\"x\":16,\"y\":54}}",
++    "{\"action\":6,\"data\":{\"x\":20,\"y\":47}}",
++    "{\"action\":6,\"data\":{\"x\":27,\"y\":40}}",
++    "{\"action\":6,\"data\":{\"x\":33,\"y\":33}}",
++    "{\"action\":6,\"data\":{\"x\":33,\"y\":27}}"
++  ],
++  "spec_refs": [
++    "REQ-ARC-WMTE-4546",
++    "SCENARIO-ARC-WMTE-4546"
++  ],
++  "target_game": "su15",
++  "target_level": 2
++}
+diff --git a/scripts/experiments/arc3_layerb_ar_model_test.py b/scripts/experiments/arc3_layerb_ar_model_test.py
+index b9009369c7..98a71e9fb2 100644
+--- a/scripts/experiments/arc3_layerb_ar_model_test.py
++++ b/scripts/experiments/arc3_layerb_ar_model_test.py
+@@ -47,6 +47,9 @@ MODELS = {
+     # coder beats the small Q4 models on accuracy. Qwen3.6-based, so /no_think applies.
+     "qwopus-q3km": ("models--Jackrong--Qwopus3.6-27B-Coder-MTP-GGUF/snapshots/*/Qwopus3.6-27B-Coder-MTP-Q3_K_M.gguf", "/no_think\n"),
+     "gemma-12b": ("models--unsloth--gemma-4-12B-it-GGUF/snapshots/*/gemma-4-12b-it-Q4_K_M.gguf", None),
++    # candidate (operator 2026-06-21): gemma-4-12B agentic/tau2/composer fine-tune (yuxinlu1) -- tests
++    # whether an agentic-tuned gemma-4-12B beats base Qwen3.5-9B-MTP on Layer-B grounding for the ARC generator.
++    "gemma4-agentic": ("models--yuxinlu1--gemma-4-12B-agentic*GGUF/snapshots/*/gemma4-v2-Q4_K_M.gguf", None),
+ }
+ 
+ 
+diff --git a/tests/python/test_experiment_4546_levelup_attempt.py b/tests/python/test_experiment_4546_levelup_attempt.py
+new file mode 100644
+index 0000000000..216554721a
+--- /dev/null
++++ b/tests/python/test_experiment_4546_levelup_attempt.py
+@@ -0,0 +1,264 @@
++"""Tests for Exp 4546 ARC sprint rotation level-up banking.
++
++Spec refs: REQ-ARC-WMTE-4546, SCENARIO-ARC-WMTE-4546.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import yaml
++
++from carnot import experiment_4546_levelup_attempt as exp4546
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _loop_result(reached_level: int = 2, reproduced: bool = True) -> dict[str, object]:
++    return {
++        "game": "su15",
++        "reached_level": reached_level,
++        "moves": 21,
++        "states_expanded": 21,
++        "verifier_src": "hand_verifier_cold_start",
++        "offline_reproduced": reproduced,
++        "reproduced_levels": reached_level,
++        "reproduction_gate": {
++            "game": "su15",
++            "reached_level": reached_level,
++            "claimed_level": reached_level,
++            "reproduced": reproduced,
++            "mode": "offline_reproduction_gate_no_quota",
++        },
++        "solution_labels": list(exp4546.SU15_L2_SOLUTION_LABELS),
++        "mode": "standing_arc_loop_offline_no_quota",
++    }
++
++
++def _registry_text() -> str:
++    return """schema_version: 1
++updated: '2026-06-21'
++games:
++- game: su15
++  reproducibility: reproduced
++  levels_reproduced: 1
++  win_condition: first-solve L1 adapter-free; click-to-connect diagonal line.
++  action_model: click-only [ACTION6]; seven clicks.
++  solver: results/arc_explore_trajectory_su15.json.
++  reproduce: re-gated reproduced=True L1.
++  gotchas: []
++- game: lp85
++  reproducibility: reproduced
++  levels_reproduced: 50
++  win_condition: existing row used to make totals realistic.
++  action_model: existing.
++  solver: existing.
++  gotchas: []
++reproducible_total_levels: 51
++reproducible_total_games: 24
++"""
++
++
++def test_req_arc_wmte_4546_spec_declares_required_contract() -> None:
++    """REQ-ARC-WMTE-4546: OpenSpec names the level-up artifact contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for ref in exp4546.SPEC_REFS:
++        assert ref in spec
++    assert exp4546.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp4546.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++    for required in (
++        "`success: su15_L2_offline_reproduced`",
++        "`offline_reproduced=true`",
++        "`reproduced_levels >= 1`",
++        "`registry_updated=true`",
++        "dead-end evidence",
++    ):
++        assert required in spec
++
++
++def test_scenario_arc_wmte_4546_registry_text_update_banks_su15_l2() -> None:
++    """SCENARIO-ARC-WMTE-4546: a reproduced su15 L2 loop result updates the registry."""
++
++    loop = _loop_result()
++    checksum = exp4546.reproducibility_checksum(
++        {
++            "target_game": "su15",
++            "reproduction_gate": loop["reproduction_gate"],
++            "solution_labels": loop["solution_labels"],
++        }
++    )
++
++    updated_text, update = exp4546.apply_su15_registry_bank(
++        _registry_text(),
++        loop_result=loop,
++        checksum=checksum,
++        artifact_path=exp4546.RESULT_RELATIVE_PATH,
++    )
++    registry = yaml.safe_load(updated_text)
++    su15 = next(row for row in registry["games"] if row["game"] == "su15")
++
++    assert update["updated"] is True
++    assert update["prior_game_levels"] == 1
++    assert update["new_game_levels"] == 2
++    assert update["banked_levels"] == 1
++    assert update["prior_total_declared"] == 51
++    assert update["prior_total_row_sum"] == 51
++    assert registry["reproducible_total_levels"] == 52
++    assert su15["levels_reproduced"] == 2
++    assert "level-3 fruit" in su15["win_condition"]
++    assert "drag/merge" in su15["action_model"]
++    assert "unbounded fruit-relative best-first search" in su15["dead_ends"][0]
++    assert checksum in su15["reproduce"]
++
++
++def test_req_arc_wmte_4546_registry_update_requires_reproduced_advance() -> None:
++    """REQ-ARC-WMTE-4546: registry updates are gated by a real reproduced advance."""
++
++    unchanged, update = exp4546.apply_su15_registry_bank(
++        _registry_text(),
++        loop_result=_loop_result(reached_level=1),
++        checksum="unused",
++        artifact_path=exp4546.RESULT_RELATIVE_PATH,
++    )
++    assert unchanged == _registry_text()
++    assert update["updated"] is False
++    assert update["banked_levels"] == 0
++
++    unreproduced, bad_update = exp4546.apply_su15_registry_bank(
++        _registry_text(),
++        loop_result=_loop_result(reached_level=2, reproduced=False),
++        checksum="unused",
++        artifact_path=exp4546.RESULT_RELATIVE_PATH,
++    )
++    assert unreproduced == _registry_text()
++    assert bad_update["updated"] is False
++
++    try:
++        exp4546.apply_su15_registry_bank(
++            "schema_version: 1\ngames: []\nreproducible_total_levels: 0\n",
++            loop_result=_loop_result(),
++            checksum="unused",
++            artifact_path=exp4546.RESULT_RELATIVE_PATH,
++        )
++    except ValueError as exc:
++        assert "registry missing game row: su15" in str(exc)
++    else:
++        raise AssertionError("missing su15 row should fail")
++
++
++def test_req_arc_wmte_4546_artifact_success_requires_reproduced_bank() -> None:
++    """REQ-ARC-WMTE-4546: success needs an offline-reproduced registry bank."""
++
++    loop = _loop_result()
++    registry_update = {
++        "updated": True,
++        "path": exp4546.REGISTRY_RELATIVE_PATH,
++        "target_game": "su15",
++        "prior_game_levels": 1,
++        "new_game_levels": 2,
++        "banked_levels": 1,
++        "prior_total_declared": 51,
++        "prior_total_row_sum": 51,
++        "new_total_declared": 52,
++        "new_total_row_sum": 52,
++        "reconciled_total_delta": 1,
++    }
++
++    artifact = exp4546.build_artifact(
++        loop_result=loop,
++        registry_update=registry_update,
++        preconditions_checked={
++            "AGENTS.md": True,
++            "CODEX.md": True,
++            "offline_arcade_import_smoke": True,
++            "spec_refs_present": True,
++        },
++        dead_ends=exp4546.DEFAULT_DEAD_ENDS,
++    )
++
++    assert artifact["honest_verdict"] == "success: su15_L2_offline_reproduced"
++    assert artifact["offline_reproduced"] is True
++    assert artifact["reproduced_levels"] == 1
++    assert artifact["registry_updated"] is True
++    assert artifact["field_principles"] == exp4546.FIELD_PRINCIPLES
++    assert artifact["schema_errors"] == []
++    assert exp4546.artifact_schema_errors(artifact) == []
++
++    changed = dict(artifact)
++    changed["reproducibility_checksum"] = "bad"
++    assert any("checksum" in error for error in exp4546.artifact_schema_errors(changed))
++
++    false_success = dict(artifact)
++    false_success["offline_reproduced"] = False
++    assert "success artifact missing reproduced registry bank" in exp4546.artifact_schema_errors(false_success)
++
++    repeated = exp4546.build_artifact(
++        loop_result=loop,
++        registry_update={**registry_update, "updated": False, "banked_levels": 0},
++        preconditions_checked={"offline_arcade_import_smoke": True, "spec_refs_present": True},
++        dead_ends=[],
++    )
++    assert repeated["honest_verdict"] == "complete: su15_delta_identified_no_bank"
++    assert repeated["reproduced_levels"] == 0
++    assert repeated["schema_errors"] == []
++
++
++def test_scenario_arc_wmte_4546_run_experiment_writes_stable_json(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4546: the runner writes the bank artifact and registry."""
++
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "openspec" / "capabilities" / "arc-world-model-trust-energy").mkdir(parents=True)
++    (tmp_path / exp4546.REGISTRY_RELATIVE_PATH).write_text(_registry_text(), encoding="utf-8")
++    (tmp_path / exp4546.LOOP_RESULT_RELATIVE_PATH).write_text(
++        json.dumps(_loop_result(), indent=2),
++        encoding="utf-8",
++    )
++    (tmp_path / exp4546.SPEC_RELATIVE_PATH).write_text(
++        "REQ-ARC-WMTE-4546\nSCENARIO-ARC-WMTE-4546\n",
++        encoding="utf-8",
++    )
++
++    artifact = exp4546.run_experiment(
++        root=tmp_path,
++        precondition_checker=lambda: True,
++        instructions_checked={"AGENTS.md": True, "CODEX.md": True},
++    )
++
++    out = json.loads((tmp_path / exp4546.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    registry = yaml.safe_load((tmp_path / exp4546.REGISTRY_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert artifact == out
++    assert out["spec_refs"] == exp4546.SPEC_REFS
++    assert out["preconditions_checked"]["offline_arcade_import_smoke"] is True
++    assert out["preconditions_checked"]["spec_refs_present"] is True
++    assert out["registry_update"]["banked_levels"] == 1
++    assert registry["reproducible_total_levels"] == 52
++
++
++def test_scenario_arc_wmte_4546_su15_adapter_reproduces_l2_offline() -> None:
++    """SCENARIO-ARC-WMTE-4546: the registered su15 adapter replays L2 offline."""
++
++    from carnot.agentic import arc_game_adapters
++    from carnot.agentic import arc_solver_kit as kit
++
++    adapter = arc_game_adapters.get_adapter("su15")
++    assert adapter is not None
++    assert list(arc_game_adapters.SU15_L2_SOLUTION_LABELS) == list(exp4546.SU15_L2_SOLUTION_LABELS)
++
++    gate = kit.reproduce(
++        "su15",
++        arc_game_adapters.SU15_L2_SOLUTION_LABELS,
++        adapter.apply,
++        claimed_level=2,
++    )
++
++    assert gate["reproduced"] is True
++    assert gate["reached_level"] == 2
+-- 
+2.55.0
+

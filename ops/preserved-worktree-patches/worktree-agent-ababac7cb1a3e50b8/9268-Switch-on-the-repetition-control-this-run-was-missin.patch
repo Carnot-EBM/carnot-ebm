@@ -1,0 +1,106 @@
+From 2024a93d6cfe7fc121ed18efa23429ee1bb9fd7c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 16 Aug 2026 07:19:29 -0400
+Subject: [PATCH 09268/11362] Switch on the repetition control this run was
+ missing, and decline the re-ask that comes with it
+
+Two independent teammate evidence reports plus the Fable review converged on the
+same gap, and it is aimed at exactly this run's failure mode.
+
+WHAT WAS OFF. `_engine_induce_call = bool(codeonly_eligible) and "engine" in
+required` (arc_executable_world_model.py:6885) gates `repeat_penalty=1.1,
+repeat_last_n=256` (:6922-6926). The driver passed codeonly_eligible=False, so the
+run had NO decode-level repetition control -- against a failure mode that is
+almost entirely `stop_type=limit`. The code names that gap itself: "the
+decode-level repetition loop that is the dominant induce failure" (:6918-6920).
+
+MEASURED (docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md, 36
+paired attempts, gemma-4-31B):
+    usable engines     13/36 -> 22/36   (1.69x; its own corrigendum C1 records the
+                                         headline wrongly said "triples")
+    hit the token cap  20/36 -> 2/36    <- our dominant failure mode
+    missing_return     13    -> 2
+    wall per attempt   100.3s -> 47.2s
+Sign test p=0.049 attempt-matched, p=0.125 clustered by game.
+
+HONEST LIMIT, from the same note: quality did NOT move. The strict out-of-sample
+funnel was 4/18 vs 4/18. This buys usable engines, not better ones -- and a run
+producing engines that hit the cap cannot be measuring induction quality either
+way.
+
+IT IS NOT A PROMPT CHANGE. With think mode on (the shipped default),
+codeonly_eligible=True routes into generate()'s `_think_on` branch -- "no
+directive, no pre-opened fence" (:6873-6874) -- so the prompt text is
+byte-identical to the previous cells. Only the sampler payload changes. Symmetric
+across arms.
+
+DEFECT RE-ASK DECLINED. codeonly_eligible=True would also arm the defect re-ask,
+which is documented converting an accept into a HARD FAILURE on 17 of 21 cells
+against 1 of 22 control (:7035-7043, reproduced deterministically in
+tests/python/test_arc_goal_defect_reask_wiring.py). Penalty and re-ask ship
+independently (:4254), so all three arms now set
+CARNOT_ARC_INDUCE_DEFECT_REASKS=0. Measured split from the same source: "the
+penalty carries 11 of the 13 paired wins, the re-ask 2" -- we are taking the 11
+and declining the risk.
+
+CONTEXT THAT RAISES THE STAKES. The 11-0-2 that retired Qwen3.6 and installed
+gemma was BUDGET EXHAUSTION, not induction skill: all 18 Qwen failures were
+`HIT n_predict=16384 OUTPUT LIMIT`, and exp6021's own budget_exhaustion_finding
+says it "does NOT establish that Qwen is intrinsically the weaker INDUCER". The
+original migration measured the same starvation this re-measurement exists to
+avoid.
+
+Also noting a citation of mine that was weaker than I represented: I twice cited
+exp6199 as evidence think mode helps gemma. The de-confounded rerun exp6221 gives
+1 win / 0 losses / 12 ties, p=1.0, gate NOT MET -- and exp6199 was confounded by an
+`os.environ.pop` that let both arms resolve think-ON.
+
+Ninth restart. Verified before launching: repeat_penalty=1.1, repeat_last_n=256,
+defect_reasks=0.
+---
+ ...xperiment_6440_qwen38_generator_h2h_arm.py | 28 ++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py b/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
+index 4207edbf71..6838c08500 100644
+--- a/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
++++ b/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
+@@ -567,8 +567,34 @@ def main() -> int:
+         # returned ok=True with both symbols at tries=3 (2,786 s) and overran at tries=1.
+         #
+         # Symmetric: both arms get 3. Gemma will simply not need the extra two.
++        # codeonly_eligible=True, to switch ON the repetition control this run was missing.
++        #
++        # WHAT IT DOES *NOT* DO: it does not restore the fence or the codeonly directive. With
++        # think mode on (the shipped default), generate() routes into its `_think_on` branch --
++        # "no directive, no pre-opened fence" (arc_executable_world_model.py:6873-6874) -- so the
++        # PROMPT TEXT IS BYTE-IDENTICAL to what the previous cells saw. This is not a prompt
++        # change.
++        #
++        # WHAT IT DOES DO: `_engine_induce_call = bool(codeonly_eligible) and "engine" in required`
++        # (:6885) gates `repeat_penalty=1.1, repeat_last_n=256` (:6922-6926). With False we were
++        # running with NO decode-level repetition control at all, against a failure mode that is
++        # almost entirely `stop_type=limit`.
++        #
++        # MEASURED, docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md, 36 paired
++        # attempts on gemma-4-31B:
++        #     usable engines      13/36 -> 22/36  (1.69x, NOT the "triples" its own headline
++        #                                          claimed -- corrigendum C1 in that note)
++        #     hit the token cap   20/36 -> 2/36   <- our dominant failure mode
++        #     missing_return      13    -> 2
++        #     wall per attempt    100.3s -> 47.2s
++        # Attempt-matched sign test p=0.049; clustered by game p=0.125. HONEST LIMIT: quality did
++        # NOT move -- the strict out-of-sample funnel was 4/18 vs 4/18. This buys usable engines,
++        # not better ones.
++        #
++        # Symmetric: both arms take the same path, and gemma's own numbers above are where the
++        # effect was measured.
+         ok_, code_ = prop_.generate(
+-            prompt, ("engine", "is_level_complete"), tries=LIVE_TRIES, codeonly_eligible=False
++            prompt, ("engine", "is_level_complete"), tries=LIVE_TRIES, codeonly_eligible=True
+         )
+         if not ok_:
+             return False, code_
+-- 
+2.55.0
+

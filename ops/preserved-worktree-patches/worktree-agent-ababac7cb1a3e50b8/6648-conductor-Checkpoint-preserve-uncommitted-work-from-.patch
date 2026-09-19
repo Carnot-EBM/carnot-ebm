@@ -1,0 +1,95 @@
+From 74fd394989acb264ab9e2afeed99bd3ea6d9ca39 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 20:14:58 -0400
+Subject: [PATCH 06648/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...5559_cross_model_sota_csl_transfer_v2.json | 42 ++++++++++++++++++-
+ 4 files changed, 43 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 11277a21e8..4c61f1d688 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 485, "phase": "iteration_start", "last_beat": "2026-07-10T23:57:54Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 486, "phase": "iteration_start", "last_beat": "2026-07-11T00:14:54Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4ecd3d5c0a..356f4b9e32 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10753,3 +10753,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-10 23:28 UTC | Gated SOTA hard-soft panel v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5553-gated-gbnf-forced-sota-row-smoke) |
+ | 2026-07-10 23:40 UTC | CSL five-arm tautology corrigendum v2 | OK | 86 passed, 1 warning in 11.28s |
+ | 2026-07-10 23:55 UTC | Gated causal write-manage-read CSL memory | OK | 89 passed, 1 warning in 13.04s |
++| 2026-07-11 00:12 UTC | Gated cross-model SOTA CSL transfer v2 | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 781fe2a72a..c88fdf59fb 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 485, "phase": "iteration_start", "started_at": "2026-07-10T23:57:54Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 486, "phase": "iteration_start", "started_at": "2026-07-11T00:14:54Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5559_cross_model_sota_csl_transfer_v2.json b/results/experiment_5559_cross_model_sota_csl_transfer_v2.json
+index 503b7fc271..8a102a1f0f 100644
+--- a/results/experiment_5559_cross_model_sota_csl_transfer_v2.json
++++ b/results/experiment_5559_cross_model_sota_csl_transfer_v2.json
+@@ -2175,5 +2175,43 @@
+     "learned_state_scope": "external_retrieval_memory_only",
+     "no_weight_mutation": true,
+     "training_steps": 0
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "aligned_memory_score=0.1666666667 and no_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "aligned_memory_score=0.1666666667 and shuffled_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "aligned_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "no_memory_score=0.1666666667 and shuffled_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "no_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "shuffled_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "cross_family_delta_over_shuffled=0.0 (exactly zero). Confirm this is not a stub default."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

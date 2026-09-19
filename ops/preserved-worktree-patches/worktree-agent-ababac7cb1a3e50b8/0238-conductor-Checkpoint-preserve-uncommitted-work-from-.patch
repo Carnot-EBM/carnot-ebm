@@ -1,0 +1,43 @@
+From 093ba9c5a5ca2942109da9f95775a001ded9efe1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 19:11:15 -0400
+Subject: [PATCH 00238/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index dc7aa9f334..e9d2864631 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 254, "phase": "iteration_start", "last_beat": "2026-06-02T22:30:03Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 255, "phase": "iteration_start", "last_beat": "2026-06-02T23:11:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 0ed74a6a05..d60f86e748 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7631,3 +7631,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-02 22:14 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
+ | 2026-06-02 22:28 UTC | FR-11 continuous self-learning v15 — Tier-1 ONLINE | OK | 87 passed in 5.08s |
+ | 2026-06-02 22:30 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
++| 2026-06-02 23:09 UTC | KV260 opportunistic continuity audit — confirm ter | OK | 90 passed in 4.46s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4704bb03d4..8550295235 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 254, "phase": "iteration_start", "started_at": "2026-06-02T22:30:03Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 255, "phase": "iteration_start", "started_at": "2026-06-02T23:11:14Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

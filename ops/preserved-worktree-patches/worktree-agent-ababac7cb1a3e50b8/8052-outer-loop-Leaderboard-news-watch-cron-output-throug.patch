@@ -1,0 +1,69 @@
+From 796fcf7b00c28574b59a7aa2ffcbad2bc678e36c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 31 Jul 2026 11:59:25 -0400
+Subject: [PATCH 08052/11362] [outer-loop] Leaderboard/news watch cron output
+ through 2026-07-31
+
+Append-only cron state from the ARC leaderboard technique watch and news watch.
+Top five moved: #2 Andy liu 1.69, #3 GeniusYY 1.64, #5 DhanaLakshmiMalla 1.60 --
+none with submission-linked public code, so all three are classified unknown
+rather than assigned an exploit/general-purpose label on inference.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-agi3-leaderboard-technique-watch.md            | 10 ++++++++++
+ docs/research-notes/arc-agi3-news-watch.md             |  8 ++++++++
+ ops/.arc_leaderboard_technique_watch_state.json        |  6 +++---
+ 3 files changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+index bdf962d33a..d69e4db52a 100644
+--- a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
++++ b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+@@ -60,3 +60,13 @@ CHECK_TIMED_OUT
+ 
+ ## 2026-07-29 13:38 UTC -- checked, nothing new
+ 
++## 2026-07-30 13:38 UTC -- checked, nothing new
++
++## 2026-07-31 13:40 UTC -- NEW
++
++- **New top-five entrant:** **Andy liu** (`codinggodandyliu`, `ichuqinggaove`) is **#2 at 1.69**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [member notebooks](https://www.kaggle.com/codinggodandyliu/code)
++
++- **New top-five entrant:** **GeniusYY** (`alexyy`) is **#3 at 1.64**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/alexyy/code)
++
++- **New top-five entrant:** **DhanaLakshmiMalla** (`dhanalakshmimalla`) is **#5 at 1.60**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/dhanalakshmimalla/code)
++
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index d5dcdb5e2e..4314281e75 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -79,3 +79,11 @@ CHECK_TIMED_OUT
+ 
+ - Kaggle’s competition host published an analysis of 500 failed submissions: nearly 20% used GPU-dependent code without enabling a GPU; other recurring issues included missing datasets/dependencies, CUDA OOM, using the wrong API endpoint, and writing to read-only `/kaggle/input`. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+ 
++## 2026-07-30 13:12 UTC -- check failed
++
++CHECK_TIMED_OUT
++
++## 2026-07-31 13:16 UTC -- check failed
++
++CHECK_TIMED_OUT
++
+diff --git a/ops/.arc_leaderboard_technique_watch_state.json b/ops/.arc_leaderboard_technique_watch_state.json
+index 5f723a6e04..bba84945f5 100644
+--- a/ops/.arc_leaderboard_technique_watch_state.json
++++ b/ops/.arc_leaderboard_technique_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+-  "last_findings": "- **New top-five entrant:** **Yuchen20** (`yuchen2066`) is now **#5 at 1.58**, tied with ippeiogawa. No submission-linked public code or ARC-AGI-3 writeup was found, so no evidence-based exploit/general-purpose classification or Carnot lever can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/yuchen2066/code)",
+-  "last_checked": "2026-07-29T13:38:55.821587+00:00",
+-  "history_count": 13
++  "last_findings": "- **New top-five entrant:** **Andy liu** (`codinggodandyliu`, `ichuqinggaove`) is **#2 at 1.69**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [member notebooks](https://www.kaggle.com/codinggodandyliu/code)\n\n- **New top-five entrant:** **GeniusYY** (`alexyy`) is **#3 at 1.64**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/alexyy/code)\n\n- **New top-five entrant:** **DhanaLakshmiMalla** (`dhanalakshmimalla`) is **#5 at 1.60**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/dhanalakshmimalla/code)",
++  "last_checked": "2026-07-31T13:40:06.959986+00:00",
++  "history_count": 15
+ }
+-- 
+2.55.0
+

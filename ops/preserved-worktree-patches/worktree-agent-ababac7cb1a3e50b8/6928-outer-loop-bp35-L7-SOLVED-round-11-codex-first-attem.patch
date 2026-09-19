@@ -1,0 +1,434 @@
+From af10f71038df3a886001f61c90f5753fb2096ea4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 17:30:22 -0400
+Subject: [PATCH 06928/11362] [outer-loop] bp35: L7 SOLVED round 11 (codex,
+ first attempt at fresh territory)
+
+Round-11 gpt-5.6-sol session solved L7 on the first attempt. L7
+doubles the per-level hard timer from L6's 64 actions to 128 -- the
+session grounded this via the executable timer branch rather than
+assuming it carries over. L7 is a deliberate temporary-support puzzle:
+open X-cells must be solidified above the player to create an
+intermediate landing altitude, several toggled twice at different
+route phases, unlocking lateral transfers impossible from either
+natural shelf.
+
+The source agent's own fresh-environment reproduction gate confirmed
+reached_level=7 independently. The outer loop independently
+re-verified regardless: 5x fresh env.reset() + replay via a new
+resolver priority branch, all 5 confirmed level=7,
+state=GameState.NOT_FINISHED (frame well-formed, not degenerate).
+
+ops/arc_solve_registry.yaml: bp35 levels_reproduced 6 -> 7.
+reproducible_total_levels 173 -> 174 (sum-checked;
+arc_count_integrity_lint exit 0).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   |  35 ++-
+ ...experiment_4460_submission_package_prep.py |  23 ++
+ ...uter_loop_round11_bp35_probe_20260712.json | 296 ++++++++++++++++++
+ 3 files changed, 352 insertions(+), 2 deletions(-)
+ create mode 100644 results/outer_loop_round11_bp35_probe_20260712.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index fd275ac013..4136e7692d 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -5132,7 +5132,7 @@ games:
+     reproducibility_checksum: 64a8aa87d4892fd2dc6107ba556d326a3c39178cebe1bc7abc7ca7869b4eda64
+ - game: bp35
+   reproducibility: reproduced
+-  levels_reproduced: 6
++  levels_reproduced: 7
+   mechanic_class: goal_directed_navigation_local_obstacle_clear
+   win_condition: >-
+     L1 goal-directed upward-gravity navigation plus L2 same-row blocker clears,
+@@ -5402,6 +5402,37 @@ games:
+     priority branch, all 5 confirmed level=6, state=GameState.NOT_FINISHED
+     (the source agent''s own reproduction_verified is honestly false --
+     budget ran out after the win, only 78 of 950 calls remained).'
++  - 'L7 SOLVED round 11 (2026-07-12, gpt-5.6-sol via codex,
++    results/outer_loop_round11_bp35_probe_20260712.json): first attempt
++    at fresh L7 territory. L7 DOUBLES the per-level hard action-count
++    budget from L6''s 64 actions to 128 -- do not assume the timer
++    stays at 64 for future levels; verify it live each time via a
++    grounded reading of the executable timer branch, as this session
++    did (using an early ACTION5 no-op to advance the timer/HUD while
++    leaving the world unchanged, confirming the exact budget without
++    burning real moves). L7 is a deliberate TEMPORARY-SUPPORT puzzle:
++    open X-cells must be solidified above the player to create an
++    intermediate landing altitude that permits lateral transfers
++    otherwise impossible from either natural shelf -- several cells
++    must be toggled TWICE at different phases of the route. The
++    lower-right escape uses the same technique: solidify the open X at
++    world (7,7), reverse gravity to perch at (7,6), then cross through
++    (8,7) into a hazard-free express shaft at column 9. Won live: a
++    44-action L7 tail (from (3,19), alternating solidify/gravity-
++    reverse/move-through-shields sequences through a zig-zag of paired
++    pillar columns) reached the goal at (3,25), advancing frame_level
++    from 6 to 7 and loading L8 alive. The source agent ran its own
++    fresh-environment reproduction gate via arc_solver_kit.reproduce
++    (claimed_level=7) on the full 269-action sequence and got
++    reached_level=7, reproduced=true, and the outer loop independently
++    re-verified regardless: 5x fresh env.reset() + replay via a new
++    resolver priority branch, all 5 confirmed level=7,
++    state=GameState.NOT_FINISHED (frame well-formed, not degenerate).
++    Gotcha for future rounds: grouped hazard/wall objects expose only
++    an ANCHOR position in compact object dumps -- their actual
++    collision footprint spans every matching glyph in the level grid,
++    so route planning must use the full footprint, not just the
++    anchor.'
+   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
+     partially superseded by the entry above): a wider multi-screen tower with
+     chained E-door descents. Every then-known descent branch dead-ended: one
+@@ -5435,7 +5466,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 173
++reproducible_total_levels: 174
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index 61a4310aa1..87699ee6bf 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -889,7 +889,30 @@ def resolve_replay_plan(
+             adapter.apply,
+             warmup_label=adapter.warmup_label,
+         )
++    if game == "bp35" and _as_int(entry.get("levels_reproduced")) >= 7:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_round11_bp35_probe_20260712.json"
++        artifact = _load_json(root / rel_path)
++        raw_labels = artifact.get("action_sequence") or []
++        if adapter is None:
++            raise RuntimeError("bp35 adapter missing")
++        labels = [
++            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
++            for label in raw_labels
++        ]
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "bp35" and _as_int(entry.get("levels_reproduced")) >= 6:
++        # NOTE: unreachable for the live registry entry (which is >=7 as of the
++        # round-11 L7 win); retained as historical dead code documenting the
++        # round-10 (level-6) resolution.
+         from carnot.agentic.arc_game_adapters import get_adapter
+ 
+         adapter = get_adapter(game)
+diff --git a/results/outer_loop_round11_bp35_probe_20260712.json b/results/outer_loop_round11_bp35_probe_20260712.json
+new file mode 100644
+index 0000000000..c063ca90f6
+--- /dev/null
++++ b/results/outer_loop_round11_bp35_probe_20260712.json
+@@ -0,0 +1,296 @@
++{
++  "game": "bp35",
++  "model": "gpt-5",
++  "starting_level": 6,
++  "max_level_reached": 7,
++  "total_env_steps_used": 763,
++  "reproduction_verified": true,
++  "action_sequence": [
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 30}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 36}}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 18, \"y\": 36}}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 18, \"y\": 30}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 30, \"y\": 30}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 30}}",
++    "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 30}}",
++    "{\"action\": 6, \"data\": {\"x\": 30, \"y\": 36}}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 36}}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 18, \"y\": 36}}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 12, \"y\": 36}}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 12, \"y\": 30}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 30, \"y\": 30}}",
++    "{\"action\": 6, \"data\": {\"x\": 30, \"y\": 30}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 18, \"y\": 30}}",
++    "{\"action\": 6, \"data\": {\"x\": 18, \"y\": 30}}",
++    "{\"action\": 6, \"data\": {\"x\": 18, \"y\": 30}}",
++    "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 36}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 30, \"y\": 36}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 36}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 36}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 48, \"y\": 36}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 48, \"y\": 30}}",
++    "{\"action\": 6, \"data\": {\"x\": 48, \"y\": 30}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 30, \"y\": 30}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 39}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 40, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 21, \"y\": 33}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 27}}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 33}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 27}}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 33}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 39}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 39}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 33}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 15, \"y\": 33}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 39}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 27}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 21, \"y\": 33}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 21, \"y\": 39}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 57}}",
++    "{\"action\": 6, \"data\": {\"x\": 45, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 45, \"y\": 39}}",
++    "{\"action\": 6, \"data\": {\"x\": 45, \"y\": 33}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 39}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 51, \"y\": 39}}",
++    "{\"action\": 6, \"data\": {\"x\": 45, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 45, \"y\": 35}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++    "{\"action\": 4}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 51, \"y\": 59}}",
++    "{\"action\": 6, \"data\": {\"x\": 21, \"y\": 34}}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 34}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 33}}",
++    "{\"action\": 4}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 51, \"y\": 39}}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 45, \"y\": 39}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 51}}",
++    "{\"action\": 6, \"data\": {\"x\": 45, \"y\": 51}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 33}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 29}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 33}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 15, \"y\": 9}}",
++    "{\"action\": 6, \"data\": {\"x\": 21, \"y\": 9}}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 9}}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 9}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 15, \"y\": 33}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 51, \"y\": 3}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 35}}",
++    "{\"action\": 3}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 5}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 51}}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 45}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 23}}",
++    "{\"action\": 4}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 39}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 11}}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 11}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 39}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 27, \"y\": 17}}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 23}}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 39}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 33, \"y\": 51}}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 33}}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 29}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 17}}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 17}}",
++    "{\"action\": 4}",
++    "{\"action\": 6, \"data\": {\"x\": 45, \"y\": 57}}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 51}}",
++    "{\"action\": 4}",
++    "{\"action\": 4}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 29}}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 3}",
++    "{\"action\": 6, \"data\": {\"x\": 3, \"y\": 39}}"
++  ],
++  "levels_won_this_session": 1,
++  "novel_mechanics_found": [
++    "L7 increases the per-level hard action-count budget from L6's 64 actions to 128 actions. The executable L7-L9 timer branch is exact, and an early live ACTION5 control advanced the timer/HUD while leaving the world unchanged.",
++    "L7 is a deliberate temporary-support puzzle: an open X must be solidified above the player to create an intermediate landing altitude, permitting a lateral transfer that is impossible at either natural shelf.",
++    "The lower-right escape similarly requires solidifying the open X at world (7,7), reversing gravity to perch at (7,6), and crossing through (8,7) into the hazard-free column-9 express shaft.",
++    "Compact component summaries report grouped wall and pillar objects only at their anchor position; their collision footprint spans every matching glyph in the level grid, so routing must use the full footprint rather than the anchor alone."
++  ],
++  "narrative": "The mandatory precondition passed. resolve_replay_plan({\"game\":\"bp35\",\"levels_reproduced\":6}, Path(\".\")) selected results/outer_loop_codex55_bp35_probe_round10_20260712.json, returned 225 labels, and a fresh reset replay reached frame_level=6 with state=NOT_FINISHED. That first mapping process consumed 225 env.step calls. A second fresh environment replayed the same 225-label prefix, then used one ACTION5 no-op as an early timer control: position, gravity, and objects were unchanged while the action timer/HUD advanced. Inspection of the executable level-specific timer branch established that L7-L9 use a 128-action per-level budget, double L6's 64; the death boundary was not intentionally burned because the exact branch and live increment were already grounded and preserving calls allowed a fresh reproduction gate. The solved L7 route used 44 actions including that control no-op. From (3,19), three RIGHT moves reached (6,19); solidifying the open X at (6,21) and reversing gravity created a perch at (6,20). RIGHT, reverse gravity, RIGHT entered the mid-right shaft at (8,15). Two LEFT moves, a reversal, and two more LEFT moves reached the upper edge of the central X field. Solidifying (4,14), reversing, and moving LEFT twice dropped safely to (2,8). The lower zig-zag then used shields (4,9), (5,10), and (6,9) as alternating doors and landing supports to cross the paired pillar columns and arrive at (7,4). Solidifying (7,7), reversing gravity, then moving RIGHT twice reached (9,26) through the safe column-9 express shaft. Two LEFT moves, a reversal to (7,23), four LEFT moves to (3,23), and one final gravity-switch click landed on the goal at (3,25), advancing frame_level from 6 to 7 and loading L8 alive. The live winning run consumed 269 calls including the prefix. A third fresh environment replayed all 269 saved labels through arc_solver_kit.reproduce(claimed_level=7) and returned reached_level=7, reproduced=true. Total usage was 225+269+269=763 env.step calls.",
++  "gotchas": [
++    "All ACTION6 coordinates in the saved sequence are camera-relative display coordinates; the camera recenters after long falls, so world coordinates cannot be substituted directly.",
++    "The diagnostic world field named gravity in the scratch dumper tracked player facing; the actual gravity direction was the separate flag2/vivnprldht field.",
++    "The winning candidate deliberately retains one ACTION5 no-op at L7 start. It proves the timer increments without a world transition and consumes one of the 128 available L7 actions.",
++    "Open X cells are passable; solid X cells block falling and are essential temporary shelves. Several cells must be toggled twice at different phases.",
++    "Grouped hazard and wall objects expose only an anchor in compact object lists. Treating the anchor as the whole collision geometry gives incorrect routes.",
++    "After GAME_OVER, a fresh Arcade environment remains mandatory; env.reset() in place was not used."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

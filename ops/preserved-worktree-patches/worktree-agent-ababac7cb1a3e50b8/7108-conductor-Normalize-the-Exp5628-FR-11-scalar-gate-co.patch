@@ -1,0 +1,1276 @@
+From 61f94555b46bc00da9a8c543dd492d63cadfbdbe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 15:03:56 -0400
+Subject: [PATCH 07108/11362] [conductor] Normalize the Exp5628 FR-11 scalar
+ gate contract without rerunning the learner
+
+Automated research step by research conductor.
+Task ID: exp5638-fr11-gate-schema-corrigendum
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  81 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...iment_5638_fr11_gate_schema_corrigendum.py | 433 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |  10 +-
+ results/experiment_2097_eqm_eval.json         |  17 +
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ent_5638_fr11_gate_schema_corrigendum.json |  82 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...iment_5638_fr11_gate_schema_corrigendum.py | 315 +++++++++++++
+ 21 files changed, 963 insertions(+), 35 deletions(-)
+ create mode 100644 python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py
+ create mode 100644 results/experiment_2097_eqm_eval.json
+ create mode 100644 results/experiment_5638_fr11_gate_schema_corrigendum.json
+ create mode 100644 tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index cbf87af131..82fdb2538f 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -22801,3 +22801,84 @@ recorded readiness gates
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5628 | Planned (`python/carnot/experiment_5628_conformal_active_spline_kan_csl.py`, `results/experiment_5628_conformal_active_spline_kan_csl.json`) | Planned (`tests/python/test_experiment_5628_conformal_active_spline_kan_csl.py`) |
++
++## REQ-LEARN-5638: Hash-Bound FR-11 Gate Schema Corrigendum
++
++The self-learning tier SHALL provide Exp 5638, a deterministic downstream
++contract for the Exp 5628 `unsafe_false_accept_count` schema mismatch that
++blocked Exp 5629's conductor pre-gate. The Exp 5628 scientific artifact is
++immutable: Exp 5638 MUST read
++`results/experiment_5628_conformal_active_spline_kan_csl.json` as bytes,
++compute its SHA-256 content hash, reject duplicate JSON object keys as
++ambiguous evidence, and emit only a separate corrigendum at
++`results/experiment_5638_fr11_gate_schema_corrigendum.json`. It MUST NOT modify
++Exp 5628, recompute any scientific metric, rerun learner state, or edit
++`scripts/conductor_gates.py` or `scripts/research_conductor.py`.
++
++The corrigendum SHALL preserve the raw structured Exp 5628
++`unsafe_false_accept_count` object under `raw_unsafe_false_accept_count` and
++derive the conductor-safe scalar `unsafe_false_accept_count_total` only from the
++exact JSON path `unsafe_false_accept_count.total`. The total and every
++`unsafe_false_accept_count.by_arm` value SHALL be a non-boolean, non-negative
++integer. Missing totals, boolean totals, floating totals, negative totals,
++string totals, duplicate-key totals, malformed `by_arm` shapes, and totals whose
++declared value differs from the sum of integer `by_arm` values SHALL fail
++closed. Nonzero but internally consistent totals SHALL remain preserved and
++produce a blocked gate contract, not a complete readiness score.
++
++The terminal artifact MUST include field principles and the following required
++top-level fields: `field_principles` -- receipt fields explain why they exist;
++`source_artifact_path` -- provenance is explicit; `source_artifact_sha256` --
++immutability is enforced; `source_honest_verdict` -- upstream status is
++preserved; `raw_unsafe_false_accept_count` -- structured evidence is not
++discarded; `normalization_json_path` -- derivation is unambiguous;
++`unsafe_false_accept_count_total` -- the conductor-safe value is a scalar
++integer; `by_arm_sum` -- reconciliation is explicit;
++`by_arm_reconciliation_pass` -- shape consistency is tested;
++`source_continuous_self_learning_ready` -- no readiness value is invented;
++`scientific_recompute_performed` -- this is not a rerun;
++`source_artifact_modified` -- Exp 5628 remains immutable;
++`gate_contract_ready_score` -- downstream gating is mechanical;
++`inference_substrate` -- no model inference occurred;
++`reproducibility_checksum` -- receipt is stable; and `honest_verdict` --
++terminal status starts with `complete:` or `blocked:` and never claims
++independent FR-11 validation. `inference_substrate` SHALL equal
++`deterministic_artifact_schema_normalization`.
++
++`gate_contract_ready_score` SHALL equal `1.0` only when the source artifact hash
++matches the pre-registered Exp 5628 hash, `unsafe_false_accept_count_total` is
++the integer `0`, `by_arm_reconciliation_pass=true`,
++`scientific_recompute_performed=false`, and `source_artifact_modified=false`.
++Otherwise it SHALL equal `0.0` with a terminal `blocked:` verdict.
++
++### SCENARIO-LEARN-5638-ORIGINAL-SHAPE: Original Exp5628 Object Normalizes To Scalar Zero
++
++**Given** the immutable Exp 5628 artifact bytes are available at the
++pre-registered hash
++**When** Exp 5638 builds the corrigendum
++**Then** `raw_unsafe_false_accept_count` SHALL equal the original structured
++object
++**And** `unsafe_false_accept_count_total` SHALL equal the integer `0`
++**And** `by_arm_sum` SHALL equal `0`
++**And** `gate_contract_ready_score` SHALL equal `1.0`.
++
++### SCENARIO-LEARN-5638-FAIL-CLOSED: Malformed Or Drifted Evidence Blocks The Contract
++
++**Given** a source artifact has a missing, boolean, floating, negative, string,
++duplicate-key, malformed, inconsistent, or source-hash-drifted
++`unsafe_false_accept_count.total`
++**When** Exp 5638 validates the gate contract
++**Then** validation SHALL fail closed without changing the source artifact
++**And** no scientific metric or learner state SHALL be recomputed.
++
++### SCENARIO-LEARN-5638-DETERMINISTIC: Corrigendum Output Is Stable
++
++**Given** the same source bytes and tests list
++**When** Exp 5638 writes the corrigendum more than once
++**Then** the JSON payload and `reproducibility_checksum` SHALL be identical.
++
++## Implementation Status (Exp 5638)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5638 | Implemented (`python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py`, `results/experiment_5638_fr11_gate_schema_corrigendum.json`) | Implemented (`tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0b1f5e59a6..d81d6f503e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4564,
++  "experiments_checked": 4565,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py b/python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py
+new file mode 100644
+index 0000000000..810e08e76d
+--- /dev/null
++++ b/python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py
+@@ -0,0 +1,433 @@
++"""Exp5638 FR-11 gate schema corrigendum.
++
++Spec refs: REQ-LEARN-5638,
++SCENARIO-LEARN-5638-ORIGINAL-SHAPE,
++SCENARIO-LEARN-5638-FAIL-CLOSED,
++SCENARIO-LEARN-5638-DETERMINISTIC.
++
++This module does not rerun Exp5628. It reads the immutable Exp5628 artifact as
++bytes, verifies the exact source hash, and emits a separate downstream receipt
++that exposes the existing `unsafe_false_accept_count.total` value as the scalar
++integer expected by conductor gates. The raw structured evidence is kept intact
++so the schema correction cannot silently discard per-arm safety evidence.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5638_fr11_gate_schema_corrigendum.json")
++SOURCE_ARTIFACT_RELATIVE_PATH = Path("results/experiment_5628_conformal_active_spline_kan_csl.json")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py")
++
++EXPECTED_SOURCE_ARTIFACT_SHA256 = (
++    "sha256:241d7dfb5db9c5984c4d6353d3e6dc7ef64dece658bf6f4babeb247403307bea"
++)
++NORMALIZATION_JSON_PATH = "unsafe_false_accept_count.total"
++INFERENCE_SUBSTRATE = "deterministic_artifact_schema_normalization"
++SCHEMA = "carnot.experiment_5638.fr11_gate_schema_corrigendum.v1"
++EXPERIMENT = 5638
++EXPERIMENT_ID = "experiment_5638_fr11_gate_schema_corrigendum"
++TASK_ID = "exp5638-fr11-gate-schema-corrigendum"
++MILESTONE = "2026.07.509"
++RUN_DATE = "20260714"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++FORBIDDEN_VERDICT_PHRASE = "independent FR-11 validation"
++
++SPEC_REFS = (
++    "REQ-LEARN-5638",
++    "SCENARIO-LEARN-5638-ORIGINAL-SHAPE",
++    "SCENARIO-LEARN-5638-FAIL-CLOSED",
++    "SCENARIO-LEARN-5638-DETERMINISTIC",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "source_artifact_path",
++    "source_artifact_sha256",
++    "source_honest_verdict",
++    "raw_unsafe_false_accept_count",
++    "normalization_json_path",
++    "unsafe_false_accept_count_total",
++    "by_arm_sum",
++    "by_arm_reconciliation_pass",
++    "source_continuous_self_learning_ready",
++    "scientific_recompute_performed",
++    "source_artifact_modified",
++    "gate_contract_ready_score",
++    "inference_substrate",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES: JsonDict = {
++    "field_principles": "receipt fields explain why they exist",
++    "source_artifact_path": "provenance is explicit",
++    "source_artifact_sha256": "immutability is enforced",
++    "source_honest_verdict": "upstream status is preserved",
++    "raw_unsafe_false_accept_count": "structured evidence is not discarded",
++    "normalization_json_path": "derivation is unambiguous",
++    "unsafe_false_accept_count_total": "the conductor-safe value is a scalar integer",
++    "by_arm_sum": "reconciliation is explicit",
++    "by_arm_reconciliation_pass": "shape consistency is tested",
++    "source_continuous_self_learning_ready": "no readiness value is invented",
++    "scientific_recompute_performed": "this is not a rerun",
++    "source_artifact_modified": "Exp5628 remains immutable",
++    "gate_contract_ready_score": "downstream gating is mechanical",
++    "inference_substrate": "no model inference occurred",
++    "reproducibility_checksum": "receipt is stable",
++    "honest_verdict": (
++        "terminal status starts with complete: or blocked: without claiming independent FR-11"
++    ),
++    "source_hash_exact": "pre-registered source hash match is explicit",
++}
++DEFAULT_TESTS_ADDED_OR_REUSED = (
++    ".venv/bin/pytest tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --include=python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py -m pytest tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5638_fr11_gate_schema_corrigendum.json",
++)
++
++
++def _resolve_path(root: Path | str, path: Path | str) -> Path:
++    """Resolve repository-relative paths without hiding absolute test fixtures."""
++
++    candidate = Path(path)
++    if candidate.is_absolute():
++        return candidate
++    return Path(root) / candidate
++
++
++def _display_path(root: Path | str, path: Path | str) -> str:
++    """Return a stable repository-relative path when the source lives in the repo."""
++
++    root_path = Path(root).resolve()
++    target = Path(path).resolve()
++    try:
++        return target.relative_to(root_path).as_posix()
++    except ValueError:
++        return target.as_posix()
++
++
++def _reject_duplicate_object_pairs(pairs: Sequence[tuple[str, Any]]) -> JsonDict:
++    """Parse JSON objects while treating duplicate keys as ambiguous evidence."""
++
++    parsed: JsonDict = {}
++    for key, value in pairs:
++        if key in parsed:
++            raise ValueError(f"duplicate JSON key: {key}")
++        parsed[key] = value
++    return parsed
++
++
++def load_json_object_from_bytes(raw_bytes: bytes) -> JsonDict:
++    """Decode one JSON object and reject duplicate keys before normalization."""
++
++    try:
++        parsed = json.loads(
++            raw_bytes.decode("utf-8"),
++            object_pairs_hook=_reject_duplicate_object_pairs,
++        )
++    except json.JSONDecodeError as exc:
++        raise ValueError(f"invalid JSON source artifact: {exc.msg}") from exc
++    if not isinstance(parsed, dict):
++        raise ValueError("source artifact must be a JSON object")
++    return parsed
++
++
++def _strict_non_negative_int(value: Any, path: str) -> int:
++    """Accept only real JSON integers, excluding Python's bool-as-int subclass."""
++
++    if isinstance(value, bool) or not isinstance(value, int):
++        raise ValueError(f"{path} must be a non-boolean integer")
++    if value < 0:
++        raise ValueError(f"{path} must be non-negative")
++    return value
++
++
++def normalize_unsafe_false_accept_count(source_artifact: Mapping[str, Any]) -> JsonDict:
++    """Normalize only `unsafe_false_accept_count.total` and reconcile by-arm evidence."""
++
++    raw_count = source_artifact.get("unsafe_false_accept_count")
++    if not isinstance(raw_count, Mapping):
++        raise ValueError("unsafe_false_accept_count must be an object")
++    if "total" not in raw_count:
++        raise ValueError("unsafe_false_accept_count.total is missing")
++    if "by_arm" not in raw_count:
++        raise ValueError("unsafe_false_accept_count.by_arm is missing")
++
++    total = _strict_non_negative_int(raw_count["total"], "unsafe_false_accept_count.total")
++    by_arm = raw_count["by_arm"]
++    if not isinstance(by_arm, Mapping) or not by_arm:
++        raise ValueError("unsafe_false_accept_count.by_arm must be a non-empty object")
++
++    by_arm_sum = 0
++    for arm, arm_value in by_arm.items():
++        by_arm_sum += _strict_non_negative_int(
++            arm_value,
++            f"unsafe_false_accept_count.by_arm.{arm}",
++        )
++    if by_arm_sum != total:
++        raise ValueError(
++            f"by_arm_sum {by_arm_sum} does not equal unsafe_false_accept_count.total {total}"
++        )
++    return {
++        "raw_unsafe_false_accept_count": dict(raw_count),
++        "unsafe_false_accept_count_total": total,
++        "by_arm_sum": by_arm_sum,
++        "by_arm_reconciliation_pass": True,
++    }
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    source_path: Path | str = SOURCE_ARTIFACT_RELATIVE_PATH,
++    tests_added_or_reused: Sequence[str] = DEFAULT_TESTS_ADDED_OR_REUSED,
++) -> JsonDict:
++    """Build the hash-bound scalar gate contract without modifying Exp5628."""
++
++    root_path = Path(root)
++    resolved_source_path = _resolve_path(root_path, source_path)
++    source_bytes = resolved_source_path.read_bytes()
++    source_sha256 = sha256_bytes(source_bytes)
++    source_artifact = load_json_object_from_bytes(source_bytes)
++    normalization = normalize_unsafe_false_accept_count(source_artifact)
++    source_artifact_modified = resolved_source_path.read_bytes() != source_bytes
++    source_hash_exact = source_sha256 == EXPECTED_SOURCE_ARTIFACT_SHA256
++    gate_contract_ready = (
++        source_hash_exact
++        and normalization["unsafe_false_accept_count_total"] == 0
++        and normalization["by_arm_reconciliation_pass"] is True
++        and source_artifact_modified is False
++    )
++
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "spec_refs": list(SPEC_REFS),
++        "tests_added_or_reused": list(tests_added_or_reused),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "source_artifact_path": _display_path(root_path, resolved_source_path),
++        "source_artifact_sha256": source_sha256,
++        "expected_source_artifact_sha256": EXPECTED_SOURCE_ARTIFACT_SHA256,
++        "source_hash_exact": source_hash_exact,
++        "source_honest_verdict": source_artifact.get("honest_verdict"),
++        "normalization_json_path": NORMALIZATION_JSON_PATH,
++        "source_continuous_self_learning_ready": source_artifact.get(
++            "continuous_self_learning_ready"
++        ),
++        "scientific_recompute_performed": False,
++        "source_artifact_modified": source_artifact_modified,
++        "gate_contract_ready_score": 1.0 if gate_contract_ready else 0.0,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "source_files": {
++            "module": MODULE_RELATIVE_PATH.as_posix(),
++            "spec": SPEC_RELATIVE_PATH.as_posix(),
++            "test": TEST_RELATIVE_PATH.as_posix(),
++        },
++        "source_file_checksums": source_file_checksums(root_path),
++    }
++    artifact.update(normalization)
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    source_path: Path | str = SOURCE_ARTIFACT_RELATIVE_PATH,
++    result_path: Path | str = RESULT_RELATIVE_PATH,
++    tests_added_or_reused: Sequence[str] = DEFAULT_TESTS_ADDED_OR_REUSED,
++    write: bool = True,
++) -> JsonDict:
++    """Build and optionally write the deterministic Exp5638 corrigendum."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root=root_path,
++        source_path=source_path,
++        tests_added_or_reused=tests_added_or_reused,
++    )
++    if write:
++        write_json(_resolve_path(root_path, result_path), artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Raise when the corrigendum cannot safely feed a scalar conductor gate."""
++
++    errors = artifact_errors(artifact)
++    if errors:
++        raise ValueError("invalid Exp5638 artifact: " + "; ".join(errors))
++    return True
++
++
++def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return validation errors while recomputing only schema-derived checks."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if not artifact.get("tests_added_or_reused"):
++        errors.append("tests_added_or_reused")
++
++    principles = artifact.get("field_principles", {})
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles")
++    else:
++        missing_principles = [
++            field for field in REQUIRED_ARTIFACT_FIELDS if not principles.get(field)
++        ]
++        if missing_principles:
++            errors.append(f"field_principles missing: {missing_principles}")
++
++    normalized: JsonDict | None = None
++    try:
++        normalized = normalize_unsafe_false_accept_count(
++            {"unsafe_false_accept_count": artifact.get("raw_unsafe_false_accept_count")}
++        )
++    except ValueError as exc:
++        errors.append(f"raw_unsafe_false_accept_count: {exc}")
++
++    if normalized is not None:
++        if (
++            artifact.get("unsafe_false_accept_count_total")
++            != normalized["unsafe_false_accept_count_total"]
++        ):
++            errors.append("unsafe_false_accept_count_total")
++        if artifact.get("by_arm_sum") != normalized["by_arm_sum"]:
++            errors.append("by_arm_sum")
++        if artifact.get("by_arm_reconciliation_pass") is not True:
++            errors.append("by_arm_reconciliation_pass")
++
++    source_hash_exact = artifact.get("source_artifact_sha256") == artifact.get(
++        "expected_source_artifact_sha256"
++    )
++    if artifact.get("source_hash_exact") is not source_hash_exact:
++        errors.append("source_artifact_sha256/source_hash_exact")
++    if artifact.get("scientific_recompute_performed") is not False:
++        errors.append("scientific_recompute_performed")
++    if artifact.get("source_artifact_modified") is not False:
++        errors.append("source_artifact_modified")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++
++    expected_score = expected_gate_contract_ready_score(artifact, source_hash_exact)
++    if artifact.get("gate_contract_ready_score") != expected_score:
++        errors.append("gate_contract_ready_score")
++
++    verdict = str(artifact.get("honest_verdict", ""))
++    if not verdict.startswith(TERMINAL_PREFIXES) or FORBIDDEN_VERDICT_PHRASE in verdict:
++        errors.append("honest_verdict")
++    if artifact.get("gate_contract_ready_score") == 1.0 and not verdict.startswith("complete:"):
++        errors.append("honest_verdict")
++    if artifact.get("gate_contract_ready_score") == 0.0 and not verdict.startswith("blocked:"):
++        errors.append("honest_verdict")
++
++    checksum = artifact.get("reproducibility_checksum")
++    if checksum and checksum != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def expected_gate_contract_ready_score(
++    artifact: Mapping[str, Any],
++    source_hash_exact: bool,
++) -> float:
++    """Compute the mechanical downstream score from already-normalized fields."""
++
++    if (
++        source_hash_exact
++        and artifact.get("unsafe_false_accept_count_total") == 0
++        and artifact.get("by_arm_reconciliation_pass") is True
++        and artifact.get("scientific_recompute_performed") is False
++        and artifact.get("source_artifact_modified") is False
++    ):
++        return 1.0
++    return 0.0
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    """Return a terminal verdict without claiming independent FR-11 validation."""
++
++    source_hash_exact = bool(artifact.get("source_hash_exact"))
++    if expected_gate_contract_ready_score(artifact, source_hash_exact) == 1.0:
++        return "complete: hash_bound_scalar_gate_contract_ready"
++    return "blocked: hash_bound_scalar_gate_contract_not_ready"
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the receipt with the checksum field removed."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return sha256_json(payload)
++
++
++def source_file_checksums(root: Path | str) -> JsonDict:
++    """Record the files that define this schema-normalization receipt."""
++
++    root_path = Path(root)
++    return {
++        "module": sha256_file(root_path / MODULE_RELATIVE_PATH),
++        "spec": sha256_file(root_path / SPEC_RELATIVE_PATH),
++        "test": sha256_file(root_path / TEST_RELATIVE_PATH),
++    }
++
++
++def write_json(path: Path | str, payload: Mapping[str, Any]) -> None:
++    """Write stable JSON so repeated corrigendum runs are byte-identical."""
++
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    """Return a prefixed SHA-256 digest for stable JSON payloads."""
++
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
++        "utf-8"
++    )
++    return sha256_bytes(blob)
++
++
++def sha256_bytes(payload: bytes) -> str:
++    """Return a prefixed SHA-256 digest over exact bytes."""
++
++    return "sha256:" + hashlib.sha256(payload).hexdigest()
++
++
++def sha256_file(path: Path | str) -> str:
++    """Return a prefixed SHA-256 digest over a file's exact bytes."""
++
++    return sha256_bytes(Path(path).read_bytes())
++
++
++def main() -> int:  # pragma: no cover
++    """CLI entrypoint for writing the repository Exp5638 receipt."""
++
++    artifact = run()
++    print(_resolve_path(REPO_ROOT, RESULT_RELATIVE_PATH).as_posix())
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 14dfc2b89a..e1d8361573 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:48:41.034734+00:00",
+-  "finished_at": "2026-07-14T18:48:41.067635+00:00",
+-  "duration_s": 0.033,
++  "started_at": "2026-07-14T19:03:10.917884+00:00",
++  "finished_at": "2026-07-14T19:03:10.954559+00:00",
++  "duration_s": 0.037,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 525d81db07..3e99e391ec 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-14T18:48:41Z",
++  "run_date": "2026-07-14T19:03:11Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index c4788cb150..9b7754c0a9 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:48:42Z",
+-  "finished_at": "2026-07-14T18:48:43Z",
++  "started_at": "2026-07-14T19:03:12Z",
++  "finished_at": "2026-07-14T19:03:12Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 562a98f439..0e3460f9df 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-14T18:48:43Z",
++  "run_date": "2026-07-14T19:03:12Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 29d9f1ea7c..c650410695 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-14T18:48:43Z",
++  "run_date": "2026-07-14T19:03:12Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 3ba7b79c30..f3edd7e4b2 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-14T18:48:02.284016Z",
+-  "duration_s": 0.06828093528747559,
++  "run_date": "2026-07-14T19:02:30.854624Z",
++  "duration_s": 0.05993199348449707,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "09702d474cee2ef2e7d27619c975c0d186d2b80d18426de16f3b706df09cc4ac",
++  "reproducibility_checksum": "04e956429c9c4d61989332f9942571fab7d7b5267428ad15227af9cc61079c41",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "7ffa847b94f0797979e7fbede8a23b9b9bf70533"
++    "adversarial_verify_version": "2e06a9f0515e495beac73a4e6b56ca18a0e65fe5"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 06f40cfcd5..be0ec3bbeb 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-14T18:48:02.392942Z",
+-  "duration_s": 0.09960079193115234,
++  "run_date": "2026-07-14T19:02:30.945145Z",
++  "duration_s": 0.08331799507141113,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "19a037f1245c6f29a6e457a5a67c14ccfd76365dda9be5c69aa77f1a49a89e5b",
++  "reproducibility_checksum": "66f98d9befeb7fb300f15251dc20acae922e251d4a9b479e1669841ce93bfc87",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "7ffa847b94f0797979e7fbede8a23b9b9bf70533"
++    "adversarial_verify_version": "2e06a9f0515e495beac73a4e6b56ca18a0e65fe5"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 303851d9f1..babf72795b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.146482467651367,
++  "efficiency_gains_ms": 2.115011215209961,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index a0dd1e111c..1d7cb58375 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:48:07Z",
+-  "finished_at": "2026-07-14T18:48:07Z",
++  "started_at": "2026-07-14T19:02:34Z",
++  "finished_at": "2026-07-14T19:02:34Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index e3cadc2a23..1961c43aa1 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:48:42Z",
+-  "finished_at": "2026-07-14T18:48:42Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-14T19:03:10Z",
++  "finished_at": "2026-07-14T19:03:10Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.07367134094238281,
++  "latency_ms": 0.07534027099609375,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+@@ -35,7 +35,7 @@
+       {
+         "kind": "duration_too_short",
+         "field": "duration_s",
+-        "detail": "duration_s=0.003 below 60.0s live-model floor"
++        "detail": "duration_s=0.002 below 60.0s live-model floor"
+       },
+       {
+         "kind": "missing_methodology_receipt",
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+new file mode 100644
+index 0000000000..633b9cb6af
+--- /dev/null
++++ b/results/experiment_2097_eqm_eval.json
+@@ -0,0 +1,17 @@
++{
++  "schema": "experiment_result",
++  "experiment_id": "2097",
++  "spec_refs": [
++    "REQ-KONA-2097",
++    "SCENARIO-KONA-2097"
++  ],
++  "num_instances": 50,
++  "avg_pem_energy": 437.4525486167846,
++  "avg_eqm_energy": 448.6849434757233,
++  "avg_pem_time": 0.000844278335571289,
++  "avg_eqm_time": 0.07348494529724121,
++  "pem_satisfaction_rate": 0.12,
++  "eqm_satisfaction_rate": 0.0,
++  "eqm_superior": false,
++  "honest_verdict": "SUCCESS: eqm_eval_complete"
++}
+\ No newline at end of file
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 83e28d3b58..dcf663be40 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6198256015777588,
++  "duration_s": 0.6909303665161133,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a0dd63a9b1..418f6462ec 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.0986011046916246e-05,
++  "duration_s": 4.018600156996399e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5638_fr11_gate_schema_corrigendum.json b/results/experiment_5638_fr11_gate_schema_corrigendum.json
+new file mode 100644
+index 0000000000..84c595d361
+--- /dev/null
++++ b/results/experiment_5638_fr11_gate_schema_corrigendum.json
+@@ -0,0 +1,82 @@
++{
++  "by_arm_reconciliation_pass": true,
++  "by_arm_sum": 0,
++  "expected_source_artifact_sha256": "sha256:241d7dfb5db9c5984c4d6353d3e6dc7ef64dece658bf6f4babeb247403307bea",
++  "experiment": 5638,
++  "experiment_id": "experiment_5638_fr11_gate_schema_corrigendum",
++  "field_principles": {
++    "by_arm_reconciliation_pass": "shape consistency is tested",
++    "by_arm_sum": "reconciliation is explicit",
++    "field_principles": "receipt fields explain why they exist",
++    "gate_contract_ready_score": "downstream gating is mechanical",
++    "honest_verdict": "terminal status starts with complete: or blocked: without claiming independent FR-11",
++    "inference_substrate": "no model inference occurred",
++    "normalization_json_path": "derivation is unambiguous",
++    "raw_unsafe_false_accept_count": "structured evidence is not discarded",
++    "reproducibility_checksum": "receipt is stable",
++    "scientific_recompute_performed": "this is not a rerun",
++    "source_artifact_modified": "Exp5628 remains immutable",
++    "source_artifact_path": "provenance is explicit",
++    "source_artifact_sha256": "immutability is enforced",
++    "source_continuous_self_learning_ready": "no readiness value is invented",
++    "source_hash_exact": "pre-registered source hash match is explicit",
++    "source_honest_verdict": "upstream status is preserved",
++    "unsafe_false_accept_count_total": "the conductor-safe value is a scalar integer"
++  },
++  "gate_contract_ready_score": 1.0,
++  "honest_verdict": "complete: hash_bound_scalar_gate_contract_ready",
++  "inference_substrate": "deterministic_artifact_schema_normalization",
++  "milestone": "2026.07.509",
++  "normalization_json_path": "unsafe_false_accept_count.total",
++  "raw_unsafe_false_accept_count": {
++    "by_arm": {
++      "active_component_substitution_control": 0,
++      "frozen_controller_control": 0,
++      "frozen_no_update": 0,
++      "frozen_spline_control": 0,
++      "loss_smoothed_adaptation": 0,
++      "no_update_control": 0,
++      "predictive_window_controller": 0,
++      "reset_adapt": 0,
++      "retain_exact_replay": 0,
++      "shuffled_order_control": 0,
++      "update_substitution_control": 0
++    },
++    "total": 0
++  },
++  "reproducibility_checksum": "sha256:2a1921755b27d1c5847291415e52b0f27aeec067fc3256a9255e777742201b70",
++  "run_date": "20260714",
++  "schema": "carnot.experiment_5638.fr11_gate_schema_corrigendum.v1",
++  "scientific_recompute_performed": false,
++  "source_artifact_modified": false,
++  "source_artifact_path": "results/experiment_5628_conformal_active_spline_kan_csl.json",
++  "source_artifact_sha256": "sha256:241d7dfb5db9c5984c4d6353d3e6dc7ef64dece658bf6f4babeb247403307bea",
++  "source_continuous_self_learning_ready": true,
++  "source_file_checksums": {
++    "module": "sha256:8728e9be9ba320365485286273bdf51618fc7c204f22977a4c8a478515219aa3",
++    "spec": "sha256:2e159b883f96ec5e977b001453c2e5c50e630ce4f0fa3bc0bed8eb6e35a576bd",
++    "test": "sha256:498eb27ccad7b59f685a23c9a6cc2600dfcbca1264e6b76fbfd894cd2fec2971"
++  },
++  "source_files": {
++    "module": "python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py",
++    "spec": "openspec/capabilities/self-learning/spec.md",
++    "test": "tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py"
++  },
++  "source_hash_exact": true,
++  "source_honest_verdict": "complete: conformal_active_spline_kan_continuous_self_learning_ready",
++  "spec_refs": [
++    "REQ-LEARN-5638",
++    "SCENARIO-LEARN-5638-ORIGINAL-SHAPE",
++    "SCENARIO-LEARN-5638-FAIL-CLOSED",
++    "SCENARIO-LEARN-5638-DETERMINISTIC"
++  ],
++  "task_id": "exp5638-fr11-gate-schema-corrigendum",
++  "tests_added_or_reused": [
++    ".venv/bin/pytest tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --include=python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py -m pytest tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5638_fr11_gate_schema_corrigendum.json"
++  ],
++  "unsafe_false_accept_count_total": 0
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e98d1204d1..8a7e8c2982 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:47:45Z",
+-  "finished_at": "2026-07-14T18:47:45Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-14T19:02:18Z",
++  "finished_at": "2026-07-14T19:02:18Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 53e0ccfc81..08a3c69839 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:47:45Z",
+-  "finished_at": "2026-07-14T18:47:46Z",
++  "started_at": "2026-07-14T19:02:18Z",
++  "finished_at": "2026-07-14T19:02:18Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 85d97a4304..e5ba971650 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:47:46Z",
+-  "finished_at": "2026-07-14T18:47:46Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-14T19:02:19Z",
++  "finished_at": "2026-07-14T19:02:19Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py b/tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py
+new file mode 100644
+index 0000000000..357dfef34c
+--- /dev/null
++++ b/tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py
+@@ -0,0 +1,315 @@
++"""Tests for Exp5638 FR-11 gate schema corrigendum.
++
++Spec refs: REQ-LEARN-5638,
++SCENARIO-LEARN-5638-ORIGINAL-SHAPE,
++SCENARIO-LEARN-5638-FAIL-CLOSED,
++SCENARIO-LEARN-5638-DETERMINISTIC.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5638_fr11_gate_schema_corrigendum as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++SOURCE_PATH = REPO / mod.SOURCE_ARTIFACT_RELATIVE_PATH
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py "
++    "-m pytest tests/python/test_experiment_5638_fr11_gate_schema_corrigendum.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5638_fr11_gate_schema_corrigendum.py "
++    "--fail-under=100"
++)
++FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COMMAND = ".venv/bin/python scripts/check_spec_coverage.py"
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_5638_fr11_gate_schema_corrigendum.json"
++)
++TESTS_ADDED_OR_REUSED = [
++    TEST_COMMAND,
++    COVERAGE_COMMAND,
++    FULL_TEST_COMMAND,
++    SPEC_COMMAND,
++    ADVERSARIAL_COMMAND,
++]
++
++
++def _write_source(path: Path, unsafe_false_accept_count: object) -> dict[str, object]:
++    payload: dict[str, object] = {
++        "continuous_self_learning_ready": True,
++        "honest_verdict": "complete: source_fixture",
++        "unsafe_false_accept_count": unsafe_false_accept_count,
++    }
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return payload
++
++
++def test_req_learn_5638_spec_declares_hash_bound_scalar_contract() -> None:
++    """REQ-LEARN-5638: OpenSpec anchors immutable scalar normalization."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5638") :]
++
++    for marker in (
++        "REQ-LEARN-5638",
++        "SCENARIO-LEARN-5638-ORIGINAL-SHAPE",
++        "SCENARIO-LEARN-5638-FAIL-CLOSED",
++        "SCENARIO-LEARN-5638-DETERMINISTIC",
++        str(mod.RESULT_RELATIVE_PATH),
++        str(mod.SOURCE_ARTIFACT_RELATIVE_PATH),
++        mod.NORMALIZATION_JSON_PATH,
++        mod.INFERENCE_SUBSTRATE,
++        "scripts/conductor_gates.py",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++        assert mod.FIELD_PRINCIPLES[field]
++
++
++def test_scenario_learn_5638_original_exp5628_shape_normalizes_to_scalar_zero() -> None:
++    """SCENARIO-LEARN-5638-ORIGINAL-SHAPE: structured Exp5628 evidence is preserved."""
++
++    source_bytes_before = SOURCE_PATH.read_bytes()
++    source = json.loads(source_bytes_before.decode("utf-8"))
++
++    artifact = mod.build_artifact(root=REPO, tests_added_or_reused=TESTS_ADDED_OR_REUSED)
++
++    assert SOURCE_PATH.read_bytes() == source_bytes_before
++    assert artifact["source_artifact_path"] == mod.SOURCE_ARTIFACT_RELATIVE_PATH.as_posix()
++    assert artifact["source_artifact_sha256"] == mod.EXPECTED_SOURCE_ARTIFACT_SHA256
++    assert artifact["source_honest_verdict"] == source["honest_verdict"]
++    assert artifact["raw_unsafe_false_accept_count"] == source["unsafe_false_accept_count"]
++    assert artifact["normalization_json_path"] == mod.NORMALIZATION_JSON_PATH
++    assert artifact["unsafe_false_accept_count_total"] == 0
++    assert type(artifact["unsafe_false_accept_count_total"]) is int
++    assert artifact["by_arm_sum"] == 0
++    assert artifact["by_arm_reconciliation_pass"] is True
++    assert artifact["source_continuous_self_learning_ready"] is True
++    assert artifact["scientific_recompute_performed"] is False
++    assert artifact["source_artifact_modified"] is False
++    assert artifact["gate_contract_ready_score"] == 1.0
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert "independent FR-11 validation" not in artifact["honest_verdict"]
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++        assert artifact["field_principles"][field] == mod.FIELD_PRINCIPLES[field]
++    assert mod.validate_artifact(artifact) is True
++
++
++def test_scenario_learn_5638_json_source_must_be_unambiguous_object() -> None:
++    """SCENARIO-LEARN-5638-FAIL-CLOSED: invalid JSON cannot be normalized."""
++
++    with pytest.raises(ValueError, match="invalid JSON source artifact"):
++        mod.load_json_object_from_bytes(b"{")
++    with pytest.raises(ValueError, match="source artifact must be a JSON object"):
++        mod.load_json_object_from_bytes(b"[]")
++
++
++@pytest.mark.parametrize(
++    ("unsafe_false_accept_count", "match"),
++    [
++        ([], "unsafe_false_accept_count must be an object"),
++        ({"by_arm": {"a": 0}}, "unsafe_false_accept_count.total"),
++        ({"by_arm": {"a": 0}, "total": False}, "non-boolean integer"),
++        ({"by_arm": {"a": 0}, "total": 0.0}, "non-boolean integer"),
++        ({"by_arm": {"a": 0}, "total": -1}, "non-negative"),
++        ({"by_arm": {"a": 0}, "total": "0"}, "non-boolean integer"),
++        ({"total": 0}, "unsafe_false_accept_count.by_arm"),
++        ({"by_arm": [], "total": 0}, "unsafe_false_accept_count.by_arm"),
++        ({"by_arm": {"a": True}, "total": 0}, "non-boolean integer"),
++        ({"by_arm": {"a": 0.5}, "total": 0}, "non-boolean integer"),
++        ({"by_arm": {"a": -1}, "total": 0}, "non-negative"),
++        ({"by_arm": {"a": "0"}, "total": 0}, "non-boolean integer"),
++        ({"by_arm": {"a": 1}, "total": 0}, "by_arm_sum"),
++    ],
++)
++def test_scenario_learn_5638_malformed_shapes_are_rejected(
++    tmp_path: Path,
++    unsafe_false_accept_count: object,
++    match: str,
++) -> None:
++    """SCENARIO-LEARN-5638-FAIL-CLOSED: malformed totals never emit a contract."""
++
++    source_path = tmp_path / "source.json"
++    _write_source(source_path, unsafe_false_accept_count)
++
++    with pytest.raises(ValueError, match=match):
++        mod.build_artifact(
++            source_path=source_path,
++            tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        )
++
++
++def test_scenario_learn_5638_duplicate_total_is_ambiguous_and_rejected(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5638-FAIL-CLOSED: duplicate JSON keys are ambiguous totals."""
++
++    source_path = tmp_path / "source.json"
++    source_path.write_text(
++        "{"
++        '"continuous_self_learning_ready": true,'
++        '"honest_verdict": "complete: source_fixture",'
++        '"unsafe_false_accept_count": {"by_arm": {"a": 0}, "total": 1, "total": 0}'
++        "}\n",
++        encoding="utf-8",
++    )
++
++    with pytest.raises(ValueError, match="duplicate JSON key: total"):
++        mod.build_artifact(
++            source_path=source_path,
++            tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        )
++
++
++def test_scenario_learn_5638_nonzero_consistent_values_block_without_rewriting(
++    tmp_path: Path,
++) -> None:
++    """REQ-LEARN-5638: nonzero but reconciled evidence is preserved and blocked."""
++
++    source_path = tmp_path / "source.json"
++    _write_source(source_path, {"by_arm": {"arm_a": 1, "arm_b": 2}, "total": 3})
++    source_bytes_before = source_path.read_bytes()
++
++    artifact = mod.build_artifact(
++        source_path=source_path,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++    )
++
++    assert source_path.read_bytes() == source_bytes_before
++    assert artifact["raw_unsafe_false_accept_count"] == {
++        "by_arm": {"arm_a": 1, "arm_b": 2},
++        "total": 3,
++    }
++    assert artifact["unsafe_false_accept_count_total"] == 3
++    assert artifact["by_arm_sum"] == 3
++    assert artifact["by_arm_reconciliation_pass"] is True
++    assert artifact["gate_contract_ready_score"] == 0.0
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert mod.validate_artifact(artifact) is True
++
++
++def test_scenario_learn_5638_source_hash_drift_blocks_contract(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5638-FAIL-CLOSED: hash drift cannot receive readiness credit."""
++
++    source_path = tmp_path / "source.json"
++    _write_source(source_path, {"by_arm": {"arm_a": 0}, "total": 0})
++
++    artifact = mod.build_artifact(
++        source_path=source_path,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++    )
++
++    assert artifact["source_artifact_sha256"] == mod.sha256_file(source_path)
++    assert artifact["source_hash_exact"] is False
++    assert artifact["unsafe_false_accept_count_total"] == 0
++    assert artifact["gate_contract_ready_score"] == 0.0
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert artifact["scientific_recompute_performed"] is False
++    assert artifact["source_artifact_modified"] is False
++    assert mod.validate_artifact(artifact) is True
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"] = "complete: wrong_for_blocked_contract"
++    bad_verdict["reproducibility_checksum"] = mod.reproducibility_checksum(bad_verdict)
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(bad_verdict)
++
++
++def test_scenario_learn_5638_run_is_deterministic_and_validation_rejects_drift(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5638-DETERMINISTIC: repeated writes are byte stable."""
++
++    result_path = tmp_path / mod.RESULT_RELATIVE_PATH.name
++
++    first = mod.run(
++        root=REPO,
++        result_path=result_path,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=True,
++    )
++    first_bytes = result_path.read_bytes()
++    second = mod.run(
++        root=REPO,
++        result_path=result_path,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=True,
++    )
++    second_bytes = result_path.read_bytes()
++
++    assert first == second
++    assert first_bytes == second_bytes
++    assert json.loads(second_bytes.decode("utf-8")) == second
++    assert second["reproducibility_checksum"] == first["reproducibility_checksum"]
++
++    drift_cases = [
++        ("source_artifact_sha256", "sha256:bad", "source_artifact_sha256"),
++        ("unsafe_false_accept_count_total", True, "unsafe_false_accept_count_total"),
++        ("by_arm_sum", 1, "by_arm_sum"),
++        ("by_arm_reconciliation_pass", False, "by_arm_reconciliation_pass"),
++        ("scientific_recompute_performed", True, "scientific_recompute_performed"),
++        ("source_artifact_modified", True, "source_artifact_modified"),
++        ("gate_contract_ready_score", 0.5, "gate_contract_ready_score"),
++        ("inference_substrate", "llm_inference", "inference_substrate"),
++        ("honest_verdict", "ready", "honest_verdict"),
++    ]
++    for field, value, match in drift_cases:
++        bad = deepcopy(second)
++        bad[field] = value
++        bad["reproducibility_checksum"] = mod.reproducibility_checksum(bad)
++        with pytest.raises(ValueError, match=match):
++            mod.validate_artifact(bad)
++
++    missing = deepcopy(second)
++    missing.pop("source_artifact_path")
++    missing["reproducibility_checksum"] = mod.reproducibility_checksum(missing)
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing)
++
++    missing_principle = deepcopy(second)
++    missing_principle["field_principles"].pop("source_artifact_path")
++    missing_principle["reproducibility_checksum"] = mod.reproducibility_checksum(missing_principle)
++    with pytest.raises(ValueError, match="field_principles"):
++        mod.validate_artifact(missing_principle)
++
++    nonmapping_principle = deepcopy(second)
++    nonmapping_principle["field_principles"] = []
++    nonmapping_principle["reproducibility_checksum"] = mod.reproducibility_checksum(
++        nonmapping_principle
++    )
++    with pytest.raises(ValueError, match="field_principles"):
++        mod.validate_artifact(nonmapping_principle)
++
++    bad_raw = deepcopy(second)
++    bad_raw["raw_unsafe_false_accept_count"] = []
++    bad_raw["reproducibility_checksum"] = mod.reproducibility_checksum(bad_raw)
++    with pytest.raises(ValueError, match="raw_unsafe_false_accept_count"):
++        mod.validate_artifact(bad_raw)
++
++    no_tests = deepcopy(second)
++    no_tests["tests_added_or_reused"] = []
++    no_tests["reproducibility_checksum"] = mod.reproducibility_checksum(no_tests)
++    with pytest.raises(ValueError, match="tests_added_or_reused"):
++        mod.validate_artifact(no_tests)
++
++    bad_checksum = deepcopy(second)
++    bad_checksum["reproducibility_checksum"] = "sha256:bad"
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(bad_checksum)
+-- 
+2.55.0
+

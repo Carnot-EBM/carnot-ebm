@@ -1,0 +1,413 @@
+From b262fdd6d8256e9248b6eacf11057ee6c449c148 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 20:06:17 -0400
+Subject: [PATCH 03336/11362] [outer-loop] arc: goal-bias v2
+ (direction-agnostic, confirming) -- real cd82 unlock but the LEVER is REFUTED
+
+ConfirmingGoalBiasValueHead: direction-agnostic extremality-on-any-axis pre-win + reads
+frame.levels_completed to confirm the rewarded axis post-win (fixes v1's fixed-direction misroute).
+Measured both modes + weight sweep:
+- best_first: unlocks cd82 (1/11->2/11, a game undirected AND v1 both miss -- direction-agnostic
+  signal is REAL) BUT best_first priority is pure-value (no depth term -> value_weight inert) and
+  pays a ruinous replay-from-reset tax -> cd82 costs 1144 actions (~0 score); net SCORE worse.
+- depth_first_ride (the efficient mode): value head INERT, identical to baseline at weights 1/5/20.
+No regime improves the score: where the head has effect it tanks efficiency; where it preserves
+efficiency it has no effect. The explorer-frontier-reordering lever is refuted for moving 0.08 --
+the real first-win bottleneck is action-generation / mechanic-induction (the e3 LLM cascade, the
+actual 0.08 mechanism), not the tier-1 explorer floor. Heads/policies preserved as refuted scaffolding.
+Offline-first discipline worked: ~0 quota, exhaustive test, lever refuted, scarce shots SAVED.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...arc-gate-readiness-prior-ttt-2026-06-21.md |  34 ++++++
+ python/carnot/agentic/arc_goal_bias.py        | 105 +++++++++++++++++-
+ results/arc_compete_sim.json                  |  82 +++++++-------
+ scripts/arc_leaderboard_eval.py               |  11 ++
+ 4 files changed, 190 insertions(+), 42 deletions(-)
+
+diff --git a/docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md b/docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md
+index f4c110a4af..67b8103661 100644
+--- a/docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md
++++ b/docs/research-notes/arc-gate-readiness-prior-ttt-2026-06-21.md
+@@ -68,6 +68,40 @@
+ > env `levels_completed` reveals which hypothesis the game rewards, then commit that direction. That
+ > online-confirmation explorer is the next iteration; the fixed prior is preserved as the refuted seed.
+ > Gate decision unchanged: NOT gate-ready; do not spend a shot.
++>
++> ### Goal-bias v2 (direction-agnostic, online-confirming) — partial unlock, but the LEVER is REFUTED
++>
++> `ConfirmingGoalBiasValueHead` (direction-agnostic extremality-on-any-axis pre-win; reads
++> `frame.levels_completed` to confirm the rewarded axis+direction post-win). Measured across both search
++> modes and a weight sweep:
++>
++> | config | first-wins | efficiency-sum (baseline 2.0069) |
++> |---|---|---|
++> | undirected baseline | 1/11 (lp85) | **2.0069** |
++> | confirm, `best_first` (w=0.5..5, weight-INERT — best_first priority is pure value, no depth) | **2/11 (lp85 + cd82 NEW)** | 0.0152 (lp85 20→437, cd82 1144 — replay-tax) |
++> | confirm, `depth_first_ride` (w=1,5,20) | 1/11 | 2.0069 (IDENTICAL to baseline — value head inert) |
++>
++> **Two real findings, one refutation.** (1) The direction-agnostic bias DOES reach a game undirected
++> exploration + the fixed prior both miss (cd82) — the signal is real. (2) But `best_first` is value-PRIMARY
++> (its priority is `float(verifier(frame))`, no depth term, so `value_weight` is ignored) and pays a
++> ruinous replay-from-reset navigation tax jumping the frontier → the cd82 win costs 1144 actions, scoring
++> ~0; net SCORE is WORSE than baseline. (3) In the efficient `depth_first_ride` mode (the one that earns the
++> deep wins) the value head is **inert** — identical to no head at every weight. **So there is NO regime
++> where the value-head goal-bias improves the score**: where it has effect it destroys efficiency; where it
++> preserves efficiency it has no effect.
++>
++> **Conclusion: the explorer-frontier-reordering lever is refuted for moving 0.08.** Reordering WHICH state
++> to expand doesn't help when (a) the efficient ride structure is dominant and (b) the real bottleneck is
++> generating the right ACTIONS / inducing the game MECHANIC — which is the e3 LLM-induction cascade's job
++> (the actual 0.08 mechanism), not the tier-1 explorer floor. The cd82 reachability signal is trapped
++> behind best_first's replay tax; capturing it efficiently needs value-GUIDED depth-first branch selection
++> (which the current explorer does not implement), not a frontier value head. `GoalBiasValueHead` +
++> `ConfirmingGoalBiasValueHead` + `explorer_goalbias`/`explorer_confirm` are preserved as refuted scaffolding.
++>
++> **The offline-first discipline worked exactly as intended:** ~zero quota, exhaustively tested the
++> hypothesized lever (2 variants × 2 modes × weight sweep), found it does not move the score, and **saved
++> the scarce L4x4 shots**. Gate decision unchanged: NOT gate-ready. Next candidate lever (operator's call):
++> the e3 LLM mechanic-induction cascade (the real first-win mechanism), not the explorer floor.
+ 
+ 
+ **Question (operator):** are we gate-ready to spend a scarce L4x4 submission shot? The gate (offline-first
+diff --git a/python/carnot/agentic/arc_goal_bias.py b/python/carnot/agentic/arc_goal_bias.py
+index 7fdf0e24de..9dde042543 100644
+--- a/python/carnot/agentic/arc_goal_bias.py
++++ b/python/carnot/agentic/arc_goal_bias.py
+@@ -106,7 +106,13 @@ class GoalBiasValueHead:
+     value_weight*value; min-heap, so lower value is expanded first). A zero-shot ORDER prior over the
+     arc_agi3_goal_induction hypothesis classes -- no trained weights, no win example, no game-specific
+     state. Matches the load_cross_game_value_head callable contract (``value_head(frame) -> float``) so it
+-    drops into CarnotAgentPolicy(value_head=..., value_weight>0, search_mode="best_first") unchanged."""
++    drops into CarnotAgentPolicy(value_head=..., value_weight>0, search_mode="best_first") unchanged.
++
++    REFUTED 2026-06-21 (results/arc_compete_sim.json, explorer_goalbias): the FIXED order direction
++    (always bias toward consolidation) lifted first-win 0/10 and CRASHED the one working game (lp85
++    20->437 actions) because lp85's win is NOT a consolidation. A fixed directional prior misroutes on
++    games whose win-direction differs. Use ConfirmingGoalBiasValueHead instead -- it is direction-AGNOSTIC
++    until the env confirms a direction. Kept as the refuted seed."""
+ 
+     def __init__(self) -> None:
+         self._evals = 0
+@@ -117,3 +123,100 @@ class GoalBiasValueHead:
+         if g is None:
+             return 0.0
+         return disorder(g)
++
++
++def _features(grid: np.ndarray) -> tuple[float, float, float]:
++    """The three direction-AGNOSTIC hypothesis axes, as comparable scalars (no assumed win-direction):
++    (n_objects, n_colors, dominant-color coverage in [0,1]). A win-state is EXTREMAL on at least one of
++    these -- but we do NOT assume which end (clear vs build, uniform vs varied). The explorer rewards
++    moving toward an extreme on ANY axis pre-confirmation; once the env's levels_completed reveals a real
++    level-up, the axis+direction that moved most becomes the confirmed bias for deepening."""
++    g = np.asarray(grid)
++    if g.ndim != 2 or g.size == 0:
++        return (0.0, 0.0, 0.0)
++    colors = np.unique(g)
++    n_colors = float((colors != 0).sum())
++    _, counts = np.unique(g, return_counts=True)
++    dom_cov = float(counts.max()) / float(g.size)
++    n_objects = float(min(_component_count(g), 64))
++    return (n_objects, n_colors, dom_cov)
++
++
++# per-axis normalizers so |delta| on each axis is comparable (objects 0-64, colors 0-15, coverage 0-1)
++_AXIS_SCALE = (64.0, 15.0, 1.0)
++
++
++class ConfirmingGoalBiasValueHead:
++    """Direction-AGNOSTIC, online-CONFIRMING goal-bias value head (the v2 lever, 2026-06-21).
++
++    Fixes the v1 (GoalBiasValueHead) refutation: v1 committed to ONE direction (consolidation) and
++    misrouted games whose win lies the other way. v2 assumes only that a win-state is EXTREMAL on SOME
++    hypothesis axis -- not which axis, not which end -- and CONFIRMS the true axis+direction online from
++    the env's own level signal:
++
++    PRE-CONFIRMATION (no level-up observed yet): value = 1 - max_axis(|feature - start_feature| / scale).
++    Reward being far from the START along ANY axis (clear OR build, uniform OR varied). This is
++    direction-agnostic, so it cannot misroute the way a fixed prior does; at worst it degrades to
++    near-undirected (a weak, permissive signal) rather than actively steering away from the win.
++
++    ONLINE CONFIRMATION: the value head reads ``frame.levels_completed`` on every frame it scores (the
++    frame carries it; arc_agi3_live_adapter._levels_completed). The moment it sees a frame whose level
++    exceeds the start level, it INDUCES the rewarded hypothesis = the (axis, direction) that moved most
++    from start to that win-frame, and switches to BIASING toward extending that confirmed direction (to
++    reach the NEXT level efficiently). This is the 'confirm against levels_completed' step, done with no
++    extra harness hook -- the level signal rides on the frames the A* already scores.
++
++    No trained weights, no win example, no game-specific state -- pure reusable PROCESS; transfers to the
++    hidden eval by construction. Matches value_head(frame)->float (lower = expand first)."""
++
++    def __init__(self) -> None:
++        self._evals = 0
++        self._start: tuple[float, float, float] | None = None
++        self._start_level: int | None = None
++        self._confirmed: tuple[int, float] | None = None   # (axis_index, sign in {+1,-1}) once a level-up is seen
++        self._max_level_seen = 0
++
++    @staticmethod
++    def _level_of(frame: Any) -> int:
++        try:
++            from carnot.agentic.arc_agi3_live_adapter import _levels_completed
++            return int(_levels_completed(frame))
++        except Exception:
++            return int(getattr(frame, "levels_completed", 0) or 0)
++
++    def _confirm_from_win(self, win_feats: tuple[float, float, float]) -> None:
++        """Induce the rewarded (axis, direction): the axis whose normalized move from start was largest."""
++        if self._start is None:
++            return
++        best_axis, best_mag, best_sign = 0, -1.0, 1.0
++        for ax in range(3):
++            delta = (win_feats[ax] - self._start[ax]) / _AXIS_SCALE[ax]
++            if abs(delta) > best_mag:
++                best_axis, best_mag, best_sign = ax, abs(delta), (1.0 if delta >= 0 else -1.0)
++        if best_mag > 0:
++            self._confirmed = (best_axis, best_sign)
++
++    def __call__(self, frame: Any) -> float:
++        self._evals += 1
++        g = _grid(frame)
++        if g is None:
++            return 0.0
++        feats = _features(g)
++        lvl = self._level_of(frame)
++        if self._start is None:
++            self._start = feats
++            self._start_level = lvl
++            self._max_level_seen = lvl
++        # online confirmation: a frame past the start level reveals the rewarded axis+direction
++        if self._confirmed is None and self._start_level is not None and lvl > self._start_level:
++            self._confirm_from_win(feats)
++        self._max_level_seen = max(self._max_level_seen, lvl)
++        start = self._start
++        if self._confirmed is not None:
++            ax, sign = self._confirmed
++            # bias toward EXTENDING the confirmed direction: lower value = further along it
++            prog = sign * (feats[ax] - start[ax]) / _AXIS_SCALE[ax]   # >0 = moved the rewarded way
++            return float(max(0.0, 1.0 - prog))
++        # pre-confirmation: reward extremality on ANY axis (direction-agnostic) -> lower value = more extremal
++        extremality = max(abs(feats[ax] - start[ax]) / _AXIS_SCALE[ax] for ax in range(3))
++        return float(max(0.0, 1.0 - min(1.0, extremality)))
+diff --git a/results/arc_compete_sim.json b/results/arc_compete_sim.json
+index cd8aacc717..b550f904f2 100644
+--- a/results/arc_compete_sim.json
++++ b/results/arc_compete_sim.json
+@@ -1,147 +1,147 @@
+ {
+   "experiment": "arc_compete_sim",
+-  "honest_verdict": "complete_compete_sim_explorer_goalbias_score_eff_0.0042_levels_1",
+-  "policy": "explorer_goalbias",
++  "honest_verdict": "complete_compete_sim_explorer_confirm_score_eff_2.0069_levels_1",
++  "policy": "explorer_confirm",
+   "total_budget": 50000,
+-  "leaderboard_efficiency_sum": 0.0042,
++  "leaderboard_efficiency_sum": 2.0069,
+   "total_levels": 1,
+   "games_reached_progress": 1,
+   "games_total": 11,
+-  "total_steps_used": 17241,
+-  "budget_utilization": 0.3448,
+-  "budget_unused_banked": 32759,
++  "total_steps_used": 19542,
++  "budget_utilization": 0.3908,
++  "budget_unused_banked": 30458,
+   "per_game": [
+     {
+       "game": "r11l",
+       "allocated_cap": 2000,
+-      "actions_used": 1488,
+-      "banked_saved": 512,
++      "actions_used": 1956,
++      "banked_saved": 44,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 48512
++      "budget_remaining_after": 48044
+     },
+     {
+       "game": "lp85",
+       "allocated_cap": 2000,
+-      "actions_used": 437,
+-      "banked_saved": 1563,
++      "actions_used": 20,
++      "banked_saved": 1980,
+       "levels": 1,
+       "reached": 1,
+-      "efficiency": 0.0042,
++      "efficiency": 2.0069,
+       "gave_up_no_progress": false,
+-      "actions_to_first_levelup": 437,
+-      "budget_remaining_after": 48075
++      "actions_to_first_levelup": 20,
++      "budget_remaining_after": 48024
+     },
+     {
+       "game": "ls20",
+       "allocated_cap": 2000,
+-      "actions_used": 1727,
+-      "banked_saved": 273,
++      "actions_used": 1940,
++      "banked_saved": 60,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 46348
++      "budget_remaining_after": 46084
+     },
+     {
+       "game": "wa30",
+       "allocated_cap": 2000,
+-      "actions_used": 1668,
+-      "banked_saved": 332,
++      "actions_used": 1953,
++      "banked_saved": 47,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 44680
++      "budget_remaining_after": 44131
+     },
+     {
+       "game": "cd82",
+       "allocated_cap": 2000,
+-      "actions_used": 1648,
+-      "banked_saved": 352,
++      "actions_used": 1966,
++      "banked_saved": 34,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 43032
++      "budget_remaining_after": 42165
+     },
+     {
+       "game": "sp80",
+       "allocated_cap": 2000,
+-      "actions_used": 1609,
+-      "banked_saved": 391,
++      "actions_used": 1924,
++      "banked_saved": 76,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 41423
++      "budget_remaining_after": 40241
+     },
+     {
+       "game": "su15",
+       "allocated_cap": 2000,
+-      "actions_used": 1642,
+-      "banked_saved": 358,
++      "actions_used": 1944,
++      "banked_saved": 56,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 39781
++      "budget_remaining_after": 38297
+     },
+     {
+       "game": "tu93",
+       "allocated_cap": 2000,
+-      "actions_used": 1773,
+-      "banked_saved": 227,
++      "actions_used": 1941,
++      "banked_saved": 59,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 38008
++      "budget_remaining_after": 36356
+     },
+     {
+       "game": "cn04",
+       "allocated_cap": 2000,
+-      "actions_used": 1595,
+-      "banked_saved": 405,
++      "actions_used": 1967,
++      "banked_saved": 33,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 36413
++      "budget_remaining_after": 34389
+     },
+     {
+       "game": "m0r0",
+       "allocated_cap": 2000,
+-      "actions_used": 1735,
+-      "banked_saved": 265,
++      "actions_used": 1954,
++      "banked_saved": 46,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 34678
++      "budget_remaining_after": 32435
+     },
+     {
+       "game": "sk48",
+       "allocated_cap": 2000,
+-      "actions_used": 1919,
+-      "banked_saved": 81,
++      "actions_used": 1977,
++      "banked_saved": 23,
+       "levels": 0,
+       "reached": 0,
+       "efficiency": 0.0,
+       "gave_up_no_progress": true,
+       "actions_to_first_levelup": null,
+-      "budget_remaining_after": 32759
++      "budget_remaining_after": 30458
+     }
+   ],
+   "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade multi-game scored run under a global step budget; no live LLM unless policy=e3",
+diff --git a/scripts/arc_leaderboard_eval.py b/scripts/arc_leaderboard_eval.py
+index 4cebefadf9..845059c0d9 100644
+--- a/scripts/arc_leaderboard_eval.py
++++ b/scripts/arc_leaderboard_eval.py
+@@ -83,9 +83,20 @@ def _build_policy(kind: str, game: str):
+         # best_first A* frontier nudged toward more-ordered (plausibly-winning) states by a hand-crafted
+         # distance-to-win prior (NO trained weights). value_weight defaults to 3.0 here (the global
+         # --value-weight default is 0, which would disable the nudge); override with --value-weight.
++        # REFUTED 2026-06-21 (fixed direction misroutes); use explorer_confirm instead.
+         _w = _VALUE_WEIGHT if _VALUE_WEIGHT > 0 else 3.0
+         return CarnotAgentPolicy(game, {}, force_explore=True, value_head=GoalBiasValueHead(),
+                                  value_weight=_w, search_mode="best_first")
++    if kind in ("explorer_confirm", "confirm"):             # direction-AGNOSTIC, online-confirming goal-bias
++        from carnot.agentic.arc_goal_bias import ConfirmingGoalBiasValueHead
++        # depth_first_ride (NOT best_first): best_first's priority is PURE value (no depth term -> value_weight
++        # ignored), which ballooned paths (lp85 20->437) and tanked the efficiency score. depth_first_ride is
++        # depth-PRIMARY (priority = depth + value_weight*value) -- it preserves the action-efficient ride that
++        # earns the deep wins, while the value head nudges the frontier toward extremal (plausibly-winning)
++        # states. Stateful head -> fresh PER GAME (correct: _build_policy is per game). --value-weight overrides.
++        _w = _VALUE_WEIGHT if _VALUE_WEIGHT > 0 else 3.0
++        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=ConfirmingGoalBiasValueHead(),
++                                 value_weight=_w, search_mode="depth_first_ride")
+     if kind in ("explorer_dv", "verifier_router"):
+         global _DISC_ROUTER
+         if _DISC_ROUTER is None:
+-- 
+2.55.0
+

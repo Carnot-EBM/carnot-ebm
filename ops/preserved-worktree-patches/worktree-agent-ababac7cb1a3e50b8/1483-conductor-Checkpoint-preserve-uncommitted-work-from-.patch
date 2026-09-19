@@ -1,0 +1,84 @@
+From 3745f2d48c8bd2ebefe738e440afe2a74c63a996 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 16:34:36 -0400
+Subject: [PATCH 01483/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md                      |  5 +++++
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...iment_4109_carnot_verifier_graft_sudoku.json | 17 +++++++++++++++--
+ 5 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index ecf890ad06..6c5c435d70 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -241,3 +241,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_4100_trm_verifier_rft_conditional.json
++
++## experiment_4109_carnot_verifier_graft_sudoku.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4109_carnot_verifier_graft_sudoku.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3787d54a1e..72274bdaba 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 34755, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-12T20:04:58Z"}
+\ No newline at end of file
++{"pid": 34755, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-12T20:34:34Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 358a10a02a..e4cc8f5075 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8377,3 +8377,4 @@ c |
+ | 2026-06-12 18:13 UTC | NANO-TRM TRAINER MECHANISM SMOKE (THE de-risk; min | OK | 88 passed, 2 warnings in 7.41s |
+ | 2026-06-12 19:36 UTC | REPRODUCE the PUBLISHED Sudoku-Extreme TRM baselin | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  _exp4107_arti |
+ | 2026-06-12 19:54 UTC | REPRODUCE the PUBLISHED Sudoku-Extreme TRM baselin | OK | 92 passed, 2 warnings in 9.22s |
++| 2026-06-12 20:24 UTC | GRAFT the Carnot Sudoku verifier onto the reproduc | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 31f5389ae2..63bb6b16b6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 34755, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-12T20:04:58Z"}
+\ No newline at end of file
++{"pid": 34755, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-12T20:34:34Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4109_carnot_verifier_graft_sudoku.json b/results/experiment_4109_carnot_verifier_graft_sudoku.json
+index 2dd6b1b0e7..d3c9f9b298 100644
+--- a/results/experiment_4109_carnot_verifier_graft_sudoku.json
++++ b/results/experiment_4109_carnot_verifier_graft_sudoku.json
+@@ -3804,5 +3804,18 @@
+     "SCENARIO-LEARN-4109-RERANK",
+     "SCENARIO-LEARN-4109-RFT"
+   ],
+-  "verifier_value_added": false
+-}
++  "verifier_value_added": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=7.081 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

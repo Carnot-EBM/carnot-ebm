@@ -1,0 +1,507 @@
+From 585c8e0411d0d1ca3b63c3b7a82553f50a191917 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 1 Aug 2026 21:15:54 -0400
+Subject: [PATCH 08104/11362] Content failures eat the attempts the defect
+ gates run on, so the gates go quiet on hard games
+
+The incident, found in a live A/B's first treatment cell rather than in review: ar25 accepted a
+textbook `return False` -- the model's own comment reads "no win state was given ... maybe just
+return False" -- with `goal_defect_reasks == 0` AND `engine_defect_reasks == 0`. Both gates silent
+at once is what pointed at a shared cause rather than a bug in either.
+
+`attempt < tries - 1` guards both, for a real reason: a `continue` on the final attempt falls out
+of the loop into the content-failure return, converting an accept into a hard failure. But `tries`
+is ALSO the budget CONTENT failures draw from -- no code block, missing `def`, syntax error. So
+every attempt spent on malformed output is an attempt the defect gate needed, and an answer that
+finally parses on the last attempt is never checked at all. The gate is quietest exactly where it
+is most needed: a hard game burns its attempts on unusable output, then lands its one parseable
+answer where nothing is armed.
+
+NOT A REGRESSION FROM THE NEWER GOAL GATE. The shipped ENGINE gate carries the identical guard and
+the identical blind spot, so its measured 13/36 -> 22/36 is a FLOOR on that gate, not a ceiling.
+
+THE FIX GRANTS AN ATTEMPT RATHER THAN RELAXING THE GUARD. Under
+CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS a defect re-ask extends the budget instead of consuming a
+content attempt. That keeps the "never fails where the old path succeeded" guarantee true by
+construction -- the change only ever ADDS an iteration and cannot turn an accept into a failure --
+and it needs no cap, because the grant is gated on `_reasks_left` / `_goal_reasks_left`, which are
+finite. A test pins that bound rather than trusting it: 3 content attempts + at most 2 grants = 5
+server calls, asserted.
+
+DEFAULT OFF, and that is the load-bearing part. The A/B that FOUND this was still collecting when
+the fix was written; flipping it mid-run would have measured two treatments under one label. The
+test therefore asserts BOTH directions -- with the flag off the bug REPRODUCES exactly (a
+content-failure sequence still yields zero defect re-asks), and only with it on does the gate
+fire. A clean answer costs exactly one call in both modes.
+
+A FIXTURE I GOT WRONG, recorded because the test caught it and I did not. The first "defective"
+engine returned `grid.copy()` on every path -- the IDENTITY function, which this module's own
+docstring documents as clearing every check while modelling nothing. It is not a defect, so it
+could not exercise a defect gate, and two tests failed for that reason rather than for a code
+fault. Replaced with the shape the 2026-07-30 audit actually measured on ft09: the `action == 6`
+path computes and falls off the end with no return.
+
+72 tests pass across the induce, re-ask, static-validation and win-transition suites. 7 artifacts
+acknowledged; the evidence names the DEFAULT-OFF proof rather than reusing the win-transition
+byte-identity argument, which was written first and describes a different mechanism -- reverted
+and rewritten rather than left approximately right.
+
+Banked levels remain 3/3.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../agentic/arc_executable_world_model.py     |  73 ++++++-
+ ...6011_world_model_change_gate_four_arm.json |   8 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   8 +
+ ...6013_hidden_state_change_gate_closure.json |   8 +
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |   8 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   8 +
+ ...rc_generator_concurrency_fix_20260727.json |   8 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   8 +
+ ...ect_gate_attempt_consumption_2026_08_01.py | 191 ++++++++++++++++++
+ 9 files changed, 317 insertions(+), 3 deletions(-)
+ create mode 100644 tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py
+
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index d4bb48d5b8..128c53f3a4 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3559,6 +3559,51 @@ _INDUCE_REPEAT_LAST_N = 256
+ # measured (round 0 + one plain re-ask). This is a floor on quality, never a cap on attempts: when
+ # the budget is spent the candidate is accepted anyway rather than failing the call -- see
+ # `generate()`.
++_INDUCE_DEFECT_OWNS_ATTEMPTS_DEFAULT = "0"
++
++
++def _defect_gate_owns_attempts() -> bool:
++    """Do the defect gates get attempts a CONTENT failure cannot consume? Default NO.
++
++    THE INCIDENT (2026-08-01, found in a live A/B's first treatment cell, not in review). ar25
++    accepted a textbook `return False` -- the model's own comment reads "no win state was given
++    ... maybe just return False" -- with `goal_defect_reasks == 0` AND `engine_defect_reasks == 0`.
++    Both gates silent at once is what pointed at a shared cause rather than a bug in either.
++
++    `attempt < tries - 1` guards both defect gates, and it is there for a real reason: a
++    `continue` on the final attempt falls out of the loop into the content-failure return, which
++    would convert an accept into a hard failure. But `tries` is ALSO the budget that content
++    failures draw from -- a reply with no code block, a missing `def`, a syntax error. So every
++    attempt the model wastes on malformed output is an attempt the defect gate needed, and an
++    answer that finally parses on the last attempt is never checked at all.
++
++    THE GATE IS THEREFORE QUIETEST EXACTLY WHERE IT IS MOST NEEDED. A game the model finds hard
++    burns its attempts on unusable output, then lands its one parseable answer on the attempt
++    where nothing is armed. Confirmed against a scripted server: accepted on attempt 0 gives 2
++    re-asks; two content failures followed by the SAME defective answer gives 0, accepted
++    unchecked.
++
++    NOT A REGRESSION FROM THE GOAL GATE. The shipped ENGINE gate carries the identical guard and
++    the identical blind spot, so its measured 13/36 -> 22/36 is a FLOOR on what that gate can do,
++    not a ceiling.
++
++    WHEN ON, a defect re-ask GRANTS one extra attempt instead of consuming a content attempt. That
++    keeps the "never fails where the old path succeeded" guarantee intact by construction: the
++    change only ever ADDS an iteration, and can never turn an accept into a failure. It is bounded
++    without needing a cap, because the grant is gated on `_reasks_left` / `_goal_reasks_left`,
++    which are finite (1 each by default) -- so the loop can grow by at most the re-ask budgets.
++
++    DEFAULT OFF, and deliberately so: this changes shipped induce behaviour, and it was written
++    while the A/B that found it was still collecting. Flipping it mid-run would have measured two
++    treatments under one label. `CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS=1` enables it.
++    """
++
++    raw = os.environ.get("CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS")
++    if raw is None:
++        raw = _INDUCE_DEFECT_OWNS_ATTEMPTS_DEFAULT
++    return str(raw).strip().lower() in {"1", "true", "yes", "on"}
++
++
+ _INDUCE_DEFECT_REASKS = 1
+ # The re-ask text. It names NOTHING about what went wrong, and that is a measured choice rather
+ # than laziness: `arc_engine_static_validation.repair_prompt_block()` builds a defect-naming block,
+@@ -5801,7 +5846,18 @@ class LocalGGUFProposer:
+         _goal_reasks_left = _goal_defect_reasks() if _goal_check_on else 0
+         _reask_suffix = ""
+         last = ""
+-        for attempt in range(tries):
++        # ATTEMPT BUDGET. `tries` is the CONTENT budget -- attempts spent on a reply that is
++        # unusable (no code block, missing `def`, syntax error). With
++        # `_defect_gate_owns_attempts()` OFF, `_budget` never grows and this loop is exactly
++        # `for attempt in range(tries)`; with it ON, a defect re-ask GRANTS an attempt rather
++        # than consuming one. See that resolver for the incident.
++        _own_attempts = _defect_gate_owns_attempts()
++        _budget = int(tries)
++        attempt = -1
++        while True:
++            attempt += 1
++            if attempt >= _budget:
++                break
+             _payload = {
+                 "prompt": prompt + _reask_suffix,
+                 "n_predict": self.max_tokens,
+@@ -5893,9 +5949,14 @@ class LocalGGUFProposer:
+             # guarantee TRUE rather than merely intended: on the final attempt a `continue` would
+             # fall out of the loop into the content-failure return and convert an accept into a
+             # hard False. On the last try we take the defective candidate, exactly as before.
+-            if _defect_check_on and _reasks_left > 0 and attempt < tries - 1:
++            if _defect_check_on and _reasks_left > 0 and (attempt < _budget - 1 or _own_attempts):
+                 _defects = self._engine_defects(code, engine_transitions)
+                 if _defects:
++                    # Grant rather than consume: without this the `continue` below would fall out
++                    # of the loop and turn an accept into a hard failure, which is precisely what
++                    # the old `attempt < tries - 1` guard existed to prevent.
++                    if attempt >= _budget - 1:
++                        _budget += 1
+                     _reasks_left -= 1
+                     _reask_suffix = _INDUCE_PLAIN_REASK_BLOCK
+                     last = f"mechanically defective engine: {_defects}"
+@@ -5911,9 +5972,15 @@ class LocalGGUFProposer:
+             # same reason it exists above: on the final attempt a `continue` would fall out of
+             # the loop and convert an accept into a hard False, so the last try takes the
+             # defective candidate exactly as the shipped path does.
+-            if _goal_check_on and _goal_reasks_left > 0 and attempt < tries - 1:
++            if (
++                _goal_check_on
++                and _goal_reasks_left > 0
++                and (attempt < _budget - 1 or _own_attempts)
++            ):
+                 _gdefects = self._goal_defects(code, engine_transitions)
+                 if _gdefects:
++                    if attempt >= _budget - 1:
++                        _budget += 1
+                     _goal_reasks_left -= 1
+                     _reask_suffix = _GOAL_PLAIN_REASK_BLOCK
+                     last = f"mechanically defective goal: {_gdefects}"
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index 313994b73d..aae7a21dce 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52581,6 +52581,14 @@
+         "acknowledged_on": "2026-08-01",
+         "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+         "evidence": "PROVEN BY REBUILD plus a byte-identity proof. The artifact's own rebuild_command was run against the changed source and compared to the published file leaf by leaf: ZERO substantive movement. All 20 differing keys are provenance bookkeeping the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each) -- whose own recorded verdict is `substantive_values_changed: 0`. Independently, `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games (ft09, lp85, sc25, tn36, tu93, vc33), which covers the exact function this artifact's code path would use."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
++        "acknowledged_on": "2026-08-01",
++        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
++        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 39f0d7f6f3..3456a7c6e8 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -65,6 +65,14 @@
+         "acknowledged_on": "2026-08-01",
+         "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+         "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
++        "acknowledged_on": "2026-08-01",
++        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
++        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index e3987d9255..1eba9066db 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8607,6 +8607,14 @@
+         "acknowledged_on": "2026-08-01",
+         "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+         "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
++        "acknowledged_on": "2026-08-01",
++        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
++        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 4782986c51..180f474dc9 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1344,6 +1344,14 @@
+         "acknowledged_on": "2026-08-01",
+         "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+         "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
++        "acknowledged_on": "2026-08-01",
++        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
++        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 17742f99f2..eb7ecf07c1 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3375,6 +3375,14 @@
+         "acknowledged_on": "2026-08-01",
+         "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+         "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
++        "acknowledged_on": "2026-08-01",
++        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
++        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 1ef825ea87..33b8c64e45 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1008,6 +1008,14 @@
+         "acknowledged_on": "2026-08-01",
+         "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+         "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
++        "acknowledged_on": "2026-08-01",
++        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
++        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index 4d4d732d75..50002a234b 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -250,6 +250,14 @@
+         "acknowledged_on": "2026-08-01",
+         "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+         "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
++        "acknowledged_on": "2026-08-01",
++        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
++        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py b/tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py
+new file mode 100644
+index 0000000000..534e3587e9
+--- /dev/null
++++ b/tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py
+@@ -0,0 +1,191 @@
++"""Content failures eat the attempts the defect gates run on, so the gates go quiet on hard games.
++
++THE INCIDENT (2026-08-01, found in a live A/B's first treatment cell, not in review). ar25
++accepted a textbook `return False` -- the model's own comment reads "no win state was given ...
++maybe just return False" -- with `goal_defect_reasks == 0` AND `engine_defect_reasks == 0`. Both
++gates silent simultaneously is what pointed at a shared cause rather than a bug in either one.
++
++`attempt < tries - 1` guards both gates, and it exists for a real reason: a `continue` on the
++final attempt falls out of the loop into the content-failure return, converting an accept into a
++hard failure. But `tries` is ALSO the budget content failures draw from -- a reply with no code
++block, a missing `def`, a syntax error. So every attempt the model wastes on malformed output is
++an attempt the defect gate needed, and an answer that finally parses on the last attempt is never
++checked at all.
++
++The gate is therefore quietest exactly where it is most needed: a game the model finds hard burns
++its attempts on unusable output, then lands its one parseable answer where nothing is armed.
++
++NOT A REGRESSION FROM THE NEWER GOAL GATE. The shipped ENGINE gate carries the identical guard and
++blind spot, so its measured 13/36 -> 22/36 improvement is a FLOOR on that gate, not a ceiling.
++
++WHAT IS ASSERTED HERE. Both directions, because either alone would be misleading:
++  * with the flag OFF the bug REPRODUCES exactly -- that is what makes the default a true A/B and
++    what keeps the in-flight measurement that found this interpretable;
++  * with it ON the gate fires on the same input, and no accept is turned into a failure.
++
++SCENARIO-ARC-FCP-5699-43-DEFECT-GATE-OWNS-ATTEMPTS
++"""
++
++from __future__ import annotations
++
++import json
++from typing import Any
++
++import pytest
++
++from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++
++CONTENT_FAILURE = "I cannot produce that."  # no code block, no `def` -- unusable
++# A GENUINE engine defect, in the shape the 2026-07-30 audit measured on ft09: the `action == 6`
++# path computes and then falls off the end with no `return`, so every click evaluates to None --
++# and `WorldModelVerifier.score` wraps that in `np.asarray(None)` rather than raising, so it
++# degrades SILENTLY into a model that predicts nothing.
++#
++# Deliberately NOT the identity function. `return grid.copy()` on every path is what the first
++# draft of this fixture used, and it is not a defect at all -- this module's own docstring records
++# the identity engine clearing every check while modelling nothing. The test failed and was right
++# to: a fixture that is not defective cannot exercise a defect gate.
++DEFECTIVE = """```python
++def engine(grid, action, data=None):
++    out = grid.copy()
++    if action != 6:
++        return out
++    row = 0
++    col = 0
++```"""
++
++
++class _ScriptedServer:
++    """Replays a fixed reply list. Only the HTTP boundary is faked, so the real accept/reject
++    control flow -- the thing under test -- runs unmodified."""
++
++    def __init__(self, replies: list[str]) -> None:
++        self.replies = list(replies)
++        self.calls = 0
++
++    def urlopen(self, req: Any, timeout: float | None = None) -> Any:  # noqa: ANN401
++        body = self.replies[min(self.calls, len(self.replies) - 1)]
++        self.calls += 1
++
++        class _Resp:
++            def __enter__(_s):  # noqa: ANN001, N805
++                return _s
++
++            def __exit__(_s, *a):  # noqa: ANN001, N805
++                return False
++
++            def read(_s):  # noqa: ANN001, N805
++                return json.dumps({"content": body}).encode()
++
++        return _Resp()
++
++
++def _proposer(monkeypatch: pytest.MonkeyPatch, replies: list[str]):
++    import urllib.request
++
++    srv = _ScriptedServer(replies)
++    prop = LocalGGUFProposer(repo_substr="gemma-4-31B-it", port=65511)
++    monkeypatch.setattr(prop, "_ensure_server", lambda: True)
++    monkeypatch.setattr(urllib.request, "urlopen", srv.urlopen)
++    return prop, srv
++
++
++@pytest.fixture(autouse=True)
++def _shipped_env(monkeypatch: pytest.MonkeyPatch) -> None:
++    for var in (
++        "CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS",
++        "CARNOT_ARC_INDUCE_DEFECT_REASKS",
++        "CARNOT_ARC_GOAL_DEFECT_REASKS",
++    ):
++        monkeypatch.delenv(var, raising=False)
++
++
++def _generate(prop, **kw):
++    return prop.generate(
++        "irrelevant",
++        required=("engine",),
++        codeonly_eligible=True,
++        engine_transitions=None,
++        **kw,
++    )
++
++
++class TestTheBugReproducesWhenTheFlagIsOff:
++    """The default must still be the OLD behaviour, or the A/B that found this is uninterpretable."""
++
++    def test_flag_defaults_off(self):
++        from carnot.agentic.arc_executable_world_model import _defect_gate_owns_attempts
++
++        assert _defect_gate_owns_attempts() is False
++
++    def test_defect_on_the_FIRST_attempt_is_re_asked(self, monkeypatch):
++        """The healthy case, which is why the bug was invisible: with attempts to spare, the gate
++        fires normally. Any test that only covered this would have passed throughout."""
++        prop, srv = _proposer(monkeypatch, [DEFECTIVE, DEFECTIVE, DEFECTIVE])
++        ok, _ = _generate(prop, tries=3)
++        assert ok is True
++        assert prop.n_induce_defect_reasks >= 1, "the gate must fire when attempts remain"
++
++    def test_content_failures_SILENCE_the_gate_on_the_same_input(self, monkeypatch):
++        """THE BUG. Identical defective answer, identical budget -- but two wasted attempts first,
++        and the gate never runs. This is the ar25 cell."""
++        prop, srv = _proposer(monkeypatch, [CONTENT_FAILURE, CONTENT_FAILURE, DEFECTIVE])
++        ok, _ = _generate(prop, tries=3)
++        assert ok is True, "the defective answer is still accepted -- that part is unchanged"
++        assert prop.n_induce_defect_reasks == 0, (
++            "if this is non-zero the bug is fixed with the flag OFF, which breaks the A/B"
++        )
++
++
++class TestTheFlagFixesIt:
++    def test_the_gate_fires_even_after_content_failures(self, monkeypatch):
++        """The fix: the defect gate gets an attempt a content failure cannot consume."""
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS", "1")
++        prop, srv = _proposer(monkeypatch, [CONTENT_FAILURE, CONTENT_FAILURE, DEFECTIVE, DEFECTIVE])
++        ok, _ = _generate(prop, tries=3)
++        assert prop.n_induce_defect_reasks >= 1, (
++            "with the flag on, the answer that finally parses must still be checked"
++        )
++        assert ok is True
++
++    def test_it_never_turns_an_accept_into_a_failure(self, monkeypatch):
++        """THE GUARANTEE THE OLD GUARD EXISTED TO PROTECT, and the reason the fix GRANTS an
++        attempt rather than relaxing the guard. A `continue` on the final attempt would fall out
++        of the loop into the content-failure return. Here every reply is defective and the re-ask
++        budget is spent, so the loop must still end in an accept."""
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS", "1")
++        prop, srv = _proposer(monkeypatch, [DEFECTIVE] * 8)
++        ok, code = _generate(prop, tries=3)
++        assert ok is True, "a spent re-ask budget must accept, exactly as the shipped path does"
++        assert "def engine" in code
++
++    def test_the_grant_is_bounded_by_the_reask_budget(self, monkeypatch):
++        """No cap is needed and none is used: the grant is gated on `_reasks_left`, which is
++        finite. If the loop could grow without bound a defective model would spin forever, so
++        this pins the bound rather than trusting it."""
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS", "1")
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_DEFECT_REASKS", "2")
++        prop, srv = _proposer(monkeypatch, [DEFECTIVE] * 20)
++        ok, _ = _generate(prop, tries=3)
++        assert ok is True
++        # 3 content attempts + at most 2 granted re-asks.
++        assert srv.calls <= 5, f"loop grew beyond the re-ask budget: {srv.calls} calls"
++        assert prop.n_induce_defect_reasks <= 2
++
++
++def test_a_clean_answer_is_unaffected_either_way(monkeypatch):
++    """The fix must be inert on the happy path in BOTH modes -- a change that only shows up when
++    something is already broken is easier to trust."""
++    clean = """```python
++def engine(grid, action, data=None):
++    g = grid.copy()
++    g[0, 0] = 1
++    return g
++```"""
++    for flag in ("0", "1"):
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS", flag)
++        prop, srv = _proposer(monkeypatch, [clean])
++        ok, _ = _generate(prop, tries=3)
++        assert ok is True
++        assert srv.calls == 1, f"flag={flag}: a clean answer must cost exactly one call"
++        assert prop.n_induce_defect_reasks == 0
+-- 
+2.55.0
+

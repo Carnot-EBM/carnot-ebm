@@ -1,0 +1,65 @@
+From ee721f4fcc25a36b8847f0ca4e78d796c190c260 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 04:51:56 -0400
+Subject: [PATCH 04999/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ .../experiment_5020_uncertainty_routed_cascade.json  | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 970bd094ee..8c5e872c86 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 191, "phase": "iteration_start", "last_beat": "2026-06-30T08:34:17Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 192, "phase": "iteration_start", "last_beat": "2026-06-30T08:51:54Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 700cdadfa4..eef1339e5b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9639,3 +9639,4 @@ The contro |
+ | 2026-06-30 08:28 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == |
+ | 2026-06-30 08:30 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == |
+ | 2026-06-30 08:32 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == |
++| 2026-06-30 08:49 UTC | PHASE D6 (VERIFIER MOAT; the EFFICIENCY axis -- no | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 723411661d..85f890ac25 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 191, "phase": "iteration_start", "started_at": "2026-06-30T08:34:17Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 192, "phase": "iteration_start", "started_at": "2026-06-30T08:51:54Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5020_uncertainty_routed_cascade.json b/results/experiment_5020_uncertainty_routed_cascade.json
+index 05ad0bf806..9ec0d6a88a 100644
+--- a/results/experiment_5020_uncertainty_routed_cascade.json
++++ b/results/experiment_5020_uncertainty_routed_cascade.json
+@@ -104,5 +104,13 @@
+     "SCENARIO-VERIFY-5020"
+   ],
+   "summarize_artifact_exit_code": 0,
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.009914 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

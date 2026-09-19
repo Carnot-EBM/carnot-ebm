@@ -1,0 +1,43 @@
+From 1b1635c5c0260dd91bba8b4ba95c62f5c072eb64 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 13:33:34 -0400
+Subject: [PATCH 08911/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index cee87ac6ab..d08a59c2f6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-08-12T17:10:38Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-12T17:33:31Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f3c230aed0..b0b04d6a06 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15711,3 +15711,4 @@ code |
+ | 2026-08-12 15:28 UTC | Bounded V545 terminal evidence handoff into V546 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-12 16:52 UTC | V546 dated source-window and three-lane scope free | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:   assert write |
+ | 2026-08-12 17:08 UTC | V546 dated source-window and three-lane scope free | OK | 88 passed, 1 warning in 9.12s |
++| 2026-08-12 17:31 UTC | Incremental parser-state and JIT prefix-feasibilit | OK | 91 passed, 1 warning in 31.57s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 111f9513c3..f93996968f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 10, "phase": "iteration_start", "started_at": "2026-08-12T17:10:38Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-12T17:33:31Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

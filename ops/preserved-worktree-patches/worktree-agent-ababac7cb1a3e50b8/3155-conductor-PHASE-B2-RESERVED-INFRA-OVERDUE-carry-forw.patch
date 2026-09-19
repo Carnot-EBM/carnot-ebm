@@ -1,0 +1,1186 @@
+From fd4797c84b728d36426681617c72117252682185 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 22:26:42 -0400
+Subject: [PATCH 03155/11362] [conductor] PHASE B2 (RESERVED INFRA; OVERDUE) --
+ carry-forward any unfinished .417 B-track infra (metric-harness
+ canonicalization / timing detector) and the headroom-budget B* measurement if
+ .417 B2 did not complete it. Audit-only if already done.
+
+Automated research step by research conductor.
+Task ID: exp4528-b2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  32 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4528_infra_carryforward.py     | 426 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_4528_infra_carryforward.json   | 194 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...test_experiment_4528_infra_carryforward.py | 330 ++++++++++++++
+ 12 files changed, 1000 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4528_infra_carryforward.py
+ create mode 100644 results/experiment_4528_infra_carryforward.json
+ create mode 100644 tests/python/test_experiment_4528_infra_carryforward.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index bfad9e7c61..6dcd256c1c 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -526,6 +526,29 @@ Required field principles:
+ - `tests_added_pass`: principle "Tests Must Run and Assert."
+ - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+ 
++### REQ-ARC-FCP-4528: .417 B-Track Infra Carryforward Audit
++
++Experiment 4528 SHALL write
++`results/experiment_4528_infra_carryforward.json` by reading the upstream
++`.417 B2` artifact
++`results/experiment_4518_metric_harness_canonical.json` and reconciling the
++canonical local submission-gate state without rerunning the live headroom
++measurement unless the upstream artifact is missing required evidence. The
++audit SHALL confirm whether the CORE set-containment verdict is canonical,
++whether the four-or-more verdict fixtures are CI-guarded, and whether the
++headroom-budget table measured `B*` as the smallest candidate whose baseline
++solved set equals the baseline solved set at `1.5B`. If no candidate plateau is
++present in the upstream table, the audit SHALL record `b_star_measured=false`
++and keep the default budget unchanged instead of raising it blindly.
++
++Required field principles:
++
++- `honest_verdict`: principle "terminal prefix; shipped: infra_carryforward_complete OR complete: infra_audit_already_done."
++- `inference_substrate`: principle "aggregation_from_upstream_artifacts (reads the .417 B2 artifact) unless it measures B* live (then verifier_ensemble_against_cached_candidates)."
++- `b_track_status`: principle "what landed in .417 B2 vs what this task completed -- the audit trail."
++- `cited_upstream_artifacts`: principle "traceability of the .417 B2 numbers this reconciles."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
+ ### REQ-ARC-FCP-4524: Stop After Scored Target Level-Up
+ 
+ Experiment 4524 SHALL write
+@@ -783,3 +806,12 @@ When the measured candidate baseline is missing CORE efficiency or drops `lp85`
+ below the canonical per-level efficiency floor
+ Then the baseline is not persisted and the command reports the canonical
+ baseline guard failure.
++
++### SCENARIO-ARC-FCP-4528: .417 B-Track Audit Records No Blind Budget Raise
++
++Given the upstream `.417 B2` canonical metric harness artifact
++When experiment 4528 audits the artifact
++Then it records the CORE containment gate, fixture CI guard, and measured
++headroom table in `b_track_status`, cites the upstream artifact fields it
++imports, and reports a complete audit if the headroom table has no stable `B*`
++candidate instead of raising the local submission-gate default blindly.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0c83d4513b..77d57f4a85 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 183,
+   "code_violations": 0,
+-  "experiments_checked": 3545,
++  "experiments_checked": 3546,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4528_infra_carryforward.py b/python/carnot/experiment_4528_infra_carryforward.py
+new file mode 100644
+index 0000000000..79f4069725
+--- /dev/null
++++ b/python/carnot/experiment_4528_infra_carryforward.py
+@@ -0,0 +1,426 @@
++"""Experiment 4528: .417 B-track infra carryforward audit.
++
++Spec refs: REQ-ARC-FCP-4528, SCENARIO-ARC-FCP-4528.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import subprocess
++import time
++from collections.abc import Callable, Mapping
++from pathlib import Path
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4528_infra_carryforward.json"
++UPSTREAM_RELATIVE_PATH = "results/experiment_4518_metric_harness_canonical.json"
++GATE_RELATIVE_PATH = "scripts/kaggle/arc_local_submission_gate.py"
++FIXTURE_TEST_RELATIVE_PATH = "tests/python/test_arc_submission_gate_verdict.py"
++FOCUSED_TEST_COMMAND = ".venv/bin/pytest tests/python/test_experiment_4528_infra_carryforward.py -q --no-cov"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts (reads the .417 B2 artifact)"
++REQUIREMENTS = ("REQ-ARC-FCP-4528",)
++SCENARIOS = ("SCENARIO-ARC-FCP-4528",)
++CANONICAL_GAME_SET = ("lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20")
++CANONICAL_CORE_GAMES = ("lp85", "m0r0", "sp80", "vc33")
++CANONICAL_ACTION_FIELD = "actions"
++DEFAULT_BUDGET = 8000
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++CORE_FIXTURE_TESTS = (
++    "test_a1_frame_change_prune_fails_lost_core_m0r0",
++    "test_a2_imitation_prior_fails_core_traded_for_fringe",
++    "test_positive_core_faster_passes_improved",
++    "test_neutral_core_same_passes_non_inferior",
++    "test_bonus_solve_reported_but_core_required",
++)
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "principle \"terminal prefix; shipped: infra_carryforward_complete OR "
++        "complete: infra_audit_already_done.\""
++    ),
++    "inference_substrate": (
++        "principle \"aggregation_from_upstream_artifacts (reads the .417 B2 artifact) "
++        "unless it measures B* live (then verifier_ensemble_against_cached_candidates).\""
++    ),
++    "b_track_status": (
++        "principle \"what landed in .417 B2 vs what this task completed -- the audit trail.\""
++    ),
++    "cited_upstream_artifacts": (
++        "principle \"traceability of the .417 B2 numbers this reconciles.\""
++    ),
++    "preconditions_checked": (
++        "principle \"records resources verified; pre-empts missing-resource fabrication.\""
++    ),
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "requirements",
++    "scenarios",
++    "field_principles",
++    "tests_added_pass",
++    "reproducibility_checksum",
++    "leaderboard_submission",
++    "result_path",
++    "duration_s",
++)
++
++
++def _stable_checksum(payload: Mapping[str, Any]) -> str:
++    digest = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    ).hexdigest()
++    return f"sha256:{digest}"
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _stable_checksum(payload)
++
++
++def _as_mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _as_rows(value: Any) -> list[Mapping[str, Any]]:
++    if not isinstance(value, list):
++        return []
++    return [row for row in value if isinstance(row, Mapping)]
++
++
++def _int_or_none(value: Any) -> int | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, int):
++        return value
++    try:
++        return int(str(value))
++    except (TypeError, ValueError):
++        return None
++
++
++def load_upstream(root: Path | str = REPO_ROOT) -> dict[str, Any]:
++    return json.loads((Path(root) / UPSTREAM_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++
++def read_fixture_test_source(root: Path | str = REPO_ROOT) -> str:
++    return (Path(root) / FIXTURE_TEST_RELATIVE_PATH).read_text(encoding="utf-8")
++
++
++def _fixture_guard(upstream: Mapping[str, Any], fixture_test_source: str) -> dict[str, Any]:
++    tests = _as_mapping(upstream.get("tests_added_pass"))
++    command = str(tests.get("command", ""))
++    present = [name for name in CORE_FIXTURE_TESTS if f"def {name}" in fixture_test_source]
++    return {
++        "landed_in_4518": bool(tests.get("passed") is True),
++        "ci_guarded": bool(
++            tests.get("passed") is True
++            and FIXTURE_TEST_RELATIVE_PATH in command
++            and len(present) >= 4
++        ),
++        "fixture_count": len(present),
++        "fixture_tests_present": present,
++        "ci_command": command,
++    }
++
++
++def _canonical_gate(upstream: Mapping[str, Any]) -> dict[str, Any]:
++    baseline = _as_mapping(upstream.get("canonical_baseline"))
++    guard = _as_mapping(baseline.get("guard"))
++    game_set = list(upstream.get("canonical_game_set") or [])
++    core_games = list(baseline.get("core_games") or [])
++    action_field = str(baseline.get("action_metric_field", ""))
++    canonical = bool(
++        str(upstream.get("honest_verdict", "")).startswith("shipped:")
++        and guard.get("ok") is True
++        and game_set == list(CANONICAL_GAME_SET)
++        and core_games == list(CANONICAL_CORE_GAMES)
++        and action_field == CANONICAL_ACTION_FIELD
++    )
++    return {
++        "landed_in_4518": canonical,
++        "core_containment_gate_canonical": canonical,
++        "canonical_game_set": game_set,
++        "core_games": core_games,
++        "action_metric_field": action_field,
++        "baseline_guard_ok": guard.get("ok") is True,
++        "upstream_honest_verdict": str(upstream.get("honest_verdict", "")),
++    }
++
++
++def _headroom_status(upstream: Mapping[str, Any]) -> dict[str, Any]:
++    headroom = _as_mapping(upstream.get("headroom_budget_measurement"))
++    rows = _as_rows(headroom.get("rows"))
++    stable_rows = [row for row in rows if row.get("stable_vs_1_5x") is True]
++    selected_b_star = _int_or_none(stable_rows[0].get("budget")) if stable_rows else None
++    upstream_default = _int_or_none(upstream.get("canonical_default_budget"))
++    if upstream_default is None:
++        upstream_default = _int_or_none(headroom.get("selected_default_budget"))
++    if upstream_default is None:
++        upstream_default = DEFAULT_BUDGET
++    if selected_b_star is None:
++        no_blind_budget_raise = upstream_default == DEFAULT_BUDGET
++    else:
++        no_blind_budget_raise = upstream_default == selected_b_star
++    return {
++        "landed_in_4518": headroom.get("measured") is True,
++        "measured": headroom.get("measured") is True,
++        "candidate_rows": [dict(row) for row in rows],
++        "stable_rows": [dict(row) for row in stable_rows],
++        "b_star_measured": selected_b_star is not None,
++        "selected_b_star": selected_b_star,
++        "upstream_default_budget": upstream_default,
++        "no_stable_candidate": selected_b_star is None and bool(rows),
++        "no_blind_budget_raise": no_blind_budget_raise,
++    }
++
++
++def audit_upstream(upstream: Mapping[str, Any], *, fixture_test_source: str) -> dict[str, Any]:
++    """REQ-ARC-FCP-4528: reconcile the .417 B2 artifact into a B-track audit."""
++
++    canonical_gate = _canonical_gate(upstream)
++    fixture_guard = _fixture_guard(upstream, fixture_test_source)
++    headroom = _headroom_status(upstream)
++    gaps: list[str] = []
++    if not canonical_gate["core_containment_gate_canonical"]:
++        gaps.append("missing_canonical_gate_evidence")
++    if not fixture_guard["ci_guarded"]:
++        gaps.append("missing_fixture_ci_guard")
++    if not headroom["measured"]:
++        gaps.append("missing_headroom_measurement")
++    return {
++        "upstream_417_b2_landed": {
++            "canonical_gate": canonical_gate,
++            "fixture_ci_guard": fixture_guard,
++            "headroom_budget": headroom,
++        },
++        "this_task_completed": {
++            "audit_only": True,
++            "completed_missing_piece": "none",
++            "no_blind_budget_raise": headroom["no_blind_budget_raise"],
++            "result_path": RESULT_RELATIVE_PATH,
++        },
++        "gaps": gaps,
++    }
++
++
++def _cited_upstream_artifacts(upstream: Mapping[str, Any]) -> list[dict[str, Any]]:
++    return [
++        {
++            "path": UPSTREAM_RELATIVE_PATH,
++            "sha256": _stable_checksum(upstream),
++            "fields_imported": [
++                "honest_verdict",
++                "canonical_game_set",
++                "canonical_baseline",
++                "tests_added_pass",
++                "headroom_budget_measurement",
++                "canonical_default_budget",
++            ],
++        }
++    ]
++
++
++def _honest_verdict(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    b_track_status: Mapping[str, Any],
++    tests_added_pass: Mapping[str, Any],
++) -> str:
++    upstream = _as_mapping(b_track_status.get("upstream_417_b2_landed"))
++    canonical_gate = _as_mapping(upstream.get("canonical_gate"))
++    fixture_guard = _as_mapping(upstream.get("fixture_ci_guard"))
++    headroom = _as_mapping(upstream.get("headroom_budget"))
++    if preconditions_checked.get("ok") is not True:
++        return "blocked_infra_carryforward_preconditions"
++    if canonical_gate.get("core_containment_gate_canonical") is not True:
++        return "complete: infra_carryforward_missing_canonical_gate_evidence"
++    if fixture_guard.get("ci_guarded") is not True:
++        return "complete: infra_carryforward_missing_fixture_ci_guard"
++    if headroom.get("measured") is not True:
++        return "complete: infra_carryforward_missing_headroom_measurement"
++    if tests_added_pass.get("passed") is not True:
++        return "complete: infra_carryforward_tests_not_green"
++    return "complete: infra_audit_already_done"
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    upstream_artifact: Mapping[str, Any],
++    fixture_test_source: str,
++    tests_added_pass: Mapping[str, Any],
++    duration_s: float | None,
++) -> dict[str, Any]:
++    """SCENARIO-ARC-FCP-4528: assemble the carryforward audit artifact."""
++
++    b_track_status = audit_upstream(upstream_artifact, fixture_test_source=fixture_test_source)
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4528_infra_carryforward",
++        "schema": "carnot.arc_infra_carryforward_4528.v1",
++        "honest_verdict": _honest_verdict(
++            preconditions_checked=preconditions_checked,
++            b_track_status=b_track_status,
++            tests_added_pass=tests_added_pass,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "requirements": list(REQUIREMENTS),
++        "scenarios": list(SCENARIOS),
++        "preconditions_checked": dict(preconditions_checked),
++        "b_track_status": b_track_status,
++        "cited_upstream_artifacts": _cited_upstream_artifacts(upstream_artifact),
++        "tests_added_pass": dict(tests_added_pass),
++        "reproducibility_checksum": "",
++        "leaderboard_submission": False,
++        "result_path": RESULT_RELATIVE_PATH,
++        "duration_s": None if duration_s is None else float(duration_s),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with a terminal prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must match the required substrate")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles must match required principles")
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        errors.append("preconditions_checked must be a mapping")
++    b_status = artifact.get("b_track_status")
++    if not isinstance(b_status, Mapping):
++        errors.append("b_track_status must be a mapping")
++    else:
++        task = _as_mapping(b_status.get("this_task_completed"))
++        if task.get("no_blind_budget_raise") is not True and str(verdict).startswith(("complete:", "shipped:")):
++            errors.append("no_blind_budget_raise must be true for terminal audits")
++    if not isinstance(artifact.get("cited_upstream_artifacts"), list):
++        errors.append("cited_upstream_artifacts must be a list")
++    tests = artifact.get("tests_added_pass")
++    if not isinstance(tests, Mapping):
++        errors.append("tests_added_pass must be a mapping")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    elif checksum != payload_checksum(artifact):
++        errors.append("reproducibility_checksum must match payload")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    if artifact.get("result_path") != RESULT_RELATIVE_PATH:
++        errors.append("result_path must point to the 4528 artifact")
++    return errors
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - local resource boundary.
++    root_path = Path(root)
++    spec_path = root_path / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++    checks: dict[str, Any] = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "gate_help_precondition": False,
++        "upstream_artifact_present": (root_path / UPSTREAM_RELATIVE_PATH).exists(),
++        "fixture_test_file_present": (root_path / FIXTURE_TEST_RELATIVE_PATH).exists(),
++        "spec_has_req_4528": spec_path.exists() and "REQ-ARC-FCP-4528" in spec_path.read_text(encoding="utf-8"),
++    }
++    cmd = [str(root_path / ".venv" / "bin" / "python"), str(root_path / GATE_RELATIVE_PATH), "--help"]
++    try:
++        completed = subprocess.run(cmd, cwd=root_path, capture_output=True, text=True, timeout=30)
++        checks["gate_help_precondition"] = completed.returncode == 0
++        if completed.returncode != 0:
++            checks["gate_help_error"] = completed.stderr[-500:]
++    except Exception as exc:
++        checks["gate_help_error"] = repr(exc)
++    checks["ok"] = bool(
++        checks["agents_md_read"]
++        and checks["codex_md_read"]
++        and checks["gate_help_precondition"]
++        and checks["upstream_artifact_present"]
++        and checks["fixture_test_file_present"]
++        and checks["spec_has_req_4528"]
++    )
++    return checks
++
++
++def run_focused_tests(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - subprocess boundary.
++    root_path = Path(root)
++    completed = subprocess.run(
++        FOCUSED_TEST_COMMAND.split(),
++        cwd=root_path,
++        capture_output=True,
++        text=True,
++        timeout=120,
++    )
++    return {
++        "command": FOCUSED_TEST_COMMAND,
++        "passed": completed.returncode == 0,
++        "returncode": completed.returncode,
++        "stdout_tail": completed.stdout[-2000:],
++        "stderr_tail": completed.stderr[-2000:],
++    }
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    fixture_test_source: str | None = None,
++    tests_added_pass: Mapping[str, Any] | None = None,
++    now: Callable[[], float] = time.monotonic,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-4528: write the audit artifact from upstream B2 evidence."""
++
++    root_path = Path(root)
++    started = float(now())
++    preconditions = (
++        dict(preconditions_checked)
++        if preconditions_checked is not None
++        else check_preconditions(root_path)
++    )
++    upstream = load_upstream(root_path)
++    source = fixture_test_source if fixture_test_source is not None else read_fixture_test_source(root_path)
++    tests_result = dict(tests_added_pass) if tests_added_pass is not None else run_focused_tests(root_path)
++    artifact = build_artifact(
++        preconditions_checked=preconditions,
++        upstream_artifact=upstream,
++        fixture_test_source=source,
++        tests_added_pass=tests_result,
++        duration_s=max(0.0, float(now()) - started),
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        out = root_path / RESULT_RELATIVE_PATH
++        out.parent.mkdir(parents=True, exist_ok=True)
++        out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper.
++    artifact = run()
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper.
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 98ea541fa9..5d8a68d5df 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-21T01:49:36.722290Z",
+-  "duration_s": 0.026915311813354492,
++  "run_date": "2026-06-21T02:25:38.717131Z",
++  "duration_s": 0.02126002311706543,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "6c0b6fb17dc193f57c651fb74a88c24dc3c08f969836cc4b8ae28b7fad2e398d",
++  "reproducibility_checksum": "aeff60be9fc58c558ef7a813b8b1fd70489c6d6e70ca5ed7a06d3bfa525a3694",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ab64f5ac7211dd54ba984b8275326dc96db62c24"
++    "adversarial_verify_version": "db3434fc2ebf44203240355b4872f5c62cedfb01"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 51c602361f..2586982380 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-21T01:49:36.759388Z",
+-  "duration_s": 0.0304567813873291,
++  "run_date": "2026-06-21T02:25:38.745379Z",
++  "duration_s": 0.022998332977294922,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e8608356e735a4c57a2260246cd8d8cb025f6fd1829e0ae7e6ce9caaa03825cf",
++  "reproducibility_checksum": "27368efc61304e5cb5a443fdfbf9fcedbcc8c5a8cd4c300d4f54f396ce98f3ac",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ab64f5ac7211dd54ba984b8275326dc96db62c24"
++    "adversarial_verify_version": "db3434fc2ebf44203240355b4872f5c62cedfb01"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 15ab76a43f..9bc734ac9e 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.112150192260742,
++  "efficiency_gains_ms": 2.1162033081054688,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 3894e860d0..143fd3b7a8 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.357301466166973e-05,
++  "duration_s": 2.8814072720706463e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4528_infra_carryforward.json b/results/experiment_4528_infra_carryforward.json
+new file mode 100644
+index 0000000000..d6cbcfee8f
+--- /dev/null
++++ b/results/experiment_4528_infra_carryforward.json
+@@ -0,0 +1,194 @@
++{
++  "b_track_status": {
++    "gaps": [],
++    "this_task_completed": {
++      "audit_only": true,
++      "completed_missing_piece": "none",
++      "no_blind_budget_raise": true,
++      "result_path": "results/experiment_4528_infra_carryforward.json"
++    },
++    "upstream_417_b2_landed": {
++      "canonical_gate": {
++        "action_metric_field": "actions",
++        "baseline_guard_ok": true,
++        "canonical_game_set": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33",
++          "cd82",
++          "ft09",
++          "su15",
++          "ls20"
++        ],
++        "core_containment_gate_canonical": true,
++        "core_games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33"
++        ],
++        "landed_in_4518": true,
++        "upstream_honest_verdict": "shipped: metric_harness_canonical_ci_guarded"
++      },
++      "fixture_ci_guard": {
++        "ci_command": ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py tests/python/test_experiment_4518_metric_harness_canonical.py -q --no-cov",
++        "ci_guarded": true,
++        "fixture_count": 5,
++        "fixture_tests_present": [
++          "test_a1_frame_change_prune_fails_lost_core_m0r0",
++          "test_a2_imitation_prior_fails_core_traded_for_fringe",
++          "test_positive_core_faster_passes_improved",
++          "test_neutral_core_same_passes_non_inferior",
++          "test_bonus_solve_reported_but_core_required"
++        ],
++        "landed_in_4518": true
++      },
++      "headroom_budget": {
++        "b_star_measured": false,
++        "candidate_rows": [
++          {
++            "budget": 8000,
++            "comparison_budget": 12000,
++            "comparison_solved_games": [
++              "lp85",
++              "ls20",
++              "m0r0",
++              "sp80",
++              "su15",
++              "vc33"
++            ],
++            "solved_games": [
++              "lp85",
++              "m0r0",
++              "sp80",
++              "vc33"
++            ],
++            "stable_vs_1_5x": false
++          },
++          {
++            "budget": 12000,
++            "comparison_budget": 18000,
++            "comparison_solved_games": [
++              "cd82",
++              "lp85",
++              "ls20",
++              "m0r0",
++              "sp80",
++              "su15",
++              "vc33"
++            ],
++            "solved_games": [
++              "lp85",
++              "ls20",
++              "m0r0",
++              "sp80",
++              "su15",
++              "vc33"
++            ],
++            "stable_vs_1_5x": false
++          },
++          {
++            "budget": 16000,
++            "comparison_budget": 24000,
++            "comparison_solved_games": [
++              "cd82",
++              "lp85",
++              "ls20",
++              "m0r0",
++              "sp80",
++              "su15",
++              "vc33"
++            ],
++            "solved_games": [
++              "lp85",
++              "ls20",
++              "m0r0",
++              "sp80",
++              "su15",
++              "vc33"
++            ],
++            "stable_vs_1_5x": false
++          },
++          {
++            "budget": 24000,
++            "comparison_budget": 36000,
++            "comparison_solved_games": [
++              "ls20",
++              "m0r0",
++              "vc33"
++            ],
++            "solved_games": [
++              "cd82",
++              "lp85",
++              "ls20",
++              "m0r0",
++              "sp80",
++              "su15",
++              "vc33"
++            ],
++            "stable_vs_1_5x": false
++          }
++        ],
++        "landed_in_4518": true,
++        "measured": true,
++        "no_blind_budget_raise": true,
++        "no_stable_candidate": true,
++        "selected_b_star": null,
++        "stable_rows": [],
++        "upstream_default_budget": 8000
++      }
++    }
++  },
++  "cited_upstream_artifacts": [
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "canonical_game_set",
++        "canonical_baseline",
++        "tests_added_pass",
++        "headroom_budget_measurement",
++        "canonical_default_budget"
++      ],
++      "path": "results/experiment_4518_metric_harness_canonical.json",
++      "sha256": "sha256:0b85016d9c1c36d464bc261c05bb404df9a8ca89e5ed1b5e829f4a62b786bdc1"
++    }
++  ],
++  "duration_s": 3.7782628120621666,
++  "experiment": "experiment_4528_infra_carryforward",
++  "field_principles": {
++    "b_track_status": "principle \"what landed in .417 B2 vs what this task completed -- the audit trail.\"",
++    "cited_upstream_artifacts": "principle \"traceability of the .417 B2 numbers this reconciles.\"",
++    "honest_verdict": "principle \"terminal prefix; shipped: infra_carryforward_complete OR complete: infra_audit_already_done.\"",
++    "inference_substrate": "principle \"aggregation_from_upstream_artifacts (reads the .417 B2 artifact) unless it measures B* live (then verifier_ensemble_against_cached_candidates).\"",
++    "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\""
++  },
++  "honest_verdict": "complete: infra_audit_already_done",
++  "inference_substrate": "aggregation_from_upstream_artifacts (reads the .417 B2 artifact)",
++  "leaderboard_submission": false,
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_md_read": true,
++    "fixture_test_file_present": true,
++    "gate_help_precondition": true,
++    "ok": true,
++    "spec_has_req_4528": true,
++    "upstream_artifact_present": true
++  },
++  "reproducibility_checksum": "sha256:eeb9bca4a28644ea7a5365c21575061ed441a952b47d28e32907c19b1957f211",
++  "requirements": [
++    "REQ-ARC-FCP-4528"
++  ],
++  "result_path": "results/experiment_4528_infra_carryforward.json",
++  "scenarios": [
++    "SCENARIO-ARC-FCP-4528"
++  ],
++  "schema": "carnot.arc_infra_carryforward_4528.v1",
++  "tests_added_pass": {
++    "command": ".venv/bin/pytest tests/python/test_experiment_4528_infra_carryforward.py -q --no-cov",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [5 items]\n\n.....                                                                    [100%]\n============================== 5 passed in 2.47s ===============================\n"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 40b8d9ace3..0c6f2daf91 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T02:01:29Z",
+-  "finished_at": "2026-06-21T02:01:29Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-21T02:25:28Z",
++  "finished_at": "2026-06-21T02:25:28Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 90ddcadf7f..6955d82260 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T02:01:30Z",
+-  "finished_at": "2026-06-21T02:01:30Z",
++  "started_at": "2026-06-21T02:25:28Z",
++  "finished_at": "2026-06-21T02:25:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index be66f31943..efa1ac5c87 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T02:01:30Z",
+-  "finished_at": "2026-06-21T02:01:30Z",
++  "started_at": "2026-06-21T02:25:28Z",
++  "finished_at": "2026-06-21T02:25:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4528_infra_carryforward.py b/tests/python/test_experiment_4528_infra_carryforward.py
+new file mode 100644
+index 0000000000..da4eea420e
+--- /dev/null
++++ b/tests/python/test_experiment_4528_infra_carryforward.py
+@@ -0,0 +1,330 @@
++"""Tests for Exp 4528 .417 B-track infra carryforward.
++
++Spec refs: REQ-ARC-FCP-4528, SCENARIO-ARC-FCP-4528.
++"""
++
++from __future__ import annotations
++
++import json
++import importlib.util
++from pathlib import Path
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++MODULE_PATH = REPO / "python" / "carnot" / "experiment_4528_infra_carryforward.py"
++
++_spec = importlib.util.spec_from_file_location("experiment_4528_infra_carryforward", MODULE_PATH)
++exp4528 = importlib.util.module_from_spec(_spec)
++assert _spec.loader is not None
++_spec.loader.exec_module(exp4528)
++
++
++def _preconditions(ok: bool = True) -> dict[str, object]:
++    return {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "gate_help_precondition": True,
++        "upstream_artifact_present": True,
++        "fixture_test_file_present": True,
++        "spec_has_req_4528": True,
++        "ok": ok,
++    }
++
++
++def _fixture_test_source() -> str:
++    return "\n".join(
++        [
++            "def test_a1_frame_change_prune_fails_lost_core_m0r0(): pass",
++            "def test_a2_imitation_prior_fails_core_traded_for_fringe(): pass",
++            "def test_positive_core_faster_passes_improved(): pass",
++            "def test_neutral_core_same_passes_non_inferior(): pass",
++            "def test_bonus_solve_reported_but_core_required(): pass",
++        ]
++    )
++
++
++def _upstream(*, stable_budget: int | None = None, tests_passed: bool = True) -> dict[str, object]:
++    rows = [
++        {
++            "budget": 8000,
++            "comparison_budget": 12000,
++            "solved_games": ["lp85", "m0r0", "sp80", "vc33"],
++            "comparison_solved_games": ["lp85", "ls20", "m0r0", "sp80", "su15", "vc33"],
++            "stable_vs_1_5x": False,
++        },
++        {
++            "budget": 12000,
++            "comparison_budget": 18000,
++            "solved_games": ["lp85", "ls20", "m0r0", "sp80", "su15", "vc33"],
++            "comparison_solved_games": ["cd82", "lp85", "ls20", "m0r0", "sp80", "su15", "vc33"],
++            "stable_vs_1_5x": False,
++        },
++    ]
++    selected_default = 8000
++    if stable_budget is not None:
++        rows.append(
++            {
++                "budget": stable_budget,
++                "comparison_budget": int(stable_budget * 1.5),
++                "solved_games": ["lp85", "m0r0", "sp80", "vc33"],
++                "comparison_solved_games": ["lp85", "m0r0", "sp80", "vc33"],
++                "stable_vs_1_5x": True,
++            }
++        )
++        selected_default = stable_budget
++    return {
++        "experiment": "experiment_4518_metric_harness_canonical",
++        "honest_verdict": "shipped: metric_harness_canonical_ci_guarded",
++        "canonical_game_set": ["lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20"],
++        "canonical_default_budget": selected_default,
++        "canonical_baseline": {
++            "action_metric_field": "actions",
++            "core_games": ["lp85", "m0r0", "sp80", "vc33"],
++            "median_actions_on_core": 7760.0,
++            "guard": {"ok": True, "errors": []},
++        },
++        "positive_control_passed": True,
++        "tests_added_pass": {
++            "command": ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py "
++            "tests/python/test_experiment_4518_metric_harness_canonical.py -q --no-cov",
++            "passed": tests_passed,
++            "stdout_tail": "15 passed",
++        },
++        "headroom_budget_measurement": {
++            "measured": True,
++            "selected_default_budget": selected_default,
++            "rows": rows,
++            "measurements_by_budget": {
++                "8000": {"solved_games": ["lp85", "m0r0", "sp80", "vc33"]},
++                "12000": {"solved_games": ["lp85", "ls20", "m0r0", "sp80", "su15", "vc33"]},
++            },
++        },
++    }
++
++
++def test_req_arc_fcp_4528_spec_declares_carryforward_contract() -> None:
++    """REQ-ARC-FCP-4528: OpenSpec anchors the carryforward artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-4528" in spec
++    assert "SCENARIO-ARC-FCP-4528" in spec
++    assert exp4528.RESULT_RELATIVE_PATH in spec
++    assert exp4528.UPSTREAM_RELATIVE_PATH in spec
++    for field, principle in exp4528.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_scenario_arc_fcp_4528_records_audit_without_blind_budget_raise() -> None:
++    """SCENARIO-ARC-FCP-4528: no stable headroom plateau is recorded, not raised."""
++
++    artifact = exp4528.build_artifact(
++        preconditions_checked=_preconditions(),
++        upstream_artifact=_upstream(),
++        fixture_test_source=_fixture_test_source(),
++        tests_added_pass={"command": "fixture", "passed": True},
++        duration_s=0.25,
++    )
++
++    assert exp4528.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "complete: infra_audit_already_done"
++    assert artifact["inference_substrate"] == exp4528.INFERENCE_SUBSTRATE
++    assert artifact["b_track_status"]["upstream_417_b2_landed"]["canonical_gate"]["core_containment_gate_canonical"]
++    assert artifact["b_track_status"]["upstream_417_b2_landed"]["fixture_ci_guard"]["ci_guarded"]
++    assert artifact["b_track_status"]["upstream_417_b2_landed"]["fixture_ci_guard"]["fixture_count"] == 5
++    headroom = artifact["b_track_status"]["upstream_417_b2_landed"]["headroom_budget"]
++    assert headroom["measured"] is True
++    assert headroom["b_star_measured"] is False
++    assert headroom["selected_b_star"] is None
++    assert artifact["b_track_status"]["this_task_completed"]["no_blind_budget_raise"] is True
++    assert artifact["cited_upstream_artifacts"][0]["path"] == exp4528.UPSTREAM_RELATIVE_PATH
++
++
++def test_req_arc_fcp_4528_selects_first_stable_b_star_when_present() -> None:
++    """REQ-ARC-FCP-4528: B* is the first stable budget in the upstream table."""
++
++    status = exp4528.audit_upstream(
++        _upstream(stable_budget=16000),
++        fixture_test_source=_fixture_test_source(),
++    )
++
++    headroom = status["upstream_417_b2_landed"]["headroom_budget"]
++    assert headroom["b_star_measured"] is True
++    assert headroom["selected_b_star"] == 16000
++    assert headroom["upstream_default_budget"] == 16000
++    assert status["this_task_completed"]["audit_only"] is True
++    assert status["gaps"] == []
++
++    fallback_default = exp4528.audit_upstream(
++        {
++            **_upstream(),
++            "canonical_default_budget": None,
++            "headroom_budget_measurement": {
++                "measured": True,
++                "selected_default_budget": "12000",
++                "rows": "not-a-list",
++            },
++        },
++        fixture_test_source=_fixture_test_source(),
++    )
++    assert fallback_default["upstream_417_b2_landed"]["headroom_budget"]["candidate_rows"] == []
++    assert fallback_default["upstream_417_b2_landed"]["headroom_budget"]["upstream_default_budget"] == 12000
++
++    hard_default = exp4528.audit_upstream(
++        {
++            **_upstream(),
++            "canonical_default_budget": None,
++            "headroom_budget_measurement": {"measured": True, "selected_default_budget": None, "rows": []},
++        },
++        fixture_test_source=_fixture_test_source(),
++    )
++    assert hard_default["upstream_417_b2_landed"]["headroom_budget"]["upstream_default_budget"] == 8000
++    assert exp4528._int_or_none(True) is None
++    assert exp4528._int_or_none("bad") is None
++
++
++def test_scenario_arc_fcp_4528_run_writes_json_from_upstream_artifact(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-4528: run() writes the stable carryforward JSON."""
++
++    upstream_path = tmp_path / exp4528.UPSTREAM_RELATIVE_PATH
++    upstream_path.parent.mkdir(parents=True)
++    upstream_path.write_text(json.dumps(_upstream()), encoding="utf-8")
++
++    artifact = exp4528.run(
++        root=tmp_path,
++        write=True,
++        preconditions_checked=_preconditions(),
++        fixture_test_source=_fixture_test_source(),
++        tests_added_pass={"command": "fixture", "passed": True},
++        now=lambda: 1.0,
++    )
++
++    out = tmp_path / exp4528.RESULT_RELATIVE_PATH
++    assert out.exists()
++    assert json.loads(out.read_text(encoding="utf-8")) == artifact
++    assert artifact["b_track_status"]["this_task_completed"]["completed_missing_piece"] == "none"
++
++    fixture_path = tmp_path / exp4528.FIXTURE_TEST_RELATIVE_PATH
++    fixture_path.parent.mkdir(parents=True, exist_ok=True)
++    fixture_path.write_text(_fixture_test_source(), encoding="utf-8")
++    assert exp4528.read_fixture_test_source(tmp_path) == _fixture_test_source()
++
++    bad_upstream = _upstream()
++    bad_upstream["canonical_default_budget"] = 12000
++    upstream_path.write_text(json.dumps(bad_upstream), encoding="utf-8")
++    try:
++        exp4528.run(
++            root=tmp_path,
++            write=False,
++            preconditions_checked=_preconditions(),
++            fixture_test_source=_fixture_test_source(),
++            tests_added_pass={"command": "fixture", "passed": True},
++            now=lambda: 1.0,
++        )
++    except ValueError as exc:
++        assert "no_blind_budget_raise" in str(exc)
++    else:  # pragma: no cover - assertion guard.
++        raise AssertionError("expected no_blind_budget_raise schema failure")
++
++
++def test_req_arc_fcp_4528_honest_verdict_and_schema_guardrails() -> None:
++    """REQ-ARC-FCP-4528: partial evidence produces terminal-prefixed audit verdicts."""
++
++    status = exp4528.audit_upstream(_upstream(), fixture_test_source=_fixture_test_source())
++    tests = {"passed": True}
++
++    assert exp4528._honest_verdict(preconditions_checked={"ok": False}, b_track_status=status, tests_added_pass=tests) == (
++        "blocked_infra_carryforward_preconditions"
++    )
++
++    missing_gate = exp4528.audit_upstream(
++        {**_upstream(), "canonical_baseline": {"guard": {"ok": False}}},
++        fixture_test_source=_fixture_test_source(),
++    )
++    assert exp4528._honest_verdict(
++        preconditions_checked=_preconditions(),
++        b_track_status=missing_gate,
++        tests_added_pass=tests,
++    ) == "complete: infra_carryforward_missing_canonical_gate_evidence"
++
++    missing_fixtures = exp4528.audit_upstream(
++        _upstream(tests_passed=False),
++        fixture_test_source="def test_only_one_fixture(): pass",
++    )
++    assert exp4528._honest_verdict(
++        preconditions_checked=_preconditions(),
++        b_track_status=missing_fixtures,
++        tests_added_pass=tests,
++    ) == "complete: infra_carryforward_missing_fixture_ci_guard"
++
++    no_headroom = exp4528.audit_upstream(
++        {**_upstream(), "headroom_budget_measurement": {"measured": False, "rows": []}},
++        fixture_test_source=_fixture_test_source(),
++    )
++    assert exp4528._honest_verdict(
++        preconditions_checked=_preconditions(),
++        b_track_status=no_headroom,
++        tests_added_pass=tests,
++    ) == "complete: infra_carryforward_missing_headroom_measurement"
++
++    assert exp4528._honest_verdict(
++        preconditions_checked=_preconditions(),
++        b_track_status=status,
++        tests_added_pass={"passed": False},
++    ) == "complete: infra_carryforward_tests_not_green"
++
++    valid = exp4528.build_artifact(
++        preconditions_checked=_preconditions(),
++        upstream_artifact=_upstream(),
++        fixture_test_source=_fixture_test_source(),
++        tests_added_pass={"command": "fixture", "passed": True},
++        duration_s=0.25,
++    )
++    missing = dict(valid)
++    missing.pop("schema")
++    assert "missing required field schema" in exp4528.artifact_schema_errors(missing)
++
++    malformed = {
++        **valid,
++        "honest_verdict": "working",
++        "inference_substrate": "live",
++        "field_principles": {},
++        "preconditions_checked": [],
++        "b_track_status": [],
++        "cited_upstream_artifacts": {},
++        "tests_added_pass": [],
++        "reproducibility_checksum": 123,
++        "leaderboard_submission": True,
++        "result_path": "wrong.json",
++    }
++    malformed_errors = exp4528.artifact_schema_errors(malformed)
++    assert "honest_verdict must start with a terminal prefix" in malformed_errors
++    assert "inference_substrate must match the required substrate" in malformed_errors
++    assert "field_principles must match required principles" in malformed_errors
++    assert "preconditions_checked must be a mapping" in malformed_errors
++    assert "b_track_status must be a mapping" in malformed_errors
++    assert "cited_upstream_artifacts must be a list" in malformed_errors
++    assert "tests_added_pass must be a mapping" in malformed_errors
++    assert "reproducibility_checksum must be sha256-prefixed" in malformed_errors
++    assert "leaderboard_submission must be false" in malformed_errors
++    assert "result_path must point to the 4528 artifact" in malformed_errors
++
++    blind_raise = {
++        **valid,
++        "b_track_status": {
++            **valid["b_track_status"],
++            "this_task_completed": {
++                **valid["b_track_status"]["this_task_completed"],
++                "no_blind_budget_raise": False,
++            },
++        },
++    }
++    blind_raise["reproducibility_checksum"] = exp4528.payload_checksum(blind_raise)
++    assert "no_blind_budget_raise must be true for terminal audits" in exp4528.artifact_schema_errors(
++        blind_raise
++    )
++
++    bad = {**valid, "reproducibility_checksum": "sha256:bad"}
++    assert "reproducibility_checksum must match payload" in exp4528.artifact_schema_errors(bad)
+-- 
+2.55.0
+

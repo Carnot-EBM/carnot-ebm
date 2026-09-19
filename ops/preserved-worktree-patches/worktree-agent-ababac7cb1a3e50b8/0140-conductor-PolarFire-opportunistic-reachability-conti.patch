@@ -1,0 +1,679 @@
+From 1dc41dff3b0f66f78191b0fd12a7295a43624a92 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 08:31:41 -0400
+Subject: [PATCH 00140/11362] [conductor] PolarFire opportunistic reachability
+ + continuity audit (per Hardware-Task Continuity; reachable in .338)
+
+Automated research step by research conductor.
+Task ID: exp3710-polarfire-continuity-v26
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/fpga/spec.md            |  55 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_3710_polarfire_continuity_v26.py | 231 +++++++++++++++++
+ ...eriment_3710_polarfire_continuity_v26.json |  61 +++++
+ ...xperiment_3710_polarfire_continuity_v26.py |  15 ++
+ ...xperiment_3710_polarfire_continuity_v26.py | 243 ++++++++++++++++++
+ 6 files changed, 606 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_3710_polarfire_continuity_v26.py
+ create mode 100644 results/experiment_3710_polarfire_continuity_v26.json
+ create mode 100644 scripts/experiment_3710_polarfire_continuity_v26.py
+ create mode 100644 tests/python/test_experiment_3710_polarfire_continuity_v26.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index c14010c8dd..65a6b82349 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -4490,6 +4490,61 @@ deterministic seed, checksum, and duration.
+ **Implementation status:** Pending (Exp 3709)
+ 
+ 
++---
++
++### REQ-HW-3710
++
++**Title:** PolarFire continuity v26 MUST confirm live SSH continuity for milestone .339
++
++**Description:**
++Experiment 3710 MUST perform the milestone PolarFire hardware-task continuity
++check. Hardware-Task Continuity requires one PolarFire task per milestone, and
++the board was last recorded reachable in .338. The experiment MUST first execute
++the SSH precondition:
++
++`ssh -o ConnectTimeout=5 polarfire 'true'`
++
++If that precondition exits zero, the experiment MUST collect live continuity
++evidence from the board by recording uptime and the Carnot dispatch path with
++distinct, deflagged PolarFire field names. If the precondition exits non-zero,
++the experiment MUST write the terminal blocked verdict and MUST NOT claim board
++continuity values.
++
++**Acceptance criteria:**
++- `results/experiment_3710_polarfire_continuity_v26.json` is generated.
++- The artifact includes `honest_verdict`, `inference_substrate`,
++  `preconditions_checked`, `polarfire_ssh_reachable`, `random_seed`,
++  `reproducibility_checksum`, and `duration_s`.
++- The artifact includes field-principle annotations for each required field,
++  documenting why the value exists while storing the bare value separately.
++- `inference_substrate` MUST be exactly `"hardware_smoke"` and MUST NOT include
++  GGUF or CUDA markers.
++- If `ssh -o ConnectTimeout=5 polarfire 'true'` succeeds, the verdict MUST be
++  `"complete: polarfire_continuity_confirmed_reachable"` and the artifact MUST
++  include PolarFire uptime and Carnot dispatch-path values.
++- If the SSH precondition fails, the verdict MUST be
++  `"complete: blocked_polarfire_ssh_timeout"` and the artifact MUST record the
++  failed precondition before reporting the blocked board state.
++
++**Implementation status:** Implemented (Exp 3710)
++
++---
++
++### SCENARIO-HW-3710
++
++**Scenario:** PolarFire continuity v26 records reachable or blocked state from SSH.
++
++**Given:** A PolarFire continuity check is required for milestone .339 after the
++board was reachable in .338.
++**When:** Experiment 3710 runs the SSH reachability precondition and, only when
++reachable, asks the board for uptime and the Carnot dispatch path.
++**Then:** It writes `results/experiment_3710_polarfire_continuity_v26.json` with
++the terminal verdict, SSH state, precondition record, live continuity values
++when reachable, field principles, deterministic seed, checksum, and duration.
++
++**Implementation status:** Implemented (Exp 3710)
++
++
+ ---
+ 
+ ### REQ-HW-3687
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f106b57a37..b6139dc659 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2835,
++  "experiments_checked": 2836,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_3710_polarfire_continuity_v26.py b/python/carnot/experiment_3710_polarfire_continuity_v26.py
+new file mode 100644
+index 0000000000..e4befa99ca
+--- /dev/null
++++ b/python/carnot/experiment_3710_polarfire_continuity_v26.py
+@@ -0,0 +1,231 @@
++"""Build the Exp 3710 PolarFire continuity v26 artifact.
++
++Spec refs: REQ-HW-3710, SCENARIO-HW-3710.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import shlex
++import subprocess
++import time
++
++EXPERIMENT_ID = "exp3710"
++TASK_ID = "exp3710-polarfire-continuity-v26"
++SCHEMA = "carnot.polarfire_continuity.v26"
++OUTPUT_REL_PATH = Path("results/experiment_3710_polarfire_continuity_v26.json")
++RANDOM_SEED = 3710
++
++POLARFIRE_SSH_COMMAND = ("ssh", "-o", "ConnectTimeout=5", "polarfire", "true")
++POLARFIRE_UPTIME_COMMAND = ("ssh", "polarfire", "uptime")
++POLARFIRE_DISPATCH_COMMAND = ("ssh", "polarfire", "which carnot")
++
++REACHABLE_VERDICT = "complete: polarfire_continuity_confirmed_reachable"
++BLOCKED_VERDICT = "complete: blocked_polarfire_ssh_timeout"
++
++CURRENT_MILESTONE = ".339"
++LAST_RECORDED_REACHABLE_MILESTONE = ".338"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "preconditions_checked",
++    "polarfire_ssh_reachable",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "SSH-attached board test.",
++    "preconditions_checked": ("Records the SSH-reachability check before claiming continuity."),
++    "polarfire_ssh_reachable": "Honest board state.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++    "polarfire_uptime": (
++        "Live board continuity value collected only after SSH reachability passes."
++    ),
++    "polarfire_carnot_dispatch_path": (
++        "Live Carnot dispatch-path value collected only after SSH reachability passes."
++    ),
++    "polarfire_continuity_state": (
++        "Deflagged summary derived from the distinct PolarFire uptime and dispatch fields."
++    ),
++}
++
++
++@dataclass(frozen=True)
++class CommandProbe:
++    command: tuple[str, ...]
++    exit_code: int
++    stdout: str = ""
++    stderr: str = ""
++
++    @property
++    def combined_output(self) -> str:
++        return f"{self.stdout}{self.stderr}"
++
++    def as_dict(self) -> dict[str, object]:
++        return {
++            "command": command_to_string(self.command),
++            "exit_code": self.exit_code,
++            "stdout": self.stdout,
++            "stderr": self.stderr,
++            "combined_output": self.combined_output,
++        }
++
++
++CommandRunner = Callable[[tuple[str, ...]], CommandProbe]
++
++
++def command_to_string(command: tuple[str, ...]) -> str:
++    return shlex.join(command)
++
++
++def run_command(command: tuple[str, ...]) -> CommandProbe:
++    """Run one command and preserve enough transcript to audit board continuity."""
++    try:
++        completed = subprocess.run(
++            list(command),
++            check=False,
++            capture_output=True,
++            text=True,
++        )
++    except OSError as exc:
++        return CommandProbe(command=command, exit_code=127, stderr=str(exc))
++    return CommandProbe(
++        command=command,
++        exit_code=completed.returncode,
++        stdout=completed.stdout,
++        stderr=completed.stderr,
++    )
++
++
++def sha256_payload(payload: dict[str, object]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _precondition_entry(ssh_probe: CommandProbe) -> dict[str, object]:
++    return {
++        "resource": "polarfire_ssh",
++        "command": command_to_string(POLARFIRE_SSH_COMMAND),
++        "available": ssh_probe.exit_code == 0,
++        "exit_code": ssh_probe.exit_code,
++    }
++
++
++def _uptime_value(probe: CommandProbe | None) -> str | None:
++    if probe is None:
++        return None
++    if probe.exit_code != 0:
++        return "unknown"
++    stripped = probe.stdout.strip()
++    return stripped or "unknown"
++
++
++def _dispatch_value(probe: CommandProbe | None) -> str | None:
++    if probe is None:
++        return None
++    if probe.exit_code != 0:
++        return "not_found"
++    stripped = probe.stdout.strip()
++    return stripped or "not_found"
++
++
++def _continuity_state(
++    ssh_reachable: bool,
++    uptime_probe: CommandProbe | None,
++    dispatch_probe: CommandProbe | None,
++) -> str:
++    if not ssh_reachable:
++        return "blocked_ssh_timeout"
++    if (
++        uptime_probe is not None
++        and dispatch_probe is not None
++        and uptime_probe.exit_code == 0
++        and dispatch_probe.exit_code == 0
++    ):
++        return "reachable_uptime_and_dispatch_path_recorded_deflagged"
++    return "reachable_probe_values_incomplete"
++
++
++def build_artifact(
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> dict[str, object]:
++    """Build a continuity artifact from the SSH precondition and board probes."""
++    started = time.perf_counter()
++    ssh_probe = command_runner(POLARFIRE_SSH_COMMAND)
++    ssh_reachable = ssh_probe.exit_code == 0
++
++    uptime_probe = command_runner(POLARFIRE_UPTIME_COMMAND) if ssh_reachable else None
++    dispatch_probe = command_runner(POLARFIRE_DISPATCH_COMMAND) if ssh_reachable else None
++    raw_elapsed = duration_s if duration_s is not None else time.perf_counter() - started
++    elapsed = max(float(raw_elapsed), 0.0001)
++
++    payload: dict[str, object] = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "honest_verdict": REACHABLE_VERDICT if ssh_reachable else BLOCKED_VERDICT,
++        "inference_substrate": "hardware_smoke",
++        "preconditions_checked": [_precondition_entry(ssh_probe)],
++        "polarfire_ssh_reachable": ssh_reachable,
++        "polarfire_uptime": _uptime_value(uptime_probe),
++        "polarfire_carnot_dispatch_path": _dispatch_value(dispatch_probe),
++        "polarfire_continuity_state": _continuity_state(
++            ssh_reachable,
++            uptime_probe,
++            dispatch_probe,
++        ),
++        "continuity_history": {
++            "current_milestone": CURRENT_MILESTONE,
++            "last_recorded_reachable_milestone": LAST_RECORDED_REACHABLE_MILESTONE,
++        },
++        "command_probes": {
++            "polarfire_ssh": ssh_probe.as_dict(),
++            "polarfire_uptime": uptime_probe.as_dict() if uptime_probe is not None else None,
++            "polarfire_carnot_dispatch_path": (
++                dispatch_probe.as_dict() if dispatch_probe is not None else None
++            ),
++        },
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(elapsed, 4),
++    }
++    payload["reproducibility_checksum"] = sha256_payload(payload)
++    return payload
++
++
++def write_artifact(repo_root: str | Path, payload: dict[str, object]) -> Path:
++    out_path = Path(repo_root) / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    return out_path
++
++
++def run_experiment(
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> Path:
++    payload = build_artifact(command_runner=command_runner, duration_s=duration_s)
++    return write_artifact(repo_root, payload)
++
++
++def main() -> None:  # pragma: no cover
++    run_experiment(Path("."))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_3710_polarfire_continuity_v26.json b/results/experiment_3710_polarfire_continuity_v26.json
+new file mode 100644
+index 0000000000..3702bcdf76
+--- /dev/null
++++ b/results/experiment_3710_polarfire_continuity_v26.json
+@@ -0,0 +1,61 @@
++{
++  "command_probes": {
++    "polarfire_carnot_dispatch_path": {
++      "combined_output": "/usr/bin/carnot\n",
++      "command": "ssh polarfire 'which carnot'",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "/usr/bin/carnot\n"
++    },
++    "polarfire_ssh": {
++      "combined_output": "",
++      "command": "ssh -o ConnectTimeout=5 polarfire true",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": ""
++    },
++    "polarfire_uptime": {
++      "combined_output": " 12:29:47 up 3 days, 22:00,  0 user,  load average: 0.02, 0.01, 0.00\n",
++      "command": "ssh polarfire uptime",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": " 12:29:47 up 3 days, 22:00,  0 user,  load average: 0.02, 0.01, 0.00\n"
++    }
++  },
++  "continuity_history": {
++    "current_milestone": ".339",
++    "last_recorded_reachable_milestone": ".338"
++  },
++  "duration_s": 2.5071,
++  "experiment_id": "exp3710",
++  "field_principles": {
++    "duration_s": "Plausibility floor.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "SSH-attached board test.",
++    "polarfire_carnot_dispatch_path": "Live Carnot dispatch-path value collected only after SSH reachability passes.",
++    "polarfire_continuity_state": "Deflagged summary derived from the distinct PolarFire uptime and dispatch fields.",
++    "polarfire_ssh_reachable": "Honest board state.",
++    "polarfire_uptime": "Live board continuity value collected only after SSH reachability passes.",
++    "preconditions_checked": "Records the SSH-reachability check before claiming continuity.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection."
++  },
++  "honest_verdict": "complete: polarfire_continuity_confirmed_reachable",
++  "inference_substrate": "hardware_smoke",
++  "polarfire_carnot_dispatch_path": "/usr/bin/carnot",
++  "polarfire_continuity_state": "reachable_uptime_and_dispatch_path_recorded_deflagged",
++  "polarfire_ssh_reachable": true,
++  "polarfire_uptime": "12:29:47 up 3 days, 22:00,  0 user,  load average: 0.02, 0.01, 0.00",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 polarfire true",
++      "exit_code": 0,
++      "resource": "polarfire_ssh"
++    }
++  ],
++  "random_seed": 3710,
++  "reproducibility_checksum": "d12100133c55e0a1de7cf606b883d477cde5da39cf8c2eedb236560d06c02acc",
++  "schema": "carnot.polarfire_continuity.v26",
++  "task_id": "exp3710-polarfire-continuity-v26"
++}
+diff --git a/scripts/experiment_3710_polarfire_continuity_v26.py b/scripts/experiment_3710_polarfire_continuity_v26.py
+new file mode 100644
+index 0000000000..2e2b1bf163
+--- /dev/null
++++ b/scripts/experiment_3710_polarfire_continuity_v26.py
+@@ -0,0 +1,15 @@
++#!/usr/bin/env python3
++"""Entrypoint for Exp 3710 PolarFire continuity v26."""
++
++from __future__ import annotations
++
++import os
++import sys
++
++sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../python")))
++
++from carnot.experiment_3710_polarfire_continuity_v26 import main
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_3710_polarfire_continuity_v26.py b/tests/python/test_experiment_3710_polarfire_continuity_v26.py
+new file mode 100644
+index 0000000000..21777538c7
+--- /dev/null
++++ b/tests/python/test_experiment_3710_polarfire_continuity_v26.py
+@@ -0,0 +1,243 @@
++"""Tests for Exp 3710 PolarFire continuity v26.
++
++Spec refs: REQ-HW-3710, SCENARIO-HW-3710.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++from carnot import experiment_3710_polarfire_continuity_v26 as mod
++
++
++class RecordingRunner:
++    """Deterministic command runner so tests can describe board states without SSH."""
++
++    def __init__(self, probes: dict[tuple[str, ...], mod.CommandProbe]) -> None:
++        self.probes = probes
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...]) -> mod.CommandProbe:
++        self.commands.append(command)
++        if command not in self.probes:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command]
++
++
++def _probe(
++    command: tuple[str, ...],
++    exit_code: int,
++    stdout: str = "",
++    stderr: str = "",
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command=command, exit_code=exit_code, stdout=stdout, stderr=stderr)
++
++
++def _assert_required_fields_and_principles(payload: dict[str, object]) -> None:
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in payload
++        assert field in payload["field_principles"]
++        assert "principle" not in str(payload[field]).lower()
++
++
++def test_req_hw_3710_spec_anchor_declares_reachable_continuity_contract() -> None:
++    """REQ-HW-3710: OpenSpec declares the PolarFire v26 continuity artifact."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++    assert "REQ-HW-3710" in spec
++    assert "SCENARIO-HW-3710" in spec
++    assert "experiment_3710_polarfire_continuity_v26.json" in spec
++    assert "ssh -o ConnectTimeout=5 polarfire 'true'" in spec
++    assert "GGUF or CUDA markers" in spec
++    assert "complete: polarfire_continuity_confirmed_reachable" in spec
++    assert "complete: blocked_polarfire_ssh_timeout" in spec
++
++
++def test_scenario_hw_3710_unreachable_stops_after_precondition() -> None:
++    """SCENARIO-HW-3710: failed SSH precondition records blocked board state."""
++    runner = RecordingRunner(
++        {
++            mod.POLARFIRE_SSH_COMMAND: _probe(
++                mod.POLARFIRE_SSH_COMMAND,
++                255,
++                stderr="ssh: connect to host polarfire port 22: timed out\n",
++            )
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=0.9)
++
++    assert runner.commands == [mod.POLARFIRE_SSH_COMMAND]
++    assert payload["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert payload["inference_substrate"] == "hardware_smoke"
++    assert "gguf" not in json.dumps(payload).lower()
++    assert "cuda" not in json.dumps(payload).lower()
++    assert payload["polarfire_ssh_reachable"] is False
++    assert payload["polarfire_uptime"] is None
++    assert payload["polarfire_carnot_dispatch_path"] is None
++    assert payload["polarfire_continuity_state"] == "blocked_ssh_timeout"
++    assert payload["continuity_history"] == {
++        "current_milestone": ".339",
++        "last_recorded_reachable_milestone": ".338",
++    }
++    assert payload["preconditions_checked"] == [
++        {
++            "resource": "polarfire_ssh",
++            "command": mod.command_to_string(mod.POLARFIRE_SSH_COMMAND),
++            "available": False,
++            "exit_code": 255,
++        }
++    ]
++    assert payload["command_probes"]["polarfire_uptime"] is None
++    assert payload["command_probes"]["polarfire_carnot_dispatch_path"] is None
++    _assert_required_fields_and_principles(payload)
++
++
++def test_scenario_hw_3710_reachable_records_deflagged_uptime_and_dispatch_path() -> None:
++    """SCENARIO-HW-3710: reachable SSH records live continuity values."""
++    runner = RecordingRunner(
++        {
++            mod.POLARFIRE_SSH_COMMAND: _probe(mod.POLARFIRE_SSH_COMMAND, 0),
++            mod.POLARFIRE_UPTIME_COMMAND: _probe(
++                mod.POLARFIRE_UPTIME_COMMAND,
++                0,
++                stdout="02:57:09 up 3 days, load average: 0.01, 0.00, 0.00\n",
++            ),
++            mod.POLARFIRE_DISPATCH_COMMAND: _probe(
++                mod.POLARFIRE_DISPATCH_COMMAND,
++                0,
++                stdout="/usr/bin/carnot\n",
++            ),
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=1.4)
++
++    assert runner.commands == [
++        mod.POLARFIRE_SSH_COMMAND,
++        mod.POLARFIRE_UPTIME_COMMAND,
++        mod.POLARFIRE_DISPATCH_COMMAND,
++    ]
++    assert payload["honest_verdict"] == mod.REACHABLE_VERDICT
++    assert payload["polarfire_ssh_reachable"] is True
++    assert payload["polarfire_uptime"] == "02:57:09 up 3 days, load average: 0.01, 0.00, 0.00"
++    assert payload["polarfire_carnot_dispatch_path"] == "/usr/bin/carnot"
++    assert payload["polarfire_continuity_state"] == (
++        "reachable_uptime_and_dispatch_path_recorded_deflagged"
++    )
++    assert not any("flag" in key for key in payload if key.startswith("polarfire_"))
++    dispatch_probe = payload["command_probes"]["polarfire_carnot_dispatch_path"]
++    assert dispatch_probe["command"] == mod.command_to_string(mod.POLARFIRE_DISPATCH_COMMAND)
++    assert dispatch_probe["stdout"] == "/usr/bin/carnot\n"
++    _assert_required_fields_and_principles(payload)
++
++
++def test_req_hw_3710_reachable_probe_failures_are_recorded_as_values() -> None:
++    """REQ-HW-3710: reachable SSH still stores uptime/path values if probes fail."""
++    runner = RecordingRunner(
++        {
++            mod.POLARFIRE_SSH_COMMAND: _probe(mod.POLARFIRE_SSH_COMMAND, 0),
++            mod.POLARFIRE_UPTIME_COMMAND: _probe(
++                mod.POLARFIRE_UPTIME_COMMAND,
++                1,
++                stderr="uptime: failed\n",
++            ),
++            mod.POLARFIRE_DISPATCH_COMMAND: _probe(
++                mod.POLARFIRE_DISPATCH_COMMAND,
++                1,
++                stderr="which: no carnot in path\n",
++            ),
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=2.0)
++
++    assert payload["honest_verdict"] == mod.REACHABLE_VERDICT
++    assert payload["polarfire_ssh_reachable"] is True
++    assert payload["polarfire_uptime"] == "unknown"
++    assert payload["polarfire_carnot_dispatch_path"] == "not_found"
++    assert payload["polarfire_continuity_state"] == "reachable_probe_values_incomplete"
++    assert payload["command_probes"]["polarfire_uptime"]["exit_code"] == 1
++    assert payload["command_probes"]["polarfire_carnot_dispatch_path"]["exit_code"] == 1
++
++
++def test_req_hw_3710_field_principles_match_required_why_annotations() -> None:
++    """REQ-HW-3710: required fields store values and principles store the why."""
++    assert mod.FIELD_PRINCIPLES == {
++        "honest_verdict": "Terminal prefix for reconciler classification.",
++        "inference_substrate": "SSH-attached board test.",
++        "preconditions_checked": (
++            "Records the SSH-reachability check before claiming continuity."
++        ),
++        "polarfire_ssh_reachable": "Honest board state.",
++        "random_seed": "Determinism precondition.",
++        "reproducibility_checksum": "Drift detection.",
++        "duration_s": "Plausibility floor.",
++        "polarfire_uptime": (
++            "Live board continuity value collected only after SSH reachability passes."
++        ),
++        "polarfire_carnot_dispatch_path": (
++            "Live Carnot dispatch-path value collected only after SSH reachability passes."
++        ),
++        "polarfire_continuity_state": (
++            "Deflagged summary derived from the distinct PolarFire uptime and dispatch fields."
++        ),
++    }
++
++
++def test_req_hw_3710_write_artifact_preserves_schema_and_checksum(tmp_path: Path) -> None:
++    """REQ-HW-3710: result JSON has required fields, principles, and checksum."""
++    runner = RecordingRunner(
++        {
++            mod.POLARFIRE_SSH_COMMAND: _probe(mod.POLARFIRE_SSH_COMMAND, 0),
++            mod.POLARFIRE_UPTIME_COMMAND: _probe(
++                mod.POLARFIRE_UPTIME_COMMAND,
++                0,
++                stdout="up 10 days\n",
++            ),
++            mod.POLARFIRE_DISPATCH_COMMAND: _probe(
++                mod.POLARFIRE_DISPATCH_COMMAND,
++                0,
++                stdout="/opt/carnot/bin/carnot\n",
++            ),
++        }
++    )
++
++    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=runner, duration_s=0.0)
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++    assert payload["schema"] == mod.SCHEMA
++    assert payload["experiment_id"] == "exp3710"
++    assert payload["random_seed"] == mod.RANDOM_SEED
++    assert payload["duration_s"] == 0.0001
++    assert payload["field_principles"] == mod.FIELD_PRINCIPLES
++    checksum_payload = dict(payload)
++    checksum_payload.pop("reproducibility_checksum")
++    assert payload["reproducibility_checksum"] == mod.sha256_payload(checksum_payload)
++    _assert_required_fields_and_principles(payload)
++
++
++def test_req_hw_3710_run_command_captures_output_and_exec_errors() -> None:
++    """REQ-HW-3710: command probes preserve command, output, and failed execs."""
++    ok_probe = mod.run_command(
++        (sys.executable, "-c", "import sys; print('OK'); sys.stderr.write('ERR\\n')")
++    )
++    assert ok_probe.exit_code == 0
++    assert ok_probe.stdout == "OK\n"
++    assert ok_probe.stderr == "ERR\n"
++    assert ok_probe.combined_output == "OK\nERR\n"
++    assert sys.executable in ok_probe.as_dict()["command"]
++
++    missing_probe = mod.run_command(("/definitely/missing/ssh-for-req-hw-3710",))
++    assert missing_probe.exit_code == 127
++    assert "No such file" in missing_probe.stderr
++
++
++def test_scenario_hw_3710_script_wrapper_exists() -> None:
++    """SCENARIO-HW-3710: conductor entrypoint delegates to the module main."""
++    script = Path("scripts/experiment_3710_polarfire_continuity_v26.py")
++    text = script.read_text(encoding="utf-8")
++    assert "experiment_3710_polarfire_continuity_v26" in text
++    assert "main" in text
+-- 
+2.55.0
+

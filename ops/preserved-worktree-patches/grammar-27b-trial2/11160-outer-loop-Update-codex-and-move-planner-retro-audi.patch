@@ -1,0 +1,99 @@
+From 6932d330ad3bb61e83a7687234c86bb5573a7093 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 01:23:23 -0400
+Subject: [PATCH 11160/11171] [outer-loop] Update codex and move
+ planner/retro/audit to gpt-6-astra
+
+Operator directive named a 'new 6 pro model' for conductor planning, critical
+thinking and adversarial review, without the exact name.
+
+The installed codex was 0.144.1 from 2026-07-10 and knew nothing newer than
+gpt-5.6-sol, so it was updated to 0.153.4 first. The new binary offers two
+candidates and both were probed rather than guessed. gpt-5.6-pro returns HTTP
+400: not supported when using Codex with a ChatGPT account. gpt-6-astra works,
+answering a repo-reading prompt correctly in 9.8s. The second probe was
+conductor-shaped on purpose, because a long-prompt hang is how codex failed
+this project in May and a one-word smoke test would not find it.
+
+Drop-in 70- sets the three reasoning tiers only. AGENT_MODEL stays gpt-5.6-sol:
+the bulk experiment tier was not named, and it makes the most calls, so moving
+it is a cost decision rather than a quality one.
+
+Applied at a clean boundary with no child running and the last task 24 minutes
+finished, so nothing in flight was lost. Verified from the new process's own
+environ rather than from the unit file. A daemon-reload alone would not have
+taken effect: the conductor is long-lived and its self-re-exec keeps the old
+environment.
+
+Stated as unverified: no planner, retro or audit phase has yet RUN on the new
+model, since those fire at milestone close. Two probes are not a completed
+planning cycle.
+
+Rollback for both halves recorded in the drop-in and in status.md.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index c62ec70377..c0d11ed625 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -89,6 +89,52 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
+ would manufacture a record, which is worse than the gap it hides.
+ 
+ 
++## 2026-09-05 05:25Z — codex updated; planner, retro and audit moved to gpt-6-astra
++
++Operator directive: "there is a new codex supporting a new 6 pro model that we should use for
++conductor planning and critical thinking and adversarial review. I do not know the exact model
++name."
++
++**The model is `gpt-6-astra`, and the literal "pro" model does not work on this account.** The
++installed codex was 0.144.1 from 2026-07-10 and knew nothing newer than `gpt-5.6-sol`, so
++`codex update` ran first: **0.144.1 to 0.153.4**. The new binary offers two candidates matching
++the description. Both were PROBED rather than guessed:
++
++| candidate | result |
++|---|---|
++| `gpt-5.6-pro` | **HTTP 400**: "The 'gpt-5.6-pro' model is not supported when using Codex with a ChatGPT account." Also warns its model metadata is missing. |
++| `gpt-6-astra` | Works. Trivial prompt returned OK. A repo-reading prompt returned the correct answer in 9.8 s and 5,467 tokens, no hang. |
++
++The second probe was deliberately conductor-shaped — read a file in the repo and answer a
++question — because a long-prompt hang is how codex failed this project on 2026-05-29, and a
++one-word smoke test would not have found it.
++
++**What changed.** New drop-in
++`~/.config/systemd/user/carnot-conductor.service.d/70-model-gpt6astra-20260905.conf` sets
++`AGENT_MODEL_PLANNER`, `AGENT_MODEL_RETRO` and `AGENT_MODEL_AUDIT` to `gpt-6-astra`. Written as a
++new drop-in rather than an edit to `60-`, matching how `40-`, `50-` and `60-` were added: later
++files win and the earlier ones keep their incident history intact.
++
++**What did NOT change.** `AGENT_MODEL` stays `gpt-5.6-sol`. That is the bulk experiment tier, the
++directive did not name it, and it makes by far the most calls — moving it is a cost decision, not
++a quality one. `CODEX_FORCE_EXPERIMENTS` and every `AGENT_TYPE_*` are untouched.
++
++**Applied and verified live.** The conductor was restarted at a clean boundary: no child was
++running and the last task had finished 24 minutes earlier, so nothing in flight was lost. New
++pid 3455204. Its `/proc/<pid>/environ` confirms the three tiers read `gpt-6-astra` while
++`AGENT_MODEL` reads `gpt-5.6-sol`, and it has since picked up a task on the 0.153.4 binary. A
++`daemon-reload` alone would not have done this: the conductor is a long-lived `--loop` process
++and its self-re-exec keeps the old environment.
++
++**Rollback, both halves.** The previous CLI release is still on disk:
++`ln -sfn ~/.codex/packages/standalone/releases/0.144.1-x86_64-unknown-linux-musl ~/.codex/packages/standalone/current`.
++For the model, delete the drop-in and `systemctl --user daemon-reload`, then restart.
++
++**Unverified, stated rather than assumed.** No planner, retro or audit phase has RUN on
++`gpt-6-astra` yet — those fire at milestone close. The evidence so far is two direct probes, not
++a completed planning cycle. Watch the next `.615` close for output quality and for any stall,
++since planner timeouts are the historical failure mode when a model changes.
++
+ ## 2026-09-05 05:25Z — CORRECTION 7: my provenance work was redundant, and the headline is now dark
+ 
+ **The dashboard's generalization line went from "5 level(s) across 9 game(s)" to
+-- 
+2.55.0
+

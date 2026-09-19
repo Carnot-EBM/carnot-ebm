@@ -1,0 +1,167 @@
+From 33c63162f8d1da0a55341627400279d96bf92711 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 04:18:11 -0400
+Subject: [PATCH 11165/11171] fix(arc): clear failed tool-loop receipts
+
+---
+ .../arc-world-model-trust-energy/spec.md      |  5 +-
+ .../carnot/agentic/arc_induction_tool_loop.py | 11 ++-
+ .../python/test_arc_tool_grammar_transport.py | 72 ++++++++++++++++++-
+ 3 files changed, 83 insertions(+), 5 deletions(-)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 59a87a448a..db10cd7701 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -30134,7 +30134,7 @@ The transport SHALL reject vLLM before sending a grammar request. This feature
+ is confirmed only for llama.cpp. Unsupported transport SHALL follow the existing
+ tool-loop failure and single-shot fallback, with a diagnostic.
+ The existing compactor requires native tool messages. Grammar plus enabled
+-compaction SHALL be explicitly rejected before HTTP, with the same fallback;
++compaction SHALL be explicitly rejected before a grammar chat request, with the same fallback;
+ it SHALL NOT silently claim compaction of the JSON message stream.
+ 
+ ### SCENARIO-ARC-WMTE-7044-A: The call site sends the grammar
+@@ -30156,6 +30156,9 @@ outer response shapes and nonfinite JSON constants SHALL also be rejected.
+ Scored attempt records SHALL retain grammar statistics, including initial bounded
+ refinement rounds and repair rounds. Grammar prompts SHALL not demand a final
+ Python fence that their own output grammar forbids.
++Every loop invocation SHALL replace prior diagnostics before attempting server
++startup or evidence staging, so an early failure in repair or refinement cannot
++report another attempt's successful grammar calls.
+ 
+ Both the scored `E3AgentPolicy` path and `arc_loop_solve.py --mechanism e3` SHALL
+ reach this transport through the existing proposer. Tests SHALL drive the real
+diff --git a/python/carnot/agentic/arc_induction_tool_loop.py b/python/carnot/agentic/arc_induction_tool_loop.py
+index 79341d3009..e145efe6a7 100644
+--- a/python/carnot/agentic/arc_induction_tool_loop.py
++++ b/python/carnot/agentic/arc_induction_tool_loop.py
+@@ -415,6 +415,16 @@ def induce_with_tool_loop(
+ 
+     t0 = time.time()
+     deadline = t0 + float(proposer.timeout)
++    grammar_json = tool_loop_grammar_enabled()
++    # REQ-ARC-WMTE-7045: early startup/staging failures must replace prior success.
++    proposer.last_tool_loop_stats = {
++        "grammar_json": grammar_json,
++        "grammar_calls_parsed": 0,
++        "grammar_invalid_responses": 0,
++        "turns": 0,
++        "decode_tokens_total": 0,
++        "terminated_by": "initialization_failed",
++    }
+     # Cold start: the single-shot path launches the server inside generate(); this loop
+     # posts directly, so it must ensure the server itself or a cold start would always
+     # fall back to single-shot without the loop ever running.
+@@ -492,7 +502,6 @@ def induce_with_tool_loop(
+     # SELFPARSE transport (REQ-ARC-WMTE-6730): schemas travel as prompt text because
+     # the request will carry no `tools` field; everything else about the loop -- turn
+     # caps, budgets, dispatch, monotone accept -- is shared with the server-lifted mode.
+-    grammar_json = tool_loop_grammar_enabled()
+     selfparse = tool_loop_selfparse_enabled() and not grammar_json
+     # One frozen schema list serves the payload, the prompt text, and (via the
+     # session snapshot) dispatch, for the whole run (REQ-ARC-WMTE-6770).
+diff --git a/tests/python/test_arc_tool_grammar_transport.py b/tests/python/test_arc_tool_grammar_transport.py
+index d81a0040d8..a3664a7bb4 100644
+--- a/tests/python/test_arc_tool_grammar_transport.py
++++ b/tests/python/test_arc_tool_grammar_transport.py
+@@ -1,4 +1,7 @@
+-"""REQ-ARC-WMTE-7043/7044/7045: observed serving shapes reach live dispatch."""
++"""Observed serving shapes reach live dispatch.
++
++Spec: REQ-ARC-WMTE-7043, REQ-ARC-WMTE-7044, REQ-ARC-WMTE-7045.
++"""
+ 
+ from __future__ import annotations
+ 
+@@ -202,7 +205,12 @@ def test_invalid_outer_response_is_rejected(transport, choices):
+     """REQ-7045: malformed server shapes still record spent tokens and fall back."""
+     p, sent, answers = transport
+     answers[:] = [{"choices": choices, "usage": {"completion_tokens": 20}}]
+-    assert p.induce("grammar", rows(), 1)[0]
++    try:
++        outcome = p.induce("grammar", rows(), 1)
++    except Exception as exc:
++        outcome = exc
++    assert not isinstance(outcome, Exception), f"fallback raised instead of returning: {outcome!r}"
++    assert outcome[0]
+     assert len(sent) == 2 and "prompt" in sent[1]
+     assert p.last_tool_loop_stats["terminated_by"] == "grammar_invalid_response"
+     assert p.last_tool_loop_stats["decode_tokens_total"] == 20
+@@ -232,10 +240,15 @@ def test_candidate_names_and_json_are_preserved(monkeypatch, transport):
+     from carnot.agentic import arc_induction_tools as tool_module
+ 
+     p, sent, answers = transport
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "selfparse")
+     monkeypatch.setattr(tool_module, "CANDIDATE_TOOLS", {})
+     schema = {
+         "type": "function",
+-        "function": {"name": "echo_probe", "parameters": {"type": "object"}},
++        "function": {
++            "name": "echo_probe",
++            "description": "Return the observed JSON arguments unchanged.",
++            "parameters": {"type": "object"},
++        },
+     }
+     received = []
+ 
+@@ -396,3 +409,56 @@ def test_bounded_round_does_not_reuse_stale_diagnostics(monkeypatch, transport):
+     )
+     assert sent and "prompt" in sent[0]
+     assert "tool_loop" not in outcome.rounds[0]
++
++
++@pytest.mark.parametrize("route", ["repair", "refactor"])
++@pytest.mark.parametrize("failure", ["server_false", "server_raise", "evidence_raise"])
++def test_early_failure_receipts_are_fresh(monkeypatch, transport, route, failure):
++    """REQ-ARC-WMTE-7045: a dead server cannot reuse prior successful call counts."""
++    from carnot.agentic.arc_competition_agent import E3AgentPolicy
++    from carnot.agentic.arc_llm_reinduction import _tool_loop_refactor
++
++    p, sent, _ = transport
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "repair")
++    prior = {"grammar_json": True, "grammar_calls_parsed": 999, "terminated_by": "zero_mismatches"}
++    p.last_tool_loop_stats = prior
++
++    def fail(*args, **kwargs):
++        raise RuntimeError("injected initialization failure")
++
++    if failure == "evidence_raise":
++        monkeypatch.setattr(p, "_begin_engine_evidence", fail)
++    else:
++        monkeypatch.setattr(
++            p, "_ensure_server", fail if failure == "server_raise" else lambda: False
++        )
++    path = e3.E3_DIR / "grammar" / "world_model.py"
++    path.parent.mkdir(parents=True)
++    path.write_text(CODE.replace("return grid + 1", "return grid"))
++    if route == "refactor":
++        outcome = _tool_loop_refactor(p, "grammar", rows(), 1)
++        assert outcome is not None and outcome[0] is False
++        stats = outcome[2]
++    else:
++        policy = object.__new__(E3AgentPolicy)
++        policy.short, policy.cell, policy.proposer = "grammar", 1, p
++        engine, goal = e3.load_engine("grammar")
++        verdict = e3.WorldModelVerifier(rows()).score(engine)
++        attempt = {}
++        policy._maybe_recall_gated_resample(
++            attempt=attempt,
++            transitions=rows(),
++            hud_mask=None,
++            engine=engine,
++            is_done=goal,
++            vr=verdict,
++            induce_rows=rows(),
++            induce_kwargs={},
++        )
++        stats = attempt["recall_resample"]["tool_loop"]
++    assert sent == []
++    assert p.last_tool_loop_stats is not prior
++    assert stats.get("grammar_json") is True
++    assert stats.get("grammar_calls_parsed") == 0
++    assert stats.get("decode_tokens_total") == 0
++    assert stats.get("terminated_by") == "initialization_failed"
+-- 
+2.55.0
+

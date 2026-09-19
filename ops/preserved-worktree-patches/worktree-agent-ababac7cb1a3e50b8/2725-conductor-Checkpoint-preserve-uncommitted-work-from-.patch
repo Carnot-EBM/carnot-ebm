@@ -1,0 +1,43 @@
+From 6415d93b3fc835d84b7e7177291e376bf64fa11f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 02:35:31 -0400
+Subject: [PATCH 02725/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 319f3879a6..eb791da3fd 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 172, "phase": "iteration_start", "last_beat": "2026-06-19T06:18:53Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 173, "phase": "iteration_start", "last_beat": "2026-06-19T06:35:29Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8a81289fe1..03a8922d91 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8805,3 +8805,4 @@ c |
+ | 2026-06-19 05:39 UTC | Milestone 2026.06.409 activated | OK | 11 tasks queued |
+ | 2026-06-19 05:56 UTC | PHASE 0 (TRANSITION) -- archive .408 -> activate . | OK | 95 passed, 1 warning in 7.20s |
+ | 2026-06-19 06:16 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-19 06:33 UTC | PHASE A2 (ARC NORTH STAR) -- from-PIXELS glyph-sub | OK | 88 passed, 1 warning in 5.69s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index af9fdf8b38..1b45888eac 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 172, "phase": "iteration_start", "started_at": "2026-06-19T06:18:53Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 173, "phase": "iteration_start", "started_at": "2026-06-19T06:35:29Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

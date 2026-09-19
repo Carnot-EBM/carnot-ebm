@@ -1,0 +1,184 @@
+From 5dcf7f43a1e40718328555d6c274b0481b707923 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 13:05:56 -0400
+Subject: [PATCH 03262/11362] [outer-loop] arc: record 2nd live submission (33
+ levels, +20 over first) + bump next-play gate
+
+Operator-authorized live submission (2026-06-21 'let's go ahead and submit then'), validate-first
+then --submit. Scorecard d6a4b922-b52c-4202-989d-4d58215a8a3e CLOSED -> leaderboard record.
+
+LIVE TOTAL: 33 levels, 17/18 games env-matched (vs the 13-level 2026-06-17 first submission = +20,
+2.5x). Deeper paths held live: lp85 L4, tu93 L3, tn36 L7, tr87 L6; recovered dc22/vc33 both matched.
+Only miss: sc25 -> LIVE L0 (claimed L1; offline-reproduced L1 but live version-drift on hash
+635fd71a) -- harmless (contributes 0) and a +1 follow-up.
+
+Updated live_submissions ledger + prior_submitted_baseline_levels 13 -> 33 so the next online-play
+gate is "beat 33". Registry was clean in the working tree (conductor not mid-write); ledger fields
+only -- did not touch reproducible_total_levels (conductor-owned this milestone).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/arc_solve_registry.yaml   | 15 +++++-
+ results/arc3_live_submit.json | 89 +++++++++++++++++++++++++++++------
+ 2 files changed, 89 insertions(+), 15 deletions(-)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 8a5327b24b..731b6ce593 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -880,7 +880,20 @@ live_submissions:
+   driver: scripts/arc3_live_submit.py
+   artifact: results/arc3_live_submit.json
+   note: 'FIRST live submission. The gate for the next online play: beat 13 levels.'
+-prior_submitted_baseline_levels: 13
++- date: '2026-06-21'
++  scorecard_id: d6a4b922-b52c-4202-989d-4d58215a8a3e
++  levels: 33
++  games: 18
++  games_env_matched: 17/18
++  mode: mode1_offline_reproduced_replay
++  authorization: operator directive 2026-06-21 'let's go ahead and submit then' (validate-first, then submit)
++  driver: scripts/arc3_live_submit.py
++  artifact: results/arc3_live_submit.json
++  note: 'SECOND live submission, +20 over the first (2.5x). Dynamic validated-package replay set
++    (16->18 games incl recovered dc22/vc33; honest flat-replay-capped claims). Only miss: sc25 ->
++    LIVE L0 (claimed L1; offline-reproduced L1 but live version-drift on hash 635fd71a -- +1 follow-up).
++    The gate for the next online play: beat 33 levels.'
++prior_submitted_baseline_levels: 33
+ learning_loop:
+   transfer_routing: python/carnot/agentic/arc_solve_learning.py
+   verifier_routed_search: python/carnot/agentic/arc_solver_kit.py
+diff --git a/results/arc3_live_submit.json b/results/arc3_live_submit.json
+index d561645be7..3f465eea8a 100644
+--- a/results/arc3_live_submit.json
++++ b/results/arc3_live_submit.json
+@@ -1,11 +1,11 @@
+ {
+   "experiment": "arc3_live_submit",
+   "mode": "submit",
+-  "scorecard_id": "0f6273ce-cf0d-426c-83e5-d745e4d45ea2",
+-  "live_total_levels": 13,
+-  "games_env_matched": 11,
+-  "games": 11,
+-  "claimed_total_levels": 13,
++  "scorecard_id": "d6a4b922-b52c-4202-989d-4d58215a8a3e",
++  "live_total_levels": 33,
++  "games_env_matched": 17,
++  "games": 18,
++  "claimed_total_levels": 34,
+   "per_game": [
+     {
+       "game": "r11l",
+@@ -13,12 +13,6 @@
+       "live_level": 1,
+       "env_match": true
+     },
+-    {
+-      "game": "lp85",
+-      "claimed": 3,
+-      "live_level": 3,
+-      "env_match": true
+-    },
+     {
+       "game": "ls20",
+       "claimed": 1,
+@@ -31,6 +25,18 @@
+       "live_level": 1,
+       "env_match": true
+     },
++    {
++      "game": "lp85",
++      "claimed": 4,
++      "live_level": 4,
++      "env_match": true
++    },
++    {
++      "game": "sc25",
++      "claimed": 1,
++      "live_level": 0,
++      "env_match": false
++    },
+     {
+       "game": "cd82",
+       "claimed": 1,
+@@ -51,8 +57,14 @@
+     },
+     {
+       "game": "tu93",
+-      "claimed": 1,
+-      "live_level": 1,
++      "claimed": 3,
++      "live_level": 3,
++      "env_match": true
++    },
++    {
++      "game": "tn36",
++      "claimed": 7,
++      "live_level": 7,
+       "env_match": true
+     },
+     {
+@@ -72,9 +84,58 @@
+       "claimed": 1,
+       "live_level": 1,
+       "env_match": true
++    },
++    {
++      "game": "ar25",
++      "claimed": 1,
++      "live_level": 1,
++      "env_match": true
++    },
++    {
++      "game": "ka59",
++      "claimed": 1,
++      "live_level": 1,
++      "env_match": true
++    },
++    {
++      "game": "tr87",
++      "claimed": 6,
++      "live_level": 6,
++      "env_match": true
++    },
++    {
++      "game": "vc33",
++      "claimed": 1,
++      "live_level": 1,
++      "env_match": true
++    },
++    {
++      "game": "dc22",
++      "claimed": 1,
++      "live_level": 1,
++      "env_match": true
++    }
++  ],
++  "replay_set_source": "package:experiment_4473_submission_package_prep_refresh.json",
++  "claimed_caps": [
++    {
++      "game": "lp85",
++      "package_levels": 5,
++      "offline_reached": 4
++    },
++    {
++      "game": "sc25",
++      "package_levels": 5,
++      "offline_reached": 1
++    },
++    {
++      "game": "tu93",
++      "package_levels": 5,
++      "offline_reached": 3
+     }
+   ],
++  "uncapped_package_total": 41,
+   "leaderboard_submitted": true,
+-  "run_date": "2026-06-17",
++  "run_date": "2026-06-21T17:04:45Z",
+   "inference_substrate": "live_arc_agi3_env_multi_game_replay"
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

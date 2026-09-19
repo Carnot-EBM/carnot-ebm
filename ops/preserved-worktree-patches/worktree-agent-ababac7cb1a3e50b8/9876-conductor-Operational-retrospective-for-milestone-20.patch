@@ -1,0 +1,92 @@
+From 2e7e0f5643e11c7dd4fa608438ff8416110c8f48 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 00:56:56 -0400
+Subject: [PATCH 09876/11362] [conductor] Operational retrospective for
+ milestone 2026.08.573
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 ++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_573.json | 45 ++++++++++++++++++++++
+ 3 files changed, 53 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_573.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index f212b05694..aa3a7deb42 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6332,3 +6332,10 @@ The critical path for milestone .250:
+ - theme: one-family flagship source-shard execution concentrated the reconstructed compute path while per-task phase telemetry remained absent
+ - key result: the Qwen3.6 source shard took 15 minutes; GPU 1 was active at 94% while GPU 0 was unused, but no data available this milestone establishes parallel multi-model loading or a missed DualGPURunner engagement
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.573
++
++- exp_range: no data available this milestone
++- theme: synthesis-only contract and audit work closed through a coarse fallback clock with no compute path
++- key result: accelerator efficiency and parallel-model runner behavior had no applicable milestone task; the available timing cannot separate phase costs
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 845f86a2ba..33a50fa591 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17540,3 +17540,4 @@ ops/test-results.md by the same session.
+ - 2026-08-25: Isolated repo-wide suite truth baseline and mutation audit (⚠️ Blocked) — honest_verdict=blocked_isolated_environment: pytest_receipt; results/experiment_6586_isolated_full_suite_truth_baseline.json
+ - 2026-08-25 (outer loop): SECOND CORRIGENDUM to REQ-ARC-WMTE-6710, on team-lead ruling. (1) MUTATION PROOFS RE-RUN FROM SCRATCH AND THE EARLIER SET TREATED AS VOID. Two mutation harnesses had been writing the same three source files in the same checkout with no lock, so a RED reading attributed to one agent's deleted pattern could equally have been the other agent's live mutation. That contamination is symmetric and undetectable by re-reading one's own code. All eleven mutations M1-M11 were re-run in an isolated `git worktree` copy with `PYTHONPATH` pinned to the worktree — verified necessary, because the venv resolves `carnot` to the main checkout, so worktree mutations would otherwise have been silently inert and every reading falsely GREEN. Result: all 11 RED, baseline GREEN at 14 tests, zero `MUTATED` markers in the three files before and after. No earlier reading is carried forward. (2) THE PREVALENCE FIGURE IS WITHDRAWN ENTIRELY, not corrected. `no_reachable_plan_after_refinement` is ALSO the correct label for a genuine no-plan attempt, so that counter can never separate a real planning failure from a masked dynamics failure — no denominator makes it meaningful. Two figures were quoted during this work ("9 of 18" from the brief, "9 of 120" measured); both are withdrawn. The defect is now stated from the code path — the default is assigned before the loop runs, and two sites that diagnosed a cause did not overwrite it — and the per-round record added by this REQ is what makes the prevalence measurable for the first time. (3) `plan_reaches_goal` is deliberately left absent (None) on rounds that skip before planning, with the reasoning recorded at the harness read site: absent means "the planner never ran", False means "it ran and found nothing", and defaulting it to False would rebuild the masking defect inside the instrument meant to expose it. (4) Mutation harnesses must not run in this checkout: the conductor commits `git add -A` with pre-commit verification skipped, on its own schedule, and a mutated line that is still valid Python passes every hook.
+ - 2026-08-25: V573 SOTA constraint-first source and method contract (✅ Complete) — honest_verdict=complete: source, fixture, router, metric, and exact-authority contracts are ready before any V573 model outcome; results/experiment_6587_v573_constraint_first_method_contract.json
++- 2026-08-25: Operational retrospective for 2026.08.573: 3 synthesis-only experiments completed in 0.1 reconstructed minutes, and 0 were compute-bound. The GPU snapshot cannot measure compute-task efficiency, and no task required a parallel-model runner check. Direct conductor timing and complete closeout receipts are the next tooling priorities. Estimated savings: 0% because the evidence includes no measured faster path. Artifact: results/operational_retro_2026_08_573.json.
+diff --git a/results/operational_retro_2026_08_573.json b/results/operational_retro_2026_08_573.json
+new file mode 100644
+index 0000000000..4be128ada5
+--- /dev/null
++++ b/results/operational_retro_2026_08_573.json
+@@ -0,0 +1,45 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.573",
++  "generated_at": "2026-08-25T04:54:02Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.1,
++  "experiments_completed": 3,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [
++    {
++      "experiment": "Isolated repo-wide suite truth baseline and mutation audit",
++      "duration_minutes": 0.12,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V573 terminal recovery and bounded execution contract",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V573 SOTA constraint-first source and method contract",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 3 synthesis-only experiments in 0.1 minutes and recorded 0 compute-bound experiments. No compute-runtime, accelerator-efficiency, or DualGPURunner bottleneck can therefore be evaluated from this milestone.",
++  "bottlenecks_identified": [
++    "Task timing was reconstructed from disk modification times after the live commit path found no commits, so the record cannot isolate phase costs within the synthesis-only work."
++  ],
++  "improvements_suggested": [
++    "Persist monotonic start, end, and phase timestamps for every experiment before any git-log or disk-mtime fallback is needed.",
++    "Carry experiment identifiers and acceptance totals into the milestone closeout payload so the research-log fields can be completed from authoritative data.",
++    "Suppress GPU-efficiency and DualGPURunner recommendations automatically when the milestone contains no compute-bound tasks."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Replace commit-derived and disk-mtime task clocks with conductor-owned monotonic timers and phase spans.",
++    "Persist compute classification, loaded-model count, and runner-selection receipts with each experiment record.",
++    "Populate experiment-range and acceptance fields from the milestone manifest during closeout."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The evidence supports only an instrumentation conclusion: synthesis-only work finished quickly, but the reconstruction method is too coarse to diagnose phase costs. No measured counterfactual supports a nonzero time-savings estimate."
++}
+-- 
+2.55.0
+

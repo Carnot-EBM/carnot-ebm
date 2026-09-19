@@ -1,0 +1,150 @@
+From 19f4386192cab4d46f3a8d2758610c948c59302b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 13:31:26 -0400
+Subject: [PATCH 03269/11362] [outer-loop] kaggle: make LLM-tier engagement
+ self-reporting + bundle-time agent smoke
+
+The v3=0.08 competition run could not be diagnosed: nothing logged whether the Qwen3.5-9B-MTP
+generator actually loaded on the 16GB P100/T4 eval card or silently degraded to the CPU
+graph-explore cascade (env vars were set inside `if server and gguf:` with no else; the agent
+launches llama-server with stderr=DEVNULL and returns False silently on OOM). Two kernel-side
+fixes (scripts/kaggle/ only -- the core agent files are conductor-territory this milestone):
+
+1. submission_kernel/main.py: loud LLM-tier visibility in the eval log -- resolved server/gguf
+   paths, a GGUF filename match (avoids binding a stale/second .gguf via order-undefined rglob),
+   and a one-shot HEALTH PROBE that spawns the generator with the SAME args the agent uses (incl
+   MTP) with stderr CAPTURED, then prints "LLM GENERATOR HEALTHY" / "FAILED TO LOAD (likely OOM
+   ... consider CARNOT_ARC_MTP=0)" / "LLM TIER DISABLED". Wrapped so a probe failure can never
+   crash the agent. Does NOT change the operator-frozen stack (MTP stays on) -- it MEASURES the
+   real config so the next run's logs reveal whether to flip MTP=0.
+
+2. prep_daily_submission.py: import+build smoke against the STAGED tree in stage_dataset() -- a
+   core file caught mid-edit by the daily rsync would be 0 on every eval game; the existing guards
+   only string-check MAX_ACTIONS + the .so leak. ABORT the bundle if the agent won't import/build.
+
+Verdict from the audit: it is UNKNOWN whether the LLM tier engaged in the 0.08 run; this makes the
+next run self-report it. The biggest raw score lever (global wall-clock budget allocator so a few
+slow early games don't leave the ~110-game tail unplayed=0) lives in the conductor-owned core agent
+files -- handed off, not race-edited.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/kaggle/prep_daily_submission.py  | 18 ++++++++
+ scripts/kaggle/submission_kernel/main.py | 57 +++++++++++++++++++++++-
+ 2 files changed, 73 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/kaggle/prep_daily_submission.py b/scripts/kaggle/prep_daily_submission.py
+index 2c7746a46c..57cabb8d9e 100644
+--- a/scripts/kaggle/prep_daily_submission.py
++++ b/scripts/kaggle/prep_daily_submission.py
+@@ -79,6 +79,24 @@ def stage_dataset() -> None:
+     if leaked:
+         sys.exit(f"ABORT: compiled _rust.so leaked into bundle (SIGILLs on Kaggle): {leaked}")
+ 
++    # import+build smoke against the STAGED tree: a non-importable / broken agent (e.g. a core file
++    # caught mid-edit by the daily rsync) would be 0 on EVERY eval game. The existing guards only
++    # string-check MAX_ACTIONS and the .so leak -- neither validates that the agent actually imports
++    # and constructs. Catch the catastrophic-zero case at bundle time, before a scored slot is spent.
++    smoke = subprocess.run(
++        [sys.executable, "-c",
++         "import sys; sys.path.insert(0, %r); "
++         "import carnot.agentic.arc_competition_agent as m; "
++         "cls = m.make_carnot_agent(type('S', (), {'MAX_ACTIONS': 80})); "
++         "assert isinstance(cls, type), 'make_carnot_agent did not return a class'; "
++         "print('agent import+build smoke OK')" % str(STAGE / "python")],
++        capture_output=True, text=True,
++    )
++    if smoke.returncode != 0:
++        sys.exit("ABORT: staged agent failed import+build smoke (would be 0 on every eval game):\n"
++                 f"{smoke.stdout[-400:]}\n{smoke.stderr[-1000:]}")
++    print("[stage] agent import+build smoke passed.")
++
+     (STAGE / "dataset-metadata.json").write_text(
+         json.dumps({"id": DATASET, "title": "carnot-agent-code", "licenses": [{"name": "other"}]})
+     )
+diff --git a/scripts/kaggle/submission_kernel/main.py b/scripts/kaggle/submission_kernel/main.py
+index 4baf691160..92091b89b1 100644
+--- a/scripts/kaggle/submission_kernel/main.py
++++ b/scripts/kaggle/submission_kernel/main.py
+@@ -45,7 +45,7 @@ subprocess.run(
+ #    Kaggle image (agent dry-run: 3.6s). The bundled llama-server is copied to a writable
+ #    path (/kaggle/input is read-only) and pointed at via CARNOT_LLAMA_SERVER / GGUF env.
+ AGENT_SRC = r'''
+-import os, shutil, sys
++import os, shutil, sys, time, subprocess, urllib.request
+ from pathlib import Path
+ 
+ inp = Path("/kaggle/input")
+@@ -54,8 +54,19 @@ inp = Path("/kaggle/input")
+ carnot = next(p.parents[2] for p in inp.rglob("carnot/agentic/arc_competition_agent.py"))
+ sys.path.insert(0, str(carnot))
+ 
++# --- generator (LLM tier) resolution + LOUD visibility (2026-06-21) --------------------------------
++# The v3=0.08 run could NOT be diagnosed because nothing logged whether the Qwen generator loaded or
++# silently degraded to the CPU graph-explore cascade (env vars were set inside `if server and gguf:`
++# with no else, and the agent launches llama-server with stderr=DEVNULL). Make it self-reporting in the
++# eval log so the operator can grep "LLM GENERATOR HEALTHY/FAILED" on the next run. We do NOT change the
++# operator-frozen stack (MTP stays on); the probe tests the REAL config and only RECOMMENDS MTP=0 on OOM.
+ server = next(iter(inp.rglob("llama-server")), None)
+-gguf = next(iter(inp.rglob("*.gguf")), None)
++# match the Qwen GGUF by name so an order-undefined rglob can't bind a stale/second .gguf
++_ggufs = [g for g in inp.rglob("*.gguf") if ("Qwen3.5-9B" in g.name or "Q4_K_M" in g.name)] or list(inp.rglob("*.gguf"))
++gguf = _ggufs[0] if _ggufs else None
++if len(_ggufs) > 1:
++    print(f"LLM TIER WARNING: {len(_ggufs)} GGUFs under /kaggle/input, using {gguf.name}; all={[g.name for g in _ggufs]}", flush=True)
++
+ if server and gguf:
+     run_server = Path("/kaggle/working/llama-server")
+     shutil.copy2(server, run_server)
+@@ -63,6 +74,48 @@ if server and gguf:
+     os.environ["LD_LIBRARY_PATH"] = f"{server.parent}:" + os.environ.get("LD_LIBRARY_PATH", "")
+     os.environ["CARNOT_LLAMA_SERVER"] = str(run_server)
+     os.environ["CARNOT_ARC_GGUF_PATH"] = str(gguf)
++    _mtp = os.environ.get("CARNOT_ARC_MTP", "1") != "0"
++    print(f"LLM TIER RESOLVED: server={run_server} gguf={gguf.name} mtp={_mtp} ctx=16384 kv=q8_0", flush=True)
++    # one-shot health probe: spawn the generator with the SAME args the agent uses and confirm it
++    # actually LOADS on this 16GB GPU (stderr CAPTURED, not swallowed like the agent's DEVNULL launch),
++    # then free the port. Wrapped so a probe failure can NEVER crash the agent / zero the submission.
++    try:
++        _pp = 8945
++        _err = open("/kaggle/working/llm_probe.err", "w")
++        _args = [str(run_server), "-m", str(gguf), "-ngl", "999", "-c", "16384",
++                 "--port", str(_pp), "--host", "127.0.0.1", "--cache-type-k", "q8_0", "--cache-type-v", "q8_0"]
++        if _mtp:
++            _args += ["--spec-type", "draft-mtp", "--model-draft", str(gguf)]
++        _proc = subprocess.Popen(_args, stdout=_err, stderr=_err)
++        _ok = False
++        for _ in range(150):  # up to ~300s for a cold GPU load
++            if _proc.poll() is not None:
++                break
++            try:
++                with urllib.request.urlopen(f"http://127.0.0.1:{_pp}/health", timeout=2) as r:
++                    if r.status == 200:
++                        _ok = True; break
++            except Exception:
++                time.sleep(2)
++        _proc.terminate()
++        try:
++            _proc.wait(timeout=15)
++        except Exception:
++            _proc.kill()
++        _err.close()
++        if _ok:
++            print("LLM GENERATOR HEALTHY -- loaded on GPU, /health ok (generator tier ENGAGED)", flush=True)
++        else:
++            _tail = Path("/kaggle/working/llm_probe.err").read_text()[-1000:]
++            print(f"LLM GENERATOR FAILED TO LOAD (likely OOM at mtp={_mtp}/ctx=16384 on 16GB) -- agent will "
++                  f"run CPU graph-explore ONLY. Operator: consider CARNOT_ARC_MTP=0. stderr tail:\n{_tail}",
++                  flush=True)
++    except Exception as _e:
++        print(f"LLM PROBE ERROR (non-fatal, agent continues with LLM env set): {_e!r}", flush=True)
++else:
++    print("LLM TIER DISABLED: llama-server/gguf NOT FOUND under /kaggle/input -- running CPU graph-explore "
++          f"ONLY (server={server}, gguf={gguf}). Verify the carnot-llamacpp + qwen GGUF datasets are attached.",
++          flush=True)
+ 
+ from agents.agent import Agent
+ from carnot.agentic.arc_competition_agent import make_carnot_agent
+-- 
+2.55.0
+

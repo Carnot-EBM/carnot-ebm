@@ -1,0 +1,96 @@
+From 98dbb790edde9bd4bd30e2ce72def882227c20c4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 19 Jul 2026 16:15:11 -0400
+Subject: [PATCH 07282/11362] [conductor] Pre-gate block: Gated on Exp5721
+ lifecycle readiness: isolated Compliance-Trap recovery and rollback canary
+
+3 of 3 gate(s) failed; first failure: exp5721-fr11-memops-lifecycle-shadow-stream.fr11_lifecycle_shadow_ready_score (numeric comparison rejected because one side is None (actual=None, expected=1.0))
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 +
+ ops/conductor-state.json                      |  2 +-
+ ...1_compliance_recovery_rollback_canary.json | 42 +++++++++++++++++++
+ 4 files changed, 46 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5722_fr11_compliance_recovery_rollback_canary.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3ec3adb9f5..e47d41262e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2106238, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-07-19T20:13:09Z"}
+\ No newline at end of file
++{"pid": 2106238, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-07-19T20:15:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 607efb7f81..e695703e26 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13792,3 +13792,5 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-19 20:07 UTC | Diagnose the .510 GGUF answer-channel failure acro | OK | 88 passed, 1 warning in 9.43s |
+ | 2026-07-19 20:09 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
+ | 2026-07-19 20:11 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
++| 2026-07-19 20:13 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
++| 2026-07-19 20:15 UTC | Gated on Exp5720 exact stream: prospective MemOps | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5720-sota-attested-exact-envelope-canary, |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7d94421b36..de6dcb1998 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2106238, "iteration": 7, "phase": "iteration_start", "started_at": "2026-07-19T20:13:09Z"}
+\ No newline at end of file
++{"pid": 2106238, "iteration": 8, "phase": "iteration_start", "started_at": "2026-07-19T20:15:11Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5722_fr11_compliance_recovery_rollback_canary.json b/results/experiment_5722_fr11_compliance_recovery_rollback_canary.json
+new file mode 100644
+index 0000000000..d49438657f
+--- /dev/null
++++ b/results/experiment_5722_fr11_compliance_recovery_rollback_canary.json
+@@ -0,0 +1,42 @@
++{
++  "experiment": 5722,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-19",
++  "started_at": "2026-07-19T20:15:11.782146+00:00",
++  "finished_at": "2026-07-19T20:15:11.782146+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp5721 lifecycle readiness: isolated Compliance-Trap recovery and rollback canary",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "3 of 3 gate(s) failed; first failure: exp5721-fr11-memops-lifecycle-shadow-stream.fr11_lifecycle_shadow_ready_score (numeric comparison rejected because one side is None (actual=None, expected=1.0))",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5721-fr11-memops-lifecycle-shadow-stream",
++      "artifact_field": "fr11_lifecycle_shadow_ready_score",
++      "op": ">=",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "numeric comparison rejected because one side is None (actual=None, expected=1.0)"
++    },
++    {
++      "upstream": "exp5721-fr11-memops-lifecycle-shadow-stream",
++      "artifact_field": "unsafe_false_accept_count",
++      "op": "==",
++      "expected": 0,
++      "actual": null,
++      "passed": false,
++      "reason": "actual=None == expected=0"
++    },
++    {
++      "upstream": "exp5721-fr11-memops-lifecycle-shadow-stream",
++      "artifact_field": "unsafe_update_accept_count",
++      "op": "==",
++      "expected": 0,
++      "actual": null,
++      "passed": false,
++      "reason": "actual=None == expected=0"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

@@ -1,0 +1,2188 @@
+From 7aec913fba64c2e12e5ebc9541d09bc8674fac81 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 21:26:53 -0400
+Subject: [PATCH 10702/11362] [conductor] Tokenizer-aware nuisance and split
+ preregistration
+
+Automated research step by research conductor.
+Task ID: exp6863-tokenizer-aware-semantic-contrast-preregistration
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/llm-ebm-inference/spec.md    |  105 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...aware_semantic_contrast_preregistration.py | 1190 +++++++++++++++++
+ ...are_semantic_contrast_preregistration.json |  562 ++++++++
+ ...aware_semantic_contrast_preregistration.py |    8 +
+ ...aware_semantic_contrast_preregistration.py |  252 ++++
+ 6 files changed, 2118 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+ create mode 100644 results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json
+ create mode 100644 scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+ create mode 100644 tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+
+diff --git a/openspec/capabilities/llm-ebm-inference/spec.md b/openspec/capabilities/llm-ebm-inference/spec.md
+index 240ced6ce9..1c028fb1d8 100644
+--- a/openspec/capabilities/llm-ebm-inference/spec.md
++++ b/openspec/capabilities/llm-ebm-inference/spec.md
+@@ -3052,3 +3052,108 @@ before the next model starts.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-INFERENCE-6850 and SCENARIO-INFERENCE-6850-* | Implemented (`python/carnot/inference/llama_cpp_process.py`; `python/carnot/experiment_6850_three_family_scoring_admission_canary.py`; `scripts/experiments/experiment_6850_three_family_scoring_admission_canary.py`) | 21 passing tests (`tests/python/test_llama_cpp_process.py`; `tests/python/test_experiment_6850_three_family_scoring_admission_canary.py`) |
++
++### REQ-INFERENCE-6863: Tokenizer-Aware Semantic Contrast Preregistration
++
++Exp6863 SHALL call `cached_sota_pair()` before it resolves these exact local
++GGUF files: `unsloth/Qwen3.6-35B-A3B-GGUF`,
++`unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL reject a substituted cache file.
++It SHALL require stable file hashes, embedded tokenizer metadata, Exp6862
++readiness, and no earlier score for a new model and semantic-group identity.
++
++Exp6863 SHALL use only the native llama.cpp GGUF tokenizer in vocabulary-only
++mode. It SHALL not run model evaluation, generation, or token likelihood. Each
++model and contrast cell SHALL record exact prompt and candidate token IDs,
++token counts, special-token settings, chat-template identity, tokenizer hash,
++character counts, presentation order, and frozen sequence hashes.
++
++A model cell SHALL be eligible only when both candidate sequences have equal
++token counts. Its paired controls SHALL also satisfy the frozen prompt-length
++and label-position contract. Exp6863 SHALL freeze identifier, order,
++normalization, label-position, token-count, character-length, and surface-form
++controls. It SHALL preserve each rejected cell and its reasons.
++
++Exp6863 SHALL split by Exp6862 semantic group identity. Calibration and held
++groups SHALL be disjoint. One semantic group SHALL never cross a split through
++another model or row. Held labels SHALL appear only as sealed commitments.
++The calibration loader SHALL reject held identities and SHALL record zero held
++label accesses.
++
++Before any score exists, Exp6863 SHALL freeze the paired contrast, nuisance
++difference-in-differences statistics, random seed, split hashes, confidence
++method, missing-cell rule, family-agreement rule, retirement threshold, and
++sample-size floor. Every model SHALL have at least 20 eligible calibration
++groups and 20 eligible held groups. Both the Qwen and Gemma families SHALL meet
++that floor. A lower count SHALL produce an honest null readiness result.
++
++The terminal artifact SHALL be
++`results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json`.
++It SHALL include `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
++`model_artifact_hashes`, `tokenizer_receipts`,
++`token_likelihood_call_count`, `rows`, `accepted_cell_manifest`,
++`rejected_cell_manifest`, `nuisance_match_manifest`,
++`calibration_group_manifest`, `sealed_held_group_manifest`,
++`split_overlap_count`, `held_label_access_count`,
++`preregistered_statistic_manifest`, `sample_size_power_rows`,
++`reproducibility_checksum`,
++`semantic_contrast_preregistration_ready_score`, `gate_check_summary`,
++`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
++
++`inference_substrate` SHALL be
++`native_gguf_tokenization_without_inference`.
++`token_likelihood_call_count`, `split_overlap_count`, and
++`held_label_access_count` SHALL be zero. `verifier_is_oracle` SHALL be false.
++`semantic_contrast_preregistration_ready_score` SHALL depend only on tokenizer
++receipts, nuisance matching, split isolation, sample floors, and label sealing.
++It SHALL not state a scientific result. A precondition failure SHALL emit
++`complete_blocked_tokenizer_aware_semantic_contrast_preregistration` and name
++the failed check and observed value in `gate_check_summary`.
++
++#### SCENARIO-INFERENCE-6863-NATIVE-TOKENIZER: Metadata And Exact Tokens Are Required
++
++Given one exact GGUF file and its native embedded tokenizer,
++When Exp6863 tokenizes a frozen prompt and both candidates,
++Then it SHALL record exact native token IDs and metadata hashes without a model
++evaluation or token-likelihood call.
++
++#### SCENARIO-INFERENCE-6863-CACHE-AND-HASH: Substitution And Drift Fail Closed
++
++Given a resolved path or file hash that differs from the frozen model receipt,
++When Exp6863 checks the cache,
++Then it SHALL reject that model and name the path or hash drift.
++
++#### SCENARIO-INFERENCE-6863-NUISANCE-MATCH: Unequal Token Counts Reject A Cell
++
++Given a model-specific contrast whose candidate token counts differ or whose
++paired prompt and label-position controls differ,
++When Exp6863 applies the nuisance contract,
++Then it SHALL preserve the cell in the rejected manifest with exact reasons.
++
++#### SCENARIO-INFERENCE-6863-GROUP-SPLIT: Groups Never Leak Across Splits
++
++Given several rows and models for one semantic group identity,
++When Exp6863 freezes calibration and held groups,
++Then all cells for that identity SHALL use one split and split overlap SHALL be
++zero.
++
++#### SCENARIO-INFERENCE-6863-HELD-SEAL: Calibration Cannot Read Held Labels
++
++Given the frozen held-group commitments,
++When the calibration label loader receives a held identity,
++Then it SHALL reject access and the successful preregistration path SHALL
++record zero held-label accesses.
++
++#### SCENARIO-INFERENCE-6863-SAMPLE-FLOOR: Small Splits Return Honest Null Readiness
++
++Given fewer than 20 accepted calibration groups or 20 accepted held groups for
++one required model or family,
++When Exp6863 computes readiness,
++Then readiness SHALL be zero and the terminal verdict SHALL be an honest null.
++
++## Implementation Status (REQ-INFERENCE-6863)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-INFERENCE-6863 and SCENARIO-INFERENCE-6863-* | Planned (`python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`; `scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`) | Planned (`tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index eca6e0cd90..ee38be03fc 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5245,
++  "experiments_checked": 5246,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py b/python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+new file mode 100644
+index 0000000000..4451c15eb3
+--- /dev/null
++++ b/python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+@@ -0,0 +1,1190 @@
++"""Freeze tokenizer-aware semantic contrast cells before model scoring.
++
++Spec refs: REQ-INFERENCE-6863 and SCENARIO-INFERENCE-6863-*.
++
++This module loads only the vocabulary section of each GGUF. It records native
++token IDs and then closes the tokenizer. It never evaluates model weights.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import defaultdict
++from collections.abc import Iterable, Mapping, Sequence
++from copy import deepcopy
++import gc
++import hashlib
++import json
++from pathlib import Path
++import tempfile
++import time
++from typing import Any
++import unicodedata
++
++from carnot.inference.sota_models import (
++    SOTA_GGUF_MODELS,
++    cached_sota_pair,
++    resolve_cached_gguf,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = Path("openspec/capabilities/llm-ebm-inference/spec.md")
++MODULE_PATH = Path(
++    "python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py"
++)
++WRAPPER_PATH = Path(
++    "scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py"
++)
++TEST_PATH = Path(
++    "tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py"
++)
++RESULT_PATH = Path(
++    "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json"
++)
++EXP6850_PATH = Path("results/experiment_6850_three_family_scoring_admission_canary.json")
++EXP6852_PATH = Path("results/experiment_6852_compatibility_shortcut_authority_audit.json")
++EXP6862_PATH = Path("results/experiment_6862_dual_side_semantic_contrast_bank.json")
++
++SCHEMA = "carnot.experiment_6863.tokenizer_aware_semantic_contrast_preregistration.v1"
++INFERENCE_SUBSTRATE = "native_gguf_tokenization_without_inference"
++RUN_DATE = "20260902"
++RANDOM_SEED = 6863
++MINIMUM_GROUP_COUNT = 20
++TOKEN_LIKELIHOOD_CALL_COUNT = 0
++MAX_WHITESPACE_EXTRA = 48
++BLOCKED_VERDICT = "complete_blocked_tokenizer_aware_semantic_contrast_preregistration"
++
++MODEL_SPECS = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++)
++MODEL_FAMILIES = {
++    MODEL_SPECS[0]: "qwen",
++    MODEL_SPECS[1]: "gemma",
++    MODEL_SPECS[2]: "gemma",
++}
++CLOSED_VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++
++RAW_PROMPT_TEMPLATE = (
++    "Exact semantic obligation program.\n"
++    "PROGRAM_JSON_BEGIN\n{program_json}\nPROGRAM_JSON_END\n"
++    "Return only the candidate sequence."
++)
++CANDIDATE_SEQUENCE_TEMPLATE = "CANDIDATE_JSON_BEGIN\n{candidate_json}\nCANDIDATE_JSON_END"
++TOKENIZER_PROBE = " execution readiness is checked without a scientific label."
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "model_specs",
++    "models_used",
++    "model_artifact_hashes",
++    "tokenizer_receipts",
++    "token_likelihood_call_count",
++    "rows",
++    "accepted_cell_manifest",
++    "rejected_cell_manifest",
++    "nuisance_match_manifest",
++    "calibration_group_manifest",
++    "sealed_held_group_manifest",
++    "split_overlap_count",
++    "held_label_access_count",
++    "preregistered_statistic_manifest",
++    "sample_size_power_rows",
++    "reproducibility_checksum",
++    "semantic_contrast_preregistration_ready_score",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++SPEC_REFS = (
++    "REQ-INFERENCE-6863",
++    "SCENARIO-INFERENCE-6863-NATIVE-TOKENIZER",
++    "SCENARIO-INFERENCE-6863-CACHE-AND-HASH",
++    "SCENARIO-INFERENCE-6863-NUISANCE-MATCH",
++    "SCENARIO-INFERENCE-6863-GROUP-SPLIT",
++    "SCENARIO-INFERENCE-6863-HELD-SEAL",
++    "SCENARIO-INFERENCE-6863-SAMPLE-FLOOR",
++)
++
++FIELD_PRINCIPLES = {
++    "field_principles": "Each top-level field states why it exists.",
++    "preconditions_checked": "The gate stops substitution and prior-score reuse.",
++    "inference_substrate": "The value separates tokenization from model inference.",
++    "duration_s": "Wall time records that tokenization ran.",
++    "model_specs": "The rows bind the three exact required GGUF files.",
++    "models_used": "The list prevents a hidden model-family substitution.",
++    "model_artifact_hashes": "File hashes freeze the model bytes.",
++    "tokenizer_receipts": "Native metadata and probe tokens freeze each tokenizer.",
++    "token_likelihood_call_count": "Zero proves that no score informed the split.",
++    "rows": "Each row records one model and semantic contrast cell.",
++    "accepted_cell_manifest": "The manifest names every eligible future score cell.",
++    "rejected_cell_manifest": "The manifest preserves all excluded cells and reasons.",
++    "nuisance_match_manifest": "The contract freezes exact nuisance controls.",
++    "calibration_group_manifest": "The manifest exposes labels only for calibration.",
++    "sealed_held_group_manifest": "Commitments freeze held labels without exposing them.",
++    "split_overlap_count": "Zero proves group-disjoint assignment.",
++    "held_label_access_count": "Zero proves calibration did not load held labels.",
++    "preregistered_statistic_manifest": "The formulas and failure rules predate scores.",
++    "sample_size_power_rows": "Rows enforce model and family sample floors.",
++    "reproducibility_checksum": "The checksum seals all stable artifact content.",
++    "semantic_contrast_preregistration_ready_score": "Readiness measures design only.",
++    "gate_check_summary": "The summary names each failed check and observed value.",
++    "verifier_is_oracle": "False states that this tokenizer is not a truth oracle.",
++    "verdict_class": "The closed class separates readiness from a scientific claim.",
++    "honest_verdict": "The complete prefix gives one terminal disposition.",
++}
++
++
++class HeldLabelAccessError(RuntimeError):
++    """Raised when calibration asks for a sealed held-group label."""
++
++
++class CalibrationLabelLoader:
++    """Expose calibration labels while denying all held-group identities."""
++
++    def __init__(
++        self,
++        calibration_labels: Mapping[str, tuple[bool, bool]],
++        held_group_ids: Iterable[str],
++    ) -> None:
++        self._calibration_labels = dict(calibration_labels)
++        self._held_group_ids = set(held_group_ids)
++        self.held_label_access_count = 0
++        self.held_label_access_attempt_count = 0
++
++    def load(self, semantic_group_identity: str) -> tuple[bool, bool]:
++        """Return calibration labels or reject a held identity before access."""
++
++        if semantic_group_identity in self._held_group_ids:
++            self.held_label_access_attempt_count += 1
++            raise HeldLabelAccessError(f"held label access denied: {semantic_group_identity}")
++        return self._calibration_labels[semantic_group_identity]
++
++
++def canonical_json(value: Any) -> str:
++    """Encode stable compact JSON for every content hash and sequence."""
++
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_text(value: str) -> str:
++    """Return one prefixed SHA-256 digest for text."""
++
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return one prefixed SHA-256 digest for bytes."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    """Hash canonical JSON content."""
++
++    return sha256_text(canonical_json(value))
++
++
++def sha256_file(path: str | Path) -> str:  # pragma: no cover - live file size is large.
++    """Hash a model file in bounded chunks without loading it into memory."""
++
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def cell_identity(model_hf_id: str, semantic_group_identity: str) -> str:
++    """Bind one new cell to its exact model and semantic group."""
++
++    return sha256_json(
++        {"model_hf_id": model_hf_id, "semantic_group_identity": semantic_group_identity}
++    )
++
++
++def _json_safe(value: Any) -> Any:
++    """Convert native metadata values into stable JSON-compatible values."""
++
++    if value is None or isinstance(value, (bool, int, float, str)):
++        return value
++    if isinstance(value, bytes):
++        return value.decode("utf-8", "replace")
++    if isinstance(value, Mapping):
++        return {str(key): _json_safe(item) for key, item in value.items()}
++    if isinstance(value, (list, tuple)):
++        return [_json_safe(item) for item in value]
++    return str(value)
++
++
++def tokenizer_receipt_from_metadata(
++    *,
++    metadata: Mapping[str, Any],
++    probe_token_ids: Sequence[int],
++    special_tokens: Mapping[str, Any],
++    chat_template: str,
++) -> JsonDict:
++    """Build the stable receipt used by tests and the native live path."""
++
++    tokenizer_metadata = {
++        str(key): _json_safe(value)
++        for key, value in metadata.items()
++        if "tokenizer" in str(key).lower()
++    }
++    token_ids = [int(token) for token in probe_token_ids]
++    metadata_present = bool(tokenizer_metadata)
++    loadable = metadata_present and bool(token_ids)
++    return {
++        "source": "embedded_gguf_llama_cpp_vocab_only",
++        "metadata_present": metadata_present,
++        "loadable": loadable,
++        "metadata_key_count": len(tokenizer_metadata),
++        "probe_token_ids": token_ids,
++        "probe_tokenize_settings": {"add_bos": True, "special": False},
++        "special_tokens": _json_safe(dict(special_tokens)),
++        "chat_template_identity": sha256_text(chat_template),
++        "chat_template_present": bool(chat_template),
++        "tokenizer_sha256": (
++            sha256_text(
++                canonical_json({"metadata": tokenizer_metadata, "probe_token_ids": token_ids})
++            )
++            if loadable
++            else ""
++        ),
++    }
++
++
++def model_binding_errors(
++    resolved: Mapping[str, Any], frozen: Mapping[str, Any]
++) -> list[str]:
++    """Name cache, hash, and embedded-tokenizer failures without substitution."""
++
++    errors: list[str] = []
++    if resolved.get("cached_sota_pair_called") is not True:
++        errors.append("cached_sota_pair_not_called")
++    if resolved.get("local_model_present") is not True:
++        errors.append("model_file_missing")
++    if str(resolved.get("model_path") or "") != str(frozen.get("path") or ""):
++        errors.append("cache_substitution")
++    if str(resolved.get("model_sha256") or "") != str(frozen.get("sha256") or ""):
++        errors.append("model_hash_drift")
++    tokenizer = resolved.get("tokenizer_receipt")
++    tokenizer = tokenizer if isinstance(tokenizer, Mapping) else {}
++    if tokenizer.get("metadata_present") is not True or tokenizer.get("loadable") is not True:
++        errors.append("tokenizer_metadata_missing")
++    frozen_tokenizer_hash = str(frozen.get("tokenizer_sha256") or "")
++    if frozen_tokenizer_hash and tokenizer.get("tokenizer_sha256") != frozen_tokenizer_hash:
++        errors.append("tokenizer_hash_drift")
++    return errors
++
++
++def preexisting_score_identities(
++    prior_artifact_bytes: Iterable[bytes], identities: Iterable[str]
++) -> list[str]:
++    """Find a new cell identity already present in any prior score artifact."""
++
++    corpus = b"\n".join(prior_artifact_bytes)
++    return sorted(identity for identity in set(identities) if identity.encode("utf-8") in corpus)
++
++
++def cell_nuisance_errors(cell: Mapping[str, Any]) -> list[str]:
++    """Apply the exact token, character, prompt, and label-position contract."""
++
++    errors: list[str] = []
++    token_counts = cell.get("candidate_token_counts")
++    token_counts = token_counts if isinstance(token_counts, Mapping) else {}
++    if token_counts.get("slot_0") != token_counts.get("slot_1"):
++        errors.append("unequal_candidate_token_counts")
++    character_counts = cell.get("candidate_character_counts")
++    character_counts = character_counts if isinstance(character_counts, Mapping) else {}
++    if character_counts.get("slot_0") != character_counts.get("slot_1"):
++        errors.append("unequal_candidate_character_counts")
++    prompt_counts = cell.get("paired_prompt_token_counts")
++    prompt_counts = prompt_counts if isinstance(prompt_counts, Mapping) else {}
++    if prompt_counts.get("base") != prompt_counts.get("label_swap"):
++        errors.append("paired_prompt_length_mismatch")
++    label_positions = cell.get("label_position_contract")
++    label_positions = label_positions if isinstance(label_positions, Mapping) else {}
++    if label_positions.get("base") != [0, 1] or label_positions.get("swapped") != [1, 0]:
++        errors.append("label_position_contract_failed")
++    return errors
++
++
++def freeze_group_splits(
++    semantic_group_ids: Iterable[str], *, random_seed: int
++) -> JsonDict:
++    """Assign each semantic identity once with a stable seeded hash order."""
++
++    unique = sorted(set(semantic_group_ids))
++    ordered = sorted(unique, key=lambda group_id: sha256_json([random_seed, group_id]))
++    midpoint = len(ordered) // 2
++    calibration = sorted(ordered[:midpoint])
++    held = sorted(ordered[midpoint:])
++    return {
++        "random_seed": int(random_seed),
++        "assignment_unit": "semantic_group_identity",
++        "calibration_group_ids": calibration,
++        "held_group_ids": held,
++        "calibration_group_hash": sha256_json(calibration),
++        "held_group_hash": sha256_json(held),
++    }
++
++
++def split_errors(
++    calibration_group_ids: Iterable[str],
++    held_group_ids: Iterable[str],
++    rows: Iterable[Mapping[str, Any]],
++) -> list[str]:
++    """Detect direct overlap and any row-level split leakage."""
++
++    calibration = set(calibration_group_ids)
++    held = set(held_group_ids)
++    errors = [f"split_overlap:{group_id}" for group_id in sorted(calibration & held)]
++    observed: dict[str, set[str]] = defaultdict(set)
++    for row in rows:
++        observed[str(row.get("semantic_group_identity"))].add(str(row.get("split")))
++    errors.extend(
++        f"group_leakage:{group_id}"
++        for group_id, splits in sorted(observed.items())
++        if len(splits) > 1
++    )
++    return errors
++
++
++def seal_held_groups(groups: Iterable[Mapping[str, Any]]) -> list[JsonDict]:
++    """Replace held labels with commitments over exact candidate identities."""
++
++    sealed: list[JsonDict] = []
++    for group in groups:
++        candidates = group.get("candidates")
++        candidates = candidates if isinstance(candidates, list) else []
++        label_payload = [
++            {
++                "candidate_id": candidate.get("candidate_id"),
++                "expected_label": candidate.get("expected_label"),
++            }
++            for candidate in candidates
++            if isinstance(candidate, Mapping)
++        ]
++        sealed.append(
++            {
++                "semantic_group_identity": group.get("semantic_identity"),
++                "candidate_ids": [row["candidate_id"] for row in label_payload],
++                "label_commitment": sha256_json(label_payload),
++                "label_schema": "two_boolean_labels_sealed_no_plaintext",
++            }
++        )
++    return sealed
++
++
++def readiness_score(
++    sample_size_power_rows: Iterable[Mapping[str, Any]], *, all_other_checks_pass: bool
++) -> int:
++    """Return design readiness only when every declared sample floor passes."""
++
++    rows = list(sample_size_power_rows)
++    floors_pass = bool(rows) and all(
++        int(row.get("accepted_group_count", -1)) >= int(row.get("minimum_group_count", 0))
++        for row in rows
++    )
++    return int(all_other_checks_pass and floors_pass)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Validate required fields and the score-free terminal contract."""
++
++    errors = [
++        f"missing_field:{field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact
++    ]
++    principles = artifact.get("field_principles")
++    principle_keys = set(principles) if isinstance(principles, Mapping) else set()
++    if principle_keys != set(artifact):
++        errors.append("field_principle_keys")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("token_likelihood_call_count") != 0:
++        errors.append("token_likelihood_call_count")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    if artifact.get("verdict_class") not in CLOSED_VERDICT_CLASSES:
++        errors.append("verdict_class")
++    if not str(artifact.get("honest_verdict") or "").startswith("complete_"):
++        errors.append("honest_verdict")
++    return errors
++
++
++class NativeGgufTokenizer:  # pragma: no cover - exercised by the requested live run.
++    """Load only embedded GGUF vocabulary metadata through llama.cpp."""
++
++    def __init__(self, model_path: str) -> None:
++        from llama_cpp import Llama
++
++        self._llm = Llama(model_path=model_path, vocab_only=True, verbose=False)
++        metadata_value = getattr(self._llm, "metadata", {})
++        metadata_value = metadata_value() if callable(metadata_value) else metadata_value
++        self.metadata = dict(metadata_value) if isinstance(metadata_value, Mapping) else {}
++        chat_template = str(
++            self.metadata.get("tokenizer.chat_template")
++            or self.metadata.get("tokenizer.chat_templates")
++            or ""
++        )
++        special_tokens = {
++            str(key): _json_safe(value)
++            for key, value in self.metadata.items()
++            if any(marker in str(key).lower() for marker in ("token_id", "add_bos", "add_eos"))
++        }
++        # Exp6850 used llama.cpp's native default, which adds BOS for Gemma.
++        # Keep that exact probe setting so tokenizer hash drift is meaningful.
++        probe = self.tokenize(TOKENIZER_PROBE, add_bos=True, special=False)
++        self.receipt = tokenizer_receipt_from_metadata(
++            metadata=self.metadata,
++            probe_token_ids=probe,
++            special_tokens=special_tokens,
++            chat_template=chat_template,
++        )
++        self.receipt["tokenize_settings"] = {"add_bos": False, "special": False}
++
++    def tokenize(self, text: str, *, add_bos: bool, special: bool) -> list[int]:
++        """Return native token IDs without any evaluation call."""
++
++        return [
++            int(token)
++            for token in self._llm.tokenize(
++                text.encode("utf-8"), add_bos=add_bos, special=special
++            )
++        ]
++
++    def close(self) -> None:
++        """Release the vocabulary-only llama.cpp context."""
++
++        close = getattr(self._llm, "close", None)
++        if callable(close):
++            close()
++        del self._llm
++        gc.collect()
++
++
++def _whitespace_variants(length: int) -> list[str]:
++    """Return bounded semantic-free suffixes with one exact character length."""
++
++    if length == 0:
++        return [""]
++    patterns = (
++        " ",
++        "\n",
++        "\t",
++        " \n",
++        "\n ",
++        " \t",
++        "\t ",
++        "\n\t",
++    )
++    variants: list[str] = []
++    for pattern in patterns:
++        value = (pattern * ((length + len(pattern) - 1) // len(pattern)))[:length]
++        if value not in variants:
++            variants.append(value)
++    return variants
++
++
++def _equalized_sequences(
++    tokenizer: Any, first: str, second: str
++) -> tuple[list[str], list[list[int]], JsonDict] | None:
++    """Find equal character and token lengths using trailing whitespace only."""
++
++    base_length = max(len(first), len(second))
++    for extra in range(MAX_WHITESPACE_EXTRA + 1):
++        target = base_length + extra
++        first_options: dict[int, tuple[str, list[int]]] = {}
++        second_options: dict[int, tuple[str, list[int]]] = {}
++        for suffix in _whitespace_variants(target - len(first)):
++            sequence = first + suffix
++            tokens = tokenizer.tokenize(sequence, add_bos=False, special=False)
++            first_options.setdefault(len(tokens), (sequence, tokens))
++        for suffix in _whitespace_variants(target - len(second)):
++            sequence = second + suffix
++            tokens = tokenizer.tokenize(sequence, add_bos=False, special=False)
++            second_options.setdefault(len(tokens), (sequence, tokens))
++        common = sorted(set(first_options) & set(second_options))
++        if common:
++            count = common[0]
++            first_sequence, first_tokens = first_options[count]
++            second_sequence, second_tokens = second_options[count]
++            return (
++                [first_sequence, second_sequence],
++                [first_tokens, second_tokens],
++                {
++                    "method": "bounded_trailing_whitespace_exact_match",
++                    "target_character_count": target,
++                    "candidate_token_count": count,
++                    "extra_character_budget": extra,
++                },
++            )
++    return None
++
++
++def _render_group_cell(
++    *, tokenizer: Any, model: Mapping[str, Any], group: Mapping[str, Any]
++) -> JsonDict:
++    """Tokenize one model-specific contrast and apply exact nuisance matching."""
++
++    semantic_identity = str(group.get("semantic_identity"))
++    prompt = unicodedata.normalize(
++        "NFC", RAW_PROMPT_TEMPLATE.format(program_json=canonical_json(group.get("program")))
++    )
++    candidates = group.get("candidates")
++    candidates = candidates if isinstance(candidates, list) else []
++    candidate_rows = [candidate for candidate in candidates if isinstance(candidate, Mapping)]
++    original_sequences = [
++        unicodedata.normalize(
++            "NFC",
++            CANDIDATE_SEQUENCE_TEMPLATE.format(
++                candidate_json=canonical_json(candidate.get("content"))
++            ),
++        )
++        for candidate in candidate_rows[:2]
++    ]
++    prompt_tokens = tokenizer.tokenize(prompt, add_bos=True, special=False)
++    equalized = (
++        _equalized_sequences(tokenizer, original_sequences[0], original_sequences[1])
++        if len(original_sequences) == 2
++        else None
++    )
++    if equalized is None:
++        sequences = original_sequences
++        candidate_tokens = [
++            tokenizer.tokenize(sequence, add_bos=False, special=False)
++            for sequence in sequences
++        ]
++        padding_receipt: JsonDict = {
++            "method": "bounded_trailing_whitespace_exact_match",
++            "matched": False,
++            "maximum_extra_character_budget": MAX_WHITESPACE_EXTRA,
++        }
++    else:
++        sequences, candidate_tokens, padding_receipt = equalized
++        padding_receipt["matched"] = True
++
++    token_counts = {
++        f"slot_{index}": len(tokens) for index, tokens in enumerate(candidate_tokens)
++    }
++    character_counts = {
++        f"slot_{index}": len(sequence) for index, sequence in enumerate(sequences)
++    }
++    row: JsonDict = {
++        "cell_id": cell_identity(str(model.get("hf_id")), semantic_identity),
++        "model_hf_id": model.get("hf_id"),
++        "model_family": MODEL_FAMILIES.get(str(model.get("hf_id"))),
++        "semantic_group_identity": semantic_identity,
++        "source_group_id": group.get("group_id"),
++        "prompt_token_ids": prompt_tokens,
++        "prompt_token_count": len(prompt_tokens),
++        "prompt_character_count": len(prompt),
++        "candidate_ids": {
++            f"slot_{index}": candidate.get("candidate_id")
++            for index, candidate in enumerate(candidate_rows[:2])
++        },
++        "candidate_token_ids": {
++            f"slot_{index}": tokens for index, tokens in enumerate(candidate_tokens)
++        },
++        "candidate_token_counts": token_counts,
++        "candidate_character_counts": character_counts,
++        "original_candidate_character_counts": {
++            f"slot_{index}": len(sequence)
++            for index, sequence in enumerate(original_sequences)
++        },
++        "prompt_sequence_sha256": sha256_text(prompt),
++        "candidate_sequence_sha256": {
++            f"slot_{index}": sha256_text(sequence)
++            for index, sequence in enumerate(sequences)
++        },
++        "original_candidate_sequence_sha256": {
++            f"slot_{index}": sha256_text(sequence)
++            for index, sequence in enumerate(original_sequences)
++        },
++        "special_tokens": deepcopy(tokenizer.receipt.get("special_tokens", {})),
++        "tokenize_settings": {
++            "prompt": {"add_bos": True, "special": False},
++            "candidate": {"add_bos": False, "special": False},
++        },
++        "chat_template_identity": tokenizer.receipt.get("chat_template_identity"),
++        "tokenizer_hash": tokenizer.receipt.get("tokenizer_sha256"),
++        "paired_prompt_token_counts": {
++            "base": len(prompt_tokens),
++            "label_swap": len(prompt_tokens),
++        },
++        "label_position_contract": {"base": [0, 1], "swapped": [1, 0]},
++        "presentation_order": {
++            "base": list(range(len(candidate_rows[:2]))),
++            "label_swap": list(reversed(range(len(candidate_rows[:2])))),
++        },
++        "normalization": "NFC_and_ascii_sorted_compact_JSON",
++        "padding_receipt": padding_receipt,
++        "token_likelihood_call_count": 0,
++    }
++    reasons = cell_nuisance_errors(row)
++    row["accepted"] = not reasons
++    row["rejection_reasons"] = reasons
++    return row
++
++
++def _gate_check(check: str, expected: Any, observed: Any, passed: bool) -> JsonDict:
++    return {"check": check, "expected": expected, "observed": observed, "passed": passed}
++
++
++def _gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    failed = [dict(row) for row in checks if row.get("passed") is not True]
++    return {
++        "passed": not failed,
++        "failed_check": failed[0].get("check") if failed else None,
++        "expected": failed[0].get("expected") if failed else None,
++        "observed": failed[0].get("observed") if failed else "all checks pass",
++        "failed_checks": failed,
++        "checks": [dict(row) for row in checks],
++    }
++
++
++def _read_json_bytes(path: Path) -> tuple[JsonDict, bytes]:
++    raw = path.read_bytes()
++    value = json.loads(raw)
++    if not isinstance(value, dict):
++        raise ValueError(f"artifact is not an object: {path}")
++    return value, raw
++
++
++def _resolve_model_files(exp6850: Mapping[str, Any]) -> list[JsonDict]:  # pragma: no cover
++    """Call the canonical pair helper and bind all three current model files."""
++
++    pair = cached_sota_pair() or []
++    pair_rows = [dict(row) for row in pair if isinstance(row, Mapping)]
++    pair_ids = [str(row.get("hf_id")) for row in pair_rows]
++    pair_by_id = {str(row.get("hf_id")): row for row in pair_rows}
++    frozen_hashes = exp6850.get("model_artifact_hashes")
++    frozen_hashes = frozen_hashes if isinstance(frozen_hashes, Mapping) else {}
++    registry = {str(row["hf_id"]): dict(row) for row in SOTA_GGUF_MODELS}
++    rows: list[JsonDict] = []
++    for hf_id in MODEL_SPECS:
++        source = dict(pair_by_id.get(hf_id, {}))
++        path_text = str(source.get("model_path") or resolve_cached_gguf(hf_id) or "")
++        path = Path(path_text) if path_text else Path()
++        present = bool(path_text and path.is_file())
++        frozen = frozen_hashes.get(hf_id)
++        frozen = frozen if isinstance(frozen, Mapping) else {}
++        rows.append(
++            {
++                "hf_id": hf_id,
++                "family": MODEL_FAMILIES[hf_id],
++                "role": registry.get(hf_id, {}).get("role"),
++                "model_path": path_text,
++                "local_model_present": present,
++                "model_size_bytes": path.stat().st_size if present else 0,
++                "model_sha256": sha256_file(path) if present else "",
++                "cached_sota_pair_called": True,
++                "cached_sota_pair_hf_ids": pair_ids,
++                "frozen_model_receipt": dict(frozen),
++                "tokenizer_receipt": {},
++            }
++        )
++    return rows
++
++
++def _attach_native_tokenizers(
++    model_rows: list[JsonDict], exp6850: Mapping[str, Any]
++) -> tuple[dict[str, NativeGgufTokenizer], list[JsonDict]]:  # pragma: no cover
++    """Load vocabulary-only tokenizers and attach stable receipts."""
++
++    expected_receipts = {
++        str(row.get("hf_id")): row
++        for row in exp6850.get("tokenizer_receipts", [])
++        if isinstance(row, Mapping)
++    }
++    tokenizers: dict[str, NativeGgufTokenizer] = {}
++    failures: list[JsonDict] = []
++    for model in model_rows:
++        hf_id = str(model["hf_id"])
++        try:
++            tokenizer = NativeGgufTokenizer(str(model["model_path"]))
++        except Exception as exc:
++            model["tokenizer_receipt"] = {
++                "source": "embedded_gguf_llama_cpp_vocab_only",
++                "metadata_present": False,
++                "loadable": False,
++                "tokenizer_sha256": "",
++                "error": f"{type(exc).__name__}: {exc}",
++            }
++            failures.append(
++                _gate_check(f"model.{hf_id}.native_tokenizer", True, model["tokenizer_receipt"], False)
++            )
++            continue
++        model["tokenizer_receipt"] = deepcopy(tokenizer.receipt)
++        expected_hash = str(expected_receipts.get(hf_id, {}).get("tokenizer_sha256") or "")
++        model["frozen_model_receipt"]["tokenizer_sha256"] = expected_hash
++        errors = model_binding_errors(model, model["frozen_model_receipt"])
++        if errors:
++            tokenizer.close()
++            failures.append(_gate_check(f"model.{hf_id}.binding", [], errors, False))
++        else:
++            tokenizers[hf_id] = tokenizer
++    return tokenizers, failures
++
++
++def _preregistered_statistics() -> JsonDict:
++    """Return the score-free effect, interval, missingness, and retirement plan."""
++
++    controls = (
++        "identifier",
++        "order",
++        "normalization",
++        "label_position",
++        "token_count",
++        "character_length",
++        "surface_form",
++    )
++    return {
++        "frozen_before_token_likelihood": True,
++        "primary_within_group_paired_contrast": (
++            "mean_candidate_log_likelihood_per_token(valid) - "
++            "mean_candidate_log_likelihood_per_token(invalid)"
++        ),
++        "nuisance_difference_in_differences": {
++            control: f"primary_contrast - matched_{control}_control_contrast"
++            for control in controls
++        },
++        "confidence_method": {
++            "name": "semantic_group_cluster_BCa_bootstrap",
++            "confidence_level": 0.95,
++            "resamples": 10000,
++            "seed": RANDOM_SEED,
++            "cluster_unit": "semantic_group_identity",
++        },
++        "missing_cell_rule": (
++            "No imputation. Analyze a model on complete eligible held groups only. "
++            "A model below 20 held groups fails readiness."
++        ),
++        "family_agreement_rule": (
++            "Qwen and both Gemma models must have the same primary-effect sign. "
++            "The pooled Qwen and Gemma 95% intervals must also have the same sign."
++        ),
++        "failure_rules": [
++            "Reject a scientific claim when any required model has fewer than 20 held groups.",
++            "Reject a scientific claim when any nuisance interval includes the primary effect magnitude.",
++            "Reject a scientific claim when the family-agreement rule fails.",
++            "Reject a scientific claim when a sealed hash or tokenizer hash drifts.",
++        ],
++        "retirement_threshold": (
++            "Retire the semantic-likelihood direction when the upper 95% primary interval is "
++            "at or below zero for both Qwen and pooled Gemma, or when two preregistered reruns "
++            "fail the family-agreement rule."
++        ),
++        "normalization_rule": "candidate mean log likelihood per token; equal token counts required",
++        "multiple_comparison_rule": "Holm correction across seven nuisance statistics per model",
++    }
++
++
++def _sample_rows(
++    accepted_rows: Sequence[Mapping[str, Any]], split_manifest: Mapping[str, Any]
++) -> list[JsonDict]:
++    """Count unique accepted groups for each model and family split."""
++
++    split_ids = {
++        "calibration": set(split_manifest.get("calibration_group_ids", [])),
++        "held": set(split_manifest.get("held_group_ids", [])),
++    }
++    by_model: dict[str, set[str]] = defaultdict(set)
++    for row in accepted_rows:
++        by_model[str(row.get("model_hf_id"))].add(str(row.get("semantic_group_identity")))
++    rows: list[JsonDict] = []
++    for hf_id in MODEL_SPECS:
++        for split, group_ids in split_ids.items():
++            count = len(by_model[hf_id] & group_ids)
++            rows.append(
++                {
++                    "scope": "model",
++                    "scope_id": hf_id,
++                    "model_hf_id": hf_id,
++                    "family": MODEL_FAMILIES[hf_id],
++                    "split": split,
++                    "accepted_group_count": count,
++                    "minimum_group_count": MINIMUM_GROUP_COUNT,
++                    "floor_passed": count >= MINIMUM_GROUP_COUNT,
++                    "planned_standardized_paired_effect": 0.65,
++                    "two_sided_alpha": 0.05,
++                    "planned_power": 0.80,
++                    "power_status": "preregistered_design_target_not_observed_result",
++                }
++            )
++    family_models = {
++        family: [hf_id for hf_id in MODEL_SPECS if MODEL_FAMILIES[hf_id] == family]
++        for family in sorted(set(MODEL_FAMILIES.values()))
++    }
++    for family, model_ids in family_models.items():
++        common = set.intersection(*(by_model[hf_id] for hf_id in model_ids))
++        for split, group_ids in split_ids.items():
++            count = len(common & group_ids)
++            rows.append(
++                {
++                    "scope": "family",
++                    "scope_id": family,
++                    "family": family,
++                    "required_models": model_ids,
++                    "split": split,
++                    "accepted_group_count": count,
++                    "minimum_group_count": MINIMUM_GROUP_COUNT,
++                    "floor_passed": count >= MINIMUM_GROUP_COUNT,
++                    "planned_standardized_paired_effect": 0.65,
++                    "two_sided_alpha": 0.05,
++                    "planned_power": 0.80,
++                    "power_status": "preregistered_design_target_not_observed_result",
++                }
++            )
++    return rows
++
++
++def _artifact_checksum(artifact: Mapping[str, Any]) -> str:
++    unsigned = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"duration_s", "field_principles", "reproducibility_checksum"}
++    }
++    return sha256_json(unsigned)
++
++
++def _finish_artifact(artifact: JsonDict) -> JsonDict:
++    artifact["reproducibility_checksum"] = _artifact_checksum(artifact)
++    artifact["field_principles"] = {
++        key: FIELD_PRINCIPLES.get(key, f"{key} preserves tokenizer preregistration evidence.")
++        for key in artifact
++    }
++    artifact["field_principles"]["field_principles"] = FIELD_PRINCIPLES["field_principles"]
++    return artifact
++
++
++def _base_artifact(*, run_date: str, duration_s: float) -> JsonDict:
++    """Create a complete blocked-safe schema before any live tokenization."""
++
++    return {
++        "schema": SCHEMA,
++        "experiment_id": 6863,
++        "run_date": run_date,
++        "status": "complete",
++        "result_path": RESULT_PATH.as_posix(),
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": {},
++        "preconditions_checked": {},
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(duration_s, 6),
++        "model_specs": [],
++        "models_used": [],
++        "model_artifact_hashes": {},
++        "tokenizer_receipts": [],
++        "token_likelihood_call_count": 0,
++        "rows": [],
++        "accepted_cell_manifest": [],
++        "rejected_cell_manifest": [],
++        "nuisance_match_manifest": {},
++        "calibration_group_manifest": [],
++        "sealed_held_group_manifest": [],
++        "split_overlap_count": 0,
++        "held_label_access_count": 0,
++        "preregistered_statistic_manifest": _preregistered_statistics(),
++        "sample_size_power_rows": [],
++        "source_artifact_hashes": {},
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "semantic_contrast_preregistration_ready_score": 0,
++        "gate_check_summary": {},
++        "scientific_effect_claimed": False,
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": BLOCKED_VERDICT,
++    }
++
++
++def build_preregistration(
++    *, repo_root: Path = REPO_ROOT, run_date: str = RUN_DATE
++) -> JsonDict:  # pragma: no cover - requested live GGUF execution path.
++    """Run all preconditions, native tokenization, splitting, and sealing."""
++
++    started = time.monotonic()
++    exp6850, raw6850 = _read_json_bytes(repo_root / EXP6850_PATH)
++    exp6852, raw6852 = _read_json_bytes(repo_root / EXP6852_PATH)
++    exp6862, raw6862 = _read_json_bytes(repo_root / EXP6862_PATH)
++    artifact = _base_artifact(run_date=run_date, duration_s=0.0)
++    artifact["source_artifact_hashes"] = {
++        "exp6850": sha256_bytes(raw6850),
++        "exp6852": sha256_bytes(raw6852),
++        "exp6862": sha256_bytes(raw6862),
++    }
++
++    groups_value = exp6862.get("semantic_contrast_group_manifest")
++    groups = [dict(row) for row in groups_value if isinstance(row, Mapping)] if isinstance(groups_value, list) else []
++    semantic_ids = [str(group.get("semantic_identity")) for group in groups]
++    new_cell_ids = [cell_identity(hf_id, group_id) for hf_id in MODEL_SPECS for group_id in semantic_ids]
++    preexisting = preexisting_score_identities([raw6850, raw6852, raw6862], new_cell_ids)
++    checks = [
++        _gate_check("exp6862_readiness", 1, exp6862.get("dual_side_semantic_contrast_bank_ready_score"), exp6862.get("dual_side_semantic_contrast_bank_ready_score") == 1),
++        _gate_check("exp6862_model_scores_absent", False, dict(exp6862.get("frozen_sequence_template_manifest") or {}).get("model_scores_present"), dict(exp6862.get("frozen_sequence_template_manifest") or {}).get("model_scores_present") is False),
++        _gate_check("exp6862_semantic_groups", ">=40", len(groups), len(groups) >= 40),
++        _gate_check("preexisting_model_scores_for_new_identities", [], preexisting, not preexisting),
++    ]
++
++    model_rows = _resolve_model_files(exp6850)
++    frozen_hashes = exp6850.get("model_artifact_hashes")
++    frozen_hashes = frozen_hashes if isinstance(frozen_hashes, Mapping) else {}
++    for model in model_rows:
++        hf_id = str(model["hf_id"])
++        frozen = frozen_hashes.get(hf_id)
++        frozen = frozen if isinstance(frozen, Mapping) else {}
++        preliminary = dict(model)
++        preliminary["tokenizer_receipt"] = {"metadata_present": True, "loadable": True}
++        errors = [
++            error
++            for error in model_binding_errors(preliminary, frozen)
++            if error not in {"tokenizer_metadata_missing", "tokenizer_hash_drift"}
++        ]
++        checks.append(_gate_check(f"model.{hf_id}.file_binding", [], errors, not errors))
++
++    artifact["model_specs"] = deepcopy(model_rows)
++    artifact["model_artifact_hashes"] = {
++        str(row["hf_id"]): {
++            "path": row["model_path"],
++            "sha256": row["model_sha256"],
++            "size_bytes": row["model_size_bytes"],
++        }
++        for row in model_rows
++    }
++    if any(row["passed"] is not True for row in checks):
++        artifact["preconditions_checked"] = {"checks": checks, "passed": False}
++        artifact["gate_check_summary"] = _gate_summary(checks)
++        artifact["duration_s"] = round(time.monotonic() - started, 6)
++        return _finish_artifact(artifact)
++
++    tokenizers, tokenizer_failures = _attach_native_tokenizers(model_rows, exp6850)
++    checks.extend(tokenizer_failures)
++    checks.append(
++        _gate_check(
++            "all_three_native_tokenizers",
++            list(MODEL_SPECS),
++            sorted(tokenizers),
++            set(tokenizers) == set(MODEL_SPECS),
++        )
++    )
++    artifact["model_specs"] = deepcopy(model_rows)
++    artifact["tokenizer_receipts"] = [
++        {"hf_id": row["hf_id"], **deepcopy(row["tokenizer_receipt"])} for row in model_rows
++    ]
++    if any(row["passed"] is not True for row in checks):
++        for tokenizer in tokenizers.values():
++            tokenizer.close()
++        artifact["preconditions_checked"] = {"checks": checks, "passed": False}
++        artifact["gate_check_summary"] = _gate_summary(checks)
++        artifact["duration_s"] = round(time.monotonic() - started, 6)
++        return _finish_artifact(artifact)
++
++    rows: list[JsonDict] = []
++    try:
++        for model in model_rows:
++            tokenizer = tokenizers[str(model["hf_id"])]
++            for group in groups:
++                rows.append(_render_group_cell(tokenizer=tokenizer, model=model, group=group))
++            tokenizer.close()
++    finally:
++        for tokenizer in tokenizers.values():
++            if hasattr(tokenizer, "_llm"):
++                tokenizer.close()
++
++    accepted_rows = [row for row in rows if row.get("accepted") is True]
++    rejected_rows = [row for row in rows if row.get("accepted") is not True]
++    split_manifest = freeze_group_splits(semantic_ids, random_seed=RANDOM_SEED)
++    split_by_group = {
++        **{group_id: "calibration" for group_id in split_manifest["calibration_group_ids"]},
++        **{group_id: "held" for group_id in split_manifest["held_group_ids"]},
++    }
++    for row in rows:
++        row["split"] = split_by_group.get(str(row["semantic_group_identity"]), "unassigned")
++    split_failures = split_errors(
++        split_manifest["calibration_group_ids"], split_manifest["held_group_ids"], rows
++    )
++
++    groups_by_identity = {str(group.get("semantic_identity")): group for group in groups}
++    accepted_models_by_group: dict[str, list[str]] = defaultdict(list)
++    for row in accepted_rows:
++        accepted_models_by_group[str(row["semantic_group_identity"])].append(
++            str(row["model_hf_id"])
++        )
++    calibration_manifest: list[JsonDict] = []
++    calibration_labels: dict[str, tuple[bool, bool]] = {}
++    for group_id in split_manifest["calibration_group_ids"]:
++        group = groups_by_identity[group_id]
++        candidates = [row for row in group.get("candidates", []) if isinstance(row, Mapping)]
++        labels = tuple(bool(row.get("expected_label")) for row in candidates[:2])
++        calibration_labels[group_id] = labels  # type: ignore[assignment]
++        calibration_manifest.append(
++            {
++                "semantic_group_identity": group_id,
++                "eligible_models": sorted(accepted_models_by_group[group_id]),
++                "candidate_ids": [row.get("candidate_id") for row in candidates[:2]],
++                "candidate_labels_by_slot": list(labels),
++                "manifest_hash": sha256_json(
++                    {"group": group_id, "models": sorted(accepted_models_by_group[group_id]), "labels": labels}
++                ),
++            }
++        )
++    held_groups = [groups_by_identity[group_id] for group_id in split_manifest["held_group_ids"]]
++    held_manifest = seal_held_groups(held_groups)
++    for row in held_manifest:
++        group_id = str(row["semantic_group_identity"])
++        row["eligible_models"] = sorted(accepted_models_by_group[group_id])
++        row["manifest_hash"] = sha256_json(row)
++
++    label_loader = CalibrationLabelLoader(
++        calibration_labels, split_manifest["held_group_ids"]
++    )
++    for group_id in split_manifest["calibration_group_ids"]:
++        label_loader.load(group_id)
++
++    sample_rows = _sample_rows(accepted_rows, split_manifest)
++    all_other_checks_pass = (
++        not split_failures
++        and label_loader.held_label_access_count == 0
++        and all(row.get("metadata_present") is True and row.get("loadable") is True for row in artifact["tokenizer_receipts"])
++        and all(not cell_nuisance_errors(row) for row in accepted_rows)
++    )
++    ready = readiness_score(sample_rows, all_other_checks_pass=all_other_checks_pass)
++    checks.extend(
++        [
++            _gate_check("nuisance_matched_cells_present", True, bool(accepted_rows), bool(accepted_rows)),
++            _gate_check("split_overlap_count", 0, len([error for error in split_failures if error.startswith("split_overlap:")]), not any(error.startswith("split_overlap:") for error in split_failures)),
++            _gate_check("group_leakage", [], split_failures, not split_failures),
++            _gate_check("held_label_access_count", 0, label_loader.held_label_access_count, label_loader.held_label_access_count == 0),
++            _gate_check("sample_size_floors", True, [row for row in sample_rows if not row["floor_passed"]], all(row["floor_passed"] for row in sample_rows)),
++        ]
++    )
++
++    artifact.update(
++        preconditions_checked={"checks": checks[: 4 + len(model_rows) + 1], "passed": True},
++        models_used=list(MODEL_SPECS),
++        rows=rows,
++        accepted_cell_manifest=[
++            {
++                "cell_id": row["cell_id"],
++                "model_hf_id": row["model_hf_id"],
++                "semantic_group_identity": row["semantic_group_identity"],
++                "split": row["split"],
++                "cell_hash": sha256_json(row),
++            }
++            for row in accepted_rows
++        ],
++        rejected_cell_manifest=[
++            {
++                "cell_id": row["cell_id"],
++                "model_hf_id": row["model_hf_id"],
++                "semantic_group_identity": row["semantic_group_identity"],
++                "reasons": row["rejection_reasons"],
++                "cell_hash": sha256_json(row),
++            }
++            for row in rejected_rows
++        ],
++        nuisance_match_manifest={
++            "controls": [
++                "identifier",
++                "order",
++                "normalization",
++                "label_position",
++                "token_count",
++                "character_length",
++                "surface_form",
++            ],
++            "prompt_length_contract": "base_prompt_tokens_equal_label_swap_prompt_tokens",
++            "label_position_contract": {"base": [0, 1], "swapped": [1, 0]},
++            "candidate_contract": "equal_native_token_count_and_equal_character_count",
++            "normalization": "NFC_and_ascii_sorted_compact_JSON",
++            "raw_prompt_template_sha256": sha256_text(RAW_PROMPT_TEMPLATE),
++            "candidate_sequence_template_sha256": sha256_text(CANDIDATE_SEQUENCE_TEMPLATE),
++            "accepted_cell_count": len(accepted_rows),
++            "rejected_cell_count": len(rejected_rows),
++            "manifest_hash": sha256_json(
++                [
++                    [row["cell_id"], row["accepted"], row["rejection_reasons"]]
++                    for row in rows
++                ]
++            ),
++        },
++        calibration_group_manifest=calibration_manifest,
++        sealed_held_group_manifest=held_manifest,
++        split_overlap_count=len(
++            [error for error in split_failures if error.startswith("split_overlap:")]
++        ),
++        held_label_access_count=label_loader.held_label_access_count,
++        sample_size_power_rows=sample_rows,
++        semantic_contrast_preregistration_ready_score=ready,
++        gate_check_summary=_gate_summary(checks),
++        verdict_class="null",
++        honest_verdict=(
++            "complete_null_tokenizer_aware_semantic_contrast_preregistration_ready_no_scores"
++            if ready
++            else "complete_null_tokenizer_aware_semantic_contrast_preregistration_sample_floor_not_met"
++        ),
++        duration_s=round(time.monotonic() - started, 6),
++    )
++    artifact["split_manifest"] = split_manifest
++    return _finish_artifact(artifact)
++
++
++def write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
++    """Write the terminal artifact atomically after full validation."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.NamedTemporaryFile(
++        "w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", delete=False
++    ) as handle:
++        json.dump(dict(payload), handle, indent=2, sort_keys=True)
++        handle.write("\n")
++        temporary = Path(handle.name)
++    temporary.replace(path)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI live path.
++    """Run Exp6863 and write its stable terminal result."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--output", type=Path, default=REPO_ROOT / RESULT_PATH)
++    args = parser.parse_args(argv)
++    artifact = build_preregistration(run_date=args.date)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise RuntimeError(f"invalid Exp6863 artifact: {errors}")
++    write_json_atomic(args.output, artifact)
++    print(
++        canonical_json(
++            {
++                "output": str(args.output),
++                "ready": artifact["semantic_contrast_preregistration_ready_score"],
++                "accepted_cells": len(artifact["accepted_cell_manifest"]),
++                "rejected_cells": len(artifact["rejected_cell_manifest"]),
++                "honest_verdict": artifact["honest_verdict"],
++            }
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json b/results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json
+new file mode 100644
+index 0000000000..2b687a8fc2
+--- /dev/null
++++ b/results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json
+@@ -0,0 +1,562 @@
++{
++  "accepted_cell_manifest": [],
++  "calibration_group_manifest": [],
++  "duration_s": 38.387381,
++  "experiment_id": 6863,
++  "field_principles": {
++    "accepted_cell_manifest": "The manifest names every eligible future score cell.",
++    "calibration_group_manifest": "The manifest exposes labels only for calibration.",
++    "duration_s": "Wall time records that tokenization ran.",
++    "experiment_id": "experiment_id preserves tokenizer preregistration evidence.",
++    "field_principles": "Each top-level field states why it exists.",
++    "gate_check_summary": "The summary names each failed check and observed value.",
++    "held_label_access_count": "Zero proves calibration did not load held labels.",
++    "honest_verdict": "The complete prefix gives one terminal disposition.",
++    "inference_substrate": "The value separates tokenization from model inference.",
++    "model_artifact_hashes": "File hashes freeze the model bytes.",
++    "model_specs": "The rows bind the three exact required GGUF files.",
++    "models_used": "The list prevents a hidden model-family substitution.",
++    "nuisance_match_manifest": "The contract freezes exact nuisance controls.",
++    "preconditions_checked": "The gate stops substitution and prior-score reuse.",
++    "preregistered_statistic_manifest": "The formulas and failure rules predate scores.",
++    "random_seed": "random_seed preserves tokenizer preregistration evidence.",
++    "rejected_cell_manifest": "The manifest preserves all excluded cells and reasons.",
++    "reproducibility_checksum": "The checksum seals all stable artifact content.",
++    "result_path": "result_path preserves tokenizer preregistration evidence.",
++    "rows": "Each row records one model and semantic contrast cell.",
++    "run_date": "run_date preserves tokenizer preregistration evidence.",
++    "sample_size_power_rows": "Rows enforce model and family sample floors.",
++    "schema": "schema preserves tokenizer preregistration evidence.",
++    "scientific_effect_claimed": "scientific_effect_claimed preserves tokenizer preregistration evidence.",
++    "sealed_held_group_manifest": "Commitments freeze held labels without exposing them.",
++    "semantic_contrast_preregistration_ready_score": "Readiness measures design only.",
++    "source_artifact_hashes": "source_artifact_hashes preserves tokenizer preregistration evidence.",
++    "spec_refs": "spec_refs preserves tokenizer preregistration evidence.",
++    "split_overlap_count": "Zero proves group-disjoint assignment.",
++    "status": "status preserves tokenizer preregistration evidence.",
++    "token_likelihood_call_count": "Zero proves that no score informed the split.",
++    "tokenizer_receipts": "Native metadata and probe tokens freeze each tokenizer.",
++    "verdict_class": "The closed class separates readiness from a scientific claim.",
++    "verifier_is_oracle": "False states that this tokenizer is not a truth oracle."
++  },
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "exp6862_readiness",
++        "expected": 1,
++        "observed": 1,
++        "passed": true
++      },
++      {
++        "check": "exp6862_model_scores_absent",
++        "expected": false,
++        "observed": false,
++        "passed": true
++      },
++      {
++        "check": "exp6862_semantic_groups",
++        "expected": ">=40",
++        "observed": 100,
++        "passed": true
++      },
++      {
++        "check": "preexisting_model_scores_for_new_identities",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "model.unsloth/Qwen3.6-35B-A3B-GGUF.file_binding",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "model.unsloth/gemma-4-31B-it-GGUF.file_binding",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.file_binding",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "model.unsloth/gemma-4-31B-it-GGUF.binding",
++        "expected": [],
++        "observed": [
++          "tokenizer_hash_drift"
++        ],
++        "passed": false
++      },
++      {
++        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.binding",
++        "expected": [],
++        "observed": [
++          "tokenizer_hash_drift"
++        ],
++        "passed": false
++      },
++      {
++        "check": "all_three_native_tokenizers",
++        "expected": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF"
++        ],
++        "observed": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "passed": false
++      }
++    ],
++    "expected": [],
++    "failed_check": "model.unsloth/gemma-4-31B-it-GGUF.binding",
++    "failed_checks": [
++      {
++        "check": "model.unsloth/gemma-4-31B-it-GGUF.binding",
++        "expected": [],
++        "observed": [
++          "tokenizer_hash_drift"
++        ],
++        "passed": false
++      },
++      {
++        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.binding",
++        "expected": [],
++        "observed": [
++          "tokenizer_hash_drift"
++        ],
++        "passed": false
++      },
++      {
++        "check": "all_three_native_tokenizers",
++        "expected": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF"
++        ],
++        "observed": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "passed": false
++      }
++    ],
++    "observed": [
++      "tokenizer_hash_drift"
++    ],
++    "passed": false
++  },
++  "held_label_access_count": 0,
++  "honest_verdict": "complete_blocked_tokenizer_aware_semantic_contrast_preregistration",
++  "inference_substrate": "native_gguf_tokenization_without_inference",
++  "model_artifact_hashes": {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": {
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "size_bytes": 22134528992
++    },
++    "unsloth/gemma-4-26B-A4B-it-GGUF": {
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "size_bytes": 16947539744
++    },
++    "unsloth/gemma-4-31B-it-GGUF": {
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++      "size_bytes": 18323731456
++    }
++  },
++  "model_specs": [
++    {
++      "cached_sota_pair_called": true,
++      "cached_sota_pair_hf_ids": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "family": "qwen",
++      "frozen_model_receipt": {
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "tokenizer_sha256": "sha256:4e95861a364e75660c7fcf9df129cf1d158b927e3ad5ac801ae53bd2681cf08b"
++      },
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "local_model_present": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "model_size_bytes": 22134528992,
++      "role": "moe",
++      "tokenizer_receipt": {
++        "chat_template_identity": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
++        "chat_template_present": true,
++        "loadable": true,
++        "metadata_key_count": 7,
++        "metadata_present": true,
++        "probe_token_ids": [
++          10993,
++          59610,
++          369,
++          9770,
++          1973,
++          264,
++          11991,
++          2306,
++          13
++        ],
++        "source": "embedded_gguf_llama_cpp_vocab_only",
++        "special_tokens": {
++          "tokenizer.ggml.add_bos_token": "false",
++          "tokenizer.ggml.bos_token_id": "248044",
++          "tokenizer.ggml.eos_token_id": "248046",
++          "tokenizer.ggml.padding_token_id": "248055"
++        },
++        "tokenize_settings": {
++          "add_bos": false,
++          "special": false
++        },
++        "tokenizer_sha256": "sha256:4e95861a364e75660c7fcf9df129cf1d158b927e3ad5ac801ae53bd2681cf08b"
++      }
++    },
++    {
++      "cached_sota_pair_called": true,
++      "cached_sota_pair_hf_ids": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "family": "gemma",
++      "frozen_model_receipt": {
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "tokenizer_sha256": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd"
++      },
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "local_model_present": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++      "model_size_bytes": 18323731456,
++      "role": "dense",
++      "tokenizer_receipt": {
++        "chat_template_identity": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++        "chat_template_present": true,
++        "loadable": true,
++        "metadata_key_count": 9,
++        "metadata_present": true,
++        "probe_token_ids": [
++          14860,
++          58024,
++          563,
++          15593,
++          2180,
++          496,
++          11639,
++          5346,
++          236761
++        ],
++        "source": "embedded_gguf_llama_cpp_vocab_only",
++        "special_tokens": {
++          "tokenizer.ggml.add_bos_token": "true",
++          "tokenizer.ggml.bos_token_id": "2",
++          "tokenizer.ggml.eos_token_id": "106",
++          "tokenizer.ggml.mask_token_id": "4",
++          "tokenizer.ggml.padding_token_id": "0",
++          "tokenizer.ggml.unknown_token_id": "3"
++        },
++        "tokenize_settings": {
++          "add_bos": false,
++          "special": false
++        },
++        "tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c"
++      }
++    },
++    {
++      "cached_sota_pair_called": true,
++      "cached_sota_pair_hf_ids": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "family": "gemma",
++      "frozen_model_receipt": {
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "tokenizer_sha256": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd"
++      },
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "local_model_present": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "model_size_bytes": 16947539744,
++      "role": "moe",
++      "tokenizer_receipt": {
++        "chat_template_identity": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++        "chat_template_present": true,
++        "loadable": true,
++        "metadata_key_count": 9,
++        "metadata_present": true,
++        "probe_token_ids": [
++          14860,
++          58024,
++          563,
++          15593,
++          2180,
++          496,
++          11639,
++          5346,
++          236761
++        ],
++        "source": "embedded_gguf_llama_cpp_vocab_only",
++        "special_tokens": {
++          "tokenizer.ggml.add_bos_token": "true",
++          "tokenizer.ggml.bos_token_id": "2",
++          "tokenizer.ggml.eos_token_id": "106",
++          "tokenizer.ggml.mask_token_id": "4",
++          "tokenizer.ggml.padding_token_id": "0",
++          "tokenizer.ggml.unknown_token_id": "3"
++        },
++        "tokenize_settings": {
++          "add_bos": false,
++          "special": false
++        },
++        "tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c"
++      }
++    }
++  ],
++  "models_used": [],
++  "nuisance_match_manifest": {},
++  "preconditions_checked": {
++    "checks": [
++      {
++        "check": "exp6862_readiness",
++        "expected": 1,
++        "observed": 1,
++        "passed": true
++      },
++      {
++        "check": "exp6862_model_scores_absent",
++        "expected": false,
++        "observed": false,
++        "passed": true
++      },
++      {
++        "check": "exp6862_semantic_groups",
++        "expected": ">=40",
++        "observed": 100,
++        "passed": true
++      },
++      {
++        "check": "preexisting_model_scores_for_new_identities",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "model.unsloth/Qwen3.6-35B-A3B-GGUF.file_binding",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "model.unsloth/gemma-4-31B-it-GGUF.file_binding",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.file_binding",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "model.unsloth/gemma-4-31B-it-GGUF.binding",
++        "expected": [],
++        "observed": [
++          "tokenizer_hash_drift"
++        ],
++        "passed": false
++      },
++      {
++        "check": "model.unsloth/gemma-4-26B-A4B-it-GGUF.binding",
++        "expected": [],
++        "observed": [
++          "tokenizer_hash_drift"
++        ],
++        "passed": false
++      },
++      {
++        "check": "all_three_native_tokenizers",
++        "expected": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF"
++        ],
++        "observed": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "passed": false
++      }
++    ],
++    "passed": false
++  },
++  "preregistered_statistic_manifest": {
++    "confidence_method": {
++      "cluster_unit": "semantic_group_identity",
++      "confidence_level": 0.95,
++      "name": "semantic_group_cluster_BCa_bootstrap",
++      "resamples": 10000,
++      "seed": 6863
++    },
++    "failure_rules": [
++      "Reject a scientific claim when any required model has fewer than 20 held groups.",
++      "Reject a scientific claim when any nuisance interval includes the primary effect magnitude.",
++      "Reject a scientific claim when the family-agreement rule fails.",
++      "Reject a scientific claim when a sealed hash or tokenizer hash drifts."
++    ],
++    "family_agreement_rule": "Qwen and both Gemma models must have the same primary-effect sign. The pooled Qwen and Gemma 95% intervals must also have the same sign.",
++    "frozen_before_token_likelihood": true,
++    "missing_cell_rule": "No imputation. Analyze a model on complete eligible held groups only. A model below 20 held groups fails readiness.",
++    "multiple_comparison_rule": "Holm correction across seven nuisance statistics per model",
++    "normalization_rule": "candidate mean log likelihood per token; equal token counts required",
++    "nuisance_difference_in_differences": {
++      "character_length": "primary_contrast - matched_character_length_control_contrast",
++      "identifier": "primary_contrast - matched_identifier_control_contrast",
++      "label_position": "primary_contrast - matched_label_position_control_contrast",
++      "normalization": "primary_contrast - matched_normalization_control_contrast",
++      "order": "primary_contrast - matched_order_control_contrast",
++      "surface_form": "primary_contrast - matched_surface_form_control_contrast",
++      "token_count": "primary_contrast - matched_token_count_control_contrast"
++    },
++    "primary_within_group_paired_contrast": "mean_candidate_log_likelihood_per_token(valid) - mean_candidate_log_likelihood_per_token(invalid)",
++    "retirement_threshold": "Retire the semantic-likelihood direction when the upper 95% primary interval is at or below zero for both Qwen and pooled Gemma, or when two preregistered reruns fail the family-agreement rule."
++  },
++  "random_seed": 6863,
++  "rejected_cell_manifest": [],
++  "reproducibility_checksum": "sha256:7b73a7e6c3a36d845bbed59e14318be067f0f76f0a0bceaa69d0d4aaa9e6cfd4",
++  "result_path": "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json",
++  "rows": [],
++  "run_date": "20260902",
++  "sample_size_power_rows": [],
++  "schema": "carnot.experiment_6863.tokenizer_aware_semantic_contrast_preregistration.v1",
++  "scientific_effect_claimed": false,
++  "sealed_held_group_manifest": [],
++  "semantic_contrast_preregistration_ready_score": 0,
++  "source_artifact_hashes": {
++    "exp6850": "sha256:0093104ffb1d4f3f22e7ab9369d56561d8d01fa84406faa89d8f0117ced6977d",
++    "exp6852": "sha256:121dd2640dd50404e081e281953402b2f6e0d36c0aeeb805df049e1debbe07a9",
++    "exp6862": "sha256:dbc2d463153274432dd02bbd188e5e5477a650bcdf4f1fc101f2e6adc5778638"
++  },
++  "spec_refs": [
++    "REQ-INFERENCE-6863",
++    "SCENARIO-INFERENCE-6863-NATIVE-TOKENIZER",
++    "SCENARIO-INFERENCE-6863-CACHE-AND-HASH",
++    "SCENARIO-INFERENCE-6863-NUISANCE-MATCH",
++    "SCENARIO-INFERENCE-6863-GROUP-SPLIT",
++    "SCENARIO-INFERENCE-6863-HELD-SEAL",
++    "SCENARIO-INFERENCE-6863-SAMPLE-FLOOR"
++  ],
++  "split_overlap_count": 0,
++  "status": "complete",
++  "token_likelihood_call_count": 0,
++  "tokenizer_receipts": [
++    {
++      "chat_template_identity": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
++      "chat_template_present": true,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "loadable": true,
++      "metadata_key_count": 7,
++      "metadata_present": true,
++      "probe_token_ids": [
++        10993,
++        59610,
++        369,
++        9770,
++        1973,
++        264,
++        11991,
++        2306,
++        13
++      ],
++      "source": "embedded_gguf_llama_cpp_vocab_only",
++      "special_tokens": {
++        "tokenizer.ggml.add_bos_token": "false",
++        "tokenizer.ggml.bos_token_id": "248044",
++        "tokenizer.ggml.eos_token_id": "248046",
++        "tokenizer.ggml.padding_token_id": "248055"
++      },
++      "tokenize_settings": {
++        "add_bos": false,
++        "special": false
++      },
++      "tokenizer_sha256": "sha256:4e95861a364e75660c7fcf9df129cf1d158b927e3ad5ac801ae53bd2681cf08b"
++    },
++    {
++      "chat_template_identity": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++      "chat_template_present": true,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "loadable": true,
++      "metadata_key_count": 9,
++      "metadata_present": true,
++      "probe_token_ids": [
++        14860,
++        58024,
++        563,
++        15593,
++        2180,
++        496,
++        11639,
++        5346,
++        236761
++      ],
++      "source": "embedded_gguf_llama_cpp_vocab_only",
++      "special_tokens": {
++        "tokenizer.ggml.add_bos_token": "true",
++        "tokenizer.ggml.bos_token_id": "2",
++        "tokenizer.ggml.eos_token_id": "106",
++        "tokenizer.ggml.mask_token_id": "4",
++        "tokenizer.ggml.padding_token_id": "0",
++        "tokenizer.ggml.unknown_token_id": "3"
++      },
++      "tokenize_settings": {
++        "add_bos": false,
++        "special": false
++      },
++      "tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c"
++    },
++    {
++      "chat_template_identity": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++      "chat_template_present": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "loadable": true,
++      "metadata_key_count": 9,
++      "metadata_present": true,
++      "probe_token_ids": [
++        14860,
++        58024,
++        563,
++        15593,
++        2180,
++        496,
++        11639,
++        5346,
++        236761
++      ],
++      "source": "embedded_gguf_llama_cpp_vocab_only",
++      "special_tokens": {
++        "tokenizer.ggml.add_bos_token": "true",
++        "tokenizer.ggml.bos_token_id": "2",
++        "tokenizer.ggml.eos_token_id": "106",
++        "tokenizer.ggml.mask_token_id": "4",
++        "tokenizer.ggml.padding_token_id": "0",
++        "tokenizer.ggml.unknown_token_id": "3"
++      },
++      "tokenize_settings": {
++        "add_bos": false,
++        "special": false
++      },
++      "tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c"
++    }
++  ],
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py b/scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+new file mode 100644
+index 0000000000..5295a293da
+--- /dev/null
++++ b/scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+@@ -0,0 +1,8 @@
++#!/usr/bin/env python3
++"""Run the Exp6863 tokenizer-aware semantic contrast preregistration."""
++
++from carnot.experiment_6863_tokenizer_aware_semantic_contrast_preregistration import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py b/tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+new file mode 100644
+index 0000000000..a539627870
+--- /dev/null
++++ b/tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py
+@@ -0,0 +1,252 @@
++"""Tests for REQ-INFERENCE-6863 and SCENARIO-INFERENCE-6863-*.
++
++These tests use small receipts and token rows. They never load a GGUF or write
++the research artifact.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_6863_tokenizer_aware_semantic_contrast_preregistration as exp
++
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def _receipt(*, metadata_present: bool = True) -> dict:
++    """Return one native-tokenizer receipt for pure contract tests."""
++
++    return exp.tokenizer_receipt_from_metadata(
++        metadata={"tokenizer.ggml.model": "test"} if metadata_present else {},
++        probe_token_ids=[1, 2, 3],
++        special_tokens={"bos_token_id": 1, "eos_token_id": 2},
++        chat_template="{{ messages }}",
++    )
++
++
++def _model(hf_id: str, *, path: str = "/cache/model.gguf", digest: str = "sha256:abc") -> dict:
++    """Return one resolved model row with a frozen cache binding."""
++
++    return {
++        "hf_id": hf_id,
++        "model_path": path,
++        "model_sha256": digest,
++        "local_model_present": True,
++        "cached_sota_pair_called": True,
++        "tokenizer_receipt": _receipt(),
++    }
++
++
++def _cell(group: str, *, split: str = "calibration") -> dict:
++    """Return one nuisance-matched token cell."""
++
++    return {
++        "cell_id": exp.cell_identity(exp.MODEL_SPECS[0], group),
++        "model_hf_id": exp.MODEL_SPECS[0],
++        "semantic_group_identity": group,
++        "split": split,
++        "prompt_token_ids": [1, 4, 5],
++        "prompt_token_count": 3,
++        "candidate_token_ids": {"slot_0": [7, 8], "slot_1": [9, 10]},
++        "candidate_token_counts": {"slot_0": 2, "slot_1": 2},
++        "candidate_character_counts": {"slot_0": 14, "slot_1": 14},
++        "label_position_contract": {"base": [0, 1], "swapped": [1, 0]},
++        "paired_prompt_token_counts": {"base": 3, "label_swap": 3},
++    }
++
++
++def test_req_inference_6863_spec_declares_required_contract() -> None:
++    """REQ-INFERENCE-6863: OpenSpec owns the tokenizer and seal contract."""
++
++    text = (ROOT / exp.SPEC_PATH).read_text(encoding="utf-8")
++    section = text.split("REQ-INFERENCE-6863", 1)[1]
++    for anchor in exp.SPEC_REFS:
++        assert anchor in text
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_6863_native_tokenizer_rejects_missing_metadata() -> None:
++    """SCENARIO-INFERENCE-6863-NATIVE-TOKENIZER: metadata is mandatory."""
++
++    receipt = _receipt(metadata_present=False)
++    assert receipt["source"] == "embedded_gguf_llama_cpp_vocab_only"
++    assert receipt["metadata_present"] is False
++    assert receipt["loadable"] is False
++    assert receipt["tokenizer_sha256"] == ""
++
++
++def test_scenario_6863_native_probe_preserves_frozen_bos_setting() -> None:
++    """SCENARIO-INFERENCE-6863-NATIVE-TOKENIZER: the Exp6850 probe uses BOS."""
++
++    receipt = _receipt()
++    assert receipt["probe_tokenize_settings"] == {"add_bos": True, "special": False}
++
++
++def test_scenario_6863_cache_substitution_fails_closed() -> None:
++    """SCENARIO-INFERENCE-6863-CACHE-AND-HASH: a new path is not the frozen file."""
++
++    resolved = _model(exp.MODEL_SPECS[0], path="/cache/substitute.gguf")
++    frozen = {"path": "/cache/frozen.gguf", "sha256": "sha256:abc"}
++    assert exp.model_binding_errors(resolved, frozen) == ["cache_substitution"]
++
++
++def test_scenario_6863_hash_drift_fails_closed() -> None:
++    """SCENARIO-INFERENCE-6863-CACHE-AND-HASH: changed bytes fail the gate."""
++
++    resolved = _model(exp.MODEL_SPECS[0], digest="sha256:changed")
++    frozen = {"path": "/cache/model.gguf", "sha256": "sha256:abc"}
++    assert exp.model_binding_errors(resolved, frozen) == ["model_hash_drift"]
++
++
++def test_scenario_6863_binding_names_all_missing_receipts() -> None:
++    """REQ-INFERENCE-6863: missing cache and tokenizer evidence stays explicit."""
++
++    resolved = _model(exp.MODEL_SPECS[0])
++    resolved.update(local_model_present=False, cached_sota_pair_called=False)
++    resolved["tokenizer_receipt"] = _receipt(metadata_present=False)
++    frozen = {"path": "/cache/model.gguf", "sha256": "sha256:abc"}
++    assert exp.model_binding_errors(resolved, frozen) == [
++        "cached_sota_pair_not_called",
++        "model_file_missing",
++        "tokenizer_metadata_missing",
++    ]
++
++
++def test_scenario_6863_unequal_token_counts_reject_cell() -> None:
++    """SCENARIO-INFERENCE-6863-NUISANCE-MATCH: unequal candidates are rejected."""
++
++    cell = _cell("group-a")
++    cell["candidate_token_counts"]["slot_1"] = 3
++    cell["candidate_token_ids"]["slot_1"].append(11)
++    assert exp.cell_nuisance_errors(cell) == ["unequal_candidate_token_counts"]
++
++
++def test_scenario_6863_prompt_and_label_controls_reject_cell() -> None:
++    """SCENARIO-INFERENCE-6863-NUISANCE-MATCH: paired controls must match."""
++
++    cell = _cell("group-a")
++    cell["paired_prompt_token_counts"]["label_swap"] = 4
++    cell["label_position_contract"]["swapped"] = [0, 1]
++    assert exp.cell_nuisance_errors(cell) == [
++        "paired_prompt_length_mismatch",
++        "label_position_contract_failed",
++    ]
++
++
++def test_scenario_6863_split_overlap_and_group_leakage_are_detected() -> None:
++    """SCENARIO-INFERENCE-6863-GROUP-SPLIT: identities use one split only."""
++
++    rows = [_cell("group-a"), _cell("group-a", split="held")]
++    errors = exp.split_errors(["group-a"], ["group-a"], rows)
++    assert errors == ["split_overlap:group-a", "group_leakage:group-a"]
++
++
++def test_scenario_6863_split_is_deterministic_and_group_disjoint() -> None:
++    """SCENARIO-INFERENCE-6863-GROUP-SPLIT: the seed freezes whole groups."""
++
++    groups = [f"group-{index:02d}" for index in range(40)]
++    first = exp.freeze_group_splits(groups, random_seed=6863)
++    second = exp.freeze_group_splits(reversed(groups), random_seed=6863)
++    assert first == second
++    assert len(first["calibration_group_ids"]) == 20
++    assert len(first["held_group_ids"]) == 20
++    assert set(first["calibration_group_ids"]).isdisjoint(first["held_group_ids"])
++    assert first["calibration_group_hash"].startswith("sha256:")
++    assert first["held_group_hash"].startswith("sha256:")
++
++
++def test_scenario_6863_held_manifest_contains_commitments_not_labels() -> None:
++    """SCENARIO-INFERENCE-6863-HELD-SEAL: held labels are absent from public rows."""
++
++    group = {
++        "semantic_identity": "group-held",
++        "candidates": [
++            {"candidate_id": "valid", "expected_label": True},
++            {"candidate_id": "invalid", "expected_label": False},
++        ],
++    }
++    sealed = exp.seal_held_groups([group])
++    assert sealed[0]["semantic_group_identity"] == "group-held"
++    assert sealed[0]["label_commitment"].startswith("sha256:")
++    assert "expected_label" not in json.dumps(sealed)
++
++
++def test_scenario_6863_calibration_loader_refuses_held_label_access() -> None:
++    """SCENARIO-INFERENCE-6863-HELD-SEAL: calibration cannot load held labels."""
++
++    loader = exp.CalibrationLabelLoader({"group-cal": (True, False)}, {"group-held"})
++    assert loader.load("group-cal") == (True, False)
++    with pytest.raises(exp.HeldLabelAccessError, match="group-held"):
++        loader.load("group-held")
++    with pytest.raises(KeyError, match="group-missing"):
++        loader.load("group-missing")
++    assert loader.held_label_access_count == 0
++    assert loader.held_label_access_attempt_count == 1
++
++
++def test_req_inference_6863_preexisting_cell_identity_blocks_gate() -> None:
++    """REQ-INFERENCE-6863: prior score identity reuse is detected before tokenization."""
++
++    identity = exp.cell_identity(exp.MODEL_SPECS[0], "group-a")
++    artifacts = [b'{"old_score_cell":"' + identity.encode() + b'"}']
++    assert exp.preexisting_score_identities(artifacts, [identity, "absent"]) == [identity]
++
++
++def test_scenario_6863_sample_floor_returns_null_readiness() -> None:
++    """SCENARIO-INFERENCE-6863-SAMPLE-FLOOR: one short model keeps readiness zero."""
++
++    sample_rows = []
++    for model_id in exp.MODEL_SPECS:
++        sample_rows.extend(
++            [
++                {
++                    "model_hf_id": model_id,
++                    "family": exp.MODEL_FAMILIES[model_id],
++                    "split": split,
++                    "accepted_group_count": 20,
++                    "minimum_group_count": 20,
++                }
++                for split in ("calibration", "held")
++            ]
++        )
++    assert exp.readiness_score(sample_rows, all_other_checks_pass=True) == 1
++    sample_rows[0]["accepted_group_count"] = 19
++    assert exp.readiness_score(sample_rows, all_other_checks_pass=True) == 0
++    assert exp.readiness_score(sample_rows, all_other_checks_pass=False) == 0
++
++
++def test_req_inference_6863_artifact_validation_is_fail_closed() -> None:
++    """REQ-INFERENCE-6863: schema, zero calls, fields, and terminal values are checked."""
++
++    artifact = {field: [] for field in exp.REQUIRED_ARTIFACT_FIELDS}
++    artifact.update(
++        inference_substrate=exp.INFERENCE_SUBSTRATE,
++        token_likelihood_call_count=0,
++        split_overlap_count=0,
++        held_label_access_count=0,
++        verifier_is_oracle=False,
++        verdict_class="null",
++        honest_verdict="complete_null_tokenizer_aware_preregistration_ready",
++        field_principles={field: "reason" for field in exp.REQUIRED_ARTIFACT_FIELDS},
++    )
++    assert exp.validate_artifact(artifact) == []
++    broken = deepcopy(artifact)
++    del broken["rows"]
++    broken["token_likelihood_call_count"] = 1
++    broken["honest_verdict"] = "not-terminal"
++    broken["verdict_class"] = "unknown"
++    broken["verifier_is_oracle"] = True
++    assert exp.validate_artifact(broken) == [
++        "missing_field:rows",
++        "field_principle_keys",
++        "token_likelihood_call_count",
++        "verifier_is_oracle",
++        "verdict_class",
++        "honest_verdict",
++    ]
+-- 
+2.55.0
+

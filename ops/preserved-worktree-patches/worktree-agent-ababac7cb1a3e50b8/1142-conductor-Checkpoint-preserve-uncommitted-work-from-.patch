@@ -1,0 +1,44 @@
+From ccb815ed8af4cfe313ac08a93af7048ff0b0feee Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 13:15:42 -0400
+Subject: [PATCH 01142/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 17ee11b211..3ddc29a15c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-10T16:59:33Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-10T17:15:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c088de63f2..346b0f299f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8182,3 +8182,5 @@ c |
+ | 2026-06-10 15:09 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Codex CLI error: Wall-clock+idle timeout after 4027s (300s silence). Last out |
+ | 2026-06-10 16:33 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: "latency" in d |
+ | 2026-06-10 16:57 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
++| 2026-06-10 17:13 UTC | GAP-4 PRE-REGISTERED PRECISION CONFIRMATION v3 (TH | OK | 91 passed in 5.82s |
++| 2026-06-10 17:15 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | OK | Deliverable already exists in repo |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a1b4f30c5d..0166d4d1fc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-10T16:59:33Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-10T17:15:40Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

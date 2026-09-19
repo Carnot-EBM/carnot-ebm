@@ -1,0 +1,57 @@
+From 9d567283208b2f7448800bd94879997765cb2d06 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 11:08:37 -0400
+Subject: [PATCH 10106/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 0fa1b22c03..5cffc4710c 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-27T15:06:30Z"
++ "last_scan_utc": "2026-08-27T15:08:34Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 872d06fce9..99bd8dbdb2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 83, "phase": "iteration_start", "last_beat": "2026-08-27T15:06:29Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 84, "phase": "iteration_start", "last_beat": "2026-08-27T15:08:33Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e634e910bc..bbe8bfbc7b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16628,3 +16628,5 @@ code |
+ | 2026-08-27 15:00 UTC | Independent constraint-family prequential stream | OK | 102 passed, 1 warning in 8.21s |
+ | 2026-08-27 15:02 UTC | Prequential cross-family continuous self-learning  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6678-constraint-family-stream.constrain |
+ | 2026-08-27 15:04 UTC | Prequential cross-family continuous self-learning  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6678-constraint-family-stream.constrain |
++| 2026-08-27 15:06 UTC | Prequential cross-family continuous self-learning  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6678-constraint-family-stream.constrain |
++| 2026-08-27 15:08 UTC | Cross-family CSL chronological durability audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6679-prequential-cross-family-csl-ab) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a10a5865a2..2c8c381d0a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 83, "phase": "iteration_start", "started_at": "2026-08-27T15:06:29Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 84, "phase": "iteration_start", "started_at": "2026-08-27T15:08:33Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

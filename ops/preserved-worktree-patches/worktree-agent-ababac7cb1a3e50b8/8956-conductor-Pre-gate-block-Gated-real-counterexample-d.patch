@@ -1,0 +1,61 @@
+From 2ce63edc8a48c24b62e28d22159dbc10c741f59d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 18:41:05 -0400
+Subject: [PATCH 08956/11362] [conductor] Pre-gate block: Gated real
+ counterexample-directed factor proposal A/B
+
+1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity-preflight.live_factor_proposal_authenticity_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...xperiment_6353_live_counterexample_factor_proposal_ab.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index db4fe6e7b6..4cddbe8ae5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-08-12T22:39:02Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-08-12T22:41:04Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e650bbd1c6..519403620c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15730,3 +15730,4 @@ code |
+ | 2026-08-12 22:08 UTC | V547 dated source window and two-lane scope freeze | OK | 88 passed, 1 warning in 10.65s |
+ | 2026-08-12 22:34 UTC | Three-model live factor proposal authenticity pref | OK | 88 passed, 1 warning in 10.97s |
+ | 2026-08-12 22:37 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
++| 2026-08-12 22:39 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d69cf7f11e..985c24b72c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 29, "phase": "iteration_start", "started_at": "2026-08-12T22:39:02Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 30, "phase": "iteration_start", "started_at": "2026-08-12T22:41:04Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6353_live_counterexample_factor_proposal_ab.json b/results/experiment_6353_live_counterexample_factor_proposal_ab.json
+index c39ab66d22..33e87e7cc7 100644
+--- a/results/experiment_6353_live_counterexample_factor_proposal_ab.json
++++ b/results/experiment_6353_live_counterexample_factor_proposal_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 6353,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-12",
+-  "started_at": "2026-08-12T22:39:02.368552+00:00",
+-  "finished_at": "2026-08-12T22:39:02.368552+00:00",
++  "started_at": "2026-08-12T22:41:04.996886+00:00",
++  "finished_at": "2026-08-12T22:41:04.996886+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated real counterexample-directed factor proposal A/B",
+-- 
+2.55.0
+

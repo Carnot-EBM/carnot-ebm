@@ -1,0 +1,3891 @@
+From dd901bbcb03e56497dd6fceb8001463ff9897486 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 08:41:05 -0400
+Subject: [PATCH 11237/11362] [conductor] V615 recent-source ingestion and
+ architecture map
+
+Automated research step by research conductor.
+Task ID: exp7018-v615-sota-ingestion
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md                         |   11 +
+ .../capabilities/research-harnesses/spec.md   |    3 +-
+ .../capabilities/research-reporting/spec.md   |  127 ++
+ ops/changelog.md                              |   16 +
+ ops/dogfood-memory.json                       |    2 +-
+ ops/status.md                                 |   14 +
+ .../experiment_7018_v615_sota_ingestion.py    | 1433 ++++++++++++++++
+ .../experiment_7018_v615_sota_ingestion.json  | 1518 +++++++++++++++++
+ .../experiment_7018_v615_sota_ingestion.py    |   19 +
+ scripts/memory_index_drift.py                 |   13 +-
+ ...est_experiment_7018_v615_sota_ingestion.py |  584 +++++++
+ .../test_memory_index_capacity_20260905.py    |    2 +
+ 12 files changed, 3737 insertions(+), 5 deletions(-)
+ create mode 100644 python/carnot/experiment_7018_v615_sota_ingestion.py
+ create mode 100644 results/experiment_7018_v615_sota_ingestion.json
+ create mode 100644 scripts/experiments/experiment_7018_v615_sota_ingestion.py
+ create mode 100644 tests/python/test_experiment_7018_v615_sota_ingestion.py
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 54407cbf0a..fbd4ec4f50 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -2,6 +2,17 @@
+ 
+ **Last Updated:** 2026-09-05
+ 
++**Operational Note:** 2026-09-05 REQ-INFRA-6976 routing regression repair
++centralized the actual-or-expected pointer destination in
++`resolved_index_file`. An existing pointer resolves to the index file that
++holds it, while an absent pointer resolves through the configured group
++policy. Both branches are covered by the failing-test regression. The exact
++conductor shard now passes (`129 passed`, one existing warning), the complete
++memory-index set passes (`69 passed`), and the simultaneously preserved
++REQ-REPORT-7018 module retains 100% scoped statement coverage (`401/401`). No
++test was skipped, weakened, deleted, or reverted, and
++`scripts/research_conductor.py` was not modified.
++
+ **Operational Note:** 2026-09-05 REQ-ARC-7010 regression repair made the
+ atomic Exp7010 evidence writer create its `results/` directory before
+ publishing through a temporary file. The exact conductor-equivalent shard is
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 6ff4a0df37..5fe933873f 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -10370,7 +10370,8 @@ files. It does not rely on `@include` inside `MEMORY.md`: even if the harness ho
+ auto-memory, that would load the whole catalogue past a cap the harness set on purpose.
+ 
+ Implementation status: implemented 2026-09-05 (`scripts/memory_index_drift.py:index_capacity`,
+-`:harness_cut`, `:index_lines`, `:index_locations`, `:demote`, `:hook_reminder`;
++`:harness_cut`, `:index_lines`, `:index_locations`, `:resolved_index_file`, `:demote`,
++`:hook_reminder`;
+ `tests/python/test_memory_index_capacity_20260905.py`, 32 tests). Mutation proofs: 24 of 24
+ rules RED with byte-identical restores, including the dashboard call site
+ (`outer_loop_dashboard.py:render`, `L.extend`), the `main()` exit-code site, and the hook's
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 00285fdf96..33730b8048 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -64293,3 +64293,130 @@ model ID, and model hash are retained
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-7017 and SCENARIO-REPORT-7017-* | Implemented (`python/carnot/task_runtime_receipts.py`; `python/carnot/gpu_lease_phase_journal.py`; `python/carnot/pipeline/dual_gpu_monitor.py`; `python/carnot/pipeline/dual_gpu_assigner.py`; `scripts/experiment_template.py`; `python/carnot/experiment_7017_task_linked_compute_receipts.py`; `scripts/experiments/experiment_7017_task_linked_compute_receipts.py`) | Passing (`tests/python/test_experiment_7017_task_linked_compute_receipts.py`) |
++
++### REQ-REPORT-7018: V615 Post-Marker SOTA Ingestion SHALL Preserve Source Boundaries
++
++Exp7018 SHALL write
++`results/experiment_7018_v615_sota_ingestion.json`. It SHALL use the dated
++V615 planner marker as the exclusive lower bound for new findings. It SHALL
++require the marker, readable references, network access, and a writable
++artifact path. A failed local precondition SHALL write a schema-complete
++`blocked_v615_sota_ingestion` artifact. If all public source routes terminate
++without usable content, the same blocked verdict SHALL identify
++`all_source_routes_unavailable` in `gate_check_summary`.
++
++The experiment SHALL record each query, canonical URL, access date, HTTP or
++tool outcome, and terminal state. It SHALL preserve challenges, rate limits,
++and missing pages as evidence about access only. It SHALL record a date or
++version receipt for each usable primary source. It SHALL not promote search
++snippets, citation counts, product benchmarks, repository README files, or
++secondary summaries as evidence of local model, software, or hardware
++readiness.
++
++The source sweep SHALL cover 2025-2026 EBM reasoning, neural constraints,
++Ising methods, hallucination mitigation, KANs, constrained generation,
++hardware sampling, and continual learning. It SHALL check OpenReview,
++Hugging Face Papers, Semantic Scholar routes for EBT `2507.02092` and ARM-EBM
++`2512.15605`, GitHub discovery, Extropic writing, and Logical Intelligence.
++Every requested source family SHALL have at least one terminal row.
++
++Each relevant finding SHALL be classified as exactly one of `build`, `test`,
++`watch`, or `reject`. A `build` row requires a verified primary source and a
++reproducible public implementation identity. A `test` row requires a verified
++primary method and a bounded local falsification plan. A `watch` row records a
++useful method with a missing local dependency or unresolved source boundary.
++A `reject` row records a false positive, retired scope, unsupported hardware
++claim, product-only claim, or unchanged result. Extropic Z1T SHALL remain
++public software evidence only without an authenticated Z1 or TSU receipt.
++Kona SHALL remain watch-only while no reproducible local runner is available.
++
++The experiment SHALL suppress duplicate source identities and findings. It
++SHALL record each suppressed item in `duplicate_rows`. It SHALL not reopen
++retired generated-text, grammar, pair-centered latent, or unchanged KAN
++scopes. A source dated before the marker is not a post-marker delta. A source
++dated on 2026-09-05 without a time that proves later ordering SHALL remain
++`same_day_order_uncertain` and SHALL not be appended. Only a verified primary
++or first-party source with proved later ordering MAY enter
++`post_marker_delta_rows` and `research-references.md`.
++
++The artifact SHALL contain `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `source_artifact_hashes`,
++`source_query_rows`, `primary_source_rows`, `secondary_source_rows`,
++`semantic_scholar_rows`, `github_rows`, `extropic_rows`,
++`logical_intelligence_rows`, `post_marker_delta_rows`, `duplicate_rows`,
++`classification_rows`, `reference_append_rows`, `rows`,
++`cutoff_rate_limit_and_same_day_uncertainty_receipts`,
++`v615_sota_ingestion_complete_score`, `random_seed`,
++`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
++`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
++scientific principle for every required field. `source_artifact_hashes` SHALL
++bind the local marker ledger, prior ingestion artifact, exclusion manifest,
++specification, module, script, and tests when those files exist.
++`inference_substrate` SHALL equal
++`deterministic_primary_source_ingestion_no_llm`. `verifier_is_oracle` SHALL be
++false.
++
++`v615_sota_ingestion_complete_score` SHALL equal one only when every requested
++source family has a terminal row, every classification is closed, every
++append has a verified later primary or first-party source, and duplicate and
++same-day rules hold. A complete source audit MAY return `positive` with no
++post-marker append. Source access blocks SHALL use `blocked`. A broken source
++contract SHALL use `disqualified`. `partial`, `null`, and
++`circular_positive` remain valid enum members but SHALL not describe a
++complete audit. The `honest_verdict` SHALL start with the terminal prefix for
++its `verdict_class`.
++
++#### SCENARIO-REPORT-7018-PREFLIGHT: Missing Inputs Fail Closed
++
++**Given** a missing V615 marker, unreadable reference, unavailable network, or unwritable artifact path
++**When** Exp7018 checks preconditions
++**Then** it writes a complete blocked artifact with expected and observed values
++**And** no source absence is classified as a scientific null.
++
++#### SCENARIO-REPORT-7018-RECEIPTS: URLs, Dates, And Access Outcomes Stay Explicit
++
++**Given** primary and secondary routes that can succeed, rate-limit, challenge, or fail
++**When** Exp7018 records the source sweep
++**Then** every requested family has a terminal URL and access-date receipt
++**And** a blocked route does not create a paper, count, code, or readiness claim.
++
++#### SCENARIO-REPORT-7018-CUTOFF: Same-Day Ordering Fails Closed
++
++**Given** a source with a date before, on, or after the V615 marker date
++**When** Exp7018 tests post-marker eligibility
++**Then** only a verified timestamp after the marker qualifies
++**And** an un-timed same-day source remains explicit ordering uncertainty.
++
++#### SCENARIO-REPORT-7018-DUPLICATES: Repeated Identities Do Not Reopen Old Scope
++
++**Given** repeated URLs, paper IDs, findings, unchanged KAN work, or retired lanes
++**When** Exp7018 deduplicates and classifies the rows
++**Then** one canonical finding remains and each suppression has a reason
++**And** generated-text, grammar, pair-centered latent, and unchanged KAN work stay rejected.
++
++#### SCENARIO-REPORT-7018-CLASSIFY: Findings Map To One Terminal Action
++
++**Given** BB-WM, counterexample learning, verifier controls, KAN cautions, Z1T, and Kona evidence
++**When** Exp7018 maps the evidence to Carnot
++**Then** each finding is exactly `build`, `test`, `watch`, or `reject`
++**And** no product prose or public repository alone implies local readiness.
++
++#### SCENARIO-REPORT-7018-APPEND: Only Proved New Primary Findings Change The Ledger
++
++**Given** the frozen marker and deduplicated verified source rows
++**When** Exp7018 prepares reference changes
++**Then** every append points to one proved post-marker primary or first-party row
++**And** no qualifying delta leaves `research-references.md` byte-identical.
++
++#### SCENARIO-REPORT-7018-ARTIFACT: Independent Validation Recomputes Completion
++
++**Given** a positive, blocked, or disqualified Exp7018 artifact
++**When** an independent validator recomputes principles, families, classes, append eligibility, rows, verdict, and checksum
++**Then** a consistent artifact passes
++**And** a forged score, missing receipt, false promotion, duplicate, bad prefix, or changed hash fails.
++
++## Implementation Status (REQ-REPORT-7018)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-7018 and SCENARIO-REPORT-7018-* | Implemented (`python/carnot/experiment_7018_v615_sota_ingestion.py`; `scripts/experiments/experiment_7018_v615_sota_ingestion.py`) | Passing (`tests/python/test_experiment_7018_v615_sota_ingestion.py`) |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index cdec9ceed8..f1d696c972 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,21 @@
+ # Carnot — Changelog
+ 
++## 2026-09-05 — Memory pointer routing regression repair (REQ-INFRA-6976)
++
++- Added `resolved_index_file` as the single actual-or-expected destination
++  resolver used by the memory edit hook. Existing pointers keep their real
++  tier; absent pointers use `expected_index_file` and the configured group
++  policy.
++- Strengthened the existing failing-test regression to exercise both the
++  unindexed tier-2 destination and the indexed tier-1 destination without
++  skips, weakening, deletion, or reversion.
++- Verification: conductor-equivalent shard `129 passed` with one existing
++  deprecation warning; memory-index suites `69 passed`; focused Ruff, format,
++  mypy, artifact validation, and changed-test spec coverage pass. The
++  preserved Exp7018 module reports 100% scoped statement coverage (`401/401`).
++  The whole-repository spec audit retains its pre-existing 1,178-test backlog.
++- `scripts/research_conductor.py` was not modified.
++
+ ## 2026-09-05 — The memory index is two-tier and inside the harness load envelope (REQ-INFRA-6976)
+ 
+ - Origin: team-lead brief. `MEMORY.md` had grown past the size at which the
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a1f9568b78..587ffba450 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5335,
++  "experiments_checked": 5336,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/status.md b/ops/status.md
+index df2006cc4e..8611b4e017 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -2,6 +2,20 @@
+ 
+ **Last Updated:** 2026-09-05
+ 
++## 2026-09-05 12:34Z — Memory pointer routing regression closed; Exp7018 preserved
++
++- `resolved_index_file` now owns the REQ-INFRA-6976 routing decision: use the
++  actual index file for an existing pointer and the group-policy destination
++  for an unindexed memory file. The regression exercises both outcomes.
++- The conductor-equivalent shard is green (`129 passed`, one existing
++  deprecation warning); both memory-index suites are green (`69 passed`).
++- The in-flight Exp7018 source-ingestion work remains intact. Its artifact
++  validates with `v615_sota_ingestion_complete_score=1`,
++  `honest_verdict=complete_positive_v615_sota_ingestion_no_verified_post_marker_delta`,
++  and no reference append. Its module has 100% scoped statement coverage
++  (`401/401`).
++- No skip, test weakening, source reversion, or conductor edit was used.
++
+ ## 2026-09-05 12:20Z — DECISION 16 resolved: the memory index is two-tier and inside the harness envelope
+ 
+ **Step 0 first: the limit is real, and it was never bytes.** Read from the installed `claude`
+diff --git a/python/carnot/experiment_7018_v615_sota_ingestion.py b/python/carnot/experiment_7018_v615_sota_ingestion.py
+new file mode 100644
+index 0000000000..9bc6b4fb27
+--- /dev/null
++++ b/python/carnot/experiment_7018_v615_sota_ingestion.py
+@@ -0,0 +1,1433 @@
++"""Build the V615 source-ingestion receipt without using model inference.
++
++The module records what each public route returned on the execution date. It
++keeps primary evidence separate from indexes, repository descriptions, and
++product prose. This prevents a useful research lead from becoming an
++unsupported local-readiness claim.
++
++Spec refs: REQ-REPORT-7018 and SCENARIO-REPORT-7018-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++from datetime import datetime, timezone, UTC
++import hashlib
++import json
++from pathlib import Path
++import tempfile
++import time
++from typing import Any
++from urllib.error import HTTPError, URLError
++from urllib.request import Request, urlopen
++
++from carnot.experiment_artifacts import atomic_write_json
++from carnot.paths import repo_root as find_repo_root
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = 7018
++RUN_DATE = "20260905"
++RANDOM_SEED = 7_018_202_609_05
++INFERENCE_SUBSTRATE = "deterministic_primary_source_ingestion_no_llm"
++REFERENCE_MARKER = "## V615 Planner Refresh - 2026-09-05"
++MARKER_DATE = "2026-09-05"
++
++MODULE_PATH = Path("python/carnot/experiment_7018_v615_sota_ingestion.py")
++SCRIPT_PATH = Path("scripts/experiments/experiment_7018_v615_sota_ingestion.py")
++TEST_PATH = Path("tests/python/test_experiment_7018_v615_sota_ingestion.py")
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++REFERENCE_PATH = Path("research-references.md")
++PRIOR_ARTIFACT_PATH = Path("results/experiment_7011_v614_sota_ingestion.json")
++EXCLUSION_PATH = Path("ops/exclusion_manifest.yaml")
++RESULT_PATH = Path("results/experiment_7018_v615_sota_ingestion.json")
++
++REQUIRED_LOCAL_INPUTS = (
++    REFERENCE_PATH,
++    PRIOR_ARTIFACT_PATH,
++    EXCLUSION_PATH,
++    SPEC_PATH,
++)
++HASH_PATHS = REQUIRED_LOCAL_INPUTS + (MODULE_PATH, SCRIPT_PATH, TEST_PATH)
++
++ARXIV_TOPICS = (
++    "ebm_reasoning",
++    "neural_constraints",
++    "ising",
++    "hallucination_mitigation",
++    "kan",
++    "constrained_generation",
++    "hardware_sampling",
++    "continual_learning",
++)
++REQUIRED_SOURCE_FAMILIES = (
++    "arxiv",
++    "openreview",
++    "huggingface",
++    "semantic_scholar",
++    "github",
++    "extropic",
++    "logical_intelligence",
++)
++CLASSIFICATIONS = ("build", "test", "watch", "reject")
++VERDICT_CLASSES = (
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "source_query_rows",
++    "primary_source_rows",
++    "secondary_source_rows",
++    "semantic_scholar_rows",
++    "github_rows",
++    "extropic_rows",
++    "logical_intelligence_rows",
++    "post_marker_delta_rows",
++    "duplicate_rows",
++    "classification_rows",
++    "reference_append_rows",
++    "rows",
++    "cutoff_rate_limit_and_same_day_uncertainty_receipts",
++    "v615_sota_ingestion_complete_score",
++    "random_seed",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "field_principles": "One reason per field makes the evidence contract reviewable.",
++    "preconditions_checked": "Preflight rows stop missing inputs from becoming scientific findings.",
++    "inference_substrate": "The substrate discloses that deterministic source review used no LLM.",
++    "duration_s": "Elapsed time distinguishes an executed audit from an undated assertion.",
++    "source_artifact_hashes": "Hashes bind conclusions to the local marker and policy inputs.",
++    "source_query_rows": "Query rows show the scope searched and keep search evidence advisory.",
++    "primary_source_rows": "Versioned primary rows support method claims without source substitution.",
++    "secondary_source_rows": "Secondary rows preserve useful discovery without granting authority.",
++    "semantic_scholar_rows": "Citation-route rows retain rate limits without inventing counts.",
++    "github_rows": "Repository rows separate public code identity from local readiness.",
++    "extropic_rows": "First-party software evidence stays separate from hardware estimates.",
++    "logical_intelligence_rows": "Product rows expose Kona's missing reproducible runner.",
++    "post_marker_delta_rows": "Only proved later primary changes can enter the append set.",
++    "duplicate_rows": "Suppression rows prevent old findings from appearing new.",
++    "classification_rows": "Closed actions make each finding operational and falsifiable.",
++    "reference_append_rows": "Append receipts show exactly why the research ledger changed or stayed fixed.",
++    "rows": "One combined ledger supports independent row-by-row consistency checks.",
++    "cutoff_rate_limit_and_same_day_uncertainty_receipts": (
++        "Cutoff and access receipts preserve uncertainty instead of resolving it by assumption."
++    ),
++    "v615_sota_ingestion_complete_score": (
++        "One requires terminal route coverage and valid source-bound classifications."
++    ),
++    "random_seed": "A fixed seed records deterministic ordering even though no sampling ran.",
++    "reproducibility_checksum": "A stable payload hash detects later evidence changes.",
++    "gate_check_summary": "Expected and observed values make every blocked result actionable.",
++    "verifier_is_oracle": "False states that literature review does not determine task correctness.",
++    "verdict_class": "A closed class prevents blocked access from appearing positive.",
++    "honest_verdict": "A matching prefix gives automation one unambiguous terminal outcome.",
++}
++
++
++def _copy(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return [deepcopy(dict(row)) for row in rows]
++
++
++def _parse_datetime(value: str) -> tuple[datetime, bool]:
++    """Parse a source date and report whether it contains an ordering time."""
++
++    text = value.strip()
++    has_time = "T" in text
++    if text.endswith("Z"):
++        text = f"{text[:-1]}+00:00"
++    parsed = datetime.fromisoformat(text)
++    if parsed.tzinfo is None:
++        parsed = parsed.replace(tzinfo=UTC)
++    return parsed.astimezone(UTC), has_time
++
++
++def cutoff_relation(
++    source_date: str,
++    *,
++    marker_date: str = MARKER_DATE,
++    marker_timestamp: str | None = None,
++) -> str:
++    """Classify ordering without guessing a time for the dated V615 marker."""
++
++    try:
++        source, source_has_time = _parse_datetime(source_date)
++        marker, marker_has_time = _parse_datetime(marker_timestamp or marker_date)
++    except (TypeError, ValueError):
++        return "unknown"
++    if source.date() < marker.date():
++        return "pre_marker"
++    if source.date() > marker.date():
++        return "post_marker"
++    if marker_timestamp is None or not source_has_time or not marker_has_time:
++        return "same_day_order_uncertain"
++    return "post_marker" if source > marker else "pre_marker"
++
++
++def access_receipt(
++    *,
++    family: str,
++    query: str,
++    url: str,
++    accessed_on: str,
++    http_status: int | None,
++    access_outcome: str,
++    evidence_kind: str,
++) -> JsonDict:
++    """Create one terminal route receipt without inferring missing content."""
++
++    if not url.startswith("https://"):
++        raise ValueError("a canonical https URL is required")
++    verified_kinds = {"primary_paper", "first_party_report", "repository_api"}
++    content_verified = bool(
++        http_status is not None
++        and 200 <= http_status < 300
++        and evidence_kind in verified_kinds
++        and access_outcome == "ok"
++    )
++    return {
++        "family": family,
++        "query": query,
++        "url": url,
++        "accessed_on": accessed_on,
++        "http_status": http_status,
++        "access_outcome": access_outcome,
++        "evidence_kind": evidence_kind,
++        "content_verified": content_verified,
++        "readiness_claimed": False,
++        "terminal": True,
++    }
++
++
++def deduplicate_findings(
++    rows: Sequence[Mapping[str, Any]],
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Keep the first source and finding identities and record every suppression."""
++
++    unique: list[JsonDict] = []
++    duplicates: list[JsonDict] = []
++    source_owner: dict[str, str] = {}
++    finding_owner: dict[str, str] = {}
++    for original in rows:
++        row = dict(original)
++        row_id = str(row.get("row_id", ""))
++        source_identity = str(row.get("source_identity", ""))
++        finding_id = str(row.get("finding_id", ""))
++        reason = ""
++        kept_row_id = ""
++        if source_identity and source_identity in source_owner:
++            reason = "duplicate_source_identity"
++            kept_row_id = source_owner[source_identity]
++        elif finding_id and finding_id in finding_owner:
++            reason = "duplicate_finding_identity"
++            kept_row_id = finding_owner[finding_id]
++        if reason:
++            duplicates.append(
++                {
++                    "duplicate_row_id": row_id,
++                    "kept_row_id": kept_row_id,
++                    "reason": reason,
++                    "suppressed": True,
++                    "terminal": True,
++                }
++            )
++            continue
++        unique.append(deepcopy(row))
++        if source_identity:
++            source_owner[source_identity] = row_id
++        if finding_id:
++            finding_owner[finding_id] = row_id
++    return unique, duplicates
++
++
++def classify_finding(
++    *,
++    finding_id: str,
++    source_ids: Sequence[str],
++    proposed_action: str,
++    primary_verified: bool,
++    reproducible_code_identity: bool,
++    bounded_local_test: bool,
++    reason: str,
++    false_positive_kind: str | None = None,
++) -> JsonDict:
++    """Apply the evidence floor before accepting an operational action."""
++
++    if proposed_action not in CLASSIFICATIONS:
++        raise ValueError(f"unknown classification: {proposed_action}")
++    classification = proposed_action
++    if false_positive_kind:
++        classification = "reject"
++    elif (
++        proposed_action == "build"
++        and not (primary_verified and reproducible_code_identity)
++        or proposed_action == "test"
++        and not (primary_verified and bounded_local_test)
++    ):
++        classification = "watch"
++    return {
++        "finding_id": finding_id,
++        "source_ids": list(source_ids),
++        "classification": classification,
++        "primary_verified": primary_verified,
++        "reproducible_code_identity": reproducible_code_identity,
++        "bounded_local_test": bounded_local_test,
++        "false_positive_kind": false_positive_kind,
++        "reason": reason,
++        "local_readiness_claimed": False,
++        "terminal": True,
++    }
++
++
++def source_query_rows() -> list[JsonDict]:
++    """Return the eight bounded arXiv topic-query receipts from this run."""
++
++    query_text = {
++        "ebm_reasoning": "energy based model reasoning verifier LLM 2025 2026",
++        "neural_constraints": "neural constraint satisfaction 2025 2026",
++        "ising": "Ising methods sampling 2025 2026",
++        "hallucination_mitigation": "hallucination mitigation verifier 2025 2026",
++        "kan": "Kolmogorov Arnold network continual learning 2025 2026",
++        "constrained_generation": "constrained generation exact verifier 2025 2026",
++        "hardware_sampling": "probabilistic hardware sampling 2025 2026",
++        "continual_learning": "continual learning counterexample agents 2025 2026",
++    }
++    rows: list[JsonDict] = []
++    for topic in ARXIV_TOPICS:
++        query = query_text[topic]
++        receipt = access_receipt(
++            family="arxiv",
++            query=query,
++            url=f"https://arxiv.org/search/?query={query.replace(' ', '+')}&searchtype=all",
++            accessed_on="2026-09-05",
++            http_status=200,
++            access_outcome="ok",
++            evidence_kind="primary_index",
++        )
++        rows.append({"query_id": f"arxiv_{topic}", "topic": topic, **receipt})
++    return rows
++
++
++_PRIMARY_SOURCE_ROWS: tuple[JsonDict, ...] = (
++    {
++        "row_id": "primary_bbwm",
++        "source_id": "bbwm",
++        "finding_id": "bbwm_queryable_belief",
++        "title": "Towards a Belief-Based World Model for LLM Agents",
++        "canonical_url": "https://arxiv.org/abs/2609.00455",
++        "source_identity": "arXiv:2609.00455v1",
++        "publication_or_update_date": "2026-08-31T22:48:38Z",
++        "accessed_on": "2026-09-05",
++        "access_outcome": "ok",
++        "method_extraction": "Keep queryable current-state belief separate from action simulation.",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "readiness_claimed": False,
++        "terminal": True,
++    },
++    {
++        "row_id": "primary_cegl",
++        "source_id": "cegl",
++        "finding_id": "counterexample_guided_updates",
++        "title": "Counterexample Guided Learning in the Large using Reasoning Agents",
++        "canonical_url": "https://arxiv.org/abs/2606.11521",
++        "source_identity": "arXiv:2606.11521v1",
++        "publication_or_update_date": "2026-06-09T23:46:46Z",
++        "accessed_on": "2026-09-05",
++        "access_outcome": "ok",
++        "method_extraction": "Use exact counterexamples and symbolic clusters to refine hypotheses.",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "readiness_claimed": False,
++        "terminal": True,
++    },
++    {
++        "row_id": "primary_scaling_flaws",
++        "source_id": "scaling_flaws",
++        "finding_id": "compute_matched_verifier_controls",
++        "title": "Scaling Flaws of Verifier-Guided Search in Mathematical Reasoning",
++        "canonical_url": "https://arxiv.org/abs/2502.00271",
++        "source_identity": "arXiv:2502.00271v1",
++        "publication_or_update_date": "2025-02-01T02:08:49Z",
++        "accessed_on": "2026-09-05",
++        "access_outcome": "ok",
++        "method_extraction": "Compare verifier search against repeated sampling as budgets grow.",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "readiness_claimed": False,
++        "terminal": True,
++    },
++    {
++        "row_id": "primary_solve_verify",
++        "source_id": "solve_verify",
++        "finding_id": "compute_matched_verifier_controls",
++        "title": "When To Solve, When To Verify",
++        "canonical_url": "https://arxiv.org/abs/2504.01005",
++        "source_identity": "arXiv:2504.01005v2",
++        "publication_or_update_date": "2025-10-19T10:28:43Z",
++        "accessed_on": "2026-09-05",
++        "access_outcome": "ok",
++        "method_extraction": "Compare generation and verification under one inference budget.",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "readiness_claimed": False,
++        "terminal": True,
++    },
++    {
++        "row_id": "primary_kac",
++        "source_id": "kac",
++        "finding_id": "kan_classifier_claim",
++        "title": "KAC: Kolmogorov-Arnold Classifier for Continual Learning",
++        "canonical_url": "https://arxiv.org/abs/2503.21076",
++        "source_identity": "arXiv:2503.21076v1",
++        "publication_or_update_date": "2025-03-27T01:27:14Z",
++        "accessed_on": "2026-09-05",
++        "access_outcome": "ok",
++        "method_extraction": "Replace linear continual-learning heads with KAN or RBF classifiers.",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "readiness_claimed": False,
++        "terminal": True,
++    },
++    {
++        "row_id": "primary_kan_forgetting",
++        "source_id": "kan_forgetting",
++        "finding_id": "kan_forgetting_caution",
++        "title": "Catastrophic Forgetting in Kolmogorov-Arnold Networks",
++        "canonical_url": "https://arxiv.org/abs/2511.12828",
++        "source_identity": "arXiv:2511.12828v1",
++        "publication_or_update_date": "2025-11-16T23:22:50Z",
++        "accessed_on": "2026-09-05",
++        "access_outcome": "ok",
++        "method_extraction": "Treat KAN retention as dependent on activation overlap and data dimension.",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "readiness_claimed": False,
++        "terminal": True,
++    },
++    {
++        "row_id": "primary_ebt",
++        "source_id": "ebt",
++        "finding_id": "ebt_existing_scope",
++        "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
++        "canonical_url": "https://arxiv.org/abs/2507.02092",
++        "source_identity": "arXiv:2507.02092v1",
++        "publication_or_update_date": "2025-07-02T19:17:29Z",
++        "accessed_on": "2026-09-05",
++        "access_outcome": "ok",
++        "method_extraction": "Optimize predictions against learned input-candidate compatibility energy.",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "readiness_claimed": False,
++        "terminal": True,
++    },
++    {
++        "row_id": "primary_arm_ebm",
++        "source_id": "arm_ebm",
++        "finding_id": "arm_ebm_existing_scope",
++        "title": "Autoregressive Language Models are Secretly Energy-Based Models",
++        "canonical_url": "https://arxiv.org/abs/2512.15605",
++        "source_identity": "arXiv:2512.15605v4",
++        "publication_or_update_date": "2026-05-25T15:54:35Z",
++        "accessed_on": "2026-09-05",
++        "access_outcome": "ok",
++        "method_extraction": "Relate autoregressive and energy models through a function-space bijection.",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "readiness_claimed": False,
++        "terminal": True,
++    },
++)
++
++
++def primary_source_rows() -> list[JsonDict]:
++    return _copy(_PRIMARY_SOURCE_ROWS)
++
++
++def secondary_source_rows() -> list[JsonDict]:
++    """Return advisory OpenReview and Hugging Face route receipts."""
++
++    return [
++        access_receipt(
++            family="openreview",
++            query="VerifierQ qhOT0MisId",
++            url="https://openreview.net/forum?id=qhOT0MisId",
++            accessed_on="2026-09-05",
++            http_status=403,
++            access_outcome="challenge_required",
++            evidence_kind="secondary_review_route",
++        ),
++        access_receipt(
++            family="huggingface",
++            query="step-level verifier-guided scaling 2507.15512",
++            url="https://huggingface.co/papers/2507.15512",
++            accessed_on="2026-09-05",
++            http_status=200,
++            access_outcome="ok",
++            evidence_kind="secondary_index",
++        ),
++        access_receipt(
++            family="huggingface",
++            query="VerifyBench 2507.09884",
++            url="https://huggingface.co/papers/2507.09884",
++            accessed_on="2026-09-05",
++            http_status=200,
++            access_outcome="ok",
++            evidence_kind="secondary_index",
++        ),
++    ]
++
++
++def semantic_scholar_rows() -> list[JsonDict]:
++    """Return the two observed HTTP 429 citation-route receipts."""
++
++    rows: list[JsonDict] = []
++    for paper_id in ("2507.02092", "2512.15605"):
++        receipt = access_receipt(
++            family="semantic_scholar",
++            query=f"ARXIV:{paper_id} metadata and citations",
++            url=(
++                "https://api.semanticscholar.org/graph/v1/paper/"
++                f"ARXIV%3A{paper_id}?fields=paperId,title,year,publicationDate,url,citationCount"
++            ),
++            accessed_on="2026-09-05",
++            http_status=429,
++            access_outcome="rate_limited",
++            evidence_kind="secondary_index",
++        )
++        rows.append({"paper_id": paper_id, "citation_count_claimed": False, **receipt})
++    return rows
++
++
++def github_rows() -> list[JsonDict]:
++    """Return immutable code identities plus one repository-only false positive."""
++
++    return [
++        {
++            "repository_id": "bbwm_code",
++            "source_id": "bbwm",
++            "query": "paper-linked BB-WM implementation",
++            "url": "https://github.com/skumar-ml/belief-world-models",
++            "accessed_on": "2026-09-05",
++            "http_status": 200,
++            "access_outcome": "ok",
++            "source_identity": "git:d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
++            "revision_date": "2026-08-31T22:29:26Z",
++            "reproducible_public_code": True,
++            "readiness_claimed": False,
++            "terminal": True,
++        },
++        {
++            "repository_id": "z1t_training_code",
++            "source_id": "z1t",
++            "query": "Extropic-linked sparse-transformers implementation",
++            "url": "https://github.com/extropic-ai/sparse-transformers",
++            "accessed_on": "2026-09-05",
++            "http_status": 200,
++            "access_outcome": "ok",
++            "source_identity": "git:13051e90df9669be5b8f9f34fb097329fa82f674",
++            "revision_date": "2026-09-03T20:28:12Z",
++            "reproducible_public_code": True,
++            "readiness_claimed": False,
++            "terminal": True,
++        },
++        {
++            "repository_id": "github_discovery_impetus",
++            "source_id": "impetus_repo_only",
++            "query": "energy-based model reasoning created 2025-2026",
++            "url": "https://github.com/EdhieBM/Impetus",
++            "accessed_on": "2026-09-05",
++            "http_status": 200,
++            "access_outcome": "repository_search_result_only",
++            "source_identity": "github:EdhieBM/Impetus:unverified_search_result",
++            "revision_date": "2026-05-16T19:20:54Z",
++            "reproducible_public_code": False,
++            "readiness_claimed": False,
++            "terminal": True,
++        },
++    ]
++
++
++def extropic_rows() -> list[JsonDict]:
++    """Return Z1T as dated first-party software evidence only."""
++
++    return [
++        {
++            "source_id": "z1t",
++            "query": "Extropic Z1T writing and linked public software",
++            "url": "https://extropic.ai/writing/z1t",
++            "accessed_on": "2026-09-05",
++            "http_status": 200,
++            "access_outcome": "ok",
++            "source_kind": "first_party_report",
++            "source_identity": "Extropic:Z1T:2026-09-04",
++            "publication_or_update_date": "2026-09-04",
++            "public_software_observed": True,
++            "hardware_readiness_claimed": False,
++            "latency_energy_claimed_by_carnot": False,
++            "authenticated_device_receipt": False,
++            "cutoff_relation": "pre_marker",
++            "terminal": True,
++        }
++    ]
++
++
++def logical_intelligence_rows() -> list[JsonDict]:
++    """Return Kona's accessible product page without inventing a local asset."""
++
++    return [
++        {
++            "source_id": "kona",
++            "query": "Logical Intelligence Kona public implementation and runner",
++            "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
++            "accessed_on": "2026-09-05",
++            "http_status": 200,
++            "access_outcome": "product_page_ok_no_public_runner",
++            "source_kind": "first_party_product_page",
++            "source_identity": "LogicalIntelligence:Kona:page_access_2026-09-05",
++            "publication_or_update_date": "2026-09-05",
++            "date_receipt": "access_date_only_no_page_update_time",
++            "reproducible_local_runner_claimed": False,
++            "public_weights_claimed": False,
++            "cutoff_relation": "same_day_order_uncertain",
++            "terminal": True,
++        }
++    ]
++
++
++def classification_rows() -> list[JsonDict]:
++    """Map selected, guarded, and retired findings to closed actions."""
++
++    definitions = (
++        (
++            "bbwm_queryable_belief",
++            ["bbwm", "bbwm_code"],
++            "build",
++            True,
++            True,
++            True,
++            "Build a small explicit belief ledger before learned compression.",
++            None,
++        ),
++        (
++            "counterexample_guided_updates",
++            ["cegl"],
++            "test",
++            True,
++            True,
++            True,
++            "Test contradiction clusters and tombstones on sealed later transitions.",
++            None,
++        ),
++        (
++            "compute_matched_verifier_controls",
++            ["scaling_flaws", "solve_verify"],
++            "test",
++            True,
++            True,
++            True,
++            "Match actions, model calls, verifier calls, and elapsed compute across arms.",
++            None,
++        ),
++        (
++            "kan_forgetting_caution",
++            ["kac", "kan_forgetting"],
++            "watch",
++            True,
++            False,
++            False,
++            "Watch KAN compression only after a retained belief signal exists.",
++            None,
++        ),
++        (
++            "z1t_public_software",
++            ["z1t", "z1t_training_code"],
++            "watch",
++            True,
++            True,
++            False,
++            "Study the public JAX graph without a Z1 or TSU execution claim.",
++            None,
++        ),
++        (
++            "kona_architecture_only",
++            ["kona"],
++            "watch",
++            False,
++            False,
++            False,
++            "Keep Kona as an architecture comparator until a local runner exists.",
++            None,
++        ),
++        (
++            "retired_generated_text",
++            ["exclusion_manifest"],
++            "reject",
++            False,
++            False,
++            False,
++            "The generated-text verifier lane is retired.",
++            "retired_scope",
++        ),
++        (
++            "retired_grammar_decoding",
++            ["exclusion_manifest"],
++            "reject",
++            False,
++            False,
++            False,
++            "Grammar decoding does not provide live transition identity.",
++            "retired_scope",
++        ),
++        (
++            "retired_pair_centered_latent",
++            ["v614_artifact"],
++            "reject",
++            True,
++            False,
++            False,
++            "V614 found no released causal feature bank for another pair-centered fit.",
++            "unchanged_failed_scope",
++        ),
++        (
++            "unchanged_kan_scope",
++            ["kac", "kan_forgetting"],
++            "reject",
++            True,
++            False,
++            False,
++            "No new KAN result after the marker reopens the critical path.",
++            "unchanged_scope",
++        ),
++        (
++            "z1_hardware_readiness",
++            ["z1t"],
++            "reject",
++            True,
++            True,
++            False,
++            "Carnot has no authenticated Z1 or TSU runner.",
++            "unsupported_hardware_readiness",
++        ),
++        (
++            "github_repo_only_false_positive",
++            ["impetus_repo_only"],
++            "reject",
++            False,
++            False,
++            False,
++            "A repository search result alone is not primary evidence or local readiness.",
++            "repository_only",
++        ),
++    )
++    return [
++        classify_finding(
++            finding_id=finding_id,
++            source_ids=source_ids,
++            proposed_action=action,
++            primary_verified=primary,
++            reproducible_code_identity=code,
++            bounded_local_test=bounded,
++            reason=reason,
++            false_positive_kind=false_positive,
++        )
++        for finding_id, source_ids, action, primary, code, bounded, reason, false_positive in definitions
++    ]
++
++
++def duplicate_rows() -> list[JsonDict]:
++    """Record why rechecked marker findings are not new append candidates."""
++
++    return [
++        {
++            "duplicate_row_id": f"marker_repeat_{finding_id}",
++            "kept_row_id": f"v615_marker:{finding_id}",
++            "reason": "already_present_at_v615_marker",
++            "suppressed": True,
++            "terminal": True,
++        }
++        for finding_id in (
++            "bbwm_queryable_belief",
++            "counterexample_guided_updates",
++            "compute_matched_verifier_controls",
++            "kan_forgetting_caution",
++            "z1t_public_software",
++            "kona_architecture_only",
++        )
++    ]
++
++
++def _eligible_delta(row: Mapping[str, Any]) -> bool:
++    return bool(
++        row.get("source_kind") in {"primary_paper", "first_party_report"}
++        and row.get("primary_verified") is True
++        and row.get("cutoff_relation") == "post_marker"
++        and str(row.get("canonical_url", "")).startswith("https://")
++    )
++
++
++def reference_append_rows(delta_rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Prepare append receipts only for verified primary post-marker deltas."""
++
++    eligible = [dict(row) for row in delta_rows if _eligible_delta(row)]
++    if not eligible:
++        return [
++            {
++                "action": "no_change",
++                "marker": REFERENCE_MARKER,
++                "appended": False,
++                "reason": "No verified primary or first-party change was proved after the V615 marker.",
++                "terminal": True,
++            }
++        ]
++    return [
++        {
++            "action": "append",
++            "verified_source_id": row["source_id"],
++            "canonical_url": row["canonical_url"],
++            "cutoff_relation": row["cutoff_relation"],
++            "primary_verified": True,
++            "finding": row["finding"],
++            "appended": False,
++            "terminal": True,
++        }
++        for row in eligible
++    ]
++
++
++def cutoff_receipts(
++    primary_rows: Sequence[Mapping[str, Any]],
++    semantic_rows: Sequence[Mapping[str, Any]],
++    logical_rows: Sequence[Mapping[str, Any]],
++) -> list[JsonDict]:
++    """Combine date boundaries, rate limits, and same-day uncertainty receipts."""
++
++    rows = [
++        {
++            "receipt_kind": "cutoff",
++            "source_id": row["source_id"],
++            "source_date": row["publication_or_update_date"],
++            "marker_date": MARKER_DATE,
++            "relation": row["cutoff_relation"],
++            "terminal": True,
++        }
++        for row in primary_rows
++    ]
++    rows.extend(
++        {
++            "receipt_kind": "rate_limit",
++            "source_id": f"semantic_scholar_{row.get('paper_id', row.get('query', 'route'))}",
++            "http_status": row["http_status"],
++            "access_outcome": row["access_outcome"],
++            "terminal": True,
++        }
++        for row in semantic_rows
++    )
++    rows.extend(
++        {
++            "receipt_kind": "same_day_uncertainty",
++            "source_id": row.get("source_id", "logical_intelligence_route"),
++            "source_date": row.get("publication_or_update_date", row.get("accessed_on")),
++            "marker_date": MARKER_DATE,
++            "relation": row.get("cutoff_relation", "same_day_order_uncertain"),
++            "reason": "The source page supplies no update time that proves ordering after the marker.",
++            "terminal": True,
++        }
++        for row in logical_rows
++    )
++    return rows
++
++
++def source_row_groups() -> dict[str, list[JsonDict]]:
++    """Return every requested source family under one exact family key."""
++
++    secondary = secondary_source_rows()
++    return {
++        "arxiv": source_query_rows(),
++        "openreview": [row for row in secondary if row["family"] == "openreview"],
++        "huggingface": [row for row in secondary if row["family"] == "huggingface"],
++        "semantic_scholar": semantic_scholar_rows(),
++        "github": github_rows(),
++        "extropic": extropic_rows(),
++        "logical_intelligence": logical_intelligence_rows(),
++    }
++
++
++def _route_available(row: Mapping[str, Any]) -> bool:
++    status = row.get("http_status")
++    return isinstance(status, int) and 200 <= status < 400
++
++
++def _family_rows(artifact: Mapping[str, Any]) -> dict[str, list[Mapping[str, Any]]]:
++    secondary = artifact.get("secondary_source_rows", [])
++    secondary_rows = secondary if isinstance(secondary, list) else []
++    return {
++        "arxiv": artifact.get("source_query_rows", []),
++        "openreview": [row for row in secondary_rows if row.get("family") == "openreview"],
++        "huggingface": [row for row in secondary_rows if row.get("family") == "huggingface"],
++        "semantic_scholar": artifact.get("semantic_scholar_rows", []),
++        "github": artifact.get("github_rows", []),
++        "extropic": artifact.get("extropic_rows", []),
++        "logical_intelligence": artifact.get("logical_intelligence_rows", []),
++    }
++
++
++def _families_complete(artifact: Mapping[str, Any]) -> bool:
++    groups = _family_rows(artifact)
++    return set(groups) == set(REQUIRED_SOURCE_FAMILIES) and all(
++        isinstance(rows, list)
++        and rows
++        and all(isinstance(row, Mapping) and row.get("terminal") is True for row in rows)
++        for rows in groups.values()
++    )
++
++
++def _all_routes_unavailable(artifact: Mapping[str, Any]) -> bool:
++    return not any(
++        _route_available(row)
++        for rows in _family_rows(artifact).values()
++        for row in rows
++        if isinstance(row, Mapping)
++    )
++
++
++def _reference_appends_valid(artifact: Mapping[str, Any]) -> bool:
++    appends = artifact.get("reference_append_rows")
++    deltas = artifact.get("post_marker_delta_rows")
++    if not isinstance(appends, list) or not appends or not isinstance(deltas, list):
++        return False
++    eligible_ids = {str(row.get("source_id")) for row in deltas if _eligible_delta(row)}
++    for row in appends:
++        if not isinstance(row, Mapping):
++            return False
++        if row.get("action") == "append":
++            if (
++                row.get("primary_verified") is not True
++                or row.get("cutoff_relation") != "post_marker"
++                or str(row.get("verified_source_id")) not in eligible_ids
++            ):
++                return False
++        elif row.get("action") != "no_change" or eligible_ids:
++            return False
++    return True
++
++
++def completion_score(artifact: Mapping[str, Any]) -> int:
++    """Recompute the V615 ingestion gate from unit rows only."""
++
++    classifications = artifact.get("classification_rows")
++    duplicates = artifact.get("duplicate_rows")
++    cutoff = artifact.get("cutoff_rate_limit_and_same_day_uncertainty_receipts")
++    primary = artifact.get("primary_source_rows")
++    if not all(isinstance(value, list) for value in (classifications, duplicates, cutoff, primary)):
++        return 0
++    class_rows = classifications
++    expected_ids = {row["finding_id"] for row in classification_rows()}
++    observed_ids = {str(row.get("finding_id")) for row in class_rows if isinstance(row, Mapping)}
++    classes_ok = observed_ids == expected_ids and all(
++        isinstance(row, Mapping)
++        and row.get("classification") in CLASSIFICATIONS
++        and row.get("terminal") is True
++        for row in class_rows
++    )
++    duplicates_ok = all(
++        isinstance(row, Mapping) and row.get("suppressed") is True and row.get("terminal") is True
++        for row in duplicates
++    )
++    receipt_kinds = {str(row.get("receipt_kind")) for row in cutoff if isinstance(row, Mapping)}
++    cutoff_ok = {"cutoff", "rate_limit", "same_day_uncertainty"} <= receipt_kinds
++    primary_ok = bool(primary) and all(
++        isinstance(row, Mapping)
++        and row.get("primary_verified") is True
++        and row.get("source_identity")
++        and row.get("publication_or_update_date")
++        and row.get("terminal") is True
++        for row in primary
++    )
++    return int(
++        _families_complete(artifact)
++        and not _all_routes_unavailable(artifact)
++        and classes_ok
++        and duplicates_ok
++        and cutoff_ok
++        and primary_ok
++        and _reference_appends_valid(artifact)
++    )
++
++
++def _combined_rows(artifact: Mapping[str, Any]) -> list[JsonDict]:
++    fields = (
++        "source_query_rows",
++        "primary_source_rows",
++        "secondary_source_rows",
++        "semantic_scholar_rows",
++        "github_rows",
++        "extropic_rows",
++        "logical_intelligence_rows",
++        "post_marker_delta_rows",
++        "duplicate_rows",
++        "classification_rows",
++        "reference_append_rows",
++        "cutoff_rate_limit_and_same_day_uncertainty_receipts",
++    )
++    combined: list[JsonDict] = []
++    for field in fields:
++        value = artifact.get(field, [])
++        if isinstance(value, list):
++            combined.extend(deepcopy(value))
++    return combined
++
++
++def _readable_nonempty(path: Path) -> bool:
++    try:
++        return path.is_file() and bool(path.read_bytes())
++    except OSError:
++        return False
++
++
++def writable_path(path: Path) -> bool:
++    """Probe the nearest existing parent without modifying the requested artifact."""
++
++    parent = path.parent
++    while not parent.exists() and parent != parent.parent:
++        parent = parent.parent
++    try:
++        with tempfile.NamedTemporaryFile(dir=parent, prefix=".exp7018-write-", delete=True):
++            pass
++    except OSError:
++        return False
++    return True
++
++
++def network_available() -> bool:
++    """Treat an HTTP response, including a rate limit, as a reachable network."""
++
++    request = Request("https://arxiv.org/", headers={"User-Agent": "Carnot-Exp7018/1.0"})
++    try:
++        with urlopen(request, timeout=10) as response:
++            return int(getattr(response, "status", 0)) > 0
++    except HTTPError:
++        return True
++    except (OSError, URLError):
++        return False
++
++
++def check_preconditions(
++    root: Path,
++    output_path: Path,
++    *,
++    network_is_available: bool,
++) -> list[JsonDict]:
++    """Check the marker, readable evidence, network, and output boundary."""
++
++    rows: list[JsonDict] = [
++        {
++            "check": "network_access",
++            "expected_value": "available",
++            "observed_value": "available" if network_is_available else "unavailable",
++            "passed": network_is_available,
++            "terminal": True,
++        }
++    ]
++    reference = root / REFERENCE_PATH
++    try:
++        marker_present = REFERENCE_MARKER in reference.read_text(encoding="utf-8")
++    except OSError:
++        marker_present = False
++    rows.append(
++        {
++            "check": "v615_reference_marker",
++            "expected_value": REFERENCE_MARKER,
++            "observed_value": "present" if marker_present else "missing",
++            "passed": marker_present,
++            "terminal": True,
++        }
++    )
++    for relative in REQUIRED_LOCAL_INPUTS[1:]:
++        readable = _readable_nonempty(root / relative)
++        rows.append(
++            {
++                "check": f"readable_reference:{relative.as_posix()}",
++                "expected_value": "readable_nonempty_file",
++                "observed_value": "readable_nonempty_file" if readable else "missing_or_unreadable",
++                "passed": readable,
++                "terminal": True,
++            }
++        )
++    writable = writable_path(output_path)
++    rows.append(
++        {
++            "check": "writable_artifact_path",
++            "expected_value": "writable",
++            "observed_value": "writable" if writable else "unwritable",
++            "passed": writable,
++            "terminal": True,
++        }
++    )
++    return rows
++
++
++def source_artifact_hashes(root: Path) -> list[JsonDict]:
++    """Hash every required or newly added local source that currently exists."""
++
++    rows: list[JsonDict] = []
++    for relative in HASH_PATHS:
++        path = root / relative
++        if path.is_file():
++            rows.append(
++                {
++                    "path": relative.as_posix(),
++                    "sha256": f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}",
++                }
++            )
++    return rows
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash all scientific fields except the checksum that stores the hash."""
++
++    payload = dict(artifact)
++    payload.pop("reproducibility_checksum", None)
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
++
++
++def _gate_from_failure(row: Mapping[str, Any]) -> JsonDict:
++    return {
++        "failed_check": row["check"],
++        "expected_value": row["expected_value"],
++        "observed_value": row["observed_value"],
++        "passed": False,
++    }
++
++
++def build_artifact(
++    root: Path,
++    run_date: str,
++    *,
++    output_path: Path,
++    network_available: bool | None = None,
++    duration_s: float | None = None,
++    source_groups: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++) -> JsonDict:
++    """Build one positive, blocked, or disqualified deterministic artifact."""
++
++    started = time.monotonic()
++    reachable = globals()["network_available"]() if network_available is None else network_available
++    preconditions = check_preconditions(
++        root,
++        output_path,
++        network_is_available=reachable,
++    )
++    artifact: JsonDict = {
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": 0.0,
++        "source_artifact_hashes": source_artifact_hashes(root),
++        "source_query_rows": [],
++        "primary_source_rows": [],
++        "secondary_source_rows": [],
++        "semantic_scholar_rows": [],
++        "github_rows": [],
++        "extropic_rows": [],
++        "logical_intelligence_rows": [],
++        "post_marker_delta_rows": [],
++        "duplicate_rows": [],
++        "classification_rows": [],
++        "reference_append_rows": [],
++        "rows": [],
++        "cutoff_rate_limit_and_same_day_uncertainty_receipts": [],
++        "v615_sota_ingestion_complete_score": 0,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "gate_check_summary": {
++            "failed_check": None,
++            "expected_value": 1,
++            "observed_value": 0,
++            "passed": False,
++        },
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "blocked_v615_sota_ingestion",
++    }
++    failure = next((row for row in preconditions if row["passed"] is False), None)
++    if failure is not None:
++        artifact["gate_check_summary"] = _gate_from_failure(failure)
++    else:
++        groups = (
++            {family: _copy(rows) for family, rows in source_groups.items()}
++            if source_groups is not None
++            else source_row_groups()
++        )
++        artifact["source_query_rows"] = groups.get("arxiv", [])
++        artifact["primary_source_rows"] = primary_source_rows()
++        artifact["secondary_source_rows"] = [
++            *groups.get("openreview", []),
++            *groups.get("huggingface", []),
++        ]
++        artifact["semantic_scholar_rows"] = groups.get("semantic_scholar", [])
++        artifact["github_rows"] = groups.get("github", [])
++        artifact["extropic_rows"] = groups.get("extropic", [])
++        artifact["logical_intelligence_rows"] = groups.get("logical_intelligence", [])
++        artifact["post_marker_delta_rows"] = []
++        artifact["duplicate_rows"] = duplicate_rows()
++        artifact["classification_rows"] = classification_rows()
++        artifact["reference_append_rows"] = reference_append_rows(
++            artifact["post_marker_delta_rows"]
++        )
++        artifact["cutoff_rate_limit_and_same_day_uncertainty_receipts"] = cutoff_receipts(
++            artifact["primary_source_rows"],
++            artifact["semantic_scholar_rows"],
++            artifact["logical_intelligence_rows"],
++        )
++        artifact["v615_sota_ingestion_complete_score"] = completion_score(artifact)
++        if _all_routes_unavailable(artifact):
++            artifact["gate_check_summary"] = {
++                "failed_check": "all_source_routes_unavailable",
++                "expected_value": "at_least_one_usable_route",
++                "observed_value": "no_usable_routes",
++                "passed": False,
++            }
++        elif artifact["v615_sota_ingestion_complete_score"] == 1:
++            artifact["verdict_class"] = "positive"
++            artifact["honest_verdict"] = (
++                "complete_positive_v615_sota_ingestion_no_verified_post_marker_delta"
++            )
++            artifact["gate_check_summary"] = {
++                "failed_check": None,
++                "expected_value": 1,
++                "observed_value": 1,
++                "passed": True,
++            }
++        else:
++            artifact["verdict_class"] = "disqualified"
++            artifact["honest_verdict"] = "disqualified_v615_sota_ingestion_contract_failed"
++            artifact["gate_check_summary"] = {
++                "failed_check": "source_ingestion_contract",
++                "expected_value": 1,
++                "observed_value": artifact["v615_sota_ingestion_complete_score"],
++                "passed": False,
++            }
++        artifact["rows"] = _combined_rows(artifact)
++    artifact["duration_s"] = round(
++        max(0.0, duration_s if duration_s is not None else time.monotonic() - started),
++        6,
++    )
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def _load_artifact(value: Mapping[str, Any] | str | Path) -> tuple[JsonDict | None, str | None]:
++    if isinstance(value, Mapping):
++        return deepcopy(dict(value)), None
++    path = Path(value)
++    if not path.is_file():
++        return None, "artifact_missing"
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return None, "artifact_unreadable"
++    if not isinstance(loaded, dict):
++        return None, "artifact_not_object"
++    return loaded, None
++
++
++def validate_artifact(value: Mapping[str, Any] | str | Path) -> list[str]:
++    """Recompute the artifact contract without trusting stored summary fields."""
++
++    artifact, load_error = _load_artifact(value)
++    if load_error:
++        return [load_error]
++    assert artifact is not None
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        return [f"missing_required_fields:{','.join(missing)}"]
++    errors: list[str] = []
++    principles = artifact["field_principles"]
++    if not isinstance(principles, Mapping) or set(principles) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_principles_keys_invalid")
++    elif not all(isinstance(value, str) and value.strip() for value in principles.values()):
++        errors.append("field_principles_empty")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_invalid")
++    if artifact["verifier_is_oracle"] is not False:
++        errors.append("verifier_is_oracle_invalid")
++    if not isinstance(artifact["duration_s"], (int, float)) or artifact["duration_s"] < 0:
++        errors.append("duration_s_invalid")
++    hashes = artifact["source_artifact_hashes"]
++    if (
++        not isinstance(hashes, list)
++        or not hashes
++        or not all(
++            isinstance(row, Mapping)
++            and row.get("path")
++            and str(row.get("sha256", "")).startswith("sha256:")
++            for row in hashes
++        )
++    ):
++        errors.append("source_artifact_hashes_invalid")
++    failed_precondition = next(
++        (
++            row
++            for row in artifact["preconditions_checked"]
++            if isinstance(row, Mapping) and row.get("passed") is False
++        ),
++        None,
++    )
++    if failed_precondition is None:
++        if not _families_complete(artifact):
++            errors.append("source_family_coverage_invalid")
++        primary = artifact["primary_source_rows"]
++        if isinstance(primary, list):
++            identities = [
++                str(row.get("source_identity")) for row in primary if isinstance(row, Mapping)
++            ]
++            if len(identities) != len(set(identities)):
++                errors.append("unsuppressed_duplicate_source_identity")
++        else:
++            errors.append("primary_source_rows_invalid")
++        classes = artifact["classification_rows"]
++        expected_class_ids = {row["finding_id"] for row in classification_rows()}
++        observed_class_ids = {
++            str(row.get("finding_id"))
++            for row in classes
++            if isinstance(classes, list) and isinstance(row, Mapping)
++        }
++        if (
++            not isinstance(classes, list)
++            or observed_class_ids != expected_class_ids
++            or any(
++                not isinstance(row, Mapping) or row.get("classification") not in CLASSIFICATIONS
++                for row in classes
++            )
++        ):
++            errors.append("classification_rows_invalid")
++        cutoff = artifact["cutoff_rate_limit_and_same_day_uncertainty_receipts"]
++        cutoff_kinds = {
++            str(row.get("receipt_kind"))
++            for row in cutoff
++            if isinstance(cutoff, list) and isinstance(row, Mapping)
++        }
++        if (
++            not isinstance(cutoff, list)
++            or not {
++                "cutoff",
++                "rate_limit",
++                "same_day_uncertainty",
++            }
++            <= cutoff_kinds
++        ):
++            errors.append("cutoff_receipts_invalid")
++        if not _reference_appends_valid(artifact):
++            errors.append("reference_append_without_verified_post_marker_primary")
++    if artifact["rows"] != _combined_rows(artifact):
++        errors.append("rows_consistency_invalid")
++    score = completion_score(artifact)
++    if artifact["v615_sota_ingestion_complete_score"] != score:
++        errors.append("v615_sota_ingestion_complete_score_invalid")
++    all_unavailable = _all_routes_unavailable(artifact)
++    expected_class = (
++        "blocked"
++        if failed_precondition is not None or all_unavailable
++        else ("positive" if score == 1 else "disqualified")
++    )
++    if artifact["verdict_class"] not in VERDICT_CLASSES:
++        errors.append("verdict_class_invalid")
++    elif artifact["verdict_class"] != expected_class:
++        errors.append("verdict_class_inconsistent")
++    prefix = {
++        "positive": "complete_positive_",
++        "circular_positive": "complete_circular_positive_",
++        "null": "null_",
++        "blocked": "blocked_",
++        "disqualified": "disqualified_",
++        "partial": "partial_",
++    }.get(str(artifact["verdict_class"]), "")
++    if not prefix or not str(artifact["honest_verdict"]).startswith(prefix):
++        errors.append("honest_verdict_prefix_invalid")
++    gate = artifact["gate_check_summary"]
++    if not isinstance(gate, Mapping) or not {
++        "failed_check",
++        "expected_value",
++        "observed_value",
++        "passed",
++    } <= set(gate):
++        errors.append("gate_check_summary_invalid")
++    elif (
++        expected_class == "positive"
++        and gate.get("passed") is not True
++        or expected_class != "positive"
++        and gate.get("passed") is not False
++    ):
++        errors.append("gate_check_summary_inconsistent")
++    if artifact["reproducibility_checksum"] != payload_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], path: Path) -> Path:
++    """Validate before the atomic write so malformed evidence never replaces a result."""
++
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError(";".join(errors))
++    atomic_write_json(path, dict(artifact), allow_override=False, sort_keys=True)
++    return path
++
++
++def _parser() -> argparse.ArgumentParser:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--output", type=Path, default=RESULT_PATH)
++    parser.add_argument("--validate", type=Path)
++    return parser
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run the deterministic build or validate an existing artifact."""
++
++    args = _parser().parse_args(argv)
++    if args.validate is not None:
++        errors = validate_artifact(args.validate)
++        if errors:
++            print(json.dumps({"errors": errors}, sort_keys=True))
++            return 1
++        print(json.dumps({"valid": True, "path": str(args.validate)}, sort_keys=True))
++        return 0
++    try:
++        datetime.strptime(args.date, "%Y%m%d")
++    except ValueError:
++        return 2
++    root = find_repo_root()
++    output = args.output if args.output.is_absolute() else root / args.output
++    artifact = build_artifact(root, args.date, output_path=output)
++    errors = validate_artifact(artifact)
++    if errors:
++        print(json.dumps({"errors": errors}, sort_keys=True))
++        return 1
++    write_artifact(artifact, output)
++    print(json.dumps({"path": str(output), "verdict": artifact["honest_verdict"]}, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_7018_v615_sota_ingestion.json b/results/experiment_7018_v615_sota_ingestion.json
+new file mode 100644
+index 0000000000..0ad5e8346e
+--- /dev/null
++++ b/results/experiment_7018_v615_sota_ingestion.json
+@@ -0,0 +1,1518 @@
++{
++  "classification_rows": [
++    {
++      "bounded_local_test": true,
++      "classification": "build",
++      "false_positive_kind": null,
++      "finding_id": "bbwm_queryable_belief",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Build a small explicit belief ledger before learned compression.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "bbwm",
++        "bbwm_code"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": true,
++      "classification": "test",
++      "false_positive_kind": null,
++      "finding_id": "counterexample_guided_updates",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Test contradiction clusters and tombstones on sealed later transitions.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "cegl"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": true,
++      "classification": "test",
++      "false_positive_kind": null,
++      "finding_id": "compute_matched_verifier_controls",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Match actions, model calls, verifier calls, and elapsed compute across arms.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "scaling_flaws",
++        "solve_verify"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "watch",
++      "false_positive_kind": null,
++      "finding_id": "kan_forgetting_caution",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Watch KAN compression only after a retained belief signal exists.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "kac",
++        "kan_forgetting"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "watch",
++      "false_positive_kind": null,
++      "finding_id": "z1t_public_software",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Study the public JAX graph without a Z1 or TSU execution claim.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "z1t",
++        "z1t_training_code"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "watch",
++      "false_positive_kind": null,
++      "finding_id": "kona_architecture_only",
++      "local_readiness_claimed": false,
++      "primary_verified": false,
++      "reason": "Keep Kona as an architecture comparator until a local runner exists.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "kona"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "retired_scope",
++      "finding_id": "retired_generated_text",
++      "local_readiness_claimed": false,
++      "primary_verified": false,
++      "reason": "The generated-text verifier lane is retired.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "exclusion_manifest"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "retired_scope",
++      "finding_id": "retired_grammar_decoding",
++      "local_readiness_claimed": false,
++      "primary_verified": false,
++      "reason": "Grammar decoding does not provide live transition identity.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "exclusion_manifest"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "unchanged_failed_scope",
++      "finding_id": "retired_pair_centered_latent",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "V614 found no released causal feature bank for another pair-centered fit.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "v614_artifact"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "unchanged_scope",
++      "finding_id": "unchanged_kan_scope",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "No new KAN result after the marker reopens the critical path.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "kac",
++        "kan_forgetting"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "unsupported_hardware_readiness",
++      "finding_id": "z1_hardware_readiness",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Carnot has no authenticated Z1 or TSU runner.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "z1t"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "repository_only",
++      "finding_id": "github_repo_only_false_positive",
++      "local_readiness_claimed": false,
++      "primary_verified": false,
++      "reason": "A repository search result alone is not primary evidence or local readiness.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "impetus_repo_only"
++      ],
++      "terminal": true
++    }
++  ],
++  "cutoff_rate_limit_and_same_day_uncertainty_receipts": [
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2026-08-31T22:48:38Z",
++      "source_id": "bbwm",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2026-06-09T23:46:46Z",
++      "source_id": "cegl",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-02-01T02:08:49Z",
++      "source_id": "scaling_flaws",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-10-19T10:28:43Z",
++      "source_id": "solve_verify",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-03-27T01:27:14Z",
++      "source_id": "kac",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-11-16T23:22:50Z",
++      "source_id": "kan_forgetting",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-07-02T19:17:29Z",
++      "source_id": "ebt",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2026-05-25T15:54:35Z",
++      "source_id": "arm_ebm",
++      "terminal": true
++    },
++    {
++      "access_outcome": "rate_limited",
++      "http_status": 429,
++      "receipt_kind": "rate_limit",
++      "source_id": "semantic_scholar_2507.02092",
++      "terminal": true
++    },
++    {
++      "access_outcome": "rate_limited",
++      "http_status": 429,
++      "receipt_kind": "rate_limit",
++      "source_id": "semantic_scholar_2512.15605",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "reason": "The source page supplies no update time that proves ordering after the marker.",
++      "receipt_kind": "same_day_uncertainty",
++      "relation": "same_day_order_uncertain",
++      "source_date": "2026-09-05",
++      "source_id": "kona",
++      "terminal": true
++    }
++  ],
++  "duplicate_rows": [
++    {
++      "duplicate_row_id": "marker_repeat_bbwm_queryable_belief",
++      "kept_row_id": "v615_marker:bbwm_queryable_belief",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_counterexample_guided_updates",
++      "kept_row_id": "v615_marker:counterexample_guided_updates",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_compute_matched_verifier_controls",
++      "kept_row_id": "v615_marker:compute_matched_verifier_controls",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_kan_forgetting_caution",
++      "kept_row_id": "v615_marker:kan_forgetting_caution",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_z1t_public_software",
++      "kept_row_id": "v615_marker:z1t_public_software",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_kona_architecture_only",
++      "kept_row_id": "v615_marker:kona_architecture_only",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    }
++  ],
++  "duration_s": 0.149779,
++  "extropic_rows": [
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "authenticated_device_receipt": false,
++      "cutoff_relation": "pre_marker",
++      "hardware_readiness_claimed": false,
++      "http_status": 200,
++      "latency_energy_claimed_by_carnot": false,
++      "public_software_observed": true,
++      "publication_or_update_date": "2026-09-04",
++      "query": "Extropic Z1T writing and linked public software",
++      "source_id": "z1t",
++      "source_identity": "Extropic:Z1T:2026-09-04",
++      "source_kind": "first_party_report",
++      "terminal": true,
++      "url": "https://extropic.ai/writing/z1t"
++    }
++  ],
++  "field_principles": {
++    "classification_rows": "Closed actions make each finding operational and falsifiable.",
++    "cutoff_rate_limit_and_same_day_uncertainty_receipts": "Cutoff and access receipts preserve uncertainty instead of resolving it by assumption.",
++    "duplicate_rows": "Suppression rows prevent old findings from appearing new.",
++    "duration_s": "Elapsed time distinguishes an executed audit from an undated assertion.",
++    "extropic_rows": "First-party software evidence stays separate from hardware estimates.",
++    "field_principles": "One reason per field makes the evidence contract reviewable.",
++    "gate_check_summary": "Expected and observed values make every blocked result actionable.",
++    "github_rows": "Repository rows separate public code identity from local readiness.",
++    "honest_verdict": "A matching prefix gives automation one unambiguous terminal outcome.",
++    "inference_substrate": "The substrate discloses that deterministic source review used no LLM.",
++    "logical_intelligence_rows": "Product rows expose Kona's missing reproducible runner.",
++    "post_marker_delta_rows": "Only proved later primary changes can enter the append set.",
++    "preconditions_checked": "Preflight rows stop missing inputs from becoming scientific findings.",
++    "primary_source_rows": "Versioned primary rows support method claims without source substitution.",
++    "random_seed": "A fixed seed records deterministic ordering even though no sampling ran.",
++    "reference_append_rows": "Append receipts show exactly why the research ledger changed or stayed fixed.",
++    "reproducibility_checksum": "A stable payload hash detects later evidence changes.",
++    "rows": "One combined ledger supports independent row-by-row consistency checks.",
++    "secondary_source_rows": "Secondary rows preserve useful discovery without granting authority.",
++    "semantic_scholar_rows": "Citation-route rows retain rate limits without inventing counts.",
++    "source_artifact_hashes": "Hashes bind conclusions to the local marker and policy inputs.",
++    "source_query_rows": "Query rows show the scope searched and keep search evidence advisory.",
++    "v615_sota_ingestion_complete_score": "One requires terminal route coverage and valid source-bound classifications.",
++    "verdict_class": "A closed class prevents blocked access from appearing positive.",
++    "verifier_is_oracle": "False states that literature review does not determine task correctness."
++  },
++  "gate_check_summary": {
++    "expected_value": 1,
++    "failed_check": null,
++    "observed_value": 1,
++    "passed": true
++  },
++  "github_rows": [
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "http_status": 200,
++      "query": "paper-linked BB-WM implementation",
++      "readiness_claimed": false,
++      "repository_id": "bbwm_code",
++      "reproducible_public_code": true,
++      "revision_date": "2026-08-31T22:29:26Z",
++      "source_id": "bbwm",
++      "source_identity": "git:d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
++      "terminal": true,
++      "url": "https://github.com/skumar-ml/belief-world-models"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "http_status": 200,
++      "query": "Extropic-linked sparse-transformers implementation",
++      "readiness_claimed": false,
++      "repository_id": "z1t_training_code",
++      "reproducible_public_code": true,
++      "revision_date": "2026-09-03T20:28:12Z",
++      "source_id": "z1t",
++      "source_identity": "git:13051e90df9669be5b8f9f34fb097329fa82f674",
++      "terminal": true,
++      "url": "https://github.com/extropic-ai/sparse-transformers"
++    },
++    {
++      "access_outcome": "repository_search_result_only",
++      "accessed_on": "2026-09-05",
++      "http_status": 200,
++      "query": "energy-based model reasoning created 2025-2026",
++      "readiness_claimed": false,
++      "repository_id": "github_discovery_impetus",
++      "reproducible_public_code": false,
++      "revision_date": "2026-05-16T19:20:54Z",
++      "source_id": "impetus_repo_only",
++      "source_identity": "github:EdhieBM/Impetus:unverified_search_result",
++      "terminal": true,
++      "url": "https://github.com/EdhieBM/Impetus"
++    }
++  ],
++  "honest_verdict": "complete_positive_v615_sota_ingestion_no_verified_post_marker_delta",
++  "inference_substrate": "deterministic_primary_source_ingestion_no_llm",
++  "logical_intelligence_rows": [
++    {
++      "access_outcome": "product_page_ok_no_public_runner",
++      "accessed_on": "2026-09-05",
++      "cutoff_relation": "same_day_order_uncertain",
++      "date_receipt": "access_date_only_no_page_update_time",
++      "http_status": 200,
++      "public_weights_claimed": false,
++      "publication_or_update_date": "2026-09-05",
++      "query": "Logical Intelligence Kona public implementation and runner",
++      "reproducible_local_runner_claimed": false,
++      "source_id": "kona",
++      "source_identity": "LogicalIntelligence:Kona:page_access_2026-09-05",
++      "source_kind": "first_party_product_page",
++      "terminal": true,
++      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++    }
++  ],
++  "post_marker_delta_rows": [],
++  "preconditions_checked": [
++    {
++      "check": "network_access",
++      "expected_value": "available",
++      "observed_value": "available",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "v615_reference_marker",
++      "expected_value": "## V615 Planner Refresh - 2026-09-05",
++      "observed_value": "present",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "readable_reference:results/experiment_7011_v614_sota_ingestion.json",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty_file",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "readable_reference:ops/exclusion_manifest.yaml",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty_file",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "readable_reference:openspec/capabilities/research-reporting/spec.md",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty_file",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "writable_artifact_path",
++      "expected_value": "writable",
++      "observed_value": "writable",
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "primary_source_rows": [
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2609.00455",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "bbwm_queryable_belief",
++      "method_extraction": "Keep queryable current-state belief separate from action simulation.",
++      "primary_verified": true,
++      "publication_or_update_date": "2026-08-31T22:48:38Z",
++      "readiness_claimed": false,
++      "row_id": "primary_bbwm",
++      "source_id": "bbwm",
++      "source_identity": "arXiv:2609.00455v1",
++      "terminal": true,
++      "title": "Towards a Belief-Based World Model for LLM Agents"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2606.11521",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "counterexample_guided_updates",
++      "method_extraction": "Use exact counterexamples and symbolic clusters to refine hypotheses.",
++      "primary_verified": true,
++      "publication_or_update_date": "2026-06-09T23:46:46Z",
++      "readiness_claimed": false,
++      "row_id": "primary_cegl",
++      "source_id": "cegl",
++      "source_identity": "arXiv:2606.11521v1",
++      "terminal": true,
++      "title": "Counterexample Guided Learning in the Large using Reasoning Agents"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2502.00271",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "compute_matched_verifier_controls",
++      "method_extraction": "Compare verifier search against repeated sampling as budgets grow.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-02-01T02:08:49Z",
++      "readiness_claimed": false,
++      "row_id": "primary_scaling_flaws",
++      "source_id": "scaling_flaws",
++      "source_identity": "arXiv:2502.00271v1",
++      "terminal": true,
++      "title": "Scaling Flaws of Verifier-Guided Search in Mathematical Reasoning"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2504.01005",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "compute_matched_verifier_controls",
++      "method_extraction": "Compare generation and verification under one inference budget.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-10-19T10:28:43Z",
++      "readiness_claimed": false,
++      "row_id": "primary_solve_verify",
++      "source_id": "solve_verify",
++      "source_identity": "arXiv:2504.01005v2",
++      "terminal": true,
++      "title": "When To Solve, When To Verify"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2503.21076",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "kan_classifier_claim",
++      "method_extraction": "Replace linear continual-learning heads with KAN or RBF classifiers.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-03-27T01:27:14Z",
++      "readiness_claimed": false,
++      "row_id": "primary_kac",
++      "source_id": "kac",
++      "source_identity": "arXiv:2503.21076v1",
++      "terminal": true,
++      "title": "KAC: Kolmogorov-Arnold Classifier for Continual Learning"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2511.12828",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "kan_forgetting_caution",
++      "method_extraction": "Treat KAN retention as dependent on activation overlap and data dimension.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-11-16T23:22:50Z",
++      "readiness_claimed": false,
++      "row_id": "primary_kan_forgetting",
++      "source_id": "kan_forgetting",
++      "source_identity": "arXiv:2511.12828v1",
++      "terminal": true,
++      "title": "Catastrophic Forgetting in Kolmogorov-Arnold Networks"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2507.02092",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "ebt_existing_scope",
++      "method_extraction": "Optimize predictions against learned input-candidate compatibility energy.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-07-02T19:17:29Z",
++      "readiness_claimed": false,
++      "row_id": "primary_ebt",
++      "source_id": "ebt",
++      "source_identity": "arXiv:2507.02092v1",
++      "terminal": true,
++      "title": "Energy-Based Transformers are Scalable Learners and Thinkers"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2512.15605",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "arm_ebm_existing_scope",
++      "method_extraction": "Relate autoregressive and energy models through a function-space bijection.",
++      "primary_verified": true,
++      "publication_or_update_date": "2026-05-25T15:54:35Z",
++      "readiness_claimed": false,
++      "row_id": "primary_arm_ebm",
++      "source_id": "arm_ebm",
++      "source_identity": "arXiv:2512.15605v4",
++      "terminal": true,
++      "title": "Autoregressive Language Models are Secretly Energy-Based Models"
++    }
++  ],
++  "random_seed": 701820260905,
++  "reference_append_rows": [
++    {
++      "action": "no_change",
++      "appended": false,
++      "marker": "## V615 Planner Refresh - 2026-09-05",
++      "reason": "No verified primary or first-party change was proved after the V615 marker.",
++      "terminal": true
++    }
++  ],
++  "reproducibility_checksum": "sha256:87189d52f0c61b002b8461ae1c2c1a56486987c310519688a21f2de20702cc3d",
++  "rows": [
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "energy based model reasoning verifier LLM 2025 2026",
++      "query_id": "arxiv_ebm_reasoning",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "ebm_reasoning",
++      "url": "https://arxiv.org/search/?query=energy+based+model+reasoning+verifier+LLM+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "neural constraint satisfaction 2025 2026",
++      "query_id": "arxiv_neural_constraints",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "neural_constraints",
++      "url": "https://arxiv.org/search/?query=neural+constraint+satisfaction+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "Ising methods sampling 2025 2026",
++      "query_id": "arxiv_ising",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "ising",
++      "url": "https://arxiv.org/search/?query=Ising+methods+sampling+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "hallucination mitigation verifier 2025 2026",
++      "query_id": "arxiv_hallucination_mitigation",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "hallucination_mitigation",
++      "url": "https://arxiv.org/search/?query=hallucination+mitigation+verifier+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "Kolmogorov Arnold network continual learning 2025 2026",
++      "query_id": "arxiv_kan",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "kan",
++      "url": "https://arxiv.org/search/?query=Kolmogorov+Arnold+network+continual+learning+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "constrained generation exact verifier 2025 2026",
++      "query_id": "arxiv_constrained_generation",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "constrained_generation",
++      "url": "https://arxiv.org/search/?query=constrained+generation+exact+verifier+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "probabilistic hardware sampling 2025 2026",
++      "query_id": "arxiv_hardware_sampling",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "hardware_sampling",
++      "url": "https://arxiv.org/search/?query=probabilistic+hardware+sampling+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "continual learning counterexample agents 2025 2026",
++      "query_id": "arxiv_continual_learning",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "continual_learning",
++      "url": "https://arxiv.org/search/?query=continual+learning+counterexample+agents+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2609.00455",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "bbwm_queryable_belief",
++      "method_extraction": "Keep queryable current-state belief separate from action simulation.",
++      "primary_verified": true,
++      "publication_or_update_date": "2026-08-31T22:48:38Z",
++      "readiness_claimed": false,
++      "row_id": "primary_bbwm",
++      "source_id": "bbwm",
++      "source_identity": "arXiv:2609.00455v1",
++      "terminal": true,
++      "title": "Towards a Belief-Based World Model for LLM Agents"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2606.11521",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "counterexample_guided_updates",
++      "method_extraction": "Use exact counterexamples and symbolic clusters to refine hypotheses.",
++      "primary_verified": true,
++      "publication_or_update_date": "2026-06-09T23:46:46Z",
++      "readiness_claimed": false,
++      "row_id": "primary_cegl",
++      "source_id": "cegl",
++      "source_identity": "arXiv:2606.11521v1",
++      "terminal": true,
++      "title": "Counterexample Guided Learning in the Large using Reasoning Agents"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2502.00271",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "compute_matched_verifier_controls",
++      "method_extraction": "Compare verifier search against repeated sampling as budgets grow.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-02-01T02:08:49Z",
++      "readiness_claimed": false,
++      "row_id": "primary_scaling_flaws",
++      "source_id": "scaling_flaws",
++      "source_identity": "arXiv:2502.00271v1",
++      "terminal": true,
++      "title": "Scaling Flaws of Verifier-Guided Search in Mathematical Reasoning"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2504.01005",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "compute_matched_verifier_controls",
++      "method_extraction": "Compare generation and verification under one inference budget.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-10-19T10:28:43Z",
++      "readiness_claimed": false,
++      "row_id": "primary_solve_verify",
++      "source_id": "solve_verify",
++      "source_identity": "arXiv:2504.01005v2",
++      "terminal": true,
++      "title": "When To Solve, When To Verify"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2503.21076",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "kan_classifier_claim",
++      "method_extraction": "Replace linear continual-learning heads with KAN or RBF classifiers.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-03-27T01:27:14Z",
++      "readiness_claimed": false,
++      "row_id": "primary_kac",
++      "source_id": "kac",
++      "source_identity": "arXiv:2503.21076v1",
++      "terminal": true,
++      "title": "KAC: Kolmogorov-Arnold Classifier for Continual Learning"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2511.12828",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "kan_forgetting_caution",
++      "method_extraction": "Treat KAN retention as dependent on activation overlap and data dimension.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-11-16T23:22:50Z",
++      "readiness_claimed": false,
++      "row_id": "primary_kan_forgetting",
++      "source_id": "kan_forgetting",
++      "source_identity": "arXiv:2511.12828v1",
++      "terminal": true,
++      "title": "Catastrophic Forgetting in Kolmogorov-Arnold Networks"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2507.02092",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "ebt_existing_scope",
++      "method_extraction": "Optimize predictions against learned input-candidate compatibility energy.",
++      "primary_verified": true,
++      "publication_or_update_date": "2025-07-02T19:17:29Z",
++      "readiness_claimed": false,
++      "row_id": "primary_ebt",
++      "source_id": "ebt",
++      "source_identity": "arXiv:2507.02092v1",
++      "terminal": true,
++      "title": "Energy-Based Transformers are Scalable Learners and Thinkers"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "canonical_url": "https://arxiv.org/abs/2512.15605",
++      "cutoff_relation": "pre_marker",
++      "finding_id": "arm_ebm_existing_scope",
++      "method_extraction": "Relate autoregressive and energy models through a function-space bijection.",
++      "primary_verified": true,
++      "publication_or_update_date": "2026-05-25T15:54:35Z",
++      "readiness_claimed": false,
++      "row_id": "primary_arm_ebm",
++      "source_id": "arm_ebm",
++      "source_identity": "arXiv:2512.15605v4",
++      "terminal": true,
++      "title": "Autoregressive Language Models are Secretly Energy-Based Models"
++    },
++    {
++      "access_outcome": "challenge_required",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "secondary_review_route",
++      "family": "openreview",
++      "http_status": 403,
++      "query": "VerifierQ qhOT0MisId",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://openreview.net/forum?id=qhOT0MisId"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "secondary_index",
++      "family": "huggingface",
++      "http_status": 200,
++      "query": "step-level verifier-guided scaling 2507.15512",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://huggingface.co/papers/2507.15512"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "secondary_index",
++      "family": "huggingface",
++      "http_status": 200,
++      "query": "VerifyBench 2507.09884",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://huggingface.co/papers/2507.09884"
++    },
++    {
++      "access_outcome": "rate_limited",
++      "accessed_on": "2026-09-05",
++      "citation_count_claimed": false,
++      "content_verified": false,
++      "evidence_kind": "secondary_index",
++      "family": "semantic_scholar",
++      "http_status": 429,
++      "paper_id": "2507.02092",
++      "query": "ARXIV:2507.02092 metadata and citations",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV%3A2507.02092?fields=paperId,title,year,publicationDate,url,citationCount"
++    },
++    {
++      "access_outcome": "rate_limited",
++      "accessed_on": "2026-09-05",
++      "citation_count_claimed": false,
++      "content_verified": false,
++      "evidence_kind": "secondary_index",
++      "family": "semantic_scholar",
++      "http_status": 429,
++      "paper_id": "2512.15605",
++      "query": "ARXIV:2512.15605 metadata and citations",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV%3A2512.15605?fields=paperId,title,year,publicationDate,url,citationCount"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "http_status": 200,
++      "query": "paper-linked BB-WM implementation",
++      "readiness_claimed": false,
++      "repository_id": "bbwm_code",
++      "reproducible_public_code": true,
++      "revision_date": "2026-08-31T22:29:26Z",
++      "source_id": "bbwm",
++      "source_identity": "git:d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
++      "terminal": true,
++      "url": "https://github.com/skumar-ml/belief-world-models"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "http_status": 200,
++      "query": "Extropic-linked sparse-transformers implementation",
++      "readiness_claimed": false,
++      "repository_id": "z1t_training_code",
++      "reproducible_public_code": true,
++      "revision_date": "2026-09-03T20:28:12Z",
++      "source_id": "z1t",
++      "source_identity": "git:13051e90df9669be5b8f9f34fb097329fa82f674",
++      "terminal": true,
++      "url": "https://github.com/extropic-ai/sparse-transformers"
++    },
++    {
++      "access_outcome": "repository_search_result_only",
++      "accessed_on": "2026-09-05",
++      "http_status": 200,
++      "query": "energy-based model reasoning created 2025-2026",
++      "readiness_claimed": false,
++      "repository_id": "github_discovery_impetus",
++      "reproducible_public_code": false,
++      "revision_date": "2026-05-16T19:20:54Z",
++      "source_id": "impetus_repo_only",
++      "source_identity": "github:EdhieBM/Impetus:unverified_search_result",
++      "terminal": true,
++      "url": "https://github.com/EdhieBM/Impetus"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "authenticated_device_receipt": false,
++      "cutoff_relation": "pre_marker",
++      "hardware_readiness_claimed": false,
++      "http_status": 200,
++      "latency_energy_claimed_by_carnot": false,
++      "public_software_observed": true,
++      "publication_or_update_date": "2026-09-04",
++      "query": "Extropic Z1T writing and linked public software",
++      "source_id": "z1t",
++      "source_identity": "Extropic:Z1T:2026-09-04",
++      "source_kind": "first_party_report",
++      "terminal": true,
++      "url": "https://extropic.ai/writing/z1t"
++    },
++    {
++      "access_outcome": "product_page_ok_no_public_runner",
++      "accessed_on": "2026-09-05",
++      "cutoff_relation": "same_day_order_uncertain",
++      "date_receipt": "access_date_only_no_page_update_time",
++      "http_status": 200,
++      "public_weights_claimed": false,
++      "publication_or_update_date": "2026-09-05",
++      "query": "Logical Intelligence Kona public implementation and runner",
++      "reproducible_local_runner_claimed": false,
++      "source_id": "kona",
++      "source_identity": "LogicalIntelligence:Kona:page_access_2026-09-05",
++      "source_kind": "first_party_product_page",
++      "terminal": true,
++      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
++    },
++    {
++      "duplicate_row_id": "marker_repeat_bbwm_queryable_belief",
++      "kept_row_id": "v615_marker:bbwm_queryable_belief",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_counterexample_guided_updates",
++      "kept_row_id": "v615_marker:counterexample_guided_updates",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_compute_matched_verifier_controls",
++      "kept_row_id": "v615_marker:compute_matched_verifier_controls",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_kan_forgetting_caution",
++      "kept_row_id": "v615_marker:kan_forgetting_caution",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_z1t_public_software",
++      "kept_row_id": "v615_marker:z1t_public_software",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "duplicate_row_id": "marker_repeat_kona_architecture_only",
++      "kept_row_id": "v615_marker:kona_architecture_only",
++      "reason": "already_present_at_v615_marker",
++      "suppressed": true,
++      "terminal": true
++    },
++    {
++      "bounded_local_test": true,
++      "classification": "build",
++      "false_positive_kind": null,
++      "finding_id": "bbwm_queryable_belief",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Build a small explicit belief ledger before learned compression.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "bbwm",
++        "bbwm_code"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": true,
++      "classification": "test",
++      "false_positive_kind": null,
++      "finding_id": "counterexample_guided_updates",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Test contradiction clusters and tombstones on sealed later transitions.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "cegl"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": true,
++      "classification": "test",
++      "false_positive_kind": null,
++      "finding_id": "compute_matched_verifier_controls",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Match actions, model calls, verifier calls, and elapsed compute across arms.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "scaling_flaws",
++        "solve_verify"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "watch",
++      "false_positive_kind": null,
++      "finding_id": "kan_forgetting_caution",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Watch KAN compression only after a retained belief signal exists.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "kac",
++        "kan_forgetting"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "watch",
++      "false_positive_kind": null,
++      "finding_id": "z1t_public_software",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Study the public JAX graph without a Z1 or TSU execution claim.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "z1t",
++        "z1t_training_code"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "watch",
++      "false_positive_kind": null,
++      "finding_id": "kona_architecture_only",
++      "local_readiness_claimed": false,
++      "primary_verified": false,
++      "reason": "Keep Kona as an architecture comparator until a local runner exists.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "kona"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "retired_scope",
++      "finding_id": "retired_generated_text",
++      "local_readiness_claimed": false,
++      "primary_verified": false,
++      "reason": "The generated-text verifier lane is retired.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "exclusion_manifest"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "retired_scope",
++      "finding_id": "retired_grammar_decoding",
++      "local_readiness_claimed": false,
++      "primary_verified": false,
++      "reason": "Grammar decoding does not provide live transition identity.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "exclusion_manifest"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "unchanged_failed_scope",
++      "finding_id": "retired_pair_centered_latent",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "V614 found no released causal feature bank for another pair-centered fit.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "v614_artifact"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "unchanged_scope",
++      "finding_id": "unchanged_kan_scope",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "No new KAN result after the marker reopens the critical path.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "kac",
++        "kan_forgetting"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "unsupported_hardware_readiness",
++      "finding_id": "z1_hardware_readiness",
++      "local_readiness_claimed": false,
++      "primary_verified": true,
++      "reason": "Carnot has no authenticated Z1 or TSU runner.",
++      "reproducible_code_identity": true,
++      "source_ids": [
++        "z1t"
++      ],
++      "terminal": true
++    },
++    {
++      "bounded_local_test": false,
++      "classification": "reject",
++      "false_positive_kind": "repository_only",
++      "finding_id": "github_repo_only_false_positive",
++      "local_readiness_claimed": false,
++      "primary_verified": false,
++      "reason": "A repository search result alone is not primary evidence or local readiness.",
++      "reproducible_code_identity": false,
++      "source_ids": [
++        "impetus_repo_only"
++      ],
++      "terminal": true
++    },
++    {
++      "action": "no_change",
++      "appended": false,
++      "marker": "## V615 Planner Refresh - 2026-09-05",
++      "reason": "No verified primary or first-party change was proved after the V615 marker.",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2026-08-31T22:48:38Z",
++      "source_id": "bbwm",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2026-06-09T23:46:46Z",
++      "source_id": "cegl",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-02-01T02:08:49Z",
++      "source_id": "scaling_flaws",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-10-19T10:28:43Z",
++      "source_id": "solve_verify",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-03-27T01:27:14Z",
++      "source_id": "kac",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-11-16T23:22:50Z",
++      "source_id": "kan_forgetting",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2025-07-02T19:17:29Z",
++      "source_id": "ebt",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "receipt_kind": "cutoff",
++      "relation": "pre_marker",
++      "source_date": "2026-05-25T15:54:35Z",
++      "source_id": "arm_ebm",
++      "terminal": true
++    },
++    {
++      "access_outcome": "rate_limited",
++      "http_status": 429,
++      "receipt_kind": "rate_limit",
++      "source_id": "semantic_scholar_2507.02092",
++      "terminal": true
++    },
++    {
++      "access_outcome": "rate_limited",
++      "http_status": 429,
++      "receipt_kind": "rate_limit",
++      "source_id": "semantic_scholar_2512.15605",
++      "terminal": true
++    },
++    {
++      "marker_date": "2026-09-05",
++      "reason": "The source page supplies no update time that proves ordering after the marker.",
++      "receipt_kind": "same_day_uncertainty",
++      "relation": "same_day_order_uncertain",
++      "source_date": "2026-09-05",
++      "source_id": "kona",
++      "terminal": true
++    }
++  ],
++  "secondary_source_rows": [
++    {
++      "access_outcome": "challenge_required",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "secondary_review_route",
++      "family": "openreview",
++      "http_status": 403,
++      "query": "VerifierQ qhOT0MisId",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://openreview.net/forum?id=qhOT0MisId"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "secondary_index",
++      "family": "huggingface",
++      "http_status": 200,
++      "query": "step-level verifier-guided scaling 2507.15512",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://huggingface.co/papers/2507.15512"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "secondary_index",
++      "family": "huggingface",
++      "http_status": 200,
++      "query": "VerifyBench 2507.09884",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://huggingface.co/papers/2507.09884"
++    }
++  ],
++  "semantic_scholar_rows": [
++    {
++      "access_outcome": "rate_limited",
++      "accessed_on": "2026-09-05",
++      "citation_count_claimed": false,
++      "content_verified": false,
++      "evidence_kind": "secondary_index",
++      "family": "semantic_scholar",
++      "http_status": 429,
++      "paper_id": "2507.02092",
++      "query": "ARXIV:2507.02092 metadata and citations",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV%3A2507.02092?fields=paperId,title,year,publicationDate,url,citationCount"
++    },
++    {
++      "access_outcome": "rate_limited",
++      "accessed_on": "2026-09-05",
++      "citation_count_claimed": false,
++      "content_verified": false,
++      "evidence_kind": "secondary_index",
++      "family": "semantic_scholar",
++      "http_status": 429,
++      "paper_id": "2512.15605",
++      "query": "ARXIV:2512.15605 metadata and citations",
++      "readiness_claimed": false,
++      "terminal": true,
++      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV%3A2512.15605?fields=paperId,title,year,publicationDate,url,citationCount"
++    }
++  ],
++  "source_artifact_hashes": [
++    {
++      "path": "research-references.md",
++      "sha256": "sha256:96fc5cf82946e931fba473c0fd0d30dadeabd828c8c7da7b658367d5545f778a"
++    },
++    {
++      "path": "results/experiment_7011_v614_sota_ingestion.json",
++      "sha256": "sha256:eab46aa5927cd298cdd8702334d7990570e5a0766a5901df3aed0e664f2bad75"
++    },
++    {
++      "path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
++    },
++    {
++      "path": "openspec/capabilities/research-reporting/spec.md",
++      "sha256": "sha256:86d6ea3bb9da598359be3c1a5555a10ff3c60281129daeb09a26c3675d307038"
++    },
++    {
++      "path": "python/carnot/experiment_7018_v615_sota_ingestion.py",
++      "sha256": "sha256:2cffefa211a5b3699cddd78346a0294a3803536f75e9bd1bbfeb3e5ae2b84466"
++    },
++    {
++      "path": "scripts/experiments/experiment_7018_v615_sota_ingestion.py",
++      "sha256": "sha256:111455237aa4f7dde951c63d49231f96176772a95f3554099b32dd21b2245a19"
++    },
++    {
++      "path": "tests/python/test_experiment_7018_v615_sota_ingestion.py",
++      "sha256": "sha256:831494e55c23471134cc6dbf2bbc5d73eef26dddf3aa02cda8c81d37dc970b35"
++    }
++  ],
++  "source_query_rows": [
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "energy based model reasoning verifier LLM 2025 2026",
++      "query_id": "arxiv_ebm_reasoning",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "ebm_reasoning",
++      "url": "https://arxiv.org/search/?query=energy+based+model+reasoning+verifier+LLM+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "neural constraint satisfaction 2025 2026",
++      "query_id": "arxiv_neural_constraints",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "neural_constraints",
++      "url": "https://arxiv.org/search/?query=neural+constraint+satisfaction+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "Ising methods sampling 2025 2026",
++      "query_id": "arxiv_ising",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "ising",
++      "url": "https://arxiv.org/search/?query=Ising+methods+sampling+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "hallucination mitigation verifier 2025 2026",
++      "query_id": "arxiv_hallucination_mitigation",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "hallucination_mitigation",
++      "url": "https://arxiv.org/search/?query=hallucination+mitigation+verifier+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "Kolmogorov Arnold network continual learning 2025 2026",
++      "query_id": "arxiv_kan",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "kan",
++      "url": "https://arxiv.org/search/?query=Kolmogorov+Arnold+network+continual+learning+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "constrained generation exact verifier 2025 2026",
++      "query_id": "arxiv_constrained_generation",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "constrained_generation",
++      "url": "https://arxiv.org/search/?query=constrained+generation+exact+verifier+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "probabilistic hardware sampling 2025 2026",
++      "query_id": "arxiv_hardware_sampling",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "hardware_sampling",
++      "url": "https://arxiv.org/search/?query=probabilistic+hardware+sampling+2025+2026&searchtype=all"
++    },
++    {
++      "access_outcome": "ok",
++      "accessed_on": "2026-09-05",
++      "content_verified": false,
++      "evidence_kind": "primary_index",
++      "family": "arxiv",
++      "http_status": 200,
++      "query": "continual learning counterexample agents 2025 2026",
++      "query_id": "arxiv_continual_learning",
++      "readiness_claimed": false,
++      "terminal": true,
++      "topic": "continual_learning",
++      "url": "https://arxiv.org/search/?query=continual+learning+counterexample+agents+2025+2026&searchtype=all"
++    }
++  ],
++  "v615_sota_ingestion_complete_score": 1,
++  "verdict_class": "positive",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_7018_v615_sota_ingestion.py b/scripts/experiments/experiment_7018_v615_sota_ingestion.py
+new file mode 100644
+index 0000000000..ffa2837dfc
+--- /dev/null
++++ b/scripts/experiments/experiment_7018_v615_sota_ingestion.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run the deterministic V615 ingestion required by REQ-REPORT-7018."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++ROOT = Path(__file__).resolve().parents[2]
++PYTHON = ROOT / "python"
++if str(PYTHON) not in sys.path:
++    sys.path.insert(0, str(PYTHON))
++
++from carnot.experiment_7018_v615_sota_ingestion import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/scripts/memory_index_drift.py b/scripts/memory_index_drift.py
+index 73495b2424..7e096d66eb 100755
+--- a/scripts/memory_index_drift.py
++++ b/scripts/memory_index_drift.py
+@@ -221,6 +221,15 @@ def expected_index_file(name: str) -> str:
+     return f"_index_{group}.md" if group in TIER2_GROUPS else INDEX_FILE
+ 
+ 
++def resolved_index_file(mem: Path, name: str) -> str:
++    """Return the file holding a pointer, or its policy destination when absent."""
++
++    actual = index_locations(mem).get(name)
++    if actual is not None:
++        return actual
++    return expected_index_file(name)
++
++
+ def utf16_units(text: str) -> int:
+     """The harness measures `.length` of a JavaScript string: UTF-16 code units."""
+ 
+@@ -636,9 +645,7 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
+     if mem_dir is None:
+         return ""
+     name = path.name
+-    where = index_locations(mem_dir).get(name)
+-    if where is None:
+-        where = expected_index_file(name)
++    where = resolved_index_file(mem_dir, name)
+     if is_index_file(name):
+         # REQ-INFRA-6976: the file as written is on disk (PostToolUse), so measure it.
+         problems = [
+diff --git a/tests/python/test_experiment_7018_v615_sota_ingestion.py b/tests/python/test_experiment_7018_v615_sota_ingestion.py
+new file mode 100644
+index 0000000000..73f084c38b
+--- /dev/null
++++ b/tests/python/test_experiment_7018_v615_sota_ingestion.py
+@@ -0,0 +1,584 @@
++"""Tests for REQ-REPORT-7018 and its source-ingestion scenarios."""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_7018_v615_sota_ingestion as mod
++
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def _fake_root(path: Path, *, marker: bool = True) -> Path:
++    """Create only the local evidence that the preflight is allowed to trust."""
++
++    for relative in mod.REQUIRED_LOCAL_INPUTS:
++        target = path / relative
++        target.parent.mkdir(parents=True, exist_ok=True)
++        if relative == mod.REFERENCE_PATH:
++            text = f"{mod.REFERENCE_MARKER}\n" if marker else "## older marker\n"
++        elif relative.suffix == ".json":
++            text = '{"honest_verdict":"complete_positive_prior"}\n'
++        else:
++            text = "required evidence\n"
++        target.write_text(text, encoding="utf-8")
++    return path
++
++
++def _artifact(tmp_path: Path, **kwargs: object) -> dict[str, object]:
++    """Build one complete fixture without making a test depend on the network."""
++
++    root = _fake_root(tmp_path / "root")
++    return mod.build_artifact(
++        root,
++        "20260905",
++        output_path=tmp_path / "artifact.json",
++        network_available=True,
++        duration_s=0.25,
++        **kwargs,
++    )
++
++
++def _refresh_checksum(artifact: dict[str, object]) -> dict[str, object]:
++    artifact["reproducibility_checksum"] = mod.payload_checksum(artifact)
++    return artifact
++
++
++def test_scenario_report_7018_cutoff_requires_proved_order() -> None:
++    """SCENARIO-REPORT-7018-CUTOFF rejects old, uncertain, and malformed dates."""
++
++    assert mod.cutoff_relation("2026-09-04") == "pre_marker"
++    assert mod.cutoff_relation("2026-09-05") == "same_day_order_uncertain"
++    assert mod.cutoff_relation("2026-09-05T23:59:59Z") == "same_day_order_uncertain"
++    assert mod.cutoff_relation("2026-09-06") == "post_marker"
++    assert (
++        mod.cutoff_relation(
++            "2026-09-05T08:00:01Z",
++            marker_timestamp="2026-09-05T08:00:00Z",
++        )
++        == "post_marker"
++    )
++    assert mod.cutoff_relation("not-a-date") == "unknown"
++
++
++def test_scenario_report_7018_receipts_keep_rate_limits_terminal() -> None:
++    """SCENARIO-REPORT-7018-RECEIPTS preserves access limits without claims."""
++
++    row = mod.access_receipt(
++        family="semantic_scholar",
++        query="ARXIV:2507.02092 citations",
++        url="https://api.semanticscholar.org/test",
++        accessed_on="2026-09-05",
++        http_status=429,
++        access_outcome="rate_limited",
++        evidence_kind="secondary_index",
++    )
++    assert row["terminal"] is True
++    assert row["content_verified"] is False
++    assert row["readiness_claimed"] is False
++    assert row["http_status"] == 429
++    with pytest.raises(ValueError, match="canonical https URL"):
++        mod.access_receipt(
++            family="arxiv",
++            query="bad",
++            url="snippet only",
++            accessed_on="2026-09-05",
++            http_status=None,
++            access_outcome="search_snippet_only",
++            evidence_kind="search_result",
++        )
++
++
++def test_scenario_report_7018_duplicates_suppress_identity_and_finding() -> None:
++    """SCENARIO-REPORT-7018-DUPLICATES keeps one identity and one finding."""
++
++    rows = [
++        {"row_id": "a", "source_identity": "arXiv:2609.00455v1", "finding_id": "bbwm"},
++        {"row_id": "b", "source_identity": "arXiv:2609.00455v1", "finding_id": "other"},
++        {"row_id": "c", "source_identity": "arXiv:2606.11521v1", "finding_id": "bbwm"},
++        {"row_id": "d", "source_identity": "arXiv:2502.00271v1", "finding_id": "control"},
++    ]
++    unique, duplicates = mod.deduplicate_findings(rows)
++
++    assert [row["row_id"] for row in unique] == ["a", "d"]
++    assert {row["reason"] for row in duplicates} == {
++        "duplicate_source_identity",
++        "duplicate_finding_identity",
++    }
++    assert all(row["suppressed"] is True for row in duplicates)
++
++
++def test_scenario_report_7018_false_positives_and_readiness_fail_closed() -> None:
++    """SCENARIO-REPORT-7018-CLASSIFY rejects snippets and product-only readiness."""
++
++    snippet = mod.classify_finding(
++        finding_id="snippet",
++        source_ids=["search"],
++        proposed_action="build",
++        primary_verified=False,
++        reproducible_code_identity=False,
++        bounded_local_test=False,
++        reason="A search snippet is not a primary source.",
++        false_positive_kind="search_snippet",
++    )
++    hardware = mod.classify_finding(
++        finding_id="z1_hardware_readiness",
++        source_ids=["z1t"],
++        proposed_action="build",
++        primary_verified=True,
++        reproducible_code_identity=True,
++        bounded_local_test=False,
++        reason="No authenticated Z1 or TSU runner exists.",
++        false_positive_kind="unsupported_hardware_readiness",
++    )
++    bounded_test = mod.classify_finding(
++        finding_id="counterexample_clusters",
++        source_ids=["cegl"],
++        proposed_action="test",
++        primary_verified=True,
++        reproducible_code_identity=False,
++        bounded_local_test=True,
++        reason="Test contradiction clusters on sealed later transitions.",
++    )
++
++    assert snippet["classification"] == "reject"
++    assert hardware["classification"] == "reject"
++    assert bounded_test["classification"] == "test"
++    assert all(row["local_readiness_claimed"] is False for row in (snippet, hardware))
++    assert (
++        mod.classify_finding(
++            finding_id="missing_code",
++            source_ids=["paper"],
++            proposed_action="build",
++            primary_verified=True,
++            reproducible_code_identity=False,
++            bounded_local_test=True,
++            reason="Code identity is missing.",
++        )["classification"]
++        == "watch"
++    )
++    assert (
++        mod.classify_finding(
++            finding_id="missing_test",
++            source_ids=["paper"],
++            proposed_action="test",
++            primary_verified=True,
++            reproducible_code_identity=False,
++            bounded_local_test=False,
++            reason="A bounded local test is missing.",
++        )["classification"]
++        == "watch"
++    )
++    with pytest.raises(ValueError, match="unknown classification"):
++        mod.classify_finding(
++            finding_id="bad",
++            source_ids=[],
++            proposed_action="promote",
++            primary_verified=False,
++            reproducible_code_identity=False,
++            bounded_local_test=False,
++            reason="Invalid action.",
++        )
++
++
++def test_scenario_report_7018_classifications_cover_selected_scope() -> None:
++    """SCENARIO-REPORT-7018-CLASSIFY maps every selected V615 finding once."""
++
++    rows = mod.classification_rows()
++    by_id = {row["finding_id"]: row for row in rows}
++
++    assert by_id["bbwm_queryable_belief"]["classification"] == "build"
++    assert by_id["counterexample_guided_updates"]["classification"] == "test"
++    assert by_id["compute_matched_verifier_controls"]["classification"] == "test"
++    assert by_id["kan_forgetting_caution"]["classification"] == "watch"
++    assert by_id["z1t_public_software"]["classification"] == "watch"
++    assert by_id["kona_architecture_only"]["classification"] == "watch"
++    assert {
++        "retired_generated_text",
++        "retired_grammar_decoding",
++        "retired_pair_centered_latent",
++        "unchanged_kan_scope",
++        "z1_hardware_readiness",
++    } <= {row["finding_id"] for row in rows if row["classification"] == "reject"}
++    assert all(row["classification"] in mod.CLASSIFICATIONS for row in rows)
++
++
++def test_scenario_report_7018_source_families_are_terminal_and_bounded() -> None:
++    """SCENARIO-REPORT-7018-RECEIPTS covers every requested public route."""
++
++    groups = mod.source_row_groups()
++    combined = [row for rows in groups.values() for row in rows]
++
++    assert set(groups) == set(mod.REQUIRED_SOURCE_FAMILIES)
++    assert all(rows for rows in groups.values())
++    assert all(row["terminal"] is True for row in combined)
++    assert all(str(row["url"]).startswith("https://") for row in combined)
++    assert all(row["accessed_on"] == "2026-09-05" for row in combined)
++    assert {row["topic"] for row in mod.source_query_rows()} == set(mod.ARXIV_TOPICS)
++    assert all(row["readiness_claimed"] is False for row in mod.secondary_source_rows())
++    assert all(row["citation_count_claimed"] is False for row in mod.semantic_scholar_rows())
++    assert all(row["hardware_readiness_claimed"] is False for row in mod.extropic_rows())
++    assert all(
++        row["reproducible_local_runner_claimed"] is False for row in mod.logical_intelligence_rows()
++    )
++
++
++def test_scenario_report_7018_append_requires_verified_post_marker_primary() -> None:
++    """SCENARIO-REPORT-7018-APPEND permits only proved later primary evidence."""
++
++    old = {
++        "delta_id": "old",
++        "source_id": "old",
++        "source_kind": "primary_paper",
++        "primary_verified": True,
++        "cutoff_relation": "pre_marker",
++        "canonical_url": "https://arxiv.org/abs/2502.00271",
++        "finding": "Old finding.",
++    }
++    same_day = old | {"delta_id": "same", "cutoff_relation": "same_day_order_uncertain"}
++    new = old | {"delta_id": "new", "cutoff_relation": "post_marker"}
++
++    assert mod.reference_append_rows([])[0]["action"] == "no_change"
++    assert mod.reference_append_rows([old, same_day])[0]["action"] == "no_change"
++    rows = mod.reference_append_rows([new])
++    assert rows[0]["action"] == "append"
++    assert rows[0]["verified_source_id"] == "old"
++
++
++def test_scenario_report_7018_preflight_blocks_with_complete_diagnostics(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-7018-PREFLIGHT returns an exact blocked artifact."""
++
++    root = _fake_root(tmp_path / "missing", marker=False)
++    artifact = mod.build_artifact(
++        root,
++        "20260905",
++        output_path=tmp_path / "blocked.json",
++        network_available=True,
++        duration_s=0.1,
++    )
++
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["v615_sota_ingestion_complete_score"] == 0
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == "blocked_v615_sota_ingestion"
++    assert artifact["gate_check_summary"] == {
++        "failed_check": "v615_reference_marker",
++        "expected_value": mod.REFERENCE_MARKER,
++        "observed_value": "missing",
++        "passed": False,
++    }
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_report_7018_all_routes_unavailable_is_blocked(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-7018-PREFLIGHT blocks when every public route lacks content."""
++
++    unavailable = {
++        family: [
++            mod.access_receipt(
++                family=family,
++                query=f"{family} route",
++                url=f"https://example.com/{family}",
++                accessed_on="2026-09-05",
++                http_status=429,
++                access_outcome="rate_limited",
++                evidence_kind="secondary_index",
++            )
++        ]
++        for family in mod.REQUIRED_SOURCE_FAMILIES
++    }
++    artifact = _artifact(tmp_path, source_groups=unavailable)
++
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["gate_check_summary"]["failed_check"] == "all_source_routes_unavailable"
++    assert artifact["v615_sota_ingestion_complete_score"] == 0
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_report_7018_artifact_recomputes_contract_and_checksum(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-7018-ARTIFACT rejects forged fields and promotions."""
++
++    artifact = _artifact(tmp_path)
++
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert set(artifact["field_principles"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["v615_sota_ingestion_complete_score"] == 1
++    assert artifact["verdict_class"] == "positive"
++    assert str(artifact["honest_verdict"]).startswith("complete_positive_")
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.validate_artifact(artifact) == []
++
++    mutations = {
++        "field_principles": {},
++        "source_query_rows": [],
++        "classification_rows": artifact["classification_rows"][:-1],
++        "cutoff_rate_limit_and_same_day_uncertainty_receipts": [],
++        "v615_sota_ingestion_complete_score": 0,
++        "inference_substrate": "llm_summary",
++        "verifier_is_oracle": True,
++        "verdict_class": "partial",
++        "honest_verdict": "partial_unfinished",
++    }
++    for field, value in mutations.items():
++        changed = deepcopy(artifact)
++        changed[field] = value
++        assert mod.validate_artifact(_refresh_checksum(changed)), field
++
++    forged_append = deepcopy(artifact)
++    forged_append["reference_append_rows"] = [
++        {
++            "action": "append",
++            "verified_source_id": "snippet",
++            "cutoff_relation": "same_day_order_uncertain",
++            "primary_verified": False,
++            "appended": True,
++        }
++    ]
++    assert "reference_append_without_verified_post_marker_primary" in mod.validate_artifact(
++        _refresh_checksum(forged_append)
++    )
++
++    missing = deepcopy(artifact)
++    missing.pop("rows")
++    assert mod.validate_artifact(missing) == ["missing_required_fields:rows"]
++    changed_hash = deepcopy(artifact)
++    changed_hash["reproducibility_checksum"] = "sha256:bad"
++    assert "reproducibility_checksum_mismatch" in mod.validate_artifact(changed_hash)
++
++
++def test_req_report_7018_source_hashes_and_reference_nochange_are_stable(tmp_path: Path) -> None:
++    """REQ-REPORT-7018 binds local inputs and preserves the ledger without a delta."""
++
++    root = _fake_root(tmp_path / "root")
++    before = (root / mod.REFERENCE_PATH).read_bytes()
++    hashes = mod.source_artifact_hashes(root)
++    artifact = mod.build_artifact(
++        root,
++        "20260905",
++        output_path=tmp_path / "result.json",
++        network_available=True,
++        duration_s=0.2,
++    )
++
++    assert {row["path"] for row in hashes} == {
++        path.as_posix() for path in mod.REQUIRED_LOCAL_INPUTS
++    }
++    assert all(str(row["sha256"]).startswith("sha256:") for row in hashes)
++    assert artifact["reference_append_rows"][0]["action"] == "no_change"
++    assert (root / mod.REFERENCE_PATH).read_bytes() == before
++
++
++def test_req_report_7018_writer_validator_and_cli(tmp_path: Path, monkeypatch) -> None:
++    """REQ-REPORT-7018 writes, reloads, validates, and rejects a bad date."""
++
++    artifact = _artifact(tmp_path)
++    path = tmp_path / "nested" / "artifact.json"
++
++    assert mod.write_artifact(artifact, path) == path
++    assert json.loads(path.read_text(encoding="utf-8")) == artifact
++    assert mod.validate_artifact(path) == []
++    assert mod.validate_artifact(tmp_path / "missing.json") == ["artifact_missing"]
++
++    monkeypatch.setattr(mod, "build_artifact", lambda *_args, **_kwargs: deepcopy(artifact))
++    writes: list[Path] = []
++    monkeypatch.setattr(
++        mod,
++        "write_artifact",
++        lambda _artifact, target: writes.append(target) or target,
++    )
++    assert mod.main(["--date", "20260905", "--output", str(path)]) == 0
++    assert writes == [path]
++    assert mod.main(["--date", "bad", "--output", str(path)]) == 2
++    assert mod.main(["--validate", str(path)]) == 0
++
++
++def test_req_report_7018_io_and_network_failure_paths(tmp_path: Path, monkeypatch) -> None:
++    """REQ-REPORT-7018 turns local probe failures into explicit preconditions."""
++
++    class Response:
++        status = 200
++
++        def __enter__(self) -> "Response":
++            return self
++
++        def __exit__(self, *_args: object) -> None:
++            return None
++
++    monkeypatch.setattr(mod, "urlopen", lambda *_args, **_kwargs: Response())
++    assert mod.network_available() is True
++    monkeypatch.setattr(
++        mod,
++        "urlopen",
++        lambda *_args, **_kwargs: (_ for _ in ()).throw(mod.HTTPError("x", 429, "rate", {}, None)),
++    )
++    assert mod.network_available() is True
++    monkeypatch.setattr(
++        mod,
++        "urlopen",
++        lambda *_args, **_kwargs: (_ for _ in ()).throw(mod.URLError("offline")),
++    )
++    assert mod.network_available() is False
++
++    monkeypatch.setattr(
++        mod.tempfile,
++        "NamedTemporaryFile",
++        lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("read only")),
++    )
++    assert mod.writable_path(tmp_path / "artifact.json") is False
++
++    class BrokenFile:
++        def is_file(self) -> bool:
++            return True
++
++        def read_bytes(self) -> bytes:
++            raise OSError("unreadable")
++
++    assert mod._readable_nonempty(BrokenFile()) is False  # type: ignore[arg-type]
++
++    nested = tmp_path / "not-created" / "deeper" / "artifact.json"
++    monkeypatch.undo()
++    assert mod.writable_path(nested) is True
++
++    root = _fake_root(tmp_path / "marker-io")
++    original_read_text = Path.read_text
++
++    def fail_marker(path: Path, *args: object, **kwargs: object) -> str:
++        if path == root / mod.REFERENCE_PATH:
++            raise OSError("unreadable")
++        return original_read_text(path, *args, **kwargs)
++
++    monkeypatch.setattr(Path, "read_text", fail_marker)
++    checks = mod.check_preconditions(
++        root,
++        tmp_path / "marker-io.json",
++        network_is_available=False,
++    )
++    assert next(row for row in checks if row["check"] == "v615_reference_marker")["passed"] is False
++    monkeypatch.undo()
++
++    malformed = tmp_path / "bad.json"
++    malformed.write_text("{", encoding="utf-8")
++    assert mod.validate_artifact(malformed) == ["artifact_unreadable"]
++    not_object = tmp_path / "list.json"
++    not_object.write_text("[]", encoding="utf-8")
++    assert mod.validate_artifact(not_object) == ["artifact_not_object"]
++    with pytest.raises(ValueError, match="missing_required_fields"):
++        mod.write_artifact({}, tmp_path / "invalid.json")
++
++
++def test_req_report_7018_validator_catches_family_rows_and_duplicate_leaks(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-7018-ARTIFACT catches missing families and unsuppressed duplicates."""
++
++    artifact = _artifact(tmp_path)
++    missing_family = deepcopy(artifact)
++    missing_family["github_rows"] = []
++    assert "source_family_coverage_invalid" in mod.validate_artifact(
++        _refresh_checksum(missing_family)
++    )
++
++    duplicate = deepcopy(artifact)
++    duplicate["primary_source_rows"] = [
++        *duplicate["primary_source_rows"],
++        deepcopy(duplicate["primary_source_rows"][0]),
++    ]
++    assert "unsuppressed_duplicate_source_identity" in mod.validate_artifact(
++        _refresh_checksum(duplicate)
++    )
++
++    empty_principle = deepcopy(artifact)
++    empty_principle["field_principles"]["rows"] = ""
++    assert "field_principles_empty" in mod.validate_artifact(_refresh_checksum(empty_principle))
++
++
++def test_req_report_7018_validator_covers_malformed_terminal_shapes(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-7018-ARTIFACT rejects malformed terminal row shapes."""
++
++    artifact = _artifact(tmp_path)
++    assert mod.completion_score(artifact | {"classification_rows": ()}) == 0
++    assert (
++        mod._reference_appends_valid({"reference_append_rows": [], "post_marker_delta_rows": []})
++        is False
++    )
++    assert (
++        mod._reference_appends_valid(
++            {"reference_append_rows": ["bad"], "post_marker_delta_rows": []}
++        )
++        is False
++    )
++    eligible = {
++        "source_id": "new",
++        "source_kind": "primary_paper",
++        "primary_verified": True,
++        "cutoff_relation": "post_marker",
++        "canonical_url": "https://arxiv.org/abs/2609.99999",
++    }
++    assert (
++        mod._reference_appends_valid(
++            {
++                "reference_append_rows": [
++                    {"action": "no_change", "terminal": True},
++                ],
++                "post_marker_delta_rows": [eligible],
++            }
++        )
++        is False
++    )
++
++    mutations = (
++        ("duration_s", -1, "duration_s_invalid"),
++        ("source_artifact_hashes", [], "source_artifact_hashes_invalid"),
++        ("primary_source_rows", (), "primary_source_rows_invalid"),
++        ("verdict_class", "alien", "verdict_class_invalid"),
++        ("gate_check_summary", {}, "gate_check_summary_invalid"),
++    )
++    for field, value, expected in mutations:
++        changed = deepcopy(artifact)
++        changed[field] = value
++        assert expected in mod.validate_artifact(_refresh_checksum(changed))
++
++    positive_bad_gate = deepcopy(artifact)
++    positive_bad_gate["gate_check_summary"]["passed"] = False
++    assert "gate_check_summary_inconsistent" in mod.validate_artifact(
++        _refresh_checksum(positive_bad_gate)
++    )
++
++    blocked = _artifact(
++        tmp_path / "blocked",
++        source_groups={
++            family: [
++                mod.access_receipt(
++                    family=family,
++                    query=family,
++                    url=f"https://example.com/{family}",
++                    accessed_on="2026-09-05",
++                    http_status=429,
++                    access_outcome="rate_limited",
++                    evidence_kind="secondary_index",
++                )
++            ]
++            for family in mod.REQUIRED_SOURCE_FAMILIES
++        },
++    )
++    blocked["gate_check_summary"]["passed"] = True
++    assert "gate_check_summary_inconsistent" in mod.validate_artifact(_refresh_checksum(blocked))
++
++
++def test_req_report_7018_disqualified_and_cli_error_branches(tmp_path: Path, monkeypatch) -> None:
++    """REQ-REPORT-7018 reports contract defects and CLI validation failures."""
++
++    groups = mod.source_row_groups()
++    groups["logical_intelligence"] = []
++    disqualified = _artifact(tmp_path, source_groups=groups)
++    assert disqualified["verdict_class"] == "disqualified"
++    assert disqualified["gate_check_summary"]["failed_check"] == "source_ingestion_contract"
++
++    assert mod.main(["--validate", str(tmp_path / "missing.json")]) == 1
++    monkeypatch.setattr(mod, "build_artifact", lambda *_args, **_kwargs: {})
++    monkeypatch.setattr(mod, "validate_artifact", lambda _artifact: ["bad_artifact"])
++    assert mod.main(["--date", "20260905", "--output", str(tmp_path / "bad.json")]) == 1
+diff --git a/tests/python/test_memory_index_capacity_20260905.py b/tests/python/test_memory_index_capacity_20260905.py
+index 24e7e25e52..9d7a2ce62c 100644
+--- a/tests/python/test_memory_index_capacity_20260905.py
++++ b/tests/python/test_memory_index_capacity_20260905.py
+@@ -382,8 +382,10 @@ def test_the_reminder_for_a_demoted_file_names_its_tier2_file_not_memory_md(mem:
+ def test_an_unindexed_tier2_group_file_is_told_where_its_line_belongs(mem: Path) -> None:
+     (mem / "reference_new.md").write_text(_FILE.format(desc="new", body="The fact.\n"))
+     assert mid.expected_index_file("reference_new.md") == "_index_reference.md"
++    assert mid.resolved_index_file(mem, "reference_new.md") == "_index_reference.md"
+     text = mid.hook_reminder(_grow(mem, "reference_new.md"), mem)
+     assert "`_index_reference.md` has no line for it" in text
+     assert mid.expected_index_file("feedback_a.md") == "MEMORY.md"
++    assert mid.resolved_index_file(mem, "feedback_a.md") == "MEMORY.md"
+     text = mid.hook_reminder(_grow(mem, "feedback_a.md"), mem)
+     assert "`MEMORY.md` line" in text and "`_index_" not in text
+-- 
+2.55.0
+

@@ -1,0 +1,60 @@
+From 5d489e5ec7b48130ba6dd01cad33ab4169acd9ad Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 10:39:26 -0400
+Subject: [PATCH 07519/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 4a4e0b0076..6da6a8f33e 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,155</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,168</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f1bc46121b..727355c09d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 237, "phase": "iteration_start", "last_beat": "2026-07-22T13:53:18Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 238, "phase": "iteration_start", "last_beat": "2026-07-22T14:37:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 789eb5b504..e894d74c7d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14107,3 +14107,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 13:25 UTC | Frozen calibration chooser over immutable simulato | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5791-arc-sota-independent-hypothesis-pane |
+ | 2026-07-22 13:25 UTC | Gated on Exp5792 selector benefit: measure selecte | GATE_BLOCK | 5 of 5 gate(s) failed; first failure: exp5792-arc-calibration-only-selector.sele |
+ | 2026-07-22 13:51 UTC | Board-state hash ledger and operator handoff packe | OK | 91 passed, 1 warning in 10.48s |
++| 2026-07-22 14:35 UTC | Reconcile .516 evidence, phase telemetry, specs, o | OK | 86 passed, 1 warning in 11.48s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 0481e1782d..f9050c5a9c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 237, "phase": "iteration_start", "started_at": "2026-07-22T13:53:18Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 238, "phase": "iteration_start", "started_at": "2026-07-22T14:37:18Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

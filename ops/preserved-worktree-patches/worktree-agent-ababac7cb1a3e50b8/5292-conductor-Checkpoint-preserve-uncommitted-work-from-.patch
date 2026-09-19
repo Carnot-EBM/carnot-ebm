@@ -1,0 +1,83 @@
+From 1a7a96e7a14f0dd0286854e7334ac47ded647e61 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 10:51:08 -0400
+Subject: [PATCH 05292/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._5105_fr11_severa_guarded_memory_v468.json | 23 ++++++++++++++++---
+ 4 files changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 23e91619cb..7821cea552 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 93, "phase": "iteration_start", "last_beat": "2026-07-01T14:39:20Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 94, "phase": "iteration_start", "last_beat": "2026-07-01T14:51:06Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 249fd2a581..ff4818b767 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9758,3 +9758,4 @@ web search: |
+ | 2026-07-01 14:09 UTC | PHASE B2 high-order energy -- direct HUBO/p-spin c | OK | 99 passed, 1 warning in 33.91s |
+ | 2026-07-01 14:22 UTC | PHASE B3 adaptive solver help -- TACO-style test-t | OK | 101 passed, 1 warning in 6.90s |
+ | 2026-07-01 14:37 UTC | PHASE B4 constrained decoding audit -- semantic-ri | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-07-01 14:49 UTC | PHASE C1 continuous self-learning -- SEVerA-style  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9debadddcc..2b27df55dc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 93, "phase": "iteration_start", "started_at": "2026-07-01T14:39:20Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 94, "phase": "iteration_start", "started_at": "2026-07-01T14:51:06Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5105_fr11_severa_guarded_memory_v468.json b/results/experiment_5105_fr11_severa_guarded_memory_v468.json
+index 15ce57d639..f34c27158f 100644
+--- a/results/experiment_5105_fr11_severa_guarded_memory_v468.json
++++ b/results/experiment_5105_fr11_severa_guarded_memory_v468.json
+@@ -401,7 +401,7 @@
+       "principle": "true when the no-promote rollback arm exactly preserves baseline behavior if any gate blocks promotion."
+     }
+   },
+-  "flagged_adversarial": false,
++  "flagged_adversarial": true,
+   "flagged_adversarial_candidate_ids": [
+     "candidate_5105_0003_memory_5092_0003_q0056"
+   ],
+@@ -844,5 +844,22 @@
+     ]
+   },
+   "store_path": "/home/ianblenke/github.com/ianblenke/carnot/results/replay_memory/experiment_5105_severa_guarded_memory_sop_store_v468.json",
+-  "store_sha256": "sha256:b0ebfcb3f52d58a0c3567db1f3dfe9f92b9adea46afaf7966cb6b745ddeb1e7b"
+-}
++  "store_sha256": "sha256:b0ebfcb3f52d58a0c3567db1f3dfe9f92b9adea46afaf7966cb6b745ddeb1e7b",
++  "corrigendum_pending": [
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "heldout_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "nonforgetting_delta=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.00143 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

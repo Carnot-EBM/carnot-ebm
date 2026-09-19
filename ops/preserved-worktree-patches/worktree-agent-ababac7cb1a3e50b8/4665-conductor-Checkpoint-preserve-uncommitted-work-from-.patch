@@ -1,0 +1,57 @@
+From e0c72e89d3fa327967b40ce407c13225dd804719 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 28 Jun 2026 12:17:59 -0400
+Subject: [PATCH 04665/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md   | 5 +++++
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index de0a3b72db..086cb7536d 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -662,3 +662,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_4917_heldout_first_win_readiness.json
++
++## arc_ige_llm_go_explore_ab.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/arc_ige_llm_go_explore_ab.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 37d1e740f7..541b93166c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 76, "phase": "iteration_start", "last_beat": "2026-06-28T16:01:51Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 77, "phase": "iteration_start", "last_beat": "2026-06-28T16:17:56Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index bf7cad186a..553cbab3eb 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9523,3 +9523,4 @@ The contro |
+ | 2026-06-28 15:29 UTC | PHASE 0 (TRANSITION) -- archive .453 -> activate . | OK | 85 passed, 1 warning in 7.67s |
+ | 2026-06-28 15:45 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; LEVEL-BANK -- t | OK | 127 passed, 1 warning in 9.74s |
+ | 2026-06-28 15:59 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 90 passed, 1 warning in 8.17s |
++| 2026-06-28 16:15 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 107 passed, 1 warning in 13.67s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4195accc40..23e7bcb6aa 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 76, "phase": "iteration_start", "started_at": "2026-06-28T16:01:51Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 77, "phase": "iteration_start", "started_at": "2026-06-28T16:17:56Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

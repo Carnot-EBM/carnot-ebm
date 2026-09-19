@@ -1,0 +1,1464 @@
+From 1bd9ff1a7d055069aa76f41d38a55c279b65a463 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 07:26:50 -0400
+Subject: [PATCH 01747/11362] =?UTF-8?q?[conductor]=20PHASE=20C1=20?=
+ =?UTF-8?q?=E2=80=94=20DiffusionGemma=20verifier-guided=20decoding=20(gate?=
+ =?UTF-8?q?=20MET;=20feasibility=20+=20smoke).=20The=20DiffusionGemma=20ga?=
+ =?UTF-8?q?te=20flipped=20MET=20(exp4177).=20HARD=20PRECONDITION:=20Diffus?=
+ =?UTF-8?q?ionGemma=20cached/downloadable=20AND=20exposes=20per-step=20tok?=
+ =?UTF-8?q?en=20logits=20(NOT=20cached=20as=20of=202026-06-14=20=E2=80=94?=
+ =?UTF-8?q?=20else=20honest=20blocked=20verdict).=20Use=20Carnot's=20EXECU?=
+ =?UTF-8?q?TABLE=20verifier=20ensemble=20as=20the=20GUIDANCE=20energy=20re?=
+ =?UTF-8?q?weighting=20per-step=20token=20selection=20during=20denoising?=
+ =?UTF-8?q?=20on=20an=20executable=20domain=20(code/Sudoku);=20guided=20vs?=
+ =?UTF-8?q?=20unguided=20vs=20AR-baseline,=20small=20n,=20bootstrap=20CI.?=
+ =?UTF-8?q?=20Feasibility+smoke=20(NOT=20a=20headline=20benchmark);=20a=20?=
+ =?UTF-8?q?clean=20blocked=20verdict=20is=20COMPLETE=20and=20de-risks=20th?=
+ =?UTF-8?q?e=20.389=20scale-up.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4189-diffusiongemma-verifier-guided-decoding
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  61 ++
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ffusiongemma_verifier_guided_decoding.json | 102 +++
+ ...diffusiongemma_verifier_guided_decoding.py | 702 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...diffusiongemma_verifier_guided_decoding.py | 372 ++++++++++
+ 13 files changed, 1260 insertions(+), 18 deletions(-)
+ create mode 100644 results/experiment_4189_diffusiongemma_verifier_guided_decoding.json
+ create mode 100644 results/experiment_4189_diffusiongemma_verifier_guided_decoding.py
+ create mode 100644 tests/python/test_experiment_4189_diffusiongemma_verifier_guided_decoding.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index f3ceefc297..833ae312fc 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -12228,6 +12228,67 @@ the Codex hardened-gate reference, reports
+ programs banked, emits a terminal-prefix complete or success verdict, and
+ writes the self-distillation corpus without gold labels.
+ 
++### REQ-VERIFY-4189: Verifier-Guided DiffusionGemma Decoding Feasibility
++
++The repository SHALL provide Exp 4189 at
++`results/experiment_4189_diffusiongemma_verifier_guided_decoding.py` to test
++whether DiffusionGemma can accept Carnot executable verifier energy inside the
++per-step denoising loop. The runner SHALL verify, before any model load or
++smoke scoring, that the official Hugging Face repo id
++`google/diffusiongemma-26B-A4B-it` resolves, that the full weight shards are
++cached locally or otherwise available for a bounded load, that CUDA is
++available, and that the installed DiffusionGemma release exposes a
++`LogitsProcessor` hook applied to per-step logits before the sampler accepts
++low-entropy tokens. If the full weights are not cached/loadable, it SHALL write
++`honest_verdict=blocked_diffusiongemma_not_cached`; if CUDA is unavailable, it
++SHALL write `honest_verdict=blocked_cuda_unavailable`; if the per-step hook is
++absent, it SHALL write
++`honest_verdict=blocked_diffusiongemma_no_perstep_logit_hook`.
++
++When all preconditions pass, the runner SHALL attach a verifier-energy logits
++processor that subtracts `lambda * carnot_verifier_energy` from candidate token
++logits, which is equivalent to reweighting the candidate distribution by
++`exp(-lambda * verifier_energy)`, before DiffusionGemma's entropy-bound sampler
++commits low-entropy tokens. The smoke domain SHALL be executable code
++generation with at least 20 prompts, and generated candidates SHALL be checked
++by executing the task tests rather than by text matching. The smoke artifact
++SHALL compare guided DiffusionGemma, unguided DiffusionGemma, and an
++autoregressive baseline when the run is feasible.
++
++The terminal artifact SHALL write
++`results/experiment_4189_diffusiongemma_verifier_guided_decoding.json` with
++top-level fields `honest_verdict`, bare bool `diffusiongemma_feasible`,
++`guided_vs_unguided_delta`, `model_specs`, `random_seed`,
++`reproducibility_checksum`, `preconditions_checked`, `field_principles`,
++`spec_refs`, `duration_s`, and `inference_substrate`. The required field
++principles are:
++`honest_verdict` = `Terminal-prefixed. A clean blocked_diffusiongemma_* (model/hook/CUDA unavailable) is a COMPLETE feasibility verdict that de-risks the .389 scale-up.`;
++`diffusiongemma_feasible` = `Bare bool: the model loaded AND the per-step guidance hook fired end-to-end; the precondition for any .389 headline benchmark.`;
++`guided_vs_unguided_delta` = `guided - unguided pass-rate with bootstrap CI95 on the smoke n; the first directional read on whether verifier guidance helps at LLM scale.`;
++`model_specs` = `DiffusionGemma + the verifier ensemble invoked; required methodology for a live-LLM artifact.`;
++`random_seed` = `Determinism precondition; the denoising + guidance must be reproducible.`;
++`reproducibility_checksum` = `Hash of the prompt set + guidance config; catches silent drift.`;
++`preconditions_checked` = `Records the cache / per-step-logit / CUDA checks; pre-empts the silent-missing-resource fabrication mode.`
++
++### SCENARIO-VERIFY-4189: Missing DiffusionGemma Weights Block Without Fabrication
++
++Given the official DiffusionGemma repo metadata resolves but the local Hugging
++Face cache lacks one or more required `model-*.safetensors` shards, when Exp
++4189 runs, then it writes the terminal artifact with
++`diffusiongemma_feasible=false`,
++`honest_verdict=blocked_diffusiongemma_not_cached`, records the repo id,
++missing shard count, CUDA result, and per-step hook inspection under
++`preconditions_checked`, sets `guided_vs_unguided_delta.status` to the blocked
++verdict, and does not fabricate guided, unguided, or autoregressive pass-rate
++metrics.
++
++If all weights are cached, CUDA is available, and the hook exists, then Exp
++4189 SHALL run the executable-code smoke with at least 20 prompts, fire the
++guidance processor during denoising, report guided and unguided pass rates plus
++bootstrap CI95 for guided minus unguided, record the AR baseline result, and set
++`diffusiongemma_feasible=true` only after the model loads and the hook fires
++end-to-end.
++
+ ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
+ 
+ The repository SHALL provide Exp 4036 at
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 567c0af59d..6c06141d12 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -366,3 +366,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_4178_gap3_stage1_model_native_arc_energy.json
++
++## experiment_4188_sovereign_local_generator_gap4_self_distill.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4188_sovereign_local_generator_gap4_self_distill.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ad263ec7f6..0b3344b809 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 174,
+   "code_violations": 0,
+-  "experiments_checked": 3211,
++  "experiments_checked": 3212,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 29d75d998e..57838ad8e8 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-14T11:06:05.647807Z",
+-  "duration_s": 0.021996259689331055,
++  "run_date": "2026-06-14T11:24:49.029158Z",
++  "duration_s": 0.016279935836791992,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "3dc6deee7008223bf42f049ac671d32996716e06f33109c0e99a9591569ba067",
++  "reproducibility_checksum": "b4efcf47cab1e1be94e6a583e77d3fbe5f617afc1110d1222ea32d4140ddcf84",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "f382bbba0376fd83f8c9ddda49927d7effd72cbc"
++    "adversarial_verify_version": "74f5e1d537773c366ad941a72933706f08055654"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 7b3285390c..f7084eb289 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-14T11:06:05.679615Z",
+-  "duration_s": 0.024962425231933594,
++  "run_date": "2026-06-14T11:24:49.051625Z",
++  "duration_s": 0.01896500587463379,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "478967662f986e5be6b7e87d0f691519ea8092eda70372ab97e3ff35d71abd54",
++  "reproducibility_checksum": "0c2f9446724f7cdf516fe5092b46dae63171ac16177a00b83c81d6f539ab5c0f",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "f382bbba0376fd83f8c9ddda49927d7effd72cbc"
++    "adversarial_verify_version": "74f5e1d537773c366ad941a72933706f08055654"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 89edc1a707..76c6994900 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.108335494995117,
++  "efficiency_gains_ms": 2.1140575408935547,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a153872ad9..d33723e06b 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.215999458916485e-05,
++  "duration_s": 3.2051000744104385e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4189_diffusiongemma_verifier_guided_decoding.json b/results/experiment_4189_diffusiongemma_verifier_guided_decoding.json
+new file mode 100644
+index 0000000000..59e997eade
+--- /dev/null
++++ b/results/experiment_4189_diffusiongemma_verifier_guided_decoding.json
+@@ -0,0 +1,102 @@
++{
++  "acceptance_gate": true,
++  "diffusiongemma_feasible": false,
++  "duration_s": 0.433437,
++  "field_principles": {
++    "diffusiongemma_feasible": "Bare bool: the model loaded AND the per-step guidance hook fired end-to-end; the precondition for any .389 headline benchmark.",
++    "guided_vs_unguided_delta": "guided - unguided pass-rate with bootstrap CI95 on the smoke n; the first directional read on whether verifier guidance helps at LLM scale.",
++    "honest_verdict": "Terminal-prefixed. A clean blocked_diffusiongemma_* (model/hook/CUDA unavailable) is a COMPLETE feasibility verdict that de-risks the .389 scale-up.",
++    "model_specs": "DiffusionGemma + the verifier ensemble invoked; required methodology for a live-LLM artifact.",
++    "preconditions_checked": "Records the cache / per-step-logit / CUDA checks; pre-empts the silent-missing-resource fabrication mode.",
++    "random_seed": "Determinism precondition; the denoising + guidance must be reproducible.",
++    "reproducibility_checksum": "Hash of the prompt set + guidance config; catches silent drift."
++  },
++  "guided_vs_unguided_delta": {
++    "ci95": null,
++    "delta": null,
++    "guided_pass_rate": null,
++    "n": 0,
++    "status": "blocked_diffusiongemma_not_cached",
++    "unguided_pass_rate": null
++  },
++  "honest_verdict": "blocked_diffusiongemma_not_cached",
++  "inference_substrate": "precondition_probe_only",
++  "model_specs": {
++    "diffusiongemma": {
++      "expected_weight_shards": 11,
++      "guidance_hook_fired": false,
++      "per_step_logit_hook": true,
++      "present_weight_shards": 0,
++      "repo_id": "google/diffusiongemma-26B-A4B-it",
++      "repo_sha": "0f28bc42f588fbd8f71e08102b1c3960298a1358",
++      "weights_cached": false
++    },
++    "verifier_ensemble": {
++      "guidance_config": {
++        "domain": "executable_python_smoke",
++        "guidance_lambda": 0.7,
++        "max_denoising_steps": 24,
++        "max_new_tokens": 128,
++        "smoke_n": 20,
++        "top_k": 4
++      },
++      "guidance_equation": "logit' = logit - lambda * verifier_energy",
++      "name": "carnot_executable_code_verifier_energy",
++      "source": "python execution smoke over HumanEval-style micro tasks"
++    }
++  },
++  "preconditions_checked": [
++    {
++      "bounded_metadata_download_ok": true,
++      "cache_dir": "/home/ianblenke/.cache/huggingface/hub",
++      "cache_grep_diffusion_matches": [
++        "models--google--diffusiongemma-26B-A4B-it"
++      ],
++      "expected_weight_shards": 11,
++      "full_weights_cached": false,
++      "gated": false,
++      "missing_weight_shards": [
++        "model-00001-of-00011.safetensors",
++        "model-00002-of-00011.safetensors",
++        "model-00003-of-00011.safetensors",
++        "model-00004-of-00011.safetensors",
++        "model-00005-of-00011.safetensors",
++        "model-00006-of-00011.safetensors",
++        "model-00007-of-00011.safetensors",
++        "model-00008-of-00011.safetensors",
++        "model-00009-of-00011.safetensors",
++        "model-00010-of-00011.safetensors",
++        "model-00011-of-00011.safetensors"
++      ],
++      "present_weight_shards": 0,
++      "private": false,
++      "repo_accessible": true,
++      "repo_cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--google--diffusiongemma-26B-A4B-it",
++      "repo_error": null,
++      "repo_id": "google/diffusiongemma-26B-A4B-it",
++      "repo_sha": "0f28bc42f588fbd8f71e08102b1c3960298a1358",
++      "resource": "diffusiongemma_cache"
++    },
++    {
++      "available": true,
++      "evidence": "logits_processor(input_ids, raw_logits, cur_step=cur_step) before sampler.accept_canvas",
++      "resource": "per_step_logit_hook",
++      "surface": "DiffusionGemmaGenerationMixin._denoising_step"
++    },
++    {
++      "available": true,
++      "device_count": 2,
++      "devices": [
++        "NVIDIA GeForce RTX 3090",
++        "NVIDIA GeForce RTX 3090"
++      ],
++      "resource": "cuda"
++    }
++  ],
++  "random_seed": 4189,
++  "reproducibility_checksum": "7dd898501b4ad953afbaebddf6a9a0425ffbbd4ae08f6d7dc9fe72838e0e33fc",
++  "spec_refs": [
++    "REQ-VERIFY-4189",
++    "SCENARIO-VERIFY-4189"
++  ]
++}
+diff --git a/results/experiment_4189_diffusiongemma_verifier_guided_decoding.py b/results/experiment_4189_diffusiongemma_verifier_guided_decoding.py
+new file mode 100644
+index 0000000000..470976c138
+--- /dev/null
++++ b/results/experiment_4189_diffusiongemma_verifier_guided_decoding.py
+@@ -0,0 +1,702 @@
++#!/usr/bin/env python3
++"""Exp 4189: verifier-guided DiffusionGemma decoding feasibility.
++
++This runner is deliberately precondition-first. DiffusionGemma guidance is only
++decision-grade if the actual model loads, the Hugging Face denoising loop
++accepts a per-step logits processor, and that processor fires before
++low-entropy token commit. When the weight shards are absent, the correct
++deliverable is a blocked artifact, not a simulated smoke benchmark.
++
++Spec refs: REQ-VERIFY-4189, SCENARIO-VERIFY-4189.
++"""
++
++import argparse
++import hashlib
++import inspect
++import json
++import math
++import random
++import re
++import sys
++import time
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any, Callable, Sequence
++
++
++ROOT = Path(__file__).resolve().parents[1]
++PYTHON_DIR = ROOT / "python"
++for _path in (PYTHON_DIR, ROOT):
++    if str(_path) not in sys.path:  # pragma: no cover - import bootstrap.
++        sys.path.insert(0, str(_path))
++
++try:  # pragma: no cover - exercised through the processor tests when present.
++    import torch
++except Exception:  # pragma: no cover - lets preflight report missing torch honestly.
++    torch = None  # type: ignore[assignment]
++
++try:  # pragma: no cover - import availability is environment-specific.
++    from transformers.generation import LogitsProcessor
++except Exception:  # pragma: no cover
++
++    class LogitsProcessor:  # type: ignore[no-redef]
++        """Fallback base so tests can import the module without transformers."""
++
++
++ARTIFACT_PATH = ROOT / "results" / "experiment_4189_diffusiongemma_verifier_guided_decoding.json"
++REPO_ID = "google/diffusiongemma-26B-A4B-it"
++RANDOM_SEED = 4189
++SMOKE_N = 20
++SPEC_REFS = ["REQ-VERIFY-4189", "SCENARIO-VERIFY-4189"]
++
++DEFAULT_GUIDANCE_CONFIG = {
++    "domain": "executable_python_smoke",
++    "guidance_lambda": 0.7,
++    "top_k": 4,
++    "max_new_tokens": 128,
++    "max_denoising_steps": 24,
++    "smoke_n": SMOKE_N,
++}
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. A clean blocked_diffusiongemma_* (model/hook/CUDA unavailable) "
++        "is a COMPLETE feasibility verdict that de-risks the .389 scale-up."
++    ),
++    "diffusiongemma_feasible": (
++        "Bare bool: the model loaded AND the per-step guidance hook fired end-to-end; "
++        "the precondition for any .389 headline benchmark."
++    ),
++    "guided_vs_unguided_delta": (
++        "guided - unguided pass-rate with bootstrap CI95 on the smoke n; the first "
++        "directional read on whether verifier guidance helps at LLM scale."
++    ),
++    "model_specs": (
++        "DiffusionGemma + the verifier ensemble invoked; required methodology for a live-LLM artifact."
++    ),
++    "random_seed": "Determinism precondition; the denoising + guidance must be reproducible.",
++    "reproducibility_checksum": (
++        "Hash of the prompt set + guidance config; catches silent drift."
++    ),
++    "preconditions_checked": (
++        "Records the cache / per-step-logit / CUDA checks; pre-empts the silent-missing-resource fabrication mode."
++    ),
++}
++
++REQUIRED_FIELDS = [
++    "honest_verdict",
++    "diffusiongemma_feasible",
++    "guided_vs_unguided_delta",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "preconditions_checked",
++    "field_principles",
++    "spec_refs",
++    "duration_s",
++    "inference_substrate",
++]
++
++
++@dataclass(frozen=True)
++class SmokeTask:
++    """One tiny executable-code prompt plus tests for the optional live smoke."""
++
++    task_id: str
++    prompt: str
++    entry_point: str
++    tests: tuple[str, ...]
++
++    def to_dict(self) -> dict[str, Any]:
++        return {
++            "task_id": self.task_id,
++            "prompt": self.prompt,
++            "entry_point": self.entry_point,
++            "tests": list(self.tests),
++        }
++
++
++SMOKE_TASKS: tuple[SmokeTask, ...] = (
++    SmokeTask("add_one", "Write Python function add_one(x) returning x + 1.", "add_one", ("add_one(2) == 3", "add_one(-1) == 0")),
++    SmokeTask("double", "Write Python function double(x) returning twice x.", "double", ("double(4) == 8", "double(-3) == -6")),
++    SmokeTask("square", "Write Python function square(x) returning x squared.", "square", ("square(5) == 25", "square(-4) == 16")),
++    SmokeTask("is_even", "Write Python function is_even(x) returning True iff x is even.", "is_even", ("is_even(2) is True", "is_even(3) is False")),
++    SmokeTask("first_char", "Write Python function first_char(s) returning the first character.", "first_char", ("first_char('abc') == 'a'", "first_char('z') == 'z'")),
++    SmokeTask("last_char", "Write Python function last_char(s) returning the last character.", "last_char", ("last_char('abc') == 'c'", "last_char('q') == 'q'")),
++    SmokeTask("abs_diff", "Write Python function abs_diff(a, b) returning absolute difference.", "abs_diff", ("abs_diff(7, 2) == 5", "abs_diff(2, 7) == 5")),
++    SmokeTask("max2", "Write Python function max2(a, b) returning the larger value.", "max2", ("max2(1, 9) == 9", "max2(8, 3) == 8")),
++    SmokeTask("min2", "Write Python function min2(a, b) returning the smaller value.", "min2", ("min2(1, 9) == 1", "min2(8, 3) == 3")),
++    SmokeTask("negate", "Write Python function negate(x) returning -x.", "negate", ("negate(5) == -5", "negate(-2) == 2")),
++    SmokeTask("cube", "Write Python function cube(x) returning x cubed.", "cube", ("cube(3) == 27", "cube(-2) == -8")),
++    SmokeTask("nonempty", "Write Python function nonempty(s) returning True iff s is not empty.", "nonempty", ("nonempty('x') is True", "nonempty('') is False")),
++    SmokeTask("concat", "Write Python function concat(a, b) returning a followed by b.", "concat", ("concat('a', 'b') == 'ab'", "concat('', 'x') == 'x'")),
++    SmokeTask("head2", "Write Python function head2(xs) returning the first two elements.", "head2", ("head2([1,2,3]) == [1,2]", "head2(['a','b']) == ['a','b']")),
++    SmokeTask("tail", "Write Python function tail(xs) returning all but the first element.", "tail", ("tail([1,2,3]) == [2,3]", "tail(['a']) == []")),
++    SmokeTask("sum2", "Write Python function sum2(a, b) returning a + b.", "sum2", ("sum2(1, 2) == 3", "sum2(-2, 5) == 3")),
++    SmokeTask("is_positive", "Write Python function is_positive(x) returning True iff x > 0.", "is_positive", ("is_positive(1) is True", "is_positive(0) is False")),
++    SmokeTask("repeat_twice", "Write Python function repeat_twice(s) returning s repeated twice.", "repeat_twice", ("repeat_twice('ab') == 'abab'", "repeat_twice('') == ''")),
++    SmokeTask("floor_half", "Write Python function floor_half(x) returning x // 2.", "floor_half", ("floor_half(5) == 2", "floor_half(4) == 2")),
++    SmokeTask("bool_not", "Write Python function bool_not(x) returning not x.", "bool_not", ("bool_not(True) is False", "bool_not(False) is True")),
++)
++
++
++class VerifierEnergyLogitsProcessor(LogitsProcessor):
++    """Apply executable verifier energy to DiffusionGemma per-step logits.
++
++    The DiffusionGemma sampler operates in logit space before converting to a
++    categorical distribution and accepting low-entropy tokens. Multiplying a
++    candidate token probability by ``exp(-lambda * energy)`` is therefore the
++    same as subtracting ``lambda * energy`` from that candidate's logit. The
++    processor only evaluates the top-k candidates per canvas position so an
++    executable verifier can be used during a bounded smoke run.
++    """
++
++    def __init__(
++        self,
++        verifier_energy_fn: Callable[..., Any],
++        *,
++        guidance_lambda: float,
++        top_k: int,
++        max_energy: float = 8.0,
++    ) -> None:
++        if guidance_lambda < 0:
++            raise ValueError("guidance_lambda must be non-negative")
++        if top_k < 1:
++            raise ValueError("top_k must be >= 1")
++        self.verifier_energy_fn = verifier_energy_fn
++        self.guidance_lambda = float(guidance_lambda)
++        self.top_k = int(top_k)
++        self.max_energy = float(max_energy)
++        self.call_count = 0
++        self.guidance_applied = False
++
++    def __call__(self, input_ids: Any, scores: Any, cur_step: Any | None = None, **_: Any) -> Any:
++        if torch is None:
++            raise RuntimeError("torch is required for verifier-guided logits processing")
++        if scores.ndim != 3:
++            raise ValueError("DiffusionGemma logits must have shape [batch, canvas, vocab]")
++
++        k = min(self.top_k, int(scores.shape[-1]))
++        _, candidate_token_ids = torch.topk(scores, k=k, dim=-1)
++        energies = self.verifier_energy_fn(
++            input_ids=input_ids,
++            candidate_token_ids=candidate_token_ids,
++            scores=scores,
++            cur_step=cur_step,
++        )
++        if not torch.is_tensor(energies):
++            energies = torch.as_tensor(energies, device=scores.device)
++        energies = energies.to(device=scores.device, dtype=scores.dtype)
++        if tuple(energies.shape) != tuple(candidate_token_ids.shape):
++            raise ValueError("verifier energy shape must match candidate_token_ids")
++        energies = torch.nan_to_num(
++            energies,
++            nan=self.max_energy,
++            posinf=self.max_energy,
++            neginf=0.0,
++        ).clamp(min=0.0, max=self.max_energy)
++
++        adjusted = scores.clone()
++        guided_values = adjusted.gather(-1, candidate_token_ids) - (self.guidance_lambda * energies)
++        adjusted.scatter_(-1, candidate_token_ids, guided_values)
++        self.call_count += 1
++        self.guidance_applied = True
++        return adjusted
++
++
++class ExecutablePythonVerifierEnergy:
++    """Score candidate tokens by executing the completed Python task when possible.
++
++    This is intentionally simple and expensive. The smoke run is only n=20 with
++    a tiny top-k because the goal is feasibility of guidance, not a production
++    decoder. Partial candidates that cannot yet form executable code receive a
++    neutral energy so the verifier does not fabricate certainty mid-denoising.
++    """
++
++    def __init__(self, tokenizer: Any, tasks: Sequence[SmokeTask], *, neutral_energy: float = 0.5) -> None:
++        self.tokenizer = tokenizer
++        self.tasks = list(tasks)
++        self.neutral_energy = float(neutral_energy)
++
++    def __call__(self, *, input_ids: Any, candidate_token_ids: Any, scores: Any, cur_step: Any | None) -> Any:  # pragma: no cover - live model path.
++        if torch is None:
++            raise RuntimeError("torch is required for executable verifier energy")
++        base_canvas = torch.argmax(scores, dim=-1)
++        out = torch.empty(candidate_token_ids.shape, device=candidate_token_ids.device, dtype=torch.float32)
++        for batch_idx in range(candidate_token_ids.shape[0]):
++            task = self.tasks[min(batch_idx, len(self.tasks) - 1)]
++            for pos_idx in range(candidate_token_ids.shape[1]):
++                for cand_idx in range(candidate_token_ids.shape[2]):
++                    canvas = base_canvas[batch_idx].clone()
++                    canvas[pos_idx] = candidate_token_ids[batch_idx, pos_idx, cand_idx]
++                    seq = torch.cat([input_ids[batch_idx].detach().cpu(), canvas.detach().cpu()])
++                    text = self.tokenizer.decode(seq.tolist(), skip_special_tokens=True)
++                    out[batch_idx, pos_idx, cand_idx] = self.score_text(text, task)
++        return out
++
++    def score_text(self, text: str, task: SmokeTask) -> float:  # pragma: no cover - live model path.
++        code = extract_python_code(text, task.entry_point)
++        if not code:
++            return self.neutral_energy
++        result = execute_code_task(code, task)
++        if result == "pass":
++            return 0.0
++        if result == "fail":
++            return 2.0
++        return self.neutral_energy
++
++
++def extract_python_code(text: str, entry_point: str) -> str | None:  # pragma: no cover - live model path.
++    fenced = re.findall(r"```(?:python)?\s*(.*?)```", text, flags=re.DOTALL | re.IGNORECASE)
++    candidates = fenced or [text]
++    pattern = re.compile(rf"def\s+{re.escape(entry_point)}\s*\(.*", flags=re.DOTALL)
++    for candidate in candidates:
++        match = pattern.search(candidate)
++        if match:
++            return match.group(0).strip()
++    return None
++
++
++def execute_code_task(code: str, task: SmokeTask) -> str:  # pragma: no cover - live model path.
++    forbidden = ("__import__", "open(", "exec(", "eval(", "compile(", "subprocess", "socket", "os.", "sys.")
++    if any(token in code for token in forbidden):
++        return "fail"
++    namespace: dict[str, Any] = {"__builtins__": {"abs": abs, "bool": bool, "len": len, "max": max, "min": min, "sum": sum, "range": range, "list": list, "str": str, "int": int}}
++    try:
++        exec(code, namespace)
++        fn = namespace.get(task.entry_point)
++        if not callable(fn):
++            return "partial"
++        for assertion in task.tests:
++            if not bool(eval(assertion, namespace)):
++                return "fail"
++    except SyntaxError:
++        return "partial"
++    except Exception:
++        return "fail"
++    return "pass"
++
++
++def reproducibility_checksum(tasks: Sequence[SmokeTask], guidance_config: dict[str, Any]) -> str:
++    payload = {
++        "guidance_config": guidance_config,
++        "tasks": [task.to_dict() for task in tasks],
++    }
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _percentile(sorted_values: Sequence[float], q: float) -> float:
++    if not sorted_values:
++        return 0.0
++    pos = (len(sorted_values) - 1) * q
++    lo = math.floor(pos)
++    hi = math.ceil(pos)
++    if lo == hi:
++        return float(sorted_values[lo])
++    frac = pos - lo
++    return float(sorted_values[lo] * (1.0 - frac) + sorted_values[hi] * frac)
++
++
++def bootstrap_delta_ci(
++    guided_passed: Sequence[bool],
++    unguided_passed: Sequence[bool],
++    *,
++    seed: int,
++    resamples: int = 1000,
++) -> list[float]:
++    if len(guided_passed) != len(unguided_passed):
++        raise ValueError("guided and unguided result lengths must match")
++    if not guided_passed:
++        return [0.0, 0.0]
++    rng = random.Random(seed)
++    n = len(guided_passed)
++    deltas: list[float] = []
++    for _ in range(resamples):
++        indices = [rng.randrange(n) for _ in range(n)]
++        guided_mean = sum(1.0 for i in indices if guided_passed[i]) / n
++        unguided_mean = sum(1.0 for i in indices if unguided_passed[i]) / n
++        deltas.append(guided_mean - unguided_mean)
++    deltas.sort()
++    return [round(_percentile(deltas, 0.025), 6), round(_percentile(deltas, 0.975), 6)]
++
++
++def _default_model_info(repo_id: str) -> Any:  # pragma: no cover - live network path.
++    from huggingface_hub import HfApi  # noqa: PLC0415
++
++    return HfApi().model_info(repo_id, files_metadata=True)
++
++
++def _default_cuda_info() -> dict[str, Any]:  # pragma: no cover - hardware path.
++    if torch is None:
++        return {"available": False, "device_count": 0, "devices": [], "error": "torch_import_failed"}
++    try:
++        available = bool(torch.cuda.is_available())
++        count = int(torch.cuda.device_count()) if available else 0
++        return {
++            "available": available,
++            "device_count": count,
++            "devices": [torch.cuda.get_device_name(i) for i in range(count)],
++        }
++    except Exception as exc:
++        return {"available": False, "device_count": 0, "devices": [], "error": type(exc).__name__}
++
++
++def inspect_per_step_logit_hook() -> dict[str, Any]:  # pragma: no cover - installed-package path.
++    try:
++        from transformers.models.diffusion_gemma.generation_diffusion_gemma import (  # noqa: PLC0415
++            DiffusionGemmaGenerationMixin,
++        )
++
++        source = inspect.getsource(DiffusionGemmaGenerationMixin._denoising_step)
++        has_processor = "processed_logits = logits_processor(input_ids, raw_logits, cur_step=cur_step)" in source
++        has_sampler = "sampler.accept_canvas(current_canvas, denoiser_canvas, processed_logits, cur_step)" in source
++        return {
++            "available": bool(has_processor and has_sampler),
++            "surface": "DiffusionGemmaGenerationMixin._denoising_step",
++            "evidence": "logits_processor(input_ids, raw_logits, cur_step=cur_step) before sampler.accept_canvas"
++            if has_processor and has_sampler
++            else "expected logits_processor -> sampler.accept_canvas ordering not found",
++        }
++    except Exception as exc:
++        return {
++            "available": False,
++            "surface": "DiffusionGemmaGenerationMixin._denoising_step",
++            "error": f"{type(exc).__name__}: {exc}",
++        }
++
++
++def _repo_cache_dir(cache_dir: Path, repo_id: str) -> Path:
++    return cache_dir / f"models--{repo_id.replace('/', '--')}"
++
++
++def _expected_weight_files(model_info: Any | None) -> list[dict[str, Any]]:
++    siblings = getattr(model_info, "siblings", []) if model_info is not None else []
++    out: list[dict[str, Any]] = []
++    for sibling in siblings:
++        name = str(getattr(sibling, "rfilename", ""))
++        if name.endswith(".safetensors") and name.startswith("model-"):
++            out.append({"name": name, "size": int(getattr(sibling, "size", 0) or 0)})
++    return sorted(out, key=lambda item: item["name"])
++
++
++def _present_weight_files(cache_dir: Path, repo_id: str) -> set[str]:
++    repo_dir = _repo_cache_dir(cache_dir, repo_id)
++    if not repo_dir.exists():
++        return set()
++    present: set[str] = set()
++    snapshots = repo_dir / "snapshots"
++    if snapshots.exists():
++        for path in snapshots.rglob("model-*.safetensors"):
++            try:
++                if path.is_file() and path.stat().st_size > 0:
++                    present.add(path.name)
++            except OSError:  # pragma: no cover - filesystem race defense.
++                continue
++    return present
++
++
++def _cache_grep_matches(cache_dir: Path) -> list[str]:
++    if not cache_dir.exists():
++        return []
++    return sorted(path.name for path in cache_dir.iterdir() if "diffusion" in path.name.lower())
++
++
++def check_preconditions(
++    *,
++    repo_id: str = REPO_ID,
++    cache_dir: Path | None = None,
++    model_info_fn: Callable[[str], Any] | None = None,
++    cuda_info_fn: Callable[[], dict[str, Any]] | None = None,
++    hook_info_fn: Callable[[], dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    cache_dir = Path(cache_dir or Path.home() / ".cache" / "huggingface" / "hub")
++    model_info_fn = model_info_fn or _default_model_info
++    cuda_info_fn = cuda_info_fn or _default_cuda_info
++    hook_info_fn = hook_info_fn or inspect_per_step_logit_hook
++
++    repo_error = None
++    model_info = None
++    try:
++        model_info = model_info_fn(repo_id)
++        repo_accessible = True
++    except Exception as exc:
++        repo_accessible = False
++        repo_error = f"{type(exc).__name__}: {exc}"
++
++    expected = _expected_weight_files(model_info)
++    present = _present_weight_files(cache_dir, repo_id)
++    missing = [item["name"] for item in expected if item["name"] not in present]
++    full_weights_cached = bool(expected) and not missing
++
++    cache_check = {
++        "resource": "diffusiongemma_cache",
++        "repo_id": repo_id,
++        "cache_dir": str(cache_dir),
++        "repo_cache_dir": str(_repo_cache_dir(cache_dir, repo_id)),
++        "cache_grep_diffusion_matches": _cache_grep_matches(cache_dir),
++        "repo_accessible": repo_accessible,
++        "repo_error": repo_error,
++        "repo_sha": getattr(model_info, "sha", None),
++        "gated": bool(getattr(model_info, "gated", False)) if model_info is not None else None,
++        "private": bool(getattr(model_info, "private", False)) if model_info is not None else None,
++        "expected_weight_shards": len(expected),
++        "present_weight_shards": len(present & {item["name"] for item in expected}),
++        "missing_weight_shards": missing,
++        "full_weights_cached": full_weights_cached,
++        "bounded_metadata_download_ok": repo_accessible,
++    }
++    hook_check = {"resource": "per_step_logit_hook", **hook_info_fn()}
++    cuda_check = {"resource": "cuda", **cuda_info_fn()}
++
++    verdict = None
++    if not repo_accessible or not full_weights_cached:
++        verdict = "blocked_diffusiongemma_not_cached"
++    elif not bool(hook_check.get("available")):
++        verdict = "blocked_diffusiongemma_no_perstep_logit_hook"
++    elif not bool(cuda_check.get("available")):
++        verdict = "blocked_cuda_unavailable"
++
++    checks = {
++        "diffusiongemma_cache": cache_check,
++        "per_step_logit_hook": hook_check,
++        "cuda": cuda_check,
++    }
++    return {
++        "all_passed": verdict is None,
++        "verdict": verdict,
++        "checks": checks,
++        "ordered_checks": [cache_check, hook_check, cuda_check],
++    }
++
++
++def _blocked_delta(verdict: str) -> dict[str, Any]:
++    return {
++        "status": verdict,
++        "n": 0,
++        "guided_pass_rate": None,
++        "unguided_pass_rate": None,
++        "delta": None,
++        "ci95": None,
++    }
++
++
++def _model_specs(preconditions: dict[str, Any], *, hook_fired: bool = False) -> dict[str, Any]:
++    cache = preconditions["checks"]["diffusiongemma_cache"]
++    return {
++        "diffusiongemma": {
++            "repo_id": cache["repo_id"],
++            "repo_sha": cache.get("repo_sha"),
++            "weights_cached": cache["full_weights_cached"],
++            "expected_weight_shards": cache["expected_weight_shards"],
++            "present_weight_shards": cache["present_weight_shards"],
++            "per_step_logit_hook": bool(preconditions["checks"]["per_step_logit_hook"].get("available")),
++            "guidance_hook_fired": bool(hook_fired),
++        },
++        "verifier_ensemble": {
++            "name": "carnot_executable_code_verifier_energy",
++            "source": "python execution smoke over HumanEval-style micro tasks",
++            "guidance_equation": "logit' = logit - lambda * verifier_energy",
++            "guidance_config": dict(DEFAULT_GUIDANCE_CONFIG),
++        },
++    }
++
++
++def build_blocked_artifact(
++    *,
++    verdict: str,
++    preconditions: dict[str, Any],
++    duration_s: float,
++) -> dict[str, Any]:
++    return {
++        "honest_verdict": verdict,
++        "diffusiongemma_feasible": False,
++        "guided_vs_unguided_delta": _blocked_delta(verdict),
++        "model_specs": _model_specs(preconditions, hook_fired=False),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": reproducibility_checksum(SMOKE_TASKS, DEFAULT_GUIDANCE_CONFIG),
++        "preconditions_checked": preconditions["ordered_checks"],
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "duration_s": round(float(duration_s), 6),
++        "inference_substrate": "precondition_probe_only",
++        "acceptance_gate": True,
++    }
++
++
++def _pass_rate(values: Sequence[bool]) -> float:
++    return sum(1 for value in values if value) / max(1, len(values))
++
++
++def _smoke_delta(
++    guided_passed: Sequence[bool],
++    unguided_passed: Sequence[bool],
++    *,
++    seed: int,
++) -> dict[str, Any]:
++    guided = _pass_rate(guided_passed)
++    unguided = _pass_rate(unguided_passed)
++    return {
++        "status": "measured",
++        "n": len(guided_passed),
++        "guided_pass_rate": round(guided, 6),
++        "unguided_pass_rate": round(unguided, 6),
++        "delta": round(guided - unguided, 6),
++        "ci95": bootstrap_delta_ci(guided_passed, unguided_passed, seed=seed),
++    }
++
++
++def run_live_smoke(preconditions: dict[str, Any]) -> dict[str, Any]:  # pragma: no cover - requires 53GB model cache.
++    from transformers import AutoProcessor, DiffusionGemmaForBlockDiffusion
++    from transformers.generation import LogitsProcessorList
++
++    if torch is None:
++        raise RuntimeError("torch is required for live smoke")
++
++    random.seed(RANDOM_SEED)
++    torch.manual_seed(RANDOM_SEED)
++
++    processor = AutoProcessor.from_pretrained(REPO_ID, local_files_only=True)
++    model = DiffusionGemmaForBlockDiffusion.from_pretrained(
++        REPO_ID,
++        local_files_only=True,
++        device_map="auto",
++        torch_dtype="auto",
++    )
++    tokenizer = processor.tokenizer
++    device = next(model.parameters()).device
++
++    tasks = list(SMOKE_TASKS[:SMOKE_N])
++    unguided_passed: list[bool] = []
++    guided_passed: list[bool] = []
++    guided_processor = VerifierEnergyLogitsProcessor(
++        ExecutablePythonVerifierEnergy(tokenizer, tasks),
++        guidance_lambda=float(DEFAULT_GUIDANCE_CONFIG["guidance_lambda"]),
++        top_k=int(DEFAULT_GUIDANCE_CONFIG["top_k"]),
++    )
++
++    for task in tasks:
++        chat = [{"role": "user", "content": task.prompt + "\nReturn only Python code."}]
++        input_ids = processor.apply_chat_template(chat, tokenize=True, return_tensors="pt").to(device)
++        unguided = model.generate(
++            input_ids,
++            max_new_tokens=int(DEFAULT_GUIDANCE_CONFIG["max_new_tokens"]),
++            max_denoising_steps=int(DEFAULT_GUIDANCE_CONFIG["max_denoising_steps"]),
++        )
++        guided = model.generate(
++            input_ids,
++            max_new_tokens=int(DEFAULT_GUIDANCE_CONFIG["max_new_tokens"]),
++            max_denoising_steps=int(DEFAULT_GUIDANCE_CONFIG["max_denoising_steps"]),
++            logits_processor=LogitsProcessorList([guided_processor]),
++        )
++        unguided_text = tokenizer.decode(unguided.sequences[0].detach().cpu().tolist(), skip_special_tokens=True)
++        guided_text = tokenizer.decode(guided.sequences[0].detach().cpu().tolist(), skip_special_tokens=True)
++        unguided_passed.append(execute_code_task(extract_python_code(unguided_text, task.entry_point) or "", task) == "pass")
++        guided_passed.append(execute_code_task(extract_python_code(guided_text, task.entry_point) or "", task) == "pass")
++
++    feasible = guided_processor.guidance_applied and guided_processor.call_count > 0
++    return {
++        "honest_verdict": "complete: diffusiongemma_guided_smoke_measured" if feasible else "blocked_diffusiongemma_no_perstep_logit_hook",
++        "diffusiongemma_feasible": bool(feasible),
++        "guided_vs_unguided_delta": _smoke_delta(guided_passed, unguided_passed, seed=RANDOM_SEED),
++        "model_specs": _model_specs(preconditions, hook_fired=feasible),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": reproducibility_checksum(SMOKE_TASKS, DEFAULT_GUIDANCE_CONFIG),
++        "preconditions_checked": preconditions["ordered_checks"],
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "duration_s": 0.0,
++        "inference_substrate": "live_diffusiongemma_cuda_with_executable_verifier_guidance",
++        "ar_baseline": {"status": "not_run_in_this_guarded_live_path"},
++        "acceptance_gate": bool(feasible),
++    }
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    missing = [field for field in REQUIRED_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    if not isinstance(artifact["honest_verdict"], str) or not artifact["honest_verdict"]:
++        raise ValueError("honest_verdict must be a non-empty string")
++    if not isinstance(artifact["diffusiongemma_feasible"], bool):
++        raise ValueError("diffusiongemma_feasible must be a bare bool")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles do not match REQ-VERIFY-4189")
++    if artifact["spec_refs"] != SPEC_REFS:
++        raise ValueError("spec_refs must cite REQ-VERIFY-4189 and SCENARIO-VERIFY-4189")
++    if not isinstance(artifact["preconditions_checked"], list) or len(artifact["preconditions_checked"]) < 3:
++        raise ValueError("preconditions_checked must record cache, hook, and CUDA checks")
++    resources = {row.get("resource") for row in artifact["preconditions_checked"] if isinstance(row, dict)}
++    if {"diffusiongemma_cache", "per_step_logit_hook", "cuda"} - resources:
++        raise ValueError("preconditions_checked missing cache/hook/cuda resources")
++    if not isinstance(artifact["guided_vs_unguided_delta"], dict):
++        raise ValueError("guided_vs_unguided_delta must be an object")
++    if not isinstance(artifact["model_specs"], dict):
++        raise ValueError("model_specs must be an object")
++    if artifact["diffusiongemma_feasible"]:
++        delta = artifact["guided_vs_unguided_delta"]
++        if delta.get("status") != "measured" or delta.get("n", 0) < SMOKE_N:
++            raise ValueError("feasible artifact must include measured smoke n >= 20")
++        if not artifact["model_specs"].get("diffusiongemma", {}).get("guidance_hook_fired"):
++            raise ValueError("diffusiongemma_feasible requires guidance hook fired")
++    else:
++        verdict = artifact["honest_verdict"]
++        allowed = (
++            verdict.startswith("blocked_diffusiongemma_")
++            or verdict == "blocked_cuda_unavailable"
++        )
++        if not allowed:
++            raise ValueError("infeasible artifact must use a blocked_diffusiongemma_* or CUDA verdict")
++        if artifact["guided_vs_unguided_delta"].get("status") != verdict:
++            raise ValueError("blocked delta status must match honest_verdict")
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def run(
++    *,
++    artifact_path: Path = ARTIFACT_PATH,
++    cache_dir: Path | None = None,
++    model_info_fn: Callable[[str], Any] | None = None,
++    cuda_info_fn: Callable[[], dict[str, Any]] | None = None,
++    hook_info_fn: Callable[[], dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    started = time.time()
++    preconditions = check_preconditions(
++        cache_dir=cache_dir,
++        model_info_fn=model_info_fn,
++        cuda_info_fn=cuda_info_fn,
++        hook_info_fn=hook_info_fn,
++    )
++    if preconditions["verdict"] is not None:
++        artifact = build_blocked_artifact(
++            verdict=preconditions["verdict"],
++            preconditions=preconditions,
++            duration_s=time.time() - started,
++        )
++        validate_artifact(artifact)
++        _write_json(Path(artifact_path), artifact)
++        return artifact
++
++    artifact = run_live_smoke(preconditions)  # pragma: no cover - live 53GB model path.
++    artifact["duration_s"] = round(time.time() - started, 6)  # pragma: no cover
++    validate_artifact(artifact)  # pragma: no cover
++    _write_json(Path(artifact_path), artifact)  # pragma: no cover
++    return artifact  # pragma: no cover
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - exercised by integration command.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--artifact", type=Path, default=ARTIFACT_PATH)
++    parser.add_argument("--cache-dir", type=Path, default=Path.home() / ".cache" / "huggingface" / "hub")
++    args = parser.parse_args(argv)
++    artifact = run(artifact_path=args.artifact, cache_dir=args.cache_dir)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ffc073be01..616ac28047 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T11:05:56Z",
+-  "finished_at": "2026-06-14T11:05:56Z",
++  "started_at": "2026-06-14T11:24:39Z",
++  "finished_at": "2026-06-14T11:24:39Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 32d60a4df5..864e66c3e7 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T11:05:56Z",
+-  "finished_at": "2026-06-14T11:05:56Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-14T11:24:39Z",
++  "finished_at": "2026-06-14T11:24:39Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 78d2557366..04d20c9d6e 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T11:05:57Z",
+-  "finished_at": "2026-06-14T11:05:57Z",
++  "started_at": "2026-06-14T11:24:39Z",
++  "finished_at": "2026-06-14T11:24:39Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4189_diffusiongemma_verifier_guided_decoding.py b/tests/python/test_experiment_4189_diffusiongemma_verifier_guided_decoding.py
+new file mode 100644
+index 0000000000..839495c4c6
+--- /dev/null
++++ b/tests/python/test_experiment_4189_diffusiongemma_verifier_guided_decoding.py
+@@ -0,0 +1,372 @@
++"""Tests for Exp 4189 verifier-guided DiffusionGemma feasibility.
++
++REQ-VERIFY-4189 / SCENARIO-VERIFY-4189: the runner must either produce a
++feasible guided-vs-unguided smoke artifact, or block honestly when the
++DiffusionGemma weights, CUDA, or per-step hook are unavailable.
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++import pytest
++import torch
++
++
++ROOT = Path(__file__).parents[2]
++MODULE_PATH = ROOT / "results" / "experiment_4189_diffusiongemma_verifier_guided_decoding.py"
++
++
++def _load_module():
++    spec = importlib.util.spec_from_file_location("experiment_4189", MODULE_PATH)
++    assert spec is not None and spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def _fake_model_info() -> SimpleNamespace:
++    return SimpleNamespace(
++        id="google/diffusiongemma-26B-A4B-it",
++        sha="abc123",
++        gated=False,
++        private=False,
++        siblings=[
++            SimpleNamespace(rfilename="README.md", size=100),
++            SimpleNamespace(rfilename="config.json", size=100),
++            SimpleNamespace(rfilename="model-00001-of-00002.safetensors", size=10),
++            SimpleNamespace(rfilename="model-00002-of-00002.safetensors", size=10),
++            SimpleNamespace(rfilename="model.safetensors.index.json", size=10),
++        ],
++    )
++
++
++def _cuda_available() -> dict[str, object]:
++    return {"available": True, "device_count": 1, "devices": ["NVIDIA GeForce RTX 3090"]}
++
++
++def _hook_available() -> dict[str, object]:
++    return {
++        "available": True,
++        "surface": "DiffusionGemmaGenerationMixin._denoising_step",
++        "evidence": "logits_processor(input_ids, raw_logits, cur_step=cur_step) before sampler.accept_canvas",
++    }
++
++
++def _write_cached_shards(cache_dir: Path) -> None:
++    snapshot = (
++        cache_dir
++        / "models--google--diffusiongemma-26B-A4B-it"
++        / "snapshots"
++        / "abc123"
++    )
++    snapshot.mkdir(parents=True)
++    for name in ("model-00001-of-00002.safetensors", "model-00002-of-00002.safetensors"):
++        (snapshot / name).write_bytes(b"0123456789")
++
++
++def test_req_verify_4189_spec_declares_diffusiongemma_contract() -> None:
++    """REQ-VERIFY-4189: OpenSpec declares the feasibility artifact and fields."""
++
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-4189",
++        "SCENARIO-VERIFY-4189",
++        "results/experiment_4189_diffusiongemma_verifier_guided_decoding.py",
++        "results/experiment_4189_diffusiongemma_verifier_guided_decoding.json",
++        "google/diffusiongemma-26B-A4B-it",
++        "blocked_diffusiongemma_not_cached",
++        "blocked_diffusiongemma_no_perstep_logit_hook",
++        "diffusiongemma_feasible",
++        "guided_vs_unguided_delta",
++    ):
++        assert marker in spec
++
++
++def test_req_verify_4189_guidance_processor_reweights_candidate_logits() -> None:
++    """REQ-VERIFY-4189: verifier energy is applied as logit -= lambda * energy."""
++
++    exp = _load_module()
++
++    def energy_fn(*, input_ids, candidate_token_ids, scores, cur_step):
++        assert input_ids.shape == (1, 2)
++        assert scores.shape == (1, 2, 4)
++        assert int(cur_step) == 7
++        return candidate_token_ids.float()
++
++    processor = exp.VerifierEnergyLogitsProcessor(
++        verifier_energy_fn=energy_fn,
++        guidance_lambda=0.5,
++        top_k=2,
++    )
++    scores = torch.tensor([[[1.0, 4.0, 3.0, -1.0], [0.0, 2.0, 1.0, 5.0]]])
++    adjusted = processor(torch.tensor([[101, 102]]), scores, cur_step=torch.tensor(7))
++
++    assert adjusted[0, 0, 1].item() == pytest.approx(3.5)
++    assert adjusted[0, 0, 2].item() == pytest.approx(2.0)
++    assert adjusted[0, 0, 0].item() == pytest.approx(1.0)
++    assert adjusted[0, 1, 3].item() == pytest.approx(3.5)
++    assert adjusted[0, 1, 1].item() == pytest.approx(1.5)
++    assert adjusted[0, 1, 2].item() == pytest.approx(1.0)
++    assert processor.call_count == 1
++    assert processor.guidance_applied is True
++
++
++def test_req_verify_4189_guidance_processor_defensive_edges(monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-VERIFY-4189: malformed guidance inputs fail loudly."""
++
++    exp = _load_module()
++    with pytest.raises(ValueError, match="guidance_lambda"):
++        exp.VerifierEnergyLogitsProcessor(lambda **_: torch.zeros((1, 1, 1)), guidance_lambda=-0.1, top_k=1)
++    with pytest.raises(ValueError, match="top_k"):
++        exp.VerifierEnergyLogitsProcessor(lambda **_: torch.zeros((1, 1, 1)), guidance_lambda=0.1, top_k=0)
++
++    processor = exp.VerifierEnergyLogitsProcessor(
++        lambda **_: [[[0.0]]],
++        guidance_lambda=1.0,
++        top_k=1,
++    )
++    adjusted = processor(torch.tensor([[1]]), torch.ones((1, 1, 2)))
++    assert adjusted.shape == (1, 1, 2)
++    with pytest.raises(ValueError, match="shape"):
++        processor(torch.tensor([[1]]), torch.ones((1, 2)))
++
++    bad_shape = exp.VerifierEnergyLogitsProcessor(
++        lambda **_: torch.zeros((1, 1)),
++        guidance_lambda=1.0,
++        top_k=1,
++    )
++    with pytest.raises(ValueError, match="energy shape"):
++        bad_shape(torch.tensor([[1]]), torch.ones((1, 1, 2)))
++
++    monkeypatch.setattr(exp, "torch", None)
++    with pytest.raises(RuntimeError, match="torch is required"):
++        processor(torch.tensor([[1]]), torch.ones((1, 1, 2)))
++
++
++def test_req_verify_4189_preconditions_block_when_weights_missing(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4189: metadata-only cache does not count as model cached."""
++
++    exp = _load_module()
++
++    preconditions = exp.check_preconditions(
++        cache_dir=tmp_path,
++        model_info_fn=lambda repo_id: _fake_model_info(),
++        cuda_info_fn=_cuda_available,
++        hook_info_fn=_hook_available,
++    )
++
++    assert preconditions["verdict"] == "blocked_diffusiongemma_not_cached"
++    cache_check = preconditions["checks"]["diffusiongemma_cache"]
++    assert cache_check["repo_id"] == "google/diffusiongemma-26B-A4B-it"
++    assert cache_check["full_weights_cached"] is False
++    assert cache_check["expected_weight_shards"] == 2
++    assert cache_check["present_weight_shards"] == 0
++    assert preconditions["checks"]["cuda"]["available"] is True
++    assert preconditions["checks"]["per_step_logit_hook"]["available"] is True
++
++
++def test_req_verify_4189_precondition_verdict_priority_edges(tmp_path: Path) -> None:
++    """REQ-VERIFY-4189: hook and CUDA failures get explicit blocked verdicts."""
++
++    exp = _load_module()
++    _write_cached_shards(tmp_path)
++
++    no_hook = exp.check_preconditions(
++        cache_dir=tmp_path,
++        model_info_fn=lambda repo_id: _fake_model_info(),
++        cuda_info_fn=_cuda_available,
++        hook_info_fn=lambda: {"available": False, "evidence": "missing"},
++    )
++    assert no_hook["verdict"] == "blocked_diffusiongemma_no_perstep_logit_hook"
++
++    no_cuda = exp.check_preconditions(
++        cache_dir=tmp_path,
++        model_info_fn=lambda repo_id: _fake_model_info(),
++        cuda_info_fn=lambda: {"available": False, "device_count": 0, "devices": []},
++        hook_info_fn=_hook_available,
++    )
++    assert no_cuda["verdict"] == "blocked_cuda_unavailable"
++
++    repo_error = exp.check_preconditions(
++        cache_dir=tmp_path / "missing-cache-root",
++        model_info_fn=lambda repo_id: (_ for _ in ()).throw(RuntimeError("offline")),
++        cuda_info_fn=_cuda_available,
++        hook_info_fn=_hook_available,
++    )
++    assert repo_error["verdict"] == "blocked_diffusiongemma_not_cached"
++    assert repo_error["checks"]["diffusiongemma_cache"]["repo_error"].startswith("RuntimeError")
++    assert repo_error["checks"]["diffusiongemma_cache"]["cache_grep_diffusion_matches"] == []
++
++
++def test_req_verify_4189_preconditions_pass_with_shards_cuda_and_hook(tmp_path: Path) -> None:
++    """REQ-VERIFY-4189: all hard preconditions must pass before smoke is feasible."""
++
++    exp = _load_module()
++    _write_cached_shards(tmp_path)
++
++    preconditions = exp.check_preconditions(
++        cache_dir=tmp_path,
++        model_info_fn=lambda repo_id: _fake_model_info(),
++        cuda_info_fn=_cuda_available,
++        hook_info_fn=_hook_available,
++    )
++
++    assert preconditions["verdict"] is None
++    assert preconditions["all_passed"] is True
++    assert preconditions["checks"]["diffusiongemma_cache"]["full_weights_cached"] is True
++
++
++def test_scenario_4189_blocked_run_writes_required_artifact(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4189: missing shards write a stable blocked JSON artifact."""
++
++    exp = _load_module()
++    artifact_path = tmp_path / "experiment_4189.json"
++
++    artifact = exp.run(
++        artifact_path=artifact_path,
++        cache_dir=tmp_path,
++        model_info_fn=lambda repo_id: _fake_model_info(),
++        cuda_info_fn=_cuda_available,
++        hook_info_fn=_hook_available,
++    )
++
++    exp.validate_artifact(artifact)
++    assert artifact_path.exists()
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++    assert artifact["honest_verdict"] == "blocked_diffusiongemma_not_cached"
++    assert artifact["diffusiongemma_feasible"] is False
++    assert artifact["guided_vs_unguided_delta"] == {
++        "status": "blocked_diffusiongemma_not_cached",
++        "n": 0,
++        "guided_pass_rate": None,
++        "unguided_pass_rate": None,
++        "delta": None,
++        "ci95": None,
++    }
++    assert artifact["model_specs"]["diffusiongemma"]["repo_id"] == "google/diffusiongemma-26B-A4B-it"
++    assert artifact["model_specs"]["verifier_ensemble"]["name"] == "carnot_executable_code_verifier_energy"
++    assert artifact["field_principles"] == exp.FIELD_PRINCIPLES
++    assert artifact["spec_refs"] == ["REQ-VERIFY-4189", "SCENARIO-VERIFY-4189"]
++
++
++def test_req_verify_4189_validation_rejects_schema_poison(tmp_path: Path) -> None:
++    """REQ-VERIFY-4189: load-bearing artifact fields remain strongly typed."""
++
++    exp = _load_module()
++    artifact = exp.build_blocked_artifact(
++        verdict="blocked_diffusiongemma_not_cached",
++        preconditions=exp.check_preconditions(
++            cache_dir=tmp_path,
++            model_info_fn=lambda repo_id: _fake_model_info(),
++            cuda_info_fn=_cuda_available,
++            hook_info_fn=_hook_available,
++        ),
++        duration_s=0.1,
++    )
++
++    artifact["diffusiongemma_feasible"] = "false"
++    with pytest.raises(ValueError, match="diffusiongemma_feasible"):
++        exp.validate_artifact(artifact)
++
++    artifact["diffusiongemma_feasible"] = False
++    artifact["field_principles"] = {}
++    with pytest.raises(ValueError, match="field_principles"):
++        exp.validate_artifact(artifact)
++
++
++def test_req_verify_4189_validation_defensive_edges(tmp_path: Path) -> None:
++    """REQ-VERIFY-4189: schema validation blocks every load-bearing corruption."""
++
++    exp = _load_module()
++    base = exp.build_blocked_artifact(
++        verdict="blocked_diffusiongemma_not_cached",
++        preconditions=exp.check_preconditions(
++            cache_dir=tmp_path,
++            model_info_fn=lambda repo_id: _fake_model_info(),
++            cuda_info_fn=_cuda_available,
++            hook_info_fn=_hook_available,
++        ),
++        duration_s=0.1,
++    )
++
++    corruptions = [
++        ("missing required fields", lambda a: a.pop("honest_verdict")),
++        ("honest_verdict", lambda a: a.update({"honest_verdict": ""})),
++        ("spec_refs", lambda a: a.update({"spec_refs": []})),
++        ("preconditions_checked", lambda a: a.update({"preconditions_checked": []})),
++        (
++            "cache/hook/cuda",
++            lambda a: a.update(
++                {
++                    "preconditions_checked": [
++                        {"resource": "cuda"},
++                        {"resource": "cuda"},
++                        {"resource": "cuda"},
++                    ]
++                }
++            ),
++        ),
++        ("guided_vs_unguided_delta", lambda a: a.update({"guided_vs_unguided_delta": []})),
++        ("model_specs", lambda a: a.update({"model_specs": []})),
++        ("infeasible artifact", lambda a: a.update({"honest_verdict": "complete: bad"})),
++        ("blocked delta status", lambda a: a.update({"guided_vs_unguided_delta": {"status": "other"}})),
++    ]
++    for message, mutate in corruptions:
++        artifact = json.loads(json.dumps(base))
++        mutate(artifact)
++        with pytest.raises(ValueError, match=message):
++            exp.validate_artifact(artifact)
++
++    feasible = json.loads(json.dumps(base))
++    feasible["honest_verdict"] = "complete: diffusiongemma_guided_smoke_measured"
++    feasible["diffusiongemma_feasible"] = True
++    feasible["guided_vs_unguided_delta"] = {"status": "measured", "n": exp.SMOKE_N - 1}
++    with pytest.raises(ValueError, match="measured smoke"):
++        exp.validate_artifact(feasible)
++
++    feasible["guided_vs_unguided_delta"] = {"status": "measured", "n": exp.SMOKE_N}
++    with pytest.raises(ValueError, match="guidance hook fired"):
++        exp.validate_artifact(feasible)
++
++    feasible["model_specs"]["diffusiongemma"]["guidance_hook_fired"] = True
++    exp.validate_artifact(feasible)
++
++
++def test_req_verify_4189_checksum_bootstrap_and_smoke_helpers_are_deterministic() -> None:
++    """REQ-VERIFY-4189: checksum, CI, and smoke helpers are reproducible."""
++
++    exp = _load_module()
++    task = exp.SmokeTask("id", "prompt", "fn", ("fn() == 1",))
++    assert task.to_dict() == {
++        "task_id": "id",
++        "prompt": "prompt",
++        "entry_point": "fn",
++        "tests": ["fn() == 1"],
++    }
++    energy = exp.ExecutablePythonVerifierEnergy(tokenizer=object(), tasks=[task], neutral_energy=0.25)
++    assert energy.tasks == [task]
++    assert energy.neutral_energy == 0.25
++
++    checksum = exp.reproducibility_checksum(exp.SMOKE_TASKS, exp.DEFAULT_GUIDANCE_CONFIG)
++    assert checksum == exp.reproducibility_checksum(exp.SMOKE_TASKS, exp.DEFAULT_GUIDANCE_CONFIG)
++    assert checksum != exp.reproducibility_checksum(
++        exp.SMOKE_TASKS,
++        {**exp.DEFAULT_GUIDANCE_CONFIG, "guidance_lambda": 0.25},
++    )
++
++    assert exp._percentile([], 0.5) == 0.0
++    assert exp._percentile([7.0], 0.5) == 7.0
++    with pytest.raises(ValueError, match="lengths"):
++        exp.bootstrap_delta_ci([True], [], seed=123)
++    assert exp.bootstrap_delta_ci([], [], seed=123) == [0.0, 0.0]
++    ci = exp.bootstrap_delta_ci([True, False, True], [False, False, True], seed=123, resamples=200)
++    assert ci == exp.bootstrap_delta_ci([True, False, True], [False, False, True], seed=123, resamples=200)
++    assert len(ci) == 2
++    assert ci[0] <= ci[1]
++    assert exp._pass_rate([True, False, True]) == pytest.approx(2 / 3)
++    assert exp._pass_rate([]) == 0.0
++    assert exp._smoke_delta([True, False], [False, False], seed=123)["delta"] == 0.5
+-- 
+2.55.0
+

@@ -1,0 +1,1424 @@
+From 58413bc61d87600480d4c401ce7908084bd9cfec Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 09:10:20 -0400
+Subject: [PATCH 05886/11362] [conductor] Exp 5307: Archive 2026.07.484 and
+ activate 2026.07.485
+
+Automated research step by research conductor.
+Task ID: exp5307-archive-484-activate-485
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  80 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_5307_archive_484_activate_485.py | 494 ++++++++++++++++++
+ ...eriment_5307_archive_484_activate_485.json | 263 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xperiment_5307_archive_484_activate_485.py | 469 +++++++++++++++++
+ 8 files changed, 1315 insertions(+), 9 deletions(-)
+ create mode 100644 python/carnot/experiment_5307_archive_484_activate_485.py
+ create mode 100644 results/experiment_5307_archive_484_activate_485.json
+ create mode 100644 tests/python/test_experiment_5307_archive_484_activate_485.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index dc5867574e..635a28f899 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -35605,6 +35605,86 @@ validation command fails
+ |---|---|---|
+ | REQ-REPORT-5295 | Planned (`python/carnot/experiment_5295_archive_483_activate_484.py`, `results/experiment_5295_archive_483_activate_484.json`) | Planned (`tests/python/test_experiment_5295_archive_483_activate_484.py`) |
+ 
++### REQ-REPORT-5307: Archive .484 And Emit .485 Transition Artifact
++
++The Exp 5307 workflow SHALL audit local repository documents and the `.484`
++capstone artifact before writing
++`results/experiment_5307_archive_484_activate_485.json`. It SHALL read
++`CODEX.md`, `CLAUDE.md`, `research-roadmap.yaml`,
++`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/status.md`,
++`ops/changelog.md`, `ops/conductor-log.md`, and
++`results/experiment_5306_capstone_v484.json`. It SHALL NOT modify
++`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
++and SHALL NOT push.
++
++The workflow SHALL summarize only what the `.484` capstone artifact actually
++proves: changed-runtime SOTA remained blocked and SOTA quality was unmeasured;
++adaptive memory/self-learning was cleanly positive on the bounded fixtures;
++solver/certificate evidence remained bounded with LNS and p-bit gates,
++quarantined EBT telemetry, and no certificate-success lift; and hardware
++evidence remained reachability-only with no speedup claim. It SHALL verify the
++`.485` milestone document names `2026.07.485`, inspect
++`research-roadmap-next.yaml` when present, and record a bare
++`roadmap_next_present` boolean. If `research-roadmap-next.yaml` is absent
++because `research-roadmap.yaml` already names `2026.07.485`, the workflow SHALL
++record that fact instead of creating or copying a roadmap file.
++
++The artifact SHALL include required fields `experiment_id`, `milestone`,
++`status`, `honest_verdict`, `inference_substrate`, `archived_milestone`,
++`activated_milestone`, `v484_capstone_verdict`, bare boolean
++`roadmap_next_present`, bare boolean `milestone_doc_present`, bare boolean
++`active_roadmap_modified`, bare boolean `conductor_modified`, and
++`preconditions_checked`. It SHALL declare
++`inference_substrate.value="local_repo_doc_and_artifact_audit"` because the
++workflow only reads local documents, git status, and checked-in artifacts.
++
++Required field principles:
++
++- `experiment_id`: principle "Identifies this as the durable transition receipt from .484 to .485, not a new research result."
++- `milestone`: principle "Names the activated milestone being audited so downstream gates do not confuse transition scope with .484 capstone scope."
++- `status`: principle "Machine-readable terminal state for the transition audit."
++- `honest_verdict`: principle "Must start with complete: or blocked_ and state whether .484 was archived, .485 was observed, and no active-roadmap or conductor edit occurred."
++- `inference_substrate`: principle "local_repo_doc_and_artifact_audit because Exp5307 reads local docs, git status, and artifacts without running models, solvers, or hardware."
++- `archived_milestone`: principle "Records the closed milestone whose capstone is being archived."
++- `activated_milestone`: principle "Records the next milestone observed in roadmap documents."
++- `v484_capstone_verdict`: principle "Carries forward the capstone's own verdict without broadening it into unproven claims."
++- `preconditions_checked`: principle "Documents each file, milestone, and no-edit precondition that makes the transition receipt auditable."
++
++#### SCENARIO-REPORT-5307: Active .485 Emits A Complete No-Overwrite Artifact
++
++**Given** the `.484` capstone artifact is loadable and states changed-runtime
++SOTA is still blocked, SOTA quality is unmeasured, adaptive memory is positive,
++solver/certificate work is bounded or quarantined, and hardware has no speedup
++claim
++**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
++`2026.07.485`
++**And** `research-roadmap.yaml` already names `2026.07.485`
++**When** the Exp 5307 workflow runs
++**Then** it writes
++`results/experiment_5307_archive_484_activate_485.json`, sets
++`roadmap_next_present` from the actual filesystem state, sets
++`milestone_doc_present=true`, sets `active_roadmap_modified=false`, sets
++`conductor_modified=false`, declares `local_repo_doc_and_artifact_audit`, and
++emits a `complete:` verdict without overwriting `research-roadmap.yaml`.
++
++#### SCENARIO-REPORT-5307-BLOCKED-PRECONDITIONS: Missing Or Contradictory Inputs Block The Receipt
++
++**Given** the `.484` capstone artifact is missing or does not support the
++bounded closeout summary, the vNEXT milestone document is missing or does not
++name `2026.07.485`, the active roadmap does not name `2026.07.485` and no
++present next-roadmap names it, or git status reports changes to
++`research-roadmap.yaml` or `scripts/research_conductor.py`
++**When** the Exp 5307 workflow runs
++**Then** it writes a terminal artifact whose `honest_verdict.value` starts with
++`blocked_`, preserves the failed preconditions, and does not modify
++`research-roadmap.yaml` or `scripts/research_conductor.py`.
++
++## Implementation Status (REQ-REPORT-5307)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5307 | Implemented (`python/carnot/experiment_5307_archive_484_activate_485.py`, `results/experiment_5307_archive_484_activate_485.json`) | Implemented (`tests/python/test_experiment_5307_archive_484_activate_485.py`) |
++
+ ### REQ-REPORT-5296: V484 Execution-Time SOTA Source Delta Refresh
+ 
+ The Exp 5296 workflow SHALL search 2025-2026 network sources for actionable
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d3aaa9b5ba..739e878335 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4276,
++  "experiments_checked": 4277,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5307_archive_484_activate_485.py b/python/carnot/experiment_5307_archive_484_activate_485.py
+new file mode 100644
+index 0000000000..ba7cc0014c
+--- /dev/null
++++ b/python/carnot/experiment_5307_archive_484_activate_485.py
+@@ -0,0 +1,494 @@
++"""Exp 5307: archive .484 and emit the .485 transition artifact.
++
++Spec refs: REQ-REPORT-5307, SCENARIO-REPORT-5307,
++SCENARIO-REPORT-5307-BLOCKED-PRECONDITIONS.
++
++This module is deliberately a local audit receipt. It does not activate a
++roadmap, edit the conductor, run a model, run a solver, or touch hardware. Its
++job is to preserve what the .484 capstone actually proved, confirm that the
++.485 roadmap state is visible in local files, and make any missing or dirty
++precondition explicit in the JSON artifact.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5307_archive_484_activate_485.json")
++CAPSTONE_RELATIVE_PATH = Path("results/experiment_5306_capstone_v484.json")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++
++EXPERIMENT = "experiment_5307_archive_484_activate_485"
++EXPERIMENT_ID = "exp5307-archive-484-activate-485"
++ARCHIVED_MILESTONE = "2026.07.484"
++ACTIVATED_MILESTONE = "2026.07.485"
++SCHEMA = "carnot.experiment_5307_archive_484_activate_485.v1"
++RANDOM_SEED = 5307
++INFERENCE_SUBSTRATE = "local_repo_doc_and_artifact_audit"
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "experiment_id": (
++        "Identifies this as the durable transition receipt from .484 to .485, "
++        "not a new research result."
++    ),
++    "milestone": (
++        "Names the activated milestone being audited so downstream gates do not "
++        "confuse transition scope with .484 capstone scope."
++    ),
++    "status": "Machine-readable terminal state for the transition audit.",
++    "honest_verdict": (
++        "Must start with complete: or blocked_ and state whether .484 was archived, "
++        ".485 was observed, and no active-roadmap or conductor edit occurred."
++    ),
++    "inference_substrate": (
++        "local_repo_doc_and_artifact_audit because Exp5307 reads local docs, git status, "
++        "and artifacts without running models, solvers, or hardware."
++    ),
++    "archived_milestone": "Records the closed milestone whose capstone is being archived.",
++    "activated_milestone": "Records the next milestone observed in roadmap documents.",
++    "v484_capstone_verdict": (
++        "Carries forward the capstone's own verdict without broadening it into unproven claims."
++    ),
++    "preconditions_checked": (
++        "Documents each file, milestone, and no-edit precondition that makes the "
++        "transition receipt auditable."
++    ),
++}
++
++PRINCIPLE_WRAPPED_FIELDS = tuple(FIELD_PRINCIPLES)
++REQUIRED_SCHEMA_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "status",
++    "run_date",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "duration_s",
++    "random_seed",
++    "source_context",
++    "v484_capstone_proves",
++    "failed_preconditions",
++    "honest_verdict",
++    "inference_substrate",
++    "archived_milestone",
++    "activated_milestone",
++    "v484_capstone_verdict",
++    "roadmap_next_present",
++    "milestone_doc_present",
++    "active_roadmap_modified",
++    "conductor_modified",
++    "preconditions_checked",
++    "reproducibility_checksum",
++)
++
++SPEC_REFS = [
++    "REQ-REPORT-5307",
++    "SCENARIO-REPORT-5307",
++    "SCENARIO-REPORT-5307-BLOCKED-PRECONDITIONS",
++]
++
++SOURCE_CONTEXT_PATHS = (
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    ROADMAP_RELATIVE_PATH,
++    ROADMAP_NEXT_RELATIVE_PATH,
++    VNEXT_RELATIVE_PATH,
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    Path("ops/conductor-log.md"),
++    CAPSTONE_RELATIVE_PATH,
++    CONDUCTOR_RELATIVE_PATH,
++)
++
++EXPECTED_CAPSTONE_PROOFS: dict[str, Any] = {
++    "changed_runtime_sota_ready": False,
++    "sota_quality_measured": False,
++    "adaptive_memory_positive": True,
++    "ebt_telemetry_quarantined": True,
++    "certificate_success_lift": 0.0,
++    "hardware_speedup_claimed": False,
++}
++
++V484_CAPSTONE_PROVES_PRINCIPLE = (
++    "Summarizes only fields present in the .484 capstone so the transition "
++    "does not turn bounded, blocked, quarantined, or no-speedup evidence into "
++    "a stronger claim."
++)
++
++
++def value_of(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def _principled(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def path_sha256(path: Path) -> str | None:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
++
++
++def payload_checksum(payload: JsonMap) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def read_json_mapping(path: Path) -> tuple[JsonDict, JsonDict]:
++    if not path.exists():
++        return {}, {"exists": False, "loadable": False, "error": "missing"}
++    try:
++        parsed = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return {}, {"exists": True, "loadable": False, "error": "malformed_json"}
++    if not isinstance(parsed, dict):
++        return {}, {"exists": True, "loadable": False, "error": "not_json_object"}
++    return parsed, {
++        "exists": True,
++        "loadable": True,
++        "error": None,
++        "sha256": path_sha256(path),
++    }
++
++
++def yaml_milestone(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    try:
++        parsed = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++    except yaml.YAMLError:
++        return None
++    if not isinstance(parsed, Mapping):
++        return None
++    milestone = parsed.get("milestone")
++    return str(milestone) if milestone is not None else None
++
++
++def _as_map(value: Any) -> JsonDict:
++    raw = value_of(value)
++    return dict(raw) if isinstance(raw, Mapping) else {}
++
++
++def git_path_modified(root: Path, relative_path: Path) -> bool:
++    if not (root / ".git").exists():
++        return False
++    result = subprocess.run(
++        ("git", "status", "--short", "--", str(relative_path)),
++        cwd=root,
++        check=False,
++        capture_output=True,
++        text=True,
++    )
++    return result.returncode == 0 and bool(result.stdout.strip())
++
++
++def _modification_status(
++    root: Path,
++    relative_path: Path,
++    overrides: Mapping[Path | str, bool] | None,
++) -> bool:
++    if overrides is None:
++        return git_path_modified(root, relative_path)
++    if relative_path in overrides:
++        return bool(overrides[relative_path])
++    return bool(overrides.get(str(relative_path), git_path_modified(root, relative_path)))
++
++
++def _document_contains_milestone(path: Path, milestone: str) -> bool:
++    return path.exists() and milestone in path.read_text(encoding="utf-8", errors="replace")
++
++
++def capstone_verdict(capstone: JsonMap) -> str:
++    verdict = value_of(capstone.get("honest_verdict", ""))
++    return verdict if isinstance(verdict, str) else str(verdict)
++
++
++def capstone_proves(capstone: JsonMap) -> JsonDict:
++    changed_runtime = _as_map(capstone.get("changed_runtime_outcome"))
++    self_learning = _as_map(capstone.get("continuous_self_learning_outcome"))
++    solver = _as_map(capstone.get("solver_energy_certificate_outcome"))
++    spectral = _as_map(solver.get("spectral_control"))
++    kan = _as_map(solver.get("kan_dynamic_abstraction"))
++    hardware_status = _as_map(capstone.get("hardware_status"))
++    tasks = _as_map(capstone.get("tasks_summarized"))
++
++    return {
++        "capstone_milestone": capstone.get("milestone"),
++        "capstone_honest_verdict": capstone_verdict(capstone),
++        "changed_runtime_sota_ready": changed_runtime.get("changed_runtime_sota_ready"),
++        "sota_quality_measured": changed_runtime.get("sota_quality_measured"),
++        "no_quality_claim": changed_runtime.get("no_quality_claim"),
++        "adaptive_memory_positive": self_learning.get("adaptive_memory_policy_positive"),
++        "memory_stress_passed": self_learning.get("memory_stress_passed"),
++        "unsafe_false_accepts": self_learning.get("unsafe_false_accepts"),
++        "constraint_lns_fixture_ready": solver.get("constraint_lns_fixture_ready"),
++        "pbit_gate_ready": solver.get("pbit_gate_ready"),
++        "ebt_telemetry_quarantined": spectral.get("quarantined"),
++        "ebt_headline_eligible": spectral.get("headline_eligible"),
++        "kan_diagnostic_tightness_helped": kan.get("diagnostic_tightness_helped"),
++        "certificate_success_lift": kan.get("certificate_success_improvement"),
++        "hardware_speedup_claimed": value_of(capstone.get("hardware_speedup_claimed")),
++        "hardware_status": hardware_status,
++        "task_classification_counts": _as_map(tasks.get("by_classification")),
++        "expected_task_count": tasks.get("expected_count"),
++        "loadable_task_count": tasks.get("loadable_count"),
++    }
++
++
++def capstone_failures(capstone: JsonMap) -> list[str]:
++    if not capstone:
++        return ["capstone_missing_or_unloadable"]
++    proved = capstone_proves(capstone)
++    failures: list[str] = []
++    if proved.get("capstone_milestone") != ARCHIVED_MILESTONE:
++        failures.append(
++            f"capstone_milestone_expected_{ARCHIVED_MILESTONE}_observed_"
++            f"{proved.get('capstone_milestone')}"
++        )
++    if not capstone_verdict(capstone).startswith(TERMINAL_PREFIXES):
++        failures.append("capstone_honest_verdict_missing_terminal_prefix")
++    for field, expected in EXPECTED_CAPSTONE_PROOFS.items():
++        observed = proved.get(field)
++        if observed != expected:
++            failures.append(f"capstone_{field}_expected_{expected}_observed_{observed}")
++    return failures
++
++
++def source_context(root: Path) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for relative_path in SOURCE_CONTEXT_PATHS:
++        path = root / relative_path
++        rows.append(
++            {
++                "relative_path": str(relative_path),
++                "exists": path.exists(),
++                "sha256": path_sha256(path),
++                "read_only": True,
++            }
++        )
++    return rows
++
++
++def precondition_summary(
++    *,
++    root: Path,
++    capstone_meta: JsonMap,
++    active_roadmap_modified: bool,
++    conductor_modified: bool,
++) -> JsonDict:
++    milestone_doc_path = root / VNEXT_RELATIVE_PATH
++    roadmap_next_path = root / ROADMAP_NEXT_RELATIVE_PATH
++    active_milestone = yaml_milestone(root / ROADMAP_RELATIVE_PATH)
++    next_milestone = yaml_milestone(roadmap_next_path)
++    active_names_485 = active_milestone == ACTIVATED_MILESTONE
++    next_names_485 = next_milestone == ACTIVATED_MILESTONE
++    milestone_doc_names_485 = _document_contains_milestone(milestone_doc_path, ACTIVATED_MILESTONE)
++    roadmap_next_present = roadmap_next_path.exists()
++    return {
++        "capstone_present": capstone_meta.get("exists") is True,
++        "capstone_loadable": capstone_meta.get("loadable") is True,
++        "milestone_doc_present": milestone_doc_path.exists(),
++        "milestone_doc_names_activated_milestone": milestone_doc_names_485,
++        "active_roadmap_present": (root / ROADMAP_RELATIVE_PATH).exists(),
++        "active_roadmap_milestone": active_milestone,
++        "active_roadmap_names_activated_milestone": active_names_485,
++        "roadmap_next_present": roadmap_next_present,
++        "roadmap_next_milestone": next_milestone,
++        "roadmap_next_names_activated_milestone": next_names_485,
++        "roadmap_next_absent_after_activation": (not roadmap_next_present) and active_names_485,
++        "active_or_next_roadmap_ready": active_names_485 or next_names_485,
++        "active_roadmap_modified": active_roadmap_modified,
++        "conductor_modified": conductor_modified,
++        "no_active_roadmap_overwrite_performed": not active_roadmap_modified,
++        "no_conductor_edit_performed": not conductor_modified,
++        "checked_paths": [
++            str(CAPSTONE_RELATIVE_PATH),
++            str(VNEXT_RELATIVE_PATH),
++            str(ROADMAP_RELATIVE_PATH),
++            str(ROADMAP_NEXT_RELATIVE_PATH),
++            str(CONDUCTOR_RELATIVE_PATH),
++        ],
++    }
++
++
++def failed_preconditions(capstone_failure_rows: Sequence[str], preconditions: JsonMap) -> list[str]:
++    failures = list(capstone_failure_rows)
++    if preconditions.get("milestone_doc_names_activated_milestone") is not True:
++        failures.append(f"milestone_doc_missing_{ACTIVATED_MILESTONE}")
++    if preconditions.get("active_or_next_roadmap_ready") is not True:
++        failures.append(f"active_or_next_roadmap_not_ready_for_{ACTIVATED_MILESTONE}")
++    if preconditions.get("active_roadmap_modified") is True:
++        failures.append("active_roadmap_modified")
++    if preconditions.get("conductor_modified") is True:
++        failures.append("conductor_modified")
++    return failures
++
++
++def build_honest_verdict(status: str, roadmap_next_present: bool) -> str:
++    if status == "complete":
++        return (
++            "complete: .484 capstone archived and .485 observed in local roadmap docs; "
++            f"roadmap_next_present={str(roadmap_next_present).lower()}; no active roadmap "
++            "overwrite or conductor edit performed."
++        )
++    return (
++        "blocked_archive_484_activate_485: transition preconditions failed; active "
++        "roadmap or conductor cleanliness could not be confirmed."
++    )
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = "20260706",
++    duration_s: float | None = None,
++    modification_status: Mapping[Path | str, bool] | None = None,
++) -> JsonDict:
++    start = time.perf_counter()
++    capstone, capstone_meta = read_json_mapping(root / CAPSTONE_RELATIVE_PATH)
++    active_modified = _modification_status(root, ROADMAP_RELATIVE_PATH, modification_status)
++    conductor_dirty = _modification_status(root, CONDUCTOR_RELATIVE_PATH, modification_status)
++    preconditions = precondition_summary(
++        root=root,
++        capstone_meta=capstone_meta,
++        active_roadmap_modified=active_modified,
++        conductor_modified=conductor_dirty,
++    )
++    capstone_failure_rows = capstone_failures(capstone)
++    failures = failed_preconditions(capstone_failure_rows, preconditions)
++    status = "complete" if not failures else "blocked"
++    roadmap_next_present = bool(preconditions["roadmap_next_present"])
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": _principled("experiment_id", EXPERIMENT_ID),
++        "milestone": _principled("milestone", ACTIVATED_MILESTONE),
++        "status": _principled("status", status),
++        "run_date": run_date,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "duration_s": round(
++            float(duration_s if duration_s is not None else time.perf_counter() - start), 6
++        ),
++        "random_seed": RANDOM_SEED,
++        "source_context": source_context(root),
++        "v484_capstone_proves": {
++            "principle": V484_CAPSTONE_PROVES_PRINCIPLE,
++            "value": capstone_proves(capstone) if capstone else {},
++        },
++        "failed_preconditions": failures,
++        "honest_verdict": _principled(
++            "honest_verdict", build_honest_verdict(status, roadmap_next_present)
++        ),
++        "inference_substrate": _principled("inference_substrate", INFERENCE_SUBSTRATE),
++        "archived_milestone": _principled("archived_milestone", ARCHIVED_MILESTONE),
++        "activated_milestone": _principled("activated_milestone", ACTIVATED_MILESTONE),
++        "v484_capstone_verdict": _principled("v484_capstone_verdict", capstone_verdict(capstone)),
++        "roadmap_next_present": roadmap_next_present,
++        "milestone_doc_present": bool(preconditions["milestone_doc_present"]),
++        "active_roadmap_modified": active_modified,
++        "conductor_modified": conductor_dirty,
++        "preconditions_checked": _principled("preconditions_checked", preconditions),
++        "reproducibility_checksum": "",
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(payload: JsonMap) -> None:
++    missing = [field for field in REQUIRED_SCHEMA_FIELDS if field not in payload]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if payload.get("schema") != SCHEMA:
++        raise ValueError("schema mismatch")
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field_principles mismatch")
++    for field in PRINCIPLE_WRAPPED_FIELDS:
++        wrapped = payload[field]
++        if not isinstance(wrapped, Mapping) or wrapped.get("principle") != FIELD_PRINCIPLES[field]:
++            raise ValueError(f"{field} principle mismatch")
++        if "value" not in wrapped:
++            raise ValueError(f"{field} missing value")
++    if value_of(payload["experiment_id"]) != EXPERIMENT_ID:
++        raise ValueError("experiment_id mismatch")
++    if value_of(payload["milestone"]) != ACTIVATED_MILESTONE:
++        raise ValueError("milestone mismatch")
++    verdict = value_of(payload["honest_verdict"])
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must start with complete: or blocked_")
++    if value_of(payload["inference_substrate"]) != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")
++    if value_of(payload["archived_milestone"]) != ARCHIVED_MILESTONE:
++        raise ValueError("archived_milestone mismatch")
++    if value_of(payload["activated_milestone"]) != ACTIVATED_MILESTONE:
++        raise ValueError("activated_milestone mismatch")
++    for field in (
++        "roadmap_next_present",
++        "milestone_doc_present",
++        "active_roadmap_modified",
++        "conductor_modified",
++    ):
++        if not isinstance(payload[field], bool):
++            raise ValueError(f"{field} must be a bare bool")
++    preconditions = value_of(payload["preconditions_checked"])
++    if not isinstance(preconditions, Mapping):
++        raise ValueError("preconditions_checked must wrap a mapping")
++    if payload.get("reproducibility_checksum") != payload_checksum(payload):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = "20260706",
++    duration_s: float | None = None,
++) -> Path:
++    artifact = build_artifact(root=root, run_date=run_date, duration_s=duration_s)
++    out_path = root / RESULT_RELATIVE_PATH
++    write_json(out_path, artifact)
++    return out_path
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - thin CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--run-date", default="20260706")
++    args = parser.parse_args(argv)
++    print(run(root=args.root, run_date=args.run_date))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_5307_archive_484_activate_485.json b/results/experiment_5307_archive_484_activate_485.json
+new file mode 100644
+index 0000000000..4548b24ceb
+--- /dev/null
++++ b/results/experiment_5307_archive_484_activate_485.json
+@@ -0,0 +1,263 @@
++{
++  "activated_milestone": {
++    "principle": "Records the next milestone observed in roadmap documents.",
++    "value": "2026.07.485"
++  },
++  "active_roadmap_modified": false,
++  "archived_milestone": {
++    "principle": "Records the closed milestone whose capstone is being archived.",
++    "value": "2026.07.484"
++  },
++  "conductor_modified": false,
++  "duration_s": 0.035367,
++  "experiment": "experiment_5307_archive_484_activate_485",
++  "experiment_id": {
++    "principle": "Identifies this as the durable transition receipt from .484 to .485, not a new research result.",
++    "value": "exp5307-archive-484-activate-485"
++  },
++  "failed_preconditions": [],
++  "field_principles": {
++    "activated_milestone": "Records the next milestone observed in roadmap documents.",
++    "archived_milestone": "Records the closed milestone whose capstone is being archived.",
++    "experiment_id": "Identifies this as the durable transition receipt from .484 to .485, not a new research result.",
++    "honest_verdict": "Must start with complete: or blocked_ and state whether .484 was archived, .485 was observed, and no active-roadmap or conductor edit occurred.",
++    "inference_substrate": "local_repo_doc_and_artifact_audit because Exp5307 reads local docs, git status, and artifacts without running models, solvers, or hardware.",
++    "milestone": "Names the activated milestone being audited so downstream gates do not confuse transition scope with .484 capstone scope.",
++    "preconditions_checked": "Documents each file, milestone, and no-edit precondition that makes the transition receipt auditable.",
++    "status": "Machine-readable terminal state for the transition audit.",
++    "v484_capstone_verdict": "Carries forward the capstone's own verdict without broadening it into unproven claims."
++  },
++  "honest_verdict": {
++    "principle": "Must start with complete: or blocked_ and state whether .484 was archived, .485 was observed, and no active-roadmap or conductor edit occurred.",
++    "value": "complete: .484 capstone archived and .485 observed in local roadmap docs; roadmap_next_present=false; no active roadmap overwrite or conductor edit performed."
++  },
++  "inference_substrate": {
++    "principle": "local_repo_doc_and_artifact_audit because Exp5307 reads local docs, git status, and artifacts without running models, solvers, or hardware.",
++    "value": "local_repo_doc_and_artifact_audit"
++  },
++  "milestone": {
++    "principle": "Names the activated milestone being audited so downstream gates do not confuse transition scope with .484 capstone scope.",
++    "value": "2026.07.485"
++  },
++  "milestone_doc_present": true,
++  "preconditions_checked": {
++    "principle": "Documents each file, milestone, and no-edit precondition that makes the transition receipt auditable.",
++    "value": {
++      "active_or_next_roadmap_ready": true,
++      "active_roadmap_milestone": "2026.07.485",
++      "active_roadmap_modified": false,
++      "active_roadmap_names_activated_milestone": true,
++      "active_roadmap_present": true,
++      "capstone_loadable": true,
++      "capstone_present": true,
++      "checked_paths": [
++        "results/experiment_5306_capstone_v484.json",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "research-roadmap.yaml",
++        "research-roadmap-next.yaml",
++        "scripts/research_conductor.py"
++      ],
++      "conductor_modified": false,
++      "milestone_doc_names_activated_milestone": true,
++      "milestone_doc_present": true,
++      "no_active_roadmap_overwrite_performed": true,
++      "no_conductor_edit_performed": true,
++      "roadmap_next_absent_after_activation": true,
++      "roadmap_next_milestone": null,
++      "roadmap_next_names_activated_milestone": false,
++      "roadmap_next_present": false
++    }
++  },
++  "random_seed": 5307,
++  "reproducibility_checksum": "sha256:f7fa187e42e8f272a786625e60c793b005c6c610c0153b67347c5af922eff067",
++  "result_path": "results/experiment_5307_archive_484_activate_485.json",
++  "roadmap_next_present": false,
++  "run_date": "20260706",
++  "schema": "carnot.experiment_5307_archive_484_activate_485.v1",
++  "source_context": [
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "CODEX.md",
++      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "CLAUDE.md",
++      "sha256": "sha256:2f827a1b66f7fdcecd7b380b8bfe0770bcb794740b08858b4af92d6d89edd8fb"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "research-roadmap.yaml",
++      "sha256": "sha256:edaf030e603373fa3f10083198c247ca84bf7dca77a5751b2c1e9b5bff44122a"
++    },
++    {
++      "exists": false,
++      "read_only": true,
++      "relative_path": "research-roadmap-next.yaml",
++      "sha256": null
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "sha256:5f77021d1ba299c0c756743efba221c24c5b682236a702e82772bca12c51eeec"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/status.md",
++      "sha256": "sha256:16a1e98a10f8d8cb40dcc7143103fe353b5908674599dd7b6fe544f025a0c164"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/changelog.md",
++      "sha256": "sha256:ed2bd35ea8a4b63f6a7ecc1c6c327cfe4c452ee396f096368fd746ed501f34aa"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/conductor-log.md",
++      "sha256": "sha256:218eb97332067ff04bc5b9e5ef7b69e45502b9a5db2a1902223ebf1f68398a7d"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "results/experiment_5306_capstone_v484.json",
++      "sha256": "sha256:17843615cc2f63cd1ce168b7501c7773c72c9c8634767dad06ed42bf27c919f7"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "scripts/research_conductor.py",
++      "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
++    }
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5307",
++    "SCENARIO-REPORT-5307",
++    "SCENARIO-REPORT-5307-BLOCKED-PRECONDITIONS"
++  ],
++  "status": {
++    "principle": "Machine-readable terminal state for the transition audit.",
++    "value": "complete"
++  },
++  "v484_capstone_proves": {
++    "principle": "Summarizes only fields present in the .484 capstone so the transition does not turn bounded, blocked, quarantined, or no-speedup evidence into a stronger claim.",
++    "value": {
++      "adaptive_memory_positive": true,
++      "capstone_honest_verdict": "complete: .484 closed with changed-runtime SOTA still blocked and quality unmeasured, adaptive memory/self-learning cleanly positive, solver/certificate tracks bounded with LNS and p-bit gates but quarantined EBT telemetry and null certificate-success lift, and hardware reachability-only with no speedup.",
++      "capstone_milestone": "2026.07.484",
++      "certificate_success_lift": 0.0,
++      "changed_runtime_sota_ready": false,
++      "constraint_lns_fixture_ready": true,
++      "ebt_headline_eligible": false,
++      "ebt_telemetry_quarantined": true,
++      "expected_task_count": 11,
++      "hardware_speedup_claimed": false,
++      "hardware_status": {
++        "blocked_reason": {
++          "GateMate": {
++            "prior_evidence": "results/experiment_5293_hardware_continuity_reachability_v483.json",
++            "reason": "operator_setup_unchanged_physical_jtag_block_carried_forward"
++          },
++          "KV260": {
++            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'xmutil='\"'\"'; (xmutil --version 2>&1 || command -v xmutil || true); printf '\"'\"'uio='\"'\"'; (ls /dev/uio* 2>/dev/null | tr '\"'\"'\\n'\"'\"' '\"'\"' '\"'\"' || true)'",
++            "exit_code": 255,
++            "reason": "blocked_kv260_ssh_unreachable",
++            "stderr": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
++            "stdout": "",
++            "timeout_s": 10.0
++          },
++          "PolarFire": null
++        },
++        "gatemate_status": {
++          "board": "GateMate",
++          "device_identifier": "1209:c0ca",
++          "dirtyjtag_usb": {
++            "device_identifier": "1209:c0ca",
++            "stderr": "",
++            "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++            "visible": true
++          },
++          "jtag_probe_attempted": false,
++          "physical_setup_changed": false,
++          "speedup_claimed": false,
++          "status": "blocked_gatemate_physical_jtag_setup_unchanged",
++          "tool_versions": {
++            "gmpack": {
++              "path": "/opt/oss-cad-suite/bin/gmpack",
++              "present": true,
++              "version": "Error: unrecognised option '-V'"
++            },
++            "lsusb": {
++              "path": "/opt/oss-cad-suite/bin/lsusb",
++              "present": true,
++              "version": "1d6b:0003 (bus 8, device 1)"
++            },
++            "nextpnr-himbaechel": {
++              "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++              "present": true,
++              "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++            },
++            "openFPGALoader": {
++              "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++              "present": true,
++              "version": "openFPGALoader v1.1.1"
++            },
++            "ssh": {
++              "path": "/usr/bin/ssh",
++              "present": true,
++              "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++            },
++            "yosys": {
++              "path": "/opt/oss-cad-suite/bin/yosys",
++              "present": true,
++              "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++            }
++          }
++        },
++        "hardware_evidence_level": "reachability_status_receipt_only",
++        "kv260_status": {
++          "board": "KV260",
++          "probe_exit_code": 255,
++          "remote_identifier": null,
++          "speedup_claimed": false,
++          "ssh_reachable": false,
++          "status": "blocked_kv260_ssh_unreachable"
++        },
++        "polarfire_status": {
++          "board": "PolarFire",
++          "probe_exit_code": 0,
++          "remote_identifier": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
++          "speedup_claimed": false,
++          "ssh_reachable": true,
++          "status": "reachable_ssh_status_only"
++        },
++        "source_experiment": 5305
++      },
++      "kan_diagnostic_tightness_helped": true,
++      "loadable_task_count": 11,
++      "memory_stress_passed": true,
++      "no_quality_claim": true,
++      "pbit_gate_ready": true,
++      "sota_quality_measured": false,
++      "task_classification_counts": {
++        "blocked_precondition": 2,
++        "clean_null": 1,
++        "clean_positive": 4,
++        "gated_skip": 1,
++        "mixed_positive_with_harmful_class": 1,
++        "quarantined": 2
++      },
++      "unsafe_false_accepts": 0
++    }
++  },
++  "v484_capstone_verdict": {
++    "principle": "Carries forward the capstone's own verdict without broadening it into unproven claims.",
++    "value": "complete: .484 closed with changed-runtime SOTA still blocked and quality unmeasured, adaptive memory/self-learning cleanly positive, solver/certificate tracks bounded with LNS and p-bit gates but quarantined EBT telemetry and null certificate-success lift, and hardware reachability-only with no speedup."
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e8e30c6518..35462da351 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260706",
+-  "started_at": "2026-07-06T12:04:21Z",
+-  "finished_at": "2026-07-06T12:04:21Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-06T13:10:06Z",
++  "finished_at": "2026-07-06T13:10:06Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d8010e0da8..ac8d633641 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260706",
+-  "started_at": "2026-07-06T12:04:21Z",
+-  "finished_at": "2026-07-06T12:04:22Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-06T13:10:06Z",
++  "finished_at": "2026-07-06T13:10:06Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 102622a7ab..b5aa69e2bc 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260706",
+-  "started_at": "2026-07-06T12:04:22Z",
+-  "finished_at": "2026-07-06T12:04:22Z",
++  "started_at": "2026-07-06T13:10:07Z",
++  "finished_at": "2026-07-06T13:10:07Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5307_archive_484_activate_485.py b/tests/python/test_experiment_5307_archive_484_activate_485.py
+new file mode 100644
+index 0000000000..9b13db1f67
+--- /dev/null
++++ b/tests/python/test_experiment_5307_archive_484_activate_485.py
+@@ -0,0 +1,469 @@
++"""Tests for Exp 5307 archive .484 / .485 transition artifact.
++
++Spec refs: REQ-REPORT-5307, SCENARIO-REPORT-5307,
++SCENARIO-REPORT-5307-BLOCKED-PRECONDITIONS.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import subprocess
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_5307_archive_484_activate_485 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def _wrap(value: Any, principle: str = "fixture principle") -> dict[str, Any]:
++    return {"principle": principle, "value": value}
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _roadmap(milestone: str) -> str:
++    return yaml.safe_dump(
++        {
++            "milestone": milestone,
++            "milestone_title": f"fixture {milestone}",
++            "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
++            "tasks": [
++                {
++                    "id": "exp5307-archive-484-activate-485",
++                    "milestone": milestone,
++                    "deliverable": str(mod.RESULT_RELATIVE_PATH),
++                    "title": "fixture transition",
++                    "agent_type": "codex",
++                    "model": "gpt-5.5",
++                    "prompt": "REQ-REPORT-5307 fixture",
++                }
++            ],
++        },
++        sort_keys=False,
++    )
++
++
++def _capstone_payload() -> dict[str, Any]:
++    return {
++        "experiment_id": "exp5306-capstone-v484",
++        "milestone": "2026.07.484",
++        "honest_verdict": _wrap(
++            "complete: .484 closed with changed-runtime SOTA still blocked and quality "
++            "unmeasured, adaptive memory/self-learning cleanly positive, solver/certificate "
++            "tracks bounded with LNS and p-bit gates but quarantined EBT telemetry and null "
++            "certificate-success lift, and hardware reachability-only with no speedup."
++        ),
++        "changed_runtime_outcome": _wrap(
++            {
++                "changed_runtime_sota_ready": False,
++                "sota_quality_measured": False,
++                "no_quality_claim": True,
++            }
++        ),
++        "continuous_self_learning_outcome": _wrap(
++            {
++                "adaptive_memory_policy_positive": True,
++                "memory_stress_passed": True,
++                "unsafe_false_accepts": 0,
++            }
++        ),
++        "solver_energy_certificate_outcome": _wrap(
++            {
++                "constraint_lns_fixture_ready": True,
++                "pbit_gate_ready": True,
++                "spectral_control": {"quarantined": True, "headline_eligible": False},
++                "kan_dynamic_abstraction": {
++                    "diagnostic_tightness_helped": True,
++                    "certificate_success_improvement": 0.0,
++                },
++            }
++        ),
++        "hardware_speedup_claimed": _wrap(False),
++        "hardware_status": {
++            "kv260_status": {"status": "blocked_kv260_ssh_unreachable"},
++            "polarfire_status": {"status": "reachable_ssh_status_only"},
++            "gatemate_status": {"status": "blocked_gatemate_physical_jtag_setup_unchanged"},
++        },
++        "tasks_summarized": _wrap(
++            {
++                "expected_count": 11,
++                "loadable_count": 11,
++                "by_classification": {
++                    "clean_positive": 4,
++                    "clean_null": 1,
++                    "blocked_precondition": 2,
++                    "gated_skip": 1,
++                    "mixed_positive_with_harmful_class": 1,
++                    "quarantined": 2,
++                },
++            }
++        ),
++    }
++
++
++def _make_repo(
++    root: Path,
++    *,
++    active_milestone: str = "2026.07.485",
++    vnext_milestone: str = "2026.07.485",
++    next_milestone: str | None = None,
++    capstone: dict[str, Any] | None = None,
++) -> Path:
++    root.mkdir(parents=True, exist_ok=True)
++    for relative in ("CODEX.md", "CLAUDE.md"):
++        (root / relative).write_text("fixture\n", encoding="utf-8")
++    (root / "research-roadmap.yaml").write_text(_roadmap(active_milestone), encoding="utf-8")
++    if next_milestone is not None:
++        (root / "research-roadmap-next.yaml").write_text(_roadmap(next_milestone), encoding="utf-8")
++    (root / "openspec/change-proposals").mkdir(parents=True, exist_ok=True)
++    (root / "openspec/change-proposals/research-roadmap-vNEXT.md").write_text(
++        f"# Research Roadmap vNEXT: {vnext_milestone}\nMilestone: {vnext_milestone}\n",
++        encoding="utf-8",
++    )
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    for relative in ("status.md", "changelog.md", "conductor-log.md"):
++        (root / "ops" / relative).write_text("fixture 2026.07.485\n", encoding="utf-8")
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "scripts/research_conductor.py").write_text("# fixture\n", encoding="utf-8")
++    if capstone is not None:
++        _write_json(root / mod.CAPSTONE_RELATIVE_PATH, capstone)
++    return root
++
++
++def test_req_report_5307_spec_declares_transition_contract() -> None:
++    """REQ-REPORT-5307: OpenSpec anchors the .484 archive and .485 transition contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5307") : spec.index("REQ-REPORT-5296")]
++
++    for marker in (
++        "REQ-REPORT-5307",
++        "SCENARIO-REPORT-5307",
++        "SCENARIO-REPORT-5307-BLOCKED-PRECONDITIONS",
++        str(mod.RESULT_RELATIVE_PATH),
++        "local_repo_doc_and_artifact_audit",
++        "`roadmap_next_present`",
++        "`active_roadmap_modified`",
++        "`conductor_modified`",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_report_5307_active_485_records_no_overwrite(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5307: active .485 emits a complete no-overwrite artifact."""
++
++    root = _make_repo(tmp_path, capstone=_capstone_payload())
++    roadmap_before = (root / "research-roadmap.yaml").read_text(encoding="utf-8")
++    conductor_before = (root / "scripts/research_conductor.py").read_text(encoding="utf-8")
++
++    artifact = mod.build_artifact(
++        root=root,
++        run_date="20260706",
++        duration_s=0.5,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    mod.validate_artifact(artifact)
++    assert (root / "research-roadmap.yaml").read_text(encoding="utf-8") == roadmap_before
++    assert (root / "scripts/research_conductor.py").read_text(encoding="utf-8") == conductor_before
++    assert artifact["experiment_id"]["value"] == mod.EXPERIMENT_ID
++    assert artifact["milestone"]["value"] == mod.ACTIVATED_MILESTONE
++    assert artifact["status"]["value"] == "complete"
++    assert artifact["honest_verdict"]["value"].startswith("complete:")
++    assert artifact["inference_substrate"]["value"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["archived_milestone"]["value"] == mod.ARCHIVED_MILESTONE
++    assert artifact["activated_milestone"]["value"] == mod.ACTIVATED_MILESTONE
++    assert artifact["v484_capstone_verdict"]["value"].startswith("complete: .484 closed")
++    assert artifact["roadmap_next_present"] is False
++    assert artifact["milestone_doc_present"] is True
++    assert artifact["active_roadmap_modified"] is False
++    assert artifact["conductor_modified"] is False
++    assert (
++        artifact["preconditions_checked"]["value"]["active_roadmap_names_activated_milestone"]
++        is True
++    )
++    assert (
++        artifact["preconditions_checked"]["value"]["roadmap_next_absent_after_activation"] is True
++    )
++    assert artifact["v484_capstone_proves"]["value"]["changed_runtime_sota_ready"] is False
++    assert artifact["v484_capstone_proves"]["value"]["sota_quality_measured"] is False
++    assert artifact["v484_capstone_proves"]["value"]["adaptive_memory_positive"] is True
++    assert artifact["v484_capstone_proves"]["value"]["ebt_telemetry_quarantined"] is True
++    assert artifact["v484_capstone_proves"]["value"]["certificate_success_lift"] == 0.0
++    assert artifact["v484_capstone_proves"]["value"]["hardware_speedup_claimed"] is False
++    assert artifact["failed_preconditions"] == []
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++
++def test_scenario_report_5307_present_next_roadmap_is_recorded(tmp_path: Path) -> None:
++    """REQ-REPORT-5307: present research-roadmap-next.yaml is audited, not copied."""
++
++    artifact = mod.build_artifact(
++        root=_make_repo(tmp_path, next_milestone="2026.07.485", capstone=_capstone_payload()),
++        run_date="20260706",
++        duration_s=0.25,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["roadmap_next_present"] is True
++    assert (
++        artifact["preconditions_checked"]["value"]["roadmap_next_names_activated_milestone"] is True
++    )
++    assert (
++        artifact["preconditions_checked"]["value"]["no_active_roadmap_overwrite_performed"] is True
++    )
++
++
++def test_scenario_report_5307_blocked_preconditions_keep_failures_visible(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5307-BLOCKED-PRECONDITIONS: bad inputs emit blocked_."""
++
++    bad_capstone = _capstone_payload() | {
++        "changed_runtime_outcome": _wrap({"changed_runtime_sota_ready": True}),
++        "hardware_speedup_claimed": _wrap(True),
++    }
++    artifact = mod.build_artifact(
++        root=_make_repo(
++            tmp_path,
++            active_milestone="2026.07.484",
++            vnext_milestone="2026.07.484",
++            capstone=bad_capstone,
++        ),
++        run_date="20260706",
++        duration_s=0.25,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: True,
++            mod.CONDUCTOR_RELATIVE_PATH: True,
++        },
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"]["value"] == "blocked"
++    assert artifact["honest_verdict"]["value"].startswith("blocked_")
++    assert artifact["active_roadmap_modified"] is True
++    assert artifact["conductor_modified"] is True
++    assert (
++        "capstone_changed_runtime_sota_ready_expected_False_observed_True"
++        in artifact["failed_preconditions"]
++    )
++    assert (
++        "capstone_sota_quality_measured_expected_False_observed_None"
++        in artifact["failed_preconditions"]
++    )
++    assert (
++        "capstone_hardware_speedup_claimed_expected_False_observed_True"
++        in artifact["failed_preconditions"]
++    )
++    assert "milestone_doc_missing_2026.07.485" in artifact["failed_preconditions"]
++    assert "active_or_next_roadmap_not_ready_for_2026.07.485" in artifact["failed_preconditions"]
++    assert "active_roadmap_modified" in artifact["failed_preconditions"]
++    assert "conductor_modified" in artifact["failed_preconditions"]
++
++
++def test_req_report_5307_repository_artifact_matches_schema() -> None:
++    """REQ-REPORT-5307: checked-in deliverable is a valid transition artifact."""
++
++    artifact = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"]["value"] == mod.EXPERIMENT_ID
++    assert artifact["milestone"]["value"] == mod.ACTIVATED_MILESTONE
++    assert artifact["honest_verdict"]["value"].startswith(("complete:", "blocked_"))
++    assert artifact["inference_substrate"]["value"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["archived_milestone"]["value"] == mod.ARCHIVED_MILESTONE
++    assert artifact["activated_milestone"]["value"] == mod.ACTIVATED_MILESTONE
++    assert artifact["milestone_doc_present"] is True
++    assert artifact["active_roadmap_modified"] is False
++    assert artifact["conductor_modified"] is False
++
++
++def test_req_report_5307_helper_edges_and_validation_guards(tmp_path: Path) -> None:
++    """REQ-REPORT-5307: helpers fail closed on malformed or contradictory data."""
++
++    root = _make_repo(tmp_path / "repo", capstone=_capstone_payload())
++    artifact = mod.build_artifact(
++        root=root,
++        run_date="20260706",
++        duration_s=1.0,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact({key: value for key, value in artifact.items() if key != "schema"})
++    with pytest.raises(ValueError, match="schema"):
++        mod.validate_artifact(artifact | {"schema": "wrong"})
++    with pytest.raises(ValueError, match="field_principles"):
++        mod.validate_artifact(artifact | {"field_principles": {}})
++    with pytest.raises(ValueError, match="principle mismatch"):
++        mod.validate_artifact(artifact | {"honest_verdict": _wrap("complete: fixture")})
++    with pytest.raises(ValueError, match="missing value"):
++        mod.validate_artifact(
++            artifact | {"honest_verdict": {"principle": mod.FIELD_PRINCIPLES["honest_verdict"]}}
++        )
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "honest_verdict": {
++                    "principle": mod.FIELD_PRINCIPLES["honest_verdict"],
++                    "value": "done",
++                }
++            }
++        )
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "inference_substrate": {
++                    "principle": mod.FIELD_PRINCIPLES["inference_substrate"],
++                    "value": "aggregation_from_upstream_artifacts",
++                }
++            }
++        )
++    with pytest.raises(ValueError, match="experiment_id"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "experiment_id": {
++                    "principle": mod.FIELD_PRINCIPLES["experiment_id"],
++                    "value": "wrong",
++                }
++            }
++        )
++    with pytest.raises(ValueError, match="milestone"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "milestone": {
++                    "principle": mod.FIELD_PRINCIPLES["milestone"],
++                    "value": "2026.07.484",
++                }
++            }
++        )
++    with pytest.raises(ValueError, match="archived_milestone"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "archived_milestone": {
++                    "principle": mod.FIELD_PRINCIPLES["archived_milestone"],
++                    "value": "2026.07.483",
++                }
++            }
++        )
++    with pytest.raises(ValueError, match="activated_milestone"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "activated_milestone": {
++                    "principle": mod.FIELD_PRINCIPLES["activated_milestone"],
++                    "value": "2026.07.486",
++                }
++            }
++        )
++    with pytest.raises(ValueError, match="roadmap_next_present"):
++        mod.validate_artifact(artifact | {"roadmap_next_present": "false"})
++    with pytest.raises(ValueError, match="active_roadmap_modified"):
++        mod.validate_artifact(artifact | {"active_roadmap_modified": "false"})
++    with pytest.raises(ValueError, match="conductor_modified"):
++        mod.validate_artifact(artifact | {"conductor_modified": "false"})
++    with pytest.raises(ValueError, match="preconditions_checked"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "preconditions_checked": {
++                    "principle": mod.FIELD_PRINCIPLES["preconditions_checked"],
++                    "value": "not-a-map",
++                }
++            }
++        )
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(artifact | {"reproducibility_checksum": "sha256:bad"})
++
++    assert mod.value_of(_wrap("x")) == "x"
++    assert mod.value_of("x") == "x"
++    written = tmp_path / "written.json"
++    mod.write_json(written, {"ok": True})
++    assert json.loads(written.read_text(encoding="utf-8")) == {"ok": True}
++    assert mod.read_json_mapping(tmp_path / "missing.json")[1]["error"] == "missing"
++    malformed = tmp_path / "malformed.json"
++    malformed.write_text("{bad", encoding="utf-8")
++    assert mod.read_json_mapping(malformed)[1]["error"] == "malformed_json"
++    array_json = tmp_path / "array.json"
++    array_json.write_text("[]", encoding="utf-8")
++    assert mod.read_json_mapping(array_json)[1]["error"] == "not_json_object"
++    assert mod.yaml_milestone(tmp_path / "missing.yaml") is None
++    bad_yaml = tmp_path / "bad.yaml"
++    bad_yaml.write_text("bad: [", encoding="utf-8")
++    assert mod.yaml_milestone(bad_yaml) is None
++    list_yaml = tmp_path / "list.yaml"
++    list_yaml.write_text("- item\n", encoding="utf-8")
++    assert mod.yaml_milestone(list_yaml) is None
++    assert mod.git_path_modified(tmp_path, mod.ROADMAP_RELATIVE_PATH) is False
++    git_repo = tmp_path / "git-repo"
++    git_repo.mkdir()
++    subprocess.run(("git", "init"), cwd=git_repo, check=True, capture_output=True, text=True)
++    (git_repo / "research-roadmap.yaml").write_text("milestone: 2026.07.485\n", encoding="utf-8")
++    assert mod.git_path_modified(git_repo, mod.ROADMAP_RELATIVE_PATH) is True
++    assert mod._modification_status(tmp_path, mod.ROADMAP_RELATIVE_PATH, None) is False
++    assert (
++        mod._modification_status(
++            tmp_path,
++            mod.ROADMAP_RELATIVE_PATH,
++            {str(mod.ROADMAP_RELATIVE_PATH): True},
++        )
++        is True
++    )
++    assert mod.path_sha256(tmp_path / "missing") is None
++    assert mod.capstone_failures({}) == ["capstone_missing_or_unloadable"]
++    bad_capstone_failures = mod.capstone_failures(
++        _capstone_payload()
++        | {
++            "milestone": "2026.07.483",
++            "honest_verdict": _wrap("done"),
++        }
++    )
++    assert "capstone_milestone_expected_2026.07.484_observed_2026.07.483" in bad_capstone_failures
++    assert "capstone_honest_verdict_missing_terminal_prefix" in bad_capstone_failures
++
++    no_capstone = mod.build_artifact(
++        root=_make_repo(tmp_path / "no-capstone"),
++        run_date="20260706",
++        duration_s=1.0,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++    assert no_capstone["honest_verdict"]["value"].startswith("blocked_")
++    assert "capstone_missing_or_unloadable" in no_capstone["failed_preconditions"]
++
++    out = mod.run(
++        root=_make_repo(tmp_path / "run-repo", capstone=_capstone_payload()),
++        run_date="20260706",
++        duration_s=1.0,
++    )
++    saved = json.loads(out.read_text(encoding="utf-8"))
++    mod.validate_artifact(saved)
++    assert saved["experiment_id"]["value"] == mod.EXPERIMENT_ID
+-- 
+2.55.0
+

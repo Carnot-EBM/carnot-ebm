@@ -1,0 +1,66 @@
+From 07006ee90d2ba01402e41b5179e49b0df6ff79c0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 07:28:52 -0400
+Subject: [PATCH 03041/11362] =?UTF-8?q?[outer-loop]=20revert=20value=5Fwei?=
+ =?UTF-8?q?ght=205->0=20(keep=20the=20wired=20v3=20head=20as=20a=20tiebrea?=
+ =?UTF-8?q?ker)=20=E2=80=94=20un-ship=20the=20regression?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Operator: 'revert, but also wire in v3 first.' Finding: .415 ALREADY wired v3 -- load_cross_game_value_head
+prefers models/arc_verifier_cross_game_v3.json (LOO-AUROC 0.674) with cross_game_features_v3. So the live
+agent already loads the GOOD head. The remaining issue was value_weight=5.0: it makes the search pay the
+(now richer/more-expensive) v3 value eval on EVERY node -> measured regression (25-game sim timed out
+20/25; A1 delta=0.0; bridge w5 8->6). Reverted SUBMITTED_VALUE_WEIGHT 5.0 -> 0.0: the v3 head stays
+LOADED + used as a cheap frontier TIEBREAKER, but no per-node A* cost. router/world-model-DSL stay wired;
+target_levels stays 5. Parity test updated (asserts value_weight==0.0, not >0 which asserted the
+regression); 5/5 pass. .416 re-measures the submitted-default solve-rate with the v3 head at weight>0 and
+raises it ONLY if it beats bare-BFS live AND finishes in budget.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ python/carnot/agentic/arc_competition_agent.py  | 10 +++++++++-
+ tests/python/test_arc_submitted_agent_parity.py |  5 ++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 971d051b12..c95bc15074 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -51,7 +51,15 @@ CLAIMED = {
+     "sk48": 1,
+ }
+ MAX_ACTIONS = 200
+-SUBMITTED_VALUE_WEIGHT = 5.0
++# value_weight=0.0 (reverted from 5.0, 2026-06-20): the v3 cross-game value head (LOO-AUROC 0.674,
++# loaded by load_cross_game_value_head) IS wired and used as a frontier TIEBREAKER. But weight>0 makes
++# the search pay the (now richer/more-expensive v3) value eval on EVERY node -> measured REGRESSION:
++# value_weight=5 was slower than bare BFS and solved fewer games in bounded time (the 25-game sim timed
++# out 20/25; A1's own benchmark delta=0.0; bridge w5 regressed 8->6). The head's offline LOO of 0.674 is
++# NOT yet shown to help LIVE routing enough to justify the per-node cost. .416 re-measures the submitted-
++# default solve-rate with the v3 head at weight>0 (+ a possible lazy/cheap eval); raise value_weight ONLY
++# if it beats bare-BFS on solve-rate AND finishes in budget. Until then: v3 head loaded, weight 0 (cheap).
++SUBMITTED_VALUE_WEIGHT = 0.0
+ SUBMITTED_TARGET_LEVELS = 5
+ SUBMITTED_SEARCH_MODE = "depth_first_ride"
+ SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
+diff --git a/tests/python/test_arc_submitted_agent_parity.py b/tests/python/test_arc_submitted_agent_parity.py
+index 68f5262320..9d20f8c1b4 100644
+--- a/tests/python/test_arc_submitted_agent_parity.py
++++ b/tests/python/test_arc_submitted_agent_parity.py
+@@ -40,7 +40,10 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
+     assert exp.value_weight == SUBMITTED_AGENT_CONFIG["value_weight"]
+     assert exp.target_levels == SUBMITTED_AGENT_CONFIG["target_levels"]
+     assert exp.search_mode == SUBMITTED_AGENT_CONFIG["search_mode"]
+-    assert exp.value_weight > 0.0
++    # value_weight reverted to 0.0 (2026-06-20): the v3 head is loaded + used as a tiebreaker, but
++    # weight>0 was a measured regression (per-node v3 eval too slow). Pin it to 0 until .416 shows a
++    # weight>0 beats bare-BFS live AND finishes in budget. (NOT `> 0` — that asserted the regression.)
++    assert exp.value_weight == 0.0
+     assert exp.target_levels > 1
+ 
+ 
+-- 
+2.55.0
+

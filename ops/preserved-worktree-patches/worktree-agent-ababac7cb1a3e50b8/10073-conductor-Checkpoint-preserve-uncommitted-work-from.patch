@@ -1,0 +1,56 @@
+From 9712891ebe5f991a8019a7b80222f2ac312b0e57 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 02:35:04 -0400
+Subject: [PATCH 10073/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 33cfb94557..6ef8c93430 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-27T06:32:53Z"
++ "last_scan_utc": "2026-08-27T06:35:00Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 57682e13e4..720ee8b8ed 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 66, "phase": "iteration_start", "last_beat": "2026-08-27T06:32:53Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 67, "phase": "iteration_start", "last_beat": "2026-08-27T06:35:00Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 425dd88131..ea1a4c17bf 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16607,3 +16607,4 @@ code |
+ | 2026-08-27 06:26 UTC | Milestone 2026.08.581 activated | OK | 4 tasks queued |
+ | 2026-08-27 06:28 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+ | 2026-08-27 06:30 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
++| 2026-08-27 06:33 UTC | V581 evidence and retirement contract | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e35f6df2d6..5291e17f6e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 66, "phase": "iteration_start", "started_at": "2026-08-27T06:32:53Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 67, "phase": "iteration_start", "started_at": "2026-08-27T06:35:00Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

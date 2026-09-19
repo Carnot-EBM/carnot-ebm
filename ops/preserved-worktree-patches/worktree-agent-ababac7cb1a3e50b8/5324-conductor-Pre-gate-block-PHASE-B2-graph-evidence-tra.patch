@@ -1,0 +1,79 @@
+From 1d04cc553d7db28ead205f3dfbbe038de787348a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 13:58:00 -0400
+Subject: [PATCH 05324/11362] [conductor] Pre-gate block: PHASE B2 graph
+ evidence transfer -- apply contradiction/unsupported/support energy to FoVer
+ step traces
+
+1 of 1 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n (actual=0 >= expected=150)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...15_graph_evidence_fover_transfer_v469.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5115_graph_evidence_fover_transfer_v469.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8cd508cad8..867323eff8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 105, "phase": "iteration_start", "last_beat": "2026-07-01T17:40:31Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 106, "phase": "iteration_start", "last_beat": "2026-07-01T17:58:00Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d6c706f97c..314d4b53bf 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9771,3 +9771,5 @@ web search: |
+ | 2026-07-01 17:36 UTC | PHASE A2 FoVer selector -- in-domain verifier sele | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n ( |
+ | 2026-07-01 17:38 UTC | PHASE A2 FoVer selector -- in-domain verifier sele | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n ( |
+ | 2026-07-01 17:40 UTC | PHASE A3 FoVer selector audit -- independent leaka | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
++| 2026-07-01 17:56 UTC | PHASE B1 KAN post-wall verification -- abstraction | OK | 87 passed, 1 warning in 24.29s |
++| 2026-07-01 17:58 UTC | PHASE A3 FoVer selector audit -- independent leaka | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index efc125cde5..5342708ead 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 105, "phase": "iteration_start", "started_at": "2026-07-01T17:40:31Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 106, "phase": "iteration_start", "started_at": "2026-07-01T17:58:00Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5115_graph_evidence_fover_transfer_v469.json b/results/experiment_5115_graph_evidence_fover_transfer_v469.json
+new file mode 100644
+index 0000000000..89b88fa033
+--- /dev/null
++++ b/results/experiment_5115_graph_evidence_fover_transfer_v469.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5115,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-01",
++  "started_at": "2026-07-01T17:58:00.350494+00:00",
++  "finished_at": "2026-07-01T17:58:00.350494+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE B2 graph evidence transfer -- apply contradiction/unsupported/support energy to FoVer step traces",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n (actual=0 >= expected=150)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5111-fover-in-domain-pool-v469",
++      "artifact_field": "pool_n",
++      "op": ">=",
++      "expected": 150,
++      "actual": 0,
++      "passed": false,
++      "reason": "actual=0 >= expected=150"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

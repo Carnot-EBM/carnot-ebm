@@ -1,0 +1,37 @@
+From c2a085f7796b98ef9cd80fdd5de6b7270888216a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 09:32:42 -0400
+Subject: [PATCH 03060/11362] =?UTF-8?q?[outer-loop]=20disable=20the=20dail?=
+ =?UTF-8?q?y=20submission-prep=20timer=20(operator)=20=E2=80=94=20don't=20?=
+ =?UTF-8?q?auto-prep=20a=20known-regressed=20config?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+systemctl --user disable --now carnot-arc-daily-prep.timer (now inactive/disabled, no next fire). The
+prep was refreshing the submission dataset daily; with the E3+v3 cascade shown to be a regression vs
+bare BFS (worse solve-rate + 370x worse action efficiency), we hold auto-prep until the submitted config
+is fixed. Re-enable with 'systemctl --user enable --now carnot-arc-daily-prep.timer'. Conductor +
+outer-loop + orphan-cleanup timers are UNAFFECTED.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/arc-submission-checklist.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ops/arc-submission-checklist.md b/ops/arc-submission-checklist.md
+index c9cc4db27d..e9faa27742 100644
+--- a/ops/arc-submission-checklist.md
++++ b/ops/arc-submission-checklist.md
+@@ -56,7 +56,7 @@ open-source eligible — the project is MIT-0 ✅).
+ 3. **Watch:** the [Submissions page](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/submissions);
+    the scored rerun takes up to 12h.
+ 
+-Scheduling: **durable systemd user timer `carnot-arc-daily-prep.timer`** (daily 09:37 EDT, `Persistent=true`
++Scheduling: **[DISABLED 2026-06-20 per operator — re-enable with `systemctl --user enable --now carnot-arc-daily-prep.timer` once the submitted config is no longer a regression]** durable systemd user timer `carnot-arc-daily-prep.timer` (daily 09:37 EDT, `Persistent=true`
+ — survives session end + reboots; validated end-to-end 2026-06-19). It runs the prep `--default` (refresh +
+ re-push + validate, NEVER submits) and writes `ops/arc-daily-prep-status.json` (`{kernel_version, ready,
+ submit_command}`). The timer cannot push-notify or submit (agent-only / operator-only), so the in-session
+-- 
+2.55.0
+

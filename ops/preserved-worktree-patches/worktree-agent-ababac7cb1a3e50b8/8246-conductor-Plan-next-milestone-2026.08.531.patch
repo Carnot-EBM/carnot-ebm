@@ -1,0 +1,2183 @@
+From dc56c233a2c94a065333cafc8da20209800deab2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 4 Aug 2026 21:10:45 -0400
+Subject: [PATCH 08246/11362] [conductor] Plan next milestone: 2026.08.531
+
+Planning agent proposed 9 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../research-roadmap-vNEXT.md                 | 714 ++++++++++--------
+ ops/arc_self_solve_audit_report.md            |   8 +-
+ ops/docs_audit_report.md                      | 132 ++--
+ ops/verifier_authenticity_audit_report.md     | 176 +++--
+ research-references.md                        | 109 +++
+ research-roadmap-next.yaml                    | 523 +++++++++++++
+ .../exp6091_refine_engine_visible_shard.jsonl |   1 +
+ 7 files changed, 1189 insertions(+), 474 deletions(-)
+ create mode 100644 research-roadmap-next.yaml
+
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index d89f235545..388b0cd413 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,407 +1,481 @@
+-# Research Roadmap vNEXT — Milestone 2026.08.530
++# Research Roadmap vNEXT — Milestone 2026.08.531
+ 
+-**Milestone title:** Authentic Phase-D Headroom, Reachable Internal-State
+-Verification, and Outcome-Committed Self-Learning
++**Milestone title:** Model-Native Phase-D Claims, Mid-Layer Verification, and
++Idempotent Outcome Learning
+ 
+-**Status:** Pre-staged after terminal milestone `2026.08.529`
++**Status:** Planned after terminal milestone `2026.08.530`
+ 
+-**Experiment range:** Exp6112-Exp6123
++**Experiment range:** Exp6124-Exp6137
+ 
+ **Architecture freshness note:** `_bmad/architecture.md` was last reconciled on
+-2026-07-03, 32 days before this plan. It is treated as historical architecture
+-evidence. Exp6123 must reconcile it against the actually implemented `.530`
+-surfaces; planned or gate-blocked components must not be described as current.
++2026-07-03 and is stale relative to the terminal `.530` artifacts. It is used
++as historical evidence only. Exp6137 must reconcile it against delivered `.531`
++surfaces; gate-blocked or proposal-only components must not be documented as
++current architecture.
+ 
+-**Primary question:** Can Carnot turn the sealed low-chance constraint ladder
+-into an authentic, adequately powered same-model candidate pool, prove that a
+-matching-base per-layer surface is reachable, and test an internal-state
+-selector against tuned self-consistency—while changing continuous learning from
+-same-iteration writes to exact-outcome commits and preserving hardware and ARC
+-obligations?
++**Primary question:** Can Carnot repair the measured model-native answer
++transport failure, produce an authentic same-model Phase-D selection domain,
++test a genuinely mid-layer internal verifier without reopening retired scorer
++families, and turn outcome-committed memory into an idempotent, resource-matched
++continuous-learning substrate?
+ 
+-## What milestone 2026.08.529 proved
++## What milestone 2026.08.530 proved
+ 
+-The conductor activated four identities, Exp6100-Exp6103. The eight additional
+-identities described in the old proposal were never activated and are not
+-reported as completed experiments.
+-
+-| Evidence | Terminal result | Consequence for `.530` |
++| Evidence | Terminal result | Consequence for `.531` |
+ |---|---|---|
+-| Exp6100 transition | `complete`; exact `.528` terminal classes were archived without laundering missing or gate-blocked evidence | Reuse exact `(milestone, task_id, deliverable)` transition semantics |
+-| Exp6101 source delta | `complete_null`; no accepted post-V529 source delta | The V530 planner marker is the next exact search boundary |
+-| Exp6102 representation recovery | `blocked: insufficient_free_vram`; readiness `0.0`; the artifact set `retirement_triggered=true` | Do not retry all-family representation acquisition, sequential eviction, or another VRAM-recovery variant |
+-| Exp6102 capacity receipt | Qwen3.6-35B and Gemma-4-31B each required 24,576 MiB while the best device exposed 23,859 MiB free; Gemma-4-26B-A4B fit at 17,186 MiB | Use the measured-fit 26B MoE alone for a bounded CUDA canary and candidate generation; do not infer that the other families fit |
+-| Exp6103 difficulty ladder | `complete_ready`; 600 calibration + 360 held questions, three balanced families, exact Python/Z3 parity, semantic-group-disjoint splits, enumerated chance floor `0.25` | The next scientific action is authentic inference on the frozen ladder, not another fixture revision |
+-| `.529` operational retro | Four experiments completed in 5.6 minutes, but the compute task left both GPUs effectively idle and lacked task-correlated lifecycle telemetry | Establish task-owned GPU engagement and release before spending a held-test run |
+-
+-The last positive continuous-learning substrate remains Exp5967-Exp5969:
+-transactional external state, rollback, poison quarantine, chronological exact
+-events, and Python/Rust/PyO3 parity are ready. Exp5968 also showed that immediate
+-write-through beat delayed commit. `.530` therefore changes credit state and
+-commit timing, not the safety envelope or model weights.
++| Exp6112 transition | `complete`; the exact `.529` terminal ledger was archived without treating proposal-only tasks as missing | Reuse the collision-safe transition pattern for `.531` |
++| Exp6113 source delta | `complete_null`; no accepted source after the V530 planner marker | Search only after `V531-PLANNER-REFRESH-20260804-END`; zero findings remains valid |
++| Exp6114 GPU canary | `complete_ready`; `unsloth/gemma-4-26B-A4B-it-GGUF` ran on a task-owned RTX 3090 lease with real lifecycle receipts | The measured-fit 26B MoE is the Phase-D generator; do not infer that the 31B or 35B families fit one 24 GiB card |
++| Exp6115 calibration pool | `complete_null`; per-candidate accuracy `0.020833`, parseability `0.061111`, method-validity `0.011111`, all-wrong `0.877778`, and effective K about `1.7-2.0` | Do not spend the held pool. First isolate and replace the raw-completion/newline-stop transport that emitted empty strings and model channel fragments |
++| Exp6115 raw receipts | Raw `Llama(...)` completion omitted the model-native chat template and used `stop=["\n"]`; rare rows that reached `Final answer: D` were parseable | The smallest legitimate recovery is a frozen chat-template and terminal-answer canary, not a new dataset or hidden-label retry loop |
++| Exp6116-Exp6119 | Correctly gate-blocked after Exp6115 readiness `0.0` | Preserve the scientific chain: transport, calibration pool, held headroom, per-layer surface, selector |
++| Exp6120 outcome commits | `complete_positive` only on equal final utility with smaller state: reduced-order final utility `1.0`, write-through `1.0`, state 24 versus 78 bytes; write-through still led online AUC | Test equal-resource stress, shift, delayed outcomes, duplicate delivery, rollback, and non-forgetting before integration; do not claim reduced-order superiority |
++| Exp6121 GateMate | `blocked_physical_action`; hardware state unchanged and `retirement_triggered=true` | No new GateMate task until a physical-state receipt changes |
++| Exp6122 ARC | `complete_null`; generic object-centric digest reached 19 games and was downstream-consumed, but lacked direct returned-decision receipts and a disable/LOO causal arm | Allocate exactly one ARC slot to live-path receipt instrumentation and held leave-one-game-out ablation; make no level-solve claim |
++| Exp6123 capstone | `complete_with_blocks`; Phase D remained blocked downstream of transport, while continuous learning supplied the only new positive substrate | `.531` must close evidence boundaries honestly and reconcile stale architecture and operations documents |
+ 
+ ## The three largest gaps to the PRD vision
+ 
+-### Gap 1 — no authentic oracle-distinct selection domain exists
+-
+-FR12 requires deterministic, verifiable reasoning beyond cases where the
+-verifier simply executes the answer. Phase D still has zero candidate pools
+-that simultaneously provide a competent generator, authentic same-model
+-diversity, unsaturated tuned self-consistency, and selectable oracle headroom.
+-Exp6103 supplies the missing exact, low-chance question distribution, but no
+-model has yet generated on it.
+-
+-`.530` uses `unsloth/gemma-4-26B-A4B-it-GGUF`, the only mandated family whose
+-`.529` capacity receipt fit one 24 GiB 3090. It calibrates only on the frozen
+-calibration split, then collects `K >= 8` natural samples for all 360 held
+-questions. Qualification is question-clustered and keeps competence, method
+-validity, diversity, all-wrong rate, tuned self-consistency, and oracle headroom
+-separate. Best-of-K is diagnostic; exact labels never steer held generation.
+-
+-### Gap 2 — internal verification is a paper design, not a reachable substrate
+-
+-Hidden-state verification remains sanctioned, but prior evidence is weak or
+-negative: engineered drift features were null, a final-token n=6 pilot was
+-underpowered, and the MMLU-Pro hidden-state lineage was retired. GGUF inference
+-does not expose a trustworthy equivalent of matching-base per-layer activations.
+-The PRD's learned energy/verifier layer therefore has no qualified live surface.
+-
+-`.530` first proves headroom, then separately resolves and hash-pins the matching
+-base transformer under `output_hidden_states=True`. It caches pre-answer-marker,
+-answer-token, prefix, and layerwise summaries with explicit token alignment and
+-precision/device provenance. Only then may a grouped, held-out selector compare
+-against tuned self-consistency, cheap text controls, shuffled labels, norms,
+-length, and an oracle-peeking positive control. External generated-text/logprob
+-scorers remain retired.
+-
+-### Gap 3 — continuous learning is safe but its causal credit is still weak
+-
+-FR11 requires autonomous improvement from verified experience. Carnot can
+-write, replay, roll back, and cross-language-check external memory, but delayed
+-commit lost to write-through and no reduced-order utility mechanism has shown a
+-positive future-event gain. Same-iteration reads and writes also risk circular
+-credit.
+-
+-`.530` freezes the memory snapshot for each decision and commits a bounded
+-task/polarity/dynamics utility state only after an exact external outcome. It
+-compares post-outcome reduced-order commits against the Exp5968 write-through
+-winner, delayed commit, fixed memory, shuffled retrieval, and no memory over
+-chronological seeds. Learning speed, eventual utility, contamination, safety,
+-state size, and non-forgetting are reported separately. Model weights stay
++### Gap 1 — Phase D has no authentic claim-producing candidate domain
++
++PRD FR12 requires verifiable reasoning where an internal verifier can choose
++among plausible model candidates and an exact authority can audit the choice.
++The frozen low-chance ladder exists, but Exp6115 never tested that scientific
++question: the runtime used raw completion with a newline stop against a
++channel-bearing instruction model, so most rows were empty or transport
++fragments. Carnot therefore still lacks a competent, diverse, unsaturated
++same-model pool with measurable `oracle@K - tuned_SC` headroom.
++
++`.531` first performs artifact-grounded transport forensics, then runs a small
++model-native chat canary with a free-reasoning region and one terminal answer
++field. Only a pass may generate a new calibration pool; only calibration
++qualification may spend the sealed held split. Exact Python/Z3 labels remain
++the authority. Syntactic success is necessary but never a semantic result.
++
++### Gap 2 — the learned verifier lacks a reachable mid-layer substrate
++
++Carnot's prior final-token/final-layer hidden-state paths were weak or null, and
++the MMLU-Pro lineage is retired. The `.530` per-layer and selector tasks never
++ran because the candidate domain failed upstream. Meanwhile, new quantized-LLM
++evidence localizes truthfulness signals in intermediate layers rather than the
++last layer. The PRD's learned verifier/energy layer still has no qualified
++same-corpus test of that distinct surface.
++
++`.531` gates extraction on authentic held headroom, hash-pins a matching-base
++transformer, proves token and pre-answer-marker alignment, and preregisters a
++small mid-layer band before inspecting labels. Calibration selects one simple
++probe or centroid configuration. A separately frozen held comparison then
++tests it against tuned self-consistency, final-layer, norm, length,
++answer-label, shuffled-label, and oracle-peeking controls. Generated-text and
++output-logprob scorer families remain retired.
++
++### Gap 3 — continuous learning is transactional but not stress-qualified
++
++PRD FR11 requires autonomous improvement from verified experience. Exp6120
++showed that a 24-byte outcome-committed state could tie the eventual utility of
++a 78-byte write-through state, but it trailed write-through during learning and
++was not tested under equal state budgets, domain shift, delayed outcomes,
++duplicate deliveries, replay retries, rollback, or protected-prefix retention.
++
++`.531` treats idempotence as a first-class property. A deterministic fixture
++injects shift, delay, duplicate/reordered delivery, poison, and rollback cases.
++The outcome-committed method is then compared with resource-matched
++write-through, delayed commit, fixed memory, shuffled retrieval, and no-memory
++controls. A default-off shadow adapter is allowed only if future-event utility,
++idempotence, safety, ABI parity, and non-forgetting all pass. Model weights stay
+ immutable.
+ 
+ ## Research findings incorporated
+ 
+-| Source | Finding | `.530` use |
++| Source | Finding | `.531` use |
+ |---|---|---|
+-| Explorative Modeling, arXiv:2607.27372 | Candidate exploration is a distinct scaling axis; best-match training gains depend on meaningful diversity | Exp6115-Exp6117 preserve all draws and measure effective K, answer clusters, and oracle gain at fixed compute; no EBT/XM reproduction claim |
+-| Geometric Algorithms for constrained NCO, arXiv:2510.24039 | Feasibility-preserving decomposition and rounding can separate construction quality from constraint validity | Exp6117 includes an independently exact feasible-constructor positive control, never mixed into the authentic LLM pool |
+-| Memoir, arXiv:2607.20792 | Writing fast memory during the same pondering loop slowed fixed-budget learning relative to read-only pondering | Exp6120 freezes decision snapshots and commits only after exact outcomes |
+-| CLUE, arXiv:2510.01591 | Simple hidden-state trajectory summaries can rerank if success/failure geometry is separable | Exp6118-Exp6119 preregister trajectory and centroid controls, but require a new corpus and positive held interval |
+-| Hidden-Align, arXiv:2606.03234 | Correct rollouts concentrate near a pre-answer-marker anchor; layer and token position are load-bearing | Exp6118 caches anchor, answer-token, prefix, and layer sweeps separately |
+-| Solver-Hard, arXiv:2607.17047 | Solver conflicts are not model difficulty; proof-preserving relabels reveal surface sensitivity | Exp6115 calibrates observed accuracy, while Exp6117 retains solver/relabel strata as diagnostics |
+-| SATQuest, OpenReview ICLR 2026 workshop | Instance, problem-type, and question-format factors can be controlled under an exact SAT authority | Supports Exp6103's frozen family/surface controls; no new fixture task |
+-| Extropic TSU/XTR-0 and Kona 1.0 official pages | Hardware-native sampling and a constraint layer beneath generators remain relevant architecture directions | Diagram/watch items only; no authenticated local execution route or comparator |
++| IDER, arXiv:2603.00624 | Continual learners should be stable under repeated application of the same experience | Exp6133-Exp6135 require duplicate and retried exact-outcome deliveries to leave bounded state, decisions, audit events, and rollback results unchanged |
++| Hallucination Is Linearly Decodable from Mid-Layer Hidden States in Quantized LLMs, arXiv:2606.02628 | The strongest truthfulness signal appears in intermediate layer bands; a linear probe can match more complex heads | Exp6130-Exp6132 test a preregistered mid-layer band on the new Phase-D corpus and retain the negative final-layer lineage as a control |
++| Thinking Before Constraining, arXiv:2601.07525 | Free reasoning followed by a terminal structured switch can preserve reasoning while making the final answer reachable | Exp6127 uses this only as a bounded transport canary around the model's native chat serialization; it is not a ConstraintIR or semantic-success claim |
++| Solver-Hard, arXiv:2607.17047 | Solver difficulty and model difficulty diverge, and semantics-preserving surface changes expose model brittleness | Exp6128-Exp6129 retain family, relabel, shortcut, and difficulty strata instead of treating exact solver validity as model competence |
++| Semantic Scholar citation refresh | Direct API receipts showed 32 visible EBT citations and eight ARM-EBM citations; no new citation displaced the local plan | Citation counts are discovery receipts only; no citation-driven reproduction task is added |
++| Extropic official hardware page | Z1 Stick and Card are now labeled early access 2027 | No TSU experiment, speedup claim, or 2026 availability assumption is eligible |
++| Logical Intelligence Kona pages | Public architecture still describes global/non-autoregressive trace scoring beneath LLM coordination, without public weights or a reproducible local API | Retain the generator/verifier boundary as architecture context only |
++
++The full dated evidence and URLs are recorded before this design in
++`research-references.md` under `V531 Planner Refresh - 20260804`.
+ 
+ ## Target architecture
+ 
+ ```mermaid
+ flowchart TD
+-    LADDER[Exp6103 sealed ladder\n600 calibration / 360 held]
+-    CANARY[Task-owned Gemma-4-26B GGUF\nCUDA engagement + release canary]
+-    CAL[Calibration-only pool pilot\nfixed strata and decode policy]
+-    POOL[Held authentic candidate pool\n360 questions x K >= 8]
+-    AUDIT[Question-clustered\ncompetence/diversity/headroom audit]
+-    BASE[Matching base transformer\noutput_hidden_states surface]
+-    CACHE[Layer/token-aligned\nimmutable feature cache]
+-    SELECT[Internal-state selector]
+-    SC[Tuned self-consistency]
+-    EXACT[Python/Z3 exact authority]
+-
+-    EVENTS[Chronological exact events]
+-    SNAP[Read-only decision snapshot]
+-    ROU[Reduced-order utility state]
+-    TX[Post-outcome transaction\nrollback + poison quarantine]
+-    ABI[Python/Rust/PyO3 parity]
+-
+-    GM[GateMate changed-state gate]
+-    ARC[One ARC generalization floor\nprimitive reachability + LOO A/B]
+-    CAP[Branch-independent capstone]
+-
+-    LADDER --> CANARY --> CAL --> POOL --> AUDIT
++    LADDER[Exp6103 frozen ladder]
++    FORENSICS[Transport forensics\nraw completion and stop receipts]
++    NATIVE[Model-native chat canary\nfree reasoning plus terminal answer]
++    CAL[Calibration pool v2\nfixed template and decode policy]
++    HELD[Sealed held pool v2\nK >= 8 natural samples]
++    AUDIT[Clustered competence\ndiversity and oracle headroom]
++    EXACT[Python and Z3\nexact authority]
++
++    BASE[Hash-pinned matching base\nper-layer hidden states]
++    CACHE[Immutable aligned cache\nmid-layer plus final controls]
++    SELECT[Calibration-selected\ninternal-state selector]
++    EVAL[Frozen held comparison\nversus tuned SC]
++
++    EVENTS[Exact chronological outcomes]
++    FIXTURE[Shift delay duplicate retry\npoison and rollback fixture]
++    COMMIT[Bounded post-outcome state]
++    SHADOW[Default-off shadow adapter]
++    ABI[Python Rust PyO3 parity]
++
++    ARC[Agent-owned object digest\ndirect decision receipt and LOO]
++    CAP[Branch-independent capstone\nand documentation reconciliation]
++
++    LADDER --> FORENSICS --> NATIVE --> CAL --> HELD --> AUDIT
++    EXACT --> CAL
+     EXACT --> AUDIT
+-    AUDIT -->|qualified only| BASE --> CACHE --> SELECT
+-    POOL --> SC
+-    SELECT -->|paired held comparison| SC
++    AUDIT -->|qualified only| BASE --> CACHE --> SELECT --> EVAL
++    HELD --> EVAL
+ 
+-    EVENTS --> SNAP --> ROU --> TX --> ABI
++    EVENTS --> FIXTURE --> COMMIT --> SHADOW
++    COMMIT --> ABI
+ 
+     AUDIT --> CAP
+-    SELECT --> CAP
+-    ABI --> CAP
+-    GM --> CAP
++    EVAL --> CAP
++    SHADOW --> CAP
+     ARC --> CAP
+ ```
+ 
+ Load-bearing boundaries:
+ 
+-- Exact Python/Z3 validators label candidates; a learned selector is never the
+-  oracle.
+-- Exp6102's all-family representation-recovery shape is retired. The canary is
+-  a one-model generation and telemetry precondition, not a representation
+-  corpus rerun.
+-- Calibration may choose a preregistered stratum and decode policy only from
+-  the 600 calibration rows. Held labels, hidden validators, and later selector
+-  features cannot affect generation or row inclusion.
+-- GGUF generation and matching-base activation extraction are different
+-  substrates with separate file hashes, revisions, tokenizers, precisions, and
+-  device maps.
+-- The selector reads immutable cached internal features. It does not score
+-  generated text, output logprobs, model-authored confidence, or model identity.
+-- Self-learning reads a frozen snapshot within a decision and writes only
+-  after exact future evidence. Model weights remain unchanged.
+-- ARC uses agent-owned observations and live-reachable generic code only. No
+-  game source, per-game adapter, exhaustive ground-truth BFS, registry path, or
+-  duplicate solve credit is allowed.
++- Exact Python/Z3 validators label candidates. No learned energy, hidden-state
++  selector, model confidence, or LLM judge is an oracle.
++- Exp6127 changes only model serialization and terminal-answer reachability on
++  a frozen calibration slice. It cannot claim improved reasoning.
++- Calibration may choose a decode policy and selector configuration only from
++  calibration rows. Held labels cannot affect prompts, generation, retries,
++  row inclusion, layer choice, or thresholds.
++- Same-model `K` means independent stochastic draws from the same pinned GGUF,
++  template, and question. Deterministic builders and hidden-label retries are
++  forbidden.
++- GGUF generation and matching-base activation extraction are distinct
++  substrates. Revisions, hashes, tokenizers, precision, device maps, and token
++  alignment are explicit and fail closed.
++- The internal selector reads immutable cached hidden features. External
++  generated-text/logprob scoring, the retired MMLU final-embedding lineage,
++  finite-ID transport, parser repair loops, and stop-token retry families are
++  not reopened.
++- Continuous learning reads a frozen decision snapshot and mutates bounded
++  external state only after exact outcomes. Duplicate delivery is idempotent;
++  model weights remain unchanged.
++- ARC instrumentation is agent-owned and live-reachable. No game source,
++  registry path, hand GameAdapter, exhaustive offline BFS, or solve claim is
++  eligible.
+ 
+ ## Reservation and majority accounting
+ 
+ | Class | Tasks | Count |
+ |---|---|---:|
+-| Infrastructure reservation | Exp6112 transition, Exp6123 capstone | 2 |
+-| SOTA ingestion reservation | Exp6113 dated source delta | 1 |
+-| Attached-board continuity | Exp6121 GateMate | 1 |
+-| ARC generalization floor | Exp6122 primitive reachability/LOO | 1 |
+-| Discretionary Phase D | Exp6114-Exp6119 | 6 |
+-| Other discretionary research | Exp6120 continuous self-learning | 1 |
+-| **Total** | Exp6112-Exp6123 | **12** |
++| Infrastructure | Exp6124 transition, Exp6137 capstone | 2 |
++| Phase-D evidence ingestion | Exp6125 source delta | 1 |
++| Phase-D claim production | Exp6126-Exp6132 | 7 |
++| Continuous self-learning | Exp6133-Exp6135 | 3 |
++| ARC live-path floor | Exp6136 | 1 |
++| **Total** | Exp6124-Exp6137 | **14** |
++
++Eight of fourteen tasks are allocated to Phase-D evidence or execution. After
++transition, capstone, and the single ARC floor are removed, eight of eleven
++remaining slots are Phase D. The ARC induction line remains closed.
++
++## Phase A — exact boundary and transport diagnosis
++
++### Exp6124 — exact transition into `.531`
++
++Archive exactly the twelve activated `.530` identities and declared
++deliverables. Preserve readiness, gate-block, physical-action, and retirement
++states without laundering them into missing or successful evidence. Append
++`.530` once if absent and prove Exp6124-Exp6137 collision-free.
++
++**Deliverable:** `results/experiment_6124_transition_v531.json`
++
++### Exp6125 — post-V531 source-delta ingestion
++
++Search only after `V531-PLANNER-REFRESH-20260804-END`. Recheck the mandated
++primary and secondary sources. Record URLs, dates, applicability, duplicates,
++and rejection reasons. Zero accepted deltas is an honest complete-null result
++and cannot change experiment identities or preregistered gates.
++
++**Deliverable:** `results/experiment_6125_v531_source_delta_ingestion.json`
++
++### Exp6126 — Exp6115 transport forensics
++
++Recompute Exp6115's non-empty, channel-fragment, terminal-field, parseability,
++method-validity, truncation, and stop-reason rates directly from its immutable
++raw rows. Pin the GGUF metadata and inspect the local tokenizer/chat-template
++surface without running a new model. Produce a minimal, falsifiable v2
++serialization specification and state whether a new canary is justified.
++
++**Deliverable:** `results/experiment_6126_phase_d_exp6115_transport_forensics.json`
+ 
+-After the fixed reservations and one ARC floor are removed, seven discretionary
+-slots remain. Six of seven are Phase D, satisfying the required majority.
++## Phase B — model-native Phase-D candidate domain
+ 
+-## Phase A — exact handoff, source boundary, and compute reachability
++### Exp6127 — gated model-native chat fidelity canary
+ 
+-### Exp6112 — exact transition into `.530`
++On a frozen, family-balanced calibration slice, compare the exact Exp6115
++transport with one pinned model-native chat serialization using
++`unsloth/gemma-4-26B-A4B-it-GGUF`. Permit natural reasoning and require one
++terminal answer field. Use a non-truncating budget and task-owned GPU receipts.
++Pass only on preregistered non-empty, terminal-field, parseability,
++channel-leakage, and method-validity deltas; report exact accuracy separately.
+ 
+-Archive exactly the four activated `.529` identities and declared deliverables.
+-Preserve Exp6102 as a terminal block with its retirement signal, and preserve
+-proposal-only Exp6104-Exp6111 as unactivated rather than missing experiments.
+-Append `.529` once if absent and prove Exp6112-Exp6123 collision-free.
++**Gate:** Exp6126 `model_native_chat_change_justified_score == 1.0`
+ 
+-**Deliverable:** `results/experiment_6112_transition_v530.json`
++**Deliverable:** `results/experiment_6127_phase_d_native_chat_transport_canary.json`
+ 
+-### Exp6113 — post-V530 source-delta ingestion
++### Exp6128 — gated calibration candidate pool v2
+ 
+-Search only after `V530-PLANNER-REFRESH-20260804-END`. Recheck all mandated
+-primary and secondary sources. Zero accepted findings is a valid complete-null
+-result and cannot rewrite milestone identities or gates.
++Freeze the passing template and decode policy from Exp6127. On at least 90
++calibration questions balanced across the three families and preregistered
++difficulty strata, collect `K >= 8` natural independent draws from the 26B MoE.
++Persist raw prompts, chat serialization, completions, seeds, stop reasons,
++token counts, exact labels, and compute receipts. Qualification measures
++competence, method validity, parseability, all-wrong, duplicate rate, and
++effective K separately.
+ 
+-**Deliverable:** `results/experiment_6113_v530_source_delta_ingestion.json`
++**Gate:** Exp6127 `model_native_transport_ready_score == 1.0`
+ 
+-### Exp6114 — Phase-D task-scoped GPU and ladder canary
++**Deliverable:** `results/experiment_6128_phase_d_calibration_pool_v2.json`
+ 
+-Validate Exp6103 readiness, resolve the exact cached
+-`unsloth/gemma-4-26B-A4B-it-GGUF`, acquire a task-owned single-GPU lease, run a
+-bounded natural-text generation canary, prove CUDA engagement and release, and
+-persist task-correlated model/server/PID/VRAM/thermal timestamps. This is not
+-another all-family representation extraction attempt.
++### Exp6129 — gated held pool and clustered headroom audit v2
+ 
+-**Deliverable:** `results/experiment_6114_phase_d_gpu_ladder_canary.json`
++Using the frozen Exp6128 policy, generate at least eight draws for every sealed
++held question and audit at the independent-question unit. Require parseability
++`>= 0.95`, effective `K >= 7.5`, per-candidate accuracy in `[0.40, 0.70]`, a
++question-clustered lower interval above the enumerated `0.25` floor, all-wrong
++rate `<= 0.10`, and `oracle@K - tuned_SC >= 0.10` with a clustered lower
++interval above zero. Report method-validity, relabel, shortcut, difficulty,
++answer-cluster, and family strata. Best-of-K is diagnostic only.
+ 
+-## Phase B — authentic candidate pool and headroom
++**Gate:** Exp6128 `phase_d_calibration_ready_score == 1.0`
+ 
+-### Exp6115 — gated calibration-only candidate pilot
++**Deliverable:** `results/experiment_6129_phase_d_held_pool_v2.json`
+ 
+-On the frozen 600-row calibration split, collect `K >= 8` samples for at least
+-90 questions across the three families and preregistered difficulty strata.
+-Select one stratum and fixed decode policy using observed per-candidate accuracy,
+-parseability, effective K, method validity, and all-wrong rate. Never inspect
+-held labels.
++## Phase C — authenticated mid-layer verifier
+ 
+-**Deliverable:** `results/experiment_6115_phase_d_calibration_pool.json`
++### Exp6130 — gated matching-base per-layer surface v2
+ 
+-### Exp6116 — gated held same-model candidate pool
++Resolve and hash-pin the base transformer corresponding to the GGUF generator.
++Prove tokenizer and pre-answer-marker alignment, establish
++`output_hidden_states=True`, and cache immutable calibration and held candidate
++features with explicit revision, precision, device-map, layer, token-position,
++and row-hash provenance. Preregister a small intermediate layer band before
++reading correctness labels, while retaining final-layer features as a control.
++Fail closed on mismatch, memory pressure, or ambiguous alignment.
+ 
+-Using the fixed Exp6115 policy, collect at least eight independent natural
+-reasoning samples for all 360 held questions. Persist raw prompts, completions,
+-seeds, generation settings, exact final/method labels, row hashes, and compute
+-receipts. No JSON grammar, finite-ID answer transport, retries based on hidden
+-labels, or deterministic candidate builder is allowed.
++**Gate:** Exp6129 `phase_d_headroom_ready_score == 1.0`
+ 
+-**Deliverable:** `results/experiment_6116_phase_d_held_candidate_pool.json`
++**Deliverable:** `results/experiment_6130_phase_d_per_layer_surface_v2.json`
+ 
+-### Exp6117 — gated clustered authenticity and headroom audit
++### Exp6131 — gated mid-layer selector calibration
+ 
+-Audit at the independent-question unit. Qualification requires parseability
+-`>= 0.95`, effective `K >= 7.5`, per-candidate accuracy in `[0.40, 0.70]`, an
+-accuracy lower interval above the enumerated `0.25` floor, all-wrong rate at
+-most `0.10` (36/360), and `oracle@K - tuned_SC >= 0.10` with a clustered lower
+-interval above zero. Report method-validity, relabel, family, shortcut, answer
+-cluster, and exact-constructor-control strata separately. The observed-p
+-independence formula is diagnostic only.
++Use calibration questions only to choose one simple linear probe or
++non-parametric centroid configuration, one layer/anchor, and one frozen
++threshold. Compare with tuned self-consistency, final-layer, norm, length,
++answer-label, shuffled-label, and oracle-peeking positive controls. Require
++question-grouped resampling and persist the selected immutable configuration;
++do not inspect or report held selector accuracy.
+ 
+-**Deliverable:** `results/experiment_6117_phase_d_headroom_audit.json`
++**Gate:** Exp6130 `per_layer_surface_ready_score == 1.0`
+ 
+-## Phase C — internal verifier and continuous self-learning
++**Deliverable:** `results/experiment_6131_phase_d_mid_layer_selector_calibration.json`
+ 
+-### Exp6118 — gated matching-base per-layer surface
++### Exp6132 — gated frozen held hidden-state evaluation
+ 
+-Resolve the base model associated with the Gemma-4-26B-A4B GGUF, pin its exact
+-revision, and establish `output_hidden_states=True` under a declared precision
+-and device map. Teacher-force immutable candidate texts and cache layerwise
+-pre-answer-marker, answer-token, prefix, and trajectory summaries. Block if
+-weights, tokenizer alignment, memory, or per-layer access cannot be verified.
++Apply the frozen Exp6131 selector once to the sealed held candidates. Compare
++paired question-level accuracy, exact utility, abstention, latency, and compute
++against tuned self-consistency and all preregistered controls. Headline only if
++the paired lower confidence bound for accuracy delta is above zero, exact
++utility does not regress, shortcut controls fail as expected, and no held-data
++selection or leakage is detected. Otherwise record the honest null or negative.
+ 
+-**Deliverable:** `results/experiment_6118_phase_d_per_layer_surface.json`
++**Gate:** Exp6131 `selector_calibration_ready_score == 1.0`
+ 
+-### Exp6119 — gated internal-state selector against tuned SC
++**Deliverable:** `results/experiment_6132_phase_d_hidden_state_held_eval.json`
+ 
+-Use question-grouped train/calibration/test splits and preregistered simple
+-probes or non-parametric centroids. Compare against tuned self-consistency,
+-cheap text statistics, final-layer-only, anchor-only, answer-token, prefix,
+-norm, length, shuffled-label, and oracle-peeking controls. Promotion requires a
+-positive paired lower interval over tuned SC, no shuffled-label reproduction,
+-no cheap-baseline match, and `n >= 30` on the identically-wrong-consensus
+-stratum.
++## Phase D — idempotent learning, ARC causality, and reconciliation
+ 
+-**Deliverable:** `results/experiment_6119_phase_d_hidden_state_selector.json`
++### Exp6133 — deterministic CSL shift/delay/idempotence fixture
+ 
+-### Exp6120 — outcome-committed reduced-order continuous self-learning
++Build a test-first chronological fixture that contains clean pre-shift events,
++post-shift events, delayed exact outcomes, exact duplicate deliveries,
++reordered retries, poison events, rollback checkpoints, and protected-prefix
++sentinels. Establish Python/Rust/PyO3 fixed-width serialization parity and
++reference invariants before comparing learners.
+ 
+-Add a fixed-dimensional task/polarity/dynamics utility state to the ready
+-transactional store. Freeze the retrieval snapshot during each decision and
+-commit only after exact future outcomes. Compare against write-through, delayed
+-commit, fixed memory, shuffled retrieval, and no memory on five chronological
+-seeds; preserve rollback, poison, retention, state-cap, and ABI gates.
++**Deliverable:** `results/experiment_6133_csl_shift_delay_idempotence_fixture.json`
+ 
+-**Deliverable:** `results/experiment_6120_outcome_committed_reduced_order_csl.json`
++### Exp6134 — gated resource-matched outcome-committed CSL stress A/B
+ 
+-## Phase D — attached hardware, ARC floor, and reconciliation
++Run the Exp6120 outcome-committed method against resource-matched
++write-through, delayed commit, fixed memory, shuffled retrieval, and no-memory
++controls across chronological seeds. Equalize state bytes and retrieval budget.
++Report pre/post-shift online AUC, future-event exact utility, recovery time,
++duplicate-delivery state delta, replay idempotence, contamination, rollback,
++protected-prefix retention, state size, and paired confidence intervals.
+ 
+-### Exp6121 — GateMate changed-physical-state gate
++**Gate:** Exp6133 `csl_stress_fixture_ready_score == 1.0`
+ 
+-Hash the latest cable/port/power/DirtyJTAG state. Without a newer dated physical
+-receipt, do not repeat detection; emit the exact operator action packet. With a
+-changed receipt, permit one non-destructive IDCODE detect and already-built
+-smoke only if the expected device appears. No flash or speedup claim.
++**Deliverable:** `results/experiment_6134_outcome_committed_csl_stress_ab.json`
+ 
+-**Deliverable:** `results/experiment_6121_gatemate_changed_state_gate_v530.json`
++### Exp6135 — gated default-off outcome-learning shadow adapter
+ 
+-### Exp6122 — ARC generic primitive reachability and held-out attribution
++If and only if Exp6134 passes every scientific and safety gate, add a
++default-off adapter that consumes exact post-outcome events through the
++transactional store and emits shadow-only decisions and audit receipts. It may
++not alter production selection, verifier authority, or model weights. Test
++replay, duplicate delivery, rollback, poison quarantine, disabled-mode parity,
++and Python/Rust/PyO3 behavior.
+ 
+-Registry-precheck all 25 games, then trace which existing game-ID-free
+-`arc_solver_kit.py` primitives are actually reachable from the live agent on
+-agent-owned tapes. Select at most one primitive with support on at least three
+-development games and run leave-one-game-out live-path A/B on held games. This
+-is an efficiency/generalization audit, not a level-solve task. Any incidental
+-level outcome records `solve_provenance: live_agent_self_discovery`, receives
+-no headline credit, and must not duplicate a registered level.
++**Gate:** Exp6134 `outcome_csl_stress_ready_score == 1.0`
+ 
+-**Deliverable:** `results/experiment_6122_arc_primitive_reachability_loo.json`
++**Deliverable:** `results/experiment_6135_outcome_csl_shadow_adapter.json`
+ 
+-### Exp6123 — branch-independent capstone
++### Exp6136 — ARC object-digest direct receipt and held LOO ablation
+ 
+-Resolve all 11 upstream identities by exact declared path. Preserve positive,
+-ready, null, blocked-precondition, gate-blocked, retired, underpowered, missing,
+-and adversarial-flagged classes independently. Reconcile specs, traceability,
+-the stale architecture, status, changelog, and hardware/ARC ledgers without
+-turning one branch's result into evidence for another.
++Use the already live-reachable generic object-centric digest; do not add a
++per-game solver and do not claim a level solve. Add an agent-owned direct
++returned-decision receipt and a generic default-off feature-disable hook. On
++the frozen development/held game split, compare digest enabled versus disabled
++with leave-one-game-out fitting, identical budgets, and attempt-level paired
++receipts. Report discoverability, direct decision consumption, regression,
++leakage, and solve provenance even though no solve claim is eligible.
+ 
+-**Deliverable:** `results/experiment_6123_v530_capstone_reconciliation.json`
++**Deliverable:** `results/experiment_6136_arc_object_digest_receipt_loo.json`
++
++### Exp6137 — branch-independent `.531` capstone and reconciliation
++
++Inventory every activated identity and artifact regardless of upstream gate
++outcomes. Re-run adversarial verification, unit/lint/spec coverage, and the
++applicable end-to-end checks from `ops/e2e-test-plan.md`. Reconcile delivered
++behavior only across `openspec/`, `_bmad/traceability.md`,
++`_bmad/architecture.md`, `ops/status.md`, `ops/changelog.md`,
++`research-complete.yaml`, `ops/known-issues.md`, and hardware documentation.
++Mark every proposal-only or gate-blocked component explicitly.
++
++**Deliverable:** `results/experiment_6137_v531_capstone_reconciliation.json`
+ 
+ ## Dependency graph
+ 
+ ```text
+-Exp6112 transition ─────────────────────────────────────────────────────┐
+-Exp6113 source delta ───────────────────────────────────────────────────┤
+-                                                                       │
+-Exp6103 sealed ladder                                                   │
+-  └─> Exp6114 GPU/ladder canary                                        │
+-       └─[phase_d_compute_and_ladder_ready_score == 1]─> Exp6115 cal   │
+-            └─[phase_d_calibration_ready_score == 1]─> Exp6116 pool   │
+-                 └─[candidate_pool_integrity_score == 1]─> Exp6117    │
+-                      └─[phase_d_headroom_ready_score == 1]─> Exp6118 │
+-                           └─[per_layer_surface_ready_score == 1 AND  │
+-                              phase_d_headroom_ready_score == 1]       │
+-                              └─> Exp6119 selector ────────────────────┤
+-                                                                       ├─> Exp6123
+-Exp5967-Exp5969 ─> Exp6120 outcome-committed CSL ──────────────────────┤
+-Exp6121 GateMate changed-state gate ───────────────────────────────────┤
+-ARC registry + live agent tapes ─> Exp6122 reachability/LOO ──────────┘
++Exp6124  exact transition ---------------------------------------------\
++Exp6125  source delta --------------------------------------------------+--> Exp6137
++                                                                       |
++Exp6126  transport forensics                                           |
++   `--> Exp6127  native chat canary                                    |
++          `--> Exp6128  calibration pool v2                            |
++                 `--> Exp6129  held pool + headroom -------------------+
++                        `--> Exp6130  per-layer surface v2              |
++                               `--> Exp6131  selector calibration      |
++                                      `--> Exp6132 held evaluation ----+
++                                                                       |
++Exp6133  CSL stress fixture                                            |
++   `--> Exp6134  resource-matched stress A/B                           |
++          `--> Exp6135  default-off shadow adapter --------------------+
++                                                                       |
++Exp6136  one ARC receipt/LOO slot -------------------------------------/
+ ```
+ 
+-Structured `gated_on` fields are required for Exp6115-Exp6119. Exp6123 is
+-deliberately ungated so it can preserve failed and blocked branches rather than
+-skip reconciliation.
+-
+-## Model policy
+-
+-- Exp6114-Exp6116 MODEL_SPECS include
+-  `unsloth/gemma-4-26B-A4B-it-GGUF` with exact local file hash,
+-  quantization, embedded tokenizer provenance, CUDA offload, seed, and decode
+-  settings.
+-- Exp6118-Exp6119 preserve that GGUF generator provenance and separately pin
+-  the matching base-transformer revision, tokenizer, precision, device map,
+-  token alignment, and cached-feature hashes.
+-- `unsloth/Qwen3.6-35B-A3B-GGUF` and
+-  `unsloth/gemma-4-31B-it-GGUF` remain mandated headline families generally,
+-  but `.529` proved this specific one-GPU route lacks their declared 24,576 MiB
+-  capacity. They are not silently substituted, split, or CPU-headlined here.
+-- Qwen3.5-0.8B and gemma-4-E4B-it may appear only in explicit CPU smoke tests;
+-  they cannot satisfy any readiness or headline gate.
+-
+-## Failed-experiment and retirement discipline
+-
+-- Exp6102's all-family representation corpus and VRAM-recovery shape is retired.
+-  No `.530` task resumes its row shards or repeats its acquisition technique.
+-- Exp6114 declares Exp6102 as a prior failure because both touch local SOTA GPU
+-  readiness, but the deliverable and technique are materially different: one
+-  measured-fit model, natural generation canary, and task-correlated telemetry;
+-  no embeddings, all-family residency, or representation corpus.
+-- Exp6115-Exp6117 declare Exp5786 where their candidate-pool shape overlaps; the
+-  sealed low-chance ladder, natural reasoning transport, calibration/held split,
+-  and question-clustered gates are the changed prerequisites.
+-- Exp6118-Exp6119 declare the retired MMLU-Pro hidden-state lineage and explain
+-  the changed corpus, token/layer surface, power, and controls.
+-- Exp6120 declares Exp5895 and retires the new mechanism if it repeats the same
+-  non-promotion verdict.
+-- Exp6121 declares Exp5201 and permits no unchanged physical rerun.
+-
+-Every prior-failure entry in YAML carries `experiment_id`, exact prior
+-`verdict`, a concrete `addressed_by`, and `retire_if_same_verdict: true`.
+-
+-## Hardware requirements
+-
+-| Resource | Use | Fail-closed rule |
++Exp6137 is intentionally ungated. It must reconcile skipped and failed branches
++as carefully as successful ones.
++
++## Hardware and model requirements
++
++| Tasks | Requirement | Expected use | Fail-closed condition |
++|---|---|---|---|
++| Exp6124-Exp6126, Exp6131, Exp6133-Exp6137 | CPU, normal host RAM, existing artifacts | Ledger, diagnostics, cached-feature analysis, deterministic fixtures, ARC, and reconciliation | Missing immutable upstream artifacts or provenance |
++| Exp6127-Exp6129 | One RTX 3090 with task-owned lease; pinned `unsloth/gemma-4-26B-A4B-it-GGUF`; sufficient model/cache disk | Small canary, calibration pool, then held pool | Free VRAM below the measured fit, missing model hash/chat template, absent GPU lifecycle receipt, or thermal/lifecycle violation |
++| Exp6130 and Exp6132 | Dual RTX 3090 host or an explicitly measured equivalent; at least 64 GiB host RAM; sufficient disk for pinned base weights and immutable feature cache | Matching-base hidden-state extraction and frozen held evaluation | Base/GGUF provenance mismatch, ambiguous token alignment, OOM, unpinned weights, or missing cache hashes |
++
++Any new task that invokes an LLM includes at least one mandated local SOTA GGUF
++in `MODEL_SPECS`. The Phase-D generator is
++`unsloth/gemma-4-26B-A4B-it-GGUF`, selected from the `.529` measured capacity
++receipt. The matching base is additional provenance, not a substitute for that
++required generator declaration. Legacy Qwen3.5-0.8B or Gemma E4B models may be
++used only for explicitly labeled CPU smoke tests and cannot support headline
++results.
++
++No FPGA task is planned. GateMate remains retired pending a changed physical
++receipt, KV260 is terminal, PolarFire is opportunistic, and Extropic's Z1
++schedule is now 2027 with no authenticated local access. Hardware availability
++is reported without speedup or power claims.
++
++## Preregistered gates and kill rules
++
++| Gate | Required artifact field | Pass condition |
+ |---|---|---|
+-| RTX 3090 GPU, 24 GiB | Exp6114-Exp6116 GGUF generation | Task-owned lease, measured CUDA engagement, thermals, PID ownership, and verified release; never kill unrelated processes |
+-| Two RTX 3090s + host RAM | Exp6118 matching-base surface if its declared device map needs sharding/offload | No claim unless the exact revision loads and emits aligned per-layer states; block on memory or access failure |
+-| GateMate A1-EVB + DirtyJTAG | Exp6121 changed-state continuity | No detect without a newer physical receipt; no flash without explicit authorization |
+-| CPU + Z3/PySAT | Exact labels, clustered audit, CSL replay, ARC no-LLM controls | Independent exact authority and deterministic checks remain available without GPU |
+-| KV260 / PolarFire | No active experiment; prior terminal/graduated receipts remain historical evidence | Do not create continuity work or speedup claims without a materially changed requirement |
+-| Extropic XTR-0/Z1 / Kona | Architecture watch only | No local authenticated route means no execution or comparator claim |
++| Transport diagnosis | Exp6126 `model_native_chat_change_justified_score` | `== 1.0` |
++| Native transport | Exp6127 `model_native_transport_ready_score` | `== 1.0` after all transport and method-validity thresholds pass |
++| Calibration pool | Exp6128 `phase_d_calibration_ready_score` | `== 1.0` on the frozen calibration policy |
++| Held headroom | Exp6129 `phase_d_headroom_ready_score` | `== 1.0` after all clustered competence, diversity, all-wrong, and oracle-headroom gates pass |
++| Per-layer surface | Exp6130 `per_layer_surface_ready_score` | `== 1.0` with matching provenance and aligned immutable cache |
++| Selector calibration | Exp6131 `selector_calibration_ready_score` | `== 1.0` with a frozen calibration-only configuration |
++| CSL fixture | Exp6133 `csl_stress_fixture_ready_score` | `== 1.0` after deterministic invariants and ABI parity pass |
++| CSL stress | Exp6134 `outcome_csl_stress_ready_score` | `== 1.0` only with positive future-event evidence plus idempotence, rollback, safety, parity, and non-forgetting |
++
++Kill rules:
++
++- If Exp6127 does not beat the immutable Exp6115 transport on every
++  preregistered transport threshold, retire this transport attempt and do not
++  generate another pool.
++- If Exp6128 fails semantic competence, method validity, diversity, or
++  all-wrong gates, stop Phase D. Parseability alone cannot qualify it.
++- If Exp6129 lacks clustered oracle headroom over tuned self-consistency, stop
++  hidden-state extraction; a selector has no legitimate target.
++- If Exp6130 cannot prove matching-base provenance and token alignment, do not
++  approximate hidden states from another model.
++- If Exp6132's held interval includes zero, record a null. Do not tune on held
++  rows or reopen external text/logprob scoring.
++- If duplicate delivery changes state or decisions, rollback/parity fails, or
++  future-event utility is non-positive, do not build the shadow adapter.
++- If the ARC digest cannot be tied directly to returned live decisions, report
++  a null. Do not substitute outer-loop reverse engineering or claim a solve.
++
++## Explicitly deferred or excluded
++
++- GateMate, KV260, PolarFire, and Extropic execution while physical/access state
++  is unchanged.
++- Any ARC induction-line revival, repeated registered solve, hand GameAdapter,
++  game-source inspection, exhaustive offline BFS, or outer-loop solve claim.
++- Another raw-completion newline-stop pool, finite-ID/grammar transport retry,
++  parser-only repair loop, or full ConstraintIR rerun.
++- External generated-text/logprob scorer families and the retired MMLU-Pro
++  final-token/final-layer hidden-state scope.
++- Model-weight fine-tuning, self-authored labels, same-decision writes, or
++  non-transactional memory mutation.
++- Speedup, energy-efficiency, thermodynamic-compute, or hardware-parity claims
++  without measured executable access.
+ 
+ ## Success criteria
+ 
+-The milestone is scientifically successful if it produces honest branch evidence,
+-including a decisive null. The strongest positive path requires all of:
+-
+-1. Exp6114 proves the measured-fit 26B model actually engages and releases CUDA
+-   under task ownership.
+-2. Exp6116 contains 360 independent held questions with at least eight authentic
+-   same-model draws each and complete raw provenance.
+-3. Exp6117 qualifies competence, diversity, all-wrong rate, and at least 10 pp
+-   clustered oracle-over-tuned-SC headroom.
+-4. Exp6118 proves token-aligned per-layer access on the matching base surface.
+-5. Exp6119 beats tuned self-consistency with a paired lower interval above zero
+-   and survives shuffled-label and cheap-feature controls.
+-6. Exp6120 either improves exact future-event utility over write-through without
+-   safety/forgetting regression or lands a clean mechanism-level null.
+-7. GateMate and ARC tasks preserve their changed-state and live-provenance
+-   boundaries, and Exp6123 reconciles every branch without laundering.
+-
+-The following are also valid terminal outcomes: the measured-fit canary fails;
+-the generator is below chance or saturated; the pool lacks oracle headroom; the
+-matching base surface is unreachable; the selector ties or loses; or
+-outcome-committed memory does not beat write-through. Each outcome closes or
+-narrows a real PRD gap without reviving a retired construction.
++The milestone is successful even if scientific branches terminate honestly.
++Operational completion requires:
++
++1. Every activated Exp6124-Exp6137 identity emits its declared artifact or a
++   conductor-authenticated gate skip.
++2. Phase D either produces an authentic held pool with clustered headroom and a
++   frozen mid-layer held comparison, or terminates at the first failed gate
++   without spending downstream compute.
++3. Continuous learning produces an equal-resource, chronological stress result
++   with explicit duplicate-delivery idempotence; integration remains default
++   off and is built only after all gates pass.
++4. The single ARC task emits direct live decision and feature-disable receipts
++   without claiming a solve.
++5. Exp6137 reconciles specs, architecture, traceability, status, changelog,
++   research ledger, known issues, and hardware records with the actual terminal
++   evidence and applicable end-to-end checks.
++
++## Conductor execution order
++
++```text
++Exp6124 -> Exp6125 -> Exp6126 -> Exp6127 -> Exp6128 -> Exp6129 ->
++Exp6130 -> Exp6131 -> Exp6132 -> Exp6133 -> Exp6134 -> Exp6135 ->
++Exp6136 -> Exp6137
++```
++
++Do not modify `research-roadmap.yaml` or
++`scripts/research_conductor.py`. Do not push.
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index b15a8cca1a..7b306da28f 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -16,11 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (68 modul
+ 
+ ## Hostile LLM review
+ 
+-**TL;DR: NO RECENT SOLVE ADVANCE.** There are zero artifacts to classify; the clean reachability lint proves only structural accessibility, not live self-discovery.
++**TL;DR: NO RECENT SOLVES TO CREDIT.** Reachability passes, but with zero artifacts there is no evidence of new live self-discovery capability.
+ 
+-Per-artifact: none in the last 7 days.
++**Per-artifact review:** None — no ARC solve artifacts were produced in the last 7 days.
+ 
+-**Recommended action:** Produce runtime artifacts showing the live entrypoint discovering hidden-game solutions through its own attempts and runtime reverse-engineering, with traceable action/observation history and no source inspection, offline ground-truth search, or hand-built per-game logic.
+-
+-**Pattern watch:** No current evidence of outer-loop solving—but also no evidence of progress. Do not present “68 reachable modules” as solving capability; reachability is plumbing, not a live solve.
++**Pattern watch:** No current outer-loop drift is observable because there are no artifacts. However, “68 modules reachable” proves only wiring, not that the live agent independently discovers hidden-game solutions. Do not count future solves without attempt traces and runtime reverse-engineering provenance from a live entrypoint.
+ 
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 8b4d7e3952..6f84242cc6 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,82 +4,94 @@
+ # docs_audit_report — 2026-08-04
+ 
+ ## TL;DR (stranger's 30-second take)
+-I understand the basic pitch, but I would close the tab once the page turns into an internal research dashboard full of unexplained benchmarks, vanity counts, and perfect-looking results. The MIT-0 versus Apache 2.0 contradiction is an immediate credibility failure.
++
++The hero explains Carnot clearly, but I would probably close the tab once I hit the wall of unexplained benchmarks, suspiciously perfect results, internal status language, and contradictory license claims. It feels more like a research lab dashboard than a trustworthy product landing page.
+ 
+ ## TOP 3 PROBLEMS
+-1. The license contradicts itself — “MIT-0 · Open Source” in the hero versus “Apache 2.0 License” in the footer.
+-2. “What we measured” is a 12-card jargon wall whose impressive numbers lack directly accessible evidence, sample sizes, uncertainty, or comparable baselines.
+-3. “Project headline numbers” and “Preprint” read like internal status reporting — 5,308 experiments, 382 milestones, “paper-v6,” repinning history, and operator-upload state do not help a newcomer evaluate the product.
++
++1. Unverifiable metric wall — “What we measured” presents 12 incomparable results without sample sizes, confidence intervals, methods, or direct artifact links.
++2. Insider-language overload — “Recent progress,” “Capabilities,” and “Evidence” expect visitors to understand FoVer, PREM, CRANE, VeriCoT, CCTU, AUROC, and internal version history.
++3. Basic trust failures — the hero says MIT-0 while the footer says Apache 2.0, and “Install and verify in five lines” contains no installation command.
+ 
+ ## DETAILED FINDINGS
++
+ ### Bloat
+-- Whole page — 33 cards plus 4 headline statistics — cap the landing page at roughly 12–16 high-value items and move research inventory elsewhere.
+-- Primary navigation — 12 navigation links plus 2 repository buttons — cap at 5–7 primary destinations.
+-- “What we measured” — 12 result cards — cap at 4–6 representative results with links to evidence.
+-- “From the blog” — 7 article cards — cap at 3 recent or foundational posts.
+-- “Project headline numbers” — 4 statistics plus a “Recent progress” card — cap at 2 product-relevant numbers; experiment, milestone, and test counts are not user outcomes.
+-- Individual bento-card bodies — none exceeds the specified 120-word limit.
+-- Individual result cards — none exceeds the specified 60-word limit.
+-- Footer paragraph — under 100 words, but its brevity does not excuse the license contradiction.
++
++- Navigation — 12 text links plus 2 destination buttons — cap at roughly 5–7 primary choices.
++- Entire page — 33 content/result/blog cards plus 4 headline stats — cap the landing page at roughly 12–16 primary cards and move the rest into evidence, research, and blog pages.
++- The Problem — approximately 106 body words across two introductions and two cards, repeatedly using the same arithmetic example — cap at 60–70 words.
++- How it works — approximately 210 words across 4 bento bodies — no individual card breaches 120 words, but cap each at roughly 35–45 words.
++- What you can check — 7 cards and roughly 300 body words — surface 4 visitor-facing capabilities and move implementation surfaces and research operations elsewhere.
++- Evidence — 12 result cards, plus 4 hero metrics and a “Recent progress” card — cap at 4–6 comparable headline results.
++- Writing — 7 blog cards — cap at 3 recent or strongest posts.
++- Recent progress — approximately 45 body words, technically below the 60-word result-card limit, but it tries to cover packaging, model hosting, two AUROCs, an audit, version history, and repository identity in one card.
+ 
+ ### Internal jargon
+-- “Project headline numbers” — “Experiment runs,” “Completed milestones,” “FoVer,” “5-seed” — these are internal activity measures and unexplained research terminology, not reasons to adopt Carnot.
+-- “Recent progress” — “dual-condition,” “architecture-only,” “Repinned from v2 0.9857,” “pre-submission adversarial audit” — reads like a lab changelog and forces the visitor to reconstruct the methodology.
+-- “Why ‘Energy-Based’?” — “gradient,” “FPGA Ising machines,” “thermodynamic samplers” — unexplained hardware and optimization terminology appears before the page proves ordinary users need it.
+-- “Typed constraints” — “CCTU constrained tool-use micro-benchmark” — neither CCTU nor the benchmark setup is explained.
+-- “Multi-step reasoning” — “AND-composed” — implementation shorthand presented as a benefit.
+-- “Research operations” — “autonomous research loop,” “inner agent,” “adversarial-verify pass,” “structured JSON record” — internal process machinery masquerading as a customer-facing capability.
+-- “APIs & portable memory” — “MCP,” “VerdictRecord,” and “SessionMemory packs” — insider API names without a concrete integration example.
+-- “Test-Time Compute (TTC) & PREM” — the acronyms are expanded but not explained; “intrinsic motivation for continuous self-learning” sounds like research vapor rather than a user-visible capability.
+-- “What we measured” — “KV260,” “Ising,” “SVAMP,” “FoVer,” “CRANE,” “VeriCoT,” “CoT,” “GSM8K,” “TP rate,” “PRM-BiasBench,” “k=5,” “HalluGuard v3,” “pp,” and “CCTU” — nearly every card requires external context.
+-- “Preprint” — “paper-v6,” “clean continuous-integration checkout,” “non-operator environment,” and “operator-initiated upload” — repository workflow language, not public-facing evidence.
++
++- Hero stats and Recent progress — `FoVer`, `AUROC`, `5-seed dual-condition`, `architecture-only`, `v2 0.9857`, and “repinned” — a stranger cannot tell what was measured, what “v2” refers to, or why the number changed.
++- Typed constraints — `CCTU constrained tool-use micro-benchmark` — neither CCTU nor the benchmark task is explained.
++- Multi-step reasoning — “AND-composed,” “symbolic,” and “energy-based” ensemble — implementation language with no user-level consequence.
++- APIs & portable memory — `MCP`, `REST`, `VerdictRecord`, and `SessionMemory` — raw protocol and class names presented as benefits.
++- Test-Time Compute & PREM — `TTC`, `PREM`, “variance,” and “intrinsic motivation for continuous self-learning” — almost entirely insider terminology.
++- Evidence cards — `KV260 FPGA`, `Ising`, `SVAMP`, `AUC`, `FoVer`, `CRANE`, `VeriCoT`, `GSM8K`, `TP`, `CoT`, `PRM-BiasBench`, `k=5`, `HalluGuard v3`, and `pp` — acronym soup with no definitions or visitor-oriented interpretation.
++- Preprint — `paper-v6`, “non-operator environment,” “operator-initiated upload,” and “arXiv bundle” — internal workflow language.
++- No raw `Exp ####` or dotted milestone identifiers appear, but “382 completed milestones” is still meaningless internal bookkeeping.
+ 
+ ### Per-milestone narrative
+-- “Project headline numbers” — “382 Completed milestones” exposes internal project-management volume with no visitor value.
+-- “Recent progress” — “Repinned from v2 0.9857 after pre-submission adversarial audit” is retrospective closeout language.
+-- “Preprint” — “current draft,” reproducibility checkout history, and “pending operator-initiated upload” describe release operations rather than the paper’s contribution.
+-- “Research operations” — the planner/inner-agent/adversarial-pass narrative describes how the project runs itself, not what Carnot does for a user.
+-- “From the blog” — four operations/incident-retrospective cards make the project look preoccupied with its own failures and process.
++
++- Hero stats — “5,318 Experiment runs,” “382 Completed milestones,” and “30,658 Automated tests” read like internal progress counters, not evidence that Carnot helps a user.
++- Recent progress — “ships,” “mirrored,” “repinned from v2,” “after pre-submission adversarial audit,” and “canonical source repository” read like a release-note entry.
++- Research operations — the autonomous planner, inner agent, adversarial-verification pass, JSON artifacts, and reproducibility metadata describe project operations rather than something a visitor can check.
++- Preprint — `paper-v6`, “current draft,” and “submission is prepared but pending operator-initiated upload” are status-report prose.
++- Hardware and training result cards — “sampler live on silicon” and “two-GPU parallel retrain” report engineering milestones without establishing a benefit to users.
++- Blog cards — repeated “defense we shipped,” “detector we shipped,” audit rounds, retractions, and self-verification stories dominate the public narrative with internal retrospectives.
+ 
+ ### Inconsistencies
+-- “MIT-0 · Open Source” and the metadata’s “MIT-0” vs “Apache 2.0 License” in the footer.
+-- Code capability says repair improves HumanEval pass rate by 3 points vs the results section’s HumanEval-50 claim of +18 percentage points; the differing subsets or protocols are not explained.
+-- “Carnot can scale beyond conventional CPUs” vs “Ising sampler live on silicon”; a prototype being live does not establish scaling superiority.
+-- “Seven capabilities” includes “Research operations,” which is a development process rather than something users can check.
+-- The page presents 0.9131 FoVer AUROC, 0.8947 architecture-only AUROC, an older 0.9857 value, 0.91 prompt-injection AUROC, and 0.90 SVAMP AUC with insufficient visual separation; a newcomer cannot tell which number represents the product.
+-- “Install and verify in five lines” offers a Python verification example, but the Rust tab demonstrates low-level Ising sampling rather than the advertised verify-and-repair workflow.
++
++- “MIT-0 · Open Source” in the hero and `MIT-0` in the metadata vs “Apache 2.0 License” in the footer.
++- “Install and verify in five lines” vs a Python example containing no `pip install` command.
++- The Python tab demonstrates LLM-output verification vs the Rust tab merely constructs an Ising model and sampler; they are not equivalent quick starts.
++- “Seven capabilities, one framework” vs cards for “Research operations” and “APIs & portable memory,” which are development practices and integration surfaces rather than things Carnot checks.
++- “+3.0 points on pass-rate” paired with a 14.6% meter vs “+4.9 points” paired with a 66.7% meter; the bars have no stated denominator and do not consistently encode the headline values.
++- “Ising sampler live on silicon” and “2.0× speedup” are both rendered as 100% bars even though neither claim is a percentage.
++- “Repair” says Carnot returns violations to an LLM for another attempt vs “Why Energy-Based?” saying the repair step descends a gradient; the page never explains whether these are separate repair modes.
++- “Independently re-computed in a non-operator environment” vs “externally reproducible” — a separate environment is not necessarily an independent external replication.
++- The TTC/PREM card is outside the `.bento-grid` because of premature closing tags, visually orphaning the advertised seventh capability.
+ 
+ ### Missing essentials
+-- The one-sentence purpose is present and reasonably clear in the hero.
+-- Python installation is present, but the quick-start section itself omits the installation command, and no Rust installation instructions are shown.
+-- Trust evidence is incomplete: claims mention checked-in artifacts, five seeds, and reproducibility, but cards do not link directly to artifacts, protocols, sample sizes, confidence intervals, hardware conditions, or independent evaluators.
+-- The applicable license is effectively missing because the page gives two incompatible answers.
+-- A copyright line names Ian Blenke, but the page does not explicitly identify maintainers, organization, governance, support channel, or contact point.
+-- Scope limits are missing: the page claims support for facts, code, mathematics, tool calls, and “any LLM” without clearly stating what Carnot cannot reliably verify.
++
++- What Carnot does is present: the hero clearly says it checks an LLM answer for internal consistency and suggests a fix.
++- Trust evidence is inadequate: the page asserts that artifacts exist but provides no direct artifact, methodology, dataset, sample-size, confidence-interval, or reproduction link beside each result.
++- Installation is only partially covered: `pip install carnot-ebm` appears in prose, but the installation command is missing from the section explicitly titled “Install.”
++- The license is unusable as presented because two different licenses are claimed.
++- “Ian Blenke” appears in the footer, but the page provides no maintainer role, team information, contact route, governance statement, or support expectations.
++- The page never states the practical operating requirements clearly: which capabilities work locally, which require an LLM or GPU, and which need model weights or external services.
+ 
+ ### Fabrication signals
+-- “GSM8K extraction TP rate: 0.5 → 1.0” — a perfect result with no sample size, false-positive rate, or confidence interval.
+-- “k=5 ensemble catches 60/60 attacks” — perfect performance on a small-looking attack set without test construction or holdout details.
+-- “2.0× speedup, identical losses” — suspiciously exact speedup and equivalence without run variance or tolerances.
+-- “0.0pp accuracy delta with 4.4% cost savings” — implausible precision without sample size or uncertainty.
+-- “99.3% of wrong code flagged” — near-perfect detection without the number of wrong programs or corresponding false-positive rate.
+-- “Zero false positives” in “Carnot Dogfooding by the Numbers” — perfect operational claim relegated to a teaser with no credibility anchor.
+-- “70% → 85%” on HumanEval-50 — 85% cannot be a single raw proportion of 50 problems; aggregation or averaging must be explained.
+-- Several meters are filled to 100% for categorical or unrelated claims such as “live on silicon” and “2.0× speedup”; the visualization falsely implies a normalized perfect score.
+-- “0.9131” reports four-decimal precision on a five-seed result while the page omits the actual confidence interval it says exists.
++
++- “GSM8K extraction TP rate: 0.5 → 1.0” — perfect 1.0 result with no sample size, holdout description, uncertainty, or artifact link.
++- “k=5 ensemble catches 60/60 attacks” — perfect performance on an apparently project-defined attack set, with no independent evaluation anchor.
++- “0.0pp accuracy delta with 4.4% cost savings” — exact zero degradation without uncertainty or trial count.
++- “2.0× speedup, identical losses” — suspiciously perfect scaling and equality without hardware configuration, run variance, or measurement tolerance.
++- “99.3% of wrong code flagged” on HumanEval — high precision without disclosing how many generated programs were wrong or how false positives behaved.
++- “Zero false positives” in the dogfooding blog card — another perfect claim without denominator or audit method.
++- `0.9131` AUROC is shown to four decimal places from a five-seed evaluation, while the claimed confidence interval is never displayed.
++- Multiple 100%-filled meters visually imply perfection even for claims that are binary statuses or non-percentage measurements.
+ 
+ ## WHAT'S WORKING
+-- The hero gives a plain-language explanation, an installation command, and a concrete arithmetic example.
+-- The page acknowledges audits, retractions, provenance differences, and an older inflated AUROC instead of silently hiding them.
++
++- The hero gives a concrete one-sentence explanation, an immediately understandable arithmetic example, and a visible pip package name.
++- The primary FoVer headline is consistently stated as 0.9131, and the page at least acknowledges that an earlier 0.9857 claim was revised after audit.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-- Resolve the MIT-0/Apache 2.0 contradiction everywhere before making any other credibility claim.
+-- Replace experiment, milestone, and test-volume statistics with at most two user-relevant outcomes.
+-- Reduce the evidence grid to 4–6 representative benchmarks and link every number directly to its artifact, protocol, sample size, uncertainty, and baseline.
+-- Remove internal release narrative such as “paper-v6,” repinning history, completed milestones, and operator-upload status from the landing page.
+-- Rewrite or remove acronym-heavy cards; define unavoidable benchmark names in ordinary language.
+-- Reconcile the +3-point and +18-point HumanEval claims by labeling datasets, subsets, models, seeds, and evaluation protocols.
+-- Replace perfect-result marketing with denominators, confidence intervals, false-positive rates, and limitations.
+-- Make the Rust quick start demonstrate the same verify-and-repair product promised by the Python example, or label it clearly as a low-level library example.
+-- Cut navigation to the core paths: overview, evidence, quick start, documentation, paper, and repository.
+-- Explicitly identify maintainers, project governance or support contact, and the verified license.
+\ No newline at end of file
++
++1. Resolve the MIT-0 versus Apache 2.0 contradiction everywhere before making any other trust claim.
++2. Replace the 12-card evidence wall with 4–6 comparable results, each showing task, model, denominator, baseline, uncertainty, and a direct artifact or methodology link.
++3. Remove experiment, milestone, and test counters from the hero; they measure project activity, not product usefulness.
++4. Rewrite or expand every unexplained acronym, especially FoVer, AUROC, CCTU, PREM, CRANE, VeriCoT, and PRM-BiasBench.
++5. Move release-note and operator-status prose—`paper-v6`, repinning history, autonomous-loop internals, and pending upload status—to the blog or project-status documentation.
++6. Put the actual `pip install carnot-ebm` command in Quick Start and either provide a Rust verification example or relabel that tab as low-level sampler usage.
++7. Remove or qualify every perfect result until its sample size, evaluation protocol, uncertainty, and independent credibility anchor are visible.
++8. Reduce navigation choices, capability cards, evidence cards, and blog previews so the page has a clear reading path.
++9. Fix the malformed capability-section markup and decide whether research operations, APIs, TTC, and PREM are user capabilities or separate technical topics.
++10. Add a concise maintainer/contact statement and clearly disclose runtime, model, GPU, and external-service requirements.
+\ No newline at end of file
+diff --git a/ops/verifier_authenticity_audit_report.md b/ops/verifier_authenticity_audit_report.md
+index 32e624f8cc..d536650fa7 100644
+--- a/ops/verifier_authenticity_audit_report.md
++++ b/ops/verifier_authenticity_audit_report.md
+@@ -7,15 +7,17 @@
+ 
+ | Verdict | Count |
+ |---|---|
+-| `AUTHENTIC` | 14 |
+-| `HONEST_HEURISTIC` | 4 |
+-| `DISHONEST_NAMING` | 1 |
+-| `ADVERSARIAL_GAMING` | 1 |
+-| `CANNOT_DETERMINE` | 0 |
++| `AUTHENTIC` | 10 |
++| `HONEST_HEURISTIC` | 5 |
++| `DISHONEST_NAMING` | 2 |
++| `ADVERSARIAL_GAMING` | 2 |
++| `CANNOT_DETERMINE` | 1 |
+ | `UNKNOWN` | 0 |
+ | `OUTRIGHT_FAKE` | 0 |
+ 
+ ### FLAGGED — operator action recommended
++- `python/carnot/verify/abstention_calibrated_clean_verifier_v15.py` — **ADVERSARIAL_GAMING**
++- `python/carnot/verify/arc_gap1_registry_promotion_decision.py` — **DISHONEST_NAMING**
+ - `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — **ADVERSARIAL_GAMING**
+ - `python/carnot/verify/beaver_lite.py` — **DISHONEST_NAMING**
+ 
+@@ -25,16 +27,16 @@ Scanned 20 verifier file(s) with codex as the hostile reviewer.
+ 
+ ## python/carnot/verify/__init__.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `CANNOT_DETERMINE`
+ 
+ ## VERDICT
+-AUTHENTIC
++CANNOT_DETERMINE
+ 
+ ## CLAIMS
+-“Verifiable reasoning: constraints as energy terms + landscape certification.” No paper, learned model, live-inference, or compute-substrate claim is made.
++“Verifiable reasoning: constraints as energy terms + landscape certification.”
+ 
+ ## IMPLEMENTATION_REALITY
+-This is a package initializer that re-exports constraint-energy, landscape-certification, convergence, and verifier implementations from other modules. It performs no scoring or inference itself.
++This is a package initializer that imports and re-exports verifier classes and utilities. It performs no scoring, model invocation, inference, or certification itself; those behaviors live in the imported modules.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -46,33 +48,35 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The limited docstring claim matches the modules this initializer exposes, including `ComposedEnergy`, `ConstraintTerm`, and `certify_landscape`. There is no fake model claim, concealed heuristic, sleep-padding, score-capping, random-data classification, or adversarial-check token-dodging in this file.
++There is no fake verifier implementation here to audit. The docstring describes the package surface, and this file merely exposes that surface; authenticity and production suitability can only be determined by inspecting each imported verifier module.
+ 
+ 
+ ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `ADVERSARIAL_GAMING`
+ 
+ ## VERDICT
+-AUTHENTIC
++ADVERSARIAL_GAMING
+ 
+ ## CLAIMS
+-“The v14 rerun proved the local GGUF path was real” and “the raw model text did not honor the strict verifier-output contract.” The implementation further claims: “Run llama.cpp with grammar-constrained verifier decisions.”
++“The v14 rerun proved the local GGUF path was real” and “the raw model text did not honor the strict verifier-output contract.” Function docstrings further claim: “Run llama.cpp with grammar-constrained verifier decisions” and “Check that this Python can see CUDA and llama.cpp GPU offload.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The default runner imports `llama_cpp.Llama` and `LlamaGrammar`, loads a cached GGUF with GPU layers enabled, and calls `create_chat_completion` for every evaluation row. It also probes CUDA, llama.cpp GPU-offload support, and NVIDIA memory usage.
++The default runner genuinely loads a local GGUF through `llama_cpp.Llama`, requests full GPU offload with `n_gpu_layers=-1`, applies a `LlamaGrammar`, and invokes `create_chat_completion` for every row. This is real model inference, not a text-statistical proxy.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+ 
+ ## GAMING_PATTERNS
+-none
++- Terminal-status token dodge: `validate_artifact` requires an “honest” verdict to begin with a success-style prefix, while `honest_verdict` labels even a gated skip or failed readiness result as `complete:`.
++- GPU evidence uses maximum absolute memory consumption, not the model’s memory delta, so unrelated GPU allocation can satisfy the 512 MiB offload gate.
++- No sleep-padding, score-capping, random-feature classification, or named `IMPLAUSIBLE_PERFECT`/`DURATION_TOO_SHORT` checks.
+ 
+ ## RECOMMENDATION
+-KEEP
++REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-This is real local model inference, not regex or text-statistical theater. The injectable runner and probes support testing, while the production default path still loads and invokes an actual GGUF model under grammar-constrained decoding.
++The inference path is authentic, but the artifact-validation layer deliberately forces failure and skip outcomes through success-looking terminal prefixes. That status laundering is adversarial-check gaming; this verifier must not contribute to headline metrics until failure states remain failures and GPU use is attributed to the invoked model process.
+ 
+ 
+ ## python/carnot/verify/adaptive_conformal_calibration.py
+@@ -83,10 +87,10 @@ This is real local model inference, not regex or text-statistical theater. The i
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“ACSE uses semantic dispersion over multiple generations.” The docstring immediately qualifies the implementation as “a lightweight ACSE-style semantic entropy proxy” using “the variance of the top-k token logprob alternatives and the variance across verifier scores.” It also states that prompt classification is “intentionally lexical and deterministic” and “must not depend on another LLM call.”
++No paper, model, live-inference, GPU, or learned-feature claim. The closest methodological claim is: “Compute a lightweight ACSE-style semantic entropy proxy.” It explicitly discloses: “ACSE uses semantic dispersion over multiple generations. The exp2547 corpus has fixed verifier rows rather than fresh generations, so this proxy uses two local uncertainty signals…”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic keyword classification, NumPy variance calculations over supplied logprobs and verifier scores, and scikit-learn train/test splitting and AUROC evaluation. It invokes no model and generates no embeddings, logits, or fresh completions.
++The code performs deterministic lexical prompt classification, NumPy variance calculations over supplied logprobs and verifier scores, supervised score calibration, Fisher combination, and scikit-learn AUROC evaluation. It invokes no model and imports no model-serving framework.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -98,7 +102,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is plainly a statistical calibration layer, not a standalone model-backed verifier, and its docstrings admit that limitation. The ACSE label is loose branding, but the methodological gap is explicitly disclosed; there is no sleep-padding, score-capping, fabricated random feature generation, or named adversarial-check evasion.
++This is plainly a heuristic calibration layer, not an ACSE implementation, but the docstring admits that directly and explains the substituted statistics. There is no fake model invocation, sleep-padding, score-capping, fabricated random feature generation, or adversarial-check token dodging.
+ 
+ 
+ ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
+@@ -109,10 +113,10 @@ This is plainly a statistical calibration layer, not a standalone model-backed v
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“The policy is a deterministic scheduler over evidence that already exists in the repo.” It “decides how much checking a future verifier pass should spend per row” and “never lets an EBM score, LLM response, or receipt become answer authority.”
++“The policy is a deterministic scheduler over evidence that already exists in the repo.” It “decides how much checking a future verifier pass should spend per row” and explicitly states that it does not make an “EBM score, LLM response, or receipt become answer authority.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads checked-in JSON artifacts, extracts deterministic features, applies a fixed rule table, and writes a policy-simulation artifact. It performs no model inference and explicitly reports zero live model, verifier-scoring, and repair calls.
++The code reads checked-in JSON artifacts, extracts deterministic features, applies a fixed rule table, computes accounting statistics, and writes a validated JSON policy artifact. It imports no ML framework or model client and performs no model inference—exactly as disclosed.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -124,7 +128,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation matches the narrow claim: this is an offline deterministic scheduling artifact, not a paper-derived or learned verifier. It neither pretends to invoke a model nor hides the absence of inference; the authority boundary and non-promotion status are explicit and enforced.
++The module makes no paper, learned-model, GPU, or live-inference claim. Its implementation matches its narrow claim of offline deterministic scheduling and explicitly records zero live model, verifier-scoring, and repair calls; there is no deceptive model branding or adversarial-check gaming.
+ 
+ 
+ ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
+@@ -135,10 +139,10 @@ The implementation matches the narrow claim: this is an offline deterministic sc
+ AUTHENTIC
+ 
+ ## CLAIMS
+-No paper, model, or compute-substrate claim appears in the docstring. It only claims: “Exp 3643 additive second-pair-of-eyes remeasurement.”
++No paper, model, or compute claim appears in the docstring. It only states: “Exp 3643 additive second-pair-of-eyes remeasurement” and cites internal requirements “REQ-VERIFY-3643, SCENARIO-VERIFY-3643.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code loads cached experiment artifacts and corpora, delegates score generation to the Exp 3642 module, and computes thresholds, conditional-catch statistics, McNemar significance, calibrated fusion metrics, AUROC, and checksums. It explicitly performs no live LLM inference.
++The code loads cached experiment artifacts, delegates score production to `corrected_cross_domain_remeasurement_v4`, and computes thresholds, conditional catch rates, McNemar significance, calibration, and AUROC. It invokes no model and explicitly identifies its substrate as cached-corpus scoring with “no LLM load.”
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -150,7 +154,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is a measurement and artifact-generation module, not a verifier pretending to implement a cited model. There is no paper-brand laundering, fake model invocation, sleep-padding, score-capping, random feature fabrication, or named adversarial-check dodge.
++This is an experiment remeasurement and aggregation module, not a falsely branded implementation of a paper or learned verifier. Duration is genuinely measured, scores are not capped or randomized, and the absence of live inference is explicitly disclosed rather than concealed.
+ 
+ 
+ ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
+@@ -161,10 +165,10 @@ This is a measurement and artifact-generation module, not a verifier pretending
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“This module is a gate audit, not a verifier rerun.” It claims to read “the checked-in .292 evidence chain” and distinguish exact-replay evidence from insufficiently documented live-inference claims. It makes no paper or model-execution claim.
++“This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims whose authenticity evidence is incomplete.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads local JSON and repository files, computes checksums, audits evidence fields, and emits a corrigendum artifact. It invokes no model and explicitly records that no live inference occurs.
++The code reads checked-in JSON and documentation, computes checksums, classifies evidence gaps, and emits a corrigendum artifact. It imports no ML framework and invokes no model, exactly as its docstring states.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -176,7 +180,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly what the docstring claims: artifact aggregation and authenticity auditing, not verification or inference. Runtime is measured from `perf_counter()` without sleep-padding, and there is no score-capping, random feature fabrication, or attempt to masquerade heuristics as a published model.
++This is honestly labeled audit infrastructure, not a disguised model-backed verifier. It should remain available as an evidence gate, but it produces no verifier scores and therefore must not itself contribute to ensemble AUROC.
+ 
+ 
+ ## python/carnot/verify/and_composition_verifier.py
+@@ -187,14 +191,10 @@ The implementation does exactly what the docstring claims: artifact aggregation
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“Advisory k=5 verifier-adapter harness.”  
+-“The default SOSKAN adapter is neutral until trained, SemEnergy uses its proxy scorer.”  
+-“This adapter uses the text-feature extraction from Exp 1108 to build the feature vector, then scores with the model.”  
+-“A future headline verifier must wire real trained/live verification substrates.”  
+-“This helper is headline-ineligible until a real trained/live verification substrate replaces the current advisory defaults.”
++“This module keeps the historical AND-composition API used by pipeline certificates, but the default surface is not a production headline verifier.” “The default SOSKAN adapter is neutral until trained, SemEnergy uses its proxy scorer.” “A future headline verifier must wire real trained/live verification substrates, calibrated thresholds, and fail-closed behavior.” The SOSKAN adapter further claims it “uses text-feature extraction to produce energy” through `SOSKANEnergyV3`.
+ 
+ ## IMPLEMENTATION_REALITY
+-The module invokes local Carnot verifier classes and `SOSKANEnergyV3`; when trained, it calls the model’s `fit()` and `energy()` methods. However, the default SOSKAN path returns a constant 0.5, its inputs are three crude text statistics, SemEnergy is explicitly a proxy, and all adapter exceptions are converted into passing 0.0 scores.
++The harness invokes real Carnot verifier/model classes, including `SOSKANEnergyV3.energy()` after training, but its SOSKAN inputs are only response length, numeric-token density, and vocabulary richness. By default SOSKAN returns a constant `0.5`, SemEnergy is explicitly proxy-based, and every adapter exception is converted into a passing `0.0`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -206,7 +206,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation is weak and fail-open, but the docstrings and metadata admit every material deficiency and explicitly quarantine the harness from headline metrics. It is suitable only as advisory diagnostic machinery; `HEADLINE_ELIGIBLE = False` must remain enforced until the proxy, untrained constant output, and exception-as-pass behavior are replaced.
++The module is unusually explicit that it is an advisory, headline-ineligible compatibility harness rather than five active, calibrated verification signals. Its weak proxies, neutral untrained model, and fail-open exception handling make it unsuitable for production headline AUROC, but those defects are disclosed and enforced through `HEADLINE_ELIGIBLE = False`.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_autopyverifier_pilot.py
+@@ -217,10 +217,10 @@ The implementation is weak and fail-open, but the docstrings and metadata admit
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“AutoPyVerifier-inspired GAP-1 set search for ARC orientation.” The docstring explicitly limits the claim: “It does not synthesize verifier code with an LLM. Instead, a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool.”
++“AutoPyVerifier-inspired GAP-1 set search for ARC orientation.” The docstring immediately limits that claim: “This module deliberately borrows only the cheap set-search idea from AutoPyVerifier. It does not synthesize verifier code with an LLM.” It further claims evaluation over “a cached ARC square-transpose distractor pool” and that scoring sees “only train pairs plus a candidate grid.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic subset search over hand-authored grid statistics such as adjacency counts, positional histograms, centroids, and run profiles. It imports no ML framework and invokes no model, exactly as disclosed.
++The code exhaustively searches combinations of hand-authored grid-statistical discriminators built from `Counter`, adjacency patterns, histograms, centroids, and run lengths. It invokes no model and imports no ML framework; seeded randomness constructs evaluation distractors rather than learned features.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -232,33 +232,33 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The AutoPyVerifier association is qualified immediately and unambiguously: only the cheap set-search idea is borrowed, while LLM synthesis is explicitly disclaimed. The implementation matches that limited description; its seeded randomness constructs distractors and splits rather than fabricating learned features or evading adversarial checks.
++The implementation is a cheap deterministic substitute, and the docstring states that limitation bluntly instead of impersonating AutoPyVerifier’s LLM-synthesis method. There is no sleep-padding, score-capping, random-feature classifier, or named adversarial-check dodge. It is valid as an honestly labeled ARC heuristic, not as evidence that the full AutoPyVerifier method was implemented.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_registry_promotion_decision.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `DISHONEST_NAMING`
+ 
+ ## VERDICT
+-AUTHENTIC
++DISHONEST_NAMING
+ 
+ ## CLAIMS
+-“This module is intentionally evidence-only. It reads the existing Exp 5209 hardening artifact ... and decides whether the GAP-1 set verifier is ready to become a frozen registry entry.” It makes no paper, learned-model, GPU, live-inference, or embedding claim.
++No paper, model, GPU, embedding, or live-inference claim. It claims: “This module is intentionally evidence-only” and “decides whether the GAP-1 set verifier is ready to become a frozen registry entry.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads JSON and registry text, validates evidence fields, makes a deterministic rule-based decision, and writes an artifact plus documentation update. It imports no ML framework and invokes no model, consistent with its evidence-only description.
++The code reads JSON and registry text, performs deterministic field checks and regex extraction, then writes an artifact and documentation. Critically, `_decision()` never returns `"promoted"`: even when the gate, leakage audit, and subset stability all pass, it returns `"blocked_missing_evidence"`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-NONE
++OUTRIGHT_FAKE
+ 
+ ## GAMING_PATTERNS
+ none
+ 
+ ## RECOMMENDATION
+-KEEP
++REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-This is honestly labeled registry-governance code, not a scientific or model-backed verifier, and it must not contribute to production AUROC. However, `_decision()` can never return `"promoted"`—even when every gate passes—so its promotion branch is dead and must be fixed before using it to make registry decisions.
++The evidence-only description is honest, but the advertised “promotion decision” is rigged so promotion is unreachable. This is not a functioning verifier or even a valid binary promotion gate; it must not contribute to production ensemble or headline AUROC numbers.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_set_search_holdout_hardening.py
+@@ -269,10 +269,10 @@ This is honestly labeled registry-governance code, not a scientific or model-bac
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library.” It also claims grouped train/held-out selection where “held-out rows only measure the chosen subset; they never choose it.”
++“This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library.” It also explicitly states the substrate limitation: “no live LLM inference.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code loads cached artifacts and ARC candidate pools through `arc_gap1_autopyverifier_pilot`, computes deterministic discriminator score tables, selects subsets on training groups, and evaluates them on disjoint held-out groups. It performs no live model inference and does not claim otherwise.
++The code performs deterministic subset search and grouped holdout evaluation over cached ARC candidate pools using discriminators imported from `arc_gap1_autopyverifier_pilot`. It invokes no torch, transformers, API, or live model; that matches its explicit cached-candidate claim.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -284,7 +284,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation matches the narrow experimental claim: cached candidates, deterministic discriminators, grouped holdout selection, and leakage checks. The seeded randomness only creates reproducible data splits; it does not fabricate classifier features, and there is no sleep-padding, score-capping, or adversarial-check token dodging. The module explicitly says not to promote this experiment directly to the registry, so it should not itself be mistaken for a production verifier.
++The module claims to be an offline hardening experiment, not a neural or paper-derived verifier, and the implementation does exactly that. Its seeded randomness only constructs grouped splits; it does not fabricate classifier features or scores. The code also explicitly says not to promote this experiment directly to the verifier registry.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
+@@ -295,10 +295,10 @@ The implementation matches the narrow experimental claim: cached candidates, det
+ AUTHENTIC
+ 
+ ## CLAIMS
+-None. The docstring makes no paper, model, learned-feature, live-inference, or compute-substrate claim.
++No docstring claims about a paper, model, learned representation, live inference, GPU, or other compute substrate. It accurately claims: “It reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads two existing JSON artifacts, applies deterministic stability and leakage rules, audits a registry file, and writes a decision artifact plus an optional documentation update. It invokes no model and does not claim to.
++The code reads two JSON artifacts, applies deterministic threshold and leakage checks, audits a YAML registry using regex, and writes a decision artifact plus an ops-document update. It invokes no model and does not pretend to.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -310,7 +310,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly what the docstring claims: it performs an administrative freeze-or-retire decision over existing evidence. There is no fake model attribution, undisclosed proxy, sleep-padding, score-capping, random feature generation, or named adversarial-check dodge.
++The implementation does exactly the deterministic evidence-processing job described by the docstring. There are no bogus paper or model claims, no fake learned features, no sleep-padding, no score-capping, and no random-data classification.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
+@@ -321,12 +321,10 @@ The implementation does exactly what the docstring claims: it performs an admini
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“The adapter ... repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.”  
+-“Token logprobs and top-k alternatives are treated as research diagnostics only.”  
+-“Deterministic validators still make every final accept/reject decision.”
++“The adapter … repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.” It claims access to “Token logprobs and top-k alternatives” while explicitly limiting them to “research diagnostics only” and naming three GGUF model specifications.
+ 
+ ## IMPLEMENTATION_REALITY
+-The default execution path delegates to Carnot’s live telemetry builder with `generation_source="live_sota_llamacpp"`, then consumes actual token logprobs and top-k alternatives from its manifest. This module performs telemetry normalization, diagnostic scoring, and artifact validation rather than implementing inference directly.
++The default execution path calls Carnot’s `build_telemetry_artifact(..., generation_source="live_sota_llamacpp")`, then parses actual token-logprob and top-k fields. This file delegates model invocation to that telemetry module rather than importing `llama_cpp` directly.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -338,7 +336,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not regex masquerading as model inference: it explicitly invokes a Carnot live llama.cpp telemetry module and refuses to declare readiness unless live inference, logprobs, top-k data, and focused tests are reported. Its scope is also stated honestly—telemetry affects diagnostic routing metrics but cannot override deterministic decisions.
++This is an adapter around an explicitly delegated live llama.cpp telemetry path, not regex or text-statistical theater. It refuses to declare readiness without live-inference, logprob, top-k, and test-success signals, and it honestly states that telemetry is diagnostic-only and cannot override deterministic validators.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
+@@ -349,25 +347,27 @@ This is not regex masquerading as model inference: it explicitly invokes a Carno
+ ADVERSARIAL_GAMING
+ 
+ ## CLAIMS
++“Exp 1542 ARM/EBT soft-value diagnostic.”  
+ “The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The module performs no model inference and merely reads scores from existing JSON artifacts. Worse, for runtime-contract and BEAVER cases it fabricates the supposed `carnot_energy_score` directly from the ground-truth decision—`0.0` for accept and `1.0` for reject—then uses that label-derived value to calculate routing AUROC.
++The module invokes no model and imports no ML framework; it only reads existing JSON fields and calculates correlations/AUC in pure Python. Worse, for runtime-contract and BEAVER cases it fabricates “Carnot energy” directly from the ground-truth decision: `0.0 if deterministic_accept else 1.0`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ OUTRIGHT_FAKE
+ 
+ ## GAMING_PATTERNS
+-- Direct target leakage: `carnot_energy_score=0.0 if deterministic_accept else 1.0`
+-- The leaked score is reused in `routing_score`, manufacturing near-perfect or perfect routing performance
+-- `live_sota_model_inference_used` can become true merely because a row contains a matching `model_hf_id`; no inference is verified
+-- No sleep-padding, score-capping, random-data generation, or named adversarial-check dodge
++- Direct label leakage: `carnot_energy_score` is manufactured from `deterministic_accept`, guaranteeing perfect separation whenever both classes exist.
++- `routing_score` includes that leaked label-derived score, contaminating routing AUC.
++- `live_sota_model_inference_used` can become true merely because a row contains a matching `model_hf_id`; this module performs no live inference.
++- `honest_verdict` says “complete” even when the artifact status is `blocked`.
++- `_authority_or_weight_mutation_blocked()` is hard-coded to `False`, making the readiness guard meaningless.
+ 
+ ## RECOMMENDATION
+-REIMPLEMENT_PROPERLY
++RETIRE
+ 
+ ## RATIONALE
+-A deterministic label recoded as an “energy” is not explicit Carnot energy; it is the evaluation target smuggled into the predictor. Any correlation or AUROC containing those rows is contaminated and must not contribute to production or headline results, regardless of the diagnostic-only disclaimer.
++This is not an ARM/EBT or energy-model diagnostic for two of its three data sources; it renames the deterministic label as “Carnot energy” and then measures how well that label predicts itself. The optional logprob signal is merely copied from artifacts, and model-name metadata is treated as evidence of live inference. Its AUROC is contaminated by construction and must not enter production or headline results.
+ 
+ 
+ ## python/carnot/verify/ast_structure_verifier.py
+@@ -378,12 +378,10 @@ A deterministic label recoded as an “energy” is not explicit Carnot energy;
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“Python-looking text is checked with ``ast.parse`` plus bracket balance.”  
+-“General prose is checked with cheap structural heuristics such as balanced brackets and sentence boundaries.”  
+-“The kernel is syntactic structure, not token-level statistical fluency.”
++“Python-looking text is checked with ``ast.parse`` plus bracket balance.” “General prose is checked with cheap structural heuristics such as balanced brackets and sentence boundaries.” “The kernel is syntactic structure, not token-level statistical fluency.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code uses `ast.parse`, regex-based Python detection, bracket-stack validation, and simple prose-structure statistics. It invokes no learned model and claims none.
++The code invokes `ast.parse` for Python-like input and otherwise uses regexes, bracket-stack validation, sentence-boundary checks, and simple text statistics. This exactly matches the documented syntactic and heuristic scope.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -395,7 +393,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring precisely describes a lightweight syntactic verifier, and the implementation does exactly that. There is no fabricated paper attribution, model invocation claim, compute claim, or adversarial-check gaming.
++The docstring makes no paper, learned-model, inference, embedding, or hardware claim. It explicitly describes cheap structural heuristics, and the implementation delivers those heuristics without pretending they are model-based; the clamps enforce the documented `[0, 1]` range rather than dodging perfect scores.
+ 
+ 
+ ## python/carnot/verify/beaver_epr_bounded_probe.py
+@@ -407,12 +405,11 @@ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+ “Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints.”  
+-“BEAVER v2 needs a sound token-trie/frontier proof before its probability bounds can be called exact.”  
+-“This module does not implement that frontier proof.”  
+-“Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features.”
++“This module does not implement that frontier proof. It implements a bounded-prefix feasibility probe…”  
++“Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code uses regex extraction, AST-based arithmetic evaluation, prefix scanning, and AUROC calculations over local labeled files. It performs no model invocation; EPR-style features are computed only from previously recorded top-k logprobs.
++The code uses regex, AST evaluation, and `Decimal` arithmetic to detect false equalities in text prefixes. It performs no model inference; its entropy features are computed only from previously recorded top-k logprobs.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -424,7 +421,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is a narrow text-statistical heuristic, not BEAVER, and the docstring says so explicitly. The artifact reinforces that disclosure with `beaver_exact: False`, identifies the missing frontier proof, and reports absent logprob telemetry instead of fabricating it.
++This is a heuristic wearing an honest label: the docstring explicitly disclaims exact BEAVER and identifies the missing frontier proof. The model names and `llama_cpp` check are merely metadata and capability preconditions, not inference, but the module never falsely claims otherwise and forces `beaver_exact` to `False`.
+ 
+ 
+ ## python/carnot/verify/beaver_exact_tiny_frontier.py
+@@ -435,10 +432,11 @@ This is a narrow text-statistical heuristic, not BEAVER, and the docstring says
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset.” The docstring explicitly disclaims the broader method: “This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model.”
++“Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset.”  
++“This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code imports and invokes Z3 through `z3.Solver()`, translates parsed arithmetic expressions into Z3 terms, and checks ground equalities for satisfiability. Regex is used only to extract candidate equalities; the actual decisions come from the solver.
++The code regex-extracts simple arithmetic equalities, parses them into a restricted AST, converts them to Z3 expressions, and invokes `z3.Solver().check()` for exact satisfiability. It explicitly labels the separate text-statistical scorer as an Exp 2858 proxy.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -450,7 +448,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly the narrow thing the docstring claims, and it repeatedly records that full BEAVER is not implemented. There is no sleep-padding, score-capping, random feature fabrication, or named adversarial-check dodging; seeded randomness only selects a balanced evaluation subset.
++The implementation performs the exact narrow operation claimed: Z3 decides ground arithmetic equalities found in observed prefixes. The docstring and artifact schema repeatedly disclose that this is neither full BEAVER nor a language-model probability-frontier proof; deterministic random sampling selects examples but does not fabricate features or scores.
+ 
+ 
+ ## python/carnot/verify/beaver_lite.py
+@@ -466,10 +464,10 @@ DISHONEST_NAMING
+ “Enumerate prefixes and bound unsafe probability mass for final answers.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The optional provider performs real llama.cpp inference and sums log probabilities for violating completions retained by a top-K beam search; otherwise it explicitly uses deterministic mock completions. The reported “upper bound” ignores all probability mass outside the retained frontier, so it is generally an enumerated unsafe-mass subtotal—not an upper bound.
++The optional live path genuinely invokes `llama_cpp.Llama` and derives token log-probabilities from model logits; otherwise it explicitly uses deterministic mock completions. However, summing unsafe probability only across a truncated top-K beam is not an upper bound on total unsafe mass—the omitted probability mass is never bounded.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-OUTRIGHT_FAKE
++UNDISCLOSED_PROXY
+ 
+ ## GAMING_PATTERNS
+ none
+@@ -478,7 +476,7 @@ none
+ REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-The model-invocation claim is authentic and the mock fallback is disclosed, but the central certificate claim is mathematically false. Comparing weighted unsafe mass with an unweighted empirical violation rate does not establish soundness; the mock’s equal masses merely make that comparison tautologically pass. This must not contribute to headline AUROC or certification results.
++The model integration is real and the mock fallback is honestly labeled, so this is not regex masquerading as inference. The central “certificate” claim is still false: enumerated unsafe mass is generally a lower bound, while `bound_is_sound` merely compares it with an unweighted violation rate over selected candidates. This must not contribute to headline results as a certified upper-bound verifier until residual frontier mass is handled soundly.
+ 
+ 
+ ## python/carnot/verify/beaver_lite_live.py
+@@ -494,7 +492,7 @@ AUTHENTIC
+ “Select a live llama.cpp bounder or the honest Zipf fallback.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The live path imports `llama_cpp.Llama`, loads a GGUF model with `logits_all=True`, invokes it, extracts `token_logprobs`, and sums them for each completion. When live inference is unavailable, it uses an explicitly named deterministic Zipf mock and records that fallback in the artifact.
++The live path imports and instantiates `llama_cpp.Llama`, invokes it for completions, extracts `token_logprobs`, and sums them into candidate logprobs. When live inference is unavailable or fails, it uses a deterministic Zipf mock and explicitly records that fallback in the artifact.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -506,21 +504,21 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not regex masquerading as model inference: it contains a real llama.cpp model invocation and consumes generated-token log probabilities. The synthetic fallback is conspicuously disclosed through class names, provenance fields, logprob-source fields, and verdicts; no sleep-padding, score-capping, random classification features, or adversarial-check token dodges appear.
++The claimed llama.cpp inference path is real, not regex or text-statistical theater. The synthetic fallback is plainly named, tagged through `mock_logprobs_used`, `zipf_mock_used`, and `logprobs_source`, and prevented from masquerading as live inference in the reported verdict.
+ 
+ 
+ ## python/carnot/verify/beaver_prefix_bound_contracts.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `HONEST_HEURISTIC`
+ 
+ ## VERDICT
+-AUTHENTIC
++HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-No paper, model-inference, or compute-substrate claim. The docstring accurately says it “builds a bounded prefix frontier over the canonical contract JSON” and reports “structural risk signals.”
++“BEAVER-lite prefix-bound audit for runtime-contract decoder rows.” The docstring explicitly limits the claim: “It builds a bounded prefix frontier over the canonical contract JSON” and says the resulting signals only “help rank rows for routing and inspection.” It makes no paper citation, model-invocation, live-inference, GPU, logprob, or learned-feature claim.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code constructs a character trie, compares JSON prefixes with canonical targets, computes deterministic length-based bounds, and imports false-accept results from the runtime-contract validator ledger. It performs no model inference and does not claim to.
++The code performs deterministic string-prefix and JSON-structure calculations over previously generated decoder rows. It invokes no model and imports no ML framework; unavailable logprobs and top-k values are explicitly recorded as structural simulation blockers.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -532,7 +530,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly the structural prefix audit described by the docstring. It explicitly records unavailable logprobs, labels fallback behavior as `structural_bound_simulation`, and leaves deterministic validators as final authority; the score clamping merely enforces the documented probability-bound range.
++The implementation does exactly what the narrowly scoped docstring describes: it constructs canonical JSON targets, evaluates prefix consistency, and reports structural risk bounds. It does not impersonate live BEAVER inference and explicitly preserves the deterministic validator ledger as final authority, so these heuristic bounds must not be presented as independent headline AUROC evidence.
+ 
+ 
+ ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
+@@ -547,7 +545,7 @@ AUTHENTIC
+ “No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code deterministically replays checked-in JSON artifacts, canonicalizes answers, and checks premise and ledger consistency. It invokes no model, solver, GPU substrate, or inference API.
++The code deterministically reads checked-in JSON artifacts, canonicalizes answers, compares labels, replays ledger fields, and writes a summary artifact. It imports no ML framework or model client and performs no model or solver invocation.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -559,5 +557,5 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation matches its deliberately limited claims and explicitly discloses that it is artifact replay rather than a production verifier. There is no sleep-padding, score-capping, random feature generation, or named adversarial-check evasion; however, this pilot should not be presented as a model-backed verifier or used to generate headline production AUROC.
++The implementation does exactly what the docstring admits: local artifact replay with rule-based canonicalization and grounding checks. Keep it as a regression-pilot artifact, but do not include it in the production verifier ensemble or headline AUROC numbers because it explicitly is not a production verifier and only replays known cases.
+ 
+diff --git a/research-references.md b/research-references.md
+index aca95c6b69..5d95f83e43 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -32162,3 +32162,112 @@ sealed a usable low-chance Phase-D ladder.
+   registered solve.
+ 
+ <!-- V530-PLANNER-REFRESH-20260804-END -->
++
++## V531 Planner Refresh - 20260804
++
++Incremental planning sweep after terminal milestone `2026.08.530` and the
++`V530-PLANNER-REFRESH-20260804-END` boundary. The primary pass rechecked arXiv
++for 2025-2026 energy-based verification and reasoning, neural constraint
++satisfaction, Ising and probabilistic hardware, hallucination detection, KANs,
++energy-guided or constrained decoding, and continual/online learning. The
++secondary pass rechecked OpenReview, Hugging Face Papers, direct Semantic
++Scholar citation APIs for EBT (`2507.02092`) and ARM-EBM (`2512.15605`),
++targeted GitHub repositories, Extropic's official writing/hardware pages, and
++Logical Intelligence's Kona/Aleph pages. This block records only findings that
++became newly actionable after `.530` or changed operational planning.
++
++### Newly actionable deltas
++
++- **IDER: IDempotent Experience Replay for Reliable Continual Learning** -
++  arXiv:2603.00624, https://arxiv.org/abs/2603.00624; code at
++  https://github.com/YutingLi0606/Idempotent-Continual-Learning. IDER treats
++  stability under repeated application as an explicit continual-learning
++  property. Its published mechanism mutates model parameters and therefore is
++  not a direct Carnot fit, but the idempotence criterion is actionable after
++  Exp6120: duplicate or retried exact-outcome deliveries must leave the bounded
++  utility state, future decisions, audit ledger, and rollback result unchanged.
++  The `.531` continuous-self-learning stress test should add duplicate-delivery
++  and reordered-retry controls while retaining immutable model weights,
++  chronological first delivery, exact external outcomes, poison quarantine,
++  protected-prefix retention, and fixed-width ABI parity.
++- **Hallucination Is Linearly Decodable from Mid-Layer Hidden States in
++  Quantized LLMs** - arXiv:2606.02628,
++  https://arxiv.org/abs/2606.02628. This source was indexed earlier, but `.530`
++  makes its layer-localization result newly decisive: Carnot's prior MMLU path
++  tested final-token/final-layer summaries and retired after a null, whereas
++  the paper reports peak held-out truthfulness probes in intermediate layer
++  bands and little gain from an MLP over a linear probe. If the new Phase-D
++  corpus first establishes real headroom, `.531` should fail closed on
++  per-layer access, sweep a preregistered small mid-layer band plus the
++  pre-answer marker, and retain final-layer, norm, length, answer-label,
++  shuffled-label, and tuned-self-consistency controls. This is a genuinely
++  different internal-representation surface, not permission to reopen the
++  retired external generated-text/logprob scorer or MMLU final-embedding path.
++- **Thinking Before Constraining: A Unified Decoding Framework for Large
++  Language Models** - arXiv:2601.07525,
++  https://arxiv.org/abs/2601.07525. The source was also indexed earlier, but
++  Exp6115 supplies the missing local trigger: raw completion with a newline
++  stop produced empty strings and channel fragments despite a 512-token
++  budget. Use the paper only for a small transport canary that compares a
++  model-native chat template with a free-reasoning region followed by one
++  terminal answer field. Do not retry full ConstraintIR generation, finite-ID
++  grammar decoding, parser-only repair, or claim semantic improvement from
++  syntactic success. Exact Python/Z3 labels remain the authority, and the
++  canary must beat the frozen Exp6115 transport on non-empty completion,
++  terminal-field reachability, and parseability before any large pool runs.
++
++### Citation-trail, ecosystem, and hardware status
++
++- **Semantic Scholar:** dated 2026-08-04 direct-API receipts still return 32
++  visible EBT citing records and eight ARM-EBM citing records. The EBT trail is
++  still led by the already-indexed Explorative Modeling, Memoir, Solver-Hard,
++  fixed-point reasoners, LoopUS, and causal-energy work; the ARM-EBM trail
++  remains Path-Measure Dynamics, Constitutional On-Policy Safe Distillation,
++  Distributional EBMs, LoopUS, ontology constraints, Graph Energy Matching,
++  false-first-step planning, and Gibbs-aligned diffusion-LM work. Counts are
++  discovery receipts, not stable bibliometric claims.
++- **OpenReview / Hugging Face Papers:** the pass reconfirmed the probabilistic
++  algebraic layer, Scalable EBMs, NRGPT, Hidden-Align, ALMA, Continual Learning
++  Bench, and trigger-switched constrained decoding. IDER is promoted above.
++  None supplies a competent-but-unsaturated Carnot candidate pool or removes
++  the need for exact labels, tuned self-consistency, and shortcut controls.
++- **GitHub:** targeted and Trending searches exposed no maintained EBM,
++  constraint, KAN, or verifier repository that displaces Carnot's local GGUF
++  runtime, exact validators, or transactional memory. IDER's public repository
++  is a design reference for the idempotence control, not a dependency or a
++  claimed reproduction.
++- **Extropic schedule change:** the current official hardware page at
++  https://extropic.ai/hardware now labels both the Z1 Stick and Z1 Card as
++  **early access 2027**, replacing the 2026 label recorded in V530. Carnot has
++  no authenticated XTR-0/Z1 route, so no TSU task, power result, speedup claim,
++  or 2026 availability assumption is eligible for `.531`.
++- **Logical Intelligence:** the public Kona page still describes a continuous,
++  globally scored, non-autoregressive trace model beneath an LLM coordination
++  layer, and the Aleph page reports machine-checked Lean orchestration. The
++  pages still expose no public Kona weights, documented local API, or
++  reproducible comparator. They support Carnot's generator/verifier boundary
++  only as architecture context.
++
++### V531 planning impact
++
++- Diagnose and repair the Exp6115 model-native transport on a small frozen
++  calibration slice before spending compute on another candidate pool. A
++  transport pass is necessary but never sufficient for a semantic claim.
++- Build the Phase-D pool only with the mandated
++  `unsloth/gemma-4-26B-A4B-it-GGUF`, a pinned chat template, non-truncating
++  budget, genuine same-model `K`, question-clustered intervals, exact labels,
++  effective-`K`, all-wrong, method-validity, relabel, and shortcut controls.
++- Gate any hidden-state experiment on measured candidate headroom and on
++  authenticated matching-base per-layer access; compare a small mid-layer band
++  with the already-negative final-layer surface rather than assuming the paper
++  transfers.
++- Stress Exp6120's outcome-committed reduced-order state under equal state
++  budgets, delayed and duplicate outcomes, domain shift, idempotent retries,
++  poison quarantine, rollback, and future-event utility before any default-off
++  shadow integration.
++- Keep ARC at exactly one live-path instrumentation/ablation slot. Do not rerun
++  the closed induction line or claim a level solve. Do not restage GateMate
++  while its physical-state receipt remains unchanged; retain current hardware
++  as requirements/context only.
++
++<!-- V531-PLANNER-REFRESH-20260804-END -->
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..fd025bc28d
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,523 @@
++milestone: "2026.08.531"
++milestone_title: "Model-Native Phase-D Claims, Mid-Layer Verification, and Idempotent Outcome Learning"
++milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
++tasks:
++  - id: exp6124-transition-v531
++    milestone: "2026.08.531"
++    title: "Exact terminal-boundary handoff from .530 into .531"
++    priority: critical
++    track: infrastructure
++    deliverable: results/experiment_6124_transition_v531.json
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 30
++    estimated_wall_time_min: 120
++    requires_gpu: false
++    operator_override: "2026-05-29 standing operator directive: routine exact-path milestone transitions recur by design; this transition classifies only the twelve actually activated .530 identities and allocates a fresh collision-free range."
++    prior_failures:
++      - experiment_id: exp5961-transition-v528
++        verdict: "blocked: three conductor wall-clock attempts exhausted before the declared transition artifact was written"
++        addressed_by: "The exact-path transition helper and multiple later transitions have shipped; this attempt is bounded to twelve declared .530 identities, writes the artifact before optional reconciliation, and treats gate skips as terminal evidence rather than missing files."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Milestone 2026.08.530 is terminal with twelve conductor-activated identities, Exp6112-Exp6123. Exp6115 is complete-null; Exp6116-Exp6119 are gate-blocked downstream; Exp6120 is complete-positive under an equal-utility/lower-state criterion; Exp6121 is blocked on unchanged physical state with retirement triggered; Exp6122 is complete-null without solve credit; and Exp6123 is complete-with-blocks. The next CalVer milestone is 2026.08.531 and reserves Exp6124-Exp6137. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-roadmap.yaml
++      - {project_root}/research-roadmap-next.yaml
++      - {project_root}/research-complete.yaml
++      - {project_root}/ops/conductor-log.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/ops/known-issues.md
++      - {project_root}/results/experiment_6112_transition_v530.json
++      - {project_root}/results/experiment_6115_phase_d_calibration_pool.json
++      - {project_root}/results/experiment_6120_outcome_committed_reduced_order_csl.json
++      - {project_root}/results/experiment_6121_gatemate_changed_state_gate_v530.json
++      - {project_root}/results/experiment_6122_arc_primitive_reachability_loo.json
++      - {project_root}/results/experiment_6123_v530_capstone_reconciliation.json
++      - {project_root}/scripts/evidence_index_collision_preflight.py
++      - {project_root}/scripts/adversarial_verify.py
++      - {project_root}/openspec/capabilities/research-reporting/spec.md
++
++      TASK:
++      Archive exactly the twelve conductor-activated `.530` identities by declared `(task_id, deliverable)`; preserve complete, null, gate-blocked, physical-action, retired, and complete-with-blocks states; append `.530` to research-complete.yaml at most once if absent; prove Exp6124-Exp6137 collision-free; and write results/experiment_6124_transition_v531.json.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: parse the active roadmap, activation-plan line, twelve declared deliverables, completion history, conductor log, exclusion manifest, dirty worktree, root-clutter inventory, and protected-file hashes. Resolve evidence only by exact declared path.
++      1. Ensure the research-reporting spec contains REQ-* activated-identity, exact-path, gate-skip, terminal-class, retirement-preservation, duplicate-history, debt-non-amplification, and collision requirements; add focused failing tests first.
++      2. Freshly adversarial-verify every present declared artifact. Treat conductor-authenticated structured gate skips as terminal evidence without inventing missing result files.
++      3. Write the transition artifact atomically, then append `.530` once only if its canonical completion block is absent. Never mutate a historical result or rewrite `.529`.
++      4. Scan active/staged roadmaps, completion history, proposals, exclusions, results, tests, and known allocations for Exp6124-Exp6137; require zero collisions outside this staged plan.
++      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_transition, activated_task_and_deliverable_matrix, exact_terminal_classification, structured_gate_skip_receipts, retirement_signals_preserved, adversarial_verifier_receipts, inherited_debt_baselines_and_deltas, research_complete_append_count, duplicate_history_amplification_count, next_task_range, next_range_collision_count, docs_reconciled, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         exact_terminal_classification/structured_gate_skip_receipts principle: every `.530` terminal class remains distinct and no skipped branch is reported as run.
++         retirement_signals_preserved principle: Exp6121 and any same-verdict retirement signals remain load-bearing.
++         research_complete_append_count/duplicate_history_amplification_count principle: append at most once and amplify no history.
++         next_task_range/next_range_collision_count principle: bare zero collisions authorize Exp6124-Exp6137.
++         honest_verdict principle: use a terminal `complete:` or `blocked:` prefix.
++      6. Run focused unit/spec coverage, YAML parse, exact-path, structured-gate-skip, retirement, duplicate-history, adversarial-verifier, exclusion, collision, protected-file, applicable E2E, and no-new-root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp6125-v531-source-delta-ingestion
++    milestone: "2026.08.531"
++    title: "Dated evidence refresh after the V531 planner marker"
++    priority: high
++    track: phase-d-evidence
++    deliverable: results/experiment_6125_v531_source_delta_ingestion.json
++    agent_type: gemini
++    model: gemini-3.1-pro-preview
++    max_turns: 50
++    estimated_wall_time_min: 120
++    requires_gpu: false
++    prior_failures:
++      - experiment_id: exp6113-v530-source-delta-ingestion
++        verdict: "complete_null: no accepted post-V530 source deltas; references unchanged"
++        addressed_by: "This search starts after the disjoint V531 marker and tests material changes to model-native transport, mid-layer verification, idempotent outcome learning, live ARC receipts, and newly executable hardware routes."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      The planning sweep is sealed at `V531-PLANNER-REFRESH-20260804-END` in research-references.md. It records newly actionable IDER idempotence controls, mid-layer quantized-LLM truthfulness evidence, a bounded free-reasoning/terminal-answer transport hypothesis, direct EBT/ARM-EBM citation receipts, Extropic's 2027 Z1 schedule, and unchanged Kona access. Only evidence published or materially changed after that exact marker is eligible. Zero accepted findings is a valid complete-null result. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-program.md
++      - {project_root}/research-references.md
++      - {project_root}/research-studying.md
++      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/research-roadmap.yaml
++      - {project_root}/research-roadmap-next.yaml
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/ops/known-issues.md
++      - {project_root}/results/experiment_6113_v530_source_delta_ingestion.json
++      - {project_root}/scripts/sweep_clusters.py
++      - {project_root}/scripts/sweep_semscholar.py
++      - {project_root}/openspec/capabilities/research-reporting/spec.md
++
++      TASK:
++      Search the hash-bounded post-V531 window through arXiv, OpenReview, Hugging Face Papers, direct Semantic Scholar citation trails for EBT and ARM-EBM, GitHub, Extropic, and Logical Intelligence; classify every receipt; append only actionable non-duplicate deltas to research-references.md; and write results/experiment_6125_v531_source_delta_ingestion.json without changing task identities, gates, exclusions, or sealed findings.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: hash the exact V531 marker, references, active/staged roadmaps, exclusions, sweep code, output path, and protected files. Record UTC start/end, source cutoffs, same-day ordering uncertainty, endpoint failures, and rate limits.
++      1. Ensure REQ-* source-window, primary-source, provenance, duplicate/retired-scope rejection, append-only bibliography, and task-immutability requirements exist; add focused failing tests first.
++      2. Search post-marker work on EBM verification/reasoning, neural CSP, Ising/p-bit hardware, hallucination/internal representations, KANs, constrained generation, continual learning, and ARC online discovery. Open primary papers or official pages before acceptance.
++      3. Recheck direct Semantic Scholar citations for EBT `2507.02092` and ARM-EBM `2512.15605`, OpenReview, Hugging Face Papers, GitHub Trending and targeted repos, Extropic hardware/writing, and Kona. Date negative and failed receipts.
++      4. Deduplicate by identifier, title, author, mechanism, and ledger heading. Reject renamed retired transport/scorer/ARC/hardware shapes and unchanged access claims.
++      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, search_window_and_marker_receipt, source_queries_and_endpoint_receipts, primary_secondary_and_official_source_counts, accepted_rejected_duplicate_retired_and_abstained_findings, false_positive_false_negative_cutoff_and_rate_limit_receipts, semantic_scholar_ebt_and_arm_ebm_receipts, openreview_huggingface_github_extropic_and_kona_receipts, duplicate_and_retired_scope_filter, references_append_receipt, task_identity_gate_and_exclusion_immutability, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         search_window_and_marker_receipt principle: only a hash-anchored post-marker window is eligible.
++         accepted_rejected_duplicate_retired_and_abstained_findings principle: every candidate receives one explicit disposition.
++         references_append_receipt/task_identity_gate_and_exclusion_immutability principle: evidence aggregation may append references but cannot rewrite the staged plan.
++         honest_verdict principle: use `complete_delta:`, `complete_null:`, or `blocked:`.
++      6. Run focused unit/spec coverage, marker/hash, date-window, deduplication, source classification, cutoff/rate-limit, roadmap/exclusion immutability, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp6126-phase-d-exp6115-transport-forensics
++    milestone: "2026.08.531"
++    title: "Exp6115 model-transport forensics and frozen v2 specification"
++    priority: critical
++    track: phase-d
++    deliverable: results/experiment_6126_phase_d_exp6115_transport_forensics.json
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 20
++    estimated_wall_time_min: 90
++    requires_gpu: false
++    prompt: |
++      CONTEXT:
++      Exp6115 generated 720 candidate rows but was complete-null: per-candidate accuracy 0.020833, parseability 0.061111, method validity 0.011111, all-wrong 0.877778, and effective K about 1.7-2.0. Raw receipts used `Llama(...)` completion with `stop=["\n"]`, no authenticated chat template, and a 512-token budget; most outputs were empty or channel fragments, while rare rows reached `Final answer: D`. This diagnostic must distinguish transport failure from model incompetence without running another model or redesigning the sealed ladder. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-program.md
++      - {project_root}/research-references.md
++      - {project_root}/ops/known-issues.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/results/experiment_6114_phase_d_gpu_ladder_canary.json
++      - {project_root}/results/experiment_6115_phase_d_calibration_pool.json
++      - {project_root}/results/experiment_6115_phase_d_calibration_pool.rows.jsonl
++      - {project_root}/scripts/experiments/experiment_6115_phase_d_calibration_pool.py
++      - {project_root}/scripts/llama_cpp_server_manager.py
++      - {project_root}/scripts/model_cache_helpers.py
++      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
++
++      TASK:
++      Recompute Exp6115's transport and semantic metrics from immutable raw rows; attribute empty, truncated, channel-fragment, terminal-field, parse, and method failures to observable causes; inspect the pinned GGUF chat-template surface; freeze one minimal v2 serialization/canary contract; and write results/experiment_6126_phase_d_exp6115_transport_forensics.json without live inference.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: hash Exp6114/Exp6115 artifacts, raw rows, generator script, GGUF metadata, tokenizer/chat-template metadata, exclusions, output path, protected files, and dirty worktree. Require all 720 row identities or report incompleteness.
++      1. Ensure REQ-* immutable-row audit, observable-failure attribution, model-template provenance, transport-versus-semantics separation, frozen-canary contract, and retired-scope exclusion requirements exist; add focused failing tests first.
++      2. Recompute non-empty rate, exact-empty rate, whitespace-only rate, channel-token leakage, terminal-field reachability, parseability, method validity, answer accuracy, stop reason, generated-token count, duplicate clusters, and family/stratum breakdowns.
++      3. Trace each row to prompt serialization, stop list, token budget, seed, model hash, and server receipt. Do not infer a cause where the receipt is absent.
++      4. Inspect local GGUF metadata and runtime template APIs. Freeze exactly one model-native messages serialization, natural reasoning region, terminal answer field, non-truncating budget, and no-newline-stop canary contract.
++      5. A new canary is justified only if observable template/stop/channel evidence explains a material share of failures and the proposed change is mechanically testable without hidden labels. Otherwise score zero and retire this recovery path.
++      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, immutable_exp6114_exp6115_artifact_code_and_row_hashes, expected_observed_and_missing_row_counts, nonempty_empty_whitespace_channel_leak_terminal_field_parse_method_and_accuracy_metrics, family_stratum_stop_reason_token_count_and_duplicate_breakdowns, row_level_failure_attribution_and_unknown_count, gguf_model_tokenizer_and_chat_template_provenance, frozen_v2_messages_reasoning_terminal_field_budget_and_stop_contract, transport_semantics_separation_receipt, hidden_label_retry_count, retired_scope_nonrecurrence, model_native_chat_change_justified_score, retirement_triggered, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         row_level_failure_attribution_and_unknown_count principle: causal language is limited to directly observed configuration and row receipts.
++         transport_semantics_separation_receipt principle: answer accuracy and method validity are never inferred from parse success.
++         model_native_chat_change_justified_score principle: exactly 1 only for an evidence-backed, frozen, label-blind canary contract.
++         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
++      7. Run focused unit/spec coverage, 720-row conservation, metric recomputation, attribution, model-template provenance, frozen-contract, retired-scope, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp6127-phase-d-native-chat-transport-canary
++    milestone: "2026.08.531"
++    title: "Gated on Exp6126 justification: model-native Phase-D chat fidelity canary"
++    priority: critical
++    track: phase-d
++    deliverable: results/experiment_6127_phase_d_native_chat_transport_canary.json
++    model: opus
++    max_turns: 100
++    estimated_wall_time_min: 240
++    requires_gpu: true
++    prior_failures:
++      - experiment_id: exp5813-sota-split-budget-decoding-canary
++        verdict: "complete: answer_channel_not_ready_split_budget_sota_canary"
++        addressed_by: "This attempt uses the exact measured-fit 26B GGUF's native chat serialization and one terminal answer field on the Exp6103 corpus, with direct channel/stop receipts; it does not reuse the split-budget finite-ID answer channel."
++        retire_if_same_verdict: true
++      - experiment_id: exp6115-phase-d-calibration-pool
++        verdict: "complete_null: no_calibration_stratum_decode_policy_met_gate"
++        addressed_by: "Exp6126 first attributes the failed raw-completion/newline-stop transport and freezes one minimal native-chat canary; this task is only a small paired transport test and cannot spend the full pool or claim semantic recovery."
++        retire_if_same_verdict: true
++    gated_on:
++      - upstream: exp6126-phase-d-exp6115-transport-forensics
++        artifact_field: model_native_chat_change_justified_score
++        op: "=="
++        value: 1.0
++    prompt: |
++      CONTEXT:
++      Exp6126 must justify one frozen native-chat change from immutable Exp6115 evidence. This task tests transport reachability, not a new constraint language and not a semantic headline. It compares the exact failed Exp6115 raw-completion baseline against one model-native messages serialization with unconstrained natural reasoning followed by one terminal answer field. MODEL_SPECS: `unsloth/gemma-4-26B-A4B-it-GGUF`, the pinned Q4_K_M GGUF and embedded tokenizer/chat template used by the ready Exp6114 CUDA route. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-references.md
++      - {project_root}/ops/known-issues.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.json
++      - {project_root}/results/experiment_6114_phase_d_gpu_ladder_canary.json
++      - {project_root}/results/experiment_6115_phase_d_calibration_pool.json
++      - {project_root}/results/experiment_6126_phase_d_exp6115_transport_forensics.json
++      - {project_root}/scripts/experiment_template.py
++      - {project_root}/scripts/llama_cpp_server_manager.py
++      - {project_root}/scripts/model_cache_helpers.py
++      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
++      - {project_root}/ops/e2e-test-plan.md
++
++      TASK:
++      On a frozen family-balanced calibration slice, run a paired exact-Exp6115 transport baseline and the single Exp6126 native-chat contract with the mandated 26B GGUF; measure transport and semantic outcomes separately with task-owned CUDA lifecycle receipts; and write results/experiment_6127_phase_d_native_chat_transport_canary.json.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: recompute the structured gate; hash ladder, Exp6114-Exp6116 evidence, frozen row IDs, model file, tokenizer/template metadata, code, output paths, GPU state, lease state, protected files, and inherited debt. Block before model load if the gate fails.
++      1. Ensure REQ-* structured-gate, frozen-slice, paired-transport, model-native-template, terminal-field, non-truncating-budget, independent-seed, GPU-lifecycle, semantic-separation, and retirement requirements exist; add focused failing tests first.
++      2. Freeze at least 18 calibration questions balanced by family and difficulty. Use identical questions and preregistered seeds for baseline and treatment; never inspect held labels.
++      3. Run exactly the Exp6115 baseline and one native-chat treatment. The treatment allows natural reasoning, uses the pinned chat template, removes the newline stop, allocates a measured non-truncating budget, and requests one terminal answer field. Do not add grammar, finite-ID, parser-repair, or hidden-label retries.
++      4. Persist raw serialized prompts/messages, raw completions, stop reasons, token counts, seeds, parse results, exact method/answer labels, model/server hashes, and task-owned load/decode/release telemetry.
++      5. Preregister pass thresholds before treatment generation: treatment non-empty and terminal-field reachability each at least 0.95; parseability at least 0.90; channel leakage at most 0.05; method validity strictly above the baseline with a positive paired lower interval; no regression in exact accuracy. Report accuracy without treating it as the transport primary.
++      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_ladder_slice_and_row_hashes, model_specs_and_exact_file_hashes, tokenizer_chat_template_and_serialization_hashes, paired_baseline_treatment_prompt_seed_and_budget_contract, raw_completion_stop_reason_token_and_terminal_field_receipts, nonempty_terminal_parse_channel_method_and_accuracy_arm_metrics, paired_deltas_intervals_and_threshold_matrix, hidden_label_retry_grammar_finite_id_and_parser_repair_counts, task_owned_gpu_server_pid_engagement_and_release_timeline, model_native_transport_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         paired_deltas_intervals_and_threshold_matrix principle: every preregistered transport threshold must pass; parseability cannot substitute for method validity.
++         hidden_label_retry_grammar_finite_id_and_parser_repair_counts principle: all are zero.
++         model_native_transport_ready_score/retirement_triggered principle: readiness is exactly 1 only for a conjunctive pass; the same negative verdict retires this exact attempt.
++         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
++      7. Run focused unit/spec coverage, structured gate, frozen-row pairing, template/serialization, raw-row conservation, paired thresholds, semantic separation, no-retired-mechanism, GPU ownership/engagement/release, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp6128-phase-d-calibration-pool-v2
++    milestone: "2026.08.531"
++    title: "Gated on Exp6127 readiness: model-native Phase-D calibration pool v2"
++    priority: critical
++    track: phase-d
++    deliverable: results/experiment_6128_phase_d_calibration_pool_v2.json
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 420
++    requires_gpu: true
++    prior_failures:
++      - experiment_id: exp6115-phase-d-calibration-pool
++        verdict: "complete_null: no_calibration_stratum_decode_policy_met_gate"
++        addressed_by: "The prerequisite native-chat canary must now prove terminal reachability, parseability, method validity, exact model/template provenance, and GPU lifecycle before this pool reuses the frozen ladder; the failed raw-completion/newline-stop policy is forbidden."
++        retire_if_same_verdict: true
++    gated_on:
++      - upstream: exp6127-phase-d-native-chat-transport-canary
++        artifact_field: model_native_transport_ready_score
++        op: "=="
++        value: 1.0
++    prompt: |
++      CONTEXT:
++      Exp6127 must qualify a single model-native transport contract on a small frozen calibration slice. This task then asks the semantic question that Exp6115 could not: whether the mandated local generator yields a competent, diverse, unsaturated natural candidate pool. MODEL_SPECS: `unsloth/gemma-4-26B-A4B-it-GGUF`, the exact pinned Q4_K_M file and embedded tokenizer/chat template qualified by Exp6127. Legacy small models may run CPU smoke tests only and cannot contribute headline rows. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-program.md
++      - {project_root}/ops/known-issues.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.json
++      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.rows.jsonl
++      - {project_root}/results/experiment_6115_phase_d_calibration_pool.json
++      - {project_root}/results/experiment_6127_phase_d_native_chat_transport_canary.json
++      - {project_root}/scripts/experiments/experiment_6115_phase_d_calibration_pool.py
++      - {project_root}/scripts/experiment_template.py
++      - {project_root}/scripts/llama_cpp_server_manager.py
++      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
++      - {project_root}/ops/e2e-test-plan.md
++
++      TASK:
++      Freeze Exp6127's passing template and decode policy; collect at least eight independent natural samples for at least 90 balanced Exp6103 calibration questions; preserve complete row and compute provenance; qualify exactly one calibration policy using separate competence, method-validity, parseability, diversity, and all-wrong gates; and write results/experiment_6128_phase_d_calibration_pool_v2.json.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: recompute the structured gate; hash the sealed ladder/splits, model, template, canary, selected calibration IDs, exact validators, code, output paths, GPU/lease state, protected files, and inherited debt. Block before generation if the gate fails.
++      1. Ensure REQ-* structured-gate, calibration-only, model-native-template, independent-K, raw-row provenance, exact-label, diversity, competence, method-validity, no-hidden-retry, lifecycle, and retirement requirements exist; add focused failing tests first.
++      2. Freeze at least 90 calibration questions balanced across all three families and preregistered difficulty strata. No held row or label may be read.
++      3. Collect `K >= 8` independent stochastic samples per question with distinct declared seeds and fixed sampling settings. Preserve raw messages, completions, token/stop receipts, final answer, method trace, exact Python/Z3 labels, model/template hashes, and compute receipts for every attempted draw.
++      4. Compute per-candidate accuracy, clustered intervals, parseability, method validity, effective K, exact and semantic duplicate rates, all-wrong rate, oracle@K, tuned self-consistency, family/stratum results, latency, tokens, and GPU lifecycle.
++      5. Calibration readiness requires parseability at least 0.95, effective K at least 7.5, per-candidate accuracy in [0.40, 0.70] with lower interval above the enumerated 0.25 floor, all-wrong at most 0.10, method validity at least 0.80, and oracle@K minus tuned SC at least 0.10. Freeze one policy or stop honestly.
++      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_ladder_split_question_and_validator_hashes, calibration_question_family_stratum_and_semantic_group_counts, model_specs_and_exact_file_hashes, tokenizer_chat_template_decode_seed_and_budget_contract, attempted_expected_present_missing_and_duplicate_row_counts, raw_prompt_completion_stop_token_method_answer_and_exact_label_receipts, per_candidate_accuracy_clustered_intervals_parseability_method_validity, effective_k_exact_semantic_duplicate_all_wrong_oracle_and_tuned_sc_metrics, family_stratum_shortcut_relabel_and_answer_cluster_metrics, task_owned_gpu_server_pid_engagement_and_release_timeline, hidden_label_retry_and_deterministic_builder_counts, qualification_gate_matrix, frozen_policy_receipt, phase_d_calibration_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         attempted_expected_present_missing_and_duplicate_row_counts principle: all attempted draws remain auditable; no malformed or wrong row is silently excluded.
++         hidden_label_retry_and_deterministic_builder_counts principle: both are zero.
++         qualification_gate_matrix/frozen_policy_receipt principle: all gates are conjunctive and held generation receives one immutable policy.
++         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
++      7. Run focused unit/spec coverage, structured gate, split sealing, row conservation, exact-validator parity, independent-seed/K, transport, diversity/competence/method gates, no-hidden-retry, GPU lifecycle, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp6129-phase-d-held-pool-v2
++    milestone: "2026.08.531"
++    title: "Gated on Exp6128 readiness: sealed held Phase-D pool and headroom audit v2"
++    priority: critical
++    track: phase-d
++    deliverable: results/experiment_6129_phase_d_held_pool_v2.json
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 720
++    requires_gpu: true
++    prior_failures:
++      - experiment_id: exp6116-phase-d-held-candidate-pool
++        verdict: "GATE_BLOCK: exp6115 phase_d_calibration_ready_score was 0.0; no held generation was eligible"
++        addressed_by: "A genuinely new prerequisite chain now requires Exp6127's native-chat transport and Exp6128's semantic calibration gates before the sealed held split can be spent; the failed policy cannot flow downstream."
++        retire_if_same_verdict: true
++    gated_on:
++      - upstream: exp6128-phase-d-calibration-pool-v2
++        artifact_field: phase_d_calibration_ready_score
++        op: "=="
++        value: 1.0
++    prompt: |
++      CONTEXT:
++      Exp6128 must freeze one qualified, model-native calibration policy. This task is the first permitted spend of the sealed 360-question held split and combines generation with the independent-question headroom audit so no extra identity is spent on the same immutable rows. Exact labels may score completed draws but cannot influence prompts, retries, inclusion, or decoding. MODEL_SPECS: `unsloth/gemma-4-26B-A4B-it-GGUF`, the exact pinned Q4_K_M generator, embedded tokenizer/chat template, and frozen Exp6128 policy. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-program.md
++      - {project_root}/ops/known-issues.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.json
++      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.rows.jsonl
++      - {project_root}/results/experiment_6128_phase_d_calibration_pool_v2.json
++      - {project_root}/scripts/experiment_template.py
++      - {project_root}/scripts/llama_cpp_server_manager.py
++      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
++      - {project_root}/ops/e2e-test-plan.md
++
++      TASK:
++      Apply the immutable Exp6128 generation policy once to all sealed held questions with `K >= 8`; preserve every attempt and exact label; compute question-clustered competence, diversity, all-wrong, tuned-self-consistency, and oracle-headroom evidence with preregistered strata and controls; and write results/experiment_6129_phase_d_held_pool_v2.json.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: recompute the structured gate; hash the held manifest, semantic-group split, frozen policy, model/template, exact validators, code, output paths, GPU lease state, protected files, and inherited debt. Prove held question identities and labels were not consumed upstream.
++      1. Ensure REQ-* structured-gate, held-seal, immutable-policy, full-row conservation, exact-label, independent-question inference, tuned-SC, oracle-headroom, shortcut-strata, no-retry, lifecycle, and retirement requirements exist; add focused failing tests first.
++      2. Generate at least eight independent stochastic samples for every held question with the exact frozen policy. Persist raw messages, completions, seeds, stop/token receipts, method trace, parsed answer, exact labels, model/template hashes, timestamps, and task-owned GPU lifecycle for every attempted draw.
++      3. Do not regenerate, omit, or replace a row based on correctness, parseability, method validity, validator output, or downstream feature availability. Record failures in place.
++      4. Compute clustered per-candidate accuracy and interval, parseability, method validity, effective K, exact/semantic duplicates, all-wrong, tuned SC, majority vote, oracle@K, and paired oracle-minus-SC interval at the question unit.
++      5. Report family, difficulty, relabel, shortcut, semantic group, answer cluster, identically-wrong consensus, latency, token, and compute strata. The observed-p independence formula and best-of-K are diagnostics only.
++      6. Headroom readiness requires parseability >=0.95, effective K >=7.5, accuracy in [0.40,0.70] with clustered lower interval >0.25, all-wrong <=0.10, method validity >=0.80, and oracle@K - tuned_SC >=0.10 with paired clustered lower interval >0. Any failure stops hidden-state work.
++      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_held_manifest_split_policy_model_template_and_validator_hashes, held_seal_and_upstream_nonconsumption_receipt, question_family_stratum_semantic_group_and_answer_cluster_counts, model_specs_and_exact_file_hashes, attempted_expected_present_missing_and_duplicate_row_counts, raw_prompt_completion_seed_stop_token_method_answer_and_exact_label_receipts, per_candidate_accuracy_clustered_interval_parseability_and_method_validity, effective_k_exact_semantic_duplicate_and_all_wrong_metrics, majority_tuned_sc_oracle_at_k_and_paired_oracle_headroom_interval, family_difficulty_relabel_shortcut_consensus_and_answer_cluster_metrics, task_owned_gpu_server_pid_engagement_and_release_timeline, hidden_label_retry_regeneration_omission_and_deterministic_builder_counts, qualification_gate_matrix, phase_d_headroom_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         attempted_expected_present_missing_and_duplicate_row_counts principle: every expected draw has a preserved row or an explicit failure receipt.
++         hidden_label_retry_regeneration_omission_and_deterministic_builder_counts principle: all are zero.
++         majority_tuned_sc_oracle_at_k_and_paired_oracle_headroom_interval principle: the selector target exists only if oracle headroom exceeds tuned SC at the independent-question unit.
++         phase_d_headroom_ready_score/retirement_triggered principle: readiness is conjunctive; the same null retires this exact corpus/policy attempt.
++         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
++      8. Run focused unit/spec coverage, structured gate, held seal/leakage, immutable policy, row conservation, validator parity, question-clustered statistics, shortcut/relabel controls, no-retry/omission, GPU lifecycle, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp6130-phase-d-per-layer-surface-v2
++    milestone: "2026.08.531"
++    title: "Gated on Exp6129 headroom: authenticated matching-base mid-layer surface v2"
++    priority: critical
++    track: phase-d
++    deliverable: results/experiment_6130_phase_d_per_layer_surface_v2.json
++    model: opus
++    max_turns: 100
++    estimated_wall_time_min: 720
++    requires_gpu: true
++    prior_failures:
++      - experiment_id: exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477
++        verdict: "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
++        addressed_by: "This task uses a new exact low-chance Phase-D corpus with proved oracle headroom, authentic same-model candidates, a hash-pinned matching base, and a preregistered intermediate-layer band; final-layer MMLU features are controls only."
++        retire_if_same_verdict: true
++      - experiment_id: exp6118-phase-d-per-layer-surface
++        verdict: "blocked_gate_check_failed"
++        addressed_by: "The new chain repairs model transport and requires a ready held headroom artifact before any base-model download or extraction; the task still fails closed on provenance, alignment, or memory."
++        retire_if_same_verdict: true
++    gated_on:
++      - upstream: exp6129-phase-d-held-pool-v2
++        artifact_field: phase_d_headroom_ready_score
++        op: "=="
++        value: 1.0
++    prompt: |
++      CONTEXT:
++      Exp6129 must prove authentic selectable headroom before hidden-state spending. Prior MMLU final-layer work is retired, but arXiv:2606.02628 reports truthfulness signals in intermediate layers of quantized LLMs, making a preregistered mid-layer surface on the new corpus genuinely distinct. GGUF generation and base-transformer activation extraction are separate substrates and must be proven equivalent enough for provenance, not assumed. MODEL_SPECS: mandated generator `unsloth/gemma-4-26B-A4B-it-GGUF` plus its separately resolved, exact-revision matching base transformer with `output_hidden_states=True`; no legacy model may provide headline features. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-program.md
++      - {project_root}/research-references.md
++      - {project_root}/ops/known-issues.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json
++      - {project_root}/results/experiment_6118_phase_d_per_layer_surface.json
++      - {project_root}/results/experiment_6129_phase_d_held_pool_v2.json
++      - {project_root}/scripts/model_cache_helpers.py
++      - {project_root}/scripts/experiment_template.py
++      - {project_root}/openspec/capabilities/verification/spec.md
++      - {project_root}/ops/e2e-test-plan.md
++
++      TASK:
++      Resolve and hash-pin the matching base for the mandated GGUF generator; prove tokenizer, prompt, answer-marker, and candidate-text alignment; establish authenticated per-layer access; preregister a small intermediate-layer band; cache immutable calibration and held candidate features with final-layer and cheap controls; and write results/experiment_6130_phase_d_per_layer_surface_v2.json.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: recompute the structured gate before downloads or model load; hash the held pool, generator GGUF, template, candidate rows, base-model metadata, local caches, output paths, disk/RAM/swap, both GPUs, protected files, and inherited debt. Never kill an unrelated process.
++      1. Ensure REQ-* structured-gate, exact-model-provenance, tokenizer/template-alignment, per-layer-access, preregistered-mid-layer-band, immutable-cache, calibration/held sealing, device-lifecycle, and fail-closed requirements exist; add focused failing tests first.
++      2. Resolve an exact base revision and record authoritative linkage evidence, file hashes, license/access receipt, architecture/config, tokenizer files, precision, attention implementation, and device map. Ambiguous linkage is a block.
++      3. Prove byte/token equivalence for prompts and candidate texts, identify the terminal answer field and pre-answer marker, and publish mismatch counts. Do not silently normalize, retokenize, or replace candidates.
++      4. Before reading correctness labels, preregister a small intermediate layer band motivated by the paper and exact token anchors: pre-answer marker, answer token, prefix mean/delta, and trajectory summaries. Retain final layer, norm, length, and answer-label features as controls.
++      5. Teacher-force immutable candidate texts and write content-addressed calibration and held feature shards with row, model, layer, token-position, dtype, device, and code provenance. Labels remain in a separately hashed table.
++      6. Require successful shuffled-row, repeated-extraction determinism, label-separation, alignment, and no-missing-row tests; fail closed on OOM or mismatch and do not substitute another model.
++      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_pool_candidate_split_label_and_template_hashes, model_specs_and_exact_generator_and_base_file_hashes, generator_base_linkage_revision_license_and_access_receipt, tokenizer_prompt_candidate_answer_marker_and_token_alignment_metrics, precision_attention_device_map_and_output_hidden_states_receipt, preregistered_mid_layer_band_anchor_prefix_trajectory_and_final_control_contract, expected_extracted_missing_misaligned_and_duplicate_row_counts, calibration_and_held_feature_shard_paths_hashes_schema_and_label_separation, repeated_extraction_determinism_and_shuffled_row_controls, gpu_server_pid_vram_thermal_and_release_timeline, external_text_logprob_confidence_and_model_judge_counts, per_layer_surface_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         generator_base_linkage_revision_license_and_access_receipt principle: a name resemblance is not model equivalence.
++         tokenizer_prompt_candidate_answer_marker_and_token_alignment_metrics principle: extraction fails closed on unexplained alignment mismatch.
++         calibration_and_held_feature_shard_paths_hashes_schema_and_label_separation principle: immutable features are content-addressed and labels cannot leak into extraction.
++         external_text_logprob_confidence_and_model_judge_counts principle: all are zero.
++         per_layer_surface_ready_score/retirement_triggered principle: readiness is exactly 1 only if every provenance, access, alignment, cache, and lifecycle gate passes.
++         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
++      8. Run focused unit/spec coverage, structured gate, generator/base provenance, tokenizer/template/token alignment, per-layer access, preregistration, cache row conservation, label isolation, deterministic replay, controls, GPU lifecycle, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp6131-phase-d-mid-layer-selector-calibration
++    milestone: "2026.08.531"
++    title: "Gated on Exp6130 surface: calibration-only mid-layer selector freeze"
++    priority: critical
++    track: phase-d
++    deliverable: results/experiment_6131_phase_d_mid_layer_selector_calibration.json
++    max_turns: 50
++    estimated_wall_time_min: 300
++    requires_gpu: false
++    prior_failures:
++      - experiment_id: exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477
++        verdict: "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
++        addressed_by: "This calibration uses a different corpus with proved selector headroom, preregistered mid-layer bands and pre-answer anchors, separate calibration/held caches, question groups, and final-layer/cheap/shuffled controls; it does not reopen MMLU-Pro."
++        retire_if_same_verdict: true
++      - experiment_id: exp6119-phase-d-hidden-state-selector
++        verdict: "GATE_BLOCK: exp6118 per_layer_surface_ready_score was 0.0; selector fitting was ineligible"
++        addressed_by: "Exp6130 must now emit an authenticated, aligned, immutable per-layer cache before calibration. This task freezes on calibration only and reserves a separate identity for the held comparison."
++        retire_if_same_verdict: true
++    gated_on:
++      - upstream: exp6130-phase-d-per-layer-surface-v2
++        artifact_field: per_layer_surface_ready_score
++        op: "=="
++        value: 1.0
++    prompt: |
++      CONTEXT:
++      Exp6130 must provide an authenticated matching-base feature cache over an authentic headroom-qualified pool. This task uses calibration questions only to choose one simple internal selector and freezes it before any held evaluation. The hypothesis is mid-layer localization, not model complexity. No live LLM call is required; MODEL_SPECS provenance still preserves the mandated `unsloth/gemma-4-26B-A4B-it-GGUF` generator and exact matching-base revision from Exp6130. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-references.md
++      - {project_root}/ops/known-issues.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json
++      - {project_root}/results/experiment_6129_phase_d_held_pool_v2.json
++      - {project_root}/results/experiment_6130_phase_d_per_layer_surface_v2.json
++      - {project_root}/openspec/capabilities/verification/spec.md
++      - {project_root}/ops/e2e-test-plan.md
++
++      TASK:
++      On calibration question groups only, compare preregistered simple linear and centroid mid-layer selectors with tuned self-consistency, final-layer, norm, length, answer-label, shuffled, and oracle-peeking controls; freeze one layer/anchor/model/threshold configuration without reading held selector outcomes; and write results/experiment_6131_phase_d_mid_layer_selector_calibration.json.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: recompute the structured gate; hash pool, feature shards, label table, group split, model provenance, preregistered band, code, output path, protected files, and inherited debt. Prove held labels and selector outputs have not been opened.
++      1. Ensure REQ-* structured-gate, calibration-only fitting, question grouping, simple-model family, preregistered band, tuned-SC, cheap/final/shuffled controls, positive-control reachability, frozen configuration, and retirement requirements exist; add focused failing tests first.
++      2. Fit only regularized linear/logistic probes and non-parametric success/failure centroids over the preregistered layer/anchor summaries. Hyperparameters and thresholds use train/calibration question groups only.
++      3. Compare with tuned SC, majority vote, final-layer-only, norm, length, answer-label, cheap text metadata, shuffled labels, shuffled candidate features within question, and an oracle-peeking positive control marked non-deployable.
++      4. Use nested question-grouped resampling. Report calibration selection accuracy, paired delta and interval versus tuned SC, calibration, fixes/harms/ties/abstentions, leakage checks, and compute; do not emit held accuracy.
++      5. Freeze exactly one feature schema, layer/anchor, scaler, selector coefficients or centroids, threshold, abstention rule, tuned-SC comparator, and hash. Readiness requires positive calibration lower interval versus tuned SC, no cheap/final/shuffled reproduction, positive-control reachability, and zero leakage.
++      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_pool_feature_label_group_model_and_preregistered_band_hashes, model_specs_and_exact_file_hashes, calibration_train_validation_question_counts_and_leakage_receipts, candidate_selector_family_hyperparameter_and_nested_grouping_contract, tuned_sc_majority_final_layer_norm_length_answer_label_and_cheap_controls, shuffled_label_and_within_question_feature_controls, oracle_peeking_positive_control_non_deployable, calibration_selection_accuracy_paired_delta_interval_fixes_harms_ties_abstentions_and_calibration, held_label_access_and_held_selector_metric_counts, frozen_feature_layer_anchor_scaler_selector_threshold_abstention_and_hash, qualification_gate_matrix, selector_calibration_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         held_label_access_and_held_selector_metric_counts principle: both are zero.
++         tuned_sc_majority_final_layer_norm_length_answer_label_and_cheap_controls principle: mid-layer evidence must survive cheaper and retired-lineage explanations.
++         selector_calibration_ready_score/retirement_triggered principle: readiness is conjunctive and the same null retires this exact calibration shape.
++         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
++      7. Run focused unit/spec coverage, structured gate, group/leakage, held seal, preregistration, nested calibration, comparator/control, frozen-config hash, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp6132-phase-d-hidden-state-held-eval
++    milestone: "2026.08.531"
++    title: "Gated on Exp6131 readiness: frozen held mid-layer selector evaluation"
++    priority: critical
++    track: phase-d
++    deliverable: results/experiment_6132_phase_d_hidden_state_held_eval.json
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 360
++    requires_gpu: false
++    prior_failures:
++      - experiment_id: exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477
++        verdict: "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
++        addressed_by: "The held test uses an independently frozen mid-layer configuration on a new exact Phase-D corpus with proved headroom and authenticated matching-base caches; the retired MMLU final-layer surface is only a control."
++        retire_if_same_verdict: true
++      - experiment_id: exp6119-phase-d-hidden-state-selector
++        verdict: "GATE_BLOCK: exp6118 per_layer_surface_ready_score was 0.0; selector fitting was ineligible"
++        addressed_by: "Exp6130 and Exp6131 now separately establish the reachable surface and freeze a calibration-only selector before this one-time held application."
++        retire_if_same_verdict: true
++    gated_on:
++      - upstream: exp6131-phase-d-mid-layer-selector-calibration
++        artifact_field: selector_calibration_ready_score
++        op: "=="
++        value: 1.0
++    prompt: |
++      CONTEXT:
++      Exp6131 must freeze one selector using calibration only. This task performs a single, paired held application against tuned self-consistency and all preregistered controls. No tuning, layer selection, threshold adjustment, row omission, or regeneration is permitted after held labels are opened. No live LLM call is required; MODEL_SPECS provenance preserves `unsloth/gemma-4-26B-A4B-it-GGUF` and the exact matching base from Exp6130. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-program.md
++      - {project_root}/ops/known-issues.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/results/experiment_6129_phase_d_held_pool_v2.json
++      - {project_root}/results/experiment_6130_phase_d_per_layer_surface_v2.json
++      - {project_root}/results/experiment_6131_phase_d_mid_layer_selector_calibration.json
++      - {project_root}/scripts/adversarial_verify.py
++      - {project_root}/openspec/capabilities/verification/spec.md
++      - {project_root}/ops/e2e-test-plan.md
++
++      TASK:
++      Apply the exact frozen Exp6131 selector once to all sealed held question groups; compare paired accuracy, exact utility, abstention, latency, and compute with tuned self-consistency and preregistered final/cheap/shuffled controls; audit leakage and identically-wrong consensus behavior; and write results/experiment_6132_phase_d_hidden_state_held_eval.json.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: recompute the structured gate; hash held pool/features/labels, frozen selector/config, comparator, model provenance, code, output path, protected files, and inherited debt. Verify no held selector result exists before the run.
++      1. Ensure REQ-* structured-gate, one-time-held-application, frozen-selector, row conservation, paired-question inference, exact-utility, tuned-SC, controls, shortcut/leakage, consensus-stratum, and retirement requirements exist; add focused failing tests first.
++      2. Apply the frozen selector, threshold, abstention rule, and tuned-SC comparator without mutation to every held question. Preserve row-level scores, selected candidate, answer, exact label, abstention, latency, and hashes.
++      3. Report question-level accuracy, exact utility, calibration, coverage, abstention, paired delta/cluster bootstrap interval, exact discordance test, fixes, harms, ties, latency, compute, and storage versus tuned SC.
++      4. Recompute final-layer, norm, length, answer-label, cheap metadata, shuffled-label, within-question shuffled-feature, and oracle-peeking positive controls. Report family, difficulty, relabel, shortcut, answer-cluster, and identically-wrong-consensus strata with power.
++      5. Promotion requires paired held lower interval >0 for accuracy versus tuned SC, non-regressed exact utility, no cheap/final/shuffled reproduction, reachable positive control, zero leakage/row omission, and no adversarial critical flag. Otherwise record null, negative, or underpowered honestly.
++      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_held_pool_feature_label_selector_comparator_and_model_hashes, model_specs_and_exact_file_hashes, expected_scored_missing_omitted_duplicate_and_misaligned_question_counts, frozen_selector_threshold_abstention_and_no_mutation_receipt, held_selection_accuracy_exact_utility_calibration_coverage_and_abstention, paired_delta_cluster_interval_discordance_fixes_harms_ties, tuned_sc_majority_final_layer_norm_length_answer_label_and_cheap_controls, shuffled_label_within_question_feature_and_oracle_positive_controls, family_difficulty_relabel_shortcut_answer_cluster_and_consensus_strata, latency_compute_storage_and_extra_forward_costs, held_tuning_regeneration_and_row_omission_counts, verifier_is_oracle, missing_verifier_gaps, qualification_gate_matrix, internal_state_selector_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
++         held_tuning_regeneration_and_row_omission_counts principle: all are zero.
++         paired_delta_cluster_interval_discordance_fixes_harms_ties principle: promotion is paired at the independent-question unit, never candidate-row AUROC alone.
++         internal_state_selector_ready_score/retirement_triggered principle: readiness is conjunctive and the same null retires this exact corpus/surface/configuration.
++         honest_verdict principle: use `complete_positive:`, `complete_null:`, `complete_negative:`, `underpowered:`, `retired:`, or `blocked:`.
++      7. Run focused unit/spec coverage, structured gate, held one-shot/frozen-config, row conservation, paired statistics, exact utility, controls/strata, no-held-tuning, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+diff --git a/results/exp6091_refine_engine_visible_shard.jsonl b/results/exp6091_refine_engine_visible_shard.jsonl
+index e13b0255aa..7d24d8983a 100644
+--- a/results/exp6091_refine_engine_visible_shard.jsonl
++++ b/results/exp6091_refine_engine_visible_shard.jsonl
+@@ -1,3 +1,4 @@
+ {"game": "tu93", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [20], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 20, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 1007.0, "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')", "generated_tokens": -1, "stop_type": "", "prompt_truncated": false, "raw_completion_chars": 0, "raw_completion_tail": "", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/tu93/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 1007.0, "substrate_witness_before": {"pid": 4085822, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": null, "is_cuda": false, "reason": "no process owns the port"}, "substrate_cuda_throughout": false}
+ {"game": "tr87", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [11], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 11, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 1847.4, "induce_message": "split induce: engine failed: GPU llama-server failed for gemma-4-31B-it-qat; SOTA models must run on GPU (no CPU fallback)", "generated_tokens": -1, "stop_type": "", "prompt_truncated": false, "raw_completion_chars": 0, "raw_completion_tail": "", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/tr87/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 1847.4, "substrate_witness_before": {"pid": 4088244, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": null, "is_cuda": false, "reason": "no process owns the port"}, "substrate_cuda_throughout": false}
+ {"game": "sp80", "trial": 0, "random_seed": 6091, "window_n": 4, "n_refinable": 2, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [34], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 34, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 4, "gradeable_n": 3, "n_levelup_rows_excluded": 1, "n_changing": 3, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 3, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 669.0, "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')", "generated_tokens": 5922, "stop_type": "eos", "prompt_truncated": false, "raw_completion_chars": 14710, "raw_completion_tail": "at r0:\n        *   Initial: r0: 14x64\n        *   T1: r0c62:0x2 (c62, 63 become 0)\n        *   T2: r0c60:0x2 (c60, 61 become 0)\n        *   Correct.\n\n    *   Wait, what if Action 4 is not \"Right\" but something else?\n        *   The data says ACTION4. In many ARC games, ACTION4 is \"Right\".\n        *   Let's assume:\n            *   Action 1: Up\n            *   Action 2: Left\n            *   Action 3: Down\n            *   Action 4: Right\n\n    *   Let's refine the block movement:\n        *   Find the bounding box of color 9.\n        *   Shift it.\n        *   Fill the old position with color 12.\n        *   Fill the new position with color 9.\n        *   Wait, the block of color 9 is a rectangle. Let's just find its top-left corner (r, c).\n        *   Initial: (16, 12).\n        *   T1: (16, 16).\n        *   T2: (16, 20).\n        *   So Action 4: `c = c + 4`.\n\n    *   Let's refine the marker movement:\n        *   Find the rightmost cell in r0 that is 14.\n        *   Set it and the cell to its left to 0.\n        *   Wait, T1: r0c62, r0c63 become 0. (Rightmost cells are 63, 62).\n        *   T2: r0c60, r0c61 become 0. (Next rightmost cells are 61, 60).\n        *   So:\n            \n</think>\n", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/sp80/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 669.0, "substrate_witness_before": {"pid": 4098318, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": null, "is_cuda": false, "reason": "no process owns the port"}, "substrate_cuda_throughout": false}
++{"game": "r11l", "trial": 0, "random_seed": 6091, "window_n": 3, "n_refinable": 2, "n_acceptance": 1, "acceptance_decidable": false, "acceptance_reason": "no_gradeable_acceptance_row_within_refinable_floor", "n_acceptance_gradeable": 0, "acceptance_changed_cells_per_row": [], "oracle_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "oracle_reaches_1": false, "identity_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 3, "gradeable_n": 2, "n_levelup_rows_excluded": 1, "n_changing": 2, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 2, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 2333.2, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output)", "generated_tokens": 8800, "stop_type": "eos", "prompt_truncated": false, "raw_completion_chars": 16809, "raw_completion_tail": " (Wait, r57c25: 5x1, r57c28: 1x1)\n        This is another path!\n        It's a path of 1s and 15s.\n        And the other path is a path of 5s.\n        This looks like some kind of \"game\" where you're clearing paths.\n        But the diamond is the only thing we can clearly define.\n\n    *   What about `is_level_complete`?\n        We don't have a win state grid.\n        But usually, in these games, the win state is when some condition is met.\n        Maybe when all diamonds are color 3? Or when some path is completed?\n        Since we don't have a win state, we'll have to guess.\n        A common win state is when the grid reaches a certain configuration.\n        Let's just return `False` for now, or try to find a simple condition.\n        Actually, the prompt says \"return True if `grid` is a level-complete / win state, else False.\"\n        If we don't have a win state, we can't know for sure.\n        But let's look at the colors again.\n        Maybe the win state is when there are no more 0s?\n        Or when all diamonds are 3s?\n        Let's just use a simple `False` and see.\n\n    *   Wait, let's re-read: \"Induce SIMPLE, GENERAL rules\".\n        The diamond rule is:\n        \n</think>\n", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/r11l/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 2333.2, "substrate_witness_before": {"pid": 4126654, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": null, "is_cuda": false, "reason": "no process owns the port"}, "substrate_cuda_throughout": false}
+-- 
+2.55.0
+

@@ -1,0 +1,64 @@
+From db55473d25820075f82b8ec64f49ac81cfa0b6b4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 17:27:33 -0400
+Subject: [PATCH 05692/11362] [conductor] Update docs for PHASE 2 Continuous
+ Self-Learning -- controlled typed-memory ablation with aligned, shuffled,
+ random, constant, and no-memory arms
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md             | 1 +
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ ops/status.md                | 1 +
+ 5 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 17b83b5d1d..167210188d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10876,3 +10876,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-04: PHASE 1 gated on exp5235 qa_calibration_passed -- GAP-4 clean status decision without regenerating the pool (⚠️ Blocked) — honest_verdict=complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120.; results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json
+ - 2026-07-04: PHASE 1 GAP-1 stability decision -- freeze a non-leaky subset or retire the current promotion path (⚠️ Blocked) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.","value":"complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."}; status=<missing>; gap1_stability_decision.value=blocked_instability; gap1_registry_promoted.value=false; frozen_subset.value=null; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5237_gap1_stability_freeze_or_retire_v479.json
+ - 2026-07-04: PHASE 1 VerIbmc methodology-correct rerun -- local SOTA GGUF solver feedback or retire if null repeats (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ or blocked_ and state whether solver feedback improved, stayed null, or was retired.","value":"complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path"}; status=<missing>; n_examples.value=3; solver_only_solved.value=1; llm_only_solved.value=2; llm_solver_feedback_solved.value=2; solver_feedback_uplift.value=0.0; methodology_receipts_complete.value=true; retire_current_veribmc_path.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json
++- 2026-07-04: PHASE 2 Continuous Self-Learning -- controlled typed-memory ablation with aligned, shuffled, random, constant, and no-memory arms (✅ Complete) — honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether typed memory shows controlled useful reuse.","value":"complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training"}; status=null; aligned_vs_shuffled_delta.value=1.0; aligned_vs_no_memory_delta.value=0.666667; aligned_memory.accuracy=1.0; shuffled_memory.accuracy=0.0; no_memory.accuracy=0.333333; best_constant.accuracy=0.166667; per_query_random.accuracy=0.0; degradation_detected.value=true; retention_check_passed.value=true; rollback_policy_exercised.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d47e961ce1..ad3a647658 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 61, "phase": "iteration_start", "last_beat": "2026-07-04T21:00:40Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 62, "phase": "iteration_start", "last_beat": "2026-07-04T21:27:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 49926ba487..d8953b9e94 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10297,3 +10297,4 @@ web search: |
+ | 2026-07-04 19:36 UTC | PHASE 1 gated on exp5235 qa_calibration_passed --  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+ | 2026-07-04 20:33 UTC | PHASE 1 GAP-1 stability decision -- freeze a non-l | OK | 86 passed, 1 warning in 7.84s |
+ | 2026-07-04 20:58 UTC | PHASE 1 VerIbmc methodology-correct rerun -- local | OK | 88 passed, 1 warning in 8.32s |
++| 2026-07-04 21:25 UTC | PHASE 2 Continuous Self-Learning -- controlled typ | OK | 87 passed, 1 warning in 10.01s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d91f867410..f50536b1a8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 61, "phase": "iteration_start", "started_at": "2026-07-04T21:00:40Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 62, "phase": "iteration_start", "started_at": "2026-07-04T21:27:08Z"}
+\ No newline at end of file
+diff --git a/ops/status.md b/ops/status.md
+index 2f205748e8..12e44b3c58 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5795,3 +5795,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-04 | Exp 5234: PHASE 0 SOTA ingestion -- refresh 2025-2026 artifact QA, memory, KAN, hardware, and citation trail before execution | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.","value":"complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM."}; status=null; new_references_added.value=0; references_md_updated.value=false; retired_scope_reopened.value=false; inference_substrate.value=literature_ingestion; EBT Semantic Scholar citation_count=26 after 429 retry; ARM-EBM Semantic Scholar citation_count=8 after 429 retry; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5234, SCENARIO-REPORT-5234, SCENARIO-REPORT-5234-BLOCKED-METADATA; status label mapped to ⚠️ Partial / Not Viable / Research Finding because the verdict records no new actionable findings and no measured improvement | results/experiment_5234_sota_ingestion_v479.json |
+ | 2026-07-04 | Exp 5237: PHASE 1 GAP-1 stability decision -- freeze a non-leaky subset or retire the current promotion path | ⚠️ Blocked | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.","value":"complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."}; status=<missing>; gap1_stability_decision.value=blocked_instability; gap1_registry_promoted.value=false; frozen_subset.value=null; stability_rule_predeclared.value=true; no_new_broad_search.value=true; refuted_single_invariant_excluded.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5237, SCENARIO-VERIFY-5237; status label mapped to ⚠️ Blocked because the verdict contains `blocked` | results/experiment_5237_gap1_stability_freeze_or_retire_v479.json |
+ | 2026-07-04 | Exp 5238: PHASE 1 VerIbmc methodology-correct rerun -- local SOTA GGUF solver feedback or retire if null repeats | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ or blocked_ and state whether solver feedback improved, stayed null, or was retired.","value":"complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path"}; status=<missing>; n_examples.value=3; solver_only_solved.value=1; llm_only_solved.value=2; llm_solver_feedback_solved.value=2; solver_feedback_uplift.value=0.0; methodology_receipts_complete.value=true; retire_current_veribmc_path.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5238, SCENARIO-VERIFY-5238; status label mapped to ⚠️ Partial / Not Viable / Research Finding because the verdict records a clean null and solver_feedback_uplift.value=0.0, not a measured solver-feedback win | results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json |
++| 2026-07-04 | Exp 5239: PHASE 2 Continuous Self-Learning -- controlled typed-memory ablation with aligned, shuffled, random, constant, and no-memory arms | ✅ Complete | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state whether typed memory shows controlled useful reuse.","value":"complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training"}; status=null; aligned_vs_shuffled_delta.value=1.0; aligned_vs_no_memory_delta.value=0.666667; aligned_memory.accuracy=1.0; shuffled_memory.accuracy=0.0; no_memory.accuracy=0.333333; best_constant.accuracy=0.166667; per_query_random.accuracy=0.0; degradation_detected.value=true; retention_check_passed.value=true; rollback_policy_exercised.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; spec_refs=[REQ-LEARN-5239, SCENARIO-LEARN-5239]; no new spec diff lines detected; status label mapped to ✅ Complete because the verdict records controlled useful reuse with measured positive aligned-memory deltas | results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json |
+-- 
+2.55.0
+

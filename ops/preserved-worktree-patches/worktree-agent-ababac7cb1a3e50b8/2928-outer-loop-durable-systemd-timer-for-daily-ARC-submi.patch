@@ -1,0 +1,157 @@
+From 0ac5880ad9f312fa7deded674024f25c17ea36d2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 19:51:30 -0400
+Subject: [PATCH 02928/11362] [outer-loop] durable systemd timer for daily ARC
+ submission prep (validated end-to-end)
+
+carnot-arc-daily-prep.timer (daily 09:37 EDT, Persistent) runs the prep script
+session-independently: refresh dataset -> re-push public kernel -> validate ->
+write ops/arc-daily-prep-status.json. Never submits (operator-gated --submit-only).
+Retired the session-only cron. Unit copies tracked in ops/systemd/.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/arc-daily-prep-status.json            |  8 ++++++++
+ ops/arc-submission-checklist.md           | 11 +++++++----
+ ops/conductor-heartbeat.json              |  2 +-
+ ops/conductor-log.md                      |  1 +
+ ops/conductor-state.json                  |  2 +-
+ ops/systemd/carnot-arc-daily-prep.service | 10 ++++++++++
+ ops/systemd/carnot-arc-daily-prep.timer   | 10 ++++++++++
+ scripts/kaggle/prep_daily_submission.py   | 18 ++++++++++++++++--
+ 8 files changed, 54 insertions(+), 8 deletions(-)
+ create mode 100644 ops/arc-daily-prep-status.json
+ create mode 100644 ops/systemd/carnot-arc-daily-prep.service
+ create mode 100644 ops/systemd/carnot-arc-daily-prep.timer
+
+diff --git a/ops/arc-daily-prep-status.json b/ops/arc-daily-prep-status.json
+new file mode 100644
+index 0000000000..08f831841e
+--- /dev/null
++++ b/ops/arc-daily-prep-status.json
+@@ -0,0 +1,8 @@
++{
++  "prepped_at": "2026-06-19T23:49Z",
++  "kernel_version": "4",
++  "save_run": "complete",
++  "parquet_ok": true,
++  "ready_for_operator_submit": true,
++  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 4"
++}
+\ No newline at end of file
+diff --git a/ops/arc-submission-checklist.md b/ops/arc-submission-checklist.md
+index 0069ca426f..c9cc4db27d 100644
+--- a/ops/arc-submission-checklist.md
++++ b/ops/arc-submission-checklist.md
+@@ -56,10 +56,13 @@ open-source eligible — the project is MIT-0 ✅).
+ 3. **Watch:** the [Submissions page](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/submissions);
+    the scored rerun takes up to 12h.
+ 
+-Scheduling: an in-session cron (`a26bfb30`, daily 9:37 AM local) runs the prep + notifies — but it is
+-SESSION-ONLY (dies if this session ends) and auto-expires in 7 days. For a session-independent standing
+-routine across the full sprint, a systemd user timer is the durable mechanism (matches
+-`carnot-outer-loop.timer`) — TODO if the session-only cron proves insufficient.
++Scheduling: **durable systemd user timer `carnot-arc-daily-prep.timer`** (daily 09:37 EDT, `Persistent=true`
++— survives session end + reboots; validated end-to-end 2026-06-19). It runs the prep `--default` (refresh +
++re-push + validate, NEVER submits) and writes `ops/arc-daily-prep-status.json` (`{kernel_version, ready,
++submit_command}`). The timer cannot push-notify or submit (agent-only / operator-only), so the in-session
++watchdog surfaces the status file and the operator runs the `--submit-only` command to approve. Units live at
++`~/.config/systemd/user/carnot-arc-daily-prep.{service,timer}` (copies tracked at `ops/systemd/`). The
++session-only cron approach was retired in favor of this.
+ 
+ ## What was verified (so the operator can trust the package)
+ 
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c1f69fdd0c..e9a9e4a2a2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 39, "phase": "iteration_start", "last_beat": "2026-06-19T23:30:28Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 40, "phase": "iteration_start", "last_beat": "2026-06-19T23:49:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1abeb1b730..b3e18a3a22 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8888,3 +8888,4 @@ c |
+ | 2026-06-19 22:54 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; BIGG | OK | 95 passed, 1 warning in 8.15s |
+ | 2026-06-19 23:10 UTC | PHASE A3 (ARC NORTH STAR) -- GENERIC cast-grid pha | OK | 107 passed, 1 warning in 5.93s |
+ | 2026-06-19 23:28 UTC | PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- B | OK | 108 passed, 1 warning in 7.29s |
++| 2026-06-19 23:47 UTC | PHASE A5 (ARC NORTH STAR) -- FIRST-CONTACT a NEW n | OK | 96 passed, 1 warning in 7.75s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c430c2f461..1b9b23d6e8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 39, "phase": "iteration_start", "started_at": "2026-06-19T23:30:28Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 40, "phase": "iteration_start", "started_at": "2026-06-19T23:49:37Z"}
+\ No newline at end of file
+diff --git a/ops/systemd/carnot-arc-daily-prep.service b/ops/systemd/carnot-arc-daily-prep.service
+new file mode 100644
+index 0000000000..40b203b7db
+--- /dev/null
++++ b/ops/systemd/carnot-arc-daily-prep.service
+@@ -0,0 +1,10 @@
++[Unit]
++Description=Carnot ARC-AGI-3 daily submission prep (refresh dataset + re-push public kernel; NEVER submits)
++
++[Service]
++Type=oneshot
++WorkingDirectory=/home/ianblenke/github.com/ianblenke/carnot
++Environment=PATH=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin:/usr/local/bin:/usr/bin:/bin
++ExecStart=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/kaggle/prep_daily_submission.py
++StandardOutput=journal
++StandardError=journal
+diff --git a/ops/systemd/carnot-arc-daily-prep.timer b/ops/systemd/carnot-arc-daily-prep.timer
+new file mode 100644
+index 0000000000..3fbdd31d71
+--- /dev/null
++++ b/ops/systemd/carnot-arc-daily-prep.timer
+@@ -0,0 +1,10 @@
++[Unit]
++Description=Carnot ARC-AGI-3 daily submission prep — daily 09:37 local (EDT)
++Requires=carnot-arc-daily-prep.service
++
++[Timer]
++OnCalendar=*-*-* 09:37:00
++Persistent=true
++
++[Install]
++WantedBy=timers.target
+diff --git a/scripts/kaggle/prep_daily_submission.py b/scripts/kaggle/prep_daily_submission.py
+index 355ea9615f..e31e1af9bf 100644
+--- a/scripts/kaggle/prep_daily_submission.py
++++ b/scripts/kaggle/prep_daily_submission.py
+@@ -133,11 +133,25 @@ def prep() -> None:
+     kaggle("kernels", "output", KERNEL, "-p", str(out))
+     parquet_ok = any(out.glob("*.parquet"))
+ 
++    ready = status == "complete" and parquet_ok
++    # Status file: the durable hand-off between the (session-independent) systemd timer that
++    # runs this prep and the in-session watchdog/operator that approves + submits. The timer
++    # can prep but cannot push-notify or submit (those need an agent / are operator-only), so
++    # it records readiness here; the watchdog surfaces it and the operator approves the submit.
++    status_path = REPO / "ops" / "arc-daily-prep-status.json"
++    status_path.write_text(json.dumps({
++        "prepped_at": stamp,
++        "kernel_version": kver,
++        "save_run": status,
++        "parquet_ok": parquet_ok,
++        "ready_for_operator_submit": ready,
++        "submit_command": f".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}",
++    }, indent=2))
++
+     print("\n=== DAILY PREP RESULT ===")
+     print(f"  dataset: re-versioned ({stamp})")
+     print(f"  kernel:  v{kver}  save-run={status}  submission.parquet={'OK' if parquet_ok else 'MISSING'}")
+-    print(f"  current best public score: see leaderboard (first scored = 0.08)")
+-    ready = status == "complete" and parquet_ok
++    print(f"  status file: {status_path}")
+     print(f"  READY FOR OPERATOR-APPROVED SUBMIT: {'YES' if ready else 'NO — investigate above'}")
+     if ready:
+         print("\n  To submit (operator approval), run:")
+-- 
+2.55.0
+

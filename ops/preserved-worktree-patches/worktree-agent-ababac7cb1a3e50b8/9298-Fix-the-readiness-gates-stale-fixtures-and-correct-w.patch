@@ -1,0 +1,197 @@
+From 1d9ac60e6db4cb5cf83a3fcc8f6e247b9d771332 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 18 Aug 2026 18:06:13 -0400
+Subject: [PATCH 09298/11362] Fix the readiness gates' stale fixtures, and
+ correct what I claimed was wrong with them
+
+The gates are green: 144 passed over the selection that was 7 red at HEAD.
+
+I filed this an hour ago saying "the project has no working mechanical answer to
+whether the package is consistent with what will run." That was wrong, and checking
+first would have shown it. Running the gate against the REAL SUBMITTED_AGENT_CONFIG
+and the REAL model cache returns intact: True on all three of its checks. The gate
+logic was healthy the whole time and would have answered a live readiness question
+correctly. What was broken was the TESTS' synthetic inputs -- the guard worked, its
+regression suite did not. That is a real defect and a much smaller one than claimed,
+so the known-issues entry carries a correction rather than an edit.
+
+Four stale literals from the gemma-4-31B-it to Qwen3.8-27B migration, of which the
+first diagnosis found only one: the frozen_generator identity keys, the cached-gguf
+path handed to gguf_finder, the synthetic submission-entrypoint text, and the
+mtp/spec_type pair with its three assertions. All now derive from the live constants,
+so the next generator migration cannot leave them behind.
+
+The scored-MTP contract stays a literal in exactly one place, the parity test, so
+flipping the knob still goes red there. Repeating it as a second literal is what let
+two tests assert opposite values of one constant.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                           | 30 +++++++++++++++
+ ...iment_4744_submission_package_readiness.py | 37 ++++++++++++++-----
+ ..._experiment_4754_submitted_agent_config.py | 10 +++--
+ 3 files changed, 65 insertions(+), 12 deletions(-)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index ea7a69a9c4..922897d123 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -48,6 +48,36 @@ gemma-4-31B-it migration that last touched the stale fixture) ·
+ `python/carnot/experiment_4754_submitted_agent_config.py` · CLAUDE.md "Tests Must Run and
+ Assert".
+ 
++**RESOLVED 2026-08-18, same day — and one claim above was WRONG. Correcting rather than
++editing, per never-prune.**
++
++The entry says "the project has no working mechanical answer to whether the package is
++consistent with what will run." That is false, and I should have checked before writing it.
++Running the gate directly against the REAL `SUBMITTED_AGENT_CONFIG` and the REAL model cache
++returns `intact: True`, with all three of `submitted_config_declares_pinned_generator`,
++`cached_gguf_matches` and `submission_entrypoint_resolves_generator` True. **The gate logic was
++healthy the whole time and would have answered a live readiness question correctly.** What was
++broken was the TESTS' synthetic inputs. The distinction matters: a broken gate means the
++submission is unguarded, while stale test fixtures mean the guard works but its regression
++suite does not — a real defect, and a much smaller one than what this entry originally claimed.
++
++Fixed by deriving every generator-identity fixture from the live constants instead of repeating
++them as literals. Four stale literals were involved, and only the first was found by the initial
++diagnosis:
++
++1. `frozen_generator.model_id` / `repo_substr` / `model_filename` (both files)
++2. the cached-gguf path handed to `gguf_finder` (`/models/gemma-4-31B-it-Q4_K_M.gguf`)
++3. the synthetic submission-entrypoint text (`"gemma-4-31B-it CARNOT_ARC_GGUF_PATH"`)
++4. `mtp` / `spec_type` in the exp4744 fixture and its three assertions
++
++The scored-MTP contract stays a LITERAL in exactly one place,
++`tests/python/test_arc_submitted_agent_parity.py`, so flipping the knob still goes red there.
++Repeating it as a second literal here is what let two tests assert opposite values of one
++constant.
++
++Result: 144 passed, 0 failed over the same selection that was 7 red at HEAD. The "next step"
++above is complete; no further work is queued from this entry.
++
+ ### NEW 2026-08-08 (Phase 0a of the ARC live-agent improvement plan): a corrected artifact's fabrication-gate quarantine cannot be re-admitted by the lever-portfolio gate — a real, filed gap, not fixed
+ 
+ **What was attempted.** Per `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`
+diff --git a/tests/python/test_experiment_4744_submission_package_readiness.py b/tests/python/test_experiment_4744_submission_package_readiness.py
+index 36c08d0976..db89df0dd9 100644
+--- a/tests/python/test_experiment_4744_submission_package_readiness.py
++++ b/tests/python/test_experiment_4744_submission_package_readiness.py
+@@ -12,6 +12,25 @@ from pathlib import Path
+ from typing import Any
+ 
+ from carnot import experiment_4744_submission_package_readiness as mod
++from carnot.agentic.arc_executable_world_model import (
++    ARC_LIVE_GENERATOR_MODEL_ID as _LIVE_MODEL_ID,
++)
++from carnot.agentic.arc_executable_world_model import (
++    ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT as _SCORED_MTP,
++)
++from carnot.agentic.arc_executable_world_model import (
++    ARC_LIVE_GENERATOR_REPO_SUBSTR as _LIVE_REPO_SUBSTR,
++)
++
++# DERIVED FROM THE LIVE CONSTANTS, NOT LITERALS (2026-08-18). This fixture stands in for the
++# frozen generator so the readiness gate's LOGIC can be exercised. The gate compares the config
++# against these same constants, so literals naming a previous model make a CORRECT gate report
++# `frozen_generator_confirmed: False` -- which is what happened when the generator moved to
++# Qwen3.8-27B and these five tests went red without anyone noticing. The scored-MTP CONTRACT is
++# pinned as a literal in `tests/python/test_arc_submitted_agent_parity.py`, deliberately and in
++# exactly one place; duplicating it here as a second literal is what let two tests disagree about
++# one constant.
++_SCORED_MTP_ON = _SCORED_MTP != "0"
+ 
+ 
+ JsonDict = dict[str, Any]
+@@ -21,9 +40,9 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
+     "policy": "E3AgentPolicy",
+     "cascade": True,
+     "frozen_generator": {
+-        "model_id": "unsloth/gemma-4-31B-it-GGUF",
+-        "repo_substr": "gemma-4-31B-it",
+-        "model_filename": "gemma-4-31B-it-Q4_K_M.gguf",
++        "model_id": _LIVE_MODEL_ID,
++        "repo_substr": _LIVE_REPO_SUBSTR,
++        "model_filename": f"{_LIVE_REPO_SUBSTR}-Q4_K_M.gguf",
+         "model_path_env": "CARNOT_ARC_GGUF_PATH",
+         "server_path_env": "CARNOT_LLAMA_SERVER",
+         "llama_server_kind": "cuda-12.8-binary",
+@@ -34,8 +53,8 @@ SUBMITTED_AGENT_CONFIG_FIXTURE: JsonDict = {
+             "libggml",
+             "libggml-cuda",
+         ],
+-        "mtp": True,
+-        "spec_type": "draft-mtp",
++        "mtp": _SCORED_MTP_ON,
++        "spec_type": "draft-mtp" if _SCORED_MTP_ON else None,
+         "kv_quant": "q8_0",
+         "no_think_prefix": "",
+         "max_tokens": 2560,
+@@ -96,7 +115,7 @@ def _parity(ok: bool = True) -> JsonDict:
+ 
+ 
+ def _manifest(tmp_path: Path, *, complete: bool = True) -> JsonDict:
+-    model = tmp_path / "gemma-4-31B-it-Q4_K_M.gguf"
++    model = tmp_path / f"{_LIVE_REPO_SUBSTR}-Q4_K_M.gguf"
+     server = tmp_path / "llama-server"
+     if complete:
+         shared = [
+@@ -140,9 +159,9 @@ def test_scenario_capstone_4744_confirms_frozen_generator_from_submitted_config(
+     config = mod.frozen_generator_config_from_submitted(SUBMITTED_AGENT_CONFIG_FIXTURE)
+ 
+     assert config["confirmed"] is True
+-    assert config["model_id"] == "unsloth/gemma-4-31B-it-GGUF"
+-    assert config["repo_substr"] == "gemma-4-31B-it"
+-    assert config["mtp"] is True
++    assert config["model_id"] == _LIVE_MODEL_ID
++    assert config["repo_substr"] == _LIVE_REPO_SUBSTR
++    assert config["mtp"] is _SCORED_MTP_ON
+     assert config["kv_quant"] == "q8_0"
+     assert config["max_tokens"] >= 2048
+     assert config["no_think_prefix"] == ""
+diff --git a/tests/python/test_experiment_4754_submitted_agent_config.py b/tests/python/test_experiment_4754_submitted_agent_config.py
+index b8c5224ce7..cbdc9890f9 100644
+--- a/tests/python/test_experiment_4754_submitted_agent_config.py
++++ b/tests/python/test_experiment_4754_submitted_agent_config.py
+@@ -36,6 +36,10 @@ def _live_generator_pins() -> tuple[str, str]:
+ 
+ 
+ _LIVE_MODEL_ID, _LIVE_REPO_SUBSTR = _live_generator_pins()
++# The gate matches a CACHED gguf against the live repo substring, so a fixture path naming a
++# previous model makes `cached_gguf_matches` False and the whole gate read as broken. Derived
++# for the same reason as the model pins above.
++_LIVE_GGUF_PATH = f"/models/{_LIVE_REPO_SUBSTR}-Q4_K_M.gguf"
+ 
+ 
+ def _submitted_config() -> dict[str, Any]:
+@@ -84,7 +88,7 @@ def _preconditions() -> dict[str, Any]:
+         "agents_md_read": True,
+         "codex_md_read": True,
+         "pinned_generator_gguf_cached": True,
+-        "pinned_generator_gguf_paths": ["/models/gemma-4-31B-it-Q4_K_M.gguf"],
++        "pinned_generator_gguf_paths": [_LIVE_GGUF_PATH],
+         "offline_arcade_ok": True,
+         "make_carnot_agent_import_ok": True,
+         "spec_has_req_4754": True,
+@@ -297,7 +301,7 @@ def test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks(tmp_path: Path) -
+     (tmp_path / mod.SPEC_RELATIVE_PATH).write_text("REQ-ARC-WMTE-4754\n", encoding="utf-8")
+     (tmp_path / "scripts" / "kaggle" / "submission_kernel").mkdir(parents=True)
+     (tmp_path / "scripts" / "kaggle" / "submission_kernel" / "main.py").write_text(
+-        "gemma-4-31B-it CARNOT_ARC_GGUF_PATH\n", encoding="utf-8"
++        f"{_LIVE_REPO_SUBSTR} CARNOT_ARC_GGUF_PATH\n", encoding="utf-8"
+     )
+     (tmp_path / "python" / "carnot" / "agentic").mkdir(parents=True)
+     (tmp_path / "python" / "carnot" / "agentic" / "arc_competition_agent.py").write_text(
+@@ -329,7 +333,7 @@ def test_scenario_arc_wmte_4754_run_writes_artifact_and_blocks(tmp_path: Path) -
+ 
+     artifact = mod.run(
+         tmp_path,
+-        gguf_finder=lambda: ["/models/gemma-4-31B-it-Q4_K_M.gguf"],
++        gguf_finder=lambda: [_LIVE_GGUF_PATH],
+         offline_arcade_checker=lambda: {"offline_arcade_ok": True},
+         agent_import_checker=lambda: {"make_carnot_agent_import_ok": True},
+         agent_smoke_runner=lambda _gate: {
+-- 
+2.55.0
+

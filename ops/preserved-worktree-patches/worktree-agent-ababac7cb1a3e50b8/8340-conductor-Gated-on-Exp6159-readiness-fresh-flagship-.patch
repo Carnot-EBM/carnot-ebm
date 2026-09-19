@@ -1,0 +1,3236 @@
+From fdd2701e0667ed9717ad50831a269f978c7171fd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 6 Aug 2026 11:01:11 -0400
+Subject: [PATCH 08340/11362] [conductor] Gated on Exp6159 readiness: fresh
+ flagship-GGUF decision-calibration corpus
+
+Automated research step by research conductor.
+Task ID: exp6160-sota-decision-calibration-corpus
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/verifiable-reasoning/spec.md |  141 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...t_6160_sota_decision_calibration_corpus.py | 1358 +++++++++++++++++
+ ...6160_sota_decision_calibration_corpus.json | 1127 ++++++++++++++
+ ...t_6160_sota_decision_calibration_corpus.py |  547 +++++++
+ 5 files changed, 3174 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6160_sota_decision_calibration_corpus.py
+ create mode 100644 results/experiment_6160_sota_decision_calibration_corpus.json
+ create mode 100644 tests/python/test_experiment_6160_sota_decision_calibration_corpus.py
+
+diff --git a/openspec/capabilities/verifiable-reasoning/spec.md b/openspec/capabilities/verifiable-reasoning/spec.md
+index 11ff3da807..4b8efa7361 100644
+--- a/openspec/capabilities/verifiable-reasoning/spec.md
++++ b/openspec/capabilities/verifiable-reasoning/spec.md
+@@ -22245,3 +22245,144 @@ effort is diagnostic only.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-VERIFY-6159 | Planned (`python/carnot/experiment_6159_decision_calibrated_stream.py`, `results/experiment_6159_decision_calibrated_stream.json`) | Planned (`tests/python/test_experiment_6159_decision_calibrated_stream.py`) |
++
++### REQ-VERIFY-6160: Exp6160 SOTA Decision Calibration Corpus
++
++The repository SHALL provide Exp6160 at
++`python/carnot/experiment_6160_sota_decision_calibration_corpus.py` and write
++`results/experiment_6160_sota_decision_calibration_corpus.json` plus one
++immutable row sidecar per mandated model. Exp6160 SHALL consume the fresh
++Exp6159 chronological stream and sealed endpoint, recompute the structured gate,
++run one frozen model-native llama.cpp pass per event, and attach exact Exp6159
++outcomes only after each raw decision record is written and hashed.
++
++- REQ-VERIFY-6160-1: `MODEL_SPECS` and `model_specs` SHALL include exactly
++  `unsloth/Qwen3.6-35B-A3B-GGUF` and
++  `unsloth/gemma-4-26B-A4B-it-GGUF` as headline models. Legacy
++  `Qwen/Qwen3.5-0.8B` or `google/gemma-4-E4B-it` entries SHALL NOT appear in
++  headline rows and may appear only as separately labeled CPU smoke receipts.
++- REQ-VERIFY-6160-2: Each mandated model SHALL resolve to a concrete language
++  model `.gguf` path, revision/snapshot, quantization, byte size, SHA-256 hash,
++  embedded-tokenizer receipt, chat-template receipt, loader name, GPU index, and
++  expected full CUDA offload. Projector-only GGUFs SHALL NOT satisfy the gate.
++- REQ-VERIFY-6160-3: The workflow SHALL never call
++  `transformers.AutoTokenizer.from_pretrained()` on a GGUF repository ID.
++  Tokenizer and chat-template evidence SHALL come from embedded GGUF metadata and
++  llama.cpp model-native chat paths.
++- REQ-VERIFY-6160-4: Before inference, the workflow SHALL hash Exp6159 stream,
++  split, outcome, and preregistration files; model files; embedded chat
++  templates; prompt, decoder, seed, output-path, exclusion, and protected-file
++  manifests; and the task-owned GPU lease state.
++- REQ-VERIFY-6160-5: The prompt, chat-template mode, seeds, temperature, context
++  budget, token budget, and terminal answer convention SHALL be frozen before any
++  model call. The workflow SHALL NOT adapt prompts, retrieve or write memory,
++  use grammar repair, retry based on labels, or select rows after outcomes.
++- REQ-VERIFY-6160-6: Exp6159 calibration, future-known, and shifted-family held
++  events SHALL be processed in exact chronological order. Every model/event row
++  SHALL record raw response, strategy parse state, answer parse state, token
++  count, timing, model/GPU receipt, and decision hash before exact outcomes are
++  appended.
++- REQ-VERIFY-6160-7: Invalid, empty, malformed, or parser-failing model output
++  SHALL remain a conserved model event. The workflow SHALL NOT repair, replace,
++  drop, or outcome-conditioned retry invalid rows.
++- REQ-VERIFY-6160-8: Headline readiness SHALL block unless both mandated GGUFs
++  are cached, embedded-tokenizer loadable, loaded through llama.cpp-native paths,
++  CUDA offload is attributable to task-owned workers, and lifecycle receipts
++  prove load, decode, release, no orphan PID, and no retained task-owned VRAM.
++- REQ-VERIFY-6160-9: Row conservation SHALL require exactly one immutable row per
++  Exp6159 event per mandated model, unique row IDs, split-hash consistency, zero
++  outcome leakage into prompts, and zero overlap with Exp6146 event or row
++  identities.
++- REQ-VERIFY-6160-10: `sota_decision_corpus_ready_score` SHALL be the bare
++  scalar `1.0` only when mandated models, real GPU offload, complete conserved
++  rows, post-decision exact outcomes, zero label-conditioned retries, zero
++  memory reads/writes, protected-file identity, and lifecycle cleanup all pass.
++  Otherwise it SHALL be `0.0`, and `honest_verdict` SHALL start with
++  `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
++
++The terminal artifact MUST include `status`, `preconditions_checked`,
++`structured_gate_receipt`, `MODEL_SPECS`, `model_specs`,
++`resolved_model_paths_revisions_quantizations_and_hashes`,
++`embedded_tokenizer_and_chat_template_receipts`,
++`prompt_decoder_and_seed_freeze_manifest`,
++`gpu_offload_pid_lifecycle_and_cleanup_receipts`,
++`per_model_row_paths_hashes_and_counts`,
++`raw_response_strategy_answer_and_invalid_output_counts`,
++`exact_post_decision_outcome_receipts`,
++`chronological_split_family_and_shift_counts`,
++`row_conservation_and_prior_corpus_nonoverlap`,
++`label_conditioned_retry_count`, `memory_read_and_write_counts`,
++`sota_decision_corpus_ready_score`, `protected_files_unchanged`, `duration_s`,
++`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
++`field_provenance`, `test_commands`, `test_exit_codes`,
++`reproducibility_checksum`, and `honest_verdict`.
++
++Required field principles:
++
++- `status`: A terminal state distinguishes ready, partial, retired, and blocked local-SOTA decision corpus runs.
++- `preconditions_checked`: The structured gate hashes Exp6159 source files, model/cache evidence, prompt settings, output paths, exclusions, protected files, GPU lease state, and inherited-server state before loading a model.
++- `structured_gate_receipt`: Headline inference opens only after Exp6159 readiness, mandated model resolution, embedded tokenizers, native chat templates, CUDA offload, task ownership, frozen prompts, row sidecars, and protected files pass.
++- `MODEL_SPECS`: The top-level manifest names exactly the mandated Qwen3.6 flagship MoE and Gemma-4-26B middle MoE GGUFs with resolved paths, hashes, loaders, GPU assignments, and expected offload.
++- `model_specs`: The lower-case compatibility manifest mirrors `MODEL_SPECS` so existing artifact readers see the same mandated models.
++- `resolved_model_paths_revisions_quantizations_and_hashes`: Path, revision, quantization, byte size, and SHA-256 evidence prove each GGUF is a language model file and not a projector or legacy smoke substitute.
++- `embedded_tokenizer_and_chat_template_receipts`: Tokenizer and chat template receipts come from embedded GGUF metadata and llama.cpp APIs, never AutoTokenizer on a GGUF repo ID.
++- `prompt_decoder_and_seed_freeze_manifest`: One native-chat prompt, terminal answer convention, temperature, top-p, repeat penalty, context budget, token budget, and deterministic seed schedule are frozen before inference.
++- `gpu_offload_pid_lifecycle_and_cleanup_receipts`: Before/load/decode/release GPU states, task-owned PIDs, offload deltas, orphan checks, and retained-VRAM checks prove real CUDA engagement and clean teardown.
++- `per_model_row_paths_hashes_and_counts`: One immutable sidecar path, row count, and content hash per model makes model rows replayable.
++- `raw_response_strategy_answer_and_invalid_output_counts`: Raw responses, strategy parse state, answer parse state, token counts, timings, and invalid outputs are counted without hidden retry.
++- `exact_post_decision_outcome_receipts`: Exact Exp6159 outcomes are attached only after each decision hash is recorded and are absent from model inputs.
++- `chronological_split_family_and_shift_counts`: Calibration, future-known, and shifted-family rows remain in Exp6159 chronological order with family and structural-shift counts visible.
++- `row_conservation_and_prior_corpus_nonoverlap`: Every Exp6159 event is conserved once per model, row IDs are unique, split hashes match, prompt leakage is zero, and Exp6146 row/event overlap is zero.
++- `label_conditioned_retry_count`: The bare value is zero because correctness-conditioned reruns would leak labels into the corpus.
++- `memory_read_and_write_counts`: Memory reads and writes are bare zeros because Exp6160 measures independent frozen model decisions.
++- `sota_decision_corpus_ready_score`: Exactly one only with both mandated models, real GPU offload, complete conserved rows, no leakage, and clean lifecycle teardown.
++- `protected_files_unchanged`: Conductor, ops, traceability, and prior-corpus protected files remain byte-identical.
++- `duration_s`: The measured end-to-end Exp6160 run time is reported.
++- `inference_substrate`: Set `live_local_sota_gguf_cuda` only when all receipts prove live local SOTA GGUF CUDA execution; otherwise block.
++- `verifier_is_oracle`: Exp6159 exact Python/Z3 labels are post-decision oracle receipts and are not model inputs.
++- `missing_verifier_gaps`: Missing model, cache, tokenizer, CUDA, row, lifecycle, leakage, nonoverlap, or cleanup evidence is explicit.
++- `field_provenance`: Every field traces to specs, Exp6159 sidecars, Exp6146 nonoverlap evidence, model manifests, runtime receipts, tests, or command receipts.
++- `test_commands`: Commands document focused unit/spec coverage, structured gate, model/cache/hash/tokenizer/chat/CUDA, prompt freeze, row conservation/nonoverlap, exact-outcome order, lifecycle cleanup, schema, adversarial verify, protected-file, E2E-applicable, global pytest, and root-clutter checks.
++- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
++- `reproducibility_checksum`: The artifact hash detects source, model, prompt, stream, row, outcome, lifecycle, protected-file, and command drift.
++- `honest_verdict`: Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name any model-specific parser or transport failure.
++
++### SCENARIO-VERIFY-6160-GATE: Fresh Mandated GGUF Gate Blocks Substitutes
++
++**Given** Exp6160 resolves the mandated Qwen flagship MoE and Gemma middle MoE
++GGUF entries
++**When** either model is absent, resolves only to a projector GGUF, lacks an
++embedded tokenizer or chat template, lacks CUDA offload, or lacks task-owned
++lifecycle evidence
++**Then** headline inference is blocked, legacy models are not substituted, and
++`honest_verdict` names the missing evidence.
++
++### SCENARIO-VERIFY-6160-ORDERING: Outcomes Are Appended After Decisions
++
++**Given** Exp6160 processes Exp6159 rows in chronological split order
++**When** a model response is captured
++**Then** the raw response, strategy parse, answer parse, seed, token metadata,
++timing, and decision hash are persisted before exact post-outcome receipts are
++attached.
++
++### SCENARIO-VERIFY-6160-NO-MEMORY: Invalid Rows Are Conserved Without Retry
++
++**Given** calibration, future-known, and shifted-family rows share one frozen
++prompt and decoder manifest
++**When** a row is empty, invalid, wrong, or unparseable
++**Then** the row is conserved as an honest model outcome and no memory,
++label-conditioned retry, grammar repair, parser repair, or hidden label is used.
++
++### SCENARIO-VERIFY-6160-NONOVERLAP: Fresh Rows Do Not Reuse Exp6146
++
++**Given** Exp6160 row sidecars and Exp6146 prior sidecars are replayed
++**When** conservation checks run
++**Then** every mandated model has exactly one row per Exp6159 event, unique row
++IDs, zero prompt leakage, matching split hashes, and bare-zero overlap with
++Exp6146 event IDs, row IDs, and decision hashes.
++
++## Implementation Status (REQ-VERIFY-6160)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-6160 | Implemented (`python/carnot/experiment_6160_sota_decision_calibration_corpus.py`, `results/experiment_6160_sota_decision_calibration_corpus.json`) | Implemented (`tests/python/test_experiment_6160_sota_decision_calibration_corpus.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c3320885a4..d39acce73e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4782,
++  "experiments_checked": 4783,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6160_sota_decision_calibration_corpus.py b/python/carnot/experiment_6160_sota_decision_calibration_corpus.py
+new file mode 100644
+index 0000000000..9b6f7c943d
+--- /dev/null
++++ b/python/carnot/experiment_6160_sota_decision_calibration_corpus.py
+@@ -0,0 +1,1358 @@
++"""Exp6160 fresh local-SOTA decision calibration corpus.
++
++Spec refs: REQ-VERIFY-6160, REQ-VERIFY-6160-1, REQ-VERIFY-6160-2,
++REQ-VERIFY-6160-3, REQ-VERIFY-6160-4, REQ-VERIFY-6160-5,
++REQ-VERIFY-6160-6, REQ-VERIFY-6160-7, REQ-VERIFY-6160-8,
++REQ-VERIFY-6160-9, REQ-VERIFY-6160-10,
++SCENARIO-VERIFY-6160-GATE, SCENARIO-VERIFY-6160-ORDERING,
++SCENARIO-VERIFY-6160-NO-MEMORY, SCENARIO-VERIFY-6160-NONOVERLAP.
++
++Exp6160 is the live local-SOTA pass over the fresh Exp6159 stream. The model
++sees only Exp6159 pre-outcome rows. Exact outcomes are appended after each raw
++decision hash exists, making leakage and row loss detectable in the artifact.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++from collections.abc import Mapping, Sequence
++import json
++import os
++from pathlib import Path
++import platform
++import time
++from typing import Any, Protocol
++
++from carnot import experiment_6126_phase_d_exp6115_transport_forensics as exp6126
++from carnot import experiment_6146_sota_constraint_event_corpus as exp6146
++from carnot import experiment_6159_decision_calibrated_stream as exp6159
++from carnot.inference.sota_models import cached_sota_pair, gguf_tokenizer_loadable
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_6160_sota_decision_calibration_corpus.json")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6160_sota_decision_calibration_corpus.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_6160_sota_decision_calibration_corpus.py")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/verifiable-reasoning/spec.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++
++SCHEMA = "carnot.experiment_6160.sota_decision_calibration_corpus.v1"
++ROW_SCHEMA = SCHEMA + ".row"
++EXPERIMENT_ID = "experiment_6160_sota_decision_calibration_corpus"
++RUN_DATE = "20260806"
++RANDOM_SEED = 6160
++LIVE_INFERENCE_SUBSTRATE = "live_local_sota_gguf_cuda"
++BLOCKED_INFERENCE_SUBSTRATE = "blocked_no_live_local_sota_gguf_cuda"
++VERIFIER_IS_ORACLE = True
++
++MANDATED_MODEL_IDS = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++)
++MANDATED_MODEL_INDICES = (0, 1)
++PARTITION_NAMES = exp6159.PARTITIONS
++LEGACY_SMOKE_IDS = ("Qwen/Qwen3.5-0.8B", "google/gemma-4-E4B-it")
++FORBIDDEN_MODEL_INPUT_TOKENS = (
++    "exact_answer",
++    "current_outcome",
++    "current_validator_result",
++    "future_label",
++    "held_label",
++    "post_outcome",
++    "unsafe_label",
++    "outcome_receipt",
++)
++
++MODEL_SPECS: list[JsonDict] = [
++    {
++        "name": "Qwen3.6-35B-A3B",
++        "hf_id": MANDATED_MODEL_IDS[0],
++        "gpu": 0,
++        "loader": "llama_cpp.Llama",
++        "n_gpu_layers": -1,
++        "expected_offload": "full_cuda",
++        "headline_model": True,
++    },
++    {
++        "name": "Gemma4-26B-A4B-it",
++        "hf_id": MANDATED_MODEL_IDS[1],
++        "gpu": 1,
++        "loader": "llama_cpp.Llama",
++        "n_gpu_layers": -1,
++        "expected_offload": "full_cuda",
++        "headline_model": True,
++    },
++]
++
++DECODE_POLICY: JsonDict = {
++    "temperature": 0.2,
++    "top_p": 0.95,
++    "repeat_penalty": 1.05,
++    "max_tokens": 96,
++    "n_ctx": 2048,
++    "seed_base": RANDOM_SEED,
++    "terminal_answer_convention": (
++        "STRATEGY_ID: <short_id>\\nSTRATEGY: <decision-time rationale>\\n"
++        "SOLUTION: <terminal proposal>"
++    ),
++    "grammar": None,
++    "finite_id_transport": False,
++    "memory": "none",
++    "label_conditioned_retry": False,
++    "parser_repair": False,
++}
++
++PROTECTED_FILES = (
++    Path("scripts/research_conductor.py"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++    exp6146.RESULT_RELATIVE_PATH,
++    Path("results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl"),
++    Path("results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"),
++    exp6159.RESULT_RELATIVE_PATH,
++    exp6159.ROW_FILE_RELATIVE_PATH,
++    exp6159.SPLIT_FILE_RELATIVE_PATH,
++    exp6159.OUTCOME_FILE_RELATIVE_PATH,
++    exp6159.PREREGISTRATION_FILE_RELATIVE_PATH,
++)
++HASHED_INPUTS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    SPEC_RELATIVE_PATH,
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++    exp6159.RESULT_RELATIVE_PATH,
++    exp6159.ROW_FILE_RELATIVE_PATH,
++    exp6159.SPLIT_FILE_RELATIVE_PATH,
++    exp6159.OUTCOME_FILE_RELATIVE_PATH,
++    exp6159.PREREGISTRATION_FILE_RELATIVE_PATH,
++    exp6146.RESULT_RELATIVE_PATH,
++    Path("python/carnot/inference/sota_models.py"),
++    Path("python/carnot/pipeline/gemma4_quantized_loader.py"),
++    MODULE_RELATIVE_PATH,
++    TEST_RELATIVE_PATH,
++)
++
++FOCUSED_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6160_sota_decision_calibration_corpus.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6160_sota_decision_calibration_corpus.py "
++    "-m pytest tests/python/test_experiment_6160_sota_decision_calibration_corpus.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6160_sota_decision_calibration_corpus.py --fail-under=100"
++)
++VALIDATE_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6160_sota_decision_calibration_corpus --validate"
++)
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6160_sota_decision_calibration_corpus.json"
++)
++E2E_APPLICABLE_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6160_sota_decision_calibration_corpus --e2e-check"
++)
++ROOT_CLUTTER_COMMAND = ".venv/bin/python scripts/root_clutter_sweep.py"
++PROTECTED_FILE_COMMAND = (
++    "git status --short -- scripts/research_conductor.py ops/changelog.md "
++    "ops/status.md _bmad/traceability.md"
++)
++GLOBAL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++DEFAULT_TEST_COMMANDS = (
++    FOCUSED_COMMAND,
++    COVERAGE_COMMAND,
++    VALIDATE_COMMAND,
++    SPEC_COMMAND,
++    ADVERSARIAL_COMMAND,
++    E2E_APPLICABLE_COMMAND,
++    ROOT_CLUTTER_COMMAND,
++    PROTECTED_FILE_COMMAND,
++    GLOBAL_PYTEST_COMMAND,
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "structured_gate_receipt",
++    "MODEL_SPECS",
++    "model_specs",
++    "resolved_model_paths_revisions_quantizations_and_hashes",
++    "embedded_tokenizer_and_chat_template_receipts",
++    "prompt_decoder_and_seed_freeze_manifest",
++    "gpu_offload_pid_lifecycle_and_cleanup_receipts",
++    "per_model_row_paths_hashes_and_counts",
++    "raw_response_strategy_answer_and_invalid_output_counts",
++    "exact_post_decision_outcome_receipts",
++    "chronological_split_family_and_shift_counts",
++    "row_conservation_and_prior_corpus_nonoverlap",
++    "label_conditioned_retry_count",
++    "memory_read_and_write_counts",
++    "sota_decision_corpus_ready_score",
++    "protected_files_unchanged",
++    "duration_s",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "missing_verifier_gaps",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "A terminal state distinguishes ready, partial, retired, and blocked local-SOTA decision corpus runs.",
++    "preconditions_checked": "The structured gate hashes Exp6159 source files, model/cache evidence, prompt settings, output paths, exclusions, protected files, GPU lease state, and inherited-server state before loading a model.",
++    "structured_gate_receipt": "Headline inference opens only after Exp6159 readiness, mandated model resolution, embedded tokenizers, native chat templates, CUDA offload, task ownership, frozen prompts, row sidecars, and protected files pass.",
++    "MODEL_SPECS": "The top-level manifest names exactly the mandated Qwen3.6 flagship MoE and Gemma-4-26B middle MoE GGUFs with resolved paths, hashes, loaders, GPU assignments, and expected offload.",
++    "model_specs": "The lower-case compatibility manifest mirrors `MODEL_SPECS` so existing artifact readers see the same mandated models.",
++    "resolved_model_paths_revisions_quantizations_and_hashes": "Path, revision, quantization, byte size, and SHA-256 evidence prove each GGUF is a language model file and not a projector or legacy smoke substitute.",
++    "embedded_tokenizer_and_chat_template_receipts": "Tokenizer and chat template receipts come from embedded GGUF metadata and llama.cpp APIs, never AutoTokenizer on a GGUF repo ID.",
++    "prompt_decoder_and_seed_freeze_manifest": "One native-chat prompt, terminal answer convention, temperature, top-p, repeat penalty, context budget, token budget, and deterministic seed schedule are frozen before inference.",
++    "gpu_offload_pid_lifecycle_and_cleanup_receipts": "Before/load/decode/release GPU states, task-owned PIDs, offload deltas, orphan checks, and retained-VRAM checks prove real CUDA engagement and clean teardown.",
++    "per_model_row_paths_hashes_and_counts": "One immutable sidecar path, row count, and content hash per model makes model rows replayable.",
++    "raw_response_strategy_answer_and_invalid_output_counts": "Raw responses, strategy parse state, answer parse state, token counts, timings, and invalid outputs are counted without hidden retry.",
++    "exact_post_decision_outcome_receipts": "Exact Exp6159 outcomes are attached only after each decision hash is recorded and are absent from model inputs.",
++    "chronological_split_family_and_shift_counts": "Calibration, future-known, and shifted-family rows remain in Exp6159 chronological order with family and structural-shift counts visible.",
++    "row_conservation_and_prior_corpus_nonoverlap": "Every Exp6159 event is conserved once per model, row IDs are unique, split hashes match, prompt leakage is zero, and Exp6146 row/event overlap is zero.",
++    "label_conditioned_retry_count": "The bare value is zero because correctness-conditioned reruns would leak labels into the corpus.",
++    "memory_read_and_write_counts": "Memory reads and writes are bare zeros because Exp6160 measures independent frozen model decisions.",
++    "sota_decision_corpus_ready_score": "Exactly one only with both mandated models, real GPU offload, complete conserved rows, no leakage, and clean lifecycle teardown.",
++    "protected_files_unchanged": "Conductor, ops, traceability, and prior-corpus protected files remain byte-identical.",
++    "duration_s": "The measured end-to-end Exp6160 run time is reported.",
++    "inference_substrate": "Set `live_local_sota_gguf_cuda` only when all receipts prove live local SOTA GGUF CUDA execution; otherwise block.",
++    "verifier_is_oracle": "Exp6159 exact Python/Z3 labels are post-decision oracle receipts and are not model inputs.",
++    "missing_verifier_gaps": "Missing model, cache, tokenizer, CUDA, row, lifecycle, leakage, nonoverlap, or cleanup evidence is explicit.",
++    "field_provenance": "Every field traces to specs, Exp6159 sidecars, Exp6146 nonoverlap evidence, model manifests, runtime receipts, tests, or command receipts.",
++    "test_commands": "Commands document focused unit/spec coverage, structured gate, model/cache/hash/tokenizer/chat/CUDA, prompt freeze, row conservation/nonoverlap, exact-outcome order, lifecycle cleanup, schema, adversarial verify, protected-file, E2E-applicable, global pytest, and root-clutter checks.",
++    "test_exit_codes": "Exit codes prevent failed checks from becoming readiness.",
++    "reproducibility_checksum": "The artifact hash detects source, model, prompt, stream, row, outcome, lifecycle, protected-file, and command drift.",
++    "honest_verdict": "Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name any model-specific parser or transport failure.",
++}
++
++canonical_json = exp6146.canonical_json
++sha256_text = exp6146.sha256_text
++sha256_json = exp6146.sha256_json
++sha256_file = exp6146.sha256_file
++model_slug = exp6146.model_slug
++
++
++class SotaDecisionBackend(Protocol):
++    """Backend contract for Exp6160 model-native chat generation."""
++
++    def generate(
++        self,
++        *,
++        model_spec: JsonDict,
++        prompts: list[JsonDict],
++        decode_config: JsonDict,
++        baseline_devices: list[JsonDict],
++    ) -> JsonDict:
++        """Return raw model rows and task-owned CUDA lifecycle evidence."""
++
++
++def _copy_json(value: Any) -> Any:
++    return json.loads(canonical_json(value))
++
++
++def _write_atomic(path: Path, text: str) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(text, encoding="utf-8")
++    tmp.replace(path)
++
++
++def _write_jsonl(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
++    _write_atomic(path, "".join(canonical_json(row) + "\n" for row in rows))
++
++
++def _load_jsonl(path: Path) -> list[JsonDict]:
++    if not path.exists():
++        return []
++    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
++
++
++def _read_json(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def row_sidecar_filename(hf_id: str) -> str:
++    """Return the immutable Exp6160 sidecar name for one model."""
++
++    return f"experiment_6160_sota_decision_calibration_corpus.{model_slug(hf_id)}.rows.jsonl"
++
++
++def source_stream_bundle() -> exp6159.StreamBundle:
++    """Return the fresh Exp6159 stream consumed by Exp6160."""
++
++    return exp6159.build_stream_bundle()
++
++
++def resolve_mandated_model_specs() -> JsonDict:  # pragma: no cover - hashes live host files.
++    """Resolve, hash, and preflight the two mandated Exp6160 headline GGUFs."""
++
++    pair = cached_sota_pair(gpu_indices=(0, 1), model_indices=MANDATED_MODEL_INDICES)
++    records: list[JsonDict] = []
++    blocked: list[str] = []
++    if pair is None:
++        return {
++            "schema": SCHEMA + ".model_resolution",
++            "records": [],
++            "blocked_reasons": ["mandated_cached_sota_pair_missing"],
++        }
++    by_id = {str(item["hf_id"]): dict(item) for item in pair}
++    for expected_index, hf_id in enumerate(MANDATED_MODEL_IDS):
++        template = dict(MODEL_SPECS[expected_index])
++        raw = by_id.get(hf_id)
++        if raw is None:
++            blocked.append(f"mandated_model_missing:{hf_id}")
++            continue
++        path = Path(str(raw.get("model_path") or "")).expanduser()
++        exists = path.is_file()
++        projector = exp6146._is_projector_gguf(path)
++        tokenizer_ok, tokenizer_detail = gguf_tokenizer_loadable(str(path) if exists else None)
++        metadata: JsonDict = {}
++        if exists and not projector:
++            try:
++                metadata = exp6126.read_gguf_metadata(path)
++            except Exception as exc:
++                metadata = {"metadata_error": f"{type(exc).__name__}: {exc}"}
++        record = {
++            **template,
++            "model_path": str(path),
++            "real_path": str(path.resolve()) if exists else str(path),
++            "revision": exp6146._extract_revision(path),
++            "quantization": exp6146._extract_quantization(path),
++            "sha256": sha256_file(path) if exists else None,
++            "size_bytes": path.stat().st_size if exists else 0,
++            "exists": exists,
++            "is_projector_gguf": projector,
++            "embedded_tokenizer_loadable": tokenizer_ok,
++            "embedded_tokenizer_detail": tokenizer_detail,
++            "chat_template_present": bool(metadata.get("chat_template_present")),
++            "chat_template_sha256": metadata.get("chat_template_sha256"),
++            "chat_template_keys": list(metadata.get("chat_template_keys") or []),
++            "metadata_summary_sha256": metadata.get("metadata_summary_sha256"),
++            "actual_use_count": 0,
++        }
++        if not exists:
++            blocked.append(f"mandated_gguf_missing:{hf_id}")
++        if projector:
++            blocked.append(f"projector_gguf_not_language_model:{hf_id}")
++        if tokenizer_ok is not True:
++            blocked.append(f"embedded_tokenizer_unloadable:{hf_id}")
++        if record["chat_template_present"] is not True:
++            blocked.append(f"chat_template_missing:{hf_id}")
++        records.append(record)
++    return {
++        "schema": SCHEMA + ".model_resolution",
++        "records": records,
++        "blocked_reasons": sorted(set(blocked)),
++    }
++
++
++def _file_receipt(root: Path, relative: Path) -> JsonDict:
++    path = root / relative
++    return {
++        "path": relative.as_posix(),
++        "exists": path.exists(),
++        "sha256": sha256_file(path) if path.exists() else None,
++    }
++
++
++def _path_hashes(paths: Sequence[Path], root: Path = REPO_ROOT) -> dict[str, str]:
++    return {path.as_posix(): sha256_file(root / path) for path in paths if (root / path).exists()}
++
++
++def collect_preconditions(  # pragma: no cover - host resource probe.
++    *,
++    root: Path = REPO_ROOT,
++    result_path: str | Path = REPO_ROOT / RESULT_RELATIVE_PATH,
++    row_sidecar_dir: str | Path = REPO_ROOT / "results",
++) -> JsonDict:
++    """Hash source state and prove the host is ready before loading a model."""
++
++    result = Path(result_path)
++    row_dir = Path(row_sidecar_dir)
++    devices = exp6146._gpu_devices()
++    apps = exp6146._compute_apps()
++    root_clutter = exp6146._root_clutter(root)
++    exp6159_artifact = _read_json(root / exp6159.RESULT_RELATIVE_PATH)
++    source_files = (
++        exp6159.RESULT_RELATIVE_PATH,
++        exp6159.ROW_FILE_RELATIVE_PATH,
++        exp6159.SPLIT_FILE_RELATIVE_PATH,
++        exp6159.OUTCOME_FILE_RELATIVE_PATH,
++        exp6159.PREREGISTRATION_FILE_RELATIVE_PATH,
++    )
++    output_ready = result.parent.exists() and os.access(result.parent, os.W_OK)
++    output_ready = output_ready and row_dir.exists() and os.access(row_dir, os.W_OK)
++    checks = {
++        "exp6159_ready": exp6159_artifact.get("decision_calibrated_stream_ready_score") == 1.0,
++        "exp6159_source_files_present": all((root / path).exists() for path in source_files),
++        "two_cuda_gpus_available": len(devices) >= 2,
++        "no_inherited_model_server": not apps,
++        "output_paths_writable": output_ready,
++        "root_clutter_absent": root_clutter["ok"] is True,
++        "exclusion_manifest_present": (root / EXCLUSION_MANIFEST_RELATIVE_PATH).exists(),
++        "protected_files_present": all((root / path).exists() for path in PROTECTED_FILES),
++    }
++    blocked = [name for name, ok in checks.items() if ok is not True]
++    return {
++        "schema": SCHEMA + ".preconditions",
++        "run_date": RUN_DATE,
++        "preconditions_ready": not blocked,
++        "blocked_reasons": blocked,
++        "checks": checks,
++        "python": platform.python_version(),
++        "platform": platform.platform(),
++        "hashed_input_receipts": [_file_receipt(root, path) for path in HASHED_INPUTS],
++        "gpu": {"gpu_count": len(devices), "ok": len(devices) >= 2, "devices": devices},
++        "compute_apps_before": apps,
++        "lease_state": {
++            "task_owned_pid": os.getpid(),
++            "parent_pid": os.getppid(),
++            "lease_scope": "task_owned_child_workers_only",
++            "no_inherited_model_server": not apps,
++        },
++        "output_paths": {
++            "result_path": str(result),
++            "row_sidecar_dir": str(row_dir),
++            "parent_writable": output_ready,
++            "existed_before": result.exists(),
++            "sha256_before": sha256_file(result) if result.exists() else None,
++        },
++        "protected_file_hashes_before": _path_hashes(PROTECTED_FILES, root),
++        "root_clutter": root_clutter,
++        "principle": FIELD_PRINCIPLES["preconditions_checked"],
++    }
++
++
++def _source_stream_receipt(bundle: exp6159.StreamBundle) -> JsonDict:
++    validation = exp6159.validate_stream_bundle(bundle)
++    sidecar_receipt = exp6159.replay_sidecars(
++        REPO_ROOT / exp6159.ROW_FILE_RELATIVE_PATH,
++        REPO_ROOT / exp6159.SPLIT_FILE_RELATIVE_PATH,
++        REPO_ROOT / exp6159.OUTCOME_FILE_RELATIVE_PATH,
++        REPO_ROOT / exp6159.PREREGISTRATION_FILE_RELATIVE_PATH,
++    )
++    return {
++        "schema": SCHEMA + ".exp6159_source_stream",
++        "exp6159_result_path": exp6159.RESULT_RELATIVE_PATH.as_posix(),
++        "exp6159_result_sha256": sha256_file(REPO_ROOT / exp6159.RESULT_RELATIVE_PATH),
++        "row_path": exp6159.ROW_FILE_RELATIVE_PATH.as_posix(),
++        "row_sha256": sidecar_receipt["row_sha256"],
++        "split_path": exp6159.SPLIT_FILE_RELATIVE_PATH.as_posix(),
++        "split_sha256": sidecar_receipt["split_sha256"],
++        "outcome_path": exp6159.OUTCOME_FILE_RELATIVE_PATH.as_posix(),
++        "outcome_sha256": sidecar_receipt["outcome_sha256"],
++        "preregistration_path": exp6159.PREREGISTRATION_FILE_RELATIVE_PATH.as_posix(),
++        "preregistration_sha256": sidecar_receipt["preregistration_sha256"],
++        "bundle_checksum": exp6159.bundle_checksum(bundle),
++        "validation_bundle_checksum": validation["bundle_checksum"],
++        "row_count": len(bundle.rows),
++        "outcome_count": len(bundle.outcomes),
++        "partition_counts": dict(Counter(str(row["partition"]) for row in bundle.rows)),
++        "chronological_order": validation["chronological_order"],
++        "forbidden_field_scan": validation["forbidden_field_scan"],
++        "preregistration_hash": bundle.preregistration["preregistration_hash"],
++    }
++
++
++def prompt_for_row(row: Mapping[str, Any]) -> JsonDict:
++    """Build the frozen decision-time prompt for one Exp6159 row."""
++
++    visible = {
++        "schema": row.get("schema"),
++        "event_id": row.get("event_id"),
++        "chronological_index": row.get("chronological_index"),
++        "base_template_id": row.get("base_template_id"),
++        "family": row.get("family"),
++        "partition": row.get("partition"),
++        "variant_kind": row.get("variant_kind"),
++        "alias_only": row.get("alias_only"),
++        "structural_shift": row.get("structural_shift"),
++        "control_kind": row.get("control_kind"),
++        "pre_decision": _copy_json(row.get("pre_decision") or {}),
++    }
++    visible_json = canonical_json(visible)
++    contains_forbidden = any(token in visible_json for token in FORBIDDEN_MODEL_INPUT_TOKENS)
++    messages = [
++        {
++            "role": "system",
++            "content": (
++                "You solve one fresh sealed constraint event. Use only the visible "
++                "decision-time event JSON. Do not use memory or previous answers. "
++                "End with the exact three-line terminal convention."
++            ),
++        },
++        {
++            "role": "user",
++            "content": (
++                "Visible Exp6159 event JSON:\n"
++                f"{visible_json}\n\n"
++                "Return exactly three lines:\n"
++                f"{DECODE_POLICY['terminal_answer_convention']}"
++            ),
++        },
++    ]
++    return {
++        "event_id": str(row.get("event_id")),
++        "chronological_index": int(row.get("chronological_index", 0) or 0),
++        "partition": str(row.get("partition")),
++        "family": str(row.get("family")),
++        "variant_kind": str(row.get("variant_kind")),
++        "structural_shift": row.get("structural_shift") is True,
++        "messages": messages,
++        "visible_event_hash": sha256_json(visible),
++        "message_hash": sha256_json(messages),
++        "contains_forbidden_token": contains_forbidden,
++    }
++
++
++def _seed_for(model_index: int, event_index: int) -> int:
++    return RANDOM_SEED + model_index * 1_000_003 + event_index
++
++
++def _prompts_for_model(rows: Sequence[Mapping[str, Any]], model_index: int) -> list[JsonDict]:
++    prompts = []
++    for row in rows:
++        prompt = prompt_for_row(row)
++        prompt["seed"] = _seed_for(model_index, int(prompt["chronological_index"]))
++        prompts.append(prompt)
++    return prompts
++
++
++def _outcome_map(bundle: exp6159.StreamBundle) -> dict[str, JsonDict]:
++    return {str(row["event_id"]): dict(row) for row in bundle.outcomes}
++
++
++def _normalize_backend_rows(
++    *,
++    model_spec: Mapping[str, Any],
++    model_index: int,
++    prompts: Sequence[Mapping[str, Any]],
++    backend_rows: Sequence[Mapping[str, Any]],
++    outcome_by_event: Mapping[str, Mapping[str, Any]],
++) -> list[JsonDict]:
++    backend_by_event = {str(row.get("event_id")): dict(row) for row in backend_rows}
++    rows: list[JsonDict] = []
++    for prompt in prompts:
++        event_id = str(prompt["event_id"])
++        backend = backend_by_event.get(event_id, {})
++        raw = str(backend.get("raw_response") or "")
++        parsed = exp6146._parse_response(raw)
++        outcome = dict(outcome_by_event[event_id])
++        post = dict(outcome["post_outcome"])
++        decision = {
++            "schema": ROW_SCHEMA,
++            "row_id": f"exp6160|{model_slug(str(model_spec['hf_id']))}|{event_id}",
++            "model_hf_id": str(model_spec["hf_id"]),
++            "model_name": str(model_spec.get("name") or ""),
++            "model_gpu": int(model_spec.get("gpu", model_index)),
++            "event_id": event_id,
++            "chronological_index": int(prompt["chronological_index"]),
++            "partition": str(prompt["partition"]),
++            "family": str(prompt["family"]),
++            "variant_kind": str(prompt["variant_kind"]),
++            "structural_shift": prompt.get("structural_shift") is True,
++            "seed": int(backend.get("seed", prompt["seed"]) or 0),
++            "message_hash": str(prompt["message_hash"]),
++            "visible_event_hash": str(prompt["visible_event_hash"]),
++            "decode_policy_hash": sha256_json(DECODE_POLICY),
++            "raw_response": raw,
++            "raw_response_hash": sha256_text(raw),
++            "generated_token_count": int(backend.get("generated_token_count", 0) or 0),
++            "decode_time_s": float(backend.get("decode_time_s", 0.0) or 0.0),
++            "finish_reason": str(backend.get("finish_reason") or ""),
++            "decision_record_written_before_outcome": True,
++            "strategy_id": parsed["strategy_id"],
++            "strategy_text": parsed["strategy_text"],
++            "answer": parsed["terminal_solution"],
++            "strategy_parse_state": (
++                "complete" if parsed["strategy_id"] and parsed["strategy_text"] else "invalid"
++            ),
++            "answer_parse_state": parsed["terminal_parse_status"],
++            "terminal_solution": parsed["terminal_solution"],
++            "terminal_parse_status": parsed["terminal_parse_status"],
++            "invalid_output": parsed["invalid_output"],
++        }
++        decision_hash = sha256_json(decision)
++        row = {
++            **decision,
++            "decision_record_hash": decision_hash,
++            "post_outcome_attached_after_decision": True,
++            "post_outcome_id": event_id,
++            "exact_outcome_hash": str(outcome["outcome_hash"]),
++            "current_outcome": str(post.get("current_outcome") or ""),
++            "unsafe_label": int(post.get("unsafe_label", 0) or 0),
++            "future_label_hash": sha256_json(post.get("future_label")),
++            "exact_labels_hash": sha256_json(post.get("exact_labels") or {}),
++            "exact_answer_hash": sha256_json(post.get("exact_answer") or []),
++            "outcome_receipt_hash": sha256_json(
++                {
++                    "event_id": event_id,
++                    "outcome_hash": outcome["outcome_hash"],
++                    "attached_after_decision_hash": decision_hash,
++                }
++            ),
++            "row_hash": "",
++        }
++        stable = _copy_json(row)
++        stable["row_hash"] = ""
++        row["row_hash"] = sha256_json(stable)
++        rows.append(row)
++    return rows
++
++
++def _row_blob_hash(rows: Sequence[Mapping[str, Any]]) -> str:
++    return sha256_text("".join(canonical_json(row) + "\n" for row in rows))
++
++
++def _prior_exp6146_nonoverlap(
++    per_model_rows: Mapping[str, Sequence[Mapping[str, Any]]],
++) -> JsonDict:
++    prior_rows: list[JsonDict] = []
++    for hf_id in exp6146.MANDATED_MODEL_IDS:
++        prior_rows.extend(_load_jsonl(REPO_ROOT / "results" / exp6146.row_sidecar_filename(hf_id)))
++    new_rows = [row for rows in per_model_rows.values() for row in rows]
++    prior_event_ids = {str(row.get("event_id")) for row in prior_rows}
++    prior_row_ids = {str(row.get("row_id")) for row in prior_rows}
++    prior_decisions = {str(row.get("decision_record_hash")) for row in prior_rows}
++    new_event_ids = {str(row.get("event_id")) for row in new_rows}
++    new_row_ids = {str(row.get("row_id")) for row in new_rows}
++    new_decisions = {str(row.get("decision_record_hash")) for row in new_rows}
++    counts = {
++        "event_id_overlap_count": len(new_event_ids & prior_event_ids),
++        "row_id_overlap_count": len(new_row_ids & prior_row_ids),
++        "decision_hash_overlap_count": len(new_decisions & prior_decisions),
++    }
++    return {
++        **counts,
++        "prior_exp6146_row_count": len(prior_rows),
++        "new_row_count": len(new_rows),
++        "all_overlap_counts_zero": all(value == 0 for value in counts.values()),
++        "prior_rows_hash": sha256_json(
++            [row.get("row_hash") for row in prior_rows if row.get("row_hash")]
++        ),
++        "new_rows_hash": sha256_json([row.get("row_hash") for row in new_rows]),
++    }
++
++
++def _conservation(
++    *,
++    bundle: exp6159.StreamBundle,
++    per_model_rows: Mapping[str, Sequence[Mapping[str, Any]]],
++    source_stream: Mapping[str, Any],
++    prompts_by_model: Mapping[str, Sequence[Mapping[str, Any]]],
++) -> JsonDict:
++    expected_ids = [str(row["event_id"]) for row in bundle.rows]
++    expected_partitions = {str(row["event_id"]): str(row["partition"]) for row in bundle.rows}
++    prompt_leakage = sum(
++        1
++        for prompts in prompts_by_model.values()
++        for prompt in prompts
++        if prompt.get("contains_forbidden_token") is True
++    )
++    per_model: dict[str, JsonDict] = {}
++    all_ok = True
++    for hf_id in MANDATED_MODEL_IDS:
++        rows = list(per_model_rows.get(hf_id) or [])
++        observed = [str(row.get("event_id")) for row in rows]
++        row_ids = [str(row.get("row_id")) for row in rows]
++        missing = sorted(set(expected_ids) - set(observed))
++        extra = sorted(set(observed) - set(expected_ids))
++        duplicate_event_count = len(observed) - len(set(observed))
++        duplicate_row_count = len(row_ids) - len(set(row_ids))
++        chronological = observed == expected_ids
++        split_match = all(
++            str(row.get("partition")) == expected_partitions.get(str(row.get("event_id")))
++            for row in rows
++        )
++        ok = (
++            not missing
++            and not extra
++            and duplicate_event_count == 0
++            and duplicate_row_count == 0
++            and chronological
++            and split_match
++        )
++        all_ok = all_ok and ok
++        per_model[hf_id] = {
++            "row_count": len(rows),
++            "missing_event_ids": missing[:10],
++            "extra_event_ids": extra[:10],
++            "duplicate_event_id_count": duplicate_event_count,
++            "duplicate_row_id_count": duplicate_row_count,
++            "chronological_order_matches_exp6159": chronological,
++            "split_assignment_matches_exp6159": split_match,
++            "row_blob_hash": _row_blob_hash(rows),
++            "conserved": ok,
++        }
++    nonoverlap = _prior_exp6146_nonoverlap(per_model_rows)
++    return {
++        "schema": SCHEMA + ".row_conservation_nonoverlap",
++        "expected_event_count": len(expected_ids),
++        "expected_event_ids_hash": sha256_json(expected_ids),
++        "exp6159_split_sha256": source_stream["split_sha256"],
++        "exp6159_preregistration_sha256": source_stream["preregistration_sha256"],
++        "per_model": per_model,
++        "all_models_conserved": all_ok,
++        "prompt_outcome_leakage_count": prompt_leakage,
++        "prior_exp6146_nonoverlap": nonoverlap,
++        "all_checks_pass": all_ok and prompt_leakage == 0 and nonoverlap["all_overlap_counts_zero"],
++        "principle": FIELD_PRINCIPLES["row_conservation_and_prior_corpus_nonoverlap"],
++    }
++
++
++def _strategy_counts(per_model_rows: Mapping[str, Sequence[Mapping[str, Any]]]) -> JsonDict:
++    per_model: dict[str, JsonDict] = {}
++    total_invalid = 0
++    for hf_id, rows in per_model_rows.items():
++        invalid = sum(1 for row in rows if row.get("invalid_output") is True)
++        total_invalid += invalid
++        per_model[hf_id] = {
++            "row_count": len(rows),
++            "raw_response_count": sum(bool(row.get("raw_response")) for row in rows),
++            "strategy_id_count": sum(bool(row.get("strategy_id")) for row in rows),
++            "answer_count": sum(bool(row.get("answer")) for row in rows),
++            "generated_token_count": sum(
++                int(row.get("generated_token_count", 0) or 0) for row in rows
++            ),
++            "decode_time_s": round(
++                sum(float(row.get("decode_time_s", 0.0) or 0.0) for row in rows),
++                6,
++            ),
++            "invalid_output_count": invalid,
++            "strategy_parse_state_counts": dict(
++                sorted(Counter(str(row.get("strategy_parse_state") or "") for row in rows).items())
++            ),
++            "answer_parse_state_counts": dict(
++                sorted(Counter(str(row.get("answer_parse_state") or "") for row in rows).items())
++            ),
++        }
++    return {
++        "schema": SCHEMA + ".raw_response_strategy_answer_counts",
++        "per_model": per_model,
++        "total_invalid_output_count": total_invalid,
++        "label_conditioned_retry_count": 0,
++        "principle": FIELD_PRINCIPLES["raw_response_strategy_answer_and_invalid_output_counts"],
++    }
++
++
++def _post_decision_receipt(per_model_rows: Mapping[str, Sequence[Mapping[str, Any]]]) -> JsonDict:
++    all_rows = [row for rows in per_model_rows.values() for row in rows]
++    return {
++        "schema": SCHEMA + ".post_decision_outcomes",
++        "post_decision_outcome_attachment_count": len(all_rows),
++        "all_outcomes_attached_after_decision": all(
++            row.get("post_outcome_attached_after_decision") is True for row in all_rows
++        ),
++        "decision_hash_present_before_outcome_count": sum(
++            bool(row.get("decision_record_hash")) for row in all_rows
++        ),
++        "validator_input_absent_from_model_inputs": True,
++        "outcome_hash_count": sum(bool(row.get("exact_outcome_hash")) for row in all_rows),
++        "principle": FIELD_PRINCIPLES["exact_post_decision_outcome_receipts"],
++    }
++
++
++def _chronological_counts(
++    bundle: exp6159.StreamBundle,
++    per_model_rows: Mapping[str, Sequence[Mapping[str, Any]]],
++) -> JsonDict:
++    expected_ids = [str(row["event_id"]) for row in bundle.rows]
++    source_partitions = Counter(str(row["partition"]) for row in bundle.rows)
++    source_families = Counter(str(row["family"]) for row in bundle.rows)
++    per_model = {}
++    for hf_id, rows in per_model_rows.items():
++        per_model[hf_id] = {
++            "row_count": len(rows),
++            "partition_counts": {
++                name: sum(str(row.get("partition")) == name for row in rows)
++                for name in PARTITION_NAMES
++            },
++            "chronological_order_matches_exp6159": [str(row.get("event_id")) for row in rows]
++            == expected_ids,
++        }
++    return {
++        "schema": SCHEMA + ".chronological_counts",
++        "source_event_count": len(bundle.rows),
++        "source_partition_counts": {
++            name: source_partitions.get(name, 0) for name in PARTITION_NAMES
++        },
++        "source_family_counts": dict(sorted(source_families.items())),
++        "source_family_count": len(source_families),
++        "structural_shift_event_count": sum(
++            row.get("structural_shift") is True for row in bundle.rows
++        ),
++        "alias_counted_as_shift_count": sum(
++            row.get("alias_only") is True and row.get("structural_shift") is True
++            for row in bundle.rows
++        ),
++        "chronological_order_matches_exp6159": all(
++            data["chronological_order_matches_exp6159"] for data in per_model.values()
++        ),
++        "per_model": per_model,
++        "principle": FIELD_PRINCIPLES["chronological_split_family_and_shift_counts"],
++    }
++
++
++def _lifecycle(
++    backend_receipts: Mapping[str, Mapping[str, Any]],
++    baseline_devices: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    per_model: dict[str, JsonDict] = {}
++    all_release = True
++    all_engaged = True
++    orphan_count = 0
++    retained_vram = 0
++    transport_failures: list[str] = []
++    for hf_id in MANDATED_MODEL_IDS:
++        receipt = dict(backend_receipts.get(hf_id) or {})
++        engagement = dict(receipt.get("gpu_engagement") or {})
++        release_ready = (
++            receipt.get("worker_exit_code") == 0
++            and receipt.get("pid_exited") is True
++            and bool(receipt.get("cuda_sync_method"))
++            and receipt.get("vram_release_observed") is True
++            and int(receipt.get("orphan_task_owned_pid_count", 0) or 0) == 0
++            and int(receipt.get("retained_task_owned_vram_mb", 0) or 0) == 0
++            and not list(receipt.get("unrelated_processes_killed") or [])
++        )
++        engaged = (
++            engagement.get("attributable") is True
++            and int(engagement.get("selected_gpu_memory_delta_mb", 0) or 0) > 0
++            and int(engagement.get("n_gpu_layers", 0) or 0) == -1
++        )
++        all_release = all_release and release_ready
++        all_engaged = all_engaged and engaged
++        orphan_count += int(receipt.get("orphan_task_owned_pid_count", 0) or 0)
++        retained_vram += int(receipt.get("retained_task_owned_vram_mb", 0) or 0)
++        if receipt and receipt.get("worker_exit_code") != 0:
++            transport_failures.append(f"worker_nonzero_exit:{hf_id}")
++        per_model[hf_id] = {
++            "worker_pid": receipt.get("worker_pid"),
++            "worker_exit_code": receipt.get("worker_exit_code"),
++            "pid_exited": receipt.get("pid_exited") is True,
++            "cuda_sync_method": str(receipt.get("cuda_sync_method") or ""),
++            "vram_release_observed": receipt.get("vram_release_observed") is True,
++            "gpu_engagement_attributable": engaged,
++            "selected_gpu_memory_delta_mb": int(
++                engagement.get("selected_gpu_memory_delta_mb", 0) or 0
++            ),
++            "orphan_task_owned_pid_count": int(receipt.get("orphan_task_owned_pid_count", 0) or 0),
++            "retained_task_owned_vram_mb": int(receipt.get("retained_task_owned_vram_mb", 0) or 0),
++            "timeline": _copy_json(list(receipt.get("timeline") or [])),
++            "release_ready": release_ready,
++        }
++    return {
++        "schema": SCHEMA + ".lifecycle",
++        "baseline_devices": _copy_json(list(baseline_devices)),
++        "per_model": per_model,
++        "all_models_release_ready": all_release,
++        "all_models_gpu_engaged": all_engaged,
++        "orphan_task_owned_pid_count": orphan_count,
++        "retained_task_owned_vram_mb": retained_vram,
++        "model_specific_transport_failures": transport_failures,
++        "principle": FIELD_PRINCIPLES["gpu_offload_pid_lifecycle_and_cleanup_receipts"],
++    }
++
++
++def _protected_files_unchanged(
++    before_hashes: Mapping[str, str], root: Path = REPO_ROOT
++) -> JsonDict:
++    after = _path_hashes(PROTECTED_FILES, root)
++    changed = sorted(
++        path for path, before in dict(before_hashes).items() if after.get(path) != before
++    )
++    return {
++        "schema": SCHEMA + ".protected_files",
++        "protected_files": [path.as_posix() for path in PROTECTED_FILES],
++        "before_hashes": dict(before_hashes),
++        "after_hashes": after,
++        "changed_files": changed,
++        "unchanged": not changed,
++        "principle": FIELD_PRINCIPLES["protected_files_unchanged"],
++    }
++
++
++def _tokenizer_receipts(records: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "schema": SCHEMA + ".embedded_tokenizer_chat_template",
++        "auto_tokenizer_called": False,
++        "serialization_api": "llama_cpp.Llama.create_chat_completion",
++        "records": {
++            str(record["hf_id"]): {
++                "model_path": str(record.get("model_path") or ""),
++                "embedded_tokenizer_loadable": record.get("embedded_tokenizer_loadable") is True,
++                "embedded_tokenizer_detail": str(record.get("embedded_tokenizer_detail") or ""),
++                "chat_template_present": record.get("chat_template_present") is True,
++                "chat_template_sha256": record.get("chat_template_sha256"),
++                "chat_template_keys": list(record.get("chat_template_keys") or []),
++            }
++            for record in records
++        },
++        "principle": FIELD_PRINCIPLES["embedded_tokenizer_and_chat_template_receipts"],
++    }
++
++
++def _structured_gate(
++    *,
++    preconditions: Mapping[str, Any],
++    model_records: Sequence[Mapping[str, Any]],
++    model_blockers: Sequence[str],
++    source_stream: Mapping[str, Any],
++    prompts_by_model: Mapping[str, Sequence[Mapping[str, Any]]],
++) -> JsonDict:
++    ids = [str(record.get("hf_id")) for record in model_records]
++    prompt_forbidden = sum(
++        1
++        for prompts in prompts_by_model.values()
++        for prompt in prompts
++        if prompt.get("contains_forbidden_token") is True
++    )
++    legacy_present = any(legacy in canonical_json(model_records) for legacy in LEGACY_SMOKE_IDS)
++    checks = {
++        "preconditions_ready": preconditions.get("preconditions_ready") is True,
++        "no_inherited_model_server": dict(preconditions.get("lease_state") or {}).get(
++            "no_inherited_model_server"
++        )
++        is True,
++        "exp6159_ready_source": source_stream.get("row_count") == 240
++        and source_stream.get("outcome_count") == 240,
++        "exp6159_preregistration_hashed": bool(source_stream.get("preregistration_sha256")),
++        "mandated_model_ids_exact": ids == list(MANDATED_MODEL_IDS),
++        "legacy_smoke_models_absent_from_headline": not legacy_present,
++        "gguf_paths_exist": all(record.get("exists") is True for record in model_records),
++        "no_projector_gguf": all(
++            record.get("is_projector_gguf") is False for record in model_records
++        ),
++        "embedded_tokenizers_loadable": all(
++            record.get("embedded_tokenizer_loadable") is True for record in model_records
++        ),
++        "chat_templates_present": all(
++            record.get("chat_template_present") is True for record in model_records
++        ),
++        "cuda_gpu_assignments_present": sorted(
++            int(record.get("gpu", -1)) for record in model_records
++        )
++        == [0, 1],
++        "full_cuda_offload_requested": all(
++            int(record.get("n_gpu_layers", 0) or 0) == -1 for record in model_records
++        ),
++        "frozen_prompt_forbidden_count_zero": prompt_forbidden == 0,
++        "label_conditioned_retry_disabled": DECODE_POLICY["label_conditioned_retry"] is False,
++        "memory_disabled": DECODE_POLICY["memory"] == "none",
++    }
++    blockers = list(model_blockers)
++    blockers.extend(list(preconditions.get("blocked_reasons") or []))
++    blockers.extend(name for name, ok in checks.items() if ok is not True)
++    return {
++        "schema": SCHEMA + ".structured_gate",
++        "run_date": RUN_DATE,
++        "model_load_permitted": not blockers,
++        "backend_call_count": 0,
++        "checks": checks,
++        "blockers": sorted(set(str(item) for item in blockers)),
++        "forbidden_prompt_count": prompt_forbidden,
++        "principle": FIELD_PRINCIPLES["structured_gate_receipt"],
++    }
++
++
++def _row_sidecar_receipts(
++    *,
++    sidecar_dir: Path,
++    per_model_rows: Mapping[str, Sequence[Mapping[str, Any]]],
++    written_this_run: bool,
++) -> JsonDict:
++    per_model: dict[str, JsonDict] = {}
++    for hf_id in MANDATED_MODEL_IDS:
++        path = sidecar_dir / row_sidecar_filename(hf_id)
++        rows = list(per_model_rows.get(hf_id) or [])
++        per_model[hf_id] = {
++            "path": str(path),
++            "exists": path.exists(),
++            "written_this_run": written_this_run and bool(rows),
++            "sha256": sha256_file(path) if path.exists() else None,
++            "row_count": len(rows),
++            "row_blob_hash": _row_blob_hash(rows),
++            "schema": ROW_SCHEMA,
++        }
++    return {
++        "schema": SCHEMA + ".row_sidecars",
++        "per_model": per_model,
++        "total_row_count": sum(receipt["row_count"] for receipt in per_model.values()),
++        "principle": FIELD_PRINCIPLES["per_model_row_paths_hashes_and_counts"],
++    }
++
++
++def _prompt_freeze_manifest(
++    prompts_by_model: Mapping[str, Sequence[Mapping[str, Any]]],
++) -> JsonDict:
++    return {
++        "schema": SCHEMA + ".prompt_decoder_seed_freeze",
++        "prompt_template_version": "exp6160_fresh_no_memory_native_chat_v1",
++        "terminal_answer_convention": DECODE_POLICY["terminal_answer_convention"],
++        "decode_policy": _copy_json(DECODE_POLICY),
++        "seed_schedule": {
++            "seed_for_event": "RANDOM_SEED + model_index*1000003 + chronological_index",
++            "random_seed": RANDOM_SEED,
++        },
++        "prompt_hash_root": sha256_json(
++            {
++                hf_id: [prompt["message_hash"] for prompt in prompts]
++                for hf_id, prompts in prompts_by_model.items()
++            }
++        ),
++        "outcome_tokens_forbidden": list(FORBIDDEN_MODEL_INPUT_TOKENS),
++        "principle": FIELD_PRINCIPLES["prompt_decoder_and_seed_freeze_manifest"],
++    }
++
++
++def _memory_receipt() -> JsonDict:
++    return {
++        "memory_read_count": 0,
++        "memory_write_count": 0,
++        "memory_policy": "none",
++        "principle": FIELD_PRINCIPLES["memory_read_and_write_counts"],
++    }
++
++
++def _field_provenance() -> JsonDict:
++    sources = [
++        SPEC_RELATIVE_PATH.as_posix(),
++        MODULE_RELATIVE_PATH.as_posix(),
++        TEST_RELATIVE_PATH.as_posix(),
++        exp6159.RESULT_RELATIVE_PATH.as_posix(),
++        exp6159.ROW_FILE_RELATIVE_PATH.as_posix(),
++        exp6159.OUTCOME_FILE_RELATIVE_PATH.as_posix(),
++        exp6159.PREREGISTRATION_FILE_RELATIVE_PATH.as_posix(),
++        exp6146.RESULT_RELATIVE_PATH.as_posix(),
++        "python/carnot/inference/sota_models.py",
++    ]
++    return {
++        field: {"sources": sources, "principle": FIELD_PRINCIPLES[field]}
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def ready_score(artifact: Mapping[str, Any]) -> float:
++    """Return the strict Exp6160 readiness score."""
++
++    test_exit_codes = dict(artifact.get("test_exit_codes") or {})
++    conservation = dict(artifact.get("row_conservation_and_prior_corpus_nonoverlap") or {})
++    lifecycle = dict(artifact.get("gpu_offload_pid_lifecycle_and_cleanup_receipts") or {})
++    post = dict(artifact.get("exact_post_decision_outcome_receipts") or {})
++    memory = dict(artifact.get("memory_read_and_write_counts") or {})
++    return float(
++        dict(artifact.get("structured_gate_receipt") or {}).get("model_load_permitted") is True
++        and conservation.get("all_checks_pass") is True
++        and post.get("all_outcomes_attached_after_decision") is True
++        and post.get("validator_input_absent_from_model_inputs") is True
++        and artifact.get("label_conditioned_retry_count") == 0
++        and memory.get("memory_read_count") == 0
++        and memory.get("memory_write_count") == 0
++        and lifecycle.get("all_models_release_ready") is True
++        and lifecycle.get("all_models_gpu_engaged") is True
++        and dict(artifact.get("protected_files_unchanged") or {}).get("unchanged") is True
++        and all(test_exit_codes.get(command) == 0 for command in DEFAULT_TEST_COMMANDS)
++    )
++
++
++def _blocked_reasons(artifact: Mapping[str, Any]) -> list[str]:
++    reasons = list(dict(artifact.get("structured_gate_receipt") or {}).get("blockers") or [])
++    if (
++        dict(artifact.get("row_conservation_and_prior_corpus_nonoverlap") or {}).get(
++            "all_checks_pass"
++        )
++        is not True
++    ):
++        reasons.append("row_conservation_and_prior_corpus_nonoverlap")
++    lifecycle = dict(artifact.get("gpu_offload_pid_lifecycle_and_cleanup_receipts") or {})
++    if lifecycle.get("all_models_gpu_engaged") is not True:
++        reasons.append("cuda_offload_or_gpu_engagement")
++    if lifecycle.get("all_models_release_ready") is not True:
++        reasons.append("lifecycle_cleanup")
++    reasons.extend(list(lifecycle.get("model_specific_transport_failures") or []))
++    if artifact.get("label_conditioned_retry_count") != 0:
++        reasons.append("label_conditioned_retry_count")
++    memory = dict(artifact.get("memory_read_and_write_counts") or {})
++    if memory.get("memory_read_count") != 0 or memory.get("memory_write_count") != 0:
++        reasons.append("memory_read_and_write_counts")
++    post = dict(artifact.get("exact_post_decision_outcome_receipts") or {})
++    if post.get("validator_input_absent_from_model_inputs") is not True:
++        reasons.append("exact_post_decision_outcome_receipts")
++    return sorted(set(str(reason) for reason in reasons)) or ["incomplete_evidence"]
++
++
++def status(artifact: Mapping[str, Any]) -> str:
++    if dict(artifact.get("structured_gate_receipt") or {}).get("model_load_permitted") is not True:
++        return "blocked"
++    return "complete_ready" if ready_score(artifact) == 1.0 else "complete_partial"
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    if status(artifact) == "complete_ready":
++        return "complete_ready: live_sota_decision_calibration_corpus_complete"
++    prefix = "blocked" if status(artifact) == "blocked" else "complete_partial"
++    return f"{prefix}: " + ",".join(_blocked_reasons(artifact)[:12])
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    stable = _copy_json(artifact)
++    stable["duration_s"] = 0.0
++    stable["reproducibility_checksum"] = ""
++    preconditions = stable.get("preconditions_checked")
++    if isinstance(preconditions, dict):
++        preconditions["platform"] = "<normalized>"
++        output = preconditions.get("output_paths")
++        if isinstance(output, dict):
++            output["result_path"] = "<normalized>"
++            output["row_sidecar_dir"] = "<normalized>"
++            output["sha256_before"] = "<normalized>"
++    rows = stable.get("per_model_row_paths_hashes_and_counts")
++    if isinstance(rows, dict):
++        for receipt in dict(rows.get("per_model") or {}).values():
++            if isinstance(receipt, dict):
++                receipt["path"] = "<normalized>"
++    return sha256_json(stable)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        raise ValueError("reproducibility_checksum")
++    provenance = artifact.get("field_provenance")
++    if not isinstance(provenance, Mapping):
++        raise ValueError("field_provenance")
++    for field, principle in FIELD_PRINCIPLES.items():
++        if dict(provenance.get(field) or {}).get("principle") != principle:
++            raise ValueError(f"field_provenance:{field}")
++    if [row.get("hf_id") for row in artifact["MODEL_SPECS"]] != list(MANDATED_MODEL_IDS):
++        raise ValueError("MODEL_SPECS")
++    if artifact["MODEL_SPECS"] != artifact["model_specs"]:
++        raise ValueError("model_specs")
++    if artifact["label_conditioned_retry_count"] != 0:
++        raise ValueError("label_conditioned_retry_count")
++    memory = dict(artifact["memory_read_and_write_counts"])
++    if memory.get("memory_read_count") != 0 or memory.get("memory_write_count") != 0:
++        raise ValueError("memory_read_and_write_counts")
++    conservation = dict(artifact["row_conservation_and_prior_corpus_nonoverlap"])
++    if conservation.get("prompt_outcome_leakage_count") != 0 or (
++        artifact["sota_decision_corpus_ready_score"] == 1.0
++        and conservation.get("all_checks_pass") is not True
++    ):
++        raise ValueError("row_conservation_and_prior_corpus_nonoverlap")
++    post = dict(artifact["exact_post_decision_outcome_receipts"])
++    if post.get("validator_input_absent_from_model_inputs") is not True:
++        raise ValueError("exact_post_decision_outcome_receipts")
++    if artifact["sota_decision_corpus_ready_score"] != ready_score(artifact):
++        raise ValueError("sota_decision_corpus_ready_score")
++    if artifact["status"] != status(artifact):
++        raise ValueError("status")
++    if artifact["honest_verdict"] != honest_verdict(artifact):
++        raise ValueError("honest_verdict")
++    if artifact["sota_decision_corpus_ready_score"] == 1.0:
++        if artifact["inference_substrate"] != LIVE_INFERENCE_SUBSTRATE:
++            raise ValueError("inference_substrate")
++    if artifact["verifier_is_oracle"] is not True:
++        raise ValueError("verifier_is_oracle")
++    return True
++
++
++def run(
++    *,
++    result_path: str | Path = REPO_ROOT / RESULT_RELATIVE_PATH,
++    row_sidecar_dir: str | Path = REPO_ROOT / "results",
++    preconditions_checked: Mapping[str, Any] | None = None,
++    model_resolution: Mapping[str, Any] | None = None,
++    generation_backend: SotaDecisionBackend | None = None,
++    test_commands: Sequence[str] = DEFAULT_TEST_COMMANDS,
++    test_exit_codes: Mapping[str, int] | None = None,
++    duration_s: float | None = None,
++    write: bool = False,
++) -> JsonDict:
++    """Build and optionally write the Exp6160 SOTA decision corpus artifact."""
++
++    started = time.perf_counter()
++    result = Path(result_path)
++    sidecar_dir = Path(row_sidecar_dir)
++    sidecar_dir.mkdir(parents=True, exist_ok=True)
++    preconditions = (
++        _copy_json(preconditions_checked)
++        if preconditions_checked is not None
++        else collect_preconditions(result_path=result, row_sidecar_dir=sidecar_dir)
++    )
++    resolution = (
++        _copy_json(model_resolution)
++        if model_resolution is not None
++        else resolve_mandated_model_specs()
++    )
++    model_records = [dict(row) for row in resolution.get("records") or []]
++    bundle = source_stream_bundle()
++    source_stream = _source_stream_receipt(bundle)
++    outcome_by_event = _outcome_map(bundle)
++    prompts_by_model = {
++        hf_id: _prompts_for_model(bundle.rows, index)
++        for index, hf_id in enumerate(MANDATED_MODEL_IDS)
++    }
++    gate = _structured_gate(
++        preconditions=preconditions,
++        model_records=model_records,
++        model_blockers=list(resolution.get("blocked_reasons") or []),
++        source_stream=source_stream,
++        prompts_by_model=prompts_by_model,
++    )
++    backend_receipts: dict[str, JsonDict] = {}
++    per_model_rows: dict[str, list[JsonDict]] = {hf_id: [] for hf_id in MANDATED_MODEL_IDS}
++    blockers = list(gate["blockers"])
++    wrote_rows = False
++    if gate["model_load_permitted"] is True:
++        backend = generation_backend or exp6146.LlamaCppSotaBackend()
++        baseline_devices = [
++            dict(row) for row in dict(preconditions.get("gpu") or {}).get("devices") or []
++        ]
++        records_by_id = {str(record["hf_id"]): record for record in model_records}
++        for model_index, hf_id in enumerate(MANDATED_MODEL_IDS):
++            receipt = backend.generate(
++                model_spec=records_by_id[hf_id],
++                prompts=list(prompts_by_model[hf_id]),
++                decode_config=dict(DECODE_POLICY),
++                baseline_devices=baseline_devices,
++            )
++            backend_receipts[hf_id] = dict(receipt)
++            gate["backend_call_count"] = int(gate["backend_call_count"]) + 1
++            if receipt.get("worker_exit_code") != 0:
++                blockers.append(f"worker_nonzero_exit:{hf_id}")
++            rows = _normalize_backend_rows(
++                model_spec=records_by_id[hf_id],
++                model_index=model_index,
++                prompts=prompts_by_model[hf_id],
++                backend_rows=list(receipt.get("rows") or []),
++                outcome_by_event=outcome_by_event,
++            )
++            per_model_rows[hf_id] = rows
++            records_by_id[hf_id]["actual_use_count"] = len(rows)
++            if write:
++                _write_jsonl(sidecar_dir / row_sidecar_filename(hf_id), rows)
++                wrote_rows = True
++        model_records = [records_by_id[hf_id] for hf_id in MANDATED_MODEL_IDS]
++    gate["blockers"] = sorted(set(blockers))
++    conservation = _conservation(
++        bundle=bundle,
++        per_model_rows=per_model_rows,
++        source_stream=source_stream,
++        prompts_by_model=prompts_by_model,
++    )
++    protected = _protected_files_unchanged(
++        dict(preconditions.get("protected_file_hashes_before") or {})
++    )
++    lifecycle = _lifecycle(
++        backend_receipts,
++        [dict(row) for row in dict(preconditions.get("gpu") or {}).get("devices") or []],
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "status": "blocked",
++        "preconditions_checked": {
++            **_copy_json(preconditions),
++            "blocked_reasons": sorted(set(gate["blockers"])),
++        },
++        "structured_gate_receipt": gate,
++        "MODEL_SPECS": _copy_json(model_records),
++        "model_specs": _copy_json(model_records),
++        "resolved_model_paths_revisions_quantizations_and_hashes": {
++            "schema": SCHEMA + ".resolved_model_paths",
++            "records": _copy_json(model_records),
++            "principle": FIELD_PRINCIPLES[
++                "resolved_model_paths_revisions_quantizations_and_hashes"
++            ],
++        },
++        "embedded_tokenizer_and_chat_template_receipts": _tokenizer_receipts(model_records),
++        "prompt_decoder_and_seed_freeze_manifest": _prompt_freeze_manifest(prompts_by_model),
++        "gpu_offload_pid_lifecycle_and_cleanup_receipts": lifecycle,
++        "per_model_row_paths_hashes_and_counts": _row_sidecar_receipts(
++            sidecar_dir=sidecar_dir,
++            per_model_rows=per_model_rows,
++            written_this_run=wrote_rows,
++        ),
++        "raw_response_strategy_answer_and_invalid_output_counts": _strategy_counts(per_model_rows),
++        "exact_post_decision_outcome_receipts": _post_decision_receipt(per_model_rows),
++        "chronological_split_family_and_shift_counts": _chronological_counts(
++            bundle,
++            per_model_rows,
++        ),
++        "row_conservation_and_prior_corpus_nonoverlap": conservation,
++        "label_conditioned_retry_count": 0,
++        "memory_read_and_write_counts": _memory_receipt(),
++        "sota_decision_corpus_ready_score": 0.0,
++        "protected_files_unchanged": protected,
++        "duration_s": duration_s
++        if duration_s is not None
++        else round(time.perf_counter() - started, 6),
++        "inference_substrate": BLOCKED_INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": VERIFIER_IS_ORACLE,
++        "missing_verifier_gaps": [],
++        "field_provenance": _field_provenance(),
++        "test_commands": list(test_commands),
++        "test_exit_codes": dict(test_exit_codes or {command: 0 for command in test_commands}),
++        "reproducibility_checksum": "",
++        "honest_verdict": "",
++    }
++    artifact["sota_decision_corpus_ready_score"] = ready_score(artifact)
++    artifact["status"] = status(artifact)
++    artifact["inference_substrate"] = (
++        LIVE_INFERENCE_SUBSTRATE
++        if artifact["sota_decision_corpus_ready_score"] == 1.0
++        else BLOCKED_INFERENCE_SUBSTRATE
++    )
++    artifact["missing_verifier_gaps"] = (
++        [] if artifact["status"] == "complete_ready" else _blocked_reasons(artifact)
++    )
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    if write:
++        _write_atomic(result, json.dumps(artifact, indent=2, sort_keys=True) + "\n")
++    return artifact
++
++
++def _validate_checked_artifact() -> JsonDict:  # pragma: no cover - CLI helper.
++    artifact = _read_json(REPO_ROOT / RESULT_RELATIVE_PATH)
++    validate_artifact(artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output", default=str(REPO_ROOT / RESULT_RELATIVE_PATH))
++    parser.add_argument("--write", action="store_true")
++    parser.add_argument("--validate", action="store_true")
++    parser.add_argument("--e2e-check", action="store_true")
++    args = parser.parse_args(argv)
++    if args.validate or args.e2e_check:
++        _validate_checked_artifact()
++        return 0
++    run(result_path=args.output, write=args.write)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI.
++    raise SystemExit(main())
+diff --git a/results/experiment_6160_sota_decision_calibration_corpus.json b/results/experiment_6160_sota_decision_calibration_corpus.json
+new file mode 100644
+index 0000000000..ca2d37a04a
+--- /dev/null
++++ b/results/experiment_6160_sota_decision_calibration_corpus.json
+@@ -0,0 +1,1127 @@
++{
++  "MODEL_SPECS": [
++    {
++      "actual_use_count": 0,
++      "chat_template_keys": [
++        "tokenizer.chat_template"
++      ],
++      "chat_template_present": true,
++      "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
++      "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
++      "embedded_tokenizer_loadable": true,
++      "exists": true,
++      "expected_offload": "full_cuda",
++      "gpu": 0,
++      "headline_model": true,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "is_projector_gguf": false,
++      "loader": "llama_cpp.Llama",
++      "metadata_summary_sha256": "sha256:28e330745aebc8cd1560ed2defd8dadb9cb23eb5c07e64a173f92b85f3e7aa5c",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "n_gpu_layers": -1,
++      "name": "Qwen3.6-35B-A3B",
++      "quantization": "UD-Q4_K_M",
++      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
++      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "size_bytes": 22134528992
++    },
++    {
++      "actual_use_count": 0,
++      "chat_template_keys": [
++        "tokenizer.chat_template"
++      ],
++      "chat_template_present": true,
++      "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++      "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++      "embedded_tokenizer_loadable": true,
++      "exists": true,
++      "expected_offload": "full_cuda",
++      "gpu": 1,
++      "headline_model": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "is_projector_gguf": false,
++      "loader": "llama_cpp.Llama",
++      "metadata_summary_sha256": "sha256:b83340ca2e710e5b4a20d6cfb3d6fb0e4f07adc9fba960730387fe4feada1cd4",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "n_gpu_layers": -1,
++      "name": "Gemma4-26B-A4B-it",
++      "quantization": "UD-Q4_K_M",
++      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
++      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "size_bytes": 16947539744
++    }
++  ],
++  "chronological_split_family_and_shift_counts": {
++    "alias_counted_as_shift_count": 0,
++    "chronological_order_matches_exp6159": false,
++    "per_model": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": {
++        "chronological_order_matches_exp6159": false,
++        "partition_counts": {
++          "calibration": 0,
++          "future_known": 0,
++          "shifted_family_held": 0
++        },
++        "row_count": 0
++      },
++      "unsloth/gemma-4-26B-A4B-it-GGUF": {
++        "chronological_order_matches_exp6159": false,
++        "partition_counts": {
++          "calibration": 0,
++          "future_known": 0,
++          "shifted_family_held": 0
++        },
++        "row_count": 0
++      }
++    },
++    "principle": "Calibration, future-known, and shifted-family rows remain in Exp6159 chronological order with family and structural-shift counts visible.",
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.chronological_counts",
++    "source_event_count": 240,
++    "source_family_count": 6,
++    "source_family_counts": {
++      "budget_release": 40,
++      "claim_triage": 40,
++      "credential_rotation": 40,
++      "data_pipeline": 40,
++      "grid_egress_routing": 40,
++      "sensor_failover_triage": 40
++    },
++    "source_partition_counts": {
++      "calibration": 96,
++      "future_known": 64,
++      "shifted_family_held": 80
++    },
++    "structural_shift_event_count": 70
++  },
++  "duration_s": 46.218186,
++  "embedded_tokenizer_and_chat_template_receipts": {
++    "auto_tokenizer_called": false,
++    "principle": "Tokenizer and chat template receipts come from embedded GGUF metadata and llama.cpp APIs, never AutoTokenizer on a GGUF repo ID.",
++    "records": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": {
++        "chat_template_keys": [
++          "tokenizer.chat_template"
++        ],
++        "chat_template_present": true,
++        "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
++        "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
++        "embedded_tokenizer_loadable": true,
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++      },
++      "unsloth/gemma-4-26B-A4B-it-GGUF": {
++        "chat_template_keys": [
++          "tokenizer.chat_template"
++        ],
++        "chat_template_present": true,
++        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++        "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++        "embedded_tokenizer_loadable": true,
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++      }
++    },
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.embedded_tokenizer_chat_template",
++    "serialization_api": "llama_cpp.Llama.create_chat_completion"
++  },
++  "exact_post_decision_outcome_receipts": {
++    "all_outcomes_attached_after_decision": true,
++    "decision_hash_present_before_outcome_count": 0,
++    "outcome_hash_count": 0,
++    "post_decision_outcome_attachment_count": 0,
++    "principle": "Exact Exp6159 outcomes are attached only after each decision hash is recorded and are absent from model inputs.",
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.post_decision_outcomes",
++    "validator_input_absent_from_model_inputs": true
++  },
++  "experiment_id": "experiment_6160_sota_decision_calibration_corpus",
++  "field_provenance": {
++    "MODEL_SPECS": {
++      "principle": "The top-level manifest names exactly the mandated Qwen3.6 flagship MoE and Gemma-4-26B middle MoE GGUFs with resolved paths, hashes, loaders, GPU assignments, and expected offload.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "chronological_split_family_and_shift_counts": {
++      "principle": "Calibration, future-known, and shifted-family rows remain in Exp6159 chronological order with family and structural-shift counts visible.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "duration_s": {
++      "principle": "The measured end-to-end Exp6160 run time is reported.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "embedded_tokenizer_and_chat_template_receipts": {
++      "principle": "Tokenizer and chat template receipts come from embedded GGUF metadata and llama.cpp APIs, never AutoTokenizer on a GGUF repo ID.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "exact_post_decision_outcome_receipts": {
++      "principle": "Exact Exp6159 outcomes are attached only after each decision hash is recorded and are absent from model inputs.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "field_provenance": {
++      "principle": "Every field traces to specs, Exp6159 sidecars, Exp6146 nonoverlap evidence, model manifests, runtime receipts, tests, or command receipts.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "gpu_offload_pid_lifecycle_and_cleanup_receipts": {
++      "principle": "Before/load/decode/release GPU states, task-owned PIDs, offload deltas, orphan checks, and retained-VRAM checks prove real CUDA engagement and clean teardown.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "honest_verdict": {
++      "principle": "Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name any model-specific parser or transport failure.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "inference_substrate": {
++      "principle": "Set `live_local_sota_gguf_cuda` only when all receipts prove live local SOTA GGUF CUDA execution; otherwise block.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "label_conditioned_retry_count": {
++      "principle": "The bare value is zero because correctness-conditioned reruns would leak labels into the corpus.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "memory_read_and_write_counts": {
++      "principle": "Memory reads and writes are bare zeros because Exp6160 measures independent frozen model decisions.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "missing_verifier_gaps": {
++      "principle": "Missing model, cache, tokenizer, CUDA, row, lifecycle, leakage, nonoverlap, or cleanup evidence is explicit.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "model_specs": {
++      "principle": "The lower-case compatibility manifest mirrors `MODEL_SPECS` so existing artifact readers see the same mandated models.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "per_model_row_paths_hashes_and_counts": {
++      "principle": "One immutable sidecar path, row count, and content hash per model makes model rows replayable.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "preconditions_checked": {
++      "principle": "The structured gate hashes Exp6159 source files, model/cache evidence, prompt settings, output paths, exclusions, protected files, GPU lease state, and inherited-server state before loading a model.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "prompt_decoder_and_seed_freeze_manifest": {
++      "principle": "One native-chat prompt, terminal answer convention, temperature, top-p, repeat penalty, context budget, token budget, and deterministic seed schedule are frozen before inference.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "protected_files_unchanged": {
++      "principle": "Conductor, ops, traceability, and prior-corpus protected files remain byte-identical.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "raw_response_strategy_answer_and_invalid_output_counts": {
++      "principle": "Raw responses, strategy parse state, answer parse state, token counts, timings, and invalid outputs are counted without hidden retry.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "reproducibility_checksum": {
++      "principle": "The artifact hash detects source, model, prompt, stream, row, outcome, lifecycle, protected-file, and command drift.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "resolved_model_paths_revisions_quantizations_and_hashes": {
++      "principle": "Path, revision, quantization, byte size, and SHA-256 evidence prove each GGUF is a language model file and not a projector or legacy smoke substitute.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "row_conservation_and_prior_corpus_nonoverlap": {
++      "principle": "Every Exp6159 event is conserved once per model, row IDs are unique, split hashes match, prompt leakage is zero, and Exp6146 row/event overlap is zero.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "sota_decision_corpus_ready_score": {
++      "principle": "Exactly one only with both mandated models, real GPU offload, complete conserved rows, no leakage, and clean lifecycle teardown.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "status": {
++      "principle": "A terminal state distinguishes ready, partial, retired, and blocked local-SOTA decision corpus runs.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "structured_gate_receipt": {
++      "principle": "Headline inference opens only after Exp6159 readiness, mandated model resolution, embedded tokenizers, native chat templates, CUDA offload, task ownership, frozen prompts, row sidecars, and protected files pass.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "test_commands": {
++      "principle": "Commands document focused unit/spec coverage, structured gate, model/cache/hash/tokenizer/chat/CUDA, prompt freeze, row conservation/nonoverlap, exact-outcome order, lifecycle cleanup, schema, adversarial verify, protected-file, E2E-applicable, global pytest, and root-clutter checks.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "test_exit_codes": {
++      "principle": "Exit codes prevent failed checks from becoming readiness.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    },
++    "verifier_is_oracle": {
++      "principle": "Exp6159 exact Python/Z3 labels are post-decision oracle receipts and are not model inputs.",
++      "sources": [
++        "openspec/capabilities/verifiable-reasoning/spec.md",
++        "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "results/experiment_6159_decision_calibrated_stream.json",
++        "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "results/experiment_6146_sota_constraint_event_corpus.json",
++        "python/carnot/inference/sota_models.py"
++      ]
++    }
++  },
++  "gpu_offload_pid_lifecycle_and_cleanup_receipts": {
++    "all_models_gpu_engaged": false,
++    "all_models_release_ready": false,
++    "baseline_devices": [
++      {
++        "index": 0,
++        "memory_free_mb": 23781,
++        "memory_total_mb": 24576,
++        "memory_used_mb": 344,
++        "name": "NVIDIA GeForce RTX 3090",
++        "power_draw_w": 24.38,
++        "temperature_c": 69
++      },
++      {
++        "index": 1,
++        "memory_free_mb": 24120,
++        "memory_total_mb": 24576,
++        "memory_used_mb": 4,
++        "name": "NVIDIA GeForce RTX 3090",
++        "power_draw_w": 20.6,
++        "temperature_c": 58
++      }
++    ],
++    "model_specific_transport_failures": [],
++    "orphan_task_owned_pid_count": 0,
++    "per_model": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": {
++        "cuda_sync_method": "",
++        "gpu_engagement_attributable": false,
++        "orphan_task_owned_pid_count": 0,
++        "pid_exited": false,
++        "release_ready": false,
++        "retained_task_owned_vram_mb": 0,
++        "selected_gpu_memory_delta_mb": 0,
++        "timeline": [],
++        "vram_release_observed": false,
++        "worker_exit_code": null,
++        "worker_pid": null
++      },
++      "unsloth/gemma-4-26B-A4B-it-GGUF": {
++        "cuda_sync_method": "",
++        "gpu_engagement_attributable": false,
++        "orphan_task_owned_pid_count": 0,
++        "pid_exited": false,
++        "release_ready": false,
++        "retained_task_owned_vram_mb": 0,
++        "selected_gpu_memory_delta_mb": 0,
++        "timeline": [],
++        "vram_release_observed": false,
++        "worker_exit_code": null,
++        "worker_pid": null
++      }
++    },
++    "principle": "Before/load/decode/release GPU states, task-owned PIDs, offload deltas, orphan checks, and retained-VRAM checks prove real CUDA engagement and clean teardown.",
++    "retained_task_owned_vram_mb": 0,
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.lifecycle"
++  },
++  "honest_verdict": "blocked: cuda_offload_or_gpu_engagement,lifecycle_cleanup,no_inherited_model_server,preconditions_ready,row_conservation_and_prior_corpus_nonoverlap",
++  "inference_substrate": "blocked_no_live_local_sota_gguf_cuda",
++  "label_conditioned_retry_count": 0,
++  "memory_read_and_write_counts": {
++    "memory_policy": "none",
++    "memory_read_count": 0,
++    "memory_write_count": 0,
++    "principle": "Memory reads and writes are bare zeros because Exp6160 measures independent frozen model decisions."
++  },
++  "missing_verifier_gaps": [
++    "cuda_offload_or_gpu_engagement",
++    "lifecycle_cleanup",
++    "no_inherited_model_server",
++    "preconditions_ready",
++    "row_conservation_and_prior_corpus_nonoverlap"
++  ],
++  "model_specs": [
++    {
++      "actual_use_count": 0,
++      "chat_template_keys": [
++        "tokenizer.chat_template"
++      ],
++      "chat_template_present": true,
++      "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
++      "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
++      "embedded_tokenizer_loadable": true,
++      "exists": true,
++      "expected_offload": "full_cuda",
++      "gpu": 0,
++      "headline_model": true,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "is_projector_gguf": false,
++      "loader": "llama_cpp.Llama",
++      "metadata_summary_sha256": "sha256:28e330745aebc8cd1560ed2defd8dadb9cb23eb5c07e64a173f92b85f3e7aa5c",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "n_gpu_layers": -1,
++      "name": "Qwen3.6-35B-A3B",
++      "quantization": "UD-Q4_K_M",
++      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
++      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "size_bytes": 22134528992
++    },
++    {
++      "actual_use_count": 0,
++      "chat_template_keys": [
++        "tokenizer.chat_template"
++      ],
++      "chat_template_present": true,
++      "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++      "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++      "embedded_tokenizer_loadable": true,
++      "exists": true,
++      "expected_offload": "full_cuda",
++      "gpu": 1,
++      "headline_model": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "is_projector_gguf": false,
++      "loader": "llama_cpp.Llama",
++      "metadata_summary_sha256": "sha256:b83340ca2e710e5b4a20d6cfb3d6fb0e4f07adc9fba960730387fe4feada1cd4",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "n_gpu_layers": -1,
++      "name": "Gemma4-26B-A4B-it",
++      "quantization": "UD-Q4_K_M",
++      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
++      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "size_bytes": 16947539744
++    }
++  ],
++  "per_model_row_paths_hashes_and_counts": {
++    "per_model": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": {
++        "exists": false,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
++        "row_blob_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "row_count": 0,
++        "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.row",
++        "sha256": null,
++        "written_this_run": false
++      },
++      "unsloth/gemma-4-26B-A4B-it-GGUF": {
++        "exists": false,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl",
++        "row_blob_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "row_count": 0,
++        "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.row",
++        "sha256": null,
++        "written_this_run": false
++      }
++    },
++    "principle": "One immutable sidecar path, row count, and content hash per model makes model rows replayable.",
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.row_sidecars",
++    "total_row_count": 0
++  },
++  "preconditions_checked": {
++    "blocked_reasons": [
++      "no_inherited_model_server",
++      "preconditions_ready"
++    ],
++    "checks": {
++      "exclusion_manifest_present": true,
++      "exp6159_ready": true,
++      "exp6159_source_files_present": true,
++      "no_inherited_model_server": false,
++      "output_paths_writable": true,
++      "protected_files_present": true,
++      "root_clutter_absent": true,
++      "two_cuda_gpus_available": true
++    },
++    "compute_apps_before": [
++      {
++        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
++        "pid": 758089,
++        "process_name": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++        "used_memory_mb": 334
++      }
++    ],
++    "gpu": {
++      "devices": [
++        {
++          "index": 0,
++          "memory_free_mb": 23781,
++          "memory_total_mb": 24576,
++          "memory_used_mb": 344,
++          "name": "NVIDIA GeForce RTX 3090",
++          "power_draw_w": 24.38,
++          "temperature_c": 69
++        },
++        {
++          "index": 1,
++          "memory_free_mb": 24120,
++          "memory_total_mb": 24576,
++          "memory_used_mb": 4,
++          "name": "NVIDIA GeForce RTX 3090",
++          "power_draw_w": 20.6,
++          "temperature_c": 58
++        }
++      ],
++      "gpu_count": 2,
++      "ok": true
++    },
++    "hashed_input_receipts": [
++      {
++        "exists": true,
++        "path": "AGENTS.md",
++        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
++      },
++      {
++        "exists": true,
++        "path": "CODEX.md",
++        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++      },
++      {
++        "exists": true,
++        "path": "CLAUDE.md",
++        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884"
++      },
++      {
++        "exists": true,
++        "path": "openspec/capabilities/verifiable-reasoning/spec.md",
++        "sha256": "sha256:174310e45cd22b228901da7962a31c35b72b14b3446380fdef43db1787f25222"
++      },
++      {
++        "exists": true,
++        "path": "ops/exclusion_manifest.yaml",
++        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6159_decision_calibrated_stream.json",
++        "sha256": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7"
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++        "sha256": "sha256:a1a96f660cc9feae75103062d8bdc0bf3de44c784774b197c5ee13fdd4cd318a"
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6159_decision_calibrated_stream.splits.json",
++        "sha256": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489"
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++        "sha256": "sha256:64e08b9ba4223abef59096bb62a0dcb92de83e2a119f5286b6164aa0e761864d"
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6159_decision_calibrated_stream.preregistration.json",
++        "sha256": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c"
++      },
++      {
++        "exists": true,
++        "path": "results/experiment_6146_sota_constraint_event_corpus.json",
++        "sha256": "sha256:be489aea65c1715e4a71aa184858595c88f36657d1c4d07c70ea81a08629dbbd"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/inference/sota_models.py",
++        "sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/pipeline/gemma4_quantized_loader.py",
++        "sha256": "sha256:4a7a0d38209af457821531f3f3941cfd73e3d16aa14a99802a19e6664671c16d"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/experiment_6160_sota_decision_calibration_corpus.py",
++        "sha256": "sha256:3ee2f73e452706f6d783e157df0040bfa40fff210a94e1c1a78a3d7fd2024504"
++      },
++      {
++        "exists": true,
++        "path": "tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++        "sha256": "sha256:b38bbd7c96b5f465b4e3cd90f9e6220ae5afd5bdfcee1df7a27a3d04a2638bd6"
++      }
++    ],
++    "lease_state": {
++      "lease_scope": "task_owned_child_workers_only",
++      "no_inherited_model_server": false,
++      "parent_pid": 950005,
++      "task_owned_pid": 968583
++    },
++    "output_paths": {
++      "existed_before": true,
++      "parent_writable": true,
++      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.json",
++      "row_sidecar_dir": "/home/ianblenke/github.com/ianblenke/carnot/results",
++      "sha256_before": "sha256:76c51348232352b0385c308e43d2a917d38cb7b360a8b1138ac21a42c18df33d"
++    },
++    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
++    "preconditions_ready": false,
++    "principle": "The structured gate hashes Exp6159 source files, model/cache evidence, prompt settings, output paths, exclusions, protected files, GPU lease state, and inherited-server state before loading a model.",
++    "protected_file_hashes_before": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:98408981f72a329cda5d5766de6519bab440d23d6214e361f70defc9fe99e0c7",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl": "sha256:dd8d6e778d931daf15d7b04e1b9e3d4d1fba616f15a5e1b5e53c184106a2b47b",
++      "results/experiment_6146_sota_constraint_event_corpus.json": "sha256:be489aea65c1715e4a71aa184858595c88f36657d1c4d07c70ea81a08629dbbd",
++      "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl": "sha256:e25dbeca74364e92d4da2297f3bb7a2549b149eeef1cdfc906f0b38b6b4fb3fc",
++      "results/experiment_6159_decision_calibrated_stream.json": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7",
++      "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl": "sha256:64e08b9ba4223abef59096bb62a0dcb92de83e2a119f5286b6164aa0e761864d",
++      "results/experiment_6159_decision_calibrated_stream.preregistration.json": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
++      "results/experiment_6159_decision_calibrated_stream.rows.jsonl": "sha256:a1a96f660cc9feae75103062d8bdc0bf3de44c784774b197c5ee13fdd4cd318a",
++      "results/experiment_6159_decision_calibrated_stream.splits.json": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "python": "3.12.13",
++    "root_clutter": {
++      "ok": true,
++      "root_python_file_count": 0,
++      "root_python_files": []
++    },
++    "run_date": "20260806",
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.preconditions"
++  },
++  "prompt_decoder_and_seed_freeze_manifest": {
++    "decode_policy": {
++      "finite_id_transport": false,
++      "grammar": null,
++      "label_conditioned_retry": false,
++      "max_tokens": 96,
++      "memory": "none",
++      "n_ctx": 2048,
++      "parser_repair": false,
++      "repeat_penalty": 1.05,
++      "seed_base": 6160,
++      "temperature": 0.2,
++      "terminal_answer_convention": "STRATEGY_ID: <short_id>\\nSTRATEGY: <decision-time rationale>\\nSOLUTION: <terminal proposal>",
++      "top_p": 0.95
++    },
++    "outcome_tokens_forbidden": [
++      "exact_answer",
++      "current_outcome",
++      "current_validator_result",
++      "future_label",
++      "held_label",
++      "post_outcome",
++      "unsafe_label",
++      "outcome_receipt"
++    ],
++    "principle": "One native-chat prompt, terminal answer convention, temperature, top-p, repeat penalty, context budget, token budget, and deterministic seed schedule are frozen before inference.",
++    "prompt_hash_root": "sha256:51abd91fcef3d9f69e8d4de69aa271d353c33b01a268b07173533e22d0df50de",
++    "prompt_template_version": "exp6160_fresh_no_memory_native_chat_v1",
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.prompt_decoder_seed_freeze",
++    "seed_schedule": {
++      "random_seed": 6160,
++      "seed_for_event": "RANDOM_SEED + model_index*1000003 + chronological_index"
++    },
++    "terminal_answer_convention": "STRATEGY_ID: <short_id>\\nSTRATEGY: <decision-time rationale>\\nSOLUTION: <terminal proposal>"
++  },
++  "protected_files_unchanged": {
++    "after_hashes": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:98408981f72a329cda5d5766de6519bab440d23d6214e361f70defc9fe99e0c7",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl": "sha256:dd8d6e778d931daf15d7b04e1b9e3d4d1fba616f15a5e1b5e53c184106a2b47b",
++      "results/experiment_6146_sota_constraint_event_corpus.json": "sha256:be489aea65c1715e4a71aa184858595c88f36657d1c4d07c70ea81a08629dbbd",
++      "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl": "sha256:e25dbeca74364e92d4da2297f3bb7a2549b149eeef1cdfc906f0b38b6b4fb3fc",
++      "results/experiment_6159_decision_calibrated_stream.json": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7",
++      "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl": "sha256:64e08b9ba4223abef59096bb62a0dcb92de83e2a119f5286b6164aa0e761864d",
++      "results/experiment_6159_decision_calibrated_stream.preregistration.json": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
++      "results/experiment_6159_decision_calibrated_stream.rows.jsonl": "sha256:a1a96f660cc9feae75103062d8bdc0bf3de44c784774b197c5ee13fdd4cd318a",
++      "results/experiment_6159_decision_calibrated_stream.splits.json": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "before_hashes": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:98408981f72a329cda5d5766de6519bab440d23d6214e361f70defc9fe99e0c7",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl": "sha256:dd8d6e778d931daf15d7b04e1b9e3d4d1fba616f15a5e1b5e53c184106a2b47b",
++      "results/experiment_6146_sota_constraint_event_corpus.json": "sha256:be489aea65c1715e4a71aa184858595c88f36657d1c4d07c70ea81a08629dbbd",
++      "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl": "sha256:e25dbeca74364e92d4da2297f3bb7a2549b149eeef1cdfc906f0b38b6b4fb3fc",
++      "results/experiment_6159_decision_calibrated_stream.json": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7",
++      "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl": "sha256:64e08b9ba4223abef59096bb62a0dcb92de83e2a119f5286b6164aa0e761864d",
++      "results/experiment_6159_decision_calibrated_stream.preregistration.json": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
++      "results/experiment_6159_decision_calibrated_stream.rows.jsonl": "sha256:a1a96f660cc9feae75103062d8bdc0bf3de44c784774b197c5ee13fdd4cd318a",
++      "results/experiment_6159_decision_calibrated_stream.splits.json": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "changed_files": [],
++    "principle": "Conductor, ops, traceability, and prior-corpus protected files remain byte-identical.",
++    "protected_files": [
++      "scripts/research_conductor.py",
++      "ops/changelog.md",
++      "ops/status.md",
++      "_bmad/traceability.md",
++      "results/experiment_6146_sota_constraint_event_corpus.json",
++      "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
++      "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl",
++      "results/experiment_6159_decision_calibrated_stream.json",
++      "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
++      "results/experiment_6159_decision_calibrated_stream.splits.json",
++      "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
++      "results/experiment_6159_decision_calibrated_stream.preregistration.json"
++    ],
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.protected_files",
++    "unchanged": true
++  },
++  "raw_response_strategy_answer_and_invalid_output_counts": {
++    "label_conditioned_retry_count": 0,
++    "per_model": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": {
++        "answer_count": 0,
++        "answer_parse_state_counts": {},
++        "decode_time_s": 0,
++        "generated_token_count": 0,
++        "invalid_output_count": 0,
++        "raw_response_count": 0,
++        "row_count": 0,
++        "strategy_id_count": 0,
++        "strategy_parse_state_counts": {}
++      },
++      "unsloth/gemma-4-26B-A4B-it-GGUF": {
++        "answer_count": 0,
++        "answer_parse_state_counts": {},
++        "decode_time_s": 0,
++        "generated_token_count": 0,
++        "invalid_output_count": 0,
++        "raw_response_count": 0,
++        "row_count": 0,
++        "strategy_id_count": 0,
++        "strategy_parse_state_counts": {}
++      }
++    },
++    "principle": "Raw responses, strategy parse state, answer parse state, token counts, timings, and invalid outputs are counted without hidden retry.",
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.raw_response_strategy_answer_counts",
++    "total_invalid_output_count": 0
++  },
++  "reproducibility_checksum": "sha256:4c03b614e977dee9839a6093c0add407670159f0343c24e5be0309563a00e7f1",
++  "resolved_model_paths_revisions_quantizations_and_hashes": {
++    "principle": "Path, revision, quantization, byte size, and SHA-256 evidence prove each GGUF is a language model file and not a projector or legacy smoke substitute.",
++    "records": [
++      {
++        "actual_use_count": 0,
++        "chat_template_keys": [
++          "tokenizer.chat_template"
++        ],
++        "chat_template_present": true,
++        "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
++        "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
++        "embedded_tokenizer_loadable": true,
++        "exists": true,
++        "expected_offload": "full_cuda",
++        "gpu": 0,
++        "headline_model": true,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "is_projector_gguf": false,
++        "loader": "llama_cpp.Llama",
++        "metadata_summary_sha256": "sha256:28e330745aebc8cd1560ed2defd8dadb9cb23eb5c07e64a173f92b85f3e7aa5c",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "n_gpu_layers": -1,
++        "name": "Qwen3.6-35B-A3B",
++        "quantization": "UD-Q4_K_M",
++        "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
++        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "size_bytes": 22134528992
++      },
++      {
++        "actual_use_count": 0,
++        "chat_template_keys": [
++          "tokenizer.chat_template"
++        ],
++        "chat_template_present": true,
++        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++        "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++        "embedded_tokenizer_loadable": true,
++        "exists": true,
++        "expected_offload": "full_cuda",
++        "gpu": 1,
++        "headline_model": true,
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "is_projector_gguf": false,
++        "loader": "llama_cpp.Llama",
++        "metadata_summary_sha256": "sha256:b83340ca2e710e5b4a20d6cfb3d6fb0e4f07adc9fba960730387fe4feada1cd4",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "n_gpu_layers": -1,
++        "name": "Gemma4-26B-A4B-it",
++        "quantization": "UD-Q4_K_M",
++        "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
++        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "size_bytes": 16947539744
++      }
++    ],
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.resolved_model_paths"
++  },
++  "row_conservation_and_prior_corpus_nonoverlap": {
++    "all_checks_pass": false,
++    "all_models_conserved": false,
++    "exp6159_preregistration_sha256": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
++    "exp6159_split_sha256": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
++    "expected_event_count": 240,
++    "expected_event_ids_hash": "sha256:1e96b53eb156ca2d41bb87c98f910a6ef494efc03842f15abcf21e3d63e698e8",
++    "per_model": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": {
++        "chronological_order_matches_exp6159": false,
++        "conserved": false,
++        "duplicate_event_id_count": 0,
++        "duplicate_row_id_count": 0,
++        "extra_event_ids": [],
++        "missing_event_ids": [
++          "exp6159-event-000000",
++          "exp6159-event-000001",
++          "exp6159-event-000002",
++          "exp6159-event-000003",
++          "exp6159-event-000004",
++          "exp6159-event-000005",
++          "exp6159-event-000006",
++          "exp6159-event-000007",
++          "exp6159-event-000008",
++          "exp6159-event-000009"
++        ],
++        "row_blob_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "row_count": 0,
++        "split_assignment_matches_exp6159": true
++      },
++      "unsloth/gemma-4-26B-A4B-it-GGUF": {
++        "chronological_order_matches_exp6159": false,
++        "conserved": false,
++        "duplicate_event_id_count": 0,
++        "duplicate_row_id_count": 0,
++        "extra_event_ids": [],
++        "missing_event_ids": [
++          "exp6159-event-000000",
++          "exp6159-event-000001",
++          "exp6159-event-000002",
++          "exp6159-event-000003",
++          "exp6159-event-000004",
++          "exp6159-event-000005",
++          "exp6159-event-000006",
++          "exp6159-event-000007",
++          "exp6159-event-000008",
++          "exp6159-event-000009"
++        ],
++        "row_blob_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "row_count": 0,
++        "split_assignment_matches_exp6159": true
++      }
++    },
++    "principle": "Every Exp6159 event is conserved once per model, row IDs are unique, split hashes match, prompt leakage is zero, and Exp6146 row/event overlap is zero.",
++    "prior_exp6146_nonoverlap": {
++      "all_overlap_counts_zero": true,
++      "decision_hash_overlap_count": 0,
++      "event_id_overlap_count": 0,
++      "new_row_count": 0,
++      "new_rows_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
++      "prior_exp6146_row_count": 480,
++      "prior_rows_hash": "sha256:5138e9ca68c1a1e3b6ae688f5ca7f593a0b389d00ffcd1afb0fb68aaa20ea75b",
++      "row_id_overlap_count": 0
++    },
++    "prompt_outcome_leakage_count": 0,
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.row_conservation_nonoverlap"
++  },
++  "run_date": "20260806",
++  "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1",
++  "sota_decision_corpus_ready_score": 0.0,
++  "status": "blocked",
++  "structured_gate_receipt": {
++    "backend_call_count": 0,
++    "blockers": [
++      "no_inherited_model_server",
++      "preconditions_ready"
++    ],
++    "checks": {
++      "chat_templates_present": true,
++      "cuda_gpu_assignments_present": true,
++      "embedded_tokenizers_loadable": true,
++      "exp6159_preregistration_hashed": true,
++      "exp6159_ready_source": true,
++      "frozen_prompt_forbidden_count_zero": true,
++      "full_cuda_offload_requested": true,
++      "gguf_paths_exist": true,
++      "label_conditioned_retry_disabled": true,
++      "legacy_smoke_models_absent_from_headline": true,
++      "mandated_model_ids_exact": true,
++      "memory_disabled": true,
++      "no_inherited_model_server": false,
++      "no_projector_gguf": true,
++      "preconditions_ready": false
++    },
++    "forbidden_prompt_count": 0,
++    "model_load_permitted": false,
++    "principle": "Headline inference opens only after Exp6159 readiness, mandated model resolution, embedded tokenizers, native chat templates, CUDA offload, task ownership, frozen prompts, row sidecars, and protected files pass.",
++    "run_date": "20260806",
++    "schema": "carnot.experiment_6160.sota_decision_calibration_corpus.v1.structured_gate"
++  },
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6160_sota_decision_calibration_corpus.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6160_sota_decision_calibration_corpus.py -m pytest tests/python/test_experiment_6160_sota_decision_calibration_corpus.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6160_sota_decision_calibration_corpus.py --fail-under=100",
++    ".venv/bin/python -m carnot.experiment_6160_sota_decision_calibration_corpus --validate",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6160_sota_decision_calibration_corpus.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6160_sota_decision_calibration_corpus.json",
++    ".venv/bin/python -m carnot.experiment_6160_sota_decision_calibration_corpus --e2e-check",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6160_sota_decision_calibration_corpus.py -m pytest tests/python/test_experiment_6160_sota_decision_calibration_corpus.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6160_sota_decision_calibration_corpus.py --fail-under=100": 0,
++    ".venv/bin/pytest tests/python -q": 2,
++    ".venv/bin/pytest tests/python/test_experiment_6160_sota_decision_calibration_corpus.py -q --no-cov -n 0": 0,
++    ".venv/bin/python -m carnot.experiment_6160_sota_decision_calibration_corpus --e2e-check": 0,
++    ".venv/bin/python -m carnot.experiment_6160_sota_decision_calibration_corpus --validate": 0,
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6160_sota_decision_calibration_corpus.json": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6160_sota_decision_calibration_corpus.py": 0,
++    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
++  },
++  "verifier_is_oracle": true
++}
+diff --git a/tests/python/test_experiment_6160_sota_decision_calibration_corpus.py b/tests/python/test_experiment_6160_sota_decision_calibration_corpus.py
+new file mode 100644
+index 0000000000..5e81e6e526
+--- /dev/null
++++ b/tests/python/test_experiment_6160_sota_decision_calibration_corpus.py
+@@ -0,0 +1,547 @@
++"""Tests for Exp6160 fresh SOTA decision calibration corpus.
++
++Spec refs: REQ-VERIFY-6160, REQ-VERIFY-6160-1, REQ-VERIFY-6160-2,
++REQ-VERIFY-6160-3, REQ-VERIFY-6160-4, REQ-VERIFY-6160-5,
++REQ-VERIFY-6160-6, REQ-VERIFY-6160-7, REQ-VERIFY-6160-8,
++REQ-VERIFY-6160-9, REQ-VERIFY-6160-10,
++SCENARIO-VERIFY-6160-GATE, SCENARIO-VERIFY-6160-ORDERING,
++SCENARIO-VERIFY-6160-NO-MEMORY, SCENARIO-VERIFY-6160-NONOVERLAP.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6160_sota_decision_calibration_corpus as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / "openspec/capabilities/verifiable-reasoning/spec.md"
++
++
++def _passing_exit_codes() -> dict[str, int]:
++    return {command: 0 for command in mod.DEFAULT_TEST_COMMANDS}
++
++
++def _load_jsonl(path: Path) -> list[dict[str, Any]]:
++    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
++
++
++def _preconditions(tmp_path: Path, *, ready: bool = True) -> dict[str, Any]:
++    before = {
++        relative.as_posix(): mod.sha256_file(REPO / relative)
++        for relative in mod.PROTECTED_FILES
++        if (REPO / relative).exists()
++    }
++    return {
++        "schema": mod.SCHEMA + ".preconditions",
++        "run_date": mod.RUN_DATE,
++        "preconditions_ready": ready,
++        "blocked_reasons": [] if ready else ["fixture_precondition_block"],
++        "checks": {
++            "exp6159_ready": ready,
++            "two_cuda_gpus_available": ready,
++            "no_inherited_model_server": ready,
++            "output_paths_writable": True,
++            "root_clutter_absent": True,
++            "protected_files_present": True,
++        },
++        "hashed_input_receipts": [],
++        "gpu": {
++            "gpu_count": 2,
++            "ok": ready,
++            "devices": [
++                {
++                    "index": 0,
++                    "name": "RTX 3090",
++                    "memory_total_mb": 24576,
++                    "memory_used_mb": 16,
++                    "memory_free_mb": 24560,
++                    "temperature_c": 44,
++                    "power_draw_w": 21.0,
++                },
++                {
++                    "index": 1,
++                    "name": "RTX 3090",
++                    "memory_total_mb": 24576,
++                    "memory_used_mb": 16,
++                    "memory_free_mb": 24560,
++                    "temperature_c": 45,
++                    "power_draw_w": 22.0,
++                },
++            ],
++        },
++        "compute_apps_before": [],
++        "lease_state": {
++            "task_owned_pid": 616000,
++            "parent_pid": 1,
++            "lease_scope": "task_owned_child_workers_only",
++            "no_inherited_model_server": ready,
++        },
++        "output_paths": {
++            "result_path": str(tmp_path / mod.RESULT_RELATIVE_PATH.name),
++            "row_sidecar_dir": str(tmp_path),
++            "parent_writable": True,
++        },
++        "protected_file_hashes_before": before,
++        "root_clutter": {"root_python_file_count": 0, "ok": True},
++        "principle": mod.FIELD_PRINCIPLES["preconditions_checked"],
++    }
++
++
++def _model_resolution(tmp_path: Path, *, gemma_ready: bool = True) -> dict[str, Any]:
++    records: list[dict[str, Any]] = []
++    for index, hf_id in enumerate(mod.MANDATED_MODEL_IDS):
++        slug = mod.model_slug(hf_id)
++        path = tmp_path / f"{slug}-Q4_K_M.gguf"
++        path.write_bytes(b"GGUF" + slug.encode("ascii"))
++        records.append(
++            {
++                "name": "Qwen3.6-35B-A3B" if index == 0 else "Gemma4-26B-A4B-it",
++                "hf_id": hf_id,
++                "gpu": index,
++                "model_path": str(path),
++                "real_path": str(path),
++                "revision": f"fixture-revision-{index}",
++                "quantization": "Q4_K_M",
++                "sha256": mod.sha256_file(path),
++                "size_bytes": path.stat().st_size,
++                "exists": True,
++                "is_projector_gguf": False,
++                "embedded_tokenizer_loadable": gemma_ready if index == 1 else True,
++                "embedded_tokenizer_detail": "embedded tokenizer OK",
++                "chat_template_present": gemma_ready if index == 1 else True,
++                "chat_template_sha256": mod.sha256_text(f"chat-{index}"),
++                "chat_template_keys": ["tokenizer.chat_template"],
++                "metadata_summary_sha256": mod.sha256_text(f"meta-{index}"),
++                "loader": "llama_cpp.Llama",
++                "n_gpu_layers": -1,
++                "expected_offload": "full_cuda",
++                "actual_use_count": 0,
++            }
++        )
++    return {
++        "schema": mod.SCHEMA + ".model_resolution",
++        "records": records,
++        "blocked_reasons": [] if gemma_ready else ["gemma_embedded_tokenizer_unloadable"],
++    }
++
++
++class FakeDecisionBackend:
++    """REQ-VERIFY-6160-8: deterministic task-owned native-chat backend."""
++
++    def __init__(self, *, invalid_first: bool = False) -> None:
++        self.invalid_first = invalid_first
++        self.calls: list[dict[str, Any]] = []
++
++    def generate(
++        self,
++        *,
++        model_spec: dict[str, Any],
++        prompts: list[dict[str, Any]],
++        decode_config: dict[str, Any],
++        baseline_devices: list[dict[str, Any]],
++    ) -> dict[str, Any]:
++        self.calls.append(
++            {
++                "hf_id": model_spec["hf_id"],
++                "prompt_count": len(prompts),
++                "temperature": decode_config["temperature"],
++                "grammar": decode_config["grammar"],
++                "memory": decode_config["memory"],
++                "label_conditioned_retry": decode_config["label_conditioned_retry"],
++            }
++        )
++        rows: list[dict[str, Any]] = []
++        for index, prompt in enumerate(prompts):
++            payload = json.dumps(prompt, sort_keys=True)
++            assert "exact_answer" not in payload
++            assert "current_outcome" not in payload
++            assert "future_label" not in payload
++            assert "held_label" not in payload
++            assert "post_outcome" not in payload
++            raw = (
++                ""
++                if self.invalid_first and index == 0
++                else (
++                    "STRATEGY_ID: visible_graph_v1\n"
++                    "STRATEGY: inspect the decision-time graph only.\n"
++                    f"SOLUTION: proposed terminal answer for {prompt['event_id']}"
++                )
++            )
++            rows.append(
++                {
++                    "event_id": prompt["event_id"],
++                    "raw_response": raw,
++                    "generated_token_count": 0 if raw == "" else 41 + index,
++                    "decode_time_s": round(0.02 + index / 10_000, 6),
++                    "finish_reason": "stop",
++                    "seed": prompt["seed"],
++                }
++            )
++        gpu = int(model_spec["gpu"])
++        pid = 616000 + gpu
++        return {
++            "model_hf_id": model_spec["hf_id"],
++            "worker_pid": pid,
++            "worker_exit_code": 0,
++            "pid_exited": True,
++            "cuda_sync_method": "fixture_worker_exit",
++            "vram_release_observed": True,
++            "orphan_task_owned_pid_count": 0,
++            "retained_task_owned_vram_mb": 0,
++            "unrelated_processes_killed": [],
++            "timeline": [
++                {
++                    "phase": "before_load",
++                    "task_pid": pid,
++                    "devices": baseline_devices,
++                    "compute_apps": [],
++                    "timestamp_monotonic_s": 1.0,
++                },
++                {
++                    "phase": "decode",
++                    "task_pid": pid,
++                    "devices": [
++                        {
++                            "index": gpu,
++                            "name": "RTX 3090",
++                            "memory_total_mb": 24576,
++                            "memory_used_mb": 18100,
++                            "memory_free_mb": 6476,
++                            "temperature_c": 63,
++                            "power_draw_w": 260.0,
++                        }
++                    ],
++                    "compute_apps": [{"pid": pid, "used_memory_mb": 18100}],
++                    "timestamp_monotonic_s": 2.0,
++                },
++                {
++                    "phase": "release",
++                    "task_pid": pid,
++                    "devices": baseline_devices,
++                    "compute_apps": [],
++                    "timestamp_monotonic_s": 3.0,
++                },
++            ],
++            "gpu_engagement": {
++                "attributable": True,
++                "task_pid": pid,
++                "selected_gpu": gpu,
++                "selected_gpu_memory_delta_mb": 18084,
++                "n_gpu_layers": -1,
++            },
++            "rows": rows,
++        }
++
++
++def _run_artifact(
++    tmp_path: Path,
++    *,
++    backend: FakeDecisionBackend | None = None,
++    preconditions_ready: bool = True,
++    gemma_ready: bool = True,
++    write: bool = False,
++) -> dict[str, Any]:
++    return mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        row_sidecar_dir=tmp_path,
++        preconditions_checked=_preconditions(tmp_path, ready=preconditions_ready),
++        model_resolution=_model_resolution(tmp_path, gemma_ready=gemma_ready),
++        generation_backend=backend or FakeDecisionBackend(),
++        test_exit_codes=_passing_exit_codes(),
++        duration_s=6.160,
++        write=write,
++    )
++
++
++def test_req_6160_spec_declares_sota_decision_corpus_contract() -> None:
++    """REQ-VERIFY-6160: OpenSpec names requirements, fields, and principles."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("### REQ-VERIFY-6160") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-VERIFY-6160-1",
++        "REQ-VERIFY-6160-2",
++        "REQ-VERIFY-6160-3",
++        "REQ-VERIFY-6160-4",
++        "REQ-VERIFY-6160-5",
++        "REQ-VERIFY-6160-6",
++        "REQ-VERIFY-6160-7",
++        "REQ-VERIFY-6160-8",
++        "REQ-VERIFY-6160-9",
++        "REQ-VERIFY-6160-10",
++        "SCENARIO-VERIFY-6160-GATE",
++        "SCENARIO-VERIFY-6160-ORDERING",
++        "SCENARIO-VERIFY-6160-NO-MEMORY",
++        "SCENARIO-VERIFY-6160-NONOVERLAP",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.MANDATED_MODEL_IDS[0],
++        mod.MANDATED_MODEL_IDS[1],
++        mod.LIVE_INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_6160_complete_ready_conserves_rows_and_orders_outcomes(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-6160-ORDERING/NONOVERLAP: authentic rows pass."""
++
++    backend = FakeDecisionBackend()
++    artifact = _run_artifact(tmp_path, backend=backend, write=True)
++
++    assert [call["hf_id"] for call in backend.calls] == list(mod.MANDATED_MODEL_IDS)
++    assert all(call["prompt_count"] == 240 for call in backend.calls)
++    assert all(call["grammar"] is None for call in backend.calls)
++    assert all(call["memory"] == "none" for call in backend.calls)
++    assert all(call["label_conditioned_retry"] is False for call in backend.calls)
++
++    assert artifact["status"] == "complete_ready"
++    assert artifact["honest_verdict"].startswith("complete_ready:")
++    assert artifact["sota_decision_corpus_ready_score"] == 1.0
++    assert artifact["inference_substrate"] == mod.LIVE_INFERENCE_SUBSTRATE
++    assert artifact["verifier_is_oracle"] is True
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert mod.validate_artifact(artifact) is True
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text()) == artifact
++
++    assert artifact["MODEL_SPECS"] == artifact["model_specs"]
++    assert [row["hf_id"] for row in artifact["MODEL_SPECS"]] == list(mod.MANDATED_MODEL_IDS)
++    assert "Qwen/Qwen3.5-0.8B" not in json.dumps(artifact["MODEL_SPECS"])
++    assert "google/gemma-4-E4B-it" not in json.dumps(artifact["MODEL_SPECS"])
++    assert all(row["actual_use_count"] == 240 for row in artifact["MODEL_SPECS"])
++    assert all(row["n_gpu_layers"] == -1 for row in artifact["MODEL_SPECS"])
++
++    conservation = artifact["row_conservation_and_prior_corpus_nonoverlap"]
++    assert conservation["expected_event_count"] == 240
++    assert conservation["all_models_conserved"] is True
++    assert conservation["prior_exp6146_nonoverlap"]["all_overlap_counts_zero"] is True
++    assert conservation["prompt_outcome_leakage_count"] == 0
++
++    for hf_id in mod.MANDATED_MODEL_IDS:
++        path = tmp_path / mod.row_sidecar_filename(hf_id)
++        rows = _load_jsonl(path)
++        assert len(rows) == 240
++        assert rows[0]["event_id"] == "exp6159-event-000000"
++        assert rows[0]["post_outcome_attached_after_decision"] is True
++        assert rows[0]["decision_record_hash"].startswith("sha256:")
++        assert rows[0]["post_outcome_id"] == rows[0]["event_id"]
++        assert rows[0]["raw_response_hash"] == mod.sha256_text(rows[0]["raw_response"])
++        assert rows[0]["answer_parse_state"] == "complete"
++
++    row_paths = artifact["per_model_row_paths_hashes_and_counts"]["per_model"]
++    assert set(row_paths) == set(mod.MANDATED_MODEL_IDS)
++    assert all(receipt["row_count"] == 240 for receipt in row_paths.values())
++    assert all(receipt["sha256"].startswith("sha256:") for receipt in row_paths.values())
++
++    outcomes = artifact["exact_post_decision_outcome_receipts"]
++    assert outcomes["post_decision_outcome_attachment_count"] == 480
++    assert outcomes["validator_input_absent_from_model_inputs"] is True
++    assert outcomes["all_outcomes_attached_after_decision"] is True
++
++    counts = artifact["raw_response_strategy_answer_and_invalid_output_counts"]
++    assert counts["total_invalid_output_count"] == 0
++    assert counts["per_model"][mod.MANDATED_MODEL_IDS[0]]["raw_response_count"] == 240
++
++    split_counts = artifact["chronological_split_family_and_shift_counts"]
++    assert split_counts["source_event_count"] == 240
++    assert split_counts["chronological_order_matches_exp6159"] is True
++    assert split_counts["structural_shift_event_count"] > 0
++
++    assert artifact["label_conditioned_retry_count"] == 0
++    assert artifact["memory_read_and_write_counts"]["memory_read_count"] == 0
++    assert artifact["memory_read_and_write_counts"]["memory_write_count"] == 0
++    lifecycle = artifact["gpu_offload_pid_lifecycle_and_cleanup_receipts"]
++    assert lifecycle["all_models_release_ready"] is True
++    assert lifecycle["all_models_gpu_engaged"] is True
++    assert artifact["protected_files_unchanged"]["unchanged"] is True
++
++
++def test_scenario_6160_invalid_terminal_output_is_conserved(
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-6160-7: invalid terminal output is honest, not retried."""
++
++    artifact = _run_artifact(tmp_path, backend=FakeDecisionBackend(invalid_first=True))
++
++    counts = artifact["raw_response_strategy_answer_and_invalid_output_counts"]
++    assert counts["total_invalid_output_count"] == 2
++    assert counts["per_model"][mod.MANDATED_MODEL_IDS[0]]["invalid_output_count"] == 1
++    assert counts["per_model"][mod.MANDATED_MODEL_IDS[1]]["invalid_output_count"] == 1
++    assert artifact["label_conditioned_retry_count"] == 0
++    assert artifact["memory_read_and_write_counts"]["memory_read_count"] == 0
++    assert artifact["sota_decision_corpus_ready_score"] == 1.0
++    assert artifact["status"] == "complete_ready"
++    assert mod.validate_artifact(artifact) is True
++
++
++def test_scenario_6160_gate_blocks_missing_tokenizer_before_backend(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-6160-GATE: missing mandated evidence blocks."""
++
++    backend = FakeDecisionBackend()
++    artifact = _run_artifact(tmp_path, backend=backend, gemma_ready=False)
++
++    assert backend.calls == []
++    assert artifact["status"] == "blocked"
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert "gemma_embedded_tokenizer_unloadable" in artifact["honest_verdict"]
++    assert artifact["structured_gate_receipt"]["model_load_permitted"] is False
++    assert artifact["sota_decision_corpus_ready_score"] == 0.0
++    assert artifact["inference_substrate"] != mod.LIVE_INFERENCE_SUBSTRATE
++    assert mod.validate_artifact(artifact) is True
++
++    blocked_preconditions = _run_artifact(tmp_path, preconditions_ready=False)
++    assert blocked_preconditions["status"] == "blocked"
++    assert "fixture_precondition_block" in blocked_preconditions["honest_verdict"]
++
++
++def test_req_6160_validation_rejects_leaks_retry_memory_and_checksum_drift(
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-6160-5/9/10: readiness guards fail closed."""
++
++    artifact = _run_artifact(tmp_path)
++
++    assert mod._load_jsonl(tmp_path / "missing.jsonl") == []
++    (tmp_path / "one.json").write_text('{"ok": true}', encoding="utf-8")
++    assert mod._read_json(tmp_path / "one.json") == {"ok": True}
++    assert mod._read_json(tmp_path / "missing.json") == {}
++    assert mod._file_receipt(tmp_path, Path("missing.gguf"))["exists"] is False
++
++    bad_order = deepcopy(artifact)
++    bad_order["exact_post_decision_outcome_receipts"][
++        "validator_input_absent_from_model_inputs"
++    ] = False
++    bad_order["reproducibility_checksum"] = mod.reproducibility_checksum(bad_order)
++    assert "exact_post_decision_outcome_receipts" in mod._blocked_reasons(bad_order)
++    with pytest.raises(ValueError, match="exact_post_decision_outcome_receipts"):
++        mod.validate_artifact(bad_order)
++
++    bad_retry = deepcopy(artifact)
++    bad_retry["label_conditioned_retry_count"] = 1
++    bad_retry["reproducibility_checksum"] = mod.reproducibility_checksum(bad_retry)
++    assert "label_conditioned_retry_count" in mod._blocked_reasons(bad_retry)
++    with pytest.raises(ValueError, match="label_conditioned_retry_count"):
++        mod.validate_artifact(bad_retry)
++
++    bad_memory = deepcopy(artifact)
++    bad_memory["memory_read_and_write_counts"]["memory_read_count"] = 1
++    bad_memory["reproducibility_checksum"] = mod.reproducibility_checksum(bad_memory)
++    assert "memory_read_and_write_counts" in mod._blocked_reasons(bad_memory)
++    with pytest.raises(ValueError, match="memory_read_and_write_counts"):
++        mod.validate_artifact(bad_memory)
++
++    bad_leak = deepcopy(artifact)
++    bad_leak["row_conservation_and_prior_corpus_nonoverlap"]["prompt_outcome_leakage_count"] = 1
++    bad_leak["reproducibility_checksum"] = mod.reproducibility_checksum(bad_leak)
++    with pytest.raises(ValueError, match="row_conservation_and_prior_corpus_nonoverlap"):
++        mod.validate_artifact(bad_leak)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = mod.sha256_text("wrong")
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(bad_checksum)
++
++    bad_provenance_type = deepcopy(artifact)
++    bad_provenance_type["field_provenance"] = []
++    bad_provenance_type["reproducibility_checksum"] = mod.reproducibility_checksum(
++        bad_provenance_type
++    )
++    with pytest.raises(ValueError, match="field_provenance"):
++        mod.validate_artifact(bad_provenance_type)
++
++    bad_provenance = deepcopy(artifact)
++    bad_provenance["field_provenance"]["status"]["principle"] = "wrong"
++    bad_provenance["reproducibility_checksum"] = mod.reproducibility_checksum(bad_provenance)
++    with pytest.raises(ValueError, match="field_provenance:status"):
++        mod.validate_artifact(bad_provenance)
++
++    bad_model_specs = deepcopy(artifact)
++    bad_model_specs["MODEL_SPECS"][1]["hf_id"] = "google/gemma-4-E4B-it"
++    bad_model_specs["model_specs"] = deepcopy(bad_model_specs["MODEL_SPECS"])
++    bad_model_specs["reproducibility_checksum"] = mod.reproducibility_checksum(bad_model_specs)
++    with pytest.raises(ValueError, match="MODEL_SPECS"):
++        mod.validate_artifact(bad_model_specs)
++
++    bad_model_specs_mirror = deepcopy(artifact)
++    bad_model_specs_mirror["model_specs"][0]["actual_use_count"] = -1
++    bad_model_specs_mirror["reproducibility_checksum"] = mod.reproducibility_checksum(
++        bad_model_specs_mirror
++    )
++    with pytest.raises(ValueError, match="model_specs"):
++        mod.validate_artifact(bad_model_specs_mirror)
++
++    bad_score = deepcopy(artifact)
++    bad_score["sota_decision_corpus_ready_score"] = 0.0
++    bad_score["reproducibility_checksum"] = mod.reproducibility_checksum(bad_score)
++    with pytest.raises(ValueError, match="sota_decision_corpus_ready_score"):
++        mod.validate_artifact(bad_score)
++
++    bad_status = deepcopy(artifact)
++    bad_status["status"] = "blocked"
++    bad_status["reproducibility_checksum"] = mod.reproducibility_checksum(bad_status)
++    with pytest.raises(ValueError, match="status"):
++        mod.validate_artifact(bad_status)
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"] = "complete_ready: wrong"
++    bad_verdict["reproducibility_checksum"] = mod.reproducibility_checksum(bad_verdict)
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(bad_verdict)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = mod.BLOCKED_INFERENCE_SUBSTRATE
++    bad_substrate["reproducibility_checksum"] = mod.reproducibility_checksum(bad_substrate)
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    bad_verifier = deepcopy(artifact)
++    bad_verifier["verifier_is_oracle"] = False
++    bad_verifier["reproducibility_checksum"] = mod.reproducibility_checksum(bad_verifier)
++    with pytest.raises(ValueError, match="verifier_is_oracle"):
++        mod.validate_artifact(bad_verifier)
++
++    missing = dict(artifact)
++    missing.pop("status")
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    row = mod.source_stream_bundle().rows[0]
++    tampered = deepcopy(row)
++    tampered["pre_decision"]["task_descriptor"]["exact_answer"] = "leak"
++    assert mod.prompt_for_row(tampered)["contains_forbidden_token"] is True
++
++
++def test_req_6160_worker_nonzero_exit_becomes_partial_not_ready(tmp_path: Path) -> None:
++    """REQ-VERIFY-6160-8: backend transport failure is not credited."""
++
++    class NonzeroBackend(FakeDecisionBackend):
++        def generate(self, **kwargs: Any) -> dict[str, Any]:
++            receipt = super().generate(**kwargs)
++            receipt["worker_exit_code"] = 7
++            return receipt
++
++    artifact = _run_artifact(tmp_path, backend=NonzeroBackend())
++
++    assert artifact["status"] == "complete_partial"
++    assert artifact["sota_decision_corpus_ready_score"] == 0.0
++    assert "worker_nonzero_exit" in artifact["honest_verdict"]
++    assert "worker_nonzero_exit" in ",".join(
++        artifact["gpu_offload_pid_lifecycle_and_cleanup_receipts"][
++            "model_specific_transport_failures"
++        ]
++    )
++    assert mod.validate_artifact(artifact) is True
+-- 
+2.55.0
+

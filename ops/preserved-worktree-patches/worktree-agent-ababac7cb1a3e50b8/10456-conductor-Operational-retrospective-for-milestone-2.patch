@@ -1,0 +1,112 @@
+From 0a7bffb0e8ebcf8b3c4be663965a30bb4d80e2e4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 18:42:17 -0400
+Subject: [PATCH 10456/11362] [conductor] Operational retrospective for
+ milestone 2026.08.592
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 11 +++++
+ results/operational_retro_2026_08_592.json | 55 ++++++++++++++++++++++
+ 3 files changed, 73 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_592.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 1bd65ef861..1c6aa961f8 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6465,3 +6465,10 @@ The critical path for milestone .250:
+ - theme: compute-only execution exposed failed accelerator engagement and missing task-level timing
+ - key result: honest operational negative — both GPUs were idle with compute-bound work present; the longest task is known, but its cause and any parallel-model runner miss have no data available this milestone
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.592
++
++- exp_range: no data available this milestone
++- theme: fast synthesis-only execution exposed the causal limits of modification-time reconstruction
++- key result: honest operational negative — 12 synthesis-only experiments completed in 1.2 minutes; compute-task GPU efficiency and parallel-model runner engagement had no data available this milestone
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 3f7dd250ab..d0858c225e 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18323,3 +18323,14 @@ do not measure the effect of these changes.
+ - 2026-08-30: V592 branch disposition and PRD reconciliation (⚠️ Research Finding) — honest_verdict=complete_partial: V592 has checkpoint and bounded fixed-point evidence, but dispatch and cold CSL causality remain incomplete and temporal exchange is null; no branch metrics were pooled.; results/experiment_6795_v592_branch_disposition.json
+ - 2026-08-30: V592 branch disposition and PRD reconciliation (⚠️ Research Finding) — honest_verdict=complete_partial: V592 has checkpoint and bounded fixed-point evidence, but dispatch and cold CSL causality remain incomplete and temporal exchange is null; no branch metrics were pooled.; results/experiment_6795_v592_branch_disposition.json
+ - 2026-08-30: V592 branch disposition and PRD reconciliation (⚠️ Research Finding) — honest_verdict=complete_partial: V592 has checkpoint and bounded fixed-point evidence, but dispatch and cold CSL causality remain incomplete and temporal exchange is null; no branch metrics were pooled.; results/experiment_6795_v592_branch_disposition.json
++
++## 2026-08-30 — Milestone 2026.08.592 operational retrospective
++
++The milestone completed 12 synthesis-only experiments in 1.2 minutes and had
++0 compute-bound experiments. Compute-task GPU efficiency and parallel-model
++runner engagement therefore had no data available this milestone. The timing
++record came from disk-mtime reconstruction and does not attribute costs to
++task phases. The next tooling priorities are task-owned monotonic phase
++telemetry, dependency-aware parallel synthesis dispatch, and a task-scoped
++launch receipt. Estimated time savings is 0% because the supplied data does
++not quantify a causal reduction.
+diff --git a/results/operational_retro_2026_08_592.json b/results/operational_retro_2026_08_592.json
+new file mode 100644
+index 0000000000..17e003ea76
+--- /dev/null
++++ b/results/operational_retro_2026_08_592.json
+@@ -0,0 +1,55 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.592",
++  "generated_at": "2026-08-30T22:36:35Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 1.2,
++  "experiments_completed": 12,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [
++    {
++      "experiment": "Group-aware fixed point versus parameter-matched flat control",
++      "duration_minutes": 0.33,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Temporal coupling sampler target-law study",
++      "duration_minutes": 0.26,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Temporal coupling target-law recomputation and cost accounting",
++      "duration_minutes": 0.18,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Compositional online constraint-routing comparison",
++      "duration_minutes": 0.17,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Cold fixed-point authority and shortcut audit",
++      "duration_minutes": 0.11,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 12 synthesis-only experiments in 1.2 minutes, with 0 compute-bound experiments. Compute-bound GPU efficiency and DualGPURunner applicability therefore had no data available this milestone.",
++  "bottlenecks_identified": [
++    "Disk-mtime reconstruction provides elapsed estimates but no task-phase attribution, so the causes of the listed synthesis durations cannot be identified."
++  ],
++  "improvements_suggested": [
++    "Capture task-owned monotonic start, end, and phase timestamps so future retrospectives can distinguish launch, execution, validation, and artifact-write costs.",
++    "Add dependency-aware parallel dispatch for independent synthesis-only work and measure its effect before assigning a savings estimate.",
++    "Record compute classification, model concurrency, runner identity, and task-window accelerator samples in one launch receipt so GPU and DualGPURunner assessments are task-scoped."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Replace disk-mtime-only reconstruction with task-owned monotonic phase telemetry.",
++    "Dispatch independent synthesis-only tasks concurrently when their dependencies permit.",
++    "Emit a task-scoped launch receipt that records compute classification, model concurrency, runner identity, and accelerator activity."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The reconstructed timestamps support a bounded duration ranking but not a causal bottleneck diagnosis. With 0 compute-bound experiments, the GPU snapshot cannot establish compute-task efficiency or a missed parallel-model runner engagement."
++}
+-- 
+2.55.0
+

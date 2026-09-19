@@ -1,0 +1,43 @@
+From eb436819e1315526eed4e73a084b895938dfd88f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 09:06:50 -0400
+Subject: [PATCH 01767/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e7321a382e..c8ec7bc17a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-14T12:55:53Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-14T13:06:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index bb72bc26a9..078a4cf5db 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8475,3 +8475,4 @@ c |
+ | 2026-06-14 12:22 UTC | PHASE C3 — ARC-AGI-3 LIVE-env grounding probe (the | OK | cache hit: 112 passed, 1 warning in 5.86s |
+ | 2026-06-14 12:39 UTC | PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding | OK | 107 passed, 1 warning in 6.66s |
+ | 2026-06-14 12:53 UTC | PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reser | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-14 13:04 UTC | PHASE D3 — Hardware continuity (consolidated; Gate | OK | 87 passed, 1 warning in 5.47s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index da558fda80..f7352fc227 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-14T12:55:53Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-14T13:06:49Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

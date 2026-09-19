@@ -1,0 +1,23 @@
+From 14417172e0fad3cae0c55d7c14fa2c1d51882365 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 10 Aug 2026 06:31:35 -0400
+Subject: [PATCH 08690/11362] [conductor] In-process docs for Exact multimodal
+ Ising, Potts, and typed-factor sampler fixture suite
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 099dfe44c7..e1f3910646 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16621,3 +16621,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-10: Terminal-artifact completeness and downstream-readiness contract (⚠️ Blocked) — honest_verdict=blocked: Exp6262 readiness controls did not all pass; results/experiment_6262_terminal_artifact_readiness_contract.json
+ - 2026-08-10: Clean immutable local-SOTA event corpus to chronological replay bridge (✅ Complete) — honest_verdict=complete_ready: clean Exp6160 and Exp6162 local-SOTA events are sealed for chronological replay; Exp6146 remains quarantine-only; results/experiment_6263_clean_sota_event_replay_bridge.json
+ - 2026-08-10: Gated on Exp6263 clean replay: task-conditional energy-familiarity memory admission (❌ Failed) — honest_verdict=complete_null: energy familiarity mechanics passed, but a recorded test command failed so the readiness conjunction stayed closed; results/experiment_6264_energy_familiarity_memory_gate.json
++- 2026-08-10: Exact multimodal Ising, Potts, and typed-factor sampler fixture suite (✅ Complete) — honest_verdict=complete_ready: frozen exact suite covers six-state, Ising, Potts, and typed-factor fixtures; controls pass; no timing or hardware claim is made; test command failures recorded in test_exit_codes; results/experiment_6268_multimodal_sampler_fixture_suite.json
+-- 
+2.55.0
+

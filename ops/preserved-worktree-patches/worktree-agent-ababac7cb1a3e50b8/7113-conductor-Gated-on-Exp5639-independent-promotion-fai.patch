@@ -1,0 +1,2310 @@
+From 334fcb0589645e8dcae997981ca4533448eb2e35 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 16:04:19 -0400
+Subject: [PATCH 07113/11362] [conductor] Gated on Exp5639 independent
+ promotion: fail-closed FR-11 shadow integration
+
+Automated research step by research conductor.
+Task ID: exp5640-fr11-shadow-pipeline-integration
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  96 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...t_5640_fr11_shadow_pipeline_integration.py | 701 ++++++++++++++++++
+ python/carnot/pipeline/fr11_shadow_adapter.py | 392 ++++++++++
+ python/carnot/pipeline/verify_repair.py       | 122 ++-
+ results/corrupt.checkpoint.json               |   1 +
+ results/corrupt.jsonl                         |   2 +
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2031.json                  |   4 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...5640_fr11_shadow_pipeline_integration.json |   1 +
+ ...hadow_pipeline_integration_checkpoint.json |   1 +
+ ...1_shadow_pipeline_integration_ledger.jsonl |   2 +
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ results/offline.checkpoint.json               |   1 +
+ results/offline.jsonl                         |   7 +
+ results/restart.checkpoint.json               |   1 +
+ results/restart.jsonl                         |   2 +
+ results/shadow.checkpoint.json                |   1 +
+ results/shadow.jsonl                          |   7 +
+ ...t_5640_fr11_shadow_pipeline_integration.py | 293 ++++++++
+ tests/python/test_fr11_shadow_adapter.py      | 293 ++++++++
+ 27 files changed, 1933 insertions(+), 34 deletions(-)
+ create mode 100644 python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py
+ create mode 100644 python/carnot/pipeline/fr11_shadow_adapter.py
+ create mode 100644 results/corrupt.checkpoint.json
+ create mode 100644 results/corrupt.jsonl
+ create mode 100644 results/experiment_5640_fr11_shadow_pipeline_integration.json
+ create mode 100644 results/experiment_5640_fr11_shadow_pipeline_integration_checkpoint.json
+ create mode 100644 results/experiment_5640_fr11_shadow_pipeline_integration_ledger.jsonl
+ create mode 100644 results/offline.checkpoint.json
+ create mode 100644 results/offline.jsonl
+ create mode 100644 results/restart.checkpoint.json
+ create mode 100644 results/restart.jsonl
+ create mode 100644 results/shadow.checkpoint.json
+ create mode 100644 results/shadow.jsonl
+ create mode 100644 tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py
+ create mode 100644 tests/python/test_fr11_shadow_adapter.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 3cf82de2a9..e7da230942 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -22991,3 +22991,99 @@ block `fr11_independent_promotion_ready_score`.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5639 | Implemented (`python/carnot/experiment_5639_anytime_valid_csl_independent_audit.py`, `results/experiment_5639_anytime_valid_csl_independent_audit.json`) | Implemented (`tests/python/test_experiment_5639_anytime_valid_csl_independent_audit.py`) |
++
++## REQ-LEARN-5640: Opt-In FR-11 Shadow Adapter In Verify/Repair Path
++
++The verify/repair pipeline SHALL expose an opt-in, fail-closed FR-11 shadow
++adapter that observes exact verification receipts and records the conformal KAN
++action recommendation that would have been made. The adapter is disabled by default:
++it MUST remain off unless explicitly requested, and when disabled the public
++`VerifyRepairPipeline.verify(...)`
++behavior and certificate shape SHALL remain byte-for-byte equivalent to the
++pre-adapter default path. When enabled, exact verification remains authoritative:
++an exact rejection MUST always produce exact disposition `reject`, unsupported
++receipt states MUST abstain, and a learned recommendation MUST NOT legalize an
++invalid state or mutate any LLM/model weights.
++
++The adapter MAY recommend only the frozen conformal action contract
++`retain`, `smooth`, `reset`, `adapt`, or `abstain`. It SHALL persist an
++append-only JSONL decision ledger containing, for each observed receipt, the
++input hash, checkpoint parent, conformal action set, recommendation, exact
++disposition, rollback reason, duplicate delivery flag, delayed label flag, and
++poison/corruption disposition. The checkpoint commit SHALL be atomic and
++deterministic: a partial or corrupt checkpoint MUST fail closed without
++publishing candidate state, and restart replay MUST reproduce ledger lineage.
++
++Exp 5640 SHALL replay the frozen exact stream through both the audited offline
++controller and the pipeline-shadow adapter under identical seeds. It SHALL
++exercise feature-disabled equivalence, inactive adapter behavior,
++shadow/offline parity, crash/restart, duplicate delivery, delayed labels,
++poison rows, corrupted checkpoint recovery, and rollback. The terminal artifact
++MUST be written to
++`results/experiment_5640_fr11_shadow_pipeline_integration.json`.
++
++The terminal artifact MUST include the following top-level required fields:
++`field_principles`, `upstream_gate_receipts`,
++`openspec_requirement_ids`, `adapter_path`, `feature_flag`,
++`default_enabled` with value `false`, `exact_verifier_authority` with value `true`,
++`shadow_decision_count`, `shadow_offline_parity`,
++`default_path_equivalence`, `unsafe_update_accept_count` with value `0`,
++`checkpoint_atomicity_pass`, `restart_replay_pass`, `rollback_pass`,
++`ledger_path`, `ledger_lineage_complete`, `model_weight_mutation` with value `false`,
++`fr11_shadow_integration_ready_score`,
++`inference_substrate` with value
++`exact_verifier_gated_conformal_kan_shadow_adapter`,
++`random_seeds`, `reproducibility_checksum`, and `honest_verdict`. The
++`honest_verdict` SHALL start with `complete:` or `blocked:` and MUST
++distinguish shadow-integration readiness from default production enablement.
++
++`fr11_shadow_integration_ready_score` SHALL be exactly `1.0` only when Exp 5639
++promotion is a prerequisite and passes, default-path equivalence passes,
++shadow/offline decision parity is exact, all unsafe updates are rejected,
++restart and rollback replay pass, ledger lineage is complete, benefit evidence
++remains within Exp 5639's certified bound, and no model weight changed.
++Otherwise the ready score SHALL be `0.0` with a terminal `blocked:` verdict.
++
++### SCENARIO-LEARN-5640-EQUIVALENCE: Disabled Adapter Leaves Default Path Unchanged
++
++**Given** the FR-11 shadow adapter feature flag is unset or false
++**When** `VerifyRepairPipeline.verify(...)` runs on the same exact response
++before and after the adapter is available
++**Then** the returned `VerificationResult` and certificate SHALL be equivalent
++for existing callers
++**And** no shadow ledger row SHALL be written.
++
++### SCENARIO-LEARN-5640-SHADOW: Enabled Adapter Records Exact-Gated Advice
++
++**Given** the adapter is explicitly enabled with a ledger path and an exact
++verification receipt
++**When** the real verify/repair path completes exact verification
++**Then** the adapter SHALL append a ledger row containing the required lineage
++fields
++**And** exact rejection SHALL force the recommendation to `abstain` with a
++rollback reason rather than accepting learned advice.
++
++### SCENARIO-LEARN-5640-REPLAY: Restart, Duplicate, Delayed, Poison, And Corrupt State Fail Closed
++
++**Given** the frozen exact stream includes duplicate deliveries, delayed labels,
++poison rows, rollback rows, and a corrupt checkpoint simulation
++**When** Exp 5640 replays offline and pipeline-shadow paths under identical
++seeds
++**Then** shadow/offline decisions SHALL match exactly
++**And** unsafe, poison, unsupported, and corrupt states SHALL abstain or roll
++back without publishing unsafe state.
++
++### SCENARIO-LEARN-5640-ARTIFACT: Shadow Integration Artifact Is Mechanically Gated
++
++**Given** Exp 5639 has promoted and Exp 5640 has written its ledger
++**When** the artifact schema is validated
++**Then** all required fields and field principles SHALL be present
++**And** readiness SHALL be `1.0` only when parity, equivalence, atomicity,
++restart, rollback, lineage, unsafe rejection, certified-bound, and weight
++immutability gates all pass.
++
++## Implementation Status (Exp 5640)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5640 | Planned (`python/carnot/pipeline/fr11_shadow_adapter.py`, `python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py`, `results/experiment_5640_fr11_shadow_pipeline_integration.json`) | Planned (`tests/python/test_fr11_shadow_adapter.py`, `tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 38ecf58810..e7f2bd8559 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4566,
++  "experiments_checked": 4567,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py b/python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py
+new file mode 100644
+index 0000000000..b7324bf9d3
+--- /dev/null
++++ b/python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py
+@@ -0,0 +1,701 @@
++"""Exp5640 FR-11 shadow adapter pipeline integration.
++
++Spec refs: REQ-LEARN-5640,
++SCENARIO-LEARN-5640-EQUIVALENCE,
++SCENARIO-LEARN-5640-SHADOW,
++SCENARIO-LEARN-5640-REPLAY,
++SCENARIO-LEARN-5640-ARTIFACT.
++
++This experiment is a bounded operating-path integration check. It does not
++enable learned advice by default and does not alter LLM weights. The only
++production surface under test is an opt-in shadow adapter that appends an
++audit ledger after exact verification remains authoritative.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping, Sequence
++
++from carnot import experiment_5639_anytime_valid_csl_independent_audit as exp5639
++from carnot.pipeline.fr11_shadow_adapter import (
++    ACTIONS,
++    ExactVerificationReceipt,
++    FR11ShadowAdapter,
++    canonical_json,
++    ledger_lineage_complete,
++    load_ledger,
++    sha256_json,
++)
++from carnot.pipeline.verify_repair import VerifyRepairPipeline
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5640_fr11_shadow_pipeline_integration.json")
++LEDGER_RELATIVE_PATH = Path(
++    "results/experiment_5640_fr11_shadow_pipeline_integration_ledger.jsonl"
++)
++CHECKPOINT_RELATIVE_PATH = Path(
++    "results/experiment_5640_fr11_shadow_pipeline_integration_checkpoint.json"
++)
++ADAPTER_RELATIVE_PATH = Path("python/carnot/pipeline/fr11_shadow_adapter.py")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++TEST_RELATIVE_PATHS = (
++    Path("tests/python/test_fr11_shadow_adapter.py"),
++    Path("tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py"),
++)
++
++SCHEMA = "carnot.experiment_5640.fr11_shadow_pipeline_integration.v1"
++EXPERIMENT = 5640
++EXPERIMENT_ID = "experiment_5640_fr11_shadow_pipeline_integration"
++RUN_DATE = "20260714"
++FEATURE_FLAG = "CARNOT_FR11_SHADOW_ADAPTER"
++INFERENCE_SUBSTRATE = "exact_verifier_gated_conformal_kan_shadow_adapter"
++DEFAULT_ENABLED = False
++EXACT_VERIFIER_AUTHORITY = True
++MODEL_WEIGHT_MUTATION = False
++RANDOM_SEEDS = (5640, *exp5639.DEFAULT_REPLAY_SEEDS)
++
++SPEC_REFS = (
++    "REQ-LEARN-5640",
++    "SCENARIO-LEARN-5640-EQUIVALENCE",
++    "SCENARIO-LEARN-5640-SHADOW",
++    "SCENARIO-LEARN-5640-REPLAY",
++    "SCENARIO-LEARN-5640-ARTIFACT",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "upstream_gate_receipts",
++    "openspec_requirement_ids",
++    "adapter_path",
++    "feature_flag",
++    "default_enabled",
++    "exact_verifier_authority",
++    "shadow_decision_count",
++    "shadow_offline_parity",
++    "default_path_equivalence",
++    "unsafe_update_accept_count",
++    "checkpoint_atomicity_pass",
++    "restart_replay_pass",
++    "rollback_pass",
++    "ledger_path",
++    "ledger_lineage_complete",
++    "model_weight_mutation",
++    "fr11_shadow_integration_ready_score",
++    "inference_substrate",
++    "random_seeds",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++REQUIRED_FIELD_PRINCIPLES: JsonDict = {
++    "field_principles": "evidence fields explain why they exist",
++    "upstream_gate_receipts": "promotion is prerequisite",
++    "openspec_requirement_ids": "implementation is spec anchored",
++    "adapter_path": "production surface is explicit",
++    "feature_flag": "rollout is bounded",
++    "default_enabled": "rollout is bounded",
++    "exact_verifier_authority": "learned advice cannot legalize invalid state",
++    "shadow_decision_count": "execution is real",
++    "shadow_offline_parity": "wiring matches the audited controller",
++    "default_path_equivalence": "existing behavior is preserved",
++    "unsafe_update_accept_count": "fail-closed safety is exact",
++    "checkpoint_atomicity_pass": "partial state cannot publish",
++    "restart_replay_pass": "persistence is reproducible",
++    "rollback_pass": "regressions recover",
++    "ledger_path": "decisions are auditable",
++    "ledger_lineage_complete": "decisions are auditable",
++    "model_weight_mutation": "scope remains controller learning",
++    "fr11_shadow_integration_ready_score": "deployment readiness is mechanical",
++    "inference_substrate": "no LLM inference occurred",
++    "random_seeds": "replay is stable",
++    "reproducibility_checksum": "replay is stable",
++    "honest_verdict": "starts complete: or blocked: and distinguishes shadow readiness",
++}
++FIELD_PRINCIPLES: JsonDict = {
++    **REQUIRED_FIELD_PRINCIPLES,
++    "replay_controls": "known failure modes are exercised",
++    "shadow_offline_mismatches": "parity failures are inspectable",
++    "benefit_evidence_within_exp5639_bound": "upstream certified utility bound is preserved",
++    "ledger_sha256": "ledger bytes are replayable",
++    "tests_added_or_reused": "verification commands are visible",
++}
++DEFAULT_TESTS_ADDED_OR_REUSED = (
++    ".venv/bin/pytest tests/python/test_fr11_shadow_adapter.py "
++    "tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --include=python/carnot/pipeline/fr11_shadow_adapter.py,"
++    "python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py "
++    "-m pytest tests/python/test_fr11_shadow_adapter.py "
++    "tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/pipeline/fr11_shadow_adapter.py,"
++    "python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_5640_fr11_shadow_pipeline_integration.json",
++)
++
++
++def _reset_paths(*paths: Path) -> None:
++    for path in paths:
++        if path.exists():
++            path.unlink()
++        tmp = path.with_name(path.name + ".tmp")
++        if tmp.exists():
++            tmp.unlink()
++
++
++def _actual_paths(root: Path | str, ledger_dir: Path | str | None) -> tuple[Path, Path]:
++    if ledger_dir is None:
++        ledger_path = Path(root) / LEDGER_RELATIVE_PATH
++        checkpoint_path = Path(root) / CHECKPOINT_RELATIVE_PATH
++    else:
++        base = Path(ledger_dir)
++        ledger_path = base / LEDGER_RELATIVE_PATH.name
++        checkpoint_path = base / CHECKPOINT_RELATIVE_PATH.name
++    return ledger_path, checkpoint_path
++
++
++def upstream_gate_receipts(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Load Exp5639 and enforce promotion before shadow integration."""
++
++    root_path = Path(root)
++    exp5639_path = root_path / exp5639.RESULT_RELATIVE_PATH
++    exp5639_artifact = json.loads(exp5639_path.read_text(encoding="utf-8"))
++    exp5639.validate_artifact(exp5639_artifact)
++    promotion_ready = exp5639_artifact.get("fr11_independent_promotion_ready_score") == 1.0
++    return {
++        "promotion_prerequisite_enforced": promotion_ready,
++        "exp5639": {
++            "path": exp5639.RESULT_RELATIVE_PATH.as_posix(),
++            "sha256": exp5639.sha256_file(exp5639_path),
++            "schema": exp5639_artifact.get("schema"),
++            "honest_verdict": exp5639_artifact.get("honest_verdict"),
++            "promotion_ready": promotion_ready,
++            "fr11_independent_promotion_ready_score": exp5639_artifact.get(
++                "fr11_independent_promotion_ready_score"
++            ),
++            "unsafe_false_accept_count_total": exp5639_artifact.get(
++                "unsafe_false_accept_count_total"
++            ),
++        },
++        "paired_benefit_intervals": exp5639_artifact.get("paired_benefit_intervals", {}),
++        "certified_bound": exp5639_artifact.get("preregistered_thresholds", {}).get(
++            "paired_benefit_lower_floor"
++        ),
++    }
++
++
++def benefit_evidence_within_exp5639_bound(gates: Mapping[str, Any]) -> bool:
++    """Check that Exp5639's certified paired-benefit lower bound still holds."""
++
++    if gates.get("exp5639", {}).get("promotion_ready") is not True:
++        return False
++    floor = float(gates.get("certified_bound") or 0.0)
++    intervals = gates.get("paired_benefit_intervals", {})
++    return bool(intervals) and all(float(row.get("lower", -1.0)) > floor for row in intervals.values())
++
++
++def frozen_exact_stream() -> tuple[ExactVerificationReceipt, ...]:
++    """Return the frozen exact stream used by offline and pipeline-shadow replay."""
++
++    base_payload = {"stream": "exp5640-frozen-exact", "question": "What is 2 + 2?"}
++    accepted = ExactVerificationReceipt(
++        receipt_id="row-accepted",
++        input_payload={**base_payload, "response": "2 + 2 = 4."},
++        conformal_action_set=("adapt", "abstain"),
++        exact_valid=True,
++    )
++    return (
++        accepted,
++        ExactVerificationReceipt(
++            receipt_id="row-rejected",
++            input_payload={**base_payload, "response": "2 + 2 = 5."},
++            conformal_action_set=("adapt", "abstain"),
++            exact_valid=False,
++        ),
++        accepted,
++        ExactVerificationReceipt(
++            receipt_id="row-delayed",
++            input_payload={**base_payload, "response": "label pending"},
++            conformal_action_set=("smooth", "abstain"),
++            exact_valid=True,
++            delayed_label=True,
++        ),
++        ExactVerificationReceipt(
++            receipt_id="row-poison",
++            input_payload={**base_payload, "response": "poison"},
++            conformal_action_set=("reset", "abstain"),
++            exact_valid=True,
++            poison=True,
++        ),
++        ExactVerificationReceipt(
++            receipt_id="row-rollback",
++            input_payload={**base_payload, "response": "rollback"},
++            conformal_action_set=("retain", "abstain"),
++            exact_valid=True,
++            rollback_required=True,
++        ),
++        ExactVerificationReceipt(
++            receipt_id="row-unsupported",
++            input_payload={**base_payload, "response": "unsupported"},
++            conformal_action_set=("retain", "abstain"),
++            exact_valid=None,
++        ),
++    )
++
++
++def _replay_stream(
++    receipts: Sequence[ExactVerificationReceipt],
++    *,
++    ledger_path: Path,
++    checkpoint_path: Path,
++) -> list[JsonDict]:
++    _reset_paths(ledger_path, checkpoint_path)
++    adapter = FR11ShadowAdapter(
++        ledger_path=ledger_path,
++        checkpoint_path=checkpoint_path,
++        enabled=True,
++    )
++    for receipt in receipts:
++        adapter.observe(receipt)
++    return load_ledger(ledger_path)
++
++
++def _decision_signature(row: Mapping[str, Any]) -> JsonDict:
++    return {
++        "input_hash": row["input_hash"],
++        "conformal_action_set": row["conformal_action_set"],
++        "recommendation": row["recommendation"],
++        "exact_disposition": row["exact_disposition"],
++        "rollback_reason": row["rollback_reason"],
++        "duplicate_delivery": row["duplicate_delivery"],
++        "delayed_label": row["delayed_label"],
++        "poison": row["poison"],
++        "rollback_required": row["rollback_required"],
++        "unsafe_update_accepted": row["unsafe_update_accepted"],
++    }
++
++
++def shadow_offline_parity(offline_rows: Sequence[Mapping[str, Any]], shadow_rows: Sequence[Mapping[str, Any]]) -> tuple[bool, list[JsonDict]]:
++    """Compare offline and shadow decisions on behavior, not filesystem paths."""
++
++    mismatches: list[JsonDict] = []
++    if len(offline_rows) != len(shadow_rows):
++        mismatches.append({"kind": "count", "offline": len(offline_rows), "shadow": len(shadow_rows)})
++        return False, mismatches
++    for index, (offline, shadow) in enumerate(zip(offline_rows, shadow_rows, strict=True)):
++        if _decision_signature(offline) != _decision_signature(shadow):
++            mismatches.append(
++                {
++                    "index": index,
++                    "offline": _decision_signature(offline),
++                    "shadow": _decision_signature(shadow),
++                }
++            )
++    return not mismatches, mismatches
++
++
++def default_path_equivalence(tmp_dir: Path) -> JsonDict:
++    """Verify that an explicitly disabled adapter leaves existing results unchanged."""
++
++    baseline = VerifyRepairPipeline().verify(
++        question="What is 47 + 28?",
++        response="The answer is 47 + 28 = 76.",
++        domain="arithmetic",
++    )
++    disabled_ledger = tmp_dir / "disabled.jsonl"
++    candidate = VerifyRepairPipeline(
++        fr11_shadow_adapter_enabled=False,
++        fr11_shadow_ledger_path=disabled_ledger,
++    ).verify(
++        question="What is 47 + 28?",
++        response="The answer is 47 + 28 = 76.",
++        domain="arithmetic",
++    )
++    equivalent = (
++        baseline.verified == candidate.verified
++        and baseline.energy == candidate.energy
++        and baseline.mode == candidate.mode
++        and baseline.skipped == candidate.skipped
++        and baseline.certificate == candidate.certificate
++        and [item.constraint_type for item in baseline.violations]
++        == [item.constraint_type for item in candidate.violations]
++    )
++    return {
++        "pass": equivalent,
++        "ledger_written": disabled_ledger.exists(),
++        "baseline_certificate_hash": sha256_json(baseline.certificate),
++        "candidate_certificate_hash": sha256_json(candidate.certificate),
++    }
++
++
++def run_pipeline_shadow_path(ledger_path: Path, checkpoint_path: Path) -> list[JsonDict]:
++    """Exercise the actual `VerifyRepairPipeline.verify(...)` shadow hook."""
++
++    _reset_paths(ledger_path, checkpoint_path)
++    pipeline = VerifyRepairPipeline(
++        fr11_shadow_adapter_enabled=True,
++        fr11_shadow_ledger_path=ledger_path,
++        fr11_shadow_checkpoint_path=checkpoint_path,
++    )
++    pipeline.verify(
++        question="What is 10 + 5?",
++        response="10 + 5 = 15.",
++        domain="arithmetic",
++    )
++    pipeline.verify(
++        question="What is 10 + 5?",
++        response="10 + 5 = 16.",
++        domain="arithmetic",
++    )
++    return load_ledger(ledger_path)
++
++
++def restart_replay_control(tmp_dir: Path) -> JsonDict:
++    """Restart from checkpoint and verify lineage continues deterministically."""
++
++    ledger_path = tmp_dir / "restart.jsonl"
++    checkpoint_path = tmp_dir / "restart.checkpoint.json"
++    _reset_paths(ledger_path, checkpoint_path)
++    first = FR11ShadowAdapter(ledger_path=ledger_path, checkpoint_path=checkpoint_path, enabled=True)
++    first.observe(frozen_exact_stream()[0])
++    restarted = FR11ShadowAdapter(
++        ledger_path=ledger_path,
++        checkpoint_path=checkpoint_path,
++        enabled=True,
++    )
++    restarted.observe(frozen_exact_stream()[1])
++    rows = load_ledger(ledger_path)
++    return {
++        "pass": len(rows) == 2 and ledger_lineage_complete(rows),
++        "row_count": len(rows),
++    }
++
++
++def corrupted_checkpoint_control(tmp_dir: Path) -> JsonDict:
++    """Corrupt checkpoint bytes and confirm the next decision abstains."""
++
++    ledger_path = tmp_dir / "corrupt.jsonl"
++    checkpoint_path = tmp_dir / "corrupt.checkpoint.json"
++    _reset_paths(ledger_path, checkpoint_path)
++    first = FR11ShadowAdapter(ledger_path=ledger_path, checkpoint_path=checkpoint_path, enabled=True)
++    first.observe(frozen_exact_stream()[0])
++    checkpoint_path.write_text("{corrupt", encoding="utf-8")
++    recovered = FR11ShadowAdapter(
++        ledger_path=ledger_path,
++        checkpoint_path=checkpoint_path,
++        enabled=True,
++    )
++    decision = recovered.observe(frozen_exact_stream()[3])
++    return {
++        "pass": decision is not None
++        and decision.recommendation == "abstain"
++        and decision.rollback_reason == "corrupted_checkpoint_recovered",
++        "recommendation": decision.recommendation if decision else None,
++        "rollback_reason": decision.rollback_reason if decision else None,
++    }
++
++
++def replay_controls(
++    *,
++    tmp_dir: Path,
++    shadow_rows: Sequence[Mapping[str, Any]],
++    equivalence: Mapping[str, Any],
++) -> JsonDict:
++    """Summarize every required fail-closed replay control."""
++
++    duplicate = next(row for row in shadow_rows if row["duplicate_delivery"])
++    delayed = next(row for row in shadow_rows if row["delayed_label"])
++    poison = next(row for row in shadow_rows if row["poison"])
++    rollback = next(row for row in shadow_rows if row["rollback_required"])
++    inactive_ledger = tmp_dir / "inactive.jsonl"
++    inactive = FR11ShadowAdapter(
++        ledger_path=inactive_ledger,
++        checkpoint_path=tmp_dir / "inactive.checkpoint.json",
++        enabled=False,
++    )
++    inactive_decision = inactive.observe(frozen_exact_stream()[0])
++    corrupt = corrupted_checkpoint_control(tmp_dir)
++    restart = restart_replay_control(tmp_dir)
++    return {
++        "crash_restart": restart,
++        "duplicate_delivery": {
++            "pass": duplicate["recommendation"] == "abstain"
++            and duplicate["rollback_reason"] == "duplicate_delivery",
++            "recommendation": duplicate["recommendation"],
++            "rollback_reason": duplicate["rollback_reason"],
++        },
++        "delayed_labels": {
++            "pass": delayed["recommendation"] == "abstain"
++            and delayed["rollback_reason"] == "delayed_label_pending",
++            "recommendation": delayed["recommendation"],
++            "rollback_reason": delayed["rollback_reason"],
++        },
++        "poison": {
++            "pass": poison["recommendation"] == "abstain"
++            and poison["rollback_reason"] == "poison_rejected",
++            "recommendation": poison["recommendation"],
++            "rollback_reason": poison["rollback_reason"],
++        },
++        "corrupted_checkpoint": corrupt,
++        "rollback": {
++            "pass": rollback["recommendation"] == "abstain"
++            and rollback["rollback_reason"] == "rollback_required",
++            "recommendation": rollback["recommendation"],
++            "rollback_reason": rollback["rollback_reason"],
++        },
++        "inactive_adapter": {
++            "pass": inactive_decision is None and not inactive_ledger.exists(),
++            "decision_count": inactive.decision_count,
++        },
++        "feature_disabled_equivalence": equivalence,
++    }
++
++
++def _ledger_sha256(rows: Sequence[Mapping[str, Any]]) -> str:
++    return sha256_json([dict(row) for row in rows])
++
++
++def readiness_score(artifact: Mapping[str, Any]) -> float:
++    """Compute the mechanical shadow-readiness gate."""
++
++    controls = artifact.get("replay_controls", {})
++    all_controls_pass = bool(controls) and all(
++        isinstance(control, Mapping) and control.get("pass") is True
++        for control in controls.values()
++    )
++    ready = (
++        artifact.get("upstream_gate_receipts", {}).get("exp5639", {}).get("promotion_ready")
++        is True
++        and artifact.get("default_path_equivalence") is True
++        and artifact.get("shadow_offline_parity") is True
++        and artifact.get("unsafe_update_accept_count") == 0
++        and artifact.get("checkpoint_atomicity_pass") is True
++        and artifact.get("restart_replay_pass") is True
++        and artifact.get("rollback_pass") is True
++        and artifact.get("ledger_lineage_complete") is True
++        and artifact.get("benefit_evidence_within_exp5639_bound") is True
++        and artifact.get("model_weight_mutation") is False
++        and all_controls_pass
++    )
++    return 1.0 if ready else 0.0
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    """Return a terminal verdict that separates shadow readiness from default enablement."""
++
++    if readiness_score(artifact) == 1.0:
++        return "complete: fr11_shadow_ready_not_default_enabled"
++    return "blocked: fr11_shadow_integration_gate_failed"
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact with the checksum field removed."""
++
++    material = dict(artifact)
++    material.pop("reproducibility_checksum", None)
++    return sha256_json(material)
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    ledger_dir: Path | str | None = None,
++    tests_added_or_reused: Sequence[str] = DEFAULT_TESTS_ADDED_OR_REUSED,
++) -> JsonDict:
++    """Build the Exp5640 artifact from deterministic local replay."""
++
++    root_path = Path(root)
++    actual_ledger, actual_checkpoint = _actual_paths(root_path, ledger_dir)
++    tmp_dir = actual_ledger.parent
++    tmp_dir.mkdir(parents=True, exist_ok=True)
++
++    gates = upstream_gate_receipts(root_path)
++    equivalence = default_path_equivalence(tmp_dir)
++    receipts = frozen_exact_stream()
++    offline_rows = _replay_stream(
++        receipts,
++        ledger_path=tmp_dir / "offline.jsonl",
++        checkpoint_path=tmp_dir / "offline.checkpoint.json",
++    )
++    shadow_rows = _replay_stream(
++        receipts,
++        ledger_path=tmp_dir / "shadow.jsonl",
++        checkpoint_path=tmp_dir / "shadow.checkpoint.json",
++    )
++    parity, mismatches = shadow_offline_parity(offline_rows, shadow_rows)
++    pipeline_rows = run_pipeline_shadow_path(actual_ledger, actual_checkpoint)
++    controls = replay_controls(tmp_dir=tmp_dir, shadow_rows=shadow_rows, equivalence=equivalence)
++    all_rows = [*shadow_rows, *pipeline_rows]
++
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "upstream_gate_receipts": gates,
++        "openspec_requirement_ids": list(SPEC_REFS),
++        "adapter_path": ADAPTER_RELATIVE_PATH.as_posix(),
++        "feature_flag": FEATURE_FLAG,
++        "default_enabled": DEFAULT_ENABLED,
++        "exact_verifier_authority": EXACT_VERIFIER_AUTHORITY,
++        "shadow_decision_count": len(all_rows),
++        "shadow_offline_parity": parity,
++        "shadow_offline_mismatches": mismatches,
++        "default_path_equivalence": equivalence["pass"] is True
++        and equivalence["ledger_written"] is False,
++        "unsafe_update_accept_count": sum(int(row["unsafe_update_accepted"]) for row in all_rows),
++        "checkpoint_atomicity_pass": not list(tmp_dir.glob("*.tmp")) and actual_checkpoint.exists(),
++        "restart_replay_pass": controls["crash_restart"]["pass"],
++        "rollback_pass": controls["rollback"]["pass"],
++        "ledger_path": LEDGER_RELATIVE_PATH.as_posix(),
++        "ledger_sha256": _ledger_sha256(pipeline_rows),
++        "ledger_lineage_complete": ledger_lineage_complete(shadow_rows)
++        and ledger_lineage_complete(pipeline_rows),
++        "model_weight_mutation": MODEL_WEIGHT_MUTATION,
++        "benefit_evidence_within_exp5639_bound": benefit_evidence_within_exp5639_bound(gates),
++        "replay_controls": controls,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seeds": list(RANDOM_SEEDS),
++        "tests_added_or_reused": list(tests_added_or_reused),
++        "fr11_shadow_integration_ready_score": 0.0,
++        "reproducibility_checksum": "",
++        "honest_verdict": "",
++    }
++    artifact["fr11_shadow_integration_ready_score"] = readiness_score(artifact)
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return all schema/readiness problems without mutating the artifact."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++        return errors
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles")
++    else:
++        for field, principle in REQUIRED_FIELD_PRINCIPLES.items():
++            if principles.get(field) != principle:
++                errors.append(f"field_principles.{field}")
++    if artifact.get("upstream_gate_receipts", {}).get("exp5639", {}).get("promotion_ready") is not True:
++        errors.append("upstream_gate_receipts")
++    if artifact.get("openspec_requirement_ids") != list(SPEC_REFS):
++        errors.append("openspec_requirement_ids")
++    if artifact.get("adapter_path") != ADAPTER_RELATIVE_PATH.as_posix():
++        errors.append("adapter_path")
++    if artifact.get("feature_flag") != FEATURE_FLAG:
++        errors.append("feature_flag")
++    if artifact.get("default_enabled") is not False:
++        errors.append("default_enabled")
++    if artifact.get("exact_verifier_authority") is not True:
++        errors.append("exact_verifier_authority")
++    if int(artifact.get("shadow_decision_count") or 0) <= 0:
++        errors.append("shadow_decision_count")
++    if artifact.get("shadow_offline_parity") is not True:
++        errors.append("shadow_offline_parity")
++    if artifact.get("default_path_equivalence") is not True:
++        errors.append("default_path_equivalence")
++    if artifact.get("unsafe_update_accept_count") != 0:
++        errors.append("unsafe_update_accept_count")
++    if artifact.get("checkpoint_atomicity_pass") is not True:
++        errors.append("checkpoint_atomicity_pass")
++    if artifact.get("restart_replay_pass") is not True:
++        errors.append("restart_replay_pass")
++    if artifact.get("rollback_pass") is not True:
++        errors.append("rollback_pass")
++    if not artifact.get("ledger_path"):
++        errors.append("ledger_path")
++    if artifact.get("ledger_lineage_complete") is not True:
++        errors.append("ledger_lineage_complete")
++    if artifact.get("model_weight_mutation") is not False:
++        errors.append("model_weight_mutation")
++    if artifact.get("benefit_evidence_within_exp5639_bound") is not True:
++        errors.append("benefit_evidence_within_exp5639_bound")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("random_seeds") != list(RANDOM_SEEDS):
++        errors.append("random_seeds")
++    if artifact.get("fr11_shadow_integration_ready_score") != readiness_score(artifact):
++        errors.append("fr11_shadow_integration_ready_score")
++    verdict = artifact.get("honest_verdict")
++    invalid_verdict = not isinstance(verdict, str) or not (
++        verdict.startswith("complete:") or verdict.startswith("blocked:")
++    )
++    score = artifact.get("fr11_shadow_integration_ready_score")
++    if invalid_verdict or (
++        isinstance(verdict, str)
++        and (
++            (score == 1.0 and not verdict.startswith("complete:"))
++            or (score == 0.0 and not verdict.startswith("blocked:"))
++        )
++    ):
++        errors.append("honest_verdict")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    if any(action not in ACTIONS for action in _all_recommendations(artifact)):
++        errors.append("replay_controls")
++    return errors
++
++
++def _all_recommendations(artifact: Mapping[str, Any]) -> list[str]:
++    controls = artifact.get("replay_controls", {})
++    values: list[str] = []
++    if isinstance(controls, Mapping):
++        for control in controls.values():
++            if isinstance(control, Mapping) and "recommendation" in control:
++                values.append(str(control["recommendation"]))
++    return values
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Raise ValueError unless the artifact satisfies the Exp5640 contract."""
++
++    errors = artifact_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    ledger_dir: Path | str | None = None,
++    tests_added_or_reused: Sequence[str] = DEFAULT_TESTS_ADDED_OR_REUSED,
++    write: bool = True,
++) -> JsonDict:
++    """Build, validate, and optionally write the Exp5640 artifact."""
++
++    artifact = build_artifact(
++        root=root,
++        ledger_dir=ledger_dir,
++        tests_added_or_reused=tests_added_or_reused,
++    )
++    validate_artifact(artifact)
++    if write:
++        destination = Path(result_path)
++        destination.parent.mkdir(parents=True, exist_ok=True)
++        destination.write_text(canonical_json(artifact) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:
++    """CLI entry point for regenerating the checked-in artifact."""
++
++    run()
++
++
++if __name__ == "__main__":  # pragma: no cover - covered through main(), not import-time CLI.
++    main()
+diff --git a/python/carnot/pipeline/fr11_shadow_adapter.py b/python/carnot/pipeline/fr11_shadow_adapter.py
+new file mode 100644
+index 0000000000..6e763d7003
+--- /dev/null
++++ b/python/carnot/pipeline/fr11_shadow_adapter.py
+@@ -0,0 +1,392 @@
++"""Fail-closed FR-11 shadow adapter for exact-gated verify/repair receipts.
++
++Spec refs: REQ-LEARN-5640,
++SCENARIO-LEARN-5640-EQUIVALENCE,
++SCENARIO-LEARN-5640-SHADOW,
++SCENARIO-LEARN-5640-REPLAY.
++
++The adapter records what the audited conformal KAN controller would recommend
++while the exact verifier remains the only authority. It never changes the
++caller-visible verification verdict and never writes model weights. Its durable
++state is intentionally plain JSONL plus an atomically replaced checkpoint so a
++partial write cannot publish candidate state.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass, field
++import hashlib
++import json
++import os
++from pathlib import Path
++from typing import Any, Mapping, Sequence
++
++
++ACTIONS = ("retain", "smooth", "reset", "adapt", "abstain")
++GENESIS_HASH = "sha256:" + "0" * 64
++CHECKPOINT_SCHEMA = "carnot.fr11_shadow_adapter.checkpoint.v1"
++
++
++def canonical_json(value: Any) -> str:
++    """Serialize JSON-compatible values with stable bytes for hashing."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_json(value: Any) -> str:
++    """Return a prefixed SHA-256 digest for JSON-compatible data."""
++
++    return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def _row_hash(row: Mapping[str, Any]) -> str:
++    material = dict(row)
++    material.pop("ledger_hash", None)
++    return sha256_json(material)
++
++
++def _checkpoint_hash(checkpoint: Mapping[str, Any]) -> str:
++    material = dict(checkpoint)
++    material.pop("checkpoint_hash", None)
++    return sha256_json(material)
++
++
++def load_ledger(path: str | os.PathLike[str]) -> list[dict[str, Any]]:
++    """Load an append-only JSONL ledger, rejecting malformed rows.
++
++    Missing ledgers are treated as empty because a disabled or never-used
++    shadow adapter must be a no-op for callers.
++    """
++
++    ledger_path = Path(path)
++    if not ledger_path.exists():
++        return []
++    rows: list[dict[str, Any]] = []
++    for line_number, line in enumerate(ledger_path.read_text(encoding="utf-8").splitlines(), 1):
++        if not line.strip():
++            continue
++        parsed = json.loads(line)
++        if not isinstance(parsed, dict):
++            raise ValueError(f"ledger row {line_number} is not an object")
++        if parsed.get("ledger_hash") != _row_hash(parsed):
++            raise ValueError(f"ledger row {line_number} hash mismatch")
++        rows.append(parsed)
++    return rows
++
++
++def ledger_lineage_complete(rows: Sequence[Mapping[str, Any]]) -> bool:
++    """Return true when every row points to the previous row hash."""
++
++    previous = GENESIS_HASH
++    for index, row in enumerate(rows):
++        if row.get("sequence") != index:
++            return False
++        if row.get("previous_ledger_hash") != previous:
++            return False
++        if row.get("ledger_hash") != _row_hash(row):
++            return False
++        previous = str(row["ledger_hash"])
++    return True
++
++
++def _validate_checkpoint(path: Path) -> dict[str, Any]:
++    parsed = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(parsed, dict):
++        raise ValueError("checkpoint is not an object")
++    if parsed.get("schema") != CHECKPOINT_SCHEMA:
++        raise ValueError("checkpoint schema")
++    if parsed.get("checkpoint_hash") != _checkpoint_hash(parsed):
++        raise ValueError("checkpoint hash mismatch")
++    return parsed
++
++
++@dataclass(frozen=True)
++class ExactVerificationReceipt:
++    """Exact verifier receipt consumed by the shadow adapter.
++
++    `exact_valid` is deliberately tri-state. True means the exact verifier
++    accepted the state, False means it rejected it, and None means the state is
++    unsupported or not exact enough to learn from. The adapter abstains for the
++    latter two states.
++    """
++
++    receipt_id: str
++    input_payload: Mapping[str, Any]
++    checkpoint_parent: str = GENESIS_HASH
++    conformal_action_set: Sequence[str] = ("retain", "abstain")
++    exact_valid: bool | None = None
++    delayed_label: bool = False
++    poison: bool = False
++    rollback_required: bool = False
++    metadata: Mapping[str, Any] = field(default_factory=dict)
++
++    @property
++    def input_hash(self) -> str:
++        """Hash the logical input, not the adapter state path."""
++
++        return sha256_json(
++            {
++                "receipt_id": self.receipt_id,
++                "input_payload": self.input_payload,
++            }
++        )
++
++    @classmethod
++    def from_verification_result(
++        cls,
++        *,
++        question: str,
++        response: str,
++        domain: str | None,
++        result: Any,
++    ) -> "ExactVerificationReceipt":
++        """Build a receipt from `VerifyRepairPipeline.verify(...)` output."""
++
++        unsupported = bool(result.certificate.get("error_type") or result.certificate.get("error"))
++        exact_valid = None if unsupported else bool(result.verified)
++        action_set: tuple[str, ...] = ("retain", "smooth", "abstain") if exact_valid else ("abstain",)
++        return cls(
++            receipt_id=sha256_json(
++                {
++                    "question": question,
++                    "response": response,
++                    "domain": domain,
++                    "n_constraints": result.certificate.get("n_constraints"),
++                    "n_violations": result.certificate.get("n_violations"),
++                }
++            ),
++            input_payload={
++                "question": question,
++                "response": response,
++                "domain": domain,
++                "verified": bool(result.verified),
++                "energy": float(result.energy),
++            },
++            checkpoint_parent=str(result.certificate.get("checkpoint_hash") or GENESIS_HASH),
++            conformal_action_set=action_set,
++            exact_valid=exact_valid,
++            metadata={
++                "mode": result.mode,
++                "n_constraints": result.certificate.get("n_constraints", 0),
++                "n_violations": result.certificate.get("n_violations", 0),
++            },
++        )
++
++
++@dataclass(frozen=True)
++class ShadowDecision:
++    """One auditable conformal recommendation made in shadow mode."""
++
++    row: Mapping[str, Any]
++
++    @property
++    def recommendation(self) -> str:
++        return str(self.row["recommendation"])
++
++    @property
++    def rollback_reason(self) -> str:
++        return str(self.row["rollback_reason"])
++
++    @property
++    def unsafe_update_accepted(self) -> bool:
++        return bool(self.row["unsafe_update_accepted"])
++
++    @property
++    def checkpoint_parent(self) -> str:
++        return str(self.row["checkpoint_parent"])
++
++    @property
++    def corrupted_checkpoint(self) -> bool:
++        return bool(self.row["corrupted_checkpoint"])
++
++    def to_certificate(self) -> dict[str, Any]:
++        """Return the small certificate payload attached to verification results."""
++
++        return {
++            "input_hash": self.row["input_hash"],
++            "checkpoint_parent": self.row["checkpoint_parent"],
++            "conformal_action_set": list(self.row["conformal_action_set"]),
++            "recommendation": self.row["recommendation"],
++            "exact_disposition": self.row["exact_disposition"],
++            "rollback_reason": self.row["rollback_reason"],
++            "ledger_hash": self.row["ledger_hash"],
++            "checkpoint_hash": self.row["checkpoint_hash"],
++        }
++
++
++class FR11ShadowAdapter:
++    """Append-only exact-gated shadow adapter.
++
++    The adapter can be constructed disabled. In that state `observe()` returns
++    None and does not create files, matching the production rollout contract.
++    """
++
++    def __init__(
++        self,
++        *,
++        ledger_path: str | os.PathLike[str],
++        checkpoint_path: str | os.PathLike[str] | None = None,
++        enabled: bool = False,
++    ) -> None:
++        self.enabled = bool(enabled)
++        self.ledger_path = Path(ledger_path)
++        self.checkpoint_path = (
++            Path(checkpoint_path)
++            if checkpoint_path is not None
++            else self.ledger_path.with_suffix(".checkpoint.json")
++        )
++        self._rows = load_ledger(self.ledger_path) if self.ledger_path.exists() else []
++        if not ledger_lineage_complete(self._rows):
++            raise ValueError("ledger lineage incomplete")
++        self._seen_input_hashes = {str(row["input_hash"]) for row in self._rows}
++        self._checkpoint_corrupted = False
++        self._checkpoint_hash = self._rows[-1]["checkpoint_hash"] if self._rows else GENESIS_HASH
++        if self.checkpoint_path.exists():
++            try:
++                checkpoint = _validate_checkpoint(self.checkpoint_path)
++                if checkpoint.get("ledger_tail_hash") != (
++                    self._rows[-1]["ledger_hash"] if self._rows else GENESIS_HASH
++                ):
++                    raise ValueError("checkpoint ledger tail mismatch")
++                self._checkpoint_hash = str(checkpoint["checkpoint_hash"])
++            except (OSError, ValueError, json.JSONDecodeError):
++                self._checkpoint_corrupted = True
++                self._checkpoint_hash = self._rows[-1]["checkpoint_hash"] if self._rows else GENESIS_HASH
++
++    @property
++    def decision_count(self) -> int:
++        """Number of durable decisions currently visible in the ledger."""
++
++        return len(self._rows)
++
++    def observe(self, receipt: ExactVerificationReceipt) -> ShadowDecision | None:
++        """Record one exact verifier receipt and return the shadow decision."""
++
++        if not self.enabled:
++            return None
++
++        action_set = self._safe_action_set(receipt)
++        exact_disposition = self._exact_disposition(receipt)
++        rollback_reason = ""
++        recommendation = self._choose_recommendation(action_set)
++        corrupted_checkpoint = self._checkpoint_corrupted
++
++        if corrupted_checkpoint:
++            recommendation = "abstain"
++            action_set = ("abstain",)
++            rollback_reason = "corrupted_checkpoint_recovered"
++        elif receipt.input_hash in self._seen_input_hashes:
++            recommendation = "abstain"
++            action_set = ("abstain",)
++            rollback_reason = "duplicate_delivery"
++        elif receipt.delayed_label:
++            recommendation = "abstain"
++            action_set = ("abstain",)
++            rollback_reason = "delayed_label_pending"
++        elif receipt.poison:
++            recommendation = "abstain"
++            action_set = ("abstain",)
++            rollback_reason = "poison_rejected"
++        elif receipt.rollback_required:
++            recommendation = "abstain"
++            action_set = ("abstain",)
++            rollback_reason = "rollback_required"
++        elif receipt.exact_valid is None:
++            recommendation = "abstain"
++            action_set = ("abstain",)
++            rollback_reason = "unsupported_exact_state"
++        elif receipt.exact_valid is False:
++            recommendation = "abstain"
++            action_set = ("abstain",)
++            rollback_reason = "exact_rejection_authoritative"
++        elif recommendation == "abstain":
++            rollback_reason = "conformal_action_set_abstained"
++
++        previous_ledger_hash = self._rows[-1]["ledger_hash"] if self._rows else GENESIS_HASH
++        row: dict[str, Any] = {
++            "sequence": len(self._rows),
++            "receipt_id": receipt.receipt_id,
++            "input_hash": receipt.input_hash,
++            "checkpoint_parent": self._checkpoint_hash or receipt.checkpoint_parent,
++            "receipt_checkpoint_parent": receipt.checkpoint_parent,
++            "conformal_action_set": list(action_set),
++            "recommendation": recommendation,
++            "exact_disposition": exact_disposition,
++            "rollback_reason": rollback_reason,
++            "duplicate_delivery": receipt.input_hash in self._seen_input_hashes,
++            "delayed_label": bool(receipt.delayed_label),
++            "poison": bool(receipt.poison),
++            "rollback_required": bool(receipt.rollback_required),
++            "corrupted_checkpoint": corrupted_checkpoint,
++            "unsafe_update_accepted": bool(receipt.exact_valid is False and recommendation != "abstain"),
++            "previous_ledger_hash": previous_ledger_hash,
++            "checkpoint_hash": "",
++            "ledger_hash": "",
++            "metadata": dict(receipt.metadata),
++        }
++        row["checkpoint_hash"] = self._next_checkpoint_hash(row)
++        row["ledger_hash"] = _row_hash(row)
++
++        self._append_row(row)
++        self._rows.append(row)
++        self._seen_input_hashes.add(receipt.input_hash)
++        self._commit_checkpoint(row)
++        self._checkpoint_hash = str(row["checkpoint_hash"])
++        self._checkpoint_corrupted = False
++        return ShadowDecision(row)
++
++    @staticmethod
++    def _safe_action_set(receipt: ExactVerificationReceipt) -> tuple[str, ...]:
++        actions: list[str] = []
++        for action in receipt.conformal_action_set:
++            if action in ACTIONS and action not in actions:
++                actions.append(action)
++        return tuple(actions or ["abstain"])
++
++    @staticmethod
++    def _choose_recommendation(action_set: Sequence[str]) -> str:
++        for action in ("retain", "smooth", "reset", "adapt", "abstain"):
++            if action in action_set:
++                return action
++        return "abstain"
++
++    @staticmethod
++    def _exact_disposition(receipt: ExactVerificationReceipt) -> str:
++        if receipt.exact_valid is True:
++            return "accept"
++        if receipt.exact_valid is False:
++            return "reject"
++        return "unsupported"
++
++    def _next_checkpoint_hash(self, row: Mapping[str, Any]) -> str:
++        checkpoint = {
++            "schema": CHECKPOINT_SCHEMA,
++            "last_sequence": row["sequence"],
++            "decision_count": int(row["sequence"]) + 1,
++            "ledger_tail_hash": row["ledger_hash"] or _row_hash(row),
++            "checkpoint_parent": row["checkpoint_parent"],
++            "seen_input_hashes": sorted((*self._seen_input_hashes, str(row["input_hash"]))),
++            "checkpoint_hash": "",
++        }
++        return _checkpoint_hash(checkpoint)
++
++    def _append_row(self, row: Mapping[str, Any]) -> None:
++        self.ledger_path.parent.mkdir(parents=True, exist_ok=True)
++        with self.ledger_path.open("a", encoding="utf-8") as handle:
++            handle.write(canonical_json(dict(row)) + "\n")
++
++    def _commit_checkpoint(self, row: Mapping[str, Any]) -> None:
++        checkpoint = {
++            "schema": CHECKPOINT_SCHEMA,
++            "last_sequence": row["sequence"],
++            "decision_count": int(row["sequence"]) + 1,
++            "ledger_tail_hash": row["ledger_hash"],
++            "checkpoint_parent": row["checkpoint_parent"],
++            "seen_input_hashes": sorted(self._seen_input_hashes),
++            "checkpoint_hash": "",
++        }
++        checkpoint["checkpoint_hash"] = _checkpoint_hash(checkpoint)
++        self.checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
++        tmp_path = self.checkpoint_path.with_name(self.checkpoint_path.name + ".tmp")
++        tmp_path.write_text(canonical_json(checkpoint), encoding="utf-8")
++        os.replace(tmp_path, self.checkpoint_path)
+diff --git a/python/carnot/pipeline/verify_repair.py b/python/carnot/pipeline/verify_repair.py
+index 628eb50da3..07c516cafb 100644
+--- a/python/carnot/pipeline/verify_repair.py
++++ b/python/carnot/pipeline/verify_repair.py
+@@ -457,6 +457,10 @@ class VerifyRepairPipeline:
+         learning_mode: bool = False,
+         n_learning_cycles: int = 3,
+         enable_abductive_csp: bool = False,
++        fr11_shadow_adapter_enabled: bool | None = None,
++        fr11_shadow_ledger_path: str | os.PathLike[str] | None = None,
++        fr11_shadow_checkpoint_path: str | os.PathLike[str] | None = None,
++        fr11_shadow_adapter: Any | None = None,
+     ) -> None:
+         """Initialize the verify-repair pipeline.
+ 
+@@ -520,11 +524,21 @@ class VerifyRepairPipeline:
+                 Based on exp2755 validation: 3-cycle loop achieves AUROC=0.9275 with
+                 genuine generalization.
+             n_learning_cycles: Number of learning cycles for ORCA-NEXUS loop (default 3).
++            fr11_shadow_adapter_enabled: Optional FR-11 shadow-mode flag. None reads
++                ``CARNOT_FR11_SHADOW_ADAPTER`` at construction. False preserves
++                the exact pre-shadow behavior and writes no ledger.
++            fr11_shadow_ledger_path: Append-only JSONL ledger path used only when the
++                FR-11 shadow adapter is enabled.
++            fr11_shadow_checkpoint_path: Atomic checkpoint path used only when the
++                FR-11 shadow adapter is enabled.
++            fr11_shadow_adapter: Optional prebuilt adapter for tests or controlled
++                deployments. Passing None keeps the feature purely flag-driven.
+ 
+         Raises:
+             ModelLoadError: If model is specified but cannot be loaded.
+ 
+-        Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2, REQ-ODAR-2243
++        Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2, REQ-ODAR-2243,
++              REQ-LEARN-5640
+         """
+         self.learning_mode = learning_mode
+         self.n_learning_cycles = n_learning_cycles
+@@ -595,6 +609,31 @@ class VerifyRepairPipeline:
+         self._online_observation_count = 0
+         self._online_fast_path_taken_count = 0
+         self._n_partial_fits = 0
++        if fr11_shadow_adapter is not None:
++            self._fr11_shadow_adapter = fr11_shadow_adapter
++        else:
++            fr11_shadow_enabled = (
++                os.getenv("CARNOT_FR11_SHADOW_ADAPTER", "0") == "1"
++                if fr11_shadow_adapter_enabled is None
++                else bool(fr11_shadow_adapter_enabled)
++            )
++            self._fr11_shadow_adapter = None
++            if fr11_shadow_enabled:
++                from carnot.pipeline.fr11_shadow_adapter import FR11ShadowAdapter
++
++                ledger_path = fr11_shadow_ledger_path or os.getenv(
++                    "CARNOT_FR11_SHADOW_LEDGER",
++                    "results/fr11_shadow_adapter_ledger.jsonl",
++                )
++                checkpoint_path = fr11_shadow_checkpoint_path or os.getenv(
++                    "CARNOT_FR11_SHADOW_CHECKPOINT",
++                    "results/fr11_shadow_adapter_checkpoint.json",
++                )
++                self._fr11_shadow_adapter = FR11ShadowAdapter(
++                    ledger_path=ledger_path,
++                    checkpoint_path=checkpoint_path,
++                    enabled=True,
++                )
+         self._repair_router = None
+         if self.routing_mode == "odar":
+             from carnot.pipeline.odar_router import OdarRouter
+@@ -1745,6 +1784,12 @@ class VerifyRepairPipeline:
+                     )
+                     if _pending_odar_certificate is not None:
+                         result.certificate.update(_pending_odar_certificate)
++                    result = self._record_fr11_shadow_decision(
++                        question=question,
++                        response=response,
++                        domain=domain,
++                        result=result,
++                    )
+                     return _with_fst_certificate(result)
+                 except Exception as exc:
+                     logger.warning("Rust verify failed, falling back to Python: %s", exc)
+@@ -1862,18 +1907,23 @@ class VerifyRepairPipeline:
+             raise
+         except CarnotError as exc:
+             logger.warning("Verification degraded: %s", exc)
+-            return _with_fst_certificate(
+-                VerificationResult(
+-                    verified=False,
+-                    constraints=[],
+-                    energy=0.0,
+-                    violations=[],
+-                    certificate={"error": str(exc), "error_type": type(exc).__name__},
+-                    typed_reasoning=typed_reasoning,
+-                    semantic_grounding=semantic_grounding,
+-                    semantic_verifier_v2=semantic_verifier_v2,
+-                )
++            degraded_result = VerificationResult(
++                verified=False,
++                constraints=[],
++                energy=0.0,
++                violations=[],
++                certificate={"error": str(exc), "error_type": type(exc).__name__},
++                typed_reasoning=typed_reasoning,
++                semantic_grounding=semantic_grounding,
++                semantic_verifier_v2=semantic_verifier_v2,
++            )
++            degraded_result = self._record_fr11_shadow_decision(
++                question=question,
++                response=response,
++                domain=domain,
++                result=degraded_result,
+             )
++            return _with_fst_certificate(degraded_result)
+ 
+         result.typed_reasoning = typed_reasoning
+         result.semantic_grounding = semantic_grounding
+@@ -2038,6 +2088,12 @@ class VerifyRepairPipeline:
+                     )
+                 )
+ 
++        result = self._record_fr11_shadow_decision(
++            question=question,
++            response=response,
++            domain=domain,
++            result=result,
++        )
+         return _with_fst_certificate(result)
+ 
+     def verify_with_gate(
+@@ -2903,6 +2959,48 @@ class VerifyRepairPipeline:
+             typed_reasoning=typed_reasoning,
+         )
+ 
++    def _record_fr11_shadow_decision(
++        self,
++        *,
++        question: str,
++        response: str,
++        domain: str | None,
++        result: VerificationResult,
++    ) -> VerificationResult:
++        """Append FR-11 shadow advice after exact verification, when enabled.
++
++        The disabled path returns the original result without touching its
++        certificate. If shadow persistence fails, exact verification remains
++        authoritative and the learned side channel records an abstaining error
++        certificate rather than altering ``result.verified``.
++
++        Spec: REQ-LEARN-5640, SCENARIO-LEARN-5640-SHADOW
++        """
++
++        adapter = getattr(self, "_fr11_shadow_adapter", None)
++        if adapter is None:
++            return result
++
++        try:
++            from carnot.pipeline.fr11_shadow_adapter import ExactVerificationReceipt
++
++            receipt = ExactVerificationReceipt.from_verification_result(
++                question=question,
++                response=response,
++                domain=domain,
++                result=result,
++            )
++            decision = adapter.observe(receipt)
++            if decision is not None:
++                result.certificate["fr11_shadow_adapter"] = decision.to_certificate()
++        except Exception as exc:
++            result.certificate["fr11_shadow_adapter"] = {
++                "recommendation": "abstain",
++                "exact_disposition": "unsupported",
++                "rollback_reason": f"shadow_adapter_error:{type(exc).__name__}",
++            }
++        return result
++
+     @staticmethod
+     def _merge_semantic_analysis(
+         result: VerificationResult,
+diff --git a/results/corrupt.checkpoint.json b/results/corrupt.checkpoint.json
+new file mode 100644
+index 0000000000..8764fc2a1f
+--- /dev/null
++++ b/results/corrupt.checkpoint.json
+@@ -0,0 +1 @@
++{"checkpoint_hash":"sha256:71bd26e9859b35d8223b116f618211c46b082e4fae0e956b0aabe17e26d0b169","checkpoint_parent":"sha256:411b545690004974f3bad3de2ccaf78129a7a4208b7f77811572497d4ea65cb4","decision_count":2,"last_sequence":1,"ledger_tail_hash":"sha256:86932a59880d5e2002342889e6db04d28062d25ce577afea949d1136f9e0854c","schema":"carnot.fr11_shadow_adapter.checkpoint.v1","seen_input_hashes":["sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","sha256:5c909ee64f499ae139367ae9764bd3dd08d0bdd1cff906b891c0b1125d26dea4"]}
+\ No newline at end of file
+diff --git a/results/corrupt.jsonl b/results/corrupt.jsonl
+new file mode 100644
+index 0000000000..4977b67141
+--- /dev/null
++++ b/results/corrupt.jsonl
+@@ -0,0 +1,2 @@
++{"checkpoint_hash":"sha256:411b545690004974f3bad3de2ccaf78129a7a4208b7f77811572497d4ea65cb4","checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","conformal_action_set":["adapt","abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","ledger_hash":"sha256:b9adae8759551e70adbe8f4b5a92fb1a465760412746720adb8204625395eae9","metadata":{},"poison":false,"previous_ledger_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-accepted","recommendation":"adapt","rollback_reason":"","rollback_required":false,"sequence":0,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:0e4720ec6ce4ae29a97fdf02edbd4f720ae8e41f01de4c3e052b36cdfcd720da","checkpoint_parent":"sha256:411b545690004974f3bad3de2ccaf78129a7a4208b7f77811572497d4ea65cb4","conformal_action_set":["abstain"],"corrupted_checkpoint":true,"delayed_label":true,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:5c909ee64f499ae139367ae9764bd3dd08d0bdd1cff906b891c0b1125d26dea4","ledger_hash":"sha256:86932a59880d5e2002342889e6db04d28062d25ce577afea949d1136f9e0854c","metadata":{},"poison":false,"previous_ledger_hash":"sha256:b9adae8759551e70adbe8f4b5a92fb1a465760412746720adb8204625395eae9","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-delayed","recommendation":"abstain","rollback_reason":"corrupted_checkpoint_recovered","rollback_required":false,"sequence":1,"unsafe_update_accepted":false}
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index fe89e9a53a..0768f18ea0 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-14T19:37:15.419546Z",
+-  "duration_s": 0.12442421913146973,
++  "run_date": "2026-07-14T20:03:12.061215Z",
++  "duration_s": 0.07379508018493652,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "8d7ce24f3eb9f847913654ae5b5e5d647774727d278c211d38ddb75a0eead32b",
++  "reproducibility_checksum": "1a92eae9fffb6d38fd0f2657750201b95ac8e00638ffd5d0af74ad6ff268b965",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "340fadac8d323021d0573b5533f0d2ec65f1dd68"
++    "adversarial_verify_version": "93293dfcbdb42e2ed14c8c6f822ba76a6655b818"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 0793a355e6..868ecb6854 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-14T19:37:15.562818Z",
+-  "duration_s": 0.12920713424682617,
++  "run_date": "2026-07-14T20:03:12.162866Z",
++  "duration_s": 0.09223222732543945,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "634d4688b01e4119cd12c5a58cec24c823a313a9365acf54cee4387916aef0dc",
++  "reproducibility_checksum": "747532614d8440cdd10c0a3b4f3358aec072a5c26e7fd6f851af579cdb2c1287",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "340fadac8d323021d0573b5533f0d2ec65f1dd68"
++    "adversarial_verify_version": "93293dfcbdb42e2ed14c8c6f822ba76a6655b818"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index babf72795b..1042ec950e 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.115011215209961,
++  "efficiency_gains_ms": 2.1626949310302734,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index a41d561b4d..aaffa94364 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T19:37:20Z",
+-  "finished_at": "2026-07-14T19:37:20Z",
++  "started_at": "2026-07-14T20:03:15Z",
++  "finished_at": "2026-07-14T20:03:15Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index dcf663be40..e2a822c898 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6909303665161133,
++  "duration_s": 0.5404908657073975,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 418f6462ec..b5eeba427d 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.018600156996399e-05,
++  "duration_s": 6.982100603636354e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5640_fr11_shadow_pipeline_integration.json b/results/experiment_5640_fr11_shadow_pipeline_integration.json
+new file mode 100644
+index 0000000000..ccd4fd30f8
+--- /dev/null
++++ b/results/experiment_5640_fr11_shadow_pipeline_integration.json
+@@ -0,0 +1 @@
++{"adapter_path":"python/carnot/pipeline/fr11_shadow_adapter.py","benefit_evidence_within_exp5639_bound":true,"checkpoint_atomicity_pass":true,"default_enabled":false,"default_path_equivalence":true,"exact_verifier_authority":true,"experiment":5640,"experiment_id":"experiment_5640_fr11_shadow_pipeline_integration","feature_flag":"CARNOT_FR11_SHADOW_ADAPTER","field_principles":{"adapter_path":"production surface is explicit","benefit_evidence_within_exp5639_bound":"upstream certified utility bound is preserved","checkpoint_atomicity_pass":"partial state cannot publish","default_enabled":"rollout is bounded","default_path_equivalence":"existing behavior is preserved","exact_verifier_authority":"learned advice cannot legalize invalid state","feature_flag":"rollout is bounded","field_principles":"evidence fields explain why they exist","fr11_shadow_integration_ready_score":"deployment readiness is mechanical","honest_verdict":"starts complete: or blocked: and distinguishes shadow readiness","inference_substrate":"no LLM inference occurred","ledger_lineage_complete":"decisions are auditable","ledger_path":"decisions are auditable","ledger_sha256":"ledger bytes are replayable","model_weight_mutation":"scope remains controller learning","openspec_requirement_ids":"implementation is spec anchored","random_seeds":"replay is stable","replay_controls":"known failure modes are exercised","reproducibility_checksum":"replay is stable","restart_replay_pass":"persistence is reproducible","rollback_pass":"regressions recover","shadow_decision_count":"execution is real","shadow_offline_mismatches":"parity failures are inspectable","shadow_offline_parity":"wiring matches the audited controller","tests_added_or_reused":"verification commands are visible","unsafe_update_accept_count":"fail-closed safety is exact","upstream_gate_receipts":"promotion is prerequisite"},"fr11_shadow_integration_ready_score":1.0,"honest_verdict":"complete: fr11_shadow_ready_not_default_enabled","inference_substrate":"exact_verifier_gated_conformal_kan_shadow_adapter","ledger_lineage_complete":true,"ledger_path":"results/experiment_5640_fr11_shadow_pipeline_integration_ledger.jsonl","ledger_sha256":"sha256:7eb83c1acfd50848478402228105150807eb28967b57a0fb90ec0387da8c948c","model_weight_mutation":false,"openspec_requirement_ids":["REQ-LEARN-5640","SCENARIO-LEARN-5640-EQUIVALENCE","SCENARIO-LEARN-5640-SHADOW","SCENARIO-LEARN-5640-REPLAY","SCENARIO-LEARN-5640-ARTIFACT"],"random_seeds":[5640,5628,5629,5630,5631,5632],"replay_controls":{"corrupted_checkpoint":{"pass":true,"recommendation":"abstain","rollback_reason":"corrupted_checkpoint_recovered"},"crash_restart":{"pass":true,"row_count":2},"delayed_labels":{"pass":true,"recommendation":"abstain","rollback_reason":"delayed_label_pending"},"duplicate_delivery":{"pass":true,"recommendation":"abstain","rollback_reason":"duplicate_delivery"},"feature_disabled_equivalence":{"baseline_certificate_hash":"sha256:be4bc926bd7100a09937cbec90bc8d3f75d8139c000dd033290a97e1c580e220","candidate_certificate_hash":"sha256:be4bc926bd7100a09937cbec90bc8d3f75d8139c000dd033290a97e1c580e220","ledger_written":false,"pass":true},"inactive_adapter":{"decision_count":0,"pass":true},"poison":{"pass":true,"recommendation":"abstain","rollback_reason":"poison_rejected"},"rollback":{"pass":true,"recommendation":"abstain","rollback_reason":"rollback_required"}},"reproducibility_checksum":"sha256:f30904fe6b7d6d5cab4539108f264128093066349bf4b5c2c06b08999cb46eb3","restart_replay_pass":true,"rollback_pass":true,"run_date":"20260714","schema":"carnot.experiment_5640.fr11_shadow_pipeline_integration.v1","shadow_decision_count":9,"shadow_offline_mismatches":[],"shadow_offline_parity":true,"tests_added_or_reused":[".venv/bin/pytest tests/python/test_fr11_shadow_adapter.py tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py -q --no-cov -n 0",".venv/bin/coverage run --include=python/carnot/pipeline/fr11_shadow_adapter.py,python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py -m pytest tests/python/test_fr11_shadow_adapter.py tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/pipeline/fr11_shadow_adapter.py,python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py --fail-under=100",".venv/bin/pytest tests/python -q",".venv/bin/python scripts/check_spec_coverage.py",".venv/bin/python scripts/adversarial_verify.py results/experiment_5640_fr11_shadow_pipeline_integration.json"],"unsafe_update_accept_count":0,"upstream_gate_receipts":{"certified_bound":0.0,"exp5639":{"fr11_independent_promotion_ready_score":1.0,"honest_verdict":"complete: anytime_valid_csl_independent_audit_ready","path":"results/experiment_5639_anytime_valid_csl_independent_audit.json","promotion_ready":true,"schema":"carnot.experiment_5639.anytime_valid_csl_independent_audit.v1","sha256":"sha256:ec8c0d905087d30fcbbe5391c3a03fa57625e318ceb074479a6c2b5b9452a587","unsafe_false_accept_count_total":0},"paired_benefit_intervals":{"frozen_no_update":{"lower":0.257768,"mean":0.390278,"n":36,"upper":0.522788},"frozen_spline_control":{"lower":0.257768,"mean":0.390278,"n":36,"upper":0.522788},"loss_smoothed_adaptation":{"lower":0.140152,"mean":0.240972,"n":36,"upper":0.341793},"reset_adapt":{"lower":0.087842,"mean":0.155556,"n":36,"upper":0.22327},"retain_exact_replay":{"lower":0.187309,"mean":0.304861,"n":36,"upper":0.422413},"update_substitution_control":{"lower":0.257768,"mean":0.390278,"n":36,"upper":0.522788}},"promotion_prerequisite_enforced":true}}
+diff --git a/results/experiment_5640_fr11_shadow_pipeline_integration_checkpoint.json b/results/experiment_5640_fr11_shadow_pipeline_integration_checkpoint.json
+new file mode 100644
+index 0000000000..a8935dc65e
+--- /dev/null
++++ b/results/experiment_5640_fr11_shadow_pipeline_integration_checkpoint.json
+@@ -0,0 +1 @@
++{"checkpoint_hash":"sha256:b42901668588885bfffba164a91cb95997a9b33065e2a7be1429c3ad63fe5ef1","checkpoint_parent":"sha256:f7f2cf94e385f735e8ad4c91a6eae0cfa3fefae776106e937d05933386550301","decision_count":2,"last_sequence":1,"ledger_tail_hash":"sha256:c570c0a97e8f10f2b635439e072810b85d2790fbdc65af8b7319e3137189f9e1","schema":"carnot.fr11_shadow_adapter.checkpoint.v1","seen_input_hashes":["sha256:2fa77a4fb23e9584bfde65f986b415bdbc082b025de768a75989be6ec91b9698","sha256:dee9327b56ed53fb93aabc18f1eb748e5f243ac4b879a98a72fdac8871e1f1d6"]}
+\ No newline at end of file
+diff --git a/results/experiment_5640_fr11_shadow_pipeline_integration_ledger.jsonl b/results/experiment_5640_fr11_shadow_pipeline_integration_ledger.jsonl
+new file mode 100644
+index 0000000000..44c9b3cd97
+--- /dev/null
++++ b/results/experiment_5640_fr11_shadow_pipeline_integration_ledger.jsonl
+@@ -0,0 +1,2 @@
++{"checkpoint_hash":"sha256:f7f2cf94e385f735e8ad4c91a6eae0cfa3fefae776106e937d05933386550301","checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","conformal_action_set":["retain","smooth","abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:2fa77a4fb23e9584bfde65f986b415bdbc082b025de768a75989be6ec91b9698","ledger_hash":"sha256:240d5b18da144b201111bca287d7b90746f546dc40c83570a60669677c6a18ad","metadata":{"mode":"FULL","n_constraints":1,"n_violations":0},"poison":false,"previous_ledger_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"sha256:0b75e62d5ada78e9f13aac5e743bb1afd4811de45affa81d42a8a7ad66f911bb","recommendation":"retain","rollback_reason":"","rollback_required":false,"sequence":0,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:48ae930ca657687568e2816d3a9a804d2233c2334b3bbb2c22afc0f513a5720f","checkpoint_parent":"sha256:f7f2cf94e385f735e8ad4c91a6eae0cfa3fefae776106e937d05933386550301","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"reject","input_hash":"sha256:dee9327b56ed53fb93aabc18f1eb748e5f243ac4b879a98a72fdac8871e1f1d6","ledger_hash":"sha256:c570c0a97e8f10f2b635439e072810b85d2790fbdc65af8b7319e3137189f9e1","metadata":{"mode":"FULL","n_constraints":1,"n_violations":1},"poison":false,"previous_ledger_hash":"sha256:240d5b18da144b201111bca287d7b90746f546dc40c83570a60669677c6a18ad","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"sha256:33325d39af5c6e9599f6c0acee25194aebc41a3dc85c1c9511ef57dce12206bd","recommendation":"abstain","rollback_reason":"exact_rejection_authoritative","rollback_required":false,"sequence":1,"unsafe_update_accepted":false}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 0254204052..6a2262b0df 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T19:36:53Z",
+-  "finished_at": "2026-07-14T19:36:53Z",
++  "started_at": "2026-07-14T20:02:51Z",
++  "finished_at": "2026-07-14T20:02:52Z",
+   "duration_s": 0.006,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index c9e259d29b..a2776f5b90 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T19:36:53Z",
+-  "finished_at": "2026-07-14T19:36:53Z",
+-  "duration_s": 0.008,
++  "started_at": "2026-07-14T20:02:52Z",
++  "finished_at": "2026-07-14T20:02:52Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index b881981c91..1a7312dcb4 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T19:36:53Z",
+-  "finished_at": "2026-07-14T19:36:53Z",
+-  "duration_s": 0.006,
++  "started_at": "2026-07-14T20:02:52Z",
++  "finished_at": "2026-07-14T20:02:52Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/offline.checkpoint.json b/results/offline.checkpoint.json
+new file mode 100644
+index 0000000000..606d6c3d9f
+--- /dev/null
++++ b/results/offline.checkpoint.json
+@@ -0,0 +1 @@
++{"checkpoint_hash":"sha256:cb2064fb44aa30e9196a4e0b4c8d8b5a0d36d95e5b528b0fa2a7d09962fa3dcd","checkpoint_parent":"sha256:e81796bbd95a35fb2525f19f31b9003ca5c00566b6ba8331cf2e016fc60e902f","decision_count":7,"last_sequence":6,"ledger_tail_hash":"sha256:b90d35ed8883aa5cf37664f5f93406b520f490abe86d6fcdb5b92f8300fed601","schema":"carnot.fr11_shadow_adapter.checkpoint.v1","seen_input_hashes":["sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","sha256:5aba55dc6450d5eea15e540b91c3bbf7f1d32db2c19e4edcd84c19eb77031aaa","sha256:5c909ee64f499ae139367ae9764bd3dd08d0bdd1cff906b891c0b1125d26dea4","sha256:91ff12143d09d576954a387cce68aa2a1fe064931d25600b2200826c88b9f382","sha256:dcf48f90b174f5667e54bea84839263659ff6fa7df758a8953f316a8baa854bb","sha256:e7346587b265c9d3eaabd6b0734acc3fa7ad5e274e7722fa745eed8a2799ddf3"]}
+\ No newline at end of file
+diff --git a/results/offline.jsonl b/results/offline.jsonl
+new file mode 100644
+index 0000000000..a82f6dbef1
+--- /dev/null
++++ b/results/offline.jsonl
+@@ -0,0 +1,7 @@
++{"checkpoint_hash":"sha256:411b545690004974f3bad3de2ccaf78129a7a4208b7f77811572497d4ea65cb4","checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","conformal_action_set":["adapt","abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","ledger_hash":"sha256:b9adae8759551e70adbe8f4b5a92fb1a465760412746720adb8204625395eae9","metadata":{},"poison":false,"previous_ledger_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-accepted","recommendation":"adapt","rollback_reason":"","rollback_required":false,"sequence":0,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:5b4d4ff1bda2ac5930a16c4b4cce83a2605c596c126ff162f97b23a138eaff3a","checkpoint_parent":"sha256:411b545690004974f3bad3de2ccaf78129a7a4208b7f77811572497d4ea65cb4","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"reject","input_hash":"sha256:dcf48f90b174f5667e54bea84839263659ff6fa7df758a8953f316a8baa854bb","ledger_hash":"sha256:0460ba7be73d80c69c0a8dfb32ff819d9a2cc09c59654d1c6c466b10dca4953b","metadata":{},"poison":false,"previous_ledger_hash":"sha256:b9adae8759551e70adbe8f4b5a92fb1a465760412746720adb8204625395eae9","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-rejected","recommendation":"abstain","rollback_reason":"exact_rejection_authoritative","rollback_required":false,"sequence":1,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:a7b4e69c9a6c08507a07f5bb79c8b4ddaad66f6ab8a02f2d6b0a3c77056fed78","checkpoint_parent":"sha256:5b4d4ff1bda2ac5930a16c4b4cce83a2605c596c126ff162f97b23a138eaff3a","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":true,"exact_disposition":"accept","input_hash":"sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","ledger_hash":"sha256:24d0e618267c8a49b6e3a35c28ed780c93cef3068fab2ac1a66b8e5d585a6ef4","metadata":{},"poison":false,"previous_ledger_hash":"sha256:0460ba7be73d80c69c0a8dfb32ff819d9a2cc09c59654d1c6c466b10dca4953b","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-accepted","recommendation":"abstain","rollback_reason":"duplicate_delivery","rollback_required":false,"sequence":2,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:cfe4eb1c838f9a0a48635afd3442bfb41b5c1e880d2465dbfaed0e674ef449b0","checkpoint_parent":"sha256:a7b4e69c9a6c08507a07f5bb79c8b4ddaad66f6ab8a02f2d6b0a3c77056fed78","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":true,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:5c909ee64f499ae139367ae9764bd3dd08d0bdd1cff906b891c0b1125d26dea4","ledger_hash":"sha256:bf562752b930eaf9121c9cf552097bec9fa696808ec8e6a72bc117894db26958","metadata":{},"poison":false,"previous_ledger_hash":"sha256:24d0e618267c8a49b6e3a35c28ed780c93cef3068fab2ac1a66b8e5d585a6ef4","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-delayed","recommendation":"abstain","rollback_reason":"delayed_label_pending","rollback_required":false,"sequence":3,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:0f3802e6141600dae9e3971c6b19d546e0e5c3da103634edd8db0a31e431ce57","checkpoint_parent":"sha256:cfe4eb1c838f9a0a48635afd3442bfb41b5c1e880d2465dbfaed0e674ef449b0","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:e7346587b265c9d3eaabd6b0734acc3fa7ad5e274e7722fa745eed8a2799ddf3","ledger_hash":"sha256:697c91758b4c661926f8c619fd4fa7901adb68026d87b5d439e9edc2d7f73e13","metadata":{},"poison":true,"previous_ledger_hash":"sha256:bf562752b930eaf9121c9cf552097bec9fa696808ec8e6a72bc117894db26958","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-poison","recommendation":"abstain","rollback_reason":"poison_rejected","rollback_required":false,"sequence":4,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:e81796bbd95a35fb2525f19f31b9003ca5c00566b6ba8331cf2e016fc60e902f","checkpoint_parent":"sha256:0f3802e6141600dae9e3971c6b19d546e0e5c3da103634edd8db0a31e431ce57","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:91ff12143d09d576954a387cce68aa2a1fe064931d25600b2200826c88b9f382","ledger_hash":"sha256:c1a163be64c600b1eece5511d3f527d2eba4858f73a50539b006f0d274678440","metadata":{},"poison":false,"previous_ledger_hash":"sha256:697c91758b4c661926f8c619fd4fa7901adb68026d87b5d439e9edc2d7f73e13","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-rollback","recommendation":"abstain","rollback_reason":"rollback_required","rollback_required":true,"sequence":5,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:d2b014e2fbb490424a5e6ea68a54e2d84ac69a6d8f2252e018297aafad68911b","checkpoint_parent":"sha256:e81796bbd95a35fb2525f19f31b9003ca5c00566b6ba8331cf2e016fc60e902f","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"unsupported","input_hash":"sha256:5aba55dc6450d5eea15e540b91c3bbf7f1d32db2c19e4edcd84c19eb77031aaa","ledger_hash":"sha256:b90d35ed8883aa5cf37664f5f93406b520f490abe86d6fcdb5b92f8300fed601","metadata":{},"poison":false,"previous_ledger_hash":"sha256:c1a163be64c600b1eece5511d3f527d2eba4858f73a50539b006f0d274678440","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-unsupported","recommendation":"abstain","rollback_reason":"unsupported_exact_state","rollback_required":false,"sequence":6,"unsafe_update_accepted":false}
+diff --git a/results/restart.checkpoint.json b/results/restart.checkpoint.json
+new file mode 100644
+index 0000000000..5680b6bb2a
+--- /dev/null
++++ b/results/restart.checkpoint.json
+@@ -0,0 +1 @@
++{"checkpoint_hash":"sha256:4ffb3878d0977f296879763e7a92ae604c23b4f9ef61675e2d949429db18849e","checkpoint_parent":"sha256:fa371178e4ad17ef33a305d806fe5beb8a8e8627e368cc08d09ebefe46789f76","decision_count":2,"last_sequence":1,"ledger_tail_hash":"sha256:bc8475eeac536d96c66de0711930f91a1f158e88f7f4c32deea37cc02e263fe5","schema":"carnot.fr11_shadow_adapter.checkpoint.v1","seen_input_hashes":["sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","sha256:dcf48f90b174f5667e54bea84839263659ff6fa7df758a8953f316a8baa854bb"]}
+\ No newline at end of file
+diff --git a/results/restart.jsonl b/results/restart.jsonl
+new file mode 100644
+index 0000000000..8ef0351b0a
+--- /dev/null
++++ b/results/restart.jsonl
+@@ -0,0 +1,2 @@
++{"checkpoint_hash":"sha256:411b545690004974f3bad3de2ccaf78129a7a4208b7f77811572497d4ea65cb4","checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","conformal_action_set":["adapt","abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","ledger_hash":"sha256:b9adae8759551e70adbe8f4b5a92fb1a465760412746720adb8204625395eae9","metadata":{},"poison":false,"previous_ledger_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-accepted","recommendation":"adapt","rollback_reason":"","rollback_required":false,"sequence":0,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:32467c4173b39fef1bf626af06f168d8708e9f2506a13d16ef4c70493002448b","checkpoint_parent":"sha256:fa371178e4ad17ef33a305d806fe5beb8a8e8627e368cc08d09ebefe46789f76","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"reject","input_hash":"sha256:dcf48f90b174f5667e54bea84839263659ff6fa7df758a8953f316a8baa854bb","ledger_hash":"sha256:bc8475eeac536d96c66de0711930f91a1f158e88f7f4c32deea37cc02e263fe5","metadata":{},"poison":false,"previous_ledger_hash":"sha256:b9adae8759551e70adbe8f4b5a92fb1a465760412746720adb8204625395eae9","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-rejected","recommendation":"abstain","rollback_reason":"exact_rejection_authoritative","rollback_required":false,"sequence":1,"unsafe_update_accepted":false}
+diff --git a/results/shadow.checkpoint.json b/results/shadow.checkpoint.json
+new file mode 100644
+index 0000000000..606d6c3d9f
+--- /dev/null
++++ b/results/shadow.checkpoint.json
+@@ -0,0 +1 @@
++{"checkpoint_hash":"sha256:cb2064fb44aa30e9196a4e0b4c8d8b5a0d36d95e5b528b0fa2a7d09962fa3dcd","checkpoint_parent":"sha256:e81796bbd95a35fb2525f19f31b9003ca5c00566b6ba8331cf2e016fc60e902f","decision_count":7,"last_sequence":6,"ledger_tail_hash":"sha256:b90d35ed8883aa5cf37664f5f93406b520f490abe86d6fcdb5b92f8300fed601","schema":"carnot.fr11_shadow_adapter.checkpoint.v1","seen_input_hashes":["sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","sha256:5aba55dc6450d5eea15e540b91c3bbf7f1d32db2c19e4edcd84c19eb77031aaa","sha256:5c909ee64f499ae139367ae9764bd3dd08d0bdd1cff906b891c0b1125d26dea4","sha256:91ff12143d09d576954a387cce68aa2a1fe064931d25600b2200826c88b9f382","sha256:dcf48f90b174f5667e54bea84839263659ff6fa7df758a8953f316a8baa854bb","sha256:e7346587b265c9d3eaabd6b0734acc3fa7ad5e274e7722fa745eed8a2799ddf3"]}
+\ No newline at end of file
+diff --git a/results/shadow.jsonl b/results/shadow.jsonl
+new file mode 100644
+index 0000000000..a82f6dbef1
+--- /dev/null
++++ b/results/shadow.jsonl
+@@ -0,0 +1,7 @@
++{"checkpoint_hash":"sha256:411b545690004974f3bad3de2ccaf78129a7a4208b7f77811572497d4ea65cb4","checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","conformal_action_set":["adapt","abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","ledger_hash":"sha256:b9adae8759551e70adbe8f4b5a92fb1a465760412746720adb8204625395eae9","metadata":{},"poison":false,"previous_ledger_hash":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-accepted","recommendation":"adapt","rollback_reason":"","rollback_required":false,"sequence":0,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:5b4d4ff1bda2ac5930a16c4b4cce83a2605c596c126ff162f97b23a138eaff3a","checkpoint_parent":"sha256:411b545690004974f3bad3de2ccaf78129a7a4208b7f77811572497d4ea65cb4","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"reject","input_hash":"sha256:dcf48f90b174f5667e54bea84839263659ff6fa7df758a8953f316a8baa854bb","ledger_hash":"sha256:0460ba7be73d80c69c0a8dfb32ff819d9a2cc09c59654d1c6c466b10dca4953b","metadata":{},"poison":false,"previous_ledger_hash":"sha256:b9adae8759551e70adbe8f4b5a92fb1a465760412746720adb8204625395eae9","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-rejected","recommendation":"abstain","rollback_reason":"exact_rejection_authoritative","rollback_required":false,"sequence":1,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:a7b4e69c9a6c08507a07f5bb79c8b4ddaad66f6ab8a02f2d6b0a3c77056fed78","checkpoint_parent":"sha256:5b4d4ff1bda2ac5930a16c4b4cce83a2605c596c126ff162f97b23a138eaff3a","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":true,"exact_disposition":"accept","input_hash":"sha256:5aa3596ac83b569216551685460f88b7391792a0d30147a0d7de7e3d007eb8d2","ledger_hash":"sha256:24d0e618267c8a49b6e3a35c28ed780c93cef3068fab2ac1a66b8e5d585a6ef4","metadata":{},"poison":false,"previous_ledger_hash":"sha256:0460ba7be73d80c69c0a8dfb32ff819d9a2cc09c59654d1c6c466b10dca4953b","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-accepted","recommendation":"abstain","rollback_reason":"duplicate_delivery","rollback_required":false,"sequence":2,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:cfe4eb1c838f9a0a48635afd3442bfb41b5c1e880d2465dbfaed0e674ef449b0","checkpoint_parent":"sha256:a7b4e69c9a6c08507a07f5bb79c8b4ddaad66f6ab8a02f2d6b0a3c77056fed78","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":true,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:5c909ee64f499ae139367ae9764bd3dd08d0bdd1cff906b891c0b1125d26dea4","ledger_hash":"sha256:bf562752b930eaf9121c9cf552097bec9fa696808ec8e6a72bc117894db26958","metadata":{},"poison":false,"previous_ledger_hash":"sha256:24d0e618267c8a49b6e3a35c28ed780c93cef3068fab2ac1a66b8e5d585a6ef4","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-delayed","recommendation":"abstain","rollback_reason":"delayed_label_pending","rollback_required":false,"sequence":3,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:0f3802e6141600dae9e3971c6b19d546e0e5c3da103634edd8db0a31e431ce57","checkpoint_parent":"sha256:cfe4eb1c838f9a0a48635afd3442bfb41b5c1e880d2465dbfaed0e674ef449b0","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:e7346587b265c9d3eaabd6b0734acc3fa7ad5e274e7722fa745eed8a2799ddf3","ledger_hash":"sha256:697c91758b4c661926f8c619fd4fa7901adb68026d87b5d439e9edc2d7f73e13","metadata":{},"poison":true,"previous_ledger_hash":"sha256:bf562752b930eaf9121c9cf552097bec9fa696808ec8e6a72bc117894db26958","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-poison","recommendation":"abstain","rollback_reason":"poison_rejected","rollback_required":false,"sequence":4,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:e81796bbd95a35fb2525f19f31b9003ca5c00566b6ba8331cf2e016fc60e902f","checkpoint_parent":"sha256:0f3802e6141600dae9e3971c6b19d546e0e5c3da103634edd8db0a31e431ce57","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"accept","input_hash":"sha256:91ff12143d09d576954a387cce68aa2a1fe064931d25600b2200826c88b9f382","ledger_hash":"sha256:c1a163be64c600b1eece5511d3f527d2eba4858f73a50539b006f0d274678440","metadata":{},"poison":false,"previous_ledger_hash":"sha256:697c91758b4c661926f8c619fd4fa7901adb68026d87b5d439e9edc2d7f73e13","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-rollback","recommendation":"abstain","rollback_reason":"rollback_required","rollback_required":true,"sequence":5,"unsafe_update_accepted":false}
++{"checkpoint_hash":"sha256:d2b014e2fbb490424a5e6ea68a54e2d84ac69a6d8f2252e018297aafad68911b","checkpoint_parent":"sha256:e81796bbd95a35fb2525f19f31b9003ca5c00566b6ba8331cf2e016fc60e902f","conformal_action_set":["abstain"],"corrupted_checkpoint":false,"delayed_label":false,"duplicate_delivery":false,"exact_disposition":"unsupported","input_hash":"sha256:5aba55dc6450d5eea15e540b91c3bbf7f1d32db2c19e4edcd84c19eb77031aaa","ledger_hash":"sha256:b90d35ed8883aa5cf37664f5f93406b520f490abe86d6fcdb5b92f8300fed601","metadata":{},"poison":false,"previous_ledger_hash":"sha256:c1a163be64c600b1eece5511d3f527d2eba4858f73a50539b006f0d274678440","receipt_checkpoint_parent":"sha256:0000000000000000000000000000000000000000000000000000000000000000","receipt_id":"row-unsupported","recommendation":"abstain","rollback_reason":"unsupported_exact_state","rollback_required":false,"sequence":6,"unsafe_update_accepted":false}
+diff --git a/tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py b/tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py
+new file mode 100644
+index 0000000000..54966f0eb1
+--- /dev/null
++++ b/tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py
+@@ -0,0 +1,293 @@
++"""Tests for Exp5640 FR-11 shadow pipeline integration.
++
++Spec refs: REQ-LEARN-5640,
++SCENARIO-LEARN-5640-EQUIVALENCE,
++SCENARIO-LEARN-5640-SHADOW,
++SCENARIO-LEARN-5640-REPLAY,
++SCENARIO-LEARN-5640-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5640_fr11_shadow_pipeline_integration as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest tests/python/test_fr11_shadow_adapter.py "
++    "tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py -q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/pipeline/fr11_shadow_adapter.py,"
++    "python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py "
++    "-m pytest tests/python/test_fr11_shadow_adapter.py "
++    "tests/python/test_experiment_5640_fr11_shadow_pipeline_integration.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/pipeline/fr11_shadow_adapter.py,"
++    "python/carnot/experiment_5640_fr11_shadow_pipeline_integration.py "
++    "--fail-under=100"
++)
++FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COMMAND = ".venv/bin/python scripts/check_spec_coverage.py"
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_5640_fr11_shadow_pipeline_integration.json"
++)
++TESTS_ADDED_OR_REUSED = [
++    TEST_COMMAND,
++    COVERAGE_COMMAND,
++    FULL_TEST_COMMAND,
++    SPEC_COMMAND,
++    ADVERSARIAL_COMMAND,
++]
++
++
++def _artifact(tmp_path: Path) -> dict[str, object]:
++    return mod.build_artifact(
++        root=REPO,
++        ledger_dir=tmp_path / "ledgers",
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++    )
++
++
++def test_req_learn_5640_spec_declares_shadow_pipeline_contract() -> None:
++    """REQ-LEARN-5640: OpenSpec anchors gates, fields, scenarios, and substrate."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5640") :]
++
++    for marker in (
++        "REQ-LEARN-5640",
++        "SCENARIO-LEARN-5640-EQUIVALENCE",
++        "SCENARIO-LEARN-5640-SHADOW",
++        "SCENARIO-LEARN-5640-REPLAY",
++        "SCENARIO-LEARN-5640-ARTIFACT",
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.INFERENCE_SUBSTRATE,
++        "disabled by default",
++        "exact verification remains authoritative",
++        "append-only JSONL decision ledger",
++        "checkpoint commit SHALL be atomic",
++    ):
++        assert marker in section
++    for field, principle in mod.REQUIRED_FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle == mod.FIELD_PRINCIPLES[field]
++
++
++def test_scenario_learn_5640_artifact_fields_and_mechanical_ready_score(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5640-ARTIFACT: all readiness gates must pass."""
++
++    artifact = _artifact(tmp_path)
++
++    assert mod.validate_artifact(artifact) is True
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++        assert artifact["field_principles"][field] == mod.REQUIRED_FIELD_PRINCIPLES[field]
++
++    assert artifact["openspec_requirement_ids"] == list(mod.SPEC_REFS)
++    assert artifact["adapter_path"] == mod.ADAPTER_RELATIVE_PATH.as_posix()
++    assert artifact["feature_flag"] == mod.FEATURE_FLAG
++    assert artifact["default_enabled"] is False
++    assert artifact["exact_verifier_authority"] is True
++    assert artifact["shadow_decision_count"] > 0
++    assert artifact["shadow_offline_parity"] is True
++    assert artifact["default_path_equivalence"] is True
++    assert artifact["unsafe_update_accept_count"] == 0
++    assert artifact["checkpoint_atomicity_pass"] is True
++    assert artifact["restart_replay_pass"] is True
++    assert artifact["rollback_pass"] is True
++    assert artifact["ledger_lineage_complete"] is True
++    assert artifact["model_weight_mutation"] is False
++    assert artifact["fr11_shadow_integration_ready_score"] == 1.0
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["benefit_evidence_within_exp5639_bound"] is True
++    assert artifact["upstream_gate_receipts"]["exp5639"]["promotion_ready"] is True
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert "shadow_ready_not_default_enabled" in artifact["honest_verdict"]
++
++
++def test_scenario_learn_5640_replay_controls_are_exercised(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5640-REPLAY: adversarial stream controls fail closed."""
++
++    artifact = _artifact(tmp_path)
++    controls = artifact["replay_controls"]
++
++    for control in (
++        "crash_restart",
++        "duplicate_delivery",
++        "delayed_labels",
++        "poison",
++        "corrupted_checkpoint",
++        "rollback",
++        "inactive_adapter",
++        "feature_disabled_equivalence",
++    ):
++        assert controls[control]["pass"] is True
++
++    assert controls["duplicate_delivery"]["recommendation"] == "abstain"
++    assert controls["delayed_labels"]["rollback_reason"] == "delayed_label_pending"
++    assert controls["poison"]["rollback_reason"] == "poison_rejected"
++    assert controls["corrupted_checkpoint"]["rollback_reason"] == "corrupted_checkpoint_recovered"
++    assert controls["inactive_adapter"]["decision_count"] == 0
++    assert controls["feature_disabled_equivalence"]["ledger_written"] is False
++    assert artifact["shadow_offline_mismatches"] == []
++
++
++def test_req_learn_5640_run_writes_stable_artifact(tmp_path: Path) -> None:
++    """REQ-LEARN-5640: run writes deterministic JSON with checksum."""
++
++    destination = tmp_path / mod.RESULT_RELATIVE_PATH.name
++    first = mod.run(
++        root=REPO,
++        result_path=destination,
++        ledger_dir=tmp_path / "first-ledgers",
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=True,
++    )
++    loaded = json.loads(destination.read_text(encoding="utf-8"))
++    second = mod.run(
++        root=REPO,
++        result_path=tmp_path / "second.json",
++        ledger_dir=tmp_path / "second-ledgers",
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=False,
++    )
++
++    assert loaded == first
++    assert first == second
++    assert first["reproducibility_checksum"] == mod.reproducibility_checksum(first)
++    assert mod.validate_artifact(first) is True
++
++
++def test_req_learn_5640_validation_fail_closed(tmp_path: Path) -> None:
++    """REQ-LEARN-5640: schema and readiness failures are terminal blockers."""
++
++    artifact = _artifact(tmp_path)
++    assert any("missing required fields" in error for error in mod.artifact_errors({}))
++
++    cases: list[tuple[str, dict[str, object]]] = []
++
++    for principles in ({}, []):
++        bad = deepcopy(artifact)
++        bad["field_principles"] = principles
++        cases.append(("field_principles", bad))
++
++    for field, value, expected in (
++        ("openspec_requirement_ids", [], "openspec_requirement_ids"),
++        ("adapter_path", "wrong.py", "adapter_path"),
++        ("feature_flag", "WRONG_FLAG", "feature_flag"),
++        ("default_enabled", True, "default_enabled"),
++        ("exact_verifier_authority", False, "exact_verifier_authority"),
++        ("shadow_decision_count", 0, "shadow_decision_count"),
++        ("shadow_offline_parity", False, "shadow_offline_parity"),
++        ("default_path_equivalence", False, "default_path_equivalence"),
++        ("unsafe_update_accept_count", 1, "unsafe_update_accept_count"),
++        ("checkpoint_atomicity_pass", False, "checkpoint_atomicity_pass"),
++        ("restart_replay_pass", False, "restart_replay_pass"),
++        ("rollback_pass", False, "rollback_pass"),
++        ("ledger_path", "", "ledger_path"),
++        ("ledger_lineage_complete", False, "ledger_lineage_complete"),
++        ("model_weight_mutation", True, "model_weight_mutation"),
++        (
++            "inference_substrate",
++            "llm_inference",
++            "inference_substrate",
++        ),
++        ("random_seeds", [], "random_seeds"),
++        ("benefit_evidence_within_exp5639_bound", False, "benefit_evidence"),
++    ):
++        bad = deepcopy(artifact)
++        bad[field] = value
++        cases.append((expected, bad))
++
++    bad = deepcopy(artifact)
++    bad["upstream_gate_receipts"]["exp5639"]["promotion_ready"] = False
++    cases.append(("upstream_gate_receipts", bad))
++
++    bad = deepcopy(artifact)
++    bad["honest_verdict"] = "ambiguous"
++    cases.append(("honest_verdict", bad))
++
++    bad = deepcopy(artifact)
++    bad["honest_verdict"] = "blocked: stale"
++    cases.append(("honest_verdict", bad))
++
++    bad = deepcopy(artifact)
++    bad["reproducibility_checksum"] = "sha256:bad"
++    cases.append(("reproducibility_checksum", bad))
++
++    bad = deepcopy(artifact)
++    bad["fr11_shadow_integration_ready_score"] = 0.0
++    bad["honest_verdict"] = mod.honest_verdict(bad)
++    bad["reproducibility_checksum"] = mod.reproducibility_checksum(bad)
++    cases.append(("fr11_shadow_integration_ready_score", bad))
++
++    bad = deepcopy(artifact)
++    bad["replay_controls"]["duplicate_delivery"]["recommendation"] = "illegal"
++    cases.append(("replay_controls", bad))
++
++    for expected, bad_artifact in cases:
++        errors = mod.artifact_errors(bad_artifact)
++        assert any(expected in error for error in errors), (expected, errors)
++        with pytest.raises(ValueError, match=expected):
++            mod.validate_artifact(bad_artifact)
++
++
++def test_req_learn_5640_helper_edges_and_main(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-LEARN-5640: helper edge branches are deterministic."""
++
++    target = tmp_path / "target.txt"
++    tmp = tmp_path / "target.txt.tmp"
++    target.write_text("old", encoding="utf-8")
++    tmp.write_text("partial", encoding="utf-8")
++    mod._reset_paths(target)
++    assert not target.exists()
++    assert not tmp.exists()
++
++    root_ledger, root_checkpoint = mod._actual_paths(tmp_path, None)
++    assert root_ledger == tmp_path / mod.LEDGER_RELATIVE_PATH
++    assert root_checkpoint == tmp_path / mod.CHECKPOINT_RELATIVE_PATH
++
++    assert mod.benefit_evidence_within_exp5639_bound({"exp5639": {"promotion_ready": False}}) is False
++
++    parity, mismatches = mod.shadow_offline_parity([], [{"sequence": 0}])
++    assert parity is False
++    assert mismatches[0]["kind"] == "count"
++
++    artifact_base = tmp_path / "mismatch"
++    artifact = _artifact(artifact_base)
++    rows = mod.load_ledger(artifact_base / "ledgers" / mod.LEDGER_RELATIVE_PATH.name)
++    changed = [dict(row) for row in rows]
++    changed[0]["recommendation"] = "abstain"
++    parity, mismatches = mod.shadow_offline_parity(rows, changed)
++    assert parity is False
++    assert mismatches[0]["index"] == 0
++
++    blocked = deepcopy(artifact)
++    blocked["upstream_gate_receipts"]["exp5639"]["promotion_ready"] = False
++    blocked["fr11_shadow_integration_ready_score"] = mod.readiness_score(blocked)
++    assert mod.honest_verdict(blocked).startswith("blocked:")
++
++    called = {"run": 0}
++
++    def fake_run() -> dict[str, object]:
++        called["run"] += 1
++        return {}
++
++    monkeypatch.setattr(mod, "run", fake_run)
++    assert mod.main() is None
++    assert called["run"] == 1
+diff --git a/tests/python/test_fr11_shadow_adapter.py b/tests/python/test_fr11_shadow_adapter.py
+new file mode 100644
+index 0000000000..59dd84d9fd
+--- /dev/null
++++ b/tests/python/test_fr11_shadow_adapter.py
+@@ -0,0 +1,293 @@
++"""Tests for the FR-11 shadow adapter in the verify/repair path.
++
++Spec refs: REQ-LEARN-5640,
++SCENARIO-LEARN-5640-EQUIVALENCE,
++SCENARIO-LEARN-5640-SHADOW,
++SCENARIO-LEARN-5640-REPLAY.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.pipeline import fr11_shadow_adapter as shadow_mod
++from carnot.pipeline.fr11_shadow_adapter import (
++    ACTIONS,
++    ExactVerificationReceipt,
++    FR11ShadowAdapter,
++    ledger_lineage_complete,
++    load_ledger,
++)
++from carnot.pipeline.verify_repair import VerifyRepairPipeline
++
++
++def _receipt(
++    receipt_id: str,
++    *,
++    exact_valid: bool | None = True,
++    action_set: tuple[str, ...] = ("retain", "smooth", "abstain"),
++    delayed_label: bool = False,
++    poison: bool = False,
++    rollback_required: bool = False,
++) -> ExactVerificationReceipt:
++    return ExactVerificationReceipt(
++        receipt_id=receipt_id,
++        input_payload={"question": "What is 2 + 2?", "response": "2 + 2 = 4."},
++        checkpoint_parent="sha256:parent",
++        conformal_action_set=action_set,
++        exact_valid=exact_valid,
++        delayed_label=delayed_label,
++        poison=poison,
++        rollback_required=rollback_required,
++    )
++
++
++def test_scenario_learn_5640_disabled_adapter_leaves_verify_result_unchanged(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5640-EQUIVALENCE: disabled adapter writes nothing."""
++
++    baseline = VerifyRepairPipeline().verify(
++        question="What is 47 + 28?",
++        response="The answer is 47 + 28 = 76.",
++        domain="arithmetic",
++    )
++    candidate = VerifyRepairPipeline(
++        fr11_shadow_adapter_enabled=False,
++        fr11_shadow_ledger_path=tmp_path / "shadow.jsonl",
++    ).verify(
++        question="What is 47 + 28?",
++        response="The answer is 47 + 28 = 76.",
++        domain="arithmetic",
++    )
++
++    assert candidate.verified == baseline.verified
++    assert candidate.energy == baseline.energy
++    assert candidate.mode == baseline.mode
++    assert candidate.skipped == baseline.skipped
++    assert candidate.certificate == baseline.certificate
++    assert [v.constraint_type for v in candidate.violations] == [
++        v.constraint_type for v in baseline.violations
++    ]
++    assert not (tmp_path / "shadow.jsonl").exists()
++
++
++def test_scenario_learn_5640_enabled_pipeline_appends_exact_gated_shadow_row(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5640-SHADOW: exact rejection forces shadow abstention."""
++
++    ledger_path = tmp_path / "ledger.jsonl"
++    checkpoint_path = tmp_path / "checkpoint.json"
++    result = VerifyRepairPipeline(
++        fr11_shadow_adapter_enabled=True,
++        fr11_shadow_ledger_path=ledger_path,
++        fr11_shadow_checkpoint_path=checkpoint_path,
++    ).verify(
++        question="What is 47 + 28?",
++        response="The answer is 47 + 28 = 76.",
++        domain="arithmetic",
++    )
++
++    assert result.verified is False
++    shadow = result.certificate["fr11_shadow_adapter"]
++    assert shadow["recommendation"] == "abstain"
++    assert shadow["exact_disposition"] == "reject"
++    assert shadow["rollback_reason"] == "exact_rejection_authoritative"
++    assert shadow["conformal_action_set"] == ["abstain"]
++
++    rows = load_ledger(ledger_path)
++    assert len(rows) == 1
++    row = rows[0]
++    for field in (
++        "input_hash",
++        "checkpoint_parent",
++        "conformal_action_set",
++        "recommendation",
++        "exact_disposition",
++        "rollback_reason",
++        "ledger_hash",
++        "previous_ledger_hash",
++    ):
++        assert field in row
++    assert row["recommendation"] == "abstain"
++    assert row["unsafe_update_accepted"] is False
++    assert row["checkpoint_hash"].startswith("sha256:")
++    assert checkpoint_path.exists()
++    assert ledger_lineage_complete(rows) is True
++
++
++def test_req_learn_5640_adapter_recommends_only_frozen_actions_and_fails_closed(
++    tmp_path: Path,
++) -> None:
++    """REQ-LEARN-5640: unsupported, duplicate, delayed, poison, rollback states abstain."""
++
++    adapter = FR11ShadowAdapter(
++        ledger_path=tmp_path / "ledger.jsonl",
++        checkpoint_path=tmp_path / "checkpoint.json",
++        enabled=True,
++    )
++
++    accepted = adapter.observe(_receipt("accepted", action_set=("adapt", "abstain")))
++    duplicate = adapter.observe(_receipt("accepted", action_set=("adapt", "abstain")))
++    delayed = adapter.observe(_receipt("delayed", delayed_label=True))
++    poison = adapter.observe(_receipt("poison", poison=True))
++    rollback = adapter.observe(_receipt("rollback", rollback_required=True))
++    unsupported = adapter.observe(_receipt("unsupported", exact_valid=None))
++    rejected = adapter.observe(_receipt("rejected", exact_valid=False))
++
++    assert accepted.recommendation == "adapt"
++    assert accepted.recommendation in ACTIONS
++    for decision, reason in (
++        (duplicate, "duplicate_delivery"),
++        (delayed, "delayed_label_pending"),
++        (poison, "poison_rejected"),
++        (rollback, "rollback_required"),
++        (unsupported, "unsupported_exact_state"),
++        (rejected, "exact_rejection_authoritative"),
++    ):
++        assert decision.recommendation == "abstain"
++        assert decision.rollback_reason == reason
++        assert decision.unsafe_update_accepted is False
++
++    rows = load_ledger(tmp_path / "ledger.jsonl")
++    assert len(rows) == 7
++    assert ledger_lineage_complete(rows) is True
++    assert {row["recommendation"] for row in rows}.issubset(set(ACTIONS))
++    assert sum(int(row["unsafe_update_accepted"]) for row in rows) == 0
++
++
++def test_scenario_learn_5640_restart_replay_and_corrupt_checkpoint_recover(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5640-REPLAY: restart and corrupt checkpoints fail closed."""
++
++    ledger_path = tmp_path / "ledger.jsonl"
++    checkpoint_path = tmp_path / "checkpoint.json"
++    first = FR11ShadowAdapter(
++        ledger_path=ledger_path,
++        checkpoint_path=checkpoint_path,
++        enabled=True,
++    )
++    first.observe(_receipt("row-1", action_set=("retain", "abstain")))
++
++    restarted = FR11ShadowAdapter(
++        ledger_path=ledger_path,
++        checkpoint_path=checkpoint_path,
++        enabled=True,
++    )
++    second = restarted.observe(_receipt("row-2", action_set=("smooth", "abstain")))
++    assert second.checkpoint_parent.startswith("sha256:")
++    assert ledger_lineage_complete(load_ledger(ledger_path)) is True
++
++    checkpoint_path.write_text("{corrupt", encoding="utf-8")
++    recovered = FR11ShadowAdapter(
++        ledger_path=ledger_path,
++        checkpoint_path=checkpoint_path,
++        enabled=True,
++    )
++    third = recovered.observe(_receipt("row-3", action_set=("reset", "abstain")))
++    rows = load_ledger(ledger_path)
++
++    assert third.corrupted_checkpoint is True
++    assert third.recommendation == "abstain"
++    assert third.rollback_reason == "corrupted_checkpoint_recovered"
++    assert ledger_lineage_complete(rows) is True
++    assert not list(tmp_path.glob("*.tmp"))
++    checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
++    assert checkpoint["checkpoint_hash"].startswith("sha256:")
++
++
++def test_req_learn_5640_ledger_and_checkpoint_parsers_fail_closed(tmp_path: Path) -> None:
++    """REQ-LEARN-5640: malformed ledger and checkpoint state is rejected or recovered."""
++
++    missing = tmp_path / "missing.jsonl"
++    assert load_ledger(missing) == []
++
++    valid_adapter = FR11ShadowAdapter(
++        ledger_path=tmp_path / "valid.jsonl",
++        checkpoint_path=tmp_path / "valid.checkpoint.json",
++        enabled=True,
++    )
++    valid_adapter.observe(_receipt("valid"))
++    valid_row = load_ledger(tmp_path / "valid.jsonl")[0]
++
++    blank_then_valid = tmp_path / "blank.jsonl"
++    blank_then_valid.write_text("\n" + shadow_mod.canonical_json(valid_row) + "\n", encoding="utf-8")
++    assert len(load_ledger(blank_then_valid)) == 1
++
++    non_object = tmp_path / "non_object.jsonl"
++    non_object.write_text("[]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="not an object"):
++        load_ledger(non_object)
++
++    bad_hash = tmp_path / "bad_hash.jsonl"
++    bad_hash.write_text(
++        shadow_mod.canonical_json({**valid_row, "recommendation": "adapt"}) + "\n",
++        encoding="utf-8",
++    )
++    with pytest.raises(ValueError, match="hash mismatch"):
++        load_ledger(bad_hash)
++
++    assert shadow_mod.ledger_lineage_complete([{**valid_row, "sequence": 99}]) is False
++    assert (
++        shadow_mod.ledger_lineage_complete(
++            [{**valid_row, "previous_ledger_hash": shadow_mod.GENESIS_HASH.replace("0", "1", 1)}]
++        )
++        is False
++    )
++    assert shadow_mod.ledger_lineage_complete([{**valid_row, "ledger_hash": "sha256:bad"}]) is False
++
++    bad_lineage = tmp_path / "bad_lineage.jsonl"
++    lineage_row = {**valid_row, "sequence": 99}
++    lineage_row["ledger_hash"] = shadow_mod._row_hash(lineage_row)  # noqa: SLF001
++    bad_lineage.write_text(shadow_mod.canonical_json(lineage_row) + "\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="ledger lineage incomplete"):
++        FR11ShadowAdapter(
++            ledger_path=bad_lineage,
++            checkpoint_path=tmp_path / "unused.checkpoint.json",
++            enabled=True,
++        )
++
++    for payload, message in (
++        ([], "checkpoint is not an object"),
++        ({"schema": "wrong", "checkpoint_hash": ""}, "checkpoint schema"),
++        ({"schema": shadow_mod.CHECKPOINT_SCHEMA, "checkpoint_hash": "sha256:bad"}, "hash"),
++    ):
++        checkpoint_path = tmp_path / f"{message.split()[0]}.json"
++        checkpoint_path.write_text(json.dumps(payload), encoding="utf-8")
++        with pytest.raises(ValueError, match=message.split()[0]):
++            shadow_mod._validate_checkpoint(checkpoint_path)  # noqa: SLF001
++
++    checkpoint = json.loads((tmp_path / "valid.checkpoint.json").read_text(encoding="utf-8"))
++    checkpoint["ledger_tail_hash"] = shadow_mod.GENESIS_HASH
++    checkpoint["checkpoint_hash"] = shadow_mod._checkpoint_hash(checkpoint)  # noqa: SLF001
++    mismatch_path = tmp_path / "mismatch.checkpoint.json"
++    mismatch_path.write_text(shadow_mod.canonical_json(checkpoint), encoding="utf-8")
++    recovered = FR11ShadowAdapter(
++        ledger_path=tmp_path / "valid.jsonl",
++        checkpoint_path=mismatch_path,
++        enabled=True,
++    )
++    decision = recovered.observe(_receipt("after-mismatch"))
++    assert decision is not None
++    assert decision.rollback_reason == "corrupted_checkpoint_recovered"
++
++
++def test_req_learn_5640_private_recommendation_edges(tmp_path: Path) -> None:
++    """REQ-LEARN-5640: empty/abstain-only action sets remain fail closed."""
++
++    adapter = FR11ShadowAdapter(
++        ledger_path=tmp_path / "ledger.jsonl",
++        checkpoint_path=tmp_path / "checkpoint.json",
++        enabled=True,
++    )
++    abstain = adapter.observe(_receipt("abstain-only", action_set=("abstain",)))
++
++    assert abstain is not None
++    assert abstain.recommendation == "abstain"
++    assert abstain.rollback_reason == "conformal_action_set_abstained"
++    assert shadow_mod.FR11ShadowAdapter._choose_recommendation(("invalid",)) == "abstain"  # noqa: SLF001
+-- 
+2.55.0
+

@@ -1,0 +1,64 @@
+From 816acb64c62c2770aeb6d0174e9be95839d38168 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 16:58:10 -0400
+Subject: [PATCH 03307/11362] [outer-loop] arc: per-cell change-weighted loss
+ (fix identity collapse on real 64x64 games)
+
+The residual head still read 0/5 because the KEEP class is ~4000:1 dominant at 64x64 -> unweighted
+cross-entropy collapsed the net to predict KEEP everywhere = identity = 0% on changing transitions
+(verified: cd82 91/91, ka59 120/120 predicted-identity). The gravity toy survived only because 6x6 is
+~17:1. Fix: per-cell loss weight (change_weight=40) upweights the CHANGED cells so the net must model them.
+
+Verified: identity collapse broken -- cd82 91->8 (cell-recall 0->0.23), ka59 120->1 (cell-recall 0->0.58,
+exact-match 0->16% on changing transitions). Real learning now. 5 tests green; gravity toy still learns.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ python/carnot/agentic/arc_live_ttt.py | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_live_ttt.py b/python/carnot/agentic/arc_live_ttt.py
+index b2f0db25e1..9947bc8a2f 100644
+--- a/python/carnot/agentic/arc_live_ttt.py
++++ b/python/carnot/agentic/arc_live_ttt.py
+@@ -59,11 +59,16 @@ class CNNDynamics:
+     cross-entropy; predict = argmax per cell. Oracle-DISTINCT (a learned net, not the executable oracle).
+     torch is imported LAZILY so the rule-only path needs no torch."""
+ 
+-    def __init__(self, game: str = "?", *, epochs: int = 400, lr: float = 5e-3, hidden: int = 48) -> None:
++    def __init__(self, game: str = "?", *, epochs: int = 400, lr: float = 5e-3, hidden: int = 48,
++                 change_weight: float = 40.0) -> None:
+         self.game = game
+         self.epochs = int(epochs)
+         self.lr = float(lr)
+         self.hidden = int(hidden)
++        # per-cell loss weight on CHANGED cells (target != KEEP). The KEEP class is ~4000:1 dominant at
++        # 64x64, so unweighted cross-entropy collapses the net to "predict KEEP everywhere" = identity =
++        # 0% on changing transitions (verified). Upweighting the change forces the net to model it.
++        self.change_weight = float(change_weight)
+         self._net: Any = None
+         self._shape: Optional[tuple] = None  # (H, W) the net was trained at
+ 
+@@ -128,7 +133,7 @@ class CNNDynamics:
+         if warm_state is not None:
+             net.load_state_dict(warm_state)
+         opt = torch.optim.Adam(net.parameters(), lr=self.lr)
+-        loss_fn = torch.nn.CrossEntropyLoss()
++        loss_fn = torch.nn.CrossEntropyLoss(reduction="none")
+         n = len(items)
+         net.train()
+         for _ in range(int(epochs if epochs is not None else self.epochs)):
+@@ -140,7 +145,9 @@ class CNNDynamics:
+                 yb = torch.stack([torch.from_numpy(self._residual_target(items[j][0], items[j][2]))
+                                   for j in idx])  # residual/KEEP target (0=keep, 1..16=set colour)
+                 opt.zero_grad()
+-                loss = loss_fn(net(xb), yb)
++                ce = loss_fn(net(xb), yb)                                  # [B, H, W] per-cell loss
++                w = torch.where(yb > 0, self.change_weight, 1.0)           # upweight CHANGED cells
++                loss = (ce * w).sum() / w.sum()
+                 loss.backward()
+                 opt.step()
+         net.eval()
+-- 
+2.55.0
+

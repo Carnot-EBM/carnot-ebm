@@ -1,0 +1,87 @@
+From 291c34f019a07f8bdcc5c8235075a87aac2a0b0c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 23:48:02 -0400
+Subject: [PATCH 07956/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html                                 |  2 +-
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...iment_5931_v526_capstone_reconciliation.json | 17 +++++++++++++++--
+ 5 files changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 394aadeec5..b05681ef96 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,248</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,264</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2b5200db7c..193afc84b6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1187494, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-07-26T03:25:59Z"}
+\ No newline at end of file
++{"pid": 1187494, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-07-26T03:45:45Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 2177b42fa2..6c9f08c03f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14309,3 +14309,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-26 03:04 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:    )
+ +    live |
+ | 2026-07-26 03:23 UTC | Gated on Exp5926 ready: adaptive-state ABI v2 atta | OK | 134 passed, 1 warning in 9.49s |
++| 2026-07-26 03:43 UTC | Branch-independent .526 capstone and exact reconci | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9685d79e9a..9c25222f79 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1187494, "iteration": 7, "phase": "iteration_start", "started_at": "2026-07-26T03:25:59Z"}
+\ No newline at end of file
++{"pid": 1187494, "iteration": 8, "phase": "iteration_start", "started_at": "2026-07-26T03:45:45Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5931_v526_capstone_reconciliation.json b/results/experiment_5931_v526_capstone_reconciliation.json
+index 01b1242df3..600875699b 100644
+--- a/results/experiment_5931_v526_capstone_reconciliation.json
++++ b/results/experiment_5931_v526_capstone_reconciliation.json
+@@ -4140,5 +4140,18 @@
+     "principle": "Transition blockage and source-refresh nulls are separate receipts, not milestone-wide conclusions.",
+     "source_null_is_not_no_change_to_all_branches": true,
+     "transition_blockage_is_not_milestone_wide": true
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=5.966263 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

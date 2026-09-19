@@ -1,0 +1,118 @@
+From 30e561dc81ccff2540ddbe0094de2b26c8409d76 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 02:58:43 -0400
+Subject: [PATCH 09993/11362] [conductor] Pre-gate block: Bounded Qwen3.6
+ direct-headroom requalification
+
+1 of 1 gate(s) failed; first failure: exp6621-mandated-model-admission.qwen_admission_ready_score (upstream artifact not found for task id 'exp6621-mandated-model-admission')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                  |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 +
+ ops/conductor-state.json                      |  2 +-
+ ...xperiment_6622_qwen36_direct_headroom.json | 51 +++++++++++++++++++
+ 5 files changed, 56 insertions(+), 3 deletions(-)
+ create mode 100644 results/experiment_6622_qwen36_direct_headroom.json
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index d83bddde2f..d166046259 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T06:56:39Z"
++ "last_scan_utc": "2026-08-26T06:58:43Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5215c4451a..892d5f2816 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-26T06:56:39Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-26T06:58:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c251a47cfc..e1e4b3f5d4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16519,3 +16519,5 @@ code |
+ | 2026-08-26 06:50 UTC | Complete V578 activation and gate-ownership contra | OK | 91 passed, 1 warning in 11.92s |
+ | 2026-08-26 06:52 UTC | Task-scoped GPU lease and phase receipt implementa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
+ | 2026-08-26 06:54 UTC | Task-scoped GPU lease and phase receipt implementa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
++| 2026-08-26 06:56 UTC | Task-scoped GPU lease and phase receipt implementa | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
++| 2026-08-26 06:58 UTC | Independent mandated-model CUDA admission canaries | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6620-gpu-lease-phase-receipts) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2b1e5e79c2..5586a1563d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-26T06:56:39Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-26T06:58:42Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6622_qwen36_direct_headroom.json b/results/experiment_6622_qwen36_direct_headroom.json
+new file mode 100644
+index 0000000000..5121a05f6a
+--- /dev/null
++++ b/results/experiment_6622_qwen36_direct_headroom.json
+@@ -0,0 +1,51 @@
++{
++  "experiment": 6622,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-26",
++  "started_at": "2026-08-26T06:58:43.347336+00:00",
++  "finished_at": "2026-08-26T06:58:43.347336+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Bounded Qwen3.6 direct-headroom requalification",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "upstream artifact not found for task id 'exp6621-mandated-model-admission'",
++  "failed_upstream": "exp6621-mandated-model-admission",
++  "failed_field": "qwen_admission_ready_score",
++  "failed_operator": "==",
++  "failed_expected": 1.0,
++  "failed_expected_type": "float",
++  "failed_observed": null,
++  "failed_observed_type": "null",
++  "failed_evidence_path": null,
++  "failed_evidence_sha256": null,
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "upstream artifact not found for task id 'exp6621-mandated-model-admission'",
++    "failed_upstream": "exp6621-mandated-model-admission",
++    "failed_field": "qwen_admission_ready_score",
++    "failed_operator": "==",
++    "failed_expected": 1.0,
++    "failed_expected_type": "float",
++    "failed_observed": null,
++    "failed_observed_type": "null",
++    "failed_evidence_path": null,
++    "failed_evidence_sha256": null
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6621-mandated-model-admission.qwen_admission_ready_score (upstream artifact not found for task id 'exp6621-mandated-model-admission')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6621-mandated-model-admission",
++      "artifact_field": "qwen_admission_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "expected_type": "float",
++      "actual": null,
++      "actual_type": "null",
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6621-mandated-model-admission'",
++      "artifact_path": null,
++      "artifact_sha256": null
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

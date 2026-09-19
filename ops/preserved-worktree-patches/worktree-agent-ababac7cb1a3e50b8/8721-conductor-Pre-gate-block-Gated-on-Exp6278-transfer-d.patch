@@ -1,0 +1,62 @@
+From e8e91555812fd5fee72948e255ea155403306a16 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 10 Aug 2026 11:20:03 -0400
+Subject: [PATCH 08721/11362] [conductor] Pre-gate block: Gated on Exp6278
+ transfer: default-off certified-memory shadow consumer
+
+1 of 1 gate(s) failed; first failure: exp6278-model-family-task-holdout-csl-audit.heldout_certified_transfer_ready_score (upstream artifact not found for task id 'exp6278-model-family-task-holdout-csl-audit')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 2 ++
+ ops/conductor-state.json                                      | 2 +-
+ results/experiment_6279_certified_memory_shadow_consumer.json | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2fd0550ce6..2c2781b636 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-08-10T15:18:00Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-08-10T15:20:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ce0df71a4a..1175b78f58 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15609,3 +15609,5 @@ Still active  |
+ | 2026-08-10 15:13 UTC | Gated on Exp6276 certificate: chronological contin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer |
+ | 2026-08-10 15:16 UTC | Gated on Exp6276 certificate: chronological contin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6276-certified-dual-cache-admission.cer |
+ | 2026-08-10 15:18 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |
++| 2026-08-10 15:18 UTC | Gated on Exp6278 transfer: default-off certified-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6278-model-family-task-holdout-csl-audi |
++| 2026-08-10 15:20 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5693513297..8ae92bc71c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 30, "phase": "iteration_start", "started_at": "2026-08-10T15:18:00Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 31, "phase": "iteration_start", "started_at": "2026-08-10T15:20:03Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6279_certified_memory_shadow_consumer.json b/results/experiment_6279_certified_memory_shadow_consumer.json
+index 2dce53716d..f1881e452e 100644
+--- a/results/experiment_6279_certified_memory_shadow_consumer.json
++++ b/results/experiment_6279_certified_memory_shadow_consumer.json
+@@ -2,8 +2,8 @@
+   "experiment": 6279,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-10",
+-  "started_at": "2026-08-10T15:18:00.425597+00:00",
+-  "finished_at": "2026-08-10T15:18:00.425597+00:00",
++  "started_at": "2026-08-10T15:20:03.069339+00:00",
++  "finished_at": "2026-08-10T15:20:03.069339+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6278 transfer: default-off certified-memory shadow consumer",
+-- 
+2.55.0
+

@@ -1,0 +1,1931 @@
+From 23daf64bf2361b53a2c35b613139b7fa25f9712a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 00:47:39 -0400
+Subject: [PATCH 11153/11362] [worktree] Read the redirect ledger against its
+ own control (REQ-ARC-WMTE-7030/7031/7032)
+
+Round two of the ARC live-agent evaluation. Measured first, on the ledger as
+merged 2026-09-04 (14 receipts, 31 redirects) and the 14 eval artifacts in
+results/arc_leaderboard_eval_runs/ (28 rows), all read-only.
+
+What was wrong, and is now fixed:
+
+1. The new-arm trigger was narrower than its concept (REQ-7030). It compared
+   the fired arms against set(ARM_ORDER), which holds the env-gated,
+   default-OFF tool rung (REQ-6760, 2026-08-29). A default run could never
+   satisfy it. It reported 1 exhausted cell (11 windows) and hid 4 cells
+   (53 of 64 unredirected windows). The receipt now names `arms_enabled`
+   and the trigger reads that set; legacy rows fall back to the three
+   default-on arms. Re-ingest: 5 cells, 64 windows.
+
+2. The count said "propose an arm" 64 times without saying why the table
+   ran dry (REQ-7031). Every exhausted window now records the state the
+   supervisor saw: spent arms, attempt-cap and evidence-floor flags, goal
+   bias, diversity. Bounded at 64 rows per receipt with a dropped counter.
+   The ledger keeps the rows; each cell carries a per-flag summary; the
+   heartbeat shows the count in flight.
+
+3. Shadow receipts were counted and thrown away (REQ-7032). The shadow run
+   r11l-3114878 leveled up at action 813 with nothing applied, and its
+   would-have rows at 120/240/360 carry the same 765/645/525 that four
+   applied runs booked as `helped`. Shadow receipts now ingest into a
+   separate `controls` pool (never `entries`; REQ-6720 rule 1 holds). A
+   credit a control reproduces reads `control_matched`; the report shows
+   `helped_beyond_control`. On the live ledger: 12 of 19 credits are
+   matched; 2/2/2/1 remain across the four arms. The frozen rules still
+   key on pooled `helped` (as REQ-7013-D recorded).
+
+Null results, stated as such: `co_credited_count` / `arm_credit` appear in
+0 of 28 eval rows (the one post-merge run started before the merge), so
+retire-or-promote by sole credit is not decidable on any existing evidence.
+0 of 28 rows carry wall_s, run_envelope or solve_provenance: no run has
+exercised the 2026-09-04/05 instrumentation yet.
+
+Deliberately not done: no fifth arm (every cell is a legacy row with no
+recorded exhaustion state; the candidates are ranked in the note for the
+operator), no arm retired or promoted, no GPU run, no change to the
+planning gate.
+
+Proof: 21 tests (20 in test_arc_supervisor_exhaustion_20260905.py, 1 in
+the heartbeat file, placed there because importing the eval script inside
+a test trips the memory watchdog). 12 of 12 mutations RED with sha256
+byte-identical restores, scored only after a green unmutated baseline and
+re-confirmed green after the last restore. Step 6 of the error lifecycle:
+the widened trigger IS the check; the exhaustion rows make the next
+"propose an arm" decision rest on recorded state, not a hand-read receipt.
+
+Mutation-gate markers retired deliberately (two, both gitignored under
+ops/.test_suite_mutation_runs/). Each listed only paths the gate itself
+marked [NOT this run]: spec.md edited by hand while the mutation harness
+ran its pytest windows; the ledger re-ingested by the refine CLI, and
+changelog.md and status.md edited by hand, while the whole-tree
+--collect-only ran. No test wrote any of them. The ledger diff was checked
+against HEAD: all 14 entries byte-equal, only the `controls` key added.
+
+Whole-tree --collect-only: 61,601 tests, 7 collection errors, none in this
+change: 4 x `No module named carnot._rust` (the PyO3 extension is not built
+under a worktree PYTHONPATH pin) and 3 x the un-collectable
+experiment_6814/6819/6828 test files already known.
+
+Note: docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...haustion-and-shadow-controls-2026-09-05.md | 175 ++++++
+ .../arc-world-model-trust-energy/spec.md      | 120 ++++
+ ops/arc_supervisor_refinement_ledger.json     | 178 +++++-
+ ops/changelog.md                              |  34 ++
+ ops/metrics.md                                |  13 +
+ ops/status.md                                 |  53 ++
+ .../carnot/agentic/arc_competition_agent.py   |   3 +
+ .../agentic/arc_supervisor_refinement.py      | 234 +++++++-
+ .../agentic/arc_trajectory_supervisor.py      |  63 ++
+ scripts/arc_leaderboard_eval.py               |   4 +
+ ...st_arc_eval_progress_heartbeat_20260904.py |  38 ++
+ ...test_arc_supervisor_exhaustion_20260905.py | 561 ++++++++++++++++++
+ 12 files changed, 1459 insertions(+), 17 deletions(-)
+ create mode 100644 docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md
+ create mode 100644 tests/python/test_arc_supervisor_exhaustion_20260905.py
+
+diff --git a/docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md b/docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md
+new file mode 100644
+index 0000000000..f27e1d4719
+--- /dev/null
++++ b/docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md
+@@ -0,0 +1,175 @@
++# ARC live agent, round two: the redirect ledger read against its own controls — 2026-09-05
++
++Written by a worktree agent under the 2026-09-05 brief "evaluate the ARC-AGI-3 live agent and
++implement improvements to efficiency, iteration velocity, accuracy, unattended
++self-improvement, and supervisor refinement". The 2026-09-04 four-axis baseline
++(`arc-live-agent-baseline-four-axes-2026-09-04.md`) is not repeated here. Every number names
++its population. "Measured" means computed in this session from files on disk; "read" means
++copied from a recorded artifact.
++
++## 1. What was measured
++
++Population A: `ops/arc_supervisor_refinement_ledger.json` as merged on 2026-09-04 21:28Z,
++14 receipts and 31 redirects. Population B: the 14 files in
++`results/arc_leaderboard_eval_runs/` (13 complete or partial eval artifacts plus one sweep
++partial), 28 game rows. Both read-only.
++
++### 1.1 Where the 64 unredirected windows live
++
++| receipts | source shape | window | unredirected windows |
++|---|---|---|---|
++| 9 | harness `rows.json` (ar25, tu93; 2026-08-27) | 400 or 120 | 0 |
++| 5 | live eval `per_game` (r11l x4, cd82 x1; all seed 20260719) | 120 | 64 (13, 14, 14, 11, 12) |
++
++Every one of the 64 sits in a receipt where the three default-on arms all fired. Only ONE of
++the five (`r11l-1594772`) also fired `tool_loop_reinduction`, because only that run set
++`CARNOT_ARC_SUPERVISOR_TOOL_ARM=1`.
++
++### 1.2 The new-arm trigger was narrower than its concept
++
++`_new_arm_cells` required `set(ARM_ORDER) <= arms_fired`. `ARM_ORDER` gained the env-gated,
++default-OFF tool rung on 2026-08-29 (REQ-ARC-WMTE-6760). The spec's own scenario
++(SCENARIO-ARC-WMTE-6720-6) still says "all three arms fired". So a default run could never
++satisfy the trigger, however long it stagnated.
++
++Measured on population A: the trigger admitted 1 cell (11 windows) and hid 4 cells (53 of 64
++windows). The number the brief cites as "the written specification for a new arm" was, for 83
++percent of its weight, invisible to the tool that writes that specification.
++
++### 1.3 No receipt says why the table ran dry
++
++`stagnations_unredirected` is a count. Reading `r11l-1594772` by hand: on level 0 the four arms
++fired at actions 120/240/360/480 and the level-up came at 813, so two windows passed with every
++arm spent. On level 2 the ladder had only three rungs, because the level-0
++`force_exploration_diversity` arm left `_hybrid_diversity=True` on the explorer and the arm is
++ineligible while diversity is active. Three arms fired at 1130/1250/1370; then about nine
++windows passed with `induction_attempts` at the cap of 3, no goal bias installed, and
++diversity already on. None of that is in the receipt. A human asked to "propose one new arm"
++had a count and no state.
++
++### 1.4 A control now exists, and it says the level-0 credits are base rate
++
++`r11l-3114878` (2026-09-04) ran in SHADOW mode: the supervisor observed and applied nothing.
++Read from its `would_have_redirects`:
++
++| arm | would have fired at | level-up followed | actions to level-up |
++|---|---|---|---|
++| drop_goal_bias | 120 | yes | 765 |
++| force_exploration_diversity | 240 | yes | 645 |
++| allow_reinduction | 360 | yes | 525 |
++
++The four APPLIED r11l runs credit the same three arms at the same actions with the same
++765 / 645 / 525 (768 / 648 / 528 on one run). The level-0 level-up lands at action 813 to 815
++in all five runs, applied or not. So 12 of the 19 `helped` credits in the ledger are exactly
++reproduced by a run that pulled no lever.
++
++This is the "control-arm (shadow) estimator" the 2026-09-04 note said did not exist yet. It
++exists now, and the refinement tool ignored it: shadow rows were counted and discarded.
++
++### 1.5 The 7013 credit split has an empty population
++
++`co_credited_count` and `arm_credit` (REQ-ARC-WMTE-7013) appear in ZERO rows of population B.
++The one run that finished after the merge (`r11l-3114878`) started at 21:23Z, before the merge
++landed, and carries neither field. So `helped_sole` and `helped_share` read 0 on every arm, and
++the brief's instruction to retire or promote arms by sole credit cannot be executed on any
++evidence that exists. That is a null result, stated as one. The earliest it changes is after an
++APPLIED-mode run with the merged code.
++
++### 1.6 Other facts read from population B
++
++- 0 of 28 rows carry `wall_s`, `run_envelope`, or `solve_provenance`. The heartbeat and
++  envelope code shipped 2026-09-04 and 2026-09-05; no run has exercised them.
++- 8 rows (the sweep partial) carry an `{"error": ...}` supervisor marker; 11 rows carry no
++  supervisor field at all (runs from before the receipt was wired).
++
++## 2. What changed
++
++| REQ | change | tests |
++|---|---|---|
++| REQ-ARC-WMTE-7030 | the receipt names `arms_enabled`; the refinement trigger reads that set (legacy rows fall back to the three default-on arms); cells name their source | 6 |
++| REQ-ARC-WMTE-7031 | every exhausted window records the state the table saw (spent arms, cap and floor flags, bias, diversity), bounded at 64 with a dropped counter; the ledger keeps the rows; the cell carries a per-flag summary; the heartbeat shows the count in flight | 7 + 1 |
++| REQ-ARC-WMTE-7032 | shadow receipts ingest into a separate `controls` pool, never `entries`; a credit is `control_matched` when a shadow run in the same (game, seed, window, level) leveled up after the same arm would have fired; the report shows `helped_beyond_control`; the frozen rules still key on pooled `helped` | 6 |
++
++Effect on the live ledger after re-ingest: see section 4.
++
++## 3. What was deliberately not done
++
++- **No new arm was added to `ARM_ORDER`.** The brief allows it if the specification is sound.
++  It is not yet sound: every existing cell is a legacy row with no exhaustion state, and the one
++  hand-read (section 1.3) shows the level-2 exhaustion happened with the attempt cap reached and
++  diversity already on. The candidate arms that remain on the live path each change what the
++  scored agent does with its generator or its trust gate. That is an operator decision; the
++  proposal is in the handoff.
++- **No retirement or promotion of an arm.** Section 1.5: the sole-credit population is empty.
++  Section 1.4: the pooled credits are dominated by one deterministic level-0 event.
++- **No GPU run.** A run that exercises the heartbeat, the envelope and the new receipt fields
++  is a multi-hour commitment. Proposed, not started.
++- **No change to `min_heldout_accuracy=1.0`** (the planning gate) and no engine work.
++
++## 4. The ledger after re-ingest
++
++Re-ingested from `results/arc_leaderboard_eval_runs/` (read-only) into the worktree copy of
++`ops/arc_supervisor_refinement_ledger.json` with the new reader. Entries and redirects are
++unchanged (14 and 31: no row was added or double-counted). What changed is what the tool can
++see:
++
++| quantity | before | after |
++|---|---|---|
++| new-arm cells | 1 (11 windows) | 5 (64 windows), every one `legacy_default`, every one `states: not_recorded` |
++| controls | none kept | 1 (the r11l shadow run) |
++| credits matched by a control | not computed | 12 of 19 |
++| `helped_beyond_control` per arm | not computed | drop_goal_bias 2, allow_reinduction 2, force_exploration_diversity 2, tool_loop_reinduction 1 |
++
++The 2-2-2-1 remainder is the cd82 level-0 credits (651 / 531 / 411), the tu93 harness credits
++(233 / 113 / 63), and the one tool-rung credit; none of those cells has a shadow control yet.
++The frozen rules did not move: no `retire_candidate`, no `raise_priority_candidate`. Both the
++exhaustion states and the sole-credit split stay empty until a run with the merged code
++finishes, which is the GPU run proposed in the handoff.
++
++## 5. Proposal for the operator: the fifth arm
++
++The state a human can read today (section 1.3, one cell, by hand) is: goal bias dropped,
++re-induction spent to the cap of 3, tool loop spent, diversity already on, about 900 actions
++of level-2 stagnation left in the budget. Three levers exist on the live path and each is a
++judgement call:
++
++1. **`plan_with_best_partial_model`.** The planning gate is `min_heldout_accuracy=1.0` and the
++   best engine ever scored reads 0.672 exact on held-out transitions. An arm that, once every
++   other rung is spent, lets `plan_in_model` run ONE plan from the best archived engine below
++   the gate would spend actions on a plan the real env then verifies. It changes what
++   "trusted" means for one attempt. Highest plausible value; needs the operator.
++2. **`widen_diversity_draw`.** Raise `_div_topk` (8) so the randomized draw covers more of the
++   frontier. Search-side only; measurable offline with the LLM off in seconds per run.
++3. **`reset_and_replay`.** Force a level reset with a different prefix. Cheap; the explorer
++   already resets on its own, so the marginal value is unclear.
++
++Recommendation: implement (2) first as an offline LLM-off A/B on r11l and cd82 (window 120,
++applied mode, several seeds), because it is the only one this project can measure without a
++GPU hour. Bring (1) to the operator with the exhaustion states from the first post-merge run,
++so the decision rests on recorded state rather than one hand-read receipt.
++
++## 6. An LLM-off smoke run through the scored eval (measured, not evidence)
++
++One run of `scripts/arc_leaderboard_eval.py --only r11l --policy e3 --budget 1500` with
++`CARNOT_ARC_DISABLE_INDUCTION=1`, in the worktree, through a read-only symlink to the main
++checkout's `environment_files/`. The record landed in the worktree's gitignored runs directory
++and was copied to session scratch; it is a smoke run, not an evidence artifact, and it was not
++committed. One game, one seed (20260719), one run.
++
++| quantity | value |
++|---|---|
++| wall clock | 7.8 s process, `wall_s: 5.094` on the row |
++| actions | 1,407; level 0 completed at action 776; level 1 not completed in 631 |
++| heartbeat | 18 distinct snapshots captured at a 50 ms poll; `writes: 22`; `progress_write_errors: 0`; file removed at the end |
++| events captured | `periodic`, `induction_attempt_recorded`, `end` (the `level_up` write was overwritten before the next poll; `level_up_actions: [776]` persisted in every later snapshot) |
++| receipt (shadow) | `arms_enabled` = the three default-on arms; 5 would-have redirects (120/240/360 on level 0, 966/1086 on level 1); `stagnations_unredirected: 7`; 7 window rows, 0 dropped |
++| window rows | level 0 at 480/600/720/840 with `goal_bias_installed: true` (the drop was counterfactual in shadow mode) and the cap not reached; level 1 at 1206/1326/1446 with no bias |
++| envelope | present; every GPU field an honest none (LLM off); `solve_provenance: live_agent_self_discovery` |
++
++Two things this says. First, every field shipped on 2026-09-04 and 2026-09-05 (REQ-7010,
++7021, 7022, 7030, 7031) is now exercised by a real run of the scored script, in shadow mode,
++without a GPU. Second, and new: **r11l level 0 is cleared by the classical path alone, at
++action 776, with the generator disabled.** The LLM-on runs clear it at 813 to 815. So the
++level-0 credits in the ledger were never a generator event either; the control in section
++1.4 and this run agree from two directions. One seed, one run: a fact about this seed, not
++yet a rate.
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index bc23f41c6f..20c8e91143 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -98,6 +98,126 @@ rather than the project's evidence store. Left alone deliberately: the authorize
+ widen the shapes read, and repointing the default root changes which population every past
+ number was drawn from.
+ 
++### REQ-ARC-WMTE-7030: The supervisor receipt SHALL name the arms its run could fire, and the new-arm trigger SHALL read that set
++
++`TrajectorySupervisor.receipt()` SHALL carry `arms_enabled`: the arms the decision table could
++fire in this run, in `ARM_ORDER` order. The set is configuration, not eligibility-by-state: an
++arm that is enabled but ineligible now (no goal bias installed) is still listed. It is
++snapshotted at construction and unioned with every arm that actually fired, so a mid-run
++change to `CARNOT_ARC_SUPERVISOR_TOOL_ARM` cannot hide a firing.
++
++`arc_supervisor_refinement._new_arm_cells` SHALL treat a receipt as exhausted when every arm in
++its `arms_enabled` fired and `stagnations_unredirected > 0`. A row with no `arms_enabled` (written
++before this requirement) SHALL fall back to `LEGACY_DEFAULT_ARMS` (the three default-on arms)
++unioned with the arms it fired. Each cell SHALL name `arms_enabled` and `arms_enabled_source`
++(`receipt` or `legacy_default`). This amends REQ-ARC-WMTE-6720 rule 4, whose "every arm in
++`ARM_ORDER`" wording predates the env-gated fourth rung (REQ-ARC-WMTE-6760).
++
++#### SCENARIO-ARC-WMTE-7030-A: the enabled set follows the tool gate
++- GIVEN `CARNOT_ARC_SUPERVISOR_TOOL_ARM` unset
++- THEN `enabled_arms()` is the three default-on arms; with it set to `"1"`, it is `ARM_ORDER`
++
++#### SCENARIO-ARC-WMTE-7030-B: the receipt carries the set, and a fired arm is always in it
++- GIVEN a supervisor built with the tool rung off that later fires it after an env flip
++- THEN `arms_enabled` reads all four, in `ARM_ORDER` order
++
++#### SCENARIO-ARC-WMTE-7030-C: a legacy row that fired the three default arms is a cell
++- GIVEN a row with no `arms_enabled`, the three default arms fired, and stagnation continued
++- THEN it is a new-arm cell with `arms_enabled_source: legacy_default`
++- AND a row declaring four arms enabled that fired three is NOT a cell
++- AND a row declaring three that fired three IS a cell with source `receipt`
++
++Origin: 2026-09-05. `_new_arm_cells` compared against `set(ARM_ORDER)`. The tool rung was added
++to `ARM_ORDER` on 2026-08-29, default OFF, so a default run could never satisfy the trigger.
++Measured on the ledger as merged 2026-09-04: the trigger reported 1 cell (11 windows) and hid 4
++cells (53 of 64 unredirected windows). The count CLAUDE.md names as the written specification
++for a new arm was, for 83 percent of its weight, invisible to the tool that writes that
++specification. The spec's own SCENARIO-ARC-WMTE-6720-6 still said "all three arms fired".
++
++### REQ-ARC-WMTE-7031: Every exhausted window SHALL record the state the table saw
++
++When a stagnation window fires no arm, `TrajectorySupervisor.observe` SHALL append a row to
++`unredirected_windows` holding `action_index`, `level`, the `arms_used` on this level,
++`goal_bias_installed`, `induced`, `induction_attempts`, `attempt_cap_reached` (against this
++supervisor's own cap), `new_transitions_since_induction`, `evidence_floor_met` (against its own
++floor), and `diversity_active`. The list is bounded at `MAX_UNREDIRECTED_WINDOWS` (64); overflow
++increments `unredirected_windows_dropped` and is never silent. The refinement ledger SHALL keep
++the rows (bounded at the same cap) and each new-arm cell SHALL carry `exhaustion_states`: a
++per-flag count over the rows, or the string `not_recorded` for a legacy row. The heartbeat's
++supervisor block (REQ-ARC-WMTE-7010) SHALL carry `stagnations_unredirected` and
++`unredirected_windows_n`. In shadow mode the key keeps its name, as `stagnations_unredirected`
++already does: the stagnation is real in both modes.
++
++#### SCENARIO-ARC-WMTE-7031-A: an exhausted window records its state
++- GIVEN `drop_goal_bias` fired, then a window with attempts at the cap and diversity on
++- THEN one row reads the spent arm, `attempt_cap_reached: true`, `diversity_active: true`
++- AND a window an arm answers records no row
++
++#### SCENARIO-ARC-WMTE-7031-B: the list is bounded and overflow is counted
++- GIVEN `MAX_UNREDIRECTED_WINDOWS + 5` exhausted windows
++- THEN 64 rows are kept, the count reads 69, and `unredirected_windows_dropped` reads 5
++
++#### SCENARIO-ARC-WMTE-7031-C: the cell summarises the states
++- GIVEN eleven rows, nine at the attempt cap
++- THEN the cell reads `attempt_cap_reached: 9` and the report prints the counts
++- AND a legacy row reads `not_recorded`, never "every flag False"
++
++#### SCENARIO-ARC-WMTE-7031-D: the heartbeat shows the table running dry
++- GIVEN a supervisor with three exhausted windows
++- THEN the progress record's supervisor block reads `stagnations_unredirected: 3`
++
++Origin: 2026-09-05. The count told a human "propose an arm" 64 times without once saying which
++levers were spent and which were never eligible. Read by hand from `r11l-1594772`: on level 2
++the ladder had three rungs, because the level-0 `force_exploration_diversity` arm left
++diversity on and the arm is ineligible while it is; three arms fired at 1130/1250/1370, then
++about nine windows passed with the attempt cap reached. None of that was in the receipt.
++
++### REQ-ARC-WMTE-7032: Shadow receipts SHALL be kept as controls, and credits matched by a control SHALL be shown
++
++`ingest_files` SHALL store a shadow receipt (REQ-ARC-WMTE-6660) in `ledger["controls"]`, keyed
++by the same row hash, holding its `would_have_redirects` with
++`levelup_followed_without_redirect` and `actions_to_levelup_without_redirect`. It SHALL NOT enter
++`entries`; REQ-ARC-WMTE-6720 rule 1 holds unchanged. `evaluate` SHALL mark an applied redirect
++`control_matched` when it was credited AND a control in the same (game, seed, window, level)
++leveled up after the same arm would have fired. Per arm the report SHALL show
++`helped_matched_by_control` and `helped_beyond_control`; the evidence block SHALL show the
++totals. The frozen decision rules SHALL keep reading pooled `helped`; changing a rule is a
++separate spec act, as REQ-ARC-WMTE-7013-D recorded. A ledger written before this requirement
++SHALL load with an empty control pool.
++
++#### SCENARIO-ARC-WMTE-7032-A: shadow rows land in controls, not entries
++- GIVEN a shadow row ingested twice
++- THEN `entries` is empty, `controls` holds one, and the duplicate is counted
++
++#### SCENARIO-ARC-WMTE-7032-B: a credit the control reproduces is matched
++- GIVEN applied credits at level 0 on r11l and a shadow run in the same cell that leveled up
++- THEN those credits read `control_matched`; a credit in a cell with no control, or where the
++  control did not level up, does not
++- AND an unhelped redirect is never matched
++
++#### SCENARIO-ARC-WMTE-7032-C: the frozen rules still key on pooled helped
++- GIVEN ten credits every one of which a control reproduces
++- THEN the arm is not a retire candidate
++
++#### SCENARIO-ARC-WMTE-7032-D: an older ledger loads
++- GIVEN a v1 ledger file with no `controls` key
++- THEN it loads with `controls: {}` and evaluates
++
++Origin: 2026-09-05. `r11l-3114878` ran in shadow mode and leveled up at action 813 with nothing
++applied; its would-have rows at 120/240/360 carry the same 765/645/525 actions-to-level-up that
++four applied runs booked as `helped`. Twelve of the ledger's nineteen credits are reproduced by
++a run that pulled no lever. The tool counted the shadow row and threw it away.
++
++Implementation status (7030, 7031, 7032): implemented 2026-09-05
++(`python/carnot/agentic/arc_trajectory_supervisor.py`: `enabled_arms`, `MAX_UNREDIRECTED_WINDOWS`,
++`_record_unredirected_window`, receipt keys; `python/carnot/agentic/arc_supervisor_refinement.py`:
++`LEGACY_DEFAULT_ARMS`, `enabled_arms_for_entry`, `exhaustion_summary`, `_control_from_row`,
++`_control_index`, the `controls` pool in `ingest_files`/`load_ledger`/`evaluate`, report lines;
++`scripts/arc_leaderboard_eval.py` `ProgressWriter.snapshot`;
++`tests/python/test_arc_supervisor_exhaustion_20260905.py`, 20 tests, and
++`tests/python/test_arc_eval_progress_heartbeat_20260904.py::test_scenario_7031_d_the_heartbeat_shows_the_table_running_dry`).
++Mutation proof: 12 of 12 mutations RED (M1 receipt drops the fired-arm union; M2 `enabled_arms` ignores the tool gate; M3 legacy fallback reads `ARM_ORDER`, the original bug; M4 the `_new_arm_cells` call site reverts to `set(ARM_ORDER)`; M5 the window row is never recorded; M6 the cap is removed; M7 the summary always reads `not_recorded`; M8 shadow rows are counted but never stored; M9 `control_matched` always False; M10 the control index ignores whether the level-up followed; M11 the heartbeat drops `stagnations_unredirected`; M12 the evidence row drops `arms_enabled`), each restored byte-identically (sha256 compare), scored only after the unmutated baseline passed and re-confirmed GREEN after the last restore.
++
+ ### REQ-ARC-WMTE-4491: Held-Out Trust Energy Ranking
+ 
+ The repository SHALL expose a deterministic world-model trust-energy module for
+diff --git a/ops/arc_supervisor_refinement_ledger.json b/ops/arc_supervisor_refinement_ledger.json
+index b4f47b7a6a..0ce704e68a 100644
+--- a/ops/arc_supervisor_refinement_ledger.json
++++ b/ops/arc_supervisor_refinement_ledger.json
+@@ -1,4 +1,63 @@
+ {
++  "controls": {
++    "sha256:82750966c7e15adebc2ba8fccd26f332e2036df0ab708bb4d01d9c37128aa252": {
++      "actions": 2121,
++      "game": "r11l",
++      "harness_arm": "eval:e3:budget20000",
++      "ingested_at": "2026-09-05T04:38:33+00:00",
++      "levels": 2,
++      "mode": "shadow",
++      "receipt_id": "sha256:82750966c7e15adebc2ba8fccd26f332e2036df0ab708bb4d01d9c37128aa252",
++      "seed": 20260719,
++      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-3114878.json",
++      "stagnations_unredirected": 12,
++      "window": 120,
++      "would_have_redirects": [
++        {
++          "action_index": 120,
++          "actions_to_levelup_without_redirect": 765,
++          "arm": "drop_goal_bias",
++          "level": 0,
++          "levelup_followed_without_redirect": true
++        },
++        {
++          "action_index": 240,
++          "actions_to_levelup_without_redirect": 645,
++          "arm": "force_exploration_diversity",
++          "level": 0,
++          "levelup_followed_without_redirect": true
++        },
++        {
++          "action_index": 360,
++          "actions_to_levelup_without_redirect": 525,
++          "arm": "allow_reinduction",
++          "level": 0,
++          "levelup_followed_without_redirect": true
++        },
++        {
++          "action_index": 1005,
++          "actions_to_levelup_without_redirect": 5,
++          "arm": "force_exploration_diversity",
++          "level": 1,
++          "levelup_followed_without_redirect": true
++        },
++        {
++          "action_index": 1130,
++          "actions_to_levelup_without_redirect": null,
++          "arm": "force_exploration_diversity",
++          "level": 2,
++          "levelup_followed_without_redirect": false
++        },
++        {
++          "action_index": 1250,
++          "actions_to_levelup_without_redirect": null,
++          "arm": "allow_reinduction",
++          "level": 2,
++          "levelup_followed_without_redirect": false
++        }
++      ]
++    }
++  },
+   "created_at": "2026-08-27T11:07:32+00:00",
+   "entries": {
+     "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e": {
+@@ -460,52 +519,145 @@
+       "rules": [
+         "retire_candidate: fired >= floor and helped == 0",
+         "raise_priority_candidate: arm and pooled others both at floor, arm lower bound > others upper bound",
+-        "new_arm_specification: a receipt fired every arm and still recorded stagnations_unredirected > 0"
++        "new_arm_specification: a receipt fired every arm its run could fire (arms_enabled) and still recorded stagnations_unredirected > 0"
+       ],
+       "wilson_z": 1.6448536269514722
+     },
+     "evidence": {
++      "controls": 1,
+       "games": [
+         "ar25",
+         "cd82",
+         "r11l",
+         "tu93"
+       ],
++      "helped_matched_by_control_total": 12,
++      "helped_total": 19,
+       "receipts": 14,
+       "redirects": 31,
+       "stagnations_unredirected_total": 64
+     },
+-    "generated_at": "2026-09-04T21:28:49+00:00",
++    "generated_at": "2026-09-05T04:38:33+00:00",
+     "ingest_counts": {
+-      "applied_duplicate": 0,
+-      "applied_new": 5,
++      "applied_duplicate": 5,
++      "applied_new": 0,
++      "controls_duplicate": 0,
++      "controls_new": 1,
+       "error_rows": 8,
+-      "files_read": 13,
++      "files_read": 14,
+       "other_receipts": 0,
+-      "rows_seen": 26,
++      "rows_seen": 27,
+       "rows_without_receipt": 13,
+-      "shadow_observed": 0
++      "shadow_observed": 1
+     },
+     "new_arm_specification": {
+       "audience": "human",
+       "cells": [
+         {
++          "arms_enabled": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity"
++          ],
++          "arms_enabled_source": "legacy_default",
+           "arms_fired": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity"
++          ],
++          "exhaustion_states": "not_recorded",
++          "game": "r11l",
++          "levels": 2,
++          "seed": 20260719,
++          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
++          "stagnations_unredirected": 13,
++          "window": 120
++        },
++        {
++          "arms_enabled": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity"
++          ],
++          "arms_enabled_source": "legacy_default",
++          "arms_fired": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity"
++          ],
++          "exhaustion_states": "not_recorded",
++          "game": "cd82",
++          "levels": 0,
++          "seed": 20260719,
++          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
++          "stagnations_unredirected": 14,
++          "window": 120
++        },
++        {
++          "arms_enabled": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity"
++          ],
++          "arms_enabled_source": "legacy_default",
++          "arms_fired": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity"
++          ],
++          "exhaustion_states": "not_recorded",
++          "game": "r11l",
++          "levels": 1,
++          "seed": 20260719,
++          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
++          "stagnations_unredirected": 12,
++          "window": 120
++        },
++        {
++          "arms_enabled": [
+             "allow_reinduction",
+             "drop_goal_bias",
+             "force_exploration_diversity",
+             "tool_loop_reinduction"
+           ],
++          "arms_enabled_source": "legacy_default",
++          "arms_fired": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity",
++            "tool_loop_reinduction"
++          ],
++          "exhaustion_states": "not_recorded",
+           "game": "r11l",
+           "levels": 2,
+           "seed": 20260719,
+           "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+           "stagnations_unredirected": 11,
+           "window": 120
++        },
++        {
++          "arms_enabled": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity"
++          ],
++          "arms_enabled_source": "legacy_default",
++          "arms_fired": [
++            "allow_reinduction",
++            "drop_goal_bias",
++            "force_exploration_diversity"
++          ],
++          "exhaustion_states": "not_recorded",
++          "game": "r11l",
++          "levels": 2,
++          "seed": 20260719,
++          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
++          "stagnations_unredirected": 14,
++          "window": 120
+         }
+       ],
+       "instruction": "Propose ONE new curated arm for ARM_ORDER in python/carnot/agentic/arc_trajectory_supervisor.py. Arm growth stays human on a 27B generator; this tool never generates an arm implementation.",
+-      "trigger": "every existing arm fired and stagnation continued (stagnations_unredirected > 0) in the cells below"
++      "trigger": "every arm the run could fire (arms_enabled) fired and stagnation continued (stagnations_unredirected > 0) in the cells below"
+     },
+     "per_arm": [
+       {
+@@ -522,6 +674,8 @@
+         "floor_shortfall": 0,
+         "help_follow_rate": 0.6,
+         "helped": 6,
++        "helped_beyond_control": 2,
++        "helped_matched_by_control": 4,
+         "helped_share": 0.0,
+         "helped_sole": 0,
+         "helped_with_known_split": 0,
+@@ -545,6 +699,8 @@
+         "floor_shortfall": 0,
+         "help_follow_rate": 0.5,
+         "helped": 6,
++        "helped_beyond_control": 2,
++        "helped_matched_by_control": 4,
+         "helped_share": 0.0,
+         "helped_sole": 0,
+         "helped_with_known_split": 0,
+@@ -568,6 +724,8 @@
+         "floor_shortfall": 3,
+         "help_follow_rate": 0.857143,
+         "helped": 6,
++        "helped_beyond_control": 2,
++        "helped_matched_by_control": 4,
+         "helped_share": 0.0,
+         "helped_sole": 0,
+         "helped_with_known_split": 0,
+@@ -586,6 +744,8 @@
+         "floor_shortfall": 8,
+         "help_follow_rate": 0.5,
+         "helped": 1,
++        "helped_beyond_control": 1,
++        "helped_matched_by_control": 0,
+         "helped_share": 0.0,
+         "helped_sole": 0,
+         "helped_with_known_split": 0,
+@@ -602,5 +762,5 @@
+     "status": "recommendation_available"
+   },
+   "schema": "carnot.arc.supervisor_refinement_ledger.v1",
+-  "updated_at": "2026-09-04T21:28:49+00:00"
++  "updated_at": "2026-09-05T04:38:33+00:00"
+ }
+diff --git a/ops/changelog.md b/ops/changelog.md
+index aa1d19aa9d..52731035b2 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18878,3 +18878,37 @@ dispatch. Add phase timing, task-linked GPU traces, and launch receipts that
+ record model count and runner selection. No measured alternative supports a
+ time-savings estimate, so the estimate is 0%.
+ - 2026-09-05: V614 source delta and task-contract preflight (⚠️ Research Finding) — honest_verdict=disqualified_v614_markdown_yaml_contract_mismatch; results/experiment_7009_v614_source_contract_preflight.json
++
++## 2026-09-05 — Live-agent round two: exhaustion trigger widened, exhaustion state recorded, shadow controls kept (worktree agent)
++
++Triggered by the 2026-09-05 brief "evaluate the ARC-AGI-3 live agent and implement improvements
++to efficiency, iteration velocity, accuracy, unattended self-improvement, and supervisor
++refinement". Branch `worktree-agent-a83acaaa5293c1b8f`.
++
++- Measured (ledger of 14 receipts, 31 redirects; 14 eval artifacts, 28 rows): all 64
++  unredirected windows sit in 5 eval receipts where the three default-on arms fired; only 1
++  of those runs had the env-gated tool rung on. The new-arm trigger compared against
++  `set(ARM_ORDER)`, so it reported 1 cell and hid 4 (53 of 64 windows).
++- Measured: the shadow run `r11l-3114878` leveled up at action 813 with nothing applied, and
++  its would-have rows carry the same 765 / 645 / 525 actions-to-level-up that four applied
++  runs booked as `helped`. 12 of the ledger's 19 credits are reproduced by a run that pulled
++  no lever.
++- Null: `co_credited_count` / `arm_credit` (REQ-ARC-WMTE-7013) appear in 0 of 28 eval rows.
++  Retiring or promoting an arm by sole credit cannot be done on evidence that exists.
++- REQ-ARC-WMTE-7030 (`arc_trajectory_supervisor.py`, `arc_supervisor_refinement.py`): the
++  receipt names `arms_enabled`; the refinement trigger reads that set, with a legacy fallback
++  to the three default-on arms; cells name their source. 6 tests.
++- REQ-ARC-WMTE-7031: every exhausted window records the state the table saw (spent arms, cap
++  and floor flags, bias, diversity), bounded at 64 with a dropped counter; the ledger keeps the
++  rows; cells carry a per-flag summary; the heartbeat shows the count in flight. 7 + 1 tests.
++- REQ-ARC-WMTE-7032: shadow receipts ingest into a separate `controls` pool, never `entries`;
++  credits a control reproduces read `control_matched`; the report shows `helped_beyond_control`.
++  The frozen rules still key on pooled `helped`. 6 tests.
++- 12 mutations RED with byte-identical restores, scored after a green unmutated baseline and
++  re-confirmed green after the last restore.
++- Ledger re-ingested: 5 new-arm cells (64 windows), 1 control, 12 of 19 credits
++  control-matched; entries and redirects unchanged at 14 / 31.
++- Research note: `docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md`
++  (measurements, the fifth-arm proposal, what was deliberately not done).
++- Deliberately not done: no new arm (the exhaustion state is unrecorded on every existing
++  cell); no arm retired or promoted; no GPU run; no change to the planning gate.
+diff --git a/ops/metrics.md b/ops/metrics.md
+index d1733521f2..a8babea040 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3340,3 +3340,16 @@ improvements reachable from the two live entrypoints; prove every guard by mutat
+ | Turn | Start | End | Description | Tokens (est) |
+ |------|-------|-----|-------------|------|
+ | 1 | 2026-09-04T21:08:46Z | 2026-09-04T21:59:55Z | Baseline on four axes (LLM-off timing run, offline engine scoring, ledger audit); REQ-ARC-WMTE-7010..7013 spec, code, 28 tests, 11 mutation proofs; adversarial review applied; commits 47689d162f + the ops commit. Sub-agent review: 451,656 tokens, 874 s, 59 tool uses. | see session JSONL |
++
++## Session: 2026-09-05 worktree agent a83acaa — ARC live-agent round two (supervisor refinement)
++
++User instruction summary: evaluate the ARC-AGI-3 live agent and implement improvements to
++efficiency, iteration velocity, accuracy, unattended self-improvement, and supervisor
++refinement; act on the redirect ledger; retire or promote arms from evidence using the credit
++split; measure before planning; prove every guard by deletion.
++
++### Turn Log
++
++| Turn | Start | End | Description | Tokens (est) |
++|------|-------|-----|-------------|------|
++| 1 | 2026-09-05T04:21:03Z | 2026-09-05T04:47:27Z | Measured the ledger (14 receipts, 31 redirects) and 14 eval artifacts (28 rows): new-arm trigger hid 4 of 5 exhausted cells; the shadow run reproduces 12 of 19 credits; the 7013 split has an empty population. REQ-ARC-WMTE-7030/7031/7032 spec, code, 21 tests, 12/12 mutations RED; ledger re-ingested; research note; adversarial review. | see session JSONL |
+diff --git a/ops/status.md b/ops/status.md
+index 7e1f0d3cc4..6166d97036 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -60,6 +60,59 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
+ would manufacture a record, which is worse than the gap it hides.
+ 
+ 
++## 2026-09-05 — Live-agent round two (worktree agent a83acaa): the redirect ledger read against its own control
++
++Brief: evaluate the live agent and improve it on five axes. Full measurements and the
++fifth-arm proposal: `docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md`.
++
++### Measured (populations named)
++
++- **The new-arm trigger hid 4 of 5 exhausted cells.** Ledger as merged 2026-09-04 (14
++  receipts, 31 redirects): all 64 unredirected windows sit in 5 eval receipts where the three
++  default-on arms fired. `_new_arm_cells` required every arm in `ARM_ORDER`, which holds the
++  default-OFF tool rung, so only the one run with `CARNOT_ARC_SUPERVISOR_TOOL_ARM=1` qualified.
++  53 of 64 windows were invisible to the tool that writes the new-arm specification.
++- **A shadow control exists and it reproduces 12 of 19 credits.** `r11l-3114878` (shadow,
++  nothing applied) leveled up at action 813; its would-have rows at 120 / 240 / 360 carry
++  765 / 645 / 525, byte-identical to four applied runs' `helped` credits. The level-0 r11l
++  level-up lands at 813 to 815 in all five runs, applied or not.
++- **Null: the 7013 credit split has an empty population.** 0 of 28 eval rows carry
++  `co_credited_count` or `arm_credit`. The one run that finished after the merge started
++  before it. Retire-or-promote by sole credit is not decidable on existing evidence.
++- **No run has exercised the 2026-09-04/05 instrumentation.** 0 of 28 rows carry `wall_s`,
++  `run_envelope` or `solve_provenance`.
++
++### Shipped (REQ-ARC-WMTE-7030 / 7031 / 7032)
++
++- Receipt carries `arms_enabled`; the trigger reads it (legacy rows fall back to the three
++  default-on arms). Re-ingest: 5 cells, 64 windows, all `legacy_default`.
++- Every exhausted window records the state the table saw, bounded at 64; cells carry a
++  per-flag summary (`not_recorded` on every existing cell); the heartbeat shows the count.
++- Shadow receipts are kept as `controls`; the report shows `helped_beyond_control`
++  (2 / 2 / 2 / 1 across the four arms). Frozen rules unchanged.
++- 21 tests; 12 of 12 mutations RED, byte-identical restores; baseline green before and after.
++- **Exercised on a real LLM-off run of the scored eval** (r11l, budget 1500, shadow mode,
++  no GPU, worktree, not committed): 18 heartbeat snapshots, file removed at the end, receipt
++  carries `arms_enabled` and 7 exhaustion rows, envelope and provenance present. New measured
++  fact from that run: r11l level 0 clears at action 776 with the generator DISABLED (813 to
++  815 with it on), so the level-0 credits were never a generator event. One seed, one run.
++
++### Open, most actionable first
++
++1. **A post-merge APPLIED run** (GPU, multi-hour; proposed, not started). It is the only way
++   to populate the exhaustion states, the sole-credit split, the heartbeat, and the envelope
++   at once. Recommended shape: r11l and cd82, seed 20260719, window 120,
++   `CARNOT_ARC_TRAJECTORY_SUPERVISOR=1`, on GPU 1 with a long-run receipt armed.
++2. **OPERATOR DECISION (new): the fifth arm.** Candidates ranked in the note, section 5.
++   `plan_with_best_partial_model` (one plan from the best archived engine below the 1.0
++   gate after every rung is spent) is the highest-value and the one that changes what
++   "trusted" means. `widen_diversity_draw` is measurable offline in seconds and could go first.
++3. **A cd82 shadow control.** The cd82 level-0 credits (651 / 531 / 411) have no control;
++   one shadow run in that cell would settle whether they are base rate too.
++4. The `force_exploration_diversity` arm fires once per RUN in practice, not once per level:
++   the applied `_hybrid_diversity=True` persists across levels, so later levels have a
++   three-rung ladder. Not changed; recorded as a design question.
++
+ ## 2026-09-04 — Quarantine stamps measured against the current rule (two operator decisions)
+ 
+ An hourly outer-loop check re-ran `adversarial_verify.verify_artifact` over every
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 51b1b9088d..1f592b63dd 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -6019,6 +6019,9 @@ class E3AgentPolicy:
+             row["actions_to_levelup_without_redirect"] = row.pop("actions_to_levelup")
+             would_have_rows.append(row)
+         receipt["would_have_redirects"] = would_have_rows
++        # `arms_enabled` (REQ-ARC-WMTE-7030) is configuration and `unredirected_windows`
++        # (REQ-ARC-WMTE-7031) records real stagnation, so both keep their names here, as
++        # `stagnations_unredirected` already does. Only counterfactual outcomes are renamed.
+         receipt["would_have_arm_outcomes"] = receipt.pop("arm_outcomes")
+         if "arm_credit" in receipt:
+             # REQ-ARC-WMTE-7013: the credit split is a counterfactual here too.
+diff --git a/python/carnot/agentic/arc_supervisor_refinement.py b/python/carnot/agentic/arc_supervisor_refinement.py
+index f0d117fa8d..86e500149c 100644
+--- a/python/carnot/agentic/arc_supervisor_refinement.py
++++ b/python/carnot/agentic/arc_supervisor_refinement.py
+@@ -21,9 +21,44 @@ from datetime import datetime, timezone, UTC
+ from pathlib import Path
+ from typing import Any
+ 
+-from carnot.agentic.arc_trajectory_supervisor import ARM_ORDER
++from carnot.agentic.arc_trajectory_supervisor import (
++    ARM_ALLOW_REINDUCTION,
++    ARM_DROP_GOAL_BIAS,
++    ARM_FORCE_DIVERSITY,
++    ARM_ORDER,
++    MAX_UNREDIRECTED_WINDOWS,
++)
+ 
+ LEDGER_SCHEMA = "carnot.arc.supervisor_refinement_ledger.v1"
++
++# REQ-ARC-WMTE-7030: the arms a run could fire before receipts said so. Rows written before
++# 2026-09-05 carry no `arms_enabled`. The tool rung was env-gated and default OFF from the day
++# it was added (REQ-ARC-WMTE-6760), so a legacy row could fire these three plus any arm it
++# actually fired. Measured 2026-09-05: reading `ARM_ORDER` as the exhaustion set hid 4 of the
++# 5 exhausted cells (53 of 64 unredirected windows), because only one run had the tool rung on.
++LEGACY_DEFAULT_ARMS = (ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION, ARM_FORCE_DIVERSITY)
++
++# REQ-ARC-WMTE-7031: the per-window state fields the ledger keeps from a receipt row.
++UNREDIRECTED_WINDOW_FIELDS = (
++    "action_index",
++    "level",
++    "arms_used",
++    "goal_bias_installed",
++    "induced",
++    "induction_attempts",
++    "attempt_cap_reached",
++    "new_transitions_since_induction",
++    "evidence_floor_met",
++    "diversity_active",
++)
++# The exhaustion summary counts windows where each of these read True.
++EXHAUSTION_FLAGS = (
++    "goal_bias_installed",
++    "induced",
++    "attempt_cap_reached",
++    "evidence_floor_met",
++    "diversity_active",
++)
+ RECOMMENDATION_SCHEMA = "carnot.arc.supervisor_refinement_recommendation.v1"
+ DEFAULT_LEDGER_PARTS = ("ops", "arc_supervisor_refinement_ledger.json")
+ 
+@@ -126,6 +161,15 @@ def _evidence_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
+                 "co_credited_count": co_credited if isinstance(co_credited, int) else None,
+             }
+         )
++    # REQ-ARC-WMTE-7030: None on rows written before the receipt carried the set.
++    arms_enabled = receipt.get("arms_enabled")
++    arms_enabled = [str(arm) for arm in arms_enabled] if isinstance(arms_enabled, list) else None
++    # REQ-ARC-WMTE-7031: the state at each exhausted window, bounded at the receipt's own cap.
++    windows: list[dict[str, Any]] = []
++    for item in receipt.get("unredirected_windows") or []:
++        if isinstance(item, dict) and len(windows) < MAX_UNREDIRECTED_WINDOWS:
++            windows.append({k: item.get(k) for k in UNREDIRECTED_WINDOW_FIELDS})
++    dropped = receipt.get("unredirected_windows_dropped")
+     return {
+         "source": source,
+         "game": row.get("game"),
+@@ -137,10 +181,85 @@ def _evidence_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
+         "stagnations_unredirected": int(receipt.get("stagnations_unredirected") or 0),
+         "levels": row.get("levels"),
+         "actions": row.get("actions"),
++        "arms_enabled": arms_enabled,
++        "unredirected_windows": windows,
++        "unredirected_windows_dropped": dropped if isinstance(dropped, int) else None,
+         "redirects": redirects,
+     }
+ 
+ 
++def _control_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
++    """A shadow receipt as CONTROL evidence (REQ-ARC-WMTE-7032).
++
++    A shadow run applied nothing, so `levelup_followed_without_redirect` on one of its
++    would-have rows is the base rate: the same level-up, in the same cell, with no arm
++    pulled. This is not redirect evidence and never enters `entries`."""
++
++    receipt = row["trajectory_supervisor"]
++    would_have: list[dict[str, Any]] = []
++    for item in receipt.get("would_have_redirects") or []:
++        if not isinstance(item, dict) or item.get("arm") is None:
++            continue
++        would_have.append(
++            {
++                "arm": str(item.get("arm")),
++                "action_index": item.get("action_index"),
++                "level": item.get("level"),
++                "levelup_followed_without_redirect": (
++                    item.get("levelup_followed_without_redirect") is True
++                ),
++                "actions_to_levelup_without_redirect": item.get(
++                    "actions_to_levelup_without_redirect"
++                ),
++            }
++        )
++    return {
++        "source": source,
++        "game": row.get("game"),
++        "seed": row.get("seed"),
++        "harness_arm": row.get("arm"),
++        "window": receipt.get("window"),
++        "mode": "shadow",
++        "levels": row.get("levels"),
++        "actions": row.get("actions"),
++        "stagnations_unredirected": int(receipt.get("stagnations_unredirected") or 0),
++        "would_have_redirects": would_have,
++    }
++
++
++def enabled_arms_for_entry(entry: dict[str, Any]) -> tuple[set[str], str]:
++    """The arms this entry's run could fire, and where that answer came from.
++
++    A declared `arms_enabled` wins; a legacy row falls back to the three default-on arms.
++    Either way an arm that fired was enabled, so the fired set is unioned in."""
++
++    fired = {redirect["arm"] for redirect in entry.get("redirects", [])}
++    declared = entry.get("arms_enabled")
++    if isinstance(declared, list) and declared:
++        return {str(arm) for arm in declared} | fired, "receipt"
++    return set(LEGACY_DEFAULT_ARMS) | fired, "legacy_default"
++
++
++def exhaustion_summary(entry: dict[str, Any]) -> dict[str, Any] | str:
++    """Count what the table saw across an entry's exhausted windows (REQ-ARC-WMTE-7031).
++
++    Returns the string `not_recorded` for a legacy row, so a reader cannot mistake "no
++    window rows were kept" for "every flag read False"."""
++
++    windows = [w for w in entry.get("unredirected_windows") or [] if isinstance(w, dict)]
++    if not windows:
++        return "not_recorded"
++    summary: dict[str, Any] = {
++        "windows_recorded": len(windows),
++        "windows_dropped": int(entry.get("unredirected_windows_dropped") or 0),
++        "levels": sorted({int(w["level"]) for w in windows if w.get("level") is not None}),
++        "arms_used_sets": sorted({",".join(w.get("arms_used") or []) for w in windows}),
++    }
++    for flag in EXHAUSTION_FLAGS:
++        summary[flag] = sum(1 for w in windows if w.get(flag) is True)
++    return summary
++
++
+ def extract_rows(doc: Any) -> list[dict[str, Any]]:
+     """Accept every shape a receipt producer has written.
+ 
+@@ -217,6 +336,8 @@ def empty_ledger() -> dict[str, Any]:
+         "created_at": None,
+         "updated_at": None,
+         "entries": {},
++        # REQ-ARC-WMTE-7032: shadow receipts, kept apart from redirect evidence.
++        "controls": {},
+         "recommendation": None,
+     }
+ 
+@@ -229,6 +350,9 @@ def load_ledger(path: Path) -> dict[str, Any]:
+         raise ValueError(f"unsupported ledger schema in {path}")
+     if not isinstance(data.get("entries"), dict):
+         raise ValueError(f"malformed ledger entries in {path}")
++    # A ledger written before REQ-ARC-WMTE-7032 has no control pool; an empty one is honest.
++    if not isinstance(data.get("controls"), dict):
++        data["controls"] = {}
+     return data
+ 
+ 
+@@ -252,8 +376,11 @@ def ingest_files(ledger: dict[str, Any], files: Sequence[Path], now_iso: str) ->
+         "error_rows": 0,
+         "other_receipts": 0,
+         "rows_without_receipt": 0,
++        "controls_new": 0,
++        "controls_duplicate": 0,
+     }
+     entries = ledger["entries"]
++    controls = ledger.setdefault("controls", {})
+     for file_path in files:
+         doc = json.loads(file_path.read_text(encoding="utf-8"))
+         counts["files_read"] += 1
+@@ -272,6 +399,16 @@ def ingest_files(ledger: dict[str, Any], files: Sequence[Path], now_iso: str) ->
+                     counts["applied_new"] += 1
+             elif kind == "shadow":
+                 counts["shadow_observed"] += 1
++                # REQ-ARC-WMTE-7032: a control, never an entry (REQ-6720 rule 1 holds).
++                control_id = receipt_id_for_row(row)
++                if control_id in controls:
++                    counts["controls_duplicate"] += 1
++                else:
++                    control = _control_from_row(row, str(file_path))
++                    control["receipt_id"] = control_id
++                    control["ingested_at"] = now_iso
++                    controls[control_id] = control
++                    counts["controls_new"] += 1
+             elif kind == "error":
+                 counts["error_rows"] += 1
+             elif kind == "other":
+@@ -297,10 +434,16 @@ def wilson_bounds(helped: int, fired: int, z: float = WILSON_Z) -> tuple[float,
+ 
+ 
+ def _new_arm_cells(entries: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
++    """Cells where every arm the run COULD fire fired and stagnation continued.
++
++    REQ-ARC-WMTE-7030: the exhaustion set is the run's `arms_enabled`, not `ARM_ORDER`.
++    REQ-ARC-WMTE-7031: each cell carries the state the table saw at its exhausted windows."""
++
+     cells: list[dict[str, Any]] = []
+     for entry in entries:
+         arms_fired = {redirect["arm"] for redirect in entry.get("redirects", [])}
+-        if entry.get("stagnations_unredirected", 0) > 0 and set(ARM_ORDER) <= arms_fired:
++        enabled, enabled_source = enabled_arms_for_entry(entry)
++        if entry.get("stagnations_unredirected", 0) > 0 and enabled <= arms_fired:
+             cells.append(
+                 {
+                     "game": entry.get("game"),
+@@ -309,21 +452,61 @@ def _new_arm_cells(entries: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+                     "source": entry.get("source"),
+                     "levels": entry.get("levels"),
+                     "arms_fired": sorted(arms_fired),
++                    "arms_enabled": sorted(enabled),
++                    "arms_enabled_source": enabled_source,
+                     "stagnations_unredirected": entry.get("stagnations_unredirected"),
++                    "exhaustion_states": exhaustion_summary(entry),
+                 }
+             )
+     return cells
+ 
+ 
++def _control_index(controls: Iterable[dict[str, Any]]) -> set[tuple[Any, ...]]:
++    """Cells (game, seed, window, level, arm) where a shadow run leveled up after the point
++    the arm would have fired, with nothing applied (REQ-ARC-WMTE-7032)."""
++
++    followed: set[tuple[Any, ...]] = set()
++    for control in controls:
++        for row in control.get("would_have_redirects") or []:
++            if row.get("levelup_followed_without_redirect") is True:
++                followed.add(
++                    (
++                        control.get("game"),
++                        control.get("seed"),
++                        control.get("window"),
++                        row.get("level"),
++                        row.get("arm"),
++                    )
++                )
++    return followed
++
++
+ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+     """Apply the frozen contract to the whole ledger. Pure function of the
+     ledger content so a re-evaluation after source deletion reproduces the
+     same answer (SCENARIO-6720-2)."""
+ 
+     entries = list(ledger["entries"].values())
++    controls = list((ledger.get("controls") or {}).values())
++    control_followed = _control_index(controls)
+     redirects: list[dict[str, Any]] = []
+     for entry in entries:
+-        redirects.extend(entry.get("redirects", []))
++        for redirect in entry.get("redirects", []):
++            # REQ-ARC-WMTE-7032: a credit is control-matched when a shadow run in the same
++            # (game, seed, window, level) leveled up after the same arm would have fired.
++            # Tagged on a copy; the ledger entry itself is not rewritten by evaluation.
++            tagged = dict(redirect)
++            key = (
++                entry.get("game"),
++                entry.get("seed"),
++                entry.get("window"),
++                redirect.get("level"),
++                redirect.get("arm"),
++            )
++            tagged["control_matched"] = bool(
++                redirect.get("resolved_by_levelup") and key in control_followed
++            )
++            redirects.append(tagged)
+ 
+     arms_seen = sorted({redirect["arm"] for redirect in redirects} - set(ARM_ORDER))
+     arm_names = [*ARM_ORDER, *arms_seen]
+@@ -332,6 +515,7 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+         arm_redirects = [redirect for redirect in redirects if redirect["arm"] == arm]
+         fired = len(arm_redirects)
+         helped = sum(1 for redirect in arm_redirects if redirect["resolved_by_levelup"])
++        helped_matched = sum(1 for redirect in arm_redirects if redirect["control_matched"])
+         lower, upper = wilson_bounds(helped, fired)
+         actions = sorted(
+             redirect["actions_to_levelup"]
+@@ -366,6 +550,10 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+                 "helped_with_known_split": helped_known,
+                 "sole_wilson_lower": round(sole_lower, 6),
+                 "sole_wilson_upper": round(sole_upper, 6),
++                # REQ-ARC-WMTE-7032: credits a shadow control reproduced with nothing applied,
++                # and the remainder. The frozen rules keep reading pooled `helped`.
++                "helped_matched_by_control": helped_matched,
++                "helped_beyond_control": helped - helped_matched,
+                 "actions_to_levelup": actions,
+                 "meets_floor": fired >= MIN_FIRED_PER_ARM,
+                 "floor_shortfall": max(0, MIN_FIRED_PER_ARM - fired),
+@@ -434,8 +622,8 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+                 "arm implementation."
+             ),
+             "trigger": (
+-                "every existing arm fired and stagnation continued "
+-                "(stagnations_unredirected > 0) in the cells below"
++                "every arm the run could fire (arms_enabled) fired and stagnation "
++                "continued (stagnations_unredirected > 0) in the cells below"
+             ),
+             "cells": cells,
+         }
+@@ -460,8 +648,8 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+                 "retire_candidate: fired >= floor and helped == 0",
+                 "raise_priority_candidate: arm and pooled others both at floor, "
+                 "arm lower bound > others upper bound",
+-                "new_arm_specification: a receipt fired every arm and still "
+-                "recorded stagnations_unredirected > 0",
++                "new_arm_specification: a receipt fired every arm its run could fire "
++                "(arms_enabled) and still recorded stagnations_unredirected > 0",
+             ],
+         },
+         "recommendation_only": True,
+@@ -473,6 +661,10 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
+             "stagnations_unredirected_total": sum(
+                 int(entry.get("stagnations_unredirected") or 0) for entry in entries
+             ),
++            # REQ-ARC-WMTE-7032: how much of the pooled credit a control reproduced.
++            "controls": len(controls),
++            "helped_total": sum(1 for r in redirects if r["resolved_by_levelup"]),
++            "helped_matched_by_control_total": sum(1 for r in redirects if r["control_matched"]),
+         },
+         "per_arm": per_arm,
+         "recommendations": recommendations,
+@@ -509,11 +701,20 @@ def render_report(recommendation: dict[str, Any]) -> str:
+         f"evidence: {evidence['receipts']} receipts, {evidence['redirects']} "
+         f"redirects, games={','.join(evidence['games']) or 'none'}"
+     )
++    # REQ-ARC-WMTE-7032: say how much of the pooled credit a control reproduced. A credit
++    # the control reproduces is base rate, not an arm effect; a reader must see the split.
++    lines.append(
++        f"controls: {evidence.get('controls', 0)} shadow receipts; "
++        f"{evidence.get('helped_matched_by_control_total', 0)} of "
++        f"{evidence.get('helped_total', 0)} credits matched by a control "
++        "(same level-up followed with nothing applied)"
++    )
+     for row in recommendation["per_arm"]:
+         lines.append(
+             f"  {row['arm']}: fired={row['fired']} helped={row['helped']} "
+             f"wilson=[{row['wilson_lower']}, {row['wilson_upper']}] "
+             f"sole={row.get('helped_sole', 0)} share={row.get('helped_share', 0.0)} "
++            f"beyond_control={row.get('helped_beyond_control', row['helped'])} "
+             f"floor_shortfall={row['floor_shortfall']}"
+         )
+     for item in recommendation["recommendations"]:
+@@ -528,8 +729,25 @@ def render_report(recommendation: dict[str, Any]) -> str:
+             lines.append(
+                 f"    game={cell['game']} seed={cell['seed']} "
+                 f"window={cell['window']} "
+-                f"stagnations_unredirected={cell['stagnations_unredirected']}"
++                f"stagnations_unredirected={cell['stagnations_unredirected']} "
++                f"arms_enabled={','.join(cell.get('arms_enabled') or [])} "
++                f"({cell.get('arms_enabled_source', '?')})"
+             )
++            states = cell.get("exhaustion_states")
++            if isinstance(states, dict):
++                # REQ-ARC-WMTE-7031: the state the table saw, so the human reads WHY the
++                # remaining rungs were ineligible instead of only how many windows passed.
++                lines.append(
++                    f"      states: windows={states['windows_recorded']} "
++                    f"levels={states['levels']} "
++                    f"attempt_cap_reached={states['attempt_cap_reached']} "
++                    f"diversity_active={states['diversity_active']} "
++                    f"goal_bias_installed={states['goal_bias_installed']} "
++                    f"induced={states['induced']} "
++                    f"evidence_floor_met={states['evidence_floor_met']}"
++                )
++            else:
++                lines.append(f"      states: {states}")
+     lines.append(f"caveat: {recommendation['causal_caveat']}")
+     return "\n".join(lines)
+ 
+diff --git a/python/carnot/agentic/arc_trajectory_supervisor.py b/python/carnot/agentic/arc_trajectory_supervisor.py
+index 26ba7397c1..b9968e685d 100644
+--- a/python/carnot/agentic/arc_trajectory_supervisor.py
++++ b/python/carnot/agentic/arc_trajectory_supervisor.py
+@@ -66,6 +66,27 @@ def tool_loop_arm_enabled() -> bool:
+     return os.environ.get("CARNOT_ARC_SUPERVISOR_TOOL_ARM") == "1"
+ 
+ 
++def enabled_arms() -> tuple[str, ...]:
++    """The arms this run's decision table CAN fire (REQ-ARC-WMTE-7030).
++
++    Configuration, not state: an enabled arm that is ineligible right now (no goal bias
++    installed) is still enabled. The tool rung is env-gated (REQ-ARC-WMTE-6760), so a default
++    run can never fire it. A reader that waits for "every arm in ARM_ORDER" therefore waits
++    forever on a default run; see commit for the 2026-09-05 count (4 of 5 exhausted cells hidden).
++    """
++
++    return tuple(
++        arm for arm in ARM_ORDER if arm != ARM_TOOL_LOOP_REINDUCTION or tool_loop_arm_enabled()
++    )
++
++
++# REQ-ARC-WMTE-7031: how many exhausted windows one receipt keeps in full. Window 120 under
++# a 20,000-action budget allows 166 windows; the largest count seen per receipt is 14
++# (2026-09-05 ledger), so 64 keeps every real case whole. Overflow is counted, never
++# silently dropped (the REQ-ARC-WMTE-6770 bounded-list pattern).
++MAX_UNREDIRECTED_WINDOWS = 64
++
++
+ @dataclass(frozen=True)
+ class TrajectorySnapshot:
+     """One per-action view of the run, built by the policy from state it
+@@ -120,6 +141,14 @@ class TrajectorySupervisor:
+         # When this grows while no arm fires, the closed table has run out
+         # of ideas — the written trigger for a human to propose a new arm.
+         self._stagnations_unredirected = 0
++        # REQ-ARC-WMTE-7031: the state the table saw at each window it could not
++        # answer. The count alone told a human "propose an arm" 64 times without
++        # once saying which levers were spent and which were never eligible.
++        self._unredirected_windows: list[dict] = []
++        self._unredirected_windows_dropped = 0
++        # REQ-ARC-WMTE-7030: snapshot at construction; an arm that later fires is
++        # unioned in at receipt time, so a mid-run env change cannot hide a firing.
++        self._arms_enabled: tuple[str, ...] = enabled_arms()
+ 
+     def observe(self, snapshot: TrajectorySnapshot) -> Redirect | None:
+         """Feed one action's snapshot; get back a redirect or None."""
+@@ -157,6 +186,7 @@ class TrajectorySupervisor:
+         self._actions_since_progress = 0
+         if arm is None:
+             self._stagnations_unredirected += 1
++            self._record_unredirected_window(snapshot)
+             return None
+         self._arms_used.add(arm)
+         redirect = Redirect(
+@@ -182,6 +212,34 @@ class TrajectorySupervisor:
+         )
+         return redirect
+ 
++    def _record_unredirected_window(self, s: TrajectorySnapshot) -> None:
++        """One row per window the table could not answer (REQ-ARC-WMTE-7031).
++
++        The row is the arm designer's input: which arms were already spent on this
++        level, and why each remaining rung was ineligible (attempt cap reached, no goal
++        bias to drop, diversity already on). Bounded; overflow is counted.
++        """
++
++        if len(self._unredirected_windows) >= MAX_UNREDIRECTED_WINDOWS:
++            self._unredirected_windows_dropped += 1
++            return
++        attempts = int(s.induction_attempts)
++        new_transitions = int(s.new_transitions_since_induction)
++        self._unredirected_windows.append(
++            {
++                "action_index": self._actions_total,
++                "level": int(s.level),
++                "arms_used": sorted(self._arms_used),
++                "goal_bias_installed": bool(s.goal_bias_installed),
++                "induced": bool(s.induced),
++                "induction_attempts": attempts,
++                "attempt_cap_reached": attempts >= self.reinduction_attempt_cap,
++                "new_transitions_since_induction": new_transitions,
++                "evidence_floor_met": new_transitions >= self.reinduction_evidence_floor,
++                "diversity_active": bool(s.diversity_active),
++            }
++        )
++
+     def _first_eligible_arm(self, s: TrajectorySnapshot) -> tuple[str | None, str]:
+         """The decision table. Fixed order, one winner, plain-words diagnosis."""
+ 
+@@ -254,15 +312,20 @@ class TrajectorySupervisor:
+         # Round once at emit, so the receipt and the refinement report agree on the same rows.
+         for credit in arm_credit.values():
+             credit["helped_share"] = round(credit["helped_share"], 4)
++        # REQ-ARC-WMTE-7030: in ARM_ORDER order, so two receipts compare by equality.
++        enabled = set(self._arms_enabled) | {row["arm"] for row in self._redirects}
+         return {
+             "enabled": True,
+             "window": self.window,
+             "actions_observed": self._actions_total,
+             "arms_used": sorted(self._arms_used),
++            "arms_enabled": [arm for arm in ARM_ORDER if arm in enabled],
+             "redirects": list(self._redirects),
+             "arm_outcomes": arm_outcomes,
+             "arm_credit": arm_credit,
+             "stagnations_unredirected": self._stagnations_unredirected,
++            "unredirected_windows": [dict(row) for row in self._unredirected_windows],
++            "unredirected_windows_dropped": self._unredirected_windows_dropped,
+         }
+ 
+ 
+diff --git a/scripts/arc_leaderboard_eval.py b/scripts/arc_leaderboard_eval.py
+index 37ce8aa38b..5f602dea72 100644
+--- a/scripts/arc_leaderboard_eval.py
++++ b/scripts/arc_leaderboard_eval.py
+@@ -829,6 +829,10 @@ class ProgressWriter:
+                 "enabled": sup.get("enabled"),
+                 "mode": sup.get("mode"),
+                 "redirects_n": len(redirects),
++                # REQ-ARC-WMTE-7031: a reader of the heartbeat sees the table run dry
++                # while the game is still in flight, not only at the end.
++                "stagnations_unredirected": sup.get("stagnations_unredirected"),
++                "unredirected_windows_n": len(sup.get("unredirected_windows") or []),
+                 "last_redirect": (
+                     {k: last_redirect.get(k) for k in ("arm", "action_index", "level")}
+                     if last_redirect is not None
+diff --git a/tests/python/test_arc_eval_progress_heartbeat_20260904.py b/tests/python/test_arc_eval_progress_heartbeat_20260904.py
+index 41d631e02c..aae4bb6d4f 100644
+--- a/tests/python/test_arc_eval_progress_heartbeat_20260904.py
++++ b/tests/python/test_arc_eval_progress_heartbeat_20260904.py
+@@ -358,3 +358,41 @@ def test_main_wires_a_heartbeat_per_game_and_removes_it_at_the_end(
+     assert seen[0].path is not None and seen[0].path.name.endswith(".progress.json")
+     assert seen[0].path.parent.name == "arc_leaderboard_eval_runs"
+     assert seen[0].path in gone
++
++
++# --- REQ-ARC-WMTE-7031 on the heartbeat: the table running dry is visible in flight --------
++# Lives here, not in test_arc_supervisor_exhaustion_20260905.py, because this file already pays
++# the eval import at collection time; importing it inside a test trips the memory watchdog.
++
++
++def test_scenario_7031_d_the_heartbeat_shows_the_table_running_dry() -> None:
++    """SCENARIO-ARC-WMTE-7031-D: the progress record's supervisor block carries
++    `stagnations_unredirected` and the number of window rows kept, from a receipt built by a
++    real supervisor, so a reader sees the table run dry before the game ends."""
++    from carnot.agentic.arc_trajectory_supervisor import TrajectorySnapshot, TrajectorySupervisor
++
++    sup = TrajectorySupervisor(window=1)
++    busy = TrajectorySnapshot(
++        level=0,
++        goal_bias_installed=False,
++        induced=False,
++        induction_attempts=0,
++        new_transitions_since_induction=0,
++        diversity_active=True,
++    )
++    for _ in range(3):
++        assert sup.observe(busy) is None
++
++    class _Policy:
++        induction_attempts: list = []
++
++        def trajectory_supervisor_diagnostics(self) -> dict:
++            receipt = sup.receipt()
++            receipt["mode"] = "applied"
++            return receipt
++
++    writer = ale.ProgressWriter(None, game="r11l", game_index=1, games_planned=1, policy=_Policy())
++    block = writer.snapshot()["supervisor"]
++    assert block["redirects_n"] == 0
++    assert block["stagnations_unredirected"] == 3
++    assert block["unredirected_windows_n"] == 3
+diff --git a/tests/python/test_arc_supervisor_exhaustion_20260905.py b/tests/python/test_arc_supervisor_exhaustion_20260905.py
+new file mode 100644
+index 0000000000..d1e5485edd
+--- /dev/null
++++ b/tests/python/test_arc_supervisor_exhaustion_20260905.py
+@@ -0,0 +1,561 @@
++"""Spec: REQ-ARC-WMTE-7030, REQ-ARC-WMTE-7031, REQ-ARC-WMTE-7032 and their scenarios.
++
++The trajectory supervisor says which arms its run could fire and what it saw at each window
++it could not answer; the refinement tool reads both, and keeps shadow receipts as controls.
++
++MEASURED 2026-09-05 (population: the 14 receipts in ops/arc_supervisor_refinement_ledger.json
++and the 14 artifacts in results/arc_leaderboard_eval_runs/):
++
++- All 64 unredirected windows sit in 5 eval receipts where the three default-on arms all
++  fired. Only ONE of those runs had the env-gated tool rung on, so a trigger that waits for
++  `set(ARM_ORDER)` reported one cell and hid four (53 of 64 windows). REQ-7030.
++- No receipt says WHY the table ran dry (attempt cap? diversity already on?). REQ-7031.
++- One shadow receipt (r11l, seed 20260719, window 120) leveled up at action 813 with nothing
++  applied, and its would-have rows at 120/240/360 carry the same 765/645/525 actions-to-level-up
++  that four applied runs booked as `helped`. A control now exists; the tool ignored it. REQ-7032.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.agentic.arc_supervisor_refinement import (
++    LEGACY_DEFAULT_ARMS,
++    MIN_FIRED_PER_ARM,
++    STATUS_RECOMMENDATION,
++    empty_ledger,
++    enabled_arms_for_entry,
++    evaluate,
++    exhaustion_summary,
++    ingest_files,
++    load_ledger,
++    render_report,
++)
++from carnot.agentic.arc_trajectory_supervisor import (
++    ARM_ALLOW_REINDUCTION,
++    ARM_DROP_GOAL_BIAS,
++    ARM_FORCE_DIVERSITY,
++    ARM_ORDER,
++    ARM_TOOL_LOOP_REINDUCTION,
++    MAX_UNREDIRECTED_WINDOWS,
++    TrajectorySnapshot,
++    TrajectorySupervisor,
++    enabled_arms,
++)
++
++NOW = "2026-09-05T05:00:00+00:00"
++
++
++def _snap(**overrides) -> TrajectorySnapshot:
++    base = {
++        "level": 0,
++        "goal_bias_installed": False,
++        "induced": False,
++        "induction_attempts": 0,
++        "new_transitions_since_induction": 0,
++        "diversity_active": False,
++    }
++    base.update(overrides)
++    return TrajectorySnapshot(**base)
++
++
++def _redirect(arm: str, resolved: bool, level: int = 0, a2l: int | None = None) -> dict:
++    return {
++        "arm": arm,
++        "action_index": 120,
++        "level": level,
++        "diagnosis": "test",
++        "resolved_by_levelup": resolved,
++        "actions_to_levelup": a2l,
++    }
++
++
++def _applied_row(
++    *,
++    game: str = "r11l",
++    seed: int = 20260719,
++    redirects: list[dict] | None = None,
++    stag: int = 0,
++    arms_enabled: list[str] | None = None,
++    windows: list[dict] | None = None,
++    levels: int = 2,
++) -> dict:
++    receipt: dict = {
++        "enabled": True,
++        "mode": "applied",
++        "window": 120,
++        "actions_observed": 2310,
++        "arms_used": [],
++        "arm_outcomes": {},
++        "stagnations_unredirected": stag,
++        "redirects": redirects or [],
++    }
++    if arms_enabled is not None:
++        receipt["arms_enabled"] = arms_enabled
++    if windows is not None:
++        receipt["unredirected_windows"] = windows
++        receipt["unredirected_windows_dropped"] = 0
++    return {
++        "game": game,
++        "seed": seed,
++        "arm": "eval:e3:budget20000",
++        "levels": levels,
++        "actions": 2121,
++        "trajectory_supervisor": receipt,
++    }
++
++
++def _shadow_row(
++    *,
++    game: str = "r11l",
++    seed: int = 20260719,
++    would_have: list[dict] | None = None,
++) -> dict:
++    return {
++        "game": game,
++        "seed": seed,
++        "arm": "eval:e3:budget20000",
++        "levels": 2,
++        "actions": 2121,
++        "trajectory_supervisor": {
++            "enabled": False,
++            "mode": "shadow",
++            "window": 120,
++            "actions_observed": 2310,
++            "arms_used": [],
++            "would_have_arm_outcomes": {},
++            "stagnations_unredirected": 12,
++            "would_have_redirects": would_have or [],
++        },
++    }
++
++
++def _would_have(arm: str, followed: bool, level: int = 0, a2l: int | None = None) -> dict:
++    return {
++        "arm": arm,
++        "action_index": 120,
++        "level": level,
++        "diagnosis": "test",
++        "levelup_followed_without_redirect": followed,
++        "actions_to_levelup_without_redirect": a2l,
++        "co_credited_count": None,
++    }
++
++
++def _ingest(tmp_path: Path, rows: list[dict], name: str = "rows.json") -> tuple[dict, dict]:
++    path = tmp_path / name
++    path.write_text(json.dumps({"rows": rows}), encoding="utf-8")
++    ledger = empty_ledger()
++    counts = ingest_files(ledger, [path], NOW)
++    return ledger, counts
++
++
++def _exhausted_windows(n: int, **state) -> list[dict]:
++    base = {
++        "level": 2,
++        "arms_used": [ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION],
++        "goal_bias_installed": False,
++        "induced": True,
++        "induction_attempts": 3,
++        "attempt_cap_reached": True,
++        "new_transitions_since_induction": 250,
++        "evidence_floor_met": True,
++        "diversity_active": True,
++    }
++    base.update(state)
++    return [{"action_index": 1490 + 120 * i, **base} for i in range(n)]
++
++
++# --- REQ-ARC-WMTE-7030: the receipt names the arms the run could fire ----------------------
++
++
++def test_scenario_7030_a_enabled_arms_follow_the_tool_gate(monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-7030-A: with the tool rung off, three arms are enabled; with it
++    on, four. Configuration, not eligibility-by-state."""
++    monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
++    assert enabled_arms() == (ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION, ARM_FORCE_DIVERSITY)
++    monkeypatch.setenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", "1")
++    assert enabled_arms() == ARM_ORDER
++
++
++def test_scenario_7030_b_receipt_carries_arms_enabled_in_order(monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-7030-B: the receipt lists `arms_enabled` in ARM_ORDER order."""
++    monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
++    sup = TrajectorySupervisor(window=2)
++    receipt = sup.receipt()
++    assert receipt["arms_enabled"] == [
++        ARM_DROP_GOAL_BIAS,
++        ARM_ALLOW_REINDUCTION,
++        ARM_FORCE_DIVERSITY,
++    ]
++    assert ARM_TOOL_LOOP_REINDUCTION not in receipt["arms_enabled"]
++
++
++def test_scenario_7030_b_an_arm_that_fired_is_enabled_even_after_a_late_env_flip(
++    monkeypatch,
++) -> None:
++    """SCENARIO-ARC-WMTE-7030-B: the set is a snapshot at construction unioned with what
++    fired, so a mid-run env change cannot hide a firing from the exhaustion reader."""
++    monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
++    sup = TrajectorySupervisor(window=1, reinduction_evidence_floor=0)
++    assert sup.observe(_snap(goal_bias_installed=True)).arm == ARM_DROP_GOAL_BIAS
++    assert sup.observe(_snap(induced=True, induction_attempts=1)).arm == ARM_ALLOW_REINDUCTION
++    monkeypatch.setenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", "1")
++    fired = sup.observe(_snap(induced=True, induction_attempts=1))
++    assert fired is not None and fired.arm == ARM_TOOL_LOOP_REINDUCTION
++    assert sup.receipt()["arms_enabled"] == list(ARM_ORDER)
++
++
++def test_scenario_7030_c_legacy_row_with_three_default_arms_is_an_exhausted_cell(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7030-C: the 2026-09-05 shape. A row with no `arms_enabled` that
++    fired the three default arms and still stagnated IS a new-arm cell; reading ARM_ORDER
++    (which holds the default-off tool rung) hid four of five such cells."""
++    row = _applied_row(
++        redirects=[_redirect(arm, True, a2l=700) for arm in LEGACY_DEFAULT_ARMS],
++        stag=14,
++    )
++    ledger, _ = _ingest(tmp_path, [row])
++    entry = next(iter(ledger["entries"].values()))
++    assert entry["arms_enabled"] is None
++    enabled, source = enabled_arms_for_entry(entry)
++    assert enabled == set(LEGACY_DEFAULT_ARMS)
++    assert source == "legacy_default"
++    spec = evaluate(ledger, NOW)["new_arm_specification"]
++    assert spec is not None
++    assert len(spec["cells"]) == 1
++    cell = spec["cells"][0]
++    assert cell["arms_enabled_source"] == "legacy_default"
++    assert cell["stagnations_unredirected"] == 14
++    assert "arms_enabled" in spec["trigger"]
++
++
++def test_scenario_7030_c_a_declared_four_arm_run_that_fired_three_is_not_exhausted(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-7030-C: a run that declares the tool rung enabled but never fired
++    it still had a rung left, so it is not a cell. The declared set wins over the legacy default."""
++    declared_four = _applied_row(
++        seed=1,
++        redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
++        stag=5,
++        arms_enabled=list(ARM_ORDER),
++    )
++    declared_three = _applied_row(
++        seed=2,
++        redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
++        stag=5,
++        arms_enabled=list(LEGACY_DEFAULT_ARMS),
++    )
++    ledger, _ = _ingest(tmp_path, [declared_four, declared_three])
++    spec = evaluate(ledger, NOW)["new_arm_specification"]
++    assert spec is not None
++    assert [(c["seed"], c["arms_enabled_source"]) for c in spec["cells"]] == [(2, "receipt")]
++
++
++def test_scenario_7030_c_a_fired_arm_is_unioned_into_a_declared_set(tmp_path: Path) -> None:
++    """A receipt that declares three arms but fired the tool rung anyway (a late env flip
++    on an old receipt) counts the tool rung as enabled, so the fired set is exhausted only
++    when every one of the four is present."""
++    row = _applied_row(
++        redirects=[_redirect(arm, False) for arm in ARM_ORDER],
++        stag=3,
++        arms_enabled=list(LEGACY_DEFAULT_ARMS),
++    )
++    ledger, _ = _ingest(tmp_path, [row])
++    enabled, _ = enabled_arms_for_entry(next(iter(ledger["entries"].values())))
++    assert enabled == set(ARM_ORDER)
++    assert evaluate(ledger, NOW)["new_arm_specification"] is not None
++
++
++# --- REQ-ARC-WMTE-7031: every exhausted window records the state the table saw ------------
++
++
++def test_scenario_7031_a_an_exhausted_window_records_its_state(monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-7031-A: the row names the spent arms and why the rest were
++    ineligible (attempt cap reached, evidence floor, diversity already on)."""
++    monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
++    sup = TrajectorySupervisor(window=1, reinduction_evidence_floor=200, reinduction_attempt_cap=3)
++    assert sup.observe(_snap(level=2, goal_bias_installed=True)).arm == ARM_DROP_GOAL_BIAS
++    # Nothing left that is eligible: bias gone, attempts at the cap, diversity already on.
++    # Same level as the firing above: a level change is progress, not stagnation.
++    exhausted = _snap(
++        level=2,
++        induced=True,
++        induction_attempts=3,
++        new_transitions_since_induction=250,
++        diversity_active=True,
++    )
++    assert sup.observe(exhausted) is None
++    receipt = sup.receipt()
++    assert receipt["stagnations_unredirected"] == 1
++    assert receipt["unredirected_windows_dropped"] == 0
++    assert receipt["unredirected_windows"] == [
++        {
++            "action_index": 2,
++            "level": 2,
++            "arms_used": [ARM_DROP_GOAL_BIAS],
++            "goal_bias_installed": False,
++            "induced": True,
++            "induction_attempts": 3,
++            "attempt_cap_reached": True,
++            "new_transitions_since_induction": 250,
++            "evidence_floor_met": True,
++            "diversity_active": True,
++        }
++    ]
++
++
++def test_scenario_7031_a_a_window_that_fires_records_no_row() -> None:
++    """A window answered by an arm is not an exhausted window."""
++    sup = TrajectorySupervisor(window=1)
++    assert sup.observe(_snap(goal_bias_installed=True)) is not None
++    assert sup.receipt()["unredirected_windows"] == []
++
++
++def test_scenario_7031_a_the_cap_and_floor_flags_read_the_supervisor_settings() -> None:
++    """`attempt_cap_reached` and `evidence_floor_met` use THIS supervisor's settings, so a
++    reader does not have to know the cap to read the row."""
++    sup = TrajectorySupervisor(window=1, reinduction_evidence_floor=10, reinduction_attempt_cap=5)
++    assert (
++        sup.observe(
++            _snap(
++                induced=True,
++                induction_attempts=2,
++                new_transitions_since_induction=4,
++                diversity_active=True,
++            )
++        )
++        is None
++    )
++    row = sup.receipt()["unredirected_windows"][0]
++    assert row["attempt_cap_reached"] is False
++    assert row["evidence_floor_met"] is False
++
++
++def test_scenario_7031_b_the_window_list_is_bounded_and_overflow_is_counted() -> None:
++    """SCENARIO-ARC-WMTE-7031-B: past MAX_UNREDIRECTED_WINDOWS rows, the count keeps
++    growing and `unredirected_windows_dropped` says how many rows were not kept."""
++    sup = TrajectorySupervisor(window=1)
++    busy = _snap(diversity_active=True)
++    for _ in range(MAX_UNREDIRECTED_WINDOWS + 5):
++        assert sup.observe(busy) is None
++    receipt = sup.receipt()
++    assert receipt["stagnations_unredirected"] == MAX_UNREDIRECTED_WINDOWS + 5
++    assert len(receipt["unredirected_windows"]) == MAX_UNREDIRECTED_WINDOWS
++    assert receipt["unredirected_windows_dropped"] == 5
++
++
++def test_scenario_7031_c_the_cell_summarises_the_exhaustion_states(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7031-C: the ledger keeps the rows and the new-arm cell counts them
++    per flag; the report prints the counts."""
++    windows = _exhausted_windows(9) + _exhausted_windows(
++        2,
++        level=0,
++        arms_used=list(LEGACY_DEFAULT_ARMS),
++        attempt_cap_reached=False,
++        induction_attempts=1,
++    )
++    row = _applied_row(
++        redirects=[_redirect(arm, True, a2l=700) for arm in LEGACY_DEFAULT_ARMS],
++        stag=11,
++        arms_enabled=list(LEGACY_DEFAULT_ARMS),
++        windows=windows,
++    )
++    ledger, _ = _ingest(tmp_path, [row])
++    entry = next(iter(ledger["entries"].values()))
++    assert len(entry["unredirected_windows"]) == 11
++    assert entry["unredirected_windows_dropped"] == 0
++    recommendation = evaluate(ledger, NOW)
++    states = recommendation["new_arm_specification"]["cells"][0]["exhaustion_states"]
++    assert states == {
++        "windows_recorded": 11,
++        "windows_dropped": 0,
++        "levels": [0, 2],
++        "arms_used_sets": sorted(
++            {
++                ",".join([ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION]),
++                ",".join(LEGACY_DEFAULT_ARMS),
++            }
++        ),
++        "goal_bias_installed": 0,
++        "induced": 11,
++        "attempt_cap_reached": 9,
++        "evidence_floor_met": 11,
++        "diversity_active": 11,
++    }
++    report = render_report(recommendation)
++    assert "states: windows=11 levels=[0, 2] attempt_cap_reached=9" in report
++
++
++def test_scenario_7031_c_a_legacy_row_reads_not_recorded(tmp_path: Path) -> None:
++    """A row from before the field must not read as "every flag False"."""
++    row = _applied_row(redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS], stag=14)
++    ledger, _ = _ingest(tmp_path, [row])
++    entry = next(iter(ledger["entries"].values()))
++    assert entry["unredirected_windows"] == []
++    assert exhaustion_summary(entry) == "not_recorded"
++    recommendation = evaluate(ledger, NOW)
++    assert (
++        recommendation["new_arm_specification"]["cells"][0]["exhaustion_states"] == "not_recorded"
++    )
++    assert "states: not_recorded" in render_report(recommendation)
++
++
++def test_scenario_7031_c_the_ledger_copy_is_bounded_too(tmp_path: Path) -> None:
++    """An oversized producer list cannot bloat the ledger past the receipt's own cap."""
++    row = _applied_row(
++        redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
++        stag=MAX_UNREDIRECTED_WINDOWS + 10,
++        windows=_exhausted_windows(MAX_UNREDIRECTED_WINDOWS + 10),
++    )
++    ledger, _ = _ingest(tmp_path, [row])
++    entry = next(iter(ledger["entries"].values()))
++    assert len(entry["unredirected_windows"]) == MAX_UNREDIRECTED_WINDOWS
++
++
++# --- REQ-ARC-WMTE-7032: shadow receipts are controls, never redirect evidence -------------
++
++
++def test_scenario_7032_a_shadow_receipts_land_in_controls_not_entries(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7032-A: REQ-6720 rule 1 still holds (no shadow row in `entries`),
++    and the shadow row is now kept in `controls` with its would-have outcomes."""
++    shadow = _shadow_row(would_have=[_would_have(ARM_DROP_GOAL_BIAS, True, a2l=765)])
++    ledger, counts = _ingest(tmp_path, [shadow, shadow])
++    assert ledger["entries"] == {}
++    assert counts["shadow_observed"] == 2
++    assert counts["controls_new"] == 1
++    assert counts["controls_duplicate"] == 1
++    control = next(iter(ledger["controls"].values()))
++    assert control["mode"] == "shadow"
++    assert control["would_have_redirects"] == [
++        {
++            "arm": ARM_DROP_GOAL_BIAS,
++            "action_index": 120,
++            "level": 0,
++            "levelup_followed_without_redirect": True,
++            "actions_to_levelup_without_redirect": 765,
++        }
++    ]
++    # Redirect evidence is unchanged by the control pool.
++    assert evaluate(ledger, NOW)["evidence"]["redirects"] == 0
++    assert evaluate(ledger, NOW)["evidence"]["controls"] == 1
++
++
++def test_scenario_7032_b_a_credit_the_control_reproduces_is_matched(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7032-B: the 2026-09-05 r11l shape. Four applied runs booked
++    `drop_goal_bias` as helped at level 0; a shadow run in the same cell leveled up with
++    nothing applied. Those credits are control-matched; a credit in a cell with no control,
++    or where the control did NOT level up, is not."""
++    applied = [
++        _applied_row(seed=20260719, redirects=[_redirect(ARM_DROP_GOAL_BIAS, True, a2l=765)]),
++        _applied_row(
++            seed=20260719,
++            redirects=[
++                _redirect(ARM_DROP_GOAL_BIAS, True, a2l=768),
++                _redirect(ARM_FORCE_DIVERSITY, True, level=1, a2l=5),
++            ],
++        ),
++        _applied_row(
++            game="cd82", seed=20260719, redirects=[_redirect(ARM_DROP_GOAL_BIAS, True, a2l=651)]
++        ),
++        _applied_row(seed=99, redirects=[_redirect(ARM_ALLOW_REINDUCTION, True, a2l=100)]),
++    ]
++    shadow = [
++        _shadow_row(
++            seed=20260719,
++            would_have=[
++                _would_have(ARM_DROP_GOAL_BIAS, True, a2l=765),
++                _would_have(ARM_FORCE_DIVERSITY, False, level=1),
++            ],
++        ),
++        _shadow_row(seed=99, would_have=[_would_have(ARM_ALLOW_REINDUCTION, False)]),
++    ]
++    ledger, _ = _ingest(tmp_path, applied + shadow)
++    recommendation = evaluate(ledger, NOW)
++    per_arm = {row["arm"]: row for row in recommendation["per_arm"]}
++    assert per_arm[ARM_DROP_GOAL_BIAS]["helped"] == 3
++    assert per_arm[ARM_DROP_GOAL_BIAS]["helped_matched_by_control"] == 2
++    assert per_arm[ARM_DROP_GOAL_BIAS]["helped_beyond_control"] == 1
++    # The level-1 diversity credit: control exists but did not level up there.
++    assert per_arm[ARM_FORCE_DIVERSITY]["helped_matched_by_control"] == 0
++    # A different seed is a different cell.
++    assert per_arm[ARM_ALLOW_REINDUCTION]["helped_matched_by_control"] == 0
++    assert recommendation["evidence"]["helped_total"] == 5
++    assert recommendation["evidence"]["helped_matched_by_control_total"] == 2
++    assert recommendation["evidence"]["controls"] == 2
++    report = render_report(recommendation)
++    assert "controls: 2 shadow receipts; 2 of 5 credits matched by a control" in report
++    assert f"{ARM_DROP_GOAL_BIAS}: fired=3 helped=3" in report
++    assert "beyond_control=1" in report
++
++
++def test_scenario_7032_b_an_unhelped_redirect_is_never_matched(tmp_path: Path) -> None:
++    """A redirect that no level-up credited cannot be "reproduced" by a control."""
++    ledger, _ = _ingest(
++        tmp_path,
++        [
++            _applied_row(redirects=[_redirect(ARM_DROP_GOAL_BIAS, False)]),
++            _shadow_row(would_have=[_would_have(ARM_DROP_GOAL_BIAS, True, a2l=765)]),
++        ],
++    )
++    row = evaluate(ledger, NOW)["per_arm"][0]
++    assert row["arm"] == ARM_DROP_GOAL_BIAS
++    assert (row["helped"], row["helped_matched_by_control"], row["helped_beyond_control"]) == (
++        0,
++        0,
++        0,
++    )
++
++
++def test_scenario_7032_c_the_frozen_rules_still_key_on_pooled_helped(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7032-C: an arm whose every credit a control reproduces is still not
++    a retire candidate. Changing a rule is a separate spec act (as REQ-7013-D recorded)."""
++    applied = [
++        _applied_row(seed=i, redirects=[_redirect(ARM_DROP_GOAL_BIAS, True, a2l=700)])
++        for i in range(MIN_FIRED_PER_ARM)
++    ]
++    shadow = [
++        _shadow_row(seed=i, would_have=[_would_have(ARM_DROP_GOAL_BIAS, True, a2l=700)])
++        for i in range(MIN_FIRED_PER_ARM)
++    ]
++    ledger, _ = _ingest(tmp_path, applied + shadow)
++    recommendation = evaluate(ledger, NOW)
++    row = recommendation["per_arm"][0]
++    assert row["helped"] == MIN_FIRED_PER_ARM
++    assert row["helped_beyond_control"] == 0
++    assert [r for r in recommendation["recommendations"] if r["kind"] == "retire_candidate"] == []
++
++
++def test_scenario_7032_d_a_ledger_from_before_the_control_pool_loads(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-7032-D: the v1 ledger on disk has no `controls`; it loads with an
++    empty pool rather than failing or reading a missing key."""
++    ledger = empty_ledger()
++    del ledger["controls"]
++    path = tmp_path / "ledger.json"
++    path.write_text(json.dumps(ledger), encoding="utf-8")
++    loaded = load_ledger(path)
++    assert loaded["controls"] == {}
++    recommendation = evaluate(loaded, NOW)
++    assert recommendation["evidence"]["controls"] == 0
++
++
++def test_scenario_7032_status_is_recommendation_when_only_legacy_cells_exist(
++    tmp_path: Path,
++) -> None:
++    """The widened trigger alone moves the ledger's status; the human sees every cell."""
++    rows = [
++        _applied_row(
++            seed=s, redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS], stag=n
++        )
++        for s, n in ((1, 13), (2, 14), (3, 14), (4, 12))
++    ]
++    ledger, _ = _ingest(tmp_path, rows)
++    recommendation = evaluate(ledger, NOW)
++    assert recommendation["status"] == STATUS_RECOMMENDATION
++    assert len(recommendation["new_arm_specification"]["cells"]) == 4
++    assert recommendation["evidence"]["stagnations_unredirected_total"] == 53
+-- 
+2.55.0
+

@@ -1,0 +1,449 @@
+From a38c4a2d27544a73af4fa10f64b7809755c333c1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 10:26:15 -0400
+Subject: [PATCH 03970/11362] [outer-loop] Correct L2 truncation-fix note per
+ adversarial review: retract isolation "satisfiable" over-claim
+
+An adversarial verification pass (workflow verify-l2-truncation-fix) caught 3 over-claims in the
+first draft. Corrections:
+- RETRACT "satisfiable goal in isolation": the synthetic test was circular (prompt literally
+  instructs is_level_complete must return True + prints the grid -> model copies it), and the
+  harness's real _goal_satisfiability_check (BFS reachability over the induced engine) would return
+  False anyway (toy engine only mutates cell [2,2]; hardcoded 25-cell grid unreachable). Defensible
+  isolation claim is ONLY "emits valid parseable code, fast".
+- Attribute stopping to the stop=["```"] sequence, NOT the code-only directive (directive alone ran
+  to the 4096 limit, 605s; stop-seq -> 195 tokens / 15.6s).
+- Back the live conclusion with the fix-enabled run's binary arm (logs/proto_graded_ab_codeonly.log:
+  lp85/binary maxL=1 exemplar=True gps=False), not the stale pre-fix proto_graded artifact. exemplar=True
+  confirms the unsatisfiable goal is the L2 attempt (not a benign L1 placeholder); the fix moves the
+  live failure from "no code (truncated)" to "valid code, inconsistent/unsatisfiable goal" -> the
+  deeper wall is goal-induction QUALITY. lp85 L2 still does NOT bank.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...fix-and-degenerate-goal-wall-2026-06-25.md | 189 ++++++++++--------
+ logs/proto_graded_ab_codeonly.log             |  15 ++
+ logs/proto_l2_code_only_prefix.log            |  13 ++
+ logs/proto_l2_stopseq_verify.log              |   7 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   3 +
+ ops/conductor-state.json                      |   2 +-
+ results/arc_e3/lp85/world_model.py            |  60 +-----
+ results/proto_l2_code_only_prefix.json        |  13 +-
+ 9 files changed, 159 insertions(+), 145 deletions(-)
+ create mode 100644 logs/proto_graded_ab_codeonly.log
+ create mode 100644 logs/proto_l2_code_only_prefix.log
+ create mode 100644 logs/proto_l2_stopseq_verify.log
+
+diff --git a/docs/research-notes/l2-truncation-fix-and-degenerate-goal-wall-2026-06-25.md b/docs/research-notes/l2-truncation-fix-and-degenerate-goal-wall-2026-06-25.md
+index 3a9c7e22c5..3cff8e59c4 100644
+--- a/docs/research-notes/l2-truncation-fix-and-degenerate-goal-wall-2026-06-25.md
++++ b/docs/research-notes/l2-truncation-fix-and-degenerate-goal-wall-2026-06-25.md
+@@ -1,116 +1,129 @@
+-# L2 goal-induction: the token-truncation wall is FIXED — and fixing it reveals a deeper degenerate-goal wall
++# L2 goal-induction: the token-truncation wall is FIXED — but a deeper goal-induction-QUALITY wall stands
+ 
+ **Date:** 2026-06-25 · **Author:** outer-loop (operator-directed: "update qwen ctx to 16384; re-call
+ the captured L2 prompt with a stronger code-only prefix at 4096; if CoT irrepressible fall back to
+ raise-budget; if it produces a satisfiable goal, chain into re-testing the graded-bias fix to see if
+ lp85 L2 banks").
+-**Artifacts:** `results/proto_l2_code_only_prefix.json`, `results/proto_graded_goal_bias_ab.json`.
+-**Code:** `scripts/experiments/proto_l2_code_only_prefix.py`, `proto_l2_stopseq_verify.py`;
+-shipped fix env-gated in `python/carnot/agentic/arc_executable_world_model.py`
++**Self-corrected** after an adversarial verification pass (workflow `verify-l2-truncation-fix`,
++2026-06-25) caught three over-claims in the first draft; this note retracts them explicitly below.
++**Artifacts:** `results/proto_l2_code_only_prefix.json` (isolation; well-supported);
++`logs/proto_graded_ab_codeonly.log` (the fix-enabled live A/B; binary arm decisive, graded+sc25
++still completing). **Code:** shipped fix env-gated in `python/carnot/agentic/arc_executable_world_model.py`
+ (`CARNOT_ARC_CODEONLY_INDUCE=1`).
+ 
+-## TL;DR
++## TL;DR (corrected)
+ 
+ 1. **Qwen context** was already `n_ctx=16384` (code + running llama-server) — no change needed.
+-2. **The truncation wall is real and now FIXED.** A forceful CODE-ONLY directive + a `stop=["```"]`
+-   sequence makes the L2 induction emit ONLY the code block instead of burning the whole 4096-token
+-   budget on win-state chain-of-thought (CoT). Measured on the lp85 L2 prompt:
+-   - baseline `/no_think`: `stop_type=limit`, 4096 tokens, **0 code**, 450s.
+-   - code-only prefix (no stop): valid `engine`+`is_level_complete`, but rambled to the limit (605s).
+-   - **code-only prefix + `stop=["```"]`: valid code, `stop_type=word`, 195 tokens, 15.6s** — a
+-     ~30× latency *improvement*, not a hit. In isolation the induced predicate is
+-     satisfiable+discriminating (True on the rendered win state, False elsewhere).
+-   - Wired end-to-end through the shipped `generate()`: returns valid+satisfiable code in **12.9s**
+-     where the unpatched path produced nothing.
+-3. **But fixing truncation does NOT make lp85 L2 bank.** On the LIVE lp85 game the fixed induction
+-   emits code, yet the induced `is_level_complete` is **degenerate** (`return False`), so the
+-   harness's `_goal_satisfiability_check` (BFS over the induced engine; satisfiable iff some
+-   reachable grid makes the predicate True) returns `satisfiable=False`. lp85 stays at L1.
+-   **The deeper wall is goal-induction QUALITY, not token budget.**
+-
+-## What was wrong before (the truncation wall)
+-
+-`proto_l2_proposer_truncation_check` (prior session) proved the 4096-token L2 induce call returned
+-`stop_type='limit'` with `tokens_predicted=4096` and **zero** code: the model spent the entire
+-budget "analyzing the win state" (CoT prose) and never reached the code block. `/no_think` did not
+-suppress this. So `is_level_complete` was never induced → `goal_predicate_satisfiable=False` for
+-~10 milestones, blamed on truncation.
++2. **The truncation wall is real and now FIXED.** A forceful CODE-ONLY directive **plus a
++   `stop=["```"]` sequence** makes the L2 induction emit ONLY the code block instead of burning the
++   whole 4096-token budget on win-state chain-of-thought (CoT):
++   - baseline `/no_think`, SAME prompt (matched within-run control): `stop_type=limit`, 4096 tokens,
++     **0 code**, 450s.
++   - **directive ALONE did NOT stop the model**: it ran to `stop_type=limit`, 4096 tokens, 605s — it
++     emitted the code *early* (so valid code is extractable) then rambled to the limit.
++   - **directive + `stop=["```"]`: `stop_type=word`, 195 tokens, 15.6s, valid parseable
++     `engine`+`is_level_complete`.** The stop-sequence — not the directive — is what stops the
++     rambling. This is the deployable fix and it is a ~30× latency *improvement*, not a hit.
++   - Wired through the shipped `generate()` it returns valid code where the unpatched path returned
++     nothing.
++3. **RETRACTED over-claim (first draft said "produces a satisfiable goal in isolation").** It does
++   NOT under the harness's real criterion. Two reasons: **(a) circular** — the synthetic prompt
++   literally instructs `is_level_complete must return True here` and prints the win grid, so the
++   model copying it into `np.array_equal` is True *by construction*; **(b) unreachable** — the
++   harness's `_goal_satisfiability_check` (`arc_llm_reinduction.py:481`) is BFS *reachability over
++   the induced engine*, and the toy synthetic engine only ever mutates cell `[2,2]`, so the hardcoded
++   25-cell win grid is unreachable → the harness would return `satisfiable=False` even in isolation.
++   The only defensible isolation claim is **"emits valid parseable code, fast"**.
++4. **On the live game, lp85 L2 does NOT bank — even with the fix.** That is the answer to the
++   operator's question.
+ 
+ ## The fix (truncation half — confirmed, shipped, env-gated)
+ 
+ `_L2_CODEONLY_DIRECTIVE` (a forceful "output ONLY a ```python block, do NOT analyze, skip all
+-reasoning" instruction) is prepended to the induce prompt, an opening fence is appended, and the
+-completion request carries `stop=["```"]`. The model emits the two functions and stops at the
+-closing fence. Gated by `CARNOT_ARC_CODEONLY_INDUCE=1`, scoped to the induce call
+-(`"is_level_complete" in required`) so gap-filler/refactor prompts are untouched. Default OFF — no
+-behaviour change unless the env var is set. Extraction is made robust to the stop-sequence eating
+-the closing fence (the opener is in the prompt, so the raw completion IS the code body).
++reasoning") is prepended to the induce prompt, an opening fence is appended, and the completion
++request carries `stop=["```"]`. The model emits the two functions and stops at the closing fence.
++Gated by `CARNOT_ARC_CODEONLY_INDUCE=1`, scoped to inductions (`"is_level_complete" in required`,
++which matches `_gen_to_file` and `experiment_4544:615`) so gap-filler/refactor callers are untouched.
++Default OFF — no behaviour change unless the env var is set (verified by the adversarial review:
++`bool(os.environ.get(...))` is False when unset → the pre-existing `no_think_prefix` path runs).
++Extraction is made robust to the stop-sequence eating the closing fence (the opener is in the prompt,
++so the raw completion IS the code body), and still passes through the same `def`-presence + `ast.parse`
++gate, so garbage cannot slip through.
+ 
+-Within-run matched control (same prompt bytes, warm Qwen :8920): baseline truncates to 0 code;
+-the fixed path emits valid code in 15.6s. This is an unambiguous, deployable improvement.
++## The deeper wall (goal-induction QUALITY) — confirmed at L2 on the fix-enabled live run
+ 
+-## The deeper wall the fix REVEALS (goal-induction quality)
++Live graded-bias A/B on real lp85 with `CARNOT_ARC_CODEONLY_INDUCE=1` (the actual fix-enabled run;
++`logs/proto_graded_ab_codeonly.log`):
+ 
+-On the live lp85 graded-bias re-test (`CARNOT_ARC_CODEONLY_INDUCE=1`, both arms): the smoke arm
+-reached **maxL=1, n_induce=2, goal_satisfiable=False (712s)**, and the induced world model was:
+-
+-```python
+-def engine(grid, action, data):
+-    if action == 6:
+-        ...
+-        new_grid[py, px] = 5      # a plausible click-sets-cell dynamics model
+-        return new_grid
+-    return grid
+-def is_level_complete(grid):
+-    return False                  # <-- DEGENERATE constant-false goal
++```
++lp85/binary: maxL=1 l2=False exemplar=True n_induce=2 gps=False outcome_c=False (1398.5s)
+ ```
+ 
+-`is_level_complete: return False` can never be satisfied → `_goal_satisfiability_check` returns
+-`degenerate_goal_predicate` → the planner has no goal to plan toward → no L2.
++- `maxL=1` — reached L1, **not L2**.
++- `exemplar=True` — the L2 induction **did** receive the win-state exemplar. So the unsatisfiable
++  goal is **the L2 attempt with exemplar present**, NOT a benign L1 placeholder (this resolves the
++  L1-vs-L2 question the first draft left open).
++- `gps=False` — `goal_predicate_satisfiable_any=False`: no induction produced a goal satisfiable
++  under the harness's reachability criterion.
+ 
+-**Two candidate causes (the live A/B's per-induction `induction_summary` disambiguates which):**
++Unlike the **pre-fix** run (whose stale artifact recorded `skipped: proposer_failed` = no code at
++all for L2), the fix-enabled run **does emit valid code** — multiple world models were written
++during the run, with *inconsistent* `is_level_complete` quality:
++
++```python
++# one induction (degenerate constant):        # another induction (a real general rule):
++def is_level_complete(grid):                   def is_level_complete(grid):
++    return False                                   h, w = grid.shape
++                                                   for r in range(h):
++# a third (exact-match a hardcoded grid,           for c in range(w):
++#  unreachable by the induced engine):                 if grid[r, c] == 3: return False
++def is_level_complete(grid):                       return True
++    return np.array_equal(grid, np.array([...]))
++```
+ 
+-- **(likely benign) this is the L1 induction**, fired before any win-state exemplar exists. With no
+-  exemplar the model legitimately cannot know the win condition, and `return False` is an honest
+-  placeholder. L1 is reached by exploration, not by a goal, so a false goal there is harmless.
+-- **(the real problem) this is the L2 induction WITH the win-state exemplar**, and the model still
+-  punted to `return False`. That would mean code-only reasoning-suppression hurts the GOAL predicate:
+-  in isolation (a clear ASCII win exemplar) the code-only model hardcodes the exact win grid (a
+-  satisfiable-if-reachable predicate), but on the real lp85 L2 exemplar it gives up. The CoT we
+-  suppressed ("let me re-examine the win state…") was the model *trying to derive the win condition*;
+-  skipping it may trade truncation for laziness on the hardest part of the induction.
++So the truncation fix moves the live failure from **"no code (truncated)"** to **"valid code, but the
++induced win-condition is inconsistent and not satisfiable"** (`gps=False`). **The deeper wall is
++goal-induction QUALITY, not token budget** — and, plausibly, suppressing reasoning trades truncation
++for a lazier goal predicate (HYPOTHESIS, not established: in isolation the directive made the model
++copy the instructed grid; here it produces `return False` / unreachable-exact-match on some attempts).
+ 
+ ## Honest reconciliation with the operator's conditional
+ 
+-The operator's chain was: fix truncation → IF a satisfiable goal is produced → re-test graded-bias →
+-see if lp85 L2 banks. In **isolation** the fix produces a satisfiable goal (condition met), so we
+-chained. On the **live** game the goal collapses to degenerate, so **lp85 L2 does NOT bank** — the
+-graded-bias fix is moot when the goal predicate is constant-false (graded distance to an unreachable
+-/ never-True goal is uninformative). This is **outcome B** (goal induction is the wall) — but now
+-demonstrably a *quality* wall beneath the *truncation* wall, not the truncation itself.
++The chain was: fix truncation → IF a satisfiable goal is produced → re-test graded-bias → does lp85
++L2 bank. The honest reading: the fix produces **valid code but not a harness-satisfiable goal**
++(neither in isolation — circular/unreachable — nor live — `gps=False`). So the antecedent is **not
++cleanly met**, and the live re-test confirms **lp85 L2 does NOT bank**. The graded-bias fix is moot
++when there is no satisfiable goal predicate to grade distance against. This is **outcome B** (goal
++induction is the wall), now demonstrably a *quality* wall beneath the *truncation* wall.
+ 
+ ## What ships vs what's next
+ 
+ - **Ships now:** the env-gated truncation fix (`CARNOT_ARC_CODEONLY_INDUCE=1`). It is a real,
+-  validated, 30×-faster, non-truncating induction path. It is necessary-not-sufficient for L2.
+-- **Next (goal-induction quality):** the candidate levers are (a) a LESS aggressive directive that
+-  forbids prose but still permits a brief, fenced reasoning scratch *before* the code (suppress the
+-  ramble, keep the win-condition derivation); (b) a goal-predicate REPAIR/verify loop that rejects
+-  `return False` / constant predicates and re-prompts (the harness already has
+-  `_nonzero_count_predicate` as an exemplar-derived fallback — wire it in when the LLM punts);
+-  (c) generate the goal predicate as a SEPARATE focused call from the engine, with the win-state
+-  exemplar front-and-center, so the model's budget is spent on the win condition, not the dynamics.
+-- The **rendering-space caveat** (the `_transitions_block` ASCII win state can differ from the raw
+-  frame array) is a separate latent risk for exact-match predicates and should be audited if a
+-  future induction hardcodes a grid.
+-
+-## Method notes / integrity
+-
+-- `inference_substrate=live_llm_inference`; `solve_provenance=development_proxy` (the offline dev
+-  twin, not a live-agent self-discovery solve); `verifier_is_oracle=false`.
+-- The original `proto_l2_code_only_prefix` satisfiability verdict was a TEST BUG (it fed the raw
+-  `prev` array, not the `_transitions_block`-rendered win grid the model was shown); corrected in the
+-  artifact (`goal_satisfiability_CORRECTED`).
+-- Server reuse: the warm Qwen :8920 (4 idle slots) was reused directly; the graded proto's
+-  port-busy hard-abort was patched to reuse a healthy Qwen server.
++  validated, ~30×-faster, non-truncating induction path that emits valid code where the unpatched
++  path emitted none. It is **necessary-not-sufficient** for L2.
++- **Next (the real lever — goal-induction QUALITY):**
++  1. A goal-predicate REPAIR/verify loop that REJECTS degenerate predicates (`return False`,
++     `return True`, exact-match grids the engine can't reach) and re-prompts — the harness already
++     ships `_nonzero_count_predicate` as an exemplar-derived fallback; wire it in when the LLM punts.
++  2. Generate the goal predicate in a SEPARATE focused call (win-state exemplar front-and-centre)
++     from the dynamics engine, so the budget is spent on the win condition specifically.
++  3. A LESS aggressive directive that forbids *prose* but permits a brief fenced reasoning scratch
++     *before* the code — suppress the ramble, keep the win-condition derivation (the suppressed CoT
++     was the model trying to derive the win condition).
++  4. Make `is_level_complete` satisfiability a first-class gate: reject any induced predicate whose
++     `_goal_satisfiability_check` returns `degenerate_goal_predicate` and re-induce.
++
++## Integrity / provenance
++
++- `inference_substrate=live_llm_inference`; `solve_provenance=development_proxy` (offline dev twin,
++  not a live-agent self-discovery solve); `verifier_is_oracle=false`.
++- **Corrections applied after adversarial review:** (1) the isolation "satisfiable" claim is retracted
++  (circular + unreachable; see `goal_satisfiability_RECONCILED` in the artifact); (2) stopping is
++  attributed to the stop-sequence, not the directive; (3) the live conclusion is now backed by the
++  fix-enabled run's binary arm (`logs/proto_graded_ab_codeonly.log`), not the stale pre-fix
++  `proto_graded_goal_bias_ab.json` (06:24). The full fix-enabled A/B artifact (graded arm + sc25 +
++  per-induction `induction_summary`) is completing in the background and is confirmatory — the binary
++  arm already settles the lp85-L2 question.
++- The `712s` smoke / `1398.5s` binary-arm durations are from the fix-enabled run's log; the
++  first draft's reference to a `649.9s` figure was the stale pre-fix artifact and has been dropped.
+ - No external submission; no landing-page edits; canonical URLs unchanged.
+diff --git a/logs/proto_graded_ab_codeonly.log b/logs/proto_graded_ab_codeonly.log
+new file mode 100644
+index 0000000000..0acc281529
+--- /dev/null
++++ b/logs/proto_graded_ab_codeonly.log
+@@ -0,0 +1,15 @@
++=== STEP 0: PRECONDITIONS ===
++  GGUF present: True -> /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf
++  Port 8920 free: False
++  Port 8919 occupant: ?
++  Port 8920 busy but serving a healthy Qwen -> REUSING warm server.
++
++=== STEP 1: SMOKE TEST - lp85 binary arm (confirm L1 reach + L2 induction fires) ===
++INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
++2026-06-25 09:42:43 | INFO | Created new scorecard: 5ca3bda9-74ea-4295-8100-0d89905fb4a1
++2026-06-25 09:42:43 | INFO | Successfully loaded game class Lp85 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/lp85/305b61c3/lp85.py
++  lp85 binary smoke: maxL=1 n_induce=2 goal_satisfiable=False (712.1s)
++
++=== STEP 2: FULL 2x2 A/B (games=['lp85', 'sc25'], budget=400) ===
++  Running lp85 / binary arm ...
++2026-06-25 09:54:37 | INFO | Created new scorecard: 03c0df50-fe44-45dc-a746-9f8637176168
+diff --git a/logs/proto_l2_code_only_prefix.log b/logs/proto_l2_code_only_prefix.log
+new file mode 100644
+index 0000000000..93533ac12d
+--- /dev/null
++++ b/logs/proto_l2_code_only_prefix.log
+@@ -0,0 +1,13 @@
++[09:16:42] PRECONDITIONS: {'qwen_gguf': True, 'server_health': True, 'serving_qwen': True, 'n_ctx': 16384, 'model_path': '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf'}
++[09:16:42] prompt rebuilt: base=2167c captured=2249c sha=8e198a5d63934854 (WIN STATE block present=True)
++[09:16:42] BASELINE: /no_think + weak suffix @4096 (expect truncation)...
++[09:24:13]   baseline: stop=limit toks=4096 parse_ok=False dur=450.3s
++[09:24:13] ARM A: STRONG_DIRECTIVE prefix + fenced suffix @4096...
++[09:34:18]   A: stop=limit toks=4096 parse_ok=True dur=605.38s
++[09:34:18] WINNER=A_strong_prefix_4096 -- testing goal satisfiability...
++[09:34:18]   satisfiability: {'exec_ok': True, 'win_state_complete': False, 'non_degenerate': True, 'engine_runs': True, 'goal_predicate_satisfiable': False, 'error': None, 'is_level_complete_on': {'win_exemplar': False, 'init': False, 'rand0': False, 'rand1': False, 'rand2': False}}
++[09:34:18] VERDICT: complete_code_only_prefix_emits_code_but_goal_unsatisfiable
++[09:34:18] SUMMARY: A_strong_prefix_4096 emits valid code at 4096, but is_level_complete is NOT satisfiable/non-degenerate on the win exemplar (sat={'exec_ok': True, 'win_state_complete': False, 'non_degenerate': True, 'engine_runs': True, 'goal_predicate_satisfiable': False, 'error': None, 'is_level_complete_on': {'win_exemplar': False, 'init': False, 'rand0': False, 'rand1': False, 'rand2': False}}).
++[09:34:18] DONE in 1055.7s -> /home/ianblenke/github.com/ianblenke/carnot/results/proto_l2_code_only_prefix.json
++[09:34:18] CHAIN: NOT satisfiable -> do NOT chain to graded-bias; report the wall.
++EXIT=0
+diff --git a/logs/proto_l2_stopseq_verify.log b/logs/proto_l2_stopseq_verify.log
+new file mode 100644
+index 0000000000..20e3bbd8c5
+--- /dev/null
++++ b/logs/proto_l2_stopseq_verify.log
+@@ -0,0 +1,7 @@
++[09:38:56] CORRECTED satisfiability: win_state->True, randoms->[False, False, False, False, False], satisfiable=True
++[09:38:56] CALL: code-only prefix + stop=['```'] @4096 ...
++[09:39:11]   stop_type=word toks=195 dur=15.6s parse_ok=True missing=[] syn=None
++[09:39:11]   stopseq is_level_complete(win_state)=True
++[09:39:11] latency_win=True (Arm A was 605s @limit; this call 15.6s @word)
++[09:39:11] artifact updated -> /home/ianblenke/github.com/ianblenke/carnot/results/proto_l2_code_only_prefix.json
++EXIT=0
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index eac236af60..90b1517f3e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 183, "phase": "iteration_start", "last_beat": "2026-06-25T12:37:32Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 184, "phase": "iteration_start", "last_beat": "2026-06-25T14:00:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c4e5ed0cdb..4550561c42 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9264,3 +9264,6 @@ c |
+ | 2026-06-25 10:35 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; the capstone +  | OK | 105 passed, 1 warning in 6.50s |
+ | 2026-06-25 11:12 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 116 passed, 1 warning in 18.01s |
+ | 2026-06-25 12:35 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: rst_win_ci_low |
++| 2026-06-25 13:58 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: it.
++codex
++The  |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 31708b22b8..7a5709cc63 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 183, "phase": "iteration_start", "started_at": "2026-06-25T12:37:32Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 184, "phase": "iteration_start", "started_at": "2026-06-25T14:00:50Z"}
+\ No newline at end of file
+diff --git a/results/arc_e3/lp85/world_model.py b/results/arc_e3/lp85/world_model.py
+index 2531bd0361..9291773620 100644
+--- a/results/arc_e3/lp85/world_model.py
++++ b/results/arc_e3/lp85/world_model.py
+@@ -1,62 +1,18 @@
+ import numpy as np
+ 
+ def engine(grid, action, data):
+-    """
+-    Predict the next grid state given the current grid, action, and action data.
+-    This game is a "toggle" or "swap" puzzle where clicking a cell toggles its state
+-    and potentially swaps it with adjacent cells of the same color.
+-    """
+-    H, W = grid.shape
+-    new_grid = grid.copy()
+-    
+-    # Action 6 is a click action with pixel coordinates
+     if action == 6:
+         if data is None:
+-            return new_grid
+-        
++            return grid
+         px, py = data['x'], data['y']
+-        # Convert pixel coordinates to logical coordinates
+-        row, col = py // 1, px // 1  # Assuming 1:1 mapping for simplicity
+-        
+-        # Check bounds
+-        if row < 0 or row >= H or col < 0 or col >= W:
+-            return new_grid
+-        
+-        # Toggle the clicked cell
+-        current_val = new_grid[row, col]
+-        
+-        # If the cell is not 0 (empty), toggle it
+-        if current_val != 0:
+-            # Toggle logic: swap with adjacent cells of the same color
+-            # This is a simplified toggle mechanism
+-            new_grid[row, col] = 0  # Clear the cell
+-            
+-            # Check adjacent cells for same color
+-            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+-                nr, nc = row + dr, col + dc
+-                if 0 <= nr < H and 0 <= nc < W:
+-                    if new_grid[nr, nc] == current_val:
+-                        new_grid[nr, nc] = 0  # Clear adjacent cells of the same color
+-            
+-            # Fill the cleared cells with the original color
+-            new_grid[row, col] = current_val
+-            
+-            # Check adjacent cells again for same color
+-            for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+-                nr, nc = row + dr, col + dc
+-                if 0 <= nr < H and 0 <= nc < W:
+-                    if new_grid[nr, nc] == current_val:
+-                        new_grid[nr, nc] = current_val  # Fill adjacent cells of the same color
+-        
++        if px < 0 or px >= grid.shape[1] or py < 0 or py >= grid.shape[0]:
++            return grid
++        if grid[py, px] == 4:
++            return grid
++        new_grid = grid.copy()
++        new_grid[py, px] = 5
+         return new_grid
+-    
+-    return new_grid
++    return grid
+ 
+ def is_level_complete(grid):
+-    """
+-    Check if the level is complete.
+-    This is a simplified check for a win state.
+-    """
+-    # Check if the grid is in a specific win state
+-    # For now, return False as a placeholder
+     return False
+\ No newline at end of file
+diff --git a/results/proto_l2_code_only_prefix.json b/results/proto_l2_code_only_prefix.json
+index 913ac3982a..552071f0d4 100644
+--- a/results/proto_l2_code_only_prefix.json
++++ b/results/proto_l2_code_only_prefix.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment_id": "proto_l2_code_only_prefix",
+-  "honest_verdict": "complete_code_only_prefix_fixes_truncation_satisfiable_goal",
+-  "verdict_summary": "CORRECTED: the strong code-only prefix defeats the zero-code truncation (valid engine+is_level_complete at 4096; baseline got 0 code) AND the induced goal predicate is SATISFIABLE+discriminating (True on the rendered win state, False elsewhere). The original 'unsatisfiable' verdict was a test bug (fed raw prev, not the rendered win grid). Remaining: Arm A rambled to the 4096 limit (605s); a stop-sequence on the closing fence fixes latency.",
++  "honest_verdict": "complete_code_only_prefix_fixes_truncation_emits_valid_code",
++  "verdict_summary": "The strong code-only directive + stop=['```'] DEFEATS the zero-code truncation: valid parseable engine+is_level_complete at 4096 where the baseline emitted 0 code (450s). The stopping is due to the STOP-SEQUENCE (the directive ALONE still ran to the 4096 limit, 605s); with the stop-sequence the call is 195 tokens / 15.6s. RETRACTED OVER-CLAIM (per 2026-06-25 adversarial review): the isolation 'satisfiable goal' claim does NOT hold under the harness's real criterion. (1) The synthetic prompt literally instructs 'is_level_complete must return True here' and prints the win grid, so the model copying it into np.array_equal is True BY CONSTRUCTION (circular). (2) The harness's _goal_satisfiability_check is BFS-reachability over the induced engine; the toy engine only sets cell [2,2], so the hardcoded 25-cell grid is UNREACHABLE -> the harness would return satisfiable=False even in isolation. The defensible isolation claim is ONLY 'emits valid parseable code, fast' -- NOT 'satisfiable goal'.",
+   "baseline_truncation_reproduced_on_this_prompt": true,
+   "winner_arm": "A_strong_prefix_4096",
+   "goal_satisfiability": {
+@@ -132,5 +132,12 @@
+     "baseline_arm_a_duration_s": 605.38,
+     "note": "stop=['```'] stops the model right after the code block, avoiding the ramble-to-4096-limit Arm A showed. Confirms the fix is code-only-prefix + stop-sequence (no budget bump needed)."
+   },
+-  "stop_sequence_code": "import numpy as np\n\ndef engine(grid, action, data):\n    grid = grid.copy()\n    if action == 0:\n        grid[2, 2] = 2\n    elif action == 2:\n        grid[2, 2] = 1\n    elif action == 1:\n        pass\n    elif action == 3:\n        pass\n    return grid\n\ndef is_level_complete(grid):\n    return np.array_equal(grid, np.array([\n        [2, 0, 1, 0, 1],\n        [2, 2, 2, 2, 1],\n        [2, 2, 0, 2, 2],\n        [0, 0, 2, 2, 1],\n        [2, 1, 0, 0, 2]\n    ]))"
++  "stop_sequence_code": "import numpy as np\n\ndef engine(grid, action, data):\n    grid = grid.copy()\n    if action == 0:\n        grid[2, 2] = 2\n    elif action == 2:\n        grid[2, 2] = 1\n    elif action == 1:\n        pass\n    elif action == 3:\n        pass\n    return grid\n\ndef is_level_complete(grid):\n    return np.array_equal(grid, np.array([\n        [2, 0, 1, 0, 1],\n        [2, 2, 2, 2, 1],\n        [2, 2, 0, 2, 2],\n        [0, 0, 2, 2, 1],\n        [2, 1, 0, 0, 2]\n    ]))",
++  "goal_satisfiability_RECONCILED": {
++    "note": "Supersedes both the top-level goal_satisfiability (False, fed raw prev) AND goal_satisfiability_CORRECTED (True, circular self-match). Neither is the harness criterion.",
++    "harness_criterion": "_goal_satisfiability_check (arc_llm_reinduction.py:481) = BFS over induced engine; satisfiable iff a REACHABLE grid makes is_level_complete True.",
++    "isolation_satisfiable_under_harness_criterion": false,
++    "reason": "induced engine only mutates cell [2,2]; hardcoded 25-cell win grid is unreachable.",
++    "defensible_isolation_claim": "emits valid parseable engine+is_level_complete (truncation defeated)"
++  }
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,1559 @@
+From fdacaec4fc9271a3aa5914413d59ec7f403e5374 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 03:31:04 -0400
+Subject: [PATCH 01717/11362] =?UTF-8?q?[conductor]=20PHASE=20D1=20?=
+ =?UTF-8?q?=E2=80=94=20SOTA-INGESTION=20SLOT=20(reserved;=20bleeding-edge?=
+ =?UTF-8?q?=20track).=20Ingest=20the=20.387=20sweep=20mapped=20onto=20the?=
+ =?UTF-8?q?=20moat=20/=20GAP-3=20/=20DiffusionGemma=20stack:=20arXiv=20260?=
+ =?UTF-8?q?5.07395=20(headroom-is-artifact),=202504.01005=20(SC=20compute-?=
+ =?UTF-8?q?crossover),=202504.16828=20(ThinkPRM=20budget-conditional),=202?=
+ =?UTF-8?q?510.20607=20(compositional=20energy=20minimization),=202602.018?=
+ =?UTF-8?q?49=20(self-rewarding=20SMC=20for=20masked=20diffusion),=202512.?=
+ =?UTF-8?q?11847=20(TRM-ARC=20headroom/vote=20decomposition).=20SOTA->expe?=
+ =?UTF-8?q?riment=20mapping=20note;=20flag=20the=20strongest=20for=20.388.?=
+ =?UTF-8?q?=20Cite=20real=20arXiv=20IDs.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4180-sota-ingestion-moat-gap3-diffusion
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...ion-moat-gap3-diffusion-v388-2026-06-14.md | 159 +++++
+ .../capabilities/research-reporting/spec.md   |  70 +++
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...4180_sota_ingestion_moat_gap3_diffusion.py | 573 ++++++++++++++++++
+ research-studying.md                          |  31 +
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...80_sota_ingestion_moat_gap3_diffusion.json |  65 ++
+ ...4180_sota_ingestion_moat_gap3_diffusion.py |  18 +
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...4180_sota_ingestion_moat_gap3_diffusion.py | 335 ++++++++++
+ 20 files changed, 1278 insertions(+), 22 deletions(-)
+ create mode 100644 docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md
+ create mode 100644 python/carnot/experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+ create mode 100644 results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json
+ create mode 100644 results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+ create mode 100644 tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+
+diff --git a/docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md b/docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md
+new file mode 100644
+index 0000000000..c52fbc232a
+--- /dev/null
++++ b/docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md
+@@ -0,0 +1,159 @@
++# SOTA ingestion 2026-06-14: moat, GAP-3, and diffusion map for .388
++
++**Artifact fields**
++- honest_verdict: `complete: sota_ingestion_moat_gap3_diffusion_mapped_v388`
++  - principle: Terminal-prefixed. Records ingestion completed with verifiable citations.
++- methods_mapped:
++  - {name: `Unsolvability Ceiling headroom sanitization`, arxiv_id_or_url: `2605.07395`, url: `https://arxiv.org/abs/2605.07395`}
++  - {name: `When To Solve/Verify accuracy-cost moat`, arxiv_id_or_url: `2504.01005`, url: `https://arxiv.org/abs/2504.01005`}
++  - {name: `ThinkPRM process-verifier cost control`, arxiv_id_or_url: `2504.16828`, url: `https://arxiv.org/abs/2504.16828`}
++  - {name: `CEM compositional ARC energy`, arxiv_id_or_url: `2510.20607`, url: `https://arxiv.org/abs/2510.20607`}
++  - {name: `Self-Rewarding SMC DiffusionGemma guidance`, arxiv_id_or_url: `2602.01849`, url: `https://arxiv.org/abs/2602.01849`}
++  - {name: `TRM ARC headroom-vote decomposition`, arxiv_id_or_url: `2512.11847`, url: `https://arxiv.org/abs/2512.11847`}
++  - principle: Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline).
++- flagged_for_v388: `cem_gap3_stage2_compositional_arc_energy_v388`
++  - principle: Closes discover->ingest->plan: names the strongest method for the next planner.
++
++## Fresh-pass provenance
++
++Read `research-references.md` `.387 planning sweep` and the
++`research-studying.md` / `research-references.md` verifier-as-reward,
++headroom, and energy-guided diffusion entries.
++
++Reliable-channel helper pass, not `/deep-research`:
++- `.venv/bin/python scripts/sweep_clusters.py 0 --max-results 8`
++- `.venv/bin/python scripts/sweep_clusters.py 1 --max-results 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "verifier as reward headroom compute optimal verification process reward model" --limit 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "compositional energy minimization ARC masked diffusion self rewarding SMC" --limit 8`
++
++The cluster helper emitted the broadened verifier and energy arXiv API URLs.
++Semantic Scholar returned HTTP 429 for both focused queries during this run, so
++no fresh S2-only promotion is claimed. Low-concurrency WebSearch/WebFetch
++verified the requested mapped paper set: arXiv:2605.07395, arXiv:2504.01005,
++arXiv:2504.16828, arXiv:2510.20607, arXiv:2602.01849, and arXiv:2512.11847.
++
++## SOTA -> experiment mapping
++
++## Unsolvability Ceiling headroom sanitization
++
++**Method/source:** Unsolvability Ceiling, arXiv:2605.07395
++(https://arxiv.org/abs/2605.07395), audits multi-LLM routing headroom and
++shows that judge bias, truncation, and output-format mismatch can inflate the
++apparent oracle gap.
++
++**Carnot stack mapping:** This maps to the A1 headroom-gate sanitization
++already applied: use executable or exact objective checks, retain oracle@K,
++and reject unsanitized judge-only headroom.
++
++**Implication:** A positive verifier result is only decision-grade if it
++survives objective oracle checks and cost-sensitive routing controls.
++
++**Failure mode:** This paper does not provide a verifier, ARC energy, or
++DiffusionGemma mechanism. It only tells us how the measurement can lie.
++
++**Experiment mapping:** Keep A1 as a mandatory precondition for A3 and GAP-3:
++no accuracy-cost moat claim without executable headroom.
++
++## When To Solve/Verify accuracy-cost moat
++
++**Method/source:** When To Solve, When To Verify, arXiv:2504.01005
++(https://arxiv.org/abs/2504.01005), compares self-consistency with generative
++verification under fixed inference budgets.
++
++**Carnot stack mapping:** This maps to A3's accuracy-and-cost moat framing:
++report vote@K, oracle@K, Carnot rerank@K, verifier calls, and wall-clock cost.
++
++**Implication:** Carnot must prove that a cheap executable energy beats or
++sits on the Pareto frontier against simply sampling more solutions.
++
++**Failure mode:** The paper studies GenRM-style generative verification, not
++Carnot's executable energy. It sets a cost bar but is not a direct substrate.
++
++**Experiment mapping:** Keep the A3 table cost-normalized and do not report an
++accuracy-only moat result.
++
++## ThinkPRM process-verifier cost control
++
++**Method/source:** ThinkPRM, arXiv:2504.16828
++(https://arxiv.org/abs/2504.16828), uses generative process verification with
++small synthetic supervision to judge reasoning steps.
++
++**Carnot stack mapping:** This also maps to A3: it is the high-quality PRM
++comparator for an accuracy-and-cost moat, not the cheap-energy method itself.
++
++**Implication:** Verifier advantage is real but budget-conditional; Carnot must
++show both quality and cost separation from an expensive process verifier.
++
++**Failure mode:** ThinkPRM's long generative judging can be too expensive for
++Carnot's claimed moat, so it validates the target class without proving our
++efficiency claim.
++
++**Experiment mapping:** Use ThinkPRM as the expensive quality comparator while
++Carnot energy must carry the cheap verifier arm.
++
++## CEM compositional ARC energy
++
++**Method/source:** Generalizable Reasoning through Compositional Energy
++Minimization, arXiv:2510.20607 (https://arxiv.org/abs/2510.20607), learns
++subproblem energy landscapes and composes them at test time.
++
++**Carnot stack mapping:** This is the GAP-3 Stage-2 compositional ARC energy
++map: factor rule/content energies, compose them on held-out tasks, and sample
++with a PEM-like parallel minimization loop.
++
++**Implication:** This is the strongest .388 method because it targets the next
++unbuilt Carnot capability: a learned transition energy, not another post-hoc
++reranker.
++
++**Failure mode:** CEM is not an ARC-AGI-3 result and not a Carnot executable
++transition verifier. Transfer must be measured on the GAP-3 harness.
++
++**Experiment mapping:** Flag .388 for `cem_gap3_stage2_compositional_arc_energy_v388`:
++train local transformation energies, compose them on held-out ARC-style tasks,
++and compare PEM sampling against the current GAP-3 candidates.
++
++## Self-Rewarding SMC DiffusionGemma guidance
++
++**Method/source:** Self-Rewarding SMC for Masked Diffusion Language Models,
++arXiv:2602.01849 (https://arxiv.org/abs/2602.01849), weights and resamples
++parallel masked-diffusion particles using trajectory confidence.
++
++**Carnot stack mapping:** This maps to the queued DiffusionGemma guidance plan:
++use particle weighting and resampling as the training-free guidance template.
++
++**Implication:** A future DiffusionGemma run can convert parallel denoising
++capacity into better candidates without training a separate reward model.
++
++**Failure mode:** The reward is model confidence, not external executable
++correctness. It can improve confident sampling without improving task validity.
++
++**Experiment mapping:** Keep SMC-style guidance queued behind A3: use it for
++DiffusionGemma guidance once the energy gate is positive.
++
++## TRM ARC headroom-vote decomposition
++
++**Method/source:** Tiny Recursive Models on ARC-AGI-1, arXiv:2512.11847
++(https://arxiv.org/abs/2512.11847), decomposes TRM performance into voting,
++identity conditioning, and shallow recursion effects.
++
++**Carnot stack mapping:** This maps to the TRM headroom/vote decomposition:
++separate single-pass, vote@1000, oracle@K, and identity-ID ablation before
++crediting a verifier.
++
++**Implication:** TRM can remain the candidate generator, but only with a clean
++headroom/vote receipt that shows where selection value could exist.
++
++**Failure mode:** The ablation is a warning about substrate artifacts, not an
++energy or guidance mechanism.
++
++**Experiment mapping:** Keep TRM as a controlled generator and require identity
++conditioning plus vote/headroom ablations before any rerank claim.
++
++## Flagged for .388
++
++`cem_gap3_stage2_compositional_arc_energy_v388` is the strongest follow-on.
++A1 headroom sanitation and A3 accuracy-cost framing are necessary gates, and
++Self-Rewarding SMC is a useful DiffusionGemma template after the verifier gate
++turns positive. The method that most directly advances Carnot's stack is CEM:
++it gives GAP-3 Stage-2 a concrete learned compositional energy experiment.
++
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 8938e8d34c..602fca9766 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -20364,6 +20364,76 @@ files untouched.
+ |---|---|---|
+ | REQ-REPORT-4170 | Implemented (`python/carnot/experiment_4170_sota_ingestion_verifier_moat_guidance.py`, `docs/research-notes/sota-ingestion-verifier-moat-guidance-v387-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4170_sota_ingestion_verifier_moat_guidance.py`) |
+ 
++### REQ-REPORT-4180: SOTA Ingestion Mapping For Moat, GAP-3, And Diffusion Guidance Into .388
++
++The Exp 4180 workflow SHALL emit a dated SOTA-to-experiment mapping note that
++ingests the `.387 planning sweep` from `research-references.md` into actionable
++Carnot experiment mappings for the `.388` planner. The note SHALL map
++Unsolvability Ceiling (`arXiv:2605.07395`) to the headroom-gate sanitization
++already applied in A1, When To Solve/Verify (`arXiv:2504.01005`) and ThinkPRM
++(`arXiv:2504.16828`) to the accuracy-and-cost moat framing in A3, CEM
++(`arXiv:2510.20607`) to GAP-3 Stage-2 compositional ARC energy, Self-Rewarding
++SMC (`arXiv:2602.01849`) to DiffusionGemma guidance, and TRM ARC-AGI-1
++ablation (`arXiv:2512.11847`) to the TRM headroom/vote decomposition. The
++markdown note SHALL be written to
++`docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`
++and the machine-checkable mapping artifact SHALL be written to
++`results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json`. The
++required runner SHALL be
++`results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py` and SHALL
++delegate to the implementation module without modifying
++`scripts/research_conductor.py`.
++
++Before writing the note, the workflow SHALL read the `.387 planning sweep`
++section in `research-references.md`, read `research-studying.md` and
++`research-references.md` filtered to verifier-as-reward, headroom, and
++energy-guided diffusion, run `scripts/sweep_clusters.py` and
++`scripts/sweep_semscholar.py` with focused reliable-channel queries, verify the
++top mapped papers with low-concurrency WebSearch/WebFetch, and SHALL NOT invoke
++`/deep-research`. The note SHALL record any reliable-channel rate limits or
++non-results honestly rather than fabricating fresh discoveries.
++
++For each mapped method, the note SHALL state (a) the Carnot stack mapping, (b)
++what the method implies for the next experiment, (c) where the method fails or
++does not by itself prove Carnot's claim, and (d) the concrete experiment target.
++The mapped method set SHALL include at least three verified anchors with real
++arXiv IDs and URLs, and every method claim SHALL carry a real arXiv ID and URL.
++The workflow SHALL update `research-studying.md` to mark the `.387 planning
++sweep` as ingested, SHALL include `flagged_for_v388`, and SHALL NOT update
++`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
++`scripts/research_conductor.py`.
++
++The JSON artifact SHALL contain the top-level fields `honest_verdict`,
++`methods_mapped`, `flagged_for_v388`, and `field_principles`.
++`field_principles` SHALL contain exactly the principle annotations for
++`honest_verdict`, `methods_mapped`, and `flagged_for_v388`. `honest_verdict`
++SHALL use a terminal prefix and, on the complete path, start with
++`complete: sota_ingestion_moat_gap3_diffusion_mapped_v388`. `methods_mapped`
++SHALL be a list of at least three dicts with exactly `name`,
++`arxiv_id_or_url`, `url`, `carnot_stack_mapping`, `implication`,
++`failure_mode`, and `experiment_mapping`; each `arxiv_id_or_url` SHALL be one
++of the WebFetch-verified arXiv IDs, preventing fabricated or uncited method
++rows. `flagged_for_v388` SHALL be a non-empty concrete roadmap slug naming the
++single strongest method for the next planner.
++
++#### SCENARIO-REPORT-4180: Moat, GAP-3, And Diffusion Ingestion Closes The .388 Loop
++
++**Given** the `.387 planning sweep` has already filed verifier-headroom,
++accuracy-cost, GAP-3 learned energy, DiffusionGemma guidance, and TRM
++headroom/vote candidates
++**When** the Exp 4180 SOTA-ingestion workflow runs
++**Then** it writes the required markdown note and JSON mapping artifact, maps
++verified arXiv papers to Carnot stack implications, failure modes, and concrete
++experiment targets, updates `research-studying.md` idempotently, flags the
++single strongest `.388` follow-up, and leaves conductor and reconciliation
++files untouched.
++
++## Implementation Status (REQ-REPORT-4180)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4180 | Implemented (`python/carnot/experiment_4180_sota_ingestion_moat_gap3_diffusion.py`, `docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py`) |
++
+ ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
+ 
+ The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 42a3444f47..567c0af59d 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -361,3 +361,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
+ - artifact: results/experiment_4169_arc_incremental_progress.json
++
++## experiment_4178_gap3_stage1_model_native_arc_energy.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_4178_gap3_stage1_model_native_arc_energy.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 485d367c3a..3c8cde14c9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 174,
+   "code_violations": 0,
+-  "experiments_checked": 3202,
++  "experiments_checked": 3203,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4180_sota_ingestion_moat_gap3_diffusion.py b/python/carnot/experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+new file mode 100644
+index 0000000000..66c115c564
+--- /dev/null
++++ b/python/carnot/experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+@@ -0,0 +1,573 @@
++"""Exp 4180 SOTA ingestion for moat, GAP-3, and diffusion planning.
++
++Spec refs: REQ-REPORT-4180, SCENARIO-REPORT-4180.
++
++This module writes a planning artifact, not a benchmark result. The purpose is
++to close the discover->ingest->plan loop for the `.387 planning sweep`: each
++paper is tied to a concrete Carnot experiment target and to the limitation that
++keeps the mapping honest.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++from typing import Any
++
++
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "methods_mapped",
++        "flagged_for_v388",
++        "field_principles",
++    }
++)
++REQUIRED_METHOD_FIELDS = frozenset(
++    {
++        "name",
++        "arxiv_id_or_url",
++        "url",
++        "carnot_stack_mapping",
++        "implication",
++        "failure_mode",
++        "experiment_mapping",
++    }
++)
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:", "blocked_")
++DEFAULT_HONEST_VERDICT = "complete: sota_ingestion_moat_gap3_diffusion_mapped_v388"
++DEFAULT_FLAGGED_FOR_V388 = "cem_gap3_stage2_compositional_arc_energy_v388"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
++    "methods_mapped": (
++        "Each method MUST carry a real arXiv ID/URL; an ingestion note without "
++        "verifiable citations is treated as fabrication (adversarial_verify discipline)."
++    ),
++    "flagged_for_v388": (
++        "Closes discover->ingest->plan: names the strongest method for the next planner."
++    ),
++}
++
++VERIFIED_ARXIV_IDS = frozenset(
++    {
++        "2605.07395",
++        "2504.01005",
++        "2504.16828",
++        "2510.20607",
++        "2602.01849",
++        "2512.11847",
++    }
++)
++NOTE_REQUIRED_SOURCE_CITATIONS = frozenset(
++    f"arXiv:{arxiv_id}" for arxiv_id in VERIFIED_ARXIV_IDS
++)
++
++DEFAULT_METHODS_MAPPED = [
++    {
++        "name": "Unsolvability Ceiling headroom sanitization",
++        "arxiv_id_or_url": "2605.07395",
++        "url": "https://arxiv.org/abs/2605.07395",
++        "carnot_stack_mapping": (
++            "A1 headroom gate: keep the executable oracle, exact-format checks, "
++            "and artifact-sanitized oracle@K measurement before treating any "
++            "verifier delta as real headroom."
++        ),
++        "implication": (
++            "A positive moat result must survive judge-bias, truncation, and "
++            "format-mismatch controls; otherwise it may only be routed noise."
++        ),
++        "failure_mode": (
++            "The paper audits routing headroom but does not provide a verifier "
++            "or ARC energy mechanism; it is a measurement-discipline anchor."
++        ),
++        "experiment_mapping": (
++            "Keep A1 as the mandatory precondition for A3 and GAP-3: no "
++            "accuracy-cost claim without executable oracle headroom."
++        ),
++    },
++    {
++        "name": "When To Solve/Verify accuracy-cost moat",
++        "arxiv_id_or_url": "2504.01005",
++        "url": "https://arxiv.org/abs/2504.01005",
++        "carnot_stack_mapping": (
++            "A3 moat framing: report accuracy and verifier-call cost against "
++            "self-consistency rather than reporting accuracy alone."
++        ),
++        "implication": (
++            "Carnot's external energy must beat or sit on a Pareto frontier "
++            "against scaled solution sampling, because GenRM-style verification "
++            "can need much more compute before matching self-consistency."
++        ),
++        "failure_mode": (
++            "It studies generative verification, not Carnot's cheap executable "
++            "energy; using it as a direct baseline would overcharge the verifier."
++        ),
++        "experiment_mapping": (
++            "In .388, keep the A3 table cost-normalized: vote@K, oracle@K, "
++            "Carnot-rerank@K, verifier calls, and wall-clock budget."
++        ),
++    },
++    {
++        "name": "ThinkPRM process-verifier cost control",
++        "arxiv_id_or_url": "2504.16828",
++        "url": "https://arxiv.org/abs/2504.16828",
++        "carnot_stack_mapping": (
++            "A3 verifier comparator: use ThinkPRM as the high-quality process "
++            "verifier reference when framing the accuracy-and-cost moat."
++        ),
++        "implication": (
++            "The moat is conditional: a verifier can help under the right "
++            "budget and process-label regime, but the claim must show value "
++            "over both vote aggregation and an expensive PRM comparator."
++        ),
++        "failure_mode": (
++            "ThinkPRM's long generative verification is a different cost class "
++            "from Carnot energy; it can validate the target but not prove cheapness."
++        ),
++        "experiment_mapping": (
++            "Use A3 to separate quality from cost: Carnot must report any "
++            "accuracy lift alongside the verifier-cost discount against PRM judging."
++        ),
++    },
++    {
++        "name": "CEM compositional ARC energy",
++        "arxiv_id_or_url": "2510.20607",
++        "url": "https://arxiv.org/abs/2510.20607",
++        "carnot_stack_mapping": (
++            "GAP-3 Stage-2: learn local rule/content energies over ARC-style "
++            "subproblems, compose them at inference, then sample with a PEM-like "
++            "parallel minimization loop."
++        ),
++        "implication": (
++            "This is the strongest .388 method because it targets the next "
++            "unbuilt Carnot capability: a learned compositional energy for ARC "
++            "transitions rather than only reranking finished candidates."
++        ),
++        "failure_mode": (
++            "CEM is not an ARC-AGI-3 result and its benchmark energies are not "
++            "Carnot's executable transition checks; transfer must be earned on "
++            "the GAP-3 harness."
++        ),
++        "experiment_mapping": (
++            "Flag .388 for a Stage-2 compositional ARC energy prototype: train "
++            "factor energies on small transformations, compose on held-out tasks, "
++            "and compare PEM sampling to the current GAP-3 candidates."
++        ),
++    },
++    {
++        "name": "Self-Rewarding SMC DiffusionGemma guidance",
++        "arxiv_id_or_url": "2602.01849",
++        "url": "https://arxiv.org/abs/2602.01849",
++        "carnot_stack_mapping": (
++            "DiffusionGemma guidance: use particle weighting/resampling over "
++            "masked-diffusion trajectories as the training-free guidance template."
++        ),
++        "implication": (
++            "A guidance experiment can convert parallel denoising capacity into "
++            "better candidates without training a new reward model, which fits "
++            "the gated DiffusionGemma plan."
++        ),
++        "failure_mode": (
++            "The reward is trajectory confidence, not an external executable "
++            "Carnot verifier; it may improve fluency or confidence without "
++            "improving task correctness."
++        ),
++        "experiment_mapping": (
++            "Keep it queued behind the verifier gate: after A3 shows positive "
++            "energy discrimination, test SMC-style particle guidance on "
++            "DiffusionGemma with exact downstream validation."
++        ),
++    },
++    {
++        "name": "TRM ARC headroom-vote decomposition",
++        "arxiv_id_or_url": "2512.11847",
++        "url": "https://arxiv.org/abs/2512.11847",
++        "carnot_stack_mapping": (
++            "TRM headroom/vote decomposition: separate single-pass accuracy, "
++            "1000-sample vote gains, identity conditioning, and candidate "
++            "coverage before crediting a verifier."
++        ),
++        "implication": (
++            "The TRM stack needs an oracle@K versus vote@1 decomposition; if "
++            "vote is carrying the result, Carnot should not claim verifier value."
++        ),
++        "failure_mode": (
++            "The ablation is a warning about TRM substrate artifacts, not a "
++            "recipe for Carnot energy or DiffusionGemma guidance."
++        ),
++        "experiment_mapping": (
++            "For .388, keep TRM as a controlled generator: report identity-ID "
++            "ablations and vote/headroom decomposition before any rerank result."
++        ),
++    },
++]
++
++NOTE_MARKDOWN = """# SOTA ingestion 2026-06-14: moat, GAP-3, and diffusion map for .388
++
++**Artifact fields**
++- honest_verdict: `complete: sota_ingestion_moat_gap3_diffusion_mapped_v388`
++  - principle: Terminal-prefixed. Records ingestion completed with verifiable citations.
++- methods_mapped:
++  - {name: `Unsolvability Ceiling headroom sanitization`, arxiv_id_or_url: `2605.07395`, url: `https://arxiv.org/abs/2605.07395`}
++  - {name: `When To Solve/Verify accuracy-cost moat`, arxiv_id_or_url: `2504.01005`, url: `https://arxiv.org/abs/2504.01005`}
++  - {name: `ThinkPRM process-verifier cost control`, arxiv_id_or_url: `2504.16828`, url: `https://arxiv.org/abs/2504.16828`}
++  - {name: `CEM compositional ARC energy`, arxiv_id_or_url: `2510.20607`, url: `https://arxiv.org/abs/2510.20607`}
++  - {name: `Self-Rewarding SMC DiffusionGemma guidance`, arxiv_id_or_url: `2602.01849`, url: `https://arxiv.org/abs/2602.01849`}
++  - {name: `TRM ARC headroom-vote decomposition`, arxiv_id_or_url: `2512.11847`, url: `https://arxiv.org/abs/2512.11847`}
++  - principle: Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline).
++- flagged_for_v388: `cem_gap3_stage2_compositional_arc_energy_v388`
++  - principle: Closes discover->ingest->plan: names the strongest method for the next planner.
++
++## Fresh-pass provenance
++
++Read `research-references.md` `.387 planning sweep` and the
++`research-studying.md` / `research-references.md` verifier-as-reward,
++headroom, and energy-guided diffusion entries.
++
++Reliable-channel helper pass, not `/deep-research`:
++- `.venv/bin/python scripts/sweep_clusters.py 0 --max-results 8`
++- `.venv/bin/python scripts/sweep_clusters.py 1 --max-results 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "verifier as reward headroom compute optimal verification process reward model" --limit 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "compositional energy minimization ARC masked diffusion self rewarding SMC" --limit 8`
++
++The cluster helper emitted the broadened verifier and energy arXiv API URLs.
++Semantic Scholar returned HTTP 429 for both focused queries during this run, so
++no fresh S2-only promotion is claimed. Low-concurrency WebSearch/WebFetch
++verified the requested mapped paper set: arXiv:2605.07395, arXiv:2504.01005,
++arXiv:2504.16828, arXiv:2510.20607, arXiv:2602.01849, and arXiv:2512.11847.
++
++## SOTA -> experiment mapping
++
++## Unsolvability Ceiling headroom sanitization
++
++**Method/source:** Unsolvability Ceiling, arXiv:2605.07395
++(https://arxiv.org/abs/2605.07395), audits multi-LLM routing headroom and
++shows that judge bias, truncation, and output-format mismatch can inflate the
++apparent oracle gap.
++
++**Carnot stack mapping:** This maps to the A1 headroom-gate sanitization
++already applied: use executable or exact objective checks, retain oracle@K,
++and reject unsanitized judge-only headroom.
++
++**Implication:** A positive verifier result is only decision-grade if it
++survives objective oracle checks and cost-sensitive routing controls.
++
++**Failure mode:** This paper does not provide a verifier, ARC energy, or
++DiffusionGemma mechanism. It only tells us how the measurement can lie.
++
++**Experiment mapping:** Keep A1 as a mandatory precondition for A3 and GAP-3:
++no accuracy-cost moat claim without executable headroom.
++
++## When To Solve/Verify accuracy-cost moat
++
++**Method/source:** When To Solve, When To Verify, arXiv:2504.01005
++(https://arxiv.org/abs/2504.01005), compares self-consistency with generative
++verification under fixed inference budgets.
++
++**Carnot stack mapping:** This maps to A3's accuracy-and-cost moat framing:
++report vote@K, oracle@K, Carnot rerank@K, verifier calls, and wall-clock cost.
++
++**Implication:** Carnot must prove that a cheap executable energy beats or
++sits on the Pareto frontier against simply sampling more solutions.
++
++**Failure mode:** The paper studies GenRM-style generative verification, not
++Carnot's executable energy. It sets a cost bar but is not a direct substrate.
++
++**Experiment mapping:** Keep the A3 table cost-normalized and do not report an
++accuracy-only moat result.
++
++## ThinkPRM process-verifier cost control
++
++**Method/source:** ThinkPRM, arXiv:2504.16828
++(https://arxiv.org/abs/2504.16828), uses generative process verification with
++small synthetic supervision to judge reasoning steps.
++
++**Carnot stack mapping:** This also maps to A3: it is the high-quality PRM
++comparator for an accuracy-and-cost moat, not the cheap-energy method itself.
++
++**Implication:** Verifier advantage is real but budget-conditional; Carnot must
++show both quality and cost separation from an expensive process verifier.
++
++**Failure mode:** ThinkPRM's long generative judging can be too expensive for
++Carnot's claimed moat, so it validates the target class without proving our
++efficiency claim.
++
++**Experiment mapping:** Use ThinkPRM as the expensive quality comparator while
++Carnot energy must carry the cheap verifier arm.
++
++## CEM compositional ARC energy
++
++**Method/source:** Generalizable Reasoning through Compositional Energy
++Minimization, arXiv:2510.20607 (https://arxiv.org/abs/2510.20607), learns
++subproblem energy landscapes and composes them at test time.
++
++**Carnot stack mapping:** This is the GAP-3 Stage-2 compositional ARC energy
++map: factor rule/content energies, compose them on held-out tasks, and sample
++with a PEM-like parallel minimization loop.
++
++**Implication:** This is the strongest .388 method because it targets the next
++unbuilt Carnot capability: a learned transition energy, not another post-hoc
++reranker.
++
++**Failure mode:** CEM is not an ARC-AGI-3 result and not a Carnot executable
++transition verifier. Transfer must be measured on the GAP-3 harness.
++
++**Experiment mapping:** Flag .388 for `cem_gap3_stage2_compositional_arc_energy_v388`:
++train local transformation energies, compose them on held-out ARC-style tasks,
++and compare PEM sampling against the current GAP-3 candidates.
++
++## Self-Rewarding SMC DiffusionGemma guidance
++
++**Method/source:** Self-Rewarding SMC for Masked Diffusion Language Models,
++arXiv:2602.01849 (https://arxiv.org/abs/2602.01849), weights and resamples
++parallel masked-diffusion particles using trajectory confidence.
++
++**Carnot stack mapping:** This maps to the queued DiffusionGemma guidance plan:
++use particle weighting and resampling as the training-free guidance template.
++
++**Implication:** A future DiffusionGemma run can convert parallel denoising
++capacity into better candidates without training a separate reward model.
++
++**Failure mode:** The reward is model confidence, not external executable
++correctness. It can improve confident sampling without improving task validity.
++
++**Experiment mapping:** Keep SMC-style guidance queued behind A3: use it for
++DiffusionGemma guidance once the energy gate is positive.
++
++## TRM ARC headroom-vote decomposition
++
++**Method/source:** Tiny Recursive Models on ARC-AGI-1, arXiv:2512.11847
++(https://arxiv.org/abs/2512.11847), decomposes TRM performance into voting,
++identity conditioning, and shallow recursion effects.
++
++**Carnot stack mapping:** This maps to the TRM headroom/vote decomposition:
++separate single-pass, vote@1000, oracle@K, and identity-ID ablation before
++crediting a verifier.
++
++**Implication:** TRM can remain the candidate generator, but only with a clean
++headroom/vote receipt that shows where selection value could exist.
++
++**Failure mode:** The ablation is a warning about substrate artifacts, not an
++energy or guidance mechanism.
++
++**Experiment mapping:** Keep TRM as a controlled generator and require identity
++conditioning plus vote/headroom ablations before any rerank claim.
++
++## Flagged for .388
++
++`cem_gap3_stage2_compositional_arc_energy_v388` is the strongest follow-on.
++A1 headroom sanitation and A3 accuracy-cost framing are necessary gates, and
++Self-Rewarding SMC is a useful DiffusionGemma template after the verifier gate
++turns positive. The method that most directly advances Carnot's stack is CEM:
++it gives GAP-3 Stage-2 a concrete learned compositional energy experiment.
++"""
++
++STUDYING_SECTION = """## 2026-06-14 Exp 4180 - .387 planning sweep SOTA ingestion ingested
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`.
++
++**Filtered track:** verifier-as-reward, sanitized headroom, accuracy-and-cost
++moat framing, GAP-3 learned ARC energy, TRM vote/headroom decomposition, and
++DiffusionGemma guidance for the `.388` handoff.
++
++**Seed and fresh-pass candidates marked ingested:**
++- Unsolvability Ceiling, arXiv:2605.07395 - mapped to the A1 headroom-gate
++  sanitization already applied; it is a measurement guard, not a verifier.
++- When To Solve/Verify, arXiv:2504.01005 - mapped to A3 accuracy-and-cost
++  reporting against self-consistency.
++- ThinkPRM, arXiv:2504.16828 - mapped to A3 as the high-quality but expensive
++  process-verifier comparator.
++- Generalizable Reasoning through Compositional Energy Minimization,
++  arXiv:2510.20607 - mapped to GAP-3 Stage-2 compositional ARC energy and
++  flagged as the strongest `.388` follow-on.
++- Self-Rewarding SMC, arXiv:2602.01849 - mapped to the queued DiffusionGemma
++  particle-guidance template after a positive energy gate.
++- TRM ARC-AGI-1 ablation, arXiv:2512.11847 - mapped to the TRM headroom/vote
++  decomposition and identity-conditioning control.
++
++flagged_for_v388:
++`cem_gap3_stage2_compositional_arc_energy_v388`.
++
++Flagged for .388: `cem_gap3_stage2_compositional_arc_energy_v388`.
++
++**Bottom line for the .388 roadmap:** run the CEM-style GAP-3 Stage-2
++compositional ARC energy prototype first. Keep A1/A3 as mandatory gates and use
++Self-Rewarding SMC only for DiffusionGemma guidance once the energy gate is positive.
++"""
++
++STUDYING_MARKER = "## 2026-06-14 Exp 4180 - .387 planning sweep SOTA ingestion ingested"
++
++
++def build_artifact(
++    *,
++    methods_mapped: Sequence[Mapping[str, str]],
++    flagged_for_v388: str,
++    honest_verdict: str = DEFAULT_HONEST_VERDICT,
++) -> dict[str, object]:
++    """Build and validate the REQ-REPORT-4180 mapping artifact."""
++
++    artifact: dict[str, object] = {
++        "honest_verdict": honest_verdict,
++        "methods_mapped": [dict(method) for method in methods_mapped],
++        "flagged_for_v388": flagged_for_v388,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the JSON contract so uncited method rows fail closed."""
++
++    missing = REQUIRED_ARTIFACT_FIELDS.difference(artifact)
++    extra = set(artifact).difference(REQUIRED_ARTIFACT_FIELDS)
++    if missing:
++        raise ValueError(f"artifact missing required fields: {sorted(missing)}")
++    if extra:
++        raise ValueError(f"artifact has unexpected fields: {sorted(extra)}")
++
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must use a terminal prefix")
++
++    field_principles = artifact["field_principles"]
++    if field_principles != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required annotations")
++
++    methods_mapped = artifact["methods_mapped"]
++    if not isinstance(methods_mapped, list) or len(methods_mapped) < 3:
++        raise ValueError("methods_mapped must contain at least three methods")
++
++    seen: set[str] = set()
++    for method in methods_mapped:
++        if not isinstance(method, dict) or set(method) != REQUIRED_METHOD_FIELDS:
++            raise ValueError(
++                "each method must contain exactly name, arxiv_id_or_url, url, "
++                "carnot_stack_mapping, implication, failure_mode, and experiment_mapping"
++            )
++        source = method["arxiv_id_or_url"]
++        if source not in VERIFIED_ARXIV_IDS:
++            raise ValueError(f"method arxiv_id_or_url must be a verified arxiv ID: {source}")
++        if source in seen:
++            raise ValueError(f"duplicate source: {source}")
++        seen.add(source)
++        expected_url = f"https://arxiv.org/abs/{source}"
++        if method["url"] != expected_url:
++            raise ValueError(f"method url must be {expected_url!r}")
++        for field in REQUIRED_METHOD_FIELDS - {"arxiv_id_or_url", "url"}:
++            value = method[field]
++            if not isinstance(value, str) or not value.strip():
++                raise ValueError(f"method {field} must be a non-empty string")
++
++    flagged = artifact["flagged_for_v388"]
++    if not isinstance(flagged, str) or not flagged.strip():
++        raise ValueError("flagged_for_v388 must be a non-empty string")
++
++
++def validate_markdown_note(markdown: str) -> None:
++    """Check that the paired note maps verified sources to required axes."""
++
++    required_phrases = (
++        "Fresh-pass provenance",
++        "SOTA -> experiment mapping",
++        "Unsolvability Ceiling headroom sanitization",
++        "When To Solve/Verify accuracy-cost moat",
++        "ThinkPRM process-verifier cost control",
++        "CEM compositional ARC energy",
++        "Self-Rewarding SMC DiffusionGemma guidance",
++        "TRM ARC headroom-vote decomposition",
++        "Carnot stack mapping",
++        "Implication",
++        "Failure mode",
++        "Experiment mapping",
++        "Flagged for .388",
++    )
++    missing_phrases = [phrase for phrase in required_phrases if phrase not in markdown]
++    if missing_phrases:
++        raise ValueError(f"markdown note missing required sections: {missing_phrases}")
++
++    missing_sources = [
++        source for source in NOTE_REQUIRED_SOURCE_CITATIONS if source not in markdown
++    ]
++    if missing_sources:
++        raise ValueError(
++            f"markdown note missing verified source citations: {missing_sources}"
++        )
++
++
++def write_outputs(
++    *,
++    note_path: Path,
++    artifact_path: Path,
++    studying_path: Path,
++) -> dict[str, object]:
++    """Write the note, JSON artifact, and idempotent studying update."""
++
++    artifact = build_artifact(
++        methods_mapped=DEFAULT_METHODS_MAPPED,
++        flagged_for_v388=DEFAULT_FLAGGED_FOR_V388,
++    )
++    validate_markdown_note(NOTE_MARKDOWN)
++
++    note_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    note_path.write_text(NOTE_MARKDOWN + "\n", encoding="utf-8")
++    artifact_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++    studying_path.write_text(
++        _with_studying_section(studying_path.read_text(encoding="utf-8")),
++        encoding="utf-8",
++    )
++    return artifact
++
++
++def _replace_or_insert_section(
++    existing: str,
++    *,
++    marker: str,
++    section: str,
++) -> str:
++    if marker not in existing:
++        if existing.startswith("## "):
++            return section + "\n" + existing
++        if "\n## " not in existing:
++            return existing.rstrip() + "\n\n" + section
++        return existing.replace("\n## ", "\n" + section + "\n## ", 1)
++
++    before, after_marker = existing.split(marker, 1)
++    next_section = after_marker.find("\n## ")
++    if next_section == -1:
++        return before + section.rstrip() + "\n"
++    return before + section + after_marker[next_section + 1 :]
++
++
++def _with_studying_section(existing: str) -> str:
++    return _replace_or_insert_section(
++        existing,
++        marker=STUDYING_MARKER,
++        section=STUDYING_SECTION,
++    )
++
++
++def main() -> int:
++    """Write the default Exp 4180 deliverables under the repository root."""
++
++    repo_root = Path(__file__).resolve().parents[2]
++    artifact = write_outputs(
++        note_path=repo_root
++        / "docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md",
++        artifact_path=repo_root
++        / "results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json",
++        studying_path=repo_root / "research-studying.md",
++    )
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/research-studying.md b/research-studying.md
+index c477e97062..8545c6e94e 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -8,6 +8,37 @@ loop) executes the current experiments.
+ **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
+ **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+ 
++## 2026-06-14 Exp 4180 - .387 planning sweep SOTA ingestion ingested
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`.
++
++**Filtered track:** verifier-as-reward, sanitized headroom, accuracy-and-cost
++moat framing, GAP-3 learned ARC energy, TRM vote/headroom decomposition, and
++DiffusionGemma guidance for the `.388` handoff.
++
++**Seed and fresh-pass candidates marked ingested:**
++- Unsolvability Ceiling, arXiv:2605.07395 - mapped to the A1 headroom-gate
++  sanitization already applied; it is a measurement guard, not a verifier.
++- When To Solve/Verify, arXiv:2504.01005 - mapped to A3 accuracy-and-cost
++  reporting against self-consistency.
++- ThinkPRM, arXiv:2504.16828 - mapped to A3 as the high-quality but expensive
++  process-verifier comparator.
++- Generalizable Reasoning through Compositional Energy Minimization,
++  arXiv:2510.20607 - mapped to GAP-3 Stage-2 compositional ARC energy and
++  flagged as the strongest `.388` follow-on.
++- Self-Rewarding SMC, arXiv:2602.01849 - mapped to the queued DiffusionGemma
++  particle-guidance template after a positive energy gate.
++- TRM ARC-AGI-1 ablation, arXiv:2512.11847 - mapped to the TRM headroom/vote
++  decomposition and identity-conditioning control.
++
++flagged_for_v388:
++`cem_gap3_stage2_compositional_arc_energy_v388`.
++
++Flagged for .388: `cem_gap3_stage2_compositional_arc_energy_v388`.
++
++**Bottom line for the .388 roadmap:** run the CEM-style GAP-3 Stage-2
++compositional ARC energy prototype first. Keep A1/A3 as mandatory gates and use
++Self-Rewarding SMC only for DiffusionGemma guidance once the energy gate is positive.
+ ## 2026-06-13 Exp 4170 - .387 verifier-moat guidance SOTA ingestion ingested
+ 
+ **Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-moat-guidance-v387-2026-06-13.md`.
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 6fa904d949..8b1d57f5cd 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-14T06:36:59.179399Z",
+-  "duration_s": 0.016402006149291992,
++  "run_date": "2026-06-14T07:28:55.811207Z",
++  "duration_s": 0.022435426712036133,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "52996234bc42bff577dc9dc366fb12ab89ad5024f29df676a9eb0606f3620d08",
++  "reproducibility_checksum": "00bcdc4b3ad522a44edb1d546ccebcab08995b0be57a548c454f7337d6bae016",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "a22f891f5717c59251dd49804e0dc7f2a9f8044e"
++    "adversarial_verify_version": "e0167488b88c4b277cf33a13812adc72749a803a"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index c474055e7a..572a83d318 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-14T06:36:59.205768Z",
+-  "duration_s": 0.021825551986694336,
++  "run_date": "2026-06-14T07:28:55.834869Z",
++  "duration_s": 0.01965641975402832,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "0d757457fcee3d516a9c895126fe1d681526417f750371724e7da2f068c44ac3",
++  "reproducibility_checksum": "ea24de7f420a5e4315ae5b495b23060255e36d74da461f066669131046807bc7",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "a22f891f5717c59251dd49804e0dc7f2a9f8044e"
++    "adversarial_verify_version": "e0167488b88c4b277cf33a13812adc72749a803a"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 539cb3eb4c..8e423a29e0 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.167224884033203,
++  "efficiency_gains_ms": 2.1562576293945312,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 86765ae597..f343d921f4 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.3915834426879883,
++  "duration_s": 0.4289815425872803,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index c1c5485981..10f7742808 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0010042190551757812,
++  "duration_s": 0.0010075569152832031,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index ebbe3b392e..4e70e04d02 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.264198312535882e-05,
++  "duration_s": 3.181002102792263e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 95a40ba99c..85de5ba3ff 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 7.519993232563138e-07,
++  "duration_s": 4.7101639211177826e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index a806c4fa3f..e17cf0522a 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 8.821487426757812e-05,
++  "duration_s": 7.43865966796875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json b/results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json
+new file mode 100644
+index 0000000000..8605e8b88f
+--- /dev/null
++++ b/results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json
+@@ -0,0 +1,65 @@
++{
++  "field_principles": {
++    "flagged_for_v388": "Closes discover->ingest->plan: names the strongest method for the next planner.",
++    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
++    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
++  },
++  "flagged_for_v388": "cem_gap3_stage2_compositional_arc_energy_v388",
++  "honest_verdict": "complete: sota_ingestion_moat_gap3_diffusion_mapped_v388",
++  "methods_mapped": [
++    {
++      "arxiv_id_or_url": "2605.07395",
++      "carnot_stack_mapping": "A1 headroom gate: keep the executable oracle, exact-format checks, and artifact-sanitized oracle@K measurement before treating any verifier delta as real headroom.",
++      "experiment_mapping": "Keep A1 as the mandatory precondition for A3 and GAP-3: no accuracy-cost claim without executable oracle headroom.",
++      "failure_mode": "The paper audits routing headroom but does not provide a verifier or ARC energy mechanism; it is a measurement-discipline anchor.",
++      "implication": "A positive moat result must survive judge-bias, truncation, and format-mismatch controls; otherwise it may only be routed noise.",
++      "name": "Unsolvability Ceiling headroom sanitization",
++      "url": "https://arxiv.org/abs/2605.07395"
++    },
++    {
++      "arxiv_id_or_url": "2504.01005",
++      "carnot_stack_mapping": "A3 moat framing: report accuracy and verifier-call cost against self-consistency rather than reporting accuracy alone.",
++      "experiment_mapping": "In .388, keep the A3 table cost-normalized: vote@K, oracle@K, Carnot-rerank@K, verifier calls, and wall-clock budget.",
++      "failure_mode": "It studies generative verification, not Carnot's cheap executable energy; using it as a direct baseline would overcharge the verifier.",
++      "implication": "Carnot's external energy must beat or sit on a Pareto frontier against scaled solution sampling, because GenRM-style verification can need much more compute before matching self-consistency.",
++      "name": "When To Solve/Verify accuracy-cost moat",
++      "url": "https://arxiv.org/abs/2504.01005"
++    },
++    {
++      "arxiv_id_or_url": "2504.16828",
++      "carnot_stack_mapping": "A3 verifier comparator: use ThinkPRM as the high-quality process verifier reference when framing the accuracy-and-cost moat.",
++      "experiment_mapping": "Use A3 to separate quality from cost: Carnot must report any accuracy lift alongside the verifier-cost discount against PRM judging.",
++      "failure_mode": "ThinkPRM's long generative verification is a different cost class from Carnot energy; it can validate the target but not prove cheapness.",
++      "implication": "The moat is conditional: a verifier can help under the right budget and process-label regime, but the claim must show value over both vote aggregation and an expensive PRM comparator.",
++      "name": "ThinkPRM process-verifier cost control",
++      "url": "https://arxiv.org/abs/2504.16828"
++    },
++    {
++      "arxiv_id_or_url": "2510.20607",
++      "carnot_stack_mapping": "GAP-3 Stage-2: learn local rule/content energies over ARC-style subproblems, compose them at inference, then sample with a PEM-like parallel minimization loop.",
++      "experiment_mapping": "Flag .388 for a Stage-2 compositional ARC energy prototype: train factor energies on small transformations, compose on held-out tasks, and compare PEM sampling to the current GAP-3 candidates.",
++      "failure_mode": "CEM is not an ARC-AGI-3 result and its benchmark energies are not Carnot's executable transition checks; transfer must be earned on the GAP-3 harness.",
++      "implication": "This is the strongest .388 method because it targets the next unbuilt Carnot capability: a learned compositional energy for ARC transitions rather than only reranking finished candidates.",
++      "name": "CEM compositional ARC energy",
++      "url": "https://arxiv.org/abs/2510.20607"
++    },
++    {
++      "arxiv_id_or_url": "2602.01849",
++      "carnot_stack_mapping": "DiffusionGemma guidance: use particle weighting/resampling over masked-diffusion trajectories as the training-free guidance template.",
++      "experiment_mapping": "Keep it queued behind the verifier gate: after A3 shows positive energy discrimination, test SMC-style particle guidance on DiffusionGemma with exact downstream validation.",
++      "failure_mode": "The reward is trajectory confidence, not an external executable Carnot verifier; it may improve fluency or confidence without improving task correctness.",
++      "implication": "A guidance experiment can convert parallel denoising capacity into better candidates without training a new reward model, which fits the gated DiffusionGemma plan.",
++      "name": "Self-Rewarding SMC DiffusionGemma guidance",
++      "url": "https://arxiv.org/abs/2602.01849"
++    },
++    {
++      "arxiv_id_or_url": "2512.11847",
++      "carnot_stack_mapping": "TRM headroom/vote decomposition: separate single-pass accuracy, 1000-sample vote gains, identity conditioning, and candidate coverage before crediting a verifier.",
++      "experiment_mapping": "For .388, keep TRM as a controlled generator: report identity-ID ablations and vote/headroom decomposition before any rerank result.",
++      "failure_mode": "The ablation is a warning about TRM substrate artifacts, not a recipe for Carnot energy or DiffusionGemma guidance.",
++      "implication": "The TRM stack needs an oracle@K versus vote@1 decomposition; if vote is carrying the result, Carnot should not claim verifier value.",
++      "name": "TRM ARC headroom-vote decomposition",
++      "url": "https://arxiv.org/abs/2512.11847"
++    }
++  ]
++}
+diff --git a/results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py b/results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+new file mode 100644
+index 0000000000..474ef7c98b
+--- /dev/null
++++ b/results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+@@ -0,0 +1,18 @@
++"""Run Exp 4180 SOTA ingestion from the required results entry point."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot import experiment_4180_sota_ingestion_moat_gap3_diffusion as exp4180
++
++
++if __name__ == "__main__":
++    raise SystemExit(exp4180.main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index f133f93195..a7811efb46 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T06:36:50Z",
+-  "finished_at": "2026-06-14T06:36:50Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-14T07:28:46Z",
++  "finished_at": "2026-06-14T07:28:46Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 01f41d0813..57bc6945c6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T06:36:50Z",
+-  "finished_at": "2026-06-14T06:36:50Z",
++  "started_at": "2026-06-14T07:28:46Z",
++  "finished_at": "2026-06-14T07:28:46Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index beb9ef789c..1856d00f68 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260614",
+-  "started_at": "2026-06-14T06:36:50Z",
+-  "finished_at": "2026-06-14T06:36:50Z",
++  "started_at": "2026-06-14T07:28:46Z",
++  "finished_at": "2026-06-14T07:28:46Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py b/tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+new file mode 100644
+index 0000000000..c79b769b99
+--- /dev/null
++++ b/tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py
+@@ -0,0 +1,335 @@
++"""Tests for REQ-REPORT-4180 / SCENARIO-REPORT-4180."""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4180_sota_ingestion_moat_gap3_diffusion as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++NOTE_PATH = Path(
++    "docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md"
++)
++ARTIFACT_PATH = Path(
++    "results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json"
++)
++WRAPPER_PATH = Path("results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py")
++STUDYING_PATH = Path("research-studying.md")
++
++
++def _valid_methods() -> list[dict[str, str]]:
++    return [dict(method) for method in mod.DEFAULT_METHODS_MAPPED]
++
++
++def _valid_artifact() -> dict[str, object]:
++    return mod.build_artifact(
++        methods_mapped=_valid_methods(),
++        flagged_for_v388=mod.DEFAULT_FLAGGED_FOR_V388,
++    )
++
++
++def test_req_report_4180_spec_anchor_exists() -> None:
++    """REQ-REPORT-4180: OpenSpec declares the .388 ingestion artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4180" in spec
++    assert "SCENARIO-REPORT-4180" in spec
++    assert NOTE_PATH.as_posix() in spec
++    assert ARTIFACT_PATH.as_posix() in spec
++    assert WRAPPER_PATH.as_posix() in spec
++    assert "flagged_for_v388" in spec
++    for arxiv_id in mod.VERIFIED_ARXIV_IDS:
++        assert f"arXiv:{arxiv_id}" in spec
++
++
++def test_build_artifact_has_required_fields_for_req_report_4180() -> None:
++    """REQ-REPORT-4180: artifact exposes required principle fields."""
++
++    artifact = _valid_artifact()
++
++    assert artifact == {
++        "honest_verdict": mod.DEFAULT_HONEST_VERDICT,
++        "methods_mapped": _valid_methods(),
++        "flagged_for_v388": mod.DEFAULT_FLAGGED_FOR_V388,
++        "field_principles": {
++            "honest_verdict": (
++                "Terminal-prefixed. Records ingestion completed with verifiable citations."
++            ),
++            "methods_mapped": (
++                "Each method MUST carry a real arXiv ID/URL; an ingestion note "
++                "without verifiable citations is treated as fabrication "
++                "(adversarial_verify discipline)."
++            ),
++            "flagged_for_v388": (
++                "Closes discover->ingest->plan: names the strongest method for "
++                "the next planner."
++            ),
++        },
++    }
++
++
++@pytest.mark.parametrize(
++    ("bad_artifact", "message"),
++    [
++        (_valid_artifact() | {"honest_verdict": "draft"}, "terminal prefix"),
++        (
++            _valid_artifact() | {"field_principles": {"honest_verdict": "loose"}},
++            "field_principles",
++        ),
++        (_valid_artifact() | {"methods_mapped": _valid_methods()[:2]}, "at least three"),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    {
++                        "name": "fake",
++                        "arxiv_id_or_url": "9999.99999",
++                        "url": "https://arxiv.org/abs/9999.99999",
++                        "carnot_stack_mapping": "fake",
++                        "implication": "fake",
++                        "failure_mode": "fake",
++                        "experiment_mapping": "fake",
++                    }
++                ]
++                + _valid_methods()[1:]
++            },
++            "verified arxiv ID",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    _valid_methods()[0] | {"url": "https://example.com/2605.07395"}
++                ]
++                + _valid_methods()[1:]
++            },
++            "url",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    {"name": "headroom", "arxiv_id_or_url": "2605.07395"}
++                ]
++                + _valid_methods()[1:]
++            },
++            "exactly",
++        ),
++        (
++            _valid_artifact()
++            | {"methods_mapped": [_valid_methods()[0]] + _valid_methods()[:-1]},
++            "duplicate source",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    _valid_methods()[0] | {"failure_mode": ""}
++                ]
++                + _valid_methods()[1:]
++            },
++            "non-empty string",
++        ),
++        (_valid_artifact() | {"flagged_for_v388": ""}, "flagged_for_v388"),
++    ],
++)
++def test_validate_artifact_rejects_schema_violations_for_scenario_report_4180(
++    bad_artifact: dict[str, object], message: str
++) -> None:
++    """SCENARIO-REPORT-4180: invalid mapping artifacts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_validate_artifact_rejects_missing_extra_and_bad_method_rows() -> None:
++    """SCENARIO-REPORT-4180: artifact and method fields are exact."""
++
++    missing_artifact = _valid_artifact()
++    missing_artifact.pop("methods_mapped")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing_artifact)
++
++    extra_artifact = _valid_artifact()
++    extra_artifact["inference_substrate"] = "manual_ingestion"
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_artifact(extra_artifact)
++
++    malformed_methods = _valid_artifact() | {
++        "methods_mapped": ["not-a-dict"] + _valid_methods()[1:]
++    }
++    with pytest.raises(ValueError, match="exactly"):
++        mod.validate_artifact(malformed_methods)
++
++
++def test_validate_markdown_note_checks_scenario_report_4180_sections() -> None:
++    """SCENARIO-REPORT-4180: note maps sources to required axes."""
++
++    note = """
++    ## Fresh-pass provenance
++    reliable-channel sweeps and WebSearch/WebFetch verified the sources.
++    ## SOTA -> experiment mapping
++    ## Unsolvability Ceiling headroom sanitization
++    arXiv:2605.07395. Carnot stack mapping. Implication. Failure mode. Experiment mapping.
++    ## When To Solve/Verify accuracy-cost moat
++    arXiv:2504.01005. Carnot stack mapping. Implication. Failure mode. Experiment mapping.
++    ## ThinkPRM process-verifier cost control
++    arXiv:2504.16828. Carnot stack mapping. Implication. Failure mode. Experiment mapping.
++    ## CEM compositional ARC energy
++    arXiv:2510.20607. Carnot stack mapping. Implication. Failure mode. Experiment mapping.
++    ## Self-Rewarding SMC DiffusionGemma guidance
++    arXiv:2602.01849. Carnot stack mapping. Implication. Failure mode. Experiment mapping.
++    ## TRM ARC headroom-vote decomposition
++    arXiv:2512.11847. Carnot stack mapping. Implication. Failure mode. Experiment mapping.
++    ## Flagged for .388
++    cem_gap3_stage2_compositional_arc_energy_v388
++    """
++
++    mod.validate_markdown_note(note)
++
++
++def test_validate_markdown_note_rejects_missing_sources_or_flag() -> None:
++    """SCENARIO-REPORT-4180: note must cite each source and close the loop."""
++
++    with pytest.raises(ValueError, match="Flagged for .388"):
++        mod.validate_markdown_note("## Fresh-pass provenance\narXiv:2605.07395\n")
++
++    with pytest.raises(ValueError, match="verified source citations"):
++        mod.validate_markdown_note(
++            mod.NOTE_MARKDOWN.replace("arXiv:2510.20607", "CEM")
++        )
++
++
++def test_write_outputs_updates_files_idempotently_for_req_report_4180(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-4180: writer emits note, artifact, and studying entry."""
++
++    note_path = tmp_path / "note.md"
++    artifact_path = tmp_path / "artifact.json"
++    studying_path = tmp_path / "research-studying.md"
++    studying_path.write_text("# Research Studying\n\n## Existing\nBody.\n", encoding="utf-8")
++
++    artifact = mod.write_outputs(
++        note_path=note_path,
++        artifact_path=artifact_path,
++        studying_path=studying_path,
++    )
++    second_artifact = mod.write_outputs(
++        note_path=note_path,
++        artifact_path=artifact_path,
++        studying_path=studying_path,
++    )
++
++    mod.validate_artifact(artifact)
++    mod.validate_artifact(second_artifact)
++    mod.validate_markdown_note(note_path.read_text(encoding="utf-8"))
++    saved_artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    studying = studying_path.read_text(encoding="utf-8")
++
++    assert saved_artifact == artifact
++    assert studying.count("2026-06-14 Exp 4180") == 1
++    assert "flagged_for_v388" in studying
++    assert "Flagged for .388" in studying
++
++
++def test_section_updates_handle_heading_layouts_for_req_report_4180() -> None:
++    """REQ-REPORT-4180: markdown updates work before or between sections."""
++
++    without_marker = "# Doc\n\n## Existing\nBody.\n"
++    studying_once = mod._with_studying_section(without_marker)
++    starts_with_heading = mod._with_studying_section("## Existing\nBody.\n")
++    studying_refreshed = mod._with_studying_section(studying_once)
++    marker_at_end = mod._with_studying_section(
++        studying_once.split("\n## Existing")[0]
++    )
++    no_heading = mod._with_studying_section("# Doc\nOnly body.\n")
++
++    assert studying_once.index("2026-06-14 Exp 4180") < studying_once.index("## Existing")
++    assert starts_with_heading.startswith("## 2026-06-14 Exp 4180")
++    assert studying_refreshed.count("2026-06-14 Exp 4180") == 1
++    assert marker_at_end.count("2026-06-14 Exp 4180") == 1
++    assert "## Existing\nBody." in studying_refreshed
++    assert no_heading.rstrip().endswith(
++        "for DiffusionGemma guidance once the energy gate is positive."
++    )
++
++
++def test_main_prints_terminal_verdict_for_req_report_4180(
++    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-REPORT-4180: CLI entry point writes default repo-root outputs."""
++
++    calls: dict[str, Path] = {}
++
++    def fake_write_outputs(
++        *,
++        note_path: Path,
++        artifact_path: Path,
++        studying_path: Path,
++    ) -> dict[str, object]:
++        calls["note_path"] = note_path
++        calls["artifact_path"] = artifact_path
++        calls["studying_path"] = studying_path
++        return {"honest_verdict": mod.DEFAULT_HONEST_VERDICT}
++
++    monkeypatch.setattr(mod, "write_outputs", fake_write_outputs)
++
++    assert mod.main() == 0
++
++    captured = capsys.readouterr()
++    assert captured.out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert calls["note_path"].as_posix().endswith(NOTE_PATH.as_posix())
++    assert calls["artifact_path"].as_posix().endswith(ARTIFACT_PATH.as_posix())
++    assert calls["studying_path"].as_posix().endswith(STUDYING_PATH.as_posix())
++
++
++def test_module_main_guard_exits_zero_for_req_report_4180(
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-4180: direct module execution exits after writing outputs."""
++
++    with pytest.raises(SystemExit) as exc_info:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++
++    assert exc_info.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++
++
++def test_wrapper_script_runs_module_for_req_report_4180(
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-4180: required results/ wrapper delegates to the module."""
++
++    with pytest.raises(SystemExit) as exc_info:
++        runpy.run_path(str(WRAPPER_PATH), run_name="__main__")
++
++    assert exc_info.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++
++
++def test_deliverable_files_validate_against_req_report_4180() -> None:
++    """REQ-REPORT-4180: committed note and JSON artifact satisfy the contract."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++    note = NOTE_PATH.read_text(encoding="utf-8")
++    studying = STUDYING_PATH.read_text(encoding="utf-8")
++
++    mod.validate_artifact(artifact)
++    mod.validate_markdown_note(note)
++    assert len(artifact["methods_mapped"]) >= 3
++    assert artifact["flagged_for_v388"] == mod.DEFAULT_FLAGGED_FOR_V388
++    assert (
++        "2026-06-14 Exp 4180 - .387 planning sweep SOTA ingestion ingested"
++        in studying
++    )
++    assert (
++        "Flagged for .388: "
++        "`cem_gap3_stage2_compositional_arc_energy_v388`"
++    ) in studying
+-- 
+2.55.0
+

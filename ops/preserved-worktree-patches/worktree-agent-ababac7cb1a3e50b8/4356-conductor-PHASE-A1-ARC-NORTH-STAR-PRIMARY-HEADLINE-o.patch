@@ -1,0 +1,2688 @@
+From 8eecf23f64ac89cae23d590a5e8af5bef74c6845 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 21:54:49 -0400
+Subject: [PATCH 04356/11362] [conductor] PHASE A1 (ARC NORTH STAR; PRIMARY;
+ HEADLINE; operator 'c' RESEARCH BET) -- GENERIC OBJECT-IDENTITY PERCEPTION
+ LAYER for GOAL-GROUNDING. Build a grid-grounded module that segments each
+ frame into persistent OBJECTS and tracks their identity across transitions by
+ SHAPE/CONNECTIVITY/MOTION (NOT color -- robust to recoloring), exposing
+ object-relational features. PROBE per Phase-Prototype+Validation. Decisive:
+ recover stable cross-frame object correspondence on the complex-rendering
+ games (lp85 full-recolor, r11l no-anchor) where the naive color-centroid
+ detector got 0, with tu93 (visible goal) as a positive control. The named
+ L1-wall root cause; a research bet (may not pay off before 6/30).
+
+Automated research step by research conductor.
+Task ID: exp4841-a1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |   79 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/agentic/arc_competition_agent.py   |    8 +
+ .../agentic/arc_object_identity_perception.py |  457 +++++++
+ ...t_4841_object_identity_perception_probe.py |  676 ++++++++++
+ ...4841_object_identity_perception_probe.json | 1135 +++++++++++++++++
+ .../test_arc_object_identity_perception.py    |   73 ++
+ ...t_4841_object_identity_perception_probe.py |  161 +++
+ 8 files changed, 2590 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/agentic/arc_object_identity_perception.py
+ create mode 100644 python/carnot/experiment_4841_object_identity_perception_probe.py
+ create mode 100644 results/experiment_4841_object_identity_perception_probe.json
+ create mode 100644 tests/python/agentic/test_arc_object_identity_perception.py
+ create mode 100644 tests/python/test_experiment_4841_object_identity_perception_probe.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index b84e28daad..14042cea69 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -10354,3 +10354,82 @@ offline-reproduce a new level, and A4 reports a clean refreshed package
+ and `scripts/arc_orphan_solver_lint.py` green, reports the live-submittable count
+ from the clean refreshed package, and writes an honest-null artifact with a
+ stable checksum.
++
++### REQ-ARC-WMTE-4841: Grid-Grounded Object Identity Perception Probe
++
++Experiment 4841 SHALL build a prototype object-identity perception module under
++`python/carnot/agentic/` that segments rendered ARC frames into connected
++components and tracks object identity across frame transitions by shape,
++connectivity, overlap, and displacement rather than by color identity. The
++module SHALL expose deterministic per-object tracks and object-relational
++features suitable for later goal-predicate grounding, while making no live
++solver integration or first-win claim in this milestone.
++
++The probe SHALL measure real rendered frames for `lp85`, `r11l`, and `tu93`
++from the offline environment or banked frame sources. Missing frames for one
++game SHALL be recorded and skipped; if no target game has frames, the experiment
++SHALL write a terminal `blocked_no_offline_frames` artifact instead of
++fabricating correspondence scores. Before frame measurement the workflow SHALL
++verify `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"`
++or the equivalent import smoke; failure SHALL produce
++`blocked_offline_arcade_missing`.
++
++Experiment 4841 SHALL compare the shape/motion tracker against a color-centroid
++baseline on the same frames and SHALL report a quantitative per-game
++correspondence score rather than a binary self-grade. The positive control on
++`tu93` SHALL require stable player and goal identity tracks on visible-goal
++solving transitions. The headline gate SHALL pass only when the `tu93` positive
++control passes and at least two of `lp85`, `r11l`, and `tu93` have a
++shape/motion correspondence score materially above the color-centroid baseline.
++If the shape/motion tracker also fails on at least two games, the artifact SHALL
++report the deeper rendered-grid object-identity null honestly.
++
++Experiment 4841 SHALL write
++`results/experiment_4841_object_identity_perception_probe.json` with
++principle-annotated top-level fields for `honest_verdict`,
++`measured_on_real_frames`, `per_game_correspondence`,
++`positive_control_tu93_passed`, `games_with_recovery`, `verifier_is_oracle`,
++`live_path_reachable`, `solve_provenance`, `inference_substrate`,
++`preconditions_checked`, `random_seed`, and `reproducibility_checksum`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; recovery is success_object_identity_perception_recovers_goal_grounding, a null is complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding."
++- `measured_on_real_frames`: principle "true iff the correspondence scores are measured on REAL lp85/r11l/tu93 frames, NOT synthetic -- the mechanic-template synthetic-only-pass trap; a false here is a NON-TEST."
++- `per_game_correspondence`: principle "per-game mapping game -> (shape_motion_score, color_centroid_baseline_score, n_frames) -- the quantitative recovery measure vs the color-centroid comparator on the same frames."
++- `positive_control_tu93_passed`: principle "the tu93 visible-goal control must yield stable player+goal identity tracks -- a Phase-Prototype positive control so a global null is not a harness artifact."
++- `games_with_recovery`: principle "count of the three test games (lp85, r11l, tu93) where the shape/motion tracker materially beats color-centroid -- >=2 for a PASS."
++- `verifier_is_oracle`: principle "true -- execution-grounded structural perception, NOT an oracle-distinct moat (circularity discipline); this probe is about grounding."
++- `live_path_reachable`: principle "the module is importable by the live agent (arc_orphan_solver_lint passes) -- a perception layer the live agent cannot reach is wasted effort."
++- `solve_provenance`: principle "development_proxy -- an offline perception probe on banked frames, NOT a live first-win; declared honestly (not live_agent_self_discovery)."
++- `inference_substrate`: principle "live_llm_inference if any LLM induction runs, else verifier_ensemble_against_cached_candidates -- declare what actually ran (the probe is mostly CPU segmentation; do not claim live inference if none ran)."
++- `preconditions_checked`: principle "records arcade/frame-availability checks so a missing-resource run emits blocked_, never a fabricated correspondence score."
++- `random_seed`: principle "determinism for any stochastic segmentation/tracking step + the baseline."
++- `reproducibility_checksum`: principle "content hash of (frames, tracker params, baseline) so a replication catches drift."
++
++#### SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE
++
++Given real offline/banked frames are available for at least one of `lp85`,
++`r11l`, or `tu93`
++When Experiment 4841 runs the object-identity tracker and the color-centroid
++baseline on the same transition sequence
++Then the artifact records `measured_on_real_frames=true`, one
++`per_game_correspondence` row per available target game, frame counts, stable
++shape/motion scores, color-baseline scores, `games_with_recovery`, and a stable
++checksum over frames and tracker parameters.
++
++#### SCENARIO-ARC-WMTE-4841-TU93-POSITIVE-CONTROL
++
++Given `tu93` real solving-transition frames are available
++When the prototype tracker runs on that sequence
++Then `positive_control_tu93_passed=true` only if at least one player-like moving
++track and one goal-like persistent track remain stable enough to ground the
++visible-goal control.
++
++#### SCENARIO-ARC-WMTE-4841-LIVE-PATH-REACHABLE
++
++Given the object-identity module is committed under `python/carnot/agentic/`
++When `scripts/arc_orphan_solver_lint.py` runs
++Then the lint passes and the artifact records `live_path_reachable=true` only
++when the module is importable from the live agent path or consciously
++allow-listed with a reason.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e724db67fa..c2599f0209 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 199,
+   "code_violations": 0,
+-  "experiments_checked": 3848,
++  "experiments_checked": 3849,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index d089352496..ba82a6659e 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -125,6 +125,14 @@ _DEFAULT_FRAME_CHANGE_SCORER = object()
+ _DEFAULT_GOAL_BIAS = object()
+ 
+ 
++def _object_identity_perception_hook() -> type:
++    """REQ-ARC-WMTE-4841: keep the prototype perception layer live-path importable."""
++
++    from carnot.agentic.arc_object_identity_perception import TrackerConfig
++
++    return TrackerConfig
++
++
+ def load_solutions() -> dict[str, list[dict]]:
+     """game-short -> [{"action": int, "data": {x,y}|None}] for every banked solution,
+     via the metaharness's loader (single source of truth for the trajectories)."""
+diff --git a/python/carnot/agentic/arc_object_identity_perception.py b/python/carnot/agentic/arc_object_identity_perception.py
+new file mode 100644
+index 0000000000..e0d44937ba
+--- /dev/null
++++ b/python/carnot/agentic/arc_object_identity_perception.py
+@@ -0,0 +1,457 @@
++"""Grid-grounded object identity tracking for ARC rendered frames.
++
++Spec refs: REQ-ARC-WMTE-4841,
++SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE,
++SCENARIO-ARC-WMTE-4841-TU93-POSITIVE-CONTROL.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++import math
++from typing import Any, Iterable, Mapping
++
++import numpy as np
++
++
++@dataclass(frozen=True)
++class TrackerConfig:
++    """Deterministic thresholds for the prototype tracker."""
++
++    min_pixels: int = 1
++    max_component_fraction: float = 0.45
++    max_match_distance: float = 18.0
++    min_match_score: float = 0.45
++    recovery_margin: float = 0.10
++    positive_control_min_persistence: float = 0.35
++
++
++@dataclass(frozen=True)
++class Component:
++    """One connected same-color component in a rendered grid."""
++
++    component_id: int
++    color: int
++    pixel_count: int
++    bbox: tuple[int, int, int, int]
++    centroid: tuple[float, float]
++    cells: frozenset[tuple[int, int]]
++    normalized_cells: frozenset[tuple[int, int]]
++    shape_key: str
++
++
++@dataclass(frozen=True)
++class TrackedObject:
++    """A component plus its persistent identity assigned by shape/motion matching."""
++
++    track_id: int
++    frame_index: int
++    component: Component
++
++    @property
++    def centroid(self) -> tuple[float, float]:
++        return self.component.centroid
++
++    @property
++    def pixel_count(self) -> int:
++        return self.component.pixel_count
++
++    @property
++    def shape_key(self) -> str:
++        return self.component.shape_key
++
++
++@dataclass(frozen=True)
++class TrackedSequence:
++    """Tracked objects grouped both by frame and by stable track id."""
++
++    frames: list[list[TrackedObject]]
++    tracks: dict[int, list[TrackedObject]]
++
++
++@dataclass(frozen=True)
++class CorrespondenceMeasurement:
++    """Quantitative tracker-vs-baseline correspondence on one frame sequence."""
++
++    shape_motion_score: float
++    color_centroid_baseline_score: float
++    n_frames: int
++    n_transition_pairs: int
++    eligible_objects: int
++    shape_motion_matches: int
++    color_centroid_matches: int
++    recovered: bool
++
++    def as_dict(self) -> dict[str, Any]:
++        return {
++            "shape_motion_score": self.shape_motion_score,
++            "color_centroid_baseline_score": self.color_centroid_baseline_score,
++            "n_frames": self.n_frames,
++            "n_transition_pairs": self.n_transition_pairs,
++            "eligible_objects": self.eligible_objects,
++            "shape_motion_matches": self.shape_motion_matches,
++            "color_centroid_matches": self.color_centroid_matches,
++            "recovered": self.recovered,
++        }
++
++
++def _as_grid(frame: Any) -> np.ndarray:
++    arr = np.asarray(frame.frame if hasattr(frame, "frame") else frame)
++    if arr.ndim == 3:
++        arr = arr[-1]
++    if arr.ndim != 2:
++        raise ValueError(f"expected a 2-D grid, got shape {arr.shape}")
++    return arr.astype(np.int16, copy=False)
++
++
++def _shape_key(normalized_cells: Iterable[tuple[int, int]], height: int, width: int) -> str:
++    cells = set(normalized_cells)
++    rows = []
++    for y in range(height):
++        rows.append("".join("1" if (y, x) in cells else "0" for x in range(width)))
++    return f"{width}:{height}:{'/'.join(rows)}"
++
++
++def segment_frame(frame: Any, config: TrackerConfig | None = None) -> list[Component]:
++    """Segment one rendered grid into same-color connected components.
++
++    Color is allowed to define component boundaries, but it is not used as the
++    identity key by the shape/motion tracker. Very large components are treated
++    as rendered background/board fill and excluded from object correspondence.
++    """
++
++    cfg = config or TrackerConfig()
++    grid = _as_grid(frame)
++    h, w = grid.shape
++    max_pixels = int(max(1, math.floor(h * w * cfg.max_component_fraction)))
++    seen = np.zeros((h, w), dtype=bool)
++    components: list[Component] = []
++
++    for y0 in range(h):
++        for x0 in range(w):
++            if seen[y0, x0]:
++                continue
++            color = int(grid[y0, x0])
++            stack = [(y0, x0)]
++            seen[y0, x0] = True
++            cells: list[tuple[int, int]] = []
++            while stack:
++                y, x = stack.pop()
++                cells.append((y, x))
++                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
++                    ny = y + dy
++                    nx = x + dx
++                    if (
++                        0 <= ny < h
++                        and 0 <= nx < w
++                        and not seen[ny, nx]
++                        and int(grid[ny, nx]) == color
++                    ):
++                        seen[ny, nx] = True
++                        stack.append((ny, nx))
++            pixel_count = len(cells)
++            if pixel_count < cfg.min_pixels or pixel_count > max_pixels:
++                continue
++            ys = [cell[0] for cell in cells]
++            xs = [cell[1] for cell in cells]
++            ymin, ymax = min(ys), max(ys)
++            xmin, xmax = min(xs), max(xs)
++            normalized = frozenset((y - ymin, x - xmin) for y, x in cells)
++            height = ymax - ymin + 1
++            width = xmax - xmin + 1
++            component = Component(
++                component_id=len(components),
++                color=color,
++                pixel_count=pixel_count,
++                bbox=(ymin, xmin, ymax, xmax),
++                centroid=(float(sum(ys)) / pixel_count, float(sum(xs)) / pixel_count),
++                cells=frozenset(cells),
++                normalized_cells=normalized,
++                shape_key=_shape_key(normalized, height, width),
++            )
++            components.append(component)
++
++    return sorted(components, key=lambda item: (item.bbox, item.color, item.pixel_count))
++
++
++def _centroid_distance(left: Component, right: Component) -> float:
++    return math.dist(left.centroid, right.centroid)
++
++
++def _shape_similarity(left: Component, right: Component) -> float:
++    if left.normalized_cells == right.normalized_cells:
++        return 1.0
++    union = left.normalized_cells | right.normalized_cells
++    if not union:
++        return 0.0
++    return len(left.normalized_cells & right.normalized_cells) / len(union)
++
++
++def _overlap_similarity(left: Component, right: Component) -> float:
++    union = left.cells | right.cells
++    if not union:
++        return 0.0
++    return len(left.cells & right.cells) / len(union)
++
++
++def _size_similarity(left: Component, right: Component) -> float:
++    bigger = max(left.pixel_count, right.pixel_count)
++    if bigger <= 0:
++        return 0.0
++    return min(left.pixel_count, right.pixel_count) / bigger
++
++
++def _motion_similarity(left: Component, right: Component, config: TrackerConfig) -> float:
++    return max(0.0, 1.0 - (_centroid_distance(left, right) / config.max_match_distance))
++
++
++def _shape_motion_score(left: Component, right: Component, config: TrackerConfig) -> float:
++    return (
++        0.45 * _shape_similarity(left, right)
++        + 0.25 * _overlap_similarity(left, right)
++        + 0.20 * _motion_similarity(left, right, config)
++        + 0.10 * _size_similarity(left, right)
++    )
++
++
++def _greedy_match(
++    previous: list[Component],
++    current: list[Component],
++    config: TrackerConfig,
++) -> dict[int, int]:
++    candidates: list[tuple[float, int, int]] = []
++    for left_index, left in enumerate(previous):
++        for right_index, right in enumerate(current):
++            score = _shape_motion_score(left, right, config)
++            if score >= config.min_match_score:
++                candidates.append((score, left_index, right_index))
++    candidates.sort(key=lambda item: (-item[0], item[1], item[2]))
++    used_left: set[int] = set()
++    used_right: set[int] = set()
++    matches: dict[int, int] = {}
++    for _score, left_index, right_index in candidates:
++        if left_index in used_left or right_index in used_right:
++            continue
++        used_left.add(left_index)
++        used_right.add(right_index)
++        matches[left_index] = right_index
++    return matches
++
++
++def _color_centroid_match(
++    previous: list[Component],
++    current: list[Component],
++    config: TrackerConfig,
++) -> dict[int, int]:
++    candidates: list[tuple[float, int, int]] = []
++    for left_index, left in enumerate(previous):
++        for right_index, right in enumerate(current):
++            if left.color != right.color:
++                continue
++            distance = _centroid_distance(left, right)
++            if distance > config.max_match_distance:
++                continue
++            size = _size_similarity(left, right)
++            if size < 0.25:
++                continue
++            score = (1.0 - (distance / config.max_match_distance)) + size
++            candidates.append((score, left_index, right_index))
++    candidates.sort(key=lambda item: (-item[0], item[1], item[2]))
++    used_left: set[int] = set()
++    used_right: set[int] = set()
++    matches: dict[int, int] = {}
++    for _score, left_index, right_index in candidates:
++        if left_index in used_left or right_index in used_right:
++            continue
++        used_left.add(left_index)
++        used_right.add(right_index)
++        matches[left_index] = right_index
++    return matches
++
++
++def _active_component_indices(
++    previous: list[Component],
++    before: np.ndarray,
++    after: np.ndarray,
++) -> list[int]:
++    changed = before != after
++    if not bool(changed.any()):
++        return []
++    changed_cells = set(zip(*np.where(changed), strict=False))
++    active = [
++        index
++        for index, component in enumerate(previous)
++        if component.cells & changed_cells
++    ]
++    return active
++
++
++def track_object_identities(
++    frames: Iterable[Any],
++    config: TrackerConfig | None = None,
++) -> TrackedSequence:
++    """Assign stable track ids to segmented objects over a frame sequence."""
++
++    cfg = config or TrackerConfig()
++    grids = [_as_grid(frame) for frame in frames]
++    if not grids:
++        return TrackedSequence(frames=[], tracks={})
++
++    segmented = [segment_frame(grid, cfg) for grid in grids]
++    next_track_id = 1
++    tracked_frames: list[list[TrackedObject]] = []
++
++    first_frame: list[TrackedObject] = []
++    previous_ids: dict[int, int] = {}
++    for index, component in enumerate(segmented[0]):
++        previous_ids[index] = next_track_id
++        first_frame.append(TrackedObject(next_track_id, 0, component))
++        next_track_id += 1
++    tracked_frames.append(first_frame)
++
++    for frame_index in range(1, len(segmented)):
++        previous = segmented[frame_index - 1]
++        current = segmented[frame_index]
++        matches = _greedy_match(previous, current, cfg)
++        current_ids: dict[int, int] = {}
++        for prev_index, curr_index in matches.items():
++            current_ids[curr_index] = previous_ids[prev_index]
++        frame_objects: list[TrackedObject] = []
++        for curr_index, component in enumerate(current):
++            track_id = current_ids.get(curr_index)
++            if track_id is None:
++                track_id = next_track_id
++                next_track_id += 1
++            frame_objects.append(TrackedObject(track_id, frame_index, component))
++        previous_ids = {index: obj.track_id for index, obj in enumerate(frame_objects)}
++        tracked_frames.append(frame_objects)
++
++    tracks: dict[int, list[TrackedObject]] = {}
++    for frame_objects in tracked_frames:
++        for obj in frame_objects:
++            tracks.setdefault(obj.track_id, []).append(obj)
++    return TrackedSequence(frames=tracked_frames, tracks=tracks)
++
++
++def measure_correspondence(
++    frames: Iterable[Any],
++    config: TrackerConfig | None = None,
++) -> CorrespondenceMeasurement:
++    """Measure active-object correspondence against a color-centroid baseline."""
++
++    cfg = config or TrackerConfig()
++    grids = [_as_grid(frame) for frame in frames]
++    if len(grids) < 2:
++        return CorrespondenceMeasurement(0.0, 0.0, len(grids), 0, 0, 0, 0, False)
++
++    eligible = 0
++    shape_matches = 0
++    color_matches = 0
++    pairs = 0
++    for before, after in zip(grids, grids[1:], strict=False):
++        previous = segment_frame(before, cfg)
++        current = segment_frame(after, cfg)
++        active_indices = _active_component_indices(previous, before, after)
++        if not active_indices:
++            continue
++        pairs += 1
++        eligible += len(active_indices)
++        shape = _greedy_match(previous, current, cfg)
++        color = _color_centroid_match(previous, current, cfg)
++        shape_matches += sum(1 for index in active_indices if index in shape)
++        color_matches += sum(1 for index in active_indices if index in color)
++
++    shape_score = shape_matches / eligible if eligible else 0.0
++    color_score = color_matches / eligible if eligible else 0.0
++    recovered = bool(eligible and shape_score >= color_score + cfg.recovery_margin)
++    return CorrespondenceMeasurement(
++        shape_motion_score=round(shape_score, 6),
++        color_centroid_baseline_score=round(color_score, 6),
++        n_frames=len(grids),
++        n_transition_pairs=pairs,
++        eligible_objects=eligible,
++        shape_motion_matches=shape_matches,
++        color_centroid_matches=color_matches,
++        recovered=recovered,
++    )
++
++
++def object_relational_features(objects: Iterable[TrackedObject]) -> list[dict[str, Any]]:
++    """Expose simple object-relational offsets for later goal-grounding consumers."""
++
++    frame_objects = list(objects)
++    rows: list[dict[str, Any]] = []
++    for obj in frame_objects:
++        nearest: TrackedObject | None = None
++        nearest_distance = float("inf")
++        for other in frame_objects:
++            if other.track_id == obj.track_id:
++                continue
++            distance = math.dist(obj.centroid, other.centroid)
++            if distance < nearest_distance:
++                nearest = other
++                nearest_distance = distance
++        overlaps = [
++            other.track_id
++            for other in frame_objects
++            if other.track_id != obj.track_id
++            and bool(obj.component.cells & other.component.cells)
++        ]
++        if nearest is None:
++            offset = [0.0, 0.0]
++            nearest_id = None
++        else:
++            offset = [
++                round(nearest.centroid[0] - obj.centroid[0], 6),
++                round(nearest.centroid[1] - obj.centroid[1], 6),
++            ]
++            nearest_id = nearest.track_id
++        rows.append(
++            {
++                "object_id": obj.track_id,
++                "shape_key": obj.shape_key,
++                "pixel_count": obj.pixel_count,
++                "centroid": [round(obj.centroid[0], 6), round(obj.centroid[1], 6)],
++                "nearest_object_id": nearest_id,
++                "offset_to_nearest": offset,
++                "overlaps_object_ids": sorted(overlaps),
++            }
++        )
++    return rows
++
++
++def track_summary(tracked: TrackedSequence) -> dict[int, dict[str, float | int]]:
++    """Summarize track persistence and motion for controls and artifacts."""
++
++    n_frames = len(tracked.frames)
++    out: dict[int, dict[str, float | int]] = {}
++    for track_id, objects in tracked.tracks.items():
++        ordered = sorted(objects, key=lambda obj: obj.frame_index)
++        motion = 0.0
++        for left, right in zip(ordered, ordered[1:], strict=False):
++            motion += math.dist(left.centroid, right.centroid)
++        out[track_id] = {
++            "frames_present": len({obj.frame_index for obj in ordered}),
++            "persistence": round((len({obj.frame_index for obj in ordered}) / n_frames), 6)
++            if n_frames
++            else 0.0,
++            "total_motion": round(motion, 6),
++            "mean_pixels": round(
++                sum(obj.pixel_count for obj in ordered) / len(ordered), 6
++            ),
++        }
++    return out
++
++
++def config_fingerprint(config: TrackerConfig | None = None) -> dict[str, Any]:
++    """Stable representation of tracker parameters for artifact checksums."""
++
++    cfg = config or TrackerConfig()
++    return {
++        "min_pixels": cfg.min_pixels,
++        "max_component_fraction": cfg.max_component_fraction,
++        "max_match_distance": cfg.max_match_distance,
++        "min_match_score": cfg.min_match_score,
++        "recovery_margin": cfg.recovery_margin,
++        "positive_control_min_persistence": cfg.positive_control_min_persistence,
++    }
+diff --git a/python/carnot/experiment_4841_object_identity_perception_probe.py b/python/carnot/experiment_4841_object_identity_perception_probe.py
+new file mode 100644
+index 0000000000..e6dd4e392f
+--- /dev/null
++++ b/python/carnot/experiment_4841_object_identity_perception_probe.py
+@@ -0,0 +1,676 @@
++"""Experiment 4841: object-identity perception probe on real ARC frames.
++
++Spec refs: REQ-ARC-WMTE-4841,
++SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE,
++SCENARIO-ARC-WMTE-4841-TU93-POSITIVE-CONTROL,
++SCENARIO-ARC-WMTE-4841-LIVE-PATH-REACHABLE.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any, Callable, Iterable, Mapping
++
++import numpy as np
++
++from carnot.agentic.arc_object_identity_perception import (
++    TrackerConfig,
++    config_fingerprint,
++    measure_correspondence,
++    track_object_identities,
++    track_summary,
++)
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_4841_object_identity_perception_probe"
++RESULT_RELATIVE_PATH = "results/experiment_4841_object_identity_perception_probe.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++TARGET_GAMES = ("lp85", "r11l", "tu93")
++RANDOM_SEED = 4841
++REAL_SOURCE_KINDS = {"banked_replay", "transition_corpus"}
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; recovery is success_object_identity_perception_recovers_goal_grounding, "
++            "a null is complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding."
++        )
++    },
++    "measured_on_real_frames": {
++        "principle": (
++            "true iff the correspondence scores are measured on REAL lp85/r11l/tu93 frames, NOT "
++            "synthetic -- the mechanic-template synthetic-only-pass trap; a false here is a NON-TEST."
++        )
++    },
++    "per_game_correspondence": {
++        "principle": (
++            "per-game mapping game -> (shape_motion_score, color_centroid_baseline_score, n_frames) "
++            "-- the quantitative recovery measure vs the color-centroid comparator on the same frames."
++        )
++    },
++    "positive_control_tu93_passed": {
++        "principle": (
++            "the tu93 visible-goal control must yield stable player+goal identity tracks -- a "
++            "Phase-Prototype positive control so a global null is not a harness artifact."
++        )
++    },
++    "games_with_recovery": {
++        "principle": (
++            "count of the three test games (lp85, r11l, tu93) where the shape/motion tracker materially "
++            "beats color-centroid -- >=2 for a PASS."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "true -- execution-grounded structural perception, NOT an oracle-distinct moat "
++            "(circularity discipline); this probe is about grounding."
++        )
++    },
++    "live_path_reachable": {
++        "principle": (
++            "the module is importable by the live agent (arc_orphan_solver_lint passes) -- a "
++            "perception layer the live agent cannot reach is wasted effort."
++        )
++    },
++    "solve_provenance": {
++        "principle": (
++            "development_proxy -- an offline perception probe on banked frames, NOT a live first-win; "
++            "declared honestly (not live_agent_self_discovery)."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "live_llm_inference if any LLM induction runs, else "
++            "verifier_ensemble_against_cached_candidates -- declare what actually ran (the probe is "
++            "mostly CPU segmentation; do not claim live inference if none ran)."
++        )
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records arcade/frame-availability checks so a missing-resource run emits blocked_, never "
++            "a fabricated correspondence score."
++        )
++    },
++    "random_seed": {
++        "principle": "determinism for any stochastic segmentation/tracking step + the baseline."
++    },
++    "reproducibility_checksum": {
++        "principle": (
++            "content hash of (frames, tracker params, baseline) so a replication catches drift."
++        )
++    },
++}
++
++
++@dataclass(frozen=True)
++class FrameSequence:
++    """Real rendered frames and the source used to obtain them."""
++
++    game: str
++    frames: list[np.ndarray]
++    source_path: str
++    source_kind: str
++
++
++def _as_bool(value: Any) -> bool:
++    return bool(value) if isinstance(value, bool) else False
++
++
++def _load_actions(path: Path) -> list[dict[str, Any]]:
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return []
++    for keys in (
++        ("solution",),
++        ("trajectory",),
++        ("solve_trace", "actions"),
++        ("solver_trace", "actions"),
++        ("plan_executed_detail", "plan_result", "executed_steps"),
++    ):
++        current: Any = payload
++        for key in keys:
++            current = current.get(key) if isinstance(current, dict) else None
++            if current is None:
++                break
++        if isinstance(current, list) and current:
++            return [row for row in current if isinstance(row, dict)]
++    return []
++
++
++def _normalize_action(action: Mapping[str, Any]) -> tuple[int | None, dict[str, int] | None]:
++    action_id = action.get("action")
++    if "data" in action:
++        data = action.get("data")
++        clean_data = (
++            {"x": int(data["x"]), "y": int(data["y"])}
++            if isinstance(data, Mapping) and "x" in data and "y" in data
++            else None
++        )
++        return (int(action_id) if action_id is not None else None), clean_data
++    x = action.get("x", action.get("world_x"))
++    y = action.get("y", action.get("world_y"))
++    has_xy = x is not None and y is not None
++    if action_id is None and has_xy:
++        action_id = 6
++    data = {"x": int(x), "y": int(y)} if has_xy else None
++    return (int(action_id) if action_id is not None else None), data
++
++
++def _frame_checksum(sequence: FrameSequence) -> str:
++    digest = hashlib.sha256()
++    digest.update(sequence.game.encode())
++    digest.update(sequence.source_kind.encode())
++    digest.update(sequence.source_path.encode())
++    for frame in sequence.frames:
++        arr = np.ascontiguousarray(np.asarray(frame, dtype=np.int16))
++        digest.update(str(arr.shape).encode())
++        digest.update(arr.tobytes())
++    return "sha256:" + digest.hexdigest()
++
++
++def load_banked_replay_frames(root: Path, game: str) -> FrameSequence | None:
++    """Replay the banked solution through the offline environment and return rendered grids."""
++
++    action_path = root / "results" / "arc3_live_banked_trajectories" / f"{game}.json"
++    actions = _load_actions(action_path)
++    if not actions:
++        return _load_transition_corpus_frames(root, game)
++
++    try:
++        from arcengine import GameAction
++        from carnot.agentic import arc_solver_kit as kit
++        from carnot.agentic.arc_agi3_world_model import grid_of
++
++        arcade = kit.offline_arcade()
++        env = arcade.make(game, scorecard_id=arcade.open_scorecard())
++        frame = env.reset()
++        frames = [np.asarray(grid_of(frame), dtype=np.int16).copy()]
++        for action in actions:
++            action_id, data = _normalize_action(action)
++            if action_id is None:
++                continue
++            frame = env.step(
++                getattr(GameAction, f"ACTION{action_id}"),
++                data=data,
++                reasoning={"policy": "experiment_4841_replay"},
++            )
++            if frame is None:
++                break
++            frames.append(np.asarray(grid_of(frame), dtype=np.int16).copy())
++    except Exception:
++        return _load_transition_corpus_frames(root, game)
++
++    if len(frames) < 2:
++        return _load_transition_corpus_frames(root, game)
++    return FrameSequence(
++        game=game,
++        frames=frames,
++        source_path=str(action_path.relative_to(root)),
++        source_kind="banked_replay",
++    )
++
++
++def _load_transition_corpus_frames(root: Path, game: str) -> FrameSequence | None:
++    corpus_path = root / "data" / "arc_transition_corpus" / f"{game}.npz"
++    if not corpus_path.exists():
++        return None
++    try:
++        data = np.load(corpus_path, allow_pickle=False)
++        grids = data["grids"]
++        next_grids = data["next_grids"]
++    except (OSError, KeyError, ValueError):
++        return None
++    frames: list[np.ndarray] = []
++    for before, after in zip(grids[:64], next_grids[:64], strict=False):
++        frames.append(np.asarray(before, dtype=np.int16).copy())
++        frames.append(np.asarray(after, dtype=np.int16).copy())
++    if len(frames) < 2:
++        return None
++    return FrameSequence(
++        game=game,
++        frames=frames,
++        source_path=str(corpus_path.relative_to(root)),
++        source_kind="transition_corpus",
++    )
++
++
++def _offline_arcade_available() -> bool:
++    from carnot.agentic import arc_solver_kit as kit
++
++    kit.offline_arcade()
++    return True
++
++
++def run_arc_orphan_solver_lint(root: Path) -> dict[str, Any]:
++    command = [sys.executable, str(root / "scripts" / "arc_orphan_solver_lint.py")]
++    proc = subprocess.run(
++        command,
++        cwd=root,
++        capture_output=True,
++        text=True,
++        timeout=60,
++        check=False,
++    )
++    return {
++        "command": " ".join(command),
++        "returncode": int(proc.returncode),
++        "passed": proc.returncode == 0,
++        "stdout_tail": proc.stdout[-2000:],
++        "stderr_tail": proc.stderr[-2000:],
++    }
++
++
++def default_live_path_checker(root: Path) -> bool:
++    return bool(run_arc_orphan_solver_lint(root)["passed"])
++
++
++def evaluate_tu93_positive_control(
++    frames: Iterable[Any],
++    config: TrackerConfig | None = None,
++) -> dict[str, Any]:
++    """Identify one moving player-like track and one stable goal-like track."""
++
++    cfg = config or TrackerConfig()
++    tracked = track_object_identities(frames, cfg)
++    summary = track_summary(tracked)
++    if not tracked.frames:
++        return {
++            "passed": False,
++            "player_track_id": None,
++            "goal_track_id": None,
++            "player_motion": 0.0,
++            "goal_persistence": 0.0,
++            "track_summary": {},
++        }
++
++    player_candidates = [
++        (track_id, row)
++        for track_id, row in summary.items()
++        if float(row["persistence"]) >= cfg.positive_control_min_persistence
++        and float(row["total_motion"]) >= 1.0
++        and float(row["mean_pixels"]) <= 128.0
++    ]
++    player_candidates.sort(
++        key=lambda item: (
++            -float(item[1]["total_motion"]),
++            -float(item[1]["persistence"]),
++            float(item[1]["mean_pixels"]),
++            item[0],
++        )
++    )
++    player = player_candidates[0] if player_candidates else None
++
++    goal_candidates = [
++        (track_id, row)
++        for track_id, row in summary.items()
++        if (player is None or track_id != player[0])
++        and float(row["persistence"]) >= cfg.positive_control_min_persistence
++        and float(row["total_motion"]) <= 0.25
++        and float(row["mean_pixels"]) <= 256.0
++    ]
++    goal_candidates.sort(
++        key=lambda item: (
++            -float(item[1]["persistence"]),
++            float(item[1]["mean_pixels"]),
++            item[0],
++        )
++    )
++    goal = goal_candidates[0] if goal_candidates else None
++
++    return {
++        "passed": bool(player and goal),
++        "player_track_id": player[0] if player else None,
++        "goal_track_id": goal[0] if goal else None,
++        "player_motion": float(player[1]["total_motion"]) if player else 0.0,
++        "goal_persistence": float(goal[1]["persistence"]) if goal else 0.0,
++        "track_summary": {str(track_id): row for track_id, row in sorted(summary.items())},
++    }
++
++
++def _build_preconditions(
++    *,
++    offline_ok: bool,
++    offline_error: str | None,
++    frame_sequences: Mapping[str, FrameSequence],
++    missing_games: Iterable[str],
++    live_path_result: bool | dict[str, Any],
++) -> dict[str, Any]:
++    if isinstance(live_path_result, Mapping):
++        live_path_payload = dict(live_path_result)
++    else:
++        live_path_payload = {"passed": bool(live_path_result)}
++    return {
++        "offline_arcade": {
++            "ok": bool(offline_ok),
++            "check": 'from carnot.agentic import arc_solver_kit as k; k.offline_arcade()',
++            "error": offline_error,
++        },
++        "frame_sources": {
++            game: {
++                "present": game in frame_sequences,
++                "source_path": frame_sequences[game].source_path if game in frame_sequences else None,
++                "source_kind": frame_sequences[game].source_kind if game in frame_sequences else None,
++                "n_frames": len(frame_sequences[game].frames) if game in frame_sequences else 0,
++            }
++            for game in TARGET_GAMES
++        },
++        "available_games": sorted(frame_sequences),
++        "missing_games": sorted(missing_games),
++        "arc_orphan_solver_lint": live_path_payload,
++    }
++
++
++def _empty_artifact(
++    verdict: str,
++    *,
++    preconditions_checked: Mapping[str, Any],
++    live_path_reachable: bool,
++    duration_s: float,
++) -> dict[str, Any]:
++    artifact: dict[str, Any] = {
++        "experiment": EXPERIMENT,
++        "honest_verdict": verdict,
++        "measured_on_real_frames": False,
++        "per_game_correspondence": {},
++        "positive_control_tu93_passed": False,
++        "positive_control_tu93": {
++            "passed": False,
++            "player_track_id": None,
++            "goal_track_id": None,
++        },
++        "games_with_recovery": 0,
++        "verifier_is_oracle": True,
++        "live_path_reachable": bool(live_path_reachable),
++        "solve_provenance": "development_proxy",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": RANDOM_SEED,
++        "tracker_params": config_fingerprint(),
++        "baseline": "same-color nearest-centroid over active changed components",
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(max(1.0, duration_s), 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    frame_sequences: Mapping[str, FrameSequence],
++    preconditions_checked: Mapping[str, Any],
++    live_path_reachable: bool,
++    duration_s: float,
++    config: TrackerConfig | None = None,
++) -> dict[str, Any]:
++    cfg = config or TrackerConfig()
++    per_game: dict[str, dict[str, Any]] = {}
++    frame_checksums: dict[str, str] = {}
++    for game in TARGET_GAMES:
++        sequence = frame_sequences.get(game)
++        if sequence is None:
++            continue
++        measurement = measure_correspondence(sequence.frames, cfg).as_dict()
++        measurement["source_path"] = sequence.source_path
++        measurement["source_kind"] = sequence.source_kind
++        measurement["frame_checksum"] = _frame_checksum(sequence)
++        per_game[game] = measurement
++        frame_checksums[game] = measurement["frame_checksum"]
++
++    positive = (
++        evaluate_tu93_positive_control(frame_sequences["tu93"].frames, cfg)
++        if "tu93" in frame_sequences
++        else {
++            "passed": False,
++            "player_track_id": None,
++            "goal_track_id": None,
++            "player_motion": 0.0,
++            "goal_persistence": 0.0,
++            "track_summary": {},
++        }
++    )
++    games_with_recovery = sum(1 for row in per_game.values() if bool(row.get("recovered")))
++    measured_on_real_frames = bool(per_game) and all(
++        row.get("source_kind") in REAL_SOURCE_KINDS for row in per_game.values()
++    )
++    passed = bool(positive.get("passed")) and games_with_recovery >= 2
++    verdict = (
++        "success_object_identity_perception_recovers_goal_grounding"
++        if passed
++        else "complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding"
++    )
++
++    artifact: dict[str, Any] = {
++        "experiment": EXPERIMENT,
++        "honest_verdict": verdict,
++        "measured_on_real_frames": measured_on_real_frames,
++        "per_game_correspondence": per_game,
++        "positive_control_tu93_passed": bool(positive.get("passed")),
++        "positive_control_tu93": positive,
++        "games_with_recovery": games_with_recovery,
++        "verifier_is_oracle": True,
++        "live_path_reachable": bool(live_path_reachable),
++        "solve_provenance": "development_proxy",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": RANDOM_SEED,
++        "tracker_params": config_fingerprint(cfg),
++        "baseline": "same-color nearest-centroid over active changed components",
++        "retire_if_same_verdict": True,
++        "frame_checksums": frame_checksums,
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(max(1.0, duration_s), 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    clean = dict(payload)
++    clean["reproducibility_checksum"] = ""
++    encoded = json.dumps(clean, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    required = (
++        "honest_verdict",
++        "measured_on_real_frames",
++        "per_game_correspondence",
++        "positive_control_tu93_passed",
++        "games_with_recovery",
++        "verifier_is_oracle",
++        "live_path_reachable",
++        "solve_provenance",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++    )
++    for field in required:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    if errors:
++        return errors
++
++    verdict = str(artifact.get("honest_verdict"))
++    blocked = verdict.startswith("blocked_")
++    if not (
++        verdict.startswith("success_")
++        or verdict.startswith("complete_")
++        or verdict.startswith("blocked_")
++    ):
++        errors.append("honest_verdict must start with a terminal prefix")
++    if artifact.get("verifier_is_oracle") is not True:
++        errors.append("verifier_is_oracle must be true")
++    if artifact.get("solve_provenance") != "development_proxy":
++        errors.append("solve_provenance must be development_proxy")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must match REQ-ARC-WMTE-4841")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed must be 4841")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles drifted")
++
++    per_game = artifact.get("per_game_correspondence")
++    if not isinstance(per_game, Mapping):
++        errors.append("per_game_correspondence must be a mapping")
++        per_game = {}
++    if not blocked and artifact.get("measured_on_real_frames") is not True:
++        errors.append("measured_on_real_frames must be true for non-blocked artifacts")
++    if not blocked and not per_game:
++        errors.append("per_game_correspondence must be non-empty for non-blocked artifacts")
++    if not blocked and artifact.get("live_path_reachable") is not True:
++        errors.append("live_path_reachable must be true for non-blocked artifacts")
++
++    recovered_count = 0
++    for game, row in per_game.items():
++        if game not in TARGET_GAMES:
++            errors.append(f"unexpected per-game row {game}")
++        if not isinstance(row, Mapping):
++            errors.append(f"{game} row must be a mapping")
++            continue
++        shape = row.get("shape_motion_score")
++        color = row.get("color_centroid_baseline_score")
++        n_frames = row.get("n_frames")
++        if not isinstance(shape, (int, float)) or not 0.0 <= float(shape) <= 1.0:
++            errors.append(f"{game} shape_motion_score must be in [0, 1]")
++        if not isinstance(color, (int, float)) or not 0.0 <= float(color) <= 1.0:
++            errors.append(f"{game} color_centroid_baseline_score must be in [0, 1]")
++        if not isinstance(n_frames, int) or n_frames < 2:
++            errors.append(f"{game} n_frames must be >= 2")
++        if row.get("source_kind") not in REAL_SOURCE_KINDS:
++            errors.append(f"{game} source_kind must be real-frame backed")
++        if bool(row.get("recovered")):
++            recovered_count += 1
++    if artifact.get("games_with_recovery") != recovered_count:
++        errors.append("games_with_recovery must match per-game recovered rows")
++    if verdict.startswith("success_"):
++        if artifact.get("positive_control_tu93_passed") is not True:
++            errors.append("success requires positive_control_tu93_passed=true")
++        if recovered_count < 2:
++            errors.append("success requires games_with_recovery >= 2")
++
++    checksum = artifact.get("reproducibility_checksum")
++    expected = "sha256:" + payload_checksum(artifact)
++    if checksum != expected:
++        errors.append("reproducibility_checksum must match artifact content")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], root: Path = REPO_ROOT) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    offline_arcade_checker: Callable[[], bool] | None = None,
++    frame_sequence_provider: Callable[[str], FrameSequence | None] | None = None,
++    live_path_checker: Callable[[Path], bool | dict[str, Any]] | None = None,
++    now: Callable[[], float] | None = None,
++    write: bool = True,
++    config: TrackerConfig | None = None,
++) -> dict[str, Any]:
++    clock = now or time.monotonic
++    start = clock()
++    root = Path(root)
++    checker = offline_arcade_checker or _offline_arcade_available
++    provider = frame_sequence_provider or (lambda game: load_banked_replay_frames(root, game))
++    live_checker = live_path_checker or (lambda path: run_arc_orphan_solver_lint(path))
++
++    offline_ok = False
++    offline_error: str | None = None
++    try:
++        offline_ok = bool(checker())
++    except Exception as exc:
++        offline_error = f"{type(exc).__name__}: {exc}"
++
++    live_path_result = live_checker(root)
++    live_path_reachable = (
++        bool(live_path_result.get("passed")) if isinstance(live_path_result, Mapping) else bool(live_path_result)
++    )
++
++    if not offline_ok:
++        checks = _build_preconditions(
++            offline_ok=False,
++            offline_error=offline_error,
++            frame_sequences={},
++            missing_games=TARGET_GAMES,
++            live_path_result=live_path_result,
++        )
++        artifact = _empty_artifact(
++            "blocked_offline_arcade_missing",
++            preconditions_checked=checks,
++            live_path_reachable=live_path_reachable,
++            duration_s=clock() - start,
++        )
++        if write:
++            write_artifact(artifact, root=root)
++        return artifact
++
++    sequences: dict[str, FrameSequence] = {}
++    missing: list[str] = []
++    for game in TARGET_GAMES:
++        try:
++            sequence = provider(game)
++        except Exception:
++            sequence = None
++        if sequence is None or len(sequence.frames) < 2:
++            missing.append(game)
++            continue
++        sequences[game] = sequence
++
++    checks = _build_preconditions(
++        offline_ok=True,
++        offline_error=None,
++        frame_sequences=sequences,
++        missing_games=missing,
++        live_path_result=live_path_result,
++    )
++
++    if not sequences:
++        artifact = _empty_artifact(
++            "blocked_no_offline_frames",
++            preconditions_checked=checks,
++            live_path_reachable=live_path_reachable,
++            duration_s=clock() - start,
++        )
++    else:
++        artifact = build_artifact(
++            frame_sequences=sequences,
++            preconditions_checked=checks,
++            live_path_reachable=live_path_reachable,
++            duration_s=clock() - start,
++            config=config,
++        )
++    if write:
++        write_artifact(artifact, root=root)
++    return artifact
++
++
++def main() -> int:
++    artifact = run(REPO_ROOT)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_4841_object_identity_perception_probe.json b/results/experiment_4841_object_identity_perception_probe.json
+new file mode 100644
+index 0000000000..004e10ce2e
+--- /dev/null
++++ b/results/experiment_4841_object_identity_perception_probe.json
+@@ -0,0 +1,1135 @@
++{
++  "baseline": "same-color nearest-centroid over active changed components",
++  "duration_s": 1.264711,
++  "experiment": "experiment_4841_object_identity_perception_probe",
++  "field_principles": {
++    "games_with_recovery": {
++      "principle": "count of the three test games (lp85, r11l, tu93) where the shape/motion tracker materially beats color-centroid -- >=2 for a PASS."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; recovery is success_object_identity_perception_recovers_goal_grounding, a null is complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding."
++    },
++    "inference_substrate": {
++      "principle": "live_llm_inference if any LLM induction runs, else verifier_ensemble_against_cached_candidates -- declare what actually ran (the probe is mostly CPU segmentation; do not claim live inference if none ran)."
++    },
++    "live_path_reachable": {
++      "principle": "the module is importable by the live agent (arc_orphan_solver_lint passes) -- a perception layer the live agent cannot reach is wasted effort."
++    },
++    "measured_on_real_frames": {
++      "principle": "true iff the correspondence scores are measured on REAL lp85/r11l/tu93 frames, NOT synthetic -- the mechanic-template synthetic-only-pass trap; a false here is a NON-TEST."
++    },
++    "per_game_correspondence": {
++      "principle": "per-game mapping game -> (shape_motion_score, color_centroid_baseline_score, n_frames) -- the quantitative recovery measure vs the color-centroid comparator on the same frames."
++    },
++    "positive_control_tu93_passed": {
++      "principle": "the tu93 visible-goal control must yield stable player+goal identity tracks -- a Phase-Prototype positive control so a global null is not a harness artifact."
++    },
++    "preconditions_checked": {
++      "principle": "records arcade/frame-availability checks so a missing-resource run emits blocked_, never a fabricated correspondence score."
++    },
++    "random_seed": {
++      "principle": "determinism for any stochastic segmentation/tracking step + the baseline."
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash of (frames, tracker params, baseline) so a replication catches drift."
++    },
++    "solve_provenance": {
++      "principle": "development_proxy -- an offline perception probe on banked frames, NOT a live first-win; declared honestly (not live_agent_self_discovery)."
++    },
++    "verifier_is_oracle": {
++      "principle": "true -- execution-grounded structural perception, NOT an oracle-distinct moat (circularity discipline); this probe is about grounding."
++    }
++  },
++  "frame_checksums": {
++    "lp85": "sha256:2bfd9ee40b1a280d1670b11989393001af00da331196a716bf2fee448f6dea60",
++    "r11l": "sha256:12a7ceddc25b26ff8935523180f8ca4b0b209a92944bf2c7b449448f6acc4794",
++    "tu93": "sha256:b0b2a5424679fb817ef8dc9cc4dc049cfa59d3ce6094a5c8adf5a2148bcd2717"
++  },
++  "games_with_recovery": 1,
++  "honest_verdict": "complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "live_path_reachable": true,
++  "measured_on_real_frames": true,
++  "per_game_correspondence": {
++    "lp85": {
++      "color_centroid_baseline_score": 0.842473,
++      "color_centroid_matches": 845,
++      "eligible_objects": 1003,
++      "frame_checksum": "sha256:2bfd9ee40b1a280d1670b11989393001af00da331196a716bf2fee448f6dea60",
++      "n_frames": 53,
++      "n_transition_pairs": 52,
++      "recovered": false,
++      "shape_motion_matches": 895,
++      "shape_motion_score": 0.892323,
++      "source_kind": "banked_replay",
++      "source_path": "results/arc3_live_banked_trajectories/lp85.json"
++    },
++    "r11l": {
++      "color_centroid_baseline_score": 0.403846,
++      "color_centroid_matches": 21,
++      "eligible_objects": 52,
++      "frame_checksum": "sha256:12a7ceddc25b26ff8935523180f8ca4b0b209a92944bf2c7b449448f6acc4794",
++      "n_frames": 5,
++      "n_transition_pairs": 4,
++      "recovered": true,
++      "shape_motion_matches": 31,
++      "shape_motion_score": 0.596154,
++      "source_kind": "banked_replay",
++      "source_path": "results/arc3_live_banked_trajectories/r11l.json"
++    },
++    "tu93": {
++      "color_centroid_baseline_score": 0.857884,
++      "color_centroid_matches": 827,
++      "eligible_objects": 964,
++      "frame_checksum": "sha256:b0b2a5424679fb817ef8dc9cc4dc049cfa59d3ce6094a5c8adf5a2148bcd2717",
++      "n_frames": 94,
++      "n_transition_pairs": 93,
++      "recovered": false,
++      "shape_motion_matches": 891,
++      "shape_motion_score": 0.924274,
++      "source_kind": "banked_replay",
++      "source_path": "results/arc3_live_banked_trajectories/tu93.json"
++    }
++  },
++  "positive_control_tu93": {
++    "goal_persistence": 0.5,
++    "goal_track_id": 39,
++    "passed": true,
++    "player_motion": 220.624731,
++    "player_track_id": 9,
++    "track_summary": {
++      "1": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.125
++      },
++      "10": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "100": {
++        "frames_present": 19,
++        "mean_pixels": 8.947368,
++        "persistence": 0.202128,
++        "total_motion": 0.125
++      },
++      "101": {
++        "frames_present": 66,
++        "mean_pixels": 8.863636,
++        "persistence": 0.702128,
++        "total_motion": 9.29118
++      },
++      "102": {
++        "frames_present": 66,
++        "mean_pixels": 9.0,
++        "persistence": 0.702128,
++        "total_motion": 7.0
++      },
++      "103": {
++        "frames_present": 66,
++        "mean_pixels": 8.939394,
++        "persistence": 0.702128,
++        "total_motion": 15.329409
++      },
++      "104": {
++        "frames_present": 18,
++        "mean_pixels": 17.333333,
++        "persistence": 0.191489,
++        "total_motion": 15.5
++      },
++      "105": {
++        "frames_present": 47,
++        "mean_pixels": 1.0,
++        "persistence": 0.5,
++        "total_motion": 159.081028
++      },
++      "106": {
++        "frames_present": 23,
++        "mean_pixels": 1.0,
++        "persistence": 0.244681,
++        "total_motion": 155.147581
++      },
++      "107": {
++        "frames_present": 46,
++        "mean_pixels": 27.0,
++        "persistence": 0.489362,
++        "total_motion": 12.649111
++      },
++      "108": {
++        "frames_present": 17,
++        "mean_pixels": 38.411765,
++        "persistence": 0.180851,
++        "total_motion": 25.5
++      },
++      "109": {
++        "frames_present": 45,
++        "mean_pixels": 39.355556,
++        "persistence": 0.478723,
++        "total_motion": 48.5
++      },
++      "11": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "110": {
++        "frames_present": 30,
++        "mean_pixels": 8.966667,
++        "persistence": 0.319149,
++        "total_motion": 29.04236
++      },
++      "111": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 27.294688
++      },
++      "112": {
++        "frames_present": 30,
++        "mean_pixels": 8.966667,
++        "persistence": 0.319149,
++        "total_motion": 4.25
++      },
++      "113": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 4.0
++      },
++      "114": {
++        "frames_present": 30,
++        "mean_pixels": 8.966667,
++        "persistence": 0.319149,
++        "total_motion": 4.25
++      },
++      "115": {
++        "frames_present": 30,
++        "mean_pixels": 8.966667,
++        "persistence": 0.319149,
++        "total_motion": 16.677945
++      },
++      "116": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 3.162278
++      },
++      "117": {
++        "frames_present": 30,
++        "mean_pixels": 204.6,
++        "persistence": 0.319149,
++        "total_motion": 8.467141
++      },
++      "118": {
++        "frames_present": 30,
++        "mean_pixels": 8.933333,
++        "persistence": 0.319149,
++        "total_motion": 9.555385
++      },
++      "119": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 27.892651
++      },
++      "12": {
++        "frames_present": 18,
++        "mean_pixels": 27.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "120": {
++        "frames_present": 30,
++        "mean_pixels": 8.9,
++        "persistence": 0.319149,
++        "total_motion": 29.54236
++      },
++      "121": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 29.966648
++      },
++      "122": {
++        "frames_present": 30,
++        "mean_pixels": 8.833333,
++        "persistence": 0.319149,
++        "total_motion": 31.079322
++      },
++      "123": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 28.79236
++      },
++      "124": {
++        "frames_present": 30,
++        "mean_pixels": 8.833333,
++        "persistence": 0.319149,
++        "total_motion": 9.794004
++      },
++      "125": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 1.0
++      },
++      "126": {
++        "frames_present": 30,
++        "mean_pixels": 8.466667,
++        "persistence": 0.319149,
++        "total_motion": 7.105551
++      },
++      "127": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 1.0
++      },
++      "128": {
++        "frames_present": 16,
++        "mean_pixels": 1.0,
++        "persistence": 0.170213,
++        "total_motion": 87.236444
++      },
++      "129": {
++        "frames_present": 11,
++        "mean_pixels": 1.0,
++        "persistence": 0.117021,
++        "total_motion": 61.36296
++      },
++      "13": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "130": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 3.162278
++      },
++      "131": {
++        "frames_present": 29,
++        "mean_pixels": 63.0,
++        "persistence": 0.308511,
++        "total_motion": 0.0
++      },
++      "132": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 1.0
++      },
++      "133": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 1.0
++      },
++      "134": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 11.401754
++      },
++      "135": {
++        "frames_present": 30,
++        "mean_pixels": 8.933333,
++        "persistence": 0.319149,
++        "total_motion": 10.150284
++      },
++      "136": {
++        "frames_present": 30,
++        "mean_pixels": 8.566667,
++        "persistence": 0.319149,
++        "total_motion": 7.92506
++      },
++      "137": {
++        "frames_present": 30,
++        "mean_pixels": 19.5,
++        "persistence": 0.319149,
++        "total_motion": 74.511626
++      },
++      "138": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 1.0
++      },
++      "139": {
++        "frames_present": 30,
++        "mean_pixels": 8.966667,
++        "persistence": 0.319149,
++        "total_motion": 3.855551
++      },
++      "14": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "140": {
++        "frames_present": 30,
++        "mean_pixels": 9.0,
++        "persistence": 0.319149,
++        "total_motion": 2.0
++      },
++      "141": {
++        "frames_present": 30,
++        "mean_pixels": 8.966667,
++        "persistence": 0.319149,
++        "total_motion": 2.25
++      },
++      "142": {
++        "frames_present": 30,
++        "mean_pixels": 8.8,
++        "persistence": 0.319149,
++        "total_motion": 2.5
++      },
++      "143": {
++        "frames_present": 8,
++        "mean_pixels": 1.0,
++        "persistence": 0.085106,
++        "total_motion": 37.09902
++      },
++      "144": {
++        "frames_present": 23,
++        "mean_pixels": 1.0,
++        "persistence": 0.244681,
++        "total_motion": 117.242784
++      },
++      "145": {
++        "frames_present": 14,
++        "mean_pixels": 1.0,
++        "persistence": 0.148936,
++        "total_motion": 70.0
++      },
++      "146": {
++        "frames_present": 3,
++        "mean_pixels": 1.0,
++        "persistence": 0.031915,
++        "total_motion": 20.764823
++      },
++      "147": {
++        "frames_present": 4,
++        "mean_pixels": 1.0,
++        "persistence": 0.042553,
++        "total_motion": 26.74676
++      },
++      "148": {
++        "frames_present": 7,
++        "mean_pixels": 1.0,
++        "persistence": 0.074468,
++        "total_motion": 41.928388
++      },
++      "149": {
++        "frames_present": 8,
++        "mean_pixels": 1.0,
++        "persistence": 0.085106,
++        "total_motion": 48.269107
++      },
++      "15": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "150": {
++        "frames_present": 3,
++        "mean_pixels": 1.0,
++        "persistence": 0.031915,
++        "total_motion": 12.544004
++      },
++      "151": {
++        "frames_present": 3,
++        "mean_pixels": 1.0,
++        "persistence": 0.031915,
++        "total_motion": 43.560081
++      },
++      "152": {
++        "frames_present": 1,
++        "mean_pixels": 8.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "153": {
++        "frames_present": 1,
++        "mean_pixels": 27.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "154": {
++        "frames_present": 1,
++        "mean_pixels": 45.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "155": {
++        "frames_present": 1,
++        "mean_pixels": 1.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "156": {
++        "frames_present": 1,
++        "mean_pixels": 1.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "157": {
++        "frames_present": 1,
++        "mean_pixels": 8.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "158": {
++        "frames_present": 1,
++        "mean_pixels": 1.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "159": {
++        "frames_present": 1,
++        "mean_pixels": 9.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "16": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "160": {
++        "frames_present": 1,
++        "mean_pixels": 8.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "161": {
++        "frames_present": 1,
++        "mean_pixels": 1.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "162": {
++        "frames_present": 1,
++        "mean_pixels": 9.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "163": {
++        "frames_present": 1,
++        "mean_pixels": 9.0,
++        "persistence": 0.010638,
++        "total_motion": 0.0
++      },
++      "17": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "18": {
++        "frames_present": 94,
++        "mean_pixels": 8.904255,
++        "persistence": 1.0,
++        "total_motion": 25.214982
++      },
++      "19": {
++        "frames_present": 94,
++        "mean_pixels": 8.989362,
++        "persistence": 1.0,
++        "total_motion": 28.214623
++      },
++      "2": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "20": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "21": {
++        "frames_present": 94,
++        "mean_pixels": 8.989362,
++        "persistence": 1.0,
++        "total_motion": 34.855832
++      },
++      "22": {
++        "frames_present": 47,
++        "mean_pixels": 8.957447,
++        "persistence": 0.5,
++        "total_motion": 7.742641
++      },
++      "23": {
++        "frames_present": 47,
++        "mean_pixels": 9.0,
++        "persistence": 0.5,
++        "total_motion": 4.242641
++      },
++      "24": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 6.958204
++      },
++      "25": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 3.25
++      },
++      "26": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 3.25
++      },
++      "27": {
++        "frames_present": 94,
++        "mean_pixels": 8.989362,
++        "persistence": 1.0,
++        "total_motion": 18.028051
++      },
++      "28": {
++        "frames_present": 94,
++        "mean_pixels": 8.819149,
++        "persistence": 1.0,
++        "total_motion": 13.676777
++      },
++      "29": {
++        "frames_present": 94,
++        "mean_pixels": 8.957447,
++        "persistence": 1.0,
++        "total_motion": 17.605551
++      },
++      "3": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "30": {
++        "frames_present": 94,
++        "mean_pixels": 8.829787,
++        "persistence": 1.0,
++        "total_motion": 28.927042
++      },
++      "31": {
++        "frames_present": 47,
++        "mean_pixels": 9.0,
++        "persistence": 0.5,
++        "total_motion": 0.0
++      },
++      "32": {
++        "frames_present": 94,
++        "mean_pixels": 8.93617,
++        "persistence": 1.0,
++        "total_motion": 23.286644
++      },
++      "33": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 4.492641
++      },
++      "34": {
++        "frames_present": 47,
++        "mean_pixels": 9.0,
++        "persistence": 0.5,
++        "total_motion": 9.708204
++      },
++      "35": {
++        "frames_present": 47,
++        "mean_pixels": 8.957447,
++        "persistence": 0.5,
++        "total_motion": 4.742641
++      },
++      "36": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 6.25
++      },
++      "37": {
++        "frames_present": 94,
++        "mean_pixels": 8.957447,
++        "persistence": 1.0,
++        "total_motion": 16.453743
++      },
++      "38": {
++        "frames_present": 94,
++        "mean_pixels": 8.968085,
++        "persistence": 1.0,
++        "total_motion": 10.365773
++      },
++      "39": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 0.25
++      },
++      "4": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "40": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 3.25
++      },
++      "41": {
++        "frames_present": 94,
++        "mean_pixels": 8.87234,
++        "persistence": 1.0,
++        "total_motion": 22.524858
++      },
++      "42": {
++        "frames_present": 94,
++        "mean_pixels": 8.968085,
++        "persistence": 1.0,
++        "total_motion": 24.840026
++      },
++      "43": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 16.445037
++      },
++      "44": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "45": {
++        "frames_present": 47,
++        "mean_pixels": 9.0,
++        "persistence": 0.5,
++        "total_motion": 8.485281
++      },
++      "46": {
++        "frames_present": 47,
++        "mean_pixels": 8.978723,
++        "persistence": 0.5,
++        "total_motion": 6.721637
++      },
++      "47": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "48": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "49": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "5": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "50": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "51": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "52": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "53": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "54": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "55": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.125
++      },
++      "56": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "57": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "58": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "59": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "6": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "60": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "61": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "62": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "63": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "64": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "65": {
++        "frames_present": 18,
++        "mean_pixels": 8.944444,
++        "persistence": 0.191489,
++        "total_motion": 0.25
++      },
++      "66": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "67": {
++        "frames_present": 47,
++        "mean_pixels": 51.957447,
++        "persistence": 0.5,
++        "total_motion": 50.5
++      },
++      "68": {
++        "frames_present": 17,
++        "mean_pixels": 11.529412,
++        "persistence": 0.180851,
++        "total_motion": 10.5
++      },
++      "69": {
++        "frames_present": 7,
++        "mean_pixels": 1.0,
++        "persistence": 0.074468,
++        "total_motion": 39.213203
++      },
++      "7": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "70": {
++        "frames_present": 9,
++        "mean_pixels": 6.444444,
++        "persistence": 0.095745,
++        "total_motion": 5.5
++      },
++      "71": {
++        "frames_present": 66,
++        "mean_pixels": 8.984848,
++        "persistence": 0.702128,
++        "total_motion": 9.574555
++      },
++      "72": {
++        "frames_present": 66,
++        "mean_pixels": 8.833333,
++        "persistence": 0.702128,
++        "total_motion": 7.912278
++      },
++      "73": {
++        "frames_present": 66,
++        "mean_pixels": 8.878788,
++        "persistence": 0.702128,
++        "total_motion": 15.987135
++      },
++      "74": {
++        "frames_present": 66,
++        "mean_pixels": 9.0,
++        "persistence": 0.702128,
++        "total_motion": 15.29563
++      },
++      "75": {
++        "frames_present": 66,
++        "mean_pixels": 8.969697,
++        "persistence": 0.702128,
++        "total_motion": 15.79563
++      },
++      "76": {
++        "frames_present": 66,
++        "mean_pixels": 8.984848,
++        "persistence": 0.702128,
++        "total_motion": 8.080952
++      },
++      "77": {
++        "frames_present": 66,
++        "mean_pixels": 9.0,
++        "persistence": 0.702128,
++        "total_motion": 9.615773
++      },
++      "78": {
++        "frames_present": 66,
++        "mean_pixels": 8.984848,
++        "persistence": 0.702128,
++        "total_motion": 13.690307
++      },
++      "79": {
++        "frames_present": 66,
++        "mean_pixels": 8.848485,
++        "persistence": 0.702128,
++        "total_motion": 21.953624
++      },
++      "8": {
++        "frames_present": 18,
++        "mean_pixels": 9.0,
++        "persistence": 0.191489,
++        "total_motion": 0.0
++      },
++      "80": {
++        "frames_present": 66,
++        "mean_pixels": 8.727273,
++        "persistence": 0.702128,
++        "total_motion": 12.819606
++      },
++      "81": {
++        "frames_present": 66,
++        "mean_pixels": 8.818182,
++        "persistence": 0.702128,
++        "total_motion": 16.301777
++      },
++      "82": {
++        "frames_present": 11,
++        "mean_pixels": 1.0,
++        "persistence": 0.117021,
++        "total_motion": 1.414214
++      },
++      "83": {
++        "frames_present": 16,
++        "mean_pixels": 1.0,
++        "persistence": 0.170213,
++        "total_motion": 27.556349
++      },
++      "84": {
++        "frames_present": 19,
++        "mean_pixels": 45.0,
++        "persistence": 0.202128,
++        "total_motion": 0.0
++      },
++      "85": {
++        "frames_present": 66,
++        "mean_pixels": 8.939394,
++        "persistence": 0.702128,
++        "total_motion": 4.0
++      },
++      "86": {
++        "frames_present": 66,
++        "mean_pixels": 8.954545,
++        "persistence": 0.702128,
++        "total_motion": 25.247968
++      },
++      "87": {
++        "frames_present": 66,
++        "mean_pixels": 8.939394,
++        "persistence": 0.702128,
++        "total_motion": 8.0
++      },
++      "88": {
++        "frames_present": 66,
++        "mean_pixels": 8.924242,
++        "persistence": 0.702128,
++        "total_motion": 6.855551
++      },
++      "89": {
++        "frames_present": 66,
++        "mean_pixels": 8.984848,
++        "persistence": 0.702128,
++        "total_motion": 8.017829
++      },
++      "9": {
++        "frames_present": 38,
++        "mean_pixels": 1.0,
++        "persistence": 0.404255,
++        "total_motion": 220.624731
++      },
++      "90": {
++        "frames_present": 19,
++        "mean_pixels": 8.105263,
++        "persistence": 0.202128,
++        "total_motion": 0.301777
++      },
++      "91": {
++        "frames_present": 19,
++        "mean_pixels": 9.0,
++        "persistence": 0.202128,
++        "total_motion": 0.0
++      },
++      "92": {
++        "frames_present": 19,
++        "mean_pixels": 8.947368,
++        "persistence": 0.202128,
++        "total_motion": 0.25
++      },
++      "93": {
++        "frames_present": 66,
++        "mean_pixels": 8.984848,
++        "persistence": 0.702128,
++        "total_motion": 6.25
++      },
++      "94": {
++        "frames_present": 66,
++        "mean_pixels": 8.969697,
++        "persistence": 0.702128,
++        "total_motion": 10.5
++      },
++      "95": {
++        "frames_present": 66,
++        "mean_pixels": 9.0,
++        "persistence": 0.702128,
++        "total_motion": 8.324555
++      },
++      "96": {
++        "frames_present": 66,
++        "mean_pixels": 8.984848,
++        "persistence": 0.702128,
++        "total_motion": 18.550425
++      },
++      "97": {
++        "frames_present": 34,
++        "mean_pixels": 1.0,
++        "persistence": 0.361702,
++        "total_motion": 131.983787
++      },
++      "98": {
++        "frames_present": 19,
++        "mean_pixels": 9.0,
++        "persistence": 0.202128,
++        "total_motion": 0.0
++      },
++      "99": {
++        "frames_present": 66,
++        "mean_pixels": 8.984848,
++        "persistence": 0.702128,
++        "total_motion": 14.351089
++      }
++    }
++  },
++  "positive_control_tu93_passed": true,
++  "preconditions_checked": {
++    "arc_orphan_solver_lint": {
++      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_orphan_solver_lint.py",
++      "passed": true,
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (40 modules in the live closure).\n"
++    },
++    "available_games": [
++      "lp85",
++      "r11l",
++      "tu93"
++    ],
++    "frame_sources": {
++      "lp85": {
++        "n_frames": 53,
++        "present": true,
++        "source_kind": "banked_replay",
++        "source_path": "results/arc3_live_banked_trajectories/lp85.json"
++      },
++      "r11l": {
++        "n_frames": 5,
++        "present": true,
++        "source_kind": "banked_replay",
++        "source_path": "results/arc3_live_banked_trajectories/r11l.json"
++      },
++      "tu93": {
++        "n_frames": 94,
++        "present": true,
++        "source_kind": "banked_replay",
++        "source_path": "results/arc3_live_banked_trajectories/tu93.json"
++      }
++    },
++    "missing_games": [],
++    "offline_arcade": {
++      "check": "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
++      "error": null,
++      "ok": true
++    }
++  },
++  "random_seed": 4841,
++  "reproducibility_checksum": "sha256:a743a61962eb8608b98452e5088a3341deac2d6d97f3614b5f567ff0b5b9f8a3",
++  "retire_if_same_verdict": true,
++  "solve_provenance": "development_proxy",
++  "tracker_params": {
++    "max_component_fraction": 0.45,
++    "max_match_distance": 18.0,
++    "min_match_score": 0.45,
++    "min_pixels": 1,
++    "positive_control_min_persistence": 0.35,
++    "recovery_margin": 0.1
++  },
++  "verifier_is_oracle": true
++}
+diff --git a/tests/python/agentic/test_arc_object_identity_perception.py b/tests/python/agentic/test_arc_object_identity_perception.py
+new file mode 100644
+index 0000000000..4265ef5b5d
+--- /dev/null
++++ b/tests/python/agentic/test_arc_object_identity_perception.py
+@@ -0,0 +1,73 @@
++"""Tests for the Exp 4841 object-identity perception prototype.
++
++Spec refs: REQ-ARC-WMTE-4841,
++SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE,
++SCENARIO-ARC-WMTE-4841-TU93-POSITIVE-CONTROL.
++"""
++
++from __future__ import annotations
++
++import numpy as np
++
++from carnot.agentic.arc_object_identity_perception import (
++    TrackerConfig,
++    measure_correspondence,
++    object_relational_features,
++    segment_frame,
++    track_object_identities,
++)
++
++
++def _grid_with_recolored_object(color: int, *, x_offset: int = 0) -> np.ndarray:
++    grid = np.zeros((12, 12), dtype=np.int16)
++    grid[2:5, 2 + x_offset : 5 + x_offset] = color
++    grid[8, 8:11] = 3
++    return grid
++
++
++def test_req_arc_wmte_4841_segments_connected_components_without_global_color_identity() -> None:
++    """REQ-ARC-WMTE-4841: segmentation exposes shape/connectivity object slots."""
++
++    components = segment_frame(_grid_with_recolored_object(2), TrackerConfig(min_pixels=1))
++
++    shapes = sorted((component.pixel_count, component.bbox) for component in components)
++    assert shapes == [(3, (8, 8, 8, 10)), (9, (2, 2, 4, 4))]
++    assert {component.shape_key for component in components} == {
++        "3:1:111",
++        "3:3:111/111/111",
++    }
++
++
++def test_scenario_arc_wmte_4841_shape_motion_beats_color_centroid_on_recolor() -> None:
++    """SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE: recolor-invariant matching is measured."""
++
++    frames = [
++        _grid_with_recolored_object(2, x_offset=0),
++        _grid_with_recolored_object(7, x_offset=1),
++        _grid_with_recolored_object(9, x_offset=2),
++    ]
++
++    measurement = measure_correspondence(frames, TrackerConfig(min_pixels=1))
++
++    assert measurement.n_frames == 3
++    assert measurement.shape_motion_score == 1.0
++    assert measurement.color_centroid_baseline_score < 0.5
++    assert measurement.recovered is True
++
++
++def test_scenario_arc_wmte_4841_tracks_support_object_relational_features() -> None:
++    """REQ-ARC-WMTE-4841: stable tracks expose object-relational offsets."""
++
++    frames = [
++        _grid_with_recolored_object(2, x_offset=0),
++        _grid_with_recolored_object(7, x_offset=1),
++    ]
++    tracked = track_object_identities(frames, TrackerConfig(min_pixels=1))
++
++    assert len(tracked.frames) == 2
++    assert {obj.track_id for obj in tracked.frames[0]} == {obj.track_id for obj in tracked.frames[1]}
++
++    relations = object_relational_features(tracked.frames[1])
++    assert relations
++    assert all("nearest_object_id" in row for row in relations)
++    assert any(row["offset_to_nearest"] != [0.0, 0.0] for row in relations)
+diff --git a/tests/python/test_experiment_4841_object_identity_perception_probe.py b/tests/python/test_experiment_4841_object_identity_perception_probe.py
+new file mode 100644
+index 0000000000..76eb00e5d0
+--- /dev/null
++++ b/tests/python/test_experiment_4841_object_identity_perception_probe.py
+@@ -0,0 +1,161 @@
++"""Tests for Exp 4841 object-identity perception probe artifact.
++
++Spec refs: REQ-ARC-WMTE-4841,
++SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE,
++SCENARIO-ARC-WMTE-4841-TU93-POSITIVE-CONTROL,
++SCENARIO-ARC-WMTE-4841-LIVE-PATH-REACHABLE.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++
++from carnot import experiment_4841_object_identity_perception_probe as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _fixture_frames() -> list[np.ndarray]:
++    frames: list[np.ndarray] = []
++    for step, color in enumerate((2, 7, 9)):
++        grid = np.zeros((10, 10), dtype=np.int16)
++        grid[2:4, 2 + step : 4 + step] = color
++        grid[7:9, 7:9] = 5
++        frames.append(grid)
++    return frames
++
++
++def _frame_source(game: str) -> mod.FrameSequence | None:
++    if game == "r11l":
++        return None
++    return mod.FrameSequence(
++        game=game,
++        frames=_fixture_frames(),
++        source_path=f"results/arc3_live_banked_trajectories/{game}.json",
++        source_kind="banked_replay",
++    )
++
++
++def test_req_arc_wmte_4841_spec_declares_artifact_contract() -> None:
++    """REQ-ARC-WMTE-4841: OpenSpec anchors the object-identity probe contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-ARC-WMTE-4841",
++        "SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE",
++        "SCENARIO-ARC-WMTE-4841-TU93-POSITIVE-CONTROL",
++        "SCENARIO-ARC-WMTE-4841-LIVE-PATH-REACHABLE",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4841_run_blocks_missing_preconditions(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4841: blocked resources never fabricate correspondence scores."""
++
++    blocked_arcade = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: False,
++        frame_sequence_provider=_frame_source,
++        live_path_checker=lambda _root: True,
++        now=iter([1.0, 1.1]).__next__,
++        write=False,
++    )
++    assert blocked_arcade["honest_verdict"] == "blocked_offline_arcade_missing"
++    assert blocked_arcade["measured_on_real_frames"] is False
++    assert blocked_arcade["per_game_correspondence"] == {}
++
++    blocked_frames = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        frame_sequence_provider=lambda _game: None,
++        live_path_checker=lambda _root: True,
++        now=iter([2.0, 2.1]).__next__,
++        write=False,
++    )
++    assert blocked_frames["honest_verdict"] == "blocked_no_offline_frames"
++    assert blocked_frames["preconditions_checked"]["available_games"] == []
++
++
++def test_scenario_arc_wmte_4841_artifact_schema_and_write(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE: artifact fields are schema-gated."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        frame_sequence_provider=_frame_source,
++        live_path_checker=lambda _root: True,
++        now=iter([10.0, 10.2]).__next__,
++        write=False,
++    )
++
++    assert artifact["measured_on_real_frames"] is True
++    assert set(artifact["per_game_correspondence"]) == {"lp85", "tu93"}
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["inference_substrate"] == "verifier_ensemble_against_cached_candidates"
++    assert mod.artifact_schema_errors(artifact) == []
++
++    path = mod.write_artifact(artifact, root=tmp_path)
++    assert path == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert json.loads(path.read_text(encoding="utf-8")) == artifact
++
++    broken = dict(artifact)
++    broken["measured_on_real_frames"] = False
++    broken["reproducibility_checksum"] = "sha256:bad"
++    errors = mod.artifact_schema_errors(broken)
++    assert "measured_on_real_frames must be true for non-blocked artifacts" in errors
++    assert "reproducibility_checksum must match artifact content" in errors
++
++
++def test_scenario_arc_wmte_4841_tu93_positive_control_uses_stable_tracks() -> None:
++    """SCENARIO-ARC-WMTE-4841-TU93-POSITIVE-CONTROL: player-like and goal-like tracks gate control."""
++
++    result = mod.evaluate_tu93_positive_control(_fixture_frames())
++
++    assert result["passed"] is True
++    assert result["player_track_id"] != result["goal_track_id"]
++    assert result["player_motion"] > 0.0
++    assert result["goal_persistence"] == 1.0
++
++
++def test_scenario_arc_wmte_4841_live_path_import_hook_is_reachable() -> None:
++    """SCENARIO-ARC-WMTE-4841-LIVE-PATH-REACHABLE: live import closure reaches the module."""
++
++    import scripts.arc_orphan_solver_lint as lint
++
++    closure = lint._closure(lint.ENTRYPOINTS) | {entrypoint.stem for entrypoint in lint.ENTRYPOINTS}
++    assert "arc_object_identity_perception" in closure
++    assert lint.main() == 0
++
++
++def test_req_arc_wmte_4841_delivered_result_json_is_real_frame_backed() -> None:
++    """SCENARIO-ARC-WMTE-4841-REAL-FRAME-CORRESPONDENCE: final artifact is the requested deliverable."""
++
++    artifact_path = REPO / mod.RESULT_RELATIVE_PATH
++    artifact: dict[str, Any] = json.loads(artifact_path.read_text(encoding="utf-8"))
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["measured_on_real_frames"] is True
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["live_path_reachable"] is True
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["inference_substrate"] == "verifier_ensemble_against_cached_candidates"
++    assert set(artifact["per_game_correspondence"]) == {"lp85", "r11l", "tu93"}
++    assert artifact["preconditions_checked"]["offline_arcade"]["ok"] is True
++    assert artifact["preconditions_checked"]["available_games"] == ["lp85", "r11l", "tu93"]
++    assert artifact["reproducibility_checksum"] == "sha256:" + mod.payload_checksum(artifact)
++    for row in artifact["per_game_correspondence"].values():
++        assert row["n_frames"] > 1
++        assert 0.0 <= row["shape_motion_score"] <= 1.0
++        assert 0.0 <= row["color_centroid_baseline_score"] <= 1.0
+-- 
+2.55.0
+

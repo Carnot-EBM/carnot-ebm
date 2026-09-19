@@ -1,0 +1,115 @@
+From 4d26f8cdd1264ff8afe2ae841396f7d155891c0c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 02:39:59 -0400
+Subject: [PATCH 10243/11362] [conductor] Operational retrospective for
+ milestone 2026.08.587
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 11 +++++
+ results/operational_retro_2026_08_587.json | 57 ++++++++++++++++++++++
+ 3 files changed, 75 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_587.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 4d71dc81d8..c800eb1726 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6430,3 +6430,10 @@ The critical path for milestone .250:
+ - theme: modification-time fallback erased the phase shape of a lone object-table compute task
+ - key result: honest operational negative — 1 compute task landed at 0.0-minute resolution; stage attribution, simultaneous model execution, and runner applicability have no data available this milestone
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.587
++
++- exp_range: no data available this milestone
++- theme: mixed execution surfaced missing compute activity proof and a fallback clock with no ordering power
++- key result: honest operational negative — the 2 compute-bound entries share the 0.0-minute floor while both GPUs are idle; cause and parallel-model dispatcher eligibility have no data available this milestone
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 602740e273..87ebe2e623 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18201,3 +18201,14 @@ receipt with monotonic timestamps, task-linked GPU samples, model count, and
+ runner identity. Since observed elapsed time has no positive amount, the
+ savings estimate is 0%.
+ - 2026-08-29: V587 activation, source-receipt, and evidence-contract preflight (⚠️ Blocked) — honest_verdict=blocked_v587_activation_contract: one or more source, manifest, gate, prior, or model checks failed.; results/experiment_6729_v587_activation_evidence_contract.json
++
++## 2026-08-29 — Milestone 2026.08.587 operational retrospective
++
++All 5 entries landed on the 0.0-minute floor, including the 2 compute-bound
++entries, so the record cannot explain their tie. The accelerator snapshot is
++idle despite that compute-bearing workload, making task-owned activity proof
++the next launch-gate priority. Model concurrency is absent, so no data
++available this milestone can show DualGPURunner eligibility or a dispatch
++failure. Source-level monotonic phase stamps and dispatcher metadata should
++follow. Estimated savings is 0% because the clock captured no positive
++duration.
+diff --git a/results/operational_retro_2026_08_587.json b/results/operational_retro_2026_08_587.json
+new file mode 100644
+index 0000000000..5131930959
+--- /dev/null
++++ b/results/operational_retro_2026_08_587.json
+@@ -0,0 +1,57 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.587",
++  "generated_at": "2026-08-29T06:35:39Z",
++  "retro_type": "operational_in_progress",
++  "total_wall_time_minutes": 0.0,
++  "experiments_completed": 5,
++  "compute_bound_experiments_count": 2,
++  "slowest_experiments": [
++    {
++      "experiment": "V587 activation, source-receipt, and evidence-contract preflight",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Owned 32K context and live code-carrying selfparse preflight",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Cold object-table row, statistic, and live-provenance audit",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Hardness-controlled exact certificate stream with proof-preserving relabeling",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Oracle-distinct dual-encoding diagnostic energy on held-out families",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": true,
++  "summary": "The milestone completed 5 experiments in 0.0 minutes, including 2 compute-bound experiments. Every entry shares the timing floor, while the GPU snapshot establishes idle accelerators in a milestone containing compute-bound work.",
++  "bottlenecks_identified": [
++    "The monitor snapshot showed 0% utilization on both accelerators despite the milestone containing 2 compute-bound entries.",
++    "The fallback clock rounded all 5 records to 0.0 minutes, exposing neither an ordering nor a causal execution stage.",
++    "Model concurrency and selected runner are absent from the source blocks; no data available this milestone can establish DualGPURunner eligibility or a dispatch failure."
++  ],
++  "improvements_suggested": [
++    "Require each compute launch to prove task-owned accelerator activity before continuing, and stop with a diagnostic receipt when that proof is absent.",
++    "Instrument task boundaries and execution phases with a high-resolution monotonic clock at the source.",
++    "Include concurrently loaded model count and dispatcher identity in the launch artifact, routing 2-or-more-model parallel work through DualGPURunner."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Make task-owned accelerator activity proof a compute-launch gate.",
++    "Capture monotonic phase timestamps inside the execution path.",
++    "Persist and validate model concurrency plus dispatcher choice."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "V587 activation, source-receipt, and evidence-contract preflight and Owned 32K context and live code-carrying selfparse preflight are tied as the longest compute-bound entries at 0.0 minutes; no data available this milestone explains why. The idle snapshot is actionable for compute execution, but the record supports neither a positive savings estimate nor a claim that DualGPURunner was missed.",
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,76 @@
+From f8238abfd20524e5d61300113aa6a284e72cc899 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 02:40:50 -0400
+Subject: [PATCH 10991/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...xperiment_6965_v610_contract_advisory.json | 23 +++++++++++++++++--
+ 4 files changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 240c553a97..5062db4a39 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 13, "phase": "iteration_start", "last_beat": "2026-09-04T06:26:31Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 14, "phase": "iteration_start", "last_beat": "2026-09-04T06:40:41Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 2a2cb7254e..d6aed29a4c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17223,3 +17223,4 @@ code |
+ | 2026-09-04 04:58 UTC | Plan milestone 2026.09.610 | OK | 7 tasks proposed |
+ | 2026-09-04 05:01 UTC | Milestone 2026.09.610 activated | OK | 7 tasks queued |
+ | 2026-09-04 06:24 UTC | V610 advisory execution-contract and retirement au | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: t json.loads(o |
++| 2026-09-04 06:38 UTC | V610 advisory execution-contract and retirement au | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 09a1599768..ab857d5302 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 13, "phase": "iteration_start", "started_at": "2026-09-04T06:26:31Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 14, "phase": "iteration_start", "started_at": "2026-09-04T06:40:41Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6965_v610_contract_advisory.json b/results/experiment_6965_v610_contract_advisory.json
+index 72fab4f3c5..ae129933bd 100644
+--- a/results/experiment_6965_v610_contract_advisory.json
++++ b/results/experiment_6965_v610_contract_advisory.json
+@@ -6048,5 +6048,24 @@
+   ],
+   "v610_contract_audit_complete_score": 1,
+   "verdict_class": "null",
+-  "verifier_is_oracle": true
+-}
++  "verifier_is_oracle": true,
++  "flagged_adversarial": true,
++  "flagged_adversarial_provenance": {
++    "gate_version": "917de937eb516a1af4e21a3a5002ff295a01729e1e938778cc3afc04d72ba3eb",
++    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
++    "stamped_at": "2026-09-04T06:38:41Z",
++    "stamper": "research_conductor.completion_gate"
++  },
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=18.089853 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

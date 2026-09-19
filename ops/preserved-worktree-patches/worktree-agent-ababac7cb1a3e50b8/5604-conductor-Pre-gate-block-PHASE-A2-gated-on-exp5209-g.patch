@@ -1,0 +1,51 @@
+From 14fdca400fc9f5bbfed0c074666dff7f5cc910bd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 22:34:30 -0400
+Subject: [PATCH 05604/11362] [conductor] Pre-gate block: PHASE A2 gated on
+ exp5209 gap1_hardened_positive == true -- promote GAP-1 set verifier to
+ registry-grade implementation
+
+1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening-v477.gap1_hardened_positive (actual={'principle': 'BARE top-level boolean used by exp5210 gate. True only if held-out mean pass@2 beats both baselines and the paired delta CI excludes harmful regression.', 'value': True} == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...10_gap1_registry_promotion_gated_v477.json | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 results/experiment_5210_gap1_registry_promotion_gated_v477.json
+
+diff --git a/results/experiment_5210_gap1_registry_promotion_gated_v477.json b/results/experiment_5210_gap1_registry_promotion_gated_v477.json
+new file mode 100644
+index 0000000000..7c50f53ac0
+--- /dev/null
++++ b/results/experiment_5210_gap1_registry_promotion_gated_v477.json
+@@ -0,0 +1,27 @@
++{
++  "experiment": 5210,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-04",
++  "started_at": "2026-07-04T02:34:30.061329+00:00",
++  "finished_at": "2026-07-04T02:34:30.061329+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE A2 gated on exp5209 gap1_hardened_positive == true -- promote GAP-1 set verifier to registry-grade implementation",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening-v477.gap1_hardened_positive (actual={'principle': 'BARE top-level boolean used by exp5210 gate. True only if held-out mean pass@2 beats both baselines and the paired delta CI excludes harmful regression.', 'value': True} == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5209-gap1-set-search-holdout-hardening-v477",
++      "artifact_field": "gap1_hardened_positive",
++      "op": "==",
++      "expected": true,
++      "actual": {
++        "principle": "BARE top-level boolean used by exp5210 gate. True only if held-out mean pass@2 beats both baselines and the paired delta CI excludes harmful regression.",
++        "value": true
++      },
++      "passed": false,
++      "reason": "actual={'principle': 'BARE top-level boolean used by exp5210 gate. True only if held-out mean pass@2 beats both baselines and the paired delta CI excludes harmful regression.', 'value': True} == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

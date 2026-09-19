@@ -1,0 +1,444 @@
+From 046a0cb4ab4b3935025e9b3e3ec316474c4ffebe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 22:57:33 -0400
+Subject: [PATCH 04555/11362] [outer-loop] GAP-4891 attempt: richer-scalar
+ goal-energy BUILT + REFUTED -> the gap is RELATIONAL, not scalar
+
+Operator "tackle GAP-4891 next". Built induce_goal_energy_richer (arc_agi3_goal_induction.py):
+a value/fill/spatial scalar ladder (nonbg_cells, max_color_count, nonbg_bbox_area,
+color_entropy) under the same strict-separation anti-mis-induction guard as the GAP-4890
+single-positive operator, drop-in for the graph_explore_solve_v2 goal_energy hook. 3 new unit
+tests pass (test_arc_single_positive_goal_energy.py; 7 total).
+
+EMPIRICAL RESULT (the honest finding): re-ran the stage-1.6 probe on all 4 grid-based stalled
+games (cd82/sk48/sp80/cn04) -- the richer SCALAR operator STILL returns None
+(operator_used=None, separating_feature=None; adversarial_verify clean 4/4). ROOT CAUSE: the
+negatives include NEAR-WIN frames (the penultimate frame differs from the win by ~one cell), so
+NO global scalar -- count, fill, OR spatial-extent -- can strictly separate the win. The goal is
+RELATIONAL/CELL-LEVEL (the configuration matches a within-frame TARGET; win vs penultimate differ
+only in specific cell VALUES), which no global statistic expresses.
+
+So GAP-4891 is re-scoped: global scalars are now EMPIRICALLY RULED OUT; the missing feature is a
+WITHIN-FRAME RELATIONAL TARGET-MATCH (induce a region-pair equal-in-win-not-in-negatives -> Hamming
+mismatch energy; re-read the target per level so it generalises). The richer operator stays (reusable
+for any game whose goal IS scalar-separable). This is layered negative progress: counts (GAP-4890) ->
+scalars (this) -> relational (next), each empirically narrowing the design. Confirmed binding: .451 A2
+level-up just stalled (repro=False) on exactly this class.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/verifier_gaps.md                          | 29 +++++++-
+ .../carnot/agentic/arc_agi3_goal_induction.py | 74 +++++++++++++++++++
+ ...in_game_l3_self_induction_cd82_stage1.json | 13 ++--
+ ...in_game_l3_self_induction_cn04_stage1.json | 13 ++--
+ ...in_game_l3_self_induction_sk48_stage1.json | 13 ++--
+ ...in_game_l3_self_induction_sp80_stage1.json | 13 ++--
+ .../arc_within_game_l3_self_induction_cd82.py | 37 ++++++++--
+ .../test_arc_single_positive_goal_energy.py   | 35 +++++++++
+ 8 files changed, 192 insertions(+), 35 deletions(-)
+
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 800ef5fc29..1f9eb983cb 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2517,9 +2517,32 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+ - priority: high (it is the single binding ceiling on multi-level deepening = the only lever that grows reproducible_total_levels via live self-discovery; 15 games gated on it)
+ 
+ ### GAP-4891: goal-induction REPRESENTATION beyond object/colour COUNTS (spatial/value/order goals)
+-- status: open
++- status: building (RICHER-SCALAR candidate BUILT + REFUTED 2026-06-27 -> re-scoped to RELATIONAL; see UPDATE)
++- UPDATE 2026-06-27 (richer-scalar candidate refuted -> the gap is RELATIONAL, not scalar): built
++  induce_goal_energy_richer (arc_agi3_goal_induction.py) adding a value/fill/spatial scalar ladder
++  (nonbg_cells, max_color_count, nonbg_bbox_area, color_entropy) under the SAME strict-separation guard;
++  3 unit tests pass (test_arc_single_positive_goal_energy.py). RE-RAN the stage-1.6 probe on all 4 games:
++  STILL None on cd82/sk48/sp80/cn04 (operator_used=None, separating_feature=None; adversarial_verify clean
++  4/4). ROOT CAUSE (the sharper finding): the negatives include NEAR-WIN frames (the penultimate frame
++  differs from the win by ~one cell), so NO global scalar -- count, fill, OR spatial-extent -- can strictly
++  separate the win from them. The goal is RELATIONAL/CELL-LEVEL (the configuration matches a within-frame
++  TARGET; the win differs from the penultimate frame only in specific cell VALUES), which no global scalar
++  can express. So the missing feature is a WITHIN-FRAME RELATIONAL TARGET-MATCH, not richer scalars.
++  Re-scoped candidate design below.
+ - evidence: results/arc_within_game_l3_self_induction_{cd82,sk48,sp80,cn04}_stage1.json (2026-06-27, outer-loop). With the GAP-4890 win-exemplar floor cleared (induce_goal_energy_single_positive fires from 1 win), ALL 4 grid-based stalled games returned None with verdict complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling: NO object-count / unique-colour-count feature strictly separates the lone level-completion win from the self-played non-win grids. adversarial_verify clean (4/4).
+ - failure mode: the goal-induction operator (both the >=2-win and the new single-positive variants) only has object-COUNT and colour-COUNT hypotheses (H1-H5). The stalled games' goals are SPATIAL/VALUE/ORDER, not count: cd82 palette_region_fill (canvas==target under a mask -> same counts), sk48 chain_color_reorder (same colours, reordered), sp80 spill_splitter (placement), cn04 marker_pair_shape_alignment (alignment). So the win and non-win states have identical object/colour counts and the energy reads ~0 on both -> cannot induce a usable goal -> graph_explore degrades to blind BFS -> no L3. This, NOT the win-exemplar floor, is the binding ceiling on multi-level deepening for >=4 of the 15 L2-stalled games.
+ - missing discriminator: a richer goal-feature family for goal-energy induction -- cell-VALUE match against an induced target/mask, spatial-pattern / alignment match, set/multiset ORDER match -- so the induced energy is 0 on the win and >0 on non-wins for value/spatial/order goals. The change-LOCATION prior (which transfers) can supply the candidate mask region; the gap is the VALUE/spatial predicate over it.
+-- candidate design: extend induce_goal_energy_single_positive with (a) a target-mask-match energy (Hamming distance of changed-cell VALUES vs the win exemplar over the change-location mask), (b) a permutation/order energy for reorder games, (c) an alignment energy (object-centroid relative-position match). Select among these by the same strict-separation contrastive guard already used for the count hypotheses. Then re-run the cd82/sk48/sp80/cn04 stage-1.5 probe; success = the energy separates on real grids -> proceed to the graph_explore L3 search.
+-- priority: high (now THE binding ceiling on within-game deepening once the floor is cleared; >=4 of 15 L2-stalled games confirmed gated on it; growing reproducible_total_levels via live self-discovery depends on it)
++- candidate design (RE-SCOPED 2026-06-27 to RELATIONAL after the scalar refutation): the energy must be a
++  WITHIN-FRAME RELATIONAL TARGET-MATCH, not a global scalar. Concretely: (a) induce a target by finding a
++  region-PAIR (or region + reference) that is EQUAL in the win exemplar but UNEQUAL in the negatives (the
++  canvas vs the displayed target) -> energy = Hamming mismatch of that region pair in the candidate grid
++  (this generalises across levels: the target is re-read from each level's frame, not the win's exact
++  values); (b) for reorder games, a sequence/permutation-match energy over the ordered colour run; (c) for
++  alignment, an object-centroid relative-position match. The strict-separation guard still selects which
++  relational predicate fires. NOTE: global-scalar features (counts AND value/fill/spatial) are now
++  EMPIRICALLY RULED OUT (this UPDATE) because near-win negatives bracket the win on every global statistic.
++  Then re-run the stage-1.6 probe; success = the relational energy is 0 on the win and >0 on near-win
++  negatives -> proceed to the graph_explore_solve_v2 L3 search.
++- priority: high (now THE binding ceiling on within-game deepening; confirmed 2026-06-28 when the .451 A2
++  level-up STALLED on a stalled-game with repro=False/newlvls=0 -- the reliable +1/milestone lane is now
++  blocked on exactly this; growing reproducible_total_levels via live self-discovery depends on it)
+diff --git a/python/carnot/agentic/arc_agi3_goal_induction.py b/python/carnot/agentic/arc_agi3_goal_induction.py
+index 25f8a3cbdf..6e0be36230 100644
+--- a/python/carnot/agentic/arc_agi3_goal_induction.py
++++ b/python/carnot/agentic/arc_agi3_goal_induction.py
+@@ -148,3 +148,77 @@ def induce_goal_energy_single_positive(
+         return lambda g: float(abs(len(objects(g)) - w_obj))
+     # No feature strictly separates the single win from the negatives -> cannot induce honestly.
+     return None
++
++
++# --- GAP-4891: richer goal-feature family (value / fill / spatial), beyond object/colour COUNTS ----
++
++def _goal_feature_value(grid: np.ndarray, feat: str) -> float:
++    """One scalar goal-relevant feature of a grid (GAP-4891). Beyond the count features
++    (objects / unique-colours) that GAP-4890 showed cannot separate the win from non-wins on
++    spatial/value/order goals (cd82 region-fill, sk48 reorder, sp80 placement, cn04 alignment),
++    these capture FILL/VALUE/SPATIAL changes that leave the counts unchanged."""
++    arr = np.asarray(grid)
++    vals, counts = np.unique(arr, return_counts=True)
++    if feat == "n_objects":
++        return float(len(objects(arr)))
++    if feat == "n_unique_colors":
++        return float(len(vals))
++    if feat == "nonbg_cells":  # cells not the dominant (background) colour -- FILL extent
++        return float(arr.size - int(counts.max()))
++    if feat == "max_color_count":  # extent of the most-common colour (fills shrink/grow it)
++        return float(int(counts.max()))
++    if feat == "nonbg_bbox_area":  # spatial extent (bounding box) of non-background -- placement/alignment
++        bg = vals[int(counts.argmax())]
++        ys, xs = np.where(arr != bg)
++        return float((ys.max() - ys.min() + 1) * (xs.max() - xs.min() + 1)) if ys.size else 0.0
++    if feat == "color_entropy":  # distributional spread of colours (reorder/redistribute goals)
++        p = counts / counts.sum()
++        return float(-(p * np.log(p + 1e-12)).sum())
++    raise ValueError(f"unknown goal feature {feat}")
++
++
++_RICHER_GOAL_FEATURES = (
++    "n_objects",
++    "n_unique_colors",
++    "nonbg_cells",
++    "max_color_count",
++    "nonbg_bbox_area",
++    "color_entropy",
++)
++
++
++def induce_goal_energy_richer(
++    win_grid: Optional[np.ndarray],
++    non_win_grids: List[np.ndarray],
++    features: tuple[str, ...] = _RICHER_GOAL_FEATURES,
++) -> Optional[Callable[[np.ndarray], float]]:
++    """GAP-4891 goal-energy over a RICHER scalar-feature family (the within-game L2->L3 deepening
++    unblock, after GAP-4890's single-positive operator cleared the win-exemplar floor).
++
++    WHY: GAP-4890 proved that with the floor cleared, all 4 grid-based stalled games (cd82/sk48/sp80/
++    cn04) still returned None because object/colour-COUNT features cannot SEPARATE the lone win from the
++    non-wins -- their goals are spatial/value/order (region-fill, reorder, placement, alignment), which
++    leave counts unchanged (results/arc_within_game_l3_self_induction_*_stage1.json). This adds FILL/
++    VALUE/SPATIAL scalar features (non-background cell count, dominant-colour extent, non-bg bounding-box
++    area, colour entropy) and applies the SAME strict-separation anti-mis-induction guard from GAP-4890:
++    a feature fires ONLY when the lone win is strictly above/below EVERY negative on it. Returns
++    energy(grid)->float>=0 (0 at the win's value), or None if no feature separates -- an honest
++    'cannot induce'. Same contract as induce_goal_energy -> drops into graph_explore_solve_v2's
++    goal_energy hook. The caller MUST still run the BFS-only ablation (energy only counts if it reaches
++    the win faster than navigation-only)."""
++    if win_grid is None or not non_win_grids:
++        return None
++    for feat in features:
++        try:
++            wv = _goal_feature_value(win_grid, feat)
++            nv = [_goal_feature_value(g, feat) for g in non_win_grids]
++        except Exception:
++            continue
++        if not nv:
++            continue
++        if wv < min(nv):  # win strictly LOWER -> goal = reduce this feature to the win's value
++            return lambda g, _f=feat, _w=wv: float(max(0.0, _goal_feature_value(g, _f) - _w))
++        if wv > max(nv):  # win strictly HIGHER -> goal = increase this feature to the win's value
++            return lambda g, _f=feat, _w=wv: float(max(0.0, _w - _goal_feature_value(g, _f)))
++    # No richer feature strictly separates the single win from the negatives -> cannot induce honestly.
++    return None
+diff --git a/results/arc_within_game_l3_self_induction_cd82_stage1.json b/results/arc_within_game_l3_self_induction_cd82_stage1.json
+index dfb90f1ed4..1f6019478b 100644
+--- a/results/arc_within_game_l3_self_induction_cd82_stage1.json
++++ b/results/arc_within_game_l3_self_induction_cd82_stage1.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
+   "schema": "carnot.arc_within_game_l3_self_induction.v1",
+-  "honest_verdict": "complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling_n_win_1",
++  "honest_verdict": "complete_self_induction_gap4891_no_feature_separates_needs_order_relational_n_win_1",
+   "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
+   "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "verifier_is_oracle": false,
+@@ -9,11 +9,12 @@
+   "level_reached": 2,
+   "n_win_grids": 1,
+   "n_nonwin_grids": 20,
+-  "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++  "goal_induction_operator": null,
+   "two_win_floor_blocked_old_operator": true,
+-  "single_positive_operator_fired": false,
++  "induce_fired": false,
++  "separating_feature": null,
+   "energy_separation": null,
+-  "stage": 1.5,
++  "stage": 1.6,
+   "solve_provenance": "live_agent_self_discovery",
+   "used_env_source": false,
+   "read_game_source": false,
+@@ -26,6 +27,6 @@
+     "arc_solve_registry.yaml cd82 dead_end"
+   ],
+   "random_seed": 20260627,
+-  "duration_s": 2.47,
+-  "reproducibility_checksum": "sha256:b3994dc218022f7d9ac403858eee8795570ea33721c4852162520d17d0b1e86b"
++  "duration_s": 2.61,
++  "reproducibility_checksum": "sha256:028b53f77f30727e347e89c3b8fc2bf5e1fc56f5fc072cfeaa33bb8984b461a4"
+ }
+diff --git a/results/arc_within_game_l3_self_induction_cn04_stage1.json b/results/arc_within_game_l3_self_induction_cn04_stage1.json
+index 709fe1962b..9002a3bb4a 100644
+--- a/results/arc_within_game_l3_self_induction_cn04_stage1.json
++++ b/results/arc_within_game_l3_self_induction_cn04_stage1.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
+   "schema": "carnot.arc_within_game_l3_self_induction.v1",
+-  "honest_verdict": "complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling_n_win_1",
++  "honest_verdict": "complete_self_induction_gap4891_no_feature_separates_needs_order_relational_n_win_1",
+   "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
+   "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "verifier_is_oracle": false,
+@@ -9,11 +9,12 @@
+   "level_reached": 2,
+   "n_win_grids": 1,
+   "n_nonwin_grids": 43,
+-  "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++  "goal_induction_operator": null,
+   "two_win_floor_blocked_old_operator": true,
+-  "single_positive_operator_fired": false,
++  "induce_fired": false,
++  "separating_feature": null,
+   "energy_separation": null,
+-  "stage": 1.5,
++  "stage": 1.6,
+   "solve_provenance": "live_agent_self_discovery",
+   "used_env_source": false,
+   "read_game_source": false,
+@@ -26,6 +27,6 @@
+     "arc_solve_registry.yaml cd82 dead_end"
+   ],
+   "random_seed": 20260627,
+-  "duration_s": 3.65,
+-  "reproducibility_checksum": "sha256:5dd1dfd05edb7fa3981190eba282b546dd4944e48867a26d0b417d2d52f5ba3b"
++  "duration_s": 3.32,
++  "reproducibility_checksum": "sha256:f54349f9952a4f3ac1e5b8b057075cc3b6b5a7ee1300ad479d7cfdde7482bcf2"
+ }
+diff --git a/results/arc_within_game_l3_self_induction_sk48_stage1.json b/results/arc_within_game_l3_self_induction_sk48_stage1.json
+index 063a43104d..162bea8c31 100644
+--- a/results/arc_within_game_l3_self_induction_sk48_stage1.json
++++ b/results/arc_within_game_l3_self_induction_sk48_stage1.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
+   "schema": "carnot.arc_within_game_l3_self_induction.v1",
+-  "honest_verdict": "complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling_n_win_1",
++  "honest_verdict": "complete_self_induction_gap4891_no_feature_separates_needs_order_relational_n_win_1",
+   "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
+   "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "verifier_is_oracle": false,
+@@ -9,11 +9,12 @@
+   "level_reached": 2,
+   "n_win_grids": 1,
+   "n_nonwin_grids": 39,
+-  "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++  "goal_induction_operator": null,
+   "two_win_floor_blocked_old_operator": true,
+-  "single_positive_operator_fired": false,
++  "induce_fired": false,
++  "separating_feature": null,
+   "energy_separation": null,
+-  "stage": 1.5,
++  "stage": 1.6,
+   "solve_provenance": "live_agent_self_discovery",
+   "used_env_source": false,
+   "read_game_source": false,
+@@ -26,6 +27,6 @@
+     "arc_solve_registry.yaml cd82 dead_end"
+   ],
+   "random_seed": 20260627,
+-  "duration_s": 6.43,
+-  "reproducibility_checksum": "sha256:f0c622445e5fdfdf34e900492ae23abd7b25fb173b41d880e476b5ae080b64c3"
++  "duration_s": 6.59,
++  "reproducibility_checksum": "sha256:68dce18b3438ffca68583cc2497fd5859997889595e2208abaa4f13c431882fb"
+ }
+diff --git a/results/arc_within_game_l3_self_induction_sp80_stage1.json b/results/arc_within_game_l3_self_induction_sp80_stage1.json
+index a72399cf75..d620ea9e12 100644
+--- a/results/arc_within_game_l3_self_induction_sp80_stage1.json
++++ b/results/arc_within_game_l3_self_induction_sp80_stage1.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
+   "schema": "carnot.arc_within_game_l3_self_induction.v1",
+-  "honest_verdict": "complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling_n_win_1",
++  "honest_verdict": "complete_self_induction_gap4891_no_feature_separates_needs_order_relational_n_win_1",
+   "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
+   "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "verifier_is_oracle": false,
+@@ -9,11 +9,12 @@
+   "level_reached": 2,
+   "n_win_grids": 1,
+   "n_nonwin_grids": 33,
+-  "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++  "goal_induction_operator": null,
+   "two_win_floor_blocked_old_operator": true,
+-  "single_positive_operator_fired": false,
++  "induce_fired": false,
++  "separating_feature": null,
+   "energy_separation": null,
+-  "stage": 1.5,
++  "stage": 1.6,
+   "solve_provenance": "live_agent_self_discovery",
+   "used_env_source": false,
+   "read_game_source": false,
+@@ -26,6 +27,6 @@
+     "arc_solve_registry.yaml cd82 dead_end"
+   ],
+   "random_seed": 20260627,
+-  "duration_s": 3.29,
+-  "reproducibility_checksum": "sha256:096be84b8970a41856a76eadc59fee4ef11452bd41e917f4c4a6b0d29a255ad5"
++  "duration_s": 3.0,
++  "reproducibility_checksum": "sha256:c5fbdf32575b42583cf3917a2c757535f6747361055862a847663fdc08e68230"
+ }
+diff --git a/scripts/experiments/arc_within_game_l3_self_induction_cd82.py b/scripts/experiments/arc_within_game_l3_self_induction_cd82.py
+index 7933516291..e8a41adeac 100644
+--- a/scripts/experiments/arc_within_game_l3_self_induction_cd82.py
++++ b/scripts/experiments/arc_within_game_l3_self_induction_cd82.py
+@@ -35,7 +35,10 @@ sys.path.insert(0, str(REPO / "scripts"))
+ from carnot.agentic import arc_game_adapters as adapters  # noqa: E402
+ from carnot.agentic import arc_solver_kit as kit  # noqa: E402
+ from carnot.agentic.arc_agi3_goal_induction import (  # noqa: E402
++    _RICHER_GOAL_FEATURES,
++    _goal_feature_value,
+     induce_goal_energy,
++    induce_goal_energy_richer,
+     induce_goal_energy_single_positive,
+ )
+ from carnot.agentic.arc_agi3_world_model import grid_of  # noqa: E402
+@@ -110,8 +113,25 @@ def main() -> int:
+     # fires from ONE win iff it is strictly separated from the negatives. Test BOTH on cd82's real grids.
+     energy_two_win = induce_goal_energy(win_grids, non_win_grids) if len(win_grids) >= 2 else None
+     energy = induce_goal_energy_single_positive(win_grids[0], non_win_grids) if win_grids else None
++    operator_used = "single_positive_count" if energy is not None else None
++    # GAP-4891: if the count operator can't separate, try the RICHER value/fill/spatial feature family.
++    if energy is None and win_grids:
++        energy = induce_goal_energy_richer(win_grids[0], non_win_grids)
++        operator_used = "richer_value_spatial" if energy is not None else None
+     induce_fired = energy is not None
+     two_win_floor_blocked = energy_two_win is None and len(win_grids) < 2
++    # diagnostic: which richer feature (if any) strictly separates the win from the negatives?
++    separating_feature = None
++    if win_grids:
++        for _feat in _RICHER_GOAL_FEATURES:
++            try:
++                _wv = _goal_feature_value(win_grids[0], _feat)
++                _nv = [_goal_feature_value(g, _feat) for g in non_win_grids]
++            except Exception:
++                continue
++            if _nv and (_wv < min(_nv) or _wv > max(_nv)):
++                separating_feature = _feat
++                break
+     sep = None
+     if induce_fired:
+         we = [float(energy(g)) for g in win_grids]
+@@ -130,15 +150,15 @@ def main() -> int:
+     if level_reached < 2:
+         verdict = f"complete_self_induction_stage1_could_not_reach_l2_reached_{level_reached}"
+     elif not induce_fired:
+-        # the single-positive operator clears the win-exemplar FLOOR; None now means the deeper ceiling:
+-        # object/colour features cannot separate the lone win from the negatives (representation ceiling).
+-        verdict = (f"complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling"
++        # neither count (GAP-4890) NOR richer value/fill/spatial (GAP-4891) features separate the lone
++        # win from the negatives -> the goal needs ORDER/relational features (the next ceiling).
++        verdict = (f"complete_self_induction_gap4891_no_feature_separates_needs_order_relational"
+                    f"_n_win_{len(win_grids)}")
+     elif not sep["separates"]:
+-        verdict = (f"complete_self_induction_gap4890_energy_does_not_separate_on_real_grids"
++        verdict = (f"complete_self_induction_energy_does_not_separate_on_real_grids_op_{operator_used}"
+                    f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}")
+     else:
+-        verdict = (f"success_gap4890_single_positive_goal_energy_fires_and_separates_from_one_win"
++        verdict = (f"success_goal_energy_fires_and_separates_op_{operator_used}_feat_{separating_feature}"
+                    f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}_proceed_to_stage2_search")
+ 
+     art = {
+@@ -153,11 +173,12 @@ def main() -> int:
+         "level_reached": level_reached,
+         "n_win_grids": len(win_grids),
+         "n_nonwin_grids": len(non_win_grids),
+-        "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++        "goal_induction_operator": operator_used,
+         "two_win_floor_blocked_old_operator": two_win_floor_blocked,
+-        "single_positive_operator_fired": induce_fired,
++        "induce_fired": induce_fired,
++        "separating_feature": separating_feature,
+         "energy_separation": sep,
+-        "stage": 1.5,
++        "stage": 1.6,
+         "solve_provenance": "live_agent_self_discovery",
+         "used_env_source": False, "read_game_source": False,
+         "offline_ground_truth_bfs": False, "hand_calibrated_per_game": False,
+diff --git a/tests/python/test_arc_single_positive_goal_energy.py b/tests/python/test_arc_single_positive_goal_energy.py
+index 0a0bd7c3cd..fe508101d4 100644
+--- a/tests/python/test_arc_single_positive_goal_energy.py
++++ b/tests/python/test_arc_single_positive_goal_energy.py
+@@ -12,6 +12,7 @@ import numpy as np
+ 
+ from carnot.agentic.arc_agi3_goal_induction import (
+     induce_goal_energy,
++    induce_goal_energy_richer,
+     induce_goal_energy_single_positive,
+ )
+ 
+@@ -72,3 +73,37 @@ def test_single_positive_handles_empty_inputs():
+     """Defensive: no negatives or no win -> None (cannot contrast)."""
+     assert induce_goal_energy_single_positive(None, [_grid_with_objects(2)]) is None
+     assert induce_goal_energy_single_positive(_grid_with_objects(1), []) is None
++
++
++# --- GAP-4891 richer goal-feature family --------------------------------------------------------
++
++def test_richer_fires_on_fill_where_counts_are_blind():
++    """GAP-4891 core: a region-FILL goal -- win has more non-background cells than non-wins, but the
++    SAME object/colour COUNTS. The count-only operator returns None; the richer operator fires on the
++    nonbg_cells (fill) feature and separates."""
++    win = np.zeros((6, 6), dtype=int)
++    win[0:4, 0:4] = 1  # 16 filled cells, 1 connected object, colours {0,1}
++    nonwin = np.zeros((6, 6), dtype=int)
++    nonwin[0, 0:5] = 1  # 5 filled cells, 1 connected object, colours {0,1}
++
++    # counts are identical (1 object, 2 colours) -> the GAP-4890 count operator cannot separate
++    assert induce_goal_energy_single_positive(win, [nonwin]) is None
++
++    energy = induce_goal_energy_richer(win, [nonwin])
++    assert energy is not None, "richer operator must fire on a fill goal the counts are blind to"
++    assert energy(win) == 0.0
++    assert energy(nonwin) > 0.0
++
++
++def test_richer_returns_none_when_truly_indistinguishable():
++    """If NO feature (count or value/fill/spatial) separates the lone win from the negatives -> None."""
++    win = np.zeros((6, 6), dtype=int)
++    win[0:2, 0:2] = 1
++    nonwin = np.zeros((6, 6), dtype=int)
++    nonwin[0:2, 0:2] = 1  # identical grid -> every feature identical
++    assert induce_goal_energy_richer(win, [nonwin]) is None
++
++
++def test_richer_handles_empty_inputs():
++    assert induce_goal_energy_richer(None, [np.zeros((4, 4), dtype=int)]) is None
++    assert induce_goal_energy_richer(np.zeros((4, 4), dtype=int), []) is None
+-- 
+2.55.0
+

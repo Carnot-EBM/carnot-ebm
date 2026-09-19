@@ -1,0 +1,307 @@
+From 3fef9baeea652120c089252110284b7ab5f5a1e0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 14:34:51 -0400
+Subject: [PATCH 10296/11362] [worktree] artifact_freshness_lint: worktree
+ backlog carve-out reachable, related-repo gated, hook-env proof
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Standalone gate fix, split out of the tool-gap feature commit per
+coordinator directive (supersedes the unmerged a613f36bc7, which carried
+it as a rider).
+
+Origin: run from a session worktree, `_repo_relative` could never strip
+another checkout's absolute provenance prefix, so `_sha256_at_head` got
+an unresolvable path, `drift_is_pre_existing` fail-closed, and the
+pre-existing-debt carve-out (REQ-OPS-FRESHNESS-BACKLOG-1) was
+unreachable: three artifacts whose every drifted dependency was already
+drifted at HEAD still blocked a worktree commit — the exact
+--no-verify-training failure the module's docstring names.
+
+The fix, hardened by the same-day adversarial review:
+- Fallback relativizes via the git toplevel CONTAINING the recorded
+  path, gated on a shared root commit with THIS repo (R1: without the
+  gate, an unrelated repo with colliding layout flipped a real block to
+  backlog — fail-open on a fail-closed gate; the first cut's regression
+  test PINNED that bug and was rewritten to assert the opposite).
+- Both the toplevel probe AND the block-deciding `_sha256_at_head` strip
+  the four git discovery overrides (R2: hooks run with GIT_DIR /
+  GIT_INDEX_FILE exported; cwd does not beat GIT_DIR — measured: every
+  dependency degraded to its bare basename at hook time, and a poisoned
+  head hash returned the impostor repo's blob).
+- The strip is the explicit denylist {GIT_DIR, GIT_WORK_TREE,
+  GIT_INDEX_FILE, GIT_COMMON_DIR}, not GIT_* wholesale (R3: CI injects
+  safe.directory via GIT_CONFIG_*, and stripping GIT_CEILING_DIRECTORIES
+  widens discovery instead of narrowing it).
+
+Unresolvable stays None and the caller keeps blocking: the error
+direction is unchanged, fail-closed. Live corpus re-verified after the
+relatedness gate: the three backlog artifacts still classify
+pre-existing (worktree and main share the root commit) and the full lint
+reports OK.
+
+Mutations M15 (fallback reverted), M16 (strip emptied), M25 (relatedness
+gate removed), M26 (head-hash env strip removed): each RED, restored
+byte-identical. R3's keep-config direction is stated, not
+mutation-proven — a dubious-ownership repo cannot be constructed without
+root in this environment.
+
+Mutation-gate note: two pending markers armed during this session's own
+mutation-driver pytest windows named openspec spec.md, ops/arc_tool_gaps.md,
+ops/changelog.md and ops/status.md as [NOT this run] writes. Those are this
+session's DELIBERATE append-only doc edits, made concurrently with the
+driver's focused test runs; the tests themselves write nothing tracked.
+Markers retired deliberately per the gate's own instruction.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/artifact_freshness_lint.py            | 94 ++++++++++++++++++-
+ ...freshness_pre_existing_backlog_20260811.py | 87 +++++++++++++++++
+ 2 files changed, 180 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/artifact_freshness_lint.py b/scripts/artifact_freshness_lint.py
+index 20840e253e..74ae34a870 100644
+--- a/scripts/artifact_freshness_lint.py
++++ b/scripts/artifact_freshness_lint.py
+@@ -58,6 +58,7 @@ from __future__ import annotations
+ import argparse
+ import hashlib
+ import json
++import os
+ import re
+ import subprocess
+ import sys
+@@ -201,6 +202,42 @@ def check_artifact(artifact: Path) -> tuple[str, list[str], str | None]:
+     return ("fresh", detail, cmd)
+ 
+ 
++def _git_env_without_repo_overrides() -> dict[str, str]:
++    """The process env minus the four vars that override git's repo DISCOVERY.
++
++    `git commit` exports GIT_DIR / GIT_INDEX_FILE to its hooks; with those set,
++    `git -C <elsewhere>` answers about the HOOK'S repo, not the path it was
++    pointed at (measured 2026-08-29: every dependency degraded to its bare
++    basename at hook time). Only the discovery overrides are dropped —
++    GIT_CONFIG_* and GIT_CEILING_DIRECTORIES stay, because CI and containers
++    legitimately inject config (safe.directory) through them."""
++    drop = {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR"}
++    return {k: v for k, v in os.environ.items() if k not in drop}
++
++
++def _root_commits(repo_dir: Path) -> tuple[str, ...] | None:
++    """The repository's root (parentless) commits, or None when unanswerable.
++
++    Two checkouts are the SAME repository — main tree, worktree, clone — when
++    they share a root commit. An unrelated repo that merely shares file layout
++    does not, which is what keeps the worktree fallback in `_repo_relative`
++    from adopting a stranger's checkout (fail-open across repos)."""
++    try:
++        out = subprocess.run(
++            ["git", "-C", str(repo_dir), "rev-list", "--max-parents=0", "HEAD"],
++            capture_output=True,
++            text=True,
++            check=False,
++            env=_git_env_without_repo_overrides(),
++        )
++    except Exception:
++        return None
++    if out.returncode != 0:
++        return None
++    roots = tuple(sorted(line.strip() for line in out.stdout.splitlines() if line.strip()))
++    return roots or None
++
++
+ def _sha256_at_head(rel: str) -> str | None:
+     """sha256 of a repo-relative path as it exists at HEAD, or None if unavailable.
+ 
+@@ -208,6 +245,11 @@ def _sha256_at_head(rel: str) -> str | None:
+     caller treats None as "cannot prove this drift is pre-existing" and therefore keeps
+     blocking. Fail-CLOSED on purpose: the alternative would let an unreadable git turn a
+     real regression into a warning.
++
++    Runs with the discovery-override env vars stripped: this call DECIDES
++    block-versus-backlog, and under a hook a poisoned GIT_DIR made it hash the
++    wrong repo's blob — cwd does not beat GIT_DIR (adversarial review
++    2026-08-29, R2).
+     """
+     try:
+         out = subprocess.run(
+@@ -215,6 +257,7 @@ def _sha256_at_head(rel: str) -> str | None:
+             capture_output=True,
+             cwd=str(REPO),
+             check=False,
++            env=_git_env_without_repo_overrides(),
+         )
+         if out.returncode != 0:
+             return None
+@@ -282,12 +325,46 @@ def drift_is_pre_existing(artifact: Path) -> bool:
+     return saw_drift
+ 
+ 
++def _git_toplevel_containing(p: Path) -> str | None:
++    """The root of the git checkout that contains p, or None (e.g. /tmp scratch).
++
++    Asked of git, not guessed from string prefixes, so any checkout of this
++    repository — the operator's main tree, a session worktree, a fresh clone —
++    resolves the same way.
++
++    Runs with the discovery-override env vars stripped (see
++    `_git_env_without_repo_overrides` for the hook incident this answers)."""
++    probe = p if p.is_dir() else p.parent
++    try:
++        out = subprocess.run(
++            ["git", "-C", str(probe), "rev-parse", "--show-toplevel"],
++            capture_output=True,
++            text=True,
++            check=False,
++            env=_git_env_without_repo_overrides(),
++        )
++    except Exception:
++        return None
++    if out.returncode != 0:
++        return None
++    top = out.stdout.strip()
++    return top or None
++
++
+ def _repo_relative(raw: str) -> str | None:
+     """Provenance records ABSOLUTE paths. pre-commit matches `files:` against REPO-RELATIVE paths.
+ 
+     That mismatch is why a naive "does the provenance path match the regex" check reports nothing
+     useful, and it is worth stating: a row source under /tmp (a scratchpad input) is not a tracked
+     file at all and can never be a commit trigger, so it is dropped rather than reported as a gap.
++
++    WORKTREE FIX (2026-08-29). Provenance paths are recorded in whichever checkout built the
++    artifact — usually the operator's main tree. Run from a session WORKTREE, `relative_to(REPO)`
++    can never strip that other checkout's prefix, so this returned None, `_sha256_at_head` got an
++    absolute path git cannot show, and `drift_is_pre_existing` fail-closed — every worktree commit
++    touching the trigger was refused for backlog it did not cause, the exact --no-verify-training
++    failure this module's own docstring names. The fallback relativizes against the git toplevel
++    that CONTAINS the recorded path; the same repo-relative name then resolves in any checkout.
+     """
+     if not raw:
+         return None
+@@ -295,7 +372,22 @@ def _repo_relative(raw: str) -> str | None:
+     try:
+         return str(p.resolve().relative_to(REPO)) if p.is_absolute() else str(p)
+     except ValueError:
+-        return None
++        top = _git_toplevel_containing(p)
++        if not top:
++            return None
++        # RELATEDNESS GATE (adversarial review 2026-08-29, R1). The discovered
++        # checkout must be THIS repository — sharing a root commit — or the
++        # fallback would adopt a stranger's checkout whose layout merely
++        # collides, and the caller's HEAD lookup would then downgrade a real
++        # block to backlog. Unanswerable either side stays None: fail-closed.
++        ours = _root_commits(REPO)
++        theirs = _root_commits(Path(top))
++        if not ours or not theirs or not set(ours) & set(theirs):
++            return None
++        try:
++            return str(p.resolve().relative_to(Path(top).resolve()))
++        except ValueError:
++            return None
+ 
+ 
+ def registered_dependency_paths(index_path: Path = DEFAULT_INDEX) -> dict[str, list[str]]:
+diff --git a/tests/python/test_artifact_freshness_pre_existing_backlog_20260811.py b/tests/python/test_artifact_freshness_pre_existing_backlog_20260811.py
+index bf2cc018b9..893686ceac 100644
+--- a/tests/python/test_artifact_freshness_pre_existing_backlog_20260811.py
++++ b/tests/python/test_artifact_freshness_pre_existing_backlog_20260811.py
+@@ -123,3 +123,90 @@ def test_git_failure_falls_back_to_blocking() -> None:
+ 
+     mod = importlib.import_module("artifact_freshness_lint")
+     assert mod._sha256_at_head("definitely/not/a/tracked/path/xyz.py") is None
++
++
++def test_provenance_paths_relativize_only_within_this_repository(monkeypatch) -> None:
++    """WORKTREE FIX 2026-08-29 (REQ-OPS-FRESHNESS-BACKLOG-1), hardened per the
++    same-day adversarial review (R1/R2). Provenance records absolute paths from
++    whichever checkout built the artifact; run from a session worktree,
++    `relative_to(REPO)` could never strip that prefix, so the pre-existing-debt
++    carve-out fail-closed and refused worktree commits for backlog they did not
++    cause. The fallback asks git for the toplevel containing the path — but it
++    must adopt ONLY a checkout of THIS repository (shared root commit), or a
++    stranger's repo with colliding layout flips a real block to backlog (R1),
++    and its git calls must strip the hook-exported discovery overrides
++    (GIT_DIR / GIT_INDEX_FILE), which otherwise hijack both the toplevel probe
++    and the block-deciding HEAD hash (R2).
++
++    Uses tempfile, not tmp_path: a pytest --basetemp inside the repo would let
++    the primary relative_to(REPO) branch succeed and never exercise the
++    fallback."""
++    import hashlib
++    import importlib.util
++    import tempfile
++
++    spec = importlib.util.spec_from_file_location("afl_wt_fix", LINT)
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++
++    def _git(cwd, *args):
++        subprocess.run(
++            ["git", "-c", "user.name=t", "-c", "user.email=t@t", *args],
++            cwd=str(cwd),
++            check=True,
++            capture_output=True,
++        )
++
++    with tempfile.TemporaryDirectory() as td:
++        base = Path(td)
++        # The repository under lint: stands in for the session worktree's REPO.
++        primary = base / "primary"
++        (primary / "python").mkdir(parents=True)
++        (primary / "python" / "dep.py").write_text("x = 1\n")
++        _git(primary, "init", "-q")
++        _git(primary, "add", "-A")
++        _git(primary, "commit", "-q", "-m", "root")
++        monkeypatch.setattr(mod, "REPO", primary)
++
++        # A SECOND CHECKOUT of the same repository (a clone shares the root
++        # commit, like the operator's main tree vs a session worktree): its
++        # paths must relativize.
++        clone2 = base / "clone2"
++        _git(base, "clone", "-q", str(primary), str(clone2))
++        related = clone2 / "python" / "dep.py"
++        assert mod._repo_relative(str(related)) == "python/dep.py"
++
++        # An UNRELATED repository with a colliding layout must NOT be adopted:
++        # pre-review this returned "python/dep.py" and the caller then hashed
++        # THIS repo's HEAD blob against the stranger's file — a real block
++        # downgraded to backlog (R1). Fail-closed means None.
++        stranger = base / "stranger"
++        (stranger / "python").mkdir(parents=True)
++        (stranger / "python" / "dep.py").write_text("y = 2\n")
++        _git(stranger, "init", "-q")
++        _git(stranger, "add", "-A")
++        _git(stranger, "commit", "-q", "-m", "root")
++        assert mod._repo_relative(str(stranger / "python" / "dep.py")) is None
++
++        # Hook conditions: GIT_DIR/GIT_INDEX_FILE point at a DIFFERENT repo,
++        # exactly what `git commit` exports to its hooks. Both the fallback
++        # and the block-deciding HEAD hash must ignore them (R2).
++        monkeypatch.setenv("GIT_DIR", str(stranger / ".git"))
++        monkeypatch.setenv("GIT_INDEX_FILE", str(stranger / ".git" / "index"))
++        assert mod._repo_relative(str(related)) == "python/dep.py"
++        expected = hashlib.sha256(b"x = 1\n").hexdigest()
++        assert mod._sha256_at_head("python/dep.py") == expected
++        monkeypatch.delenv("GIT_DIR")
++        monkeypatch.delenv("GIT_INDEX_FILE")
++
++        # The narrowed strip keeps legitimate GIT_CONFIG_* injection working
++        # (R3): config vars must not disable the fallback.
++        monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
++        monkeypatch.setenv("GIT_CONFIG_KEY_0", "safe.directory")
++        monkeypatch.setenv("GIT_CONFIG_VALUE_0", "*")
++        assert mod._repo_relative(str(related)) == "python/dep.py"
++
++        # A path git cannot place in any checkout still drops (fail-closed
++        # upstream keeps blocking): a missing parent makes rev-parse fail
++        # deterministically wherever the tempdir lives.
++        assert mod._repo_relative(str(base / "nodir" / "rows.json")) is None
+-- 
+2.55.0
+

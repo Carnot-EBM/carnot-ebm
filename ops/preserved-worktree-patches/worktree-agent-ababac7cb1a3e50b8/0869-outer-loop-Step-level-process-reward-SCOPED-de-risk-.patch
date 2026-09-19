@@ -1,0 +1,309 @@
+From a123572aaf445e3df33da230d453b94e668cacb1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 21:08:46 -0400
+Subject: [PATCH 00869/11362] [outer-loop] Step-level process-reward SCOPED +
+ de-risk PASSES (outcome AUROC 0.73)
+
+Scopes the most-promising rescue path (dense per-step process-reward, not hard trace
+certification) + runs its gating de-risk. RESULT: aggregated per-step process-reward
+ranks correct traces above incorrect at trace-outcome AUROC 0.73 (fraction_certified;
+mean 0.72) on 558 free-form p01 traces -- GATE PASSES (>=0.65). The soft/dense reward
+keeps the per-step signal that the HARD all-clean certification (56%, Phase 0) threw
+away. So verifier-as-self-improvement-reward is VIABLE via process-reward (not hard
+RFT certification): use the verifier as a DENSE reward. Build now justified: process-
+reward-weighted SFT on a 0.5B base (fine-tune harness = the remaining gap). Caveats:
+0.73 moderate (process-vs-outcome + OOD attenuation), correlational not causal.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../step-level-process-reward-scoping.md      |  97 ++++++++++++
+ .../process_reward_outcome_auroc_phase05.json |  19 +++
+ ...cess_reward_outcome_auroc_phase05_draft.py | 146 ++++++++++++++++++
+ 3 files changed, 262 insertions(+)
+ create mode 100644 docs/research-notes/step-level-process-reward-scoping.md
+ create mode 100644 results/process_reward_outcome_auroc_phase05.json
+ create mode 100644 scripts/experiments/process_reward_outcome_auroc_phase05_draft.py
+
+diff --git a/docs/research-notes/step-level-process-reward-scoping.md b/docs/research-notes/step-level-process-reward-scoping.md
+new file mode 100644
+index 0000000000..01c6e8d275
+--- /dev/null
++++ b/docs/research-notes/step-level-process-reward-scoping.md
+@@ -0,0 +1,97 @@
++# Step-level process-reward: the rescue path that uses the verifier where it's strong
++
++**2026-06-07.** Phase 0 found Carnot's verifier is a strong PROCESS verifier (96.7%
++per-step precision in-format) but a weak OUTCOME certifier (56% trace-level) — so
++trace-level RFT poisons. This path uses the verifier the way it's actually strong:
++as a **dense per-step process reward**, not a trace-level pass/fail filter.
++
++## The idea
++
++Instead of "keep whole traces the verifier certifies correct" (failed: process !=
++outcome), give the generator a **dense per-step reward** from the verifier and train
++it to produce more locally-valid reasoning — the standard process-reward-model (PRM)
++recipe (Lightman et al. "Let's Verify Step by Step"; the FoVer line). The 96.7%
++per-step precision is exactly the signal a PRM needs.
++
++Mechanism options (simplest first):
++1. **Process-reward-weighted SFT** — weight each generated trace (or each step's
++   contribution) by its verifier process-reward; up-weight high-reward reasoning.
++   Cheapest; no RL.
++2. **Best-prefix distillation** — keep the longest verifier-certified-correct PREFIX
++   of each trace and train on it (extract the maximal-valid portion).
++3. **Step-level RL (process-reward PPO/GRPO)** — per-step reward in an RL loop.
++   Heaviest; the full PRM-as-reward.
++
++## The central risk (must de-risk before building)
++
++**Process-reward hacking / process != outcome, as a SOFT signal.** Phase 0 already
++showed local step-validity only weakly predicts outcome (trace-level 56%). So
++rewarding per-step validity risks producing **locally-valid-but-unproductive**
++reasoning — valid-looking steps that don't progress to the right answer. The PRM
++literature shows a STRONG PRM improves outcomes, but a weak/miscalibrated one can be
++gamed. The question is whether Carnot's per-step signal is strong ENOUGH, as a dense
++reward, to move outcome accuracy.
++
++## The cheap de-risk (Phase 0.5 — gates the build, runnable NOW)
++
++Before any training, measure whether the verifier's aggregated per-step process-reward
++**ranks correct traces above incorrect ones** — i.e., the trace-OUTCOME AUROC of the
++aggregate process-reward, on existing p01 traces (we already have the per-step scores
++from the chunking-bridge run). No training, no new infra.
++
++- **GATE:** trace-outcome AUROC of the aggregate process-reward >= ~0.65 (meaningfully
++  above chance). If yes, the dense reward carries real outcome signal -> process-reward
++  training is worth the harness build. If ~0.5-0.55, the per-step signal does NOT rank
++  correct traces above incorrect at the trace level -> process-reward would reward-hack;
++  the path needs a stronger/outcome-aware verifier first.
++
++Aggregation variants to report: mean per-step reward, min per-step reward (one bad step
++sinks the trace), and fraction-of-steps-certified. The best aggregation's AUROC is the
++gate.
++
++## Infra (if the gate passes)
++
++The fine-tune harness is still the gap (no peft/LoRA/RL in the tree). Start with option
++1 (process-reward-weighted SFT) on a 0.5B base — simplest, no RL. Arms: base /
++process-reward-weighted / gold-RFT (upper bound) / SC. Headroom corpus, multi-seed,
++held-out eval. Only escalate to step-level RL (option 3) if weighted-SFT shows signal.
++
++## Honest framing
++
++This is the most promising rescue because it matches the verifier's demonstrated
++strength (per-step), and it's the established PRM-as-reward recipe. But the same
++process-vs-outcome tension applies as a soft signal — the Phase-0.5 de-risk measures
++whether the soft per-step reward is strong enough at the trace-outcome level before any
++build. Same discipline as Phase 0: cheapest decisive measurement first.
++
++---
++
++# Phase 0.5 RESULT (2026-06-07) — de-risk PASSES: dense process-reward ranks outcomes at AUROC 0.73
++
++Trace-OUTCOME AUROC of the aggregated per-step process-reward on 558 free-form p01
++traces (6038 chunks, 34% base rate):
++
++| aggregation | trace-outcome AUROC |
++|---|---|
++| fraction_certified | **0.730** |
++| mean_reward | 0.722 |
++| min_reward | 0.673 |
++
++**GATE PASSES (best 0.73 >= 0.65).** The dense/soft process-reward carries real outcome
++signal -- unlike the HARD trace-certification (56% precision, Phase 0). The difference
++is information: all-steps-clean is all-or-nothing (one flagged step kills a mostly-
++correct trace), but the soft aggregate (fraction-certified / mean-reward) keeps the
++dense per-step signal and ranks correct traces above incorrect at 0.73.
++
++**Conclusion: the step-level process-reward path is VIABLE.** Use Carnot's verifier as a
++DENSE per-step reward, NOT a hard trace certifier. This is the actionable resolution of
++the Phase-0 process-vs-outcome bound: hard certification fails, soft process-reward
++works (0.73 outcome ranking). Caveats: 0.73 is moderate (not the 0.967 in-format per-
++step -- process-vs-outcome + OOD attenuation remain), so a process-reward-trained
++generator would improve under a moderately-noisy reward (some reward-hacking risk); and
++this is correlational (reward ranks outcome) -- the causal lift needs the training run.
++
++**Next (the build, now justified):** process-reward-weighted SFT (option 1) on a 0.5B
++base; arms base / process-reward-weighted / gold-RFT (UB) / SC; multi-seed, held-out
++eval; gate on the weighted arm beating base. The fine-tune harness is the remaining
++infra to build. This is the concrete forward experiment.
+diff --git a/results/process_reward_outcome_auroc_phase05.json b/results/process_reward_outcome_auroc_phase05.json
+new file mode 100644
+index 0000000000..fc9378b01d
+--- /dev/null
++++ b/results/process_reward_outcome_auroc_phase05.json
+@@ -0,0 +1,19 @@
++{
++  "best_aggregation": "fraction_certified",
++  "best_trace_outcome_auroc": 0.73,
++  "experiment": "process_reward_outcome_auroc_phase05_draft",
++  "gate": "best trace-outcome AUROC >= 0.65 (dense process-reward carries outcome signal)",
++  "gate_pass": true,
++  "gold_correct_base_rate": 0.3405,
++  "honest_verdict": "complete: process_reward_outcome_SIGNAL_bestauroc0.73_via_fraction_certified_baserate0.341",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "interpretation": "Reference: a perfect OUTCOME verifier -> AUROC 1.0; chance -> 0.5. The moat's PER-STEP (in-format) AUROC was 0.967. This trace-OUTCOME AUROC of aggregated process-reward on FREE-FORM generations is the gate for the process-reward path. If it is ~0.5-0.6 the per-step signal does not transfer to outcome ranking -> process-reward training would reward-hack.",
++  "n_steps_scored": 6038,
++  "n_traces": 558,
++  "title": "process_reward_predicts_outcome",
++  "trace_outcome_auroc_by_aggregation": {
++    "fraction_certified": 0.73,
++    "mean_reward": 0.7217,
++    "min_reward": 0.6726
++  }
++}
+diff --git a/scripts/experiments/process_reward_outcome_auroc_phase05_draft.py b/scripts/experiments/process_reward_outcome_auroc_phase05_draft.py
+new file mode 100644
+index 0000000000..0b8fd5c853
+--- /dev/null
++++ b/scripts/experiments/process_reward_outcome_auroc_phase05_draft.py
+@@ -0,0 +1,146 @@
++"""DRAFT (Phase 0.5): does the verifier's per-step PROCESS-REWARD predict OUTCOME?
++
++The step-level process-reward path is worth building ONLY if the verifier's aggregated
++per-step reward RANKS correct traces above incorrect ones. Phase 0 showed trace-level
++CERTIFICATION (all-steps-clean) is only 56% precise -- but a dense soft reward might
++still rank traces usefully even if the hard pass/fail doesn't. This measures the
++trace-OUTCOME AUROC of the aggregate process-reward, on existing p01 traces + the
++existing ensemble. No training, no new infra.
++
++GATE: best-aggregation trace-outcome AUROC >= 0.65 -> dense reward carries outcome
++signal -> process-reward training is worth the harness build. ~0.5-0.55 -> the per-step
++signal does not rank correct traces above incorrect at the trace level -> would
++reward-hack; need an outcome-aware/stronger verifier first.
++
++  .venv/bin/python scripts/experiments/process_reward_outcome_auroc_phase05_draft.py
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++from pathlib import Path
++
++from carnot.eval.verifier_error_independence_scissor_at_scale import (
++    FoVerPanel,
++    score_carnot_ensemble,
++)
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++TRACES = REPO_ROOT / "data" / "p01_difficulty_matched_generations_flattened_v2.jsonl"
++OUT = REPO_ROOT / "results" / "process_reward_outcome_auroc_phase05.json"
++_THINK = re.compile(r"<think>.*?</think>", re.DOTALL)
++
++
++def _chunks(text: str) -> list[str]:
++    body = _THINK.sub("", text).strip()
++    return [s.strip() for s in re.split(r"\n\s*\n", body)
++            if len(s.strip()) >= 12 and re.search(r"[a-zA-Z0-9]", s)]
++
++
++def _load(path: Path, limit: int | None = None) -> list[dict]:
++    out = []
++    with path.open(encoding="utf-8") as f:
++        for line in f:
++            r = json.loads(line)
++            ic = r.get("is_correct")
++            ch = _chunks(str(r.get("text") or ""))
++            if ic is None or not ch:
++                continue
++            out.append({"chunks": ch, "is_correct": bool(ic)})
++            if limit and len(out) >= limit:
++                break
++    return out
++
++
++def _auroc(labels: list[int], scores: list[float]) -> float | None:
++    pos = [s for y, s in zip(labels, scores) if y == 1]
++    neg = [s for y, s in zip(labels, scores) if y == 0]
++    if not pos or not neg:
++        return None
++    wins = sum((1.0 if p > n else 0.5 if p == n else 0.0) for p in pos for n in neg)
++    return wins / (len(pos) * len(neg))
++
++
++def run(limit: int | None = None, write: bool = True) -> dict:
++    traces = _load(TRACES, limit=limit)
++    n = len(traces)
++    gold = [1 if t["is_correct"] else 0 for t in traces]
++    base_rate = sum(gold) / n if n else 0.0
++
++    chunk_texts, owner = [], []
++    for ti, t in enumerate(traces):
++        for c in t["chunks"]:
++            chunk_texts.append(c)
++            owner.append(ti)
++    panel = FoVerPanel(
++        rows=tuple({"idx": i} for i in range(len(chunk_texts))),
++        labels=tuple(0 for _ in chunk_texts),
++        texts=tuple(chunk_texts),
++        panel_sha256=hashlib.sha256("".join(chunk_texts).encode("utf-8")).hexdigest(),
++    )
++    scoring = score_carnot_ensemble(panel, REPO_ROOT)
++    # per-step process reward = 1 - error_score (higher = more correct)
++    reward = [1.0 - float(s) for s in scoring.scores]
++    pred_correct = [1 - int(p) for p in scoring.error_preds]  # 1 if verifier says correct
++
++    # Aggregate per-trace.
++    per_trace_rewards: list[list[float]] = [[] for _ in range(n)]
++    per_trace_predcorrect: list[list[int]] = [[] for _ in range(n)]
++    for i, ti in enumerate(owner):
++        per_trace_rewards[ti].append(reward[i])
++        per_trace_predcorrect[ti].append(pred_correct[i])
++
++    agg_mean = [sum(r) / len(r) for r in per_trace_rewards]
++    agg_min = [min(r) for r in per_trace_rewards]
++    agg_fraccert = [sum(p) / len(p) for p in per_trace_predcorrect]
++
++    aurocs = {
++        "mean_reward": _auroc(gold, agg_mean),
++        "min_reward": _auroc(gold, agg_min),
++        "fraction_certified": _auroc(gold, agg_fraccert),
++    }
++    best_name = max((k for k in aurocs if aurocs[k] is not None),
++                    key=lambda k: aurocs[k], default=None)
++    best = aurocs.get(best_name) if best_name else None
++    gate_pass = bool(best is not None and best >= 0.65)
++    verdict = (
++        f"complete: process_reward_outcome_{'SIGNAL' if gate_pass else 'WEAK'}"
++        f"_bestauroc{None if best is None else round(best,3)}_via_{best_name}"
++        f"_baserate{base_rate:.3f}"
++    )
++    artifact = {
++        "experiment": "process_reward_outcome_auroc_phase05_draft",
++        "title": "process_reward_predicts_outcome",
++        "honest_verdict": verdict,
++        "inference_substrate": "verifier_ensemble_against_cached_candidates",
++        "n_traces": n,
++        "n_steps_scored": len(chunk_texts),
++        "gold_correct_base_rate": round(base_rate, 4),
++        "trace_outcome_auroc_by_aggregation": {k: (None if v is None else round(v, 4))
++                                               for k, v in aurocs.items()},
++        "best_aggregation": best_name,
++        "best_trace_outcome_auroc": None if best is None else round(best, 4),
++        "gate": "best trace-outcome AUROC >= 0.65 (dense process-reward carries outcome signal)",
++        "gate_pass": gate_pass,
++        "interpretation": (
++            "Reference: a perfect OUTCOME verifier -> AUROC 1.0; chance -> 0.5. The moat's "
++            "PER-STEP (in-format) AUROC was 0.967. This trace-OUTCOME AUROC of aggregated "
++            "process-reward on FREE-FORM generations is the gate for the process-reward path. "
++            "If it is ~0.5-0.6 the per-step signal does not transfer to outcome ranking -> "
++            "process-reward training would reward-hack."
++        ),
++    }
++    if write:
++        OUT.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", "utf-8")
++    return artifact
++
++
++if __name__ == "__main__":
++    art = run()
++    print(f"-> {art['honest_verdict']}")
++    print(f"   n_traces={art['n_traces']} steps={art['n_steps_scored']} base_rate={art['gold_correct_base_rate']}")
++    print(f"   trace-outcome AUROC by aggregation: {art['trace_outcome_auroc_by_aggregation']}")
++    print(f"   best: {art['best_aggregation']} = {art['best_trace_outcome_auroc']}")
++    print(f"   Gate (>=0.65): {'PASS' if art['gate_pass'] else 'FAIL'}")
+-- 
+2.55.0
+

@@ -1,0 +1,119 @@
+From e8a432acb3857d4a28a74da06b82da5c1c7ef4d4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 17:47:12 -0400
+Subject: [PATCH 07557/11362] [outer-loop] quarantine exp5813's orphaned test
+ to unblock the pretest gate
+
+exp5813's codex agent hit a wall-clock+idle timeout (1204s/665s silence,
+conductor-log 21:35 UTC) after writing a 552-line test but before writing
+the experiment_5813_split_budget_sota_canary module it imports, poisoning
+pytest collection for the whole pretest gate ("Pre-tests failing, self-heal
+failed" SKIP at 21:37 UTC) -- the poison-test cascade failure mode.
+Pre-empted the conductor's own 3-strikes auto-quarantine (currently at
+strike 1, and its own poison counter appears to reset on interleaved full
+pretest runs, so convergence wasn't guaranteed) by quarantining it directly.
+Verified: a full `pytest --collect-only` now completes with zero import
+errors (50584 tests collected). exp5813 itself is untouched and will be
+retried/re-planned by the conductor.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                           | 10 ++++++
+ ...xperiment_5813_split_budget_sota_canary.py | 31 +++++++++++++++----
+ 2 files changed, 35 insertions(+), 6 deletions(-)
+ rename tests/python/{ => quarantine}/test_experiment_5813_split_budget_sota_canary.py (96%)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 8d0a9e0d64..5ef395d2a7 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -13107,3 +13107,13 @@ machinery has a chance to protect it regardless of the still-unknown mechanism.
+ if the pattern recurs with enough detail to actually pin down a cause.
+ 
+ 
++
++- [MANUAL QUARANTINE 2026-07-22T21:43:03Z] tests/python/test_experiment_5813_split_budget_sota_canary.py moved to
++  tests/python/quarantine/ (outer-loop, pre-empting the conductor's own 3-strikes auto-quarantine —
++  poison-test cascade guard). Root cause: exp5813's codex agent hit a wall-clock+idle timeout
++  (1204s / 665s silence, conductor-log 21:35 UTC) after writing this 552-line test but before
++  writing the `python/carnot/experiment_5813_split_budget_sota_canary.py` module it imports,
++  poisoning pytest collection (ImportError) for the whole pretest gate. The experiment script is
++  unaffected (it never existed); the TEST setup is broken. exp5813 itself is untouched and will be
++  retried/re-planned by the conductor in a future milestone. Un-quarantine once a real
++  implementation + test pair lands for exp5813.
+diff --git a/tests/python/test_experiment_5813_split_budget_sota_canary.py b/tests/python/quarantine/test_experiment_5813_split_budget_sota_canary.py
+similarity index 96%
+rename from tests/python/test_experiment_5813_split_budget_sota_canary.py
+rename to tests/python/quarantine/test_experiment_5813_split_budget_sota_canary.py
+index 29091b71ee..da52cf4e8e 100644
+--- a/tests/python/test_experiment_5813_split_budget_sota_canary.py
++++ b/tests/python/quarantine/test_experiment_5813_split_budget_sota_canary.py
+@@ -317,7 +317,10 @@ def test_scenario_verify_5813_complete_canary_rows_and_replay(tmp_path: Path) ->
+     assert mod.validate_artifact(artifact) is True
+     assert mod.verify_canary_rows(rows, artifact, rows_path=rows_path) is True
+     assert artifact["status"] == "complete"
+-    assert artifact["honest_verdict"] == "complete: answer_channel_ready_all_three_split_budget_sota_models"
++    assert (
++        artifact["honest_verdict"]
++        == "complete: answer_channel_ready_all_three_split_budget_sota_models"
++    )
+     assert artifact["qualified_real_sota_model_count"] == 3
+     assert artifact["answer_channel_ready_score"] == 1.0
+     assert artifact["row_file_and_sha256"]["sha256"] == mod.sha256_file(rows_path)
+@@ -342,14 +345,19 @@ def test_scenario_verify_5813_complete_canary_rows_and_replay(tmp_path: Path) ->
+     assert artifact["transcript_and_checkpoint_receipts"]["checkpoint_count"] == len(rows)
+     assert artifact["transcript_and_checkpoint_receipts"]["row_hash_replay_ok"] is True
+     assert all(row["checkpoint_after_response"] is True for row in rows)
+-    assert all(row["frozen_transcript_hash"] == row["reasoning_call"]["transcript_hash"] for row in rows)
++    assert all(
++        row["frozen_transcript_hash"] == row["reasoning_call"]["transcript_hash"] for row in rows
++    )
+     assert all(
+         row["candidate_environment_hash"] == row["finalization_call"]["candidate_environment_hash"]
+         for row in rows
+     )
+     assert resumed["row_file_and_sha256"]["sha256"] == artifact["row_file_and_sha256"]["sha256"]
+     assert resumed["transcript_and_checkpoint_receipts"]["duplicate_cells_skipped"] == len(rows)
+-    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text(encoding="utf-8")) == resumed
++    assert (
++        json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text(encoding="utf-8"))
++        == resumed
++    )
+ 
+ 
+ def test_scenario_verify_5813_balanced_fixture_and_controls(tmp_path: Path) -> None:
+@@ -445,7 +453,10 @@ def test_req_verify_5813_row_hash_and_artifact_gates_fail_closed(tmp_path: Path)
+     for mutate, match in (
+         (lambda item: item.pop("status"), "missing required artifact fields"),
+         (lambda item: item.update({"inference_substrate": "wrong"}), "inference_substrate"),
+-        (lambda item: item.update({"answer_channel_ready_score": 0.0}), "answer_channel_ready_score"),
++        (
++            lambda item: item.update({"answer_channel_ready_score": 0.0}),
++            "answer_channel_ready_score",
++        ),
+         (lambda item: item["model_specs"][0].update({"hf_id": "wrong"}), "model_specs"),
+         (lambda item: item["field_provenance"].pop("status"), "field_provenance"),
+         (lambda item: item.update({"honest_verdict": "ready"}), "honest_verdict"),
+@@ -509,8 +520,16 @@ def test_req_verify_5813_defensive_receipts_and_resume_only_runtime(tmp_path: Pa
+     assert "fresh_load_receipt_missing" in resume_summary["retirement_reasons"]
+ 
+     extra_receipt = deepcopy(artifact)
+-    extra_receipt["transcript_and_checkpoint_receipts"]["raw_call_receipts"]["extra::cell"] = deepcopy(
+-        next(iter(extra_receipt["transcript_and_checkpoint_receipts"]["raw_call_receipts"].values()))
++    extra_receipt["transcript_and_checkpoint_receipts"]["raw_call_receipts"]["extra::cell"] = (
++        deepcopy(
++            next(
++                iter(
++                    extra_receipt["transcript_and_checkpoint_receipts"][
++                        "raw_call_receipts"
++                    ].values()
++                )
++            )
++        )
+     )
+     with pytest.raises(mod.ManifestReplayError, match="row receipt set"):
+         mod.verify_canary_rows(rows, extra_receipt)
+-- 
+2.55.0
+

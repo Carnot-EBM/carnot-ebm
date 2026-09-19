@@ -1,0 +1,75 @@
+From b5b4f26e9fce1cc40e2b0c49cc7a3e3bf5706d9d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 6 Jun 2026 05:30:39 -0400
+Subject: [PATCH 00716/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...ent_3885_moat_scissor_in_distribution.json | 22 +++++++++++++++++--
+ 4 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8d75076a18..d8ecb02a2a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 404900, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-06-06T09:13:00Z"}
+\ No newline at end of file
++{"pid": 404900, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-06-06T09:30:38Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 91946e5025..de95e4d648 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7930,3 +7930,4 @@ ERROR: {
+ | 2026-06-06 08:14 UTC | THESIS-A PART-(b) KILL-GATE, IMPORT-FIXED: on a CO | OK | cache hit: 81 passed in 3.43s |
+ | 2026-06-06 08:50 UTC | EBT System-2 K-curve diagnostic (disk-reads exp388 | OK | 89 passed in 5.21s |
+ | 2026-06-06 09:11 UTC | BUILD an IN-DISTRIBUTION error-rich step-error cor | OK | 92 passed in 6.84s |
++| 2026-06-06 09:28 UTC | MOAT SCISSOR IN-DISTRIBUTION (DT-P2, disk-reads ex | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index fa493f62e8..cf49534cf1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 404900, "iteration": 9, "phase": "iteration_start", "started_at": "2026-06-06T09:13:00Z"}
+\ No newline at end of file
++{"pid": 404900, "iteration": 10, "phase": "iteration_start", "started_at": "2026-06-06T09:30:38Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3885_moat_scissor_in_distribution.json b/results/experiment_3885_moat_scissor_in_distribution.json
+index bcf244f5c2..5acb153d31 100644
+--- a/results/experiment_3885_moat_scissor_in_distribution.json
++++ b/results/experiment_3885_moat_scissor_in_distribution.json
+@@ -3709,5 +3709,23 @@
+   "run_date": "20260606",
+   "started_at": "2026-06-06T09:25:20.747561Z",
+   "status": "complete: moat_scissor_indist_INCONCLUSIVE_reasoner_self_verify_auroc",
+-  "title": "moat_scissor_in_distribution"
+-}
++  "title": "moat_scissor_in_distribution",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "error_overlap_jaccard=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "n_reasoner_caught_errors=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=35.31046009063721 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

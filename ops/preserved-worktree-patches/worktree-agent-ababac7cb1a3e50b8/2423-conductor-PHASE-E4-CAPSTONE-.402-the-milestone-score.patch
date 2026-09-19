@@ -1,0 +1,2629 @@
+From eb73d6fc441c5ae01e11ea4b7d8b6dbcb8995be4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 19:47:16 -0400
+Subject: [PATCH 02423/11362] [conductor] PHASE E4 (CAPSTONE .402) -- the
+ milestone scorecard + the HEADLINE DECISION. Headline questions: (1) did S3
+ stratified verifier-guided search CONVERT the proven oracle-distinct moat
+ into a fixed-NFE GENERATION GAIN (exp4348 s3_guided_beats_control + the
+ exp4349 reward-state-alignment validation)? -> the moat graduates
+ 'exists'->'useful' (Pareto-improves generation), or a powered null retires
+ the in-generation scale-up direction. (2) ARC north star: the new
+ reproducible_total_levels (>=21?) across exp4350 (ka59) + exp4351 (sc25
+ L2+/ar25 L2/tn36 L7) + exp4352 (tr87+ft09); how many NEW levels/games. (3)
+ self-learning: did the learned action-cost heuristic (exp4353) lower held-out
+ env-actions-to-solve (north-star efficiency axis)? Aggregate (SKIP any
+ flagged_adversarial artifact; HONOR verifier_is_oracle -- a
+ circular/execution-grounded win is NOT a moat). Emit verifier_thesis_state
+ (one honest string) + s3_moat_utility (one of: useful_generation_gain /
+ proven_but_not_useful / open) + reproducible_total_levels +
+ action_efficiency_improves. Compute the G1-G4 publication gate via
+ publication_gate.py. Use the robust aggregate-available-report-gaps helper
+ (NO hard-block-all-False). CARRY verifier_is_oracle correctly (the exp4355
+ stamp fix) so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM. NO
+ gated_on.
+
+Automated research step by research conductor.
+Task ID: exp4357-capstone-v402
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/agentic/arc_solver_kit.py       |   3 +-
+ python/carnot/reporting/capstone_v402_4357.py | 930 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_4357_capstone_v402.json    | 935 ++++++++++++++++++
+ results/experiment_4357_capstone_v402.py      |  22 +
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../test_experiment_4357_capstone_v402.py     | 505 ++++++++++
+ 14 files changed, 2414 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v402_4357.py
+ create mode 100644 results/experiment_4357_capstone_v402.json
+ create mode 100644 results/experiment_4357_capstone_v402.py
+ create mode 100644 tests/python/test_experiment_4357_capstone_v402.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 07fef292da..d330f4b26a 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -109,3 +109,6 @@
+ - REQ-CAPSTONE-4346: The .401 verifier scorecard capstone must import and use the Exp 4308 aggregate-available-report-gaps helper to aggregate existing upstream artifacts exp4337, exp4338, exp4339, exp4340, exp4341, exp4342, and exp4344; it must run `scripts/summarize_artifact.py` and a live `scripts/adversarial_verify.py` re-check for each present upstream before importing any metric, skip every artifact stamped `flagged_adversarial:true` or live-critical without aggregating its numbers, report missing upstreams as per-axis gaps rather than hard-blocking unrelated axes, cite each included upstream by sha256, honor `verifier_is_oracle:false` for every in-generation and self-learning headline while reporting exp4339/4340/4341 E3 solves as execution-grounded ARC progress, emit bare bool `in_generation_moat_replicates_headline` only when clean exp4337 reports `scorer_leak_audit_passed==true` and clean exp4338 reports `in_generation_moat_replicates==true`, `controls_differentiated==true`, `scorer_leak_recheck_passed==true`, a replication CI95 excluding zero, and `verifier_is_oracle:false`, emit `diffusiongemma_gate_status=MET_oracle_distinct_leak_robust_replicated` only for that leak-robust replicated oracle-distinct win, emit `RETIRED_corpus_specific_<reason>` only for a powered non-replication with a leak-robust scorer, otherwise emit `STILL_PENDING_<reason>`, compute `arc_reproducible_total_levels` from `ops/arc_solve_registry.yaml` `reproducible_total_levels`, compute `paper_ready` and `unmet_gates` through `scripts/publication_gate.py --json`, and produce an honest `blocked_publication_gate_missing` verdict without further aggregation when `scripts/publication_gate.py` is missing.
+ - SCENARIO-CAPSTONE-4346: The capstone artifact `results/experiment_4346_capstone_v401.json` must emit principle-annotated top-level fields for `honest_verdict`, bare boolean `in_generation_moat_replicates_headline`, `diffusiongemma_gate_status`, bare integer `arc_reproducible_total_levels`, `verifier_thesis_state`, bare boolean `verifier_is_oracle_honored`, `per_axis_gaps`, `flagged_artifacts_excluded`, bare boolean `paper_ready`, `upstream_provenance`, and `reproducibility_checksum`; the default .401 read must report Exp 4337's leak-robust scorer precondition, Exp 4338's leak-robust in-generation moat replication with matched controls and CI95 excluding zero, Exp 4339 ar25 and Exp 4341 sc25 as offline-reproduced execution-grounded ARC progress, Exp 4340 ka59 as a residual HUD mismatch with zero reproduced levels, Exp 4342 as an oracle-distinct self-learning null, Exp 4344 as hygiene/regression-guard context, G1-G4 publication readiness, and that excluded upstreams have empty `fields_imported`.
+ - SCENARIO-CAPSTONE-4346-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "Terminal-prefixed. The .401 close-state -- whether the in-generation moat replicated leak-robust (gate flips) or retired (corpus-specific), whether E3 landed the first ARC solve, whether the action-role encoder transferred."; `in_generation_moat_replicates_headline` = "BARE bool: did the in-generation oracle-distinct moat REPLICATE with the LEAK-ROBUST scorer on the 2nd corpus (exp4338, CI95-excl-0, controls_differentiated, verifier_is_oracle=false) -- the SETTLED headline."; `diffusiongemma_gate_status` = "One honest string: 'MET_oracle_distinct_leak_robust_replicated' iff the LEAK-ROBUST scorer (exp4337) replicated the moat (exp4338) with matched controls + CI95-excl-0; 'RETIRED_corpus_specific_<reason>' iff a powered non-replication even with a leak-robust scorer; else 'STILL_PENDING_<reason>'. The operator was twice-burned -> only a leak-robust REPLICATED win flips MET."; `arc_reproducible_total_levels` = "BARE int: the cumulative OFFLINE-REPRODUCED ARC solved-level count (the north-star accuracy metric; only reproduced levels count) after the .401 E3 advances (target >=14)."; `verifier_thesis_state` = "One honest string for the verifier thesis state -- the framing the .402 planner inherits (e.g. in_generation_moat_replicated_leak_robust / in_generation_moat_retired_corpus_specific / first_e3_arc_solve)."; `verifier_is_oracle_honored` = "BARE bool=true -- confirms every cited MOAT/headline result carried verifier_is_oracle=false (the E3 solves are reported as execution-grounded ARC progress, NOT moats)."; `per_axis_gaps` = "List of .401 axes whose artifact was MISSING (reported as a gap, NOT defaulted False) -- the robust-aggregator fix (no exp4301-style all-False)."; `flagged_artifacts_excluded` = "List of .401 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated)."; `paper_ready` = "From publication_gate.py --json -- the G1-G4 status (FoVer 0.9131 stays the publication target; a replicated leak-robust in-generation moat would be a new headline-grade supporting result)."; `upstream_provenance` = "Each cited upstream artifact {experiment_id, fields_imported, sha256} -- the audit trail that the capstone synthesizes nothing from nothing."; `reproducibility_checksum` = "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone."
++- REQ-CAPSTONE-4357: The .402 capstone must aggregate existing upstream artifacts exp4348 through exp4353 through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` or live-critical before importing metrics, report missing upstreams as per-axis gaps through the robust aggregate-available-report-gaps helper, compute G1-G4 through `scripts/publication_gate.py --json`, read `ops/arc_solve_registry.yaml` as the authoritative ARC reproducible total, honor `verifier_is_oracle:false` for the oracle-distinct moat read, and produce an honest `blocked_publication_gate_unrunnable` verdict without further aggregation if the publication gate is missing or cannot run.
++- SCENARIO-CAPSTONE-4357: The capstone artifact `results/experiment_4357_capstone_v402.json` must emit principle-annotated top-level fields for `honest_verdict`, `s3_moat_utility`, bare integer `reproducible_total_levels`, bare boolean `action_efficiency_improves`, `verifier_thesis_state`, `publication_gate`, bare boolean `verifier_is_oracle`, `cited_upstream_artifacts`, and `preconditions_checked`; the default .402 read must exclude flagged Exp 4348 instead of aggregating its apparent S3 deltas, report Exp 4349 alignment as unavailable/blocked rather than validated, import the registry reproducible total of 23 levels, import Exp 4353's action-efficiency improvement, and stamp `verifier_is_oracle=false` so `scripts/adversarial_verify.py` does not fire `CIRCULAR_MOAT_OVERCLAIM`.
++- SCENARIO-CAPSTONE-4357-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "Terminal-prefixed. The .402 scorecard string (whether S3 converted the moat, the ARC reproducible-total, the self-learning result)."; `s3_moat_utility` = "One of useful_generation_gain / proven_but_not_useful / open -- the headline decision: did the proven oracle-distinct moat become a fixed-NFE generation gain (Pareto-improvement), validated by reward-state alignment?"; `reproducible_total_levels` = "BARE int: the ARC reproducible-level count after .402 (>= the prior 21) -- the monotonic north-star accuracy signal."; `action_efficiency_improves` = "BARE bool: did the learned action-cost heuristic lower held-out env-actions-to-solve (north-star efficiency axis)?"; `verifier_thesis_state` = "One honest string summarizing where the verifier-moat thesis stands after .402 (moat proven+useful / proven-not-useful / etc.)."; `publication_gate` = "G1-G4 via publication_gate.py (paper_ready + unmet_gates) -- the stable finish line (north-star §2)."; `verifier_is_oracle` = "BARE bool=false for the oracle-distinct moat read (the exp4355 stamp fix) -- so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM."; `cited_upstream_artifacts` = "list of {experiment_id, fields_imported} -- the audit trail so the capstone numbers trace to real measurements."; `preconditions_checked` = "Records the upstream-artifact + publication_gate availability; pre-empts the silent-missing-resource fabrication mode."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 2cdb67763a..5e21681dc9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 180,
+   "code_violations": 0,
+-  "experiments_checked": 3373,
++  "experiments_checked": 3374,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_solver_kit.py b/python/carnot/agentic/arc_solver_kit.py
+index 598b427b52..e760be6044 100644
+--- a/python/carnot/agentic/arc_solver_kit.py
++++ b/python/carnot/agentic/arc_solver_kit.py
+@@ -81,7 +81,8 @@ class OfflineSolver:
+                  apply: Callable[[Any, str, Any], Any], state_key: Callable[[Any], Hashable],
+                  *, warmup_label: Optional[str] = None, max_nodes: int = 30000,
+                  verifier: Optional[Callable[[Any], float]] = None,
+-                 path_cost_weight: float = 0.0, branch_mode: str = "replay") -> None:
++                 path_cost_weight: float = 0.0, branch_mode: str = "replay",
++                 env_factory: Optional[Callable[[], Any]] = None) -> None:
+         self.game_id = game_id
+         self.action_labels = action_labels
+         self.apply = apply
+diff --git a/python/carnot/reporting/capstone_v402_4357.py b/python/carnot/reporting/capstone_v402_4357.py
+new file mode 100644
+index 0000000000..b8a856b5db
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v402_4357.py
+@@ -0,0 +1,930 @@
++"""Build the Exp 4357 v402 verifier scorecard capstone.
++
++Spec refs: REQ-CAPSTONE-4357, SCENARIO-CAPSTONE-4357.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++import yaml
++
++from carnot.reporting import capstone_aggregate_available as aggregate
++from carnot.reporting import capstone_v400_4335 as base
++
++
++JsonDict = dict[str, Any]
++LiveFlagRunner = Callable[[Path], list[dict[str, Any]]]
++SummarizeRunner = Callable[[Path, Path], int]
++PublicationGateRunner = Callable[[Path], JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_4357_capstone_v402.json")
++REGISTRY_REL_PATH = Path("ops/arc_solve_registry.yaml")
++PUBLICATION_GATE_REL_PATH = Path("scripts/publication_gate.py")
++EXPERIMENT_ID = 4357
++RANDOM_SEED = 4357
++SCHEMA = "carnot.capstone_v402_4357.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SPEC_REFS = ["REQ-CAPSTONE-4357", "SCENARIO-CAPSTONE-4357"]
++PRIOR_REPRODUCIBLE_TOTAL_LEVELS = 21
++PRIOR_REPRODUCIBLE_TOTAL_GAMES = 13
++BLOCKED_PUBLICATION_GATE_CHECKSUM = hashlib.sha256(
++    b"blocked_publication_gate_unrunnable"
++).hexdigest()
++EMPTY_UPSTREAM_CHECKSUM = hashlib.sha256(b"no_v402_upstream_artifacts").hexdigest()
++
++S3_MOAT_UTILITIES = {"useful_generation_gain", "proven_but_not_useful", "open"}
++THESIS_STATES = {
++    "moat_proven_useful",
++    "moat_proven_not_useful",
++    "moat_proven_leak_robust_but_s3_utility_open",
++    "blocked_publication_gate_unrunnable",
++}
++
++
++@dataclass(frozen=True)
++class Upstream:
++    experiment_id: int
++    path: Path
++
++
++DEFAULT_UPSTREAMS: Mapping[str, Upstream] = {
++    "4348_s3_search": Upstream(
++        4348, Path("results/experiment_4348_s3_stratified_verifier_guided_search.json")
++    ),
++    "4349_reward_state_alignment": Upstream(
++        4349, Path("results/experiment_4349_papo_reward_state_alignment_diagnostic.json")
++    ),
++    "4350_e3_ka59": Upstream(
++        4350, Path("results/experiment_4350_e3_explore_verify_plan_ka59.json")
++    ),
++    "4351_e3_deeper": Upstream(4351, Path("results/experiment_4351_e3_deeper_solved_games.json")),
++    "4352_e3_tr87_ft09": Upstream(
++        4352, Path("results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json")
++    ),
++    "4353_action_efficiency": Upstream(
++        4353, Path("results/experiment_4353_learned_action_cost_heuristic_efficiency.json")
++    ),
++}
++
++ARTIFACT_EXPERIMENT_IDS = {
++    key: upstream.experiment_id for key, upstream in DEFAULT_UPSTREAMS.items()
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "s3_moat_utility",
++    "reproducible_total_levels",
++    "action_efficiency_improves",
++    "verifier_thesis_state",
++    "publication_gate",
++    "verifier_is_oracle",
++    "cited_upstream_artifacts",
++    "preconditions_checked",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. The .402 scorecard string (whether S3 converted the "
++        "moat, the ARC reproducible-total, the self-learning result)."
++    ),
++    "s3_moat_utility": (
++        "One of useful_generation_gain / proven_but_not_useful / open -- the "
++        "headline decision: did the proven oracle-distinct moat become a fixed-NFE "
++        "generation gain (Pareto-improvement), validated by reward-state alignment?"
++    ),
++    "reproducible_total_levels": (
++        "BARE int: the ARC reproducible-level count after .402 (>= the prior 21) "
++        "-- the monotonic north-star accuracy signal."
++    ),
++    "action_efficiency_improves": (
++        "BARE bool: did the learned action-cost heuristic lower held-out "
++        "env-actions-to-solve (north-star efficiency axis)?"
++    ),
++    "verifier_thesis_state": (
++        "One honest string summarizing where the verifier-moat thesis stands "
++        "after .402 (moat proven+useful / proven-not-useful / etc.)."
++    ),
++    "publication_gate": (
++        "G1-G4 via publication_gate.py (paper_ready + unmet_gates) -- the stable "
++        "finish line (north-star \u00a72)."
++    ),
++    "verifier_is_oracle": (
++        "BARE bool=false for the oracle-distinct moat read (the exp4355 stamp fix) "
++        "-- so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM."
++    ),
++    "cited_upstream_artifacts": (
++        "list of {experiment_id, fields_imported} -- the audit trail so the "
++        "capstone numbers trace to real measurements."
++    ),
++    "preconditions_checked": (
++        "Records the upstream-artifact + publication_gate availability; "
++        "pre-empts the silent-missing-resource fabrication mode."
++    ),
++}
++
++IMPORTED_FIELDS: Mapping[str, list[str]] = {
++    "4348_s3_search": [
++        "s3_guided_beats_control",
++        "controls_differentiated",
++        "scorer_leak_recheck_passed",
++        "nfe_budget",
++        "s3_gain_ci95",
++        "s3_minus_best_of_k_delta",
++        "s3_minus_self_reward_smc_delta",
++        "s3_minus_unguided_delta",
++        "verifier_is_oracle",
++    ],
++    "4349_reward_state_alignment": [
++        "reward_state_alignment_passed",
++        "gate_check_summary",
++        "gates_evaluated",
++        "status",
++    ],
++    "4350_e3_ka59": [
++        "game",
++        "offline_reproduced",
++        "reproduced_levels",
++        "residual_mismatch_class",
++        "verifier_best_accuracy",
++        "verifier_is_oracle",
++    ],
++    "4351_e3_deeper": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_target_scorecard",
++        "verifier_is_oracle",
++    ],
++    "4352_e3_tr87_ft09": [
++        "games",
++        "new_levels_reproduced",
++        "per_game_scorecard",
++        "verifier_is_oracle",
++    ],
++    "4353_action_efficiency": [
++        "action_efficiency_improves",
++        "held_out_actions_baseline",
++        "held_out_actions_learned",
++        "positive_control_passed",
++        "reproduction_gated",
++        "verifier_is_oracle",
++    ],
++}
++
++
++def _selected_paths(root: Path) -> dict[str, Path]:
++    return {key: root / upstream.path for key, upstream in DEFAULT_UPSTREAMS.items()}
++
++
++def _fields_for_payload(key: str, skipped: bool) -> list[str]:
++    return [] if skipped else list(IMPORTED_FIELDS[key])
++
++
++def _skipped_payload(payload: JsonDict) -> JsonDict:
++    skipped = dict(payload)
++    skipped["flagged_adversarial"] = True
++    return skipped
++
++
++def _read_inputs(
++    root: Path,
++    live_flag_runner: LiveFlagRunner,
++    summarize_runner: SummarizeRunner,
++) -> tuple[dict[str, Any], list[JsonDict], list[JsonDict]]:
++    raw_artifacts: dict[str, Any] = {}
++    provenance: list[JsonDict] = []
++    exclusions: list[JsonDict] = []
++
++    for key, path in _selected_paths(root).items():
++        upstream = DEFAULT_UPSTREAMS[key]
++        if not path.exists():
++            raw_artifacts[key] = None
++            continue
++
++        sha = base.sha256_file(path)
++        summarize_exit_code, summarize_error = base._safe_summarize(  # noqa: SLF001
++            path, root, summarize_runner
++        )
++        live_flags = base._safe_live_flags(path, live_flag_runner)  # noqa: SLF001
++        critical = base.live_has_critical(live_flags)
++        payload: JsonDict | None = None
++        parse_error = ""
++        try:
++            payload = base.read_json_object(path)
++        except (OSError, json.JSONDecodeError, ValueError) as exc:
++            parse_error = f"{type(exc).__name__}: {exc}"
++
++        stamped = payload.get("flagged_adversarial") is True if payload is not None else False
++        skipped = stamped or critical or payload is None
++        raw_artifacts[key] = (
++            _skipped_payload(payload) if payload is not None and skipped else payload
++        )
++        provenance_row = {
++            "artifact_key": key,
++            "experiment_id": upstream.experiment_id,
++            "path": str(upstream.path),
++            "sha256": sha,
++            "payload_reproducibility_checksum": base.sha_from_payload_checksum(payload or {}),
++            "summarize_exit_code": summarize_exit_code,
++            "summarize_error": summarize_error,
++            "live_adversarial_flags": live_flags,
++            "stamped_flagged_adversarial": stamped,
++            "live_critical": critical,
++            "parse_error": parse_error,
++            "skipped": skipped,
++            "fields_imported": _fields_for_payload(key, skipped),
++        }
++        provenance.append(provenance_row)
++        if skipped:
++            exclusions.append(
++                {
++                    "artifact_key": key,
++                    "experiment_id": upstream.experiment_id,
++                    "path": str(upstream.path),
++                    "sha256": sha,
++                    "stamped_flagged_adversarial": stamped,
++                    "live_critical": critical,
++                    "parse_error": parse_error,
++                    "live_critical_flags": [
++                        flag
++                        for flag in live_flags
++                        if str(flag.get("severity", "")).lower() == "critical"
++                    ],
++                    "reason": base._exclusion_reason(stamped, critical, parse_error),  # noqa: SLF001
++                }
++            )
++    return raw_artifacts, provenance, exclusions
++
++
++def _positive_float(payload: Mapping[str, Any], field: str) -> bool:
++    value = base.float_metric(payload, field)
++    return value is not None and value > 0.0
++
++
++def s3_search_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    ci95 = base.list_metric(payload, "s3_gain_ci95")
++    nfe_budget = base.int_metric(payload, "nfe_budget")
++    reported = base.bool_metric(payload, "s3_guided_beats_control")
++    verifier_is_oracle = base.bool_metric(payload, "verifier_is_oracle")
++    deltas_positive = all(
++        _positive_float(payload, field)
++        for field in (
++            "s3_minus_best_of_k_delta",
++            "s3_minus_self_reward_smc_delta",
++            "s3_minus_unguided_delta",
++        )
++    )
++    beats_controls = (
++        reported is True
++        and base.bool_metric(payload, "controls_differentiated") is True
++        and base.bool_metric(payload, "scorer_leak_recheck_passed") is True
++        and base.ci95_excludes_zero(ci95)
++        and nfe_budget > 0
++        and deltas_positive
++        and verifier_is_oracle is False
++    )
++    null_clean = (
++        reported is False
++        and base.bool_metric(payload, "controls_differentiated") is True
++        and verifier_is_oracle is False
++    )
++    if beats_controls:
++        status = "beats_controls"
++    elif null_clean:
++        status = "null"
++    else:
++        status = "measured_unresolved"
++    return {
++        "status": status,
++        "beats_compute_matched_and_intrinsic_controls": beats_controls,
++        "reported_s3_guided_beats_control": reported,
++        "controls_differentiated": base.bool_metric(payload, "controls_differentiated"),
++        "scorer_leak_recheck_passed": base.bool_metric(payload, "scorer_leak_recheck_passed"),
++        "nfe_budget": nfe_budget,
++        "s3_gain_ci95": ci95,
++        "s3_gain_ci95_excludes_zero": base.ci95_excludes_zero(ci95),
++        "s3_minus_best_of_k_delta": base.float_metric(payload, "s3_minus_best_of_k_delta"),
++        "s3_minus_self_reward_smc_delta": base.float_metric(
++            payload, "s3_minus_self_reward_smc_delta"
++        ),
++        "s3_minus_unguided_delta": base.float_metric(payload, "s3_minus_unguided_delta"),
++        "verifier_is_oracle": verifier_is_oracle,
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def reward_alignment_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    passed = base.bool_metric(payload, "reward_state_alignment_passed")
++    artifact_status = base.str_metric(payload, "status")
++    verdict = base.str_metric(payload, "honest_verdict")
++    if passed is True:
++        status = "passed"
++    elif artifact_status == "blocked" or verdict.startswith("blocked"):
++        status = "blocked"
++    elif passed is False:
++        status = "failed"
++    else:
++        status = "missing_measurement"
++    return {
++        "status": status,
++        "reward_state_alignment_passed": passed,
++        "gate_check_summary": base.str_metric(payload, "gate_check_summary"),
++        "gates_evaluated": base.list_metric(payload, "gates_evaluated"),
++        "honest_verdict": verdict,
++    }
++
++
++def decide_s3_moat_utility(
++    s3_search: Mapping[str, Any],
++    reward_alignment: Mapping[str, Any],
++) -> str:
++    if (
++        s3_search.get("beats_compute_matched_and_intrinsic_controls") is True
++        and reward_alignment.get("reward_state_alignment_passed") is True
++    ):
++        return "useful_generation_gain"
++    if s3_search.get("status") == "null":
++        return "proven_but_not_useful"
++    return "open"
++
++
++def s3_utility_read(
++    s3_search: Mapping[str, Any],
++    reward_alignment: Mapping[str, Any],
++) -> JsonDict:
++    utility = decide_s3_moat_utility(s3_search, reward_alignment)
++    if utility != "open":
++        status = utility
++    elif s3_search.get("status") in {"excluded_flagged_adversarial", "missing_or_excluded"}:
++        status = "open_flagged_or_missing_s3"
++    elif reward_alignment.get("reward_state_alignment_passed") is not True:
++        status = "open_alignment_not_validated"
++    else:
++        status = "open"
++    return {
++        "status": status,
++        "s3_moat_utility": utility,
++        "requires_clean_s3_gain": True,
++        "requires_reward_state_alignment": True,
++    }
++
++
++def arc_ka59_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    reproduced = base.bool_metric(payload, "offline_reproduced") is True
++    levels = base.int_metric(payload, "reproduced_levels") if reproduced else 0
++    return {
++        "status": "reproduced" if reproduced else "partial",
++        "game": base.str_metric(payload, "game") or "ka59",
++        "offline_reproduced": reproduced,
++        "new_levels_reproduced": levels,
++        "reproduced_levels": base.int_metric(payload, "reproduced_levels"),
++        "residual_mismatch_class": base.str_metric(payload, "residual_mismatch_class"),
++        "verifier_best_accuracy": base.float_metric(payload, "verifier_best_accuracy"),
++        "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def _clean_scorecard_rows(
++    rows: list[Any], level_field: str
++) -> tuple[int, list[str], list[JsonDict]]:
++    total = 0
++    games: list[str] = []
++    cleaned: list[JsonDict] = []
++    for row in rows:
++        if not isinstance(row, Mapping):
++            continue
++        item = dict(row)
++        game = item.get("game")
++        level = item.get(level_field)
++        if (
++            item.get("offline_reproduced") is True
++            and isinstance(game, str)
++            and isinstance(level, int)
++            and not isinstance(level, bool)
++        ):
++            games.append(game)
++        cleaned.append(item)
++    return total, games, cleaned
++
++
++def arc_deeper_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    rows = base.list_metric(payload, "per_target_scorecard")
++    _, games, cleaned = _clean_scorecard_rows(rows, "new_reproduced_level")
++    new_levels = base.int_metric(payload, "new_levels_reproduced")
++    return {
++        "status": "reproduced" if new_levels > 0 else "partial",
++        "new_levels_reproduced": new_levels,
++        "games_with_new_reproducible_levels": games,
++        "reproducible_total_levels_reported": base.int_metric(payload, "reproducible_total_levels"),
++        "per_target_scorecard": cleaned,
++        "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def arc_tr87_ft09_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    rows = base.list_metric(payload, "per_game_scorecard")
++    _, games, cleaned = _clean_scorecard_rows(rows, "reproduced_levels")
++    new_levels = base.int_metric(payload, "new_levels_reproduced")
++    return {
++        "status": "reproduced" if new_levels > 0 else "partial",
++        "new_levels_reproduced": new_levels,
++        "games_with_new_reproducible_levels": games,
++        "per_game_scorecard": cleaned,
++        "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def arc_e3_summary(
++    ka59: Mapping[str, Any],
++    deeper: Mapping[str, Any],
++    tr87_ft09: Mapping[str, Any],
++) -> JsonDict:
++    reads = [ka59, deeper, tr87_ft09]
++    new_levels = sum(int(read.get("new_levels_reproduced") or 0) for read in reads)
++    games: set[str] = set()
++    for read in reads:
++        game = read.get("game")
++        if read.get("new_levels_reproduced") and isinstance(game, str):
++            games.add(game)
++        for nested in read.get("games_with_new_reproducible_levels") or []:
++            if isinstance(nested, str):
++                games.add(nested)
++    return {
++        "status": "advanced" if new_levels > 0 else "partial",
++        "new_levels_reproduced_from_artifacts": new_levels,
++        "games_with_new_reproducible_levels": sorted(games),
++        "execution_grounded": any(read.get("verifier_is_oracle") is True for read in reads),
++        "ka59": dict(ka59),
++        "deeper": dict(deeper),
++        "tr87_ft09": dict(tr87_ft09),
++    }
++
++
++def action_efficiency_read(payload: JsonDict | None, skipped: bool) -> JsonDict:
++    if skipped:
++        return {"status": "excluded_flagged_adversarial"}
++    if payload is None:
++        return {"status": "missing_or_excluded"}
++    baseline = base.int_metric(payload, "held_out_actions_baseline")
++    learned = base.int_metric(payload, "held_out_actions_learned")
++    reported = base.bool_metric(payload, "action_efficiency_improves")
++    improves = (
++        reported is True
++        and baseline > learned
++        and learned > 0
++        and base.bool_metric(payload, "positive_control_passed") is True
++        and base.bool_metric(payload, "reproduction_gated") is True
++        and base.bool_metric(payload, "verifier_is_oracle") is False
++    )
++    return {
++        "status": "improves" if improves else "open",
++        "action_efficiency_improves": improves,
++        "reported_action_efficiency_improves": reported,
++        "held_out_actions_baseline": baseline,
++        "held_out_actions_learned": learned,
++        "action_reduction": baseline - learned if baseline and learned else 0,
++        "positive_control_passed": base.bool_metric(payload, "positive_control_passed"),
++        "reproduction_gated": base.bool_metric(payload, "reproduction_gated"),
++        "verifier_is_oracle": base.bool_metric(payload, "verifier_is_oracle"),
++        "honest_verdict": base.str_metric(payload, "honest_verdict"),
++    }
++
++
++def read_registry_progress(root: Path) -> JsonDict:
++    path = root / REGISTRY_REL_PATH
++    if not path.exists():
++        return {
++            "status": "missing",
++            "path": str(REGISTRY_REL_PATH),
++            "reproducible_total_levels": 0,
++            "reproducible_total_games": 0,
++            "new_levels_since_prior": 0,
++            "new_games_since_prior": 0,
++        }
++    try:
++        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except yaml.YAMLError as exc:
++        return {
++            "status": "unparseable",
++            "path": str(REGISTRY_REL_PATH),
++            "reproducible_total_levels": 0,
++            "reproducible_total_games": 0,
++            "new_levels_since_prior": 0,
++            "new_games_since_prior": 0,
++            "error": str(exc),
++        }
++    if not isinstance(payload, Mapping):
++        return {
++            "status": "unparseable",
++            "path": str(REGISTRY_REL_PATH),
++            "reproducible_total_levels": 0,
++            "reproducible_total_games": 0,
++            "new_levels_since_prior": 0,
++            "new_games_since_prior": 0,
++            "error": "non-mapping registry",
++        }
++    levels = payload.get("reproducible_total_levels")
++    games = payload.get("reproducible_total_games")
++    if not isinstance(levels, int) or isinstance(levels, bool):
++        levels = 0
++    if not isinstance(games, int) or isinstance(games, bool):
++        games = 0
++    return {
++        "status": "loaded",
++        "path": str(REGISTRY_REL_PATH),
++        "reproducible_total_levels": levels,
++        "reproducible_total_games": games,
++        "prior_reproducible_total_levels": PRIOR_REPRODUCIBLE_TOTAL_LEVELS,
++        "prior_reproducible_total_games": PRIOR_REPRODUCIBLE_TOTAL_GAMES,
++        "new_levels_since_prior": max(0, levels - PRIOR_REPRODUCIBLE_TOTAL_LEVELS),
++        "new_games_since_prior": max(0, games - PRIOR_REPRODUCIBLE_TOTAL_GAMES),
++    }
++
++
++def _publication_gate_check(
++    root: Path,
++    runner: PublicationGateRunner,
++) -> tuple[JsonDict | None, JsonDict]:
++    path = root / PUBLICATION_GATE_REL_PATH
++    check: JsonDict = {
++        "path": str(PUBLICATION_GATE_REL_PATH),
++        "exists": path.exists(),
++        "runnable": False,
++    }
++    if not path.exists():
++        check["error"] = "missing"
++        return None, check
++    try:
++        payload = runner(root)
++    except Exception as exc:
++        check["error"] = f"{type(exc).__name__}: {exc}"
++        return None, check
++    if not isinstance(payload, dict):
++        check["error"] = "publication_gate returned non-object"
++        return None, check
++    check["runnable"] = True
++    check["paper_ready"] = bool(payload.get("paper_ready"))
++    check["unmet_gates"] = base.list_metric(payload, "unmet_gates")
++    return payload, check
++
++
++def _axis_specs() -> list[aggregate.AxisSpec]:
++    return [
++        aggregate.AxisSpec(
++            name="s3_utility",
++            required_keys=("4348_s3_search", "4349_reward_state_alignment"),
++            verdict_fn=lambda present: decide_s3_moat_utility(
++                s3_search_read(present.get("4348_s3_search"), False),
++                reward_alignment_read(present.get("4349_reward_state_alignment"), False),
++            ),
++        ),
++        aggregate.AxisSpec(
++            name="arc",
++            required_keys=("4350_e3_ka59", "4351_e3_deeper", "4352_e3_tr87_ft09"),
++            verdict_fn=lambda present: (
++                arc_e3_summary(
++                    arc_ka59_read(present.get("4350_e3_ka59"), False),
++                    arc_deeper_read(present.get("4351_e3_deeper"), False),
++                    arc_tr87_ft09_read(present.get("4352_e3_tr87_ft09"), False),
++                )["new_levels_reproduced_from_artifacts"]
++                > 0
++            ),
++        ),
++        aggregate.AxisSpec(
++            name="action_efficiency",
++            required_keys=("4353_action_efficiency",),
++            verdict_fn=lambda present: (
++                action_efficiency_read(present.get("4353_action_efficiency"), False)[
++                    "action_efficiency_improves"
++                ]
++                is True
++            ),
++        ),
++    ]
++
++
++def verifier_thesis_state(s3_moat_utility: str) -> str:
++    if s3_moat_utility == "useful_generation_gain":
++        return "moat_proven_useful"
++    if s3_moat_utility == "proven_but_not_useful":
++        return "moat_proven_not_useful"
++    return "moat_proven_leak_robust_but_s3_utility_open"
++
++
++def _honest_verdict(
++    s3_moat_utility: str,
++    total_levels: int,
++    action_efficiency_improves: bool,
++    paper_ready: bool,
++) -> str:
++    action = "improves" if action_efficiency_improves else "open"
++    paper = "publication_ready" if paper_ready else "publication_not_ready"
++    return (
++        f"complete: v402_s3_{s3_moat_utility}_arc_levels_{total_levels}_"
++        f"action_efficiency_{action}_{paper}"
++    )
++
++
++def checksum_from_provenance(provenance: list[Mapping[str, Any]]) -> str:
++    if not provenance:
++        return EMPTY_UPSTREAM_CHECKSUM
++    shas = sorted(str(row["sha256"]) for row in provenance)
++    return hashlib.sha256("\n".join(shas).encode("utf-8")).hexdigest()
++
++
++def _field_provenance(satisfied_by: str) -> dict[str, JsonDict]:
++    return {
++        field: {"principle": principle, "satisfied_by": satisfied_by}
++        for field, principle in FIELD_PRINCIPLES.items()
++    }
++
++
++def _cited_upstream_artifacts(provenance: list[JsonDict]) -> list[JsonDict]:
++    cited: list[JsonDict] = []
++    for row in provenance:
++        if row.get("skipped") is True:
++            continue
++        fields = row.get("fields_imported")
++        if not isinstance(fields, list) or not fields:
++            continue
++        cited.append(
++            {
++                "artifact_key": row["artifact_key"],
++                "experiment_id": row["experiment_id"],
++                "path": row["path"],
++                "sha256": row["sha256"],
++                "fields_imported": fields,
++            }
++        )
++    return cited
++
++
++def _preconditions_checked(
++    root: Path,
++    publication_gate_check: Mapping[str, Any],
++    provenance: list[JsonDict],
++    registry: Mapping[str, Any],
++) -> JsonDict:
++    provenance_by_key = {row["artifact_key"]: row for row in provenance}
++    upstreams: list[JsonDict] = []
++    for key, path in _selected_paths(root).items():
++        upstream = DEFAULT_UPSTREAMS[key]
++        row = provenance_by_key.get(key)
++        upstreams.append(
++            {
++                "artifact_key": key,
++                "experiment_id": upstream.experiment_id,
++                "path": str(upstream.path),
++                "exists": path.exists(),
++                "summarize_exit_code": row.get("summarize_exit_code") if row else None,
++                "skipped": row.get("skipped") if row else None,
++            }
++        )
++    return {
++        "publication_gate": dict(publication_gate_check),
++        "upstream_artifacts": upstreams,
++        "arc_registry": dict(registry),
++    }
++
++
++def _blocked_publication_gate_artifact(
++    started_s: float,
++    now_s: float | None,
++    publication_gate_check: Mapping[str, Any],
++) -> JsonDict:
++    end = time.time() if now_s is None else now_s
++    return {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(end - started_s, 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": "blocked_publication_gate_unrunnable",
++        "s3_moat_utility": "open",
++        "reproducible_total_levels": 0,
++        "action_efficiency_improves": False,
++        "verifier_thesis_state": "blocked_publication_gate_unrunnable",
++        "publication_gate": {
++            "paper_ready": False,
++            "unmet_gates": ["publication_gate_unrunnable"],
++            "error": str(publication_gate_check.get("error", "unrunnable")),
++        },
++        "paper_ready": False,
++        "unmet_gates": ["publication_gate_unrunnable"],
++        "verifier_is_oracle": False,
++        "verifier_is_oracle_honored": True,
++        "cited_upstream_artifacts": [],
++        "preconditions_checked": {
++            "publication_gate": dict(publication_gate_check),
++            "upstream_artifacts": [],
++            "arc_registry": {"status": "not_checked", "path": str(REGISTRY_REL_PATH)},
++        },
++        "per_axis_gaps": [],
++        "flagged_artifacts_excluded": [],
++        "upstream_provenance": [],
++        "upstream_sha256_set": [],
++        "reproducibility_checksum": BLOCKED_PUBLICATION_GATE_CHECKSUM,
++        "required_artifact_fields": list(REQUIRED_ARTIFACT_FIELDS),
++        "field_principles": FIELD_PRINCIPLES,
++        "field_provenance": _field_provenance("blocked precondition"),
++    }
++
++
++def build_artifact(
++    root: Path = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    live_flag_runner: LiveFlagRunner = base.run_live_flags,
++    summarize_runner: SummarizeRunner = base.run_summarize_artifact,
++    publication_gate_runner: PublicationGateRunner = base.run_publication_gate,
++) -> JsonDict:
++    start = time.time() if started_s is None else started_s
++    publication_gate, publication_gate_check = _publication_gate_check(
++        root, publication_gate_runner
++    )
++    if publication_gate is None:
++        return _blocked_publication_gate_artifact(start, now_s, publication_gate_check)
++
++    raw_artifacts, provenance, exclusions = _read_inputs(root, live_flag_runner, summarize_runner)
++    availability_report = aggregate.aggregate_available_report_gaps(
++        raw_artifacts,
++        _axis_specs(),
++        artifact_experiment_ids=ARTIFACT_EXPERIMENT_IDS,
++    )
++    skipped = {row["artifact_key"]: bool(row["skipped"]) for row in provenance}
++    clean = {
++        key: base.clean_payload(
++            raw_artifacts.get(key) if isinstance(raw_artifacts.get(key), dict) else None,
++            skipped.get(key, False),
++        )
++        for key in DEFAULT_UPSTREAMS
++    }
++
++    s3_search = s3_search_read(clean["4348_s3_search"], skipped.get("4348_s3_search", False))
++    reward_alignment = reward_alignment_read(
++        clean["4349_reward_state_alignment"],
++        skipped.get("4349_reward_state_alignment", False),
++    )
++    s3_utility = s3_utility_read(s3_search, reward_alignment)
++    ka59 = arc_ka59_read(clean["4350_e3_ka59"], skipped.get("4350_e3_ka59", False))
++    deeper = arc_deeper_read(clean["4351_e3_deeper"], skipped.get("4351_e3_deeper", False))
++    tr87_ft09 = arc_tr87_ft09_read(
++        clean["4352_e3_tr87_ft09"], skipped.get("4352_e3_tr87_ft09", False)
++    )
++    arc_e3 = arc_e3_summary(ka59, deeper, tr87_ft09)
++    action_efficiency = action_efficiency_read(
++        clean["4353_action_efficiency"], skipped.get("4353_action_efficiency", False)
++    )
++    registry = read_registry_progress(root)
++    paper_ready = bool(publication_gate.get("paper_ready"))
++    utility = str(s3_utility["s3_moat_utility"])
++    thesis = verifier_thesis_state(utility)
++    action_improves = action_efficiency.get("action_efficiency_improves") is True
++    total_levels = int(registry.get("reproducible_total_levels") or 0)
++    end = time.time() if now_s is None else now_s
++
++    return {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(end - start, 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(utility, total_levels, action_improves, paper_ready),
++        "s3_moat_utility": utility,
++        "s3_utility": s3_utility,
++        "s3_search": s3_search,
++        "reward_state_alignment": reward_alignment,
++        "reproducible_total_levels": total_levels,
++        "arc_reproducible_progress": registry,
++        "arc_e3_outcomes": arc_e3,
++        "action_efficiency_improves": action_improves,
++        "action_efficiency": action_efficiency,
++        "verifier_thesis_state": thesis,
++        "publication_gate": publication_gate,
++        "paper_ready": paper_ready,
++        "unmet_gates": base.list_metric(publication_gate, "unmet_gates"),
++        "verifier_is_oracle": False,
++        "verifier_is_oracle_honored": True,
++        "cited_upstream_artifacts": _cited_upstream_artifacts(provenance),
++        "preconditions_checked": _preconditions_checked(
++            root, publication_gate_check, provenance, registry
++        ),
++        "per_axis_gaps": list(availability_report.get("missing_upstream_artifacts", [])),
++        "flagged_artifacts_excluded": exclusions,
++        "availability_report": availability_report,
++        "upstream_provenance": provenance,
++        "upstream_sha256_set": sorted(str(row["sha256"]) for row in provenance),
++        "reproducibility_checksum": checksum_from_provenance(provenance),
++        "required_artifact_fields": list(REQUIRED_ARTIFACT_FIELDS),
++        "field_principles": FIELD_PRINCIPLES,
++        "field_provenance": _field_provenance("aggregation logic"),
++    }
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact.get("honest_verdict")
++    if verdict != "blocked_publication_gate_unrunnable":
++        if not isinstance(verdict, str) or not verdict.startswith(
++            ("complete:", "success:", "passed:", "shipped:", "blocked:")
++        ):
++            raise ValueError("honest_verdict must be terminal-prefixed")
++    if artifact.get("s3_moat_utility") not in S3_MOAT_UTILITIES:
++        raise ValueError("s3_moat_utility is not recognized")
++    if not isinstance(artifact.get("reproducible_total_levels"), int) or isinstance(
++        artifact.get("reproducible_total_levels"), bool
++    ):
++        raise ValueError("reproducible_total_levels must be a bare int")
++    if not isinstance(artifact.get("action_efficiency_improves"), bool):
++        raise ValueError("action_efficiency_improves must be a bare bool")
++    if artifact.get("verifier_thesis_state") not in THESIS_STATES:
++        raise ValueError("verifier_thesis_state is not recognized")
++    if not isinstance(artifact.get("publication_gate"), Mapping):
++        raise ValueError("publication_gate must be an object")
++    if artifact.get("verifier_is_oracle") is not False:
++        raise ValueError("verifier_is_oracle must be bare false")
++    if not isinstance(artifact.get("cited_upstream_artifacts"), list):
++        raise ValueError("cited_upstream_artifacts must be a list")
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        raise ValueError("preconditions_checked must be an object")
++    if not base.is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be a sha256 hex string")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required principles")
++    provenance = artifact.get("upstream_provenance")
++    if not isinstance(provenance, list):
++        raise ValueError("upstream_provenance must be a list")
++    for row in provenance:
++        if not isinstance(row, Mapping):
++            raise ValueError("upstream provenance row must be an object")
++        if not base.is_sha256(row.get("sha256")):
++            raise ValueError("upstream provenance row has invalid sha256")
++        if row.get("skipped") is True and row.get("fields_imported") != []:
++            raise ValueError("skipped upstreams must not import fields")
++    expected = (
++        BLOCKED_PUBLICATION_GATE_CHECKSUM
++        if artifact.get("honest_verdict") == "blocked_publication_gate_unrunnable"
++        else checksum_from_provenance(provenance)
++    )
++    if artifact.get("reproducibility_checksum") != expected:
++        raise ValueError("reproducibility_checksum does not match upstream sha256 set")
++
++
++def write_artifact(
++    root: Path = REPO_ROOT,
++    *,
++    output_path: Path = OUTPUT_REL_PATH,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    live_flag_runner: LiveFlagRunner = base.run_live_flags,
++    summarize_runner: SummarizeRunner = base.run_summarize_artifact,
++    publication_gate_runner: PublicationGateRunner = base.run_publication_gate,
++) -> Path:
++    artifact = build_artifact(
++        root,
++        started_s=started_s,
++        now_s=now_s,
++        live_flag_runner=live_flag_runner,
++        summarize_runner=summarize_runner,
++        publication_gate_runner=publication_gate_runner,
++    )
++    validate_artifact(artifact)
++    path = root / output_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 10c3505b16..8e04dd6f7a 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-17T23:28:33.576642Z",
+-  "duration_s": 0.025359153747558594,
++  "run_date": "2026-06-17T23:45:51.852360Z",
++  "duration_s": 0.02014923095703125,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "3864309beeacdbd8bef1539d8adf90b6fb0a7f7668acb84a16a5e243d06339bf",
++  "reproducibility_checksum": "a0123ffa42324afc7a6cdf23f06df4dd768cf3484021374122cf10f872c7f883",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "303d97b067bc05ad94bafcd315075e6e52716fb7"
++    "adversarial_verify_version": "b08604931d7d51315e899a3cd1390e8c37a5c905"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 3c2654d6a6..05ca4b5a23 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-17T23:28:33.612273Z",
+-  "duration_s": 0.029395103454589844,
++  "run_date": "2026-06-17T23:45:51.885294Z",
++  "duration_s": 0.026845216751098633,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "aa4d3c9ff3bc8c27784f368b2fd3b9e1a6315d16952b2e8db3dd14965f0f9d4c",
++  "reproducibility_checksum": "c1b495095cbfc3920bb31d22a40722fda5c7b3713357f17aa5ba445fd3469656",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "303d97b067bc05ad94bafcd315075e6e52716fb7"
++    "adversarial_verify_version": "b08604931d7d51315e899a3cd1390e8c37a5c905"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 9e752c9127..2bb77cc0aa 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.109527587890625,
++  "efficiency_gains_ms": 2.1300315856933594,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 8d690c6df8..ec993e44ae 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.331201151013374e-05,
++  "duration_s": 2.711097477003932e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4357_capstone_v402.json b/results/experiment_4357_capstone_v402.json
+new file mode 100644
+index 0000000000..305d912560
+--- /dev/null
++++ b/results/experiment_4357_capstone_v402.json
+@@ -0,0 +1,935 @@
++{
++  "action_efficiency": {
++    "action_efficiency_improves": true,
++    "action_reduction": 9,
++    "held_out_actions_baseline": 25,
++    "held_out_actions_learned": 16,
++    "honest_verdict": "success: learned_action_cost_reduces_actions_25_to_16",
++    "positive_control_passed": true,
++    "reported_action_efficiency_improves": true,
++    "reproduction_gated": true,
++    "status": "improves",
++    "verifier_is_oracle": false
++  },
++  "action_efficiency_improves": true,
++  "arc_e3_outcomes": {
++    "deeper": {
++      "games_with_new_reproducible_levels": [
++        "tn36"
++      ],
++      "honest_verdict": "success_e3_deeper_tn36_reproduced",
++      "new_levels_reproduced": 1,
++      "per_target_scorecard": [
++        {
++          "checkpoint_status": "honest_partial_no_new_level_reproduced",
++          "game": "sc25",
++          "new_reproduced_level": 1,
++          "offline_reproduced": false,
++          "plan": [
++            "cell0,1",
++            "cell1,0",
++            "cell1,2",
++            "cell2,1",
++            "move3",
++            "move3",
++            "move3",
++            "move3",
++            "move3",
++            "move3",
++            "move3",
++            "move3",
++            "move3",
++            "move3",
++            "move3",
++            "move3"
++          ],
++          "prior_best_level": 1,
++          "reproduce_result": {
++            "claimed_level": 1,
++            "game": "sc25",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "residual_win_mechanic_gap_class": "sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap",
++          "verifier_accuracy": 1.0,
++          "verifier_accuracy_per_round": [
++            1.0
++          ],
++          "world_model_path": "results/arc_e3/sc25/world_model.py"
++        },
++        {
++          "checkpoint_status": "new_level_reproduced",
++          "game": "tn36",
++          "new_reproduced_level": 7,
++          "offline_reproduced": true,
++          "plan": [
++            "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 44}}",
++            "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 44}}",
++            "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 44}}",
++            "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 55}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 46, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 38}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 38}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 41}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 44}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
++            "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
++            "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
++            "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}"
++          ],
++          "prior_best_level": 6,
++          "reproduce_result": {
++            "claimed_level": 7,
++            "game": "tn36",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 7,
++            "reproduced": true
++          },
++          "residual_win_mechanic_gap_class": "none",
++          "trajectory_action_count": 102,
++          "verifier_accuracy": 1.0,
++          "verifier_accuracy_per_round": [
++            1.0
++          ],
++          "world_model_path": "scripts/arc3_tn36_offline_solver.py"
++        },
++        {
++          "checkpoint_status": "honest_partial_no_new_level_reproduced",
++          "game": "ar25",
++          "new_reproduced_level": 1,
++          "offline_reproduced": false,
++          "plan": [
++            "3",
++            "3",
++            "3",
++            "3",
++            "3",
++            "2",
++            "2",
++            "2",
++            "2",
++            "2",
++            "2",
++            "2",
++            "2",
++            "2",
++            "2"
++          ],
++          "prior_best_level": 1,
++          "reproduce_result": {
++            "claimed_level": 1,
++            "game": "ar25",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "residual_win_mechanic_gap_class": "ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap",
++          "verifier_accuracy": 0.8875,
++          "verifier_accuracy_per_round": [
++            0.8875
++          ],
++          "world_model_path": "results/arc_e3/ar25/world_model.py"
++        }
++      ],
++      "reproducible_total_levels_reported": 23,
++      "status": "reproduced",
++      "verifier_is_oracle": true
++    },
++    "execution_grounded": true,
++    "games_with_new_reproducible_levels": [
++      "ka59",
++      "tn36"
++    ],
++    "ka59": {
++      "game": "ka59",
++      "honest_verdict": "success_e3_ka59_L1_reproduced",
++      "new_levels_reproduced": 1,
++      "offline_reproduced": true,
++      "reproduced_levels": 1,
++      "residual_mismatch_class": "hidden_step_counter_hud_gap",
++      "status": "reproduced",
++      "verifier_best_accuracy": 0.6375,
++      "verifier_is_oracle": true
++    },
++    "new_levels_reproduced_from_artifacts": 2,
++    "status": "advanced",
++    "tr87_ft09": {
++      "games_with_new_reproducible_levels": [],
++      "honest_verdict": "complete_e3_tr87_ft09_partial",
++      "new_levels_reproduced": 0,
++      "per_game_scorecard": [
++        {
++          "adaptive_test_results": [
++            {
++              "accuracy_threshold": 0.95,
++              "hidden_rule_mismatch_class": "tr87_mechanics_not_verified_for_planning",
++              "name": "tr87_agent2world_mechanic_threshold_probe",
++              "observed_accuracy": 0.0,
++              "passed": false
++            }
++          ],
++          "checkpoint_status": "complete_e3_tr87_partial_model_0.00",
++          "explore_lemmas": [
++            {
++              "action": 4,
++              "changed_cells": 28,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 1,
++              "changed_cells": 12,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 4,
++              "changed_cells": 28,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 4,
++              "changed_cells": 29,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 3,
++              "changed_cells": 28,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 2,
++              "changed_cells": 9,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 3,
++              "changed_cells": 28,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 3,
++              "changed_cells": 29,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 2,
++              "changed_cells": 15,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 1,
++              "changed_cells": 16,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 2,
++              "changed_cells": 15,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 2,
++              "changed_cells": 9,
++              "has_data": false,
++              "level_delta": 0,
++              "verifier_gated": true
++            }
++          ],
++          "explore_lemmas_collected": 12,
++          "game": "tr87",
++          "mechanic_checks_passed": false,
++          "offline_env_present": true,
++          "offline_reproduced": false,
++          "plan_executed": false,
++          "plan_result": {
++            "game": "tr87",
++            "planned": false,
++            "reason": "mechanic checks did not pass; plan withheld per explore-verify-plan gate"
++          },
++          "reproduce_result": {
++            "claimed_level": 1,
++            "game": "tr87",
++            "mode": "not_reproduced",
++            "reached_level": 0,
++            "reproduced": false
++          },
++          "reproduced_levels": 0,
++          "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_3_4",
++          "verifier_accuracy": 0.0,
++          "verifier_accuracy_per_round": [
++            0.0
++          ],
++          "world_model_path": "results/arc_e3/tr87/world_model.py",
++          "world_model_sha256": "1f497c0f688a9d8b4e5439f77cfeea445fc7326599a5aa118037388ff14bd21a"
++        },
++        {
++          "adaptive_test_results": [
++            {
++              "accuracy_threshold": 0.95,
++              "hidden_rule_mismatch_class": "ft09_mechanics_not_verified_for_planning",
++              "name": "ft09_agent2world_mechanic_threshold_probe",
++              "observed_accuracy": 0.05,
++              "passed": false
++            }
++          ],
++          "checkpoint_status": "complete_e3_ft09_partial_model_0.05",
++          "explore_lemmas": [
++            {
++              "action": 6,
++              "changed_cells": 0,
++              "has_data": true,
++              "level_delta": 0,
++              "verifier_gated": true
++            },
++            {
++              "action": 6,
++              "changed_cells": 0,
++              "has_data": true,
++              "level_delta": 0,
++              "verifier_gated": true
++            }
++          ],
++          "explore_lemmas_collected": 2,
++          "game": "ft09",
++          "mechanic_checks_passed": false,
++          "offline_env_present": true,
++          "offline_reproduced": false,
++          "plan_executed": false,
++          "plan_result": {
++            "game": "ft09",
++            "planned": false,
++            "reason": "mechanic checks did not pass; plan withheld per explore-verify-plan gate"
++          },
++          "reproduce_result": {
++            "claimed_level": 1,
++            "game": "ft09",
++            "mode": "not_reproduced",
++            "reached_level": 0,
++            "reproduced": false
++          },
++          "reproduced_levels": 0,
++          "residual_mismatch_class": "missing_world_model_rule_gap_actions_6",
++          "verifier_accuracy": 0.05,
++          "verifier_accuracy_per_round": [
++            0.05
++          ],
++          "world_model_path": "results/arc_e3/ft09/world_model.py",
++          "world_model_sha256": "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee"
++        }
++      ],
++      "status": "partial",
++      "verifier_is_oracle": true
++    }
++  },
++  "arc_reproducible_progress": {
++    "new_games_since_prior": 1,
++    "new_levels_since_prior": 2,
++    "path": "ops/arc_solve_registry.yaml",
++    "prior_reproducible_total_games": 13,
++    "prior_reproducible_total_levels": 21,
++    "reproducible_total_games": 14,
++    "reproducible_total_levels": 23,
++    "status": "loaded"
++  },
++  "availability_report": {
++    "available_artifact_keys": [
++      "4349_reward_state_alignment",
++      "4350_e3_ka59",
++      "4351_e3_deeper",
++      "4352_e3_tr87_ft09",
++      "4353_action_efficiency"
++    ],
++    "axes": {
++      "action_efficiency": {
++        "available_artifact_keys": [
++          "4353_action_efficiency"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": true
++      },
++      "arc": {
++        "available_artifact_keys": [
++          "4350_e3_ka59",
++          "4351_e3_deeper",
++          "4352_e3_tr87_ft09"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": true
++      },
++      "s3_utility": {
++        "available_artifact_keys": [
++          "4349_reward_state_alignment"
++        ],
++        "flagged_artifacts": [
++          {
++            "artifact_key": "4348_s3_search",
++            "axis": "s3_utility",
++            "experiment_id": 4348,
++            "reason": "flagged_adversarial"
++          }
++        ],
++        "missing_artifacts": [],
++        "verdict": "open"
++      }
++    },
++    "flagged_artifacts_excluded": [
++      {
++        "artifact_key": "4348_s3_search",
++        "axis": "s3_utility",
++        "experiment_id": 4348,
++        "reason": "flagged_adversarial"
++      }
++    ],
++    "missing_upstream_artifacts": []
++  },
++  "cited_upstream_artifacts": [
++    {
++      "artifact_key": "4349_reward_state_alignment",
++      "experiment_id": 4349,
++      "fields_imported": [
++        "reward_state_alignment_passed",
++        "gate_check_summary",
++        "gates_evaluated",
++        "status"
++      ],
++      "path": "results/experiment_4349_papo_reward_state_alignment_diagnostic.json",
++      "sha256": "a159f087790dc3a1a46011d4cb7af96a4bc5226ab057f08566e93a8c8e49a9c0"
++    },
++    {
++      "artifact_key": "4350_e3_ka59",
++      "experiment_id": 4350,
++      "fields_imported": [
++        "game",
++        "offline_reproduced",
++        "reproduced_levels",
++        "residual_mismatch_class",
++        "verifier_best_accuracy",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4350_e3_explore_verify_plan_ka59.json",
++      "sha256": "b55e64e6720c375f0aa11df112ffbf70c0f67c1c7799b5485853dab621e5dde6"
++    },
++    {
++      "artifact_key": "4351_e3_deeper",
++      "experiment_id": 4351,
++      "fields_imported": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_target_scorecard",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4351_e3_deeper_solved_games.json",
++      "sha256": "e361fe94f68adc30027b8d5d54346a20c523748a539985d7ea4a7a2c7e0e8605"
++    },
++    {
++      "artifact_key": "4352_e3_tr87_ft09",
++      "experiment_id": 4352,
++      "fields_imported": [
++        "games",
++        "new_levels_reproduced",
++        "per_game_scorecard",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json",
++      "sha256": "339f0a80691642fbc9869849ba76eb4715bcdc7ed84a5ee8cd977bdeb8981270"
++    },
++    {
++      "artifact_key": "4353_action_efficiency",
++      "experiment_id": 4353,
++      "fields_imported": [
++        "action_efficiency_improves",
++        "held_out_actions_baseline",
++        "held_out_actions_learned",
++        "positive_control_passed",
++        "reproduction_gated",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4353_learned_action_cost_heuristic_efficiency.json",
++      "sha256": "f66430d110db1338d0f2172a8fc2ef3e862c41caf6edf03eba4592e53f60b61d"
++    }
++  ],
++  "duration_s": 0.346641,
++  "experiment": 4357,
++  "field_principles": {
++    "action_efficiency_improves": "BARE bool: did the learned action-cost heuristic lower held-out env-actions-to-solve (north-star efficiency axis)?",
++    "cited_upstream_artifacts": "list of {experiment_id, fields_imported} -- the audit trail so the capstone numbers trace to real measurements.",
++    "honest_verdict": "Terminal-prefixed. The .402 scorecard string (whether S3 converted the moat, the ARC reproducible-total, the self-learning result).",
++    "preconditions_checked": "Records the upstream-artifact + publication_gate availability; pre-empts the silent-missing-resource fabrication mode.",
++    "publication_gate": "G1-G4 via publication_gate.py (paper_ready + unmet_gates) -- the stable finish line (north-star \u00a72).",
++    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after .402 (>= the prior 21) -- the monotonic north-star accuracy signal.",
++    "s3_moat_utility": "One of useful_generation_gain / proven_but_not_useful / open -- the headline decision: did the proven oracle-distinct moat become a fixed-NFE generation gain (Pareto-improvement), validated by reward-state alignment?",
++    "verifier_is_oracle": "BARE bool=false for the oracle-distinct moat read (the exp4355 stamp fix) -- so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM.",
++    "verifier_thesis_state": "One honest string summarizing where the verifier-moat thesis stands after .402 (moat proven+useful / proven-not-useful / etc.)."
++  },
++  "field_provenance": {
++    "action_efficiency_improves": {
++      "principle": "BARE bool: did the learned action-cost heuristic lower held-out env-actions-to-solve (north-star efficiency axis)?",
++      "satisfied_by": "aggregation logic"
++    },
++    "cited_upstream_artifacts": {
++      "principle": "list of {experiment_id, fields_imported} -- the audit trail so the capstone numbers trace to real measurements.",
++      "satisfied_by": "aggregation logic"
++    },
++    "honest_verdict": {
++      "principle": "Terminal-prefixed. The .402 scorecard string (whether S3 converted the moat, the ARC reproducible-total, the self-learning result).",
++      "satisfied_by": "aggregation logic"
++    },
++    "preconditions_checked": {
++      "principle": "Records the upstream-artifact + publication_gate availability; pre-empts the silent-missing-resource fabrication mode.",
++      "satisfied_by": "aggregation logic"
++    },
++    "publication_gate": {
++      "principle": "G1-G4 via publication_gate.py (paper_ready + unmet_gates) -- the stable finish line (north-star \u00a72).",
++      "satisfied_by": "aggregation logic"
++    },
++    "reproducible_total_levels": {
++      "principle": "BARE int: the ARC reproducible-level count after .402 (>= the prior 21) -- the monotonic north-star accuracy signal.",
++      "satisfied_by": "aggregation logic"
++    },
++    "s3_moat_utility": {
++      "principle": "One of useful_generation_gain / proven_but_not_useful / open -- the headline decision: did the proven oracle-distinct moat become a fixed-NFE generation gain (Pareto-improvement), validated by reward-state alignment?",
++      "satisfied_by": "aggregation logic"
++    },
++    "verifier_is_oracle": {
++      "principle": "BARE bool=false for the oracle-distinct moat read (the exp4355 stamp fix) -- so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM.",
++      "satisfied_by": "aggregation logic"
++    },
++    "verifier_thesis_state": {
++      "principle": "One honest string summarizing where the verifier-moat thesis stands after .402 (moat proven+useful / proven-not-useful / etc.).",
++      "satisfied_by": "aggregation logic"
++    }
++  },
++  "flagged_artifacts_excluded": [
++    {
++      "artifact_key": "4348_s3_search",
++      "experiment_id": 4348,
++      "live_critical": true,
++      "live_critical_flags": [
++        {
++          "detail": "s3_minus_best_of_k_delta=0.266667 and s3_minus_self_reward_smc_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "s3_minus_best_of_k_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "s3_minus_self_reward_smc_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        }
++      ],
++      "parse_error": "",
++      "path": "results/experiment_4348_s3_stratified_verifier_guided_search.json",
++      "reason": "flagged_adversarial",
++      "sha256": "4723a7966f9fbcc05e8aff69f6e7b0b8a587faea3e37558bb4bc5b930d991001",
++      "stamped_flagged_adversarial": true
++    }
++  ],
++  "honest_verdict": "complete: v402_s3_open_arc_levels_23_action_efficiency_improves_publication_ready",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "paper_ready": true,
++  "per_axis_gaps": [],
++  "preconditions_checked": {
++    "arc_registry": {
++      "new_games_since_prior": 1,
++      "new_levels_since_prior": 2,
++      "path": "ops/arc_solve_registry.yaml",
++      "prior_reproducible_total_games": 13,
++      "prior_reproducible_total_levels": 21,
++      "reproducible_total_games": 14,
++      "reproducible_total_levels": 23,
++      "status": "loaded"
++    },
++    "publication_gate": {
++      "exists": true,
++      "paper_ready": true,
++      "path": "scripts/publication_gate.py",
++      "runnable": true,
++      "unmet_gates": []
++    },
++    "upstream_artifacts": [
++      {
++        "artifact_key": "4348_s3_search",
++        "exists": true,
++        "experiment_id": 4348,
++        "path": "results/experiment_4348_s3_stratified_verifier_guided_search.json",
++        "skipped": true,
++        "summarize_exit_code": 2
++      },
++      {
++        "artifact_key": "4349_reward_state_alignment",
++        "exists": true,
++        "experiment_id": 4349,
++        "path": "results/experiment_4349_papo_reward_state_alignment_diagnostic.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4350_e3_ka59",
++        "exists": true,
++        "experiment_id": 4350,
++        "path": "results/experiment_4350_e3_explore_verify_plan_ka59.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4351_e3_deeper",
++        "exists": true,
++        "experiment_id": 4351,
++        "path": "results/experiment_4351_e3_deeper_solved_games.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4352_e3_tr87_ft09",
++        "exists": true,
++        "experiment_id": 4352,
++        "path": "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      },
++      {
++        "artifact_key": "4353_action_efficiency",
++        "exists": true,
++        "experiment_id": 4353,
++        "path": "results/experiment_4353_learned_action_cost_heuristic_efficiency.json",
++        "skipped": false,
++        "summarize_exit_code": 0
++      }
++    ]
++  },
++  "publication_gate": {
++    "gates": {
++      "G1": {
++        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      },
++      "G2": {
++        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++        "pass": true
++      },
++      "G3": {
++        "detail": "no retracted phrasings asserted as live claims",
++        "hits": [],
++        "pass": true
++      },
++      "G4": {
++        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      }
++    },
++    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
++    "paper_ready": true,
++    "unmet_gates": []
++  },
++  "random_seed": 4357,
++  "reproducibility_checksum": "fd7f759d59942deeef2e350640fc1bc71b498d3a26f1ef6756e68e043ca328fc",
++  "reproducible_total_levels": 23,
++  "required_artifact_fields": [
++    "honest_verdict",
++    "s3_moat_utility",
++    "reproducible_total_levels",
++    "action_efficiency_improves",
++    "verifier_thesis_state",
++    "publication_gate",
++    "verifier_is_oracle",
++    "cited_upstream_artifacts",
++    "preconditions_checked"
++  ],
++  "reward_state_alignment": {
++    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4348-s3-stratified-verifier-guided-search.s3_guided_beats_control (actual=False == expected=True)",
++    "gates_evaluated": [
++      {
++        "actual": false,
++        "artifact_field": "s3_guided_beats_control",
++        "expected": true,
++        "op": "==",
++        "passed": false,
++        "reason": "actual=False == expected=True",
++        "upstream": "exp4348-s3-stratified-verifier-guided-search"
++      }
++    ],
++    "honest_verdict": "blocked_gate_check_failed",
++    "reward_state_alignment_passed": null,
++    "status": "blocked"
++  },
++  "s3_moat_utility": "open",
++  "s3_search": {
++    "status": "excluded_flagged_adversarial"
++  },
++  "s3_utility": {
++    "requires_clean_s3_gain": true,
++    "requires_reward_state_alignment": true,
++    "s3_moat_utility": "open",
++    "status": "open_flagged_or_missing_s3"
++  },
++  "schema": "carnot.capstone_v402_4357.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4357",
++    "SCENARIO-CAPSTONE-4357"
++  ],
++  "unmet_gates": [],
++  "upstream_provenance": [
++    {
++      "artifact_key": "4348_s3_search",
++      "experiment_id": 4348,
++      "fields_imported": [],
++      "live_adversarial_flags": [
++        {
++          "detail": "s3_minus_best_of_k_delta=0.266667 and s3_minus_self_reward_smc_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "s3_minus_best_of_k_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "s3_minus_self_reward_smc_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        }
++      ],
++      "live_critical": true,
++      "parse_error": "",
++      "path": "results/experiment_4348_s3_stratified_verifier_guided_search.json",
++      "payload_reproducibility_checksum": "6f6e37ce8128fe9e77c5ad4623c1d6dfc07b4a0b9d323318eed8734d4d16c938",
++      "sha256": "4723a7966f9fbcc05e8aff69f6e7b0b8a587faea3e37558bb4bc5b930d991001",
++      "skipped": true,
++      "stamped_flagged_adversarial": true,
++      "summarize_error": "",
++      "summarize_exit_code": 2
++    },
++    {
++      "artifact_key": "4349_reward_state_alignment",
++      "experiment_id": 4349,
++      "fields_imported": [
++        "reward_state_alignment_passed",
++        "gate_check_summary",
++        "gates_evaluated",
++        "status"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4349_papo_reward_state_alignment_diagnostic.json",
++      "payload_reproducibility_checksum": "",
++      "sha256": "a159f087790dc3a1a46011d4cb7af96a4bc5226ab057f08566e93a8c8e49a9c0",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4350_e3_ka59",
++      "experiment_id": 4350,
++      "fields_imported": [
++        "game",
++        "offline_reproduced",
++        "reproduced_levels",
++        "residual_mismatch_class",
++        "verifier_best_accuracy",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4350_e3_explore_verify_plan_ka59.json",
++      "payload_reproducibility_checksum": "3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06",
++      "sha256": "b55e64e6720c375f0aa11df112ffbf70c0f67c1c7799b5485853dab621e5dde6",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4351_e3_deeper",
++      "experiment_id": 4351,
++      "fields_imported": [
++        "new_levels_reproduced",
++        "reproducible_total_levels",
++        "per_target_scorecard",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4351_e3_deeper_solved_games.json",
++      "payload_reproducibility_checksum": "72ad0cdfb5c23845b4272b9b98c30c4b0fa4a27b47980107fc76862aa45f45c9",
++      "sha256": "e361fe94f68adc30027b8d5d54346a20c523748a539985d7ea4a7a2c7e0e8605",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4352_e3_tr87_ft09",
++      "experiment_id": 4352,
++      "fields_imported": [
++        "games",
++        "new_levels_reproduced",
++        "per_game_scorecard",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json",
++      "payload_reproducibility_checksum": "88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28",
++      "sha256": "339f0a80691642fbc9869849ba76eb4715bcdc7ed84a5ee8cd977bdeb8981270",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    },
++    {
++      "artifact_key": "4353_action_efficiency",
++      "experiment_id": 4353,
++      "fields_imported": [
++        "action_efficiency_improves",
++        "held_out_actions_baseline",
++        "held_out_actions_learned",
++        "positive_control_passed",
++        "reproduction_gated",
++        "verifier_is_oracle"
++      ],
++      "live_adversarial_flags": [],
++      "live_critical": false,
++      "parse_error": "",
++      "path": "results/experiment_4353_learned_action_cost_heuristic_efficiency.json",
++      "payload_reproducibility_checksum": "bb2239bae156eb0fae288a54a8d20855e79543ba07db250b0d47e61173c731fa",
++      "sha256": "f66430d110db1338d0f2172a8fc2ef3e862c41caf6edf03eba4592e53f60b61d",
++      "skipped": false,
++      "stamped_flagged_adversarial": false,
++      "summarize_error": "",
++      "summarize_exit_code": 0
++    }
++  ],
++  "upstream_sha256_set": [
++    "339f0a80691642fbc9869849ba76eb4715bcdc7ed84a5ee8cd977bdeb8981270",
++    "4723a7966f9fbcc05e8aff69f6e7b0b8a587faea3e37558bb4bc5b930d991001",
++    "a159f087790dc3a1a46011d4cb7af96a4bc5226ab057f08566e93a8c8e49a9c0",
++    "b55e64e6720c375f0aa11df112ffbf70c0f67c1c7799b5485853dab621e5dde6",
++    "e361fe94f68adc30027b8d5d54346a20c523748a539985d7ea4a7a2c7e0e8605",
++    "f66430d110db1338d0f2172a8fc2ef3e862c41caf6edf03eba4592e53f60b61d"
++  ],
++  "verifier_is_oracle": false,
++  "verifier_is_oracle_honored": true,
++  "verifier_thesis_state": "moat_proven_leak_robust_but_s3_utility_open"
++}
+diff --git a/results/experiment_4357_capstone_v402.py b/results/experiment_4357_capstone_v402.py
+new file mode 100644
+index 0000000000..a24d9a2a13
+--- /dev/null
++++ b/results/experiment_4357_capstone_v402.py
+@@ -0,0 +1,22 @@
++#!/usr/bin/env python3
++"""Run Exp 4357 v402 verifier scorecard capstone.
++
++Spec refs: REQ-CAPSTONE-4357, SCENARIO-CAPSTONE-4357.
++"""
++
++# ruff: noqa: E402,I001
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.capstone_v402_4357 import write_artifact  # noqa: E402
++
++
++if __name__ == "__main__":
++    output = write_artifact(REPO_ROOT)
++    print(output.read_text(encoding="utf-8"), end="")
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 59343202e8..fdabad2c19 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T23:28:23Z",
+-  "finished_at": "2026-06-17T23:28:23Z",
++  "started_at": "2026-06-17T23:45:42Z",
++  "finished_at": "2026-06-17T23:45:42Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 19d35b2145..7343486c4d 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T23:28:23Z",
+-  "finished_at": "2026-06-17T23:28:23Z",
++  "started_at": "2026-06-17T23:45:42Z",
++  "finished_at": "2026-06-17T23:45:42Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 5b0894f3f1..07e89bee03 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T23:28:23Z",
+-  "finished_at": "2026-06-17T23:28:23Z",
++  "started_at": "2026-06-17T23:45:42Z",
++  "finished_at": "2026-06-17T23:45:42Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4357_capstone_v402.py b/tests/python/test_experiment_4357_capstone_v402.py
+new file mode 100644
+index 0000000000..0511ee5859
+--- /dev/null
++++ b/tests/python/test_experiment_4357_capstone_v402.py
+@@ -0,0 +1,505 @@
++"""Tests for Exp 4357 .402 milestone capstone.
++
++Spec refs: REQ-CAPSTONE-4357, SCENARIO-CAPSTONE-4357.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot.reporting import capstone_v402_4357 as mod
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_support_files(root: Path, total: int = 23, games: int = 14) -> None:
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "scripts" / "publication_gate.py").write_text("# fixture\n", encoding="utf-8")
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "arc_solve_registry.yaml").write_text(
++        yaml.safe_dump(
++            {
++                "schema_version": 1,
++                "reproducible_total_levels": total,
++                "reproducible_total_games": games,
++            },
++            sort_keys=False,
++        ),
++        encoding="utf-8",
++    )
++
++
++def _clean_live_flags(_: Path) -> list[dict[str, str]]:
++    return []
++
++
++def _summarize_zero(_: Path, __: Path) -> int:
++    return 0
++
++
++def _publication_gate(paper_ready: bool = True) -> JsonDict:
++    return {
++        "paper_ready": paper_ready,
++        "gates": {
++            "G1": {"pass": True, "detail": "fixture"},
++            "G2": {"pass": paper_ready, "detail": "fixture"},
++            "G3": {"pass": True, "detail": "fixture"},
++            "G4": {"pass": True, "detail": "fixture"},
++        },
++        "unmet_gates": [] if paper_ready else ["G2"],
++    }
++
++
++def _minimal_payloads(*, flagged_s3: bool = True, s3_win: bool = False) -> dict[str, JsonDict]:
++    return {
++        "4348_s3_search": {
++            "honest_verdict": "controls_not_differentiable",
++            "acceptance_gate": True,
++            "s3_guided_beats_control": s3_win,
++            "controls_differentiated": s3_win,
++            "scorer_leak_recheck_passed": True,
++            "nfe_budget": 16,
++            "s3_gain_ci95": [0.208333, 0.329167] if s3_win else [-0.02, 0.01],
++            "s3_minus_best_of_k_delta": 0.266667 if s3_win else 0.0,
++            "s3_minus_self_reward_smc_delta": 0.266667 if s3_win else 0.0,
++            "s3_minus_unguided_delta": 0.266667 if s3_win else 0.0,
++            "flagged_adversarial": flagged_s3,
++            "verifier_is_oracle": False,
++            "reproducibility_checksum": "sha256:" + "a" * 64,
++        },
++        "4349_reward_state_alignment": {
++            "honest_verdict": "blocked_gate_check_failed",
++            "status": "blocked",
++            "blocked_at_layer": "conductor_pre_gate",
++            "gate_check_summary": (
++                "1 of 1 gate(s) failed; first failure: "
++                "exp4348-s3-stratified-verifier-guided-search.s3_guided_beats_control"
++            ),
++        },
++        "4350_e3_ka59": {
++            "honest_verdict": "success_e3_ka59_L1_reproduced",
++            "game": "ka59",
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "verifier_is_oracle": True,
++            "reproducibility_checksum": "sha256:" + "b" * 64,
++        },
++        "4351_e3_deeper": {
++            "honest_verdict": "success_e3_deeper_tn36_reproduced",
++            "new_levels_reproduced": 1,
++            "reproducible_total_levels": 23,
++            "verifier_is_oracle": True,
++            "per_target_scorecard": [
++                {
++                    "game": "sc25",
++                    "offline_reproduced": False,
++                    "new_reproduced_level": 1,
++                },
++                {
++                    "game": "tn36",
++                    "offline_reproduced": True,
++                    "new_reproduced_level": 7,
++                },
++                {
++                    "game": "ar25",
++                    "offline_reproduced": False,
++                    "new_reproduced_level": 1,
++                },
++            ],
++            "reproducibility_checksum": "sha256:" + "c" * 64,
++        },
++        "4352_e3_tr87_ft09": {
++            "honest_verdict": "complete_e3_tr87_ft09_partial",
++            "new_levels_reproduced": 0,
++            "verifier_is_oracle": True,
++            "per_game_scorecard": [
++                {"game": "tr87", "offline_reproduced": False, "reproduced_levels": 0},
++                {"game": "ft09", "offline_reproduced": False, "reproduced_levels": 0},
++            ],
++            "reproducibility_checksum": "sha256:" + "d" * 64,
++        },
++        "4353_action_efficiency": {
++            "honest_verdict": "success: learned_action_cost_reduces_actions_25_to_16",
++            "acceptance_gate_passed": True,
++            "action_efficiency_improves": True,
++            "held_out_actions_baseline": 25,
++            "held_out_actions_learned": 16,
++            "positive_control_passed": True,
++            "reproduction_gated": True,
++            "verifier_is_oracle": False,
++            "reproducibility_checksum": "sha256:" + "e" * 64,
++        },
++    }
++
++
++def _write_default_artifacts(root: Path, payloads: dict[str, JsonDict]) -> None:
++    for key, payload in payloads.items():
++        _write_json(root / mod.DEFAULT_UPSTREAMS[key].path, payload)
++
++
++def test_req_capstone_4357_spec_anchor_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4357: OpenSpec declares the .402 scorecard contract."""
++
++    spec = Path("openspec/capabilities/capstone/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4357" in spec
++    assert "SCENARIO-CAPSTONE-4357" in spec
++    assert "experiment_4357_capstone_v402.json" in spec
++    assert "blocked_publication_gate_unrunnable" in spec
++    assert "CIRCULAR_MOAT_OVERCLAIM" in spec
++    assert "aggregate-available-report-gaps" in spec
++    assert "publication_gate.py --json" in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++        assert mod.FIELD_PRINCIPLES[field] in spec
++
++
++def test_scenario_capstone_4357_current_artifacts_report_v402_scorecard() -> None:
++    """SCENARIO-CAPSTONE-4357: current .402 artifacts report the honest scorecard."""
++
++    artifact = mod.build_artifact(
++        Path.cwd(),
++        started_s=1.0,
++        now_s=1.5,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == (
++        "complete: v402_s3_open_arc_levels_23_action_efficiency_improves_publication_ready"
++    )
++    assert artifact["s3_moat_utility"] == "open"
++    assert artifact["s3_utility"]["status"] == "open_flagged_or_missing_s3"
++    assert artifact["s3_search"]["status"] == "excluded_flagged_adversarial"
++    assert artifact["reward_state_alignment"]["status"] == "blocked"
++    assert artifact["reproducible_total_levels"] == 23
++    assert artifact["arc_reproducible_progress"]["new_levels_since_prior"] == 2
++    assert artifact["arc_reproducible_progress"]["new_games_since_prior"] == 1
++    assert artifact["arc_e3_outcomes"]["new_levels_reproduced_from_artifacts"] == 2
++    assert artifact["action_efficiency_improves"] is True
++    assert artifact["verifier_thesis_state"] == ("moat_proven_leak_robust_but_s3_utility_open")
++    assert artifact["publication_gate"]["paper_ready"] is True
++    assert artifact["paper_ready"] is True
++    assert artifact["unmet_gates"] == []
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["verifier_is_oracle_honored"] is True
++    assert artifact["preconditions_checked"]["publication_gate"]["runnable"] is True
++
++    cited = {row["artifact_key"]: row for row in artifact["cited_upstream_artifacts"]}
++    assert "4348_s3_search" not in cited
++    assert cited["4353_action_efficiency"]["fields_imported"] == list(
++        mod.IMPORTED_FIELDS["4353_action_efficiency"]
++    )
++    excluded = {row["artifact_key"] for row in artifact["flagged_artifacts_excluded"]}
++    assert "4348_s3_search" in excluded
++
++
++def test_req_capstone_4357_missing_axis_does_not_zero_available_axes(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4357: missing artifacts become per-axis gaps only."""
++
++    _write_support_files(tmp_path, total=24, games=15)
++    payloads = _minimal_payloads()
++    payloads.pop("4352_e3_tr87_ft09")
++    _write_default_artifacts(tmp_path, payloads)
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        started_s=2.0,
++        now_s=2.25,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(False),
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["s3_moat_utility"] == "open"
++    assert artifact["reproducible_total_levels"] == 24
++    assert artifact["action_efficiency_improves"] is True
++    assert artifact["paper_ready"] is False
++    assert artifact["unmet_gates"] == ["G2"]
++    assert artifact["per_axis_gaps"] == [
++        {"axis": "arc", "artifact_key": "4352_e3_tr87_ft09", "experiment_id": 4352}
++    ]
++
++
++def test_req_capstone_4357_useful_and_not_useful_decisions(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4357: S3 utility decisions require clean S3 plus alignment."""
++
++    _write_support_files(tmp_path)
++    useful_payloads = _minimal_payloads(flagged_s3=False, s3_win=True)
++    useful_payloads["4349_reward_state_alignment"] = {
++        "honest_verdict": "success: reward_state_alignment_passed",
++        "reward_state_alignment_passed": True,
++        "alignment_delta": 0.11,
++        "reproducibility_checksum": "sha256:" + "f" * 64,
++    }
++    _write_default_artifacts(tmp_path, useful_payloads)
++    useful = mod.build_artifact(
++        tmp_path,
++        started_s=3.0,
++        now_s=3.5,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++    )
++    mod.validate_artifact(useful)
++    assert useful["s3_moat_utility"] == "useful_generation_gain"
++    assert useful["verifier_thesis_state"] == "moat_proven_useful"
++    assert useful["verifier_is_oracle"] is False
++
++    null_root = tmp_path / "null"
++    _write_support_files(null_root)
++    null_payloads = _minimal_payloads(flagged_s3=False, s3_win=False)
++    null_payloads["4348_s3_search"]["controls_differentiated"] = True
++    null_payloads["4348_s3_search"]["s3_gain_ci95"] = [-0.03, 0.02]
++    null_payloads["4349_reward_state_alignment"] = {
++        "honest_verdict": "complete: no aligned gain because S3 null",
++        "reward_state_alignment_passed": False,
++    }
++    _write_default_artifacts(null_root, null_payloads)
++    null = mod.build_artifact(
++        null_root,
++        started_s=4.0,
++        now_s=4.5,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++    )
++    mod.validate_artifact(null)
++    assert null["s3_moat_utility"] == "proven_but_not_useful"
++    assert null["verifier_thesis_state"] == "moat_proven_not_useful"
++
++
++def test_req_capstone_4357_publication_gate_unrunnable_blocks(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4357: an unrunnable publication gate stops honestly."""
++
++    (tmp_path / "scripts").mkdir(parents=True, exist_ok=True)
++    (tmp_path / "scripts" / "publication_gate.py").write_text("# fixture\n", encoding="utf-8")
++
++    def broken_gate(_: Path) -> JsonDict:
++        raise RuntimeError("fixture gate failed")
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        started_s=5.0,
++        now_s=5.25,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=broken_gate,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_publication_gate_unrunnable"
++    assert artifact["s3_moat_utility"] == "open"
++    assert artifact["reproducible_total_levels"] == 0
++    assert artifact["action_efficiency_improves"] is False
++    assert artifact["verifier_thesis_state"] == "blocked_publication_gate_unrunnable"
++    assert artifact["publication_gate"]["error"].startswith("RuntimeError")
++    assert artifact["cited_upstream_artifacts"] == []
++    assert artifact["preconditions_checked"]["publication_gate"]["runnable"] is False
++
++
++def test_req_capstone_4357_write_validate_and_strict_edges(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4357: wrapper output and validation stay strict."""
++
++    _write_support_files(tmp_path)
++    _write_default_artifacts(tmp_path, _minimal_payloads())
++    out_path = mod.write_artifact(
++        tmp_path,
++        output_path=Path("results/experiment_4357_capstone_v402.json"),
++        started_s=6.0,
++        now_s=6.5,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++    )
++    written = json.loads(out_path.read_text(encoding="utf-8"))
++    mod.validate_artifact(written)
++    assert written["reproducibility_checksum"] == mod.checksum_from_provenance(
++        written["upstream_provenance"]
++    )
++
++    assert mod.s3_search_read(None, True)["status"] == "excluded_flagged_adversarial"
++    assert mod.s3_search_read(None, False)["status"] == "missing_or_excluded"
++    assert (
++        mod.s3_search_read({"s3_guided_beats_control": True, "verifier_is_oracle": False}, False)[
++            "status"
++        ]
++        == "measured_unresolved"
++    )
++    assert mod.reward_alignment_read(None, True)["status"] == "excluded_flagged_adversarial"
++    assert mod.reward_alignment_read(None, False)["status"] == "missing_or_excluded"
++    assert mod.reward_alignment_read({}, False)["status"] == "missing_measurement"
++    assert (
++        mod.s3_utility_read(
++            {"status": "measured_unresolved"},
++            {"reward_state_alignment_passed": False},
++        )["status"]
++        == "open_alignment_not_validated"
++    )
++    assert (
++        mod.s3_utility_read(
++            {"status": "measured_unresolved"},
++            {"reward_state_alignment_passed": True},
++        )["status"]
++        == "open"
++    )
++    assert mod.arc_ka59_read(None, True)["status"] == "excluded_flagged_adversarial"
++    assert mod.arc_ka59_read(None, False)["status"] == "missing_or_excluded"
++    assert mod.arc_deeper_read(None, True)["status"] == "excluded_flagged_adversarial"
++    assert mod.arc_deeper_read(None, False)["status"] == "missing_or_excluded"
++    assert mod.arc_tr87_ft09_read(None, True)["status"] == "excluded_flagged_adversarial"
++    assert mod.arc_tr87_ft09_read(None, False)["status"] == "missing_or_excluded"
++    deeper_with_bad_row = mod.arc_deeper_read(
++        {
++            "new_levels_reproduced": 1,
++            "per_target_scorecard": [
++                None,
++                {"game": "tn36", "offline_reproduced": True, "new_reproduced_level": 7},
++            ],
++        },
++        False,
++    )
++    assert deeper_with_bad_row["games_with_new_reproducible_levels"] == ["tn36"]
++    assert mod.action_efficiency_read(None, True)["status"] == "excluded_flagged_adversarial"
++    assert mod.action_efficiency_read(None, False)["status"] == "missing_or_excluded"
++    assert mod.read_registry_progress(tmp_path / "missing")["status"] == "missing"
++    bad_registry = tmp_path / "bad_registry"
++    _write_support_files(bad_registry)
++    (bad_registry / "ops" / "arc_solve_registry.yaml").write_text("[bad\n", encoding="utf-8")
++    assert mod.read_registry_progress(bad_registry)["status"] == "unparseable"
++    non_mapping_registry = tmp_path / "non_mapping_registry"
++    _write_support_files(non_mapping_registry)
++    (non_mapping_registry / "ops" / "arc_solve_registry.yaml").write_text("[]\n", encoding="utf-8")
++    assert mod.read_registry_progress(non_mapping_registry)["error"] == "non-mapping registry"
++    bad_total_registry = tmp_path / "bad_total_registry"
++    _write_support_files(bad_total_registry)
++    (bad_total_registry / "ops" / "arc_solve_registry.yaml").write_text(
++        "reproducible_total_levels: nope\nreproducible_total_games: nope\n",
++        encoding="utf-8",
++    )
++    bad_total = mod.read_registry_progress(bad_total_registry)
++    assert bad_total["reproducible_total_levels"] == 0
++    assert bad_total["reproducible_total_games"] == 0
++    assert mod.checksum_from_provenance([]) == mod.EMPTY_UPSTREAM_CHECKSUM
++    assert (
++        mod._cited_upstream_artifacts(  # noqa: SLF001
++            [
++                {"skipped": False, "fields_imported": []},
++                {"skipped": False, "fields_imported": "not-list"},
++            ]
++        )
++        == []
++    )
++
++    missing_gate = mod.build_artifact(
++        tmp_path / "no_gate",
++        started_s=7.0,
++        now_s=7.25,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++    )
++    mod.validate_artifact(missing_gate)
++    assert missing_gate["honest_verdict"] == "blocked_publication_gate_unrunnable"
++
++    non_object_gate_root = tmp_path / "non_object_gate"
++    (non_object_gate_root / "scripts").mkdir(parents=True, exist_ok=True)
++    (non_object_gate_root / "scripts" / "publication_gate.py").write_text(
++        "# fixture\n", encoding="utf-8"
++    )
++    non_object_gate = mod.build_artifact(
++        non_object_gate_root,
++        started_s=7.5,
++        now_s=7.75,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: [],  # type: ignore[return-value]
++    )
++    mod.validate_artifact(non_object_gate)
++    assert non_object_gate["publication_gate"]["error"] == "publication_gate returned non-object"
++
++    parse_root = tmp_path / "parse_error"
++    _write_support_files(parse_root)
++    bad_artifact = parse_root / mod.DEFAULT_UPSTREAMS["4352_e3_tr87_ft09"].path
++    bad_artifact.parent.mkdir(parents=True, exist_ok=True)
++    bad_artifact.write_text("[]\n", encoding="utf-8")
++    parse_artifact = mod.build_artifact(
++        parse_root,
++        started_s=8.0,
++        now_s=8.25,
++        live_flag_runner=_clean_live_flags,
++        summarize_runner=_summarize_zero,
++        publication_gate_runner=lambda _: _publication_gate(True),
++    )
++    mod.validate_artifact(parse_artifact)
++    assert parse_artifact["flagged_artifacts_excluded"][0]["reason"] == ("unparsable_or_non_object")
++
++    for field, value, pattern in [
++        ("honest_verdict", "not_terminal", "terminal-prefixed"),
++        ("s3_moat_utility", "maybe", "s3_moat_utility"),
++        ("reproducible_total_levels", True, "bare int"),
++        ("action_efficiency_improves", None, "bare bool"),
++        ("verifier_thesis_state", "unknown", "verifier_thesis_state"),
++        ("publication_gate", [], "publication_gate"),
++        ("verifier_is_oracle", None, "verifier_is_oracle"),
++        ("cited_upstream_artifacts", {}, "cited_upstream_artifacts"),
++        ("preconditions_checked", [], "preconditions_checked"),
++        ("reproducibility_checksum", "bad", "reproducibility_checksum"),
++    ]:
++        bad = json.loads(json.dumps(written))
++        bad[field] = value
++        with pytest.raises(ValueError, match=pattern):
++            mod.validate_artifact(bad)
++
++    bad = json.loads(json.dumps(written))
++    bad.pop("honest_verdict")
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(bad)
++
++    bad = json.loads(json.dumps(written))
++    bad["field_principles"] = {}
++    with pytest.raises(ValueError, match="field_principles"):
++        mod.validate_artifact(bad)
++
++    bad = json.loads(json.dumps(written))
++    bad["upstream_provenance"] = {}
++    with pytest.raises(ValueError, match="upstream_provenance"):
++        mod.validate_artifact(bad)
++
++    bad = json.loads(json.dumps(written))
++    bad["upstream_provenance"] = ["bad-row"]
++    with pytest.raises(ValueError, match="upstream provenance row"):
++        mod.validate_artifact(bad)
++
++    bad = json.loads(json.dumps(written))
++    bad["upstream_provenance"][0]["sha256"] = "bad"
++    with pytest.raises(ValueError, match="upstream provenance"):
++        mod.validate_artifact(bad)
++
++    bad = json.loads(json.dumps(written))
++    bad["upstream_provenance"][0]["skipped"] = True
++    bad["upstream_provenance"][0]["fields_imported"] = ["s3_guided_beats_control"]
++    with pytest.raises(ValueError, match="skipped upstreams"):
++        mod.validate_artifact(bad)
++
++    bad = json.loads(json.dumps(written))
++    bad["reproducibility_checksum"] = "f" * 64
++    with pytest.raises(ValueError, match="does not match"):
++        mod.validate_artifact(bad)
++
++    wrapper = Path("results/experiment_4357_capstone_v402.py").read_text(encoding="utf-8")
++    assert "capstone_v402_4357" in wrapper
+-- 
+2.55.0
+

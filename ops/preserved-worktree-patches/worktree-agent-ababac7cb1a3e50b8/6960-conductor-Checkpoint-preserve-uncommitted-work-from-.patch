@@ -1,0 +1,78 @@
+From 95b41d00d51119f807b21ac363f579339974e583 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 13 Jul 2026 20:43:30 -0400
+Subject: [PATCH 06960/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json  |  2 +-
+ ops/conductor-log.md          |  1 +
+ ops/conductor-state.json      |  2 +-
+ scripts/research_conductor.py | 23 ++++++++++++++++++++++-
+ 4 files changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a63343f3c4..8e06434504 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 109, "phase": "iteration_start", "last_beat": "2026-07-14T00:23:52Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 110, "phase": "iteration_start", "last_beat": "2026-07-14T00:43:29Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index af4888e1c6..670429cae7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11688,3 +11688,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-13 23:13 UTC | Activation REFUSED: milestone 2026.07.505 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+ | 2026-07-13 23:16 UTC | Milestone 2026.07.505 activated | OK | 8 tasks queued |
+ | 2026-07-14 00:21 UTC | Transition .504 terminal evidence into .505 execut | OK | 86 passed, 1 warning in 16.88s |
++| 2026-07-14 00:41 UTC | Execution-time V505 source delta and experiment ma | OK | 87 passed, 1 warning in 9.03s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 368017f124..acfe97da49 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 109, "phase": "iteration_start", "started_at": "2026-07-14T00:23:52Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 110, "phase": "iteration_start", "started_at": "2026-07-14T00:43:29Z"}
+\ No newline at end of file
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 9409a712a8..6f5829ed27 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -2873,7 +2873,28 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+     retro_timing_reconstructed_from_disk_mtime = False
+     if not experiment_times:
+         try:
+-            from scripts.retro_timing_fallback import build_retro_timing_fallback
++            # 2026-07-03 (exp5195 root-cause fix): the conductor is
++            # launched as `python scripts/research_conductor.py`, so
++            # sys.path[0] is the scripts/ directory, NOT the repo root —
++            # the same reason every other sibling helper in this file is
++            # imported bare (gpu_monitor, failure_ledger,
++            # in_process_doc_reconcile, adversarial_verify). The original
++            # `from scripts.retro_timing_fallback import ...` raised
++            # ModuleNotFoundError at conductor runtime (repo root not on
++            # sys.path); the outer `except Exception` swallowed it and
++            # left experiment_times empty, reproducing the very false-zero
++            # this fallback was built to eliminate (the .475 retro passes,
++            # confirmed in journalctl). Import the bare sibling first
++            # (works at conductor runtime); fall back to the package path
++            # (works under pytest, where the repo root IS on sys.path).
++            # The package form is deliberately retained so the existing
++            # conductor-wiring assertion test stays green.
++            try:
++                from retro_timing_fallback import (  # type: ignore[import-not-found]
++                    build_retro_timing_fallback,
++                )
++            except ModuleNotFoundError:
++                from scripts.retro_timing_fallback import build_retro_timing_fallback
+ 
+             _fallback_timing = build_retro_timing_fallback(current, repo_root=PROJECT_ROOT)
+             if _fallback_timing.get("experiment_times"):
+-- 
+2.55.0
+

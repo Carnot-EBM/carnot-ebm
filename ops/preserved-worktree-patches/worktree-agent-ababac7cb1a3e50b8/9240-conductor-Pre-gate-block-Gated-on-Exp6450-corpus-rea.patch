@@ -1,0 +1,62 @@
+From 7161f23c71702cffac160364fabf90c9a16758ac Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 15 Aug 2026 05:18:47 -0400
+Subject: [PATCH 09240/11362] [conductor] Pre-gate block: Gated on Exp6450
+ corpus readiness: held-out verifier budget allocation
+
+1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus.sota_corpus_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 2 ++
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_6453_held_verifier_budget_allocation_ab.json   | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6878c01333..d9308d6ffa 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 204, "phase": "iteration_start", "last_beat": "2026-08-15T09:16:43Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 205, "phase": "iteration_start", "last_beat": "2026-08-15T09:18:46Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 03621c9383..78ca3bf2e1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16039,3 +16039,5 @@ code |
+ | 2026-08-15 09:12 UTC | Gated on Exp6450 corpus readiness: typed fact grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
+ | 2026-08-15 09:14 UTC | Gated on Exp6450 corpus readiness: typed fact grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
+ | 2026-08-15 09:16 UTC | Gated on Exp6451 grounding readiness: representati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6451-typed-fact-grounding-fixed-policy-lo |
++| 2026-08-15 09:16 UTC | Gated on Exp6450 corpus readiness: held-out verifi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
++| 2026-08-15 09:18 UTC | Gated on Exp6451 grounding readiness: representati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6451-typed-fact-grounding-fixed-policy-lo |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a4bc0eac9b..098ac6b1a6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 204, "phase": "iteration_start", "started_at": "2026-08-15T09:16:43Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 205, "phase": "iteration_start", "started_at": "2026-08-15T09:18:46Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6453_held_verifier_budget_allocation_ab.json b/results/experiment_6453_held_verifier_budget_allocation_ab.json
+index 4f4b75f4fe..2f78e0ce03 100644
+--- a/results/experiment_6453_held_verifier_budget_allocation_ab.json
++++ b/results/experiment_6453_held_verifier_budget_allocation_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 6453,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-15",
+-  "started_at": "2026-08-15T09:16:43.889897+00:00",
+-  "finished_at": "2026-08-15T09:16:43.889897+00:00",
++  "started_at": "2026-08-15T09:18:46.975087+00:00",
++  "finished_at": "2026-08-15T09:18:46.975087+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6450 corpus readiness: held-out verifier budget allocation",
+-- 
+2.55.0
+

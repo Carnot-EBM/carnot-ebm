@@ -1,0 +1,25 @@
+From c3518d0ff601e09716d4d3f5e1efa67a537915bc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 08:02:43 -0400
+Subject: [PATCH 10516/11362] [conductor] Checkpoint: preserve uncommitted work
+ (self-heal failed)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.pretest-poison-counter.json | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index 9e26dfeeb6..a7db5cae45 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1 +1,3 @@
+-{}
+\ No newline at end of file
++{
++  "tests/python/test_experiment_6814_selective_priority_arbiter_cold_audit.py": 1
++}
+\ No newline at end of file
+-- 
+2.55.0
+

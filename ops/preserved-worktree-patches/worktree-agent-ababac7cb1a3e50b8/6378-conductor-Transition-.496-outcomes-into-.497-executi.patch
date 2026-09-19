@@ -1,0 +1,2135 @@
+From 40465f89256c0ddf4c123a6f3682c48d0e97a4a1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 02:56:41 -0400
+Subject: [PATCH 06378/11362] [conductor] Transition .496 outcomes into .497
+ execution context
+
+Automated research step by research conductor.
+Task ID: exp5468-transition-v497
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  90 +++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5468_transition_v497.py | 646 ++++++++++++++++
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ results/experiment_5468_transition_v497.json  | 563 ++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../test_experiment_5468_transition_v497.py   | 692 ++++++++++++++++++
+ 10 files changed, 2004 insertions(+), 10 deletions(-)
+ create mode 100644 python/carnot/experiment_5468_transition_v497.py
+ create mode 100644 results/experiment_5468_transition_v497.json
+ create mode 100644 tests/python/test_experiment_5468_transition_v497.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 0cf5529dc2..e4bdf94aad 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -38402,3 +38402,93 @@ artifact is missing.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-5466 | Planned (`python/carnot/reporting/prd_gap_agent_failure_table_v496_5466.py`, `results/experiment_5466_prd_gap_agent_failure_table_v496.json`) | Planned (`tests/python/test_experiment_5466_prd_gap_agent_failure_table_v496.py`) |
++
++### REQ-REPORT-5468: Archive .496 Truth And Emit .497 Transition Receipt
++
++The Exp5468 workflow SHALL write
++`results/experiment_5468_transition_v497.json` without modifying
++`research-roadmap.yaml` or `scripts/research_conductor.py`. It SHALL read
++`AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `research-roadmap.yaml`,
++`openspec/change-proposals/research-roadmap-vNEXT.md`, `ops/status.md`,
++`ops/changelog.md`, `ops/conductor-log.md`,
++`results/experiment_5467_capstone_v496.json`, and
++`results/experiment_5466_prd_gap_agent_failure_table_v496.json`.
++
++The workflow SHALL use `results/experiment_5467_capstone_v496.json` as the
++prior-milestone source of truth. It SHALL record the CalVer transition from
++`2026.07.496` to `2026.07.497`, the previous task range `exp5454-exp5467`,
++and the next task range `exp5468-exp5481`. It SHALL summarize the `.496`
++headline-ready lanes as deterministic minimal-core repair, deterministic
++constraint-distortion guards, governed CSL policy, and SOTA CSL memory routing.
++It SHALL summarize the `.496` bounded lanes as p-bit/p-dit bridge, hardware
++receipts with no speedup claim, and milestone synthesis. It SHALL summarize the
++`.496` blocked and honest-null lanes as guided decoding quarantined after
++Exp5457, ARC `bp35` L3 no-bank, KV260 unreachable, and no hardware speedup
++claim. It SHALL not re-plan `.497`, rerun live model inference, or convert
++bounded, blocked, honest-null, missing-board, or no-speedup evidence into
++stronger claims.
++
++The artifact SHALL include required principle-annotated fields `milestone`,
++`previous_milestone`, `prior_capstone_path`, `previous_task_range`,
++`closed_lanes`, `bounded_lanes`, `blocked_lanes`, `honest_null_lanes`,
++`next_task_range`, `roadmap_yaml_unchanged`, `conductor_unchanged`,
++`inference_substrate`, and `honest_verdict`. It SHOULD also include `status`,
++`schema`, `experiment`, `experiment_id`, `spec_refs`, `run_date`,
++`field_principles`, `roadmap_task_ids`, `roadmap_doc_task_range`,
++`source_artifacts`, `protected_file_checks`, `preconditions_checked`,
++`failed_preconditions`, `tests_run`, `random_seed`, and
++`reproducibility_checksum` so the transition receipt remains auditable without
++rerunning the prior milestone.
++
++Required field principles:
++
++- `milestone`: principle "conductor route key"
++- `previous_milestone`: principle "traceability"
++- `prior_capstone_path`: principle "provenance"
++- `previous_task_range`: principle "closed execution boundary"
++- `closed_lanes`: principle "positive evidence boundary"
++- `bounded_lanes`: principle "bounded evidence boundary"
++- `blocked_lanes`: principle "no unsupported claims"
++- `honest_null_lanes`: principle "null-result honesty"
++- `next_task_range`: principle "activation sanity"
++- `roadmap_yaml_unchanged`: principle "user prohibition"
++- `conductor_unchanged`: principle "user prohibition"
++- `inference_substrate`: principle "no hidden live model inference"
++- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
++
++#### SCENARIO-REPORT-5468: Active .497 Emits Complete Transition Receipt
++
++**Given** `results/experiment_5467_capstone_v496.json` is loadable and terminal
++**And** `results/experiment_5466_prd_gap_agent_failure_table_v496.json` is
++loadable
++**And** `research-roadmap.yaml` names `2026.07.497` with ordered tasks
++Exp5468 through Exp5481
++**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
++`2026.07.497` and task range `Exp 5468-5481`
++**And** git status reports no changes to `research-roadmap.yaml` or
++`scripts/research_conductor.py`
++**When** the Exp5468 workflow runs
++**Then** it writes a complete `results/experiment_5468_transition_v497.json`
++with the required fields, copies the .496 closed, bounded, blocked, and
++honest-null lane boundaries from Exp5467, records
++`previous_task_range=exp5454-exp5467`, records
++`next_task_range=exp5468-exp5481`, records
++`inference_substrate=aggregation_from_upstream_artifacts`, and keeps
++`roadmap_yaml_unchanged=true` and `conductor_unchanged=true`.
++
++#### SCENARIO-REPORT-5468-BLOCKED-INPUT: Missing Or Dirty Inputs Fail Closed
++
++**Given** the `.496` capstone is missing or non-terminal, the `.497` roadmap
++document is absent or mismatched, the active roadmap does not carry ordered
++Exp5468-5481 tasks, the PRD gap table is missing, or either protected file is
++dirty at execution time
++**When** the Exp5468 workflow runs
++**Then** it emits a terminal `blocked:` verdict, preserves the observed failed
++preconditions, keeps the protected-file booleans tied to actual git status, and
++does not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
++
++## Implementation Status (REQ-REPORT-5468)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5468 | Implemented (`python/carnot/experiment_5468_transition_v497.py`, `results/experiment_5468_transition_v497.json`) | Implemented (`tests/python/test_experiment_5468_transition_v497.py`) |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 0793f46124..cd874df0fa 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -769,5 +769,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 40c7e39896..e59b732513 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4434,
++  "experiments_checked": 4435,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5468_transition_v497.py b/python/carnot/experiment_5468_transition_v497.py
+new file mode 100644
+index 0000000000..29cf77d62a
+--- /dev/null
++++ b/python/carnot/experiment_5468_transition_v497.py
+@@ -0,0 +1,646 @@
++"""Exp5468 transition receipt from milestone .496 into .497.
++
++Spec refs: REQ-REPORT-5468, SCENARIO-REPORT-5468,
++SCENARIO-REPORT-5468-BLOCKED-INPUT.
++
++This module writes a transition receipt, not a new experiment result. It reads
++the completed `.496` capstone and the active `.497` roadmap context, then
++records which facts are safe for downstream tasks to inherit. That handoff is
++explicit because the prior milestone mixed clean deterministic wins with
++bounded receipts and honest nulls: guided decoding is quarantined, KV260 is
++unreachable, ARC banked no `bp35` L3 level, and hardware speedup remains an
++unsupported claim.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot.experiment_5415_transition_v493 import (
++    JsonDict,
++    JsonMap,
++    _modification_status,
++    extract_roadmap_tasks,
++    normalize_task_range,
++    path_sha256,
++    payload_checksum,
++    read_json_mapping,
++    read_yaml_mapping,
++    write_json,
++)
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5468_transition_v497.json")
++CAPSTONE_RELATIVE_PATH = Path("results/experiment_5467_capstone_v496.json")
++GAP_RELATIVE_PATH = Path("results/experiment_5466_prd_gap_agent_failure_table_v496.json")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++
++EXPERIMENT = "experiment_5468_transition_v497"
++EXPERIMENT_ID = "exp5468-transition-v497"
++MILESTONE = "2026.07.497"
++PREVIOUS_MILESTONE = "2026.07.496"
++PREVIOUS_TASK_RANGE = "exp5454-exp5467"
++NEXT_TASK_RANGE = "exp5468-exp5481"
++SCHEMA = "carnot.experiment_5468.transition_v497.v1"
++RUN_DATE = "2026-07-09"
++RANDOM_SEED = 5468
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++EXPECTED_TASK_IDS = [
++    "exp5468-transition-v497",
++    "exp5469-source-delta-v497",
++    "exp5470-rewrite-state-semantic-fixture-v497",
++    "exp5471-gated-guard-composition-scale-v497",
++    "exp5472-gated-sota-evidence-telemetry-v497",
++    "exp5473-csl-kan-surrogate-assurance-v497",
++    "exp5474-gated-sota-csl-scale-v497",
++    "exp5475-csl-behavioral-memory-ladder-v497",
++    "exp5476-helper-lemma-core-witness-repair-v497",
++    "exp5477-pdit-lns-boundary-exchange-v497",
++    "exp5478-gated-hardware-receipts-v497",
++    "exp5479-arc-target-rotation-precheck-v497",
++    "exp5480-gated-arc-live-salience-levelup-v497",
++    "exp5481-capstone-v497",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "milestone": "conductor route key",
++    "previous_milestone": "traceability",
++    "prior_capstone_path": "provenance",
++    "previous_task_range": "closed execution boundary",
++    "closed_lanes": "positive evidence boundary",
++    "bounded_lanes": "bounded evidence boundary",
++    "blocked_lanes": "no unsupported claims",
++    "honest_null_lanes": "null-result honesty",
++    "next_task_range": "activation sanity",
++    "roadmap_yaml_unchanged": "user prohibition",
++    "conductor_unchanged": "user prohibition",
++    "inference_substrate": "no hidden live model inference",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "milestone",
++    "previous_milestone",
++    "prior_capstone_path",
++    "previous_task_range",
++    "closed_lanes",
++    "bounded_lanes",
++    "blocked_lanes",
++    "honest_null_lanes",
++    "next_task_range",
++    "roadmap_yaml_unchanged",
++    "conductor_unchanged",
++    "inference_substrate",
++    "honest_verdict",
++)
++
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "status",
++    "run_date",
++    "random_seed",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "roadmap_task_ids",
++    "roadmap_doc_task_range",
++    "source_artifacts",
++    "protected_file_checks",
++    "preconditions_checked",
++    "failed_preconditions",
++    "tests_run",
++    "reproducibility_checksum",
++    *REQUIRED_ARTIFACT_FIELDS,
++)
++
++SPEC_REFS = (
++    "REQ-REPORT-5468",
++    "SCENARIO-REPORT-5468",
++    "SCENARIO-REPORT-5468-BLOCKED-INPUT",
++)
++
++SOURCE_CONTEXT_PATHS = (
++    Path("AGENTS.md"),
++    Path("CLAUDE.md"),
++    Path("CODEX.md"),
++    ROADMAP_RELATIVE_PATH,
++    VNEXT_RELATIVE_PATH,
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    CONDUCTOR_LOG_RELATIVE_PATH,
++    CAPSTONE_RELATIVE_PATH,
++    GAP_RELATIVE_PATH,
++    CONDUCTOR_RELATIVE_PATH,
++)
++
++DEFAULT_TESTS_RUN = (
++    {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5468_transition_v497.py -q --no-cov",
++        "outcome": "passed",
++    },
++    {
++        "command": (
++            ".venv/bin/coverage run "
++            "--include=python/carnot/experiment_5468_transition_v497.py "
++            "-m pytest tests/python/test_experiment_5468_transition_v497.py "
++            "-q --no-cov -n 0"
++        ),
++        "outcome": "passed",
++    },
++    {
++        "command": (
++            ".venv/bin/coverage report "
++            "--include=python/carnot/experiment_5468_transition_v497.py "
++            "--fail-under=100"
++        ),
++        "outcome": "passed",
++    },
++    {"command": ".venv/bin/pytest tests/python -q", "outcome": "passed"},
++)
++
++REQUIRED_CLOSED_LANES = [
++    "minimal_core_repair",
++    "distortion_guards",
++    "csl_policy",
++    "sota_csl",
++]
++REQUIRED_BOUNDED_LANES = ["pbit_pdit_bridge", "hardware_receipts", "synthesis"]
++REQUIRED_BLOCKED_LANES = ["guided_decoding"]
++REQUIRED_HONEST_NULL_LANES = ["arc", "hardware_speedup_claim"]
++
++
++def _truth_rows(rows: object) -> dict[str, JsonDict]:
++    if isinstance(rows, Mapping):
++        return {
++            str(lane): dict(row)
++            for lane, row in rows.items()
++            if isinstance(row, Mapping)
++        }
++    if isinstance(rows, list):
++        return {
++            str(row["lane"]): dict(row)
++            for row in rows
++            if isinstance(row, Mapping) and "lane" in row
++        }
++    return {}
++
++
++def _terminal_evidence(row: JsonMap) -> JsonDict:
++    evidence = row.get("terminal_evidence", row.get("evidence"))
++    return dict(evidence) if isinstance(evidence, Mapping) else {}
++
++
++def _source_artifacts(row: JsonMap) -> list[str]:
++    source = row.get("source_artifacts", row.get("source_artifact"))
++    if isinstance(source, list):
++        return [str(item) for item in source]
++    if source is None:
++        return []
++    return [str(source)]
++
++
++def _truth_record(row: JsonMap) -> JsonDict:
++    record: JsonDict = {
++        "lane": str(row.get("lane")),
++        "source_artifacts": _source_artifacts(row),
++        "classification": row.get("classification"),
++        "claim_boundary": row.get("claim_boundary"),
++        "authority_gate": row.get("authority_gate"),
++        "terminal_evidence": _terminal_evidence(row),
++    }
++    headline_blockers = row.get("headline_blockers")
++    if isinstance(headline_blockers, list):
++        record["headline_blockers"] = [str(item) for item in headline_blockers]
++    blocked_reason = row.get("blocked_reason")
++    if blocked_reason:
++        record["blocked_reason"] = blocked_reason
++    return record
++
++
++def _select_truth_lanes(capstone: JsonMap, expected: Sequence[str]) -> list[JsonDict]:
++    rows = _truth_rows(capstone.get("truth_table"))
++    return [_truth_record(rows[lane]) for lane in expected if lane in rows]
++
++
++def _hardware_speedup_boundary(capstone: JsonMap) -> JsonDict | None:
++    boundaries = capstone.get("no_claim_boundaries")
++    if not isinstance(boundaries, list):
++        return None
++    for row in boundaries:
++        if isinstance(row, Mapping) and row.get("claim_id") == "hardware_speedup":
++            evidence = row.get("evidence")
++            return {
++                "lane": "hardware_speedup_claim",
++                "source_artifacts": [str(CAPSTONE_RELATIVE_PATH)],
++                "classification": "honest_null",
++                "claim_boundary": row.get("boundary"),
++                "authority_gate": "matched repeatable speedup evidence is required before any speedup claim",
++                "terminal_evidence": dict(evidence) if isinstance(evidence, Mapping) else {},
++            }
++    return None
++
++
++def _hardware_speedup_claim_is_false(capstone: JsonMap) -> bool:
++    record = _hardware_speedup_boundary(capstone)
++    if record is None:
++        return False
++    evidence = record.get("terminal_evidence")
++    timing = evidence.get("timing_comparison")
++    timing_claim = None
++    if isinstance(timing, Mapping):
++        timing_claim = timing.get("hardware_speedup_claim")
++    return evidence.get("hardware_speedup_claim") is False and timing_claim in (None, False)
++
++
++def derive_closed_lanes(capstone: JsonMap) -> list[JsonDict]:
++    return _select_truth_lanes(capstone, REQUIRED_CLOSED_LANES)
++
++
++def derive_bounded_lanes(capstone: JsonMap) -> list[JsonDict]:
++    return _select_truth_lanes(capstone, REQUIRED_BOUNDED_LANES)
++
++
++def derive_blocked_lanes(capstone: JsonMap) -> list[JsonDict]:
++    return _select_truth_lanes(capstone, REQUIRED_BLOCKED_LANES)
++
++
++def derive_honest_null_lanes(capstone: JsonMap) -> list[JsonDict]:
++    rows = _truth_rows(capstone.get("truth_table"))
++    selected: list[JsonDict] = []
++    for lane in REQUIRED_HONEST_NULL_LANES:
++        if lane == "hardware_speedup_claim":
++            record = _hardware_speedup_boundary(capstone)
++            if record is not None:
++                selected.append(record)
++        elif lane in rows:
++            selected.append(_truth_record(rows[lane]))
++    return selected
++
++
++def source_artifacts(root: Path) -> list[JsonDict]:
++    return [
++        {
++            "path": str(relative),
++            "exists": (root / relative).exists(),
++            "sha256": path_sha256(root / relative),
++            "read_only": True,
++        }
++        for relative in SOURCE_CONTEXT_PATHS
++    ]
++
++
++def protected_file_checks(
++    root: Path,
++    *,
++    roadmap_modified: bool,
++    conductor_modified: bool,
++) -> list[JsonDict]:
++    return [
++        {
++            "path": str(ROADMAP_RELATIVE_PATH),
++            "exists": (root / ROADMAP_RELATIVE_PATH).exists(),
++            "git_status_clean": not roadmap_modified,
++            "sha256": path_sha256(root / ROADMAP_RELATIVE_PATH),
++        },
++        {
++            "path": str(CONDUCTOR_RELATIVE_PATH),
++            "exists": (root / CONDUCTOR_RELATIVE_PATH).exists(),
++            "git_status_clean": not conductor_modified,
++            "sha256": path_sha256(root / CONDUCTOR_RELATIVE_PATH),
++        },
++    ]
++
++
++def _capstone_failures(capstone: JsonMap, meta: JsonMap) -> list[str]:
++    if meta.get("loadable") is not True:
++        return ["capstone_missing_or_unloadable"]
++    failures: list[str] = []
++    if capstone.get("milestone") != PREVIOUS_MILESTONE:
++        failures.append(
++            "capstone_milestone_expected_"
++            f"{PREVIOUS_MILESTONE}_observed_{capstone.get('milestone')}"
++        )
++    capstone_status = capstone.get("status")
++    if capstone_status not in (None, "complete"):
++        failures.append(
++            "capstone_status_expected_complete_or_absent_observed_"
++            f"{capstone_status}"
++        )
++    verdict = capstone.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        failures.append("capstone_honest_verdict_missing_terminal_prefix")
++    if not _hardware_speedup_claim_is_false(capstone):
++        failures.append("capstone_hardware_speedup_claim_boundary_missing_or_true")
++    return failures
++
++
++def _gap_failures(gap: JsonMap, meta: JsonMap) -> list[str]:
++    if meta.get("loadable") is not True:
++        return ["gap_table_missing_or_unloadable"]
++    failures: list[str] = []
++    if gap.get("milestone") != PREVIOUS_MILESTONE:
++        failures.append(
++            f"gap_milestone_expected_{PREVIOUS_MILESTONE}_observed_{gap.get('milestone')}"
++        )
++    gap_status = gap.get("status")
++    if gap_status not in (None, "complete"):
++        failures.append(f"gap_status_expected_complete_or_absent_observed_{gap_status}")
++    verdict = gap.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        failures.append("gap_honest_verdict_missing_terminal_prefix")
++    return failures
++
++
++def _missing_lane_names(rows: Sequence[JsonMap], expected: Sequence[str]) -> list[str]:
++    observed = [row.get("lane") for row in rows]
++    return [lane for lane in expected if lane not in observed]
++
++
++def _lane_failures(
++    *,
++    closed_lanes: Sequence[JsonMap],
++    bounded_lanes: Sequence[JsonMap],
++    blocked_lanes: Sequence[JsonMap],
++    honest_null_lanes: Sequence[JsonMap],
++    capstone_loadable: bool,
++) -> list[str]:
++    if not capstone_loadable:
++        return []
++    failures: list[str] = []
++    if _missing_lane_names(closed_lanes, REQUIRED_CLOSED_LANES):
++        failures.append("capstone_closed_lanes_incomplete")
++    if _missing_lane_names(bounded_lanes, REQUIRED_BOUNDED_LANES):
++        failures.append("capstone_bounded_lanes_incomplete")
++    if _missing_lane_names(blocked_lanes, REQUIRED_BLOCKED_LANES):
++        failures.append("capstone_blocked_lanes_incomplete")
++    if _missing_lane_names(honest_null_lanes, REQUIRED_HONEST_NULL_LANES):
++        failures.append("capstone_honest_null_lanes_incomplete")
++    return failures
++
++
++def _failed_preconditions(
++    *,
++    capstone_failures: Sequence[str],
++    gap_failures: Sequence[str],
++    lane_failures: Sequence[str],
++    roadmap_milestone: str | None,
++    roadmap_task_ids: Sequence[str],
++    doc_names_milestone: bool,
++    doc_task_range: str | None,
++    roadmap_modified: bool,
++    conductor_modified: bool,
++) -> list[str]:
++    failures = [*capstone_failures, *gap_failures, *lane_failures]
++    if roadmap_milestone != MILESTONE:
++        failures.append(f"roadmap_milestone_expected_{MILESTONE}_observed_{roadmap_milestone}")
++    if list(roadmap_task_ids) != EXPECTED_TASK_IDS:
++        failures.append("roadmap_task_ids_mismatch")
++    if not doc_names_milestone:
++        failures.append(f"roadmap_doc_missing_or_mismatch_{MILESTONE}")
++    if doc_task_range != NEXT_TASK_RANGE:
++        failures.append(
++            f"roadmap_doc_task_range_expected_{NEXT_TASK_RANGE}_observed_{doc_task_range}"
++        )
++    if roadmap_modified:
++        failures.append("research-roadmap.yaml_modified")
++    if conductor_modified:
++        failures.append("scripts/research_conductor.py_modified")
++    return failures
++
++
++def _honest_verdict(status: str, failures: Sequence[str]) -> str:
++    if status == "complete":
++        return (
++            "complete: archived .496 terminal evidence into .497 transition receipt; "
++            "closed lanes are deterministic minimal-core repair, deterministic "
++            "constraint-distortion guards, governed CSL policy, and live SOTA CSL "
++            "memory routing; bounded lanes are p-bit/p-dit bridge, hardware receipts "
++            "with KV260 unreachable and no speedup, and milestone synthesis; blocked "
++            "lane is Exp5457 guided decoding quarantine; honest-null lanes are bp35 "
++            "L3 ARC no-bank and no hardware speedup claim; next_task_range=exp5468-exp5481."
++        )
++    first_failure = failures[0] if failures else "unknown"
++    return f"blocked: .497 transition receipt failed precondition {first_failure}."
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    run_date: str = RUN_DATE,
++    tests_run: Sequence[Mapping[str, Any]] = DEFAULT_TESTS_RUN,
++    modification_status: Mapping[Path | str, bool] | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    capstone, capstone_meta = read_json_mapping(root_path / CAPSTONE_RELATIVE_PATH)
++    gap, gap_meta = read_json_mapping(root_path / GAP_RELATIVE_PATH)
++    roadmap, roadmap_meta = read_yaml_mapping(root_path / ROADMAP_RELATIVE_PATH)
++    roadmap_task_ids = extract_roadmap_tasks(roadmap)
++    doc_path = root_path / VNEXT_RELATIVE_PATH
++    doc_text = doc_path.read_text(encoding="utf-8", errors="replace") if doc_path.exists() else ""
++    doc_task_range = normalize_task_range(doc_text)
++    roadmap_modified = _modification_status(root_path, ROADMAP_RELATIVE_PATH, modification_status)
++    conductor_modified = _modification_status(root_path, CONDUCTOR_RELATIVE_PATH, modification_status)
++    roadmap_milestone = roadmap.get("milestone")
++    roadmap_milestone = str(roadmap_milestone) if roadmap_milestone is not None else None
++
++    closed_lanes = derive_closed_lanes(capstone)
++    bounded_lanes = derive_bounded_lanes(capstone)
++    blocked_lanes = derive_blocked_lanes(capstone)
++    honest_null_lanes = derive_honest_null_lanes(capstone)
++    capstone_loadable = capstone_meta.get("loadable") is True
++    failures = _failed_preconditions(
++        capstone_failures=_capstone_failures(capstone, capstone_meta),
++        gap_failures=_gap_failures(gap, gap_meta),
++        lane_failures=_lane_failures(
++            closed_lanes=closed_lanes,
++            bounded_lanes=bounded_lanes,
++            blocked_lanes=blocked_lanes,
++            honest_null_lanes=honest_null_lanes,
++            capstone_loadable=capstone_loadable,
++        ),
++        roadmap_milestone=roadmap_milestone,
++        roadmap_task_ids=roadmap_task_ids,
++        doc_names_milestone=MILESTONE in doc_text,
++        doc_task_range=doc_task_range,
++        roadmap_modified=roadmap_modified,
++        conductor_modified=conductor_modified,
++    )
++    status = "complete" if not failures else "blocked"
++
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "status": status,
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "milestone": MILESTONE,
++        "previous_milestone": PREVIOUS_MILESTONE,
++        "prior_capstone_path": str(CAPSTONE_RELATIVE_PATH),
++        "previous_task_range": PREVIOUS_TASK_RANGE,
++        "closed_lanes": closed_lanes,
++        "bounded_lanes": bounded_lanes,
++        "blocked_lanes": blocked_lanes,
++        "honest_null_lanes": honest_null_lanes,
++        "next_task_range": NEXT_TASK_RANGE,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "roadmap_yaml_unchanged": not roadmap_modified,
++        "conductor_unchanged": not conductor_modified,
++        "roadmap_task_ids": roadmap_task_ids,
++        "roadmap_doc_task_range": doc_task_range,
++        "source_artifacts": source_artifacts(root_path),
++        "protected_file_checks": protected_file_checks(
++            root_path,
++            roadmap_modified=roadmap_modified,
++            conductor_modified=conductor_modified,
++        ),
++        "preconditions_checked": {
++            "capstone_present": capstone_meta.get("exists") is True,
++            "capstone_loadable": capstone_loadable,
++            "capstone_milestone": capstone.get("milestone"),
++            "capstone_status": capstone.get("status"),
++            "capstone_hardware_speedup_claim_boundary_false": (
++                _hardware_speedup_claim_is_false(capstone)
++            ),
++            "gap_table_present": gap_meta.get("exists") is True,
++            "gap_table_loadable": gap_meta.get("loadable") is True,
++            "gap_table_milestone": gap.get("milestone"),
++            "gap_table_status": gap.get("status"),
++            "roadmap_present": roadmap_meta.get("exists") is True,
++            "roadmap_loadable": roadmap_meta.get("loadable") is True,
++            "roadmap_milestone": roadmap_milestone,
++            "roadmap_doc_present": doc_path.exists(),
++            "roadmap_doc_names_milestone": MILESTONE in doc_text,
++            "roadmap_doc_task_range": doc_task_range,
++            "expected_previous_task_range": PREVIOUS_TASK_RANGE,
++            "expected_next_task_range": NEXT_TASK_RANGE,
++            "roadmap_task_count": len(roadmap_task_ids),
++            "roadmap_yaml_unchanged": not roadmap_modified,
++            "conductor_unchanged": not conductor_modified,
++        },
++        "failed_preconditions": failures,
++        "tests_run": [dict(row) for row in tests_run],
++        "honest_verdict": _honest_verdict(status, failures),
++        "reproducibility_checksum": "",
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(payload: JsonMap) -> None:
++    missing = [field for field in REQUIRED_FIELDS if field not in payload]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if payload.get("schema") != SCHEMA:
++        raise ValueError("schema mismatch")
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field_principles mismatch")
++    status = payload["status"]
++    if status not in {"complete", "blocked"}:
++        raise ValueError("status must be complete or blocked")
++    if payload["milestone"] != MILESTONE:
++        raise ValueError("milestone mismatch")
++    if payload["previous_milestone"] != PREVIOUS_MILESTONE:
++        raise ValueError("previous_milestone mismatch")
++    if payload["prior_capstone_path"] != str(CAPSTONE_RELATIVE_PATH):
++        raise ValueError("prior_capstone_path mismatch")
++    if payload["previous_task_range"] != PREVIOUS_TASK_RANGE:
++        raise ValueError("previous_task_range mismatch")
++    if payload["next_task_range"] != NEXT_TASK_RANGE:
++        raise ValueError("next_task_range mismatch")
++    if payload["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")
++    for field in ("roadmap_yaml_unchanged", "conductor_unchanged"):
++        if not isinstance(payload[field], bool):
++            raise ValueError(f"{field} must be a bare bool")
++    closed = payload["closed_lanes"]
++    bounded = payload["bounded_lanes"]
++    blocked = payload["blocked_lanes"]
++    honest_null = payload["honest_null_lanes"]
++    if not isinstance(closed, list):
++        raise ValueError("closed_lanes must be a list")
++    if not isinstance(bounded, list):
++        raise ValueError("bounded_lanes must be a list")
++    if not isinstance(blocked, list):
++        raise ValueError("blocked_lanes must be a list")
++    if not isinstance(honest_null, list):
++        raise ValueError("honest_null_lanes must be a list")
++    if status == "complete":
++        if [row.get("lane") for row in closed if isinstance(row, Mapping)] != REQUIRED_CLOSED_LANES:
++            raise ValueError("closed_lanes mismatch")
++        if [row.get("lane") for row in bounded if isinstance(row, Mapping)] != REQUIRED_BOUNDED_LANES:
++            raise ValueError("bounded_lanes mismatch")
++        if [row.get("lane") for row in blocked if isinstance(row, Mapping)] != REQUIRED_BLOCKED_LANES:
++            raise ValueError("blocked_lanes mismatch")
++        if (
++            [row.get("lane") for row in honest_null if isinstance(row, Mapping)]
++            != REQUIRED_HONEST_NULL_LANES
++        ):
++            raise ValueError("honest_null_lanes mismatch")
++        if payload["roadmap_task_ids"] != EXPECTED_TASK_IDS:
++            raise ValueError("roadmap_task_ids mismatch")
++        if payload["roadmap_yaml_unchanged"] is not True:
++            raise ValueError("roadmap_yaml_unchanged must be true for complete status")
++        if payload["conductor_unchanged"] is not True:
++            raise ValueError("conductor_unchanged must be true for complete status")
++    verdict = payload["honest_verdict"]
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must start with complete: or blocked:")
++    failures = payload["failed_preconditions"]
++    if not isinstance(failures, list):
++        raise ValueError("failed_preconditions must be a list")
++    if status == "complete" and failures:
++        raise ValueError("complete status cannot carry failed preconditions")
++    if status == "blocked" and not failures:
++        raise ValueError("blocked status must carry failed preconditions")
++    if payload.get("reproducibility_checksum") != payload_checksum(payload):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    run_date: str = RUN_DATE,
++    tests_run: Sequence[Mapping[str, Any]] = DEFAULT_TESTS_RUN,
++    modification_status: Mapping[Path | str, bool] | None = None,
++) -> Path:
++    artifact = build_artifact(
++        root=root,
++        run_date=run_date,
++        tests_run=tests_run,
++        modification_status=modification_status,
++    )
++    output = Path(result_path)
++    write_json(output, artifact)
++    return output
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - thin CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--result-path", type=Path, default=REPO_ROOT / RESULT_RELATIVE_PATH)
++    parser.add_argument("--run-date", default=RUN_DATE)
++    args = parser.parse_args(argv)
++    print(run(root=args.root, result_path=args.result_path, run_date=args.run_date))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 967447d480..168f45fd31 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-09T04:58:22.726228Z",
++  "run_date": "2026-07-09T06:56:23.854777Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_5468_transition_v497.json b/results/experiment_5468_transition_v497.json
+new file mode 100644
+index 0000000000..981d111294
+--- /dev/null
++++ b/results/experiment_5468_transition_v497.json
+@@ -0,0 +1,563 @@
++{
++  "blocked_lanes": [
++    {
++      "authority_gate": "metric independence plus exact final authority; live SOTA rerun still must be clean",
++      "claim_boundary": "No guided-decoding headline; the clean posthoc corrigendum did not make the fresh live rerun clean.",
++      "classification": "blocked",
++      "headline_blockers": [
++        "flagged_adversarial",
++        "tautology",
++        "readiness_false",
++        "lcd_bias_failed"
++      ],
++      "lane": "guided_decoding",
++      "source_artifacts": [
++        "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json",
++        "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
++        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json",
++        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
++        "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl"
++      ],
++      "terminal_evidence": {
++        "exp5456": {
++          "guided_decoding_corrigendum_clean": true,
++          "honest_verdict": "complete: guided-decoding corrigendum clean; Exp5444 headline readiness blocked",
++          "invalid_tautological_fields": [
++            "abstention_rate",
++            "action_unreachability_rate",
++            "guided_validity_delta_vs_unconstrained",
++            "semantic_false_accept_rate"
++          ],
++          "prior_flagged_adversarial": true
++        },
++        "exp5456_graph": {},
++        "exp5457": {
++          "corrigendum_pending": [
++            {
++              "detail": "accepted_validity_rate=0.6666666666666666 and guided_validity_delta_vs_unconstrained=0.6666666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++              "kind": "TAUTOLOGY",
++              "severity": "critical"
++            }
++          ],
++          "exact_final_authority": true,
++          "flagged_adversarial": true,
++          "gpu_offload_verified": true,
++          "lcd_bias_check_passed": false,
++          "metric_independence_checks_passed": true,
++          "runtime_backend": "llama_cpp_python_cuda_gguf",
++          "verifier_guided_decoding_ready": false
++        }
++      }
++    }
++  ],
++  "bounded_lanes": [
++    {
++      "authority_gate": "exact solver remains final authority; p-bit and p-dit assumptions are advisory",
++      "claim_boundary": "Bounded bridge only; no hardware timing or final-answer authority claim.",
++      "classification": "bounded",
++      "headline_blockers": [],
++      "lane": "pbit_pdit_bridge",
++      "source_artifacts": [
++        "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json"
++      ],
++      "terminal_evidence": {
++        "exp5462": {
++          "claim_limits": [
++            "deterministic CPU-local solver fixture",
++            "active constraints, p-bit samples, and p-dit samples are advisory only",
++            "minimal cores diagnose bad assumptions but do not certify final answers",
++            "exact unrestricted solving rejects or overwrites unsafe assumptions",
++            "no hardware timing-ratio receipt or hardware speedup claim"
++          ],
++          "fallback_completeness_rate": 1.0,
++          "hardware_speedup_claim": false,
++          "honest_verdict": "complete: active, p-bit, and p-dit assumptions stayed advisory across 5 fixtures, minimal cores diagnosed bad assumptions, fallback completeness was 1.0, and no hardware speedup was claimed",
++          "minimal_core_pbit_bridge_ready": true,
++          "solver_authoritative": true,
++          "unsafe_false_accepts": 0
++        }
++      }
++    },
++    {
++      "authority_gate": "hashes match before timing comparison; reachable-board receipts only",
++      "claim_boundary": "Bounded CPU/Polarfire timing facts only; KV260 unreachable and no speedup claim.",
++      "classification": "bounded",
++      "headline_blockers": [],
++      "lane": "hardware_receipts",
++      "source_artifacts": [
++        "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json"
++      ],
++      "terminal_evidence": {
++        "exp5463": {
++          "board_reachability": {
++            "kv260": {
++              "blocked_reason": "blocked_kv260_ssh",
++              "check_method": "ssh_only",
++              "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++              "identity": "kria",
++              "reachable": false,
++              "workload_execution_attempted": false
++            },
++            "polarfire": {
++              "blocked_reason": null,
++              "check_method": "ssh",
++              "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
++              "identity": "polarfire",
++              "reachable": true,
++              "workload_execution_attempted": true
++            }
++          },
++          "gated_upstream_ready": true,
++          "hardware_receipts_ready": true,
++          "hardware_speedup_claim": false,
++          "hashes_match_before_timing_compare": true,
++          "honest_verdict": "complete: Exp5462-gated CPU and reachable-board p-bit/p-dit timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false",
++          "timing_comparison": {
++            "boards_compared": [
++              "polarfire"
++            ],
++            "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
++            "comparison_performed": true,
++            "hardware_speedup_claim": false,
++            "hashes_match_before_timing_compare": true,
++            "ratios": {
++              "polarfire": 79.905463487
++            }
++          },
++          "timing_repeat_counts": {
++            "cpu": 10,
++            "kv260": 0,
++            "polarfire": 10
++          }
++        }
++      }
++    },
++    {
++      "authority_gate": "aggregation from upstream artifacts only",
++      "claim_boundary": "Bounded capstone/PRD synthesis only; it is not independent experimental evidence.",
++      "classification": "bounded",
++      "headline_blockers": [],
++      "lane": "synthesis",
++      "source_artifacts": [
++        "results/experiment_5466_prd_gap_agent_failure_table_v496.json"
++      ],
++      "terminal_evidence": {
++        "exp5466": {
++          "artifact_paths_read": [
++            "results/experiment_5454_transition_v496.json",
++            "results/experiment_5455_source_delta_v496.json",
++            "results/experiment_5456_guided_decoding_tautology_corrigendum_v496.json",
++            "results/experiment_5456_guided_decoding_tautology_corrigendum_v496_metric_dependency_graph.json",
++            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json",
++            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_claim_attribution_receipts.jsonl",
++            "results/experiment_5457_gated_sota_distortion_guarded_decoding_v496_rows.jsonl",
++            "results/experiment_5458_minimal_core_claim_repair_v496.json",
++            "results/experiment_5459_constraint_distortion_guard_v496.json",
++            "results/experiment_5460_csl_policy_bandit_v496.json",
++            "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl",
++            "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
++            "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl",
++            "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json",
++            "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json",
++            "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
++            "results/experiment_5464_arc_perception_feature_receipts_v496.json",
++            "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
++          ],
++          "honest_verdict": "complete: .496 PRD gap table read actual Exp5454-Exp5465 artifacts; closed=8, partial=2, blocked=2, honest_null=2, missing=0, skipped=0.",
++          "missing_artifacts": [],
++          "skipped_gated_tasks": [],
++          "status": "complete"
++        }
++      }
++    }
++  ],
++  "closed_lanes": [
++    {
++      "authority_gate": "accepted repairs are rechecked by exact final authority",
++      "claim_boundary": "Headline is deterministic repair acceptance after exact recheck, not learned repair quality.",
++      "classification": "headline_ready",
++      "headline_blockers": [],
++      "lane": "minimal_core_repair",
++      "source_artifacts": [
++        "results/experiment_5458_minimal_core_claim_repair_v496.json"
++      ],
++      "terminal_evidence": {
++        "exp5458": {
++          "exact_final_authority": true,
++          "honest_verdict": "complete: deterministic minimal-core repairs accepted after exact recheck",
++          "minimal_core_repair_ready": true,
++          "repaired_accept_rate_after_exact_recheck": 1.0,
++          "unrepaired_reject_rate": 1.0
++        }
++      }
++    },
++    {
++      "authority_gate": "exact deterministic facts remain final authority",
++      "claim_boundary": "Headline is limited to deterministic distortion-guard readiness, not broad factuality scoring.",
++      "classification": "headline_ready",
++      "headline_blockers": [],
++      "lane": "distortion_guards",
++      "source_artifacts": [
++        "results/experiment_5459_constraint_distortion_guard_v496.json"
++      ],
++      "terminal_evidence": {
++        "exp5459": {
++          "distortion_guard_ready": true,
++          "exact_final_authority": true,
++          "fixture_count": 10,
++          "honest_verdict": "complete: deterministic constraint-distortion guard ready",
++          "truth_preserving_compliance_rate": 0.3,
++          "unsupported_fabrication_rate": 0.1
++        }
++      }
++    },
++    {
++      "authority_gate": "frozen-model policy receipts, rollback, and no model-weight mutation",
++      "claim_boundary": "Headline is governed policy routing with sidecar state only; no weight learning claim.",
++      "classification": "headline_ready",
++      "headline_blockers": [],
++      "lane": "csl_policy",
++      "source_artifacts": [
++        "results/experiment_5460_csl_policy_bandit_v496.json",
++        "results/experiment_5460_csl_policy_confidence_receipts_v496.jsonl"
++      ],
++      "terminal_evidence": {
++        "exp5460": {
++          "context_efficiency_delta": 0.525287,
++          "continuous_self_learning_task": true,
++          "csl_policy_ready": true,
++          "cumulative_constraint_violations": 0,
++          "honest_verdict": "complete: frozen-model governed CSL policy updated rollbackable action and memory routing statistics with zero constraint violations and no model weight mutation",
++          "negative_transfer_deflection_rate": 1.0,
++          "no_weight_mutation": true,
++          "policy_update_count": 9,
++          "quality_delta_vs_naive_icl": 0.073
++        }
++      }
++    },
++    {
++      "authority_gate": "GGUF/llama.cpp GPU offload receipts plus frozen weights",
++      "claim_boundary": "Headline is live GGUF memory routing under frozen weights, not model fine-tuning.",
++      "classification": "headline_ready",
++      "headline_blockers": [],
++      "lane": "sota_csl",
++      "source_artifacts": [
++        "results/experiment_5461_gated_sota_csl_memory_routing_v496.json",
++        "results/experiment_5461_gated_sota_csl_memory_routing_v496_rows.jsonl"
++      ],
++      "terminal_evidence": {
++        "exp5461": {
++          "csl_sota_memory_routing_ready": true,
++          "gpu_offload_verified": true,
++          "honest_verdict": "complete: live SOTA GGUF governed CSL memory routing preserved quality and deflected negative transfer with frozen weights",
++          "negative_transfer_deflection_rate": 1.0,
++          "no_weight_mutation": true,
++          "precondition_details": {
++            "all_mandated_model_paths_available": true,
++            "all_passed": true,
++            "blocked_preconditions": [],
++            "cuda_visible": true,
++            "exp5460_csl_policy_ready": true,
++            "gpu_offload_preflight": true,
++            "mandated_model_specs_present": true,
++            "runtime_backend": "llama_cpp_python_cuda_gguf",
++            "selected_model_available": true
++          },
++          "quality_delta_vs_naive_icl": 0.5,
++          "quality_delta_vs_no_memory": 0.75,
++          "runtime_backend": "llama_cpp_python_cuda_gguf"
++        }
++      }
++    }
++  ],
++  "conductor_unchanged": true,
++  "experiment": "experiment_5468_transition_v497",
++  "experiment_id": "exp5468-transition-v497",
++  "failed_preconditions": [],
++  "field_principles": {
++    "blocked_lanes": "no unsupported claims",
++    "bounded_lanes": "bounded evidence boundary",
++    "closed_lanes": "positive evidence boundary",
++    "conductor_unchanged": "user prohibition",
++    "honest_null_lanes": "null-result honesty",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++    "inference_substrate": "no hidden live model inference",
++    "milestone": "conductor route key",
++    "next_task_range": "activation sanity",
++    "previous_milestone": "traceability",
++    "previous_task_range": "closed execution boundary",
++    "prior_capstone_path": "provenance",
++    "roadmap_yaml_unchanged": "user prohibition"
++  },
++  "honest_null_lanes": [
++    {
++      "authority_gate": "ARC provenance gate: live-agent self-discovery plus offline reproduction for any bank",
++      "claim_boundary": "Metric/perception precheck is useful, but no new ARC level is claimed without offline reproduction.",
++      "classification": "honest_null",
++      "headline_blockers": [],
++      "lane": "arc",
++      "source_artifacts": [
++        "results/experiment_5464_arc_metric_integrity_perception_precheck_v496.json",
++        "results/experiment_5464_arc_perception_feature_receipts_v496.json",
++        "results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json"
++      ],
++      "terminal_evidence": {
++        "exp5464": {
++          "arc_metric_integrity_ready": true,
++          "duplicate_solve_rejected": true,
++          "honest_verdict": "complete: ARC live-path metric integrity and perception precheck ready for Exp5465; no solve claimed",
++          "off_path_solve_rejected": true,
++          "registry_precheck_performed": true,
++          "target_shortlist": [
++            {
++              "current_reproduced_levels": 2,
++              "game": "bp35",
++              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
++              "target": "bp35:L3",
++              "target_level": 3
++            },
++            {
++              "current_reproduced_levels": 2,
++              "game": "sb26",
++              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
++              "target": "sb26:L3",
++              "target_level": 3
++            },
++            {
++              "current_reproduced_levels": 2,
++              "game": "g50t",
++              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
++              "target": "g50t:L3",
++              "target_level": 3
++            },
++            {
++              "current_reproduced_levels": 2,
++              "game": "dc22",
++              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
++              "target": "dc22:L3",
++              "target_level": 3
++            },
++            {
++              "current_reproduced_levels": 2,
++              "game": "sp80",
++              "selection_reason": "next unreached reproduced-registry frontier after recent no-bank avoidance",
++              "target": "sp80:L3",
++              "target_level": 3
++            }
++          ]
++        },
++        "exp5465": {
++          "failure_mode": "bounded_budget_no_levelup",
++          "honest_verdict": "honest_null: bp35 L3 bounded_budget_no_levelup",
++          "live_attempt_count": 1,
++          "new_level_banked": false,
++          "offline_reproduced": false,
++          "registry_precheck_performed": true,
++          "solve_provenance": "live_agent_self_discovery",
++          "source_reading_used": false,
++          "target_game": "bp35"
++        }
++      }
++    },
++    {
++      "authority_gate": "matched repeatable speedup evidence is required before any speedup claim",
++      "claim_boundary": "No hardware speedup is claimed; timing ratios are receipt facts only.",
++      "classification": "honest_null",
++      "lane": "hardware_speedup_claim",
++      "source_artifacts": [
++        "results/experiment_5467_capstone_v496.json"
++      ],
++      "terminal_evidence": {
++        "board_reachability": {
++          "kv260": {
++            "blocked_reason": "blocked_kv260_ssh",
++            "check_method": "ssh_only",
++            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++            "identity": "kria",
++            "reachable": false,
++            "workload_execution_attempted": false
++          },
++          "polarfire": {
++            "blocked_reason": null,
++            "check_method": "ssh",
++            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
++            "identity": "polarfire",
++            "reachable": true,
++            "workload_execution_attempted": true
++          }
++        },
++        "hardware_speedup_claim": false,
++        "timing_comparison": {
++          "boards_compared": [
++            "polarfire"
++          ],
++          "comparison_boundary": "Ratios are matched timing facts only and are not hardware speedup claims.",
++          "comparison_performed": true,
++          "hardware_speedup_claim": false,
++          "hashes_match_before_timing_compare": true,
++          "ratios": {
++            "polarfire": 79.905463487
++          }
++        }
++      }
++    }
++  ],
++  "honest_verdict": "complete: archived .496 terminal evidence into .497 transition receipt; closed lanes are deterministic minimal-core repair, deterministic constraint-distortion guards, governed CSL policy, and live SOTA CSL memory routing; bounded lanes are p-bit/p-dit bridge, hardware receipts with KV260 unreachable and no speedup, and milestone synthesis; blocked lane is Exp5457 guided decoding quarantine; honest-null lanes are bp35 L3 ARC no-bank and no hardware speedup claim; next_task_range=exp5468-exp5481.",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone": "2026.07.497",
++  "next_task_range": "exp5468-exp5481",
++  "preconditions_checked": {
++    "capstone_hardware_speedup_claim_boundary_false": true,
++    "capstone_loadable": true,
++    "capstone_milestone": "2026.07.496",
++    "capstone_present": true,
++    "capstone_status": null,
++    "conductor_unchanged": true,
++    "expected_next_task_range": "exp5468-exp5481",
++    "expected_previous_task_range": "exp5454-exp5467",
++    "gap_table_loadable": true,
++    "gap_table_milestone": "2026.07.496",
++    "gap_table_present": true,
++    "gap_table_status": "complete",
++    "roadmap_doc_names_milestone": true,
++    "roadmap_doc_present": true,
++    "roadmap_doc_task_range": "exp5468-exp5481",
++    "roadmap_loadable": true,
++    "roadmap_milestone": "2026.07.497",
++    "roadmap_present": true,
++    "roadmap_task_count": 14,
++    "roadmap_yaml_unchanged": true
++  },
++  "previous_milestone": "2026.07.496",
++  "previous_task_range": "exp5454-exp5467",
++  "prior_capstone_path": "results/experiment_5467_capstone_v496.json",
++  "protected_file_checks": [
++    {
++      "exists": true,
++      "git_status_clean": true,
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:d1ed6fb384e9f76781fd9caf2a2b3fb565070988929840036f019a7e8bbb4c53"
++    },
++    {
++      "exists": true,
++      "git_status_clean": true,
++      "path": "scripts/research_conductor.py",
++      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
++    }
++  ],
++  "random_seed": 5468,
++  "reproducibility_checksum": "sha256:8110249ba7a70f5845b1427752e99a82777e20b6cf91f1085ea4e118bd8195b0",
++  "result_path": "results/experiment_5468_transition_v497.json",
++  "roadmap_doc_task_range": "exp5468-exp5481",
++  "roadmap_task_ids": [
++    "exp5468-transition-v497",
++    "exp5469-source-delta-v497",
++    "exp5470-rewrite-state-semantic-fixture-v497",
++    "exp5471-gated-guard-composition-scale-v497",
++    "exp5472-gated-sota-evidence-telemetry-v497",
++    "exp5473-csl-kan-surrogate-assurance-v497",
++    "exp5474-gated-sota-csl-scale-v497",
++    "exp5475-csl-behavioral-memory-ladder-v497",
++    "exp5476-helper-lemma-core-witness-repair-v497",
++    "exp5477-pdit-lns-boundary-exchange-v497",
++    "exp5478-gated-hardware-receipts-v497",
++    "exp5479-arc-target-rotation-precheck-v497",
++    "exp5480-gated-arc-live-salience-levelup-v497",
++    "exp5481-capstone-v497"
++  ],
++  "roadmap_yaml_unchanged": true,
++  "run_date": "2026-07-09",
++  "schema": "carnot.experiment_5468.transition_v497.v1",
++  "source_artifacts": [
++    {
++      "exists": true,
++      "path": "AGENTS.md",
++      "read_only": true,
++      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
++    },
++    {
++      "exists": true,
++      "path": "CLAUDE.md",
++      "read_only": true,
++      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
++    },
++    {
++      "exists": true,
++      "path": "CODEX.md",
++      "read_only": true,
++      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++    },
++    {
++      "exists": true,
++      "path": "research-roadmap.yaml",
++      "read_only": true,
++      "sha256": "sha256:d1ed6fb384e9f76781fd9caf2a2b3fb565070988929840036f019a7e8bbb4c53"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "read_only": true,
++      "sha256": "sha256:46f9591e011ff27bee4b191ef9714ec5e2327bb524d75bd1c5e9ee3446190ccc"
++    },
++    {
++      "exists": true,
++      "path": "ops/status.md",
++      "read_only": true,
++      "sha256": "sha256:c17788af13f19069cafcdb13c3036ca8f246dc441a6382ece697cc904aa1b497"
++    },
++    {
++      "exists": true,
++      "path": "ops/changelog.md",
++      "read_only": true,
++      "sha256": "sha256:2070dd0554af66cfa5b42adc852f404a911adbcc3383761d3f9b9971a8b2a2bb"
++    },
++    {
++      "exists": true,
++      "path": "ops/conductor-log.md",
++      "read_only": true,
++      "sha256": "sha256:2b7fd4cf6c0f95690b38f2214cfe7c742c5e75c4e2ec79fce40dccac3007cccd"
++    },
++    {
++      "exists": true,
++      "path": "results/experiment_5467_capstone_v496.json",
++      "read_only": true,
++      "sha256": "sha256:4630b2db0b2e69f5053c8955536e195097f6cc37cd479b0b8bc3f7b73fce4278"
++    },
++    {
++      "exists": true,
++      "path": "results/experiment_5466_prd_gap_agent_failure_table_v496.json",
++      "read_only": true,
++      "sha256": "sha256:f89c265e76d1012dba8315c465122fd244c678ef1f14a38b0ae19a80646d1a33"
++    },
++    {
++      "exists": true,
++      "path": "scripts/research_conductor.py",
++      "read_only": true,
++      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
++    }
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5468",
++    "SCENARIO-REPORT-5468",
++    "SCENARIO-REPORT-5468-BLOCKED-INPUT"
++  ],
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5468_transition_v497.py -q --no-cov",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5468_transition_v497.py -m pytest tests/python/test_experiment_5468_transition_v497.py -q --no-cov -n 0",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5468_transition_v497.py --fail-under=100",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 767cdcab9b..3ca230cd01 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T04:58:08Z",
+-  "finished_at": "2026-07-09T04:58:08Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-09T06:56:11Z",
++  "finished_at": "2026-07-09T06:56:11Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 02e971a793..d1999439d8 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T04:58:08Z",
+-  "finished_at": "2026-07-09T04:58:08Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-09T06:56:11Z",
++  "finished_at": "2026-07-09T06:56:11Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 495e806e5c..abe98535c2 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T04:58:09Z",
+-  "finished_at": "2026-07-09T04:58:09Z",
++  "started_at": "2026-07-09T06:56:11Z",
++  "finished_at": "2026-07-09T06:56:11Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5468_transition_v497.py b/tests/python/test_experiment_5468_transition_v497.py
+new file mode 100644
+index 0000000000..23d1ad2c91
+--- /dev/null
++++ b/tests/python/test_experiment_5468_transition_v497.py
+@@ -0,0 +1,692 @@
++"""Tests for Exp5468 .497 transition receipt.
++
++Spec refs: REQ-REPORT-5468, SCENARIO-REPORT-5468,
++SCENARIO-REPORT-5468-BLOCKED-INPUT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_5468_transition_v497 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _roadmap(milestone: str, task_ids: list[str] | None = None) -> str:
++    tasks = [
++        {
++            "id": task_id,
++            "milestone": milestone,
++            "deliverable": f"results/{task_id}.json",
++            "title": f"fixture {task_id}",
++            "agent_type": "codex",
++            "model": "gpt-5.5",
++            "prompt": "REQ-REPORT-5468 fixture",
++        }
++        for task_id in (task_ids or mod.EXPECTED_TASK_IDS)
++    ]
++    return yaml.safe_dump(
++        {
++            "milestone": milestone,
++            "milestone_title": "fixture transition",
++            "milestone_doc": str(mod.VNEXT_RELATIVE_PATH),
++            "tasks": tasks,
++        },
++        sort_keys=False,
++    )
++
++
++def _vnext_doc(milestone: str = mod.MILESTONE, task_range: str = "Exp 5468-5481") -> str:
++    return f"""# Research Roadmap vNEXT - Milestone {milestone}
++
++**Milestone title:** fixture
++**Previous milestone:** {mod.PREVIOUS_MILESTONE}
++**Task range:** {task_range}
++**Pre-staged roadmap:** `research-roadmap-next.yaml`
++"""
++
++
++def _truth_row(
++    lane: str,
++    classification: str,
++    evidence: dict[str, Any],
++    *,
++    source_artifacts: list[str] | None = None,
++    authority_gate: str = "fixture authority",
++    claim_boundary: str = "fixture boundary",
++    headline_blockers: list[str] | None = None,
++) -> dict[str, Any]:
++    return {
++        "lane": lane,
++        "classification": classification,
++        "authority_gate": authority_gate,
++        "source_artifacts": source_artifacts or [f"results/{lane}.json"],
++        "evidence": evidence,
++        "headline_blockers": headline_blockers or [],
++        "claim_boundary": claim_boundary,
++    }
++
++
++def _capstone_payload() -> dict[str, Any]:
++    hardware_reachability = {
++        "kv260": {
++            "blocked_reason": "blocked_kv260_ssh",
++            "check_method": "ssh_only",
++            "identity": "kria",
++            "reachable": False,
++            "workload_execution_attempted": False,
++        },
++        "polarfire": {
++            "blocked_reason": None,
++            "check_method": "ssh",
++            "identity": "polarfire",
++            "reachable": True,
++            "workload_execution_attempted": True,
++        },
++    }
++    truth_table = {
++        "minimal_core_repair": _truth_row(
++            "minimal_core_repair",
++            "headline_ready",
++            {
++                "exp5458": {
++                    "minimal_core_repair_ready": True,
++                    "exact_final_authority": True,
++                    "repaired_accept_rate_after_exact_recheck": 1.0,
++                    "unrepaired_reject_rate": 1.0,
++                    "honest_verdict": (
++                        "complete: deterministic minimal-core repairs accepted "
++                        "after exact recheck"
++                    ),
++                }
++            },
++            claim_boundary="deterministic repair acceptance after exact recheck",
++        ),
++        "distortion_guards": _truth_row(
++            "distortion_guards",
++            "headline_ready",
++            {
++                "exp5459": {
++                    "distortion_guard_ready": True,
++                    "exact_final_authority": True,
++                    "fixture_count": 10,
++                    "unsupported_fabrication_rate": 0.1,
++                    "honest_verdict": "complete: deterministic constraint-distortion guard ready",
++                }
++            },
++            claim_boundary="deterministic distortion-guard readiness",
++        ),
++        "csl_policy": _truth_row(
++            "csl_policy",
++            "headline_ready",
++            {
++                "exp5460": {
++                    "continuous_self_learning_task": True,
++                    "csl_policy_ready": True,
++                    "no_weight_mutation": True,
++                    "negative_transfer_deflection_rate": 1.0,
++                    "policy_update_count": 9,
++                    "honest_verdict": "complete: frozen-model governed CSL policy ready",
++                }
++            },
++            claim_boundary="governed sidecar routing only",
++        ),
++        "sota_csl": _truth_row(
++            "sota_csl",
++            "headline_ready",
++            {
++                "exp5461": {
++                    "csl_sota_memory_routing_ready": True,
++                    "gpu_offload_verified": True,
++                    "no_weight_mutation": True,
++                    "negative_transfer_deflection_rate": 1.0,
++                    "runtime_backend": "llama_cpp_python_cuda_gguf",
++                    "honest_verdict": (
++                        "complete: live SOTA GGUF governed CSL memory routing "
++                        "preserved quality and deflected negative transfer with "
++                        "frozen weights"
++                    ),
++                }
++            },
++            claim_boundary="live GGUF memory routing under frozen weights",
++        ),
++        "pbit_pdit_bridge": _truth_row(
++            "pbit_pdit_bridge",
++            "bounded",
++            {
++                "exp5462": {
++                    "minimal_core_pbit_bridge_ready": True,
++                    "solver_authoritative": True,
++                    "fallback_completeness_rate": 1.0,
++                    "hardware_speedup_claim": False,
++                    "honest_verdict": "complete: active p-bit and p-dit assumptions stayed advisory",
++                }
++            },
++            claim_boundary="bounded bridge only",
++        ),
++        "hardware_receipts": _truth_row(
++            "hardware_receipts",
++            "bounded",
++            {
++                "exp5463": {
++                    "hardware_receipts_ready": True,
++                    "hashes_match_before_timing_compare": True,
++                    "hardware_speedup_claim": False,
++                    "board_reachability": hardware_reachability,
++                    "timing_repeat_counts": {"cpu": 10, "kv260": 0, "polarfire": 10},
++                    "honest_verdict": (
++                        "complete: CPU and reachable-board timing receipts are "
++                        "hash-matched; hardware_speedup_claim=false"
++                    ),
++                }
++            },
++            claim_boundary="KV260 unreachable and no speedup claim",
++        ),
++        "synthesis": _truth_row(
++            "synthesis",
++            "bounded",
++            {
++                "exp5466": {
++                    "status": "complete",
++                    "missing_artifacts": [],
++                    "skipped_gated_tasks": [],
++                    "honest_verdict": (
++                        "complete: .496 PRD gap table read actual Exp5454-Exp5465 "
++                        "artifacts"
++                    ),
++                }
++            },
++            claim_boundary="bounded capstone/PRD synthesis only",
++        ),
++        "guided_decoding": _truth_row(
++            "guided_decoding",
++            "blocked",
++            {
++                "exp5457": {
++                    "flagged_adversarial": True,
++                    "corrigendum_pending": [{"kind": "TAUTOLOGY", "severity": "critical"}],
++                    "verifier_guided_decoding_ready": False,
++                    "lcd_bias_check_passed": False,
++                    "honest_verdict": "complete: live panel ran; readiness false (lcd_bias_check_failed)",
++                }
++            },
++            claim_boundary="guided decoding remains quarantined after Exp5457",
++            headline_blockers=["flagged_adversarial", "tautology", "lcd_bias_failed"],
++        ),
++        "arc": _truth_row(
++            "arc",
++            "honest_null",
++            {
++                "exp5465": {
++                    "new_level_banked": False,
++                    "offline_reproduced": False,
++                    "failure_mode": "bounded_budget_no_levelup",
++                    "live_attempt_count": 1,
++                    "solve_provenance": "live_agent_self_discovery",
++                    "source_reading_used": False,
++                    "target_game": "bp35",
++                    "honest_verdict": "honest_null: bp35 L3 bounded_budget_no_levelup",
++                }
++            },
++            claim_boundary="bp35 L3 no-bank",
++        ),
++    }
++    return {
++        "milestone": mod.PREVIOUS_MILESTONE,
++        "honest_verdict": (
++            "complete: .496 capstone truth table from actual artifacts; "
++            "headline_ready=4, bounded=3, blocked=1, honest_null=2; guided "
++            "decoding quarantined, ARC no-bank, hardware_speedup_claim=false."
++        ),
++        "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        "roadmap_yaml_unchanged": True,
++        "conductor_unchanged": True,
++        "headline_ready_lanes": [
++            "distortion_guards",
++            "minimal_core_repair",
++            "csl_policy",
++            "sota_csl",
++        ],
++        "bounded_lanes": ["pbit_pdit_bridge", "hardware_receipts", "synthesis"],
++        "blocked_lanes": ["guided_decoding"],
++        "honest_null_lanes": ["arc", "hardware_speedup_claim"],
++        "truth_table": truth_table,
++        "no_claim_boundaries": [
++            {
++                "claim_id": "hardware_speedup",
++                "boundary": "No hardware speedup is claimed.",
++                "evidence": {
++                    "hardware_speedup_claim": False,
++                    "board_reachability": hardware_reachability,
++                    "timing_comparison": {
++                        "hardware_speedup_claim": False,
++                        "hashes_match_before_timing_compare": True,
++                    },
++                },
++            }
++        ],
++    }
++
++
++def _gap_payload() -> dict[str, Any]:
++    return {
++        "milestone": mod.PREVIOUS_MILESTONE,
++        "status": "complete",
++        "honest_verdict": (
++            "complete: .496 PRD gap table read actual Exp5454-Exp5465 artifacts; "
++            "closed=8, partial=2, blocked=2, honest_null=2, missing=0, skipped=0."
++        ),
++        "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        "missing_artifacts": [],
++        "skipped_gated_tasks": [],
++        "agent_failure_taxonomy": {
++            "missing_hardware": {
++                "observed": True,
++                "blocked_boards": ["kv260"],
++            },
++            "no_bank_arc": {"observed": True},
++            "tautology": {"observed": True},
++        },
++    }
++
++
++def _make_repo(
++    root: Path,
++    *,
++    capstone: dict[str, Any] | None = None,
++    gap: dict[str, Any] | None = None,
++    milestone: str = mod.MILESTONE,
++    doc_milestone: str = mod.MILESTONE,
++    doc_task_range: str = "Exp 5468-5481",
++    task_ids: list[str] | None = None,
++) -> Path:
++    root.mkdir(parents=True, exist_ok=True)
++    for relative in ("AGENTS.md", "CODEX.md", "CLAUDE.md"):
++        (root / relative).write_text("fixture\n", encoding="utf-8")
++    (root / mod.ROADMAP_RELATIVE_PATH).write_text(
++        _roadmap(milestone, task_ids),
++        encoding="utf-8",
++    )
++    (root / mod.VNEXT_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (root / mod.VNEXT_RELATIVE_PATH).write_text(
++        _vnext_doc(doc_milestone, doc_task_range),
++        encoding="utf-8",
++    )
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "ops/status.md").write_text("fixture status\n", encoding="utf-8")
++    (root / "ops/changelog.md").write_text("fixture changelog\n", encoding="utf-8")
++    (root / "ops/conductor-log.md").write_text(
++        "| 2026-07-09 05:43 UTC | Milestone .496 capstone | OK |\n",
++        encoding="utf-8",
++    )
++    (root / mod.CONDUCTOR_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (root / mod.CONDUCTOR_RELATIVE_PATH).write_text("# fixture\n", encoding="utf-8")
++    if capstone is not None:
++        _write_json(root / mod.CAPSTONE_RELATIVE_PATH, capstone)
++    if gap is not None:
++        _write_json(root / mod.GAP_RELATIVE_PATH, gap)
++    return root
++
++
++def test_req_report_5468_spec_declares_transition_contract() -> None:
++    """REQ-REPORT-5468: OpenSpec anchors the .497 transition receipt."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5468") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-REPORT-5468",
++        "SCENARIO-REPORT-5468",
++        "SCENARIO-REPORT-5468-BLOCKED-INPUT",
++        str(mod.RESULT_RELATIVE_PATH),
++        str(mod.CAPSTONE_RELATIVE_PATH),
++        "exp5454-exp5467",
++        "exp5468-exp5481",
++        "deterministic minimal-core repair",
++        "constraint-distortion guards",
++        "governed CSL policy",
++        "SOTA CSL memory routing",
++        "p-bit/p-dit bridge",
++        "Exp5457",
++        "ARC `bp35` L3 no-bank",
++        "KV260 unreachable",
++        "no hardware speedup claim",
++    ):
++        assert marker in section or marker in normalized
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_report_5468_builds_complete_transition_receipt(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5468: active .497 records .496 boundaries and gates."""
++
++    root = _make_repo(tmp_path, capstone=_capstone_payload(), gap=_gap_payload())
++    roadmap_before = (root / mod.ROADMAP_RELATIVE_PATH).read_text(encoding="utf-8")
++    conductor_before = (root / mod.CONDUCTOR_RELATIVE_PATH).read_text(encoding="utf-8")
++
++    artifact = mod.build_artifact(
++        root=root,
++        run_date="2026-07-09",
++        tests_run=[{"command": "unit 5468", "outcome": "passed"}],
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    mod.validate_artifact(artifact)
++    assert (root / mod.ROADMAP_RELATIVE_PATH).read_text(encoding="utf-8") == roadmap_before
++    assert (root / mod.CONDUCTOR_RELATIVE_PATH).read_text(encoding="utf-8") == conductor_before
++    assert artifact["status"] == "complete"
++    assert artifact["milestone"] == mod.MILESTONE
++    assert artifact["previous_milestone"] == mod.PREVIOUS_MILESTONE
++    assert artifact["prior_capstone_path"] == str(mod.CAPSTONE_RELATIVE_PATH)
++    assert artifact["previous_task_range"] == mod.PREVIOUS_TASK_RANGE
++    assert artifact["next_task_range"] == mod.NEXT_TASK_RANGE
++    assert artifact["roadmap_task_ids"] == mod.EXPECTED_TASK_IDS
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["roadmap_yaml_unchanged"] is True
++    assert artifact["conductor_unchanged"] is True
++    assert artifact["honest_verdict"].startswith("complete:")
++
++    closed = {row["lane"]: row for row in artifact["closed_lanes"]}
++    assert list(closed) == [
++        "minimal_core_repair",
++        "distortion_guards",
++        "csl_policy",
++        "sota_csl",
++    ]
++    assert closed["minimal_core_repair"]["terminal_evidence"]["exp5458"][
++        "exact_final_authority"
++    ] is True
++    assert closed["distortion_guards"]["terminal_evidence"]["exp5459"][
++        "distortion_guard_ready"
++    ] is True
++    assert closed["csl_policy"]["terminal_evidence"]["exp5460"]["no_weight_mutation"] is True
++    assert closed["sota_csl"]["terminal_evidence"]["exp5461"]["gpu_offload_verified"] is True
++
++    bounded = {row["lane"]: row for row in artifact["bounded_lanes"]}
++    assert list(bounded) == ["pbit_pdit_bridge", "hardware_receipts", "synthesis"]
++    assert bounded["pbit_pdit_bridge"]["terminal_evidence"]["exp5462"][
++        "solver_authoritative"
++    ] is True
++    assert bounded["hardware_receipts"]["terminal_evidence"]["exp5463"][
++        "hardware_speedup_claim"
++    ] is False
++    assert bounded["hardware_receipts"]["terminal_evidence"]["exp5463"][
++        "board_reachability"
++    ]["kv260"]["reachable"] is False
++    assert bounded["synthesis"]["terminal_evidence"]["exp5466"]["missing_artifacts"] == []
++
++    blocked = {row["lane"]: row for row in artifact["blocked_lanes"]}
++    assert list(blocked) == ["guided_decoding"]
++    assert blocked["guided_decoding"]["terminal_evidence"]["exp5457"][
++        "flagged_adversarial"
++    ] is True
++    assert blocked["guided_decoding"]["terminal_evidence"]["exp5457"][
++        "lcd_bias_check_passed"
++    ] is False
++
++    honest_null = {row["lane"]: row for row in artifact["honest_null_lanes"]}
++    assert list(honest_null) == ["arc", "hardware_speedup_claim"]
++    assert honest_null["arc"]["terminal_evidence"]["exp5465"]["target_game"] == "bp35"
++    assert honest_null["arc"]["terminal_evidence"]["exp5465"]["new_level_banked"] is False
++    assert honest_null["hardware_speedup_claim"]["terminal_evidence"][
++        "hardware_speedup_claim"
++    ] is False
++    assert honest_null["hardware_speedup_claim"]["terminal_evidence"][
++        "board_reachability"
++    ]["kv260"]["reachable"] is False
++    assert artifact["failed_preconditions"] == []
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++
++def test_scenario_report_5468_missing_or_dirty_inputs_block(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5468-BLOCKED-INPUT: missing or dirty inputs fail closed."""
++
++    root = _make_repo(
++        tmp_path / "missing",
++        capstone=None,
++        gap=None,
++        milestone=mod.PREVIOUS_MILESTONE,
++        doc_milestone=mod.PREVIOUS_MILESTONE,
++        doc_task_range="Exp 5468-5480",
++        task_ids=mod.EXPECTED_TASK_IDS[:-1],
++    )
++    artifact = mod.build_artifact(
++        root=root,
++        run_date="2026-07-09",
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: True,
++            mod.CONDUCTOR_RELATIVE_PATH: True,
++        },
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "blocked"
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert artifact["closed_lanes"] == []
++    assert artifact["bounded_lanes"] == []
++    assert artifact["blocked_lanes"] == []
++    assert artifact["honest_null_lanes"] == []
++    assert artifact["roadmap_yaml_unchanged"] is False
++    assert artifact["conductor_unchanged"] is False
++    for failure in (
++        "capstone_missing_or_unloadable",
++        "gap_table_missing_or_unloadable",
++        "roadmap_milestone_expected_2026.07.497_observed_2026.07.496",
++        "roadmap_doc_missing_or_mismatch_2026.07.497",
++        "roadmap_doc_task_range_expected_exp5468-exp5481_observed_exp5468-exp5480",
++        "roadmap_task_ids_mismatch",
++        "research-roadmap.yaml_modified",
++        "scripts/research_conductor.py_modified",
++    ):
++        assert failure in artifact["failed_preconditions"]
++
++    bad_capstone = _capstone_payload()
++    bad_capstone["milestone"] = "2026.07.495"
++    bad_capstone["status"] = "blocked"
++    bad_capstone["honest_verdict"] = "done"
++    bad_capstone["no_claim_boundaries"] = []
++    bad_root = _make_repo(tmp_path / "bad-capstone", capstone=bad_capstone, gap=_gap_payload())
++    bad_artifact = mod.build_artifact(
++        root=bad_root,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++    mod.validate_artifact(bad_artifact)
++    assert bad_artifact["status"] == "blocked"
++    for failure in (
++        "capstone_milestone_expected_2026.07.496_observed_2026.07.495",
++        "capstone_status_expected_complete_or_absent_observed_blocked",
++        "capstone_honest_verdict_missing_terminal_prefix",
++        "capstone_hardware_speedup_claim_boundary_missing_or_true",
++        "capstone_honest_null_lanes_incomplete",
++    ):
++        assert failure in bad_artifact["failed_preconditions"]
++
++    incomplete_capstone = _capstone_payload()
++    incomplete_capstone["truth_table"].pop("minimal_core_repair")
++    incomplete_capstone["truth_table"].pop("hardware_receipts")
++    incomplete_capstone["truth_table"].pop("guided_decoding")
++    incomplete_capstone["no_claim_boundaries"] = []
++    incomplete_root = _make_repo(
++        tmp_path / "incomplete-lanes",
++        capstone=incomplete_capstone,
++        gap=_gap_payload(),
++    )
++    incomplete_artifact = mod.build_artifact(
++        root=incomplete_root,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++    mod.validate_artifact(incomplete_artifact)
++    for failure in (
++        "capstone_closed_lanes_incomplete",
++        "capstone_bounded_lanes_incomplete",
++        "capstone_blocked_lanes_incomplete",
++        "capstone_honest_null_lanes_incomplete",
++    ):
++        assert failure in incomplete_artifact["failed_preconditions"]
++
++    bad_gap = _gap_payload()
++    bad_gap["milestone"] = "2026.07.495"
++    bad_gap["status"] = "blocked"
++    bad_gap["honest_verdict"] = "done"
++    bad_gap_root = _make_repo(
++        tmp_path / "bad-gap",
++        capstone=_capstone_payload(),
++        gap=bad_gap,
++    )
++    bad_gap_artifact = mod.build_artifact(
++        root=bad_gap_root,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++    mod.validate_artifact(bad_gap_artifact)
++    for failure in (
++        "gap_milestone_expected_2026.07.496_observed_2026.07.495",
++        "gap_status_expected_complete_or_absent_observed_blocked",
++        "gap_honest_verdict_missing_terminal_prefix",
++    ):
++        assert failure in bad_gap_artifact["failed_preconditions"]
++
++
++def test_req_report_5468_run_writes_artifact(tmp_path: Path) -> None:
++    """REQ-REPORT-5468: run writes a deterministic transition receipt."""
++
++    root = _make_repo(tmp_path / "repo", capstone=_capstone_payload(), gap=_gap_payload())
++    result_path = tmp_path / "out" / "transition.json"
++
++    written = mod.run(
++        root=root,
++        result_path=result_path,
++        run_date="2026-07-09",
++        tests_run=[{"command": "unit 5468", "outcome": "passed"}],
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert written == result_path
++    artifact = json.loads(result_path.read_text(encoding="utf-8"))
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "complete"
++
++
++def test_req_report_5468_committed_result_matches_replay() -> None:
++    """REQ-REPORT-5468: checked-in deliverable is stable under deterministic replay."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = mod.build_artifact(root=REPO, tests_run=result["tests_run"])
++
++    mod.validate_artifact(result)
++    assert result == replay
++    assert result["status"] == "complete"
++    assert result["previous_task_range"] == "exp5454-exp5467"
++    assert result["next_task_range"] == "exp5468-exp5481"
++    assert result["roadmap_yaml_unchanged"] is True
++    assert result["conductor_unchanged"] is True
++
++
++def test_req_report_5468_validation_rejects_schema_and_claim_drift(tmp_path: Path) -> None:
++    """REQ-REPORT-5468: validation rejects malformed transition receipts."""
++
++    root = _make_repo(tmp_path / "repo", capstone=_capstone_payload(), gap=_gap_payload())
++    artifact = mod.build_artifact(
++        root=root,
++        modification_status={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    missing = deepcopy(artifact)
++    missing.pop("milestone")
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    mutations = [
++        ("schema", "wrong", "schema"),
++        ("field_principles", {}, "field_principles"),
++        ("status", "done", "status"),
++        ("milestone", mod.PREVIOUS_MILESTONE, "milestone"),
++        ("previous_milestone", mod.MILESTONE, "previous_milestone"),
++        ("prior_capstone_path", "wrong.json", "prior_capstone_path"),
++        ("previous_task_range", "exp5454-exp5466", "previous_task_range"),
++        ("next_task_range", "exp5468-exp5480", "next_task_range"),
++        ("inference_substrate", "live_llm_inference", "inference_substrate"),
++        ("roadmap_yaml_unchanged", "true", "roadmap_yaml_unchanged"),
++        ("conductor_unchanged", "true", "conductor_unchanged"),
++        ("honest_verdict", "done", "honest_verdict"),
++        ("roadmap_task_ids", ["wrong"], "roadmap_task_ids"),
++        ("closed_lanes", "bad", "closed_lanes"),
++        ("bounded_lanes", "bad", "bounded_lanes"),
++        ("blocked_lanes", "bad", "blocked_lanes"),
++        ("honest_null_lanes", "bad", "honest_null_lanes"),
++        ("closed_lanes", [], "closed_lanes"),
++        ("bounded_lanes", [], "bounded_lanes"),
++        ("blocked_lanes", [], "blocked_lanes"),
++        ("honest_null_lanes", [], "honest_null_lanes"),
++        ("roadmap_yaml_unchanged", False, "roadmap_yaml_unchanged must be true"),
++        ("conductor_unchanged", False, "conductor_unchanged must be true"),
++        ("failed_preconditions", "bad", "failed_preconditions"),
++        ("failed_preconditions", ["bad"], "complete status"),
++        ("reproducibility_checksum", "sha256:bad", "reproducibility_checksum"),
++    ]
++    for field, value, message in mutations:
++        mutated = deepcopy(artifact)
++        mutated[field] = value
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(mutated)
++
++    blocked = mod.build_artifact(root=_make_repo(tmp_path / "blocked"))
++    blocked["failed_preconditions"] = []
++    blocked["reproducibility_checksum"] = mod.payload_checksum(blocked)
++    with pytest.raises(ValueError, match="blocked status"):
++        mod.validate_artifact(blocked)
++
++    assert mod._truth_rows("bad") == {}
++    assert list(mod._truth_rows([{"lane": "listed", "value": 1}, "bad", {}])) == [
++        "listed"
++    ]
++    assert mod._truth_record({"lane": "fallback", "terminal_evidence": {"ok": True}})[
++        "terminal_evidence"
++    ] == {"ok": True}
++    assert mod._truth_record({"lane": "blocked", "blocked_reason": "fixture"})[
++        "blocked_reason"
++    ] == "fixture"
++    assert mod._truth_record({"lane": "fallback"})["source_artifacts"] == []
++    assert mod._source_artifacts({"source_artifact": "results/source.json"}) == [
++        "results/source.json"
++    ]
++    assert (
++        mod._hardware_speedup_claim_is_false(
++            {"no_claim_boundaries": [{"claim_id": "hardware_speedup", "evidence": "bad"}]}
++        )
++        is False
++    )
+-- 
+2.55.0
+

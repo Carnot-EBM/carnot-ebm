@@ -1,0 +1,43 @@
+From 3345efd93b3555476c50e0a8086f14b46c509fef Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 23:29:08 -0400
+Subject: [PATCH 05158/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 701884d919..cf41d472e6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 38, "phase": "iteration_start", "last_beat": "2026-07-01T02:06:43Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 39, "phase": "iteration_start", "last_beat": "2026-07-01T03:29:06Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8cee33bdc9..441fa76d43 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9693,3 +9693,4 @@ The contro |
+ | 2026-07-01 01:41 UTC | PHASE D4 audit -- independently validate the Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5060_second_ |
+ | 2026-07-01 01:49 UTC | PHASE D4 audit -- independently validate the Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5060_second_ |
+ | 2026-07-01 02:04 UTC | PHASE D6 tool-first cascade -- T1/SAFE determinist | OK | 86 passed, 1 warning in 8.43s |
++| 2026-07-01 03:27 UTC | PHASE D7 guided decoding frontier -- Vegas / rewar | OK | 108 passed, 1 warning in 7.39s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 6240c1138f..d94d96fc5f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 38, "phase": "iteration_start", "started_at": "2026-07-01T02:06:43Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 39, "phase": "iteration_start", "started_at": "2026-07-01T03:29:06Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

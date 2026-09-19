@@ -1,0 +1,2806 @@
+From 85ff82bc29a8d05e8b943a322f4cfbefaf0e024a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 06:54:58 -0400
+Subject: [PATCH 11023/11362] [conductor] Claim-provenance-aware duration
+ verification
+
+Automated research step by research conductor.
+Task ID: exp6974-claim-provenance-duration-lint
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   | 101 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...t_6974_claim_provenance_duration_lint.json | 710 +++++++++++++++++
+ scripts/adversarial_verify.py                 | 439 ++++++++++-
+ ...ent_6974_claim_provenance_duration_lint.py | 732 ++++++++++++++++++
+ ...dversarial_verify_claim_provenance_6974.py | 302 ++++++++
+ .../python/test_adversarial_verify_guards.py  |   6 +-
+ ...ent_6974_claim_provenance_duration_lint.py | 364 +++++++++
+ 8 files changed, 2632 insertions(+), 24 deletions(-)
+ create mode 100644 results/experiment_6974_claim_provenance_duration_lint.json
+ create mode 100644 scripts/experiments/experiment_6974_claim_provenance_duration_lint.py
+ create mode 100644 tests/python/test_adversarial_verify_claim_provenance_6974.py
+ create mode 100644 tests/python/test_experiment_6974_claim_provenance_duration_lint.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 8d9369b487..8b2e5f050f 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -63138,3 +63138,104 @@ contract SHALL use `circular_positive`. A complete audit with defects SHALL use
+ **When** its validator recomputes scores, principles, verdict, and checksum
+ **Then** consistent clean, defect, and blocked shapes pass
+ **And** forged or missing required values fail.
++
++### REQ-CONDUCTOR-6974: Duration Verification SHALL Use Current-Task Claim Provenance
++
++The adversarial verifier SHALL decide whether the current task claims or
++evidences live model inference before it selects a duration floor. It SHALL use
++the explicit top-level `inference_substrate`, structured invocation fields,
++current-task live-duration fields, current-task GPU receipts, and current-task
++methodology. It SHALL inspect structured invocation fields at every nesting
++depth so moving an invocation marker into input data cannot bypass the live
++floor.
++
++The classifier SHALL distinguish current-task evidence, cited upstream
++evidence, and ambiguous evidence. Arbitrary values in source rows, hashes,
++source paths, diagnostics, and model-label fields SHALL NOT establish current
++task invocation. A deterministic substrate declaration SHALL establish a
++no-live-inference claim by rule when it does not also claim a live model. This
++rule SHALL NOT enumerate Exp6967 or its substrate value.
++
++A live substrate declaration or positive current-task invocation evidence SHALL
++retain the existing applicable live-model duration floor. A deterministic or
++other no-LLM claim that has contradictory invocation evidence SHALL fail closed.
++A missing, malformed, or unknown substrate with compute markers SHALL remain
++ambiguous and SHALL retain the conservative live-model floor. A live claim with
++an explicit no-invocation declaration SHALL also fail closed as contradictory
++provenance. All unrelated adversarial checks SHALL keep their behavior.
++
++Exp6974 SHALL exercise a mutation corpus that contains genuine live,
++deterministic reducer, bibliographic, embedding, nested-marker, ambiguous, and
++pre-gate artifacts. It SHALL record the legacy and corrected duration decisions
++for every fixture. `duration_lint_repair_complete_score` SHALL equal one only
++when all expected mutation decisions pass.
++
++Exp6974 SHALL read Exp6967 without modifying it. It SHALL record the source
++hash, current verifier version, raw verifier findings, stored historical flag,
++and a separate derivative admissibility decision.
++`fixture_admissibility_ready_score` SHALL equal one only when the source hash
++still matches and the corrected verifier reports no live-duration critical for
++Exp6967. The receipt SHALL not remove or rewrite Exp6967's historical stamp.
++
++The Exp6974 artifact SHALL contain `field_principles`,
++`preconditions_checked`, `inference_substrate`, `duration_s`,
++`source_artifact_hashes`, `rows`, `classification_rule_rows`,
++`mutation_fixture_rows`, `old_new_decision_rows`, `false_positive_rows`,
++`false_negative_rows`, `ambiguous_provenance_rows`, `focused_test_receipts`,
++`exp6967_readonly_recheck`, `verifier_version_hash`,
++`duration_lint_repair_complete_score`, `fixture_admissibility_ready_score`,
++`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
++`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
++`field_principles` SHALL give one scientific principle for every required
++field, including both scores. `inference_substrate` SHALL equal
++`deterministic_claim_provenance_verifier`. `verifier_is_oracle` SHALL be true.
++`verdict_class` SHALL use the closed project enum. A missing precondition SHALL
++produce `verdict_class: blocked`, an `honest_verdict` that starts with
++`blocked_claim_provenance_duration_lint`, and a `gate_check_summary` row with
++the failed check, expected value, and observed value.
++
++#### SCENARIO-CONDUCTOR-6974-DETERMINISTIC: Source Model IDs Do Not Claim Invocation
++
++**Given** a deterministic reducer has a short measured duration
++**And** GGUF IDs occur only as arbitrary values in immutable source rows
++**When** adversarial duration verification runs
++**Then** the reducer uses the deterministic non-model floor
++**And** it receives no live-model `DURATION_TOO_SHORT` critical.
++
++#### SCENARIO-CONDUCTOR-6974-LIVE: Genuine Live Claims Keep Their Floor
++
++**Given** an artifact declares live model inference or current-task invocation
++**When** its measured duration is below the applicable live floor
++**Then** adversarial verification emits a critical `DURATION_TOO_SHORT` flag.
++
++#### SCENARIO-CONDUCTOR-6974-NESTED: Nested Invocation Markers Cannot Hide
++
++**Given** a no-live or unknown artifact places a positive invocation field in
++nested input data
++**When** claim provenance is classified
++**Then** the classifier reports contradictory or ambiguous live evidence
++**And** duration verification fails closed against the live floor.
++
++#### SCENARIO-CONDUCTOR-6974-AMBIGUOUS: Missing Provenance Fails Closed
++
++**Given** an artifact has no usable current-task substrate declaration
++**And** it contains a compute marker but no attributable invocation evidence
++**When** duration verification runs
++**Then** the artifact remains ambiguous
++**And** the conservative live-model duration floor applies.
++
++#### SCENARIO-CONDUCTOR-6974-DERIVATIVE: Exp6967 Is Rechecked Without Rewriting History
++
++**Given** the frozen Exp6967 bytes and their expected source hash
++**When** Exp6974 runs the corrected verifier
++**Then** its derivative receipt retains the stored historical flag separately
++**And** readiness is one only if no current live-duration critical remains and
++the frozen source hash is unchanged.
++
++#### SCENARIO-CONDUCTOR-6974-ARTIFACT: Scores Recompute From Terminal Rows
++
++**Given** a terminal Exp6974 receipt
++**When** its validator recomputes mutation outcomes, source identity, scores,
++principles, verdict class, and checksum
++**Then** a consistent clean, null, or blocked receipt passes
++**And** forged scores, missing fields, or altered source identity fail.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7d5e914d7b..765be8a300 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5305,
++  "experiments_checked": 5306,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_6974_claim_provenance_duration_lint.json b/results/experiment_6974_claim_provenance_duration_lint.json
+new file mode 100644
+index 0000000000..f0cd1af54d
+--- /dev/null
++++ b/results/experiment_6974_claim_provenance_duration_lint.json
+@@ -0,0 +1,710 @@
++{
++  "ambiguous_provenance_rows": [
++    {
++      "category": "ambiguous",
++      "claim_classification": {
++        "declared_substrate": "",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [],
++        "negative_evidence": [],
++        "reason": "compute_markers_without_claim_provenance",
++        "state": "ambiguous",
++        "substrate_kind": "unknown",
++        "substrate_source": "missing_top_level_inference_substrate"
++      },
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "ambiguous_model_context",
++      "new_decision": "critical",
++      "new_duration_flags": [
++        {
++          "detail": "duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        }
++      ],
++      "new_floor": {
++        "min_duration_s": 60.0,
++        "reason": "live_model",
++        "substrate": "ambiguous_compute_provenance"
++      },
++      "old_decision": "critical",
++      "old_floor_s": 60.0,
++      "passed": true
++    }
++  ],
++  "classification_rule_rows": [
++    {
++      "field_family": "inference_substrate",
++      "rule": "Explicit live, no-LLM, aggregation, and deterministic claims lead classification.",
++      "scope": "top_level_current_task"
++    },
++    {
++      "field_family": "invocation_boolean_or_count",
++      "rule": "Positive typed invocation fields are evidence even when nested; cited upstream fields stay external.",
++      "scope": "recursive_typed_fields"
++    },
++    {
++      "field_family": "live_duration",
++      "rule": "A positive live, inference, generation, or model-load duration evidences current live work.",
++      "scope": "typed_current_task_fields"
++    },
++    {
++      "field_family": "gpu_receipt",
++      "rule": "Model-load or offload measurements in a current-task GPU receipt evidence live work.",
++      "scope": "typed_current_task_receipts"
++    },
++    {
++      "field_family": "methodology",
++      "rule": "A narrow affirmative methodology statement can evidence live inference; explicit negation wins first.",
++      "scope": "current_task_methodology"
++    },
++    {
++      "field_family": "arbitrary_values",
++      "rule": "String content alone never proves invocation; unknown model context remains ambiguous and fails closed.",
++      "scope": "rows_hashes_paths_diagnostics_model_labels"
++    }
++  ],
++  "duration_lint_repair_complete_score": 1,
++  "duration_s": 7.32366955303587,
++  "exp6967_readonly_recheck": {
++    "claim_classification": {
++      "declared_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
++      "external_evidence": [],
++      "has_compute_markers": true,
++      "live_evidence": [],
++      "negative_evidence": [],
++      "reason": "deterministic_substrate_claim",
++      "state": "no_live_inference",
++      "substrate_kind": "unknown",
++      "substrate_source": "unknown_top_level_inference_substrate"
++    },
++    "gate_version": "643693e2b39c3e53dcfa3e988aa9e3dff1b80b74502be0e3981914de63770a02",
++    "live_duration_critical": false,
++    "raw_findings": [],
++    "source_hash_after": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
++    "source_hash_before": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
++    "source_path": "results/experiment_6967_certified_error_headroom_fixture.json",
++    "source_unchanged": true,
++    "stored_corrigendum_pending": [
++      {
++        "detail": "duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++        "kind": "DURATION_TOO_SHORT",
++        "severity": "critical"
++      },
++      {
++        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
++        "kind": "METHODOLOGY_MISSING",
++        "severity": "warn"
++      }
++    ],
++    "stored_flagged_adversarial": true
++  },
++  "experiment_id": 6974,
++  "false_negative_rows": [],
++  "false_positive_rows": [
++    {
++      "category": "deterministic_reducer",
++      "claim_classification": {
++        "declared_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [],
++        "negative_evidence": [],
++        "reason": "deterministic_substrate_claim",
++        "state": "no_live_inference",
++        "substrate_kind": "unknown",
++        "substrate_source": "unknown_top_level_inference_substrate"
++      },
++      "expected_new_decision": "clean",
++      "expected_old_decision": "critical",
++      "fixture_id": "deterministic_source_row_reducer",
++      "new_decision": "clean",
++      "new_duration_flags": [],
++      "new_floor": {
++        "min_duration_s": 0.0001,
++        "reason": "deterministic_verifier",
++        "substrate": "deterministic_z3_and_bounded_enumeration_reducer"
++      },
++      "old_decision": "critical",
++      "old_floor_s": 60.0,
++      "passed": true
++    }
++  ],
++  "field_principles": {
++    "ambiguous_provenance_rows": "Ambiguous cases stay visible because silence would look like verification.",
++    "classification_rule_rows": "An explicit rule table makes the claim and invocation boundary falsifiable.",
++    "duration_lint_repair_complete_score": "Completion is one only when every mutation has the expected terminal decision.",
++    "duration_s": "A monotonic task clock separates receipt work from copied source timing.",
++    "exp6967_readonly_recheck": "The incident artifact is re-evaluated while its stored stamp and bytes remain intact.",
++    "false_negative_rows": "Missed expected criticals would reveal a weakened fabrication guard.",
++    "false_positive_rows": "Removed false positives show that source model identifiers no longer become invocation evidence.",
++    "field_principles": "Each required result has a stated scientific reason for inclusion.",
++    "fixture_admissibility_ready_score": "Readiness is one only when Exp6967 keeps its source identity and has no current live-duration critical.",
++    "focused_test_receipts": "Terminal test receipts distinguish executed checks from planned checks.",
++    "gate_check_summary": "Every blocked result states the failed check and its expected and observed values.",
++    "honest_verdict": "A terminal prefix states the receipt outcome before any supporting metrics.",
++    "inference_substrate": "The receipt declares the computation it performed rather than inheriting a source model label.",
++    "mutation_fixture_rows": "A varied mutation corpus tests both false-positive removal and live-check retention.",
++    "old_new_decision_rows": "Paired decisions isolate the behavioral change caused by the repair.",
++    "preconditions_checked": "A verifier conclusion is valid only when every frozen input is readable and identified.",
++    "random_seed": "A fixed seed identifies the deterministic mutation-corpus contract.",
++    "reproducibility_checksum": "A canonical checksum detects drift in decisions while excluding wall-clock noise.",
++    "rows": "Per-fixture rows let readers recompute the aggregate repair decision.",
++    "source_artifact_hashes": "Immutable source hashes make the derivative decision repeatable without rewriting history.",
++    "verdict_class": "A closed verdict class prevents success-shaped text from hiding a blocked or null result.",
++    "verifier_is_oracle": "The verifier directly defines this infrastructure receipt, so a positive is circular.",
++    "verifier_version_hash": "The decision names the exact verifier implementation that produced it."
++  },
++  "fixture_admissibility_ready_score": 1,
++  "focused_test_receipts": [
++    {
++      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest -o addopts= tests/python/test_adversarial_verify_claim_provenance_6974.py tests/python/test_experiment_6974_claim_provenance_duration_lint.py -q",
++      "duration_s": 7.022384608048014,
++      "exit_code": 0,
++      "name": "exp6974_focused_pytest",
++      "outcome": "pass",
++      "stderr": "",
++      "stdout": "...............................................                          [100%]\n47 passed in 5.65s\n"
++    }
++  ],
++  "gate_check_summary": [],
++  "honest_verdict": "complete_circular_claim_provenance_duration_lint_repair",
++  "inference_substrate": "deterministic_claim_provenance_verifier",
++  "mutation_fixture_rows": [
++    {
++      "category": "genuine_live",
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "genuine_live_inference",
++      "payload": {
++        "duration_s": 5.0,
++        "experiment_id": 6974,
++        "honest_verdict": "complete_circular_claim_provenance_fixture",
++        "inference_substrate": "live_llm_inference",
++        "model_invoked": true,
++        "model_specs": {
++          "name": "unsloth/Qwen3.6-35B-A3B-GGUF"
++        },
++        "random_seed": 697420260904,
++        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
++        "source_rows": [
++          {
++            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++            "model_label": "unsloth/gemma-4-31B-it-GGUF"
++          }
++        ]
++      }
++    },
++    {
++      "category": "deterministic_reducer",
++      "expected_new_decision": "clean",
++      "expected_old_decision": "critical",
++      "fixture_id": "deterministic_source_row_reducer",
++      "payload": {
++        "duration_s": 1.864951312,
++        "experiment_id": 6974,
++        "honest_verdict": "complete_circular_claim_provenance_fixture",
++        "inference_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
++        "random_seed": 697420260904,
++        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
++        "source_rows": [
++          {
++            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++            "model_label": "unsloth/gemma-4-31B-it-GGUF"
++          }
++        ]
++      }
++    },
++    {
++      "category": "nested_marker_attack",
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "nested_input_invocation",
++      "payload": {
++        "duration_s": 1.864951312,
++        "experiment_id": 6974,
++        "honest_verdict": "complete_circular_claim_provenance_fixture",
++        "inference_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
++        "input_data": {
++          "batch": [
++            {
++              "invocation": {
++                "model_invoked": true
++              }
++            }
++          ]
++        },
++        "random_seed": 697420260904,
++        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
++        "source_rows": [
++          {
++            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++            "model_label": "unsloth/gemma-4-31B-it-GGUF"
++          }
++        ]
++      }
++    },
++    {
++      "category": "ambiguous",
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "ambiguous_model_context",
++      "payload": {
++        "duration_s": 1.864951312,
++        "experiment_id": 6974,
++        "honest_verdict": "complete_circular_claim_provenance_fixture",
++        "model_specs": {
++          "name": "unsloth/gemma-4-31B-it-GGUF"
++        },
++        "random_seed": 697420260904,
++        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
++        "source_rows": [
++          {
++            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++            "model_label": "unsloth/gemma-4-31B-it-GGUF"
++          }
++        ]
++      }
++    },
++    {
++      "category": "bibliographic",
++      "expected_new_decision": "clean",
++      "expected_old_decision": "clean",
++      "fixture_id": "bibliographic_source_scan",
++      "payload": {
++        "duration_s": 0.05,
++        "experiment_id": 6974,
++        "honest_verdict": "complete_circular_claim_provenance_fixture",
++        "inference_substrate": "web_and_bibliographic_search_only",
++        "random_seed": 697420260904,
++        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
++        "source_rows": [
++          {
++            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++            "model_label": "unsloth/gemma-4-31B-it-GGUF"
++          }
++        ]
++      }
++    },
++    {
++      "category": "embedding",
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "live_embedding_extraction",
++      "payload": {
++        "duration_s": 1.0,
++        "experiment_id": 6974,
++        "honest_verdict": "complete_circular_claim_provenance_fixture",
++        "inference_substrate": "live_llm_embedding_extraction",
++        "model_invoked": true,
++        "model_specs": {
++          "name": "unsloth/gemma-4-26B-A4B-it-GGUF"
++        },
++        "random_seed": 697420260904,
++        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
++        "source_rows": [
++          {
++            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++            "model_label": "unsloth/gemma-4-31B-it-GGUF"
++          }
++        ]
++      }
++    },
++    {
++      "category": "pre_gate",
++      "expected_new_decision": "clean",
++      "expected_old_decision": "clean",
++      "fixture_id": "pre_gate_block",
++      "payload": {
++        "duration_s": 0.01,
++        "experiment_id": 6974,
++        "honest_verdict": "blocked_model_not_cached",
++        "inference_substrate": "live_llm_inference",
++        "model_invoked": false,
++        "random_seed": 697420260904,
++        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
++        "source_rows": [
++          {
++            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++            "model_label": "unsloth/gemma-4-31B-it-GGUF"
++          }
++        ]
++      }
++    }
++  ],
++  "old_new_decision_rows": [
++    {
++      "category": "genuine_live",
++      "claim_classification": {
++        "declared_substrate": "live_llm_inference",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [
++          {
++            "field": "model_invoked",
++            "path": "model_invoked",
++            "scope": "current_task",
++            "signal": "invocation_boolean",
++            "value": true
++          }
++        ],
++        "negative_evidence": [],
++        "reason": "live_substrate_claim",
++        "state": "live_inference",
++        "substrate_kind": "live_model",
++        "substrate_source": "top_level_inference_substrate"
++      },
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "genuine_live_inference",
++      "new_decision": "critical",
++      "new_duration_flags": [
++        {
++          "detail": "duration_s=5.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        }
++      ],
++      "new_floor": {
++        "min_duration_s": 60.0,
++        "reason": "live_model",
++        "substrate": "live_llm_inference"
++      },
++      "old_decision": "critical",
++      "old_floor_s": 60.0,
++      "passed": true
++    },
++    {
++      "category": "deterministic_reducer",
++      "claim_classification": {
++        "declared_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [],
++        "negative_evidence": [],
++        "reason": "deterministic_substrate_claim",
++        "state": "no_live_inference",
++        "substrate_kind": "unknown",
++        "substrate_source": "unknown_top_level_inference_substrate"
++      },
++      "expected_new_decision": "clean",
++      "expected_old_decision": "critical",
++      "fixture_id": "deterministic_source_row_reducer",
++      "new_decision": "clean",
++      "new_duration_flags": [],
++      "new_floor": {
++        "min_duration_s": 0.0001,
++        "reason": "deterministic_verifier",
++        "substrate": "deterministic_z3_and_bounded_enumeration_reducer"
++      },
++      "old_decision": "critical",
++      "old_floor_s": 60.0,
++      "passed": true
++    },
++    {
++      "category": "nested_marker_attack",
++      "claim_classification": {
++        "declared_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [
++          {
++            "field": "model_invoked",
++            "path": "input_data.batch.0.invocation.model_invoked",
++            "scope": "nested_unattributed",
++            "signal": "invocation_boolean",
++            "value": true
++          }
++        ],
++        "negative_evidence": [],
++        "reason": "non_live_claim_with_invocation_evidence",
++        "state": "contradictory",
++        "substrate_kind": "unknown",
++        "substrate_source": "unknown_top_level_inference_substrate"
++      },
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "nested_input_invocation",
++      "new_decision": "critical",
++      "new_duration_flags": [
++        {
++          "detail": "Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='deterministic_z3_and_bounded_enumeration_reducer', live_evidence_count=1, negative_evidence_count=0. The duration check fails closed until the invocation scope agrees.",
++          "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
++          "severity": "critical"
++        },
++        {
++          "detail": "duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        }
++      ],
++      "new_floor": {
++        "min_duration_s": 60.0,
++        "reason": "live_model",
++        "substrate": "deterministic_z3_and_bounded_enumeration_reducer"
++      },
++      "old_decision": "critical",
++      "old_floor_s": 60.0,
++      "passed": true
++    },
++    {
++      "category": "ambiguous",
++      "claim_classification": {
++        "declared_substrate": "",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [],
++        "negative_evidence": [],
++        "reason": "compute_markers_without_claim_provenance",
++        "state": "ambiguous",
++        "substrate_kind": "unknown",
++        "substrate_source": "missing_top_level_inference_substrate"
++      },
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "ambiguous_model_context",
++      "new_decision": "critical",
++      "new_duration_flags": [
++        {
++          "detail": "duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        }
++      ],
++      "new_floor": {
++        "min_duration_s": 60.0,
++        "reason": "live_model",
++        "substrate": "ambiguous_compute_provenance"
++      },
++      "old_decision": "critical",
++      "old_floor_s": 60.0,
++      "passed": true
++    },
++    {
++      "category": "bibliographic",
++      "claim_classification": {
++        "declared_substrate": "web_and_bibliographic_search_only",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [],
++        "negative_evidence": [],
++        "reason": "declared_non_live_substrate",
++        "state": "no_live_inference",
++        "substrate_kind": "no_llm",
++        "substrate_source": "top_level_inference_substrate"
++      },
++      "expected_new_decision": "clean",
++      "expected_old_decision": "clean",
++      "fixture_id": "bibliographic_source_scan",
++      "new_decision": "clean",
++      "new_duration_flags": [],
++      "new_floor": {
++        "min_duration_s": 0.0001,
++        "reason": "web_bibliographic_search_only",
++        "substrate": "web_and_bibliographic_search_only"
++      },
++      "old_decision": "clean",
++      "old_floor_s": 0.0001,
++      "passed": true
++    },
++    {
++      "category": "embedding",
++      "claim_classification": {
++        "declared_substrate": "live_llm_embedding_extraction",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [
++          {
++            "field": "model_invoked",
++            "path": "model_invoked",
++            "scope": "current_task",
++            "signal": "invocation_boolean",
++            "value": true
++          }
++        ],
++        "negative_evidence": [],
++        "reason": "live_substrate_claim",
++        "state": "live_inference",
++        "substrate_kind": "live_model",
++        "substrate_source": "top_level_inference_substrate"
++      },
++      "expected_new_decision": "critical",
++      "expected_old_decision": "critical",
++      "fixture_id": "live_embedding_extraction",
++      "new_decision": "critical",
++      "new_duration_flags": [
++        {
++          "detail": "duration_s=1.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=2.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        }
++      ],
++      "new_floor": {
++        "min_duration_s": 2.0,
++        "reason": "llm_embedding_extraction",
++        "substrate": "live_llm_embedding_extraction"
++      },
++      "old_decision": "critical",
++      "old_floor_s": 2.0,
++      "passed": true
++    },
++    {
++      "category": "pre_gate",
++      "claim_classification": {
++        "declared_substrate": "live_llm_inference",
++        "external_evidence": [],
++        "has_compute_markers": true,
++        "live_evidence": [],
++        "negative_evidence": [
++          {
++            "field": "model_invoked",
++            "path": "model_invoked",
++            "scope": "current_task",
++            "signal": "invocation_boolean",
++            "value": false
++          }
++        ],
++        "reason": "precondition_check_only",
++        "state": "blocked",
++        "substrate_kind": "live_model",
++        "substrate_source": "top_level_inference_substrate"
++      },
++      "expected_new_decision": "clean",
++      "expected_old_decision": "clean",
++      "fixture_id": "pre_gate_block",
++      "new_decision": "clean",
++      "new_duration_flags": [],
++      "new_floor": null,
++      "old_decision": "clean",
++      "old_floor_s": null,
++      "passed": true
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "check": "required_input:results/experiment_6967_certified_error_headroom_fixture.json",
++      "expected_value": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
++      "observed_value": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
++      "passed": true,
++      "path": "results/experiment_6967_certified_error_headroom_fixture.json"
++    },
++    {
++      "check": "required_input:scripts/adversarial_verify.py",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "sha256:837453f97167b6dfd20a8713da8d504e60c0751098ee80ee5bbe8116e3ac0f41",
++      "passed": true,
++      "path": "scripts/adversarial_verify.py"
++    },
++    {
++      "check": "required_input:tests/python/test_adversarial_verify_guards.py",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "sha256:664f2e31d19ebd94571a88665e3b93b9231c02b382fb25a5b2fb2f974f107f3c",
++      "passed": true,
++      "path": "tests/python/test_adversarial_verify_guards.py"
++    },
++    {
++      "check": "required_input:tests/python/test_adversarial_verify_no_llm_name_rule_6593.py",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "sha256:7aa609e2138ff12e7654af0e96a3ac70425f7b0f49d6bd008d8920ece9c13abf",
++      "passed": true,
++      "path": "tests/python/test_adversarial_verify_no_llm_name_rule_6593.py"
++    },
++    {
++      "check": "required_input:tests/python/test_adversarial_verify_substrate_classification_5933.py",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "sha256:ff474759f92f607438b92322168b97eec0f3d9c2aff66f2d8ead8dedeb33c20d",
++      "passed": true,
++      "path": "tests/python/test_adversarial_verify_substrate_classification_5933.py"
++    },
++    {
++      "check": "required_input:tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "sha256:5f594170af16c01d4d0f572aa4f13ef78379a8b3d96331fad6b025d7fbd16d57",
++      "passed": true,
++      "path": "tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py"
++    },
++    {
++      "check": "required_input:openspec/capabilities/research-reporting/spec.md",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "sha256:9fb1b70a606b773ef897c2bfc91497ad6aa3a1521d0e714b869811c1f4ac1197",
++      "passed": true,
++      "path": "openspec/capabilities/research-reporting/spec.md"
++    }
++  ],
++  "random_seed": 697420260904,
++  "reproducibility_checksum": "sha256:4435817ce059aad816d0202f62e46915b2ef9088ef7ac9311bdbf94016e542c3",
++  "rows": [
++    {
++      "category": "genuine_live",
++      "expected_new_decision": "critical",
++      "fixture_id": "genuine_live_inference",
++      "new_decision": "critical",
++      "old_decision": "critical",
++      "passed": true
++    },
++    {
++      "category": "deterministic_reducer",
++      "expected_new_decision": "clean",
++      "fixture_id": "deterministic_source_row_reducer",
++      "new_decision": "clean",
++      "old_decision": "critical",
++      "passed": true
++    },
++    {
++      "category": "nested_marker_attack",
++      "expected_new_decision": "critical",
++      "fixture_id": "nested_input_invocation",
++      "new_decision": "critical",
++      "old_decision": "critical",
++      "passed": true
++    },
++    {
++      "category": "ambiguous",
++      "expected_new_decision": "critical",
++      "fixture_id": "ambiguous_model_context",
++      "new_decision": "critical",
++      "old_decision": "critical",
++      "passed": true
++    },
++    {
++      "category": "bibliographic",
++      "expected_new_decision": "clean",
++      "fixture_id": "bibliographic_source_scan",
++      "new_decision": "clean",
++      "old_decision": "clean",
++      "passed": true
++    },
++    {
++      "category": "embedding",
++      "expected_new_decision": "critical",
++      "fixture_id": "live_embedding_extraction",
++      "new_decision": "critical",
++      "old_decision": "critical",
++      "passed": true
++    },
++    {
++      "category": "pre_gate",
++      "expected_new_decision": "clean",
++      "fixture_id": "pre_gate_block",
++      "new_decision": "clean",
++      "old_decision": "clean",
++      "passed": true
++    }
++  ],
++  "run_date": "20260904",
++  "schema": "carnot.exp6974.claim_provenance_duration_lint.v1",
++  "source_artifact_hashes": {
++    "openspec/capabilities/research-reporting/spec.md": "sha256:9fb1b70a606b773ef897c2bfc91497ad6aa3a1521d0e714b869811c1f4ac1197",
++    "results/experiment_6967_certified_error_headroom_fixture.json": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
++    "scripts/adversarial_verify.py": "sha256:837453f97167b6dfd20a8713da8d504e60c0751098ee80ee5bbe8116e3ac0f41",
++    "tests/python/test_adversarial_verify_guards.py": "sha256:664f2e31d19ebd94571a88665e3b93b9231c02b382fb25a5b2fb2f974f107f3c",
++    "tests/python/test_adversarial_verify_no_llm_name_rule_6593.py": "sha256:7aa609e2138ff12e7654af0e96a3ac70425f7b0f49d6bd008d8920ece9c13abf",
++    "tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py": "sha256:5f594170af16c01d4d0f572aa4f13ef78379a8b3d96331fad6b025d7fbd16d57",
++    "tests/python/test_adversarial_verify_substrate_classification_5933.py": "sha256:ff474759f92f607438b92322168b97eec0f3d9c2aff66f2d8ead8dedeb33c20d"
++  },
++  "verdict_class": "circular_positive",
++  "verifier_is_oracle": true,
++  "verifier_version_hash": "sha256:643693e2b39c3e53dcfa3e988aa9e3dff1b80b74502be0e3981914de63770a02"
++}
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index 13485eacbb..886d24437a 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -246,6 +246,15 @@ SUBSTRATE_KIND_NO_LLM = "no_llm"
+ SUBSTRATE_KIND_LIVE_MODEL = "live_model"
+ SUBSTRATE_KIND_UNKNOWN = "unknown"
+ 
++# Current-task claim states are separate from substrate classes. A substrate is
++# one declaration. Claim provenance also includes typed invocation evidence that
++# can confirm or contradict that declaration (REQ-CONDUCTOR-6974).
++CLAIM_STATE_LIVE = "live_inference"
++CLAIM_STATE_NON_LIVE = "no_live_inference"
++CLAIM_STATE_AMBIGUOUS = "ambiguous"
++CLAIM_STATE_CONTRADICTORY = "contradictory"
++CLAIM_STATE_BLOCKED = "blocked"
++
+ AGGREGATION_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
+     AGGREGATION_SUBSTRATE,
+     "aggregation_from_exact_declared_artifacts",
+@@ -2406,6 +2415,335 @@ def _classify_inference_substrate(d: dict[str, Any]) -> dict[str, str]:
+     }
+ 
+ 
++_INVOCATION_BOOLEAN_FIELDS = frozenset(
++    {
++        "generation_invoked",
++        "inference_invoked",
++        "live_inference_invoked",
++        "live_model_invoked",
++        "live_model_loaded",
++        "llm_invoked",
++        "llm_loaded",
++        "model_invoked",
++        "model_loaded",
++    }
++)
++_INVOCATION_COUNT_FIELDS = frozenset(
++    {
++        "generation_call_count",
++        "inference_call_count",
++        "invocation_count",
++        "live_inference_call_count",
++        "llm_call_count",
++        "model_inference_call_count",
++        "model_invocation_count",
++    }
++)
++_LIVE_DURATION_FIELDS = frozenset(
++    {
++        "generation_duration_s",
++        "inference_duration_s",
++        "live_duration_s",
++        "live_inference_duration_s",
++        "model_load_duration_s",
++    }
++)
++_METHODOLOGY_FIELDS = frozenset(
++    {
++        "current_task_methodology",
++        "execution_methodology",
++        "methodology",
++        "methodology_note",
++    }
++)
++_EXTERNAL_PROVENANCE_TOKENS = frozenset(
++    {"cited", "historical", "predecessor", "quoted", "replay", "source", "upstream"}
++)
++_DIAGNOSTIC_PROVENANCE_TOKENS = frozenset(
++    {
++        "classification",
++        "corrigendum",
++        "diagnostic",
++        "diagnostics",
++        "error",
++        "finding",
++        "findings",
++        "fixture",
++        "flag",
++        "flags",
++        "focused",
++        "mutation",
++        "recheck",
++    }
++)
++_CURRENT_TASK_CONTAINER_TOKENS = frozenset(
++    {"current", "execution", "generation", "gpu", "methodology", "runtime", "task"}
++)
++_GPU_MODEL_EVIDENCE_FIELDS = frozenset(
++    {
++        "cuda_model_loaded",
++        "gpu_memory_delta_mb",
++        "model_vram_delta_mb",
++        "offloaded_layer_count",
++        "offloaded_layers",
++    }
++)
++
++
++def _claim_field_name(value: object) -> str:
++    """Normalize a field name without reading its arbitrary value as a claim."""
++
++    return re.sub(r"[^a-z0-9]+", "_", str(value).lower()).strip("_")
++
++
++def _claim_path_tokens(path: tuple[str, ...]) -> set[str]:
++    """Return whole path words so `resource` does not accidentally mean `source`."""
++
++    return {
++        token
++        for segment in path
++        for token in _claim_field_name(segment).split("_")
++        if token and not token.isdigit()
++    }
++
++
++def _claim_evidence_scope(path: tuple[str, ...], container: dict[str, Any]) -> str:
++    """Attribute typed evidence to this task, an upstream source, or neither.
++
++    Source and diagnostic containers are explicit provenance boundaries. Other
++    nested data is not trusted as current-task evidence, but it remains visible
++    so moving a typed invocation marker deeper cannot make the guard miss it.
++    """
++
++    tokens = _claim_path_tokens(path)
++    scope_raw = _unwrapped_scalar(container.get("scope", container.get("provenance_scope")))
++    scope = _claim_field_name(scope_raw) if isinstance(scope_raw, str) else ""
++    if scope in {"cited", "external", "historical", "source", "upstream"}:
++        return "external"
++    if tokens & _DIAGNOSTIC_PROVENANCE_TOKENS:
++        return "diagnostic"
++    if tokens & _EXTERNAL_PROVENANCE_TOKENS:
++        return "external"
++    if scope in {"current", "current_run", "current_task", "self", "this_task"}:
++        return "current_task"
++    if len(path) == 1 or tokens & _CURRENT_TASK_CONTAINER_TOKENS:
++        return "current_task"
++    return "nested_unattributed"
++
++
++def _methodology_claims_live_inference(value: object) -> bool:
++    """Recognize an affirmative live-inference statement in task methodology.
++
++    The check is narrow because free prose is weaker than a typed field. Common
++    explicit negations win first, so text such as "did not invoke the model"
++    cannot become positive evidence through the word `invoke` alone.
++    """
++
++    if not isinstance(value, str):
++        return False
++    text = " ".join(value.lower().replace("_", " ").split())
++    negated = (
++        "did not invoke",
++        "does not invoke",
++        "never invoked",
++        "no llm",
++        "no model was loaded",
++        "without invoking",
++        "without model inference",
++    )
++    if any(marker in text for marker in negated):
++        return False
++    affirmative = (
++        "current task invoked llama.cpp",
++        "current task invoked the llm",
++        "current task invoked the model",
++        "live llm inference",
++        "live model inference",
++        "llm was invoked",
++        "model was loaded for inference",
++        "ran live inference",
++    )
++    return any(marker in text for marker in affirmative)
++
++
++def _identity_claims_live_inference(d: dict[str, Any]) -> tuple[str, str] | None:
++    """Return an explicit current-task live claim from its title or verdict."""
++
++    if _is_precondition_check_only_blocked(d):
++        return None
++    live_pattern = re.compile(r"(?:^|[_ -])live[_ -](?:eval|inference|llm|model)(?:$|[_ -])")
++    negated_pattern = re.compile(r"\b(?:no|not|without)\b.{0,32}\blive\b")
++    for key in SELF_DESCRIBING_FIELDS:
++        value = _unwrapped_scalar(d.get(key))
++        if not isinstance(value, str):
++            continue
++        text = value.lower()
++        if live_pattern.search(text) and not negated_pattern.search(text.replace("_", " ")):
++            return key, value
++    return None
++
++
++def _typed_invocation_evidence(d: dict[str, Any]) -> tuple[list[dict[str, Any]], ...]:
++    """Collect typed live, no-invocation, and cited evidence at every depth.
++
++    Only field names with invocation meaning are read. Model labels, commands,
++    paths, hashes, and row text are never promoted from string content alone.
++    """
++
++    live: list[dict[str, Any]] = []
++    negative: list[dict[str, Any]] = []
++    external: list[dict[str, Any]] = []
++
++    def visit(value: Any, path: tuple[str, ...]) -> None:
++        if isinstance(value, dict):
++            for raw_key, nested in value.items():
++                key = _claim_field_name(raw_key)
++                next_path = (*path, str(raw_key))
++                if key in {"field_principles", "required_artifact_fields"}:
++                    continue
++                scalar = _unwrapped_scalar(nested)
++                signal = ""
++                positive: bool | None = None
++                parent = _claim_field_name(path[-1]) if path else ""
++                if key in _INVOCATION_BOOLEAN_FIELDS or (
++                    key == "invoked"
++                    and any(
++                        token in parent for token in ("generation", "inference", "llm", "model")
++                    )
++                ):
++                    if isinstance(scalar, bool):
++                        signal = "invocation_boolean"
++                        positive = scalar
++                elif key in _INVOCATION_COUNT_FIELDS and _is_finite_number(scalar):
++                    signal = "invocation_count"
++                    positive = float(scalar) > 0.0
++                elif key in _LIVE_DURATION_FIELDS and _is_finite_number(scalar):
++                    signal = "live_duration"
++                    positive = float(scalar) > 0.0
++                elif key in _GPU_MODEL_EVIDENCE_FIELDS and _is_finite_number(scalar):
++                    if "gpu" in _claim_path_tokens(next_path):
++                        signal = "gpu_model_receipt"
++                        positive = float(scalar) > 0.0
++                elif key in _METHODOLOGY_FIELDS and _methodology_claims_live_inference(scalar):
++                    signal = "current_task_methodology"
++                    positive = True
++
++                if positive is not None:
++                    scope = _claim_evidence_scope(next_path, value)
++                    row = {
++                        "path": ".".join(next_path),
++                        "field": key,
++                        "signal": signal,
++                        "scope": scope,
++                        "value": scalar,
++                    }
++                    if scope == "diagnostic":
++                        pass
++                    elif scope == "external":
++                        external.append(row)
++                    elif positive:
++                        live.append(row)
++                    else:
++                        negative.append(row)
++                if isinstance(nested, (dict, list)):
++                    visit(nested, next_path)
++        elif isinstance(value, list):
++            for index, nested in enumerate(value):
++                if isinstance(nested, (dict, list)):
++                    visit(nested, (*path, str(index)))
++
++    visit(d, ())
++    identity = _identity_claims_live_inference(d)
++    if identity is not None:
++        key, value = identity
++        live.append(
++            {
++                "path": key,
++                "field": key,
++                "signal": "current_task_claim",
++                "scope": "current_task",
++                "value": value,
++            }
++        )
++    return live, negative, external
++
++
++def _substrate_declares_deterministic_non_live(raw: str) -> bool:
++    """Recognize the declared deterministic-work concept without a name allowlist."""
++
++    token = _claim_field_name(_substrate_leading_token(raw))
++    if "deterministic" not in token.split("_"):
++        return False
++    live_markers = ("live_llm", "live_model", "llama_cpp", "gguf")
++    return not any(marker in token for marker in live_markers)
++
++
++def _classify_current_task_inference_claim(d: dict[str, Any]) -> dict[str, Any]:
++    """Classify live inference from attributable current-task provenance.
++
++    Explicit substrate claims lead. Typed evidence can confirm or contradict
++    them. Whole-blob model strings are used only to keep an otherwise unknown
++    artifact conservative; they never prove that this task invoked a model.
++    """
++
++    substrate = _classify_inference_substrate(d)
++    raw = substrate["declared_value"]
++    live_evidence, negative_evidence, external_evidence = _typed_invocation_evidence(d)
++    has_compute_markers = _has_compute_bound_marker(d)
++    deterministic = _substrate_declares_deterministic_non_live(raw)
++
++    if _is_precondition_check_only_blocked(d):
++        state = CLAIM_STATE_BLOCKED
++        reason = "precondition_check_only"
++    elif substrate["kind"] == SUBSTRATE_KIND_LIVE_MODEL:
++        if negative_evidence:
++            state = CLAIM_STATE_CONTRADICTORY
++            reason = "live_claim_with_no_invocation_evidence"
++        else:
++            state = CLAIM_STATE_LIVE
++            reason = "live_substrate_claim"
++    elif substrate["kind"] in {SUBSTRATE_KIND_AGGREGATION, SUBSTRATE_KIND_NO_LLM} or deterministic:
++        if live_evidence:
++            state = CLAIM_STATE_CONTRADICTORY
++            reason = "non_live_claim_with_invocation_evidence"
++        else:
++            state = CLAIM_STATE_NON_LIVE
++            reason = (
++                "deterministic_substrate_claim"
++                if deterministic and substrate["kind"] == SUBSTRATE_KIND_UNKNOWN
++                else "declared_non_live_substrate"
++            )
++    elif live_evidence:
++        if negative_evidence:
++            state = CLAIM_STATE_CONTRADICTORY
++            reason = "conflicting_typed_invocation_evidence"
++        elif any(row["scope"] == "nested_unattributed" for row in live_evidence):
++            state = CLAIM_STATE_AMBIGUOUS
++            reason = "nested_invocation_without_current_task_provenance"
++        else:
++            state = CLAIM_STATE_LIVE
++            reason = "typed_current_task_invocation_evidence"
++    else:
++        state = CLAIM_STATE_AMBIGUOUS
++        reason = (
++            "compute_markers_without_claim_provenance"
++            if has_compute_markers
++            else "insufficient_claim_provenance"
++        )
++
++    return {
++        "state": state,
++        "reason": reason,
++        "substrate_kind": substrate["kind"],
++        "declared_substrate": raw,
++        "substrate_source": substrate["source"],
++        "has_compute_markers": has_compute_markers,
++        "live_evidence": live_evidence,
++        "negative_evidence": negative_evidence,
++        "external_evidence": external_evidence,
++    }
++
++
+ def _is_live_llm_inference(d: dict[str, Any]) -> bool:
+     """True when the artifact declares a live LLM inference substrate."""
+     return _inference_substrate_matches(d, LIVE_LLM_SUBSTRATE)
+@@ -2763,6 +3101,40 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
+     if _is_precondition_check_only_blocked(d):
+         return None
+     classification = _classify_inference_substrate(d)
++    claim = _classify_current_task_inference_claim(d)
++    requires_live_floor = claim["state"] in {
++        CLAIM_STATE_LIVE,
++        CLAIM_STATE_CONTRADICTORY,
++    } or (
++        claim["state"] == CLAIM_STATE_AMBIGUOUS
++        and (claim["has_compute_markers"] or bool(claim["live_evidence"]))
++    )
++    if requires_live_floor:
++        # Keep calibrated live subclasses. Provenance changes whether the run is
++        # live, not the existing floor for the live method it declares.
++        if _is_llm_embedding_extraction(d):
++            return {
++                "substrate": LLM_EMBEDDING_EXTRACTION_SUBSTRATE,
++                "min_duration_s": LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S,
++                "reason": "llm_embedding_extraction",
++            }
++        if _is_local_sota_gguf_small_n(d):
++            return {
++                "substrate": LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE,
++                "min_duration_s": LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S,
++                "reason": "local_sota_gguf_small_n",
++            }
++        if _is_native_gguf_backend_bisect(d):
++            return {
++                "substrate": NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE,
++                "min_duration_s": NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S,
++                "reason": "native_gguf_backend_bisect",
++            }
++        return {
++            "substrate": _inference_substrate_text(d) or "ambiguous_compute_provenance",
++            "min_duration_s": COMPUTE_BOUND_MIN_DURATION_S,
++            "reason": "live_model",
++        }
+     if _is_verifier_scoring_only(d):
+         cheap_floor = _cheap_learned_value_floor_descriptor(d)
+         if cheap_floor is not None:
+@@ -2778,7 +3150,7 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
+             "min_duration_s": AGGREGATION_MIN_DURATION_S,
+             "reason": "aggregation",
+         }
+-    if _is_deterministic_verifier(d):
++    if _is_deterministic_verifier(d) or claim["reason"] == "deterministic_substrate_claim":
+         return {
+             "substrate": _inference_substrate_text(d) or "deterministic_verifier",
+             "min_duration_s": DETERMINISTIC_VERIFIER_MIN_DURATION_S,
+@@ -2870,12 +3242,30 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
+     # is exactly the case an early return would hide. 50 artifacts sat in that blind
+     # spot when the warn was placed after the guards.
+     _emit_no_llm_by_name_warning(d, flags)
+-    if not _is_finite_number(duration):
+-        return
+     if _is_precondition_check_only_blocked(d):
+         return
++    claim = _classify_current_task_inference_claim(d)
++    if claim["state"] == CLAIM_STATE_CONTRADICTORY:
++        flags.append(
++            Flag(
++                kind="INFERENCE_PROVENANCE_CONTRADICTION",
++                severity="critical",
++                detail=(
++                    "Current-task inference provenance is contradictory: "
++                    f"{claim['reason']}; substrate={claim['declared_substrate']!r}, "
++                    f"live_evidence_count={len(claim['live_evidence'])}, "
++                    f"negative_evidence_count={len(claim['negative_evidence'])}. "
++                    "The duration check fails closed until the invocation scope agrees."
++                ),
++            )
++        )
++    if not _is_finite_number(duration):
++        return
+     classification = _classify_inference_substrate(d)
+-    if classification["kind"] == SUBSTRATE_KIND_AGGREGATION:
++    if (
++        classification["kind"] == SUBSTRATE_KIND_AGGREGATION
++        and claim["state"] == CLAIM_STATE_NON_LIVE
++    ):
+         floor = duration_floor_for_artifact(d)
+         assert floor is not None
+         min_duration = float(floor["min_duration_s"])
+@@ -2939,10 +3329,18 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
+         )
+ 
+     _declares_arc_live_no_llm = _is_arc_live_agent_no_llm(d)
++    _claim_requires_live_floor = claim["state"] in {
++        CLAIM_STATE_LIVE,
++        CLAIM_STATE_CONTRADICTORY,
++    } or (
++        claim["state"] == CLAIM_STATE_AMBIGUOUS
++        and (claim["has_compute_markers"] or bool(claim["live_evidence"]))
++    )
+     if (
+         not _has_compute_bound_marker(d)
+         and not _is_live_llm_inference(d)
+         and not _declares_arc_live_no_llm
++        and not _claim_requires_live_floor
+     ):
+         return
+     floor = duration_floor_for_artifact(d)
+@@ -3181,9 +3579,14 @@ def check_preconditions_declared(d: dict[str, Any], flags: list[Flag]) -> None:
+ 
+ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
+     """Compute-bound artifact missing methodology evidence."""
+-    if _classify_inference_substrate(d)["kind"] == SUBSTRATE_KIND_AGGREGATION:
++    claim = _classify_current_task_inference_claim(d)
++    if claim["state"] in {CLAIM_STATE_BLOCKED, CLAIM_STATE_NON_LIVE}:
+         return
+-    if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
++    if (
++        claim["state"] == CLAIM_STATE_AMBIGUOUS
++        and not claim["has_compute_markers"]
++        and not claim["live_evidence"]
++    ):
+         return
+     # An honest blocked_* verdict (Pre-Launch Preconditions Discipline) means no
+     # measurement happened at all -- requiring random_seed/reproducibility_checksum
+@@ -6923,21 +7326,15 @@ HIGH_PRECISION_KINDS = ("DURATION_TOO_SHORT", "GATE_PASSED_WITHOUT_DATA")
+ 
+ 
+ def _claims_live_model(d: dict[str, Any]) -> bool:
+-    """True if the artifact AFFIRMATIVELY claims it ran a named live model
+-    (declares model_specs / target_model / models, or
+-    inference_substrate=live_llm_inference). DURATION_TOO_SHORT is only a real
+-    fabrication signal when paired with such a claim — an aggregation/audit
+-    artifact that merely mentions 'GGUF' in prose but declares no model didn't
+-    claim a live run, so a sub-floor duration is expected, not suspicious. This
+-    guard keeps the retroactive backfill high-precision (see exp1877/1498/1459
+-    aggregation false positives vs exp1851/1782 real live-claim fabrications)."""
+-    if _is_live_llm_inference(d):
+-        return True
+-    for key in ("model_specs", "target_model", "models", "model"):
+-        v = d.get(key)
+-        if v:
+-            return True
+-    return False
++    """True when attributable provenance says this task ran a live model.
++
++    A model label identifies what could run; it does not establish that a call
++    happened. The backfill remains high precision by requiring a live claim or
++    typed invocation evidence instead of the old label-presence shortcut.
++    """
++
++    claim = _classify_current_task_inference_claim(d)
++    return claim["state"] in {CLAIM_STATE_LIVE, CLAIM_STATE_CONTRADICTORY}
+ 
+ 
+ def backfill_stamps(
+diff --git a/scripts/experiments/experiment_6974_claim_provenance_duration_lint.py b/scripts/experiments/experiment_6974_claim_provenance_duration_lint.py
+new file mode 100644
+index 0000000000..3d808e7eb3
+--- /dev/null
++++ b/scripts/experiments/experiment_6974_claim_provenance_duration_lint.py
+@@ -0,0 +1,732 @@
++#!/usr/bin/env python3
++"""Build the Exp6974 claim-provenance duration-lint repair receipt.
++
++The source Exp6967 artifact is historical evidence. This script reads and
++hashes it but writes only a separate derivative receipt.
++
++Spec ref: REQ-CONDUCTOR-6974.
++"""
++
++from __future__ import annotations
++
++import argparse
++from copy import deepcopy
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct CLI import path only.
++    sys.path.insert(0, str(REPO_ROOT))
++
++import scripts.adversarial_verify as av
++
++
++EXPERIMENT_ID = 6974
++RANDOM_SEED = 697420260904
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++EXP6967_PATH = Path("results/experiment_6967_certified_error_headroom_fixture.json")
++OUTPUT_PATH = Path("results/experiment_6974_claim_provenance_duration_lint.json")
++EXPECTED_EXP6967_SHA256 = "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee"
++INFERENCE_SUBSTRATE = "deterministic_claim_provenance_verifier"
++VERDICT_CLASSES = {"positive", "circular_positive", "null", "blocked", "disqualified", "partial"}
++
++REQUIRED_INPUT_PATHS = (
++    EXP6967_PATH,
++    Path("scripts/adversarial_verify.py"),
++    Path("tests/python/test_adversarial_verify_guards.py"),
++    Path("tests/python/test_adversarial_verify_no_llm_name_rule_6593.py"),
++    Path("tests/python/test_adversarial_verify_substrate_classification_5933.py"),
++    Path("tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py"),
++    SPEC_PATH,
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "rows",
++    "classification_rule_rows",
++    "mutation_fixture_rows",
++    "old_new_decision_rows",
++    "false_positive_rows",
++    "false_negative_rows",
++    "ambiguous_provenance_rows",
++    "focused_test_receipts",
++    "exp6967_readonly_recheck",
++    "verifier_version_hash",
++    "duration_lint_repair_complete_score",
++    "fixture_admissibility_ready_score",
++    "random_seed",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "field_principles": "Each required result has a stated scientific reason for inclusion.",
++    "preconditions_checked": "A verifier conclusion is valid only when every frozen input is readable and identified.",
++    "inference_substrate": "The receipt declares the computation it performed rather than inheriting a source model label.",
++    "duration_s": "A monotonic task clock separates receipt work from copied source timing.",
++    "source_artifact_hashes": "Immutable source hashes make the derivative decision repeatable without rewriting history.",
++    "rows": "Per-fixture rows let readers recompute the aggregate repair decision.",
++    "classification_rule_rows": "An explicit rule table makes the claim and invocation boundary falsifiable.",
++    "mutation_fixture_rows": "A varied mutation corpus tests both false-positive removal and live-check retention.",
++    "old_new_decision_rows": "Paired decisions isolate the behavioral change caused by the repair.",
++    "false_positive_rows": "Removed false positives show that source model identifiers no longer become invocation evidence.",
++    "false_negative_rows": "Missed expected criticals would reveal a weakened fabrication guard.",
++    "ambiguous_provenance_rows": "Ambiguous cases stay visible because silence would look like verification.",
++    "focused_test_receipts": "Terminal test receipts distinguish executed checks from planned checks.",
++    "exp6967_readonly_recheck": "The incident artifact is re-evaluated while its stored stamp and bytes remain intact.",
++    "verifier_version_hash": "The decision names the exact verifier implementation that produced it.",
++    "duration_lint_repair_complete_score": "Completion is one only when every mutation has the expected terminal decision.",
++    "fixture_admissibility_ready_score": "Readiness is one only when Exp6967 keeps its source identity and has no current live-duration critical.",
++    "random_seed": "A fixed seed identifies the deterministic mutation-corpus contract.",
++    "reproducibility_checksum": "A canonical checksum detects drift in decisions while excluding wall-clock noise.",
++    "gate_check_summary": "Every blocked result states the failed check and its expected and observed values.",
++    "verifier_is_oracle": "The verifier directly defines this infrastructure receipt, so a positive is circular.",
++    "verdict_class": "A closed verdict class prevents success-shaped text from hiding a blocked or null result.",
++    "honest_verdict": "A terminal prefix states the receipt outcome before any supporting metrics.",
++}
++
++CLASSIFICATION_RULE_ROWS = (
++    {
++        "field_family": "inference_substrate",
++        "scope": "top_level_current_task",
++        "rule": "Explicit live, no-LLM, aggregation, and deterministic claims lead classification.",
++    },
++    {
++        "field_family": "invocation_boolean_or_count",
++        "scope": "recursive_typed_fields",
++        "rule": "Positive typed invocation fields are evidence even when nested; cited upstream fields stay external.",
++    },
++    {
++        "field_family": "live_duration",
++        "scope": "typed_current_task_fields",
++        "rule": "A positive live, inference, generation, or model-load duration evidences current live work.",
++    },
++    {
++        "field_family": "gpu_receipt",
++        "scope": "typed_current_task_receipts",
++        "rule": "Model-load or offload measurements in a current-task GPU receipt evidence live work.",
++    },
++    {
++        "field_family": "methodology",
++        "scope": "current_task_methodology",
++        "rule": "A narrow affirmative methodology statement can evidence live inference; explicit negation wins first.",
++    },
++    {
++        "field_family": "arbitrary_values",
++        "scope": "rows_hashes_paths_diagnostics_model_labels",
++        "rule": "String content alone never proves invocation; unknown model context remains ambiguous and fails closed.",
++    },
++)
++
++
++def sha256_path(path: Path) -> str:
++    """Return a prefixed hash so stored source identities cannot be mistaken for paths."""
++
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return f"sha256:{digest.hexdigest()}"
++
++
++def _base_payload(**overrides: Any) -> dict[str, Any]:
++    """Create the shared deterministic fixture without claiming model invocation."""
++
++    payload: dict[str, Any] = {
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": "complete_circular_claim_provenance_fixture",
++        "inference_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
++        "duration_s": 1.864951312,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "sha256:" + "7" * 64,
++        "source_rows": [
++            {
++                "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++                "model_label": "unsloth/gemma-4-31B-it-GGUF",
++            }
++        ],
++    }
++    payload.update(overrides)
++    return payload
++
++
++def mutation_corpus() -> list[dict[str, Any]]:
++    """Return the fixed paired-control corpus required by REQ-CONDUCTOR-6974."""
++
++    ambiguous = _base_payload(model_specs={"name": "unsloth/gemma-4-31B-it-GGUF"})
++    ambiguous.pop("inference_substrate")
++    return [
++        {
++            "fixture_id": "genuine_live_inference",
++            "category": "genuine_live",
++            "expected_old_decision": "critical",
++            "expected_new_decision": "critical",
++            "payload": _base_payload(
++                inference_substrate="live_llm_inference",
++                duration_s=5.0,
++                model_invoked=True,
++                model_specs={"name": "unsloth/Qwen3.6-35B-A3B-GGUF"},
++            ),
++        },
++        {
++            "fixture_id": "deterministic_source_row_reducer",
++            "category": "deterministic_reducer",
++            "expected_old_decision": "critical",
++            "expected_new_decision": "clean",
++            "payload": _base_payload(),
++        },
++        {
++            "fixture_id": "nested_input_invocation",
++            "category": "nested_marker_attack",
++            "expected_old_decision": "critical",
++            "expected_new_decision": "critical",
++            "payload": _base_payload(
++                input_data={"batch": [{"invocation": {"model_invoked": True}}]},
++            ),
++        },
++        {
++            "fixture_id": "ambiguous_model_context",
++            "category": "ambiguous",
++            "expected_old_decision": "critical",
++            "expected_new_decision": "critical",
++            "payload": ambiguous,
++        },
++        {
++            "fixture_id": "bibliographic_source_scan",
++            "category": "bibliographic",
++            "expected_old_decision": "clean",
++            "expected_new_decision": "clean",
++            "payload": _base_payload(
++                inference_substrate="web_and_bibliographic_search_only",
++                duration_s=0.05,
++            ),
++        },
++        {
++            "fixture_id": "live_embedding_extraction",
++            "category": "embedding",
++            "expected_old_decision": "critical",
++            "expected_new_decision": "critical",
++            "payload": _base_payload(
++                inference_substrate="live_llm_embedding_extraction",
++                duration_s=1.0,
++                model_invoked=True,
++                model_specs={"name": "unsloth/gemma-4-26B-A4B-it-GGUF"},
++            ),
++        },
++        {
++            "fixture_id": "pre_gate_block",
++            "category": "pre_gate",
++            "expected_old_decision": "clean",
++            "expected_new_decision": "clean",
++            "payload": _base_payload(
++                honest_verdict="blocked_model_not_cached",
++                inference_substrate="live_llm_inference",
++                duration_s=0.01,
++                model_invoked=False,
++            ),
++        },
++    ]
++
++
++def _legacy_duration_floor(payload: dict[str, Any]) -> float | None:
++    """Reproduce the pre-repair duration choice for paired decision reporting."""
++
++    if av._is_precondition_check_only_blocked(payload):
++        return None
++    classification = av._classify_inference_substrate(payload)
++    if av._is_verifier_scoring_only(payload):
++        return av.VERIFIER_SCORING_MIN_DURATION_S
++    if av._is_aggregation_only(payload):
++        return av.AGGREGATION_MIN_DURATION_S
++    if av._is_deterministic_verifier(payload):
++        return av.DETERMINISTIC_VERIFIER_MIN_DURATION_S
++    if av._is_arc_live_agent_no_llm(payload):
++        return av.ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S
++    if av._is_llm_embedding_extraction(payload):
++        return av.LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S
++    if av._is_log_analysis_local_timing(payload):
++        return av.LOG_ANALYSIS_LOCAL_TIMING_MIN_DURATION_S
++    if av._is_artifact_qa_lint_tests(payload):
++        return av.ARTIFACT_QA_LINT_TESTS_MIN_DURATION_S
++    if av._is_web_bibliographic_search_only(payload):
++        return av.WEB_BIBLIOGRAPHIC_SEARCH_ONLY_MIN_DURATION_S
++    if av._is_local_sota_gguf_small_n(payload):
++        return av.LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S
++    if av._is_deterministic_smt_hint_validation(payload):
++        return av.DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S
++    if av._is_native_gguf_backend_bisect(payload):
++        return av.NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S
++    if classification["kind"] == av.SUBSTRATE_KIND_NO_LLM:
++        return av.NO_LLM_DECLARED_MIN_DURATION_S
++    if av._is_live_llm_inference(payload) or av._has_compute_bound_marker(payload):
++        return av.COMPUTE_BOUND_MIN_DURATION_S
++    return None
++
++
++def _legacy_duration_decision(payload: dict[str, Any]) -> dict[str, Any]:
++    """Return the old whole-blob marker decision without mutating the verifier."""
++
++    floor = _legacy_duration_floor(payload)
++    duration = payload.get("duration_s")
++    critical = floor is not None and av._is_finite_number(duration) and float(duration) < floor
++    return {
++        "decision": "critical" if critical else "clean",
++        "min_duration_s": floor,
++        "rule": "whole_blob_compute_marker_fallback",
++    }
++
++
++def _current_duration_decision(payload: dict[str, Any]) -> dict[str, Any]:
++    """Return the corrected duration decision and its raw duration-rule flags."""
++
++    flags: list[av.Flag] = []
++    av.check_duration_vs_claim(payload, flags)
++    relevant = [
++        flag.to_dict()
++        for flag in flags
++        if flag.kind in {"DURATION_TOO_SHORT", "INFERENCE_PROVENANCE_CONTRADICTION"}
++    ]
++    critical = any(flag["severity"] == "critical" for flag in relevant)
++    return {
++        "decision": "critical" if critical else "clean",
++        "classification": av._classify_current_task_inference_claim(payload),
++        "duration_flags": relevant,
++        "duration_floor": av.duration_floor_for_artifact(payload),
++    }
++
++
++def evaluate_mutation_corpus() -> list[dict[str, Any]]:
++    """Evaluate old and corrected rules against every required mutation fixture."""
++
++    rows: list[dict[str, Any]] = []
++    for fixture in mutation_corpus():
++        old = _legacy_duration_decision(fixture["payload"])
++        new = _current_duration_decision(fixture["payload"])
++        passed = (
++            old["decision"] == fixture["expected_old_decision"]
++            and new["decision"] == fixture["expected_new_decision"]
++        )
++        rows.append(
++            {
++                "fixture_id": fixture["fixture_id"],
++                "category": fixture["category"],
++                "expected_old_decision": fixture["expected_old_decision"],
++                "old_decision": old["decision"],
++                "old_floor_s": old["min_duration_s"],
++                "expected_new_decision": fixture["expected_new_decision"],
++                "new_decision": new["decision"],
++                "new_floor": new["duration_floor"],
++                "claim_classification": new["classification"],
++                "new_duration_flags": new["duration_flags"],
++                "passed": passed,
++            }
++        )
++    return rows
++
++
++def _preconditions(repo_root: Path) -> tuple[list[dict[str, Any]], dict[str, str | None]]:
++    """Check all frozen inputs before classification and preserve observed hashes."""
++
++    rows: list[dict[str, Any]] = []
++    hashes: dict[str, str | None] = {}
++    for relative in REQUIRED_INPUT_PATHS:
++        path = repo_root / relative
++        observed = sha256_path(path) if path.is_file() and path.stat().st_size > 0 else None
++        hashes[str(relative)] = observed
++        expected: Any = "readable_nonempty_file"
++        passed = observed is not None
++        if relative == EXP6967_PATH:
++            expected = EXPECTED_EXP6967_SHA256
++            passed = observed == expected
++        rows.append(
++            {
++                "check": f"required_input:{relative}",
++                "path": str(relative),
++                "expected_value": expected,
++                "observed_value": observed,
++                "passed": passed,
++            }
++        )
++    return rows, hashes
++
++
++def _blocked_gate_rows(preconditions: list[dict[str, Any]]) -> list[dict[str, Any]]:
++    """Convert failed preconditions to the repository's standard blocked shape."""
++
++    return [
++        {
++            "failed_check": row["check"],
++            "expected_value": row["expected_value"],
++            "observed_value": row["observed_value"],
++        }
++        for row in preconditions
++        if row["passed"] is not True
++    ]
++
++
++def run_focused_tests(repo_root: Path) -> list[dict[str, Any]]:
++    """Run the two Exp6974 test modules and preserve a terminal command receipt."""
++
++    command = [
++        sys.executable,
++        "-m",
++        "pytest",
++        "-o",
++        "addopts=",
++        "tests/python/test_adversarial_verify_claim_provenance_6974.py",
++        "tests/python/test_experiment_6974_claim_provenance_duration_lint.py",
++        "-q",
++    ]
++    started = time.perf_counter()
++    try:
++        completed = subprocess.run(
++            command,
++            cwd=repo_root,
++            capture_output=True,
++            text=True,
++            timeout=180.0,
++            check=False,
++        )
++        exit_code: int | None = completed.returncode
++        stdout = completed.stdout
++        stderr = completed.stderr
++        outcome = "pass" if completed.returncode == 0 else "fail"
++    except (OSError, subprocess.TimeoutExpired) as exc:
++        exit_code = None
++        stdout = ""
++        stderr = f"{type(exc).__name__}: {exc}"
++        outcome = "blocked"
++    return [
++        {
++            "name": "exp6974_focused_pytest",
++            "command": " ".join(command),
++            "exit_code": exit_code,
++            "outcome": outcome,
++            "stdout": stdout,
++            "stderr": stderr,
++            "duration_s": time.perf_counter() - started,
++        }
++    ]
++
++
++def _checksum_view(artifact: dict[str, Any]) -> dict[str, Any]:
++    """Remove process timing and console noise while retaining every decision."""
++
++    view = deepcopy(artifact)
++    view.pop("duration_s", None)
++    view.pop("reproducibility_checksum", None)
++    for receipt in view.get("focused_test_receipts", []):
++        if isinstance(receipt, dict):
++            receipt.pop("duration_s", None)
++            receipt.pop("stdout", None)
++            receipt.pop("stderr", None)
++    return view
++
++
++def reproducibility_checksum(artifact: dict[str, Any]) -> str:
++    """Hash all stable claims and rows in canonical JSON form."""
++
++    encoded = json.dumps(
++        _checksum_view(artifact), sort_keys=True, separators=(",", ":"), ensure_ascii=True
++    ).encode("utf-8")
++    return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
++
++
++def _base_artifact(
++    *,
++    date: str,
++    duration_s: float,
++    preconditions: list[dict[str, Any]],
++    source_hashes: dict[str, str | None],
++) -> dict[str, Any]:
++    """Create a schema-complete neutral receipt before terminal scores are known."""
++
++    return {
++        "schema": "carnot.exp6974.claim_provenance_duration_lint.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": date,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "source_artifact_hashes": source_hashes,
++        "rows": [],
++        "classification_rule_rows": [dict(row) for row in CLASSIFICATION_RULE_ROWS],
++        "mutation_fixture_rows": [],
++        "old_new_decision_rows": [],
++        "false_positive_rows": [],
++        "false_negative_rows": [],
++        "ambiguous_provenance_rows": [],
++        "focused_test_receipts": [],
++        "exp6967_readonly_recheck": {},
++        "verifier_version_hash": f"sha256:{av.LOADED_GATE_VERSION}",
++        "duration_lint_repair_complete_score": 0,
++        "fixture_admissibility_ready_score": 0,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "gate_check_summary": [],
++        "verifier_is_oracle": True,
++        "verdict_class": "blocked",
++        "honest_verdict": "blocked_claim_provenance_duration_lint",
++    }
++
++
++def build_artifact(
++    *,
++    date: str,
++    repo_root: Path,
++    focused_test_receipts: list[dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    """Build a terminal derivative receipt without writing any source artifact."""
++
++    started = time.perf_counter()
++    preconditions, source_hashes = _preconditions(repo_root)
++    artifact = _base_artifact(
++        date=date,
++        duration_s=0.0,
++        preconditions=preconditions,
++        source_hashes=source_hashes,
++    )
++    failed = _blocked_gate_rows(preconditions)
++    if failed:
++        artifact["gate_check_summary"] = failed
++        artifact["exp6967_readonly_recheck"] = {
++            "source_path": str(EXP6967_PATH),
++            "source_hash_before": source_hashes.get(str(EXP6967_PATH)),
++            "source_hash_after": source_hashes.get(str(EXP6967_PATH)),
++            "source_unchanged": True,
++            "stored_flagged_adversarial": None,
++            "raw_findings": [],
++            "live_duration_critical": None,
++        }
++        artifact["duration_s"] = time.perf_counter() - started
++        artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++        return artifact
++
++    mutation_fixtures = mutation_corpus()
++    decisions = evaluate_mutation_corpus()
++    receipts = focused_test_receipts if focused_test_receipts is not None else []
++    source_path = repo_root / EXP6967_PATH
++    source_hash_before = sha256_path(source_path)
++    source_payload = json.loads(source_path.read_text(encoding="utf-8"))
++    source_report = av.verify_artifact(source_path)
++    source_hash_after = sha256_path(source_path)
++    raw_findings = list(source_report.get("flags", []))
++    live_duration_critical = any(
++        row.get("kind") == "DURATION_TOO_SHORT"
++        and str(row.get("severity", "")).lower() == "critical"
++        for row in raw_findings
++    )
++
++    false_positives = [
++        row
++        for row in decisions
++        if row["old_decision"] == "critical"
++        and row["expected_new_decision"] == "clean"
++        and row["new_decision"] == "clean"
++    ]
++    false_negatives = [
++        row
++        for row in decisions
++        if row["expected_new_decision"] == "critical" and row["new_decision"] != "critical"
++    ]
++    ambiguous = [
++        row for row in decisions if row["claim_classification"]["state"] == av.CLAIM_STATE_AMBIGUOUS
++    ]
++    receipt_tests_pass = all(row.get("outcome") == "pass" for row in receipts) if receipts else True
++    repair_score = int(all(row["passed"] is True for row in decisions) and receipt_tests_pass)
++    fixture_score = int(
++        source_hash_before == EXPECTED_EXP6967_SHA256
++        and source_hash_after == source_hash_before
++        and not live_duration_critical
++    )
++
++    artifact.update(
++        {
++            "rows": [
++                {
++                    "fixture_id": row["fixture_id"],
++                    "category": row["category"],
++                    "old_decision": row["old_decision"],
++                    "new_decision": row["new_decision"],
++                    "expected_new_decision": row["expected_new_decision"],
++                    "passed": row["passed"],
++                }
++                for row in decisions
++            ],
++            "mutation_fixture_rows": mutation_fixtures,
++            "old_new_decision_rows": decisions,
++            "false_positive_rows": false_positives,
++            "false_negative_rows": false_negatives,
++            "ambiguous_provenance_rows": ambiguous,
++            "focused_test_receipts": receipts,
++            "exp6967_readonly_recheck": {
++                "source_path": str(EXP6967_PATH),
++                "source_hash_before": source_hash_before,
++                "source_hash_after": source_hash_after,
++                "source_unchanged": source_hash_after == source_hash_before,
++                "stored_flagged_adversarial": source_payload.get("flagged_adversarial"),
++                "stored_corrigendum_pending": source_payload.get("corrigendum_pending", []),
++                "raw_findings": raw_findings,
++                "live_duration_critical": live_duration_critical,
++                "claim_classification": av._classify_current_task_inference_claim(source_payload),
++                "gate_version": source_report.get("gate_version"),
++            },
++            "duration_lint_repair_complete_score": repair_score,
++            "fixture_admissibility_ready_score": fixture_score,
++        }
++    )
++    if repair_score == 1 and fixture_score == 1:
++        artifact["verdict_class"] = "circular_positive"
++        artifact["honest_verdict"] = "complete_circular_claim_provenance_duration_lint_repair"
++    else:
++        artifact["verdict_class"] = "null"
++        artifact["honest_verdict"] = "complete_null_claim_provenance_duration_lint_not_ready"
++    artifact["duration_s"] = time.perf_counter() - started
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def _expected_repair_score(artifact: dict[str, Any]) -> int:
++    decisions = artifact.get("old_new_decision_rows", [])
++    receipts = artifact.get("focused_test_receipts", [])
++    receipt_tests_pass = all(row.get("outcome") == "pass" for row in receipts) if receipts else True
++    return int(
++        bool(decisions)
++        and all(row.get("passed") is True for row in decisions)
++        and receipt_tests_pass
++    )
++
++
++def _expected_fixture_score(artifact: dict[str, Any]) -> int:
++    recheck = artifact.get("exp6967_readonly_recheck", {})
++    return int(
++        isinstance(recheck, dict)
++        and recheck.get("source_hash_before") == EXPECTED_EXP6967_SHA256
++        and recheck.get("source_hash_after") == recheck.get("source_hash_before")
++        and recheck.get("source_unchanged") is True
++        and recheck.get("live_duration_critical") is False
++    )
++
++
++def validate_artifact(artifact: dict[str, Any], *, repo_root: Path) -> None:
++    """Recompute every terminal score and reject a forged receipt."""
++
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        raise ValueError(f"missing_required_fields:{missing}")
++    principle_missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact["field_principles"]))
++    if principle_missing:
++        raise ValueError(f"field_principles_missing:{principle_missing}")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate")
++    if artifact["verifier_is_oracle"] is not True:
++        raise ValueError("verifier_is_oracle")
++    if artifact["verdict_class"] not in VERDICT_CLASSES:
++        raise ValueError("verdict_class")
++    if artifact["verifier_version_hash"] != f"sha256:{av.LOADED_GATE_VERSION}":
++        raise ValueError("verifier_version_hash")
++
++    blocked = artifact["verdict_class"] == "blocked"
++    if blocked:
++        if not str(artifact["honest_verdict"]).startswith("blocked_claim_provenance_duration_lint"):
++            raise ValueError("honest_verdict")
++        if not artifact["gate_check_summary"]:
++            raise ValueError("gate_check_summary")
++        if artifact["duration_lint_repair_complete_score"] != 0:
++            raise ValueError("duration_lint_repair_complete_score")
++        if artifact["fixture_admissibility_ready_score"] != 0:
++            raise ValueError("fixture_admissibility_ready_score")
++    else:
++        if not all(row.get("passed") is True for row in artifact["preconditions_checked"]):
++            raise ValueError("preconditions_checked")
++        repair_score = _expected_repair_score(artifact)
++        fixture_score = _expected_fixture_score(artifact)
++        if artifact["duration_lint_repair_complete_score"] != repair_score:
++            raise ValueError("duration_lint_repair_complete_score")
++        if artifact["fixture_admissibility_ready_score"] != fixture_score:
++            raise ValueError("fixture_admissibility_ready_score")
++        expected_class = "circular_positive" if repair_score == fixture_score == 1 else "null"
++        if artifact["verdict_class"] != expected_class:
++            raise ValueError("verdict_class")
++        expected_prefix = (
++            "complete_circular_" if expected_class == "circular_positive" else "complete_null_"
++        )
++        if not str(artifact["honest_verdict"]).startswith(expected_prefix):
++            raise ValueError("honest_verdict")
++        source_path = repo_root / EXP6967_PATH
++        if (
++            source_path.is_file()
++            and sha256_path(source_path)
++            != artifact["exp6967_readonly_recheck"]["source_hash_after"]
++        ):
++            raise ValueError("exp6967_source_identity")
++    if artifact["reproducibility_checksum"] != reproducibility_checksum(artifact):
++        raise ValueError("reproducibility_checksum")
++
++
++def write_json_atomic(path: Path, artifact: dict[str, Any]) -> None:
++    """Replace only the requested derivative path after complete validation."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    temporary = path.with_suffix(path.suffix + ".tmp")
++    temporary.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    temporary.replace(path)
++
++
++def main(argv: list[str] | None = None) -> int:
++    """Run focused checks, build the receipt, validate it, and write it once."""
++
++    started = time.perf_counter()
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", required=True)
++    parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--output", type=Path)
++    parser.add_argument("--skip-focused-tests", action="store_true")
++    args = parser.parse_args(argv)
++
++    repo_root = args.repo_root.resolve()
++    preconditions, _ = _preconditions(repo_root)
++    inputs_ready = all(row["passed"] is True for row in preconditions)
++    receipts = [] if args.skip_focused_tests or not inputs_ready else run_focused_tests(repo_root)
++    artifact = build_artifact(
++        date=args.date,
++        repo_root=repo_root,
++        focused_test_receipts=receipts,
++    )
++    artifact["duration_s"] = time.perf_counter() - started
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact, repo_root=repo_root)
++    output = args.output.resolve() if args.output else repo_root / OUTPUT_PATH
++    write_json_atomic(output, artifact)
++    print(
++        json.dumps(
++            {
++                "output": str(output),
++                "verdict_class": artifact["verdict_class"],
++                "duration_lint_repair_complete_score": artifact[
++                    "duration_lint_repair_complete_score"
++                ],
++                "fixture_admissibility_ready_score": artifact["fixture_admissibility_ready_score"],
++            },
++            sort_keys=True,
++        )
++    )
++    return 0 if artifact["verdict_class"] != "blocked" else 2
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised through the required command.
++    raise SystemExit(main())
+diff --git a/tests/python/test_adversarial_verify_claim_provenance_6974.py b/tests/python/test_adversarial_verify_claim_provenance_6974.py
+new file mode 100644
+index 0000000000..a67d0b6bcd
+--- /dev/null
++++ b/tests/python/test_adversarial_verify_claim_provenance_6974.py
+@@ -0,0 +1,302 @@
++"""Claim-provenance duration regressions for Exp6974.
++
++Spec refs: REQ-CONDUCTOR-6974 and SCENARIO-CONDUCTOR-6974-*.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import scripts.adversarial_verify as av
++
++
++ROOT = Path(__file__).resolve().parents[2]
++EXP6967 = ROOT / "results" / "experiment_6967_certified_error_headroom_fixture.json"
++
++
++def _duration_flags(payload: dict[str, Any]) -> list[av.Flag]:
++    """Run only the duration rule so unrelated artifact guards cannot mask this contract."""
++
++    flags: list[av.Flag] = []
++    av.check_duration_vs_claim(payload, flags)
++    return flags
++
++
++def _critical_kinds(payload: dict[str, Any]) -> set[str]:
++    return {flag.kind for flag in _duration_flags(payload) if flag.severity == "critical"}
++
++
++def _deterministic_payload(**overrides: Any) -> dict[str, Any]:
++    payload: dict[str, Any] = {
++        "experiment_id": 6974,
++        "honest_verdict": "complete_circular_claim_provenance_fixture",
++        "inference_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
++        "duration_s": 1.864951312,
++        "random_seed": 6974,
++        "reproducibility_checksum": "sha256:" + "7" * 64,
++        "source_rows": [
++            {
++                "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
++                "model_label": "unsloth/gemma-4-31B-it-GGUF",
++            }
++        ],
++    }
++    payload.update(overrides)
++    return payload
++
++
++def test_req_conductor_6974_spec_declares_claim_provenance_contract() -> None:
++    """REQ-CONDUCTOR-6974 precedes implementation and names every required scenario."""
++
++    text = (ROOT / "openspec/capabilities/research-reporting/spec.md").read_text(encoding="utf-8")
++    section = text[text.index("### REQ-CONDUCTOR-6974") :]
++    assert all(
++        f"SCENARIO-CONDUCTOR-6974-{name}" in section
++        for name in ("DETERMINISTIC", "LIVE", "NESTED", "AMBIGUOUS", "DERIVATIVE", "ARTIFACT")
++    )
++
++
++def test_scenario_conductor_6974_deterministic_rows_do_not_claim_invocation() -> None:
++    """SCENARIO-CONDUCTOR-6974-DETERMINISTIC ignores model IDs used as row keys."""
++
++    payload = _deterministic_payload(
++        source_hash="sha256:unsloth/Qwen3.6-35B-A3B-GGUF",
++        source_path="results/GGUF/source.json",
++        diagnostics={"detail": "upstream llama.cpp used torch.cuda"},
++        model_specs={"labels_only": ["unsloth/gemma-4-26B-A4B-it-GGUF"]},
++    )
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_NON_LIVE
++    assert classification["reason"] == "deterministic_substrate_claim"
++    assert "DURATION_TOO_SHORT" not in _critical_kinds(payload)
++
++
++def test_scenario_conductor_6974_real_exp6967_is_not_a_live_duration_claim() -> None:
++    """SCENARIO-CONDUCTOR-6974-DERIVATIVE rechecks the frozen incident bytes."""
++
++    payload = json.loads(EXP6967.read_text(encoding="utf-8"))
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_NON_LIVE
++    assert "DURATION_TOO_SHORT" not in _critical_kinds(payload)
++
++
++def test_scenario_conductor_6974_genuine_live_claim_keeps_live_floor() -> None:
++    """SCENARIO-CONDUCTOR-6974-LIVE preserves the 60-second live floor."""
++
++    payload = _deterministic_payload(
++        inference_substrate="live_llm_inference",
++        duration_s=5.0,
++        model_invoked=True,
++        model_specs={"name": "unsloth/Qwen3.6-35B-A3B-GGUF"},
++    )
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_LIVE
++    assert "DURATION_TOO_SHORT" in _critical_kinds(payload)
++
++
++def test_scenario_conductor_6974_nested_input_invocation_cannot_hide() -> None:
++    """SCENARIO-CONDUCTOR-6974-NESTED scans typed invocation fields recursively."""
++
++    payload = _deterministic_payload(
++        input_data={"batch": [{"invocation": {"model_invoked": True}}]},
++    )
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_CONTRADICTORY
++    assert any(row["path"].endswith("model_invoked") for row in classification["live_evidence"])
++    assert "DURATION_TOO_SHORT" in _critical_kinds(payload)
++
++
++def test_req_conductor_6974_typed_upstream_invocation_stays_external() -> None:
++    """REQ-CONDUCTOR-6974 distinguishes cited invocation from this task's invocation."""
++
++    payload = _deterministic_payload(
++        upstream_receipt_rows=[
++            {
++                "invocation_provenance": {
++                    "scope": "upstream",
++                    "model_invoked": True,
++                    "live_duration_s": 72.0,
++                }
++            }
++        ]
++    )
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_NON_LIVE
++    assert len(classification["external_evidence"]) == 2
++    assert "DURATION_TOO_SHORT" not in _critical_kinds(payload)
++
++
++def test_req_conductor_6974_path_scopes_and_diagnostics_do_not_leak() -> None:
++    """REQ-CONDUCTOR-6974 attributes typed source fields and ignores diagnostic copies."""
++
++    payload = _deterministic_payload(
++        source_rows=[{"model_invoked": True}],
++        diagnostics={"model_invoked": True},
++    )
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_NON_LIVE
++    assert [row["path"] for row in classification["external_evidence"]] == [
++        "source_rows.0.model_invoked"
++    ]
++    assert classification["live_evidence"] == []
++
++
++def test_scenario_conductor_6974_ambiguous_model_context_fails_closed() -> None:
++    """SCENARIO-CONDUCTOR-6974-AMBIGUOUS keeps the conservative live floor."""
++
++    payload = _deterministic_payload()
++    payload.pop("inference_substrate")
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_AMBIGUOUS
++    assert classification["reason"] == "compute_markers_without_claim_provenance"
++    assert "DURATION_TOO_SHORT" in _critical_kinds(payload)
++
++
++def test_req_conductor_6974_model_labels_alone_are_not_invocation() -> None:
++    """REQ-CONDUCTOR-6974 does not turn a model inventory into execution evidence."""
++
++    payload = _deterministic_payload(
++        model_specs={"name": "unsloth/Qwen3.6-35B-A3B-GGUF"},
++        target_model="unsloth/gemma-4-31B-it-GGUF",
++    )
++
++    assert av._claims_live_model(payload) is False
++    assert "DURATION_TOO_SHORT" not in _critical_kinds(payload)
++
++
++def test_req_conductor_6974_live_duration_gpu_and_methodology_are_evidence() -> None:
++    """REQ-CONDUCTOR-6974 recognizes three structured current-task evidence families."""
++
++    fixtures = (
++        _deterministic_payload(live_duration_s=4.0),
++        _deterministic_payload(
++            gpu_receipts={
++                "scope": "current_task",
++                "model_loaded": True,
++                "offloaded_layer_count": 42,
++            }
++        ),
++        _deterministic_payload(
++            methodology_note="The current task invoked llama.cpp for live model inference."
++        ),
++    )
++    for payload in fixtures:
++        classification = av._classify_current_task_inference_claim(payload)
++        assert classification["state"] == av.CLAIM_STATE_CONTRADICTORY
++        assert "DURATION_TOO_SHORT" in _critical_kinds(payload)
++
++
++def test_req_conductor_6974_typed_counts_identity_and_methodology_boundaries() -> None:
++    """REQ-CONDUCTOR-6974 covers count claims, task identity, and methodology negation."""
++
++    assert av._methodology_claims_live_inference({"structured": True}) is False
++    assert av._methodology_claims_live_inference("This task did not invoke the model.") is False
++
++    identity = {
++        "honest_verdict": "complete_live_eval_finished",
++        "duration_s": 5.0,
++    }
++    identity_claim = av._classify_current_task_inference_claim(identity)
++    assert identity_claim["state"] == av.CLAIM_STATE_LIVE
++    assert identity_claim["live_evidence"][0]["signal"] == "current_task_claim"
++
++    count_claim = {
++        "inference_call_count": 2,
++        "duration_s": 5.0,
++    }
++    assert av._classify_current_task_inference_claim(count_claim)["state"] == av.CLAIM_STATE_LIVE
++
++    conflicting = {
++        "model_invoked": True,
++        "llm_invoked": False,
++        "duration_s": 5.0,
++    }
++    conflict = av._classify_current_task_inference_claim(conflicting)
++    assert conflict["state"] == av.CLAIM_STATE_CONTRADICTORY
++    assert conflict["reason"] == "conflicting_typed_invocation_evidence"
++
++    nested = {
++        "input_data": {"batch": [{"model_invoked": True}]},
++        "duration_s": 5.0,
++    }
++    nested_claim = av._classify_current_task_inference_claim(nested)
++    assert nested_claim["state"] == av.CLAIM_STATE_AMBIGUOUS
++    assert nested_claim["reason"] == "nested_invocation_without_current_task_provenance"
++    assert av.duration_floor_for_artifact(nested)["min_duration_s"] == 60.0
++
++
++def test_req_conductor_6974_specialized_live_floors_are_preserved() -> None:
++    """REQ-CONDUCTOR-6974 changes provenance classification, not calibrated live floors."""
++
++    for substrate, expected in (
++        ("live_llm_embedding_extraction", 2.0),
++        ("live_llm_inference_local_gguf_sota", 10.0),
++        ("local_native_llama_cpp_gguf_backend_bisect", 5.0),
++    ):
++        floor = av.duration_floor_for_artifact(
++            {
++                "inference_substrate": substrate,
++                "model_invoked": True,
++                "duration_s": 1.0,
++            }
++        )
++        assert floor is not None
++        assert floor["min_duration_s"] == expected
++
++
++def test_req_conductor_6974_nonfinite_and_nonlive_methodology_paths() -> None:
++    """REQ-CONDUCTOR-6974 reports contradictions before missing-duration return paths."""
++
++    contradiction = _deterministic_payload(model_invoked=True, duration_s=None)
++    assert "INFERENCE_PROVENANCE_CONTRADICTION" in _critical_kinds(contradiction)
++    assert "DURATION_TOO_SHORT" not in _critical_kinds(contradiction)
++
++    for payload in (
++        _deterministic_payload(),
++        {"inference_substrate": "unknown_cpu_work", "duration_s": 1.0},
++        {
++            "inference_substrate": "live_llm_inference",
++            "honest_verdict": "blocked_model_missing",
++        },
++    ):
++        flags: list[av.Flag] = []
++        av.check_methodology_present(payload, flags)
++        assert flags == []
++
++
++def test_req_conductor_6974_live_claim_with_no_invocation_is_contradictory() -> None:
++    """REQ-CONDUCTOR-6974 fails closed when claim and structured invocation disagree."""
++
++    payload = _deterministic_payload(
++        inference_substrate="live_llm_inference",
++        duration_s=120.0,
++        model_invoked=False,
++    )
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_CONTRADICTORY
++    assert "INFERENCE_PROVENANCE_CONTRADICTION" in _critical_kinds(payload)
++
++
++def test_req_conductor_6974_blocked_pre_gate_remains_exempt() -> None:
++    """REQ-CONDUCTOR-6974 does not call an honest precondition stop a live run."""
++
++    payload = _deterministic_payload(
++        honest_verdict="blocked_model_not_cached",
++        inference_substrate="live_llm_inference",
++        duration_s=0.01,
++        model_invoked=False,
++    )
++    classification = av._classify_current_task_inference_claim(payload)
++
++    assert classification["state"] == av.CLAIM_STATE_BLOCKED
++    assert _critical_kinds(payload) == set()
+diff --git a/tests/python/test_adversarial_verify_guards.py b/tests/python/test_adversarial_verify_guards.py
+index d72b8d2139..6423475db5 100644
+--- a/tests/python/test_adversarial_verify_guards.py
++++ b/tests/python/test_adversarial_verify_guards.py
+@@ -363,8 +363,10 @@ def test_degenerate_separation_allows_nondegenerate_arcgen_read():
+ 
+ 
+ def test_claims_live_model():
+-    assert av._claims_live_model({"model_specs": [{"name": "Qwen"}]})
+-    assert av._claims_live_model({"target_model": "gemma-4-31B"})
++    # REQ-CONDUCTOR-6974: labels identify a model but do not prove invocation.
++    assert not av._claims_live_model({"model_specs": [{"name": "Qwen"}]})
++    assert not av._claims_live_model({"target_model": "gemma-4-31B"})
++    assert av._claims_live_model({"model_specs": [{"name": "Qwen"}], "model_invoked": True})
+     assert av._claims_live_model({"inference_substrate": "live_llm_inference"})
+     # an aggregation/audit artifact that names no model does NOT claim a live run
+     assert not av._claims_live_model({"roce_success_rate": 0.8})
+diff --git a/tests/python/test_experiment_6974_claim_provenance_duration_lint.py b/tests/python/test_experiment_6974_claim_provenance_duration_lint.py
+new file mode 100644
+index 0000000000..b305a55893
+--- /dev/null
++++ b/tests/python/test_experiment_6974_claim_provenance_duration_lint.py
+@@ -0,0 +1,364 @@
++"""Tests for the Exp6974 derivative duration-lint receipt.
++
++Spec refs: REQ-CONDUCTOR-6974 and SCENARIO-CONDUCTOR-6974-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from scripts.experiments import experiment_6974_claim_provenance_duration_lint as exp
++
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def _passing_receipts() -> list[dict[str, object]]:
++    return [
++        {
++            "name": "claim_provenance_mutation_tests",
++            "command": "in_process: evaluate_mutation_corpus",
++            "exit_code": 0,
++            "outcome": "pass",
++            "stdout": "7/7 fixtures matched expected decisions",
++            "stderr": "",
++            "duration_s": 0.01,
++        }
++    ]
++
++
++def test_req_conductor_6974_spec_lists_every_artifact_field() -> None:
++    """REQ-CONDUCTOR-6974 declares the complete derivative receipt schema."""
++
++    text = (ROOT / exp.SPEC_PATH).read_text(encoding="utf-8")
++    section = text[text.index("### REQ-CONDUCTOR-6974") :]
++    assert all(f"`{field}`" in section for field in exp.REQUIRED_ARTIFACT_FIELDS)
++
++
++def test_scenarios_conductor_6974_mutation_corpus_decisions() -> None:
++    """SCENARIO-CONDUCTOR-6974-LIVE, NESTED, and AMBIGUOUS all stay effective."""
++
++    rows = exp.evaluate_mutation_corpus()
++    by_name = {row["fixture_id"]: row for row in rows}
++
++    assert set(by_name) == {
++        "ambiguous_model_context",
++        "bibliographic_source_scan",
++        "deterministic_source_row_reducer",
++        "genuine_live_inference",
++        "live_embedding_extraction",
++        "nested_input_invocation",
++        "pre_gate_block",
++    }
++    assert by_name["deterministic_source_row_reducer"]["old_decision"] == "critical"
++    assert by_name["deterministic_source_row_reducer"]["new_decision"] == "clean"
++    assert by_name["genuine_live_inference"]["new_decision"] == "critical"
++    assert by_name["nested_input_invocation"]["new_decision"] == "critical"
++    assert by_name["ambiguous_model_context"]["new_decision"] == "critical"
++    assert by_name["bibliographic_source_scan"]["new_decision"] == "clean"
++    assert by_name["live_embedding_extraction"]["new_decision"] == "critical"
++    assert by_name["pre_gate_block"]["new_decision"] == "clean"
++    assert all(row["passed"] is True for row in rows)
++
++
++@pytest.mark.parametrize(
++    ("substrate", "expected"),
++    (
++        ("verifier_ensemble_against_cached_candidates", 1.0),
++        ("aggregation_from_upstream_artifacts", 0.0001),
++        ("deterministic_verifier", 0.0001),
++        ("offline_arcade_live_agent_runtime_self_discovery_no_llm", 0.01),
++        ("arc_log_analysis_plus_local_timing", 1.0),
++        ("artifact_qa_lint_tests", 0.0001),
++        ("live_llm_inference_local_gguf_sota", 10.0),
++        ("deterministic_smt_hint_validation_no_llm", 0.0001),
++        ("local_native_llama_cpp_gguf_backend_bisect", 5.0),
++        ("simulation", 0.0001),
++        ("plain_cpu_work", None),
++    ),
++)
++def test_req_conductor_6974_legacy_comparison_covers_existing_floor_classes(
++    substrate: str,
++    expected: float | None,
++) -> None:
++    """REQ-CONDUCTOR-6974 compares against the full pre-repair floor order."""
++
++    payload = {
++        "inference_substrate": substrate,
++        "duration_s": 3.0,
++        "honest_verdict": "complete_fixture",
++    }
++    assert exp._legacy_duration_floor(payload) == expected
++
++
++def test_scenario_conductor_6974_builds_clean_readonly_derivative() -> None:
++    """SCENARIO-CONDUCTOR-6974-DERIVATIVE keeps the source bytes unchanged."""
++
++    source = ROOT / exp.EXP6967_PATH
++    before = exp.sha256_path(source)
++    artifact = exp.build_artifact(
++        date="20260904",
++        repo_root=ROOT,
++        focused_test_receipts=_passing_receipts(),
++    )
++    after = exp.sha256_path(source)
++
++    assert before == after == exp.EXPECTED_EXP6967_SHA256
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["duration_lint_repair_complete_score"] == 1
++    assert artifact["fixture_admissibility_ready_score"] == 1
++    assert artifact["verdict_class"] == "circular_positive"
++    assert artifact["honest_verdict"].startswith("complete_circular_")
++    assert artifact["gate_check_summary"] == []
++    assert artifact["false_negative_rows"] == []
++    assert [row["fixture_id"] for row in artifact["false_positive_rows"]] == [
++        "deterministic_source_row_reducer"
++    ]
++    assert [row["fixture_id"] for row in artifact["ambiguous_provenance_rows"]] == [
++        "ambiguous_model_context"
++    ]
++    recheck = artifact["exp6967_readonly_recheck"]
++    assert recheck["source_hash_before"] == recheck["source_hash_after"]
++    assert recheck["source_unchanged"] is True
++    assert recheck["stored_flagged_adversarial"] is True
++    assert recheck["live_duration_critical"] is False
++    assert recheck["raw_findings"] == []
++    exp.validate_artifact(artifact, repo_root=ROOT)
++
++
++def test_scenario_conductor_6974_blocked_preconditions_are_schema_complete(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CONDUCTOR-6974-ARTIFACT records each absent input and blocks."""
++
++    artifact = exp.build_artifact(date="20260904", repo_root=tmp_path)
++
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert artifact["duration_lint_repair_complete_score"] == 0
++    assert artifact["fixture_admissibility_ready_score"] == 0
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"].startswith("blocked_claim_provenance_duration_lint")
++    assert artifact["gate_check_summary"]
++    assert all(
++        {"failed_check", "expected_value", "observed_value"} <= set(row)
++        for row in artifact["gate_check_summary"]
++    )
++    exp.validate_artifact(artifact, repo_root=tmp_path)
++
++
++def test_scenario_conductor_6974_validator_rejects_score_hash_and_verdict_drift() -> None:
++    """SCENARIO-CONDUCTOR-6974-ARTIFACT derives claims from rows and frozen bytes."""
++
++    artifact = exp.build_artifact(
++        date="20260904",
++        repo_root=ROOT,
++        focused_test_receipts=_passing_receipts(),
++    )
++    for field, value, match in (
++        ("duration_lint_repair_complete_score", 0, "duration_lint_repair_complete_score"),
++        ("fixture_admissibility_ready_score", 0, "fixture_admissibility_ready_score"),
++        ("verdict_class", "positive", "verdict_class"),
++        ("reproducibility_checksum", "sha256:wrong", "reproducibility_checksum"),
++    ):
++        changed = deepcopy(artifact)
++        changed[field] = value
++        with pytest.raises(ValueError, match=match):
++            exp.validate_artifact(changed, repo_root=ROOT)
++
++
++@pytest.mark.parametrize(
++    ("mutation", "match"),
++    (
++        (lambda item: item.pop("rows"), "missing_required_fields"),
++        (lambda item: item["field_principles"].pop("rows"), "field_principles_missing"),
++        (lambda item: item.__setitem__("inference_substrate", "wrong"), "inference_substrate"),
++        (lambda item: item.__setitem__("verifier_is_oracle", False), "verifier_is_oracle"),
++        (lambda item: item.__setitem__("verdict_class", "other"), "verdict_class"),
++        (
++            lambda item: item.__setitem__("verifier_version_hash", "sha256:wrong"),
++            "verifier_version_hash",
++        ),
++        (
++            lambda item: item["preconditions_checked"][0].__setitem__("passed", False),
++            "preconditions_checked",
++        ),
++    ),
++)
++def test_req_conductor_6974_validator_rejects_structural_drift(mutation, match: str) -> None:
++    """REQ-CONDUCTOR-6974 validates declarations before trusting terminal scores."""
++
++    artifact = exp.build_artifact(
++        date="20260904",
++        repo_root=ROOT,
++        focused_test_receipts=_passing_receipts(),
++    )
++    mutation(artifact)
++    artifact["reproducibility_checksum"] = exp.reproducibility_checksum(artifact)
++    with pytest.raises(ValueError, match=match):
++        exp.validate_artifact(artifact, repo_root=ROOT)
++
++
++@pytest.mark.parametrize(
++    ("mutation", "match"),
++    (
++        (lambda item: item.__setitem__("honest_verdict", "complete_wrong"), "honest_verdict"),
++        (lambda item: item.__setitem__("gate_check_summary", []), "gate_check_summary"),
++        (
++            lambda item: item.__setitem__("duration_lint_repair_complete_score", 1),
++            "duration_lint_repair_complete_score",
++        ),
++        (
++            lambda item: item.__setitem__("fixture_admissibility_ready_score", 1),
++            "fixture_admissibility_ready_score",
++        ),
++    ),
++)
++def test_req_conductor_6974_blocked_validator_rejects_forged_terminal_fields(
++    tmp_path: Path,
++    mutation,
++    match: str,
++) -> None:
++    """SCENARIO-CONDUCTOR-6974-ARTIFACT keeps the blocked shape fail closed."""
++
++    artifact = exp.build_artifact(date="20260904", repo_root=tmp_path)
++    mutation(artifact)
++    artifact["reproducibility_checksum"] = exp.reproducibility_checksum(artifact)
++    with pytest.raises(ValueError, match=match):
++        exp.validate_artifact(artifact, repo_root=tmp_path)
++
++
++def test_req_conductor_6974_null_receipt_and_source_identity_validation(tmp_path: Path) -> None:
++    """REQ-CONDUCTOR-6974 validates terminal nulls and the checked-in source identity."""
++
++    failing_receipt = _passing_receipts()
++    failing_receipt[0]["outcome"] = "fail"
++    artifact = exp.build_artifact(
++        date="20260904",
++        repo_root=ROOT,
++        focused_test_receipts=failing_receipt,
++    )
++    assert artifact["verdict_class"] == "null"
++    assert artifact["duration_lint_repair_complete_score"] == 0
++    exp.validate_artifact(artifact, repo_root=ROOT)
++
++    wrong_verdict = deepcopy(artifact)
++    wrong_verdict["honest_verdict"] = "complete_circular_wrong"
++    wrong_verdict["reproducibility_checksum"] = exp.reproducibility_checksum(wrong_verdict)
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp.validate_artifact(wrong_verdict, repo_root=ROOT)
++
++    fake_source = tmp_path / exp.EXP6967_PATH
++    fake_source.parent.mkdir(parents=True)
++    fake_source.write_text("{}", encoding="utf-8")
++    with pytest.raises(ValueError, match="exp6967_source_identity"):
++        exp.validate_artifact(artifact, repo_root=tmp_path)
++
++
++def test_req_conductor_6974_checksum_excludes_only_runtime_receipt_noise() -> None:
++    """REQ-CONDUCTOR-6974 keeps scientific decisions reproducible across wall clocks."""
++
++    artifact = exp.build_artifact(
++        date="20260904",
++        repo_root=ROOT,
++        focused_test_receipts=_passing_receipts(),
++    )
++    changed = deepcopy(artifact)
++    changed["duration_s"] = 999.0
++    changed["focused_test_receipts"][0]["duration_s"] = 888.0
++    changed["focused_test_receipts"][0]["stdout"] = "same assertions, different timing"
++    assert exp.reproducibility_checksum(changed) == artifact["reproducibility_checksum"]
++
++    changed["focused_test_receipts"].append("terminal marker")
++    assert exp.reproducibility_checksum(changed) != artifact["reproducibility_checksum"]
++
++
++def test_req_conductor_6974_focused_test_receipt_success_and_blocked(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CONDUCTOR-6974 preserves both completed and unavailable test execution."""
++
++    class Completed:
++        returncode = 0
++        stdout = "tests passed"
++        stderr = ""
++
++    monkeypatch.setattr(exp.subprocess, "run", lambda *args, **kwargs: Completed())
++    success = exp.run_focused_tests(ROOT)[0]
++    assert success["outcome"] == "pass"
++    assert success["exit_code"] == 0
++
++    def unavailable(*args, **kwargs):
++        raise OSError("pytest unavailable")
++
++    monkeypatch.setattr(exp.subprocess, "run", unavailable)
++    blocked = exp.run_focused_tests(ROOT)[0]
++    assert blocked["outcome"] == "blocked"
++    assert blocked["exit_code"] is None
++
++
++def test_req_conductor_6974_cli_writes_only_the_requested_output(tmp_path: Path) -> None:
++    """REQ-CONDUCTOR-6974 gives tests a temporary output instead of tracked state."""
++
++    output = tmp_path / "nested" / "receipt.json"
++    exit_code = exp.main(
++        [
++            "--date",
++            "20260904",
++            "--repo-root",
++            str(ROOT),
++            "--output",
++            str(output),
++            "--skip-focused-tests",
++        ]
++    )
++
++    assert exit_code == 0
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++    exp.validate_artifact(artifact, repo_root=ROOT)
++    assert artifact["fixture_admissibility_ready_score"] == 1
++
++
++def test_req_conductor_6974_cli_runs_focused_receipt_and_blocks_missing_inputs(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CONDUCTOR-6974 runs checks only after preconditions and returns blocked as 2."""
++
++    monkeypatch.setattr(exp, "run_focused_tests", lambda root: _passing_receipts())
++    ready_output = tmp_path / "ready.json"
++    assert (
++        exp.main(
++            [
++                "--date",
++                "20260904",
++                "--repo-root",
++                str(ROOT),
++                "--output",
++                str(ready_output),
++            ]
++        )
++        == 0
++    )
++    assert json.loads(ready_output.read_text(encoding="utf-8"))["focused_test_receipts"]
++
++    blocked_output = tmp_path / "blocked.json"
++    missing_root = tmp_path / "missing"
++    assert (
++        exp.main(
++            [
++                "--date",
++                "20260904",
++                "--repo-root",
++                str(missing_root),
++                "--output",
++                str(blocked_output),
++            ]
++        )
++        == 2
++    )
++    assert json.loads(blocked_output.read_text(encoding="utf-8"))["verdict_class"] == "blocked"
+-- 
+2.55.0
+

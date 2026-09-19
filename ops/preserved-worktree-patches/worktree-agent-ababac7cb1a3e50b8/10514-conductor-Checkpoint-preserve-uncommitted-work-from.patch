@@ -1,0 +1,43 @@
+From db971b2535e7dbd37ccff20113d9a87e97a47249 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 07:36:26 -0400
+Subject: [PATCH 10514/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a0c63c46bf..fc3f51a938 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-08-31T11:08:31Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 33, "phase": "iteration_start", "last_beat": "2026-08-31T11:36:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 43921a3323..517465f96d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16904,3 +16904,4 @@ The l |
+ | 2026-08-31 11:03 UTC | Selective priority arbiter versus flat retry A/B | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ed[1].update(
+ +     |
+ | 2026-08-31 11:06 UTC | Selective priority arbiter versus flat retry A/B | SKIP | Pre-tests failing, self-heal failed:  |
++| 2026-08-31 11:34 UTC | Selective priority arbiter versus flat retry A/B | OK | 95 passed, 1 warning in 13.00s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d3280bebe5..d209e1fcf0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 32, "phase": "iteration_start", "started_at": "2026-08-31T11:08:31Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 33, "phase": "iteration_start", "started_at": "2026-08-31T11:36:18Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

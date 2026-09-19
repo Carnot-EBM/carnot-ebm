@@ -1,0 +1,79 @@
+From b6d91d6d545338e0be5c466cf55dfa131059ff9a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 02:42:52 -0400
+Subject: [PATCH 00964/11362] [conductor] Operational retrospective for
+ milestone 2026.06.365
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  4 +++
+ results/operational_retro_2026_06_365.json | 30 ++++++++++++++++++++++
+ 3 files changed, 40 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_365.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 97dfb9f904..7f87fbebe7 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5121,3 +5121,9 @@ The critical path for milestone .250:
+ - theme: Operational Retrospective for 2026.06.363
+ - key result: Honest negative: no experiment commits found since activation.
+ - acceptance: no data available this milestone
++
++### Milestone 2026.06.365
++- exp_range: no data available this milestone
++- theme: Zero-artifact milestone — capstone stalled at the .365 first-solve aggregation gate
++- key result: Honest negative — no experiment commits found since activation of 2026.06.365; both GPUs correctly idle (0 compute-bound tasks).
++- acceptance: 0/0 criteria met
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 4a54a987fb..fe1a3c2475 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8768,3 +8768,7 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-09: Literature synthesis — where Carnot's NOW-CREDIBLE verifier-earns-its-place result sits in the 2026 verification-efficiency landscape: synthesize the .364 outcomes (competent-judge efficiency head-to-head + independent-corpus moat replication + non-degenerate cascade + ARC-AGI-3 step 2) against ProcessBench / ThinkPRM / GenRM / Budget-aware Discriminative Verification / ARC-AGI-3, and name the next 1-2 highest-leverage experiments. Updates research-studying.md + research-references.md ONLY — never docs/index.html / README / blog (Public Documentation Discipline). No new inference. (✅ Complete) — honest_verdict=complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched; results/experiment_3943_literature_synthesis.json
+ - 2026-06-09: Capstone .364 — the verifier scorecard with the efficiency axis FINALLY LANDED against a COMPETENT judge: aggregate the now-unblocked offline proof — EFFICIENCY (energy vs a competent judge: parity/Pareto + cost ratio) + the NON-DEGENERATE cascade (escalation>0) + the INDEPENDENT-corpus moat replication + the ARC-AGI-3 step-2 agentic datum + FR-11 v27 + the cross-domain map + hardware. ANSWER the operator's 'does the verifier earn its place?' question against a competent judge (the .363 INCONCLUSIVE now resolved). paper_ready stays TRUE; frozen 0.9131 unchanged. (✅ Complete) — honest_verdict=complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged; results/experiment_3944_capstone_v364.json
+ - 2026-06-09: Archive .364 -> activate .365; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load, the core pretest subset is green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model, arc_world_model_synth, arc_world_model_dsl), so .365 can EXECUTE the ARC first-solve tasks. (✅ Complete) — honest_verdict=complete: archived_v364_v365_active_arc_substrate_green_modules_importable; results/experiment_3945_archive_v364_activate_v365.json
++
++## 2026-06-09 (Milestone 2026.06.365 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_365.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation of 2026.06.365, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s idle is correct (0 compute-bound tasks) and is NOT flagged as a bottleneck. The milestone stalled at the .365 capstone aggregation gate (repeated pre-gate-block commits, no upstream experiment artifacts). Highest-leverage fix: a zero-artifact circuit-breaker plus capstone gate fall-through so a stalled milestone is surfaced early and still produces forward artifacts.
+diff --git a/results/operational_retro_2026_06_365.json b/results/operational_retro_2026_06_365.json
+new file mode 100644
+index 0000000000..f1dd2f6c0b
+--- /dev/null
++++ b/results/operational_retro_2026_06_365.json
+@@ -0,0 +1,30 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.365",
++  "generated_at": "2026-06-09T06:40:02Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "Milestone 2026.06.365 landed 0 experiment commits since activation, with 0 compute-bound tasks and 0 minutes of measured wall time. With no compute-bound task present, gpu_idle_on_compute_bound_tasks is null and both RTX 3090s sitting idle is correct behaviour, not a bug. The operational signal this milestone is a production gap (zero artifacts), not an execution-efficiency problem.",
++  "bottlenecks_identified": [
++    "Zero experiment artifacts produced: no experiment commits found since activation of 2026.06.365. The binary outcome (0 vs N artifacts) dominates any per-experiment efficiency concern this milestone.",
++    "Recent conductor activity was repeated pre-gate-block commits on the .365 capstone rather than landed experiment artifacts, indicating the milestone stalled at the capstone aggregation gate instead of executing a task slate to completion.",
++    "Idempotency gap: the same pre-gate-block message was re-emitted multiple times for the same capstone, which adds log noise without changing the blocked state."
++  ],
++  "improvements_suggested": [
++    "Zero-artifact circuit-breaker: have the conductor emit an early operator-ping when N consecutive gate-blocks occur on the same capstone with no upstream experiment commits, so a stalled milestone is surfaced in minutes rather than discovered at retro time.",
++    "Capstone gate fall-through: when the capstone's required upstream artifacts are absent or flagged_adversarial, route to the non-capstone task slate so the milestone still produces forward artifacts instead of repeatedly blocking on the headline aggregation.",
++    "Backend-health preflight at activation: confirm the experiment backend (gemini quota / codex route) is reachable before the slate runs, so a single-backend outage is caught at activation rather than zeroing out the whole milestone (per the .333 gemini-429 wipeout precedent).",
++    "Pre-gate-block idempotency: emit one block + one operator-actionable note per capstone rather than re-committing identical pre-gate-block messages, keeping the commit log readable."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add a zero-artifact circuit-breaker that detects '0 experiment commits + repeated capstone gate-blocks' and surfaces it to the operator immediately, instead of spending the milestone window stalled.",
++    "Make the capstone gate-block fall through to the non-capstone task slate so every milestone produces SOME forward artifacts even when the headline aggregation is blocked.",
++    "Verify experiment-backend health (gemini quota / codex route) at milestone activation so a backend outage is caught before, not after, the task slate fails to run."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The honest operational signal is binary: zero experiments executed, so there is no execution-efficiency story to tell this milestone — only a production gap. The highest-leverage fix is not GPU or throughput tuning (both GPUs were correctly idle with no compute-bound task) but a fast-fail circuit-breaker so a stalled, gate-blocked milestone is caught in minutes instead of consuming the full window. Per the .333 wipeout precedent, a single zero-artifact milestone usually traces to a backend outage or a capstone gate that will not fall through, and both are detectable at activation."
++}
+-- 
+2.55.0
+

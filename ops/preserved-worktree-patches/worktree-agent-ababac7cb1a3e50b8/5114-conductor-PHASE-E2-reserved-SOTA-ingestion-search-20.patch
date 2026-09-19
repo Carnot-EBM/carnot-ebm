@@ -1,0 +1,1499 @@
+From 6728fcb14029f869feea5405ba9ae2d2697a2201 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 18:19:56 -0400
+Subject: [PATCH 05114/11362] [conductor] PHASE E2 reserved SOTA ingestion --
+ search 2025-2026 verifier, EBM, KAN, constraint, hardware-sampling, and
+ hallucination-mitigation work for .465.
+
+Automated research step by research conductor.
+Task ID: exp5053-e2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  70 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_5053_sota_ingestion_v465.py    | 756 ++++++++++++++++++
+ research-references.md                        |  58 ++
+ .../experiment_5053_sota_ingestion_v465.json  | 355 ++++++++
+ ...est_experiment_5053_sota_ingestion_v465.py | 184 +++++
+ 6 files changed, 1424 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5053_sota_ingestion_v465.py
+ create mode 100644 results/experiment_5053_sota_ingestion_v465.json
+ create mode 100644 tests/python/test_experiment_5053_sota_ingestion_v465.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index e0ec7f48e3..23e3005719 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -518,6 +518,76 @@ a terminal `blocked_<resource>` verdict, records the failed resource in
+ |---|---|---|
+ | REQ-REPORT-5038 | Planned (`python/carnot/experiment_5038_sota_ingestion_verifier_moat.py`) | Planned (`tests/python/test_experiment_5038_sota_ingestion_verifier_moat.py`) |
+ 
++### REQ-REPORT-5053: Phase E1 SOTA Ingestion For .465
++
++The Exp 5053 workflow SHALL run the fresh SOTA-ingestion pass reserved for the
++`.465` planning handoff and write
++`results/experiment_5053_sota_ingestion_v465.json`. It SHALL update
++`research-references.md` with only genuinely actionable additions for Carnot
++and SHALL NOT modify `scripts/research_conductor.py`, `ops/changelog.md`,
++`ops/status.md`, or `_bmad/traceability.md`.
++
++The workflow SHALL read `AGENTS.md`, `CODEX.md`, `research-references.md`,
++`research-program.md`,
++`results/experiment_5038_sota_ingestion_verifier_moat.json`, and
++`openspec/change-proposals/research-roadmap-vNEXT.md` before writing the
++artifact. It SHALL search or record checks for arXiv, OpenReview, Hugging Face Papers,
++GitHub, Extropic, Logical Intelligence, and EBT/ARM-EBM citation trails.
++
++The complete artifact SHALL include at least these top-level fields:
++`honest_verdict`, `references_added`, `n_sources_checked`,
++`selected_sources`, `next_milestone_candidates`,
++`research_references_updated`, `inference_substrate`,
++`preconditions_checked`, `duplicate_filter`, and `field_principles`.
++`honest_verdict` SHALL equal
++`success_sota_ingestion_v465_actionable_references_added`.
++`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
++`research_references_updated` SHALL be true on the complete path.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; complete verdict is success_sota_ingestion_v465_actionable_references_added."
++- `references_added`: principle "only genuinely actionable nonduplicate sources added to research-references.md, each with URL and concrete Carnot hook."
++- `n_sources_checked`: principle "count of source records checked across arXiv, OpenReview, Hugging Face Papers, GitHub, Extropic, Logical Intelligence, and EBT/ARM-EBM trails."
++- `selected_sources`: principle "deduplicated source records selected for .465 planning; no repeats from Exp 5038 or the .464 planning sweep."
++- `next_milestone_candidates`: principle "candidate .465 follow-up experiments with the source IDs that justify them."
++- `research_references_updated`: principle "true only when the managed Exp 5053 section has been written and validated."
++
++`references_added` SHALL contain the selected source IDs and URLs actually
++inserted into `research-references.md`. Every selected source SHALL include a
++concrete Carnot hook and SHALL NOT duplicate the Exp 5038 selected set or the
++`.464` planning sweep IDs and URLs. The duplicate filter SHALL reject known
++existing IDs such as `2512.05439`, `2512.12850`, `2507.07731`, `2602.03034`,
++`2601.21484`, `2603.21558`, `2603.02119`, `2606.18910`, `2606.21724`,
++`2606.29366`, `2605.12421`, `2601.17789`, `2606.25313`, `2507.02092`,
++`2510.27545`, `2512.15605`, and every Exp 5038 ID.
++
++#### SCENARIO-REPORT-5053: Actionable .465 Sources Are Added Without Duplicates
++
++Given the required repository instructions, roadmap, prior SOTA artifact, and
++research reference file are readable
++When the Exp 5053 workflow runs
++Then it writes the JSON artifact, updates `research-references.md` once with a
++managed Exp 5053 section, records at least five checked sources, selects only
++non-duplicate actionable sources, includes concrete Carnot hooks for verifier
++moat, energy-guided decoding, constraint satisfaction, hallucination
++mitigation, continual verifier learning or hardware-accelerated decoding, and
++records that no duplicate KAN/KANFIS or EBT/ARM-EBM entry was re-added.
++
++#### SCENARIO-REPORT-5053-DUPLICATE-FILTER: Existing Source IDs Are Suppressed
++
++Given candidate sources include an already-recorded Exp 5038 or `.464` source
++and at least one new actionable source
++When duplicate filtering is applied
++Then the existing source is listed under rejected duplicates, is absent from
++`references_added`, and the new source remains eligible for selection.
++
++## Implementation Status (REQ-REPORT-5053)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5053 | Planned (`python/carnot/experiment_5053_sota_ingestion_v465.py`) | Planned (`tests/python/test_experiment_5053_sota_ingestion_v465.py`) |
++
+ ### REQ-REPORT-4873: Rotated ARC Level-Up Attempt Banks Only New Offline-Reproduced Depth
+ 
+ The Exp 4873 workflow SHALL select a rotated ARC target for a deepening attempt
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3dd02bae7f..e17f5cdc75 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4057,
++  "experiments_checked": 4058,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5053_sota_ingestion_v465.py b/python/carnot/experiment_5053_sota_ingestion_v465.py
+new file mode 100644
+index 0000000000..0a084cda9c
+--- /dev/null
++++ b/python/carnot/experiment_5053_sota_ingestion_v465.py
+@@ -0,0 +1,756 @@
++"""Exp 5053 SOTA ingestion for the .465 research frontier.
++
++Spec refs: REQ-REPORT-5053, SCENARIO-REPORT-5053,
++SCENARIO-REPORT-5053-DUPLICATE-FILTER.
++
++This module records a literature ingestion pass. It is deliberately
++deterministic: web research is summarized into source rows, duplicate filtering
++is testable, and rerunning the module rewrites the JSON artifact and managed
++reference section without changing unrelated docs.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterable, Mapping
++import hashlib
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++
++RESULT_RELATIVE_PATH = "results/experiment_5053_sota_ingestion_v465.json"
++REFERENCES_RELATIVE_PATH = "research-references.md"
++HONEST_VERDICT = "success_sota_ingestion_v465_actionable_references_added"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++REFERENCES_SECTION_START = "<!-- EXP5053-SOTA-INGESTION-V465-REFERENCES-START -->"
++REFERENCES_SECTION_END = "<!-- EXP5053-SOTA-INGESTION-V465-REFERENCES-END -->"
++TERMINAL_PREFIXES = ("blocked_", "complete:", "complete_", "success:", "success_")
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "references_added",
++    "n_sources_checked",
++    "selected_sources",
++    "next_milestone_candidates",
++    "research_references_updated",
++    "inference_substrate",
++    "preconditions_checked",
++    "duplicate_filter",
++    "field_principles",
++    "reproducibility_checksum",
++)
++
++REQUIRED_USER_FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; complete verdict is "
++            "success_sota_ingestion_v465_actionable_references_added."
++        )
++    },
++    "references_added": {
++        "principle": (
++            "only genuinely actionable nonduplicate sources added to "
++            "research-references.md, each with URL and concrete Carnot hook."
++        )
++    },
++    "n_sources_checked": {
++        "principle": (
++            "count of source records checked across arXiv, OpenReview, Hugging Face "
++            "Papers, GitHub, Extropic, Logical Intelligence, and EBT/ARM-EBM trails."
++        )
++    },
++    "selected_sources": {
++        "principle": (
++            "deduplicated source records selected for .465 planning; no repeats from "
++            "Exp 5038 or the .464 planning sweep."
++        )
++    },
++    "next_milestone_candidates": {
++        "principle": (
++            "candidate .465 follow-up experiments with the source IDs that justify them."
++        )
++    },
++    "research_references_updated": {
++        "principle": (
++            "true only when the managed Exp 5053 section has been written and validated."
++        )
++    },
++}
++
++FIELD_PRINCIPLES = {
++    **REQUIRED_USER_FIELD_PRINCIPLES,
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts; no model training or live inference."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records required file reads, search channels, and forbidden side effects."
++        )
++    },
++    "duplicate_filter": {
++        "principle": (
++            "explicit record of selected IDs and already-ingested IDs rejected before "
++            "reference insertion."
++        )
++    },
++    "field_principles": {"principle": "principle annotations are part of the artifact contract."},
++    "reproducibility_checksum": {
++        "principle": "sha256 over the stable selected-source and duplicate-filter payload."
++    },
++}
++
++EXP5038_SOURCE_IDS = frozenset(
++    {
++        "2505.14999",
++        "2605.10325",
++        "2606.11209",
++        "2503.22480",
++        "2602.06291",
++    }
++)
++
++V464_DUPLICATE_SOURCE_IDS = frozenset(
++    {
++        "2507.02092",
++        "2507.07731",
++        "2510.27545",
++        "2512.05439",
++        "2512.12850",
++        "2512.15605",
++        "2601.17789",
++        "2601.21484",
++        "2602.03034",
++        "2603.02119",
++        "2603.21558",
++        "2606.18910",
++        "2606.21724",
++        "2606.25313",
++        "2606.29366",
++        "2605.12421",
++    }
++)
++
++REQUIRED_DUPLICATE_IDS_IN_SPEC = frozenset(V464_DUPLICATE_SOURCE_IDS)
++ALREADY_INGESTED_SOURCE_IDS = EXP5038_SOURCE_IDS | V464_DUPLICATE_SOURCE_IDS
++
++SELECTED_SOURCE_IDS = [
++    "2504.04718",
++    "2510.08992",
++    "2602.07223",
++    "2604.01993",
++    "2604.12046",
++    "2605.26942",
++    "2605.28020",
++    "2606.26108",
++]
++
++SELECTED_SOURCES = [
++    {
++        "source_id": "2504.04718",
++        "title": "T1: Tool-integrated Verification for Test-time Compute Scaling in Small Language Models",
++        "url": "https://arxiv.org/abs/2504.04718",
++        "channels": ["arXiv", "OpenReview", "Hugging Face Papers"],
++        "tracks": ["verifier moat", "constraint satisfaction"],
++        "source_signal": (
++            "External tools handle memorization-heavy checks before a small verifier "
++            "ranks candidates, giving a direct cheap-verifier path for test-time scaling."
++        ),
++        "carnot_hook": (
++            ".465: add a tool-first cheap verifier gate before D6 judge fallback and "
++            "charge tool calls separately from final verifier selection."
++        ),
++        "actionable": True,
++    },
++    {
++        "source_id": "2510.08992",
++        "title": "Constraints-of-Thought: A Framework for Constrained Reasoning in Language-Model-Guided Search",
++        "url": "https://arxiv.org/abs/2510.08992",
++        "channels": ["arXiv", "citation trail"],
++        "tracks": ["constraint satisfaction", "verifier moat"],
++        "source_signal": (
++            "Represents each search step as intent plus constraint and uses that "
++            "representation to prune infeasible MCTS branches."
++        ),
++        "carnot_hook": (
++            ".465: prototype intent-constraint trace features for verifier training "
++            "and measure whether pruning beats tuned self-consistency on frozen tasks."
++        ),
++        "actionable": True,
++    },
++    {
++        "source_id": "2602.07223",
++        "title": "Vegas: Self-Speculative Decoding with Verification-Guided Sparse Attention",
++        "url": "https://arxiv.org/abs/2602.07223",
++        "channels": ["arXiv", "GitHub/citation trail"],
++        "tracks": ["hardware-accelerated decoding", "verifier moat"],
++        "source_signal": (
++            "Uses verification-guided sparse attention to make self-speculative "
++            "decoding more efficient without a second draft model."
++        ),
++        "carnot_hook": (
++            ".465: add a decoding-cost baseline where verifier evidence gates sparse "
++            "attention before any larger judge call."
++        ),
++        "actionable": True,
++    },
++    {
++        "source_id": "2604.01993",
++        "title": "SAFE: An LLM-as-Verifier Framework for Evidence-Grounded Multi-Hop Reasoning",
++        "url": "https://arxiv.org/abs/2604.01993",
++        "channels": ["arXiv", "Hugging Face Papers"],
++        "tracks": ["hallucination mitigation", "verifier moat"],
++        "source_signal": (
++            "Splits multi-hop claims into evidence-grounded checks so verifier output "
++            "is tied to cited support instead of a free-form judge vote."
++        ),
++        "carnot_hook": (
++            ".465: extend retrieval-NLI grounding with SAFE-style per-hop evidence "
++            "checks and compare against the current semantic consistency verifier."
++        ),
++        "actionable": True,
++    },
++    {
++        "source_id": "2604.12046",
++        "title": "Think Through Uncertainty: Improving Long-Form Generation Factuality via Reasoning Calibration",
++        "url": "https://arxiv.org/abs/2604.12046",
++        "channels": ["arXiv", "Hugging Face Papers"],
++        "tracks": ["hallucination mitigation", "continual verifier learning"],
++        "source_signal": (
++            "Calibrates generation around uncertainty-aware reasoning traces, making "
++            "the uncertainty signal useful to downstream factuality checks."
++        ),
++        "carnot_hook": (
++            ".465: use uncertainty trace features as replay examples for continual "
++            "verifier calibration instead of only scalar confidence thresholds."
++        ),
++        "actionable": True,
++    },
++    {
++        "source_id": "2605.26942",
++        "title": "Neuro-Symbolic Verification of LLM Outputs for Data-Sensitive Domains",
++        "url": "https://arxiv.org/abs/2605.26942",
++        "channels": ["arXiv", "citation trail"],
++        "tracks": ["constraint satisfaction", "hallucination mitigation"],
++        "source_signal": (
++            "Combines symbolic policy checks with neural output interpretation for "
++            "domains where violations are concrete and auditable."
++        ),
++        "carnot_hook": (
++            ".465: add a neuro-symbolic compliance fixture for the verifier moat so "
++            "policy violations are evaluated as structured constraints."
++        ),
++        "actionable": True,
++    },
++    {
++        "source_id": "2605.28020",
++        "title": (
++            "The Missing Piece in Pre-trained Model Evaluation: Reward-Guided Decoding "
++            "Unlocks Task-Oriented Behavior Without Parameter Updates"
++        ),
++        "url": "https://arxiv.org/abs/2605.28020",
++        "channels": ["arXiv", "GitHub/citation trail"],
++        "tracks": ["energy-guided decoding", "hardware-accelerated decoding"],
++        "source_signal": (
++            "Uses reward-guided decoding as a parameter-free way to steer task "
++            "behavior, making decoding-time guidance the intervention to measure."
++        ),
++        "carnot_hook": (
++            ".465: adapt the semantic-energy selector into a reward-guided decoding "
++            "arm and report accuracy per additional sampled token."
++        ),
++        "actionable": True,
++    },
++    {
++        "source_id": "2606.26108",
++        "title": "Where Larger Models Excel: The Primacy of Constraint-Guided Reasoning",
++        "url": "https://arxiv.org/abs/2606.26108",
++        "channels": ["arXiv", "Logical Intelligence/citation trail"],
++        "tracks": ["constraint satisfaction", "continual verifier learning"],
++        "source_signal": (
++            "Frames scale gains as improved constraint-guided reasoning, which gives "
++            "the verifier program a target for smaller-model distillation."
++        ),
++        "carnot_hook": (
++            ".465: mine constraint-guided failure modes into a continual verifier "
++            "learning replay set and separate scale benefit from verifier benefit."
++        ),
++        "actionable": True,
++    },
++]
++
++DUPLICATE_SOURCES = [
++    {
++        "source_id": "2512.05439",
++        "title": "BEAVER",
++        "url": "https://arxiv.org/abs/2512.05439",
++        "channels": ["arXiv", "Hugging Face Papers"],
++        "tracks": ["verifier moat"],
++        "source_signal": "Already recorded by the .464 planning sweep.",
++        "carnot_hook": ".464 duplicate; do not re-add for .465.",
++        "actionable": True,
++    },
++    {
++        "source_id": "2512.12850",
++        "title": "KANELE",
++        "url": "https://arxiv.org/abs/2512.12850",
++        "channels": ["arXiv"],
++        "tracks": ["KAN/KANFIS"],
++        "source_signal": "Already recorded by the .464 planning sweep.",
++        "carnot_hook": ".464 duplicate; do not re-add for .465.",
++        "actionable": True,
++    },
++    {
++        "source_id": "2602.03034",
++        "title": "KANFIS",
++        "url": "https://arxiv.org/abs/2602.03034",
++        "channels": ["arXiv", "GitHub/citation trail"],
++        "tracks": ["KAN/KANFIS"],
++        "source_signal": "Already recorded by the .464 planning sweep.",
++        "carnot_hook": ".464 duplicate; do not re-add for .465.",
++        "actionable": True,
++    },
++    {
++        "source_id": "2507.02092",
++        "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
++        "url": "https://arxiv.org/abs/2507.02092",
++        "channels": ["arXiv", "Extropic/citation trail"],
++        "tracks": ["energy-guided decoding"],
++        "source_signal": "Already recorded by the .464 planning sweep.",
++        "carnot_hook": ".464 duplicate; do not re-add for .465.",
++        "actionable": True,
++    },
++    {
++        "source_id": "2512.15605",
++        "title": "ARM-EBM",
++        "url": "https://arxiv.org/abs/2512.15605",
++        "channels": ["arXiv", "citation trail"],
++        "tracks": ["energy-guided decoding"],
++        "source_signal": "Already recorded by the .464 planning sweep.",
++        "carnot_hook": ".464 duplicate; do not re-add for .465.",
++        "actionable": True,
++    },
++]
++
++CANDIDATE_SOURCES = SELECTED_SOURCES + DUPLICATE_SOURCES
++CANDIDATE_SOURCES_BY_ID = {source["source_id"]: source for source in CANDIDATE_SOURCES}
++CANDIDATE_SOURCE_IDS = [source["source_id"] for source in CANDIDATE_SOURCES]
++
++SOURCES_CHECKED = [
++    {
++        "channel": "arXiv",
++        "query": "verifier moat, constraint satisfaction, energy-guided decoding 2025 2026",
++        "source_ids": SELECTED_SOURCE_IDS
++        + ["2512.05439", "2512.12850", "2602.03034", "2507.02092", "2512.15605"],
++        "result": "selected nonduplicates; rejected prior .464 and Exp 5038 IDs",
++    },
++    {
++        "channel": "OpenReview",
++        "query": "ICLR 2026 verifier test-time compute small verifier T1",
++        "source_ids": ["2504.04718"],
++        "result": "T1 kept because it supplies a concrete tool-first verifier gate",
++    },
++    {
++        "channel": "Hugging Face Papers",
++        "query": "2026 verifier factuality constraint decoding",
++        "source_ids": ["2504.04718", "2604.01993", "2604.12046"],
++        "result": "papers matched arXiv records and nonduplicate Carnot hooks",
++    },
++    {
++        "channel": "GitHub",
++        "query": "verification guided sparse attention reward guided decoding code 2026",
++        "source_ids": ["2602.07223", "2605.28020"],
++        "result": "hardware/sampling entries kept as decoding-cost experiment hooks",
++    },
++    {
++        "channel": "Extropic",
++        "query": "thermodynamic sampling energy based transformer p-bit EBT ARM-EBM",
++        "source_ids": ["2507.02092", "2512.15605", "2606.25313"],
++        "result": "no new nonduplicate Carnot hook beyond .464 energy hardware entries",
++    },
++    {
++        "channel": "Logical Intelligence",
++        "query": "Kona constraint guided reasoning verification 2026",
++        "source_ids": ["2606.26108"],
++        "result": "kept constraint-guided reasoning taxonomy as verifier replay hook",
++    },
++    {
++        "channel": "citation trails",
++        "query": "EBT ARM-EBM KAN KANFIS continual verifier hallucination mitigation",
++        "source_ids": [
++            "2512.12850",
++            "2602.03034",
++            "2507.02092",
++            "2512.15605",
++            "2604.01993",
++            "2604.12046",
++            "2605.26942",
++        ],
++        "result": "KAN/KANFIS and EBT/ARM-EBM were duplicate-only; verification sources kept",
++    },
++    {
++        "channel": "Exp 5038 artifact",
++        "query": "prior verifier-moat selected source IDs",
++        "source_ids": sorted(EXP5038_SOURCE_IDS),
++        "result": "excluded all Exp 5038 sources from .465 additions",
++    },
++]
++
++NEXT_MILESTONE_CANDIDATES = [
++    {
++        "candidate": "Tool-first verifier gate before judge fallback",
++        "candidate_flag": "flagged_for_v465 (.465): tool_first_small_verifier_gate",
++        "source_ids": ["2504.04718", "2604.01993"],
++        "why": (
++            "T1 and SAFE give a low-cost path where tools and evidence checks reduce "
++            "the burden on a small verifier before expensive judge escalation."
++        ),
++    },
++    {
++        "candidate": "Constraint-guided verifier replay set",
++        "candidate_flag": "flagged_for_v465 (.465): constraint_replay_continual_verifier",
++        "source_ids": ["2510.08992", "2605.26942", "2606.26108"],
++        "why": (
++            "Constraint traces, neuro-symbolic checks, and scale taxonomy can be "
++            "converted into verifier replay fixtures that distinguish constraint "
++            "following from generic model scale."
++        ),
++    },
++    {
++        "candidate": "Guided decoding cost frontier",
++        "candidate_flag": "flagged_for_v465 (.465): guided_decoding_cost_frontier",
++        "source_ids": ["2602.07223", "2605.28020"],
++        "why": (
++            "Verification-guided sparse attention and reward-guided decoding let .465 "
++            "measure whether sampling-time guidance buys accuracy per token instead "
++            "of only per model call."
++        ),
++    },
++    {
++        "candidate": "Uncertainty-calibrated factuality loop",
++        "candidate_flag": "flagged_for_v465 (.465): uncertainty_calibrated_factuality_loop",
++        "source_ids": ["2604.01993", "2604.12046"],
++        "why": (
++            "Evidence-grounded verification plus uncertainty trace calibration gives "
++            "a concrete hallucination-mitigation loop for continual verifier learning."
++        ),
++    },
++]
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:  # pragma: no cover
++        raise ValueError(message)
++
++
++def _stable_checksum(payload: Mapping[str, Any]) -> str:
++    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
++    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
++
++
++def _source_id_or_url_seen(source: Mapping[str, Any], existing_reference_text: str) -> bool:
++    source_id = str(source["source_id"])
++    return source_id in existing_reference_text or str(source["url"]) in existing_reference_text
++
++
++def filter_actionable_sources(
++    candidates: Iterable[Mapping[str, Any]], *, existing_reference_text: str
++) -> dict[str, list[dict[str, Any]]]:
++    """Select actionable sources while rejecting known and already-written duplicates."""
++
++    selected: list[dict[str, Any]] = []
++    rejected: list[dict[str, Any]] = []
++    for candidate in candidates:
++        source = dict(candidate)
++        source_id = str(source["source_id"])
++        if source_id in ALREADY_INGESTED_SOURCE_IDS:
++            rejected.append({**source, "reason": "already_ingested"})
++        elif _source_id_or_url_seen(source, existing_reference_text):
++            rejected.append({**source, "reason": "already_in_research_references"})
++        elif source.get("actionable") is not True:
++            rejected.append({**source, "reason": "not_actionable"})
++        else:
++            selected.append(source)
++    return {"selected": selected, "rejected": rejected}
++
++
++def _build_duplicate_filter() -> dict[str, Any]:
++    filtered = filter_actionable_sources(CANDIDATE_SOURCES, existing_reference_text="")
++    selected_ids = [source["source_id"] for source in filtered["selected"]]
++    rejected_duplicates = [
++        {"source_id": source["source_id"], "title": source["title"], "reason": source["reason"]}
++        for source in filtered["rejected"]
++        if source["reason"] == "already_ingested"
++    ]
++    return {
++        "selected_source_ids": selected_ids,
++        "rejected_duplicate_source_ids": [row["source_id"] for row in rejected_duplicates],
++        "rejected_duplicates": rejected_duplicates,
++        "exp5038_source_ids_checked": sorted(EXP5038_SOURCE_IDS),
++        "v464_duplicate_source_ids_checked": sorted(V464_DUPLICATE_SOURCE_IDS),
++        "kan_kanfis_status": (
++            "no_new_nonduplicate_actionable_source_found; KANELE and KANFIS were "
++            "already recorded in the .464 sweep"
++        ),
++        "ebt_arm_ebm_status": (
++            "no_new_nonduplicate_actionable_source_found; EBT, ARM-EBM, and p-bit "
++            "hardware hits were already recorded in the .464 sweep"
++        ),
++    }
++
++
++def _build_references_added(selected_sources: list[dict[str, Any]]) -> list[dict[str, str]]:
++    return [
++        {
++            "source_id": source["source_id"],
++            "title": source["title"],
++            "url": source["url"],
++            "carnot_hook": source["carnot_hook"],
++        }
++        for source in selected_sources
++    ]
++
++
++def _build_preconditions_checked() -> dict[str, Any]:
++    return {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "research_references_read": True,
++        "research_program_read": True,
++        "exp5038_artifact_read": True,
++        "roadmap_vnext_read": True,
++        "arxiv_checked": True,
++        "openreview_checked": True,
++        "huggingface_papers_checked": True,
++        "github_checked": True,
++        "extropic_checked": True,
++        "logical_intelligence_checked": True,
++        "ebt_arm_ebm_citation_trails_checked": True,
++        "deep_research_invoked": False,
++        "research_conductor_modified": False,
++        "ops_docs_modified": False,
++        "kan_kanfis_duplicate_only": True,
++        "ebt_arm_ebm_duplicate_only": True,
++    }
++
++
++def build_artifact(*, research_references_updated: bool) -> dict[str, Any]:
++    """Build and validate the Exp 5053 JSON artifact."""
++
++    duplicate_filter = _build_duplicate_filter()
++    selected_sources = [dict(source) for source in SELECTED_SOURCES]
++    checksum_payload = {
++        "selected_source_ids": SELECTED_SOURCE_IDS,
++        "duplicate_filter": duplicate_filter,
++        "next_milestone_candidates": NEXT_MILESTONE_CANDIDATES,
++    }
++    artifact: dict[str, Any] = {
++        "honest_verdict": HONEST_VERDICT,
++        "references_added": _build_references_added(selected_sources),
++        "n_sources_checked": len(SOURCES_CHECKED),
++        "selected_sources": selected_sources,
++        "next_milestone_candidates": [dict(candidate) for candidate in NEXT_MILESTONE_CANDIDATES],
++        "research_references_updated": research_references_updated,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": _build_preconditions_checked(),
++        "duplicate_filter": duplicate_filter,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "reproducibility_checksum": _stable_checksum(checksum_payload),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Fail closed if the artifact drifts from REQ-REPORT-5053."""
++
++    _require(set(artifact) == set(REQUIRED_ARTIFACT_FIELDS), "artifact fields mismatch")
++    verdict = artifact["honest_verdict"]
++    _require(
++        isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES),
++        "honest_verdict must use a terminal prefix",
++    )
++    _require(verdict == HONEST_VERDICT, "unexpected complete verdict")
++    _require(
++        artifact["inference_substrate"] == INFERENCE_SUBSTRATE,
++        "inference substrate mismatch",
++    )
++    _require(artifact["field_principles"] == FIELD_PRINCIPLES, "field principles mismatch")
++    _require(
++        artifact["research_references_updated"] in {True, False},
++        "research_references_updated must be a bool",
++    )
++    _require(
++        artifact["n_sources_checked"] == len(SOURCES_CHECKED),
++        "source check count mismatch",
++    )
++
++    preconditions = artifact["preconditions_checked"]
++    _require(isinstance(preconditions, dict), "preconditions must be a dict")
++    _require(preconditions.get("deep_research_invoked") is False, "deep-research banned")
++    _require(
++        preconditions.get("research_conductor_modified") is False,
++        "research conductor must not be modified",
++    )
++    _require(preconditions.get("ops_docs_modified") is False, "ops docs must not be modified")
++
++    selected_sources = artifact["selected_sources"]
++    _require(isinstance(selected_sources, list), "selected_sources must be a list")
++    selected_ids = [source["source_id"] for source in selected_sources]
++    _require(selected_ids == SELECTED_SOURCE_IDS, "selected source IDs mismatch")
++    _require(
++        not set(selected_ids).intersection(ALREADY_INGESTED_SOURCE_IDS),
++        "selected source repeats prior ingestion",
++    )
++    for source in selected_sources:
++        _require(source["actionable"] is True, "selected source must be actionable")
++        _require(str(source["url"]).startswith("https://arxiv.org/abs/"), "bad source URL")
++        _require(".465" in str(source["carnot_hook"]), "missing .465 hook")
++        _require(source["tracks"], "selected source must declare tracks")
++
++    references_added = artifact["references_added"]
++    _require(
++        [entry["source_id"] for entry in references_added] == SELECTED_SOURCE_IDS,
++        "references_added source IDs mismatch",
++    )
++    for entry in references_added:
++        _require(str(entry["url"]).startswith("https://arxiv.org/abs/"), "bad ref URL")
++        _require(".465" in str(entry["carnot_hook"]), "reference hook missing .465")
++
++    duplicate_filter = artifact["duplicate_filter"]
++    _require(
++        duplicate_filter["selected_source_ids"] == SELECTED_SOURCE_IDS,
++        "duplicate-filter selected IDs mismatch",
++    )
++    _require(
++        {"2512.05439", "2602.03034"}.issubset(
++            set(duplicate_filter["rejected_duplicate_source_ids"])
++        ),
++        "required duplicate rejection missing",
++    )
++    _require(
++        duplicate_filter["kan_kanfis_status"].startswith("no_new_nonduplicate"),
++        "KAN/KANFIS duplicate status mismatch",
++    )
++    _require(
++        duplicate_filter["ebt_arm_ebm_status"].startswith("no_new_nonduplicate"),
++        "EBT/ARM-EBM duplicate status mismatch",
++    )
++
++    candidates = artifact["next_milestone_candidates"]
++    _require(len(candidates) >= 3, "need at least three milestone candidates")
++    for candidate in candidates:
++        _require(".465" in candidate["candidate_flag"], "candidate must target .465")
++        _require(candidate["source_ids"], "candidate needs source IDs")
++
++    expected_checksum = _stable_checksum(
++        {
++            "selected_source_ids": SELECTED_SOURCE_IDS,
++            "duplicate_filter": duplicate_filter,
++            "next_milestone_candidates": NEXT_MILESTONE_CANDIDATES,
++        }
++    )
++    _require(
++        artifact["reproducibility_checksum"] == expected_checksum,
++        "reproducibility checksum mismatch",
++    )
++
++
++def _build_references_section(artifact: Mapping[str, Any]) -> str:
++    validate_artifact(artifact)
++    lines = [
++        REFERENCES_SECTION_START,
++        "## Exp 5053 .465 SOTA ingestion source set",
++        "",
++        f"- **Artifact:** `{RESULT_RELATIVE_PATH}`",
++        f"- **Honest verdict:** `{artifact['honest_verdict']}`",
++        "- **Scope:** verifier moat, guided decoding, constraints, hallucination mitigation, continual verifier learning, and sampling hardware.",
++        "- **Duplicate handling:** prior Exp 5038 and .464 planning-sweep entries were checked and not re-added.",
++        "",
++    ]
++    for source in artifact["selected_sources"]:
++        lines.extend(
++            [
++                f"### {source['title']}",
++                f"- **Source:** arXiv:{source['source_id']} - {source['url']}",
++                f"- **Tracks:** {', '.join(source['tracks'])}",
++                f"- **Carnot hook:** {source['carnot_hook']}",
++                f"- **Actionability:** {source['source_signal']}",
++                "",
++            ]
++        )
++    lines.extend([REFERENCES_SECTION_END, ""])
++    return "\n".join(lines)
++
++
++def _replace_marked_section(text: str, section: str) -> str:
++    if REFERENCES_SECTION_START not in text:
++        return f"{text.rstrip()}\n\n{section}".lstrip()
++    before, rest = text.split(REFERENCES_SECTION_START, 1)
++    _require(
++        REFERENCES_SECTION_END in rest,
++        "existing Exp 5053 reference section is missing end marker",
++    )
++    _, after = rest.split(REFERENCES_SECTION_END, 1)
++    return f"{before.rstrip()}\n\n{section}{after.lstrip()}"
++
++
++def update_research_references_text(text: str, artifact: Mapping[str, Any]) -> str:
++    """Insert or replace the managed Exp 5053 section in research references."""
++
++    section = _build_references_section(artifact)
++    updated = _replace_marked_section(text, section)
++    validate_research_references_text(updated, artifact)
++    return updated
++
++
++def validate_research_references_text(text: str, artifact: Mapping[str, Any]) -> None:
++    """Validate the managed reference section without parsing the whole bibliography."""
++
++    _require(REFERENCES_SECTION_START in text, "reference section start missing")
++    _require(REFERENCES_SECTION_END in text, "reference section end missing")
++    section = text.split(REFERENCES_SECTION_START, 1)[1].split(REFERENCES_SECTION_END, 1)[0]
++    _require(HONEST_VERDICT in section, "honest verdict missing from reference section")
++    for source_id in SELECTED_SOURCE_IDS:
++        _require(f"arXiv:{source_id}" in section, f"missing selected source {source_id}")
++        _require(f"https://arxiv.org/abs/{source_id}" in section, "missing source URL")
++    _require("Carnot hook" in section, "Carnot hooks missing from reference section")
++    _require("arXiv:2512.05439" not in section, "duplicate BEAVER source was re-added")
++    _require(
++        artifact["research_references_updated"] is True,
++        "references can only validate against a write-complete artifact",
++    )
++
++
++def write_outputs(*, artifact_path: Path, references_path: Path) -> dict[str, Any]:
++    """Write the stable JSON artifact and managed reference section."""
++
++    artifact = build_artifact(research_references_updated=True)
++    references_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    existing_references = (
++        references_path.read_text(encoding="utf-8")
++        if references_path.exists()
++        else "# Research References\n\n"
++    )
++    updated_references = update_research_references_text(existing_references, artifact)
++    artifact_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    references_path.write_text(updated_references, encoding="utf-8")
++    return artifact
++
++
++def main() -> int:
++    root = Path(os.environ.get("CARNOT_EXP5053_ROOT", Path(__file__).resolve().parents[2]))
++    write_outputs(
++        artifact_path=root / RESULT_RELATIVE_PATH,
++        references_path=root / REFERENCES_RELATIVE_PATH,
++    )
++    print(HONEST_VERDICT)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/research-references.md b/research-references.md
+index 10c0fa47f9..32ae2a01b4 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -25148,3 +25148,61 @@ NEW this planning pass (not in the ingested set; comparator candidates for `.463
+ 
+ **Bottom line for the `.462` roadmap:** the moat is still UNTESTED (zero real trained-verifier measurements landed). `.462` builds the prerequisites (genuine tuned-SC baseline B1; shared logprob cache B2) and re-runs D1/D2/D3 to FIRST measure the decisive question, plus adds the efficiency-axis cascade (2510.20369) so a Pareto win is reachable even if every accuracy arm ties SC. Flag for `.463`: if a real arm produces a win, scale it (more corpora + the DiffusionGemma activation proposal); if D1+D2 both cleanly null, the off-ARC moat retires as bounded (a publishable null converging with the ARC tie).
+ <!-- V462-PLANNER-REFERENCES-END -->
++
++<!-- EXP5053-SOTA-INGESTION-V465-REFERENCES-START -->
++## Exp 5053 .465 SOTA ingestion source set
++
++- **Artifact:** `results/experiment_5053_sota_ingestion_v465.json`
++- **Honest verdict:** `success_sota_ingestion_v465_actionable_references_added`
++- **Scope:** verifier moat, guided decoding, constraints, hallucination mitigation, continual verifier learning, and sampling hardware.
++- **Duplicate handling:** prior Exp 5038 and .464 planning-sweep entries were checked and not re-added.
++
++### T1: Tool-integrated Verification for Test-time Compute Scaling in Small Language Models
++- **Source:** arXiv:2504.04718 - https://arxiv.org/abs/2504.04718
++- **Tracks:** verifier moat, constraint satisfaction
++- **Carnot hook:** .465: add a tool-first cheap verifier gate before D6 judge fallback and charge tool calls separately from final verifier selection.
++- **Actionability:** External tools handle memorization-heavy checks before a small verifier ranks candidates, giving a direct cheap-verifier path for test-time scaling.
++
++### Constraints-of-Thought: A Framework for Constrained Reasoning in Language-Model-Guided Search
++- **Source:** arXiv:2510.08992 - https://arxiv.org/abs/2510.08992
++- **Tracks:** constraint satisfaction, verifier moat
++- **Carnot hook:** .465: prototype intent-constraint trace features for verifier training and measure whether pruning beats tuned self-consistency on frozen tasks.
++- **Actionability:** Represents each search step as intent plus constraint and uses that representation to prune infeasible MCTS branches.
++
++### Vegas: Self-Speculative Decoding with Verification-Guided Sparse Attention
++- **Source:** arXiv:2602.07223 - https://arxiv.org/abs/2602.07223
++- **Tracks:** hardware-accelerated decoding, verifier moat
++- **Carnot hook:** .465: add a decoding-cost baseline where verifier evidence gates sparse attention before any larger judge call.
++- **Actionability:** Uses verification-guided sparse attention to make self-speculative decoding more efficient without a second draft model.
++
++### SAFE: An LLM-as-Verifier Framework for Evidence-Grounded Multi-Hop Reasoning
++- **Source:** arXiv:2604.01993 - https://arxiv.org/abs/2604.01993
++- **Tracks:** hallucination mitigation, verifier moat
++- **Carnot hook:** .465: extend retrieval-NLI grounding with SAFE-style per-hop evidence checks and compare against the current semantic consistency verifier.
++- **Actionability:** Splits multi-hop claims into evidence-grounded checks so verifier output is tied to cited support instead of a free-form judge vote.
++
++### Think Through Uncertainty: Improving Long-Form Generation Factuality via Reasoning Calibration
++- **Source:** arXiv:2604.12046 - https://arxiv.org/abs/2604.12046
++- **Tracks:** hallucination mitigation, continual verifier learning
++- **Carnot hook:** .465: use uncertainty trace features as replay examples for continual verifier calibration instead of only scalar confidence thresholds.
++- **Actionability:** Calibrates generation around uncertainty-aware reasoning traces, making the uncertainty signal useful to downstream factuality checks.
++
++### Neuro-Symbolic Verification of LLM Outputs for Data-Sensitive Domains
++- **Source:** arXiv:2605.26942 - https://arxiv.org/abs/2605.26942
++- **Tracks:** constraint satisfaction, hallucination mitigation
++- **Carnot hook:** .465: add a neuro-symbolic compliance fixture for the verifier moat so policy violations are evaluated as structured constraints.
++- **Actionability:** Combines symbolic policy checks with neural output interpretation for domains where violations are concrete and auditable.
++
++### The Missing Piece in Pre-trained Model Evaluation: Reward-Guided Decoding Unlocks Task-Oriented Behavior Without Parameter Updates
++- **Source:** arXiv:2605.28020 - https://arxiv.org/abs/2605.28020
++- **Tracks:** energy-guided decoding, hardware-accelerated decoding
++- **Carnot hook:** .465: adapt the semantic-energy selector into a reward-guided decoding arm and report accuracy per additional sampled token.
++- **Actionability:** Uses reward-guided decoding as a parameter-free way to steer task behavior, making decoding-time guidance the intervention to measure.
++
++### Where Larger Models Excel: The Primacy of Constraint-Guided Reasoning
++- **Source:** arXiv:2606.26108 - https://arxiv.org/abs/2606.26108
++- **Tracks:** constraint satisfaction, continual verifier learning
++- **Carnot hook:** .465: mine constraint-guided failure modes into a continual verifier learning replay set and separate scale benefit from verifier benefit.
++- **Actionability:** Frames scale gains as improved constraint-guided reasoning, which gives the verifier program a target for smaller-model distillation.
++
++<!-- EXP5053-SOTA-INGESTION-V465-REFERENCES-END -->
+diff --git a/results/experiment_5053_sota_ingestion_v465.json b/results/experiment_5053_sota_ingestion_v465.json
+new file mode 100644
+index 0000000000..dda9b44d57
+--- /dev/null
++++ b/results/experiment_5053_sota_ingestion_v465.json
+@@ -0,0 +1,355 @@
++{
++  "duplicate_filter": {
++    "ebt_arm_ebm_status": "no_new_nonduplicate_actionable_source_found; EBT, ARM-EBM, and p-bit hardware hits were already recorded in the .464 sweep",
++    "exp5038_source_ids_checked": [
++      "2503.22480",
++      "2505.14999",
++      "2602.06291",
++      "2605.10325",
++      "2606.11209"
++    ],
++    "kan_kanfis_status": "no_new_nonduplicate_actionable_source_found; KANELE and KANFIS were already recorded in the .464 sweep",
++    "rejected_duplicate_source_ids": [
++      "2512.05439",
++      "2512.12850",
++      "2602.03034",
++      "2507.02092",
++      "2512.15605"
++    ],
++    "rejected_duplicates": [
++      {
++        "reason": "already_ingested",
++        "source_id": "2512.05439",
++        "title": "BEAVER"
++      },
++      {
++        "reason": "already_ingested",
++        "source_id": "2512.12850",
++        "title": "KANELE"
++      },
++      {
++        "reason": "already_ingested",
++        "source_id": "2602.03034",
++        "title": "KANFIS"
++      },
++      {
++        "reason": "already_ingested",
++        "source_id": "2507.02092",
++        "title": "Energy-Based Transformers are Scalable Learners and Thinkers"
++      },
++      {
++        "reason": "already_ingested",
++        "source_id": "2512.15605",
++        "title": "ARM-EBM"
++      }
++    ],
++    "selected_source_ids": [
++      "2504.04718",
++      "2510.08992",
++      "2602.07223",
++      "2604.01993",
++      "2604.12046",
++      "2605.26942",
++      "2605.28020",
++      "2606.26108"
++    ],
++    "v464_duplicate_source_ids_checked": [
++      "2507.02092",
++      "2507.07731",
++      "2510.27545",
++      "2512.05439",
++      "2512.12850",
++      "2512.15605",
++      "2601.17789",
++      "2601.21484",
++      "2602.03034",
++      "2603.02119",
++      "2603.21558",
++      "2605.12421",
++      "2606.18910",
++      "2606.21724",
++      "2606.25313",
++      "2606.29366"
++    ]
++  },
++  "field_principles": {
++    "duplicate_filter": {
++      "principle": "explicit record of selected IDs and already-ingested IDs rejected before reference insertion."
++    },
++    "field_principles": {
++      "principle": "principle annotations are part of the artifact contract."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; complete verdict is success_sota_ingestion_v465_actionable_references_added."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts; no model training or live inference."
++    },
++    "n_sources_checked": {
++      "principle": "count of source records checked across arXiv, OpenReview, Hugging Face Papers, GitHub, Extropic, Logical Intelligence, and EBT/ARM-EBM trails."
++    },
++    "next_milestone_candidates": {
++      "principle": "candidate .465 follow-up experiments with the source IDs that justify them."
++    },
++    "preconditions_checked": {
++      "principle": "records required file reads, search channels, and forbidden side effects."
++    },
++    "references_added": {
++      "principle": "only genuinely actionable nonduplicate sources added to research-references.md, each with URL and concrete Carnot hook."
++    },
++    "reproducibility_checksum": {
++      "principle": "sha256 over the stable selected-source and duplicate-filter payload."
++    },
++    "research_references_updated": {
++      "principle": "true only when the managed Exp 5053 section has been written and validated."
++    },
++    "selected_sources": {
++      "principle": "deduplicated source records selected for .465 planning; no repeats from Exp 5038 or the .464 planning sweep."
++    }
++  },
++  "honest_verdict": "success_sota_ingestion_v465_actionable_references_added",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "n_sources_checked": 8,
++  "next_milestone_candidates": [
++    {
++      "candidate": "Tool-first verifier gate before judge fallback",
++      "candidate_flag": "flagged_for_v465 (.465): tool_first_small_verifier_gate",
++      "source_ids": [
++        "2504.04718",
++        "2604.01993"
++      ],
++      "why": "T1 and SAFE give a low-cost path where tools and evidence checks reduce the burden on a small verifier before expensive judge escalation."
++    },
++    {
++      "candidate": "Constraint-guided verifier replay set",
++      "candidate_flag": "flagged_for_v465 (.465): constraint_replay_continual_verifier",
++      "source_ids": [
++        "2510.08992",
++        "2605.26942",
++        "2606.26108"
++      ],
++      "why": "Constraint traces, neuro-symbolic checks, and scale taxonomy can be converted into verifier replay fixtures that distinguish constraint following from generic model scale."
++    },
++    {
++      "candidate": "Guided decoding cost frontier",
++      "candidate_flag": "flagged_for_v465 (.465): guided_decoding_cost_frontier",
++      "source_ids": [
++        "2602.07223",
++        "2605.28020"
++      ],
++      "why": "Verification-guided sparse attention and reward-guided decoding let .465 measure whether sampling-time guidance buys accuracy per token instead of only per model call."
++    },
++    {
++      "candidate": "Uncertainty-calibrated factuality loop",
++      "candidate_flag": "flagged_for_v465 (.465): uncertainty_calibrated_factuality_loop",
++      "source_ids": [
++        "2604.01993",
++        "2604.12046"
++      ],
++      "why": "Evidence-grounded verification plus uncertainty trace calibration gives a concrete hallucination-mitigation loop for continual verifier learning."
++    }
++  ],
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "arxiv_checked": true,
++    "codex_md_read": true,
++    "deep_research_invoked": false,
++    "ebt_arm_ebm_citation_trails_checked": true,
++    "ebt_arm_ebm_duplicate_only": true,
++    "exp5038_artifact_read": true,
++    "extropic_checked": true,
++    "github_checked": true,
++    "huggingface_papers_checked": true,
++    "kan_kanfis_duplicate_only": true,
++    "logical_intelligence_checked": true,
++    "openreview_checked": true,
++    "ops_docs_modified": false,
++    "research_conductor_modified": false,
++    "research_program_read": true,
++    "research_references_read": true,
++    "roadmap_vnext_read": true
++  },
++  "references_added": [
++    {
++      "carnot_hook": ".465: add a tool-first cheap verifier gate before D6 judge fallback and charge tool calls separately from final verifier selection.",
++      "source_id": "2504.04718",
++      "title": "T1: Tool-integrated Verification for Test-time Compute Scaling in Small Language Models",
++      "url": "https://arxiv.org/abs/2504.04718"
++    },
++    {
++      "carnot_hook": ".465: prototype intent-constraint trace features for verifier training and measure whether pruning beats tuned self-consistency on frozen tasks.",
++      "source_id": "2510.08992",
++      "title": "Constraints-of-Thought: A Framework for Constrained Reasoning in Language-Model-Guided Search",
++      "url": "https://arxiv.org/abs/2510.08992"
++    },
++    {
++      "carnot_hook": ".465: add a decoding-cost baseline where verifier evidence gates sparse attention before any larger judge call.",
++      "source_id": "2602.07223",
++      "title": "Vegas: Self-Speculative Decoding with Verification-Guided Sparse Attention",
++      "url": "https://arxiv.org/abs/2602.07223"
++    },
++    {
++      "carnot_hook": ".465: extend retrieval-NLI grounding with SAFE-style per-hop evidence checks and compare against the current semantic consistency verifier.",
++      "source_id": "2604.01993",
++      "title": "SAFE: An LLM-as-Verifier Framework for Evidence-Grounded Multi-Hop Reasoning",
++      "url": "https://arxiv.org/abs/2604.01993"
++    },
++    {
++      "carnot_hook": ".465: use uncertainty trace features as replay examples for continual verifier calibration instead of only scalar confidence thresholds.",
++      "source_id": "2604.12046",
++      "title": "Think Through Uncertainty: Improving Long-Form Generation Factuality via Reasoning Calibration",
++      "url": "https://arxiv.org/abs/2604.12046"
++    },
++    {
++      "carnot_hook": ".465: add a neuro-symbolic compliance fixture for the verifier moat so policy violations are evaluated as structured constraints.",
++      "source_id": "2605.26942",
++      "title": "Neuro-Symbolic Verification of LLM Outputs for Data-Sensitive Domains",
++      "url": "https://arxiv.org/abs/2605.26942"
++    },
++    {
++      "carnot_hook": ".465: adapt the semantic-energy selector into a reward-guided decoding arm and report accuracy per additional sampled token.",
++      "source_id": "2605.28020",
++      "title": "The Missing Piece in Pre-trained Model Evaluation: Reward-Guided Decoding Unlocks Task-Oriented Behavior Without Parameter Updates",
++      "url": "https://arxiv.org/abs/2605.28020"
++    },
++    {
++      "carnot_hook": ".465: mine constraint-guided failure modes into a continual verifier learning replay set and separate scale benefit from verifier benefit.",
++      "source_id": "2606.26108",
++      "title": "Where Larger Models Excel: The Primacy of Constraint-Guided Reasoning",
++      "url": "https://arxiv.org/abs/2606.26108"
++    }
++  ],
++  "reproducibility_checksum": "a5fa32bcec9d6b9119a11205012a9576d297ffeff0b46b2398a2995acd63508c",
++  "research_references_updated": true,
++  "selected_sources": [
++    {
++      "actionable": true,
++      "carnot_hook": ".465: add a tool-first cheap verifier gate before D6 judge fallback and charge tool calls separately from final verifier selection.",
++      "channels": [
++        "arXiv",
++        "OpenReview",
++        "Hugging Face Papers"
++      ],
++      "source_id": "2504.04718",
++      "source_signal": "External tools handle memorization-heavy checks before a small verifier ranks candidates, giving a direct cheap-verifier path for test-time scaling.",
++      "title": "T1: Tool-integrated Verification for Test-time Compute Scaling in Small Language Models",
++      "tracks": [
++        "verifier moat",
++        "constraint satisfaction"
++      ],
++      "url": "https://arxiv.org/abs/2504.04718"
++    },
++    {
++      "actionable": true,
++      "carnot_hook": ".465: prototype intent-constraint trace features for verifier training and measure whether pruning beats tuned self-consistency on frozen tasks.",
++      "channels": [
++        "arXiv",
++        "citation trail"
++      ],
++      "source_id": "2510.08992",
++      "source_signal": "Represents each search step as intent plus constraint and uses that representation to prune infeasible MCTS branches.",
++      "title": "Constraints-of-Thought: A Framework for Constrained Reasoning in Language-Model-Guided Search",
++      "tracks": [
++        "constraint satisfaction",
++        "verifier moat"
++      ],
++      "url": "https://arxiv.org/abs/2510.08992"
++    },
++    {
++      "actionable": true,
++      "carnot_hook": ".465: add a decoding-cost baseline where verifier evidence gates sparse attention before any larger judge call.",
++      "channels": [
++        "arXiv",
++        "GitHub/citation trail"
++      ],
++      "source_id": "2602.07223",
++      "source_signal": "Uses verification-guided sparse attention to make self-speculative decoding more efficient without a second draft model.",
++      "title": "Vegas: Self-Speculative Decoding with Verification-Guided Sparse Attention",
++      "tracks": [
++        "hardware-accelerated decoding",
++        "verifier moat"
++      ],
++      "url": "https://arxiv.org/abs/2602.07223"
++    },
++    {
++      "actionable": true,
++      "carnot_hook": ".465: extend retrieval-NLI grounding with SAFE-style per-hop evidence checks and compare against the current semantic consistency verifier.",
++      "channels": [
++        "arXiv",
++        "Hugging Face Papers"
++      ],
++      "source_id": "2604.01993",
++      "source_signal": "Splits multi-hop claims into evidence-grounded checks so verifier output is tied to cited support instead of a free-form judge vote.",
++      "title": "SAFE: An LLM-as-Verifier Framework for Evidence-Grounded Multi-Hop Reasoning",
++      "tracks": [
++        "hallucination mitigation",
++        "verifier moat"
++      ],
++      "url": "https://arxiv.org/abs/2604.01993"
++    },
++    {
++      "actionable": true,
++      "carnot_hook": ".465: use uncertainty trace features as replay examples for continual verifier calibration instead of only scalar confidence thresholds.",
++      "channels": [
++        "arXiv",
++        "Hugging Face Papers"
++      ],
++      "source_id": "2604.12046",
++      "source_signal": "Calibrates generation around uncertainty-aware reasoning traces, making the uncertainty signal useful to downstream factuality checks.",
++      "title": "Think Through Uncertainty: Improving Long-Form Generation Factuality via Reasoning Calibration",
++      "tracks": [
++        "hallucination mitigation",
++        "continual verifier learning"
++      ],
++      "url": "https://arxiv.org/abs/2604.12046"
++    },
++    {
++      "actionable": true,
++      "carnot_hook": ".465: add a neuro-symbolic compliance fixture for the verifier moat so policy violations are evaluated as structured constraints.",
++      "channels": [
++        "arXiv",
++        "citation trail"
++      ],
++      "source_id": "2605.26942",
++      "source_signal": "Combines symbolic policy checks with neural output interpretation for domains where violations are concrete and auditable.",
++      "title": "Neuro-Symbolic Verification of LLM Outputs for Data-Sensitive Domains",
++      "tracks": [
++        "constraint satisfaction",
++        "hallucination mitigation"
++      ],
++      "url": "https://arxiv.org/abs/2605.26942"
++    },
++    {
++      "actionable": true,
++      "carnot_hook": ".465: adapt the semantic-energy selector into a reward-guided decoding arm and report accuracy per additional sampled token.",
++      "channels": [
++        "arXiv",
++        "GitHub/citation trail"
++      ],
++      "source_id": "2605.28020",
++      "source_signal": "Uses reward-guided decoding as a parameter-free way to steer task behavior, making decoding-time guidance the intervention to measure.",
++      "title": "The Missing Piece in Pre-trained Model Evaluation: Reward-Guided Decoding Unlocks Task-Oriented Behavior Without Parameter Updates",
++      "tracks": [
++        "energy-guided decoding",
++        "hardware-accelerated decoding"
++      ],
++      "url": "https://arxiv.org/abs/2605.28020"
++    },
++    {
++      "actionable": true,
++      "carnot_hook": ".465: mine constraint-guided failure modes into a continual verifier learning replay set and separate scale benefit from verifier benefit.",
++      "channels": [
++        "arXiv",
++        "Logical Intelligence/citation trail"
++      ],
++      "source_id": "2606.26108",
++      "source_signal": "Frames scale gains as improved constraint-guided reasoning, which gives the verifier program a target for smaller-model distillation.",
++      "title": "Where Larger Models Excel: The Primacy of Constraint-Guided Reasoning",
++      "tracks": [
++        "constraint satisfaction",
++        "continual verifier learning"
++      ],
++      "url": "https://arxiv.org/abs/2606.26108"
++    }
++  ]
++}
+diff --git a/tests/python/test_experiment_5053_sota_ingestion_v465.py b/tests/python/test_experiment_5053_sota_ingestion_v465.py
+new file mode 100644
+index 0000000000..30405cea29
+--- /dev/null
++++ b/tests/python/test_experiment_5053_sota_ingestion_v465.py
+@@ -0,0 +1,184 @@
++"""Tests for Exp 5053 .465 SOTA ingestion.
++
++Spec refs: REQ-REPORT-5053, SCENARIO-REPORT-5053,
++SCENARIO-REPORT-5053-DUPLICATE-FILTER.
++"""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++from carnot import experiment_5053_sota_ingestion_v465 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++ARTIFACT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++REFERENCES_PATH = REPO / mod.REFERENCES_RELATIVE_PATH
++
++
++def _artifact() -> dict[str, object]:
++    return mod.build_artifact(research_references_updated=True)
++
++
++def _spec_section() -> str:
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    start = spec.index("### REQ-REPORT-5053")
++    end = spec.index("### REQ-REPORT-4873", start)
++    return spec[start:end]
++
++
++def test_req_report_5053_spec_declares_artifact_and_duplicate_contract() -> None:
++    """REQ-REPORT-5053: OpenSpec declares the .465 ingestion contract."""
++
++    section = _spec_section()
++
++    assert "REQ-REPORT-5053" in section
++    assert "SCENARIO-REPORT-5053" in section
++    assert "SCENARIO-REPORT-5053-DUPLICATE-FILTER" in section
++    assert mod.RESULT_RELATIVE_PATH in section
++    assert mod.REFERENCES_RELATIVE_PATH in section
++    assert mod.HONEST_VERDICT in section
++    assert "scripts/research_conductor.py" in section
++    assert "ops/changelog.md" in section
++    assert "OpenReview" in section
++    assert "Hugging Face Papers" in section
++    assert "EBT/ARM-EBM citation trails" in section
++    for field, principle in mod.REQUIRED_USER_FIELD_PRINCIPLES.items():
++        assert field in section
++        assert principle["principle"] in section
++    for duplicate_id in sorted(mod.REQUIRED_DUPLICATE_IDS_IN_SPEC):
++        assert duplicate_id in section
++
++
++def test_req_report_5053_artifact_maps_actionable_nonduplicate_sources() -> None:
++    """REQ-REPORT-5053: artifact maps checked sources to concrete .465 hooks."""
++
++    artifact = _artifact()
++
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["honest_verdict"] == mod.HONEST_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["research_references_updated"] is True
++    assert artifact["n_sources_checked"] == len(mod.SOURCES_CHECKED)
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++
++    selected_ids = [source["source_id"] for source in artifact["selected_sources"]]
++    assert selected_ids == mod.SELECTED_SOURCE_IDS
++    assert not set(selected_ids).intersection(mod.ALREADY_INGESTED_SOURCE_IDS)
++    assert len(selected_ids) >= 5
++
++    reference_ids = [entry["source_id"] for entry in artifact["references_added"]]
++    assert reference_ids == mod.SELECTED_SOURCE_IDS
++    for entry in artifact["references_added"]:
++        assert entry["url"].startswith(("https://arxiv.org/abs/", "https://github.com/"))
++        assert entry["carnot_hook"]
++        assert ".465" in entry["carnot_hook"]
++
++    required_tracks = {
++        "verifier moat",
++        "energy-guided decoding",
++        "constraint satisfaction",
++        "hallucination mitigation",
++        "hardware-accelerated decoding",
++    }
++    observed_tracks = {track for source in artifact["selected_sources"] for track in source["tracks"]}
++    assert required_tracks.issubset(observed_tracks)
++
++    duplicate_filter = artifact["duplicate_filter"]
++    assert "2512.05439" in duplicate_filter["rejected_duplicate_source_ids"]
++    assert "2602.03034" in duplicate_filter["rejected_duplicate_source_ids"]
++    assert duplicate_filter["selected_source_ids"] == mod.SELECTED_SOURCE_IDS
++    assert duplicate_filter["kan_kanfis_status"].startswith("no_new_nonduplicate")
++    assert duplicate_filter["ebt_arm_ebm_status"].startswith("no_new_nonduplicate")
++
++    assert len(artifact["next_milestone_candidates"]) >= 3
++    assert all(".465" in row["candidate_flag"] for row in artifact["next_milestone_candidates"])
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_report_5053_duplicate_filter_suppresses_prior_sources() -> None:
++    """SCENARIO-REPORT-5053-DUPLICATE-FILTER: duplicate IDs are not selected."""
++
++    candidates = [
++        mod.CANDIDATE_SOURCES_BY_ID["2512.05439"],
++        mod.CANDIDATE_SOURCES_BY_ID["2504.04718"],
++    ]
++
++    result = mod.filter_actionable_sources(candidates, existing_reference_text="")
++
++    assert [source["source_id"] for source in result["selected"]] == ["2504.04718"]
++    assert result["rejected"][0]["source_id"] == "2512.05439"
++    assert result["rejected"][0]["reason"] == "already_ingested"
++
++
++def test_research_references_update_is_idempotent_for_scenario_report_5053() -> None:
++    """SCENARIO-REPORT-5053: managed research reference section is stable."""
++
++    artifact = _artifact()
++    original = "# Research References\n\n## Existing\nOld body\n"
++    once = mod.update_research_references_text(original, artifact)
++    twice = mod.update_research_references_text(once, artifact)
++
++    assert once == twice
++    assert once.count(mod.REFERENCES_SECTION_START) == 1
++    assert once.count(mod.REFERENCES_SECTION_END) == 1
++    assert "Exp 5053 .465 SOTA ingestion source set" in once
++    assert mod.HONEST_VERDICT in once
++    for source_id in mod.SELECTED_SOURCE_IDS:
++        assert f"arXiv:{source_id}" in once
++    assert "arXiv:2512.05439" not in once.split(mod.REFERENCES_SECTION_START, 1)[1].split(
++        mod.REFERENCES_SECTION_END, 1
++    )[0]
++    mod.validate_research_references_text(once, artifact)
++
++
++def test_write_outputs_is_stable_for_req_report_5053(tmp_path: Path) -> None:
++    """REQ-REPORT-5053: writer emits stable artifact and reference update."""
++
++    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
++    references_path = tmp_path / mod.REFERENCES_RELATIVE_PATH
++    references_path.write_text("# Research References\n\n", encoding="utf-8")
++
++    artifact = mod.write_outputs(artifact_path=artifact_path, references_path=references_path)
++    second = mod.write_outputs(artifact_path=artifact_path, references_path=references_path)
++
++    assert second == artifact
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++    mod.validate_artifact(artifact)
++    mod.validate_research_references_text(references_path.read_text(encoding="utf-8"), artifact)
++
++
++def test_main_writes_deliverables_for_req_report_5053(
++    monkeypatch, tmp_path: Path, capsys
++) -> None:
++    """REQ-REPORT-5053: direct module execution writes default outputs."""
++
++    (tmp_path / mod.REFERENCES_RELATIVE_PATH).write_text(
++        "# Research References\n\n", encoding="utf-8"
++    )
++    monkeypatch.setenv("CARNOT_EXP5053_ROOT", str(tmp_path))
++
++    try:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++    except SystemExit as exc:
++        assert exc.code == 0
++
++    assert capsys.readouterr().out.strip() == mod.HONEST_VERDICT
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    mod.validate_artifact(written)
++    mod.validate_research_references_text(
++        (tmp_path / mod.REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8"), written
++    )
++
++
++def test_deliverable_files_validate_for_req_report_5053() -> None:
++    """REQ-REPORT-5053: committed deliverables satisfy the schema."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    mod.validate_research_references_text(REFERENCES_PATH.read_text(encoding="utf-8"), artifact)
++    assert artifact["honest_verdict"] == mod.HONEST_VERDICT
+-- 
+2.55.0
+

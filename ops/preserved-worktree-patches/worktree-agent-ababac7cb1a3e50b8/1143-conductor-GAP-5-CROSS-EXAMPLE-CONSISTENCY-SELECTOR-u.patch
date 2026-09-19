@@ -1,0 +1,2015 @@
+From 2106c86ca92807d03e13ef18123eace75f393d0c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 13:31:27 -0400
+Subject: [PATCH 01143/11362] [conductor] GAP-5 CROSS-EXAMPLE-CONSISTENCY
+ SELECTOR upgrade (build against the logged GAP-5 demo-underdetermination gap
+ per the Missing-Verifier Gap Logging mandate): exp4001 logged GAP-5 (multiple
+ demo-consistent programs disagree on the test = the verifier cannot select
+ among them). Build a STRONGER discriminator than plain output-agreement:
+ among induced demo-perfect programs, score each by (a) cross-DEMONSTRATION
+ consistency (does it reproduce held-out demo pairs, leave-one-demo-out) and
+ (b) SIBLING-INPUT agreement (do the candidate programs agree on
+ perturbed/sibling inputs). Measure whether this lifts precision and/or
+ coverage over plain final-grid output-agreement on the SAME ARC-2
+ chain-feasible pool (reuse the cached induced programs; NO new codex calls if
+ the saved programs suffice). The cleanest off-the-shelf design
+ (arXiv:2604.02434 cross-example consistency filtering). A new
+ registry-eligible discriminator that closes a logged gap is direct progress
+ on Carnot's core.
+
+Automated research step by research conductor.
+Task ID: exp4010-gap5-cross-example-consistency-selector
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  45 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../agentic/gap5_cross_example_selector.py    | 616 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...p5_cross_example_consistency_selector.json | 604 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...gap5_cross_example_consistency_selector.py |  51 ++
+ ...riment_4010_gap5_cross_example_selector.py | 384 +++++++++++
+ 19 files changed, 1730 insertions(+), 30 deletions(-)
+ create mode 100644 python/carnot/agentic/gap5_cross_example_selector.py
+ create mode 100644 results/experiment_4010_gap5_cross_example_consistency_selector.json
+ create mode 100644 scripts/experiments/experiment_4010_gap5_cross_example_consistency_selector.py
+ create mode 100644 tests/python/test_experiment_4010_gap5_cross_example_selector.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index a364c1777b..f53ecb4cb8 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -11929,6 +11929,51 @@ Codex calls or zero agreement events remain after execution with Codex
+ available, then it reports a `blocked_` verdict instead of a complete verdict
+ and leaves `execution_floor_met=false`.
+ 
++### REQ-VERIFY-4010: GAP-5 Cross-Example Consistency Selector
++
++The repository SHALL provide Exp 4010 at
++`scripts/experiments/experiment_4010_gap5_cross_example_consistency_selector.py`
++to replay the saved ARC-2 GAP-4 induced programs offline and test whether a
++cross-example-consistency selector improves over plain final-grid
++output-agreement. Before scoring, the runner SHALL verify that
++`results/arc3_gap4_arc2_induced_programs.json`,
++`results/arc3_gap4_induced_programs.json`,
++`results/arc3_gap4_arc2_chain_ensemble.json`, and
++`results/arc3_gap4_arc2_eval_pool.json.gz` load successfully. Missing or
++unreadable saved programs SHALL produce `blocked_saved_programs_missing`;
++an unreadable eval pool SHALL produce `blocked_eval_pool_unreadable`. The
++offline path SHALL make zero Codex calls.
++
++For each ARC-2 chain-feasible task with at least two demo-perfect candidate
++programs, the runner SHALL execute candidates with the existing GAP-4 sandbox,
++score each candidate's leave-one-demo-out reproduction rate using the shared
++grid-grounded grading primitive, score sibling-input agreement against other
++candidates, choose a cross-example candidate only when the combined score has a
++unique dominating maximum, and otherwise abstain as the GAP-5 tripwire. The
++artifact SHALL compare cross-example precision and coverage against the plain
++output-agreement baseline with a paired bootstrap confidence interval and write
++`results/experiment_4010_gap5_cross_example_consistency_selector.json` with
++bare top-level fields `cross_example_precision`,
++`output_agreement_precision_ref`, `cross_example_coverage`,
++`selector_beats_output_agreement`, `sibling_abstention_gold_rate`,
++`n_tasks_scored`, `n_codex_calls`, `missing_verifier_gaps`, `random_seed`,
++`honest_verdict`, `duration_s`, and `inference_substrate`.
++
++### SCENARIO-VERIFY-4010: Cross-Example Selector Reports Lift Or Bounded No-Lift
++
++Given the saved ARC-2 GAP-4 program artifacts and eval pool are readable, when
++Exp 4010 runs, then it uses only offline replay (`n_codex_calls=0`), evaluates
++candidate programs on demonstrations and sibling inputs without exposing gold
++to selection, computes `cross_example_precision` as selected gold divided by
++confident cross-example selections, computes `cross_example_coverage` as
++confident selections divided by scored tasks, sets
++`selector_beats_output_agreement=true` only when the paired CI for precision or
++coverage lift excludes zero, reports
++`success: gap5_cross_example_selector_beats_agreement_prec<val>_cov<val>` for a
++CI-supported lift, otherwise reports
++`complete: gap5_cross_example_no_better_than_agreement_<reason>`, and records
++remaining undecidable cases in `missing_verifier_gaps`.
++
+ ### REQ-VERIFY-4002: GAP-4 Local Open-Weight Generator Arm
+ 
+ The repository SHALL provide Exp 4002 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 2077631b50..c260e2dc7d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 161,
+   "code_violations": 0,
+-  "experiments_checked": 3042,
++  "experiments_checked": 3043,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/gap5_cross_example_selector.py b/python/carnot/agentic/gap5_cross_example_selector.py
+new file mode 100644
+index 0000000000..a8959ac6db
+--- /dev/null
++++ b/python/carnot/agentic/gap5_cross_example_selector.py
+@@ -0,0 +1,616 @@
++"""Offline GAP-5 cross-example consistency selector for saved ARC programs."""
++
++from __future__ import annotations
++
++import gzip
++import hashlib
++import json
++import sys
++import time
++from collections import Counter
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++
++from .arc_world_model_synth import grade_predictions
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++SCRIPTS_DIR = REPO_ROOT / "scripts" / "experiments"
++if str(SCRIPTS_DIR) not in sys.path:  # pragma: no cover - pytest already injects it
++    sys.path.insert(0, str(SCRIPTS_DIR))
++
++from arc3_gap3_stage2_transition_ebm import SEED  # noqa: E402
++from arc3_gap4_rule_exec_verifier import safe_transform_from_code  # noqa: E402
++
++
++ARC2_POOL = REPO_ROOT / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
++ARC2_PROGRAMS = REPO_ROOT / "results" / "arc3_gap4_arc2_induced_programs.json"
++ARC1_PROGRAMS = REPO_ROOT / "results" / "arc3_gap4_induced_programs.json"
++CHAIN_ARTIFACT = REPO_ROOT / "results" / "arc3_gap4_arc2_chain_ensemble.json"
++OUTPUT = REPO_ROOT / "results" / "experiment_4010_gap5_cross_example_consistency_selector.json"
++INFERENCE_SUBSTRATE = "offline_saved_gap4_program_replay_cross_example_consistency"
++
++REQUIRED_FIELDS = [
++    "cross_example_precision",
++    "output_agreement_precision_ref",
++    "cross_example_coverage",
++    "selector_beats_output_agreement",
++    "sibling_abstention_gold_rate",
++    "n_tasks_scored",
++    "n_codex_calls",
++    "missing_verifier_gaps",
++    "random_seed",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++]
++
++FIELD_PRINCIPLES = {
++    "cross_example_precision": (
++        "BARE FLOAT -- P(gold | cross-example-consistency selected) on the ARC-2 pool "
++        "(the precision side)."
++    ),
++    "output_agreement_precision_ref": (
++        "BARE FLOAT -- the plain output-agreement precision baseline (the must-beat)."
++    ),
++    "cross_example_coverage": (
++        "BARE FLOAT -- fraction of tasks with a confident cross-example selection "
++        "(the coverage side)."
++    ),
++    "selector_beats_output_agreement": (
++        "BARE BOOL -- does the cross-example selector beat output-agreement on precision "
++        "and/or coverage with a CI excluding 0 (the verifier-improvement claim)."
++    ),
++    "sibling_abstention_gold_rate": (
++        "BARE FLOAT -- gold rate on tasks where the selector abstains due to sibling-input "
++        "disagreement (the GAP-5 tripwire datum)."
++    ),
++    "n_tasks_scored": "Coverage provenance: ARC-2 chain-feasible tasks with >=2 demo-perfect programs.",
++    "n_codex_calls": "Coverage provenance: 0 means pure offline replay over saved programs.",
++    "missing_verifier_gaps": (
++        "What the cross-example selector still cannot disambiguate (the next gap per the "
++        "Missing-Verifier Gap Logging mandate)."
++    ),
++    "random_seed": "Reproducibility seed for the paired bootstrap.",
++    "honest_verdict": "Terminal-prefix verdict.",
++    "duration_s": "Wall-clock seconds for the offline replay.",
++    "inference_substrate": "Aggregation/offline substrate.",
++}
++
++
++def load_json(path: Path) -> dict[str, Any]:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def load_eval_pool(path: Path) -> dict[str, Any]:
++    with gzip.open(path, "rt", encoding="utf-8") as handle:
++        return json.load(handle)
++
++
++def group_entries_by_task(entries: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
++    grouped: dict[str, list[dict[str, Any]]] = {}
++    for entry in entries:
++        grouped.setdefault(str(entry["task"]), []).append(entry)
++    return grouped
++
++
++def selected_tasks_from_chain_artifact(chain_artifact: dict[str, Any]) -> list[str]:
++    prereg_tasks = chain_artifact.get("preregistration", {}).get("tasks")
++    if prereg_tasks:
++        return [str(task) for task in prereg_tasks]
++    return [str(row["task"]) for row in chain_artifact.get("per_task", []) if "task" in row]
++
++
++def _arms_by_task(chain_artifact: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
++    return {
++        str(row["task"]): list(row.get("arms", []))
++        for row in chain_artifact.get("per_task", [])
++        if "task" in row
++    }
++
++
++def _grid_hash(grid: Any) -> str | None:
++    if grid is None:
++        return None
++    arr = np.asarray(grid, dtype=np.int64)
++    payload = repr(tuple(arr.shape)).encode("ascii") + arr.tobytes()
++    return hashlib.sha1(payload).hexdigest()
++
++
++def _grid_equal(left: Any, right: Any) -> bool:
++    if left is None or right is None:
++        return False
++    left_arr = np.asarray(left, dtype=np.int64)
++    right_arr = np.asarray(right, dtype=np.int64)
++    return left_arr.shape == right_arr.shape and bool(np.array_equal(left_arr, right_arr))
++
++
++def _gold_for_entry(entry: dict[str, Any]) -> np.ndarray | None:
++    for candidate in entry.get("candidates", []):
++        if candidate.get("correct") is True and "grid" in candidate:
++            return np.asarray(candidate["grid"], dtype=np.int64)
++    return None
++
++
++def _call_transform(fn: Any, grid: Any) -> np.ndarray | None:
++    try:
++        out = fn(grid)
++    except Exception:
++        return None
++    if out is None:
++        return None
++    return np.asarray(out, dtype=np.int64)
++
++
++def _demo_reproduction_rate(fn: Any, demos: list[dict[str, Any]]) -> float:
++    if fn is None or not demos:
++        return 0.0
++
++    def predict(grid: Any, _akey: tuple[Any, ...]) -> Any:
++        return _call_transform(fn, grid)
++
++    held_out = [(demo["input"], (), demo["output"]) for demo in demos]
++    try:
++        grade = grade_predictions(predict, held_out)
++        return round(float(grade.get("transition_exact_rate") or 0.0), 4)
++    except ValueError:
++        exact = 0
++        for demo in demos:
++            exact += int(_grid_equal(_call_transform(fn, demo["input"]), demo["output"]))
++        return round(exact / len(demos), 4)
++
++
++def _compile_candidates(
++    arms: list[dict[str, Any]],
++    entries: list[dict[str, Any]],
++) -> list[dict[str, Any]]:
++    demos = list(entries[0].get("demos", [])) if entries else []
++    compiled = []
++    for idx, arm in enumerate(arms):
++        source = str(arm.get("source") or f"candidate{idx}")
++        code = str(arm.get("code") or "")
++        fn = safe_transform_from_code(code) if code else None
++        predictions = [_call_transform(fn, entry["test_input"]) if fn else None for entry in entries]
++        demo_rate = _demo_reproduction_rate(fn, demos)
++        compiled.append(
++            {
++                "source": source,
++                "fn": fn,
++                "executable": fn is not None,
++                "demo_reproduction_rate": demo_rate,
++                "selectable": bool(fn is not None and demo_rate >= 1.0),
++                "predictions": predictions,
++            }
++        )
++    return compiled
++
++
++def _sibling_agreement(
++    candidate: dict[str, Any],
++    all_candidates: list[dict[str, Any]],
++    sibling_indices: list[int],
++) -> float:
++    others = [other for other in all_candidates if other is not candidate and other["executable"]]
++    if not sibling_indices or not others:
++        return 0.0
++    matching = 0
++    total = 0
++    for input_idx in sibling_indices:
++        own_pred = candidate["predictions"][input_idx]
++        for other in others:
++            total += 1
++            matching += int(_grid_equal(own_pred, other["predictions"][input_idx]))
++    return round(matching / total, 4) if total else 0.0
++
++
++def _output_agreement_baseline(
++    candidates: list[dict[str, Any]],
++    primary_idx: int,
++    target: np.ndarray | None,
++) -> dict[str, Any]:
++    selectable = [candidate for candidate in candidates if candidate["selectable"]]
++    hashes = [
++        _grid_hash(candidate["predictions"][primary_idx])
++        for candidate in selectable
++        if candidate["predictions"][primary_idx] is not None
++    ]
++    counts = Counter(hash_value for hash_value in hashes if hash_value is not None)
++    if not counts:
++        return {"selected": False, "selected_gold": False, "selected_hash": None, "n_matching": 0}
++    top_hash, top_count = counts.most_common(1)[0]
++    tied = [hash_value for hash_value, count in counts.items() if count == top_count]
++    if top_count < 2 or len(tied) > 1:
++        return {
++            "selected": False,
++            "selected_gold": False,
++            "selected_hash": top_hash,
++            "n_matching": int(top_count),
++        }
++    selected_pred = None
++    for candidate in selectable:
++        pred = candidate["predictions"][primary_idx]
++        if _grid_hash(pred) == top_hash:
++            selected_pred = pred
++            break
++    return {
++        "selected": True,
++        "selected_gold": _grid_equal(selected_pred, target),
++        "selected_hash": top_hash,
++        "n_matching": int(top_count),
++    }
++
++
++def _has_prediction_disagreement(candidates: list[dict[str, Any]], input_indices: list[int]) -> bool:
++    selectable = [candidate for candidate in candidates if candidate["selectable"]]
++    for input_idx in input_indices:
++        hashes = {
++            _grid_hash(candidate["predictions"][input_idx])
++            for candidate in selectable
++            if candidate["predictions"][input_idx] is not None
++        }
++        if len(hashes) > 1:
++            return True
++    return False
++
++
++def score_task(
++    task: str,
++    entries: list[dict[str, Any]],
++    arms: list[dict[str, Any]],
++    primary_idx: int = 0,
++) -> dict[str, Any]:
++    candidates = _compile_candidates(arms, entries)
++    selectable = [candidate for candidate in candidates if candidate["selectable"]]
++    sibling_indices = [idx for idx in range(len(entries)) if idx != primary_idx]
++    target = _gold_for_entry(entries[primary_idx]) if entries else None
++
++    for candidate in candidates:
++        sibling = _sibling_agreement(candidate, candidates, sibling_indices)
++        candidate["sibling_agreement"] = sibling
++        candidate["combined_score"] = round(
++            (float(candidate["demo_reproduction_rate"]) + sibling) / 2.0,
++            4,
++        )
++
++    baseline = _output_agreement_baseline(candidates, primary_idx, target)
++    selected = None
++    abstain_reason = None
++    if len(selectable) < 2:
++        abstain_reason = "fewer_than_two_demo_perfect_candidates"
++    else:
++        max_score = max(float(candidate["combined_score"]) for candidate in selectable)
++        top = [
++            candidate
++            for candidate in selectable
++            if abs(float(candidate["combined_score"]) - max_score) <= 1e-12
++        ]
++        if len(top) == 1:
++            selected = top[0]
++        elif not sibling_indices:
++            abstain_reason = "no_sibling_inputs"
++        elif _has_prediction_disagreement(candidates, sibling_indices):
++            abstain_reason = "sibling_input_disagreement"
++        else:
++            abstain_reason = "score_tie"
++
++    selected_pred = selected["predictions"][primary_idx] if selected is not None else None
++    row_candidates = []
++    for candidate in candidates:
++        primary_pred = candidate["predictions"][primary_idx] if entries else None
++        row_candidates.append(
++            {
++                "source": candidate["source"],
++                "executable": bool(candidate["executable"]),
++                "selectable": bool(candidate["selectable"]),
++                "demo_reproduction_rate": float(candidate["demo_reproduction_rate"]),
++                "sibling_agreement": float(candidate["sibling_agreement"]),
++                "combined_score": float(candidate["combined_score"]),
++                "primary_pred_hash": _grid_hash(primary_pred),
++            }
++        )
++
++    return {
++        "task": task,
++        "n_entries": len(entries),
++        "n_candidates": len(candidates),
++        "n_demo_perfect_candidates": len(selectable),
++        "n_sibling_inputs": len(sibling_indices),
++        "candidate_scores": row_candidates,
++        "cross_example_selected": selected is not None,
++        "cross_example_selected_source": selected["source"] if selected is not None else None,
++        "cross_example_selected_gold": _grid_equal(selected_pred, target),
++        "cross_example_abstain_reason": abstain_reason,
++        "output_agreement_selected": bool(baseline["selected"]),
++        "output_agreement_selected_gold": bool(baseline["selected_gold"]),
++        "output_agreement_n_matching": int(baseline["n_matching"]),
++    }
++
++
++def _rate(successes: int, total: int) -> float:
++    return round(successes / total, 4) if total else 0.0
++
++
++def _metrics(rows: list[dict[str, Any]]) -> dict[str, float]:
++    n = len(rows)
++    cross_selected = [row for row in rows if row["cross_example_selected"]]
++    output_selected = [row for row in rows if row["output_agreement_selected"]]
++    return {
++        "cross_precision": _rate(
++            sum(int(row["cross_example_selected_gold"]) for row in cross_selected),
++            len(cross_selected),
++        ),
++        "output_precision": _rate(
++            sum(int(row["output_agreement_selected_gold"]) for row in output_selected),
++            len(output_selected),
++        ),
++        "cross_coverage": _rate(len(cross_selected), n),
++        "output_coverage": _rate(len(output_selected), n),
++    }
++
++
++def paired_bootstrap_ci(
++    rows: list[dict[str, Any]],
++    seed: int = SEED,
++    bootstrap_iters: int = 5000,
++) -> dict[str, Any]:
++    if not rows or bootstrap_iters <= 0:
++        return {
++            "precision_lift": 0.0,
++            "precision_lift_ci95": [0.0, 0.0],
++            "coverage_lift": 0.0,
++            "coverage_lift_ci95": [0.0, 0.0],
++        }
++    base = _metrics(rows)
++    precision_diffs = []
++    coverage_diffs = []
++    rng = np.random.default_rng(seed)
++    n = len(rows)
++    for _ in range(bootstrap_iters):
++        sample = [rows[int(idx)] for idx in rng.integers(0, n, size=n)]
++        sampled = _metrics(sample)
++        precision_diffs.append(sampled["cross_precision"] - sampled["output_precision"])
++        coverage_diffs.append(sampled["cross_coverage"] - sampled["output_coverage"])
++    return {
++        "precision_lift": round(base["cross_precision"] - base["output_precision"], 4),
++        "precision_lift_ci95": [
++            round(float(np.percentile(precision_diffs, 2.5)), 4),
++            round(float(np.percentile(precision_diffs, 97.5)), 4),
++        ],
++        "coverage_lift": round(base["cross_coverage"] - base["output_coverage"], 4),
++        "coverage_lift_ci95": [
++            round(float(np.percentile(coverage_diffs, 2.5)), 4),
++            round(float(np.percentile(coverage_diffs, 97.5)), 4),
++        ],
++    }
++
++
++def check_preconditions(
++    pool_path: Path,
++    arc2_programs_path: Path,
++    arc1_programs_path: Path,
++    chain_artifact_path: Path,
++) -> tuple[list[dict[str, Any]], str | None]:
++    preconditions: list[dict[str, Any]] = []
++    saved_ok = True
++    for resource, path, loader in (
++        ("arc2_saved_programs", arc2_programs_path, load_json),
++        ("arc1_saved_programs", arc1_programs_path, load_json),
++        ("chain_candidate_sets", chain_artifact_path, load_json),
++    ):
++        try:
++            loader(path)
++            available = True
++        except Exception as exc:
++            available = False
++            saved_ok = False
++            preconditions.append({"resource": resource, "available": False, "error": str(exc)})
++        if available:
++            preconditions.append({"resource": resource, "available": True})
++    try:
++        load_eval_pool(pool_path)
++        pool_ok = True
++        preconditions.append({"resource": "eval_pool", "available": True})
++    except Exception as exc:
++        pool_ok = False
++        preconditions.append({"resource": "eval_pool", "available": False, "error": str(exc)})
++    if not saved_ok:
++        return preconditions, "blocked_saved_programs_missing"
++    if not pool_ok:
++        return preconditions, "blocked_eval_pool_unreadable"
++    return preconditions, None
++
++
++def _missing_gaps(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
++    gaps = []
++    for row in rows:
++        if row["cross_example_selected"] and not row["cross_example_selected_gold"]:
++            gaps.append(
++                {
++                    "task": row["task"],
++                    "failure_mode": "cross_example_selector_selected_wrong",
++                    "missing_discriminator": (
++                        "rule correctness beyond demo reproduction and sibling agreement"
++                    ),
++                }
++            )
++        elif not row["cross_example_selected"]:
++            reason = str(row["cross_example_abstain_reason"])
++            gaps.append(
++                {
++                    "task": row["task"],
++                    "failure_mode": f"cross_example_selector_abstained_{reason}",
++                    "missing_discriminator": (
++                        "higher-order rule consistency beyond demo reproduction and sibling agreement"
++                    ),
++                }
++            )
++    return gaps
++
++
++def _sibling_abstention_gold_rate(rows: list[dict[str, Any]]) -> float:
++    abstained = [
++        row
++        for row in rows
++        if row["cross_example_abstain_reason"] == "sibling_input_disagreement"
++    ]
++    return _rate(
++        sum(int(row["output_agreement_selected_gold"]) for row in abstained),
++        len(abstained),
++    )
++
++
++def _base_artifact(honest_verdict: str, duration_s: float) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4010_gap5_cross_example_consistency_selector",
++        "schema": "carnot.experiment_4010_gap5_cross_example_consistency_selector.v1",
++        "title": "GAP-5 cross-example consistency selector over saved GAP-4 programs",
++        "cross_example_precision": 0.0,
++        "output_agreement_precision_ref": 0.0,
++        "cross_example_coverage": 0.0,
++        "output_agreement_coverage_ref": 0.0,
++        "selector_beats_output_agreement": False,
++        "sibling_abstention_gold_rate": 0.0,
++        "n_tasks_scored": 0,
++        "n_codex_calls": 0,
++        "missing_verifier_gaps": [],
++        "random_seed": int(SEED),
++        "honest_verdict": honest_verdict,
++        "duration_s": round(float(duration_s), 1),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++    }
++
++
++def _verdict(beats: bool, metrics: dict[str, float], comparison: dict[str, Any]) -> str:
++    if beats:
++        return (
++            "success: gap5_cross_example_selector_beats_agreement_"
++            f"prec{metrics['cross_precision']:.4f}_cov{metrics['cross_coverage']:.4f}"
++        )
++    if metrics["cross_precision"] < metrics["output_precision"]:
++        reason = "precision_lower"
++    elif metrics["cross_coverage"] < metrics["output_coverage"]:
++        reason = "coverage_lower"
++    elif comparison["precision_lift_ci95"][0] <= 0 and comparison["coverage_lift_ci95"][0] <= 0:
++        reason = "ci_includes_zero"
++    else:
++        reason = "no_scored_tasks"
++    return f"complete: gap5_cross_example_no_better_than_agreement_{reason}"
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:")
++        or verdict.startswith("success:")
++        or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    for field in (
++        "cross_example_precision",
++        "output_agreement_precision_ref",
++        "cross_example_coverage",
++        "sibling_abstention_gold_rate",
++        "duration_s",
++    ):
++        if not isinstance(artifact[field], float) or isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare float")
++    for field in ("selector_beats_output_agreement",):
++        if not isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare bool")
++    for field in ("n_tasks_scored", "n_codex_calls", "random_seed"):
++        if not isinstance(artifact[field], int) or isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare int")
++    if not isinstance(artifact["missing_verifier_gaps"], list):
++        raise ValueError("missing_verifier_gaps must be a list")
++    if not isinstance(artifact["inference_substrate"], str):
++        raise ValueError("inference_substrate must be a string")
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def run(
++    pool_path: Path = ARC2_POOL,
++    arc2_programs_path: Path = ARC2_PROGRAMS,
++    arc1_programs_path: Path = ARC1_PROGRAMS,
++    chain_artifact_path: Path = CHAIN_ARTIFACT,
++    output_path: Path = OUTPUT,
++    bootstrap_iters: int = 5000,
++    write: bool = True,
++) -> dict[str, Any]:
++    started = time.time()
++    preconditions, blocker = check_preconditions(
++        pool_path,
++        arc2_programs_path,
++        arc1_programs_path,
++        chain_artifact_path,
++    )
++    if blocker:
++        artifact = _base_artifact(blocker, time.time() - started)
++        artifact["preconditions_checked"] = preconditions
++        validate_artifact(artifact)
++        if write:
++            _write_json(output_path, artifact)
++        return artifact
++
++    pool = load_eval_pool(pool_path)
++    arc2_programs = load_json(arc2_programs_path)
++    arc1_programs = load_json(arc1_programs_path)
++    chain_artifact = load_json(chain_artifact_path)
++    entries_by_task = group_entries_by_task(pool.get("entries", []))
++    arms_by_task = _arms_by_task(chain_artifact)
++    rows = []
++    skipped = []
++    for task in selected_tasks_from_chain_artifact(chain_artifact):
++        entries = entries_by_task.get(task, [])
++        arms = arms_by_task.get(task, [])
++        if not entries or not arms:
++            skipped.append({"task": task, "reason": "missing_entries_or_arms"})
++            continue
++        row = score_task(task, entries, arms)
++        if row["n_demo_perfect_candidates"] < 2:
++            skipped.append({"task": task, "reason": "fewer_than_two_demo_perfect_candidates"})
++            continue
++        rows.append(row)
++
++    metrics = _metrics(rows)
++    comparison = paired_bootstrap_ci(rows, seed=SEED, bootstrap_iters=bootstrap_iters)
++    beats = bool(
++        comparison["precision_lift_ci95"][0] > 0.0
++        or comparison["coverage_lift_ci95"][0] > 0.0
++    )
++    verdict = _verdict(beats, metrics, comparison)
++    artifact = _base_artifact(verdict, time.time() - started)
++    artifact.update(
++        {
++            "preconditions_checked": preconditions,
++            "saved_program_counts": {
++                "arc2_programs": len(arc2_programs.get("programs", [])),
++                "arc1_programs": len(arc1_programs.get("programs", [])),
++                "chain_tasks": len(arms_by_task),
++            },
++            "cross_example_precision": float(metrics["cross_precision"]),
++            "output_agreement_precision_ref": float(metrics["output_precision"]),
++            "cross_example_coverage": float(metrics["cross_coverage"]),
++            "output_agreement_coverage_ref": float(metrics["output_coverage"]),
++            "selector_beats_output_agreement": beats,
++            "sibling_abstention_gold_rate": _sibling_abstention_gold_rate(rows),
++            "n_tasks_scored": len(rows),
++            "paired_comparison": comparison,
++            "missing_verifier_gaps": _missing_gaps(rows),
++            "per_task": rows,
++            "skipped_tasks": skipped,
++        }
++    )
++    validate_artifact(artifact)
++    if write:
++        _write_json(output_path, artifact)
++    return artifact
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 0c8973aab7..b9bf3c4f56 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T17:00:56.674425+00:00",
+-  "finished_at": "2026-06-10T17:00:56.702883+00:00",
+-  "duration_s": 0.028,
++  "started_at": "2026-06-10T17:31:09.609006+00:00",
++  "finished_at": "2026-06-10T17:31:09.633122+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index b49692d204..6f98cd03fb 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-10T17:00:56Z",
++  "run_date": "2026-06-10T17:31:09Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 2f2b2686b6..12a08a1cbb 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T17:00:57Z",
+-  "finished_at": "2026-06-10T17:00:58Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-10T17:31:10Z",
++  "finished_at": "2026-06-10T17:31:10Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 164e301f7d..3880a0fd60 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-10T17:00:58Z",
++  "run_date": "2026-06-10T17:31:10Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 6cfbc97f91..ca4a967dda 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-10T17:00:58Z",
++  "run_date": "2026-06-10T17:31:10Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 9b98ec18cb..9f9c70e99b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-10T16:59:07.652280Z",
+-  "duration_s": 0.04932546615600586,
++  "run_date": "2026-06-10T17:29:44.618946Z",
++  "duration_s": 0.09431791305541992,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "be59248ee87621c8c1b7bba41a9a2a086a262e16ccc3883604dac9e21f1a46a0",
++  "reproducibility_checksum": "e998f8579364bacbbfae6f248e452329c5c8415b32c1fe42d67d8aabaeee7a82",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "8b73cc6c132d442f2d2b94a29ffb79d24d7fe875"
++    "adversarial_verify_version": "ccb815ed8af4cfe313ac08a93af7048ff0b0feee"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 3119cdfa58..43213b1c08 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-10T16:59:07.709306Z",
+-  "duration_s": 0.03842449188232422,
++  "run_date": "2026-06-10T17:29:44.739810Z",
++  "duration_s": 0.08281183242797852,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "4e5c8777f17edc9825538a276986ab80ead55d0ae18cd074fc17bde768aaba73",
++  "reproducibility_checksum": "798631f1584644a6d4c4443648820a4fdf61d9cf69bcb28bd11872f6f7cdea5b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "8b73cc6c132d442f2d2b94a29ffb79d24d7fe875"
++    "adversarial_verify_version": "ccb815ed8af4cfe313ac08a93af7048ff0b0feee"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index baaf717e56..886df7f48d 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.125263214111328,
++  "efficiency_gains_ms": 2.2020339965820312,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index ac66cfab85..b786c45d9f 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.37183165550231934,
++  "duration_s": 0.2797544002532959,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index fedd95351e..a1b0b51eba 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.201997606083751e-05,
++  "duration_s": 3.2701995223760605e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4010_gap5_cross_example_consistency_selector.json b/results/experiment_4010_gap5_cross_example_consistency_selector.json
+new file mode 100644
+index 0000000000..50f9844565
+--- /dev/null
++++ b/results/experiment_4010_gap5_cross_example_consistency_selector.json
+@@ -0,0 +1,604 @@
++{
++  "cross_example_coverage": 0.0,
++  "cross_example_precision": 0.0,
++  "duration_s": 2.2,
++  "experiment": "experiment_4010_gap5_cross_example_consistency_selector",
++  "field_principles": {
++    "cross_example_coverage": "BARE FLOAT -- fraction of tasks with a confident cross-example selection (the coverage side).",
++    "cross_example_precision": "BARE FLOAT -- P(gold | cross-example-consistency selected) on the ARC-2 pool (the precision side).",
++    "duration_s": "Wall-clock seconds for the offline replay.",
++    "honest_verdict": "Terminal-prefix verdict.",
++    "inference_substrate": "Aggregation/offline substrate.",
++    "missing_verifier_gaps": "What the cross-example selector still cannot disambiguate (the next gap per the Missing-Verifier Gap Logging mandate).",
++    "n_codex_calls": "Coverage provenance: 0 means pure offline replay over saved programs.",
++    "n_tasks_scored": "Coverage provenance: ARC-2 chain-feasible tasks with >=2 demo-perfect programs.",
++    "output_agreement_precision_ref": "BARE FLOAT -- the plain output-agreement precision baseline (the must-beat).",
++    "random_seed": "Reproducibility seed for the paired bootstrap.",
++    "selector_beats_output_agreement": "BARE BOOL -- does the cross-example selector beat output-agreement on precision and/or coverage with a CI excluding 0 (the verifier-improvement claim).",
++    "sibling_abstention_gold_rate": "BARE FLOAT -- gold rate on tasks where the selector abstains due to sibling-input disagreement (the GAP-5 tripwire datum)."
++  },
++  "honest_verdict": "complete: gap5_cross_example_no_better_than_agreement_coverage_lower",
++  "inference_substrate": "offline_saved_gap4_program_replay_cross_example_consistency",
++  "missing_verifier_gaps": [
++    {
++      "failure_mode": "cross_example_selector_abstained_sibling_input_disagreement",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "13e47133"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "2b83f449"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_sibling_input_disagreement",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "2d0172a1"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_sibling_input_disagreement",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "446ef5d2"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "58490d8a"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "58f5dbd5"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "6e453dd6"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "6ffbe589"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "9aaea919"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "b10624e5"
++    },
++    {
++      "failure_mode": "cross_example_selector_abstained_score_tie",
++      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++      "task": "d8e07eb2"
++    }
++  ],
++  "n_codex_calls": 0,
++  "n_tasks_scored": 11,
++  "output_agreement_coverage_ref": 0.7273,
++  "output_agreement_precision_ref": 0.0,
++  "paired_comparison": {
++    "coverage_lift": -0.7273,
++    "coverage_lift_ci95": [
++      -1.0,
++      -0.4545
++    ],
++    "precision_lift": 0.0,
++    "precision_lift_ci95": [
++      0.0,
++      0.0
++    ]
++  },
++  "per_task": [
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "171fd9d45d530baf6939552f5f6c86081e4fdba6",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.3333,
++          "demo_reproduction_rate": 0.6667,
++          "executable": true,
++          "primary_pred_hash": "9b01c37bc00250cd8b0b958044fe6faf45cfce08",
++          "selectable": false,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "b1ec4c640247c89d7fe5d2e8ef59558345a6b909",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "sibling_input_disagreement",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 2,
++      "n_entries": 2,
++      "n_sibling_inputs": 1,
++      "output_agreement_n_matching": 1,
++      "output_agreement_selected": false,
++      "output_agreement_selected_gold": false,
++      "task": "13e47133"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "f3309e087caef042ec8b1381b021549cbe9b1438",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "9d5fdf4bdb72f32f0d16c1034bdf2d47e3c6854a",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "129d1c479f6a4ef4cb8cf715fdbea5b04b323a36",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "no_sibling_inputs",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 1,
++      "n_sibling_inputs": 0,
++      "output_agreement_n_matching": 1,
++      "output_agreement_selected": false,
++      "output_agreement_selected_gold": false,
++      "task": "2b83f449"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "765134ea0bd3a6fab96a399fa84be8369d30e178",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "b9f6b231d305f2cd9a6b0d5337e6ddbe6620a8ef",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "b9f6b231d305f2cd9a6b0d5337e6ddbe6620a8ef",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "sibling_input_disagreement",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 2,
++      "n_sibling_inputs": 1,
++      "output_agreement_n_matching": 2,
++      "output_agreement_selected": true,
++      "output_agreement_selected_gold": false,
++      "task": "2d0172a1"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "86a4c2fe5b8f3169131cd2b5aaba3e582b93843e",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.75,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "86a4c2fe5b8f3169131cd2b5aaba3e582b93843e",
++          "selectable": true,
++          "sibling_agreement": 0.5,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.75,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "86a4c2fe5b8f3169131cd2b5aaba3e582b93843e",
++          "selectable": true,
++          "sibling_agreement": 0.5,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "sibling_input_disagreement",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 2,
++      "n_sibling_inputs": 1,
++      "output_agreement_n_matching": 3,
++      "output_agreement_selected": true,
++      "output_agreement_selected_gold": false,
++      "task": "446ef5d2"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "0514dd954306615e201590c1450308d61e87c541",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "0514dd954306615e201590c1450308d61e87c541",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "0514dd954306615e201590c1450308d61e87c541",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "no_sibling_inputs",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 1,
++      "n_sibling_inputs": 0,
++      "output_agreement_n_matching": 3,
++      "output_agreement_selected": true,
++      "output_agreement_selected_gold": false,
++      "task": "58490d8a"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "d4b61dbb89820a3861f4d58e0a4a3e62a1252831",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "d4b61dbb89820a3861f4d58e0a4a3e62a1252831",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "d4b61dbb89820a3861f4d58e0a4a3e62a1252831",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "no_sibling_inputs",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 1,
++      "n_sibling_inputs": 0,
++      "output_agreement_n_matching": 3,
++      "output_agreement_selected": true,
++      "output_agreement_selected_gold": false,
++      "task": "58f5dbd5"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "bb899a79088512256f9e2a65641478acee57e966",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "d758fde486f20ccd22273b8f20b44dce5b910e65",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "d758fde486f20ccd22273b8f20b44dce5b910e65",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "no_sibling_inputs",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 1,
++      "n_sibling_inputs": 0,
++      "output_agreement_n_matching": 2,
++      "output_agreement_selected": true,
++      "output_agreement_selected_gold": false,
++      "task": "6e453dd6"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "69625ce7304ec85a43796f47e9ef883fba6288ea",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "503b6067824ed39b72874f1d53be1aee3ac1d152",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "9d3c20573e428e20e78dfe93d63b29a92a75aae0",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "no_sibling_inputs",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 1,
++      "n_sibling_inputs": 0,
++      "output_agreement_n_matching": 1,
++      "output_agreement_selected": false,
++      "output_agreement_selected_gold": false,
++      "task": "6ffbe589"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "807eed9022ed6d1980b7366665eb09f7b69eb5a8",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "df3554812830a16978aca1a15cfb73c8fc9f3343",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "807eed9022ed6d1980b7366665eb09f7b69eb5a8",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "no_sibling_inputs",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 1,
++      "n_sibling_inputs": 0,
++      "output_agreement_n_matching": 2,
++      "output_agreement_selected": true,
++      "output_agreement_selected_gold": false,
++      "task": "9aaea919"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "fa27056422de36f0d53f5ce8b8611d3c87ca9d3b",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "fa27056422de36f0d53f5ce8b8611d3c87ca9d3b",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 0.5,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "fa27056422de36f0d53f5ce8b8611d3c87ca9d3b",
++          "selectable": true,
++          "sibling_agreement": 0.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "no_sibling_inputs",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 3,
++      "n_entries": 1,
++      "n_sibling_inputs": 0,
++      "output_agreement_n_matching": 3,
++      "output_agreement_selected": true,
++      "output_agreement_selected_gold": false,
++      "task": "b10624e5"
++    },
++    {
++      "candidate_scores": [
++        {
++          "combined_score": 1.0,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "4478f0122d4b8aedf8f41f1d6295b4c1406ba17d",
++          "selectable": true,
++          "sibling_agreement": 1.0,
++          "source": "probe_chain"
++        },
++        {
++          "combined_score": 0.9,
++          "demo_reproduction_rate": 0.8,
++          "executable": true,
++          "primary_pred_hash": "4478f0122d4b8aedf8f41f1d6295b4c1406ba17d",
++          "selectable": false,
++          "sibling_agreement": 1.0,
++          "source": "fresh_chain1"
++        },
++        {
++          "combined_score": 1.0,
++          "demo_reproduction_rate": 1.0,
++          "executable": true,
++          "primary_pred_hash": "4478f0122d4b8aedf8f41f1d6295b4c1406ba17d",
++          "selectable": true,
++          "sibling_agreement": 1.0,
++          "source": "fresh_chain2"
++        }
++      ],
++      "cross_example_abstain_reason": "score_tie",
++      "cross_example_selected": false,
++      "cross_example_selected_gold": false,
++      "cross_example_selected_source": null,
++      "n_candidates": 3,
++      "n_demo_perfect_candidates": 2,
++      "n_entries": 2,
++      "n_sibling_inputs": 1,
++      "output_agreement_n_matching": 2,
++      "output_agreement_selected": true,
++      "output_agreement_selected_gold": false,
++      "task": "d8e07eb2"
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "resource": "arc2_saved_programs"
++    },
++    {
++      "available": true,
++      "resource": "arc1_saved_programs"
++    },
++    {
++      "available": true,
++      "resource": "chain_candidate_sets"
++    },
++    {
++      "available": true,
++      "resource": "eval_pool"
++    }
++  ],
++  "random_seed": 12345,
++  "saved_program_counts": {
++    "arc1_programs": 31,
++    "arc2_programs": 31,
++    "chain_tasks": 12
++  },
++  "schema": "carnot.experiment_4010_gap5_cross_example_consistency_selector.v1",
++  "selector_beats_output_agreement": false,
++  "sibling_abstention_gold_rate": 0.0,
++  "skipped_tasks": [
++    {
++      "reason": "fewer_than_two_demo_perfect_candidates",
++      "task": "7b80bb43"
++    }
++  ],
++  "title": "GAP-5 cross-example consistency selector over saved GAP-4 programs"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 164e80b485..e3be256202 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T16:58:44Z",
+-  "finished_at": "2026-06-10T16:58:44Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-10T17:29:19Z",
++  "finished_at": "2026-06-10T17:29:19Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 62edc36669..576c509fab 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T16:58:44Z",
+-  "finished_at": "2026-06-10T16:58:44Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-10T17:29:19Z",
++  "finished_at": "2026-06-10T17:29:19Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 1b097335ad..82ef3a11bf 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260610",
+-  "started_at": "2026-06-10T16:58:44Z",
+-  "finished_at": "2026-06-10T16:58:44Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-10T17:29:19Z",
++  "finished_at": "2026-06-10T17:29:19Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/experiment_4010_gap5_cross_example_consistency_selector.py b/scripts/experiments/experiment_4010_gap5_cross_example_consistency_selector.py
+new file mode 100644
+index 0000000000..054874c590
+--- /dev/null
++++ b/scripts/experiments/experiment_4010_gap5_cross_example_consistency_selector.py
+@@ -0,0 +1,51 @@
++"""Exp 4010: GAP-5 cross-example consistency selector over saved GAP-4 programs.
++
++Spec refs: REQ-VERIFY-4010, SCENARIO-VERIFY-4010.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.agentic.gap5_cross_example_selector import (  # noqa: E402
++    ARC1_PROGRAMS,
++    ARC2_POOL,
++    ARC2_PROGRAMS,
++    CHAIN_ARTIFACT,
++    OUTPUT,
++    run,
++)
++
++
++def main() -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--pool", type=Path, default=ARC2_POOL)
++    parser.add_argument("--arc2-programs", type=Path, default=ARC2_PROGRAMS)
++    parser.add_argument("--arc1-programs", type=Path, default=ARC1_PROGRAMS)
++    parser.add_argument("--chain-artifact", type=Path, default=CHAIN_ARTIFACT)
++    parser.add_argument("--output", type=Path, default=OUTPUT)
++    parser.add_argument("--bootstrap-iters", type=int, default=5000)
++    args = parser.parse_args()
++    artifact = run(
++        pool_path=args.pool,
++        arc2_programs_path=args.arc2_programs,
++        arc1_programs_path=args.arc1_programs,
++        chain_artifact_path=args.chain_artifact,
++        output_path=args.output,
++        bootstrap_iters=args.bootstrap_iters,
++    )
++    print(json.dumps({field: artifact[field] for field in ("honest_verdict", "n_tasks_scored")}))
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_4010_gap5_cross_example_selector.py b/tests/python/test_experiment_4010_gap5_cross_example_selector.py
+new file mode 100644
+index 0000000000..570775f322
+--- /dev/null
++++ b/tests/python/test_experiment_4010_gap5_cross_example_selector.py
+@@ -0,0 +1,384 @@
++"""Tests for Exp 4010 GAP-5 cross-example consistency selector.
++
++Spec refs: REQ-VERIFY-4010, SCENARIO-VERIFY-4010.
++"""
++
++from __future__ import annotations
++
++import gzip
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.agentic import gap5_cross_example_selector as gap5
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_gzip_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with gzip.open(path, "wt", encoding="utf-8") as handle:
++        json.dump(payload, handle)
++
++
++def _code(mapping: dict[int, int]) -> str:
++    pairs = "\n".join(f"        {src}: {dst}," for src, dst in sorted(mapping.items()))
++    return (
++        "def transform(grid):\n"
++        "    value = int(grid[0, 0])\n"
++        "    table = {\n"
++        f"{pairs}\n"
++        "    }\n"
++        "    return np.array([[table.get(value, value)]])\n"
++    )
++
++
++def _entry(task: str, value: int, gold: int) -> JsonDict:
++    return {
++        "task": task,
++        "demos": [
++            {"input": [[0]], "output": [[0]]},
++            {"input": [[1]], "output": [[1]]},
++        ],
++        "test_input": [[value]],
++        "candidates": [{"grid": [[gold]], "correct": True}],
++    }
++
++
++def _arm(source: str, mapping: dict[int, int]) -> JsonDict:
++    return {
++        "source": source,
++        "code": _code(mapping),
++        "n_calls": 0,
++        "codex_seconds": 0.0,
++    }
++
++
++def _fixture_paths(tmp_path: Path) -> dict[str, Path]:
++    result_dir = tmp_path / "results"
++    return {
++        "pool": result_dir / "arc3_gap4_arc2_eval_pool.json.gz",
++        "arc2_programs": result_dir / "arc3_gap4_arc2_induced_programs.json",
++        "arc1_programs": result_dir / "arc3_gap4_induced_programs.json",
++        "chain": result_dir / "arc3_gap4_arc2_chain_ensemble.json",
++        "output": result_dir / "experiment_4010_gap5_cross_example_consistency_selector.json",
++    }
++
++
++def _write_selector_fixture(tmp_path: Path) -> dict[str, Path]:
++    paths = _fixture_paths(tmp_path)
++    entries = [
++        _entry("lift", 7, 9),
++        _entry("lift", 8, 9),
++        _entry("abstain", 7, 9),
++        _entry("abstain", 8, 9),
++    ]
++    chain = {
++        "preregistration": {"tasks": ["lift", "abstain"]},
++        "per_task": [
++            {
++                "task": "lift",
++                "arms": [
++                    _arm("correct_supported", {0: 0, 1: 1, 7: 9, 8: 9}),
++                    _arm("demo_perfect_wrong", {0: 0, 1: 1, 7: 5, 8: 6}),
++                    _arm("sibling_supporter_nonselectable", {0: 0, 1: 2, 7: 4, 8: 9}),
++                ],
++            },
++            {
++                "task": "abstain",
++                "arms": [
++                    _arm("correct_no_support", {0: 0, 1: 1, 7: 9, 8: 9}),
++                    _arm("wrong_no_support_a", {0: 0, 1: 1, 7: 5, 8: 6}),
++                    _arm("wrong_no_support_b", {0: 0, 1: 1, 7: 4, 8: 7}),
++                ],
++            },
++        ],
++    }
++    _write_gzip_json(paths["pool"], {"entries": entries})
++    _write_json(paths["arc2_programs"], {"experiment": "fixture", "programs": []})
++    _write_json(paths["arc1_programs"], {"experiment": "fixture", "programs": []})
++    _write_json(paths["chain"], chain)
++    return paths
++
++
++def test_req_verify_4010_spec_anchor_exists() -> None:
++    """REQ-VERIFY-4010: OpenSpec declares the offline cross-example contract."""
++
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-VERIFY-4010" in spec
++    assert "SCENARIO-VERIFY-4010" in spec
++    assert "cross_example_precision" in spec
++    assert "blocked_saved_programs_missing" in spec
++    assert "n_codex_calls=0" in spec
++
++
++def test_scenario_verify_4010_scores_dominance_and_abstention(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4010: sibling consistency can select or abstain offline."""
++
++    paths = _write_selector_fixture(tmp_path)
++    artifact = gap5.run(
++        pool_path=paths["pool"],
++        arc2_programs_path=paths["arc2_programs"],
++        arc1_programs_path=paths["arc1_programs"],
++        chain_artifact_path=paths["chain"],
++        output_path=paths["output"],
++        bootstrap_iters=200,
++    )
++
++    assert paths["output"].exists()
++    assert artifact["n_codex_calls"] == 0
++    assert artifact["n_tasks_scored"] == 2
++    assert artifact["cross_example_precision"] == 1.0
++    assert artifact["output_agreement_precision_ref"] == 0.0
++    assert artifact["cross_example_coverage"] == 0.5
++    assert artifact["output_agreement_coverage_ref"] == 0.0
++    assert artifact["per_task"][0]["task"] == "lift"
++    assert artifact["per_task"][0]["cross_example_selected_source"] == "correct_supported"
++    assert artifact["per_task"][0]["cross_example_selected_gold"] is True
++    assert artifact["per_task"][1]["task"] == "abstain"
++    assert artifact["per_task"][1]["cross_example_abstain_reason"] == "sibling_input_disagreement"
++    assert artifact["missing_verifier_gaps"] == [
++        {
++            "task": "abstain",
++            "failure_mode": "cross_example_selector_abstained_sibling_input_disagreement",
++            "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
++        }
++    ]
++    gap5.validate_artifact(artifact)
++
++
++def test_req_verify_4010_task_scoring_uses_demo_reproduction_and_sibling_agreement(
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-4010: candidate scores expose leave-one-demo-out and sibling rates."""
++
++    paths = _write_selector_fixture(tmp_path)
++    pool = gap5.load_eval_pool(paths["pool"])
++    chain = gap5.load_json(paths["chain"])
++    entries_by_task = gap5.group_entries_by_task(pool["entries"])
++    row = gap5.score_task("lift", entries_by_task["lift"], chain["per_task"][0]["arms"])
++
++    selected = row["cross_example_selected_source"]
++    candidate_scores = {candidate["source"]: candidate for candidate in row["candidate_scores"]}
++
++    assert selected == "correct_supported"
++    assert candidate_scores["correct_supported"]["demo_reproduction_rate"] == 1.0
++    assert candidate_scores["demo_perfect_wrong"]["demo_reproduction_rate"] == 1.0
++    assert candidate_scores["sibling_supporter_nonselectable"]["demo_reproduction_rate"] == 0.5
++    assert candidate_scores["correct_supported"]["sibling_agreement"] == pytest.approx(0.5)
++    assert candidate_scores["demo_perfect_wrong"]["sibling_agreement"] == pytest.approx(0.0)
++    assert candidate_scores["correct_supported"]["selectable"] is True
++    assert candidate_scores["sibling_supporter_nonselectable"]["selectable"] is False
++
++
++def test_scenario_verify_4010_blocks_without_saved_programs_or_pool(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4010: blocked preconditions do not fabricate lift metrics."""
++
++    paths = _fixture_paths(tmp_path)
++    _write_gzip_json(paths["pool"], {"entries": []})
++
++    blocked_programs = gap5.run(
++        pool_path=paths["pool"],
++        arc2_programs_path=paths["arc2_programs"],
++        arc1_programs_path=paths["arc1_programs"],
++        chain_artifact_path=paths["chain"],
++        output_path=paths["output"],
++    )
++
++    assert blocked_programs["honest_verdict"] == "blocked_saved_programs_missing"
++    assert blocked_programs["n_codex_calls"] == 0
++    assert blocked_programs["n_tasks_scored"] == 0
++
++    _write_json(paths["arc2_programs"], {"experiment": "fixture", "programs": []})
++    _write_json(paths["arc1_programs"], {"experiment": "fixture", "programs": []})
++    _write_json(paths["chain"], {"per_task": []})
++    blocked_pool = gap5.run(
++        pool_path=tmp_path / "missing_pool.json.gz",
++        arc2_programs_path=paths["arc2_programs"],
++        arc1_programs_path=paths["arc1_programs"],
++        chain_artifact_path=paths["chain"],
++        output_path=paths["output"],
++        write=False,
++    )
++
++    assert blocked_pool["honest_verdict"] == "blocked_eval_pool_unreadable"
++    assert blocked_pool["cross_example_precision"] == 0.0
++
++
++def test_req_verify_4010_edge_outcomes_and_verdict_branches(tmp_path: Path) -> None:
++    """REQ-VERIFY-4010: edge outcomes remain explicit and schema-stable."""
++
++    paths = _fixture_paths(tmp_path)
++    entries = [
++        _entry("baseline_wrong", 7, 9),
++        _entry("baseline_wrong", 8, 9),
++        _entry("no_sibling", 7, 9),
++        _entry("fewer", 7, 9),
++        _entry("missing_arms", 7, 9),
++        {
++            "task": "no_gold",
++            "demos": [{"input": [[0]], "output": [[0]]}],
++            "test_input": [[7]],
++            "candidates": [],
++        },
++        {
++            "task": "no_gold",
++            "demos": [{"input": [[0]], "output": [[0]]}],
++            "test_input": [[8]],
++            "candidates": [],
++        },
++    ]
++    chain = {
++        "per_task": [
++            {
++                "task": "baseline_wrong",
++                "arms": [
++                    _arm("wrong_a", {0: 0, 1: 1, 7: 5, 8: 6}),
++                    _arm("wrong_b", {0: 0, 1: 1, 7: 5, 8: 6}),
++                ],
++            },
++            {
++                "task": "no_sibling",
++                "arms": [
++                    _arm("one", {0: 0, 1: 1, 7: 9}),
++                    _arm("two", {0: 0, 1: 1, 7: 5}),
++                ],
++            },
++            {
++                "task": "fewer",
++                "arms": [
++                    _arm("perfect", {0: 0, 1: 1, 7: 9}),
++                    _arm("nonperfect", {0: 0, 1: 2, 7: 9}),
++                ],
++            },
++            {
++                "task": "no_gold",
++                "arms": [
++                    _arm("selected_wrong_without_gold_a", {0: 0, 7: 4, 8: 4}),
++                    _arm("selected_wrong_without_gold_b", {0: 0, 7: 5, 8: 6}),
++                    _arm("supporter", {0: 1, 7: 4, 8: 4}),
++                ],
++            },
++            {"task": "missing_arms", "arms": []},
++        ],
++    }
++    _write_gzip_json(paths["pool"], {"entries": entries})
++    _write_json(paths["arc2_programs"], {"experiment": "fixture", "programs": []})
++    _write_json(paths["arc1_programs"], {"experiment": "fixture", "programs": []})
++    _write_json(paths["chain"], chain)
++
++    artifact = gap5.run(
++        pool_path=paths["pool"],
++        arc2_programs_path=paths["arc2_programs"],
++        arc1_programs_path=paths["arc1_programs"],
++        chain_artifact_path=paths["chain"],
++        output_path=paths["output"],
++        bootstrap_iters=0,
++        write=False,
++    )
++    by_task = {row["task"]: row for row in artifact["per_task"]}
++
++    assert gap5.selected_tasks_from_chain_artifact(chain) == [
++        "baseline_wrong",
++        "no_sibling",
++        "fewer",
++        "no_gold",
++        "missing_arms",
++    ]
++    assert by_task["baseline_wrong"]["output_agreement_selected"] is True
++    assert by_task["baseline_wrong"]["output_agreement_selected_gold"] is False
++    assert by_task["baseline_wrong"]["cross_example_abstain_reason"] == "score_tie"
++    assert by_task["no_sibling"]["cross_example_abstain_reason"] == "no_sibling_inputs"
++    assert by_task["no_gold"]["cross_example_selected"] is True
++    assert by_task["no_gold"]["cross_example_selected_gold"] is False
++    assert artifact["skipped_tasks"] == [
++        {"task": "fewer", "reason": "fewer_than_two_demo_perfect_candidates"},
++        {"task": "missing_arms", "reason": "missing_entries_or_arms"},
++    ]
++    assert gap5._grid_hash(None) is None  # noqa: SLF001
++    assert gap5._call_transform(lambda _grid: None, [[0]]) is None  # noqa: SLF001
++
++    def raises(_grid: Any) -> None:
++        raise RuntimeError("boom")
++
++    assert gap5._call_transform(raises, [[0]]) is None  # noqa: SLF001
++    assert gap5._demo_reproduction_rate(None, []) == 0.0  # noqa: SLF001
++    assert (
++        gap5._demo_reproduction_rate(  # noqa: SLF001
++            lambda grid: [[int(grid[0][0]), int(grid[0][0]), int(grid[0][0])]],
++            [{"input": [[3, 3], [3, 3]], "output": [[3, 3, 3]]}],
++        )
++        == 1.0
++    )
++    assert gap5._output_agreement_baseline(  # noqa: SLF001
++        [{"selectable": True, "predictions": [None]}],
++        0,
++        None,
++    ) == {
++        "selected": False,
++        "selected_gold": False,
++        "selected_hash": None,
++        "n_matching": 0,
++    }
++    assert gap5.paired_bootstrap_ci([], bootstrap_iters=0)["coverage_lift_ci95"] == [0.0, 0.0]
++    assert gap5._verdict(  # noqa: SLF001
++        True,
++        {"cross_precision": 1.0, "cross_coverage": 1.0},
++        {"precision_lift_ci95": [0.1, 0.2], "coverage_lift_ci95": [0.0, 0.0]},
++    ).startswith("success:")
++    assert "precision_lower" in gap5._verdict(  # noqa: SLF001
++        False,
++        {
++            "cross_precision": 0.0,
++            "output_precision": 1.0,
++            "cross_coverage": 1.0,
++            "output_coverage": 1.0,
++        },
++        {"precision_lift_ci95": [-1.0, 0.0], "coverage_lift_ci95": [0.0, 0.0]},
++    )
++    assert "coverage_lower" in gap5._verdict(  # noqa: SLF001
++        False,
++        {
++            "cross_precision": 1.0,
++            "output_precision": 1.0,
++            "cross_coverage": 0.0,
++            "output_coverage": 1.0,
++        },
++        {"precision_lift_ci95": [0.0, 0.0], "coverage_lift_ci95": [-1.0, 0.0]},
++    )
++    assert "no_scored_tasks" in gap5._verdict(  # noqa: SLF001
++        False,
++        {
++            "cross_precision": 1.0,
++            "output_precision": 1.0,
++            "cross_coverage": 1.0,
++            "output_coverage": 1.0,
++        },
++        {"precision_lift_ci95": [0.1, 0.1], "coverage_lift_ci95": [0.1, 0.1]},
++    )
++
++    invalid = dict(artifact)
++    invalid.pop("cross_example_precision")
++    with pytest.raises(ValueError, match="missing required field"):
++        gap5.validate_artifact(invalid)
++    for field, value, message in [
++        ("honest_verdict", "pending", "terminal prefix"),
++        ("cross_example_precision", 1, "bare float"),
++        ("selector_beats_output_agreement", 1, "bare bool"),
++        ("n_tasks_scored", True, "bare int"),
++        ("missing_verifier_gaps", {}, "must be a list"),
++        ("inference_substrate", 1, "must be a string"),
++    ]:
++        invalid = dict(artifact)
++        invalid[field] = value
++        with pytest.raises(ValueError, match=message):
++            gap5.validate_artifact(invalid)
+-- 
+2.55.0
+

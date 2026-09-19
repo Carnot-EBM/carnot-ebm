@@ -1,0 +1,43 @@
+From 57053fea3c22b7b869e73d282ed9ad07e77312c8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 15 Jun 2026 05:04:02 -0400
+Subject: [PATCH 01916/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 678f0fc200..3d1539ee36 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-06-15T09:01:57Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-06-15T09:04:00Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index cdd4f46aff..e655bb65c4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8531,3 +8531,4 @@ c |
+ | 2026-06-15 08:55 UTC | PHASE B1 (HARNESS-FIRST + REAL-TRAINING ASSERTION) | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-15 08:57 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
+ | 2026-06-15 08:59 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
++| 2026-06-15 09:02 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f040dcf1b6..b2534ca0ef 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 31, "phase": "iteration_start", "started_at": "2026-06-15T09:01:57Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 32, "phase": "iteration_start", "started_at": "2026-06-15T09:04:00Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

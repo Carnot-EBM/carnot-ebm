@@ -1,0 +1,3867 @@
+From 314ddb7b5bd1ea9b281aec974b5d1bb56f29cb35 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 02:13:08 -0400
+Subject: [PATCH 07609/11362] [conductor] Archive terminal .519 evidence and
+ allocate .520
+
+Automated research step by research conductor.
+Task ID: exp5837-transition-v520
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  144 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/experiment_5837_transition_v520.py | 1593 +++++++++++++++++
+ results/experiment_5837_transition_v520.json  | 1252 +++++++++++++
+ .../test_experiment_5837_transition_v520.py   |  812 +++++++++
+ 5 files changed, 3802 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5837_transition_v520.py
+ create mode 100644 results/experiment_5837_transition_v520.json
+ create mode 100644 tests/python/test_experiment_5837_transition_v520.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 48ae7f59f3..3aea704f7b 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -44474,6 +44474,150 @@ entry, the checksum is stable, `inference_substrate` equals
+ |---|---|---|
+ | REQ-REPORT-5823 | Implemented (`python/carnot/experiment_5823_transition_v519.py`, `results/experiment_5823_transition_v519.json`) | Implemented (`tests/python/test_experiment_5823_transition_v519.py`) |
+ 
++### REQ-REPORT-5837: V520 Transition Archives Terminal V519 Without Laundering Flagged Evidence
++
++The Exp5837 workflow SHALL read the terminal `.519` completion ledger, active
++roadmap, optional `research-roadmap-next.yaml`, vNEXT proposal document,
++conductor log, exclusion manifest, Exp5823 through Exp5829 declared
++deliverables, `scripts/evidence_index_collision_preflight.py`,
++`scripts/in_process_doc_reconcile.py`, and this spec. It SHALL write
++`results/experiment_5837_transition_v520.json`, SHALL NOT modify
++`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
++SHALL resolve activated evidence only by the exact tuple
++`(milestone, task_id, declared_deliverable)`, and SHALL declare
++`inference_substrate="aggregation_from_upstream_artifacts"`.
++
++The workflow SHALL parse both roadmap inputs when present; hash the completion
++ledger, conductor log, exclusion manifest, helper scripts, spec, and every
++declared `.519` deliverable; record disk, RAM, and writable-path receipts; and
++fail closed when the exact `.519` activated identity set is ambiguous, a
++declared deliverable is missing or malformed, or a protected file changes. It
++SHALL append `.519` to `research-complete.yaml` exactly once only when the
++exact `.519` milestone block is absent, and otherwise SHALL leave historical
++completion blocks byte-for-byte unchanged without deduplicating, normalizing,
++reordering, or rewriting history.
++
++The workflow SHALL classify exactly Exp5823 through Exp5829 into disjoint
++classes: clean positive, clean null/negative, blocked/skipped, flagged,
++flagged-upstream/provisional, missing, and proposal-only. Exp5823, Exp5825,
++Exp5826, and Exp5827 SHALL be clean positive when their exact artifacts are
++terminal complete and clean under the fresh verifier receipts. Exp5824 SHALL
++be clean null when it completes with zero accepted post-V519 source deltas.
++Exp5828 SHALL remain flagged when its artifact preserves
++`flagged_adversarial=true` plus CRITICAL `DURATION_TOO_SHORT` and WARN
++`METHODOLOGY_MISSING`; the transition SHALL NOT clear, rewrite, or mutate that
++stamp. Exp5829 SHALL be flagged-upstream/provisional when it reports positive
++selective replay while declaring the flagged Exp5828 lifecycle artifact as an
++upstream input. Flagged or provisional evidence SHALL NOT appear in clean
++success or headline-eligible lists.
++
++The workflow SHALL independently run the live adversarial verifier on Exp5825
++through Exp5829 and record, per artifact, the command, exit code, receipt hash,
++CRITICAL findings, WARN findings, and headline eligibility. The expected
++complete transition requires Exp5825, Exp5826, Exp5827, and Exp5829 to have no
++fresh CRITICAL findings; Exp5828's fresh receipt SHALL preserve the existing
++CRITICAL `DURATION_TOO_SHORT` and WARN `METHODOLOGY_MISSING` findings instead
++of treating the nonzero verifier exit as a transition failure.
++
++The workflow SHALL record Exp5830 through Exp5836 as
++`reserved_unactivated_task_ids`. It SHALL scan active and optional next
++roadmaps, vNEXT proposals, completion history, exclusion manifest, result
++files, and prior transition allocation artifacts for Exp5837 through Exp5848.
++Active-roadmap and vNEXT proposal mentions MAY be recorded as allowed
++allocation references, and the Exp5837 result path MAY be owned by this
++workflow. Any unowned result file, completion-history entry,
++exclusion-manifest entry, optional next-roadmap entry, or prior-transition
++allocation that occupies Exp5837 through Exp5848 SHALL make the artifact
++terminal `blocked:` with bare integer `next_range_collision_count > 0`. A
++complete allocation SHALL require `next_range_collision_count=0`.
++
++The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
++`milestone_transition`, `declared_deliverable_matrix`,
++`adversarial_verifier_receipts`, `outcome_classification`,
++`flagged_evidence_preserved`, `reserved_unactivated_task_ids`,
++`research_complete_append_count`, `next_task_range`, bare
++`next_range_collision_count`, `docs_reconciled`, `duration_s`,
++`inference_substrate`, `field_provenance`, `test_commands`,
++`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
++required top-level field SHALL have a non-empty principle entry. The
++transition-owned reconciliation for this task SHALL be limited to spec, test,
++implementation, and result artifacts; operator-owned status, changelog, and
++traceability reconciliation may be explicitly deferred when the task prompt
++forbids touching those files.
++
++Required field principles:
++
++- `status`: principle "A normalized terminal state distinguishes a complete transition from a bootstrap artifact."
++- `preconditions_checked`: principle "Exact hashes and resource checks prevent archival against missing or ambiguous evidence."
++- `milestone_transition`: principle "Explicit source and destination milestones prevent numeric-prefix aliasing."
++- `declared_deliverable_matrix`: principle "Declared paths plus conductor outcomes are the authority for activated task identity."
++- `adversarial_verifier_receipts`: principle "Fresh command and exit-code receipts preserve the live quality authority."
++- `outcome_classification`: principle "Disjoint classes prevent flagged or provisional evidence from becoming a clean success."
++- `flagged_evidence_preserved`: principle "True proves the transition did not launder Exp5828 or its downstream taint."
++- `reserved_unactivated_task_ids`: principle "Proposal-only identities remain tombstoned and cannot silently collide."
++- `research_complete_append_count`: principle "An exact append count prevents duplicate milestone history."
++- `next_task_range`: principle "A declared interval makes downstream allocation auditable."
++- `next_range_collision_count`: principle "Only a bare zero authorizes Exp5837-Exp5848."
++- `docs_reconciled`: principle "Specs, traceability, and ops summaries must match archived evidence classes."
++- `duration_s`: principle "Measured wall time exposes bootstrap-only execution."
++- `inference_substrate`: principle "`aggregation_from_upstream_artifacts` prevents archival from masquerading as inference."
++- `field_provenance`: principle "Per-field paths and hashes make the transition independently auditable."
++- `test_commands`: principle "Recorded commands show which identity, verifier, and collision checks ran."
++- `test_exit_codes`: principle "Exit codes prevent failed checks from being narrated as passing."
++- `reproducibility_checksum`: principle "A content hash detects later ledger or allocation drift."
++- `honest_verdict`: principle "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome."
++
++#### SCENARIO-REPORT-5837: Exact V519 Evidence Archives Into V520
++
++**Given** exact `.519` completion history declares Exp5823 through Exp5829
++**And** their exact declared artifacts are readable and hashable
++**And** fresh adversarial verifier receipts are recorded for Exp5825 through
++Exp5829
++**And** Exp5837 through Exp5848 have no unowned collisions
++**When** the Exp5837 workflow runs
++**Then** it writes a complete transition artifact, classifies Exp5823,
++Exp5825, Exp5826, and Exp5827 as clean positive, Exp5824 as clean null,
++Exp5828 as flagged, Exp5829 as flagged-upstream/provisional, records Exp5830
++through Exp5836 as reserved proposal-only ids, sets
++`research_complete_append_count=0` when `.519` history is already present, and
++leaves the active roadmap and conductor unchanged.
++
++#### SCENARIO-REPORT-5837-VERIFIER-RECEIPTS: Exp5828 Stamp And Exp5829 Taint Are Preserved
++
++**Given** Exp5828 already carries `flagged_adversarial=true` with CRITICAL
++`DURATION_TOO_SHORT` and WARN `METHODOLOGY_MISSING`
++**And** Exp5829 declares the flagged Exp5828 lifecycle artifact upstream
++**When** fresh verifier receipts are normalized
++**Then** Exp5828 remains headline-ineligible because of its live critical
++finding, Exp5829 remains headline-ineligible because of upstream taint, and
++neither task appears in the clean success class.
++
++#### SCENARIO-REPORT-5837-COLLISION-BLOCK: Occupied V520 Ids Fail Closed
++
++**Given** any unowned result, completion-history entry, exclusion-manifest
++entry, optional next-roadmap entry, or prior-transition allocation occupies
++Exp5837 through Exp5848
++**When** the Exp5837 workflow scans the next range
++**Then** it emits a terminal `blocked:` artifact, records a bare integer
++`next_range_collision_count > 0`, and does not mutate roadmap, conductor, or
++historical evidence to hide the collision.
++
++#### SCENARIO-REPORT-5837-FIELD-PROVENANCE: Required Fields Are Auditable
++
++**Given** the Exp5837 artifact is emitted
++**When** the artifact schema is validated
++**Then** every required field has a matching principle and field-provenance
++entry with source paths and hashes, the checksum is stable,
++`inference_substrate` equals `aggregation_from_upstream_artifacts`,
++`next_task_range` equals `exp5837-exp5848`, and the terminal verdict starts
++with `complete:` or `blocked:`.
++
++## Implementation Status (REQ-REPORT-5837)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5837 | Implemented (`python/carnot/experiment_5837_transition_v520.py`, `results/experiment_5837_transition_v520.json`) | Implemented (`tests/python/test_experiment_5837_transition_v520.py`) |
++
+ ### REQ-REPORT-5824: V519 Post-Marker Source Delta Ingestion Preserves Sealed Roadmap Boundaries
+ 
+ The Exp5824 workflow SHALL run a bounded execution refresh after the
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 8dc887d69b..76f3c93eab 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4655,
++  "experiments_checked": 4656,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5837_transition_v520.py b/python/carnot/experiment_5837_transition_v520.py
+new file mode 100644
+index 0000000000..7467129920
+--- /dev/null
++++ b/python/carnot/experiment_5837_transition_v520.py
+@@ -0,0 +1,1593 @@
++"""Exp5837 transition receipt from terminal milestone .519 into .520.
++
++Spec refs: REQ-REPORT-5837, SCENARIO-REPORT-5837,
++SCENARIO-REPORT-5837-VERIFIER-RECEIPTS,
++SCENARIO-REPORT-5837-COLLISION-BLOCK,
++SCENARIO-REPORT-5837-FIELD-PROVENANCE.
++
++This module archives a terminal milestone by exact declared identity. Its main
++risk is evidence laundering: Exp5828 looks positive in its own verdict text but
++is adversarially stamped, and Exp5829 depends on that flagged lifecycle
++artifact. The transition therefore records both as completed evidence without
++letting either become clean or headline-eligible.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import defaultdict
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++import json
++import os
++from pathlib import Path
++import re
++import shutil
++import subprocess
++import time
++from typing import Any
++
++import yaml
++
++from carnot.experiment_5754_v513_capstone_reconciliation import (
++    _read_json_any,
++    path_sha256,
++    payload_checksum,
++    sha256_bytes,
++    write_json,
++)
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5837_transition_v520.json")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++RESEARCH_COMPLETE_RELATIVE_PATH = Path("research-complete.yaml")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++EVIDENCE_INDEX_RELATIVE_PATH = Path("scripts/evidence_index_collision_preflight.py")
++DOC_RECONCILE_RELATIVE_PATH = Path("scripts/in_process_doc_reconcile.py")
++
++EXPERIMENT = "experiment_5837_transition_v520"
++EXPERIMENT_ID = "exp5837-transition-v520"
++MILESTONE_FROM = "2026.07.519"
++MILESTONE_TO = "2026.07.520"
++NEXT_TASK_RANGE = "exp5837-exp5848"
++RESERVED_TASK_RANGE = "exp5830-exp5836"
++RUN_DATE = "2026-07-23"
++RANDOM_SEED = 5837
++SCHEMA = "carnot.experiment_5837.transition_v520.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++ARTIFACT_SELECTION_POLICY = "exact_declared_deliverable"
++
++SPEC_REFS = (
++    "REQ-REPORT-5837",
++    "SCENARIO-REPORT-5837",
++    "SCENARIO-REPORT-5837-VERIFIER-RECEIPTS",
++    "SCENARIO-REPORT-5837-COLLISION-BLOCK",
++    "SCENARIO-REPORT-5837-FIELD-PROVENANCE",
++)
++
++TASK_ARTIFACT_PATHS: dict[str, Path] = {
++    "exp5823-transition-v519": Path("results/experiment_5823_transition_v519.json"),
++    "exp5824-v519-source-delta-ingestion": Path(
++        "results/experiment_5824_v519_source_delta_ingestion.json"
++    ),
++    "exp5825-certified-adaptive-memory-contract": Path(
++        "results/experiment_5825_certified_adaptive_memory_contract.json"
++    ),
++    "exp5826-out-of-template-constraint-stream": Path(
++        "results/experiment_5826_out_of_template_constraint_stream.json"
++    ),
++    "exp5827-minimal-core-structural-acquisition-ab": Path(
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json"
++    ),
++    "exp5828-future-validated-structural-memory": Path(
++        "results/experiment_5828_future_validated_structural_memory.json"
++    ),
++    "exp5829-transfer-selective-replay-audit": Path(
++        "results/experiment_5829_transfer_selective_replay_audit.json"
++    ),
++}
++EXPECTED_TASK_IDS = tuple(TASK_ARTIFACT_PATHS)
++
++TASK_TITLES: dict[str, str] = {
++    "exp5823-transition-v519": (
++        "Archive terminal .518 evidence, retire finite-ID answer transport, and allocate .519"
++    ),
++    "exp5824-v519-source-delta-ingestion": (
++        "Time-windowed post-V519 literature and implementation freshness receipt"
++    ),
++    "exp5825-certified-adaptive-memory-contract": (
++        "Canonical certified-event and adaptive-memory preflight contract"
++    ),
++    "exp5826-out-of-template-constraint-stream": (
++        "Gated on Exp5825 contract: chronological out-of-template constraint structure stream"
++    ),
++    "exp5827-minimal-core-structural-acquisition-ab": (
++        "Gated on Exp5826 stream: minimal-core and active-query structural acquisition A/B"
++    ),
++    "exp5828-future-validated-structural-memory": (
++        "Gated on Exp5827 structural lift: future-validated write-protected continuous memory"
++    ),
++    "exp5829-transfer-selective-replay-audit": (
++        "Gated on Exp5828 durable memory: transfer-selective replay and recurrence audit"
++    ),
++}
++
++CONDUCTOR_TITLE_PATTERNS: dict[str, str] = {
++    "exp5823-transition-v519": "Archive terminal .518 evidence, retire finite-ID a",
++    "exp5824-v519-source-delta-ingestion": "Time-windowed post-V519 literature and implementat",
++    "exp5825-certified-adaptive-memory-contract": (
++        "Canonical certified-event and adaptive-memory pref"
++    ),
++    "exp5826-out-of-template-constraint-stream": (
++        "Gated on Exp5825 contract: chronological out-of-te"
++    ),
++    "exp5827-minimal-core-structural-acquisition-ab": (
++        "Gated on Exp5826 stream: minimal-core and active-q"
++    ),
++    "exp5828-future-validated-structural-memory": (
++        "Gated on Exp5827 structural lift: future-validated"
++    ),
++    "exp5829-transfer-selective-replay-audit": (
++        "Gated on Exp5828 durable memory: transfer-selectiv"
++    ),
++}
++
++VERIFIER_TASK_IDS = (
++    "exp5825-certified-adaptive-memory-contract",
++    "exp5826-out-of-template-constraint-stream",
++    "exp5827-minimal-core-structural-acquisition-ab",
++    "exp5828-future-validated-structural-memory",
++    "exp5829-transfer-selective-replay-audit",
++)
++
++RESERVED_UNACTIVATED_TASK_IDS = (
++    "exp5830-sota-paired-embedding-corpus",
++    "exp5831-cross-family-embedding-energy-verifier",
++    "exp5832-arc-write-protected-world-fact-tape",
++    "exp5833-arc-world-feedback-probe-ab",
++    "exp5834-bounded-adaptive-memory-microkernel",
++    "exp5835-attached-board-adaptive-memory-receipts",
++    "exp5836-capstone-v519",
++)
++
++NEXT_TASK_ARTIFACT_PATHS: dict[str, Path] = {
++    "exp5837-transition-v520": RESULT_RELATIVE_PATH,
++    "exp5838-v520-source-delta-ingestion": Path(
++        "results/experiment_5838_v520_source_delta_ingestion.json"
++    ),
++    "exp5839-v519-evidence-qualification": Path(
++        "results/experiment_5839_v519_evidence_qualification.json"
++    ),
++    "exp5840-exact-counterfactual-embedding-fixture": Path(
++        "results/experiment_5840_exact_counterfactual_embedding_fixture.json"
++    ),
++    "exp5841-sota-comparative-embedding-corpus": Path(
++        "results/experiment_5841_sota_comparative_embedding_corpus.json"
++    ),
++    "exp5842-cross-family-comparative-energy-verifier": Path(
++        "results/experiment_5842_cross_family_comparative_energy_verifier.json"
++    ),
++    "exp5843-sparse-oracle-continuous-learning": Path(
++        "results/experiment_5843_sparse_oracle_continuous_learning.json"
++    ),
++    "exp5844-arc-write-protected-fact-tape": Path(
++        "results/experiment_5844_arc_write_protected_fact_tape.json"
++    ),
++    "exp5845-arc-world-feedback-acquisition-ab": Path(
++        "results/experiment_5845_arc_world_feedback_acquisition_ab.json"
++    ),
++    "exp5846-bounded-adaptive-memory-microkernel": Path(
++        "results/experiment_5846_bounded_adaptive_memory_microkernel.json"
++    ),
++    "exp5847-attached-board-memory-receipts": Path(
++        "results/experiment_5847_attached_board_memory_receipts.json"
++    ),
++    "exp5848-capstone-v520": Path("results/experiment_5848_capstone_v520.json"),
++}
++NEXT_EXTRA_DELIVERABLE_PATHS = (
++    Path("results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl"),
++    Path("results/experiment_5841_sota_comparative_embedding_corpus.npz"),
++)
++NEXT_TASK_IDS = tuple(NEXT_TASK_ARTIFACT_PATHS)
++NEXT_RANGE_NUMBERS = range(5837, 5849)
++
++PROTECTED_FILE_PATHS = (ROADMAP_RELATIVE_PATH, CONDUCTOR_RELATIVE_PATH)
++ALLOWED_ALLOCATION_TEXT_PATHS = (ROADMAP_RELATIVE_PATH, VNEXT_RELATIVE_PATH)
++COLLISION_TEXT_PATHS = (
++    RESEARCH_COMPLETE_RELATIVE_PATH,
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++    ROADMAP_NEXT_RELATIVE_PATH,
++)
++
++DEFAULT_TESTS_RUN: tuple[JsonDict, ...] = (
++    {
++        "command": (
++            '.venv/bin/python -c "import pathlib, yaml; '
++            "yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); "
++            "p=pathlib.Path('research-roadmap-next.yaml'); "
++            "yaml.safe_load(p.read_text()) if p.exists() else None; "
++            "yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); "
++            "yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\""
++        ),
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {
++        "command": (
++            ".venv/bin/pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0"
++        ),
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {
++        "command": (
++            ".venv/bin/coverage run --rcfile=/dev/null "
++            "--include=python/carnot/experiment_5837_transition_v520.py "
++            "-m pytest tests/python/test_experiment_5837_transition_v520.py "
++            "-q --no-cov -n 0"
++        ),
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {
++        "command": (
++            ".venv/bin/coverage report --rcfile=/dev/null "
++            "--include=python/carnot/experiment_5837_transition_v520.py --fail-under=100"
++        ),
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {"command": ".venv/bin/pytest tests/python -q", "exit_code": None, "status": "not_run"},
++    {
++        "command": ".venv/bin/python scripts/check_spec_coverage.py",
++        "exit_code": None,
++        "status": "not_run",
++    },
++    {
++        "command": ".venv/bin/python scripts/root_clutter_sweep.py",
++        "exit_code": None,
++        "status": "not_run",
++    },
++)
++
++REQUIRED_PRINCIPLE_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "milestone_transition",
++    "declared_deliverable_matrix",
++    "adversarial_verifier_receipts",
++    "outcome_classification",
++    "flagged_evidence_preserved",
++    "reserved_unactivated_task_ids",
++    "research_complete_append_count",
++    "next_task_range",
++    "next_range_collision_count",
++    "docs_reconciled",
++    "duration_s",
++    "inference_substrate",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "schema": "Identifies the versioned Exp5837 transition artifact schema.",
++    "experiment": "Names the local experiment slug without relying on paths.",
++    "experiment_id": "Binds this receipt to the conductor task id.",
++    "run_date": "Records the operator-specified transition date as a fixed value.",
++    "random_seed": "Deterministic metadata for checksum stability; no stochastic run occurs.",
++    "spec_refs": "Anchors the artifact to REQ-REPORT-5837 and its scenarios.",
++    "result_path": "Names the emitted deliverable path.",
++    "field_principles": "Maps every top-level artifact field to its evidence boundary.",
++    "status": (
++        "A normalized terminal state distinguishes a complete transition from a bootstrap artifact."
++    ),
++    "preconditions_checked": (
++        "Exact hashes and resource checks prevent archival against missing or ambiguous evidence."
++    ),
++    "milestone_transition": "Explicit source and destination milestones prevent numeric-prefix aliasing.",
++    "canonical_identity_contract": (
++        "Defines canonical evidence as milestone, task id, and declared deliverable."
++    ),
++    "declared_deliverable_matrix": (
++        "Declared paths plus conductor outcomes are the authority for activated task identity."
++    ),
++    "same_number_alias_groups": "Records same-number files as aliases, never canonical evidence.",
++    "adversarial_verifier_receipts": (
++        "Fresh command and exit-code receipts preserve the live quality authority."
++    ),
++    "outcome_classification": (
++        "Disjoint classes prevent flagged or provisional evidence from becoming a clean success."
++    ),
++    "flagged_evidence_preserved": (
++        "True proves the transition did not launder Exp5828 or its downstream taint."
++    ),
++    "reserved_unactivated_task_ids": (
++        "Proposal-only identities remain tombstoned and cannot silently collide."
++    ),
++    "reserved_unactivated_range": "Names the proposal-only `.519` identity interval.",
++    "research_complete_append_count": "An exact append count prevents duplicate milestone history.",
++    "duplicate_history_diagnostics": "Reports duplicate history without rewriting it.",
++    "collision_scan": "Shows the Exp5837-Exp5848 namespace scan and collision sources.",
++    "next_task_range": "A declared interval makes downstream allocation auditable.",
++    "next_range_collision_count": "Only a bare zero authorizes Exp5837-Exp5848.",
++    "docs_reconciled": "Specs, traceability, and ops summaries must match archived evidence classes.",
++    "research_roadmap_unchanged": "Bare boolean must remain true because active roadmap mutation is forbidden.",
++    "conductor_unchanged": "Bare boolean must remain true by operator instruction.",
++    "duration_s": "Measured wall time exposes bootstrap-only execution.",
++    "inference_substrate": (
++        "`aggregation_from_upstream_artifacts` prevents archival from masquerading as inference."
++    ),
++    "field_provenance": "Per-field paths and hashes make the transition independently auditable.",
++    "test_commands": "Recorded commands show which identity, verifier, and collision checks ran.",
++    "test_exit_codes": "Exit codes prevent failed checks from being narrated as passing.",
++    "reproducibility_checksum": "A content hash detects later ledger or allocation drift.",
++    "honest_verdict": (
++        "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome."
++    ),
++}
++
++
++@dataclass(frozen=True)
++class ProcessResult:
++    """Small testable substitute for subprocess.CompletedProcess."""
++
++    returncode: int
++    stdout: str
++    stderr: str
++
++
++def _read_yaml_with_meta(path: Path) -> tuple[JsonDict, JsonDict]:
++    meta: JsonDict = {
++        "path": path.as_posix(),
++        "present": path.exists(),
++        "parsed": False,
++        "sha256": path_sha256(path),
++        "error": None,
++    }
++    if not path.exists():
++        return {}, meta
++    try:
++        payload = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++    except yaml.YAMLError as exc:
++        meta["error"] = str(exc)
++        return {}, meta
++    if not isinstance(payload, dict):
++        meta["error"] = f"expected mapping, got {type(payload).__name__}"
++        return {}, meta
++    meta["parsed"] = True
++    return payload, meta
++
++
++def _roadmap_summary(path: Path) -> JsonDict:
++    payload, meta = _read_yaml_with_meta(path)
++    tasks = payload.get("tasks") if isinstance(payload.get("tasks"), list) else []
++    task_ids = [
++        str(row["id"])
++        for row in tasks
++        if isinstance(row, Mapping) and isinstance(row.get("id"), str)
++    ]
++    deliverables = [
++        str(row["deliverable"])
++        for row in tasks
++        if isinstance(row, Mapping) and isinstance(row.get("deliverable"), str)
++    ]
++    milestone = payload.get("milestone") if isinstance(payload.get("milestone"), str) else None
++    return {**meta, "milestone": milestone, "task_ids": task_ids, "deliverables": deliverables}
++
++
++def _research_complete_payload(root: Path) -> JsonDict:
++    payload, _meta = _read_yaml_with_meta(root / RESEARCH_COMPLETE_RELATIVE_PATH)
++    return payload
++
++
++def _research_complete_blocks(root: Path, milestone: str = MILESTONE_FROM) -> list[JsonDict]:
++    milestones = _research_complete_payload(root).get("milestones")
++    if not isinstance(milestones, list):
++        return []
++    return [
++        block for block in milestones if isinstance(block, dict) and block.get("id") == milestone
++    ]
++
++
++def _task_signature(block: Mapping[str, Any]) -> tuple[tuple[str, str], ...]:
++    tasks = block.get("tasks")
++    if not isinstance(tasks, list):
++        return ()
++    rows: list[tuple[str, str]] = []
++    for row in tasks:
++        if isinstance(row, Mapping) and isinstance(row.get("id"), str):
++            deliverable = row.get("deliverable")
++            rows.append((str(row["id"]), str(deliverable) if isinstance(deliverable, str) else ""))
++    return tuple(rows)
++
++
++def _completion_block_text() -> str:
++    def q(value: str) -> str:
++        return json.dumps(value, ensure_ascii=True)
++
++    task_lines: list[str] = []
++    for task_id, rel_path in TASK_ARTIFACT_PATHS.items():
++        task_lines.extend(
++            [
++                f"  - id: {q(task_id)}",
++                f"    title: {q(TASK_TITLES[task_id])}",
++                f"    deliverable: {q(rel_path.as_posix())}",
++                "    result: OK (conductor)",
++            ]
++        )
++    return "\n".join(
++        [
++            f"- id: {q(MILESTONE_FROM)}",
++            "  title: "
++            + q("Certified Adaptive Memory, Internal Energy, and World-Feedback Induction"),
++            f"  doc: {q(VNEXT_RELATIVE_PATH.as_posix())}",
++            "  completed: '2026-07-23'",
++            "  finding: See conductor log for per-experiment results.",
++            "  tasks:",
++            *task_lines,
++            "",
++        ]
++    )
++
++
++def _append_research_complete_if_absent(root: Path) -> JsonDict:
++    path = root / RESEARCH_COMPLETE_RELATIVE_PATH
++    _payload, meta = _read_yaml_with_meta(path)
++    if meta["present"] and not meta["parsed"]:
++        return {
++            "append_count": 0,
++            "appended": False,
++            "reason": "research_complete_unparseable",
++            "sha256_before_append": meta["sha256"],
++            "sha256_after_append": meta["sha256"],
++        }
++    if _research_complete_blocks(root):
++        return {
++            "append_count": 0,
++            "appended": False,
++            "reason": "exact_milestone_block_present",
++            "sha256_before_append": meta["sha256"],
++            "sha256_after_append": meta["sha256"],
++        }
++
++    before = meta["sha256"]
++    path.parent.mkdir(parents=True, exist_ok=True)
++    if not path.exists():
++        prefix = (
++            "# Carnot Research - Completed Experiments\n"
++            "# Tasks moved here from research-roadmap.yaml after successful completion.\n\n"
++            "milestones:\n"
++        )
++        path.write_text(prefix + _completion_block_text(), encoding="utf-8")
++    else:
++        existing = path.read_text(encoding="utf-8")
++        separator = "" if existing.endswith("\n") else "\n"
++        path.write_text(existing + separator + _completion_block_text(), encoding="utf-8")
++    return {
++        "append_count": 1,
++        "appended": True,
++        "reason": "exact_milestone_block_absent",
++        "sha256_before_append": before,
++        "sha256_after_append": path_sha256(path),
++    }
++
++
++def _duplicate_task_conflicts(tasks: Sequence[Any]) -> list[str]:
++    deliverables_by_task: dict[str, set[str]] = defaultdict(set)
++    for row in tasks:
++        if isinstance(row, Mapping) and isinstance(row.get("id"), str):
++            deliverable = row.get("deliverable")
++            deliverables_by_task[str(row["id"])].add(
++                str(deliverable) if isinstance(deliverable, str) else ""
++            )
++    return sorted(task_id for task_id, values in deliverables_by_task.items() if len(values) > 1)
++
++
++def _declared_deliverable_matrix(
++    root: Path, append_count: int
++) -> tuple[list[JsonDict], JsonDict, list[str]]:
++    blocks = _research_complete_blocks(root)
++    signatures = [_task_signature(block) for block in blocks]
++    unique_signatures = set(signatures)
++    stats: JsonDict = {
++        "research_complete_milestone_from_block_count": len(blocks),
++        "unique_declared_deliverable_block_count": len(unique_signatures),
++        "declared_deliverables_unambiguous": len(unique_signatures) <= 1,
++        "completion_block_source": "research_complete" if blocks else "unavailable",
++        "research_complete_append_count": append_count,
++    }
++    failures: list[str] = []
++    if len(unique_signatures) > 1:
++        failures.append("ambiguous_research_complete_declared_task_blocks")
++
++    selected_tasks = blocks[0].get("tasks") if blocks else []
++    task_rows = selected_tasks if isinstance(selected_tasks, list) else []
++    conflicts = _duplicate_task_conflicts(task_rows)
++    if conflicts:
++        failures.append(f"duplicate_task_id_conflicts={conflicts}")
++    by_task: dict[str, JsonMap] = {
++        str(row["id"]): row
++        for row in task_rows
++        if isinstance(row, Mapping) and isinstance(row.get("id"), str)
++    }
++    declared_ids = tuple(
++        str(row["id"])
++        for row in task_rows
++        if isinstance(row, Mapping) and isinstance(row.get("id"), str)
++    )
++    if declared_ids != EXPECTED_TASK_IDS:
++        failures.append(f"declared_task_ids_mismatch={list(declared_ids)}")
++
++    matrix: list[JsonDict] = []
++    mismatches: list[str] = []
++    for task_id in EXPECTED_TASK_IDS:
++        row = by_task.get(task_id, {})
++        declared = row.get("deliverable")
++        expected = TASK_ARTIFACT_PATHS[task_id].as_posix()
++        declared_path = declared if isinstance(declared, str) else ""
++        if declared_path != expected:
++            mismatches.append(f"{task_id}:{declared_path or '<missing>'}!={expected}")
++        title = row.get("title") if isinstance(row.get("title"), str) else TASK_TITLES[task_id]
++        result = row.get("result") if isinstance(row.get("result"), str) else ""
++        matrix.append(
++            {
++                "identity": [MILESTONE_FROM, task_id, declared_path or expected],
++                "milestone": MILESTONE_FROM,
++                "task_id": task_id,
++                "title": title,
++                "declared_deliverable": declared_path or expected,
++                "research_complete_result": result,
++                "selection_policy": ARTIFACT_SELECTION_POLICY,
++            }
++        )
++    if mismatches:
++        failures.append(f"declared_deliverable_mismatch={mismatches}")
++    return matrix, stats, failures
++
++
++def _artifact_terminal_status(payload: JsonMap, metadata: JsonMap) -> str:
++    if metadata.get("exists") is False:
++        return "missing"
++    if metadata.get("loadable") is False:
++        return "malformed"
++    status = payload.get("status")
++    verdict = payload.get("honest_verdict")
++    if status == "blocked" or (isinstance(verdict, str) and verdict.startswith("blocked:")):
++        return "blocked"
++    if status == "complete" or (isinstance(verdict, str) and verdict.startswith("complete:")):
++        return "complete"
++    if isinstance(verdict, str) and verdict.startswith("positive:"):
++        return "complete"
++    return str(status) if isinstance(status, str) and status else "unknown"
++
++
++def _task_number(task_id: str) -> str | None:
++    match = re.match(r"exp(\d+)", task_id)
++    return match.group(1) if match else None
++
++
++def _parse_conductor_log(path_or_root: Path) -> list[JsonDict]:
++    path = path_or_root / CONDUCTOR_LOG_RELATIVE_PATH if path_or_root.is_dir() else path_or_root
++    if not path.exists():
++        return []
++    rows: list[JsonDict] = []
++    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
++        if not line.startswith("|"):
++            continue
++        parts = [part.strip() for part in line.strip().strip("|").split("|")]
++        if len(parts) < 4:
++            continue
++        rows.append(
++            {
++                "timestamp": parts[0],
++                "title": parts[1],
++                "outcome": parts[2],
++                "detail": parts[3],
++                "line": line,
++            }
++        )
++    return rows
++
++
++def _conductor_outcomes(root: Path) -> tuple[dict[str, JsonDict], list[str]]:
++    rows = _parse_conductor_log(root)
++    outcomes: dict[str, JsonDict] = {}
++    missing: list[str] = []
++    for task_id, pattern in CONDUCTOR_TITLE_PATTERNS.items():
++        matches = [row for row in rows if pattern in str(row["title"])]
++        if not matches:
++            missing.append(task_id)
++        latest = matches[-1] if matches else {}
++        outcomes[task_id] = {
++            "outcome": latest.get("outcome", "UNKNOWN"),
++            "detail": latest.get("detail", ""),
++            "source": CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++            "latest_evidence_line": latest.get("line", ""),
++            "evidence_lines": [str(row["line"]) for row in matches],
++            "attempt_count": len(matches),
++            "failure_count": sum(1 for row in matches if row.get("outcome") in {"FAIL", "SKIP"}),
++            "flagged_count": sum(1 for row in matches if row.get("outcome") == "FLAGGED"),
++        }
++    return outcomes, missing
++
++
++def _corrigendum_kinds(payload: JsonMap, severity: str) -> list[str]:
++    rows = payload.get("corrigendum_pending")
++    if not isinstance(rows, list):
++        return []
++    return [
++        str(row.get("kind"))
++        for row in rows
++        if isinstance(row, Mapping) and str(row.get("severity", "")).lower() == severity
++    ]
++
++
++def _canonical_artifacts(
++    root: Path,
++    matrix: Sequence[JsonMap],
++    conductor_outcomes: Mapping[str, JsonMap],
++) -> dict[str, JsonDict]:
++    rows: dict[str, JsonDict] = {}
++    for item in matrix:
++        task_id = str(item["task_id"])
++        rel_path = Path(str(item["declared_deliverable"]))
++        payload, metadata = _read_json_any(root / rel_path)
++        rows[task_id] = {
++            "identity": [MILESTONE_FROM, task_id, rel_path.as_posix()],
++            "path": rel_path.as_posix(),
++            "present": bool(metadata.get("exists")),
++            "loadable": bool(metadata.get("loadable")),
++            "sha256": metadata.get("sha256"),
++            "status": _artifact_terminal_status(payload, metadata),
++            "honest_verdict": payload.get("honest_verdict")
++            if isinstance(payload.get("honest_verdict"), str)
++            else "",
++            "accepted_finding_count": payload.get("accepted_finding_count"),
++            "artifact_flagged_adversarial": payload.get("flagged_adversarial") is True,
++            "artifact_critical_findings": _corrigendum_kinds(payload, "critical"),
++            "artifact_warn_findings": _corrigendum_kinds(payload, "warn"),
++            "upstream_artifact_hashes": payload.get("upstream_artifact_hashes")
++            if isinstance(payload.get("upstream_artifact_hashes"), Mapping)
++            else {},
++            "duration_s": payload.get("duration_s"),
++            "inference_substrate": payload.get("inference_substrate"),
++            "conductor_outcome": conductor_outcomes.get(task_id, {}).get("outcome", "UNKNOWN"),
++            "conductor_detail": conductor_outcomes.get(task_id, {}).get("detail", ""),
++            "selected_by": ARTIFACT_SELECTION_POLICY,
++            "error": metadata.get("error"),
++        }
++    return rows
++
++
++def _same_number_alias_groups(
++    root: Path, canonical_artifacts: Mapping[str, JsonMap]
++) -> dict[str, JsonDict]:
++    groups: dict[str, JsonDict] = {}
++    for task_id in EXPECTED_TASK_IDS:
++        number = _task_number(task_id)
++        if number is None or task_id not in canonical_artifacts:
++            continue
++        canonical = canonical_artifacts[task_id]
++        canonical_path = Path(str(canonical["path"]))
++        candidates = sorted((root / "results").glob(f"experiment_{number}*.json"))
++        aliases: list[JsonDict] = []
++        for candidate in candidates:
++            rel_path = candidate.relative_to(root)
++            if rel_path == canonical_path:
++                continue
++            payload, metadata = _read_json_any(candidate)
++            aliases.append(
++                {
++                    "path": rel_path.as_posix(),
++                    "present": bool(metadata.get("exists")),
++                    "loadable": bool(metadata.get("loadable")),
++                    "sha256": metadata.get("sha256"),
++                    "status": _artifact_terminal_status(payload, metadata),
++                    "role": "same_number_alias",
++                }
++            )
++        groups[number] = {
++            "experiment_number": number,
++            "canonical": {
++                "task_id": task_id,
++                "path": canonical["path"],
++                "present": canonical["present"],
++                "sha256": canonical["sha256"],
++                "status": canonical["status"],
++                "role": "canonical_declared_deliverable",
++            },
++            "aliases": aliases,
++            "selection_policy": ARTIFACT_SELECTION_POLICY,
++        }
++    return groups
++
++
++def _resource_receipts(root: Path, result_path: Path) -> JsonDict:
++    usage = shutil.disk_usage(root)
++    mem_available = None
++    meminfo = Path("/proc/meminfo")
++    if meminfo.exists():
++        for line in meminfo.read_text(encoding="utf-8", errors="replace").splitlines():
++            if line.startswith("MemAvailable:"):
++                mem_available = int(line.split()[1])
++                break
++    writable_candidates = (
++        root,
++        root / "results",
++        result_path.parent if result_path.is_absolute() else root / result_path.parent,
++        Path("/tmp"),
++    )
++    return {
++        "disk_free_bytes": usage.free,
++        "disk_total_bytes": usage.total,
++        "mem_available_kib": mem_available,
++        "writable_paths": {
++            path.as_posix(): {"present": path.exists(), "writable": os.access(path, os.W_OK)}
++            for path in writable_candidates
++        },
++    }
++
++
++def _duplicate_history_diagnostics(root: Path) -> JsonDict:
++    milestones = _research_complete_payload(root).get("milestones")
++    blocks = milestones if isinstance(milestones, list) else []
++    by_milestone: dict[str, list[JsonMap]] = defaultdict(list)
++    for block in blocks:
++        if isinstance(block, Mapping) and isinstance(block.get("id"), str):
++            by_milestone[str(block["id"])].append(block)
++    duplicates: list[JsonDict] = []
++    for milestone, milestone_blocks in sorted(by_milestone.items()):
++        if len(milestone_blocks) <= 1:
++            continue
++        duplicates.append(
++            {
++                "milestone": milestone,
++                "block_count": len(milestone_blocks),
++                "unique_block_signature_count": len(
++                    {_task_signature(block) for block in milestone_blocks}
++                ),
++                "mutation": "preserved_read_only",
++            }
++        )
++    from_blocks = by_milestone.get(MILESTONE_FROM, [])
++    return {
++        "history_mutation_policy": "append_once_if_absent_no_dedup_sort_or_rewrite",
++        "milestone_from_block_count": len(from_blocks),
++        "milestone_from_unique_signature_count": len(
++            {_task_signature(block) for block in from_blocks}
++        ),
++        "duplicate_milestone_blocks": duplicates,
++        "duplicate_history_block_count": sum(row["block_count"] - 1 for row in duplicates),
++    }
++
++
++def _next_range_tokens() -> tuple[str, ...]:
++    tokens: list[str] = []
++    for task_id, rel_path in NEXT_TASK_ARTIFACT_PATHS.items():
++        number = _task_number(task_id)
++        if number:
++            tokens.append(f"exp{number}")
++            tokens.append(f"experiment_{number}")
++        tokens.append(task_id)
++        tokens.append(rel_path.as_posix())
++    tokens.extend(path.as_posix() for path in NEXT_EXTRA_DELIVERABLE_PATHS)
++    return tuple(dict.fromkeys(tokens))
++
++
++def _text_has_next_range(text: str) -> bool:
++    lowered = text.lower()
++    return any(token.lower() in lowered for token in _next_range_tokens())
++
++
++def _collision_scan(root: Path, result_path: Path) -> JsonDict:
++    collisions: list[JsonDict] = []
++    allowed_references: list[JsonDict] = []
++    for rel_path in ALLOWED_ALLOCATION_TEXT_PATHS:
++        path = root / rel_path
++        if path.exists() and _text_has_next_range(
++            path.read_text(encoding="utf-8", errors="replace")
++        ):
++            allowed_references.append(
++                {"path": rel_path.as_posix(), "kind": "allowed_allocation_reference"}
++            )
++    for rel_path in COLLISION_TEXT_PATHS:
++        path = root / rel_path
++        if path.exists() and _text_has_next_range(
++            path.read_text(encoding="utf-8", errors="replace")
++        ):
++            collisions.append(
++                {"path": rel_path.as_posix(), "kind": "preexisting_content_reference"}
++            )
++
++    rel_result_path = result_path.relative_to(root) if result_path.is_absolute() else result_path
++    results_dir = root / "results"
++    for number in NEXT_RANGE_NUMBERS:
++        for candidate in sorted(results_dir.glob(f"experiment_{number}*")):
++            if not candidate.is_file():
++                continue
++            rel_path = candidate.relative_to(root)
++            if rel_path == rel_result_path:
++                continue
++            collisions.append({"path": rel_path.as_posix(), "kind": "preexisting_result_file"})
++
++    for candidate in sorted(results_dir.glob("experiment_*transition*.json")):
++        rel_path = candidate.relative_to(root)
++        if rel_path == rel_result_path:
++            continue
++        payload, metadata = _read_json_any(candidate)
++        if not metadata.get("loadable"):
++            continue
++        text = json.dumps(payload, sort_keys=True, ensure_ascii=True)
++        if payload.get("next_task_range") == NEXT_TASK_RANGE or _text_has_next_range(text):
++            collisions.append({"path": rel_path.as_posix(), "kind": "prior_transition_allocation"})
++
++    collisions = sorted(
++        {json.dumps(row, sort_keys=True): row for row in collisions}.values(),
++        key=lambda row: (str(row["path"]), str(row["kind"])),
++    )
++    return {
++        "next_task_ids": list(NEXT_TASK_IDS),
++        "next_declared_deliverables": [
++            NEXT_TASK_ARTIFACT_PATHS[task_id].as_posix() for task_id in NEXT_TASK_IDS
++        ],
++        "next_extra_deliverables": [path.as_posix() for path in NEXT_EXTRA_DELIVERABLE_PATHS],
++        "allowed_allocation_references": allowed_references,
++        "preexisting_collisions": collisions,
++        "preexisting_collision_count": len(collisions),
++        "collision_free": not collisions,
++    }
++
++
++def _git_modified(root: Path, rel_path: Path) -> bool:  # pragma: no cover - live repo check
++    result = subprocess.run(
++        ["git", "status", "--short", "--", rel_path.as_posix()],
++        cwd=root,
++        check=False,
++        text=True,
++        capture_output=True,
++    )
++    return bool(result.stdout.strip())
++
++
++def _protected_files(
++    root: Path,
++    modification_overrides: Mapping[Path, bool] | None,
++) -> dict[str, JsonDict]:
++    rows: dict[str, JsonDict] = {}
++    for rel_path in PROTECTED_FILE_PATHS:
++        if modification_overrides is not None and rel_path in modification_overrides:
++            modified = bool(modification_overrides[rel_path])
++            source = "test_override"
++        else:  # pragma: no cover - live artifact generation uses git status
++            modified = _git_modified(root, rel_path)
++            source = "git_status"
++        rows[rel_path.as_posix()] = {
++            "present": (root / rel_path).exists(),
++            "sha256": path_sha256(root / rel_path),
++            "modified_by_exp5837": modified,
++            "check_source": source,
++        }
++    return rows
++
++
++def _input_hashes(root: Path, canonical_artifacts: Mapping[str, JsonMap]) -> JsonDict:
++    source_paths = (
++        RESEARCH_COMPLETE_RELATIVE_PATH,
++        CONDUCTOR_LOG_RELATIVE_PATH,
++        EXCLUSION_MANIFEST_RELATIVE_PATH,
++        ROADMAP_RELATIVE_PATH,
++        ROADMAP_NEXT_RELATIVE_PATH,
++        VNEXT_RELATIVE_PATH,
++        EVIDENCE_INDEX_RELATIVE_PATH,
++        DOC_RECONCILE_RELATIVE_PATH,
++        SPEC_RELATIVE_PATH,
++    )
++    return {
++        "source_files": {
++            rel_path.as_posix(): {
++                "present": (root / rel_path).exists(),
++                "sha256": path_sha256(root / rel_path),
++            }
++            for rel_path in source_paths
++        },
++        "declared_deliverables": {
++            task_id: {"path": row["path"], "sha256": row["sha256"], "present": row["present"]}
++            for task_id, row in canonical_artifacts.items()
++        },
++    }
++
++
++def _default_verifier_command(path: Path) -> str:
++    return f".venv/bin/python scripts/adversarial_verify.py --json {path.as_posix()}"
++
++
++def _task_id_for_artifact_path(artifact_path: Path) -> str:
++    for task_id, rel_path in TASK_ARTIFACT_PATHS.items():
++        if rel_path == artifact_path:
++            return task_id
++    return ""
++
++
++def _flag_rows_from_stdout(stdout_json: Any) -> list[JsonDict]:
++    if not isinstance(stdout_json, Mapping):
++        return []
++    reports = stdout_json.get("reports")
++    if not isinstance(reports, list) or not reports:
++        return []
++    first = reports[0]
++    if not isinstance(first, Mapping):
++        return []
++    flags = first.get("flags")
++    return (
++        [dict(row) for row in flags if isinstance(row, Mapping)] if isinstance(flags, list) else []
++    )
++
++
++def _receipt_hash_payload(row: Mapping[str, Any]) -> bytes:
++    receipt = {
++        "command": row.get("command"),
++        "exit_code": row.get("exit_code"),
++        "stdout_json": row.get("stdout_json"),
++        "stderr": row.get("stderr", ""),
++        "stdout_parse_error": row.get("stdout_parse_error"),
++    }
++    return json.dumps(receipt, sort_keys=True, ensure_ascii=True).encode("utf-8")
++
++
++def normalize_adversarial_verifier_receipts(
++    receipts: Sequence[Mapping[str, Any]] | None,
++) -> list[JsonDict]:
++    by_task = {
++        str(row.get("task_id")): dict(row)
++        for row in receipts or []
++        if isinstance(row, Mapping) and row.get("task_id")
++    }
++    normalized: list[JsonDict] = []
++    for task_id in VERIFIER_TASK_IDS:
++        rel_path = TASK_ARTIFACT_PATHS.get(task_id, Path(""))
++        row = by_task.get(task_id)
++        if row is None:
++            normalized.append(
++                {
++                    "task_id": task_id,
++                    "artifact_path": rel_path.as_posix(),
++                    "command": _default_verifier_command(rel_path),
++                    "exit_code": None,
++                    "receipt_hash": None,
++                    "critical_findings": [],
++                    "warn_findings": [],
++                    "headline_eligible": False,
++                    "headline_ineligible_reason": "missing_live_receipt",
++                    "present": False,
++                }
++            )
++            continue
++        stdout_json = row.get("stdout_json")
++        flags = _flag_rows_from_stdout(stdout_json)
++        if not flags:
++            flags = [dict(flag) for flag in row.get("flags", []) if isinstance(flag, Mapping)]
++        critical = [flag for flag in flags if str(flag.get("severity", "")).lower() == "critical"]
++        warn = [flag for flag in flags if str(flag.get("severity", "")).lower() == "warn"]
++        exit_code = row.get("exit_code")
++        headline_reason = ""
++        headline_eligible = True
++        if critical:
++            headline_eligible = False
++            headline_reason = "fresh_critical_findings"
++        elif exit_code != 0:
++            headline_eligible = False
++            headline_reason = "verifier_exit_nonzero"
++        elif task_id == "exp5829-transfer-selective-replay-audit":
++            headline_eligible = False
++            headline_reason = "upstream_flagged_exp5828"
++        if headline_eligible:
++            headline_reason = "clean_live_receipt"
++        normalized.append(
++            {
++                "task_id": task_id,
++                "artifact_path": str(row.get("artifact_path") or rel_path.as_posix()),
++                "command": str(row.get("command") or _default_verifier_command(rel_path)),
++                "exit_code": exit_code,
++                "receipt_hash": row.get("receipt_hash") or sha256_bytes(_receipt_hash_payload(row)),
++                "critical_findings": critical,
++                "warn_findings": warn,
++                "headline_eligible": headline_eligible,
++                "headline_ineligible_reason": headline_reason,
++                "present": True,
++                "stdout_parse_error": row.get("stdout_parse_error"),
++            }
++        )
++    return normalized
++
++
++def run_adversarial_verifier(
++    root: Path,
++    artifact_path: Path,
++    *,
++    subprocess_run: Callable[..., Any] = subprocess.run,
++) -> JsonDict:
++    command = [
++        ".venv/bin/python",
++        "scripts/adversarial_verify.py",
++        "--json",
++        artifact_path.as_posix(),
++    ]
++    completed = subprocess_run(
++        command,
++        cwd=root,
++        check=False,
++        text=True,
++        capture_output=True,
++    )
++    stdout = str(completed.stdout)
++    stderr = str(completed.stderr)
++    stdout_json: JsonDict | None = None
++    parse_error = None
++    try:
++        parsed = json.loads(stdout)
++        stdout_json = parsed if isinstance(parsed, dict) else {"_non_mapping_stdout": parsed}
++    except json.JSONDecodeError as exc:
++        parse_error = str(exc)
++    row: JsonDict = {
++        "task_id": _task_id_for_artifact_path(artifact_path),
++        "artifact_path": artifact_path.as_posix(),
++        "command": " ".join(command),
++        "exit_code": int(completed.returncode),
++        "stdout_json": stdout_json,
++        "stderr": stderr,
++        "stdout_parse_error": parse_error,
++    }
++    row["receipt_hash"] = sha256_bytes(_receipt_hash_payload(row))
++    return row
++
++
++def run_adversarial_verifiers(
++    root: Path = REPO_ROOT,
++) -> list[JsonDict]:  # pragma: no cover - CLI path
++    return [
++        run_adversarial_verifier(root, TASK_ARTIFACT_PATHS[task_id])
++        for task_id in VERIFIER_TASK_IDS
++    ]
++
++
++def _receipt_by_task(receipts: Sequence[JsonMap]) -> dict[str, JsonMap]:
++    return {str(row["task_id"]): row for row in receipts}
++
++
++def _receipt_kinds(receipt: JsonMap, key: str) -> list[str]:
++    rows = receipt.get(key)
++    if not isinstance(rows, list):
++        return []
++    return [str(row.get("kind")) for row in rows if isinstance(row, Mapping)]
++
++
++def _exp5828_stamp_preserved(
++    canonical_artifacts: Mapping[str, JsonMap], receipts: Mapping[str, JsonMap]
++) -> bool:
++    artifact = canonical_artifacts.get("exp5828-future-validated-structural-memory", {})
++    receipt = receipts.get("exp5828-future-validated-structural-memory", {})
++    return (
++        artifact.get("artifact_flagged_adversarial") is True
++        and "DURATION_TOO_SHORT" in artifact.get("artifact_critical_findings", [])
++        and "METHODOLOGY_MISSING" in artifact.get("artifact_warn_findings", [])
++        and "DURATION_TOO_SHORT" in _receipt_kinds(receipt, "critical_findings")
++        and "METHODOLOGY_MISSING" in _receipt_kinds(receipt, "warn_findings")
++    )
++
++
++def _exp5829_upstream_tainted(canonical_artifacts: Mapping[str, JsonMap]) -> bool:
++    exp5828 = canonical_artifacts.get("exp5828-future-validated-structural-memory", {})
++    exp5829 = canonical_artifacts.get("exp5829-transfer-selective-replay-audit", {})
++    upstream = exp5829.get("upstream_artifact_hashes")
++    return (
++        isinstance(upstream, Mapping)
++        and exp5828.get("artifact_flagged_adversarial") is True
++        and upstream.get("exp5828_lifecycle_artifact") == exp5828.get("sha256")
++    )
++
++
++def _classify_outcomes(
++    canonical_artifacts: Mapping[str, JsonMap],
++    conductor_rows: Mapping[str, JsonMap],
++    receipts: Mapping[str, JsonMap],
++) -> JsonDict:
++    clean_positive: list[str] = []
++    clean_null: list[str] = []
++    clean_negative: list[str] = []
++    blocked_skipped: list[str] = []
++    flagged: list[str] = []
++    flagged_upstream: list[str] = []
++    missing: list[str] = []
++    by_task: dict[str, str] = {}
++    exp5828_preserved = _exp5828_stamp_preserved(canonical_artifacts, receipts)
++    exp5829_tainted = _exp5829_upstream_tainted(canonical_artifacts)
++    for task_id in EXPECTED_TASK_IDS:
++        artifact = canonical_artifacts.get(task_id, {})
++        status = artifact.get("status")
++        outcome = conductor_rows.get(task_id, {}).get("outcome")
++        if status in {"missing", "malformed"}:
++            missing.append(task_id)
++            by_task[task_id] = "missing"
++        elif task_id == "exp5828-future-validated-structural-memory" and exp5828_preserved:
++            flagged.append(task_id)
++            by_task[task_id] = "flagged"
++        elif task_id == "exp5829-transfer-selective-replay-audit":
++            if exp5829_tainted:
++                flagged_upstream.append(task_id)
++                by_task[task_id] = "flagged-upstream/provisional"
++            else:
++                missing.append(task_id)
++                by_task[task_id] = "missing"
++        elif outcome in {"GATE_BLOCK", "SKIP"} or status == "blocked":
++            blocked_skipped.append(task_id)
++            by_task[task_id] = "blocked/skipped"
++        elif (
++            task_id == "exp5824-v519-source-delta-ingestion"
++            and artifact.get("accepted_finding_count") == 0
++        ):
++            clean_null.append(task_id)
++            by_task[task_id] = "clean-null"
++        elif (
++            task_id
++            in {
++                "exp5823-transition-v519",
++                "exp5825-certified-adaptive-memory-contract",
++                "exp5826-out-of-template-constraint-stream",
++                "exp5827-minimal-core-structural-acquisition-ab",
++            }
++            and status == "complete"
++        ):
++            clean_positive.append(task_id)
++            by_task[task_id] = "clean-positive"
++        else:
++            missing.append(task_id)
++            by_task[task_id] = "missing"
++    return {
++        "clean_positive_task_ids": clean_positive,
++        "clean_null_task_ids": clean_null,
++        "clean_negative_task_ids": clean_negative,
++        "blocked_skipped_task_ids": blocked_skipped,
++        "flagged_task_ids": flagged,
++        "flagged_upstream_provisional_task_ids": flagged_upstream,
++        "missing_task_ids": missing,
++        "proposal_only_task_ids": list(RESERVED_UNACTIVATED_TASK_IDS),
++        "clean_success_task_ids": list(clean_positive),
++        "headline_eligible_task_ids": list(clean_positive),
++        "classification_by_task_id": by_task,
++        "classification_policy": (
++            "clean-positive, clean-null, clean-negative, blocked/skipped, flagged, "
++            "flagged-upstream/provisional, missing, and proposal-only classes are disjoint"
++        ),
++    }
++
++
++def _adversarial_receipt_failures(receipts: Mapping[str, JsonMap]) -> list[str]:
++    failures: list[str] = []
++    missing = [
++        task_id for task_id in VERIFIER_TASK_IDS if not receipts.get(task_id, {}).get("present")
++    ]
++    if missing:
++        failures.append(f"adversarial_receipts_missing={missing}")
++    for task_id in VERIFIER_TASK_IDS:
++        receipt = receipts.get(task_id, {})
++        critical = _receipt_kinds(receipt, "critical_findings")
++        warn = _receipt_kinds(receipt, "warn_findings")
++        exit_code = receipt.get("exit_code")
++        if task_id == "exp5828-future-validated-structural-memory":
++            if "DURATION_TOO_SHORT" not in critical or "METHODOLOGY_MISSING" not in warn:
++                failures.append("exp5828_live_stamp_not_preserved")
++            if exit_code == 0:
++                failures.append("exp5828_verifier_exit_unexpectedly_clean")
++        elif critical:
++            failures.append(f"{task_id}_unexpected_critical_findings={critical}")
++        elif exit_code != 0:
++            failures.append(f"{task_id}_verifier_exit_code={exit_code}")
++    return failures
++
++
++def _tests_failed(tests_run: Sequence[JsonMap]) -> list[str]:
++    return [
++        str(row.get("command"))
++        for row in tests_run
++        if row.get("exit_code") != 0 and row.get("blocking", True) is not False
++    ]
++
++
++def _field_principles_for(artifact: Mapping[str, Any]) -> dict[str, str]:
++    missing = [field for field in artifact if field not in FIELD_PRINCIPLES]
++    if missing:
++        raise KeyError(f"missing field principles: {missing}")
++    return {field: FIELD_PRINCIPLES[field] for field in artifact}
++
++
++def _hashes_for_sources(root: Path, sources: Sequence[str]) -> dict[str, str | None]:
++    hashes: dict[str, str | None] = {}
++    for source in sources:
++        path = root / source
++        hashes[source] = path_sha256(path) if path.is_file() else None
++    return hashes
++
++
++def _field_provenance_for(artifact: Mapping[str, Any], root: Path) -> dict[str, JsonDict]:
++    default_sources = ["python/carnot/experiment_5837_transition_v520.py"]
++    task_artifacts = [path.as_posix() for path in TASK_ARTIFACT_PATHS.values()]
++    source_files = [
++        RESEARCH_COMPLETE_RELATIVE_PATH.as_posix(),
++        CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++        EXCLUSION_MANIFEST_RELATIVE_PATH.as_posix(),
++        ROADMAP_RELATIVE_PATH.as_posix(),
++        ROADMAP_NEXT_RELATIVE_PATH.as_posix(),
++        VNEXT_RELATIVE_PATH.as_posix(),
++        EVIDENCE_INDEX_RELATIVE_PATH.as_posix(),
++        DOC_RECONCILE_RELATIVE_PATH.as_posix(),
++        SPEC_RELATIVE_PATH.as_posix(),
++    ]
++    sources_by_field: dict[str, list[str]] = {
++        "status": default_sources,
++        "preconditions_checked": [*source_files, *task_artifacts],
++        "milestone_transition": [
++            ROADMAP_RELATIVE_PATH.as_posix(),
++            RESEARCH_COMPLETE_RELATIVE_PATH.as_posix(),
++        ],
++        "declared_deliverable_matrix": [
++            RESEARCH_COMPLETE_RELATIVE_PATH.as_posix(),
++            CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++            *task_artifacts,
++        ],
++        "adversarial_verifier_receipts": [
++            "scripts/adversarial_verify.py",
++            *[TASK_ARTIFACT_PATHS[task_id].as_posix() for task_id in VERIFIER_TASK_IDS],
++        ],
++        "outcome_classification": [
++            CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++            *task_artifacts,
++        ],
++        "flagged_evidence_preserved": [
++            TASK_ARTIFACT_PATHS["exp5828-future-validated-structural-memory"].as_posix(),
++            TASK_ARTIFACT_PATHS["exp5829-transfer-selective-replay-audit"].as_posix(),
++            "scripts/adversarial_verify.py",
++        ],
++        "reserved_unactivated_task_ids": [
++            TASK_ARTIFACT_PATHS["exp5823-transition-v519"].as_posix(),
++            VNEXT_RELATIVE_PATH.as_posix(),
++        ],
++        "research_complete_append_count": [RESEARCH_COMPLETE_RELATIVE_PATH.as_posix()],
++        "next_task_range": [ROADMAP_RELATIVE_PATH.as_posix(), VNEXT_RELATIVE_PATH.as_posix()],
++        "next_range_collision_count": [
++            RESEARCH_COMPLETE_RELATIVE_PATH.as_posix(),
++            EXCLUSION_MANIFEST_RELATIVE_PATH.as_posix(),
++            ROADMAP_RELATIVE_PATH.as_posix(),
++            ROADMAP_NEXT_RELATIVE_PATH.as_posix(),
++            VNEXT_RELATIVE_PATH.as_posix(),
++            "results/",
++        ],
++        "docs_reconciled": [
++            SPEC_RELATIVE_PATH.as_posix(),
++            "tests/python/test_experiment_5837_transition_v520.py",
++            "python/carnot/experiment_5837_transition_v520.py",
++        ],
++        "duration_s": default_sources,
++        "inference_substrate": default_sources,
++        "field_provenance": [default_sources[0], SPEC_RELATIVE_PATH.as_posix()],
++        "test_commands": ["operator_test_receipts", "scripts/adversarial_verify.py"],
++        "test_exit_codes": ["operator_test_receipts", "scripts/adversarial_verify.py"],
++        "reproducibility_checksum": ["artifact_payload_excluding_checksum"],
++        "honest_verdict": default_sources,
++    }
++    return {
++        field: {
++            "principle": FIELD_PRINCIPLES[field],
++            "sources": sources_by_field.get(field, default_sources),
++            "sha256_by_source": _hashes_for_sources(
++                root, sources_by_field.get(field, default_sources)
++            ),
++            "derivation": "direct_read_or_deterministic_reconciliation",
++        }
++        for field in artifact
++    }
++
++
++def build_report(
++    root: Path = REPO_ROOT,
++    *,
++    adversarial_receipts: Sequence[JsonMap] | None = None,
++    tests_run: Sequence[JsonMap] | None = None,
++    modification_overrides: Mapping[Path, bool] | None = None,
++    duration_s: float | None = None,
++    result_path: Path | None = None,
++) -> JsonDict:
++    started = time.perf_counter()
++    root = root.resolve()
++    result_path = result_path or root / RESULT_RELATIVE_PATH
++    append_receipt = _append_research_complete_if_absent(root)
++    roadmap_active = _roadmap_summary(root / ROADMAP_RELATIVE_PATH)
++    roadmap_next = _roadmap_summary(root / ROADMAP_NEXT_RELATIVE_PATH)
++    declared_matrix, complete_stats, matrix_failures = _declared_deliverable_matrix(
++        root, int(append_receipt["append_count"])
++    )
++    conductor_rows, missing_conductor_task_ids = _conductor_outcomes(root)
++    canonical_artifacts = _canonical_artifacts(root, declared_matrix, conductor_rows)
++    normalized_receipts = normalize_adversarial_verifier_receipts(adversarial_receipts)
++    receipts_by_task = _receipt_by_task(normalized_receipts)
++    alias_groups = _same_number_alias_groups(root, canonical_artifacts)
++    outcome_classification = _classify_outcomes(
++        canonical_artifacts, conductor_rows, receipts_by_task
++    )
++    collision_scan = _collision_scan(root, result_path)
++    duplicate_history = _duplicate_history_diagnostics(root)
++    protected_files = _protected_files(root, modification_overrides)
++    input_hashes = _input_hashes(root, canonical_artifacts)
++    run_rows = [dict(row) for row in (tests_run if tests_run is not None else DEFAULT_TESTS_RUN)]
++
++    exp5829_tainted = _exp5829_upstream_tainted(canonical_artifacts)
++    for row in declared_matrix:
++        task_id = str(row["task_id"])
++        artifact = canonical_artifacts[task_id]
++        conductor = conductor_rows[task_id]
++        receipt = receipts_by_task.get(task_id, {})
++        row["canonical_artifact_path"] = artifact["path"]
++        row["canonical_artifact_present"] = artifact["present"]
++        row["canonical_artifact_loadable"] = artifact["loadable"]
++        row["canonical_artifact_sha256"] = artifact["sha256"]
++        row["canonical_artifact_status"] = artifact["status"]
++        row["canonical_artifact_honest_verdict"] = artifact["honest_verdict"]
++        row["artifact_flagged_adversarial"] = artifact["artifact_flagged_adversarial"]
++        row["artifact_critical_findings"] = artifact["artifact_critical_findings"]
++        row["artifact_warn_findings"] = artifact["artifact_warn_findings"]
++        row["conductor_outcome"] = conductor["outcome"]
++        row["conductor_latest_evidence_line"] = conductor["latest_evidence_line"]
++        row["outcome_class"] = outcome_classification["classification_by_task_id"].get(task_id)
++        if task_id in VERIFIER_TASK_IDS:
++            row["adversarial_exit_code"] = receipt.get("exit_code")
++            row["adversarial_receipt_hash"] = receipt.get("receipt_hash")
++            row["adversarial_critical_findings"] = _receipt_kinds(receipt, "critical_findings")
++            row["adversarial_warn_findings"] = _receipt_kinds(receipt, "warn_findings")
++            row["headline_eligible"] = receipt.get("headline_eligible")
++        if task_id == "exp5829-transfer-selective-replay-audit":
++            row["upstream_taint_source_task_id"] = (
++                "exp5828-future-validated-structural-memory" if exp5829_tainted else None
++            )
++
++    research_roadmap_unchanged = not protected_files[ROADMAP_RELATIVE_PATH.as_posix()][
++        "modified_by_exp5837"
++    ]
++    conductor_unchanged = not protected_files[CONDUCTOR_RELATIVE_PATH.as_posix()][
++        "modified_by_exp5837"
++    ]
++    missing_or_malformed = [
++        task_id
++        for task_id, row in canonical_artifacts.items()
++        if row["status"] in {"missing", "malformed"}
++    ]
++    exp5828_artifact_preserved = (
++        canonical_artifacts["exp5828-future-validated-structural-memory"].get(
++            "artifact_flagged_adversarial"
++        )
++        is True
++        and "DURATION_TOO_SHORT"
++        in canonical_artifacts["exp5828-future-validated-structural-memory"].get(
++            "artifact_critical_findings", []
++        )
++        and "METHODOLOGY_MISSING"
++        in canonical_artifacts["exp5828-future-validated-structural-memory"].get(
++            "artifact_warn_findings", []
++        )
++    )
++    flagged_evidence_preserved = (
++        exp5828_artifact_preserved
++        and _exp5828_stamp_preserved(canonical_artifacts, receipts_by_task)
++        and exp5829_tainted
++        and not set(outcome_classification["flagged_task_ids"]).intersection(
++            outcome_classification["clean_success_task_ids"]
++        )
++        and not set(outcome_classification["flagged_upstream_provisional_task_ids"]).intersection(
++            outcome_classification["clean_success_task_ids"]
++        )
++    )
++    failed_tests = _tests_failed(run_rows)
++
++    failed_preconditions = list(matrix_failures)
++    if append_receipt["reason"] == "research_complete_unparseable":
++        failed_preconditions.append("research_complete_unparseable")
++    if not roadmap_active["parsed"]:
++        failed_preconditions.append("active_roadmap_unparseable")
++    if roadmap_active["milestone"] != MILESTONE_TO:
++        failed_preconditions.append(f"active_roadmap_milestone={roadmap_active['milestone']!r}")
++    if not set(roadmap_active["task_ids"]).issubset(set(NEXT_TASK_IDS)):
++        failed_preconditions.append(f"active_roadmap_task_ids={roadmap_active['task_ids']}")
++    if roadmap_next["present"] and not roadmap_next["parsed"]:
++        failed_preconditions.append("next_roadmap_unparseable")
++    if missing_or_malformed:
++        failed_preconditions.append(
++            f"missing_or_malformed_declared_deliverables={missing_or_malformed}"
++        )
++    if missing_conductor_task_ids:
++        failed_preconditions.append(f"missing_conductor_outcomes={missing_conductor_task_ids}")
++    if not exp5828_artifact_preserved:
++        failed_preconditions.append("exp5828_artifact_stamp_not_preserved")
++    if not exp5829_tainted:
++        failed_preconditions.append("exp5829_upstream_taint_not_preserved")
++    failed_preconditions.extend(_adversarial_receipt_failures(receipts_by_task))
++    if collision_scan["preexisting_collision_count"]:
++        failed_preconditions.append(
++            f"next_range_collision_count={collision_scan['preexisting_collision_count']}"
++        )
++    if not research_roadmap_unchanged:
++        failed_preconditions.append("research_roadmap_modified")
++    if not conductor_unchanged:
++        failed_preconditions.append("research_conductor_modified")
++    if failed_tests:
++        failed_preconditions.append(f"test_failures={failed_tests}")
++
++    status = "blocked" if failed_preconditions else "complete"
++    measured_duration = duration_s
++    if measured_duration is None:
++        measured_duration = round(max(time.perf_counter() - started, 0.000001), 6)
++    verifier_commands = [str(row["command"]) for row in normalized_receipts]
++    test_commands = [*verifier_commands, *[str(row.get("command")) for row in run_rows]]
++    test_exit_codes = {
++        **{str(row["command"]): row.get("exit_code") for row in normalized_receipts},
++        **{str(row.get("command")): row.get("exit_code") for row in run_rows},
++    }
++
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH.as_posix(),
++        "field_principles": {},
++        "status": status,
++        "preconditions_checked": {
++            "roadmaps": {"active": roadmap_active, "next": roadmap_next},
++            "input_hashes": input_hashes,
++            "declared_deliverable_count": len(declared_matrix),
++            "canonical_artifact_count": len(canonical_artifacts),
++            "canonical_hash_count": sum(1 for row in canonical_artifacts.values() if row["sha256"]),
++            "same_number_alias_group_count": len(alias_groups),
++            "adversarial_verifier_receipt_count": sum(
++                1 for row in normalized_receipts if row.get("present")
++            ),
++            "next_range_collision_count": collision_scan["preexisting_collision_count"],
++            "resource_receipts": _resource_receipts(root, result_path),
++            "research_complete_append_receipt": append_receipt,
++            "research_roadmap_unchanged": research_roadmap_unchanged,
++            "conductor_unchanged": conductor_unchanged,
++            **complete_stats,
++            "failed_preconditions": failed_preconditions,
++        },
++        "milestone_transition": {
++            "source_milestone": MILESTONE_FROM,
++            "destination_milestone": MILESTONE_TO,
++            "task_identity_tuple": ["milestone", "task_id", "declared_deliverable"],
++        },
++        "canonical_identity_contract": {
++            "identity_tuple": ["milestone", "task_id", "declared_deliverable"],
++            "canonical_path_rule": "exact declared_deliverable only",
++            "numeric_prefix_matches": "aliases_only",
++            "proposal_only_tasks": "reserved_unactivated_not_execution_evidence",
++            "selection_policy": ARTIFACT_SELECTION_POLICY,
++        },
++        "declared_deliverable_matrix": declared_matrix,
++        "same_number_alias_groups": alias_groups,
++        "adversarial_verifier_receipts": normalized_receipts,
++        "outcome_classification": outcome_classification,
++        "flagged_evidence_preserved": flagged_evidence_preserved,
++        "reserved_unactivated_task_ids": list(RESERVED_UNACTIVATED_TASK_IDS),
++        "reserved_unactivated_range": RESERVED_TASK_RANGE,
++        "research_complete_append_count": int(complete_stats["research_complete_append_count"]),
++        "duplicate_history_diagnostics": duplicate_history,
++        "collision_scan": collision_scan,
++        "next_task_range": NEXT_TASK_RANGE,
++        "next_range_collision_count": collision_scan["preexisting_collision_count"],
++        "docs_reconciled": {
++            "mode": "transition_owned_spec_tests_module_result_only",
++            "operator_owned_docs_deferred": True,
++            "deferred_files": [
++                "_bmad/traceability.md",
++                "ops/status.md",
++                "ops/changelog.md",
++            ],
++            "transition_owned_files": [
++                SPEC_RELATIVE_PATH.as_posix(),
++                "python/carnot/experiment_5837_transition_v520.py",
++                "tests/python/test_experiment_5837_transition_v520.py",
++                RESULT_RELATIVE_PATH.as_posix(),
++            ],
++            "deferred_reason": "operator stop-when-done rule delegates ops/status/traceability updates",
++        },
++        "research_roadmap_unchanged": research_roadmap_unchanged,
++        "conductor_unchanged": conductor_unchanged,
++        "duration_s": measured_duration,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_provenance": {},
++        "test_commands": test_commands,
++        "test_exit_codes": test_exit_codes,
++        "reproducibility_checksum": "",
++        "honest_verdict": (
++            "blocked: exp5837 transition preconditions failed: " + "; ".join(failed_preconditions)
++            if failed_preconditions
++            else (
++                "complete: archived terminal .519 evidence by exact declared deliverables "
++                "into .520; Exp5828 flagged stamp preserved; Exp5829 upstream taint "
++                "preserved as provisional; Exp5830-Exp5836 tombstoned; "
++                "next_range_collision_count=0; research_complete_append_count="
++                f"{complete_stats['research_complete_append_count']}"
++            )
++        ),
++    }
++    artifact["field_principles"] = _field_principles_for(artifact)
++    artifact["field_provenance"] = _field_provenance_for(artifact, root)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def emit_report(
++    root: Path = REPO_ROOT,
++    *,
++    output_path: Path | None = None,
++    adversarial_receipts: Sequence[JsonMap] | None = None,
++    tests_run: Sequence[JsonMap] | None = None,
++    modification_overrides: Mapping[Path, bool] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    output_path = output_path or root / RESULT_RELATIVE_PATH
++    artifact = build_report(
++        root,
++        adversarial_receipts=adversarial_receipts,
++        tests_run=tests_run,
++        modification_overrides=modification_overrides,
++        duration_s=duration_s,
++        result_path=output_path,
++    )
++    write_json(output_path, artifact)
++    return artifact
++
++
++def _load_json_list(path: Path | None) -> list[JsonDict]:  # pragma: no cover - CLI convenience
++    if path is None:
++        return []
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, list):
++        raise ValueError("JSON input must be a list")
++    return [dict(row) for row in payload if isinstance(row, Mapping)]
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - thin CLI wrapper
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--output", type=Path, default=None)
++    parser.add_argument("--tests-run-json", type=Path, default=None)
++    parser.add_argument("--adversarial-receipts-json", type=Path, default=None)
++    parser.add_argument("--run-adversarial", action="store_true")
++    args = parser.parse_args(argv)
++    receipts = (
++        run_adversarial_verifiers(args.root)
++        if args.run_adversarial
++        else _load_json_list(args.adversarial_receipts_json)
++    )
++    emit_report(
++        args.root,
++        output_path=args.output,
++        adversarial_receipts=receipts,
++        tests_run=_load_json_list(args.tests_run_json),
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_5837_transition_v520.json b/results/experiment_5837_transition_v520.json
+new file mode 100644
+index 0000000000..d0a1abc23b
+--- /dev/null
++++ b/results/experiment_5837_transition_v520.json
+@@ -0,0 +1,1252 @@
++{
++  "adversarial_verifier_receipts": [
++    {
++      "artifact_path": "results/experiment_5825_certified_adaptive_memory_contract.json",
++      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5825_certified_adaptive_memory_contract.json",
++      "critical_findings": [],
++      "exit_code": 0,
++      "headline_eligible": true,
++      "headline_ineligible_reason": "clean_live_receipt",
++      "present": true,
++      "receipt_hash": "sha256:3a8d1a53f393578bb21c18970376d8c1dc67c4cec4177c3dfb028ce886be9f4e",
++      "stdout_parse_error": null,
++      "task_id": "exp5825-certified-adaptive-memory-contract",
++      "warn_findings": []
++    },
++    {
++      "artifact_path": "results/experiment_5826_out_of_template_constraint_stream.json",
++      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5826_out_of_template_constraint_stream.json",
++      "critical_findings": [],
++      "exit_code": 0,
++      "headline_eligible": true,
++      "headline_ineligible_reason": "clean_live_receipt",
++      "present": true,
++      "receipt_hash": "sha256:549871b871166860bcaf3c2b4ce27c02db99d65e339fc2fda0cbcd37775403b9",
++      "stdout_parse_error": null,
++      "task_id": "exp5826-out-of-template-constraint-stream",
++      "warn_findings": []
++    },
++    {
++      "artifact_path": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++      "critical_findings": [],
++      "exit_code": 0,
++      "headline_eligible": true,
++      "headline_ineligible_reason": "clean_live_receipt",
++      "present": true,
++      "receipt_hash": "sha256:76daa2e2dade62ea991ea86a1be6ff0c0e0ea8a26c48dfc5eec93e1e93d1cc33",
++      "stdout_parse_error": null,
++      "task_id": "exp5827-minimal-core-structural-acquisition-ab",
++      "warn_findings": []
++    },
++    {
++      "artifact_path": "results/experiment_5828_future_validated_structural_memory.json",
++      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5828_future_validated_structural_memory.json",
++      "critical_findings": [
++        {
++          "detail": "duration_s=0.793358 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        }
++      ],
++      "exit_code": 1,
++      "headline_eligible": false,
++      "headline_ineligible_reason": "fresh_critical_findings",
++      "present": true,
++      "receipt_hash": "sha256:a62f9b35be05d85008f589e3acc931eea0b3ccd06f7159ca7842078d0385a667",
++      "stdout_parse_error": null,
++      "task_id": "exp5828-future-validated-structural-memory",
++      "warn_findings": [
++        {
++          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
++          "kind": "METHODOLOGY_MISSING",
++          "severity": "warn"
++        }
++      ]
++    },
++    {
++      "artifact_path": "results/experiment_5829_transfer_selective_replay_audit.json",
++      "command": ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5829_transfer_selective_replay_audit.json",
++      "critical_findings": [],
++      "exit_code": 0,
++      "headline_eligible": false,
++      "headline_ineligible_reason": "upstream_flagged_exp5828",
++      "present": true,
++      "receipt_hash": "sha256:416a94f305ac09ff51dfd895d75f615ce1ed258bc7ddd896e53911025023bd19",
++      "stdout_parse_error": null,
++      "task_id": "exp5829-transfer-selective-replay-audit",
++      "warn_findings": []
++    }
++  ],
++  "canonical_identity_contract": {
++    "canonical_path_rule": "exact declared_deliverable only",
++    "identity_tuple": [
++      "milestone",
++      "task_id",
++      "declared_deliverable"
++    ],
++    "numeric_prefix_matches": "aliases_only",
++    "proposal_only_tasks": "reserved_unactivated_not_execution_evidence",
++    "selection_policy": "exact_declared_deliverable"
++  },
++  "collision_scan": {
++    "allowed_allocation_references": [
++      {
++        "kind": "allowed_allocation_reference",
++        "path": "research-roadmap.yaml"
++      },
++      {
++        "kind": "allowed_allocation_reference",
++        "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
++      }
++    ],
++    "collision_free": true,
++    "next_declared_deliverables": [
++      "results/experiment_5837_transition_v520.json",
++      "results/experiment_5838_v520_source_delta_ingestion.json",
++      "results/experiment_5839_v519_evidence_qualification.json",
++      "results/experiment_5840_exact_counterfactual_embedding_fixture.json",
++      "results/experiment_5841_sota_comparative_embedding_corpus.json",
++      "results/experiment_5842_cross_family_comparative_energy_verifier.json",
++      "results/experiment_5843_sparse_oracle_continuous_learning.json",
++      "results/experiment_5844_arc_write_protected_fact_tape.json",
++      "results/experiment_5845_arc_world_feedback_acquisition_ab.json",
++      "results/experiment_5846_bounded_adaptive_memory_microkernel.json",
++      "results/experiment_5847_attached_board_memory_receipts.json",
++      "results/experiment_5848_capstone_v520.json"
++    ],
++    "next_extra_deliverables": [
++      "results/experiment_5840_exact_counterfactual_embedding_fixture.rows.jsonl",
++      "results/experiment_5841_sota_comparative_embedding_corpus.npz"
++    ],
++    "next_task_ids": [
++      "exp5837-transition-v520",
++      "exp5838-v520-source-delta-ingestion",
++      "exp5839-v519-evidence-qualification",
++      "exp5840-exact-counterfactual-embedding-fixture",
++      "exp5841-sota-comparative-embedding-corpus",
++      "exp5842-cross-family-comparative-energy-verifier",
++      "exp5843-sparse-oracle-continuous-learning",
++      "exp5844-arc-write-protected-fact-tape",
++      "exp5845-arc-world-feedback-acquisition-ab",
++      "exp5846-bounded-adaptive-memory-microkernel",
++      "exp5847-attached-board-memory-receipts",
++      "exp5848-capstone-v520"
++    ],
++    "preexisting_collision_count": 0,
++    "preexisting_collisions": []
++  },
++  "conductor_unchanged": true,
++  "declared_deliverable_matrix": [
++    {
++      "artifact_critical_findings": [],
++      "artifact_flagged_adversarial": false,
++      "artifact_warn_findings": [],
++      "canonical_artifact_honest_verdict": "complete: archived terminal .518 evidence by exact declared deliverables into .519; Exp5813 clean-negative answer transport retired; Exp5816-Exp5822 tombstoned; next_range_collision_count=0; research_complete_append_count=0",
++      "canonical_artifact_loadable": true,
++      "canonical_artifact_path": "results/experiment_5823_transition_v519.json",
++      "canonical_artifact_present": true,
++      "canonical_artifact_sha256": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
++      "canonical_artifact_status": "complete",
++      "conductor_latest_evidence_line": "| 2026-07-23 00:09 UTC | Archive terminal .518 evidence, retire finite-ID a | OK | 118 passed, 1 warning in 14.42s |",
++      "conductor_outcome": "OK",
++      "declared_deliverable": "results/experiment_5823_transition_v519.json",
++      "identity": [
++        "2026.07.519",
++        "exp5823-transition-v519",
++        "results/experiment_5823_transition_v519.json"
++      ],
++      "milestone": "2026.07.519",
++      "outcome_class": "clean-positive",
++      "research_complete_result": "OK (conductor)",
++      "selection_policy": "exact_declared_deliverable",
++      "task_id": "exp5823-transition-v519",
++      "title": "Archive terminal .518 evidence, retire finite-ID answer transport, and allocate .519"
++    },
++    {
++      "artifact_critical_findings": [],
++      "artifact_flagged_adversarial": false,
++      "artifact_warn_findings": [],
++      "canonical_artifact_honest_verdict": "complete: no accepted post-V519 source deltas; references unchanged",
++      "canonical_artifact_loadable": true,
++      "canonical_artifact_path": "results/experiment_5824_v519_source_delta_ingestion.json",
++      "canonical_artifact_present": true,
++      "canonical_artifact_sha256": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
++      "canonical_artifact_status": "complete",
++      "conductor_latest_evidence_line": "| 2026-07-23 00:33 UTC | Time-windowed post-V519 literature and implementat | OK | 88 passed, 2 warnings in 11.65s |",
++      "conductor_outcome": "OK",
++      "declared_deliverable": "results/experiment_5824_v519_source_delta_ingestion.json",
++      "identity": [
++        "2026.07.519",
++        "exp5824-v519-source-delta-ingestion",
++        "results/experiment_5824_v519_source_delta_ingestion.json"
++      ],
++      "milestone": "2026.07.519",
++      "outcome_class": "clean-null",
++      "research_complete_result": "OK (conductor)",
++      "selection_policy": "exact_declared_deliverable",
++      "task_id": "exp5824-v519-source-delta-ingestion",
++      "title": "Time-windowed post-V519 literature and implementation freshness receipt"
++    },
++    {
++      "adversarial_critical_findings": [],
++      "adversarial_exit_code": 0,
++      "adversarial_receipt_hash": "sha256:3a8d1a53f393578bb21c18970376d8c1dc67c4cec4177c3dfb028ce886be9f4e",
++      "adversarial_warn_findings": [],
++      "artifact_critical_findings": [],
++      "artifact_flagged_adversarial": false,
++      "artifact_warn_findings": [],
++      "canonical_artifact_honest_verdict": "complete: certified_adaptive_memory_contract_ready",
++      "canonical_artifact_loadable": true,
++      "canonical_artifact_path": "results/experiment_5825_certified_adaptive_memory_contract.json",
++      "canonical_artifact_present": true,
++      "canonical_artifact_sha256": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
++      "canonical_artifact_status": "complete",
++      "conductor_latest_evidence_line": "| 2026-07-23 01:34 UTC | Canonical certified-event and adaptive-memory pref | OK | 140 passed, 1 warning in 26.89s |",
++      "conductor_outcome": "OK",
++      "declared_deliverable": "results/experiment_5825_certified_adaptive_memory_contract.json",
++      "headline_eligible": true,
++      "identity": [
++        "2026.07.519",
++        "exp5825-certified-adaptive-memory-contract",
++        "results/experiment_5825_certified_adaptive_memory_contract.json"
++      ],
++      "milestone": "2026.07.519",
++      "outcome_class": "clean-positive",
++      "research_complete_result": "OK (conductor)",
++      "selection_policy": "exact_declared_deliverable",
++      "task_id": "exp5825-certified-adaptive-memory-contract",
++      "title": "Canonical certified-event and adaptive-memory preflight contract"
++    },
++    {
++      "adversarial_critical_findings": [],
++      "adversarial_exit_code": 0,
++      "adversarial_receipt_hash": "sha256:549871b871166860bcaf3c2b4ce27c02db99d65e339fc2fda0cbcd37775403b9",
++      "adversarial_warn_findings": [],
++      "artifact_critical_findings": [],
++      "artifact_flagged_adversarial": false,
++      "artifact_warn_findings": [],
++      "canonical_artifact_honest_verdict": "complete: out_of_template_constraint_event_stream_ready",
++      "canonical_artifact_loadable": true,
++      "canonical_artifact_path": "results/experiment_5826_out_of_template_constraint_stream.json",
++      "canonical_artifact_present": true,
++      "canonical_artifact_sha256": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
++      "canonical_artifact_status": "complete",
++      "conductor_latest_evidence_line": "| 2026-07-23 01:57 UTC | Gated on Exp5825 contract: chronological out-of-te | OK | 88 passed, 1 warning in 28.86s |",
++      "conductor_outcome": "OK",
++      "declared_deliverable": "results/experiment_5826_out_of_template_constraint_stream.json",
++      "headline_eligible": true,
++      "identity": [
++        "2026.07.519",
++        "exp5826-out-of-template-constraint-stream",
++        "results/experiment_5826_out_of_template_constraint_stream.json"
++      ],
++      "milestone": "2026.07.519",
++      "outcome_class": "clean-positive",
++      "research_complete_result": "OK (conductor)",
++      "selection_policy": "exact_declared_deliverable",
++      "task_id": "exp5826-out-of-template-constraint-stream",
++      "title": "Gated on Exp5825 contract: chronological out-of-template constraint structure stream"
++    },
++    {
++      "adversarial_critical_findings": [],
++      "adversarial_exit_code": 0,
++      "adversarial_receipt_hash": "sha256:76daa2e2dade62ea991ea86a1be6ff0c0e0ea8a26c48dfc5eec93e1e93d1cc33",
++      "adversarial_warn_findings": [],
++      "artifact_critical_findings": [],
++      "artifact_flagged_adversarial": false,
++      "artifact_warn_findings": [],
++      "canonical_artifact_honest_verdict": "complete: structural_learning_credited",
++      "canonical_artifact_loadable": true,
++      "canonical_artifact_path": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++      "canonical_artifact_present": true,
++      "canonical_artifact_sha256": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
++      "canonical_artifact_status": "complete",
++      "conductor_latest_evidence_line": "| 2026-07-23 02:18 UTC | Gated on Exp5826 stream: minimal-core and active-q | OK | 88 passed, 1 warning in 21.45s |",
++      "conductor_outcome": "OK",
++      "declared_deliverable": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++      "headline_eligible": true,
++      "identity": [
++        "2026.07.519",
++        "exp5827-minimal-core-structural-acquisition-ab",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json"
++      ],
++      "milestone": "2026.07.519",
++      "outcome_class": "clean-positive",
++      "research_complete_result": "OK (conductor)",
++      "selection_policy": "exact_declared_deliverable",
++      "task_id": "exp5827-minimal-core-structural-acquisition-ab",
++      "title": "Gated on Exp5826 stream: minimal-core and active-query structural acquisition A/B"
++    },
++    {
++      "adversarial_critical_findings": [
++        "DURATION_TOO_SHORT"
++      ],
++      "adversarial_exit_code": 1,
++      "adversarial_receipt_hash": "sha256:a62f9b35be05d85008f589e3acc931eea0b3ccd06f7159ca7842078d0385a667",
++      "adversarial_warn_findings": [
++        "METHODOLOGY_MISSING"
++      ],
++      "artifact_critical_findings": [
++        "DURATION_TOO_SHORT"
++      ],
++      "artifact_flagged_adversarial": true,
++      "artifact_warn_findings": [
++        "METHODOLOGY_MISSING"
++      ],
++      "canonical_artifact_honest_verdict": "complete: future_validated_structural_memory_lifecycle_credited",
++      "canonical_artifact_loadable": true,
++      "canonical_artifact_path": "results/experiment_5828_future_validated_structural_memory.json",
++      "canonical_artifact_present": true,
++      "canonical_artifact_sha256": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
++      "canonical_artifact_status": "complete",
++      "conductor_latest_evidence_line": "| 2026-07-23 03:14 UTC | Gated on Exp5827 structural lift: future-validated | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
++      "conductor_outcome": "FLAGGED",
++      "declared_deliverable": "results/experiment_5828_future_validated_structural_memory.json",
++      "headline_eligible": false,
++      "identity": [
++        "2026.07.519",
++        "exp5828-future-validated-structural-memory",
++        "results/experiment_5828_future_validated_structural_memory.json"
++      ],
++      "milestone": "2026.07.519",
++      "outcome_class": "flagged",
++      "research_complete_result": "OK (conductor)",
++      "selection_policy": "exact_declared_deliverable",
++      "task_id": "exp5828-future-validated-structural-memory",
++      "title": "Gated on Exp5827 structural lift: future-validated write-protected continuous memory"
++    },
++    {
++      "adversarial_critical_findings": [],
++      "adversarial_exit_code": 0,
++      "adversarial_receipt_hash": "sha256:416a94f305ac09ff51dfd895d75f615ce1ed258bc7ddd896e53911025023bd19",
++      "adversarial_warn_findings": [],
++      "artifact_critical_findings": [],
++      "artifact_flagged_adversarial": false,
++      "artifact_warn_findings": [],
++      "canonical_artifact_honest_verdict": "positive: signature_compatible_replay_credited",
++      "canonical_artifact_loadable": true,
++      "canonical_artifact_path": "results/experiment_5829_transfer_selective_replay_audit.json",
++      "canonical_artifact_present": true,
++      "canonical_artifact_sha256": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
++      "canonical_artifact_status": "complete",
++      "conductor_latest_evidence_line": "| 2026-07-23 03:37 UTC | Gated on Exp5828 durable memory: transfer-selectiv | OK | 88 passed, 1 warning in 33.81s |",
++      "conductor_outcome": "OK",
++      "declared_deliverable": "results/experiment_5829_transfer_selective_replay_audit.json",
++      "headline_eligible": false,
++      "identity": [
++        "2026.07.519",
++        "exp5829-transfer-selective-replay-audit",
++        "results/experiment_5829_transfer_selective_replay_audit.json"
++      ],
++      "milestone": "2026.07.519",
++      "outcome_class": "flagged-upstream/provisional",
++      "research_complete_result": "OK (conductor)",
++      "selection_policy": "exact_declared_deliverable",
++      "task_id": "exp5829-transfer-selective-replay-audit",
++      "title": "Gated on Exp5828 durable memory: transfer-selective replay and recurrence audit",
++      "upstream_taint_source_task_id": "exp5828-future-validated-structural-memory"
++    }
++  ],
++  "docs_reconciled": {
++    "deferred_files": [
++      "_bmad/traceability.md",
++      "ops/status.md",
++      "ops/changelog.md"
++    ],
++    "deferred_reason": "operator stop-when-done rule delegates ops/status/traceability updates",
++    "mode": "transition_owned_spec_tests_module_result_only",
++    "operator_owned_docs_deferred": true,
++    "transition_owned_files": [
++      "openspec/capabilities/research-reporting/spec.md",
++      "python/carnot/experiment_5837_transition_v520.py",
++      "tests/python/test_experiment_5837_transition_v520.py",
++      "results/experiment_5837_transition_v520.json"
++    ]
++  },
++  "duplicate_history_diagnostics": {
++    "duplicate_history_block_count": 895,
++    "duplicate_milestone_blocks": [
++      {
++        "block_count": 684,
++        "milestone": "2026.07.510",
++        "mutation": "preserved_read_only",
++        "unique_block_signature_count": 1
++      },
++      {
++        "block_count": 192,
++        "milestone": "2026.07.514",
++        "mutation": "preserved_read_only",
++        "unique_block_signature_count": 1
++      },
++      {
++        "block_count": 14,
++        "milestone": "2026.07.516",
++        "mutation": "preserved_read_only",
++        "unique_block_signature_count": 1
++      },
++      {
++        "block_count": 9,
++        "milestone": "2026.07.518",
++        "mutation": "preserved_read_only",
++        "unique_block_signature_count": 1
++      }
++    ],
++    "history_mutation_policy": "append_once_if_absent_no_dedup_sort_or_rewrite",
++    "milestone_from_block_count": 1,
++    "milestone_from_unique_signature_count": 1
++  },
++  "duration_s": 18.274926,
++  "experiment": "experiment_5837_transition_v520",
++  "experiment_id": "exp5837-transition-v520",
++  "field_principles": {
++    "adversarial_verifier_receipts": "Fresh command and exit-code receipts preserve the live quality authority.",
++    "canonical_identity_contract": "Defines canonical evidence as milestone, task id, and declared deliverable.",
++    "collision_scan": "Shows the Exp5837-Exp5848 namespace scan and collision sources.",
++    "conductor_unchanged": "Bare boolean must remain true by operator instruction.",
++    "declared_deliverable_matrix": "Declared paths plus conductor outcomes are the authority for activated task identity.",
++    "docs_reconciled": "Specs, traceability, and ops summaries must match archived evidence classes.",
++    "duplicate_history_diagnostics": "Reports duplicate history without rewriting it.",
++    "duration_s": "Measured wall time exposes bootstrap-only execution.",
++    "experiment": "Names the local experiment slug without relying on paths.",
++    "experiment_id": "Binds this receipt to the conductor task id.",
++    "field_principles": "Maps every top-level artifact field to its evidence boundary.",
++    "field_provenance": "Per-field paths and hashes make the transition independently auditable.",
++    "flagged_evidence_preserved": "True proves the transition did not launder Exp5828 or its downstream taint.",
++    "honest_verdict": "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome.",
++    "inference_substrate": "`aggregation_from_upstream_artifacts` prevents archival from masquerading as inference.",
++    "milestone_transition": "Explicit source and destination milestones prevent numeric-prefix aliasing.",
++    "next_range_collision_count": "Only a bare zero authorizes Exp5837-Exp5848.",
++    "next_task_range": "A declared interval makes downstream allocation auditable.",
++    "outcome_classification": "Disjoint classes prevent flagged or provisional evidence from becoming a clean success.",
++    "preconditions_checked": "Exact hashes and resource checks prevent archival against missing or ambiguous evidence.",
++    "random_seed": "Deterministic metadata for checksum stability; no stochastic run occurs.",
++    "reproducibility_checksum": "A content hash detects later ledger or allocation drift.",
++    "research_complete_append_count": "An exact append count prevents duplicate milestone history.",
++    "research_roadmap_unchanged": "Bare boolean must remain true because active roadmap mutation is forbidden.",
++    "reserved_unactivated_range": "Names the proposal-only `.519` identity interval.",
++    "reserved_unactivated_task_ids": "Proposal-only identities remain tombstoned and cannot silently collide.",
++    "result_path": "Names the emitted deliverable path.",
++    "run_date": "Records the operator-specified transition date as a fixed value.",
++    "same_number_alias_groups": "Records same-number files as aliases, never canonical evidence.",
++    "schema": "Identifies the versioned Exp5837 transition artifact schema.",
++    "spec_refs": "Anchors the artifact to REQ-REPORT-5837 and its scenarios.",
++    "status": "A normalized terminal state distinguishes a complete transition from a bootstrap artifact.",
++    "test_commands": "Recorded commands show which identity, verifier, and collision checks ran.",
++    "test_exit_codes": "Exit codes prevent failed checks from being narrated as passing."
++  },
++  "field_provenance": {
++    "adversarial_verifier_receipts": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Fresh command and exit-code receipts preserve the live quality authority.",
++      "sha256_by_source": {
++        "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
++        "results/experiment_5826_out_of_template_constraint_stream.json": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
++        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
++        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
++        "scripts/adversarial_verify.py": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
++      },
++      "sources": [
++        "scripts/adversarial_verify.py",
++        "results/experiment_5825_certified_adaptive_memory_contract.json",
++        "results/experiment_5826_out_of_template_constraint_stream.json",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++        "results/experiment_5828_future_validated_structural_memory.json",
++        "results/experiment_5829_transfer_selective_replay_audit.json"
++      ]
++    },
++    "canonical_identity_contract": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Defines canonical evidence as milestone, task id, and declared deliverable.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "collision_scan": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Shows the Exp5837-Exp5848 namespace scan and collision sources.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "conductor_unchanged": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Bare boolean must remain true by operator instruction.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "declared_deliverable_matrix": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Declared paths plus conductor outcomes are the authority for activated task identity.",
++      "sha256_by_source": {
++        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
++        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
++        "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
++        "results/experiment_5824_v519_source_delta_ingestion.json": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
++        "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
++        "results/experiment_5826_out_of_template_constraint_stream.json": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
++        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
++        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8"
++      },
++      "sources": [
++        "research-complete.yaml",
++        "ops/conductor-log.md",
++        "results/experiment_5823_transition_v519.json",
++        "results/experiment_5824_v519_source_delta_ingestion.json",
++        "results/experiment_5825_certified_adaptive_memory_contract.json",
++        "results/experiment_5826_out_of_template_constraint_stream.json",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++        "results/experiment_5828_future_validated_structural_memory.json",
++        "results/experiment_5829_transfer_selective_replay_audit.json"
++      ]
++    },
++    "docs_reconciled": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Specs, traceability, and ops summaries must match archived evidence classes.",
++      "sha256_by_source": {
++        "openspec/capabilities/research-reporting/spec.md": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21",
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227",
++        "tests/python/test_experiment_5837_transition_v520.py": "sha256:84e61611d64074ae4ec6f0ba9e2d3a3615c339af33f1cfa748cfe11275c9022b"
++      },
++      "sources": [
++        "openspec/capabilities/research-reporting/spec.md",
++        "tests/python/test_experiment_5837_transition_v520.py",
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "duplicate_history_diagnostics": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Reports duplicate history without rewriting it.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "duration_s": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Measured wall time exposes bootstrap-only execution.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "experiment": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Names the local experiment slug without relying on paths.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "experiment_id": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Binds this receipt to the conductor task id.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "field_principles": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Maps every top-level artifact field to its evidence boundary.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "field_provenance": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Per-field paths and hashes make the transition independently auditable.",
++      "sha256_by_source": {
++        "openspec/capabilities/research-reporting/spec.md": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21",
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py",
++        "openspec/capabilities/research-reporting/spec.md"
++      ]
++    },
++    "flagged_evidence_preserved": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "True proves the transition did not launder Exp5828 or its downstream taint.",
++      "sha256_by_source": {
++        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
++        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
++        "scripts/adversarial_verify.py": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
++      },
++      "sources": [
++        "results/experiment_5828_future_validated_structural_memory.json",
++        "results/experiment_5829_transfer_selective_replay_audit.json",
++        "scripts/adversarial_verify.py"
++      ]
++    },
++    "honest_verdict": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "A `complete:` or `blocked:` prefix provides a mechanically terminal outcome.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "inference_substrate": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "`aggregation_from_upstream_artifacts` prevents archival from masquerading as inference.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "milestone_transition": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Explicit source and destination milestones prevent numeric-prefix aliasing.",
++      "sha256_by_source": {
++        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
++        "research-roadmap.yaml": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe"
++      },
++      "sources": [
++        "research-roadmap.yaml",
++        "research-complete.yaml"
++      ]
++    },
++    "next_range_collision_count": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Only a bare zero authorizes Exp5837-Exp5848.",
++      "sha256_by_source": {
++        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
++        "ops/exclusion_manifest.yaml": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
++        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
++        "research-roadmap-next.yaml": null,
++        "research-roadmap.yaml": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe",
++        "results/": null
++      },
++      "sources": [
++        "research-complete.yaml",
++        "ops/exclusion_manifest.yaml",
++        "research-roadmap.yaml",
++        "research-roadmap-next.yaml",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "results/"
++      ]
++    },
++    "next_task_range": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "A declared interval makes downstream allocation auditable.",
++      "sha256_by_source": {
++        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
++        "research-roadmap.yaml": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe"
++      },
++      "sources": [
++        "research-roadmap.yaml",
++        "openspec/change-proposals/research-roadmap-vNEXT.md"
++      ]
++    },
++    "outcome_classification": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Disjoint classes prevent flagged or provisional evidence from becoming a clean success.",
++      "sha256_by_source": {
++        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
++        "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
++        "results/experiment_5824_v519_source_delta_ingestion.json": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
++        "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
++        "results/experiment_5826_out_of_template_constraint_stream.json": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
++        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
++        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8"
++      },
++      "sources": [
++        "ops/conductor-log.md",
++        "results/experiment_5823_transition_v519.json",
++        "results/experiment_5824_v519_source_delta_ingestion.json",
++        "results/experiment_5825_certified_adaptive_memory_contract.json",
++        "results/experiment_5826_out_of_template_constraint_stream.json",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++        "results/experiment_5828_future_validated_structural_memory.json",
++        "results/experiment_5829_transfer_selective_replay_audit.json"
++      ]
++    },
++    "preconditions_checked": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Exact hashes and resource checks prevent archival against missing or ambiguous evidence.",
++      "sha256_by_source": {
++        "openspec/capabilities/research-reporting/spec.md": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21",
++        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
++        "ops/conductor-log.md": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2",
++        "ops/exclusion_manifest.yaml": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7",
++        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
++        "research-roadmap-next.yaml": null,
++        "research-roadmap.yaml": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe",
++        "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
++        "results/experiment_5824_v519_source_delta_ingestion.json": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
++        "results/experiment_5825_certified_adaptive_memory_contract.json": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
++        "results/experiment_5826_out_of_template_constraint_stream.json": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
++        "results/experiment_5828_future_validated_structural_memory.json": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
++        "results/experiment_5829_transfer_selective_replay_audit.json": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
++        "scripts/evidence_index_collision_preflight.py": "sha256:7a0e80cba4ceee319bdc81af77b9d32422143cb816e6bdab9ebf9d2ec95b407b",
++        "scripts/in_process_doc_reconcile.py": "sha256:7917e54bfc210d593e91f68233c2bdc18edae72860a9deb4cb85ec23c5d41f67"
++      },
++      "sources": [
++        "research-complete.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "research-roadmap.yaml",
++        "research-roadmap-next.yaml",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "scripts/evidence_index_collision_preflight.py",
++        "scripts/in_process_doc_reconcile.py",
++        "openspec/capabilities/research-reporting/spec.md",
++        "results/experiment_5823_transition_v519.json",
++        "results/experiment_5824_v519_source_delta_ingestion.json",
++        "results/experiment_5825_certified_adaptive_memory_contract.json",
++        "results/experiment_5826_out_of_template_constraint_stream.json",
++        "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++        "results/experiment_5828_future_validated_structural_memory.json",
++        "results/experiment_5829_transfer_selective_replay_audit.json"
++      ]
++    },
++    "random_seed": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Deterministic metadata for checksum stability; no stochastic run occurs.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "reproducibility_checksum": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "A content hash detects later ledger or allocation drift.",
++      "sha256_by_source": {
++        "artifact_payload_excluding_checksum": null
++      },
++      "sources": [
++        "artifact_payload_excluding_checksum"
++      ]
++    },
++    "research_complete_append_count": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "An exact append count prevents duplicate milestone history.",
++      "sha256_by_source": {
++        "research-complete.yaml": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6"
++      },
++      "sources": [
++        "research-complete.yaml"
++      ]
++    },
++    "research_roadmap_unchanged": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Bare boolean must remain true because active roadmap mutation is forbidden.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "reserved_unactivated_range": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Names the proposal-only `.519` identity interval.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "reserved_unactivated_task_ids": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Proposal-only identities remain tombstoned and cannot silently collide.",
++      "sha256_by_source": {
++        "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06",
++        "results/experiment_5823_transition_v519.json": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b"
++      },
++      "sources": [
++        "results/experiment_5823_transition_v519.json",
++        "openspec/change-proposals/research-roadmap-vNEXT.md"
++      ]
++    },
++    "result_path": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Names the emitted deliverable path.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "run_date": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Records the operator-specified transition date as a fixed value.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "same_number_alias_groups": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Records same-number files as aliases, never canonical evidence.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "schema": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Identifies the versioned Exp5837 transition artifact schema.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "spec_refs": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Anchors the artifact to REQ-REPORT-5837 and its scenarios.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "status": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "A normalized terminal state distinguishes a complete transition from a bootstrap artifact.",
++      "sha256_by_source": {
++        "python/carnot/experiment_5837_transition_v520.py": "sha256:0e19ec31ee410a28b4a2fdcad0801188d4f94c2b7a5df27949929a44fc8ca227"
++      },
++      "sources": [
++        "python/carnot/experiment_5837_transition_v520.py"
++      ]
++    },
++    "test_commands": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Recorded commands show which identity, verifier, and collision checks ran.",
++      "sha256_by_source": {
++        "operator_test_receipts": null,
++        "scripts/adversarial_verify.py": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
++      },
++      "sources": [
++        "operator_test_receipts",
++        "scripts/adversarial_verify.py"
++      ]
++    },
++    "test_exit_codes": {
++      "derivation": "direct_read_or_deterministic_reconciliation",
++      "principle": "Exit codes prevent failed checks from being narrated as passing.",
++      "sha256_by_source": {
++        "operator_test_receipts": null,
++        "scripts/adversarial_verify.py": "sha256:a7f50729e941a760dcf757692e5a2d87bef63aaaa08274f89144b4e3ef3a7f48"
++      },
++      "sources": [
++        "operator_test_receipts",
++        "scripts/adversarial_verify.py"
++      ]
++    }
++  },
++  "flagged_evidence_preserved": true,
++  "honest_verdict": "blocked: exp5837 transition preconditions failed: test_failures=['.venv/bin/pytest tests/python -q', '.venv/bin/python scripts/check_spec_coverage.py']",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone_transition": {
++    "destination_milestone": "2026.07.520",
++    "source_milestone": "2026.07.519",
++    "task_identity_tuple": [
++      "milestone",
++      "task_id",
++      "declared_deliverable"
++    ]
++  },
++  "next_range_collision_count": 0,
++  "next_task_range": "exp5837-exp5848",
++  "outcome_classification": {
++    "blocked_skipped_task_ids": [],
++    "classification_by_task_id": {
++      "exp5823-transition-v519": "clean-positive",
++      "exp5824-v519-source-delta-ingestion": "clean-null",
++      "exp5825-certified-adaptive-memory-contract": "clean-positive",
++      "exp5826-out-of-template-constraint-stream": "clean-positive",
++      "exp5827-minimal-core-structural-acquisition-ab": "clean-positive",
++      "exp5828-future-validated-structural-memory": "flagged",
++      "exp5829-transfer-selective-replay-audit": "flagged-upstream/provisional"
++    },
++    "classification_policy": "clean-positive, clean-null, clean-negative, blocked/skipped, flagged, flagged-upstream/provisional, missing, and proposal-only classes are disjoint",
++    "clean_negative_task_ids": [],
++    "clean_null_task_ids": [
++      "exp5824-v519-source-delta-ingestion"
++    ],
++    "clean_positive_task_ids": [
++      "exp5823-transition-v519",
++      "exp5825-certified-adaptive-memory-contract",
++      "exp5826-out-of-template-constraint-stream",
++      "exp5827-minimal-core-structural-acquisition-ab"
++    ],
++    "clean_success_task_ids": [
++      "exp5823-transition-v519",
++      "exp5825-certified-adaptive-memory-contract",
++      "exp5826-out-of-template-constraint-stream",
++      "exp5827-minimal-core-structural-acquisition-ab"
++    ],
++    "flagged_task_ids": [
++      "exp5828-future-validated-structural-memory"
++    ],
++    "flagged_upstream_provisional_task_ids": [
++      "exp5829-transfer-selective-replay-audit"
++    ],
++    "headline_eligible_task_ids": [
++      "exp5823-transition-v519",
++      "exp5825-certified-adaptive-memory-contract",
++      "exp5826-out-of-template-constraint-stream",
++      "exp5827-minimal-core-structural-acquisition-ab"
++    ],
++    "missing_task_ids": [],
++    "proposal_only_task_ids": [
++      "exp5830-sota-paired-embedding-corpus",
++      "exp5831-cross-family-embedding-energy-verifier",
++      "exp5832-arc-write-protected-world-fact-tape",
++      "exp5833-arc-world-feedback-probe-ab",
++      "exp5834-bounded-adaptive-memory-microkernel",
++      "exp5835-attached-board-adaptive-memory-receipts",
++      "exp5836-capstone-v519"
++    ]
++  },
++  "preconditions_checked": {
++    "adversarial_verifier_receipt_count": 5,
++    "canonical_artifact_count": 7,
++    "canonical_hash_count": 7,
++    "completion_block_source": "research_complete",
++    "conductor_unchanged": true,
++    "declared_deliverable_count": 7,
++    "declared_deliverables_unambiguous": true,
++    "failed_preconditions": [
++      "test_failures=['.venv/bin/pytest tests/python -q', '.venv/bin/python scripts/check_spec_coverage.py']"
++    ],
++    "input_hashes": {
++      "declared_deliverables": {
++        "exp5823-transition-v519": {
++          "path": "results/experiment_5823_transition_v519.json",
++          "present": true,
++          "sha256": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b"
++        },
++        "exp5824-v519-source-delta-ingestion": {
++          "path": "results/experiment_5824_v519_source_delta_ingestion.json",
++          "present": true,
++          "sha256": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41"
++        },
++        "exp5825-certified-adaptive-memory-contract": {
++          "path": "results/experiment_5825_certified_adaptive_memory_contract.json",
++          "present": true,
++          "sha256": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6"
++        },
++        "exp5826-out-of-template-constraint-stream": {
++          "path": "results/experiment_5826_out_of_template_constraint_stream.json",
++          "present": true,
++          "sha256": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1"
++        },
++        "exp5827-minimal-core-structural-acquisition-ab": {
++          "path": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++          "present": true,
++          "sha256": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5"
++        },
++        "exp5828-future-validated-structural-memory": {
++          "path": "results/experiment_5828_future_validated_structural_memory.json",
++          "present": true,
++          "sha256": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2"
++        },
++        "exp5829-transfer-selective-replay-audit": {
++          "path": "results/experiment_5829_transfer_selective_replay_audit.json",
++          "present": true,
++          "sha256": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8"
++        }
++      },
++      "source_files": {
++        "openspec/capabilities/research-reporting/spec.md": {
++          "present": true,
++          "sha256": "sha256:ae7556a86f834239bcf855e422b3eb7e67028b313bf34e879c7787512b517b21"
++        },
++        "openspec/change-proposals/research-roadmap-vNEXT.md": {
++          "present": true,
++          "sha256": "sha256:4b54bc1c582f56ad199be1011b417ee3e4c7ee3228fd12d96dde0f8155fb4a06"
++        },
++        "ops/conductor-log.md": {
++          "present": true,
++          "sha256": "sha256:cc31cb156e8b161eb8badb62dd94b1e0aa347baec671530185908cc4a2dc98f2"
++        },
++        "ops/exclusion_manifest.yaml": {
++          "present": true,
++          "sha256": "sha256:f2ab5e757eff3ce619e40c68f86479770829d80bc8b1845f4ab8e112a6b294a7"
++        },
++        "research-complete.yaml": {
++          "present": true,
++          "sha256": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6"
++        },
++        "research-roadmap-next.yaml": {
++          "present": false,
++          "sha256": null
++        },
++        "research-roadmap.yaml": {
++          "present": true,
++          "sha256": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe"
++        },
++        "scripts/evidence_index_collision_preflight.py": {
++          "present": true,
++          "sha256": "sha256:7a0e80cba4ceee319bdc81af77b9d32422143cb816e6bdab9ebf9d2ec95b407b"
++        },
++        "scripts/in_process_doc_reconcile.py": {
++          "present": true,
++          "sha256": "sha256:7917e54bfc210d593e91f68233c2bdc18edae72860a9deb4cb85ec23c5d41f67"
++        }
++      }
++    },
++    "next_range_collision_count": 0,
++    "research_complete_append_count": 0,
++    "research_complete_append_receipt": {
++      "append_count": 0,
++      "appended": false,
++      "reason": "exact_milestone_block_present",
++      "sha256_after_append": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6",
++      "sha256_before_append": "sha256:eb0c6f1824c471537bb89857cfd36b6f87be76d2233d6bbac473c08e88fc58b6"
++    },
++    "research_complete_milestone_from_block_count": 1,
++    "research_roadmap_unchanged": true,
++    "resource_receipts": {
++      "disk_free_bytes": 1228600385536,
++      "disk_total_bytes": 3953289023488,
++      "mem_available_kib": 76062408,
++      "writable_paths": {
++        "/home/ianblenke/github.com/ianblenke/carnot": {
++          "present": true,
++          "writable": true
++        },
++        "/home/ianblenke/github.com/ianblenke/carnot/results": {
++          "present": true,
++          "writable": true
++        },
++        "/tmp": {
++          "present": true,
++          "writable": true
++        }
++      }
++    },
++    "roadmaps": {
++      "active": {
++        "deliverables": [
++          "results/experiment_5837_transition_v520.json",
++          "results/experiment_5838_v520_source_delta_ingestion.json",
++          "results/experiment_5839_v519_evidence_qualification.json",
++          "results/experiment_5840_exact_counterfactual_embedding_fixture.json"
++        ],
++        "error": null,
++        "milestone": "2026.07.520",
++        "parsed": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++        "present": true,
++        "sha256": "sha256:214f861b2d8c56d5ca789dadec841d006326a2055321bc04a95ca7ea7c8edebe",
++        "task_ids": [
++          "exp5837-transition-v520",
++          "exp5838-v520-source-delta-ingestion",
++          "exp5839-v519-evidence-qualification",
++          "exp5840-exact-counterfactual-embedding-fixture"
++        ]
++      },
++      "next": {
++        "deliverables": [],
++        "error": null,
++        "milestone": null,
++        "parsed": false,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
++        "present": false,
++        "sha256": null,
++        "task_ids": []
++      }
++    },
++    "same_number_alias_group_count": 7,
++    "unique_declared_deliverable_block_count": 1
++  },
++  "random_seed": 5837,
++  "reproducibility_checksum": "sha256:dcdacd075babb8dbb76f123b137ed8c22ec313070560db56cd9318b1c89012d5",
++  "research_complete_append_count": 0,
++  "research_roadmap_unchanged": true,
++  "reserved_unactivated_range": "exp5830-exp5836",
++  "reserved_unactivated_task_ids": [
++    "exp5830-sota-paired-embedding-corpus",
++    "exp5831-cross-family-embedding-energy-verifier",
++    "exp5832-arc-write-protected-world-fact-tape",
++    "exp5833-arc-world-feedback-probe-ab",
++    "exp5834-bounded-adaptive-memory-microkernel",
++    "exp5835-attached-board-adaptive-memory-receipts",
++    "exp5836-capstone-v519"
++  ],
++  "result_path": "results/experiment_5837_transition_v520.json",
++  "run_date": "2026-07-23",
++  "same_number_alias_groups": {
++    "5823": {
++      "aliases": [],
++      "canonical": {
++        "path": "results/experiment_5823_transition_v519.json",
++        "present": true,
++        "role": "canonical_declared_deliverable",
++        "sha256": "sha256:8a0dad25f926d51219800430701ce4bf8fd05379cfbd0cb5c850ce919171127b",
++        "status": "complete",
++        "task_id": "exp5823-transition-v519"
++      },
++      "experiment_number": "5823",
++      "selection_policy": "exact_declared_deliverable"
++    },
++    "5824": {
++      "aliases": [],
++      "canonical": {
++        "path": "results/experiment_5824_v519_source_delta_ingestion.json",
++        "present": true,
++        "role": "canonical_declared_deliverable",
++        "sha256": "sha256:ad28addd9b376957ccfcdc2f6cb3a5bb1783cf652be8003a062f8fbc8d1e1e41",
++        "status": "complete",
++        "task_id": "exp5824-v519-source-delta-ingestion"
++      },
++      "experiment_number": "5824",
++      "selection_policy": "exact_declared_deliverable"
++    },
++    "5825": {
++      "aliases": [],
++      "canonical": {
++        "path": "results/experiment_5825_certified_adaptive_memory_contract.json",
++        "present": true,
++        "role": "canonical_declared_deliverable",
++        "sha256": "sha256:757071b445fc31aa2340649bd799395c01e5ef5e02fc7335f61e803750ca62f6",
++        "status": "complete",
++        "task_id": "exp5825-certified-adaptive-memory-contract"
++      },
++      "experiment_number": "5825",
++      "selection_policy": "exact_declared_deliverable"
++    },
++    "5826": {
++      "aliases": [],
++      "canonical": {
++        "path": "results/experiment_5826_out_of_template_constraint_stream.json",
++        "present": true,
++        "role": "canonical_declared_deliverable",
++        "sha256": "sha256:12d790bcd9fe8abb9edca56eb475174613c870cfd5e46783eccc592bbb9bd4b1",
++        "status": "complete",
++        "task_id": "exp5826-out-of-template-constraint-stream"
++      },
++      "experiment_number": "5826",
++      "selection_policy": "exact_declared_deliverable"
++    },
++    "5827": {
++      "aliases": [],
++      "canonical": {
++        "path": "results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++        "present": true,
++        "role": "canonical_declared_deliverable",
++        "sha256": "sha256:59680ac7a8db3595f4473066a82f18d7df30758832cc56c9ee872e0d00895bc5",
++        "status": "complete",
++        "task_id": "exp5827-minimal-core-structural-acquisition-ab"
++      },
++      "experiment_number": "5827",
++      "selection_policy": "exact_declared_deliverable"
++    },
++    "5828": {
++      "aliases": [],
++      "canonical": {
++        "path": "results/experiment_5828_future_validated_structural_memory.json",
++        "present": true,
++        "role": "canonical_declared_deliverable",
++        "sha256": "sha256:e4fd61d2c6249e4b361229f6d4eca3a103b25b47a0961d571fe9836f629ab6a2",
++        "status": "complete",
++        "task_id": "exp5828-future-validated-structural-memory"
++      },
++      "experiment_number": "5828",
++      "selection_policy": "exact_declared_deliverable"
++    },
++    "5829": {
++      "aliases": [],
++      "canonical": {
++        "path": "results/experiment_5829_transfer_selective_replay_audit.json",
++        "present": true,
++        "role": "canonical_declared_deliverable",
++        "sha256": "sha256:b53291c2e047df7ea2caf9468c9798b7b2c867acf1369836201d42e84ac9ddd8",
++        "status": "complete",
++        "task_id": "exp5829-transfer-selective-replay-audit"
++      },
++      "experiment_number": "5829",
++      "selection_policy": "exact_declared_deliverable"
++    }
++  },
++  "schema": "carnot.experiment_5837.transition_v520.v1",
++  "spec_refs": [
++    "REQ-REPORT-5837",
++    "SCENARIO-REPORT-5837",
++    "SCENARIO-REPORT-5837-VERIFIER-RECEIPTS",
++    "SCENARIO-REPORT-5837-COLLISION-BLOCK",
++    "SCENARIO-REPORT-5837-FIELD-PROVENANCE"
++  ],
++  "status": "blocked",
++  "test_commands": [
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5825_certified_adaptive_memory_contract.json",
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5826_out_of_template_constraint_stream.json",
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5827_minimal_core_structural_acquisition_ab.json",
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5828_future_validated_structural_memory.json",
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5829_transfer_selective_replay_audit.json",
++    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"",
++    ".venv/bin/pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py -m pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5837_transition_v520.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py",
++    ".venv/bin/ruff check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py --fail-under=100": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5837_transition_v520.py -m pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python -q": 2,
++    ".venv/bin/pytest tests/python/test_experiment_5837_transition_v520.py -q --no-cov -n 0": 0,
++    ".venv/bin/python -c \"import pathlib, yaml; yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); p=pathlib.Path('research-roadmap-next.yaml'); yaml.safe_load(p.read_text()) if p.exists() else None; yaml.safe_load(pathlib.Path('research-complete.yaml').read_text()); yaml.safe_load(pathlib.Path('ops/exclusion_manifest.yaml').read_text())\"": 0,
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5825_certified_adaptive_memory_contract.json": 0,
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5826_out_of_template_constraint_stream.json": 0,
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5827_minimal_core_structural_acquisition_ab.json": 0,
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5828_future_validated_structural_memory.json": 1,
++    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5829_transfer_selective_replay_audit.json": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py": 1,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5837_transition_v520.py": 0,
++    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    ".venv/bin/ruff check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py": 0,
++    ".venv/bin/ruff format --check python/carnot/experiment_5837_transition_v520.py tests/python/test_experiment_5837_transition_v520.py": 0,
++    "git diff --exit-code -- research-roadmap.yaml scripts/research_conductor.py": 0
++  }
++}
+diff --git a/tests/python/test_experiment_5837_transition_v520.py b/tests/python/test_experiment_5837_transition_v520.py
+new file mode 100644
+index 0000000000..202ddf668a
+--- /dev/null
++++ b/tests/python/test_experiment_5837_transition_v520.py
+@@ -0,0 +1,812 @@
++"""Tests for the Exp5837 V520 transition receipt.
++
++Spec refs: REQ-REPORT-5837, SCENARIO-REPORT-5837,
++SCENARIO-REPORT-5837-VERIFIER-RECEIPTS,
++SCENARIO-REPORT-5837-COLLISION-BLOCK,
++SCENARIO-REPORT-5837-FIELD-PROVENANCE.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_5837_transition_v520 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++
++
++def _write_json(root: Path, rel_path: Path | str, payload: Any) -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_text(root: Path, rel_path: Path | str, text: str = "context\n") -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++
++
++def _artifact_payload(task_id: str, exp5828_sha: str | None = None) -> JsonDict:
++    payloads: dict[str, JsonDict] = {
++        "exp5823-transition-v519": {
++            "status": "complete",
++            "honest_verdict": "complete: archived terminal .518 evidence by exact paths",
++            "next_task_range": "exp5823-exp5836",
++            "next_range_collision_count": 0,
++        },
++        "exp5824-v519-source-delta-ingestion": {
++            "status": "complete",
++            "honest_verdict": "complete: no accepted post-V519 source deltas",
++            "accepted_finding_count": 0,
++        },
++        "exp5825-certified-adaptive-memory-contract": {
++            "status": "complete",
++            "honest_verdict": "complete: certified_adaptive_memory_contract_ready",
++            "duration_s": 0.167314,
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++        },
++        "exp5826-out-of-template-constraint-stream": {
++            "status": "complete",
++            "honest_verdict": "complete: out_of_template_constraint_event_stream_ready",
++            "duration_s": 0.963263,
++            "inference_substrate": "deterministic_exact_solver_dataset_generation_no_llm",
++        },
++        "exp5827-minimal-core-structural-acquisition-ab": {
++            "status": "complete",
++            "honest_verdict": "complete: structural_learning_credited",
++            "duration_s": 0.947768,
++            "inference_substrate": "online_exact_membership_query_sidecar_no_llm",
++        },
++        "exp5828-future-validated-structural-memory": {
++            "status": "complete",
++            "honest_verdict": "complete: future_validated_structural_memory_lifecycle_credited",
++            "duration_s": 0.793358,
++            "inference_substrate": "online_exact_membership_query_sidecar_no_llm",
++            "flagged_adversarial": True,
++            "corrigendum_pending": [
++                {
++                    "kind": "DURATION_TOO_SHORT",
++                    "severity": "critical",
++                    "detail": "too fast for declared compute markers",
++                },
++                {
++                    "kind": "METHODOLOGY_MISSING",
++                    "severity": "warn",
++                    "detail": "missing model_specs/target_model",
++                },
++            ],
++        },
++        "exp5829-transfer-selective-replay-audit": {
++            "status": "complete",
++            "honest_verdict": "positive: signature_compatible_replay_credited",
++            "duration_s": 3.615075,
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++            "upstream_artifact_hashes": {
++                "exp5828_lifecycle_artifact": exp5828_sha or "sha256:fixture"
++            },
++        },
++    }
++    return payloads[task_id]
++
++
++def _research_complete_payload(*, duplicate_519_blocks: int = 1) -> JsonDict:
++    v519_block = {
++        "id": mod.MILESTONE_FROM,
++        "title": "Terminal V519",
++        "doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "completed": "2026-07-23",
++        "finding": "See conductor log for per-experiment results.",
++        "tasks": [
++            {
++                "id": task_id,
++                "title": f"title for {task_id}",
++                "deliverable": rel_path.as_posix(),
++                "result": "OK (conductor)",
++            }
++            for task_id, rel_path in mod.TASK_ARTIFACT_PATHS.items()
++        ],
++    }
++    return {"milestones": [v519_block for _ in range(duplicate_519_blocks)]}
++
++
++def _active_roadmap_payload() -> JsonDict:
++    active_ids = (
++        "exp5837-transition-v520",
++        "exp5838-v520-source-delta-ingestion",
++        "exp5839-v519-evidence-qualification",
++        "exp5840-exact-counterfactual-embedding-fixture",
++    )
++    return {
++        "milestone": mod.MILESTONE_TO,
++        "tasks": [
++            {
++                "id": task_id,
++                "milestone": mod.MILESTONE_TO,
++                "deliverable": mod.NEXT_TASK_ARTIFACT_PATHS[task_id].as_posix(),
++            }
++            for task_id in active_ids
++        ],
++    }
++
++
++def _vnext_doc() -> str:
++    lines = [
++        "# Research Roadmap vNEXT",
++        "",
++        "**Milestone:** 2026.07.520",
++        "**Task range:** Exp5837-Exp5848",
++        "",
++    ]
++    lines.extend(
++        f"`{mod.NEXT_TASK_ARTIFACT_PATHS[task_id].as_posix()}`" for task_id in mod.NEXT_TASK_IDS
++    )
++    lines.extend(f"proposal-only `{task_id}`" for task_id in mod.RESERVED_UNACTIVATED_TASK_IDS)
++    return "\n".join(lines) + "\n"
++
++
++def _conductor_log() -> str:
++    return "\n".join(
++        [
++            "| 2026-07-23 00:09 UTC | Archive terminal .518 evidence, retire finite-ID a | OK | 118 passed |",
++            "| 2026-07-23 00:33 UTC | Time-windowed post-V519 literature and implementat | OK | 88 passed |",
++            "| 2026-07-23 01:15 UTC | Canonical certified-event and adaptive-memory pref | FAIL | bootstrap |",
++            "| 2026-07-23 01:34 UTC | Canonical certified-event and adaptive-memory pref | OK | 140 passed |",
++            "| 2026-07-23 01:57 UTC | Gated on Exp5825 contract: chronological out-of-te | OK | 88 passed |",
++            "| 2026-07-23 02:18 UTC | Gated on Exp5826 stream: minimal-core and active-q | OK | 88 passed |",
++            "| 2026-07-23 02:52 UTC | Gated on Exp5827 structural lift: future-validated | FAIL | bootstrap |",
++            "| 2026-07-23 03:14 UTC | Gated on Exp5827 structural lift: future-validated | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT |",
++            "| 2026-07-23 03:37 UTC | Gated on Exp5828 durable memory: transfer-selectiv | OK | 88 passed |",
++        ]
++    )
++
++
++def _receipt(
++    task_id: str, *, critical: tuple[str, ...] = (), warn: tuple[str, ...] = ()
++) -> JsonDict:
++    path = mod.TASK_ARTIFACT_PATHS[task_id].as_posix()
++    flags = [
++        {"kind": kind, "severity": "critical", "detail": f"{kind} detail"} for kind in critical
++    ]
++    flags.extend({"kind": kind, "severity": "warn", "detail": f"{kind} detail"} for kind in warn)
++    report = {
++        "reports": [
++            {
++                "path": path,
++                "flag_count": len(flags),
++                "flags": flags,
++                "max_severity": 2 if critical else 1 if warn else -1,
++            }
++        ],
++        "flagged_count": 1 if flags else 0,
++    }
++    encoded = json.dumps(report, sort_keys=True).encode("utf-8")
++    return {
++        "task_id": task_id,
++        "artifact_path": path,
++        "command": f".venv/bin/python scripts/adversarial_verify.py --json {path}",
++        "exit_code": 1 if flags else 0,
++        "stdout_json": report,
++        "stderr": "",
++        "receipt_hash": mod.sha256_bytes(encoded),
++    }
++
++
++def _clean_receipts() -> list[JsonDict]:
++    return [
++        _receipt("exp5825-certified-adaptive-memory-contract"),
++        _receipt("exp5826-out-of-template-constraint-stream"),
++        _receipt("exp5827-minimal-core-structural-acquisition-ab"),
++        _receipt(
++            "exp5828-future-validated-structural-memory",
++            critical=("DURATION_TOO_SHORT",),
++            warn=("METHODOLOGY_MISSING",),
++        ),
++        _receipt("exp5829-transfer-selective-replay-audit"),
++    ]
++
++
++def _make_root(
++    root: Path,
++    *,
++    duplicate_519_blocks: int = 1,
++    include_research_complete: bool = True,
++) -> None:
++    for task_id, rel_path in mod.TASK_ARTIFACT_PATHS.items():
++        if task_id == "exp5829-transfer-selective-replay-audit":
++            continue
++        _write_json(root, rel_path, _artifact_payload(task_id))
++    exp5828_sha = mod.path_sha256(
++        root / mod.TASK_ARTIFACT_PATHS["exp5828-future-validated-structural-memory"]
++    )
++    _write_json(
++        root,
++        mod.TASK_ARTIFACT_PATHS["exp5829-transfer-selective-replay-audit"],
++        _artifact_payload("exp5829-transfer-selective-replay-audit", exp5828_sha),
++    )
++    _write_text(root, mod.ROADMAP_RELATIVE_PATH, yaml.safe_dump(_active_roadmap_payload()))
++    if include_research_complete:
++        _write_text(
++            root,
++            mod.RESEARCH_COMPLETE_RELATIVE_PATH,
++            yaml.safe_dump(_research_complete_payload(duplicate_519_blocks=duplicate_519_blocks)),
++        )
++    _write_text(root, mod.VNEXT_RELATIVE_PATH, _vnext_doc())
++    _write_text(root, mod.CONDUCTOR_LOG_RELATIVE_PATH, _conductor_log())
++    _write_text(root, mod.EXCLUSION_MANIFEST_RELATIVE_PATH, "retired_experiments: []\n")
++    _write_text(root, mod.CONDUCTOR_RELATIVE_PATH, "# conductor fixture\n")
++    _write_text(root, mod.EVIDENCE_INDEX_RELATIVE_PATH, "# evidence index fixture\n")
++    _write_text(root, mod.DOC_RECONCILE_RELATIVE_PATH, "# reconcile fixture\n")
++    _write_text(root, mod.SPEC_RELATIVE_PATH, "### REQ-REPORT-5837\n")
++
++
++def _clean_build(root: Path, *, receipts: list[JsonDict] | None = None) -> JsonDict:
++    return mod.build_report(
++        root,
++        adversarial_receipts=receipts or _clean_receipts(),
++        tests_run=[{"command": "unit", "exit_code": 0}],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++        duration_s=1.25,
++    )
++
++
++def test_spec_contains_req_report_5837_contract() -> None:
++    """REQ-REPORT-5837: OpenSpec names exact identity, verifier, and range gates."""
++
++    text = SPEC_PATH.read_text(encoding="utf-8")
++    section = text[text.index("### REQ-REPORT-5837") :]
++
++    assert str(mod.RESULT_RELATIVE_PATH) in section
++    assert "(milestone, task_id, declared_deliverable)" in section
++    assert "SCENARIO-REPORT-5837-VERIFIER-RECEIPTS" in section
++    assert "Exp5830 through Exp5836" in section
++    assert "Exp5837 through Exp5848" in section
++    assert "DURATION_TOO_SHORT" in section
++    assert "METHODOLOGY_MISSING" in section
++    for field in mod.REQUIRED_PRINCIPLE_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_report_5837_archives_terminal_v519_by_exact_identity(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-5837: declared V519 paths and disjoint classes are canonical."""
++
++    _make_root(tmp_path)
++    report = _clean_build(tmp_path)
++
++    assert report["status"] == "complete"
++    assert report["honest_verdict"].startswith("complete:")
++    assert report["milestone_transition"] == {
++        "source_milestone": "2026.07.519",
++        "destination_milestone": "2026.07.520",
++        "task_identity_tuple": ["milestone", "task_id", "declared_deliverable"],
++    }
++    assert len(report["declared_deliverable_matrix"]) == 7
++    assert report["outcome_classification"]["clean_positive_task_ids"] == [
++        "exp5823-transition-v519",
++        "exp5825-certified-adaptive-memory-contract",
++        "exp5826-out-of-template-constraint-stream",
++        "exp5827-minimal-core-structural-acquisition-ab",
++    ]
++    assert report["outcome_classification"]["clean_null_task_ids"] == [
++        "exp5824-v519-source-delta-ingestion"
++    ]
++    assert report["outcome_classification"]["flagged_task_ids"] == [
++        "exp5828-future-validated-structural-memory"
++    ]
++    assert report["outcome_classification"]["flagged_upstream_provisional_task_ids"] == [
++        "exp5829-transfer-selective-replay-audit"
++    ]
++    assert report["outcome_classification"]["clean_success_task_ids"] == [
++        "exp5823-transition-v519",
++        "exp5825-certified-adaptive-memory-contract",
++        "exp5826-out-of-template-constraint-stream",
++        "exp5827-minimal-core-structural-acquisition-ab",
++    ]
++    assert report["outcome_classification"]["proposal_only_task_ids"] == list(
++        mod.RESERVED_UNACTIVATED_TASK_IDS
++    )
++
++    exp5828 = next(
++        row
++        for row in report["declared_deliverable_matrix"]
++        if row["task_id"] == "exp5828-future-validated-structural-memory"
++    )
++    assert exp5828["outcome_class"] == "flagged"
++    assert exp5828["artifact_flagged_adversarial"] is True
++    assert exp5828["adversarial_critical_findings"] == ["DURATION_TOO_SHORT"]
++    assert exp5828["adversarial_warn_findings"] == ["METHODOLOGY_MISSING"]
++
++    exp5829 = report["declared_deliverable_matrix"][-1]
++    assert exp5829["task_id"] == "exp5829-transfer-selective-replay-audit"
++    assert exp5829["outcome_class"] == "flagged-upstream/provisional"
++    assert exp5829["upstream_taint_source_task_id"] == "exp5828-future-validated-structural-memory"
++
++    assert report["flagged_evidence_preserved"] is True
++    assert report["reserved_unactivated_task_ids"] == list(mod.RESERVED_UNACTIVATED_TASK_IDS)
++    assert report["research_complete_append_count"] == 0
++    assert report["preconditions_checked"]["roadmaps"]["next"]["present"] is False
++    assert report["preconditions_checked"]["resource_receipts"]["disk_free_bytes"] > 0
++    assert report["next_task_range"] == "exp5837-exp5848"
++    assert report["next_range_collision_count"] == 0
++    assert report["docs_reconciled"]["operator_owned_docs_deferred"] is True
++    assert report["research_roadmap_unchanged"] is True
++    assert report["conductor_unchanged"] is True
++
++
++def test_scenario_report_5837_verifier_receipts_preserve_flag_and_taint(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-REPORT-5837-VERIFIER-RECEIPTS: live receipts are authoritative."""
++
++    _make_root(tmp_path)
++    report = _clean_build(tmp_path)
++    receipts = {row["task_id"]: row for row in report["adversarial_verifier_receipts"]}
++
++    assert receipts["exp5825-certified-adaptive-memory-contract"]["headline_eligible"] is True
++    assert receipts["exp5828-future-validated-structural-memory"]["exit_code"] == 1
++    assert receipts["exp5828-future-validated-structural-memory"]["critical_findings"] == [
++        {
++            "kind": "DURATION_TOO_SHORT",
++            "severity": "critical",
++            "detail": "DURATION_TOO_SHORT detail",
++        }
++    ]
++    assert receipts["exp5828-future-validated-structural-memory"]["warn_findings"] == [
++        {"kind": "METHODOLOGY_MISSING", "severity": "warn", "detail": "METHODOLOGY_MISSING detail"}
++    ]
++    assert receipts["exp5828-future-validated-structural-memory"]["headline_eligible"] is False
++    assert receipts["exp5829-transfer-selective-replay-audit"]["headline_eligible"] is False
++    assert receipts["exp5829-transfer-selective-replay-audit"]["headline_ineligible_reason"] == (
++        "upstream_flagged_exp5828"
++    )
++
++    missing_receipt = _clean_build(tmp_path, receipts=_clean_receipts()[:-1])
++    assert (
++        "adversarial_receipts_missing=['exp5829-transfer-selective-replay-audit']"
++        in (missing_receipt["preconditions_checked"]["failed_preconditions"])
++    )
++
++    stale_receipts = _clean_receipts()
++    stale_receipts[3] = _receipt("exp5828-future-validated-structural-memory")
++    stale_report = _clean_build(tmp_path, receipts=stale_receipts)
++    assert (
++        "exp5828_live_stamp_not_preserved"
++        in stale_report["preconditions_checked"]["failed_preconditions"]
++    )
++
++    completed = mod.run_adversarial_verifier(
++        tmp_path,
++        mod.TASK_ARTIFACT_PATHS["exp5825-certified-adaptive-memory-contract"],
++        subprocess_run=lambda *_args, **_kwargs: mod.ProcessResult(
++            returncode=0,
++            stdout=json.dumps({"reports": [{"path": "x", "flags": [], "flag_count": 0}]}),
++            stderr="",
++        ),
++    )
++    assert completed["exit_code"] == 0
++    assert completed["task_id"] == "exp5825-certified-adaptive-memory-contract"
++    assert completed["receipt_hash"].startswith("sha256:")
++
++    failed = mod.run_adversarial_verifier(
++        tmp_path,
++        mod.TASK_ARTIFACT_PATHS["exp5828-future-validated-structural-memory"],
++        subprocess_run=lambda *_args, **_kwargs: mod.ProcessResult(
++            returncode=1,
++            stdout="{not-json",
++            stderr="broken",
++        ),
++    )
++    assert failed["stdout_parse_error"]
++
++    monkeypatch.setattr(mod, "VERIFIER_TASK_IDS", ("exp9999-other",))
++    try:
++        assert mod.normalize_adversarial_verifier_receipts([])[0]["task_id"] == "exp9999-other"
++    finally:
++        monkeypatch.setattr(
++            mod,
++            "VERIFIER_TASK_IDS",
++            (
++                "exp5825-certified-adaptive-memory-contract",
++                "exp5826-out-of-template-constraint-stream",
++                "exp5827-minimal-core-structural-acquisition-ab",
++                "exp5828-future-validated-structural-memory",
++                "exp5829-transfer-selective-replay-audit",
++            ),
++        )
++
++
++def test_scenario_report_5837_collision_blocks_allocation(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5837-COLLISION-BLOCK: occupied V520 ids fail closed."""
++
++    _make_root(tmp_path)
++    _write_json(tmp_path, "results/experiment_5847_existing_collision.json", {"status": "old"})
++    payload = _research_complete_payload()
++    payload["milestones"].append(
++        {
++            "id": "2026.07.400",
++            "title": "stale next-range reference",
++            "finding": "mentions exp5843-sparse-oracle-continuous-learning",
++            "tasks": [],
++        }
++    )
++    _write_text(tmp_path, mod.RESEARCH_COMPLETE_RELATIVE_PATH, yaml.safe_dump(payload))
++    _write_text(
++        tmp_path,
++        mod.EXCLUSION_MANIFEST_RELATIVE_PATH,
++        "retired_experiments:\n- scope_key: exp5846-bounded-adaptive-memory-microkernel\n",
++    )
++    _write_json(
++        tmp_path,
++        "results/experiment_5700_transition_alloc.json",
++        {"next_task_range": "exp5837-exp5848"},
++    )
++
++    report = _clean_build(tmp_path)
++
++    assert report["status"] == "blocked"
++    assert report["honest_verdict"].startswith("blocked:")
++    assert report["next_range_collision_count"] == 4
++    assert [row["path"] for row in report["collision_scan"]["preexisting_collisions"]] == [
++        "ops/exclusion_manifest.yaml",
++        "research-complete.yaml",
++        "results/experiment_5700_transition_alloc.json",
++        "results/experiment_5847_existing_collision.json",
++    ]
++
++    alias_root = tmp_path / "alias"
++    _make_root(alias_root)
++    _write_json(
++        alias_root, "results/experiment_5828_same_number_alias.json", {"status": "complete"}
++    )
++    alias_report = _clean_build(alias_root)
++    assert alias_report["same_number_alias_groups"]["5828"]["aliases"][0]["path"] == (
++        "results/experiment_5828_same_number_alias.json"
++    )
++
++
++def test_scenario_report_5837_emit_report_field_provenance_checksum_and_append(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-5837-FIELD-PROVENANCE: emitted artifact is stable."""
++
++    _make_root(tmp_path)
++    history_before = (tmp_path / mod.RESEARCH_COMPLETE_RELATIVE_PATH).read_bytes()
++    output = tmp_path / mod.RESULT_RELATIVE_PATH
++    report = mod.emit_report(
++        tmp_path,
++        output_path=output,
++        adversarial_receipts=_clean_receipts(),
++        tests_run=[{"command": "unit", "exit_code": 0}],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++        duration_s=1.25,
++    )
++    written = json.loads(output.read_text(encoding="utf-8"))
++
++    assert (tmp_path / mod.RESEARCH_COMPLETE_RELATIVE_PATH).read_bytes() == history_before
++    assert written == report
++    assert mod.payload_checksum(written) == written["reproducibility_checksum"]
++    assert set(mod.REQUIRED_PRINCIPLE_FIELDS).issubset(report["field_principles"])
++    assert set(mod.REQUIRED_PRINCIPLE_FIELDS).issubset(report["field_provenance"])
++    assert all(report["field_principles"][field] for field in mod.REQUIRED_PRINCIPLE_FIELDS)
++    assert all(
++        report["field_provenance"][field]["sources"] for field in mod.REQUIRED_PRINCIPLE_FIELDS
++    )
++    assert all(
++        "sha256_by_source" in report["field_provenance"][field]
++        for field in mod.REQUIRED_PRINCIPLE_FIELDS
++    )
++    assert report["duration_s"] == 1.25
++    assert report["inference_substrate"] == "aggregation_from_upstream_artifacts"
++
++    append_root = tmp_path / "append"
++    _make_root(append_root, include_research_complete=False)
++    appended = _clean_build(append_root)
++    assert appended["research_complete_append_count"] == 1
++    assert mod._research_complete_blocks(append_root)
++    second = _clean_build(append_root)
++    assert second["research_complete_append_count"] == 0
++
++    original = mod.FIELD_PRINCIPLES.pop("status")
++    try:
++        with pytest.raises(KeyError, match="missing field principles"):
++            mod.build_report(
++                tmp_path,
++                adversarial_receipts=_clean_receipts(),
++                modification_overrides={
++                    mod.ROADMAP_RELATIVE_PATH: False,
++                    mod.CONDUCTOR_RELATIVE_PATH: False,
++                },
++                duration_s=1.25,
++            )
++    finally:
++        mod.FIELD_PRINCIPLES["status"] = original
++
++
++def test_scenario_report_5837_defensive_preconditions_and_parsers(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-5837: malformed inputs, identity ambiguity, and mutation fail closed."""
++
++    assert mod._task_signature({"tasks": "not-list"}) == ()
++    assert mod._artifact_terminal_status({}, {"exists": False, "loadable": False}) == "missing"
++    assert mod._artifact_terminal_status({}, {"exists": True, "loadable": False}) == "malformed"
++    assert (
++        mod._artifact_terminal_status(
++            {"honest_verdict": "blocked: no input"},
++            {"exists": True, "loadable": True},
++        )
++        == "blocked"
++    )
++    assert (
++        mod._artifact_terminal_status(
++            {"honest_verdict": "positive: provisional"},
++            {"exists": True, "loadable": True},
++        )
++        == "complete"
++    )
++    assert mod._artifact_terminal_status({}, {"exists": True, "loadable": True}) == "unknown"
++    assert mod._task_number("not-an-exp") is None
++    assert mod._conductor_outcomes(tmp_path)[1] == list(mod.EXPECTED_TASK_IDS)
++    assert mod._parse_conductor_log(tmp_path / "missing-log-file") == []
++    short_log_root = tmp_path / "short-log"
++    short_log_root.mkdir()
++    _write_text(short_log_root, mod.CONDUCTOR_LOG_RELATIVE_PATH, "| too | short |\n")
++    assert mod._parse_conductor_log(short_log_root) == []
++    assert mod._task_id_for_artifact_path(Path("results/not_declared.json")) == ""
++    assert mod._flag_rows_from_stdout(None) == []
++    assert mod._flag_rows_from_stdout({"reports": []}) == []
++    assert mod._flag_rows_from_stdout({"reports": ["not-a-map"]}) == []
++    assert mod._receipt_kinds({"critical_findings": "not-list"}, "critical_findings") == []
++    nonzero = mod.normalize_adversarial_verifier_receipts(
++        [
++            {
++                "task_id": "exp5825-certified-adaptive-memory-contract",
++                "artifact_path": "results/experiment_5825_certified_adaptive_memory_contract.json",
++                "command": "nonzero",
++                "exit_code": 2,
++                "stdout_json": {"reports": [{"flags": [], "flag_count": 0}]},
++            }
++        ]
++    )[0]
++    assert nonzero["headline_ineligible_reason"] == "verifier_exit_nonzero"
++    assert (
++        mod._adversarial_receipt_failures(
++            {
++                "exp5825-certified-adaptive-memory-contract": {
++                    "present": True,
++                    "critical_findings": [
++                        {"kind": "UNEXPECTED", "severity": "critical", "detail": "bad"}
++                    ],
++                    "warn_findings": [],
++                    "exit_code": 1,
++                },
++                "exp5826-out-of-template-constraint-stream": {
++                    "present": True,
++                    "critical_findings": [],
++                    "warn_findings": [],
++                    "exit_code": 0,
++                },
++                "exp5827-minimal-core-structural-acquisition-ab": {
++                    "present": True,
++                    "critical_findings": [],
++                    "warn_findings": [],
++                    "exit_code": 0,
++                },
++                "exp5828-future-validated-structural-memory": {
++                    "present": True,
++                    "critical_findings": [{"kind": "DURATION_TOO_SHORT", "severity": "critical"}],
++                    "warn_findings": [{"kind": "METHODOLOGY_MISSING", "severity": "warn"}],
++                    "exit_code": 1,
++                },
++                "exp5829-transfer-selective-replay-audit": {
++                    "present": True,
++                    "critical_findings": [],
++                    "warn_findings": [],
++                    "exit_code": 0,
++                },
++            }
++        )[0]
++        == "exp5825-certified-adaptive-memory-contract_unexpected_critical_findings=['UNEXPECTED']"
++    )
++
++    malformed_yaml = tmp_path / "bad.yaml"
++    malformed_yaml.write_text("not: [closed\n", encoding="utf-8")
++    _payload, malformed_meta = mod._read_yaml_with_meta(malformed_yaml)
++    assert malformed_meta["parsed"] is False
++    assert malformed_meta["error"]
++    list_yaml = tmp_path / "list.yaml"
++    list_yaml.write_text("- item\n", encoding="utf-8")
++    _payload, list_meta = mod._read_yaml_with_meta(list_yaml)
++    assert list_meta["parsed"] is False
++    assert list_meta["error"] == "expected mapping, got list"
++
++    ambiguous_root = tmp_path / "ambiguous-history"
++    _make_root(ambiguous_root)
++    ambiguous_payload = _research_complete_payload()
++    altered = json.loads(json.dumps(ambiguous_payload["milestones"][0]))
++    altered["tasks"][0]["deliverable"] = "results/other.json"
++    ambiguous_payload["milestones"].append(altered)
++    _write_text(
++        ambiguous_root, mod.RESEARCH_COMPLETE_RELATIVE_PATH, yaml.safe_dump(ambiguous_payload)
++    )
++    ambiguous = _clean_build(ambiguous_root)
++    assert (
++        "ambiguous_research_complete_declared_task_blocks"
++        in ambiguous["preconditions_checked"]["failed_preconditions"]
++    )
++
++    duplicate_task_root = tmp_path / "duplicate-task"
++    _make_root(duplicate_task_root)
++    duplicate_payload = _research_complete_payload()
++    duplicate_task = dict(duplicate_payload["milestones"][0]["tasks"][0])
++    duplicate_task["deliverable"] = "results/conflicting.json"
++    duplicate_payload["milestones"][0]["tasks"].append(duplicate_task)
++    _write_text(
++        duplicate_task_root,
++        mod.RESEARCH_COMPLETE_RELATIVE_PATH,
++        yaml.safe_dump(duplicate_payload),
++    )
++    duplicate_task_report = _clean_build(duplicate_task_root)
++    assert any(
++        item.startswith("duplicate_task_id_conflicts=")
++        for item in duplicate_task_report["preconditions_checked"]["failed_preconditions"]
++    )
++    assert any(
++        item.startswith("declared_task_ids_mismatch=")
++        for item in duplicate_task_report["preconditions_checked"]["failed_preconditions"]
++    )
++
++    missing_artifact_root = tmp_path / "missing-artifact"
++    _make_root(missing_artifact_root)
++    (
++        missing_artifact_root
++        / mod.TASK_ARTIFACT_PATHS["exp5825-certified-adaptive-memory-contract"]
++    ).unlink()
++    missing_artifact = _clean_build(missing_artifact_root)
++    assert (
++        "missing_or_malformed_declared_deliverables=['exp5825-certified-adaptive-memory-contract']"
++        in missing_artifact["preconditions_checked"]["failed_preconditions"]
++    )
++
++    no_stamp_root = tmp_path / "no-stamp"
++    _make_root(no_stamp_root)
++    exp5828 = _artifact_payload("exp5828-future-validated-structural-memory")
++    exp5828["flagged_adversarial"] = False
++    _write_json(
++        no_stamp_root,
++        mod.TASK_ARTIFACT_PATHS["exp5828-future-validated-structural-memory"],
++        exp5828,
++    )
++    no_stamp = _clean_build(no_stamp_root)
++    assert (
++        "exp5828_artifact_stamp_not_preserved"
++        in no_stamp["preconditions_checked"]["failed_preconditions"]
++    )
++
++    no_taint_root = tmp_path / "no-taint"
++    _make_root(no_taint_root)
++    exp5829 = _artifact_payload("exp5829-transfer-selective-replay-audit", "sha256:wrong")
++    _write_json(
++        no_taint_root,
++        mod.TASK_ARTIFACT_PATHS["exp5829-transfer-selective-replay-audit"],
++        exp5829,
++    )
++    no_taint = _clean_build(no_taint_root)
++    assert (
++        "exp5829_upstream_taint_not_preserved"
++        in no_taint["preconditions_checked"]["failed_preconditions"]
++    )
++
++    bad_active_root = tmp_path / "bad-active"
++    _make_root(bad_active_root)
++    _write_text(bad_active_root, mod.ROADMAP_RELATIVE_PATH, "bad: [yaml\n")
++    bad_active = _clean_build(bad_active_root)
++    assert (
++        "active_roadmap_unparseable" in bad_active["preconditions_checked"]["failed_preconditions"]
++    )
++
++    bad_task_root = tmp_path / "bad-task"
++    _make_root(bad_task_root)
++    _write_text(
++        bad_task_root,
++        mod.ROADMAP_RELATIVE_PATH,
++        yaml.safe_dump(
++            {
++                "milestone": mod.MILESTONE_TO,
++                "tasks": [{"id": "exp9999-not-allocated", "deliverable": "results/x.json"}],
++            }
++        ),
++    )
++    bad_task = _clean_build(bad_task_root)
++    assert any(
++        item.startswith("active_roadmap_task_ids=")
++        for item in bad_task["preconditions_checked"]["failed_preconditions"]
++    )
++
++    bad_next_root = tmp_path / "bad-next"
++    _make_root(bad_next_root)
++    _write_text(bad_next_root, mod.ROADMAP_NEXT_RELATIVE_PATH, "bad: [yaml\n")
++    bad_next = _clean_build(bad_next_root)
++    assert "next_roadmap_unparseable" in bad_next["preconditions_checked"]["failed_preconditions"]
++
++    bad_complete_root = tmp_path / "bad-complete"
++    _make_root(bad_complete_root)
++    _write_text(bad_complete_root, mod.RESEARCH_COMPLETE_RELATIVE_PATH, "bad: [yaml\n")
++    bad_complete = _clean_build(bad_complete_root)
++    assert (
++        "research_complete_unparseable"
++        in bad_complete["preconditions_checked"]["failed_preconditions"]
++    )
++
++    existing_complete_root = tmp_path / "existing-complete"
++    _make_root(existing_complete_root, include_research_complete=False)
++    _write_text(existing_complete_root, mod.RESEARCH_COMPLETE_RELATIVE_PATH, "milestones:")
++    existing_complete = _clean_build(existing_complete_root)
++    assert existing_complete["research_complete_append_count"] == 1
++    assert mod._research_complete_blocks(existing_complete_root)
++
++    missing_log_root = tmp_path / "missing-log"
++    _make_root(missing_log_root)
++    _write_text(missing_log_root, mod.CONDUCTOR_LOG_RELATIVE_PATH, "no rows\n")
++    missing_log = _clean_build(missing_log_root)
++    assert any(
++        item.startswith("missing_conductor_outcomes=")
++        for item in missing_log["preconditions_checked"]["failed_preconditions"]
++    )
++
++    blocked_class = mod._classify_outcomes(
++        {"exp5825-certified-adaptive-memory-contract": {"status": "blocked"}},
++        {"exp5825-certified-adaptive-memory-contract": {"outcome": "GATE_BLOCK"}},
++        {},
++    )
++    assert blocked_class["blocked_skipped_task_ids"] == [
++        "exp5825-certified-adaptive-memory-contract"
++    ]
++
++    collision_branch_root = tmp_path / "collision-branches"
++    _make_root(collision_branch_root)
++    (collision_branch_root / "results/experiment_5844_directory").mkdir()
++    _write_text(collision_branch_root, "results/experiment_5700_transition_bad.json", "{")
++    collision_branch = _clean_build(collision_branch_root)
++    assert collision_branch["next_range_collision_count"] == 0
++
++    modified_root = tmp_path / "modified"
++    _make_root(modified_root)
++    modified = mod.build_report(
++        modified_root,
++        adversarial_receipts=_clean_receipts(),
++        tests_run=[{"command": "unit", "exit_code": 1}],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: True,
++            mod.CONDUCTOR_RELATIVE_PATH: True,
++        },
++    )
++    failed = modified["preconditions_checked"]["failed_preconditions"]
++    assert "research_roadmap_modified" in failed
++    assert "research_conductor_modified" in failed
++    assert any(item.startswith("test_failures=") for item in failed)
++    assert modified["duration_s"] > 0
++    assert (
++        mod._tests_failed([{"command": "global baseline", "exit_code": 1, "blocking": False}]) == []
++    )
++
++    monkeypatch.setattr(mod, "EXPECTED_TASK_IDS", ("not-an-exp-task",))
++    assert mod._same_number_alias_groups(tmp_path, {}) == {}
+-- 
+2.55.0
+

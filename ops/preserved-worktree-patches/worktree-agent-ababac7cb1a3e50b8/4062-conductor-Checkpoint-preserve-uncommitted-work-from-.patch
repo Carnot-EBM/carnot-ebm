@@ -1,0 +1,70 @@
+From 51a221ac54c4205ca50557db697c99c99d832fd7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 21:51:37 -0400
+Subject: [PATCH 04062/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ results/experiment_4753_persist_transfer.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 281896c8fb..c9ef2c943a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 212, "phase": "iteration_start", "last_beat": "2026-06-26T01:35:34Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 213, "phase": "iteration_start", "last_beat": "2026-06-26T01:51:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 838919eba8..d7453b1ab3 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9296,3 +9296,4 @@ The contro |
+ | 2026-06-26 00:46 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY) -- FIX THE STRU | OK | 111 passed, 1 warning in 10.98s |
+ | 2026-06-26 01:07 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 94 passed, 1 warning in 9.12s |
+ | 2026-06-26 01:33 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-26 01:49 UTC | PHASE A5 (ARC NORTH STAR; persist + cross-game tra | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 146ddb27b8..10dfa9adfb 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 212, "phase": "iteration_start", "started_at": "2026-06-26T01:35:34Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 213, "phase": "iteration_start", "started_at": "2026-06-26T01:51:35Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4753_persist_transfer.json b/results/experiment_4753_persist_transfer.json
+index 873919ba82..aee90a4ef6 100644
+--- a/results/experiment_4753_persist_transfer.json
++++ b/results/experiment_4753_persist_transfer.json
+@@ -109,5 +109,18 @@
+       "structural_alignment_detector"
+     ]
+   },
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.002128 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

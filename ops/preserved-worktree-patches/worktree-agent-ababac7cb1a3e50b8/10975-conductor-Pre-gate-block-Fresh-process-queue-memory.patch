@@ -1,0 +1,104 @@
+From 346dc733a910fc1df33369cf738085db5c8bf61d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 23:04:55 -0400
+Subject: [PATCH 10975/11362] [conductor] Pre-gate block: Fresh-process
+ queue-memory safety audit
+
+1 of 1 gate(s) failed; first failure: exp6962-queue-regulated-self-learning.queue_learning_run_complete_score (actual=0 == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...periment_6963_queue_memory_cold_audit.json | 51 +++++++++++++++++++
+ 4 files changed, 54 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6963_queue_memory_cold_audit.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 90a7c08522..8fe1c8f901 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-09-04T02:38:18Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-09-04T03:04:54Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8089905284..b73f31b7f1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17215,3 +17215,4 @@ code |
+ | 2026-09-04 01:21 UTC | Causal certified-energy candidate selection | OK | 97 passed, 1 warning in 13.76s |
+ | 2026-09-04 02:00 UTC | Fresh-process certified-selection audit | OK | 102 passed, 1 warning in 13.57s |
+ | 2026-09-04 02:36 UTC | Sealed chronological outcome-certificate sequence | OK | 103 passed, 1 warning in 30.33s |
++| 2026-09-04 03:02 UTC | Queue-regulated continuous self-learning | OK | 108 passed, 1 warning in 8.60s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d8230b3a80..f5f176f5b7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 5, "phase": "iteration_start", "started_at": "2026-09-04T02:38:18Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 6, "phase": "iteration_start", "started_at": "2026-09-04T03:04:54Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6963_queue_memory_cold_audit.json b/results/experiment_6963_queue_memory_cold_audit.json
+new file mode 100644
+index 0000000000..d58d078e1c
+--- /dev/null
++++ b/results/experiment_6963_queue_memory_cold_audit.json
+@@ -0,0 +1,51 @@
++{
++  "experiment": 6963,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-09-04",
++  "started_at": "2026-09-04T03:04:55.334433+00:00",
++  "finished_at": "2026-09-04T03:04:55.334433+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Fresh-process queue-memory safety audit",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=0 == expected=1",
++  "failed_upstream": "exp6962-queue-regulated-self-learning",
++  "failed_field": "queue_learning_run_complete_score",
++  "failed_operator": "==",
++  "failed_expected": 1,
++  "failed_expected_type": "int",
++  "failed_observed": 0,
++  "failed_observed_type": "int",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6962_queue_regulated_self_learning.json",
++  "failed_evidence_sha256": "sha256:2c9b92554d5277f5fbbea9587e7df6aac16bb819c6f6d80591a755550672535d",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=0 == expected=1",
++    "failed_upstream": "exp6962-queue-regulated-self-learning",
++    "failed_field": "queue_learning_run_complete_score",
++    "failed_operator": "==",
++    "failed_expected": 1,
++    "failed_expected_type": "int",
++    "failed_observed": 0,
++    "failed_observed_type": "int",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6962_queue_regulated_self_learning.json",
++    "failed_evidence_sha256": "sha256:2c9b92554d5277f5fbbea9587e7df6aac16bb819c6f6d80591a755550672535d"
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6962-queue-regulated-self-learning.queue_learning_run_complete_score (actual=0 == expected=1)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6962-queue-regulated-self-learning",
++      "artifact_field": "queue_learning_run_complete_score",
++      "op": "==",
++      "expected": 1,
++      "expected_type": "int",
++      "actual": 0,
++      "actual_type": "int",
++      "passed": false,
++      "reason": "actual=0 == expected=1",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6962_queue_regulated_self_learning.json",
++      "artifact_sha256": "sha256:2c9b92554d5277f5fbbea9587e7df6aac16bb819c6f6d80591a755550672535d"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

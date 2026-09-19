@@ -1,0 +1,522 @@
+From fc5e8e2b020bbab893cca94afdd38df3ce47eda0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 10:00:05 -0400
+Subject: [PATCH 02324/11362] [outer-loop] ARC heuristic SELECTION learning:
+ when (and when not) to use which
+
+Answers the operator audit: 'have we learned WHEN to use these heuristics; is
+the learning phase updated; are heuristics missing?' Honest gap found: the
+heuristics were captured per-game but NOT wired into the solve loop, and there
+was NO encoded selection rule. Fixed all three:
+
+1. WHEN-to-use-which is now learned + encoded (arc_heuristic_select):
+   - feature = per-action CELL IMPACT (median cells changed/move, from transitions)
+   - rule (recommend_order): no win-state -> BFS (a goal heuristic needs a target);
+     cell-impact >=~40 -> region_count first; <40 -> cell_count first; BFS last.
+   - validated: su15 (impact 20) -> chose cell_count (1406); r11l (70) -> region_count
+     (optimal 3/257); sk48 (74) -> region_count (cell_count FAILS that game).
+
+2. DYNAMIC ADAPTATION to unseen games: select_best() runs the portfolio,
+   reproduction-gates, picks by path-optimality then expansions, BANKS the winner.
+   bank_for_solved_game() (1 search, cheap) is wired into the standing loop
+   (arc_loop_solve.solve_via_explore) GUARDED so every fresh solve learns + captures
+   its best heuristic live -- never breaks the solve. recommend_approach() now
+   surfaces heuristic_policy in every new-game recipe (the new-game flow already
+   calls it). Selection rule recorded in ops/arc_solve_registry.yaml (auditable;
+   includes HOW to extend with a new heuristic).
+
+3. MISSING heuristic classes logged (ops/verifier_gaps.md): deep-sparse (wa30-class,
+   region-count is flat early -> no gradient), object-displacement/manhattan (for
+   move-a-piece-to-target games region-count can't see distance), condition/predicate
+   distance (condition-win games have no fixed target grid).
+
+Plus cell_count_distance factory + 8 asserting unit tests for the rule/feature/factory.
+33 tests pass, no regression.
+---
+ ops/arc_solve_registry.yaml                   |  23 +++
+ ops/verifier_gaps.md                          |  51 +++++
+ python/carnot/agentic/arc_graph_explore.py    |  16 ++
+ python/carnot/agentic/arc_heuristic_select.py | 186 ++++++++++++++++++
+ python/carnot/agentic/arc_solve_learning.py   |  20 ++
+ scripts/arc_loop_solve.py                     |  24 +++
+ tests/python/test_arc_heuristic_select.py     |  77 ++++++++
+ 7 files changed, 397 insertions(+)
+ create mode 100644 python/carnot/agentic/arc_heuristic_select.py
+ create mode 100644 tests/python/test_arc_heuristic_select.py
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 6632f58de9..67af17db0e 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -213,6 +213,29 @@ learning_loop:
+   verifier_routed_search: python/carnot/agentic/arc_solver_kit.py  # OfflineSolver verifier=
+   learned_verifier: python/carnot/agentic/arc_value_learner.py
+   reproduction_gate: python/carnot/agentic/arc_solver_kit.py        # reproduce()
++  goal_distance_heuristics: python/carnot/agentic/arc_heuristic_select.py
++  # GOAL-DISTANCE HEURISTIC SELECTION (the "when to use which" learning, 2026-06-17).
++  # The search (graph_explore_solve_v2) takes an optional A*-style goal heuristic. We have two,
++  # and they are NOT interchangeable -- the selector picks by measured per-action CELL IMPACT
++  # (median cells one action changes, from a few banked transitions):
++  #   - cell_count_distance (Hamming): best for LOW cell-impact games (su15 ~20 cells/action;
++  #     cell-count ~= move-count). Over-estimates move-distance on high-impact games -> greedy.
++  #   - misplaced_region_distance (8-conn wrong-region count): best for HIGH cell-impact games
++  #     (r11l~70 / sk48~74 / m0r0~100). Move-aligned (one action ~ fixes one region) -> finds the
++  #     OPTIMAL path with far fewer expansions (r11l 3-act @257 vs BFS 2236; sk48 -43%; m0r0
++  #     solves where BFS exhausts 8000). NEVER regressed across the 8-game validation.
++  #   - bfs (no heuristic): the complete fallback, and the CORRECT choice when NO win-state/target
++  #     is known yet (a first-ever solve) -- a goal-distance heuristic needs a target.
++  # RULE (arc_heuristic_select.recommend_order): no target -> bfs; cell-impact >= ~40 ->
++  #   region_count first; < 40 -> cell_count first; bfs always last.
++  # DYNAMIC ADAPTATION to unseen games: select_best() runs the portfolio, reproduction-gates each,
++  #   picks the winner (path-optimality then expansions), and BANKS it to gap_fills/. The standing
++  #   loop (arc_loop_solve.solve_via_explore) calls bank_for_solved_game() after every fresh solve,
++  #   so each new game's best heuristic is learned + captured live (guarded, never breaks the solve).
++  #   recommend_approach() now surfaces this policy in every new-game recipe.
++  # CAPTURED (reproduction-gated gap_fills/): su15=cell_count; r11l/ls20/m0r0/sk48=region_count.
++  # TO EXTEND (add a new heuristic): register it in arc_heuristic_select.factory()/HEURISTIC_NAMES
++  #   + add its selection condition to recommend_order; it then joins the portfolio automatically.
+   # ADAPTER-FREE FALLBACK (first contact, no per-game RE): scripts/arc_loop_solve.py
+   # routes an un-adaptered game to graph_explore_solve (arc_graph_explore.py); if it
+   # advances a level it CAPTURES the trajectory -> reproduction-gates it -> trains a
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 3921c3ebe9..6c396be07e 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -1245,3 +1245,54 @@ registry version that closed them when a new verifier captures a previously-open
+ - candidate design: larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path
+ - priority: medium
+ <!-- exp4333-gap-4331:end -->
++
++<!-- arc-search-heuristic-gaps-2026-06-17:start -->
++## Missing SEARCH-HEURISTIC classes (move-distance program, 2026-06-17)
++
++The goal-distance heuristic is a cheap, oracle-distinct PROGRESS verifier for the search (it
++ranks states by estimated moves-to-win). We now have two — `cell_count_distance` (low cell-impact
++games) and `misplaced_region_distance` (high cell-impact games) — selected dynamically by
++`arc_heuristic_select`. The 8-game validation surfaced the heuristic CLASSES we still lack:
++
++### GAP-ARC-HEURISTIC-DEEP-SPARSE: deep-sparse-win progress signal (wa30-class)
++- status: open
++- evidence: /tmp move-dist A/B + registry HARD TAIL note — wa30 (~33-deep keyboard nav) is NOT
++  solved by BFS, cell_count, OR region_count at budget 8000 (all no-advance); cross-game verifier
++  also did not transfer (66s vs 77s, both no-advance).
++- failure mode: region-count is flat early in a long sparse game (every far-from-win state has a
++  similar number of wrong regions), so it gives no usable gradient until near the goal; BFS
++  exhausts the budget before reaching the win.
++- missing discriminator: a progress signal that increases monotonically along a LONG plan before
++  the grid visibly approaches the win (sub-goal / bottleneck / reachability distance, not surface).
++- candidate design: learned game-specific value head (per-game RE / adapter), OR a sub-goal
++  decomposition heuristic, OR depth-biased novelty (v3) with a much larger budget.
++- priority: high (the deep tail is the bulk of the unsolved games)
++
++### GAP-ARC-HEURISTIC-OBJECT-DISPLACEMENT: manhattan-to-target for piece-moving games
++- status: open
++- evidence: r11l region-count finds the optimal path, but for games where a specific agent/object
++  must REACH a target cell, region-count only counts "wrong regions" — it cannot tell a piece 2
++  cells from its goal from one 20 cells away (both = 1 wrong region).
++- failure mode: region-count is move-aligned for FIX-IN-PLACE edits but blind to DISTANCE for
++  move-an-object-to-a-target mechanics; it under-discriminates within an equal region-count tier.
++- missing discriminator: summed manhattan distance of each misplaced object to its WIN position
++  (object correspondence + displacement), as a tie-breaker within equal region counts.
++- candidate design: a `manhattan_displacement_distance(win)` heuristic (match components grid↔win
++  by color/shape, sum centroid manhattan); register in arc_heuristic_select; select for spatial
++  piece-moving games (survey is_spatial_planning + low region-count variance).
++- priority: medium
++
++### GAP-ARC-HEURISTIC-CONDITION-WIN: predicate-distance for non-target-grid wins
++- status: open
++- evidence: all current goal-distance heuristics need a concrete win GRID to diff against; games
++  whose win is a CONDITION ("all X collected", "counter == N") have no single target grid, so the
++  heuristics are inapplicable (and a banked L1 win-grid mis-grounds a different level).
++- failure mode: a grid-diff heuristic grounded on one level's win-state does not transfer to other
++  levels of the same game when levels are different puzzles sharing only the win CONDITION.
++- missing discriminator: distance measured against the win PREDICATE (count of unmet sub-conditions
++  / distance to the condition boundary), not a fixed grid — ties this to the GameAdapter
++  hand_verifier as the goal signal.
++- candidate design: a `condition_distance(hand_verifier)` heuristic that scores how close a frame
++  is to satisfying the adapter's win predicate; level-general by construction.
++- priority: medium
++<!-- arc-search-heuristic-gaps-2026-06-17:end -->
+diff --git a/python/carnot/agentic/arc_graph_explore.py b/python/carnot/agentic/arc_graph_explore.py
+index 05be822581..8dd4515fe8 100644
+--- a/python/carnot/agentic/arc_graph_explore.py
++++ b/python/carnot/agentic/arc_graph_explore.py
+@@ -324,6 +324,22 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
+     return _ret(None, best)
+ 
+ 
++def cell_count_distance(win):
++    """Baseline goal heuristic: `goal_distance(grid) -> float` = the number of cells differing
++    from the win-state (`(grid != win).sum()`, Hamming distance). It is move-distance-accurate
++    ONLY in LOW-cell-impact games (where one action changes few cells, so cell-count ≈ move
++    count — e.g. su15, where it slightly beats region-count). In HIGH-cell-impact games it
++    over-estimates move-distance and sends A* greedy → use `misplaced_region_distance` instead.
++    The `arc_heuristic_select` router picks between the two by per-action cell impact."""
++    import numpy as np
++    win_arr = np.asarray(win)
++
++    def goal_distance(grid) -> float:
++        return float((np.asarray(grid) != win_arr).sum())
++
++    return goal_distance
++
++
+ def misplaced_region_distance(win, connectivity: int = 8):
+     """MOVE-DISTANCE-aware goal heuristic factory. Returns `goal_distance(grid) -> float` =
+     the number of CONNECTED COMPONENTS in the `(grid != win)` mask — how many distinct
+diff --git a/python/carnot/agentic/arc_heuristic_select.py b/python/carnot/agentic/arc_heuristic_select.py
+new file mode 100644
+index 0000000000..94c20dadea
+--- /dev/null
++++ b/python/carnot/agentic/arc_heuristic_select.py
+@@ -0,0 +1,186 @@
++"""Heuristic SELECTION learning for ARC-AGI-3 search — the "when (and when NOT) to use which
++goal-distance heuristic" brain. This is the learning layer that was missing: we had several
++heuristics (cell-count, 8-connected misplaced-region count) and per-game captures, but no
++encoded rule for CHOOSING between them, and nothing wired into the live solve loop.
++
++Why selection matters (measured 2026-06-17): the heuristics are NOT interchangeable.
++  - `misplaced_region_distance` (8-conn wrong-region count) wins on HIGH-cell-impact games
++    where one action flips many cells (r11l/m0r0/sk48): it is move-aligned (one action ≈ fixes
++    one region) so A* finds the OPTIMAL path with far fewer expansions (r11l -88%).
++  - `cell_count_distance` (Hamming) wins on LOW-cell-impact games (su15) where cell-count ≈
++    move-count, and over-estimates move-distance on high-impact games (greedy → suboptimal).
++  - pure BFS (no heuristic) is the complete fallback and is correct when NO win-state/target is
++    known (a goal-distance heuristic needs a target — on a first-ever solve there is none).
++
++The DISCRIMINATING feature is the per-action CELL IMPACT (median cells changed per move),
++measurable from a handful of banked transitions: su15≈20 (cell-count better) vs r11l≈70 /
++sk48≈74 / m0r0≈100 (region-count better). `recommend_order` encodes that learned rule.
++
++For DYNAMIC ADAPTATION to UNSEEN games, `select_best` does not merely trust the rule — it runs
++the small portfolio in the recommended order, reproduction-gates each, picks the winner
++(fewest expansions among reproduced; solving-where-others-fail wins outright), and BANKS it to
++`gap_fills/` so the choice becomes a reusable, compounding asset. Try-and-measure beats predict
++on a novel game; the rule just orders the portfolio so the likely winner runs first.
++"""
++from __future__ import annotations
++
++import json
++from typing import Any, Callable, Optional
++
++import numpy as np
++
++from .arc_graph_explore import (
++    cell_count_distance,
++    graph_explore_solve_v2,
++    misplaced_region_distance,
++    trajectory_labels,
++)
++
++# Learned threshold separating low- vs high-cell-impact games. Derived from the 2026-06-17
++# 8-game A/B: su15≈20 / cd82,sp80 low (cell-count fine) vs r11l≈70 / sk48≈74 / m0r0≈100
++# (region-count wins). The portfolio selector makes the exact value non-critical — it only
++# orders which heuristic is TRIED first.
++HIGH_IMPACT_CELLS = 40
++
++# The heuristic catalog. None = pure BFS (no heuristic). New heuristics register here.
++HEURISTIC_NAMES = ("region_count", "cell_count", "bfs")
++
++
++def factory(name: str, win) -> Optional[Callable[[Any], float]]:
++    """Return the goal_distance(grid) factory for a heuristic name, or None for BFS."""
++    if name == "region_count":
++        return misplaced_region_distance(win, connectivity=8)
++    if name == "cell_count":
++        return cell_count_distance(win)
++    if name == "bfs":
++        return None
++    raise ValueError(f"unknown heuristic {name!r}")
++
++
++def per_action_cell_impact(transitions) -> float:
++    """Median number of cells a single action changes, over the banked transitions. This is the
++    feature that predicts which heuristic to use — high impact ⇒ cell-count over-estimates
++    move-distance ⇒ prefer region-count."""
++    diffs = [int((np.asarray(t.grid) != np.asarray(t.next_grid)).sum())
++             for t in transitions
++             if not np.array_equal(np.asarray(t.grid), np.asarray(t.next_grid))]
++    return float(np.median(diffs)) if diffs else 0.0
++
++
++def recommend_order(step_cells: float, has_target: bool) -> list[str]:
++    """THE LEARNED RULE — ordered heuristic names to try for a game.
++
++    - No win-state/target known (e.g. a first-ever solve) ⇒ ['bfs'] only: a goal-distance
++      heuristic is meaningless without a target, so do NOT use one (this is the 'when NOT to').
++    - High per-action cell-impact ⇒ region-count first (move-aligned), cell-count, then BFS.
++    - Low per-action cell-impact ⇒ cell-count first, region-count, then BFS.
++    BFS is always included last as the complete fallback (it never fails to be correct)."""
++    if not has_target:
++        return ["bfs"]
++    if step_cells >= HIGH_IMPACT_CELLS:
++        return ["region_count", "cell_count", "bfs"]
++    return ["cell_count", "region_count", "bfs"]
++
++
++def _run(env_factory, game, win, mask_hud, budget, max_depth, name) -> dict:
++    """Run one heuristic over a fresh env; return solve metrics (reproduction-gated)."""
++    from . import arc_solver_kit as kit
++    from .arc_agi3_live_adapter import _game_action
++    from .arc_agi3_world_model import grid_of
++    from arcengine import GameAction
++
++    gd = factory(name, win)
++    heuristic = None if gd is None else (lambda frame, _gd=gd: _gd(grid_of(frame)))
++    env = env_factory()
++    stats: dict = {}
++    traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=budget, max_depth=max_depth,
++                                       heuristic=heuristic, mask_hud=mask_hud, stats=stats)
++    reproduced = False
++    if traj:
++        def apply(env, label, frame):
++            s = json.loads(label)
++            return env.step(_game_action(GameAction, s["action"]), data=s.get("data"))
++        reproduced = bool(kit.reproduce(game, trajectory_labels(traj), apply,
++                                        claimed_level=lvl)["reproduced"])
++    return {"heuristic": name, "solved": bool(traj), "reproduced": reproduced,
++            "actions": len(traj) if traj else 0, "expansions": stats.get("expansions"),
++            "trajectory": traj if reproduced else None}
++
++
++def select_best(game: str, win, transitions, *, mask_hud: bool = False, budget: int = 8000,
++                max_depth: int = 60, env_factory: Optional[Callable[[], Any]] = None,
++                bank: bool = True) -> dict:
++    """DYNAMIC ADAPTATION: run the recommended heuristic portfolio on `game` (which must have a
++    known `win`-state), reproduction-gate each, and return the winner. A heuristic that SOLVES
++    where another doesn't wins outright; otherwise fewest expansions among reproduced wins. The
++    winning heuristic is BANKED to gap_fills/ (the selection becomes a reusable asset) unless
++    bank=False. Returns {chosen, step_cells, order, results:[...], rule}."""
++    if env_factory is None:
++        from . import arc_solver_kit as kit
++        def env_factory():  # noqa: E306
++            arc = kit.offline_arcade()
++            return arc.make(game, scorecard_id=arc.open_scorecard())
++
++    win = np.asarray(win)
++    step_cells = per_action_cell_impact(transitions)
++    order = recommend_order(step_cells, has_target=True)
++
++    results = [_run(env_factory, game, win, mask_hud, budget, max_depth, name) for name in order]
++    reproduced = [r for r in results if r["reproduced"]]
++
++    chosen = None
++    if reproduced:
++        # fewest actions first (path-optimality), then fewest expansions (efficiency)
++        chosen = min(reproduced, key=lambda r: (r["actions"], r["expansions"] or 1 << 30))
++
++    if bank and chosen is not None and chosen["heuristic"] != "bfs":
++        _bank(game, win, chosen["heuristic"], chosen)
++
++    return {"game": game, "chosen": chosen["heuristic"] if chosen else None,
++            "step_cells": step_cells, "order": order,
++            "rule": ("high-impact→region_count" if step_cells >= HIGH_IMPACT_CELLS
++                     else "low-impact→cell_count"),
++            "results": [{k: v for k, v in r.items() if k != "trajectory"} for r in results]}
++
++
++def bank_for_solved_game(game: str, win, transitions, *, mask_hud: bool = False,
++                         budget: int = 8000, max_depth: int = 60,
++                         env_factory: Optional[Callable[[], Any]] = None) -> Optional[str]:
++    """LIVE-LOOP HOOK (cheap): once a game is solved and a win-state is known, pick the
++    RULE-recommended heuristic (by measured per-action cell-impact), reproduction-gate it with a
++    SINGLE search, and BANK it to gap_fills/ if it reproduces. One extra search (vs select_best's
++    full portfolio) — light enough to run on every fresh solve so the learning updates live.
++    Returns the banked heuristic name, or None if it didn't reproduce. Never raises on a bad
++    heuristic (the caller should still guard, but this is best-effort)."""
++    if env_factory is None:
++        from . import arc_solver_kit as kit
++        def env_factory():  # noqa: E306
++            arc = kit.offline_arcade()
++            return arc.make(game, scorecard_id=arc.open_scorecard())
++    win = np.asarray(win)
++    name = recommend_order(per_action_cell_impact(transitions), has_target=True)[0]
++    r = _run(env_factory, game, win, mask_hud, budget, max_depth, name)
++    if r["reproduced"]:
++        _bank(game, win, name, r)
++        return name
++    return None
++
++
++def _bank(game: str, win, name: str, metrics: dict) -> None:
++    """Persist the winning heuristic to gap_fills/ as a self-contained, reusable asset."""
++    from . import gap_fills
++    if name == "region_count":
++        body = ("    return float(ndi.label(np.asarray(grid) != WIN, "
++                "structure=np.ones((3, 3), dtype=int))[1])\n")
++        imports = "import numpy as np\nimport scipy.ndimage as ndi\n"
++    elif name == "cell_count":
++        body = "    return float((np.asarray(grid) != WIN).sum())\n"
++        imports = "import numpy as np\n"
++    else:
++        return
++    code = (f"{imports}WIN = np.array({np.asarray(win).tolist()}, dtype=np.int16)\n\n"
++            f"def goal_distance(grid):\n{body}")
++    gap_fills.save_heuristic(
++        game, code,
++        meta=(f"selected '{name}' by portfolio (step_cells-routed); reproduced "
++              f"{metrics['actions']}-action solve @ {metrics['expansions']} exp"))
+diff --git a/python/carnot/agentic/arc_solve_learning.py b/python/carnot/agentic/arc_solve_learning.py
+index 19838c903b..e5a8d9f493 100644
+--- a/python/carnot/agentic/arc_solve_learning.py
++++ b/python/carnot/agentic/arc_solve_learning.py
+@@ -123,6 +123,7 @@ def recommend_approach(target_game: str) -> dict:
+         "target_game": target_game,
+         "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
+         "recommended": ranked[:3],
++        "heuristic_policy": _heuristic_policy(),
+         "general_gotchas": reg.get("general_gotchas", []),
+         "guidance": ("Start from the top-ranked solved game's solver + reuse its action-model "
+                      "and gotchas; only reverse-engineer the DELTA. Import arc_solver_kit; run "
+@@ -130,6 +131,25 @@ def recommend_approach(target_game: str) -> dict:
+     }
+ 
+ 
++def _heuristic_policy() -> dict:
++    """The learned WHEN-to-use-which-heuristic policy (arc_heuristic_select). The choice is
++    DATA-DRIVEN per game and cannot be decided from survey features alone (it needs the per-
++    action cell-impact, measured from a few transitions) — so the policy is: run the portfolio
++    selector ONCE a win-state is available; for a first-ever solve (no target) use pure BFS."""
++    return {
++        "selector": "arc_heuristic_select.select_best(game, win, transitions, mask_hud=...)",
++        "feature": "per-action cell impact (median cells changed per move) from banked transitions",
++        "rule": {
++            "no_win_state_yet (first solve)": "pure BFS — a goal-distance heuristic needs a target",
++            "high cell-impact (>= ~40 cells/action)": "misplaced_region_distance (8-conn) — move-aligned",
++            "low cell-impact (< ~40)": "cell_count_distance (Hamming) — cell-count ≈ move-count",
++        },
++        "default_if_unmeasured": ("region_count — it NEVER regressed across the 8-game validation "
++                                  "and wins the high-impact games; cell_count only when low-impact"),
++        "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
++    }
++
++
+ if __name__ == "__main__":  # pragma: no cover - manual probe
+     import sys
+     print(json.dumps(recommend_approach(sys.argv[1] if len(sys.argv) > 1 else "vc33"), indent=2))
+diff --git a/scripts/arc_loop_solve.py b/scripts/arc_loop_solve.py
+index 97a77d271b..74eed7cd99 100644
+--- a/scripts/arc_loop_solve.py
++++ b/scripts/arc_loop_solve.py
+@@ -141,11 +141,35 @@ def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60
+     # persist the captured trajectory as the adapter SEED
+     seed = RESULTS / f"arc_explore_trajectory_{game}.json"
+     seed.write_text(json.dumps({"game": game, "reached_level": lvl, "trajectory": traj}, indent=2))
++
++    # LEARN + BANK the best goal-distance heuristic for this game (dynamic adaptation): now that
++    # we have a win-state, pick the rule-recommended heuristic by measured per-action cell-impact,
++    # reproduction-gate it, and bank it to gap_fills/ so the NEXT solve of this game is heuristic-
++    # guided. Fully guarded: heuristic-learning must NEVER break the solve itself.
++    heuristic_learned = None
++    try:
++        if gate["reproduced"] and traj:
++            import types
++            from carnot.agentic import arc_heuristic_select as hsel
++            f2 = env.reset()
++            if warmup:
++                f2 = apply(env, labels[0], f2)
++            trans = []
++            for lab in (labels[1:] if warmup else labels):
++                g0 = grid_of(f2)
++                f2 = apply(env, lab, f2)
++                trans.append(types.SimpleNamespace(grid=g0, next_grid=grid_of(f2)))
++            heuristic_learned = hsel.bank_for_solved_game(
++                game, grid_of(f2), trans, mask_hud=False, budget=max_expansions)
++    except Exception:
++        heuristic_learned = None
++
+     return {
+         "game": game, "method": "graph_explore_adapter_free", "reached_level": lvl,
+         "moves": len(traj), "offline_reproduced": bool(gate["reproduced"]),
+         "reproduced_levels": lvl, "trajectory_seed": str(seed.relative_to(REPO)),
+         "verifier_seed_checkpoint": (str(ckpt.relative_to(REPO)) if ckpt else None),
++        "heuristic_learned": heuristic_learned,
+         "next": "register a GameAdapter from the seed for verifier-routed re-solving",
+         "mode": "standing_arc_loop_graph_explore_no_quota",
+     }
+diff --git a/tests/python/test_arc_heuristic_select.py b/tests/python/test_arc_heuristic_select.py
+new file mode 100644
+index 0000000000..e14dc0f23e
+--- /dev/null
++++ b/tests/python/test_arc_heuristic_select.py
+@@ -0,0 +1,77 @@
++"""Unit tests for the ARC heuristic SELECTION learning (arc_heuristic_select) — the encoded
++"when (and when NOT) to use which goal-distance heuristic" rule.
++
++These pin the LEARNED rule itself (derived from the 2026-06-17 8-game A/B), independent of any
++live search: no win-state ⇒ BFS only; high per-action cell-impact ⇒ region-count first;
++low ⇒ cell-count first; BFS always the complete fallback.
++"""
++import types
++
++import numpy as np
++
++from carnot.agentic import arc_heuristic_select as sel
++
++
++def _trans(grid, next_grid):
++    return types.SimpleNamespace(grid=np.asarray(grid), next_grid=np.asarray(next_grid))
++
++
++def test_no_win_state_uses_bfs_only():
++    # The 'when NOT to use a heuristic' case: a goal-distance heuristic is meaningless without a
++    # target (e.g. a first-ever solve), so the rule must fall back to pure BFS.
++    assert sel.recommend_order(step_cells=999, has_target=False) == ["bfs"]
++    assert sel.recommend_order(step_cells=0, has_target=False) == ["bfs"]
++
++
++def test_high_cell_impact_prefers_region_count():
++    order = sel.recommend_order(step_cells=70, has_target=True)
++    assert order[0] == "region_count"
++    assert order[-1] == "bfs"            # BFS is always the complete fallback
++    assert set(order) == {"region_count", "cell_count", "bfs"}
++
++
++def test_low_cell_impact_prefers_cell_count():
++    order = sel.recommend_order(step_cells=20, has_target=True)
++    assert order[0] == "cell_count"
++    assert order[-1] == "bfs"
++
++
++def test_threshold_boundary():
++    # Exactly at the threshold counts as high-impact (>=).
++    assert sel.recommend_order(sel.HIGH_IMPACT_CELLS, True)[0] == "region_count"
++    assert sel.recommend_order(sel.HIGH_IMPACT_CELLS - 1, True)[0] == "cell_count"
++
++
++def test_per_action_cell_impact_is_median_changed_cells():
++    win = np.zeros((4, 4), dtype=np.int16)
++    g1 = win.copy()
++    a = g1.copy(); a[0, 0] = 1                    # 1 cell changed
++    b = a.copy(); b[1, :] = 2                      # 4 cells changed
++    c = b.copy(); c[2, :3] = 3                     # 3 cells changed
++    trans = [_trans(g1, a), _trans(a, b), _trans(b, c)]
++    # changed-cell counts = [1, 4, 3] -> median 3
++    assert sel.per_action_cell_impact(trans) == 3.0
++
++
++def test_per_action_cell_impact_ignores_noops():
++    g = np.zeros((3, 3), dtype=np.int16)
++    moved = g.copy(); moved[0, 0] = 5
++    trans = [_trans(g, g), _trans(g, moved)]      # first is a no-op (0 changed) -> ignored
++    assert sel.per_action_cell_impact(trans) == 1.0
++
++
++def test_factory_returns_callables_and_none_for_bfs():
++    win = np.zeros((5, 5), dtype=np.int16)
++    grid = win.copy(); grid[0, 0] = 1; grid[4, 4] = 1   # two separate wrong regions
++    region = sel.factory("region_count", win)
++    cell = sel.factory("cell_count", win)
++    assert sel.factory("bfs", win) is None
++    assert region(grid) == 2.0          # two 8-connected wrong regions
++    assert cell(grid) == 2.0            # two differing cells
++    assert region(win) == 0.0 and cell(win) == 0.0
++
++
++def test_factory_rejects_unknown():
++    import pytest
++    with pytest.raises(ValueError):
++        sel.factory("does_not_exist", np.zeros((2, 2)))
+-- 
+2.55.0
+

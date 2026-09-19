@@ -1,0 +1,76 @@
+From 3d6327d66e42338b142630d5f2de382a304d622a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 21:03:15 -0400
+Subject: [PATCH 05719/11362] [conductor] Update docs for PHASE 1 gated on
+ exp5247 artifact_normalizer_ready -- GAP-4 receipt salvage or retire current
+ pool
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md        | 3 +++
+ ops/changelog.md             | 1 +
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ ops/status.md                | 1 +
+ 6 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index eb1f5cb52d..89c8db9ece 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1902,3 +1902,6 @@ legacy tests.
+ | SCENARIO-REPORT-5247-SAFE-REPAIR | Wrappers, nulls, and unambiguous gate fields normalize | Scaffolding | Artifact records only shape-only safe repairs: top-level principle wrapper unwrap, missing explicit null for declared nullable fields, and unambiguous boolean gate field extraction; no methodology, duration, model, solve, or win evidence is synthesized. |
+ | SCENARIO-REPORT-5247-UNSAFE-REJECTION | Missing evidence does not become evidence | Scaffolding | Artifact rejects missing methodology receipts, missing duration receipts, subfloor compute duration, missing model receipts, missing or conflicting gate booleans, missing required-field principles, and solve/provenance/performance-win synthesis; the honest verdict says missing evidence remains blocked. |
+ | SCENARIO-REPORT-5247-REPRESENTATIVE-479 | Representative artifacts stay quarantined when flagged | Scaffolding | Representative checks keep Exp 5235, Exp 5236, and Exp 5241 not ready for gates when source artifacts are flagged adversarial or have pending corrigenda; safe_repairs are empty and normalization_rejections preserve the quarantine reasons. |
++| REQ-REPORT-5248 | GAP-4 receipt salvage or retirement decision | Implemented | `python/carnot/experiment_5248_gap4_receipt_salvage_or_retire_v480.py`; `tests/python/test_experiment_5248_gap4_receipt_salvage_or_retire_v480.py`; `openspec/capabilities/research-reporting/spec.md`; `results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json`; honest_verdict={"principle":"Must start with complete: or blocked_ and state the final GAP-4 receipt decision.","value":"complete: GAP-4 final decision salvaged_clean_null; frozen validation preserves wins=0, losses=0, ties=120, and all claim-critical receipts are present after safe normalization."}; status=null; gap4_final_decision.value=salvaged_clean_null; unsafe_missing_receipts.value=[]; wins.value=0; losses.value=0; ties.value=120; pool_retired.value=false; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields. |
++| SCENARIO-REPORT-5248-SALVAGED-CLEAN-NULL | Frozen null is salvaged by receipt classification | Implemented | Artifact records Exp 5247 normalizer replay over frozen GAP-4 artifacts, `gap4_final_decision.value=salvaged_clean_null`, empty `unsafe_missing_receipts.value`, preserved counts wins=0 losses=0 ties=120, `pool_retired.value=false`, and `no_new_generation.value=true`. |
++| SCENARIO-REPORT-5248-BLOCKED-OR-RETIRED | Claim-critical missing evidence fails closed | Implemented | Focused tests cover blocked or retired fail-closed paths for claim-critical missing evidence; completed artifact followed the salvaged clean-null path and does not claim a blocked or retired final decision. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index f56ee92183..3c08017cef 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10885,3 +10885,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-04: Operational retrospective for milestone 2026.07.479 (✅ Complete) — TIMING DATA reports no experiment commits since activation after both live git-log and disk-mtime reconstruction checks. Locked operational fields remain total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null; no compute-bound slow-run, GPU-idle bottleneck, or DualGPURunner finding is supportable from the supplied data. Tooling recommendation: make the empty timing window a first-class no-data branch before GPU-efficiency analysis. estimated_time_savings_pct=0; results/operational_retro_2026_07_479.json
+ - 2026-07-04: PHASE 0 transition -- archive .479 truth and prepare .480 activation (⚠️ Blocked) — honest_verdict={"principle":"Must start with complete: or blocked_ and state whether .479 was archived and .480 is activation-ready.","value":"blocked_archive_479_activate_480: .479 archived but .480 activation-ready verification is blocked by the failed/interrupted full tests/python run; no roadmap overwrite performed."}; status=<missing>; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5245_archive_479_activate_480.json
+ - 2026-07-05: PHASE 1 evidence integrity -- SLOT-style artifact schema and receipt normalizer (⚠️ Blocked) — honest_verdict={"principle":"Must start with complete: or blocked_ and state whether the strict normalizer is ready for gated consumers.","value":"complete: strict artifact schema/receipt normalizer ready for gated consumers; safe repairs are shape-only and missing evidence remains blocked."}; status=<missing>; artifact_normalizer_ready=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5247_slot_artifact_normalizer_v480.json
++- 2026-07-05: PHASE 1 gated on exp5247 artifact_normalizer_ready -- GAP-4 receipt salvage or retire current pool (✅ Complete) — honest_verdict={"principle":"Must start with complete: or blocked_ and state the final GAP-4 receipt decision.","value":"complete: GAP-4 final decision salvaged_clean_null; frozen validation preserves wins=0, losses=0, ties=120, and all claim-critical receipts are present after safe normalization."}; status=null; gap4_final_decision.value=salvaged_clean_null; unsafe_missing_receipts.value=[]; wins.value=0; losses.value=0; ties.value=120; pool_retired.value=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 93bfd27dfd..0c19f4620e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 74, "phase": "iteration_start", "last_beat": "2026-07-05T00:43:30Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 75, "phase": "iteration_start", "last_beat": "2026-07-05T01:00:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index aa08e85f9f..d2d2537dcb 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10310,3 +10310,4 @@ web search: |
+ | 2026-07-05 00:18 UTC | PHASE 0 SOTA refresh -- 2025-2026 memory, verifica | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+ | 2026-07-05 00:20 UTC | PHASE 0 SOTA refresh -- 2025-2026 memory, verifica | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+ | 2026-07-05 00:41 UTC | PHASE 1 evidence integrity -- SLOT-style artifact  | OK | 93 passed, 1 warning in 7.80s |
++| 2026-07-05 00:58 UTC | PHASE 1 gated on exp5247 artifact_normalizer_ready | OK | 91 passed, 1 warning in 11.19s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c2effc5c32..ecfa11851b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 74, "phase": "iteration_start", "started_at": "2026-07-05T00:43:30Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 75, "phase": "iteration_start", "started_at": "2026-07-05T01:00:17Z"}
+\ No newline at end of file
+diff --git a/ops/status.md b/ops/status.md
+index 6e0ab8b447..a2bb3d8de2 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5801,3 +5801,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-04 | Exp 5244: PHASE Z capstone -- reconcile .479 evidence, exclusions, specs, memory, ARC, KAN, and hardware | ⚠️ Blocked | honest_verdict={"principle":"Must start with complete:/complete_/success:/success_ and state the honest .479 close state.","value":"complete: .479 closed with GAP-4 blocked, GAP-1 blocked, VerIbmc retired after clean-null evidence, continuous self-learning controlled_positive, ARC delta 0, KAN certificate extended, hardware no-speedup, and flagged/gated artifacts excluded."}; status=<missing>; tasks_seen=11; gap4_final_status=blocked; gap1_final_status=blocked; veribmc_final_status=retired; continuous_self_learning_status=controlled_positive; arc_level_delta=0; kan_certificate_status=extended; hardware_speedup_claimed=false; ops_docs_updated=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-CAPSTONE-5244, SCENARIO-CAPSTONE-5244, SCENARIO-CAPSTONE-5244-FIELD-PRINCIPLES; status label mapped to ⚠️ Blocked because the honest_verdict field contains `blocked` | results/experiment_5244_capstone_v479.json |
+ | 2026-07-04 | Exp 5245: PHASE 0 transition -- archive .479 truth and prepare .480 activation | ⚠️ Blocked | honest_verdict={"principle":"Must start with complete: or blocked_ and state whether .479 was archived and .480 is activation-ready.","value":"blocked_archive_479_activate_480: .479 archived but .480 activation-ready verification is blocked by the failed/interrupted full tests/python run; no roadmap overwrite performed."}; status=<missing>; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5245, SCENARIO-REPORT-5245, SCENARIO-REPORT-5245-BLOCKED-CLOSEOUT; status label mapped to ⚠️ Blocked because honest_verdict.value starts with `blocked_` and contains `blocked` | results/experiment_5245_archive_479_activate_480.json |
+ | 2026-07-05 | Exp 5247: PHASE 1 evidence integrity -- SLOT-style artifact schema and receipt normalizer | ⚠️ Blocked | honest_verdict={"principle":"Must start with complete: or blocked_ and state whether the strict normalizer is ready for gated consumers.","value":"complete: strict artifact schema/receipt normalizer ready for gated consumers; safe repairs are shape-only and missing evidence remains blocked."}; status=<missing>; artifact_normalizer_ready=true; safe_repairs_supported=3; unsafe_repairs_rejected=7; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5247, SCENARIO-REPORT-5247-SAFE-REPAIR, SCENARIO-REPORT-5247-UNSAFE-REJECTION, SCENARIO-REPORT-5247-REPRESENTATIVE-479; status label mapped to ⚠️ Blocked because the honest_verdict field contains `blocked` | results/experiment_5247_slot_artifact_normalizer_v480.json |
++| 2026-07-05 | Exp 5248: PHASE 1 gated on exp5247 artifact_normalizer_ready -- GAP-4 receipt salvage or retire current pool | ✅ Complete | honest_verdict={"principle":"Must start with complete: or blocked_ and state the final GAP-4 receipt decision.","value":"complete: GAP-4 final decision salvaged_clean_null; frozen validation preserves wins=0, losses=0, ties=120, and all claim-critical receipts are present after safe normalization."}; status=null; gap4_final_decision.value=salvaged_clean_null; unsafe_missing_receipts.value=[]; preserved counts wins=0 losses=0 ties=120; pool_retired.value=false; no_new_generation.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5248, SCENARIO-REPORT-5248-SALVAGED-CLEAN-NULL, SCENARIO-REPORT-5248-BLOCKED-OR-RETIRED; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:`, records final decision `salvaged_clean_null`, and the artifact has no unsafe missing receipts | results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json |
+-- 
+2.55.0
+

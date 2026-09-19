@@ -1,0 +1,169 @@
+From e7b3628d883177b7d3588f1d4574ae284f92abc5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 17 Aug 2026 23:36:05 -0400
+Subject: [PATCH 09288/11362] Point the scored path at NVFP4 + a
+ Blackwell-targeted llama.cpp build
+
+THE ROOT CAUSE, which nothing was watching. The shipped llama.cpp was configured
+CMAKE_CUDA_ARCHITECTURES=86 -- the dev 3090s -- and then sent to an
+NvidiaRtxPro6000 (Blackwell, sm_120). Nothing in the project tied the build
+target to the scored hardware, so the mismatch survived every hardware move. The
+v22 log shows the generator does load on GPU, so this was not the CPU-fallback
+disaster it looked like, but no NVFP4 kernel could ever have run there.
+
+Rebuilt for "86;120": locally testable on the 3090s AND Blackwell-capable.
+Verified sm_120 and sm_86 in the packaged libggml-cuda.so.0, and smoke-tested
+the binary end to end on a 3090 -- server healthy, weights on GPU, /v1/chat
+answering. Packaged self-contained (the CUDA runtime resolves from the package
+directory, not the host) as carnot-llamacpp-blackwell-nvfp4, left alongside the
+working CUDA-12 dataset rather than replacing it, so v22 stays reproducible.
+
+KNOWN RISK, deliberately taken. The new build links libcudart.so.13 while the
+previous bundle shipped CUDA 12, and Kaggle's driver version is not observable
+from here -- it appears in no log we have. This is a bet on the save-run, NOT on
+the submission slot: the save-run validates before any competition submit, so
+being wrong costs wall-clock and a rebuild against a 12.8 toolkit, not the daily
+slot.
+
+MTP SCORED DEFAULT "0" -> "1". The "0" was correct for exactly one reason, that
+Qwen3.8-27B had no published draft head, and that reason is gone: the NVFP4
+build is self-drafting. Both halves now read True, so the v19 claims-versus-
+resolves disagreement does not return. Verify `adding speculative implementation
+'draft-mtp'` in the save-run log before trusting the speedup -- tok/s is
+otherwise the only tell, which is the trap this area keeps setting.
+
+TWO ORPHANED TESTS FIXED, both pre-existing and both failing at HEAD since the
+2026-08-16 gemma migration -- confirmed by running them against a stashed tree
+before touching either. One demanded the gemma MTP-head dataset be attached, a
+configuration nothing has shipped for a day; the other asserted "31B" in a
+repo_substr that now reads Qwen3.8-27B. Neither was caused by this change and
+both are now asserted against the invariant rather than the model string: the
+weights must be able to supply MTP by whatever mechanism, and the default must
+track the single pinned constant. The next generator move costs one constant
+instead of a fresh orphan.
+
+31 tests green across the two files.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../agentic/arc_executable_world_model.py     | 13 ++++++-
+ .../submission_kernel/kernel-metadata.json    | 10 ++++--
+ scripts/kaggle/submission_kernel/main.py      |  2 +-
+ .../test_arc_generator_migration_defects.py   | 35 +++++++++++++++----
+ 4 files changed, 49 insertions(+), 11 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 924a08121a..534e390216 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3763,7 +3763,18 @@ ARC_LIVE_GENERATOR_MTP_DEFAULT = "0"
+ # resolves head_present=False and proceeds without speculative decoding) but it makes every
+ # readiness gate report a config that is not the one running, which is the precise failure this
+ # constant's own comment above warns about, pointed the other way.
+-ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "0"
++# FLIPPED BACK TO "1" 2026-08-17 (later the same day, operator-directed) with the move to the
++# NVFP4 Qwen3.8-27B conversion. The "0" above was correct for exactly one reason -- that model
++# had no published draft head -- and that reason is now gone: the NVFP4 build carries its own MTP
++# layers and declares `nextn_predict_layers` in its GGUF, so `_gguf_declares_baked_mtp` resolves
++# it and `_ensure_server` emits `--spec-type draft-mtp` with no separate head. Head presence is
++# therefore no longer the right question to ask about this model; self-drafting is.
++# The v19 disagreement this constant's comment describes does NOT return: that fired because the
++# config CLAIMED mtp=True while the kernel resolved False. Here both read True, and the run is
++# verifiable rather than assumed -- llama.cpp prints `adding speculative implementation
++# 'draft-mtp'` when speculation is genuinely wired, and this file already greps for that marker.
++# Confirm it in the save-run log before trusting the speedup; tok/s is otherwise the only tell.
++ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "1"
+ # The MTP head is a SEPARATE FILE, not a section of the main GGUF. Both the filename and the
+ # substring are named here because the Kaggle kernel matches by name against an order-undefined
+ # `rglob`, and the head and the main model are both `*.gguf` under the same mount root.
+diff --git a/scripts/kaggle/submission_kernel/kernel-metadata.json b/scripts/kaggle/submission_kernel/kernel-metadata.json
+index e760d93666..50f0e49daf 100644
+--- a/scripts/kaggle/submission_kernel/kernel-metadata.json
++++ b/scripts/kaggle/submission_kernel/kernel-metadata.json
+@@ -8,7 +8,13 @@
+   "enable_gpu": true,
+   "machine_shape": "NvidiaRtxPro6000",
+   "enable_internet": false,
+-  "dataset_sources": ["iancblenke/carnot-agent-code", "iancblenke/carnot-llamacpp-mtp-binary", "iancblenke/carnot-qwen38-27b-gguf"],
+-  "competition_sources": ["arc-prize-2026-arc-agi-3"],
++  "dataset_sources": [
++    "iancblenke/carnot-agent-code",
++    "iancblenke/carnot-llamacpp-blackwell-nvfp4",
++    "iancblenke/carnot-qwen38-27b-nvfp4-mtp"
++  ],
++  "competition_sources": [
++    "arc-prize-2026-arc-agi-3"
++  ],
+   "kernel_sources": []
+ }
+diff --git a/scripts/kaggle/submission_kernel/main.py b/scripts/kaggle/submission_kernel/main.py
+index 277e8938b5..591c814697 100644
+--- a/scripts/kaggle/submission_kernel/main.py
++++ b/scripts/kaggle/submission_kernel/main.py
+@@ -238,7 +238,7 @@ server = next(iter(inp.rglob("llama-server")), None)
+ # not be bindable as the Qwen main model. Pinning the head string to one model reintroduced exactly
+ # the silent failure described above, and the order-independence test caught it.
+ _HEAD_SUBSTR = "mtp-"
+-_MAIN_SUBSTR = "Qwen3.8-27B"
++_MAIN_SUBSTR = "Qwen3.8-27B-NVFP4"
+ 
+ 
+ # A draft head is marked by the mtp- PREFIX, case-insensitively -- never by mtp appearing
+diff --git a/tests/python/test_arc_generator_migration_defects.py b/tests/python/test_arc_generator_migration_defects.py
+index 278aafe0d2..45a1aebfd0 100644
+--- a/tests/python/test_arc_generator_migration_defects.py
++++ b/tests/python/test_arc_generator_migration_defects.py
+@@ -317,10 +317,18 @@ def test_kv_quant_default_is_q8_0_not_none(wm) -> None:
+ 
+ 
+ def test_repo_substr_default_is_the_pinned_31b_not_a_third_model(wm) -> None:
+-    """The default was `gemma-4-12B-it` -- neither the retired Qwen nor the directed 31B."""
++    """The default was `gemma-4-12B-it` -- neither the retired Qwen nor the directed 31B.
++
++    UPDATED 2026-08-17, second orphan in this file. The literal `31B` assertion outlived the
++    model it named: the generator moved to Qwen3.8-27B on 2026-08-16 and this test has failed
++    ever since, alongside the head-dataset test above. The DEFENSIBLE invariant is not any one
++    model string -- it is that the proposer's default tracks the single pinned constant and never
++    silently drifts to a third model. That is what is asserted now, so the next generator move
++    costs one constant instead of a fresh orphan. The retired-model list keeps growing rather
++    than being replaced, per never-prune; `gemma-4-31B` joins it because it is retired too.
++    """
+     assert wm.LocalGGUFProposer().repo_substr == wm.ARC_LIVE_GENERATOR_REPO_SUBSTR
+-    assert "31B" in wm.LocalGGUFProposer().repo_substr
+-    for retired in ("Qwen3.5-9B", "Qwen3.6-27B", "gemma-4-12B"):
++    for retired in ("Qwen3.5-9B", "Qwen3.6-27B", "gemma-4-12B", "gemma-4-31B"):
+         assert retired not in wm.LocalGGUFProposer().repo_substr
+     assert wm.LocalGGUFProposer(repo_substr="explicit-other").repo_substr == "explicit-other"
+ 
+@@ -480,10 +488,23 @@ def test_the_mtp_head_dataset_is_attached_by_the_kernel() -> None:
+         )
+     )
+     sources = meta["dataset_sources"]
+-    assert "iancblenke/carnot-gemma4-31b-mtp-head" in sources, sources
+-    assert "iancblenke/carnot-gemma4-31b-it-gguf" in sources, sources
+-    # Both must be present: the head alone is not a generator, and the weights alone are not MTP.
+-    assert len({s for s in sources if "gemma4-31b" in s}) == 2, sources
++    # UPDATED 2026-08-17. The two-dataset assertion below is preserved in prose because its
++    # REASONING still holds; only the model it named has changed. It required
++    # carnot-gemma4-31b-mtp-head AND carnot-gemma4-31b-it-gguf, on the grounds that "the head
++    # alone is not a generator, and the weights alone are not MTP". That became unsatisfiable on
++    # 2026-08-16 when the generator moved off gemma, and the test was left asserting a
++    # configuration nothing shipped -- it failed at HEAD for a full day before anyone ran it.
++    #
++    # The NVFP4 Qwen3.8-27B conversion is SELF-DRAFTING: it declares `nextn_predict_layers` and
++    # carries its MTP layers inside the single weights file, so there is no second dataset to
++    # forget. The invariant that survives is the one that mattered all along -- the attached
++    # weights must be able to supply MTP, by whatever mechanism -- and for a self-drafting model
++    # that means exactly one weights dataset, not two.
++    assert "iancblenke/carnot-qwen38-27b-nvfp4-mtp" in sources, sources
++    # A stale separate-head dataset must NOT ride along: the launcher checks self-drafting FIRST,
++    # so a leftover head cannot win, but attaching one invites the next reader to conclude this
++    # model needs it.
++    assert not [s for s in sources if "mtp-head" in s], sources
+ 
+ 
+ def test_the_kernel_disambiguates_the_two_ggufs_by_name_not_by_rglob_order() -> None:
+-- 
+2.55.0
+

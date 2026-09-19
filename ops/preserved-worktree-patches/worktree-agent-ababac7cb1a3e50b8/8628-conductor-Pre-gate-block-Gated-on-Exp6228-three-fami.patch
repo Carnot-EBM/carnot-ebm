@@ -1,0 +1,62 @@
+From 28bb22f33296511c399aa435b3f1753b4382f675 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 09:24:03 -0400
+Subject: [PATCH 08628/11362] [conductor] Pre-gate block: Gated on Exp6228
+ three-family readiness: code correction content margin
+
+1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-endurance.three_family_runtime_ready_score (actual=None == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 2 ++
+ ops/conductor-state.json                                      | 2 +-
+ results/experiment_6233_three_family_code_content_margin.json | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b618ea28cd..b89d0f26ba 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2814502, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-09T13:22:01Z"}
+\ No newline at end of file
++{"pid": 2814502, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-08-09T13:24:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ea6e370c3e..bb140647d6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15552,3 +15552,5 @@ Still active  |
+ | 2026-08-09 13:05 UTC | Gated on Exp6229 frozen think configuration: bound | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6229-arc-gemma31-think-determination) |
+ | 2026-08-09 13:20 UTC | Prospective admissible ARC depth portfolio or exac | OK | 88 passed, 1 warning in 8.66s |
+ | 2026-08-09 13:22 UTC | Gated on Exp6229 frozen think configuration: bound | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6229-arc-gemma31-think-determination) |
++| 2026-08-09 13:22 UTC | Gated on Exp6228 three-family readiness: code corr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
++| 2026-08-09 13:24 UTC | Gated on Exp6229 frozen think configuration: bound | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6229-arc-gemma31-think-determination) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a66113c50d..69cb2091d4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2814502, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-09T13:22:01Z"}
+\ No newline at end of file
++{"pid": 2814502, "iteration": 12, "phase": "iteration_start", "started_at": "2026-08-09T13:24:03Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6233_three_family_code_content_margin.json b/results/experiment_6233_three_family_code_content_margin.json
+index b84595cae3..8868bbc82c 100644
+--- a/results/experiment_6233_three_family_code_content_margin.json
++++ b/results/experiment_6233_three_family_code_content_margin.json
+@@ -2,8 +2,8 @@
+   "experiment": 6233,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-09",
+-  "started_at": "2026-08-09T13:22:01.210078+00:00",
+-  "finished_at": "2026-08-09T13:22:01.210078+00:00",
++  "started_at": "2026-08-09T13:24:03.743267+00:00",
++  "finished_at": "2026-08-09T13:24:03.743267+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6228 three-family readiness: code correction content margin",
+-- 
+2.55.0
+

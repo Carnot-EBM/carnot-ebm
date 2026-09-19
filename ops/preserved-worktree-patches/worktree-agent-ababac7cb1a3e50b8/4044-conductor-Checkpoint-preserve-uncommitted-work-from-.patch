@@ -1,0 +1,75 @@
+From ce89d04067b71879afc4292b02174d5f9b899d91 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 19:30:22 -0400
+Subject: [PATCH 04044/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...nt_4749_structured_engine_vs_freeform.json | 22 +++++++++++++++++--
+ 4 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f6a4159912..b9f973974a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 208, "phase": "iteration_start", "last_beat": "2026-06-25T23:06:38Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 209, "phase": "iteration_start", "last_beat": "2026-06-25T23:30:20Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 084f17b05f..f7630dff07 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9292,3 +9292,4 @@ The contro |
+ | 2026-06-25 22:46 UTC | Activation REFUSED: milestone 2026.06.437 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+ | 2026-06-25 22:48 UTC | Milestone 2026.06.437 activated | OK | 12 tasks queued |
+ | 2026-06-25 23:04 UTC | PHASE 0 (TRANSITION) -- archive .436 -> activate . | OK | 86 passed, 1 warning in 8.25s |
++| 2026-06-25 23:28 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- RE | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 156b6b0a81..976a2264d2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 208, "phase": "iteration_start", "started_at": "2026-06-25T23:06:38Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 209, "phase": "iteration_start", "started_at": "2026-06-25T23:30:20Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4749_structured_engine_vs_freeform.json b/results/experiment_4749_structured_engine_vs_freeform.json
+index e2feb51bac..1de1c29ba5 100644
+--- a/results/experiment_4749_structured_engine_vs_freeform.json
++++ b/results/experiment_4749_structured_engine_vs_freeform.json
+@@ -145,5 +145,23 @@
+   "structured_heldout_accuracy": 0.5,
+   "submitted_to_leaderboard": false,
+   "target_game": "lp85",
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "accuracy_delta=0.5 and structured_heldout_accuracy=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    },
++    {
++      "kind": "FALSE_NEGATIVE_RISK",
++      "severity": "warn",
++      "detail": "Null claim and the experiment's own gate structured_engine_non_degenerate=False: it self-reports the test was degenerate. Do not propagate this null to a forward-facing claim."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,1247 @@
+From e3fd865119205a3eec5813a96a893ab582fd5ab7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 07:47:59 -0400
+Subject: [PATCH 05544/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../research-roadmap-vNEXT.md                 | 723 +++++++++---------
+ ops/arc_self_solve_audit_report.md            |  39 +-
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/docs_audit_report.md                      | 164 +---
+ research-references.md                        | 100 +++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ 10 files changed, 540 insertions(+), 507 deletions(-)
+
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index 9d8982436a..001f7ad37c 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,396 +1,431 @@
+-# Research Roadmap vNEXT: V476 Conductor Self-Heal (Poison-Test Hardening), DiffusionGemma Pilot Live-Unblocked, MAP Landmark Retry, Hidden-State Verifier V2, QA/Verifier-Authenticity Follow-Through
++# Research Roadmap vNEXT: V476 -- Poison-Test Hardening + Retro-Timing Real Fix, DiffusionGemma vLLM-Native
++Retry, MAP Landmark Retry, Hidden-State Verifier V2, QA/Verifier-Authenticity Follow-Through
+ 
+ **Milestone:** `2026.07.476`
+-**Status:** Pre-staged next milestone (hand-authored by an outer-loop Claude planning session, per the
+-Pre-Staged Roadmap Convention)
++**Status:** Planner-authored (fresh verification pass over an existing outer-loop draft of the same
++milestone number -- see "Provenance" below)
+ **Prepared:** 2026-07-03
+ **Predecessor:** `2026.07.475`
+ **Execution manifest:** `research-roadmap-next.yaml`
+ 
+-## Why this plan was hand-authored, and why it re-issues most of `.475`'s content
+-
+-`.475` was itself hand-authored (see its own `research-roadmap-vNEXT.md`, preserved in git history) after
+-the automated planner stalled ~2.5 hours on repeated exclusion-manifest activation refusals. It activated
+-cleanly (`ops/conductor-log.md`, 2026-07-03 07:59 UTC, "12 tasks queued") and its first task
+-(`exp5181`, archive/activate) ran — but **`.475` then suffered a near-total execution loss**, diagnosed
+-in detail this session:
+-
+-**Root cause (confirmed, not inferred).** `exp5182` (PHASE A1, `agent_type: claude`/`model: opus`,
+-`requires_claude_verified: true`, 100-turn budget) wrote a complete, well-structured 792-line module
+-(`python/carnot/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py`) and a 499-line test
+-suite, correctly updated `openspec/capabilities/verification/spec.md` with `REQ-VERIFY-5182` and three
+-scenarios — then **hit `Wall-clock+idle timeout after 1201s`** (`ops/conductor-log.md`, 08:39 UTC) before
+-ever calling its own `main()` to produce `results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json`.
+-One of its own tests, `test_ondisk_deliverable_is_valid`, asserts that exact file exists on disk — a
+-correct, well-designed test (it is the thing that would catch a fabricated deliverable) that was, through
+-no fault of its own design, left permanently red by an incomplete upstream run. From 08:42 UTC through at
+-least 09:42 UTC (confirmed still cycling when this session began), **every single subsequent task in the
+-milestone** — `exp5183` through `exp5192`, 9 of the remaining 11 tasks — either `SKIP`'d 3x
+-(`Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings`) or `GATE_BLOCK`'d on an
+-upstream the conductor had, correctly per its own doomed-rerun bookkeeping, started treating as retired.
+-**This is the FOURTH occurrence of the "agent-shipped-incomplete-artifact poisons the shared pretest gate"
+-incident class** (prior occurrences: `exp3521`/`.325`, `exp3544`/`.326`, `exp3612`/`.332`, per
+-`incident_agent_shipped_test_cascade` memory) — the incident recurs because nothing mechanically
+-distinguishes "a genuinely broken test" from "a correct test whose one precondition (an upstream artifact)
+-never got produced because the authoring task ran out of wall-clock." `.475`'s own two reserved
+-infrastructure slots — including the MANDATORY, 4-milestone-overdue `retro_timing_fallback.py` wiring
+-patch-prep — were among the casualties, never running at all.
+-
+-**Direct outer-loop remediation performed this session (2026-07-03, before this plan was drafted):**
+-
+-1. Ran `python -m carnot.experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475` live against an
+-   idle GPU 0 (confirmed via `nvidia-smi` — both RTX 3090s at 0% util / near-zero memory before starting)
+-   to completion, producing the real, non-fabricated `results/experiment_5182_..._v475.json` deliverable
+-   the stalled task never reached. This is reported in detail below (§ "What `exp5182` actually found,
+-   live").
+-2. Re-ran `tests/python/test_experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py` in isolation
+-   after the artifact existed: `1 failed, 35 passed` -> confirmed the single failure
+-   (`test_ondisk_deliverable_is_valid`) is now resolved once the real artifact exists; the rest of the
+-   suite was never broken.
+-3. Verified `scripts/retro_timing_fallback.py` (the MANDATORY overdue priority, pending since `.469`,
+-   diagnosed 5 separate times through `.474`) is **already wired into
+-   `scripts/research_conductor.py::_run_operational_retrospective`** at commit `75bc15756`
+-   (2026-07-03T02:24:26-04:00, "[conductor] Operational retrospective for milestone 2026.07.474") — i.e.
+-   `exp5190`'s job (had it run) is **already done in source**. The live conductor daemon
+-   (`carnot-conductor.service`, PID 3124275) has been running continuously since **2026-07-01 23:57:19
+-   EDT** — over a day before that commit — so the fix is live in the tracked file but not in the running
+-   process's memory. This is a **restart-to-pick-up-an-already-merged-fix** situation, not an unsolved code
+-   problem.
+-4. Corrected a factual error carried in `.475`'s own doc: it stated two directories
+-   (`/home/ianblenke/github.com/ianblenke/carnot` and `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm`)
+-   "need to reach... before the live conductor will see them." Verified directly: `Carnot-EBM/carnot-ebm`
+-   is a **symlink alias**, `carnot-conductor.service`'s `WorkingDirectory=` is explicitly
+-   `/home/ianblenke/github.com/ianblenke/carnot`, and both paths report an **identical `git rev-parse
+-   HEAD`**. There is one working tree, not two; no sync step is needed. This plan and its artifacts are
+-   directly visible to the live conductor with no push/pull step.
+-5. Restarted `carnot-conductor.service` (`systemctl --user restart`) after step 1's artifact was confirmed
+-   on disk and step 2's test suite was confirmed green, so the resumed daemon picks up (a) the unblocked
+-   pretest gate and (b) the already-merged `retro_timing_fallback.py` wiring in the same restart. The
+-   service is a `--loop` daemon designed to be interruptible and resume from `research-roadmap.yaml` /
+-   `ops/conductor-state.json` checkpoints — this is a normal, low-risk operational action, not a
+-   destructive one. **The result files this produced were left uncommitted on disk for the operator to
+-   review and commit** — this session did not create a commit (only the user creates commits on request).
+-
+-Because steps 1-3 resolve the *infrastructure* blocker but **did not themselves re-run any of `.475`'s
+-actual research content** (`exp5183`-`exp5192` still have no real results), this plan's primary job is to
+-**re-issue that content, informed by what step 1 found**, plus add the hardening `.475` was never able to
+-attempt. Per the Failed-Experiment Rerun Discipline, every re-issued task below carries a `prior_failures:`
+-block naming the exact `.475` task it continues and what is different (mostly: "the infra blocker that
+-prevented it from running at all is now fixed," which is itself a legitimate, falsifiable difference —
+-these are gated-and-skipped tasks, not failed-and-retried ones, so the bar is lower, but the block is
+-included for auditability regardless).
+-
+-## What `exp5182` actually found, live (2026-07-03, this session)
+-
+-All four ladder mitigations were attempted on an idle GPU 0 (confirmed via `nvidia-smi` before and during):
++## Provenance -- this plan supersedes an unfinished on-disk draft of the same milestone
++
++A prior outer-loop Claude session (earlier on 2026-07-03) diagnosed `.475`'s execution stall, performed
++direct remediation (ran `exp5182` live, verified `retro_timing_fallback.py`'s wiring, restarted
++`carnot-conductor.service`), and wrote a `research-roadmap-vNEXT.md` draft for `.476` -- but
++`research-roadmap-next.yaml` was never written (confirmed: the file does not exist on disk), and the
++milestone's *own* subsequent close (the `.475` operational retrospective, commit `958859613`,
++2026-07-03 06:46:43 -0400) happened after that draft was written. This planning pass:
++
++1. **Independently re-verified every load-bearing claim in that draft** against primary sources (the
++   real `exp5182` artifact, `conductor-log.md`'s full `.475` timeline, the actual `.475` operational
++   retrospective JSON, the two `.474` GGUF/vLLM probe artifacts, both audit reports, the exclusion
++   manifest, `verifier_gaps.md`) rather than re-deriving the diagnosis from scratch or trusting the prior
++   draft's prose uncritically.
++2. **Found the prior draft's DiffusionGemma framing incomplete**: it treated the GGUF/vLLM loader stack
++   as "never followed up," but both probes ran in `.474` and both are conclusively blocked
++   (`blocked_gguf_load_failed`, `blocked_vllm_load_failed`). Fresh research this session found the *real*
++   actionable lead: **vLLM shipped native DiffusionGemma support the same day the model released**
++   (2026-06-10 vLLM blog post), and the `.474` probe's traceback shows it fell back to the generic
++   Transformers backend inside vLLM (`"TransformersMultiModalMoEForCausalLM has no vLLM implementation,
++   falling back to Transformers implementation"`) rather than exercising the native path -- almost
++   certainly a stale vLLM version or wrong invocation, not a fundamental block. See "What this session's
++   research found" below.
++3. **Found a live, still-present bug the prior draft assumed was fixed**: `retro_timing_fallback.py` is
++   confirmed wired into `research_conductor.py` (commit `75bc15756`) and the daemon was restarted, but
++   the *actual* `.475` operational retrospective (`results/operational_retro_2026_07_475.json`, generated
++   AFTER both the fix and the restart) still shows `experiments_completed=0`, `total_wall_time_minutes=0`,
++   `reconstructed_from_disk_mtime=False` -- the exact false-zero pattern the fix was built to eliminate.
++   This is read directly from the artifact, not inferred. `.476` reopens this as a live bug, not a
++   verification formality.
++4. **Found a second, unrelated, live doc-corruption bug**: `ops/known-issues.md` (10,651 lines) contains
++   **187 byte-identical copies** of a `### NEW Phase 4 Canonical Metric MANDATORY` section, almost all
++   concentrated in the file's final ~450 lines. Root-caused to `scripts/experiments/run_experiment_1911.py`
++   lines 62-68, which unconditionally `open(path, "a").write(...)` the same fixed string with **no
++   idempotency check**. Not mentioned in the prior draft.
++5. **Found exp5181's `DURATION_TOO_SHORT` flag is very likely a false positive**, not a genuine
++   fabrication signal: its `inference_substrate` is correctly declared
++   `{"principle": "...", "value": "aggregation_from_upstream_artifacts"}` (2.49s is far above that
++   substrate's 0.0001s floor), so the flag is almost certainly firing on GGUF/CUDA substring mentions
++   inside *cited upstream* fields (e.g. quoting exp5182's mitigation log) rather than on a live-inference
++   claim this artifact itself makes. This looks like the same unwrap/context-blindness bug class the
++   QA-Layer Authenticity Discipline exists to catch, just in `adversarial_verify.py` rather than
++   `exclusion_manifest_lint.py`.
++6. **Verified the two new literature citations the prior draft added** (Radial Consensus Score,
++   AutoPyVerifier) via direct WebFetch -- both are real, both check out topically. Logged formally to
++   `research-references.md` (see below) since the prior draft cited them without logging them.
++7. **Surfaced one governance-relevant correction for the operator, not for this plan to act on**: the
++   ARC Prize deadline this project has been treating as final (`2026-06-30`, the trigger for retiring the
++   ARC Submission Sprint Forcing Function) is, per a fresh WebFetch of arcprize.org, actually **"Milestone
++   #1"** for early open-source prize eligibility -- the overall 2026 competition reportedly runs through
++   **November 2, 2026** (this end date via search snippet only, not independently WebFetched -- flagged at
++   lower confidence). This does not change this plan's task allocation (the self-solve audit's
++   zero-advance finding and the "do not silently re-expand ARC's share" stance both still apply), but it
++   is exactly the kind of fact that should inform the operator's pending "post-PHASE-D strategic direction"
++   decision, so it is surfaced explicitly rather than left buried in a sub-agent transcript.
++
++Where the prior draft's diagnosis held up against fresh verification (the poison-test-cascade root cause,
++the MAP/hidden-state-verifier task designs, the two audit-report action items), this plan keeps it and
++does not re-litigate it. Nothing here re-does verification work that was already correct.
++
++## What actually happened in `.475` (verified directly against `results/*.json` and `conductor-log.md`,
++not paraphrased from any prior doc)
++
++`.475` activation was refused **51 times** between 03:15 and 05:25 UTC on `SCOPE_MATCHED_PRIOR_FAILURE`
++exclusion-manifest violations, then the automated planner itself failed 3 times (a 50-turn cap, then two
++1201s wall-clock+idle timeouts). The milestone was hand-activated at 07:59 UTC with 12 tasks queued.
++
++Of those 12 tasks, **exactly two produced real artifacts** (confirmed: `results/experiment_5183*.json`
++through `experiment_5192*.json` do not exist anywhere on disk):
++
++| Task | Result |
++|---|---|
++| `exp5181` (archive .474->.475) | Ran, produced a real artifact, `flagged_adversarial: true` (`DURATION_TOO_SHORT` -- see finding #5 above, likely false positive) |
++| `exp5182` (DiffusionGemma root-cause fix) | The CONDUCTOR's own attempt hit `Wall-clock+idle timeout after 1201s` and never ran `main()`. An outer-loop session ran the script directly against idle GPU 0 afterward, producing the real 630.3s artifact this plan reads (see below). The conductor's own retry at 10:35 UTC found "Deliverable already exists in repo" and marked it `OK`. |
++| `exp5183`-`exp5192` (10 tasks) | **Never executed.** `exp5182`'s conductor-side timeout left `test_ondisk_deliverable_is_valid` red (a correct test whose one precondition -- the artifact -- didn't exist yet), which poisoned the SHARED pretest gate: every subsequent task either `SKIP`'d 3x on that shared failure or `GATE_BLOCK`'d on an upstream the conductor had started treating as retired. This is the **4th occurrence** of the "agent-shipped-incomplete-artifact poisons the pretest gate" incident class (prior: `exp3521`/`.325`, `exp3544`/`.326`, `exp3612`/`.332`). |
++
++The `.475` operational retrospective ran at 10:46:43 EDT (commit `958859613`) once the task queue reached
++a terminal state (SKIP/GATE_BLOCK both count as terminal for retro-triggering purposes) -- **not** because
++substantive research happened in 10 of 12 slots. `.476`'s job is genuinely a recovery milestone: two
++infra fixes (one of which the prior draft believed was already done and is not), plus re-attempting the
++10 tasks that never got a chance to run, now informed by real new ground truth from `exp5182` and this
++session's research.
++
++## What `exp5182` actually found, live (verified directly against `results/experiment_5182_*.json`)
++
++All four device-placement mitigations were attempted on an idle GPU 0 (confirmed via `nvidia-smi` before
++starting; 630.3s total, genuinely GPU-bound):
+ 
+ | Mitigation | Description | Outcome | Duration |
+ |---|---|---|---|
+-| m1 | `device_map={"":0}`, 4-bit NF4, single GPU | `load_failed` | 188.6s |
+-| m2 | `device_map="auto"` + explicit `_no_split_modules` correction, 4-bit NF4 | `load_failed` | 137.1s |
+-| m3 | `device_map={"":0}`, 4-bit NF4, `low_cpu_mem_usage=False` | `load_failed` | 149.8s |
+-| m4 | `device_map={"":0}`, bitsandbytes int8 | *(see live artifact for final outcome)* | *(see live artifact)* |
+-
+-**This is a genuinely new result regardless of m4's outcome**: `.474`'s `exp5173` never got past
+-`device_map="auto"` variants (all 5 sub-attempts used the auto-balancer); `.475`'s live run confirms
+-mitigations 1-3 — including the two most-likely-to-work theories (single-GPU placement,
+-`_no_split_modules` correction) — **fail with a different/consistent signature than the `.474` failure**,
+-which narrows the root-cause search space materially for whichever task continues this thread (see
+-`exp5196` below, which reads the full artifact and either runs the pilot or pivots to the GGUF/vLLM loader
+-paths that `.474`'s own probe artifacts — `diffusiongemma_energy_prior_gguf.json`,
+-`diffusiongemma_energy_prior_vllm.json` — left unexplored as a fundamentally different loading stack).
+-The full per-mitigation error text, the `diffusiongemma_loadable` bare-boolean gate value, and the honest
+-verdict are all in `results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json` — read it
+-directly before writing `exp5196`'s CONTEXT, do not re-paraphrase this table alone.
+-
+-## Executive Summary
+-
+-`.476` has two co-equal jobs: **(1) hardening** — close the poison-test-cascade class of incident so a
+-5th recurrence does not cost another ~2-hour milestone, and **(2) recovery** — actually run the research
+-`.475` specified but never executed, now informed by the one piece of new ground truth `.475` did
+-produce (the exp5182 mitigation-ladder results above).
+-
+-1. **Harden the pretest gate against agent-shipped-incomplete-artifact poisoning (NEW, moved early in
+-   sequence deliberately).** Four occurrences of the same incident class in ~7 weeks
+-   (`exp3521`/`.325`, `exp3544`/`.326`, `exp3612`/`.332`, `exp5182`/`.475`) is a pattern, not noise. Every
+-   prior occurrence was resolved by manual quarantine of the offending test; nothing mechanical exists to
+-   do this without operator intervention, and no task can edit `scripts/research_conductor.py` directly.
+-   `exp5194` builds a standalone triage module (mirroring `retro_timing_fallback.py`'s own
+-   new-module-plus-ready-patch pattern) that detects the specific signature — a just-added test file whose
+-   only failure references a `results/*.json` deliverable path that a sibling module in the same diff
+-   would produce via its own `main()` — and prepares a scoped, auditable remediation (an `xfail` marker
+-   with a tracking note and an expiry condition, NOT a `skip`, since CLAUDE.md's Tests-Must-Run-And-Assert
+-   rule forbids skipping; `xfail` still executes the test, it just doesn't fail the pretest gate on a
+-   documented, tracked, temporary precondition gap). Also lands `.475`'s never-run reserved-infra work:
+-   confirming the `retro_timing_fallback.py` wiring is now live post-restart, and applying the
+-   already-drafted staleness-check improvement.
+-2. **Finish the DiffusionGemma thread — three m1-m3 mitigations now genuinely ruled out live, not just on
+-   paper.** `exp5196` reads `exp5182`'s real artifact first. If `diffusiongemma_loadable=true` (m4
+-   succeeded), it runs the actual 3-arm guided-vs-unguided-vs-AR pilot `exp5173`/`exp5183` already fully
+-   specified (EDLM recipe, VFScale control, commit-position telemetry, correct `verifier_is_oracle`
+-   declaration). If `false` (all four HF-transformers-stack mitigations exhausted), it pivots to a
+-   **structurally different loading stack** — GGUF via `llama-cpp-python` or vLLM, per the two existing
+-   `.474` probe artifacts that were never followed up — which satisfies the Failed-Experiment Rerun
+-   Discipline's "what is different" bar precisely (a different library/runtime, not another
+-   `from_pretrained` kwarg variant).
+-3. **Re-attempt the MAP landmark pre-stage exactly as `.475` specified it** (`exp5172`'s falsifiable 3-arm
+-   gate on CD82/SK48/SP80 — pruner-only vs. map-only vs. map-plus-pruner). Nothing about this design was
+-   invalidated by the infra stall; it simply never got a chance to run.
+-4. **Re-attempt the hidden-state verifier v2 (PHSV-style probe on the MMLU-Pro headroom-confirmed pool)**,
+-   with one addition this session's literature sweep surfaced that `.475` did not have: **Radial Consensus
+-   Score (arXiv:2604.12196)**, a training-free embedding-geometry replacement for majority voting that
+-   reportedly beats it — added as a **mandatory third free-baseline** alongside self-certainty and CLUE, so
+-   a trained hidden-state probe has to clear a higher, more defensible bar than "beats plain vote" before
+-   any beats-SC claim is taken seriously.
+-5. **Two new, concretely-scoped fixes from this session's audit reading**, both small and well-bounded:
+-   the QA-layer's own documented `REAL_BUG` in `exclusion_manifest_lint.py` (raw substring matching without
+-   word boundaries, no principle-field unwrapping — `ops/qa_layer_authenticity_audit_report.md`,
+-   2026-07-02), and operator-facing remediation proposals for the two `DISHONEST_NAMING`-flagged verifiers
+-   (`and_composition_verifier.py`, `claim_isolation_uncertainty_router.py` —
+-   `ops/verifier_authenticity_audit_report.md`, 2026-07-01).
+-6. **One literature-informed new verifier-build pilot**: `AutoPyVerifier` (arXiv:2604.22937, a systematic
+-   search over compact executable verifier sets) mapped onto `ops/verifier_gaps.md`'s still-open GAP-1
+-   (transpose/orientation discrimination — the one hand-invariant attempt was tested and refuted) as a
+-   bounded pilot, per research-program.md's mandate to turn fresh literature findings into concrete
+-   experiments rather than leaving them as reading notes.
+-7. **Respect the ARC self-solve audit's explicit finding.** `ops/arc_self_solve_audit_report.md`
+-   (2026-07-03) found **zero `SELF_DISCOVERY_ADVANCE`** this week — 19 benign re-reproductions plus one
+-   correctly-caught-and-quarantined `OUTER_LOOP_RE` violation — and recommended either pushing ARC work
+-   toward live-path integration or explicitly de-prioritizing it to maintenance status. This plan does
+-   **not** add net-new ARC task slots beyond re-running what `.475` already gated (`exp5198`/`exp5199`,
+-   the MAP thread); it does not expand ARC's claim on the milestone.
+-
+-PHASE D's retirement (2026-07-02, `exp5170`, `phase_d_external_text_scorer_retired_exp5163_v474`) is
+-respected throughout — nothing here re-proposes an external-text-scorer construction on an off-ARC corpus;
+-the hidden-state verifier thread is the explicitly-preserved exception, unchanged from `.475`'s framing.
+-
+-## What `.475` Actually Delivered (verified against primary artifacts, not the milestone's own aspiration)
+-
+-| Task | What happened | Verdict / evidence |
+-|---|---|---|
+-| `exp5181` (archive .474->.475) | Ran, produced an artifact | `FLAGGED` by `adversarial_verify` (`DURATION_TOO_SHORT`) per `ops/conductor-log.md` 08:15 UTC — quarantined, not a clean success. `exp5193` below re-verifies whether this is a genuine issue or a self-report/substrate-classification false positive (the project has multiple documented precedents for the latter — see CLAUDE.md's QA-Layer Authenticity Discipline origin incident) before trusting its content. |
+-| `exp5182` (DiffusionGemma root-cause fix) | Wrote a complete module + tests + spec; **never ran to completion** — `Wall-clock+idle timeout after 1201s` | No artifact existed until this session's direct remediation (see above). Real result now exists; three of four mitigations ruled out live. |
+-| `exp5183` (DiffusionGemma pilot) | Never ran | `GATE_BLOCK`'d — upstream (`exp5182`) had no passing artifact to gate on |
+-| `exp5184` (GAP-4 scale-up) | Never ran | `SKIP`'d 3x on the shared pretest failure |
+-| `exp5185` (MAP landmark pre-stage) | Never ran | `SKIP`'d 3x, then conductor treated it as retired |
+-| `exp5186` (gated level-up attempt) | Never ran | `GATE_BLOCK`'d — upstream (`exp5185`) had no passing artifact |
+-| `exp5187` (hidden-state verifier v2) | Never ran | `SKIP`'d 3x |
+-| `exp5188` (hardware continuity) | Never ran | `SKIP`'d 3x |
+-| `exp5189` (architecture.md reconciliation) | Never ran | `SKIP`'d 3x — `_bmad/architecture.md` is now 48+ days stale, unchanged |
+-| `exp5190` (retro-timing patch-prep) | Never ran | `SKIP`'d 3x — moot: this session found the wiring already landed via a different path (commit `75bc15756`, `.474`'s own retro, not a dedicated `.475` patch-prep task); only a restart was needed, now done |
+-| `exp5191` (docs numeric sync) | Never ran | `SKIP`'d 3x |
+-| `exp5192` (capstone) | Never ran | Still cycling `SKIP` as of this session's start (09:42 UTC and later) |
+-
+-**Net: of 12 planned tasks, 1 ran and was flagged, 1 was completed directly by this session's outer-loop
+-remediation (not by a conductor task), and 10 never executed.** This milestone's job is substantially to
+-re-attempt the 10, informed by the 1 genuine new data point (`exp5182`'s live mitigation-ladder result).
++| m1 | `device_map={"":0}`, 4-bit NF4, single GPU | `load_failed` -- **CUDA OOM** (need ~22.6 GiB+ of 23.56 GiB total) | 188.6s |
++| m2 | `device_map="auto"` + explicit `_no_split_modules` correction, 4-bit NF4 | `load_failed` -- **meta-tensor / CPU-disk dispatch error** (the original bug) | 137.1s |
++| m3 | `device_map={"":0}`, 4-bit NF4, `low_cpu_mem_usage=False` | `load_failed` -- **CUDA OOM** | 149.8s |
++| m4 | `device_map={"":0}`, int8 | `load_failed` -- **CUDA OOM** | 149.0s |
++
++**Root cause, precisely diagnosed** (quoted from the artifact): DiffusionGemma's encoder is a weight-tied
++mirror of its decoder (`DiffusionGemmaModel._tied_weights_keys` ties `encoder.language_model.layers...` to
++`decoder.layers...`); the checkpoint stores one physical copy. `device_map="auto"` splits encoder and
++decoder across the two GPUs, breaking the shared-storage tie, so the encoder's tied weights are never
++materialized (stay on the meta device) -> `Tensor.item()` fails at forward. Single-device placement
++(`device_map={"":0}`) correctly co-locates the tied weights and *resolves the meta-tensor bug specifically*
++-- but then the model needs more than 23.56 GiB even at 4-bit/int8 quantization on ONE GPU, so all three
++single-device variants OOM instead. **Both failure modes are now root-caused and neither is a mystery**;
++the remaining question is a memory-budget one, not a correctness one.
++
++This directly narrows what `.476`'s DiffusionGemma task should try -- see "What this session's research
++found" immediately below.
++
++## What this session's research found (verified via direct WebFetch; logged to `research-references.md`
++under a new `## V476 Planner References` section alongside this plan's commit)
++
++**1. vLLM ships NATIVE DiffusionGemma support, as of the model's own release day.** The official vLLM blog
++(`https://vllm.ai/blog/2026-06-10-diffusion-gemma`, fetched directly) is titled "DiffusionGemma: The First
++Diffusion LLM (dLLM) Natively Supported in vLLM," dated 2026-06-10 -- the SAME day DiffusionGemma released
++-- and demonstrates it on single H100/H200 via a new "model runner v2 `ModelState` abstraction." Our own
++`.474` vLLM probe (`results/diffusiongemma_energy_prior_vllm.log`, dated 2026-06-14) shows
++`"TransformersMultiModalMoEForCausalLM has no vLLM implementation, falling back to Transformers
++implementation"` -- i.e. **that probe did NOT exercise the native path** and fell back to the same
++device-placement-fragile Transformers backend `exp5182` just exhausted. This is a genuinely different,
++untried mitigation, not a re-run of anything: `exp5196` should re-test vLLM using the exact recipe from the
++blog post (checking vLLM version -- the native support needs a version that postdates 2026-06-10 -- and the
++specific invocation flags/model-runner path the blog demonstrates), rather than the generic
++`quantization="bitsandbytes"` + default routing our stale probe used.
++
++**2. If vLLM-native also fails on 2x24GB (the blog only demonstrates H100/H200, not our VRAM budget), there
++is a concretely-cited HF/accelerate mitigation we have not tried.** `huggingface/transformers#22018`
++(fetched directly) describes the exact interaction class: `device_map="auto"` + `llm_int8_enable_fp32_cpu_offload=True`
++failing because CPU-offloaded modules are excluded from the quantization module list at the wrong point in
++`replace_8bit_linear`. The reporter's workaround, confirmed in the issue thread: **pass a manually
++pre-configured `device_map` dict (not `"auto"`)** that explicitly co-locates the tied encoder+decoder
++modules on GPU 0 and offloads other named (non-tied) modules to `"cpu"`, combined with
++`llm_int8_enable_fp32_cpu_offload=True`. This is qualitatively different from all four of `exp5182`'s
++mitigations (which were either fully-auto or fully-single-device with no partial-offload option) and
++directly exploits the root cause `exp5182` diagnosed (tied weights must co-locate; only non-tied parts may
++offload).
++
++**3. GGUF / llama.cpp support is genuinely not ready -- confirmed, not a bug on our side.**
++`ggml-org/llama.cpp#24427` ("Add diffusion-gemma block-diffusion support," fetched directly) is **Draft,
++open, not merged**. The companion `ollama/ollama#16664` ("unknown model architecture: 'diffusion-gemma'")
++is open with no linked fix. Our `.474` `blocked_gguf_load_failed` probe was correct; there is nothing to
++retry here until the upstream PR lands. Do not propose a GGUF retry in `.477+` without checking whether
++`#24427` has merged.
++
++**4. Two literature citations verified real** (both WebFetch-confirmed, both check out against their
++described use):
++- **Radial Consensus Score** -- arXiv:2604.12196, "Beyond Majority Voting: Efficient Best-Of-N with Radial
++  Consensus Score" (Nguyen, Gupta, Le). Computes a weighted Frechet mean of answer embeddings and ranks by
++  radial distance to that center -- a training-free, black-box, embedding-geometry replacement for majority
++  voting, validated across 7 benchmarks.
++- **AutoPyVerifier** -- arXiv:2604.22937, "AutoPyVerifier: Learning Compact Executable Verifiers for Large
++  Language Model Outputs" (Pezeshkpour, Hruschka). An LLM synthesizes candidate Python verifier functions;
++  a DAG search identifies a compact/minimal SET whose combined satisfaction best predicts correctness
++  (up to +55 F1 over the initial set). The paper's own core finding -- search a *set* of cheap
++  discriminators, not one hand-crafted invariant -- is precisely what distinguishes `exp5205`'s pilot from
++  the already-refuted single hand-invariant attempt (see `exp5205`'s `prior_failures` block below).
++
++**5. Fresh 48-hour sweep: honestly nothing new.** A direct fetch of arXiv's cs.LG recent listing (2026-07-01
++through 2026-07-03) and targeted searches for energy-based verifiers, hidden-state verification, and
++ARC-AGI-3 results found nothing dated in that window. Reported as a clean negative rather than padded with
++older papers restated as new.
+ 
+ ## Current registry / gate state (read directly, not inferred)
+ 
+-- `ops/arc_solve_registry.yaml`: `reproducible_total_levels=69`, `reproducible_total_games=24`, **flat for
+-  5+ consecutive milestones** (`.471`-`.475`). `ops/arc_self_solve_audit_report.md` (2026-07-03) confirms
+-  zero live `SELF_DISCOVERY_ADVANCE` in the most recent audit window.
+-- `ops/verifier_gaps.md`: GAP-4891 (ARC trajectory-enumeration wall) diagnosed but not closed — the
+-  falsifiable MAP 3-arm gate is specified and unrun. GAP-4 (same-shape rule-application consistency,
+-  the `exp5161`/`exp5177` forward-protocol lineage) is `scale_up_recommended`, n=62 of a ~180 target floor.
+-  GAP-1 (transpose/orientation) is open with its one hand-invariant candidate refuted — the AutoPyVerifier
+-  pilot (`exp5205`) targets this. GAP-2 (variable-output-dim content verification) remains the single
+-  largest open coverage hole (~half of ARC).
++- `ops/arc_solve_registry.yaml`: `reproducible_total_levels=69`, flat for 5+ consecutive milestones
++  (`.471`-`.475`). `ops/arc_self_solve_audit_report.md` (2026-07-03, read directly this session) confirms
++  **zero `SELF_DISCOVERY_ADVANCE`** in the most recent window: 19/20 recent solve artifacts are benign
++  `development_proxy` re-reproductions of already-banked levels (regression re-fires, not progress); the
++  1 outlier (`experiment_headway_lp85_capture.json`, a claimed lp85 L6) is a confirmed `OUTER_LOOP_RE`
++  violation (`used_env_source: true` under a `development_proxy` stamp) that the mechanical layer already
++  caught and quarantined (`flagged_adversarial: true`). The same audit surfaces a **registry inconsistency**:
++  lp85's standing registry ceiling is L3, but the quarantined artifact claims a prior level of 5 and a new
++  level of 6 -- three disagreeing numbers for the same game. `.476`'s capstone reconciles this.
++- `ops/verifier_gaps.md`: GAP-4891 (ARC trajectory-enumeration wall) diagnosed but not closed through four
++  ladder stages (counts -> richer-scalar -> relational target-match [separates 3/4] -> stage-2 goal-energy
++  guidance [separates but does not guide search] -> stage-3 relational-mask pruning [prunes edges, banks
++  nothing]). The next lever, per the gap's own log, is a MAP-style pre-search stage. GAP-1
++  (transpose/orientation discrimination) has one hand-invariant candidate TESTED AND REFUTED (2026-06-09):
++  it degraded HYBRID rerank pass@2 0.452->0.419 and captured 0/2 transpose mis-votes. `exp5205` targets
++  this gap with a structurally different approach (verified real per the literature check above).
+ - `ops/exclusion_manifest.yaml`: PHASE D external-text-scorer construction is terminally retired
+-  (`phase_d_external_text_scorer_retired_exp5163_v474`, 2026-07-02) with hidden-state/internal-
+-  representation verifiers, ARC oracle-distinct verifier work, and the FoVer production ensemble
+-  explicitly named as outside the retired scope. `gap3_trained_content_energy_selector_retired_stage2v2`
++  (`phase_d_external_text_scorer_retired_exp5163_v474`, 2026-07-02) after 27 artifacts across 7 milestones;
++  hidden-state/internal-representation verifiers, ARC oracle-distinct verifier work, and the FoVer
++  production ensemble are explicitly named as outside the retired scope. `gap3_trained_content_energy_selector_retired_stage2v2`
+   and `generation_axis_exploration_signal_retired_exp5154_v473` remain retired and untouched by this plan.
+-- `ops/north-star.md`: ARC-AGI-3 (accuracy + efficiency) remains the stated destination (§0); the FoVer
+-  headline (AUROC 0.9131) and the G1-G4 publication gate remain fixed and MET
+-  (`paper_ready: true` per `scripts/publication_gate.py`). The ARC-AGI-3 Submission Sprint Forcing Function
+-  (CLAUDE.md) is RETIRED (deadline passed 2026-06-30, operator lifted the ARC-majority reservation) and its
+-  designated successor (PHASE D majority) is now *also* retired — this plan does not resolve that strategic
+-  gap outright (that is an operator-scope call, not a planning-agent one) but does not let it silently
+-  default back to unbounded ARC-majority either; see "Recommended operator attention" below.
+-- `_bmad/architecture.md`: still Last Reconciled 2026-05-16 — now 48+ days stale (was already flagged in
+-  `.475`, never addressed because `exp5189` never ran). Carried forward as `exp5202`.
+-- `ops/verifier_authenticity_audit_report.md` (2026-07-01): 11 AUTHENTIC, 6 HONEST_HEURISTIC, **2
+-  DISHONEST_NAMING** (`and_composition_verifier.py`, `claim_isolation_uncertainty_router.py`) — never
+-  actioned. Carried forward as `exp5203`.
+-- `ops/qa_layer_authenticity_audit_report.md` (2026-07-02): 1 unit scanned, **1 REAL_BUG**
+-  (`scripts/exclusion_manifest_lint.py` — word-boundary, principle-unwrap, and negation-handling gaps) —
+-  never actioned. Carried forward as `exp5204`.
+-- `ops/docs_audit_report.md` (2026-07-03, regenerated during the stall cycling): flags a **license
+-  contradiction** on the public landing page (hero states MIT-0, footer states Apache 2.0 — factually
+-  wrong, one of them is stale) plus AUROC "number soup" and trust-undercutting framing. **This is
+-  operator-curated content per Public Documentation Discipline — no task in this plan touches
+-  `docs/index.html`.** Flagged here for direct operator attention since a license-text contradiction is a
+-  correctness bug, not a style judgment call.
++- `ops/north-star.md`: the FoVer headline (AUROC 0.9131) and G1-G4 publication gate remain fixed and MET
++  (`paper_ready: true` per `scripts/publication_gate.py`). ARC-AGI-3 remains the stated destination (S0),
++  hardware focus is narrowed to KV260-as-sovereignty-story with GateMate/PolarFire opportunistic only (S3).
++- `ops/verifier_authenticity_audit_report.md` (2026-07-01, read directly): 11 `AUTHENTIC`, 6
++  `HONEST_HEURISTIC`, **2 `DISHONEST_NAMING`** -- `and_composition_verifier.py` (claims a production k=5
++  AND-composition ensemble with paper-backed exponential null-space shrinkage; the default
++  `SOSKANEnergyV3Adapter` member is untrained and returns a hardcoded neutral `0.5` for every input, plus
++  score-capping and exception-swallowing that silently converts a broken verifier into a clean pass) and
++  `claim_isolation_uncertainty_router.py` (implies routed cases get real isolated-claim verification; the
++  implementation only copies manifest booleans and assigns fixed scores -- no model call). Never actioned;
++  carried forward as `exp5203`.
++- `ops/qa_layer_authenticity_audit_report.md` (2026-07-02, read directly): 1 unit scanned, **1 `REAL_BUG`**
++  in `scripts/exclusion_manifest_lint.py` with a concrete counterexample: a task titled "Guard against FoVer
++  premise reuse" whose prompt explicitly says "do not reuse the FoVer... premise" gets mis-classified
++  `BLOCKED_PATTERN_MATCHED` because the check does raw substring matching with no word boundaries and no
++  negation awareness. Never actioned; carried forward as `exp5204`.
++- `ops/docs_audit_report.md` (2026-07-03, read directly): confirms the license contradiction (hero says
++  MIT-0, footer says Apache 2.0) the prior draft flagged, **plus additional findings the prior draft did not
++  mention**: a structural render risk (the "Recent progress" card is shoehorned into `.stats-bar` using an
++  undefined `.r-desc` CSS class with a stray unmatched `</div>`; the "TTC & PREM" card sits after an extra
++  `</div>` that may close the features grid early), an undefined-and-self-contradictory "FoVer" usage
++  (0.9131 headline win vs. "0.125 FoVer baseline" in the same page), and a cluster of suspiciously-perfect
++  result-card numbers (1.0, 60/60, "identical losses") with no visible n/CI. **All operator-curated content
++  per Public Documentation Discipline -- no task in this plan touches `docs/index.html`**; flagged in
++  "Recommended operator attention" below because the CSS/div-nesting issue is a rendering bug, not just a
++  style judgment call.
+ 
+ ## Phase design
+ 
+-### Phase 0 — Transition
+-`exp5193`: routine `.475`->`.476` archive/activation, with the added job of verifying (not trusting)
+-`exp5181`'s `DURATION_TOO_SHORT` flag and reconciling `exp5182`'s live-remediated result into the archive
+-record precisely (this milestone's own genuine new finding, produced outside the normal task-execution
+-path — the archive record must say so plainly, not imply a conductor task produced it).
+-
+-### Phase INFRA-CRITICAL — close the poison-test-cascade gap, verify the retro-timing restart
+-- `exp5194`: build the pretest-triage module + ready patch (mirrors `retro_timing_fallback.py`'s pattern —
+-  new standalone module, cannot edit `scripts/research_conductor.py` directly). Positioned **second**,
+-  immediately after archive/activate, on purpose — `.475`'s own placement of its reserved-infra slots
+-  *last* meant they were exactly the tasks starved when the cascade hit early. Moving the equivalent
+-  hardening slot to position 2 means even a repeat cascade this milestone would not erase it.
+-- `exp5195`: verify the `carnot-conductor.service` restart (performed this session) actually landed —
+-  confirm the daemon's next operational retrospective reads real `retro_timing` numbers (not
+-  `total_wall_time_minutes=0`), and apply `.475`'s never-applied staleness-self-check patch if it still
+-  only exists in draft form.
+-
+-### Phase A — DiffusionGemma resolution and GAP-4 continuation
+-- `exp5196`: **reads `exp5182`'s real, live-produced artifact first.** Branches on
+-  `diffusiongemma_loadable`: if `true`, runs the exp5173/exp5183-specified 3-arm pilot (AR baseline /
+-  unguided diffusion / energy-guided diffusion, EDLM recipe, VFScale control, commit-position telemetry,
+-  correct `verifier_is_oracle` declaration per the Circularity Discipline); if `false`, pivots to the
+-  GGUF/vLLM loader-stack alternative (a structurally different mitigation class, satisfying the
+-  Failed-Experiment Rerun Discipline) and reports honestly if that also fails, at which point the whole
+-  HF-transformers-and-alternatives search space is exhausted and the thread should be escalated to the
+-  operator rather than re-attempted a further time.
++### Phase 0 -- Transition
++`exp5193`: routine `.475`->`.476` archive/activation. Reconciles `exp5182`'s live-remediated result into
++the archive record precisely (produced outside the normal task-execution path, by direct outer-loop
++intervention -- the archive record must say so, not imply a conductor task produced it), and verifies
++(rather than trusts) exp5181's `DURATION_TOO_SHORT` flag against the evidence this plan already gathered
++(the substrate is correctly declared `aggregation_from_upstream_artifacts`; the flag likely fired on
++GGUF/CUDA substrings inside cited upstream fields -- confirm and document, feeding the finding toward a
++future `adversarial_verify.py` fix pass rather than re-diagnosing it from zero next milestone).
++
++### Phase INFRA-CRITICAL -- close the poison-test-cascade gap; fix retro-timing for real; stop the known-issues.md corruption
++Positioned second, immediately after archive/activate, on purpose -- `.475`'s own reserved-infra slots were
++placed *last* and were exactly what starved when the cascade hit early. A repeat cascade this milestone
++would not erase these two tasks if they run early.
++- `exp5194`: build the pretest-triage module (mirrors `retro_timing_fallback.py`'s pattern: new standalone
++  module, cannot edit `scripts/research_conductor.py` directly) that detects the specific signature -- a
++  just-added test whose only failure references a `results/*.json` path a sibling module's own `main()`
++  would produce -- and prepares a scoped, auditable `xfail` remediation (never `skip`, per Tests-Must-
++  Run-And-Assert) with a tracking note and expiry condition.
++- `exp5195`: **re-open, not just verify**, the retro-timing bug. `retro_timing_fallback.py` is confirmed
++  wired (commit `75bc15756`) and the daemon was restarted, but `results/operational_retro_2026_07_475.json`
++  -- generated AFTER both -- still shows `experiments_completed=0`, `total_wall_time_minutes=0`,
++  `reconstructed_from_disk_mtime=False`. Trace exactly which code path produced that specific artifact
++  (is `timing_summary`'s assembled text actually reaching the LLM agent that writes the final retro JSON?
++  did this retro get generated by a process that predates the fix landing in memory despite the restart?),
++  fix it for real, add a regression test that asserts the END-TO-END retro JSON is correct for a milestone
++  with known real work (not just that the wiring exists), and backfill `.469`/`.473`/`.474`/`.475`. Same
++  task also fixes the unrelated `known-issues.md` duplication bug: `scripts/experiments/run_experiment_1911.py`
++  lines 62-68 append the same fixed string with no idempotency check (187 duplicate copies confirmed on
++  disk); add the idempotency guard and deduplicate the file down to one copy of that section (content-
++  preserving cleanup, not a content removal -- consistent with Documentation Update Rules).
++
++### Phase A -- Verifier-moat continuation: DiffusionGemma and GAP-4
++- `exp5196`: reads `exp5182`'s real artifact first (root cause + all 4 exhausted mitigations), then tries,
++  in order: (1) vLLM using the exact native-support recipe from the 2026-06-10 vLLM blog post (a genuinely
++  untried path -- our `.474` probe fell back to the generic Transformers backend); (2) if that also fails
++  or cannot fit the 2x24GB budget, the HF/accelerate custom-`device_map`-dict +
++  `llm_int8_enable_fp32_cpu_offload=True` mitigation grounded in `transformers#22018` (co-locate tied
++  modules on GPU 0, offload named non-tied modules to CPU); (3) if BOTH fail, retire the DiffusionGemma
++  live-loading thread with a clear, evidence-backed write-up -- six well-motivated mitigations across two
++  serving stacks is a thorough good-faith effort, and continuing to guess a seventh has strongly
++  diminishing returns per the Failed-Experiment Rerun Discipline. Does NOT re-attempt GGUF (confirmed
++  not-yet-supported upstream, `llama.cpp#24427` still Draft).
+ - `exp5197`: continue the GAP-4 forward-protocol scale-up from n=62 toward the ~180-sample significance
+-  floor, with genuine atomic checkpoint/resume this time (per the exp5177 shortfall: a `checkpoint_path`
+-  field was declared but no file was ever written).
+-
+-### Phase B — Trajectory-enumeration wall: MAP landmark pre-stage (re-attempt, unchanged design)
+-- `exp5198`: the exact 3-arm falsifiable MAP gate `exp5172` specified and `.475`'s `exp5185` was meant to
+-  run — pruner-only vs. map-only vs. map-plus-pruner on CD82/SK48/SP80, CN04 negative control, same
+-  4000-expansion reproduction-gated budget.
+-- `exp5199`: **gated on `exp5198` validating a lever.** Satisfies the ARC Level-Up Attempt Guarantee's
+-  mandatory >=1-attempt floor for this roadmap.
+-
+-### Phase C — Hidden-state verifier v2 (re-attempt, one addition) and hardware continuity
+-- `exp5200`: PHSV-style trained probe on the MMLU-Pro headroom-confirmed pool, self-certainty and CLUE as
+-  mandatory zero-training baselines (unchanged from `.475`'s design), **plus Radial Consensus Score
+-  (arXiv:2604.12196) as a third mandatory baseline** — a training-free embedding-geometry vote replacement
+-  this session's literature sweep found, which any trained-probe claim now has to clear alongside plain
+-  self-consistency. This is this milestone's designated continuous-self-learning experiment (a probe
+-  trained on the model's own accumulated correct/incorrect hidden-state experience — the JEPA-style Tier 3
+-  predictive-verification pattern from research-program.md).
+-- `exp5201`: hardware continuity — KV260 + PolarFire SSH-reachability + hash-verified workload (routine),
+-  and a genuine attempt to resolve the GateMate DirtyJTAG IDCODE regression (enumerates at USB level,
+-  IDCODE read fails — worked in May, now doesn't; this is the third consecutive milestone this has been
+-  visible without a resolution attempt beyond re-running `--detect`).
+-
+-### New literature-informed work
+-- `exp5203`: prepare operator-facing remediation options (RENAME_TO_REFLECT_REALITY vs. RETIRE vs.
+-  REIMPLEMENT_PROPERLY, per the Verifier Authenticity Discipline's own decision categories) for the two
+-  `DISHONEST_NAMING`-flagged verifiers. Per that discipline, the audit never edits verifiers and the
+-  operator decides — this task's job is to make the operator's decision cheap (read each verifier's real
+-  behavior, draft the three options with a recommendation and rationale, do not silently rename anything).
+-- `exp5204`: fix `scripts/exclusion_manifest_lint.py`'s documented `REAL_BUG` (word-boundary matching,
+-  principle-field unwrapping, negation handling) per the QA-Layer Authenticity Discipline's own prescribed
+-  process — write the regression test reproducing the counterexample first, fix, run the full
+-  `adversarial_verify.py` test suite, then a corpus-wide `--backfill` dry-run sanity check before
+-  committing, exactly as the discipline's "How to apply (operator)" section specifies.
+-- `exp5205`: a bounded AutoPyVerifier-inspired (arXiv:2604.22937) pilot targeting GAP-1
+-  (transpose/orientation discrimination) — search a small space of candidate cheap discriminators
+-  (not another single hand-invariant, per the discipline the paper actually demonstrates: search a SET,
+-  evaluate joint satisfaction) against the same square-transpose distractor subset the original GAP-1
+-  hand-invariant was refuted on, so this result is directly comparable to the existing refutation.
+-
+-### Phase Z — Capstone (absorbs the docs numeric sync from `.475`'s `exp5191`)
+-- `exp5206`: milestone capstone, reconciling all of the above honestly, PLUS the numeric-only
+-  `docs/technical-report.md` sync `.475`'s `exp5191` never ran (folded in here rather than kept as a
+-  separate low-priority task, since it is a small, mechanical, few-minute addition to a task that is
+-  already reading every other task's output).
++  floor, with genuine atomic checkpoint/resume this time (`exp5177`'s gap: a `checkpoint_path` field was
++  declared but no file was ever written).
++
++### Phase B -- Trajectory-enumeration wall: MAP landmark pre-stage (re-attempt; design unchanged, never ran)
++- `exp5198`: the falsifiable 3-arm MAP gate `exp5172` specified and `.475` was never able to run --
++  pruner-only vs. map-only vs. map-plus-pruner on CD82/SK48/SP80, CN04 negative control, same
++  4000-expansion reproduction-gated budget as the existing relational-mask-pruner result it must beat.
++- `exp5199`: gated on `exp5198` validating a lever. Satisfies the ARC Level-Up Attempt Guarantee's
++  mandatory >=1-attempt floor for this roadmap (the gated-task pattern is the established precedent for
++  satisfying this floor without forcing a doomed attempt on a null `exp5198`).
++
++### Phase C -- Hidden-state verifier v2 (re-attempt, sharpened) and hardware continuity
++- `exp5200`: PHSV-style trained probe (arXiv:2504.05419 -- chunk-level reasoning boundaries, last-token/
++  last-layer hidden state, 2-layer MLP) on the MMLU-Pro headroom-confirmed pool (oracle_at_k=0.350 vs.
++  sc_vote=0.075, CI95=[0.150, 0.425] excludes 0 -- the 2026-07-01 headroom check), replacing `exp5178`'s
++  naive centroid probe on an underpowered n=6. Three mandatory zero-training baselines: self-certainty
++  (arXiv:2502.18581), CLUE (arXiv:2510.01591), and **Radial Consensus Score** (arXiv:2604.12196,
++  WebFetch-verified real this session) -- a trained probe must clear all three before any beats-SC claim is
++  credible. This is `.476`'s designated continuous-self-learning experiment (JEPA-style Tier 3 predictive
++  verification per research-program.md: a probe trained on the model's own accumulated correct/incorrect
++  hidden-state experience).
++- `exp5201`: hardware continuity -- KV260 + PolarFire SSH-reachability + hash-verified workload (routine,
++  per Hardware-Task Continuity Discipline), and a genuine third-consecutive-milestone attempt to resolve
++  the GateMate DirtyJTAG IDCODE regression (enumerates at USB level, IDCODE read fails; worked in May,
++  regressed since).
++
++### Phase D -- Literature-informed QA and verifier-authenticity follow-through
++- `exp5202`: `_bmad/architecture.md` reconciliation -- 48+ days stale (Last Reconciled 2026-05-16),
++  never addressed across `.475` (never ran) and before. Document the ARC-AGI-3 pivot, the PHASE D
++  lifecycle (committed -> executed -> retired), the hidden-state-verifier program, and the current
++  verification-tier table's drift since May.
++- `exp5203`: prepare operator-facing remediation options (RENAME_TO_REFLECT_REALITY / RETIRE /
++  REIMPLEMENT_PROPERLY, per the Verifier Authenticity Discipline's own decision categories) for
++  `and_composition_verifier.py` and `claim_isolation_uncertainty_router.py`. The audit never edits
++  verifiers and the operator decides; this task makes that decision cheap (read each verifier's real
++  behavior, draft the three options with a recommendation and rationale, rename/retire/reimplement
++  nothing silently).
++- `exp5204`: fix `scripts/exclusion_manifest_lint.py`'s documented `REAL_BUG` (raw substring matching
++  without word boundaries; `id`/`requires`/`operator_override`/`title`/`prompt` treated as bare values
++  when they may be principle-wrapped; `_is_negated_context` only covers the KV260 `/dev/mmcblk` check, not
++  `blocked_patterns`). Write the regression test reproducing the audit's own counterexample first (the
++  "Guard against FoVer premise reuse" false-positive), fix, run the full `adversarial_verify.py` test
++  suite, then a corpus-wide `--backfill` dry-run sanity check before committing, exactly as the QA-Layer
++  Authenticity Discipline's "How to apply (operator)" section specifies.
++- `exp5205`: an AutoPyVerifier-inspired (arXiv:2604.22937, WebFetch-verified real this session) pilot
++  targeting GAP-1 (transpose/orientation discrimination). The paper's own core method -- search a compact
++  SET of cheap candidate discriminators via LLM-synthesis + DAG search for joint satisfaction, not one
++  hand-crafted invariant -- is precisely what distinguishes this from the already-refuted single
++  directional-adjacency hand-invariant. Evaluated against the same square-transpose distractor subset
++  (239 tasks, `results/arc_grid_verifier_invariants_v2.json`) the original refutation used, so the result
++  is directly comparable.
++
++### Phase Z -- Capstone
++- `exp5206`: milestone capstone, reconciling all of the above honestly. Also absorbs the numeric-only
++  `docs/technical-report.md` sync `.475` never ran (small, mechanical, folded in rather than kept as a
++  separate low-priority task), and reconciles the lp85 registry inconsistency the ARC self-solve audit
++  surfaced (L3 canonical vs. L5-claimed vs. L6-quarantined -- determine ground truth from
++  `ops/arc_solve_registry.yaml` + the standing `arc_loop_solve_lp85.json`, fix the registry, and either
++  restamp or drop the quarantined L6 claim per the audit's own recommendation).
+ 
+ ## Dependency graph
+ 
+ ```
+ exp5193 (archive/activate)
+    |
+-   +-- exp5194 (poison-test-cascade triage module + patch)             [independent, EARLY]
+-   +-- exp5195 (retro-timing restart verification + staleness patch)   [independent, EARLY]
++   +-- exp5194 (poison-test-cascade triage module)                       [independent, EARLY]
++   +-- exp5195 (retro-timing REAL fix + known-issues.md dedup)           [independent, EARLY]
+    |
+-   +-- exp5196 (DiffusionGemma: branch on exp5182's live result)       [independent -- exp5182 already resolved this session]
+-   +-- exp5197 (GAP-4 scale-up, real checkpoint/resume)                [independent]
++   +-- exp5196 (DiffusionGemma: vLLM-native retry -> custom device_map -> retire)  [independent]
++   +-- exp5197 (GAP-4 scale-up, real checkpoint/resume)                  [independent]
+    |
+    +-- exp5198 (MAP landmark pre-stage A/B/C) --gated_on(lever validated)--> exp5199 (level-up attempt)
+    |
+-   +-- exp5200 (hidden-state verifier v2 + RCS baseline)               [independent]
+-   +-- exp5201 (hardware continuity: KV260/PolarFire/GateMate)         [independent]
++   +-- exp5200 (hidden-state verifier v2 + RCS baseline)                 [independent]
++   +-- exp5201 (hardware continuity: KV260/PolarFire/GateMate)           [independent]
+    |
+-   +-- exp5202 (architecture.md reconciliation)                       [independent]
+-   +-- exp5203 (verifier-authenticity DISHONEST_NAMING remediation)   [independent]
+-   +-- exp5204 (exclusion_manifest_lint.py REAL_BUG fix)              [independent]
+-   +-- exp5205 (AutoPyVerifier-inspired GAP-1 pilot)                  [independent]
++   +-- exp5202 (architecture.md reconciliation)                         [independent]
++   +-- exp5203 (verifier-authenticity DISHONEST_NAMING remediation)     [independent]
++   +-- exp5204 (exclusion_manifest_lint.py REAL_BUG fix)                [independent]
++   +-- exp5205 (AutoPyVerifier-inspired GAP-1 pilot)                    [independent]
+    |
+-   +-- exp5206 (capstone, reads all of the above; absorbs docs sync)
++   +-- exp5206 (capstone, reads all of the above; absorbs docs sync + lp85 registry reconciliation)
+ ```
+ 
+ ## Hardware requirements
+ 
+ | Task | Hardware | Notes |
+ |---|---|---|
+-| `exp5196` | 1x RTX 3090 (CUDA), or GGUF/vLLM fallback path | `exp5182` already confirmed GPU 0 idle-availability and produced the load-path ground truth this task reads first |
++| `exp5196` | 1x RTX 3090 (CUDA), vLLM stack | `exp5182` already confirmed GPU 0 idle-availability; vLLM-native path is the primary attempt this time |
+ | `exp5197` | ARC live-submission stack / cached candidate pool, per `exp5161`/`exp5177`'s established methodology | Continue, do not re-derive |
+ | `exp5198`/`exp5199` | CPU (offline ARC arcade simulation) | No GPU required |
+-| `exp5200` | 1x RTX 3090 or iGPU, GGUF-cached `gemma-4-26B-A4B-it-GGUF` | Matches `exp5178`/`.475`'s target model for continuity |
++| `exp5200` | 1x RTX 3090 or iGPU, GGUF-cached `gemma-4-26B-A4B-it-GGUF` | Matches `exp5178`'s target model for continuity |
+ | `exp5201` | KV260 (SSH), PolarFire (SSH), GateMate (USB DirtyJTAG) | Continuity + one genuine GateMate regression-diagnosis attempt |
+-| `exp5193`, `exp5194`, `exp5195`, `exp5202`, `exp5203`, `exp5204`, `exp5205`, `exp5206` | None (CPU, aggregation/doc/lint work) | `exp5205` is CPU-only (evaluates cheap discriminators against a cached distractor pool, no LLM call) |
++| `exp5193`, `exp5194`, `exp5195`, `exp5202`, `exp5203`, `exp5204`, `exp5205`, `exp5206` | None (CPU, aggregation/doc/lint work) | `exp5205` evaluates cheap discriminators against a cached distractor pool, no LLM call |
+ 
+ ## Risk notes
+ 
+-- **The poison-test-cascade hardening (`exp5194`) cannot itself apply its fix**, by the same standing
+-  constraint that blocked `exp5190` in `.475` — it produces a ready patch + regression test, not a live
+-  edit. This is a known, accepted limitation of the current task sandbox, not a design flaw in this plan;
+-  flagged explicitly rather than silently assumed away, exactly as `.475`'s `exp5190` risk note did for the
+-  retro-timing wiring (which, notably, turned out to already be resolved via a different path — a reminder
+-  to re-verify rather than assume a patch-prep task's target is still unapplied).
+-- **`exp5196` may exhaust all known DiffusionGemma loading mitigations.** If the GGUF/vLLM pivot also
+-  fails, per the Failed-Experiment Rerun Discipline this specific pilot (not the broader verifier-moat
+-  program) should be retired pending either an upstream `transformers`/`accelerate` bugfix release or
+-  direct operator investigation — do not propose a fifth mitigation-variant task in `.477` without a
+-  genuinely new theory.
+-- **MAP may still not close the enumeration wall.** Unchanged from `.475`'s own risk note: the 3-arm
+-  falsifiable gate is designed so a null result is exactly as reportable as a positive one, and `exp5199`
+-  is gated so a null `exp5198` does not force a doomed level-up attempt.
+-- **The hidden-state verifier v2 may lose to all three free baselines, including the new one.** A clean
+-  loss to Radial Consensus Score specifically (a method this project had not previously benchmarked against
+-  at all) would be a materially informative negative, not just a repeat of `exp5178`'s finding.
+-- **This plan does not resolve the post-PHASE-D strategic gap** (CLAUDE.md names PHASE D as the
+-  designated ARC-deadline successor track; PHASE D is now itself retired). It deliberately does not expand
+-  ARC's task-slot share to fill that gap by default, per the self-solve audit's explicit recommendation —
+-  but it also does not propose a replacement "primary" direction, since that is an operator-scope strategic
+-  decision this planning session should surface, not make unilaterally. See "Recommended operator
+-  attention" below.
++- **`exp5194` cannot itself apply its fix** -- same standing sandbox constraint as `retro_timing_fallback.py`'s
++  own patch-prep pattern: it produces a ready patch + regression test, not a live edit to
++  `scripts/research_conductor.py`. Known, accepted limitation, flagged explicitly.
++- **`exp5196` may exhaust all known DiffusionGemma loading mitigations a second time.** If vLLM-native
++  also fails (plausible -- the blog only demonstrates H100/H200, not a 2x24GB budget) and the custom-
++  device_map mitigation also fails, per the Failed-Experiment Rerun Discipline this specific pilot should
++  retire pending either an upstream fix or direct operator investigation. Do not propose a further HF/
++  accelerate mitigation-variant task in `.477` without a genuinely new theory; GGUF stays blocked until
++  `llama.cpp#24427` merges (check before re-proposing).
++- **MAP may still not close the enumeration wall.** The 3-arm falsifiable gate is designed so a null result
++  is exactly as reportable as a positive one; `exp5199` is gated so a null `exp5198` does not force a
++  doomed level-up attempt.
++- **The hidden-state verifier v2 may lose to all three free baselines, including Radial Consensus Score.**
++  A clean loss to RCS specifically (a method this project had not previously benchmarked against) would be
++  a materially informative negative, not a repeat of `exp5178`'s finding -- `retire_if_same_verdict: true`
++  is set for exactly this reason.
++- **`exp5195`'s retro-timing bug may have a deeper root cause than a simple wiring gap** (e.g. the LLM
++  retro-writing agent not faithfully transcribing the assembled `timing_summary` text into its JSON
++  schema, independent of whether the Python-side data is correct). If the first diagnosis pass doesn't
++  find a clean fix, report the narrowed root cause honestly rather than declaring victory on a
++  partial fix -- this bug has now survived one full "fix" cycle already.
++- **This plan does not resolve the post-PHASE-D strategic gap or the ARC-deadline correction.** Both are
++  named explicitly in "Recommended operator attention" below rather than decided unilaterally; this
++  planning pass deliberately does not expand ARC's task-slot share by default, consistent with the
++  self-solve audit's recommendation, but also does not treat the matter as closed.
+ 
+ ## Recommended operator attention (not autonomous-loop actions)
+ 
+-1. **The `docs/index.html` MIT-0/Apache-2.0 license contradiction** (`ops/docs_audit_report.md`,
+-   2026-07-03) is a factual-correctness bug on operator-curated public content — no task here touches it,
+-   but it should not wait for a future audit cycle to be noticed a second time.
+-2. **The post-PHASE-D strategic direction.** CLAUDE.md's designated successor to the ARC-sprint majority
+-   reservation (PHASE D) is retired; `ops/north-star.md` §0 still names ARC-AGI-3 as the destination but
+-   the self-solve audit reports zero net live-capability advance in the most recent window. An explicit
+-   operator decision — resume ARC majority, formally scope ARC to maintenance/opportunistic status, or name
+-   a new primary track — would remove ambiguity the next 2-3 planning cycles will otherwise have to
+-   re-adjudicate independently.
+-3. **This session restarted `carnot-conductor.service`** to pick up the exp5182 unblock and the
+-   already-merged `retro_timing_fallback.py` wiring. Confirm the daemon resumed cleanly
+-   (`systemctl --user status carnot-conductor.service`) and that `exp5182`'s live-produced result file
+-   (currently uncommitted) gets committed on the next natural commit point.
++1. **The `docs/index.html` MIT-0/Apache-2.0 license contradiction, PLUS a structural CSS/div-nesting risk**
++   (`ops/docs_audit_report.md`, 2026-07-03) -- the "Recent progress" card is shoehorned into `.stats-bar`
++   with an undefined `.r-desc` class and a stray unmatched `</div>`; the "TTC & PREM" card sits after
++   another possibly-early-closing `</div>`. This is a rendering-correctness bug, not only a style judgment
++   call. No task here touches `docs/index.html` per Public Documentation Discipline.
++2. **The ARC Prize deadline correction.** This session's research found the `2026-06-30` date this project
++   has treated as the final deadline (the trigger for retiring the ARC-AGI-3 Submission Sprint Forcing
++   Function) is actually "Milestone #1" for early open-source prize eligibility per arcprize.org
++   (WebFetch-confirmed); the overall competition may run through November 2, 2026 (lower confidence --
++   search-snippet only, not independently WebFetched). Combined with the still-unresolved
++   "post-PHASE-D strategic direction" question (CLAUDE.md's designated ARC-deadline successor track is
++   itself now retired, and the self-solve audit reports zero net live-capability advance in the most recent
++   window) -- an explicit operator decision on both facts together would remove ambiguity the next several
++   planning cycles would otherwise re-adjudicate independently.
++3. **Confirm `carnot-conductor.service`'s restart state and the exp5182 commit.** A prior outer-loop
++   session restarted the daemon and left `exp5182`'s live-produced result file for the operator to review;
++   confirm it has been committed on a natural commit point if not already done.
+ 
+ ## Cross-references
+ 
+-- `ops/conductor-log.md` (2026-07-03 08:15-09:42+ UTC) — the stall this plan diagnoses and works around
+-- `results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json` — this session's live
+-  remediation artifact, the load-bearing new ground truth for `exp5196`
+-- `research-references.md` §"V475 Planner References", §"V475 Outer-Loop Planner References --
+-  Supplementary Sweep", §"V475 Outer-Loop Planner References -- Session 2" — the three prior literature
+-  sweeps this plan builds on; this session's own two-agent sweep (EBM/verification/hardware track +
+-  Ising/KAN/hardware/ARC-SOTA track) should be appended there alongside them, not duplicated
+-- `ops/verifier_gaps.md` GAP-4891, GAP-4, GAP-1 — the open gaps `exp5198`/`exp5197`/`exp5205` address
++- `ops/conductor-log.md` (2026-07-03 03:15-10:35 UTC) -- the full `.475` timeline this plan verified directly
++- `results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json` -- the real mitigation-ladder
++  result, read directly (not paraphrased) for this plan
++- `results/operational_retro_2026_07_475.json` -- read directly; confirms the retro-timing bug is still live
++- `results/diffusiongemma_energy_prior_gguf.json`, `results/diffusiongemma_energy_prior_vllm.json` and their
++  `.log` files -- the `.474` probe artifacts read directly to ground `exp5196`'s design
++- `research-references.md` `## V476 Planner References` (new section, added alongside this plan) -- this
++  session's WebFetch-verified citations (vLLM native support, `transformers#22018`, `llama.cpp#24427`,
++  Radial Consensus Score, AutoPyVerifier)
++- `ops/verifier_gaps.md` GAP-4891, GAP-1 -- the open gaps `exp5198`/`exp5205` address
+ - `ops/verifier_authenticity_audit_report.md`, `ops/qa_layer_authenticity_audit_report.md`,
+-  `ops/arc_self_solve_audit_report.md`, `ops/docs_audit_report.md` — the four audit reports this plan reads
+-  and, in two cases (`exp5203`, `exp5204`), acts on
+-- `ops/north-star.md` §0, §3, §5 — ARC-AGI-3 destination framing, hardware focus, verifier-moat reframe
+-- `incident_agent_shipped_test_cascade` (memory) — the 4-occurrence incident class `exp5194` addresses
++  `ops/arc_self_solve_audit_report.md`, `ops/docs_audit_report.md` -- all four read directly this session;
++  two acted on (`exp5203`, `exp5204`), two flagged for operator attention or capstone reconciliation
++- `ops/north-star.md` SS0, S3, S5 -- ARC-AGI-3 destination framing, hardware focus, verifier-moat reframe
++- `incident_agent_shipped_test_cascade` (memory) -- the 4-occurrence incident class `exp5194` addresses
+ - CLAUDE.md "Failed-Experiment Rerun Discipline", "Exclusion-Manifest Cross-Check Before Planning",
+   "Circularity / Oracle-Distinctness Discipline", "ARC Live-Path Reachability Discipline",
+   "Verifier Authenticity Discipline", "QA-Layer Authenticity Discipline", "Tests Must Run and Assert",
+-  "Never Stash — Always Commit-First", "Overdue-Priority Forcing Function"
++  "Inference-Substrate Declaration Discipline", "Overdue-Priority Forcing Function",
++  "ARC Level-Up Attempt Guarantee", "SOTA-Ingestion Cycle Discipline"
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index 33cde48941..c7db86531b 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -18,44 +18,23 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
+ 
+ ## TL;DR
+ 
+-**0 SELF_DISCOVERY_ADVANCE · 1 OUTER_LOOP_RE · 19 DUPLICATE · 0 OFF_PATH.** The reachability pre-pass is clean (exit 0, no orphaned solvers), and the one genuine anti-pattern (`experiment_headway_lp85_capture` — a live-recorded L6 trajectory captured with `used_env_source: true`) was **already caught mechanically** (`flagged_adversarial: true` + critical `ARC_OUTER_LOOP_SOLVE` corrigendum, excluded from the counted total). The other 19 are honestly-labeled `development_proxy` re-reproductions of already-banked levels. **Net live capability advance this window: zero** — `reproducible_total_levels` is flat at 69, and the registry itself notes recent probes "reproduced only prior-or-lower registry depths."
+-
+----
++**19/20 are legitimately-stamped `development_proxy` standing-loop reproductions (allowed, source-clean, but NONE demonstrate live self-discovery and all appear to re-bank already-registered levels). The 1 outlier — `experiment_headway_lp85_capture.json` (lp85 L6) — is OUTER_LOOP_RE: it declares `used_env_source: true` under a `development_proxy` stamp, the exact CRITICAL contradiction the discipline names. The mechanical layer already caught it (`flagged_adversarial: true`, quarantined). Reachability is clean (exit 0). Zero self-discovery advances in the window; the one deepen attempt leaned on env-source RE.**
+ 
+ ## Per-artifact verdicts
+ 
+-### The one to flag: `results/experiment_headway_lp85_capture.json` — **OUTER_LOOP_RE**
+-
+-- **Evidence:** `solve_provenance: development_proxy` **but** `used_env_source: true` — the exact contradiction the discipline names as CRITICAL (reading env source is RE the live agent *cannot* do on a hidden game). `honest_verdict: complete_confirmed_lp85_L6_bank_trajectory_captured` + `solution_labels` = 89 frozen pixel coords = a captured trajectory, not a from-scratch live derivation. Claims L6 over a clean registry ceiling of **L5** (registry line 858: `new_reproduced_level=5`).
+-- **Already handled:** `flagged_adversarial: true`, `corrigendum_pending[ARC_OUTER_LOOP_SOLVE / critical]`, `corrigendum_note: Excluded from headline / capstone aggregation`. Cross-check confirms the taint did **not** leak into the count — grep for `lp85_l6`/`used_env_source` in the registry returns nothing; lp85 stands at L5 clean. **The defense worked.**
+-- **Recommended action:** No new fix needed — leave quarantined. Either re-stamp `solve_provenance: outer_loop_re` for label-honesty, or delete the artifact. Do **not** count lp85 L6.
+-
+-### The 19 standing-loop artifacts — **DUPLICATE** (benign regression-maintenance, not drift)
++### `results/experiment_headway_lp85_capture.json` — lp85 L6 → **OUTER_LOOP_RE**
+ 
+-All share: `mode: standing_arc_loop_offline_no_quota`, `solve_provenance: development_proxy`, empty `honest_verdict`, **no** outer-loop inputs declared (`used_env_source`/`offline_ground_truth_bfs`/`hand_calibrated_per_game` all absent or false), verifier-routed best-first search over the offline sim reusing the shared operator library + reproduction gate.
++- **Evidence:** `used_env_source: true` while `solve_provenance: development_proxy`. This is precisely the discipline's CRITICAL contradiction ("declaring outer-loop-only inputs on a non-`outer_loop_re` solve"). The artifact self-carries `flagged_adversarial: true` + `corrigendum_pending[0].kind = ARC_OUTER_LOOP_SOLVE`, severity `critical`, and is `Excluded from headline / capstone aggregation`. The L5→L6 deepen was a real 971.6s / 11,069-node verifier-routed search — but it consumed env source to get there, which the live agent cannot do on a hidden game. Note also a **registry inconsistency**: this artifact asserts `prior_reproducible_level: 5`, yet the standing `arc_loop_solve_lp85.json` reproduces lp85 only to **L3**.
++- **Recommended action:** Do NOT count L6 toward `reproducible_total_levels` or any capstone. Either restamp `solve_provenance: outer_loop_re` (stays quarantined, never headline) **or** re-run the L5→L6 deepen with `used_env_source=false` (pure runtime discovery) and re-verify before banking. Reconcile lp85's registry ceiling (L3 vs L5 vs L6 — three sources disagree).
+ 
+-| game | reached L | game | reached L | game | reached L |
+-|---|---|---|---|---|---|
+-| lp85 | 3 | dc22 | 3 | ft09 | 3 |
+-| r11l | 2 | vc33 | 2 | ar25 | 3 |
+-| ls20 | 2 | g50t | 2 | m0r0 | 2 |
+-| s5i5 | 2 | sp80 | 2 | cn04 | 3 |
+-| su15 | 2 | sk48 | 2 | lf52 | 2 |
+-| bp35 | 2 | re86 | 2 | ka59 | 1 |
+-| sb26 | 2 | | | | |
++### 19× `results/arc_loop_solve_<game>.json` → **DUPLICATE** (allowed dev-proxy, not self-discovery)
+ 
+-- **Evidence:** These are the standing offline regression loop, not new-capability claims. `reproducible_total_levels` flat at 69; registry line 1620 states directly that lp85/tr87/tn36 "reproduced only prior-or-lower registry depths." Confirmed exemplar: `arc_loop_solve_lp85` reaches **L3**, below the banked **L5** → re-reproduction, no new capability.
+-- **Not OUTER_LOOP_RE / not OFF_PATH:** honestly stamped, clean of source-read inputs, reachable from `arc_loop_solve.py`. They are the *allowed* dev-twin — but per the discipline, `development_proxy` is explicitly **not** proof the live agent self-discovers, so none earns SELF_DISCOVERY_ADVANCE.
+-- **Caveat (honest):** per-game ceilings were individually verified only for lp85; the DUPLICATE call on the other 18 rests on the flat total + standing-regression mode + the registry's "prior-or-lower" note. Strong but circumstantial.
+-- **Recommended action:** Keep as regression hygiene. **Do not let any capstone/headline count these as "levels solved this milestone" or as live progress** — that aggregation step is where a clean-labeled duplicate silently becomes an over-claim.
++lp85·r11l·ls20·dc22·vc33·g50t·s5i5·sp80·su15·sk48·ft09·ar25·m0r0·cn04·lf52·bp35·re86·ka59·sb26
+ 
+----
++- **Evidence:** All run through `scripts/arc_loop_solve.py` (a live entrypoint — reachable), verifier-routed best-first search over the offline sim, `offline_reproduced: true`, `mode: standing_arc_loop_offline_no_quota`. Provenance correctly `development_proxy`; **no** `read_game_source` / `offline_ground_truth_bfs` / `hand_calibrated_per_game` declared — source-clean, not the RE anti-pattern. **However:** registry `reproducible_total_levels: 69` with repeated "no new level was banked, reproducible_total_levels is unchanged" notes, and each run reports a level the registry already holds (ka59 L1, lp85 L3, etc.). These are the reproduction gate **re-firing on banked levels** — a valid regression check, but **no new live capability and, by definition, not `live_agent_self_discovery`** (the GameAdapter is hand-registered per game).
++- **Recommended action:** No provenance fix needed. But do NOT let a milestone cite these as *progress* — the honest read is "levels flat at 69." If the loop keeps burning cycles re-reproducing banked levels, that's churn (north-star §1), not advance.
+ 
+ ## Pattern watch
+ 
+-1. **Deepen well is dry, and the shortcut instinct showed.** A full 7-day window yielded zero live self-discovered advances — 19 re-reproductions plus one reach for `used_env_source` to force lp85 L6. That single env-source capture is the canary: when the honest search stalls, the tempting path is outer-loop RE dressed as `development_proxy`. It was caught this time; the guard is load-bearing, not decorative. Keep Layer 1b hot.
+-
+-2. **The residual risk is aggregation, not these artifacts.** The 19 are labeled correctly. The failure mode to watch is a downstream capstone summing `arc_loop_solve_*` "solves" into a milestone progress number — that would launder 19 duplicates + 1 quarantined solve into apparent forward motion against a total that has not moved off 69.
+-
+-3. **`development_proxy` is doing heavy lifting with no live-agent proof behind it.** Every solve this week routes through hand-registered `GameAdapter`s in the offline twin. None demonstrates the scored `E3AgentPolicy` advancing a game from its own runtime attempts. That is consistent with the sprint being over (deadline passed 2026-06-30) — but if ARC keeps claiming milestone slots, the planner should be pushed toward `live_agent_self_discovery` provenance or explicitly reclassified as maintenance, not progress.
++**The whole 7-day window is 20/20 `development_proxy`, 0 `live_agent_self_discovery`, against a registry flat at 69 (deepen well drying).** The single artifact that tried to break the wall (lp85 L6) reached for `used_env_source` — outer-loop RE — to manufacture a deeper bank. That is the exact drift this discipline exists to catch: **when self-discovery dries up, the loop leans on env-source RE and stamps it `development_proxy`.** It was caught mechanically this time (Layer 1b flag + quarantine, reachability green). The thing to watch next milestone is a "correction" that flips the stamp to `outer_loop_re` to *silence the flag* while still counting the level — or a fresh `*_capture` artifact that omits the `used_env_source` flag but still depends on env source under the hood (only Layer 2's hostile LLM review, not the mechanical layer, catches that). Net: defenses held, but the loop is producing regression re-fires, not new self-discovered solves.
+ 
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 020825418c..e2dc7e42b8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3678205, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-07-03T10:35:57Z"}
+\ No newline at end of file
++{"pid": 3678205, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-07-03T11:45:20Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3f1a54cd9d..c0f771d363 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10162,3 +10162,4 @@ web search: |
+ | 2026-07-03 09:39 UTC | PHASE Z capstone -- reconcile the DiffusionGemma u | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.64s |
+ | 2026-07-03 09:42 UTC | PHASE Z capstone -- reconcile the DiffusionGemma u | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.58s |
+ | 2026-07-03 10:35 UTC | PHASE A1 root-cause and fix the DiffusionGemma two | OK | Deliverable already exists in repo |
++| 2026-07-03 11:43 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 608d21650c..8737cb58d9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3678205, "iteration": 1, "phase": "iteration_start", "started_at": "2026-07-03T10:35:57Z"}
+\ No newline at end of file
++{"pid": 3678205, "iteration": 2, "phase": "iteration_start", "started_at": "2026-07-03T11:45:20Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 3173a68b10..acc5bfaf34 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -1,151 +1,69 @@
+ <!-- generated by scripts/pages_adversarial_audit.py — 2026-07-03 -->
+ <!-- per CLAUDE.md 'Adversarial Landing-Page Discipline' — this report is advisory; operator decides what to act on -->
+ 
+-I have the full page. Here is my hostile-stranger audit.
+-
+-```
+ # docs_audit_report — 2026-07-03
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero is genuinely good — I understand what Carnot does (a "second pair of
+-eyes" that checks LLM answers) and how to install it inside 10 seconds. But the
+-moment I look for reasons to trust it, the page fights itself: the license is
+-stated two different ways, five different AUROC-ish numbers float around an
+-undefined benchmark called "FoVer," and the hero + blog lead with the project's
+-own retractions and fabrication-catching. Net: a sharp stranger keeps reading a
+-little, then hesitates to adopt because they can't tell the license or which
+-number is real.
++The hero is genuinely good — one clear sentence, a concrete `47 + 28 = 76` example, and `pip install carnot-ebm` visible above the fold — so a stranger earns a reason to keep scrolling. But trust erodes on the way down: the license says **MIT-0 at the top and Apache 2.0 at the bottom**, the evidence grid is 12 jargon-dense benchmark cards several of which show suspiciously perfect numbers (1.0, 60/60, 0.90 vs a below-chance 0.125), and the headline benchmark ("FoVer") is never defined yet appears as both a 0.9131 triumph and a 0.125 baseline. A skeptical conference-goer leaves thinking "interesting idea, but is this sloppy or cherry-picked?"
+ 
+ ## TOP 3 PROBLEMS
+-1. LICENSE CONTRADICTION — hero badge + meta say "MIT-0", footer says "Apache
+-   2.0 License". A stranger evaluating adoption cannot answer "can I use this?"
+-2. AUROC / FoVer NUMBER SOUP — 0.9131, 0.91, 0.90, retracted 0.9857, 0.8947,
+-   and a "0.125 FoVer baseline" (worse than chance); "FoVer" is never defined
+-   and is used as both the headline benchmark AND a 0.125 baseline we beat.
+-3. TRUST-UNDERCUTTING FRAMING — the hero's first prose card and 5 of 7 blog
+-   posts are about the project catching ITSELF fabricating/retracting ("Repinned
+-   from v2 0.9857", "Caught Cheating", "Two Retractions"). Honest, but to a
+-   stranger it reads "this project has a fabrication problem."
++1. **License contradicts itself** — hero badge + meta say "MIT-0", footer says "Apache 2.0 License". For an open-source tool this is the #1 trust-killer.
++2. **"FoVer" is the most-repeated proper noun on the page and is never defined** — and it appears as both the 0.9131 headline win *and* a "0.125 FoVer baseline" that gets beaten, which reads as self-contradictory.
++3. **Results grid is a wall of 12 jargon-dense cards with stacked perfect scores** (SVAMP AUC card, VeriCoT 0.5→1.0, k=5 60/60, "identical losses") — a stranger skims all 12, parses none, and the perfection reads as cherry-picking rather than evidence.
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- Word-count bloat is NOT a major issue — bento/result card bodies are all under
+-  the 120/60-word caps. The bloat is by CARD COUNT and density, below.
+-- Results grid (#results, lines 517–578) — 12 cards spanning code, FPGA
+-  hardware, GPU-training speedup, synthetic pilots, and adversarial audits — no
+-  hierarchy, so a stranger skims none and can't find the ONE headline result.
+-  Suggest cap ~6 and mark the single headline.
+-- Test-Time Compute & PREM card (lines 495–501) — not word-long but 100% jargon
+-  ("dynamic budget controller that scales Test-Time Compute based on
+-  Process-Reward Energy Model variance… intrinsic motivation for continuous
+-  self-learning"). Reads like a spec note dropped onto a landing page.
++- Per-card **word counts are actually fine** — the longest bento body ("Why Energy-Based?", ~88 words) is under the 120 cap; result cards have no bodies. Bloat here is **count + density, not length**.
++- Results grid (`#results`) — **12 cards**, most titled with an undefined benchmark acronym — under the 20 cap but past a stranger's skim budget. Suggested: cut to the ~5 strongest, plainly-labeled outcomes.
++- Nav bar — **12 in-page/doc links + 2 buttons = 14 targets**. Too many entry points; a stranger's eye has no focal path. (On mobile all 12 links are `display:none`, leaving only HuggingFace/GitHub — the whole in-page nav vanishes.)
++- Hero stats bar leads with **process-volume vanity metrics** ("4,579 Experiment runs", "382 Completed milestones", "30,658 Automated tests") that tell a stranger you did a lot of work, not that the tool works *for them*.
+ 
+ ### Internal jargon
+-- Preprint section (line 584) — "paper-v6" — implies five prior papers; means
+-  nothing to a stranger. Also "pending operator-initiated upload" and
+-  "non-operator environment" (lines 591–594) are internal-workflow terms.
+-- Hero "Recent progress" card (line 312) — "Repinned from v2 0.9857",
+-  "architecture-only 0.8947", "5-seed dual-condition" — versioning + internal
+-  provenance jargon in the most prominent card on the page.
+-- Hero stats (lines 305–307) — "382 Completed milestones", "4,578 Experiment
+-  runs" — internal vanity metrics; a stranger doesn't know what a "milestone" is
+-  here and 382 of them reads as churn/bureaucracy. The one meaningful stat
+-  (0.9131 AUROC) is buried fourth.
+-- Results cards — "EstimationVerifier" (549), "VeriCoT" (559), "CRANE" (554),
+-  "CCTU" (451, 574), "PRM-BiasBench" (564), "HalluGuard v3" (569), "k=5
+-  ensemble" (565) — component names, acronyms, and version numbers, none
+-  expanded.
+-- "FoVer" — appears in the stats bar, hero card, results, and preprint but is
+-  NEVER defined. A stranger cannot tell it's a benchmark dataset.
+-- Features section (line 497) — "PREM (Process-Reward Energy Model)", "TTC" —
+-  expanded but still opaque.
++- Undefined benchmark/acronym names a stranger cannot decode: **FoVer** (stats bar, recent-progress card, preprint — the single worst offender), **SVAMP**, **CCTU**, **CRANE**, **VeriCoT**, **PRM-BiasBench**, **HalluGuard v3**, **GSM8K**. (HumanEval at least gets a "164-problem benchmark" gloss — do that for the rest or drop them.)
++- **"paper-v6"** in the section title "Carnot position paper (paper-v6)" — internal version tag on a public heading.
++- **"operator"** role-speak in the preprint block: "non-operator environment", "pending operator-initiated upload". A stranger has no idea what an "operator" is; this reads like an internal status field.
++- **"Repinned from v2 0.9857"** in the hero recent-progress card — "Repinned" + "v2" is internal versioning, and telling a stranger *in the hero region* that your headline number used to be higher and got corrected down plants doubt where you want confidence (the nuance belongs in the linked blog post, not the fold).
++- "0.0pp accuracy delta", "+18pp", "+15pp" — the "pp" shorthand and, worse, **leading a card headline with "0.0pp"** reads as "nothing happened"; the real point (cost savings at no accuracy cost) is buried.
++- "intrinsic motivation for continuous self-learning" (TTC & PREM card) — hand-wavy/anthropomorphic acronym soup; weakest card on the page.
+ 
+ ### Per-milestone narrative
+-- Hero "Recent progress" card (lines 309–313) reads like a changelog entry:
+-  "Repinned from v2 0.9857 after pre-submission adversarial audit."
+-- Stats bar surfaces "382 Completed milestones" as a headline number — internal
+-  milestone-counting exposed as a public stat.
+-- Blog section (lines 682–745): 5 of 7 posts are internal-ops retrospectives —
+-  "Two Retractions and a Rescue", "Regex in an NTK Costume" (cites
+-  arXiv:2601.18753 in the teaser), "Five FATAL Findings", "Caught Cheating: 95
+-  Microseconds on a 30B Model", "Why We Report Two AUROCs Now". This is the
+-  project's internal integrity drama, not landing-page material.
++- No literal milestone numbers (".148" etc.) survive — this has been cleaned up. The residue is version/process narrative: **"Repinned from v2 0.9857 after pre-submission adversarial audit"** (hero card) and **"paper-v6"** (preprint title) are the closest to commit-message-style internal status.
+ 
+ ### Inconsistencies
+-- License: "MIT-0" (line 7 meta, line 291 hero badge) vs "Apache 2.0 License"
+-  (line 766 footer). Direct contradiction.
+-- FoVer AUROC headline 0.9131 (lines 308, 312, 589) vs "0.125 FoVer baseline"
+-  (line 550) — same named benchmark presented as both a ~0.91 headline and a
+-  sub-chance 0.125 baseline, with no explanation. Reads as cherry-picking.
+-- Multiple near-identical metrics with no map: 0.9131, 0.91 (line 530, "publication
+-  gate"), 0.90 AUC (line 550), 0.9857 retracted (line 312). A stranger cannot
+-  tell which is THE number.
+-- Section label "What you can check" (line 415) vs contents: "Research
+-  operations" (how the project builds itself) and "APIs & portable memory" are
+-  not things the user checks — they don't fit the "Seven capabilities" framing.
+-- Result meters are internally inconsistent: "+3.0 points" → 14.6% bar (line
+-  521) but "+4.9 points" → 66.7% bar (526); "0.0pp accuracy delta" → a nearly
+-  full 95.6% GREEN bar (570). The bars encode nothing consistent and the 0.0pp
+-  green bar is actively misleading.
++- **License: "MIT-0" (meta description + hero badge) vs "Apache 2.0 License" (footer).** Hard contradiction; footer is almost certainly stale.
++- **"FoVer" = 0.9131 headline AUROC** (stats bar, recent-progress, preprint) **vs "0.125 FoVer baseline"** (Math-reasoning result card). Same name, one a triumph and one a weak baseline, never disambiguated → looks contradictory at a glance.
++- Two different **"0.91 AUROC"** claims for different things (FoVer math step-errors 0.9131; prompt-injection classifier 0.91) sit near each other and blur together.
+ 
+ ### Missing essentials
+-- LICENSE is unanswerable due to the MIT-0/Apache-2.0 contradiction — this is
+-  the single most important missing essential for an adoption decision.
+-- "FoVer" (the headline benchmark) is never defined for a stranger.
+-- Maintainer is a lone name ("© 2026 Ian Blenke", line 766) — fine, but a
+-  stranger sees a solo project with no team/backing signal.
++- **License is worse than missing — it's contradictory** (see above). Pick one and state it once.
++- **Trust anchors on the perfect numbers are absent on the cards themselves**: no sample size / CI on the 1.0, 60/60, 0.90 cards. The section intro says "backed by a checked-in experiment artifact," but the cards don't link to those artifacts, so the claim is unverifiable in the 30-second window.
++- **Maintainer signal is thin for the volume claimed**: "© 2026 Ian Blenke" as sole name against "4,579 experiments / 382 milestones" of autonomous-loop output may read to a skeptic as "one person + a lot of machine-generated runs." Not fatal, but no team/contributors/backing is shown.
+ 
+ ### Fabrication signals
+-- "GSM8K extraction TP rate: 0.5 → 1.0" (line 560) — perfect 1.0.
+-- "k=5 ensemble catches 60/60 attacks" (line 565) — 100% on n=60.
+-- "2.0× speedup, identical losses" (line 540) — "identical" is suspiciously
+-  exact.
+-- "99.3% of wrong code flagged" on 164 problems (line 431) — very high for
+-  edge-case detection.
+-- "Zero false positives" (blog, line 741) — perfect.
+-- Mitigating anchor exists (the #results intro promises every number is backed
+-  by a checked-in artifact and labeled by provenance), but the perfect numbers
+-  above still carry no per-card confidence interval or sample-size note.
++- "GSM8K extraction TP rate: 0.5 → 1.0" — **perfect 1.0**, no n, bar pinned at 100%.
++- "k=5 ensemble catches 60/60 attacks" — **100% on n=60**, perfect.
++- "0.90 AUC (vs 0.125 FoVer baseline)" — a **0.125 AUC baseline is below chance (0.5)**, a bizarre comparator that makes the 0.90 look inflated/cherry-picked.
++- "2.0× speedup, identical losses" — **"identical"** is an implausibly strong word for parallel training (bit-identical losses are rare).
++- "99.3% of wrong code flagged" — very high, but at least anchored to the 164-problem set.
++- Blog card: "639 experiments self-verified … Zero false positives" — another perfect claim.
++- **Aggregate effect**: five near-perfect numbers stacked in one grid *lowers* credibility for a technical reader instead of raising it.
+ 
+-### Structural / rendering (worth an operator check)
+-- The hero "Recent progress" r-card is nested INSIDE the `.stats-bar` flex
+-  container (lines 304–315) and uses an undefined class `r-desc` (line 312) —
+-  likely renders as a large card jammed against the four stat numbers, with
+-  wrong text styling. This is the above-the-fold element.
+-- The 7th feature card (Test-Time Compute & PREM, line 495) appears to sit
+-  OUTSIDE the `.bento-grid` that closes at line 494 — likely renders orphaned
+-  below the grid. Similar stray-`</div>` imbalance around the problem grid
+-  (lines 346–348). Verify these render as intended.
++### Structural / render risk (stranger-facing, worth a look)
++- The **"Recent progress" card is shoehorned inside the `.stats-bar` flexbox** (alongside the four small stat columns) and uses a `.r-desc` class that has **no CSS rule defined**. There's also a stray unmatched `</div>` right after it. High risk this renders as an awkward full-width paragraph wedged into the stat row — and it's the first thing below the fold.
++- The **"Test-Time Compute (TTC) & PREM" card sits after an extra `</div>`** that appears to close the features grid early — same shoehorn pattern. Verify it renders inside the grid, not orphaned below it.
+ 
+ ## WHAT'S WORKING
+-- The hero one-liner + the 47+28=76 worked example is excellent: a stranger
+-  understands the product and the problem in one read, jargon-free.
+-- Install path is immediate and repeated (`pip install carnot-ebm`), and the
+-  "Extract → Check → Repair" three-card explainer is clean, plain-English, and
+-  well-scoped.
++- **The hero is strong**: "Catch the reasoning errors your LLM states with total confidence" + the `47 + 28 = 76` example + visible `pip install` is exactly the right one-breath pitch for a stranger.
++- **The "How it works: Extract → Check → Repair" section is clear and jargon-light** — the plain-English "energy = one number, low good / high bad" framing lands, and "works with any LLM you can call (Claude, GPT, Qwen, Gemma, local Llama)" answers an obvious question immediately.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. FIX THE LICENSE CONTRADICTION FIRST — pick MIT-0 or Apache-2.0 and make the
+-   meta tag, hero badge, and footer agree. This is a hard blocker for adoption.
+-2. Collapse the AUROC story to ONE headline number with a one-line gloss of what
+-   FoVer is (e.g., "FoVer — a public benchmark of math reasoning step-errors").
+-   Remove or relocate the retracted "0.9857" and the "0.125 baseline" from the
+-   landing page; move the two-AUROCs nuance to the linked blog post only.
+-3. Move the "Repinned from v2 0.9857" self-retraction out of the hero card;
+-   the above-the-fold surface should state the current result plainly.
+-4. De-jargon the results cards: expand or drop VeriCoT / CRANE / CCTU /
+-   PRM-BiasBench / HalluGuard v3 / "k=5", and cut the grid from 12 cards to a
+-   curated ~6 with one clearly-marked headline.
+-5. Fix the result meters so bar width tracks the stated metric (and never render
+-   a full green bar for a "0.0pp delta").
+-6. Rebalance the blog teasers so the project's own fabrication/retraction
+-   stories don't dominate the "From the blog" surface a stranger sees.
+-7. Replace hero vanity stats ("382 milestones", "4,578 experiment runs") with
+-   stats a stranger values (headline AUROC, benchmarks covered, license), and
+-   define/lead with the one number you most want remembered.
+-8. Verify the hero r-card nesting and the orphaned 7th feature card actually
+-   render as intended; add the missing `.r-desc` style or reuse `.p-text`.
+-```
++1. **Fix the license contradiction now** — decide MIT-0 vs Apache 2.0 and make the footer, hero badge, and meta description agree. This is the single highest-trust-per-edit fix.
++2. **Define or drop "FoVer"** everywhere it appears, and resolve the 0.9131-vs-0.125 collision (e.g., "FoVer, a math step-error benchmark" once, and rename/reframe the 0.125 card so it doesn't look like the same thing being both strong and weak).
++3. **Cut the results grid from 12 to ~5 cards**, each with a plain-English label, a sample size, and a link to its artifact. Drop or gloss the acronym-only titles (SVAMP, CCTU, CRANE, VeriCoT, PRM-BiasBench).
++4. **De-risk the perfect numbers** — add n / CI inline on the 1.0, 60/60, and 0.90 cards, or move the perfect-score results into a secondary "full results" table off the landing page.
++5. **Verify the two shoehorned cards render correctly** (hero "Recent progress" inside `.stats-bar` with the undefined `.r-desc`; the TTC card after the early grid-closing `</div>`), and rebalance the div nesting.
++6. **Move internal/process language off the fold**: pull "Repinned from v2 0.9857", "paper-v6", and the "operator"-role phrasing into the linked blog/report; the hero should project the current number confidently, not narrate its correction history.
++7. **Trim the nav** to ~5 anchors (Problem, How it works, Results, Quick Start, GitHub) so a stranger has an obvious path.
+ 
+-I did not edit `docs/index.html`. This report is advisory only — the operator owns the landing page per the Public Documentation Discipline.
+\ No newline at end of file
++*(Advisory only — no edits made to `docs/index.html`, per Public Documentation Discipline. The landing page is operator-curated.)*
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index 3420662577..a747cb4002 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -26550,3 +26550,103 @@ arXiv:2508.10751/2602.21189, "Single Direction of Truth" arXiv:2507.23221, EBM-C
+ Koopman hallucination detection arXiv:2605.05134, MultiHaluDet arXiv:2605.24919) is logged for completeness
+ but did not change `.475`'s task design; flagged as candidate reading for `.476+` rather than repeated here
+ in full to avoid padding this file with content that does not feed a concrete next experiment.
++
++## V476 Planner References - 2026-07-03
++
++Added by the `.476` planning session. This pass independently re-verified two citations the `.475`
++planning session's own draft had referenced without logging (Radial Consensus Score, AutoPyVerifier --
++both confirmed real via direct WebFetch below), and ran four bounded, targeted searches: DiffusionGemma
++serving-infra status (the decisive lead this milestone acts on), a documented HF/accelerate tied-weight
++mitigation, a fresh 48-hour sweep (honest negative), and an ARC Prize deadline sanity-check. Did not
++re-run the broad KAN/EBM/hardware/Kona sweep the `.475` supplementary pass already covered -- nothing in
++that space changed in two days.
++
++### vLLM ships native DiffusionGemma support (the decisive finding for `.476`'s `exp5196`)
++- **Source:** https://vllm.ai/blog/2026-06-10-diffusion-gemma -- fetched directly, confirmed real.
++- **Finding:** "DiffusionGemma: The First Diffusion LLM (dLLM) Natively Supported in vLLM," dated
++  2026-06-10 -- the same day DiffusionGemma itself released. Demonstrated on single H100/H200 via a new
++  "model runner v2 `ModelState` abstraction." Does not address multi-GPU or a <24GB VRAM budget directly.
++- **Carnot hook:** Our own `.474` vLLM probe (`results/diffusiongemma_energy_prior_vllm.log`, dated
++  2026-06-14, four days after this blog post) shows `"TransformersMultiModalMoEForCausalLM has no vLLM
++  implementation, falling back to Transformers implementation"` -- confirming that probe did NOT exercise
++  the native path and instead fell back to the same device-placement-fragile generic backend `exp5182`
++  (`.475`) separately exhausted via the HF `transformers`+`accelerate` stack. This is a genuinely
++  different, untried mitigation for the DiffusionGemma energy-guided-diffusion pilot, not a re-run.
++- **Actionability:** Primary attempt for `exp5196` -- re-test using the blog's exact recipe/version,
++  checking the installed vLLM version postdates 2026-06-10's native-support merge.
++
++### huggingface/transformers#22018 -- documented tied-weight + custom device_map + CPU-offload pattern
++- **Source:** https://github.com/huggingface/transformers/issues/22018 -- fetched directly.
++- **Finding:** Describes the exact interaction class our `exp5182` hit: `device_map="auto"` +
++  `llm_int8_enable_fp32_cpu_offload=True` failing because CPU-offloaded modules are excluded from the
++  quantization module list at the point `replace_8bit_linear` runs. Reporter's confirmed workaround: pass
++  a manually pre-configured `device_map` dict (not `"auto"`) rather than relying on auto-balancing.
++- **Carnot hook:** `exp5182` root-caused DiffusionGemma's failure to weight-tied encoder/decoder modules
++  that must co-locate on one device; `#22018`'s workaround pattern -- custom dict co-locating the tied pair
++  on GPU 0 while explicitly offloading other named non-tied modules to CPU with
++  `llm_int8_enable_fp32_cpu_offload=True` -- directly exploits that diagnosis and was not among `exp5182`'s
++  four attempted mitigations (which were either fully-`"auto"` or fully-single-device with no offload
++  option).
++- **Actionability:** Secondary attempt for `exp5196`, if the vLLM-native path above also fails to fit the
++  2x24GB budget.
++
++### ggml-org/llama.cpp#24427 and ollama/ollama#16664 -- GGUF path confirmed not-yet-ready
++- **Source:** https://github.com/ggml-org/llama.cpp/pull/24427 and
++  https://github.com/ollama/ollama/issues/16664 -- both fetched directly.
++- **Finding:** `#24427` ("Add diffusion-gemma block-diffusion support") is **Draft, open, not merged** as
++  of this check. `#16664` ("unknown model architecture: 'diffusion-gemma'") is open with no linked fix.
++- **Carnot hook:** Confirms our `.474` `blocked_gguf_load_failed` probe was correct and this is an upstream
++  gap, not a local bug. `exp5196` should not re-attempt GGUF; a future milestone should only retry once
++  `#24427` merges.
++- **Actionability:** None until upstream lands. Check `#24427`'s status before proposing any GGUF retry in
++  `.477+`.
++
++### Radial Consensus Score -- confirmed real, verified via direct WebFetch
++- **Source:** arXiv:2604.12196 - https://arxiv.org/abs/2604.12196 -- fetched directly.
++- **Real title:** "Beyond Majority Voting: Efficient Best-Of-N with Radial Consensus Score" (Nguyen,
++  Gupta, Le).
++- **Finding:** Computes a weighted Frechet mean (semantic center) of answer embeddings and ranks candidates
++  by radial distance to that center -- a training-free, black-box, embedding-geometry drop-in replacement
++  for majority voting, validated across 7 benchmarks.
++- **Carnot hook:** A third mandatory zero-training baseline for `exp5200` (hidden-state verifier v2),
++  alongside self-certainty and CLUE -- a trained probe must clear all three before any beats-SC claim is
++  credible.
++- **Actionability:** Wired directly into `exp5200`'s design.
++
++### AutoPyVerifier -- confirmed real, verified via direct WebFetch
++- **Source:** arXiv:2604.22937 - https://arxiv.org/abs/2604.22937 -- fetched directly.
++- **Real title:** "AutoPyVerifier: Learning Compact Executable Verifiers for Large Language Model Outputs"
++  (Pezeshkpour, Hruschka).
++- **Finding:** An LLM synthesizes candidate Python verifier functions; a DAG search identifies a compact/
++  minimal SET whose combined satisfaction best predicts correctness (up to +55 F1 over the initial set; up
++  to +17 points when exposing discovered verifiers as tools).
++- **Carnot hook:** The paper's core method -- search a compact SET of cheap discriminators via synthesis +
++  DAG search, not one hand-crafted invariant -- is precisely what distinguishes `exp5205`'s GAP-1
++  (transpose/orientation) pilot from the already-refuted single directional-adjacency hand-invariant
++  (2026-06-09, degraded HYBRID rerank pass@2 0.452->0.419, captured 0/2 transpose mis-votes).
++  Directly maps onto `ops/verifier_gaps.md`'s open GAP-1 entry.
++- **Actionability:** Wired directly into `exp5205`'s design.
++
++### Fresh 48-hour sweep (2026-07-01 through 2026-07-03): honest negative
++Direct fetch of arXiv's cs.LG recent listing plus targeted searches for energy-based verifiers/reward
++models, hidden-state/internal-representation LLM verification, and ARC-AGI-3 competition results found
++**nothing dated in this window**. Reported explicitly as a clean negative rather than padded with older
++papers restated as new.
++
++### ARC Prize deadline correction (governance-relevant, not an experiment input)
++- **Source:** arcprize.org -- fetched directly for the "Milestone #1" framing; the November 2, 2026
++  overall-competition end date is from a search snippet only, not independently WebFetched (lower
++  confidence, flagged as such).
++- **Finding:** The `2026-06-30` date this project has treated as the final ARC Prize deadline (the trigger
++  for retiring the ARC-AGI-3 Submission Sprint Forcing Function in CLAUDE.md) is actually "Milestone #1"
++  for early open-source prize eligibility; the overall 2026 competition may run through November 2, 2026.
++- **Carnot hook:** Does not change `.476`'s task allocation (the self-solve audit's zero-advance finding
++  and the standing "do not silently re-expand ARC's share" stance both still apply). Surfaced for the
++  operator's pending "post-PHASE-D strategic direction" decision -- see the `.476` roadmap doc's
++  "Recommended operator attention."
++- **Actionability:** None for this milestone's task design; operator-attention item only.
++
++**Bottom line for `.476`:** the DiffusionGemma thread gets a genuinely new primary lever (vLLM-native) plus
++a well-grounded secondary lever (custom device_map + CPU offload) before any retirement decision; GAP-1
++gets a structurally-different pilot design (AutoPyVerifier) instead of repeating the refuted hand-invariant
++approach; the hidden-state verifier v2 gets a third, newly-verified free baseline (RCS) to clear.
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 6e9117dbcf..a13d572d80 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260703",
+-  "started_at": "2026-07-03T10:42:28Z",
+-  "finished_at": "2026-07-03T10:42:28Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-03T11:45:49Z",
++  "finished_at": "2026-07-03T11:45:49Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 22b70cb879..911e06db33 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260703",
+-  "started_at": "2026-07-03T10:42:28Z",
+-  "finished_at": "2026-07-03T10:42:28Z",
++  "started_at": "2026-07-03T11:45:49Z",
++  "finished_at": "2026-07-03T11:45:49Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 81e56459f0..a463ebfd42 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260703",
+-  "started_at": "2026-07-03T10:42:28Z",
+-  "finished_at": "2026-07-03T10:42:28Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-03T11:45:49Z",
++  "finished_at": "2026-07-03T11:45:49Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+-- 
+2.55.0
+

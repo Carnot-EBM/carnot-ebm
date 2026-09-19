@@ -1,0 +1,656 @@
+From 787594eb6890dd87a72feac4badd59eb86a476a4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 4 Aug 2026 01:48:50 -0400
+Subject: [PATCH 08177/11362] [conductor] Checkpoint: preserve uncommitted work
+ (self-heal failed)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/agentic-harness/spec.md | 118 +++++++++
+ ops/.pretest-poison-counter.json              |   4 +-
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-state.json                      |   2 +-
+ .../exp6091_refine_engine_visible_shard.jsonl |  20 ++
+ ...eriment_6091_refine_engine_visible_ab.json | 179 +++++--------
+ ..._experiment_5971_arc_strip_swap_battery.py | 243 ++++++++++++++++++
+ 7 files changed, 450 insertions(+), 118 deletions(-)
+ create mode 100644 tests/python/test_experiment_5971_arc_strip_swap_battery.py
+
+diff --git a/openspec/capabilities/agentic-harness/spec.md b/openspec/capabilities/agentic-harness/spec.md
+index 3db322179f..c02fe1e55a 100644
+--- a/openspec/capabilities/agentic-harness/spec.md
++++ b/openspec/capabilities/agentic-harness/spec.md
+@@ -547,3 +547,121 @@ game/hidden-state route
+ retaining non-empty valid action/progress support, or the artifact emits an
+ honest null/retirement; the registry and shipped flags remain unchanged and no
+ solve credit is claimed.
++
++### REQ-ARC-CPTB-5971: Strip-Swap Battery Gate Replay and Game-Unit Inference
++
++Experiment 5971 SHALL replay the exact Exp5970 strip-swap sentinel gate before
++running the full battery. The replay SHALL verify the exact Exp5970 artifact
++path, artifact hash, `strip_swap_sentinel_ready_score == 1.0`, transform schema
++hash, condition definitions, 25-public-game manifest, four preregistered CPTB
++arms, five preregistered seeds, action and wall-time budgets, SDK/cache/resource
++availability, registry hash, shipped policy flags, and disabled source, BFS,
++adapter, registry-trajectory, hidden-prior, and per-game-calibration routes.
++If any precondition fails, Exp5971 SHALL emit a terminal
++`blocked_precondition:` artifact before full execution.
++
++Exp5971 SHALL freeze the game x arm x seed x condition matrix before outcomes.
++The matrix SHALL cover all 25 public games, the four arms `CTRL`, `FRONT`,
++`HUDO`, and `SHIP`, five seeds, and original plus strip-swap observation
++conditions. Every executed cell SHALL be driven through
++`make_carnot_agent` and `E3AgentPolicy` with fresh policy, environment, and
++cell-local state. GameAdapter, game source reads, offline BFS, per-game
++calibration/model lookup, registry trajectory replay, hidden priors, and
++denominator repair SHALL be forbidden. Missing, errored, generator-invalid, and
++completed cells SHALL remain explicit terminal states.
++
++Exp5971 SHALL record per-cell actions, observations, progress, levels, elapsed
++time, errors, generator validity, transform dose, HUD/frontier masks, policy
++decisions, and cell health. The artifact SHALL also expose per-game,
++per-seed, per-arm outcomes so no aggregate can hide game or seed reversals.
++
++Exp5971 SHALL analyze the shipped, HUD-removed, frontier-removed, and combined
++control arms under original and strip conditions as preregistered. Inference
++SHALL use the game as the replication unit. The artifact SHALL report per-game
++paired deltas, exact one-sided sign tests, game jackknife intervals, seed
++stability, and support p-floors. Seeds SHALL NOT be counted as new game
++support.
++
++Convention-dependence SHALL be interpretable only when the transform changes
++the HUD predicate, the original anchor is won by at least one matched arm, the
++transformed anchor retains valid support, and enough games discriminate the
++arms. If any pass region is empty, destroyed, one/two-game-only, or otherwise
++underpowered, Exp5971 SHALL refuse a forced positive or flag recommendation and
++SHALL emit `complete_null:` or `complete_underpowered:` with the exact empty or
++underpowered region. Exp5971 SHALL NOT recommend a shipped flag change, claim
++hidden-game transfer, credit a public solve, or mutate
++`ops/arc_solve_registry.yaml`.
++
++Experiment 5971 SHALL write
++`results/experiment_5971_arc_strip_swap_battery.json` with bare top-level
++fields `status`, `preconditions_checked`, `gate_replay_receipt`,
++`registry_precheck_and_hash`,
++`transform_condition_arm_game_seed_and_budget_seal`,
++`expected_completed_missing_errored_and_generator_invalid_cells`,
++`live_agent_path_and_disabled_escape_hatches`,
++`per_cell_actions_progress_levels_time_and_health`,
++`per_game_per_seed_per_arm_outcomes`,
++`static_and_behavioral_transform_dose`,
++`anchor_survival_and_discriminating_game_support`,
++`game_unit_sign_jackknife_intervals_and_p_floors`,
++`convention_dependence_decision`,
++`overall_hud_value_not_identified_receipt`,
++`shipped_flag_and_registry_immutability`, `no_solve_credit_receipt`,
++`protected_files_unchanged`, `duration_s`, `inference_substrate`,
++`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
++`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
++`honest_verdict`.
++
++Required field provenance principles SHALL include:
++
++- `preconditions_checked`: principle "full execution starts only after the authentic sentinel gate and complete matrix/resources are verified."
++- `gate_replay_receipt`: principle "Exp5970 exact path/hash/value must satisfy `strip_swap_sentinel_ready_score == 1.0`."
++- `registry_precheck_and_hash`: principle "this is generalization measurement over already-cleared games, not a solve task."
++- `transform_condition_arm_game_seed_and_budget_seal`: principle "the entire factorial design is immutable before outcomes."
++- `expected_completed_missing_errored_and_generator_invalid_cells`: principle "every planned cell has one honest terminal state."
++- `live_agent_path_and_disabled_escape_hatches`: principle "only the reachable adapter-free live mechanism receives credit."
++- `per_cell_actions_progress_levels_time_and_health`: principle "accuracy, efficiency, and execution validity remain jointly visible."
++- `per_game_per_seed_per_arm_outcomes`: principle "no aggregate can hide game/seed direction reversals."
++- `static_and_behavioral_transform_dose`: principle "intended convention dose and actual policy effect are both measured."
++- `anchor_survival_and_discriminating_game_support`: principle "no verdict is allowed from a destroyed or empty pass region."
++- `game_unit_sign_jackknife_intervals_and_p_floors`: principle "games are the replication unit and exact attainable significance is explicit."
++- `convention_dependence_decision`: principle "state supported dependence, invariance, underpower, or uninterpretable null without forced inference."
++- `overall_hud_value_not_identified_receipt`: principle "this battery cannot establish overall lever value from inadequate game support."
++- `shipped_flag_and_registry_immutability`: principle "both remain byte-identical."
++- `no_solve_credit_receipt`: principle "incidental levels are measurements only and never registry credit."
++- `protected_files_unchanged`: principle "active roadmap, conductor, exclusions, history, and unrelated changes remain immutable."
++- `duration_s`: principle "use measured `offline_arcade_live_agent_runtime_self_discovery_no_llm`."
++- `inference_substrate`: principle "use measured `offline_arcade_live_agent_runtime_self_discovery_no_llm`."
++- `verifier_is_oracle`: principle "false; public-game convention evidence does not prove hidden transfer."
++- `missing_verifier_gaps`: principle "public-game convention evidence does not prove hidden transfer."
++- `field_provenance`: principle "artifact fields carry principle annotations tied to the preregistered safeguards."
++- `test_commands`: principle "record focused, coverage, full-suite, spec, E2E, adversarial, protected-file, and clutter checks."
++- `test_exit_codes`: principle "record the actual exit code for each verification command."
++- `reproducibility_checksum`: principle "hash measured rows and immutable precondition receipts, excluding wall-clock duration."
++- `honest_verdict`: principle "use `complete_positive:`, `complete_null:`, `complete_underpowered:`, or `blocked:`."
++
++### SCENARIO-ARC-CPTB-5971-GATE-REPLAY-MATRIX-SEAL
++
++**Given** Exp5970's ready artifact, the current registry, shipped flags, CPTB
++arm definitions, all 25 public games, and the five seeds
++**When** Exp5971 prepares execution
++**Then** it verifies the exact Exp5970 path/hash/value and freezes the full
++original-plus-strip matrix before any outcome row is read or written.
++
++### SCENARIO-ARC-CPTB-5971-LIVE-PATH-CELL-HEALTH
++
++**Given** a sealed cell for any game, arm, seed, and condition
++**When** the cell is executed
++**Then** the action loop goes through `make_carnot_agent` and `E3AgentPolicy`,
++records actions/progress/levels/time/HUD/frontier health, disables source,
++BFS, adapters, per-game priors, and hidden routes, and records one terminal
++state without fabricating replacement rows.
++
++### SCENARIO-ARC-CPTB-5971-GAME-UNIT-FORCED-VERDICT-REFUSAL
++
++**Given** complete or partially complete original and strip rows
++**When** Exp5971 analyzes convention transfer
++**Then** the game is the replication unit, exact sign-test p-floors and
++jackknife support are reported, anchor-destroyed or one/two-game-only regions
++force `complete_null:` or `complete_underpowered:`, and no flag flip, hidden
++transfer, public solve credit, or registry mutation is claimed.
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index 9e26dfeeb6..766b78d4c6 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1 +1,3 @@
+-{}
+\ No newline at end of file
++{
++  "tests/python/test_experiment_5971_arc_strip_swap_battery.py": 1
++}
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index de2c92364e..2271bb2073 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2989570, "iteration": 160, "phase": "iteration_start", "last_beat": "2026-08-03T23:09:26Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-08-04T05:48:09Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c0d55a0b0f..4d68cf118f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2989570, "iteration": 160, "phase": "iteration_start", "started_at": "2026-08-03T23:09:26Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 1, "phase": "iteration_start", "started_at": "2026-08-04T05:48:09Z"}
+\ No newline at end of file
+diff --git a/results/exp6091_refine_engine_visible_shard.jsonl b/results/exp6091_refine_engine_visible_shard.jsonl
+index 118881b7d4..05e784514e 100644
+--- a/results/exp6091_refine_engine_visible_shard.jsonl
++++ b/results/exp6091_refine_engine_visible_shard.jsonl
+@@ -4,3 +4,23 @@
+ {"game": "sb26", "trial": 0, "random_seed": 6091, "window_n": 9, "n_refinable": 7, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [53], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 53, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 9, "gradeable_n": 8, "n_levelup_rows_excluded": 1, "n_changing": 8, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 8, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 495.3, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/sb26/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 495.3, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
+ {"game": "re86", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [48], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 48, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 499.2, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/re86/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 499.2, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
+ {"game": "g50t", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [49], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 49, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 498.9, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/g50t/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 498.9, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "r11l", "trial": 0, "random_seed": 6091, "window_n": 3, "n_refinable": 2, "n_acceptance": 1, "acceptance_decidable": false, "acceptance_reason": "no_gradeable_acceptance_row_within_refinable_floor", "n_acceptance_gradeable": 0, "acceptance_changed_cells_per_row": [], "oracle_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "oracle_reaches_1": false, "identity_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 3, "gradeable_n": 2, "n_levelup_rows_excluded": 1, "n_changing": 2, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 2, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 467.8, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/r11l/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 467.8, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "cd82", "trial": 0, "random_seed": 6091, "window_n": 5, "n_refinable": 3, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [201], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 201, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 5, "gradeable_n": 4, "n_levelup_rows_excluded": 1, "n_changing": 4, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 4, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 467.9, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/cd82/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 467.9, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "ar25", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [108], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 108, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 474.0, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/ar25/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 474.1, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "lp85", "trial": 0, "random_seed": 6091, "window_n": 5, "n_refinable": 3, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [293], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 293, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 5, "gradeable_n": 4, "n_levelup_rows_excluded": 1, "n_changing": 4, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 4, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 476.8, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/lp85/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 476.8, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "sk48", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [201], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 201, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 469.7, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/sk48/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 469.7, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "vc33", "trial": 0, "random_seed": 6091, "window_n": 3, "n_refinable": 2, "n_acceptance": 1, "acceptance_decidable": false, "acceptance_reason": "no_gradeable_acceptance_row_within_refinable_floor", "n_acceptance_gradeable": 0, "acceptance_changed_cells_per_row": [], "oracle_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "oracle_reaches_1": false, "identity_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 3, "gradeable_n": 2, "n_levelup_rows_excluded": 1, "n_changing": 2, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 2, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 465.0, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/vc33/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 465.1, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "ft09", "trial": 0, "random_seed": 6091, "window_n": 4, "n_refinable": 2, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [38], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 38, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 4, "gradeable_n": 3, "n_levelup_rows_excluded": 1, "n_changing": 3, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 3, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 406.7, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output)", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/ft09/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 406.7, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "tu93", "trial": 1, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [20], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 20, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 464.7, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/tu93/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 464.7, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "tr87", "trial": 1, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [11], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 11, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 470.4, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/tr87/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 470.4, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "sp80", "trial": 1, "random_seed": 6091, "window_n": 4, "n_refinable": 2, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [34], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 34, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 4, "gradeable_n": 3, "n_levelup_rows_excluded": 1, "n_changing": 3, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 3, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 401.4, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/sp80/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 401.4, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "sb26", "trial": 1, "random_seed": 6091, "window_n": 9, "n_refinable": 7, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [53], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 53, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 9, "gradeable_n": 8, "n_levelup_rows_excluded": 1, "n_changing": 8, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 8, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 464.5, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/sb26/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 464.6, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "re86", "trial": 1, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [48], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 48, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 469.2, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/re86/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 469.3, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "g50t", "trial": 1, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [49], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 49, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 468.8, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/g50t/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 468.9, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "r11l", "trial": 1, "random_seed": 6091, "window_n": 3, "n_refinable": 2, "n_acceptance": 1, "acceptance_decidable": false, "acceptance_reason": "no_gradeable_acceptance_row_within_refinable_floor", "n_acceptance_gradeable": 0, "acceptance_changed_cells_per_row": [], "oracle_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "oracle_reaches_1": false, "identity_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 3, "gradeable_n": 2, "n_levelup_rows_excluded": 1, "n_changing": 2, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 2, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 464.8, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/r11l/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 464.8, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "cd82", "trial": 1, "random_seed": 6091, "window_n": 5, "n_refinable": 3, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [201], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 201, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 5, "gradeable_n": 4, "n_levelup_rows_excluded": 1, "n_changing": 4, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 4, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 464.4, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/cd82/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 464.4, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "ar25", "trial": 1, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [108], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 108, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 470.6, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/ar25/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 470.6, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "lp85", "trial": 1, "random_seed": 6091, "window_n": 5, "n_refinable": 3, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [293], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 293, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 5, "gradeable_n": 4, "n_levelup_rows_excluded": 1, "n_changing": 4, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 4, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 473.0, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/lp85/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 473.0, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "sk48", "trial": 1, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [201], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 201, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 467.4, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/sk48/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 467.4, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "vc33", "trial": 1, "random_seed": 6091, "window_n": 3, "n_refinable": 2, "n_acceptance": 1, "acceptance_decidable": false, "acceptance_reason": "no_gradeable_acceptance_row_within_refinable_floor", "n_acceptance_gradeable": 0, "acceptance_changed_cells_per_row": [], "oracle_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "oracle_reaches_1": false, "identity_acceptance": {"n_rows": 1, "gradeable_n": 0, "n_levelup_rows_excluded": 1, "n_changing": 0, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 3, "gradeable_n": 2, "n_levelup_rows_excluded": 1, "n_changing": 2, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 2, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 464.6, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/vc33/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 464.6, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "ft09", "trial": 1, "random_seed": 6091, "window_n": 4, "n_refinable": 2, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [38], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 38, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 4, "gradeable_n": 3, "n_levelup_rows_excluded": 1, "n_changing": 3, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 3, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 457.4, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/exp6091_e3/ft09/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 457.4, "substrate_witness_before": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3542914, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
+diff --git a/results/experiment_6091_refine_engine_visible_ab.json b/results/experiment_6091_refine_engine_visible_ab.json
+index 298b7a78c9..c7a1c3ac91 100644
+--- a/results/experiment_6091_refine_engine_visible_ab.json
++++ b/results/experiment_6091_refine_engine_visible_ab.json
+@@ -1,133 +1,82 @@
+ {
+  "experiment": "experiment_6091_refine_engine_visible_ab",
+  "spec": "REQ-ARC-WMTE-6091",
+- "run_date": "2026-08-03T21:35:47Z",
+- "inference_substrate": "aggregation_from_upstream_artifacts",
+- "solve_provenance": "development_proxy",
+- "verifier_is_oracle": false,
+- "random_seed": 6091,
+- "instrument_defects_fixed": {
+-  "D1_refactor_prompt_lacked_engine": {
+-   "reproduced": true,
+-   "games_measured": 13,
+-   "total_substantive_engine_lines": 454,
+-   "lines_delivered_to_prompt": 0,
+-   "delivered_fraction": 0.0,
+-   "fix": "CARNOT_ARC_REFACTOR_SHOW_ENGINE (default OFF) splices the current engine source into refactor_prompt",
+-   "tests": "tests/python/test_arc_refactor_show_engine_20260803.py (7 tests, both directions; OFF byte-identical to shipped)",
+-   "mutation_proven": true,
+-   "mutation_evidence": "deleting the `{engine_block}` splice from the prompt f-string turns 3 of 7 tests red; source restored and re-verified green"
+-  },
+-  "D2_ungradeable_acceptance_cells": {
+-   "reproduced": true,
+-   "undecidable_under_shipped_split": [
+-    "sp80",
+-    "r11l",
+-    "vc33",
+-    "ft09"
+-   ],
+-   "n_cells_ungradeable_of_39": 12,
+-   "fraction_ungradeable": 0.3077,
+-   "fix": "CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1 (already shipped, default OFF) -- its grow loop recovers sp80 and ft09",
+-   "still_undecidable_and_excluded_explicitly": [
+-    "r11l",
+-    "vc33"
+-   ],
+-   "oracle_control_non_vacuous": true
+-  }
+- },
+- "live_ab_blocked": {
+-  "summary": "Every llama-server started on this host during the session was SIGINT-killed. Zero cells were produced whose generator substrate could be vouched for end to end.",
+-  "n_cells_attempted": 2,
+-  "n_cells_substrate_cuda_throughout": 0,
+-  "cells": [
+-   {
+-    "game": "tu93",
+-    "trial": 0,
+-    "wall_s": 445.5,
+-    "induce_ok": false,
+-    "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')",
+-    "substrate_cuda_throughout": false
+-   },
+-   {
+-    "game": "tr87",
+-    "trial": 0,
+-    "wall_s": 102.4,
+-    "induce_ok": false,
+-    "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')",
+-    "substrate_cuda_throughout": false
+-   }
+-  ],
+-  "server_log_evidence": {
+-   "present": true,
+-   "n_clean_exit_records": 4,
+-   "n_second_interrupt_records": 1,
+-   "server_lifetimes_s": [
+-    369,
+-    17,
+-    10,
+-    53
+-   ],
+-   "n_oom_or_abort_records": 0,
+-   "peak_decode_tok_s": 34.75
+-  },
+-  "standalone_control": {
+-   "what": "a llama-server launched from a plain shell with NO harness attached, to separate an environmental reaper from a harness-induced kill",
+-   "evidence": {
+-    "present": true,
+-    "n_clean_exit_records": 1,
+-    "n_second_interrupt_records": 0,
+-    "server_lifetimes_s": [
+-     22
+-    ],
+-    "n_oom_or_abort_records": 0,
+-    "peak_decode_tok_s": 0.0
+-   },
+-   "verdict": "it died too, so the kill is NOT harness-specific",
+-   "correction_recorded": "an earlier reading of this control claimed it SURVIVED 541s. That was wrong: the liveness probe was `pgrep -f \"port 8981\"`, which matched the probe's OWN shell command line rather than the server. The server's own log shows it began exiting ~22s in. Recorded rather than quietly fixed -- it is the same self-matching-pattern error that made four `pkill -f` calls in this session kill their own shell (exit 144)."
+-  },
+-  "ruled_out_by_measurement": [
+-   "host OOM -- free -g showed 94 GB available at the time of a kill",
+-   "the 2-hour orphan janitor (~/.carnot/orphan-cleanup.sh) -- it targets python processes older than 2h and never matches llama-server",
+-   "the CUDA capacity guard -- the server was already healthy and serving",
+-   "llama.cpp slot arithmetic -- fixed independently with --parallel 1, and the kills continued after that fix",
+-   "a name-matching reaper -- the binary was copied to a privately-named path (/tmp/carnot6091bin/cgen6091) and the kills continued",
+-   "process-group signal delivery -- setsid on the parent AND os.setsid() in the server child both failed to stop it",
+-   "an inheritable SIG_IGN -- llama.cpp installs its own console handler at startup, which overwrites it"
+-  ],
+-  "not_attempted_deliberately": "stopping the conductor. It is the operator's autonomous loop; killing it to free the machine is destructive and out of scope for this task.",
+-  "what_this_is_NOT": "This is NOT a null result. A null would require cells whose substrate is vouched for. Reporting one here would be fabrication -- which is precisely what the per-cell substrate witness was built to make impossible."
+- },
+- "cited_upstream_artifacts": [
+-  {
+-   "experiment_id": "outer_loop_arc_refine_instrument_repro_20260803",
+-   "path": "results/outer_loop_arc_refine_instrument_repro_20260803.json",
+-   "sha256": "affa65a0c7bcc07c5bc2f6157638cb53e95b9a141197db67423a9ed3a32c52d9"
+-  }
+- ],
++ "run_date": "2026-08-04T04:50:40Z",
+  "preconditions_checked": [
+   {
+    "resource": "gguf_cached::gemma-4-31B-it",
+-   "available": true
++   "available": true,
++   "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
+   },
+   {
+-   "resource": "llama_cpp_gpu_offload",
+-   "available": true
++   "resource": "llama_server_binary",
++   "available": true,
++   "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+   },
+   {
+-   "resource": "llama_server_links_cuda",
+-   "available": true
++   "resource": "llama_cpp_gpu_offload",
++   "available": true,
++   "detail": "llama_supports_gpu_offload()"
+   },
+   {
+    "resource": "gpu1_idle",
+-   "available": true
++   "available": true,
++   "detail": "used=4 MiB (< 2000)"
+   },
+   {
+-   "resource": "generator_server_survives_a_cell",
+-   "available": false
++   "resource": "llama_server_links_cuda",
++   "available": true,
++   "detail": "ldd"
+   }
+  ],
+- "honest_verdict": "complete_instrument_defects_fixed_and_proven_live_ab_blocked_generator_reaped",
+- "duration_s": 0.000993,
+- "reproducibility_checksum": "d0cc8502d466a9de7fa7a287b68d8baa643e20fb40d961e42c17d4f0045a10ef"
++ "server": {
++  "n_ctx": 32768,
++  "port": 8977,
++  "gpu_index": 1,
++  "vram_before_mib": 4,
++  "vram_after_mib": 19158,
++  "vram_jump_mib": 19154
++ },
++ "config": {
++  "roster": [
++   "tu93",
++   "tr87",
++   "sp80",
++   "sb26",
++   "re86",
++   "g50t",
++   "r11l",
++   "cd82",
++   "ar25",
++   "lp85",
++   "sk48",
++   "vc33",
++   "ft09"
++  ],
++  "trials": [
++   0,
++   1
++  ],
++  "refactor_rounds": 2,
++  "budget_max_tokens": 4096,
++  "cegis_accept_split": "1",
++  "refactor_show_engine_treatment": "1",
++  "refactor_show_engine_control": "0"
++ },
++ "shard": "results/exp6091_refine_engine_visible_shard.jsonl",
++ "evidence_checksum_before": {
++  "results/arc_e3": "03ce66e564c4550e4eccdecc14f5b17eba2d0687e66d73e1366728cbb3e115ff",
++  "results/arc_logo_snapshot": "751a8c26f1b6c34db3228c057249dea363460039b22f8822ec52cb629d73382b",
++  "results/arc_e3_origin_fixtures": "8c376fe86c334a389b13aef956b7b8c15f0e94c8a3b7db8bd59ec1d7d6ca13f5"
++ },
++ "evidence_checksum_after": {
++  "results/arc_e3": "03ce66e564c4550e4eccdecc14f5b17eba2d0687e66d73e1366728cbb3e115ff",
++  "results/arc_logo_snapshot": "751a8c26f1b6c34db3228c057249dea363460039b22f8822ec52cb629d73382b",
++  "results/arc_e3_origin_fixtures": "8c376fe86c334a389b13aef956b7b8c15f0e94c8a3b7db8bd59ec1d7d6ca13f5"
++ },
++ "evidence_unchanged": true,
++ "duration_s": 9511.73,
++ "honest_verdict": "complete_shard_written_see_analysis",
++ "note": "Analysis + the stopping-rule verdict are produced by the sibling analyse script.",
++ "reproducibility_checksum": "0b95e4e4061b15cb483070aaabf967391000331187a22dd3bc80ee2a52ffc3d1"
+ }
+\ No newline at end of file
+diff --git a/tests/python/test_experiment_5971_arc_strip_swap_battery.py b/tests/python/test_experiment_5971_arc_strip_swap_battery.py
+new file mode 100644
+index 0000000000..277f6a71ba
+--- /dev/null
++++ b/tests/python/test_experiment_5971_arc_strip_swap_battery.py
+@@ -0,0 +1,243 @@
++"""Tests for Exp5971 ARC strip-swap battery.
++
++Spec refs: REQ-ARC-CPTB-5971,
++SCENARIO-ARC-CPTB-5971-GATE-REPLAY-MATRIX-SEAL,
++SCENARIO-ARC-CPTB-5971-LIVE-PATH-CELL-HEALTH,
++SCENARIO-ARC-CPTB-5971-GAME-UNIT-FORCED-VERDICT-REFUSAL.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.agentic import arc_strip_swap_battery as mod
++
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/agentic-harness/spec.md"
++
++
++def _fixture_rows(*, transformed_anchor_live: bool = False) -> list[dict]:
++    rows: list[dict] = []
++    games = ["g1", "g2", "g3"]
++    seeds = [101, 102]
++    for game in games:
++        for seed in seeds:
++            for condition in mod.CONDITIONS:
++                for arm in mod.ARMS:
++                    levels = 0
++                    if condition == "original":
++                        if game == "g1" and arm in {"SHIP", "HUDO"}:
++                            levels = 1
++                        if game == "g2" and arm == "CTRL":
++                            levels = 1
++                    elif transformed_anchor_live:
++                        if game == "g1" and arm == "SHIP":
++                            levels = 1
++                        if game == "g3" and arm == "FRONT":
++                            levels = 1
++                    rows.append(
++                        {
++                            "cell_id": f"{game}|{arm}|{seed}|{condition}",
++                            "game": game,
++                            "seed": seed,
++                            "condition": condition,
++                            "arm": arm,
++                            "terminal_state": "completed",
++                            "completed": True,
++                            "missing": False,
++                            "errored": False,
++                            "generator_invalid": False,
++                            "ran": True,
++                            "levels": levels,
++                            "progress": float(levels),
++                            "actions": 7 + levels,
++                            "actions_to_first_levelup": 4 if levels else None,
++                            "elapsed_s": 0.01,
++                            "error": None,
++                            "transform_selected_condition_id": (
++                                None if condition == "original" else "C5_strip_swap_rows_bottom_t2"
++                            ),
++                            "hud_predicate_changed": condition == "strip_swap",
++                            "hud_mask_resolved_before": True,
++                            "hud_mask_resolved_after": condition == "original",
++                            "frontier_predicate_dose": 0.0,
++                            "policy_decisions": [{"kind": "RESET"}, {"kind": "ACTION1"}],
++                            "observations": [{"level": 0}],
++                            "health": {"valid_action_count": 1, "step_ok_count": 1},
++                        }
++                    )
++    return rows
++
++
++def test_req_arc_cptb_5971_spec_declares_battery_contract() -> None:
++    """REQ-ARC-CPTB-5971: OpenSpec freezes gate replay, matrix, fields, and safeguards."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-CPTB-5971") :]
++
++    for marker in (
++        "SCENARIO-ARC-CPTB-5971-GATE-REPLAY-MATRIX-SEAL",
++        "SCENARIO-ARC-CPTB-5971-LIVE-PATH-CELL-HEALTH",
++        "SCENARIO-ARC-CPTB-5971-GAME-UNIT-FORCED-VERDICT-REFUSAL",
++        mod.RESULT_RELATIVE_PATH,
++        "make_carnot_agent",
++        "E3AgentPolicy",
++        "strip_swap_sentinel_ready_score == 1.0",
++    ):
++        assert marker in section
++
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++    for field, principle in mod.REQUIRED_FIELD_PROVENANCE.items():
++        assert f"`{field}`" in section
++        assert principle["principle"] in section
++
++
++def test_scenario_arc_cptb_5971_gate_replay_and_matrix_seal() -> None:
++    """SCENARIO-ARC-CPTB-5971-GATE-REPLAY-MATRIX-SEAL: preconditions seal all planned cells."""
++
++    gate = mod.replay_exp5970_gate(REPO)
++    arms = mod.load_preregistered_arms(REPO)
++    seal = mod.build_matrix_seal(REPO, arms=arms, action_budget=3, wall_time_s=5.0)
++
++    assert gate["ready"] is True
++    assert gate["strip_swap_sentinel_ready_score"] == 1.0
++    assert gate["artifact_sha256"]
++    assert list(arms) == list(mod.ARMS)
++    assert seal["sealed_before_outcomes"] is True
++    assert seal["n_games"] == 25
++    assert seal["n_arms"] == 4
++    assert seal["n_seeds"] == 5
++    assert seal["n_conditions"] == 2
++    assert seal["n_cells_expected"] == 25 * 4 * 5 * 2
++    assert seal["action_budget"] == 3
++
++
++def test_scenario_arc_cptb_5971_live_path_cell_health_smoke() -> None:
++    """SCENARIO-ARC-CPTB-5971-LIVE-PATH-CELL-HEALTH: a bounded cell uses the submitted path."""
++
++    row = mod.run_live_cell(
++        REPO,
++        game="tn36",
++        arm="SHIP",
++        seed=20260726,
++        condition="strip_swap",
++        arm_kwargs=mod.load_preregistered_arms(REPO)["SHIP"]["kwargs"],
++        action_budget=1,
++        wall_time_s=10.0,
++    )
++
++    assert row["game"] == "tn36"
++    assert row["arm"] == "SHIP"
++    assert row["condition"] == "strip_swap"
++    assert row["live_path"] == "make_carnot_agent/E3AgentPolicy.choose_action"
++    assert row["terminal_state"] in {"completed", "errored"}
++    assert row["health"]["source_bfs_adapter_prior_game_hidden_state_access_count"] == 0
++    assert row["transform_selected_condition_id"] in {
++        "C4_strip_swap_rows_top_t2",
++        "C5_strip_swap_rows_bottom_t2",
++        "C6_strip_swap_cols_left_t2",
++        "C7_strip_swap_cols_right_t2",
++    }
++
++
++def test_scenario_arc_cptb_5971_game_unit_forced_verdict_refusal() -> None:
++    """SCENARIO-ARC-CPTB-5971-GAME-UNIT-FORCED-VERDICT-REFUSAL: destroyed anchors force null."""
++
++    analysis = mod.analyze_rows(_fixture_rows(transformed_anchor_live=False), expected_cells=48)
++
++    hud = analysis["anchor_survival_and_discriminating_game_support"]["hud_given_frontier_on"]
++    stats = analysis["game_unit_sign_jackknife_intervals_and_p_floors"]["hud_given_frontier_on"]
++
++    assert hud["original_anchor_won_by_matched_arm"] is True
++    assert hud["transformed_anchor_retains_valid_support"] is False
++    assert hud["interpretable"] is False
++    assert stats["strip_swap"]["exact_one_sided_sign_test"]["n_independent_games"] <= 2
++    assert analysis["convention_dependence_decision"]["status"] == "complete_null"
++    assert "anchor support" in analysis["convention_dependence_decision"]["reason"]
++    assert analysis["overall_hud_value_not_identified_receipt"]["flag_flip_recommended"] is False
++
++
++def test_req_arc_cptb_5971_artifact_schema_validation_and_checksum(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-ARC-CPTB-5971: artifact fields, immutability receipts, and checksum are enforced."""
++
++    rows = _fixture_rows(transformed_anchor_live=True)
++    monkeypatch.setattr(mod, "run_frozen_matrix", lambda *args, **kwargs: rows)
++
++    artifact = mod.build_artifact(
++        root=REPO,
++        result_output_path=tmp_path / "experiment_5971.json",
++        action_budget=3,
++        wall_time_s=5.0,
++        test_exit_codes={"focused_unit": 0},
++    )
++
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++    assert artifact["status"] in {"complete_null", "complete_underpowered", "complete_positive"}
++    assert artifact["preconditions_checked"]["checked"] is True
++    assert artifact["gate_replay_receipt"]["ready"] is True
++    assert artifact["expected_completed_missing_errored_and_generator_invalid_cells"]["expected"] == 1000
++    assert artifact["live_agent_path_and_disabled_escape_hatches"]["normal_path"].endswith(
++        "E3AgentPolicy.choose_action"
++    )
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["no_solve_credit_receipt"]["solve_credit_claimed"] is False
++    mod.validate_artifact(artifact)
++
++    with pytest.raises(ValueError, match="missing required fields"):
++        bad = dict(artifact)
++        del bad["status"]
++        mod.validate_artifact(bad)
++    with pytest.raises(ValueError, match="checksum"):
++        mod.validate_artifact({**artifact, "reproducibility_checksum": "sha256:bad"})
++    with pytest.raises(ValueError, match="verifier_is_oracle"):
++        mod.validate_artifact({**artifact, "verifier_is_oracle": True})
++    with pytest.raises(ValueError, match="solve credit"):
++        bad = json.loads(json.dumps(artifact))
++        bad["no_solve_credit_receipt"]["solve_credit_claimed"] = True
++        mod.validate_artifact(bad)
++    with pytest.raises(ValueError, match="flag flip"):
++        bad = json.loads(json.dumps(artifact))
++        bad["overall_hud_value_not_identified_receipt"]["flag_flip_recommended"] = True
++        mod.validate_artifact(bad)
++    with pytest.raises(ValueError, match="registry"):
++        bad = json.loads(json.dumps(artifact))
++        bad["shipped_flag_and_registry_immutability"]["registry_unchanged"] = False
++        mod.validate_artifact(bad)
++    with pytest.raises(ValueError, match="honest_verdict"):
++        bad = json.loads(json.dumps(artifact))
++        bad["honest_verdict"] = "ready: bad"
++        bad["reproducibility_checksum"] = mod.artifact_checksum(bad)
++        mod.validate_artifact(bad)
++
++
++def test_req_arc_cptb_5971_writer_round_trips_json(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-ARC-CPTB-5971: writer emits the validated artifact returned by the builder."""
++
++    payload = {field: None for field in mod.REQUIRED_ARTIFACT_FIELDS}
++    payload.update(
++        {
++            "status": "complete_null",
++            "honest_verdict": "complete_null: fixture",
++            "reproducibility_checksum": "sha256:fixture",
++        }
++    )
++    monkeypatch.setattr(mod, "build_artifact", lambda **kwargs: payload)
++
++    out = tmp_path / "experiment_5971.json"
++    written = mod.write_artifact(root=REPO, result_output_path=out, test_exit_codes={"unit": 0})
++
++    assert written is payload
++    assert json.loads(out.read_text(encoding="utf-8"))["honest_verdict"] == "complete_null: fixture"
+-- 
+2.55.0
+

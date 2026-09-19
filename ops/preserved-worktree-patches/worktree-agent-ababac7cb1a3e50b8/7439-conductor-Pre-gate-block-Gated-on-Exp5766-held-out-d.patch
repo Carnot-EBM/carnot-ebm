@@ -1,0 +1,61 @@
+From fc65585aa27f02addf67b8432529e785cbe93d4c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 11:14:39 -0400
+Subject: [PATCH 07439/11362] [conductor] Pre-gate block: Gated on Exp5766
+ held-out delta>0: harden one game-blind ARC live-path composition rule
+
+2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audit.loo_generalization_delta_lcb (actual=0.0 > expected=0.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_5767_arc_game_blind_composition_hardening.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d32994ca51..0912191896 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-07-21T15:12:36Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-07-21T15:14:38Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 73430b5a8d..a993547e6b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13863,3 +13863,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-21 14:51 UTC | Gated on Exp5764 parity: run the final matched Rus | OK | 138 passed, 1 warning in 20.82s |
+ | 2026-07-21 15:08 UTC | Measure ARC leave-one-game-out generalization and  | OK | 89 passed, 1 warning in 13.90s |
+ | 2026-07-21 15:10 UTC | Gated on Exp5766 held-out delta>0: harden one game | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audi |
++| 2026-07-21 15:12 UTC | Gated on Exp5766 held-out delta>0: harden one game | GATE_BLOCK | 2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audi |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 33d4df8ec7..1ab73b0dc9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 4, "phase": "iteration_start", "started_at": "2026-07-21T15:12:36Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 5, "phase": "iteration_start", "started_at": "2026-07-21T15:14:38Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5767_arc_game_blind_composition_hardening.json b/results/experiment_5767_arc_game_blind_composition_hardening.json
+index 399c1d9218..651e4a56bc 100644
+--- a/results/experiment_5767_arc_game_blind_composition_hardening.json
++++ b/results/experiment_5767_arc_game_blind_composition_hardening.json
+@@ -2,8 +2,8 @@
+   "experiment": 5767,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-21",
+-  "started_at": "2026-07-21T15:12:36.210344+00:00",
+-  "finished_at": "2026-07-21T15:12:36.210344+00:00",
++  "started_at": "2026-07-21T15:14:38.832852+00:00",
++  "finished_at": "2026-07-21T15:14:38.832852+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp5766 held-out delta>0: harden one game-blind ARC live-path composition rule",
+-- 
+2.55.0
+

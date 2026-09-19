@@ -1,0 +1,43 @@
+From d2a55ad0acc61ea9f29f2b5164569a0dd7712e98 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 18:01:51 -0400
+Subject: [PATCH 01495/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 49e4a07136..444d321726 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 34755, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-06-12T21:41:15Z"}
+\ No newline at end of file
++{"pid": 34755, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-06-12T22:01:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1a7cafbb04..3af34f1a1e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8381,3 +8381,4 @@ c |
+ | 2026-06-12 20:48 UTC | TWELFTH ARC-AGI-3 game first-solve via the PROVEN  | OK | 89 passed in 4.61s |
+ | 2026-06-12 21:09 UTC | SOTA-INGESTION SLOT (reserved; headline is a bleed | OK | 100 passed in 5.06s |
+ | 2026-06-12 21:31 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | OK | 87 passed in 6.22s |
++| 2026-06-12 21:51 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed in 5.23s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c260303dcc..c5681f3fd0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 34755, "iteration": 7, "phase": "iteration_start", "started_at": "2026-06-12T21:41:15Z"}
+\ No newline at end of file
++{"pid": 34755, "iteration": 8, "phase": "iteration_start", "started_at": "2026-06-12T22:01:49Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

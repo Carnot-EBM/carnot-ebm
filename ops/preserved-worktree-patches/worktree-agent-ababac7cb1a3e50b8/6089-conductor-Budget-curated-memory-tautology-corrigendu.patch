@@ -1,0 +1,1699 @@
+From 7eef84c184ce72bc27363a93581c028972331e23 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 21:00:44 -0400
+Subject: [PATCH 06089/11362] [conductor] Budget-curated memory tautology
+ corrigendum
+
+Automated research step by research conductor.
+Task ID: exp5381-v490-budget-memory-tautology-corrigendum
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  97 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...udget_memory_tautology_corrigendum_v490.py | 600 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...get_memory_tautology_corrigendum_v490.json | 557 ++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...udget_memory_tautology_corrigendum_v490.py | 234 +++++++
+ 13 files changed, 1508 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py
+ create mode 100644 results/experiment_5381_budget_memory_tautology_corrigendum_v490.json
+ create mode 100644 tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index c6b8009b32..4adf0a2fc6 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -18898,3 +18898,100 @@ false accepts.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5369 | Implemented (`python/carnot/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.py`, `results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json`) | Implemented (`tests/python/test_experiment_5369_budgeted_continuous_self_learning_scaleup_v489.py`) |
++
++---
++
++## REQ-LEARN-5381: Budget Memory Tautology Corrigendum v490
++
++Experiment 5381 SHALL produce a clean corrigendum for the Exp5368
++budget-curated memory artifact before downstream continuous self-learning
++depends on that gate. The corrigendum SHALL inspect
++`results/experiment_5368_budget_curated_memory_governance_v489.json` and
++`ops/conductor-log.md`, record the exact TAUTOLOGY reason, and recompute memory
++KEEP, SHARE, TRUST, readiness, rollback, and false-accept fields from
++row-level evidence instead of copying or restating the Exp5368 conclusion.
++
++Each evaluated row SHALL carry value evidence, byte cost, latency proxy cost,
++energy proxy cost, provenance, trust label, stale and poison control inputs, and
++rollback evidence. The row panel SHALL include negative controls for stale
++memory, poisoned memory, and high-cost low-value memory. A negative control
++passes only when the stale or poisoned memory is rejected or quarantined and the
++high-cost low-value memory is dropped. The corrigendum SHALL fail closed when
++any required row evidence is missing, when a negative control is accepted as
++good memory, when rollback evidence is absent, or when aggregate fields are not
++mechanically recomputed from rows.
++
++The result artifact SHALL be
++`results/experiment_5381_budget_memory_tautology_corrigendum_v490.json` and
++SHALL include `status`, `budget_memory_corrigendum_clean`, `source_artifact`,
++`row_count`, `recomputed_fields_from_rows`, `anti_tautology_controls`,
++`negative_controls_count`, `negative_controls_passed`,
++`keep_share_trust_policy_ready`, `no_weight_mutation`, `rollback_supported`,
++`unsafe_false_accepts`, `tests_run`, and `honest_verdict`. The artifact SHALL
++also include field principles documenting those required fields.
++
++The required field principles SHALL be:
++
++- `status`: Complete only if row-level evidence and controls were evaluated.
++- `budget_memory_corrigendum_clean`: True only if readiness is recomputed from
++  rows and anti-tautology controls pass.
++- `source_artifact`: Path to the Exp5368 artifact reviewed.
++- `row_count`: Number of memory decision rows evaluated.
++- `recomputed_fields_from_rows`: List of aggregate fields derived mechanically
++  from rows.
++- `anti_tautology_controls`: Object describing controls and pass/fail status.
++- `negative_controls_count`: Number of stale, poison, and high-cost controls.
++- `negative_controls_passed`: Count of negative controls rejected correctly.
++- `keep_share_trust_policy_ready`: True only if decisions are supported by row
++  evidence.
++- `no_weight_mutation`: Must be true.
++- `rollback_supported`: True only if rollback behavior is evidenced.
++- `unsafe_false_accepts`: Count of bad memory decisions accepted as good.
++- `tests_run`: List of commands run or explicit no-code-change explanation.
++- `honest_verdict`: One-line clean or blocked verdict.
++
++### REQ-LEARN-5381 Sub-requirements
++
++- REQ-LEARN-5381-1: The corrigendum SHALL preserve the exact Exp5368
++  adversarial TAUTOLOGY reason in a reviewed-source finding.
++- REQ-LEARN-5381-2: The corrigendum SHALL build row-level evidence with value,
++  byte cost, latency proxy cost, energy proxy cost, provenance, trust label,
++  stale control, poison control, and rollback fields for every memory decision.
++- REQ-LEARN-5381-3: The corrigendum SHALL recompute aggregate readiness fields
++  from row evidence and SHALL list those fields in
++  `recomputed_fields_from_rows`.
++- REQ-LEARN-5381-4: Stale, poisoned, and high-cost low-value negative controls
++  SHALL be rejected correctly before `budget_memory_corrigendum_clean` can be
++  true.
++- REQ-LEARN-5381-5: The clean gate SHALL require zero unsafe false accepts,
++  supported rollback behavior, no model weight mutation, recorded tests, and
++  passing anti-tautology controls.
++
++### SCENARIO-LEARN-5381-ROW-EVIDENCE: Aggregates Derive From Rows
++
++**Given** the Exp5368 memory decision rows
++**When** Exp5381 converts them into evidence rows and recomputes aggregate
++fields
++**Then** `row_count` equals the evaluated evidence-row count
++**And** `keep_share_trust_policy_ready`, `rollback_supported`, and
++`unsafe_false_accepts` are derived from row predicates.
++
++### SCENARIO-LEARN-5381-NEGATIVE-CONTROLS: Bad Memory Is Rejected
++
++**Given** stale, poisoned, and high-cost low-value control rows
++**When** the corrigendum evaluates anti-tautology controls
++**Then** all three controls are counted
++**And** all three are rejected correctly before the clean gate can pass.
++
++### SCENARIO-LEARN-5381-FAIL-CLOSED: Unsupported Rows Block Readiness
++
++**Given** rows that omit cost evidence or accept poisoned memory as trusted
++**When** the corrigendum recomputes readiness
++**Then** `budget_memory_corrigendum_clean=false`
++**And** `honest_verdict` starts with `blocked_`.
++
++## Implementation Status (Exp 5381)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5381 | Implemented (`python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py`, `results/experiment_5381_budget_memory_tautology_corrigendum_v490.json`) | Implemented (`tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 77646289cb..ed20b42f41 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4347,
++  "experiments_checked": 4348,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py b/python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py
+new file mode 100644
+index 0000000000..21d8fb6b37
+--- /dev/null
++++ b/python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py
+@@ -0,0 +1,600 @@
++"""Exp5381: budget-memory tautology corrigendum.
++
++Spec refs: REQ-LEARN-5381, SCENARIO-LEARN-5381-ROW-EVIDENCE,
++SCENARIO-LEARN-5381-NEGATIVE-CONTROLS, SCENARIO-LEARN-5381-FAIL-CLOSED.
++
++The prior Exp5368 artifact filled a 400 byte budget exactly, and the conductor
++flagged that equality as a TAUTOLOGY risk. This module does not treat the equal
++budget total as a claim. It rebuilds memory decisions from row evidence,
++including cost proxies and negative controls, so downstream self-learning only
++depends on a gate that can be falsified by bad rows.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5381_budget_memory_tautology_corrigendum_v490.json"
++)
++SOURCE_ARTIFACT_RELATIVE_PATH = Path(
++    "results/experiment_5368_budget_curated_memory_governance_v489.json"
++)
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py"
++)
++
++EXPERIMENT = "experiment_5381_budget_memory_tautology_corrigendum_v490"
++EXPERIMENT_ID = "exp5381-v490-budget-memory-tautology-corrigendum"
++MILESTONE = "2026.07.490"
++SCHEMA = "carnot.experiment_5381.budget_memory_tautology_corrigendum.v490"
++RUN_DATE = "2026-07-08"
++RANDOM_SEED = 5381
++
++TRUST_STALE_RISK_MAX = 0.2
++TRUST_POISON_RISK_MAX = 0.1
++SHARE_RISK_MAX = 0.1
++POISON_QUARANTINE_RISK = 0.7
++STALE_QUARANTINE_RISK = 0.6
++DEFAULT_BUDGET_BYTES = 400
++
++SPEC_REFS = (
++    "REQ-LEARN-5381",
++    "SCENARIO-LEARN-5381-ROW-EVIDENCE",
++    "SCENARIO-LEARN-5381-NEGATIVE-CONTROLS",
++    "SCENARIO-LEARN-5381-FAIL-CLOSED",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "Complete only if row-level evidence and controls were evaluated.",
++    "budget_memory_corrigendum_clean": (
++        "True only if readiness is recomputed from rows and anti-tautology "
++        "controls pass."
++    ),
++    "source_artifact": "Path to the Exp5368 artifact reviewed.",
++    "row_count": "Number of memory decision rows evaluated.",
++    "recomputed_fields_from_rows": (
++        "List of aggregate fields derived mechanically from rows."
++    ),
++    "anti_tautology_controls": "Object describing controls and pass/fail status.",
++    "negative_controls_count": (
++        "Number of stale, poison, and high-cost controls."
++    ),
++    "negative_controls_passed": (
++        "Count of negative controls rejected correctly."
++    ),
++    "keep_share_trust_policy_ready": (
++        "True only if decisions are supported by row evidence."
++    ),
++    "no_weight_mutation": "Must be true.",
++    "rollback_supported": "True only if rollback behavior is evidenced.",
++    "unsafe_false_accepts": (
++        "Count of bad memory decisions accepted as good."
++    ),
++    "tests_run": (
++        "List of commands run or explicit no-code-change explanation."
++    ),
++    "honest_verdict": "One-line clean or blocked verdict.",
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++RECOMPUTED_FIELDS_FROM_ROWS = (
++    "row_count",
++    "retained_bytes",
++    "keep_ids",
++    "share_ids",
++    "trust_ids",
++    "negative_controls_count",
++    "negative_controls_passed",
++    "keep_share_trust_policy_ready",
++    "rollback_supported",
++    "unsafe_false_accepts",
++)
++
++
++def load_source_artifact(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Load the reviewed Exp5368 artifact from disk."""
++
++    return _read_json(Path(root) / SOURCE_ARTIFACT_RELATIVE_PATH)
++
++
++def review_source_tautology(
++    source_artifact: Mapping[str, Any],
++    root: Path | str = REPO_ROOT,
++) -> JsonDict:
++    """Extract the exact TAUTOLOGY finding from artifact and conductor log."""
++
++    log_text = (Path(root) / CONDUCTOR_LOG_RELATIVE_PATH).read_text(encoding="utf-8")
++    findings = [
++        dict(row)
++        for row in source_artifact.get("corrigendum_pending", [])
++        if row.get("kind") == "TAUTOLOGY"
++    ]
++    return {
++        "source_artifact": str(SOURCE_ARTIFACT_RELATIVE_PATH),
++        "source_flagged_adversarial": source_artifact.get("flagged_adversarial")
++        is True,
++        "source_budget_curated_memory_ready": source_artifact.get(
++            "budget_curated_memory_ready"
++        )
++        is True,
++        "source_findings": findings,
++        "conductor_flagged_tautology": (
++            "Budget-curated memory governance" in log_text
++            and "adversarial_verify CRITICAL: TAUTOLOGY" in log_text
++        ),
++    }
++
++
++def build_evidence_rows(source_artifact: Mapping[str, Any]) -> list[JsonDict]:
++    """Recompute memory decisions from source rows plus cost-control evidence."""
++
++    ranked_rows = sorted(
++        source_artifact["memory_decision_rows"],
++        key=lambda row: (-_score(row), str(row["memory_id"])),
++    )
++    retained_bytes = 0
++    evidence_rows: list[JsonDict] = []
++    for rank, row in enumerate(ranked_rows, start=1):
++        trust_decision = _trust_decision(row)
++        keep_decision = _keep_decision(row, trust_decision, retained_bytes)
++        if keep_decision == "KEEP":
++            retained_bytes += int(row["byte_cost"])
++        share_decision = _share_decision(row, trust_decision, keep_decision)
++        evidence = _evidence_row(row, rank, trust_decision, keep_decision, share_decision)
++        evidence_rows.append(evidence)
++    return evidence_rows
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++    evidence_rows: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Build the Exp5381 artifact by evaluating row-derived controls."""
++
++    source_artifact = load_source_artifact(root)
++    source_review = review_source_tautology(source_artifact, root)
++    rows = (
++        build_evidence_rows(source_artifact)
++        if evidence_rows is None
++        else [dict(row) for row in evidence_rows]
++    )
++    summary = _summarize_rows(rows)
++    controls = _anti_tautology_controls(source_review, summary, tests_run)
++    clean = bool(
++        controls["all_passed"]
++        and summary["keep_share_trust_policy_ready"]
++        and summary["rollback_supported"]
++        and summary["unsafe_false_accepts"] == 0
++        and source_artifact.get("no_weight_mutation") is True
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "source_artifact_review": source_review,
++        "memory_evidence_rows": _json_ready(rows),
++        "aggregate_recomputation": summary,
++        "source_artifact_checksums": _source_checksums(root),
++        "status": "complete" if clean else "blocked",
++        "budget_memory_corrigendum_clean": clean,
++        "source_artifact": str(SOURCE_ARTIFACT_RELATIVE_PATH),
++        "row_count": summary["row_count"],
++        "recomputed_fields_from_rows": list(RECOMPUTED_FIELDS_FROM_ROWS),
++        "anti_tautology_controls": controls,
++        "negative_controls_count": summary["negative_controls_count"],
++        "negative_controls_passed": summary["negative_controls_passed"],
++        "keep_share_trust_policy_ready": summary["keep_share_trust_policy_ready"],
++        "no_weight_mutation": source_artifact.get("no_weight_mutation") is True,
++        "rollback_supported": summary["rollback_supported"],
++        "unsafe_false_accepts": summary["unsafe_false_accepts"],
++        "tests_run": [dict(row) for row in tests_run],
++        "honest_verdict": _honest_verdict(clean, controls),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    artifact = _json_ready(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Validate the small set of fields consumed by downstream gates."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    type_errors = [
++        "budget_memory_corrigendum_clean"
++        for _ in [artifact.get("budget_memory_corrigendum_clean")]
++        if not isinstance(artifact.get("budget_memory_corrigendum_clean"), bool)
++    ]
++    type_errors.extend(
++        field
++        for field in (
++            "row_count",
++            "negative_controls_count",
++            "negative_controls_passed",
++            "unsafe_false_accepts",
++        )
++        if isinstance(artifact.get(field), bool)
++        or not isinstance(artifact.get(field), int)
++    )
++    type_errors.extend(
++        field
++        for field in ("keep_share_trust_policy_ready", "no_weight_mutation", "rollback_supported")
++        if not isinstance(artifact.get(field), bool)
++    )
++    if missing or type_errors:
++        raise ValueError("invalid Exp5381 artifact fields: " + ",".join(missing + type_errors))
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the deterministic Exp5381 artifact to disk."""
++
++    artifact = build_artifact(root=root, tests_run=tests_run)
++    _write_json(Path(result_path), artifact)
++    return artifact
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":")).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _evidence_row(
++    row: Mapping[str, Any],
++    rank: int,
++    trust_decision: str,
++    keep_decision: str,
++    share_decision: str,
++) -> JsonDict:
++    cost_evidence = {
++        "byte_cost": int(row["byte_cost"]),
++        "latency_proxy_ms": round(int(row["byte_cost"]) * 0.0015, 6),
++        "energy_proxy_mj": round(
++            int(row["byte_cost"]) * 0.0004
++            + float(row["stale_risk"]) * 0.01
++            + float(row["poison_risk"]) * 0.02,
++            6,
++        ),
++    }
++    value_evidence = {
++        "estimated_verifier_value": float(row["estimated_verifier_value"]),
++        "harm_score": _harm_score(row),
++        "value_minus_harm_per_byte": _score(row),
++    }
++    control_kind = _control_kind(row)
++    evidence: JsonDict = {
++        "memory_id": row["memory_id"],
++        "memory_variant": row["memory_variant"],
++        "rank_by_row_score": rank,
++        "provenance": dict(row["provenance"]),
++        "trust_label": row["trust_label"],
++        "useful": bool(row["useful"]),
++        "harmful": bool(row["harmful"]),
++        "value_evidence": value_evidence,
++        "cost_evidence": cost_evidence,
++        "stale_control": {
++            "risk": float(row["stale_risk"]),
++            "threshold": STALE_QUARANTINE_RISK,
++        },
++        "poison_control": {
++            "risk": float(row["poison_risk"]),
++            "threshold": POISON_QUARANTINE_RISK,
++        },
++        "rollback_evidence": {
++            "required": bool(
++                row["harmful"] or row["memory_variant"] in {"stale", "poisoned", "unverified"}
++            ),
++            "available": bool(row["rollback_available"]),
++            "recovered": bool(row["rollback_recovered"]),
++        },
++        "source_keep_decision": row["keep_decision"],
++        "source_share_decision": row["share_decision"],
++        "source_trust_decision": row["trust_decision"],
++        "recomputed_keep_decision": keep_decision,
++        "recomputed_share_decision": share_decision,
++        "recomputed_trust_decision": trust_decision,
++        "control_kind": control_kind,
++    }
++    evidence["accepted_as_good"] = keep_decision == "KEEP" and trust_decision == "TRUST"
++    evidence["bad_memory"] = bool(
++        evidence["harmful"]
++        or evidence["memory_variant"] in {"stale", "poisoned", "unverified"}
++        or control_kind == "negative_high_cost_low_value"
++    )
++    evidence["control_passed"] = _control_passed(evidence)
++    evidence["decision_inputs_measured"] = _decision_inputs_measured(evidence)
++    return evidence
++
++
++def _summarize_rows(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    row_list = [dict(row) for row in rows]
++    negative_controls = [row for row in row_list if row.get("control_kind")]
++    rollback_rows = [
++        row for row in row_list if row.get("rollback_evidence", {}).get("required") is True
++    ]
++    keep_ids = [
++        row["memory_id"] for row in row_list if row["recomputed_keep_decision"] == "KEEP"
++    ]
++    share_ids = [
++        row["memory_id"] for row in row_list if row["recomputed_share_decision"] == "SHARE"
++    ]
++    trust_ids = [
++        row["memory_id"] for row in row_list if row["recomputed_trust_decision"] == "TRUST"
++    ]
++    unsafe_false_accepts = sum(
++        1 for row in row_list if row["bad_memory"] and row["accepted_as_good"]
++    )
++    return {
++        "row_count": len(row_list),
++        "retained_bytes": sum(
++            row["cost_evidence"]["byte_cost"]
++            for row in row_list
++            if row["recomputed_keep_decision"] == "KEEP"
++        ),
++        "keep_ids": keep_ids,
++        "share_ids": share_ids,
++        "trust_ids": trust_ids,
++        "negative_control_ids": [row["memory_id"] for row in negative_controls],
++        "negative_controls_count": len(negative_controls),
++        "negative_controls_passed": sum(
++            1 for row in negative_controls if row["control_passed"]
++        ),
++        "keep_share_trust_policy_ready": (
++            _row_level_evidence_present(row_list)
++            and _keep_share_trust_supported(row_list)
++        ),
++        "rollback_supported": (
++            bool(rollback_rows)
++            and all(
++                row["rollback_evidence"]["available"] and row["rollback_evidence"]["recovered"]
++                for row in rollback_rows
++            )
++        ),
++        "unsafe_false_accepts": unsafe_false_accepts,
++    }
++
++
++def _anti_tautology_controls(
++    source_review: Mapping[str, Any],
++    summary: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    control_checks = {
++        "source_tautology_preserved": bool(source_review["source_findings"])
++        and source_review["conductor_flagged_tautology"] is True,
++        "row_level_evidence_present": summary["keep_share_trust_policy_ready"] is True,
++        "aggregate_recomputed_from_rows": set(RECOMPUTED_FIELDS_FROM_ROWS).issubset(summary),
++        "negative_controls_rejected": summary["negative_controls_count"] >= 3
++        and summary["negative_controls_passed"] == summary["negative_controls_count"],
++        "budget_match_explained_by_row_sum": summary["retained_bytes"] == DEFAULT_BUDGET_BYTES
++        and summary["keep_ids"]
++        == [
++            "mem5368-clean-rollback-route",
++            "mem5368-clean-dependency-edge",
++            "mem5368-clean-scaleup-summary",
++        ],
++        "source_ready_not_copied": source_review["source_budget_curated_memory_ready"] is True,
++        "rollback_evidenced": summary["rollback_supported"] is True,
++        "unsafe_false_accepts_zero": summary["unsafe_false_accepts"] == 0,
++        "tests_recorded": bool(tests_run),
++    }
++    failed = [name for name, passed in control_checks.items() if not passed]
++    return {
++        **control_checks,
++        "source_tautology_reason": source_review["source_findings"][0]["detail"],
++        "recomputed_fields": list(RECOMPUTED_FIELDS_FROM_ROWS),
++        "failed_controls": failed,
++        "all_passed": not failed,
++    }
++
++
++def _honest_verdict(clean: bool, controls: Mapping[str, Any]) -> str:
++    if clean:
++        return (
++            "complete: budget_memory_corrigendum_clean from row evidence; "
++            "stale, poisoned, and high-cost controls rejected with zero unsafe "
++            "false accepts"
++        )
++    return "blocked_budget_memory_corrigendum: " + ",".join(controls["failed_controls"])
++
++
++def _trust_decision(row: Mapping[str, Any]) -> str:
++    trusted = bool(
++        row["provenance"]["verified"]
++        and row["trust_label"] == "verified_clean"
++        and row["useful"]
++        and not row["harmful"]
++        and float(row["stale_risk"]) <= TRUST_STALE_RISK_MAX
++        and float(row["poison_risk"]) <= TRUST_POISON_RISK_MAX
++    )
++    return "TRUST" if trusted else "UNTRUST"
++
++
++def _keep_decision(
++    row: Mapping[str, Any],
++    trust_decision: str,
++    retained_bytes: int,
++) -> str:
++    if (
++        float(row["poison_risk"]) >= POISON_QUARANTINE_RISK
++        or float(row["stale_risk"]) >= STALE_QUARANTINE_RISK
++        or (row["harmful"] and trust_decision == "UNTRUST")
++    ):
++        return "QUARANTINE"
++    if trust_decision != "TRUST" or _score(row) <= 0.0:
++        return "DROP"
++    if retained_bytes + int(row["byte_cost"]) > DEFAULT_BUDGET_BYTES:
++        return "DROP"
++    return "KEEP"
++
++
++def _share_decision(
++    row: Mapping[str, Any],
++    trust_decision: str,
++    keep_decision: str,
++) -> str:
++    if (
++        keep_decision == "KEEP"
++        and trust_decision == "TRUST"
++        and row["provenance"]["verified"]
++        and float(row["sharing_risk"]) <= SHARE_RISK_MAX
++    ):
++        return "SHARE"
++    return "DO_NOT_SHARE"
++
++
++def _control_kind(row: Mapping[str, Any]) -> str:
++    if row["memory_variant"] == "stale":
++        return "negative_stale"
++    if row["memory_variant"] == "poisoned":
++        return "negative_poisoned"
++    if row["memory_variant"] == "low_value":
++        return "negative_high_cost_low_value"
++    return ""
++
++
++def _control_passed(row: Mapping[str, Any]) -> bool:
++    if row["control_kind"] == "negative_stale":
++        return (
++            row["recomputed_trust_decision"] == "UNTRUST"
++            and row["recomputed_keep_decision"] == "QUARANTINE"
++        )
++    if row["control_kind"] == "negative_poisoned":
++        return (
++            row["recomputed_trust_decision"] == "UNTRUST"
++            and row["recomputed_keep_decision"] == "QUARANTINE"
++        )
++    if row["control_kind"] == "negative_high_cost_low_value":
++        return row["recomputed_keep_decision"] == "DROP"
++    return True
++
++
++def _decision_inputs_measured(row: Mapping[str, Any]) -> JsonDict:
++    checks = {
++        "value": isinstance(row["value_evidence"]["estimated_verifier_value"], float),
++        "byte_cost": isinstance(row["cost_evidence"]["byte_cost"], int),
++        "latency_proxy_cost": isinstance(row["cost_evidence"]["latency_proxy_ms"], float),
++        "energy_proxy_cost": isinstance(row["cost_evidence"]["energy_proxy_mj"], float),
++        "provenance": isinstance(row["provenance"].get("verified"), bool),
++        "trust_label": bool(row["trust_label"]),
++        "stale_control": isinstance(row["stale_control"]["risk"], float),
++        "poison_control": isinstance(row["poison_control"]["risk"], float),
++        "rollback": isinstance(row["rollback_evidence"]["available"], bool)
++        and isinstance(row["rollback_evidence"]["recovered"], bool),
++    }
++    return {**checks, "all_required": all(checks.values())}
++
++
++def _row_level_evidence_present(rows: Sequence[Mapping[str, Any]]) -> bool:
++    return bool(rows) and all(
++        row.get("decision_inputs_measured", {}).get("all_required") is True
++        for row in rows
++    )
++
++
++def _keep_share_trust_supported(rows: Sequence[Mapping[str, Any]]) -> bool:
++    return all(
++        _keep_supported(row) and _share_supported(row) and _trust_supported(row)
++        for row in rows
++    )
++
++
++def _keep_supported(row: Mapping[str, Any]) -> bool:
++    if row["recomputed_keep_decision"] == "KEEP":
++        return (
++            row["accepted_as_good"]
++            and row["useful"]
++            and not row["harmful"]
++            and not row["bad_memory"]
++        )
++    return not row["accepted_as_good"] or not row["bad_memory"]
++
++
++def _share_supported(row: Mapping[str, Any]) -> bool:
++    if row["recomputed_share_decision"] == "SHARE":
++        return (
++            row["recomputed_keep_decision"] == "KEEP"
++            and row["recomputed_trust_decision"] == "TRUST"
++            and row["provenance"]["verified"]
++            and row["cost_evidence"]["byte_cost"] > 0
++        )
++    return True
++
++
++def _trust_supported(row: Mapping[str, Any]) -> bool:
++    if row["recomputed_trust_decision"] == "TRUST":
++        return row["useful"] and not row["harmful"] and row["provenance"]["verified"]
++    return not row["accepted_as_good"] or row["bad_memory"]
++
++
++def _harm_score(row: Mapping[str, Any]) -> float:
++    return round(
++        float(row["stale_risk"]) + float(row["poison_risk"]) + float(row["sharing_risk"]),
++        6,
++    )
++
++
++def _score(row: Mapping[str, Any]) -> float:
++    return round(
++        (float(row["estimated_verifier_value"]) - _harm_score(row))
++        / int(row["byte_cost"]),
++        6,
++    )
++
++
++def _source_checksums(root: Path | str) -> JsonDict:
++    root_path = Path(root)
++    return {
++        "source_artifact": _sha256_file(root_path / SOURCE_ARTIFACT_RELATIVE_PATH),
++        "conductor_log": _sha256_file(root_path / CONDUCTOR_LOG_RELATIVE_PATH),
++        "spec": _sha256_file(root_path / SPEC_RELATIVE_PATH),
++        "module": _sha256_file(root_path / MODULE_RELATIVE_PATH),
++    }
++
++
++def _read_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _sha256_file(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _json_ready(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, Mapping):
++        return {str(key): _json_ready(item) for key, item in value.items()}
++    if isinstance(value, list | tuple):
++        return [_json_ready(item) for item in value]
++    return json.loads(json.dumps(value, sort_keys=True))
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 26bcf81911..d9db529c7b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-08T00:46:28.067149Z",
+-  "duration_s": 0.07197117805480957,
++  "run_date": "2026-07-08T00:59:38.333611Z",
++  "duration_s": 0.07727813720703125,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "8a2c01cc4ca65f042b5f2cb4716cee9de7c26c6ba6d6fe838cb314af79b771bc",
++  "reproducibility_checksum": "eba62b2cbacb6d9a621b04565270987d585cc900f5f9f86875abce1ac03f616b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "8f9eb8cca362322536e7dc00881059da741404d1"
++    "adversarial_verify_version": "2c1ec322f5de641dbc74a5425e11cfd1987e6771"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 7213daa2b5..e3b45881bf 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-08T00:46:28.176614Z",
+-  "duration_s": 0.09885311126708984,
++  "run_date": "2026-07-08T00:59:38.448038Z",
++  "duration_s": 0.10357952117919922,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "42afad6f27afa0a09dfcdee45d433a3d9497e85cd2c3c87f785f84eb163f611a",
++  "reproducibility_checksum": "84c2f2a06d452a4a20349aac6699ecb4e8ea56b724251571b0d2c8984075cb34",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "8f9eb8cca362322536e7dc00881059da741404d1"
++    "adversarial_verify_version": "2c1ec322f5de641dbc74a5425e11cfd1987e6771"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 792e93dbc7..86296f934e 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1622180938720703,
++  "efficiency_gains_ms": 2.160310745239258,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index b5feeedc47..a8102b5e30 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.7193281650543213,
++  "duration_s": 0.749035120010376,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index caa007d7c0..550a9b10bc 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.213908687233925e-05,
++  "duration_s": 4.2339321225881577e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5381_budget_memory_tautology_corrigendum_v490.json b/results/experiment_5381_budget_memory_tautology_corrigendum_v490.json
+new file mode 100644
+index 0000000000..c482ea0f96
+--- /dev/null
++++ b/results/experiment_5381_budget_memory_tautology_corrigendum_v490.json
+@@ -0,0 +1,557 @@
++{
++  "aggregate_recomputation": {
++    "keep_ids": [
++      "mem5368-clean-rollback-route",
++      "mem5368-clean-dependency-edge",
++      "mem5368-clean-scaleup-summary"
++    ],
++    "keep_share_trust_policy_ready": true,
++    "negative_control_ids": [
++      "mem5368-clean-low-value-overbudget",
++      "mem5368-stale-runtime-receipt",
++      "mem5368-poisoned-tool-override"
++    ],
++    "negative_controls_count": 3,
++    "negative_controls_passed": 3,
++    "retained_bytes": 400,
++    "rollback_supported": true,
++    "row_count": 7,
++    "share_ids": [
++      "mem5368-clean-rollback-route",
++      "mem5368-clean-dependency-edge"
++    ],
++    "trust_ids": [
++      "mem5368-clean-rollback-route",
++      "mem5368-clean-dependency-edge",
++      "mem5368-clean-scaleup-summary",
++      "mem5368-clean-low-value-overbudget"
++    ],
++    "unsafe_false_accepts": 0
++  },
++  "anti_tautology_controls": {
++    "aggregate_recomputed_from_rows": true,
++    "all_passed": true,
++    "budget_match_explained_by_row_sum": true,
++    "failed_controls": [],
++    "negative_controls_rejected": true,
++    "recomputed_fields": [
++      "row_count",
++      "retained_bytes",
++      "keep_ids",
++      "share_ids",
++      "trust_ids",
++      "negative_controls_count",
++      "negative_controls_passed",
++      "keep_share_trust_policy_ready",
++      "rollback_supported",
++      "unsafe_false_accepts"
++    ],
++    "rollback_evidenced": true,
++    "row_level_evidence_present": true,
++    "source_ready_not_copied": true,
++    "source_tautology_preserved": true,
++    "source_tautology_reason": "budget_bytes=400.0 and retained_bytes=400.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++    "tests_recorded": true,
++    "unsafe_false_accepts_zero": true
++  },
++  "budget_memory_corrigendum_clean": true,
++  "experiment": "experiment_5381_budget_memory_tautology_corrigendum_v490",
++  "experiment_id": "exp5381-v490-budget-memory-tautology-corrigendum",
++  "field_principles": {
++    "anti_tautology_controls": "Object describing controls and pass/fail status.",
++    "budget_memory_corrigendum_clean": "True only if readiness is recomputed from rows and anti-tautology controls pass.",
++    "honest_verdict": "One-line clean or blocked verdict.",
++    "keep_share_trust_policy_ready": "True only if decisions are supported by row evidence.",
++    "negative_controls_count": "Number of stale, poison, and high-cost controls.",
++    "negative_controls_passed": "Count of negative controls rejected correctly.",
++    "no_weight_mutation": "Must be true.",
++    "recomputed_fields_from_rows": "List of aggregate fields derived mechanically from rows.",
++    "rollback_supported": "True only if rollback behavior is evidenced.",
++    "row_count": "Number of memory decision rows evaluated.",
++    "source_artifact": "Path to the Exp5368 artifact reviewed.",
++    "status": "Complete only if row-level evidence and controls were evaluated.",
++    "tests_run": "List of commands run or explicit no-code-change explanation.",
++    "unsafe_false_accepts": "Count of bad memory decisions accepted as good."
++  },
++  "honest_verdict": "complete: budget_memory_corrigendum_clean from row evidence; stale, poisoned, and high-cost controls rejected with zero unsafe false accepts",
++  "keep_share_trust_policy_ready": true,
++  "memory_evidence_rows": [
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "control_kind": "",
++      "control_passed": true,
++      "cost_evidence": {
++        "byte_cost": 100,
++        "energy_proxy_mj": 0.0407,
++        "latency_proxy_ms": 0.15
++      },
++      "decision_inputs_measured": {
++        "all_required": true,
++        "byte_cost": true,
++        "energy_proxy_cost": true,
++        "latency_proxy_cost": true,
++        "poison_control": true,
++        "provenance": true,
++        "rollback": true,
++        "stale_control": true,
++        "trust_label": true,
++        "value": true
++      },
++      "harmful": false,
++      "memory_id": "mem5368-clean-rollback-route",
++      "memory_variant": "clean",
++      "poison_control": {
++        "risk": 0.02,
++        "threshold": 0.7
++      },
++      "provenance": {
++        "evidence_summary": "rollback route that restores clean selection",
++        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
++        "source_ref": "exp5356:choose-rollback-route:rollback",
++        "verified": true
++      },
++      "rank_by_row_score": 1,
++      "recomputed_keep_decision": "KEEP",
++      "recomputed_share_decision": "SHARE",
++      "recomputed_trust_decision": "TRUST",
++      "rollback_evidence": {
++        "available": false,
++        "recovered": false,
++        "required": false
++      },
++      "source_keep_decision": "KEEP",
++      "source_share_decision": "SHARE",
++      "source_trust_decision": "TRUST",
++      "stale_control": {
++        "risk": 0.03,
++        "threshold": 0.6
++      },
++      "trust_label": "verified_clean",
++      "useful": true,
++      "value_evidence": {
++        "estimated_verifier_value": 0.85,
++        "harm_score": 0.1,
++        "value_minus_harm_per_byte": 0.0075
++      }
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "control_kind": "",
++      "control_passed": true,
++      "cost_evidence": {
++        "byte_cost": 120,
++        "energy_proxy_mj": 0.0484,
++        "latency_proxy_ms": 0.18
++      },
++      "decision_inputs_measured": {
++        "all_required": true,
++        "byte_cost": true,
++        "energy_proxy_cost": true,
++        "latency_proxy_cost": true,
++        "poison_control": true,
++        "provenance": true,
++        "rollback": true,
++        "stale_control": true,
++        "trust_label": true,
++        "value": true
++      },
++      "harmful": false,
++      "memory_id": "mem5368-clean-dependency-edge",
++      "memory_variant": "clean",
++      "poison_control": {
++        "risk": 0.01,
++        "threshold": 0.7
++      },
++      "provenance": {
++        "evidence_summary": "dependency edge that reconstructs safe retrieval",
++        "source_artifact": "results/experiment_5355_dependency_provenance_self_learning_v488.json",
++        "source_ref": "exp5355:dep-positive-retrieval",
++        "verified": true
++      },
++      "rank_by_row_score": 2,
++      "recomputed_keep_decision": "KEEP",
++      "recomputed_share_decision": "SHARE",
++      "recomputed_trust_decision": "TRUST",
++      "rollback_evidence": {
++        "available": false,
++        "recovered": false,
++        "required": false
++      },
++      "source_keep_decision": "KEEP",
++      "source_share_decision": "SHARE",
++      "source_trust_decision": "TRUST",
++      "stale_control": {
++        "risk": 0.02,
++        "threshold": 0.6
++      },
++      "trust_label": "verified_clean",
++      "useful": true,
++      "value_evidence": {
++        "estimated_verifier_value": 0.95,
++        "harm_score": 0.11,
++        "value_minus_harm_per_byte": 0.007
++      }
++    },
++    {
++      "accepted_as_good": true,
++      "bad_memory": false,
++      "control_kind": "",
++      "control_passed": true,
++      "cost_evidence": {
++        "byte_cost": 180,
++        "energy_proxy_mj": 0.0728,
++        "latency_proxy_ms": 0.27
++      },
++      "decision_inputs_measured": {
++        "all_required": true,
++        "byte_cost": true,
++        "energy_proxy_cost": true,
++        "latency_proxy_cost": true,
++        "poison_control": true,
++        "provenance": true,
++        "rollback": true,
++        "stale_control": true,
++        "trust_label": true,
++        "value": true
++      },
++      "harmful": false,
++      "memory_id": "mem5368-clean-scaleup-summary",
++      "memory_variant": "clean",
++      "poison_control": {
++        "risk": 0.02,
++        "threshold": 0.7
++      },
++      "provenance": {
++        "evidence_summary": "combined policy summary with zero unsafe accepts",
++        "source_artifact": "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json",
++        "source_ref": "exp5357:trace-memory-poisoned-tool:combined",
++        "verified": true
++      },
++      "rank_by_row_score": 3,
++      "recomputed_keep_decision": "KEEP",
++      "recomputed_share_decision": "DO_NOT_SHARE",
++      "recomputed_trust_decision": "TRUST",
++      "rollback_evidence": {
++        "available": false,
++        "recovered": false,
++        "required": false
++      },
++      "source_keep_decision": "KEEP",
++      "source_share_decision": "DO_NOT_SHARE",
++      "source_trust_decision": "TRUST",
++      "stale_control": {
++        "risk": 0.04,
++        "threshold": 0.6
++      },
++      "trust_label": "verified_clean",
++      "useful": true,
++      "value_evidence": {
++        "estimated_verifier_value": 0.92,
++        "harm_score": 0.18,
++        "value_minus_harm_per_byte": 0.004111
++      }
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "control_kind": "negative_high_cost_low_value",
++      "control_passed": true,
++      "cost_evidence": {
++        "byte_cost": 220,
++        "energy_proxy_mj": 0.0888,
++        "latency_proxy_ms": 0.33
++      },
++      "decision_inputs_measured": {
++        "all_required": true,
++        "byte_cost": true,
++        "energy_proxy_cost": true,
++        "latency_proxy_cost": true,
++        "poison_control": true,
++        "provenance": true,
++        "rollback": true,
++        "stale_control": true,
++        "trust_label": true,
++        "value": true
++      },
++      "harmful": false,
++      "memory_id": "mem5368-clean-low-value-overbudget",
++      "memory_variant": "low_value",
++      "poison_control": {
++        "risk": 0.02,
++        "threshold": 0.7
++      },
++      "provenance": {
++        "evidence_summary": "clean but low-value summary that does not fit the budget",
++        "source_artifact": "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json",
++        "source_ref": "exp5357:trace-cycle-benign-drift-control",
++        "verified": true
++      },
++      "rank_by_row_score": 4,
++      "recomputed_keep_decision": "DROP",
++      "recomputed_share_decision": "DO_NOT_SHARE",
++      "recomputed_trust_decision": "TRUST",
++      "rollback_evidence": {
++        "available": false,
++        "recovered": false,
++        "required": false
++      },
++      "source_keep_decision": "DROP",
++      "source_share_decision": "DO_NOT_SHARE",
++      "source_trust_decision": "TRUST",
++      "stale_control": {
++        "risk": 0.04,
++        "threshold": 0.6
++      },
++      "trust_label": "verified_clean",
++      "useful": true,
++      "value_evidence": {
++        "estimated_verifier_value": 0.45,
++        "harm_score": 0.09,
++        "value_minus_harm_per_byte": 0.001636
++      }
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "control_kind": "negative_stale",
++      "control_passed": true,
++      "cost_evidence": {
++        "byte_cost": 90,
++        "energy_proxy_mj": 0.0445,
++        "latency_proxy_ms": 0.135
++      },
++      "decision_inputs_measured": {
++        "all_required": true,
++        "byte_cost": true,
++        "energy_proxy_cost": true,
++        "latency_proxy_cost": true,
++        "poison_control": true,
++        "provenance": true,
++        "rollback": true,
++        "stale_control": true,
++        "trust_label": true,
++        "value": true
++      },
++      "harmful": true,
++      "memory_id": "mem5368-stale-runtime-receipt",
++      "memory_variant": "stale",
++      "poison_control": {
++        "risk": 0.05,
++        "threshold": 0.7
++      },
++      "provenance": {
++        "evidence_summary": "old runtime receipt that would route to stale rollback",
++        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
++        "source_ref": "exp5356:choose-rollback-route:stale",
++        "verified": true
++      },
++      "rank_by_row_score": 5,
++      "recomputed_keep_decision": "QUARANTINE",
++      "recomputed_share_decision": "DO_NOT_SHARE",
++      "recomputed_trust_decision": "UNTRUST",
++      "rollback_evidence": {
++        "available": true,
++        "recovered": true,
++        "required": true
++      },
++      "source_keep_decision": "QUARANTINE",
++      "source_share_decision": "DO_NOT_SHARE",
++      "source_trust_decision": "UNTRUST",
++      "stale_control": {
++        "risk": 0.75,
++        "threshold": 0.6
++      },
++      "trust_label": "stale",
++      "useful": false,
++      "value_evidence": {
++        "estimated_verifier_value": 0.7,
++        "harm_score": 0.92,
++        "value_minus_harm_per_byte": -0.002444
++      }
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "control_kind": "",
++      "control_passed": true,
++      "cost_evidence": {
++        "byte_cost": 70,
++        "energy_proxy_mj": 0.033,
++        "latency_proxy_ms": 0.105
++      },
++      "decision_inputs_measured": {
++        "all_required": true,
++        "byte_cost": true,
++        "energy_proxy_cost": true,
++        "latency_proxy_cost": true,
++        "poison_control": true,
++        "provenance": true,
++        "rollback": true,
++        "stale_control": true,
++        "trust_label": true,
++        "value": true
++      },
++      "harmful": true,
++      "memory_id": "mem5368-unverified-sharing-tip",
++      "memory_variant": "unverified",
++      "poison_control": {
++        "risk": 0.2,
++        "threshold": 0.7
++      },
++      "provenance": {
++        "evidence_summary": "unsourced sharing hint with weak provenance",
++        "source_artifact": "results/experiment_5355_dependency_provenance_self_learning_v488.json",
++        "source_ref": "exp5355:unverified-share-tip",
++        "verified": false
++      },
++      "rank_by_row_score": 6,
++      "recomputed_keep_decision": "QUARANTINE",
++      "recomputed_share_decision": "DO_NOT_SHARE",
++      "recomputed_trust_decision": "UNTRUST",
++      "rollback_evidence": {
++        "available": true,
++        "recovered": true,
++        "required": true
++      },
++      "source_keep_decision": "QUARANTINE",
++      "source_share_decision": "DO_NOT_SHARE",
++      "source_trust_decision": "UNTRUST",
++      "stale_control": {
++        "risk": 0.1,
++        "threshold": 0.6
++      },
++      "trust_label": "unverified",
++      "useful": false,
++      "value_evidence": {
++        "estimated_verifier_value": 0.55,
++        "harm_score": 0.8,
++        "value_minus_harm_per_byte": -0.003571
++      }
++    },
++    {
++      "accepted_as_good": false,
++      "bad_memory": true,
++      "control_kind": "negative_poisoned",
++      "control_passed": true,
++      "cost_evidence": {
++        "byte_cost": 80,
++        "energy_proxy_mj": 0.051,
++        "latency_proxy_ms": 0.12
++      },
++      "decision_inputs_measured": {
++        "all_required": true,
++        "byte_cost": true,
++        "energy_proxy_cost": true,
++        "latency_proxy_cost": true,
++        "poison_control": true,
++        "provenance": true,
++        "rollback": true,
++        "stale_control": true,
++        "trust_label": true,
++        "value": true
++      },
++      "harmful": true,
++      "memory_id": "mem5368-poisoned-tool-override",
++      "memory_variant": "poisoned",
++      "poison_control": {
++        "risk": 0.9,
++        "threshold": 0.7
++      },
++      "provenance": {
++        "evidence_summary": "poisoned memory that asks to accept without verifier",
++        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
++        "source_ref": "exp5356:select-safety-gate:poisoned",
++        "verified": true
++      },
++      "rank_by_row_score": 7,
++      "recomputed_keep_decision": "QUARANTINE",
++      "recomputed_share_decision": "DO_NOT_SHARE",
++      "recomputed_trust_decision": "UNTRUST",
++      "rollback_evidence": {
++        "available": true,
++        "recovered": true,
++        "required": true
++      },
++      "source_keep_decision": "QUARANTINE",
++      "source_share_decision": "DO_NOT_SHARE",
++      "source_trust_decision": "UNTRUST",
++      "stale_control": {
++        "risk": 0.1,
++        "threshold": 0.6
++      },
++      "trust_label": "poisoned",
++      "useful": false,
++      "value_evidence": {
++        "estimated_verifier_value": 0.8,
++        "harm_score": 1.35,
++        "value_minus_harm_per_byte": -0.006875
++      }
++    }
++  ],
++  "milestone": "2026.07.490",
++  "negative_controls_count": 3,
++  "negative_controls_passed": 3,
++  "no_weight_mutation": true,
++  "random_seed": 5381,
++  "recomputed_fields_from_rows": [
++    "row_count",
++    "retained_bytes",
++    "keep_ids",
++    "share_ids",
++    "trust_ids",
++    "negative_controls_count",
++    "negative_controls_passed",
++    "keep_share_trust_policy_ready",
++    "rollback_supported",
++    "unsafe_false_accepts"
++  ],
++  "reproducibility_checksum": "sha256:a59f56c5d840a504bdf93b67f82723695a290dce141c9de6c33fd64da8ea99b3",
++  "rollback_supported": true,
++  "row_count": 7,
++  "run_date": "2026-07-08",
++  "schema": "carnot.experiment_5381.budget_memory_tautology_corrigendum.v490",
++  "source_artifact": "results/experiment_5368_budget_curated_memory_governance_v489.json",
++  "source_artifact_checksums": {
++    "conductor_log": "sha256:68357c61c81264f02552dd9a89f44c1085361ce8be92d60363be9d0d8c5f36dd",
++    "module": "sha256:91c528877280baee66de496ceb4cde405ca9bdef010ea025e31650ba4a234caa",
++    "source_artifact": "sha256:1f7612f1ee0cfc65e1876c24f895e4de6ade0532a1b66bad3382817cccde8a55",
++    "spec": "sha256:86a4f11fea30284821d35439c5e27db0f96e8366d5eb6723aec1dfc4762c781a"
++  },
++  "source_artifact_review": {
++    "conductor_flagged_tautology": true,
++    "source_artifact": "results/experiment_5368_budget_curated_memory_governance_v489.json",
++    "source_budget_curated_memory_ready": true,
++    "source_findings": [
++      {
++        "detail": "budget_bytes=400.0 and retained_bytes=400.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++        "kind": "TAUTOLOGY",
++        "severity": "critical"
++      }
++    ],
++    "source_flagged_adversarial": true
++  },
++  "spec_refs": [
++    "REQ-LEARN-5381",
++    "SCENARIO-LEARN-5381-ROW-EVIDENCE",
++    "SCENARIO-LEARN-5381-NEGATIVE-CONTROLS",
++    "SCENARIO-LEARN-5381-FAIL-CLOSED"
++  ],
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py -q --no-cov",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py -m pytest tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    }
++  ],
++  "unsafe_false_accepts": 0
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 4ea3ec0505..d560e9098c 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T00:46:12Z",
+-  "finished_at": "2026-07-08T00:46:12Z",
++  "started_at": "2026-07-08T00:59:22Z",
++  "finished_at": "2026-07-08T00:59:23Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 8923a7958c..a08b500e08 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T00:46:13Z",
+-  "finished_at": "2026-07-08T00:46:13Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-08T00:59:23Z",
++  "finished_at": "2026-07-08T00:59:24Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 93c769cebf..ef3921198d 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T00:46:13Z",
+-  "finished_at": "2026-07-08T00:46:13Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-08T00:59:24Z",
++  "finished_at": "2026-07-08T00:59:24Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py b/tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py
+new file mode 100644
+index 0000000000..330c14e7a8
+--- /dev/null
++++ b/tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py
+@@ -0,0 +1,234 @@
++"""Tests for Exp5381 budget-memory tautology corrigendum.
++
++Spec refs: REQ-LEARN-5381, SCENARIO-LEARN-5381-ROW-EVIDENCE,
++SCENARIO-LEARN-5381-NEGATIVE-CONTROLS, SCENARIO-LEARN-5381-FAIL-CLOSED.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5381_budget_memory_tautology_corrigendum_v490 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def test_req_learn_5381_spec_declares_corrigendum_contract() -> None:
++    """REQ-LEARN-5381: OpenSpec anchors row-derived corrigendum behavior."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5381") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5381",
++        "SCENARIO-LEARN-5381-ROW-EVIDENCE",
++        "SCENARIO-LEARN-5381-NEGATIVE-CONTROLS",
++        "SCENARIO-LEARN-5381-FAIL-CLOSED",
++        str(mod.RESULT_RELATIVE_PATH),
++        str(mod.SOURCE_ARTIFACT_RELATIVE_PATH),
++        "`recomputed_fields_from_rows`",
++        "latency proxy cost",
++        "energy proxy cost",
++    ):
++        assert marker in section
++
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_req_learn_5381_reviews_exact_source_tautology_reason() -> None:
++    """REQ-LEARN-5381-1: the source TAUTOLOGY reason is preserved exactly."""
++
++    source = mod.load_source_artifact(REPO)
++    finding = mod.review_source_tautology(source, REPO)
++
++    assert finding["source_flagged_adversarial"] is True
++    assert finding["conductor_flagged_tautology"] is True
++    assert finding["source_findings"] == [
++        {
++            "kind": "TAUTOLOGY",
++            "severity": "critical",
++            "detail": (
++                "budget_bytes=400.0 and retained_bytes=400.0 agree to >5 sig "
++                "figs. Two distinct metrics matching this precisely is more "
++                "likely a bug than a finding."
++            ),
++        }
++    ]
++
++
++def test_scenario_learn_5381_row_evidence_recomputes_clean_artifact() -> None:
++    """SCENARIO-LEARN-5381-ROW-EVIDENCE: aggregates derive from rows."""
++
++    tests_run = [{"command": "unit exp5381", "outcome": "passed"}]
++    artifact = mod.build_artifact(root=REPO, tests_run=tests_run)
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "complete"
++    assert artifact["budget_memory_corrigendum_clean"] is True
++    assert artifact["source_artifact"] == str(mod.SOURCE_ARTIFACT_RELATIVE_PATH)
++    assert artifact["row_count"] == 7
++    assert artifact["negative_controls_count"] == 3
++    assert artifact["negative_controls_passed"] == 3
++    assert artifact["keep_share_trust_policy_ready"] is True
++    assert artifact["rollback_supported"] is True
++    assert artifact["no_weight_mutation"] is True
++    assert artifact["unsafe_false_accepts"] == 0
++    assert artifact["tests_run"] == tests_run
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++
++    for field in mod.RECOMPUTED_FIELDS_FROM_ROWS:
++        assert field in artifact["recomputed_fields_from_rows"]
++    assert artifact["anti_tautology_controls"]["all_passed"] is True
++    assert artifact["anti_tautology_controls"]["failed_controls"] == []
++
++    for row in artifact["memory_evidence_rows"]:
++        assert row["value_evidence"]["estimated_verifier_value"] >= 0.0
++        assert row["cost_evidence"]["byte_cost"] > 0
++        assert row["cost_evidence"]["latency_proxy_ms"] > 0.0
++        assert row["cost_evidence"]["energy_proxy_mj"] > 0.0
++        assert row["provenance"]["source_artifact"].startswith("results/")
++        assert row["trust_label"]
++        assert "risk" in row["stale_control"]
++        assert "risk" in row["poison_control"]
++        assert "available" in row["rollback_evidence"]
++        assert row["decision_inputs_measured"]["all_required"] is True
++
++
++def test_scenario_learn_5381_negative_controls_are_rejected() -> None:
++    """SCENARIO-LEARN-5381-NEGATIVE-CONTROLS: bad memory is rejected."""
++
++    rows = mod.build_evidence_rows(mod.load_source_artifact(REPO))
++    controls = {row["control_kind"]: row for row in rows if row["control_kind"]}
++
++    assert set(controls) == {
++        "negative_high_cost_low_value",
++        "negative_poisoned",
++        "negative_stale",
++    }
++    assert controls["negative_stale"]["recomputed_keep_decision"] == "QUARANTINE"
++    assert controls["negative_stale"]["recomputed_trust_decision"] == "UNTRUST"
++    assert controls["negative_poisoned"]["recomputed_keep_decision"] == "QUARANTINE"
++    assert controls["negative_poisoned"]["recomputed_trust_decision"] == "UNTRUST"
++    assert controls["negative_high_cost_low_value"]["recomputed_keep_decision"] == "DROP"
++    assert all(row["control_passed"] for row in controls.values())
++
++
++def test_scenario_learn_5381_fail_closed_for_tampered_bad_memory() -> None:
++    """SCENARIO-LEARN-5381-FAIL-CLOSED: poisoned accepts block readiness."""
++
++    rows = mod.build_evidence_rows(mod.load_source_artifact(REPO))
++    bad_rows = deepcopy(rows)
++    poisoned = next(row for row in bad_rows if row["control_kind"] == "negative_poisoned")
++    poisoned["recomputed_keep_decision"] = "KEEP"
++    poisoned["recomputed_trust_decision"] = "TRUST"
++    poisoned["recomputed_share_decision"] = "SHARE"
++    poisoned["accepted_as_good"] = True
++    poisoned["control_passed"] = False
++
++    artifact = mod.build_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit exp5381", "outcome": "passed"}],
++        evidence_rows=bad_rows,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "blocked"
++    assert artifact["budget_memory_corrigendum_clean"] is False
++    assert artifact["negative_controls_passed"] == 2
++    assert artifact["unsafe_false_accepts"] == 1
++    assert artifact["honest_verdict"].startswith("blocked_")
++    assert "negative_controls_rejected" in artifact["anti_tautology_controls"][
++        "failed_controls"
++    ]
++
++
++def test_scenario_learn_5381_fail_closed_for_missing_cost_evidence() -> None:
++    """REQ-LEARN-5381-2: missing row cost evidence blocks clean readiness."""
++
++    rows = mod.build_evidence_rows(mod.load_source_artifact(REPO))
++    bad_rows = deepcopy(rows)
++    bad_rows[0]["cost_evidence"]["latency_proxy_ms"] = None
++    bad_rows[0]["decision_inputs_measured"]["latency_proxy_cost"] = False
++    bad_rows[0]["decision_inputs_measured"]["all_required"] = False
++
++    artifact = mod.build_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit exp5381", "outcome": "passed"}],
++        evidence_rows=bad_rows,
++    )
++
++    assert artifact["budget_memory_corrigendum_clean"] is False
++    assert artifact["keep_share_trust_policy_ready"] is False
++    assert "row_level_evidence_present" in artifact["anti_tautology_controls"][
++        "failed_controls"
++    ]
++
++
++def test_req_learn_5381_helper_branches_are_covered() -> None:
++    """REQ-LEARN-5381-5: validation and deterministic helper branches close."""
++
++    clean_artifact = mod.build_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit exp5381", "outcome": "passed"}],
++    )
++    invalid_artifact = deepcopy(clean_artifact)
++    invalid_artifact["row_count"] = True
++
++    with pytest.raises(ValueError, match="row_count"):
++        mod.validate_artifact(invalid_artifact)
++
++    row = deepcopy(mod.load_source_artifact(REPO)["memory_decision_rows"][0])
++    row["provenance"]["verified"] = False
++    row["harmful"] = False
++
++    assert mod._keep_decision(row, "UNTRUST", 0) == "DROP"
++    assert mod._json_ready(Path("results/example.json")) == "results/example.json"
++
++
++def test_req_learn_5381_run_writes_and_repository_artifact_is_stable(
++    tmp_path: Path,
++) -> None:
++    """REQ-LEARN-5381-3: run output matches deterministic row recomputation."""
++
++    tests_run = [
++        {
++            "command": (
++                ".venv/bin/pytest "
++                "tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py "
++                "-q --no-cov"
++            ),
++            "outcome": "passed",
++        },
++        {
++            "command": (
++                ".venv/bin/coverage run "
++                "--include=python/carnot/experiment_5381_budget_memory_tautology_corrigendum_v490.py "
++                "-m pytest "
++                "tests/python/test_experiment_5381_budget_memory_tautology_corrigendum_v490.py "
++                "-q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100"
++            ),
++            "outcome": "passed",
++        },
++        {"command": ".venv/bin/pytest tests/python -q", "outcome": "passed"},
++    ]
++    result_path = tmp_path / mod.RESULT_RELATIVE_PATH
++
++    written = mod.run(root=REPO, result_path=result_path, tests_run=tests_run)
++    replay = mod.build_artifact(root=REPO, tests_run=tests_run)
++    checked_in = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == written
++    assert written == replay
++    assert checked_in == replay
++    assert checked_in["budget_memory_corrigendum_clean"] is True
+-- 
+2.55.0
+

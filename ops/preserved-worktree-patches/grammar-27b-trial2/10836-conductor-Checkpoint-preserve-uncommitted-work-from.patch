@@ -1,0 +1,45 @@
+From 1c860578bac92ec02adfb8e14b4535f18f2a1fe3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 23:12:55 -0400
+Subject: [PATCH 10836/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 3 +++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 70d33c6445..e2a6337626 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-09-03T03:09:43Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-09-03T03:12:45Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9515191440..715a47f085 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17114,3 +17114,6 @@ code |
+ | 2026-09-03 02:06 UTC | Exact relation source and tuple qualification shar | OK | 94 passed, 1 warning in 8.22s |
+ | 2026-09-03 02:39 UTC | Exact relation ASP and isomorphic qualification sh | OK | 100 passed, 1 warning in 17.34s |
+ | 2026-09-03 03:07 UTC | Independent qualified relation event-bank merge | OK | 99 passed, 1 warning in 12.73s |
++| 2026-09-03 03:10 UTC | Isomorphic prospective relation learning stream | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp6915-qualified-relat |
++| 2026-09-03 03:12 UTC | Bounded relation-memory continuous self-learning c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6916-isomorphic-prospective-relation-stre |
++| 2026-09-03 03:12 UTC | Independent relation-learning safety and support a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6917-bounded-relation-memory-continuous-l |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7d49160da2..fe569a35d9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 5, "phase": "iteration_start", "started_at": "2026-09-03T03:09:43Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 6, "phase": "iteration_start", "started_at": "2026-09-03T03:12:45Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

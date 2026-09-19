@@ -1,0 +1,80 @@
+From 04e4313f1ab9b71b791529d9419055cd8b7e98bb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 10:28:11 -0400
+Subject: [PATCH 04828/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                    | 2 +-
+ ops/conductor-log.md                                            | 1 +
+ ops/conductor-state.json                                        | 2 +-
+ ops/supervisor-alerts.json                                      | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0043.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0044.json  | 1 +
+ .../distributional_energy_verifier_musr_checkpoints/q0045.json  | 1 +
+ 7 files changed, 7 insertions(+), 2 deletions(-)
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0043.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0044.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0045.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f52690bf87..ebf93decaf 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 133, "phase": "iteration_start", "last_beat": "2026-06-29T14:20:05Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 134, "phase": "iteration_start", "last_beat": "2026-06-29T14:28:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1b2c3dd770..5f88f3a771 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9581,3 +9581,4 @@ The contro |
+ | 2026-06-29 13:39 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; LEVEL-BANK ATTE | OK | 94 passed, 1 warning in 10.35s |
+ | 2026-06-29 13:57 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 91 passed, 1 warning in 12.47s |
+ | 2026-06-29 14:18 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 87 passed, 1 warning in 11.54s |
++| 2026-06-29 14:26 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERAB | OK | cache hit: 87 passed, 1 warning in 11.54s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e2572993b8..8a76466c82 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 133, "phase": "iteration_start", "started_at": "2026-06-29T14:20:05Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 134, "phase": "iteration_start", "started_at": "2026-06-29T14:28:08Z"}
+\ No newline at end of file
+diff --git a/ops/supervisor-alerts.json b/ops/supervisor-alerts.json
+index 1b1708204f..d07eb59863 100644
+--- a/ops/supervisor-alerts.json
++++ b/ops/supervisor-alerts.json
+@@ -58,3 +58,4 @@
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-27T17:18:51Z", "task_id": "exp4875-a4", "deliverable": "results/experiment_4875_heldout_first_win_readiness.json", "exact_zero_deltas": [{"key": "heldout_first_win_delta_vs_baseline", "value": 0.0}, {"key": "heldout_first_win_delta_vs_prior_best", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4875-a4 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-29T00:06:15Z", "task_id": "exp4950-a4", "deliverable": "results/experiment_4950_heldout_first_win_readiness.json", "exact_zero_deltas": [{"key": "heldout_first_win_delta_vs_baseline", "value": 0.0}, {"key": "operator_decision_number.delta_vs_baseline", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4950-a4 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-29T07:44:17Z", "task_id": "exp4961-a4", "deliverable": "results/experiment_4961_heldout_first_win_readiness.json", "exact_zero_deltas": [{"key": "heldout_first_win_delta_vs_baseline", "value": 0.0}, {"key": "operator_decision_number.delta_vs_baseline", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4961-a4 reports parity-test outputs that are bit-identical or exactly zero across 2 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
++{"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-06-29T14:26:08Z", "task_id": "exp4972-a4", "deliverable": "results/experiment_4972_heldout_first_win_readiness.json", "exact_zero_deltas": [{"key": "first_win_delta_vs_baseline", "value": 0.0}, {"key": "heldout_first_win_delta_vs_baseline", "value": 0.0}, {"key": "operator_decision_number.delta_vs_baseline", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp4972-a4 reports parity-test outputs that are bit-identical or exactly zero across 3 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0043.json b/results/distributional_energy_verifier_musr_checkpoints/q0043.json
+new file mode 100644
+index 0000000000..3b1e8a0685
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0043.json
+@@ -0,0 +1 @@
++{"q": 43, "gold": "Kimberly", "n_choices": 2, "sc_answer": "Kimberly", "energy_answer": "Kimberly", "energy_pure_answer": "Kimberly", "judge_answer": "Kimberly", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Kimberly", "Kimberly", "Kimberly", "Lillian", "Kimberly", "Kimberly", "Kimberly", "Kimberly"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0044.json b/results/distributional_energy_verifier_musr_checkpoints/q0044.json
+new file mode 100644
+index 0000000000..82e190748c
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0044.json
+@@ -0,0 +1 @@
++{"q": 44, "gold": "Peyton", "n_choices": 2, "sc_answer": "Isolde", "energy_answer": "Isolde", "energy_pure_answer": "Isolde", "judge_answer": "Isolde", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 7, "answers": [null, "Isolde", "Isolde", "Peyton", "Isolde", "Isolde", "Isolde", "Isolde"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0045.json b/results/distributional_energy_verifier_musr_checkpoints/q0045.json
+new file mode 100644
+index 0000000000..91672be969
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0045.json
+@@ -0,0 +1 @@
++{"q": 45, "gold": "Isolde", "n_choices": 2, "sc_answer": "Isolde", "energy_answer": "Isolde", "energy_pure_answer": "Isolde", "judge_answer": "Isolde", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Isolde", "Isolde", "Isolde", "Peyton", "Isolde", "Isolde", "Isolde", "Isolde"], "energy_abstained": false}
+-- 
+2.55.0
+

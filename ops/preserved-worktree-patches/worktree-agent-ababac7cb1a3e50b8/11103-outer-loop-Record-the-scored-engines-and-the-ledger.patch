@@ -1,0 +1,119 @@
+From 1c351642a12566e1aa37e33875dae68f8b27e541 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 18:03:42 -0400
+Subject: [PATCH 11103/11362] [outer-loop] Record the scored engines and the
+ ledger's silent under-read
+
+Two results from the subagent's four-axis review, recorded on main so they
+survive independently of the unmerged worktree branch that produced them.
+
+The four post-fix r11l engines are scored against 119 held-out transitions.
+Engine 1, which holds 52 literal coordinate strings, predicts the next frame
+exactly on 65 percent of transitions it never saw. So 'lookup table'
+described its shape correctly and implied a generalization claim the numbers
+refute. The best engine is the PRE-fix one, which agrees with the earlier
+finding that the context repair moved the bottleneck not at all.
+
+The supervisor refinement ledger was reading 3 of 13 run files. Its reader
+could not parse the eval's per_game shape and skipped those files silently
+while still producing a well-formed ledger reporting insufficient_evidence.
+stagnations_unredirected_total read 0 for eight days; it is 64. CLAUDE.md
+names that count as the specification for a new arm, so the signal that was
+supposed to drive arm growth was the one being dropped.
+
+Verified before recording rather than relayed: branch commits present, 34
+tests green with PYTHONPATH pinned to the worktree, and one mutation proof
+reproduced by hand with a byte-identical restore.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 72 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index 2187d91efd..3a4428abcd 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -46,6 +46,78 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
+ verifier already recognizes by pattern. Whether to make that a planner-prompt change
+ is the operator's call.
+ 
++### 22:05Z — the four post-fix engines are SCORED, and the ledger was reading 3 of 13 files
++
++A subagent completed a four-axis review of the live agent. Its work sits on the branch
++`worktree-agent-afd77ea2887b9da58` (commits `47689d162f`, `8013ea97e7`) and is NOT merged. The
++two results below are recorded here so they survive independently of that branch.
++
++**The engines are no longer unscored.** Every archived r11l engine was scored against 119 fresh
++level-0 random-walk transitions it had never seen (`collect_transitions("r11l", n=120, seed=0)`),
++read-only over `results/arc_e3/r11l/attempts/`.
++
++| engine | bytes | exact_acc | cell_recall |
++|---|---|---|---|
++| 2026-09-02 23:28, PRE-fix | 7588 | 0.672 | 0.789 |
++| 2026-09-04 02:05, post-fix engine 1 (the 52 literal deltas) | 5046 | 0.647 | 0.699 |
++| 2026-09-04 06:24, post-fix engine 2 (the RLE decoder) | 3193 | 0.345 | 0.362 |
++| 2026-09-04 07:12, post-fix engine 3 | 6428 | 0.639 | 0.684 |
++| 2026-09-04 07:49, post-fix engine 4 | 1741 | 0.008 | 0.017 |
++| 2026-09-03 tool-loop engines (7) | 151-2525 | 0.0 to 0.244 | 0.0 to 0.310 |
++
++Two readings, kept separate.
++
++First: **a lookup table is not a null model.** Engine 1 holds 52 literal coordinate strings and
++still predicts the next frame exactly on 65 percent of transitions it never saw. Calling these
++engines "lookup tables" described their SHAPE correctly and implied a generalization claim that
++the numbers refute.
++
++Second: **the best engine is the PRE-fix one.** The context-size repair did not improve engine
++quality. That agrees with the earlier finding that the repair moved the bottleneck not at all,
++now measured on the engine side as well as the channel side. No engine reaches the 1.0 the
++planning gate wants.
++
++Limits, stated: one game, one seed, 119 transitions. Engines 3 and 4 may be level-1 engines
++scored out of their distribution. These numbers are **not** in a `results/` artifact — writing
++one would have meant a subagent writing into the evidence tree. Treat them as unrecorded science
++until an experiment carries them. The regeneration recipe is
++`WorldModelVerifier(trans).score(engine)` per attempt file.
++
++**The refinement ledger was silently reading 3 of 13 run files.** Its reader could not parse the
++eval's `per_game` shape, so it skipped every file in that shape and still produced a
++well-formed ledger. Before and after, from the committed JSON on each side:
++
++| | main | branch |
++|---|---|---|
++| files read | 3 | 13 |
++| receipts | 9 | 14 |
++| redirects | 6 | 31 |
++| games | ar25, tu93 | ar25, cd82, r11l, tu93 |
++| `stagnations_unredirected_total` | 0 | 64 |
++| status | `insufficient_evidence` | `recommendation_available` |
++
++The last two rows are the point. `stagnations_unredirected_total` is the count of stalls where
++every arm had fired and the agent was still stuck, and CLAUDE.md's Generalization-Testing Floor
++names exactly that as the written specification for a NEW arm. It read 0 for eight days. It is
++64. The ledger now carries a concrete new-arm specification.
++
++This is the healthy-but-wrong shape the QA-layer discipline is named for: a guard that produced
++clean, plausible output while ignoring 10 of 13 inputs, and reported `insufficient_evidence`
++rather than `could_not_read`.
++
++**Verified independently before recording**, not taken on the subagent's word: the branch
++commits exist and the tree is clean; its 34 new tests pass in its worktree with `PYTHONPATH`
++pinned to that worktree; and one mutation proof was reproduced by hand — deleting the heartbeat
++exclusion in `scripts/eval_run_consumer_field_lint.py` turned
++`test_a_heartbeat_key_does_not_count_as_observed` RED on a real assertion, and a byte-identical
++restore (`cmp`) returned it GREEN.
++
++**OPERATOR DECISION 3 (new).** Whether to merge that branch to main. It is 2,122 insertions
++across 16 files and touches the live agent and the eval script. It is spec-anchored
++(REQ-ARC-WMTE-7010 through 7013), tested, and mutation-proven, but the subagent also attributed
++four pre-existing test failures it did not fix. Unmerged, none of the above reaches the live
++agent.
++
+ ### 21:25Z — r11l engine-scoring eval IN FLIGHT, plus two corrections
+ 
+ **In flight.** A post-fix ARC eval is running, operator-authorized 2026-09-04 21:23Z.
+-- 
+2.55.0
+

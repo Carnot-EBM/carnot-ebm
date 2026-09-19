@@ -1,0 +1,44 @@
+From c4476901fd8ff7ad58374522696f89c6f277934f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 04:11:59 -0400
+Subject: [PATCH 00591/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 962847bca2..84a28c1f83 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 22, "phase": "iteration_start", "last_beat": "2026-06-05T08:09:45Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-06-05T08:11:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1f67903261..e11f8ac6e6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7843,3 +7843,5 @@ ERROR: {
+ | 2026-06-05 08:07 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
+ | 2026-06-05 08:07 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.55s |
+ | 2026-06-05 08:09 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
++| 2026-06-05 08:09 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.34s |
++| 2026-06-05 08:11 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 503552b8bc..1bce76b2f2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 22, "phase": "iteration_start", "started_at": "2026-06-05T08:09:45Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 23, "phase": "iteration_start", "started_at": "2026-06-05T08:11:58Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

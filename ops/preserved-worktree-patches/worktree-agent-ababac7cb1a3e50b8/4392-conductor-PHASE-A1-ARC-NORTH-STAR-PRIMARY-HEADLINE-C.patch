@@ -1,0 +1,1989 @@
+From 2c91f44a4b09eb8dd760602f1af5a6d5e91a4e7f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 01:16:30 -0400
+Subject: [PATCH 04392/11362] [conductor] PHASE A1 (ARC NORTH STAR; PRIMARY;
+ HEADLINE) -- CANDIDATE-GENERATION COVERAGE DIAGNOSTIC. Instrument the LIVE
+ generic first-contact proposer (StepwiseExplorer / OfflineSolver proposal
+ step) and, for games whose winning L1 prefix is offline-banked as GROUND
+ TRUTH (proposer BLIND to it), measure whether the proposer ever EMITS the
+ winning prefix within the standard action budget. Decompose every miss into
+ COVERED / ENUMERATED-BUT-LOST / NEVER-ENUMERATED. Positive control: a game
+ WITH an adapter must be COVERED. This is the named forward focus; a
+ DIAGNOSTIC, not an 18th lever.
+
+Automated research step by research conductor.
+Task ID: exp4851-a1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md                         |  12 +-
+ .../arc-world-model-trust-energy/spec.md      |  79 ++
+ ops/changelog.md                              |  11 +
+ ops/dogfood-memory.json                       |   2 +-
+ ops/status.md                                 |  15 +-
+ ...ent_4851_generation_coverage_diagnostic.py | 887 ++++++++++++++++++
+ ...t_4851_generation_coverage_diagnostic.json | 236 +++++
+ .../cd82.json                                 |  11 +
+ .../cn04.json                                 |  11 +
+ .../lp85.json                                 |  11 +
+ .../ls20.json                                 |  11 +
+ .../m0r0.json                                 |  11 +
+ .../r11l.json                                 |  11 +
+ .../sk48.json                                 |  11 +
+ .../sp80.json                                 |  11 +
+ .../su15.json                                 |  11 +
+ .../wa30.json                                 |  11 +
+ ...ent_4851_generation_coverage_diagnostic.py | 449 +++++++++
+ 18 files changed, 1798 insertions(+), 3 deletions(-)
+ create mode 100644 python/carnot/experiment_4851_generation_coverage_diagnostic.py
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/cd82.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/cn04.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/lp85.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/ls20.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/m0r0.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/r11l.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/sk48.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/sp80.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/su15.json
+ create mode 100644 results/experiment_4851_generation_coverage_diagnostic_checkpoints/wa30.json
+ create mode 100644 tests/python/test_experiment_4851_generation_coverage_diagnostic.py
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index c6e22cf7dc..dbe11ba303 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1,5 +1,15 @@
+ # Carnot — Traceability Matrix
+ 
++**Operational Note:** 2026-06-27 Exp 4851 generation-coverage diagnostic
++regression fix hardened `artifact_schema_errors()` for malformed
++`per_game_coverage` rows under `REQ-ARC-WMTE-4851`. The validator now reports
++`per_game_coverage.<game>` instead of crashing during dominant-bucket
++recomputation. Focused tests:
++`tests/python/test_experiment_4851_generation_coverage_diagnostic.py`
++(`8 passed`); scoped Coverage.py for the Exp 4851 module is 100% (`262`
++statements, `0` missing); focused Ruff check/format passed. The full
++spec-coverage audit is still blocked by pre-existing unreferenced legacy tests.
++
+ **Operational Note:** 2026-06-26 Exp 4750 structural-alignment detector
+ regression fix added the missing multi-exemplar L1-completion fallback API and
+ artifact fields for `REQ-ARC-WMTE-4712`, with focused tests in
+@@ -17,7 +27,7 @@ and the `scripts/__init__.py` package hook, without modifying
+ The full spec-coverage audit is still blocked by pre-existing unreferenced
+ legacy tests.
+ 
+-**Last Updated:** 2026-06-26 (Exp 4750 structural-alignment detector fallback regression fix; REQ-ARC-WMTE-4712 implementation/test traceability reconciled)
++**Last Updated:** 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation regression fix; REQ-ARC-WMTE-4851 implementation/test traceability reconciled)
+ 
+ **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
+ 
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 2026e8d436..0afb75b930 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -10705,3 +10705,82 @@ When Experiment 4845 audits that artifact
+ Then the audit records the corresponding failed check, emits a terminal
+ `complete_a1_perception_probe_non_test_*` verdict, and sets
+ `a1_genuinely_exercised=false`.
++
++### REQ-ARC-WMTE-4851: L1 First-Contact Generation Coverage Diagnostic
++
++Experiment 4851 SHALL measure the L1-first-contact candidate-generation wall as
++a Phase-Prototype diagnostic, not as another solve lever. The workflow SHALL use
++the live generic first-contact proposer path (`StepwiseExplorer._candidates`,
++with optional `OfflineSolver` adaptered proposal path only for the positive
++control) from a cold offline reset, shall keep the proposer blind to banked
++answers, and shall load banked L1 winning prefixes only after proposal
++enumeration for executable-oracle classification. It SHALL not inject a
++`GameAdapter` into the held-out generic proposer measurement.
++
++The diagnostic SHALL first verify that `arc_solver_kit.offline_arcade()` is
++available, that no LLM generator is required unless the configured proposer
++actually invokes one, and that at least three games have banked L1 ground truth
++present in both `ops/arc_solve_registry.yaml` and the offline environment. A
++missing resource SHALL produce a terminal `blocked_*` artifact rather than a
++fabricated coverage bucket.
++
++For each measured held-out game the workflow SHALL run the cold live proposer
++under a bounded action budget, capture each enumerated candidate pool, and
++classify the game into exactly one of `COVERED`, `ENUMERATED_BUT_LOST`, or
++`NEVER_ENUMERATED`. `COVERED` means the live run reaches an L1 win within
++budget. `ENUMERATED_BUT_LOST` means the banked winning prefix was proposed at
++each corresponding prefix state but the run did not reach the win within the
++budget. `NEVER_ENUMERATED` means at least one winning-prefix action primitive
++was absent from the recorded proposal pools at the corresponding prefix state.
++
++The workflow SHALL include a positive control on an adaptered game such as
++`tu93`; the positive control must classify as `COVERED` or the diagnostic is
++retired as a harness artifact. A passing diagnostic SHALL report a named
++dominant bucket over at least three held-out games and write
++`results/experiment_4851_generation_coverage_diagnostic.json`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; a measured decomposition is complete_generation_wall_<dominant_bucket>_dominant (e.g. complete_generation_wall_never_enumerated_dominant)."
++- `per_game_coverage`: principle "per-game mapping game -> {bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, winning_prefix_len, pool_size, reached_l1_win, budget_actions} -- the quantitative measurement."
++- `dominant_bucket`: principle "the bucket the majority of held-out games fall in -- the headline that redirects .448 (never_enumerated -> generation expressibility; enumerated_but_lost -> budget/pruning; covered -> ranking)."
++- `positive_control_game`: principle "the adaptered game used as positive control; it MUST be COVERED or the measurement is a harness artifact (a Phase-Prototype positive control)."
++- `positive_control_covered`: principle "true iff the positive control came out COVERED -- the load-bearing not-a-harness-artifact check."
++- `proposer_blind_to_banked_answer`: principle "true -- the banked winning prefix was NOT injected into the proposer (the tautology trap B1 audits)."
++- `n_games_measured`: principle ">=3 held-out games for a non-degenerate distribution."
++- `verifier_is_oracle`: principle "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
++- `live_path_reachable`: principle "the instrumentation hooks the live proposer (arc_orphan_solver_lint passes) -- a diagnostic the live agent cannot reach is wasted effort."
++- `solve_provenance`: principle "development_proxy -- an offline coverage measurement, NOT a live first-win; declared honestly."
++- `inference_substrate`: principle "live_llm_inference if the proposer invokes the LLM (60s floor), else verifier_ensemble_against_cached_candidates -- declare what actually ran."
++- `preconditions_checked`: principle "records arcade/generator/ground-truth checks; a missing resource emits blocked_, never a fabricated bucket."
++- `random_seed`: principle "determinism for the proposer's stochastic search."
++- `reproducibility_checksum`: principle "content hash of (games, proposer config, budget) so a replication catches drift."
++
++#### SCENARIO-ARC-WMTE-4851-COVERAGE-BUCKETS
++
++Given banked L1 winning prefixes and a bounded cold `StepwiseExplorer` run
++When Experiment 4851 compares recorded proposal pools against the executable
++oracle prefixes after the run
++Then every measured held-out game is assigned exactly one coverage bucket,
++records `winning_prefix_len`, `pool_size`, `reached_l1_win`, and
++`budget_actions`, and the artifact reports the majority `dominant_bucket`.
++
++#### SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL
++
++Given the adaptered `tu93` positive-control path is available
++When Experiment 4851 runs the adaptered proposal control without injecting the
++banked answer
++Then `positive_control_game="tu93"` and `positive_control_covered=true`; if the
++control is not covered, the diagnostic emits a retired/non-test verdict rather
++than claiming a generation-wall decomposition.
++
++#### SCENARIO-ARC-WMTE-4851-BLOCKED-PRECONDITION
++
++Given the offline arcade is unavailable, generator availability is required but
++missing, or fewer than three banked L1 prefixes are present in the registry and
++offline environment
++When Experiment 4851 starts
++Then it writes
++`results/experiment_4851_generation_coverage_diagnostic.json` with a terminal
++`blocked_*` verdict, empty or partial coverage fields, and explicit
++`preconditions_checked` details.
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 53a442e778..e4b3f8b034 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,16 @@
+ # Carnot — Changelog
+ 
++## 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation test fix — codex)
++
++- Fixed the failing Exp 4851 diagnostic test without reverting prior changes and without modifying
++  `scripts/research_conductor.py`. Malformed `per_game_coverage` rows now flow through
++  `artifact_schema_errors()` as explicit `per_game_coverage.<game>` errors instead of raising while
++  recomputing the dominant bucket.
++- Validation: `pytest tests/python/test_experiment_4851_generation_coverage_diagnostic.py -q --no-cov`
++  passed (`8 passed`); direct Coverage.py scoped to the Exp 4851 module reported 100%
++  (`262` statements, `0` missing); focused Ruff check/format passed. Repo-wide spec coverage remains
++  blocked by pre-existing unreferenced legacy tests (`1124 test(s) missing spec traceability`).
++
+ ## 2026-06-27 (Operational retrospective .446 -- GENUINE empty just-activated window, NOT a false-zero detector gap; 0 experiments executed -- outer-loop)
+ 
+ Operational retro for milestone 2026.06.446. Unlike the recurring false-zero timing-detector gap of .435/.443 (where real high-numbered artifacts existed on disk despite the detector reporting 0), .446 is a GENUINELY EMPTY window: the milestone was activated 2026-06-27T03:57:33Z (commit b088ff144) and the retro ran ~7 minutes later at 04:04:50Z, with ZERO experiments executed in between. Definitive on-disk check: the only results/*.json modified after activation is operational_retro_2026_06_446.json itself; the 15 most-recent experiment artifacts (all mtime ~03:54Z, BEFORE activation) are low-numbered (exp1593-2071) bulk-touched files, not real runs; the highest on-disk experiment artifacts (exp4846-4849) are from the prior cycle. The detector's 0/0/0/null is therefore CORRECT here, not a false zero.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 12d147dc69..fc1517e04c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 200,
+   "code_violations": 0,
+-  "experiments_checked": 3858,
++  "experiments_checked": 3859,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/status.md b/ops/status.md
+index 8beef0a479..72c5a32dba 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,19 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-06-26 (Exp 4750 structural-alignment detector fallback regression fix)
++**Last Updated:** 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation regression fix)
++
++## Session 2026-06-27 — Exp 4851 Generation-Coverage Diagnostic Test Fix
++
++Fixed the Exp 4851 schema-validation regression without modifying
++`scripts/research_conductor.py`. `artifact_schema_errors()` now handles malformed
++`per_game_coverage` row values fail-closed and reports the explicit row error
++instead of crashing while recomputing `dominant_bucket`.
++
++Validation for this fix: Exp 4851 focused tests pass (`8 passed`), scoped
++Coverage.py report for the Exp 4851 module is 100% (`262` statements, `0`
++missing), and focused Ruff check/format pass on the touched Python files. The repo-wide
++`scripts/check_spec_coverage.py` check remains blocked by pre-existing
++unreferenced legacy tests (`1124 test(s) missing spec traceability`).
+ 
+ ## Session 2026-06-26 — Exp 4750 Structural-Alignment Detector Test Fix
+ 
+diff --git a/python/carnot/experiment_4851_generation_coverage_diagnostic.py b/python/carnot/experiment_4851_generation_coverage_diagnostic.py
+new file mode 100644
+index 0000000000..a6dc05a20a
+--- /dev/null
++++ b/python/carnot/experiment_4851_generation_coverage_diagnostic.py
+@@ -0,0 +1,887 @@
++"""Exp 4851: measure L1 first-contact generation coverage.
++
++The diagnostic runs the live generic StepwiseExplorer proposal path cold, records
++the candidate pools it actually enumerates, and only then compares those pools to
++banked executable L1 prefixes. The banked prefix is classification ground truth,
++not proposer input.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++import subprocess
++import sys
++import time
++from collections import Counter
++from pathlib import Path
++from typing import Any, Callable, Mapping, Sequence
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - script execution path
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++EXPERIMENT_ID = 4851
++RESULT_RELATIVE_PATH = "results/experiment_4851_generation_coverage_diagnostic.json"
++CHECKPOINT_RELATIVE_DIR = "results/experiment_4851_generation_coverage_diagnostic_checkpoints"
++SPEC_REFS = [
++    "REQ-ARC-WMTE-4851",
++    "SCENARIO-ARC-WMTE-4851-COVERAGE-BUCKETS",
++    "SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL",
++    "SCENARIO-ARC-WMTE-4851-BLOCKED-PRECONDITION",
++]
++BUCKETS = ("COVERED", "ENUMERATED_BUT_LOST", "NEVER_ENUMERATED")
++DEFAULT_ACTION_BUDGET = 160
++DEFAULT_MAX_DEPTH = 45
++DEFAULT_POSITIVE_CONTROL_GAME = "tu93"
++RANDOM_SEED = 20260627
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; a measured decomposition is "
++            "complete_generation_wall_<dominant_bucket>_dominant "
++            "(e.g. complete_generation_wall_never_enumerated_dominant)."
++        )
++    },
++    "per_game_coverage": {
++        "principle": (
++            "per-game mapping game -> {bucket in "
++            "COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, winning_prefix_len, "
++            "pool_size, reached_l1_win, budget_actions} -- the quantitative measurement."
++        )
++    },
++    "dominant_bucket": {
++        "principle": (
++            "the bucket the majority of held-out games fall in -- the headline that "
++            "redirects .448 (never_enumerated -> generation expressibility; "
++            "enumerated_but_lost -> budget/pruning; covered -> ranking)."
++        )
++    },
++    "positive_control_game": {
++        "principle": (
++            "the adaptered game used as positive control; it MUST be COVERED or the "
++            "measurement is a harness artifact (a Phase-Prototype positive control)."
++        )
++    },
++    "positive_control_covered": {
++        "principle": (
++            "true iff the positive control came out COVERED -- the load-bearing "
++            "not-a-harness-artifact check."
++        )
++    },
++    "proposer_blind_to_banked_answer": {
++        "principle": (
++            "true -- the banked winning prefix was NOT injected into the proposer "
++            "(the tautology trap B1 audits)."
++        )
++    },
++    "n_games_measured": {"principle": ">=3 held-out games for a non-degenerate distribution."},
++    "verifier_is_oracle": {
++        "principle": (
++            "true -- the reproduction gate defining the winner is the executable "
++            "oracle (circularity discipline)."
++        )
++    },
++    "live_path_reachable": {
++        "principle": (
++            "the instrumentation hooks the live proposer (arc_orphan_solver_lint "
++            "passes) -- a diagnostic the live agent cannot reach is wasted effort."
++        )
++    },
++    "solve_provenance": {
++        "principle": (
++            "development_proxy -- an offline coverage measurement, NOT a live "
++            "first-win; declared honestly."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "live_llm_inference if the proposer invokes the LLM (60s floor), else "
++            "verifier_ensemble_against_cached_candidates -- declare what actually ran."
++        )
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records arcade/generator/ground-truth checks; a missing resource emits "
++            "blocked_, never a fabricated bucket."
++        )
++    },
++    "random_seed": {"principle": "determinism for the proposer's stochastic search."},
++    "reproducibility_checksum": {
++        "principle": (
++            "content hash of (games, proposer config, budget) so a replication catches drift."
++        )
++    },
++}
++
++
++JsonDict = dict[str, Any]
++Clock = Callable[[], float]
++
++
++class DiagnosticError(RuntimeError):
++    """Raised when the artifact builder would otherwise write invalid results."""
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def _normalise_data(data: Any) -> Any:
++    if data is None:
++        return None
++    if isinstance(data, Mapping):
++        out: dict[str, Any] = {}
++        for key, value in sorted(data.items()):
++            if value is None:
++                out[str(key)] = None
++            elif isinstance(value, bool):
++                out[str(key)] = bool(value)
++            elif isinstance(value, int) or (isinstance(value, float) and value.is_integer()):
++                out[str(key)] = int(value)
++            else:
++                out[str(key)] = value
++        return out
++    return data
++
++
++def normalize_action(action: Any) -> JsonDict | None:
++    """Return the canonical action shape used by StepwiseExplorer and banked traces."""
++
++    if action is None:
++        return None
++    if isinstance(action, str):
++        try:
++            action = json.loads(action)
++        except json.JSONDecodeError:
++            return None
++    if not isinstance(action, Mapping):
++        return None
++    raw_action = action.get("action")
++    if raw_action is None:
++        raw_action = action.get("kind")
++    if raw_action is None:
++        return None
++    try:
++        action_id = int(raw_action)
++    except (TypeError, ValueError):
++        return None
++    data = action.get("data")
++    if data is None and {"x", "y"} <= set(action):
++        data = {"x": action.get("x"), "y": action.get("y")}
++    return {"action": action_id, "data": _normalise_data(data)}
++
++
++def normalize_sequence(actions: Sequence[Any] | None) -> list[JsonDict]:
++    out: list[JsonDict] = []
++    for action in actions or []:
++        normalised = normalize_action(action)
++        if normalised is not None:
++            out.append(normalised)
++    return out
++
++
++def action_key(action: Any) -> str:
++    normalised = normalize_action(action)
++    return _json_dumps(normalised) if normalised is not None else "<invalid>"
++
++
++def prefix_key(prefix: Sequence[Any] | None) -> str:
++    return _json_dumps(normalize_sequence(prefix))
++
++
++def _unique_pool_size(records: Sequence[Mapping[str, Any]]) -> int:
++    keys: set[tuple[str, str]] = set()
++    for record in records:
++        pkey = prefix_key(record.get("prefix") or [])
++        for candidate in record.get("candidates") or []:
++            ckey = action_key(candidate)
++            if ckey != "<invalid>":
++                keys.add((pkey, ckey))
++    return len(keys)
++
++
++def classify_game_coverage(
++    game: str,
++    winning_prefix: Sequence[Any],
++    proposal_records: Sequence[Mapping[str, Any]],
++    *,
++    reached_l1_win: bool,
++    budget_actions: int,
++) -> JsonDict:
++    """Classify one game's recorded proposal pools against its banked L1 prefix."""
++
++    winner = normalize_sequence(winning_prefix)
++    by_prefix: dict[str, set[str]] = {}
++    for record in proposal_records:
++        pkey = prefix_key(record.get("prefix") or [])
++        by_prefix.setdefault(pkey, set())
++        for candidate in record.get("candidates") or []:
++            ckey = action_key(candidate)
++            if ckey != "<invalid>":
++                by_prefix[pkey].add(ckey)
++
++    matched = 0
++    for index, step in enumerate(winner):
++        candidates = by_prefix.get(prefix_key(winner[:index]), set())
++        if action_key(step) not in candidates:
++            break
++        matched += 1
++
++    if reached_l1_win:
++        bucket = "COVERED"
++    elif winner and matched == len(winner):
++        bucket = "ENUMERATED_BUT_LOST"
++    else:
++        bucket = "NEVER_ENUMERATED"
++
++    return {
++        "game": str(game),
++        "bucket": bucket,
++        "winning_prefix_len": len(winner),
++        "pool_size": _unique_pool_size(proposal_records),
++        "reached_l1_win": bool(reached_l1_win),
++        "budget_actions": int(budget_actions),
++        "matched_winning_prefix_len": int(matched),
++    }
++
++
++def compute_dominant_bucket(per_game_coverage: Mapping[str, Any]) -> str | None:
++    buckets = [
++        str(row.get("bucket")) for row in per_game_coverage.values() if isinstance(row, Mapping)
++    ]
++    counts = Counter(bucket for bucket in buckets if bucket in BUCKETS)
++    if not counts:
++        return None
++    return sorted(counts.items(), key=lambda item: (-item[1], BUCKETS.index(item[0])))[0][0]
++
++
++def _terminal_verdict_for(dominant: str | None, positive_control_covered: bool) -> str:
++    if not positive_control_covered:
++        return "complete_generation_coverage_diagnostic_retired_positive_control_failed"
++    if dominant is None:
++        return "complete_generation_coverage_diagnostic_retired_no_distribution"
++    return f"complete_generation_wall_{dominant.lower()}_dominant"
++
++
++def _proposer_config(action_budget: int, max_depth: int, max_games: int | None) -> JsonDict:
++    return {
++        "proposer": "StepwiseExplorer._candidates",
++        "search_mode": "depth_first_ride",
++        "action_budget": int(action_budget),
++        "max_depth": int(max_depth),
++        "max_games": max_games,
++        "llm_invoked": False,
++        "game_adapter_for_heldout": False,
++        "positive_control_adaptered": True,
++    }
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = {
++        "games": sorted((artifact.get("per_game_coverage") or {}).keys()),
++        "positive_control_game": artifact.get("positive_control_game"),
++        "proposer_config": artifact.get("proposer_config") or {},
++        "random_seed": artifact.get("random_seed"),
++        "spec_refs": artifact.get("spec_refs") or SPEC_REFS,
++    }
++    return "sha256:" + hashlib.sha256(_json_dumps(payload).encode("utf-8")).hexdigest()
++
++
++def _attach_checksum(artifact: JsonDict) -> JsonDict:
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_blocked_artifact(
++    verdict: str,
++    *,
++    preconditions_checked: Mapping[str, Any],
++    live_path_reachable: bool = False,
++    action_budget: int = DEFAULT_ACTION_BUDGET,
++    max_depth: int = DEFAULT_MAX_DEPTH,
++    max_games: int | None = None,
++    duration_s: float = 0.0,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    artifact: JsonDict = {
++        "schema_version": 1,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": str(verdict),
++        "per_game_coverage": {},
++        "dominant_bucket": None,
++        "positive_control_game": DEFAULT_POSITIVE_CONTROL_GAME,
++        "positive_control_covered": False,
++        "positive_control_coverage": None,
++        "proposer_blind_to_banked_answer": True,
++        "n_games_measured": 0,
++        "verifier_is_oracle": True,
++        "live_path_reachable": bool(live_path_reachable),
++        "solve_provenance": "development_proxy",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": int(random_seed),
++        "proposer_config": _proposer_config(action_budget, max_depth, max_games),
++        "retire_if_same_verdict": True,
++        "duration_s": float(duration_s),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "reproducibility_checksum": "",
++    }
++    return _attach_checksum(artifact)
++
++
++def build_artifact(
++    *,
++    per_game_coverage: Mapping[str, Mapping[str, Any]],
++    positive_control_game: str,
++    positive_control_coverage: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    live_path_reachable: bool,
++    action_budget: int,
++    max_depth: int,
++    max_games: int | None,
++    duration_s: float,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    dominant = compute_dominant_bucket(per_game_coverage)
++    positive_control_covered = positive_control_coverage.get("bucket") == "COVERED"
++    artifact: JsonDict = {
++        "schema_version": 1,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": _terminal_verdict_for(dominant, positive_control_covered),
++        "per_game_coverage": {str(k): dict(v) for k, v in per_game_coverage.items()},
++        "dominant_bucket": dominant,
++        "positive_control_game": str(positive_control_game),
++        "positive_control_covered": bool(positive_control_covered),
++        "positive_control_coverage": dict(positive_control_coverage),
++        "proposer_blind_to_banked_answer": True,
++        "n_games_measured": len(per_game_coverage),
++        "verifier_is_oracle": True,
++        "live_path_reachable": bool(live_path_reachable),
++        "solve_provenance": "development_proxy",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": int(random_seed),
++        "proposer_config": _proposer_config(action_budget, max_depth, max_games),
++        "retire_if_same_verdict": True,
++        "duration_s": float(duration_s),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "reproducibility_checksum": "",
++    }
++    return _attach_checksum(artifact)
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    required = set(FIELD_PRINCIPLES) | {
++        "schema_version",
++        "experiment_id",
++        "spec_refs",
++        "positive_control_coverage",
++        "proposer_config",
++        "retire_if_same_verdict",
++        "duration_s",
++        "field_principles",
++    }
++    for field in sorted(required):
++        if field not in artifact:
++            errors.append(f"missing_field:{field}")
++    if errors:
++        return errors
++
++    verdict = str(artifact.get("honest_verdict"))
++    terminal = verdict.startswith(("complete_", "blocked_", "success_"))
++    if not terminal:
++        errors.append("honest_verdict_terminal_prefix")
++    blocked = verdict.startswith("blocked_")
++    retired = "retired" in verdict
++
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles")
++    else:
++        for field, principle in FIELD_PRINCIPLES.items():
++            if principles.get(field) != principle:
++                errors.append(f"field_principles.{field}")
++
++    per_game = artifact.get("per_game_coverage")
++    if not isinstance(per_game, Mapping):
++        errors.append("per_game_coverage")
++        per_game = {}
++    for game, row in per_game.items():
++        if not isinstance(row, Mapping):
++            errors.append(f"per_game_coverage.{game}")
++            continue
++        if row.get("bucket") not in BUCKETS:
++            errors.append(f"per_game_coverage.{game}.bucket")
++        for key in ("winning_prefix_len", "pool_size", "budget_actions"):
++            try:
++                if int(row.get(key)) < (
++                    1 if key in {"winning_prefix_len", "budget_actions"} else 0
++                ):
++                    errors.append(f"per_game_coverage.{game}.{key}")
++            except (TypeError, ValueError):
++                errors.append(f"per_game_coverage.{game}.{key}")
++        if not isinstance(row.get("reached_l1_win"), bool):
++            errors.append(f"per_game_coverage.{game}.reached_l1_win")
++
++    if not blocked:
++        dominant = compute_dominant_bucket(per_game)
++        if artifact.get("dominant_bucket") != dominant:
++            errors.append("dominant_bucket")
++        try:
++            n_games = int(artifact.get("n_games_measured"))
++        except (TypeError, ValueError):
++            n_games = -1
++            errors.append("n_games_measured")
++        if n_games != len(per_game):
++            errors.append("n_games_measured")
++        if n_games < 3:
++            errors.append("n_games_measured_minimum")
++        if artifact.get("positive_control_covered") is not True and not retired:
++            errors.append("positive_control_covered")
++        if artifact.get("live_path_reachable") is not True and not retired:
++            errors.append("live_path_reachable")
++    elif artifact.get("per_game_coverage") != {}:
++        errors.append("blocked_artifact_has_coverage")
++
++    if artifact.get("proposer_blind_to_banked_answer") is not True:
++        errors.append("proposer_blind_to_banked_answer")
++    if artifact.get("verifier_is_oracle") is not True:
++        errors.append("verifier_is_oracle")
++    if artifact.get("solve_provenance") != "development_proxy":
++        errors.append("solve_provenance")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("retire_if_same_verdict") is not True:
++        errors.append("retire_if_same_verdict")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _write_checkpoint(game: str, row: Mapping[str, Any], *, root: Path | str) -> Path:
++    path = Path(root) / CHECKPOINT_RELATIVE_DIR / f"{game}.json"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(row), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _registry_games(
++    root: Path | str = REPO_ROOT,
++) -> set[str]:  # pragma: no cover - file precondition
++    path = Path(root) / "ops" / "arc_solve_registry.yaml"
++    if not path.exists():
++        return set()
++    text = path.read_text(encoding="utf-8")
++    return set(re.findall(r"(?m)^- game:\s*([A-Za-z0-9_]+)\s*$", text))
++
++
++def offline_arcade_available() -> bool:  # pragma: no cover - live SDK boundary
++    try:
++        from carnot.agentic import arc_solver_kit as kit
++
++        kit.offline_arcade()
++    except Exception:
++        return False
++    return True
++
++
++def _step_env(env: Any, action: Mapping[str, Any], *, policy: str) -> Any:  # pragma: no cover
++    from arcengine import GameAction
++
++    action_id = int(action["action"])
++    return env.step(
++        getattr(GameAction, f"ACTION{action_id}"),
++        data=action.get("data"),
++        reasoning={"policy": policy},
++    )
++
++
++def extract_l1_prefix(
++    game: str,
++    actions: Sequence[Mapping[str, Any]],
++    *,
++    arcade: Any | None = None,
++) -> list[JsonDict] | None:  # pragma: no cover - live SDK boundary
++    from carnot.agentic import arc_solver_kit as kit
++
++    arc = arcade or kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    frame = env.reset()
++    start_level = kit.frame_level(frame)
++    normalised = normalize_sequence(actions)
++    if not normalised:
++        return None
++
++    prefix: list[JsonDict] = []
++    if game == "sc25":
++        warmup = normalised[0]
++        frame = _step_env(env, warmup, policy="exp4851_warmup_for_banked_prefix")
++        prefix.append(warmup)
++        if frame is not None and kit.frame_level(frame) > start_level:
++            return prefix
++
++    for step in normalised:
++        frame = _step_env(env, step, policy="exp4851_banked_prefix_oracle")
++        prefix.append(step)
++        if frame is None:
++            return None
++        if kit.frame_level(frame) > start_level:
++            return list(prefix)
++    return None
++
++
++def load_banked_l1_prefixes(
++    root: Path | str = REPO_ROOT,
++) -> dict[str, list[JsonDict]]:  # pragma: no cover - live artifact/offline boundary
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_competition_agent import load_solutions
++
++    registry = _registry_games(root)
++    arcade = kit.offline_arcade()
++    prefixes: dict[str, list[JsonDict]] = {}
++    for game, actions in load_solutions().items():
++        if registry and game not in registry:
++            continue
++        prefix = extract_l1_prefix(game, actions, arcade=arcade)
++        if prefix:
++            prefixes[game] = prefix
++    return prefixes
++
++
++def measure_game_with_stepwise_explorer(
++    *,
++    game: str,
++    winning_prefix: Sequence[Mapping[str, Any]],
++    action_budget: int,
++    max_depth: int = DEFAULT_MAX_DEPTH,
++    root: Path | str = REPO_ROOT,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:  # pragma: no cover - live simulator boundary
++    from arcengine import GameAction
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_competition_agent import StepwiseExplorer
++
++    class RecordingStepwiseExplorer(StepwiseExplorer):
++        def __init__(self, *args: Any, **kwargs: Any) -> None:
++            self.proposal_records: list[JsonDict] = []
++            super().__init__(*args, **kwargs)
++
++        def _candidates(
++            self, frame: Any, path: Sequence[dict] | None = None, previous_frame: Any | None = None
++        ) -> list[dict]:  # type: ignore[override]
++            rows = super()._candidates(frame, path=path, previous_frame=previous_frame)
++            self.proposal_records.append(
++                {"prefix": normalize_sequence(path or []), "candidates": normalize_sequence(rows)}
++            )
++            return rows
++
++    _ = root, random_seed
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    explorer = RecordingStepwiseExplorer(
++        target_levels=1,
++        max_depth=max_depth,
++        value_head=None,
++        value_weight=0.0,
++        search_mode="depth_first_ride",
++        online_discriminative=False,
++        frame_change_scorer=None,
++        action_effect_expansion_prior=None,
++        action_prior=None,
++        candidate_router=None,
++        dense_curiosity=False,
++        goal_bias=None,
++        goal_candidate_guidance=None,
++        qd_generator=None,
++        controllable_novelty=False,
++        object_centric_proposal=False,
++        program_synthesis_filter=None,
++        amortized_first_contact_prior=False,
++        go_explore_archive=False,
++    )
++
++    frames: list[Any] = []
++    latest: Any = None
++    start_level: int | None = None
++    reached_l1_win = False
++    actions_executed = 0
++    turns = 0
++    max_turns = int(action_budget) * 4 + 10
++    while actions_executed < int(action_budget) and turns < max_turns:
++        turns += 1
++        if explorer.is_done(frames, latest):
++            break
++        action_id, data = explorer.next_move(frames, latest)
++        if action_id == "RESET":
++            latest = env.reset()
++            frames.append(latest)
++            if start_level is None:
++                start_level = kit.frame_level(latest)
++            continue
++        if action_id is None:
++            break
++        latest = env.step(
++            getattr(GameAction, f"ACTION{int(action_id)}"),
++            data=data,
++            reasoning={"policy": "exp4851_stepwise_generation_coverage"},
++        )
++        actions_executed += 1
++        if latest is None:
++            break
++        frames.append(latest)
++        if start_level is None:
++            start_level = kit.frame_level(latest)
++        if kit.frame_level(latest) > int(start_level):
++            reached_l1_win = True
++            break
++
++    row = classify_game_coverage(
++        game,
++        winning_prefix,
++        explorer.proposal_records,
++        reached_l1_win=reached_l1_win,
++        budget_actions=action_budget,
++    )
++    row["actions_executed"] = actions_executed
++    row["proposal_record_count"] = len(explorer.proposal_records)
++    return row
++
++
++def measure_adapter_positive_control(
++    *,
++    game: str = DEFAULT_POSITIVE_CONTROL_GAME,
++    winning_prefix: Sequence[Mapping[str, Any]] | None = None,
++    action_budget: int = DEFAULT_ACTION_BUDGET,
++    max_depth: int = DEFAULT_MAX_DEPTH,
++    root: Path | str = REPO_ROOT,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:  # pragma: no cover - live adapter boundary
++    from carnot.agentic import arc_game_adapters as adapters
++    from carnot.agentic import arc_solver_kit as kit
++
++    _ = root, random_seed
++    adapter = adapters.get_adapter(game)
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    solver = kit.OfflineSolver(
++        game,
++        adapter.action_labels,
++        adapter.apply,
++        adapter.state_key,
++        warmup_label=getattr(adapter, "warmup_label", None),
++        verifier=getattr(adapter, "hand_verifier", None),
++        branch_mode=getattr(adapter, "branch_mode", "replay"),
++        max_nodes=max(2000, int(action_budget) * 100),
++    )
++    start_frame = solver._replay(env, [])
++    start_level = kit.frame_level(start_frame)
++    depth_cap = min(max_depth, max(1, len(winning_prefix or []), 60))
++    path, states = solver.solve_level(env, start_level, [], depth_cap)
++    reached = path is not None
++    prefix = normalize_sequence(winning_prefix or path or [])
++    records = []
++    if path:
++        for index, label in enumerate(path):
++            records.append({"prefix": prefix[:index], "candidates": [normalize_action(label)]})
++    row = classify_game_coverage(
++        game,
++        prefix,
++        records,
++        reached_l1_win=reached,
++        budget_actions=action_budget,
++    )
++    row["states_expanded"] = int(states)
++    row["adaptered"] = True
++    if reached:
++        row["bucket"] = "COVERED"
++        row["reached_l1_win"] = True
++    return row
++
++
++def run_orphan_lint(root: Path | str = REPO_ROOT) -> bool:  # pragma: no cover - subprocess boundary
++    result = subprocess.run(
++        [sys.executable, "scripts/arc_orphan_solver_lint.py"],
++        cwd=Path(root),
++        text=True,
++        capture_output=True,
++        timeout=90,
++        check=False,
++    )
++    return result.returncode == 0
++
++
++def _validate_or_raise(artifact: JsonDict) -> JsonDict:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise DiagnosticError(";".join(errors))
++    return artifact
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    offline_arcade_checker: Callable[[], bool] = offline_arcade_available,
++    ground_truth_loader: Callable[[Path], Mapping[str, Sequence[Mapping[str, Any]]]] = (
++        load_banked_l1_prefixes
++    ),
++    coverage_measurer: Callable[..., Mapping[str, Any]] = measure_game_with_stepwise_explorer,
++    positive_control_runner: Callable[..., Mapping[str, Any]] = measure_adapter_positive_control,
++    live_path_checker: Callable[[Path], bool] = run_orphan_lint,
++    now: Clock = time.time,
++    write: bool = True,
++    write_checkpoints: bool = True,
++    action_budget: int = DEFAULT_ACTION_BUDGET,
++    max_depth: int = DEFAULT_MAX_DEPTH,
++    max_games: int | None = None,
++    positive_control_game: str = DEFAULT_POSITIVE_CONTROL_GAME,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    root_path = Path(root)
++    start = now()
++    preconditions: JsonDict = {
++        "offline_arcade": {"ok": False},
++        "generator": {
++            "required": False,
++            "available": True,
++            "detail": "not_required_stepwise_explorer_no_llm",
++        },
++        "ground_truth": {"ok": False, "available_games": []},
++        "live_path": {"ok": False},
++        "proposer_invokes_llm": False,
++    }
++
++    if not offline_arcade_checker():
++        preconditions["offline_arcade"] = {"ok": False, "detail": "offline_arcade_import_failed"}
++        artifact = build_blocked_artifact(
++            "blocked_offline_arcade_missing",
++            preconditions_checked=preconditions,
++            action_budget=action_budget,
++            max_depth=max_depth,
++            max_games=max_games,
++            duration_s=now() - start,
++            random_seed=random_seed,
++        )
++        if write:
++            write_artifact(artifact, root=root_path)
++        return _validate_or_raise(artifact)
++
++    preconditions["offline_arcade"] = {"ok": True}
++    ground_truth = {
++        str(game): normalize_sequence(prefix)
++        for game, prefix in ground_truth_loader(root_path).items()
++        if normalize_sequence(prefix)
++    }
++    heldout_games = [game for game in sorted(ground_truth) if game != positive_control_game]
++    if max_games is not None:
++        heldout_games = heldout_games[: int(max_games)]
++    preconditions["ground_truth"] = {
++        "ok": len(heldout_games) >= 3,
++        "available_games": list(heldout_games),
++        "n_available": len(heldout_games),
++        "positive_control_game_present": positive_control_game in ground_truth,
++    }
++    if len(heldout_games) < 3:
++        artifact = build_blocked_artifact(
++            "blocked_no_banked_ground_truth",
++            preconditions_checked=preconditions,
++            action_budget=action_budget,
++            max_depth=max_depth,
++            max_games=max_games,
++            duration_s=now() - start,
++            random_seed=random_seed,
++        )
++        if write:
++            write_artifact(artifact, root=root_path)
++        return _validate_or_raise(artifact)
++
++    live_path_reachable = bool(live_path_checker(root_path))
++    preconditions["live_path"] = {"ok": live_path_reachable}
++    if not live_path_reachable:
++        artifact = build_blocked_artifact(
++            "blocked_live_path_unreachable",
++            preconditions_checked=preconditions,
++            live_path_reachable=False,
++            action_budget=action_budget,
++            max_depth=max_depth,
++            max_games=max_games,
++            duration_s=now() - start,
++            random_seed=random_seed,
++        )
++        if write:
++            write_artifact(artifact, root=root_path)
++        return _validate_or_raise(artifact)
++
++    per_game: dict[str, JsonDict] = {}
++    for game in heldout_games:
++        row = dict(
++            coverage_measurer(
++                game=game,
++                winning_prefix=ground_truth[game],
++                action_budget=action_budget,
++                max_depth=max_depth,
++                root=root_path,
++                random_seed=random_seed,
++            )
++        )
++        per_game[game] = row
++        if write_checkpoints:
++            _write_checkpoint(game, row, root=root_path)
++
++    positive_prefix = ground_truth.get(positive_control_game)
++    positive_control = dict(
++        positive_control_runner(
++            game=positive_control_game,
++            winning_prefix=positive_prefix,
++            action_budget=action_budget,
++            max_depth=max_depth,
++            root=root_path,
++            random_seed=random_seed,
++        )
++    )
++    preconditions["positive_control"] = {
++        "game": positive_control_game,
++        "covered": positive_control.get("bucket") == "COVERED",
++    }
++    artifact = build_artifact(
++        per_game_coverage=per_game,
++        positive_control_game=positive_control_game,
++        positive_control_coverage=positive_control,
++        preconditions_checked=preconditions,
++        live_path_reachable=live_path_reachable,
++        action_budget=action_budget,
++        max_depth=max_depth,
++        max_games=max_games,
++        duration_s=now() - start,
++        random_seed=random_seed,
++    )
++    if write:
++        write_artifact(artifact, root=root_path)
++    return _validate_or_raise(artifact)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper
++    _ = argv
++    artifact = run(root=REPO_ROOT, write=True, write_checkpoints=True)
++    print(
++        json.dumps({"artifact": RESULT_RELATIVE_PATH, "honest_verdict": artifact["honest_verdict"]})
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/results/experiment_4851_generation_coverage_diagnostic.json b/results/experiment_4851_generation_coverage_diagnostic.json
+new file mode 100644
+index 0000000000..32e6a28cad
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic.json
+@@ -0,0 +1,236 @@
++{
++  "dominant_bucket": "NEVER_ENUMERATED",
++  "duration_s": 14.209228754043579,
++  "experiment_id": 4851,
++  "field_principles": {
++    "dominant_bucket": {
++      "principle": "the bucket the majority of held-out games fall in -- the headline that redirects .448 (never_enumerated -> generation expressibility; enumerated_but_lost -> budget/pruning; covered -> ranking)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; a measured decomposition is complete_generation_wall_<dominant_bucket>_dominant (e.g. complete_generation_wall_never_enumerated_dominant)."
++    },
++    "inference_substrate": {
++      "principle": "live_llm_inference if the proposer invokes the LLM (60s floor), else verifier_ensemble_against_cached_candidates -- declare what actually ran."
++    },
++    "live_path_reachable": {
++      "principle": "the instrumentation hooks the live proposer (arc_orphan_solver_lint passes) -- a diagnostic the live agent cannot reach is wasted effort."
++    },
++    "n_games_measured": {
++      "principle": ">=3 held-out games for a non-degenerate distribution."
++    },
++    "per_game_coverage": {
++      "principle": "per-game mapping game -> {bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, winning_prefix_len, pool_size, reached_l1_win, budget_actions} -- the quantitative measurement."
++    },
++    "positive_control_covered": {
++      "principle": "true iff the positive control came out COVERED -- the load-bearing not-a-harness-artifact check."
++    },
++    "positive_control_game": {
++      "principle": "the adaptered game used as positive control; it MUST be COVERED or the measurement is a harness artifact (a Phase-Prototype positive control)."
++    },
++    "preconditions_checked": {
++      "principle": "records arcade/generator/ground-truth checks; a missing resource emits blocked_, never a fabricated bucket."
++    },
++    "proposer_blind_to_banked_answer": {
++      "principle": "true -- the banked winning prefix was NOT injected into the proposer (the tautology trap B1 audits)."
++    },
++    "random_seed": {
++      "principle": "determinism for the proposer's stochastic search."
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash of (games, proposer config, budget) so a replication catches drift."
++    },
++    "solve_provenance": {
++      "principle": "development_proxy -- an offline coverage measurement, NOT a live first-win; declared honestly."
++    },
++    "verifier_is_oracle": {
++      "principle": "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
++    }
++  },
++  "honest_verdict": "complete_generation_wall_never_enumerated_dominant",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "live_path_reachable": true,
++  "n_games_measured": 10,
++  "per_game_coverage": {
++    "cd82": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "cd82",
++      "matched_winning_prefix_len": 1,
++      "pool_size": 1568,
++      "proposal_record_count": 98,
++      "reached_l1_win": false,
++      "winning_prefix_len": 5
++    },
++    "cn04": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "cn04",
++      "matched_winning_prefix_len": 2,
++      "pool_size": 1491,
++      "proposal_record_count": 115,
++      "reached_l1_win": false,
++      "winning_prefix_len": 13
++    },
++    "lp85": {
++      "actions_executed": 20,
++      "bucket": "COVERED",
++      "budget_actions": 160,
++      "game": "lp85",
++      "matched_winning_prefix_len": 0,
++      "pool_size": 189,
++      "proposal_record_count": 5,
++      "reached_l1_win": true,
++      "winning_prefix_len": 5
++    },
++    "ls20": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "ls20",
++      "matched_winning_prefix_len": 2,
++      "pool_size": 488,
++      "proposal_record_count": 122,
++      "reached_l1_win": false,
++      "winning_prefix_len": 13
++    },
++    "m0r0": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "m0r0",
++      "matched_winning_prefix_len": 3,
++      "pool_size": 1268,
++      "proposal_record_count": 116,
++      "reached_l1_win": false,
++      "winning_prefix_len": 15
++    },
++    "r11l": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "r11l",
++      "matched_winning_prefix_len": 1,
++      "pool_size": 2524,
++      "proposal_record_count": 70,
++      "reached_l1_win": false,
++      "winning_prefix_len": 4
++    },
++    "sk48": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "sk48",
++      "matched_winning_prefix_len": 4,
++      "pool_size": 4766,
++      "proposal_record_count": 109,
++      "reached_l1_win": false,
++      "winning_prefix_len": 14
++    },
++    "sp80": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "sp80",
++      "matched_winning_prefix_len": 2,
++      "pool_size": 1585,
++      "proposal_record_count": 122,
++      "reached_l1_win": false,
++      "winning_prefix_len": 4
++    },
++    "su15": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "su15",
++      "matched_winning_prefix_len": 1,
++      "pool_size": 896,
++      "proposal_record_count": 32,
++      "reached_l1_win": false,
++      "winning_prefix_len": 7
++    },
++    "wa30": {
++      "actions_executed": 160,
++      "bucket": "NEVER_ENUMERATED",
++      "budget_actions": 160,
++      "game": "wa30",
++      "matched_winning_prefix_len": 3,
++      "pool_size": 575,
++      "proposal_record_count": 115,
++      "reached_l1_win": false,
++      "winning_prefix_len": 33
++    }
++  },
++  "positive_control_coverage": {
++    "adaptered": true,
++    "bucket": "COVERED",
++    "budget_actions": 160,
++    "game": "tu93",
++    "matched_winning_prefix_len": 18,
++    "pool_size": 18,
++    "reached_l1_win": true,
++    "states_expanded": 966,
++    "winning_prefix_len": 18
++  },
++  "positive_control_covered": true,
++  "positive_control_game": "tu93",
++  "preconditions_checked": {
++    "generator": {
++      "available": true,
++      "detail": "not_required_stepwise_explorer_no_llm",
++      "required": false
++    },
++    "ground_truth": {
++      "available_games": [
++        "cd82",
++        "cn04",
++        "lp85",
++        "ls20",
++        "m0r0",
++        "r11l",
++        "sk48",
++        "sp80",
++        "su15",
++        "wa30"
++      ],
++      "n_available": 10,
++      "ok": true,
++      "positive_control_game_present": true
++    },
++    "live_path": {
++      "ok": true
++    },
++    "offline_arcade": {
++      "ok": true
++    },
++    "positive_control": {
++      "covered": true,
++      "game": "tu93"
++    },
++    "proposer_invokes_llm": false
++  },
++  "proposer_blind_to_banked_answer": true,
++  "proposer_config": {
++    "action_budget": 160,
++    "game_adapter_for_heldout": false,
++    "llm_invoked": false,
++    "max_depth": 45,
++    "max_games": null,
++    "positive_control_adaptered": true,
++    "proposer": "StepwiseExplorer._candidates",
++    "search_mode": "depth_first_ride"
++  },
++  "random_seed": 20260627,
++  "reproducibility_checksum": "sha256:6d57bb153a10a519171c42bc838ad510b73fe8405b8e1eca937a051764b11d4b",
++  "retire_if_same_verdict": true,
++  "schema_version": 1,
++  "solve_provenance": "development_proxy",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4851",
++    "SCENARIO-ARC-WMTE-4851-COVERAGE-BUCKETS",
++    "SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL",
++    "SCENARIO-ARC-WMTE-4851-BLOCKED-PRECONDITION"
++  ],
++  "verifier_is_oracle": true
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/cd82.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/cd82.json
+new file mode 100644
+index 0000000000..c8d1d7b60f
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/cd82.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "cd82",
++  "matched_winning_prefix_len": 1,
++  "pool_size": 1568,
++  "proposal_record_count": 98,
++  "reached_l1_win": false,
++  "winning_prefix_len": 5
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/cn04.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/cn04.json
+new file mode 100644
+index 0000000000..84b34db5b1
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/cn04.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "cn04",
++  "matched_winning_prefix_len": 2,
++  "pool_size": 1491,
++  "proposal_record_count": 115,
++  "reached_l1_win": false,
++  "winning_prefix_len": 13
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/lp85.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/lp85.json
+new file mode 100644
+index 0000000000..919c0e0788
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/lp85.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 20,
++  "bucket": "COVERED",
++  "budget_actions": 160,
++  "game": "lp85",
++  "matched_winning_prefix_len": 0,
++  "pool_size": 189,
++  "proposal_record_count": 5,
++  "reached_l1_win": true,
++  "winning_prefix_len": 5
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/ls20.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/ls20.json
+new file mode 100644
+index 0000000000..a96a084f18
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/ls20.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "ls20",
++  "matched_winning_prefix_len": 2,
++  "pool_size": 488,
++  "proposal_record_count": 122,
++  "reached_l1_win": false,
++  "winning_prefix_len": 13
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/m0r0.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/m0r0.json
+new file mode 100644
+index 0000000000..09b0a07ea0
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/m0r0.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "m0r0",
++  "matched_winning_prefix_len": 3,
++  "pool_size": 1268,
++  "proposal_record_count": 116,
++  "reached_l1_win": false,
++  "winning_prefix_len": 15
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/r11l.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/r11l.json
+new file mode 100644
+index 0000000000..3876210c63
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/r11l.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "r11l",
++  "matched_winning_prefix_len": 1,
++  "pool_size": 2524,
++  "proposal_record_count": 70,
++  "reached_l1_win": false,
++  "winning_prefix_len": 4
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/sk48.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/sk48.json
+new file mode 100644
+index 0000000000..c8827e1305
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/sk48.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "sk48",
++  "matched_winning_prefix_len": 4,
++  "pool_size": 4766,
++  "proposal_record_count": 109,
++  "reached_l1_win": false,
++  "winning_prefix_len": 14
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/sp80.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/sp80.json
+new file mode 100644
+index 0000000000..953b21f1b6
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/sp80.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "sp80",
++  "matched_winning_prefix_len": 2,
++  "pool_size": 1585,
++  "proposal_record_count": 122,
++  "reached_l1_win": false,
++  "winning_prefix_len": 4
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/su15.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/su15.json
+new file mode 100644
+index 0000000000..df9cf6a0f2
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/su15.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "su15",
++  "matched_winning_prefix_len": 1,
++  "pool_size": 896,
++  "proposal_record_count": 32,
++  "reached_l1_win": false,
++  "winning_prefix_len": 7
++}
+diff --git a/results/experiment_4851_generation_coverage_diagnostic_checkpoints/wa30.json b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/wa30.json
+new file mode 100644
+index 0000000000..a879b48d6f
+--- /dev/null
++++ b/results/experiment_4851_generation_coverage_diagnostic_checkpoints/wa30.json
+@@ -0,0 +1,11 @@
++{
++  "actions_executed": 160,
++  "bucket": "NEVER_ENUMERATED",
++  "budget_actions": 160,
++  "game": "wa30",
++  "matched_winning_prefix_len": 3,
++  "pool_size": 575,
++  "proposal_record_count": 115,
++  "reached_l1_win": false,
++  "winning_prefix_len": 33
++}
+diff --git a/tests/python/test_experiment_4851_generation_coverage_diagnostic.py b/tests/python/test_experiment_4851_generation_coverage_diagnostic.py
+new file mode 100644
+index 0000000000..d6f5775c7d
+--- /dev/null
++++ b/tests/python/test_experiment_4851_generation_coverage_diagnostic.py
+@@ -0,0 +1,449 @@
++"""Tests for Exp 4851 L1 first-contact generation coverage diagnostic.
++
++Spec refs: REQ-ARC-WMTE-4851,
++SCENARIO-ARC-WMTE-4851-COVERAGE-BUCKETS,
++SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL,
++SCENARIO-ARC-WMTE-4851-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4851_generation_coverage_diagnostic as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _act(action: int, data: dict[str, int] | None = None) -> dict[str, Any]:
++    return {"action": action, "data": data}
++
++
++def _ground_truth() -> dict[str, list[dict[str, Any]]]:
++    return {
++        "aa00": [_act(1), _act(6, {"x": 3, "y": 4})],
++        "bb00": [_act(2)],
++        "cc00": [_act(3)],
++    }
++
++
++def _coverage_rows() -> dict[str, dict[str, Any]]:
++    return {
++        "aa00": {
++            "bucket": "ENUMERATED_BUT_LOST",
++            "winning_prefix_len": 2,
++            "pool_size": 3,
++            "reached_l1_win": False,
++            "budget_actions": 12,
++            "matched_winning_prefix_len": 2,
++        },
++        "bb00": {
++            "bucket": "NEVER_ENUMERATED",
++            "winning_prefix_len": 1,
++            "pool_size": 2,
++            "reached_l1_win": False,
++            "budget_actions": 12,
++            "matched_winning_prefix_len": 0,
++        },
++        "cc00": {
++            "bucket": "NEVER_ENUMERATED",
++            "winning_prefix_len": 1,
++            "pool_size": 2,
++            "reached_l1_win": False,
++            "budget_actions": 12,
++            "matched_winning_prefix_len": 0,
++        },
++    }
++
++
++def test_req_arc_wmte_4851_spec_declares_generation_diagnostic_contract() -> None:
++    """REQ-ARC-WMTE-4851: OpenSpec anchors fields, scenarios, and result path."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-ARC-WMTE-4851",
++        "SCENARIO-ARC-WMTE-4851-COVERAGE-BUCKETS",
++        "SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL",
++        "SCENARIO-ARC-WMTE-4851-BLOCKED-PRECONDITION",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4851_classifies_coverage_buckets() -> None:
++    """SCENARIO-ARC-WMTE-4851-COVERAGE-BUCKETS: each game gets exactly one bucket."""
++
++    winner = [_act(1), _act(6, {"x": 3, "y": 4})]
++    records = [
++        {"prefix": [], "candidates": [_act(1), _act(2)]},
++        {"prefix": [_act(1)], "candidates": [_act(6, {"x": 3, "y": 4})]},
++    ]
++    lost = mod.classify_game_coverage(
++        "aa00",
++        winner,
++        records,
++        reached_l1_win=False,
++        budget_actions=7,
++    )
++    covered = mod.classify_game_coverage(
++        "aa00",
++        winner,
++        records,
++        reached_l1_win=True,
++        budget_actions=7,
++    )
++    missing = mod.classify_game_coverage(
++        "aa00",
++        winner,
++        [{"prefix": [], "candidates": [_act(2)]}],
++        reached_l1_win=False,
++        budget_actions=7,
++    )
++
++    assert lost["bucket"] == "ENUMERATED_BUT_LOST"
++    assert lost["pool_size"] == 3
++    assert lost["matched_winning_prefix_len"] == 2
++    assert covered["bucket"] == "COVERED"
++    assert covered["reached_l1_win"] is True
++    assert missing["bucket"] == "NEVER_ENUMERATED"
++    assert missing["matched_winning_prefix_len"] == 0
++
++
++def test_scenario_arc_wmte_4851_run_blocks_missing_preconditions(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4851-BLOCKED-PRECONDITION: missing resources never fabricate buckets."""
++
++    blocked_arcade = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: False,
++        ground_truth_loader=lambda _root: _ground_truth(),
++        coverage_measurer=lambda **_kwargs: _coverage_rows()["aa00"],
++        positive_control_runner=lambda **_kwargs: dict(_coverage_rows()["aa00"], bucket="COVERED"),
++        live_path_checker=lambda _root: True,
++        now=iter([1.0, 1.1]).__next__,
++        write=False,
++    )
++    blocked_truth = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        ground_truth_loader=lambda _root: {"aa00": [_act(1)]},
++        coverage_measurer=lambda **_kwargs: _coverage_rows()["aa00"],
++        positive_control_runner=lambda **_kwargs: dict(_coverage_rows()["aa00"], bucket="COVERED"),
++        live_path_checker=lambda _root: True,
++        now=iter([2.0, 2.1]).__next__,
++        write=False,
++    )
++
++    assert blocked_arcade["honest_verdict"] == "blocked_offline_arcade_missing"
++    assert blocked_arcade["per_game_coverage"] == {}
++    assert blocked_arcade["preconditions_checked"]["offline_arcade"]["ok"] is False
++    assert blocked_truth["honest_verdict"] == "blocked_no_banked_ground_truth"
++    assert blocked_truth["n_games_measured"] == 0
++
++
++def test_scenario_arc_wmte_4851_artifact_schema_positive_control_and_write(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL: covered control gates a real diagnostic."""
++
++    rows = _coverage_rows()
++
++    artifact = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        ground_truth_loader=lambda _root: _ground_truth(),
++        coverage_measurer=lambda game, **_kwargs: dict(rows[game]),
++        positive_control_runner=lambda **_kwargs: {
++            "bucket": "COVERED",
++            "winning_prefix_len": 3,
++            "pool_size": 4,
++            "reached_l1_win": True,
++            "budget_actions": 12,
++            "matched_winning_prefix_len": 3,
++        },
++        live_path_checker=lambda _root: True,
++        now=iter([10.0, 10.2]).__next__,
++        write=True,
++    )
++    loaded = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert loaded == artifact
++    assert artifact["honest_verdict"] == "complete_generation_wall_never_enumerated_dominant"
++    assert artifact["dominant_bucket"] == "NEVER_ENUMERATED"
++    assert artifact["positive_control_game"] == "tu93"
++    assert artifact["positive_control_covered"] is True
++    assert artifact["proposer_blind_to_banked_answer"] is True
++    assert artifact["n_games_measured"] == 3
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["live_path_reachable"] is True
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["inference_substrate"] == "verifier_ensemble_against_cached_candidates"
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_arc_wmte_4851_positive_control_failure_retires_measurement(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL: failed control is a harness artifact."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        ground_truth_loader=lambda _root: _ground_truth(),
++        coverage_measurer=lambda game, **_kwargs: dict(_coverage_rows()[game]),
++        positive_control_runner=lambda **_kwargs: {
++            "bucket": "NEVER_ENUMERATED",
++            "winning_prefix_len": 3,
++            "pool_size": 1,
++            "reached_l1_win": False,
++            "budget_actions": 12,
++            "matched_winning_prefix_len": 0,
++        },
++        live_path_checker=lambda _root: True,
++        now=iter([20.0, 20.2]).__next__,
++        write=False,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete_generation_coverage_diagnostic_retired_positive_control_failed"
++    )
++    assert artifact["positive_control_covered"] is False
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_arc_wmte_4851_schema_errors_are_explicit(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4851: malformed artifacts fail closed with named errors."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        ground_truth_loader=lambda _root: _ground_truth(),
++        coverage_measurer=lambda game, **_kwargs: dict(_coverage_rows()[game]),
++        positive_control_runner=lambda **_kwargs: {
++            "bucket": "COVERED",
++            "winning_prefix_len": 3,
++            "pool_size": 4,
++            "reached_l1_win": True,
++            "budget_actions": 12,
++            "matched_winning_prefix_len": 3,
++        },
++        live_path_checker=lambda _root: True,
++        now=iter([30.0, 30.2]).__next__,
++        write=False,
++    )
++    malformed = dict(artifact)
++    malformed.update(
++        {
++            "honest_verdict": "not_terminal",
++            "per_game_coverage": {"aa00": {"bucket": "MAYBE"}},
++            "positive_control_covered": False,
++            "proposer_blind_to_banked_answer": False,
++            "verifier_is_oracle": False,
++            "live_path_reachable": False,
++            "solve_provenance": "live_agent_self_discovery",
++            "inference_substrate": "live_llm_inference",
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++
++    errors = mod.artifact_schema_errors(malformed)
++    assert "honest_verdict_terminal_prefix" in errors
++    assert "per_game_coverage.aa00.bucket" in errors
++    assert "positive_control_covered" in errors
++    assert "proposer_blind_to_banked_answer" in errors
++    assert "verifier_is_oracle" in errors
++    assert "live_path_reachable" in errors
++    assert "solve_provenance" in errors
++    assert "inference_substrate" in errors
++    assert "reproducibility_checksum" in errors
++
++
++def test_req_arc_wmte_4851_helper_branches_and_blocked_writes(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4851: defensive helper branches remain deterministic."""
++
++    assert mod.normalize_action(None) is None
++    assert mod.normalize_action("not-json") is None
++    assert mod.normalize_action(7) is None
++    assert mod.normalize_action({"data": None}) is None
++    assert mod.normalize_action({"action": "bad"}) is None
++    assert mod.normalize_action({"kind": "6", "x": 1.0, "y": 2}) == {
++        "action": 6,
++        "data": {"x": 1, "y": 2},
++    }
++    assert mod.normalize_action(
++        {"action": 1, "data": {"a": None, "b": True, "c": 2.0, "d": "raw"}}
++    ) == {"action": 1, "data": {"a": None, "b": True, "c": 2, "d": "raw"}}
++    assert mod.normalize_action({"action": 2, "data": "raw"}) == {
++        "action": 2,
++        "data": "raw",
++    }
++    assert mod.action_key({"data": None}) == "<invalid>"
++    assert mod.compute_dominant_bucket({}) is None
++
++    no_distribution = mod.build_artifact(
++        per_game_coverage={},
++        positive_control_game="tu93",
++        positive_control_coverage={"bucket": "COVERED"},
++        preconditions_checked={},
++        live_path_reachable=True,
++        action_budget=12,
++        max_depth=4,
++        max_games=None,
++        duration_s=0.0,
++    )
++    assert no_distribution["honest_verdict"] == (
++        "complete_generation_coverage_diagnostic_retired_no_distribution"
++    )
++    assert "n_games_measured_minimum" in mod.artifact_schema_errors(no_distribution)
++
++    assert mod.artifact_schema_errors({})[0].startswith("missing_field:")
++    assert "field_principles" in mod.artifact_schema_errors(
++        dict(no_distribution, field_principles=[])
++    )
++    bad_principles = {
++        **no_distribution["field_principles"],
++        "honest_verdict": {"principle": "different"},
++    }
++    assert "field_principles.honest_verdict" in mod.artifact_schema_errors(
++        dict(no_distribution, field_principles=bad_principles)
++    )
++    assert "per_game_coverage" in mod.artifact_schema_errors(
++        dict(no_distribution, per_game_coverage=[], n_games_measured=0)
++    )
++    assert "per_game_coverage.aa00" in mod.artifact_schema_errors(
++        dict(no_distribution, per_game_coverage={"aa00": []}, n_games_measured=1)
++    )
++
++    invalid_rows = dict(no_distribution)
++    invalid_rows.update(
++        {
++            "per_game_coverage": {
++                "aa00": {
++                    "bucket": "COVERED",
++                    "winning_prefix_len": 0,
++                    "pool_size": -1,
++                    "budget_actions": 0,
++                    "reached_l1_win": "yes",
++                }
++            },
++            "dominant_bucket": "COVERED",
++            "n_games_measured": "bad",
++            "retire_if_same_verdict": False,
++        }
++    )
++    row_errors = mod.artifact_schema_errors(invalid_rows)
++    assert "per_game_coverage.aa00.winning_prefix_len" in row_errors
++    assert "per_game_coverage.aa00.pool_size" in row_errors
++    assert "per_game_coverage.aa00.budget_actions" in row_errors
++    assert "per_game_coverage.aa00.reached_l1_win" in row_errors
++    assert "n_games_measured" in row_errors
++    assert "retire_if_same_verdict" in row_errors
++
++    blocked = mod.build_blocked_artifact(
++        "blocked_test",
++        preconditions_checked={},
++        duration_s=0.0,
++    )
++    blocked_bad = dict(blocked, per_game_coverage={"aa00": _coverage_rows()["aa00"]})
++    blocked_bad["reproducibility_checksum"] = mod.reproducibility_checksum(blocked_bad)
++    assert "blocked_artifact_has_coverage" in mod.artifact_schema_errors(blocked_bad)
++
++    try:
++        mod._validate_or_raise({"bad": True})
++    except mod.DiagnosticError as exc:
++        assert "missing_field:" in str(exc)
++    else:  # pragma: no cover - assertion guard
++        raise AssertionError("DiagnosticError not raised")
++
++    written_arcade = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: False,
++        ground_truth_loader=lambda _root: _ground_truth(),
++        coverage_measurer=lambda **_kwargs: _coverage_rows()["aa00"],
++        positive_control_runner=lambda **_kwargs: {"bucket": "COVERED"},
++        live_path_checker=lambda _root: True,
++        now=iter([40.0, 40.2]).__next__,
++        write=True,
++    )
++    assert written_arcade["honest_verdict"] == "blocked_offline_arcade_missing"
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++    written_truth = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        ground_truth_loader=lambda _root: {"aa00": [_act(1)]},
++        coverage_measurer=lambda **_kwargs: _coverage_rows()["aa00"],
++        positive_control_runner=lambda **_kwargs: {"bucket": "COVERED"},
++        live_path_checker=lambda _root: True,
++        now=iter([41.0, 41.2]).__next__,
++        write=True,
++    )
++    assert written_truth["honest_verdict"] == "blocked_no_banked_ground_truth"
++
++    live_blocked = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        ground_truth_loader=lambda _root: _ground_truth(),
++        coverage_measurer=lambda **_kwargs: _coverage_rows()["aa00"],
++        positive_control_runner=lambda **_kwargs: {"bucket": "COVERED"},
++        live_path_checker=lambda _root: False,
++        now=iter([42.0, 42.2]).__next__,
++        write=True,
++    )
++    assert live_blocked["honest_verdict"] == "blocked_live_path_unreachable"
++
++    rows = _coverage_rows()
++    max_games_artifact = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        ground_truth_loader=lambda _root: {
++            **_ground_truth(),
++            "dd00": [_act(4)],
++            "ee00": [_act(5)],
++        },
++        coverage_measurer=lambda game, **_kwargs: dict(rows.get(game, rows["bb00"])),
++        positive_control_runner=lambda **_kwargs: {
++            "bucket": "COVERED",
++            "winning_prefix_len": 1,
++            "pool_size": 1,
++            "reached_l1_win": True,
++            "budget_actions": 12,
++        },
++        live_path_checker=lambda _root: True,
++        now=iter([43.0, 43.2]).__next__,
++        write=False,
++        max_games=3,
++    )
++    assert max_games_artifact["n_games_measured"] == 3
++    assert max_games_artifact["preconditions_checked"]["ground_truth"]["n_available"] == 3
++
++
++def test_req_arc_wmte_4851_delivered_result_json_is_valid() -> None:
++    """REQ-ARC-WMTE-4851: final artifact is the requested diagnostic deliverable."""
++
++    artifact_path = REPO / mod.RESULT_RELATIVE_PATH
++    artifact: dict[str, Any] = json.loads(artifact_path.read_text(encoding="utf-8"))
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["positive_control_game"] == "tu93"
++    assert artifact["positive_control_covered"] is True
++    assert artifact["proposer_blind_to_banked_answer"] is True
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["live_path_reachable"] is True
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["n_games_measured"] >= 3
++    assert artifact["dominant_bucket"] in mod.BUCKETS
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++    for row in artifact["per_game_coverage"].values():
++        assert row["bucket"] in mod.BUCKETS
++        assert row["winning_prefix_len"] >= 1
++        assert row["pool_size"] >= 0
++        assert row["budget_actions"] > 0
+-- 
+2.55.0
+

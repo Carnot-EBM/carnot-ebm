@@ -1,0 +1,74 @@
+From ffe34ebfeb83eeb8afb149a6e2b9ab726556a875 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 03:37:52 -0400
+Subject: [PATCH 10858/11362] Record an 84-minute heartbeat gap that recovered
+ on its own
+
+At 07:35Z the conductor heartbeat was 84 minutes stale, phase iteration_start,
+zero children, both GPUs idle, 5m29s CPU against 16h29m elapsed. That is what a
+wedge looks like. Checked again 45 seconds later and it had advanced to phase
+sleeping with a fresh beat, so it was not one.
+
+The planner explains 23 of the 84 minutes -- it FAILed at 07:35 on a codex
+wall-clock timeout after 1364s. The last logged task before that was at 06:09.
+The 61 minutes in between have no log line and no heartbeat and I cannot account
+for them. Deliberately naming no cause: the observation was taken after
+recovery, which is enough to describe the gap and not enough to explain it.
+
+Base rate measured first. Planner FAILs land on scattered days, 4/1/2/1/1/1/2
+and today's 1 over about two months, so the timeout itself is unremarkable. The
+silent hour is the part that is not, and it is the part with no evidence.
+
+Records what would actually settle it: a py-spy dump taken DURING a future gap,
+which separates a blocked call from a long sleep. Everything here was measured
+afterwards.
+
+Written because it self-recovered and would otherwise leave no trace at all.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 8b804e18d9..5b4412c093 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -20717,3 +20717,33 @@ decide separately whether `VERDICT_PREFIX_CLASS_CONTRADICTION` should be critica
+ terminal verdict, and it is live (conductor re-exec'd 01:18Z into source hash 48f45c9cced2). This
+ is the sibling path it did not touch. Base rate check: FAIL counts for the last eight days are 14,
+ 14, 8, 22, 17, 8, 6, 3 — today's 3 is the lowest of the eight, so this is not a volume regression.
++
++## 2026-09-03 — an 84-minute heartbeat gap that recovered on its own, 61 minutes of it unexplained
++
++Observation, not a diagnosis. Recorded because it self-recovered and would otherwise leave no
++trace, and because a recurrence would matter.
++
++At 07:35Z the conductor heartbeat read `phase: iteration_start`, `last_beat:
++2026-09-03T06:11:41Z` — 84 minutes stale — with zero children, both GPUs idle, and the process in
++`Ssl` with 5m29s of CPU against 16h29m elapsed. That is the shape of a wedge.
++
++It was not one. Checked again 45 seconds later: `last_beat: 07:36:24Z`, `phase: sleeping`. The
++conductor advanced on its own.
++
++The planner accounts for part of the gap and not most of it. `Plan next milestone` FAILed at 07:35
++with `Codex CLI error: Wall-clock+idle timeout after 1364s (600s silence)`, so it was running from
++roughly 07:12 to 07:35 — 23 of the 84 minutes. The last logged task before that was the 06:09 FAIL.
++**The 61 minutes from 06:11 to 07:12 have no log line and no heartbeat, and I cannot account for
++them.** No cause is named here on purpose.
++
++Base rate, measured before writing this: planner FAILs occur on scattered days — 4, 1, 2, 1, 1, 1,
++2 and today's 1 across roughly two months. A planner timeout is unremarkable. The silent gap is the
++part that is not.
++
++`research-roadmap-next.yaml` does not exist, so the failed planner produced nothing and the next
++iteration must re-plan. Milestone 2026.09.605 remains active with 12 tasks.
++
++**What would settle it.** If this recurs, capture `py-spy dump --pid <conductor>` during the gap
++rather than after. A stack taken while the beat is missing distinguishes a blocked call from a long
++sleep; everything above was measured after recovery, which is why it can describe the gap and not
++explain it.
+-- 
+2.55.0
+

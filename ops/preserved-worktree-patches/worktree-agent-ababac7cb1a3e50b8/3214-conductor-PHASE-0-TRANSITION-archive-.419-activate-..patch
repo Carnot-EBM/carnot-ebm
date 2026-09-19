@@ -1,0 +1,1311 @@
+From 116248bcaebc1454da466978757c0b1feb94dc1e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 08:04:33 -0400
+Subject: [PATCH 03214/11362] [conductor] PHASE 0 (TRANSITION) -- archive .419
+ -> activate .420; assert YAML parses + smart-subset pre-test gate green;
+ RECORD the TRUE .419 close-state (per-level re-induction TRIGGERS but the
+ offline DSL-only proposer produces no reachable L_{{n+1}} plan -- the
+ PROPOSER is the bottleneck; A3 banked sp80 L2; reproducible_total_levels=51;
+ efficiency_moved=false).
+
+Automated research step by research conductor.
+Task ID: exp4543-phase0
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_4543_archive_419_activate_420.py | 628 ++++++++++++++++++
+ ...eriment_4543_archive_419_activate_420.json | 174 +++++
+ ...xperiment_4543_archive_419_activate_420.py | 439 ++++++++++++
+ 5 files changed, 1245 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4543_archive_419_activate_420.py
+ create mode 100644 results/experiment_4543_archive_419_activate_420.json
+ create mode 100644 tests/python/test_experiment_4543_archive_419_activate_420.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index bdbc5760cd..fcd1a9618f 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -171,3 +171,6 @@
+ - REQ-CAPSTONE-4542: The .419 capstone must aggregate existing upstream artifacts exp4533 through exp4537 through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` or live-critical before importing headline metrics, apply the REQ-CAPSTONE-4539 null-delta carve-out only to read diagnosis-context fields with a corrigendum note, read `ops/arc_solve_registry.yaml` for authoritative `reproducible_total_levels`, answer whether per-level goal re-induction raised `core_efficiency` strictly above the fixed `arc_agi.scorecard` baseline `2.0074` by reaching a deeper CORE-game level at preserved CORE solves, report whether A2 energy routing and A5 primitive transfer generalized without laundering flagged numbers, record failed acceptance gates as overriding celebratory verdicts, make no leaderboard submission, and write `results/experiment_4542_capstone_v419.json`.
+ - SCENARIO-CAPSTONE-4542: The capstone artifact `results/experiment_4542_capstone_v419.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, bare boolean `efficiency_moved`, `deepest_level_gains_per_core_game`, `reproducible_total_levels_delta`, `flagged_artifacts_handled`, `cited_upstream_artifacts`, bare boolean `ready_for_operator_submit`, `preconditions_checked`, `scorecard`, `energy_routing_generalization`, `primitive_transfer_generalization`, `operator_resubmission_verdict`, `duration_s`, `random_seed`, and `reproducibility_checksum`; the default .419 read must treat exp4533 as a diagnosis-only known false-positive null-delta TAUTOLOGY when annotated, exclude exp4534 and exp4536 from headline aggregation when stamped or live-critical, count exp4535 `sp80` L2 only when the reproduction gate passes and the registry reconciles to a higher total, report exp4537 representation transfer as generalized but not a reproduced level bank when `new_levels_banked` is zero, and set `ready_for_operator_submit` true only when a clean integrated SUBMITTED config raises CORE `core_efficiency` above `2.0074`.
+ - SCENARIO-CAPSTONE-4542-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: reinduction_core_efficiency_<n>_above_2.0074 OR complete: reinduction_null_efficiency_unmoved_barrier_refined."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `efficiency_moved` = "the bottom line -- did core_efficiency rise STRICTLY above 2.0074 (a CORE game reached a deeper level) at preserved solve-rate (the thing .418 did not achieve)."; `deepest_level_gains_per_core_game` = "per-CORE-game deepest level before/after re-induction -- the direct score-lever evidence."; `reproducible_total_levels_delta` = "did solve CAPABILITY grow this milestone (A3/A5 level-up)."; `flagged_artifacts_handled` = "names any flagged_adversarial artifact excluded AND any null-delta-carve-out artifact whose diagnosis was read (B2) -- the fabrication-gate compliance + the no-lost-diagnosis guard."; `cited_upstream_artifacts` = "every headline number traces to a real upstream measurement (the audit trail)."; `ready_for_operator_submit` = "True only if the integrated config is a CORE-preserved core_efficiency improvement worth a 1/day slot; never submits."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4543: The .419 to .420 transition workflow must write `results/experiment_4543_archive_419_activate_420.json` as a record-only artifact, must not modify `scripts/research_conductor.py`, must use `inference_substrate=aggregation_from_upstream_artifacts`, and must confirm the active roadmap is milestone `2026.06.420`. If `research-roadmap-next.yaml` has already been consumed by conductor-level activation, the workflow shall treat `research-roadmap.yaml` being parseable and active at `2026.06.420` as the no-op activation state while recording the missing literal next-roadmap probe in `preconditions_checked`; it shall not fabricate a replacement next roadmap. The workflow must verify offline arcade, assert the smart-subset pre-test gate is green, read `results/experiment_4542_capstone_v419.json`, `results/experiment_4533_per_level_goal_reinduction.json`, and `ops/arc_solve_registry.yaml`, carry forward the true .419 close-state, and write a terminal-prefixed `honest_verdict`.
++- SCENARIO-CAPSTONE-4543: The transition artifact must emit top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `transition`, `close_state_419`, `cited_upstream_artifacts`, `field_provenance`, `duration_s`, `random_seed`, and `reproducibility_checksum`; it must record that per-level re-induction triggered on a level-up but the offline DSL-only proposer produced an empty `L_{n+1}` plan (`proposer_failed_or_missing_root`; `model_specs=offline_dsl_induction_no_llm`), so the proposer rather than the trigger is the bottleneck, A2 energy-routing nulled because there was nothing to route toward, A3 banked `sp80` L2, A5 representation-transferred but banked `0`, registry `reproducible_total_levels=51`, and `.419` `efficiency_moved=false` because no lever raised `core_efficiency` above `2.0074`.
++- SCENARIO-CAPSTONE-4543-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."; `inference_substrate` = "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."; `preconditions_checked` = "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."; `close_state_419` = "the honest .419 numbers (proposer-is-the-bottleneck; A3 sp80 L2; reproducible_total_levels=51; efficiency_moved=false) carried forward so the record does not drift."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 698ff9a27c..b2f67733e3 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3560,
++  "experiments_checked": 3561,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4543_archive_419_activate_420.py b/python/carnot/experiment_4543_archive_419_activate_420.py
+new file mode 100644
+index 0000000000..fe1600906d
+--- /dev/null
++++ b/python/carnot/experiment_4543_archive_419_activate_420.py
+@@ -0,0 +1,628 @@
++"""Experiment 4543: archive `.419`, activate `.420`, and record the `.419` close-state.
++
++Spec refs: REQ-CAPSTONE-4543, SCENARIO-CAPSTONE-4543,
++SCENARIO-CAPSTONE-4543-FIELD-PRINCIPLES.
++
++This is a record-only transition. The conductor may already have consumed
++`research-roadmap-next.yaml`; in that case a parseable active `.420` roadmap is
++the activation evidence, and the missing literal next-roadmap probe is recorded
++instead of reconstructed.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import json
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++from carnot.reporting.archive_v391_activate_v392_4230 import (
++    CommandResult,
++    duration_from,
++    file_sha256,
++    is_sha256,
++    payload_checksum,
++    run_smart_subset,
++)
++
++
++JsonDict = dict[str, Any]
++OfflineArcadeChecker = Callable[[], bool]
++SmartSubsetChecker = Callable[[Path], CommandResult]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4543_archive_419_activate_420.json"
++OUTPUT_REL_PATH = Path(RESULT_RELATIVE_PATH)
++RESEARCH_ROADMAP_REL_PATH = Path("research-roadmap.yaml")
++RESEARCH_ROADMAP_NEXT_REL_PATH = Path("research-roadmap-next.yaml")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++REGISTRY_REL_PATH = Path("ops/arc_solve_registry.yaml")
++CAPSTONE_REL_PATH = Path("results/experiment_4542_capstone_v419.json")
++A1_GOAL_REINDUCTION_REL_PATH = Path("results/experiment_4533_per_level_goal_reinduction.json")
++
++EXPERIMENT_ID = 4543
++ARCHIVED_MILESTONE = "2026.06.419"
++ACTIVATED_MILESTONE = "2026.06.420"
++RANDOM_SEED = 4543
++SCHEMA = "carnot.archive_activation.v419_to_v420_4543.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++CORE_EFFICIENCY_BASELINE = 2.0074
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++
++FIELD_PROVENANCE = {
++    "honest_verdict": {
++        "principle": (
++            "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/"
++            "passed_/shipped:/shipped_ so the reconciler classifies it terminal."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us "
++            "floor, not the 60s live-model floor."
++        )
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
++        )
++    },
++    "close_state_419": {
++        "principle": (
++            "the honest .419 numbers (proposer-is-the-bottleneck; A3 sp80 L2; "
++            "reproducible_total_levels=51; efficiency_moved=false) carried forward so "
++            "the record does not drift."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "preconditions_checked",
++    "transition",
++    "close_state_419",
++    "cited_upstream_artifacts",
++    "field_provenance",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++)
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _list(value: Any) -> list[Any]:
++    return value if isinstance(value, list) else []
++
++
++def _float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return float(value)
++    return default
++
++
++def _int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return int(value)
++    return default
++
++
++def _read_text(path: Path) -> str | None:
++    return path.read_text(encoding="utf-8") if path.exists() else None
++
++
++def _yaml_info(path: Path) -> JsonDict:
++    text = _read_text(path)
++    if text is None:
++        return {"path": str(path), "available": False, "parses": False, "milestone": None}
++    try:
++        loaded = yaml.safe_load(text)
++    except yaml.YAMLError as exc:
++        return {
++            "path": str(path),
++            "available": True,
++            "parses": False,
++            "milestone": None,
++            "error": str(exc),
++        }
++    milestone = loaded.get("milestone") if isinstance(loaded, Mapping) else None
++    return {
++        "path": str(path),
++        "available": True,
++        "parses": True,
++        "milestone": milestone,
++    }
++
++
++def _read_json(path: Path) -> JsonDict:
++    with path.open("r", encoding="utf-8") as handle:
++        loaded = json.load(handle)
++    if not isinstance(loaded, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return loaded
++
++
++def _registry_total_levels(path: Path) -> int | None:
++    if not path.exists():
++        return None
++    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    if not isinstance(loaded, Mapping):
++        return None
++    value = loaded.get("reproducible_total_levels")
++    return None if isinstance(value, bool) or not isinstance(value, int | float) else int(value)
++
++
++def _command_check(result: CommandResult) -> JsonDict:
++    return {
++        "command": result.command,
++        "exit_code": result.exit_code,
++        "stdout_tail": result.stdout[-500:],
++        "stderr_tail": result.stderr[-500:],
++        "passed": result.exit_code == 0,
++    }
++
++
++def _default_offline_arcade_checker() -> bool:  # pragma: no cover - integration smoke wrapper
++    from carnot.agentic import arc_solver_kit as kit
++
++    kit.offline_arcade()
++    return True
++
++
++def _default_smart_subset_checker(root: Path) -> CommandResult:  # pragma: no cover - subprocess wrapper
++    return run_smart_subset(root)
++
++
++def _preconditions(
++    root: Path,
++    *,
++    offline_arcade_checker: OfflineArcadeChecker,
++    smart_subset_checker: SmartSubsetChecker,
++) -> JsonDict:
++    next_info = _yaml_info(root / RESEARCH_ROADMAP_NEXT_REL_PATH)
++    active_info = _yaml_info(root / RESEARCH_ROADMAP_REL_PATH)
++    complete_text = _read_text(root / RESEARCH_COMPLETE_REL_PATH)
++    registry_levels = _registry_total_levels(root / REGISTRY_REL_PATH)
++
++    try:
++        offline_ok = bool(offline_arcade_checker())
++        offline_error = ""
++    except Exception as exc:  # pragma: no cover - defensive integration reporting
++        offline_ok = False
++        offline_error = str(exc)
++
++    smart_subset = smart_subset_checker(root)
++
++    return {
++        "research_roadmap_next_yaml": {
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "available": next_info["available"],
++            "parses": next_info["parses"],
++            "milestone": next_info["milestone"],
++            "note": (
++                "literal precondition unavailable; accepted only when active research-roadmap.yaml "
++                "is parseable at 2026.06.420"
++            )
++            if not next_info["available"]
++            else "",
++        },
++        "active_research_roadmap_yaml": {
++            "path": str(RESEARCH_ROADMAP_REL_PATH),
++            "available": active_info["available"],
++            "parses": active_info["parses"],
++            "milestone": active_info["milestone"],
++        },
++        "research_complete_yaml": {
++            "path": str(RESEARCH_COMPLETE_REL_PATH),
++            "available": complete_text is not None,
++            "parses": _yaml_info(root / RESEARCH_COMPLETE_REL_PATH)["parses"],
++            "contains_2026_06_419": bool(complete_text and ARCHIVED_MILESTONE in complete_text),
++        },
++        "offline_arcade": {
++            "available": offline_ok,
++            "command": (
++                ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; "
++                "k.offline_arcade()\""
++            ),
++            "error": offline_error,
++        },
++        "smart_subset_pretest_gate": _command_check(smart_subset),
++        "registry": {
++            "path": str(REGISTRY_REL_PATH),
++            "available": registry_levels is not None,
++            "reproducible_total_levels": registry_levels,
++        },
++        "capstone_4542": {
++            "path": str(CAPSTONE_REL_PATH),
++            "available": (root / CAPSTONE_REL_PATH).exists(),
++        },
++        "a1_goal_reinduction": {
++            "path": str(A1_GOAL_REINDUCTION_REL_PATH),
++            "available": (root / A1_GOAL_REINDUCTION_REL_PATH).exists(),
++        },
++    }
++
++
++def _first_proposer_failure(a1: Mapping[str, Any]) -> str:
++    text = str(a1.get("barrier_refinement", ""))
++    if "proposer_failed_or_missing_root" in text:
++        return "proposer_failed_or_missing_root"
++    for measurement in _list(a1.get("measurements")):
++        for per_game in _list(_mapping(measurement).get("per_game")):
++            diagnostics = _mapping(_mapping(per_game).get("diagnostics"))
++            for attempt in _list(diagnostics.get("induction_attempts")):
++                skipped = _mapping(attempt).get("skipped")
++                if isinstance(skipped, str) and skipped:
++                    return skipped
++    return ""
++
++
++def _reinduction_triggered(a1: Mapping[str, Any]) -> bool:
++    if _first_proposer_failure(a1) == "proposer_failed_or_missing_root":
++        return True
++    for measurement in _list(a1.get("measurements")):
++        for per_game in _list(_mapping(measurement).get("per_game")):
++            if _list(_mapping(per_game).get("level_up_actions")):
++                return True
++    return False
++
++
++def _close_state_419(
++    *,
++    capstone: Mapping[str, Any],
++    a1_reinduction: Mapping[str, Any],
++    registry_total_levels: int,
++) -> JsonDict:
++    scorecard = _mapping(capstone.get("scorecard"))
++    a1_scorecard = _mapping(scorecard.get("a1_reinduction"))
++    a2_scorecard = _mapping(scorecard.get("a2_energy_routing"))
++    a3_scorecard = _mapping(scorecard.get("a3_levelup"))
++    a5_scorecard = _mapping(scorecard.get("a5_primitive_transfer"))
++    primitive_transfer = _mapping(capstone.get("primitive_transfer_generalization"))
++
++    proposer_failure = _first_proposer_failure(a1_reinduction)
++    model_specs = str(a1_reinduction.get("model_specs") or "offline_dsl_induction_no_llm")
++    representation_transferred = bool(
++        a5_scorecard.get("representation_generalized") is True
++        or primitive_transfer.get("representation_generalized") is True
++    )
++    new_levels_banked = _int(
++        a5_scorecard.get("new_levels_banked"),
++        _int(primitive_transfer.get("new_levels_banked")),
++    )
++
++    return {
++        "source_capstone_honest_verdict": capstone.get("honest_verdict"),
++        "source_a1_honest_verdict": a1_reinduction.get("honest_verdict"),
++        "capstone_reported_efficiency_moved": capstone.get("efficiency_moved"),
++        "efficiency_moved": False,
++        "core_efficiency_baseline": _float(
++            scorecard.get("baseline_core_efficiency"), CORE_EFFICIENCY_BASELINE
++        ),
++        "core_efficiency_best": a1_reinduction.get("core_efficiency_best"),
++        "efficiency_delta": _float(a1_reinduction.get("efficiency_delta")),
++        "reproducible_total_levels": registry_total_levels,
++        "capstone_reported_reproducible_total_levels_delta": dict(
++            _mapping(capstone.get("reproducible_total_levels_delta"))
++        ),
++        "a1_reinduction": {
++            "status": a1_scorecard.get("status"),
++            "barrier_refinement": a1_reinduction.get(
++                "barrier_refinement",
++                _mapping(a1_scorecard.get("diagnosis")).get("barrier_refinement"),
++            ),
++            "triggered_on_level_up": _reinduction_triggered(a1_reinduction),
++            "proposer_is_bottleneck": proposer_failure == "proposer_failed_or_missing_root",
++            "proposer_failure": proposer_failure,
++            "model_specs": model_specs,
++            "empty_next_level_plan": proposer_failure == "proposer_failed_or_missing_root",
++        },
++        "a2_energy_routing": {
++            "status": a2_scorecard.get("status"),
++            "generalized": a2_scorecard.get("generalized") is True,
++            "nulled_because_no_reachable_plan": proposer_failure == "proposer_failed_or_missing_root",
++            "reason": "nothing_to_route_toward",
++        },
++        "a3_levelup": {
++            "source_honest_verdict": a3_scorecard.get("honest_verdict"),
++            "target_game": a3_scorecard.get("target_game"),
++            "target_level": _int(a3_scorecard.get("target_level")),
++            "banked_levels": _int(a3_scorecard.get("banked_levels")),
++            "banked": a3_scorecard.get("level_up_banked") is True,
++        },
++        "a5_primitive_transfer": {
++            "status": a5_scorecard.get("status") or primitive_transfer.get("status"),
++            "representation_transferred": representation_transferred,
++            "new_levels_banked": new_levels_banked,
++            "offline_reproduced_new_level": bool(
++                a5_scorecard.get("offline_reproduced_new_level") is True
++                or primitive_transfer.get("offline_reproduced_new_level") is True
++            ),
++        },
++        "net_419": {
++            "solve_capability_grew": registry_total_levels >= 51,
++            "efficiency_moved": False,
++            "efficiency_reason": "no lever raised core_efficiency above 2.0074",
++            "submitted_config": "unchanged",
++            "score_lever_to_build_next": "llm_proposer_reinduction",
++        },
++    }
++
++
++def _transition(preconditions: Mapping[str, Any], *, complete: bool) -> JsonDict:
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    research_complete = _mapping(preconditions.get("research_complete_yaml"))
++    if complete and next_info.get("available") is False:
++        activation_state = "already_active_roadmap_next_consumed"
++    elif complete:
++        activation_state = "activated_from_research_roadmap_next"
++    else:
++        activation_state = "blocked_missing_or_failed_precondition"
++    return {
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": bool(
++            complete
++            and active.get("parses") is True
++            and active.get("milestone") == ACTIVATED_MILESTONE
++        ),
++        "activation_state": activation_state,
++        "archive_state": (
++            "research_complete_contains_2026.06.419"
++            if research_complete.get("contains_2026_06_419") is True
++            else "archive_record_not_observed"
++        ),
++    }
++
++
++def _cited_upstream(root: Path) -> list[JsonDict]:
++    return [
++        {
++            "source": "experiment_4542_capstone_v419",
++            "path": str(CAPSTONE_REL_PATH),
++            "fields_imported": [
++                "honest_verdict",
++                "efficiency_moved",
++                "scorecard",
++                "reproducible_total_levels_delta",
++            ],
++            "sha256": file_sha256(root / CAPSTONE_REL_PATH),
++        },
++        {
++            "source": "experiment_4533_per_level_goal_reinduction",
++            "path": str(A1_GOAL_REINDUCTION_REL_PATH),
++            "fields_imported": [
++                "barrier_refinement",
++                "model_specs",
++                "efficiency_delta",
++                "deepest_level_reached_per_core_game",
++            ],
++            "sha256": file_sha256(root / A1_GOAL_REINDUCTION_REL_PATH),
++        },
++        {
++            "source": "arc_solve_registry",
++            "path": str(REGISTRY_REL_PATH),
++            "fields_imported": ["reproducible_total_levels"],
++            "sha256": file_sha256(root / REGISTRY_REL_PATH),
++        },
++    ]
++
++
++def _blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    cited_upstream_artifacts: list[JsonDict],
++) -> JsonDict:
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": "experiment_4543_archive_419_activate_420",
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": f"blocked_{reason}",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "transition": _transition(preconditions_checked, complete=False),
++        "close_state_419": {},
++        "cited_upstream_artifacts": cited_upstream_artifacts,
++        "field_provenance": FIELD_PROVENANCE,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def _first_blocker(preconditions: Mapping[str, Any]) -> str | None:
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    offline = _mapping(preconditions.get("offline_arcade"))
++    smart = _mapping(preconditions.get("smart_subset_pretest_gate"))
++    registry = _mapping(preconditions.get("registry"))
++    capstone = _mapping(preconditions.get("capstone_4542"))
++    a1 = _mapping(preconditions.get("a1_goal_reinduction"))
++
++    active_420 = active.get("parses") is True and active.get("milestone") == ACTIVATED_MILESTONE
++    next_420 = next_info.get("parses") is True and next_info.get("milestone") == ACTIVATED_MILESTONE
++    if not (active_420 or next_420):
++        return "research_roadmap_420_unavailable"
++    if offline.get("available") is not True:
++        return "offline_arcade"
++    if smart.get("passed") is not True:
++        return "smart_subset_pretest_gate"
++    if registry.get("available") is not True:
++        return "arc_solve_registry"
++    if capstone.get("available") is not True:
++        return "missing_experiment_4542_capstone_v419"
++    if a1.get("available") is not True:
++        return "missing_experiment_4533_per_level_goal_reinduction"
++    return None
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    root_path = Path(root)
++    duration_s = duration_from(started_s, now_s)
++    preconditions = _preconditions(
++        root_path,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    cited = _cited_upstream(root_path)
++    blocker = _first_blocker(preconditions)
++    if blocker is not None:
++        artifact = _blocked_artifact(
++            reason=blocker,
++            preconditions_checked=preconditions,
++            duration_s=duration_s,
++            cited_upstream_artifacts=cited,
++        )
++        validate_artifact(artifact)
++        return artifact
++
++    capstone = _read_json(root_path / CAPSTONE_REL_PATH)
++    a1 = _read_json(root_path / A1_GOAL_REINDUCTION_REL_PATH)
++    registry_total_levels = int(_mapping(preconditions["registry"])["reproducible_total_levels"])
++    close_state = _close_state_419(
++        capstone=capstone,
++        a1_reinduction=a1,
++        registry_total_levels=registry_total_levels,
++    )
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": "experiment_4543_archive_419_activate_420",
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": "complete: archive_419_activate_420_true_close_state_recorded",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": preconditions,
++        "transition": _transition(preconditions, complete=True),
++        "close_state_419": close_state,
++        "cited_upstream_artifacts": cited,
++        "field_provenance": FIELD_PROVENANCE,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must start with a terminal or blocked prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    if artifact.get("field_provenance") != FIELD_PROVENANCE:
++        raise ValueError("field_provenance must preserve the required principles")
++
++    close_state = _mapping(artifact.get("close_state_419"))
++    if verdict.startswith("blocked_"):
++        if close_state:
++            raise ValueError("blocked artifacts must not fabricate close_state_419")
++    else:
++        transition = _mapping(artifact.get("transition"))
++        if transition.get("active_milestone_confirmed") is not True:
++            raise ValueError("complete artifacts must confirm active .420")
++        a1 = _mapping(close_state.get("a1_reinduction"))
++        a2 = _mapping(close_state.get("a2_energy_routing"))
++        a3 = _mapping(close_state.get("a3_levelup"))
++        a5 = _mapping(close_state.get("a5_primitive_transfer"))
++        net = _mapping(close_state.get("net_419"))
++        if (
++            close_state.get("reproducible_total_levels") != 51
++            or close_state.get("efficiency_moved") is not False
++            or close_state.get("core_efficiency_baseline") != CORE_EFFICIENCY_BASELINE
++            or net.get("efficiency_moved") is not False
++        ):
++            raise ValueError("complete artifacts must carry the true .419 close-state")
++        if (
++            a1.get("triggered_on_level_up") is not True
++            or a1.get("proposer_is_bottleneck") is not True
++            or a1.get("proposer_failure") != "proposer_failed_or_missing_root"
++            or a1.get("model_specs") != "offline_dsl_induction_no_llm"
++        ):
++            raise ValueError("close_state_419 must record the offline DSL proposer bottleneck")
++        if a2.get("nulled_because_no_reachable_plan") is not True:
++            raise ValueError("close_state_419 must record the A2 energy-routing null")
++        if (
++            a3.get("target_game") != "sp80"
++            or a3.get("target_level") != 2
++            or a3.get("banked") is not True
++        ):
++            raise ValueError("close_state_419 must record A3 sp80 L2 banked")
++        if (
++            a5.get("representation_transferred") is not True
++            or a5.get("new_levels_banked") != 0
++        ):
++            raise ValueError("close_state_419 must record A5 representation transfer with zero bank")
++
++    checksum = str(artifact.get("reproducibility_checksum", ""))
++    if not checksum.startswith("sha256:") or not is_sha256(checksum.removeprefix("sha256:")):
++        raise ValueError("reproducibility_checksum must be sha256-prefixed")
++    expected = "sha256:" + payload_checksum(artifact)
++    if checksum != expected:
++        raise ValueError("reproducibility_checksum does not match artifact content")
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    artifact = build_artifact(
++        root,
++        started_s=started_s,
++        now_s=now_s,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    if write:
++        path = Path(root) / OUTPUT_REL_PATH
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper
++    artifact = run()
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    main()
+diff --git a/results/experiment_4543_archive_419_activate_420.json b/results/experiment_4543_archive_419_activate_420.json
+new file mode 100644
+index 0000000000..82331d0bc9
+--- /dev/null
++++ b/results/experiment_4543_archive_419_activate_420.json
+@@ -0,0 +1,174 @@
++{
++  "cited_upstream_artifacts": [
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "efficiency_moved",
++        "scorecard",
++        "reproducible_total_levels_delta"
++      ],
++      "path": "results/experiment_4542_capstone_v419.json",
++      "sha256": "69d59730a362a5792a022bfc7dc5bc73faeb6efc1c65371091271139472e7d4b",
++      "source": "experiment_4542_capstone_v419"
++    },
++    {
++      "fields_imported": [
++        "barrier_refinement",
++        "model_specs",
++        "efficiency_delta",
++        "deepest_level_reached_per_core_game"
++      ],
++      "path": "results/experiment_4533_per_level_goal_reinduction.json",
++      "sha256": "7d30845db615d41874132eade62615c03590a2a74e6a2ccbe45d909ee2746795",
++      "source": "experiment_4533_per_level_goal_reinduction"
++    },
++    {
++      "fields_imported": [
++        "reproducible_total_levels"
++      ],
++      "path": "ops/arc_solve_registry.yaml",
++      "sha256": "34fd0c8b0972a42addace80c08c2b354166e4f07480d9a8550b19df37908e85a",
++      "source": "arc_solve_registry"
++    }
++  ],
++  "close_state_419": {
++    "a1_reinduction": {
++      "barrier_refinement": "post_level_reinduction_triggered_but_no_reachable_l2_plan; offline_dsl_attempt_outcomes=['proposer_failed_or_missing_root'].",
++      "empty_next_level_plan": true,
++      "model_specs": "offline_dsl_induction_no_llm",
++      "proposer_failure": "proposer_failed_or_missing_root",
++      "proposer_is_bottleneck": true,
++      "status": "diagnosis_only_null_delta_carve_out",
++      "triggered_on_level_up": true
++    },
++    "a2_energy_routing": {
++      "generalized": false,
++      "nulled_because_no_reachable_plan": true,
++      "reason": "nothing_to_route_toward",
++      "status": "excluded_flagged_adversarial_or_live_critical"
++    },
++    "a3_levelup": {
++      "banked": true,
++      "banked_levels": 1,
++      "source_honest_verdict": "success: sp80_L2_offline_reproduced",
++      "target_game": "sp80",
++      "target_level": 2
++    },
++    "a5_primitive_transfer": {
++      "new_levels_banked": 0,
++      "offline_reproduced_new_level": false,
++      "representation_transferred": true,
++      "status": "representation_generalized_no_reproducible_level_bank"
++    },
++    "capstone_reported_efficiency_moved": false,
++    "capstone_reported_reproducible_total_levels_delta": {
++      "banked_levels": 1,
++      "capability_grew": true,
++      "current_total": 51,
++      "delta": 1,
++      "prior_total": 50,
++      "source": "A3_levelup_attempt+ops/arc_solve_registry.yaml"
++    },
++    "core_efficiency_baseline": 2.0074,
++    "core_efficiency_best": 2.0074,
++    "efficiency_delta": 0.0,
++    "efficiency_moved": false,
++    "net_419": {
++      "efficiency_moved": false,
++      "efficiency_reason": "no lever raised core_efficiency above 2.0074",
++      "score_lever_to_build_next": "llm_proposer_reinduction",
++      "solve_capability_grew": true,
++      "submitted_config": "unchanged"
++    },
++    "reproducible_total_levels": 51,
++    "source_a1_honest_verdict": "complete: reinduction_no_deeper_level_barrier_refined_honest_null",
++    "source_capstone_honest_verdict": "complete: reinduction_null_efficiency_unmoved_barrier_refined"
++  },
++  "duration_s": 0.0001,
++  "experiment": "experiment_4543_archive_419_activate_420",
++  "experiment_id": 4543,
++  "field_provenance": {
++    "close_state_419": {
++      "principle": "the honest .419 numbers (proposer-is-the-bottleneck; A3 sp80 L2; reproducible_total_levels=51; efficiency_moved=false) carried forward so the record does not drift."
++    },
++    "honest_verdict": {
++      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
++    },
++    "preconditions_checked": {
++      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
++    }
++  },
++  "honest_verdict": "complete: archive_419_activate_420_true_close_state_recorded",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "preconditions_checked": {
++    "a1_goal_reinduction": {
++      "available": true,
++      "path": "results/experiment_4533_per_level_goal_reinduction.json"
++    },
++    "active_research_roadmap_yaml": {
++      "available": true,
++      "milestone": "2026.06.420",
++      "parses": true,
++      "path": "research-roadmap.yaml"
++    },
++    "capstone_4542": {
++      "available": true,
++      "path": "results/experiment_4542_capstone_v419.json"
++    },
++    "offline_arcade": {
++      "available": true,
++      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
++      "error": ""
++    },
++    "registry": {
++      "available": true,
++      "path": "ops/arc_solve_registry.yaml",
++      "reproducible_total_levels": 51
++    },
++    "research_complete_yaml": {
++      "available": true,
++      "contains_2026_06_419": true,
++      "parses": true,
++      "path": "research-complete.yaml"
++    },
++    "research_roadmap_next_yaml": {
++      "available": false,
++      "milestone": null,
++      "note": "literal precondition unavailable; accepted only when active research-roadmap.yaml is parseable at 2026.06.420",
++      "parses": false,
++      "path": "research-roadmap-next.yaml"
++    },
++    "smart_subset_pretest_gate": {
++      "command": [
++        ".venv/bin/pytest",
++        "tests/python/test_pipeline_extract.py",
++        "tests/python/test_docs.py",
++        "tests/python/test_experiment_4543_archive_419_activate_420.py",
++        "-q",
++        "--no-header",
++        "-n",
++        "0",
++        "--no-cov",
++        "-o",
++        "addopts="
++      ],
++      "exit_code": 0,
++      "passed": true,
++      "stderr_tail": "",
++      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n88 passed, 1 warning in 5.82s\n"
++    }
++  },
++  "random_seed": 4543,
++  "reproducibility_checksum": "sha256:6da426363051d502358e80d17d146a65e1bb1563c5d66a01ca953116882c2f56",
++  "schema": "carnot.archive_activation.v419_to_v420_4543.v1",
++  "transition": {
++    "activated_milestone": "2026.06.420",
++    "activation_state": "already_active_roadmap_next_consumed",
++    "active_milestone_confirmed": true,
++    "archive_state": "research_complete_contains_2026.06.419",
++    "archived_milestone": "2026.06.419"
++  }
++}
+diff --git a/tests/python/test_experiment_4543_archive_419_activate_420.py b/tests/python/test_experiment_4543_archive_419_activate_420.py
+new file mode 100644
+index 0000000000..735cbba16e
+--- /dev/null
++++ b/tests/python/test_experiment_4543_archive_419_activate_420.py
+@@ -0,0 +1,439 @@
++"""Tests for Exp 4543 `.419` archive / `.420` activation.
++
++Spec refs: REQ-CAPSTONE-4543, SCENARIO-CAPSTONE-4543,
++SCENARIO-CAPSTONE-4543-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4543_archive_419_activate_420 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _green_smart_subset(_root: Path) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=["pytest", "smart-subset"],
++        exit_code=0,
++        stdout="green",
++        stderr="",
++    )
++
++
++def _capstone() -> JsonDict:
++    return {
++        "honest_verdict": "complete: reinduction_null_efficiency_unmoved_barrier_refined",
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++        "efficiency_moved": False,
++        "reproducible_total_levels_delta": {
++            "prior_total": 50,
++            "current_total": 51,
++            "delta": 1,
++            "banked_levels": 1,
++            "capability_grew": True,
++        },
++        "scorecard": {
++            "a1_reinduction": {
++                "status": "diagnosis_only_null_delta_carve_out",
++                "moved": False,
++                "core_efficiency_baseline": 2.0074,
++                "core_efficiency_best": None,
++                "diagnosis": {
++                    "barrier_refinement": (
++                        "post_level_reinduction_triggered_but_no_reachable_l2_plan; "
++                        "offline_dsl_attempt_outcomes=['proposer_failed_or_missing_root']."
++                    )
++                },
++            },
++            "a2_energy_routing": {
++                "status": "excluded_flagged_adversarial_or_live_critical",
++                "generalized": False,
++                "reason": "headline numbers quarantined",
++            },
++            "a3_levelup": {
++                "status": "level_up_banked",
++                "honest_verdict": "success: sp80_L2_offline_reproduced",
++                "target_game": "sp80",
++                "target_level": 2,
++                "banked_levels": 1,
++                "level_up_banked": True,
++                "current_total": 51,
++            },
++            "a5_primitive_transfer": {
++                "status": "representation_generalized_no_reproducible_level_bank",
++                "representation_generalized": True,
++                "new_levels_banked": 0,
++                "offline_reproduced_new_level": False,
++            },
++            "baseline_core_efficiency": 2.0074,
++        },
++        "energy_routing_generalization": {
++            "status": "excluded_flagged_adversarial_or_live_critical",
++            "generalized": False,
++            "reason": "headline numbers quarantined",
++        },
++        "primitive_transfer_generalization": {
++            "representation_generalized": True,
++            "new_levels_banked": 0,
++            "offline_reproduced_new_level": False,
++        },
++    }
++
++
++def _a1_reinduction() -> JsonDict:
++    return {
++        "honest_verdict": "complete: reinduction_no_deeper_level_barrier_refined_honest_null",
++        "barrier_refinement": (
++            "post_level_reinduction_triggered_but_no_reachable_l2_plan; "
++            "offline_dsl_attempt_outcomes=['proposer_failed_or_missing_root']."
++        ),
++        "model_specs": "offline_dsl_induction_no_llm",
++        "core_efficiency_baseline": 2.0074,
++        "core_efficiency_best": 2.0074,
++        "efficiency_delta": 0.0,
++        "null_delta_methodology_note": (
++            "baseline==best because no lever reached a deeper offline-reproduced CORE level "
++            "with CORE solves preserved; this is an honest null, not a measurement bug."
++        ),
++        "deepest_level_reached_per_core_game": {
++            "1": {"lp85": 1, "m0r0": 1, "sp80": 1, "vc33": 1}
++        },
++        "measurements": [
++            {
++                "per_game": [
++                    {
++                        "game": "m0r0",
++                        "level_up_actions": [3891],
++                        "diagnostics": {
++                            "model_specs": "offline_dsl_induction_no_llm",
++                            "induction_attempts": [
++                                {
++                                    "skipped": "proposer_failed_or_missing_root",
++                                    "planned": False,
++                                }
++                            ],
++                        },
++                    }
++                ]
++            }
++        ],
++    }
++
++
++def _write_repo_fixture(root: Path) -> None:
++    (root / "research-roadmap.yaml").write_text(
++        "milestone: 2026.06.420\n"
++        "tasks:\n"
++        "  - id: exp4543-phase0\n"
++        "    deliverable: results/experiment_4543_archive_419_activate_420.json\n",
++        encoding="utf-8",
++    )
++    (root / "research-complete.yaml").write_text(
++        "milestones:\n"
++        "- id: 2026.06.419\n"
++        "  finding: prior roadmap archived by conductor\n",
++        encoding="utf-8",
++    )
++    registry = root / "ops" / "arc_solve_registry.yaml"
++    registry.parent.mkdir(parents=True, exist_ok=True)
++    registry.write_text(
++        "schema_version: 1\n"
++        "updated: '2026-06-21'\n"
++        "reproducible_total_levels: 51\n",
++        encoding="utf-8",
++    )
++    _write_json(root / "results" / "experiment_4542_capstone_v419.json", _capstone())
++    _write_json(
++        root / "results" / "experiment_4533_per_level_goal_reinduction.json",
++        _a1_reinduction(),
++    )
++
++
++def _artifact(root: Path) -> JsonDict:
++    _write_repo_fixture(root)
++    return mod.build_artifact(
++        root,
++        started_s=1.0,
++        now_s=1.25,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++
++def test_req_capstone_4543_spec_anchor_declares_transition_contract() -> None:
++    """REQ-CAPSTONE-4543: OpenSpec declares the transition contract first."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4543" in spec
++    assert "SCENARIO-CAPSTONE-4543" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    assert "reproducible_total_levels=51" in spec
++    assert "A3 banked `sp80` L2" in spec
++    for field, provenance in mod.FIELD_PROVENANCE.items():
++        assert field in spec
++        assert provenance["principle"] in spec
++
++
++def test_scenario_capstone_4543_records_true_close_state_when_already_activated(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4543: already-activated `.420` still writes the close-state."""
++
++    _write_repo_fixture(tmp_path)
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=True,
++        started_s=1.0,
++        now_s=1.25,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    written = json.loads((tmp_path / mod.OUTPUT_REL_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    assert artifact["honest_verdict"] == "complete: archive_419_activate_420_true_close_state_recorded"
++    assert artifact["transition"] == {
++        "archived_milestone": "2026.06.419",
++        "activated_milestone": "2026.06.420",
++        "active_milestone_confirmed": True,
++        "activation_state": "already_active_roadmap_next_consumed",
++        "archive_state": "research_complete_contains_2026.06.419",
++    }
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"]["available"] is False
++    assert artifact["preconditions_checked"]["active_research_roadmap_yaml"]["milestone"] == "2026.06.420"
++    assert artifact["preconditions_checked"]["offline_arcade"]["available"] is True
++    assert artifact["preconditions_checked"]["smart_subset_pretest_gate"]["passed"] is True
++
++    close = artifact["close_state_419"]
++    assert close["reproducible_total_levels"] == 51
++    assert close["efficiency_moved"] is False
++    assert close["core_efficiency_baseline"] == 2.0074
++    assert close["a1_reinduction"]["triggered_on_level_up"] is True
++    assert close["a1_reinduction"]["proposer_is_bottleneck"] is True
++    assert close["a1_reinduction"]["proposer_failure"] == "proposer_failed_or_missing_root"
++    assert close["a1_reinduction"]["model_specs"] == "offline_dsl_induction_no_llm"
++    assert close["a2_energy_routing"]["nulled_because_no_reachable_plan"] is True
++    assert close["a3_levelup"]["target_game"] == "sp80"
++    assert close["a3_levelup"]["target_level"] == 2
++    assert close["a3_levelup"]["banked"] is True
++    assert close["a5_primitive_transfer"]["representation_transferred"] is True
++    assert close["a5_primitive_transfer"]["new_levels_banked"] == 0
++    assert close["net_419"]["score_lever_to_build_next"] == "llm_proposer_reinduction"
++    assert mod.validate_artifact(artifact) is None
++
++
++def test_scenario_capstone_4543_blocks_without_fabricating_missing_capstone(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4543: missing required close-state input blocks honestly."""
++
++    _write_repo_fixture(tmp_path)
++    (tmp_path / "results" / "experiment_4542_capstone_v419.json").unlink()
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=False,
++        started_s=2.0,
++        now_s=2.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_missing_experiment_4542_capstone_v419"
++    assert artifact["preconditions_checked"]["capstone_4542"]["available"] is False
++    assert artifact["close_state_419"] == {}
++    assert artifact["transition"]["active_milestone_confirmed"] is False
++    assert mod.validate_artifact(artifact) is None
++
++
++def test_scenario_capstone_4543_records_next_roadmap_activation_state(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4543: an extant next roadmap is recorded as activation input."""
++
++    _write_repo_fixture(tmp_path)
++    (tmp_path / "research-roadmap-next.yaml").write_text(
++        "milestone: 2026.06.420\ntasks: []\n",
++        encoding="utf-8",
++    )
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        started_s=3.0,
++        now_s=3.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert artifact["transition"]["activation_state"] == "activated_from_research_roadmap_next"
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"]["parses"] is True
++
++
++def test_scenario_capstone_4543_precondition_blockers_are_classified(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4543: each required precondition has an honest blocked reason."""
++
++    preconditions = _artifact(tmp_path)["preconditions_checked"]
++
++    active_bad = copy.deepcopy(preconditions)
++    active_bad["active_research_roadmap_yaml"]["milestone"] = "2026.06.419"
++    active_bad["research_roadmap_next_yaml"]["available"] = False
++    active_bad["research_roadmap_next_yaml"]["parses"] = False
++    assert mod._first_blocker(active_bad) == "research_roadmap_420_unavailable"
++
++    next_ok = copy.deepcopy(active_bad)
++    next_ok["research_roadmap_next_yaml"]["parses"] = True
++    next_ok["research_roadmap_next_yaml"]["milestone"] = "2026.06.420"
++    assert mod._first_blocker(next_ok) is None
++
++    offline_bad = copy.deepcopy(preconditions)
++    offline_bad["offline_arcade"]["available"] = False
++    assert mod._first_blocker(offline_bad) == "offline_arcade"
++
++    smart_bad = copy.deepcopy(preconditions)
++    smart_bad["smart_subset_pretest_gate"]["passed"] = False
++    assert mod._first_blocker(smart_bad) == "smart_subset_pretest_gate"
++
++    registry_bad = copy.deepcopy(preconditions)
++    registry_bad["registry"]["available"] = False
++    assert mod._first_blocker(registry_bad) == "arc_solve_registry"
++
++    capstone_bad = copy.deepcopy(preconditions)
++    capstone_bad["capstone_4542"]["available"] = False
++    assert mod._first_blocker(capstone_bad) == "missing_experiment_4542_capstone_v419"
++
++    a1_bad = copy.deepcopy(preconditions)
++    a1_bad["a1_goal_reinduction"]["available"] = False
++    assert mod._first_blocker(a1_bad) == "missing_experiment_4533_per_level_goal_reinduction"
++
++
++def test_scenario_capstone_4543_parse_helpers_are_defensive(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4543: malformed inputs are detected instead of fabricated."""
++
++    assert mod._list(None) == []
++    assert mod._float(True, 7.0) == 7.0
++    assert mod._float("bad", 9.0) == 9.0
++    assert mod._int(False, 2) == 2
++    assert mod._int("bad", 3) == 3
++    assert mod._registry_total_levels(tmp_path / "missing.yaml") is None
++
++    attempt_only = {
++        "measurements": [
++            {
++                "per_game": [
++                    {
++                        "diagnostics": {
++                            "induction_attempts": [{"skipped": "proposer_failed_or_missing_root"}]
++                        }
++                    }
++                ]
++            }
++        ]
++    }
++    assert mod._first_proposer_failure(attempt_only) == "proposer_failed_or_missing_root"
++    assert mod._reinduction_triggered({"measurements": [{"per_game": [{"level_up_actions": [1]}]}]})
++    assert mod._first_proposer_failure({"measurements": [{"per_game": []}]}) == ""
++    assert mod._reinduction_triggered({"measurements": [{"per_game": []}]}) is False
++
++    bad_yaml = tmp_path / "bad.yaml"
++    bad_yaml.write_text("milestone: [\n", encoding="utf-8")
++    assert mod._yaml_info(bad_yaml)["parses"] is False
++
++    list_yaml = tmp_path / "list.yaml"
++    list_yaml.write_text("- not-a-map\n", encoding="utf-8")
++    assert mod._registry_total_levels(list_yaml) is None
++
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[1]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="must contain a JSON object"):
++        mod._read_json(list_json)
++
++
++def test_scenario_capstone_4543_validation_rejects_schema_drift(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4543-FIELD-PRINCIPLES: schema drift fails loudly."""
++
++    valid = _artifact(tmp_path)
++
++    missing = copy.deepcopy(valid)
++    del missing["honest_verdict"]
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    bad_verdict = copy.deepcopy(valid)
++    bad_verdict["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(bad_verdict)
++
++    bad_substrate = copy.deepcopy(valid)
++    bad_substrate["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    bad_provenance = copy.deepcopy(valid)
++    bad_provenance["field_provenance"] = {}
++    with pytest.raises(ValueError, match="field_provenance"):
++        mod.validate_artifact(bad_provenance)
++
++    blocked = mod._blocked_artifact(
++        reason="unit_test",
++        preconditions_checked=valid["preconditions_checked"],
++        duration_s=0.1,
++        cited_upstream_artifacts=valid["cited_upstream_artifacts"],
++    )
++    blocked["close_state_419"] = {"fabricated": True}
++    with pytest.raises(ValueError, match="blocked artifacts"):
++        mod.validate_artifact(blocked)
++
++    inactive = copy.deepcopy(valid)
++    inactive["transition"]["active_milestone_confirmed"] = False
++    with pytest.raises(ValueError, match="active .420"):
++        mod.validate_artifact(inactive)
++
++    wrong_total = copy.deepcopy(valid)
++    wrong_total["close_state_419"]["reproducible_total_levels"] = 50
++    with pytest.raises(ValueError, match="true .419 close-state"):
++        mod.validate_artifact(wrong_total)
++
++    wrong_a1 = copy.deepcopy(valid)
++    wrong_a1["close_state_419"]["a1_reinduction"]["proposer_failure"] = "other"
++    with pytest.raises(ValueError, match="proposer bottleneck"):
++        mod.validate_artifact(wrong_a1)
++
++    wrong_a2 = copy.deepcopy(valid)
++    wrong_a2["close_state_419"]["a2_energy_routing"]["nulled_because_no_reachable_plan"] = False
++    with pytest.raises(ValueError, match="A2 energy-routing null"):
++        mod.validate_artifact(wrong_a2)
++
++    wrong_a3 = copy.deepcopy(valid)
++    wrong_a3["close_state_419"]["a3_levelup"]["target_game"] = "lp85"
++    with pytest.raises(ValueError, match="A3 sp80 L2"):
++        mod.validate_artifact(wrong_a3)
++
++    wrong_a5 = copy.deepcopy(valid)
++    wrong_a5["close_state_419"]["a5_primitive_transfer"]["new_levels_banked"] = 1
++    with pytest.raises(ValueError, match="A5 representation transfer"):
++        mod.validate_artifact(wrong_a5)
++
++    bad_checksum_prefix = copy.deepcopy(valid)
++    bad_checksum_prefix["reproducibility_checksum"] = "not-a-checksum"
++    with pytest.raises(ValueError, match="sha256-prefixed"):
++        mod.validate_artifact(bad_checksum_prefix)
++
++    bad_checksum_value = copy.deepcopy(valid)
++    bad_checksum_value["reproducibility_checksum"] = "sha256:" + ("0" * 64)
++    with pytest.raises(ValueError, match="does not match"):
++        mod.validate_artifact(bad_checksum_value)
+-- 
+2.55.0
+

@@ -1,0 +1,843 @@
+From 7396dd46d823f03837a94ec8b23d9a04d904520d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 05:19:00 -0400
+Subject: [PATCH 08607/11362] Add conditional think-arm fallback on total
+ induction failure (REQ-ARC-WMTE-6243)
+
+Operator-directed follow-up to REQ-ARC-WMTE-6242's per-game breakdown: sp80's
+no_think arm failed to produce any parseable engine while think scored 1.0 on
+the same transitions; cd82/ls20/sk48 show the mirror failure. Neither "always
+run both" (2b, still locked) nor "prefer think generally" (no such edge found)
+fits -- the narrower fix is: if the currently-configured arm produces no
+engine at all (heldout_accuracy is None), retry once with the other arm.
+Excludes the 11/13 floor-tie games where retrying can't help.
+
+Direction reads e3.induce_think_on() at call time rather than hardcoding a
+side, since the live default is already think=1 (2026-08-08 operator flip) --
+a hardcoded no_think-first fallback would have been a live no-op.
+
+E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback wraps both
+_induce_and_plan call sites (level_up_reinduction, stall-path). Env override
+restored in a finally block -- the exact leak class REQ-6242's confound-fix
+finding was about. Default OFF pending a live-path A/B, same standing
+convention as every other lever in this plan.
+
+Also resolved by reading the code rather than building infra: gemma-4's
+think/no_think split is a prompt choice against the same running server
+(/no_think is inert on gemma-4), not a model-load/restart difference, so the
+sequential retry already has no teardown cost -- the L4x4 dual-preload idea
+that prompted the question is better scoped as a separate concurrent-racing
+lever (cuts wall-clock, not setup cost), noted but not built.
+
+8 new tests, 59-test collateral sweep passes unchanged. 12 artifacts'
+freshness acknowledgements updated (1 second-order cascade) for the touched
+arc_competition_agent.py dependency, all verified-inert -- their own
+generating scripts never set CARNOT_ARC_THINK_ARM_FALLBACK.
+---
+ ...-live-agent-improvement-plan-2026-08-08.md |  21 ++
+ .../arc-world-model-trust-energy/spec.md      |  97 +++++++++
+ .../carnot/agentic/arc_competition_agent.py   |  89 ++++++++-
+ ...rc_gateway_card_ground_truth_20260727.json |  10 +-
+ ..._per_level_reset_attribution_20260726.json |  10 +-
+ ...6011_world_model_change_gate_four_arm.json |  10 +-
+ ...ent_6012_hidden_state_trust_gate_hole.json |  10 +-
+ ...6013_hidden_state_change_gate_closure.json |  10 +-
+ ...p_arc_early_stop_grace_sweep_20260726.json |  10 +-
+ ..._win_llm_on_eval_concurrency_20260727.json |  10 +-
+ ...arc_gateway_accurate_rescore_20260726.json |  18 +-
+ ...ter_loop_arc_gateway_rescore_20260726.json |  10 +-
+ ...rc_generator_concurrency_fix_20260727.json |  10 +-
+ ...rc_llm_on_wallclock_envelope_20260726.json |  10 +-
+ ...arc_reset_charge_attribution_20260726.json |  10 +-
+ .../test_arc_think_arm_fallback_20260809.py   | 188 ++++++++++++++++++
+ 16 files changed, 509 insertions(+), 14 deletions(-)
+ create mode 100644 tests/python/test_arc_think_arm_fallback_20260809.py
+
+diff --git a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+index a6308efb8e..75554ae031 100644
+--- a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
++++ b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+@@ -242,6 +242,27 @@ confirmation the confound this session's own Phase 2a fix removed was inflating
+ advantage. sp80 is the one result that replicates across both runs. See REQ-ARC-WMTE-6242 for
+ full detail.
+ 
++**2c. (New, operator-directed, beyond this plan's original scope) Conditional think-arm
++fallback.** Not "always run both" (2b, still locked) or "prefer think generally" (the sign test
++found no such edge) — a narrower lever the per-game data specifically supports: if the CURRENT
++arm produces no engine at all (`heldout_accuracy is None`, sp80's no_think shape: `"local model
++code unusable after 3 tries"`), retry once with the other arm before giving up. Excludes the 11
++of 13 floor-tie games (both arms already at 0.0 — retrying buys nothing there). Direction reads
++`e3.induce_think_on()` at call time rather than hardcoding a side, so it stays correct against
++whichever arm is currently primary (today: think, per the 2026-08-08 operator flip).
++**DONE (2026-08-09, REQ-ARC-WMTE-6243) — built and tested, default OFF pending its own live-path
++A/B, same standing convention as every other default flip in this plan.**
++`E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback` wraps both
++`_induce_and_plan` call sites; env-var toggle is restored in a `finally` block (the exact hazard
++class REQ-6242's confound-fix bonus finding was about). 8 new unit tests + 59-test collateral
++sweep pass unchanged (byte-identical no-op when the flag is off). Also resolved, by reading the
++code rather than building infra: gemma-4's think/no_think split is a PROMPT choice against the
++already-running server (`/no_think` is inert on gemma-4; the real switch is reasoning-engaged
++chat template vs reasoning-suppressed codeonly), not a model-load/server-restart difference — so
++the sequential single-retry design pays no teardown cost on this model already, and the L4x4
++dual-preload idea that prompted asking about it is better scoped as a SEPARATE, not-yet-built
++lever (concurrent arm racing to cut wall-clock, not to avoid setup cost).
++
+ **2b. (Conditional on 2a or 1a moving the distribution) Best-of-N engine sampling.**
+ NOT UNLOCKED — 2a's gate was not met (see above).
+ Selection is measured NOT to be our bottleneck, and the held-out gate is an oracle-distinct
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 193aae532c..bef2e1e771 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22615,6 +22615,103 @@ a code-review-time inference).
+ |---|---|---|
+ | REQ-ARC-WMTE-6242 | `scripts/analyze_exp6221_admission_rate.py` (analysis-only; no production default flipped). | `results/analysis_exp6221_admission_rate_20260809.json` (the artifact IS the check — exact sign test, reproducibility_checksum pinned, cites `results/experiment_6221_gemma_think_mode_ab_expanded_roster.json` by hash). Cross-run confound confirmation verified by direct read of `results/experiment_6199_gemma_think_mode_ab.json`'s vc33 row (no new test file — a one-shot historical comparison, not a regression to guard going forward). |
+ 
++### REQ-ARC-WMTE-6243: Conditional Think-Arm Fallback On Total Induction Failure (Default OFF, Awaiting Live-Path A/B)
++
++**Origin:** operator directive, 2026-08-09, reading REQ-ARC-WMTE-6242's per-game breakdown:
++"as sp80 was a think win, should we try think if nothink made no progress? nothink is stopping
++us from using both other than the efficiency loss and increased wall clock." A genuinely new
++lever REQ-6242 surfaced but did not itself build: not "always run both arms" (Phase 2b, which
++stays locked — its own precondition, the admission-rate gate, was not met) and not "prefer think
++over no_think generally" (the sign test found no such general edge), but a narrower, cheaper,
++asymmetric-safe design the per-game data specifically supports.
++
++**THE SIGNAL THIS TARGETS.** REQ-6242's 13-game breakdown has two failure shapes that a single
++binary "think vs no_think" comparison collapses together: (1) both arms produce an engine that
++scores 0.0 — retrying with the other arm cannot help, both already tried and both hit the same
++wall (11 of 13 games); (2) one arm fails to produce ANY parseable engine at all
++(`heldout_accuracy=None`, e.g. sp80's no_think: `"local model code unusable after 3 tries"`)
++while the OTHER arm succeeds outright (sp80's think: `heldout_accuracy=1.0`). cd82/ls20/sk48 show
++the mirror shape (think fails outright, no_think at least scores something, even if floor). Case
++(2) is a genuine complementary-failure pattern retrying can fix; case (1) is not. The lever fires
++ONLY on case (2).
++
++**THE LIVE DEFAULT, CHECKED BEFORE BUILDING (load-bearing correction caught mid-session).**
++`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT` is **already `"1"`** (operator directive 2026-08-08, on
++exp6199's ORIGINAL 10-game evidence: think never lost on raw accuracy, 4/10 strictly better, 2 of
++those crossing the admission bar from 0.0). So the live agent's PRIMARY arm today is think, not
++no_think — a fallback hardcoded "no_think first, escalate to think" would be a live no-op (the
++live path never tries no_think first at all). The design instead reads the primary arm from
++`e3.induce_think_on()` AT CALL TIME and falls back to whichever arm is NOT currently primary —
++correct regardless of which way the default is set, and correct again if a future A/B flips it.
++
++**THE BUILD.** `E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback` wraps the
++module-level `execute_bounded_llm_reinduction` (imported top-level, unchanged): call once with
++whatever `CARNOT_ARC_INDUCE_THINK` currently resolves to; if `outcome.heldout_accuracy is None`
++(the strict "no engine at all" signal — narrower than `outcome.planned is False`, which also
++fires when a GOOD engine simply has no winning plan, a failure no arm-retry can fix) AND the flag
++is on, retry once with `CARNOT_ARC_INDUCE_THINK` flipped, then restore the prior env state in a
++`finally` block regardless of outcome (this session's own earlier no_think-confound incident,
++REQ-ARC-WMTE-6242's bonus finding, is the exact hazard a leaked env override reproduces). Wired
++at BOTH call sites in `_induce_and_plan` (`level_up_reinduction` and the stall-path
++`CARNOT_ARC_STALL_REFACTOR_LOOP` branch) — both feed the identical `execute_bounded_llm_
++reinduction` signature via `**kwargs` passthrough, so one wrapper covers both without
++duplicating the retry logic. `attempt["think_arm_fallback"]` records fired-or-not-and-why on
++every call (the trajectory-transfer fire-counter discipline), so a zero-fire cell is auditable
++rather than indistinguishable from "the lever does not exist."
++
++**NO SERVER TEARDOWN/RESETUP COST TO AVOID (operator's stated motivation partially resolved by
++reading the code, not by building infra).** The operator's framing ("increased wall clock" from
++switching arms implied a setup/teardown cost worth avoiding via preloading both arms
++simultaneously on the Kaggle L4x4's multiple GPUs). Checked before building: for gemma-4, the
++think/no_think distinction is NOT a model-load or server-config difference at all —
++`ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""` (the Qwen3 `/no_think` token is inert on gemma-4), and
++`induce_think_on()` instead toggles which PROMPT CONFIGURATION is sent to the SAME already-loaded
++llama-server (native reasoning-channel-engaged chat template vs the reasoning-suppressed
++raw+codeonly directive). The wall-clock cost the operator named is real but is GENERATION time
++(more output tokens under think — the plan doc's own "110s -> 715s" figure), not restart time —
++so the sequential single-retry design already pays zero teardown cost on this model; no
++dual-server-preload infrastructure is needed for THIS lever. A genuinely useful, DISTINCT
++follow-up the L4x4 hardware does enable: racing both arms CONCURRENTLY (two parallel requests to
++two llama-server instances, taking whichever returns a scoreable engine first) to cut WALL-CLOCK
++rather than avoid setup cost — noted as a candidate future lever, not built here, since it is a
++different mechanism (parallel dispatch, not sequential fallback) with its own resource-contention
++questions (two 18GB+ model loads on a 4x-GPU box) that deserve their own scoping.
++
++**STATUS.** Default OFF (`SUBMITTED_THINK_ARM_FALLBACK_ENABLED = False`,
++`CARNOT_ARC_THINK_ARM_FALLBACK=1` opt-in), pending a live-path A/B per this project's standing
++convention that no lever flips its shipped default without one. 8 unit tests cover: default-off
++never retries; primary-succeeds never retries (the floor-tie case); total-failure retries and
++succeeds in both arm directions (no_think-primary and think-primary); env correctly toggled
++during the retry and restored after; both-arms-fail returns the original outcome rather than
++fabricating a difference; the bare default matches the constant; the status-diagnostics dict
++reports the lever. 59-test collateral sweep (trajectory-transfer, budget-aware-search,
++prompt-enrichment, think-mode-selector suites) passes unchanged — the wrapper is a strict
++byte-identical no-op when the flag is off, which every existing call-site test exercises by
++construction (none of them sets `CARNOT_ARC_THINK_ARM_FALLBACK`).
++
++#### SCENARIO-ARC-WMTE-6243-TOTAL-FAILURE-TRIGGERS-RETRY
++
++Given the primary arm's `execute_bounded_llm_reinduction` call returns `heldout_accuracy=None`
++and the fallback flag is enabled, the wrapper retries once with `CARNOT_ARC_INDUCE_THINK` set to
++the logical negation of the primary arm's resolved value, and restores the prior environment
++state afterward regardless of the retry's outcome.
++
++#### SCENARIO-ARC-WMTE-6243-FLOOR-SCORE-DOES-NOT-RETRY
++
++Given the primary arm's call returns any non-`None` `heldout_accuracy` (including `0.0`), the
++wrapper does not retry — a scored-but-failing engine is not the failure mode this lever targets.
++
++#### SCENARIO-ARC-WMTE-6243-DEFAULT-OFF-IS-A-NO-OP
++
++Given the fallback flag is not enabled, the wrapper calls `execute_bounded_llm_reinduction`
++exactly once and returns its outcome unmodified, regardless of what that outcome is.
++
++## Implementation Status (REQ-ARC-WMTE-6243)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6243 | `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_THINK_ARM_FALLBACK_ENABLED`, `E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback`, wired at both `_induce_and_plan` call sites (level_up_reinduction and stall-path). | `tests/python/test_arc_think_arm_fallback_20260809.py` (8 tests). |
++
+ ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
+ 
+ **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 7b0e416d2d..1be13bd3e5 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -368,6 +368,23 @@ SUBMITTED_HAZARD_MOVE_PRUNER_MODE = (
+ # (make_carnot_agent -> E3AgentPolicy._induce_and_plan). CARNOT_ARC_TRAJECTORY_TRANSFER=0
+ # reverts to the pre-promotion (disabled) behavior.
+ SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED = True
++
++# THINK-ARM FALLBACK (REQ-ARC-WMTE-6243, 2026-08-09). exp6221 (the Phase 2a expanded-roster A/B,
++# REQ-ARC-WMTE-6242) found the admission-rate gate NOT MET on the sign test as a whole, but its
++# per-game breakdown surfaced a genuine, differently-shaped signal the gate itself is blind to:
++# sp80's no_think arm did not just score low, it FAILED TO PRODUCE A PARSEABLE ENGINE AT ALL
++# ("local model code unusable after 3 tries") while think produced a fully-admitted 1.0 engine on
++# the identical transitions. cd82/ls20/sk48 show the mirror failure (think fails outright,
++# no_think at least produces a scoreable-but-floor engine) -- so the fix is not "prefer think" or
++# "prefer no_think", it is "if the CURRENTLY-CONFIGURED arm produces no engine at all, retry once
++# with the other arm before giving up" -- a targeted safety net for total generation/parse
++# failure, not a second attempt at games where both arms already share a floor score (11 of 12
++# tied games in exp6221 tied AT 0.0, where retrying buys nothing). Direction is read from
++# `e3.induce_think_on()` at call time, not hardcoded, so this stays correct regardless of which
++# way `ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT` is set on a future flip. Default OFF pending its
++# own live-path A/B (this lever has never run against a real scored episode).
++# CARNOT_ARC_THINK_ARM_FALLBACK=1 opts in ahead of that A/B for local experimentation.
++SUBMITTED_THINK_ARM_FALLBACK_ENABLED = False
+ SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False
+ SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archive"
+ # IGE-style LLM-guided cell selection on top of the Go-Explore archive (Intelligent Go-Explore,
+@@ -5170,6 +5187,15 @@ class E3AgentPolicy:
+             )
+             == "1"
+         )
++        # REQ-ARC-WMTE-6243: resolved once here, same rationale as trajectory_transfer_enabled
++        # above -- this fires once per induce-and-plan call, not the per-action hot path.
++        self.think_arm_fallback_enabled = (
++            os.environ.get(
++                "CARNOT_ARC_THINK_ARM_FALLBACK",
++                "1" if SUBMITTED_THINK_ARM_FALLBACK_ENABLED else "0",
++            )
++            == "1"
++        )
+         self._episode_transition_start = 0
+         self._episode_dsl_transition_start = 0
+         self._level_reinduction_pending = False
+@@ -6525,6 +6551,61 @@ class E3AgentPolicy:
+             return None, "logical_downsample_empty"
+         return mask, "resolved"
+ 
++    def _execute_bounded_llm_reinduction_with_arm_fallback(self, attempt, **kwargs):
++        """REQ-ARC-WMTE-6243. Wraps `execute_bounded_llm_reinduction` (imported at module level)
++        with a single conditional retry: if the CURRENTLY-CONFIGURED think/no_think arm produces
++        no scoreable engine at all (`heldout_accuracy is None` -- the LLM never emitted code the
++        harness could even run, not merely code that scored low), retry once with the OTHER arm
++        before giving up. `heldout_accuracy` is `None` only when every refinement round failed to
++        produce a candidate the verifier could score (see `arc_llm_reinduction.py`'s
++        `last_heldout_accuracy`, initialised `None` and only ever overwritten by a real scoring
++        round) -- a strictly narrower trigger than `outcome.planned is False`, which also fires
++        when a GOOD engine simply has no winning plan, a failure mode neither arm can fix.
++
++        Every call records `attempt["think_arm_fallback"]` (fired or not, and why) so a zero-fire
++        cell is auditable rather than silently indistinguishable from "the lever doesn't exist" --
++        the same fire-counter discipline used elsewhere in this file (e.g. trajectory_transfer).
++        """
++
++        import os
++
++        from carnot.agentic import arc_executable_world_model as e3
++
++        outcome = execute_bounded_llm_reinduction(**kwargs)
++        if not self.think_arm_fallback_enabled:
++            attempt["think_arm_fallback"] = {"enabled": False}
++            return outcome
++        if outcome.heldout_accuracy is not None:
++            attempt["think_arm_fallback"] = {
++                "enabled": True,
++                "fired": False,
++                "reason": "primary_arm_produced_a_scored_engine",
++            }
++            return outcome
++
++        primary_arm_think = e3.induce_think_on()
++        fallback_arm_think = not primary_arm_think
++        prior_env = os.environ.get("CARNOT_ARC_INDUCE_THINK")
++        os.environ["CARNOT_ARC_INDUCE_THINK"] = "1" if fallback_arm_think else "0"
++        try:
++            fallback_outcome = execute_bounded_llm_reinduction(**kwargs)
++        finally:
++            if prior_env is None:
++                os.environ.pop("CARNOT_ARC_INDUCE_THINK", None)
++            else:
++                os.environ["CARNOT_ARC_INDUCE_THINK"] = prior_env
++
++        fallback_produced_engine = fallback_outcome.heldout_accuracy is not None
++        attempt["think_arm_fallback"] = {
++            "enabled": True,
++            "fired": True,
++            "primary_arm_think": bool(primary_arm_think),
++            "fallback_arm_think": bool(fallback_arm_think),
++            "primary_produced_engine": False,
++            "fallback_produced_engine": fallback_produced_engine,
++        }
++        return fallback_outcome if fallback_produced_engine else outcome
++
+     def _induce_and_plan(self):
+         import os
+ 
+@@ -6837,7 +6918,8 @@ class E3AgentPolicy:
+                         reinduction_proposer
+                     )
+                     attempt["structured_engine_enabled"] = True
+-                outcome = execute_bounded_llm_reinduction(
++                outcome = self._execute_bounded_llm_reinduction_with_arm_fallback(
++                    attempt,
+                     game=self.short,
+                     transitions=active_transitions,
+                     cell=self.cell,
+@@ -6985,7 +7067,8 @@ class E3AgentPolicy:
+                 # pre-graduation fallback capability, matching the surrounding
+                 # program_synthesis_filter_error / ttt_prior_engine_error non-fatal pattern.
+                 try:
+-                    stall_outcome = execute_bounded_llm_reinduction(
++                    stall_outcome = self._execute_bounded_llm_reinduction_with_arm_fallback(
++                        attempt,
+                         game=self.short,
+                         transitions=active_transitions,
+                         cell=self.cell,
+@@ -7805,6 +7888,8 @@ SUBMITTED_AGENT_CONFIG = {
+         SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED
+     ),
+     "object_relative_trajectory_transfer_wired": True,
++    "think_arm_fallback_enabled": SUBMITTED_THINK_ARM_FALLBACK_ENABLED,
++    "think_arm_fallback_wired": True,
+     # Single source of truth is the kit constant (arc_solver_kit.BUDGET_AWARE_SEARCH_ENABLED,
+     # imported top-level above) -- no separate SUBMITTED_* mirror, per the two-sources-of-truth
+     # risk every other flag entry here is a mirror to avoid.
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index 994b3ebedd..53f230ca3e 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2830,6 +2830,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
+         "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ]
+   },
+@@ -2898,4 +2906,4 @@
+     "historical_artifacts_rewritten": 0,
+     "submitted_anything": false
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index b8c3a5875a..95041757ae 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1435,6 +1435,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
+         "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ]
+   },
+@@ -1933,4 +1941,4 @@
+     },
+     "power_note": "This is a WITNESS that the whole-run total mis-ranks the costly share on the cells measured, not a correlation estimate. Each game has at most 3 seeds, so no rank test here could reach p<0.05 (a 3-point support cannot). The claim being made is existential -- 'a cell with MORE total resets can have FEWER costly ones' -- and one counterexample settles it."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index b144bee4b4..5017db2a30 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52892,6 +52892,14 @@
+         "acknowledged_on": "2026-08-09",
+         "reason": "Phase 3a build (2026-08-09, REQ-ARC-WMTE-6241): added SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED (default False) plus two new, purely additive functions (_action_semantics_and_counts_block, _object_identity_crossref_note) wired into induce_prompt. Neither _transitions_block nor objects_block -- the functions this artifact actually exercises -- was modified, and this artifact's own generating script never sets CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT (grep-verified), so the new flag resolves to its default-off value, under which induce_prompt is byte-identical to before this change.",
+         "evidence": "git diff -U0 on arc_executable_world_model.py for this commit is confined to: the new module constant + resolver function (near the sibling SUBMITTED_WORLD_MODEL_* flags), four new helper functions inserted after objects_block, and two new conditional interpolations appended to induce_prompt's f-string. _transitions_block and objects_block bodies are untouched."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ]
+   },
+@@ -52997,4 +53005,4 @@
+     ],
+     "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731_qat']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 0a94afb78f..c30a23e863 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -376,6 +376,14 @@
+         "acknowledged_on": "2026-08-09",
+         "reason": "Phase 3a build (2026-08-09, REQ-ARC-WMTE-6241): added SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED (default False) plus two new, purely additive functions (_action_semantics_and_counts_block, _object_identity_crossref_note) wired into induce_prompt. Neither _transitions_block nor objects_block -- the functions this artifact actually exercises -- was modified, and this artifact's own generating script never sets CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT (grep-verified), so the new flag resolves to its default-off value, under which induce_prompt is byte-identical to before this change.",
+         "evidence": "git diff -U0 on arc_executable_world_model.py for this commit is confined to: the new module constant + resolver function (near the sibling SUBMITTED_WORLD_MODEL_* flags), four new helper functions inserted after objects_block, and two new conditional interpolations appended to induce_prompt's f-string. _transitions_block and objects_block bodies are untouched."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ]
+   },
+@@ -23644,4 +23652,4 @@
+     ],
+     "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731_qat']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 3374da92f7..b87deb3e92 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8918,6 +8918,14 @@
+         "acknowledged_on": "2026-08-09",
+         "reason": "Phase 3a build (2026-08-09, REQ-ARC-WMTE-6241): added SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED (default False) plus two new, purely additive functions (_action_semantics_and_counts_block, _object_identity_crossref_note) wired into induce_prompt. Neither _transitions_block nor objects_block -- the functions this artifact actually exercises -- was modified, and this artifact's own generating script never sets CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT (grep-verified), so the new flag resolves to its default-off value, under which induce_prompt is byte-identical to before this change.",
+         "evidence": "git diff -U0 on arc_executable_world_model.py for this commit is confined to: the new module constant + resolver function (near the sibling SUBMITTED_WORLD_MODEL_* flags), four new helper functions inserted after objects_block, and two new conditional interpolations appended to induce_prompt's f-string. _transitions_block and objects_block bodies are untouched."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ]
+   },
+@@ -8998,4 +9006,4 @@
+     ],
+     "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731_qat']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index b6f1fc6bc2..bb053242b0 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5513,6 +5513,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
+         "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ]
+   },
+@@ -5529,4 +5537,4 @@
+     "values_changed_total": 13,
+     "keys_restored_after_wholesale_rewrite": []
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 3383148668..d19c9ff9b7 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3676,9 +3676,17 @@
+         "acknowledged_on": "2026-08-09",
+         "reason": "Phase 3a build (2026-08-09, REQ-ARC-WMTE-6241): added SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED (default False) plus two new, purely additive functions (_action_semantics_and_counts_block, _object_identity_crossref_note) wired into induce_prompt. Neither _transitions_block nor objects_block -- the functions this artifact actually exercises -- was modified, and this artifact's own generating script never sets CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT (grep-verified), so the new flag resolves to its default-off value, under which induce_prompt is byte-identical to before this change.",
+         "evidence": "git diff -U0 on arc_executable_world_model.py for this commit is confined to: the new module constant + resolver function (near the sibling SUBMITTED_WORLD_MODEL_* flags), four new helper functions inserted after objects_block, and two new conditional interpolations appended to induce_prompt's f-string. _transitions_block and objects_block bodies are untouched."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+   },
+   "reproducibility_checksum": "sha256:735b5c2395dbe6390ab263b02f23eaae67a33b44774518a9c27de3cd8b794c95"
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index 234e91ee42..f6c4f48273 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3500,6 +3500,22 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Phase 1b freshness self-fix (2026-08-08), fourth occurrence of the same cascade: this artifact cites the two paths below by content hash. Acknowledging the Phase 1b trajectory-transfer promotion INSIDE those two artifacts changed their hashes, which cascades here. Not caused by a change to this artifact's own analyser script or numbers.",
+         "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry -- no change to any row/score/metric field either file reports."
++      },
++      {
++        "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++        "sha256_was": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
++        "sha256_now": "20d364b791f844a31654b429a2ca888dd00502f5a19c3787f336501fa0e3adff",
++        "acknowledged_on": "2026-08-09",
++        "reason": "Second-order cascade from REQ-ARC-WMTE-6243 (2026-08-09): acknowledging the (verified-inert) arc_competition_agent.py drift in results/outer_loop_arc_gateway_rescore_20260726.json and results/arc_per_level_reset_attribution_20260726.json changed THEIR content hashes, which this artifact cites by hash. Neither upstream artifact's own NUMBERS changed -- only their provenance.freshness_acknowledgements sections grew -- so this artifact's cited figures are unaffected. Same recurring second-order-cascade shape documented earlier this session (REQ-ARC-WMTE-6233/6234/6235/6241/6242's own freshness passes).",
++        "evidence": "Diff of both upstream files for this commit is confined to a new provenance.freshness_acknowledgements entry each; no other top-level field (including any numeric result field) changed."
++      },
++      {
++        "path": "results/arc_per_level_reset_attribution_20260726.json",
++        "sha256_was": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
++        "sha256_now": "f2be8bda4da91a37aea4c09340b7f51a5c12fc4ac6c79e3e89876587425724b0",
++        "acknowledged_on": "2026-08-09",
++        "reason": "Second-order cascade from REQ-ARC-WMTE-6243 (2026-08-09): acknowledging the (verified-inert) arc_competition_agent.py drift in results/outer_loop_arc_gateway_rescore_20260726.json and results/arc_per_level_reset_attribution_20260726.json changed THEIR content hashes, which this artifact cites by hash. Neither upstream artifact's own NUMBERS changed -- only their provenance.freshness_acknowledgements sections grew -- so this artifact's cited figures are unaffected. Same recurring second-order-cascade shape documented earlier this session (REQ-ARC-WMTE-6233/6234/6235/6241/6242's own freshness passes).",
++        "evidence": "Diff of both upstream files for this commit is confined to a new provenance.freshness_acknowledgements entry each; no other top-level field (including any numeric result field) changed."
+       }
+     ]
+   },
+@@ -3538,4 +3554,4 @@
+     },
+     "verdict": "REBUILD IS NUMERICALLY INERT: every headline, median and per-cell value is unchanged."
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index 71bfb91bb7..f06dbdc976 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1238,6 +1238,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
+         "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ]
+   },
+@@ -1246,4 +1254,4 @@
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+   "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
+   "reproducibility_checksum": "8e2123304c6120873fd80eb4d56716b287ec3d6f541e68ad04b864c5b9dad325"
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 111b685bab..26e9749071 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1333,9 +1333,17 @@
+         "acknowledged_on": "2026-08-09",
+         "reason": "Phase 3a build (2026-08-09, REQ-ARC-WMTE-6241): added SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED (default False) plus two new, purely additive functions (_action_semantics_and_counts_block, _object_identity_crossref_note) wired into induce_prompt. Neither _transitions_block nor objects_block -- the functions this artifact actually exercises -- was modified, and this artifact's own generating script never sets CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT (grep-verified), so the new flag resolves to its default-off value, under which induce_prompt is byte-identical to before this change.",
+         "evidence": "git diff -U0 on arc_executable_world_model.py for this commit is confined to: the new module constant + resolver function (near the sibling SUBMITTED_WORLD_MODEL_* flags), four new helper functions inserted after objects_block, and two new conditional interpolations appended to induce_prompt's f-string. _transitions_block and objects_block bodies are untouched."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+   },
+   "reproducibility_checksum": "sha256:7b9f345f0181c25a023968e44d3e9eeb80fa065390b406e1639db53836faab5c"
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index b1e0d2ecd1..63242271c5 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -552,6 +552,14 @@
+         "acknowledged_on": "2026-08-09",
+         "reason": "Phase 3a build (2026-08-09, REQ-ARC-WMTE-6241): added SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED (default False) plus two new, purely additive functions (_action_semantics_and_counts_block, _object_identity_crossref_note) wired into induce_prompt. Neither _transitions_block nor objects_block -- the functions this artifact actually exercises -- was modified, and this artifact's own generating script never sets CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT (grep-verified), so the new flag resolves to its default-off value, under which induce_prompt is byte-identical to before this change.",
+         "evidence": "git diff -U0 on arc_executable_world_model.py for this commit is confined to: the new module constant + resolver function (near the sibling SUBMITTED_WORLD_MODEL_* flags), four new helper functions inserted after objects_block, and two new conditional interpolations appended to induce_prompt's f-string. _transitions_block and objects_block bodies are untouched."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+@@ -3859,4 +3867,4 @@
+     "corroborates_the_memory_ceiling": "thread-per-game is also the mechanism behind the prior sweep's memory finding: all ~110 search graphs are retained simultaneously in one process."
+   },
+   "acceptance_gate_all_passed": true
+-}
+\ No newline at end of file
++}
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index 83251bbb8b..6faa25c217 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -17035,6 +17035,14 @@
+         "acknowledged_on": "2026-08-09",
+         "reason": "Phase 1c promotion (2026-08-09): BUDGET_AWARE_SEARCH_ENABLED flipped False->True (REQ-ARC-WMTE-6235, arc_solver_kit.py). This artifact predates the lever's live-cascade wiring entirely -- REQ-ARC-WMTE-6180-WIRING states the estimator/consumer were wired into StepwiseExplorer on 2026-08-07, and this artifact is dated 2026-07-26, so its default value now cannot change what was measured then.",
+         "evidence": "git diff -U0 on arc_solver_kit.py for this commit is confined to the BUDGET_AWARE_SEARCH_ENABLED constant and its comment block -- no other line changed."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
++        "acknowledged_on": "2026-08-09",
++        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
++        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
+       }
+     ]
+   },
+@@ -17049,4 +17057,4 @@
+     "values_changed_total": 28,
+     "keys_restored_after_wholesale_rewrite": []
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/tests/python/test_arc_think_arm_fallback_20260809.py b/tests/python/test_arc_think_arm_fallback_20260809.py
+new file mode 100644
+index 0000000000..3b58562648
+--- /dev/null
++++ b/tests/python/test_arc_think_arm_fallback_20260809.py
+@@ -0,0 +1,188 @@
++"""REQ-ARC-WMTE-6243 (2026-08-09): conditional think<->no_think arm fallback.
++
++Motivated directly by exp6221 (REQ-ARC-WMTE-6242, Phase 2a's expanded-roster A/B): sp80's
++no_think arm failed to produce ANY parseable engine ("local model code unusable after 3 tries")
++while think produced a fully-admitted 1.0 engine on the identical transitions; cd82/ls20/sk48
++show the mirror failure (think fails outright, no_think at least scores something). The lever:
++if the currently-configured arm produces no scoreable engine at all
++(`outcome.heldout_accuracy is None`), retry once with the OTHER arm before giving up.
++
++These tests call `E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback` directly
++(not through the full `_induce_and_plan` state machine) -- it is a thin, self-contained wrapper
++around the module-level `execute_bounded_llm_reinduction`, and testing it directly is more
++robust than driving the whole induce-and-plan branch tree to reach it.
++"""
++
++from __future__ import annotations
++
++import os
++from types import SimpleNamespace
++
++import pytest
++
++from carnot.agentic import arc_competition_agent as agent
++from carnot.agentic.arc_competition_agent import E3AgentPolicy
++
++
++def _outcome(heldout_accuracy, planned=False, plan=None):
++    return SimpleNamespace(
++        model_specs="test",
++        planned=planned,
++        skipped="",
++        plan=plan or [],
++        heldout_accuracy=heldout_accuracy,
++    )
++
++
++def _policy(**overrides):
++    return E3AgentPolicy("lp85", proposer=SimpleNamespace(), target_levels=3, value_head=None)
++
++
++def test_flag_off_default_never_retries_even_on_total_failure(monkeypatch):
++    """Default OFF (SUBMITTED_THINK_ARM_FALLBACK_ENABLED=False, no env override): a total
++    induction failure (heldout_accuracy=None) must NOT trigger a second call -- the load-bearing
++    byte-identity property for every default-off lever in this file."""
++    calls = []
++
++    def _fake(**kwargs):
++        calls.append(dict(kwargs))
++        return _outcome(heldout_accuracy=None)
++
++    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fake)
++    monkeypatch.delenv("CARNOT_ARC_THINK_ARM_FALLBACK", raising=False)
++
++    policy = _policy()
++    assert policy.think_arm_fallback_enabled is False
++    attempt = {}
++    outcome = policy._execute_bounded_llm_reinduction_with_arm_fallback(attempt, game="lp85")
++
++    assert len(calls) == 1
++    assert outcome.heldout_accuracy is None
++    assert attempt["think_arm_fallback"] == {"enabled": False}
++
++
++def test_flag_on_primary_succeeds_never_retries(monkeypatch):
++    """Flag on, but the primary arm already produced a scoreable engine (even a low-scoring one,
++    e.g. 0.0) -- the lever must not fire. Retrying an already-scored engine wastes wall-clock on
++    exactly the floor-effect cases exp6221 showed retrying cannot fix (both arms tied at 0.0)."""
++    calls = []
++
++    def _fake(**kwargs):
++        calls.append(dict(kwargs))
++        return _outcome(heldout_accuracy=0.0)
++
++    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fake)
++    monkeypatch.setenv("CARNOT_ARC_THINK_ARM_FALLBACK", "1")
++
++    policy = _policy()
++    assert policy.think_arm_fallback_enabled is True
++    attempt = {}
++    outcome = policy._execute_bounded_llm_reinduction_with_arm_fallback(attempt, game="lp85")
++
++    assert len(calls) == 1
++    assert outcome.heldout_accuracy == 0.0
++    assert attempt["think_arm_fallback"] == {
++        "enabled": True,
++        "fired": False,
++        "reason": "primary_arm_produced_a_scored_engine",
++    }
++
++
++def test_flag_on_total_failure_retries_with_opposite_arm_and_succeeds(monkeypatch):
++    """The sp80 shape: primary arm produces nothing at all; the OTHER arm succeeds. Must fire
++    exactly once more, toggle CARNOT_ARC_INDUCE_THINK to the opposite of the primary arm DURING
++    the retry call, restore the prior env state afterward, and return the fallback's outcome."""
++    seen_think_env_during_calls = []
++
++    def _fake(**kwargs):
++        seen_think_env_during_calls.append(os.environ.get("CARNOT_ARC_INDUCE_THINK"))
++        if len(seen_think_env_during_calls) == 1:
++            return _outcome(heldout_accuracy=None)
++        return _outcome(heldout_accuracy=1.0, planned=True, plan=[{"action": 1, "data": None}])
++
++    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fake)
++    monkeypatch.setenv("CARNOT_ARC_THINK_ARM_FALLBACK", "1")
++    # Primary arm = no_think (explicit, so the test does not depend on the live scored default).
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
++
++    policy = _policy()
++    attempt = {}
++    outcome = policy._execute_bounded_llm_reinduction_with_arm_fallback(attempt, game="lp85")
++
++    assert seen_think_env_during_calls == ["0", "1"]  # no_think, then think
++    assert outcome.heldout_accuracy == 1.0
++    assert outcome.plan == [{"action": 1, "data": None}]
++    assert attempt["think_arm_fallback"] == {
++        "enabled": True,
++        "fired": True,
++        "primary_arm_think": False,
++        "fallback_arm_think": True,
++        "primary_produced_engine": False,
++        "fallback_produced_engine": True,
++    }
++    # Env restored to its PRE-CALL value, not left on the fallback arm.
++    assert os.environ.get("CARNOT_ARC_INDUCE_THINK") == "0"
++
++
++def test_flag_on_total_failure_retries_opposite_direction_when_primary_is_think(monkeypatch):
++    """Direction is read from the CURRENT arm at call time, not hardcoded -- if the primary arm
++    is think (matches the live scored default per ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT), the
++    fallback must try no_think, the cd82/ls20/sk48 shape from exp6221."""
++    seen = []
++
++    def _fake(**kwargs):
++        seen.append(os.environ.get("CARNOT_ARC_INDUCE_THINK"))
++        return _outcome(heldout_accuracy=None if len(seen) == 1 else 0.0)
++
++    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fake)
++    monkeypatch.setenv("CARNOT_ARC_THINK_ARM_FALLBACK", "1")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1")
++
++    policy = _policy()
++    attempt = {}
++    policy._execute_bounded_llm_reinduction_with_arm_fallback(attempt, game="lp85")
++
++    assert seen == ["1", "0"]  # think, then no_think
++    assert attempt["think_arm_fallback"]["primary_arm_think"] is True
++    assert attempt["think_arm_fallback"]["fallback_arm_think"] is False
++    assert os.environ.get("CARNOT_ARC_INDUCE_THINK") == "1"  # restored
++
++
++def test_flag_on_both_arms_fail_returns_original_outcome_not_fallback(monkeypatch):
++    """Neither arm produces a scoreable engine (the 11/12 exp6221 floor-tie shape, taken to its
++    total-failure extreme) -- the lever must not fabricate a difference; it returns the PRIMARY
++    outcome, and the diagnostics say the fallback did not help."""
++    calls = []
++
++    def _fake(**kwargs):
++        calls.append(1)
++        return _outcome(heldout_accuracy=None)
++
++    monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fake)
++    monkeypatch.setenv("CARNOT_ARC_THINK_ARM_FALLBACK", "1")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
++
++    policy = _policy()
++    attempt = {}
++    outcome = policy._execute_bounded_llm_reinduction_with_arm_fallback(attempt, game="lp85")
++
++    assert len(calls) == 2
++    assert outcome.heldout_accuracy is None
++    assert attempt["think_arm_fallback"]["fallback_produced_engine"] is False
++
++
++def test_bare_default_matches_submitted_constant(monkeypatch):
++    monkeypatch.delenv("CARNOT_ARC_THINK_ARM_FALLBACK", raising=False)
++    assert agent.SUBMITTED_THINK_ARM_FALLBACK_ENABLED is False
++    policy = _policy()
++    assert policy.think_arm_fallback_enabled is False
++
++
++def test_status_diagnostics_dict_reports_the_lever():
++    from carnot.agentic.arc_competition_agent import SUBMITTED_AGENT_CONFIG
++
++    assert (
++        SUBMITTED_AGENT_CONFIG["think_arm_fallback_enabled"]
++        is agent.SUBMITTED_THINK_ARM_FALLBACK_ENABLED
++    )
++    assert SUBMITTED_AGENT_CONFIG["think_arm_fallback_wired"] is True
+-- 
+2.55.0
+

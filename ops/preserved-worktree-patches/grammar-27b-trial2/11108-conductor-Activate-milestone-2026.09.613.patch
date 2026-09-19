@@ -1,0 +1,2569 @@
+From f63a44f0a9749345ea3e100d94b4ba986b36902e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 19:04:06 -0400
+Subject: [PATCH 11108/11171] [conductor] Activate milestone 2026.09.613
+
+Archived previous milestone, activated 2026.09.613.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ research-roadmap.yaml | 2173 ++++++++++++++++++++++-------------------
+ 1 file changed, 1193 insertions(+), 980 deletions(-)
+
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index 4e624ba0a0..4689dfb9c4 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -1,1032 +1,1127 @@
+-milestone: 2026.09.612
+-milestone_title: Balanced constraint energy, anchored self-learning, and ARC evidence
++milestone: 2026.09.613
++milestone_title: Blinded constraint energy, continuous self-learning, and sparse placement
+ milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+ tasks:
+-- id: exp6984-exact-contrast-fixture
+-  title: Source-grouped exact mapping contrast fixture
+-  track: verification
++- id: exp6996-v613-source-contract-preflight
++  title: V613 source delta and task-contract preflight
++  track: infrastructure
+   priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
++  agent_type: claude
++  model: opus
+   requires_gpu: false
+-  max_turns: 50
++  max_turns: 100
+   estimated_wall_time_min: 90
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6984_exact_contrast_fixture.json
++  milestone: 2026.09.613
++  deliverable: results/experiment_6996_v613_source_contract_preflight.json
++  prior_failures:
++    - experiment_id: exp6528-v565-source-model-method-contract
++      verdict: "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview"
++      addressed_by: "Exp6996 records every requested source route as a terminal access row. Unavailable OpenReview metadata stays unverified evidence but no longer prevents the independent document-YAML contract audit from completing."
++      retire_if_same_verdict: true
++    - experiment_id: exp6942-v608-contract-preflight
++      verdict: blocked_v608_contract_preflight
++      addressed_by: "Exp6942 failed its bounded-scope and lint-command checks. Exp6996 audits a completed 13-task contract whose gate fields and exclusion entries are prevalidated before activation, and it reports each failed check as a terminal row."
++      retire_if_same_verdict: true
+   prompt: |
+     CONTEXT:
+-    V611 froze 108 three-family mapping candidates and exactly certified every
+-    row. Its calibration split had zero exact successes. Exp6977 could not fit
+-    or certify a PWA-KAN from one-class labels. V612 first needs balanced,
+-    source-grouped semantic contrasts. This fixture is controlled evidence. It
+-    is not a live extraction-quality claim.
++    V612 completed all 12 conductor slots. Its capstone found one disqualified
++    science boundary: mutation metadata predicted exact validity with AUROC
++    0.9532275. V613 has exactly 13 tasks, exp6996 through exp7008. This first
++    task freezes the execution-time literature delta and independently checks
++    that the Markdown and YAML describe the same executable contract. It is
++    advisory and may not gate another task.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+     - {project_root}/research-program.md
+-    - {project_root}/results/experiment_6967_certified_error_headroom_fixture.json
+-    - {project_root}/results/experiment_6975_delayed_constraint_candidate_bank.json
+-    - {project_root}/results/experiment_6976_exact_candidate_certification.json
+-    - {project_root}/results/experiment_6955_reformulation_fixture.json
+-    - {project_root}/results/experiment_6957_smt_mapping_certification.json
+-    - {project_root}/python/carnot/experiment_6957_smt_mapping_certification.py
+-    - {project_root}/openspec/capabilities/constraint-verification/spec.md
++    - {project_root}/_bmad/prd.md
++    - {project_root}/_bmad/architecture.md
++    - {project_root}/research-references.md V613 Planner Refresh
++    - {project_root}/research-roadmap-next.yaml
++    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++    - {project_root}/results/experiment_6995_v612_capstone.json
++    - {project_root}/ops/exclusion_manifest.yaml
++    - {project_root}/scripts/conductor_gates.py
++    - {project_root}/scripts/verdict_row_consistency_lint.py
+     - {project_root}/openspec/capabilities/research-reporting/spec.md
+-    - {project_root}/research-references.md V612 Planner Refresh
+ 
+     TASK:
+-    Build a prospectively frozen exact mapping contrast fixture with one valid
+-    candidate and one single-fault invalid candidate per source group. Blind
+-    surface provenance, certify both members through independent authorities,
+-    and freeze source-disjoint train, calibration, and held-out splits.
++    Run a post-marker 2025-2026 source delta and build an independent V613
++    document-YAML contract preflight. Verify task count, ordered IDs, exact
++    titles, deliverables, structured gates, gate producers, model rules,
++    comparative-row declarations, prior-failure discipline, and required
++    artifact fields. Report findings without editing the conductor.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the frozen V609 and V611 mapping schemas, Z3,
+-       bounded enumeration, three supported formulation families, and writable
+-       immutable row paths. On failure, write blocked_exact_contrast_fixture
+-       with gate_check_summary.
+-    1. Add REQ-VERIFY-6984 and RED tests before implementation. Cover label
+-       balance, one-fault isolation, solver disagreement, source-group leakage,
+-       alpha renaming, serialization blinding, and bare readiness fields.
+-    2. Freeze 36 source groups before constructing candidates. Use 18 train,
+-       six calibration, and 12 held-out groups. No source group may cross a
+-       split. Record the manifest and hash before opening candidate labels.
+-    3. Construct one exact positive mapping per group from the executable
+-       specification. Construct one negative by applying exactly one frozen
+-       fault: bound change, coefficient swap, objective-direction reversal, or
+-       constraint omission. Preserve all attempted mutations.
+-    4. Run Z3 and bounded enumeration on both candidates. Require agreement on
+-       domain, satisfiability, optimum, objective order, and solution-space
+-       relation. Unknown, timeout, disagreement, or multiple faults rejects the
+-       pair without replacement from the held-out split.
+-    5. Alpha-rename identifiers and canonicalize harmless formatting through a
+-       label-blind function. Randomize pair order from the frozen seed. Keep the
+-       unblinded source and mutation fields outside the future feature table.
+-    6. Write raw candidate rows and exact authority rows before aggregate
+-       metrics. Each split must contain both labels. The held-out split must
+-       cover all four fault families and all three formulation families.
+-    7. Set contrast_fixture_complete_score=1 only when all 36 pairs are
+-       terminal, both authorities agree, and every hash replays. Set
+-       label_balance_ready_score=1 only when each split is exactly balanced,
+-       source-disjoint, and nonconstant.
+-    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+-       adversarial verification, row-consistency lint, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle per required field and both contrast_fixture_complete_score
+-       and label_balance_ready_score; preconditions_checked;
+-       inference_substrate (deterministic_z3_contrast_fixture_no_llm);
+-       duration_s; source_artifact_hashes; source_manifest_rows;
+-       source_manifest_hash; rows; per_pair_results; per_candidate_rows;
+-       mutation_attempt_rows; fault_family_rows; z3_authority_rows;
+-       enumeration_authority_rows; authority_agreement_rows;
+-       alpha_rename_rows; serialization_blinding_rows; split_rows;
+-       split_hashes; label_balance_rows; source_overlap_rows;
+-       expected_pair_count (36); observed_pair_count;
+-       contrast_fixture_complete_score; label_balance_ready_score;
+-       controlled_fixture_only (true); live_extraction_claimed (false);
+-       random_seed; reproducibility_checksum; gate_check_summary with failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (true); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
++    0. PRECONDITIONS: require readable V613 Markdown and YAML, V612 capstone,
++       exclusion manifest, reference file, network access for the source
++       search, and a writable artifact path. On failure, write
++       blocked_v613_source_contract_preflight with gate_check_summary. Do not
++       declare partial for an external missing input.
++    1. Add REQ-REPORT-6996 and RED tests before implementation. Cover exact
++       count 13, ordered range exp6996-exp7008, title and deliverable parity,
++       gate parity, missing producers, misspelled fields, prior-failure schema,
++       MODEL_SPECS rules, verdict_class, and prompt-tail requirements.
++    2. Search arXiv, OpenReview, Hugging Face Papers, Semantic Scholar citation
++       routes for EBT 2507.02092 and ARM-EBM 2512.15605, Extropic writing,
++       GitHub discovery, and Logical Intelligence. Limit the delta to sources
++       published or changed after the V613 planner marker. Prefer primary
++       sources and preserve URL, date, query, and access outcome per source.
++    3. If a genuinely new relevant source appears, append a dated post-marker
++       subsection to research-references.md. Do not rewrite earlier entries.
++       Record a no-change row when no source changes the plan.
++    4. Parse the Markdown task table and YAML independently. Require milestone
++       2026.09.613, exactly 13 tasks, and the exact ordered IDs exp6996 through
++       exp7008. Compare every title, deliverable, order, and structured gate.
++    5. For each gated task, prove the upstream task occurs earlier in this
++       roadmap and declares the exact bare artifact field in its own REQUIRED
++       ARTIFACT FIELDS. Reject cross-milestone structured gates.
++    6. Check that every task declares verdict_class and blocked diagnostics,
++       every comparative task has per_unit_rows=true, and every reused failed
++       scope has all four prior_failures fields. Check that no task uses a
++       retired exp_id or depends on one.
++    7. Check that every LLM experiment declares at least one required GGUF in
++       MODEL_SPECS. Confirm Exp6998 declares all three. Confirm legacy small
++       models are smoke-only. Check that no-LLM substrate names end in _no_llm.
++    8. Set v613_source_delta_complete_score=1 when every requested source route
++       has a terminal row. Set v613_task_contract_conforms_score=1 only when all
++       13 contract rows agree and every gate producer resolves. A mismatch is
++       disqualified, not partial, and this task must not repair it silently.
++    9. Run focused tests, YAML parsing, artifact validation, adversarial
++       verification, row-consistency lint, OpenSpec coverage, and root-clutter
++       checks. Do not activate or archive a roadmap.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and both
++        v613_source_delta_complete_score and
++        v613_task_contract_conforms_score; preconditions_checked;
++        inference_substrate (deterministic_source_and_contract_audit_no_llm);
++        duration_s; source_artifact_hashes; source_query_rows;
++        primary_source_rows; secondary_source_rows; semantic_scholar_rows;
++        post_marker_delta_rows; reference_append_rows; rows;
++        markdown_task_rows; yaml_task_rows; task_contract_rows;
++        title_parity_rows; deliverable_parity_rows; gate_contract_rows;
++        gate_producer_rows; prior_failure_rows; retired_id_rows;
++        model_compliance_rows; substrate_name_rows; artifact_field_rows;
++        command_receipt_rows; expected_task_count (13); observed_task_count;
++        expected_id_order; observed_id_order;
++        v613_source_delta_complete_score;
++        v613_task_contract_conforms_score; random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
++        expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (false); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6984_exact_contrast_fixture.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6996_v613_source_contract_preflight.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6955-reformulation-fixture
+-      verdict: complete_circular_positive_reformulation_fixture_conforms
+-      addressed_by: "V612 changes the deliverable from a relation fixture to a source-disjoint balanced candidate corpus with isolated faults and blinded held-out rows."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6967-certified-error-headroom-fixture
+-      verdict: complete_circular_certified_error_headroom_fixture
+-      addressed_by: "The new fixture guarantees both labels in every split before training; Exp6967 supplied chronology but not a learnable calibration boundary."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6985-chronological-constraint-stream
+-  title: Sealed chronological constraint-shift stream
+-  track: self-learning
++- id: exp6997-authority-sidecar-rebuild
++  title: Authority-only mutation sidecar and blinded learner view
++  track: infrastructure
+   priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+   max_turns: 50
+-  estimated_wall_time_min: 90
++  estimated_wall_time_min: 120
+   per_unit_rows: true
+-  prior_failures:
+-    - experiment_id: exp6678-constraint-family-stream
+-      verdict: "blocked_fixture_gate: exact constraint-family stream is not ready"
+-      addressed_by: "Exp6985 consumes Exp6984's newly balanced exact contrasts, seals tied and shifted event groups prospectively, and publishes every future-support checkpoint before online use."
+-      retire_if_same_verdict: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6985_chronological_constraint_stream.json
+-  gated_on:
+-    - upstream: exp6984-exact-contrast-fixture
+-      artifact_field: contrast_fixture_complete_score
+-      op: '=='
+-      value: 1
++  milestone: 2026.09.613
++  deliverable: results/experiment_6997_authority_sidecar_rebuild.json
+   prompt: |
+     CONTEXT:
+-    Exp6984 supplies balanced static contrasts. Continuous learning also needs a
+-    sealed chronological stream with changing fault families, tied groups, and
+-    later recurrence. V611's transactional memory tied its controls because the
+-    stream never changed their decisions. This task creates the evaluation
+-    stream only. It performs no online update.
++    Exp6986 wrote 414 authentic CUDA-backed candidate-model feature rows.
++    Exp6987 found that mutation metadata alone predicted exact validity with
++    AUROC 0.9532275 and disqualified the bank. The V612 capstone requires the
++    next attempt to put mutation provenance in an authority-only sidecar and
++    rebuild the learner-facing table before any PWA training.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md section Continuous Self-Learning
+     - {project_root}/results/experiment_6984_exact_contrast_fixture.json
+-    - {project_root}/results/experiment_6961_certified_event_sequence.json
+-    - {project_root}/results/experiment_6967_certified_error_headroom_fixture.json
+-    - {project_root}/results/experiment_6978_transactional_constraint_self_learning.json
+-    - {project_root}/python/carnot/memory/transactional_constraint_memory.py
+-    - {project_root}/openspec/capabilities/continuous-learning/spec.md
++    - {project_root}/results/experiment_6985_chronological_constraint_stream.json
++    - {project_root}/results/experiment_6986_three_family_contrast_features.json
++    - {project_root}/results/experiment_6987_contrast_feature_audit.json
++    - {project_root}/results/experiment_6995_v612_capstone.json
++    - {project_root}/scripts/experiments/experiment_6986_three_family_contrast_features.py
++    - {project_root}/python/carnot/experiment_6986_three_family_contrast_features.py
+     - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/research-references.md V612 Planner Refresh
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
++    - {project_root}/research-references.md V613 Planner Refresh
+ 
+     TASK:
+-    Build and seal a 24-event constraint-shift stream from source groups absent
+-    from Exp6984. Include discriminative and tied candidate groups, freeze all
+-    future-support checkpoints, and prove that no later label is visible in an
+-    earlier event.
++    Rebuild the V612 feature bank as one wide, label-blind learner row per
++    candidate. Put exact labels, splits, source groups, mutation provenance,
++    and authority records in separate hashed sidecars. Add a learner loader
++    that cannot open those sidecars and prove stable keyed joins without
++    rerunning any GGUF.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require contrast_fixture_complete_score=1, the frozen
+-       fault operators, Z3, bounded enumeration, and at least 24 unused source
+-       groups. On failure, write blocked_chronological_constraint_stream with
+-       gate_check_summary.
+-    1. Add REQ-LEARN-6985 and RED tests before implementation. Cover event
+-       order, source disjointness, shift blocks, tie groups, future-label
+-       sealing, recurrence, and bare chronological_stream_ready_score.
+-    2. Freeze four ordered blocks of six events. Use a changed fault-family mix
+-       in each block. Make the last block revisit the first block's families on
+-       new sources so forgetting is measurable.
+-    3. Create 16 one-positive/one-negative headroom events, four all-valid
+-       events, and four all-invalid events. The tied groups test the required
+-       no-update rule when exact group advantage is zero.
+-    4. Certify every candidate with Z3 and bounded enumeration. Preserve
+-       unknown and rejected construction attempts. Never replace an event after
+-       any downstream task sees the stream hash.
+-    5. Freeze event order, candidate order, exact labels, shift IDs, recurrence
+-       links, retention anchors, held-future windows, and support metrics in an
+-       immutable JSONL stream. Store labels in a separate sealed file.
+-    6. For event t, construct a visibility manifest containing only data through
+-       t-1. Prove by mutation tests that current and future labels cannot enter
+-       the decision view.
+-    7. Set chronological_stream_ready_score=1 only when all 24 events are
+-       terminal, all authorities agree, event counts match, source overlap is
+-       zero, and every visibility manifest replays.
+-    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+-       adversarial verification, row-consistency lint, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle per required field and chronological_stream_ready_score;
+-       preconditions_checked; inference_substrate
+-       (deterministic_z3_chronological_stream_no_llm); duration_s;
+-       source_artifact_hashes; source_disjointness_rows; stream_manifest;
+-       stream_hash; sealed_label_path; sealed_label_hash; rows;
+-       per_event_results; per_candidate_rows; shift_block_rows;
+-       fault_family_rows; tie_group_rows; recurrence_rows;
+-       retention_anchor_rows; held_future_window_rows;
+-       visibility_manifest_rows; future_label_leakage_rows;
+-       authority_agreement_rows; expected_event_count (24);
+-       observed_event_count; headroom_event_count; all_valid_event_count;
+-       all_invalid_event_count; chronological_stream_ready_score;
+-       continuous_self_learning_fixture (true); random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (true); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
++    0. PRECONDITIONS: require the terminal Exp6984-Exp6987 artifacts, all 414
++       raw feature rows, source hashes, three complete family views, and
++       writable immutable data paths. On failure, write
++       blocked_authority_sidecar_rebuild with gate_check_summary.
++    1. Add REQ-VERIFY-6997 and RED tests before implementation. Cover duplicate
++       row keys, missing families, label columns, provenance aliases, nested
++       metadata, categorical model identity, sidecar access, hash mismatch,
++       row reordering, and the bare readiness field.
++    2. Freeze a candidate key derived from semantic prompt and candidate hashes,
++       not source, mutation, order, split, label, or model family. Require one
++       key for each of the 138 candidates and exactly three family rows per key.
++    3. Pivot the three long family rows into one wide row. Retain only numeric
++       teacher-forced sequence and parser features from the frozen allowlist.
++       Give family-specific numeric columns stable neutral positions. Do not
++       include a categorical model identity or repository string.
++    4. Write three immutable files: learner_view.jsonl with key and allowed
++       numeric tensors; label_split_sidecar.jsonl with exact label and split;
++       mutation_authority_sidecar.jsonl with source, mutation, witnesses, and
++       authority records. Write their manifests and hashes before any join.
++    5. Implement a learner loader whose API accepts only learner_view.jsonl and
++       the allowlist. Deny paths, objects, environment variables, or callbacks
++       that expose either sidecar. Prove denied access with tests and syscall or
++       file-open receipts.
++    6. Implement a separate authority joiner for training and evaluation. It
++       may join by the frozen key only after learner tensors are materialized.
++       It must return labels and split routing separately from the feature
++       matrix. Mutation provenance must never enter its feature output.
++    7. Permute row order and alpha-rename every nonsemantic sidecar identifier.
++       Require byte-stable learner tensors and prediction hashes. Preserve all
++       mismatch and rejected-row evidence.
++    8. Set sidecar_rebuild_complete_score=1 when all 138 candidate rows and 414
++       source rows replay. Set blinded_learner_view_ready_score=1 only when the
++       feature allowlist is clean, learner-side sidecar access is denied, all
++       hashes bind, and permutation and alpha-renaming leave tensors unchanged.
++    9. This task performs no GGUF inference and no verifier fit. If ready, use
++       circular_positive rather than positive because exact authorities define
++       the sidecars. A failed isolation check is disqualified, not partial.
++    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++        adversarial verification, row-consistency lint, and root-clutter checks.
++    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and both sidecar_rebuild_complete_score
++        and blinded_learner_view_ready_score; preconditions_checked;
++        inference_substrate (deterministic_feature_sidecar_transform_no_llm);
++        duration_s; source_artifact_hashes; MODEL_SPECS_inherited;
++        source_model_rows; rows; per_candidate_rows; candidate_key_rows;
++        family_completeness_rows; pivot_rows; learner_view_path;
++        learner_view_hash; learner_view_manifest_rows;
++        label_split_sidecar_path; label_split_sidecar_hash;
++        label_split_manifest_rows; mutation_authority_sidecar_path;
++        mutation_authority_sidecar_hash; mutation_authority_manifest_rows;
++        feature_allowlist; prohibited_feature_rows; nested_metadata_rows;
++        categorical_identity_rows; learner_loader_rows; denied_access_rows;
++        file_open_receipt_rows; authority_join_rows; tensor_hash_rows;
++        row_permutation_rows; alpha_rename_rows; source_disagreement_rows;
++        expected_candidate_count (138); observed_candidate_count;
++        expected_source_row_count (414); observed_source_row_count;
++        gguf_inference_performed (false); verifier_fit_performed (false);
++        sidecar_rebuild_complete_score; blinded_learner_view_ready_score;
++        random_seed; reproducibility_checksum; gate_check_summary with failed
++        check, expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (true); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6985_chronological_constraint_stream.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6997_authority_sidecar_rebuild.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6987-contrast-feature-audit
++      verdict: complete_disqualified_contrast_feature_bank_shortcut_gate
++      addressed_by: "This attempt changes the data boundary: mutation, source, split, label, and authority fields move to hashed sidecars, while the learner receives one wide allowlisted numeric row per candidate."
++      retire_if_same_verdict: true
+ 
+-- id: exp6986-three-family-contrast-features
+-  title: Three-family contrast feature bank
++- id: exp6998-three-family-commitment-controls
++  title: Three-family self-commitment shortcut controls
+   track: inference
+-  priority: critical
++  priority: high
+   agent_type: claude
+   model: sonnet
+   requires_gpu: true
+   max_turns: 50
+   estimated_wall_time_min: 240
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6986_three_family_contrast_features.json
++  prior_failures:
++    - experiment_id: exp6200-three-family-raw-code-transport-canary
++      verdict: "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]"
++      addressed_by: "Exp6998 replaces raw code generation and transport with teacher-forced self-commitment curves on a frozen exact contrast fixture. Exp6973 and Exp6986 now provide the three-family CUDA runtime receipts that Exp6200 lacked."
++      retire_if_same_verdict: true
++    - experiment_id: exp6212-three-family-gguf-runtime-recovery
++      verdict: "complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts"
++      addressed_by: "Exp6973 shipped the task-owned lease path, and Exp6986 recorded 414 terminal CUDA feature rows across all three required families. Exp6998 reuses that qualified runtime with sequential owned loads and teardown receipts."
++      retire_if_same_verdict: true
++    - experiment_id: exp6221-three-family-code-transport-canary-v3
++      verdict: blocked_gate_check_failed
++      addressed_by: "Exp6221 was blocked by Exp6212 runtime readiness. Exp6998 has no dependency on that retired code-transport gate; it uses the shipped Exp6973 runtime and gates only on Exp6997's same-roadmap blinded learner view."
++      retire_if_same_verdict: true
++    - experiment_id: exp6233-three-family-code-content-margin
++      verdict: blocked_gate_check_failed
++      addressed_by: "Exp6233 read a missing readiness field from an earlier runtime task. Exp6998 consumes the exact bare blinded_learner_view_ready_score declared by Exp6997 and tests commitment latency instead of code-content margin."
++      retire_if_same_verdict: true
++    - experiment_id: exp6314-three-family-model-local-state-corpus
++      verdict: blocked_gate_check_failed
++      addressed_by: "Exp6314 depended on an unready model-local representation surface. Exp6998 does not require hidden states or a local-state corpus; it measures terminal choices and teacher-forced choice-token probabilities through the qualified GGUF interface."
++      retire_if_same_verdict: true
++    - experiment_id: exp6676-three-family-triggered-tail-ab
++      verdict: "blocked_no_conflicting_workload: expected True, observed False"
++      addressed_by: "Exp6676 had no conflict-free owned runtime. Exp6998 uses the shipped task lease, sequential family loads, owned ports, checkpoints, and teardown receipts established by Exp6973 and exercised by Exp6986."
++      retire_if_same_verdict: true
++    - experiment_id: exp6837-three-family-output-free-compatibility
++      verdict: complete_blocked_output_free_compatibility
++      addressed_by: "Exp6837 failed exclusive GPU lease and live-canary checks. Exp6973 subsequently qualified lease ownership, and Exp6986 completed live CUDA rows for every required family; Exp6998 retains those ownership checks."
++      retire_if_same_verdict: true
++    - experiment_id: exp6864-three-family-semantic-contrast-scoring-stream
++      verdict: blocked_gate_check_failed
++      addressed_by: "Exp6864 was blocked by an unready semantic-contrast preregistration. Exp6998 instead uses Exp6984's completed exact source-disjoint pairs and applies a new self-commitment negative control with frozen clean, true-hint, and decoy conditions."
++      retire_if_same_verdict: true
++  milestone: 2026.09.613
++  deliverable: results/experiment_6998_three_family_commitment_controls.json
+   gated_on:
+-    - upstream: exp6984-exact-contrast-fixture
+-      artifact_field: contrast_fixture_complete_score
+-      op: '=='
+-      value: 1
+-    - upstream: exp6984-exact-contrast-fixture
+-      artifact_field: label_balance_ready_score
+-      op: '=='
+-      value: 1
+-    - upstream: exp6985-chronological-constraint-stream
+-      artifact_field: chronological_stream_ready_score
++    - upstream: exp6997-authority-sidecar-rebuild
++      artifact_field: blinded_learner_view_ready_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6984 and Exp6985 freeze 120 candidate strings before model scoring. V611
+-    also contains 18 parseable authentic transfer candidates, including two
+-    exact successes. This task measures teacher-forced likelihood features on
+-    those 138 candidates. It must not generate new answers or expose exact
+-    labels to the model process.
++    Self-Commitment Latency, arXiv:2606.05625, detects shortcut-available
++    reasoning by measuring how early partial contexts commit to the model's own
++    final answer. V612 found a concrete mutation-provenance shortcut. This task
++    adapts the probe to mapping-validity contexts with the required local GGUF
++    families. It is an audit-only negative control, not a verifier feature and
++    not a reproduction of the paper's GSM8K claim.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/research-references.md V613 Planner Refresh
+     - {project_root}/results/experiment_6973_lease_aware_gguf_runtime.json
+-    - {project_root}/results/experiment_6975_delayed_constraint_candidate_bank.json
+-    - {project_root}/results/experiment_6976_exact_candidate_certification.json
+     - {project_root}/results/experiment_6984_exact_contrast_fixture.json
+-    - {project_root}/results/experiment_6985_chronological_constraint_stream.json
++    - {project_root}/results/experiment_6997_authority_sidecar_rebuild.json
+     - {project_root}/scripts/experiment_template.py
+     - {project_root}/python/carnot/inference/sota_models.py
+-    - {project_root}/python/carnot/inference/gemma4_quantized.py
+-    - {project_root}/python/carnot/pipeline/gpu_resource_manager.py
++    - {project_root}/python/carnot/pipeline/gemma4_quantized_loader.py
++    - {project_root}/python/carnot/gpu_lease_phase_journal.py
+     - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
+     - {project_root}/openspec/capabilities/constraint-verification/spec.md
+ 
+     TASK:
+-    Build a label-blind teacher-forced feature bank for all 138 frozen
+-    candidates with each required local GGUF family. Preserve raw per-token
+-    evidence, GPU ownership, model hashes, candidate hashes, and teardown
+-    receipts. Do not fit or select a verifier here.
++    Measure partial-context self-commitment under clean,
++    true-provenance-hint, and permuted-decoy-hint conditions for 12 frozen
++    source-disjoint contrast pairs and all three required GGUF families. Keep
++    exact labels outside every model process and publish the curves only as
++    prohibited shortcut controls.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require both upstream readiness fields, the exact source
+-       hashes, 138 frozen candidates, all three GGUF files, two CUDA devices,
+-       CUDA-capable llama.cpp, a free task lease, and writable checkpoints. On
+-       failure, write blocked_three_family_contrast_features with
+-       gate_check_summary.
+-    1. Add REQ-INF-6986 and RED tests before implementation. Cover label-blind
+-       input construction, tokenizer parity, candidate hashes, per-token
+-       alignment, family completeness, CUDA evidence, checkpoint recovery,
+-       teardown, and bare downstream fields.
++    0. PRECONDITIONS: require blinded_learner_view_ready_score=1, 12 frozen
++       source-disjoint audit pairs selected before label opening, all three
++       GGUF files, two CUDA devices, CUDA-capable llama.cpp, a task-owned lease,
++       and writable checkpoints. On failure, write
++       blocked_three_family_commitment_controls with gate_check_summary.
++    1. Add REQ-INF-6998 and RED tests before implementation. Cover pair freeze,
++       label denial, tokenizer parity, hint construction, decoy permutation,
++       prefix order, final-choice extraction, family completeness, CUDA
++       evidence, resume, teardown, and bare completion fields.
+     2. Declare MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)). Require
+        exact IDs unsloth/Qwen3.6-35B-A3B-GGUF,
+        unsloth/gemma-4-31B-it-GGUF, and
+        unsloth/gemma-4-26B-A4B-it-GGUF. Legacy models are smoke-only and cannot
+-       enter rows, comparisons, or readiness fields.
+-    3. Build the scoring manifest in a label-denied process. Include 72 Exp6984
+-       candidates, 48 Exp6985 candidates, and the 18 parseable Exp6976 transfer
+-       candidates. Freeze prompt, candidate, order, and scoring-config hashes.
+-    4. Acquire the shipped task lease. Load one family at a time with n_ctx at
++       enter rows, comparisons, readiness fields, or headlines.
++    3. Freeze 12 source-disjoint audit pairs, 24 candidates, and three prompt
++       conditions before inference. Clean contains semantic task and candidate
++       only. True hint includes its mutation-provenance text without an exact
++       label. Decoy hint receives another pair's provenance through a frozen
++       derangement. Never expose sidecar paths or authority results.
++    4. For each candidate and condition, obtain the model's own terminal
++       valid-or-invalid choice. At at most eight frozen candidate-prefix
++       fractions, teacher-force the prefix and measure probability mass on that
++       same terminal choice. Preserve raw choice-token and prefix rows without
++       full-vocabulary vectors.
++    5. Compute first-commitment latency at threshold 0.8, commitment range, mean
++       uncommitted mass, choice flips, and uncertainty. Treat these as an
++       adaptation to structured mapping contexts, not the paper's metric
++       reproduction.
++    6. Acquire the shipped lease and load one family at a time with n_ctx at
+        least 16384 and CUDA offload. Use each GGUF's embedded tokenizer. Never
+-       call AutoTokenizer.from_pretrained on a GGUF repository.
+-    5. Teacher-force each prompt-candidate sequence without sampling a new
+-       answer. Record sequence NLL, length-normalized NLL, token entropy,
+-       top-probability margin, local surprisal changes, token counts, and
+-       parser-only structural counts. Keep raw token rows and no full-vocabulary
+-       vectors.
+-    6. The scoring process may read candidate IDs and text only. It may not read
+-       exact labels, mutation types, source group, split, future windows, or
+-       another family's scores. Prove denied-field access through mutation
+-       tests and process receipts.
+-    7. Checkpoint after each source block. Close each model, release owned
++       use AutoTokenizer.from_pretrained for a GGUF repository.
++    7. Checkpoint after each pair-family block. Close each model, release owned
+        processes and ports, and prove VRAM returns within 512 MiB of baseline.
+        Never kill or attach to an unowned process.
+-    8. Require exactly 138 candidates x three families = 414 terminal feature
+-       rows. Join labels only after every family process exits. Keep the joined
+-       table separate from raw model evidence.
+-    9. Set three_family_feature_bank_complete_score=1 only when all 414 rows
+-       replay, all families used CUDA, all candidate hashes match, label-blind
+-       checks pass, and teardown completes. Do not require predictive value.
+-    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++    8. Require exactly 12 pairs x two candidates x three conditions x three
++       families = 216 terminal candidate-condition-model rows. Join exact
++       labels only after all model processes exit and only for audit summaries.
++    9. Set commitment_control_complete_score=1 when all 216 rows replay, all
++       families used CUDA, labels were denied, hashes match, and teardown
++       completes. Set shortcut_commitment_detected_score=1 only when the
++       true-hint versus clean paired latency interval is below zero and the
++       decoy condition does not reproduce the same effect. A null result is
++       valid and does not block Exp6999.
++    10. Emit audit_only_control=true, learner_feature_allowed=false, and
++        verifier_fit_performed=false. Do not add any commitment column to the
++        Exp6997 learner allowlist.
++    11. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+         adversarial verification, row-consistency lint, and root-clutter checks.
+-    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and three_family_feature_bank_complete_score;
+-        preconditions_checked; inference_substrate
+-        (live_local_llama_cpp_three_family_teacher_forced_cuda);
+-        duration_s; live_duration_s; source_artifact_hashes; MODEL_SPECS;
+-        models_used; model_file_hashes; scoring_manifest_rows;
+-        scoring_manifest_hash; candidate_source_count_rows; rows;
+-        per_candidate_model_rows; raw_token_rows; sequence_feature_rows;
+-        parser_feature_rows; label_denial_rows; process_isolation_rows;
+-        gpu_runtime_rows; lease_rows; checkpoint_rows; teardown_rows;
+-        vram_release_rows; joined_label_rows; expected_feature_row_count (414);
+-        observed_feature_row_count; three_family_feature_bank_complete_score;
+-        verifier_fit_performed (false); random_seed; reproducibility_checksum;
+-        gate_check_summary with failed check, expected value, and observed value
+-        for any blocked verdict; verifier_is_oracle (false); verdict_class
++    12. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and both
++        commitment_control_complete_score and
++        shortcut_commitment_detected_score; preconditions_checked;
++        inference_substrate
++        (live_local_llama_cpp_three_family_commitment_probe_cuda); duration_s;
++        live_duration_s; source_artifact_hashes; MODEL_SPECS; models_used;
++        model_file_hashes; pair_manifest_rows; pair_manifest_hash;
++        condition_manifest_rows; prompt_hash_rows; candidate_hash_rows; rows;
++        per_pair_results; per_candidate_condition_model_rows;
++        terminal_choice_rows; prefix_fraction_rows; choice_token_rows;
++        commitment_curve_rows; first_commitment_latency_rows;
++        commitment_range_rows; uncommitted_mass_rows; uncertainty_rows;
++        choice_flip_rows; label_denial_rows; process_isolation_rows;
++        late_label_join_rows; paired_condition_delta_rows;
++        bootstrap_interval_rows; family_stratum_rows; gpu_runtime_rows;
++        lease_rows; checkpoint_rows; teardown_rows; vram_release_rows;
++        expected_unit_count (216); observed_unit_count;
++        commitment_control_complete_score;
++        shortcut_commitment_detected_score; audit_only_control (true);
++        learner_feature_allowed (false); verifier_fit_performed (false);
++        self_commitment_paper_reproduction_claimed (false); random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
++        expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (false); verdict_class
+         (positive | circular_positive | null | blocked | disqualified | partial);
+         honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6986_three_family_contrast_features.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6998_three_family_commitment_controls.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6969-error-structured-prompt-bank
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "The three-family CUDA path is now proven, and this task scores a frozen balanced corpus without generation, prompt selection, or the blocked V610 dependency."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6987-contrast-feature-audit
+-  title: Independent contrast balance and leakage audit
++- id: exp6999-blinded-feature-cold-audit
++  title: Independent blinded feature isolation and shortcut audit
+   track: verification
+   priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+   max_turns: 30
+-  estimated_wall_time_min: 90
++  estimated_wall_time_min: 120
+   per_unit_rows: true
+-  prior_failures:
+-    - experiment_id: exp5869-hardness-surface-headroom-audit
+-      verdict: "blocked: test_exit_codes"
+-      addressed_by: "Exp6987 audits a frozen three-family feature bank with explicit command receipts, per-row shortcut probes, and a terminal fail-closed artifact even when a test exits nonzero."
+-      retire_if_same_verdict: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6987_contrast_feature_audit.json
++  milestone: 2026.09.613
++  deliverable: results/experiment_6999_blinded_feature_cold_audit.json
+   gated_on:
+-    - upstream: exp6986-three-family-contrast-features
+-      artifact_field: three_family_feature_bank_complete_score
++    - upstream: exp6997-authority-sidecar-rebuild
++      artifact_field: blinded_learner_view_ready_score
++      op: '=='
++      value: 1
++    - upstream: exp6998-three-family-commitment-controls
++      artifact_field: commitment_control_complete_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6986 joins exact labels only after three isolated model-scoring passes.
+-    A balanced dataset can still leak through source IDs, mutation metadata,
+-    serialization style, candidate order, length, or model identity. PWA-KAN
+-    training must wait for an independent audit of those shortcuts.
++    Exp6997 moves labels and provenance outside the learner table. Exp6998
++    measures a new commitment-based shortcut control and marks it prohibited.
++    The same process that performs either task cannot release the bank for
++    training. V612 failed because mutation metadata alone crossed the 0.80
++    upper-interval shortcut gate. This fresh process must rerun that gate after
++    the data-boundary change.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6984_exact_contrast_fixture.json
+-    - {project_root}/results/experiment_6985_chronological_constraint_stream.json
+-    - {project_root}/results/experiment_6986_three_family_contrast_features.json
+-    - {project_root}/scripts/experiments/experiment_6986_three_family_contrast_features.py
++    - {project_root}/results/experiment_6987_contrast_feature_audit.json
++    - {project_root}/results/experiment_6997_authority_sidecar_rebuild.json
++    - {project_root}/results/experiment_6998_three_family_commitment_controls.json
++    - {project_root}/scripts/experiments/experiment_6987_contrast_feature_audit.py
+     - {project_root}/scripts/verdict_row_consistency_lint.py
+     - {project_root}/openspec/capabilities/constraint-verification/spec.md
+     - {project_root}/openspec/capabilities/research-reporting/spec.md
++    - {project_root}/research-references.md V613 Planner Refresh
+ 
+     TASK:
+-    Audit the frozen feature bank in a fresh read-only process. Recompute row
+-    counts, balance, joins, hashes, split isolation, and label-denial evidence.
+-    Measure prohibited provenance shortcuts before releasing the bank to
++    Audit the blinded learner table in a fresh read-only process. Recompute
++    keyed joins, hashes, feature schemas, label denial, split isolation, and
++    grouped shortcut probes. Prove learner invariance under mutation-sidecar
++    permutation, replacement, and removal before releasing the table to PWA
+     training.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require three_family_feature_bank_complete_score=1, all
+-       414 rows, the raw and joined hashes, both fixture hashes, and read-only
+-       access. On failure, write blocked_contrast_feature_audit with
+-       gate_check_summary.
+-    1. Add REQ-VERIFY-6987 and RED tests before implementation. Cover missing
+-       model rows, duplicate joins, label imbalance, source overlap, future
+-       leakage, direct label columns, provenance shortcuts, and bare readiness.
+-    2. Start a fresh process with network, GPU, LLM, and source writes disabled.
+-       Hash every source before reading aggregate claims.
+-    3. Rebuild all 414 candidate-model joins from raw rows. Recompute exact
+-       candidate counts, family coverage, balance by split, and source-group
+-       disjointness. Preserve every disagreement.
+-    4. Confirm that the model process inputs contain no label, fault family,
+-       split, source group, recurrence link, future window, or authority result.
+-       Confirm the training feature schema excludes those fields and IDs.
+-    5. Fit preregistered shortcut probes using length only, serialization only,
+-       source metadata only, mutation metadata only, and model identity only.
+-       Use grouped cross-validation and report intervals from per-pair rows.
+-    6. Set feature_audit_complete_score=1 when every row and receipt replays.
+-       Set contrast_feature_bank_ready_score=1 only when direct leakage count is
+-       zero, splits are balanced and disjoint, all models are complete, and no
+-       prohibited provenance-only probe has an upper CI at or above 0.80 AUROC.
+-    7. A failed shortcut gate is terminal disqualification, not a repair or
+-       partial result. Do not rewrite Exp6984, Exp6985, or Exp6986.
+-    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++    0. PRECONDITIONS: require both structured gates, 138 learner rows, all
++       three immutable sidecar files, allowlist and loader receipts, 216
++       commitment-control rows, and read-only access. On failure, write
++       blocked_blinded_feature_cold_audit with gate_check_summary.
++    1. Add REQ-VERIFY-6999 and RED tests before implementation. Cover direct
++       and nested leakage, alias columns, duplicate keys, missing families,
++       order changes, sidecar swaps, removed sidecars, model identity,
++       commitment-control admission, interval thresholds, and bare readiness.
++    2. Start a fresh process with network, GPU, LLM, training, and source writes
++       disabled. Hash every input before reading source aggregate claims.
++    3. Rebuild all 138 wide learner rows from the 414 raw model rows. Recompute
++       candidate keys, family completeness, tensor hashes, label balance,
++       source disjointness, and split membership. Preserve disagreements.
++    4. Run the learner loader with the correct mutation sidecar, a frozen
++       permutation, a cross-pair replacement, an empty file, and no file. The
++       loader must never open any sidecar. Learner tensors and a fixed reference
++       prediction hash must remain byte-identical in every condition.
++    5. Confirm the allowlist excludes labels, splits, source IDs, mutation
++       fields, candidate order, pair IDs, authority records, categorical model
++       identity, prompt-condition IDs, and every Exp6998 commitment field.
++    6. Fit preregistered grouped probes using length only, serialization only,
++       source metadata only, mutation metadata only, model identity only,
++       commitment controls only, and the allowed learner table. Report AUROC,
++       intervals, coefficients, group splits, and per-candidate predictions.
++    7. Set feature_isolation_audit_complete_score=1 when every row, mutation,
++       and receipt is terminal. Set blinded_feature_bank_ready_score=1 only
++       when direct leakage is zero, learner invariance is exact, splits are
++       balanced and disjoint, all models are complete, prohibited columns are
++       absent, and no prohibited metadata-only probe has an upper 95% interval
++       at or above 0.80 AUROC.
++    8. A failed shortcut gate is terminal disqualification. Do not repair or
++       rewrite Exp6997 or Exp6998. If ready, use circular_positive rather than
++       positive because exact labels define the audit.
++    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+        adversarial verification, row-consistency lint, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle per required field and both feature_audit_complete_score and
+-       contrast_feature_bank_ready_score; preconditions_checked;
+-       inference_substrate (fresh_process_contrast_leakage_audit_no_llm);
+-       duration_s; source_artifact_hashes; rows; per_candidate_model_rows;
+-       join_replay_rows; row_count_rows; family_coverage_rows;
+-       label_balance_rows; source_overlap_rows; split_isolation_rows;
+-       label_denial_replay_rows; feature_schema_rows;
+-       prohibited_field_rows; shortcut_probe_rows; shortcut_interval_rows;
+-       source_disagreement_rows; read_only_enforcement_receipt;
+-       direct_leakage_count; feature_audit_complete_score;
+-       contrast_feature_bank_ready_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (true); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and both
++        feature_isolation_audit_complete_score and
++        blinded_feature_bank_ready_score; preconditions_checked;
++        inference_substrate
++        (fresh_process_blinded_feature_isolation_audit_no_llm); duration_s;
++        source_artifact_hashes; rows; per_candidate_rows; raw_rebuild_rows;
++        candidate_key_rows; family_completeness_rows; join_replay_rows;
++        tensor_hash_rows; label_balance_rows; source_overlap_rows;
++        split_isolation_rows; label_denial_replay_rows; feature_schema_rows;
++        prohibited_field_rows; sidecar_condition_rows;
++        sidecar_open_attempt_rows; sidecar_permutation_rows;
++        sidecar_replacement_rows; sidecar_removal_rows;
++        reference_prediction_rows; learner_invariance_rows;
++        shortcut_probe_rows; shortcut_prediction_rows;
++        shortcut_interval_rows; commitment_prohibition_rows;
++        source_disagreement_rows; read_only_enforcement_receipt;
++        direct_leakage_count; feature_isolation_audit_complete_score;
++        blinded_feature_bank_ready_score; random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
++        expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (true); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6987_contrast_feature_audit.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6999_blinded_feature_cold_audit.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6987-contrast-feature-audit
++      verdict: complete_disqualified_contrast_feature_bank_shortcut_gate
++      addressed_by: "Exp6997 removes the causal mutation-metadata channel, and Exp6999 adds sidecar permutation, replacement, removal, and commitment-feature exclusion in a fresh process before it reruns the same 0.80 upper-interval gate."
++      retire_if_same_verdict: true
+ 
+-- id: exp6988-certified-pwa-kan-ranker
+-  title: Certified PWA-KAN constraint ranker
+-  track: energy
++- id: exp7000-certified-blinded-pwa-kan
++  title: Certified blinded PWA-KAN constraint ranker
++  track: verification
+   priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+   max_turns: 50
+-  estimated_wall_time_min: 240
++  estimated_wall_time_min: 180
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6988_certified_pwa_kan_ranker.json
++  prior_failures:
++    - experiment_id: exp6988-certified-pwa-kan-ranker
++      verdict: blocked_gate_check_failed
++      addressed_by: "Exp6988 was blocked by the mutation-provenance shortcut in Exp6987. Exp6997 and Exp6999 now remove that channel, prove sidecar invariance, and expose only a frozen numeric allowlist before Exp7000 fits any ranker."
++      retire_if_same_verdict: true
++  milestone: 2026.09.613
++  deliverable: results/experiment_7000_certified_blinded_pwa_kan.json
+   gated_on:
+-    - upstream: exp6987-contrast-feature-audit
+-      artifact_field: contrast_feature_bank_ready_score
++    - upstream: exp6999-blinded-feature-cold-audit
++      artifact_field: blinded_feature_bank_ready_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6977 never trained because V611 calibration labels were constant.
+-    Exp6987 releases a balanced, source-disjoint, leakage-audited feature bank.
+-    KAN-CL motivates local spline structure. Optimal PWA abstractions motivate
+-    solver-checkable bounds. This task gets one preregistered training attempt.
++    V612 never trained its proposed PWA-KAN because mutation provenance alone
++    predicted the exact label. Exp6997 removes authority metadata from the
++    learner view. Exp6999 independently releases that view only after exact
++    sidecar-invariance and shortcut checks. This task tests a learned
++    non-oracle energy on that released table. Exact execution evaluates the
++    ranker but never supplies an input feature or ranking decision.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/research-program.md
++    - {project_root}/research-references.md V613 Planner Refresh
+     - {project_root}/results/experiment_6977_certified_pwa_kan_energy.json
+-    - {project_root}/results/experiment_6984_exact_contrast_fixture.json
+-    - {project_root}/results/experiment_6986_three_family_contrast_features.json
+-    - {project_root}/results/experiment_6987_contrast_feature_audit.json
++    - {project_root}/results/experiment_6988_certified_pwa_kan_ranker.json
++    - {project_root}/results/experiment_6997_authority_sidecar_rebuild.json
++    - {project_root}/results/experiment_6999_blinded_feature_cold_audit.json
++    - {project_root}/python/carnot/models
+     - {project_root}/scripts/experiments/experiment_6977_certified_pwa_kan_energy.py
+-    - {project_root}/python/carnot/verification/sos_kan_energy_v3.py
+-    - {project_root}/python/carnot/verification/kan_milp_bridge.py
+-    - {project_root}/results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json
+-    - {project_root}/openspec/capabilities/kan-verifier/spec.md
+     - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/research-references.md V612 Planner Refresh
++    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+ 
+     TASK:
+-    Train one compact candidate-level KAN ranker on frozen train rows, select
+-    its configuration on calibration rows, build a certified piecewise-affine
+-    abstraction, and evaluate held-out rows once against matched non-oracle
+-    controls. Exact feasibility remains external evaluation authority.
++    Train and freeze one compact PWA-KAN constraint ranker from the blinded
++    learner view. Compare it with constant, normalized-likelihood, grouped
++    logistic, and size-matched MLP controls. Certify its piecewise-affine
++    abstraction with a real MILP solver before opening prospective held-out
++    labels.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require contrast_feature_bank_ready_score=1, nonconstant
+-       train and calibration labels, all three model views, a supported KAN
+-       implementation, an actual MILP solver, and writable model checkpoints.
+-       On failure, write blocked_certified_pwa_kan_ranker with
+-       gate_check_summary.
+-    1. Add REQ-KAN-6988 and RED tests before implementation. Cover split
+-       isolation, feature allowlists, deterministic fitting, per-knot support,
+-       PWA envelopes, real MILP execution, invariant queries, held-out sealing,
+-       and bare readiness fields.
+-    2. Freeze the feature allowlist before training. Permit only label-blind
+-       sequence and parser features from Exp6986. Exclude labels, source IDs,
+-       pair IDs, candidate order, mutation metadata, split, model identity,
+-       exact witnesses, and authority diagnostics.
+-    3. Train a small seeded KAN on the 18 train pairs. Use only six calibration
+-       pairs to select knot count, regularization, and stopping epoch. Compare a
+-       constant score, mean normalized likelihood, logistic regression, and a
+-       size-matched MLP under identical grouped splits.
+-    4. Record every epoch, active spline support, knot importance, parameter
+-       count, checkpoint hash, and selection decision. Freeze the KAN and all
+-       control hashes before opening the 12 held-out pairs.
+-    5. Construct local PWA lower and upper bounds for each spline. Allocate the
+-       fixed piece budget with deterministic dynamic programming and knapsack.
+-       Record local approximation error and propagated network error separately.
+-    6. Invoke the real MILP solver. Prove the declared output bounds, local
+-       Lipschitz limits, irrelevant-field invariance, and agreement between the
+-       KAN and PWA envelope over the bounded feature domain. Unknown or timeout
+-       never becomes a certificate.
+-    7. Evaluate every frozen arm once on held-out candidate rows. Report AUROC,
+-       AUPRC, Brier score, calibration error, pairwise ranking accuracy,
+-       abstraction disagreement, latency, and grouped bootstrap intervals.
+-    8. Set pwa_training_complete_score=1 when fitting and held-out evaluation
+-       are terminal. Set pwa_model_ready_score=1 only when all certificate
+-       queries prove, hashes freeze, PWA disagreement stays within the envelope,
+-       and every held-out row is terminal. This field does not require a win.
+-    9. Set pwa_energy_positive_score=1 only if PWA-KAN beats the strongest
+-       non-oracle control on held-out pair ranking with a paired interval above
+-       zero, its AUROC interval excludes 0.50, and no model-view stratum falls
+-       below chance. Exact labels may assess this claim but never rank candidates.
+-    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+-        adversarial verification, row-consistency lint, and root-clutter checks.
+-    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and pwa_training_complete_score,
+-        pwa_model_ready_score, and pwa_energy_positive_score;
++    0. PRECONDITIONS: require blinded_feature_bank_ready_score=1, 138 complete
++       learner rows, immutable learner and sidecar hashes, source-disjoint
++       train, calibration, and held-out groups, a supported KAN runtime, and a
++       working MILP solver. On failure, write blocked_certified_blinded_pwa_kan
++       with gate_check_summary. Do not declare partial for missing upstream
++       data.
++    1. Add REQ-VERIFY-7000 and RED tests before implementation. Cover feature
++       allowlisting, grouped splits, label timing, control parity, calibration,
++       PWA conversion, solver identity, bound violations, irrelevant-field
++       attacks, frozen-held-out timing, and both bare readiness fields.
++    2. Load features only through the Exp6997 learner loader. Materialize and
++       hash tensors before a separate authority join supplies train labels and
++       split routing. Refuse any label, split, source, mutation, authority,
++       commitment, categorical model-identity, or row-order feature.
++    3. Fit a compact spline KAN on train source groups only. Use calibration
++       groups for knot count, regularization, stopping, and threshold choices.
++       Freeze weights, knots, feature scaling, and model hash before reading
++       the 12 held-out fixture pairs.
++    4. Fit constant, mean normalized likelihood, grouped logistic, and
++       size-matched MLP controls with identical train and calibration access.
++       Match seeds, candidate sets, and group splits. No control may inspect
++       the exact evaluator before selecting.
++    5. Convert the frozen KAN to an explicit piecewise-affine abstraction over
++       the observed feature domain. Preserve every segment, breakpoint,
++       coefficient, quantization choice, approximation residual, and model-to-
++       abstraction hash.
++    6. Use an installed MILP solver, not interval stubs, to recompute output
++       bounds, local Lipschitz bounds, irrelevant-field invariance, finite
++       values, and decision stability around every held-out row. Preserve
++       solver version, status, gap, timeout, and witness rows.
++    7. Open held-out labels only after the model, controls, PWA abstraction,
++       certificates, and evaluation script hashes are frozen. Report paired
++       ranking accuracy, AUROC, exact-selection yield, calibration, bootstrap
++       intervals, and strongest-control deltas by source group.
++    8. Set pwa_candidate_artifact_complete_score=1 when all model, control,
++       PWA, solver, and held-out rows are terminal and replayable. Set
++       pwa_model_ready_score=1 only when certificates pass, direct leakage is
++       zero, and the PWA-KAN has a positive paired held-out interval over the
++       strongest matched non-oracle control. A completed scientific null still
++       sets the artifact-complete field to one.
++    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++       adversarial verification, row-consistency lint, and root-clutter checks.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and both
++        pwa_candidate_artifact_complete_score and pwa_model_ready_score;
+         preconditions_checked; inference_substrate
+-        (cpu_kan_training_and_milp_certification_no_llm); duration_s;
+-        source_artifact_hashes; feature_allowlist; prohibited_feature_rows;
+-        split_isolation_rows; rows; per_candidate_rows; training_rows;
+-        epoch_rows; active_knot_rows; knot_importance_rows; model_config;
+-        model_parameter_count; checkpoint_hash; control_model_rows;
+-        control_checkpoint_hashes; calibration_selection_rows;
+-        pwa_unit_rows; piece_budget_rows; local_error_bound_rows;
+-        propagated_error_bound_rows; milp_query_rows; milp_solver_receipts;
+-        invariant_certificate_rows; heldout_metric_rows;
+-        per_model_view_rows; paired_control_delta_rows;
+-        bootstrap_interval_rows; abstraction_disagreement_rows; latency_rows;
+-        pwa_training_complete_score; pwa_model_ready_score;
+-        pwa_energy_positive_score; random_seed; reproducibility_checksum;
+-        gate_check_summary with failed check, expected value, and observed value
+-        for any blocked verdict; verifier_is_oracle (false); verdict_class
++        (deterministic_blinded_pwa_kan_training_and_milp_no_llm); duration_s;
++        source_artifact_hashes; learner_view_hash; sidecar_hashes;
++        feature_allowlist; rows; per_candidate_rows; per_pair_results;
++        grouped_split_rows; tensor_materialization_rows; label_access_rows;
++        model_training_rows; calibration_rows; frozen_model_rows;
++        control_definition_rows; control_fit_rows; pwa_segment_rows;
++        pwa_breakpoint_rows; pwa_coefficient_rows; approximation_residual_rows;
++        milp_solver_receipt_rows; milp_bound_rows; lipschitz_bound_rows;
++        irrelevant_field_invariance_rows; decision_stability_rows;
++        freeze_before_heldout_rows; heldout_metric_rows; paired_delta_rows;
++        bootstrap_interval_rows; source_group_rows; source_disagreement_rows;
++        direct_leakage_count; exact_oracle_used_for_ranking (false);
++        pwa_candidate_artifact_complete_score; pwa_model_ready_score;
++        random_seed; reproducibility_checksum; gate_check_summary with failed
++        check, expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (false); verdict_class
+         (positive | circular_positive | null | blocked | disqualified | partial);
+         honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6988_certified_pwa_kan_ranker.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7000_certified_blinded_pwa_kan.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6977-certified-pwa-kan-energy
+-      verdict: blocked_certified_pwa_kan_energy
+-      addressed_by: "Exp6984 now guarantees nonconstant source-grouped labels, Exp6987 audits leakage, and this attempt freezes a model before one held-out opening."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6958-convex-factor-energy-canary
+-      verdict: complete_null_convex_factor_energy_canary
+-      addressed_by: "V612 fits a learned local spline ranker on balanced semantic contrasts and certifies its PWA abstraction instead of retuning hand-written convex factors."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6989-pwa-certificate-cold-audit
+-  title: Fresh-process PWA-KAN certificate audit
+-  track: energy
+-  priority: high
++- id: exp7001-pwa-certificate-cold-audit
++  title: Fresh-process blinded PWA-KAN certificate audit
++  track: verification
++  priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+   max_turns: 30
+-  estimated_wall_time_min: 90
++  estimated_wall_time_min: 120
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6989_pwa_certificate_cold_audit.json
++  prior_failures:
++    - experiment_id: exp6989-pwa-certificate-cold-audit
++      verdict: "GATE_BLOCKED: upstream exp6988-certified-pwa-kan-ranker retired"
++      addressed_by: "Exp6989 never received a candidate artifact because Exp6988 stopped at the leakage gate. Exp7001 consumes Exp7000's new artifact-complete field after the independent blinded-feature release, even when the learned result is null."
++      retire_if_same_verdict: true
++  milestone: 2026.09.613
++  deliverable: results/experiment_7001_pwa_certificate_cold_audit.json
+   gated_on:
+-    - upstream: exp6988-certified-pwa-kan-ranker
+-      artifact_field: pwa_model_ready_score
++    - upstream: exp7000-certified-blinded-pwa-kan
++      artifact_field: pwa_candidate_artifact_complete_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6988 can release a learned ranker only after training, PWA conversion,
+-    MILP proof, and held-out evaluation. Earlier KAN-CL work reported missing
+-    certificate fields and blocked promotion. This audit must reproduce the
+-    complete boundary without training or changing any coefficient.
++    Exp7000 writes a frozen learned ranker, its PWA abstraction, matched
++    controls, solver witnesses, and held-out rows. The producer cannot certify
++    its own scientific or solver claims. This task replays the artifact in a
++    fresh restricted process. A reproducible null is a completed audit; it must
++    not be promoted to a positive result.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6988_certified_pwa_kan_ranker.json
+-    - {project_root}/scripts/experiments/experiment_6988_certified_pwa_kan_ranker.py
+-    - {project_root}/python/carnot/verification/sos_kan_energy_v3.py
+-    - {project_root}/python/carnot/verification/kan_milp_bridge.py
+-    - {project_root}/results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json
++    - {project_root}/results/experiment_6999_blinded_feature_cold_audit.json
++    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
++    - {project_root}/scripts/experiments/experiment_7000_certified_blinded_pwa_kan.py
+     - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/kan-verifier/spec.md
++    - {project_root}/scripts/adversarial_verify.py
++    - {project_root}/openspec/capabilities/constraint-verification/spec.md
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Load the frozen KAN, PWA abstraction, controls, and rows in a fresh read-only
+-    process. Recompute hashes, bounds, MILP results, held-out metrics, intervals,
+-    and readiness logic. Preserve a reproduced null as a valid audited result.
++    Audit Exp7000 in a fresh read-only process. Recompute every learner tensor,
++    model and PWA hash, control fit, MILP query, certificate, held-out metric,
++    paired interval, and readiness field from primary rows.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require pwa_model_ready_score=1, immutable KAN and control
+-       checkpoints, PWA coefficients, all MILP queries, all held-out rows, and a
+-       supported MILP solver. On failure, write blocked_pwa_certificate_cold_audit
+-       with gate_check_summary.
+-    1. Add REQ-KAN-6989 and RED tests before implementation. Cover read-only
+-       enforcement, coefficient mutation, missing queries, solver disagreement,
+-       metric drift, interval drift, and favorable-source-claim disagreement.
+-    2. Start a fresh process with network, GPU, LLM, training, and source writes
+-       disabled. Hash every input before reading source aggregate metrics.
+-    3. Recompute KAN outputs and PWA lower and upper bounds for every candidate.
+-       Replay every MILP query with the same solver limits. Preserve timeout,
+-       unknown, and numerical disagreement as failures.
+-    4. Recompute held-out AUROC, AUPRC, Brier score, calibration error, pairwise
+-       ranking, model-view strata, latency summaries, and paired intervals from
+-       per-candidate rows only.
+-    5. Recompute pwa_model_ready_score and pwa_energy_positive_score from their
+-       declared terms. Do not promote a null because the certificate is valid.
+-    6. Set pwa_certificate_audit_complete_score=1 when every row and proof is
+-       terminal. Set pwa_certificate_confirmed_score=1 only when checkpoint
+-       hashes, coefficients, proofs, metrics, intervals, and source verdict all
+-       agree. A confirmed null may still set this field to one.
+-    7. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++    0. PRECONDITIONS: require pwa_candidate_artifact_complete_score=1, the raw
++       learner and authority files, frozen model and control files, complete PWA
++       coefficients, solver receipts, and read-only access. On failure, write
++       blocked_pwa_certificate_cold_audit with gate_check_summary. External
++       absence is blocked, not partial.
++    1. Add REQ-VERIFY-7001 and RED tests before implementation. Cover hash
++       tampering, feature insertion, sidecar access, split leakage, changed
++       knots, missing controls, fake solver status, loose bounds, row omission,
++       aggregate disagreement, and both bare audit fields.
++    2. Start a fresh process with network, GPU, LLM, model training, and source
++       writes disabled. Hash all inputs before reading Exp7000 aggregate claims.
++    3. Rebuild the 138 learner tensors through the restricted loader. Confirm
++       the exact allowlist and prove that label, split, source, mutation,
++       authority, commitment, model identity, and row order never enter the
++       model input.
++    4. Reload the frozen KAN and all four controls. Recompute predictions from
++       serialized parameters. Rebuild the PWA abstraction independently and
++       compare segments, breakpoints, coefficients, residuals, and hashes.
++    5. Rerun each MILP query with an independently constructed model. Recompute
++       output and Lipschitz bounds, irrelevant-field invariance, decision
++       stability, solver gaps, and timeout handling. Preserve counterexamples.
++    6. Recompute grouped held-out ranking accuracy, AUROC, exact-selection
++       yield, calibration, bootstrap intervals, and strongest-control deltas
++       from per-candidate rows. Missing units remain missing.
++    7. Set pwa_certificate_audit_complete_score=1 when every expected replay
++       and attack row is terminal. Set pwa_certificate_confirmed_score=1 only
++       when hashes, predictions, PWA conversion, solver certificates, rows, and
++       Exp7000's own pwa_model_ready_score all agree. A confirmed null leaves
++       the confirmed score at zero but completes the audit.
++    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+        adversarial verification, row-consistency lint, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and both
+        pwa_certificate_audit_complete_score and
+        pwa_certificate_confirmed_score; preconditions_checked;
+-       inference_substrate
+-       (fresh_process_readonly_pwa_certificate_replay_no_llm); duration_s;
+-       source_artifact_hashes; checkpoint_hash_rows; coefficient_hash_rows;
+-       rows; per_candidate_rows; pwa_bound_replay_rows; milp_replay_rows;
+-       invariant_replay_rows; metric_recomputation_rows;
+-       interval_recomputation_rows; readiness_recomputation;
+-       positive_gate_recomputation; source_disagreement_rows;
+-       read_only_enforcement_receipt; pwa_certificate_audit_complete_score;
+-       pwa_certificate_confirmed_score; random_seed; reproducibility_checksum;
+-       gate_check_summary with failed check, expected value, and observed value
+-       for any blocked verdict; verifier_is_oracle (true); verdict_class
++       inference_substrate (fresh_process_blinded_pwa_certificate_audit_no_llm);
++       duration_s; source_artifact_hashes; rows; per_candidate_rows;
++       per_pair_results; input_hash_rows; learner_tensor_replay_rows;
++       feature_schema_rows; denied_feature_rows; model_hash_replay_rows;
++       model_prediction_replay_rows; control_fit_replay_rows;
++       pwa_rebuild_rows; pwa_segment_replay_rows; pwa_coefficient_replay_rows;
++       residual_replay_rows; milp_solver_receipt_rows; milp_query_replay_rows;
++       bound_replay_rows; lipschitz_replay_rows;
++       irrelevant_field_attack_rows; decision_stability_replay_rows;
++       heldout_metric_replay_rows; paired_delta_replay_rows;
++       bootstrap_interval_replay_rows; missing_unit_rows;
++       source_disagreement_rows; read_only_enforcement_receipt;
++       pwa_certificate_audit_complete_score;
++       pwa_certificate_confirmed_score; random_seed;
++       reproducibility_checksum; gate_check_summary with failed check,
++       expected value, and observed value for any blocked verdict;
++       verifier_is_oracle (false); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6989_pwa_certificate_cold_audit.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7001_pwa_certificate_cold_audit.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp3230-kan-cl-certificate-boundary-audit-v2
+-      verdict: "complete: kan-cl certificate boundary audit; pwa_milp_abstraction_ready=false; certificate_boundary_ready=false"
+-      addressed_by: "Exp6988 now produces the missing PWA coefficients, per-knot budgets, real MILP queries, and immutable checkpoint before this fresh-process audit."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6977-certified-pwa-kan-energy
+-      verdict: blocked_certified_pwa_kan_energy
+-      addressed_by: "This audit consumes a completed balanced-label PWA model and cannot run until its bare readiness field is one; it does not replay the blocked one-class fit."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6990-oracle-distinct-selection
+-  title: Oracle-distinct constraint selection comparison
++- id: exp7002-oracle-distinct-selection
++  title: Oracle-distinct blinded constraint selection comparison
+   track: verification
+   priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+   max_turns: 50
+-  estimated_wall_time_min: 120
++  estimated_wall_time_min: 150
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6990_oracle_distinct_selection.json
++  prior_failures:
++    - experiment_id: exp6990-oracle-distinct-selection
++      verdict: "GATE_BLOCKED: upstream Exp6988 and Exp6989 retired"
++      addressed_by: "Exp6990 never reached selection because its leaked ranker branch retired. Exp7002 uses the independently released blinded table, a frozen Exp7000 model, and Exp7001's fresh-process certificate before any exact label is opened."
++      retire_if_same_verdict: true
++  milestone: 2026.09.613
++  deliverable: results/experiment_7002_oracle_distinct_selection.json
+   gated_on:
+-    - upstream: exp6988-certified-pwa-kan-ranker
++    - upstream: exp7000-certified-blinded-pwa-kan
+       artifact_field: pwa_model_ready_score
+       op: '=='
+       value: 1
+-    - upstream: exp6989-pwa-certificate-cold-audit
++    - upstream: exp7001-pwa-certificate-cold-audit
+       artifact_field: pwa_certificate_confirmed_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6959 had zero headroom. Exp6982 then gate-blocked before hybrid selection.
+-    Exp6984 guarantees 12 held-out contrast pairs with one valid and one invalid
+-    member. Exp6986 also scored the untouched parseable V611 transfer rows.
+-    This task tests selection after every arm and label is already frozen.
++    Exp7000 can produce a non-oracle PWA-KAN ranker. Exp7001 independently
++    checks its certificate. The PRD gap is causal selection value on future
++    exact outcomes, not classifier AUROC alone. Exp6985 already froze 16
++    headroom events before V613. The exact authority is an evaluator and an
++    upper-bound ceiling; it is not an eligible selection arm.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/ops/north-star.md section Oracle-Distinctness
+-    - {project_root}/results/experiment_6959_certified_energy_selection.json
+-    - {project_root}/results/experiment_6982_hard_feasible_hybrid_selection.json
+-    - {project_root}/results/experiment_6984_exact_contrast_fixture.json
+-    - {project_root}/results/experiment_6986_three_family_contrast_features.json
+-    - {project_root}/results/experiment_6988_certified_pwa_kan_ranker.json
+-    - {project_root}/results/experiment_6989_pwa_certificate_cold_audit.json
+-    - {project_root}/python/carnot/experiment_6959_certified_energy_selection.py
++    - {project_root}/research-program.md
++    - {project_root}/results/experiment_6985_chronological_constraint_stream.json
++    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
++    - {project_root}/results/experiment_7001_pwa_certificate_cold_audit.json
+     - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/openspec/capabilities/kan-verifier/spec.md
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Compare frozen non-oracle selection arms on controlled held-out pairs, then
+-    report read-only transfer on V611 authentic headroom groups. Reveal exact
+-    labels only after each arm's selection is durable. Keep the exact oracle as
+-    evaluator and ceiling, never as an eligible selection arm.
++    Compare fixed order, normalized likelihood, grouped logistic, size-matched
++    MLP, and certified PWA-KAN selection on the 16 sealed headroom events.
++    Freeze every non-oracle choice before opening exact outcomes. Report the 12
++    held-out fixture pairs and authentic V611 transfer groups as secondary
++    evidence without pooling strata.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require both structured gates, all 12 held-out pairs, the
+-       frozen model and control hashes, transfer feature rows, exact labels, and
+-       at least one authentic V611 headroom group. On failure, write
++    0. PRECONDITIONS: require pwa_model_ready_score=1,
++       pwa_certificate_confirmed_score=1, the immutable 24-event stream, all 16
++       headroom events, frozen ranker and control hashes, and exact evaluator
++       access in a separate process. On failure, write
+        blocked_oracle_distinct_selection with gate_check_summary.
+-    1. Add REQ-VERIFY-6990 and RED tests before implementation. Cover frozen arm
+-       hashes, candidate-order rotation, label sealing, tie policy, exact-oracle
+-       exclusion, paired arithmetic, authentic transfer, and bare result fields.
+-    2. Freeze five eligible arms: rotated fixed order, mean length-normalized
+-       likelihood, logistic regression, size-matched MLP, and PWA-KAN. Freeze
+-       tie order and all score directions before opening held-out labels.
+-    3. Score both members of each 12-pair held-out group. Make every arm's score,
+-       selected candidate, and timestamp durable. Then open the exact label and
+-       record success, margin, latency, and source group.
+-    4. Compute per-arm selection accuracy and paired deltas with exact grouped
+-       intervals. Report results by formulation family, fault family, and model
+-       scoring view. Keep abstentions and ties as terminal rows.
+-    5. Apply the same frozen arms to eligible V611 authentic headroom groups.
+-       Do not tune, recalibrate, drop rows, or redefine a group after labels
+-       open. Report this small transfer set separately from the controlled claim.
+-    6. Compute the exact-oracle ceiling only after all eligible selections. Mark
+-       it ineligible for oracle-distinct comparisons. Do not run exact-feasible
+-       filtering before PWA-KAN selection.
+-    7. Set oracle_distinct_selection_complete_score=1 when every controlled and
+-       transfer row is terminal. Set oracle_distinct_selection_positive_score=1
+-       only if PWA-KAN beats likelihood and the MLP on controlled pairs with
+-       paired intervals above zero, its own interval excludes chance, and it
+-       loses no eligible authentic V611 headroom group those controls solve.
+-    8. Limit any favorable claim to the frozen controlled fixture. Never call
+-       this live extraction, broad reasoning, or ARC evidence.
+-    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++    1. Add REQ-VERIFY-7002 and RED tests before implementation. Cover event
++       freeze, arm parity, decision timing, oracle access denial, tied groups,
++       missing candidates, strata separation, interval computation, exact
++       ceiling labeling, and both bare completion and positive fields.
++    2. Hash the event roster, candidate order, arm definitions, model files,
++       decision script, evaluator script, and all sealed outcomes before any
++       selection. Exclude the four tied groups from the primary headroom claim.
++    3. Run fixed-order, normalized-likelihood, logistic, MLP, and PWA-KAN arms
++       on identical visible pre-outcome features. Record each selected key,
++       score, rank, abstention, latency, and complete candidate-score vector.
++    4. Deny every arm access to exact labels, Z3, bounded enumeration,
++       authority sidecars, mutation provenance, source IDs, later events, and
++       another arm's choice. Prove the evaluator process starts only after all
++       primary selections and their hashes are frozen.
++    5. Open exact outcomes in the evaluator process. Compute per-event exact
++       success, regret to the oracle ceiling, pairwise arm deltas, McNemar
++       counts, grouped bootstrap intervals, and best-at-k support. The oracle
++       ceiling is reported separately and cannot win a model comparison.
++    6. Repeat the frozen evaluation on the 12 Exp6984 held-out pairs and the
++       parseable authentic V611 transfer groups. Keep fixture, chronological,
++       and transfer strata separate. Do not replace missing transfer rows.
++    7. Set selection_comparison_complete_score=1 when every primary event-arm
++       row and secondary eligible row is terminal and replayable. Set
++       oracle_distinct_selection_positive_score=1 only when the PWA-KAN's
++       paired exact-success interval is above zero against the strongest
++       matched non-oracle control, no stratum regresses, and the evaluator was
++       inaccessible during selection.
++    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+        adversarial verification, row-consistency lint, and root-clutter checks.
+-    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and both
+-        oracle_distinct_selection_complete_score and
+-        oracle_distinct_selection_positive_score; preconditions_checked;
+-        inference_substrate (deterministic_locked_selection_replay_no_llm);
+-        duration_s; source_artifact_hashes; arm_config_rows; arm_hashes;
+-        rows; per_pair_results; per_arm_selection_rows; durable_selection_rows;
+-        label_opening_rows; tie_rows; abstention_rows; formulation_rows;
+-        fault_family_rows; model_view_rows; paired_delta_rows;
+-        confidence_interval_rows; authentic_transfer_rows;
+-        authentic_headroom_rows; exact_oracle_ceiling_rows;
+-        oracle_arm_exclusion_rows; controlled_fixture_claim_only (true);
+-        live_extraction_claimed (false);
+-        oracle_distinct_selection_complete_score;
+-        oracle_distinct_selection_positive_score; random_seed;
+-        reproducibility_checksum; gate_check_summary with failed check,
+-        expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (false); verdict_class
+-        (positive | circular_positive | null | blocked | disqualified | partial);
+-        honest_verdict with a terminal prefix consistent with verdict_class.
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++       principle per required field and both
++       selection_comparison_complete_score and
++       oracle_distinct_selection_positive_score; preconditions_checked;
++       inference_substrate (deterministic_oracle_distinct_selection_no_llm);
++       duration_s; source_artifact_hashes; event_manifest_rows;
++       event_manifest_hash; arm_definition_rows; frozen_input_hash_rows; rows;
++       per_event_results; per_candidate_arm_rows; selection_rows;
++       score_vector_rows; abstention_rows; decision_timing_rows;
++       oracle_access_denial_rows; evaluator_process_rows; exact_outcome_rows;
++       oracle_ceiling_rows; exact_success_rows; regret_rows; paired_delta_rows;
++       mcnemar_rows; grouped_bootstrap_rows; best_at_k_support_rows;
++       fixture_heldout_rows; transfer_rows; stratum_summary_rows;
++       missing_unit_rows; source_disagreement_rows;
++       selection_comparison_complete_score;
++       oracle_distinct_selection_positive_score;
++       verifier_is_oracle (false); random_seed; reproducibility_checksum;
++       gate_check_summary with failed check, expected value, and observed value
++       for any blocked verdict; verdict_class
++       (positive | circular_positive | null | blocked | disqualified | partial);
++       honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6990_oracle_distinct_selection.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7002_oracle_distinct_selection.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6959-certified-energy-selection
+-      verdict: complete_null_certified_energy_selection
+-      addressed_by: "Exp6984 supplies 12 guaranteed held-out headroom pairs, while exact labels remain sealed until all non-oracle selections are durable."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6982-hard-feasible-hybrid-selection
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "This task gates on a completed certified PWA model and excludes exact feasibility from eligible selection, so it tests the learned oracle-distinct ranker directly."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6991-per-knot-continuous-learning
+-  title: Verifier-grounded per-knot continuous self-learning
++- id: exp7003-per-knot-continuous-learning
++  title: Verifier-grounded blinded per-knot continuous self-learning
+   track: self-learning
+   priority: critical
+-  agent_type: claude
+-  model: opus
++  agent_type: codex
++  model: gpt-5.6-sol
+   requires_gpu: false
+-  max_turns: 100
++  max_turns: 50
+   estimated_wall_time_min: 180
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6991_per_knot_continuous_learning.json
++  prior_failures:
++    - experiment_id: exp6991-per-knot-continuous-learning
++      verdict: "GATE_BLOCKED: upstream Exp6988 and Exp6990 retired"
++      addressed_by: "Exp6991 never executed because the V612 feature bank leaked mutation provenance. Exp7003 starts only after Exp6997-Exp7001 prove a blinded certified model and Exp7002 completes prospective oracle-distinct selection."
++      retire_if_same_verdict: true
++  milestone: 2026.09.613
++  deliverable: results/experiment_7003_per_knot_continuous_learning.json
+   gated_on:
+-    - upstream: exp6985-chronological-constraint-stream
+-      artifact_field: chronological_stream_ready_score
+-      op: '=='
+-      value: 1
+-    - upstream: exp6986-three-family-contrast-features
+-      artifact_field: three_family_feature_bank_complete_score
+-      op: '=='
+-      value: 1
+-    - upstream: exp6988-certified-pwa-kan-ranker
+-      artifact_field: pwa_model_ready_score
+-      op: '=='
+-      value: 1
+-    - upstream: exp6989-pwa-certificate-cold-audit
+-      artifact_field: pwa_certificate_confirmed_score
++    - upstream: exp7002-oracle-distinct-selection
++      artifact_field: selection_comparison_complete_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Research-program FR-11 requires continuous learning from verified outcomes.
+-    V611 transactional prompt memory completed 72 rows but changed no decision.
+-    Earlier KAN-CL work lacked a complete PWA-MILP certificate boundary.
+-    Exp6985 now supplies a sealed shift stream. Exp6988 supplies that boundary.
+-    This task updates only the small external KAN. GGUF weights stay frozen.
++    Carnot's FR-11 goal requires a prospective loop from verified outcome to a
++    bounded update that helps later events. Exp6985 froze a 24-event stream
++    with 16 headroom events, four all-valid ties, four all-invalid ties, shift
++    blocks, and recurrence. Exp7002 completes non-oracle selection on that
++    stream. This task adapts KAN-CL per-knot anchoring and FlowBalance exact
++    group-advantage release without changing any GGUF weights.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+     - {project_root}/research-program.md section Continuous Self-Learning
++    - {project_root}/research-references.md V613 Planner Refresh
+     - {project_root}/results/experiment_6985_chronological_constraint_stream.json
+-    - {project_root}/results/experiment_6986_three_family_contrast_features.json
+-    - {project_root}/results/experiment_6988_certified_pwa_kan_ranker.json
+-    - {project_root}/results/experiment_6989_pwa_certificate_cold_audit.json
+     - {project_root}/results/experiment_6978_transactional_constraint_self_learning.json
+-    - {project_root}/results/experiment_2933_kan_cl_per_knot_self_learning_v1.json
+-    - {project_root}/results/experiment_3230_kan_cl_certificate_boundary_audit_v2.json
++    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
++    - {project_root}/results/experiment_7002_oracle_distinct_selection.json
+     - {project_root}/python/carnot/memory/transactional_constraint_memory.py
+-    - {project_root}/python/carnot/verification/sos_kan_energy_v3.py
+     - {project_root}/openspec/capabilities/continuous-learning/spec.md
+-    - {project_root}/openspec/capabilities/kan-verifier/spec.md
+-    - {project_root}/research-references.md V612 Planner Refresh
++    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+ 
+     TASK:
+-    Run four matched online ranker arms on the sealed 24-event stream. Compare a
+-    frozen KAN, unrestricted updates, uniform anchoring, and KAN-CL per-knot
+-    anchoring with exact group-advantage release. Measure future gain, support,
+-    stability, forgetting, locality, journal recovery, and rollback.
++    Run frozen, unrestricted-update, uniform-anchor, and per-knot-anchor arms
++    over the sealed 24-event stream. Record each decision before opening its
++    exact outcome. Release an update only from exact group advantage. Update
++    only active spline support in the per-knot arm, and prove rollback,
++    retention, future support, and restart safety.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require all four structured gates, the frozen stream and
+-       label hashes, the certified KAN and PWA hashes, complete stream features,
+-       writable isolated journals, and no current or future label in the event
+-       view. On failure, write blocked_per_knot_continuous_learning with
+-       gate_check_summary. External absence is blocked, not partial.
+-    1. Add REQ-LEARN-6991 and RED tests before implementation. Cover arm
+-       isolation, pre-label selection, post-outcome updates, active-knot support,
+-       importance anchoring, zero-advantage no-op, journal replay, rollback,
+-       matched budgets, future-label denial, and bare downstream fields.
+-    2. Freeze arm order rotation, initial checkpoint, event order, feature
+-       schema, pairwise loss, learning rate, knot budget, importance rule,
+-       retention window, rollback threshold, and state-size budget before event
+-       one. Do not load any GGUF or mutate model weights.
+-    3. Start four arms from the same checkpoint: frozen; unrestricted online
+-       pairwise SGD; uniform importance anchoring; and per-knot importance
+-       anchoring. Give every arm the same candidate features and compute budget.
+-    4. At event t, expose only the visibility manifest through t-1. Each arm
+-       scores candidates and durably records its selection before the sealed
+-       exact outcome opens.
+-    5. After outcome, compute exact group advantage. Apply the preregistered
+-       pairwise direction for positive or negative advantage. Apply no update
+-       for all-valid and all-invalid tied groups. Never use model confidence as
+-       update or release authority.
+-    6. For the per-knot arm, update only splines whose compact support is active
+-       on the event. Scale anchoring by accumulated knot importance. Journal
+-       prepare, coefficient delta, certificate digest, commit, abort, and state
+-       hash for every proposed update.
+-    7. After each committed update, replay only prior retention anchors. Roll
+-       back if a prior exact success is lost, a PWA invariant fails, an inactive
+-       knot changes, or the state budget is exceeded. Do not inspect future
+-       support for online rollback.
+-    8. After all events, open frozen held-future windows once. Report per-arm
+-       current selection, blockwise gain, recurring-family plasticity, prior
+-       stability, maximum forgetting, effective rewardable support, best-at-k
+-       support delta, knot locality, rollbacks, latency, and state bytes.
+-    9. Set self_learning_run_complete_score=1 when all 96 arm-event rows are
+-       terminal, budgets match, journals replay, PWA checks pass, and leakage is
+-       zero. Set per_knot_learning_positive_score=1 only if the per-knot arm
+-       gains at least two held-future exact selections over frozen, loses no
+-       frozen prior success, has nonnegative support delta, beats both online
+-       controls on paired future rows, and passes rollback and state budgets.
+-    10. Emit continuous_self_learning_task=true. This task tests Tier 1 online
+-        constraint weights and Tier 4 local structural adaptation. A write count
+-        without future utility is null.
+-    11. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++    0. PRECONDITIONS: require selection_comparison_complete_score=1, the
++       immutable 24-event stream and visibility manifests, the frozen Exp7000
++       PWA-KAN and controls, all exact evaluator fixtures, writable versioned
++       journal paths, and no loaded GGUF. On failure, write
++       blocked_per_knot_continuous_learning with gate_check_summary.
++    1. Add REQ-LEARN-7003 and RED tests before implementation. Cover sealed
++       chronology, four-arm parity, pre-outcome decisions, tied-group no-op,
++       active-knot locality, group-advantage sign, anchor retention, poison
++       events, atomic journal writes, rollback, restart, future-label denial,
++       and both bare result fields.
++    2. Restore each arm from the same frozen model and empty journal. Freeze
++       event order, arm order, random seeds, learning budgets, candidate sets,
++       and update limits before opening the first event.
++    3. At event t, give every arm only the Exp6985 visibility manifest through
++       t-1 and the current blinded learner tensor. Record and hash the selected
++       candidate, scores, active knots, and model version before the separate
++       evaluator opens the current exact outcome.
++    4. Keep the frozen arm unchanged. Let the unrestricted arm update all
++       eligible parameters. Let the uniform-anchor arm use one global penalty.
++       Let the per-knot arm update only knots whose compact support is active
++       for the current row, with importance-weighted anchoring on previously
++       successful support.
++    5. Compute exact group advantage after outcome reveal. Retain guidance for
++       positive advantage, reverse it for negative advantage, and make no
++       update when all candidates are exact-valid or all are exact-invalid.
++       Never use model confidence as update authority.
++    6. Before commit, certify finite coefficients, PWA bounds, maximum update
++       norm, anchor non-regression, prior-success retention, and best-at-k
++       support. Journal intent, commit atomically, verify the new hash, and
++       roll back byte-exactly on any failed check.
++    7. Inject frozen wrong-sign, duplicate, stale-version, oversized, and
++       interrupted-write attacks. Prove quarantine and rollback. Restart from
++       every committed checkpoint and require identical later decisions.
++    8. Open held-future windows only after the online stream ends. Report later
++       exact yield, regret, update benefit, negative transfer, forgetting,
++       support retention, recurrence recovery, rollback rate, and journal cost
++       by event, shift block, and arm.
++    9. Set self_learning_run_complete_score=1 when all four arms, 24 events,
++       attacks, restarts, and held-future rows are terminal. Set
++       per_knot_learning_positive_score=1 only when the per-knot arm's held-
++       future exact-yield interval is above zero against frozen and both
++       update controls, with no lost prior success and no best-at-k support
++       shrinkage. Any positive conclusion is circular_positive because the
++       same exact authority licenses updates and evaluates outcomes.
++    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+         adversarial verification, row-consistency lint, and root-clutter checks.
+-    12. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+         principle per required field and both self_learning_run_complete_score
+         and per_knot_learning_positive_score; preconditions_checked;
+-        inference_substrate (online_pwa_kan_weight_updates_no_llm); duration_s;
+-        source_artifact_hashes; stream_hash; sealed_label_hash;
+-        initial_checkpoint_hash; arm_config_rows; budget_rows; rows;
+-        per_event_results; pre_label_selection_rows; label_opening_rows;
+-        exact_group_advantage_rows; zero_advantage_noop_rows;
+-        active_knot_rows; knot_importance_rows; coefficient_delta_rows;
+-        transaction_journal_rows; commit_rows; abort_rows; rollback_rows;
+-        state_hash_rows; pwa_invariant_rows; retention_replay_rows;
+-        future_label_denial_rows; held_future_rows; blockwise_gain_rows;
+-        plasticity_rows; stability_rows; forgetting_rows; support_rows;
+-        best_at_k_support_delta; locality_violation_count; state_bytes_rows;
+-        chronological_gain_over_frozen; max_forgetting;
++        inference_substrate
++        (deterministic_verifier_grounded_per_knot_learning_no_llm); duration_s;
++        source_artifact_hashes; stream_hash; initial_model_hash;
++        arm_definition_rows; event_visibility_rows; rows; per_event_results;
++        per_event_arm_rows; pre_outcome_decision_rows; exact_outcome_rows;
++        group_advantage_rows; tied_group_noop_rows; active_knot_rows;
++        knot_importance_rows; parameter_update_rows; update_norm_rows;
++        pwa_certificate_rows; anchor_retention_rows; prior_success_rows;
++        best_at_k_support_rows; journal_intent_rows; journal_commit_rows;
++        checkpoint_rows; rollback_rows; poison_attack_rows; quarantine_rows;
++        restart_replay_rows; future_label_denial_rows; held_future_rows;
++        exact_yield_rows; regret_rows; negative_transfer_rows; forgetting_rows;
++        recurrence_rows; paired_delta_rows; bootstrap_interval_rows;
++        source_disagreement_rows; gguf_weights_changed (false);
+         self_learning_run_complete_score; per_knot_learning_positive_score;
+-        continuous_self_learning_task (true); model_weight_update_performed
+-        (false); random_seed; reproducibility_checksum; gate_check_summary with
+-        failed check, expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (false); verdict_class
++        random_seed; reproducibility_checksum; gate_check_summary with failed
++        check, expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (true); verdict_class
+         (positive | circular_positive | null | blocked | disqualified | partial);
+         honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6991_per_knot_continuous_learning.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7003_per_knot_continuous_learning.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6978-transactional-constraint-self-learning
+-      verdict: complete_null_transactional_constraint_self_learning
+-      addressed_by: "V612 updates a certified external KAN on a deliberately discriminative shift stream; it does not reuse the prompt-memory mechanism that tied all V611 arms."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp5895-shortcut-safe-continuous-self-learning
+-      verdict: "complete_null: shortcut_safe_csl_not_promotion_eligible"
+-      addressed_by: "This task uses a new stream, per-knot weight updates, PWA invariants, and future-support controls; it does not requalify the retired Exp5895 exact slot."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp3230-kan-cl-certificate-boundary-audit-v2
+-      verdict: "complete: pwa_milp_abstraction_ready=false; certificate_boundary_ready=false; kan_sidecar_promotion_allowed=false"
+-      addressed_by: "Exp6988 and Exp6989 now provide and independently confirm the missing PWA-MILP boundary before any per-knot online update starts."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6992-self-learning-support-audit
+-  title: Fresh-process self-learning and support audit
++- id: exp7004-self-learning-cold-audit
++  title: Fresh-process self-learning retention and support audit
+   track: self-learning
+-  priority: high
++  priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+   max_turns: 30
+-  estimated_wall_time_min: 90
++  estimated_wall_time_min: 120
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6992_self_learning_support_audit.json
++  prior_failures:
++    - experiment_id: exp6992-self-learning-support-audit
++      verdict: "GATE_BLOCKED: upstream exp6991-per-knot-continuous-learning retired"
++      addressed_by: "Exp6992 had no learning rows to audit after the leakage cascade. Exp7004 consumes a completed four-arm Exp7003 run, replays versioned journals read-only, and treats a scientific null as terminal audit evidence."
++      retire_if_same_verdict: true
++  milestone: 2026.09.613
++  deliverable: results/experiment_7004_self_learning_cold_audit.json
+   gated_on:
+-    - upstream: exp6991-per-knot-continuous-learning
++    - upstream: exp7003-per-knot-continuous-learning
+       artifact_field: self_learning_run_complete_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6991 may claim continuous self-learning only if another process can
+-    reproduce its chronology, active knots, updates, rollbacks, future support,
+-    and forgetting. V611's cold audit used a nonconforming substrate name. This
+-    task uses the explicit no-LLM convention and may not mutate the source store.
++    Exp7003 runs four prospective learning arms and writes versioned update,
++    certificate, rollback, restart, and held-future rows. The learning process
++    cannot independently validate its own causal ordering or retention claim.
++    This task replays every decision and update in a fresh process. It audits a
++    completed null as carefully as a positive result.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/research-program.md section Continuous Self-Learning
+     - {project_root}/results/experiment_6985_chronological_constraint_stream.json
+-    - {project_root}/results/experiment_6988_certified_pwa_kan_ranker.json
+-    - {project_root}/results/experiment_6991_per_knot_continuous_learning.json
+-    - {project_root}/results/experiment_6979_self_learning_cold_audit.json
+-    - {project_root}/scripts/experiments/experiment_6991_per_knot_continuous_learning.py
++    - {project_root}/results/experiment_7003_per_knot_continuous_learning.json
++    - {project_root}/scripts/experiments/experiment_7003_per_knot_continuous_learning.py
+     - {project_root}/python/carnot/memory/transactional_constraint_memory.py
+-    - {project_root}/python/carnot/verification/kan_milp_bridge.py
+     - {project_root}/scripts/verdict_row_consistency_lint.py
+     - {project_root}/openspec/capabilities/continuous-learning/spec.md
+-    - {project_root}/openspec/capabilities/kan-verifier/spec.md
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Replay Exp6991 in a fresh read-only process. Recompute all arm decisions,
+-    update directions, knot changes, journal states, rollbacks, held-future
+-    gains, support deltas, forgetting, and the positive gate from per-event rows.
++    Replay Exp7003 without writes. Recompute chronology, decisions, group
++    advantage, active-knot updates, PWA certificates, journals, rollbacks,
++    restarts, held-future benefit, forgetting, and support retention. Confirm
++    that no current or future label influenced an earlier decision.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require self_learning_run_complete_score=1, all 96
+-       arm-event rows, the stream and label hashes, initial and final state
+-       hashes, complete journals, and read-only snapshots. On failure, write
+-       blocked_self_learning_support_audit with gate_check_summary. Do not use
+-       partial for missing upstream data.
+-    1. Add REQ-LEARN-6992 and RED tests before implementation. Cover read-only
+-       enforcement, visibility drift, selection recomputation, group-advantage
+-       direction, tied no-ops, inactive-knot changes, journal replay, rollback,
+-       support arithmetic, forgetting, and source-claim disagreement.
++    0. PRECONDITIONS: require self_learning_run_complete_score=1, all four-arm
++       per-event rows, sealed labels and visibility manifests, initial and
++       versioned model files, complete journals, and read-only access. On
++       failure, write blocked_self_learning_cold_audit with
++       gate_check_summary. Do not declare partial for missing upstream data.
++    1. Add REQ-LEARN-7004 and RED tests before implementation. Cover input and
++       order tampering, pre-outcome timing, future-label access, wrong-sign and
++       tied-group updates, inactive-knot changes, missing journal entries,
++       non-atomic versions, rollback drift, restart divergence, support loss,
++       aggregate disagreement, and both bare audit fields.
+     2. Start a fresh process with network, GPU, LLM, training, and source writes
+-       disabled. Hash every input before reading source aggregate metrics.
+-    3. Rebuild every event visibility frontier. Recompute each pre-label score
+-       and selection from the state available at that event. Confirm exact
+-       labels open only after durable selection rows.
+-    4. Replay prepare, commit, abort, and rollback journal entries into an
+-       in-memory store. Recompute active knot support, importance, coefficient
+-       deltas, PWA invariants, and every intermediate state hash.
+-    5. Recompute matched budgets, blockwise gain, plasticity, stability, maximum
+-       forgetting, effective rewardable support, best-at-k support delta,
+-       locality violations, state bytes, and intervals from per-event rows.
+-    6. Recompute the positive gate exactly. Confirm at least two future gains,
+-       zero lost frozen successes, nonnegative support delta, paired wins over
+-       both online controls, rollback safety, and state-budget compliance.
+-    7. Set self_learning_audit_complete_score=1 when all rows and states replay.
+-       Set learning_safety_confirmed_score=1 only when chronology, hashes,
+-       leakage, locality, journals, metrics, intervals, and the source verdict
+-       agree. A confirmed null may set this field to one.
++       disabled. Hash the stream, initial model, all versions, journals,
++       sidecars, and exact outcomes before reading source summaries.
++    3. Recompute every pre-outcome decision from its historical model version
++       and visibility manifest. Prove the current outcome and all later labels
++       were unreadable at that decision boundary.
++    4. Recompute exact group advantage and each arm's update. Confirm tied
++       groups are no-ops, negative advantage reverses guidance, only active
++       knots change in the per-knot arm, and all update norms stay bounded.
++    5. Rebuild PWA certificates, anchor checks, prior-success sets, best-at-k
++       support, journal hashes, commit lineage, quarantine decisions, and byte-
++       exact rollbacks. Replay every injected attack independently.
++    6. Restart from each committed version and require identical later choices.
++       Recompute held-future exact yield, regret, negative transfer,
++       forgetting, recurrence recovery, paired deltas, and intervals from raw
++       rows without accepting source aggregates.
++    7. Set self_learning_audit_complete_score=1 when every replay and attack is
++       terminal. Set self_learning_claim_confirmed_score=1 only when all source
++       rows agree, chronology is clean, safety checks pass, and Exp7003's
++       per_knot_learning_positive_score recomputes to one. A confirmed positive
++       remains circular_positive because the exact authority is shared.
+     8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+        adversarial verification, row-consistency lint, and root-clutter checks.
+     9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle per required field and both self_learning_audit_complete_score
+-       and learning_safety_confirmed_score; preconditions_checked;
+-       inference_substrate
+-       (fresh_process_readonly_self_learning_replay_no_llm); duration_s;
+-       source_artifact_hashes; rows; per_event_results;
+-       visibility_replay_rows; pre_label_score_replay_rows;
+-       selection_replay_rows; group_advantage_replay_rows;
+-       zero_advantage_replay_rows; active_knot_replay_rows;
+-       importance_replay_rows; coefficient_replay_rows; journal_replay_rows;
+-       rollback_replay_rows; state_hash_rows; pwa_invariant_replay_rows;
+-       budget_recomputation_rows; held_future_recomputation_rows;
+-       support_recomputation_rows; forgetting_recomputation_rows;
+-       metric_recomputation_rows; positive_gate_recomputation;
+-       source_disagreement_rows; read_only_enforcement_receipt;
+-       self_learning_audit_complete_score; learning_safety_confirmed_score;
+-       continuous_self_learning_task (true); random_seed;
++       principle per required field and both
++       self_learning_audit_complete_score and
++       self_learning_claim_confirmed_score; preconditions_checked;
++       inference_substrate (fresh_process_self_learning_support_audit_no_llm);
++       duration_s; source_artifact_hashes; rows; per_event_results;
++       per_event_arm_rows; input_hash_rows; chronology_replay_rows;
++       visibility_replay_rows; decision_replay_rows; future_label_attack_rows;
++       group_advantage_replay_rows; tied_group_replay_rows;
++       active_knot_replay_rows; parameter_update_replay_rows;
++       update_norm_replay_rows; pwa_certificate_replay_rows;
++       anchor_retention_replay_rows; prior_success_replay_rows;
++       best_at_k_support_replay_rows; journal_replay_rows;
++       atomic_commit_replay_rows; rollback_replay_rows;
++       quarantine_replay_rows; poison_attack_replay_rows;
++       restart_replay_rows; held_future_replay_rows; exact_yield_replay_rows;
++       regret_replay_rows; negative_transfer_replay_rows; forgetting_rows;
++       recurrence_rows; paired_delta_rows; bootstrap_interval_rows;
++       missing_unit_rows; source_disagreement_rows;
++       read_only_enforcement_receipt; self_learning_audit_complete_score;
++       self_learning_claim_confirmed_score; random_seed;
+        reproducibility_checksum; gate_check_summary with failed check,
+        expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
++       verifier_is_oracle (true); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6992_self_learning_support_audit.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7004_self_learning_cold_audit.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6979-self-learning-cold-audit
+-      verdict: complete_null_self_learning_cold_audit
+-      addressed_by: "This audit replays a new per-knot mechanism and uses an inference_substrate ending in _no_llm, so it avoids V611's deterministic duration-classification failure."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp5912-csl-exact-slot-requalification
+-      verdict: "retired: repeated_global_suite_exit_2_after_frozen_science_parity"
+-      addressed_by: "The task audits a new V612 online KAN run and does not retry, promote, or depend on the retired Exp5895 exact-slot requalification."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6993-arc-producer-evidence-contract
+-  title: ARC live producer evidence contract
++- id: exp7005-arc-live-envelope-audit
++  title: Prospective ARC live-envelope held-out engine audit
+   track: arc
+-  priority: critical
+-  agent_type: claude
+-  model: opus
++  priority: high
++  agent_type: codex
++  model: gpt-5.6-sol
+   requires_gpu: false
+-  max_turns: 100
+-  estimated_wall_time_min: 180
++  max_turns: 50
++  estimated_wall_time_min: 150
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6993_arc_producer_evidence_contract.json
++  prior_failures:
++    - experiment_id: exp6968-arc-post-refit-induction-audit
++      verdict: blocked_arc_post_refit_induction_audit
++      addressed_by: "Exp6968 lacked prompt, transition, run, environment, policy, and engine provenance. Exp6993 now writes those hashes atomically at the producer, so Exp7005 accepts only a real post-contract live_agent_attempts envelope."
++      retire_if_same_verdict: true
++    - experiment_id: exp6981-arc-live-engine-generalization-audit
++      verdict: blocked_arc_live_engine_generalization_audit
++      addressed_by: "Exp6981 could not reconstruct missing producer evidence. Exp6993 and Exp6994 shipped and cold-audited the producer envelope; Exp7005 rejects fixtures and consumes only a later complete real envelope for held-out quality."
++      retire_if_same_verdict: true
++  milestone: 2026.09.613
++  deliverable: results/experiment_7005_arc_live_envelope_audit.json
+   prompt: |
+     CONTEXT:
+-    Exp6981 found no eligible post-Exp6968 live engine with complete run,
+-    prompt, transition, engine, environment, scorer, and policy hashes. A
+-    reducer cannot reconstruct missing producer evidence. V612 repairs the live
+-    producer contract. It does not run or solve a public ARC game.
++    Exp6993 added immutable prompt, transition, engine, environment, scorer,
++    policy, factory, manifest, and envelope hashes to the live ARC engine
++    producer. Exp6994 confirmed that contract with deterministic fixtures. The
++    remaining question is whether a real complete envelope created after the
++    contract supports a held-out engine-quality measurement. This task does not
++    run the ARC service, inspect game source, solve a level, or update the solve
++    registry.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+@@ -1035,234 +1130,337 @@ tasks:
+     - {project_root}/ops/north-star.md
+     - {project_root}/results/experiment_6968_arc_post_refit_induction_audit.json
+     - {project_root}/results/experiment_6981_arc_live_engine_generalization_audit.json
+-    - {project_root}/scripts/experiments/experiment_6981_arc_live_engine_generalization_audit.py
+-    - {project_root}/results/arc_e3/r11l/attempts/manifest.jsonl
++    - {project_root}/results/experiment_6993_arc_producer_evidence_contract.json
++    - {project_root}/results/experiment_6994_arc_producer_cold_audit.json
++    - {project_root}/results/arc_e3
+     - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+-    - {project_root}/python/carnot/agentic/e3_agent_policy.py
+-    - {project_root}/python/carnot/agentic/arc_agent_factory.py
++    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+     - {project_root}/scripts/arc_e3_induced_model_quality.py
+     - {project_root}/scripts/arc_induction_quality.py
+-    - {project_root}/scripts/arc_llm_on_liveness_lint.py
+     - {project_root}/ops/arc_solve_registry.yaml
+     - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+ 
+     TASK:
+-    Add a prospective evidence envelope to the ARC live engine producer. Make
+-    every emitted engine record immutable prompt, transition, engine,
+-    environment, scorer, policy, and run-manifest hashes at creation time.
+-    Exercise the envelope through the shipped agent factory with deterministic
+-    fixtures only.
++    Select one real live_agent_attempts engine envelope created after Exp6993.
++    Verify its producer evidence, freeze construction and held-out transition
++    splits, and compare the engine with deterministic inert and pre-engine
++    baselines in a fresh network-disabled process. If no eligible envelope
++    exists, record one terminal blocked result.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the shipped engine producer, E3AgentPolicy,
+-       make_carnot_agent path, attempt manifest schema, ARC lints, relevant
+-       specs, and a writable temporary fixture directory. On failure, write
+-       blocked_arc_producer_evidence_contract with gate_check_summary.
+-    1. Add REQ-ARC-WMTE-6993 and RED tests before implementation. Cover atomic
+-       envelope writes, raw prompt bytes, transition ordering, source-kind
+-       provenance, every required hash, interrupted writes, stale paths,
+-       factory reachability, and mandatory false solve fields.
+-    2. Define one versioned producer-owned evidence envelope. Include run ID,
+-       timestamps, raw prompt path and hash, ordered transition JSONL path and
+-       hash, transition count, transition source kind, engine path and hash,
+-       environment receipt hash, scorer hash, live policy hash, agent factory
+-       hash, manifest row hash, and envelope hash.
+-    3. Write raw prompt and transition records before engine synthesis. Write
+-       the engine to a temporary path, compute its hash, then atomically publish
+-       the engine, envelope, and manifest row. An interrupted write must remain
+-       ineligible and must never look complete.
+-    4. Require transition source kind live_agent_attempts for later scientific
+-       audits. Reject game-source, hand-adapter, offline BFS, synthetic hidden
+-       transition, or missing provenance as live evidence.
+-    5. Extend the producer and manifest reader without changing game policy,
+-       action ranking, budgets, prompts, engine semantics, or service access.
+-       Keep older rows readable but explicitly ineligible when fields are absent.
+-    6. Exercise successful, interrupted, tampered, legacy, and duplicate-run
+-       fixtures through make_carnot_agent and E3AgentPolicy. Use a deterministic
+-       stub environment and engine. Prove one fixture engine reaches the real
+-       routing seam and changes a candidate-action score.
+-    7. Never contact the ARC service, inspect game source, launch Qwen3.8, claim
+-       a game level, or modify ops/arc_solve_registry.yaml. This task makes no
+-       model-quality or solve claim.
+-    8. Set arc_producer_contract_complete_score=1 only when all atomicity,
+-       eligibility, tamper, legacy, and schema tests pass. Set
+-       arc_live_path_fixture_ready_score=1 only when the complete envelope
+-       reaches the shipped factory and influences the deterministic fixture.
++    0. PRECONDITIONS: require terminal Exp6993 and Exp6994 contracts, readable
++       live attempt manifests, and a complete real envelope created after the
++       producer change. Require transition_source_kind=live_agent_attempts and
++       all producer hashes. On failure, write blocked_arc_live_envelope_audit
++       with gate_check_summary. Do not substitute a fixture or use partial.
++    1. Add REQ-ARC-WMTE-7005 and RED tests before implementation. Cover
++       creation-time ordering, source kind, all hashes, fixture exclusion,
++       legacy exclusion, duplicate attempts, split freeze, transition leakage,
++       inert and pre-engine controls, metric recomputation, and mandatory false
++       solve fields.
++    2. Enumerate envelope rows without reading game source. Preserve every
++       eligibility decision. Select the earliest complete post-Exp6993 real
++       envelope under a frozen rule; do not choose by engine quality.
++    3. Recompute prompt, ordered-transition, engine, environment, scorer,
++       policy, factory, manifest-row, and envelope hashes. Reject any tampered,
++       interrupted, synthetic, adapter, BFS, legacy, or fixture source.
++    4. Freeze construction and held-out transition IDs before scoring. Group by
++       attempt and episode boundary. No held-out next frame or outcome may enter
++       engine construction, baseline construction, thresholds, or selection.
++    5. In a fresh process with network, GPU, LLM, ARC service, game source, and
++       writes disabled, score the frozen engine on both strata. Compare an
++       inert no-change predictor and the exact pre-engine baseline available
++       before induction. Use identical transition rows and metrics.
++    6. Report exact next-frame accuracy, changed-cell precision and recall,
++       calibrated frame error, transition coverage, abstention, and route
++       influence per transition. Keep construction and held-out results
++       separate. Missing targets remain missing.
++    7. Set arc_live_envelope_audit_complete_score=1 when either one eligible
++       envelope is fully audited or the absence search is complete and
++       terminal. Set arc_engine_quality_evaluable_score=1 only when a real
++       complete envelope supplies the full held-out comparison. Set
++       arc_engine_quality_positive_score=1 only when its held-out paired error
++       interval improves over both controls with no coverage loss.
++    8. Emit solve_claimed=false, level_claimed=false, registry_updated=false,
++       submitted_to_leaderboard=false, game_source_inspected=false, and
++       development_fixture_used_for_quality=false. Do not modify
++       ops/arc_solve_registry.yaml.
+     9. Run focused tests, Ruff, OpenSpec coverage, ARC live-path and liveness
+        lints, artifact validation, adversarial verification, row-consistency
+        lint, and root-clutter checks.
+     10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and arc_producer_contract_complete_score
+-        and arc_live_path_fixture_ready_score; preconditions_checked;
+-        inference_substrate
+-        (deterministic_arc_producer_contract_fixture_no_llm); duration_s;
+-        source_artifact_hashes; envelope_schema; required_field_rows; rows;
+-        producer_write_rows; atomic_publish_rows; interruption_rows;
+-        tamper_rows; legacy_row_rows; transition_source_rows;
+-        manifest_row_rows; prompt_hash_rows; transition_hash_rows;
+-        engine_hash_rows; environment_hash_rows; scorer_hash_rows;
+-        policy_hash_rows; factory_hash_rows; envelope_hash_rows;
+-        agent_factory_trace_rows; live_routing_fixture_rows;
+-        action_influence_fixture_rows; focused_test_receipts;
+-        arc_producer_contract_complete_score;
+-        arc_live_path_fixture_ready_score; solve_provenance_applicable (false);
+-        solve_claimed (false); level_claimed (false); registry_updated (false);
+-        submitted_to_leaderboard (false); model_quality_claimed (false);
+-        random_seed; reproducibility_checksum; gate_check_summary with failed
+-        check, expected value, and observed value for any blocked verdict;
++        principle per required field and arc_live_envelope_audit_complete_score,
++        arc_engine_quality_evaluable_score, and
++        arc_engine_quality_positive_score; preconditions_checked;
++        inference_substrate (fresh_process_arc_live_envelope_quality_no_llm);
++        duration_s; source_artifact_hashes; envelope_inventory_rows;
++        envelope_eligibility_rows; selection_rule_rows; selected_envelope_hash;
++        rows; per_transition_rows; construction_transition_rows;
++        heldout_transition_rows; split_manifest_rows; split_manifest_hash;
++        prompt_hash_replay_rows; transition_hash_replay_rows;
++        engine_hash_replay_rows; environment_hash_replay_rows;
++        scorer_hash_replay_rows; policy_hash_replay_rows;
++        factory_hash_replay_rows; manifest_hash_replay_rows;
++        envelope_hash_replay_rows; leakage_check_rows; baseline_definition_rows;
++        engine_score_rows; inert_control_rows; pre_engine_control_rows;
++        paired_metric_rows; bootstrap_interval_rows; coverage_rows;
++        abstention_rows; route_influence_rows; missing_target_rows;
++        source_disagreement_rows; read_only_enforcement_receipt;
++        arc_live_envelope_audit_complete_score;
++        arc_engine_quality_evaluable_score; arc_engine_quality_positive_score;
++        solve_provenance_applicable (false); solve_claimed (false);
++        level_claimed (false); registry_updated (false);
++        submitted_to_leaderboard (false); game_source_inspected (false);
++        development_fixture_used_for_quality (false); random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
++        expected value, and observed value for any blocked verdict;
+         verifier_is_oracle (false); verdict_class
+         (positive | circular_positive | null | blocked | disqualified | partial);
+         honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6993_arc_producer_evidence_contract.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7005_arc_live_envelope_audit.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6981-arc-live-engine-generalization-audit
+-      verdict: blocked_arc_live_engine_generalization_audit
+-      addressed_by: "This task changes the upstream producer so every future engine atomically records the missing prompt, transition, run, and policy hashes; it does not rerun the blocked reducer."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6968-arc-post-refit-induction-audit
+-      verdict: blocked_arc_post_refit_induction_audit
+-      addressed_by: "V612 adds the prospective immutable transition source and producer envelope that Exp6968 lacked, using fixtures without claiming model quality."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6994-arc-producer-cold-audit
+-  title: Fresh-process ARC producer contract audit
+-  track: arc
+-  priority: high
++- id: exp7006-z1t-sparse-placement
++  title: Z1T sparse scorer placement receipt
++  track: hardware
++  priority: medium
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 90
++  max_turns: 50
++  estimated_wall_time_min: 150
+   per_unit_rows: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6994_arc_producer_cold_audit.json
++  milestone: 2026.09.613
++  deliverable: results/experiment_7006_z1t_sparse_placement.json
+   gated_on:
+-    - upstream: exp6993-arc-producer-evidence-contract
+-      artifact_field: arc_producer_contract_complete_score
++    - upstream: exp7000-certified-blinded-pwa-kan
++      artifact_field: pwa_candidate_artifact_complete_score
+       op: '=='
+       value: 1
+-    - upstream: exp6993-arc-producer-evidence-contract
+-      artifact_field: arc_live_path_fixture_ready_score
++  prompt: |
++    CONTEXT:
++    Extropic's public Z1T note maps sparse tanh-linear work to Z1's fixed
++    degree-16 graph and leaves dense, pooling, residual, positional, and
++    boundary work to a companion FPGA or XPU. Carnot has no Z1 hardware or
++    authenticated runner. Exp7000 supplies a concrete frozen PWA-KAN scorer
++    graph. This task produces a static, substrate-neutral placement receipt,
++    not a hardware benchmark or speedup estimate.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/research-program.md section Hardware Acceleration Principle
++    - {project_root}/research-references.md V613 Planner Refresh
++    - {project_root}/research-hardware-wishlist.md
++    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
++    - {project_root}/python/carnot/hardware
++    - {project_root}/python/carnot/models
++    - {project_root}/openspec/capabilities/hardware/spec.md
++    - {project_root}/openspec/capabilities/constraint-verification/spec.md
++
++    TASK:
++    Compile the frozen Exp7000 PWA-KAN graph into a versioned typed graph.
++    Classify each operation and edge as Z1-native sparse tanh-linear,
++    companion-FPGA or XPU work, unsupported work, or a substrate boundary.
++    Recompute degree, quantization, state, bandwidth, and crossing counts under
++    explicitly declared public Z1T assumptions.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require pwa_candidate_artifact_complete_score=1, a frozen
++       PWA graph and coefficients, readable first-party Z1T assumptions, the
++       hardware capability spec, and writable receipt paths. On failure, write
++       blocked_z1t_sparse_placement with gate_check_summary. Z1 access is not a
++       precondition.
++    1. Add REQ-HW-7006 and RED tests before implementation. Cover typed node
++       and edge completeness, degree-16 limits, four-sparse projections, 4-bit
++       weights, dy4p or dynamic-tanh classification, dense and residual
++       placement, unsupported operations, partition crossings, quantization
++       error, assumption changes, and mandatory false hardware claims.
++    2. Freeze and hash the Exp7000 model and PWA files before compilation.
++       Lower each affine region, spline selector, comparison, aggregation,
++       normalization, residual, and output operation into an explicit typed
++       node. Preserve shapes, coefficients, state, and data types.
++    3. Encode every dependency as a typed edge with source, destination,
++       tensor shape, bit width, reuse count, and fan-in. Prove the typed graph
++       reproduces the frozen PWA scorer on every Exp7000 row before placement.
++    4. Record public Z1T assumptions as inputs with source URL, access date,
++       graph degree, weight precision, activation form, and companion-processor
++       boundary. Do not convert vendor estimates into measured facts.
++    5. Apply one deterministic placement rule. Mark a node Z1-native only when
++       its operation, fan-in, sparsity, precision, and activation satisfy all
++       declared assumptions. Mark other nodes FPGA/XPU-side, unsupported, or
++       boundary with an exact reason. Do not hand-waive unsupported work away.
++    6. Count nodes, edges, parameters, state bytes, coefficient bytes, maximum
++       degree, quantization residual, partition crossings, crossing bytes per
++       scorer call, unsupported nodes, and required dense projections. Report
++       totals and one row per node and edge.
++    7. Run a placement sensitivity table for degree, precision, and sparsity
++       assumptions without optimizing after seeing the result. Keep the
++       first-party configuration primary and label alternatives hypothetical.
++    8. Set z1t_placement_receipt_complete_score=1 only when the typed graph
++       reproduces the PWA scorer, every node and edge is classified, all counts
++       reconcile, and unsupported and boundary costs remain explicit.
++    9. Emit hardware_executed=false, z1_accessed=false,
++       energy_speedup_claimed=false, latency_speedup_claimed=false,
++       throughput_claimed=false, and vendor_estimates_used_as_measurements=false.
++    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++        adversarial verification, row-consistency lint, and root-clutter checks.
++    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and z1t_placement_receipt_complete_score;
++        preconditions_checked; inference_substrate
++        (deterministic_static_z1t_placement_compiler_no_llm); duration_s;
++        source_artifact_hashes; public_assumption_rows; assumption_manifest_hash;
++        rows; typed_graph_rows; typed_node_rows; typed_edge_rows;
++        graph_reproduction_rows; operation_class_rows; z1_native_node_rows;
++        fpga_xpu_node_rows; unsupported_node_rows; boundary_node_rows;
++        fanin_rows; degree_limit_rows; sparsity_rows; quantization_rows;
++        quantization_residual_rows; state_byte_rows; coefficient_byte_rows;
++        partition_crossing_rows; crossing_bandwidth_rows; dense_projection_rows;
++        placement_reason_rows; sensitivity_rows; count_reconciliation_rows;
++        typed_graph_hash; placement_receipt_hash;
++        z1t_placement_receipt_complete_score; hardware_executed (false);
++        z1_accessed (false); energy_speedup_claimed (false);
++        latency_speedup_claimed (false); throughput_claimed (false);
++        vendor_estimates_used_as_measurements (false); random_seed;
++        reproducibility_checksum; gate_check_summary with failed check,
++        expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (false); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7006_z1t_sparse_placement.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++- id: exp7007-z1t-placement-cold-audit
++  title: Z1T substrate partition recomputation
++  track: hardware
++  priority: medium
++  agent_type: codex
++  model: gpt-5.6-sol
++  requires_gpu: false
++  max_turns: 30
++  estimated_wall_time_min: 120
++  per_unit_rows: true
++  milestone: 2026.09.613
++  deliverable: results/experiment_7007_z1t_placement_cold_audit.json
++  gated_on:
++    - upstream: exp7006-z1t-sparse-placement
++      artifact_field: z1t_placement_receipt_complete_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6993 adds the evidence fields that V611's ARC audit could not find. The
+-    producer contract is useful only if a separate process can replay every
+-    hash, distinguish legacy and tampered rows, and reach the real agent routing
+-    seam. This remains a fixture audit, not a game-quality or solve task.
++    Exp7006 produces a static typed graph and Z1T-style placement receipt from
++    a frozen PWA-KAN. The producer cannot independently validate its lowering,
++    node classification, crossing counts, or claim boundary. This task rebuilds
++    the receipt in a fresh process with no hardware access.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/ops/north-star.md
+-    - {project_root}/results/experiment_6993_arc_producer_evidence_contract.json
+-    - {project_root}/scripts/experiments/experiment_6993_arc_producer_evidence_contract.py
+-    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+-    - {project_root}/python/carnot/agentic/e3_agent_policy.py
+-    - {project_root}/python/carnot/agentic/arc_agent_factory.py
+-    - {project_root}/scripts/arc_llm_on_liveness_lint.py
+-    - {project_root}/ops/arc_solve_registry.yaml
+-    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
++    - {project_root}/research-references.md V613 Planner Refresh
++    - {project_root}/research-hardware-wishlist.md
++    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
++    - {project_root}/results/experiment_7006_z1t_sparse_placement.json
++    - {project_root}/scripts/experiments/experiment_7006_z1t_sparse_placement.py
++    - {project_root}/scripts/adversarial_verify.py
++    - {project_root}/openspec/capabilities/hardware/spec.md
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Audit Exp6993 in a fresh restricted process. Recompute every evidence hash,
+-    eligibility decision, atomicity outcome, factory trace, routing decision,
+-    and action-score influence from raw fixture rows. Make no model-quality or
+-    solve claim.
++    Rebuild the Exp7006 typed graph and placement in a fresh read-only process.
++    Recompute graph equivalence, node and edge classes, degree and precision
++    limits, partition crossings, unsupported work, hashes, and every explicit
++    no-hardware claim.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require both structured gates, the source artifact,
+-       complete raw fixture rows, envelope and manifest files, shipped factory
+-       code, and read-only access. On failure, write
+-       blocked_arc_producer_cold_audit with gate_check_summary. Do not declare
+-       partial for missing upstream data.
+-    1. Add REQ-ARC-WMTE-6994 and RED tests before implementation. Cover hash
+-       mismatch, reordered transitions, missing raw prompt, legacy eligibility,
+-       interrupted atomic writes, fake source kinds, unreachable engines, and
+-       mandatory false solve fields.
+-    2. Start a fresh process with network, GPU, LLM, ARC service, game source,
+-       and source writes disabled. Hash every input before reading source
+-       aggregate claims.
+-    3. Recompute prompt, transition, engine, environment, scorer, policy,
+-       factory, manifest-row, and envelope hashes. Recompute transition order,
+-       count, source kind, and complete-row eligibility.
+-    4. Replay successful, interrupted, tampered, legacy, and duplicate fixtures.
+-       Confirm only the complete untampered live_agent_attempts envelope is
+-       eligible for a future scientific audit.
+-    5. Construct the shipped agent through make_carnot_agent. Trace the fixture
+-       envelope into E3AgentPolicy, engine load, candidate routing, and one
+-       deterministic action-score change. A source reference alone is not
+-       reachability.
+-    6. Recompute both source readiness fields. Set
+-       arc_contract_audit_complete_score=1 when all rows are terminal. Set
+-       arc_producer_contract_confirmed_score=1 only when hashes, eligibility,
+-       atomicity, routing, action influence, and source claims all agree.
+-    7. Emit solve_claimed=false, level_claimed=false, registry_updated=false,
+-       submitted_to_leaderboard=false, and model_quality_claimed=false. Do not
+-       modify ops/arc_solve_registry.yaml.
+-    8. Run focused tests, Ruff, OpenSpec coverage, ARC live-path and liveness
+-       lints, artifact validation, adversarial verification, row-consistency
+-       lint, and root-clutter checks.
++    0. PRECONDITIONS: require z1t_placement_receipt_complete_score=1, frozen PWA
++       inputs, complete typed node and edge rows, public assumption rows, and
++       read-only access. On failure, write blocked_z1t_placement_cold_audit
++       with gate_check_summary. Hardware access is neither required nor allowed.
++    1. Add REQ-HW-7007 and RED tests before implementation. Cover altered PWA
++       coefficients, omitted nodes, changed edge shapes, degree overflow,
++       dense-as-sparse misclassification, quantization drift, hidden crossings,
++       unsupported-operation coercion, vendor-estimate promotion, and both bare
++       audit fields.
++    2. Start a fresh process with network, GPU, FPGA, Z1, LLM, and source writes
++       disabled. Hash all PWA, graph, assumption, and placement inputs before
++       reading source aggregates.
++    3. Lower the frozen PWA scorer independently. Recompute every typed node,
++       edge, shape, coefficient, dependency, state byte, and graph hash.
++       Re-evaluate the scorer on all source rows and compare predictions.
++    4. Reapply the declared deterministic placement rule. Recompute Z1-native,
++       FPGA/XPU-side, unsupported, and boundary classes with reasons. Confirm
++       every Z1-native node satisfies operation, degree, sparsity, precision,
++       and activation limits.
++    5. Recompute quantization residuals, parameter and state totals, maximum
++       degree, partition crossings, crossing bytes, dense projections, and the
++       sensitivity table. Missing nodes or operations cannot be counted as zero.
++    6. Attack the claim boundary. Confirm the artifact makes no device,
++       measured latency, throughput, energy, hardware availability, or final
++       deployed-model claim. Vendor estimates must remain declared assumptions.
++    7. Set z1t_placement_audit_complete_score=1 when every replay and attack is
++       terminal. Set z1t_placement_confirmed_score=1 only when the independent
++       graph, predictions, classifications, counts, hashes, and no-hardware
++       boundary all agree with Exp7006.
++    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
++       adversarial verification, row-consistency lint, and root-clutter checks.
+     9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle per required field and both arc_contract_audit_complete_score
+-       and arc_producer_contract_confirmed_score; preconditions_checked;
+-       inference_substrate (fresh_process_arc_contract_replay_no_llm);
+-       duration_s; source_artifact_hashes; rows; per_fixture_rows;
+-       prompt_hash_replay_rows; transition_hash_replay_rows;
+-       engine_hash_replay_rows; environment_hash_replay_rows;
+-       scorer_hash_replay_rows; policy_hash_replay_rows;
+-       factory_hash_replay_rows; manifest_hash_replay_rows;
+-       envelope_hash_replay_rows; transition_order_rows;
+-       source_kind_rows; eligibility_replay_rows; atomicity_replay_rows;
+-       tamper_replay_rows; legacy_replay_rows; agent_factory_trace_rows;
+-       routing_replay_rows; action_influence_replay_rows;
++       principle per required field and both
++       z1t_placement_audit_complete_score and z1t_placement_confirmed_score;
++       preconditions_checked; inference_substrate
++       (fresh_process_static_z1t_placement_audit_no_llm); duration_s;
++       source_artifact_hashes; input_hash_rows; public_assumption_replay_rows;
++       rows; typed_graph_rebuild_rows; typed_node_replay_rows;
++       typed_edge_replay_rows; graph_equivalence_rows; prediction_replay_rows;
++       operation_class_replay_rows; z1_native_replay_rows;
++       fpga_xpu_replay_rows; unsupported_replay_rows; boundary_replay_rows;
++       degree_replay_rows; sparsity_replay_rows; precision_replay_rows;
++       quantization_replay_rows; state_byte_replay_rows;
++       partition_crossing_replay_rows; crossing_bandwidth_replay_rows;
++       dense_projection_replay_rows; sensitivity_replay_rows;
++       count_reconciliation_rows; claim_boundary_attack_rows;
+        source_disagreement_rows; read_only_enforcement_receipt;
+-       arc_contract_audit_complete_score;
+-       arc_producer_contract_confirmed_score;
+-       solve_provenance_applicable (false); solve_claimed (false);
+-       level_claimed (false); registry_updated (false);
+-       submitted_to_leaderboard (false); model_quality_claimed (false);
++       z1t_placement_audit_complete_score; z1t_placement_confirmed_score;
++       hardware_executed (false); z1_accessed (false);
++       energy_speedup_claimed (false); latency_speedup_claimed (false);
++       throughput_claimed (false); vendor_estimates_used_as_measurements (false);
+        random_seed; reproducibility_checksum; gate_check_summary with failed
+        check, expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (false); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6994_arc_producer_cold_audit.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7007_z1t_placement_cold_audit.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6981-arc-live-engine-generalization-audit
+-      verdict: blocked_arc_live_engine_generalization_audit
+-      addressed_by: "The new audit consumes a producer-created complete fixture envelope and tests contract reachability only; it does not infer missing hashes or claim held-out engine quality."
+-      retire_if_same_verdict: true
+ 
+-- id: exp6995-v612-capstone
+-  title: V612 independent evidence capstone and V613 handoff
++- id: exp7008-v613-capstone
++  title: V613 independent evidence capstone and V614 handoff
+   track: synthesis
+   priority: critical
+   agent_type: claude
+   model: opus
+   requires_gpu: false
+   max_turns: 100
+-  estimated_wall_time_min: 90
++  estimated_wall_time_min: 120
+   per_unit_rows: true
+   prior_failures:
+     - experiment_id: exp6952-v608-capstone
+-      verdict: "partial_v608_capstone_contract_audited_science_incomplete"
+-      addressed_by: "Exp6995 is ungated, enumerates the exact 12-task contract, treats externally missing or blocked inputs as terminal blocked evidence, and reserves partial for its own incomplete work."
++      verdict: partial_v608_capstone_contract_audited_science_incomplete
++      addressed_by: "Exp7008 is ungated, enumerates the exact 13-task V613 contract, records missing or externally blocked branches as terminal blocked evidence, and reserves partial only for its own incomplete reconciliation work."
+       retire_if_same_verdict: true
+-  milestone: 2026.09.612
+-  deliverable: results/experiment_6995_v612_capstone.json
++  milestone: 2026.09.613
++  deliverable: results/experiment_7008_v613_capstone.json
+   prompt: |
+     CONTEXT:
+-    V612 has exactly 12 contract tasks, exp6984 through exp6995. Its main branch
+-    tests balanced constraint energy and per-knot continuous learning. Its ARC
+-    branch repairs producer provenance with no game solve. This capstone is
+-    deliberately ungated so upstream blocks cannot erase milestone evidence.
++    V613 has exactly 13 contract tasks, exp6996 through exp7008. The main branch
++    removes provenance leakage before learned ranking and per-knot continuous
++    learning. Independent branches test a real ARC producer envelope and a
++    static Z1T-style placement. This capstone is deliberately ungated so
++    blocked or disqualified upstream work cannot erase the milestone record.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+@@ -1272,15 +1470,16 @@ tasks:
+     - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+     - {project_root}/research-program.md
+     - {project_root}/_bmad/prd.md
++    - {project_root}/_bmad/architecture.md
+     - {project_root}/ops/north-star.md
+     - {project_root}/ops/status.md
+     - {project_root}/ops/changelog.md
+     - {project_root}/ops/conductor-log.md
+     - {project_root}/ops/exclusion_manifest.yaml
+     - {project_root}/ops/arc_solve_registry.yaml
+-    - {project_root}/results/experiment_6983_v611_capstone.json
+-    - {project_root}/results/experiment_6984_exact_contrast_fixture.json through
+-      {project_root}/results/experiment_6994_arc_producer_cold_audit.json when present
++    - {project_root}/results/experiment_6995_v612_capstone.json
++    - {project_root}/results/experiment_6996_v613_source_contract_preflight.json through
++      {project_root}/results/experiment_7007_z1t_placement_cold_audit.json when present
+     - {project_root}/scripts/publication_gate.py
+     - {project_root}/scripts/adversarial_verify.py
+     - {project_root}/scripts/verdict_row_consistency_lint.py
+@@ -1288,72 +1487,86 @@ tasks:
+     - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Reconcile every V612 task slot from primary artifacts. Recompute task
+-    contract parity, learned-energy results, selection value, continuous-learning
+-    value, ARC producer reachability, stable publication gates, and retirement
+-    outcomes. Produce one evidence-led V613 recommendation.
++    Reconcile every V613 task slot from primary artifacts. Recompute document-
++    YAML parity, blinded-feature readiness, learned-energy results, selection
++    value, continuous-learning value, ARC engine quality, static Z1T placement,
++    stable publication gates, and required retirements. Produce one evidence-
++    led V614 recommendation from the earliest causal boundary.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the activated V612 YAML and design document,
+-       reporting tools, V611 capstone, and readable results directory. Missing
+-       science artifacts do not block capstone execution. If the contract files
+-       themselves are unreadable, write blocked_v612_capstone with
+-       gate_check_summary. Never use partial for external missing inputs.
+-    1. Add REQ-REPORT-6995 and RED tests before implementation. Cover exact task
+-       count, ID order, title and deliverable parity, gate-producer parity,
+-       missing artifacts, blocked and disqualified branches, row recomputation,
+-       verdict-class propagation, circularity, and stable G1-G4 fields.
+-    2. Parse Markdown and YAML independently. Require milestone 2026.09.612,
+-       exactly 12 tasks, and exact ordered IDs exp6984 through exp6995. Compare
+-       every exact title, deliverable, order, and structured gate.
+-    3. Resolve each expected deliverable independently. Record missing,
+-       blocked, disqualified, null, circular-positive, positive, and rejected
+-       outcomes. Trust verdict_class for aggregation and preserve
+-       gate_check_summary for every blocked input.
+-    4. Recompute contrast counts, label balance, feature counts, shortcut probes,
+-       PWA metrics, certificate results, selection deltas, learning gains,
+-       future support, forgetting, ARC envelope hashes, and route influence from
+-       per-unit rows. Preserve source disagreements.
+-    5. Report three branches separately: oracle-distinct constraint selection;
+-       verifier-grounded continuous self-learning; and ARC producer contract
+-       reachability. Producer reachability is infrastructure, not game quality.
+-    6. Set v612_science_positive_score=1 only when either the oracle-distinct
+-       selection positive gate or the per-knot learning positive gate is one and
+-       its required cold audit confirms the claim. Do not count fixture,
+-       certificate, runtime, or ARC contract readiness as science positive.
+-    7. Run scripts/publication_gate.py --json and report stable g1, g2, g3, g4,
+-       paper_ready, and unmet_gates. Do not derive publication status from task
+-       counts, blocker counts, or V612 science.
+-    8. Run artifact validation, adversarial verification, row-consistency lint,
++    0. PRECONDITIONS: require the activated V613 YAML and design document, V612
++       capstone, reporting tools, exclusion manifest, and readable results
++       directory. Missing science artifacts do not block capstone execution. If
++       the contract files are unreadable, write blocked_v613_capstone with
++       gate_check_summary. Never use partial for an external missing input.
++    1. Add REQ-REPORT-7008 and RED tests before implementation. Cover exact
++       count, ID order, title and deliverable parity, structured gate parity,
++       producer fields, prior-failure entries, missing artifacts, verdict-class
++       propagation, circularity, no-solve and no-hardware boundaries, row
++       recomputation, stable G1-G4 fields, and both bare capstone fields.
++    2. Parse Markdown and YAML independently. Require milestone 2026.09.613,
++       exactly 13 tasks, and exact ordered IDs exp6996 through exp7008. Compare
++       every exact title, deliverable, order, and structured gate with the
++       document's Exact Task Contract table.
++    3. Resolve every deliverable independently. Record missing, blocked,
++       disqualified, null, circular-positive, positive, flagged, and rejected
++       outcomes. Trust verdict_class for aggregation. Preserve
++       gate_check_summary for each blocked input.
++    4. Recompute sidecar isolation, prohibited-feature probes, commitment
++       controls, PWA metrics and MILP certificates, selection deltas, learning
++       gains, forgetting, best-at-k support, ARC envelope hashes and held-out
++       metrics, and Z1T graph and placement counts from per-unit rows.
++    5. Report five branches separately: evidence isolation; oracle-distinct
++       learned selection; verifier-grounded continuous self-learning; ARC live-
++       envelope engine quality; and static Z1T placement. Do not pool fixtures,
++       authentic transfer rows, ARC transitions, or hardware assumptions.
++    6. Set v613_science_positive_score=1 only when Exp7002's oracle-distinct
++       selection positive field is one and Exp7001 confirms its certificate.
++       Report any per-knot positive result as circular-positive unless an
++       independent outcome authority exists. Do not count infrastructure,
++       runtime, contract, ARC provenance, or placement completion as science.
++    7. Run scripts/publication_gate.py --json. Report stable g1, g2, g3, g4,
++       paper_ready, and unmet_gates. Do not replace these fields with a blocker
++       count or infer publication status from V613 task outcomes.
++    8. Apply each retire_if_same_verdict rule by exact prior and current verdict.
++       Recommend no rerun without a new cause and method. Do not revive Spilled
++       Energy, schema-only reprompts, finite-ID answer transport, the Exp5895
++       exact slot, public ARC re-solves, unchanged FPGA probes, or hardware
++       execution claims without a device receipt.
++    9. Run artifact validation, adversarial verification, row-consistency lint,
+        recurring-blocker ledger, OpenSpec coverage, and root-clutter checks.
+-       Record every command, exit code, and finding without editing inputs.
+-    9. Recommend V613 from the earliest causal boundary. Retire any repeated
+-       failure when its prior_failures entry requires retirement. Do not revive
+-       Spilled Energy, schema-only reprompts, finite-ID answer transport, the
+-       Exp5895 exact slot, public ARC re-solves, or unchanged hardware probes.
+-    10. Set v612_capstone_complete_score=1 when all 12 task rows, branch rows,
+-        contract rows, publication rows, and command receipts are terminal.
+-        Set v612_task_contract_conforms_score from exact document/YAML parity.
+-    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle per required field and v612_capstone_complete_score,
+-        v612_task_contract_conforms_score, and v612_science_positive_score;
++       Record commands, exit codes, and findings without editing inputs.
++    10. Set v613_task_contract_conforms_score=1 only when all 13 task rows and
++        every title, deliverable, order, gate, producer field, and prior-failure
++        contract agree. Set v613_capstone_complete_score=1 when all task,
++        branch, contract, publication, retirement, and command rows are terminal.
++    11. Recommend V614 from the earliest causal boundary. Preserve null,
++        blocked, disqualified, circular, missing, and unsupported branches.
++        Scientific success is optional; contract and evidence honesty are not.
++    12. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and v613_capstone_complete_score,
++        v613_task_contract_conforms_score, and v613_science_positive_score;
+         preconditions_checked; inference_substrate
+-        (deterministic_milestone_evidence_synthesis_no_llm); duration_s;
++        (deterministic_milestone_v613_evidence_synthesis_no_llm); duration_s;
+         source_artifact_hashes; rows; expected_task_rows; observed_task_rows;
+         missing_task_rows; task_contract_rows; gate_contract_rows;
+-        verdict_class_rows; blocked_diagnostic_rows; per_branch_results;
+-        contrast_evidence_rows; pwa_energy_evidence_rows;
+-        selection_evidence_rows; continuous_learning_evidence_rows;
+-        support_and_forgetting_rows; arc_producer_evidence_rows;
+-        circularity_rows; source_disagreement_rows; retirement_rows;
+-        publication_gate_rows; g1; g2; g3; g4; paper_ready; unmet_gates;
+-        command_receipt_rows; v613_handoff_rows;
+-        v612_capstone_complete_score; v612_task_contract_conforms_score;
+-        v612_science_positive_score; random_seed; reproducibility_checksum;
++        gate_producer_rows; prior_failure_rows; verdict_class_rows;
++        blocked_diagnostic_rows; flagged_artifact_rows; per_branch_results;
++        evidence_isolation_rows; commitment_control_rows; pwa_energy_rows;
++        milp_certificate_rows; selection_evidence_rows;
++        continuous_learning_rows; support_and_forgetting_rows;
++        arc_live_envelope_rows; arc_quality_rows; z1t_typed_graph_rows;
++        z1t_placement_rows; circularity_rows; claim_boundary_rows;
++        source_disagreement_rows; retirement_rows; publication_gate_rows;
++        g1; g2; g3; g4; paper_ready; unmet_gates; command_receipt_rows;
++        v614_handoff_rows; v613_capstone_complete_score;
++        v613_task_contract_conforms_score; v613_science_positive_score;
++        solve_claimed (false); level_claimed (false); registry_updated (false);
++        hardware_executed (false); random_seed; reproducibility_checksum;
+         gate_check_summary with failed check, expected value, and observed value
+         for any blocked verdict; verifier_is_oracle (true); verdict_class
+         (positive | circular_positive | null | blocked | disqualified | partial);
+         honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6995_v612_capstone.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7008_v613_capstone.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+-- 
+2.55.0
+

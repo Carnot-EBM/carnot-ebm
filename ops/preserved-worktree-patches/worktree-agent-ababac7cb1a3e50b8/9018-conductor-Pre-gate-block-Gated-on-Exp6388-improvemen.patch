@@ -1,0 +1,61 @@
+From 2e3a811963d6d07ac69f974b909656d34d086f53 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 05:36:36 -0400
+Subject: [PATCH 09018/11362] [conductor] Pre-gate block: Gated on Exp6388
+ improvement: default-off live ARC active-goal shadow
+
+1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibration.delta_admission_precision (numeric comparison rejected because values are not comparable (actual_type=dict, expected_type=float))
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_6389_arc_default_off_active_goal_shadow.json   | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b4cfe12975..dd43d50629 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-08-13T09:34:33Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 27, "phase": "iteration_start", "last_beat": "2026-08-13T09:36:36Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 401f5d23ca..ae21834599 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15768,3 +15768,4 @@ code |
+ | 2026-08-13 08:50 UTC | Two-sided live ARC goal-evidence admission contrac | OK | 111 passed, 1 warning in 11.22s |
+ | 2026-08-13 09:13 UTC | Gated on Exp6386 readiness: live-path active rewar | OK | 109 passed, 1 warning in 10.51s |
+ | 2026-08-13 09:32 UTC | Gated on Exp6387 readiness: three-family ARC goal  | OK | 86 passed, 1 warning in 8.79s |
++| 2026-08-13 09:34 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 589621187b..7c9b01e650 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 26, "phase": "iteration_start", "started_at": "2026-08-13T09:34:33Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 27, "phase": "iteration_start", "started_at": "2026-08-13T09:36:36Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6389_arc_default_off_active_goal_shadow.json b/results/experiment_6389_arc_default_off_active_goal_shadow.json
+index 84319e2282..46ba19bbc1 100644
+--- a/results/experiment_6389_arc_default_off_active_goal_shadow.json
++++ b/results/experiment_6389_arc_default_off_active_goal_shadow.json
+@@ -2,8 +2,8 @@
+   "experiment": 6389,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-13",
+-  "started_at": "2026-08-13T09:34:33.696657+00:00",
+-  "finished_at": "2026-08-13T09:34:33.696657+00:00",
++  "started_at": "2026-08-13T09:36:36.288964+00:00",
++  "finished_at": "2026-08-13T09:36:36.288964+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6388 improvement: default-off live ARC active-goal shadow",
+-- 
+2.55.0
+

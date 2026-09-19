@@ -1,0 +1,61 @@
+From 767753e3c9db110de4a21a92c0a15348c175bfbc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 11 Aug 2026 08:43:20 -0400
+Subject: [PATCH 08838/11362] [conductor] Pre-gate block: Three-family local
+ state corpus gated on Exp6312 readiness=1
+
+1 of 1 gate(s) failed; first failure: exp6312-model-local-representation-surface-preflight.model_local_representation_surface_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...experiment_6314_three_family_model_local_state_corpus.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a52bbaf512..be4af716dc 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 88, "phase": "iteration_start", "last_beat": "2026-08-11T12:41:13Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 89, "phase": "iteration_start", "last_beat": "2026-08-11T12:43:19Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c082ef920a..fdfa0401b4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15675,3 +15675,4 @@ Still active  |
+ | 2026-08-11 12:18 UTC | Three-family model-local representation surface pr | OK | 87 passed, 1 warning in 10.84s |
+ | 2026-08-11 12:37 UTC | Exact held-family vulnerable/fixed Python pair fix | OK | 87 passed, 1 warning in 8.91s |
+ | 2026-08-11 12:39 UTC | Three-family local state corpus gated on Exp6312 r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6312-model-local-representation-surface |
++| 2026-08-11 12:41 UTC | Three-family local state corpus gated on Exp6312 r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6312-model-local-representation-surface |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3a07c6ed8f..06bcef566e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 88, "phase": "iteration_start", "started_at": "2026-08-11T12:41:13Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 89, "phase": "iteration_start", "started_at": "2026-08-11T12:43:19Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6314_three_family_model_local_state_corpus.json b/results/experiment_6314_three_family_model_local_state_corpus.json
+index f232d16dfc..02112d7dca 100644
+--- a/results/experiment_6314_three_family_model_local_state_corpus.json
++++ b/results/experiment_6314_three_family_model_local_state_corpus.json
+@@ -2,8 +2,8 @@
+   "experiment": 6314,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-11",
+-  "started_at": "2026-08-11T12:41:13.681569+00:00",
+-  "finished_at": "2026-08-11T12:41:13.681569+00:00",
++  "started_at": "2026-08-11T12:43:19.899885+00:00",
++  "finished_at": "2026-08-11T12:43:19.899885+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Three-family local state corpus gated on Exp6312 readiness=1",
+-- 
+2.55.0
+

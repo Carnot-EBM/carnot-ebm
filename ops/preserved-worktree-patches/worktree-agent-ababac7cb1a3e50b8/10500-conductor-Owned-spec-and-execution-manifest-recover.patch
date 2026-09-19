@@ -1,0 +1,2334 @@
+From b5190a19529e2134434d2cbf5b3201abe8ec08c2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 04:37:02 -0400
+Subject: [PATCH 10500/11362] [conductor] Owned-spec and execution-manifest
+ recovery preflight
+
+Automated research step by research conductor.
+Task ID: exp6810-v595-contract-manifest-preflight
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.pretest-poison-counter.json              |    4 +-
+ ops/dogfood-memory.json                       |    2 +-
+ research-roadmap.yaml                         |  444 +++++++
+ ...6810_v595_contract_manifest_preflight.json | 1028 +++++++++++++++++
+ ...t_6810_v595_contract_manifest_preflight.py |  684 +++++++++++
+ ...t_6810_v595_contract_manifest_preflight.py |  102 ++
+ 6 files changed, 2260 insertions(+), 4 deletions(-)
+ create mode 100644 results/experiment_6810_v595_contract_manifest_preflight.json
+ create mode 100644 scripts/experiments/experiment_6810_v595_contract_manifest_preflight.py
+
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index 9b775de3aa..9e26dfeeb6 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1,3 +1 @@
+-{
+-  "tests/python/test_experiment_6810_v595_contract_manifest_preflight.py": 1
+-}
+\ No newline at end of file
++{}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a5dc8b2ce0..4969a85eba 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5200,
++  "experiments_checked": 5201,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index 259c13d55c..4650377b08 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -798,3 +798,447 @@ tasks:
+       verdict: 'complete_null_csl_audit: no positive order-level CSL effect recomputed'
+       addressed_by: 'The source technique now uses authentic model proposals, RCML-style residual pressure, explicit memory operations, and a separate global terminal-memory coherence check.'
+       retire_if_same_verdict: true
++
++- id: exp6819-arc-stepwise-strategy-accrual
++  title: Stepwise read-only strategy-supervisor accrual
++  track: agentic-harness
++  priority: critical
++  agent_type: claude
++  model: opus
++  requires_gpu: true
++  max_turns: 100
++  estimated_wall_time_min: 480
++  per_unit_rows: true
++  milestone: 2026.08.595
++  deliverable: results/experiment_6819_arc_stepwise_strategy_accrual.json
++  gated_on:
++    - upstream: exp6811-operational-obligation-automaton-v3
++      artifact_field: operational_automaton_fixture_ready
++      op: '=='
++      value: true
++  prompt: |
++    CONTEXT:
++    Exp6776 blocked before accrual because both GPUs had unrelated owners. Exp6811 supplies the
++    owned operational-obligation interface. AdaMEM motivates transient stepwise strategy state.
++    Compare static episode-start guidance with stepwise read-only retrieval in shadow mode, then
++    collect only the bounded active top-up needed for complete next-action outcomes.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6776_arc_shadow_supervisor_accrual.json
++    - {project_root}/results/experiment_6811_operational_obligation_automaton_v3.json
++    - {project_root}/python/carnot/agentic/arc_trajectory_supervisor.py
++    - {project_root}/python/carnot/agentic/e3_agent_policy.py
++    - {project_root}/openspec/capabilities/agentic-harness/spec.md
++    - {project_root}/ops/arc_solve_registry.yaml
++
++    TASK:
++    Reuse compatible durable external-evaluation rows first. Run only the bounded top-up needed
++    for the frozen evidence floor. Compare episode-start static guidance with stepwise read-only
++    strategy retrieval. Use the production policy and no per-game adapter. Strategy may advise or
++    rank. It may not authorize an action or persist state during an active episode.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require operational_automaton_fixture_ready=true, the production
++       make_carnot_agent and E3AgentPolicy path, registry precheck, source prohibition, adapter-off
++       state, the exact Qwen3.6 GGUF hash, and one task-owned GPU lease. Define MODEL_SPECS exactly
++       as unsloth/Qwen3.6-35B-A3B-GGUF. On bounded lease or model failure write complete_blocked_
++       arc_stepwise_strategy_accrual with gate_check_summary and stop. Do not kill or reuse an
++       external process.
++    1. Write tests first for immutable strategy snapshots, episode-start and stepwise retrieval,
++       shadow action identity, exact authority, source denial, adapter denial, process isolation,
++       active-episode write rejection, checkpoint restart, and row completeness.
++    2. Freeze the compatible durable-row filter, evidence floor, game cells, seeds, budgets,
++       censoring, action limits, prompts, chat template, and strategy bytes before top-up.
++    3. In shadow cells, preserve the production action and record its hash for both guidance modes.
++       In active cells, record the exact next-action outcome. Do not infer utility from strategy
++       text or from a same-model vote.
++    4. Run fresh task-owned processes. Record lease ownership, PID, model hash, CUDA offload,
++       tokens, actions, strategy reads, exact obligation receipts, atomic checkpoints, and teardown.
++    5. Emit one row per game-seed-guidance-mode-attempt. Set stepwise_strategy_accrual_ready from
++       complete eligible rows, immutable snapshots, exact receipts, process isolation, and clean
++       teardown, independent of effect sign. This field is consumed by Exp6820 and Exp6822.
++    6. Run focused tests, ruff, OpenSpec coverage, applicable ARC E2E checks, adversarial
++       verification, artifact convention audit, and verdict-row consistency lint.
++    7. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (principle per field);
++       inference_substrate (production local llama.cpp CUDA agent path); duration_s (measured wall
++       time); random_seed (frozen game and attempt seeds); reproducibility_checksum (bind inputs,
++       rows, commands, and output); MODEL_SPECS (exact Qwen3.6 flagship hub ID); model_specs (path,
++       hash, revision, quantization, chat template, and limits); source_artifact_hashes (owned
++       obligation and durable evidence); registry_precheck (no complete level is re-solved);
++       frozen_manifest (games, arms, budgets, and censoring); immutable_strategy_hashes (read-only
++       state); process_isolation_receipts (fresh task-owned cells); gpu_receipts (lease and CUDA
++       ownership); rows (every game-seed-mode-attempt); shadow_action_identity (no shadow influence);
++       exact_next_action_outcomes (active utility authority); active_episode_write_count (must be
++       zero); adapter_use_count (must be zero); source_access_count (must be zero); solve_claim
++       (false); solve_provenance (live_agent_self_discovery rows only); checkpoint_receipts (atomic
++       restart); stepwise_strategy_accrual_ready (exact downstream field); gate_check_summary
++       (failed check, expected value, and observed value); verifier_is_oracle (false, exact outcomes
++       are external authority); verdict_class (closed enum: positive | circular_positive | null |
++       blocked | disqualified | partial); honest_verdict (terminal and row-supported).
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6819_arc_stepwise_strategy_accrual.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6776-arc-shadow-supervisor-accrual
++      verdict: 'complete_blocked_shadow_supervisor_accrual:exclusive_gpu_without_unrelated_compute'
++      addressed_by: 'This attempt uses a bounded task-owned lease, reuses compatible durable rows before top-up, and stops with a terminal artifact instead of using an occupied process.'
++      retire_if_same_verdict: true
++
++- id: exp6820-arc-tool-gap-obligation-transport-v2
++  title: Live selfparse tool-gap obligation transport v2
++  track: agentic-harness
++  priority: critical
++  agent_type: claude
++  model: opus
++  requires_gpu: true
++  max_turns: 100
++  estimated_wall_time_min: 360
++  per_unit_rows: true
++  milestone: 2026.08.595
++  deliverable: results/experiment_6820_arc_tool_gap_obligation_transport_v2.json
++  gated_on:
++    - upstream: exp6819-arc-stepwise-strategy-accrual
++      artifact_field: stepwise_strategy_accrual_ready
++      op: '=='
++      value: true
++  prompt: |
++    CONTEXT:
++    Exp6777 gate-blocked before live transport because Exp6776 was not ready. Exp6819 now supplies
++    the owned live stepwise path. Prove that typed operational fields and strategy receipts survive
++    one real selfparse cell from serialization through analyzer ingestion and ledger update.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6777_arc_tool_gap_transport.json
++    - {project_root}/results/experiment_6811_operational_obligation_automaton_v3.json
++    - {project_root}/results/experiment_6819_arc_stepwise_strategy_accrual.json
++    - {project_root}/python/carnot/agentic/e3_agent_policy.py
++    - {project_root}/python/carnot/agentic/arc_trajectory_supervisor.py
++    - {project_root}/openspec/capabilities/agentic-harness/spec.md
++
++    TASK:
++    Run one production selfparse cell and one typed canary. Verify exact transport of every
++    operational-obligation and strategy-receipt field. Keep the production feature default off.
++    An empty natural event list is valid only when the typed canary proves the complete path.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require stepwise_strategy_accrual_ready=true, complete strategy and obligation
++       schemas, production selfparse registration, source prohibition, adapter-off state, the exact
++       model hash, and one task-owned GPU lease. Define MODEL_SPECS exactly as
++       unsloth/Qwen3.6-35B-A3B-GGUF. On failure write complete_blocked_arc_tool_gap_obligation_
++       transport_v2 with gate_check_summary and stop. Do not kill or reuse an external process.
++    1. Write tests first for default-off behavior, canonical serialization, typed canary coverage,
++       missing-field rejection, duplicate receipt rejection, analyzer ingestion, ledger identity,
++       restart, source denial, adapter denial, and teardown.
++    2. Freeze the production cell, canary bytes, field list, prompt, seed, token limit, process
++       boundary, and expected ledger transition before model load.
++    3. Run the canary and one production selfparse cell in a fresh task-owned process. Record raw
++       tool bytes, parsed events, analyzer record, supervisor decision, ledger update, model hash,
++       PID, CUDA offload, and teardown.
++    4. Reparse all bytes in a fresh process. Require field identity through each transport stage.
++       Do not repair missing natural events from the canary or from expected output.
++    5. Emit one row per canary or production transport stage. Set tool_gap_obligation_transport_
++       ready from complete typed-field survival, default-off preservation, fresh replay, and clean
++       teardown, independent of the natural-event count. This field is consumed by Exp6821 and
++       Exp6822.
++    6. Run focused tests, ruff, OpenSpec coverage, applicable ARC E2E checks, adversarial
++       verification, artifact convention audit, and verdict-row consistency lint.
++    7. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (principle per field);
++       inference_substrate (one production local llama.cpp CUDA selfparse cell); duration_s
++       (measured wall time); random_seed (fixed canary and live seed); reproducibility_checksum
++       (bind inputs, bytes, rows, commands, and output); MODEL_SPECS (exact Qwen3.6 flagship hub
++       ID); model_specs (path, hash, revision, quantization, chat template, and limits);
++       source_artifact_hashes (owned upstream identity); frozen_manifest (cell and canary bytes);
++       raw_tool_byte_manifest (immutable outputs); operational_field_transport (all five fields);
++       strategy_receipt_transport (read-only provenance); analyzer_ingestion_receipts (parsed
++       identity); ledger_update_receipts (durable identity); default_off_receipts (unchanged
++       production default); rows (every source and transport stage); natural_event_count (may be
++       zero); typed_canary_passed (required if natural rows are empty); process_isolation_receipts
++       (fresh task-owned cells); gpu_receipts (lease and CUDA ownership); solve_claim (false);
++       solve_provenance (live_agent_self_discovery transport only); tool_gap_obligation_transport_
++       ready (exact downstream field); gate_check_summary (failed check, expected value, and
++       observed value); verifier_is_oracle (false, transport has no correctness authority);
++       verdict_class (closed enum: positive | circular_positive | null | blocked | disqualified |
++       partial); honest_verdict (terminal and row-supported).
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6820_arc_tool_gap_obligation_transport_v2.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6777-arc-tool-gap-transport
++      verdict: 'blocked_gate_check_failed'
++      addressed_by: 'The transport now consumes the complete Exp6819 stepwise path, adds a typed canary, and keeps an empty natural event list valid only after end-to-end field survival.'
++      retire_if_same_verdict: true
++
++- id: exp6821-arc-obligation-actions-to-progress-ab-v2
++  title: Obligation-routed actions-to-progress A/B v2
++  track: agentic-harness
++  priority: critical
++  agent_type: claude
++  model: opus
++  requires_gpu: true
++  max_turns: 100
++  estimated_wall_time_min: 720
++  per_unit_rows: true
++  milestone: 2026.08.595
++  deliverable: results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json
++  gated_on:
++    - upstream: exp6820-arc-tool-gap-obligation-transport-v2
++      artifact_field: tool_gap_obligation_transport_ready
++      op: '=='
++      value: true
++    - upstream: exp6814-selective-priority-arbiter-cold-audit
++      artifact_field: selective_arbiter_audit_completed
++      op: '=='
++      value: true
++  prompt: |
++    CONTEXT:
++    Exp6778 gate-blocked before its live A/B. Exp6820 supplies live typed transport. Exp6814
++    supplies a cold-audited selective arbiter. Measure actions-to-progress without a game-level
++    solve claim. Keep model, game, seed, action, token, censoring, and process budgets matched.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6778_arc_selfparse_actions_to_progress_ab.json
++    - {project_root}/results/experiment_6814_selective_priority_arbiter_cold_audit.json
++    - {project_root}/results/experiment_6819_arc_stepwise_strategy_accrual.json
++    - {project_root}/results/experiment_6820_arc_tool_gap_obligation_transport_v2.json
++    - {project_root}/python/carnot/agentic/e3_agent_policy.py
++    - {project_root}/openspec/capabilities/agentic-harness/spec.md
++    - {project_root}/ops/arc_solve_registry.yaml
++
++    TASK:
++    Run matched live control and treatment processes. The control leaves the tool loop unset. The
++    treatment uses selfparse, stepwise read-only strategy retrieval, and the audited selective
++    arbiter. Measure progress, restricted mean actions, harm, false interventions, and hard
++    violations. Do not claim a solve.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require both upstream completion fields, complete raw transport and arbiter
++       rows, production policy registration, registry precheck, source prohibition, adapter-off
++       state, exact model hash, frozen roster, and task-owned GPU leases. Define MODEL_SPECS exactly
++       as unsloth/Qwen3.6-35B-A3B-GGUF. On failure write complete_blocked_arc_obligation_actions_
++       to_progress_ab_v2 with gate_check_summary and stop. Do not kill or reuse external processes.
++    1. Write tests first for process isolation, control treatment separation, matched budgets,
++       default-off control, immutable strategy, exact arbiter authority, censoring, checkpoint
++       resume, false-intervention accounting, registry exclusion, source denial, and adapter denial.
++    2. Freeze games, cells, seeds, arm order, action limits, token limits, timeout, censoring,
++       strategy bytes, arbiter bytes, prompt, chat template, and analysis before inference.
++    3. Run each arm in a fresh task-owned process. Match model, game, seed, action, token, wall, and
++       censoring budgets. Record raw actions, exact obligations, interventions, progress events,
++       process IDs, model receipts, checkpoints, and teardown.
++    4. Compute progress rate and restricted mean actions from row data. Separate timeout and
++       censoring. Report hard violations and false interventions independently from utility.
++    5. Positive requires zero added hard violations, a frozen false-intervention bound, and a
++       paired progress or restricted-action lower bound above zero. A completed null or harm is
++       valid. No row supports a game-level solve claim.
++    6. Set actions_to_progress_ab_completed from complete matched rows, exact receipts, process
++       isolation, checkpoints, and teardown, independent of effect sign. This field is consumed by
++       Exp6822.
++    7. Run focused tests, ruff, OpenSpec coverage, applicable ARC E2E checks, adversarial
++       verification, artifact convention audit, and verdict-row consistency lint.
++    8. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (principle per field);
++       inference_substrate (matched production local llama.cpp CUDA processes); duration_s
++       (measured wall time by arm and cell); random_seed (frozen games and arm order);
++       reproducibility_checksum (bind inputs, rows, commands, and output); MODEL_SPECS (exact
++       Qwen3.6 flagship hub ID); model_specs (path, hash, revision, quantization, chat template, and
++       limits); source_artifact_hashes (transport, strategy, and arbiter identity); frozen_manifest
++       (games, arms, budgets, and censoring); registry_precheck (no complete level is re-solved);
++       process_isolation_receipts (fresh arm cells); gpu_receipts (lease and CUDA ownership);
++       checkpoint_receipts (atomic resume); rows (every game-seed-arm-attempt); progress_rate_by_
++       arm (exact events); restricted_mean_actions_by_arm (censor-aware); harm_rate_by_arm (exact);
++       false_intervention_rate_by_arm (safe proposals changed); hard_violation_count_by_arm (exact
++       safety); paired_progress_delta (row-derived); paired_action_delta (row-derived); solve_claim
++       (false); solve_provenance (live_agent_self_discovery only); acceptance_gate_positive
++       (predeclared conjunction); actions_to_progress_ab_completed (exact downstream field);
++       gate_check_summary (failed check, expected value, and observed value); verifier_is_oracle
++       (false, exact next-action outcomes are external authority); verdict_class (closed enum:
++       positive | circular_positive | null | blocked | disqualified | partial); honest_verdict
++       (terminal and row-supported).
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6821_arc_obligation_actions_to_progress_ab_v2.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6778-arc-selfparse-actions-to-progress-ab
++      verdict: 'GATE_BLOCKED: tool-gap transport was not ready'
++      addressed_by: 'This attempt consumes a complete typed transport and cold-audited arbiter, runs process-isolated matched arms, and separates hard safety from utility and false intervention.'
++      retire_if_same_verdict: true
++
++- id: exp6822-arc-causal-adoption-audit
++  title: Independent ARC causal adoption audit
++  track: agentic-harness
++  priority: critical
++  agent_type: codex
++  model: gpt-5.6-sol
++  requires_gpu: false
++  max_turns: 50
++  estimated_wall_time_min: 240
++  per_unit_rows: true
++  milestone: 2026.08.595
++  deliverable: results/experiment_6822_arc_causal_adoption_audit.json
++  gated_on:
++    - upstream: exp6819-arc-stepwise-strategy-accrual
++      artifact_field: stepwise_strategy_accrual_ready
++      op: '=='
++      value: true
++    - upstream: exp6820-arc-tool-gap-obligation-transport-v2
++      artifact_field: tool_gap_obligation_transport_ready
++      op: '=='
++      value: true
++    - upstream: exp6821-arc-obligation-actions-to-progress-ab-v2
++      artifact_field: actions_to_progress_ab_completed
++      op: '=='
++      value: true
++  prompt: |
++    CONTEXT:
++    Exp6779 gate-blocked before an adoption audit. Exp6819 through Exp6821 now supply the complete
++    strategy, transport, and actions-to-progress chain. Audit them with fresh reducers and no LLM.
++    Preserve null, harmful, blocked, and disqualified evidence.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6819_arc_stepwise_strategy_accrual.json
++    - {project_root}/results/experiment_6820_arc_tool_gap_obligation_transport_v2.json
++    - {project_root}/results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json
++    - {project_root}/openspec/capabilities/agentic-harness/spec.md
++    - {project_root}/scripts/adversarial_verify.py
++    - {project_root}/scripts/verdict_row_consistency_lint.py
++    - {project_root}/ops/arc_solve_registry.yaml
++
++    TASK:
++    Reparse raw bytes and independently replay the three live ARC producers. Verify process
++    isolation, exact outcomes, source prohibition, adapter absence, solve provenance, ledger
++    updates, row-derived headlines, protected files, and causal arm isolation. Issue one closed
++    decision for the supervisor, stepwise strategy, tool transport, and selective arbiter.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require all three completion fields, complete row and raw-byte manifests,
++       process receipts, checkpoints, exact outcome receipts, model hashes, and registry hashes. On
++       failure write complete_blocked_arc_causal_adoption_audit with gate_check_summary and stop.
++    1. Write cold-audit tests first for independent decoding, process identity, arm separation,
++       transport survival, exact outcome replay, source denial, adapter denial, strategy
++       immutability, registry protection, censoring, aggregation, and row deletion.
++    2. Reparse raw proposal, tool, action, strategy, obligation, analyzer, ledger, and checkpoint
++       bytes. Do not import producer reducers. Require every source hash and row identity to match.
++    3. Recompute progress, restricted actions, harm, false interventions, hard violations,
++       transport completeness, shadow identity, and process isolation from rows.
++    4. Attack source access, adapter use, cross-arm state, missing processes, stale strategy,
++       active writes, priority inversion, fabricated events, future outcomes, registry-complete
++       levels, censor deletion, row deletion, and protected-file mutation. Fail closed.
++    5. Issue separate closed decisions for supervisor use, stepwise strategy use, tool transport,
++       and selective arbitration. Hard safety does not imply utility. A null utility result can
++       preserve transport or safety adoption.
++    6. Set arc_causal_adoption_audit_completed from complete cold replay and attacks, independent
++       of the adoption decision. This field is evidence for Exp6823, which is deliberately ungated.
++    7. Run focused tests, ruff, OpenSpec coverage, applicable ARC E2E checks, adversarial
++       verification, artifact convention audit, and verdict-row consistency lint.
++    8. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (principle per field);
++       inference_substrate (fresh-process CPU audit of frozen live rows); duration_s (measured wall
++       time); random_seed (fixed attacks and intervals); reproducibility_checksum (bind inputs,
++       rows, commands, and output); source_artifact_hashes (three producer identities);
++       independent_decoder_id (no producer import); independent_reducer_id (separate aggregation);
++       protected_file_hashes (registry and shipped defaults unchanged); rows (every source unit and
++       attack); process_isolation_recomputation (fresh arm identity); transport_recomputation
++       (typed field survival); strategy_recomputation (read-only and shadow identity);
++       outcome_recomputation (exact next actions); aggregate_recomputation (all headlines);
++       headline_differences (producer versus cold); source_access_findings (must be zero);
++       adapter_use_findings (must be zero); active_episode_write_findings (must be zero);
++       solve_claim (false); solve_provenance_recomputation (live rows only); adoption_decisions
++       (closed decision by component); arc_causal_adoption_audit_completed (terminal completeness);
++       gate_check_summary (failed check, expected value, and observed value); verifier_is_oracle
++       (false, this audit checks evidence and does not define game truth); verdict_class (closed
++       enum: positive | circular_positive | null | blocked | disqualified | partial);
++       honest_verdict (terminal and cold-row-supported).
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6822_arc_causal_adoption_audit.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6779-arc-tool-supervisor-adoption-audit
++      verdict: 'GATE_BLOCKED: actions-to-progress producer was absent'
++      addressed_by: 'All three audited producers now exist in the active manifest and expose completion fields independent of effect sign, raw bytes, process receipts, and row-derived headlines.'
++      retire_if_same_verdict: true
++
++- id: exp6823-v595-branch-disposition
++  title: V595 evidence synthesis and branch disposition
++  track: infrastructure
++  priority: critical
++  agent_type: codex
++  model: gpt-5.6-sol
++  requires_gpu: false
++  max_turns: 50
++  estimated_wall_time_min: 180
++  per_unit_rows: true
++  milestone: 2026.08.595
++  deliverable: results/experiment_6823_v595_branch_disposition.json
++  prompt: |
++    CONTEXT:
++    V595 separates contract repair from selective arbitration, verified route memory, and live ARC
++    evidence. Read every terminal artifact, including blocked, disqualified, null, partial, and
++    flagged evidence. This task is deliberately ungated so every branch receives a disposition.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/research-program.md and {project_root}/_bmad/prd.md, FR11 and FR12
++    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++    - {project_root}/research-roadmap.yaml
++    - {project_root}/results/experiment_6810_v595_contract_manifest_preflight.json through
++      {project_root}/results/experiment_6822_arc_causal_adoption_audit.json
++    - {project_root}/scripts/adversarial_verify.py
++    - {project_root}/scripts/verdict_row_consistency_lint.py
++
++    TASK:
++    Recompute V595 claims from all terminal rows. Compare the executed manifest with the design.
++    Decide adopt, narrow, retire, or blocked for the selective arbiter, verified route memory, and
++    live ARC path. Do not run an experiment or invoke an LLM.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: hash the design, executed roadmap, owned specs, and every expected terminal
++       artifact. Missing, malformed, blocked, disqualified, partial, or flagged artifacts remain
++       explicit rows. They do not block this ungated task. If evidence is incomplete, continue with
++       the closed disposition `blocked` for the affected branch and record gate_check_summary.
++    1. Write tests first for fourteen-task identity, terminal-class preservation, source hashes,
++       row reducers, missing artifacts, flagged evidence, blocked branches, and closed decisions.
++    2. Load Exp6810 through Exp6822 by exact path. Re-run adversarial verification and row-verdict
++       checks. Do not pool a blocked, disqualified, partial, or flagged result into a positive claim.
++    3. Recompute every eligible headline from rows. Keep hard safety, utility, transport, memory
++       causality, portability, and live progress decisions separate.
++    4. Compare the executed manifest with the four design phases, fourteen task IDs, gates,
++       deliverables, models, and owned REQ map. Record all differences.
++    5. Issue adopt, narrow, retire, or blocked for each branch. A positive decision requires its
++       independent cold audit. A clean null narrows or retires. A resource block stays blocked.
++    6. Emit one row per task and one row per branch. This task writes no new scientific claim and
++       invokes no experiment implementation.
++    7. Run focused tests, ruff, OpenSpec coverage, prior-failure validation, gate-contract audit,
++       artifact convention audit, adversarial verification, and root-clutter checks.
++    8. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (principle per field);
++       inference_substrate (CPU aggregation from upstream artifacts, no LLM); duration_s (measured
++       wall time); random_seed (fixed audit seed); reproducibility_checksum (bind inputs, rows,
++       commands, and output); source_artifact_hashes (all terminal evidence); roadmap_identity
++       (exact milestone and task range); contract_owner_map (existing spec and REQ per contract);
++       rows (one task or branch decision per row); task_count (must be fourteen);
++       terminal_class_counts (preserve every result class); gate_check_summary (failed check,
++       expected value, and observed value); adversarial_findings (flagged evidence stays excluded);
++       row_recomputed_claims (eligible evidence only); manifest_comparison (design versus execution);
++       selective_arbiter_disposition (closed decision); verified_route_memory_disposition (closed
++       decision); live_arc_disposition (closed decision); disposition_enum (adopt | narrow | retire
++       | blocked); solve_claim (false); verifier_is_oracle (false, this synthesis does not define
++       correctness); verdict_class (closed enum: positive | circular_positive | null | blocked |
++       disqualified | partial); honest_verdict (terminal and evidence-bounded).
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6823_v595_branch_disposition.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6780-v590-branch-disposition
++      verdict: 'complete_partial: branch evidence remained blocked or missing and the artifact was flagged'
++      addressed_by: 'This disposition is ungated, preserves every terminal class, excludes flagged evidence from positive claims, and compares the full fourteen-task executed manifest with the design.'
++      retire_if_same_verdict: true
+diff --git a/results/experiment_6810_v595_contract_manifest_preflight.json b/results/experiment_6810_v595_contract_manifest_preflight.json
+new file mode 100644
+index 0000000000..d348e64cbf
+--- /dev/null
++++ b/results/experiment_6810_v595_contract_manifest_preflight.json
+@@ -0,0 +1,1028 @@
++{
++  "contract_owner_map": {
++    "exact priority arbiter": {
++      "artifact_path": "results/experiment_6813_selective_priority_arbiter_ab.json",
++      "authority_boundary": "transition evaluator remains authoritative.",
++      "failure_behavior": "complete_blocked_selective_priority_arbiter_ab",
++      "gate_field": "selective_arbiter_ab_completed",
++      "implementing_task": "exp6813-selective-priority-arbiter-ab",
++      "requirement": "REQ-CONSTRAINT-6810",
++      "spec_path": "openspec/capabilities/constraint-verification/spec.md"
++    },
++    "live stepwise strategy path": {
++      "artifact_path": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++      "authority_boundary": "Exact next-action outcomes",
++      "failure_behavior": "complete_blocked_arc_stepwise_strategy_accrual",
++      "gate_field": "stepwise_strategy_accrual_ready",
++      "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
++      "requirement": "REQ-AGENTIC-6810-2",
++      "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++    },
++    "operational-obligation interface": {
++      "artifact_path": "results/experiment_6811_operational_obligation_automaton_v3.json",
++      "authority_boundary": "The exact post-action receipts remain",
++      "failure_behavior": "complete_blocked_operational_obligation_automaton_v3",
++      "gate_field": "operational_automaton_fixture_ready",
++      "implementing_task": "exp6811-operational-obligation-automaton-v3",
++      "requirement": "REQ-AGENTIC-6810-1",
++      "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++    },
++    "transactional verified memory": {
++      "artifact_path": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++      "authority_boundary": "The exact local receipt remains authoritative.",
++      "failure_behavior": "complete_blocked_residual_pressure_route_learning_ab",
++      "gate_field": "residual_route_learning_completed",
++      "implementing_task": "exp6816-residual-pressure-route-learning-ab",
++      "requirement": "REQ-CL-6810",
++      "spec_path": "openspec/capabilities/continuous-learning/spec.md"
++    }
++  },
++  "deliverable_uniqueness_results": [
++    {
++      "deliverable": "results/experiment_6810_v595_contract_manifest_preflight.json",
++      "passed": true,
++      "task_id": "exp6810-v595-contract-manifest-preflight",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6811_operational_obligation_automaton_v3.json",
++      "passed": true,
++      "task_id": "exp6811-operational-obligation-automaton-v3",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
++      "passed": true,
++      "task_id": "exp6812-sota-operational-handoff-corpus-v2",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6813_selective_priority_arbiter_ab.json",
++      "passed": true,
++      "task_id": "exp6813-selective-priority-arbiter-ab",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
++      "passed": true,
++      "task_id": "exp6814-selective-priority-arbiter-cold-audit",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6815_verified_memory_operation_stream.json",
++      "passed": true,
++      "task_id": "exp6815-verified-memory-operation-stream",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++      "passed": true,
++      "task_id": "exp6816-residual-pressure-route-learning-ab",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6817_route_memory_portability.json",
++      "passed": true,
++      "task_id": "exp6817-route-memory-portability",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6818_route_memory_global_cold_audit.json",
++      "passed": true,
++      "task_id": "exp6818-route-memory-global-cold-audit",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++      "passed": true,
++      "task_id": "exp6819-arc-stepwise-strategy-accrual",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++      "passed": true,
++      "task_id": "exp6820-arc-tool-gap-obligation-transport-v2",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
++      "passed": true,
++      "task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6822_arc_causal_adoption_audit.json",
++      "passed": true,
++      "task_id": "exp6822-arc-causal-adoption-audit",
++      "unique": true
++    },
++    {
++      "deliverable": "results/experiment_6823_v595_branch_disposition.json",
++      "passed": true,
++      "task_id": "exp6823-v595-branch-disposition",
++      "unique": true
++    }
++  ],
++  "duration_s": 0.02710077300434932,
++  "experiment_id": "experiment_6810_v595_contract_manifest_preflight",
++  "field_principles": {
++    "contract_owner_map": "Existing specs prevent another dependency on an invented capability.",
++    "deliverable_uniqueness_results": "Unique paths prevent one task from overwriting another.",
++    "duration_s": "Measured wall time exposes fabricated or silently skipped work.",
++    "experiment_id": "A stable identity binds the evidence to the task that produced it.",
++    "field_principles": "Each field states why it exists so compliance remains auditable.",
++    "gate_check_summary": "Blocked output names the failed check, expected value, and observed value.",
++    "gate_resolution_results": "Every downstream gate must resolve to a written producer field.",
++    "honest_verdict": "The terminal verdict states only what the written evidence supports.",
++    "inference_substrate": "This is a CPU document audit and makes no model-inference claim.",
++    "model_spec_results": "Model checks prevent legacy or substituted models from supporting evidence.",
++    "prior_failure_results": "Four-part failure records prevent unchanged blocked work from recurring.",
++    "prompt_contract_results": "Prompt-tail and row checks keep execution commands and boundaries exact.",
++    "random_seed": "A fixed seed keeps deterministic audit ordering reproducible.",
++    "reproducibility_checksum": "The hash binds inputs, rows, commands, and output content.",
++    "roadmap_identity": "The milestone and task range prevent stale-roadmap activation.",
++    "rows": "Task and owner rows make every readiness claim independently checkable.",
++    "run_date": "The execution date distinguishes this audit from later roadmap revisions.",
++    "schema": "A versioned schema prevents later readers from guessing this artifact shape.",
++    "source_artifact_hashes": "Hashes bind the V594 evidence and every owned contract input.",
++    "task_count": "The exact count detects the five tasks omitted from the first active YAML.",
++    "v595_contract_map_ready": "Exp6811 may start only after every owned contract and manifest check passes.",
++    "verdict_class": "A closed result class prevents positive language from hiding a blocked audit.",
++    "verification_commands": "Recorded commands let another reader reproduce the contract audit.",
++    "verifier_is_oracle": "This audit checks contracts; it does not define scientific correctness."
++  },
++  "gate_check_summary": [],
++  "gate_resolution_results": [
++    {
++      "artifact_field": "v595_contract_map_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6811-operational-obligation-automaton-v3",
++      "upstream": "exp6810-v595-contract-manifest-preflight",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "operational_automaton_fixture_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6812-sota-operational-handoff-corpus-v2",
++      "upstream": "exp6811-operational-obligation-automaton-v3",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "operational_handoff_corpus_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6813-selective-priority-arbiter-ab",
++      "upstream": "exp6812-sota-operational-handoff-corpus-v2",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "selective_arbiter_ab_completed",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6814-selective-priority-arbiter-cold-audit",
++      "upstream": "exp6813-selective-priority-arbiter-ab",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "operational_handoff_corpus_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6815-verified-memory-operation-stream",
++      "upstream": "exp6812-sota-operational-handoff-corpus-v2",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "selective_arbiter_audit_completed",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6815-verified-memory-operation-stream",
++      "upstream": "exp6814-selective-priority-arbiter-cold-audit",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "verified_memory_stream_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6816-residual-pressure-route-learning-ab",
++      "upstream": "exp6815-verified-memory-operation-stream",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "residual_route_learning_completed",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6817-route-memory-portability",
++      "upstream": "exp6816-residual-pressure-route-learning-ab",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "residual_route_learning_completed",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6818-route-memory-global-cold-audit",
++      "upstream": "exp6816-residual-pressure-route-learning-ab",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "route_memory_portability_completed",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6818-route-memory-global-cold-audit",
++      "upstream": "exp6817-route-memory-portability",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "operational_automaton_fixture_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6819-arc-stepwise-strategy-accrual",
++      "upstream": "exp6811-operational-obligation-automaton-v3",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "stepwise_strategy_accrual_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6820-arc-tool-gap-obligation-transport-v2",
++      "upstream": "exp6819-arc-stepwise-strategy-accrual",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "tool_gap_obligation_transport_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2",
++      "upstream": "exp6820-arc-tool-gap-obligation-transport-v2",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "selective_arbiter_audit_completed",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2",
++      "upstream": "exp6814-selective-priority-arbiter-cold-audit",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "stepwise_strategy_accrual_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6822-arc-causal-adoption-audit",
++      "upstream": "exp6819-arc-stepwise-strategy-accrual",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "tool_gap_obligation_transport_ready",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6822-arc-causal-adoption-audit",
++      "upstream": "exp6820-arc-tool-gap-obligation-transport-v2",
++      "upstream_exists": true,
++      "upstream_retired": false
++    },
++    {
++      "artifact_field": "actions_to_progress_ab_completed",
++      "exact_boolean_completion_gate": true,
++      "passed": true,
++      "positivity_gate": false,
++      "producer_declares_field_verbatim": true,
++      "row_type": "gate",
++      "task_id": "exp6822-arc-causal-adoption-audit",
++      "upstream": "exp6821-arc-obligation-actions-to-progress-ab-v2",
++      "upstream_exists": true,
++      "upstream_retired": false
++    }
++  ],
++  "honest_verdict": "complete: V595 owned contracts and active execution manifest agree",
++  "inference_substrate": "CPU schema and document audit, no LLM",
++  "model_spec_results": [
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": true,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6810-v595-contract-manifest-preflight"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6811-operational-obligation-automaton-v3"
++    },
++    {
++      "declared_permitted_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF"
++      ],
++      "expected_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF"
++      ],
++      "llm_task": true,
++      "model_specs_declared": true,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6812-sota-operational-handoff-corpus-v2"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6813-selective-priority-arbiter-ab"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6814-selective-priority-arbiter-cold-audit"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6815-verified-memory-operation-stream"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6816-residual-pressure-route-learning-ab"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6817-route-memory-portability"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6818-route-memory-global-cold-audit"
++    },
++    {
++      "declared_permitted_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF"
++      ],
++      "expected_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF"
++      ],
++      "llm_task": true,
++      "model_specs_declared": true,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6819-arc-stepwise-strategy-accrual"
++    },
++    {
++      "declared_permitted_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF"
++      ],
++      "expected_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF"
++      ],
++      "llm_task": true,
++      "model_specs_declared": true,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6820-arc-tool-gap-obligation-transport-v2"
++    },
++    {
++      "declared_permitted_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF"
++      ],
++      "expected_models": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF"
++      ],
++      "llm_task": true,
++      "model_specs_declared": true,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6822-arc-causal-adoption-audit"
++    },
++    {
++      "declared_permitted_models": [],
++      "expected_models": [],
++      "llm_task": false,
++      "model_specs_declared": false,
++      "passed": true,
++      "row_type": "model_spec",
++      "task_id": "exp6823-v595-branch-disposition"
++    }
++  ],
++  "prior_failure_results": [
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6810-v595-contract-manifest-preflight"
++    },
++    {
++      "declaration_count": 2,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6811-operational-obligation-automaton-v3"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6812-sota-operational-handoff-corpus-v2"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6813-selective-priority-arbiter-ab"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6814-selective-priority-arbiter-cold-audit"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6815-verified-memory-operation-stream"
++    },
++    {
++      "declaration_count": 2,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6816-residual-pressure-route-learning-ab"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6817-route-memory-portability"
++    },
++    {
++      "declaration_count": 2,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6818-route-memory-global-cold-audit"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6819-arc-stepwise-strategy-accrual"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6820-arc-tool-gap-obligation-transport-v2"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6822-arc-causal-adoption-audit"
++    },
++    {
++      "declaration_count": 1,
++      "four_part_declarations_valid": true,
++      "passed": true,
++      "row_type": "prior_failure",
++      "task_id": "exp6823-v595-branch-disposition"
++    }
++  ],
++  "prompt_contract_results": [
++    {
++      "comparison_task": false,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6810_v595_contract_manifest_preflight.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6810-v595-contract-manifest-preflight"
++    },
++    {
++      "comparison_task": false,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6811_operational_obligation_automaton_v3.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6811-operational-obligation-automaton-v3"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6812_sota_operational_handoff_corpus_v2.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6812-sota-operational-handoff-corpus-v2"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6813_selective_priority_arbiter_ab.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6813-selective-priority-arbiter-ab"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6814_selective_priority_arbiter_cold_audit.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6814-selective-priority-arbiter-cold-audit"
++    },
++    {
++      "comparison_task": false,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6815_verified_memory_operation_stream.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6815-verified-memory-operation-stream"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6816_residual_pressure_route_learning_ab.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6816-residual-pressure-route-learning-ab"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6817_route_memory_portability.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6817-route-memory-portability"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6818_route_memory_global_cold_audit.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6818-route-memory-global-cold-audit"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6819_arc_stepwise_strategy_accrual.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6819-arc-stepwise-strategy-accrual"
++    },
++    {
++      "comparison_task": false,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6820_arc_tool_gap_obligation_transport_v2.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6820-arc-tool-gap-obligation-transport-v2"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6821_arc_obligation_actions_to_progress_ab_v2.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6822_arc_causal_adoption_audit.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6822-arc-causal-adoption-audit"
++    },
++    {
++      "comparison_task": true,
++      "passed": true,
++      "per_unit_rows": true,
++      "prompt_tail_matches": true,
++      "required_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6823_v595_branch_disposition.py --date {date}",
++      "row_type": "prompt_contract",
++      "task_id": "exp6823-v595-branch-disposition"
++    }
++  ],
++  "random_seed": 6810,
++  "reproducibility_checksum": "sha256:056903c631d90e1c6a9bf77ffae05508ad92603a751e804b962a6ae5ddcf6ad1",
++  "roadmap_identity": {
++    "first_experiment": 6810,
++    "last_experiment": 6823,
++    "milestone": "2026.08.595"
++  },
++  "rows": [
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6810_v595_contract_manifest_preflight.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6810,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6810-v595-contract-manifest-preflight",
++      "task_milestone_matches": true,
++      "ungated": true,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6811_operational_obligation_automaton_v3.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6811,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6811-operational-obligation-automaton-v3",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6812,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6812-sota-operational-handoff-corpus-v2",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6813_selective_priority_arbiter_ab.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6813,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6813-selective-priority-arbiter-ab",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6814,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6814-selective-priority-arbiter-cold-audit",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6815_verified_memory_operation_stream.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6815,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6815-verified-memory-operation-stream",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6816,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6816-residual-pressure-route-learning-ab",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6817_route_memory_portability.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6817,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6817-route-memory-portability",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6818_route_memory_global_cold_audit.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6818,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6818-route-memory-global-cold-audit",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6819,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6819-arc-stepwise-strategy-accrual",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6820,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6820-arc-tool-gap-obligation-transport-v2",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6821,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6822_arc_causal_adoption_audit.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6822,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6822-arc-causal-adoption-audit",
++      "task_milestone_matches": true,
++      "ungated": false,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "consecutive_expected_id": true,
++      "deliverable": "results/experiment_6823_v595_branch_disposition.json",
++      "design_deliverable_matches": true,
++      "design_has_task": true,
++      "experiment_number": 6823,
++      "passed": true,
++      "row_type": "task",
++      "task_id": "exp6823-v595-branch-disposition",
++      "task_milestone_matches": true,
++      "ungated": true,
++      "unique_deliverable": true,
++      "unique_task_id": true
++    },
++    {
++      "artifact_path": "results/experiment_6811_operational_obligation_automaton_v3.json",
++      "artifact_path_present": true,
++      "authority_boundary_present": true,
++      "contract": "operational-obligation interface",
++      "failure_behavior_present": true,
++      "gate_field": "operational_automaton_fixture_ready",
++      "gate_field_present": true,
++      "implementing_task": "exp6811-operational-obligation-automaton-v3",
++      "implementing_task_present": true,
++      "passed": true,
++      "requirement": "REQ-AGENTIC-6810-1",
++      "requirement_present": true,
++      "row_type": "requirement_owner",
++      "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++    },
++    {
++      "artifact_path": "results/experiment_6813_selective_priority_arbiter_ab.json",
++      "artifact_path_present": true,
++      "authority_boundary_present": true,
++      "contract": "exact priority arbiter",
++      "failure_behavior_present": true,
++      "gate_field": "selective_arbiter_ab_completed",
++      "gate_field_present": true,
++      "implementing_task": "exp6813-selective-priority-arbiter-ab",
++      "implementing_task_present": true,
++      "passed": true,
++      "requirement": "REQ-CONSTRAINT-6810",
++      "requirement_present": true,
++      "row_type": "requirement_owner",
++      "spec_path": "openspec/capabilities/constraint-verification/spec.md"
++    },
++    {
++      "artifact_path": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++      "artifact_path_present": true,
++      "authority_boundary_present": true,
++      "contract": "transactional verified memory",
++      "failure_behavior_present": true,
++      "gate_field": "residual_route_learning_completed",
++      "gate_field_present": true,
++      "implementing_task": "exp6816-residual-pressure-route-learning-ab",
++      "implementing_task_present": true,
++      "passed": true,
++      "requirement": "REQ-CL-6810",
++      "requirement_present": true,
++      "row_type": "requirement_owner",
++      "spec_path": "openspec/capabilities/continuous-learning/spec.md"
++    },
++    {
++      "artifact_path": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++      "artifact_path_present": true,
++      "authority_boundary_present": true,
++      "contract": "live stepwise strategy path",
++      "failure_behavior_present": true,
++      "gate_field": "stepwise_strategy_accrual_ready",
++      "gate_field_present": true,
++      "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
++      "implementing_task_present": true,
++      "passed": true,
++      "requirement": "REQ-AGENTIC-6810-2",
++      "requirement_present": true,
++      "row_type": "requirement_owner",
++      "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++    }
++  ],
++  "run_date": "20260831",
++  "schema": "carnot.experiment_6810.v595_contract_manifest_preflight.v1",
++  "source_artifact_hashes": {
++    "openspec/capabilities/agentic-harness/spec.md": "sha256:4caf1dee696e6ba18abe3ee2ed73c1186cd3620018b896f4837db6a3009c8d36",
++    "openspec/capabilities/constraint-verification/spec.md": "sha256:0cc0cd74a1052d973afb161065edd046cf38659b17a6fbe59a92cddf8ed846c4",
++    "openspec/capabilities/continuous-learning/spec.md": "sha256:558b466726118d520da97cedbb22051e3e695421df301cf99eb235d813074b42",
++    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4cf6f23dc1b36689122515835d8af69be80653430b6f2144db1071f6cb2c4f62",
++    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++    "research-roadmap.yaml": "sha256:cc0f206d5f367e49d1cca2b2282c3d8194968e03cb6341c35cb62e44a72b9ba8",
++    "results/experiment_6802_operational_obligation_automaton_v2.json": "sha256:f195e2680b681da066b89244a39ceac7ec212fd2034c26b967ec422f0975de36",
++    "results/experiment_6803_sota_operational_handoff_corpus.json": "sha256:4cea4d62037a8371c1ff71e8c4459c299929fb68f0ed097b5660e1c16fdb3a91",
++    "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
++  },
++  "task_count": 14,
++  "v595_contract_map_ready": true,
++  "verdict_class": "null",
++  "verification_commands": [
++    "cd {project_root} && .venv/bin/python scripts/experiments/experiment_6810_v595_contract_manifest_preflight.py --date {date}"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6810_v595_contract_manifest_preflight.py b/scripts/experiments/experiment_6810_v595_contract_manifest_preflight.py
+new file mode 100644
+index 0000000000..e9ff256d6e
+--- /dev/null
++++ b/scripts/experiments/experiment_6810_v595_contract_manifest_preflight.py
+@@ -0,0 +1,684 @@
++#!/usr/bin/env python3
++"""Audit the V595 owned contracts and active execution manifest.
++
++The V594 plan failed before research because it named a capability that did
++not exist. This module keeps the repair mechanical. It maps each contract to
++an existing requirement, compares the design with the active YAML, and fails
++closed when a gate or task cannot be checked from written evidence.
++
++Spec refs: REQ-AGENTIC-6810-1, REQ-AGENTIC-6810-2,
++REQ-CONSTRAINT-6810, and REQ-CL-6810.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++from copy import deepcopy
++from dataclasses import dataclass
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import time
++from typing import Any, Sequence
++
++import yaml
++
++
++ROADMAP_PATH = Path("research-roadmap.yaml")
++DESIGN_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++RESULT_PATH = Path("results/experiment_6810_v595_contract_manifest_preflight.json")
++EXPECTED_MILESTONE = "2026.08.595"
++EXPECTED_EXPERIMENTS = tuple(range(6810, 6824))
++AUDIT_SEED = 6810
++
++PERMITTED_MODEL_SPECS = frozenset(
++    {
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "unsloth/gemma-4-12B-it-GGUF",
++    }
++)
++
++SOURCE_PATHS = (
++    DESIGN_PATH,
++    ROADMAP_PATH,
++    Path("openspec/capabilities/agentic-harness/spec.md"),
++    Path("openspec/capabilities/constraint-verification/spec.md"),
++    Path("openspec/capabilities/continuous-learning/spec.md"),
++    Path("results/experiment_6802_operational_obligation_automaton_v2.json"),
++    Path("results/experiment_6803_sota_operational_handoff_corpus.json"),
++    Path("ops/exclusion_manifest.yaml"),
++    Path("scripts/validate_prior_failures.py"),
++)
++
++
++@dataclass(frozen=True)
++class ContractOwner:
++    """Describe the written evidence needed to prove one contract has an owner."""
++
++    spec_path: str
++    requirement: str
++    implementing_task: str
++    artifact_path: str
++    gate_field: str
++    authority_boundary: str
++    failure_behavior: str
++
++
++@dataclass(frozen=True)
++class DesignContract:
++    """Hold the task and phase identities extracted from the design document."""
++
++    phase_numbers: tuple[int, ...]
++    task_numbers: tuple[int, ...]
++    deliverables: dict[int, str]
++
++
++CONTRACT_OWNERS = {
++    "operational-obligation interface": ContractOwner(
++        spec_path="openspec/capabilities/agentic-harness/spec.md",
++        requirement="REQ-AGENTIC-6810-1",
++        implementing_task="exp6811-operational-obligation-automaton-v3",
++        artifact_path="results/experiment_6811_operational_obligation_automaton_v3.json",
++        gate_field="operational_automaton_fixture_ready",
++        authority_boundary="The exact post-action receipts remain",
++        failure_behavior="complete_blocked_operational_obligation_automaton_v3",
++    ),
++    "exact priority arbiter": ContractOwner(
++        spec_path="openspec/capabilities/constraint-verification/spec.md",
++        requirement="REQ-CONSTRAINT-6810",
++        implementing_task="exp6813-selective-priority-arbiter-ab",
++        artifact_path="results/experiment_6813_selective_priority_arbiter_ab.json",
++        gate_field="selective_arbiter_ab_completed",
++        authority_boundary="transition evaluator remains authoritative.",
++        failure_behavior="complete_blocked_selective_priority_arbiter_ab",
++    ),
++    "transactional verified memory": ContractOwner(
++        spec_path="openspec/capabilities/continuous-learning/spec.md",
++        requirement="REQ-CL-6810",
++        implementing_task="exp6816-residual-pressure-route-learning-ab",
++        artifact_path="results/experiment_6816_residual_pressure_route_learning_ab.json",
++        gate_field="residual_route_learning_completed",
++        authority_boundary="The exact local receipt remains authoritative.",
++        failure_behavior="complete_blocked_residual_pressure_route_learning_ab",
++    ),
++    "live stepwise strategy path": ContractOwner(
++        spec_path="openspec/capabilities/agentic-harness/spec.md",
++        requirement="REQ-AGENTIC-6810-2",
++        implementing_task="exp6819-arc-stepwise-strategy-accrual",
++        artifact_path="results/experiment_6819_arc_stepwise_strategy_accrual.json",
++        gate_field="stepwise_strategy_accrual_ready",
++        authority_boundary="Exact next-action outcomes",
++        failure_behavior="complete_blocked_arc_stepwise_strategy_accrual",
++    ),
++}
++
++
++FIELD_PRINCIPLES = {
++    "schema": "A versioned schema prevents later readers from guessing this artifact shape.",
++    "experiment_id": "A stable identity binds the evidence to the task that produced it.",
++    "run_date": "The execution date distinguishes this audit from later roadmap revisions.",
++    "field_principles": "Each field states why it exists so compliance remains auditable.",
++    "inference_substrate": "This is a CPU document audit and makes no model-inference claim.",
++    "duration_s": "Measured wall time exposes fabricated or silently skipped work.",
++    "random_seed": "A fixed seed keeps deterministic audit ordering reproducible.",
++    "reproducibility_checksum": "The hash binds inputs, rows, commands, and output content.",
++    "source_artifact_hashes": "Hashes bind the V594 evidence and every owned contract input.",
++    "contract_owner_map": "Existing specs prevent another dependency on an invented capability.",
++    "roadmap_identity": "The milestone and task range prevent stale-roadmap activation.",
++    "rows": "Task and owner rows make every readiness claim independently checkable.",
++    "task_count": "The exact count detects the five tasks omitted from the first active YAML.",
++    "gate_resolution_results": "Every downstream gate must resolve to a written producer field.",
++    "deliverable_uniqueness_results": "Unique paths prevent one task from overwriting another.",
++    "model_spec_results": "Model checks prevent legacy or substituted models from supporting evidence.",
++    "prior_failure_results": "Four-part failure records prevent unchanged blocked work from recurring.",
++    "prompt_contract_results": "Prompt-tail and row checks keep execution commands and boundaries exact.",
++    "verification_commands": "Recorded commands let another reader reproduce the contract audit.",
++    "v595_contract_map_ready": "Exp6811 may start only after every owned contract and manifest check passes.",
++    "gate_check_summary": "Blocked output names the failed check, expected value, and observed value.",
++    "verifier_is_oracle": "This audit checks contracts; it does not define scientific correctness.",
++    "verdict_class": "A closed result class prevents positive language from hiding a blocked audit.",
++    "honest_verdict": "The terminal verdict states only what the written evidence supports.",
++}
++
++
++def load_yaml_mapping(path: Path) -> dict[str, Any]:
++    """Load a YAML mapping and reject shapes the roadmap auditor cannot inspect."""
++
++    data = yaml.safe_load(path.read_text(encoding="utf-8"))
++    if not isinstance(data, dict):
++        raise ValueError(f"top-level roadmap value must be a mapping: {path}")
++    return data
++
++
++def requirement_section(spec_text: str, requirement: str) -> str:
++    """Return one requirement section without borrowing text from a later owner."""
++
++    heading = re.search(rf"^#{{2,3}} {re.escape(requirement)}(?::|$)", spec_text, re.MULTILINE)
++    if heading is None:
++        return ""
++    following = re.search(
++        r"^#{2,3} (?:REQ-|Implementation Status)",
++        spec_text[heading.end() :],
++        re.MULTILINE,
++    )
++    end = heading.end() + following.start() if following else len(spec_text)
++    return spec_text[heading.start() : end]
++
++
++def parse_design(path: Path) -> DesignContract:
++    """Extract phase numbers, experiment numbers, and deliverables from V595 prose."""
++
++    text = path.read_text(encoding="utf-8")
++    phases = tuple(int(value) for value in re.findall(r"^## Phase (\d+):", text, re.MULTILINE))
++    tasks = tuple(int(value) for value in re.findall(r"^### Exp(\d+):", text, re.MULTILINE))
++    deliverables: dict[int, str] = {}
++    task_matches = list(re.finditer(r"^### Exp(\d+):", text, re.MULTILINE))
++    for index, match in enumerate(task_matches):
++        section_end = task_matches[index + 1].start() if index + 1 < len(task_matches) else len(text)
++        section = text[match.end() : section_end]
++        artifact = re.search(r"\*\*Deliverable:\*\* `([^`]+)`", section)
++        if artifact:
++            deliverables[int(match.group(1))] = artifact.group(1)
++    return DesignContract(phases, tasks, deliverables)
++
++
++def _task_number(task_id: str) -> int | None:
++    match = re.fullmatch(r"exp(\d+)-[a-z0-9-]+", task_id)
++    return int(match.group(1)) if match else None
++
++
++def _tasks(roadmap: dict[str, Any]) -> list[dict[str, Any]]:
++    if not isinstance(roadmap, dict):
++        raise ValueError("top-level roadmap value must be a mapping")
++    tasks = roadmap.get("tasks")
++    if not isinstance(tasks, list):
++        raise ValueError("top-level roadmap tasks must be a list")
++    return [task for task in tasks if isinstance(task, dict)]
++
++
++def audit_task_contracts(
++    roadmap: dict[str, Any], design: DesignContract
++) -> list[dict[str, Any]]:
++    """Compare every active task identity and deliverable with the V595 design."""
++
++    tasks = _tasks(roadmap)
++    ids = [str(task.get("id") or "") for task in tasks]
++    deliverables = [str(task.get("deliverable") or "") for task in tasks]
++    id_counts = Counter(ids)
++    deliverable_counts = Counter(deliverables)
++    global_identity = (
++        roadmap.get("milestone") == EXPECTED_MILESTONE
++        and len(tasks) == len(EXPECTED_EXPERIMENTS)
++        and design.phase_numbers == (1, 2, 3, 4)
++        and design.task_numbers == EXPECTED_EXPERIMENTS
++    )
++    rows: list[dict[str, Any]] = []
++    for position, task in enumerate(tasks):
++        task_id = ids[position]
++        number = _task_number(task_id)
++        deliverable = deliverables[position]
++        expected_number = EXPECTED_EXPERIMENTS[position] if position < len(EXPECTED_EXPERIMENTS) else None
++        row = {
++            "row_type": "task",
++            "task_id": task_id,
++            "experiment_number": number,
++            "deliverable": deliverable,
++            "unique_task_id": bool(task_id) and id_counts[task_id] == 1,
++            "unique_deliverable": bool(deliverable) and deliverable_counts[deliverable] == 1,
++            "consecutive_expected_id": number == expected_number,
++            "design_has_task": number in design.task_numbers,
++            "design_deliverable_matches": design.deliverables.get(number) == deliverable,
++            "task_milestone_matches": task.get("milestone") == EXPECTED_MILESTONE,
++            "ungated": not bool(task.get("gated_on")),
++        }
++        final_gate_shape = task_id != "exp6823-v595-branch-disposition" or row["ungated"]
++        row["passed"] = bool(
++            global_identity
++            and row["unique_task_id"]
++            and row["unique_deliverable"]
++            and row["consecutive_expected_id"]
++            and row["design_has_task"]
++            and row["design_deliverable_matches"]
++            and row["task_milestone_matches"]
++            and final_gate_shape
++        )
++        rows.append(row)
++    return rows
++
++
++def retired_experiment_ids(repo_root: Path) -> set[str]:
++    """Return normalized retired IDs from every exclusion-manifest section."""
++
++    data = load_yaml_mapping(repo_root / "ops/exclusion_manifest.yaml")
++    retired: set[str] = set()
++    for section_name in ("retired", "retired_experiments", "retired_extras"):
++        for entry in data.get(section_name, []) or []:
++            if not isinstance(entry, dict):
++                continue
++            values = ([entry["experiment_id"]] if "experiment_id" in entry else []) + list(
++                entry.get("experiment_ids", []) or []
++            )
++            for value in values:
++                normalized = str(value).strip().lower()
++                normalized = normalized if normalized.startswith("exp") else f"exp{normalized}"
++                retired.add(normalized)
++                match = re.match(r"exp\d+", normalized)
++                if match:
++                    retired.add(match.group(0))
++    return retired
++
++
++def _required_fields_block(prompt: str) -> str:
++    marker = re.search(r"REQUIRED ARTIFACT FIELDS AND PRINCIPLES:", prompt, re.IGNORECASE)
++    if marker is None:
++        return ""
++    block = prompt[marker.start() :]
++    return re.sub(r"_\s+", "_", block.split("\n\nRun command:", 1)[0])
++
++
++def _is_retired(upstream: str, retired_ids: set[str]) -> bool:
++    normalized = upstream.lower()
++    base = re.match(r"exp\d+", normalized)
++    return normalized in retired_ids or bool(base and base.group(0) in retired_ids)
++
++
++def audit_gate_resolution(
++    roadmap: dict[str, Any], retired_ids: set[str]
++) -> list[dict[str, Any]]:
++    """Resolve each gate to a non-positive field declared by its producer."""
++
++    tasks = _tasks(roadmap)
++    tasks_by_id = {str(task.get("id") or ""): task for task in tasks}
++    rows: list[dict[str, Any]] = []
++    for task in tasks:
++        for gate in task.get("gated_on", []) or []:
++            upstream = str(gate.get("upstream") or "")
++            field = str(gate.get("artifact_field") or "")
++            producer = tasks_by_id.get(upstream)
++            upstream_exists = producer is not None
++            declared = bool(producer and field and field in _required_fields_block(str(producer.get("prompt") or "")))
++            positivity = bool(re.search(r"(?:positive|acceptance_gate|effect|improvement)", field, re.IGNORECASE))
++            retired = _is_retired(upstream, retired_ids)
++            exact_boolean_gate = gate.get("op") == "==" and gate.get("value") is True
++            row = {
++                "row_type": "gate",
++                "task_id": str(task.get("id") or ""),
++                "upstream": upstream,
++                "artifact_field": field,
++                "upstream_exists": upstream_exists,
++                "producer_declares_field_verbatim": declared,
++                "positivity_gate": positivity,
++                "upstream_retired": retired,
++                "exact_boolean_completion_gate": exact_boolean_gate,
++            }
++            row["passed"] = bool(
++                upstream_exists and declared and not positivity and not retired and exact_boolean_gate
++            )
++            rows.append(row)
++    return rows
++
++
++def audit_model_specs(roadmap: dict[str, Any]) -> list[dict[str, Any]]:
++    """Require each live LLM task to name its frozen permitted local model set."""
++
++    rows: list[dict[str, Any]] = []
++    for task in _tasks(roadmap):
++        task_id = str(task.get("id") or "")
++        prompt = str(task.get("prompt") or "")
++        llm_task = bool(task.get("requires_gpu"))
++        declared = sorted(model for model in PERMITTED_MODEL_SPECS if model in prompt)
++        expected = set()
++        if task_id == "exp6812-sota-operational-handoff-corpus-v2":
++            expected = set(PERMITTED_MODEL_SPECS) - {"unsloth/gemma-4-12B-it-GGUF"}
++        elif llm_task:
++            expected = {"unsloth/Qwen3.6-35B-A3B-GGUF"}
++        row = {
++            "row_type": "model_spec",
++            "task_id": task_id,
++            "llm_task": llm_task,
++            "declared_permitted_models": declared,
++            "expected_models": sorted(expected),
++            "model_specs_declared": "MODEL_SPECS" in prompt,
++        }
++        row["passed"] = bool(
++            not llm_task
++            or (row["model_specs_declared"] and expected.issubset(set(declared)))
++        )
++        rows.append(row)
++    return rows
++
++
++def audit_prior_failures(roadmap: dict[str, Any]) -> list[dict[str, Any]]:
++    """Check each repeated scope has the complete four-part failure declaration."""
++
++    rows: list[dict[str, Any]] = []
++    for task in _tasks(roadmap):
++        declarations = task.get("prior_failures")
++        valid = isinstance(declarations, list) and bool(declarations)
++        if valid:
++            valid = all(
++                isinstance(item, dict)
++                and bool(str(item.get("experiment_id") or "").strip())
++                and bool(str(item.get("verdict") or "").strip())
++                and bool(str(item.get("addressed_by") or "").strip())
++                and item.get("retire_if_same_verdict") is True
++                for item in declarations
++            )
++        rows.append(
++            {
++                "row_type": "prior_failure",
++                "task_id": str(task.get("id") or ""),
++                "declaration_count": len(declarations) if isinstance(declarations, list) else 0,
++                "four_part_declarations_valid": bool(valid),
++                "passed": bool(valid),
++            }
++        )
++    return rows
++
++
++def audit_prompt_contracts(roadmap: dict[str, Any]) -> list[dict[str, Any]]:
++    """Check per-unit evidence and the exact executable prompt ending for every task."""
++
++    rows: list[dict[str, Any]] = []
++    for task in _tasks(roadmap):
++        prompt = str(task.get("prompt") or "").rstrip()
++        deliverable = Path(str(task.get("deliverable") or ""))
++        command = (
++            "Run command: cd {project_root} && .venv/bin/python "
++            f"scripts/experiments/{deliverable.stem}.py --date {{date}}"
++        )
++        required_tail = f"{command}\nDo NOT push. Do NOT modify scripts/research_conductor.py."
++        comparison = bool(
++            re.search(r"(?:\bA/B\b|\bcompare\b|\bversus\b|\bmatched\b)", prompt, re.IGNORECASE)
++        )
++        per_unit_rows = task.get("per_unit_rows") is True
++        tail_matches = prompt.endswith(required_tail)
++        rows.append(
++            {
++                "row_type": "prompt_contract",
++                "task_id": str(task.get("id") or ""),
++                "comparison_task": comparison,
++                "per_unit_rows": per_unit_rows,
++                "required_run_command": command,
++                "prompt_tail_matches": tail_matches,
++                "passed": per_unit_rows and tail_matches,
++            }
++        )
++    return rows
++
++
++def _audit_contract_owners(repo_root: Path) -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for contract, owner in CONTRACT_OWNERS.items():
++        spec = repo_root / owner.spec_path
++        section = requirement_section(spec.read_text(encoding="utf-8"), owner.requirement) if spec.exists() else ""
++        checks = {
++            "requirement_present": bool(section),
++            "implementing_task_present": owner.implementing_task in section,
++            "artifact_path_present": owner.artifact_path in section,
++            "gate_field_present": owner.gate_field in section,
++            "authority_boundary_present": owner.authority_boundary in section,
++            "failure_behavior_present": owner.failure_behavior in section,
++        }
++        rows.append(
++            {
++                "row_type": "requirement_owner",
++                "contract": contract,
++                "spec_path": owner.spec_path,
++                "requirement": owner.requirement,
++                "implementing_task": owner.implementing_task,
++                "artifact_path": owner.artifact_path,
++                "gate_field": owner.gate_field,
++                **checks,
++                "passed": all(checks.values()),
++            }
++        )
++    return rows
++
++
++def _sha256(path: Path) -> str | None:
++    return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}" if path.is_file() else None
++
++
++def payload_checksum(artifact: dict[str, Any]) -> str:
++    """Hash canonical artifact content while excluding the checksum field itself."""
++
++    payload = deepcopy(artifact)
++    payload.pop("reproducibility_checksum", None)
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
++    return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
++
++
++def _failed_check(check: str, expected: Any, observed: Any) -> dict[str, Any]:
++    return {"check": check, "expected": expected, "observed": observed, "passed": False}
++
++
++def _base_artifact(repo_root: Path, run_date: str, duration_s: float) -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_6810.v595_contract_manifest_preflight.v1",
++        "experiment_id": "experiment_6810_v595_contract_manifest_preflight",
++        "run_date": run_date,
++        "field_principles": {},
++        "inference_substrate": "CPU schema and document audit, no LLM",
++        "duration_s": duration_s,
++        "random_seed": AUDIT_SEED,
++        "reproducibility_checksum": "",
++        "source_artifact_hashes": {
++            str(path): _sha256(repo_root / path) for path in SOURCE_PATHS
++        },
++        "contract_owner_map": {},
++        "roadmap_identity": {},
++        "rows": [],
++        "task_count": 0,
++        "gate_resolution_results": [],
++        "deliverable_uniqueness_results": [],
++        "model_spec_results": [],
++        "prior_failure_results": [],
++        "prompt_contract_results": [],
++        "verification_commands": [
++            "cd {project_root} && .venv/bin/python "
++            "scripts/experiments/experiment_6810_v595_contract_manifest_preflight.py --date {date}"
++        ],
++        "v595_contract_map_ready": False,
++        "gate_check_summary": [],
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "complete_blocked_v595_contract_manifest_preflight",
++    }
++
++
++def _finish_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
++    artifact["field_principles"] = {
++        field: FIELD_PRINCIPLES[field] for field in artifact
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    repo_root: Path,
++    run_date: str,
++    duration_s: float,
++    *,
++    roadmap: dict[str, Any] | None = None,
++) -> dict[str, Any]:
++    """Build a ready or blocked artifact from the checked-in V595 contracts."""
++
++    active = roadmap if roadmap is not None else load_yaml_mapping(repo_root / ROADMAP_PATH)
++    artifact = _base_artifact(repo_root, run_date, duration_s)
++    milestone = active.get("milestone")
++    if milestone != EXPECTED_MILESTONE:
++        artifact["roadmap_identity"] = {
++            "milestone": milestone,
++            "first_experiment": None,
++            "last_experiment": None,
++        }
++        artifact["gate_check_summary"] = [
++            _failed_check("active_roadmap_milestone", EXPECTED_MILESTONE, milestone)
++        ]
++        return _finish_artifact(artifact)
++
++    design = parse_design(repo_root / DESIGN_PATH)
++    task_rows = audit_task_contracts(active, design)
++    owner_rows = _audit_contract_owners(repo_root)
++    gate_rows = audit_gate_resolution(active, retired_experiment_ids(repo_root))
++    model_rows = audit_model_specs(active)
++    prior_rows = audit_prior_failures(active)
++    prompt_rows = audit_prompt_contracts(active)
++    all_groups = (task_rows, owner_rows, gate_rows, model_rows, prior_rows, prompt_rows)
++    ready = all(row["passed"] for group in all_groups for row in group)
++    numbers = [row["experiment_number"] for row in task_rows if row["experiment_number"] is not None]
++
++    artifact.update(
++        {
++            "contract_owner_map": {
++                contract: {
++                    "spec_path": owner.spec_path,
++                    "requirement": owner.requirement,
++                    "implementing_task": owner.implementing_task,
++                    "artifact_path": owner.artifact_path,
++                    "gate_field": owner.gate_field,
++                    "authority_boundary": owner.authority_boundary,
++                    "failure_behavior": owner.failure_behavior,
++                }
++                for contract, owner in CONTRACT_OWNERS.items()
++            },
++            "roadmap_identity": {
++                "milestone": milestone,
++                "first_experiment": min(numbers) if numbers else None,
++                "last_experiment": max(numbers) if numbers else None,
++            },
++            "rows": task_rows + owner_rows,
++            "task_count": len(task_rows),
++            "gate_resolution_results": gate_rows,
++            "deliverable_uniqueness_results": [
++                {
++                    "task_id": row["task_id"],
++                    "deliverable": row["deliverable"],
++                    "unique": row["unique_deliverable"],
++                    "passed": row["unique_deliverable"],
++                }
++                for row in task_rows
++            ],
++            "model_spec_results": model_rows,
++            "prior_failure_results": prior_rows,
++            "prompt_contract_results": prompt_rows,
++            "v595_contract_map_ready": ready,
++            "verdict_class": "null" if ready else "blocked",
++            "honest_verdict": (
++                "complete: V595 owned contracts and active execution manifest agree"
++                if ready
++                else "complete_blocked_v595_contract_manifest_preflight"
++            ),
++        }
++    )
++    if not ready:
++        artifact["gate_check_summary"] = [
++            _failed_check(
++                f"{row.get('row_type', 'contract')}:{row.get('task_id') or row.get('contract')}",
++                True,
++                row,
++            )
++            for group in all_groups
++            for row in group
++            if not row["passed"]
++        ]
++    return _finish_artifact(artifact)
++
++
++def validate_artifact(artifact: dict[str, Any]) -> list[str]:
++    """Return stable validation errors without modifying the research record."""
++
++    required = set(FIELD_PRINCIPLES)
++    errors: list[str] = []
++    missing = sorted(required - set(artifact))
++    if missing:
++        errors.append(f"missing_required_fields:{','.join(missing)}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, dict) or set(principles) != set(artifact):
++        errors.append("field_principles_do_not_cover_artifact")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    if artifact.get("verdict_class") not in {
++        "positive",
++        "circular_positive",
++        "null",
++        "blocked",
++        "disqualified",
++        "partial",
++    }:
++        errors.append("verdict_class_outside_closed_enum")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_must_be_false")
++    if artifact.get("v595_contract_map_ready") is True:
++        if artifact.get("task_count") != 14 or len(artifact.get("rows", [])) != 14 + len(CONTRACT_OWNERS):
++            errors.append("ready_artifact_row_or_task_count_mismatch")
++        if artifact.get("roadmap_identity") != {
++            "milestone": EXPECTED_MILESTONE,
++            "first_experiment": 6810,
++            "last_experiment": 6823,
++        }:
++            errors.append("ready_artifact_roadmap_identity_mismatch")
++        if artifact.get("gate_check_summary") != []:
++            errors.append("ready_artifact_has_failed_gate_summary")
++        if not str(artifact.get("honest_verdict") or "").startswith("complete:"):
++            errors.append("ready_artifact_verdict_is_not_terminal")
++    else:
++        if artifact.get("verdict_class") != "blocked":
++            errors.append("blocked_artifact_verdict_class_mismatch")
++        if not artifact.get("gate_check_summary"):
++            errors.append("blocked_artifact_missing_gate_summary")
++        if artifact.get("honest_verdict") != "complete_blocked_v595_contract_manifest_preflight":
++            errors.append("blocked_artifact_honest_verdict_mismatch")
++    return errors
++
++
++def _write_atomic(path: Path, artifact: dict[str, Any]) -> None:
++    """Replace one requested artifact atomically so interrupted writes stay valid."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
++    temporary.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    os.replace(temporary, path)
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run or validate the preflight while allowing tests to isolate output."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default="20260831")
++    parser.add_argument("--project-root", type=Path, default=Path(__file__).resolve().parents[2])
++    parser.add_argument("--output", type=Path)
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++    output = args.output or args.project_root / RESULT_PATH
++
++    if args.validate:
++        errors = validate_artifact(json.loads(output.read_text(encoding="utf-8")))
++        print("valid" if not errors else "\n".join(errors))
++        return int(bool(errors))
++
++    started = time.perf_counter()
++    roadmap = load_yaml_mapping(args.project_root / ROADMAP_PATH)
++    artifact = build_artifact(
++        args.project_root,
++        args.date,
++        time.perf_counter() - started,
++        roadmap=roadmap,
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        print("\n".join(errors))
++        return 1
++    _write_atomic(output, artifact)
++    print(output)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised by the required run command.
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6810_v595_contract_manifest_preflight.py b/tests/python/test_experiment_6810_v595_contract_manifest_preflight.py
+index 5bb4416940..9d9f3047fa 100644
+--- a/tests/python/test_experiment_6810_v595_contract_manifest_preflight.py
++++ b/tests/python/test_experiment_6810_v595_contract_manifest_preflight.py
+@@ -185,3 +185,105 @@ def test_req_6810_cli_writes_only_the_requested_atomic_artifact(
+     (tmp_path / "roadmap.yaml").write_text(malformed, encoding="utf-8")
+     with pytest.raises(ValueError, match="top-level roadmap"):
+         exp.audit_task_contracts([], exp.parse_design(REPO / exp.DESIGN_PATH))
++
++
++def test_req_6810_defensive_inputs_and_nonready_contracts_fail_closed(
++    tmp_path: Path,
++    roadmap: dict[str, object],
++) -> None:
++    """REQ-CONSTRAINT-6810 rejects malformed source and incomplete contract shapes."""
++
++    sequence_yaml = tmp_path / "sequence.yaml"
++    sequence_yaml.write_text("- not\n- a\n- roadmap\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="top-level roadmap"):
++        exp.load_yaml_mapping(sequence_yaml)
++
++    assert exp.requirement_section("## REQ-OTHER: unrelated\n", "REQ-MISSING") == ""
++    with pytest.raises(ValueError, match="tasks must be a list"):
++        exp.audit_task_contracts(
++            {"milestone": "2026.08.595", "tasks": None},
++            exp.parse_design(REPO / exp.DESIGN_PATH),
++        )
++    assert exp._required_fields_block("No artifact field section.") == ""
++
++    fake_repo = tmp_path / "fake-repo"
++    (fake_repo / "ops").mkdir(parents=True)
++    (fake_repo / "ops/exclusion_manifest.yaml").write_text(
++        yaml.safe_dump(
++            {
++                "retired": ["invalid-row", {"experiment_id": 2091}],
++                "retired_experiments": [],
++                "retired_extras": [],
++            }
++        ),
++        encoding="utf-8",
++    )
++    assert "exp2091" in exp.retired_experiment_ids(fake_repo)
++
++    incomplete = deepcopy(roadmap)
++    incomplete["tasks"][0]["prompt"] += "\nUncontracted tail."
++    artifact = exp.build_artifact(REPO, "20260831", 0.25, roadmap=incomplete)
++    assert artifact["v595_contract_map_ready"] is False
++    assert artifact["gate_check_summary"]
++    assert exp.validate_artifact(artifact) == []
++
++
++def test_req_6810_artifact_validator_names_each_invalid_contract(
++    roadmap: dict[str, object],
++) -> None:
++    """REQ-AGENTIC-6810-1 keeps ready and blocked artifact failures explicit."""
++
++    ready = exp.build_artifact(REPO, "20260831", 0.25, roadmap=roadmap)
++    missing = deepcopy(ready)
++    missing.pop("schema")
++    errors = exp.validate_artifact(missing)
++    assert "missing_required_fields:schema" in errors
++    assert "field_principles_do_not_cover_artifact" in errors
++
++    invalid_ready = deepcopy(ready)
++    invalid_ready.update(
++        {
++            "verdict_class": "unknown",
++            "verifier_is_oracle": True,
++            "task_count": 0,
++            "roadmap_identity": {},
++            "gate_check_summary": [{"passed": False}],
++            "honest_verdict": "not terminal",
++        }
++    )
++    errors = exp.validate_artifact(invalid_ready)
++    assert "verdict_class_outside_closed_enum" in errors
++    assert "verifier_is_oracle_must_be_false" in errors
++    assert "ready_artifact_row_or_task_count_mismatch" in errors
++    assert "ready_artifact_roadmap_identity_mismatch" in errors
++    assert "ready_artifact_has_failed_gate_summary" in errors
++    assert "ready_artifact_verdict_is_not_terminal" in errors
++
++    wrong = deepcopy(roadmap)
++    wrong["milestone"] = "2026.08.594"
++    invalid_blocked = exp.build_artifact(REPO, "20260831", 0.25, roadmap=wrong)
++    invalid_blocked.update(
++        {
++            "verdict_class": "null",
++            "gate_check_summary": [],
++            "honest_verdict": "complete: wrong blocked shape",
++        }
++    )
++    errors = exp.validate_artifact(invalid_blocked)
++    assert "blocked_artifact_verdict_class_mismatch" in errors
++    assert "blocked_artifact_missing_gate_summary" in errors
++    assert "blocked_artifact_honest_verdict_mismatch" in errors
++
++
++def test_req_6810_cli_refuses_to_write_invalid_artifact(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CL-6810 makes validation failure terminal before atomic output."""
++
++    output = tmp_path / "must-not-exist.json"
++    monkeypatch.setattr(exp, "validate_artifact", lambda _artifact: ["forced_error"])
++    assert exp.main(
++        ["--date", "20260831", "--project-root", str(REPO), "--output", str(output)]
++    ) == 1
++    assert not output.exists()
+-- 
+2.55.0
+

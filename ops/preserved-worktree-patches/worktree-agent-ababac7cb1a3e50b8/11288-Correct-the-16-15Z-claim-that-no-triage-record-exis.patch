@@ -1,0 +1,70 @@
+From 84a5539c4c645f6b3fc6b17cc571c7034815ee20 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 13:08:12 -0400
+Subject: [PATCH 11288/11362] Correct the 16:15Z claim that no triage record
+ exists
+
+ops/audit-findings-ledger.md exists, is append-only under REQ-OPS-AUDIT-LEDGER-1,
+carries a Disposition column, and already holds rows for all 17 escalated
+findings. I grepped for "triage" and "audit_finding" -- what I would have called
+it -- and the file is "audit-findings-ledger". Searching for my own paraphrase
+rather than for the thing, which is the trap recorded in this project's memory and
+which I appended to that memory earlier today.
+
+The mechanism is not missing; the dispositions are. Corrected rather than quietly
+restated, and the shape of the 17 recorded: 11 are one adversarial_verify.py
+cluster, 10 of them _moat_rigor_*, which should be triaged as a cluster.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index 6b8617dd9e..d245b9c4ee 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -2,6 +2,39 @@
+ 
+ **Last Updated:** 2026-09-05
+ 
++## 2026-09-05 16:45Z — CORRECTION: the triage ledger exists; I searched for the wrong name
++
++At 16:15Z I recorded, as a measurement, that "no triage record exists anywhere under `ops/` —
++nothing matching `triage` or `audit_finding`". **That is wrong.** `ops/audit-findings-ledger.md`
++exists, is governed by REQ-OPS-AUDIT-LEDGER-1, is append-only, and carries a Disposition column
++with ACCEPTED / FIXED / WONTFIX. It holds 114 OPEN rows, and ALL 17 of the escalated findings are
++already rows in it.
++
++I grepped for `triage` and `audit_finding` — what I would have called the file. It is called
++`audit-findings-ledger`, with hyphens and a plural. This is the defect named in this project's own
++memory under "the same trap applies to PROSE, and to your own paraphrase": searching for your
++summary of a thing rather than for the thing. I wrote that memory entry and then committed the
++error inside the same day.
++
++**What is actually true.** The mechanism is not missing. The DISPOSITIONS are missing: 17
++escalated rows sit at OPEN with an empty or minimal Note. Several existing rows show what a good
++disposition looks like — the exp6478, exp6544 and exp3403 notes each verify the finding against
++the artifact, say what the measurement still supports, say what it does not, and state whether a
++mechanical check is worth building. That is the standard for the 17.
++
++**Shape of the 17**, which changes how they should be worked:
++
++- 11 are `adversarial_verify.py::<function>` SILENT_NON_FIRING, and 10 of those are
++  `_moat_rigor_*`. That is one cluster from one function-chunked audit of one file, and it should
++  be triaged as a cluster with per-function exceptions, not as eleven unrelated findings.
++- 2 are guards at OPEN 7 days: `worktree_import_guard.py` and `capstone_milestone_rot_lint.py`.
++  These are the oldest and the escalation is doing its job on them.
++- 4 are artifacts with claim-class verdicts: exp6275, exp6960, exp6961, exp6976.
++
++Dispatched to a dedicated agent, because 17 dispositions each need reading the finding against
++SOURCE rather than against the report prose, and the report is overwritten at every
++milestone-close.
++
+ ## 2026-09-05 16:15Z — the attention line mixes EVENTS with BACKLOG, and one count cannot say both
+ 
+ Applying yesterday's-hour finding to the other attention kind produced the opposite answer, which
+-- 
+2.55.0
+

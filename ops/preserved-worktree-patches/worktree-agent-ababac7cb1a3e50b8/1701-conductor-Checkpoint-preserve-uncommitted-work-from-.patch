@@ -1,0 +1,43 @@
+From 8da223165882776cadc5a039ac74aecbda65ff64 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 01:53:08 -0400
+Subject: [PATCH 01701/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8098e339bc..a7ad2aa371 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 586353, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-14T05:40:06Z"}
+\ No newline at end of file
++{"pid": 586353, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-06-14T05:53:07Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 2ab842fa27..45a7803ca8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8453,3 +8453,4 @@ c |
+ | 2026-06-14 04:49 UTC | Capstone .386 (UNGATED): headline question is HAS  | OK | 85 passed, 1 warning in 4.24s |
+ | 2026-06-14 05:35 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+ | 2026-06-14 05:38 UTC | Milestone 2026.06.387 activated | OK | 10 tasks queued |
++| 2026-06-14 05:51 UTC | Archive .386 -> activate .387; KEEP the hardened g | OK | 91 passed, 1 warning in 4.92s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2f16e1f925..9d55c8abd1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 586353, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-14T05:40:06Z"}
+\ No newline at end of file
++{"pid": 586353, "iteration": 6, "phase": "iteration_start", "started_at": "2026-06-14T05:53:07Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

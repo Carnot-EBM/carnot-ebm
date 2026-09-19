@@ -1,0 +1,611 @@
+From 50a8d2e960d9caaebd231b01c631b4dc5e662343 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 01:58:30 -0400
+Subject: [PATCH 11167/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...rtunities-for-the-live-agent-2026-09-05.md | 374 ++++++++++++++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ python/carnot/agentic/arc_arm_eligibility.py  |  42 ++
+ .../carnot/agentic/arc_competition_agent.py   |  25 +-
+ ...st_arc_diversity_arm_per_level_20260905.py |  43 +-
+ 7 files changed, 448 insertions(+), 41 deletions(-)
+ create mode 100644 docs/research-notes/energy-opportunities-for-the-live-agent-2026-09-05.md
+ create mode 100644 python/carnot/agentic/arc_arm_eligibility.py
+
+diff --git a/docs/research-notes/energy-opportunities-for-the-live-agent-2026-09-05.md b/docs/research-notes/energy-opportunities-for-the-live-agent-2026-09-05.md
+new file mode 100644
+index 0000000000..748cdb7f74
+--- /dev/null
++++ b/docs/research-notes/energy-opportunities-for-the-live-agent-2026-09-05.md
+@@ -0,0 +1,374 @@
++# Energy opportunities for the live ARC agent — 2026-09-05
++
++Read-only review under the 2026-09-05 brief: "where, if anywhere, could a Carnot
++energy-based approach give the LIVE ARC agent more speed, accuracy, or efficiency?"
++The brief asked for the counter-question too: where would an energy proposal be
++novelty-seeking dressed as research? This note answers both. No code was changed.
++`results/**` was read and never written.
++
++## 0. Verdict, stated first
++
++**There is no genuine new energy opportunity on the live path. The bottleneck is
++elsewhere.** Three facts carry the verdict; each is measured below with its population.
++
++1. **Energy is already on the live path, and it measured neutral or null in every
++   slot.** Engine selection (`trust_energy`, S2-v3), plan guidance (`goal_energy`, S3),
++   candidate generation (energy-fitness QD), action pruning (three pruner prototypes and
++   the value head), and win-state recognition (state-goal energy) were each built, wired,
++   and measured. None banked a level the bare explorer did not.
++2. **The two measured bottlenecks are not scoring problems.** Wall clock is 98 percent
++   generator decode that emits lookup tables. Action count is first-contact discovery by
++   a blind explorer that finds the win by stumbling into it. An energy function ranks
++   candidates; it cannot shorten a decode or invent a hypothesis the inducer never wrote.
++3. **The score arithmetic closes the efficiency door for partial gains.** RHAE squares
++   the human-to-agent action ratio. On r11l level 0 the agent used 815 actions against a
++   human 22. Halving the agent's actions moves the level score from 0.07 to 0.29 points
++   out of 100. Only near-human action counts score, and those need a correct model of
++   the game, which is the generation wall again.
++
++"Nowhere new" is the honest answer. Section 4 lists every candidate considered and the
++measurement that rejects it, so the next session does not re-derive them. Section 5
++records two hygiene items that convert the standing prose ban into checks.
++
++## 1. Scope and what "energy" means here
++
++Scope is the LIVE agent per CLAUDE.md "ARC Live-Path Reachability Discipline":
++`python/carnot/agentic/arc_competition_agent.py` (`E3AgentPolicy`, `make_carnot_agent`,
++the scored path) and `scripts/arc_loop_solve.py` (the offline twin).
++
++In this note "energy" means a scalar score, learned or hand-built, that ranks states,
++transitions, engines, or actions. That is Carnot's verifier-as-scorer. It excludes the
++deterministic execution check that defines correctness: running an induced engine on
++recorded transitions and comparing grids. Per the Circularity / Oracle-Distinctness
++Discipline, that check is the oracle. An energy that only re-runs it is
++`execution_grounded`, not a moat.
++
++Sources read: CLAUDE.md in full; the memory files named in the brief plus the ARC-specific
++ones; `ops/known-issues.md` 2026-06-26 (the S0 conclusion);
++`docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md`;
++`docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md` (the levers ledger);
++`docs/research-notes/arc-live-agent-baseline-four-axes-2026-09-04.md`;
++`docs/research-notes/post-nctx-induce-engines-are-lookup-tables-2026-09-04.md`;
++`ops/verifier_gaps.md` GAP-ARCH-WORLD-MODEL-TRUST-ENERGY, GAP-ARCH-FRAME-CHANGE-PREDICTOR,
++GAP-WM-TRUST-GATE; `ops/exclusion_manifest.yaml`; the eval artifacts under
++`results/arc_leaderboard_eval_runs/`; and the agent source at the lines cited.
++Artifacts were read through `scripts/summarize_artifact.py` where the reader applies.
++
++## 2. Bottleneck map
++
++Every number names its population. "One run" means exactly that.
++
++### 2.1 Wall clock: the generator, and the generator alone
++
++| quantity | value | population |
++|---|---|---|
++| classical path, LLM off | 272 actions in about 1 s, about 4 ms per action | one r11l run, budget 300, `CARNOT_ARC_DISABLE_INDUCTION=1` (baseline note, 2026-09-04) |
++| whole game, LLM on | about 24,998 s for 2,077 actions | `results/arc_leaderboard_eval_runs/r11l-2491317.json`; seconds inferred from run log and file times, the artifact has no duration field |
++| generator share | about 98 percent by subtraction | the two rows above |
++| generator output | 13 chat completions; 2,467,130 reasoning chars; 37,872 final chars (98.5 percent reasoning) | same artifact, `generator_channels` |
++| one induce | 25 to 30 min at 33 to 38 tok/s | lookup-table note, 2026-09-04 |
++| what the 13 completions bought | 4 induction attempts; two carry `planned: True` and neither produced a level; skips: `proposer_failed`, `heldout_transition_verification_failed`, `exception`, one single-row attempt | same artifact, `policy_diagnostics.induction_attempts` |
++
++The level-up on that run came at charged frame 888 from exploration, not from a plan.
++The tier-1 explorer alone (`--policy explorer`, "tier-1 graph_explore only" per
++`scripts/arc_leaderboard_eval.py:113`; `sweep-3113164.partial.json`) reached r11l level 1
++in 768 actions. Six e3 runs (one partial) reached it in 813 to 815. So on r11l level 0 the
++LLM tier cost about 25,000 s and about 45 extra actions and returned nothing. That is one
++game and single seeds; it is the only game with a post-fix generator-channel record.
++
++### 2.2 Actions: first-contact discovery by a blind explorer
++
++Per-level counts from every eval artifact that banked a level. RHAE per level is computed
++here from the documented formula `min((human/agent)**2 * 100, 115)`
++(`scripts/arc_leaderboard_eval.py:8`); it is not the artifact's `efficiency` field.
++
++| game, policy | level | agent actions | human | RHAE points (computed) | artifact |
++|---|---|---|---|---|---|
++| r11l, e3 (6 runs, one partial) | 0 | 813 in five, 815 in one | 22 | 0.07 | `cd82-r11l-727651`, `cd82-r11l-1408494.partial`, `lp85-r11l-3762597`, `r11l-1594772`, `r11l-2491317`, `r11l-3114878` |
++| r11l, e3 (5 of those 6 completed level 1) | 1 | 123 in all five | 33 | 7.2 | same set less `r11l-2491317` |
++| r11l, tier-1 explorer only | 0 | 768 | 22 | 0.08 | `sweep-3113164.partial` |
++| cd82, e3 | 0 | 741 | 55 | 0.55 | `cd82-ft09-ka59-3452377` |
++| cd82, e3 | 1 | 1166 | 8 | 0.005 | same |
++| cd82, tier-1 explorer only | 0 | 586 | 55 | 0.88 | `sweep-3113164.partial` |
++| lp85, e3 | 0 | 455 | 17 | 0.14 | `lp85-r11l-3762597` |
++| lp85, tier-1 explorer only | 0 | 649 | 17 | 0.07 | `sweep-3113164.partial` |
++| sp80, e3 | 0 | 331 | 39 | 1.4 | `sp80-su15-70215`, `-70505` |
++| sp80, tier-1 explorer only | 0 | 83 | 39 | 22.1 | `sweep-3113164.partial` |
++| su15, e3 | 0 | 464, 507 | 22 | 0.22, 0.19 | `sp80-su15-70215`, `-70505` |
++| su15, tier-1 explorer only | 0 | 534 | 22 | 0.17 | `sweep-3113164.partial` |
++| tu93, tier-1 explorer only | 0 | 361 | 19 | 0.28 | `sweep-3113164.partial` |
++| ls20, tier-1 explorer only | 0 | 8878 | 22 | 0.0006 | `sweep-3113164.partial` |
++
++Two readings. First, the cost sits in FIRST CONTACT with a level's mechanic: r11l level 0
++takes 813 actions and level 1 takes 123 once the mechanic is known. Second, the tier-1
++explorer alone used fewer level-0 actions than the full e3 cascade on r11l, cd82 and
++sp80, and more on lp85 and su15. All single seeds, and the search is stochastic. The
++honest statement is that the LLM tier has no measured action advantage on level 0 yet,
++not that it has a measured disadvantage.
++
++Where the actions go inside one run (`r11l-2491317`, whole game, 2,077 actions):
++548 actions (26 percent) were reset-replays of already-known paths, 109 of 120
++navigation attempts fell back to reset-replay, and the forward-walk hit rate was 9
++percent. The live action-effect prior scored 29,920 candidates over 848 frontiers with
++weight 0.25 and zero errors: the affordance ranker is already on, and the agent still
++needed 815 actions.
++
++### 2.3 Accuracy: induced engines and the goal predicate
++
++| quantity | value | population |
++|---|---|---|
++| held-out exact-match of post-fix r11l engines | 0.647, 0.345, 0.639, 0.008 | 119 fresh level-0 random-walk transitions, one game, one seed (baseline note) |
++| best of all fifteen archived engines | 0.672 (pre-fix, 2026-09-02) | same |
++| planning gate | held-out 1.0; every recorded rejection is of a retained engine that scores 100 percent on its shown rows and 50 to 75 percent held out | 25 rounds, 2 runs, 2026-08-27 fine-read |
++| goal predicate fires on a real win | 0 of 31 win states across 49 engine evaluations | `results/arc_cross_level_retention_20260817/` |
++| induced goals constant over all observed frames | 89 percent; 71 of 93 live engines fail on the goal, not the dynamics | `arc_executable_world_model.py:4438` in-file measurement, 138 engines, 21 games |
++
++The engines are transcriptions of shown rows, compressed better over time and induced no
++better. A run-length-encoded case table dispatching on observed coordinates is a lookup
++table that reads like a program. The goal predicate never fires, so `plan_in_model`
++returns `None` at any budget. Every level ever won on the default scored configuration
++(LLM induction path, `CARNOT_ARC_STRUCTURED_NAV` off) was won by exploration; the opt-in
++structured-nav path is the one measured exception (tu93 level 0 to 1, REQ-ARC-WMTE-5842).
++
++One live gate observation from `r11l-2491317`, first induction attempt: the CNN ttt-prior
++engine PASSED the trust gate with `heldout_accuracy 0.0` because that gate's
++`trust_metric` is `cell_recall` (0.9086 against a 0.5 bar), and `plan_in_model` then
++expanded 20,020 nodes on an engine that never predicted a whole grid, and found no plan.
++This is not the identity trap (an identity engine has zero recall on changed cells); it is
++a recall-only metric admitting a partial engine. The cost is seconds at 4 ms per node, so
++it is not a wall-clock issue. It is a deterministic gate calibration question for that
++file's owner, not an energy opportunity; recorded here so it is not lost.
++
++### 2.4 The score arithmetic that bounds efficiency work
++
++RHAE per level is `min((human/agent)**2 * 100, 115)`. For r11l level 0, human 22:
++
++| agent actions | RHAE points |
++|---|---|
++| 815 (measured) | 0.07 |
++| 408 (halve) | 0.29 |
++| 204 (quarter) | 1.2 |
++| 100 | 4.8 |
++| 44 (2x human) | 25 |
++| 22 (human) | 100 |
++| 10.6 (Astra, 51.7 percent fewer than human, arcprize.org/blog/astra) | 115, capped |
++
++Any efficiency method that removes a fraction of a blind search's actions cannot move the
++score. The score rewards knowing what to do, which is a correct model plus a correct goal.
++That is the generation wall.
++
++## 3. Energy already on the live path, and what it measured
++
++This inventory matters because the brief's question presumes energy is absent. It is not.
++
++| slot | mechanism | live? | measured value | evidence |
++|---|---|---|---|---|
++| engine selection | `trust_energy = heldout_miss + 0.25 calibrated_miss + 0.25 overfit_gap + penalties` (`arc_world_model_trust_energy.py:988`), consumed by `select_trusted_world_model` | yes (`arc_competition_agent.py:8539`) | exp4491 picks the best engine when a pool exists; S2-v3 (exp4811) corpus-wide: energy minus accuracy-gate delta +0.091, CI95 [-0.063, +0.264], neutral | `results/experiment_4811_*.json` |
++| plan guidance | `goal_energy` passed into `plan_in_model` (`arc_competition_agent.py:6324-6333`) | yes | S3 (exp4821): winners newly entering the pool delta 0.0, CI [0,0], on 24 headroom games, guidance verified exercised (exp4825) | `results/experiment_4821_*.json` |
++| candidate generation | energy-fitness MAP-Elites generator (`arc_energy_fitness_qd.py`) | wired (`SUBMITTED_QD_GENERATION_MODE`); `enabled: false` in the r11l run | exp4653: solve-rate delta 0.0, first-win delta 0.0; family retired (exp4688/4689/5154) | `results/experiment_4653_*.json`; manifest `generation_axis_exploration_signal_retired_exp5154_v473` |
++| action ordering | PersistentAEM plus optional CNN frontier prior, weight 0.25 | yes (`action_effect_expansion_prior_diagnostics`) | CNN held-out AUROC 0.539 vs action-id-only 0.549 on the current corpus; four nulls in one session | GAP-ARCH-FRAME-CHANGE-PREDICTOR |
++| move pruning | `HazardMovePruner` fit from observed deaths | offline twin only (`arc_loop_solve.py`) | tu93 L3 states expanded 2947 to 2859, minus 3 percent | `results/arc_hazard_prune_ab_tu93.json` |
++| goal bias and goal-energy candidate guidance | relational goal energy from exp4020 (`arc_goal_energy_live.py`); `GoalEnergyCandidateGuidance` scores candidate states | guidance `enabled: true` in the r11l run: 26,221 candidate states scored with `goal_energy_score_variance 0.0`, `arms_non_degenerate false`, `candidate_pool_differs_from_baseline false`, a constant energy; goal bias itself `enabled: false`; a supervisor arm is `drop_goal_bias` and it fired first in that run | exp4640: first-win delta 0.0 at baseline 0.04; exp4737: 0 of 100 | `results/experiment_4640_*.json`; `r11l-2491317.json` `goal_candidate_guidance_diagnostics` |
++| lazy value head | cross-game value head, lazy top-k 4 | `enabled: true`, 35 evaluations in the r11l run | exp4652/4658/4665: first-win 0.04 both arms, delta 0.0 | `results/experiment_4652_*.json` |
++| curiosity | `arc_dense_curiosity_progress.py` | reachable, `enabled: false` in the r11l run | not measured on this run | `policy_diagnostics.curiosity_diagnostics` |
++
++The offline structural energy itself is real: S0' LOO AUROC 0.739 leak-clean, S1 0.713
++over 10 seeds with a descent direction. It is an offline cross-game discriminator that
++adds nothing to the live agent. That is the program's own conclusion (`ops/known-issues.md`
++2026-06-26), and CLAUDE.md forbids re-proposing its stages.
++
++## 4. Candidates considered
++
++Each candidate was judged on the brief's five questions: measured bottleneck and
++population; what energy adds over the current mechanism; oracle-distinct or circular;
++headroom; cheap falsifier. The rejections come first because they are most of the value.
++
++### 4.1 REJECTED
++
++**R1. Energy to select among induced engines.** Bottleneck: not selection. Comparator:
++the execution-grounded accuracy gate, which is free. S2-v3 measured neutral corpus-wide
++(23 of 25 games effective, positive control passed). Raising Kaggle concurrency to K=16
++gives about 13 inductions per game, so selection matters more there; S2-v3 already used
++enforced diverse pools, so the verdict carries. Forbidden as a re-proposal by CLAUDE.md.
++
++**R2. Energy to guide `plan_in_model` toward the goal.** S3 measured zero new winners on
++24 headroom games with guidance verified to have changed proposals. exp4640 and exp4737
++measured the goal-energy variant at zero lift and 0 of 100. The goal predicate never
++fires (2.3), so any goal energy compiled from it is constant. Forbidden as a re-proposal.
++
++**R3. Energy-as-fitness generation (quality-diversity, MAP-Elites).** exp4653 null; the
++first-contact exploration-signal family is retired on the exclusion manifest with
++`energy-as-fitness first-contact rerun` as a blocked pattern. Needs an operator override
++citing a new mechanism, and none is on offer here.
++
++**R4. Verifier-as-action-pruner or learned value head for efficiency.** The most
++tempting slot, because efficiency is the scored axis, and the most thoroughly swept.
++Hard-argmax pruner: median efficiency ratio 1.042 and lost m0r0 (`proto_carnot_pruner`).
++Hedged and abstaining variants: no deployable arm. Live value routing (exp4652/4658/4665):
++first-win 0.04 both arms, delta 0.0, CI [0,0]; `value_weight` reverted 5 to 0 because the
++live search got slower and solved fewer games. Offline-replay pruners (exp3929 1.96x,
++exp4160 1.31x, exp4071 67 percent) never pruned a winning action on already-solved traces
++and banked no level; exp4071 ran on 3 games with replay wall clock minus 199 percent.
++Section 2.4 shows why even a real 50 percent cut cannot move the score. Cross-game value
++transfer is retired (`cross_game_value_transfer_retired_exp4342_v401`).
++
++**R5. Retrain the frame-change CNN as an affordance energy.** Four adversarially verified
++nulls in one session (REQ-ARC-FCP-5590/5728/5729/5730). The headline 0.709 did not
++reproduce (0.539 over 5 seeds) and an action-id-only base rate scored higher (0.549). The
++gap entry forbids a retrain of the same frame-only architecture. See 4.3 for the one
++open door this leaves, and why it is still not proposed.
++
++**R6. State or goal energy to recognise win states.** `arc3_state_goal_energy_discrimination`:
++mean leave-one-game-out AUROC 0.4958 against a shuffled control of 0.509. Chance. An
++energy that cannot tell a win state from a non-win state cannot guide toward one.
++
++**R7. Transition-EBM reranker.** GAP-3 stage 2 and 2v2: macro AUROC 0.5442, hit set a
++strict subset of vote's, retired on the manifest
++(`gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09`). Reopen needs
++operator authorisation plus the gate-1R redesign.
++
++**R8. Energy-as-RFT-teacher for the generator.** Levers ledger "DO NOT RE-OPEN": the
++cross-game certifier is at chance (R7), and the winner is never proposed (R2), so the
++certified-correct training set is empty. The one positive (Sudoku +1.1 percent) used the
++true oracle, not a learned energy. Also blocked by the live-agent framing: the scored
++path runs frozen weights offline.
++
++**R9. Energy over the reasoning stream to stop a bad induce early.** This is the only
++candidate aimed at the 98 percent wall-clock bottleneck, so it deserves a full answer.
++What it would need: a scorer on partial reasoning text that predicts a lookup-table
++engine before decode finishes. What exists: the verifier ensemble is math-bound (FoVer
++0.9131, PRMBench 0.552, facts earned-negative, code weak); the Phase D external-text
++scorer line (LoRA-EBM, uPRM, EBRM) is retired after seven milestones
++(`phase_d_external_text_scorer_retired_exp5163_v474`); the live ARC LLM corpus is about
++47 rows total, so there is nothing to train a new one on. FALSE_NEGATIVE_RISK applies in
++reverse: no positive control could even be run. The honest comparators are non-energy:
++`CARNOT_ARC_INDUCE_THINKING_BUDGET` (an accuracy A/B; think-off measured worse, held-out
++0.100 vs 0.373 in exp6199) and Kaggle concurrency (per-stream throughput is fixed at
++about 31 tok/s; only aggregate changes). Rejected.
++
++**R10. Energy as a lookup-table or memorisation detector.** The held-out split
++(`_split_prefix_heldout`, last third of rows) already detects it exactly: 100 percent
++prefix, 50 to 75 percent held out, in 5 of 6 near-miss cells. `arc_engine_static_validation.py`
++already catches broken code before the gate. Both are deterministic and cost milliseconds
++against a 25-minute decode. An energy here would re-run the oracle: circular by
++definition. The fix is on the generation side (prompt, format, or model), not scoring.
++
++**R11. Hardware-accelerated energy evaluation.** The classical path costs 4 ms per
++action end to end. There is nothing to accelerate. Paper-v6 narrowing also forbids any
++KV260-speedup framing at current dimensions.
++
++**R12. Energy as an intrinsic curiosity or progress bonus.** `arc_dense_curiosity_progress`
++is live-reachable and was disabled in the measured run. The exploration-signal family is
++retired (R3). The 2026-06-29 structural finding stands: the winning prefix on the wall
++games is not a function of observable state (exp4914 `WALL_IS_HIDDEN_STATE`), so an
++observable-state bonus cannot point at it.
++
++**R13. The hidden-state "moat slot" (GAP-ARCH-WORLD-MODEL-TRUST-ENERGY, status open).**
++The gap entry predates the program that answered it. S2-v3 covered 23 of 25 games,
++including the hidden-state set, and measured neutral. The entry's status is stale; see 5.
++
++**R14. Any restaging of S0 to S4.** CLAUDE.md: "do NOT re-propose S4/ARC-energy stages".
++Not a judgement call.
++
++### 4.2 PROPOSED
++
++None that build energy.
++
++The brief allowed this answer and asked that no proposal be manufactured. Every slot
++where an energy could sit on the live path has an energy in it or a measured null
++against it, and the two bottlenecks that remain (decode wall clock, first-contact
++discovery) are not ranking problems. A ranked list with one manufactured entry would be
++the novelty-seeking the brief warned against.
++
++### 4.3 The one open door, and why it is still not proposed
++
++GAP-ARCH-FRAME-CHANGE-PREDICTOR's revised candidate design (b) names a contrastive,
++pairwise objective that must discriminate WITHIN an action id, not across ids. A
++contrastive scorer is energy-shaped, so an adversarial reader will ask why it is not in
++4.2. Four reasons, in order of weight.
++
++1. **Expected value is bounded by 2.4.** Even a scorer that halves level-0 actions moves
++   r11l from 0.07 to 0.29 points. The action-effect prior already scores every frontier
++   candidate (2.2) and the agent still needs 815 actions, so the marginal cut would be
++   smaller than half.
++2. **The honest comparator is free and already live.** The action-id base rate, which
++   `PersistentAEM` carries, scored 0.549 held-out against the CNN's 0.539. Any new scorer
++   must beat it by a margin with a CI that excludes zero, before any live A/B.
++3. **It is a representation problem, not an energy problem.** The record's own diagnosis
++   is that both tested representations reduce to a per-action-type base rate. The
++   missing piece is an action-by-frame-location interaction feature. Calling that
++   "Carnot energy" would be the origin-story reflex.
++4. **Four nulls stand against the closest design.** Rerun discipline requires a named
++   difference, and the difference here is a loss function on the same inputs.
++
++If someone insists on testing it, the cheap falsifier is offline and CPU-only: on the
++existing banked transitions, within-action-id AUROC for "this action changes the frame"
++minus the action-id-only baseline, leave-one-game-out, 5 seeds, CI95 excluding zero at
+++0.05 or better; then an actions-to-first-level A/B on the explorer-only sweep set with
++`run_seeded_progress` (REQ-ARC-WMTE-5720). Cost: hours. Prior: low. Not recommended.
++
++## 5. Record hygiene: two prose bans that are not yet checks
++
++Both are step 6 of the Error Lifecycle (convert a lesson into a check). Neither is an
++energy proposal. Both are for the owners of the named files; this note is read-only.
++
++1. **`ops/exclusion_manifest.yaml` has no entry for the S0 to S4 structural-energy
++   program.** The ban lives in CLAUDE.md prose and the 2026-06-26 known-issues banner.
++   `exclusion_manifest_lint.py`'s `BLOCKED_PATTERN_MATCHED` class exists for exactly this
++   case (a new task id with no prior artifact). A `retired_extras` entry citing
++   exp4811 and exp4821 with blocked patterns such as `structural energy trust gate`,
++   `energy-guided plan_in_model`, `S3 generation lift`, `S4 cross-family transfer`
++   would make the ban fire at roadmap activation instead of relying on a reader.
++2. **`ops/verifier_gaps.md` GAP-ARCH-WORLD-MODEL-TRUST-ENERGY reads `status: open`.**
++   S2-v3 (exp4811) and the trust-energy selector on the live path answered it. The
++   entry should read `attempted_and_bounded (exp4491 live; exp4811 corpus-wide neutral)`
++   with the never-prune body kept, so the next planner does not read it as an open
++   priority-medium slot.
++
++## 6. Where the bottleneck is, briefly, for the reader who came for a lever
++
++Not this note's deliverable, and other agents own this work. Recorded so the verdict
++does not read as "nothing to do".
++
++- **Goal predicate defect detection**, two existing default-off flags
++  (`CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK=1`, `CARNOT_ARC_GOAL_DEDUP=1`): 40 percent of
++  goal failures are mechanically detectable with no win required. Deterministic, free.
++- **The trust gate admitting identity-like engines** (2.3, last paragraph): the change
++  gate is built and default-off.
++- **Decode cost**: the thinking budget and Kaggle concurrency are the only levers that
++  touch the 98 percent; both are non-energy and one is a known accuracy trade.
++- **First-contact discovery**: the explorer wins level 0 in every banked game, at 4 ms
++  per action and 10 to 400 times the human count. A correct induced model would let
++  `plan_in_model` replace that search. That is the generation wall, and it is the
++  operator-directed AVO program's target, not energy's.
++
++## 7. Cross-references
++
++- CLAUDE.md: "ARC-AGI-3 Submission Sprint Forcing Function" (the CONCLUDED S0 program
++  clause), "Circularity / Oracle-Distinctness Discipline", "Failed-Experiment Rerun
++  Discipline", "ARC Live-Path Reachability Discipline", "AVO-Method Adoption".
++- `ops/known-issues.md` 2026-06-26 — S0 program conclusion.
++- `docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md` — S0' to S3.
++- `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md` — Family 2 and the
++  2026-06-29 structural conclusion.
++- `docs/research-notes/arc-live-agent-baseline-four-axes-2026-09-04.md` — wall clock and
++  engine scores.
++- `docs/research-notes/post-nctx-induce-engines-are-lookup-tables-2026-09-04.md`.
++- `ops/verifier_gaps.md` — GAP-ARCH-WORLD-MODEL-TRUST-ENERGY, GAP-ARCH-FRAME-CHANGE-PREDICTOR,
++  GAP-WM-TRUST-GATE.
++- `ops/exclusion_manifest.yaml` — `gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09`,
++  `generation_axis_exploration_signal_retired_exp5154_v473`,
++  `phase_d_external_text_scorer_retired_exp5163_v474`.
++- Memory: `energy-selection-thesis-bounded`, `energy-as-generator-sudoku`,
++  `verifier-domain-bound-math-only`, `project-gap3-verifier-program`,
++  `project_arc_oracle_distinct_win_393`, `Verifier orthogonality stall`,
++  `project_arc_live_agent_learning_gaps`, `project-arc-induction-failure-decomposition`,
++  `project-arc-kaggle-concurrency-ceiling`.
++- Artifacts: `results/experiment_4491_world_model_trust_energy.json`,
++  `results/experiment_4811_structural_energy_s2v3_corpus_wide_trust_gate.json`,
++  `results/experiment_4821_structural_energy_s3_generation_lift.json`,
++  `results/experiment_4640_goal_energy_generation_live.json`,
++  `results/experiment_4653_energy_fitness_qd_generation_live.json`,
++  `results/experiment_4071_verifier_action_pruner_efficiency.json`,
++  `results/proto_carnot_pruner.json`, `results/arc3_state_goal_energy_discrimination.json`,
++  `results/arc_leaderboard_eval_runs/r11l-2491317.json` and the other eval runs cited in 2.2.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9190afb8ed..635bcc4a4e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3455204, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-09-05T05:21:59Z"}
+\ No newline at end of file
++{"pid": 3455204, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-09-05T05:58:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 2fa5bef15d..fadbc86bbc 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17307,3 +17307,4 @@ code |
+ | 2026-09-05 04:16 UTC | V614 source delta and task-contract preflight | OK | 124 passed, 1 warning in 9.25s |
+ | 2026-09-05 04:57 UTC | ARC evaluation hardware and context provenance con | OK | 123 passed, 1 warning in 8.94s |
+ | 2026-09-05 05:21 UTC | V614 pairwise-verifier and belief-model SOTA inges | OK | Deliverable already exists in repo |
++| 2026-09-05 05:56 UTC | Exact minimal constraint-intervention pair fixture | OK | 128 passed, 1 warning in 19.91s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4080cfb16e..a2281979bc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3455204, "iteration": 1, "phase": "iteration_start", "started_at": "2026-09-05T05:21:59Z"}
+\ No newline at end of file
++{"pid": 3455204, "iteration": 2, "phase": "iteration_start", "started_at": "2026-09-05T05:58:21Z"}
+\ No newline at end of file
+diff --git a/python/carnot/agentic/arc_arm_eligibility.py b/python/carnot/agentic/arc_arm_eligibility.py
+new file mode 100644
+index 0000000000..5328089afc
+--- /dev/null
++++ b/python/carnot/agentic/arc_arm_eligibility.py
+@@ -0,0 +1,42 @@
++"""Restore a supervisor arm's eligibility when the agent reaches a new level.
++
++Spec: REQ-ARC-WMTE-7040.
++
++WHY THIS IS ITS OWN MODULE. It is three lines of rule, and it lives apart from
++`arc_competition_agent` for one reason: importing that module pulls in the whole carnot stack,
++about half a gigabyte, and the suite's per-test memory watchdog correctly refuses a teardown that
++grows by that much. A test that cannot import the real function ends up testing a hand-written
++mirror of it, and a mirror passes every mutation of the code it mirrors. That happened once on
++this very fix, so the extraction is the repair for a decorative test rather than a matter of
++taste.
++"""
++
++from __future__ import annotations
++
++from typing import Any
++
++
++def restore_arm_eligibility(explorer: Any, level: int, last_level: int | None) -> int | None:
++    """Give the new level its arms back. Returns the level now being tracked.
++
++    The trajectory supervisor clears `_arms_used` on every level-up, so its table believes every
++    arm is available again. The force-diversity arm is guarded by `not diversity_active`, which
++    reads `explorer._hybrid_diversity` -- and nothing ever set that back. So the arm fired once
++    per RUN inside a table designed to reset per LEVEL, and every level after the first ran a
++    rung short.
++
++    Restores the OPERATOR BASELINE, never a bare False. A run started with
++    `CARNOT_ARC_EXPLORE_DIVERSITY=1` asked for diversity throughout, and switching that off at a
++    level-up would be a worse bug than the one this fixes.
++
++    Keyed on a level CHANGE, not on every tick: re-running it mid-level would undo an arm the
++    supervisor had just fired. `last_level` of None means no level has been observed yet, which
++    is not the same as level 0.
++    """
++
++    if explorer is None or level == last_level:
++        return last_level
++    baseline = getattr(explorer, "_hybrid_diversity_baseline", None)
++    if baseline is not None:
++        explorer._hybrid_diversity = bool(baseline)
++    return level
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 8385b13c5b..cd18689247 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -5960,23 +5960,14 @@ class E3AgentPolicy:
+                 return
+             explorer = getattr(self, "explorer", None)
+             # REQ-ARC-WMTE-7040: give the level its arms back BEFORE the snapshot is built.
+-            #
+-            # The supervisor clears `_arms_used` on every level-up, so its table believes every
+-            # arm is available again. The force-diversity arm is guarded by `not
+-            # diversity_active`, which reads `explorer._hybrid_diversity` -- and nothing ever set
+-            # that back. So the arm fired once per RUN inside a table designed to reset per
+-            # LEVEL, and every level after the first ran a rung short. Measured across the five
+-            # exhaustion cells in the refinement ledger: every deep level was missing exactly
+-            # this arm, one of them missing two.
+-            #
+-            # Restore the operator's baseline, not False, so an operator-configured run keeps its
+-            # diversity. Ordered before the snapshot because a reset the supervisor cannot see on
+-            # this tick is a reset it acts on one window late.
+-            if explorer is not None and level != self._last_supervised_level:
+-                self._last_supervised_level = level
+-                baseline = getattr(explorer, "_hybrid_diversity_baseline", None)
+-                if baseline is not None:
+-                    explorer._hybrid_diversity = bool(baseline)
++            # A reset the supervisor cannot see on this tick is one it acts on a window late.
++            # The rule itself lives in `arc_arm_eligibility` so a test can reach it; see that
++            # module for why.
++            from carnot.agentic.arc_arm_eligibility import restore_arm_eligibility
++
++            self._last_supervised_level = restore_arm_eligibility(
++                explorer, level, self._last_supervised_level
++            )
+             new_transitions = len(self.transitions) - int(
+                 self._transitions_at_last_induction_attempt
+             )
+diff --git a/tests/python/test_arc_diversity_arm_per_level_20260905.py b/tests/python/test_arc_diversity_arm_per_level_20260905.py
+index b608465839..21798e881c 100644
+--- a/tests/python/test_arc_diversity_arm_per_level_20260905.py
++++ b/tests/python/test_arc_diversity_arm_per_level_20260905.py
+@@ -30,6 +30,9 @@ REPO = Path(__file__).resolve().parents[2]
+ sys.path.insert(0, str(REPO / "python"))
+ 
+ 
++from carnot.agentic.arc_arm_eligibility import restore_arm_eligibility as _reset  # noqa: E402
++
++
+ class _Explorer:
+     """Minimal stand-in carrying only the two attributes the reset touches."""
+ 
+@@ -39,34 +42,18 @@ class _Explorer:
+         self.goal_bias = None
+ 
+ 
+-def _reset(explorer, level, last_level):
+-    """The reset exactly as `_observe_trajectory` performs it.
+-
+-    Kept as a mirror rather than importing the agent, because importing
+-    `arc_competition_agent` pulls in the whole carnot stack and the suite's per-test memory
+-    watchdog refuses a teardown that grows by half a gigabyte. The mutation proofs run against
+-    the real module; this exercises the rule.
+-    """
+-    if explorer is not None and level != last_level:
+-        baseline = getattr(explorer, "_hybrid_diversity_baseline", None)
+-        if baseline is not None:
+-            explorer._hybrid_diversity = bool(baseline)
+-        return level
+-    return last_level
+-
+-
+ def test_an_arm_fired_on_level_0_is_eligible_again_on_level_1() -> None:
+     """The incident: the arm fired once per run and every later level ran a rung short."""
+     ex = _Explorer(baseline=False)
+     ex._hybrid_diversity = True  # the arm fired on level 0
+-    _reset(ex, level=1, last_level=0)
++    _reset(ex, 1, 0)
+     assert ex._hybrid_diversity is False, "arm still blocked on the new level"
+ 
+ 
+ def test_an_operator_configured_run_keeps_its_diversity_across_a_level_up() -> None:
+     """Resetting to False instead of the baseline would switch off an operator's own setting."""
+     ex = _Explorer(baseline=True)
+-    _reset(ex, level=1, last_level=0)
++    _reset(ex, 1, 0)
+     assert ex._hybrid_diversity is True
+ 
+ 
+@@ -74,7 +61,7 @@ def test_no_reset_happens_without_a_level_change() -> None:
+     """The reset is keyed on ADVANCE. Firing it every tick would undo the arm mid-level."""
+     ex = _Explorer(baseline=False)
+     ex._hybrid_diversity = True
+-    _reset(ex, level=0, last_level=0)
++    _reset(ex, 0, 0)
+     assert ex._hybrid_diversity is True
+ 
+ 
+@@ -82,7 +69,7 @@ def test_the_first_observation_counts_as_a_change() -> None:
+     """`None` means no level seen yet, which is not level 0."""
+     ex = _Explorer(baseline=False)
+     ex._hybrid_diversity = True
+-    assert _reset(ex, level=0, last_level=None) == 0
++    assert _reset(ex, 0, None) == 0
+     assert ex._hybrid_diversity is False
+ 
+ 
+@@ -93,7 +80,7 @@ def test_an_explorer_without_the_baseline_is_left_alone() -> None:
+         _hybrid_diversity = True
+ 
+     old = _Old()
+-    _reset(old, level=1, last_level=0)
++    _reset(old, 1, 0)
+     assert old._hybrid_diversity is True
+ 
+ 
+@@ -106,6 +93,18 @@ def test_the_real_explorer_records_a_baseline_at_init() -> None:
+ def test_the_agent_resets_before_building_the_snapshot() -> None:
+     """A reset the supervisor cannot see this tick is a reset it acts on one window late."""
+     src = (REPO / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text()
+-    reset_at = src.index('_hybrid_diversity_baseline", None)')
++    reset_at = src.index("restore_arm_eligibility(")
+     snapshot_at = src.index("diversity_active=bool(getattr(explorer")
+     assert reset_at < snapshot_at, "reset must precede the snapshot that reads the flag"
++
++
++def test_the_agent_stores_the_returned_level() -> None:
++    """Discarding the return value silently turns the reset into an every-tick reset.
++
++    `restore_arm_eligibility` reports the level it is now tracking. If the agent throws that
++    away, `_last_supervised_level` stays None, `level != last_level` is always true, and the arm
++    is undone on every observation instead of once per level. A mutation that assigned the result
++    to a throwaway survived the rest of this file, which is what this test exists to stop.
++    """
++    src = (REPO / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text()
++    assert "self._last_supervised_level = restore_arm_eligibility(" in src
+-- 
+2.55.0
+

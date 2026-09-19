@@ -1,0 +1,114 @@
+From 927e789b8db4b29390ae2a77bb03565c7e908904 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 05:52:35 -0400
+Subject: [PATCH 10746/11171] [conductor] Operational retrospective for
+ milestone 2026.09.601
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 10 ++++
+ results/operational_retro_2026_09_601.json | 58 ++++++++++++++++++++++
+ 3 files changed, 75 insertions(+)
+ create mode 100644 results/operational_retro_2026_09_601.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 0a267f1975..3e5d8cdd69 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6528,3 +6528,10 @@ The critical path for milestone .250:
+ - theme: tokenizer-aware preregistration concentrated the reconstructed clock while phase evidence remained absent
+ - key result: honest operational negative — the compute idle check stayed clear, but the records neither explain the critical path nor show concurrent model loading for a runner audit
+ - acceptance: no data available this milestone
++
++### Milestone 2026.09.601
++
++- exp_range: no data available this milestone
++- theme: mixed execution exposed missing task-level timing, accelerator, and runner evidence
++- key result: honest operational negative — the longest compute task is known, but its cause, task-window GPU efficiency, and any parallel-model runner miss are not established
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 341643ba7e..8810a9a6fa 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18509,3 +18509,13 @@ timed control, the defensible savings forecast is 0%.
+ - 2026-09-02: Observable reliability opportunity stream (✅ Complete) — honest_verdict=complete_positive_observable_reliability_opportunity_stream_ready; results/experiment_6871_observable_reliability_opportunity_stream.json
+ - 2026-09-02: Bounded reliability controller and exact transition quarantine (✅ Complete) — honest_verdict=complete_positive_bounded_reliability_controller_ready_not_sealed_utility_verdict; results/experiment_6872_bounded_reliability_controller_quarantine.json
+ - 2026-09-02: Prospective sealed continuous self-learning audit (⚠️ Research Finding) — honest_verdict=complete_null_prospective_sealed_self_learning_utility_not_demonstrated; results/experiment_6873_prospective_sealed_self_learning_audit.json
++
++## 2026-09-02 — Milestone 2026.09.601 operational retrospective
++
++The reconstructed milestone completed 9 experiments in 5 minutes. The 3
++compute-bound entries took 2 minutes, 1 minute, and 1 minute. The record does
++not explain those durations. It does not flag compute-task GPU idle, and it
++does not identify a parallel multi-model launch or a missed DualGPURunner
++dispatch. Add task-scoped phase, GPU, model-count, and runner receipts. Also
++overlap independent synthesis work with compute work. The savings estimate is
++0% because no timed alternative is available.
+diff --git a/results/operational_retro_2026_09_601.json b/results/operational_retro_2026_09_601.json
+new file mode 100644
+index 0000000000..bc4a33cab4
+--- /dev/null
++++ b/results/operational_retro_2026_09_601.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.09.601",
++  "generated_at": "2026-09-02T09:47:29Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 5.0,
++  "experiments_completed": 9,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "Tokenizer-aware semantic contrast preregistration v2",
++      "duration_minutes": 2.35,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Canonical tokenizer binding requalification",
++      "duration_minutes": 0.86,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Three-family semantic contrast scoring stream v2",
++      "duration_minutes": 0.86,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Prospective sealed continuous self-learning audit",
++      "duration_minutes": 0.76,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V601 evidence and method-change contract",
++      "duration_minutes": 0.11,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 9 experiments in 5.0 minutes, including 3 compute-bound experiments. The compute-bound leaders were Tokenizer-aware semantic contrast preregistration v2 at 2.35 minutes, followed by Canonical tokenizer binding requalification and Three-family semantic contrast scoring stream v2 at 0.86 minutes each. No data available this milestone explains their phase costs.",
++  "bottlenecks_identified": [
++    "Disk-mtime reconstruction replaced live commit timing, so task-phase attribution is unavailable.",
++    "No data available this milestone explains why Tokenizer-aware semantic contrast preregistration v2 was the longest compute-bound entry.",
++    "The GPU report is not tied to compute-task execution windows, and no data available this milestone records parallel model count or runner selection."
++  ],
++  "improvements_suggested": [
++    "Record monotonic start, end, and phase timestamps for every experiment instead of relying only on disk modification times.",
++    "Attach task-window GPU utilization samples and process identity to every compute-bound artifact.",
++    "Record model count and runner selection at launch, and select DualGPURunner only when two or more models are loaded in parallel.",
++    "Allow the scheduler to overlap independent synthesis-only work with compute-bound work when dependencies permit."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add task-scoped phase and GPU telemetry to the conductor artifact contract.",
++    "Add model-count and runner-selection receipts to each compute launch.",
++    "Overlap dependency-free synthesis-only work with active compute jobs."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The bounded record identifies the longest entries but does not expose their internal phases or task-window accelerator use. The next retrospective should use per-task telemetry instead of inferring execution behavior from modification times and a terminal GPU snapshot."
++}
+-- 
+2.55.0
+

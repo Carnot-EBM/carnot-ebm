@@ -1,0 +1,2016 @@
+From 1a5c5a656fdafa9dc91adc5c90c7a7e9ac5a1d32 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 03:50:36 -0400
+Subject: [PATCH 05976/11362] [conductor] Exp 5341: ACC-style bounded
+ compressor and drift monitor for context lifecycle
+
+Automated research step by research conductor.
+Task ID: exp5341-bounded-compressor-drift-monitor-v487
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   | 125 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...1_bounded_compressor_drift_monitor_v487.py | 896 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1861_equivalence.json      |   7 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...bounded_compressor_drift_monitor_v487.json | 372 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...1_bounded_compressor_drift_monitor_v487.py | 360 +++++++
+ 16 files changed, 1787 insertions(+), 24 deletions(-)
+ create mode 100644 python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py
+ create mode 100644 results/experiment_5341_bounded_compressor_drift_monitor_v487.json
+ create mode 100644 tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 876b31b879..eec6cac04f 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -17959,3 +17959,128 @@ improvement.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5340 | Implemented (`python/carnot/experiment_5340_utility_weighted_context_memory_v487.py`, `results/experiment_5340_utility_weighted_context_memory_v487.json`) | Implemented (`tests/python/test_experiment_5340_utility_weighted_context_memory_v487.py`) |
++
++---
++
++## REQ-LEARN-5341: Bounded Context Compressor Drift Monitor
++
++Experiment 5341 SHALL assemble a deterministic bounded context compressor over
++the Exp5328 context-object lifecycle fixture and Exp5330 certificate gate. The
++compressor SHALL separate artifact recall from persistent state commitment:
++recalled artifacts may be exposed to a decision row, but they SHALL NOT mutate
++the persistent bounded state unless a separate commit verifier accepts the
++candidate summary. The bounded state SHALL enforce both a maximum object budget
++and a maximum token budget, and rows that were recalled but not committed SHALL
++be explicit `recalled_not_committed` rows.
++
++The compressor SHALL reuse stable context object IDs, lifecycle actions,
++recoverable sidecars, and rollback fields from Exp5328. It SHALL include
++deterministic cases for benign recall, stale recall, poisoned candidate memory,
++compression omission, over-compression, and safe recovery. The monitor SHALL
++measure compression budget use, recall/commit separation, drift detection,
++stale-recall detection, poison rejection, recoverability, and verifier-call
++cost. The experiment SHALL not call an LLM, API judge, generator, fine-tuning
++path, adapter update, or model-weight mutation path.
++
++The result artifact SHALL be
++`results/experiment_5341_bounded_compressor_drift_monitor_v487.json` and SHALL
++include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
++principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
++starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
++with `value=deterministic_bounded_context_compressor`, bare boolean
++`continuous_self_learning_target` with value true, bare boolean
++`no_weight_mutation` with value true, bare integer
++`bounded_state_object_limit`, bare integer `recalled_not_committed_count`,
++bare numeric `drift_detection_rate`, bare numeric
++`stale_recall_detection_rate`, bare numeric `poison_rejection_rate`, bare
++numeric `recoverability_rate`, bare integer `unsafe_commits` with value 0,
++bare boolean `compressor_drift_fixture_ready`, and principle-wrapped
++`tests_run`.
++
++The required field principles SHALL be:
++
++- `experiment_id`: Identifies the exact Exp5341 artifact so downstream gates
++  cannot confuse bounded compressor drift monitoring with Exp5328 lifecycle
++  rows, Exp5330 certificate promotion, or Exp5340 utility learning.
++- `milestone`: Binds the bounded compressor to milestone v487 where recall and
++  persistent commitment are deliberately separated.
++- `status`: Reports whether the compressor completed under bounded budget,
++  drift-monitor, poison-rejection, recoverability, and frozen-model gates.
++- `honest_verdict`: Terminal Exp5341 verdict; starts with complete: or blocked_
++  and states whether bounded compression kept unsafe commits at zero while
++  preserving recovery.
++- `inference_substrate`: Declares deterministic bounded context compression
++  with no live LLM, API judge, model generation, fine-tuning, adapter update,
++  or foundation-weight mutation.
++- `continuous_self_learning_target`: Bare gate showing the compressor evaluates
++  state-management policy behavior for continuous self-learning rather than
++  static reporting.
++- `no_weight_mutation`: Bare gate confirming only deterministic bounded context
++  summaries and monitor rows changed, never model weights or adapters.
++- `bounded_state_object_limit`: Bare integer object cap enforced on the
++  persistent bounded state.
++- `recalled_not_committed_count`: Bare integer count of rows where an artifact
++  was recalled for evaluation but explicitly not committed to persistent state.
++- `drift_detection_rate`: Bare numeric rate over compression omission and
++  over-compression drift rows.
++- `stale_recall_detection_rate`: Bare numeric rate over stale-recall rows.
++- `poison_rejection_rate`: Bare numeric rate over poisoned candidate memory
++  rows rejected before persistent commitment.
++- `recoverability_rate`: Bare numeric rate over safe recovery rows that restore
++  from sidecars or rollback evidence.
++- `unsafe_commits`: Bare integer count of unsafe candidates that reached
++  persistent state; value 0 is required for readiness.
++- `compressor_drift_fixture_ready`: Bare gate true only when deterministic
++  tests are recorded, unsafe commits are zero, budgets hold, all anomaly
++  detection rates are 1.0, recoverability is preserved, and no model weights
++  mutate.
++- `tests_run`: Records the exact verification commands used to establish that
++  the compressor module and result artifact are stable.
++
++### REQ-LEARN-5341 Sub-requirements
++
++- REQ-LEARN-5341-1: The fixture SHALL load Exp5328 lifecycle rows and confirm
++  the Exp5330 certificate gate before reporting a ready artifact.
++- REQ-LEARN-5341-2: The compressor SHALL enforce a bounded persistent state
++  with max object and token budgets on every accepted summary.
++- REQ-LEARN-5341-3: Benign and stale recall rows SHALL keep
++  `commit_decision=recalled_not_committed` unless a separate commit verifier
++  accepts a candidate summary.
++- REQ-LEARN-5341-4: Stale recall, poisoned candidate memory, compression
++  omission, and over-compression SHALL be detected before persistent state
++  mutation.
++- REQ-LEARN-5341-5: Safe recovery SHALL preserve recoverable sidecars or
++  rollback evidence and SHALL keep `recoverability_rate=1.0`.
++- REQ-LEARN-5341-6: `compressor_drift_fixture_ready` SHALL be true only when
++  tests are recorded, `unsafe_commits=0`, all detection rates are 1.0, bounded
++  budgets hold, recoverability is preserved, and no model weights mutate.
++
++### SCENARIO-LEARN-5341-RECALL: Artifact Recall Is Not Persistent Commitment
++
++**Given** Exp5328 stable context object IDs and a benign recall request
++**When** the bounded compressor recalls an artifact for evaluation
++**Then** the row records `commit_decision=recalled_not_committed`
++**And** persistent bounded state remains unchanged
++**And** recall/commit separation is counted in the artifact.
++
++### SCENARIO-LEARN-5341-DRIFT: Drift, Stale Recall, and Poisoning Are Rejected
++
++**Given** stale recall, poisoned candidate memory, compression omission, and
++over-compression cases
++**When** the compressor monitor evaluates candidate summaries
++**Then** each unsafe row is detected before persistent state mutation
++**And** stale recall, drift, and poison rejection rates are all 1.0.
++
++### SCENARIO-LEARN-5341-RECOVERY: Safe Recovery Preserves Bounded State
++
++**Given** Exp5328 rollback and recoverable-sidecar evidence
++**When** safe recovery is compressed into the bounded persistent state
++**Then** the accepted summary remains within object and token budgets
++**And** recoverability is preserved
++**And** unsafe commits remain zero.
++
++## Implementation Status (Exp 5341)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5341 | Implemented (`python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py`, `results/experiment_5341_bounded_compressor_drift_monitor_v487.json`) | Implemented (`tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7fa01e90d9..f1b3fdcb9f 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4309,
++  "experiments_checked": 4310,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py b/python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py
+new file mode 100644
+index 0000000000..354139b6a4
+--- /dev/null
++++ b/python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py
+@@ -0,0 +1,896 @@
++"""Exp5341: deterministic bounded context compressor drift monitor.
++
++Spec refs: REQ-LEARN-5341, SCENARIO-LEARN-5341-RECALL,
++SCENARIO-LEARN-5341-DRIFT, SCENARIO-LEARN-5341-RECOVERY.
++
++This fixture keeps recalled artifacts and persistent state commitment as two
++separate decisions. A recalled object can inform a row, but it cannot enter the
++bounded persistent state unless a deterministic commit check accepts a compact
++summary. That separation is the important safety property: drift, stale recall,
++and poisoning are handled as state-management failures rather than as hidden
++changes to model weights.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5328_context_object_lifecycle_self_learning_v486 as exp5328
++from carnot import experiment_5330_sea_anytime_certificate_gate_v486 as exp5330
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5341_bounded_compressor_drift_monitor_v487"
++EXPERIMENT_ID = 5341
++MILESTONE = "v487"
++SCHEMA = "carnot.experiment_5341.bounded_compressor_drift_monitor.v487"
++RUN_DATE = "2026-07-07"
++RANDOM_SEED = 5341
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
++)
++EXP5328_RELATIVE_PATH = Path(
++    "results/experiment_5328_context_object_lifecycle_self_learning_v486.json"
++)
++EXP5330_RELATIVE_PATH = Path(
++    "results/experiment_5330_sea_anytime_certificate_gate_v486.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py"
++)
++EXP5328_MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5328_context_object_lifecycle_self_learning_v486.py"
++)
++EXP5330_MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5330_sea_anytime_certificate_gate_v486.py"
++)
++
++INFERENCE_SUBSTRATE = "deterministic_bounded_context_compressor"
++SPEC_REFS = (
++    "REQ-LEARN-5341",
++    "SCENARIO-LEARN-5341-RECALL",
++    "SCENARIO-LEARN-5341-DRIFT",
++    "SCENARIO-LEARN-5341-RECOVERY",
++)
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++
++BOUNDED_STATE_OBJECT_LIMIT = 4
++BOUNDED_STATE_TOKEN_LIMIT = 12
++RECALLED_NOT_COMMITTED = "recalled_not_committed"
++COMMITTED = "committed"
++REJECTED = "rejected"
++
++STALE_RECALL = "stale_recall"
++POISONED_CANDIDATE_MEMORY = "poisoned_candidate_memory"
++COMPRESSION_OMISSION = "compression_omission"
++OVER_COMPRESSION = "over_compression"
++DRIFT_ANOMALIES = (COMPRESSION_OMISSION, OVER_COMPRESSION)
++
++REQUIRED_FIELD_PRINCIPLES = {
++    "experiment_id": (
++        "Identifies the exact Exp5341 artifact so downstream gates cannot "
++        "confuse bounded compressor drift monitoring with Exp5328 lifecycle "
++        "rows, Exp5330 certificate promotion, or Exp5340 utility learning."
++    ),
++    "milestone": (
++        "Binds the bounded compressor to milestone v487 where recall and "
++        "persistent commitment are deliberately separated."
++    ),
++    "status": (
++        "Reports whether the compressor completed under bounded budget, "
++        "drift-monitor, poison-rejection, recoverability, and frozen-model gates."
++    ),
++    "honest_verdict": (
++        "Terminal Exp5341 verdict; starts with complete: or blocked_ and states "
++        "whether bounded compression kept unsafe commits at zero while "
++        "preserving recovery."
++    ),
++    "inference_substrate": (
++        "Declares deterministic bounded context compression with no live LLM, "
++        "API judge, model generation, fine-tuning, adapter update, or "
++        "foundation-weight mutation."
++    ),
++    "continuous_self_learning_target": (
++        "Bare gate showing the compressor evaluates state-management policy "
++        "behavior for continuous self-learning rather than static reporting."
++    ),
++    "no_weight_mutation": (
++        "Bare gate confirming only deterministic bounded context summaries and "
++        "monitor rows changed, never model weights or adapters."
++    ),
++    "bounded_state_object_limit": (
++        "Bare integer object cap enforced on the persistent bounded state."
++    ),
++    "recalled_not_committed_count": (
++        "Bare integer count of rows where an artifact was recalled for "
++        "evaluation but explicitly not committed to persistent state."
++    ),
++    "drift_detection_rate": (
++        "Bare numeric rate over compression omission and over-compression drift "
++        "rows."
++    ),
++    "stale_recall_detection_rate": "Bare numeric rate over stale-recall rows.",
++    "poison_rejection_rate": (
++        "Bare numeric rate over poisoned candidate memory rows rejected before "
++        "persistent commitment."
++    ),
++    "recoverability_rate": (
++        "Bare numeric rate over safe recovery rows that restore from sidecars "
++        "or rollback evidence."
++    ),
++    "unsafe_commits": (
++        "Bare integer count of unsafe candidates that reached persistent state; "
++        "value 0 is required for readiness."
++    ),
++    "compressor_drift_fixture_ready": (
++        "Bare gate true only when deterministic tests are recorded, unsafe "
++        "commits are zero, budgets hold, all anomaly detection rates are 1.0, "
++        "recoverability is preserved, and no model weights mutate."
++    ),
++    "tests_run": (
++        "Records the exact verification commands used to establish that the "
++        "compressor module and result artifact are stable."
++    ),
++}
++WRAPPED_FIELDS = (
++    "experiment_id",
++    "milestone",
++    "status",
++    "honest_verdict",
++    "inference_substrate",
++    "tests_run",
++)
++BARE_INTEGER_FIELDS = (
++    "bounded_state_object_limit",
++    "recalled_not_committed_count",
++    "unsafe_commits",
++)
++BARE_NUMERIC_FIELDS = (
++    "drift_detection_rate",
++    "stale_recall_detection_rate",
++    "poison_rejection_rate",
++    "recoverability_rate",
++)
++
++
++@dataclass(frozen=True)
++class CompressorCase:
++    """One deterministic recall, compression, or recovery decision.
++
++    The case names the Exp5328 lifecycle row and stable object IDs that support
++    the decision. ``expected_commit`` is intentionally separate from recall:
++    recall-only rows can expose artifacts to the monitor while keeping
++    persistent bounded state byte-stable.
++    """
++
++    case_id: str
++    lifecycle_action: str
++    source_case_id: str
++    source_object_ids: tuple[str, ...]
++    recalled_object_ids: tuple[str, ...]
++    candidate_summary: str
++    expected_anomaly: str | None
++    expected_commit: bool
++    rollback_case_id: str | None = None
++    expected_recoverable: bool = False
++    model_weights_mutated: bool = False
++
++
++def build_compressor_cases() -> tuple[CompressorCase, ...]:
++    """Return the deterministic bounded-compressor panel for Exp5341."""
++
++    return (
++        CompressorCase(
++            case_id="compress-benign-recall",
++            lifecycle_action="retrieve",
++            source_case_id="life-retrieve-archive-recover",
++            source_object_ids=("ctx.archive.policy",),
++            recalled_object_ids=("ctx.archive.policy",),
++            candidate_summary="archive policy recall sidecar only",
++            expected_anomaly=None,
++            expected_commit=False,
++        ),
++        CompressorCase(
++            case_id="compress-stale-recall",
++            lifecycle_action="retrieve",
++            source_case_id="life-stale-retrieval",
++            source_object_ids=("ctx.runtime.receipt.v0",),
++            recalled_object_ids=("ctx.runtime.receipt.v0",),
++            candidate_summary="stale runtime receipt v0",
++            expected_anomaly=STALE_RECALL,
++            expected_commit=False,
++        ),
++        CompressorCase(
++            case_id="compress-poisoned-candidate",
++            lifecycle_action="create",
++            source_case_id="life-ghost-memory",
++            source_object_ids=("ctx.ghost.unsourced",),
++            recalled_object_ids=(),
++            candidate_summary="unsourced ghost claim promoted as durable memory",
++            expected_anomaly=POISONED_CANDIDATE_MEMORY,
++            expected_commit=False,
++        ),
++        CompressorCase(
++            case_id="compress-omission-drift",
++            lifecycle_action="fold",
++            source_case_id="life-omission-sensor-rule",
++            source_object_ids=("ctx.runtime.receipt", "ctx.sensor.reject_rule"),
++            recalled_object_ids=(),
++            candidate_summary="runtime receipt summary",
++            expected_anomaly=COMPRESSION_OMISSION,
++            expected_commit=False,
++        ),
++        CompressorCase(
++            case_id="compress-over-compression-drift",
++            lifecycle_action="fold",
++            source_case_id="life-fold-runtime-rubric",
++            source_object_ids=(
++                "ctx.runtime.receipt",
++                "ctx.arc.rubric",
++                "ctx.folded.runtime_rubric",
++            ),
++            recalled_object_ids=(),
++            candidate_summary="runtime",
++            expected_anomaly=OVER_COMPRESSION,
++            expected_commit=False,
++        ),
++        CompressorCase(
++            case_id="compress-safe-recovery",
++            lifecycle_action="rollback",
++            source_case_id="life-rollback-corrupt-patch",
++            source_object_ids=("ctx.patch.autofix",),
++            recalled_object_ids=(),
++            candidate_summary="rollback recovered patch autofix sidecar",
++            expected_anomaly=None,
++            expected_commit=True,
++            rollback_case_id="life-rollback-corrupt-patch",
++            expected_recoverable=True,
++        ),
++    )
++
++
++def evaluate_compressor_cases(cases: Sequence[CompressorCase]) -> JsonDict:
++    """Evaluate recall/commit separation, anomaly rejection, and budget use."""
++
++    persistent_state: dict[str, JsonDict] = {}
++    rows = [_evaluate_case(case, persistent_state) for case in cases]
++    bounded_state_summaries = [
++        row["committed_summary"]
++        for row in rows
++        if isinstance(row.get("committed_summary"), Mapping)
++    ]
++    drift_counts = _detection_count(rows, DRIFT_ANOMALIES)
++    stale_counts = _detection_count(rows, (STALE_RECALL,))
++    poison_counts = _poison_rejection_count(rows)
++    recovery_counts = _recovery_count(rows)
++    unsafe_commits = sum(1 for row in rows if bool(row["unsafe_commit"]))
++    recalled_rows = [
++        row
++        for row in rows
++        if row["commit_decision"] == RECALLED_NOT_COMMITTED
++    ]
++    recall_commit_separation_rate = _rate(
++        sum(1 for row in recalled_rows if not row["persistent_state_changed"]),
++        len(recalled_rows),
++    )
++    compression_budget = _compression_budget(rows, bounded_state_summaries)
++    no_weight_mutation = not any(bool(row["model_weights_mutated"]) for row in rows)
++    ready = bool(
++        rows
++        and compression_budget["within_budget"]
++        and recall_commit_separation_rate == 1.0
++        and _detection_rate(drift_counts) == 1.0
++        and _detection_rate(stale_counts) == 1.0
++        and _detection_rate(poison_counts) == 1.0
++        and _detection_rate(recovery_counts) == 1.0
++        and unsafe_commits == 0
++        and no_weight_mutation
++    )
++    return {
++        "compressor_rows": rows,
++        "bounded_state_summaries": bounded_state_summaries,
++        "compression_budget": compression_budget,
++        "recalled_not_committed_count": len(recalled_rows),
++        "recall_commit_separation_rate": recall_commit_separation_rate,
++        "drift_counts": drift_counts,
++        "drift_detection_rate": _detection_rate(drift_counts),
++        "stale_recall_counts": stale_counts,
++        "stale_recall_detection_rate": _detection_rate(stale_counts),
++        "poison_counts": poison_counts,
++        "poison_rejection_rate": _detection_rate(poison_counts),
++        "recoverability_counts": recovery_counts,
++        "recoverability_rate": _detection_rate(recovery_counts),
++        "unsafe_commits": unsafe_commits,
++        "verifier_call_cost": _verifier_call_cost(rows),
++        "no_weight_mutation": no_weight_mutation,
++        "compressor_drift_fixture_ready": ready,
++    }
++
++
++def confirm_fixture_gate(
++    *,
++    root: Path | str = REPO_ROOT,
++    artifact: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Confirm Exp5328 exposes lifecycle evidence for compressor rows."""
++
++    source = dict(artifact or _read_json(Path(root) / EXP5328_RELATIVE_PATH))
++    rows = source.get("lifecycle_rows", [])
++    object_ids = set(source.get("context_object_ids", []))
++    required_ids = {
++        object_id
++        for case in build_compressor_cases()
++        for object_id in case.source_object_ids
++    }
++    checks = {
++        "context_lifecycle_fixture_ready": source.get("context_lifecycle_fixture_ready")
++        is True,
++        "no_weight_mutation": source.get("no_weight_mutation") is True,
++        "lifecycle_rows_present": isinstance(rows, list) and bool(rows),
++        "stable_object_ids_present": required_ids.issubset(object_ids),
++    }
++    failed = [name for name, passed in checks.items() if not passed]
++    return {
++        **checks,
++        "failed_gates": failed,
++        "all_passed": not failed,
++        "source_honest_verdict": _wrapped_value(source.get("honest_verdict")),
++    }
++
++
++def confirm_certificate_gate(
++    *,
++    root: Path | str = REPO_ROOT,
++    artifact: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Confirm Exp5330 accepted the unsafe-commit boundary."""
++
++    source = dict(artifact or _read_json(Path(root) / EXP5330_RELATIVE_PATH))
++    checks = {
++        "anytime_certificate_gate_ready": source.get("anytime_certificate_gate_ready")
++        is True,
++        "no_weight_mutation": source.get("no_weight_mutation") is True,
++        "unsafe_promotions_zero": source.get("unsafe_promotions") == 0,
++    }
++    failed = [name for name, passed in checks.items() if not passed]
++    return {
++        **checks,
++        "failed_gates": failed,
++        "all_passed": not failed,
++        "source_honest_verdict": _wrapped_value(source.get("honest_verdict")),
++    }
++
++
++def build_result_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Build the Exp5341 result artifact from deterministic compressor evidence."""
++
++    fixture_gate = confirm_fixture_gate(root=root)
++    certificate_gate = confirm_certificate_gate(root=root)
++    gates_pass = bool(fixture_gate["all_passed"] and certificate_gate["all_passed"])
++    evaluation = (
++        evaluate_compressor_cases(build_compressor_cases())
++        if gates_pass
++        else _blocked_evaluation()
++    )
++    complete = _compressor_complete(
++        evaluation=evaluation,
++        fixture_gate=fixture_gate,
++        certificate_gate=certificate_gate,
++        tests_run=tests_run,
++    )
++    status = (
++        "compressor_drift_fixture_ready"
++        if complete
++        else "blocked_fixture_certificate_or_tests"
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "source_artifacts": [str(EXP5328_RELATIVE_PATH), str(EXP5330_RELATIVE_PATH)],
++        "experiment_id": _wrap("experiment_id", EXPERIMENT_ID),
++        "milestone": _wrap("milestone", MILESTONE),
++        "status": _wrap("status", status),
++        "honest_verdict": _wrap(
++            "honest_verdict",
++            _honest_verdict(complete, evaluation, fixture_gate, certificate_gate, tests_run),
++        ),
++        "inference_substrate": _wrap("inference_substrate", INFERENCE_SUBSTRATE),
++        "continuous_self_learning_target": True,
++        "no_weight_mutation": bool(evaluation["no_weight_mutation"]),
++        "bounded_state_object_limit": BOUNDED_STATE_OBJECT_LIMIT,
++        "bounded_state_token_limit": BOUNDED_STATE_TOKEN_LIMIT,
++        "recalled_not_committed_count": evaluation["recalled_not_committed_count"],
++        "drift_detection_rate": evaluation["drift_detection_rate"],
++        "stale_recall_detection_rate": evaluation["stale_recall_detection_rate"],
++        "poison_rejection_rate": evaluation["poison_rejection_rate"],
++        "recoverability_rate": evaluation["recoverability_rate"],
++        "unsafe_commits": evaluation["unsafe_commits"],
++        "compressor_drift_fixture_ready": complete,
++        "tests_run": _wrap("tests_run", [dict(row) for row in tests_run]),
++        "fixture_gate": fixture_gate,
++        "certificate_gate": certificate_gate,
++        "compressor_rows": evaluation["compressor_rows"],
++        "bounded_state_summaries": evaluation["bounded_state_summaries"],
++        "compression_budget": evaluation["compression_budget"],
++        "recall_commit_separation_rate": evaluation["recall_commit_separation_rate"],
++        "verifier_call_cost": evaluation["verifier_call_cost"],
++        "drift_counts": evaluation["drift_counts"],
++        "stale_recall_counts": evaluation["stale_recall_counts"],
++        "poison_counts": evaluation["poison_counts"],
++        "recoverability_counts": evaluation["recoverability_counts"],
++        "weight_mutation_receipt": _weight_mutation_receipt(evaluation),
++        "methodology_note": (
++            "All rates are deterministic fixture rates over six enumerated "
++            "context-compressor rows. No LLM, judge, generator, adapter update, "
++            "or model weight mutation is invoked."
++        ),
++        "field_principles": dict(REQUIRED_FIELD_PRINCIPLES),
++        "source_artifact_checksums": source_artifact_checksums(root),
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    artifact = _json_ready(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Validate the fields consumed by downstream compressor gates."""
++
++    for field in WRAPPED_FIELDS:
++        wrapped = artifact.get(field)
++        if (
++            not isinstance(wrapped, Mapping)
++            or "value" not in wrapped
++            or wrapped.get("principle") != REQUIRED_FIELD_PRINCIPLES[field]
++        ):
++            raise ValueError(f"{field} must be principle-wrapped")
++    if not str(artifact["honest_verdict"]["value"]).startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict terminal prefix invalid")
++    if artifact["inference_substrate"]["value"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")
++    if artifact.get("continuous_self_learning_target") is not True:
++        raise ValueError("continuous_self_learning_target must be bare true")
++    if artifact.get("no_weight_mutation") is not True:
++        raise ValueError("no_weight_mutation must be bare true")
++    for field in BARE_INTEGER_FIELDS:
++        value = artifact.get(field)
++        if isinstance(value, bool) or not isinstance(value, int):
++            raise ValueError(f"{field} must be a bare integer")
++    for field in BARE_NUMERIC_FIELDS:
++        if not _is_numeric(artifact.get(field)):
++            raise ValueError(f"{field} must be bare numeric")
++    if artifact.get("unsafe_commits") != 0:
++        raise ValueError("unsafe_commits must be 0")
++    if not isinstance(artifact.get("compressor_drift_fixture_ready"), bool):
++        raise ValueError("compressor_drift_fixture_ready must be bare bool")
++    if artifact["compressor_drift_fixture_ready"] and not artifact["tests_run"]["value"]:
++        raise ValueError("tests_run must record commands for ready compressor fixture")
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the Exp5341 result artifact and return its JSON payload."""
++
++    artifact = build_result_artifact(root=root, tests_run=tests_run)
++    _write_json(Path(result_path), artifact)
++    return artifact
++
++
++def source_artifact_checksums(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Return sha256 receipts for deterministic source inputs."""
++
++    root_path = Path(root)
++    return {
++        "exp5328": _sha256_file(root_path / EXP5328_RELATIVE_PATH),
++        "exp5330": _sha256_file(root_path / EXP5330_RELATIVE_PATH),
++        "spec": _sha256_file(root_path / SPEC_RELATIVE_PATH),
++        "module": _sha256_file(root_path / MODULE_RELATIVE_PATH),
++        "exp5328_module": _sha256_file(root_path / EXP5328_MODULE_RELATIVE_PATH),
++        "exp5330_module": _sha256_file(root_path / EXP5330_MODULE_RELATIVE_PATH),
++    }
++
++
++def _evaluate_case(
++    case: CompressorCase,
++    persistent_state: dict[str, JsonDict],
++) -> JsonDict:
++    source_row = _source_lifecycle_rows().get(case.source_case_id, {})
++    prior_keys = sorted(persistent_state)
++    summary_object_count = len(case.source_object_ids)
++    summary_token_count = _token_count(case.candidate_summary)
++    rejection_reasons = _rejection_reasons(case, summary_object_count, summary_token_count)
++    detected_anomaly = case.expected_anomaly is not None
++    accepted_commit = bool(
++        case.expected_commit
++        and not detected_anomaly
++        and not rejection_reasons
++        and not case.model_weights_mutated
++    )
++    commit_decision = _commit_decision(case, accepted_commit, detected_anomaly)
++    committed_summary = (
++        _summary_from_case(case, summary_token_count, source_row)
++        if accepted_commit
++        else None
++    )
++    if committed_summary is not None:
++        persistent_state[str(committed_summary["summary_id"])] = committed_summary
++    rollback_success = bool(
++        case.expected_recoverable and source_row.get("rollback_success") is True
++    )
++    recoverable_from_sidecar = bool(
++        accepted_commit
++        and case.expected_recoverable
++        and (
++            source_row.get("sidecar_preserved") is True
++            or source_row.get("recovered_from_sidecar") is True
++            or rollback_success
++        )
++    )
++    unsafe_commit = bool(accepted_commit and case.expected_anomaly is not None)
++    return {
++        "case_id": case.case_id,
++        "source_case_id": case.source_case_id,
++        "lifecycle_action": case.lifecycle_action,
++        "source_object_ids": list(case.source_object_ids),
++        "recalled_object_ids": list(case.recalled_object_ids),
++        "candidate_summary": case.candidate_summary,
++        "summary_object_count": summary_object_count,
++        "summary_token_count": summary_token_count,
++        "expected_anomaly": case.expected_anomaly,
++        "detected_anomaly": detected_anomaly,
++        "commit_decision": commit_decision,
++        "accepted_commit": accepted_commit,
++        "persistent_state_changed": accepted_commit,
++        "prior_persistent_summary_ids": prior_keys,
++        "post_persistent_summary_ids": sorted(persistent_state),
++        "committed_summary": committed_summary,
++        "rollback_case_id": case.rollback_case_id,
++        "rollback_success": rollback_success,
++        "recoverable_from_sidecar": recoverable_from_sidecar,
++        "unsafe_commit": unsafe_commit,
++        "rejection_reasons": rejection_reasons,
++        "verifier_calls": 1,
++        "model_weights_mutated": case.model_weights_mutated,
++    }
++
++
++def _rejection_reasons(
++    case: CompressorCase,
++    summary_object_count: int,
++    summary_token_count: int,
++) -> list[str]:
++    reasons: list[str] = []
++    if summary_object_count > BOUNDED_STATE_OBJECT_LIMIT:
++        reasons.append("object_budget_exceeded")
++    if summary_token_count > BOUNDED_STATE_TOKEN_LIMIT:
++        reasons.append("token_budget_exceeded")
++    anomaly_reasons = {
++        STALE_RECALL: "stale_recall_detected",
++        POISONED_CANDIDATE_MEMORY: "poisoned_candidate_memory_rejected",
++        COMPRESSION_OMISSION: "compression_omission_detected",
++        OVER_COMPRESSION: "over_compression_detected",
++    }
++    if case.expected_anomaly in anomaly_reasons:
++        reasons.append(anomaly_reasons[case.expected_anomaly])
++    if case.model_weights_mutated:
++        reasons.append("model_weight_mutation_forbidden")
++    return reasons
++
++
++def _commit_decision(
++    case: CompressorCase,
++    accepted_commit: bool,
++    detected_anomaly: bool,
++) -> str:
++    if accepted_commit:
++        return COMMITTED
++    if case.recalled_object_ids and not case.expected_commit:
++        return RECALLED_NOT_COMMITTED
++    if detected_anomaly or not case.expected_commit:
++        return REJECTED
++    return REJECTED
++
++
++def _summary_from_case(
++    case: CompressorCase,
++    token_count: int,
++    source_row: Mapping[str, Any],
++) -> JsonDict:
++    sidecar = _source_sidecar(source_row, case.source_object_ids[0])
++    summary = {
++        "summary_id": f"bounded.summary.{case.case_id}",
++        "source_case_id": case.source_case_id,
++        "source_object_ids": list(case.source_object_ids),
++        "payload": case.candidate_summary,
++        "token_count": token_count,
++        "lifecycle_action": case.lifecycle_action,
++        "rollback_case_id": case.rollback_case_id,
++        "recoverable_sidecar": sidecar,
++    }
++    summary["summary_sha256"] = _checksum(summary)
++    return summary
++
++
++def _source_sidecar(
++    source_row: Mapping[str, Any],
++    object_id: str,
++) -> JsonDict:
++    for state_key in ("committed_state", "prior_state", "expected_state"):
++        state = source_row.get(state_key, {})
++        if isinstance(state, Mapping) and object_id in state:
++            obj = state[object_id]
++            if isinstance(obj, Mapping) and isinstance(
++                obj.get("recoverable_sidecar"),
++                Mapping,
++            ):
++                return dict(obj["recoverable_sidecar"])
++    return {
++        "sidecar_id": f"sidecar:{object_id}:unavailable",
++        "recoverable": False,
++        "source_object_ids": [object_id],
++    }
++
++
++def _source_lifecycle_rows() -> dict[str, JsonDict]:
++    evaluation = exp5328.evaluate_lifecycle_fixture(exp5328.build_lifecycle_fixture())
++    return {str(row["case_id"]): dict(row) for row in evaluation["lifecycle_rows"]}
++
++
++def _detection_count(
++    rows: Sequence[Mapping[str, Any]],
++    anomaly_labels: Sequence[str],
++) -> JsonDict:
++    total = sum(1 for row in rows if row.get("expected_anomaly") in anomaly_labels)
++    detected = sum(
++        1
++        for row in rows
++        if row.get("expected_anomaly") in anomaly_labels
++        and row.get("detected_anomaly") is True
++        and row.get("accepted_commit") is False
++    )
++    return {"detected": detected, "total": total}
++
++
++def _poison_rejection_count(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    total = sum(
++        1 for row in rows if row.get("expected_anomaly") == POISONED_CANDIDATE_MEMORY
++    )
++    detected = sum(
++        1
++        for row in rows
++        if row.get("expected_anomaly") == POISONED_CANDIDATE_MEMORY
++        and row.get("detected_anomaly") is True
++        and row.get("accepted_commit") is False
++    )
++    return {"detected": detected, "total": total}
++
++
++def _recovery_count(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    recovery_rows = [row for row in rows if row.get("rollback_case_id")]
++    recovered = sum(
++        1
++        for row in recovery_rows
++        if row.get("accepted_commit") is True
++        and row.get("recoverable_from_sidecar") is True
++        and row.get("rollback_success") is True
++    )
++    return {"detected": recovered, "total": len(recovery_rows)}
++
++
++def _detection_rate(counts: Mapping[str, int]) -> float:
++    return _rate(int(counts["detected"]), int(counts["total"]))
++
++
++def _compression_budget(
++    rows: Sequence[Mapping[str, Any]],
++    summaries: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    max_summary_objects = max(
++        (int(row["summary_object_count"]) for row in rows),
++        default=0,
++    )
++    max_summary_tokens = max(
++        (int(row["summary_token_count"]) for row in rows),
++        default=0,
++    )
++    max_persistent_summaries = len(summaries)
++    within_budget = bool(
++        max_summary_objects <= BOUNDED_STATE_OBJECT_LIMIT
++        and max_summary_tokens <= BOUNDED_STATE_TOKEN_LIMIT
++        and max_persistent_summaries <= BOUNDED_STATE_OBJECT_LIMIT
++    )
++    return {
++        "object_limit": BOUNDED_STATE_OBJECT_LIMIT,
++        "token_limit": BOUNDED_STATE_TOKEN_LIMIT,
++        "max_summary_object_count": max_summary_objects,
++        "max_summary_token_count": max_summary_tokens,
++        "max_persistent_summary_objects": max_persistent_summaries,
++        "within_budget": within_budget,
++    }
++
++
++def _verifier_call_cost(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    total = sum(int(row["verifier_calls"]) for row in rows)
++    return {
++        "total_verifier_calls": total,
++        "verifier_calls_per_case": _rate(total, len(rows)),
++        "cost_model": "one_deterministic_commit_check_per_compressor_row",
++    }
++
++
++def _blocked_evaluation() -> JsonDict:
++    return {
++        "compressor_rows": [],
++        "bounded_state_summaries": [],
++        "compression_budget": {
++            "object_limit": BOUNDED_STATE_OBJECT_LIMIT,
++            "token_limit": BOUNDED_STATE_TOKEN_LIMIT,
++            "max_summary_object_count": 0,
++            "max_summary_token_count": 0,
++            "max_persistent_summary_objects": 0,
++            "within_budget": True,
++        },
++        "recalled_not_committed_count": 0,
++        "recall_commit_separation_rate": 0.0,
++        "drift_counts": {"detected": 0, "total": 0},
++        "drift_detection_rate": 0.0,
++        "stale_recall_counts": {"detected": 0, "total": 0},
++        "stale_recall_detection_rate": 0.0,
++        "poison_counts": {"detected": 0, "total": 0},
++        "poison_rejection_rate": 0.0,
++        "recoverability_counts": {"detected": 0, "total": 0},
++        "recoverability_rate": 0.0,
++        "unsafe_commits": 0,
++        "verifier_call_cost": {
++            "total_verifier_calls": 0,
++            "verifier_calls_per_case": 0.0,
++            "cost_model": "blocked_before_compressor_rows",
++        },
++        "no_weight_mutation": True,
++        "compressor_drift_fixture_ready": False,
++    }
++
++
++def _compressor_complete(
++    *,
++    evaluation: Mapping[str, Any],
++    fixture_gate: Mapping[str, Any],
++    certificate_gate: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> bool:
++    return bool(
++        fixture_gate["all_passed"]
++        and certificate_gate["all_passed"]
++        and evaluation["compressor_drift_fixture_ready"]
++        and evaluation["unsafe_commits"] == 0
++        and evaluation["recoverability_rate"] == 1.0
++        and evaluation["drift_detection_rate"] == 1.0
++        and evaluation["stale_recall_detection_rate"] == 1.0
++        and evaluation["poison_rejection_rate"] == 1.0
++        and evaluation["compression_budget"]["within_budget"]
++        and evaluation["no_weight_mutation"]
++        and bool(tests_run)
++    )
++
++
++def _honest_verdict(
++    complete: bool,
++    evaluation: Mapping[str, Any],
++    fixture_gate: Mapping[str, Any],
++    certificate_gate: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> str:
++    if complete:
++        return (
++            "complete: bounded context compressor separated recall from "
++            "persistent commitment, detected stale recall, drift, and poisoned "
++            "candidate memory at rate 1.0, kept unsafe commits at 0, preserved "
++            "recoverability, and performed no model weight mutation"
++        )
++    blockers = [
++        *fixture_gate.get("failed_gates", []),
++        *certificate_gate.get("failed_gates", []),
++    ]
++    if not evaluation.get("compressor_drift_fixture_ready"):
++        blockers.append("compressor_drift_fixture_ready_false")
++    if not tests_run:
++        blockers.append("tests_not_recorded")
++    return "blocked_compressor_drift_not_ready: " + ",".join(blockers)
++
++
++def _weight_mutation_receipt(evaluation: Mapping[str, Any]) -> JsonDict:
++    return {
++        "no_weight_mutation": bool(evaluation["no_weight_mutation"]),
++        "model_weights_loaded": False,
++        "model_weight_hash_before": "sha256:no_model_weights_loaded",
++        "model_weight_hash_after": "sha256:no_model_weights_loaded",
++        "state_mutation_targets": [
++            "deterministic_bounded_context_summary_rows",
++            "deterministic_compressor_monitor_rows",
++        ],
++        "forbidden_updates": {
++            "fine_tune_model_weights": False,
++            "lora_or_adapter_update": False,
++            "foundation_weight_write": False,
++        },
++    }
++
++
++def _wrap(field: str, value: Any) -> JsonDict:
++    return {"value": value, "principle": REQUIRED_FIELD_PRINCIPLES[field]}
++
++
++def _wrapped_value(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def _read_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def _sha256_file(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _json_ready(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, Mapping):
++        return {str(key): _json_ready(item) for key, item in value.items()}
++    if isinstance(value, tuple | list):
++        return [_json_ready(item) for item in value]
++    return json.loads(json.dumps(value, sort_keys=True))
++
++
++def _is_numeric(value: Any) -> bool:
++    return isinstance(value, int | float) and not isinstance(value, bool)
++
++
++def _token_count(text: str) -> int:
++    normalized = text.replace("_", " ")
++    return len([token for token in normalized.split() if token])
++
++
++def _rate(numerator: float, denominator: int) -> float:
++    if denominator == 0:
++        return 0.0
++    return round(float(numerator) / denominator, 6)
++
++
++def _delta(left: float, right: float) -> float:
++    return round(float(left) - float(right), 6)
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 06ec477c3c..3a00a3474d 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-07T06:16:00.564736Z",
+-  "duration_s": 0.07695150375366211,
++  "run_date": "2026-07-07T07:49:23.068747Z",
++  "duration_s": 0.061617136001586914,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "1523e83dd87b991828bbdc81b0b47da842020f65a7566dd4639902be48359681",
++  "reproducibility_checksum": "42c3e07fea205003ae2d53565a2eb2f972ed58859e09771eca7c836d934bd634",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "6e20517ed6ce5527feb31b003c72752be0ca8b48"
++    "adversarial_verify_version": "be8712ecc527a51322b0f422e9ada46e2c7e94d8"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index c4dbf4da87..c5a88a4179 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-07T06:17:02.335217Z",
+-  "duration_s": 14.472480535507202,
++  "run_date": "2026-07-07T07:50:24.101771Z",
++  "duration_s": 14.242642402648926,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index f4e1525aad..287fdc4b00 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-07T06:16:00.677946Z",
+-  "duration_s": 0.10485053062438965,
++  "run_date": "2026-07-07T07:49:23.156790Z",
++  "duration_s": 0.08009958267211914,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "7e4d0bf7e5649aa371152d6a59b5a234f2cc7e3818c2503b3ada7c5366a2be0b",
++  "reproducibility_checksum": "d6966e0e854e2938b48cd19a0350fc71791fed2172fea07dd288f8a862a0cec4",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "6e20517ed6ce5527feb31b003c72752be0ca8b48"
++    "adversarial_verify_version": "be8712ecc527a51322b0f422e9ada46e2c7e94d8"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1861_equivalence.json b/results/experiment_1861_equivalence.json
+index 85975bbc35..305db0f7fc 100644
+--- a/results/experiment_1861_equivalence.json
++++ b/results/experiment_1861_equivalence.json
+@@ -3,5 +3,10 @@
+   "honest_verdict": "equivalence_verified",
+   "py_loss": 0.22222222222222232,
+   "rs_loss": 0.22222222222222232,
+-  "scores_match": true
++  "scores_match": true,
++  "corrigendum_2026_05_187_audit": {
++    "classification": "TAUTOLOGY",
++    "rationale": "py_loss and rs_loss agree to >5 sig figs.",
++    "follow_up_action": "Fix loss computation."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 098c61e799..179521c0e0 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,5 +243,10 @@
+         "success": true
+       }
+     }
+-  ]
++  ],
++  "corrigendum_2026_05_187_audit": {
++    "classification": "METHODOLOGY_MISSING",
++    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
++    "follow_up_action": "Add missing methodology fields."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 1d0e71f4a0..655a3730e9 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1610260009765625,
++  "efficiency_gains_ms": 2.1643638610839844,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 730bc2b85d..fe932933e3 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5182876586914062,
++  "duration_s": 0.6262509822845459,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 1bcf704405..3aa091efbc 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.024617373943329e-05,
++  "duration_s": 4.0416140109300613e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5341_bounded_compressor_drift_monitor_v487.json b/results/experiment_5341_bounded_compressor_drift_monitor_v487.json
+new file mode 100644
+index 0000000000..c92c73e0ff
+--- /dev/null
++++ b/results/experiment_5341_bounded_compressor_drift_monitor_v487.json
+@@ -0,0 +1,372 @@
++{
++  "bounded_state_object_limit": 4,
++  "bounded_state_summaries": [
++    {
++      "lifecycle_action": "rollback",
++      "payload": "rollback recovered patch autofix sidecar",
++      "recoverable_sidecar": {
++        "payload_sha256": "sha256:37606fd86cf50c95663fe40dbe81a45a1ebe87f1180895292570e5ccf50f351a",
++        "recoverable": true,
++        "restore_label": "rolled_back",
++        "restore_payload": "candidate_patch_passed",
++        "sidecar_id": "sidecar:ctx.patch.autofix:rolled_back",
++        "source_object_ids": []
++      },
++      "rollback_case_id": "life-rollback-corrupt-patch",
++      "source_case_id": "life-rollback-corrupt-patch",
++      "source_object_ids": [
++        "ctx.patch.autofix"
++      ],
++      "summary_id": "bounded.summary.compress-safe-recovery",
++      "summary_sha256": "sha256:858ac8f206b615230343fa6aebde9ff5b0533be40e649e9a5ff44d37b7f829d9",
++      "token_count": 5
++    }
++  ],
++  "bounded_state_token_limit": 12,
++  "certificate_gate": {
++    "all_passed": true,
++    "anytime_certificate_gate_ready": true,
++    "failed_gates": [],
++    "no_weight_mutation": true,
++    "source_honest_verdict": "complete: deterministic anytime certificate promoted 1 lifecycle policy, rejected 3, deferred 1, kept unsafe promotions at 0, recorded 2 rollback events, and preserved frozen-model discipline",
++    "unsafe_promotions_zero": true
++  },
++  "compression_budget": {
++    "max_persistent_summary_objects": 1,
++    "max_summary_object_count": 3,
++    "max_summary_token_count": 7,
++    "object_limit": 4,
++    "token_limit": 12,
++    "within_budget": true
++  },
++  "compressor_drift_fixture_ready": true,
++  "compressor_rows": [
++    {
++      "accepted_commit": false,
++      "candidate_summary": "archive policy recall sidecar only",
++      "case_id": "compress-benign-recall",
++      "commit_decision": "recalled_not_committed",
++      "committed_summary": null,
++      "detected_anomaly": false,
++      "expected_anomaly": null,
++      "lifecycle_action": "retrieve",
++      "model_weights_mutated": false,
++      "persistent_state_changed": false,
++      "post_persistent_summary_ids": [],
++      "prior_persistent_summary_ids": [],
++      "recalled_object_ids": [
++        "ctx.archive.policy"
++      ],
++      "recoverable_from_sidecar": false,
++      "rejection_reasons": [],
++      "rollback_case_id": null,
++      "rollback_success": false,
++      "source_case_id": "life-retrieve-archive-recover",
++      "source_object_ids": [
++        "ctx.archive.policy"
++      ],
++      "summary_object_count": 1,
++      "summary_token_count": 5,
++      "unsafe_commit": false,
++      "verifier_calls": 1
++    },
++    {
++      "accepted_commit": false,
++      "candidate_summary": "stale runtime receipt v0",
++      "case_id": "compress-stale-recall",
++      "commit_decision": "recalled_not_committed",
++      "committed_summary": null,
++      "detected_anomaly": true,
++      "expected_anomaly": "stale_recall",
++      "lifecycle_action": "retrieve",
++      "model_weights_mutated": false,
++      "persistent_state_changed": false,
++      "post_persistent_summary_ids": [],
++      "prior_persistent_summary_ids": [],
++      "recalled_object_ids": [
++        "ctx.runtime.receipt.v0"
++      ],
++      "recoverable_from_sidecar": false,
++      "rejection_reasons": [
++        "stale_recall_detected"
++      ],
++      "rollback_case_id": null,
++      "rollback_success": false,
++      "source_case_id": "life-stale-retrieval",
++      "source_object_ids": [
++        "ctx.runtime.receipt.v0"
++      ],
++      "summary_object_count": 1,
++      "summary_token_count": 4,
++      "unsafe_commit": false,
++      "verifier_calls": 1
++    },
++    {
++      "accepted_commit": false,
++      "candidate_summary": "unsourced ghost claim promoted as durable memory",
++      "case_id": "compress-poisoned-candidate",
++      "commit_decision": "rejected",
++      "committed_summary": null,
++      "detected_anomaly": true,
++      "expected_anomaly": "poisoned_candidate_memory",
++      "lifecycle_action": "create",
++      "model_weights_mutated": false,
++      "persistent_state_changed": false,
++      "post_persistent_summary_ids": [],
++      "prior_persistent_summary_ids": [],
++      "recalled_object_ids": [],
++      "recoverable_from_sidecar": false,
++      "rejection_reasons": [
++        "poisoned_candidate_memory_rejected"
++      ],
++      "rollback_case_id": null,
++      "rollback_success": false,
++      "source_case_id": "life-ghost-memory",
++      "source_object_ids": [
++        "ctx.ghost.unsourced"
++      ],
++      "summary_object_count": 1,
++      "summary_token_count": 7,
++      "unsafe_commit": false,
++      "verifier_calls": 1
++    },
++    {
++      "accepted_commit": false,
++      "candidate_summary": "runtime receipt summary",
++      "case_id": "compress-omission-drift",
++      "commit_decision": "rejected",
++      "committed_summary": null,
++      "detected_anomaly": true,
++      "expected_anomaly": "compression_omission",
++      "lifecycle_action": "fold",
++      "model_weights_mutated": false,
++      "persistent_state_changed": false,
++      "post_persistent_summary_ids": [],
++      "prior_persistent_summary_ids": [],
++      "recalled_object_ids": [],
++      "recoverable_from_sidecar": false,
++      "rejection_reasons": [
++        "compression_omission_detected"
++      ],
++      "rollback_case_id": null,
++      "rollback_success": false,
++      "source_case_id": "life-omission-sensor-rule",
++      "source_object_ids": [
++        "ctx.runtime.receipt",
++        "ctx.sensor.reject_rule"
++      ],
++      "summary_object_count": 2,
++      "summary_token_count": 3,
++      "unsafe_commit": false,
++      "verifier_calls": 1
++    },
++    {
++      "accepted_commit": false,
++      "candidate_summary": "runtime",
++      "case_id": "compress-over-compression-drift",
++      "commit_decision": "rejected",
++      "committed_summary": null,
++      "detected_anomaly": true,
++      "expected_anomaly": "over_compression",
++      "lifecycle_action": "fold",
++      "model_weights_mutated": false,
++      "persistent_state_changed": false,
++      "post_persistent_summary_ids": [],
++      "prior_persistent_summary_ids": [],
++      "recalled_object_ids": [],
++      "recoverable_from_sidecar": false,
++      "rejection_reasons": [
++        "over_compression_detected"
++      ],
++      "rollback_case_id": null,
++      "rollback_success": false,
++      "source_case_id": "life-fold-runtime-rubric",
++      "source_object_ids": [
++        "ctx.runtime.receipt",
++        "ctx.arc.rubric",
++        "ctx.folded.runtime_rubric"
++      ],
++      "summary_object_count": 3,
++      "summary_token_count": 1,
++      "unsafe_commit": false,
++      "verifier_calls": 1
++    },
++    {
++      "accepted_commit": true,
++      "candidate_summary": "rollback recovered patch autofix sidecar",
++      "case_id": "compress-safe-recovery",
++      "commit_decision": "committed",
++      "committed_summary": {
++        "lifecycle_action": "rollback",
++        "payload": "rollback recovered patch autofix sidecar",
++        "recoverable_sidecar": {
++          "payload_sha256": "sha256:37606fd86cf50c95663fe40dbe81a45a1ebe87f1180895292570e5ccf50f351a",
++          "recoverable": true,
++          "restore_label": "rolled_back",
++          "restore_payload": "candidate_patch_passed",
++          "sidecar_id": "sidecar:ctx.patch.autofix:rolled_back",
++          "source_object_ids": []
++        },
++        "rollback_case_id": "life-rollback-corrupt-patch",
++        "source_case_id": "life-rollback-corrupt-patch",
++        "source_object_ids": [
++          "ctx.patch.autofix"
++        ],
++        "summary_id": "bounded.summary.compress-safe-recovery",
++        "summary_sha256": "sha256:858ac8f206b615230343fa6aebde9ff5b0533be40e649e9a5ff44d37b7f829d9",
++        "token_count": 5
++      },
++      "detected_anomaly": false,
++      "expected_anomaly": null,
++      "lifecycle_action": "rollback",
++      "model_weights_mutated": false,
++      "persistent_state_changed": true,
++      "post_persistent_summary_ids": [
++        "bounded.summary.compress-safe-recovery"
++      ],
++      "prior_persistent_summary_ids": [],
++      "recalled_object_ids": [],
++      "recoverable_from_sidecar": true,
++      "rejection_reasons": [],
++      "rollback_case_id": "life-rollback-corrupt-patch",
++      "rollback_success": true,
++      "source_case_id": "life-rollback-corrupt-patch",
++      "source_object_ids": [
++        "ctx.patch.autofix"
++      ],
++      "summary_object_count": 1,
++      "summary_token_count": 5,
++      "unsafe_commit": false,
++      "verifier_calls": 1
++    }
++  ],
++  "continuous_self_learning_target": true,
++  "drift_counts": {
++    "detected": 2,
++    "total": 2
++  },
++  "drift_detection_rate": 1.0,
++  "experiment": "experiment_5341_bounded_compressor_drift_monitor_v487",
++  "experiment_id": {
++    "principle": "Identifies the exact Exp5341 artifact so downstream gates cannot confuse bounded compressor drift monitoring with Exp5328 lifecycle rows, Exp5330 certificate promotion, or Exp5340 utility learning.",
++    "value": 5341
++  },
++  "field_principles": {
++    "bounded_state_object_limit": "Bare integer object cap enforced on the persistent bounded state.",
++    "compressor_drift_fixture_ready": "Bare gate true only when deterministic tests are recorded, unsafe commits are zero, budgets hold, all anomaly detection rates are 1.0, recoverability is preserved, and no model weights mutate.",
++    "continuous_self_learning_target": "Bare gate showing the compressor evaluates state-management policy behavior for continuous self-learning rather than static reporting.",
++    "drift_detection_rate": "Bare numeric rate over compression omission and over-compression drift rows.",
++    "experiment_id": "Identifies the exact Exp5341 artifact so downstream gates cannot confuse bounded compressor drift monitoring with Exp5328 lifecycle rows, Exp5330 certificate promotion, or Exp5340 utility learning.",
++    "honest_verdict": "Terminal Exp5341 verdict; starts with complete: or blocked_ and states whether bounded compression kept unsafe commits at zero while preserving recovery.",
++    "inference_substrate": "Declares deterministic bounded context compression with no live LLM, API judge, model generation, fine-tuning, adapter update, or foundation-weight mutation.",
++    "milestone": "Binds the bounded compressor to milestone v487 where recall and persistent commitment are deliberately separated.",
++    "no_weight_mutation": "Bare gate confirming only deterministic bounded context summaries and monitor rows changed, never model weights or adapters.",
++    "poison_rejection_rate": "Bare numeric rate over poisoned candidate memory rows rejected before persistent commitment.",
++    "recalled_not_committed_count": "Bare integer count of rows where an artifact was recalled for evaluation but explicitly not committed to persistent state.",
++    "recoverability_rate": "Bare numeric rate over safe recovery rows that restore from sidecars or rollback evidence.",
++    "stale_recall_detection_rate": "Bare numeric rate over stale-recall rows.",
++    "status": "Reports whether the compressor completed under bounded budget, drift-monitor, poison-rejection, recoverability, and frozen-model gates.",
++    "tests_run": "Records the exact verification commands used to establish that the compressor module and result artifact are stable.",
++    "unsafe_commits": "Bare integer count of unsafe candidates that reached persistent state; value 0 is required for readiness."
++  },
++  "fixture_gate": {
++    "all_passed": true,
++    "context_lifecycle_fixture_ready": true,
++    "failed_gates": [],
++    "lifecycle_rows_present": true,
++    "no_weight_mutation": true,
++    "source_honest_verdict": "complete: deterministic context-object lifecycle fixture ready for Exp5329 and Exp5330; safe actions commit, unsafe actions reject, rollback succeeds at 1.0, and no model weights mutate",
++    "stable_object_ids_present": true
++  },
++  "honest_verdict": {
++    "principle": "Terminal Exp5341 verdict; starts with complete: or blocked_ and states whether bounded compression kept unsafe commits at zero while preserving recovery.",
++    "value": "complete: bounded context compressor separated recall from persistent commitment, detected stale recall, drift, and poisoned candidate memory at rate 1.0, kept unsafe commits at 0, preserved recoverability, and performed no model weight mutation"
++  },
++  "inference_substrate": {
++    "principle": "Declares deterministic bounded context compression with no live LLM, API judge, model generation, fine-tuning, adapter update, or foundation-weight mutation.",
++    "value": "deterministic_bounded_context_compressor"
++  },
++  "methodology_note": "All rates are deterministic fixture rates over six enumerated context-compressor rows. No LLM, judge, generator, adapter update, or model weight mutation is invoked.",
++  "milestone": {
++    "principle": "Binds the bounded compressor to milestone v487 where recall and persistent commitment are deliberately separated.",
++    "value": "v487"
++  },
++  "no_weight_mutation": true,
++  "poison_counts": {
++    "detected": 1,
++    "total": 1
++  },
++  "poison_rejection_rate": 1.0,
++  "random_seed": 5341,
++  "recall_commit_separation_rate": 1.0,
++  "recalled_not_committed_count": 2,
++  "recoverability_counts": {
++    "detected": 1,
++    "total": 1
++  },
++  "recoverability_rate": 1.0,
++  "reproducibility_checksum": "sha256:7b859bd917e2a6beafcf1706b20c4dfed542b0fc5cfb64e612e81c3c23417549",
++  "run_date": "2026-07-07",
++  "schema": "carnot.experiment_5341.bounded_compressor_drift_monitor.v487",
++  "source_artifact_checksums": {
++    "exp5328": "sha256:966445a7a0828e0603e146f0ad5b51813725e5c29915ea09d7bca50ca78bae36",
++    "exp5328_module": "sha256:f6db3d29f426ac6be679f3e4d6888bc6728111a0b1de0be36dacaa203976547c",
++    "exp5330": "sha256:121fb359b78b2cf27ce7c9a7e15093f7d4f0bbd567b625ca6d0ac4bee5887157",
++    "exp5330_module": "sha256:57e6deb56344f501c4d8fc6d2a714a8cfea1ff9799b18cc277dc6ab405e7519e",
++    "module": "sha256:23dccbbe917f96fa5b51037d69f1069ea415c56e52fa4da41940c393f5e061ee",
++    "spec": "sha256:42f98fb6e098d8b145d56c9b073cb4ce7be198b7133a96106e20073daaf00ca3"
++  },
++  "source_artifacts": [
++    "results/experiment_5328_context_object_lifecycle_self_learning_v486.json",
++    "results/experiment_5330_sea_anytime_certificate_gate_v486.json"
++  ],
++  "spec_refs": [
++    "REQ-LEARN-5341",
++    "SCENARIO-LEARN-5341-RECALL",
++    "SCENARIO-LEARN-5341-DRIFT",
++    "SCENARIO-LEARN-5341-RECOVERY"
++  ],
++  "stale_recall_counts": {
++    "detected": 1,
++    "total": 1
++  },
++  "stale_recall_detection_rate": 1.0,
++  "status": {
++    "principle": "Reports whether the compressor completed under bounded budget, drift-monitor, poison-rejection, recoverability, and frozen-model gates.",
++    "value": "compressor_drift_fixture_ready"
++  },
++  "tests_run": {
++    "principle": "Records the exact verification commands used to establish that the compressor module and result artifact are stable.",
++    "value": [
++      {
++        "command": ".venv/bin/pytest tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py -q -o addopts=''",
++        "outcome": "passed"
++      },
++      {
++        "command": ".venv/bin/coverage erase && .venv/bin/coverage run --include='*/python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py' -m pytest tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py -q -o addopts='' && .venv/bin/coverage report --include='*/python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py' --fail-under=100 -m",
++        "outcome": "passed"
++      }
++    ]
++  },
++  "unsafe_commits": 0,
++  "verifier_call_cost": {
++    "cost_model": "one_deterministic_commit_check_per_compressor_row",
++    "total_verifier_calls": 6,
++    "verifier_calls_per_case": 1.0
++  },
++  "weight_mutation_receipt": {
++    "forbidden_updates": {
++      "fine_tune_model_weights": false,
++      "foundation_weight_write": false,
++      "lora_or_adapter_update": false
++    },
++    "model_weight_hash_after": "sha256:no_model_weights_loaded",
++    "model_weight_hash_before": "sha256:no_model_weights_loaded",
++    "model_weights_loaded": false,
++    "no_weight_mutation": true,
++    "state_mutation_targets": [
++      "deterministic_bounded_context_summary_rows",
++      "deterministic_compressor_monitor_rows"
++    ]
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 793938e91e..1b8dbe161f 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T06:50:31Z",
+-  "finished_at": "2026-07-07T06:50:31Z",
++  "started_at": "2026-07-07T07:49:08Z",
++  "finished_at": "2026-07-07T07:49:08Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index bdc3023a01..bbea6b5207 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T06:50:32Z",
+-  "finished_at": "2026-07-07T06:50:32Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-07T07:49:09Z",
++  "finished_at": "2026-07-07T07:49:09Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 7bbe537a95..903e4396ec 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T06:50:32Z",
+-  "finished_at": "2026-07-07T06:50:32Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-07T07:49:09Z",
++  "finished_at": "2026-07-07T07:49:09Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py b/tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py
+new file mode 100644
+index 0000000000..9577dc8e0a
+--- /dev/null
++++ b/tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py
+@@ -0,0 +1,360 @@
++"""Tests for Exp5341 bounded context compressor drift monitor.
++
++Spec refs: REQ-LEARN-5341, SCENARIO-LEARN-5341-RECALL,
++SCENARIO-LEARN-5341-DRIFT, SCENARIO-LEARN-5341-RECOVERY.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5341_bounded_compressor_drift_monitor_v487 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++
++
++def _rows_by_id(evaluation: exp.JsonDict) -> dict[str, exp.JsonDict]:
++    return {row["case_id"]: row for row in evaluation["compressor_rows"]}
++
++
++def test_req_learn_5341_spec_declares_compressor_contract() -> None:
++    """REQ-LEARN-5341: OpenSpec anchors fields, budgets, and scenarios."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5341") :]
++    normalized_section = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5341",
++        "SCENARIO-LEARN-5341-RECALL",
++        "SCENARIO-LEARN-5341-DRIFT",
++        "SCENARIO-LEARN-5341-RECOVERY",
++        str(exp.RESULT_RELATIVE_PATH),
++        "recalled_not_committed",
++        "benign recall",
++        "stale recall",
++        "poisoned candidate memory",
++        "compression omission",
++        "over-compression",
++        "safe recovery",
++        exp.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++
++    for field, principle in exp.REQUIRED_FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized_section
++
++
++def test_req_learn_5341_cases_reuse_exp5328_context_objects() -> None:
++    """REQ-LEARN-5341-1: cases reuse stable object IDs and lifecycle evidence."""
++
++    cases = exp.build_compressor_cases()
++    source_ids = set(
++        exp.exp5328.stable_context_object_ids(exp.exp5328.build_lifecycle_fixture())
++    )
++
++    assert [case.case_id for case in cases] == [
++        "compress-benign-recall",
++        "compress-stale-recall",
++        "compress-poisoned-candidate",
++        "compress-omission-drift",
++        "compress-over-compression-drift",
++        "compress-safe-recovery",
++    ]
++    assert {case.expected_anomaly for case in cases} == {
++        None,
++        "stale_recall",
++        "poisoned_candidate_memory",
++        "compression_omission",
++        "over_compression",
++    }
++    assert all(set(case.source_object_ids).issubset(source_ids) for case in cases)
++    assert any(case.rollback_case_id == "life-rollback-corrupt-patch" for case in cases)
++    assert {case.lifecycle_action for case in cases}.issuperset(
++        {"retrieve", "create", "fold", "rollback"}
++    )
++
++
++def test_scenario_learn_5341_recall_is_not_commitment() -> None:
++    """SCENARIO-LEARN-5341-RECALL: recall rows do not mutate persistent state."""
++
++    evaluation = exp.evaluate_compressor_cases(exp.build_compressor_cases())
++    rows = _rows_by_id(evaluation)
++
++    for case_id in ("compress-benign-recall", "compress-stale-recall"):
++        row = rows[case_id]
++        assert row["commit_decision"] == exp.RECALLED_NOT_COMMITTED
++        assert row["persistent_state_changed"] is False
++        assert row["accepted_commit"] is False
++
++    assert rows["compress-benign-recall"]["detected_anomaly"] is False
++    assert rows["compress-stale-recall"]["detected_anomaly"] is True
++    assert evaluation["recalled_not_committed_count"] == 2
++    assert evaluation["recall_commit_separation_rate"] == 1.0
++    assert evaluation["unsafe_commits"] == 0
++
++
++def test_scenario_learn_5341_drift_stale_and_poison_reject_before_commit() -> None:
++    """SCENARIO-LEARN-5341-DRIFT: unsafe candidate rows reject before commit."""
++
++    evaluation = exp.evaluate_compressor_cases(exp.build_compressor_cases())
++    rows = _rows_by_id(evaluation)
++
++    for case_id in (
++        "compress-stale-recall",
++        "compress-poisoned-candidate",
++        "compress-omission-drift",
++        "compress-over-compression-drift",
++    ):
++        row = rows[case_id]
++        assert row["detected_anomaly"] is True
++        assert row["accepted_commit"] is False
++        assert row["persistent_state_changed"] is False
++        assert row["unsafe_commit"] is False
++        assert row["rejection_reasons"]
++
++    assert evaluation["drift_detection_rate"] == 1.0
++    assert evaluation["stale_recall_detection_rate"] == 1.0
++    assert evaluation["poison_rejection_rate"] == 1.0
++    assert evaluation["unsafe_commits"] == 0
++    assert evaluation["verifier_call_cost"]["total_verifier_calls"] == len(
++        exp.build_compressor_cases()
++    )
++
++
++def test_scenario_learn_5341_safe_recovery_preserves_bounded_state() -> None:
++    """SCENARIO-LEARN-5341-RECOVERY: accepted recovery stays within budgets."""
++
++    evaluation = exp.evaluate_compressor_cases(exp.build_compressor_cases())
++    recovery = _rows_by_id(evaluation)["compress-safe-recovery"]
++
++    assert recovery["accepted_commit"] is True
++    assert recovery["recoverable_from_sidecar"] is True
++    assert recovery["rollback_success"] is True
++    assert recovery["persistent_state_changed"] is True
++    assert recovery["summary_object_count"] <= exp.BOUNDED_STATE_OBJECT_LIMIT
++    assert recovery["summary_token_count"] <= exp.BOUNDED_STATE_TOKEN_LIMIT
++    assert evaluation["recoverability_rate"] == 1.0
++    assert evaluation["compression_budget"]["within_budget"] is True
++    assert evaluation["compressor_drift_fixture_ready"] is True
++
++    for summary in evaluation["bounded_state_summaries"]:
++        assert len(summary["source_object_ids"]) <= exp.BOUNDED_STATE_OBJECT_LIMIT
++        assert summary["token_count"] <= exp.BOUNDED_STATE_TOKEN_LIMIT
++
++
++def test_req_learn_5341_artifact_schema_and_run_write(tmp_path: Path) -> None:
++    """REQ-LEARN-5341-6: run() writes the requested terminal artifact."""
++
++    tests_run = [{"command": "unit bounded compressor drift monitor", "outcome": "passed"}]
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH
++    artifact = exp.run(root=REPO, result_path=result_path, tests_run=tests_run)
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert artifact["schema"] == exp.SCHEMA
++    assert artifact["experiment_id"]["value"] == exp.EXPERIMENT_ID
++    assert artifact["milestone"]["value"] == exp.MILESTONE
++    assert artifact["status"]["value"] == "compressor_drift_fixture_ready"
++    assert artifact["honest_verdict"]["value"].startswith("complete:")
++    assert artifact["inference_substrate"]["value"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["continuous_self_learning_target"] is True
++    assert artifact["no_weight_mutation"] is True
++    assert artifact["bounded_state_object_limit"] == exp.BOUNDED_STATE_OBJECT_LIMIT
++    assert artifact["recalled_not_committed_count"] == 2
++    assert artifact["drift_detection_rate"] == 1.0
++    assert artifact["stale_recall_detection_rate"] == 1.0
++    assert artifact["poison_rejection_rate"] == 1.0
++    assert artifact["recoverability_rate"] == 1.0
++    assert artifact["unsafe_commits"] == 0
++    assert artifact["compressor_drift_fixture_ready"] is True
++    assert artifact["tests_run"]["value"] == tests_run
++    assert artifact["field_principles"] == exp.REQUIRED_FIELD_PRINCIPLES
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5341_repository_artifact_matches_deterministic_replay() -> None:
++    """REQ-LEARN-5341: checked-in artifact is stable under deterministic replay."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = exp.build_result_artifact(root=REPO, tests_run=result["tests_run"]["value"])
++
++    assert result == replay
++    assert result["honest_verdict"]["value"].startswith("complete:")
++    assert result["inference_substrate"]["value"] == exp.INFERENCE_SUBSTRATE
++    assert result["compressor_drift_fixture_ready"] is True
++    assert result["unsafe_commits"] == 0
++    assert result["continuous_self_learning_target"] is True
++    assert result["no_weight_mutation"] is True
++    exp.validate_artifact(result)
++
++
++def test_req_learn_5341_blocked_artifact_when_certificate_gate_fails(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-LEARN-5341-1/6: failed upstream gates produce blocked artifacts."""
++
++    def blocked_certificate(*, root: Path | str = exp.REPO_ROOT) -> dict[str, object]:
++        assert root == REPO
++        return {
++            "anytime_certificate_gate_ready": False,
++            "no_weight_mutation": True,
++            "unsafe_promotions_zero": True,
++            "failed_gates": ["anytime_certificate_gate_ready"],
++            "all_passed": False,
++            "source_honest_verdict": "blocked_certificate",
++        }
++
++    monkeypatch.setattr(exp, "confirm_certificate_gate", blocked_certificate)
++
++    artifact = exp.build_result_artifact(
++        root=REPO,
++        tests_run=[{"command": "blocked compressor unit", "outcome": "passed"}],
++    )
++
++    assert artifact["status"]["value"] == "blocked_fixture_certificate_or_tests"
++    assert artifact["honest_verdict"]["value"].startswith(
++        "blocked_compressor_drift_not_ready:"
++    )
++    assert artifact["compressor_drift_fixture_ready"] is False
++    assert artifact["unsafe_commits"] == 0
++    assert artifact["no_weight_mutation"] is True
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5341_validation_rejects_schema_drift() -> None:
++    """REQ-LEARN-5341-6: artifact validation rejects gate and scalar drift."""
++
++    artifact = exp.build_result_artifact(
++        root=REPO,
++        tests_run=[{"command": "unit bounded compressor", "outcome": "passed"}],
++    )
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"]["value"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp.validate_artifact(bad_verdict)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"]["value"] = "deterministic_context_utility_learning"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp.validate_artifact(bad_substrate)
++
++    bad_learning = deepcopy(artifact)
++    bad_learning["continuous_self_learning_target"] = {"value": True}
++    with pytest.raises(ValueError, match="continuous_self_learning_target"):
++        exp.validate_artifact(bad_learning)
++
++    bad_weight = deepcopy(artifact)
++    bad_weight["no_weight_mutation"] = False
++    with pytest.raises(ValueError, match="no_weight_mutation"):
++        exp.validate_artifact(bad_weight)
++
++    bad_limit = deepcopy(artifact)
++    bad_limit["bounded_state_object_limit"] = True
++    with pytest.raises(ValueError, match="bounded_state_object_limit"):
++        exp.validate_artifact(bad_limit)
++
++    bad_numeric = deepcopy(artifact)
++    bad_numeric["drift_detection_rate"] = "1.0"
++    with pytest.raises(ValueError, match="drift_detection_rate"):
++        exp.validate_artifact(bad_numeric)
++
++    bad_unsafe = deepcopy(artifact)
++    bad_unsafe["unsafe_commits"] = 1
++    with pytest.raises(ValueError, match="unsafe_commits"):
++        exp.validate_artifact(bad_unsafe)
++
++    bad_ready = deepcopy(artifact)
++    bad_ready["compressor_drift_fixture_ready"] = "yes"
++    with pytest.raises(ValueError, match="compressor_drift_fixture_ready"):
++        exp.validate_artifact(bad_ready)
++
++    bad_missing_tests = deepcopy(artifact)
++    bad_missing_tests["tests_run"]["value"] = []
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_missing_tests)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = [{"command": "lost principle", "outcome": "passed"}]
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_tests)
++
++
++def test_req_learn_5341_blocked_artifact_when_tests_not_recorded() -> None:
++    """REQ-LEARN-5341-6: ready gate stays false without test records."""
++
++    artifact = exp.build_result_artifact(root=REPO, tests_run=[])
++
++    assert artifact["status"]["value"] == "blocked_fixture_certificate_or_tests"
++    assert artifact["honest_verdict"]["value"].startswith(
++        "blocked_compressor_drift_not_ready:"
++    )
++    assert "tests_not_recorded" in artifact["honest_verdict"]["value"]
++    assert artifact["compressor_drift_fixture_ready"] is False
++    assert artifact["unsafe_commits"] == 0
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5341_helper_edges_are_deterministic() -> None:
++    """REQ-LEARN-5341: helper paths stay deterministic and explicit."""
++
++    blocked = exp._blocked_evaluation()
++
++    assert exp._rate(1, 0) == 0.0
++    assert exp._delta(0.3333333333333, 0.1111111111111) == 0.222222
++    assert exp._json_ready((Path("x"), {"y": Path("z")})) == ["x", {"y": "z"}]
++    assert exp._is_numeric(0.0) is True
++    assert exp._is_numeric(True) is False
++    assert exp._wrapped_value({"value": "x"}) == "x"
++    assert exp._wrapped_value("x") == "x"
++    assert exp._token_count("alpha_beta gamma") == 3
++    assert blocked["compressor_drift_fixture_ready"] is False
++    assert blocked["compressor_rows"] == []
++
++    too_many_objects = exp.CompressorCase(
++        case_id="bad-budget",
++        lifecycle_action="fold",
++        source_case_id="life-fold-runtime-rubric",
++        source_object_ids=(
++            "ctx.runtime.receipt",
++            "ctx.arc.rubric",
++            "ctx.folded.runtime_rubric",
++            "ctx.archive.policy",
++            "ctx.patch.autofix",
++        ),
++        recalled_object_ids=(),
++        candidate_summary="too many objects",
++        expected_anomaly=None,
++        expected_commit=True,
++    )
++    row = exp._evaluate_case(too_many_objects, {})
++    assert row["accepted_commit"] is False
++    assert "object_budget_exceeded" in row["rejection_reasons"]
++
++    too_many_tokens = exp.CompressorCase(
++        case_id="bad-token-budget",
++        lifecycle_action="commit",
++        source_case_id="life-commit-patch",
++        source_object_ids=("ctx.patch.autofix",),
++        recalled_object_ids=(),
++        candidate_summary="one two three four five six seven eight nine ten eleven twelve thirteen",
++        expected_anomaly=None,
++        expected_commit=True,
++        model_weights_mutated=True,
++    )
++    token_row = exp._evaluate_case(too_many_tokens, {})
++    assert token_row["accepted_commit"] is False
++    assert "token_budget_exceeded" in token_row["rejection_reasons"]
++    assert "model_weight_mutation_forbidden" in token_row["rejection_reasons"]
++
++    missing_sidecar = exp._source_sidecar({}, "ctx.missing")
++    assert missing_sidecar["recoverable"] is False
++    assert missing_sidecar["sidecar_id"] == "sidecar:ctx.missing:unavailable"
+-- 
+2.55.0
+

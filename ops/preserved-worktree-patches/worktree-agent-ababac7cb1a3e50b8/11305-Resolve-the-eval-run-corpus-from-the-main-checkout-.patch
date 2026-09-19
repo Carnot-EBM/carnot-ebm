@@ -1,0 +1,717 @@
+From 8eae2c3986e7ce2d96c240da8db47ab3c51a98f9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 14:46:23 -0400
+Subject: [PATCH 11305/11362] Resolve the eval-run corpus from the main
+ checkout inside a worktree (REQ-ARC-WMTE-6642)
+
+The pre-commit hook eval-run-consumer-field-lint refused every scripts/*.py
+commit made from a git worktree or a fresh clone. The corpus
+results/arc_leaderboard_eval_runs/ is gitignored, so a worktree has none,
+and the lint failed closed on the missing directory. Reproduced in this
+worktree before the change, directly and through pre-commit:
+
+  FAIL: runs directory missing, join cannot run: <worktree>/results/arc_leaderboard_eval_runs
+  hook id: eval-run-consumer-field-lint, exit code: 1
+
+The lint's own test_real_repo_contract_holds was RED in the worktree for
+the same reason (1 failed, 6 passed, carnot imported from the worktree).
+
+What changed. With no --runs-dir the corpus now resolves in order: this
+checkout, then the main checkout found through git rev-parse
+--git-common-dir, then none. A directory counts only when it holds an
+artifact, so a bare mkdir is not a corpus. With none, the artifact half of
+the join is SKIPPED and the skip is printed on its own NOTE line and on the
+final OK line. An explicit --runs-dir that is missing or empty still fails.
+
+Fail direction, decided and written in the docstring. FAIL CLOSED on
+everything that means the lint could not look: no scripts/ or python/ tree
+(new), an empty producer surface (new), an unparseable consumer, an explicit
+missing corpus. The corpus itself is a pass-widener: an artifact key can only
+turn a failure into a pass, so with the corpus absent every declared field
+must be wired in producer source and the failures are a superset of the full
+join's (test_missing_corpus_never_admits_more). The skip costs precision in
+the loud direction, never safety.
+
+Rejected. Passing an absolute --runs-dir from the hook: a hardcoded write
+target that breaks every other machine. Failing closed on a missing corpus
+as before: it refused legitimate work in the dominant workflow with no gain
+on the fail side, and the friction pushes people to bypass hooks.
+
+Measured on the live checkout: 7 consumers, 190 producer files, 15
+artifacts, 476 keys with the main corpus; 20 declared fields pass on
+producer source alone, 0 fail.
+
+Proof. 13 mutations at the call sites, 13 RED, byte-identical restores by
+cmp, final GREEN. One survivor (the bare-repository check) was pinned with a
+named test and re-run RED. Ran UNLOCKED: --mutation-begin refuses a
+worktree. PYTHONPATH pinned to this worktree and the imported carnot path
+printed before every run.
+
+Step 6: the check IS the fix. The hook now passes from this worktree and
+names the main corpus it used.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ epics/stories/story-6642-worktree-corpus.md   |  25 ++
+ .../arc-world-model-trust-energy/spec.md      |  41 +++
+ scripts/eval_run_consumer_field_lint.py       | 235 +++++++++++++++---
+ .../test_eval_run_consumer_field_lint.py      | 225 ++++++++++++++++-
+ 4 files changed, 487 insertions(+), 39 deletions(-)
+ create mode 100644 epics/stories/story-6642-worktree-corpus.md
+
+diff --git a/epics/stories/story-6642-worktree-corpus.md b/epics/stories/story-6642-worktree-corpus.md
+new file mode 100644
+index 0000000000..4c618fcd0a
+--- /dev/null
++++ b/epics/stories/story-6642-worktree-corpus.md
+@@ -0,0 +1,25 @@
++# Story: REQ-ARC-WMTE-6642 amendment - The eval-run consumer lint works from a worktree
++
++**Status:** Completed 2026-09-05
++**Spec:** `openspec/capabilities/arc-world-model-trust-energy/spec.md`,
++SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS and SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP.
++**Goal:** The pre-commit hook `eval-run-consumer-field-lint` must not refuse a
++`scripts/*.py` commit only because the checkout is a git worktree.
++**Rationale:** The corpus `results/arc_leaderboard_eval_runs/` is gitignored. A
++worktree has none. The lint failed closed on the missing directory, so every
++agent in a worktree was refused. A refused commit leaves work staged in a shared
++index, where the next `git add -A` sweeps it under an unrelated message.
++
++## Stories
++- [x] Reproduce the refusal in a worktree, directly and through `pre-commit run`
++- [x] Add the two scenarios and the fail-closed amendment to the spec
++- [x] Write the tests first: a real `git worktree add` fixture, the skip-loudly
++  case, the superset property, the two new fail-closed conditions, the OK line
++- [x] Implement `main_checkout_root`, `resolve_runs_dir`, the loud skip
++- [x] Prove every rule by mutation at the call site: RED, byte-identical restore, GREEN
++- [x] Verify end to end: the hook passes in this worktree and names the main corpus
++
++## Decision
++Fail-closed stays for everything that means "could not look". The artifact
++corpus is a pass-widener, so its absence is a loud skip, not a failure. See the
++lint docstring for the one-sentence proof and the test that pins it.
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 37b39e54de..b0f0bc4bb6 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -30364,11 +30364,52 @@ after the GPU-hours were spent. The join below fails at commit time instead.
+ invisible to the join. The declaration-presence rule bounds that gap to fields
+ within a known consumer, not to whole consumers.
+ 
++**AMENDMENT 2026-09-05 (append-only) to SCENARIO-ARC-WMTE-6642-FAIL-CLOSED.**
++The "missing runs directory" clause above now applies to an EXPLICIT
++`--runs-dir`. A caller who names a corpus that is missing or empty gets a
++failure, as before. When no `--runs-dir` is given, the two scenarios below
++govern. Two fail-closed conditions are added: no `scripts/` or `python/` tree
++under the repo root (nothing was scanned), and an empty producer surface (the
++lint looked in the wrong place). Both print a failure that says so.
++
++Origin: the corpus `results/arc_leaderboard_eval_runs/` is gitignored, so a
++git worktree has none. Every commit that touched `scripts/*.py` from a
++worktree was refused with "runs directory missing". Every agent this project
++spawns works in a worktree. A refused commit leaves work staged in a shared
++index, where the next `git add -A` sweeps it under an unrelated message.
++
++### SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS: A checkout without a corpus uses the main checkout's
++
++- GIVEN a checkout whose `results/arc_leaderboard_eval_runs/` holds no artifact
++  (a git worktree, a second clone)
++- WHEN the lint runs with no `--runs-dir`
++- THEN it SHALL find the main checkout through `git rev-parse --git-common-dir`
++- AND SHALL join against the main checkout's corpus when that holds an artifact
++- AND SHALL print which corpus it used and why.
++
++### SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP: No corpus anywhere skips the artifact half, loudly
++
++- GIVEN no artifact in this checkout and none in any main checkout git can name
++- WHEN the lint runs with no `--runs-dir`
++- THEN it SHALL still check every declared field against the producer surface
++- AND SHALL fail on a field absent from producer source
++- AND SHALL print, on its own line and on the final OK line, that the artifact
++  half was SKIPPED and why.
++
++**Why the skip is not fail-open.** An artifact key can only turn a failure into
++a pass. With the corpus absent, every declared field must be wired in producer
++source. The failures without the corpus are a superset of the failures with it
++(`test_missing_corpus_never_admits_more`). The skip costs precision in the loud
++direction: a field observed in a real artifact but absent from producer source
++fails without the corpus. Measured 2026-09-05 on the live checkout: 7
++consumers, 20 declared fields pass on producer source alone, 0 fail.
++
+ ## Implementation Status (REQ-ARC-WMTE-6642)
+ 
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6642 | `scripts/eval_run_consumer_field_lint.py`; declarations seeded in all 6 existing consumers; pre-commit hook `eval-run-consumer-field-lint` | `tests/python/test_eval_run_consumer_field_lint.py` |
++| REQ-ARC-WMTE-6642 amendment 2026-09-05 (WORKTREE-CORPUS, CORPUS-ABSENT-SKIP) | `scripts/eval_run_consumer_field_lint.py`: `main_checkout_root`, `resolve_runs_dir`, `SKIP_MARKER`; `run_lint(runs_dir=None)` resolves; `main()` keys the OK line on the skip. Hook entry unchanged. | `tests/python/test_eval_run_consumer_field_lint.py`: `test_a_worktree_uses_the_main_checkouts_corpus` (real `git worktree add`), `test_main_checkout_root_is_none_outside_git_and_in_the_main_checkout`, `test_no_corpus_anywhere_skips_loudly_and_still_refuses_an_unwired_field`, `test_missing_corpus_never_admits_more`, `test_fails_closed_when_there_is_no_consumer_tree`, `test_fails_closed_when_the_producer_surface_is_empty`, `test_the_ok_line_says_skipped_when_the_corpus_was_absent`, `test_real_repo_passes_on_producer_source_alone` |
+ 
+ ## REQ-ARC-WMTE-6643: Every Emitted Engine's Round Row SHALL Carry Its Emission Provenance
+ 
+diff --git a/scripts/eval_run_consumer_field_lint.py b/scripts/eval_run_consumer_field_lint.py
+index 4cc7e69c14..d8bdab9860 100644
+--- a/scripts/eval_run_consumer_field_lint.py
++++ b/scripts/eval_run_consumer_field_lint.py
+@@ -30,9 +30,35 @@ scoping filter; its price, stated plainly, is that an UNDECLARED read is
+ invisible here. The declaration-presence rule bounds that gap to fields, not
+ to whole consumers.
+ 
+-Fail direction: FAIL CLOSED on a missing runs directory or an unparseable
+-consumer — a check that returns clean when it could not look is the state
+-this project's guard incidents keep re-teaching (see the QA-Layer discipline).
++FAIL DIRECTION (revised 2026-09-05, see the worktree incident below).
++FAIL CLOSED on anything that means the lint could not look: no `scripts/` or
++`python/` tree under the repo root, an empty producer surface, an unparseable
++consumer, or an explicit `--runs-dir` that is missing or holds no artifact.
++
++The artifact corpus is different. It is untracked evidence that exists once
++per machine, in the main checkout. A git worktree or a fresh clone has none.
++When no `--runs-dir` is given, the corpus is resolved in this order:
++
++1. this checkout's `results/arc_leaderboard_eval_runs/`;
++2. the main checkout's copy, found through `git rev-parse --git-common-dir`;
++3. none: the artifact half of the join is SKIPPED. The skip is printed on its
++   own NOTE line and again on the final OK line.
++
++Skipping the artifact half is NOT fail-open. An artifact key can only turn a
++failure into a pass (`field in keys` is the first branch). With the corpus
++absent, every declared field must be wired in producer source, so the failures
++are a superset of what the full join reports
++(`test_missing_corpus_never_admits_more`). The skip costs precision, never
++safety: a field observed in a real artifact but absent from producer source
++FAILS without the corpus. That is the loud direction.
++
++WHY THE REVISION. Before it, every commit that touched `scripts/*.py` from a
++git worktree was refused with "runs directory missing". The corpus is
++gitignored, so a worktree has none. Every agent this project spawns works in
++a worktree. A refused commit leaves the work staged in a shared index, where
++the next `git add -A` sweeps it under an unrelated message. That cost work
++more than once on 2026-09-05.
++
+ Population counts are always printed so "0 findings" is distinguishable from
+ "never looked" — the guarded-hasattr no-op of 2026-09-04 is the incident.
+ """
+@@ -42,11 +68,16 @@ from __future__ import annotations
+ import argparse
+ import ast
+ import json
++import subprocess
+ import sys
+ from pathlib import Path
+ 
+ REPO_ROOT = Path(__file__).resolve().parent.parent
+-RUNS_DIR = REPO_ROOT / "results" / "arc_leaderboard_eval_runs"
++RUNS_DIR_PARTS = ("results", "arc_leaderboard_eval_runs")
++RUNS_DIR = REPO_ROOT.joinpath(*RUNS_DIR_PARTS)
++#: Prefix of the notice that says the artifact half did not run. `main()` keys
++#: the final OK line on it, so a skip is never visible only in the middle of the output.
++SKIP_MARKER = "SKIPPED the artifact half of the join"
+ FLAT_EVAL = REPO_ROOT / "results" / "arc_leaderboard_eval.json"
+ DECLARATION_NAME = "EVAL_RUN_FIELDS_READ"
+ DIR_MARKER = "arc_leaderboard_eval_runs"
+@@ -126,14 +157,7 @@ def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[s
+             for v in value:
+                 walk(v)
+ 
+-    # The REQ-ARC-WMTE-7010 heartbeat (`*.progress.json`) shares this directory and is not
+-    # a record: a key that exists only there must not satisfy the "observed" join.
+-    files = (
+-        sorted(p for p in runs_dir.glob("*.json") if not p.name.endswith(".progress.json"))
+-        if runs_dir.is_dir()
+-        else []
+-    )
+-    files += [p for p in extra_files if p.is_file()]
++    files = _artifact_files(runs_dir) + [p for p in extra_files if p.is_file()]
+     for path in files:
+         try:
+             walk(json.loads(path.read_text(encoding="utf-8", errors="replace")))
+@@ -143,6 +167,76 @@ def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[s
+     return keys, n
+ 
+ 
++def _artifact_files(runs_dir: Path) -> list[Path]:
++    """Candidate artifact files under a runs directory; empty when it is not one.
++
++    The REQ-ARC-WMTE-7010 heartbeat (`*.progress.json`) shares this directory and is
++    not a record: a key that exists only there must not satisfy the "observed" join.
++    """
++    if not runs_dir.is_dir():
++        return []
++    return sorted(p for p in runs_dir.glob("*.json") if not p.name.endswith(".progress.json"))
++
++
++def main_checkout_root(repo_root: Path) -> Path | None:
++    """The main working tree of the repository that contains `repo_root`, or None.
++
++    A git worktree shares one `.git` directory with the main checkout. Git calls
++    it the common dir, and its parent is the main working tree in the normal
++    layout. None when git cannot answer, when the layout is not the normal one
++    (a bare repository has no working tree), or when `repo_root` already is the
++    main checkout.
++    """
++    try:
++        proc = subprocess.run(
++            ["git", "-C", str(repo_root), "rev-parse", "--git-common-dir"],
++            capture_output=True,
++            text=True,
++            timeout=30,
++            check=False,
++        )
++    except (OSError, subprocess.SubprocessError):
++        return None
++    if proc.returncode != 0 or not proc.stdout.strip():
++        return None
++    common = Path(proc.stdout.strip())
++    if not common.is_absolute():
++        common = Path(repo_root) / common
++    common = common.resolve()
++    if common.name != ".git":
++        return None
++    main_root = common.parent
++    if main_root == Path(repo_root).resolve():
++        return None
++    return main_root
++
++
++def resolve_runs_dir(repo_root: Path) -> tuple[Path | None, str]:
++    """Find the eval-run corpus for this checkout. Returns (directory, how).
++
++    The directory is None when no corpus exists anywhere the lint knows to look.
++    Order: this checkout, then the main checkout (a worktree or a second clone
++    has no corpus of its own; the corpus is per-machine evidence), then none.
++    A directory counts only when it holds at least one artifact file.
++    """
++    local = Path(repo_root).joinpath(*RUNS_DIR_PARTS)
++    if _artifact_files(local):
++        return local, "this checkout"
++    main_root = main_checkout_root(repo_root)
++    if main_root is not None:
++        shared = main_root.joinpath(*RUNS_DIR_PARTS)
++        if _artifact_files(shared):
++            return shared, (
++                f"the main checkout at {main_root}, because this checkout has no corpus at {local}"
++            )
++    where = f"absent from this checkout ({local})"
++    if main_root is not None:
++        where += f" and from the main checkout ({main_root})"
++    else:
++        where += ", and git names no main checkout to fall back to"
++    return None, where
++
++
+ def producer_literals(surface: tuple[Path, ...]) -> tuple[set[str], int]:
+     """Every string literal in the producer surface. Plus the file count."""
+     literals: set[str] = set()
+@@ -165,28 +259,75 @@ def producer_literals(surface: tuple[Path, ...]) -> tuple[set[str], int]:
+ 
+ def run_lint(
+     repo_root: Path = REPO_ROOT,
+-    runs_dir: Path = RUNS_DIR,
+-    flat_eval: Path = FLAT_EVAL,
+-    producer_surface: tuple[Path, ...] = PRODUCER_SURFACE,
++    runs_dir: Path | None = None,
++    flat_eval: Path | None = None,
++    producer_surface: tuple[Path, ...] | None = None,
+ ) -> tuple[list[str], list[str]]:
+-    """Returns (failures, notices). Empty failures means the contract holds."""
++    """Returns (failures, notices). Empty failures means the contract holds.
++
++    `runs_dir=None` (the hook's case) resolves the corpus per `resolve_runs_dir`
++    and skips the artifact half, loudly, when there is none. An explicit
++    `runs_dir` is a claim about where the corpus is: if it is missing or empty
++    the lint FAILS, because the caller cannot have meant "no corpus".
++    """
++    repo_root = Path(repo_root).resolve()
++    if flat_eval is None:
++        flat_eval = repo_root / "results" / "arc_leaderboard_eval.json"
++    if producer_surface is None:
++        producer_surface = (
++            repo_root / "scripts" / "arc_leaderboard_eval.py",
++            repo_root / "python" / "carnot" / "agentic",
++        )
+     failures: list[str] = []
+     notices: list[str] = []
+-    consumers = find_consumers(repo_root)
+-    if not runs_dir.is_dir():
+-        # Fail closed: with no artifacts the join cannot run, and a clean exit
+-        # here would be indistinguishable from a real pass.
+-        failures.append(f"runs directory missing, join cannot run: {runs_dir}")
++    # FAIL CLOSED: no consumer tree means nothing was scanned, which is not a pass.
++    # Without this, a wrong --repo-root would find zero consumers and print OK.
++    if not any((repo_root / base).is_dir() for base in ("scripts", "python")):
++        failures.append(
++            f"neither {repo_root / 'scripts'} nor {repo_root / 'python'} exists; "
++            f"no consumer was scanned, which is not a pass"
++        )
+         return failures, notices
+-    keys, n_artifacts = artifact_keys(runs_dir, (flat_eval,))
++    consumers = find_consumers(repo_root)
++    if runs_dir is not None:
++        runs_dir = Path(runs_dir)
++        if not runs_dir.is_dir():
++            # FAIL CLOSED: the caller named a corpus that is not there.
++            failures.append(f"runs directory missing, join cannot run: {runs_dir}")
++            return failures, notices
++        runs_source = "the --runs-dir argument"
++    else:
++        runs_dir, runs_source = resolve_runs_dir(repo_root)
++    artifact_half = runs_dir is not None
++    if artifact_half:
++        keys, n_artifacts = artifact_keys(runs_dir, (flat_eval,))
++        notices.append(f"runs directory: {runs_dir} ({runs_source})")
++    else:
++        # SKIP, LOUDLY. Not fail-open: with no keys, every field must be wired in
++        # producer source, so nothing passes here that the full join would refuse.
++        keys, n_artifacts = set(), 0
++        notices.append(
++            f"{SKIP_MARKER}: the runs directory is {runs_source}. Every declared "
++            f"field is checked against producer source only; a field the corpus "
++            f"would have shown as observed can only FAIL here, never pass. "
++            f"Pass --runs-dir to supply a corpus."
++        )
+     emitted, n_producer_files = producer_literals(producer_surface)
+     notices.append(
+         f"population: {len(consumers)} consumer(s), {n_artifacts} artifact(s), "
+         f"{len(keys)} distinct artifact keys, {n_producer_files} producer file(s)"
+     )
+-    if n_artifacts == 0:
++    # FAIL CLOSED: an empty producer surface means the lint looked in the wrong place.
++    if n_producer_files == 0:
++        surface = ", ".join(str(p) for p in producer_surface)
++        failures.append(
++            f"producer surface empty ({surface}); the lint could not look, which is not a pass"
++        )
++        return failures, notices
++    if artifact_half and n_artifacts == 0:
+         failures.append(f"no readable artifacts under {runs_dir}; join cannot run")
+         return failures, notices
++    wired_only = 0
+     for consumer in consumers:
+         rel = consumer.relative_to(repo_root).as_posix()
+         try:
+@@ -205,10 +346,16 @@ def run_lint(
+             if field in keys:
+                 continue
+             if field in emitted:
+-                notices.append(
+-                    f"{rel}: {field!r} is wired in the producer surface but observed "
+-                    f"in no artifact yet — expected only between wiring and the next run."
+-                )
++                if artifact_half:
++                    notices.append(
++                        f"{rel}: {field!r} is wired in the producer surface but observed "
++                        f"in no artifact yet — expected only between wiring and the next run."
++                    )
++                else:
++                    # In skip mode every field lands here; one summary line, not
++                    # twenty "expected between wiring and the next run" lines that
++                    # would describe a corpus nobody looked at.
++                    wired_only += 1
+                 continue
+             failures.append(
+                 f"{rel}: requires field {field!r}, which appears in NO eval-run "
+@@ -216,29 +363,41 @@ def run_lint(
+                 f"consumer; wire the field before the GPU-hours are spent "
+                 f"(REQ-ARC-WMTE-6642)."
+             )
++    if not artifact_half:
++        notices.append(f"{wired_only} declared field(s) verified against producer source only")
+     return failures, notices
+ 
+ 
+ def main(argv: list[str] | None = None) -> int:
+-    parser = argparse.ArgumentParser(description=__doc__)
++    parser = argparse.ArgumentParser(
++        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
++    )
+     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
+-    parser.add_argument("--runs-dir", type=Path, default=None)
+-    args = parser.parse_args(argv)
+-    repo_root = args.repo_root.resolve()
+-    runs_dir = args.runs_dir or (repo_root / "results" / "arc_leaderboard_eval_runs")
+-    flat = repo_root / "results" / "arc_leaderboard_eval.json"
+-    surface = (
+-        repo_root / "scripts" / "arc_leaderboard_eval.py",
+-        repo_root / "python" / "carnot" / "agentic",
++    parser.add_argument(
++        "--runs-dir",
++        type=Path,
++        default=None,
++        help=(
++            "Corpus to join against. Default: this checkout's, else the main "
++            "checkout's, else the artifact half is skipped and the output says so."
++        ),
+     )
+-    failures, notices = run_lint(repo_root, runs_dir, flat, surface)
++    args = parser.parse_args(argv)
++    failures, notices = run_lint(args.repo_root.resolve(), args.runs_dir)
+     for line in notices:
+         print(f"NOTE: {line}")
+     for line in failures:
+         print(f"FAIL: {line}")
+     if failures:
+         return 1
+-    print("OK: every declared eval-run consumer field is emitted somewhere real.")
++    if any(n.startswith(SKIP_MARKER) for n in notices):
++        print(
++            "OK (producer source only): every declared eval-run consumer field is "
++            "wired in producer source; the artifact half of the join was SKIPPED, "
++            "see the NOTE above."
++        )
++    else:
++        print("OK: every declared eval-run consumer field is emitted somewhere real.")
+     return 0
+ 
+ 
+diff --git a/tests/python/test_eval_run_consumer_field_lint.py b/tests/python/test_eval_run_consumer_field_lint.py
+index 8501b54a39..3f44d4a5d7 100644
+--- a/tests/python/test_eval_run_consumer_field_lint.py
++++ b/tests/python/test_eval_run_consumer_field_lint.py
+@@ -2,16 +2,26 @@
+ 
+ SCENARIO-ARC-WMTE-6642-DECLARE: a consumer without EVAL_RUN_FIELDS_READ fails.
+ SCENARIO-ARC-WMTE-6642-JOIN: observed passes; wired-unobserved notices; neither fails.
+-SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: no runs dir / no artifacts fails; populations print.
++SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: an explicit missing/empty runs dir fails; populations print;
++    no consumer tree or an empty producer surface fails (amendment 2026-09-05).
++SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS: a checkout with no corpus joins against the main
++    checkout's, found through `git rev-parse --git-common-dir`, and says so.
++SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP: no corpus anywhere skips the artifact half LOUDLY
++    and still refuses a field absent from producer source; failures are a superset.
+ 
+ Origin: three consumers in three days ran against fields no artifact recorded
+ (trajectory_supervisor, generator_channels, induction_attempts provenance).
++Second origin (2026-09-05): the corpus is gitignored, so every `scripts/*.py`
++commit from a git worktree was refused with "runs directory missing".
+ """
+ 
+ from __future__ import annotations
+ 
+ import importlib.util
+ import json
++import os
++import shutil
++import subprocess
+ import sys
+ from pathlib import Path
+ 
+@@ -143,3 +153,216 @@ def test_real_repo_contract_holds() -> None:
+     failures, notices = lint.run_lint()
+     assert failures == [], failures
+     assert any("population:" in n for n in notices)
++
++
++# --- The corpus exists once per machine (amendment 2026-09-05) ---------------------------------
++# SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS and SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP.
++# Before the amendment every `scripts/*.py` commit from a git worktree was refused with
++# "runs directory missing": the corpus is gitignored and a worktree has none.
++
++_GIT_ENV = {
++    **os.environ,
++    # No user or system config: a signing key or a hooks path on this machine must not
++    # reach a fixture repository.
++    "GIT_CONFIG_GLOBAL": "/dev/null",
++    "GIT_CONFIG_SYSTEM": "/dev/null",
++    "GIT_AUTHOR_NAME": "fixture",
++    "GIT_AUTHOR_EMAIL": "fixture@example.invalid",
++    "GIT_COMMITTER_NAME": "fixture",
++    "GIT_COMMITTER_EMAIL": "fixture@example.invalid",
++}
++
++
++def _git(*args: str, cwd: Path) -> None:
++    subprocess.run(
++        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True, env=_GIT_ENV
++    )
++
++
++def _main_and_worktree(tmp_path: Path, *, body: str, artifact: dict) -> tuple[Path, Path]:
++    """A real main checkout that holds a corpus, and a real worktree of it that holds none.
++
++    `results/` is left untracked, exactly like the gitignored corpus in the live repository,
++    so the worktree comes up without it.
++    """
++    main = _fake_repo(tmp_path, consumer_body=body, artifact=artifact)
++    _git("init", "-q", "-b", "main", cwd=main)
++    _git("add", "scripts", "python", cwd=main)
++    _git("commit", "-q", "-m", "seed", cwd=main)
++    wt = tmp_path / "wt"
++    _git("worktree", "add", "-q", str(wt), "-b", "agent", cwd=main)
++    assert not (wt / "results").exists(), "the worktree must start without a corpus"
++    return main, wt
++
++
++# Declares a field that exists ONLY in the corpus. Without the corpus it fails, so a green
++# run proves the corpus was found — the fallback cannot be decorative.
++_OBSERVED_ONLY = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("observed_field",)\n'
++
++
++def test_a_worktree_uses_the_main_checkouts_corpus(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS: the incident end to end, on real git."""
++
++    main, wt = _main_and_worktree(
++        tmp_path, body=_OBSERVED_ONLY, artifact={"per_game": [{"observed_field": 3}]}
++    )
++    failures, notices = lint.run_lint(wt)
++    assert failures == [], failures
++    used = [n for n in notices if n.startswith("runs directory:")]
++    assert used, notices
++    assert "main checkout" in used[0] and str(main.resolve()) in used[0], used[0]
++    assert not any(n.startswith(lint.SKIP_MARKER) for n in notices)
++
++
++def test_main_checkout_root_is_none_outside_git_and_in_the_main_checkout(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """The resolver names the main checkout from a worktree, and nothing else."""
++
++    # A ceiling stops git from climbing out of tmp_path into whatever contains it.
++    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
++    nogit = tmp_path / "nogit"
++    nogit.mkdir()
++    assert lint.main_checkout_root(nogit) is None
++    main, wt = _main_and_worktree(
++        tmp_path, body=_OBSERVED_ONLY, artifact={"per_game": [{"observed_field": 3}]}
++    )
++    assert lint.main_checkout_root(main) is None
++    assert lint.main_checkout_root(wt) == main.resolve()
++
++
++def test_main_checkout_root_rejects_a_bare_repository_layout(monkeypatch) -> None:
++    """A bare repository's common dir is `<name>.git` with no working tree beside it.
++
++    Its parent is NOT a checkout, so the resolver must return None rather than point the
++    join at a directory that never held a corpus. Mutation M13 (2026-09-05) survived until
++    this test existed.
++    """
++
++    class _Proc:
++        returncode = 0
++        stdout = "/srv/git/carnot.git\n"
++
++    monkeypatch.setattr(lint.subprocess, "run", lambda *a, **k: _Proc())
++    assert lint.main_checkout_root(Path("/srv/git/anything")) is None
++
++
++def test_no_corpus_anywhere_skips_loudly_and_still_refuses_an_unwired_field(
++    tmp_path: Path, monkeypatch
++) -> None:
++    """SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP."""
++
++    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
++    body = (
++        'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("wired_field", "ghost_field")\n'
++    )
++    root = _fake_repo(tmp_path, consumer_body=body, artifact=None)
++    shutil.rmtree(root / "results")
++    failures, notices = lint.run_lint(root)
++    assert any(n.startswith(lint.SKIP_MARKER) for n in notices), notices
++    assert any("0 artifact(s)" in n for n in notices), notices
++    assert any("1 declared field(s) verified against producer source only" in n for n in notices)
++    assert any("ghost_field" in f and "NO producer source" in f for f in failures), failures
++    assert not any("wired_field" in f for f in failures), failures
++
++
++def test_an_empty_local_runs_dir_still_falls_back_to_the_main_checkout(tmp_path: Path) -> None:
++    """A `mkdir` of the runs directory is not a corpus. The fallback keys on artifacts."""
++
++    main, wt = _main_and_worktree(
++        tmp_path, body=_OBSERVED_ONLY, artifact={"per_game": [{"observed_field": 3}]}
++    )
++    (wt / "results" / "arc_leaderboard_eval_runs").mkdir(parents=True)
++    failures, notices = lint.run_lint(wt)
++    assert failures == [], failures
++    assert any(n.startswith("runs directory:") and str(main.resolve()) in n for n in notices)
++
++
++def test_a_worktree_of_a_main_without_a_corpus_skips_and_names_both(tmp_path: Path) -> None:
++    """A fresh clone's shape: git names a main checkout, but it has no corpus either."""
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("wired_field",)\n'
++    main, wt = _main_and_worktree(tmp_path, body=body, artifact={"per_game": []})
++    shutil.rmtree(main / "results")
++    failures, notices = lint.run_lint(wt)
++    assert failures == [], failures
++    skip = [n for n in notices if n.startswith(lint.SKIP_MARKER)]
++    assert skip, notices
++    assert str(wt.resolve()) in skip[0] and str(main.resolve()) in skip[0], skip[0]
++
++
++def test_missing_corpus_never_admits_more(tmp_path: Path, monkeypatch) -> None:
++    """The artifact half can only widen passes: failures without it are a superset.
++
++    This is the property that makes the loud skip fail-closed in substance.
++    """
++
++    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
++    body = (
++        'd = "arc_leaderboard_eval_runs"\n'
++        'EVAL_RUN_FIELDS_READ = ("observed_field", "wired_field", "ghost_field")\n'
++    )
++    root = _fake_repo(tmp_path, consumer_body=body, artifact={"per_game": [{"observed_field": 3}]})
++    with_corpus, _ = lint.run_lint(root, root / "results" / "arc_leaderboard_eval_runs")
++    shutil.rmtree(root / "results")
++    without_corpus, notices = lint.run_lint(root)
++    assert any(n.startswith(lint.SKIP_MARKER) for n in notices), notices
++    assert set(with_corpus) <= set(without_corpus)
++    # The precision cost lands in the loud direction: observed-only fields FAIL.
++    assert not any("observed_field" in f for f in with_corpus)
++    assert any("observed_field" in f for f in without_corpus)
++
++
++def test_fails_closed_when_there_is_no_consumer_tree(tmp_path: Path, monkeypatch) -> None:
++    """SCENARIO-ARC-WMTE-6642-FAIL-CLOSED (amendment): a wrong root scans nothing, so it fails."""
++
++    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
++    empty = tmp_path / "nothing"
++    empty.mkdir()
++    failures, _ = lint.run_lint(empty)
++    assert any("no consumer was scanned" in f for f in failures), failures
++
++
++def test_fails_closed_when_the_producer_surface_is_empty(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6642-FAIL-CLOSED (amendment): no producer file means it looked wrong."""
++
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("per_game",)\n'
++    root = _fake_repo(tmp_path, consumer_body=body, artifact={"per_game": []})
++    failures, _ = lint.run_lint(
++        root,
++        root / "results" / "arc_leaderboard_eval_runs",
++        root / "results" / "arc_leaderboard_eval.json",
++        (root / "nowhere.py", root / "nowhere_dir"),
++    )
++    assert any("producer surface empty" in f for f in failures), failures
++
++
++def test_the_ok_line_says_skipped_when_the_corpus_was_absent(
++    tmp_path: Path, monkeypatch, capsys
++) -> None:
++    """SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP: the skip is on the LAST line, not only mid-output."""
++
++    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
++    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("wired_field",)\n'
++    root = _fake_repo(tmp_path, consumer_body=body, artifact=None)
++    shutil.rmtree(root / "results")
++    rc = lint.main(["--repo-root", str(root)])
++    out = capsys.readouterr().out
++    assert rc == 0
++    assert lint.SKIP_MARKER in out
++    assert "SKIPPED" in out.strip().splitlines()[-1]
++
++
++def test_real_repo_passes_on_producer_source_alone(monkeypatch) -> None:
++    """Skip mode on the live checkout: no declared field needs the corpus to pass.
++
++    Measured 2026-09-05: 7 consumers, 20 fields wired-only, 0 failures. If this goes RED,
++    a consumer now reads a field that is observed in artifacts but absent from producer
++    source, and commits from any checkout without a corpus will start failing. Decide
++    then whether to wire the field, not whether to weaken the lint.
++    """
++
++    monkeypatch.setattr(lint, "resolve_runs_dir", lambda repo_root: (None, "forced absent"))
++    failures, notices = lint.run_lint()
++    assert failures == [], failures
++    assert any(n.startswith(lint.SKIP_MARKER) for n in notices)
+-- 
+2.55.0
+

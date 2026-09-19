@@ -1,0 +1,56 @@
+From 0816ff4289bd8867ef079d3223ade2367bfccd96 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 16:33:52 -0400
+Subject: [PATCH 10125/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 379c08d7f1..bb47dbed08 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-27T20:30:52Z"
++ "last_scan_utc": "2026-08-27T20:33:48Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 47234d2956..0770566621 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-08-27T19:48:22Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-27T20:33:47Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7db4e933f0..4eefa143ba 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16639,3 +16639,4 @@ code |
+ | 2026-08-27 19:34 UTC | Conductor self-edit reverted | WARN | working-tree edit to research_conductor.py reverted; diff at 20260827T193431Z.pa |
+ | 2026-08-27 19:34 UTC | Held-family ARC supervisor outcome A/B | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6682_arc_hel |
+ | 2026-08-27 19:46 UTC | Held-family ARC supervisor outcome A/B | FAIL | No file changes produced |
++| 2026-08-27 20:31 UTC | Bounded-treewidth Ising task-owned receipt | OK | 93 passed, 1 warning in 7.74s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 277087b39f..ee2253a7ea 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 2, "phase": "iteration_start", "started_at": "2026-08-27T19:48:22Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-27T20:33:47Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

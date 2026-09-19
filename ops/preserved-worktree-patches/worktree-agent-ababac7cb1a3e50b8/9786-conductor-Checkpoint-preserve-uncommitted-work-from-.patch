@@ -1,0 +1,110 @@
+From 85278ecdd5a039b90c4ce678749f927c15b05f4f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 00:58:40 -0400
+Subject: [PATCH 09786/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.audit_findings_ledger_state.json |  2 +-
+ ops/.run_sentinel_state.json          |  5 +++--
+ ops/.stop_authority_state.json        |  2 +-
+ ops/anomaly-escalations.md            | 12 ++++++++++++
+ ops/conductor-heartbeat.json          |  2 +-
+ ops/conductor-log.md                  |  2 ++
+ ops/conductor-state.json              |  2 +-
+ 7 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 1fec63d095..05803c1545 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -1,5 +1,5 @@
+ {
+  "escalated": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T03:55:50Z"
++ "last_scan_utc": "2026-08-24T04:57:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 5e3246c133..70027bca6f 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -2,8 +2,9 @@
+  "escalated": {
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z",
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json|": "2026-08-23T11:27:27Z",
+-  "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z"
++  "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z",
++  "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T04:18:30Z"
++ "last_scan_utc": "2026-08-24T04:58:33Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 9eb09e6ad5..509ce906b1 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T03:55:50Z",
++ "last_scan_utc": "2026-08-24T04:57:49Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 2d245eee0e..67cf5d9862 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1479,3 +1479,15 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_6571_v570_evidence_gate_and_retirement_root.json
++
++## experiment_6572_content_derived_gguf_metadata_resolver.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_6572_content_derived_gguf_metadata_resolver.json
++
++## experiment_6573_sequential_flagship_gguf_admission_v2.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['NONTERMINAL_DECLARED_ARTIFACT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_6573_sequential_flagship_gguf_admission_v2.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6bdb98a076..342e8073b6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-24T04:18:30Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-08-24T04:58:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 67883ddf64..165ce393e0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16382,3 +16382,5 @@ code |
+ | 2026-08-24 02:45 UTC | V570 immutable evidence, gate, and retirement root | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-24 04:08 UTC | Content-derived GGUF metadata for hash-only cache  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: struct.pack("< |
+ | 2026-08-24 04:16 UTC | Content-derived GGUF metadata for hash-only cache  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-08-24 04:56 UTC | Sequential flagship GGUF admission v2 by actual ex | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6573_sequent |
++| 2026-08-24 04:57 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 582006 serves 'ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167 |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a4f2e1db98..3c9757e670 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-24T04:18:30Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 12, "phase": "iteration_start", "started_at": "2026-08-24T04:58:32Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

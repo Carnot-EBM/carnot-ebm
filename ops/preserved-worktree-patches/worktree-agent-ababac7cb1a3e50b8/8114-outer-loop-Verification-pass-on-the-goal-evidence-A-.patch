@@ -1,0 +1,1965 @@
+From 17a048ac4ea8d2e6dd4438839b122c7b6bbcea67 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 2 Aug 2026 11:37:18 -0400
+Subject: [PATCH 08114/11362] [outer-loop] Verification pass on the
+ goal-evidence A/B: hidden-game reach claim retracted, GROUNDED shown not to
+ discriminate
+
+Every finding was reproduced from the run's own files before anything was edited. Nothing in
+out/preregistration.json, out/rows.json or out/analysis.json was touched, so
+reproducibility_checksum and prereg_sha256 both still verify against the committed values.
+
+works_on_an_unsolved_game was FALSE and is now false. Not one unsolved game was measured: all 20
+roster games are full_game_clear in ops/arc_solve_registry.yaml, and every window came from
+build_progress_window -> exp5717.build_window -> solve_adaptered(game, 1), which returns None
+unless the game solves to L1 offline through a registered GameAdapter. split_meta records
+levelup_rows_in_heldout: 1 for all 20, so "stall games with zero observed wins are in the roster
+on purpose" is contradicted by the harness's own witness; the verified claim is the narrower
+levelup_rows_in_shown == 0. The tn36 existence proof was worse -- full_game_clear, 7 levels
+reproduced, four outer-loop source reads in its registry entry, and ZERO cells in this run -- and
+is deleted. The unstated confound behind it is now recorded: prompt CONTENT is clean but
+transition SELECTION is solve-conditioned, since the window is a banked winning route cut at the
+L0->L1 boundary while a hidden game yields an exploration buffer. This is not a provenance
+violation: development_proxy was declared correctly and adversarial_verify flags nothing.
+
+GROUNDED is a syntax label, not an evidence label. Re-scoring every captured predicate against a
+DIFFERENT game's transitions preserves the label on 262 of 285 comparisons; all four GROUNDED
+cells survive under 17-19 of 19 foreign games, including the single cell that produced the
+treatment arm's grounded_rate=1.0. The accepting set averages 65.9% of the literal space and
+literal 0 alone grounds on 17 of 20 games. Two behaviour-preserving rewrites on real cells:
+`return False` -> `return False and grid[0, 0] == 4` flips all five DECLINED cells to GROUNDED,
+exactly inverting the reported S2-B/S2-C result; an alpha-rename or operand swap flips TROPE
+cells. PRIMARY and TROPE re-checked and still clean.
+
+Also: min_reachable_p 0.0 was the DESIGN's floor -- at the achieved n the smallest attainable p is
+0.25, and 1.0 on the PRIMARY, so NON-TEST is structural. The split-vs-combined partition is a
+one-directional proxy, making 3.4 points a lower bound on the knobs' reach rather than a ceiling.
+An internal contradiction between known_confounds and its own byte-identity DIAGNOSIS is resolved
+in favour of the DIAGNOSIS.
+
+Found while applying the above: the artifact was not the output of its own builder --
+exhibit_truncation and known_confounds lived in the committed file and in no code path, 47 leaf
+differences on rebuild. Both are now constructed in build_artifact.py. artifact_freshness_lint did
+not fire because this artifact is unregistered, the coverage limit its own docstring names.
+
+The arc_executable_world_model.py docstring narrowing is docstring-only: both versions parsed with
+every docstring stripped from the AST give identical ast.dump (bb71fe38bdc9dd71). That proof is
+the evidence in each of the 7 freshness acknowledgements.
+
+Defaults unchanged: both knobs still ship OFF. No scored or online ARC game was played;
+submission is operator-only.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-goal-evidence-ab-2026-08-02.md        |  86 ++-
+ ops/changelog.md                              | 102 ++++
+ .../agentic/arc_executable_world_model.py     |  13 +-
+ .../build_artifact.py                         | 276 +++++++++-
+ .../out/grounded_placebo.json                 | 260 +++++++++
+ results/arc_goal_evidence_20260802/placebo.py | 283 ++++++++++
+ results/arc_goal_evidence_20260802/run_ab.py  |  36 +-
+ ...6011_world_model_change_gate_four_arm.json |   9 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   9 +
+ ...6013_hidden_state_change_gate_closure.json |   9 +
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |   9 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   9 +
+ ...rc_generator_concurrency_fix_20260727.json |   9 +
+ ...er_loop_arc_goal_evidence_ab_20260802.json | 503 ++++++++++++++++--
+ ...rc_llm_on_wallclock_envelope_20260726.json |   9 +
+ 15 files changed, 1574 insertions(+), 48 deletions(-)
+ create mode 100644 results/arc_goal_evidence_20260802/out/grounded_placebo.json
+ create mode 100644 results/arc_goal_evidence_20260802/placebo.py
+
+diff --git a/docs/research-notes/arc-goal-evidence-ab-2026-08-02.md b/docs/research-notes/arc-goal-evidence-ab-2026-08-02.md
+index 9eb4ef891b..443eade594 100644
+--- a/docs/research-notes/arc-goal-evidence-ab-2026-08-02.md
++++ b/docs/research-notes/arc-goal-evidence-ab-2026-08-02.md
+@@ -95,13 +95,34 @@ adapter, no curated win example. `_previous_level_complete_grid` is passed as `N
+ 
+ The transitions shown are the prefix split, so **`levelup_rows_in_shown` is 0 for all 20 games**:
+ every predicate in this run was written by a model that had never seen the game won. Verified by
+-inspecting a rendered treatment prompt directly — every delta line reads `level 0->0`. This is
+-exactly the condition a hidden game presents, which is why stall games are in the roster on
+-purpose.
++inspecting a rendered treatment prompt directly — every delta line reads `level 0->0`.
+ 
+ `solve_provenance: development_proxy` — no game is solved and no level is banked; the measurement
+ is offline on public games.
+ 
++### CORRECTION 2026-08-02 (post-review, same day): this does *not* extend to an unsolved game
++
++The paragraph above used to end "…This is exactly the condition a hidden game presents, which is
++why stall games are in the roster on purpose." That is wrong twice, and the artifact's
++`works_on_an_unsolved_game` has been flipped from `true` to `false`.
++
++- **There are no stall games in the roster.** All 20 are `full_game_clear: true` in
++  `ops/arc_solve_registry.yaml` (`levels_reproduced` 6–10), and every window is built by
++  `build_progress_window` → `exp5717.build_window` → `arc_loop_solve.solve_adaptered(game, 1)`,
++  which returns `None` unless the game solves to L1 offline through a registered `GameAdapter`.
++  The window builder logged `levelups=1` for all 20, and `split_meta` records
++  `levelup_rows_in_heldout: 1` for all 20. The verified claim is the narrower one:
++  `levelup_rows_in_shown == 0`, i.e. no *arm* was shown a win.
++- **Prompt content is clean; transition *selection* is not.** The window is the last k actions of
++  a banked winning route, cut at the L0→L1 boundary. On a hidden game the live `trans` at a
++  `_split_induce` call is a stall-triggered exploration buffer instead — the same field, a
++  different distribution. `_goal_prompt_transitions_on`'s docstring has been narrowed to say the
++  field is available on a hidden game and the distribution is untested.
++
++What would settle it: run the same contrast on a game with no registered adapter and no banked
++route. That needs a different harness, because `build_progress_window` returns `None` for such a
++game by construction.
++
+ ## The mechanism finding
+ 
+ The treatment prompt is **365 characters in control and 3,248–7,654 in treatment**. The
+@@ -210,11 +231,48 @@ whole-board uniformity claim names nothing observed by construction. MISSING is
+ The circularity is confined to GROUNDED. It was **not** "fixed", because removing it would mean
+ changing a pre-registered outcome definition after seeing data.
+ 
++> **UPGRADED 2026-08-02 (post-review): the disclosure above was necessary but not sufficient.**
++> It still assumed the label at least *measures* the agent's own transitions. A placebo test on
++> this run's own cells — `results/arc_goal_evidence_20260802/placebo.py`, output in
++> `out/grounded_placebo.json` — shows it does not. Re-scoring every captured predicate against a
++> **different game's** transitions preserves the label on **91.9%** of comparisons (262 of 285),
++> and all four GROUNDED cells stay GROUNDED under 17–19 of 19 foreign games — including
++> `bp35__r0__gB`, the single surviving cell that produced the treatment arm's headline
++> `grounded_rate = 1.0` (GROUNDED under 18 of 19).
++>
++> The cause is measurable: `_int_literals` harvests every integer 0–63 anywhere in the body —
++> array indices, `!= 0` background masks, `range`/`axis` arguments — and intersects that flat set
++> against the pooled union of observed rows, columns and colours. The accepting set averages
++> **65.9% of the whole literal space** (min 32.8% on `tn36`, max 96.9% on `bp35`, the game that
++> supplied half the GROUNDED cells), and literal `0` alone grounds on 17 of 20 games.
++>
++> Two behaviour-preserving rewrites, run against real captured cells, not fixtures:
++>
++> - `return False` → `return False and grid[0, 0] == 4` short-circuits to a bit-identical
++>   function, and flips **all five** real DECLINED cells to GROUNDED — exactly inverting the
++>   reported S2-B/S2-C result (declined 1.0 / grounded 0.0 → declined 0.0 / grounded 1.0) from a
++>   model that got strictly no better.
++> - Alpha-renaming `non_zero_colors` → `nzc` flips `bp35__r0__gAA` TROPE → GROUNDED, and swapping
++>   the operands of `np.all(grid == grid[0, 0])` flips `ar25__r0__gA` TROPE → GROUNDED, because
++>   `C_UNIFORMITY` is a hardcoded five-substring match over `ast.unparse` and every paraphrase
++>   escapes into `H_OTHER`.
++>
++> **`GROUNDED` is a syntax label, not an evidence label, and its rates must not be quoted as
++> evidence-use rates.** The PRIMARY (DECLINED) and TROPE are re-checked and still clean: a
++> constant-`False` predicate references nothing and a whole-board claim names nothing observed, so
++> neither can be manufactured by prompt content.
++
+ **2. Arm order within a game is fixed, not randomised — and that confounds the timing measure.**
+ Cells run `A, B, C, AA` (and `gA, gB, gAA`) always in that order, so anything drifting with
+ position — llama.cpp prompt-cache warmth, GPU thermal state — is confounded with the arm label.
+-Shape is protected by the fixed seed, and the byte-identity result above is direct evidence that
+-order is not perturbing the sampled output. **Timing is not protected**, and the run shows it: on
++~~Shape is protected by the fixed seed, and the byte-identity result above is direct evidence that
++order is not perturbing the sampled output.~~ **Corrected 2026-08-02:** that sentence contradicted
++this note's own byte-identity result and the `DIAGNOSIS` recorded in the artifact. The check
++*fired*: on `bp35` the control wrote 3,722 bytes and both treatments 4,150, at the same seed 8300,
++with the goal-only call firing in none of the three — so neither knob could have acted. A fixed
++`CARNOT_ARC_GENERATOR_SEED` does **not** fix the completion on this server, the pairing is
++approximate, and **arm order is a confound on shape, not only on timing**. **Timing is not
++protected either**, and the run shows it: on
+ `ar25` the control took 111.4s against 55.2/55.1s for the treatments, while on `bp35` the control
+ took 44.5s against 67.5/67.6s — the sign flips between games. Stage-2 `median_elapsed_s` is
+ therefore descriptive only and carries no p-value.
+@@ -245,6 +303,24 @@ truncated mid-definition. A future run should counterbalance arm order regardles
+   column or colour. That biases toward calling a predicate grounded, so the analysis separates
+   `groundable_rate` (did the model write a region-naming predicate at all) from
+   `grounded_given_groundable` (was the thing it named something it had actually seen).
++  **Corrected 2026-08-02: "easy to pass" understated it — it does not discriminate at all.** See
++  the placebo box above; `GROUNDED` is a syntax label and neither split rescues it.
++- **No contrast in this run could have reached α = 0.05, whatever the model did.** With one
++  treatment and one control cell per game the permutation reference set is `2**n_games`, so the
++  smallest attainable two-sided *p* is `2 / 2**n_games`: **1.0** on the PRIMARY (one paired game),
++  **0.5** on stage 2 (two games) and **0.25** on the three-game stage-1 blocks. The artifact's
++  `min_reachable_p: 0.0` is the *design's* floor at the pre-registered 20 games and says nothing
++  about the truncated run; `min_reachable_p_at_achieved_n` now reports both. This is what makes
++  NON-TEST a structural fact rather than a reading of the observed *p*-values.
++- **The split-vs-combined partition behind the "3.4 point ceiling" is a one-directional proxy.**
++  Split-induce is inferred as `n_defs >= 2` (the shadowing signature), which holds on all 116
++  frozen cells *by construction* — it is the definition used, not an independent measurement.
++  `_split_induce` writes one definition whenever the engine half supplied no `is_level_complete`,
++  so such a cell has `n_defs == 1` and is counted as combined. The error runs one way, and split
++  cells decline far less (0.174 vs 0.495), so **3.4 points is a lower bound on the knobs' reach,
++  not a ceiling**. The direction of the finding is unaffected. To settle it, persist
++  `_write_world_model`'s split-induce note per cell — today it is returned to the caller and never
++  written down.
+ 
+ ## What this does not license
+ 
+diff --git a/ops/changelog.md b/ops/changelog.md
+index cffcef3e96..625030d5fa 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,107 @@
+ # Carnot — Changelog
+ 
++## 2026-08-02 (outer-loop, VERIFICATION PASS on the goal-evidence A/B: a hidden-game reach claim retracted, and GROUNDED shown not to discriminate)
++
++**Instruction:** verify each review finding against the run's own data BEFORE applying it; do not
++apply one that could not be verified. Leave the tree clean.
++
++Every finding below was reproduced from the run's own files before anything was edited. Nothing in
++`out/preregistration.json`, `out/rows.json` or `out/analysis.json` was touched, so
++`reproducibility_checksum` and `prereg_sha256` both still verify against the committed values.
++
++### 1. `works_on_an_unsolved_game` was FALSE. Retracted.
++
++Not one unsolved game was measured. All 20 roster games are `full_game_clear: true` in
++`ops/arc_solve_registry.yaml` (`levels_reproduced` 6–10), and every window came from
++`build_progress_window` → `exp5717.build_window` → `arc_loop_solve.solve_adaptered(game, 1)`,
++which returns `None` unless the game solves to L1 offline through a registered `GameAdapter` —
++its own docstring says so. The window builder logged `levelups=1` for all 20 and `split_meta`
++records `levelup_rows_in_heldout: 1` for all 20, so the harness's claim that "stall games with
++zero observed wins are in the roster on purpose" is contradicted by its own witness. The verified
++claim is the narrower `levelup_rows_in_shown == 0`: no *arm* was shown a win.
++
++The named existence proof was worse: `tn36` is `full_game_clear: true` with `levels_reproduced: 7`
++and four explicit outer-loop source reads in its registry entry (`tn36.py:2153`, `:2171`, `:2269`,
++`:2500`) — and it contributed **zero** cells to this run (`rows.json` holds only `ar25`, `bp35`,
++`cd82`). That field is deleted.
++
++The unstated confound behind it: prompt *content* is clean, but transition **selection** is
++solve-conditioned. The window is the last k actions of a banked winning route cut at the L0→L1
++boundary; on a hidden game the live `trans` at a `_split_induce` call is a stall-triggered
++exploration buffer — the same field, a different distribution. `_goal_prompt_transitions_on`'s
++docstring claim "It is exactly as available on a hidden game as on a solved one" has been narrowed
++in place to say the field is available and the distribution untested. **This is not a provenance
++violation** — `solve_provenance: development_proxy` was declared correctly, no level is banked and
++`adversarial_verify` flags nothing. It is an overclaimed reach boundary on an otherwise
++honestly-scoped artifact.
++
++### 2. `GROUNDED` is a syntax label, not an evidence label
++
++The artifact already disclosed the circularity (the treatment prompt *is* the deltas the outcome
++checks for). That was necessary but not sufficient: it still assumed the label at least *measures*
++the agent's transitions. A placebo test on the run's own cells
++(`results/arc_goal_evidence_20260802/placebo.py` → `out/grounded_placebo.json`) shows it does not.
++
++- Re-scoring every captured predicate against a **different game's** transitions preserves the
++  label on **262 of 285 comparisons (91.9%)**. All four GROUNDED cells stay GROUNDED under 17–19
++  of 19 foreign games — including `bp35__r0__gB`, the single surviving cell that produced the
++  treatment arm's headline `grounded_rate = 1.0` (GROUNDED under 18 of 19).
++- Cause: `_int_literals` harvests every integer 0–63 anywhere in the body (indices, `!= 0` masks,
++  `range`/`axis` args) and intersects that flat set against the pooled union of observed rows,
++  columns and colours. The accepting set averages **65.9% of the literal space** (min 32.8% on
++  `tn36`, max 96.9% on `bp35` — the game that supplied half the GROUNDED cells), and literal `0`
++  alone grounds on 17 of 20 games.
++- Two behaviour-preserving rewrites, run on real captured cells: `return False` →
++  `return False and grid[0, 0] == 4` short-circuits to a bit-identical function and flips **all
++  five** real DECLINED cells to GROUNDED, exactly inverting the reported S2-B/S2-C result from a
++  model that got strictly no better; alpha-renaming a local or swapping `==` operands flips TROPE
++  cells to GROUNDED, because `C_UNIFORMITY` is a five-substring match over `ast.unparse`.
++
++The PRIMARY (DECLINED) and TROPE were re-checked and are still clean — a constant-`False`
++predicate references nothing and a whole-board claim names nothing observed.
++
++### 3. Three smaller corrections
++
++- **`min_reachable_p: 0.0` was the design's floor, not the run's.** With one treatment and one
++  control cell per game the permutation reference set is `2**n_games`, so the smallest attainable
++  two-sided *p* is `2 / 2**n_games`: **1.0** on the PRIMARY (one paired game), **0.5** on stage 2,
++  **0.25** on the three-game stage-1 blocks. No contrast in this run could have reached α = 0.05
++  whatever the model did. Added as `min_reachable_p_at_achieved_n` beside the design-time value.
++  (The 0.5002 that reached the summary as `min_reachable_p` is the *observed* p of the stage-1
++  missingness contrast — a mislabel in the summary only; the artifact was internally consistent.)
++- **The split-vs-combined partition is a one-directional proxy.** `split == (n_defs >= 2)` holds on
++  all 116 frozen cells *by construction* — it is the definition used. `_split_induce` writes one
++  definition whenever the engine half supplied no `is_level_complete`, so such a cell counts as
++  combined. Split cells decline far less (0.174 vs 0.495), so **3.4 points is a lower bound on the
++  knobs' reach, not a ceiling**. Sign of the finding unaffected. Fix: persist
++  `_write_world_model`'s split-induce note per cell — today it is returned and never written down.
++- **An internal contradiction is resolved.** `known_confounds` claimed the byte-identity check was
++  "direct evidence that order is not perturbing the sampled output" while the `DIAGNOSIS` field in
++  the same artifact recorded that identity FAILED on `bp35`. The DIAGNOSIS was right; the confound
++  entry was stale prose and now says arm order confounds shape, not only timing.
++
++### 4. Found while applying the above: the artifact was not the output of its own builder
++
++`exhibit_truncation` and `known_confounds` were present in the committed artifact and in **no code
++path**; `artifacts{}` carried annotations `build_artifact.py` did not emit. Rebuilding produced 47
++leaf differences. Both blocks are now constructed in `build_artifact.py`, so a rebuild reproduces
++the file. This is exactly the class `scripts/artifact_freshness_lint.py` exists for — it did not
++fire because this artifact is not in `ops/analyzer_artifact_index.json`, the coverage limit that
++lint's own docstring names out loud, demonstrated on a live artifact one day later.
++
++`out/preregistration.json` was deliberately **not** edited despite containing the retracted
++sentence — a pre-registration rewritten after seeing data is not a pre-registration. `run_ab.py`
++carries an in-place retraction comment beside the emit site and emits the same bytes.
++
++The `arc_executable_world_model.py` docstring narrowing left 7 registered artifacts stale. Each
++carries a new `freshness_acknowledgements` entry whose evidence is mechanical rather than
++argued: both versions parsed, **every** docstring stripped from the AST, `ast.dump` compared —
++identical (`bb71fe38bdc9dd71` on both). A change that cannot alter the stripped AST cannot alter
++any recorded value.
++
++**Defaults unchanged.** Both knobs still ship OFF. `adversarial_verify` 0-flagged after the
++rebuild; `artifact-freshness-lint: OK`. No scored or online ARC game was played.
++
+ ## 2026-08-02 (outer-loop, ARC goal-evidence A/B: the two shipped goal knobs are aimed at the wrong 20% of cells)
+ 
+ **Instruction:** measure whether giving the goal prompt the agent's own observed evidence stops
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 32bbb7d311..6d0503014a 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -3784,7 +3784,18 @@ def _goal_prompt_transitions_on() -> bool:
+ 
+     The transitions are the agent's OWN observations, so showing them crosses no line: it is
+     help USING what the agent has already seen for itself, not a fact about the game supplied
+-    from outside. It is exactly as available on a hidden game as on a solved one.
++    from outside.
++
++    NARROWED 2026-08-02. This paragraph used to end "It is exactly as available on a hidden game
++    as on a solved one." That is true of the FIELD and untested for the DISTRIBUTION, and the
++    difference matters. The 2026-08-02 A/B that measured this flag scored it against windows from
++    `build_progress_window`, i.e. the last k actions of a BANKED WINNING ROUTE cut at the L0->L1
++    boundary -- a game that cannot be solved to L1 offline produces no window at all. On a hidden
++    game the `trans` reaching this prompt is whatever the stall-triggered exploration buffer
++    holds, which is a strictly weaker sample from a different distribution. The sentence had been
++    read as an empirical result and had propagated into an artifact as
++    `works_on_an_unsolved_game: true`; that claim was retracted. Whether the flag helps on
++    exploration-buffer transitions is OPEN and needs an adapter-free harness to answer.
+     """
+     raw = os.environ.get("CARNOT_ARC_GOAL_PROMPT_TRANSITIONS")
+     return bool(raw) and raw.strip() == "1"
+diff --git a/results/arc_goal_evidence_20260802/build_artifact.py b/results/arc_goal_evidence_20260802/build_artifact.py
+index 46af7e18e5..945fd04706 100644
+--- a/results/arc_goal_evidence_20260802/build_artifact.py
++++ b/results/arc_goal_evidence_20260802/build_artifact.py
+@@ -31,6 +31,22 @@ def find(tests: list[dict], block: str, shape: str) -> dict:
+     return {}
+ 
+ 
++def exact_min_two_sided_p(n_games: int) -> float:
++    """The SMALLEST two-sided p the game-clustered permutation test can return at `n_games`.
++
++    Added 2026-08-02 post-review. The artifact reported the DESIGN-TIME floor (~0 at the
++    pre-registered 20 games) and nothing told a reader what the TRUNCATED run could reach. With
++    one treatment and one control cell per game, `analyse.permutation_test` has exactly two
++    arrangements per game -- keep the pair or swap it -- so the reference set is 2**n_games and
++    the most extreme observable statistic is matched by 2 of them. Hence 2 / 2**n_games, which
++    is 1.0 at one game, 0.5 at two and 0.25 at three.
++
++    This is why "NON-TEST" is the honest verdict and not a rhetorical hedge: at the n this run
++    reached, NO contrast in it could have come back below alpha whatever the model did.
++    """
++    return round(2.0 / (2**n_games), 6) if n_games >= 1 else 1.0
++
++
+ def main() -> int:
+     an = json.loads((OUT / "analysis.json").read_text())
+     meta = json.loads((OUT / "meta.json").read_text())
+@@ -61,6 +77,208 @@ def main() -> int:
+         ).encode()
+     ).hexdigest()
+ 
++    # ---- post-review additions (2026-08-02) -------------------------------------------------
++    # Each is READ from a file the run produced, never retyped, for the same reason every other
++    # number here is: a retyped number drifts away from the measurement that produced it.
++    placebo = json.loads((OUT / "grounded_placebo.json").read_text())
++    placebo_survival = placebo["placebo"]["label_preserved_under_a_foreign_games_transitions"]
++    min_reachable = {
++        "why": "the DESIGN's floor (min_reachable_p, ~0 at 20 games) says nothing about what "
++        "this truncated run could reach. This does. Any contrast whose entry here exceeds "
++        "0.05 was UNRESOLVABLE BY CONSTRUCTION, before the model wrote a single token.",
++        "formula": "2 / 2**n_games -- one treatment and one control cell per game gives two "
++        "arrangements per game, and the extremal statistic is matched by two of them",
++        "by_contrast": {
++            # Keyed by block AND arms: two stage-2 ITT contrasts share a (block, shape) pair
++            # (B-vs-A and C-vs-A) and keying on that alone would silently drop one of them.
++            f"{t.get('block')}::{t.get('shape')}::{t.get('treat')}_vs_{t.get('control')}": {
++                "n_games": t.get("n_games", 0),
++                "exact_min_two_sided_p": exact_min_two_sided_p(int(t.get("n_games", 0) or 0)),
++                "observed_p": t.get("p_permutation_two_sided"),
++            }
++            for t in tests
++            if t.get("n_games")
++        },
++        "smallest_attainable_p_anywhere_in_this_run": min(
++            exact_min_two_sided_p(int(t.get("n_games", 0) or 0)) for t in tests if t.get("n_games")
++        ),
++        "reading": "the smallest p ANY contrast in this run could have returned is 0.25, on the "
++        "three-game stage-1 blocks. The PRIMARY landed one paired game, where the only "
++        "attainable p is 1.0. NON-TEST is therefore a structural fact about the achieved n, "
++        "not a reading of the observed p-values.",
++    }
++    # The preflight partition is carried forward with its own limitation attached, rather than
++    # quoted bare. See POST_REVIEW_CORRIGENDUM_2026_08_02 finding 4.
++    preflight = dict(prereg["PREFLIGHT_ON_THE_FROZEN_SHIPPED_CORPUS"])
++    preflight["PARTITION_IS_A_ONE_DIRECTIONAL_PROXY"] = (
++        "split-induce is inferred as `n_defs >= 2` (two top-level is_level_complete definitions "
++        "-- the shadowing signature). Verified to hold on all 116 frozen cells BY CONSTRUCTION, "
++        "which is the problem: it is the definition used, not an independent measurement. "
++        "`_split_induce` writes only ONE definition whenever the engine half supplied no "
++        "is_level_complete, so such a cell has n_defs == 1 and is counted as COMBINED. The "
++        "error therefore runs one way -- split cells hide in the combined bucket, never the "
++        "reverse -- and because split cells decline far less (0.174 vs 0.495), the true split "
++        "share is at least 19.8%. THE 3.4-POINT FIGURE IS A LOWER BOUND ON THE KNOBS' REACH, "
++        "NOT A CEILING. The sign of the conclusion (declines concentrate where the knobs are "
++        "not) is unaffected; the exact number is not a hard ceiling and should not be quoted "
++        "as one. To settle it, persist `_write_world_model`'s split-induce note per cell -- "
++        "today it is returned to the caller and never written down. This run's own 8 stage-2 "
++        "cells agree with the direct `goal_only_call_ran` witness 8/8, which is consistent but "
++        "far too small to validate the proxy over a 116-cell corpus."
++    )
++
++    byte_identity = an["stage2_nonfiring_byte_identity"]
++    known_confounds = {
++        "GROUNDED_is_partially_determined_by_the_treatment": {
++            "severity": "HIGH -- this is the circularity class the brief warns about",
++            "what": "GROUNDED is defined as 'the predicate names a literal that appears in the "
++            "agent's observed deltas'. The TREATMENT prompt is precisely those deltas, rendered "
++            "as text. A model that copies a row index out of its prompt scores GROUNDED without "
++            "having understood anything, and the control -- which is shown no deltas -- can only "
++            "score GROUNDED by coincidence.",
++            "so_what": "the GROUNDED contrast is NOT a clean read on goal quality and must not "
++            "be reported as one. It is reported as what it is: whether the treatment gets the "
++            "model to REFERENCE its own observations.",
++            "which_metrics_are_clean": "DECLINED (the PRIMARY) is unaffected -- a constant-False "
++            "predicate references nothing, so no prompt content can mechanically produce or "
++            "prevent it. TROPE is unaffected for the same reason: a whole-board uniformity claim "
++            "names nothing observed by construction. MISSING is unaffected -- it is a parse "
++            "outcome. The circularity is confined to GROUNDED.",
++            "why_it_was_not_fixed": "removing it would mean changing the pre-registered outcome "
++            "definition after seeing data. It is disclosed instead.",
++            "UPGRADED_2026_08_02": "this disclosure was NECESSARY BUT NOT SUFFICIENT. It still "
++            "assumed the label at least measures the agent's own transitions. The placebo test "
++            "in GROUNDED_placebo_discriminance shows it does not: re-scored against a DIFFERENT "
++            "game's transitions the label survives on "
++            f"{round(placebo_survival * 100)}% "
++            "of comparisons, and every GROUNDED cell in the run stays GROUNDED under at least 17 "
++            "of 19 foreign games. GROUNDED is a SYNTAX label. The 'which_metrics_are_clean' "
++            "sentence above still stands and was re-checked, not assumed.",
++        },
++        "arm_ORDER_within_a_game_is_fixed_not_randomised": {
++            "severity": "MEDIUM, and it reaches SHAPE as well as TIMING -- see so_what_for_SHAPE",
++            "what": "cells run A, B, C, AA within a game (and gA, gB, gAA in stage 1), always in "
++            "that order. Anything that drifts with position -- llama.cpp prompt-cache warmth, GPU "
++            "thermal state -- is therefore confounded with the arm label.",
++            # CORRECTED 2026-08-02. This entry previously read "nothing ... the byte-identity
++            # check on non-firing stage-2 cells is direct evidence that order is not perturbing
++            # the sampled output", which directly contradicted the DIAGNOSIS recorded in
++            # stage2_nonfiring_byte_identity in the SAME artifact. The DIAGNOSIS was right and
++            # this entry was stale prose written before the check ran.
++            "so_what_for_SHAPE": "NOT nothing, contrary to what this entry said until "
++            "2026-08-02. Every arm sends the same seed within a (game, replicate), but the "
++            "byte-identity check FOUND A DIVERGENCE rather than confirming the assumption: on "
++            "bp35 the control wrote 3722 bytes and both treatments 4150, at seed 8300, with the "
++            "goal-only call firing in NONE of the three so neither knob could act. A fixed "
++            "CARNOT_ARC_GENERATOR_SEED does not fix the completion on this server. The pairing "
++            "is APPROXIMATE and arm order is a confound on shape, not only on timing.",
++            "so_what_for_TIMING": "median_elapsed_s must be read descriptively and NEVER as a "
++            "treatment effect with a p-value. Observed directly in this run: on ar25 the control "
++            "took 111.4s and both treatments 55.2/55.1s, while on bp35 the control took 44.5s "
++            "and both treatments 67.5/67.6s -- the sign flips between games, which is what "
++            "position-plus-noise looks like.",
++            "where_timing_IS_load_bearing": "stage 1, where the treatment prompt is 10-20x the "
++            "control's and the gap is 3s vs 340s. A cache or thermal effect cannot produce a "
++            "100x difference in that direction -- warmth makes calls FASTER -- and the failures "
++            "are explained by a mechanism visible in the artefact itself (three full 4096-token "
++            "attempts, code block truncated mid-definition).",
++            "the_fix_for_a_future_run": "randomise or counterbalance arm order within a game.",
++            "evidence": byte_identity["DIAGNOSIS"],
++        },
++        "transition_SELECTION_is_solve_conditioned": {
++            "severity": "HIGH for the hidden-game reach claim; NIL for the within-run contrast",
++            "added": "2026-08-02, post-review. Not disclosed in the original artifact at all.",
++            "what": "the prompt CONTENT is clean -- only the agent's own observations reach the "
++            "model. How those observations were SELECTED is not. Every window comes from "
++            "build_progress_window -> exp5717.build_window -> arc_loop_solve.solve_adaptered"
++            "(game, 1), i.e. the last k actions of a BANKED WINNING ROUTE, cut at the L0->L1 "
++            "boundary. On a hidden game the live `trans` at a _split_induce call is whatever the "
++            "stall-triggered exploration buffer happens to hold -- a strictly weaker sample from "
++            "a different distribution.",
++            "so_what": "it does not bias the A/B: every arm within a game sees the identical "
++            "window. It does invalidate any extrapolation from these rates to a hidden game, "
++            "which is why works_on_an_unsolved_game is now False.",
++            "how_to_remove_it": "drive the contrast from a live exploration buffer rather than a "
++            "banked route -- the harness would have to change, since build_progress_window "
++            "returns None for a game it cannot solve to L1 offline.",
++        },
++    }
++
++    corrigendum = {
++        "provenance": "adversarial review of the committed artifact, 2026-08-02, same day. Every "
++        "finding below was re-verified against the run's own data before being applied; the "
++        "verification commands are named so a reader can repeat them. Nothing in "
++        "out/preregistration.json, out/rows.json or out/analysis.json was touched, so "
++        "reproducibility_checksum is unchanged and still binds the design, the cells and the "
++        "scoring exactly as they were.",
++        "1_works_on_an_unsolved_game_was_FALSE": {
++            "was": "works_on_an_unsolved_game: true",
++            "now": "false, restated as a mechanism argument",
++            "verified_how": "all 20 roster games are full_game_clear: true in "
++            "ops/arc_solve_registry.yaml (levels_reproduced 6-10), and every window required "
++            "solve_adaptered(game, 1) to reach L1 -- build_progress_window's own docstring says "
++            "it returns None otherwise. Not one unsolved game was measured.",
++        },
++        "2_the_roster_has_no_zero_win_games": {
++            "was": "'stall games with zero observed wins are in the roster on purpose', asserted "
++            "in run_ab.py, out/preregistration.json and the research note",
++            "now": "false as written. meta.json's split_meta records levelup_rows_in_heldout == 1 "
++            "for all 20 games; the window builder logged levelups=1 for all 20. The verified "
++            "claim is the narrower one: levelup_rows_in_shown == 0, i.e. no ARM was shown a win.",
++            "prereg_left_frozen": "out/preregistration.json still contains the false sentence and "
++            "was deliberately NOT edited -- a pre-registration that is rewritten after seeing "
++            "data is not a pre-registration. prereg_sha256 still verifies. run_ab.py carries an "
++            "in-place correction comment beside the string it emits, and emits the same bytes.",
++        },
++        "3_the_tn36_existence_proof_was_false": {
++            "was": "works_on_an_unsolved_game_evidence.existence_proof_class -- 'tn36 is in the "
++            "roster precisely because it is a stall game'",
++            "now": "deleted. tn36 is full_game_clear: true with levels_reproduced: 7, and its "
++            "registry entry cites four explicit outer-loop source reads (tn36.py:2153, :2171, "
++            ":2269, :2500). It also contributed ZERO cells to this run -- rows.json holds only "
++            "ar25, bp35 and cd82 -- so it was a roster entry, never a measurement.",
++        },
++        "4_the_split_vs_combined_partition_is_a_one_directional_proxy": {
++            "detail": "see preflight_on_frozen_shipped_corpus."
++            "PARTITION_IS_A_ONE_DIRECTIONAL_PROXY. The 3.4-point figure is a LOWER BOUND on the "
++            "knobs' reach, not a ceiling. The direction of the finding is unchanged.",
++        },
++        "5_GROUNDED_does_not_discriminate": {
++            "detail": "see GROUNDED_placebo_discriminance. Two behaviour-preserving rewrites "
++            "were run against REAL captured cells: `return False` -> `return False and "
++            "grid[0, 0] == 4` flips all five real DECLINED cells to GROUNDED, exactly inverting "
++            "the reported S2-B/S2-C grounded result from a model that got strictly no better; "
++            "an alpha-rename or an operand swap flips TROPE cells to GROUNDED. The PRIMARY and "
++            "TROPE contrasts are NOT affected.",
++        },
++        "6_the_artifact_was_not_the_output_of_its_own_builder": {
++            "was": "exhibit_truncation and known_confounds appeared in the committed artifact and "
++            "in no code path; artifacts{} carried annotations build_artifact.py did not emit. "
++            "Rebuilding produced 47 leaf differences.",
++            "now": "both blocks are constructed in build_artifact.py, so a rebuild reproduces the "
++            "file. Found while applying finding 1, not reported by the review.",
++            "why_it_matters": "this is precisely the class artifact_freshness_lint.py exists for. "
++            "That lint did not fire because this artifact is not in "
++            "ops/analyzer_artifact_index.json -- a coverage limit the lint's own docstring names "
++            "out loud, demonstrated here on a live artifact one day later.",
++        },
++        "7_min_reachable_p_was_the_designs_floor_not_the_runs": {
++            "detail": "see min_reachable_p_at_achieved_n. The smallest p ANY contrast in this "
++            "truncated run could have returned is 0.25; on the PRIMARY, which landed one paired "
++            "game, it is 1.0. Reported alongside the design-time 0.0 rather than replacing it.",
++        },
++        "what_survived_review_unchanged": [
++            "the PRIMARY (DECLINED) and TROPE contrasts and their A/A floors",
++            "the structural-misdirection finding: 46 of 50 declines in the frozen corpus sit on "
++            "the combined path where the goal-only prompt is never built",
++            "the truncation exhibit: 4096/4096 tokens against the control's 314, 819 empty code "
++            "fences, 3s -> 343s per call",
++            "solve_provenance: development_proxy -- correctly declared, no level banked, "
++            "adversarial_verify flags nothing",
++            "defaults unchanged: both knobs still ship OFF",
++        ],
++    }
++
+     art = {
+         "experiment": "arc_goal_evidence_ab_20260802",
+         "title": "Does giving the ARC goal prompt the agent's own observed evidence stop the "
+@@ -131,6 +349,10 @@ def main() -> int:
+         "SENSITIVITY_grounded_excluding_trivial_literals": an[
+             "SENSITIVITY_grounded_excluding_trivial_literals"
+         ],
++        # THE GROUNDED LABEL DOES NOT DISCRIMINATE. Added 2026-08-02 post-review; it is the
++        # single most important thing in this artifact for anyone about to quote a grounded
++        # rate. Produced by placebo.py from this run's own captured cells.
++        "GROUNDED_placebo_discriminance": placebo,
+         "per_game": an["per_game"],
+         # The stopping rule and EVERY amendment to it, inlined rather than referenced. A
+         # truncated run whose stopping rule lives only in a side file is a run whose reader has
+@@ -147,24 +369,44 @@ def main() -> int:
+         "SECONDARY_grounded_rate": {"stage1_gB_vs_gA": s1_grounded},
+         "AA_NOISE_FLOOR": {"stage1": s1_floor, "stage2_declined": s2_floor},
+         "tests": tests,
++        # DESIGN-TIME floor of the permutation reference set, at the pre-registered 20 games.
++        # It is NOT what this truncated run could reach -- see `min_reachable_p_at_achieved_n`
++        # directly below, which is the number a reader should actually use.
+         "min_reachable_p": prereg["MINIMUM_REACHABLE_P_AND_A_HONEST_POWER_STATEMENT"][
+             "min_reachable_p_reported"
+         ],
++        "min_reachable_p_at_achieved_n": min_reachable,
+         "power_statement": prereg["MINIMUM_REACHABLE_P_AND_A_HONEST_POWER_STATEMENT"],
+-        "preflight_on_frozen_shipped_corpus": prereg["PREFLIGHT_ON_THE_FROZEN_SHIPPED_CORPUS"],
+-        "works_on_an_unsolved_game": True,
++        "preflight_on_frozen_shipped_corpus": preflight,
++        # CORRECTED 2026-08-02 post-review, from TRUE. See POST_REVIEW_CORRIGENDUM_2026_08_02
++        # finding 1: every one of the 20 roster games is `full_game_clear: true` in
++        # ops/arc_solve_registry.yaml and every window required `solve_adaptered(game, 1)` to
++        # reach L1, so not one unsolved game was measured. The MECHANISM claim survives; the
++        # measured claim does not, and this boolean asserted the measured one.
++        "works_on_an_unsolved_game": False,
+         "works_on_an_unsolved_game_evidence": {
++            "status": "MECHANISM ARGUMENT ONLY -- NOT MEASURED. Corrected 2026-08-02 after "
++            "adversarial review; the field was TRUE and the supporting existence proof was "
++            "false. No unsolved game appears anywhere in this run.",
+             "what_reaches_the_model": "the agent's OWN observed transitions only, rendered by "
+-            "the same _transitions_block the engine prompt already uses",
++            "the same _transitions_block the engine prompt already uses. The FIELD is as "
++            "available on a hidden game as on a solved one; the DISTRIBUTION is not -- see "
++            "known_confounds.transition_SELECTION_is_solve_conditioned.",
+             "no_win_is_shown_to_any_arm": "levelup_rows_in_shown is 0 for all 20 games -- the "
+             "prefix split puts the level-up row in the held-out tail, so every predicate in "
+-            "this run was written by a model that had never seen the game won",
++            "this run was written by a model that had never seen the game won. This is the "
++            "verified claim. It is NOT the same as 'the roster contains games with no win': "
++            "meta.json's own split_meta records levelup_rows_in_heldout == 1 for all 20.",
+             "nothing_a_hidden_game_would_withhold": "no game source, no hand-written adapter, no "
+             "curated win example, and _previous_level_complete_grid passed as None in every arm "
+             "(it is the NEXT level's opening board, not a win state -- the 2026-07-29 "
+-            "win-state-poison correction)",
+-            "existence_proof_class": "tn36 is in the roster precisely because it is a stall "
+-            "game; its shown transitions contain no level-up either, exactly like the other 19",
++            "win-state-poison correction). True of the PROMPT CONTENT. Not true of how the "
++            "transitions were SELECTED.",
++            "what_would_actually_settle_it": "run the same contrast on a game with NO registered "
++            "GameAdapter and no banked route, driving _split_induce from a stall-triggered "
++            "exploration buffer. That is a different harness -- build_progress_window returns "
++            "None for such a game by construction -- and it is the experiment this run did not "
++            "run.",
+         },
+         "defaults_changed": False,
+         "defaults_note": "both CARNOT_ARC_GOAL_PROMPT_TRANSITIONS and CARNOT_ARC_GOAL_DEDUP "
+@@ -181,12 +423,28 @@ def main() -> int:
+             "analysis": "results/arc_goal_evidence_20260802/out/analysis.json",
+             "meta": "results/arc_goal_evidence_20260802/out/meta.json",
+             "server_witness": "results/arc_goal_evidence_20260802/out/server_witness.json",
+-            "stage1_predicates": "results/arc_goal_evidence_20260802/out/s1_cells/",
+-            "stage2_world_models": "results/arc_goal_evidence_20260802/out/s2_cells/",
++            "stage1_predicates": "results/arc_goal_evidence_20260802/out/s1_cells/ (*.py.txt -- "
++            "raw LLM output kept byte-exact; the .txt suffix keeps ruff-format from rewriting "
++            "the evidence engine_sha256 commits to)",
++            "stage2_world_models": "results/arc_goal_evidence_20260802/out/s2_cells/ (*.py.txt, "
++            "same reason)",
+             "classifier": "results/arc_goal_evidence_20260802/classify.py",
+             "driver": "results/arc_goal_evidence_20260802/run_ab.py",
+             "analyser": "results/arc_goal_evidence_20260802/analyse.py",
++            "exhibit": "results/arc_goal_evidence_20260802/out/exhibit_truncation.json + "
++            "exhibit_*.txt",
++            "stopping_rule": "results/arc_goal_evidence_20260802/out/stopping_rule.json",
++            "grounded_placebo": "results/arc_goal_evidence_20260802/out/grounded_placebo.json "
++            "(built by placebo.py)",
+         },
++        # Inlined rather than hand-pasted into the artifact after the fact. THAT IS THE POINT:
++        # before 2026-08-02 this key and `known_confounds` existed in the committed artifact and
++        # in NO code path, so the file on disk was not the output of its own builder -- the exact
++        # staleness class scripts/artifact_freshness_lint.py exists for, on an artifact that
++        # happens not to be registered with it. See POST_REVIEW_CORRIGENDUM finding 6.
++        "exhibit_truncation": json.loads((OUT / "exhibit_truncation.json").read_text()),
++        "known_confounds": known_confounds,
++        "POST_REVIEW_CORRIGENDUM_2026_08_02": corrigendum,
+     }
+     art["honest_verdict"] = json.loads((OUT / "verdict.json").read_text())["honest_verdict"]
+     art["headline"] = json.loads((OUT / "verdict.json").read_text())["headline"]
+diff --git a/results/arc_goal_evidence_20260802/out/grounded_placebo.json b/results/arc_goal_evidence_20260802/out/grounded_placebo.json
+new file mode 100644
+index 0000000000..cd8ce9141a
+--- /dev/null
++++ b/results/arc_goal_evidence_20260802/out/grounded_placebo.json
+@@ -0,0 +1,260 @@
++{
++  "what_this_is": "a DISCRIMINANCE (placebo) test of the GROUNDED label, run AFTER the A/B on the A/B's own captured cells. Post-hoc and labelled as such.",
++  "verdict": "GROUNDED IS A SYNTAX LABEL, NOT AN EVIDENCE LABEL. It must not be quoted as an evidence-use rate. DECLINED (the PRIMARY) and TROPE are NOT affected: a constant-False predicate references nothing and a whole-board claim names nothing observed, so no prompt content can manufacture either.",
++  "accepting_set": {
++    "literal_space": 64,
++    "per_game_accepting_set_size": {
++      "ar25": 56,
++      "bp35": 62,
++      "cd82": 42,
++      "cn04": 43,
++      "g50t": 53,
++      "ka59": 33,
++      "lf52": 33,
++      "lp85": 45,
++      "ls20": 50,
++      "m0r0": 52,
++      "re86": 50,
++      "s5i5": 37,
++      "sb26": 41,
++      "sc25": 34,
++      "sk48": 50,
++      "su15": 39,
++      "tn36": 21,
++      "tr87": 38,
++      "tu93": 28,
++      "wa30": 37
++    },
++    "mean_fraction_of_literal_space": 0.6594,
++    "min_fraction": 0.3281,
++    "max_fraction": 0.9688,
++    "min_game": "tn36",
++    "max_game": "bp35",
++    "literal_0_grounds_on_n_games": 17,
++    "n_games": 20,
++    "reading": "a predicate's literals are intersected against this set. At a mean 66% of the literal space, naming ANY small integer is close to a coin flip in the grounded direction before the model has understood anything."
++  },
++  "placebo": {
++    "what": "each captured predicate re-scored against every OTHER game's observed transitions. A label that carries evidence about THIS game's deltas should mostly break; one that survives is reporting syntax.",
++    "n_cells": 15,
++    "n_comparisons": 285,
++    "label_preserved_under_a_foreign_games_transitions": 0.9193,
++    "grounded_cells": [
++      {
++        "cell": "bp35__r0__gA.py.txt",
++        "home_game": "bp35",
++        "native_shape": "GROUNDED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 17,
++        "n_foreign_scoring_GROUNDED": 17
++      },
++      {
++        "cell": "bp35__r0__gB.py.txt",
++        "home_game": "bp35",
++        "native_shape": "GROUNDED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 18,
++        "n_foreign_scoring_GROUNDED": 18
++      },
++      {
++        "cell": "cd82__r0__gAA.py.txt",
++        "home_game": "cd82",
++        "native_shape": "GROUNDED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 19
++      },
++      {
++        "cell": "bp35__r0__A.py.txt",
++        "home_game": "bp35",
++        "native_shape": "GROUNDED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 17,
++        "n_foreign_scoring_GROUNDED": 17
++      }
++    ],
++    "per_cell": [
++      {
++        "cell": "ar25__r0__gA.py.txt",
++        "home_game": "ar25",
++        "native_shape": "TROPE",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "ar25__r0__gAA.py.txt",
++        "home_game": "ar25",
++        "native_shape": "DECLINED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "bp35__r0__gA.py.txt",
++        "home_game": "bp35",
++        "native_shape": "GROUNDED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 17,
++        "n_foreign_scoring_GROUNDED": 17
++      },
++      {
++        "cell": "bp35__r0__gAA.py.txt",
++        "home_game": "bp35",
++        "native_shape": "TROPE",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "bp35__r0__gB.py.txt",
++        "home_game": "bp35",
++        "native_shape": "GROUNDED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 18,
++        "n_foreign_scoring_GROUNDED": 18
++      },
++      {
++        "cell": "cd82__r0__gA.py.txt",
++        "home_game": "cd82",
++        "native_shape": "OTHER",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 1,
++        "n_foreign_scoring_GROUNDED": 18
++      },
++      {
++        "cell": "cd82__r0__gAA.py.txt",
++        "home_game": "cd82",
++        "native_shape": "GROUNDED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 19
++      },
++      {
++        "cell": "ar25__r0__A.py.txt",
++        "home_game": "ar25",
++        "native_shape": "DECLINED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "ar25__r0__AA.py.txt",
++        "home_game": "ar25",
++        "native_shape": "TROPE",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "ar25__r0__B.py.txt",
++        "home_game": "ar25",
++        "native_shape": "DECLINED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "ar25__r0__C.py.txt",
++        "home_game": "ar25",
++        "native_shape": "DECLINED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "bp35__r0__A.py.txt",
++        "home_game": "bp35",
++        "native_shape": "GROUNDED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 17,
++        "n_foreign_scoring_GROUNDED": 17
++      },
++      {
++        "cell": "bp35__r0__AA.py.txt",
++        "home_game": "bp35",
++        "native_shape": "TROPE",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "bp35__r0__B.py.txt",
++        "home_game": "bp35",
++        "native_shape": "DECLINED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      },
++      {
++        "cell": "bp35__r0__C.py.txt",
++        "home_game": "bp35",
++        "native_shape": "DECLINED",
++        "n_foreign_games": 19,
++        "n_foreign_preserving_the_label": 19,
++        "n_foreign_scoring_GROUNDED": 0
++      }
++    ]
++  },
++  "behaviour_preserving_mutations": {
++    "short_circuit_on_DECLINED": {
++      "mutation": "`return False` -> `return False and grid[0, 0] == 4`",
++      "why_it_is_behaviour_preserving": "Python short-circuits `False and X`, so the function returns False for every input exactly as before. No induced code is executed to establish this; it is a language guarantee.",
++      "cells": [
++        {
++          "cell": "ar25__r0__A.py.txt",
++          "was": "DECLINED",
++          "now": "GROUNDED"
++        },
++        {
++          "cell": "ar25__r0__B.py.txt",
++          "was": "DECLINED",
++          "now": "GROUNDED"
++        },
++        {
++          "cell": "ar25__r0__C.py.txt",
++          "was": "DECLINED",
++          "now": "GROUNDED"
++        },
++        {
++          "cell": "bp35__r0__B.py.txt",
++          "was": "DECLINED",
++          "now": "GROUNDED"
++        },
++        {
++          "cell": "bp35__r0__C.py.txt",
++          "was": "DECLINED",
++          "now": "GROUNDED"
++        }
++      ],
++      "consequence": "the reported S2-B / S2-C result (declined 1.0, grounded 0.0) inverts to (declined 0.0, grounded 1.0) under a rewrite that changes nothing the predicate does."
++    },
++    "paraphrase_on_TROPE": {
++      "mutation": "alpha-rename a local, or swap the operands of an equality",
++      "why_it_is_behaviour_preserving": "renaming a local and commuting `==` are both semantics-preserving; TROPE is a 5-substring match over `ast.unparse`, so the paraphrase escapes into H_OTHER and the grounding check then promotes it.",
++      "cells": [
++        {
++          "cell": "ar25__r0__gA.py.txt",
++          "was": "TROPE",
++          "swap_equality_operands": "GROUNDED"
++        },
++        {
++          "cell": "bp35__r0__gAA.py.txt",
++          "was": "TROPE",
++          "alpha_rename_local": "GROUNDED"
++        },
++        {
++          "cell": "ar25__r0__AA.py.txt",
++          "was": "TROPE",
++          "swap_equality_operands": "GROUNDED"
++        },
++        {
++          "cell": "bp35__r0__AA.py.txt",
++          "was": "TROPE",
++          "alpha_rename_local": "GROUNDED"
++        }
++      ]
++    }
++  },
++  "no_induced_code_executed": true
++}
+diff --git a/results/arc_goal_evidence_20260802/placebo.py b/results/arc_goal_evidence_20260802/placebo.py
+new file mode 100644
+index 0000000000..022abe4c1e
+--- /dev/null
++++ b/results/arc_goal_evidence_20260802/placebo.py
+@@ -0,0 +1,283 @@
++#!/usr/bin/env python3
++"""DISCRIMINANCE (placebo) test for the GROUNDED label used by the goal-evidence A/B.
++
++WHY THIS EXISTS. The A/B's SECONDARY_grounded_rate is defined as "the predicate names a
++literal that appears in the agent's observed deltas". The artifact already discloses the
++obvious circularity -- the treatment prompt IS those deltas, so a model that copies a row
++index out of its prompt scores GROUNDED without understanding anything. That disclosure is
++necessary but not sufficient, because it still assumes the label at least MEASURES the
++agent's own transitions. This script tests that assumption directly and it does not hold.
++
++THE TEST. Re-score every captured predicate against a DIFFERENT game's observed transitions.
++A label that carries evidence about THIS game's deltas must mostly break when handed another
++game's deltas. If it survives, the label is reporting the SYNTAX of the predicate (does it
++mention a small integer at all) rather than its grounding in what the agent saw.
++
++TWO CONSTRUCTED COUNTEREXAMPLES, both behaviour-preserving, both run against real captured
++cells rather than synthetic fixtures:
++
++  1. `return False`  ->  `return False and grid[0, 0] == 4`
++     Python short-circuits, so the predicate is bit-identically the same function. Every
++     real DECLINED cell flips to GROUNDED. This exactly INVERTS the run's reported S2-B/S2-C
++     result (declined 1.0 / grounded 0.0 becomes declined 0.0 / grounded 1.0) from a model
++     that got strictly no better.
++
++  2. Alpha-rename a local, or swap the operands of an equality.
++     TROPE is a hardcoded 5-substring match over `ast.unparse` (see anatomy.py's
++     C_UNIFORMITY rule), so `len(non_zero_colors) == 1` -> `len(nzc) == 1` and
++     `np.all(grid == grid[0, 0])` -> `np.all(grid[0, 0] == grid)` both escape the trope
++     match into H_OTHER, where the grounding check then promotes them to GROUNDED.
++
++NO INDUCED CODE IS EXECUTED. `classify.classify_predicate` is pure AST inspection (see
++anatomy.py's module docstring) and the mutations here are textual, so nothing in a captured
++completion is ever run. That is deliberate: this file reads adversarial LLM output.
++
++WHAT THIS DOES NOT CLAIM. It does not say the predicates are bad, and it does not say the
++PRIMARY (DECLINED) or TROPE contrasts are affected -- a constant-False predicate references
++nothing and a whole-board uniformity claim names nothing observed, so neither can be
++manufactured by prompt content. It says the GROUNDED label alone must be read as a syntax
++label, and that the run's grounded rates must not be quoted as evidence-use rates.
++
++Usage:  python3 results/arc_goal_evidence_20260802/placebo.py
++        GEV_WINDOWS=/path/to/windows.pkl python3 .../placebo.py
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import pickle
++import re
++import sys
++from pathlib import Path
++from typing import Any
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parents[1]
++OUT = HERE / "out"
++
++# Point the e3 store at a scratch directory BEFORE importing anything from carnot. Rebuilding
++# the windows walks the offline arcade, and `results/arc_e3/**` is tracked read-only EVIDENCE
++# whose only runtime guard (`_guard_engine_write`) is pytest-scoped -- a measurement driver is
++# exactly the caller nothing protects.
++os.environ.setdefault(
++    "CARNOT_ARC_E3_DIR",
++    str(Path(os.environ.get("TMPDIR", "/tmp")) / "carnot_placebo_e3"),
++)
++
++sys.path.insert(0, str(HERE))
++sys.path.insert(0, str(ROOT / "python"))
++
++import classify as gcl  # noqa: E402
++
++WINDOWS_PKL = Path(
++    os.environ.get("GEV_WINDOWS")
++    or "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/"
++    "87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalev/windows.pkl"
++)
++
++ROSTER = [
++    "ar25",
++    "bp35",
++    "cd82",
++    "cn04",
++    "g50t",
++    "ka59",
++    "lf52",
++    "lp85",
++    "ls20",
++    "m0r0",
++    "re86",
++    "s5i5",
++    "sb26",
++    "sc25",
++    "sk48",
++    "su15",
++    "tn36",
++    "tr87",
++    "tu93",
++    "wa30",
++]
++
++
++def load_windows() -> dict[str, tuple]:
++    """The same (shown, heldout, cell) windows every arm of the A/B was scored against.
++
++    Read from the cached pickle when it is still on disk so this reproduces the exact inputs;
++    rebuilt from the recorded frames otherwise. Rebuilding is deterministic but slow (one game
++    took ~200s), which is why the run cached it in the first place.
++    """
++    if WINDOWS_PKL.exists():
++        return pickle.loads(WINDOWS_PKL.read_bytes())
++    from carnot.agentic import arc_actions_to_progress as atp
++    from carnot.agentic import arc_world_model_trust_energy as wmte
++
++    out: dict[str, tuple] = {}
++    for g in ROSTER:
++        w = atp.build_progress_window(g)
++        if w is None:
++            continue
++        win, _full, cell = w
++        shown, held = wmte._split_prefix_heldout(list(win))  # noqa: SLF001
++        out[g] = (shown, held, int(cell))
++    return out
++
++
++def captured_cells() -> list[tuple[str, str, str]]:
++    """(cell name, home game, source) for every predicate this run actually recovered.
++
++    The two stage-1 cells that returned no parseable predicate have no file and are therefore
++    absent here -- they are a MISSING observation, not a zero, exactly as the analysis treats
++    them.
++    """
++    cells = []
++    for sub in ("s1_cells", "s2_cells"):
++        for p in sorted((OUT / sub).glob("*.py.txt")):
++            cells.append((p.name, p.name.split("__")[0], p.read_text()))
++    return cells
++
++
++def accepting_sets(windows: dict[str, tuple]) -> dict[str, set[int]]:
++    """Per game, the union of observed rows / cols / colours clipped to the literal space.
++
++    This is the set a predicate's integer literals are intersected against. Its SIZE is the
++    headline number of this script: the grounding test is only informative if the accepting
++    set is a small part of the space a predicate's literals can fall in.
++    """
++    out: dict[str, set[int]] = {}
++    for g, (shown, _h, _c) in windows.items():
++        v = gcl.observed_vocabulary(shown)
++        out[g] = {x for x in (v["rows"] | v["cols"] | v["colours"]) if 0 <= x <= 63}
++    return out
++
++
++def shape_of(src: str, transitions: Any) -> str | None:
++    return gcl.classify_predicate(src, transitions).get("shape")
++
++
++def main() -> int:
++    windows = load_windows()
++    cells = captured_cells()
++    acc = accepting_sets(windows)
++    games = sorted(acc)
++
++    sizes = {g: len(acc[g]) for g in games}
++    literal_space = 64  # `_int_literals` keeps 0..63 and drops anything larger as arithmetic
++
++    # ---- 1. how big is the accepting set, i.e. how easy is it to score GROUNDED by luck ----
++    accepting = {
++        "literal_space": literal_space,
++        "per_game_accepting_set_size": sizes,
++        "mean_fraction_of_literal_space": round(
++            sum(sizes.values()) / len(sizes) / literal_space, 4
++        ),
++        "min_fraction": round(min(sizes.values()) / literal_space, 4),
++        "max_fraction": round(max(sizes.values()) / literal_space, 4),
++        "min_game": min(sizes, key=lambda g: sizes[g]),
++        "max_game": max(sizes, key=lambda g: sizes[g]),
++        "literal_0_grounds_on_n_games": sum(1 for g in games if 0 in acc[g]),
++        "n_games": len(games),
++        "reading": "a predicate's literals are intersected against this set. At a mean 66% of "
++        "the literal space, naming ANY small integer is close to a coin flip in the "
++        "grounded direction before the model has understood anything.",
++    }
++
++    # ---- 2. the placebo proper: does the label survive a DIFFERENT game's transitions? ----
++    per_cell = []
++    preserved = compared = 0
++    for name, home, src in cells:
++        native = shape_of(src, windows[home][0])
++        foreign = {g: shape_of(src, windows[g][0]) for g in games if g != home}
++        same = sum(1 for s in foreign.values() if s == native)
++        preserved += same
++        compared += len(foreign)
++        per_cell.append(
++            {
++                "cell": name,
++                "home_game": home,
++                "native_shape": native,
++                "n_foreign_games": len(foreign),
++                "n_foreign_preserving_the_label": same,
++                "n_foreign_scoring_GROUNDED": sum(1 for s in foreign.values() if s == "GROUNDED"),
++            }
++        )
++    placebo = {
++        "what": "each captured predicate re-scored against every OTHER game's observed "
++        "transitions. A label that carries evidence about THIS game's deltas should "
++        "mostly break; one that survives is reporting syntax.",
++        "n_cells": len(cells),
++        "n_comparisons": compared,
++        "label_preserved_under_a_foreign_games_transitions": round(preserved / compared, 4),
++        "grounded_cells": [c for c in per_cell if c["native_shape"] == "GROUNDED"],
++        "per_cell": per_cell,
++    }
++
++    # ---- 3. two behaviour-preserving mutations on REAL cells --------------------------------
++    decl_flips = []
++    for name, home, src in cells:
++        if shape_of(src, windows[home][0]) != "DECLINED":
++            continue
++        mut = re.sub(r"return\s+False\b", "return False and grid[0, 0] == 4", src)
++        if mut == src:
++            continue  # a D_NO_PREDICATE cell with no `return False` to short-circuit
++        decl_flips.append({"cell": name, "was": "DECLINED", "now": shape_of(mut, windows[home][0])})
++    trope_flips = []
++    for name, home, src in cells:
++        if shape_of(src, windows[home][0]) != "TROPE":
++            continue
++        rename = src.replace("non_zero_colors", "nzc").replace("non_zero_colours", "nzc")
++        swap = re.sub(
++            r"np\.all\(\s*grid\s*==\s*grid\[0,\s*0\]\s*\)", "np.all(grid[0, 0] == grid)", src
++        )
++        row: dict[str, Any] = {"cell": name, "was": "TROPE"}
++        if rename != src:
++            row["alpha_rename_local"] = shape_of(rename, windows[home][0])
++        if swap != src:
++            row["swap_equality_operands"] = shape_of(swap, windows[home][0])
++        trope_flips.append(row)
++    mutations = {
++        "short_circuit_on_DECLINED": {
++            "mutation": "`return False` -> `return False and grid[0, 0] == 4`",
++            "why_it_is_behaviour_preserving": "Python short-circuits `False and X`, so the "
++            "function returns False for every input exactly as before. No induced code is "
++            "executed to establish this; it is a language guarantee.",
++            "cells": decl_flips,
++            "consequence": "the reported S2-B / S2-C result (declined 1.0, grounded 0.0) "
++            "inverts to (declined 0.0, grounded 1.0) under a rewrite that changes nothing "
++            "the predicate does.",
++        },
++        "paraphrase_on_TROPE": {
++            "mutation": "alpha-rename a local, or swap the operands of an equality",
++            "why_it_is_behaviour_preserving": "renaming a local and commuting `==` are both "
++            "semantics-preserving; TROPE is a 5-substring match over `ast.unparse`, so the "
++            "paraphrase escapes into H_OTHER and the grounding check then promotes it.",
++            "cells": trope_flips,
++        },
++    }
++
++    doc = {
++        "what_this_is": "a DISCRIMINANCE (placebo) test of the GROUNDED label, run AFTER the "
++        "A/B on the A/B's own captured cells. Post-hoc and labelled as such.",
++        "verdict": "GROUNDED IS A SYNTAX LABEL, NOT AN EVIDENCE LABEL. It must not be quoted "
++        "as an evidence-use rate. DECLINED (the PRIMARY) and TROPE are NOT affected: a "
++        "constant-False predicate references nothing and a whole-board claim names nothing "
++        "observed, so no prompt content can manufacture either.",
++        "accepting_set": accepting,
++        "placebo": placebo,
++        "behaviour_preserving_mutations": mutations,
++        "no_induced_code_executed": True,
++    }
++    (OUT / "grounded_placebo.json").write_text(json.dumps(doc, indent=2) + "\n")
++    print(json.dumps({k: v for k, v in doc.items() if k in ("verdict",)}, indent=2))
++    print("accepting set mean fraction:", accepting["mean_fraction_of_literal_space"])
++    print(
++        "label preserved under foreign transitions:",
++        placebo["label_preserved_under_a_foreign_games_transitions"],
++    )
++    print("DECLINED->? under short-circuit:", [(c["cell"], c["now"]) for c in decl_flips])
++    print("wrote", OUT / "grounded_placebo.json")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/arc_goal_evidence_20260802/run_ab.py b/results/arc_goal_evidence_20260802/run_ab.py
+index 3228408075..2e2c21b978 100644
+--- a/results/arc_goal_evidence_20260802/run_ab.py
++++ b/results/arc_goal_evidence_20260802/run_ab.py
+@@ -47,9 +47,30 @@ transitions, rendered by the SAME `_transitions_block` the engine prompt already
+ source, no adapter, no curated win example, no `_previous_level_complete_grid` asserted as a win
+ state (it is the NEXT level's opening board -- the win-state poison corrected 2026-07-29; this
+ harness passes None for it in both arms).  The transitions shown are the PREFIX split, which
+-excludes the level-up row, so no arm is shown a win.  Everything here is exactly as available on
+-a game nobody has ever solved -- which is why stall games with zero observed wins are in the
+-roster on purpose.
++excludes the level-up row, so no arm is shown a win.
++
++CORRECTED 2026-08-02 (post-review, same day).  The paragraph above used to end "...Everything
++here is exactly as available on a game nobody has ever solved -- which is why stall games with
++zero observed wins are in the roster on purpose."  BOTH HALVES OF THAT ARE WRONG and the
++retraction is kept here rather than quietly deleted:
++
++  * There are no stall games in the roster.  All 20 are `full_game_clear: true` in
++    ops/arc_solve_registry.yaml, and every window is built by `build_progress_window` ->
++    `exp5717.build_window` -> `arc_loop_solve.solve_adaptered(game, 1)`, which returns None
++    unless the game solves to L1 offline through a registered GameAdapter.  The window builder
++    logged `levelups=1` for all 20 and `split_meta` records `levelup_rows_in_heldout: 1` for
++    all 20.  The TRUE claim is the narrower one: `levelup_rows_in_shown == 0`, i.e. no ARM was
++    shown a win.
++  * Prompt CONTENT is clean, but transition SELECTION is solve-conditioned: the window is the
++    last k actions of a BANKED WINNING ROUTE cut at the L0->L1 boundary.  On a hidden game the
++    live `trans` at a `_split_induce` call is a stall-triggered exploration buffer instead --
++    the same FIELD from a different DISTRIBUTION.  So this harness cannot support
++    `works_on_an_unsolved_game`, and the artifact now reports it False.
++
++The string this file EMITS into out/preregistration.json is deliberately left byte-identical so
++`prereg_sha256` still verifies -- a pre-registration rewritten after seeing data is not a
++pre-registration.  The correction lives in the artifact's
++POST_REVIEW_CORRIGENDUM_2026_08_02 and in the comment beside the emit site below.
+ 
+ NOT SUBMITTED: no scored or online ARC game is played.  Submission is operator-only.
+ """
+@@ -466,6 +487,15 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
+             "_previous_level_complete_grid asserted as a win state (it is the NEXT level's "
+             "opening board -- the win-state poison corrected 2026-07-29; passed as None here in "
+             "every arm)",
++            # RETRACTED 2026-08-02, and the bytes are NOT changed. The next two entries are
++            # false as written (there are no stall games in the roster -- all 20 are
++            # `full_game_clear: true`, and every window required `solve_adaptered(game, 1)`),
++            # but out/preregistration.json is a frozen pre-registration that `prereg_sha256`
++            # commits to, so the emit is left byte-identical and the correction is recorded in
++            # the artifact's POST_REVIEW_CORRIGENDUM_2026_08_02 instead. The verified claim is
++            # `levelup_rows_in_shown == 0`: no ARM was shown a win. If this harness is ever
++            # re-run, FIX THESE TWO STRINGS FIRST -- the freeze protects the record of what was
++            # pre-registered, not the sentence itself.
+             "no_win_is_shown": "the prefix split puts the level-up row in the HELD-OUT tail, so "
+             "levelup_rows_in_shown is 0 for every game; stall games with zero observed wins are "
+             "in the roster on purpose",
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index b16b1bc5fa..57a578c233 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52607,6 +52607,15 @@
+         "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
+         "acknowledged_date": "2026-08-02",
+         "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
++        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "acknowledged_on": "2026-08-02",
++        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
++        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
++        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index f718393998..b39791420e 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -91,6 +91,15 @@
+         "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
+         "acknowledged_date": "2026-08-02",
+         "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
++        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "acknowledged_on": "2026-08-02",
++        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
++        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
++        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 029bc6d27e..77524bcd96 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8633,6 +8633,15 @@
+         "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
+         "acknowledged_date": "2026-08-02",
+         "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
++        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "acknowledged_on": "2026-08-02",
++        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
++        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
++        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 7b0c55c503..6801cffee2 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1370,6 +1370,15 @@
+         "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
+         "acknowledged_date": "2026-08-02",
+         "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
++        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "acknowledged_on": "2026-08-02",
++        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
++        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
++        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 670f284ecf..2a2714684d 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3401,6 +3401,15 @@
+         "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
+         "acknowledged_date": "2026-08-02",
+         "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
++        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "acknowledged_on": "2026-08-02",
++        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
++        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
++        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 927e324c1d..02984708e1 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1034,6 +1034,15 @@
+         "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
+         "acknowledged_date": "2026-08-02",
+         "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
++        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "acknowledged_on": "2026-08-02",
++        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
++        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
++        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_goal_evidence_ab_20260802.json b/results/outer_loop_arc_goal_evidence_ab_20260802.json
+index a1eb7a1d8a..4ee2c75901 100644
+--- a/results/outer_loop_arc_goal_evidence_ab_20260802.json
++++ b/results/outer_loop_arc_goal_evidence_ab_20260802.json
+@@ -1,8 +1,8 @@
+ {
+   "experiment": "arc_goal_evidence_ab_20260802",
+   "title": "Does giving the ARC goal prompt the agent's own observed evidence stop the model declining to write a win condition?",
+-  "run_date": "2026-08-02T15:06:38.342124+00:00",
+-  "git_head": "0bdddb4d6d9520705745160da1232bff6c7d5c21",
++  "run_date": "2026-08-02T15:36:51.069165+00:00",
++  "git_head": "9d8f5559926d17952ce8569043f3dcd42664db82",
+   "schema": "carnot.arc_goal_evidence_ab.v1",
+   "duration_s": 2011.9,
+   "random_seed": 8300,
+@@ -538,6 +538,266 @@
+       }
+     }
+   },
++  "GROUNDED_placebo_discriminance": {
++    "what_this_is": "a DISCRIMINANCE (placebo) test of the GROUNDED label, run AFTER the A/B on the A/B's own captured cells. Post-hoc and labelled as such.",
++    "verdict": "GROUNDED IS A SYNTAX LABEL, NOT AN EVIDENCE LABEL. It must not be quoted as an evidence-use rate. DECLINED (the PRIMARY) and TROPE are NOT affected: a constant-False predicate references nothing and a whole-board claim names nothing observed, so no prompt content can manufacture either.",
++    "accepting_set": {
++      "literal_space": 64,
++      "per_game_accepting_set_size": {
++        "ar25": 56,
++        "bp35": 62,
++        "cd82": 42,
++        "cn04": 43,
++        "g50t": 53,
++        "ka59": 33,
++        "lf52": 33,
++        "lp85": 45,
++        "ls20": 50,
++        "m0r0": 52,
++        "re86": 50,
++        "s5i5": 37,
++        "sb26": 41,
++        "sc25": 34,
++        "sk48": 50,
++        "su15": 39,
++        "tn36": 21,
++        "tr87": 38,
++        "tu93": 28,
++        "wa30": 37
++      },
++      "mean_fraction_of_literal_space": 0.6594,
++      "min_fraction": 0.3281,
++      "max_fraction": 0.9688,
++      "min_game": "tn36",
++      "max_game": "bp35",
++      "literal_0_grounds_on_n_games": 17,
++      "n_games": 20,
++      "reading": "a predicate's literals are intersected against this set. At a mean 66% of the literal space, naming ANY small integer is close to a coin flip in the grounded direction before the model has understood anything."
++    },
++    "placebo": {
++      "what": "each captured predicate re-scored against every OTHER game's observed transitions. A label that carries evidence about THIS game's deltas should mostly break; one that survives is reporting syntax.",
++      "n_cells": 15,
++      "n_comparisons": 285,
++      "label_preserved_under_a_foreign_games_transitions": 0.9193,
++      "grounded_cells": [
++        {
++          "cell": "bp35__r0__gA.py.txt",
++          "home_game": "bp35",
++          "native_shape": "GROUNDED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 17,
++          "n_foreign_scoring_GROUNDED": 17
++        },
++        {
++          "cell": "bp35__r0__gB.py.txt",
++          "home_game": "bp35",
++          "native_shape": "GROUNDED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 18,
++          "n_foreign_scoring_GROUNDED": 18
++        },
++        {
++          "cell": "cd82__r0__gAA.py.txt",
++          "home_game": "cd82",
++          "native_shape": "GROUNDED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 19
++        },
++        {
++          "cell": "bp35__r0__A.py.txt",
++          "home_game": "bp35",
++          "native_shape": "GROUNDED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 17,
++          "n_foreign_scoring_GROUNDED": 17
++        }
++      ],
++      "per_cell": [
++        {
++          "cell": "ar25__r0__gA.py.txt",
++          "home_game": "ar25",
++          "native_shape": "TROPE",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "ar25__r0__gAA.py.txt",
++          "home_game": "ar25",
++          "native_shape": "DECLINED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "bp35__r0__gA.py.txt",
++          "home_game": "bp35",
++          "native_shape": "GROUNDED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 17,
++          "n_foreign_scoring_GROUNDED": 17
++        },
++        {
++          "cell": "bp35__r0__gAA.py.txt",
++          "home_game": "bp35",
++          "native_shape": "TROPE",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "bp35__r0__gB.py.txt",
++          "home_game": "bp35",
++          "native_shape": "GROUNDED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 18,
++          "n_foreign_scoring_GROUNDED": 18
++        },
++        {
++          "cell": "cd82__r0__gA.py.txt",
++          "home_game": "cd82",
++          "native_shape": "OTHER",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 1,
++          "n_foreign_scoring_GROUNDED": 18
++        },
++        {
++          "cell": "cd82__r0__gAA.py.txt",
++          "home_game": "cd82",
++          "native_shape": "GROUNDED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 19
++        },
++        {
++          "cell": "ar25__r0__A.py.txt",
++          "home_game": "ar25",
++          "native_shape": "DECLINED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "ar25__r0__AA.py.txt",
++          "home_game": "ar25",
++          "native_shape": "TROPE",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "ar25__r0__B.py.txt",
++          "home_game": "ar25",
++          "native_shape": "DECLINED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "ar25__r0__C.py.txt",
++          "home_game": "ar25",
++          "native_shape": "DECLINED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "bp35__r0__A.py.txt",
++          "home_game": "bp35",
++          "native_shape": "GROUNDED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 17,
++          "n_foreign_scoring_GROUNDED": 17
++        },
++        {
++          "cell": "bp35__r0__AA.py.txt",
++          "home_game": "bp35",
++          "native_shape": "TROPE",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "bp35__r0__B.py.txt",
++          "home_game": "bp35",
++          "native_shape": "DECLINED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        },
++        {
++          "cell": "bp35__r0__C.py.txt",
++          "home_game": "bp35",
++          "native_shape": "DECLINED",
++          "n_foreign_games": 19,
++          "n_foreign_preserving_the_label": 19,
++          "n_foreign_scoring_GROUNDED": 0
++        }
++      ]
++    },
++    "behaviour_preserving_mutations": {
++      "short_circuit_on_DECLINED": {
++        "mutation": "`return False` -> `return False and grid[0, 0] == 4`",
++        "why_it_is_behaviour_preserving": "Python short-circuits `False and X`, so the function returns False for every input exactly as before. No induced code is executed to establish this; it is a language guarantee.",
++        "cells": [
++          {
++            "cell": "ar25__r0__A.py.txt",
++            "was": "DECLINED",
++            "now": "GROUNDED"
++          },
++          {
++            "cell": "ar25__r0__B.py.txt",
++            "was": "DECLINED",
++            "now": "GROUNDED"
++          },
++          {
++            "cell": "ar25__r0__C.py.txt",
++            "was": "DECLINED",
++            "now": "GROUNDED"
++          },
++          {
++            "cell": "bp35__r0__B.py.txt",
++            "was": "DECLINED",
++            "now": "GROUNDED"
++          },
++          {
++            "cell": "bp35__r0__C.py.txt",
++            "was": "DECLINED",
++            "now": "GROUNDED"
++          }
++        ],
++        "consequence": "the reported S2-B / S2-C result (declined 1.0, grounded 0.0) inverts to (declined 0.0, grounded 1.0) under a rewrite that changes nothing the predicate does."
++      },
++      "paraphrase_on_TROPE": {
++        "mutation": "alpha-rename a local, or swap the operands of an equality",
++        "why_it_is_behaviour_preserving": "renaming a local and commuting `==` are both semantics-preserving; TROPE is a 5-substring match over `ast.unparse`, so the paraphrase escapes into H_OTHER and the grounding check then promotes it.",
++        "cells": [
++          {
++            "cell": "ar25__r0__gA.py.txt",
++            "was": "TROPE",
++            "swap_equality_operands": "GROUNDED"
++          },
++          {
++            "cell": "bp35__r0__gAA.py.txt",
++            "was": "TROPE",
++            "alpha_rename_local": "GROUNDED"
++          },
++          {
++            "cell": "ar25__r0__AA.py.txt",
++            "was": "TROPE",
++            "swap_equality_operands": "GROUNDED"
++          },
++          {
++            "cell": "bp35__r0__AA.py.txt",
++            "was": "TROPE",
++            "alpha_rename_local": "GROUNDED"
++          }
++        ]
++      }
++    },
++    "no_induced_code_executed": true
++  },
+   "per_game": {
+     "stage1": {
+       "ar25": {
+@@ -1493,6 +1753,139 @@
+     }
+   ],
+   "min_reachable_p": 0.0,
++  "min_reachable_p_at_achieved_n": {
++    "why": "the DESIGN's floor (min_reachable_p, ~0 at 20 games) says nothing about what this truncated run could reach. This does. Any contrast whose entry here exceeds 0.05 was UNRESOLVABLE BY CONSTRUCTION, before the model wrote a single token.",
++    "formula": "2 / 2**n_games -- one treatment and one control cell per game gives two arrangements per game, and the extremal statistic is matched by two of them",
++    "by_contrast": {
++      "stage1_missingness::MISSING::gB_vs_gA": {
++        "n_games": 3,
++        "exact_min_two_sided_p": 0.25,
++        "observed_p": 0.5002
++      },
++      "stage1_missingness_AA_floor::MISSING::gAA_vs_gA": {
++        "n_games": 3,
++        "exact_min_two_sided_p": 0.25,
++        "observed_p": 1.0
++      },
++      "stage2_missingness::MISSING::B_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_missingness::MISSING::C_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_missingness_AA_floor::MISSING::AA_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage1::DECLINED::gB_vs_gA": {
++        "n_games": 1,
++        "exact_min_two_sided_p": 1.0,
++        "observed_p": 1.0
++      },
++      "stage1::TROPE::gB_vs_gA": {
++        "n_games": 1,
++        "exact_min_two_sided_p": 1.0,
++        "observed_p": 1.0
++      },
++      "stage1::GROUNDED::gB_vs_gA": {
++        "n_games": 1,
++        "exact_min_two_sided_p": 1.0,
++        "observed_p": 1.0
++      },
++      "stage1::OTHER::gB_vs_gA": {
++        "n_games": 1,
++        "exact_min_two_sided_p": 1.0,
++        "observed_p": 1.0
++      },
++      "stage1_AA_floor::DECLINED::gAA_vs_gA": {
++        "n_games": 3,
++        "exact_min_two_sided_p": 0.25,
++        "observed_p": 1.0
++      },
++      "stage1_AA_floor::TROPE::gAA_vs_gA": {
++        "n_games": 3,
++        "exact_min_two_sided_p": 0.25,
++        "observed_p": 1.0
++      },
++      "stage1_AA_floor::GROUNDED::gAA_vs_gA": {
++        "n_games": 3,
++        "exact_min_two_sided_p": 0.25,
++        "observed_p": 1.0
++      },
++      "stage1_AA_floor::OTHER::gAA_vs_gA": {
++        "n_games": 3,
++        "exact_min_two_sided_p": 0.25,
++        "observed_p": 1.0
++      },
++      "stage2_ITT::DECLINED::B_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_ITT::TROPE::B_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_ITT::GROUNDED::B_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_ITT::OTHER::B_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_ITT::DECLINED::C_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_ITT::TROPE::C_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_ITT::GROUNDED::C_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_ITT::OTHER::C_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_AA_floor::DECLINED::AA_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_AA_floor::TROPE::AA_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 0.5015
++      },
++      "stage2_AA_floor::GROUNDED::AA_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      },
++      "stage2_AA_floor::OTHER::AA_vs_A": {
++        "n_games": 2,
++        "exact_min_two_sided_p": 0.5,
++        "observed_p": 1.0
++      }
++    },
++    "smallest_attainable_p_anywhere_in_this_run": 0.25,
++    "reading": "the smallest p ANY contrast in this run could have returned is 0.25, on the three-game stage-1 blocks. The PRIMARY landed one paired game, where the only attainable p is 1.0. NON-TEST is therefore a structural fact about the achieved n, not a reading of the observed p-values."
++  },
+   "power_statement": {
+     "arithmetic": "both knobs live ONLY in the split-induce fallback, and the goal-only prompt is never built when the combined call succeeds. Split-induce is 19.8% of cells and its declined rate is already only 17.4%, so driving split-cell declines to ZERO moves the ITT declined rate 0.431 -> 0.397: a 3.4 point ceiling. At 20 games x 3 replicates the permutation test cannot resolve 3.4 points, so the STAGE 2 PRIMARY IS DECLARED UNDERPOWERED BEFORE IT IS RUN. A stage-2 null is evidence that the knobs are STRUCTURALLY MISDIRECTED, not that showing evidence does not work.",
+     "min_reachable_p_reported": 0.0,
+@@ -1507,14 +1900,16 @@
+     "n": 116,
+     "source": "results/arc_object_perception_ab_change_fidelity_20260801/engines, 116 world_model.py from the same 20 games, classified with this run's classifier",
+     "split_induce_rate": 0.198,
+-    "trope_rate": 0.207
++    "trope_rate": 0.207,
++    "PARTITION_IS_A_ONE_DIRECTIONAL_PROXY": "split-induce is inferred as `n_defs >= 2` (two top-level is_level_complete definitions -- the shadowing signature). Verified to hold on all 116 frozen cells BY CONSTRUCTION, which is the problem: it is the definition used, not an independent measurement. `_split_induce` writes only ONE definition whenever the engine half supplied no is_level_complete, so such a cell has n_defs == 1 and is counted as COMBINED. The error therefore runs one way -- split cells hide in the combined bucket, never the reverse -- and because split cells decline far less (0.174 vs 0.495), the true split share is at least 19.8%. THE 3.4-POINT FIGURE IS A LOWER BOUND ON THE KNOBS' REACH, NOT A CEILING. The sign of the conclusion (declines concentrate where the knobs are not) is unaffected; the exact number is not a hard ceiling and should not be quoted as one. To settle it, persist `_write_world_model`'s split-induce note per cell -- today it is returned to the caller and never written down. This run's own 8 stage-2 cells agree with the direct `goal_only_call_ran` witness 8/8, which is consistent but far too small to validate the proxy over a 116-cell corpus."
+   },
+-  "works_on_an_unsolved_game": true,
++  "works_on_an_unsolved_game": false,
+   "works_on_an_unsolved_game_evidence": {
+-    "what_reaches_the_model": "the agent's OWN observed transitions only, rendered by the same _transitions_block the engine prompt already uses",
+-    "no_win_is_shown_to_any_arm": "levelup_rows_in_shown is 0 for all 20 games -- the prefix split puts the level-up row in the held-out tail, so every predicate in this run was written by a model that had never seen the game won",
+-    "nothing_a_hidden_game_would_withhold": "no game source, no hand-written adapter, no curated win example, and _previous_level_complete_grid passed as None in every arm (it is the NEXT level's opening board, not a win state -- the 2026-07-29 win-state-poison correction)",
+-    "existence_proof_class": "tn36 is in the roster precisely because it is a stall game; its shown transitions contain no level-up either, exactly like the other 19"
++    "status": "MECHANISM ARGUMENT ONLY -- NOT MEASURED. Corrected 2026-08-02 after adversarial review; the field was TRUE and the supporting existence proof was false. No unsolved game appears anywhere in this run.",
++    "what_reaches_the_model": "the agent's OWN observed transitions only, rendered by the same _transitions_block the engine prompt already uses. The FIELD is as available on a hidden game as on a solved one; the DISTRIBUTION is not -- see known_confounds.transition_SELECTION_is_solve_conditioned.",
++    "no_win_is_shown_to_any_arm": "levelup_rows_in_shown is 0 for all 20 games -- the prefix split puts the level-up row in the held-out tail, so every predicate in this run was written by a model that had never seen the game won. This is the verified claim. It is NOT the same as 'the roster contains games with no win': meta.json's own split_meta records levelup_rows_in_heldout == 1 for all 20.",
++    "nothing_a_hidden_game_would_withhold": "no game source, no hand-written adapter, no curated win example, and _previous_level_complete_grid passed as None in every arm (it is the NEXT level's opening board, not a win state -- the 2026-07-29 win-state-poison correction). True of the PROMPT CONTENT. Not true of how the transitions were SELECTED.",
++    "what_would_actually_settle_it": "run the same contrast on a game with NO registered GameAdapter and no banked route, driving _split_induce from a stall-triggered exploration buffer. That is a different harness -- build_progress_window returns None for such a game by construction -- and it is the experiment this run did not run."
+   },
+   "defaults_changed": false,
+   "defaults_note": "both CARNOT_ARC_GOAL_PROMPT_TRANSITIONS and CARNOT_ARC_GOAL_DEDUP still ship OFF. This run measures them; flipping either is an operator decision.",
+@@ -1533,23 +1928,9 @@
+     "driver": "results/arc_goal_evidence_20260802/run_ab.py",
+     "analyser": "results/arc_goal_evidence_20260802/analyse.py",
+     "exhibit": "results/arc_goal_evidence_20260802/out/exhibit_truncation.json + exhibit_*.txt",
+-    "stopping_rule": "results/arc_goal_evidence_20260802/out/stopping_rule.json"
++    "stopping_rule": "results/arc_goal_evidence_20260802/out/stopping_rule.json",
++    "grounded_placebo": "results/arc_goal_evidence_20260802/out/grounded_placebo.json (built by placebo.py)"
+   },
+-  "honest_verdict": "complete_goal_evidence_ab_NON_TEST_truncated_primary_underpowered_knobs_shown_structurally_misdirected",
+-  "headline": "NON-TEST, not a null. The run was truncated by its stopping rule at 17 of 140 cells, so the PRIMARY (declined rate) rests on 1 game(s) against a design powered on 20, and 2 of 3 treatment cells returned no parseable predicate at all. Nothing is claimed about whether evidence in the goal prompt changes the declined rate. What the run DID establish does not depend on that n: (1) the two shipped knobs are STRUCTURALLY MISDIRECTED -- they live only in the split-induce fallback, and 46 of the 50 declines in the 116-engine frozen corpus come from the combined path where the goal-only prompt is never built, capping any live-path effect at ~3.4 points; (2) on every stage-2 cell where the mechanism did not fire, the two TREATMENT arms produced byte-identical world models (2 of 2) while the CONTROL diverged on 1 of 2 at the same seed -- so a fixed CARNOT_ARC_GENERATOR_SEED does NOT fix the completion on this server, and the non-firing majority contributes NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed; (3) the evidence-carrying goal prompt drives the model into its generation cap -- 4096 of 4096 tokens against the control's 314, with 819 empty code fences in the degenerate tail.",
+-  "findings": [
+-    "STAGE 1 missingness moved but CANNOT BE RESOLVED at this n: no-predicate-returned goes 0.000 -> 0.667 (delta +0.667, 95% CI [0.0, 1.0]) over only 3 paired game(s), where the permutation reference set cannot reach alpha=0.05 whatever the shift -- observed p=0.50020. Read this as UNRESOLVED, never as absence. A shift of this size, if real, would mean every shape rate here is conditioned on surviving a post-treatment filter.",
+-    "A/A floor on the same missingness measure: 0.000 -> 0.000 (delta +0.000, p=1.00000) -- two runs of the IDENTICAL control arm at different seed bases. This is what 'no effect' looks like on this instrument.",
+-    "PRIMARY (stage 1, DECLINED rate among cells that returned a predicate): 0.000 -> 0.000 (delta +0.000, 95% CI [0.0, 0.0], p=1.00000, n_control=1, n_treat=1). NOT RESOLVABLE: only 1 paired game(s), below the point where alpha=0.05 is reachable at all. This is an absence of evidence, not evidence of absence.",
+-    "A/A floor on the PRIMARY: delta +0.333, p=1.00000. A treatment delta smaller than this floor is not distinguishable from the sampler.",
+-    "SECONDARY TROPE (stage 1): 0.000 -> 0.000 (delta +0.000, p=1.00000).",
+-    "SECONDARY GROUNDED (stage 1): 1.000 -> 1.000 (delta +0.000, p=1.00000).",
+-    "The model's OWN WORDS: declined predicates whose docstring says a win state was never provided -- control 0, treatment 0, A/A 0 (counts, not rates).",
+-    "STAGE 2 mechanism firing (the column that separates an UNTESTED arm from a REFUTED one): A 0/2, B 0/2, C 0/2, AA 2/2. Both knobs live ONLY in the split-induce fallback, so on every cell where the combined induce call succeeded neither arm differs from control BY CONSTRUCTION.",
+-    "STAGE 2 ITT PRIMARY, B vs A: 0.500 -> 1.000 (delta +0.500, p=1.00000). DECLARED UNDERPOWERED BEFORE THE RUN: the arithmetic ceiling on this contrast is ~3.4 points.",
+-    "STAGE 2 ITT PRIMARY, C vs A (evidence + dedup): 0.500 -> 1.000 (delta +0.500, p=1.00000). Same ceiling applies.",
+-    "STAGE 2 missingness, B vs A: 0.000 -> 0.000 (p=1.00000) -- whether the stage-1 truncation failure reaches the live path, where it can only act on the split-induce minority."
+-  ],
+   "exhibit_truncation": {
+     "what_this_is": "an EXHIBIT, not a measurement. No cell, no rate, no test uses it.",
+     "game": "ar25",
+@@ -1594,15 +1975,77 @@
+       "what": "GROUNDED is defined as 'the predicate names a literal that appears in the agent's observed deltas'. The TREATMENT prompt is precisely those deltas, rendered as text. A model that copies a row index out of its prompt scores GROUNDED without having understood anything, and the control -- which is shown no deltas -- can only score GROUNDED by coincidence.",
+       "so_what": "the GROUNDED contrast is NOT a clean read on goal quality and must not be reported as one. It is reported as what it is: whether the treatment gets the model to REFERENCE its own observations.",
+       "which_metrics_are_clean": "DECLINED (the PRIMARY) is unaffected -- a constant-False predicate references nothing, so no prompt content can mechanically produce or prevent it. TROPE is unaffected for the same reason: a whole-board uniformity claim names nothing observed by construction. MISSING is unaffected -- it is a parse outcome. The circularity is confined to GROUNDED.",
+-      "why_it_was_not_fixed": "removing it would mean changing the pre-registered outcome definition after seeing data. It is disclosed instead."
++      "why_it_was_not_fixed": "removing it would mean changing the pre-registered outcome definition after seeing data. It is disclosed instead.",
++      "UPGRADED_2026_08_02": "this disclosure was NECESSARY BUT NOT SUFFICIENT. It still assumed the label at least measures the agent's own transitions. The placebo test in GROUNDED_placebo_discriminance shows it does not: re-scored against a DIFFERENT game's transitions the label survives on 92% of comparisons, and every GROUNDED cell in the run stays GROUNDED under at least 17 of 19 foreign games. GROUNDED is a SYNTAX label. The 'which_metrics_are_clean' sentence above still stands and was re-checked, not assumed."
+     },
+     "arm_ORDER_within_a_game_is_fixed_not_randomised": {
+-      "severity": "MEDIUM, and confined to the TIMING measure",
++      "severity": "MEDIUM, and it reaches SHAPE as well as TIMING -- see so_what_for_SHAPE",
+       "what": "cells run A, B, C, AA within a game (and gA, gB, gAA in stage 1), always in that order. Anything that drifts with position -- llama.cpp prompt-cache warmth, GPU thermal state -- is therefore confounded with the arm label.",
+-      "so_what_for_SHAPE": "nothing. Every arm sends the SAME seed within a (game, replicate), and a fixed seed fixes the draw; the byte-identity check on non-firing stage-2 cells is direct evidence that order is not perturbing the sampled output.",
++      "so_what_for_SHAPE": "NOT nothing, contrary to what this entry said until 2026-08-02. Every arm sends the same seed within a (game, replicate), but the byte-identity check FOUND A DIVERGENCE rather than confirming the assumption: on bp35 the control wrote 3722 bytes and both treatments 4150, at seed 8300, with the goal-only call firing in NONE of the three so neither knob could act. A fixed CARNOT_ARC_GENERATOR_SEED does not fix the completion on this server. The pairing is APPROXIMATE and arm order is a confound on shape, not only on timing.",
+       "so_what_for_TIMING": "median_elapsed_s must be read descriptively and NEVER as a treatment effect with a p-value. Observed directly in this run: on ar25 the control took 111.4s and both treatments 55.2/55.1s, while on bp35 the control took 44.5s and both treatments 67.5/67.6s -- the sign flips between games, which is what position-plus-noise looks like.",
+       "where_timing_IS_load_bearing": "stage 1, where the treatment prompt is 10-20x the control's and the gap is 3s vs 340s. A cache or thermal effect cannot produce a 100x difference in that direction -- warmth makes calls FASTER -- and the failures are explained by a mechanism visible in the artefact itself (three full 4096-token attempts, code block truncated mid-definition).",
+-      "the_fix_for_a_future_run": "randomise or counterbalance arm order within a game."
++      "the_fix_for_a_future_run": "randomise or counterbalance arm order within a game.",
++      "evidence": "THE CHECK FIRED, AND IT FOUND A HARNESS DEFECT RATHER THAN CONFIRMING THE ASSUMPTION. A-vs-treatment identity holds on ar25 and FAILS on bp35 (A 3722 bytes / sha bcf42b01, B and C both 4150 bytes / sha 64b7c69b) -- same seed 8300, zero content failures, and the goal-only call ran in NONE of the three, so neither knob could have acted. B and C are byte-identical to EACH OTHER on both games, and they differ in the dedup knob, so the divergence is not knob-driven. What differs between A and (B, C) is POSITION: A is the first cell of the game block and B and C follow it against a KV cache warmed by the identical preceding request. CONSEQUENCE: a fixed CARNOT_ARC_GENERATOR_SEED does NOT guarantee a byte-identical completion on this server -- llama.cpp's sampled output depends on cache/batch state as well as the seed. The pairing this design relies on is therefore APPROXIMATE, not exact, and non-firing cells contribute NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed. Reported rather than dropped: this is precisely the outcome the check was written to surface, and it makes the arm-order confound a SHAPE issue and not only a timing one."
++    },
++    "transition_SELECTION_is_solve_conditioned": {
++      "severity": "HIGH for the hidden-game reach claim; NIL for the within-run contrast",
++      "added": "2026-08-02, post-review. Not disclosed in the original artifact at all.",
++      "what": "the prompt CONTENT is clean -- only the agent's own observations reach the model. How those observations were SELECTED is not. Every window comes from build_progress_window -> exp5717.build_window -> arc_loop_solve.solve_adaptered(game, 1), i.e. the last k actions of a BANKED WINNING ROUTE, cut at the L0->L1 boundary. On a hidden game the live `trans` at a _split_induce call is whatever the stall-triggered exploration buffer happens to hold -- a strictly weaker sample from a different distribution.",
++      "so_what": "it does not bias the A/B: every arm within a game sees the identical window. It does invalidate any extrapolation from these rates to a hidden game, which is why works_on_an_unsolved_game is now False.",
++      "how_to_remove_it": "drive the contrast from a live exploration buffer rather than a banked route -- the harness would have to change, since build_progress_window returns None for a game it cannot solve to L1 offline."
+     }
+-  }
+-}
+\ No newline at end of file
++  },
++  "POST_REVIEW_CORRIGENDUM_2026_08_02": {
++    "provenance": "adversarial review of the committed artifact, 2026-08-02, same day. Every finding below was re-verified against the run's own data before being applied; the verification commands are named so a reader can repeat them. Nothing in out/preregistration.json, out/rows.json or out/analysis.json was touched, so reproducibility_checksum is unchanged and still binds the design, the cells and the scoring exactly as they were.",
++    "1_works_on_an_unsolved_game_was_FALSE": {
++      "was": "works_on_an_unsolved_game: true",
++      "now": "false, restated as a mechanism argument",
++      "verified_how": "all 20 roster games are full_game_clear: true in ops/arc_solve_registry.yaml (levels_reproduced 6-10), and every window required solve_adaptered(game, 1) to reach L1 -- build_progress_window's own docstring says it returns None otherwise. Not one unsolved game was measured."
++    },
++    "2_the_roster_has_no_zero_win_games": {
++      "was": "'stall games with zero observed wins are in the roster on purpose', asserted in run_ab.py, out/preregistration.json and the research note",
++      "now": "false as written. meta.json's split_meta records levelup_rows_in_heldout == 1 for all 20 games; the window builder logged levelups=1 for all 20. The verified claim is the narrower one: levelup_rows_in_shown == 0, i.e. no ARM was shown a win.",
++      "prereg_left_frozen": "out/preregistration.json still contains the false sentence and was deliberately NOT edited -- a pre-registration that is rewritten after seeing data is not a pre-registration. prereg_sha256 still verifies. run_ab.py carries an in-place correction comment beside the string it emits, and emits the same bytes."
++    },
++    "3_the_tn36_existence_proof_was_false": {
++      "was": "works_on_an_unsolved_game_evidence.existence_proof_class -- 'tn36 is in the roster precisely because it is a stall game'",
++      "now": "deleted. tn36 is full_game_clear: true with levels_reproduced: 7, and its registry entry cites four explicit outer-loop source reads (tn36.py:2153, :2171, :2269, :2500). It also contributed ZERO cells to this run -- rows.json holds only ar25, bp35 and cd82 -- so it was a roster entry, never a measurement."
++    },
++    "4_the_split_vs_combined_partition_is_a_one_directional_proxy": {
++      "detail": "see preflight_on_frozen_shipped_corpus.PARTITION_IS_A_ONE_DIRECTIONAL_PROXY. The 3.4-point figure is a LOWER BOUND on the knobs' reach, not a ceiling. The direction of the finding is unchanged."
++    },
++    "5_GROUNDED_does_not_discriminate": {
++      "detail": "see GROUNDED_placebo_discriminance. Two behaviour-preserving rewrites were run against REAL captured cells: `return False` -> `return False and grid[0, 0] == 4` flips all five real DECLINED cells to GROUNDED, exactly inverting the reported S2-B/S2-C grounded result from a model that got strictly no better; an alpha-rename or an operand swap flips TROPE cells to GROUNDED. The PRIMARY and TROPE contrasts are NOT affected."
++    },
++    "6_the_artifact_was_not_the_output_of_its_own_builder": {
++      "was": "exhibit_truncation and known_confounds appeared in the committed artifact and in no code path; artifacts{} carried annotations build_artifact.py did not emit. Rebuilding produced 47 leaf differences.",
++      "now": "both blocks are constructed in build_artifact.py, so a rebuild reproduces the file. Found while applying finding 1, not reported by the review.",
++      "why_it_matters": "this is precisely the class artifact_freshness_lint.py exists for. That lint did not fire because this artifact is not in ops/analyzer_artifact_index.json -- a coverage limit the lint's own docstring names out loud, demonstrated here on a live artifact one day later."
++    },
++    "7_min_reachable_p_was_the_designs_floor_not_the_runs": {
++      "detail": "see min_reachable_p_at_achieved_n. The smallest p ANY contrast in this truncated run could have returned is 0.25; on the PRIMARY, which landed one paired game, it is 1.0. Reported alongside the design-time 0.0 rather than replacing it."
++    },
++    "what_survived_review_unchanged": [
++      "the PRIMARY (DECLINED) and TROPE contrasts and their A/A floors",
++      "the structural-misdirection finding: 46 of 50 declines in the frozen corpus sit on the combined path where the goal-only prompt is never built",
++      "the truncation exhibit: 4096/4096 tokens against the control's 314, 819 empty code fences, 3s -> 343s per call",
++      "solve_provenance: development_proxy -- correctly declared, no level banked, adversarial_verify flags nothing",
++      "defaults unchanged: both knobs still ship OFF"
++    ]
++  },
++  "honest_verdict": "complete_goal_evidence_ab_NON_TEST_truncated_primary_underpowered_knobs_shown_structurally_misdirected",
++  "headline": "NON-TEST, not a null. The run was truncated by its stopping rule at 17 of 140 cells, so the PRIMARY (declined rate) rests on 1 game(s) against a design powered on 20, and 2 of 3 treatment cells returned no parseable predicate at all. Nothing is claimed about whether evidence in the goal prompt changes the declined rate. What the run DID establish does not depend on that n: (1) the two shipped knobs are STRUCTURALLY MISDIRECTED -- they live only in the split-induce fallback, and 46 of the 50 declines in the 116-engine frozen corpus come from the combined path where the goal-only prompt is never built, capping any live-path effect at ~3.4 points; (2) on every stage-2 cell where the mechanism did not fire, the two TREATMENT arms produced byte-identical world models (2 of 2) while the CONTROL diverged on 1 of 2 at the same seed -- so a fixed CARNOT_ARC_GENERATOR_SEED does NOT fix the completion on this server, and the non-firing majority contributes NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed; (3) the evidence-carrying goal prompt drives the model into its generation cap -- 4096 of 4096 tokens against the control's 314, with 819 empty code fences in the degenerate tail.",
++  "findings": [
++    "STAGE 1 missingness moved but CANNOT BE RESOLVED at this n: no-predicate-returned goes 0.000 -> 0.667 (delta +0.667, 95% CI [0.0, 1.0]) over only 3 paired game(s), where the permutation reference set cannot reach alpha=0.05 whatever the shift -- observed p=0.50020. Read this as UNRESOLVED, never as absence. A shift of this size, if real, would mean every shape rate here is conditioned on surviving a post-treatment filter.",
++    "A/A floor on the same missingness measure: 0.000 -> 0.000 (delta +0.000, p=1.00000) -- two runs of the IDENTICAL control arm at different seed bases. This is what 'no effect' looks like on this instrument.",
++    "PRIMARY (stage 1, DECLINED rate among cells that returned a predicate): 0.000 -> 0.000 (delta +0.000, 95% CI [0.0, 0.0], p=1.00000, n_control=1, n_treat=1). NOT RESOLVABLE: only 1 paired game(s), below the point where alpha=0.05 is reachable at all. This is an absence of evidence, not evidence of absence.",
++    "A/A floor on the PRIMARY: delta +0.333, p=1.00000. A treatment delta smaller than this floor is not distinguishable from the sampler.",
++    "SECONDARY TROPE (stage 1): 0.000 -> 0.000 (delta +0.000, p=1.00000).",
++    "SECONDARY GROUNDED (stage 1): 1.000 -> 1.000 (delta +0.000, p=1.00000).",
++    "The model's OWN WORDS: declined predicates whose docstring says a win state was never provided -- control 0, treatment 0, A/A 0 (counts, not rates).",
++    "STAGE 2 mechanism firing (the column that separates an UNTESTED arm from a REFUTED one): A 0/2, B 0/2, C 0/2, AA 2/2. Both knobs live ONLY in the split-induce fallback, so on every cell where the combined induce call succeeded neither arm differs from control BY CONSTRUCTION.",
++    "STAGE 2 ITT PRIMARY, B vs A: 0.500 -> 1.000 (delta +0.500, p=1.00000). DECLARED UNDERPOWERED BEFORE THE RUN: the arithmetic ceiling on this contrast is ~3.4 points.",
++    "STAGE 2 ITT PRIMARY, C vs A (evidence + dedup): 0.500 -> 1.000 (delta +0.500, p=1.00000). Same ceiling applies.",
++    "STAGE 2 missingness, B vs A: 0.000 -> 0.000 (p=1.00000) -- whether the stage-1 truncation failure reaches the live path, where it can only act on the split-induce minority."
++  ]
++}
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index a2fc63f4b5..2f548bfaba 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -276,6 +276,15 @@
+         "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
+         "acknowledged_date": "2026-08-02",
+         "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
++        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
++        "acknowledged_on": "2026-08-02",
++        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
++        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
++        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+-- 
+2.55.0
+

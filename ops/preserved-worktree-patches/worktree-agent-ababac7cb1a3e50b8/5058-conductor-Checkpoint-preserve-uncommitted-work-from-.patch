@@ -1,0 +1,43 @@
+From 53b5614859223520838a8afd4926d2c254d0a938 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 12:55:46 -0400
+Subject: [PATCH 05058/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 62b9c73d82..5c6a08cd1b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-30T16:38:32Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-30T16:55:44Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3273d708a3..ce8c463224 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9658,3 +9658,4 @@ The contro |
+ | 2026-06-30 15:45 UTC | PHASE D2 (VERIFIER MOAT; the published WIN-CONDITI | OK | 88 passed, 1 warning in 9.47s |
+ | 2026-06-30 16:10 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | OK | 87 passed, 1 warning in 10.45s |
+ | 2026-06-30 16:36 UTC | PHASE D6 (VERIFIER MOAT; the EFFICIENCY axis -- no | OK | 88 passed, 1 warning in 7.06s |
++| 2026-06-30 16:53 UTC | PHASE D4 (VERIFIER MOAT; CROSS-CORPUS GENERALIZATI | OK | 86 passed, 1 warning in 7.07s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2bd4bd2491..0fe6ddc8df 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-30T16:38:32Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-30T16:55:44Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

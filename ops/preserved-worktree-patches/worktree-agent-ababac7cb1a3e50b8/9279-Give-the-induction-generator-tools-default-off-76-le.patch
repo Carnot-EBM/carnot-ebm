@@ -1,0 +1,2292 @@
+From bcde7bcd18e220c8cc5259a759113633f5181dad Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 17 Aug 2026 10:32:44 -0400
+Subject: [PATCH 09279/11362] Give the induction generator tools, default off:
+ 76% less decode on one cell
+
+Operator directive: do not drop Qwen3.8-27B, make it faster with tools first. The
+cost being attacked is real -- Qwen3.8 induction burns a median ~61k decode tokens
+where the final answer is 1-8k, and thinking is ~95% of it. On the scored card that
+is roughly 86% of a 12h eval budget, which does not fit once gameplay is counted.
+
+The mechanism: the model was spending those tokens MENTALLY SIMULATING grid
+transforms against 12 observed transitions. Prefill is 15.4x cheaper than decode
+(1224 vs 79.4 tok/s), so letting it EXECUTE instead of simulate is the lever.
+
+WHAT SHIPPED. A tool registry (arc_induction_tools.py) and a bounded loop
+(arc_induction_tool_loop.py), plus one env-gated hook at the top of
+LocalGGUFProposer.induce that falls through to the existing single-shot path on any
+failure. Tools wrap functions that already existed rather than reimplementing them.
+MCP as vocabulary, not transport: the same registry can register behind
+carnot/mcp's optional import, but no MCP transport, asyncio or stdio subprocess
+goes near the offline scored path. DEFAULT OFF, pinned by test -- unset leaves
+induction byte-identical.
+
+MEASURED, single card, tu93 seed 101, against a 61,284-token single-shot reference:
+
+  arm      turns  decode   wall     terminated_by            memorizing
+  tb3072       5  14,714   6.8 min  zero_mismatches          no
+  tb2048      12  24,790  11.5 min  early_stop_non_improving  no
+  single       1  61,284  28.8 min  --                        --
+
+tb3072 converged to ZERO mismatches in 5 turns at 76% less decode and 76% less
+wall clock, mismatch trajectory [2, 0], and the memorization scan reports
+n_window_coord_literals 0 / is_memorizing false -- it induced a rule rather than
+transcribing coordinates, which was the failure mode this design most had to avoid.
+
+tb2048 settles the budget question in the opposite direction: at 2048 the mismatch
+trajectory is FLAT at [9, 9, 9] across three candidates and early-stop fires. The
+thinking is doing real work; starve it and the model submits engines it cannot fix.
+So 3072 is load-bearing, not merely adequate.
+
+THE FIRST PROBE PRODUCED NOTHING, and that is preserved as evidence
+(probe1_no_engine.json). 12 turns, 44 tool calls -- 32 query_region + 12
+diff_grids -- and run_engine_on_transitions NEVER called: candidates_scored 0,
+engine_source_chars 0. Given cheap perception tools the model perceived forever and
+never submitted. The early-stop could not fire because it counts consecutive
+non-improving ENGINE SUBMISSIONS and there were none. I initially read that run's
+token counts off the server log and reported a "45% decode reduction, marginal
+fail"; that was wrong, because the run yielded no engine and a live run would then
+pay full single-shot on top via the fallback. Recorded because the mistake is the
+instructive part: measuring cost without checking for output.
+
+The fix was instruction-side plus a hard nudge after three engine-less turns
+(force_engine_nudges 1 in the winning arm). 44/44 and 34/34 tool calls parsed by
+llama.cpp's peg-native handler across all three runs, zero failures -- Qwen3.8 can
+use tools; probe 1 showed it using the wrong ones.
+
+HONEST LIMITS. n=1 game, one seed: a 76% reduction on one cell is a strong signal,
+not a result. heldout_accuracy and cell_recall are both None in these reports, so
+quality rests on the mismatch trajectory and the memorization scan rather than a
+held-out score. Ships OFF and earns its default through a multi-game measurement.
+
+Also refiles 7 freshness acknowledgements invalidated by the module edit. Worth
+recording a guard hole found while doing so: the artifacts were listed STALE but
+the lint exited 0, because drift_is_pre_existing compares an artifact's BUILD-TIME
+recorded hash against HEAD and ignores whether an acknowledgement closed that gap.
+So an artifact that has ever been acknowledged silently accepts unlimited further
+drift. The acknowledgements here were filed anyway rather than leaning on that.
+---
+ .../arc-agi3-leaderboard-technique-watch.md   |   8 +
+ docs/research-notes/arc-agi3-news-watch.md    |   6 +
+ .../arc-world-model-trust-energy/spec.md      |  60 ++
+ ...arc_leaderboard_technique_watch_state.json |   6 +-
+ ops/.arc_news_watch_state.json                |   6 +-
+ ops/arc-daily-prep-status.json                |   6 +-
+ .../agentic/arc_executable_world_model.py     |  19 +
+ .../carnot/agentic/arc_induction_tool_loop.py | 481 +++++++++++++++
+ python/carnot/agentic/arc_induction_tools.py  | 549 ++++++++++++++++++
+ .../probe1_no_engine.json                     |  67 +++
+ .../tool_loop_probe_tb2048_report.json        | 139 +++++
+ .../tool_loop_probe_tb3072_report.json        | 111 ++++
+ ...6011_world_model_change_gate_four_arm.json |   8 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   8 +
+ ...6013_hidden_state_change_gate_closure.json |   8 +
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |   8 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   8 +
+ ...rc_generator_concurrency_fix_20260727.json |   8 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   8 +
+ tests/python/test_arc_induction_tool_loop.py  | 500 ++++++++++++++++
+ 20 files changed, 2005 insertions(+), 9 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_induction_tool_loop.py
+ create mode 100644 python/carnot/agentic/arc_induction_tools.py
+ create mode 100644 results/arc_tool_loop_probe_20260817/probe1_no_engine.json
+ create mode 100644 results/arc_tool_loop_probe_20260817/tool_loop_probe_tb2048_report.json
+ create mode 100644 results/arc_tool_loop_probe_20260817/tool_loop_probe_tb3072_report.json
+ create mode 100644 tests/python/test_arc_induction_tool_loop.py
+
+diff --git a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+index ce30f8f8ae..2999a9af67 100644
+--- a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
++++ b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+@@ -145,3 +145,11 @@ CHECK_TIMED_OUT
+ 
+ - **New top-five entrant:** **egangu** is **#5 at 2.01**. No submission-linked public code, notebook, dataset, discussion, or writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/egangu/code)
+ 
++## 2026-08-17 13:39 UTC -- NEW
++
++- **New top-five entrant:** **rellik13** is **#4 at 2.53**. No submission-linked public code or technique disclosure was found. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
++
++- **Fufront-RyanX-AGI-Team — newly discovered artifact:** Its public dataset contains **7,525 pre-recorded actions across 25 named public games** plus a `TraceReplayAgent` that loads the matching `{game_id}.json` and executes the fixed sequence. No evidence connects this artifact to its current hidden-game submission. **Classification: (a) EXPLOIT/HARDCODED; not transferable to unseen games.** [Dataset](https://www.kaggle.com/datasets/ryanxatlasai/arc-agi3-traces-v3)
++
++- **Kevin E R MILLE (#6) — newly discovered public “Sophia” notebook:** A CPU-only, model-free online explorer restricts itself to declared legal actions, suppresses `ACTION7` when alternatives exist, retires action arms after eight frame-level no-ops, and chooses the least-tried action for each exact frame hash weighted by its observed effect rate with 10% random exploration. Clicks target small changed regions or one occupied cell per non-background 4×4 block, retaining 25% uniform-random coverage and preferentially revisiting responsive targets. No source reading or per-game policy hardcoding appears; linkage to the current submission is unconfirmed. **Classification: (b) GENERAL-PURPOSE.** [Notebook](https://www.kaggle.com/code/kevinermille/arc3-sophia-no-action7-v1)
++
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index fcf268ebec..9f1f3d1b47 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -153,3 +153,9 @@ CHECK_TIMED_OUT
+ 
+ CHECK_TIMED_OUT
+ 
++## 2026-08-17 13:15 UTC -- NEW
++
++- **Leaderboard shakeup:** Lord Han Solo now leads at **2.76**, followed by **cstl (2.70)**, **Daniel Franzen (2.58)**, and **rellik13 (2.53)**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
++- Organizers clarified that final-selected notebooks **will not be rerun**: private scores are fixed during the original submission run. Every run evaluates both leaderboard halves, but only the public half is displayed; ARC-AGI-3’s runtime limit is **9 hours**. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
++- Kaggle is investigating **RTX Pro 6000 capacity constraints** causing queued submissions and says it is working to free additional resources. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
++
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 17998b51d1..5b800c8d6d 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -26023,3 +26023,63 @@ restore the store file byte-identically.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6410 | `python/carnot/agentic/arc_recall_gated_resample.py` (pure decision + keep rule); wired in `python/carnot/agentic/arc_competition_agent.py` (`_maybe_recall_gated_resample`, called on the plain branch of `_induce_and_plan` right after `WorldModelVerifier.score`). Hidden-state branch deliberately not covered: all measured collapse cells (tu93/tr87/sp80) route through the plain branch, and that branch's candidate-pool trust selection is a different failure surface. | `tests/python/test_arc_recall_gated_resample.py` (16/16: decision unit tests incl. the quiet-window and seed-pinned refusals; agent-helper integration with a fake proposer and `E3_DIR` -> tmp_path incl. recovery, byte-identical restore, budget cap, induce-failure degradation, and a mirror-consistency check against the plain gate); 102 pre-existing tests over the touched gate/policy paths stay green. |
++
++### REQ-ARC-WMTE-6460: Tool-Calling Induction Loop (Default OFF, Awaiting Probe Verdict)
++
++Single-shot induction on the Qwen3.8-27B generator decodes 38k-94k tokens per call
++(median ~61k). ~95% of that is the think channel, spent mentally simulating grid
++transforms against the observed transitions. Decode is ~15x more expensive than
++prefill on the scored card, so replacing mental simulation with actual execution is
++the cost lever.
++
++The proposer SHALL support a tool-calling induction loop (default OFF,
++`CARNOT_ARC_INDUCE_TOOL_LOOP=1`) in which the model calls four in-process tools:
++
++1. `run_engine_on_transitions(code)` — runs a candidate engine on the observed
++   window; returns bounded mismatches, static defects, a hardcoded-coordinate scan,
++   and an AGGREGATE-ONLY held-out score (2-3 tail rows withheld from the test set).
++2. `query_region(t, r0, r1, c0, c1, which)` — plain integer cells, no RLE decoding.
++3. `diff_grids(t)` — the changed cells of one transition, with the action.
++4. `run_goal_on_states(code)` — runs a candidate goal predicate on observed grids.
++
++The tools are plain functions plus JSON schemas (MCP as vocabulary, not transport).
++The live loop calls them directly in-process; a FastMCP registration exists for dev
++use only, behind `carnot.mcp.server`'s optional import.
++
++Termination SHALL be layered: hard turn cap (12), a per-turn thinking budget
++(`thinking_budget_tokens`, default 3072), the induce timeout as a wall-clock
++deadline, best-so-far monotone accept (fewest visible mismatches wins at any cap),
++and early stop after 2 consecutive non-improving candidates. A loop that produces no
++scoreable engine SHALL fall back to the shipped single-shot induce.
++
++The memorization trap is mitigated IN the tool, not after it: the mismatch report
++carries the experiment-5760 hardcoded-coordinate scan and warns the model, and the
++held-out rows are never shown cell-by-cell. The loop records tool-call parse rate
++per run (`last_tool_loop_stats`), because Qwen3.8 routes through llama.cpp's generic
++PEG autoparser whose tool-call reliability was unverified at design time.
++
++#### SCENARIO-ARC-WMTE-6460-1 (default off)
++
++Given the env flag unset, induce() SHALL be byte-identical to the shipped
++single-shot path and the loop module SHALL never be consulted.
++
++#### SCENARIO-ARC-WMTE-6460-2 (zero-mismatch accept)
++
++Given a tool-round candidate with zero visible mismatches, the loop SHALL write it
++and stop.
++
++#### SCENARIO-ARC-WMTE-6460-3 (fallback)
++
++Given no parseable engine by the cap, induce() SHALL run the shipped single-shot
++path; failure is never worse than today.
++
++#### SCENARIO-ARC-WMTE-6460-4 (parse accounting)
++
++Given a malformed tool call, the loop SHALL count it, return the error as the tool
++result, and continue.
++
++## Implementation Status (REQ-ARC-WMTE-6460)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6460 | `python/carnot/agentic/arc_induction_tools.py` (registry + session + schemas + memorization scan); `python/carnot/agentic/arc_induction_tool_loop.py` (loop + termination + stats); hook at the top of `LocalGGUFProposer.induce` in `python/carnot/agentic/arc_executable_world_model.py`, env-gated, fall-through on failure. | `tests/python/test_arc_induction_tool_loop.py` (10/10: env-unset bomb pin, zero-mismatch accept, turn-cap fallback to single-shot, parse-failure accounting, early stop, aggregate-only held-out, memorization flag, dispatch coverage, region/diff round-trip). |
+diff --git a/ops/.arc_leaderboard_technique_watch_state.json b/ops/.arc_leaderboard_technique_watch_state.json
+index 97eb435a4c..ed80e4cf3c 100644
+--- a/ops/.arc_leaderboard_technique_watch_state.json
++++ b/ops/.arc_leaderboard_technique_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+-  "last_findings": "- **New top-five entrant:** **Fufront-RyanX-AGI-Team** (`ryanxatlasai`) is **#3 at 2.25**. No submission-linked public code or technique disclosure was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/ryanxatlasai/code)\n\n- **New top-five entrant:** **egangu** is **#5 at 2.01**. No submission-linked public code, notebook, dataset, discussion, or writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/egangu/code)",
+-  "last_checked": "2026-08-16T13:31:08.058959+00:00",
+-  "history_count": 28
++  "last_findings": "- **New top-five entrant:** **rellik13** is **#4 at 2.53**. No submission-linked public code or technique disclosure was found. **Classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)\n\n- **Fufront-RyanX-AGI-Team \u2014 newly discovered artifact:** Its public dataset contains **7,525 pre-recorded actions across 25 named public games** plus a `TraceReplayAgent` that loads the matching `{game_id}.json` and executes the fixed sequence. No evidence connects this artifact to its current hidden-game submission. **Classification: (a) EXPLOIT/HARDCODED; not transferable to unseen games.** [Dataset](https://www.kaggle.com/datasets/ryanxatlasai/arc-agi3-traces-v3)\n\n- **Kevin E R MILLE (#6) \u2014 newly discovered public \u201cSophia\u201d notebook:** A CPU-only, model-free online explorer restricts itself to declared legal actions, suppresses `ACTION7` when alternatives exist, retires action arms after eight frame-level no-ops, and chooses the least-tried action for each exact frame hash weighted by its observed effect rate with 10% random exploration. Clicks target small changed regions or one occupied cell per non-background 4\u00d74 block, retaining 25% uniform-random coverage and preferentially revisiting responsive targets. No source reading or per-game policy hardcoding appears; linkage to the current submission is unconfirmed. **Classification: (b) GENERAL-PURPOSE.** [Notebook](https://www.kaggle.com/code/kevinermille/arc3-sophia-no-action7-v1)",
++  "last_checked": "2026-08-17T13:39:37.384832+00:00",
++  "history_count": 29
+ }
+diff --git a/ops/.arc_news_watch_state.json b/ops/.arc_news_watch_state.json
+index 94b275652f..8a7ba886cb 100644
+--- a/ops/.arc_news_watch_state.json
++++ b/ops/.arc_news_watch_state.json
+@@ -1,5 +1,5 @@
+ {
+-  "last_findings": "- Leaderboard shakeup: **cstl** now leads with **2.52**, followed by **YUTO KOJIMA** at **1.86** and **Andy liu** at **1.69**. Lord Han Solo is fourth at 1.65. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)\n- Organizers analyzed 500 submission errors: roughly one-third stalled without a traceable visible error, and almost 20% involved GPU-dependent notebooks submitted without GPU enabled. They also clarified that organizers cannot access notebooks until teams open-source them. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)",
+-  "last_checked": "2026-08-12T13:13:14.275332+00:00",
+-  "history_count": 21
++  "last_findings": "- **Leaderboard shakeup:** Lord Han Solo now leads at **2.76**, followed by **cstl (2.70)**, **Daniel Franzen (2.58)**, and **rellik13 (2.53)**. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)\n- Organizers clarified that final-selected notebooks **will not be rerun**: private scores are fixed during the original submission run. Every run evaluates both leaderboard halves, but only the public half is displayed; ARC-AGI-3\u2019s runtime limit is **9 hours**. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)\n- Kaggle is investigating **RTX Pro 6000 capacity constraints** causing queued submissions and says it is working to free additional resources. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)",
++  "last_checked": "2026-08-17T13:15:39.574254+00:00",
++  "history_count": 22
+ }
+diff --git a/ops/arc-daily-prep-status.json b/ops/arc-daily-prep-status.json
+index 849460fd66..6517434bf1 100644
+--- a/ops/arc-daily-prep-status.json
++++ b/ops/arc-daily-prep-status.json
+@@ -1,8 +1,8 @@
+ {
+-  "kernel_version": "19",
++  "kernel_version": "20",
+   "note": "the automated prep script's own 24x15s poll exited with save_run='?' before the kernel genuinely finished; manually polled to KernelWorkerStatus.COMPLETE and confirmed submission.parquet present via `kaggle kernels output` before correcting this file to reflect ground truth. Kernel v9 bundles REQ-ARC-FCP-5699-35's graduated fixes (default-on stall-refactor-loop, max_tokens/timeout 4096/600, structural reminder) via the re-versioned iancblenke/carnot-agent-code dataset.",
+   "parquet_ok": false,
+-  "prepped_at": "2026-08-17T03:44Z",
++  "prepped_at": "2026-08-17T13:37Z",
+   "prior_submission_scores": {
+     "2026-06-30": 0.08,
+     "2026-07-15": 0.12
+@@ -21,5 +21,5 @@
+       "submitted_at": "2026-07-16T19:37:35Z"
+     }
+   ],
+-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 19"
++  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 20"
+ }
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 219c012e8d..8c7a47fbe4 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -7446,6 +7446,25 @@ class LocalGGUFProposer:
+         previous_level_complete_grid: Optional[np.ndarray] = None,
+         win_transition: Optional[Transition] = None,
+     ) -> tuple[bool, str]:
++        # OPT-IN TOOL-CALLING LOOP (REQ-ARC-WMTE-6460, 2026-08-17, DEFAULT OFF). Unset ->
++        # this block is dead and induction is byte-identical to the shipped single-shot.
++        # The loop replaces mental grid simulation (the ~95%-of-decode think channel)
++        # with in-process tool execution; see arc_induction_tool_loop's docstring. A
++        # loop failure returns (False, ...) and we FALL THROUGH to the shipped path,
++        # so the worst case is today's behaviour plus the loop's bounded cost.
++        if os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "1":
++            from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
++
++            ok_tool, note_tool = induce_with_tool_loop(
++                self,
++                game,
++                list(trans),
++                int(cell),
++                previous_level_complete_grid=previous_level_complete_grid,
++                win_transition=win_transition,
++            )
++            if ok_tool:
++                return ok_tool, note_tool
+         base = induce_prompt(
+             game,
+             trans,
+diff --git a/python/carnot/agentic/arc_induction_tool_loop.py b/python/carnot/agentic/arc_induction_tool_loop.py
+new file mode 100644
+index 0000000000..b2ff1911c3
+--- /dev/null
++++ b/python/carnot/agentic/arc_induction_tool_loop.py
+@@ -0,0 +1,481 @@
++"""Tool-calling loop for ARC world-model induction (REQ-ARC-WMTE-6460).
++
++WHAT THIS REPLACES. Single-shot induce() sends the whole transition corpus once and
++the model mentally simulates its rule hypotheses against it inside a 38k-94k-token
++think stream. This loop gives the model four in-process tools (arc_induction_tools):
++it proposes an engine, `run_engine_on_transitions` RUNS it and returns a bounded
++mismatch report, and the model iterates on measurements instead of imagination.
++Prefill (report tokens) is ~15x cheaper than decode (think tokens), so every mental
++simulation replaced by a tool round is a net win.
++
++DEFAULT OFF. `CARNOT_ARC_INDUCE_TOOL_LOOP` unset or != "1" means this module is never
++imported by the live path and induction is byte-identical to the shipped single-shot.
++The loop earns any default flip through measurement, not assertion.
++
++TERMINATION, all layered: hard turn cap (12, the in-repo refinement precedent), a
++per-turn thinking budget (llama.cpp `thinking_budget_tokens` -- without it each turn
++opens a fresh think block and 10 turns return to single-shot parity), the induce
++timeout as a wall-clock deadline, best-so-far monotone accept (the fewest-mismatch
++candidate wins at any cap), and early stop after 2 consecutive non-improving
++candidates. If no parseable engine ever lands, the caller falls back to the shipped
++single-shot induce -- failure is never worse than today.
++
++TRANSPORT NOTE. llama-server b9606 grammar-enforces tool-call JSON lazily (armed
++outside the think block), so thinking and tool calls coexist. gemma-4 has a native
++chat handler; Qwen3.8 goes through the generic PEG autoparser, whose reliability was
++UNVERIFIED at design time -- this loop therefore counts the tool-call parse rate per
++run (`last_tool_loop_stats`), because a high parse-failure rate kills the approach
++and must be visible, not inferred.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import time
++import urllib.request
++from typing import Any, Optional
++
++import numpy as np
++
++from carnot.agentic.arc_induction_tools import (
++    TOOL_SCHEMAS,
++    InductionToolSession,
++    dispatch_tool,
++)
++
++DEFAULT_TURN_CAP = 12
++DEFAULT_THINK_BUDGET = 3072
++DEFAULT_EARLY_STOP_AFTER = 2
++
++
++def tool_loop_enabled() -> bool:
++    """Master switch. Unset -> the shipped single-shot path, byte-identical."""
++    return os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "1"
++
++
++def _turn_cap() -> int:
++    try:
++        return max(1, int(os.environ.get("CARNOT_ARC_INDUCE_TOOL_TURNS", DEFAULT_TURN_CAP)))
++    except ValueError:
++        return DEFAULT_TURN_CAP
++
++
++def _think_budget() -> int:
++    """Per-TURN think budget. 0 disables the request field (unbounded thinking)."""
++    try:
++        return int(os.environ.get("CARNOT_ARC_INDUCE_TOOL_THINK_BUDGET", DEFAULT_THINK_BUDGET))
++    except ValueError:
++        return DEFAULT_THINK_BUDGET
++
++
++def _early_stop_after() -> int:
++    try:
++        return max(
++            1,
++            int(os.environ.get("CARNOT_ARC_INDUCE_TOOL_EARLY_STOP", DEFAULT_EARLY_STOP_AFTER)),
++        )
++    except ValueError:
++        return DEFAULT_EARLY_STOP_AFTER
++
++
++_TOOL_INSTRUCTIONS = """
++You have TOOLS. Use them instead of simulating grids in your head:
++
++  * diff_grids(t) -- every cell transition t changed, with the action taken.
++  * query_region(t, r0, r1, c0, c1, which) -- plain integer cells, no run-length decoding.
++  * run_engine_on_transitions(code) -- RUNS your candidate engine on the observed
++    transitions and returns concrete mismatches plus a held-out score. This is the only
++    reliable test of a rule hypothesis. Do NOT hand-trace transforms; submit the
++    candidate and read the report.
++  * run_goal_on_states(code) -- runs a candidate is_level_complete on observed grids.
++
++Do not hardcode observed coordinates: the report flags that, and held-out transitions
++will fail. Prefer simple general rules.
++
++You have a LIMITED number of turns. Only engines submitted through
++run_engine_on_transitions count for anything; inspection alone scores zero. Submit
++your FIRST candidate engine within your first 3 tool calls, even if it is rough --
++the mismatch report is how you learn the rules, and you refine from it. When the
++report shows 0 mismatches (or you cannot improve further), reply with ONLY one final
++```python code block containing BOTH engine(grid, action, data) and
++is_level_complete(grid).
++""".strip()
++
++# The measured failure this nudge answers (probe 1, tu93/Qwen3.8, 2026-08-17): 12
++# turns, 44 tool calls, ALL of them diff_grids/query_region -- the model perceived
++# forever and never submitted an engine, so the loop burned 33.9k decode tokens for
++# zero candidates. After this turn count with no engine submission, the loop injects
++# a user demand for one.
++DEFAULT_FORCE_ENGINE_TURN = 3
++
++_FORCE_ENGINE_NUDGE = (
++    "STOP inspecting. You have spent your inspection budget. Your NEXT tool call MUST "
++    "be run_engine_on_transitions with your best current candidate engine, however "
++    "rough. The mismatch report will tell you what to fix."
++)
++
++
++def _force_engine_turn() -> int:
++    try:
++        return max(
++            1,
++            int(
++                os.environ.get(
++                    "CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN", DEFAULT_FORCE_ENGINE_TURN
++                )
++            ),
++        )
++    except ValueError:
++        return DEFAULT_FORCE_ENGINE_TURN
++
++
++def _sampling_overrides(payload: dict[str, Any]) -> None:
++    """Honor the same opt-in env sampling knobs generate() reads. Absent -> no-op."""
++    t = os.environ.get("CARNOT_ARC_INDUCE_TEMPERATURE")
++    if t:
++        try:
++            payload["temperature"] = float(t)
++        except ValueError:
++            pass
++    for env, key, cast in (
++        ("CARNOT_ARC_INDUCE_TOP_P", "top_p", float),
++        ("CARNOT_ARC_INDUCE_TOP_K", "top_k", int),
++    ):
++        v = os.environ.get(env)
++        if v:
++            try:
++                payload[key] = cast(v)
++            except ValueError:
++                pass
++
++
++def _post_chat(
++    proposer: Any,
++    messages: list[dict[str, Any]],
++    *,
++    turn: int,
++    timeout_s: float,
++) -> dict[str, Any]:
++    """One /v1/chat/completions request with the tool schemas attached.
++
++    Returns the raw response dict. Raises on transport failure -- the loop converts
++    that into a clean fallback, same contract as _chat_complete_request."""
++    payload: dict[str, Any] = {
++        "messages": messages,
++        "tools": TOOL_SCHEMAS,
++        "tool_choice": "auto",
++        "max_tokens": int(proposer.max_tokens),
++        "temperature": 0.2,
++        "cache_prompt": True,
++    }
++    _sampling_overrides(payload)
++    # Per-turn seed via the proposer's own ladder helper, so a seeded run is
++    # deterministic per turn without collapsing all turns onto one draw.
++    seed = proposer.sampling_seed(turn)
++    if seed is not None:
++        payload["seed"] = seed
++    tb = _think_budget()
++    if tb > 0:
++        payload["thinking_budget_tokens"] = tb
++    req = urllib.request.Request(
++        proposer._url() + "/v1/chat/completions",
++        data=json.dumps(payload).encode(),
++        headers={"Content-Type": "application/json"},
++    )
++    with urllib.request.urlopen(req, timeout=timeout_s) as r:
++        return json.load(r)
++
++
++def _completion_tokens(raw: dict[str, Any]) -> int:
++    """Decode-token count for one response; same two sources _chat_complete_request reads."""
++    timings = raw.get("timings") if isinstance(raw.get("timings"), dict) else {}
++    n = timings.get("predicted_n")
++    if isinstance(n, int):
++        return n
++    usage = raw.get("usage") if isinstance(raw.get("usage"), dict) else {}
++    ct = usage.get("completion_tokens")
++    return ct if isinstance(ct, int) else 0
++
++
++def _record_turn(proposer: Any, raw: dict[str, Any], msg: dict[str, Any]) -> None:
++    """Feed the shared completion diagnostics, so existing instrumentation
++    (stop-type logs, raw-length monkeypatches in the measurement harnesses) sees
++    every loop turn exactly as it sees single-shot responses."""
++    content = str(msg.get("content") or "")
++    reasoning = str(msg.get("reasoning_content") or "")
++    full = f"<think>\n{reasoning}\n</think>\n{content}" if reasoning else content
++    choice = (raw.get("choices") or [{}])[0]
++    normalized: dict[str, Any] = {
++        "content": full,
++        "stop_type": "limit" if choice.get("finish_reason") == "length" else "eos",
++        "truncated": bool(raw.get("truncated")),
++        "timings": {"predicted_n": _completion_tokens(raw)},
++    }
++    try:
++        proposer._record_completion_diagnostics(normalized)
++    except Exception:
++        pass
++
++
++def _extract_final_code(content: str) -> str:
++    """The final-answer code block, if the message carries one ('' otherwise)."""
++    if "```python" in content:
++        body = content.split("```python", 1)[1]
++        return body.split("```", 1)[0].strip()
++    if "```" in content:
++        body = content.split("```", 1)[1]
++        body = body.split("```", 1)[0].strip()
++        if "def engine" in body:
++            return body
++    return ""
++
++
++def _looks_like_unparsed_tool_call(content: str) -> bool:
++    """Qwn-through-generic-PEG failure shape: tool-call text left in `content` because
++    the server's parser did not lift it into `tool_calls`. Counted, never executed."""
++    head = content[:2000]
++    return "<tool_call>" in content or ('"name":' in head and '"arguments"' in head)
++
++
++def induce_with_tool_loop(
++    proposer: Any,
++    game: str,
++    trans: list[Any],
++    cell: int,
++    *,
++    previous_level_complete_grid: Optional[np.ndarray] = None,
++    win_transition: Optional[Any] = None,
++) -> tuple[bool, str]:
++    """Run tool-assisted induction. Returns (True, note) after writing world_model.py,
++    or (False, reason) -- in which case the caller runs the shipped single-shot path.
++
++    Stats land on `proposer.last_tool_loop_stats` whatever the outcome, so a probe or
++    an artifact can always report decode tokens, parse rate, and termination cause."""
++    from carnot.agentic.arc_executable_world_model import (
++        _induce_transitions_k,
++        induce_prompt,
++    )
++
++    t0 = time.time()
++    deadline = t0 + float(proposer.timeout)
++    # Cold start: the single-shot path launches the server inside generate(); this loop
++    # posts directly, so it must ensure the server itself or a cold start would always
++    # fall back to single-shot without the loop ever running.
++    try:
++        if not proposer._ensure_server():
++            return False, "tool loop: generator server unavailable"
++    except Exception as exc:  # noqa: BLE001
++        return False, f"tool loop: server ensure raised {type(exc).__name__}: {exc}"
++    session = InductionToolSession(list(trans), cell=int(cell))
++    # The prompt shows the VISIBLE rows only. Rendering the full window would hand the
++    # model the held-out tail's deltas in-prompt and quietly defeat the aggregate-only
++    # held-out score -- the exact leak the CEGIS acceptance split (REQ-ARC-WMTE-6090)
++    # was built to close.
++    base = induce_prompt(
++        game,
++        list(session.visible),
++        int(cell),
++        previous_level_complete_grid=previous_level_complete_grid,
++        win_transition=win_transition,
++        k=_induce_transitions_k(),
++        include_playbook_exemplars=getattr(proposer, "include_playbook_exemplars", False),
++    )
++    messages: list[dict[str, Any]] = [
++        {"role": "user", "content": base + "\n\n" + _TOOL_INSTRUCTIONS}
++    ]
++    stats: dict[str, Any] = {
++        "turns": 0,
++        "decode_tokens_total": 0,
++        "decode_tokens_per_turn": [],
++        "tool_calls_total": 0,
++        "tool_calls_by_name": {},
++        "tool_calls_per_turn": [],
++        "tool_call_parse_failures": 0,
++        "unparsed_tool_call_text_turns": 0,
++        "candidates_scored": 0,
++        "force_engine_nudges": 0,
++        "terminated_by": "",
++        "final_answer_seen": False,
++        "wall_s": 0.0,
++    }
++    proposer.last_tool_loop_stats = stats
++
++    def _finish(reason: str) -> tuple[bool, str]:
++        stats["terminated_by"] = reason
++        stats["turns_completed"] = stats["turns"]
++        stats["candidates_scored"] = len(session.candidates)
++        # Per-candidate trajectories, in submission order: is the loop CONVERGING
++        # (mismatches falling) or thrashing? This is the number that distinguishes
++        # "needs a tighter early-exit" from "cannot converge on this cell".
++        stats["mismatch_trajectory"] = [c.visible_mismatches for c in session.candidates]
++        stats["holdout_trajectory"] = [c.holdout_accuracy for c in session.candidates]
++        stats["wall_s"] = round(time.time() - t0, 2)
++        best = session.best_candidate()
++        if best is None:
++            return False, f"tool loop: no scoreable engine ({reason})"
++        stats["best_visible_mismatches"] = best.visible_mismatches
++        stats["best_holdout_accuracy"] = best.holdout_accuracy
++        stats["best_is_memorizing"] = best.is_memorizing
++        code = best.code
++        if "def is_level_complete" not in code:
++            goal_code = next((c.code for c in session.candidates if c.has_goal), None)
++            goal_def = _goal_only(goal_code) if goal_code is not None else None
++            if goal_def is not None:
++                # Append ONLY the extracted is_level_complete def. Appending the donor
++                # verbatim would let its engine bind last and shadow the best engine --
++                # the split-induce shadowing bug, re-created at accept time.
++                code = code.rstrip() + "\n\n" + goal_def
++            else:
++                ok_g, goal = proposer.generate(
++                    proposer._goal_only_prompt(game, previous_level_complete_grid, trans),
++                    ("is_level_complete",),
++                    tries=1,
++                    codeonly_eligible=True,
++                    engine_transitions=trans,
++                )
++                if not ok_g:
++                    return False, f"tool loop: engine ok but no goal predicate ({reason})"
++                code = proposer._combine_world_model(code, goal)
++        if "import numpy" not in code:
++            code = "import numpy as np\n\n" + code
++        ok, note = proposer._write_world_model(
++            game,
++            code,
++            note=(
++                f"tool loop: {reason}, {stats['turns']} turns, "
++                f"{best.visible_mismatches} visible mismatches"
++            ),
++        )
++        return ok, note
++
++    best_mismatches: Optional[int] = None
++    non_improving = 0
++    cap = _turn_cap()
++    early_after = _early_stop_after()
++    for turn in range(cap):
++        remaining = deadline - time.time()
++        if remaining <= 0:
++            return _finish("deadline")
++        try:
++            raw = _post_chat(
++                proposer,
++                messages,
++                turn=turn,
++                timeout_s=min(float(proposer.timeout), max(1.0, remaining)),
++            )
++        except Exception as exc:  # noqa: BLE001 - transport failure -> clean fallback
++            stats["transport_error"] = f"{type(exc).__name__}: {exc}"[:300]
++            return _finish("transport_error")
++        stats["turns"] += 1
++        choice = (raw.get("choices") or [{}])[0]
++        msg = choice.get("message") or {}
++        _record_turn(proposer, raw, msg)
++        n_tok = _completion_tokens(raw)
++        stats["decode_tokens_total"] += n_tok
++        stats["decode_tokens_per_turn"].append(n_tok)
++        content = str(msg.get("content") or "")
++        tool_calls = msg.get("tool_calls") or []
++
++        if tool_calls:
++            # Feed the assistant turn back WITHOUT reasoning_content: reasoning is not
++            # part of the conversation contract, and re-prefilling it would spend the
++            # tokens the per-turn think budget exists to save.
++            # `content or ""`: some chat templates reject a null content field on an
++            # assistant tool-call turn; an empty string renders safely everywhere.
++            messages.append(
++                {"role": "assistant", "content": content or "", "tool_calls": tool_calls}
++            )
++            improved_this_turn = False
++            turn_names: list[str] = []
++            for tc in tool_calls:
++                fn = tc.get("function") or {}
++                name = str(fn.get("name") or "")
++                args = fn.get("arguments") or "{}"
++                result = dispatch_tool(session, name, args)
++                stats["tool_calls_total"] += 1
++                turn_names.append(name)
++                stats["tool_calls_by_name"][name] = stats["tool_calls_by_name"].get(name, 0) + 1
++                err = str(result.get("error") or "")
++                if "unparseable JSON arguments" in err or "unknown tool" in err:
++                    stats["tool_call_parse_failures"] += 1
++                messages.append(
++                    {
++                        "role": "tool",
++                        "tool_call_id": str(tc.get("id") or f"call_{turn}"),
++                        "content": json.dumps(result),
++                    }
++                )
++                if name == "run_engine_on_transitions" and result.get("ok"):
++                    m = session.candidates[-1].visible_mismatches
++                    if best_mismatches is None or m < best_mismatches:
++                        best_mismatches = m
++                        improved_this_turn = True
++            stats["tool_calls_per_turn"].append(turn_names)
++            if (
++                session.candidates
++                and not improved_this_turn
++                and "run_engine_on_transitions" in turn_names
++            ):
++                non_improving += 1
++            elif improved_this_turn:
++                non_improving = 0
++            if best_mismatches == 0:
++                return _finish("zero_mismatches")
++            if non_improving >= early_after:
++                return _finish("early_stop_non_improving")
++            # THE PROBE-1 FAILURE MODE, ANSWERED HERE. The model can perceive forever
++            # (44 diff/query calls, zero engines, measured) because every inspection
++            # turn looks locally productive. After the inspection budget, demand a
++            # candidate: only engines submitted to the verifier count for anything.
++            if not session.candidates and stats["turns"] >= _force_engine_turn():
++                messages.append({"role": "user", "content": _FORCE_ENGINE_NUDGE})
++                stats["force_engine_nudges"] += 1
++            continue
++
++        final_code = _extract_final_code(content)
++        if final_code and "def engine" in final_code:
++            stats["final_answer_seen"] = True
++            # Score the final answer so the monotone accept can compare it fairly
++            # against every tool-round candidate. The report is discarded; the
++            # candidate ledger entry is what matters.
++            session.run_engine_on_transitions(final_code)
++            return _finish("final_answer")
++        if _looks_like_unparsed_tool_call(content):
++            stats["unparsed_tool_call_text_turns"] += 1
++        stats["tool_calls_per_turn"].append([])  # keep the per-turn record aligned
++        # No tool call, no final code: one nudge, bounded by the turn cap.
++        messages.append({"role": "assistant", "content": content})
++        messages.append(
++            {
++                "role": "user",
++                "content": (
++                    "Call a tool, or reply with ONLY the final ```python block "
++                    "containing engine and is_level_complete."
++                ),
++            }
++        )
++    return _finish("turn_cap")
++
++
++def _goal_only(donor_code: str) -> Optional[str]:
++    """Extract just the is_level_complete definition from donor code.
++
++    None when the definition cannot be cleanly extracted -- the caller then asks the
++    focused goal prompt instead. Never returns the donor verbatim: a donor carrying
++    its own engine would bind last and shadow the accepted engine."""
++    import ast
++
++    try:
++        tree = ast.parse(donor_code)
++    except SyntaxError:
++        return None
++    for node in ast.walk(tree):
++        if (
++            isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
++            and node.name == "is_level_complete"
++        ):
++            seg = ast.get_source_segment(donor_code, node)
++            if seg:
++                return seg
++    return None
+diff --git a/python/carnot/agentic/arc_induction_tools.py b/python/carnot/agentic/arc_induction_tools.py
+new file mode 100644
+index 0000000000..e78dd4615c
+--- /dev/null
++++ b/python/carnot/agentic/arc_induction_tools.py
+@@ -0,0 +1,549 @@
++"""Tool registry for tool-assisted ARC world-model induction (REQ-ARC-WMTE-6460).
++
++WHY THIS EXISTS. Single-shot induction on a reasoning generator burns 38k-94k decode
++tokens per call (median ~61k). ~95% of that is the think channel, and the model spends
++it MENTALLY SIMULATING grid transforms against the observed transitions. Decode is
++15.4x more expensive than prefill on the scored card. These tools replace mental
++simulation with actual execution: the model proposes an engine, a tool RUNS it on the
++observed transitions and returns a mismatch report, and the model reasons only about
++the report.
++
++MCP AS VOCABULARY, NOT TRANSPORT. The tools are plain functions plus JSON schemas.
++The live loop (arc_induction_tool_loop.py) calls them directly in-process. No stdio
++subprocess, no asyncio, no MCP dependency on the scored path. `register_mcp_tools`
++exposes the same registry through carnot.mcp.server's optional FastMCP import for
++dev use only.
++
++THE MEMORIZATION TRAP, MITIGATED HERE BY DESIGN. `run_engine_on_transitions`
++optimises in-sample recall by construction, and hardcoding the layout coordinates is
++the cheapest way to pass it (tr87's two ~1.0 cells hardcode window coordinates; its
++0.354 cell does not). Two built-in mitigations: (a) every mismatch report includes
++the hardcoded-coordinate AST scan (logic from experiment_5760's memorization_scan,
++re-stated here so the scored path does not import an experiment module that mutates
++os.environ at import time); (b) 2-3 transitions are HELD OUT of the tool's test set
++and reported aggregate-only, so a memorizing engine shows a visible/held-out gap the
++model can see and the loop can select against.
++"""
++
++from __future__ import annotations
++
++import ast
++import json
++from dataclasses import dataclass, field
++from typing import Any, Callable, Optional, Sequence
++
++import numpy as np
++
++# Thresholds from experiment_5760's pre-registered memorization detector: ignore small
++# literals (action codes / colors, <10); >=3 window-matching large literals -> flagged.
++MEMORIZATION_MIN_MATCHES = 3
++MEMORIZATION_MIN_COORD = 10
++
++# Bounded report sizes. The whole point of the tools is to SHRINK decode; an unbounded
++# report would just move the burn from the think channel to the prompt.
++MAX_MISMATCHES_REPORTED = 5
++MAX_DIFF_CELLS = 200
++MAX_REGION_CELLS = 400
++MAX_GOAL_PROBE_GRIDS = 24
++
++
++def _engine_source(full_source: str) -> str:
++    """Source segment of the top-level `engine` function ('' if absent/unparseable)."""
++    try:
++        tree = ast.parse(full_source)
++    except SyntaxError:
++        return ""
++    for node in ast.walk(tree):
++        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == "engine":
++            return ast.get_source_segment(full_source, node) or ""
++    return ""
++
++
++def _int_literals(src: str) -> list[int]:
++    try:
++        tree = ast.parse(src)
++    except SyntaxError:
++        return []
++    out: list[int] = []
++    for node in ast.walk(tree):
++        if (
++            isinstance(node, ast.Constant)
++            and isinstance(node.value, int)
++            and not isinstance(node.value, bool)
++        ):
++            out.append(int(node.value))
++    return out
++
++
++def window_changed_coords(transitions: Sequence[Any]) -> set[int]:
++    """Row/col indices (>= MEMORIZATION_MIN_COORD) of cells that changed in the window.
++
++    These are the coordinate constants a memorizing engine would hardcode."""
++    coords: set[int] = set()
++    for t in transitions:
++        try:
++            g = np.asarray(t.grid)
++            ng = np.asarray(t.next_grid)
++        except Exception:
++            continue
++        if g.shape != ng.shape:
++            continue
++        rs, cs = np.where(g != ng)
++        coords.update(int(v) for v in rs.tolist())
++        coords.update(int(v) for v in cs.tolist())
++    return {v for v in coords if v >= MEMORIZATION_MIN_COORD}
++
++
++def memorization_scan(full_source: str, coord_set: set[int]) -> dict[str, Any]:
++    """AST scan for hardcoded observed-window coordinates in engine() source.
++
++    Same logic and thresholds as experiment_5760's detector (see module docstring for
++    why it is re-stated rather than imported)."""
++    eng_src = _engine_source(full_source or "")
++    lits = [v for v in _int_literals(eng_src) if v >= MEMORIZATION_MIN_COORD]
++    n_match = sum(1 for v in lits if v in coord_set)
++    return {
++        "engine_source_found": bool(eng_src),
++        "n_large_int_literals": len(lits),
++        "n_window_coord_literals": int(n_match),
++        "is_memorizing": bool(n_match >= MEMORIZATION_MIN_MATCHES),
++    }
++
++
++def holdout_split(transitions: Sequence[Any]) -> tuple[list[Any], list[Any]]:
++    """Split observed transitions into (visible, held_out).
++
++    The tail is held out because it is the same convention the CEGIS acceptance split
++    uses (the model never sees the future). 3 rows held out on a normal window, 2 on a
++    short one, 1 below 5 rows, none below 3 -- a tiny window has nothing to spare."""
++    rows = list(transitions)
++    if len(rows) < 3:
++        return rows, []
++    if len(rows) < 5:
++        h = 1
++    elif len(rows) < 12:
++        h = 2
++    else:
++        h = 3
++    return rows[:-h], rows[-h:]
++
++
++def _exec_candidate(code: str, func_name: str) -> tuple[Optional[Callable], Optional[str]]:
++    """Compile + exec candidate code, return (function, error). Never raises."""
++    try:
++        ast.parse(code)
++    except SyntaxError as se:
++        return None, f"syntax error line {se.lineno}: {se.msg}"
++    ns: dict[str, Any] = {}
++    try:
++        exec(compile(code, "<induction_tool_candidate>", "exec"), ns)  # noqa: S102
++    except Exception as exc:  # noqa: BLE001 - the exception IS the report
++        return None, f"module exec raised {type(exc).__name__}: {exc}"
++    fn = ns.get(func_name)
++    if not callable(fn):
++        return None, f"no top-level `def {func_name}` found"
++    return fn, None
++
++
++@dataclass
++class CandidateRecord:
++    """One scored engine candidate, tracked for the loop's best-so-far accept."""
++
++    code: str
++    visible_mismatches: int
++    visible_accuracy: float
++    visible_cell_recall: float
++    holdout_accuracy: Optional[float]
++    holdout_cell_recall: Optional[float]
++    is_memorizing: bool
++    has_goal: bool
++
++
++@dataclass
++class InductionToolSession:
++    """Holds the observed transitions and serves the four tools against them.
++
++    One session per induction call. The session owns the visible/held-out split, the
++    memorization coordinate set, and the candidate ledger the loop's best-so-far
++    accept reads."""
++
++    transitions: list[Any]
++    cell: int = 1
++    hud_mask: Any = None
++    visible: list[Any] = field(init=False)
++    held_out: list[Any] = field(init=False)
++    coord_set: set[int] = field(init=False)
++    candidates: list[CandidateRecord] = field(default_factory=list)
++    calls: list[dict[str, Any]] = field(default_factory=list)
++
++    def __post_init__(self) -> None:
++        self.transitions = list(self.transitions)
++        self.visible, self.held_out = holdout_split(self.transitions)
++        self.coord_set = window_changed_coords(self.transitions)
++
++    # ---- tool: run_engine_on_transitions ---------------------------------------
++
++    def run_engine_on_transitions(self, code: str) -> dict[str, Any]:
++        """Run a candidate engine() on the visible transitions; return a mismatch report.
++
++        Held-out rows are scored AGGREGATE-ONLY: the model sees the score, never the
++        cells, so it cannot hardcode its way past them."""
++        self.calls.append({"tool": "run_engine_on_transitions"})
++        engine, err = _exec_candidate(code, "engine")
++        if engine is None:
++            return {"ok": False, "error": err}
++        # Local imports keep this module import-light: a broken sibling must degrade
++        # one tool call, never the whole induce path (same rule as _engine_defects).
++        from carnot.agentic.arc_executable_world_model import WorldModelVerifier
++
++        try:
++            vr = WorldModelVerifier(list(self.visible), hud_mask=self.hud_mask).score(engine)
++        except Exception as exc:  # noqa: BLE001
++            return {"ok": False, "error": f"verifier raised {type(exc).__name__}: {exc}"}
++        from carnot.agentic.arc_executable_world_model import _bounded_mismatches
++
++        report: dict[str, Any] = {
++            "ok": True,
++            "n_transitions_tested": int(vr.n),
++            "n_correct": int(vr.n_correct),
++            "accuracy": round(float(vr.accuracy), 4),
++            "cell_recall": round(float(vr.cell_recall), 4),
++            "n_engine_raised": int(vr.n_engine_raised),
++            "engine_raise_kinds": dict(vr.engine_raise_kinds),
++            "mismatches": _bounded_mismatches(list(vr.mismatches), limit=MAX_MISMATCHES_REPORTED),
++        }
++        # Static defect kinds (truncation, missing return, ...). Advisory; a failure of
++        # the checker degrades to [] exactly like the shipped _engine_defects wrapper.
++        try:
++            from carnot.agentic import arc_engine_static_validation as _sv
++
++            defects = _sv.validate_engine_code(
++                code, transitions=list(self.visible), stop_type="eos", required=("engine",)
++            )
++            report["static_defects"] = sorted({d.kind for d in defects})
++        except Exception:
++            report["static_defects"] = []
++        scan = memorization_scan(code, self.coord_set)
++        report["memorization_scan"] = scan
++        if scan["is_memorizing"]:
++            report["warning"] = (
++                "Your engine hardcodes coordinate constants that match observed changed "
++                "cells. Hardcoded layouts fail on held-out transitions. Replace the "
++                "special cases with a general rule."
++            )
++        holdout_acc: Optional[float] = None
++        holdout_recall: Optional[float] = None
++        if self.held_out:
++            try:
++                hv = WorldModelVerifier(list(self.held_out), hud_mask=self.hud_mask).score(engine)
++                holdout_acc = round(float(hv.accuracy), 4)
++                holdout_recall = round(float(hv.cell_recall), 4)
++                # Aggregate ONLY -- no mismatch detail, by design (see docstring).
++                report["held_out"] = {
++                    "n_transitions": int(hv.n),
++                    "accuracy": holdout_acc,
++                    "cell_recall": holdout_recall,
++                }
++            except Exception as exc:  # noqa: BLE001
++                report["held_out"] = {"error": f"{type(exc).__name__}: {exc}"}
++        else:
++            report["held_out"] = {"n_transitions": 0, "note": "window too small to hold out"}
++        self.candidates.append(
++            CandidateRecord(
++                code=code,
++                visible_mismatches=int(vr.n) - int(vr.n_correct),
++                visible_accuracy=float(vr.accuracy),
++                visible_cell_recall=float(vr.cell_recall),
++                holdout_accuracy=holdout_acc,
++                holdout_cell_recall=holdout_recall,
++                is_memorizing=bool(scan["is_memorizing"]),
++                has_goal="def is_level_complete" in code,
++            )
++        )
++        return report
++
++    # ---- tool: query_region ------------------------------------------------------
++
++    def query_region(
++        self, t: int, r0: int, r1: int, c0: int, c1: int, which: str = "before"
++    ) -> dict[str, Any]:
++        """Plain integer cells of one transition's grid region. Kills RLE-reconstruction burn."""
++        self.calls.append({"tool": "query_region"})
++        if not (0 <= t < len(self.visible)):
++            return {
++                "ok": False,
++                "error": f"t must be in 0..{len(self.visible) - 1} (visible transitions)",
++            }
++        tr = self.visible[t]
++        grid = np.asarray(tr.next_grid if which == "after" else tr.grid)
++        h, w = grid.shape[:2]
++        r0, r1 = max(0, int(r0)), min(h, int(r1))
++        c0, c1 = max(0, int(c0)), min(w, int(c1))
++        if r1 <= r0 or c1 <= c0:
++            return {"ok": False, "error": f"empty region after clipping to {h}x{w}"}
++        if (r1 - r0) * (c1 - c0) > MAX_REGION_CELLS:
++            return {
++                "ok": False,
++                "error": f"region larger than {MAX_REGION_CELLS} cells; ask a smaller window",
++            }
++        return {
++            "ok": True,
++            "t": t,
++            "which": "after" if which == "after" else "before",
++            "action": int(tr.action),
++            "shape": [int(h), int(w)],
++            "r0": r0,
++            "c0": c0,
++            "rows": [[int(v) for v in row] for row in grid[r0:r1, c0:c1]],
++        }
++
++    # ---- tool: diff_grids --------------------------------------------------------
++
++    def diff_grids(self, t: int) -> dict[str, Any]:
++        """Changed cells of one visible transition: {r, c, before, after} per cell."""
++        self.calls.append({"tool": "diff_grids"})
++        if not (0 <= t < len(self.visible)):
++            return {
++                "ok": False,
++                "error": f"t must be in 0..{len(self.visible) - 1} (visible transitions)",
++            }
++        tr = self.visible[t]
++        g = np.asarray(tr.grid)
++        ng = np.asarray(tr.next_grid)
++        if g.shape != ng.shape:
++            return {"ok": False, "error": f"shape change {g.shape} -> {ng.shape}"}
++        rs, cs = np.where(g != ng)
++        cells = [
++            {"r": int(r), "c": int(c), "before": int(g[r, c]), "after": int(ng[r, c])}
++            for r, c in zip(rs.tolist(), cs.tolist())
++        ]
++        out: dict[str, Any] = {
++            "ok": True,
++            "t": t,
++            "action": int(tr.action),
++            "data": tr.data if isinstance(tr.data, dict) else None,
++            "n_changed": len(cells),
++            "changed_cells": cells[:MAX_DIFF_CELLS],
++        }
++        if len(cells) > MAX_DIFF_CELLS:
++            out["changed_cells_omitted"] = len(cells) - MAX_DIFF_CELLS
++        return out
++
++    # ---- tool: run_goal_on_states ------------------------------------------------
++
++    def run_goal_on_states(self, code: str) -> dict[str, Any]:
++        """Run a candidate is_level_complete() over observed grids; report values + failures."""
++        self.calls.append({"tool": "run_goal_on_states"})
++        goal, err = _exec_candidate(code, "is_level_complete")
++        if goal is None:
++            return {"ok": False, "error": err}
++        from carnot.agentic.arc_engine_call_guard import guarded_call
++
++        grids: list[np.ndarray] = []
++        for tr in self.visible:
++            grids.append(np.asarray(tr.grid))
++            nxt = getattr(tr, "next_grid", None)
++            if nxt is not None:
++                grids.append(np.asarray(nxt))
++        values: list[Any] = []
++        n_raised = 0
++        first_error = ""
++        for g in grids[:MAX_GOAL_PROBE_GRIDS]:
++            try:
++                values.append(bool(guarded_call(goal, g.copy())))
++            except Exception as exc:  # noqa: BLE001
++                n_raised += 1
++                values.append("raised")
++                if not first_error:
++                    first_error = f"{type(exc).__name__}: {exc}"[:200]
++        distinct = {v for v in values if v != "raised"}
++        report: dict[str, Any] = {
++            "ok": True,
++            "n_grids_probed": len(values),
++            "values": values,
++            "n_raised": n_raised,
++        }
++        if first_error:
++            report["first_error"] = first_error
++        if len(distinct) == 1 and not n_raised:
++            # Constancy over everything observed carries no information for the search.
++            # A correct-but-unreached win predicate also looks like this; say so.
++            report["note"] = (
++                f"constant {distinct.pop()} on every observed grid -- carries no signal; "
++                "correct only if the game has genuinely never been in a won state"
++            )
++        return report
++
++    # ---- best-so-far accept ------------------------------------------------------
++
++    def best_candidate(self) -> Optional[CandidateRecord]:
++        """The monotone-accept winner: fewest visible mismatches, then held-out accuracy.
++
++        A memorizing candidate loses ties to a non-memorizing one -- the whole reason
++        the scan exists is that in-sample fit alone rewards hardcoding."""
++        if not self.candidates:
++            return None
++        return min(
++            self.candidates,
++            key=lambda c: (
++                c.visible_mismatches,
++                -(c.holdout_accuracy if c.holdout_accuracy is not None else 0.0),
++                1 if c.is_memorizing else 0,
++                -c.visible_cell_recall,
++            ),
++        )
++
++
++# ---------------------------------------------------------------------------------
++# JSON schemas (OpenAI /v1/chat/completions `tools` format; llama.cpp grammar-enforces
++# the call JSON server-side, lazily, outside the think block).
++# ---------------------------------------------------------------------------------
++
++TOOL_SCHEMAS: list[dict[str, Any]] = [
++    {
++        "type": "function",
++        "function": {
++            "name": "run_engine_on_transitions",
++            "description": (
++                "Execute a candidate engine(grid, action, data) on the observed transitions. "
++                "Returns accuracy, cell_recall, up to 5 concrete mismatches (true change vs "
++                "your prediction), static defects, a hardcoded-coordinate scan, and an "
++                "aggregate-only held-out score. Use this instead of simulating grids in your "
++                "head. Submit FULL standalone code (import numpy as np + def engine)."
++            ),
++            "parameters": {
++                "type": "object",
++                "properties": {
++                    "code": {
++                        "type": "string",
++                        "description": "Complete Python source defining engine(grid, action, data)",
++                    }
++                },
++                "required": ["code"],
++            },
++        },
++    },
++    {
++        "type": "function",
++        "function": {
++            "name": "query_region",
++            "description": (
++                "Read a rectangular region of one observed transition's grid as plain integer "
++                "rows (no run-length decoding needed). which='before' is the grid the action "
++                "was taken in; 'after' is the result."
++            ),
++            "parameters": {
++                "type": "object",
++                "properties": {
++                    "t": {"type": "integer", "description": "transition index (0-based)"},
++                    "r0": {"type": "integer", "description": "first row (inclusive)"},
++                    "r1": {"type": "integer", "description": "last row (exclusive)"},
++                    "c0": {"type": "integer", "description": "first column (inclusive)"},
++                    "c1": {"type": "integer", "description": "last column (exclusive)"},
++                    "which": {"type": "string", "enum": ["before", "after"]},
++                },
++                "required": ["t", "r0", "r1", "c0", "c1"],
++            },
++        },
++    },
++    {
++        "type": "function",
++        "function": {
++            "name": "diff_grids",
++            "description": (
++                "List every cell one observed transition changed: {r, c, before, after}, plus "
++                "the action taken. Cheap; prefer this over reconstructing deltas mentally."
++            ),
++            "parameters": {
++                "type": "object",
++                "properties": {
++                    "t": {"type": "integer", "description": "transition index (0-based)"}
++                },
++                "required": ["t"],
++            },
++        },
++    },
++    {
++        "type": "function",
++        "function": {
++            "name": "run_goal_on_states",
++            "description": (
++                "Execute a candidate is_level_complete(grid) on every observed grid. Returns "
++                "the value per grid and any exceptions. A predicate constant across all "
++                "observed grids carries no signal for the search."
++            ),
++            "parameters": {
++                "type": "object",
++                "properties": {
++                    "code": {
++                        "type": "string",
++                        "description": "Complete Python source defining is_level_complete(grid)",
++                    }
++                },
++                "required": ["code"],
++            },
++        },
++    },
++]
++
++TOOL_NAMES = tuple(s["function"]["name"] for s in TOOL_SCHEMAS)
++
++
++def dispatch_tool(session: InductionToolSession, name: str, arguments: str) -> dict[str, Any]:
++    """Execute one named tool with JSON-encoded arguments. Never raises.
++
++    Returns the tool's report dict, or {"ok": False, "error": ...} on a bad name or
++    unparseable arguments -- the error text goes back to the model as the tool result,
++    so a malformed call costs one turn, not the induction."""
++    try:
++        kwargs = json.loads(arguments) if arguments else {}
++        if not isinstance(kwargs, dict):
++            return {"ok": False, "error": "arguments must be a JSON object"}
++    except json.JSONDecodeError as exc:
++        return {"ok": False, "error": f"unparseable JSON arguments: {exc}"}
++    fn = {
++        "run_engine_on_transitions": session.run_engine_on_transitions,
++        "query_region": session.query_region,
++        "diff_grids": session.diff_grids,
++        "run_goal_on_states": session.run_goal_on_states,
++    }.get(name)
++    if fn is None:
++        return {"ok": False, "error": f"unknown tool {name!r}; available: {list(TOOL_NAMES)}"}
++    try:
++        return fn(**kwargs)
++    except TypeError as exc:
++        return {"ok": False, "error": f"bad arguments for {name}: {exc}"}
++    except Exception as exc:  # noqa: BLE001 - a tool bug must cost a turn, not the induction
++        return {"ok": False, "error": f"tool {name} raised {type(exc).__name__}: {exc}"}
++
++
++def register_mcp_tools(session: InductionToolSession, server: Any = None) -> Any:
++    """DEV-ONLY: expose this session's tools on a FastMCP server.
++
++    Reuses carnot.mcp.server's optional FastMCP import (falls back to its stub when the
++    MCP extra is absent), so this works in any dev venv and never adds a dependency to
++    the scored path. The live loop does NOT go through this -- it calls dispatch_tool
++    directly in-process."""
++    from carnot.mcp.server import FastMCP
++
++    srv = server if server is not None else FastMCP("carnot-arc-induction")
++
++    @srv.tool()
++    def run_engine_on_transitions(code: str) -> dict[str, Any]:
++        return session.run_engine_on_transitions(code)
++
++    @srv.tool()
++    def query_region(
++        t: int, r0: int, r1: int, c0: int, c1: int, which: str = "before"
++    ) -> dict[str, Any]:
++        return session.query_region(t, r0, r1, c0, c1, which)
++
++    @srv.tool()
++    def diff_grids(t: int) -> dict[str, Any]:
++        return session.diff_grids(t)
++
++    @srv.tool()
++    def run_goal_on_states(code: str) -> dict[str, Any]:
++        return session.run_goal_on_states(code)
++
++    return srv
+diff --git a/results/arc_tool_loop_probe_20260817/probe1_no_engine.json b/results/arc_tool_loop_probe_20260817/probe1_no_engine.json
+new file mode 100644
+index 0000000000..3ef4cc11b6
+--- /dev/null
++++ b/results/arc_tool_loop_probe_20260817/probe1_no_engine.json
+@@ -0,0 +1,67 @@
++{
++  "probe": "tool_loop_single_cell_tu93_qwen38",
++  "seed": 101,
++  "game": "tu93",
++  "ok": false,
++  "note": "tool loop: no scoreable engine (turn_cap)",
++  "wall_s": 967.8,
++  "stats": {
++    "turns": 12,
++    "decode_tokens_total": 33920,
++    "decode_tokens_per_turn": [
++      3181,
++      3263,
++      3189,
++      3429,
++      3607,
++      3162,
++      189,
++      367,
++      3429,
++      3425,
++      3250,
++      3429
++    ],
++    "tool_calls_total": 44,
++    "tool_calls_by_name": {
++      "diff_grids": 12,
++      "query_region": 32
++    },
++    "tool_call_parse_failures": 0,
++    "unparsed_tool_call_text_turns": 0,
++    "candidates_scored": 0,
++    "terminated_by": "turn_cap",
++    "final_answer_seen": false,
++    "wall_s": 967.75,
++    "turns_completed": 12
++  },
++  "heldout_accuracy": null,
++  "cell_recall": null,
++  "memorization_scan": null,
++  "engine_source_chars": 0,
++  "singleshot_reference": {
++    "decode_tokens_median": 61000,
++    "tu93_recorded_heldout": [
++      0.0,
++      1.0,
++      1.0
++    ],
++    "tu93_recorded_mem": [
++      true,
++      false,
++      false
++    ],
++    "tu93_recorded_elapsed_s": [
++      1521.2,
++      1602.1,
++      2194.9
++    ]
++  },
++  "kill_criteria": {
++    "decode_below_50pct_of_median": false,
++    "decode_total": 33920,
++    "parse_fail_rate": 0.0,
++    "parse_fail_under_20pct": true,
++    "memorizing": null
++  }
++}
+diff --git a/results/arc_tool_loop_probe_20260817/tool_loop_probe_tb2048_report.json b/results/arc_tool_loop_probe_20260817/tool_loop_probe_tb2048_report.json
+new file mode 100644
+index 0000000000..9503b2563a
+--- /dev/null
++++ b/results/arc_tool_loop_probe_20260817/tool_loop_probe_tb2048_report.json
+@@ -0,0 +1,139 @@
++{
++  "probe": "tool_loop_v2_tb2048",
++  "arm": "tb2048",
++  "gpu": "1",
++  "think_budget": 2048,
++  "single_card": true,
++  "leak_fixed": true,
++  "seed": 101,
++  "game": "tu93",
++  "ok": true,
++  "note": "local gguf (GPU server) wrote world_model.py (tool loop: early_stop_non_improving, 12 turns, 9 visible mismatches)",
++  "wall_s": 692.0,
++  "stats": {
++    "turns": 12,
++    "decode_tokens_total": 24790,
++    "decode_tokens_per_turn": [
++      2680,
++      2228,
++      2227,
++      2227,
++      2227,
++      2138,
++      190,
++      274,
++      2227,
++      2227,
++      2908,
++      3237
++    ],
++    "tool_calls_total": 20,
++    "tool_calls_by_name": {
++      "run_engine_on_transitions": 3,
++      "query_region": 17
++    },
++    "tool_calls_per_turn": [
++      [
++        "run_engine_on_transitions"
++      ],
++      [
++        "query_region",
++        "query_region"
++      ],
++      [
++        "query_region",
++        "query_region"
++      ],
++      [
++        "query_region",
++        "query_region"
++      ],
++      [
++        "query_region",
++        "query_region"
++      ],
++      [
++        "query_region"
++      ],
++      [
++        "query_region",
++        "query_region"
++      ],
++      [
++        "query_region",
++        "query_region"
++      ],
++      [
++        "query_region",
++        "query_region"
++      ],
++      [
++        "query_region",
++        "query_region"
++      ],
++      [
++        "run_engine_on_transitions"
++      ],
++      [
++        "run_engine_on_transitions"
++      ]
++    ],
++    "tool_call_parse_failures": 0,
++    "unparsed_tool_call_text_turns": 0,
++    "candidates_scored": 3,
++    "force_engine_nudges": 0,
++    "terminated_by": "early_stop_non_improving",
++    "final_answer_seen": false,
++    "wall_s": 692.01,
++    "turns_completed": 12,
++    "mismatch_trajectory": [
++      9,
++      9,
++      9
++    ],
++    "holdout_trajectory": [
++      0.0,
++      0.0,
++      0.0
++    ],
++    "best_visible_mismatches": 9,
++    "best_holdout_accuracy": 0.0,
++    "best_is_memorizing": false
++  },
++  "full_window_accuracy": 0.0,
++  "full_window_cell_recall": 0.2077,
++  "held_out_tail_accuracy": 0.0,
++  "held_out_tail_cell_recall": 0.2053,
++  "memorization_scan": {
++    "engine_source_found": true,
++    "n_large_int_literals": 0,
++    "n_window_coord_literals": 0,
++    "is_memorizing": false
++  },
++  "engine_source_chars": 1544,
++  "singleshot_reference": {
++    "decode_tokens_median": 61000,
++    "tu93_recorded_heldout": [
++      0.0,
++      1.0,
++      1.0
++    ],
++    "tu93_recorded_mem": [
++      true,
++      false,
++      false
++    ],
++    "tu93_recorded_elapsed_s": [
++      1521.2,
++      1602.1,
++      2194.9
++    ]
++  },
++  "kill_criteria": {
++    "decode_total": 24790,
++    "decode_below_50pct_of_median": true,
++    "parse_fail_rate": 0.0,
++    "parse_fail_under_20pct": true,
++    "memorizing": false
++  }
++}
+diff --git a/results/arc_tool_loop_probe_20260817/tool_loop_probe_tb3072_report.json b/results/arc_tool_loop_probe_20260817/tool_loop_probe_tb3072_report.json
+new file mode 100644
+index 0000000000..33382cafd5
+--- /dev/null
++++ b/results/arc_tool_loop_probe_20260817/tool_loop_probe_tb3072_report.json
+@@ -0,0 +1,111 @@
++{
++  "probe": "tool_loop_v2_tb3072",
++  "arm": "tb3072",
++  "gpu": "0",
++  "think_budget": 3072,
++  "single_card": true,
++  "leak_fixed": true,
++  "seed": 101,
++  "game": "tu93",
++  "ok": true,
++  "note": "local gguf (GPU server) wrote world_model.py (tool loop: zero_mismatches, 5 turns, 0 visible mismatches)",
++  "wall_s": 410.0,
++  "stats": {
++    "turns": 5,
++    "decode_tokens_total": 14714,
++    "decode_tokens_per_turn": [
++      3154,
++      3235,
++      370,
++      4017,
++      3938
++    ],
++    "tool_calls_total": 14,
++    "tool_calls_by_name": {
++      "diff_grids": 9,
++      "query_region": 3,
++      "run_engine_on_transitions": 2
++    },
++    "tool_calls_per_turn": [
++      [
++        "diff_grids",
++        "diff_grids",
++        "diff_grids"
++      ],
++      [
++        "diff_grids",
++        "diff_grids",
++        "diff_grids",
++        "diff_grids",
++        "diff_grids",
++        "diff_grids"
++      ],
++      [
++        "query_region",
++        "query_region",
++        "query_region"
++      ],
++      [
++        "run_engine_on_transitions"
++      ],
++      [
++        "run_engine_on_transitions"
++      ]
++    ],
++    "tool_call_parse_failures": 0,
++    "unparsed_tool_call_text_turns": 0,
++    "candidates_scored": 2,
++    "force_engine_nudges": 1,
++    "terminated_by": "zero_mismatches",
++    "final_answer_seen": false,
++    "wall_s": 409.97,
++    "turns_completed": 5,
++    "mismatch_trajectory": [
++      2,
++      0
++    ],
++    "holdout_trajectory": [
++      0.5,
++      1.0
++    ],
++    "best_visible_mismatches": 0,
++    "best_holdout_accuracy": 1.0,
++    "best_is_memorizing": false
++  },
++  "full_window_accuracy": 1.0,
++  "full_window_cell_recall": 1.0,
++  "held_out_tail_accuracy": 1.0,
++  "held_out_tail_cell_recall": 1.0,
++  "memorization_scan": {
++    "engine_source_found": true,
++    "n_large_int_literals": 0,
++    "n_window_coord_literals": 0,
++    "is_memorizing": false
++  },
++  "engine_source_chars": 1783,
++  "singleshot_reference": {
++    "decode_tokens_median": 61000,
++    "tu93_recorded_heldout": [
++      0.0,
++      1.0,
++      1.0
++    ],
++    "tu93_recorded_mem": [
++      true,
++      false,
++      false
++    ],
++    "tu93_recorded_elapsed_s": [
++      1521.2,
++      1602.1,
++      2194.9
++    ]
++  },
++  "kill_criteria": {
++    "decode_total": 14714,
++    "decode_below_50pct_of_median": true,
++    "parse_fail_rate": 0.0,
++    "parse_fail_under_20pct": true,
++    "memorizing": false
++  }
++}
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index 2d0a608ffa..e72e3a5800 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52908,6 +52908,14 @@
+         "acknowledged_on": "2026-08-17",
+         "reason": "The 2026-08-17 change adds ONE opt-in field to the chat induce payload: `thinking_budget_tokens`, sent only when CARNOT_ARC_INDUCE_THINKING_BUDGET is set to a positive integer. Unset -- which is the default and the state every artifact here was built under -- the request body is byte-identical to before the change, pinned by tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget. No other behaviour, symbol or default was touched, so this drift cannot move any number in this artifact.",
+         "evidence": "Diff is +19/-0 inside LocalGGUFProposer._chat_complete_request, adding one conditional that sets payload['thinking_budget_tokens'] only when CARNOT_ARC_INDUCE_THINKING_BUDGET parses to a positive int. Established inert three ways: (1) tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget asserts the request body carries no such key when the var is unset, and test_malformed_or_nonpositive_env_is_ignored covers '0', '-5', '' and a non-numeric value; (2) no existing symbol, default, or control-flow branch was modified, so every code path this artifact exercised is unchanged; (3) neither this artifact nor its build command sets that environment variable, so the new branch cannot be taken during a rebuild. 7 tests pass."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "5286ff4f4969617dea411c5023d8b8b1a9c681d3268221278b418b8b15e64393",
++        "sha256_now": "f33be95b895d712ff49ae76937a7e20d9f9646f16d01c7df216f162b936f102c",
++        "acknowledged_on": "2026-08-17",
++        "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
++        "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index bafb4b6ef9..22ffc78ef5 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -392,6 +392,14 @@
+         "acknowledged_on": "2026-08-17",
+         "reason": "The 2026-08-17 change adds ONE opt-in field to the chat induce payload: `thinking_budget_tokens`, sent only when CARNOT_ARC_INDUCE_THINKING_BUDGET is set to a positive integer. Unset -- which is the default and the state every artifact here was built under -- the request body is byte-identical to before the change, pinned by tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget. No other behaviour, symbol or default was touched, so this drift cannot move any number in this artifact.",
+         "evidence": "Diff is +19/-0 inside LocalGGUFProposer._chat_complete_request, adding one conditional that sets payload['thinking_budget_tokens'] only when CARNOT_ARC_INDUCE_THINKING_BUDGET parses to a positive int. Established inert three ways: (1) tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget asserts the request body carries no such key when the var is unset, and test_malformed_or_nonpositive_env_is_ignored covers '0', '-5', '' and a non-numeric value; (2) no existing symbol, default, or control-flow branch was modified, so every code path this artifact exercised is unchanged; (3) neither this artifact nor its build command sets that environment variable, so the new branch cannot be taken during a rebuild. 7 tests pass."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "5286ff4f4969617dea411c5023d8b8b1a9c681d3268221278b418b8b15e64393",
++        "sha256_now": "f33be95b895d712ff49ae76937a7e20d9f9646f16d01c7df216f162b936f102c",
++        "acknowledged_on": "2026-08-17",
++        "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
++        "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index b22374ce06..3dbfebc00e 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8934,6 +8934,14 @@
+         "acknowledged_on": "2026-08-17",
+         "reason": "The 2026-08-17 change adds ONE opt-in field to the chat induce payload: `thinking_budget_tokens`, sent only when CARNOT_ARC_INDUCE_THINKING_BUDGET is set to a positive integer. Unset -- which is the default and the state every artifact here was built under -- the request body is byte-identical to before the change, pinned by tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget. No other behaviour, symbol or default was touched, so this drift cannot move any number in this artifact.",
+         "evidence": "Diff is +19/-0 inside LocalGGUFProposer._chat_complete_request, adding one conditional that sets payload['thinking_budget_tokens'] only when CARNOT_ARC_INDUCE_THINKING_BUDGET parses to a positive int. Established inert three ways: (1) tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget asserts the request body carries no such key when the var is unset, and test_malformed_or_nonpositive_env_is_ignored covers '0', '-5', '' and a non-numeric value; (2) no existing symbol, default, or control-flow branch was modified, so every code path this artifact exercised is unchanged; (3) neither this artifact nor its build command sets that environment variable, so the new branch cannot be taken during a rebuild. 7 tests pass."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "5286ff4f4969617dea411c5023d8b8b1a9c681d3268221278b418b8b15e64393",
++        "sha256_now": "f33be95b895d712ff49ae76937a7e20d9f9646f16d01c7df216f162b936f102c",
++        "acknowledged_on": "2026-08-17",
++        "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
++        "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index cca43012e7..49e840ec82 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1491,6 +1491,14 @@
+         "acknowledged_on": "2026-08-17",
+         "reason": "The 2026-08-17 change adds ONE opt-in field to the chat induce payload: `thinking_budget_tokens`, sent only when CARNOT_ARC_INDUCE_THINKING_BUDGET is set to a positive integer. Unset -- which is the default and the state every artifact here was built under -- the request body is byte-identical to before the change, pinned by tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget. No other behaviour, symbol or default was touched, so this drift cannot move any number in this artifact.",
+         "evidence": "Diff is +19/-0 inside LocalGGUFProposer._chat_complete_request, adding one conditional that sets payload['thinking_budget_tokens'] only when CARNOT_ARC_INDUCE_THINKING_BUDGET parses to a positive int. Established inert three ways: (1) tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget asserts the request body carries no such key when the var is unset, and test_malformed_or_nonpositive_env_is_ignored covers '0', '-5', '' and a non-numeric value; (2) no existing symbol, default, or control-flow branch was modified, so every code path this artifact exercised is unchanged; (3) neither this artifact nor its build command sets that environment variable, so the new branch cannot be taken during a rebuild. 7 tests pass."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "5286ff4f4969617dea411c5023d8b8b1a9c681d3268221278b418b8b15e64393",
++        "sha256_now": "f33be95b895d712ff49ae76937a7e20d9f9646f16d01c7df216f162b936f102c",
++        "acknowledged_on": "2026-08-17",
++        "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
++        "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
+       }
+     ],
+     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index eb7ec217e0..6538528237 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3708,6 +3708,14 @@
+         "acknowledged_on": "2026-08-17",
+         "reason": "The 2026-08-17 change adds ONE opt-in field to the chat induce payload: `thinking_budget_tokens`, sent only when CARNOT_ARC_INDUCE_THINKING_BUDGET is set to a positive integer. Unset -- which is the default and the state every artifact here was built under -- the request body is byte-identical to before the change, pinned by tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget. No other behaviour, symbol or default was touched, so this drift cannot move any number in this artifact.",
+         "evidence": "Diff is +19/-0 inside LocalGGUFProposer._chat_complete_request, adding one conditional that sets payload['thinking_budget_tokens'] only when CARNOT_ARC_INDUCE_THINKING_BUDGET parses to a positive int. Established inert three ways: (1) tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget asserts the request body carries no such key when the var is unset, and test_malformed_or_nonpositive_env_is_ignored covers '0', '-5', '' and a non-numeric value; (2) no existing symbol, default, or control-flow branch was modified, so every code path this artifact exercised is unchanged; (3) neither this artifact nor its build command sets that environment variable, so the new branch cannot be taken during a rebuild. 7 tests pass."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "5286ff4f4969617dea411c5023d8b8b1a9c681d3268221278b418b8b15e64393",
++        "sha256_now": "f33be95b895d712ff49ae76937a7e20d9f9646f16d01c7df216f162b936f102c",
++        "acknowledged_on": "2026-08-17",
++        "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
++        "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 69186bfc23..f25d6b1f40 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1373,6 +1373,14 @@
+         "acknowledged_on": "2026-08-17",
+         "reason": "The 2026-08-17 change adds ONE opt-in field to the chat induce payload: `thinking_budget_tokens`, sent only when CARNOT_ARC_INDUCE_THINKING_BUDGET is set to a positive integer. Unset -- which is the default and the state every artifact here was built under -- the request body is byte-identical to before the change, pinned by tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget. No other behaviour, symbol or default was touched, so this drift cannot move any number in this artifact.",
+         "evidence": "Diff is +19/-0 inside LocalGGUFProposer._chat_complete_request, adding one conditional that sets payload['thinking_budget_tokens'] only when CARNOT_ARC_INDUCE_THINKING_BUDGET parses to a positive int. Established inert three ways: (1) tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget asserts the request body carries no such key when the var is unset, and test_malformed_or_nonpositive_env_is_ignored covers '0', '-5', '' and a non-numeric value; (2) no existing symbol, default, or control-flow branch was modified, so every code path this artifact exercised is unchanged; (3) neither this artifact nor its build command sets that environment variable, so the new branch cannot be taken during a rebuild. 7 tests pass."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "5286ff4f4969617dea411c5023d8b8b1a9c681d3268221278b418b8b15e64393",
++        "sha256_now": "f33be95b895d712ff49ae76937a7e20d9f9646f16d01c7df216f162b936f102c",
++        "acknowledged_on": "2026-08-17",
++        "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
++        "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index b8ab09e063..a672b36f1d 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -592,6 +592,14 @@
+         "acknowledged_on": "2026-08-17",
+         "reason": "The 2026-08-17 change adds ONE opt-in field to the chat induce payload: `thinking_budget_tokens`, sent only when CARNOT_ARC_INDUCE_THINKING_BUDGET is set to a positive integer. Unset -- which is the default and the state every artifact here was built under -- the request body is byte-identical to before the change, pinned by tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget. No other behaviour, symbol or default was touched, so this drift cannot move any number in this artifact.",
+         "evidence": "Diff is +19/-0 inside LocalGGUFProposer._chat_complete_request, adding one conditional that sets payload['thinking_budget_tokens'] only when CARNOT_ARC_INDUCE_THINKING_BUDGET parses to a positive int. Established inert three ways: (1) tests/python/test_arc_induce_thinking_budget.py::test_absent_env_sends_no_thinking_budget asserts the request body carries no such key when the var is unset, and test_malformed_or_nonpositive_env_is_ignored covers '0', '-5', '' and a non-numeric value; (2) no existing symbol, default, or control-flow branch was modified, so every code path this artifact exercised is unchanged; (3) neither this artifact nor its build command sets that environment variable, so the new branch cannot be taken during a rebuild. 7 tests pass."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "5286ff4f4969617dea411c5023d8b8b1a9c681d3268221278b418b8b15e64393",
++        "sha256_now": "f33be95b895d712ff49ae76937a7e20d9f9646f16d01c7df216f162b936f102c",
++        "acknowledged_on": "2026-08-17",
++        "reason": "The 2026-08-17 tool-loop change adds ONE env-gated hook (+19 lines) at the top of LocalGGUFProposer.induce: when CARNOT_ARC_INDUCTION_TOOL_LOOP is enabled it delegates to arc_induction_tool_loop, and on any failure it falls through to the existing single-shot path. Unset -- the default, and the state every artifact here was built under -- induce() runs exactly as before.",
++        "evidence": "tool_loop_enabled() returns False with no environment set, verified by direct call. tests/python/test_arc_induction_tool_loop.py (20 passing, run independently) pins default-off inertness and the fall-through. No existing symbol, default or branch was modified; the hook is an early opt-in return. Neither these artifacts nor their build commands set that variable, so the new path cannot be taken during a rebuild."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/tests/python/test_arc_induction_tool_loop.py b/tests/python/test_arc_induction_tool_loop.py
+new file mode 100644
+index 0000000000..a67aaeb86d
+--- /dev/null
++++ b/tests/python/test_arc_induction_tool_loop.py
+@@ -0,0 +1,500 @@
++"""Wiring + behaviour tests for the tool-calling induction loop (REQ-ARC-WMTE-6460).
++
++Same discipline as test_arc_goal_defect_reask_wiring.py: drive the REAL induce()/loop
++against a scripted fake HTTP layer (no GPU, no model), and assert the observable
++consequences -- which endpoint was hit, what was written, which counters moved. The
++load-bearing pin is the first test: with the env var UNSET, induction must be
++byte-identical to the shipped single-shot path and the loop must never be consulted.
++"""
++
++from __future__ import annotations
++
++import json
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_executable_world_model as e3
++from carnot.agentic import arc_induction_tool_loop as loop_mod
++from carnot.agentic import arc_induction_tools as tools_mod
++
++
++class _T:
++    def __init__(self, grid, next_grid, action=1):
++        self.grid = np.asarray(grid)
++        self.next_grid = np.asarray(next_grid)
++        self.action = action
++        self.data = None
++        self.level_before = 0
++        self.level_after = 0
++
++
++def _mover_window(n=6):
++    """Action 1 moves the single 2 one column right on a 6x6 board."""
++    rows = []
++    for x in range(n):
++        a = np.zeros((6, 6), dtype=int)
++        a[2, x % 5] = 2
++        b = np.zeros((6, 6), dtype=int)
++        b[2, x % 5 + 1] = 2
++        rows.append(_T(a, b))
++    return rows
++
++
++GOOD_CODE = """import numpy as np
++
++def engine(grid, action, data):
++    g = grid.copy()
++    rs, cs = np.where(g == 2)
++    if action == 1 and len(rs):
++        g[rs[0], cs[0]] = 0
++        g[rs[0], min(g.shape[1] - 1, cs[0] + 1)] = 2
++    return g
++
++def is_level_complete(grid):
++    return False
++"""
++
++IDENTITY_CODE = """import numpy as np
++
++def engine(grid, action, data):
++    return grid
++
++def is_level_complete(grid):
++    return False
++"""
++
++
++def _chat_reply(message, finish="stop", tokens=100):
++    return {
++        "choices": [{"message": message, "finish_reason": finish}],
++        "usage": {"completion_tokens": tokens},
++    }
++
++
++def _tool_call(name, arguments, call_id="c1"):
++    return {
++        "id": call_id,
++        "type": "function",
++        "function": {"name": name, "arguments": arguments},
++    }
++
++
++class _FakeHTTP:
++    """Scripted server for BOTH endpoints. Chat replies come from `chat_replies` in
++    order; the raw /completion endpoint replays `completion_replies`."""
++
++    def __init__(self, chat_replies=(), completion_replies=()):
++        self.chat_replies = list(chat_replies)
++        self.completion_replies = list(completion_replies)
++        self.chat_payloads = []
++        self.completion_payloads = []
++
++    def __call__(self, req, timeout=None):
++        url = req.full_url if hasattr(req, "full_url") else str(req)
++        body = json.loads(req.data.decode())
++        if "/v1/chat/completions" in url:
++            self.chat_payloads.append(body)
++            reply = self.chat_replies[min(len(self.chat_payloads) - 1, len(self.chat_replies) - 1)]
++        else:
++            self.completion_payloads.append(body)
++            reply = self.completion_replies[
++                min(len(self.completion_payloads) - 1, len(self.completion_replies) - 1)
++            ]
++
++        class _R:
++            def __enter__(self):
++                return self
++
++            def __exit__(self, *_a):
++                return False
++
++            def read(self):
++                return json.dumps(reply).encode()
++
++        return _R()
++
++
++@pytest.fixture(autouse=True)
++def _json_load(monkeypatch):
++    real = json.load
++    monkeypatch.setattr(json, "load", lambda r, *a, **k: json.loads(r.read()))
++    yield
++    monkeypatch.setattr(json, "load", real)
++
++
++@pytest.fixture
++def proposer(monkeypatch, tmp_path):
++    # E3_DIR -> tmp_path: a test must never write results/** (Test-Run Record Integrity).
++    monkeypatch.setattr(e3, "E3_DIR", tmp_path)
++    # Pin think mode OFF so the shipped single-shot path takes the raw /completion route
++    # the scripted fake serves. The tool loop does not read this env var -- it always
++    # uses the chat endpoint with tools -- so the loop tests are unaffected.
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
++    p = e3.LocalGGUFProposer()
++    monkeypatch.setattr(type(p), "_ensure_server", lambda _self: True)
++    monkeypatch.setattr(type(p), "_url", lambda _self: "http://127.0.0.1:1")
++    return p
++
++
++def _patch_http(monkeypatch, fake):
++    import urllib.request
++
++    monkeypatch.setattr(urllib.request, "urlopen", fake)
++
++
++# ---------------------------------------------------------------------------------
++# The default-off pin
++# ---------------------------------------------------------------------------------
++
++
++def test_env_unset_never_consults_the_tool_loop(monkeypatch, proposer, tmp_path):
++    """Unset -> the shipped single-shot path, and the loop entry is NEVER called.
++
++    The bomb proves the negative: if induce() consulted the loop, the test would
++    raise. The payload check pins the request shape -- no `tools`, no `messages`,
++    the raw /completion prompt exactly as shipped."""
++    monkeypatch.delenv("CARNOT_ARC_INDUCE_TOOL_LOOP", raising=False)
++
++    def _bomb(*_a, **_k):
++        raise AssertionError("tool loop consulted with env unset")
++
++    monkeypatch.setattr(loop_mod, "induce_with_tool_loop", _bomb)
++    fake = _FakeHTTP(
++        completion_replies=[{"content": f"```python\n{GOOD_CODE}```", "stop_type": "eos"}]
++    )
++    _patch_http(monkeypatch, fake)
++    ok, note = proposer.induce("testgame", _mover_window(), 1)
++    assert ok
++    assert fake.chat_payloads == []
++    assert len(fake.completion_payloads) >= 1
++    assert "tools" not in fake.completion_payloads[0]
++    assert "messages" not in fake.completion_payloads[0]
++    assert (tmp_path / "testgame" / "world_model.py").exists()
++
++
++# ---------------------------------------------------------------------------------
++# Loop behaviour
++# ---------------------------------------------------------------------------------
++
++
++def test_loop_runs_tools_and_accepts_zero_mismatch_engine(monkeypatch, proposer, tmp_path):
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _FakeHTTP(
++        chat_replies=[
++            _chat_reply(
++                {"role": "assistant", "tool_calls": [_tool_call("diff_grids", '{"t": 0}')]},
++                tokens=500,
++            ),
++            _chat_reply(
++                {
++                    "role": "assistant",
++                    "tool_calls": [
++                        _tool_call(
++                            "run_engine_on_transitions", json.dumps({"code": GOOD_CODE}), "c2"
++                        )
++                    ],
++                },
++                tokens=700,
++            ),
++        ]
++    )
++    _patch_http(monkeypatch, fake)
++    ok, note = proposer.induce("toolgame", _mover_window(), 1)
++    assert ok
++    assert "tool loop" in note
++    stats = proposer.last_tool_loop_stats
++    assert stats["terminated_by"] == "zero_mismatches"
++    assert stats["tool_calls_by_name"] == {"diff_grids": 1, "run_engine_on_transitions": 1}
++    assert stats["decode_tokens_total"] == 1200
++    assert stats["tool_call_parse_failures"] == 0
++    written = (tmp_path / "toolgame" / "world_model.py").read_text()
++    assert "def engine" in written and "def is_level_complete" in written
++    # The chat requests carried the tool schemas and the per-turn think budget.
++    assert fake.chat_payloads[0]["tools"] == tools_mod.TOOL_SCHEMAS
++    assert fake.chat_payloads[0]["thinking_budget_tokens"] == loop_mod.DEFAULT_THINK_BUDGET
++    # The tool result travelled back as a tool-role message on the next request.
++    roles = [m["role"] for m in fake.chat_payloads[1]["messages"]]
++    assert roles.count("tool") == 1
++
++
++def test_loop_failure_falls_back_to_single_shot(monkeypatch, proposer, tmp_path):
++    """No parseable engine by the cap -> (False, ...) -> the shipped path runs and
++    succeeds. Failure is never worse than today."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_TURNS", "2")
++    fake = _FakeHTTP(
++        chat_replies=[_chat_reply({"role": "assistant", "content": "I am stuck."}, tokens=50)],
++        completion_replies=[{"content": f"```python\n{GOOD_CODE}```", "stop_type": "eos"}],
++    )
++    _patch_http(monkeypatch, fake)
++    ok, note = proposer.induce("fbgame", _mover_window(), 1)
++    assert ok
++    assert proposer.last_tool_loop_stats["terminated_by"] == "turn_cap"
++    assert len(fake.chat_payloads) == 2  # both turns spent
++    assert len(fake.completion_payloads) >= 1  # the fallback single-shot ran
++    assert (tmp_path / "fbgame" / "world_model.py").exists()
++
++
++def test_malformed_tool_arguments_are_counted_not_fatal(monkeypatch, proposer, tmp_path):
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _FakeHTTP(
++        chat_replies=[
++            _chat_reply(
++                {
++                    "role": "assistant",
++                    "tool_calls": [_tool_call("diff_grids", "{not json")],
++                },
++                tokens=60,
++            ),
++            _chat_reply(
++                {
++                    "role": "assistant",
++                    "tool_calls": [
++                        _tool_call(
++                            "run_engine_on_transitions", json.dumps({"code": GOOD_CODE}), "c2"
++                        )
++                    ],
++                },
++                tokens=60,
++            ),
++        ]
++    )
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("pfgame", _mover_window(), 1)
++    assert ok
++    stats = proposer.last_tool_loop_stats
++    assert stats["tool_call_parse_failures"] == 1
++    assert stats["terminated_by"] == "zero_mismatches"
++    # The malformed call produced an error tool-result, visible to the model.
++    tool_msgs = [m for m in fake.chat_payloads[1]["messages"] if m["role"] == "tool"]
++    assert any("unparseable" in m["content"] for m in tool_msgs)
++
++
++def test_early_stop_after_non_improving_candidates_keeps_best(monkeypatch, proposer, tmp_path):
++    """Two consecutive non-improving engine submissions end the loop, and the BEST
++    candidate (fewest visible mismatches) is what lands on disk -- monotone accept."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++
++    def _engine_call(code, cid):
++        return _chat_reply(
++            {
++                "role": "assistant",
++                "tool_calls": [
++                    _tool_call("run_engine_on_transitions", json.dumps({"code": code}), cid)
++                ],
++            },
++            tokens=10,
++        )
++
++    fake = _FakeHTTP(
++        chat_replies=[
++            _engine_call(GOOD_CODE.replace("min(g.shape[1] - 1, cs[0] + 1)", "cs[0]"), "c1"),
++            _engine_call(IDENTITY_CODE, "c2"),
++            _engine_call(IDENTITY_CODE, "c3"),
++        ]
++    )
++    _patch_http(monkeypatch, fake)
++    ok, note = proposer.induce("esgame", _mover_window(), 1)
++    assert ok
++    stats = proposer.last_tool_loop_stats
++    assert stats["terminated_by"] == "early_stop_non_improving"
++    # Candidate 1 clears cells (writes 0 then 2 back = identity too) -- so all three
++    # tie; best is the first scored. The pin is that SOMETHING was written and the
++    # loop stopped early rather than burning the cap.
++    assert stats["turns"] == 3
++    assert (tmp_path / "esgame" / "world_model.py").exists()
++
++
++def test_final_answer_is_scored_and_monotone_accept_keeps_the_better_candidate(
++    monkeypatch, proposer, tmp_path
++):
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _FakeHTTP(
++        chat_replies=[
++            _chat_reply(
++                {
++                    "role": "assistant",
++                    "tool_calls": [
++                        _tool_call(
++                            "run_engine_on_transitions", json.dumps({"code": GOOD_CODE}), "c1"
++                        )
++                    ],
++                },
++                tokens=10,
++            ),
++        ]
++    )
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("fagame", _mover_window(), 1)
++    assert ok
++    # GOOD_CODE has zero mismatches, so the loop accepts before any final answer.
++    written = (tmp_path / "fagame" / "world_model.py").read_text()
++    assert "min(g.shape[1] - 1" in written
++
++
++ENGINE_ONLY_CODE = GOOD_CODE.split("def is_level_complete")[0]
++
++
++def test_force_engine_nudge_fires_after_inspection_only_turns(monkeypatch, proposer, tmp_path):
++    """Probe 1's measured failure: 12 turns of pure diff/query, zero engines. After the
++    inspection budget the loop must DEMAND a candidate, and record that it did."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN", "2")
++    inspect_reply = _chat_reply(
++        {"role": "assistant", "tool_calls": [_tool_call("diff_grids", '{"t": 0}')]},
++        tokens=10,
++    )
++    submit_reply = _chat_reply(
++        {
++            "role": "assistant",
++            "tool_calls": [
++                _tool_call("run_engine_on_transitions", json.dumps({"code": GOOD_CODE}), "c9")
++            ],
++        },
++        tokens=10,
++    )
++    fake = _FakeHTTP(chat_replies=[inspect_reply, inspect_reply, submit_reply])
++    _patch_http(monkeypatch, fake)
++    ok, _ = proposer.induce("nudgegame", _mover_window(), 1)
++    assert ok
++    stats = proposer.last_tool_loop_stats
++    assert stats["force_engine_nudges"] >= 1
++    assert stats["terminated_by"] == "zero_mismatches"
++    assert stats["mismatch_trajectory"] == [0]
++    assert stats["tool_calls_per_turn"][0] == ["diff_grids"]
++    # The demand reached the conversation as a user message before the next request.
++    turn3_roles = [m["role"] for m in fake.chat_payloads[2]["messages"]]
++    assert "user" in turn3_roles[-3:]
++    nudge_texts = [m["content"] for m in fake.chat_payloads[2]["messages"] if m["role"] == "user"]
++    assert any("MUST be run_engine_on_transitions" in t for t in nudge_texts)
++
++
++def test_engine_only_best_gets_goal_from_focused_call_not_a_shadowing_donor(
++    monkeypatch, proposer, tmp_path
++):
++    """An engine-only winner is completed by the focused goal call, and _goal_only never
++    returns a donor verbatim (a donor carrying its own engine would bind last and
++    shadow the accepted engine -- the split-induce shadowing bug, at accept time)."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    fake = _FakeHTTP(
++        chat_replies=[
++            _chat_reply(
++                {
++                    "role": "assistant",
++                    "tool_calls": [
++                        _tool_call(
++                            "run_engine_on_transitions",
++                            json.dumps({"code": ENGINE_ONLY_CODE}),
++                            "c1",
++                        )
++                    ],
++                },
++                tokens=10,
++            ),
++        ],
++        completion_replies=[
++            {
++                "content": "```python\ndef is_level_complete(grid):\n    return False\n```",
++                "stop_type": "eos",
++            }
++        ],
++    )
++    _patch_http(monkeypatch, fake)
++    ok, note = proposer.induce("goalgame", _mover_window(), 1)
++    assert ok
++    written = (tmp_path / "goalgame" / "world_model.py").read_text()
++    assert "def engine" in written and "def is_level_complete" in written
++    assert len(fake.completion_payloads) == 1  # the focused goal call ran
++    # Direct unit pins on the extractor: def-only on a full donor, None without a goal.
++    donor = GOOD_CODE
++    seg = loop_mod._goal_only(donor)
++    assert seg is not None and seg.startswith("def is_level_complete")
++    assert "def engine" not in seg
++    assert loop_mod._goal_only(ENGINE_ONLY_CODE) is None
++
++
++def test_prompt_shows_visible_rows_only_never_the_held_out_tail(monkeypatch, proposer):
++    """The loop's opening prompt renders session.visible, not the full window. Rendering
++    the tail would hand the model the held-out deltas in-prompt and quietly defeat the
++    aggregate-only held-out score (the REQ-ARC-WMTE-6090 leak, one level up)."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_TURNS", "1")
++    window = _mover_window(14)  # 14 rows -> 3 held out
++    visible, _held = tools_mod.holdout_split(window)
++    expected = e3.induce_prompt(game := "leakgame", list(visible), 1, k=e3._induce_transitions_k())
++    fake = _FakeHTTP(
++        chat_replies=[_chat_reply({"role": "assistant", "content": "no tools"}, tokens=5)],
++        completion_replies=[{"content": f"```python\n{GOOD_CODE}```", "stop_type": "eos"}],
++    )
++    _patch_http(monkeypatch, fake)
++    proposer.induce(game, window, 1)
++    first_user = fake.chat_payloads[0]["messages"][0]["content"]
++    assert first_user.startswith(expected)
++
++
++# ---------------------------------------------------------------------------------
++# Registry-level guarantees
++# ---------------------------------------------------------------------------------
++
++
++def test_held_out_report_is_aggregate_only():
++    session = tools_mod.InductionToolSession(_mover_window(14), cell=1)
++    assert len(session.held_out) == 3
++    report = session.run_engine_on_transitions(GOOD_CODE)
++    assert set(report["held_out"]) == {"n_transitions", "accuracy", "cell_recall"}
++    # Every mismatch (if any) indexes a VISIBLE transition only.
++    assert all(m.get("i", 0) < len(session.visible) for m in report["mismatches"])
++
++
++def test_memorization_scan_flags_hardcoded_window_coordinates():
++    rows = []
++    for x in range(4):
++        a = np.zeros((20, 20), dtype=int)
++        a[12, 13 + x] = 2
++        b = np.zeros((20, 20), dtype=int)
++        b[12, 14 + x] = 2
++        rows.append(_T(a, b))
++    session = tools_mod.InductionToolSession(rows, cell=1)
++    hardcoded = """import numpy as np
++
++def engine(grid, action, data):
++    g = grid.copy()
++    g[12, 13] = 0
++    g[12, 14] = 2
++    g[12, 15] = 2
++    g[12, 16] = 2
++    return g
++
++def is_level_complete(grid):
++    return False
++"""
++    report = session.run_engine_on_transitions(hardcoded)
++    assert report["memorization_scan"]["is_memorizing"] is True
++    assert "warning" in report
++    general = session.run_engine_on_transitions(GOOD_CODE)
++    assert general["memorization_scan"]["is_memorizing"] is False
++
++
++def test_dispatch_covers_every_schema_and_rejects_unknown_names():
++    session = tools_mod.InductionToolSession(_mover_window(4), cell=1)
++    for name in tools_mod.TOOL_NAMES:
++        result = tools_mod.dispatch_tool(session, name, "{}")
++        # Every schema-listed tool is dispatchable; missing args are a per-tool error,
++        # never a KeyError escaping to the loop.
++        assert isinstance(result, dict)
++    bad = tools_mod.dispatch_tool(session, "no_such_tool", "{}")
++    assert bad["ok"] is False and "unknown tool" in bad["error"]
++
++
++def test_query_region_and_diff_grids_round_trip():
++    rows = _mover_window(4)
++    session = tools_mod.InductionToolSession(rows, cell=1)
++    d = session.diff_grids(0)
++    assert d["ok"] and d["n_changed"] == 2
++    q = session.query_region(0, 2, 3, 0, 3, "before")
++    assert q["ok"] and q["rows"] == [[2, 0, 0]]
++    big = session.query_region(0, 0, 6, 0, 6, "before")
++    assert big["ok"]  # 36 cells, under the cap
++    out_of_range = session.diff_grids(99)
++    assert out_of_range["ok"] is False
+-- 
+2.55.0
+

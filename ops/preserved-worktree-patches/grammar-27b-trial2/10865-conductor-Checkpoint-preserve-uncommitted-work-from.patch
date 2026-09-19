@@ -1,0 +1,739 @@
+From 2fa1a526c2d35f8fb1833fd3fe60dfc28e0128af Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 05:27:27 -0400
+Subject: [PATCH 10865/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   | 144 ++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ scripts/audit_roadmap_gates.py                |   5 +-
+ tests/python/test_audit_roadmap_gates.py      |  18 +-
+ ...11_v605_document_yaml_evidence_contract.py |   8 +-
+ ...t_6923_v606_lifecycle_evidence_contract.py | 438 ++++++++++++++++++
+ 8 files changed, 606 insertions(+), 12 deletions(-)
+ create mode 100644 tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index e7ade558e3..d2187fb089 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -61290,3 +61290,147 @@ success or production adoption.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6922 and SCENARIO-REPORT-6922-* | Planned (`python/carnot/experiment_6922_v605_independent_capstone.py`; `scripts/experiments/experiment_6922_v605_independent_capstone.py`) | Planned (`tests/python/test_experiment_6922_v605_independent_capstone.py`) |
++
++### REQ-REPORT-6923: V606 Lifecycle Evidence Contract SHALL Audit One Roadmap State
++
++Exp6923 SHALL resolve one V606 execution file without combining task lists. It
++SHALL select `research-roadmap-next.yaml` when that file is the only roadmap
++with milestone `2026.09.606`. It SHALL select `research-roadmap.yaml` when that
++file is the only roadmap with that milestone. It SHALL block when no V606 file
++exists, when a present roadmap has the wrong milestone, or when both files
++claim V606.
++
++The audit SHALL parse the design and selected YAML independently. It SHALL
++require milestone `2026.09.606`, exactly 14 ordered tasks, Exp6923 through
++Exp6936, and the exact IDs, titles, unique deliverables, and gates in the design.
++It SHALL compare each task's model-bearing, infrastructure-slot,
++SOTA-ingestion-slot, and ungated-tail roles. It SHALL not edit either roadmap.
++
++Every prompt SHALL contain `CONTEXT`, `EXISTING CODE TO READ FIRST`, `TASK`, and
++`CONCRETE STEPS`. Each prompt SHALL contain one exact `Run command:` line. Each
++prompt SHALL end with
++`Do NOT push. Do NOT modify scripts/research_conductor.py.`
++
++Every structured gate SHALL name an exact earlier task ID in V606. Each gate
++SHALL use a schema operator. Each gate field SHALL appear in that producer's
++own `REQUIRED ARTIFACT FIELDS` block. The audit SHALL reject task aliases,
++undeclared fields, later producers, and cross-branch gates.
++
++Every `prior_failures` row SHALL include `experiment_id`, `verdict`, non-empty
++`addressed_by`, and `retire_if_same_verdict=true`. The current prior-failure
++validator and exclusion-manifest lint SHALL pass. The audit SHALL record the
++manifest result without changing the manifest.
++
++The standalone roadmap audit SHALL require `gpt-5.6-sol` for Codex formulaic
++tasks. It SHALL keep the existing rejection of Gemini routes and wrong-vendor
++Claude models. Each live model task SHALL declare the documented model set,
++GGUF-native tokenization, and the ban on loading a GGUF repository through
++`AutoTokenizer.from_pretrained()`.
++
++Exp6923, Exp6924, Exp6925, Exp6926, Exp6929, Exp6932, Exp6935, and Exp6936 SHALL
++be ungated. No science task SHALL gate on Exp6923 or Exp6925. Exactly Exp6923
++and Exp6924 SHALL occupy the infrastructure slots. Exactly Exp6925 SHALL
++occupy the SOTA-ingestion slot. Exp6936 SHALL remain the ungated capstone.
++
++The artifact SHALL include `schema`, `experiment_id`, `run_date`, `status`,
++`field_principles`, `preconditions_checked`, `inference_substrate`,
++`duration_s`, `source_artifact_hashes`, `rows`, `lifecycle_resolution_rows`,
++`document_task_rows`, `yaml_task_rows`, `document_yaml_parity_rows`,
++`gate_contract_rows`, `required_field_rows`, `prior_failure_contract_rows`,
++`model_contract_rows`, `prompt_ending_rows`, `infrastructure_slot_rows`,
++`sota_ingestion_slot_rows`, `independent_root_rows`, `ungated_tail_rows`,
++`routing_audit_update_rows`, `task_count`, `experiment_range`, `random_seed`,
++`reproducibility_checksum`, `v606_execution_contract_ready_score`,
++`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
++`honest_verdict`. `field_principles` SHALL explain each required field and the
++advisory readiness score.
++
++`inference_substrate` SHALL equal
++`deterministic_lifecycle_manifest_and_evidence_audit_no_llm`.
++`v606_execution_contract_ready_score` SHALL be one only when all hard checks
++pass. The score SHALL not promote a science claim. A ready artifact SHALL use
++verdict class `null`. A blocked artifact SHALL use verdict class `blocked` and
++honest verdict `complete_blocked_v606_lifecycle_evidence_contract`.
++`verifier_is_oracle` SHALL be false. Every honest verdict SHALL start with
++`complete_`.
++
++#### SCENARIO-REPORT-6923-LIFECYCLE-PRESTAGED: The Next Roadmap Is Selected
++
++**Given** only `research-roadmap-next.yaml` declares V606
++**When** Exp6923 resolves the lifecycle
++**Then** it audits that file as the pre-staged state and does not read tasks
++from the active file.
++
++#### SCENARIO-REPORT-6923-LIFECYCLE-ACTIVATED: The Active Roadmap Is Selected
++
++**Given** only `research-roadmap.yaml` declares V606
++**When** Exp6923 resolves the lifecycle
++**Then** it audits that file as the activated state and does not require the
++deleted next file.
++
++#### SCENARIO-REPORT-6923-LIFECYCLE-MISSING: Missing Roadmaps Block
++
++**Given** neither roadmap file exists
++**When** Exp6923 resolves the lifecycle
++**Then** it emits the complete blocked artifact with expected and observed
++values for the failed lifecycle check.
++
++#### SCENARIO-REPORT-6923-LIFECYCLE-MISMATCHED: Wrong Milestones Block
++
++**Given** roadmap files exist but neither declares V606
++**When** Exp6923 resolves the lifecycle
++**Then** it does not select a task list and readiness remains zero.
++
++#### SCENARIO-REPORT-6923-LIFECYCLE-AMBIGUOUS: Two V606 Files Block
++
++**Given** both roadmap files declare V606
++**When** Exp6923 resolves the lifecycle
++**Then** it records ambiguity and does not merge or select either task list.
++
++#### SCENARIO-REPORT-6923-PARITY: Document And YAML Rows Match Exactly
++
++**Given** a task changes its order, ID, title, deliverable, gate, milestone, or
++declared role
++**When** Exp6923 compares the independent sources
++**Then** the row records expected and observed values and readiness is zero.
++
++#### SCENARIO-REPORT-6923-GATES: Exact Producer Fields Are Required
++
++**Given** a gate uses an alias, a missing or later producer, or an undeclared
++field
++**When** Exp6923 resolves the gate
++**Then** the exact failed condition appears in `gate_contract_rows`.
++
++#### SCENARIO-REPORT-6923-PRIORS: Retirement Mechanics Are Complete
++
++**Given** a prior-failure row lacks a required value or the current exclusion
++lint fails
++**When** Exp6923 validates retirement evidence
++**Then** the failed row or lint result blocks readiness.
++
++#### SCENARIO-REPORT-6923-PROMPTS: Prompt Structure And Ending Are Exact
++
++**Given** a prompt lacks a required section, has more than one run command, or
++changes the final sentence
++**When** Exp6923 checks the prompts
++**Then** the exact prompt mismatch remains visible and readiness is zero.
++
++#### SCENARIO-REPORT-6923-ROUTING: Current Vendor Rules Stay Strong
++
++**Given** a Codex task does not use `gpt-5.6-sol`, a Gemini task is present, or
++a Claude task uses a wrong-vendor model
++**When** the standalone and contract audits run
++**Then** model coherence fails without weakening another vendor check.
++
++#### SCENARIO-REPORT-6923-SLOTS-ROOTS: Advisory And Science Roots Stay Separate
++
++**Given** reserved slot counts change, a required root gains a gate, a science
++task consumes Exp6923 or Exp6925, or the capstone gains a gate
++**When** Exp6923 checks branch structure
++**Then** readiness is zero and the affected role row names the mismatch.
++
++## Implementation Status (REQ-REPORT-6923)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6923 and SCENARIO-REPORT-6923-* | Planned (`python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py`; `scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py`) | Planned (`tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py`) |
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f275c66153..5c7021b0a2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-09-03T09:04:01Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-09-03T09:27:19Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5891f8bf0b..5d5cd75b5c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17128,3 +17128,4 @@ code |
+ | 2026-09-03 07:35 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1364s (600s silence). Last out |
+ | 2026-09-03 08:59 UTC | Plan milestone 2026.09.606 | OK | 4 tasks proposed |
+ | 2026-09-03 09:02 UTC | Milestone 2026.09.606 activated | OK | 4 tasks queued |
++| 2026-09-03 09:25 UTC | V606 lifecycle-aware execution and evidence contra | FAIL | Codex CLI error: Stalled after 600s silence. Last output: mpt = prompt.replac |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f234afa030..c4b234ac31 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 15, "phase": "iteration_start", "started_at": "2026-09-03T09:04:01Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 16, "phase": "iteration_start", "started_at": "2026-09-03T09:27:19Z"}
+\ No newline at end of file
+diff --git a/scripts/audit_roadmap_gates.py b/scripts/audit_roadmap_gates.py
+index 7a890fda8f..48267a288c 100644
+--- a/scripts/audit_roadmap_gates.py
++++ b/scripts/audit_roadmap_gates.py
+@@ -195,10 +195,11 @@ def audit_roadmap(roadmap_path: Path, complete_path: Path = DEFAULT_COMPLETE_PAT
+         task_id = str(task.get("id") or "<missing-id>")
+         agent_type = str(task.get("agent_type") or "").strip().lower()
+         model = str(task.get("model") or "").strip()
+-        if agent_type == "codex" and model != "gpt-5.5":
++        if agent_type == "codex" and model != "gpt-5.6-sol":
+             result.n_model_agent_coherence_failures += 1
+             result.failure_details.append(
+-                f"MODEL_AGENT_COHERENCE {task_id}: agent_type=codex requires model=gpt-5.5, got {model or '<missing>'}"
++                f"MODEL_AGENT_COHERENCE {task_id}: agent_type=codex requires "
++                f"model=gpt-5.6-sol, got {model or '<missing>'}"
+             )
+         if agent_type == "gemini":
+             result.n_model_agent_coherence_failures += 1
+diff --git a/tests/python/test_audit_roadmap_gates.py b/tests/python/test_audit_roadmap_gates.py
+index 063b3d98ff..f7bd2d458a 100644
+--- a/tests/python/test_audit_roadmap_gates.py
++++ b/tests/python/test_audit_roadmap_gates.py
+@@ -88,7 +88,7 @@ def test_clean_roadmap_passes_all_audit_gates(tmp_path: Path) -> None:
+                     "exp2-downstream",
+                     "Fresh Consumer",
+                     agent_type="codex",
+-                    model="gpt-5.5",
++                    model="gpt-5.6-sol",
+                     gated_on=[
+                         {
+                             "upstream": "exp1-upstream",
+@@ -216,13 +216,23 @@ def test_prior_failure_keyword_overlap_requires_declaration(tmp_path: Path) -> N
+ 
+ 
+ def test_model_agent_coherence_rejects_bad_codex_model_and_gemini(tmp_path: Path) -> None:
+-    """SCENARIO-INFRA-086: Codex requires gpt-5.5 and Gemini is not allowed."""
++    """SCENARIO-INFRA-086: Codex requires gpt-5.6-sol and rejects Gemini."""
+     roadmap_path = _write_yaml(
+         tmp_path / "research-roadmap.yaml",
+         _roadmap(
+             [
+-                _task("exp1-good-codex", "Fresh Codex Task", agent_type="codex", model="gpt-5.5"),
+-                _task("exp2-bad-codex", "Fresh Bad Codex Task", agent_type="codex", model="opus"),
++                _task(
++                    "exp1-good-codex",
++                    "Fresh Codex Task",
++                    agent_type="codex",
++                    model="gpt-5.6-sol",
++                ),
++                _task(
++                    "exp2-bad-codex",
++                    "Fresh Bad Codex Task",
++                    agent_type="codex",
++                    model="gpt-5.5",
++                ),
+                 _task(
+                     "exp3-gemini",
+                     "Fresh Gemini Task",
+diff --git a/tests/python/test_experiment_6911_v605_document_yaml_evidence_contract.py b/tests/python/test_experiment_6911_v605_document_yaml_evidence_contract.py
+index 11cd49e5c5..c508a49839 100644
+--- a/tests/python/test_experiment_6911_v605_document_yaml_evidence_contract.py
++++ b/tests/python/test_experiment_6911_v605_document_yaml_evidence_contract.py
+@@ -65,7 +65,7 @@ def _valid_inputs() -> tuple[str, dict[str, Any], dict[str, dict[str, Any]]]:
+             "milestone": mod.V605_MILESTONE,
+             "deliverable": expected["deliverable"],
+             "agent_type": "codex",
+-            "model": "gpt-5.5",
++            "model": "gpt-5.6-sol",
+             "gated_on": deepcopy(expected["gates"]),
+             "prior_failures": [],
+         }
+@@ -300,7 +300,7 @@ def test_scenario_report_6911_current_model_rules(mismatch: str) -> None:
+ 
+     design, roadmap, priors = _valid_inputs()
+     if mismatch == "agent_model":
+-        roadmap["tasks"][1]["model"] = "gpt-5.6-sol"
++        roadmap["tasks"][1]["model"] = "gpt-5.5"
+         index = 1
+     elif mismatch == "forbidden_agent":
+         roadmap["tasks"][1]["agent_type"] = "gemini"
+@@ -496,11 +496,11 @@ def test_req_report_6911_parsers_and_checksum_helpers_fail_closed() -> None:
+         mod.parse_roadmap({"tasks": ["bad"]})
+     with pytest.raises(ValueError):
+         mod.parse_roadmap({"tasks": [{"gated_on": "bad"}]})
+-    assert mod.current_model_rule(AUDIT_TEXT) == ("gpt-5.5", "gemini")
++    assert mod.current_model_rule(AUDIT_TEXT) == ("gpt-5.6-sol", "gemini")
+     with pytest.raises(ValueError):
+         mod.current_model_rule("def audit(): pass")
+     with pytest.raises(ValueError):
+-        mod.current_model_rule('agent_type == "codex" and model != "gpt-5.5"')
++        mod.current_model_rule('agent_type == "codex" and model != "gpt-5.6-sol"')
+     first = {"duration_s": 1.0, "reproducibility_checksum": "", "value": 2}
+     second = {"duration_s": 9.0, "reproducibility_checksum": "bad", "value": 2}
+     assert mod.reproducibility_checksum(first) == mod.reproducibility_checksum(second)
+diff --git a/tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py b/tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py
+new file mode 100644
+index 0000000000..a574bc61f8
+--- /dev/null
++++ b/tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py
+@@ -0,0 +1,438 @@
++"""Focused tests for the V606 lifecycle and evidence contract.
++
++Spec refs: REQ-REPORT-6923 and SCENARIO-REPORT-6923-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import subprocess
++import sys
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_6923_v606_lifecycle_evidence_contract as mod
++
++
++ROOT = Path(__file__).resolve().parents[2]
++DESIGN_TEXT = (ROOT / mod.DESIGN_PATH).read_text(encoding="utf-8")
++SCHEMA_TEXT = (ROOT / mod.SCHEMA_PATH).read_text(encoding="utf-8")
++AUDIT_TEXT = (ROOT / mod.GATE_AUDIT_PATH).read_text(encoding="utf-8")
++
++
++def _write_yaml(path: Path, value: dict[str, Any]) -> None:
++    path.write_text(yaml.safe_dump(value, sort_keys=False), encoding="utf-8")
++
++
++def _prompt(number: int, deliverable: str, produced_fields: set[str]) -> str:
++    fields = mod.COMMON_PROMPT_FIELDS | produced_fields
++    model_text = ""
++    if number in mod.MODEL_BEARING_NUMBERS:
++        model_ids = mod.REQUIRED_MODEL_IDS if number != 6935 else mod.REQUIRED_MODEL_IDS[:1]
++        production_model = " plus Qwen3.8-27B" if number == 6935 else ""
++        model_text = (
++            "\nDeclare MODEL_SPECS with "
++            + ", ".join(model_ids)
++            + production_model
++            + ". Use llama.cpp's embedded tokenizer. Never pass a GGUF repository to "
++            "AutoTokenizer.from_pretrained().\n"
++        )
++        fields.add("model_specs")
++    declared = "; ".join(sorted(fields))
++    return (
++        "CONTEXT:\nA deterministic contract fixture.\n\n"
++        "EXISTING CODE TO READ FIRST:\n- CODEX.md\n\n"
++        "TASK:\nAudit one fixture.\n\n"
++        "CONCRETE STEPS:\n0. PRECONDITIONS: require fixture inputs.\n"
++        f"{model_text}\n"
++        "REQUIRED ARTIFACT FIELDS: field_principles with one principle per required field; "
++        f"{declared}.\n\n"
++        "Run command: cd {project_root} && .venv/bin/python "
++        f"scripts/experiments/{Path(deliverable).stem}.py --date {{date}}\n"
++        f"{mod.FINAL_SENTENCE}\n"
++    )
++
++
++def _valid_roadmap() -> dict[str, Any]:
++    produced = {number: set() for number in mod.EXPECTED_NUMBERS}
++    for expected in mod.EXPECTED_TASKS:
++        for gate in expected["gates"]:
++            produced[mod.experiment_number(gate["upstream"])].add(gate["artifact_field"])
++    tasks = []
++    for expected in mod.EXPECTED_TASKS:
++        number = expected["number"]
++        task = {
++            "id": expected["task_id"],
++            "title": expected["title"],
++            "track": "infrastructure" if number in mod.INFRASTRUCTURE_NUMBERS else "research",
++            "priority": "critical",
++            "agent_type": "codex",
++            "model": "gpt-5.6-sol",
++            "requires_gpu": False,
++            "milestone": mod.V606_MILESTONE,
++            "deliverable": expected["deliverable"],
++            "gated_on": deepcopy(expected["gates"]),
++            "prior_failures": [],
++            "prompt": _prompt(number, expected["deliverable"], produced[number]),
++        }
++        tasks.append(task)
++    return {
++        "milestone": mod.V606_MILESTONE,
++        "milestone_title": "fixture",
++        "milestone_doc": mod.DESIGN_PATH.as_posix(),
++        "tasks": tasks,
++    }
++
++
++def _evaluate(roadmap: dict[str, Any]) -> dict[str, Any]:
++    return mod.evaluate_contract(DESIGN_TEXT, roadmap, SCHEMA_TEXT, AUDIT_TEXT, {})
++
++
++def test_req_report_6923_spec_precedes_implementation() -> None:
++    """REQ-REPORT-6923 owns all focused lifecycle scenarios."""
++
++    text = (ROOT / mod.SPEC_PATH).read_text(encoding="utf-8")
++    section = text[text.index("### REQ-REPORT-6923") :]
++    for name in (
++        "LIFECYCLE-PRESTAGED",
++        "LIFECYCLE-ACTIVATED",
++        "LIFECYCLE-MISSING",
++        "LIFECYCLE-MISMATCHED",
++        "LIFECYCLE-AMBIGUOUS",
++        "PARITY",
++        "GATES",
++        "PRIORS",
++        "PROMPTS",
++        "ROUTING",
++        "SLOTS-ROOTS",
++    ):
++        assert f"SCENARIO-REPORT-6923-{name}" in section
++
++
++def test_scenario_report_6923_lifecycle_prestaged(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6923-LIFECYCLE-PRESTAGED selects only next."""
++
++    old = {"milestone": "2026.09.605", "tasks": [{"id": "old"}]}
++    _write_yaml(tmp_path / mod.ACTIVE_ROADMAP_PATH, old)
++    _write_yaml(tmp_path / mod.NEXT_ROADMAP_PATH, _valid_roadmap())
++
++    result = mod.resolve_roadmap_lifecycle(tmp_path)
++
++    assert result["state"] == "pre_staged"
++    assert result["selected_path"] == mod.NEXT_ROADMAP_PATH
++    assert result["roadmap"]["tasks"][0]["id"].startswith("exp6923-")
++    assert sum(row["selected"] for row in result["rows"]) == 1
++
++
++def test_scenario_report_6923_lifecycle_activated(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6923-LIFECYCLE-ACTIVATED accepts the active copy."""
++
++    _write_yaml(tmp_path / mod.ACTIVE_ROADMAP_PATH, _valid_roadmap())
++
++    result = mod.resolve_roadmap_lifecycle(tmp_path)
++
++    assert result["state"] == "activated"
++    assert result["selected_path"] == mod.ACTIVE_ROADMAP_PATH
++    assert result["passed"] is True
++
++
++@pytest.mark.parametrize(
++    ("state", "active", "next_"),
++    [
++        ("missing", None, None),
++        ("mismatched", {"milestone": "2026.09.605", "tasks": []}, None),
++        ("ambiguous", _valid_roadmap(), _valid_roadmap()),
++    ],
++)
++def test_scenario_report_6923_invalid_lifecycle_states(
++    tmp_path: Path,
++    state: str,
++    active: dict[str, Any] | None,
++    next_: dict[str, Any] | None,
++) -> None:
++    """SCENARIO-REPORT-6923-LIFECYCLE-* blocks missing, drift, and ambiguity."""
++
++    if active is not None:
++        _write_yaml(tmp_path / mod.ACTIVE_ROADMAP_PATH, active)
++    if next_ is not None:
++        _write_yaml(tmp_path / mod.NEXT_ROADMAP_PATH, next_)
++
++    result = mod.resolve_roadmap_lifecycle(tmp_path)
++
++    assert result["state"] == state
++    assert result["selected_path"] is None
++    assert result["roadmap"] is None
++    assert result["passed"] is False
++
++
++def test_req_report_6923_valid_contract_passes() -> None:
++    """REQ-REPORT-6923 accepts the exact documented 14-task contract."""
++
++    result = _evaluate(_valid_roadmap())
++
++    assert result["passed"] is True
++    assert len(result["document_yaml_parity_rows"]) == 14
++    assert len(result["prompt_ending_rows"]) == 14
++    assert len(result["model_contract_rows"]) == 14
++    assert len(result["infrastructure_slot_rows"]) == 2
++    assert len(result["sota_ingestion_slot_rows"]) == 1
++    assert len(result["ungated_tail_rows"]) == 1
++    assert all(row["passed"] for row in result["checks"])
++
++
++@pytest.mark.parametrize(
++    "mismatch",
++    ["id", "title", "order", "deliverable", "gate", "milestone", "infrastructure", "sota"],
++)
++def test_scenario_report_6923_document_yaml_parity_is_exact(mismatch: str) -> None:
++    """SCENARIO-REPORT-6923-PARITY rejects identity and role drift."""
++
++    roadmap = _valid_roadmap()
++    if mismatch == "id":
++        roadmap["tasks"][4]["id"] = "exp6927-alias"
++    elif mismatch == "title":
++        roadmap["tasks"][4]["title"] = "Changed title"
++    elif mismatch == "order":
++        roadmap["tasks"][4], roadmap["tasks"][5] = roadmap["tasks"][5], roadmap["tasks"][4]
++    elif mismatch == "deliverable":
++        roadmap["tasks"][4]["deliverable"] = "results/changed.json"
++    elif mismatch == "gate":
++        roadmap["tasks"][4]["gated_on"][0]["value"] = 0
++    elif mismatch == "milestone":
++        roadmap["tasks"][4]["milestone"] = "2026.09.605"
++    elif mismatch == "infrastructure":
++        roadmap["tasks"][1]["track"] = "research"
++    else:
++        roadmap["tasks"][2]["title"] = "Ordinary research map"
++
++    result = _evaluate(roadmap)
++
++    assert result["passed"] is False
++    assert any(not row["passed"] for row in result["checks"])
++
++
++@pytest.mark.parametrize("mismatch", ["section", "duplicate_run", "run", "ending"])
++def test_scenario_report_6923_prompt_contract_is_exact(mismatch: str) -> None:
++    """SCENARIO-REPORT-6923-PROMPTS rejects structure and ending drift."""
++
++    roadmap = _valid_roadmap()
++    prompt = roadmap["tasks"][0]["prompt"]
++    if mismatch == "section":
++        prompt = prompt.replace("TASK:", "WORK:")
++    elif mismatch == "duplicate_run":
++        prompt = prompt.replace("Run command:", "Run command:\nRun command:")
++    elif mismatch == "run":
++        prompt = prompt.replace("experiment_6923_", "experiment_9999_")
++    else:
++        prompt = prompt.replace(mod.FINAL_SENTENCE, "Do not push.")
++    roadmap["tasks"][0]["prompt"] = prompt
++
++    row = _evaluate(roadmap)["prompt_ending_rows"][0]
++
++    assert row["passed"] is False
++
++
++@pytest.mark.parametrize("mismatch", ["alias", "missing", "later", "field", "operator"])
++def test_scenario_report_6923_gate_contract_is_exact(mismatch: str) -> None:
++    """SCENARIO-REPORT-6923-GATES rejects every unsafe gate form."""
++
++    roadmap = _valid_roadmap()
++    gate = roadmap["tasks"][4]["gated_on"][0]
++    if mismatch == "alias":
++        gate["upstream"] = "exp6926"
++    elif mismatch == "missing":
++        gate["upstream"] = "exp9999-missing"
++    elif mismatch == "later":
++        gate["upstream"] = roadmap["tasks"][5]["id"]
++    elif mismatch == "field":
++        gate["artifact_field"] = "fixture_ready"
++    else:
++        gate["op"] = "==="
++
++    row = _evaluate(roadmap)["gate_contract_rows"][4]
++
++    assert row["passed"] is False
++
++
++@pytest.mark.parametrize(
++    ("field", "value"),
++    [
++        ("experiment_id", None),
++        ("verdict", None),
++        ("addressed_by", ""),
++        ("retire_if_same_verdict", False),
++    ],
++)
++def test_scenario_report_6923_prior_failure_shape(field: str, value: Any) -> None:
++    """SCENARIO-REPORT-6923-PRIORS requires complete retirement rows."""
++
++    roadmap = _valid_roadmap()
++    prior = {
++        "experiment_id": "exp6911-v605-document-yaml-evidence-contract",
++        "verdict": "complete_blocked_v605_document_yaml_evidence_contract",
++        "addressed_by": "The lifecycle resolver accepts the activated file.",
++        "retire_if_same_verdict": True,
++    }
++    if value is None:
++        prior.pop(field)
++    else:
++        prior[field] = value
++    roadmap["tasks"][0]["prior_failures"] = [prior]
++
++    row = _evaluate(roadmap)["prior_failure_contract_rows"][0]
++
++    assert field in row["failed_subfields"]
++    assert row["passed"] is False
++
++
++@pytest.mark.parametrize("mismatch", ["codex", "gemini", "claude", "model_id", "tokenizer", "loader"])
++def test_scenario_report_6923_current_model_contract(mismatch: str) -> None:
++    """SCENARIO-REPORT-6923-ROUTING enforces model and vendor rules."""
++
++    roadmap = _valid_roadmap()
++    index = 4
++    if mismatch == "codex":
++        roadmap["tasks"][index]["model"] = "gpt-5.5"
++    elif mismatch == "gemini":
++        roadmap["tasks"][index]["agent_type"] = "gemini"
++    elif mismatch == "claude":
++        roadmap["tasks"][index]["agent_type"] = "claude"
++        roadmap["tasks"][index]["model"] = "gpt-5.6-sol"
++    else:
++        prompt = roadmap["tasks"][index]["prompt"]
++        if mismatch == "model_id":
++            prompt = prompt.replace(mod.REQUIRED_MODEL_IDS[0], "missing/model")
++        elif mismatch == "tokenizer":
++            prompt = prompt.replace("llama.cpp's embedded tokenizer", "another tokenizer")
++        else:
++            prompt = prompt.replace("Never pass a GGUF repository", "Pass a GGUF repository")
++        roadmap["tasks"][index]["prompt"] = prompt
++
++    row = _evaluate(roadmap)["model_contract_rows"][index]
++
++    assert row["passed"] is False
++    assert mod.current_model_rule(AUDIT_TEXT) == ("gpt-5.6-sol", "gemini")
++
++
++@pytest.mark.parametrize("mismatch", ["root", "contract_consumer", "sota_consumer", "tail"])
++def test_scenario_report_6923_roots_and_tail_are_ungated(mismatch: str) -> None:
++    """SCENARIO-REPORT-6923-SLOTS-ROOTS preserves independent roots."""
++
++    roadmap = _valid_roadmap()
++    gate = {
++        "upstream": roadmap["tasks"][0]["id"],
++        "artifact_field": "v606_execution_contract_ready_score",
++        "op": "==",
++        "value": 1,
++    }
++    if mismatch == "root":
++        roadmap["tasks"][3]["gated_on"] = [gate]
++    elif mismatch == "contract_consumer":
++        roadmap["tasks"][4]["gated_on"] = [gate]
++    elif mismatch == "sota_consumer":
++        gate["upstream"] = roadmap["tasks"][2]["id"]
++        gate["artifact_field"] = "v606_sota_ingestion_complete_score"
++        roadmap["tasks"][4]["gated_on"] = [gate]
++    else:
++        roadmap["tasks"][-1]["gated_on"] = [gate]
++
++    result = _evaluate(roadmap)
++
++    assert result["passed"] is False
++    assert any(not row["passed"] for row in result["independent_root_rows"] + result["ungated_tail_rows"])
++
++
++def test_req_report_6923_repo_sources_emit_valid_blocked_receipt() -> None:
++    """REQ-REPORT-6923 catches the activated V606 task-count mismatch."""
++
++    before = (ROOT / mod.ACTIVE_ROADMAP_PATH).read_bytes()
++    artifact = mod.build_artifact(ROOT, "20260903")
++
++    assert mod.validate_artifact(artifact) == []
++    assert artifact["lifecycle_resolution_rows"][0]["lifecycle_state"] == "activated"
++    assert artifact["task_count"] == 4
++    assert artifact["experiment_range"] == [6923, 6926]
++    assert artifact["v606_execution_contract_ready_score"] == 0
++    assert artifact["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert artifact["science_claim_approved"] is False
++    assert (ROOT / mod.ACTIVE_ROADMAP_PATH).read_bytes() == before
++
++
++def test_req_report_6923_missing_inputs_emit_complete_block(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6923-LIFECYCLE-MISSING still emits the full schema."""
++
++    artifact = mod.build_artifact(tmp_path, "20260903")
++
++    assert mod.REQUIRED_ARTIFACT_FIELDS <= artifact.keys()
++    assert artifact["task_count"] == 0
++    assert artifact["experiment_range"] == []
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert artifact["gate_check_summary"]["failed_check"] == "preconditions"
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_report_6923_validation_recomputes_advisory_fields() -> None:
++    """REQ-REPORT-6923 validates terminal fields, principles, and checksum."""
++
++    artifact = mod.build_artifact(ROOT, "20260903")
++    mutations = {
++        "field_principles": {},
++        "inference_substrate": "llm",
++        "verifier_is_oracle": True,
++        "verdict_class": "success",
++        "honest_verdict": "blocked_without_terminal_prefix",
++        "task_count": 99,
++        "science_claim_approved": True,
++        "v606_execution_contract_ready_score": 1,
++    }
++    for field, value in mutations.items():
++        changed = deepcopy(artifact)
++        changed[field] = value
++        changed["reproducibility_checksum"] = mod.reproducibility_checksum(changed)
++        assert mod.validate_artifact(changed)
++    changed = deepcopy(artifact)
++    changed.pop("rows")
++    changed["reproducibility_checksum"] = mod.reproducibility_checksum(changed)
++    assert "missing_required_fields:rows" in mod.validate_artifact(changed)
++    changed = deepcopy(artifact)
++    changed["reproducibility_checksum"] = "sha256:bad"
++    assert "reproducibility_checksum_mismatch" in mod.validate_artifact(changed)
++
++
++def test_req_report_6923_parser_and_cli_edges(tmp_path: Path) -> None:
++    """REQ-REPORT-6923 rejects malformed sources and supports its wrapper."""
++
++    with pytest.raises(ValueError):
++        mod.parse_design("missing")
++    with pytest.raises(ValueError):
++        mod.parse_roadmap([])
++    with pytest.raises(ValueError):
++        mod.parse_roadmap({"tasks": ["bad"]})
++    with pytest.raises(ValueError):
++        mod.current_model_rule("def audit(): pass")
++    assert mod.main(["--date", "bad"]) == 2
++
++    output = tmp_path / "artifact.json"
++    result = subprocess.run(
++        [
++            sys.executable,
++            "scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py",
++            "--date",
++            "20260903",
++            "--output",
++            str(output),
++        ],
++        cwd=ROOT,
++        capture_output=True,
++        text=True,
++        check=False,
++    )
++    assert result.returncode == 0, result.stderr
++    written = json.loads(output.read_text(encoding="utf-8"))
++    assert written["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert mod.validate_artifact(written) == []
+-- 
+2.55.0
+

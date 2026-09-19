@@ -1,0 +1,1366 @@
+From 67cf0c2d0cb86a006dccfc9cd1be89ccb823097b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 10:09:39 -0400
+Subject: [PATCH 05281/11362] [conductor] PHASE B2 high-order energy -- direct
+ HUBO/p-spin constraints versus QUBO gadget blowup
+
+Automated research step by research conductor.
+Task ID: exp5102-hubo-pspin-direct-energy-v468
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  60 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_5102_hubo_pspin_direct_energy.py | 659 ++++++++++++++++++
+ ...nt_5102_hubo_pspin_direct_energy_v468.json | 406 +++++++++++
+ ...xperiment_5102_hubo_pspin_direct_energy.py | 178 +++++
+ 5 files changed, 1304 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5102_hubo_pspin_direct_energy.py
+ create mode 100644 results/experiment_5102_hubo_pspin_direct_energy_v468.json
+ create mode 100644 tests/python/test_experiment_5102_hubo_pspin_direct_energy.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 9eb54702b6..692d6bbdbc 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -23716,3 +23716,63 @@ emits a terminal verdict without modifying `scripts/research_conductor.py`.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-VERIFY-5101 | Proposed (`python/carnot/experiment_5101_incomplete_graph_evidence_energy.py`, `results/experiment_5101_incomplete_graph_evidence_energy_v468.json`) | Proposed (`tests/python/test_experiment_5101_incomplete_graph_evidence_energy.py`) |
++
++### REQ-VERIFY-5102: Direct HUBO/p-Spin Energy Versus QUBO Gadgets
++
++The repository SHALL provide Exp 5102 at
++`python/carnot/experiment_5102_hubo_pspin_direct_energy.py` to compare direct
++high-order HUBO/p-spin parity energies against QUBO quadratization gadgets on
++tiny exact Boolean CSP instances and write
++`results/experiment_5102_hubo_pspin_direct_energy_v468.json`.
++
++The runner SHALL generate a deterministic family of small high-order Boolean
++constraint instances, including k-XORSAT or parity-verifier clauses with
++clause degree at least three. The correctness authority SHALL be exact
++enumeration on CPU unless a different exact substrate is explicitly proven;
++therefore `inference_substrate` MUST equal `exact_enumeration_cpu` in the
++default artifact and MUST NOT claim live LLM inference or hardware execution.
++
++For every instance, the runner SHALL encode the constraints directly as
++HUBO/p-spin parity energy and as a QUBO gadget formulation with auxiliary
++binary variables. It SHALL enumerate the direct formulation over original
++variables, enumerate the QUBO formulation over original plus auxiliary
++variables, and verify that exact optimum energies match and that the projected
++QUBO optimum assignments match the direct optimum assignments.
++
++The comparison SHALL report auxiliary variable count, total QUBO variable
++count, direct HUBO variable count, coupling counts, coupling density for direct
++HUBO hyperedges and QUBO pairwise edges, penalty/energy coefficient-scale
++distortion introduced by quadratization, exact enumeration time, and whether
++direct HUBO reduces gadget blowup on the declared family.
++
++The terminal artifact SHALL include principle annotations and top-level fields
++`honest_verdict`, `duration_s`, `inference_substrate`, `instance_family`,
++`exact_optima_verified`, `hubo_variable_counts`, `qubo_variable_counts`,
++`auxiliary_variable_blowup`, `coupling_density_hubo`,
++`coupling_density_qubo`, `energy_scale_distortion`,
++`direct_hubo_advantage`, `hardware_mapping_notes`, and
++`flagged_adversarial`. It SHOULD also include per-instance optimum rows,
++coupling counts, exact-enumeration timings, quadratization penalty strengths,
++assignment projections, and a reproducibility checksum.
++
++`honest_verdict` SHALL begin with
++`success_hubo_pspin_direct_encoding_reduces_gadget_blowup` only when exact
++optima and projected assignments match for every instance and direct HUBO uses
++fewer total variables than QUBO on the family. Otherwise it SHALL begin with
++`complete_hubo_pspin_no_advantage_over_qubo_gadgets`.
++
++### SCENARIO-VERIFY-5102: Exact Enumeration Proves HUBO/QUBO Optimum Equivalence
++
++Given the Exp 5102 tiny high-order CSP family, when the diagnostic runs, then
++it builds direct HUBO/p-spin and QUBO-gadget encodings for each instance,
++enumerates both formulations exactly on CPU, verifies equal optimum energies
++and equal projected optimum assignments, measures auxiliary blowup, coupling
++density, coefficient-scale distortion, and enumeration time, writes the
++required JSON artifact, sets `inference_substrate=exact_enumeration_cpu`, and
++emits a terminal verdict without modifying `scripts/research_conductor.py`.
++
++## Implementation Status (REQ-VERIFY-5102)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5102 | Proposed (`python/carnot/experiment_5102_hubo_pspin_direct_energy.py`, `results/experiment_5102_hubo_pspin_direct_energy_v468.json`) | Proposed (`tests/python/test_experiment_5102_hubo_pspin_direct_energy.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5216360223..a3c45dcfae 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4101,
++  "experiments_checked": 4102,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5102_hubo_pspin_direct_energy.py b/python/carnot/experiment_5102_hubo_pspin_direct_energy.py
+new file mode 100644
+index 0000000000..918ae1e43c
+--- /dev/null
++++ b/python/carnot/experiment_5102_hubo_pspin_direct_energy.py
+@@ -0,0 +1,659 @@
++"""Exp 5102: direct HUBO/p-spin energy versus QUBO gadgets.
++
++Spec refs: REQ-VERIFY-5102, SCENARIO-VERIFY-5102.
++
++The experiment keeps the correctness authority deliberately simple: every tiny
++high-order parity CSP is solved by exact CPU enumeration. Direct HUBO uses one
++p-spin parity term per high-order clause. The QUBO arm quadratizes the same
++binary parity polynomial with auxiliary AND gadgets, then enumerates all
++original and auxiliary variables to prove that the gadget optimum projects
++back to the same original assignments.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++from fractions import Fraction
++import hashlib
++import itertools
++import json
++import math
++import os
++from pathlib import Path
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++Polynomial = dict[tuple[str, ...], Fraction]
++
++RESULT_RELATIVE_PATH = "results/experiment_5102_hubo_pspin_direct_energy_v468.json"
++RUN_DATE = "20260701"
++RANDOM_SEED = 5102
++INSTANCE_FAMILY = "tiny_high_order_xorsat_parity_v1"
++INFERENCE_SUBSTRATE = "exact_enumeration_cpu"
++SUCCESS_VERDICT = "success_hubo_pspin_direct_encoding_reduces_gadget_blowup"
++NO_ADVANTAGE_VERDICT = "complete_hubo_pspin_no_advantage_over_qubo_gadgets"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++    "instance_family",
++    "exact_optima_verified",
++    "hubo_variable_counts",
++    "qubo_variable_counts",
++    "auxiliary_variable_blowup",
++    "coupling_density_hubo",
++    "coupling_density_qubo",
++    "energy_scale_distortion",
++    "direct_hubo_advantage",
++    "hardware_mapping_notes",
++    "flagged_adversarial",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "honest_verdict": (
++        "Terminal prefix; success only when exact optima match and direct HUBO uses fewer "
++        "variables than QUBO gadgets."
++    ),
++    "duration_s": "Measured local CPU time for deterministic encoding, exact enumeration, and JSON assembly.",
++    "inference_substrate": "Must be exact_enumeration_cpu unless another exact substrate is proven.",
++    "instance_family": "Declared deterministic tiny high-order parity CSP family.",
++    "exact_optima_verified": "True only when direct and QUBO optima and projected optimum assignments match for every instance.",
++    "hubo_variable_counts": "Original variable counts for direct high-order HUBO/p-spin encodings.",
++    "qubo_variable_counts": "Original plus auxiliary variable counts for quadratized pairwise QUBO gadgets.",
++    "auxiliary_variable_blowup": "Auxiliary variables introduced only by quadratization, reported per instance and in aggregate.",
++    "coupling_density_hubo": "Direct high-order hyperedge density over the clause degrees used by each instance.",
++    "coupling_density_qubo": "Pairwise QUBO coupler density over all original plus auxiliary variables.",
++    "energy_scale_distortion": "Coefficient-scale ratio from QUBO penalties versus native direct p-spin coefficients.",
++    "direct_hubo_advantage": "True only when exactness holds and direct HUBO avoids the QUBO auxiliary-variable blowup.",
++    "hardware_mapping_notes": "Maps the result to native high-order/p-spin hardware versus pairwise QUBO hardware costs.",
++    "flagged_adversarial": "False only when substrate, exactness, projection, and metric consistency checks pass.",
++}
++
++
++@dataclass(frozen=True)
++class ParityClause:
++    """A k-XORSAT clause over zero-based binary variable indices."""
++
++    variables: tuple[int, ...]
++    parity: int
++
++
++@dataclass(frozen=True)
++class HighOrderCspInstance:
++    """One tiny high-order Boolean CSP instance with parity constraints."""
++
++    instance_id: str
++    family: str
++    n_vars: int
++    clauses: tuple[ParityClause, ...]
++    description: str
++
++
++@dataclass(frozen=True)
++class HuboEncoding:
++    """Direct p-spin parity energy over original variables only."""
++
++    instance: HighOrderCspInstance
++    constant: Fraction
++    terms: dict[tuple[int, ...], Fraction]
++
++
++@dataclass(frozen=True)
++class QuboEncoding:
++    """Pairwise binary QUBO after quadratizing high-order parity terms."""
++
++    instance: HighOrderCspInstance
++    polynomial: Polynomial
++    original_variables: tuple[str, ...]
++    all_variables: tuple[str, ...]
++    auxiliary_definitions: dict[str, tuple[str, str]]
++    penalty_strength: Fraction
++    source_binary_polynomial: Polynomial
++
++
++@dataclass(frozen=True)
++class EnumerationResult:
++    """Exact optimum energy and all original assignments reaching it."""
++
++    optimum_energy: Fraction
++    optimal_assignments: tuple[tuple[int, ...], ...]
++    duration_s: float
++
++
++@dataclass(frozen=True)
++class QuboEnumerationResult:
++    """Exact QUBO optimum and all projected original assignments reaching it."""
++
++    optimum_energy: Fraction
++    projected_assignments: tuple[tuple[int, ...], ...]
++    full_assignments: tuple[dict[str, int], ...]
++    duration_s: float
++
++
++def build_instance_family() -> tuple[HighOrderCspInstance, ...]:
++    """Return a deterministic tiny family with satisfiable and frustrated parity CSPs."""
++
++    return (
++        HighOrderCspInstance(
++            instance_id="xor3_chain_sat",
++            family=INSTANCE_FAMILY,
++            n_vars=4,
++            clauses=(
++                ParityClause((0, 1, 2), 1),
++                ParityClause((1, 2, 3), 0),
++                ParityClause((0, 2, 3), 1),
++            ),
++            description="Three overlapping 3-XOR clauses with nonempty exact optimum set.",
++        ),
++        HighOrderCspInstance(
++            instance_id="xor3_xor4_frustrated",
++            family=INSTANCE_FAMILY,
++            n_vars=4,
++            clauses=(
++                ParityClause((0, 1, 2), 0),
++                ParityClause((0, 1, 3), 0),
++                ParityClause((0, 2, 3), 0),
++                ParityClause((1, 2, 3), 0),
++                ParityClause((0, 1, 2, 3), 1),
++            ),
++            description="Four 3-XOR equations force even 4-parity, while a 4-XOR clause asks for odd parity.",
++        ),
++        HighOrderCspInstance(
++            instance_id="xor4_planted_overlap",
++            family=INSTANCE_FAMILY,
++            n_vars=5,
++            clauses=(
++                ParityClause((0, 1, 2, 3), 1),
++                ParityClause((0, 1, 3, 4), 0),
++                ParityClause((1, 2, 3, 4), 1),
++            ),
++            description="Overlapping 4-XOR clauses with a planted-compatible optimum.",
++        ),
++    )
++
++
++def build_hubo_encoding(instance: HighOrderCspInstance) -> HuboEncoding:
++    """Encode parity clauses as direct p-spin terms over bipolar spins."""
++
++    constant = Fraction(0, 1)
++    terms: dict[tuple[int, ...], Fraction] = {}
++    for clause in instance.clauses:
++        _validate_clause(instance, clause)
++        target_spin_product = Fraction(1 if clause.parity == 0 else -1, 1)
++        constant += Fraction(1, 2)
++        term = tuple(sorted(clause.variables))
++        terms[term] = terms.get(term, Fraction(0, 1)) - target_spin_product * Fraction(1, 2)
++        if terms[term] == 0:
++            del terms[term]
++    return HuboEncoding(instance=instance, constant=constant, terms=terms)
++
++
++def build_qubo_gadget_encoding(instance: HighOrderCspInstance) -> QuboEncoding:
++    """Expand parity energy to binary HUBO and reduce high-degree terms with AND gadgets."""
++
++    source = _binary_parity_polynomial(instance)
++    penalty_strength = sum(abs(coefficient) for coefficient in source.values()) + 1
++    polynomial: Polynomial = {}
++    auxiliary_by_pair: dict[tuple[str, str], str] = {}
++    auxiliary_definitions: dict[str, tuple[str, str]] = {}
++
++    def add_term(term: Sequence[str], coefficient: Fraction) -> None:
++        canonical = tuple(sorted(term))
++        polynomial[canonical] = polynomial.get(canonical, Fraction(0, 1)) + coefficient
++        if polynomial[canonical] == 0:
++            del polynomial[canonical]
++
++    def ensure_auxiliary(left: str, right: str) -> str:
++        pair = tuple(sorted((left, right)))
++        if pair in auxiliary_by_pair:
++            return auxiliary_by_pair[pair]
++        auxiliary = f"aux_{len(auxiliary_by_pair)}"
++        auxiliary_by_pair[pair] = auxiliary
++        auxiliary_definitions[auxiliary] = pair
++        add_term(pair, penalty_strength)
++        add_term((left, auxiliary), -2 * penalty_strength)
++        add_term((right, auxiliary), -2 * penalty_strength)
++        add_term((auxiliary,), 3 * penalty_strength)
++        return auxiliary
++
++    for term, coefficient in sorted(source.items(), key=lambda item: (len(item[0]), item[0])):
++        if len(term) <= 2:
++            add_term(term, coefficient)
++            continue
++        reduced = list(term)
++        while len(reduced) > 2:
++            auxiliary = ensure_auxiliary(reduced[0], reduced[1])
++            reduced = [auxiliary, *reduced[2:]]
++        add_term(reduced, coefficient)
++
++    original_variables = tuple(f"x_{index}" for index in range(instance.n_vars))
++    all_variables = original_variables + tuple(sorted(auxiliary_definitions))
++    return QuboEncoding(
++        instance=instance,
++        polynomial=polynomial,
++        original_variables=original_variables,
++        all_variables=all_variables,
++        auxiliary_definitions=auxiliary_definitions,
++        penalty_strength=penalty_strength,
++        source_binary_polynomial=source,
++    )
++
++
++def enumerate_hubo(encoding: HuboEncoding) -> EnumerationResult:
++    """Enumerate all original assignments for the direct HUBO energy."""
++
++    started = time.perf_counter()
++    best_energy: Fraction | None = None
++    best_assignments: list[tuple[int, ...]] = []
++    for assignment in itertools.product((0, 1), repeat=encoding.instance.n_vars):
++        energy = evaluate_hubo(encoding, assignment)
++        if best_energy is None or energy < best_energy:
++            best_energy = energy
++            best_assignments = [tuple(assignment)]
++        elif energy == best_energy:
++            best_assignments.append(tuple(assignment))
++    return EnumerationResult(
++        optimum_energy=best_energy if best_energy is not None else Fraction(0, 1),
++        optimal_assignments=tuple(sorted(best_assignments)),
++        duration_s=round(time.perf_counter() - started, 6),
++    )
++
++
++def enumerate_qubo(encoding: QuboEncoding) -> QuboEnumerationResult:
++    """Enumerate all original and auxiliary assignments for the QUBO energy."""
++
++    started = time.perf_counter()
++    best_energy: Fraction | None = None
++    full_assignments: list[dict[str, int]] = []
++    projected_assignments: set[tuple[int, ...]] = set()
++    for bits in itertools.product((0, 1), repeat=len(encoding.all_variables)):
++        assignment = dict(zip(encoding.all_variables, bits, strict=True))
++        energy = evaluate_qubo(encoding.polynomial, assignment)
++        projected = tuple(assignment[var] for var in encoding.original_variables)
++        if best_energy is None or energy < best_energy:
++            best_energy = energy
++            full_assignments = [assignment]
++            projected_assignments = {projected}
++        elif energy == best_energy:
++            full_assignments.append(assignment)
++            projected_assignments.add(projected)
++    return QuboEnumerationResult(
++        optimum_energy=best_energy if best_energy is not None else Fraction(0, 1),
++        projected_assignments=tuple(sorted(projected_assignments)),
++        full_assignments=tuple(full_assignments),
++        duration_s=round(time.perf_counter() - started, 6),
++    )
++
++
++def energy_by_projection(encoding: HuboEncoding) -> dict[tuple[int, ...], Fraction]:
++    """Return direct HUBO energy for every original assignment."""
++
++    return {
++        tuple(assignment): evaluate_hubo(encoding, assignment)
++        for assignment in itertools.product((0, 1), repeat=encoding.instance.n_vars)
++    }
++
++
++def best_qubo_energy_by_projection(encoding: QuboEncoding) -> dict[tuple[int, ...], Fraction]:
++    """Return the best QUBO energy over auxiliaries for every original assignment."""
++
++    best: dict[tuple[int, ...], Fraction] = {}
++    for bits in itertools.product((0, 1), repeat=len(encoding.all_variables)):
++        assignment = dict(zip(encoding.all_variables, bits, strict=True))
++        projected = tuple(assignment[var] for var in encoding.original_variables)
++        energy = evaluate_qubo(encoding.polynomial, assignment)
++        if projected not in best or energy < best[projected]:
++            best[projected] = energy
++    return dict(sorted(best.items()))
++
++
++def evaluate_hubo(encoding: HuboEncoding, assignment: Sequence[int]) -> Fraction:
++    """Evaluate direct p-spin energy for one binary assignment."""
++
++    if len(assignment) != encoding.instance.n_vars:
++        raise ValueError("assignment length does not match instance variables")
++    energy = encoding.constant
++    for variables, coefficient in encoding.terms.items():
++        product = 1
++        for variable in variables:
++            product *= 1 if assignment[variable] == 0 else -1
++        energy += coefficient * product
++    return energy
++
++
++def evaluate_qubo(polynomial: Mapping[tuple[str, ...], Fraction], assignment: Mapping[str, int]) -> Fraction:
++    """Evaluate a binary QUBO polynomial on a complete variable assignment."""
++
++    total = Fraction(0, 1)
++    for term, coefficient in polynomial.items():
++        product = 1
++        for variable in term:
++            product *= int(assignment[variable])
++        total += coefficient * product
++    return total
++
++
++def compare_instance(instance: HighOrderCspInstance) -> JsonDict:
++    """Build both encodings, enumerate them exactly, and return one metric row."""
++
++    hubo = build_hubo_encoding(instance)
++    qubo = build_qubo_gadget_encoding(instance)
++    hubo_result = enumerate_hubo(hubo)
++    qubo_result = enumerate_qubo(qubo)
++    projection_match = energy_by_projection(hubo) == best_qubo_energy_by_projection(qubo)
++    assignments_match = hubo_result.optimal_assignments == qubo_result.projected_assignments
++    optima_match = hubo_result.optimum_energy == qubo_result.optimum_energy
++    hubo_coupling_count = _hubo_coupling_count(hubo)
++    qubo_coupling_count = _qubo_coupling_count(qubo)
++    hubo_density = _hubo_density(hubo)
++    qubo_density = _qubo_density(qubo)
++    distortion = _energy_scale_distortion(hubo, qubo)
++
++    return {
++        "instance_id": instance.instance_id,
++        "description": instance.description,
++        "n_clauses": len(instance.clauses),
++        "clause_degrees": [len(clause.variables) for clause in instance.clauses],
++        "direct_optimum_energy": _json_number(hubo_result.optimum_energy),
++        "qubo_optimum_energy": _json_number(qubo_result.optimum_energy),
++        "direct_optimal_assignments": _json_assignments(hubo_result.optimal_assignments),
++        "projected_qubo_optimal_assignments": _json_assignments(qubo_result.projected_assignments),
++        "exact_optima_verified": bool(optima_match and assignments_match and projection_match),
++        "projection_energy_match_for_all_assignments": projection_match,
++        "hubo_variable_count": instance.n_vars,
++        "qubo_variable_count": len(qubo.all_variables),
++        "auxiliary_variable_count": len(qubo.auxiliary_definitions),
++        "auxiliary_definitions": {
++            key: list(value) for key, value in sorted(qubo.auxiliary_definitions.items())
++        },
++        "hubo_coupling_count": hubo_coupling_count,
++        "qubo_coupling_count": qubo_coupling_count,
++        "coupling_density_hubo": hubo_density,
++        "coupling_density_qubo": qubo_density,
++        "qubo_penalty_strength": _json_number(qubo.penalty_strength),
++        "energy_scale_distortion": distortion,
++        "enumeration_time_s": {
++            "hubo": hubo_result.duration_s,
++            "qubo": qubo_result.duration_s,
++        },
++    }
++
++
++def run(duration_s: float | None = None) -> JsonDict:
++    """Run the full Exp 5102 comparison and return the terminal artifact."""
++
++    started = time.perf_counter()
++    family = build_instance_family()
++    rows = [compare_instance(instance) for instance in family]
++    exact_optima_verified = all(row["exact_optima_verified"] for row in rows)
++    direct_hubo_advantage = bool(
++        exact_optima_verified
++        and sum(row["hubo_variable_count"] for row in rows)
++        < sum(row["qubo_variable_count"] for row in rows)
++        and sum(row["auxiliary_variable_count"] for row in rows) > 0
++    )
++    flagged_adversarial = not exact_optima_verified or INFERENCE_SUBSTRATE != "exact_enumeration_cpu"
++    honest_verdict = SUCCESS_VERDICT if direct_hubo_advantage and not flagged_adversarial else NO_ADVANTAGE_VERDICT
++    elapsed = round(time.perf_counter() - started, 6) if duration_s is None else duration_s
++    artifact: JsonDict = {
++        "schema": "carnot.experiment_5102_hubo_pspin_direct_energy.v468",
++        "experiment_id": 5102,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": honest_verdict,
++        "duration_s": elapsed,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "instance_family": INSTANCE_FAMILY,
++        "exact_optima_verified": exact_optima_verified,
++        "hubo_variable_counts": _variable_counts(rows, "hubo_variable_count"),
++        "qubo_variable_counts": _variable_counts(rows, "qubo_variable_count"),
++        "auxiliary_variable_blowup": _auxiliary_blowup(rows),
++        "coupling_density_hubo": _density_summary(rows, "coupling_density_hubo", "hubo_coupling_count"),
++        "coupling_density_qubo": _density_summary(rows, "coupling_density_qubo", "qubo_coupling_count"),
++        "energy_scale_distortion": _distortion_summary(rows),
++        "direct_hubo_advantage": direct_hubo_advantage,
++        "hardware_mapping_notes": (
++            "Direct HUBO keeps native high-order p-spin parity terms over original variables. "
++            "QUBO maps to pairwise hardware but pays auxiliary-variable, coupler-density, and "
++            "large penalty-coefficient costs."
++        ),
++        "flagged_adversarial": flagged_adversarial,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": ["REQ-VERIFY-5102", "SCENARIO-VERIFY-5102"],
++        "instance_results": rows,
++        "exact_authority": "exhaustive_binary_enumeration",
++        "methodology_note": (
++            "All optima are proven by enumerating every binary assignment; no stochastic sampler, "
++            "LLM judge, or hardware backend is used."
++        ),
++    }
++    artifact["reproducibility_checksum"] = _sha256_json(
++        {
++            "instance_family": artifact["instance_family"],
++            "instance_results": artifact["instance_results"],
++            "exact_optima_verified": artifact["exact_optima_verified"],
++        }
++    )
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Raise when an Exp 5102 artifact violates the terminal contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _require(not missing, f"missing required fields: {missing}")
++    verdict = str(artifact["honest_verdict"])
++    _require(
++        verdict.startswith(SUCCESS_VERDICT) or verdict.startswith(NO_ADVANTAGE_VERDICT),
++        "honest_verdict must use the Exp5102 terminal prefix",
++    )
++    _require(
++        isinstance(artifact["duration_s"], (int, float)) and artifact["duration_s"] >= 0.0,
++        "duration_s must be nonnegative",
++    )
++    _require(artifact["inference_substrate"] == INFERENCE_SUBSTRATE, "inference_substrate")
++    _require("llm" not in str(artifact["inference_substrate"]).lower(), "inference_substrate")
++    _require(artifact["instance_family"] == INSTANCE_FAMILY, "instance_family")
++    _require(artifact["exact_optima_verified"] is True, "exact_optima_verified")
++    _require(artifact["direct_hubo_advantage"] is True, "direct_hubo_advantage")
++    _require(artifact["flagged_adversarial"] is False, "flagged_adversarial")
++    for field in ("hubo_variable_counts", "qubo_variable_counts"):
++        _require(_valid_count_summary(artifact[field]), field)
++    blowup = artifact["auxiliary_variable_blowup"]
++    _require(
++        isinstance(blowup, Mapping)
++        and blowup.get("total_auxiliary_variables", 0) > 0
++        and blowup.get("mean_auxiliary_variables", 0) > 0,
++        "auxiliary_variable_blowup",
++    )
++    _require(_valid_density_summary(artifact["coupling_density_hubo"]), "coupling_density_hubo")
++    _require(_valid_density_summary(artifact["coupling_density_qubo"]), "coupling_density_qubo")
++    distortion = artifact["energy_scale_distortion"]
++    _require(
++        isinstance(distortion, Mapping)
++        and distortion.get("max_qubo_to_hubo_coefficient_ratio", 0) > 1.0,
++        "energy_scale_distortion",
++    )
++    notes = str(artifact["hardware_mapping_notes"])
++    _require("native high-order" in notes and "QUBO" in notes, "hardware_mapping_notes")
++    principles = artifact.get("field_principles")
++    _require(
++        isinstance(principles, Mapping)
++        and set(REQUIRED_ARTIFACT_FIELDS).issubset(principles),
++        "field_principles",
++    )
++    rows = artifact.get("instance_results", [])
++    _require(isinstance(rows, list) and bool(rows), "instance_results")
++    _require(all(row.get("exact_optima_verified") is True for row in rows), "instance_results")
++
++
++def write_artifact(root: str | Path | None = None, output_path: str | Path | None = None) -> JsonDict:
++    """Run the experiment and write the Exp 5102 terminal JSON artifact."""
++
++    repo_root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
++    destination = Path(output_path) if output_path is not None else repo_root / RESULT_RELATIVE_PATH
++    artifact = run()
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    destination.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> int:
++    """CLI entrypoint used by the conductor and tests."""
++
++    root = Path(os.environ.get("CARNOT_EXP5102_ROOT", Path(__file__).resolve().parents[2]))
++    write_artifact(root=root)
++    return 0
++
++
++def _validate_clause(instance: HighOrderCspInstance, clause: ParityClause) -> None:
++    _require(clause.parity in (0, 1), "parity must be 0 or 1")
++    _require(len(clause.variables) >= 3, "Exp 5102 clauses must be high-order")
++    _require(len(set(clause.variables)) == len(clause.variables), "clause variables must be unique")
++    _require(all(0 <= variable < instance.n_vars for variable in clause.variables), "clause variable out of range")
++
++
++def _binary_parity_polynomial(instance: HighOrderCspInstance) -> Polynomial:
++    polynomial: Polynomial = {}
++    for clause in instance.clauses:
++        _validate_clause(instance, clause)
++        variables = tuple(f"x_{index}" for index in clause.variables)
++        target_spin_product = Fraction(1 if clause.parity == 0 else -1, 1)
++        for degree in range(len(variables) + 1):
++            for subset in itertools.combinations(variables, degree):
++                coefficient = -target_spin_product * Fraction((-2) ** degree, 2)
++                if degree == 0:
++                    coefficient += Fraction(1, 2)
++                polynomial[tuple(sorted(subset))] = polynomial.get(tuple(sorted(subset)), Fraction(0, 1)) + coefficient
++                if polynomial[tuple(sorted(subset))] == 0:
++                    del polynomial[tuple(sorted(subset))]
++    return dict(sorted(polynomial.items(), key=lambda item: (len(item[0]), item[0])))
++
++
++def _hubo_coupling_count(encoding: HuboEncoding) -> int:
++    return sum(1 for term in encoding.terms if len(term) >= 3)
++
++
++def _qubo_coupling_count(encoding: QuboEncoding) -> int:
++    return sum(1 for term in encoding.polynomial if len(term) == 2)
++
++
++def _hubo_density(encoding: HuboEncoding) -> float:
++    degrees = sorted({len(term) for term in encoding.terms if len(term) >= 3})
++    possible = sum(math.comb(encoding.instance.n_vars, degree) for degree in degrees)
++    return round(_hubo_coupling_count(encoding) / possible, 6) if possible else 0.0
++
++
++def _qubo_density(encoding: QuboEncoding) -> float:
++    possible = math.comb(len(encoding.all_variables), 2)
++    return round(_qubo_coupling_count(encoding) / possible, 6) if possible else 0.0
++
++
++def _energy_scale_distortion(hubo: HuboEncoding, qubo: QuboEncoding) -> float:
++    hubo_max = max(abs(coefficient) for coefficient in hubo.terms.values())
++    qubo_max = max(abs(coefficient) for term, coefficient in qubo.polynomial.items() if term)
++    return round(float(qubo_max / hubo_max), 6)
++
++
++def _variable_counts(rows: Sequence[Mapping[str, Any]], field: str) -> JsonDict:
++    by_instance = {str(row["instance_id"]): int(row[field]) for row in rows}
++    values = list(by_instance.values())
++    return {
++        "by_instance": by_instance,
++        "total": sum(values),
++        "mean": round(sum(values) / len(values), 6),
++        "max": max(values),
++    }
++
++
++def _auxiliary_blowup(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    by_instance = {
++        str(row["instance_id"]): int(row["auxiliary_variable_count"]) for row in rows
++    }
++    ratios = {
++        str(row["instance_id"]): round(row["qubo_variable_count"] / row["hubo_variable_count"], 6)
++        for row in rows
++    }
++    values = list(by_instance.values())
++    return {
++        "auxiliary_variables_by_instance": by_instance,
++        "qubo_to_hubo_variable_ratio_by_instance": ratios,
++        "total_auxiliary_variables": sum(values),
++        "mean_auxiliary_variables": round(sum(values) / len(values), 6),
++        "mean_qubo_to_hubo_variable_ratio": round(
++            sum(ratios.values()) / len(ratios),
++            6,
++        ),
++    }
++
++
++def _density_summary(rows: Sequence[Mapping[str, Any]], density_field: str, count_field: str) -> JsonDict:
++    by_instance = {str(row["instance_id"]): float(row[density_field]) for row in rows}
++    counts = {str(row["instance_id"]): int(row[count_field]) for row in rows}
++    values = list(by_instance.values())
++    return {
++        "by_instance": by_instance,
++        "coupling_counts_by_instance": counts,
++        "mean": round(sum(values) / len(values), 6),
++        "max": round(max(values), 6),
++    }
++
++
++def _distortion_summary(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    by_instance = {str(row["instance_id"]): float(row["energy_scale_distortion"]) for row in rows}
++    values = list(by_instance.values())
++    return {
++        "by_instance": by_instance,
++        "mean_qubo_to_hubo_coefficient_ratio": round(sum(values) / len(values), 6),
++        "max_qubo_to_hubo_coefficient_ratio": round(max(values), 6),
++        "definition": "max_abs_qubo_coefficient_after_gadgets / max_abs_direct_hubo_p_spin_coefficient",
++    }
++
++
++def _valid_count_summary(value: Any) -> bool:
++    return (
++        isinstance(value, Mapping)
++        and isinstance(value.get("by_instance"), Mapping)
++        and value.get("total", 0) > 0
++        and value.get("mean", 0) > 0
++    )
++
++
++def _valid_density_summary(value: Any) -> bool:
++    return (
++        isinstance(value, Mapping)
++        and isinstance(value.get("by_instance"), Mapping)
++        and isinstance(value.get("coupling_counts_by_instance"), Mapping)
++        and 0.0 <= float(value.get("mean", -1.0)) <= 1.0
++        and 0.0 <= float(value.get("max", -1.0)) <= 1.0
++    )
++
++
++def _json_assignments(assignments: Sequence[Sequence[int]]) -> list[list[int]]:
++    return [list(assignment) for assignment in assignments]
++
++
++def _json_number(value: Fraction) -> int | float:
++    if value.denominator == 1:
++        return value.numerator
++    return round(float(value), 6)
++
++
++def _sha256_json(payload: Any) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5102_hubo_pspin_direct_energy_v468.json b/results/experiment_5102_hubo_pspin_direct_energy_v468.json
+new file mode 100644
+index 0000000000..2e4786204a
+--- /dev/null
++++ b/results/experiment_5102_hubo_pspin_direct_energy_v468.json
+@@ -0,0 +1,406 @@
++{
++  "auxiliary_variable_blowup": {
++    "auxiliary_variables_by_instance": {
++      "xor3_chain_sat": 3,
++      "xor3_xor4_frustrated": 2,
++      "xor4_planted_overlap": 8
++    },
++    "mean_auxiliary_variables": 4.333333,
++    "mean_qubo_to_hubo_variable_ratio": 1.95,
++    "qubo_to_hubo_variable_ratio_by_instance": {
++      "xor3_chain_sat": 1.75,
++      "xor3_xor4_frustrated": 1.5,
++      "xor4_planted_overlap": 2.6
++    },
++    "total_auxiliary_variables": 13
++  },
++  "coupling_density_hubo": {
++    "by_instance": {
++      "xor3_chain_sat": 0.75,
++      "xor3_xor4_frustrated": 1.0,
++      "xor4_planted_overlap": 0.6
++    },
++    "coupling_counts_by_instance": {
++      "xor3_chain_sat": 3,
++      "xor3_xor4_frustrated": 5,
++      "xor4_planted_overlap": 3
++    },
++    "max": 1.0,
++    "mean": 0.783333
++  },
++  "coupling_density_qubo": {
++    "by_instance": {
++      "xor3_chain_sat": 0.666667,
++      "xor3_xor4_frustrated": 0.8,
++      "xor4_planted_overlap": 0.448718
++    },
++    "coupling_counts_by_instance": {
++      "xor3_chain_sat": 14,
++      "xor3_xor4_frustrated": 12,
++      "xor4_planted_overlap": 35
++    },
++    "max": 0.8,
++    "mean": 0.638462
++  },
++  "direct_hubo_advantage": true,
++  "duration_s": 0.882755,
++  "energy_scale_distortion": {
++    "by_instance": {
++      "xor3_chain_sat": 168.0,
++      "xor3_xor4_frustrated": 180.0,
++      "xor4_planted_overlap": 474.0
++    },
++    "definition": "max_abs_qubo_coefficient_after_gadgets / max_abs_direct_hubo_p_spin_coefficient",
++    "max_qubo_to_hubo_coefficient_ratio": 474.0,
++    "mean_qubo_to_hubo_coefficient_ratio": 274.0
++  },
++  "exact_authority": "exhaustive_binary_enumeration",
++  "exact_optima_verified": true,
++  "experiment_id": 5102,
++  "field_principles": {
++    "auxiliary_variable_blowup": "Auxiliary variables introduced only by quadratization, reported per instance and in aggregate.",
++    "coupling_density_hubo": "Direct high-order hyperedge density over the clause degrees used by each instance.",
++    "coupling_density_qubo": "Pairwise QUBO coupler density over all original plus auxiliary variables.",
++    "direct_hubo_advantage": "True only when exactness holds and direct HUBO avoids the QUBO auxiliary-variable blowup.",
++    "duration_s": "Measured local CPU time for deterministic encoding, exact enumeration, and JSON assembly.",
++    "energy_scale_distortion": "Coefficient-scale ratio from QUBO penalties versus native direct p-spin coefficients.",
++    "exact_optima_verified": "True only when direct and QUBO optima and projected optimum assignments match for every instance.",
++    "flagged_adversarial": "False only when substrate, exactness, projection, and metric consistency checks pass.",
++    "hardware_mapping_notes": "Maps the result to native high-order/p-spin hardware versus pairwise QUBO hardware costs.",
++    "honest_verdict": "Terminal prefix; success only when exact optima match and direct HUBO uses fewer variables than QUBO gadgets.",
++    "hubo_variable_counts": "Original variable counts for direct high-order HUBO/p-spin encodings.",
++    "inference_substrate": "Must be exact_enumeration_cpu unless another exact substrate is proven.",
++    "instance_family": "Declared deterministic tiny high-order parity CSP family.",
++    "qubo_variable_counts": "Original plus auxiliary variable counts for quadratized pairwise QUBO gadgets."
++  },
++  "flagged_adversarial": false,
++  "hardware_mapping_notes": "Direct HUBO keeps native high-order p-spin parity terms over original variables. QUBO maps to pairwise hardware but pays auxiliary-variable, coupler-density, and large penalty-coefficient costs.",
++  "honest_verdict": "success_hubo_pspin_direct_encoding_reduces_gadget_blowup",
++  "hubo_variable_counts": {
++    "by_instance": {
++      "xor3_chain_sat": 4,
++      "xor3_xor4_frustrated": 4,
++      "xor4_planted_overlap": 5
++    },
++    "max": 5,
++    "mean": 4.333333,
++    "total": 13
++  },
++  "inference_substrate": "exact_enumeration_cpu",
++  "instance_family": "tiny_high_order_xorsat_parity_v1",
++  "instance_results": [
++    {
++      "auxiliary_definitions": {
++        "aux_0": [
++          "x_0",
++          "x_1"
++        ],
++        "aux_1": [
++          "x_0",
++          "x_2"
++        ],
++        "aux_2": [
++          "x_1",
++          "x_2"
++        ]
++      },
++      "auxiliary_variable_count": 3,
++      "clause_degrees": [
++        3,
++        3,
++        3
++      ],
++      "coupling_density_hubo": 0.75,
++      "coupling_density_qubo": 0.666667,
++      "description": "Three overlapping 3-XOR clauses with nonempty exact optimum set.",
++      "direct_optimal_assignments": [
++        [
++          0,
++          1,
++          0,
++          1
++        ],
++        [
++          1,
++          0,
++          0,
++          0
++        ]
++      ],
++      "direct_optimum_energy": 0,
++      "energy_scale_distortion": 168.0,
++      "enumeration_time_s": {
++        "hubo": 8.8e-05,
++        "qubo": 0.002859
++      },
++      "exact_optima_verified": true,
++      "hubo_coupling_count": 3,
++      "hubo_variable_count": 4,
++      "instance_id": "xor3_chain_sat",
++      "n_clauses": 3,
++      "projected_qubo_optimal_assignments": [
++        [
++          0,
++          1,
++          0,
++          1
++        ],
++        [
++          1,
++          0,
++          0,
++          0
++        ]
++      ],
++      "projection_energy_match_for_all_assignments": true,
++      "qubo_coupling_count": 14,
++      "qubo_optimum_energy": 0,
++      "qubo_penalty_strength": 28,
++      "qubo_variable_count": 7
++    },
++    {
++      "auxiliary_definitions": {
++        "aux_0": [
++          "x_0",
++          "x_1"
++        ],
++        "aux_1": [
++          "aux_0",
++          "x_2"
++        ]
++      },
++      "auxiliary_variable_count": 2,
++      "clause_degrees": [
++        3,
++        3,
++        3,
++        3,
++        4
++      ],
++      "coupling_density_hubo": 1.0,
++      "coupling_density_qubo": 0.8,
++      "description": "Four 3-XOR equations force even 4-parity, while a 4-XOR clause asks for odd parity.",
++      "direct_optimal_assignments": [
++        [
++          0,
++          0,
++          0,
++          0
++        ],
++        [
++          0,
++          1,
++          1,
++          1
++        ],
++        [
++          1,
++          0,
++          1,
++          1
++        ],
++        [
++          1,
++          1,
++          0,
++          1
++        ],
++        [
++          1,
++          1,
++          1,
++          0
++        ]
++      ],
++      "direct_optimum_energy": 1,
++      "energy_scale_distortion": 180.0,
++      "enumeration_time_s": {
++        "hubo": 0.000104,
++        "qubo": 0.001385
++      },
++      "exact_optima_verified": true,
++      "hubo_coupling_count": 5,
++      "hubo_variable_count": 4,
++      "instance_id": "xor3_xor4_frustrated",
++      "n_clauses": 5,
++      "projected_qubo_optimal_assignments": [
++        [
++          0,
++          0,
++          0,
++          0
++        ],
++        [
++          0,
++          1,
++          1,
++          1
++        ],
++        [
++          1,
++          0,
++          1,
++          1
++        ],
++        [
++          1,
++          1,
++          0,
++          1
++        ],
++        [
++          1,
++          1,
++          1,
++          0
++        ]
++      ],
++      "projection_energy_match_for_all_assignments": true,
++      "qubo_coupling_count": 12,
++      "qubo_optimum_energy": 1,
++      "qubo_penalty_strength": 30,
++      "qubo_variable_count": 6
++    },
++    {
++      "auxiliary_definitions": {
++        "aux_0": [
++          "x_0",
++          "x_1"
++        ],
++        "aux_1": [
++          "x_0",
++          "x_2"
++        ],
++        "aux_2": [
++          "x_0",
++          "x_3"
++        ],
++        "aux_3": [
++          "x_1",
++          "x_2"
++        ],
++        "aux_4": [
++          "x_2",
++          "x_3"
++        ],
++        "aux_5": [
++          "aux_0",
++          "x_2"
++        ],
++        "aux_6": [
++          "aux_0",
++          "x_3"
++        ],
++        "aux_7": [
++          "aux_3",
++          "x_3"
++        ]
++      },
++      "auxiliary_variable_count": 8,
++      "clause_degrees": [
++        4,
++        4,
++        4
++      ],
++      "coupling_density_hubo": 0.6,
++      "coupling_density_qubo": 0.448718,
++      "description": "Overlapping 4-XOR clauses with a planted-compatible optimum.",
++      "direct_optimal_assignments": [
++        [
++          0,
++          0,
++          1,
++          0,
++          0
++        ],
++        [
++          0,
++          1,
++          1,
++          1,
++          0
++        ],
++        [
++          1,
++          0,
++          0,
++          0,
++          1
++        ],
++        [
++          1,
++          1,
++          0,
++          1,
++          1
++        ]
++      ],
++      "direct_optimum_energy": 0,
++      "energy_scale_distortion": 474.0,
++      "enumeration_time_s": {
++        "hubo": 0.000133,
++        "qubo": 0.414469
++      },
++      "exact_optima_verified": true,
++      "hubo_coupling_count": 3,
++      "hubo_variable_count": 5,
++      "instance_id": "xor4_planted_overlap",
++      "n_clauses": 3,
++      "projected_qubo_optimal_assignments": [
++        [
++          0,
++          0,
++          1,
++          0,
++          0
++        ],
++        [
++          0,
++          1,
++          1,
++          1,
++          0
++        ],
++        [
++          1,
++          0,
++          0,
++          0,
++          1
++        ],
++        [
++          1,
++          1,
++          0,
++          1,
++          1
++        ]
++      ],
++      "projection_energy_match_for_all_assignments": true,
++      "qubo_coupling_count": 35,
++      "qubo_optimum_energy": 0,
++      "qubo_penalty_strength": 79,
++      "qubo_variable_count": 13
++    }
++  ],
++  "methodology_note": "All optima are proven by enumerating every binary assignment; no stochastic sampler, LLM judge, or hardware backend is used.",
++  "qubo_variable_counts": {
++    "by_instance": {
++      "xor3_chain_sat": 7,
++      "xor3_xor4_frustrated": 6,
++      "xor4_planted_overlap": 13
++    },
++    "max": 13,
++    "mean": 8.666667,
++    "total": 26
++  },
++  "random_seed": 5102,
++  "reproducibility_checksum": "507a6ff6ee9b3227f03dc3a5e74ef0e95d5e4bf81e4510a28e656eb30262aba5",
++  "result_path": "results/experiment_5102_hubo_pspin_direct_energy_v468.json",
++  "run_date": "20260701",
++  "schema": "carnot.experiment_5102_hubo_pspin_direct_energy.v468",
++  "spec_refs": [
++    "REQ-VERIFY-5102",
++    "SCENARIO-VERIFY-5102"
++  ]
++}
+diff --git a/tests/python/test_experiment_5102_hubo_pspin_direct_energy.py b/tests/python/test_experiment_5102_hubo_pspin_direct_energy.py
+new file mode 100644
+index 0000000000..a63d9f3c37
+--- /dev/null
++++ b/tests/python/test_experiment_5102_hubo_pspin_direct_energy.py
+@@ -0,0 +1,178 @@
++"""Tests for Exp 5102 direct HUBO/p-spin energy versus QUBO gadgets.
++
++Spec refs: REQ-VERIFY-5102, SCENARIO-VERIFY-5102.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5102_hubo_pspin_direct_energy as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/verification/spec.md"
++ARTIFACT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def test_req_verify_5102_spec_declares_hubo_qubo_contract() -> None:
++    """REQ-VERIFY-5102: OpenSpec anchors the experiment and required fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-5102",
++        "SCENARIO-VERIFY-5102",
++        "python/carnot/experiment_5102_hubo_pspin_direct_energy.py",
++        "results/experiment_5102_hubo_pspin_direct_energy_v468.json",
++        mod.INFERENCE_SUBSTRATE,
++        mod.SUCCESS_VERDICT,
++        mod.NO_ADVANTAGE_VERDICT,
++    ):
++        assert marker in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_verify_5102_family_contains_tiny_high_order_csp_instances() -> None:
++    """SCENARIO-VERIFY-5102: the deterministic family has high-order parity clauses."""
++
++    family = mod.build_instance_family()
++    optima = [mod.enumerate_hubo(mod.build_hubo_encoding(instance)).optimum_energy for instance in family]
++
++    assert len(family) >= 3
++    assert {instance.family for instance in family} == {mod.INSTANCE_FAMILY}
++    assert any(optimum > 0 for optimum in optima)
++    for instance in family:
++        assert instance.n_vars <= 5
++        assert all(clause.parity in (0, 1) for clause in instance.clauses)
++        assert max(len(clause.variables) for clause in instance.clauses) >= 3
++
++
++def test_req_verify_5102_qubo_gadgets_match_hubo_optima_and_projections() -> None:
++    """REQ-VERIFY-5102: exact enumeration proves optimum and assignment equivalence."""
++
++    rows = [mod.compare_instance(instance) for instance in mod.build_instance_family()]
++
++    assert all(row["exact_optima_verified"] for row in rows)
++    assert all(row["direct_optimum_energy"] == row["qubo_optimum_energy"] for row in rows)
++    assert all(row["direct_optimal_assignments"] == row["projected_qubo_optimal_assignments"] for row in rows)
++    assert all(row["qubo_variable_count"] > row["hubo_variable_count"] for row in rows)
++    assert all(row["auxiliary_variable_count"] > 0 for row in rows)
++    assert all(row["energy_scale_distortion"] > 1.0 for row in rows)
++
++
++def test_scenario_verify_5102_projection_energy_matches_for_every_assignment() -> None:
++    """SCENARIO-VERIFY-5102: best QUBO extension equals direct energy for each projection."""
++
++    for instance in mod.build_instance_family():
++        hubo = mod.build_hubo_encoding(instance)
++        qubo = mod.build_qubo_gadget_encoding(instance)
++        hubo_by_projection = mod.energy_by_projection(hubo)
++        qubo_by_projection = mod.best_qubo_energy_by_projection(qubo)
++
++        assert qubo.auxiliary_definitions
++        assert qubo_by_projection == hubo_by_projection
++
++
++def test_req_verify_5102_artifact_fields_principles_and_metrics(tmp_path: Path) -> None:
++    """REQ-VERIFY-5102: artifact emits required metrics and principle annotations."""
++
++    artifact = mod.write_artifact(root=tmp_path)
++    payload = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert payload == artifact
++    mod.validate_artifact(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS).issubset(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS).issubset(artifact["field_principles"])
++    assert artifact["honest_verdict"].startswith(mod.SUCCESS_VERDICT)
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["exact_optima_verified"] is True
++    assert artifact["direct_hubo_advantage"] is True
++    assert artifact["flagged_adversarial"] is False
++    assert artifact["auxiliary_variable_blowup"]["mean_auxiliary_variables"] > 0
++    assert artifact["energy_scale_distortion"]["max_qubo_to_hubo_coefficient_ratio"] > 1.0
++    assert "native high-order" in artifact["hardware_mapping_notes"]
++    assert "QUBO" in artifact["hardware_mapping_notes"]
++    assert len(artifact["reproducibility_checksum"]) == 64
++
++
++@pytest.mark.parametrize(
++    ("field", "value", "message"),
++    [
++        ("honest_verdict", "optimistic", "honest_verdict"),
++        ("duration_s", -1.0, "duration_s"),
++        ("inference_substrate", "live_llm_inference", "inference_substrate"),
++        ("instance_family", "other", "instance_family"),
++        ("exact_optima_verified", False, "exact_optima_verified"),
++        ("direct_hubo_advantage", False, "direct_hubo_advantage"),
++        ("flagged_adversarial", True, "flagged_adversarial"),
++    ],
++)
++def test_req_verify_5102_validate_artifact_rejects_schema_violations(
++    field: str,
++    value: object,
++    message: str,
++) -> None:
++    """REQ-VERIFY-5102: malformed or non-clean terminal artifacts fail closed."""
++
++    artifact = mod.run()
++    artifact[field] = value
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(artifact)
++
++
++@pytest.mark.parametrize(
++    ("mutator", "message"),
++    [
++        (lambda artifact: artifact.pop("hubo_variable_counts"), "missing required fields"),
++        (lambda artifact: artifact.update({"field_principles": {}}), "field_principles"),
++        (
++            lambda artifact: artifact.update({"energy_scale_distortion": {"max_qubo_to_hubo_coefficient_ratio": 0.5}}),
++            "energy_scale_distortion",
++        ),
++        (
++            lambda artifact: artifact.update({"coupling_density_qubo": {"mean": -0.1}}),
++            "coupling_density_qubo",
++        ),
++    ],
++)
++def test_req_verify_5102_validate_artifact_rejects_consistency_violations(
++    mutator: object,
++    message: str,
++) -> None:
++    """REQ-VERIFY-5102: coherent-looking but inconsistent artifacts fail closed."""
++
++    artifact = mod.run()
++    mutator(artifact)
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(artifact)
++
++
++def test_req_verify_5102_main_writes_default_artifact(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-5102: CLI entrypoint writes the configured result path."""
++
++    monkeypatch.setenv("CARNOT_EXP5102_ROOT", str(tmp_path))
++
++    assert mod.main() == 0
++    payload = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    mod.validate_artifact(payload)
++    assert payload["result_path"] == mod.RESULT_RELATIVE_PATH
++
++
++def test_deliverable_file_validates_for_req_verify_5102() -> None:
++    """SCENARIO-VERIFY-5102: checked-in deliverable satisfies the terminal schema."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith(mod.SUCCESS_VERDICT)
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
+-- 
+2.55.0
+

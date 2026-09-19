@@ -1,0 +1,3563 @@
+From c98291c12196fc28c54921a19faf347cf8fbea5b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 3 Aug 2026 20:33:47 -0400
+Subject: [PATCH 08173/11362] [outer-loop] exp6091 ARC refinement shot: BLOCKED
+ at round-0 induce, NOT a null; Phase D domain survey lands with no passing
+ domain; 9+6 verified corrections
+
+ARC (REQ-ARC-WMTE-6091) -- THE STOPPING RULE DOES NOT FIRE.
+6 of 6 cells produced NO round-0 engine. Every one failed identically:
+"local model code unusable after 2 tries (missing ('engine',) in output
+[HIT n_predict=4096 OUTPUT LIMIT before completing])". Games tu93/tr87/sp80/
+sb26/re86/g50t, window n = 12,12,4,9,12,12 -- not window-size dependent.
+Independently corroborated: 10 of 11 completed server generations terminated at
+EXACTLY 4096 tokens, and /tmp/exp6091_e3_scratch held 0 files throughout.
+The gradeable denominator is 0, n_discordant is 0, and NO p was reachable, so
+this is not a null and `line_closes` is False.
+
+The reaper diagnosis HELD -- this is a different blocker. The llama-server ran
+49m23s across 6 cells at 33-35 tok/s with ZERO kill-signature lines in its log,
+against the prior run's death points of 369s/17s/10s/53s. The binding constraint
+is the 4096-token code-only induce budget the script itself documents as having
+already failed on tu93; the tries=2 mitigation did not fire (2 of 2 tries failed
+on every game).
+
+PHASE D -- NO DOMAIN PASSES ALL THREE CRITERIA (7 corpora measured, 0 passing).
+Substrate is aggregation-only: no LLM invoked, no GPU used. Checksum reproduced
+byte-for-byte across reruns with duration_s the sole differing key.
+
+ANALYSER CORRECTIONS (all six self-tested on synthetic shards):
+- `line_closes` gains a POWER term and a round-0 term. It previously fired
+  identically at 1 discordant game (min reachable p = 1.0) and at 11 (0.00098),
+  contradicting the pre-registration's own prose. Change is conservative only.
+- New verdict `blocked_round0_induction_produced_no_engine_on_any_cell_not_a_null`.
+  Outcome #3 was pre-registered as not-a-null but had no branch, so it emitted
+  `blocked_treatment_never_delivered_to_generator` -- naming the delivery
+  instrument, which is independently proven working, as the blocker.
+- Like-for-like FINAL-ROUND contrast added beside the pre-registered primary.
+  The primary reads best-of-R for both refinement arms against single-shot's ONE
+  grade; with binary per-cell change_accuracy a neutral arm scores 1-(1-p)^R from
+  the extra draw alone. A POSITIVE verdict now requires both to agree.
+- Identity-control rationale corrected: MEASURED n_noop = 0 on the FULL window
+  too, and full-window change_accuracy = 0.0 everywhere. The control is vacuous
+  everywhere in this design, not only on the acceptance block.
+- The changed-cell stratification guard was INERT (tallied strata, never
+  recomputed the primary). It now recomputes on the >=2-cell subset.
+- Recorded, not fixed: the AB script's LLAMA_SERVER comment claims the binary is
+  copied to a private path; there is no copy step and /proc/<pid>/exe resolves to
+  the original build path.
+
+KNOWN-ISSUES CORRECTIONS (append-only; 245 insertions, 0 deletions, proven
+programmatically). Highest-value: the recorded Phase D acceptance gate is
+NEAR-UNREACHABLE by its own arithmetic -- at K=8, n=360 it demands a PERFECT
+360/360 oracle for any p > 0.5217 (60% of the prescribed band) and at most 6
+all-wrong questions at p=0.40, against MuSR's measured 7.0% all-wrong rate.
+Also: criterion 1 does not compute what its docstring says and cannot be passed
+by improving the generator; exp5799 is a token-budget canary (K_eff = 1.125),
+not a floor-level generator; every z is unclustered (MuSR question-level
+t=1.3587, df=199, p=0.176); exp5125 was ALREADY flagged and exp5136 is the
+uncaught one; the decisive construction evidence is a byte-identical
+`_candidate_raw` across both pool builders with no LLM imported; exp5786's
+SC=0.75 is first-in-file-order, not a vote.
+
+The 2 previously-reaped cells are preserved byte-identically in
+exp6091_refine_engine_visible_shard.blocked_reaped_20260803.jsonl
+(sha256 f883f7ca...), not deleted.
+
+No behavioural claim: every ARC number here is offline engine accuracy, and in
+this run there are none -- the trust gate stands between engine accuracy and any
+score. No game played, nothing submitted, no shipped default flipped
+(_REFACTOR_SHOW_ENGINE_DEFAULT still "0"; python/carnot/ untouched). Protected
+evidence dirs byte-identical (3e42970d...).
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...-6091-refinement-shot-prereg-2026-08-03.md |  192 +++
+ ops/known-issues.md                           |  245 ++++
+ ...isible_shard.blocked_reaped_20260803.jsonl |    2 +
+ .../exp6091_refine_engine_visible_shard.jsonl |    8 +-
+ results/experiment_6091_delivery_probe.json   |   92 ++
+ ...t_6091_refine_engine_visible_analysis.json | 1263 +++++++++++++++++
+ results/phase_d_domain_headroom_survey.json   |  320 +++++
+ .../exp_phase_d_domain_headroom_survey.py     |  549 +++++++
+ ...r_loop_arc_6091_delivery_probe_20260803.py |  259 ++++
+ ...p_arc_refine_engine_visible_ab_20260803.py |   89 ++
+ ..._refine_engine_visible_analyse_20260803.py |  283 +++-
+ 11 files changed, 3293 insertions(+), 9 deletions(-)
+ create mode 100644 docs/research-notes/arc-6091-refinement-shot-prereg-2026-08-03.md
+ create mode 100644 results/exp6091_refine_engine_visible_shard.blocked_reaped_20260803.jsonl
+ create mode 100644 results/experiment_6091_delivery_probe.json
+ create mode 100644 results/experiment_6091_refine_engine_visible_analysis.json
+ create mode 100644 results/phase_d_domain_headroom_survey.json
+ create mode 100644 scripts/experiments/exp_phase_d_domain_headroom_survey.py
+ create mode 100644 scripts/experiments/outer_loop_arc_6091_delivery_probe_20260803.py
+
+diff --git a/docs/research-notes/arc-6091-refinement-shot-prereg-2026-08-03.md b/docs/research-notes/arc-6091-refinement-shot-prereg-2026-08-03.md
+new file mode 100644
+index 0000000000..ddbb28c3d2
+--- /dev/null
++++ b/docs/research-notes/arc-6091-refinement-shot-prereg-2026-08-03.md
+@@ -0,0 +1,192 @@
++# exp6091 refinement shot — pre-registration, recorded before any number existed
++
++**Written 2026-08-03T23:41:52Z.** At that instant
++`results/exp6091_refine_engine_visible_shard.jsonl` did not exist (verified, `ls` returned
++`No such file or directory`) and the measurement process was still building its offline windows,
++having launched no `llama-server` and generated nothing. Everything below is therefore a
++commitment, not a description.
++
++## Why this record exists at all
++
++`ops/known-issues.md` (2026-08-03 ruling) closes the ARC induction line and adds one instruction
++to anyone who ever revisits it:
++
++> Any future reconsideration must settle which metric carries the decision BEFORE the shot, not
++> after.
++
++That instruction exists because of a real design property of this A/B, also recorded there: all
++11 gradeable games carry **exactly one** gradeable acceptance row each, so the primary metric is a
++single Bernoulli draw per game. `min reachable p = 0.00098` therefore requires **11 of 11**
++concordant games. A merely-good effect of 8 of 11 lands at **p = 0.23**. That is a design in which
++the honest reading depends entirely on which metric was named first — so it is named here.
++
++## Authorization — this is not a unilateral reopening of a closed axis
++
++The same ruling says: *"Do NOT propose a follow-up on the refinement / single-shot-GGUF-induction
++axis … not a re-run of the engine-visible A/B, however tempting the fixed instrument makes it,"*
++and, in the next breath, that the fixed capability *"stays in the tree, tested and default-OFF, for
++whoever later has a healthy host and an operator decision to spend a slot on it — it is banked, not
++queued."*
++
++Both conditions of that second sentence now hold, which is the only reason this ran:
++
++- **A healthy host.** The operator identified the conductor and its user timers as the process that
++  was reaping every `llama-server`, and stopped them. Verified before launch:
++  `carnot-conductor.service`, `carnot-outer-loop.timer`, `carnot-orphan-cleanup.timer` all
++  `inactive`; no `research_conductor` / `codex exec` / `pytest` children; both GPUs at 2 MiB.
++- **An operator decision to spend the slot**, issued as this task.
++
++The prior attempt was **BLOCKED, not null** — 2 attempted cells, 0 vouched, every server killed
++within seconds to minutes. This run completes the pre-committed test that could not be taken. It
++does not relitigate the closure, and the closure does not rest on it: the line was closed on an
++independent measured negative (0 of 296 clean engine-units with `n_changing>=3` reaching held-out
++`change_accuracy >= 0.5`), which stands regardless of what this shot returns.
++
++## The metric that carries the decision
++
++**PRIMARY, and the one the stopping rule keys on: held-out `change_accuracy` on the gradeable
++acceptance block, clustered at the GAME level, paired two-sided exact sign test.** This is the
++quantity the operator's stopping rule names. It decides, and it decides alone.
++
++**SECONDARY, pre-registered as secondary and explicitly NOT decision-carrying:**
++`change_fidelity` (continuous, symmetric cell-level union fidelity) and `cell_recall`, on the same
++rows. Their job is to make a null *interpretable* — to distinguish "the treatment moved nothing"
++from "the primary metric was too coarse to move at these window sizes." A secondary win alongside a
++primary null does **not** overturn the stopping rule; it is reported as a caveat, and any decision
++to act on it belongs to the operator, not to this run.
++
++## Stated before results
++
++| Quantity | Committed value |
++|---|---|
++| Roster | 13 games (`tu93 tr87 sp80 sb26 re86 g50t r11l cd82 ar25 lp85 sk48 vc33 ft09`) |
++| Leaving the denominator BY NAME | **r11l, vc33** — no gradeable acceptance row; reported, never silently dropped |
++| Gradeable games | 11 |
++| Min reachable two-sided p (11 of 11 concordant) | **0.00098** |
++| p at 8 of 11 | 0.2266 |
++| p at 6 of 11 | 1.0 |
++| Significance threshold | p < 0.05 on the PRIMARY |
++| Arms | `single_shot` · `refine_control` (engine invisible) · `refine_treatment` (engine visible) |
++| Baseline that matters | `single_shot` — refinement must beat NOT refining, not merely beat zero |
++| Identity control on the acceptance block | expected **VACUOUS** (`n_noop = 0` ⇒ 0.0 by construction); also run on the full window where it can move |
++| Oracle control | must reach `change_accuracy = 1.0` on every gradeable block, else that game is excluded as unfalsifiable |
++
++## Addendum, 2026-08-03T23:45:30Z — still pre-result (verified: shard absent)
++
++Ties are DROPPED by a sign test, so the effective n is `n_discordant`, not 11. The
++known-issues example ("8 of 11 lands at p=0.23") assumes 8 wins **and 3 losses**; 8 wins with 3
++*ties* is n=8 and p=0.0078. The two readings differ by a factor of 29, so the tie count has to be
++read off the artifact, never assumed.
++
++The consequence that matters for interpreting a null:
++
++| n_discordant | min reachable two-sided p |
++|---|---|
++| 11 | 0.0010 |
++| 8 | 0.0078 |
++| 6 | 0.0313 |
++| **5** | **0.0625 — p < 0.05 is already UNREACHABLE** |
++| 3 | 0.2500 |
++| 1 | 1.0000 |
++| 0 | no test exists |
++
++**So if 5 or fewer games are discordant, this design cannot reject the null no matter how
++one-sided the result is.** A `p = 1.0` from 2 discordant games is not evidence of no effect; it is
++an absent test. I will therefore quote `min_reachable_p_at_this_n_discordant` alongside the
++observed p in every comparison, and will say plainly whether the shot was capable of rejecting
++before saying whether it did.
++
++This does not change which metric decides — `change_accuracy` still carries the stopping rule. It
++changes what a null is allowed to be *called*: a null that could not have been anything else is
++reported as underpowered, not as a refutation.
++
++## Outcomes that are NOT a null, and must not be reported as one
++
++1. **The treatment never reached the generator.** If no generator prompt carried the engine, the
++   run measured the control twice. The analyser computes this from a wrapper on `generate` — the
++   deepest callee before transport — and emits
++   `blocked_treatment_never_delivered_to_generator_not_a_null`, with `line_closes: false`.
++2. **The substrate could not be vouched for.** Cells whose serving PID changed mid-cell are
++   recorded and excluded, never silently dropped.
++3. **No cell produced a round-0 engine.** Missing is not zero; such cells are counted and named.
++
++A clean null **is** the expected outcome and reporting it is a success. The stopping rule governs:
++if this returns null, the line stays closed and **no follow-up on this axis is proposed.**
++
++## Delivery was proven before the shot, not assumed
++
++`results/experiment_6091_delivery_probe.json` (adversarial-verify clean) wraps
++`LocalGGUFProposer.generate` and reads the caller chain off the interpreter stack, confirming
++`refactor:6702 -> _gen_to_file:6469 -> generate` on the live path. Flag ON delivers 9 of the
++engine's substantive source lines; flag OFF delivers 2, and both of those are the prompt quoting
++its own output template — an independent reproduction of the original defect's characterisation
++(0 of 454 substantive lines, 13 of 13 games). A mutation arm neutralises the source resolver and
++the ON assertion goes red, so the green result is not vacuous.
++
++---
++
++## POST-HOC ADDENDUM, 2026-08-03 ~00:20Z — corrections applied after the shot began
++
++**This section is written AFTER cells started landing and is marked as such. Nothing above it has
++been edited; every claim above stands as pre-registered, including the ones this addendum
++corrects.** Four defects were found by adversarial review and independently verified here before
++being acted on. Three are in the analyser and are fixed in
++`scripts/experiments/outer_loop_arc_refine_engine_visible_analyse_20260803.py`; one is a factual
++error in the prose above.
++
++**A-1. The identity-control rationale above is FALSE IN BOTH CLAUSES.** The pre-registration says
++the identity control is vacuous on the acceptance block because `n_noop = 0` there, and that it is
++therefore ALSO run on the full window, "where no-op rows exist and the score can move." Measured
++on the landed cells: `n_noop` is **0 on the FULL window as well** (tu93 11 changing / 0 no-op,
++tr87 11/0, sp80 3/0, sb26 likewise), and identity's full-window `change_accuracy` is **0.0**
++everywhere. The mechanism is not no-ops at all — `change_accuracy = n_changes_correct /
++n_changing`, so an identity engine scores exactly 0 on ANY block with `n_changing > 0`,
++irrespective of how many no-op rows sit beside it. **The identity control is vacuous everywhere in
++this design, not only on the acceptance block, and the stated remedy does not remedy it.** The
++analyser now computes and reports `VACUOUS` for the full-window control too. A non-vacuous identity
++control would need a block containing no-op rows AND would have to be scored on `accuracy`, not
++`change_accuracy`.
++
++**A-2. The pre-registered PRIMARY is not like-for-like.** `cell_value` reads `best_<metric>` — the
++MAX over the R refactor rounds, maximised on the very held-out block that grades — for both
++refinement arms, while reading `single_shot`'s ONE grade. Per-cell `change_accuracy` is BINARY at
++these window sizes (exactly one gradeable acceptance row per game), so a refinement arm that
++changes nothing still scores `1-(1-p)^R` against single-shot's `p` — 0.36 vs 0.20 at p=0.2, R=2 —
++**from the extra draw alone**. `treatment_vs_control` is symmetric and unaffected, and remains the
++only clean contrast in the original set. Fix: the shard already stores each arm's `final` round, so
++the analyser now ALSO computes the symmetric final-round contrast and a POSITIVE verdict requires
++BOTH to point the same way. This can only make a win harder to claim.
++
++**A-3. `line_closes` had no power term, contradicting this document's own prose.** It was
++`(not beat) and treatment_administered`, which fires identically at 1 discordant game (min
++reachable p = 1.0) and at 11 (0.00098) — while the section above commits, in words, to reporting a
++null that could not have been anything else as underpowered rather than as a refutation. That
++commitment is now machine-readable: `line_closes` additionally requires
++`min_reachable_p_at_this_n_discordant < 0.05` and requires that at least one cell produced a
++round-0 engine.
++
++**A-4. Outcome #3 above ("No cell produced a round-0 engine") had no verdict of its own.** It was
++pre-registered as not-a-null but the analyser had no branch for it, so such a run emitted
++`blocked_treatment_never_delivered_to_generator_not_a_null` — naming the DELIVERY instrument, which
++is independently proven working, as the blocker. There is now a distinct
++`blocked_round0_induction_produced_no_engine_on_any_cell_not_a_null` keyed on
++`round0_engine_loaded`, carrying the induce messages so the operator investigates the token budget
++rather than the witness.
++
++**Also corrected, not in the analyser: the LLAMA_SERVER isolation comment in the AB script
++describes protection that is not in effect.** It states the binary "is COPIED to a privately-named
++path and run from there"; there is no copy step — `LLAMA_SERVER` reads an env var and defaults to
++the original build path, `CARNOT_6091_LLAMA_SERVER` is unset in the serving process's environment,
++and `/proc/<pid>/exe` resolves to `~/.cache/llama.cpp-master/build/bin/llama-server`. Benign now
++that the reaper is stopped, but the prose overstates the isolation.
++
++**And one guard that was inert:** the "stratification by changed-cell count (failure mode 7)" block
++tallied rows and games per stratum but never recomputed the primary on the `>=2`-cell stratum, so a
++headline carried entirely by 1-changed-cell rows would not have been caught by anything. It now
++recomputes. Harmless on this data — the gradeable acceptance rows measured so far have
++changed-cell counts of 20, 11, 34 and up, with no 1-cell rows — but the guard was decorative.
++
++All six corrections were self-tested on synthetic shards (all-dead, clean-win,
++best-of-R-artifact-with-flat-final, 1-discordant-null, 11-discordant-null, all-1-cell-rows); each
++classifies as intended, and the 1-discordant case now returns `line_closes: false` where it
++previously returned `true`.
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index e82838468e..e9bc3eb61a 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -111,6 +111,251 @@ It is self-concealing — the rebuild also resets `provenance.code[*].sha256` to
+ turns GREEN at the same moment the audit trail is erased. Fix belongs with the analysers' owner
+ (read-merge-preserve the existing provenance block); until then, prefer acknowledgement over rebuild.
+ 
++### 2026-08-03 (outer-loop, MEASURED — the Phase D domain search FAILS: no corpus in this repo passes all three criteria, and the two failure modes are disjoint)
++
++**Answering the question the entry below leaves open.** That entry correctly refuses the three
++retired constructions and names MMLU-Pro's chance-floor defect. It then still needs a domain. This
++entry reports the search, run over every candidate-pool-shaped corpus in `results/`:
++`scripts/experiments/exp_phase_d_domain_headroom_survey.py` ->
++`results/phase_d_domain_headroom_survey.json` (adversarial_verify: 0 flags; substrate
++`aggregation_from_upstream_artifacts` — cached corpora only, no LLM invoked, no GPU used; checksum
++stable across two consecutive reruns by construction, `duration_s` excluded from the digest).
++
++**Result: 0 of 7 candidate pools pass. Nothing in the repo is a viable Phase D domain today.**
++
++| corpus | n_q | K | chance floor | cand acc | z vs floor | SC | oracle@K | 1-(1-p)^K | verdict |
++|---|---|---|---|---|---|---|---|---|---|
++| MMLU-Pro 5-shot | 40 | 6 | 0.10 (10-way) | 0.1250 | +1.29 | 0.1250 | 0.5000 | 0.5512 | C1 FAIL — combinatorial |
++| MMLU-Pro 0-shot | 40 | 6 | 0.10 (10-way) | 0.0833 | -0.86 | 0.0750 | 0.3000 | 0.4067 | C1 FAIL — combinatorial |
++| MuSR murder_mysteries | 200 | 5-8 | **0.50 (BINARY)** | 0.5311 | +2.43 | 0.5600 | 0.9300 | 0.9773 | C1 FAIL — combinatorial |
++| structured reasoning exp5125 | 96 | 4 | 0.0510 (enumerated) | 0.2188 | +14.95 | 0.2083 | 0.8750 | 0.6275 | **CONSTRUCTION ARTIFACT** |
++| structured reasoning exp5136 | 120 | 4 | 0.0425 (enumerated) | 0.2188 | +19.15 | 0.2167 | 0.8750 | 0.6275 | **CONSTRUCTION ARTIFACT** |
++| SOTA constraint stream exp5786 | 360 | 3 (2 live) | 0.25 (4-way) | 0.5593 | **+23.47** | 0.75 (artifact) | 0.9389 | 0.9144 | C2 FAIL — saturated |
++| SOTA answer-channel canary exp5799 | 24 | 5 | 0.25 (4-way) | 0.1750 | -1.90 | 0.7500 | 0.8333 | 0.6178 | C1 FAIL — 77.5% unparseable |
++
++exp5799 is the one row whose oracle EXCEEDS its independence prediction while still failing C1. That
++is not a point in its favour: its per-candidate accuracy is *below* the floor (z=-1.90) and the
++independence model does not apply, because the candidates are not exchangeable draws — one model
++carries the corpus (`gemma-4-31B` 24/24 parseable) while the others are near-dead (`Qwen3.6-35B`
++0/48, `gemma-4-26B` 3/48). n=24 in any case.
++
++ConstraintBench (`results/experiment_5044_second_corpus_candidate_cache.jsonl`) is excluded before
++measurement, confirming the entry below: all 500 candidates carry
++`generator_kind: deterministic_solver_backed_variant` and `generation_model: None`. There is no LLM
++generator, so criterion 1 is not even defined.
++
++**Chance floors were ENUMERATED, not asserted** — the refuted proposal turned on an asserted floor.
++For the open-ended structured families the floor is the fraction of the answer space that is
++correct, computed by brute force per instance (graph colouring over `n_colors^n_nodes`;
++knights/knaves over `2^n_people`; travel-budget and OR-allocation over the feasible-optimal set;
++code-property over `2^domain_n`). All 216 instances resolved; zero unresolved.
++
++**THE STRUCTURAL FINDING — the two failure modes are disjoint, and that is the whole diagnosis.**
++
++- **Group A — generator at the floor, so the headroom is combinatorial** (MMLU-Pro both pools, MuSR,
++  exp5799). Every one of them FAILS the independence check: observed oracle@K is at or BELOW
++  `1-(1-p)^K`. Their apparent headroom is what you get free by drawing K near-random samples.
++- **Group B — generator competent, so the task is too easy** (exp5786). The only corpus that clears
++  criterion 1 decisively, and it dies on criterion 2.
++- **Group C — the headroom was manufactured by the pool builder** (exp5125, exp5136).
++
++There is no corpus in the middle band. That band — a competent-but-unsaturated generator, genuine
++multi-sample K, low chance floor — is what Phase D needs and what the repo does not contain.
++
++**MuSR's retirement reason is REFINED, not overturned** (retirement stands). The recorded reason is
++"SC near-ceiling". Measured, SC is 0.5600 — nowhere near a ceiling. The real defect is that MuSR is
++**BINARY**, so the floor is a coin flip and per-candidate accuracy 0.5311 sits 3.1 pp above it; with
++K=5-8 draws, oracle@K 0.93 is *below* the 0.977 that independent coin-flipping predicts. Same
++combinatorial defect as MMLU-Pro, different surface. Worth recording because "SC near-ceiling" would
++wrongly suggest a harder corpus fixes it; it does not — a non-binary corpus with a real generator does.
++MuSR is also the ONLY genuine multi-sample single-model pool in the repo (gemma-4-12B-it, 163 of 200
++questions carry both answers, i.e. real temperature diversity).
++
++**NEW — exp5125 / exp5136 are templated fixtures, and their artifacts overstate what they are.**
++Both declare `inference_substrate: local_sota_gguf_generation_with_receipts_and_exact_validators`.
++The rows do not support that reading. Structural tells, all mechanical:
++(1) the correct candidate appears **only ever at index 0 or 1 — never index 2 or 3**, in both pools;
++(2) correctness patterns collapse to exactly three, in the ratio **14:7:3** — identically in both
++pools (56:28:12 and 70:35:15);
++(3) per-index model counts are balanced **to the unit** (48/48 and 40/40/40), which sampling does
++not do;
++(4) `raw_response` carries one constant `"claims": ["exact-checkable candidate"]` string across all
++864 candidates, and every parse failure is at index 3.
++Inspecting a row shows the slots directly: index 0 plausible-wrong, index 1 trivially wrong
++(`[0,0,0,0]`), index 2 out-of-range (`[3,3,3,3]` where colours are 0..2), index 3 unparseable. This
++is the same class as the `task_index % 4` signature retracted from
++`results/headroom_survey_cross_domain.json` on 2026-07-01 — **a third instance, not previously
++caught.** Their +0.66 gap is not evidence of headroom. Treat `model_hf_id` on these rows as
++decorative. Not retired here — that is an operator call — but they must not seed a Phase D domain.
++
++**NEW — exp5786 is real, is the closest thing the repo has to a viable domain, and still fails.**
++It is genuine generation (real `raw_response_text`, real truncations, per-model variation). It is
++the ONLY corpus clearing criterion 1 decisively (z=+23.47). Two things kill it:
++- **A dead arm.** `Qwen3.6-35B-A3B` produced **0 of 360** parseable answers (358 `finish_reason:
++  length`) — accuracy 0.0000. This independently corroborates exp5813's
++  `answer_channel_ready_score=0.0` on that family. The headline `SC=0.75` is therefore a degenerate
++  3-way vote containing a corpse, and it is NOT the honest baseline.
++- **Against the honest baseline there is almost nothing to win.** Best single model
++  (`gemma-4-26B-A4B-it`) = **0.9278**; oracle over the two live arms = **0.9389**. Total selectable
++  gain = **+0.0111, i.e. 4 instances out of 360.** Per family: `finite_domain_scheduling` gain
++  **0.0000** (26B scores a saturated **1.0000**), `logic_grid` gain **0.0000**,
++  `typed_finite_choice` gain +0.0333 (4 instances). Note also K=1 sample per MODEL, so genuine
++  self-consistency is not measurable from this corpus at all.
++
++**MECHANICAL CHECK — two of the three constructions the task brief names would be HARD-REFUSED, and
++this was verified, not assumed.** Probe roadmaps through `scripts/exclusion_manifest_lint.py`:
++uPRM -> `[SCOPE_MATCHED_PRIOR_FAILURE]` HARD; LoRA-EBM -> `[BLOCKED_PATTERN_MATCHED]` +
++`[SCOPE_MATCHED_PRIOR_FAILURE]` HARD; EBRM -> `[BLOCKED_PATTERN_MATCHED]` HARD. A hidden-state
++TrajSelector task draws only `[SCOPE_MATCHED_PRIOR_FAILURE]` against `exp899-drift-hidden-state-probe`,
++which a `prior_failures:` block satisfies — i.e. that lane is open, as the manifest's own `reason`
++field says. A pure corpus-construction task lints **CLEAN**. This confirms the entry below and adds
++the exact violation classes.
++
++**WHAT WOULD BE NEEDED — the honest answer, since no domain passes.** Not another verifier
++experiment. A **difficulty-calibrated candidate pool that does not yet exist**, and it is cheap:
++
++- **Generator**: `gemma-4-26B-A4B-it-GGUF`, the one model measured competent AND reliable here
++  (0.9278 accuracy, 360/360 parseable). Do NOT reach for 31B/35B — measured dead on this channel.
++- **Instances**: harder draws from the exp5785/exp5786 fixture families, calibrated so per-candidate
++  accuracy lands in **0.4-0.7**. Above ~0.9 there is nothing to select (exp5786); at the floor the
++  headroom is combinatorial (Group A). The band is the deliverable.
++- **K >= 8 genuine temperature samples from ONE model**, so self-consistency is actually measurable
++  — a thing NO corpus in this repo currently permits except MuSR.
++- **Acceptance gate, falsifiable and pre-registered**: per-candidate accuracy in [0.4, 0.7] with
++  z > 3 above the enumerated floor; observed oracle@K **strictly above** `1-(1-p)^K`; and
++  `oracle@K - SC >= 0.10` with a cluster-bootstrap CI excluding 0. **If the pool cannot be
++  calibrated into that band, report `blocked_no_headroom_band_reachable` and STOP** — do not
++  proceed to a verifier experiment on an uncalibrated pool. That failure is itself the finding, and
++  it is the cheap one to discover.
++- **Power, stated before any verifier runs**: at n=360 instances the minimum detectable effect at
++  alpha=.05/power=.80 is ~10 pp. TrajSelector's published +4.61 pp needs **n >= 866**. Pre-register
++  n and K, or the null will be as unfalsifiable as exp5163's.
++
++**This is NOT the concluded ARC-energy S0 direction.** S0 was oracle-distinct structural energy
++scored ON ARC, retired 2026-06-26 because it added no live ARC value. This is off-ARC constraint
++reasoning, no ARC env, no ARC solve claim, and it produces a CORPUS rather than an ARC selector.
++It is also not the retired Phase D external-text scorer class: the deliverable here is a calibrated
++candidate pool plus its headroom measurement, with no scorer trained — which is why the probe lints
++clean while all three named constructions do not.
++
++**Read this before spending the Phase D majority.** The next Phase D slot should build and calibrate
++the pool, and should be allowed to fail closed. Standing a verifier experiment on any corpus in the
++table above reproduces one of the three documented failure modes by construction.
++
++
++> **CORRECTIONS 2026-08-03 (second adversarial review, verified independently before applying;
++> APPEND-ONLY — every number above is left standing, nothing here deletes a prior figure).**
++> The headline survives re-measurement: `passes_all_three` is False on all 7 rows, and I
++> reproduced the survey byte-for-byte (`reproducibility_checksum`
++> `sha256:e48ca7f2447cd8559e102f8375bafd4637fbd79b110cebd61cc96b67d0299853`, `duration_s` the sole
++> differing key). Nine corrections, in decreasing order of what they cost the next milestone.
++>
++> **C-1. THE PRE-REGISTERED GATE ABOVE IS NEAR-UNREACHABLE BY ITS OWN ARITHMETIC — fix it before
++> a planner reads it.** The gate demands `observed oracle@K strictly above 1-(1-p)^K` with
++> `p in [0.4, 0.7]`, `K >= 8`, `n = 360`. Enumerated at K=8, n=360:
++>
++> | p | bar `1-(1-p)^8` | max all-wrong questions permitted | required oracle |
++> |---|---|---|---|
++> | 0.40 | 0.983204 | 6 / 360 (1.67%) | >= 0.983333 |
++> | 0.45 | 0.991627 | 3 / 360 (0.83%) | >= 0.991667 |
++> | 0.50 | 0.996094 | 1 / 360 (0.28%) | >= 0.997222 |
++> | >= 0.5217 | >= 0.997261 | **0** | **360/360 exactly** |
++>
++> So for any `p > 0.5217` — **60% of the prescribed band** — the gate requires a PERFECT oracle,
++> which `adversarial_verify.IMPLAUSIBLE_PERFECT` exists to flag. In the feasible remainder it
++> permits at most 6 all-wrong questions of 360, against the **7.0% (14/200)** all-wrong rate of
++> MuSR, the only genuine multi-sample pool in this repo: a demanded 4.2x-25x improvement that
++> nothing above justifies. `blocked_no_headroom_band_reachable` is therefore not a risk to be
++> discovered — it is the near-certain outcome, decided by arithmetic before any data is drawn,
++> which is the unfalsifiable-null failure this entry cites exp5163 for. **Corrected gate:** drop
++> the independence conjunct from the ACCEPTANCE gate and keep it as a REPORTED diagnostic, or
++> replace it with the chance-level form the survey's own docstring describes
++> (`1-(1-floor)^K` = 0.8999 at floor 0.25, K=8 — reachable). Whichever is chosen, state the
++> all-wrong rate the pool must beat, as a number, before building it.
++>
++> **C-2. Criterion 1 does not compute what its docstring says, and the conjunct cannot be passed
++> by improving the generator.** The docstring says the check is against "what independent
++> CHANCE-LEVEL sampling predicts"; the code
++> (`scripts/experiments/exp_phase_d_domain_headroom_survey.py:evaluate`) computes
++> `1-(1-p)**k_min` with the OBSERVED `p`. Because the bar rises with `p`, a better generator
++> raises its own bar. Demonstrated, not asserted: re-scoring exp5799 under this survey's OWN
++> exp5786 treatment (exclude non-generations) moves its generator z from **-1.8974 to +6.3333**
++> and its independence bar from **0.6178 to 0.9995** in lockstep — C1 stays False. Empirically the
++> conjunct tracks ARM DEGENERACY, not generator quality: all 4 rows clearing it contain a
++> structurally always-wrong arm (2 constructed pools, a 0/360-parseable arm, a 77.5%-truncation
++> canary), while BOTH genuine multi-sample pools fail it. Report "generator above chance" and
++> "errors better than independent" as two separate fields under honest names; do not conjoin them
++> under a name that reads as generator quality.
++>
++> **C-3. exp5799 is NOT "a generator at the floor" — missing was coerced to zero.** 93/120
++> candidates are `finish_reason=length` at hard token caps written into the mode ids themselves
++> (`reasoning_disabled_final_sentinel_128`, `embedded_template_final_sentinel_192`). It is a
++> DESIGNED token-budget canary. Measured: accuracy over all rows 21/120 = **0.1750**; excluding
++> non-generations **21/27 = 0.7778**. Grouping exactly as the survey does (`fixture_row_id`, 24
++> groups): live-answer counts are twenty-one 1s and three 2s, **K_effective = 1.125**, and a
++> verifier has ANY choice on **3 of 24** fixtures. The honest rejection is "K_effective 1.125,
++> 2 selectable instances, n=24", which prescribes a larger token budget; "generator at the floor"
++> wrongly prescribes a stronger model.
++>
++> **C-4. The generator prescription's reliability claim is budget-conditional and is stated
++> unconditionally.** `gemma-4-26B-A4B-it` is 360/360 parseable in exp5786 — and **3/48 = 6.25%**
++> parseable in exp5799 under the 128/192-token caps. Specify the token budget the calibration run
++> will use, or it inherits exp5799's truncation failure.
++>
++> **C-5. Every z above is unclustered.** Candidates are nested in questions (K=5-8 for MuSR, 6 for
++> MMLU-Pro). MuSR: unclustered z=2.4327 over 1525 candidates; question-level one-sample t against
++> 0.5 gives **t=1.3587, df=199, two-sided p=0.1758**. The artifact field
++> `generator_above_chance: true` for MuSR is therefore withdrawn as not cluster-robust. **No
++> verdict changes** — MuSR still fails C1 three independent ways (0.930 < 0.9773 observed-p form;
++> 0.930 < 0.96875 chance-level form; and now the clustered test).
++>
++> **C-6. The "Group A" narrative contradicts the artifact it summarizes, on 2 of its 3 members.**
++> exp5799 carries `oracle_exceeds_independence: true` — it does not fail the independence check.
++> MuSR carries `generator_above_chance: true` — its generator is not at the floor per the field.
++> The grouping prose is corrected here; the fields stand.
++>
++> **C-7. "Two new construction artifacts, not previously caught" is half wrong, and the cited
++> tells are the weak ones.** exp5125 was ALREADY caught: `flagged_adversarial: true` with a
++> CRITICAL `DURATION_TOO_SHORT` corrigendum (`duration_s=0.01706` against
++> `inference_substrate: local_sota_gguf_generation_with_exact_validators`). **exp5136 is the
++> genuinely uncaught and materially more serious one** (`flagged_adversarial: false`,
++> `duration_s=143.4`, full `model_specs`) — lead with it. And "per-index model counts balance to
++> the unit" is near-vacuous: the builder round-robins `model_specs[(global_index +
++> candidate_index) % len(model_specs)]`, so per-index balance is a tautology of the design.
++> builder round-robins `model_specs[(global_index * CANDIDATES_PER_ITEM + candidate_index) %
++> len(model_specs)]` (`experiment_5136_receipt_structured_pool_v2_v471.py:530`), so per-index
++> balance is a tautology of the design; worse, that `spec` is used ONLY to stamp the receipt —
++> the candidate string comes from `_candidate_raw(...)` on the line below it, and no model is
++> called.
++> **The decisive evidence is in source.** `_candidate_raw` is **byte-identical** between
++> `python/carnot/experiment_5125_structured_reasoning_pool_v470.py` and
++> `python/carnot/experiment_5136_receipt_structured_pool_v2_v471.py`
++> (1050 chars, `sha256 aa15d8ee60300a8f...`), keyed on `global_index % 17` / `% 16` and on the
++> deterministic index predicates `_baseline_is_correct` / `_has_oracle_candidate`; candidate
++> indices 2 and 3 are wrong BY CONSTRUCTION; and NEITHER module imports any LLM, torch,
++> transformers, or HTTP substrate. This is not "the same class as" the retracted `task_index % 4`
++> signature — it IS that signature, sitting in the repo under two `inference_substrate:
++> local_sota_gguf_generation_*` declarations.
++>
++> **C-8. Correct the exp5786 SC mechanism (this strengthens the C2 FAIL, do not drop it).**
++> `SC=0.75` is not "a 3-way vote containing a corpse": it is exactly the accuracy of the first
++> parseable candidate in file order, and `gemma-4-31B` is first in **all 360** fixtures (measured:
++> first-parseable accuracy 270/360 = 0.7500, identical to 31B's own accuracy). 80 fixtures are
++> all-distinct-label and were decided purely by `_sc_and_oracle`'s first-seen tie-break; with only
++> 2 live arms plurality can never break a disagreement. Annotate the field as order-determined.
++> Checked and NOT true elsewhere: MMLU-Pro has 1/40 such fixtures, MuSR 0/200 — this is
++> exp5786-specific.
++>
++> **C-9. The TrajSelector power figure needs a formula, not a citation — the citation already
++> exists.** A reviewer objected that "TrajSelector appears nowhere in the repo except the two
++> lines this report wrote"; that is **REFUTED** — it appears 7 times in this file at HEAD, with
++> `arXiv:2510.16449` and the "+4.61% over majority voting at Best-of-32" figure, plus in
++> `_bmad/architecture.md` and `ops/changelog.md`. What does NOT reproduce is `n >= 866`: under
++> standard forms for delta=0.0461 at alpha=.05/power=.80 I get ~924 (one-sample vs 0.5),
++> 370-1478 (McNemar, depending on discordance rate), and 3468-3684 (two independent proportions).
++> Supply the formula and its assumed discordance/baseline, or replace the number with the range —
++> a power claim is the one place an unsourced figure is most load-bearing. Note also that
++> TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+ ### 2026-08-03 (MANDATORY-NEXT-MILESTONE, outer-loop allocation correction): ARC drops to its FLOOR of one slot; PHASE D retakes the majority — and the first Phase D experiment is NOT any of the three constructions the program's own prose still names
+ 
+ **Read this before drafting the next roadmap. It changes the allocation AND it corrects a stale
+diff --git a/results/exp6091_refine_engine_visible_shard.blocked_reaped_20260803.jsonl b/results/exp6091_refine_engine_visible_shard.blocked_reaped_20260803.jsonl
+new file mode 100644
+index 0000000000..d7af862329
+--- /dev/null
++++ b/results/exp6091_refine_engine_visible_shard.blocked_reaped_20260803.jsonl
+@@ -0,0 +1,2 @@
++{"game": "tu93", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [20], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 20, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 1, "induce_ok": false, "induce_wall_s": 445.4, "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')", "round0_load_error": "FileNotFoundError: /tmp/e3_6091/tu93/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 445.5, "substrate_witness_before": {"pid": 3415345, "exe": "/tmp/carnot6091bin/cgen6091", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": null, "is_cuda": false, "reason": "no process owns the port"}, "substrate_cuda_throughout": false}
++{"game": "tr87", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [11], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 11, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 1, "induce_ok": false, "induce_wall_s": 102.4, "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')", "round0_load_error": "FileNotFoundError: /tmp/e3_6091/tr87/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 102.4, "substrate_witness_before": {"pid": 3420545, "exe": "/tmp/carnot6091bin/cgen6091", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": null, "is_cuda": false, "reason": "no process owns the port"}, "substrate_cuda_throughout": false}
+diff --git a/results/exp6091_refine_engine_visible_shard.jsonl b/results/exp6091_refine_engine_visible_shard.jsonl
+index d7af862329..118881b7d4 100644
+--- a/results/exp6091_refine_engine_visible_shard.jsonl
++++ b/results/exp6091_refine_engine_visible_shard.jsonl
+@@ -1,2 +1,6 @@
+-{"game": "tu93", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [20], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 20, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 1, "induce_ok": false, "induce_wall_s": 445.4, "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')", "round0_load_error": "FileNotFoundError: /tmp/e3_6091/tu93/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 445.5, "substrate_witness_before": {"pid": 3415345, "exe": "/tmp/carnot6091bin/cgen6091", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": null, "is_cuda": false, "reason": "no process owns the port"}, "substrate_cuda_throughout": false}
+-{"game": "tr87", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [11], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 11, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 1, "induce_ok": false, "induce_wall_s": 102.4, "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')", "round0_load_error": "FileNotFoundError: /tmp/e3_6091/tr87/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 102.4, "substrate_witness_before": {"pid": 3420545, "exe": "/tmp/carnot6091bin/cgen6091", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": null, "is_cuda": false, "reason": "no process owns the port"}, "substrate_cuda_throughout": false}
++{"game": "tu93", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [20], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 20, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 432.7, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/tu93/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 432.7, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "tr87", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [11], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 11, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 500.2, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/tr87/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 500.2, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "sp80", "trial": 0, "random_seed": 6091, "window_n": 4, "n_refinable": 2, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [34], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 34, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 4, "gradeable_n": 3, "n_levelup_rows_excluded": 1, "n_changing": 3, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 3, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 489.0, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/sp80/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 489.0, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "sb26", "trial": 0, "random_seed": 6091, "window_n": 9, "n_refinable": 7, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [53], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 53, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 9, "gradeable_n": 8, "n_levelup_rows_excluded": 1, "n_changing": 8, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 8, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 495.3, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/sb26/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 495.3, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "re86", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [48], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 48, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 499.2, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/re86/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 499.2, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
++{"game": "g50t", "trial": 0, "random_seed": 6091, "window_n": 12, "n_refinable": 10, "n_acceptance": 2, "acceptance_decidable": true, "acceptance_reason": "ok", "n_acceptance_gradeable": 1, "acceptance_changed_cells_per_row": [49], "oracle_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 1, "change_accuracy": 1.0, "change_fidelity": 1.0, "cell_recall": 1.0, "accuracy": 1.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 0, "correct_changed_cells": 49, "invented_changed_cells": 0}, "oracle_reaches_1": true, "identity_acceptance": {"n_rows": 2, "gradeable_n": 1, "n_levelup_rows_excluded": 1, "n_changing": 1, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 1, "correct_changed_cells": 0, "invented_changed_cells": 0}, "identity_full_window": {"n_rows": 12, "gradeable_n": 11, "n_levelup_rows_excluded": 1, "n_changing": 11, "n_changes_correct": 0, "change_accuracy": 0.0, "change_fidelity": 0.0, "cell_recall": 0.0, "accuracy": 0.0, "n_noop": 0, "noop_channel_measurable": false, "n_engine_raised": 0, "n_output_equals_input": 11, "correct_changed_cells": 0, "invented_changed_cells": 0}, "refactor_rounds_configured": 2, "induce_ok": false, "induce_wall_s": 498.9, "induce_message": "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])", "round0_load_error": "FileNotFoundError: /tmp/exp6091_e3_scratch/g50t/world_model.py", "round0_engine_loaded": false, "round0_source_chars": 0, "single_shot": {"change_accuracy": null}, "single_shot_refinable": {"change_accuracy": null}, "refine_control": {"skipped": "no_round0_engine", "rounds": []}, "refine_treatment": {"skipped": "no_round0_engine", "rounds": []}, "acceptance_purity": {"n_leaks": 0, "leaks": []}, "wall_s": 498.9, "substrate_witness_before": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_witness_after": {"pid": 3502461, "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "loaded_cuda": true, "loaded_hip": false, "is_cuda": true, "reason": "ok"}, "substrate_cuda_throughout": true}
+diff --git a/results/experiment_6091_delivery_probe.json b/results/experiment_6091_delivery_probe.json
+new file mode 100644
+index 0000000000..506d4ab62d
+--- /dev/null
++++ b/results/experiment_6091_delivery_probe.json
+@@ -0,0 +1,92 @@
++{
++ "experiment": "experiment_6091_delivery_probe",
++ "spec": "REQ-ARC-WMTE-6091",
++ "run_date": "2026-08-03T23:40:35Z",
++ "inference_substrate": "aggregation_from_upstream_artifacts",
++ "solve_provenance": "development_proxy",
++ "verifier_is_oracle": false,
++ "random_seed": 6091,
++ "methodology_note": "NO LLM IS INVOKED and no GPU is used; the sub-second duration is therefore correct and expected, not a truncated run. `LocalGGUFProposer.generate` -- the deepest callee before the HTTP transport -- is wrapped, so the assertion is on the exact prompt string the generator receives, and the caller chain is read off the interpreter stack to prove it arrived via the shipped `refactor` -> `_gen_to_file` path rather than via a convenience render. Transport is not in doubt; prompt CONTENT is. `model_specs` is deliberately absent: there is no model to name, and naming one would be the vestigial-marker pattern the Inference-Substrate Declaration Discipline exists to stop.",
++ "engine_store_redirected_to": "/tmp/exp6091_delivery_probe_g972pzwb",
++ "signature_line": "        out[marker_row, 0] = 7  # exp6091-delivery-probe-signature",
++ "arms": {
++  "flag_off": {
++   "flag": "0",
++   "neutralised_source_resolver": false,
++   "refactor_returned_ok": true,
++   "refactor_message": "local gguf (GPU server) wrote world_model.py",
++   "generator_was_called": true,
++   "caller_chain_at_generator": [
++    "arc_executable_world_model.py::_gen_to_file:6469",
++    "arc_executable_world_model.py::refactor:6702",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::run_arm:137",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::main:172",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::<module>:259"
++   ],
++   "codeonly_eligible": false,
++   "prompt_chars": 1515,
++   "prompt_sha256": "47889061d6051a55359499b95d13820f54507e061de1071b148490a0df6ff758",
++   "engine_signature_line_delivered": false,
++   "engine_block_header_delivered": false,
++   "mismatch_block_present": true,
++   "n_engine_source_lines_delivered": 2
++  },
++  "flag_on": {
++   "flag": "1",
++   "neutralised_source_resolver": false,
++   "refactor_returned_ok": true,
++   "refactor_message": "local gguf (GPU server) wrote world_model.py",
++   "generator_was_called": true,
++   "caller_chain_at_generator": [
++    "arc_executable_world_model.py::_gen_to_file:6469",
++    "arc_executable_world_model.py::refactor:6702",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::run_arm:137",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::main:173",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::<module>:259"
++   ],
++   "codeonly_eligible": false,
++   "prompt_chars": 2066,
++   "prompt_sha256": "741c2c702df572f8658bf3d0043f48918473acfa2c018e37b7698a83974c4b32",
++   "engine_signature_line_delivered": true,
++   "engine_block_header_delivered": true,
++   "mismatch_block_present": true,
++   "n_engine_source_lines_delivered": 9
++  },
++  "flag_on_mutation_resolver_neutralised": {
++   "flag": "1",
++   "neutralised_source_resolver": true,
++   "refactor_returned_ok": true,
++   "refactor_message": "local gguf (GPU server) wrote world_model.py",
++   "generator_was_called": true,
++   "caller_chain_at_generator": [
++    "arc_executable_world_model.py::_gen_to_file:6469",
++    "arc_executable_world_model.py::refactor:6702",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::run_arm:137",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::main:174",
++    "outer_loop_arc_6091_delivery_probe_20260803.py::<module>:259"
++   ],
++   "codeonly_eligible": false,
++   "prompt_chars": 1515,
++   "prompt_sha256": "47889061d6051a55359499b95d13820f54507e061de1071b148490a0df6ff758",
++   "engine_signature_line_delivered": false,
++   "engine_block_header_delivered": false,
++   "mismatch_block_present": true,
++   "n_engine_source_lines_delivered": 2
++  }
++ },
++ "checks": {
++  "generator_reached_on_live_path_all_arms": true,
++  "caller_chain_goes_through_shipped_refactor": true,
++  "ON_delivers_engine_signature_to_generator": true,
++  "OFF_does_not_deliver_engine": true,
++  "OFF_reproduces_the_shipped_defect": true,
++  "mismatch_block_survives_the_splice": true,
++  "ON_and_OFF_are_different_prompts": true,
++  "mutation_kills_delivery": true,
++  "mutation_collapses_to_off_bytes": true
++ },
++ "delivery_proven": true,
++ "duration_s": 0.426,
++ "honest_verdict": "complete_engine_source_delivered_to_generator_on_live_path",
++ "reproducibility_checksum": "e2616dbad9bf1ae1dcfa33fba432d7e767e10fe0f92e785317c6094c863b363f"
++}
+\ No newline at end of file
+diff --git a/results/experiment_6091_refine_engine_visible_analysis.json b/results/experiment_6091_refine_engine_visible_analysis.json
+new file mode 100644
+index 0000000000..1032f572f9
+--- /dev/null
++++ b/results/experiment_6091_refine_engine_visible_analysis.json
+@@ -0,0 +1,1263 @@
++{
++ "experiment": "experiment_6091_refine_engine_visible_analysis",
++ "spec": "REQ-ARC-WMTE-6091",
++ "run_date": "2026-08-04T00:32:26Z",
++ "inference_substrate": "aggregation_from_upstream_artifacts",
++ "solve_provenance": "development_proxy",
++ "verifier_is_oracle": false,
++ "random_seed": 6091,
++ "cited_upstream_artifacts": [
++  {
++   "experiment_id": "exp6091_shard",
++   "path": "results/exp6091_refine_engine_visible_shard.jsonl",
++   "sha256": "8f5f51b58bd25add42284e67399ff0eb7b99ff9132350dcb58f4f1effb9cbef6",
++   "n_cells": 6
++  }
++ ],
++ "n_cells": 6,
++ "gradeable_games": [
++  "g50t",
++  "re86",
++  "sb26",
++  "sp80",
++  "tr87",
++  "tu93"
++ ],
++ "n_gradeable_games": 6,
++ "excluded_games": [],
++ "missing_arm_values": [
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "g50t",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "re86",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "sb26",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "sp80",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "tr87",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_accuracy"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "change_fidelity"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "single_shot",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "refine_control",
++   "metric": "cell_recall"
++  },
++  {
++   "game": "tu93",
++   "trial": 0,
++   "arm": "refine_treatment",
++   "metric": "cell_recall"
++  }
++ ],
++ "per_game": {
++  "g50t": {
++   "single_shot::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   }
++  },
++  "re86": {
++   "single_shot::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   }
++  },
++  "sb26": {
++   "single_shot::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   }
++  },
++  "sp80": {
++   "single_shot::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   }
++  },
++  "tr87": {
++   "single_shot::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   }
++  },
++  "tu93": {
++   "single_shot::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_accuracy": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::change_fidelity": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "single_shot::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_control::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   },
++   "refine_treatment::cell_recall": {
++    "mean": null,
++    "n_trials": 0,
++    "values": []
++   }
++  }
++ },
++ "comparisons": {
++  "change_accuracy::treatment_vs_single_shot": {
++   "metric": "change_accuracy",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_treatment",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  },
++  "change_accuracy::treatment_vs_control": {
++   "metric": "change_accuracy",
++   "baseline_arm": "refine_control",
++   "treatment_arm": "refine_treatment",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  },
++  "change_accuracy::control_vs_single_shot": {
++   "metric": "change_accuracy",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_control",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  },
++  "change_fidelity::treatment_vs_single_shot": {
++   "metric": "change_fidelity",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_treatment",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  },
++  "change_fidelity::treatment_vs_control": {
++   "metric": "change_fidelity",
++   "baseline_arm": "refine_control",
++   "treatment_arm": "refine_treatment",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  },
++  "change_fidelity::control_vs_single_shot": {
++   "metric": "change_fidelity",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_control",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  },
++  "cell_recall::treatment_vs_single_shot": {
++   "metric": "cell_recall",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_treatment",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  },
++  "cell_recall::treatment_vs_control": {
++   "metric": "cell_recall",
++   "baseline_arm": "refine_control",
++   "treatment_arm": "refine_treatment",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  },
++  "cell_recall::control_vs_single_shot": {
++   "metric": "cell_recall",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_control",
++   "games_used": [],
++   "games_dropped_incomplete": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "per_game_delta": {},
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   },
++   "pooled_baseline_mean": null,
++   "pooled_treatment_mean": null
++  }
++ },
++ "comparisons_like_for_like_final_round": {
++  "change_accuracy::treatment_vs_single_shot": {
++   "metric": "change_accuracy",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_treatment",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  },
++  "change_accuracy::treatment_vs_control": {
++   "metric": "change_accuracy",
++   "baseline_arm": "refine_control",
++   "treatment_arm": "refine_treatment",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  },
++  "change_accuracy::control_vs_single_shot": {
++   "metric": "change_accuracy",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_control",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  },
++  "change_fidelity::treatment_vs_single_shot": {
++   "metric": "change_fidelity",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_treatment",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  },
++  "change_fidelity::treatment_vs_control": {
++   "metric": "change_fidelity",
++   "baseline_arm": "refine_control",
++   "treatment_arm": "refine_treatment",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  },
++  "change_fidelity::control_vs_single_shot": {
++   "metric": "change_fidelity",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_control",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  },
++  "cell_recall::treatment_vs_single_shot": {
++   "metric": "cell_recall",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_treatment",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  },
++  "cell_recall::treatment_vs_control": {
++   "metric": "cell_recall",
++   "baseline_arm": "refine_control",
++   "treatment_arm": "refine_treatment",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  },
++  "cell_recall::control_vs_single_shot": {
++   "metric": "cell_recall",
++   "baseline_arm": "single_shot",
++   "treatment_arm": "refine_control",
++   "value_read": "final_round",
++   "games_used": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "bootstrap_delta": {
++    "mean": null,
++    "ci95": null
++   }
++  }
++ },
++ "primary_comparison_asymmetry_disclosure": {
++  "pre_registered_primary_reads": "best_<metric> = MAX over the R refactor rounds",
++  "single_shot_reads": "its ONE grade",
++  "why_this_matters": "Per-cell change_accuracy is BINARY at these window sizes (exactly one gradeable acceptance row per game), so a refinement arm that changes nothing still scores 1-(1-p)^R against single-shot's p -- 0.36 vs 0.20 at p=0.2, R=2 -- from the extra draw alone, and the max is taken over the same held-out block that grades. `treatment_vs_control` is symmetric and unaffected. The like-for-like final-round contrast is reported above and a POSITIVE verdict requires both.",
++  "beat_pre_registered_best_of_r": false,
++  "beat_like_for_like_final_round": false
++ },
++ "round0_induction": {
++  "n_cells": 6,
++  "n_cells_with_round0_engine": 0,
++  "round0_failed_on_every_cell": true,
++  "induce_messages": [
++   "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
++  ],
++  "why": "If round-0 induction produced no engine, single_shot and BOTH refinement arms are undefined for that cell and no generator prompt can carry an engine. That is an upstream induction failure, NOT a delivery failure and NOT a null."
++ },
++ "stratification_by_changed_cells": {
++  "1_cell": {
++   "n_rows": 0,
++   "games": []
++  },
++  "2_to_9_cells": {
++   "n_rows": 0,
++   "games": []
++  },
++  "10_plus_cells": {
++   "n_rows": 6,
++   "games": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ]
++  },
++  "primary_recomputed_on_2plus_cell_rows": {
++   "games_used": [
++    "g50t",
++    "re86",
++    "sb26",
++    "sp80",
++    "tr87",
++    "tu93"
++   ],
++   "games_dropped_all_1_cell": [],
++   "sign_test": {
++    "n_games": 0,
++    "wins_treatment": 0,
++    "losses_treatment": 0,
++    "ties": 0,
++    "n_discordant": 0,
++    "p_two_sided": 1.0,
++    "min_reachable_p_at_this_n_discordant": null,
++    "min_reachable_p_if_all_games_discordant": null
++   },
++   "why": "Failure mode 7: a headline carried by 1-changed-cell rows is a progress counter, not an accuracy. This recomputation is the actual guard; the per-stratum tallies above are descriptive only."
++  }
++ },
++ "controls": {
++  "identity_on_acceptance": {
++   "change_accuracy_values": [
++    0.0
++   ],
++   "n_noop_values": [
++    0
++   ],
++   "VACUOUS": true,
++   "why": "Every gradeable acceptance row CHANGES and n_noop is 0, so an identity engine scores 0.0 BY CONSTRUCTION on this block. This control carries no information here and is reported as vacuous rather than as evidence."
++  },
++  "identity_on_full_window": {
++   "change_accuracy_values": [
++    0.0
++   ],
++   "n_noop_values": [
++    0
++   ],
++   "VACUOUS": true,
++   "why": "CORRECTED 2026-08-03 (measured, replacing a claim that was false in both clauses). The original text said this control was run because the full window contains no-op rows and 'CAN move'. Measured over the landed cells, n_noop is 0 on the FULL window too, and identity's full-window change_accuracy is 0.0 everywhere. The mechanism is not no-ops at all: change_accuracy is n_changes_correct / n_changing (arc_executable_world_model.py), so an identity engine scores exactly 0 on ANY block with n_changing > 0, irrespective of how many no-op rows sit beside it. The identity control is therefore vacuous EVERYWHERE in this design, not only on the acceptance block, and this field reports that rather than presenting a structural 0.0 as a passed control. A non-vacuous identity control would need a block containing no-op rows AND would have to be scored on `accuracy`, not `change_accuracy`."
++  },
++  "oracle_on_acceptance": {
++   "reaches_1_by_game": {
++    "g50t": [
++     true
++    ],
++    "re86": [
++     true
++    ],
++    "sb26": [
++     true
++    ],
++    "sp80": [
++     true
++    ],
++    "tr87": [
++     true
++    ],
++    "tu93": [
++     true
++    ]
++   }
++  }
++ },
++ "purity_and_delivery": {
++  "n_cells": 6,
++  "total_acceptance_answer_leaks_into_any_prompt": 0,
++  "treatment_prompts_containing_engine": 0,
++  "control_prompts_containing_engine": 0,
++  "callee_side": {
++   "treatment_generator_prompts_with_engine": 0,
++   "control_generator_prompts_with_engine": 0,
++   "treatment_generator_calls_witnessed": 0,
++   "control_generator_calls_witnessed": 0,
++   "harness_and_callee_agree_on_treatment": true,
++   "control_stayed_blind": true,
++   "why": "The treatment arm is only a treatment if the engine reached the MODEL. A run where this count is 0 has measured the control twice and must not be read as a null."
++  }
++ },
++ "stopping_rule": {
++  "statement": "Pre-committed by the operator 2026-08-03 before any number existed: if refinement-with-the-engine-visible does not beat single-shot on gradeable cells, the ARC induction line CLOSES and ARC drops to its CLAUDE.md floor of one slot per milestone.",
++  "primary_metric": "change_accuracy on the acceptance block, game-clustered",
++  "primary_result": "BLOCKED: round-0 induction produced no engine on any cell; both refinement arms and single-shot are undefined. This is NOT a null and NOT a delivery failure -- see `induce_messages`.",
++  "primary_sign_test": {
++   "n_games": 0,
++   "wins_treatment": 0,
++   "losses_treatment": 0,
++   "ties": 0,
++   "n_discordant": 0,
++   "p_two_sided": 1.0,
++   "min_reachable_p_at_this_n_discordant": null,
++   "min_reachable_p_if_all_games_discordant": null
++  },
++  "secondary_change_fidelity_beats": false,
++  "secondary_sign_test": {
++   "n_games": 0,
++   "wins_treatment": 0,
++   "losses_treatment": 0,
++   "ties": 0,
++   "n_discordant": 0,
++   "p_two_sided": 1.0,
++   "min_reachable_p_at_this_n_discordant": null,
++   "min_reachable_p_if_all_games_discordant": null
++  },
++  "treatment_actually_administered": false,
++  "any_treatment_rounds_ran": false,
++  "round0_failed_on_every_cell": true,
++  "min_reachable_p_at_this_n_discordant": null,
++  "adequately_powered_at_alpha_0_05": false,
++  "line_closes": false
++ },
++ "duration_s": 0.001,
++ "honest_verdict": "blocked_round0_induction_produced_no_engine_on_any_cell_not_a_null",
++ "reproducibility_checksum": "07cd87b88ff8de7b2e4162106ef94fa6d17d9aaf1c11894cc53615de54f8b357"
++}
+\ No newline at end of file
+diff --git a/results/phase_d_domain_headroom_survey.json b/results/phase_d_domain_headroom_survey.json
+new file mode 100644
+index 0000000000..7fff0db2f9
+--- /dev/null
++++ b/results/phase_d_domain_headroom_survey.json
+@@ -0,0 +1,320 @@
++{
++  "checksum_covers": "all fields except duration_s and reproducibility_checksum itself",
++  "domains": [
++    {
++      "chance_floor": 0.1,
++      "chance_floor_note": "10-way MCQ; gold letters span A-J",
++      "construction_artifact": false,
++      "criterion_1_generator_above_chance": false,
++      "criterion_2_sc_not_saturated": true,
++      "criterion_3_oracle_distinct": true,
++      "generator_above_chance": false,
++      "headroom_gap_oracle_minus_sc": 0.375,
++      "independence_prediction": 0.551205,
++      "k_max": 6,
++      "k_min": 6,
++      "label": "mmlu_pro_5shot",
++      "n_candidates": 240,
++      "n_questions": 40,
++      "notes": "the REFUTED proposal; re-measured as the control",
++      "oracle_at_k": 0.5,
++      "oracle_distinct": true,
++      "oracle_exceeds_independence": false,
++      "passes_all_three": false,
++      "per_candidate_accuracy": 0.125,
++      "sc_accuracy": 0.125,
++      "z_vs_chance": 1.291
++    },
++    {
++      "chance_floor": 0.1,
++      "chance_floor_note": "10-way MCQ; gold letters span A-J",
++      "construction_artifact": false,
++      "criterion_1_generator_above_chance": false,
++      "criterion_2_sc_not_saturated": true,
++      "criterion_3_oracle_distinct": true,
++      "generator_above_chance": false,
++      "headroom_gap_oracle_minus_sc": 0.225,
++      "independence_prediction": 0.406708,
++      "k_max": 6,
++      "k_min": 6,
++      "label": "mmlu_pro_zeroshot",
++      "n_candidates": 240,
++      "n_questions": 40,
++      "notes": "zero-shot sibling pool",
++      "oracle_at_k": 0.3,
++      "oracle_distinct": true,
++      "oracle_exceeds_independence": false,
++      "passes_all_three": false,
++      "per_candidate_accuracy": 0.083333,
++      "sc_accuracy": 0.075,
++      "z_vs_chance": -0.8607
++    },
++    {
++      "chance_floor": 0.5,
++      "chance_floor_note": "BINARY choice ([2] options); floor is a coin flip",
++      "construction_artifact": false,
++      "criterion_1_generator_above_chance": false,
++      "criterion_2_sc_not_saturated": true,
++      "criterion_3_oracle_distinct": true,
++      "generator_above_chance": true,
++      "headroom_gap_oracle_minus_sc": 0.37,
++      "independence_prediction": 0.977344,
++      "k_max": 8,
++      "k_min": 5,
++      "label": "musr_murder_mysteries",
++      "n_candidates": 1525,
++      "n_questions": 200,
++      "notes": "the only genuine multi-sample single-model pool in the repo",
++      "oracle_at_k": 0.93,
++      "oracle_distinct": true,
++      "oracle_exceeds_independence": false,
++      "passes_all_three": false,
++      "per_candidate_accuracy": 0.531148,
++      "questions_with_both_answers_present": 163,
++      "sc_accuracy": 0.56,
++      "scoring_model": [
++        "gemma-4-12B-it-GGUF"
++      ],
++      "z_vs_chance": 2.4327
++    },
++    {
++      "chance_floor": 0.050986019181616514,
++      "chance_floor_note": "ENUMERATED answer space per instance, mean over 96 tasks",
++      "construction_artifact": true,
++      "criterion_1_generator_above_chance": true,
++      "criterion_2_sc_not_saturated": false,
++      "criterion_3_oracle_distinct": true,
++      "families": {
++        "code_property": 24,
++        "graph_coloring": 24,
++        "knights_knaves": 24,
++        "travel_budget": 24
++      },
++      "generator_above_chance": true,
++      "headroom_gap_oracle_minus_sc": 0.666667,
++      "independence_prediction": 0.627471,
++      "k_max": 4,
++      "k_min": 4,
++      "label": "structured_reasoning_exp5125",
++      "n_candidates": 384,
++      "n_questions": 96,
++      "notes": "executable validator exists, so a LEARNED verifier is oracle-distinct",
++      "oracle_at_k": 0.875,
++      "oracle_distinct": true,
++      "oracle_exceeds_independence": true,
++      "passes_all_three": false,
++      "per_candidate_accuracy": 0.21875,
++      "sc_accuracy": 0.208333,
++      "structural_tells": {
++        "construction_artifact_suspected": true,
++        "correct_candidate_index_distribution": {
++          "0": 28,
++          "1": 56
++        },
++        "distinct_correctness_patterns": {
++          "(False, False, False, False)": 12,
++          "(False, True, False, False)": 56,
++          "(True, False, False, False)": 28
++        },
++        "indices_never_correct": [
++          2,
++          3
++        ],
++        "per_index_model_counts_perfectly_balanced": true
++      },
++      "z_vs_chance": 14.9452
++    },
++    {
++      "chance_floor": 0.04247338639593569,
++      "chance_floor_note": "ENUMERATED answer space per instance, mean over 120 tasks",
++      "construction_artifact": true,
++      "criterion_1_generator_above_chance": true,
++      "criterion_2_sc_not_saturated": false,
++      "criterion_3_oracle_distinct": true,
++      "families": {
++        "code_property": 24,
++        "graph_coloring": 24,
++        "knights_knaves": 24,
++        "or_allocation": 24,
++        "travel_budget": 24
++      },
++      "generator_above_chance": true,
++      "headroom_gap_oracle_minus_sc": 0.658333,
++      "independence_prediction": 0.627471,
++      "k_max": 4,
++      "k_min": 4,
++      "label": "structured_reasoning_exp5136",
++      "n_candidates": 480,
++      "n_questions": 120,
++      "notes": "executable validator exists, so a LEARNED verifier is oracle-distinct",
++      "oracle_at_k": 0.875,
++      "oracle_distinct": true,
++      "oracle_exceeds_independence": true,
++      "passes_all_three": false,
++      "per_candidate_accuracy": 0.21875,
++      "sc_accuracy": 0.216667,
++      "structural_tells": {
++        "construction_artifact_suspected": true,
++        "correct_candidate_index_distribution": {
++          "0": 35,
++          "1": 70
++        },
++        "distinct_correctness_patterns": {
++          "(False, False, False, False)": 15,
++          "(False, True, False, False)": 70,
++          "(True, False, False, False)": 35
++        },
++        "indices_never_correct": [
++          2,
++          3
++        ],
++        "per_index_model_counts_perfectly_balanced": true
++      },
++      "z_vs_chance": 19.1506
++    },
++    {
++      "best_single_model": "gemma-4-26B-A4B-it-GGUF",
++      "best_single_model_accuracy": 0.927778,
++      "chance_floor": 0.25,
++      "chance_floor_note": "4-way A/B/C/D exact label",
++      "construction_artifact": false,
++      "criterion_1_generator_above_chance": true,
++      "criterion_2_sc_not_saturated": false,
++      "criterion_3_oracle_distinct": true,
++      "dead_arms": [
++        "Qwen3.6-35B-A3B-GGUF"
++      ],
++      "generator_above_chance": true,
++      "headroom_gap_oracle_minus_sc": 0.188889,
++      "independence_prediction": 0.914385,
++      "is_multi_sample": false,
++      "k_max": 3,
++      "k_min": 3,
++      "label": "sota_constraint_stream_exp5786",
++      "multi_sample_note": "K=1 sample per MODEL, so genuine self-consistency is NOT measurable from this corpus; the reported sc_accuracy is a 3-way ensemble vote containing a dead arm and is NOT the honest baseline -- selectable_gain_over_best_single_model is.",
++      "n_candidates": 1080,
++      "n_questions": 360,
++      "notes": "REAL generations (raw text, truncations, per-model variation)",
++      "oracle_at_k": 0.938889,
++      "oracle_distinct": true,
++      "oracle_exceeds_independence": true,
++      "oracle_over_live_arms": 0.938889,
++      "passes_all_three": false,
++      "per_candidate_accuracy": 0.559259,
++      "per_family": {
++        "finite_domain_scheduling": {
++          "gain_over_best_single": 0.0,
++          "n": 120,
++          "oracle": 1.0,
++          "per_model_accuracy": {
++            "gemma-4-26B-A4B-it-GGUF": 1.0,
++            "gemma-4-31B-it-GGUF": 0.875
++          }
++        },
++        "logic_grid": {
++          "gain_over_best_single": 0.0,
++          "n": 120,
++          "oracle": 0.883333,
++          "per_model_accuracy": {
++            "gemma-4-26B-A4B-it-GGUF": 0.883333,
++            "gemma-4-31B-it-GGUF": 0.875
++          }
++        },
++        "typed_finite_choice": {
++          "gain_over_best_single": 0.033333,
++          "n": 120,
++          "oracle": 0.933333,
++          "per_model_accuracy": {
++            "gemma-4-26B-A4B-it-GGUF": 0.9,
++            "gemma-4-31B-it-GGUF": 0.5
++          }
++        }
++      },
++      "per_model": {
++        "Qwen3.6-35B-A3B-GGUF": {
++          "accuracy": 0.0,
++          "finish_reason": {
++            "length": 358,
++            "stop": 2
++          },
++          "n": 360,
++          "parse_rate": 0.0,
++          "parseable": 0
++        },
++        "gemma-4-26B-A4B-it-GGUF": {
++          "accuracy": 0.927778,
++          "finish_reason": {
++            "stop": 360
++          },
++          "n": 360,
++          "parse_rate": 1.0,
++          "parseable": 360
++        },
++        "gemma-4-31B-it-GGUF": {
++          "accuracy": 0.75,
++          "finish_reason": {
++            "stop": 360
++          },
++          "n": 360,
++          "parse_rate": 1.0,
++          "parseable": 360
++        }
++      },
++      "sc_accuracy": 0.75,
++      "selectable_gain_instances": 4,
++      "selectable_gain_over_best_single_model": 0.011111,
++      "z_vs_chance": 23.4711
++    },
++    {
++      "chance_floor": 0.25,
++      "chance_floor_note": "4-way A/B/C/D exact label",
++      "construction_artifact": false,
++      "criterion_1_generator_above_chance": false,
++      "criterion_2_sc_not_saturated": true,
++      "criterion_3_oracle_distinct": true,
++      "generator_above_chance": false,
++      "headroom_gap_oracle_minus_sc": 0.083333,
++      "independence_prediction": 0.617818,
++      "k_max": 5,
++      "k_min": 5,
++      "label": "sota_answer_channel_canary_exp5799",
++      "n_candidates": 120,
++      "n_questions": 24,
++      "notes": "answer-channel canary",
++      "oracle_at_k": 0.833333,
++      "oracle_distinct": true,
++      "oracle_exceeds_independence": true,
++      "passes_all_three": false,
++      "per_candidate_accuracy": 0.175,
++      "sc_accuracy": 0.75,
++      "unparseable_fraction": 0.775,
++      "z_vs_chance": -1.8974
++    }
++  ],
++  "domains_passing_all_three": [],
++  "duration_s": 0.254543,
++  "experiment": "phase_d_domain_headroom_survey",
++  "experiment_id": "phase_d_domain_headroom_survey",
++  "honest_verdict": "complete_no_repo_corpus_passes_all_three_criteria_two_disjoint_failure_modes",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "n_domains_measured": 7,
++  "non_candidate_corpora": {
++    "constraintbench_exp5044": {
++      "disqualified_reason": "candidates are deterministic solver-backed variants with generation_model=None; there is no LLM generator, so criterion 1 is not even defined",
++      "generation_models": {
++        "None": 500
++      },
++      "generator_kinds": {
++        "deterministic_solver_backed_variant": 500
++      },
++      "n_rows": 100,
++      "passes_criteria": false
++    }
++  },
++  "random_seed": 20260803,
++  "reproducibility_checksum": "sha256:e48ca7f2447cd8559e102f8375bafd4637fbd79b110cebd61cc96b67d0299853",
++  "schema": "carnot.phase_d_domain_headroom_survey.v1",
++  "solve_provenance": "development_proxy",
++  "title": "Phase D domain survey: is there a headroom-present, oracle-distinct corpus in this repo?",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/exp_phase_d_domain_headroom_survey.py b/scripts/experiments/exp_phase_d_domain_headroom_survey.py
+new file mode 100644
+index 0000000000..04d5d16d33
+--- /dev/null
++++ b/scripts/experiments/exp_phase_d_domain_headroom_survey.py
+@@ -0,0 +1,549 @@
++"""Phase D domain survey: which corpus in this repo has REAL, SELECTABLE, oracle-distinct headroom?
++
++WHY THIS EXISTS
++---------------
++Phase D (the off-ARC "verifier moat" program) has produced a seven-milestone null streak.
++The most recent proposal -- MMLU-Pro -- was refuted at review because its "0.375 headroom"
++was COMBINATORIAL, not selectable: the generator sat at the 10-way chance floor (per-candidate
++accuracy 0.125 vs a 0.10 floor, z=1.17), so oracle@6 rising to 0.500 is just what you get for
++free by drawing six near-random samples. `ops/known-issues.md` now carries a
++`blocked_generator_at_chance_floor` precondition.
++
++This script answers the obvious next question MECHANICALLY rather than by argument: is there
++ANY corpus already in `results/` that clears all three bars a Phase D selection experiment
++needs? It measures, for every candidate-pool-shaped corpus in the repo:
++
++  Criterion 1 -- GENERATOR ABOVE CHANCE. A verifier selects among candidates; if the generator
++      is at chance there is no signal to select. We state the chance floor EXPLICITLY (computed
++      by brute-force enumeration of the answer space where the task is open-ended, not asserted)
++      and test observed per-candidate accuracy against it with a one-proportion z test. We ALSO
++      run the independence check 1-(1-p)^K: if observed oracle@K is at or below what independent
++      chance-level sampling predicts, the "headroom" is combinatorial and there is nothing there.
++
++  Criterion 2 -- SELF-CONSISTENCY NOT SATURATED. If plain majority voting already captures the
++      headroom, no verifier can beat it -- the documented cause of the bounded energy-selection
++      result. We report SC, oracle@K, and the GAP. Where the pool is a multi-MODEL ensemble
++      rather than multi-SAMPLE, we additionally report the gap over the BEST SINGLE MODEL,
++      because that -- not a degenerate 3-way vote containing a dead arm -- is the honest baseline.
++
++  Criterion 3 -- VERIFIER ORACLE-DISTINCT. Reported as a design property per corpus.
++
++WHAT "CONSTRUCTION ARTIFACT" MEANS HERE (the trap this script is built to catch)
++-------------------------------------------------------------------------------
++Twice already this project has been fooled by a pool whose headroom was manufactured by the
++pool BUILDER rather than measured from a generator: the FoVer/arc/arcgen rows of
++`results/headroom_survey_cross_domain.json` (retracted 2026-07-01 -- the numbers were exact
++consequences of a `task_index % 4` formula). So this script also emits structural tells:
++the distribution of WHICH candidate index is correct, and the per-index model balance. A real
++temperature-sampled pool puts the correct answer at every index and does not balance models to
++the unit; a templated fixture does both.
++
++SUBSTRATE: this reads cached corpora only. No LLM is invoked, no GPU is used -- so
++`inference_substrate` is `aggregation_from_upstream_artifacts` and a sub-second duration is
++correct, not suspicious.
++"""
++
++from __future__ import annotations
++
++import collections
++import hashlib
++import itertools
++import json
++import math
++import time
++from pathlib import Path
++from typing import Any
++
++from carnot.paths import repo_path, results_path
++
++RANDOM_SEED = 20260803
++
++
++# ---------------------------------------------------------------------------
++# Chance floors by ENUMERATION.
++#
++# The MMLU-Pro refutation turned on a 10-way MCQ having a 0.10 floor. For open-ended
++# structured answers the floor is the fraction of the ANSWER SPACE that is correct. We compute
++# it by brute force per instance rather than asserting a number, because an asserted floor is
++# exactly the kind of unchecked premise that produced the refuted proposal.
++# ---------------------------------------------------------------------------
++
++
++def floor_graph_coloring(c: dict) -> tuple[float, int]:
++    n, k, edges = c["n_nodes"], c["n_colors"], [tuple(e) for e in c["edges"]]
++    tot = k**n
++    ok = sum(
++        1 for a in itertools.product(range(k), repeat=n) if all(a[u] != a[v] for u, v in edges)
++    )
++    return ok / tot, tot
++
++
++def _kk_consistent(assign, people, statements):
++    """A knight's statement is true; a knave's is false.
++
++    Returns None on an unrecognised statement kind so the caller REFUSES rather than
++    silently guessing a floor -- a wrong floor is worse than no floor.
++    """
++    idx = {p: i for i, p in enumerate(people)}
++    for s in statements:
++        speaker_is_knight = assign[idx[s["speaker"]]]
++        kind = s["kind"]
++        if kind == "target_is_knave":
++            truth = not assign[idx[s["target"]]]
++        elif kind == "target_is_knight":
++            truth = assign[idx[s["target"]]]
++        elif kind == "different_from":
++            truth = assign[idx[s["left"]]] != assign[idx[s["right"]]]
++        elif kind == "count_knights_eq":
++            truth = sum(assign) == s["count"]
++        else:
++            return None
++        if speaker_is_knight != truth:
++            return False
++    return True
++
++
++def floor_knights_knaves(c: dict) -> tuple[float | None, int]:
++    people, st = c["people"], c["statements"]
++    tot = 2 ** len(people)
++    ok = 0
++    for a in itertools.product([False, True], repeat=len(people)):
++        r = _kk_consistent(a, people, st)
++        if r is None:
++            return None, tot
++        ok += bool(r)
++    return ok / tot, tot
++
++
++def floor_travel_budget(c: dict) -> tuple[float, int]:
++    acts, budget, hours = c["activities"], c["budget"], c["hours"]
++    best, cnt, tot = -1, 0, 2 ** len(acts)
++    for r in range(len(acts) + 1):
++        for sub in itertools.combinations(range(len(acts)), r):
++            if (
++                sum(acts[i]["cost"] for i in sub) > budget
++                or sum(acts[i]["hours"] for i in sub) > hours
++            ):
++                continue
++            val = sum(acts[i]["value"] for i in sub)
++            if val > best:
++                best, cnt = val, 1
++            elif val == best:
++                cnt += 1
++    return cnt / tot, tot
++
++
++def floor_code_property(c: dict) -> tuple[float, int]:
++    # The answer is a SUBSET of range(n); exactly one subset is right.
++    n = c["domain_n"]
++    return 1 / (2**n), 2**n
++
++
++def floor_or_allocation(c: dict) -> tuple[float, int]:
++    prods, caps = c["products"], c["capacities"]
++    ranges = [range(p["max_units"] + 1) for p in prods]
++    tot = 1
++    for r in ranges:
++        tot *= len(r)
++    best, cnt = -1, 0
++    for combo in itertools.product(*ranges):
++        if any(
++            sum(combo[i] * prods[i][res] for i in range(len(prods))) > cap
++            for res, cap in caps.items()
++        ):
++            continue
++        prof = sum(combo[i] * prods[i]["profit"] for i in range(len(prods)))
++        if prof > best:
++            best, cnt = prof, 1
++        elif prof == best:
++            cnt += 1
++    return cnt / tot, tot
++
++
++FLOORS = {
++    "graph_coloring": floor_graph_coloring,
++    "knights_knaves": floor_knights_knaves,
++    "travel_budget": floor_travel_budget,
++    "code_property": floor_code_property,
++    "or_allocation": floor_or_allocation,
++}
++
++
++# ---------------------------------------------------------------------------
++# Core metrics
++# ---------------------------------------------------------------------------
++
++
++def _z_vs_chance(n_correct: int, n_total: int, floor: float) -> float | None:
++    if not n_total or floor is None:
++        return None
++    p = n_correct / n_total
++    se = math.sqrt(floor * (1 - floor) / n_total)
++    return None if se == 0 else (p - floor) / se
++
++
++def _sc_and_oracle(groups: dict[Any, list[tuple[bool, Any]]]) -> tuple[int, int, int]:
++    """Plurality vote (deterministic first-seen tie-break) and oracle@K."""
++    sc = sc_evaluable = 0
++    for cands in groups.values():
++        keys = [a for _, a in cands if a is not None]
++        if not keys:
++            continue
++        sc_evaluable += 1
++        counts = collections.Counter(keys)
++        best = max(counts.values())
++        winner = next(a for a in keys if counts[a] == best)
++        if any(ok for ok, a in cands if a == winner and ok):
++            sc += 1
++    oracle = sum(1 for cands in groups.values() if any(ok for ok, _ in cands))
++    return sc, sc_evaluable, oracle
++
++
++def evaluate(
++    label: str,
++    groups: dict[Any, list[tuple[bool, Any]]],
++    floor: float | None,
++    floor_note: str,
++    oracle_distinct: bool | None,
++    notes: str,
++) -> dict:
++    n_q = len(groups)
++    sizes = [len(v) for v in groups.values()]
++    k_min = min(sizes)
++    total = sum(sizes)
++    n_correct = sum(1 for v in groups.values() for ok, _ in v if ok)
++    p = n_correct / total
++    z = _z_vs_chance(n_correct, total, floor)
++    sc, sc_eval, oracle = _sc_and_oracle(groups)
++    sc_acc = sc / sc_eval if sc_eval else float("nan")
++    oracle_acc = oracle / n_q
++    independence_pred = 1 - (1 - p) ** k_min if floor is not None else None
++    return {
++        "label": label,
++        "n_questions": n_q,
++        "k_min": k_min,
++        "k_max": max(sizes),
++        "n_candidates": total,
++        "chance_floor": floor,
++        "chance_floor_note": floor_note,
++        "per_candidate_accuracy": round(p, 6),
++        "z_vs_chance": None if z is None else round(z, 4),
++        "generator_above_chance": None if z is None else bool(z > 2.0),
++        "sc_accuracy": round(sc_acc, 6),
++        "oracle_at_k": round(oracle_acc, 6),
++        "headroom_gap_oracle_minus_sc": round(oracle_acc - sc_acc, 6),
++        "independence_prediction": (
++            None if independence_pred is None else round(independence_pred, 6)
++        ),
++        "oracle_exceeds_independence": (
++            None if independence_pred is None else bool(oracle_acc > independence_pred)
++        ),
++        "oracle_distinct": oracle_distinct,
++        "notes": notes,
++    }
++
++
++def structural_tells(
++    rows_by_group: dict[Any, list[dict]], index_key: str, correct_key: str, model_key: str | None
++) -> dict:
++    """Detect the construction-artifact signature: correct answer confined to a few indices,
++    and per-index model counts balanced to the unit. Real sampling does neither."""
++    idx_correct: collections.Counter = collections.Counter()
++    per_index_models: dict = collections.defaultdict(collections.Counter)
++    patterns: collections.Counter = collections.Counter()
++    for cands in rows_by_group.values():
++        patterns[tuple(bool(c[correct_key]) for c in cands)] += 1
++        for c in cands:
++            if c[correct_key]:
++                idx_correct[c[index_key]] += 1
++            if model_key:
++                per_index_models[c[index_key]][c[model_key].split("/")[-1]] += 1
++    n_idx = max((len(v) for v in rows_by_group.values()), default=0)
++    indices_never_correct = [i for i in range(n_idx) if idx_correct.get(i, 0) == 0]
++    balanced = (
++        all(len(set(v.values())) == 1 for v in per_index_models.values())
++        if per_index_models
++        else None
++    )
++    return {
++        "correct_candidate_index_distribution": dict(sorted(idx_correct.items())),
++        "indices_never_correct": indices_never_correct,
++        "distinct_correctness_patterns": {str(k): v for k, v in patterns.most_common()},
++        "per_index_model_counts_perfectly_balanced": balanced,
++        "construction_artifact_suspected": bool(indices_never_correct) or bool(balanced),
++    }
++
++
++# ---------------------------------------------------------------------------
++# Per-corpus loaders
++# ---------------------------------------------------------------------------
++
++
++def _jsonl(path: Path) -> list[dict]:
++    return [json.loads(line) for line in path.open() if line.strip()]
++
++
++def survey() -> dict:
++    started = time.time()
++    domains: list[dict] = []
++    extra: dict[str, Any] = {}
++
++    # -- MMLU-Pro (the refuted proposal, re-measured here as the control) ------------------
++    for label, fname, note in [
++        (
++            "mmlu_pro_5shot",
++            "experiment_mmlu_pro_fewshot_candidate_pool.jsonl",
++            "the REFUTED proposal; re-measured as the control",
++        ),
++        (
++            "mmlu_pro_zeroshot",
++            "experiment_mmlu_pro_verifier_candidate_pool.jsonl",
++            "zero-shot sibling pool",
++        ),
++    ]:
++        g: dict = collections.defaultdict(list)
++        for r in _jsonl(results_path(fname)):
++            g[r["question_index"]].append((bool(r["correct"]), r.get("parsed_letter")))
++        domains.append(evaluate(label, g, 0.10, "10-way MCQ; gold letters span A-J", True, note))
++
++    # -- MuSR: the ONLY genuine multi-sample corpus (one model, temperature-sampled) -------
++    rows = _jsonl(results_path("experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl"))
++    g = collections.defaultdict(list)
++    n_choices = set()
++    for r in rows:
++        g[r["question_id"]].append((r["answer"] == r["gold"], r["answer"]))
++        n_choices.add(len(r["choices"]))
++    d = evaluate(
++        "musr_murder_mysteries",
++        g,
++        0.5,
++        f"BINARY choice ({sorted(n_choices)} options); floor is a coin flip",
++        True,
++        "the only genuine multi-sample single-model pool in the repo",
++    )
++    d["scoring_model"] = sorted({r["scoring_model"] for r in rows})
++    d["questions_with_both_answers_present"] = sum(
++        1 for v in g.values() if len({a for _, a in v}) > 1
++    )
++    domains.append(d)
++
++    # -- Structured-reasoning pools (exact validators; check for construction) -------------
++    for label, fname in [
++        ("structured_reasoning_exp5125", "experiment_5125_structured_reasoning_pool_v470.jsonl"),
++        ("structured_reasoning_exp5136", "experiment_5136_receipt_structured_pool_v2_v471.jsonl"),
++    ]:
++        raw = _jsonl(results_path(fname))
++        g, floors, by_group = collections.defaultdict(list), {}, {}
++        for r in raw:
++            qid = r["task_id"]
++            floors[qid] = FLOORS[r["family"]](r["constraints"])[0]
++            by_group[qid] = r["candidates"]
++            for c in r["candidates"]:
++                g[qid].append((bool(c["correct"]), c.get("normalized_answer")))
++        mean_floor = sum(floors.values()) / len(floors)
++        d = evaluate(
++            label,
++            g,
++            mean_floor,
++            f"ENUMERATED answer space per instance, mean over {len(floors)} tasks",
++            True,
++            "executable validator exists, so a LEARNED verifier is oracle-distinct",
++        )
++        d["structural_tells"] = structural_tells(
++            by_group, "candidate_index", "correct", "model_hf_id"
++        )
++        d["families"] = dict(collections.Counter(r["family"] for r in raw))
++        domains.append(d)
++
++    # -- exp5786: a genuine multi-MODEL SOTA generation stream -----------------------------
++    raw = _jsonl(results_path("experiment_5786_sota_constraint_stream.rows.jsonl"))
++
++    def model_of(r: dict) -> str:
++        return r["model_hf_id"].split("/")[-1]
++
++    g = collections.defaultdict(list)
++    by_model: dict = collections.defaultdict(dict)
++    for r in raw:
++        pred = r.get("selected_label") or None
++        g[r["fixture_row_id"]].append((pred is not None and pred == r["exact_label"], pred))
++        by_model[r["fixture_row_id"]][model_of(r)] = r
++    d = evaluate(
++        "sota_constraint_stream_exp5786",
++        g,
++        0.25,
++        "4-way A/B/C/D exact label",
++        True,
++        "REAL generations (raw text, truncations, per-model variation)",
++    )
++    # Per-model accuracy and parse rate -- a dead arm makes a 3-way vote degenerate, so the
++    # honest baseline is the BEST SINGLE MODEL, not the ensemble vote.
++    models = sorted({model_of(r) for r in raw})
++    per_model = {}
++    for m in models:
++        sub = [r for r in raw if model_of(r) == m]
++        parseable = sum(1 for r in sub if r.get("selected_label"))
++        correct = sum(1 for r in sub if r.get("selected_label") == r["exact_label"])
++        per_model[m] = {
++            "n": len(sub),
++            "parseable": parseable,
++            "parse_rate": round(parseable / len(sub), 6),
++            "accuracy": round(correct / len(sub), 6),
++            "finish_reason": dict(collections.Counter(r["finish_reason"] for r in sub)),
++        }
++    live = [m for m, v in per_model.items() if v["parseable"] > 0]
++    dead = [m for m, v in per_model.items() if v["parseable"] == 0]
++    best_model = max(live, key=lambda m: per_model[m]["accuracy"])
++    best_acc = per_model[best_model]["accuracy"]
++    oracle_live = sum(
++        1
++        for k in by_model
++        if any(by_model[k][m].get("selected_label") == by_model[k][m]["exact_label"] for m in live)
++    ) / len(by_model)
++    d["per_model"] = per_model
++    d["dead_arms"] = dead
++    d["best_single_model"] = best_model
++    d["best_single_model_accuracy"] = best_acc
++    d["oracle_over_live_arms"] = round(oracle_live, 6)
++    d["selectable_gain_over_best_single_model"] = round(oracle_live - best_acc, 6)
++    d["selectable_gain_instances"] = round((oracle_live - best_acc) * len(by_model))
++    d["is_multi_sample"] = False
++    d["multi_sample_note"] = (
++        "K=1 sample per MODEL, so genuine self-consistency is NOT measurable from this corpus; "
++        "the reported sc_accuracy is a 3-way ensemble vote containing a dead arm and is NOT the "
++        "honest baseline -- selectable_gain_over_best_single_model is."
++    )
++    per_family = {}
++    for fam in sorted({r["family"] for r in raw}):
++        ks = [k for k in by_model if by_model[k][live[0]]["family"] == fam]
++        accs = {
++            m: sum(
++                1
++                for k in ks
++                if by_model[k][m].get("selected_label") == by_model[k][m]["exact_label"]
++            )
++            / len(ks)
++            for m in live
++        }
++        orc = sum(
++            1
++            for k in ks
++            if any(
++                by_model[k][m].get("selected_label") == by_model[k][m]["exact_label"] for m in live
++            )
++        ) / len(ks)
++        per_family[fam] = {
++            "n": len(ks),
++            "per_model_accuracy": {m: round(v, 6) for m, v in accs.items()},
++            "oracle": round(orc, 6),
++            "gain_over_best_single": round(orc - max(accs.values()), 6),
++        }
++    d["per_family"] = per_family
++    domains.append(d)
++
++    # -- exp5799 canary ---------------------------------------------------------------------
++    raw = _jsonl(results_path("experiment_5799_sota_answer_channel_canary.rows.jsonl"))
++    g = collections.defaultdict(list)
++    for r in raw:
++        pred = r.get("selected_label") or None
++        g[r["fixture_row_id"]].append((pred is not None and pred == r["exact_label"], pred))
++    d = evaluate(
++        "sota_answer_channel_canary_exp5799",
++        g,
++        0.25,
++        "4-way A/B/C/D exact label",
++        True,
++        "answer-channel canary",
++    )
++    d["unparseable_fraction"] = round(
++        sum(1 for r in raw if not r.get("selected_label")) / len(raw), 6
++    )
++    domains.append(d)
++
++    # -- ConstraintBench: candidates are solver-backed, NOT LLM samples ----------------------
++    raw = _jsonl(results_path("experiment_5044_second_corpus_candidate_cache.jsonl"))
++    gen_kinds = collections.Counter(c.get("generator_kind") for r in raw for c in r["candidates"])
++    gen_models = collections.Counter(
++        str(c.get("generation_model")) for r in raw for c in r["candidates"]
++    )
++    extra["constraintbench_exp5044"] = {
++        "n_rows": len(raw),
++        "generator_kinds": dict(gen_kinds),
++        "generation_models": dict(gen_models),
++        "disqualified_reason": (
++            "candidates are deterministic solver-backed variants with generation_model=None; "
++            "there is no LLM generator, so criterion 1 is not even defined"
++        ),
++        "passes_criteria": False,
++    }
++
++    # -- Verdict --------------------------------------------------------------------------
++    for d in domains:
++        c1 = bool(d.get("generator_above_chance")) and bool(d.get("oracle_exceeds_independence"))
++        tells = d.get("structural_tells", {})
++        constructed = bool(tells.get("construction_artifact_suspected"))
++        if "selectable_gain_over_best_single_model" in d:
++            c2 = d["selectable_gain_over_best_single_model"] > 0.05
++        else:
++            c2 = d["headroom_gap_oracle_minus_sc"] > 0.05
++        d["criterion_1_generator_above_chance"] = c1
++        d["criterion_2_sc_not_saturated"] = bool(c2) and not constructed
++        d["criterion_3_oracle_distinct"] = bool(d.get("oracle_distinct"))
++        d["construction_artifact"] = constructed
++        d["passes_all_three"] = bool(
++            c1
++            and d["criterion_2_sc_not_saturated"]
++            and d["criterion_3_oracle_distinct"]
++            and not constructed
++        )
++
++    passing = [d["label"] for d in domains if d["passes_all_three"]]
++    duration = time.time() - started
++
++    artifact: dict[str, Any] = {
++        "experiment": "phase_d_domain_headroom_survey",
++        "experiment_id": "phase_d_domain_headroom_survey",
++        "schema": "carnot.phase_d_domain_headroom_survey.v1",
++        "title": "Phase D domain survey: is there a headroom-present, oracle-distinct corpus in this repo?",
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++        "solve_provenance": "development_proxy",
++        "verifier_is_oracle": False,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(duration, 6),
++        "domains": domains,
++        "non_candidate_corpora": extra,
++        "domains_passing_all_three": passing,
++        "n_domains_measured": len(domains),
++        "honest_verdict": (
++            "complete_no_repo_corpus_passes_all_three_criteria_two_disjoint_failure_modes"
++            if not passing
++            else "complete_survey_found_passing_domain_" + "_".join(passing)
++        ),
++    }
++    return artifact
++
++
++def main() -> None:
++    art = survey()
++    # The checksum must be REPRODUCIBLE across runs, so it is computed over the payload with
++    # the wall-clock-dependent and self-referential fields blanked. Including duration_s would
++    # make every rerun produce a different checksum, which defeats the point of having one.
++    normalized = {
++        k: v for k, v in art.items() if k not in ("duration_s", "reproducibility_checksum")
++    }
++    payload = json.dumps(normalized, indent=2, sort_keys=True)
++    art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(payload.encode()).hexdigest()
++    art["checksum_covers"] = "all fields except duration_s and reproducibility_checksum itself"
++    out = results_path("phase_d_domain_headroom_survey.json")
++    out.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n")
++    print(f"wrote {out}")
++    for d in art["domains"]:
++        print(
++            f"  {d['label']:34s} C1={d['criterion_1_generator_above_chance']!s:5s} "
++            f"C2={d['criterion_2_sc_not_saturated']!s:5s} C3={d['criterion_3_oracle_distinct']!s:5s} "
++            f"-> pass={d['passes_all_three']}"
++        )
++    print(f"  passing: {art['domains_passing_all_three'] or 'NONE'}")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/scripts/experiments/outer_loop_arc_6091_delivery_probe_20260803.py b/scripts/experiments/outer_loop_arc_6091_delivery_probe_20260803.py
+new file mode 100644
+index 0000000000..05ff0b0672
+--- /dev/null
++++ b/scripts/experiments/outer_loop_arc_6091_delivery_probe_20260803.py
+@@ -0,0 +1,259 @@
++"""DELIVERY PROOF for REQ-ARC-WMTE-6091, taken at the CALLEE and read off the stack.
++
++WHY THIS EXISTS AS A SEPARATE STEP, BEFORE ANY MEASUREMENT
++-----------------------------------------------------------
++A fix that ships is not a fix that runs. This session already had one fix reach its call site
++0 of 128 times, and the defect this experiment measures is ITSELF an availability-vs-delivery
++bug: `refactor_prompt` had the game id and the VerifyResult available and delivered neither the
++engine nor the passing cases into the rendered string.
++
++The A/B harness records `prompt_contains_engine` from a prompt IT renders itself, alongside a
++SEPARATE `prop.refactor(...)` call that renders the prompt AGAIN. Two independent renders. That
++recorded flag is therefore a statement about the harness's own copy, not about the bytes the
++model receives -- exactly the substitution this codebase keeps getting caught by. So delivery is
++proven HERE instead, at the deepest callee before transport, on the live entrypoint:
++
++    LocalGGUFProposer.refactor  ->  _gen_to_file  ->  generate(prompt, ...)  ->  HTTP
++
++`generate` is wrapped, the prompt it actually receives is captured, and the CALLER CHAIN is read
++off the interpreter stack with `inspect` -- so the evidence says "this string arrived at the
++generator, and it got there through the shipped refactor path", not "a function I called
++returned a string containing the engine".
++
++NO SERVER IS NEEDED and none is used: the wrapper captures and short-circuits before any socket
++is opened. The transport is not what is in doubt; the prompt content is.
++
++BOTH DIRECTIONS, because a probe that can only confirm is not a probe:
++  * flag ON  -> the engine's own signature line MUST appear in the captured prompt.
++  * flag OFF -> it MUST NOT, and the captured prompt must be byte-identical to the shipped one.
++A MUTATION arm neutralises the source resolver the way a careless edit would and requires the ON
++assertion to go red, so a green result here cannot be vacuous.
++
++Spec: REQ-ARC-WMTE-6091
++"""
++
++from __future__ import annotations
++
++import hashlib
++import inspect
++import json
++import os
++import sys
++import tempfile
++import time
++from pathlib import Path
++from typing import Any
++
++REPO = Path(__file__).resolve().parents[2]
++if str(REPO / "python") not in sys.path:
++    sys.path.insert(0, str(REPO / "python"))
++os.environ.setdefault("JAX_PLATFORMS", "cpu")
++
++# The store MUST be redirected BEFORE the module is imported: `E3_DIR` is resolved at import
++# time, so setting this afterwards would be a no-op that reads like a safeguard.
++_SCRATCH = Path(tempfile.mkdtemp(prefix="exp6091_delivery_probe_"))
++os.environ["CARNOT_ARC_E3_DIR"] = str(_SCRATCH)
++
++ARTIFACT = REPO / "results" / "experiment_6091_delivery_probe.json"
++GAME = "probe_game"
++SEED = 6091
++
++# A line that carries THIS engine's logic and appears in no template in the codebase. If it
++# reaches the generator, the engine reached the generator.
++SIGNATURE_LINE = "        out[marker_row, 0] = 7  # exp6091-delivery-probe-signature"
++ENGINE_SRC = f"""import numpy as np
++
++
++def engine(grid, action, data):
++    out = np.asarray(grid).copy()
++    marker_row = int(out.shape[0]) - 1
++    if action == 3:
++{SIGNATURE_LINE}
++    return out
++
++
++def is_level_complete(grid):
++    return bool(np.asarray(grid)[0, 0] == 9)
++"""
++
++
++def _real_verify_result():
++    """A real VerifyResult produced by the shipped scorer over real mismatches."""
++    import numpy as np
++
++    from carnot.agentic.arc_executable_world_model import Transition, WorldModelVerifier
++
++    g0 = np.zeros((3, 3), dtype=int)
++    g1 = g0.copy()
++    g1[1, 1] = 4
++    g2 = g1.copy()
++    g2[2, 2] = 5
++    rows = [
++        Transition(g0.copy(), 1, None, g1.copy(), 0, 0),
++        Transition(g1.copy(), 2, None, g2.copy(), 0, 0),
++    ]
++
++    def wrong_engine(grid, action, data=None):
++        return np.asarray(grid).copy()
++
++    return WorldModelVerifier(rows, hud_mask=None).score(wrong_engine)
++
++
++def run_arm(flag: str, *, neutralise: bool = False) -> dict[str, Any]:
++    """Drive the LIVE `refactor` entrypoint and capture what the generator was handed.
++
++    `neutralise` is the mutation arm: it makes the source resolver return nothing, the way a
++    careless edit deleting the splice would, and the ON assertion must then fail.
++    """
++    import carnot.agentic.arc_executable_world_model as e3
++
++    captured: dict[str, Any] = {}
++
++    def fake_generate(self, prompt, required=(), *args, codeonly_eligible=False, **kwargs):
++        # THE CALLEE. Read the caller chain off the interpreter stack rather than trusting that
++        # the call arrived the way the docstring says it does.
++        chain = []
++        for frame in inspect.stack()[1:8]:
++            chain.append(f"{Path(frame.filename).name}::{frame.function}:{frame.lineno}")
++        captured["prompt"] = prompt
++        captured["caller_chain"] = chain
++        captured["codeonly_eligible"] = bool(codeonly_eligible)
++        captured["required"] = list(required)
++        # Return a syntactically valid engine so `_gen_to_file` completes normally; nothing is
++        # sent anywhere and the scratch store is the only thing written.
++        return True, ENGINE_SRC
++
++    prev_flag = os.environ.get("CARNOT_ARC_REFACTOR_SHOW_ENGINE")
++    prev_gen = e3.LocalGGUFProposer.generate
++    prev_src = e3._current_engine_source
++    os.environ["CARNOT_ARC_REFACTOR_SHOW_ENGINE"] = flag
++    e3.LocalGGUFProposer.generate = fake_generate
++    if neutralise:
++        e3._current_engine_source = lambda game, **kw: ("", 0)
++    try:
++        (_SCRATCH / GAME).mkdir(parents=True, exist_ok=True)
++        (_SCRATCH / GAME / "world_model.py").write_text(ENGINE_SRC)
++        prop = e3.LocalGGUFProposer(repo_substr="gemma-4-31B-it", port=1, model_path="/nonexistent")
++        ok, msg = prop.refactor(GAME, _real_verify_result())
++    finally:
++        e3.LocalGGUFProposer.generate = prev_gen
++        e3._current_engine_source = prev_src
++        if prev_flag is None:
++            os.environ.pop("CARNOT_ARC_REFACTOR_SHOW_ENGINE", None)
++        else:
++            os.environ["CARNOT_ARC_REFACTOR_SHOW_ENGINE"] = prev_flag
++
++    prompt = captured.get("prompt", "")
++    return {
++        "flag": flag,
++        "neutralised_source_resolver": bool(neutralise),
++        "refactor_returned_ok": bool(ok),
++        "refactor_message": str(msg)[:160],
++        "generator_was_called": "prompt" in captured,
++        "caller_chain_at_generator": captured.get("caller_chain"),
++        "codeonly_eligible": captured.get("codeonly_eligible"),
++        "prompt_chars": len(prompt),
++        "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
++        # THE DELIVERY ASSERTIONS, on the bytes the generator received.
++        "engine_signature_line_delivered": SIGNATURE_LINE in prompt,
++        "engine_block_header_delivered": "THE CURRENT ENGINE YOU ARE FIXING" in prompt,
++        "mismatch_block_present": "MISMATCHES:" in prompt,
++        "n_engine_source_lines_delivered": sum(
++            1
++            for line in ENGINE_SRC.splitlines()
++            if line.strip() and len(line.strip()) > 8 and line in prompt
++        ),
++    }
++
++
++def main() -> int:
++    t0 = time.time()
++    arms = {
++        "flag_off": run_arm("0"),
++        "flag_on": run_arm("1"),
++        "flag_on_mutation_resolver_neutralised": run_arm("1", neutralise=True),
++    }
++
++    off, on, mut = arms["flag_off"], arms["flag_on"], arms["flag_on_mutation_resolver_neutralised"]
++
++    checks = {
++        "generator_reached_on_live_path_all_arms": all(
++            a["generator_was_called"] for a in arms.values()
++        ),
++        "caller_chain_goes_through_shipped_refactor": bool(
++            on["caller_chain_at_generator"]
++            and any("_gen_to_file" in f for f in on["caller_chain_at_generator"])
++            and any("refactor" in f for f in on["caller_chain_at_generator"])
++        ),
++        "ON_delivers_engine_signature_to_generator": on["engine_signature_line_delivered"],
++        "OFF_does_not_deliver_engine": not off["engine_signature_line_delivered"],
++        "OFF_reproduces_the_shipped_defect": not off["engine_block_header_delivered"],
++        "mismatch_block_survives_the_splice": on["mismatch_block_present"],
++        "ON_and_OFF_are_different_prompts": on["prompt_sha256"] != off["prompt_sha256"],
++        # MUTATION PROOF: neutralising the resolver must collapse ON back onto OFF.
++        "mutation_kills_delivery": not mut["engine_signature_line_delivered"],
++        "mutation_collapses_to_off_bytes": mut["prompt_sha256"] == off["prompt_sha256"],
++    }
++    all_ok = all(checks.values())
++
++    out: dict[str, Any] = {
++        "experiment": "experiment_6091_delivery_probe",
++        "spec": "REQ-ARC-WMTE-6091",
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        # SUBSTRATE, WITH THE GAP DISCLOSED RATHER THAN GLOSSED. No model is loaded and no
++        # candidate is scored, so neither `live_llm_inference` nor
++        # `verifier_ensemble_against_cached_candidates` is honest here -- an earlier draft
++        # declared the latter and `adversarial_verify.py` correctly flagged it
++        # DURATION_TOO_SHORT at 0.46 s, which is the linter doing its job on a real
++        # misdeclaration. This is the project's established bucket for "no model was invoked":
++        # the sibling instrument-reproduction experiment
++        # (results/outer_loop_arc_refine_instrument_repro_20260803.json) declares the same value
++        # for the same class of work. The DIFFERENCE from a literal reading of that value --
++        # this probe renders shipped code paths rather than reading upstream JSON -- is stated
++        # here so nobody has to infer it from the duration.
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++        "solve_provenance": "development_proxy",
++        "verifier_is_oracle": False,
++        "random_seed": SEED,
++        "methodology_note": (
++            "NO LLM IS INVOKED and no GPU is used; the sub-second duration is therefore correct "
++            "and expected, not a truncated run. `LocalGGUFProposer.generate` -- the deepest "
++            "callee before the HTTP transport -- is wrapped, so the assertion is on the exact "
++            "prompt string the generator receives, and the caller chain is read off the "
++            "interpreter stack to prove it arrived via the shipped `refactor` -> `_gen_to_file` "
++            "path rather than via a convenience render. Transport is not in doubt; prompt "
++            "CONTENT is. `model_specs` is deliberately absent: there is no model to name, and "
++            "naming one would be the vestigial-marker pattern the Inference-Substrate "
++            "Declaration Discipline exists to stop."
++        ),
++        "engine_store_redirected_to": str(_SCRATCH),
++        "signature_line": SIGNATURE_LINE,
++        "arms": arms,
++        "checks": checks,
++        "delivery_proven": all_ok,
++        "duration_s": round(time.time() - t0, 3),
++    }
++    out["honest_verdict"] = (
++        "complete_engine_source_delivered_to_generator_on_live_path"
++        if all_ok
++        else "blocked_delivery_not_proven"
++    )
++    out["reproducibility_checksum"] = hashlib.sha256(
++        json.dumps(
++            {k: v for k, v in out.items() if k != "reproducibility_checksum"},
++            sort_keys=True,
++            default=str,
++        ).encode()
++    ).hexdigest()
++    ARTIFACT.write_text(json.dumps(out, indent=1))
++    print(json.dumps({"checks": checks, "verdict": out["honest_verdict"]}, indent=1))
++    print(f"caller chain (ON): {on['caller_chain_at_generator']}")
++    print(
++        f"ON delivered {on['n_engine_source_lines_delivered']} engine source lines; "
++        f"OFF delivered {off['n_engine_source_lines_delivered']}"
++    )
++    return 0 if all_ok else 1
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py b/scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py
+index 80519e7fff..6182f61b7a 100644
+--- a/scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py
++++ b/scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py
+@@ -432,6 +432,75 @@ def acceptance_leak_probe(acceptance_rows: list, prompts: list[str]) -> dict[str
+     return {"n_leaks": len(hits), "leaks": hits[:8]}
+ 
+ 
++# ==============================================================================================
++# CALLEE-SIDE DELIVERY WITNESS (added 2026-08-03, before the measurement was taken)
++# ==============================================================================================
++# WHY THE HARNESS'S OWN `prompt_contains_engine` IS NOT SUFFICIENT EVIDENCE. `run_cell` renders
++# `refactor_prompt(...)` itself to record that flag, and then calls `prop.refactor(...)`, which
++# renders the prompt AGAIN. Two independent renders: the recorded flag describes the harness's
++# copy, not the bytes the generator received. That is the availability-vs-delivery substitution
++# this whole experiment exists to correct, so it must not be repeated in the instrument that
++# measures it -- and this session separately watched a shipped fix reach its call site 0 of 128
++# times while every surrounding indicator stayed green.
++#
++# So `generate` -- the deepest callee before the HTTP transport -- is wrapped once, and every
++# refactor round asserts delivery against THE PROMPT THAT WENT TO THE MODEL. The wrapper only
++# observes; it forwards to the real method unchanged.
++_LAST_GEN: dict[str, Any] = {}
++
++
++def install_generate_witness(prop: Any) -> None:
++    """Observe `generate` WITHOUT changing what it is called with.
++
++    The passthrough is `*args, **kwargs` DELIBERATELY, and this is not defensive style. A first
++    version of this wrapper spelled out `(prompt, required, tries, codeonly_eligible)` -- which
++    is the signature `refactor` happens to use -- and would therefore have SILENTLY DROPPED
++    `validate=` and `engine_transitions=`, both of which the shipped `induce` passes. That is the
++    instrument altering the very round-0 induction the two refinement arms fork from: not a
++    measurement bug at the edges, a corrupted shared baseline. Caught before the run generated
++    anything, and recorded here so the shape is not reintroduced. An observer must be transparent.
++    """
++    real = prop.generate
++
++    def witnessed(prompt, *args, **kwargs):
++        _LAST_GEN.clear()
++        _LAST_GEN["prompt"] = prompt
++        _LAST_GEN["chars"] = len(prompt)
++        _LAST_GEN["codeonly_eligible"] = bool(kwargs.get("codeonly_eligible", False))
++        return real(prompt, *args, **kwargs)
++
++    prop.generate = witnessed
++
++
++def delivery_witness(engine_source: str) -> dict[str, Any]:
++    """Did THIS engine's own source reach the prompt the generator was handed?
++
++    Counts only SUBSTANTIVE lines -- non-blank, longer than 8 characters after stripping -- so
++    the template boilerplate the shipped prompt already contains (`import numpy as np`,
++    `def engine(grid, action, data):`) cannot masquerade as delivery. That distinction is not
++    theoretical: the pre-flight probe measured exactly 2 such boilerplate matches with the flag
++    OFF versus 9 real source lines with it ON.
++    """
++    prompt = _LAST_GEN.get("prompt")
++    if prompt is None:
++        return {"generator_called": False}
++    tmpl = ("import numpy as np", "def engine(grid, action, data):", "def is_level_complete(grid):")
++    subst = [
++        ln
++        for ln in engine_source.splitlines()
++        if ln.strip() and len(ln.strip()) > 8 and ln.strip() not in tmpl
++    ]
++    delivered = [ln for ln in subst if ln in prompt]
++    return {
++        "generator_called": True,
++        "prompt_chars_at_generator": _LAST_GEN.get("chars"),
++        "engine_header_at_generator": "THE CURRENT ENGINE YOU ARE FIXING" in prompt,
++        "n_substantive_engine_lines": len(subst),
++        "n_substantive_engine_lines_delivered": len(delivered),
++        "engine_delivered": bool(subst) and len(delivered) >= max(1, len(subst) // 2),
++    }
++
++
+ # ==============================================================================================
+ # the cell
+ # ==============================================================================================
+@@ -538,10 +607,19 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
+                 rr["prompt_chars"] = len(rendered)
+                 rr["prompt_contains_engine"] = bool("THE CURRENT ENGINE YOU ARE FIXING" in rendered)
+                 rr["n_mismatches_available"] = len(rv.mismatches)
++                # The engine ON DISK at this instant is what `refactor_prompt` will read, so it
++                # is the exact text whose delivery the witness must check.
++                try:
++                    src_now = wm_path.read_text()
++                except OSError:
++                    src_now = ""
++                _LAST_GEN.clear()
+                 t_r = time.time()
+                 ok, msg = prop.refactor(game, vr_obj)
+                 rr["refactor_ok"] = bool(ok)
+                 rr["wall_s"] = round(time.time() - t_r, 1)
++                # DELIVERY, read at the callee -- not from the harness's own render above.
++                rr["delivery_witness"] = delivery_witness(src_now)
+                 if msg:
+                     rr["message"] = str(msg)[:200]
+                 try:
+@@ -579,6 +657,14 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
+             "n_rounds_run": len(arm_rows),
+             "n_engine_loaded": sum(1 for x in arm_rows if x.get("engine_loaded")),
+             "n_prompts_with_engine": sum(1 for x in arm_rows if x.get("prompt_contains_engine")),
++            # The callee-side count. If this disagrees with `n_prompts_with_engine` above, the
++            # harness's render and the model's prompt diverged and the cell is not trustworthy.
++            "n_generator_prompts_with_engine": sum(
++                1 for x in arm_rows if (x.get("delivery_witness") or {}).get("engine_delivered")
++            ),
++            "n_generator_calls_witnessed": sum(
++                1 for x in arm_rows if (x.get("delivery_witness") or {}).get("generator_called")
++            ),
+             "best_change_accuracy": best_ca,
+             "best_change_fidelity": best_cf,
+             "best_cell_recall": best_cr,
+@@ -775,6 +861,9 @@ def main() -> int:
+             # retrying it is not arm-favouring. The shipped default is tries=3.
+             prop.tries = int(os.environ.get("CARNOT_6091_TRIES") or "2")
+             os.environ["CARNOT_ARC_CODEONLY_INDUCE"] = "1"
++            # Observe the deepest callee before transport, so every refactor round can prove the
++            # engine reached the MODEL's prompt rather than the harness's copy of it.
++            install_generate_witness(prop)
+ 
+             for i, (game, trial) in enumerate(pending, 1):
+                 if time.time() - t_start > MAX_WALL_S:
+diff --git a/scripts/experiments/outer_loop_arc_refine_engine_visible_analyse_20260803.py b/scripts/experiments/outer_loop_arc_refine_engine_visible_analyse_20260803.py
+index 5b21dea211..d0dc021a85 100644
+--- a/scripts/experiments/outer_loop_arc_refine_engine_visible_analyse_20260803.py
++++ b/scripts/experiments/outer_loop_arc_refine_engine_visible_analyse_20260803.py
+@@ -115,6 +115,33 @@ def cell_value(row: dict[str, Any], arm: str, metric: str) -> Optional[float]:
+     return blk.get(key)
+ 
+ 
++def cell_value_final(row: dict[str, Any], arm: str, metric: str) -> Optional[float]:
++    """LIKE-FOR-LIKE companion to `cell_value`, added 2026-08-03 after adversarial review.
++
++    THE ASYMMETRY THIS EXISTS TO EXPOSE. `cell_value` reads `best_<metric>` for the two
++    refinement arms -- the MAX over the R refactor rounds, maximised on the very held-out block
++    that grades -- while reading `single_shot`'s ONE grade. With exactly one gradeable acceptance
++    row per game at these window sizes, per-cell `change_accuracy` is BINARY, so a refinement arm
++    that does nothing at all still scores 1-(1-p)^R against single-shot's p (0.36 vs 0.20 at
++    p=0.2, R=2) from the extra draw alone. That is a win manufactured by the comparison, not by
++    the treatment.
++
++    `treatment_vs_control` is unaffected (both arms are best-of-R) and remains the only symmetric
++    contrast in the pre-registered set. This function supplies the missing symmetric form of the
++    OTHER two contrasts by reading the FINAL round's grade, which the shard already stores under
++    `"final"`. Neither replaces the pre-registered primary; both are reported, and a POSITIVE
++    verdict now requires them to AGREE (a tightening, never a loosening).
++    """
++    if arm == "single_shot":
++        blk = row.get("single_shot")
++        return None if not isinstance(blk, dict) else blk.get(metric)
++    blk = row.get(arm)
++    if not isinstance(blk, dict):
++        return None
++    fin = blk.get("final")
++    return None if not isinstance(fin, dict) else fin.get(metric)
++
++
+ def main() -> int:
+     t0 = time.time()
+     if not SHARD.exists():
+@@ -201,6 +228,50 @@ def main() -> int:
+                 else None,
+             }
+ 
++    # ---- LIKE-FOR-LIKE (final-round) companion comparisons, added 2026-08-03 -----------------
++    # Same three contrasts, same clustering, same test -- but reading each refinement arm's FINAL
++    # round rather than its best-of-R. See `cell_value_final` for why. Reported ALONGSIDE the
++    # pre-registered best-of-R primary; neither is deleted.
++    agg_final: dict[str, dict[str, Any]] = {}
++    for game in gradeable:
++        agg_final[game] = {}
++        for metric in METRICS:
++            for arm in ("single_shot", "refine_control", "refine_treatment"):
++                vals = []
++                for c in per_game_cells[game]:
++                    if not (c.get("oracle_reaches_1") and c.get("acceptance_decidable")):
++                        continue
++                    v = cell_value_final(c, arm, metric)
++                    if v is not None:
++                        vals.append(float(v))
++                agg_final[game][f"{arm}::{metric}"] = (
++                    round(sum(vals) / len(vals), 6) if vals else None
++                )
++    comparisons_final: dict[str, Any] = {}
++    for metric in METRICS:
++        for label, base_arm, trt_arm in (
++            ("treatment_vs_single_shot", "single_shot", "refine_treatment"),
++            ("treatment_vs_control", "refine_control", "refine_treatment"),
++            ("control_vs_single_shot", "single_shot", "refine_control"),
++        ):
++            pairs, used = [], []
++            for game in gradeable:
++                b = agg_final[game][f"{base_arm}::{metric}"]
++                t = agg_final[game][f"{trt_arm}::{metric}"]
++                if b is None or t is None:
++                    continue
++                pairs.append((float(b), float(t)))
++                used.append(game)
++            comparisons_final[f"{metric}::{label}"] = {
++                "metric": metric,
++                "baseline_arm": base_arm,
++                "treatment_arm": trt_arm,
++                "value_read": "final_round" if trt_arm != "single_shot" else "single_grade",
++                "games_used": used,
++                "sign_test": sign_test(pairs),
++                "bootstrap_delta": bootstrap_ci([t - b for b, t in pairs]),
++            }
++
+     # ---- stratification by changed-cell count (failure mode 7) -------------------------------
+     strata: dict[str, list[Any]] = {"1_cell": [], "2_to_9_cells": [], "10_plus_cells": []}
+     for r in rows:
+@@ -211,6 +282,36 @@ def main() -> int:
+     strat_summary = {
+         k: {"n_rows": len(v), "games": sorted({x["game"] for x in v})} for k, v in strata.items()
+     }
++    # THE GUARD WAS INERT UNTIL 2026-08-03: the tallies above name the strata but never re-run the
++    # primary on them, so a headline carried entirely by 1-changed-cell rows (the progress-counter
++    # failure mode) would not have been caught by anything here. The primary is now RECOMPUTED on
++    # the >=2-changed-cell subset. Games whose gradeable acceptance rows are ALL 1-cell are
++    # dropped from that recomputation and named.
++    multi_cell_games = sorted(
++        {
++            r.get("game")
++            for r in rows
++            if any(int(c) >= 2 for c in (r.get("acceptance_changed_cells_per_row") or []))
++        }
++        & set(gradeable)
++    )
++    one_cell_only_games = sorted(set(gradeable) - set(multi_cell_games))
++    strat_pairs = []
++    for game in multi_cell_games:
++        b = agg[game]["single_shot::change_accuracy"]["mean"]
++        t = agg[game]["refine_treatment::change_accuracy"]["mean"]
++        if b is not None and t is not None:
++            strat_pairs.append((float(b), float(t)))
++    strat_summary["primary_recomputed_on_2plus_cell_rows"] = {
++        "games_used": multi_cell_games,
++        "games_dropped_all_1_cell": one_cell_only_games,
++        "sign_test": sign_test(strat_pairs),
++        "why": (
++            "Failure mode 7: a headline carried by 1-changed-cell rows is a progress counter, "
++            "not an accuracy. This recomputation is the actual guard; the per-stratum tallies "
++            "above are descriptive only."
++        ),
++    }
+ 
+     # ---- controls, and whether each is VACUOUS -----------------------------------------------
+     ident_acc = [r.get("identity_acceptance", {}) for r in rows]
+@@ -236,8 +337,25 @@ def main() -> int:
+             "n_noop_values": sorted(
+                 {int(b.get("n_noop") or 0) for b in ident_full if isinstance(b, dict)}
+             ),
+-            "why": "Run because the acceptance-block identity control is vacuous; the full "
+-            "window contains no-op rows, so this control CAN move.",
++            "VACUOUS": (
++                all(int(b.get("n_noop") or 0) == 0 for b in ident_full if isinstance(b, dict) and b)
++                if [b for b in ident_full if isinstance(b, dict) and b]
++                else None
++            ),
++            "why": (
++                "CORRECTED 2026-08-03 (measured, replacing a claim that was false in both "
++                "clauses). The original text said this control was run because the full window "
++                "contains no-op rows and 'CAN move'. Measured over the landed cells, n_noop is 0 "
++                "on the FULL window too, and identity's full-window change_accuracy is 0.0 "
++                "everywhere. The mechanism is not no-ops at all: change_accuracy is "
++                "n_changes_correct / n_changing (arc_executable_world_model.py), so an identity "
++                "engine scores exactly 0 on ANY block with n_changing > 0, irrespective of how "
++                "many no-op rows sit beside it. The identity control is therefore vacuous "
++                "EVERYWHERE in this design, not only on the acceptance block, and this field "
++                "reports that rather than presenting a structural 0.0 as a passed control. A "
++                "non-vacuous identity control would need a block containing no-op rows AND would "
++                "have to be scored on `accuracy`, not `change_accuracy`."
++            ),
+         },
+         "oracle_on_acceptance": {
+             "reaches_1_by_game": {
+@@ -264,6 +382,34 @@ def main() -> int:
+         ),
+     }
+ 
++    # ---- CALLEE-SIDE DELIVERY. The counts above come from a prompt the HARNESS rendered; these
++    # come from the prompt the GENERATOR was handed, captured by wrapping `generate` (the deepest
++    # callee before transport). If the two disagree, the harness's render and the model's prompt
++    # diverged and no contrast in this artifact is interpretable -- which is why the disagreement
++    # is computed and reported rather than assumed away.
++    def _sum(arm: str, key: str) -> int:
++        return sum(
++            int((r.get(arm) or {}).get(key) or 0) for r in rows if isinstance(r.get(arm), dict)
++        )
++
++    trt_gen = _sum("refine_treatment", "n_generator_prompts_with_engine")
++    ctl_gen = _sum("refine_control", "n_generator_prompts_with_engine")
++    delivery["callee_side"] = {
++        "treatment_generator_prompts_with_engine": trt_gen,
++        "control_generator_prompts_with_engine": ctl_gen,
++        "treatment_generator_calls_witnessed": _sum(
++            "refine_treatment", "n_generator_calls_witnessed"
++        ),
++        "control_generator_calls_witnessed": _sum("refine_control", "n_generator_calls_witnessed"),
++        "harness_and_callee_agree_on_treatment": trt_gen
++        == delivery["treatment_prompts_containing_engine"],
++        "control_stayed_blind": ctl_gen == 0,
++        "why": (
++            "The treatment arm is only a treatment if the engine reached the MODEL. A run where "
++            "this count is 0 has measured the control twice and must not be read as a null."
++        ),
++    }
++
+     # ---- THE VERDICT --------------------------------------------------------------------------
+     primary = comparisons.get("change_accuracy::treatment_vs_single_shot", {})
+     st = primary.get("sign_test", {})
+@@ -278,10 +424,72 @@ def main() -> int:
+         and (sec_st.get("p_two_sided") is not None and sec_st["p_two_sided"] < 0.05)
+     )
+ 
++    # LIKE-FOR-LIKE CHECK, added 2026-08-03. `beat` above is the pre-registered best-of-R form and
++    # is asymmetric against single-shot's single grade (see `cell_value_final`). A POSITIVE verdict
++    # now additionally requires the symmetric final-round contrast to point the same way. This can
++    # only ever make a win HARDER to claim; it cannot manufacture one.
++    prim_final = comparisons_final.get("change_accuracy::treatment_vs_single_shot", {})
++    st_final = prim_final.get("sign_test", {})
++    beat_like_for_like = bool(
++        st_final.get("wins_treatment", 0) > st_final.get("losses_treatment", 0)
++        and (st_final.get("p_two_sided") is not None and st_final["p_two_sided"] < 0.05)
++    )
++
++    # A NULL IS ONLY A NULL IF THE TREATMENT WAS ACTUALLY ADMINISTERED. If no generator prompt
++    # ever carried the engine, this run measured the control twice, and reporting that as a null
++    # would launder a blocked measurement into the stopping rule -- the exact substitution the
++    # previous attempt correctly refused to make. Distinguished here, not assumed.
++    treatment_administered = trt_gen > 0
++    any_treatment_rounds = (
++        _sum("refine_treatment", "n_generator_calls_witnessed") > 0
++        or delivery["treatment_prompts_containing_engine"] > 0
++    )
++
++    # ROUND-0 FAILURE IS ITS OWN OUTCOME, added 2026-08-03. Without this, a run in which round-0
++    # induction never produced an engine reports `blocked_treatment_never_delivered_to_generator`
++    # -- naming the DELIVERY instrument, which is independently proven working, as the blocker,
++    # when the measured cause is upstream and different (e.g. the code-only induce hitting its
++    # n_predict cap). Both arms are skipped with `no_round0_engine` in that case, so no generator
++    # prompt can carry an engine and the delivery counter is 0 for a reason that has nothing to do
++    # with delivery. Keyed on `round0_engine_loaded`, which the shard records per cell.
++    n_cells_with_round0_engine = sum(1 for r in rows if r.get("round0_engine_loaded"))
++    round0_failed_everywhere = len(rows) > 0 and n_cells_with_round0_engine == 0
++    induce_messages = sorted(
++        {str(r.get("induce_message"))[:200] for r in rows if not r.get("induce_ok")}
++    )
++
++    # POWER, added 2026-08-03. `line_closes` was `(not beat) and treatment_administered` with no
++    # reference to what p was reachable, so it fired identically at 1 discordant game (min
++    # reachable p = 1.0) and at 11 (0.00098). The pre-registration commits IN PROSE to reporting a
++    # null that could not have been anything else as underpowered rather than as a refutation;
++    # this makes that commitment machine-readable.
++    min_p_at_n = st.get("min_reachable_p_at_this_n_discordant")
++    adequately_powered = min_p_at_n is not None and min_p_at_n < 0.05
++
+     verdict_line = (
+         "REFINEMENT-WITH-ENGINE-VISIBLE BEATS SINGLE-SHOT"
+-        if beat
+-        else "NULL: refinement-with-engine-visible does NOT beat single-shot"
++        if (beat and beat_like_for_like)
++        else (
++            "BLOCKED: round-0 induction produced no engine on any cell; both refinement arms and "
++            "single-shot are undefined. This is NOT a null and NOT a delivery failure -- see "
++            "`induce_messages`."
++            if round0_failed_everywhere
++            else (
++                "MIXED: the pre-registered best-of-R contrast is positive but the like-for-like "
++                "final-round contrast is not; do not report a win"
++                if beat and not beat_like_for_like
++                else (
++                    "NULL: refinement-with-engine-visible does NOT beat single-shot"
++                    if treatment_administered and adequately_powered
++                    else (
++                        "UNDERPOWERED: no p below 0.05 was reachable at this number of "
++                        "discordant games; this is not a refutation"
++                        if treatment_administered
++                        else "BLOCKED: the treatment never reached the generator; this is NOT a null"
++                    )
++                )
++            )
++        )
+     )
+ 
+     out = {
+@@ -307,6 +515,32 @@ def main() -> int:
+         "missing_arm_values": missing,
+         "per_game": agg,
+         "comparisons": comparisons,
++        "comparisons_like_for_like_final_round": comparisons_final,
++        "primary_comparison_asymmetry_disclosure": {
++            "pre_registered_primary_reads": "best_<metric> = MAX over the R refactor rounds",
++            "single_shot_reads": "its ONE grade",
++            "why_this_matters": (
++                "Per-cell change_accuracy is BINARY at these window sizes (exactly one gradeable "
++                "acceptance row per game), so a refinement arm that changes nothing still scores "
++                "1-(1-p)^R against single-shot's p -- 0.36 vs 0.20 at p=0.2, R=2 -- from the "
++                "extra draw alone, and the max is taken over the same held-out block that grades. "
++                "`treatment_vs_control` is symmetric and unaffected. The like-for-like "
++                "final-round contrast is reported above and a POSITIVE verdict requires both."
++            ),
++            "beat_pre_registered_best_of_r": beat,
++            "beat_like_for_like_final_round": beat_like_for_like,
++        },
++        "round0_induction": {
++            "n_cells": len(rows),
++            "n_cells_with_round0_engine": n_cells_with_round0_engine,
++            "round0_failed_on_every_cell": round0_failed_everywhere,
++            "induce_messages": induce_messages,
++            "why": (
++                "If round-0 induction produced no engine, single_shot and BOTH refinement arms "
++                "are undefined for that cell and no generator prompt can carry an engine. That is "
++                "an upstream induction failure, NOT a delivery failure and NOT a null."
++            ),
++        },
+         "stratification_by_changed_cells": strat_summary,
+         "controls": controls,
+         "purity_and_delivery": delivery,
+@@ -322,14 +556,49 @@ def main() -> int:
+             "primary_sign_test": st,
+             "secondary_change_fidelity_beats": sec_beat,
+             "secondary_sign_test": sec_st,
+-            "line_closes": (not beat),
++            "treatment_actually_administered": treatment_administered,
++            "any_treatment_rounds_ran": any_treatment_rounds,
++            "round0_failed_on_every_cell": round0_failed_everywhere,
++            "min_reachable_p_at_this_n_discordant": min_p_at_n,
++            "adequately_powered_at_alpha_0_05": adequately_powered,
++            # The line closes on a NULL. It does NOT close on a run whose treatment never
++            # reached the model -- that is a blocked measurement and the rule does not fire.
++            # CORRECTED 2026-08-03: it also does NOT close when round-0 induction produced no
++            # engine anywhere (nothing was measured at all), nor when no p below 0.05 was
++            # REACHABLE at the observed number of discordant games -- a null that could not have
++            # been anything else is underpowered, not a refutation. Both were previously absent,
++            # so `line_closes` would have fired True on a run with 1 discordant game or with zero
++            # engines. Direction of the change is conservative: it can only make the line HARDER
++            # to close, never easier.
++            "line_closes": (
++                (not beat)
++                and treatment_administered
++                and (not round0_failed_everywhere)
++                and adequately_powered
++            ),
+         },
+         "duration_s": round(time.time() - t0, 3),
+     }
+     out["honest_verdict"] = (
+         "complete_refinement_beats_single_shot"
+-        if beat
+-        else "complete_null_refinement_does_not_beat_single_shot_line_closes"
++        if (beat and beat_like_for_like)
++        else (
++            "blocked_round0_induction_produced_no_engine_on_any_cell_not_a_null"
++            if round0_failed_everywhere
++            else (
++                "complete_mixed_best_of_r_positive_but_like_for_like_final_round_not_no_win_claimed"
++                if beat and not beat_like_for_like
++                else (
++                    "complete_null_refinement_does_not_beat_single_shot_line_closes"
++                    if treatment_administered and adequately_powered
++                    else (
++                        "blocked_underpowered_no_p_below_0_05_reachable_not_a_refutation"
++                        if treatment_administered
++                        else "blocked_treatment_never_delivered_to_generator_not_a_null"
++                    )
++                )
++            )
++        )
+     )
+     out["reproducibility_checksum"] = hashlib.sha256(
+         json.dumps(
+-- 
+2.55.0
+

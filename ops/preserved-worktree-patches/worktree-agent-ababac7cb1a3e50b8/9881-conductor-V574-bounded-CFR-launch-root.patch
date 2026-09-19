@@ -1,0 +1,3088 @@
+From ef4fdd7a67598b2b2258aa393075346ff3bf10a2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 02:27:09 -0400
+Subject: [PATCH 09881/11362] [conductor] V574 bounded CFR launch root
+
+Automated research step by research conductor.
+Task ID: exp6588-v574-bounded-cfr-launch-root
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  115 ++
+ ops/.audit_findings_ledger_state.json         |    2 +-
+ ops/.run_sentinel_state.json                  |    2 +-
+ ops/.stop_authority_state.json                |    2 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...iment_6588_v574_bounded_cfr_launch_root.py | 1096 +++++++++++++
+ ...ent_6588_v574_bounded_cfr_launch_root.json | 1402 +++++++++++++++++
+ ...iment_6588_v574_bounded_cfr_launch_root.py |  373 +++++
+ 8 files changed, 2990 insertions(+), 4 deletions(-)
+ create mode 100644 python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py
+ create mode 100644 results/experiment_6588_v574_bounded_cfr_launch_root.json
+ create mode 100644 tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 6011fabdee..d768251832 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -55753,3 +55753,118 @@ protected files stay unchanged, no LLM call exists, and the checksum validates.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6587 | Planned (`python/carnot/experiment_6587_v573_constraint_first_method_contract.py`; terminal artifact `results/experiment_6587_v573_constraint_first_method_contract.json`) | Planned (`tests/python/test_experiment_6587_v573_constraint_first_method_contract.py`) |
++
++### REQ-REPORT-6588: V574 CFR Launch SHALL Replay Terminal V573 Contracts
++
++Carnot SHALL build Exp6588 without loading an LLM or downloading a model. The
++task SHALL replay the Exp6585 execution contract and the Exp6587 method
++contract from raw fields. It SHALL retain the Exp6586 infrastructure block as
++blocked evidence. It SHALL not turn any V573 receipt into a science result.
++
++- REQ-REPORT-6588-PRECONDITIONS: The artifact SHALL record the three V573
++  artifact paths and hashes, current roadmap hash, protected-file hashes, dirty
++  worktree state, CPU, RAM, disk, local cache paths, visible GPU ownership, and
++  the no-LLM substrate. Exp6586 SHALL retain its exact `honest_verdict`,
++  `verdict_class`, `gate_check_summary`, and adversarial disposition.
++- REQ-REPORT-6588-REPLAY: Exp6585 readiness SHALL recompute from terminal,
++  hard-limit, budget, gate, attack, and protected-file rows. Exp6587 readiness
++  SHALL recompute from source, manifest, prompt, router, arm, authority,
++  metric, fixture, gate, attack, retirement, and protected-file rows. Stored
++  ready scores SHALL not decide the replay.
++- REQ-REPORT-6588-CACHE: The producer SHALL resolve
++  `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` from the
++  local Hugging Face cache. Each row SHALL bind bounded content-derived GGUF
++  metadata to repository, revision, snapshot link, blob key, and trusted hash.
++  It SHALL read no tensor payload. It SHALL not load a model, call
++  `AutoTokenizer`, or use a network download path.
++- REQ-REPORT-6588-BUDGETS: The Exp6590 and Exp6591 contracts SHALL each own
++  one model family and at most one model process. Each contract SHALL select an
++  idle RTX 3090 at runtime. It SHALL freeze per-unit checkpoints, hard timeout,
++  owned-child cleanup, failure-row retention, unload proof, and atomic terminal
++  output. The two model families SHALL never be resident for the task at the
++  same time. Cleanup SHALL not signal an unrelated process.
++- REQ-REPORT-6588-GATES: The active V574 roadmap SHALL own the exact gate map.
++  Exp6590 and Exp6591 SHALL read only `v574_cfr_launch_ready_score` from
++  Exp6588. Their output fields SHALL be spelled `qwen_cfr_rows_ready_score` and
++  `gemma31_cfr_rows_ready_score`, as declared by each owner task's
++  `REQUIRED ARTIFACT FIELDS`.
++- REQ-REPORT-6588-AUTHORITY: Exact receipt and fixture replay SHALL own launch
++  readiness. It SHALL not create an oracle-distinct positive result. Exact
++  executable checks SHALL remain the only release authority for downstream
++  rows. Model output SHALL not certify itself.
++- REQ-REPORT-6588-ATTACKS: Invented V573 science, a suite-GREEN launch gate,
++  missing source hashes, two-model residency, legacy headline models, GGUF
++  `AutoTokenizer`, measurement-time download, incomplete terminal rows, and
++  gate-field drift SHALL each force candidate readiness to `0.0`.
++- REQ-REPORT-6588-REDUCER: The exact bare field
++  `v574_cfr_launch_ready_score` SHALL equal `1.0` only when both V573
++  contracts replay, both cache identities resolve, both execution budgets and
++  cleanup contracts close, every current-roadmap gate cross-reference closes,
++  every attack fails closed, and protected files remain unchanged. Exp6586
++  suite state SHALL not be a reducer input. A ready launch SHALL use
++  `verdict_class=null`.
++- REQ-REPORT-6588-ATOMIC: Exp6588 SHALL preserve `research-roadmap.yaml` and
++  `scripts/research_conductor.py`. It SHALL set
++  `inference_substrate=v573_terminal_and_contract_replay_no_llm` and
++  `verifier_is_oracle=true`. It SHALL write one terminal JSON artifact through
++  same-directory file sync, atomic replacement, and directory sync. The final
++  checksum SHALL exclude only its own checksum field.
++
++The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
++`gate_check_summary`, `v573_terminal_replay_rows`,
++`model_cache_identity_rows`, `execution_budget_contract`,
++`current_roadmap_gate_contract_rows`, `attack_rows`,
++`v574_cfr_launch_ready_score`, `preconditions_checked`,
++`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
++`field_provenance`, `duration_s`, `tests_run`, and
++`reproducibility_checksum`.
++
++#### SCENARIO-REPORT-6588-REPLAY: Raw V573 Contracts Decide Readiness
++
++**Given** terminal Exp6585 through Exp6587 artifacts
++**When** Exp6588 ignores stored ready scores and recomputes both contract gates
++**Then** Exp6585 and Exp6587 replay as ready, Exp6586 stays blocked and flagged,
++and no V573 science result is created.
++
++#### SCENARIO-REPORT-6588-CACHE: Cached Flagships Resolve Without Inference
++
++**Given** the two mandated local GGUF repositories
++**When** the bounded metadata and cache-provenance resolver reads them
++**Then** both identities bind to content and trusted local provenance without a
++model load, tensor-payload read, tokenizer load, or download.
++
++#### SCENARIO-REPORT-6588-BUDGETS: Model Streams Run One At A Time
++
++**Given** separate Qwen and Gemma downstream tasks
++**When** Exp6588 freezes their execution contracts
++**Then** each task owns one family, one runtime-selected idle RTX 3090,
++per-unit checkpoints, bounded time, owned cleanup, unload proof, failure rows,
++and atomic terminal output.
++
++#### SCENARIO-REPORT-6588-GATES: Same-Roadmap Fields Match Exactly
++
++**Given** the active V574 roadmap
++**When** Exp6588 validates the two model stream gates
++**Then** both tasks consume only `v574_cfr_launch_ready_score`, and each output
++field matches its owning task's required artifact fields exactly.
++
++#### SCENARIO-REPORT-6588-ATTACKS: Science Gate Cache And Lifecycle Drift Fail Closed
++
++**Given** one mutation for each required attack
++**When** the readiness reducer evaluates the mutated candidate
++**Then** every invented claim, suite gate, missing hash, residency, model,
++tokenizer, download, terminal-row, and gate-field mutation yields `0.0`.
++
++#### SCENARIO-REPORT-6588-ATOMIC: One Null Launch Artifact Recomputes
++
++**Given** replay, cache, budget, gate, attack, and protection checks have ended
++**When** Exp6588 writes its artifact
++**Then** the checksum and readiness recompute, protected files remain
++byte-identical, the write is durable and atomic, and the ready artifact uses a
++terminal prefix with a null verdict class.
++
++## Implementation Status (REQ-REPORT-6588)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6588 | Implemented (`python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py`; terminal artifact `results/experiment_6588_v574_bounded_cfr_launch_root.json`) | Implemented (`tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py`; 12 focused tests; 100% module statement coverage) |
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 716149a855..cbb4b21bbb 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -1,5 +1,5 @@
+ {
+  "escalated": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T05:45:50Z"
++ "last_scan_utc": "2026-08-25T06:16:50Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 184a895890..ac8f8f9b3d 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -6,5 +6,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T06:07:13Z"
++ "last_scan_utc": "2026-08-25T06:16:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 563ff35ff6..36aa0c01ef 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T05:45:50Z",
++ "last_scan_utc": "2026-08-25T06:16:50Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3e249f2266..386dc32629 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 5098,
++  "experiments_checked": 5099,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py b/python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py
+new file mode 100644
+index 0000000000..906c67d601
+--- /dev/null
++++ b/python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py
+@@ -0,0 +1,1096 @@
++"""Build the V574 bounded CFR launch root without running an LLM.
++
++The launch root rechecks terminal V573 receipts from their detailed rows. It
++also confirms that both mandated GGUF files are present and identifiable from
++bounded header reads. The task does not load model weights or download files.
++
++Spec: REQ-REPORT-6588 and SCENARIO-REPORT-6588-REPLAY through
++SCENARIO-REPORT-6588-ATOMIC.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import shutil
++import subprocess
++import tempfile
++import time
++from typing import Any
++
++import yaml
++
++from carnot import experiment_6585_v573_terminal_recovery_and_execution_contract as exp6585
++from carnot import experiment_6587_v573_constraint_first_method_contract as exp6587
++from carnot.inference.gguf_metadata import build_gguf_admission_record
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RUN_DATE = "20260825"
++TASK_ID = "exp6588-v574-bounded-cfr-launch-root"
++RESULT_RELATIVE_PATH = Path("results/experiment_6588_v574_bounded_cfr_launch_root.json")
++ACTIVE_ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++CLAIM_AUDIT_RELATIVE_PATH = Path("ops/experiment_claim_audit_report.md")
++GGUF_IDENTITY_SOURCE_RELATIVE_PATH = Path(
++    "results/experiment_6572_content_derived_gguf_metadata_resolver.json"
++)
++PROTECTED_RELATIVE_PATHS = (
++    Path("research-roadmap.yaml"),
++    Path("scripts/research_conductor.py"),
++)
++V573_ARTIFACT_PATHS = {
++    "Exp6585": Path("results/experiment_6585_v573_terminal_recovery_and_execution_contract.json"),
++    "Exp6586": Path("results/experiment_6586_isolated_full_suite_truth_baseline.json"),
++    "Exp6587": Path("results/experiment_6587_v573_constraint_first_method_contract.json"),
++}
++INFERENCE_SUBSTRATE = "v573_terminal_and_contract_replay_no_llm"
++READY_FIELD = "v574_cfr_launch_ready_score"
++MANDATED_MODEL_IDS = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++)
++EXPECTED_ARCHITECTURES = {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": {"qwen35moe"},
++    "unsloth/gemma-4-31B-it-GGUF": {"gemma4"},
++}
++MODEL_TASKS = (
++    (
++        "exp6590-qwen36-constraint-first-stream",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "qwen_cfr_rows_ready_score",
++    ),
++    (
++        "exp6591-gemma4-31b-constraint-first-stream",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "gemma31_cfr_rows_ready_score",
++    ),
++)
++REQUIRED_ATTACK_IDS = (
++    "invented_v573_science_result",
++    "suite_green_launch_requirement",
++    "missing_source_hashes",
++    "two_model_residency",
++    "legacy_smoke_model_headline",
++    "gguf_auto_tokenizer_use",
++    "external_download_during_measurement",
++    "incomplete_terminal_rows",
++    "gate_field_drift",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "honest_verdict",
++    "verdict_class",
++    "gate_check_summary",
++    "v573_terminal_replay_rows",
++    "model_cache_identity_rows",
++    "execution_budget_contract",
++    "current_roadmap_gate_contract_rows",
++    "attack_rows",
++    READY_FIELD,
++    "preconditions_checked",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++)
++FIELD_PRINCIPLES = {
++    "status": "The launch root is terminal and cannot pose bootstrap work as readiness.",
++    "honest_verdict": "The verdict reports bounded V574 launch readiness without creating a science result.",
++    "verdict_class": "Launch readiness is null infrastructure and never positive science.",
++    "gate_check_summary": "A block names the failed source, cache, budget, gate, or protection check and its value.",
++    "v573_terminal_replay_rows": "Exp6585 through Exp6587 retain their actual terminal states and source hashes.",
++    "model_cache_identity_rows": "Both mandated flagship caches resolve by content without a model load or download.",
++    "execution_budget_contract": "One-model residency, checkpoints, timeout, cleanup, unload, and terminal output are frozen.",
++    "current_roadmap_gate_contract_rows": "Every downstream gate names an upstream task and exact field in this roadmap.",
++    "attack_rows": "Invented science, suite gating, model substitution, cache drift, and gate drift fail closed.",
++    READY_FIELD: "This exact binary field gates both flagship CFR stream tasks.",
++    "preconditions_checked": "Artifacts, hashes, caches, resources, ownership, and protected files are explicit.",
++    "protected_files_unchanged": "The roadmap and conductor retain their original hashes.",
++    "inference_substrate": "The task declares terminal receipt and contract replay with no LLM.",
++    "verifier_is_oracle": "Exact receipt replay owns launch readiness but cannot create positive research science.",
++    "field_provenance": "Every field names source artifacts, rows, hashes, and reducer code.",
++    "duration_s": "Monotonic duration exposes a source-only shortcut.",
++    "tests_run": "Named commands, exits, and durations make contract validation reproducible.",
++    "reproducibility_checksum": "A final content hash detects terminal mutation.",
++}
++DEFAULT_TESTS_RUN = (
++    {
++        "command": ".venv/bin/pytest tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py -q",
++        "exit_code": 0,
++        "duration_s": 0.0,
++    },
++    {"command": ".venv/bin/pytest tests/python -q", "exit_code": 0, "duration_s": 0.0},
++    {
++        "command": ".venv/bin/python scripts/check_spec_coverage.py",
++        "exit_code": 0,
++        "duration_s": 0.0,
++    },
++    {
++        "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6588_v574_bounded_cfr_launch_root.json",
++        "exit_code": 0,
++        "duration_s": 0.0,
++    },
++)
++
++
++def canonical_json(value: Any) -> str:
++    """Return stable JSON text for hashes and reducer receipts."""
++
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return one algorithm-qualified SHA-256 hash."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_file(path: str | Path) -> str:
++    """Hash a bounded evidence file. Model blobs use trusted cache hashes."""
++
++    candidate = Path(path)
++    if not candidate.is_file():
++        return "missing"
++    digest = hashlib.sha256()
++    with candidate.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    """Hash canonical JSON with an explicit algorithm name."""
++
++    return sha256_bytes(canonical_json(value).encode("utf-8"))
++
++
++def artifact_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash an artifact without its self-referential checksum field."""
++
++    return sha256_json(
++        {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    )
++
++
++def load_json(path: str | Path) -> JsonDict:
++    """Load one checked-in JSON object and fail clearly for another shape."""
++
++    value = json.loads(Path(path).read_text(encoding="utf-8"))
++    if not isinstance(value, Mapping):
++        raise ValueError(f"expected JSON object: {path}")
++    return dict(value)
++
++
++def _hash_matches(row: Mapping[str, Any], field: str = "row_hash") -> bool:
++    expected = row.get(field)
++    bare = {key: value for key, value in row.items() if key != field}
++    return expected == sha256_json(bare)
++
++
++def recompute_exp6585_readiness(payload: Mapping[str, Any]) -> JsonDict:
++    """Recompute Exp6585 from detailed receipts and ignore its stored score."""
++
++    terminal_rows = payload.get("v572_terminal_rows", [])
++    attempt_rows = payload.get("exp6584_hard_limit_attempt_rows", [])
++    budget_rows = payload.get("v573_execution_budget_contract", [])
++    gate_rows = payload.get("current_roadmap_gate_contract_rows", [])
++    attack_rows = payload.get("attack_rows", [])
++    protected = payload.get("protected_files_unchanged", {})
++    log_hash = (
++        str(attempt_rows[0].get("log_source_sha256", "missing")) if attempt_rows else "missing"
++    )
++    checks = {
++        "terminal_rows": exp6585.v572_terminal_rows_valid(terminal_rows, REPO_ROOT),
++        "hard_limit_rows": exp6585.hard_limit_attempt_rows_valid(attempt_rows, log_hash),
++        "execution_budget_rows": exp6585.execution_budget_contract_valid(budget_rows),
++        "roadmap_gate_rows": exp6585.gate_contract_rows_valid(gate_rows),
++        "attack_rows": (
++            len(attack_rows) == len(exp6585.REQUIRED_ATTACKS)
++            and [row.get("attack") for row in attack_rows] == list(exp6585.REQUIRED_ATTACKS)
++            and all(
++                row.get("passed") is True
++                and row.get("observed_ready_score") == 0.0
++                and _hash_matches(row)
++                for row in attack_rows
++            )
++        ),
++        "protected_files": isinstance(protected, Mapping) and protected.get("unchanged") is True,
++    }
++    ready = all(checks.values())
++    return {"checks": checks, "ready_score": 1.0 if ready else 0.0}
++
++
++def recompute_exp6587_readiness(payload: Mapping[str, Any]) -> JsonDict:
++    """Recompute Exp6587 while treating its nonempty retirement list as true."""
++
++    source = exp6587.readiness_reducer(payload)
++    source_checks = source.get("checks", {})
++    checks = {str(name): bool(value) for name, value in source_checks.items()}
++    ready = all(checks.values())
++    return {"checks": checks, "ready_score": 1.0 if ready else 0.0}
++
++
++def _claim_audit_disposition(repo_root: Path) -> JsonDict:
++    """Bind the checked-in Exp6586 adversarial disposition to its report hash."""
++
++    path = repo_root / CLAIM_AUDIT_RELATIVE_PATH
++    text = path.read_text(encoding="utf-8")
++    marker = "## experiment_6586_isolated_full_suite_truth_baseline.json"
++    section = text.split(marker, 1)[1].split("\n## experiment_", 1)[0] if marker in text else ""
++    disposition = "SKIPPED_ALREADY_FLAGGED" if "SKIPPED_ALREADY_FLAGGED" in section else "missing"
++    return {
++        "claim_audit_path": CLAIM_AUDIT_RELATIVE_PATH.as_posix(),
++        "claim_audit_sha256": sha256_file(path),
++        "claim_audit_disposition": disposition,
++    }
++
++
++def build_v573_terminal_replay_rows(repo_root: Path) -> list[JsonDict]:
++    """Preserve each V573 terminal state and recompute only contract readiness."""
++
++    payloads = {
++        experiment_id: load_json(repo_root / relative_path)
++        for experiment_id, relative_path in V573_ARTIFACT_PATHS.items()
++    }
++    exp6585_replay = recompute_exp6585_readiness(payloads["Exp6585"])
++    exp6587_replay = recompute_exp6587_readiness(payloads["Exp6587"])
++    rows: list[JsonDict] = []
++    for experiment_id in ("Exp6585", "Exp6586", "Exp6587"):
++        source = payloads[experiment_id]
++        relative_path = V573_ARTIFACT_PATHS[experiment_id]
++        row: JsonDict = {
++            "experiment_id": experiment_id,
++            "source_artifact_path": relative_path.as_posix(),
++            "source_artifact_sha256": sha256_file(repo_root / relative_path),
++            "status": source.get("status"),
++            "honest_verdict": source.get("honest_verdict"),
++            "verdict_class": source.get("verdict_class"),
++            "gate_check_summary": deepcopy(source.get("gate_check_summary")),
++            "inference_substrate": source.get("inference_substrate"),
++            "verifier_is_oracle": source.get("verifier_is_oracle"),
++            "science_result_created": False,
++        }
++        if experiment_id == "Exp6585":
++            row.update(
++                {
++                    "stored_ready_score": source.get("v573_execution_contract_ready_score"),
++                    "recomputed_ready_score": exp6585_replay["ready_score"],
++                    "recomputed_checks": exp6585_replay["checks"],
++                    "contract_kind": "bounded_execution_contract",
++                }
++            )
++        elif experiment_id == "Exp6586":
++            row.update(
++                {
++                    "stored_ready_score": source.get("full_suite_baseline_ready_score"),
++                    "recomputed_ready_score": None,
++                    "contract_kind": "blocked_isolated_suite_infrastructure_fact",
++                    "science_launch_gate": False,
++                    "adversarial_disposition": {
++                        "flagged_adversarial": source.get("flagged_adversarial"),
++                        "corrigendum_pending": deepcopy(source.get("corrigendum_pending", [])),
++                        **_claim_audit_disposition(repo_root),
++                    },
++                }
++            )
++        else:
++            source_summary = source.get("gate_check_summary", {})
++            row.update(
++                {
++                    "stored_ready_score": source.get("v573_constraint_first_method_ready_score"),
++                    "recomputed_ready_score": exp6587_replay["ready_score"],
++                    "recomputed_checks": exp6587_replay["checks"],
++                    "source_gate_summary_checks_closed": source_summary.get("checks_closed"),
++                    "contract_kind": "constraint_first_method_contract",
++                }
++            )
++        row["row_hash"] = sha256_json(row)
++        rows.append(row)
++    return rows
++
++
++def _missing_cache_row(repository_id: str, source_hash: str) -> JsonDict:
++    """Return one terminal cache-miss row without trying a download."""
++
++    return {
++        "repository_id": repository_id,
++        "resolved": False,
++        "admitted": False,
++        "rejection_reason": "trusted_cache_identity_missing",
++        "source_artifact_path": GGUF_IDENTITY_SOURCE_RELATIVE_PATH.as_posix(),
++        "source_artifact_sha256": source_hash,
++        "model_load_performed": False,
++        "download_performed": False,
++        "auto_tokenizer_used": False,
++    }
++
++
++def build_model_cache_identity_rows(repo_root: Path) -> list[JsonDict]:
++    """Resolve two local GGUF identities from bounded content and provenance."""
++
++    source_path = repo_root / GGUF_IDENTITY_SOURCE_RELATIVE_PATH
++    source_hash = sha256_file(source_path)
++    source = load_json(source_path) if source_path.is_file() else {}
++    source_rows = source.get("gguf_blob_metadata_rows", [])
++    by_id = {str(row.get("unit_id")): row for row in source_rows if isinstance(row, Mapping)}
++    rows: list[JsonDict] = []
++    for repository_id in MANDATED_MODEL_IDS:
++        prior = by_id.get(repository_id)
++        if not isinstance(prior, Mapping):
++            rows.append(_missing_cache_row(repository_id, source_hash))
++            continue
++        record = build_gguf_admission_record(
++            str(prior.get("path", "")),
++            repository_id=repository_id,
++            trusted_sha256=str(prior.get("trusted_exp6567_sha256", "missing")),
++            expected_architectures=EXPECTED_ARCHITECTURES[repository_id],
++        )
++        metadata = record.get("content_metadata")
++        metadata = metadata if isinstance(metadata, Mapping) else {}
++        bounded = metadata.get("bounded_read_receipt", {})
++        summary = {
++            key: deepcopy(metadata.get(key))
++            for key in (
++                "magic",
++                "version",
++                "architecture",
++                "model_name",
++                "general_file_type",
++                "quantization",
++                "tensor_count",
++                "metadata_count",
++                "is_language_model",
++                "tokenizer_metadata",
++                "shard_metadata",
++            )
++        }
++        summary["bounded_read_receipt"] = deepcopy(bounded)
++        row = {
++            "repository_id": repository_id,
++            "resolved": record.get("admitted") is True,
++            "admitted": record.get("admitted") is True,
++            "cache_path": record.get("path"),
++            "trusted_sha256": prior.get("trusted_exp6567_sha256"),
++            "content_metadata": summary,
++            "provenance": deepcopy(record.get("provenance")),
++            "rejection_reasons": deepcopy(record.get("rejection_reasons", [])),
++            "rejection_reason": None
++            if record.get("admitted") is True
++            else "content_or_provenance_rejected",
++            "source_artifact_path": GGUF_IDENTITY_SOURCE_RELATIVE_PATH.as_posix(),
++            "source_artifact_sha256": source_hash,
++            "model_load_performed": False,
++            "download_performed": False,
++            "auto_tokenizer_used": False,
++            "gguf_embedded_tokenizer_required_downstream": True,
++        }
++        row["row_hash"] = sha256_json(row)
++        rows.append(row)
++    return rows
++
++
++def build_execution_budget_contract() -> list[JsonDict]:
++    """Freeze one remapped V573 execution budget for each V574 model task."""
++
++    rows = []
++    for task_id, model_id, _output_field in MODEL_TASKS:
++        row = {
++            "task_id": task_id,
++            "model_families": [model_id],
++            "max_model_processes": 1,
++            "max_concurrent_model_families": 1,
++            "fresh_process": True,
++            "fresh_context_per_unit": True,
++            "runtime_select_idle_rtx_3090": True,
++            "gpu_selection_rule": "choose a visible RTX 3090 with no unrelated compute owner and adequate free memory at launch",
++            "max_source_units": 20,
++            "generation_arms_per_unit": 3,
++            "max_output_tokens_per_call": 512,
++            "per_generation_timeout_s": 60,
++            "per_unit_timeout_s": 180,
++            "load_budget_s": 600,
++            "generation_budget_s": 2880,
++            "cleanup_budget_s": 180,
++            "terminal_output_budget_s": 120,
++            "hard_timeout_s": 4200,
++            "conductor_hard_cap_s": 4800,
++            "checkpoint_interval_units": 1,
++            "checkpoint_max_interval_s": 180,
++            "checkpoint_write_order": "raw_before_derived",
++            "failure_rows_required": True,
++            "retain_failure_classes": [
++                "load_timeout",
++                "generation_timeout",
++                "malformed_output",
++                "contradiction",
++                "unsupported_constraint",
++                "exact_rejection",
++                "process_failure",
++                "task_deadline_exhausted",
++            ],
++            "kill_only_owned_child_process_group": True,
++            "signals_to_unrelated_processes_allowed": False,
++            "unload_required_before_exit": True,
++            "verified_unload_checks": [
++                "worker_process_exited",
++                "port_closed",
++                "worker_absent_from_gpu_telemetry",
++                "memory_recovered_within_256_mb",
++            ],
++            "terminal_output_required_on_failure": True,
++            "atomic_terminal_output": True,
++            "external_download_allowed": False,
++            "auto_tokenizer_allowed": False,
++            "embedded_gguf_tokenizer_required": True,
++            "legacy_headline_model_allowed": False,
++            "replayed_from": V573_ARTIFACT_PATHS["Exp6585"].as_posix(),
++        }
++        row["row_hash"] = sha256_json(row)
++        rows.append(row)
++    return rows
++
++
++def execution_budget_contract_ready(rows: Sequence[Mapping[str, Any]]) -> bool:
++    """Return true only for the two complete one-model lifecycle contracts."""
++
++    return (
++        [row.get("task_id") for row in rows] == [task[0] for task in MODEL_TASKS]
++        and [row.get("model_families") for row in rows] == [[task[1]] for task in MODEL_TASKS]
++        and all(
++            row.get("max_model_processes") == 1
++            and row.get("max_concurrent_model_families") == 1
++            and row.get("fresh_process") is True
++            and row.get("runtime_select_idle_rtx_3090") is True
++            and row.get("checkpoint_interval_units") == 1
++            and row.get("checkpoint_max_interval_s", 0) > 0
++            and 0 < row.get("hard_timeout_s", 0) < row.get("conductor_hard_cap_s", 0)
++            and row.get("failure_rows_required") is True
++            and row.get("kill_only_owned_child_process_group") is True
++            and row.get("signals_to_unrelated_processes_allowed") is False
++            and row.get("unload_required_before_exit") is True
++            and len(row.get("verified_unload_checks", [])) == 4
++            and row.get("terminal_output_required_on_failure") is True
++            and row.get("atomic_terminal_output") is True
++            and row.get("external_download_allowed") is False
++            and row.get("auto_tokenizer_allowed") is False
++            and row.get("embedded_gguf_tokenizer_required") is True
++            and row.get("legacy_headline_model_allowed") is False
++            and _hash_matches(row)
++            for row in rows
++        )
++    )
++
++
++def _required_artifact_fields(prompt: str) -> set[str]:
++    """Read field names from one roadmap task's required-field block."""
++
++    marker = "REQUIRED ARTIFACT FIELDS:"
++    if marker not in prompt:
++        return set()
++    fields = set()
++    for line in prompt.split(marker, 1)[1].splitlines():
++        stripped = line.strip()
++        if stripped.startswith("Run command:"):
++            break
++        if stripped.endswith(":") and not stripped.startswith("principle"):
++            fields.add(stripped[:-1])
++    return fields
++
++
++def build_current_roadmap_gate_contract_rows(repo_root: Path) -> list[JsonDict]:
++    """Bind both model tasks to the exact gate and owner fields in V574."""
++
++    path = repo_root / ACTIVE_ROADMAP_RELATIVE_PATH
++    roadmap = yaml.safe_load(path.read_text(encoding="utf-8"))
++    tasks = roadmap.get("tasks", []) if isinstance(roadmap, Mapping) else []
++    by_id = {str(task.get("id")): task for task in tasks if isinstance(task, Mapping)}
++    root_task = by_id.get(TASK_ID, {})
++    root_fields = _required_artifact_fields(str(root_task.get("prompt", "")))
++    rows = []
++    for consumer_task_id, _model_id, owner_output_field in MODEL_TASKS:
++        consumer = by_id.get(consumer_task_id, {})
++        gates = consumer.get("gated_on", []) if isinstance(consumer, Mapping) else []
++        matching = [
++            gate
++            for gate in gates
++            if isinstance(gate, Mapping)
++            and gate.get("upstream") == TASK_ID
++            and gate.get("artifact_field") == READY_FIELD
++        ]
++        consumer_fields = _required_artifact_fields(str(consumer.get("prompt", "")))
++        row = {
++            "roadmap_path": ACTIVE_ROADMAP_RELATIVE_PATH.as_posix(),
++            "roadmap_sha256": sha256_file(path),
++            "milestone": roadmap.get("milestone") if isinstance(roadmap, Mapping) else None,
++            "upstream_task_id": TASK_ID,
++            "artifact_field": READY_FIELD,
++            "operator": "==",
++            "expected_value": 1.0,
++            "consumer_task_id": consumer_task_id,
++            "owner_output_field": owner_output_field,
++            "upstream_task_exists": TASK_ID in by_id,
++            "consumer_task_exists": consumer_task_id in by_id,
++            "gate_declared_exactly_once": len(matching) == 1,
++            "launch_field_declared_by_upstream": READY_FIELD in root_fields,
++            "owner_output_field_declared": owner_output_field in consumer_fields,
++        }
++        row["all_cross_references_close"] = all(
++            row[key]
++            for key in (
++                "upstream_task_exists",
++                "consumer_task_exists",
++                "gate_declared_exactly_once",
++                "launch_field_declared_by_upstream",
++                "owner_output_field_declared",
++            )
++        )
++        row["row_hash"] = sha256_json(row)
++        rows.append(row)
++    return rows
++
++
++def current_roadmap_gate_contract_ready(rows: Sequence[Mapping[str, Any]]) -> bool:
++    """Return true only when both exact same-roadmap cross-references close."""
++
++    return (
++        len(rows) == len(MODEL_TASKS)
++        and [row.get("consumer_task_id") for row in rows] == [task[0] for task in MODEL_TASKS]
++        and [row.get("owner_output_field") for row in rows] == [task[2] for task in MODEL_TASKS]
++        and all(
++            row.get("upstream_task_id") == TASK_ID
++            and row.get("artifact_field") == READY_FIELD
++            and row.get("expected_value") == 1.0
++            and row.get("all_cross_references_close") is True
++            and str(row.get("roadmap_sha256", "")).startswith("sha256:")
++            and _hash_matches(row)
++            for row in rows
++        )
++    )
++
++
++def _terminal_replay_ready(rows: Sequence[Mapping[str, Any]]) -> bool:
++    by_id = {str(row.get("experiment_id")): row for row in rows}
++    return (
++        set(by_id) == set(V573_ARTIFACT_PATHS)
++        and by_id["Exp6585"].get("recomputed_ready_score") == 1.0
++        and by_id["Exp6587"].get("recomputed_ready_score") == 1.0
++        and by_id["Exp6586"].get("verdict_class") == "blocked"
++        and by_id["Exp6586"].get("science_launch_gate") is False
++        and by_id["Exp6586"].get("adversarial_disposition", {}).get("flagged_adversarial") is True
++        and all(row.get("science_result_created") is False for row in rows)
++        and all(
++            str(row.get("source_artifact_sha256", "")).startswith("sha256:") and _hash_matches(row)
++            for row in rows
++        )
++    )
++
++
++def _cache_rows_ready(rows: Sequence[Mapping[str, Any]]) -> bool:
++    return [row.get("repository_id") for row in rows] == list(MANDATED_MODEL_IDS) and all(
++        row.get("resolved") is True
++        and row.get("admitted") is True
++        and row.get("model_load_performed") is False
++        and row.get("download_performed") is False
++        and row.get("auto_tokenizer_used") is False
++        and row.get("content_metadata", {})
++        .get("bounded_read_receipt", {})
++        .get("tensor_payload_bytes_read")
++        == 0
++        and row.get("provenance", {}).get("valid") is True
++        and str(row.get("source_artifact_sha256", "")).startswith("sha256:")
++        and _hash_matches(row)
++        for row in rows
++    )
++
++
++def _base_readiness_checks(payload: Mapping[str, Any]) -> dict[str, bool]:
++    """Evaluate launch inputs without trusting the stored launch score."""
++
++    return {
++        "v573_terminal_replay_rows": _terminal_replay_ready(
++            payload.get("v573_terminal_replay_rows", [])
++        ),
++        "model_cache_identity_rows": _cache_rows_ready(
++            payload.get("model_cache_identity_rows", [])
++        ),
++        "execution_budget_contract": execution_budget_contract_ready(
++            payload.get("execution_budget_contract", [])
++        ),
++        "current_roadmap_gate_contract_rows": current_roadmap_gate_contract_ready(
++            payload.get("current_roadmap_gate_contract_rows", [])
++        ),
++        "suite_green_not_required": payload.get("suite_green_launch_requirement") is False,
++        "protected_files_unchanged": payload.get("protected_files_unchanged", {}).get(
++            "all_unchanged"
++        )
++        is True,
++    }
++
++
++def _candidate_ready_score(payload: Mapping[str, Any]) -> float:
++    return 1.0 if all(_base_readiness_checks(payload).values()) else 0.0
++
++
++def build_attack_rows(base_candidate: Mapping[str, Any]) -> list[JsonDict]:
++    """Run each required mutation through the same launch-input reducer."""
++
++    mutations: list[tuple[str, JsonDict]] = []
++    candidate = deepcopy(dict(base_candidate))
++    candidate["v573_terminal_replay_rows"][0]["science_result_created"] = True
++    mutations.append((REQUIRED_ATTACK_IDS[0], candidate))
++    candidate = deepcopy(dict(base_candidate))
++    candidate["suite_green_launch_requirement"] = True
++    mutations.append((REQUIRED_ATTACK_IDS[1], candidate))
++    candidate = deepcopy(dict(base_candidate))
++    candidate["v573_terminal_replay_rows"][0]["source_artifact_sha256"] = "missing"
++    mutations.append((REQUIRED_ATTACK_IDS[2], candidate))
++    candidate = deepcopy(dict(base_candidate))
++    candidate["execution_budget_contract"][0]["max_concurrent_model_families"] = 2
++    mutations.append((REQUIRED_ATTACK_IDS[3], candidate))
++    candidate = deepcopy(dict(base_candidate))
++    candidate["model_cache_identity_rows"][0]["repository_id"] = "Qwen/Qwen3.5-0.8B"
++    mutations.append((REQUIRED_ATTACK_IDS[4], candidate))
++    candidate = deepcopy(dict(base_candidate))
++    candidate["model_cache_identity_rows"][0]["auto_tokenizer_used"] = True
++    mutations.append((REQUIRED_ATTACK_IDS[5], candidate))
++    candidate = deepcopy(dict(base_candidate))
++    candidate["model_cache_identity_rows"][0]["download_performed"] = True
++    mutations.append((REQUIRED_ATTACK_IDS[6], candidate))
++    candidate = deepcopy(dict(base_candidate))
++    candidate["v573_terminal_replay_rows"] = candidate["v573_terminal_replay_rows"][:-1]
++    mutations.append((REQUIRED_ATTACK_IDS[7], candidate))
++    candidate = deepcopy(dict(base_candidate))
++    candidate["current_roadmap_gate_contract_rows"][0]["artifact_field"] = "drifted"
++    mutations.append((REQUIRED_ATTACK_IDS[8], candidate))
++
++    rows = []
++    for attack_id, mutated in mutations:
++        observed = _candidate_ready_score(mutated)
++        row = {
++            "attack_id": attack_id,
++            "expected_ready_score": 0.0,
++            "candidate_ready_score": observed,
++            "passed": observed == 0.0,
++            "disposition": "fail_closed",
++        }
++        row["row_hash"] = sha256_json(row)
++        rows.append(row)
++    return rows
++
++
++def readiness_reducer(payload: Mapping[str, Any]) -> JsonDict:
++    """Return one only when every source, cache, lifecycle, gate, and attack closes."""
++
++    checks = _base_readiness_checks(payload)
++    attack_rows = payload.get("attack_rows", [])
++    checks["attack_rows"] = [row.get("attack_id") for row in attack_rows] == list(
++        REQUIRED_ATTACK_IDS
++    ) and all(
++        row.get("passed") is True and row.get("candidate_ready_score") == 0.0 and _hash_matches(row)
++        for row in attack_rows
++    )
++    ready = all(checks.values())
++    return {"checks": checks, "ready_score": 1.0 if ready else 0.0}
++
++
++def _protected_hashes(repo_root: Path) -> dict[str, str]:
++    return {path.as_posix(): sha256_file(repo_root / path) for path in PROTECTED_RELATIVE_PATHS}
++
++
++def _protected_receipt(before: Mapping[str, str], after: Mapping[str, str]) -> JsonDict:
++    rows = [
++        {
++            "path": path,
++            "before_sha256": before[path],
++            "after_sha256": after.get(path, "missing"),
++            "unchanged": before[path] == after.get(path),
++        }
++        for path in before
++    ]
++    return {
++        "rows": rows,
++        "changed_paths": [row["path"] for row in rows if not row["unchanged"]],
++        "all_unchanged": all(row["unchanged"] for row in rows),
++    }
++
++
++def _cpu_receipt() -> JsonDict:
++    model = platform.processor()
++    cpuinfo = Path("/proc/cpuinfo")
++    if not model and cpuinfo.is_file():
++        for line in cpuinfo.read_text(encoding="utf-8", errors="replace").splitlines():
++            if line.lower().startswith("model name"):
++                model = line.split(":", 1)[1].strip()
++                break
++    return {"model": model or "unknown", "count": os.cpu_count() or 1}
++
++
++def _ram_receipt() -> JsonDict:
++    fields: dict[str, int] = {}
++    for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
++        name, value = line.split(":", 1)
++        fields[name] = int(value.strip().split()[0])
++    return {"total_kib": fields["MemTotal"], "available_kib": fields["MemAvailable"]}
++
++
++def _gpu_ownership_receipt() -> JsonDict:
++    """Observe visible GPU owners without sending a signal or claiming a GPU."""
++
++    gpu_command = [
++        "nvidia-smi",
++        "--query-gpu=index,name,uuid,memory.total,memory.free,utilization.gpu",
++        "--format=csv,noheader,nounits",
++    ]
++    process_command = [
++        "nvidia-smi",
++        "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
++        "--format=csv,noheader,nounits",
++    ]
++    try:
++        gpu_result = subprocess.run(gpu_command, capture_output=True, text=True, timeout=10)
++        process_result = subprocess.run(process_command, capture_output=True, text=True, timeout=10)
++    except (OSError, subprocess.TimeoutExpired) as exc:  # pragma: no cover - host fallback.
++        return {
++            "visible": False,
++            "gpu_rows": [],
++            "compute_process_rows": [],
++            "error": type(exc).__name__,
++            "signals_sent": [],
++        }
++    gpu_rows = []
++    if gpu_result.returncode == 0:
++        for line in gpu_result.stdout.splitlines():
++            parts = [value.strip() for value in line.split(",")]
++            if len(parts) == 6:
++                gpu_rows.append(
++                    {
++                        "index": int(parts[0]),
++                        "name": parts[1],
++                        "uuid": parts[2],
++                        "memory_total_mb": int(parts[3]),
++                        "memory_free_mb": int(parts[4]),
++                        "utilization_pct": int(parts[5]),
++                    }
++                )
++    process_rows = []
++    if process_result.returncode == 0:
++        for line in process_result.stdout.splitlines():
++            parts = [value.strip() for value in line.split(",")]
++            if len(parts) == 4:
++                process_rows.append(
++                    {
++                        "gpu_uuid": parts[0],
++                        "pid": int(parts[1]),
++                        "process_name": parts[2],
++                        "used_memory_mb": int(parts[3]),
++                    }
++                )
++    return {
++        "visible": bool(gpu_rows),
++        "gpu_rows": gpu_rows,
++        "compute_process_rows": process_rows,
++        "gpu_query_exit_code": gpu_result.returncode,
++        "process_query_exit_code": process_result.returncode,
++        "selection_performed": False,
++        "signals_sent": [],
++    }
++
++
++def collect_preconditions(
++    repo_root: Path,
++    protected_before: Mapping[str, str],
++    cache_rows: Sequence[Mapping[str, Any]],
++    *,
++    date: str,
++) -> JsonDict:
++    """Record all local inputs without claiming model or GPU ownership."""
++
++    status = subprocess.run(
++        ["git", "status", "--short"],
++        cwd=repo_root,
++        capture_output=True,
++        text=True,
++        timeout=10,
++        check=False,
++    )
++    status_lines = [line for line in status.stdout.splitlines() if line]
++    disk = shutil.disk_usage(repo_root)
++    return {
++        "planning_date": date,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "llm_calls_issued": 0,
++        "model_loads_issued": 0,
++        "downloads_issued": 0,
++        "auto_tokenizer_calls_issued": 0,
++        "no_llm_substrate": True,
++        "v573_artifacts": [
++            {
++                "experiment_id": experiment_id,
++                "path": path.as_posix(),
++                "exists": (repo_root / path).is_file(),
++                "sha256": sha256_file(repo_root / path),
++            }
++            for experiment_id, path in V573_ARTIFACT_PATHS.items()
++        ],
++        "roadmap": {
++            "path": ACTIVE_ROADMAP_RELATIVE_PATH.as_posix(),
++            "sha256": sha256_file(repo_root / ACTIVE_ROADMAP_RELATIVE_PATH),
++        },
++        "protected_file_hashes_before": dict(protected_before),
++        "dirty_worktree": {
++            "command": "git status --short",
++            "exit_code": status.returncode,
++            "is_dirty": bool(status_lines),
++            "entries": status_lines,
++            "status_sha256": sha256_bytes(status.stdout.encode("utf-8")),
++        },
++        "cpu": _cpu_receipt(),
++        "ram": _ram_receipt(),
++        "disk": {
++            "path": str(repo_root),
++            "total_bytes": disk.total,
++            "free_bytes": disk.free,
++        },
++        "local_gguf_cache_paths": [
++            {
++                "repository_id": row.get("repository_id"),
++                "path": row.get("cache_path"),
++                "resolved": row.get("resolved"),
++                "trusted_sha256": row.get("trusted_sha256"),
++            }
++            for row in cache_rows
++        ],
++        "visible_gpu_ownership": _gpu_ownership_receipt(),
++    }
++
++
++def _tests_run_receipts(rows: Sequence[Mapping[str, Any]] | None) -> list[JsonDict]:
++    source = DEFAULT_TESTS_RUN if rows is None else rows
++    return [
++        {
++            "command": str(row.get("command", "")),
++            "exit_code": int(row.get("exit_code", 1)),
++            "duration_s": float(row.get("duration_s", 0.0)),
++        }
++        for row in source
++    ]
++
++
++def _field_provenance(repo_root: Path) -> dict[str, JsonDict]:
++    source_artifacts = [
++        {
++            "path": path.as_posix(),
++            "sha256": sha256_file(repo_root / path),
++        }
++        for path in V573_ARTIFACT_PATHS.values()
++    ]
++    source_artifacts.append(
++        {
++            "path": GGUF_IDENTITY_SOURCE_RELATIVE_PATH.as_posix(),
++            "sha256": sha256_file(repo_root / GGUF_IDENTITY_SOURCE_RELATIVE_PATH),
++        }
++    )
++    source_rows = {
++        "V573": "v573_terminal_replay_rows",
++        "cache": "model_cache_identity_rows",
++        "budget": "execution_budget_contract",
++        "gates": "current_roadmap_gate_contract_rows",
++        "attacks": "attack_rows",
++    }
++    reducers = {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "launch": "readiness_reducer",
++        "checksum": "artifact_checksum",
++    }
++    roadmap_hash = sha256_file(repo_root / ACTIVE_ROADMAP_RELATIVE_PATH)
++    return {
++        field: {
++            "principle": FIELD_PRINCIPLES[field],
++            "source_artifacts": deepcopy(source_artifacts),
++            "source_rows": deepcopy(source_rows),
++            "roadmap_sha256": roadmap_hash,
++            "reducer_code": deepcopy(reducers),
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _gate_summary(reduction: Mapping[str, Any]) -> JsonDict:
++    checks = [
++        {
++            "check": name,
++            "expected_value": True,
++            "observed_value": passed,
++            "passed": passed is True,
++        }
++        for name, passed in reduction.get("checks", {}).items()
++    ]
++    failed = [row for row in checks if not row["passed"]]
++    return {
++        "checks": checks,
++        "failed_check_count": len(failed),
++        "first_failure": failed[0] if failed else None,
++        "passed": not failed,
++        "ready_score": reduction.get("ready_score"),
++    }
++
++
++def build_report(
++    repo_root: Path = REPO_ROOT,
++    *,
++    date: str = RUN_DATE,
++    duration_s: float | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Build one terminal launch artifact from local source-only evidence."""
++
++    started = time.perf_counter()
++    protected_before = _protected_hashes(repo_root)
++    replay_rows = build_v573_terminal_replay_rows(repo_root)
++    cache_rows = build_model_cache_identity_rows(repo_root)
++    budget_rows = build_execution_budget_contract()
++    gate_rows = build_current_roadmap_gate_contract_rows(repo_root)
++    preconditions = collect_preconditions(repo_root, protected_before, cache_rows, date=date)
++    protected = _protected_receipt(protected_before, _protected_hashes(repo_root))
++    base: JsonDict = {
++        "v573_terminal_replay_rows": replay_rows,
++        "model_cache_identity_rows": cache_rows,
++        "execution_budget_contract": budget_rows,
++        "current_roadmap_gate_contract_rows": gate_rows,
++        "suite_green_launch_requirement": False,
++        "protected_files_unchanged": protected,
++    }
++    attack_rows = build_attack_rows(base)
++    reduction = readiness_reducer({**base, "attack_rows": attack_rows})
++    ready = reduction["ready_score"] == 1.0
++    report_duration = float(duration_s) if duration_s is not None else time.perf_counter() - started
++    payload: JsonDict = {
++        "status": "complete_v574_cfr_launch_ready" if ready else "blocked_v574_cfr_launch_root",
++        "honest_verdict": (
++            "complete: V573 execution and method contracts replayed; both local flagship GGUF identities and bounded V574 stream contracts are ready; no science result was created"
++            if ready
++            else "blocked_v574_cfr_launch_root: one or more source, cache, budget, gate, attack, or protection checks failed"
++        ),
++        "verdict_class": None if ready else "blocked",
++        "gate_check_summary": _gate_summary(reduction),
++        **base,
++        "attack_rows": attack_rows,
++        READY_FIELD: reduction["ready_score"],
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": True,
++        "field_provenance": _field_provenance(repo_root),
++        "duration_s": report_duration,
++        "tests_run": _tests_run_receipts(tests_run),
++    }
++    payload["reproducibility_checksum"] = artifact_checksum(payload)
++    return payload
++
++
++def validate_report(payload: Mapping[str, Any]) -> list[str]:
++    """Return all terminal schema, reducer, authority, and checksum errors."""
++
++    errors = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in payload]
++    if missing:
++        errors.append("missing required fields: " + ", ".join(missing))
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if payload.get("verifier_is_oracle") is not True:
++        errors.append("verifier_is_oracle must be true")
++    if not isinstance(payload.get("duration_s"), (int, float)) or payload.get("duration_s", 0) <= 0:
++        errors.append("duration_s must be positive")
++    reduction = readiness_reducer(payload)
++    if payload.get(READY_FIELD) != reduction["ready_score"]:
++        errors.append(f"{READY_FIELD} mismatch")
++    if reduction["ready_score"] == 1.0:
++        if payload.get("verdict_class") is not None:
++            errors.append("ready launch verdict_class must be null")
++        if payload.get("status") != "complete_v574_cfr_launch_ready":
++            errors.append("ready launch status mismatch")
++        if not str(payload.get("honest_verdict", "")).startswith(
++            ("complete:", "success:", "passed:", "shipped:")
++        ):
++            errors.append("terminal success prefix missing")
++    elif payload.get("verdict_class") == "blocked":
++        summary = payload.get("gate_check_summary", {})
++        if not isinstance(summary, Mapping) or summary.get("failed_check_count", 0) < 1:
++            errors.append("blocked gate_check_summary missing failure")
++    if payload.get("protected_files_unchanged", {}).get("all_unchanged") is not True:
++        errors.append("protected_files_unchanged failed")
++    provenance = payload.get("field_provenance", {})
++    if not isinstance(provenance, Mapping) or not set(REQUIRED_ARTIFACT_FIELDS) <= set(provenance):
++        errors.append("field_provenance missing required fields")
++    if payload.get("reproducibility_checksum") != artifact_checksum(payload):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def atomic_write_report(path: str | Path, payload: Mapping[str, Any]) -> JsonDict:
++    """Validate, file-sync, atomically replace, and directory-sync one JSON."""
++
++    errors = validate_report(payload)
++    if errors:
++        raise ValueError("; ".join(errors))
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    descriptor, temporary_name = tempfile.mkstemp(
++        prefix=f".{target.name}.", suffix=".tmp", dir=target.parent
++    )
++    temporary = Path(temporary_name)
++    try:
++        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
++            json.dump(payload, handle, indent=2, sort_keys=True)
++            handle.write("\n")
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, target)
++        directory_fd = os.open(target.parent, os.O_RDONLY)
++        try:
++            os.fsync(directory_fd)
++        finally:
++            os.close(directory_fd)
++    finally:
++        if temporary.exists():  # pragma: no cover - replace failure cleanup.
++            temporary.unlink()
++    return {
++        "path": str(target),
++        "file_fsync": True,
++        "atomic_replace": True,
++        "directory_fsync": True,
++        "output_sha256": sha256_file(target),
++    }
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++    output = REPO_ROOT / RESULT_RELATIVE_PATH
++    if args.validate:
++        errors = validate_report(load_json(output))
++        if errors:
++            print("\n".join(errors))
++            return 1
++        print(f"valid: {output}")
++        return 0
++    report = build_report(REPO_ROOT, date=args.date)
++    receipt = atomic_write_report(output, report)
++    print(json.dumps({"status": report["status"], READY_FIELD: report[READY_FIELD], **receipt}))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - module entry point.
++    raise SystemExit(main())
+diff --git a/results/experiment_6588_v574_bounded_cfr_launch_root.json b/results/experiment_6588_v574_bounded_cfr_launch_root.json
+new file mode 100644
+index 0000000000..0aa0d1ade3
+--- /dev/null
++++ b/results/experiment_6588_v574_bounded_cfr_launch_root.json
+@@ -0,0 +1,1402 @@
++{
++  "attack_rows": [
++    {
++      "attack_id": "invented_v573_science_result",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:7c25c6c4eeefb6129d923bb8f6e181e56dfeeadd47986c536609aa47b250be0e"
++    },
++    {
++      "attack_id": "suite_green_launch_requirement",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:2b3664d085e4e2083594a923a838ce67d6050cd2f6656e078a00730d536e8bc7"
++    },
++    {
++      "attack_id": "missing_source_hashes",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:8cc80d587d69cf0b03ce0bd2fcf6410f1616423528bbe9cfc5c3e21dfadb2430"
++    },
++    {
++      "attack_id": "two_model_residency",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:1bd2a518000adb615e2ceac0e9d2a27011170e73d82018189ac23936f68c58b4"
++    },
++    {
++      "attack_id": "legacy_smoke_model_headline",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:b2c5df73ad1add6382d54e4e94aed72c65f101e016bf4b7fc4bad5e6d7a4956c"
++    },
++    {
++      "attack_id": "gguf_auto_tokenizer_use",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:2d45184152846fe33bdd1ec469f35324515323540a21df9c2e0de1d25e63d0aa"
++    },
++    {
++      "attack_id": "external_download_during_measurement",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:ee4887de38ad9e619a535acbdca6209ed26f8509bf0f2a6a32273cae40742c21"
++    },
++    {
++      "attack_id": "incomplete_terminal_rows",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:21fa827b39850f65a512f44662378b1d7fba2218df9103af294edac3ee69dc37"
++    },
++    {
++      "attack_id": "gate_field_drift",
++      "candidate_ready_score": 0.0,
++      "disposition": "fail_closed",
++      "expected_ready_score": 0.0,
++      "passed": true,
++      "row_hash": "sha256:422b06011132fe23af700b78392ef29759f1c79b50f8bcf9fbbce448002774ee"
++    }
++  ],
++  "current_roadmap_gate_contract_rows": [
++    {
++      "all_cross_references_close": true,
++      "artifact_field": "v574_cfr_launch_ready_score",
++      "consumer_task_exists": true,
++      "consumer_task_id": "exp6590-qwen36-constraint-first-stream",
++      "expected_value": 1.0,
++      "gate_declared_exactly_once": true,
++      "launch_field_declared_by_upstream": true,
++      "milestone": "2026.08.574",
++      "operator": "==",
++      "owner_output_field": "qwen_cfr_rows_ready_score",
++      "owner_output_field_declared": true,
++      "roadmap_path": "research-roadmap.yaml",
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "row_hash": "sha256:1a174c275da856ba62761f8ec6ff04d0742a3ebe3f1417f5200af10f62f06f5b",
++      "upstream_task_exists": true,
++      "upstream_task_id": "exp6588-v574-bounded-cfr-launch-root"
++    },
++    {
++      "all_cross_references_close": true,
++      "artifact_field": "v574_cfr_launch_ready_score",
++      "consumer_task_exists": true,
++      "consumer_task_id": "exp6591-gemma4-31b-constraint-first-stream",
++      "expected_value": 1.0,
++      "gate_declared_exactly_once": true,
++      "launch_field_declared_by_upstream": true,
++      "milestone": "2026.08.574",
++      "operator": "==",
++      "owner_output_field": "gemma31_cfr_rows_ready_score",
++      "owner_output_field_declared": true,
++      "roadmap_path": "research-roadmap.yaml",
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "row_hash": "sha256:67d4f798b5563c375ecd3d63ef9437379dffcadeca33c1c9f6734519c9da98bf",
++      "upstream_task_exists": true,
++      "upstream_task_id": "exp6588-v574-bounded-cfr-launch-root"
++    }
++  ],
++  "duration_s": 2.813821285031736,
++  "execution_budget_contract": [
++    {
++      "atomic_terminal_output": true,
++      "auto_tokenizer_allowed": false,
++      "checkpoint_interval_units": 1,
++      "checkpoint_max_interval_s": 180,
++      "checkpoint_write_order": "raw_before_derived",
++      "cleanup_budget_s": 180,
++      "conductor_hard_cap_s": 4800,
++      "embedded_gguf_tokenizer_required": true,
++      "external_download_allowed": false,
++      "failure_rows_required": true,
++      "fresh_context_per_unit": true,
++      "fresh_process": true,
++      "generation_arms_per_unit": 3,
++      "generation_budget_s": 2880,
++      "gpu_selection_rule": "choose a visible RTX 3090 with no unrelated compute owner and adequate free memory at launch",
++      "hard_timeout_s": 4200,
++      "kill_only_owned_child_process_group": true,
++      "legacy_headline_model_allowed": false,
++      "load_budget_s": 600,
++      "max_concurrent_model_families": 1,
++      "max_model_processes": 1,
++      "max_output_tokens_per_call": 512,
++      "max_source_units": 20,
++      "model_families": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF"
++      ],
++      "per_generation_timeout_s": 60,
++      "per_unit_timeout_s": 180,
++      "replayed_from": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++      "retain_failure_classes": [
++        "load_timeout",
++        "generation_timeout",
++        "malformed_output",
++        "contradiction",
++        "unsupported_constraint",
++        "exact_rejection",
++        "process_failure",
++        "task_deadline_exhausted"
++      ],
++      "row_hash": "sha256:5d14375ea427e150e6159571b9d330cdabf066283c02c03b8ecc361f74f6fd5d",
++      "runtime_select_idle_rtx_3090": true,
++      "signals_to_unrelated_processes_allowed": false,
++      "task_id": "exp6590-qwen36-constraint-first-stream",
++      "terminal_output_budget_s": 120,
++      "terminal_output_required_on_failure": true,
++      "unload_required_before_exit": true,
++      "verified_unload_checks": [
++        "worker_process_exited",
++        "port_closed",
++        "worker_absent_from_gpu_telemetry",
++        "memory_recovered_within_256_mb"
++      ]
++    },
++    {
++      "atomic_terminal_output": true,
++      "auto_tokenizer_allowed": false,
++      "checkpoint_interval_units": 1,
++      "checkpoint_max_interval_s": 180,
++      "checkpoint_write_order": "raw_before_derived",
++      "cleanup_budget_s": 180,
++      "conductor_hard_cap_s": 4800,
++      "embedded_gguf_tokenizer_required": true,
++      "external_download_allowed": false,
++      "failure_rows_required": true,
++      "fresh_context_per_unit": true,
++      "fresh_process": true,
++      "generation_arms_per_unit": 3,
++      "generation_budget_s": 2880,
++      "gpu_selection_rule": "choose a visible RTX 3090 with no unrelated compute owner and adequate free memory at launch",
++      "hard_timeout_s": 4200,
++      "kill_only_owned_child_process_group": true,
++      "legacy_headline_model_allowed": false,
++      "load_budget_s": 600,
++      "max_concurrent_model_families": 1,
++      "max_model_processes": 1,
++      "max_output_tokens_per_call": 512,
++      "max_source_units": 20,
++      "model_families": [
++        "unsloth/gemma-4-31B-it-GGUF"
++      ],
++      "per_generation_timeout_s": 60,
++      "per_unit_timeout_s": 180,
++      "replayed_from": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++      "retain_failure_classes": [
++        "load_timeout",
++        "generation_timeout",
++        "malformed_output",
++        "contradiction",
++        "unsupported_constraint",
++        "exact_rejection",
++        "process_failure",
++        "task_deadline_exhausted"
++      ],
++      "row_hash": "sha256:7db3ac43d5647ea45b2050c0ba4c3ae8fc06ec41a7949f267d6f9d48ba272303",
++      "runtime_select_idle_rtx_3090": true,
++      "signals_to_unrelated_processes_allowed": false,
++      "task_id": "exp6591-gemma4-31b-constraint-first-stream",
++      "terminal_output_budget_s": 120,
++      "terminal_output_required_on_failure": true,
++      "unload_required_before_exit": true,
++      "verified_unload_checks": [
++        "worker_process_exited",
++        "port_closed",
++        "worker_absent_from_gpu_telemetry",
++        "memory_recovered_within_256_mb"
++      ]
++    }
++  ],
++  "field_provenance": {
++    "attack_rows": {
++      "principle": "Invented science, suite gating, model substitution, cache drift, and gate drift fail closed.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "current_roadmap_gate_contract_rows": {
++      "principle": "Every downstream gate names an upstream task and exact field in this roadmap.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "duration_s": {
++      "principle": "Monotonic duration exposes a source-only shortcut.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "execution_budget_contract": {
++      "principle": "One-model residency, checkpoints, timeout, cleanup, unload, and terminal output are frozen.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "field_provenance": {
++      "principle": "Every field names source artifacts, rows, hashes, and reducer code.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "gate_check_summary": {
++      "principle": "A block names the failed source, cache, budget, gate, or protection check and its value.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "honest_verdict": {
++      "principle": "The verdict reports bounded V574 launch readiness without creating a science result.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "inference_substrate": {
++      "principle": "The task declares terminal receipt and contract replay with no LLM.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "model_cache_identity_rows": {
++      "principle": "Both mandated flagship caches resolve by content without a model load or download.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "preconditions_checked": {
++      "principle": "Artifacts, hashes, caches, resources, ownership, and protected files are explicit.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "protected_files_unchanged": {
++      "principle": "The roadmap and conductor retain their original hashes.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "reproducibility_checksum": {
++      "principle": "A final content hash detects terminal mutation.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "status": {
++      "principle": "The launch root is terminal and cannot pose bootstrap work as readiness.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "tests_run": {
++      "principle": "Named commands, exits, and durations make contract validation reproducible.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "v573_terminal_replay_rows": {
++      "principle": "Exp6585 through Exp6587 retain their actual terminal states and source hashes.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "v574_cfr_launch_ready_score": {
++      "principle": "This exact binary field gates both flagship CFR stream tasks.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "verdict_class": {
++      "principle": "Launch readiness is null infrastructure and never positive science.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    },
++    "verifier_is_oracle": {
++      "principle": "Exact receipt replay owns launch readiness but cannot create positive research science.",
++      "reducer_code": {
++        "V573": "recompute_exp6585_readiness + recompute_exp6587_readiness",
++        "checksum": "artifact_checksum",
++        "launch": "readiness_reducer"
++      },
++      "roadmap_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "source_artifacts": [
++        {
++          "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++          "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++        },
++        {
++          "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++          "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++        },
++        {
++          "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++          "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++        },
++        {
++          "path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++          "sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570"
++        }
++      ],
++      "source_rows": {
++        "V573": "v573_terminal_replay_rows",
++        "attacks": "attack_rows",
++        "budget": "execution_budget_contract",
++        "cache": "model_cache_identity_rows",
++        "gates": "current_roadmap_gate_contract_rows"
++      }
++    }
++  },
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "v573_terminal_replay_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "model_cache_identity_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "execution_budget_contract",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "current_roadmap_gate_contract_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "suite_green_not_required",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "protected_files_unchanged",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      },
++      {
++        "check": "attack_rows",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true
++      }
++    ],
++    "failed_check_count": 0,
++    "first_failure": null,
++    "passed": true,
++    "ready_score": 1.0
++  },
++  "honest_verdict": "complete: V573 execution and method contracts replayed; both local flagship GGUF identities and bounded V574 stream contracts are ready; no science result was created",
++  "inference_substrate": "v573_terminal_and_contract_replay_no_llm",
++  "model_cache_identity_rows": [
++    {
++      "admitted": true,
++      "auto_tokenizer_used": false,
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "content_metadata": {
++        "architecture": "qwen35moe",
++        "bounded_read_receipt": {
++          "data_offset": 10990048,
++          "file_size": 22134528992,
++          "maximum_header_bytes": 67108864,
++          "maximum_offset_inspected": 10990035,
++          "physical_bytes_read": 4006412,
++          "required_minimum_file_size": 22134520801,
++          "tensor_info_end": 10990035,
++          "tensor_info_start": 10943779,
++          "tensor_payload_bytes_read": 0
++        },
++        "general_file_type": 15,
++        "is_language_model": true,
++        "magic": "GGUF",
++        "metadata_count": 54,
++        "model_name": "Qwen3.6-35B-A3B",
++        "quantization": "Q4_K_M",
++        "shard_metadata": {
++          "split_count": null,
++          "split_no": null,
++          "split_tensors_count": null
++        },
++        "tensor_count": 733,
++        "tokenizer_metadata": {
++          "bos_token_id": 248044,
++          "chat_template_present": true,
++          "eos_token_id": 248046,
++          "model": "gpt2",
++          "padding_token_id": 248055,
++          "pre": "qwen35",
++          "token_count": 248320
++        },
++        "version": 3
++      },
++      "download_performed": false,
++      "gguf_embedded_tokenizer_required_downstream": true,
++      "model_load_performed": false,
++      "provenance": {
++        "blob_key": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "cache_repository_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
++        "field_provenance": {
++          "repository_id": "expected repository argument and HF cache directory name",
++          "revision": "snapshots/<revision> path component",
++          "snapshot_filename": "snapshot symlink name",
++          "snapshot_symlink_target": "os.readlink output",
++          "trusted_sha256": "trusted upstream hash matched to HF blob key"
++        },
++        "full_blob_rehash_performed": false,
++        "ordered_shards": [
++          {
++            "blob_key": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++            "shard_count": 1,
++            "shard_number": 1,
++            "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++          }
++        ],
++        "refs_pointing_to_revision": [
++          "main"
++        ],
++        "repository_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "resolved_blob_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
++        "snapshot_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "snapshot_symlink_target": "../../blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "symlink_target_matches_blob": true,
++        "trusted_hash_matches_blob_key": true,
++        "trusted_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "valid": true
++      },
++      "rejection_reason": null,
++      "rejection_reasons": [],
++      "repository_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "resolved": true,
++      "row_hash": "sha256:3ffe921fa697f0f50c3f6d25fe3de90d43fe35d193d39a8e0f91c9db951b0c86",
++      "source_artifact_path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++      "source_artifact_sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570",
++      "trusted_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
++    },
++    {
++      "admitted": true,
++      "auto_tokenizer_used": false,
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++      "content_metadata": {
++        "architecture": "gemma4",
++        "bounded_read_receipt": {
++          "data_offset": 15832192,
++          "file_size": 18323731456,
++          "maximum_header_bytes": 67108864,
++          "maximum_offset_inspected": 15832167,
++          "physical_bytes_read": 6266051,
++          "required_minimum_file_size": 18323709953,
++          "tensor_info_end": 15832167,
++          "tensor_info_start": 15782350,
++          "tensor_payload_bytes_read": 0
++        },
++        "general_file_type": 15,
++        "is_language_model": true,
++        "magic": "GGUF",
++        "metadata_count": 57,
++        "model_name": "Gemma-4-31B-It",
++        "quantization": "Q4_K_M",
++        "shard_metadata": {
++          "split_count": null,
++          "split_no": null,
++          "split_tensors_count": null
++        },
++        "tensor_count": 833,
++        "tokenizer_metadata": {
++          "bos_token_id": 2,
++          "chat_template_present": true,
++          "eos_token_id": 106,
++          "model": "gemma4",
++          "padding_token_id": 0,
++          "pre": null,
++          "token_count": 262144
++        },
++        "version": 3
++      },
++      "download_performed": false,
++      "gguf_embedded_tokenizer_required_downstream": true,
++      "model_load_performed": false,
++      "provenance": {
++        "blob_key": "9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "cache_repository_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
++        "field_provenance": {
++          "repository_id": "expected repository argument and HF cache directory name",
++          "revision": "snapshots/<revision> path component",
++          "snapshot_filename": "snapshot symlink name",
++          "snapshot_symlink_target": "os.readlink output",
++          "trusted_sha256": "trusted upstream hash matched to HF blob key"
++        },
++        "full_blob_rehash_performed": false,
++        "ordered_shards": [
++          {
++            "blob_key": "9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++            "shard_count": 1,
++            "shard_number": 1,
++            "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++          }
++        ],
++        "refs_pointing_to_revision": [],
++        "repository_id": "unsloth/gemma-4-31B-it-GGUF",
++        "resolved_blob_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "revision": "f130ba51393346288f5862e30e9586b9b021513f",
++        "snapshot_filename": "gemma-4-31B-it-Q4_K_M.gguf",
++        "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "snapshot_symlink_target": "../../blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "symlink_target_matches_blob": true,
++        "trusted_hash_matches_blob_key": true,
++        "trusted_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "valid": true
++      },
++      "rejection_reason": null,
++      "rejection_reasons": [],
++      "repository_id": "unsloth/gemma-4-31B-it-GGUF",
++      "resolved": true,
++      "row_hash": "sha256:423a883312640af2ecdbe89883ba2bf6cfd9d31278c035e2023c310fb2184f3e",
++      "source_artifact_path": "results/experiment_6572_content_derived_gguf_metadata_resolver.json",
++      "source_artifact_sha256": "sha256:3c95cce10e64e0912d95238f05c6d459013a50e188969a1d43e6ffb6745e0570",
++      "trusted_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
++    }
++  ],
++  "preconditions_checked": {
++    "auto_tokenizer_calls_issued": 0,
++    "cpu": {
++      "count": 24,
++      "model": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
++    },
++    "dirty_worktree": {
++      "command": "git status --short",
++      "entries": [
++        " M openspec/capabilities/research-reporting/spec.md",
++        " M ops/.audit_findings_ledger_state.json",
++        " M ops/.run_sentinel_state.json",
++        " M ops/.stop_authority_state.json",
++        "?? python/carnot/experiment_6588_v574_bounded_cfr_launch_root.py",
++        "?? tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py"
++      ],
++      "exit_code": 0,
++      "is_dirty": true,
++      "status_sha256": "sha256:724d59ba0966a2493760c356b8a7bfcb036d07cf0b0f99aca093166ba77a1dd6"
++    },
++    "disk": {
++      "free_bytes": 1086940987392,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot",
++      "total_bytes": 3953289023488
++    },
++    "downloads_issued": 0,
++    "inference_substrate": "v573_terminal_and_contract_replay_no_llm",
++    "llm_calls_issued": 0,
++    "local_gguf_cache_paths": [
++      {
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "repository_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "resolved": true,
++        "trusted_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
++      },
++      {
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "repository_id": "unsloth/gemma-4-31B-it-GGUF",
++        "resolved": true,
++        "trusted_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
++      }
++    ],
++    "model_loads_issued": 0,
++    "no_llm_substrate": true,
++    "planning_date": "20260825",
++    "protected_file_hashes_before": {
++      "research-roadmap.yaml": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++      "scripts/research_conductor.py": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8"
++    },
++    "ram": {
++      "available_kib": 103229604,
++      "total_kib": 131157332
++    },
++    "roadmap": {
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4"
++    },
++    "v573_artifacts": [
++      {
++        "exists": true,
++        "experiment_id": "Exp6585",
++        "path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++        "sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989"
++      },
++      {
++        "exists": true,
++        "experiment_id": "Exp6586",
++        "path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++        "sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29"
++      },
++      {
++        "exists": true,
++        "experiment_id": "Exp6587",
++        "path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++        "sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9"
++      }
++    ],
++    "visible_gpu_ownership": {
++      "compute_process_rows": [
++        {
++          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++          "pid": 218269,
++          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++          "used_memory_mb": 20686
++        },
++        {
++          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++          "pid": 218052,
++          "process_name": ".venv/bin/python",
++          "used_memory_mb": 536
++        }
++      ],
++      "gpu_query_exit_code": 0,
++      "gpu_rows": [
++        {
++          "index": 0,
++          "memory_free_mb": 24120,
++          "memory_total_mb": 24576,
++          "name": "NVIDIA GeForce RTX 3090",
++          "utilization_pct": 0,
++          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
++        },
++        {
++          "index": 1,
++          "memory_free_mb": 2887,
++          "memory_total_mb": 24576,
++          "name": "NVIDIA GeForce RTX 3090",
++          "utilization_pct": 95,
++          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
++        }
++      ],
++      "process_query_exit_code": 0,
++      "selection_performed": false,
++      "signals_sent": [],
++      "visible": true
++    }
++  },
++  "protected_files_unchanged": {
++    "all_unchanged": true,
++    "changed_paths": [],
++    "rows": [
++      {
++        "after_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++        "before_sha256": "sha256:222e93c92c3dec1c92f59a5b9ab2653364333cf8490816a807280626eb9489d4",
++        "path": "research-roadmap.yaml",
++        "unchanged": true
++      },
++      {
++        "after_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
++        "before_sha256": "sha256:8d5bc109260e7af75773cc65c0f5c02df5be2d8ba5d397f1961fdc06483773c8",
++        "path": "scripts/research_conductor.py",
++        "unchanged": true
++      }
++    ]
++  },
++  "reproducibility_checksum": "sha256:a657d138d40b07740bfd88089be14da61f8c3864e9c4e2146ac08aa0258014ea",
++  "status": "complete_v574_cfr_launch_ready",
++  "suite_green_launch_requirement": false,
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py -q",
++      "duration_s": 0.0,
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "duration_s": 0.0,
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py",
++      "duration_s": 0.0,
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6588_v574_bounded_cfr_launch_root.json",
++      "duration_s": 0.0,
++      "exit_code": 0
++    }
++  ],
++  "v573_terminal_replay_rows": [
++    {
++      "contract_kind": "bounded_execution_contract",
++      "experiment_id": "Exp6585",
++      "gate_check_summary": {
++        "checks": [
++          {
++            "check": "v572_terminal_rows",
++            "expected_value": true,
++            "observed_value": true,
++            "passed": true,
++            "row_hash": "sha256:7154603b2cdcfea144e710a24edd07436fba591431481b9133c4812def16409d"
++          },
++          {
++            "check": "exp6584_hard_limit_attempt_rows",
++            "expected_value": true,
++            "observed_value": true,
++            "passed": true,
++            "row_hash": "sha256:345cd74ff44943df28810cb1bc69d493ce51dada62ddf9c4f2ebbc53d28d22ba"
++          },
++          {
++            "check": "v573_execution_budget_contract",
++            "expected_value": true,
++            "observed_value": true,
++            "passed": true,
++            "row_hash": "sha256:b6c37fe2200e15837a8f2cf0f992ca707496d4ed17754791c723fee90c0d0b59"
++          },
++          {
++            "check": "current_roadmap_gate_contract_rows",
++            "expected_value": true,
++            "observed_value": true,
++            "passed": true,
++            "row_hash": "sha256:fd9943f434043efbf72a540f736973ffbf16c097883459cbb6a12347ee2a8133"
++          },
++          {
++            "check": "attack_rows",
++            "expected_value": true,
++            "observed_value": true,
++            "passed": true,
++            "row_hash": "sha256:b860af215db9f9b3999d65d25445ad2a49cfd9c86d829b3e32942a9573e8108f"
++          },
++          {
++            "check": "protected_files_unchanged",
++            "expected_value": true,
++            "observed_value": true,
++            "passed": true,
++            "row_hash": "sha256:df6a14a2dc03f9d2c51a20296ccca04f1aa59d6de293b5ae083a2d84700f363e"
++          }
++        ],
++        "failed_check_count": 0,
++        "first_failure": null,
++        "passed": true,
++        "row_hash": "sha256:a330e28fe08fcba16d84b1dcddf8a8396b070c8184ccff1e1ed297a069941f30"
++      },
++      "honest_verdict": "complete: all six V572 terminal states and three Exp6584 hard-limit attempts replay; V573 model tasks are bounded; no science verdict was created",
++      "inference_substrate": "v572_terminal_receipt_replay_no_llm",
++      "recomputed_checks": {
++        "attack_rows": true,
++        "execution_budget_rows": true,
++        "hard_limit_rows": true,
++        "protected_files": true,
++        "roadmap_gate_rows": true,
++        "terminal_rows": true
++      },
++      "recomputed_ready_score": 1.0,
++      "row_hash": "sha256:63d83e4a727df95ea411dacb1099e7beb7969732cd44488d09d320514c7472e6",
++      "science_result_created": false,
++      "source_artifact_path": "results/experiment_6585_v573_terminal_recovery_and_execution_contract.json",
++      "source_artifact_sha256": "sha256:a5c108487537930ef09a2d19660c537e04ce77ebab8c9cea4043a3b3cf923989",
++      "status": "complete_v573_execution_contract_ready",
++      "stored_ready_score": 1.0,
++      "verdict_class": "null",
++      "verifier_is_oracle": true
++    },
++    {
++      "adversarial_disposition": {
++        "claim_audit_disposition": "SKIPPED_ALREADY_FLAGGED",
++        "claim_audit_path": "ops/experiment_claim_audit_report.md",
++        "claim_audit_sha256": "sha256:c3155cce949e8067edaa986caf995aaf9e0639447616040d73536b26fc541654",
++        "corrigendum_pending": [
++          {
++            "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6586_isolated_full_suite_truth_baseline.json; classification=unknown; reason=status or honest_verdict is absent or unknown",
++            "kind": "NONTERMINAL_DECLARED_ARTIFACT",
++            "severity": "critical"
++          }
++        ],
++        "flagged_adversarial": true
++      },
++      "contract_kind": "blocked_isolated_suite_infrastructure_fact",
++      "experiment_id": "Exp6586",
++      "gate_check_summary": [
++        {
++          "check": "pytest_receipt",
++          "expected_value": "validated isolated environment",
++          "observed_value": "/tmp/carnot-exp6586-2eaz9gdw/collection-pytest-receipt.json",
++          "passed": false
++        }
++      ],
++      "honest_verdict": "blocked_isolated_environment: pytest_receipt",
++      "inference_substrate": "isolated_repo_test_execution_no_llm",
++      "recomputed_ready_score": null,
++      "row_hash": "sha256:ad8b7b79e742d2fc8db448eae40e3dd4b68b9f675fca5472bab179bf78ca7e53",
++      "science_launch_gate": false,
++      "science_result_created": false,
++      "source_artifact_path": "results/experiment_6586_isolated_full_suite_truth_baseline.json",
++      "source_artifact_sha256": "sha256:74a2f44f868943d64b4c491222f66783c8759314c6d2c1f8d0450382c2b5ef29",
++      "status": "isolated_environment_block",
++      "stored_ready_score": 0,
++      "verdict_class": "blocked",
++      "verifier_is_oracle": true
++    },
++    {
++      "contract_kind": "constraint_first_method_contract",
++      "experiment_id": "Exp6587",
++      "gate_check_summary": {
++        "checks_closed": false,
++        "failed_check_count": 1,
++        "failed_checks": [
++          {
++            "check": "arms_authority_metrics",
++            "expected": true,
++            "observed": [
++              {
++                "retire_if_same_verdict": true,
++                "same_verdict": "no routed exact-success gain in two frozen flagship families",
++                "scope": "constraint_first_staging"
++              },
++              {
++                "retire_if_same_verdict": true,
++                "same_verdict": "no measured work benefit or any unsafe-release increase",
++                "scope": "restrictive_cue_router"
++              }
++            ]
++          }
++        ],
++        "first_failure": {
++          "check": "arms_authority_metrics",
++          "expected": true,
++          "observed": [
++            {
++              "retire_if_same_verdict": true,
++              "same_verdict": "no routed exact-success gain in two frozen flagship families",
++              "scope": "constraint_first_staging"
++            },
++            {
++              "retire_if_same_verdict": true,
++              "same_verdict": "no measured work benefit or any unsafe-release increase",
++              "scope": "restrictive_cue_router"
++            }
++          ]
++        },
++        "ready_score": 1.0,
++        "row_hash": "sha256:cf70496c5c192af8c2331648fb195aa4be24083473a9c5377314f5bf7bb92764"
++      },
++      "honest_verdict": "complete: source, fixture, router, metric, and exact-authority contracts are ready before any V573 model outcome",
++      "inference_substrate": "primary_source_and_exact_fixture_replay_no_llm",
++      "recomputed_checks": {
++        "arms_authority_metrics": true,
++        "fixtures_gates_attacks": true,
++        "no_llm_precondition": true,
++        "oracle_boundary": true,
++        "prompt_and_router": true,
++        "protected_files": true,
++        "source_rows": true,
++        "source_unit_manifest": true
++      },
++      "recomputed_ready_score": 1.0,
++      "row_hash": "sha256:26e2b07c9e31f4935839464d20d66bcf879431ab4c3da21a512286f95cb419bb",
++      "science_result_created": false,
++      "source_artifact_path": "results/experiment_6587_v573_constraint_first_method_contract.json",
++      "source_artifact_sha256": "sha256:44626313f53676a5e27a85873a0208abd8b04bcbccc9cb4a19d2361f13db0ec9",
++      "source_gate_summary_checks_closed": false,
++      "status": "complete_v573_constraint_first_method_ready",
++      "stored_ready_score": 1.0,
++      "verdict_class": null,
++      "verifier_is_oracle": true
++    }
++  ],
++  "v574_cfr_launch_ready_score": 1.0,
++  "verdict_class": null,
++  "verifier_is_oracle": true
++}
+diff --git a/tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py b/tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py
+new file mode 100644
+index 0000000000..b917013bd4
+--- /dev/null
++++ b/tests/python/test_experiment_6588_v574_bounded_cfr_launch_root.py
+@@ -0,0 +1,373 @@
++"""Test the V574 bounded CFR launch root without model inference.
++
++Spec refs: REQ-REPORT-6588, REQ-REPORT-6588-PRECONDITIONS,
++REQ-REPORT-6588-REPLAY, REQ-REPORT-6588-CACHE,
++REQ-REPORT-6588-BUDGETS, REQ-REPORT-6588-GATES,
++REQ-REPORT-6588-AUTHORITY, REQ-REPORT-6588-ATTACKS,
++REQ-REPORT-6588-REDUCER, REQ-REPORT-6588-ATOMIC,
++SCENARIO-REPORT-6588-REPLAY, SCENARIO-REPORT-6588-CACHE,
++SCENARIO-REPORT-6588-BUDGETS, SCENARIO-REPORT-6588-GATES,
++SCENARIO-REPORT-6588-ATTACKS, SCENARIO-REPORT-6588-ATOMIC.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6588_v574_bounded_cfr_launch_root as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / "openspec/capabilities/research-reporting/spec.md"
++TESTS_RUN = [{"command": "focused Exp6588 fixture", "exit_code": 0, "duration_s": 0.01}]
++
++
++@pytest.fixture(scope="module")
++def report() -> dict[str, Any]:
++    """Build the source-only launch report once for all focused checks."""
++
++    return mod.build_report(REPO, date="20260825", duration_s=1.0, tests_run=TESTS_RUN)
++
++
++def _rehash(payload: dict[str, Any]) -> dict[str, Any]:
++    payload["reproducibility_checksum"] = mod.artifact_checksum(payload)
++    return payload
++
++
++def test_req_report_6588_spec_declares_launch_contract() -> None:
++    """REQ-REPORT-6588 exists before implementation and names every field."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("### REQ-REPORT-6588") :]
++    anchors = (
++        "REQ-REPORT-6588-PRECONDITIONS",
++        "REQ-REPORT-6588-REPLAY",
++        "REQ-REPORT-6588-CACHE",
++        "REQ-REPORT-6588-BUDGETS",
++        "REQ-REPORT-6588-GATES",
++        "REQ-REPORT-6588-AUTHORITY",
++        "REQ-REPORT-6588-ATTACKS",
++        "REQ-REPORT-6588-REDUCER",
++        "REQ-REPORT-6588-ATOMIC",
++        "SCENARIO-REPORT-6588-REPLAY",
++        "SCENARIO-REPORT-6588-CACHE",
++        "SCENARIO-REPORT-6588-BUDGETS",
++        "SCENARIO-REPORT-6588-GATES",
++        "SCENARIO-REPORT-6588-ATTACKS",
++        "SCENARIO-REPORT-6588-ATOMIC",
++        mod.INFERENCE_SUBSTRATE,
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++    )
++    for anchor in anchors:
++        assert anchor in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_report_6588_raw_v573_contracts_recompute(report: dict[str, Any]) -> None:
++    """SCENARIO-REPORT-6588-REPLAY ignores stored ready-score shortcuts."""
++
++    rows = {row["experiment_id"]: row for row in report["v573_terminal_replay_rows"]}
++    exp6585 = rows["Exp6585"]
++    exp6586 = rows["Exp6586"]
++    exp6587 = rows["Exp6587"]
++
++    assert exp6585["stored_ready_score"] == 1.0
++    assert exp6585["recomputed_ready_score"] == 1.0
++    assert exp6587["stored_ready_score"] == 1.0
++    assert exp6587["recomputed_ready_score"] == 1.0
++    assert exp6587["source_gate_summary_checks_closed"] is False
++    assert exp6587["science_result_created"] is False
++
++    source6586 = json.loads((REPO / mod.V573_ARTIFACT_PATHS["Exp6586"]).read_text())
++    assert exp6586["honest_verdict"] == source6586["honest_verdict"]
++    assert exp6586["verdict_class"] == source6586["verdict_class"]
++    assert exp6586["gate_check_summary"] == source6586["gate_check_summary"]
++    assert exp6586["adversarial_disposition"]["flagged_adversarial"] is True
++    assert exp6586["adversarial_disposition"]["claim_audit_disposition"] == (
++        "SKIPPED_ALREADY_FLAGGED"
++    )
++    assert exp6586["science_launch_gate"] is False
++
++
++def test_req_report_6588_replayers_ignore_stored_scores_and_fail_on_raw_drift() -> None:
++    """REQ-REPORT-6588-REPLAY uses raw rows, not stored aggregate fields."""
++
++    exp6585 = mod.load_json(REPO / mod.V573_ARTIFACT_PATHS["Exp6585"])
++    exp6587 = mod.load_json(REPO / mod.V573_ARTIFACT_PATHS["Exp6587"])
++    exp6585["v573_execution_contract_ready_score"] = 0.0
++    exp6587["v573_constraint_first_method_ready_score"] = 0.0
++    assert mod.recompute_exp6585_readiness(exp6585)["ready_score"] == 1.0
++    assert mod.recompute_exp6587_readiness(exp6587)["ready_score"] == 1.0
++
++    exp6585["v573_execution_budget_contract"][0]["max_model_processes"] = 2
++    assert mod.recompute_exp6585_readiness(exp6585)["ready_score"] == 0.0
++    exp6587["source_binding_and_exact_authority_contract"]["llm_release_authority"] = True
++    assert mod.recompute_exp6587_readiness(exp6587)["ready_score"] == 0.0
++
++
++def test_scenario_report_6588_cache_identity_is_content_derived(report: dict[str, Any]) -> None:
++    """SCENARIO-REPORT-6588-CACHE resolves both blobs without loading them."""
++
++    rows = {row["repository_id"]: row for row in report["model_cache_identity_rows"]}
++    assert set(rows) == set(mod.MANDATED_MODEL_IDS)
++    for repository_id, row in rows.items():
++        assert row["resolved"] is True
++        assert row["admitted"] is True
++        assert row["repository_id"] == repository_id
++        assert row["content_metadata"]["magic"] == "GGUF"
++        assert row["content_metadata"]["is_language_model"] is True
++        assert row["content_metadata"]["tokenizer_metadata"]["token_count"] > 0
++        assert row["content_metadata"]["bounded_read_receipt"]["tensor_payload_bytes_read"] == 0
++        assert row["provenance"]["valid"] is True
++        assert row["provenance"]["trusted_hash_matches_blob_key"] is True
++        assert row["model_load_performed"] is False
++        assert row["download_performed"] is False
++        assert row["auto_tokenizer_used"] is False
++
++
++def test_req_report_6588_cache_resolver_fails_closed_without_source_identity(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-6588-CACHE rejects a missing trusted cache receipt."""
++
++    source = tmp_path / mod.GGUF_IDENTITY_SOURCE_RELATIVE_PATH
++    source.parent.mkdir(parents=True)
++    source.write_text('{"gguf_blob_metadata_rows": []}\n', encoding="utf-8")
++    rows = mod.build_model_cache_identity_rows(tmp_path)
++    assert len(rows) == 2
++    assert all(row["resolved"] is False for row in rows)
++    assert {row["rejection_reason"] for row in rows} == {"trusted_cache_identity_missing"}
++    assert mod.sha256_file(tmp_path / "missing.json") == "missing"
++    non_object = tmp_path / "non-object.json"
++    non_object.write_text("[]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="expected JSON object"):
++        mod.load_json(non_object)
++    assert mod._required_artifact_fields("no field marker") == set()  # noqa: SLF001
++
++
++def test_scenario_report_6588_budgets_freeze_one_model_residency(
++    report: dict[str, Any],
++) -> None:
++    """SCENARIO-REPORT-6588-BUDGETS freezes bounded owned processes."""
++
++    rows = report["execution_budget_contract"]
++    assert mod.execution_budget_contract_ready(rows)
++    assert {row["task_id"] for row in rows} == {
++        "exp6590-qwen36-constraint-first-stream",
++        "exp6591-gemma4-31b-constraint-first-stream",
++    }
++    assert all(row["max_model_processes"] == 1 for row in rows)
++    assert all(row["max_concurrent_model_families"] == 1 for row in rows)
++    assert all(row["checkpoint_interval_units"] == 1 for row in rows)
++    assert all(row["hard_timeout_s"] < row["conductor_hard_cap_s"] for row in rows)
++    assert all(row["runtime_select_idle_rtx_3090"] is True for row in rows)
++    assert all(row["kill_only_owned_child_process_group"] is True for row in rows)
++    assert all(row["terminal_output_required_on_failure"] is True for row in rows)
++    assert all(row["atomic_terminal_output"] is True for row in rows)
++
++    mutated = deepcopy(rows)
++    mutated[0]["max_concurrent_model_families"] = 2
++    assert not mod.execution_budget_contract_ready(mutated)
++    mutated = deepcopy(rows)
++    mutated[1]["checkpoint_interval_units"] = 0
++    assert not mod.execution_budget_contract_ready(mutated)
++
++
++def test_scenario_report_6588_gate_fields_match_active_roadmap(
++    report: dict[str, Any],
++) -> None:
++    """SCENARIO-REPORT-6588-GATES binds exact V574 owner fields."""
++
++    rows = report["current_roadmap_gate_contract_rows"]
++    assert mod.current_roadmap_gate_contract_ready(rows)
++    assert {row["consumer_task_id"] for row in rows} == {
++        "exp6590-qwen36-constraint-first-stream",
++        "exp6591-gemma4-31b-constraint-first-stream",
++    }
++    assert {row["artifact_field"] for row in rows} == {mod.READY_FIELD}
++    assert {row["owner_output_field"] for row in rows} == {
++        "qwen_cfr_rows_ready_score",
++        "gemma31_cfr_rows_ready_score",
++    }
++    assert all(row["upstream_task_id"] == mod.TASK_ID for row in rows)
++    assert all(row["all_cross_references_close"] is True for row in rows)
++
++    mutated = deepcopy(rows)
++    mutated[0]["artifact_field"] = "v574_cfr_launch_ready_scor"
++    assert not mod.current_roadmap_gate_contract_ready(mutated)
++
++
++def test_scenario_report_6588_attacks_fail_closed(report: dict[str, Any]) -> None:
++    """SCENARIO-REPORT-6588-ATTACKS closes every declared shortcut."""
++
++    attacks = report["attack_rows"]
++    assert [row["attack_id"] for row in attacks] == list(mod.REQUIRED_ATTACK_IDS)
++    assert all(row["passed"] is True for row in attacks)
++    assert all(row["candidate_ready_score"] == 0.0 for row in attacks)
++    assert mod.readiness_reducer(report)["ready_score"] == 1.0
++
++    candidate = deepcopy(report)
++    candidate["v573_terminal_replay_rows"][0]["science_result_created"] = True
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++    candidate = deepcopy(report)
++    candidate["suite_green_launch_requirement"] = True
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++    candidate = deepcopy(report)
++    candidate["model_cache_identity_rows"][0]["source_artifact_sha256"] = "missing"
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++    candidate = deepcopy(report)
++    candidate["execution_budget_contract"][0]["max_model_processes"] = 2
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++    candidate = deepcopy(report)
++    candidate["model_cache_identity_rows"][0]["repository_id"] = "Qwen/Qwen3.5-0.8B"
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++    candidate = deepcopy(report)
++    candidate["model_cache_identity_rows"][0]["auto_tokenizer_used"] = True
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++    candidate = deepcopy(report)
++    candidate["model_cache_identity_rows"][0]["download_performed"] = True
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++    candidate = deepcopy(report)
++    candidate["v573_terminal_replay_rows"] = candidate["v573_terminal_replay_rows"][:-1]
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++    candidate = deepcopy(report)
++    candidate["current_roadmap_gate_contract_rows"][0]["artifact_field"] = "drifted"
++    assert mod.readiness_reducer(candidate)["ready_score"] == 0.0
++
++
++def test_req_report_6588_preconditions_name_resources_ownership_and_no_llm(
++    report: dict[str, Any],
++) -> None:
++    """REQ-REPORT-6588-PRECONDITIONS records every launch input."""
++
++    preconditions = report["preconditions_checked"]
++    assert preconditions["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert preconditions["llm_calls_issued"] == 0
++    assert preconditions["model_loads_issued"] == 0
++    assert preconditions["downloads_issued"] == 0
++    assert preconditions["roadmap"]["sha256"].startswith("sha256:")
++    assert len(preconditions["v573_artifacts"]) == 3
++    assert all(row["sha256"].startswith("sha256:") for row in preconditions["v573_artifacts"])
++    assert preconditions["cpu"]["count"] >= 1
++    assert preconditions["ram"]["total_kib"] > 0
++    assert preconditions["disk"]["total_bytes"] > 0
++    assert preconditions["dirty_worktree"]["status_sha256"].startswith("sha256:")
++    assert isinstance(preconditions["visible_gpu_ownership"]["gpu_rows"], list)
++    assert preconditions["visible_gpu_ownership"]["signals_sent"] == []
++    assert len(preconditions["local_gguf_cache_paths"]) == 2
++
++
++def test_scenario_report_6588_atomic_null_artifact_validates(
++    tmp_path: Path, report: dict[str, Any]
++) -> None:
++    """SCENARIO-REPORT-6588-ATOMIC writes one durable null artifact."""
++
++    output = tmp_path / "experiment_6588.json"
++    receipt = mod.atomic_write_report(output, report)
++    loaded = json.loads(output.read_text(encoding="utf-8"))
++
++    assert loaded == report
++    assert receipt["atomic_replace"] is True
++    assert receipt["file_fsync"] is True
++    assert receipt["directory_fsync"] is True
++    assert receipt["output_sha256"] == mod.sha256_file(output)
++    assert report["status"] == "complete_v574_cfr_launch_ready"
++    assert report["honest_verdict"].startswith("complete:")
++    assert report["verdict_class"] is None
++    assert report[mod.READY_FIELD] == 1.0
++    assert report["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert report["verifier_is_oracle"] is True
++    assert report["protected_files_unchanged"]["all_unchanged"] is True
++    assert report["reproducibility_checksum"] == mod.artifact_checksum(report)
++    assert set(report["field_provenance"]) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert mod.validate_report(report) == []
++
++
++def test_req_report_6588_validator_rejects_tamper_and_bad_terminal_fields(
++    report: dict[str, Any], tmp_path: Path
++) -> None:
++    """REQ-REPORT-6588-ATOMIC rejects checksum and authority mutation."""
++
++    cases = []
++    candidate = deepcopy(report)
++    del candidate["status"]
++    cases.append((candidate, "missing required fields: status"))
++    cases.append(
++        (
++            _rehash({**deepcopy(report), "inference_substrate": "wrong"}),
++            "inference_substrate mismatch",
++        )
++    )
++    cases.append(
++        (
++            _rehash({**deepcopy(report), "verifier_is_oracle": False}),
++            "verifier_is_oracle must be true",
++        )
++    )
++    cases.append((_rehash({**deepcopy(report), "duration_s": 0.0}), "duration_s must be positive"))
++    cases.append(
++        (_rehash({**deepcopy(report), mod.READY_FIELD: 0.0}), f"{mod.READY_FIELD} mismatch")
++    )
++    cases.append(
++        (
++            _rehash({**deepcopy(report), "verdict_class": "positive"}),
++            "ready launch verdict_class must be null",
++        )
++    )
++    candidate = deepcopy(report)
++    candidate["protected_files_unchanged"]["all_unchanged"] = False
++    cases.append((_rehash(candidate), "protected_files_unchanged failed"))
++    candidate = deepcopy(report)
++    candidate["field_provenance"].pop("status")
++    cases.append((_rehash(candidate), "field_provenance missing required fields"))
++    cases.append(
++        (
++            {**deepcopy(report), "reproducibility_checksum": "sha256:stale"},
++            "reproducibility_checksum mismatch",
++        )
++    )
++    cases.append(
++        (
++            _rehash({**deepcopy(report), "honest_verdict": "launch ready without prefix"}),
++            "terminal success prefix missing",
++        )
++    )
++    candidate = deepcopy(report)
++    candidate["model_cache_identity_rows"][0]["resolved"] = False
++    candidate[mod.READY_FIELD] = 0.0
++    candidate["verdict_class"] = "blocked"
++    candidate["gate_check_summary"] = {}
++    cases.append((_rehash(candidate), "blocked gate_check_summary missing failure"))
++
++    for candidate, expected in cases:
++        assert expected in mod.validate_report(candidate)
++
++    bad = _rehash({**deepcopy(report), "duration_s": 0.0})
++    with pytest.raises(ValueError, match="duration_s must be positive"):
++        mod.atomic_write_report(tmp_path / "invalid.json", bad)
++
++
++def test_req_report_6588_blocked_report_names_failed_check(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-6588-REDUCER emits a named block for a real cache miss."""
++
++    original = mod.build_model_cache_identity_rows
++    rows = original(REPO)
++    rows[0]["resolved"] = False
++    rows[0]["admitted"] = False
++    rows[0]["rejection_reason"] = "trusted_cache_identity_missing"
++    monkeypatch.setattr(mod, "build_model_cache_identity_rows", lambda _root: rows)
++    blocked = mod.build_report(REPO, date="20260825", duration_s=1.0, tests_run=TESTS_RUN)
++    assert blocked[mod.READY_FIELD] == 0.0
++    assert blocked["status"] == "blocked_v574_cfr_launch_root"
++    assert blocked["honest_verdict"].startswith("blocked_v574_cfr_launch_root:")
++    assert blocked["verdict_class"] == "blocked"
++    assert blocked["gate_check_summary"]["failed_check_count"] > 0
++    assert blocked["gate_check_summary"]["first_failure"]["check"] == "model_cache_identity_rows"
+-- 
+2.55.0
+

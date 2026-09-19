@@ -1,0 +1,81 @@
+From 2c953b6d7922135d70f77e736c488090685a136e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 07:27:30 -0400
+Subject: [PATCH 09668/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 9 ++++-----
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ ops/known-issues.md          | 8 ++++++++
+ 5 files changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index cc94fbb91b..29e1c8d46b 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -1,9 +1,8 @@
+ {
+  "escalated": {
+-  "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z"
++  "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z",
++  "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json|": "2026-08-23T11:27:27Z"
+  },
+- "last_scan_notes": [
+-  "pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json: out file missing, run unsupervisable this cycle"
+- ],
+- "last_scan_utc": "2026-08-23T11:04:01Z"
++ "last_scan_notes": [],
++ "last_scan_utc": "2026-08-23T11:27:27Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 927bec0433..0a751fbf30 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 648191, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-23T11:04:00Z"}
+\ No newline at end of file
++{"pid": 648191, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-23T11:27:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e5d7fd762e..8f58a6147f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16326,3 +16326,5 @@ code |
+ | 2026-08-23 10:28 UTC | Conductor re-exec: fresh committed source | OK | c9408e2e2773 -> 45eb2efc3b30; argv preserved |
+ | 2026-08-23 10:44 UTC | Independent DRIFT corpus provenance, chronology, a | OK | 86 passed, 1 warning in 10.15s |
+ | 2026-08-23 11:02 UTC | External exact structural-control headroom compari | OK | 88 passed, 1 warning in 12.15s |
++| 2026-08-23 11:25 UTC | External Safety-Net learned router, abstention, an | OK | 87 passed, 1 warning in 16.20s |
++| 2026-08-23 11:27 UTC | OPERATOR-ATTENTION: CONSECUTIVE_INVALID_LLM_ON_ROW | BLOCK | pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json: 2/2 L |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 45a687e77a..d96709d64a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 648191, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-23T11:04:00Z"}
+\ No newline at end of file
++{"pid": 648191, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-23T11:27:26Z"}
+\ No newline at end of file
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 48e22b703d..a0c3ada5fc 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -18344,3 +18344,11 @@ Scope: pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.jso
+ 2/2 LLM-on rows invalid (max streak 2; codes ['DEAD_GENERATOR', 'NO_COMPLETIONS'])
+ 
+ Written by scripts/conductor_run_sentinel.py (REQ-CONDUCTOR-SENTINEL-3). The sentinel never kills work; triage and clear by hand.
++
++## OPERATOR-ATTENTION 2026-08-23: run sentinel CONSECUTIVE_INVALID_LLM_ON_ROWS
++
++Scope: pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json
++
++2/2 LLM-on rows invalid (max streak 2; codes ['DEAD_GENERATOR', 'NO_COMPLETIONS'])
++
++Written by scripts/conductor_run_sentinel.py (REQ-CONDUCTOR-SENTINEL-3). The sentinel never kills work; triage and clear by hand.
+-- 
+2.55.0
+

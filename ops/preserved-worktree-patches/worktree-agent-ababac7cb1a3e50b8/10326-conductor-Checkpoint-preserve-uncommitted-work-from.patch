@@ -1,0 +1,3484 @@
+From 72d6ce1c7344dbacea53eca6ed82fb19bead2912 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 20:25:28 -0400
+Subject: [PATCH 10326/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |   54 +
+ .../capabilities/research-harnesses/spec.md   |   61 +
+ ops/anomaly-escalations.md                    |    5 +
+ ops/conductor-heartbeat.json                  |    2 +-
+ ops/conductor-log.md                          |    5 +
+ ops/conductor-state.json                      |    2 +-
+ ...iment_6764_arc_exclusive_load_preflight.py | 1692 +++++++++++++++++
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ .../e3_tool/ft09/attempts/manifest.jsonl      |    3 +
+ ...0260829T230541_122058__49848e26541a4fff.py |   50 +
+ ...0260829T231120_118096__b42cf17ff65eb3d7.py |   25 +
+ ...0260829T232142_819210__24fc93514a6340d5.py |   27 +
+ .../e3_tool/ft09/world_model.py               |   27 +
+ .../meta_tool.json                            |  136 ++
+ .../shard_tool.jsonl                          |    3 +
+ ...iment_6764_arc_exclusive_load_preflight.py |   10 +
+ ...iment_6764_arc_exclusive_load_preflight.py | 1222 ++++++++++++
+ 17 files changed, 3324 insertions(+), 4 deletions(-)
+ create mode 100644 python/carnot/experiment_6764_arc_exclusive_load_preflight.py
+ create mode 100644 results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/manifest.jsonl
+ create mode 100644 results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T230541_122058__49848e26541a4fff.py
+ create mode 100644 results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T231120_118096__b42cf17ff65eb3d7.py
+ create mode 100644 results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T232142_819210__24fc93514a6340d5.py
+ create mode 100644 results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/world_model.py
+ create mode 100644 results/holdout_equalized_ab_selfparse_20260829/meta_tool.json
+ create mode 100644 scripts/experiments/experiment_6764_arc_exclusive_load_preflight.py
+ create mode 100644 tests/python/test_experiment_6764_arc_exclusive_load_preflight.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index e4530b9ed3..929cb16f75 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -28530,3 +28530,57 @@ live selfparse transport, where unknown-name demand becomes possible.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6770 (amendment) | `python/carnot/agentic/arc_induction_tools.py` (session freeze fields + `active_tool_schemas_for`/`active_tool_names_for`, name-first capture in `dispatch_tool`, `_record_unknown_tool` caps, `loose_tool_call_names`, enablement-gated `_param_types_for`); `python/carnot/agentic/arc_induction_tool_loop.py` (frozen payload/prompt, loose-name capture on both transports, session-sourced stats); `python/carnot/agentic/arc_competition_agent.py` (`_induce_and_plan` pre-clear + `attempt["tool_gap"]`); `python/carnot/agentic/arc_tool_gap_refinement.py` (`gap_events_dropped_total`). | `tests/python/test_arc_tool_gap_feedback.py` (SCENARIO-ARC-WMTE-6770-10..12 plus the F3/F4/F6/F8/F9 regressions; 26 feature mutation runs RED). |
++
++### REQ-ARC-WMTE-6764: The Exclusive Load Receipt SHALL Prove Production Selfparse Transport Only
++
++Exp6764 SHALL resolve the exact cached
++`unsloth/Qwen3.8-27B-GGUF` and
++`unsloth/Qwen3.6-35B-A3B-GGUF` files. It SHALL bind each file to its SHA-256
++hash and embedded llama.cpp tokenizer. A missing tokenizer, changed hash,
++legacy model, remote endpoint, CPU path, or substituted model SHALL block the
++run.
++
++The Qwen3.8 worker SHALL set `CARNOT_ARC_INDUCE_N_CTX=32768` before proposer
++construction. It SHALL complete a full llama.cpp CUDA load. It SHALL record the
++server-observed context, actual GPU layers, peak owned VRAM, and one bounded
++`find_objects` request through the production selfparse XML parser, shared
++dispatcher, response bound, and transcript path.
++
++After Qwen3.8 releases its lease and recovers VRAM, Qwen3.6 SHALL run a smaller
++first-token and selfparse transport canary on the same selected physical UUID.
++The Qwen3.6 receipt SHALL remain separate from the Qwen3.8 receipt. Timings and
++quality SHALL not be pooled.
++
++`arc_exclusive_load_ready` SHALL be true only when both rows used local
++llama.cpp CUDA, Qwen3.8 observed at least 32,768 context cells, production
++selfparse dispatched its bounded call, every owned process ended, both leases
++released, and both VRAM recovery checks passed. This receipt SHALL make no ARC
++quality, score, solve, or model-ranking claim. `verifier_is_oracle` SHALL be
++false.
++
++#### SCENARIO-ARC-WMTE-6764-FULL-LOAD-SELFPARSE
++
++- GIVEN the exact Qwen3.8 GGUF and one owned eligible device
++- WHEN its fresh worker loads at 32K and enters the production selfparse loop
++- THEN the receipt binds CUDA layers, context, peak VRAM, parsed typed
++  `find_objects` arguments, bounded dispatch output, and transcript evidence.
++
++#### SCENARIO-ARC-WMTE-6764-FLAGSHIP-CANARY
++
++- GIVEN Qwen3.8 teardown and lease release passed
++- WHEN the fresh Qwen3.6 worker runs
++- THEN it records a non-empty first token and one production selfparse dispatch
++  under a new owner receipt on the same physical UUID.
++
++#### SCENARIO-ARC-WMTE-6764-ADMISSION-ONLY
++
++- GIVEN a complete or blocked Exp6764 artifact
++- WHEN a reader evaluates its claim boundary
++- THEN no timing is pooled, `verifier_is_oracle` is false, and no model quality
++  or ARC solve claim is present.
++
++## Implementation Status (REQ-ARC-WMTE-6764)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6764 and SCENARIO-ARC-WMTE-6764-* | Implemented (`python/carnot/experiment_6764_arc_exclusive_load_preflight.py`; `scripts/experiments/experiment_6764_arc_exclusive_load_preflight.py`) | Implemented (`tests/python/test_experiment_6764_arc_exclusive_load_preflight.py`; 31 focused tests, 100% new-module statement coverage) |
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index f397464003..9a157ed23f 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -9872,3 +9872,64 @@ Implementation status: implemented 2026-08-29 (`scripts/conductor_gates.py`
+ marker rule + transitive closure; `tests/python/test_gate_cascade_settlement.py`, 16 tests
+ at the real entry points, 11/11 mutations RED, restores byte-identical). Verified read-only
+ against the live 2026.08.589 roadmap: the marker fires on exp6756 only.
++
++### REQ-INFRA-6764: An Exclusive ARC Load Canary SHALL Lease The Least-Used Eligible RTX 3090
++
++Exp6764 SHALL inspect the two fixed RTX 3090 UUIDs before any model load. It
++SHALL record free VRAM, temperature, and active compute processes. It SHALL
++exclude a device below the frozen 22,610 MiB free-VRAM floor. It SHALL rank
++eligible devices by free VRAM, temperature, and active compute count. It SHALL
++select only the first ranked device.
++
++Each model SHALL run in a fresh worker. The worker SHALL acquire an owner-bound
++`GpuLease` for the selected UUID before it starts llama.cpp. The lease SHALL
++bind the worker PID, PID start time, model path, and device UUID. A busy lease
++or a changed hardware gate SHALL block the worker before model load.
++
++The two workers SHALL run in fixed sequence. Each worker SHALL record the full
++phase journal from `preflight` through one terminal phase. It SHALL terminate
++only its owned llama.cpp child. It SHALL prove that the child and worker ended,
++that the lease released, and that device VRAM returned within 512 MiB of the
++worker's baseline. It SHALL never signal, kill, adopt, or preempt an unrelated
++PID.
++
++If no device is eligible, or any other precondition fails, Exp6764 SHALL write
++`complete_blocked_arc_exclusive_load`. The artifact SHALL preserve every gate,
++the first failed check, and its observed value. It SHALL not start a worker or
++substitute CPU, remote, legacy, or different-model inference.
++
++#### SCENARIO-INFRA-6764-LEAST-USED-SELECTION
++
++- GIVEN two fixed RTX 3090 inventory rows
++- WHEN one or both rows meet the frozen free-VRAM floor
++- THEN only eligible rows are ranked, and the selected UUID is the first row
++  under the frozen free-VRAM, temperature, and active-compute ordering.
++
++#### SCENARIO-INFRA-6764-LEASE-EXCLUSION-AND-NO-PREEMPTION
++
++- GIVEN a selected device already has a live `GpuLease` owner
++- WHEN an Exp6764 worker requests that UUID
++- THEN it reports busy, starts no model, and sends no signal.
++- GIVEN unrelated compute PIDs in the inventory
++- WHEN Exp6764 tears down
++- THEN only its recorded worker group and llama.cpp child can receive a signal.
++
++#### SCENARIO-INFRA-6764-TEARDOWN-RECOVERY
++
++- GIVEN an owned model reached GPU residence
++- WHEN inference finishes or fails
++- THEN the child exits, VRAM returns within 512 MiB, the journal reaches a
++  terminal phase, and the lease release receipt is durable.
++
++#### SCENARIO-INFRA-6764-BLOCKED-ARTIFACT
++
++- GIVEN no eligible device or any failed precondition
++- WHEN the reducer writes the result
++- THEN readiness is false, no model worker starts, and `gate_check_summary`
++  retains the failed check and observed value.
++
++## Implementation Status (REQ-INFRA-6764)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-INFRA-6764 and SCENARIO-INFRA-6764-* | Implemented (`python/carnot/experiment_6764_arc_exclusive_load_preflight.py`) | Implemented (`tests/python/test_experiment_6764_arc_exclusive_load_preflight.py`; 31 focused tests, 100% new-module statement coverage) |
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 5197445590..11f148c427 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1612,3 +1612,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['NONTERMINAL_DECLARED_ARTIFACT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_6754_v588_branch_disposition.json
++
++## experiment_6762_procedural_vs_trace_csl_ab.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_6762_procedural_vs_trace_csl_ab.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 11e803e70b..9b75cc7277 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-29T23:02:15Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-30T00:25:23Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9648484757..cd3ed3e553 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16798,3 +16798,8 @@ The l |
+ | 2026-08-29 22:50 UTC | Conductor re-exec: fresh committed source | OK | d3ca0424e606 -> 63c64c3af372; argv preserved |
+ | 2026-08-29 22:58 UTC | Procedural versus trace memory prospective A/B | OK | cache hit: 92 passed, 1 warning in 16.83s |
+ | 2026-08-29 23:00 UTC | Cold CSL hard-case, forgetting, and poison audit | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6762-procedural-vs-t |
++| 2026-08-30 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6275_flagship_asp_constraint_verification_benchmark.json age-week 0:  |
++| 2026-08-30 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | worktree_import_guard.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on worktree_ |
++| 2026-08-30 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | capstone_milestone_rot_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on cap |
++| 2026-08-30 00:23 UTC | Exclusive full-load ARC preflight and teardown rec | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ad"),
+++        |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 056e05b936..614f9e1771 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-29T23:02:15Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-30T00:25:23Z"}
+\ No newline at end of file
+diff --git a/python/carnot/experiment_6764_arc_exclusive_load_preflight.py b/python/carnot/experiment_6764_arc_exclusive_load_preflight.py
+new file mode 100644
+index 0000000000..eacba209f4
+--- /dev/null
++++ b/python/carnot/experiment_6764_arc_exclusive_load_preflight.py
+@@ -0,0 +1,1692 @@
++"""Prove exclusive CUDA load, production selfparse, and clean teardown.
++
++The experiment selects one eligible RTX 3090. Each model then runs in a fresh
++worker that owns a GPU lease and one llama.cpp child. The result is an
++admission receipt only. It contains no ARC score or model-quality claim.
++
++Spec refs: REQ-INFRA-6764, SCENARIO-INFRA-6764-*,
++REQ-ARC-WMTE-6764, and SCENARIO-ARC-WMTE-6764-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++from copy import deepcopy
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import re
++import shutil
++import signal
++import socket
++import subprocess
++import sys
++import tempfile
++import threading
++import time
++from typing import Any
++
++from carnot import experiment_6647_receipt_scoped_admission_boundary as exp6647
++from carnot import experiment_6752_arc_code_carrying_tool_preflight as exp6752
++from carnot import gpu_lease_phase_journal as lease_api
++from carnot.agentic.arc_induction_tools import MAX_FIND_OBJECT_RESPONSE_BYTES
++from carnot.inference.sota_models import gguf_tokenizer_loadable, resolve_cached_gguf
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_PATH = REPO_ROOT / "results/experiment_6764_arc_exclusive_load_preflight.json"
++WORK_DIR = REPO_ROOT / "results/.experiment_6764_arc_exclusive_load_preflight"
++LEASE_RUNTIME_DIR = Path(os.environ.get("CARNOT_GPU_LEASE_RUNTIME_DIR", "/tmp/carnot-gpu-leases"))
++EXP6752_PATH = REPO_ROOT / "results/experiment_6752_arc_code_carrying_tool_preflight.json"
++EXP6647_PATH = REPO_ROOT / "results/experiment_6647_receipt_scoped_admission_boundary.json"
++SCHEMA = "carnot.experiment_6764.arc_exclusive_load_preflight.v1"
++RUN_DATE = "20260829"
++RANDOM_SEED = 6_764
++CONTEXT_REQUESTED = 32_768
++FROZEN_FREE_VRAM_THRESHOLD_MB = 22_610
++VRAM_RECOVERY_TOLERANCE_MB = 512
++RAM_AVAILABLE_FLOOR_BYTES = 64 * 1024**3
++DISK_FREE_FLOOR_BYTES = 1024**3
++WORKER_TIMEOUT_S = 1_200.0
++VRAM_RECOVERY_TIMEOUT_S = 180.0
++INFERENCE_SUBSTRATE = "task-owned local llama.cpp CUDA GGUF"
++PRODUCTION_ROUTE = "induce_with_tool_loop/selfparse/dispatch_tool"
++CLAIM_BOUNDARY = (
++    "Transport and teardown admission only. It measures no ARC quality, claims no solve, "
++    "and keeps model timings unpooled."
++)
++EXPECTED_GPU_UUIDS = (
++    "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
++    "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++)
++MODEL_SPECS: tuple[JsonDict, ...] = (
++    {
++        "model_id": "unsloth/Qwen3.8-27B-GGUF",
++        "role": "immutable_scored_arc_generator_full_load",
++        "repo_substr": "Qwen3.8-27B",
++        "filename": "Qwen3.8-27B-Q4_K_M.gguf",
++        "expected_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
++        "required_vram_mb": 17_815,
++        "max_tokens": 1_024,
++    },
++    {
++        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "role": "flagship_moe_transport_canary",
++        "repo_substr": "Qwen3.6-35B-A3B",
++        "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "expected_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "required_vram_mb": 22_610,
++        "max_tokens": 512,
++    },
++)
++VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "inference_substrate",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++    "models_used",
++    "live_model_invoked",
++    "rows",
++    "device_inventory_before",
++    "device_selection_receipt",
++    "lease_owner_receipts",
++    "phase_rows",
++    "gpu_receipts",
++    "runtime_context_by_model",
++    "production_selfparse_receipt",
++    "owned_processes_terminated",
++    "lease_release_receipts",
++    "vram_recovery_receipts",
++    "unrelated_processes_signaled",
++    "arc_exclusive_load_ready",
++    "claim_boundary",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES: JsonDict = {
++    "schema": "A versioned shape lets readers reject incompatible receipts.",
++    "experiment": "The identifier binds this file to Exp6764.",
++    "title": "The title states the admission-only scope.",
++    "run_date": "The planning date anchors the requested hardware check.",
++    "status": "The status separates ready, partial, and blocked runs.",
++    "field_principles": "Each field states why it is needed.",
++    "inference_substrate": "The value excludes CPU, remote, and substituted inference.",
++    "duration_s": "Monotonic wall time makes real work visible.",
++    "random_seed": "The fixed seed makes model requests repeatable.",
++    "reproducibility_checksum": "The checksum detects receipt or input drift.",
++    "models_used": "Exact paths and hashes prevent model substitution.",
++    "live_model_invoked": "Readiness requires both real local decodes.",
++    "rows": "One row per model phase keeps lifecycle evidence atomic.",
++    "device_inventory_before": "The initial inventory exposes unrelated work and capacity.",
++    "device_selection_receipt": "The receipt proves frozen least-used selection.",
++    "lease_owner_receipts": "PID and start time bind each lease to its worker.",
++    "phase_rows": "Ordered monotonic rows prove the complete lease lifecycle.",
++    "gpu_receipts": "Separate model receipts prevent timing and evidence pooling.",
++    "runtime_context_by_model": "Observed context distinguishes load evidence from intent.",
++    "production_selfparse_receipt": "Parser, dispatch, bound, and transcript evidence prove the live route.",
++    "owned_processes_terminated": "A true value rules out an owned process leak.",
++    "lease_release_receipts": "Durable releases prove the selected device was returned.",
++    "vram_recovery_receipts": "Before and after samples prove owned VRAM returned.",
++    "unrelated_processes_signaled": "An empty list proves the no-preemption boundary.",
++    "arc_exclusive_load_ready": "The all-admission boolean requires both complete canaries.",
++    "claim_boundary": "The boundary prevents admission evidence from becoming a quality claim.",
++    "gate_check_summary": "Blocked results retain each failed check and observed value.",
++    "verifier_is_oracle": "False states that this transport receipt is not a correctness oracle.",
++    "verdict_class": "A closed class makes the result machine-readable.",
++    "honest_verdict": "The terminal text states readiness or an owned block.",
++    "preconditions_checked": "The full gate record explains why workers did or did not start.",
++    "owned_process_receipts": "Process identities show which task-owned PIDs ended.",
++}
++
++
++def canonical_json(value: Any) -> str:
++    """Return stable compact JSON for content hashes."""
++
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_text(value: str) -> str:
++    """Hash text and name the algorithm in the receipt."""
++
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    """Hash one JSON-compatible value after stable serialization."""
++
++    return sha256_text(canonical_json(value))
++
++
++def sha256_file(path: str | Path) -> str:
++    """Hash a large model in chunks so the process does not copy it into RAM."""
++
++    candidate = Path(path)
++    if not candidate.is_file():
++        return "missing"
++    digest = hashlib.sha256()
++    with candidate.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def artifact_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact without its self-referential field."""
++
++    return sha256_json(
++        {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    )
++
++
++def gpu_receipt_checksum(receipt: Mapping[str, Any]) -> str:
++    """Hash one model receipt without its self-referential field."""
++
++    return sha256_json({key: value for key, value in receipt.items() if key != "receipt_sha256"})
++
++
++def _load_json(path: Path) -> JsonDict:
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _run_command(command: Sequence[str], timeout_s: float = 30.0) -> JsonDict:
++    """Run one read-only host probe and retain bounded output."""
++
++    started = time.monotonic()
++    try:
++        result = subprocess.run(
++            list(command), capture_output=True, text=True, timeout=timeout_s, check=False
++        )
++    except (OSError, subprocess.TimeoutExpired) as exc:
++        return {
++            "command": list(command),
++            "exit_code": 124 if isinstance(exc, subprocess.TimeoutExpired) else 127,
++            "duration_s": round(time.monotonic() - started, 6),
++            "stdout": "",
++            "stderr": f"{type(exc).__name__}: {exc}",
++        }
++    return {
++        "command": list(command),
++        "exit_code": result.returncode,
++        "duration_s": round(time.monotonic() - started, 6),
++        "stdout": result.stdout[-16_000:],
++        "stderr": result.stderr[-16_000:],
++    }
++
++
++def _model_path(spec: Mapping[str, Any]) -> str | None:
++    if spec["model_id"] == MODEL_SPECS[1]["model_id"]:
++        return resolve_cached_gguf(str(spec["model_id"]), "Q4_K_M")
++    from carnot.agentic.arc_executable_world_model import _resolve_gguf
++
++    return _resolve_gguf(str(spec["repo_substr"]))
++
++
++def resolve_model_specs() -> list[JsonDict]:
++    """Resolve and verify only the two mandated cached GGUF files."""
++
++    rows: list[JsonDict] = []
++    for spec in MODEL_SPECS:
++        resolved = _model_path(spec) or ""
++        path = Path(resolved)
++        present = path.is_file() and path.name == spec["filename"]
++        model_hash = sha256_file(path) if present else "missing"
++        tokenizer_ok, tokenizer_detail = gguf_tokenizer_loadable(str(path) if present else None)
++        rows.append(
++            {
++                **dict(spec),
++                "model_path": str(path.resolve()) if present else resolved,
++                "model_sha256": model_hash,
++                "model_size_bytes": path.stat().st_size if present else 0,
++                "resolved": bool(present and model_hash == spec["expected_sha256"]),
++                "tokenizer": {
++                    "source": "llama.cpp_embedded_gguf",
++                    "loadable": tokenizer_ok,
++                    "detail": tokenizer_detail,
++                },
++            }
++        )
++    return rows
++
++
++def nvidia_smi_inventory() -> JsonDict:
++    """Read the two physical devices and all active compute rows."""
++
++    device_receipt = _run_command(
++        (
++            "nvidia-smi",
++            "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,temperature.gpu,utilization.gpu",
++            "--format=csv,noheader,nounits",
++        )
++    )
++    process_receipt = _run_command(
++        (
++            "nvidia-smi",
++            "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
++            "--format=csv,noheader,nounits",
++        )
++    )
++    processes: list[JsonDict] = []
++    for line in process_receipt["stdout"].splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) != 4:
++            continue
++        try:
++            processes.append(
++                {
++                    "gpu_uuid": parts[0],
++                    "pid": int(parts[1]),
++                    "process_name": parts[2],
++                    "used_memory_mb": int(parts[3]),
++                }
++            )
++        except ValueError:
++            continue
++    devices: list[JsonDict] = []
++    for line in device_receipt["stdout"].splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) != 8:
++            continue
++        try:
++            uuid = parts[1]
++            active = [row for row in processes if row["gpu_uuid"] == uuid]
++            devices.append(
++                {
++                    "index": int(parts[0]),
++                    "uuid": uuid,
++                    "name": parts[2],
++                    "memory_total_mb": int(parts[3]),
++                    "memory_used_mb": int(parts[4]),
++                    "memory_free_mb": int(parts[5]),
++                    "temperature_c": int(parts[6]),
++                    "utilization_pct": int(parts[7]),
++                    "active_compute_processes": active,
++                }
++            )
++        except ValueError:
++            continue
++    return {
++        "device_query": device_receipt,
++        "process_query": process_receipt,
++        "devices": devices,
++    }
++
++
++def rank_eligible_devices(
++    devices: Sequence[Mapping[str, Any]],
++    *,
++    threshold_mb: int = FROZEN_FREE_VRAM_THRESHOLD_MB,
++) -> JsonDict:
++    """Rank fixed RTX 3090 rows with the preregistered ordering."""
++
++    retained: list[JsonDict] = []
++    for source in devices:
++        row = deepcopy(dict(source))
++        active = row.get("active_compute_processes")
++        active = active if isinstance(active, list) else []
++        exact_identity = (
++            row.get("uuid") in EXPECTED_GPU_UUIDS and row.get("name") == "NVIDIA GeForce RTX 3090"
++        )
++        row["active_compute_count"] = len(active)
++        row["eligible"] = bool(
++            exact_identity and int(row.get("memory_free_mb", -1)) >= int(threshold_mb)
++        )
++        row["ineligibility_reasons"] = []
++        if not exact_identity:
++            row["ineligibility_reasons"].append("unexpected_device_identity")
++        if int(row.get("memory_free_mb", -1)) < int(threshold_mb):
++            row["ineligibility_reasons"].append("free_vram_below_frozen_floor")
++        retained.append(row)
++    eligible = [row for row in retained if row["eligible"]]
++    eligible.sort(
++        key=lambda row: (
++            -int(row["memory_free_mb"]),
++            int(row.get("temperature_c", 10_000)),
++            int(row["active_compute_count"]),
++            int(row.get("index", 10_000)),
++        )
++    )
++    return {
++        "rank_policy": ["free_vram_desc", "temperature_asc", "active_compute_asc"],
++        "frozen_free_vram_threshold_mb": int(threshold_mb),
++        "evaluated_devices": retained,
++        "ranked_eligible_devices": eligible,
++        "eligible_device_count": len(eligible),
++        "selected_device": deepcopy(eligible[0]) if eligible else None,
++    }
++
++
++def _llama_cpp_receipt() -> JsonDict:
++    configured = os.environ.get("CARNOT_LLAMA_SERVER", "")
++    paths = [
++        Path(configured) if configured else Path("/__not_configured__"),
++        Path.home() / ".cache/llama.cpp-master/build/bin/llama-server",
++    ]
++    server = next((path for path in paths if path.is_file()), paths[-1])
++    linked = _run_command(("ldd", str(server))) if server.is_file() else {}
++    linked_text = str(linked.get("stdout", "")) + str(linked.get("stderr", ""))
++    try:
++        from llama_cpp import llama_cpp
++
++        python_cuda: Any = bool(llama_cpp.llama_supports_gpu_offload())
++    except Exception as exc:  # noqa: BLE001 - the artifact must keep the import failure
++        python_cuda = f"{type(exc).__name__}: {exc}"
++    return {
++        "path": str(server),
++        "exists": server.is_file(),
++        "executable": os.access(server, os.X_OK),
++        "sha256": sha256_file(server),
++        "dynamic_link": linked,
++        "cuda_linked": "libggml-cuda" in linked_text and "libcuda" in linked_text,
++        "python_cuda_offload": python_cuda,
++    }
++
++
++def _host_resources(root: Path) -> JsonDict:
++    memory: dict[str, int] = {}
++    try:
++        for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
++            key, value = line.split(":", 1)
++            memory[key] = int(value.strip().split()[0]) * 1024
++    except (OSError, ValueError):
++        memory = {}
++    disk = shutil.disk_usage(root)
++    return {
++        "cpu_count": os.cpu_count(),
++        "platform": platform.platform(),
++        "ram_total_bytes": memory.get("MemTotal", 0),
++        "ram_available_bytes": memory.get("MemAvailable", 0),
++        "disk_total_bytes": disk.total,
++        "disk_free_bytes": disk.free,
++    }
++
++
++def choose_free_ports(count: int = 2) -> list[int]:
++    """Ask the kernel for distinct loopback ports and release them for workers."""
++
++    ports: list[int] = []
++    sockets: list[socket.socket] = []
++    try:
++        for _ in range(count):
++            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
++            sock.bind(("127.0.0.1", 0))
++            sockets.append(sock)
++            ports.append(int(sock.getsockname()[1]))
++    finally:
++        for sock in sockets:
++            sock.close()
++    return ports
++
++
++def port_is_free(port: int) -> bool:
++    """Return true only when a loopback bind succeeds now."""
++
++    probe = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
++    try:
++        probe.bind(("127.0.0.1", int(port)))
++        return True
++    except OSError:
++        return False
++    finally:
++        probe.close()
++
++
++def collect_preconditions(root: Path = REPO_ROOT) -> JsonDict:
++    """Check every required input before any lease or model worker starts."""
++
++    prior_6752 = _load_json(EXP6752_PATH)
++    prior_6647 = _load_json(EXP6647_PATH)
++    models = resolve_model_specs()
++    inventory = nvidia_smi_inventory()
++    selection = rank_eligible_devices(inventory["devices"])
++    llama_cpp = _llama_cpp_receipt()
++    resources = _host_resources(root)
++    ports = choose_free_ports(len(MODEL_SPECS))
++    try:
++        from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++        from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
++        from carnot.agentic.arc_induction_tools import dispatch_tool, parse_xml_tool_calls
++
++        production_imports = all(
++            callable(value)
++            for value in (
++                LocalGGUFProposer,
++                induce_with_tool_loop,
++                dispatch_tool,
++                parse_xml_tool_calls,
++            )
++        )
++    except Exception:  # noqa: BLE001 - a failed import is a precondition value
++        production_imports = False
++    context_receipt = prior_6752.get("context_observed_by_model", {})
++    prior_model_hashes = {
++        row.get("model_id"): row.get("model_sha256")
++        for row in prior_6752.get("models_used", [])
++        if isinstance(row, Mapping)
++    }
++    checks: list[JsonDict] = [
++        {
++            "check": "exp6752_preflight_ready",
++            "expected": True,
++            "observed": prior_6752.get("arc_context_tool_preflight_ready"),
++            "validator_errors": exp6752.validate_artifact(prior_6752)
++            if prior_6752
++            else ["missing"],
++            "passed": prior_6752.get("arc_context_tool_preflight_ready") is True
++            and not exp6752.validate_artifact(prior_6752),
++        },
++        {
++            "check": "exp6647_task_owned_admission",
++            "expected": 1.0,
++            "observed": prior_6647.get("task_owned_admission_ready_score"),
++            "validator_errors": exp6647.validate_artifact(prior_6647)
++            if prior_6647
++            else ["missing"],
++            "passed": prior_6647.get("task_owned_admission_ready_score") == 1.0
++            and not exp6647.validate_artifact(prior_6647),
++        },
++    ]
++    for model in models:
++        checks.extend(
++            [
++                {
++                    "check": f"exact_cached_model:{model['model_id']}",
++                    "expected": {
++                        "filename": model["filename"],
++                        "sha256": model["expected_sha256"],
++                    },
++                    "observed": {
++                        "path": model.get("model_path"),
++                        "sha256": model.get("model_sha256"),
++                        "resolved": model.get("resolved"),
++                    },
++                    "passed": model.get("resolved") is True,
++                },
++                {
++                    "check": f"embedded_tokenizer:{model['model_id']}",
++                    "expected": "llama.cpp_embedded_gguf",
++                    "observed": deepcopy(model.get("tokenizer")),
++                    "passed": (model.get("tokenizer") or {}).get("loadable") is True,
++                },
++                {
++                    "check": f"context_32k_support:{model['model_id']}",
++                    "expected": {"context_at_least": CONTEXT_REQUESTED},
++                    "observed": {
++                        "prior_context": context_receipt.get(model["model_id"]),
++                        "prior_model_sha256": prior_model_hashes.get(model["model_id"]),
++                        "current_model_sha256": model.get("model_sha256"),
++                    },
++                    "passed": isinstance(context_receipt.get(model["model_id"]), int)
++                    and context_receipt[model["model_id"]] >= CONTEXT_REQUESTED
++                    and prior_model_hashes.get(model["model_id"]) == model.get("model_sha256"),
++                },
++            ]
++        )
++    identity_rows = {row.get("uuid"): row.get("name") for row in inventory["devices"]}
++    checks.extend(
++        [
++            {
++                "check": "two_fixed_rtx3090_identities",
++                "expected": {uuid: "NVIDIA GeForce RTX 3090" for uuid in EXPECTED_GPU_UUIDS},
++                "observed": identity_rows,
++                "passed": identity_rows
++                == {uuid: "NVIDIA GeForce RTX 3090" for uuid in EXPECTED_GPU_UUIDS},
++            },
++            {
++                "check": "llama_cpp_cuda",
++                "expected": True,
++                "observed": llama_cpp,
++                "passed": llama_cpp.get("exists") is True
++                and llama_cpp.get("executable") is True
++                and llama_cpp.get("cuda_linked") is True
++                and llama_cpp.get("python_cuda_offload") is True,
++            },
++            {
++                "check": "gpu_lease_api",
++                "expected": True,
++                "observed": {
++                    "acquire": callable(getattr(lease_api.GpuLease, "acquire", None)),
++                    "transition": callable(getattr(lease_api.GpuLease, "transition", None)),
++                    "release": callable(getattr(lease_api.GpuLease, "release", None)),
++                },
++                "passed": all(
++                    callable(getattr(lease_api.GpuLease, name, None))
++                    for name in ("acquire", "transition", "release")
++                ),
++            },
++            {
++                "check": "ports_free",
++                "expected": len(MODEL_SPECS),
++                "observed": {str(port): port_is_free(port) for port in ports},
++                "passed": len(ports) == len(MODEL_SPECS)
++                and all(port_is_free(port) for port in ports),
++            },
++            {
++                "check": "ram_and_disk",
++                "expected": {
++                    "ram_available_bytes_at_least": RAM_AVAILABLE_FLOOR_BYTES,
++                    "disk_free_bytes_at_least": DISK_FREE_FLOOR_BYTES,
++                },
++                "observed": resources,
++                "passed": resources["ram_available_bytes"] >= RAM_AVAILABLE_FLOOR_BYTES
++                and resources["disk_free_bytes"] >= DISK_FREE_FLOOR_BYTES,
++            },
++            {
++                "check": "production_selfparse_imports",
++                "expected": True,
++                "observed": production_imports,
++                "passed": production_imports,
++            },
++            {
++                "check": "least_used_eligible_rtx3090",
++                "expected": {"free_vram_mb_at_least": FROZEN_FREE_VRAM_THRESHOLD_MB},
++                "observed": deepcopy(selection.get("selected_device")),
++                "passed": selection.get("selected_device") is not None,
++            },
++        ]
++    )
++    return {
++        "all_passed": all(check.get("passed") is True for check in checks),
++        "checks": checks,
++        "models": models,
++        "device_inventory_before": inventory["devices"],
++        "device_inventory_commands": {
++            "devices": inventory["device_query"],
++            "processes": inventory["process_query"],
++        },
++        "device_selection_receipt": selection,
++        "ports": ports,
++        "llama_cpp": llama_cpp,
++        "resources": resources,
++        "source_receipts": {
++            "exp6752": {"path": str(EXP6752_PATH), "sha256": sha256_file(EXP6752_PATH)},
++            "exp6647": {"path": str(EXP6647_PATH), "sha256": sha256_file(EXP6647_PATH)},
++        },
++    }
++
++
++def acquire_selected_lease(
++    *,
++    runtime_dir: Path,
++    task_id: str,
++    selected_device: Mapping[str, Any],
++    expected_model: str,
++) -> lease_api.GpuLease:
++    """Acquire the selected UUID and bind it to this worker process."""
++
++    return lease_api.GpuLease.acquire(
++        runtime_dir=runtime_dir,
++        task_id=task_id,
++        device_uuid=str(selected_device["uuid"]),
++        expected_model=expected_model,
++        vram_before_mb=int(selected_device.get("memory_used_mb", 0)),
++        ttl_s=WORKER_TIMEOUT_S,
++    )
++
++
++def worker_environment(
++    base: Mapping[str, str],
++    model: Mapping[str, Any],
++    selected_device: Mapping[str, Any],
++    *,
++    port: int,
++) -> dict[str, str]:
++    """Set the full worker environment before proposer construction."""
++
++    env = dict(base)
++    env.update(
++        {
++            "CARNOT_ARC_INDUCE_N_CTX": str(CONTEXT_REQUESTED),
++            "CARNOT_ARC_INDUCE_TOOL_LOOP": "selfparse",
++            "CARNOT_ARC_INDUCE_TOOL_TURNS": "1",
++            "CARNOT_ARC_INDUCE_TOOL_THINK_BUDGET": "256",
++            "CARNOT_ARC_INDUCE_MAX_TOKENS": str(model["max_tokens"]),
++            "CARNOT_ARC_INDUCE_TIMEOUT": str(int(WORKER_TIMEOUT_S)),
++            "CARNOT_ARC_GENERATOR_CUDA_GPU": str(selected_device["index"]),
++            "CARNOT_ARC_GENERATOR_REQUIRE_CUDA": "1",
++            "CARNOT_ARC_GENERATOR_SEED": str(RANDOM_SEED),
++            "CARNOT_ARC_MTP": "0",
++            "CARNOT_ARC_KV_QUANT": "q8_0",
++            "CARNOT_ARC_GGUF_PATH": str(model["model_path"]),
++            "CARNOT_ARC_EXCLUSIVE_PORT": str(port),
++            "PYTHONPATH": str(REPO_ROOT / "python")
++            + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else ""),
++        }
++    )
++    return env
++
++
++def terminate_owned_process(
++    process: Any,
++    *,
++    terminate_timeout_s: float = 30.0,
++) -> JsonDict:
++    """Stop one recorded child without accepting any unrelated PID input."""
++
++    receipt: JsonDict = {
++        "pid": int(process.pid),
++        "terminate_sent": False,
++        "kill_sent": False,
++        "exit_code": process.poll(),
++        "absent_after_exit": process.poll() is not None,
++        "unrelated_processes_signaled": [],
++    }
++    if process.poll() is None:
++        process.terminate()
++        receipt["terminate_sent"] = True
++        try:
++            process.wait(timeout=terminate_timeout_s)
++        except subprocess.TimeoutExpired:
++            process.kill()
++            receipt["kill_sent"] = True
++            process.wait(timeout=5.0)
++    receipt["exit_code"] = process.poll()
++    receipt["absent_after_exit"] = process.poll() is not None
++    return receipt
++
++
++def build_vram_recovery_receipt(
++    *,
++    before_used_mb: int,
++    after_used_mb: int,
++    owned_pid_present: bool,
++    tolerance_mb: int = VRAM_RECOVERY_TOLERANCE_MB,
++) -> JsonDict:
++    """Compare total device use after teardown with the frozen baseline."""
++
++    delta = abs(int(after_used_mb) - int(before_used_mb))
++    return {
++        "before_used_mb": int(before_used_mb),
++        "after_used_mb": int(after_used_mb),
++        "absolute_delta_mb": delta,
++        "tolerance_mb": int(tolerance_mb),
++        "owned_pid_present": bool(owned_pid_present),
++        "passed": not owned_pid_present and delta <= int(tolerance_mb),
++    }
++
++
++def build_production_selfparse_receipt(
++    events: Sequence[Mapping[str, Any]],
++    *,
++    blocks_seen: int,
++    blocks_unparsed: int,
++) -> JsonDict:
++    """Reduce production loop events into one bounded transport receipt."""
++
++    event = next((row for row in events if row.get("parsed_tool") == "find_objects"), {})
++    raw = str(event.get("raw_emission") or "")
++    bounded = str(event.get("bounded_response") or "")
++    arguments = deepcopy(event.get("parsed_arguments"))
++    result = deepcopy(event.get("dispatch_result"))
++    receipt: JsonDict = {
++        "production_route": PRODUCTION_ROUTE,
++        "raw_emission": raw,
++        "raw_emission_sha256": sha256_text(raw),
++        "parsed_tool": event.get("parsed_tool"),
++        "parsed_arguments": arguments,
++        "dispatch_result": result,
++        "bounded_response": bounded,
++        "bounded_response_bytes": len(bounded.encode("utf-8")),
++        "bounded_response_sha256": sha256_text(bounded),
++        "transcript_sha256": sha256_json([raw, bounded]),
++        "blocks_seen": int(blocks_seen),
++        "blocks_unparsed": int(blocks_unparsed),
++    }
++    receipt["success"] = not production_selfparse_errors(receipt)
++    return receipt
++
++
++def production_selfparse_errors(receipt: Mapping[str, Any]) -> list[str]:
++    """Return every parser, dispatch, response, or transcript failure."""
++
++    errors: list[str] = []
++    if receipt.get("production_route") != PRODUCTION_ROUTE:
++        errors.append("production_route")
++    if receipt.get("parsed_tool") != "find_objects":
++        errors.append("parsed_tool")
++    arguments = receipt.get("parsed_arguments")
++    arguments = arguments if isinstance(arguments, Mapping) else {}
++    if not (
++        type(arguments.get("t")) is int
++        and arguments.get("which") in {"before", "after"}
++        and isinstance(arguments.get("predicate_code"), str)
++        and type(arguments.get("max_objects")) is int
++    ):
++        errors.append("parsed_arguments")
++    result = receipt.get("dispatch_result")
++    result = result if isinstance(result, Mapping) else {}
++    if result.get("ok") is not True:
++        errors.append("dispatch_result")
++    response_bytes = receipt.get("bounded_response_bytes")
++    if (
++        not isinstance(response_bytes, int)
++        or response_bytes <= 0
++        or response_bytes > MAX_FIND_OBJECT_RESPONSE_BYTES + 64
++    ):
++        errors.append("bounded_response")
++    if receipt.get("blocks_seen") != 1 or receipt.get("blocks_unparsed") != 0:
++        errors.append("xml_blocks")
++    for field in ("raw_emission_sha256", "bounded_response_sha256", "transcript_sha256"):
++        if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(receipt.get(field, ""))):
++            errors.append(field)
++    return errors
++
++
++def phase_rows_for_receipt(receipt: Mapping[str, Any]) -> list[JsonDict]:
++    """Bind every lease phase to the model and owner identity."""
++
++    owner = receipt.get("lease_owner")
++    owner = owner if isinstance(owner, Mapping) else {}
++    rows: list[JsonDict] = []
++    for ordinal, event in enumerate(receipt.get("phase_history", [])):
++        if not isinstance(event, Mapping):
++            continue
++        rows.append(
++            {
++                "model_id": receipt.get("model_id"),
++                "role": receipt.get("role"),
++                "ordinal": ordinal,
++                "phase": event.get("phase"),
++                "previous_phase": event.get("previous_phase"),
++                "monotonic_ns": event.get("monotonic_ns"),
++                "event_checksum": event.get("event_checksum"),
++                "owner_pid": owner.get("pid"),
++                "owner_pid_start_ticks": owner.get("pid_start_ticks"),
++                "device_uuid": owner.get("device_uuid"),
++            }
++        )
++    return rows
++
++
++def gpu_receipt_errors(receipt: Mapping[str, Any]) -> list[str]:
++    """Return every reason one model cannot satisfy exclusive-load readiness."""
++
++    errors: list[str] = []
++    if receipt.get("receipt_sha256") != gpu_receipt_checksum(receipt):
++        errors.append("receipt_sha256")
++    model_id = receipt.get("model_id")
++    expected = next((row for row in MODEL_SPECS if row["model_id"] == model_id), None)
++    if expected is None:
++        return errors + ["model_id"]
++    if receipt.get("role") != expected["role"]:
++        errors.append("role")
++    if receipt.get("model_sha256") != expected["expected_sha256"]:
++        errors.append("model_sha256")
++    if receipt.get("observed_model_path") != receipt.get("model_path"):
++        errors.append("observed_model_path")
++    if receipt.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if receipt.get("llama_cpp_cuda") is not True:
++        errors.append("llama_cpp_cuda")
++    if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(receipt.get("server_sha256", ""))):
++        errors.append("server_sha256")
++    device = receipt.get("device")
++    device = device if isinstance(device, Mapping) else {}
++    if device.get("uuid") not in EXPECTED_GPU_UUIDS:
++        errors.append("device_uuid")
++    worker = receipt.get("worker_process")
++    worker = worker if isinstance(worker, Mapping) else {}
++    model_process = receipt.get("model_process")
++    model_process = model_process if isinstance(model_process, Mapping) else {}
++    owner = receipt.get("lease_owner")
++    owner = owner if isinstance(owner, Mapping) else {}
++    if not (
++        owner.get("pid") == worker.get("pid")
++        and owner.get("pid_start_ticks") == worker.get("pid_start_ticks")
++        and owner.get("device_uuid") == device.get("uuid")
++        and owner.get("expected_model") == receipt.get("model_path")
++    ):
++        errors.append("lease_owner")
++    if worker.get("exit_code") != 0 or worker.get("absent_after_exit") is not True:
++        errors.append("worker_process")
++    if model_process.get("exit_code") is None or model_process.get("absent_after_exit") is not True:
++        errors.append("model_process")
++    sequence = [row.get("phase") for row in receipt.get("phase_history", [])]
++    if sequence != list(lease_api.COMPLETE_PHASE_SEQUENCE):
++        errors.append("phase_sequence")
++    release = receipt.get("lease_release")
++    release = release if isinstance(release, Mapping) else {}
++    if release.get("released") is not True or release.get("phase") != "terminal_complete":
++        errors.append("lease_release")
++    if receipt.get("runtime_context") != CONTEXT_REQUESTED:
++        errors.append("runtime_context")
++    layers = receipt.get("gpu_layers")
++    layers = layers if isinstance(layers, Mapping) else {}
++    if (
++        not isinstance(layers.get("offloaded"), int)
++        or layers.get("offloaded", 0) <= 0
++        or layers.get("offloaded") != layers.get("total")
++    ):
++        errors.append("gpu_layers")
++    if int(receipt.get("peak_owned_vram_mb", 0) or 0) <= 0:
++        errors.append("peak_owned_vram_mb")
++    if int(receipt.get("resident_owned_vram_mb", 0) or 0) <= 0:
++        errors.append("resident_owned_vram_mb")
++    if not isinstance(receipt.get("duration_s"), (int, float)) or receipt.get("duration_s", 0) <= 0:
++        errors.append("duration_s")
++    if (
++        receipt.get("live_model_invoked") is not True
++        or receipt.get("first_token_observed") is not True
++    ):
++        errors.append("first_token")
++    if production_selfparse_errors(receipt.get("production_selfparse", {})):
++        errors.append("production_selfparse")
++    if (receipt.get("vram_recovery") or {}).get("passed") is not True:
++        errors.append("vram_recovery")
++    if receipt.get("unrelated_processes_signaled") != []:
++        errors.append("unrelated_processes_signaled")
++    if receipt.get("errors") != []:
++        errors.append("errors")
++    if model_id == MODEL_SPECS[0]["model_id"] and receipt.get("full_load") is not True:
++        errors.append("full_load")
++    if model_id == MODEL_SPECS[1]["model_id"] and receipt.get("transport_canary") is not True:
++        errors.append("transport_canary")
++    return list(dict.fromkeys(errors))
++
++
++def reduce_arc_exclusive_load_ready(receipts: Sequence[Mapping[str, Any]]) -> bool:
++    """Require two separate complete receipts in the fixed model order."""
++
++    return bool(
++        len(receipts) == len(MODEL_SPECS)
++        and [row.get("model_id") for row in receipts] == [spec["model_id"] for spec in MODEL_SPECS]
++        and all(not gpu_receipt_errors(row) for row in receipts)
++    )
++
++
++def _gpu_snapshot(device_uuid: str, owned_pid: int = 0) -> JsonDict:
++    inventory = nvidia_smi_inventory()
++    device = next((row for row in inventory["devices"] if row.get("uuid") == device_uuid), {})
++    active = device.get("active_compute_processes")
++    active = active if isinstance(active, list) else []
++    owned = next((row for row in active if row.get("pid") == owned_pid), None)
++    return {
++        **deepcopy(device),
++        "owned_pid": int(owned_pid),
++        "owned_pid_present": owned is not None,
++        "owned_pid_vram_mb": int((owned or {}).get("used_memory_mb", 0) or 0),
++        "observed_monotonic_ns": time.monotonic_ns(),
++    }
++
++
++def _process_identity(process: Any) -> JsonDict:
++    pid = int(process.pid)
++    try:
++        executable = os.readlink(f"/proc/{pid}/exe")
++    except OSError:
++        executable = ""
++    return {
++        "pid": pid,
++        "pid_start_ticks": lease_api.proc_start_ticks(pid),
++        "parent_pid": os.getpid(),
++        "executable": executable,
++        "exit_code": process.poll(),
++        "absent_after_exit": process.poll() is not None,
++    }
++
++
++def _empty_model_process() -> JsonDict:
++    return {
++        "pid": 0,
++        "pid_start_ticks": None,
++        "parent_pid": os.getpid(),
++        "executable": "",
++        "exit_code": None,
++        "absent_after_exit": True,
++    }
++
++
++def _wait_for_vram_recovery(
++    device_uuid: str,
++    owned_pid: int,
++    before_used_mb: int,
++    *,
++    timeout_s: float = VRAM_RECOVERY_TIMEOUT_S,
++) -> tuple[JsonDict, JsonDict]:
++    deadline = time.monotonic() + timeout_s
++    snapshot = _gpu_snapshot(device_uuid, owned_pid)
++    receipt = build_vram_recovery_receipt(
++        before_used_mb=before_used_mb,
++        after_used_mb=int(snapshot.get("memory_used_mb", 0) or 0),
++        owned_pid_present=bool(snapshot.get("owned_pid_present")),
++    )
++    while not receipt["passed"] and time.monotonic() < deadline:
++        time.sleep(1.0)
++        snapshot = _gpu_snapshot(device_uuid, owned_pid)
++        receipt = build_vram_recovery_receipt(
++            before_used_mb=before_used_mb,
++            after_used_mb=int(snapshot.get("memory_used_mb", 0) or 0),
++            owned_pid_present=bool(snapshot.get("owned_pid_present")),
++        )
++    receipt["observed_monotonic_ns"] = snapshot.get("observed_monotonic_ns")
++    return receipt, snapshot
++
++
++def run_live_model_worker(
++    model: Mapping[str, Any],
++    selected_device: Mapping[str, Any],
++    *,
++    port: int,
++    lease_runtime_dir: Path = LEASE_RUNTIME_DIR,
++) -> JsonDict:
++    """Own one lease, load one model, run selfparse, and return all resources."""
++
++    from carnot.agentic import arc_induction_tool_loop as loop
++    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
++
++    started_ns = time.monotonic_ns()
++    worker_identity = lease_api.current_process_identity()
++    device_uuid = str(selected_device["uuid"])
++    before = _gpu_snapshot(device_uuid)
++    fresh_selection = rank_eligible_devices(nvidia_smi_inventory()["devices"])
++    errors: list[str] = []
++    lease: lease_api.GpuLease | None = None
++    owner: JsonDict = {}
++    release: JsonDict = {}
++    journal: JsonDict = {}
++    proposer: Any = None
++    model_process = _empty_model_process()
++    cleanup: JsonDict = {
++        "pid": 0,
++        "terminate_sent": False,
++        "kill_sent": False,
++        "exit_code": None,
++        "absent_after_exit": True,
++        "unrelated_processes_signaled": [],
++    }
++    selfparse = build_production_selfparse_receipt([], blocks_seen=0, blocks_unparsed=0)
++    context: int | None = None
++    observed_model_path: str | None = None
++    layers: JsonDict = {"requested": 999, "offloaded": 0, "total": None}
++    resident = deepcopy(before)
++    peak_vram = 0
++    resident_vram = 0
++    vram_recovery = build_vram_recovery_receipt(
++        before_used_mb=int(before.get("memory_used_mb", 0) or 0),
++        after_used_mb=int(before.get("memory_used_mb", 0) or 0),
++        owned_pid_present=False,
++    )
++    stop_monitor = threading.Event()
++    monitor_thread: threading.Thread | None = None
++    server = _llama_cpp_receipt()
++    live_model_invoked = False
++    try:
++        selected_now = fresh_selection.get("selected_device")
++        if not isinstance(selected_now, Mapping) or selected_now.get("uuid") != device_uuid:
++            raise RuntimeError("selected_device_no_longer_first_eligible")
++        if not port_is_free(port):
++            raise RuntimeError("selected_port_no_longer_free")
++        lease = acquire_selected_lease(
++            runtime_dir=lease_runtime_dir,
++            task_id=f"exp6764-{model['model_id'].split('/')[-1]}",
++            selected_device=before,
++            expected_model=str(model["model_path"]),
++        )
++        owner = lease.owner_receipt()
++        lease.transition("admitted")
++        lease.transition("loading")
++        proposer = LocalGGUFProposer(
++            repo_substr=str(model["repo_substr"]),
++            model_path=str(model["model_path"]),
++            n_ctx=CONTEXT_REQUESTED,
++            max_tokens=int(model["max_tokens"]),
++            timeout=int(WORKER_TIMEOUT_S),
++            port=int(port),
++            mtp=False,
++            n_gpu_layers=999,
++            use_chat_template=True,
++            extra_server_args=("-v",),
++        )
++        if not proposer._ensure_server():
++            raise RuntimeError("llama_server_load_failed")
++        if proposer.port != int(port):
++            raise RuntimeError("llama_server_changed_frozen_port")
++        process = proposer._proc
++        if process is None:
++            raise RuntimeError("llama_server_process_missing")
++        model_process = _process_identity(process)
++        resident = _gpu_snapshot(device_uuid, int(process.pid))
++        resident_vram = int(resident.get("owned_pid_vram_mb", 0) or 0)
++        peak_vram = resident_vram
++        context = proposer.observed_n_ctx()
++        observed_model_path = proposer.observed_model_path()
++        log_path = getattr(proposer, "_stderr_log_path", None)
++        log_text = Path(log_path).read_text(errors="replace") if log_path else ""
++        layers = exp6752._gpu_layers_from_log(log_text, 999)
++        cuda_resident = (
++            server.get("cuda_linked") is True
++            and resident.get("owned_pid_present") is True
++            and resident_vram > 0
++            and layers.get("offloaded", 0) > 0
++        )
++        if not cuda_resident:
++            raise RuntimeError("owner_bound_cuda_residency_missing")
++        lease.transition("resident", vram_mb=int(resident.get("memory_used_mb", 0) or 0))
++
++        def monitor() -> None:
++            nonlocal peak_vram
++            while not stop_monitor.wait(0.1):
++                sample = _gpu_snapshot(device_uuid, int(process.pid))
++                peak_vram = max(peak_vram, int(sample.get("owned_pid_vram_mb", 0) or 0))
++
++        monitor_thread = threading.Thread(target=monitor, daemon=True)
++        monitor_thread.start()
++        lease.transition("inferencing")
++        events: list[JsonDict] = []
++        loop.induce_with_tool_loop(
++            proposer,
++            "transport_fixture",
++            exp6752.fixture_transitions(),
++            1,
++            extra_user_instruction=exp6752.build_probe_instruction(),
++            tool_event_sink=events,
++        )
++        stats = getattr(proposer, "last_tool_loop_stats", {})
++        selfparse = build_production_selfparse_receipt(
++            events,
++            blocks_seen=int(stats.get("selfparse_blocks_seen", 0) or 0),
++            blocks_unparsed=int(stats.get("selfparse_blocks_unparsed", 0) or 0),
++        )
++        live_model_invoked = bool(selfparse.get("raw_emission", "").strip())
++    except Exception as exc:  # noqa: BLE001 - live failures belong in the receipt
++        errors.append(f"{type(exc).__name__}: {exc}"[:500])
++    finally:
++        stop_monitor.set()
++        if monitor_thread is not None:
++            monitor_thread.join(timeout=2.0)
++        if lease is not None and lease.document.get("phase") in {"resident", "inferencing"}:
++            try:
++                lease.transition("unloading")
++            except lease_api.LeaseError as exc:
++                errors.append(f"{type(exc).__name__}: {exc}")
++        if proposer is not None and proposer._proc is not None:
++            process = proposer._proc
++            cleanup = terminate_owned_process(process)
++            proposer._proc = None
++            model_process.update(
++                {
++                    "exit_code": cleanup.get("exit_code"),
++                    "absent_after_exit": cleanup.get("absent_after_exit"),
++                }
++            )
++        owned_pid = int(model_process.get("pid", 0) or 0)
++        vram_recovery, after = _wait_for_vram_recovery(
++            device_uuid,
++            owned_pid,
++            int(before.get("memory_used_mb", 0) or 0),
++        )
++        if lease is not None:
++            try:
++                phase = lease.document.get("phase")
++                if phase == "unloading":
++                    lease.transition(
++                        "validating",
++                        vram_mb=int(after.get("memory_used_mb", 0) or 0),
++                        exit_code=int(model_process.get("exit_code", 0) or 0),
++                        unload_observed=model_process.get("absent_after_exit") is True,
++                    )
++                    complete = bool(
++                        not errors
++                        and context == CONTEXT_REQUESTED
++                        and observed_model_path == str(model["model_path"])
++                        and layers.get("offloaded", 0) == layers.get("total")
++                        and live_model_invoked
++                        and not production_selfparse_errors(selfparse)
++                        and vram_recovery.get("passed") is True
++                    )
++                    lease.transition("terminal_complete" if complete else "terminal_blocked")
++                elif phase in {"preflight", "admitted", "loading"}:
++                    lease.transition("terminal_blocked")
++                if lease.document.get("phase") in lease_api.TERMINAL_PHASES:
++                    release = lease.release()
++                else:
++                    lease.close()
++            except lease_api.LeaseError as exc:
++                errors.append(f"{type(exc).__name__}: {exc}")
++                lease.close()
++            try:
++                journal = lease_api.read_journal(lease.journal_path)
++            except lease_api.LeaseError as exc:
++                errors.append(f"{type(exc).__name__}: {exc}")
++    receipt: JsonDict = {
++        "model_id": model["model_id"],
++        "role": model["role"],
++        "model_path": model["model_path"],
++        "model_sha256": model["model_sha256"],
++        "observed_model_path": observed_model_path,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "llama_cpp_cuda": server.get("cuda_linked") is True,
++        "server_path": server.get("path"),
++        "server_sha256": server.get("sha256"),
++        "device": deepcopy(dict(selected_device)),
++        "worker_process": {
++            "pid": worker_identity["pid"],
++            "pid_start_ticks": worker_identity["pid_start_ticks"],
++            "exit_code": 0,
++            "absent_after_exit": False,
++        },
++        "model_process": model_process,
++        "lease_owner": owner,
++        "phase_history": deepcopy(journal.get("phase_history", [])),
++        "lease_release": release,
++        "runtime_context": context,
++        "gpu_layers": layers,
++        "peak_owned_vram_mb": peak_vram,
++        "resident_owned_vram_mb": resident_vram,
++        "duration_s": round((time.monotonic_ns() - started_ns) / 1_000_000_000, 6),
++        "live_model_invoked": live_model_invoked,
++        "first_token_observed": live_model_invoked,
++        "production_selfparse": selfparse,
++        "vram_recovery": vram_recovery,
++        "full_load": model["model_id"] == MODEL_SPECS[0]["model_id"],
++        "transport_canary": model["model_id"] == MODEL_SPECS[1]["model_id"],
++        "owned_cleanup": cleanup,
++        "unrelated_processes_signaled": [],
++        "errors": errors,
++    }
++    receipt["receipt_sha256"] = gpu_receipt_checksum(receipt)
++    return receipt
++
++
++def _blocked_worker_receipt(
++    model: Mapping[str, Any], selected_device: Mapping[str, Any], error: str
++) -> JsonDict:
++    """Keep a failed worker attempt without inventing lifecycle evidence."""
++
++    receipt: JsonDict = {
++        "model_id": model["model_id"],
++        "role": model["role"],
++        "model_path": model["model_path"],
++        "model_sha256": model["model_sha256"],
++        "observed_model_path": None,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "llama_cpp_cuda": False,
++        "server_path": "",
++        "server_sha256": "missing",
++        "device": deepcopy(dict(selected_device)),
++        "worker_process": {
++            "pid": 0,
++            "pid_start_ticks": None,
++            "exit_code": 127,
++            "absent_after_exit": True,
++        },
++        "model_process": _empty_model_process(),
++        "lease_owner": {},
++        "phase_history": [],
++        "lease_release": {},
++        "runtime_context": None,
++        "gpu_layers": {"requested": 999, "offloaded": 0, "total": None},
++        "peak_owned_vram_mb": 0,
++        "resident_owned_vram_mb": 0,
++        "duration_s": 0.0,
++        "live_model_invoked": False,
++        "first_token_observed": False,
++        "production_selfparse": build_production_selfparse_receipt(
++            [], blocks_seen=0, blocks_unparsed=0
++        ),
++        "vram_recovery": build_vram_recovery_receipt(
++            before_used_mb=0, after_used_mb=0, owned_pid_present=False
++        ),
++        "full_load": False,
++        "transport_canary": False,
++        "owned_cleanup": {},
++        "unrelated_processes_signaled": [],
++        "errors": [error],
++    }
++    receipt["receipt_sha256"] = gpu_receipt_checksum(receipt)
++    return receipt
++
++
++def _terminate_worker_group(process: Any, start_ticks: int | None) -> JsonDict:
++    """Stop only the new session created for one task-owned worker."""
++
++    receipt = {
++        "worker_pid": int(process.pid),
++        "worker_pid_start_ticks": start_ticks,
++        "term_sent": False,
++        "kill_sent": False,
++        "unrelated_processes_signaled": [],
++    }
++    if lease_api.proc_start_ticks(int(process.pid)) != start_ticks:
++        receipt["identity_mismatch"] = True
++        return receipt
++    try:
++        os.killpg(int(process.pid), signal.SIGTERM)
++        receipt["term_sent"] = True
++        process.wait(timeout=10.0)
++    except subprocess.TimeoutExpired:
++        os.killpg(int(process.pid), signal.SIGKILL)
++        receipt["kill_sent"] = True
++        process.wait(timeout=5.0)
++    except ProcessLookupError:
++        pass
++    return receipt
++
++
++def run_model_worker(
++    model: Mapping[str, Any],
++    selected_device: Mapping[str, Any],
++    port: int,
++    runtime_dir: Path,
++    *,
++    timeout_s: float = WORKER_TIMEOUT_S,
++) -> JsonDict:
++    """Launch one fresh leased worker and wait for its stable receipt."""
++
++    runtime_dir.mkdir(parents=True, exist_ok=True)
++    slug = re.sub(r"[^a-zA-Z0-9]+", "-", str(model["model_id"])).strip("-").lower()
++    model_path = runtime_dir / f"{slug}.model.json"
++    device_path = runtime_dir / f"{slug}.device.json"
++    output_path = runtime_dir / f"{slug}.receipt.json"
++    write_json_atomic(model_path, model)
++    write_json_atomic(device_path, selected_device)
++    command = [
++        sys.executable,
++        "-m",
++        "carnot.experiment_6764_arc_exclusive_load_preflight",
++        "--worker",
++        "--worker-model",
++        str(model_path),
++        "--worker-device",
++        str(device_path),
++        "--worker-output",
++        str(output_path),
++        "--port",
++        str(port),
++        "--lease-runtime-dir",
++        str(LEASE_RUNTIME_DIR),
++    ]
++    process = subprocess.Popen(
++        command,
++        cwd=REPO_ROOT,
++        env=worker_environment(os.environ, model, selected_device, port=port),
++        stdin=subprocess.DEVNULL,
++        stdout=subprocess.PIPE,
++        stderr=subprocess.PIPE,
++        text=True,
++        start_new_session=True,
++    )
++    start_ticks = lease_api.proc_start_ticks(process.pid)
++    timeout_cleanup: JsonDict = {}
++    try:
++        stdout, stderr = process.communicate(timeout=timeout_s)
++    except subprocess.TimeoutExpired:
++        timeout_cleanup = _terminate_worker_group(process, start_ticks)
++        stdout, stderr = process.communicate()
++    row = _load_json(output_path)
++    if not row:
++        row = _blocked_worker_receipt(
++            model,
++            selected_device,
++            f"worker_output_missing:exit={process.returncode}:stderr_sha256={sha256_text(stderr)}",
++        )
++    worker = row.get("worker_process")
++    worker = dict(worker) if isinstance(worker, Mapping) else {}
++    worker.update(
++        {
++            "pid": int(process.pid),
++            "pid_start_ticks": start_ticks,
++            "exit_code": process.returncode,
++            "absent_after_exit": process.poll() is not None,
++            "stdout_sha256": sha256_text(stdout),
++            "stderr_sha256": sha256_text(stderr),
++            "timeout_cleanup": timeout_cleanup,
++        }
++    )
++    row["worker_process"] = worker
++    row["receipt_sha256"] = gpu_receipt_checksum(row)
++    return row
++
++
++def _derived_gate_summary(receipts: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    rows = []
++    for spec in MODEL_SPECS:
++        receipt = next((row for row in receipts if row.get("model_id") == spec["model_id"]), {})
++        failures = gpu_receipt_errors(receipt) if receipt else ["receipt_missing"]
++        rows.append(
++            {
++                "check": f"model_admission:{spec['model_id']}",
++                "expected": "complete owned CUDA load, selfparse, teardown, release, recovery",
++                "observed": {"failures": failures},
++                "passed": not failures,
++            }
++        )
++    rows.append(
++        {
++            "check": "unrelated_processes_signaled",
++            "expected": [],
++            "observed": [
++                pid
++                for receipt in receipts
++                for pid in receipt.get("unrelated_processes_signaled", [])
++            ],
++            "passed": all(
++                receipt.get("unrelated_processes_signaled") == [] for receipt in receipts
++            ),
++        }
++    )
++    return rows
++
++
++def build_artifact(
++    *,
++    date: str,
++    preflight: Mapping[str, Any],
++    gpu_receipts: Sequence[Mapping[str, Any]],
++    started_ns: int,
++    finished_ns: int,
++) -> JsonDict:
++    """Reduce preconditions and separate model receipts into one admission result."""
++
++    receipts = [deepcopy(dict(row)) for row in gpu_receipts]
++    models = [deepcopy(dict(row)) for row in preflight.get("models", [])]
++    selected = deepcopy(preflight.get("device_selection_receipt", {}))
++    ready = bool(preflight.get("all_passed") is True and reduce_arc_exclusive_load_ready(receipts))
++    if ready:
++        verdict_class = "positive"
++        honest_verdict = "complete_arc_exclusive_load_ready"
++        status = "complete"
++    elif preflight.get("all_passed") is not True:
++        verdict_class = "blocked"
++        honest_verdict = "complete_blocked_arc_exclusive_load"
++        status = "blocked"
++    else:
++        verdict_class = "partial"
++        honest_verdict = "complete_partial_arc_exclusive_load"
++        status = "partial"
++    phase_rows = [row for receipt in receipts for row in phase_rows_for_receipt(receipt)]
++    process_receipts = [
++        deepcopy(receipt.get(name))
++        for receipt in receipts
++        for name in ("worker_process", "model_process")
++    ]
++    unrelated = [
++        pid for receipt in receipts for pid in receipt.get("unrelated_processes_signaled", [])
++    ]
++    gate_summary = (
++        deepcopy(list(preflight.get("checks", [])))
++        if preflight.get("all_passed") is not True
++        else _derived_gate_summary(receipts)
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": 6764,
++        "title": "Exclusive ARC 32K CUDA load and selfparse admission preflight",
++        "run_date": str(date),
++        "status": status,
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(max(0, finished_ns - started_ns) / 1_000_000_000, 6),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "models_used": models,
++        "live_model_invoked": bool(receipts)
++        and len(receipts) == len(MODEL_SPECS)
++        and all(receipt.get("live_model_invoked") is True for receipt in receipts),
++        "rows": phase_rows,
++        "device_inventory_before": deepcopy(list(preflight.get("device_inventory_before", []))),
++        "device_selection_receipt": selected,
++        "lease_owner_receipts": [deepcopy(row.get("lease_owner")) for row in receipts],
++        "phase_rows": phase_rows,
++        "gpu_receipts": receipts,
++        "runtime_context_by_model": {
++            str(row.get("model_id")): row.get("runtime_context") for row in receipts
++        },
++        "production_selfparse_receipt": {
++            str(row.get("model_id")): deepcopy(row.get("production_selfparse")) for row in receipts
++        },
++        "owned_processes_terminated": all(
++            isinstance(row, Mapping) and row.get("absent_after_exit") is True
++            for row in process_receipts
++        ),
++        "lease_release_receipts": [deepcopy(row.get("lease_release")) for row in receipts],
++        "vram_recovery_receipts": [deepcopy(row.get("vram_recovery")) for row in receipts],
++        "unrelated_processes_signaled": unrelated,
++        "arc_exclusive_load_ready": ready,
++        "claim_boundary": CLAIM_BOUNDARY,
++        "gate_check_summary": gate_summary,
++        "verifier_is_oracle": False,
++        "verdict_class": verdict_class,
++        "honest_verdict": honest_verdict,
++        "preconditions_checked": deepcopy(dict(preflight)),
++        "owned_process_receipts": process_receipts,
++    }
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Recompute the admission result from retained evidence."""
++
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing_field:{field}")
++    principles = artifact.get("field_principles")
++    principles = principles if isinstance(principles, Mapping) else {}
++    if not set(artifact).issubset(principles):
++        errors.append("field_principles")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    if artifact.get("verdict_class") not in VERDICT_CLASSES:
++        errors.append("verdict_class")
++    if artifact.get("claim_boundary") != CLAIM_BOUNDARY:
++        errors.append("claim_boundary")
++    if (
++        not isinstance(artifact.get("duration_s"), (int, float))
++        or artifact.get("duration_s", -1) < 0
++    ):
++        errors.append("duration_s")
++    models = artifact.get("models_used")
++    models = models if isinstance(models, list) else []
++    if [row.get("model_id") for row in models] != [spec["model_id"] for spec in MODEL_SPECS] or any(
++        row.get("model_sha256") != spec["expected_sha256"]
++        for row, spec in zip(models, MODEL_SPECS, strict=True)
++    ):
++        errors.append("models_used")
++    inventory = artifact.get("device_inventory_before")
++    inventory = inventory if isinstance(inventory, list) else []
++    expected_selection = rank_eligible_devices(inventory)
++    if artifact.get("device_selection_receipt") != expected_selection:
++        errors.append("device_selection_receipt")
++    receipts = artifact.get("gpu_receipts")
++    receipts = receipts if isinstance(receipts, list) else []
++    expected_ready = bool(
++        artifact.get("preconditions_checked", {}).get("all_passed") is True
++        and reduce_arc_exclusive_load_ready(receipts)
++    )
++    if artifact.get("arc_exclusive_load_ready") is not expected_ready:
++        errors.append("arc_exclusive_load_ready")
++    if artifact.get("rows") != [
++        row for receipt in receipts for row in phase_rows_for_receipt(receipt)
++    ]:
++        errors.append("rows")
++    if artifact.get("phase_rows") != artifact.get("rows"):
++        errors.append("phase_rows")
++    if artifact.get("lease_owner_receipts") != [row.get("lease_owner") for row in receipts]:
++        errors.append("lease_owner_receipts")
++    if artifact.get("lease_release_receipts") != [row.get("lease_release") for row in receipts]:
++        errors.append("lease_release_receipts")
++    if artifact.get("vram_recovery_receipts") != [row.get("vram_recovery") for row in receipts]:
++        errors.append("vram_recovery_receipts")
++    if artifact.get("runtime_context_by_model") != {
++        str(row.get("model_id")): row.get("runtime_context") for row in receipts
++    }:
++        errors.append("runtime_context_by_model")
++    if artifact.get("production_selfparse_receipt") != {
++        str(row.get("model_id")): row.get("production_selfparse") for row in receipts
++    }:
++        errors.append("production_selfparse_receipt")
++    process_receipts = [
++        row.get(name) for row in receipts for name in ("worker_process", "model_process")
++    ]
++    expected_terminated = all(
++        isinstance(row, Mapping) and row.get("absent_after_exit") is True
++        for row in process_receipts
++    )
++    if artifact.get("owned_processes_terminated") is not expected_terminated:
++        errors.append("owned_processes_terminated")
++    unrelated = [pid for row in receipts for pid in row.get("unrelated_processes_signaled", [])]
++    if artifact.get("unrelated_processes_signaled") != unrelated or unrelated:
++        errors.append("unrelated_processes_signaled")
++    expected_live = (
++        bool(receipts)
++        and len(receipts) == len(MODEL_SPECS)
++        and all(row.get("live_model_invoked") is True for row in receipts)
++    )
++    if artifact.get("live_model_invoked") is not expected_live:
++        errors.append("live_model_invoked")
++    expected_gates = (
++        _derived_gate_summary(receipts)
++        if artifact.get("preconditions_checked", {}).get("all_passed") is True
++        else artifact.get("preconditions_checked", {}).get("checks", [])
++    )
++    if artifact.get("gate_check_summary") != expected_gates:
++        errors.append("gate_check_summary")
++    expected_verdict = (
++        "complete_arc_exclusive_load_ready"
++        if expected_ready
++        else (
++            "complete_blocked_arc_exclusive_load"
++            if artifact.get("preconditions_checked", {}).get("all_passed") is not True
++            else "complete_partial_arc_exclusive_load"
++        )
++    )
++    if artifact.get("honest_verdict") != expected_verdict:
++        errors.append("honest_verdict")
++    selected = artifact.get("device_selection_receipt", {}).get("selected_device")
++    selected_uuid = selected.get("uuid") if isinstance(selected, Mapping) else None
++    if any((row.get("device") or {}).get("uuid") != selected_uuid for row in receipts):
++        errors.append("selected_device_binding")
++    if artifact.get("reproducibility_checksum") != artifact_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return list(dict.fromkeys(errors))
++
++
++def write_json_atomic(path: Path, value: Mapping[str, Any]) -> None:
++    """Publish complete JSON with atomic replace."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.NamedTemporaryFile(
++        "w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", delete=False
++    ) as handle:
++        json.dump(value, handle, indent=2, sort_keys=False)
++        handle.write("\n")
++        temporary = Path(handle.name)
++    temporary.replace(path)
++
++
++def run(
++    *,
++    result_path: Path = RESULT_PATH,
++    date: str = RUN_DATE,
++    preflight_fn: Callable[[], JsonDict] = collect_preconditions,
++    worker_runner: Callable[
++        [Mapping[str, Any], Mapping[str, Any], int, Path], JsonDict
++    ] = run_model_worker,
++    clock: Callable[[], int] = time.monotonic_ns,
++) -> JsonDict:
++    """Run all gates, then two fresh workers in fixed sequence when admitted."""
++
++    started_ns = clock()
++    preflight = preflight_fn()
++    receipts: list[JsonDict] = []
++    if preflight.get("all_passed") is True:
++        selected = preflight.get("device_selection_receipt", {}).get("selected_device")
++        models = preflight.get("models", [])
++        ports = preflight.get("ports", [45_000, 45_001])
++        runtime_dir = result_path.parent / ".experiment_6764_arc_exclusive_load_preflight"
++        if isinstance(selected, Mapping):
++            for model, port in zip(models, ports, strict=True):
++                receipt = worker_runner(model, selected, int(port), runtime_dir)
++                receipts.append(receipt)
++                if gpu_receipt_errors(receipt):
++                    break
++    artifact = build_artifact(
++        date=date,
++        preflight=preflight,
++        gpu_receipts=receipts,
++        started_ns=started_ns,
++        finished_ns=clock(),
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("invalid Exp6764 artifact:" + ",".join(errors))
++    write_json_atomic(result_path, artifact)
++    return artifact
++
++
++def _worker_entry(
++    model_path: Path,
++    device_path: Path,
++    output_path: Path,
++    port: int,
++    lease_runtime_dir: Path,
++) -> int:
++    model = _load_json(model_path)
++    device = _load_json(device_path)
++    receipt = run_live_model_worker(model, device, port=port, lease_runtime_dir=lease_runtime_dir)
++    write_json_atomic(output_path, receipt)
++    return 0 if not receipt.get("errors") else 2
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run the parent experiment or one explicitly requested worker."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--worker", action="store_true")
++    parser.add_argument("--worker-model", type=Path)
++    parser.add_argument("--worker-device", type=Path)
++    parser.add_argument("--worker-output", type=Path)
++    parser.add_argument("--port", type=int)
++    parser.add_argument("--lease-runtime-dir", type=Path, default=LEASE_RUNTIME_DIR)
++    args = parser.parse_args(argv)
++    if args.worker:
++        if not all(
++            value is not None
++            for value in (args.worker_model, args.worker_device, args.worker_output, args.port)
++        ):
++            parser.error("--worker requires model, device, output, and port")
++        return _worker_entry(
++            args.worker_model,
++            args.worker_device,
++            args.worker_output,
++            args.port,
++            args.lease_runtime_dir,
++        )
++    artifact = run(date=args.date)
++    print(
++        json.dumps(
++            {
++                "artifact": str(RESULT_PATH),
++                "ready": artifact["arc_exclusive_load_ready"],
++                "verdict": artifact["honest_verdict"],
++            }
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - covered by the repository wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 55a60b64c7..104b2a8c30 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.73s, user: 2.42s, system: 0.24s, MEM: 114.65 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.70s, user: 2.36s, system: 0.21s, MEM: 114.77 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 71% 19x read_verilog (1 sec), 11% 1x synth_xilinx (0 sec), ...
++Time spent: 75% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/manifest.jsonl b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/manifest.jsonl
+new file mode 100644
+index 0000000000..b1dba2dc8d
+--- /dev/null
++++ b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/manifest.jsonl
+@@ -0,0 +1,3 @@
++{"bytes": 1645, "deduplicated": false, "file": "wm_20260829T230541_122058__49848e26541a4fff.py", "model": "Qwen3.8-27B-Q4_K_M.gguf", "note": "tool loop: zero_mismatches, 4 turns, 0 visible mismatches", "sha256_16": "49848e26541a4fff", "ts": "20260829T230541_122058", "writer": "write_world_model"}
++{"bytes": 912, "deduplicated": false, "file": "wm_20260829T231120_118096__b42cf17ff65eb3d7.py", "model": "Qwen3.8-27B-Q4_K_M.gguf", "note": "tool loop: zero_mismatches, 4 turns, 0 visible mismatches", "sha256_16": "b42cf17ff65eb3d7", "ts": "20260829T231120_118096", "writer": "write_world_model"}
++{"bytes": 982, "deduplicated": false, "file": "wm_20260829T232142_819210__24fc93514a6340d5.py", "model": "Qwen3.8-27B-Q4_K_M.gguf", "note": "tool loop: zero_mismatches, 11 turns, 0 visible mismatches", "sha256_16": "24fc93514a6340d5", "ts": "20260829T232142_819210", "writer": "write_world_model"}
+diff --git a/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T230541_122058__49848e26541a4fff.py b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T230541_122058__49848e26541a4fff.py
+new file mode 100644
+index 0000000000..d5b3cc047a
+--- /dev/null
++++ b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T230541_122058__49848e26541a4fff.py
+@@ -0,0 +1,50 @@
++import numpy as np
++
++def _convert_block(grid, r, c):
++    # convert the 6x6 block of 9s whose top-left is (r,c) to 8
++    for i in range(6):
++        for j in range(6):
++            rr, cc = r + i, c + j
++            if 0 <= rr < grid.shape[0] and 0 <= cc < grid.shape[1]:
++                if grid[rr, cc] == 9:
++                    grid[rr, cc] = 8
++
++def _advance_bar(grid):
++    # fill the bottom row (last row) with 11 from the right, 2 cells per click
++    H, W = grid.shape
++    row = H - 1
++    # find the leftmost 11 currently in the bar (the filled region is a suffix)
++    # count how many 11s are already in the suffix
++    filled = 0
++    for cc in range(W - 1, -1, -1):
++        if grid[row, cc] == 11:
++            filled += 1
++        else:
++            break
++    # add 2 more cells to the left of the filled suffix
++    new_filled = filled + 2
++    # set the suffix of length new_filled to 11
++    for cc in range(W - new_filled, W):
++        if 0 <= cc < W:
++            grid[row, cc] = 11
++
++def engine(grid, action, data):
++    g = grid.copy()
++    if action == 6 and data is not None:
++        x = int(data.get('x', 0))
++        y = int(data.get('y', 0))
++        # click at top-left of a 6x6 block of 9s
++        _convert_block(g, y, x)
++        _advance_bar(g)
++    return g
++
++def is_level_complete(grid):
++    # level complete when no 6x6 block of 9s remains in the active panel
++    # (all targets converted to 8). Simple proxy: no 9-colored 6x6 blocks at all.
++    H, W = grid.shape
++    for r in range(H - 5):
++        for c in range(W - 5):
++            block = grid[r:r+6, c:c+6]
++            if np.all(block == 9):
++                return False
++    return True
+diff --git a/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T231120_118096__b42cf17ff65eb3d7.py b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T231120_118096__b42cf17ff65eb3d7.py
+new file mode 100644
+index 0000000000..2d93d3197c
+--- /dev/null
++++ b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T231120_118096__b42cf17ff65eb3d7.py
+@@ -0,0 +1,25 @@
++import numpy as np
++
++def engine(grid, action, data):
++    g = np.array(grid, dtype=np.int64).copy()
++    H, W = g.shape
++    if action == 6 and data is not None:
++        x = int(data.get('x', 0))
++        y = int(data.get('y', 0))
++        # click at top-left corner of a 6x6 block of color 9 -> convert to 8
++        r0, c0 = y, x
++        if 0 <= r0 and 0 <= c0 and r0 + 6 <= H and c0 + 6 <= W:
++            block = g[r0:r0+6, c0:c0+6]
++            if np.all(block == 9):
++                g[r0:r0+6, c0:c0+6] = 8
++                # counter: fill 2 more cells of color 11 in bottom row, right-to-left
++                n11 = int(np.sum(g[-1] == 11))
++                c = W - 1 - n11
++                if c >= 1:
++                    g[-1, c-1:c+1] = 11
++    return g
++
++def is_level_complete(grid):
++    g = np.array(grid)
++    # level complete when the bottom counter row is fully filled with 11
++    return bool(np.all(g[-1] == 11))
+diff --git a/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T232142_819210__24fc93514a6340d5.py b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T232142_819210__24fc93514a6340d5.py
+new file mode 100644
+index 0000000000..3be94940a6
+--- /dev/null
++++ b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/attempts/wm_20260829T232142_819210__24fc93514a6340d5.py
+@@ -0,0 +1,27 @@
++import numpy as np
++
++def engine(grid, action, data):
++    g = np.array(grid, dtype=np.int64).copy()
++    if action == 6 and data is not None:
++        x = int(data.get('x', 0))
++        y = int(data.get('y', 0))
++        H, W = g.shape
++        # Check if the 6x6 block at (y, x) is all 9s
++        if y + 6 <= H and x + 6 <= W:
++            block = g[y:y+6, x:x+6]
++            if np.all(block == 9):
++                g[y:y+6, x:x+6] = 8
++                # Update progress bar in last row: add 2 cells of 11, filling from the right
++                last_row = H - 1
++                n = int(np.sum(g[last_row] == 11))
++                n_new = min(n + 2, W)
++                # Clear existing 11s and rewrite
++                g[last_row, :] = 12
++                if n_new > 0:
++                    g[last_row, W - n_new:] = 11
++    return g
++
++def is_level_complete(grid):
++    # Level complete when progress bar is full (all 11s in last row)
++    H, W = grid.shape
++    return bool(np.all(grid[H-1] == 11))
+diff --git a/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/world_model.py b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/world_model.py
+new file mode 100644
+index 0000000000..3be94940a6
+--- /dev/null
++++ b/results/holdout_equalized_ab_selfparse_20260829/e3_tool/ft09/world_model.py
+@@ -0,0 +1,27 @@
++import numpy as np
++
++def engine(grid, action, data):
++    g = np.array(grid, dtype=np.int64).copy()
++    if action == 6 and data is not None:
++        x = int(data.get('x', 0))
++        y = int(data.get('y', 0))
++        H, W = g.shape
++        # Check if the 6x6 block at (y, x) is all 9s
++        if y + 6 <= H and x + 6 <= W:
++            block = g[y:y+6, x:x+6]
++            if np.all(block == 9):
++                g[y:y+6, x:x+6] = 8
++                # Update progress bar in last row: add 2 cells of 11, filling from the right
++                last_row = H - 1
++                n = int(np.sum(g[last_row] == 11))
++                n_new = min(n + 2, W)
++                # Clear existing 11s and rewrite
++                g[last_row, :] = 12
++                if n_new > 0:
++                    g[last_row, W - n_new:] = 11
++    return g
++
++def is_level_complete(grid):
++    # Level complete when progress bar is full (all 11s in last row)
++    H, W = grid.shape
++    return bool(np.all(grid[H-1] == 11))
+diff --git a/results/holdout_equalized_ab_selfparse_20260829/meta_tool.json b/results/holdout_equalized_ab_selfparse_20260829/meta_tool.json
+new file mode 100644
+index 0000000000..b9c8ff8a1a
+--- /dev/null
++++ b/results/holdout_equalized_ab_selfparse_20260829/meta_tool.json
+@@ -0,0 +1,136 @@
++{
++  "arm": "tool",
++  "arm_wall_s": 28066.95,
++  "cells_completed": 39,
++  "cells_missing": [],
++  "cells_total": 39,
++  "decode_ceiling_total": 49152,
++  "decode_shape": "12 turns x 4096",
++  "e3_dir": "results/holdout_equalized_ab_selfparse_20260829/e3_tool",
++  "ended_iso": "2026-08-29T23:21:43Z",
++  "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
++  "gpu_index": 1,
++  "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++  "hf_id": "unsloth/Qwen3.8-27B-GGUF",
++  "holdout_sizes": {
++    "ar25": 6,
++    "cd82": 2,
++    "ft09": 1,
++    "g50t": 8,
++    "lp85": 2,
++    "r11l": 1,
++    "re86": 11,
++    "sb26": 2,
++    "sk48": 5,
++    "sp80": 1,
++    "tr87": 5,
++    "tu93": 9,
++    "vc33": 1
++  },
++  "induce_timeout_s": 3600,
++  "kv_quant": "q8_0",
++  "n_ctx": 106496,
++  "port_requested": 8991,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
++      "resource": "gguf_cached_qwen38_27b_q4km"
++    },
++    {
++      "available": true,
++      "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++      "resource": "llama_server_binary"
++    },
++    {
++      "available": true,
++      "detail": "{\"libcuda\": true, \"libcublas\": true, \"libamdhip64\": false}",
++      "resource": "server_binary_is_cuda_build"
++    },
++    {
++      "available": true,
++      "detail": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
++      "resource": "gpu1_on_pci_bus"
++    },
++    {
++      "available": true,
++      "detail": "no pre-existing server on our port",
++      "resource": "port_8991_free"
++    }
++  ],
++  "quantisation": "Q4_K_M",
++  "roster": [
++    "tu93",
++    "tr87",
++    "sp80",
++    "sb26",
++    "re86",
++    "g50t",
++    "r11l",
++    "cd82",
++    "ar25",
++    "lp85",
++    "sk48",
++    "vc33",
++    "ft09"
++  ],
++  "seed_base": 100,
++  "server": {
++    "completion_probe": {
++      "alive": true,
++      "s": 0.25
++    },
++    "launch_argv": [
++      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++      "-m",
++      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
++      "-ngl",
++      "999",
++      "-c",
++      "106496",
++      "--port",
++      "8991",
++      "--host",
++      "127.0.0.1",
++      "--cache-type-k",
++      "q8_0",
++      "--cache-type-v",
++      "q8_0"
++    ],
++    "pid": 2949122,
++    "port_actual": 8991,
++    "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
++    "residency_mib": 20664,
++    "stderr_log": "results/holdout_equalized_ab_selfparse_20260829/server_logs/carnot_llama_server_logs/llama_server_p8991_1788017636.log"
++  },
++  "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++  "server_binary_linkage": {
++    "libamdhip64": false,
++    "libcublas": true,
++    "libcuda": true
++  },
++  "started_iso": "2026-08-29T15:33:56Z",
++  "status": "complete",
++  "tool_transport": "selfparse",
++  "trials": [
++    0,
++    1,
++    2
++  ],
++  "visible_sizes": {
++    "ar25": 9,
++    "cd82": 3,
++    "ft09": 3,
++    "g50t": 9,
++    "lp85": 3,
++    "r11l": 2,
++    "re86": 9,
++    "sb26": 7,
++    "sk48": 9,
++    "sp80": 3,
++    "tr87": 9,
++    "tu93": 9,
++    "vc33": 2
++  },
++  "wedge": null
++}
+diff --git a/results/holdout_equalized_ab_selfparse_20260829/shard_tool.jsonl b/results/holdout_equalized_ab_selfparse_20260829/shard_tool.jsonl
+index 0ca760626e..b068e98d0c 100644
+--- a/results/holdout_equalized_ab_selfparse_20260829/shard_tool.jsonl
++++ b/results/holdout_equalized_ab_selfparse_20260829/shard_tool.jsonl
+@@ -33,3 +33,6 @@
+ {"game": "vc33", "trial": 0, "arm": "tool", "induce_ok": true, "note": "local gguf (GPU server) wrote world_model.py (tool loop: zero_mismatches, 7 turns, 0 visible mismatches)", "elapsed_s": 911.78, "seed": "100", "residency_mib_at_cell_start": 20692, "n_visible": 2, "n_holdout": 1, "tool_loop_stats": {"seeded": false, "seed_scoreable": null, "seed_visible_mismatches": null, "turns": 7, "decode_tokens_total": 24609, "decode_tokens_per_turn": [3088, 3100, 3100, 3658, 3836, 4096, 3731], "tool_calls_total": 6, "tool_calls_by_name": {"list_transitions": 1, "diff_grids": 2, "run_engine_on_transitions": 3}, "tool_calls_per_turn": [["list_transitions"], ["diff_grids"], ["diff_grids"], ["run_engine_on_transitions"], ["run_engine_on_transitions"], [], ["run_engine_on_transitions"]], "tool_call_parse_failures": 0, "unparsed_tool_call_text_turns": 1, "selfparse": true, "selfparse_turns_with_tool_call_text": 7, "selfparse_blocks_seen": 7, "selfparse_calls_parsed": 6, "selfparse_blocks_unparsed": 1, "candidates_scored": 3, "force_engine_nudges": 1, "prompt_tokens_per_turn": [4785, 4936, 10220, 15549, 16856, 17989, 19045], "duplicate_candidate_submissions": 0, "compactions": 0, "compact_floor_hit": false, "compaction_thrash_alarm": false, "refetch_tool_calls_post_compaction": 0, "terminated_by": "zero_mismatches", "final_answer_seen": false, "wall_s": 911.78, "stall_cap": 0, "turns_completed": 7, "mismatch_trajectory": [2, 1, 0], "holdout_trajectory": [0.0, 0.0, 0.0], "best_visible_mismatches": 0, "best_holdout_accuracy": 0.0, "best_is_memorizing": true}, "holdout": {"n_gradeable": 0, "n_correct": 0, "accuracy": 0.0, "cell_recall": 0.0}, "visible_fit": {"n_gradeable": 2, "n_correct": 2, "accuracy": 1.0, "cell_recall": 1.0}, "is_memorizing": false, "memorization_scan": {"engine_source_found": true, "n_large_int_literals": 3, "n_window_coord_literals": 2, "is_memorizing": false}}
+ {"game": "vc33", "trial": 1, "arm": "tool", "induce_ok": true, "note": "local gguf (GPU server) wrote world_model.py (tool loop: turn_cap, 12 turns, 2 visible mismatches)", "elapsed_s": 905.87, "seed": "101", "residency_mib_at_cell_start": 20692, "n_visible": 2, "n_holdout": 1, "tool_loop_stats": {"seeded": false, "seed_scoreable": null, "seed_visible_mismatches": null, "turns": 12, "decode_tokens_total": 32493, "decode_tokens_per_turn": [3088, 3115, 3114, 3396, 3637, 3179, 110, 129, 3180, 3186, 3180, 3179], "tool_calls_total": 12, "tool_calls_by_name": {"list_transitions": 1, "diff_grids": 2, "run_engine_on_transitions": 2, "query_region": 7}, "tool_calls_per_turn": [["list_transitions"], ["diff_grids"], ["diff_grids"], ["run_engine_on_transitions"], ["run_engine_on_transitions"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"]], "tool_call_parse_failures": 0, "unparsed_tool_call_text_turns": 0, "selfparse": true, "selfparse_turns_with_tool_call_text": 12, "selfparse_blocks_seen": 12, "selfparse_calls_parsed": 12, "selfparse_blocks_unparsed": 0, "candidates_scored": 2, "force_engine_nudges": 1, "prompt_tokens_per_turn": [4785, 4936, 10235, 15578, 16605, 17907, 18107, 18397, 18687, 18900, 19274, 19419], "duplicate_candidate_submissions": 0, "compactions": 0, "compact_floor_hit": false, "compaction_thrash_alarm": false, "refetch_tool_calls_post_compaction": 0, "terminated_by": "turn_cap", "final_answer_seen": false, "wall_s": 905.87, "stall_cap": 0, "turns_completed": 12, "mismatch_trajectory": [2, 2], "holdout_trajectory": [0.0, 0.0], "best_visible_mismatches": 2, "best_holdout_accuracy": 0.0, "best_is_memorizing": false}, "holdout": {"n_gradeable": 0, "n_correct": 0, "accuracy": 0.0, "cell_recall": 0.0}, "visible_fit": {"n_gradeable": 2, "n_correct": 0, "accuracy": 0.0, "cell_recall": 0.0904}, "is_memorizing": false, "memorization_scan": {"engine_source_found": true, "n_large_int_literals": 2, "n_window_coord_literals": 2, "is_memorizing": false}}
+ {"game": "vc33", "trial": 2, "arm": "tool", "induce_ok": true, "note": "local gguf (GPU server) wrote world_model.py (tool loop: turn_cap, 12 turns, 2 visible mismatches)", "elapsed_s": 868.5, "seed": "102", "residency_mib_at_cell_start": 20692, "n_visible": 2, "n_holdout": 1, "tool_loop_stats": {"seeded": false, "seed_scoreable": null, "seed_visible_mismatches": null, "turns": 12, "decode_tokens_total": 32170, "decode_tokens_per_turn": [3088, 3100, 3160, 3525, 3195, 104, 3181, 3178, 107, 3160, 3186, 3186], "tool_calls_total": 12, "tool_calls_by_name": {"list_transitions": 1, "diff_grids": 1, "query_region": 9, "run_engine_on_transitions": 1}, "tool_calls_per_turn": [["list_transitions"], ["diff_grids"], ["query_region"], ["run_engine_on_transitions"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"]], "tool_call_parse_failures": 0, "unparsed_tool_call_text_turns": 0, "selfparse": true, "selfparse_turns_with_tool_call_text": 12, "selfparse_blocks_seen": 12, "selfparse_calls_parsed": 12, "selfparse_blocks_unparsed": 0, "candidates_scored": 1, "force_engine_nudges": 1, "prompt_tokens_per_turn": [4785, 4936, 10220, 10472, 11674, 11834, 12012, 12158, 12301, 12479, 12657, 13065], "duplicate_candidate_submissions": 0, "compactions": 0, "compact_floor_hit": false, "compaction_thrash_alarm": false, "refetch_tool_calls_post_compaction": 0, "terminated_by": "turn_cap", "final_answer_seen": false, "wall_s": 868.5, "stall_cap": 0, "turns_completed": 12, "mismatch_trajectory": [2], "holdout_trajectory": [0.0], "best_visible_mismatches": 2, "best_holdout_accuracy": 0.0, "best_is_memorizing": true}, "holdout": {"n_gradeable": 0, "n_correct": 0, "accuracy": 0.0, "cell_recall": 0.0}, "visible_fit": {"n_gradeable": 2, "n_correct": 0, "accuracy": 0.0, "cell_recall": 0.3716}, "is_memorizing": true, "memorization_scan": {"engine_source_found": true, "n_large_int_literals": 9, "n_window_coord_literals": 8, "is_memorizing": true}}
++{"game": "ft09", "trial": 0, "arm": "tool", "induce_ok": true, "note": "local gguf (GPU server) wrote world_model.py (tool loop: zero_mismatches, 4 turns, 0 visible mismatches)", "elapsed_s": 351.53, "seed": "100", "residency_mib_at_cell_start": 20692, "n_visible": 3, "n_holdout": 1, "tool_loop_stats": {"seeded": false, "seed_scoreable": null, "seed_visible_mismatches": null, "turns": 4, "decode_tokens_total": 12966, "decode_tokens_per_turn": [3088, 3117, 3100, 3661], "tool_calls_total": 4, "tool_calls_by_name": {"list_transitions": 1, "diff_grids": 2, "run_engine_on_transitions": 1}, "tool_calls_per_turn": [["list_transitions"], ["diff_grids"], ["diff_grids"], ["run_engine_on_transitions"]], "tool_call_parse_failures": 0, "unparsed_tool_call_text_turns": 0, "selfparse": true, "selfparse_turns_with_tool_call_text": 4, "selfparse_blocks_seen": 4, "selfparse_calls_parsed": 4, "selfparse_blocks_unparsed": 0, "candidates_scored": 1, "force_engine_nudges": 1, "prompt_tokens_per_turn": [9039, 9241, 10341, 11471], "duplicate_candidate_submissions": 0, "compactions": 0, "compact_floor_hit": false, "compaction_thrash_alarm": false, "refetch_tool_calls_post_compaction": 0, "terminated_by": "zero_mismatches", "final_answer_seen": false, "wall_s": 351.53, "stall_cap": 0, "turns_completed": 4, "mismatch_trajectory": [0], "holdout_trajectory": [0.0], "best_visible_mismatches": 0, "best_holdout_accuracy": 0.0, "best_is_memorizing": false}, "holdout": {"n_gradeable": 0, "n_correct": 0, "accuracy": 0.0, "cell_recall": 0.0}, "visible_fit": {"n_gradeable": 3, "n_correct": 3, "accuracy": 1.0, "cell_recall": 1.0}, "is_memorizing": false, "memorization_scan": {"engine_source_found": true, "n_large_int_literals": 0, "n_window_coord_literals": 0, "is_memorizing": false}}
++{"game": "ft09", "trial": 1, "arm": "tool", "induce_ok": true, "note": "local gguf (GPU server) wrote world_model.py (tool loop: zero_mismatches, 4 turns, 0 visible mismatches)", "elapsed_s": 338.29, "seed": "101", "residency_mib_at_cell_start": 20692, "n_visible": 3, "n_holdout": 1, "tool_loop_stats": {"seeded": false, "seed_scoreable": null, "seed_visible_mismatches": null, "turns": 4, "decode_tokens_total": 12770, "decode_tokens_per_turn": [3088, 3100, 3161, 3421], "tool_calls_total": 4, "tool_calls_by_name": {"list_transitions": 1, "diff_grids": 1, "query_region": 1, "run_engine_on_transitions": 1}, "tool_calls_per_turn": [["list_transitions"], ["diff_grids"], ["query_region"], ["run_engine_on_transitions"]], "tool_call_parse_failures": 0, "unparsed_tool_call_text_turns": 0, "selfparse": true, "selfparse_turns_with_tool_call_text": 4, "selfparse_blocks_seen": 4, "selfparse_calls_parsed": 4, "selfparse_blocks_unparsed": 0, "candidates_scored": 1, "force_engine_nudges": 1, "prompt_tokens_per_turn": [9039, 9241, 10324, 10785], "duplicate_candidate_submissions": 0, "compactions": 0, "compact_floor_hit": false, "compaction_thrash_alarm": false, "refetch_tool_calls_post_compaction": 0, "terminated_by": "zero_mismatches", "final_answer_seen": false, "wall_s": 338.29, "stall_cap": 0, "turns_completed": 4, "mismatch_trajectory": [0], "holdout_trajectory": [0.0], "best_visible_mismatches": 0, "best_holdout_accuracy": 0.0, "best_is_memorizing": false}, "holdout": {"n_gradeable": 0, "n_correct": 0, "accuracy": 0.0, "cell_recall": 0.0}, "visible_fit": {"n_gradeable": 3, "n_correct": 3, "accuracy": 1.0, "cell_recall": 1.0}, "is_memorizing": false, "memorization_scan": {"engine_source_found": true, "n_large_int_literals": 2, "n_window_coord_literals": 0, "is_memorizing": false}}
++{"game": "ft09", "trial": 2, "arm": "tool", "induce_ok": true, "note": "local gguf (GPU server) wrote world_model.py (tool loop: zero_mismatches, 11 turns, 0 visible mismatches)", "elapsed_s": 622.01, "seed": "102", "residency_mib_at_cell_start": 20692, "n_visible": 3, "n_holdout": 1, "tool_loop_stats": {"seeded": false, "seed_scoreable": null, "seed_visible_mismatches": null, "turns": 11, "decode_tokens_total": 23203, "decode_tokens_per_turn": [3088, 3526, 3162, 101, 214, 3162, 107, 3162, 99, 3162, 3420], "tool_calls_total": 11, "tool_calls_by_name": {"list_transitions": 1, "run_engine_on_transitions": 2, "query_region": 8}, "tool_calls_per_turn": [["list_transitions"], ["run_engine_on_transitions"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["query_region"], ["run_engine_on_transitions"]], "tool_call_parse_failures": 0, "unparsed_tool_call_text_turns": 0, "selfparse": true, "selfparse_turns_with_tool_call_text": 11, "selfparse_blocks_seen": 11, "selfparse_calls_parsed": 11, "selfparse_blocks_unparsed": 0, "candidates_scored": 2, "force_engine_nudges": 0, "prompt_tokens_per_turn": [9039, 9241, 10800, 10927, 11185, 11599, 11867, 12063, 12192, 13252, 14312], "duplicate_candidate_submissions": 0, "compactions": 0, "compact_floor_hit": false, "compaction_thrash_alarm": false, "refetch_tool_calls_post_compaction": 0, "terminated_by": "zero_mismatches", "final_answer_seen": false, "wall_s": 622.01, "stall_cap": 0, "turns_completed": 11, "mismatch_trajectory": [3, 0], "holdout_trajectory": [0.0, 0.0], "best_visible_mismatches": 0, "best_holdout_accuracy": 0.0, "best_is_memorizing": true}, "holdout": {"n_gradeable": 0, "n_correct": 0, "accuracy": 0.0, "cell_recall": 0.0}, "visible_fit": {"n_gradeable": 3, "n_correct": 3, "accuracy": 1.0, "cell_recall": 1.0}, "is_memorizing": false, "memorization_scan": {"engine_source_found": true, "n_large_int_literals": 3, "n_window_coord_literals": 0, "is_memorizing": false}}
+diff --git a/scripts/experiments/experiment_6764_arc_exclusive_load_preflight.py b/scripts/experiments/experiment_6764_arc_exclusive_load_preflight.py
+new file mode 100644
+index 0000000000..ceed79a20b
+--- /dev/null
++++ b/scripts/experiments/experiment_6764_arc_exclusive_load_preflight.py
+@@ -0,0 +1,10 @@
++#!/usr/bin/env python3
++"""Repository entry point for the Exp6764 exclusive-load preflight."""
++
++from __future__ import annotations
++
++from carnot.experiment_6764_arc_exclusive_load_preflight import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6764_arc_exclusive_load_preflight.py b/tests/python/test_experiment_6764_arc_exclusive_load_preflight.py
+new file mode 100644
+index 0000000000..df3be48658
+--- /dev/null
++++ b/tests/python/test_experiment_6764_arc_exclusive_load_preflight.py
+@@ -0,0 +1,1222 @@
++"""Focused admission tests for the exclusive ARC load canary.
++
++Spec refs: REQ-INFRA-6764, SCENARIO-INFRA-6764-*,
++REQ-ARC-WMTE-6764, and SCENARIO-ARC-WMTE-6764-*.
++"""
++
++from __future__ import annotations
++
++import builtins
++from copy import deepcopy
++import json
++import os
++from pathlib import Path
++import socket
++import subprocess
++import sys
++import time
++from types import SimpleNamespace
++
++import pytest
++
++from carnot import experiment_6764_arc_exclusive_load_preflight as exp
++from carnot import gpu_lease_phase_journal as lease_api
++from carnot.agentic.arc_induction_tools import (
++    InductionToolSession,
++    dispatch_tool,
++    parse_xml_tool_calls,
++)
++from carnot.experiment_6752_arc_code_carrying_tool_preflight import (
++    expected_xml_call,
++    fixture_transitions,
++)
++
++
++def _models(tmp_path: Path) -> list[dict]:
++    rows = []
++    for index, spec in enumerate(exp.MODEL_SPECS):
++        path = tmp_path / spec["filename"]
++        path.write_bytes(f"model-{index}".encode())
++        rows.append(
++            {
++                **spec,
++                "model_path": str(path),
++                "model_sha256": spec["expected_sha256"],
++                "model_size_bytes": path.stat().st_size,
++                "resolved": True,
++                "tokenizer": {
++                    "source": "llama.cpp_embedded_gguf",
++                    "loadable": True,
++                    "detail": "fixture tokenizer",
++                },
++            }
++        )
++    return rows
++
++
++def _devices() -> list[dict]:
++    return [
++        {
++            "index": 0,
++            "uuid": exp.EXPECTED_GPU_UUIDS[0],
++            "name": "NVIDIA GeForce RTX 3090",
++            "memory_total_mb": 24_576,
++            "memory_used_mb": 900,
++            "memory_free_mb": 23_100,
++            "temperature_c": 67,
++            "utilization_pct": 3,
++            "active_compute_processes": [{"pid": 91, "used_memory_mb": 100}],
++        },
++        {
++            "index": 1,
++            "uuid": exp.EXPECTED_GPU_UUIDS[1],
++            "name": "NVIDIA GeForce RTX 3090",
++            "memory_total_mb": 24_576,
++            "memory_used_mb": 600,
++            "memory_free_mb": 23_300,
++            "temperature_c": 72,
++            "utilization_pct": 1,
++            "active_compute_processes": [],
++        },
++    ]
++
++
++def _selfparse_receipt() -> dict:
++    raw = expected_xml_call()
++    calls, blocks, unparsed = parse_xml_tool_calls(raw)
++    call = calls[0]["function"]
++    session = InductionToolSession(fixture_transitions(), cell=1)
++    result = dispatch_tool(session, call["name"], call["arguments"])
++    bounded = "<tool_response>\n" + json.dumps(result, sort_keys=True) + "\n</tool_response>"
++    return exp.build_production_selfparse_receipt(
++        [
++            {
++                "raw_emission": raw,
++                "parsed_tool": call["name"],
++                "parsed_arguments": json.loads(call["arguments"]),
++                "dispatch_result": result,
++                "bounded_response": bounded,
++            }
++        ],
++        blocks_seen=blocks,
++        blocks_unparsed=unparsed,
++    )
++
++
++def _phase_history() -> list[dict]:
++    rows = []
++    previous = None
++    for ordinal, phase in enumerate(lease_api.COMPLETE_PHASE_SEQUENCE):
++        rows.append(
++            {
++                "phase": phase,
++                "previous_phase": previous,
++                "monotonic_ns": 1_000 + ordinal,
++                "event_checksum": f"sha256:{ordinal:064x}",
++            }
++        )
++        previous = phase
++    return rows
++
++
++def _gpu_receipt(tmp_path: Path, index: int) -> dict:
++    model = _models(tmp_path)[index]
++    owner_pid = 7_000 + index
++    server_pid = 8_000 + index
++    before = 100
++    after = 120
++    row = {
++        "model_id": model["model_id"],
++        "role": model["role"],
++        "model_path": model["model_path"],
++        "model_sha256": model["model_sha256"],
++        "observed_model_path": model["model_path"],
++        "inference_substrate": exp.INFERENCE_SUBSTRATE,
++        "llama_cpp_cuda": True,
++        "server_path": "/fixture/llama-server",
++        "server_sha256": f"sha256:{9:064x}",
++        "device": deepcopy(_devices()[1]),
++        "worker_process": {
++            "pid": owner_pid,
++            "pid_start_ticks": 123 + index,
++            "exit_code": 0,
++            "absent_after_exit": True,
++        },
++        "model_process": {
++            "pid": server_pid,
++            "pid_start_ticks": 223 + index,
++            "exit_code": 0,
++            "absent_after_exit": True,
++        },
++        "lease_owner": {
++            "pid": owner_pid,
++            "pid_start_ticks": 123 + index,
++            "device_uuid": exp.EXPECTED_GPU_UUIDS[1],
++            "expected_model": model["model_path"],
++            "signals_sent": [],
++        },
++        "phase_history": _phase_history(),
++        "lease_release": {
++            "released": True,
++            "phase": "terminal_complete",
++            "device_uuid": exp.EXPECTED_GPU_UUIDS[1],
++            "signals_sent": [],
++        },
++        "runtime_context": exp.CONTEXT_REQUESTED,
++        "gpu_layers": {
++            "requested": 999,
++            "offloaded": 66 - (index * 25),
++            "total": 66 - (index * 25),
++        },
++        "peak_owned_vram_mb": 17_900 + (index * 3_700),
++        "resident_owned_vram_mb": 17_800 + (index * 3_700),
++        "duration_s": 10.0 + index,
++        "live_model_invoked": True,
++        "first_token_observed": True,
++        "production_selfparse": _selfparse_receipt(),
++        "vram_recovery": exp.build_vram_recovery_receipt(
++            before_used_mb=before,
++            after_used_mb=after,
++            owned_pid_present=False,
++        ),
++        "full_load": index == 0,
++        "transport_canary": index == 1,
++        "unrelated_processes_signaled": [],
++        "errors": [],
++    }
++    row["receipt_sha256"] = exp.gpu_receipt_checksum(row)
++    return row
++
++
++def _preflight(models: list[dict], selection: dict, *, passed: bool = True) -> dict:
++    checks = [
++        {"check": "exp6752_preflight_ready", "expected": True, "observed": True, "passed": True},
++        {"check": "exp6647_task_owned_admission", "expected": 1.0, "observed": 1.0, "passed": True},
++        {
++            "check": "least_used_eligible_rtx3090",
++            "expected": {"free_vram_mb_at_least": exp.FROZEN_FREE_VRAM_THRESHOLD_MB},
++            "observed": selection.get("selected_device"),
++            "passed": passed,
++        },
++    ]
++    return {
++        "all_passed": passed,
++        "checks": checks,
++        "models": models,
++        "device_inventory_before": _devices(),
++        "device_selection_receipt": selection,
++    }
++
++
++def test_scenario_infra_6764_least_used_selection_is_frozen() -> None:
++    """SCENARIO-INFRA-6764-LEAST-USED-SELECTION ranks only eligible fixed GPUs."""
++    receipt = exp.rank_eligible_devices(_devices())
++    assert receipt["frozen_free_vram_threshold_mb"] == 22_610
++    assert receipt["rank_policy"] == ["free_vram_desc", "temperature_asc", "active_compute_asc"]
++    assert receipt["selected_device"]["uuid"] == exp.EXPECTED_GPU_UUIDS[1]
++    assert [row["uuid"] for row in receipt["ranked_eligible_devices"]] == [
++        exp.EXPECTED_GPU_UUIDS[1],
++        exp.EXPECTED_GPU_UUIDS[0],
++    ]
++
++    tied = _devices()
++    tied[0]["memory_free_mb"] = tied[1]["memory_free_mb"]
++    assert exp.rank_eligible_devices(tied)["selected_device"]["uuid"] == exp.EXPECTED_GPU_UUIDS[0]
++
++    blocked = _devices()
++    for row in blocked:
++        row["memory_free_mb"] = exp.FROZEN_FREE_VRAM_THRESHOLD_MB - 1
++    blocked_receipt = exp.rank_eligible_devices(blocked)
++    assert blocked_receipt["selected_device"] is None
++    assert blocked_receipt["eligible_device_count"] == 0
++
++
++def test_scenario_infra_6764_lease_excludes_a_second_owner(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6764-LEASE-EXCLUSION-AND-NO-PREEMPTION uses GpuLease."""
++    selected = _devices()[1]
++    owner = exp.acquire_selected_lease(
++        runtime_dir=tmp_path,
++        task_id="exp6764-owner",
++        selected_device=selected,
++        expected_model="model-a.gguf",
++    )
++    with pytest.raises(lease_api.LeaseBusy):
++        exp.acquire_selected_lease(
++            runtime_dir=tmp_path,
++            task_id="exp6764-contender",
++            selected_device=selected,
++            expected_model="model-b.gguf",
++        )
++    assert owner.owner_receipt()["signals_sent"] == []
++    owner.transition("terminal_blocked")
++    assert owner.release()["signals_sent"] == []
++
++
++class _OwnedProcess:
++    def __init__(self, *, survives_term: bool) -> None:
++        self.pid = 55
++        self.returncode = None
++        self.survives_term = survives_term
++        self.terminate_calls = 0
++        self.kill_calls = 0
++
++    def poll(self):
++        return self.returncode
++
++    def terminate(self) -> None:
++        self.terminate_calls += 1
++        if not self.survives_term:
++            self.returncode = 0
++
++    def kill(self) -> None:
++        self.kill_calls += 1
++        self.returncode = -9
++
++    def wait(self, timeout: float):
++        if self.returncode is None:
++            raise exp.subprocess.TimeoutExpired(["owned"], timeout)
++        return self.returncode
++
++
++@pytest.mark.parametrize("survives_term", [False, True])
++def test_scenario_infra_6764_cleanup_targets_only_owned_child(survives_term: bool) -> None:
++    """SCENARIO-INFRA-6764-LEASE-EXCLUSION-AND-NO-PREEMPTION never accepts foreign PIDs."""
++    process = _OwnedProcess(survives_term=survives_term)
++    receipt = exp.terminate_owned_process(process, terminate_timeout_s=0.01)
++    assert receipt["pid"] == 55
++    assert receipt["terminate_sent"] is True
++    assert receipt["kill_sent"] is survives_term
++    assert receipt["unrelated_processes_signaled"] == []
++    assert process.terminate_calls == 1
++    assert process.kill_calls == int(survives_term)
++
++
++def test_scenario_arc_wmte_6764_production_selfparse_dispatch_is_real() -> None:
++    """SCENARIO-ARC-WMTE-6764-FULL-LOAD-SELFPARSE uses parser, dispatch, and bounds."""
++    receipt = _selfparse_receipt()
++    assert receipt["production_route"] == "induce_with_tool_loop/selfparse/dispatch_tool"
++    assert receipt["parsed_tool"] == "find_objects"
++    assert receipt["parsed_arguments"]["t"] == 0
++    assert receipt["parsed_arguments"]["max_objects"] == 8
++    assert receipt["dispatch_result"]["ok"] is True
++    assert receipt["bounded_response_bytes"] > 0
++    assert receipt["blocks_seen"] == 1
++    assert receipt["blocks_unparsed"] == 0
++    assert receipt["success"] is True
++    assert exp.production_selfparse_errors(receipt) == []
++
++
++def test_scenario_arc_wmte_6764_owned_environment_sets_32k_before_load(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-6764 fixes 32K, CUDA, model, and selfparse in each worker."""
++    model = _models(tmp_path)[0]
++    env = exp.worker_environment({"KEEP": "yes"}, model, _devices()[1], port=45_001)
++    assert env["KEEP"] == "yes"
++    assert env["CARNOT_ARC_INDUCE_N_CTX"] == "32768"
++    assert env["CARNOT_ARC_INDUCE_TOOL_LOOP"] == "selfparse"
++    assert env["CARNOT_ARC_GENERATOR_CUDA_GPU"] == "1"
++    assert env["CARNOT_ARC_GENERATOR_REQUIRE_CUDA"] == "1"
++    assert env["CARNOT_ARC_GGUF_PATH"] == model["model_path"]
++    assert env["CARNOT_ARC_EXCLUSIVE_PORT"] == "45001"
++
++
++def test_scenario_infra_6764_teardown_and_vram_recovery_are_required(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6764-TEARDOWN-RECOVERY fails closed on residue or a live process."""
++    receipt = _gpu_receipt(tmp_path, 0)
++    assert exp.gpu_receipt_errors(receipt) == []
++    assert receipt["vram_recovery"]["passed"] is True
++
++    for field, value in (
++        ("model_process", {**receipt["model_process"], "absent_after_exit": False}),
++        ("lease_release", {**receipt["lease_release"], "released": False}),
++        (
++            "vram_recovery",
++            exp.build_vram_recovery_receipt(
++                before_used_mb=100,
++                after_used_mb=700,
++                owned_pid_present=False,
++            ),
++        ),
++    ):
++        changed = deepcopy(receipt)
++        changed[field] = value
++        changed["receipt_sha256"] = exp.gpu_receipt_checksum(changed)
++        assert exp.gpu_receipt_errors(changed)
++
++
++def test_scenario_arc_wmte_6764_ready_requires_separate_complete_canaries(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6764-FLAGSHIP-CANARY keeps two receipts and timings separate."""
++    receipts = [_gpu_receipt(tmp_path, 0), _gpu_receipt(tmp_path, 1)]
++    assert exp.reduce_arc_exclusive_load_ready(receipts) is True
++    changed = deepcopy(receipts)
++    changed[1]["first_token_observed"] = False
++    changed[1]["receipt_sha256"] = exp.gpu_receipt_checksum(changed[1])
++    assert exp.reduce_arc_exclusive_load_ready(changed) is False
++
++
++def test_scenario_infra_6764_blocked_artifact_stops_before_workers(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6764-BLOCKED-ARTIFACT preserves the failed observed value."""
++    models = _models(tmp_path)
++    devices = _devices()
++    for row in devices:
++        row["memory_free_mb"] = 6_235
++    selection = exp.rank_eligible_devices(devices)
++    preflight = _preflight(models, selection, passed=False)
++    preflight["device_inventory_before"] = devices
++    calls = []
++    artifact = exp.run(
++        result_path=tmp_path / "blocked.json",
++        date="20260829",
++        preflight_fn=lambda: preflight,
++        worker_runner=lambda *args, **kwargs: calls.append((args, kwargs)),
++        clock=iter((1_000, 2_000)).__next__,
++    )
++    assert calls == []
++    assert artifact["honest_verdict"] == "complete_blocked_arc_exclusive_load"
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["arc_exclusive_load_ready"] is False
++    assert artifact["live_model_invoked"] is False
++    assert artifact["gpu_receipts"] == []
++    assert artifact["gate_check_summary"][-1]["observed"] is None
++    assert artifact["unrelated_processes_signaled"] == []
++    assert exp.validate_artifact(artifact) == []
++    assert json.loads((tmp_path / "blocked.json").read_text()) == artifact
++
++
++def test_scenario_arc_wmte_6764_admission_only_complete_artifact(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6764-ADMISSION-ONLY reduces lifecycle evidence, not quality."""
++    models = _models(tmp_path)
++    selection = exp.rank_eligible_devices(_devices())
++    preflight = _preflight(models, selection)
++    receipts = [_gpu_receipt(tmp_path, 0), _gpu_receipt(tmp_path, 1)]
++    artifact = exp.run(
++        result_path=tmp_path / "complete.json",
++        date="20260829",
++        preflight_fn=lambda: preflight,
++        worker_runner=lambda model, device, port, runtime_dir: deepcopy(
++            receipts[0 if model["model_id"] == receipts[0]["model_id"] else 1]
++        ),
++        clock=iter((1_000_000_000, 4_000_000_000)).__next__,
++    )
++    assert artifact["arc_exclusive_load_ready"] is True
++    assert artifact["verdict_class"] == "positive"
++    assert artifact["honest_verdict"] == "complete_arc_exclusive_load_ready"
++    assert artifact["runtime_context_by_model"] == {row["model_id"]: 32_768 for row in receipts}
++    assert len(artifact["lease_owner_receipts"]) == 2
++    assert len(artifact["lease_release_receipts"]) == 2
++    assert len(artifact["vram_recovery_receipts"]) == 2
++    assert len(artifact["phase_rows"]) == 16
++    assert artifact["rows"] == artifact["phase_rows"]
++    assert artifact["owned_processes_terminated"] is True
++    assert artifact["unrelated_processes_signaled"] == []
++    assert artifact["verifier_is_oracle"] is False
++    assert "quality" in artifact["claim_boundary"]
++    assert "solve" in artifact["claim_boundary"]
++    assert "pooled" in artifact["claim_boundary"]
++    assert set(artifact).issubset(artifact["field_principles"])
++    assert exp.validate_artifact(artifact) == []
++
++
++def test_req_arc_wmte_6764_validator_rejects_substitution_and_claim_drift(
++    tmp_path: Path,
++) -> None:
++    """REQ-ARC-WMTE-6764 rejects a changed model, pooled claim, or forged readiness."""
++    models = _models(tmp_path)
++    selection = exp.rank_eligible_devices(_devices())
++    receipts = [_gpu_receipt(tmp_path, 0), _gpu_receipt(tmp_path, 1)]
++    artifact = exp.build_artifact(
++        date="20260829",
++        preflight=_preflight(models, selection),
++        gpu_receipts=receipts,
++        started_ns=1,
++        finished_ns=2,
++    )
++    assert exp.validate_artifact(artifact) == []
++
++    changed = deepcopy(artifact)
++    changed["models_used"][0]["model_id"] = "legacy/model"
++    changed["reproducibility_checksum"] = exp.artifact_checksum(changed)
++    assert "models_used" in exp.validate_artifact(changed)
++    changed = deepcopy(artifact)
++    changed["claim_boundary"] = "ARC quality passed"
++    changed["reproducibility_checksum"] = exp.artifact_checksum(changed)
++    assert "claim_boundary" in exp.validate_artifact(changed)
++
++
++def test_req_infra_6764_phase_rows_bind_owner_and_model(tmp_path: Path) -> None:
++    """REQ-INFRA-6764 emits one ordered row for every model and lease phase."""
++    receipt = _gpu_receipt(tmp_path, 0)
++    rows = exp.phase_rows_for_receipt(receipt)
++    assert [row["phase"] for row in rows] == list(lease_api.COMPLETE_PHASE_SEQUENCE)
++    assert all(row["model_id"] == receipt["model_id"] for row in rows)
++    assert all(row["owner_pid"] == receipt["lease_owner"]["pid"] for row in rows)
++    reversed_receipt = deepcopy(receipt)
++    reversed_receipt["phase_history"] = list(reversed(receipt["phase_history"]))
++    reversed_receipt["receipt_sha256"] = exp.gpu_receipt_checksum(reversed_receipt)
++    assert "phase_sequence" in exp.gpu_receipt_errors(reversed_receipt)
++
++
++def test_req_infra_6764_all_required_artifact_fields_have_principles() -> None:
++    """REQ-INFRA-6764 keeps every required field and gate reason self-explanatory."""
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS).issubset(exp.FIELD_PRINCIPLES)
++    assert exp.INFERENCE_SUBSTRATE == "task-owned local llama.cpp CUDA GGUF"
++    assert exp.VRAM_RECOVERY_TOLERANCE_MB == 512
++    assert exp.VERDICT_CLASSES == {
++        "positive",
++        "circular_positive",
++        "null",
++        "blocked",
++        "disqualified",
++        "partial",
++    }
++
++
++def test_req_infra_6764_worker_launcher_passes_frozen_device_and_port(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6764 launches one fresh worker and retains its exact output receipt."""
++    model = _models(tmp_path)[0]
++    device = _devices()[1]
++    expected = _gpu_receipt(tmp_path, 0)
++    captured = {}
++
++    class FakePopen:
++        def __init__(self, command, **kwargs):
++            self.pid = 90_001
++            self.returncode = 0
++            self.command = command
++            captured["command"] = command
++            captured["env"] = kwargs["env"]
++            output = Path(command[command.index("--worker-output") + 1])
++            output.parent.mkdir(parents=True, exist_ok=True)
++            output.write_text(json.dumps(expected))
++
++        def communicate(self, timeout=None):
++            return "ok", ""
++
++        def poll(self):
++            return self.returncode
++
++        def wait(self, timeout=None):
++            return self.returncode
++
++    def fake_popen(command, **kwargs):
++        return FakePopen(command, **kwargs)
++
++    monkeypatch.setattr(exp.subprocess, "Popen", fake_popen)
++    monkeypatch.setattr(exp.lease_api, "proc_start_ticks", lambda pid: 321)
++    row = exp.run_model_worker(
++        model,
++        device,
++        port=45_002,
++        runtime_dir=tmp_path / "runtime",
++        timeout_s=1,
++    )
++    assert "--worker" in captured["command"]
++    assert captured["env"]["CARNOT_ARC_INDUCE_N_CTX"] == "32768"
++    assert captured["env"]["CARNOT_ARC_GENERATOR_CUDA_GPU"] == "1"
++    assert row["model_id"] == expected["model_id"]
++
++
++def test_req_infra_6764_host_probe_adapters_are_bounded(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6764 host adapters retain exact files, inventory, resources, and ports."""
++    payload = tmp_path / "payload.json"
++    payload.write_text('{"ok": true}')
++    assert exp._load_json(payload) == {"ok": True}
++    payload.write_text("[")
++    assert exp._load_json(payload) == {}
++    payload.unlink()
++    assert exp._load_json(payload) == {}
++
++    blob = tmp_path / "blob"
++    blob.write_bytes(b"abc")
++    assert exp.sha256_file(blob) == exp.sha256_text("abc")
++    assert exp.sha256_file(tmp_path / "missing") == "missing"
++
++    completed = SimpleNamespace(returncode=0, stdout="x" * 17_000, stderr="warning")
++    monkeypatch.setattr(exp.subprocess, "run", lambda *args, **kwargs: completed)
++    command = exp._run_command(("probe",))
++    assert command["exit_code"] == 0
++    assert len(command["stdout"]) == 16_000
++
++    def timed_out(*args, **kwargs):
++        raise subprocess.TimeoutExpired(["probe"], 1)
++
++    monkeypatch.setattr(exp.subprocess, "run", timed_out)
++    assert exp._run_command(("probe",))["exit_code"] == 124
++    monkeypatch.setattr(
++        exp.subprocess, "run", lambda *args, **kwargs: (_ for _ in ()).throw(OSError())
++    )
++    assert exp._run_command(("probe",))["exit_code"] == 127
++
++    model_module = sys.modules["carnot.agentic.arc_executable_world_model"]
++    monkeypatch.setattr(exp, "resolve_cached_gguf", lambda *args: "/cache/moe.gguf")
++    monkeypatch.setattr(model_module, "_resolve_gguf", lambda name: f"/cache/{name}.gguf")
++    assert exp._model_path(exp.MODEL_SPECS[1]) == "/cache/moe.gguf"
++    assert exp._model_path(exp.MODEL_SPECS[0]).endswith("Qwen3.8-27B.gguf")
++
++    models = _models(tmp_path)
++    by_id = {row["model_id"]: row for row in models}
++    monkeypatch.setattr(exp, "_model_path", lambda spec: by_id[spec["model_id"]]["model_path"])
++    monkeypatch.setattr(
++        exp,
++        "sha256_file",
++        lambda path: next(
++            row["expected_sha256"] for row in models if row["filename"] == Path(path).name
++        ),
++    )
++    monkeypatch.setattr(exp, "gguf_tokenizer_loadable", lambda path: (True, "embedded"))
++    resolved = exp.resolve_model_specs()
++    assert all(row["resolved"] and row["tokenizer"]["loadable"] for row in resolved)
++
++    responses = iter(
++        (
++            {
++                "stdout": (
++                    "bad\n"
++                    f"0, {exp.EXPECTED_GPU_UUIDS[0]}, NVIDIA GeForce RTX 3090, "
++                    "24576, 100, 24476, 60, 1\n"
++                    f"x, {exp.EXPECTED_GPU_UUIDS[1]}, NVIDIA GeForce RTX 3090, "
++                    "bad, 100, 24476, 60, 1"
++                )
++            },
++            {
++                "stdout": (
++                    "bad\n"
++                    f"{exp.EXPECTED_GPU_UUIDS[0]}, 123, llama-server, 100\n"
++                    f"{exp.EXPECTED_GPU_UUIDS[0]}, bad, llama-server, 100"
++                )
++            },
++        )
++    )
++    monkeypatch.setattr(exp, "_run_command", lambda *args, **kwargs: next(responses))
++    inventory = exp.nvidia_smi_inventory()
++    assert inventory["devices"][0]["active_compute_processes"][0]["pid"] == 123
++
++    wrong = deepcopy(_devices()[0])
++    wrong["uuid"] = "GPU-wrong"
++    ranked = exp.rank_eligible_devices([wrong])
++    assert ranked["evaluated_devices"][0]["ineligibility_reasons"] == ["unexpected_device_identity"]
++
++    ports = exp.choose_free_ports(2)
++    assert len(set(ports)) == 2 and all(exp.port_is_free(port) for port in ports)
++    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
++    try:
++        listener.bind(("127.0.0.1", 0))
++        assert exp.port_is_free(listener.getsockname()[1]) is False
++    finally:
++        listener.close()
++
++    resources = exp._host_resources(tmp_path)
++    assert resources["ram_total_bytes"] > 0 and resources["disk_total_bytes"] > 0
++    with monkeypatch.context() as scoped:
++        scoped.setattr(Path, "read_text", lambda *args, **kwargs: (_ for _ in ()).throw(OSError()))
++        assert exp._host_resources(tmp_path)["ram_total_bytes"] == 0
++
++
++def test_req_infra_6764_llama_and_precondition_receipts(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6764 checks every immutable input before opening a lease."""
++    server = tmp_path / "llama-server"
++    server.write_bytes(b"server")
++    server.chmod(0o755)
++    monkeypatch.setenv("CARNOT_LLAMA_SERVER", str(server))
++    monkeypatch.setattr(
++        exp,
++        "_run_command",
++        lambda *args, **kwargs: {"stdout": "libggml-cuda libcuda", "stderr": "", "exit_code": 0},
++    )
++    import llama_cpp
++
++    monkeypatch.setattr(llama_cpp.llama_cpp, "llama_supports_gpu_offload", lambda: True)
++    assert exp._llama_cpp_receipt()["cuda_linked"] is True
++    with monkeypatch.context() as scoped:
++        scoped.setitem(sys.modules, "llama_cpp", None)
++        assert "ModuleNotFoundError" in str(exp._llama_cpp_receipt()["python_cuda_offload"])
++
++    models = _models(tmp_path)
++    prior_6752 = {
++        "arc_context_tool_preflight_ready": True,
++        "context_observed_by_model": {row["model_id"]: exp.CONTEXT_REQUESTED for row in models},
++        "models_used": [
++            {"model_id": row["model_id"], "model_sha256": row["model_sha256"]} for row in models
++        ],
++    }
++    prior_6647 = {"task_owned_admission_ready_score": 1.0}
++    monkeypatch.setattr(
++        exp,
++        "_load_json",
++        lambda path: prior_6752 if path == exp.EXP6752_PATH else prior_6647,
++    )
++    monkeypatch.setattr(exp.exp6752, "validate_artifact", lambda artifact: [])
++    monkeypatch.setattr(exp.exp6647, "validate_artifact", lambda artifact: [])
++    monkeypatch.setattr(exp, "resolve_model_specs", lambda: deepcopy(models))
++    monkeypatch.setattr(
++        exp,
++        "nvidia_smi_inventory",
++        lambda: {
++            "devices": _devices(),
++            "device_query": {"ok": True},
++            "process_query": {"ok": True},
++        },
++    )
++    monkeypatch.setattr(
++        exp,
++        "_llama_cpp_receipt",
++        lambda: {
++            "exists": True,
++            "executable": True,
++            "cuda_linked": True,
++            "python_cuda_offload": True,
++        },
++    )
++    monkeypatch.setattr(
++        exp,
++        "_host_resources",
++        lambda root: {
++            "ram_available_bytes": exp.RAM_AVAILABLE_FLOOR_BYTES,
++            "disk_free_bytes": exp.DISK_FREE_FLOOR_BYTES,
++        },
++    )
++    monkeypatch.setattr(exp, "choose_free_ports", lambda count: [45_010, 45_011])
++    monkeypatch.setattr(exp, "port_is_free", lambda port: True)
++    monkeypatch.setattr(exp, "sha256_file", lambda path: f"sha256:{1:064x}")
++    receipt = exp.collect_preconditions(tmp_path)
++    assert receipt["all_passed"] is True
++    assert len(receipt["checks"]) == 15
++    assert receipt["device_selection_receipt"]["selected_device"]["index"] == 1
++
++    real_import = builtins.__import__
++
++    def blocked_import(name, *args, **kwargs):
++        if name == "carnot.agentic.arc_executable_world_model":
++            raise ImportError("blocked fixture")
++        return real_import(name, *args, **kwargs)
++
++    monkeypatch.setattr(builtins, "__import__", blocked_import)
++    blocked = exp.collect_preconditions(tmp_path)
++    imports_check = next(
++        row for row in blocked["checks"] if row["check"] == "production_selfparse_imports"
++    )
++    assert imports_check["passed"] is False
++
++
++def test_req_infra_6764_process_snapshots_and_recovery(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-INFRA-6764-TEARDOWN-RECOVERY polls only the recorded owner."""
++    device = _devices()[1]
++    device["active_compute_processes"] = [{"pid": 88, "used_memory_mb": 321}]
++    monkeypatch.setattr(
++        exp,
++        "nvidia_smi_inventory",
++        lambda: {"devices": [device], "device_query": {}, "process_query": {}},
++    )
++    snapshot = exp._gpu_snapshot(device["uuid"], 88)
++    assert snapshot["owned_pid_present"] is True
++    assert snapshot["owned_pid_vram_mb"] == 321
++
++    process = SimpleNamespace(pid=os.getpid(), poll=lambda: None)
++    identity = exp._process_identity(process)
++    assert identity["pid"] == os.getpid() and identity["executable"]
++    with monkeypatch.context() as scoped:
++        scoped.setattr(exp.os, "readlink", lambda path: (_ for _ in ()).throw(OSError()))
++        assert exp._process_identity(process)["executable"] == ""
++    assert exp._empty_model_process()["absent_after_exit"] is True
++
++    samples = iter(
++        (
++            {"memory_used_mb": 900, "owned_pid_present": True, "observed_monotonic_ns": 1},
++            {"memory_used_mb": 100, "owned_pid_present": False, "observed_monotonic_ns": 2},
++        )
++    )
++    monkeypatch.setattr(exp, "_gpu_snapshot", lambda *args: next(samples))
++    monotonic = iter((0.0, 1.0))
++    monkeypatch.setattr(exp.time, "monotonic", lambda: next(monotonic))
++    monkeypatch.setattr(exp.time, "sleep", lambda seconds: None)
++    recovery, after = exp._wait_for_vram_recovery(device["uuid"], 88, 100, timeout_s=10)
++    assert recovery["passed"] is True and after["observed_monotonic_ns"] == 2
++
++
++class _FakeLease:
++    def __init__(self, model: dict, device: dict, *, fail_phase: str | None = None) -> None:
++        self.document = {"phase": "preflight"}
++        self.model = model
++        self.device = device
++        self.fail_phase = fail_phase
++        self.journal_path = Path("/fixture/journal")
++        self.closed = False
++
++    def owner_receipt(self) -> dict:
++        return {
++            "pid": 400,
++            "pid_start_ticks": 500,
++            "device_uuid": self.device["uuid"],
++            "expected_model": self.model["model_path"],
++            "signals_sent": [],
++        }
++
++    def transition(self, phase: str, **kwargs) -> None:
++        if phase == self.fail_phase:
++            raise lease_api.LeaseError(f"failed {phase}")
++        self.document["phase"] = phase
++
++    def release(self) -> dict:
++        return {
++            "released": True,
++            "phase": self.document["phase"],
++            "device_uuid": self.device["uuid"],
++            "signals_sent": [],
++        }
++
++    def close(self) -> None:
++        self.closed = True
++
++
++def _install_live_worker_fakes(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    *,
++    mode: str = "success",
++    fail_phase: str | None = None,
++) -> tuple[dict, dict, _FakeLease]:
++    model = _models(tmp_path)[0]
++    device = _devices()[1]
++    fake_lease = _FakeLease(model, device, fail_phase=fail_phase)
++    model_process = _OwnedProcess(survives_term=False)
++    model_process.pid = 401
++    log_path = tmp_path / "server.log"
++    log_path.write_text("offload fixture")
++
++    class FakeProposer:
++        def __init__(self, **kwargs):
++            self.port = kwargs["port"] + int(mode == "changed_port")
++            self._proc = None if mode == "missing_process" else model_process
++            self._stderr_log_path = log_path
++            self.last_tool_loop_stats = {}
++
++        def _ensure_server(self):
++            return mode != "load_failed"
++
++        def observed_n_ctx(self):
++            return exp.CONTEXT_REQUESTED
++
++        def observed_model_path(self):
++            return model["model_path"]
++
++    model_module = sys.modules["carnot.agentic.arc_executable_world_model"]
++    loop_module = sys.modules["carnot.agentic.arc_induction_tool_loop"]
++    monkeypatch.setattr(model_module, "LocalGGUFProposer", FakeProposer)
++
++    valid = _selfparse_receipt()
++
++    def fake_induce(proposer, *args, tool_event_sink, **kwargs):
++        tool_event_sink.append(
++            {
++                "raw_emission": valid["raw_emission"],
++                "parsed_tool": valid["parsed_tool"],
++                "parsed_arguments": valid["parsed_arguments"],
++                "dispatch_result": valid["dispatch_result"],
++                "bounded_response": valid["bounded_response"],
++            }
++        )
++        proposer.last_tool_loop_stats = {
++            "selfparse_blocks_seen": 1,
++            "selfparse_blocks_unparsed": 0,
++        }
++        time.sleep(0.12)
++
++    monkeypatch.setattr(loop_module, "induce_with_tool_loop", fake_induce)
++    monkeypatch.setattr(
++        exp.lease_api, "current_process_identity", lambda: {"pid": 400, "pid_start_ticks": 500}
++    )
++    monkeypatch.setattr(exp, "acquire_selected_lease", lambda **kwargs: fake_lease)
++    monkeypatch.setattr(
++        exp,
++        "nvidia_smi_inventory",
++        lambda: {"devices": _devices(), "device_query": {}, "process_query": {}},
++    )
++    monkeypatch.setattr(exp, "port_is_free", lambda port: mode != "busy_port")
++    monkeypatch.setattr(
++        exp,
++        "_llama_cpp_receipt",
++        lambda: {"cuda_linked": mode != "no_cuda", "path": "/llama", "sha256": f"sha256:{1:064x}"},
++    )
++
++    def snapshot(uuid, owned_pid=0):
++        return {
++            **device,
++            "owned_pid": owned_pid,
++            "owned_pid_present": bool(owned_pid) and mode != "no_cuda",
++            "owned_pid_vram_mb": 20_000 if owned_pid and mode != "no_cuda" else 0,
++            "observed_monotonic_ns": 99,
++        }
++
++    monkeypatch.setattr(exp, "_gpu_snapshot", snapshot)
++    monkeypatch.setattr(
++        exp,
++        "_wait_for_vram_recovery",
++        lambda *args, **kwargs: (
++            exp.build_vram_recovery_receipt(
++                before_used_mb=device["memory_used_mb"],
++                after_used_mb=device["memory_used_mb"],
++                owned_pid_present=False,
++            ),
++            {**device, "observed_monotonic_ns": 100},
++        ),
++    )
++    monkeypatch.setattr(
++        exp,
++        "_process_identity",
++        lambda process: {
++            "pid": process.pid,
++            "pid_start_ticks": 501,
++            "parent_pid": 400,
++            "executable": "/llama",
++            "exit_code": None,
++            "absent_after_exit": False,
++        },
++    )
++    monkeypatch.setattr(
++        exp.exp6752,
++        "_gpu_layers_from_log",
++        lambda text, requested: {"requested": requested, "offloaded": 66, "total": 66},
++    )
++    monkeypatch.setattr(
++        exp.lease_api, "read_journal", lambda path: {"phase_history": _phase_history()}
++    )
++    return model, device, fake_lease
++
++
++def test_scenario_arc_wmte_6764_live_worker_success_is_owned(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-ARC-WMTE-6764-FULL-LOAD-SELFPARSE exercises the live worker lifecycle."""
++    model, device, _ = _install_live_worker_fakes(tmp_path, monkeypatch)
++    receipt = exp.run_live_model_worker(model, device, port=45_020, lease_runtime_dir=tmp_path)
++    assert receipt["errors"] == []
++    assert receipt["live_model_invoked"] is True
++    assert receipt["lease_release"]["phase"] == "terminal_complete"
++    assert receipt["model_process"]["absent_after_exit"] is True
++    assert receipt["peak_owned_vram_mb"] == 20_000
++
++
++@pytest.mark.parametrize(
++    "mode,error",
++    [
++        ("busy_port", "selected_port_no_longer_free"),
++        ("load_failed", "llama_server_load_failed"),
++        ("changed_port", "llama_server_changed_frozen_port"),
++        ("missing_process", "llama_server_process_missing"),
++        ("no_cuda", "owner_bound_cuda_residency_missing"),
++    ],
++)
++def test_req_infra_6764_live_worker_blocks_on_runtime_drift(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str, error: str
++) -> None:
++    """REQ-INFRA-6764 blocks fresh-worker drift without signaling unrelated work."""
++    model, device, _ = _install_live_worker_fakes(tmp_path, monkeypatch, mode=mode)
++    receipt = exp.run_live_model_worker(model, device, port=45_021, lease_runtime_dir=tmp_path)
++    assert any(error in item for item in receipt["errors"])
++    assert receipt["unrelated_processes_signaled"] == []
++
++
++def test_req_infra_6764_live_worker_blocks_if_selection_changes(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6764 rechecks that the leased UUID remains first eligible."""
++    model, device, _ = _install_live_worker_fakes(tmp_path, monkeypatch)
++    changed = _devices()
++    changed[0]["memory_free_mb"] = 24_000
++    monkeypatch.setattr(
++        exp,
++        "nvidia_smi_inventory",
++        lambda: {"devices": changed, "device_query": {}, "process_query": {}},
++    )
++    receipt = exp.run_live_model_worker(model, device, port=45_022, lease_runtime_dir=tmp_path)
++    assert "selected_device_no_longer_first_eligible" in receipt["errors"][0]
++
++
++@pytest.mark.parametrize("fail_phase", ["unloading", "validating"])
++def test_req_infra_6764_live_worker_retains_lease_failures(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, fail_phase: str
++) -> None:
++    """REQ-INFRA-6764 retains transition errors and closes its owner lease."""
++    model, device, lease = _install_live_worker_fakes(tmp_path, monkeypatch, fail_phase=fail_phase)
++    receipt = exp.run_live_model_worker(model, device, port=45_023, lease_runtime_dir=tmp_path)
++    assert any("LeaseError" in item for item in receipt["errors"])
++    assert lease.closed is True
++
++
++def test_req_infra_6764_live_worker_retains_journal_failure(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6764 fails closed when its durable phase journal cannot be read."""
++    model, device, _ = _install_live_worker_fakes(tmp_path, monkeypatch)
++    monkeypatch.setattr(
++        exp.lease_api,
++        "read_journal",
++        lambda path: (_ for _ in ()).throw(lease_api.LeaseError("journal")),
++    )
++    receipt = exp.run_live_model_worker(model, device, port=45_024, lease_runtime_dir=tmp_path)
++    assert any("journal" in item for item in receipt["errors"])
++
++
++def test_req_infra_6764_worker_timeout_and_group_identity_guards(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-INFRA-6764-LEASE-EXCLUSION-AND-NO-PREEMPTION binds group signals to PID start."""
++    process = SimpleNamespace(pid=90_100, wait=lambda timeout: 0)
++    monkeypatch.setattr(exp.lease_api, "proc_start_ticks", lambda pid: 2)
++    mismatch = exp._terminate_worker_group(process, 1)
++    assert mismatch["identity_mismatch"] is True and mismatch["term_sent"] is False
++
++    sent = []
++    monkeypatch.setattr(exp.lease_api, "proc_start_ticks", lambda pid: 1)
++    monkeypatch.setattr(exp.os, "killpg", lambda pid, sig: sent.append((pid, sig)))
++    exp._terminate_worker_group(process, 1)
++    assert sent == [(90_100, exp.signal.SIGTERM)]
++
++    class TimeoutProcess:
++        pid = 90_101
++
++        def __init__(self):
++            self.calls = 0
++
++        def wait(self, timeout):
++            self.calls += 1
++            if self.calls == 1:
++                raise subprocess.TimeoutExpired(["worker"], timeout)
++            return -9
++
++    sent.clear()
++    exp._terminate_worker_group(TimeoutProcess(), 1)
++    assert sent == [(90_101, exp.signal.SIGTERM), (90_101, exp.signal.SIGKILL)]
++
++    monkeypatch.setattr(
++        exp.os,
++        "killpg",
++        lambda pid, sig: (_ for _ in ()).throw(ProcessLookupError()),
++    )
++    assert exp._terminate_worker_group(process, 1)["term_sent"] is False
++
++    model = _models(tmp_path)[0]
++    device = _devices()[1]
++
++    class TimeoutPopen:
++        def __init__(self, command, **kwargs):
++            self.pid = 90_102
++            self.returncode = -15
++            self.calls = 0
++
++        def communicate(self, timeout=None):
++            self.calls += 1
++            if self.calls == 1:
++                raise subprocess.TimeoutExpired(["worker"], timeout)
++            return "", "timed out"
++
++        def poll(self):
++            return self.returncode
++
++    monkeypatch.setattr(exp.subprocess, "Popen", TimeoutPopen)
++    monkeypatch.setattr(exp.lease_api, "proc_start_ticks", lambda pid: 1)
++    monkeypatch.setattr(
++        exp,
++        "_terminate_worker_group",
++        lambda process, ticks: {"term_sent": True, "unrelated_processes_signaled": []},
++    )
++    receipt = exp.run_model_worker(model, device, 45_025, tmp_path / "runtime", timeout_s=0.01)
++    assert receipt["errors"] and receipt["worker_process"]["timeout_cleanup"]["term_sent"]
++
++
++def test_req_arc_wmte_6764_receipt_validator_failure_matrix(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-6764 rejects every forged full-load admission component."""
++    valid = _gpu_receipt(tmp_path, 0)
++    mutations = {
++        "receipt_sha256": lambda row: row.update(receipt_sha256="bad"),
++        "model_id": lambda row: row.update(model_id="legacy/model"),
++        "role": lambda row: row.update(role="wrong"),
++        "model_sha256": lambda row: row.update(model_sha256="bad"),
++        "observed_model_path": lambda row: row.update(observed_model_path="bad"),
++        "inference_substrate": lambda row: row.update(inference_substrate="cpu"),
++        "llama_cpp_cuda": lambda row: row.update(llama_cpp_cuda=False),
++        "server_sha256": lambda row: row.update(server_sha256="bad"),
++        "device_uuid": lambda row: row["device"].update(uuid="GPU-wrong"),
++        "lease_owner": lambda row: row["lease_owner"].update(pid=-1),
++        "worker_process": lambda row: row["worker_process"].update(exit_code=1),
++        "model_process": lambda row: row["model_process"].update(exit_code=None),
++        "phase_sequence": lambda row: row.update(phase_history=[]),
++        "lease_release": lambda row: row["lease_release"].update(released=False),
++        "runtime_context": lambda row: row.update(runtime_context=1),
++        "gpu_layers": lambda row: row.update(gpu_layers={}),
++        "peak_owned_vram_mb": lambda row: row.update(peak_owned_vram_mb=0),
++        "resident_owned_vram_mb": lambda row: row.update(resident_owned_vram_mb=0),
++        "duration_s": lambda row: row.update(duration_s=0),
++        "first_token": lambda row: row.update(first_token_observed=False),
++        "production_selfparse": lambda row: row.update(production_selfparse={}),
++        "vram_recovery": lambda row: row.update(vram_recovery={}),
++        "unrelated_processes_signaled": lambda row: row.update(unrelated_processes_signaled=[999]),
++        "errors": lambda row: row.update(errors=["failed"]),
++        "full_load": lambda row: row.update(full_load=False),
++    }
++    for expected_error, mutate in mutations.items():
++        changed = deepcopy(valid)
++        mutate(changed)
++        if expected_error != "receipt_sha256":
++            changed["receipt_sha256"] = exp.gpu_receipt_checksum(changed)
++        assert expected_error in exp.gpu_receipt_errors(changed)
++
++    canary = _gpu_receipt(tmp_path, 1)
++    canary["transport_canary"] = False
++    canary["receipt_sha256"] = exp.gpu_receipt_checksum(canary)
++    assert "transport_canary" in exp.gpu_receipt_errors(canary)
++    assert exp.production_selfparse_errors({}) == [
++        "production_route",
++        "parsed_tool",
++        "parsed_arguments",
++        "dispatch_result",
++        "bounded_response",
++        "xml_blocks",
++        "raw_emission_sha256",
++        "bounded_response_sha256",
++        "transcript_sha256",
++    ]
++    assert exp.phase_rows_for_receipt({"phase_history": [None]}) == []
++
++
++def test_req_infra_6764_artifact_validator_failure_matrix(tmp_path: Path) -> None:
++    """REQ-INFRA-6764 recomputes every top-level readiness and row-consistency field."""
++    models = _models(tmp_path)
++    receipts = [_gpu_receipt(tmp_path, 0), _gpu_receipt(tmp_path, 1)]
++    artifact = exp.build_artifact(
++        date="20260829",
++        preflight=_preflight(models, exp.rank_eligible_devices(_devices())),
++        gpu_receipts=receipts,
++        started_ns=1,
++        finished_ns=2,
++    )
++    mutations = {
++        "missing_field:random_seed": lambda row: row.pop("random_seed"),
++        "field_principles": lambda row: row.update(field_principles={}),
++        "inference_substrate": lambda row: row.update(inference_substrate="cpu"),
++        "verifier_is_oracle": lambda row: row.update(verifier_is_oracle=True),
++        "verdict_class": lambda row: row.update(verdict_class="unknown"),
++        "claim_boundary": lambda row: row.update(claim_boundary="quality"),
++        "duration_s": lambda row: row.update(duration_s=-1),
++        "models_used": lambda row: row["models_used"][0].update(model_sha256="bad"),
++        "device_selection_receipt": lambda row: row.update(device_selection_receipt={}),
++        "arc_exclusive_load_ready": lambda row: row.update(arc_exclusive_load_ready=False),
++        "rows": lambda row: row.update(rows=[]),
++        "phase_rows": lambda row: row.update(phase_rows=[]),
++        "lease_owner_receipts": lambda row: row.update(lease_owner_receipts=[]),
++        "lease_release_receipts": lambda row: row.update(lease_release_receipts=[]),
++        "vram_recovery_receipts": lambda row: row.update(vram_recovery_receipts=[]),
++        "runtime_context_by_model": lambda row: row.update(runtime_context_by_model={}),
++        "production_selfparse_receipt": lambda row: row.update(production_selfparse_receipt={}),
++        "owned_processes_terminated": lambda row: row.update(owned_processes_terminated=False),
++        "unrelated_processes_signaled": lambda row: row.update(unrelated_processes_signaled=[7]),
++        "live_model_invoked": lambda row: row.update(live_model_invoked=False),
++        "gate_check_summary": lambda row: row.update(gate_check_summary=[]),
++        "honest_verdict": lambda row: row.update(honest_verdict="complete_wrong"),
++        "selected_device_binding": lambda row: row["gpu_receipts"][0]["device"].update(
++            uuid=exp.EXPECTED_GPU_UUIDS[0]
++        ),
++        "reproducibility_checksum": lambda row: row.update(reproducibility_checksum="bad"),
++    }
++    for expected_error, mutate in mutations.items():
++        changed = deepcopy(artifact)
++        mutate(changed)
++        if expected_error != "reproducibility_checksum":
++            changed["reproducibility_checksum"] = exp.artifact_checksum(changed)
++        assert expected_error in exp.validate_artifact(changed)
++
++    partial = exp.build_artifact(
++        date="20260829",
++        preflight=_preflight(models, exp.rank_eligible_devices(_devices())),
++        gpu_receipts=[receipts[0]],
++        started_ns=1,
++        finished_ns=2,
++    )
++    assert partial["verdict_class"] == "partial"
++
++
++def test_req_infra_6764_run_fail_closed_and_cli_entries(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-INFRA-6764 stops after a failed first worker and exposes parent/worker CLIs."""
++    models = _models(tmp_path)
++    preflight = _preflight(models, exp.rank_eligible_devices(_devices()))
++    bad = _gpu_receipt(tmp_path, 0)
++    bad["errors"] = ["load failed"]
++    bad["receipt_sha256"] = exp.gpu_receipt_checksum(bad)
++    calls = []
++
++    artifact = exp.run(
++        result_path=tmp_path / "partial.json",
++        preflight_fn=lambda: preflight,
++        worker_runner=lambda *args: calls.append(args) or deepcopy(bad),
++        clock=iter((1, 2)).__next__,
++    )
++    assert len(calls) == 1 and artifact["verdict_class"] == "partial"
++
++    monkeypatch.setattr(exp, "validate_artifact", lambda artifact: ["forced"])
++    with pytest.raises(ValueError, match="forced"):
++        exp.run(
++            result_path=tmp_path / "invalid.json",
++            preflight_fn=lambda: {**preflight, "all_passed": False},
++            clock=iter((1, 2)).__next__,
++        )
++
++    monkeypatch.setattr(exp, "validate_artifact", lambda artifact: [])
++    model_path = tmp_path / "worker-model.json"
++    device_path = tmp_path / "worker-device.json"
++    output_path = tmp_path / "worker-output.json"
++    model_path.write_text(json.dumps(models[0]))
++    device_path.write_text(json.dumps(_devices()[1]))
++    monkeypatch.setattr(
++        exp,
++        "run_live_model_worker",
++        lambda *args, **kwargs: {"errors": []},
++    )
++    assert exp._worker_entry(model_path, device_path, output_path, 45_030, tmp_path) == 0
++    monkeypatch.setattr(
++        exp,
++        "run_live_model_worker",
++        lambda *args, **kwargs: {"errors": ["failed"]},
++    )
++    assert exp._worker_entry(model_path, device_path, output_path, 45_030, tmp_path) == 2
++
++    monkeypatch.setattr(exp, "_worker_entry", lambda *args: 7)
++    assert (
++        exp.main(
++            [
++                "--worker",
++                "--worker-model",
++                str(model_path),
++                "--worker-device",
++                str(device_path),
++                "--worker-output",
++                str(output_path),
++                "--port",
++                "45030",
++            ]
++        )
++        == 7
++    )
++    with pytest.raises(SystemExit):
++        exp.main(["--worker"])
++
++    monkeypatch.setattr(
++        exp,
++        "run",
++        lambda date: {
++            "arc_exclusive_load_ready": False,
++            "honest_verdict": "complete_blocked_arc_exclusive_load",
++        },
++    )
++    assert exp.main(["--date", "20260829"]) == 0
++    assert "complete_blocked_arc_exclusive_load" in capsys.readouterr().out
+-- 
+2.55.0
+

@@ -1,0 +1,1179 @@
+From 548f1a1a6996a08e231903379eba6c7d5335a5aa Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 13:32:20 -0400
+Subject: [PATCH 05316/11362] [conductor] PHASE A1 FoVer pool -- build an
+ in-domain n>=150 oracle-distinct candidate-selection pool with headroom and
+ leakage controls
+
+Automated research step by research conductor.
+Task ID: exp5111-fover-in-domain-pool-v469
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  87 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...periment_5111_fover_in_domain_pool_v469.py | 408 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...riment_5111_fover_in_domain_pool_v469.json | 102 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...periment_5111_fover_in_domain_pool_v469.py |  32 ++
+ ...periment_5111_fover_in_domain_pool_v469.py | 341 +++++++++++++++
+ 13 files changed, 989 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/experiment_5111_fover_in_domain_pool_v469.py
+ create mode 100644 results/experiment_5111_fover_in_domain_pool_v469.json
+ create mode 100644 scripts/experiment_5111_fover_in_domain_pool_v469.py
+ create mode 100644 tests/python/test_experiment_5111_fover_in_domain_pool_v469.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index df771f0df9..7c772e8fa9 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -191,6 +191,93 @@ condition, and does not silently drop the source from `task_mapping` or
+ |---|---|---|
+ | REQ-REPORT-5110 | Implemented (`python/carnot/experiment_5110_sota_ingestion_v469.py`, `scripts/experiment_5110_sota_ingestion_v469.py`) | Implemented (`tests/python/test_experiment_5110_sota_ingestion_v469.py`) |
+ 
++### REQ-REPORT-5111: FoVer In-Domain Pool Retraction Gate
++
++The Exp 5111 workflow SHALL NOT construct, synthesize, or report an in-domain
++FoVer candidate-selection pool when the active operator correction identifies
++the original pool premise as retracted. It SHALL identify the run as
++`exp5111-fover-in-domain-pool-v469`, SHALL write
++`results/experiment_5111_fover_in_domain_pool_v469.json`, SHALL read
++`results/experiment_fover_stepverifier_vs_cheap_baseline.json` as the terminal
++answer to the FoVer verifier-value question for milestone `2026.07.469`, and
++SHALL preserve the retraction provenance from `ops/known-issues.md`.
++
++The workflow SHALL emit a terminal `blocked_fover_indomain_pool_retracted_see_*`
++`honest_verdict`, SHALL set `headroom_present=false`, SHALL set
++`verifier_is_oracle=false`, SHALL set `pool_path=null`, `pool_sha256=null`,
++`pool_n=0`, and `candidates_per_item=0`, and SHALL leave vote/self-consistency
++candidate-selection metrics null rather than fabricating a pool. It SHALL record
++that the corrected FoVer result found learned-verifier AUROC `0.9663`, cheap
++baseline AUROC `0.9635`, delta AUROC `0.0028`, CI95 `[-0.0244, 0.0347]`, and
++`beats_cheap_baseline=false`.
++
++The artifact SHALL record learned-verifier AUROC `0.9663`, cheap baseline AUROC `0.9635`, delta AUROC `0.0028`, CI95 `[-0.0244, 0.0347]`, and `beats_cheap_baseline=false` as the corrected terminal FoVer evidence.
++
++The artifact SHALL include principle-annotated top-level fields `experiment_id`,
++`milestone`, `honest_verdict`, `inference_substrate`, `duration_s`,
++`preconditions_checked`, `pool_path`, `pool_sha256`, `pool_n`,
++`candidates_per_item`, `vote_at_1`, `tuned_self_consistency`, `oracle_at_k`,
++`headroom_present`, `verifier_is_oracle`, `model_specs`, `seeds_or_checksums`,
++`flagged_adversarial`, and `tests_run`. It SHOULD also include
++`field_principles`, `corrected_result_path`, `corrected_result_sha256`,
++`corrected_result_summary`, `retraction_sources`, and `retracted_claims` so the
++blocked verdict is auditable.
++
++Required field principles:
++
++- `experiment_id`: principle "traceability"
++- `milestone`: principle "milestone accountability"
++- `honest_verdict`: principle "terminal verdict with complete_/success_/blocked_ prefix"
++- `inference_substrate`: principle "substrate honesty"
++- `duration_s`: principle "timing accountability"
++- `preconditions_checked`: principle "compute/data preflight accountability"
++- `pool_path`: principle "deliverable reproducibility"
++- `pool_sha256`: principle "data integrity"
++- `pool_n`: principle "downstream gate signal"
++- `candidates_per_item`: principle "selection-headroom clarity"
++- `vote_at_1`: principle "baseline transparency"
++- `tuned_self_consistency`: principle "fair baseline"
++- `oracle_at_k`: principle "headroom measurement"
++- `headroom_present`: principle "no no-headroom moat claims"
++- `verifier_is_oracle`: principle "oracle-distinctness"
++- `model_specs`: principle "SOTA model accountability when LLMs are used"
++- `seeds_or_checksums`: principle "reproducibility"
++- `flagged_adversarial`: principle "adversarial-verification accountability"
++- `tests_run`: principle "verification evidence"
++- `field_principles`: principle "principle annotations for every top-level artifact field"
++- `corrected_result_path`: principle "terminal FoVer verifier-value evidence"
++- `corrected_result_sha256`: principle "corrected-result data integrity"
++- `corrected_result_summary`: principle "no stale headroom premise"
++- `retraction_sources`: principle "retraction provenance"
++- `retracted_claims`: principle "no fabricated candidate-selection claim"
++
++#### SCENARIO-REPORT-5111: Retracted FoVer Pool Writes Blocked Artifact
++
++**Given** the corrected FoVer step-verifier versus cheap-baseline artifact exists
++and `ops/known-issues.md` records the FoVer candidate-selection headroom
++retraction
++**When** the Exp 5111 workflow runs
++**Then** it writes the required JSON artifact, preserves the corrected AUROC and
++CI evidence, sets a `blocked_fover_indomain_pool_retracted_see_*` verdict, sets
++all pool/headroom metrics to blocked-safe values, does not generate local LLM
++candidates, does not claim self-consistency headroom, and records
++`verifier_is_oracle=false`.
++
++#### SCENARIO-REPORT-5111-BLOCKED-MISSING-CORRECTION: Missing Corrected Result Fails Closed
++
++**Given** the corrected FoVer step-verifier versus cheap-baseline artifact is
++missing or malformed
++**When** the Exp 5111 workflow runs
++**Then** it still writes a terminal blocked artifact, records the failed
++precondition in `preconditions_checked`, leaves all pool metrics blocked-safe,
++and does not construct or synthesize a candidate-selection pool.
++
++## Implementation Status (REQ-REPORT-5111)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5111 | Implemented (`python/carnot/experiment_5111_fover_in_domain_pool_v469.py`, `scripts/experiment_5111_fover_in_domain_pool_v469.py`) | Implemented (`tests/python/test_experiment_5111_fover_in_domain_pool_v469.py`) |
++
+ ### REQ-REPORT-5010: Verifier-Moat Literature Ingestion Maps New SOTA Onto Phase D
+ 
+ The Exp 5010 workflow SHALL run the reliable SOTA-ingestion channel for the
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d22053c4da..d9653da1ac 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4109,
++  "experiments_checked": 4110,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5111_fover_in_domain_pool_v469.py b/python/carnot/experiment_5111_fover_in_domain_pool_v469.py
+new file mode 100644
+index 0000000000..79003aefaf
+--- /dev/null
++++ b/python/carnot/experiment_5111_fover_in_domain_pool_v469.py
+@@ -0,0 +1,408 @@
++"""Exp 5111 blocked artifact for the retracted FoVer in-domain pool task.
++
++Spec refs: REQ-REPORT-5111, SCENARIO-REPORT-5111,
++SCENARIO-REPORT-5111-BLOCKED-MISSING-CORRECTION.
++
++The original task asked for an in-domain FoVer candidate-selection pool. The
++active correction says that premise was false: FoVer's real corpus is a flat
++step-correctness classification dataset, not a natural K-candidate selection
++dataset. This module therefore preserves the corrected FoVer verifier-value
++answer and writes a blocked artifact instead of fabricating headroom.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_5111_fover_in_domain_pool_v469.json"
++CORRECTED_RESULT_RELATIVE_PATH = "results/experiment_fover_stepverifier_vs_cheap_baseline.json"
++KNOWN_ISSUES_RELATIVE_PATH = "ops/known-issues.md"
++EXPERIMENT_ID = "exp5111-fover-in-domain-pool-v469"
++MILESTONE = "2026.07.469"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++BLOCKED_VERDICT = (
++    "blocked_fover_indomain_pool_retracted_see_experiment_fover_stepverifier_vs_cheap_baseline"
++)
++MISSING_CORRECTED_RESULT_VERDICT = (
++    "blocked_fover_indomain_pool_retracted_see_missing_corrected_result"
++)
++TERMINAL_PREFIXES = ("blocked_", "complete_", "success_", "partial_", "passed_")
++RETRACTION_SOURCES = [
++    "ops/known-issues.md#NUDGE-2026-07-01-RETRACTED",
++    "ops/known-issues.md#MOAT-REDIRECT-2026-06-30-RETRACTED",
++]
++RETRACTION_MARKERS = (
++    "NUDGE 2026-07-01",
++    "MOAT REDIRECT 2026-06-30",
++    "RETRACTED",
++    "construction artifact",
++    "no natural multi-candidate structure",
++)
++REQUIRED_CORRECTED_RESULT_FIELDS = frozenset(
++    {
++        "n_rows",
++        "verifier_auroc",
++        "cheap_baseline_auroc",
++        "delta_auroc",
++        "delta_auroc_ci95",
++        "beats_cheap_baseline",
++        "framing_change_from_retracted_claim",
++        "length_confound",
++        "model_specs",
++        "random_seed",
++        "reproducibility_checksum",
++    }
++)
++REQUIRED_USER_ARTIFACT_FIELDS = frozenset(
++    {
++        "experiment_id",
++        "milestone",
++        "honest_verdict",
++        "inference_substrate",
++        "duration_s",
++        "preconditions_checked",
++        "pool_path",
++        "pool_sha256",
++        "pool_n",
++        "candidates_per_item",
++        "vote_at_1",
++        "tuned_self_consistency",
++        "oracle_at_k",
++        "headroom_present",
++        "verifier_is_oracle",
++        "model_specs",
++        "seeds_or_checksums",
++        "flagged_adversarial",
++        "tests_run",
++    }
++)
++EXTRA_ARTIFACT_FIELDS = frozenset(
++    {
++        "field_principles",
++        "corrected_result_path",
++        "corrected_result_sha256",
++        "corrected_result_summary",
++        "retraction_sources",
++        "retracted_claims",
++        "run_date",
++    }
++)
++REQUIRED_ARTIFACT_FIELDS = REQUIRED_USER_ARTIFACT_FIELDS | EXTRA_ARTIFACT_FIELDS
++FIELD_PRINCIPLES = {
++    "experiment_id": "traceability",
++    "milestone": "milestone accountability",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "duration_s": "timing accountability",
++    "preconditions_checked": "compute/data preflight accountability",
++    "pool_path": "deliverable reproducibility",
++    "pool_sha256": "data integrity",
++    "pool_n": "downstream gate signal",
++    "candidates_per_item": "selection-headroom clarity",
++    "vote_at_1": "baseline transparency",
++    "tuned_self_consistency": "fair baseline",
++    "oracle_at_k": "headroom measurement",
++    "headroom_present": "no no-headroom moat claims",
++    "verifier_is_oracle": "oracle-distinctness",
++    "model_specs": "SOTA model accountability when LLMs are used",
++    "seeds_or_checksums": "reproducibility",
++    "flagged_adversarial": "adversarial-verification accountability",
++    "tests_run": "verification evidence",
++    "field_principles": "principle annotations for every top-level artifact field",
++    "corrected_result_path": "terminal FoVer verifier-value evidence",
++    "corrected_result_sha256": "corrected-result data integrity",
++    "corrected_result_summary": "no stale headroom premise",
++    "retraction_sources": "retraction provenance",
++    "retracted_claims": "no fabricated candidate-selection claim",
++}
++DEFAULT_TESTS_RUN = [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python "
++    "scripts/experiment_5111_fover_in_domain_pool_v469.py --date 20260701",
++    '.venv/bin/pytest tests/python/test_experiment_5111_fover_in_domain_pool_v469.py -q -o addopts=""',
++    ".venv/bin/coverage erase && .venv/bin/coverage run "
++    "--include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/"
++    "experiment_5111_fover_in_domain_pool_v469.py' -m pytest "
++    'tests/python/test_experiment_5111_fover_in_domain_pool_v469.py -q -o addopts="" && '
++    ".venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/"
++    "experiment_5111_fover_in_domain_pool_v469.py' --fail-under=100 -m",
++    ".venv/bin/ruff check python/carnot/experiment_5111_fover_in_domain_pool_v469.py "
++    "scripts/experiment_5111_fover_in_domain_pool_v469.py "
++    "tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_5111_fover_in_domain_pool_v469.py "
++    "scripts/experiment_5111_fover_in_domain_pool_v469.py "
++    "tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
++    "python scripts/check_spec_coverage.py tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5111_fover_in_domain_pool_v469.json",
++    ".venv/bin/pytest tests/python -q",
++]
++
++
++def _sha256_text(text: str) -> str:
++    return "sha256:" + hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def _parse_corrected_result(
++    corrected_result_text: str | None,
++) -> tuple[dict[str, Any] | None, str | None]:
++    if corrected_result_text is None:
++        return None, "missing corrected result file"
++    try:
++        parsed = json.loads(corrected_result_text)
++    except json.JSONDecodeError as exc:
++        return None, f"JSONDecodeError: {exc.msg}"
++    if not isinstance(parsed, dict):
++        return None, "corrected result is not a JSON object"
++    missing = REQUIRED_CORRECTED_RESULT_FIELDS - set(parsed)
++    if missing:
++        return None, f"corrected result missing fields: {sorted(missing)}"
++    return parsed, None
++
++
++def _known_issues_has_retraction(known_issues_text: str) -> bool:
++    return all(marker in known_issues_text for marker in RETRACTION_MARKERS)
++
++
++def _corrected_result_summary(corrected_result: Mapping[str, Any] | None) -> dict[str, Any] | None:
++    if corrected_result is None:
++        return None
++    return {
++        "n_rows": corrected_result["n_rows"],
++        "verifier_auroc": corrected_result["verifier_auroc"],
++        "cheap_baseline_auroc": corrected_result["cheap_baseline_auroc"],
++        "delta_auroc": corrected_result["delta_auroc"],
++        "delta_auroc_ci95": corrected_result["delta_auroc_ci95"],
++        "beats_cheap_baseline": corrected_result["beats_cheap_baseline"],
++        "framing_change_from_retracted_claim": corrected_result[
++            "framing_change_from_retracted_claim"
++        ],
++        "cheap_baseline_root_cause": corrected_result["length_confound"]["interpretation"],
++    }
++
++
++def _model_specs(corrected_result: Mapping[str, Any] | None) -> dict[str, Any]:
++    corrected_specs = corrected_result["model_specs"] if corrected_result is not None else {}
++    return {
++        "generative_llms_used": [],
++        "corrected_result_embedding_model": corrected_specs.get("embedding_model"),
++        "corrected_result_cheap_baseline_model": corrected_specs.get("cheap_baseline_model"),
++    }
++
++
++def _seeds_or_checksums(
++    *,
++    corrected_result: Mapping[str, Any] | None,
++    corrected_result_sha256: str | None,
++) -> dict[str, Any]:
++    return {
++        "corrected_result_random_seed": None
++        if corrected_result is None
++        else corrected_result["random_seed"],
++        "corrected_result_reproducibility_checksum": (
++            None if corrected_result is None else corrected_result["reproducibility_checksum"]
++        ),
++        "corrected_result_sha256": corrected_result_sha256,
++    }
++
++
++def build_artifact(
++    *,
++    corrected_result_text: str | None,
++    known_issues_text: str,
++    duration_s: float,
++    run_date: str,
++    tests_run: Sequence[str],
++) -> dict[str, Any]:
++    """Build the Exp 5111 artifact without constructing a FoVer candidate pool."""
++
++    corrected_result, parse_error = _parse_corrected_result(corrected_result_text)
++    corrected_result_sha256 = (
++        _sha256_text(corrected_result_text) if corrected_result_text is not None else None
++    )
++    known_issues_retraction_found = _known_issues_has_retraction(known_issues_text)
++    honest_verdict = (
++        BLOCKED_VERDICT if corrected_result is not None else MISSING_CORRECTED_RESULT_VERDICT
++    )
++    artifact = {
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "preconditions_checked": {
++            "corrected_result_path": CORRECTED_RESULT_RELATIVE_PATH,
++            "corrected_result_read": corrected_result is not None,
++            "corrected_result_parse_error": parse_error,
++            "known_issues_path": KNOWN_ISSUES_RELATIVE_PATH,
++            "known_issues_retraction_found": known_issues_retraction_found,
++            "candidate_pool_generation_attempted": False,
++            "local_llm_generation_attempted": False,
++            "pool_fabrication_blocked": True,
++        },
++        "pool_path": None,
++        "pool_sha256": None,
++        "pool_n": 0,
++        "candidates_per_item": 0,
++        "vote_at_1": None,
++        "tuned_self_consistency": None,
++        "oracle_at_k": None,
++        "headroom_present": False,
++        "verifier_is_oracle": False,
++        "model_specs": _model_specs(corrected_result),
++        "seeds_or_checksums": _seeds_or_checksums(
++            corrected_result=corrected_result,
++            corrected_result_sha256=corrected_result_sha256,
++        ),
++        "flagged_adversarial": False,
++        "tests_run": list(tests_run),
++        "field_principles": FIELD_PRINCIPLES,
++        "corrected_result_path": CORRECTED_RESULT_RELATIVE_PATH,
++        "corrected_result_sha256": corrected_result_sha256,
++        "corrected_result_summary": _corrected_result_summary(corrected_result),
++        "retraction_sources": RETRACTION_SOURCES,
++        "retracted_claims": {
++            "candidate_selection_headroom_claim_retracted": True,
++            "load_fover_domain_pool_mode_formula_artifact": True,
++            "real_corpus_has_no_natural_multi_candidate_structure": True,
++            "synthetic_pool_must_not_be_built": True,
++            "real_task_shape": "flat per-step correctness classification",
++            "real_corpus_question_id_multiplicity": "6544/6546 question_ids have exactly one row",
++        },
++        "run_date": run_date,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _verdict_has_terminal_prefix(verdict: str) -> bool:
++    return verdict.startswith(TERMINAL_PREFIXES)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate that Exp 5111 remains blocked-safe after the FoVer retraction."""
++
++    missing = REQUIRED_ARTIFACT_FIELDS - set(artifact)
++    if missing:
++        raise ValueError(f"required field missing: {sorted(missing)}")
++    if artifact["experiment_id"] != EXPERIMENT_ID:
++        raise ValueError("experiment_id mismatch")
++    if artifact["milestone"] != MILESTONE:
++        raise ValueError("milestone mismatch")
++    verdict = str(artifact["honest_verdict"])
++    if not _verdict_has_terminal_prefix(verdict) or not verdict.startswith(
++        "blocked_fover_indomain_pool_retracted_see_"
++    ):
++        raise ValueError("honest_verdict must preserve the FoVer pool retraction prefix")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    if artifact["pool_path"] is not None:
++        raise ValueError("pool_path must remain null for the retracted pool task")
++    if artifact["pool_sha256"] is not None:
++        raise ValueError("pool_sha256 must remain null for the retracted pool task")
++    if artifact["pool_n"] != 0:
++        raise ValueError("pool_n must remain 0 when no pool is built")
++    if artifact["candidates_per_item"] != 0:
++        raise ValueError("candidates_per_item must remain 0 when no pool is built")
++    if any(
++        artifact[key] is not None for key in ("vote_at_1", "tuned_self_consistency", "oracle_at_k")
++    ):
++        raise ValueError("candidate-selection metrics must remain null after the FoVer retraction")
++    if artifact["headroom_present"] is not False:
++        raise ValueError("headroom_present must remain false")
++    if artifact["verifier_is_oracle"] is not False:
++        raise ValueError("verifier_is_oracle must remain false")
++    if artifact["flagged_adversarial"] is not False:
++        raise ValueError("flagged_adversarial must remain false unless an audit flags the artifact")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must cover the required artifact fields")
++    if not artifact["tests_run"]:
++        raise ValueError("tests_run must record verification evidence")
++    if artifact["corrected_result_path"] != CORRECTED_RESULT_RELATIVE_PATH:
++        raise ValueError("corrected_result_path mismatch")
++
++    preconditions = artifact["preconditions_checked"]
++    if preconditions["candidate_pool_generation_attempted"] is not False:
++        raise ValueError("candidate_pool_generation_attempted must remain false")
++    if preconditions["local_llm_generation_attempted"] is not False:
++        raise ValueError("local_llm_generation_attempted must remain false")
++    if preconditions["pool_fabrication_blocked"] is not True:
++        raise ValueError("pool_fabrication_blocked must remain true")
++
++    retracted_claims = artifact["retracted_claims"]
++    required_retraction_flags = {
++        "candidate_selection_headroom_claim_retracted",
++        "load_fover_domain_pool_mode_formula_artifact",
++        "real_corpus_has_no_natural_multi_candidate_structure",
++        "synthetic_pool_must_not_be_built",
++    }
++    if any(retracted_claims[key] is not True for key in required_retraction_flags):
++        raise ValueError("retracted_claims must preserve the no-pool correction")
++
++    summary = artifact["corrected_result_summary"]
++    if summary is None:
++        if artifact["honest_verdict"] != MISSING_CORRECTED_RESULT_VERDICT:
++            raise ValueError(
++                "missing corrected_result_summary requires the missing-correction verdict"
++            )
++    elif summary["beats_cheap_baseline"] is not False:
++        raise ValueError("beats_cheap_baseline must remain false for the corrected FoVer result")
++
++
++def write_artifact(
++    *,
++    root: Path,
++    duration_s: float,
++    run_date: str,
++    tests_run: Sequence[str],
++) -> dict[str, Any]:
++    """Read local inputs and write the blocked Exp 5111 JSON artifact."""
++
++    corrected_result_path = root / CORRECTED_RESULT_RELATIVE_PATH
++    known_issues_path = root / KNOWN_ISSUES_RELATIVE_PATH
++    corrected_result_text = (
++        corrected_result_path.read_text(encoding="utf-8")
++        if corrected_result_path.exists()
++        else None
++    )
++    known_issues_text = (
++        known_issues_path.read_text(encoding="utf-8") if known_issues_path.exists() else ""
++    )
++    artifact = build_artifact(
++        corrected_result_text=corrected_result_text,
++        known_issues_text=known_issues_text,
++        duration_s=duration_s,
++        run_date=run_date,
++        tests_run=tests_run,
++    )
++    artifact_path = root / RESULT_RELATIVE_PATH
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8"
++    )
++    return artifact
++
++
++def main(
++    *,
++    root: Path = REPO_ROOT,
++    date: str = "20260701",
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> Path:
++    """Run Exp 5111 and return the blocked artifact path."""
++
++    start = time.perf_counter()
++    run_tests = DEFAULT_TESTS_RUN if tests_run is None else tests_run
++    elapsed = time.perf_counter() - start if duration_s is None else duration_s
++    write_artifact(root=root, duration_s=elapsed, run_date=date, tests_run=run_tests)
++    return root / RESULT_RELATIVE_PATH
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 8bef4f1695..b6de6c3bb2 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-01T17:15:26.181485Z",
+-  "duration_s": 0.10694575309753418,
++  "run_date": "2026-07-01T17:30:57.301813Z",
++  "duration_s": 0.10964131355285645,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "a1e3d8a940b1cf472b9c64b56d30c33177b5b0e0d54dbebbfad5ae6e3b977d40",
++  "reproducibility_checksum": "73c81c942fec8850c2debd2103a4201665d9da259fa822e2c4b7daf4ca3e55ef",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "9e918a791d287174b67e803659c591041740cc8f"
++    "adversarial_verify_version": "4af41502d504c21017f240b978fb46c116681cb9"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index c35e873dfd..4f04505f43 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-01T17:15:26.340917Z",
+-  "duration_s": 0.14587974548339844,
++  "run_date": "2026-07-01T17:30:57.416409Z",
++  "duration_s": 0.09354162216186523,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "f28f66471a5428e0f0a83ceff2ec21bf0a64edb96c5c34d87a4fca39a25596f8",
++  "reproducibility_checksum": "8f472ee6e7f050678f4aa7e7608fcfe7c43b00327982bda53fcfa9b9a635fe67",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "9e918a791d287174b67e803659c591041740cc8f"
++    "adversarial_verify_version": "4af41502d504c21017f240b978fb46c116681cb9"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 38bdd7afc2..0311dfb2f8 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1653175354003906,
++  "efficiency_gains_ms": 2.076387405395508,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a769650bf5..3ccc58531c 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.296004772186279e-05,
++  "duration_s": 5.4952921345829964e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5111_fover_in_domain_pool_v469.json b/results/experiment_5111_fover_in_domain_pool_v469.json
+new file mode 100644
+index 0000000000..19d953a505
+--- /dev/null
++++ b/results/experiment_5111_fover_in_domain_pool_v469.json
+@@ -0,0 +1,102 @@
++{
++  "candidates_per_item": 0,
++  "corrected_result_path": "results/experiment_fover_stepverifier_vs_cheap_baseline.json",
++  "corrected_result_sha256": "sha256:0e29373e28d34edfa7cd91f2d9ebb967eafa6d8363bcfe3b42395064a9053ec6",
++  "corrected_result_summary": {
++    "beats_cheap_baseline": false,
++    "cheap_baseline_auroc": 0.9635,
++    "cheap_baseline_root_cause": "Incorrect steps average ~5x longer than correct steps in this corpus -- a strong surface-level confound that lets simple length-aware features nearly match a semantic embedding model's AUROC. This is a corpus-construction property, not evidence that semantic understanding never helps; it explains WHY the cheap baseline is so strong on THIS specific classification task.",
++    "delta_auroc": 0.0028,
++    "delta_auroc_ci95": [
++      -0.0244,
++      0.0347
++    ],
++    "framing_change_from_retracted_claim": "This is NOT a 'verifier beats self-consistency vote' test (FoVer has no natural multi-candidate structure to vote among -- 6544/6546 question_ids have exactly one row). This IS a well-posed 'does a learned discriminator beat a cheap non-learned one' test on the real classification task.",
++    "n_rows": 6548,
++    "verifier_auroc": 0.9663
++  },
++  "duration_s": 2.698507159948349e-07,
++  "experiment_id": "exp5111-fover-in-domain-pool-v469",
++  "field_principles": {
++    "candidates_per_item": "selection-headroom clarity",
++    "corrected_result_path": "terminal FoVer verifier-value evidence",
++    "corrected_result_sha256": "corrected-result data integrity",
++    "corrected_result_summary": "no stale headroom premise",
++    "duration_s": "timing accountability",
++    "experiment_id": "traceability",
++    "field_principles": "principle annotations for every top-level artifact field",
++    "flagged_adversarial": "adversarial-verification accountability",
++    "headroom_present": "no no-headroom moat claims",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "milestone": "milestone accountability",
++    "model_specs": "SOTA model accountability when LLMs are used",
++    "oracle_at_k": "headroom measurement",
++    "pool_n": "downstream gate signal",
++    "pool_path": "deliverable reproducibility",
++    "pool_sha256": "data integrity",
++    "preconditions_checked": "compute/data preflight accountability",
++    "retracted_claims": "no fabricated candidate-selection claim",
++    "retraction_sources": "retraction provenance",
++    "seeds_or_checksums": "reproducibility",
++    "tests_run": "verification evidence",
++    "tuned_self_consistency": "fair baseline",
++    "verifier_is_oracle": "oracle-distinctness",
++    "vote_at_1": "baseline transparency"
++  },
++  "flagged_adversarial": false,
++  "headroom_present": false,
++  "honest_verdict": "blocked_fover_indomain_pool_retracted_see_experiment_fover_stepverifier_vs_cheap_baseline",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone": "2026.07.469",
++  "model_specs": {
++    "corrected_result_cheap_baseline_model": "sklearn.linear_model.LogisticRegression (8 hand-engineered text-statistical features, no learned embeddings)",
++    "corrected_result_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
++    "generative_llms_used": []
++  },
++  "oracle_at_k": null,
++  "pool_n": 0,
++  "pool_path": null,
++  "pool_sha256": null,
++  "preconditions_checked": {
++    "candidate_pool_generation_attempted": false,
++    "corrected_result_parse_error": null,
++    "corrected_result_path": "results/experiment_fover_stepverifier_vs_cheap_baseline.json",
++    "corrected_result_read": true,
++    "known_issues_path": "ops/known-issues.md",
++    "known_issues_retraction_found": true,
++    "local_llm_generation_attempted": false,
++    "pool_fabrication_blocked": true
++  },
++  "retracted_claims": {
++    "candidate_selection_headroom_claim_retracted": true,
++    "load_fover_domain_pool_mode_formula_artifact": true,
++    "real_corpus_has_no_natural_multi_candidate_structure": true,
++    "real_corpus_question_id_multiplicity": "6544/6546 question_ids have exactly one row",
++    "real_task_shape": "flat per-step correctness classification",
++    "synthetic_pool_must_not_be_built": true
++  },
++  "retraction_sources": [
++    "ops/known-issues.md#NUDGE-2026-07-01-RETRACTED",
++    "ops/known-issues.md#MOAT-REDIRECT-2026-06-30-RETRACTED"
++  ],
++  "run_date": "20260701",
++  "seeds_or_checksums": {
++    "corrected_result_random_seed": 20260701,
++    "corrected_result_reproducibility_checksum": "sha256:203f3d8d2969126a1c9e9aa366d3251fb7aae0f19d1f2df3472bd1506e4dc7aa",
++    "corrected_result_sha256": "sha256:0e29373e28d34edfa7cd91f2d9ebb967eafa6d8363bcfe3b42395064a9053ec6"
++  },
++  "tests_run": [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5111_fover_in_domain_pool_v469.py --date 20260701",
++    ".venv/bin/pytest tests/python/test_experiment_5111_fover_in_domain_pool_v469.py -q -o addopts=\"\"",
++    ".venv/bin/coverage erase && .venv/bin/coverage run --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5111_fover_in_domain_pool_v469.py' -m pytest tests/python/test_experiment_5111_fover_in_domain_pool_v469.py -q -o addopts=\"\" && .venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5111_fover_in_domain_pool_v469.py' --fail-under=100 -m",
++    ".venv/bin/ruff check python/carnot/experiment_5111_fover_in_domain_pool_v469.py scripts/experiment_5111_fover_in_domain_pool_v469.py tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_5111_fover_in_domain_pool_v469.py scripts/experiment_5111_fover_in_domain_pool_v469.py tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
++    "python scripts/check_spec_coverage.py tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5111_fover_in_domain_pool_v469.json",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "tuned_self_consistency": null,
++  "verifier_is_oracle": false,
++  "vote_at_1": null
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 50d8966960..e2b6cfa3f4 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T17:15:13Z",
+-  "finished_at": "2026-07-01T17:15:13Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-01T17:30:43Z",
++  "finished_at": "2026-07-01T17:30:43Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 86a1b4ba2c..42cfbc3ab7 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T17:15:13Z",
+-  "finished_at": "2026-07-01T17:15:13Z",
++  "started_at": "2026-07-01T17:30:44Z",
++  "finished_at": "2026-07-01T17:30:44Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index ee291aaebe..29f35179d1 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T17:15:14Z",
+-  "finished_at": "2026-07-01T17:15:14Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-01T17:30:44Z",
++  "finished_at": "2026-07-01T17:30:44Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_5111_fover_in_domain_pool_v469.py b/scripts/experiment_5111_fover_in_domain_pool_v469.py
+new file mode 100644
+index 0000000000..f52d9edb0f
+--- /dev/null
++++ b/scripts/experiment_5111_fover_in_domain_pool_v469.py
+@@ -0,0 +1,32 @@
++#!/usr/bin/env python3
++"""CLI entrypoint for Exp 5111 FoVer in-domain pool retraction artifact."""
++
++from __future__ import annotations
++
++import argparse
++from pathlib import Path
++
++from carnot.experiment_5111_fover_in_domain_pool_v469 import REPO_ROOT, main as run_main
++
++
++def main(
++    root: Path = REPO_ROOT,
++    *,
++    date: str = "20260701",
++    duration_s: float | None = None,
++    tests_run: list[str] | None = None,
++) -> Path:
++    """Run the tested Exp 5111 implementation and return the artifact path."""
++
++    return run_main(root=root, date=date, duration_s=duration_s, tests_run=tests_run)
++
++
++def _parse_args() -> argparse.Namespace:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default="20260701", help="Run label date, formatted YYYYMMDD.")
++    return parser.parse_args()
++
++
++if __name__ == "__main__":  # pragma: no cover
++    args = _parse_args()
++    main(date=args.date)
+diff --git a/tests/python/test_experiment_5111_fover_in_domain_pool_v469.py b/tests/python/test_experiment_5111_fover_in_domain_pool_v469.py
+new file mode 100644
+index 0000000000..652ea7179c
+--- /dev/null
++++ b/tests/python/test_experiment_5111_fover_in_domain_pool_v469.py
+@@ -0,0 +1,341 @@
++"""Tests for Exp 5111 FoVer in-domain pool retraction handling.
++
++Spec refs: REQ-REPORT-5111, SCENARIO-REPORT-5111,
++SCENARIO-REPORT-5111-BLOCKED-MISSING-CORRECTION.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5111_fover_in_domain_pool_v469 as mod
++from scripts import experiment_5111_fover_in_domain_pool_v469 as script_mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++CORRECTED_RESULT_PATH = REPO / mod.CORRECTED_RESULT_RELATIVE_PATH
++KNOWN_ISSUES_PATH = REPO / mod.KNOWN_ISSUES_RELATIVE_PATH
++
++
++def _spec_section() -> str:
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    start = spec.index("### REQ-REPORT-5111")
++    end = spec.index("### REQ-REPORT-5010", start)
++    return spec[start:end]
++
++
++def _artifact() -> dict[str, object]:
++    return mod.build_artifact(
++        corrected_result_text=CORRECTED_RESULT_PATH.read_text(encoding="utf-8"),
++        known_issues_text=KNOWN_ISSUES_PATH.read_text(encoding="utf-8"),
++        duration_s=1.0,
++        run_date="20260701",
++        tests_run=["tests/python/test_experiment_5111_fover_in_domain_pool_v469.py"],
++    )
++
++
++def test_req_report_5111_spec_declares_retracted_pool_contract() -> None:
++    """REQ-REPORT-5111: OpenSpec declares the FoVer pool retraction gate."""
++
++    section = _spec_section()
++
++    assert "REQ-REPORT-5111" in section
++    assert "SCENARIO-REPORT-5111" in section
++    assert "SCENARIO-REPORT-5111-BLOCKED-MISSING-CORRECTION" in section
++    assert mod.EXPERIMENT_ID in section
++    assert mod.RESULT_RELATIVE_PATH in section
++    assert mod.CORRECTED_RESULT_RELATIVE_PATH in section
++    assert "blocked_fover_indomain_pool_retracted_see_*" in section
++    assert "learned-verifier AUROC `0.9663`" in section
++    assert "cheap baseline AUROC `0.9635`" in section
++    assert "delta AUROC `0.0028`" in section
++    assert "`beats_cheap_baseline=false`" in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_retracted_pool_artifact_cites_corrected_result_for_scenario_report_5111() -> None:
++    """SCENARIO-REPORT-5111: corrected FoVer result is the terminal answer."""
++
++    artifact = _artifact()
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["milestone"] == mod.MILESTONE
++    assert artifact["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++    assert artifact["pool_path"] is None
++    assert artifact["pool_sha256"] is None
++    assert artifact["pool_n"] == 0
++    assert artifact["candidates_per_item"] == 0
++    assert artifact["vote_at_1"] is None
++    assert artifact["tuned_self_consistency"] is None
++    assert artifact["oracle_at_k"] is None
++    assert artifact["headroom_present"] is False
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["flagged_adversarial"] is False
++    assert artifact["tests_run"] == [
++        "tests/python/test_experiment_5111_fover_in_domain_pool_v469.py"
++    ]
++
++    summary = artifact["corrected_result_summary"]
++    assert summary["n_rows"] == 6548
++    assert summary["verifier_auroc"] == 0.9663
++    assert summary["cheap_baseline_auroc"] == 0.9635
++    assert summary["delta_auroc"] == 0.0028
++    assert summary["delta_auroc_ci95"] == [-0.0244, 0.0347]
++    assert summary["beats_cheap_baseline"] is False
++    assert "no natural multi-candidate structure" in summary["framing_change_from_retracted_claim"]
++    assert "length" in summary["cheap_baseline_root_cause"].lower()
++
++    assert artifact["corrected_result_path"] == mod.CORRECTED_RESULT_RELATIVE_PATH
++    assert artifact["corrected_result_sha256"].startswith("sha256:")
++    assert artifact["model_specs"] == {
++        "generative_llms_used": [],
++        "corrected_result_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
++        "corrected_result_cheap_baseline_model": (
++            "sklearn.linear_model.LogisticRegression "
++            "(8 hand-engineered text-statistical features, no learned embeddings)"
++        ),
++    }
++    assert artifact["seeds_or_checksums"]["corrected_result_random_seed"] == 20260701
++    assert artifact["preconditions_checked"]["corrected_result_read"] is True
++    assert artifact["preconditions_checked"]["known_issues_retraction_found"] is True
++    assert artifact["preconditions_checked"]["candidate_pool_generation_attempted"] is False
++    assert artifact["retracted_claims"]["candidate_selection_headroom_claim_retracted"] is True
++    assert artifact["retracted_claims"]["synthetic_pool_must_not_be_built"] is True
++    assert artifact["retraction_sources"] == [
++        "ops/known-issues.md#NUDGE-2026-07-01-RETRACTED",
++        "ops/known-issues.md#MOAT-REDIRECT-2026-06-30-RETRACTED",
++    ]
++
++
++def test_missing_corrected_result_fails_closed_for_scenario_report_5111() -> None:
++    """SCENARIO-REPORT-5111-BLOCKED-MISSING-CORRECTION: no pool is fabricated."""
++
++    artifact = mod.build_artifact(
++        corrected_result_text="{bad json",
++        known_issues_text="no retraction marker here",
++        duration_s=0.5,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++
++    assert artifact["honest_verdict"] == mod.MISSING_CORRECTED_RESULT_VERDICT
++    assert artifact["preconditions_checked"]["corrected_result_read"] is False
++    assert artifact["preconditions_checked"]["corrected_result_parse_error"]
++    assert artifact["preconditions_checked"]["known_issues_retraction_found"] is False
++    assert artifact["pool_n"] == 0
++    assert artifact["headroom_present"] is False
++    assert artifact["corrected_result_summary"] is None
++    mod.validate_artifact(artifact)
++
++
++@pytest.mark.parametrize(
++    ("corrected_result_text", "parse_error"),
++    [
++        ("[]", "not a JSON object"),
++        ("{}", "missing fields"),
++    ],
++)
++def test_malformed_corrected_result_variants_fail_closed_for_req_report_5111(
++    corrected_result_text: str,
++    parse_error: str,
++) -> None:
++    """SCENARIO-REPORT-5111-BLOCKED-MISSING-CORRECTION: malformed JSON fails closed."""
++
++    artifact = mod.build_artifact(
++        corrected_result_text=corrected_result_text,
++        known_issues_text=KNOWN_ISSUES_PATH.read_text(encoding="utf-8"),
++        duration_s=0.5,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++
++    assert artifact["honest_verdict"] == mod.MISSING_CORRECTED_RESULT_VERDICT
++    assert parse_error in artifact["preconditions_checked"]["corrected_result_parse_error"]
++    assert artifact["corrected_result_summary"] is None
++    mod.validate_artifact(artifact)
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda artifact: artifact | {"experiment_id": "bad"}, "experiment_id"),
++        (lambda artifact: artifact | {"milestone": "2026.07.468"}, "milestone"),
++        (lambda artifact: artifact | {"honest_verdict": "complete_fake_pool"}, "honest_verdict"),
++        (
++            lambda artifact: artifact | {"inference_substrate": "live_llm_inference"},
++            "inference_substrate",
++        ),
++        (lambda artifact: artifact | {"pool_path": "results/fake_pool.json"}, "pool_path"),
++        (lambda artifact: artifact | {"pool_sha256": "sha256:abc"}, "pool_sha256"),
++        (lambda artifact: artifact | {"pool_n": 150}, "pool_n"),
++        (lambda artifact: artifact | {"candidates_per_item": 4}, "candidates_per_item"),
++        (lambda artifact: artifact | {"vote_at_1": 0.25}, "candidate-selection metrics"),
++        (
++            lambda artifact: artifact | {"tuned_self_consistency": 0.50},
++            "candidate-selection metrics",
++        ),
++        (lambda artifact: artifact | {"oracle_at_k": 0.75}, "candidate-selection metrics"),
++        (lambda artifact: artifact | {"headroom_present": True}, "headroom_present"),
++        (lambda artifact: artifact | {"verifier_is_oracle": True}, "verifier_is_oracle"),
++        (lambda artifact: artifact | {"flagged_adversarial": True}, "flagged_adversarial"),
++        (lambda artifact: artifact | {"tests_run": []}, "tests_run"),
++        (lambda artifact: artifact | {"field_principles": {}}, "field_principles"),
++        (
++            lambda artifact: artifact | {"corrected_result_path": "results/other.json"},
++            "corrected_result_path",
++        ),
++        (
++            lambda artifact: (
++                artifact
++                | {
++                    "preconditions_checked": artifact["preconditions_checked"]
++                    | {"candidate_pool_generation_attempted": True}
++                }
++            ),
++            "candidate_pool_generation_attempted",
++        ),
++        (
++            lambda artifact: (
++                artifact
++                | {
++                    "preconditions_checked": artifact["preconditions_checked"]
++                    | {"local_llm_generation_attempted": True}
++                }
++            ),
++            "local_llm_generation_attempted",
++        ),
++        (
++            lambda artifact: (
++                artifact
++                | {
++                    "preconditions_checked": artifact["preconditions_checked"]
++                    | {"pool_fabrication_blocked": False}
++                }
++            ),
++            "pool_fabrication_blocked",
++        ),
++        (
++            lambda artifact: (
++                artifact
++                | {
++                    "retracted_claims": artifact["retracted_claims"]
++                    | {"synthetic_pool_must_not_be_built": False}
++                }
++            ),
++            "retracted_claims",
++        ),
++        (
++            lambda artifact: (
++                artifact
++                | {
++                    "corrected_result_summary": artifact["corrected_result_summary"]
++                    | {"beats_cheap_baseline": True}
++                }
++            ),
++            "beats_cheap_baseline",
++        ),
++        (
++            lambda artifact: {
++                key: value for key, value in artifact.items() if key != "preconditions_checked"
++            },
++            "required field",
++        ),
++        (
++            lambda artifact: artifact | {"corrected_result_summary": None},
++            "missing corrected_result_summary",
++        ),
++    ],
++)
++def test_validator_rejects_fabricated_pool_claims_for_req_report_5111(
++    mutate: object,
++    message: str,
++) -> None:
++    """REQ-REPORT-5111: validator rejects stale pool/headroom claims."""
++
++    bad_artifact = mutate(copy.deepcopy(_artifact()))
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_write_artifact_is_stable_for_req_report_5111(tmp_path: Path) -> None:
++    """REQ-REPORT-5111: writer emits a stable blocked artifact."""
++
++    (tmp_path / mod.CORRECTED_RESULT_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.KNOWN_ISSUES_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.CORRECTED_RESULT_RELATIVE_PATH).write_text(
++        CORRECTED_RESULT_PATH.read_text(encoding="utf-8"), encoding="utf-8"
++    )
++    (tmp_path / mod.KNOWN_ISSUES_RELATIVE_PATH).write_text(
++        KNOWN_ISSUES_PATH.read_text(encoding="utf-8"), encoding="utf-8"
++    )
++
++    first = mod.write_artifact(
++        root=tmp_path,
++        duration_s=0.75,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++    second = mod.write_artifact(
++        root=tmp_path,
++        duration_s=0.75,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++
++    assert second == first
++    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == first
++    assert first["honest_verdict"] == mod.BLOCKED_VERDICT
++
++
++def test_writer_missing_inputs_remains_blocked_for_req_report_5111(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5111-BLOCKED-MISSING-CORRECTION: missing files fail closed."""
++
++    artifact = mod.write_artifact(
++        root=tmp_path,
++        duration_s=0.2,
++        run_date="20260701",
++        tests_run=["focused"],
++    )
++
++    assert artifact["honest_verdict"] == mod.MISSING_CORRECTED_RESULT_VERDICT
++    assert artifact["preconditions_checked"]["corrected_result_read"] is False
++    assert artifact["preconditions_checked"]["known_issues_retraction_found"] is False
++    assert artifact["pool_path"] is None
++    mod.validate_artifact(artifact)
++
++
++def test_script_main_delegates_to_tested_module_for_req_report_5111(tmp_path: Path) -> None:
++    """REQ-REPORT-5111: CLI wrapper writes the same validated artifact."""
++
++    (tmp_path / mod.CORRECTED_RESULT_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.KNOWN_ISSUES_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.CORRECTED_RESULT_RELATIVE_PATH).write_text(
++        CORRECTED_RESULT_PATH.read_text(encoding="utf-8"), encoding="utf-8"
++    )
++    (tmp_path / mod.KNOWN_ISSUES_RELATIVE_PATH).write_text(
++        KNOWN_ISSUES_PATH.read_text(encoding="utf-8"), encoding="utf-8"
++    )
++
++    artifact_path = script_mod.main(
++        root=tmp_path,
++        date="20260701",
++        duration_s=0.25,
++        tests_run=["script wrapper"],
++    )
++
++    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    assert artifact["tests_run"] == ["script wrapper"]
++    assert artifact["run_date"] == "20260701"
++    mod.validate_artifact(artifact)
+-- 
+2.55.0
+

@@ -1,0 +1,60 @@
+From 2344b6a5fc13afc9651039d7c26532521738515f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 21:34:39 -0400
+Subject: [PATCH 10705/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index da9db5fca2..142f19e2cf 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,950</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,954</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 172a492e1f..e7afcbdde4 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 102, "phase": "iteration_start", "last_beat": "2026-09-02T01:29:52Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 103, "phase": "iteration_start", "last_beat": "2026-09-02T01:32:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 59888c02d3..7344e951c4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17043,3 +17043,4 @@ The l |
+ | 2026-09-02 00:27 UTC | V600 branch retirement and evidence contract | OK | 96 passed, 1 warning in 11.00s |
+ | 2026-09-02 01:04 UTC | Dual-side exact semantic contrast bank | OK | 108 passed, 1 warning in 17.60s |
+ | 2026-09-02 01:27 UTC | Tokenizer-aware nuisance and split preregistration | OK | 96 passed, 1 warning in 9.44s |
++| 2026-09-02 01:30 UTC | Three-family semantic contrast scoring stream | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6863-tokenizer-aware |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 52152a4489..0a0df410d9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 102, "phase": "iteration_start", "started_at": "2026-09-02T01:29:52Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 103, "phase": "iteration_start", "started_at": "2026-09-02T01:32:21Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

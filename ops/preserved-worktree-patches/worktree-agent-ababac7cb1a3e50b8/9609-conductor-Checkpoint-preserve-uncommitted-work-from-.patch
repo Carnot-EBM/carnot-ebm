@@ -1,0 +1,56 @@
+From de8320afe07131ca91aa3548626ea26692f07404 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 00:25:01 -0400
+Subject: [PATCH 09609/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 208c90e2e7..30cff7c87d 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -3,5 +3,5 @@
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-23T04:17:49Z"
++ "last_scan_utc": "2026-08-23T04:24:57Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 42b7c3a381..0ec7a3ca42 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3481641, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-08-23T04:08:36Z"}
+\ No newline at end of file
++{"pid": 3481641, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-23T04:24:56Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index df26018176..cf64e82fe7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16307,3 +16307,4 @@ code |
+ | 2026-08-23 03:41 UTC | ARC redirect-ledger supervisor generalization refi | OK | 127 passed, 1 warning in 10.88s |
+ | 2026-08-23 03:58 UTC | GateMate post-receipt changed-state continuity clo | OK | 120 passed, 1 warning in 13.89s |
+ | 2026-08-23 04:06 UTC | Independent V564 evidence capstone and next-state  | SKIP | Pre-tests failing, self-heal failed:  |
++| 2026-08-23 04:22 UTC | Independent V564 evidence capstone and next-state  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6526_v564_in |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 033359b6c0..6d34b9673c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3481641, "iteration": 2, "phase": "iteration_start", "started_at": "2026-08-23T04:08:36Z"}
+\ No newline at end of file
++{"pid": 3481641, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-23T04:24:56Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

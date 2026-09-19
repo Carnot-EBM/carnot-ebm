@@ -1,0 +1,78 @@
+From ed98a2170040da7c9657b201e9d61c076ba40bd4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 18:06:35 -0400
+Subject: [PATCH 08485/11362] [conductor] Pre-gate block: Matching-base code
+ hidden-state surface gated on Exp6202 headroom
+
+1 of 1 gate(s) failed; first failure: exp6202-livecodebench-headroom-v2.headroom_ready_score (upstream artifact not found for task id 'exp6202-livecodebench-headroom-v2')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...03_matching_base_code_hidden_state_v2.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6203_matching_base_code_hidden_state_v2.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ae8e321e44..f2bc58c01b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 102, "phase": "iteration_start", "last_beat": "2026-08-07T22:04:32Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 103, "phase": "iteration_start", "last_beat": "2026-08-07T22:06:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5db554123c..0db9a676c2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15481,3 +15481,5 @@ Still active  |
+ | 2026-08-07 21:58 UTC | Three-family raw-code envelope canary before any n | OK | 89 passed, 1 warning in 19.69s |
+ | 2026-08-07 22:00 UTC | Authentic Gemma-4-31B K=8 pool gated on Exp6200 de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
+ | 2026-08-07 22:02 UTC | Authentic Gemma-4-31B K=8 pool gated on Exp6200 de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
++| 2026-08-07 22:04 UTC | Authentic Gemma-4-31B K=8 pool gated on Exp6200 de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
++| 2026-08-07 22:06 UTC | Executable-code headroom audit gated on Exp6201 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6201-livecodebench-k8-pool-v2) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 44fcde2ca0..fc564507f7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 102, "phase": "iteration_start", "started_at": "2026-08-07T22:04:32Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 103, "phase": "iteration_start", "started_at": "2026-08-07T22:06:35Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6203_matching_base_code_hidden_state_v2.json b/results/experiment_6203_matching_base_code_hidden_state_v2.json
+new file mode 100644
+index 0000000000..954132cb6f
+--- /dev/null
++++ b/results/experiment_6203_matching_base_code_hidden_state_v2.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6203,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-07",
++  "started_at": "2026-08-07T22:06:35.365544+00:00",
++  "finished_at": "2026-08-07T22:06:35.365544+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Matching-base code hidden-state surface gated on Exp6202 headroom",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6202-livecodebench-headroom-v2.headroom_ready_score (upstream artifact not found for task id 'exp6202-livecodebench-headroom-v2')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6202-livecodebench-headroom-v2",
++      "artifact_field": "headroom_ready_score",
++      "op": "==",
++      "expected": 1,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6202-livecodebench-headroom-v2'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

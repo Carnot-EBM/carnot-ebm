@@ -1,0 +1,1965 @@
+From 14eec765b56fd05a635ef805cc687f6529cb32f2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 13:24:56 -0400
+Subject: [PATCH 01467/11362] =?UTF-8?q?[conductor]=20Capstone=20.379=20(UN?=
+ =?UTF-8?q?GATED):=20the=20milestone's=20headline=20question=20is=20DID=20?=
+ =?UTF-8?q?THE=20VERIFIER=20DISCRIMINATE=20ON=20TRM=20OUTPUTS,=20AND=20IF?=
+ =?UTF-8?q?=20SO=20DID=20VERIFIER-RFT-ON-TRM=20BEAT=20THE=20VOTE-SFT=20ABL?=
+ =?UTF-8?q?ATION=3F=20Aggregate:=20DISCRIMINATION=20=3D=20exp4099=20(verif?=
+ =?UTF-8?q?ier=5Fbeats=5Ftrm=5Fvote=20+=20captured=5Fpp=20vs=20the=20prior?=
+ =?UTF-8?q?=200.0);=20TRM-RFT=20=3D=20exp4100=20(branch=5Ftaken;=20rft=5Fv?=
+ =?UTF-8?q?s=5Fablation=5Fdelta=20OR=20trm=5Fnative=5Ftrainer=5Fcheckpoint?=
+ =?UTF-8?q?=5Fok);=20ACCURACY=20=3D=20exp4101=20(total=5Fgames=5Fsolved);?=
+ =?UTF-8?q?=20SOTA=20=3D=20exp4102=20(flagged=5Ffor=5Fv380);=20HYGIENE=20?=
+ =?UTF-8?q?=3D=20exp4103;=20HARDWARE=20=3D=20exp4104.=20Honest=20verdict?=
+ =?UTF-8?q?=20on=20whether=20the=20TRM=20substrate=20validated=20verifier-?=
+ =?UTF-8?q?as-reward=20(or=20produced=20an=20honest=20negative=20+=20a=20l?=
+ =?UTF-8?q?ogged=20gap).=20SKIP=20any=20flagged=5Fadversarial=20artifact;?=
+ =?UTF-8?q?=20cite=20upstream=20sha256.=20NO=20gated=5Fon=20=E2=80=94=20ag?=
+ =?UTF-8?q?gregate=20whatever=20exists.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4105-capstone-v379
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   2 +
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/reporting/capstone_v379_4105.py | 904 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  48 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_4105_capstone_v379.json    | 308 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../test_experiment_4105_capstone_v379.py     | 317 ++++++
+ 23 files changed, 1587 insertions(+), 56 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v379_4105.py
+ create mode 100644 results/experiment_4105_capstone_v379.json
+ create mode 100644 tests/python/test_experiment_4105_capstone_v379.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 62c3fbef84..d06e29c3f0 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -41,3 +41,5 @@
+ - SCENARIO-CAPSTONE-4085: The capstone artifact must emit top-level fields for `honest_verdict`, `pivot_result`, bare boolean `sudoku_control_reproduced`, `decentralization_distillation_outcome`, bare integer `games_solved_total`, `cited_upstream_artifacts`, and `inference_substrate`, with the pivot outcome defined from clean exp4079 RFT-vs-cold/gold metrics when present, otherwise as blocked or accumulating from the landed gate-check artifact; Sudoku trust defined only from a clean exp4080 positive-control artifact; ARC accuracy defined from clean exp4082 `total_games_solved`; and all flagged exp4077, exp4078, exp4080, or exp4083 metrics recorded only as skipped provenance, not imported headline evidence.
+ - REQ-CAPSTONE-4097: The .378 capstone must aggregate every existing upstream artifact from exp4086 through exp4096 without adding a `gated_on` field, must run each existing upstream through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` before importing metrics, cite every included upstream artifact by sha256, and honestly report whether the Exp 4087 precision rescue raised certification precision to at least 0.85 at recall at least 0.20 and whether a clean Exp 4090 A-vs-B RFT gate measured verifier-label signal.
+ - SCENARIO-CAPSTONE-4097: The capstone artifact must emit top-level fields for `honest_verdict`, `precision_rescue_outcome`, `pivot_result`, `offarc_precision_transfer`, bare integer `games_solved_total`, bare boolean `sudoku_sanity_reproduced`, `cited_upstream_artifacts`, and `inference_substrate`, with the precision rescue outcome defined from clean exp4087 `precision_rescue_succeeded`, `best_certified_precision`, and `best_op_point_recall`; the pivot result defined from a clean exp4090 A-vs-B CI excluding zero when present, otherwise as skipped/bounded when Phase B never produced that artifact; the off-ARC transfer defined from clean exp4093 `primitive_is_domain_general`; the games-solved headline defined from clean exp4092 `total_games_solved`; and any flagged exp4095 metrics recorded only as skipped provenance, not imported headline evidence.
++- REQ-CAPSTONE-4105: The .379 TRM pivot capstone must aggregate existing upstream artifacts from exp4099 through exp4104, must run each existing upstream through `scripts/summarize_artifact.py`, must skip every artifact stamped `flagged_adversarial:true` before importing any metric, must cite every upstream artifact by sha256, and must force one headline outcome from `{verifier_rft_on_trm_validated, honest_negative_no_grid_discrimination, trainer_derisked_science_open}`.
++- SCENARIO-CAPSTONE-4105: The capstone artifact must emit principle-annotated top-level fields for `honest_verdict`, `headline_outcome`, and `upstream_provenance`; answer whether exp4099 measured any verifier beating TRM-vote at rerank via `verifier_beats_trm_vote` and `captured_pp_directional` against the prior 0.0pp, whether clean exp4100 evidence measured `rft_vs_ablation_delta` and native trainer checkpoint success when applicable, and the clean ARC games solved total from exp4101; record flagged upstream artifacts with empty imported fields instead of aggregating their numbers; name the bottleneck as TRM grid discrimination when no clean verifier reranker beats TRM-vote; and list candidate .380 directions from clean SOTA/gap/hardware artifacts.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index aec98412e7..aaf010bd84 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 168,
+   "code_violations": 0,
+-  "experiments_checked": 3127,
++  "experiments_checked": 3128,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v379_4105.py b/python/carnot/reporting/capstone_v379_4105.py
+new file mode 100644
+index 0000000000..e31c466a43
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v379_4105.py
+@@ -0,0 +1,904 @@
++"""Build the Exp 4105 v379 TRM-pivot capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-4105, SCENARIO-CAPSTONE-4105.
++
++This capstone is deliberately an aggregation layer, not a second experiment. It
++turns the .379 TRM artifacts into one decision-grade read while preserving the
++important failure mode: a verifier can be useful elsewhere and still fail to
++rank native TRM grids. That negative is a real result, so flagged upstreams are
++kept as provenance but their metrics never enter the headline.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_4105_capstone_v379.json")
++EXPERIMENT_ID = 4105
++RANDOM_SEED = 4105
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++PYTHON_BIN = Path(".venv/bin/python")
++
++HEADLINE_OUTCOMES = {
++    "verifier_rft_on_trm_validated",
++    "honest_negative_no_grid_discrimination",
++    "trainer_derisked_science_open",
++}
++PRIOR_CAPTURED_PP = 0.0
++
++UPSTREAM_IDS = (4099, 4100, 4101, 4102, 4103, 4104)
++DEFAULT_UPSTREAM_PATHS: Mapping[int, Path] = {
++    4099: Path("results/experiment_4099_trm_pool_verifier_discrimination_probe.json"),
++    4100: Path("results/experiment_4100_trm_verifier_rft_conditional.json"),
++    4101: Path("results/experiment_4101_eleventh_game_explore_first.json"),
++    4102: Path("results/experiment_4102_sota_ingestion_trm_self_training.json"),
++    4103: Path("results/experiment_4103_verifier_registry_gaps_hygiene.json"),
++    4104: Path("results/experiment_4104_hardware_continuity.json"),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "headline_outcome",
++    "upstream_provenance",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. The milestone's decision-grade summary; an honest "
++        "negative ('verifier does not discriminate on TRM grids') is a COMPLETE, "
++        "valuable verdict."
++    ),
++    "headline_outcome": (
++        "One of {verifier_rft_on_trm_validated, "
++        "honest_negative_no_grid_discrimination, trainer_derisked_science_open} -- "
++        "forces a single unambiguous read of the pivot's first decision-grade result."
++    ),
++    "upstream_provenance": (
++        "{experiment_id, fields_imported, sha256} per cited upstream -- the audit "
++        "trail that proves the capstone synthesizes real measurements, not invented "
++        "numbers."
++    ),
++}
++
++
++def is_sha256(value: object) -> bool:
++    """Return true only for lowercase SHA-256 hex digests."""
++
++    return (
++        isinstance(value, str)
++        and len(value) == 64
++        and all(ch in "0123456789abcdef" for ch in value)
++    )
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Load one upstream JSON artifact as an object."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} did not contain a JSON object")  # pragma: no cover
++    return payload
++
++
++def sha256_file(path: Path) -> str:
++    """Hash an upstream artifact so the capstone can be audited later."""
++
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def relative_to_root(root: Path, path: Path) -> str:
++    """Return stable repository-relative paths in the artifact."""
++
++    try:
++        return str(path.relative_to(root))
++    except ValueError:  # pragma: no cover
++        return str(path)
++
++
++def _fallback_path(root: Path, experiment_id: int) -> Path | None:
++    matches = sorted((root / "results").glob(f"experiment_{experiment_id}_*.json"))
++    return matches[0] if matches else None
++
++
++def selected_upstream_paths(root: Path | str) -> dict[int, Path | None]:
++    """Select the intended artifact for every .379 upstream id."""
++
++    root_path = Path(root)
++    paths: dict[int, Path | None] = {}
++    for experiment_id in UPSTREAM_IDS:
++        default = root_path / DEFAULT_UPSTREAM_PATHS[experiment_id]
++        paths[experiment_id] = (
++            default if default.exists() else _fallback_path(root_path, experiment_id)
++        )
++    return paths
++
++
++def run_summarize_artifact(root: Path, path: Path) -> JsonDict:  # pragma: no cover
++    """Run the mandated artifact reader before importing upstream fields."""
++
++    completed = subprocess.run(
++        [str(PYTHON_BIN), "scripts/summarize_artifact.py", str(path)],
++        cwd=root,
++        text=True,
++        capture_output=True,
++        check=False,
++    )
++    return {
++        "returncode": completed.returncode,
++        "stdout": completed.stdout,
++        "stderr": completed.stderr,
++    }
++
++
++def summarize_existing_artifacts(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    supplied: Mapping[int, Mapping[str, Any]] | None,
++) -> dict[int, JsonDict]:
++    """Return summarize_artifact status for every upstream artifact that exists."""
++
++    statuses: dict[int, JsonDict] = {}
++    for experiment_id, path in paths.items():
++        if path is None:
++            continue
++        if supplied is not None and experiment_id in supplied:
++            statuses[experiment_id] = dict(supplied[experiment_id])
++        else:  # pragma: no cover
++            statuses[experiment_id] = run_summarize_artifact(root, path)
++    return statuses
++
++
++def flagged(payload: Mapping[str, Any] | None) -> bool:
++    """Return whether an upstream is stamped adversarial."""
++
++    return isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++
++
++def verdict_text(payload: Mapping[str, Any] | None) -> str:
++    """Extract an upstream honest verdict without coercing non-strings."""
++
++    value = payload.get("honest_verdict") if isinstance(payload, Mapping) else None
++    return value if isinstance(value, str) else ""
++
++
++def invoked(payload: Mapping[str, Any] | None) -> bool:
++    """Return false for missing or explicitly blocked upstream artifacts."""
++
++    text = verdict_text(payload)
++    return (
++        bool(text)
++        and not text.startswith(("blocked_", "blocked:"))
++        and str_metric(payload, "status") != "blocked"
++    )
++
++
++def str_metric(payload: Mapping[str, Any] | None, field: str) -> str:
++    """Extract a string metric without accepting numbers or booleans."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, str) else ""
++
++
++def bool_metric(payload: Mapping[str, Any] | None, field: str) -> bool:
++    """Extract a JSON boolean without truthifying strings or integers."""
++
++    return isinstance(payload, Mapping) and payload.get(field) is True
++
++
++def int_metric(payload: Mapping[str, Any] | None, field: str) -> int:
++    """Extract an integer counter while rejecting booleans."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, int) and not isinstance(value, bool) else 0
++
++
++def float_metric(payload: Mapping[str, Any] | None, field: str) -> float:
++    """Extract a numeric metric while rejecting booleans and strings."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else 0.0
++
++
++def list_float_metric(payload: Mapping[str, Any] | None, field: str) -> list[float]:
++    """Extract numeric confidence interval endpoints without coercing strings."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    if not isinstance(value, list):
++        return []
++    return [
++        float(item)
++        for item in value
++        if isinstance(item, int | float) and not isinstance(item, bool)
++    ]
++
++
++def _nested(payload: Mapping[str, Any] | None, path: tuple[str, ...]) -> Any:
++    current: Any = payload
++    for key in path:
++        if not isinstance(current, Mapping):
++            return None
++        current = current.get(key)
++    return current
++
++
++def nested_str(payload: Mapping[str, Any] | None, path: tuple[str, ...]) -> str:
++    """Read a nested string metric without coercion."""
++
++    value = _nested(payload, path)
++    return value if isinstance(value, str) else ""
++
++
++def nested_bool(payload: Mapping[str, Any] | None, path: tuple[str, ...]) -> bool:
++    """Read a nested boolean metric without coercion."""
++
++    return _nested(payload, path) is True
++
++
++def nested_float(payload: Mapping[str, Any] | None, path: tuple[str, ...]) -> float:
++    """Read a nested numeric metric without accepting booleans."""
++
++    value = _nested(payload, path)
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else 0.0
++
++
++def nested_int(payload: Mapping[str, Any] | None, path: tuple[str, ...]) -> int:
++    """Read a nested integer counter without accepting booleans."""
++
++    value = _nested(payload, path)
++    return value if isinstance(value, int) and not isinstance(value, bool) else 0
++
++
++def nested_float_list(payload: Mapping[str, Any] | None, path: tuple[str, ...]) -> list[float]:
++    """Read nested numeric list values such as bootstrap CIs."""
++
++    value = _nested(payload, path)
++    if not isinstance(value, list):
++        return []
++    return [
++        float(item)
++        for item in value
++        if isinstance(item, int | float) and not isinstance(item, bool)
++    ]
++
++
++def _ci_excludes_zero_positive(ci: list[float]) -> bool:
++    return len(ci) == 2 and ci[0] > 0.0 and ci[1] > 0.0
++
++
++def trm_grid_discrimination(
++    payload: Mapping[str, Any] | None,
++    registry_payload: Mapping[str, Any] | None,
++    *,
++    was_skipped: bool,
++) -> JsonDict:
++    """Summarize whether a verifier reranker discriminates native TRM grids."""
++
++    if was_skipped:
++        status = "skipped_flagged"
++    elif not isinstance(payload, Mapping):
++        status = "missing"
++    elif not invoked(payload):
++        status = "blocked"
++    else:
++        status = (
++            "verifier_beats_trm_vote"
++            if bool_metric(payload, "verifier_beats_trm_vote")
++            else "no_grid_discrimination"
++        )
++
++    best_reranker = str_metric(payload, "best_reranker")
++    captured = float_metric(payload, "captured_pp_directional")
++    bottleneck = ""
++    if status == "no_grid_discrimination":
++        bottleneck = nested_str(registry_payload, ("exp4099_gap", "missing_discriminator")) or (
++            "signal_separating_correct_trm_grid_from_confident_wrong_trm_grid_on_pool"
++        )
++    return {
++        "status": status,
++        "verifier_beats_trm_vote": status == "verifier_beats_trm_vote",
++        "captured_pp": captured if status in {"verifier_beats_trm_vote", "no_grid_discrimination"} else 0.0,
++        "prior_captured_pp": PRIOR_CAPTURED_PP,
++        "delta_vs_prior_pp": (
++            captured - PRIOR_CAPTURED_PP
++            if status in {"verifier_beats_trm_vote", "no_grid_discrimination"}
++            else 0.0
++        ),
++        "best_reranker": best_reranker,
++        "pool_n_tasks": int_metric(payload, "pool_n_tasks") or int_metric(payload, "n_tasks_scored"),
++        "underpowered": bool_metric(payload, "underpowered"),
++        "trm_vote_pass2": nested_float(payload, ("per_reranker", "TRM_VOTE", "pass@2")),
++        "best_reranker_pass2": nested_float(payload, ("per_reranker", best_reranker, "pass@2")),
++        "captured_pp_ci95": nested_float_list(
++            payload, ("per_reranker", best_reranker, "captured_pp_ci95")
++        ),
++        "bottleneck": bottleneck,
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def verifier_rft_followthrough(
++    payload: Mapping[str, Any] | None,
++    *,
++    verifier_beat_vote: bool,
++    was_skipped: bool,
++) -> JsonDict:
++    """Summarize Exp 4100 only when Exp 4099 made RFT scientifically warranted."""
++
++    if was_skipped:
++        return {
++            "status": "skipped_flagged",
++            "branch_taken": "",
++            "rft_vs_ablation_delta": None,
++            "native_trainer_checkpoint": "skipped_flagged",
++            "trm_native_trainer_checkpoint_ok": False,
++            "honest_verdict": "",
++        }
++    if not verifier_beat_vote:
++        return {
++            "status": "not_applicable_no_grid_discrimination",
++            "branch_taken": "",
++            "rft_vs_ablation_delta": None,
++            "native_trainer_checkpoint": "not_applicable_no_grid_discrimination",
++            "trm_native_trainer_checkpoint_ok": False,
++            "honest_verdict": "",
++        }
++    if not isinstance(payload, Mapping):
++        return {
++            "status": "missing",
++            "branch_taken": "",
++            "rft_vs_ablation_delta": None,
++            "native_trainer_checkpoint": "missing",
++            "trm_native_trainer_checkpoint_ok": False,
++            "honest_verdict": "",
++        }
++    if not invoked(payload):
++        return {
++            "status": "blocked",
++            "branch_taken": str_metric(payload, "branch_taken"),
++            "rft_vs_ablation_delta": None,
++            "native_trainer_checkpoint": "blocked",
++            "trm_native_trainer_checkpoint_ok": False,
++            "honest_verdict": verdict_text(payload),
++        }
++
++    delta_payload = payload.get("rft_vs_ablation_delta")
++    delta_map = delta_payload if isinstance(delta_payload, Mapping) else {}
++    delta = float_metric(delta_map, "delta")
++    ci = list_float_metric(delta_map, "ci95")
++    checkpoint_ok = bool_metric(payload, "trm_native_trainer_checkpoint_ok") or nested_bool(
++        payload, ("native_smoke", "checkpoint_reload_ok")
++    )
++    status = "rft_beats_vote_sft" if delta > 0.0 and _ci_excludes_zero_positive(ci) else (
++        str_metric(delta_map, "status") or "measured_null"
++    )
++    if status == "rft_beats_vote_sft" and not checkpoint_ok:
++        status = "rft_beats_without_checkpoint"
++    return {
++        "status": status,
++        "branch_taken": str_metric(payload, "branch_taken"),
++        "rft_vs_ablation_delta": {
++            "delta": delta,
++            "ci95": ci,
++            "metric": str_metric(delta_map, "metric"),
++        },
++        "native_trainer_checkpoint": "checkpoint_ok" if checkpoint_ok else "checkpoint_missing",
++        "trm_native_trainer_checkpoint_ok": checkpoint_ok,
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def arc_games(
++    payload: Mapping[str, Any] | None,
++    prior_payload: Mapping[str, Any] | None,
++    *,
++    was_skipped: bool,
++) -> JsonDict:
++    """Carry the clean ARC games-solved count without inferring hidden progress."""
++
++    if was_skipped:
++        prior = int_metric(prior_payload, "total_games_solved")
++        return {
++            "status": "skipped_flagged",
++            "prior_total_games_solved": prior,
++            "total_games_solved": prior,
++            "game_solved": False,
++            "real_env_confirmed": False,
++            "target_game": "",
++            "first_solve_at_action": 0,
++            "honest_verdict": "",
++        }
++    if not isinstance(payload, Mapping):
++        prior = int_metric(prior_payload, "total_games_solved")
++        return {
++            "status": "missing",
++            "prior_total_games_solved": prior,
++            "total_games_solved": prior,
++            "game_solved": False,
++            "real_env_confirmed": False,
++            "target_game": "",
++            "first_solve_at_action": 0,
++            "honest_verdict": "",
++        }
++
++    clean = invoked(payload)
++    prior = int_metric(payload, "prior_total_games_solved") or int_metric(
++        prior_payload, "total_games_solved"
++    )
++    solved = clean and bool_metric(payload, "game_solved") and bool_metric(
++        payload, "real_env_confirmed"
++    )
++    total = int_metric(payload, "total_games_solved") if clean else prior
++    return {
++        "status": "new_game_solved" if solved else "measured_no_new_solve" if clean else "blocked",
++        "prior_total_games_solved": prior,
++        "total_games_solved": total or prior,
++        "game_solved": solved,
++        "real_env_confirmed": solved,
++        "target_game": str_metric(payload, "target_game") if clean else "",
++        "first_solve_at_action": int_metric(payload, "first_solve_at_action") if clean else 0,
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def sota_ingestion(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Summarize clean .380 method candidates from the SOTA ingestion artifact."""
++
++    methods = payload.get("methods_mapped") if isinstance(payload, Mapping) else None
++    method_rows = [dict(item) for item in methods if isinstance(item, Mapping)] if isinstance(methods, list) else []
++    return {
++        "included": invoked(payload),
++        "flagged_for_v380": str_metric(payload, "flagged_for_v380"),
++        "methods_mapped": [
++            {"name": str_metric(row, "name"), "arxiv_id": str_metric(row, "arxiv_id")}
++            for row in method_rows
++        ],
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def registry_gap_hygiene(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Summarize registry and gap reconciliation without re-importing flagged Exp 4100."""
++
++    gaps = payload.get("gaps_updated") if isinstance(payload, Mapping) else None
++    gap_rows = [item for item in gaps if isinstance(item, str)] if isinstance(gaps, list) else []
++    return {
++        "included": invoked(payload),
++        "gaps_updated": gap_rows,
++        "regression_guard_passed": bool_metric(payload, "regression_guard_passed"),
++        "trm_grid_gap_status": nested_str(payload, ("exp4099_gap", "status")),
++        "missing_discriminator": nested_str(payload, ("exp4099_gap", "missing_discriminator")),
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def hardware_continuity(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Carry hardware continuity separately from the scientific TRM verdict."""
++
++    reachability = payload.get("per_board_reachability") if isinstance(payload, Mapping) else None
++    return {
++        "included": invoked(payload),
++        "kv260_terminal_confirmed": bool_metric(payload, "kv260_terminal_confirmed"),
++        "per_board_reachability": dict(reachability) if isinstance(reachability, Mapping) else {},
++        "gatemate_step_taken": str_metric(payload, "gatemate_step_taken"),
++        "polarfire_step_taken": str_metric(payload, "polarfire_step_taken"),
++        "honest_verdict": verdict_text(payload),
++    }
++
++
++def candidate_v380_directions(
++    discrimination: Mapping[str, Any],
++    sota: Mapping[str, Any],
++    registry: Mapping[str, Any],
++    hardware: Mapping[str, Any],
++) -> list[str]:
++    """List next directions implied by clean upstreams, led by the named bottleneck."""
++
++    directions: list[str] = []
++    if discrimination.get("status") == "no_grid_discrimination":
++        gap = registry.get("gaps_updated", [])
++        gap_name = "GAP-TRM-GRID-DISCRIMINATION" if "GAP-TRM-GRID-DISCRIMINATION" in gap else (
++            "TRM-grid-discrimination"
++        )
++        directions.append(
++            f"{gap_name}: build a discriminator that separates correct TRM grids from "
++            "confident wrong TRM grids before another verifier-RFT run."
++        )
++    flagged = str(sota.get("flagged_for_v380", ""))
++    if flagged:
++        directions.append(f"{flagged}: test rejected-trace selection only after grid discrimination improves.")
++    method_names = [row.get("name", "") for row in sota.get("methods_mapped", []) if isinstance(row, Mapping)]
++    for name in method_names:
++        if "process rewards" in str(name).lower():
++            directions.append(f"{name}: score recursive grid-edit steps instead of only final grids.")
++        if "imperfect-verifier" in str(name).lower():
++            directions.append(f"{name}: carry FP/FN correction into any TRM reward labels.")
++    if hardware.get("included") is True:
++        directions.append("Keep hardware continuity separate from TRM science claims until a clean trainer run exists.")
++    return directions
++
++
++def headline_outcome(discrimination: Mapping[str, Any], rft: Mapping[str, Any]) -> str:
++    """Choose the single enumerated outcome the milestone must report."""
++
++    if discrimination.get("status") == "no_grid_discrimination":
++        return "honest_negative_no_grid_discrimination"
++    if (
++        discrimination.get("status") == "verifier_beats_trm_vote"
++        and rft.get("status") == "rft_beats_vote_sft"
++        and rft.get("trm_native_trainer_checkpoint_ok") is True
++    ):
++        return "verifier_rft_on_trm_validated"
++    return "trainer_derisked_science_open"
++
++
++def headline_answer(
++    discrimination: Mapping[str, Any],
++    rft: Mapping[str, Any],
++    games: Mapping[str, Any],
++) -> JsonDict:
++    """Answer the three concrete headline questions in machine-checkable fields."""
++
++    return {
++        "verifier_beats_trm_vote": discrimination.get("verifier_beats_trm_vote") is True,
++        "captured_pp_vs_prior": {
++            "prior_captured_pp": PRIOR_CAPTURED_PP,
++            "captured_pp": float(discrimination.get("captured_pp", 0.0)),
++            "delta_vs_prior_pp": float(discrimination.get("delta_vs_prior_pp", 0.0)),
++        },
++        "best_reranker": str(discrimination.get("best_reranker", "")),
++        "trm_vote_pass2": float(discrimination.get("trm_vote_pass2", 0.0)),
++        "best_reranker_pass2": float(discrimination.get("best_reranker_pass2", 0.0)),
++        "verifier_rft_beat_vote_sft_ablation": rft.get("status") == "rft_beats_vote_sft",
++        "native_trm_trainer_checkpoint_produced": (
++            rft.get("native_trainer_checkpoint") == "checkpoint_ok"
++        ),
++        "total_arc_games_solved": int(games.get("total_games_solved", 0)),
++    }
++
++
++def flagged_artifacts_skipped(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    skipped_ids: set[int],
++) -> list[JsonDict]:
++    """Record upstreams excluded before any metric import."""
++
++    rows: list[JsonDict] = []
++    for experiment_id in sorted(skipped_ids):
++        path = paths[experiment_id]
++        rows.append(
++            {
++                "experiment_id": experiment_id,
++                "path": relative_to_root(root, path) if path is not None else "",
++                "reason": "flagged_adversarial:true"
++                if flagged(upstreams[experiment_id])
++                else "unknown",
++                "sha256": sha256_file(path) if path is not None else "",
++            }
++        )
++    return rows
++
++
++def imported_fields_by_id(
++    discrimination: Mapping[str, Any],
++    rft: Mapping[str, Any],
++    games: Mapping[str, Any],
++    clean_ids: set[int],
++) -> dict[int, list[str]]:
++    """Declare exactly which upstream fields shaped the capstone headline."""
++
++    fields: dict[int, list[str]] = {experiment_id: [] for experiment_id in UPSTREAM_IDS}
++    if 4099 in clean_ids:
++        fields[4099] = [
++            "verifier_beats_trm_vote",
++            "captured_pp_directional",
++            "best_reranker",
++            "pool_n_tasks",
++            "per_reranker.TRM_VOTE.pass@2",
++            f"per_reranker.{discrimination.get('best_reranker', '')}.pass@2",
++        ]
++    if 4100 in clean_ids and rft.get("status") not in {
++        "not_applicable_no_grid_discrimination",
++        "skipped_flagged",
++        "missing",
++    }:
++        fields[4100] = [
++            "branch_taken",
++            "rft_vs_ablation_delta",
++            "trm_native_trainer_checkpoint_ok",
++        ]
++    if 4101 in clean_ids:
++        fields[4101] = [
++            "game_solved",
++            "real_env_confirmed",
++            "prior_total_games_solved",
++            "total_games_solved",
++            "target_game",
++            "first_solve_at_action",
++        ]
++    if 4102 in clean_ids:
++        fields[4102] = ["flagged_for_v380", "methods_mapped"]
++    if 4103 in clean_ids:
++        fields[4103] = [
++            "gaps_updated",
++            "regression_guard_passed",
++            "exp4099_gap.missing_discriminator",
++        ]
++    if 4104 in clean_ids:
++        fields[4104] = [
++            "kv260_terminal_confirmed",
++            "per_board_reachability",
++            "gatemate_step_taken",
++            "polarfire_step_taken",
++        ]
++    return fields
++
++
++def upstream_provenance(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    summaries: Mapping[int, Mapping[str, Any]],
++    skipped_ids: set[int],
++    fields_by_id: Mapping[int, list[str]],
++) -> list[JsonDict]:
++    """Cite every existing upstream sha and name the fields actually imported."""
++
++    rows: list[JsonDict] = []
++    for experiment_id in UPSTREAM_IDS:
++        path = paths[experiment_id]
++        if path is None:
++            continue
++        skipped = experiment_id in skipped_ids
++        rows.append(
++            {
++                "experiment_id": experiment_id,
++                "path": relative_to_root(root, path),
++                "sha256": sha256_file(path),
++                "fields_imported": [] if skipped else list(fields_by_id.get(experiment_id, [])),
++                "skipped": skipped,
++                "skip_reason": "flagged_adversarial:true" if skipped else "",
++                "honest_verdict": verdict_text(upstreams[experiment_id])
++                if isinstance(upstreams[experiment_id], Mapping)
++                else "",
++                "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++            }
++        )
++    return rows
++
++
++def missing_upstream_artifacts(paths: Mapping[int, Path | None]) -> list[JsonDict]:
++    """Record missing upstream artifacts without turning absence into a hidden gate."""
++
++    return [
++        {"experiment_id": experiment_id}
++        for experiment_id in UPSTREAM_IDS
++        if paths[experiment_id] is None
++    ]
++
++
++def upstream_artifact_state(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    summaries: Mapping[int, Mapping[str, Any]],
++    skipped_ids: set[int],
++    clean_ids: set[int],
++) -> dict[str, JsonDict]:
++    """Expose inclusion state so skipped and missing inputs are auditable."""
++
++    state: dict[str, JsonDict] = {}
++    for experiment_id in UPSTREAM_IDS:
++        path = paths[experiment_id]
++        payload = upstreams[experiment_id]
++        state[str(experiment_id)] = {
++            "exists": path is not None,
++            "path": relative_to_root(root, path) if path is not None else "",
++            "honest_verdict": verdict_text(payload) if isinstance(payload, Mapping) else "missing",
++            "flagged_adversarial": flagged(payload),
++            "included": experiment_id in clean_ids,
++            "skipped": experiment_id in skipped_ids,
++            "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++        }
++    return state
++
++
++def verdict(
++    outcome: str,
++    discrimination: Mapping[str, Any],
++    games_solved_total: int,
++    skipped_count: int,
++) -> str:
++    """Build the terminal-prefix .379 headline."""
++
++    prefix = "success:" if outcome == "verifier_rft_on_trm_validated" else "complete:"
++    best = str(discrimination.get("best_reranker", "")) or "missing"
++    captured = float(discrimination.get("captured_pp", 0.0))
++    return (
++        f"{prefix} capstone_v379_{outcome}_best_{best}_captured_{captured:.4f}_"
++        f"games{games_solved_total}_flagged_skipped{skipped_count}"
++    )
++
++
++def duration_from(started_s: float, now_s: float | None) -> float:
++    """Compute an honest aggregation duration with a small nonzero floor."""
++
++    end = time.perf_counter() if now_s is None else float(now_s)
++    return max(0.0001, end - started_s)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return a reproducibility checksum excluding the checksum field itself."""
++
++    stable = dict(payload)
++    stable.pop("reproducibility_checksum", None)
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the .379 TRM pivot capstone from landed upstream artifacts."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = selected_upstream_paths(root_path)
++    summaries = summarize_existing_artifacts(root_path, paths, summary_statuses)
++    upstreams: dict[int, Mapping[str, Any] | None] = {
++        experiment_id: read_json_object(path) if path is not None else None
++        for experiment_id, path in paths.items()
++    }
++    skipped_ids = {
++        experiment_id for experiment_id, payload in upstreams.items() if flagged(payload)
++    }
++    clean_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping) and experiment_id not in skipped_ids
++    }
++    clean_upstreams = {experiment_id: upstreams[experiment_id] for experiment_id in clean_ids}
++
++    discrimination = trm_grid_discrimination(
++        clean_upstreams.get(4099),
++        clean_upstreams.get(4103),
++        was_skipped=4099 in skipped_ids,
++    )
++    rft = verifier_rft_followthrough(
++        clean_upstreams.get(4100),
++        verifier_beat_vote=bool(discrimination["verifier_beats_trm_vote"]),
++        was_skipped=4100 in skipped_ids,
++    )
++    games = arc_games(clean_upstreams.get(4101), None, was_skipped=4101 in skipped_ids)
++    sota = sota_ingestion(clean_upstreams.get(4102))
++    registry = registry_gap_hygiene(clean_upstreams.get(4103))
++    hardware = hardware_continuity(clean_upstreams.get(4104))
++    outcome = headline_outcome(discrimination, rft)
++    directions = candidate_v380_directions(discrimination, sota, registry, hardware)
++    fields_by_id = imported_fields_by_id(discrimination, rft, games, clean_ids)
++    skipped = flagged_artifacts_skipped(root_path, paths, upstreams, skipped_ids)
++    total_games = int(games["total_games_solved"])
++
++    artifact: JsonDict = {
++        "schema": "carnot.capstone_v379_4105.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": verdict(outcome, discrimination, total_games, len(skipped)),
++        "headline_outcome": outcome,
++        "headline_answer": headline_answer(discrimination, rft, games),
++        "total_arc_games_solved": total_games,
++        "trm_grid_discrimination": discrimination,
++        "verifier_rft_followthrough": rft,
++        "arc_games": games,
++        "candidate_v380_directions": directions,
++        "sota_ingestion": sota,
++        "registry_gap_hygiene": registry,
++        "hardware_continuity": hardware,
++        "flagged_artifacts_skipped": skipped,
++        "upstream_provenance": upstream_provenance(
++            root_path, paths, upstreams, summaries, skipped_ids, fields_by_id
++        ),
++        "missing_upstream_artifacts": missing_upstream_artifacts(paths),
++        "upstream_artifact_state": upstream_artifact_state(
++            root_path, paths, upstreams, summaries, skipped_ids, clean_ids
++        ),
++        "summarize_artifact_status": {
++            str(experiment_id): {
++                "returncode": status.get("returncode"),
++                "stdout": status.get("stdout", ""),
++                "stderr": status.get("stderr", ""),
++            }
++            for experiment_id, status in summaries.items()
++        },
++        "duration_s": duration_from(start, now_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": RANDOM_SEED,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the fields that protect the .379 headline from drift."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")  # pragma: no cover
++    if "gated_on" in artifact:
++        raise ValueError("capstone must not emit gated_on")  # pragma: no cover
++    verdict_value = str(artifact.get("honest_verdict", ""))
++    if not verdict_value.startswith(("complete:", "success:", "blocked_", "blocked:")):
++        raise ValueError("honest_verdict must use a terminal prefix")  # pragma: no cover
++    if artifact.get("headline_outcome") not in HEADLINE_OUTCOMES:
++        raise ValueError("headline_outcome must be one of the enumerated values")
++    if not isinstance(artifact.get("total_arc_games_solved"), int) or isinstance(
++        artifact.get("total_arc_games_solved"), bool
++    ):
++        raise ValueError("total_arc_games_solved must be a bare int")  # pragma: no cover
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")  # pragma: no cover
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be an object")  # pragma: no cover
++    for field, principle in FIELD_PRINCIPLES.items():
++        if principles.get(field) != principle:
++            raise ValueError(f"field_principles.{field} mismatch")  # pragma: no cover
++    provenance = artifact.get("upstream_provenance")
++    if not isinstance(provenance, list):
++        raise ValueError("upstream_provenance must be a list")  # pragma: no cover
++    for row in provenance:
++        if not isinstance(row, Mapping):
++            raise ValueError("upstream_provenance entries must be objects")  # pragma: no cover
++        if not isinstance(row.get("experiment_id"), int):
++            raise ValueError("upstream_provenance entries need integer experiment_id")  # pragma: no cover
++        if not isinstance(row.get("fields_imported"), list) or not all(
++            isinstance(item, str) for item in row.get("fields_imported", [])
++        ):
++            raise ValueError("upstream_provenance fields_imported must be strings")  # pragma: no cover
++        if row.get("skipped") is True and row.get("fields_imported") != []:
++            raise ValueError("skipped upstreams must import no fields")  # pragma: no cover
++        if not is_sha256(row.get("sha256")):
++            raise ValueError("upstream_provenance entries need sha256")
++    if not isinstance(artifact.get("flagged_artifacts_skipped"), list):
++        raise ValueError("flagged_artifacts_skipped must be a list")  # pragma: no cover
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")  # pragma: no cover
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and write the Exp 4105 capstone artifact."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        summary_statuses=summary_statuses,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    validate_artifact(artifact)
++    output = root_path / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 3c6f5ddb2c..7162ca52c9 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T17:09:40.729360+00:00",
+-  "finished_at": "2026-06-12T17:09:40.757907+00:00",
+-  "duration_s": 0.029,
++  "started_at": "2026-06-12T17:24:41.299795+00:00",
++  "finished_at": "2026-06-12T17:24:41.327938+00:00",
++  "duration_s": 0.028,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 1ac45aecd0..0ad282f320 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T17:09:40Z",
++  "run_date": "2026-06-12T17:24:41Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index a5950f7e7c..b858883d5b 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T17:09:41Z",
+-  "finished_at": "2026-06-12T17:09:41Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-12T17:24:42Z",
++  "finished_at": "2026-06-12T17:24:42Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index b310f885cf..92b5804cf9 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T17:09:42Z",
++  "run_date": "2026-06-12T17:24:42Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 0e12c61783..93c4306d7b 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-12T17:09:42Z",
++  "run_date": "2026-06-12T17:24:42Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index b58031e8b2..ecda5f8e94 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-12T17:08:17.540218Z",
+-  "duration_s": 0.05835580825805664,
++  "run_date": "2026-06-12T17:23:19.325637Z",
++  "duration_s": 0.18687891960144043,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "b35fa546d32c291655e387a1d5d942a13085237bb0836777764e081b5dad3b97",
++  "reproducibility_checksum": "b54cd66435ff88de7f62f1ca260b6d321df78b4e41b25337b43bfc590cb35ecb",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "d8b65cdd836cf73717a4db3df0c8f1f1394b7ef6"
++    "adversarial_verify_version": "d2af1cf0e72076e42544ed0781908601546c4904"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index ecfa7586ec..930a881bb2 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-12T17:08:17.662693Z",
+-  "duration_s": 0.0991678237915039,
++  "run_date": "2026-06-12T17:23:19.541927Z",
++  "duration_s": 0.12502837181091309,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e004f3a17b67c3660df84b7f904d7b66b94bf7ba26599b15424f99bb7dd67e3d",
++  "reproducibility_checksum": "d4bd3d1b7981362b83046d6fa5914034fd4b288330ba3718ba2bbf43081051ce",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "d8b65cdd836cf73717a4db3df0c8f1f1394b7ef6"
++    "adversarial_verify_version": "d2af1cf0e72076e42544ed0781908601546c4904"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 0139059e6c..a35ba5edb0 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.141237258911133,
++  "efficiency_gains_ms": 2.159595489501953,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index f814a401b5..06ec3a568a 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-12T17:09:16Z",
++  "run_date": "2026-06-12T17:24:19Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index e1453bacf7..8eb52a7b6c 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000074625015259,
++  "duration_s": 5.000120401382446,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index ae1a3f0ef6..7f7ed86b48 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000094652175903,
++  "duration_s": 10.000072717666626,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 7b6e4428bd..33832f4286 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2870597839355469,
++  "duration_s": 0.23659491539001465,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 696de80e6f..dba1cad267 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.055920897000078185,
++  "duration_s": 0.0540908230000241,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index 1054b89371..aa053ca535 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,28 +1,6 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_transfer": {
+-      "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
+-      },
+-      "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
+-      },
+-      "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
+-      },
+-      "TruthfulQA": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
+-      }
+-    },
+     "tier_low": {
+       "FoVer": {
+         "production": 0.5,
+@@ -88,6 +66,28 @@
+         "architecture_only": 0.5,
+         "delta": 0.0
+       }
++    },
++    "tier_transfer": {
++      "FoVer": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
++      "MBPP": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
++      "HumanEval": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
++      "TruthfulQA": {
++        "production": 0.5,
++        "architecture_only": 0.5,
++        "delta": 0.0
++      }
+     }
+   },
+   "architecture_transfer_verifiers": [],
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_transfer",
+-    "tier_specific"
++    "tier_specific",
++    "tier_transfer"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index d537ee8f35..aec9e94f6e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.4043999903587974e-05,
++  "duration_s": 3.198000013071578e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4105_capstone_v379.json b/results/experiment_4105_capstone_v379.json
+new file mode 100644
+index 0000000000..6328aa4979
+--- /dev/null
++++ b/results/experiment_4105_capstone_v379.json
+@@ -0,0 +1,308 @@
++{
++  "arc_games": {
++    "first_solve_at_action": 13,
++    "game_solved": true,
++    "honest_verdict": "success: eleventh_game_solved_s5i5-18d95033_at_action_13",
++    "prior_total_games_solved": 10,
++    "real_env_confirmed": true,
++    "status": "new_game_solved",
++    "target_game": "s5i5-18d95033",
++    "total_games_solved": 11
++  },
++  "candidate_v380_directions": [
++    "GAP-TRM-GRID-DISCRIMINATION: build a discriminator that separates correct TRM grids from confident wrong TRM grids before another verifier-RFT run.",
++    "vstar_rejected_trace_selector_for_trm_rft: test rejected-trace selection only after grid discrimination improves.",
++    "Imperfect-verifier forward correction: carry FP/FN correction into any TRM reward labels.",
++    "Verifiable process rewards for recursive steps: score recursive grid-edit steps instead of only final grids.",
++    "Keep hardware continuity separate from TRM science claims until a clean trainer run exists."
++  ],
++  "duration_s": 0.21992630799968538,
++  "experiment_id": 4105,
++  "field_principles": {
++    "headline_outcome": "One of {verifier_rft_on_trm_validated, honest_negative_no_grid_discrimination, trainer_derisked_science_open} -- forces a single unambiguous read of the pivot's first decision-grade result.",
++    "honest_verdict": "Terminal-prefixed. The milestone's decision-grade summary; an honest negative ('verifier does not discriminate on TRM grids') is a COMPLETE, valuable verdict.",
++    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail that proves the capstone synthesizes real measurements, not invented numbers."
++  },
++  "flagged_artifacts_skipped": [
++    {
++      "experiment_id": 4100,
++      "path": "results/experiment_4100_trm_verifier_rft_conditional.json",
++      "reason": "flagged_adversarial:true",
++      "sha256": "d9af9534fb47b4dd868b6be29efb61ee9593d29244fe06283b6cac468bb1e467"
++    }
++  ],
++  "hardware_continuity": {
++    "gatemate_step_taken": "gatemate_existing_n16_bitstream_post_flash_detect_blocked",
++    "honest_verdict": "complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
++    "included": true,
++    "kv260_terminal_confirmed": true,
++    "per_board_reachability": {
++      "gatemate": true,
++      "kv260": true,
++      "polarfire": true
++    },
++    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
++  },
++  "headline_answer": {
++    "best_reranker": "K_OF_N_AGREEMENT",
++    "best_reranker_pass2": 0.2742,
++    "captured_pp_vs_prior": {
++      "captured_pp": 0.0,
++      "delta_vs_prior_pp": 0.0,
++      "prior_captured_pp": 0.0
++    },
++    "native_trm_trainer_checkpoint_produced": false,
++    "total_arc_games_solved": 11,
++    "trm_vote_pass2": 0.2742,
++    "verifier_beats_trm_vote": false,
++    "verifier_rft_beat_vote_sft_ablation": false
++  },
++  "headline_outcome": "honest_negative_no_grid_discrimination",
++  "honest_verdict": "complete: capstone_v379_honest_negative_no_grid_discrimination_best_K_OF_N_AGREEMENT_captured_0.0000_games11_flagged_skipped1",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "missing_upstream_artifacts": [],
++  "random_seed": 4105,
++  "registry_gap_hygiene": {
++    "gaps_updated": [
++      "GAP-TRM-GRID-DISCRIMINATION",
++      "GAP-TRM-VERIFIER-RFT-4100"
++    ],
++    "honest_verdict": "complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok",
++    "included": true,
++    "missing_discriminator": "signal_separating_correct_trm_grid_from_confident_wrong_trm_grid_on_pool",
++    "regression_guard_passed": true,
++    "trm_grid_gap_status": "open_captured_pp_0.0000"
++  },
++  "reproducibility_checksum": "404596cd7bf872a188f07c107ac296676ef7f91cd7d706fe18df7bf27039e759",
++  "schema": "carnot.capstone_v379_4105.v1",
++  "sota_ingestion": {
++    "flagged_for_v380": "vstar_rejected_trace_selector_for_trm_rft",
++    "honest_verdict": "complete: sota_ingestion_trm_self_training_mapped",
++    "included": true,
++    "methods_mapped": [
++      {
++        "arxiv_id": "2402.06457",
++        "name": "V-STaR keep-rejected verifier training"
++      },
++      {
++        "arxiv_id": "2203.14465",
++        "name": "STaR / ReST generate-filter-improve loop"
++      },
++      {
++        "arxiv_id": "2511.02886",
++        "name": "TTA-TRM full fine-tuning with verifier admission"
++      },
++      {
++        "arxiv_id": "2510.00915",
++        "name": "Imperfect-verifier forward correction"
++      },
++      {
++        "arxiv_id": "2605.10325",
++        "name": "Verifiable process rewards for recursive steps"
++      }
++    ]
++  },
++  "summarize_artifact_status": {
++    "4099": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4099_trm_pool_verifier_discrimination_probe.json\n------------------------------------------------------------------------------\n  verdict          : complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 3.779   substrate: offline_saved_trm_candidate_grid_rerank_zero_codex\n  headline metrics :\n      n_tasks_scored = 62\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4100": {
++      "returncode": 2,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4100_trm_verifier_rft_conditional.json\n------------------------------------------------------------------------------\n  verdict          : complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 15.682   substrate: native_nano_trm_trainer_checkpoint_smoke\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=15.682 but artifact references compute-bound markers (GGUF / CUDA / live model). Load\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n==============================================================================\n"
++    },
++    "4101": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4101_eleventh_game_explore_first.json\n------------------------------------------------------------------------------\n  verdict          : success: eleventh_game_solved_s5i5-18d95033_at_action_13\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.442   substrate: offline_arc_agi3_explore_first_first_solve\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4102": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4102_sota_ingestion_trm_self_training.json\n------------------------------------------------------------------------------\n  verdict          : complete: sota_ingestion_trm_self_training_mapped\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: None\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4103": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4103_verifier_registry_gaps_hygiene.json\n------------------------------------------------------------------------------\n  verdict          : complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.233   substrate: verifier_ensemble_against_cached_candidates\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4104": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4104_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 12.197299   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
++    }
++  },
++  "total_arc_games_solved": 11,
++  "trm_grid_discrimination": {
++    "best_reranker": "K_OF_N_AGREEMENT",
++    "best_reranker_pass2": 0.2742,
++    "bottleneck": "signal_separating_correct_trm_grid_from_confident_wrong_trm_grid_on_pool",
++    "captured_pp": 0.0,
++    "captured_pp_ci95": [
++      0.0,
++      0.0
++    ],
++    "delta_vs_prior_pp": 0.0,
++    "honest_verdict": "complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true",
++    "pool_n_tasks": 62,
++    "prior_captured_pp": 0.0,
++    "status": "no_grid_discrimination",
++    "trm_vote_pass2": 0.2742,
++    "underpowered": true,
++    "verifier_beats_trm_vote": false
++  },
++  "upstream_artifact_state": {
++    "4099": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true",
++      "included": true,
++      "path": "results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4100": {
++      "exists": true,
++      "flagged_adversarial": true,
++      "honest_verdict": "complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000",
++      "included": false,
++      "path": "results/experiment_4100_trm_verifier_rft_conditional.json",
++      "skipped": true,
++      "summarize_artifact_returncode": 2
++    },
++    "4101": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "success: eleventh_game_solved_s5i5-18d95033_at_action_13",
++      "included": true,
++      "path": "results/experiment_4101_eleventh_game_explore_first.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4102": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: sota_ingestion_trm_self_training_mapped",
++      "included": true,
++      "path": "results/experiment_4102_sota_ingestion_trm_self_training.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4103": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok",
++      "included": true,
++      "path": "results/experiment_4103_verifier_registry_gaps_hygiene.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4104": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
++      "included": true,
++      "path": "results/experiment_4104_hardware_continuity.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    }
++  },
++  "upstream_provenance": [
++    {
++      "experiment_id": 4099,
++      "fields_imported": [
++        "verifier_beats_trm_vote",
++        "captured_pp_directional",
++        "best_reranker",
++        "pool_n_tasks",
++        "per_reranker.TRM_VOTE.pass@2",
++        "per_reranker.K_OF_N_AGREEMENT.pass@2"
++      ],
++      "honest_verdict": "complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true",
++      "path": "results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
++      "sha256": "2e40df2e99d4238dca8dc82e2d6f53715b134d63ecc04d1a2b4a318cfe59bd0b",
++      "skip_reason": "",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 4100,
++      "fields_imported": [],
++      "honest_verdict": "complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000",
++      "path": "results/experiment_4100_trm_verifier_rft_conditional.json",
++      "sha256": "d9af9534fb47b4dd868b6be29efb61ee9593d29244fe06283b6cac468bb1e467",
++      "skip_reason": "flagged_adversarial:true",
++      "skipped": true,
++      "summarize_artifact_returncode": 2
++    },
++    {
++      "experiment_id": 4101,
++      "fields_imported": [
++        "game_solved",
++        "real_env_confirmed",
++        "prior_total_games_solved",
++        "total_games_solved",
++        "target_game",
++        "first_solve_at_action"
++      ],
++      "honest_verdict": "success: eleventh_game_solved_s5i5-18d95033_at_action_13",
++      "path": "results/experiment_4101_eleventh_game_explore_first.json",
++      "sha256": "063cff537f328d374112cceec9e6eaaf03d6789f458f2f1ecbbd97ff63146067",
++      "skip_reason": "",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 4102,
++      "fields_imported": [
++        "flagged_for_v380",
++        "methods_mapped"
++      ],
++      "honest_verdict": "complete: sota_ingestion_trm_self_training_mapped",
++      "path": "results/experiment_4102_sota_ingestion_trm_self_training.json",
++      "sha256": "572154b13ed2776348778062e6ab466d95464877c91c317de42e3263c95dab45",
++      "skip_reason": "",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 4103,
++      "fields_imported": [
++        "gaps_updated",
++        "regression_guard_passed",
++        "exp4099_gap.missing_discriminator"
++      ],
++      "honest_verdict": "complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok",
++      "path": "results/experiment_4103_verifier_registry_gaps_hygiene.json",
++      "sha256": "a45072a7bfd14d47df2c8e277fb1f25253deafb82718787da26a98556b4c36bf",
++      "skip_reason": "",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 4104,
++      "fields_imported": [
++        "kv260_terminal_confirmed",
++        "per_board_reachability",
++        "gatemate_step_taken",
++        "polarfire_step_taken"
++      ],
++      "honest_verdict": "complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
++      "path": "results/experiment_4104_hardware_continuity.json",
++      "sha256": "b50534ed52c348ef13daa78c2b146bc0acdbb2f8da10be1d0cd69882350475e3",
++      "skip_reason": "",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    }
++  ],
++  "verifier_rft_followthrough": {
++    "branch_taken": "",
++    "honest_verdict": "",
++    "native_trainer_checkpoint": "skipped_flagged",
++    "rft_vs_ablation_delta": null,
++    "status": "skipped_flagged",
++    "trm_native_trainer_checkpoint_ok": false
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ac1123245e..8882a9a67a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T17:07:51Z",
+-  "finished_at": "2026-06-12T17:07:51Z",
++  "started_at": "2026-06-12T17:22:53Z",
++  "finished_at": "2026-06-12T17:22:53Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 4f80e4f0e8..191480406e 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T17:07:51Z",
+-  "finished_at": "2026-06-12T17:07:52Z",
++  "started_at": "2026-06-12T17:22:53Z",
++  "finished_at": "2026-06-12T17:22:53Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 275f8db019..f44b03eb43 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T17:07:52Z",
+-  "finished_at": "2026-06-12T17:07:52Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-12T17:22:53Z",
++  "finished_at": "2026-06-12T17:22:53Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4105_capstone_v379.py b/tests/python/test_experiment_4105_capstone_v379.py
+new file mode 100644
+index 0000000000..a31b5eba55
+--- /dev/null
++++ b/tests/python/test_experiment_4105_capstone_v379.py
+@@ -0,0 +1,317 @@
++"""Tests for Exp 4105 .379 TRM-pivot capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-4105, SCENARIO-CAPSTONE-4105.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.reporting import capstone_v379_4105 as mod
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _summary_statuses(
++    experiment_ids: tuple[int, ...] = mod.UPSTREAM_IDS,
++    *,
++    returncodes: dict[int, int] | None = None,
++) -> dict[int, JsonDict]:
++    overrides = returncodes or {}
++    return {
++        experiment_id: {
++            "returncode": overrides.get(experiment_id, 0),
++            "stdout": f"summarized {experiment_id}",
++            "stderr": "",
++        }
++        for experiment_id in experiment_ids
++    }
++
++
++def _clean_payloads() -> dict[int, JsonDict]:
++    return {
++        4099: {
++            "honest_verdict": "success: verifier_beats_trm_vote",
++            "best_reranker": "STACK_ALL",
++            "captured_pp_directional": 0.08,
++            "verifier_beats_trm_vote": True,
++            "pool_n_tasks": 120,
++            "n_tasks_scored": 120,
++            "underpowered": False,
++            "per_reranker": {
++                "TRM_VOTE": {"pass@2": 0.25},
++                "STACK_ALL": {"pass@2": 0.33, "captured_pp_ci95": [0.02, 0.14]},
++            },
++        },
++        4100: {
++            "honest_verdict": "success: verifier_rft_beats_vote_sft",
++            "branch_taken": "rft",
++            "rft_vs_ablation_delta": {
++                "delta": 0.06,
++                "ci95": [0.01, 0.11],
++                "metric": "heldout_pass@2",
++                "status": "rft_beats_vote_sft",
++            },
++            "trm_native_trainer_checkpoint_ok": True,
++        },
++        4101: {
++            "honest_verdict": "success: eleventh_game_solved_fixture",
++            "game_solved": True,
++            "real_env_confirmed": True,
++            "prior_total_games_solved": 10,
++            "total_games_solved": 11,
++            "target_game": "fixture-game",
++            "first_solve_at_action": 13,
++        },
++        4102: {
++            "honest_verdict": "complete: sota_ingestion_trm_self_training_mapped",
++            "flagged_for_v380": "vstar_rejected_trace_selector_for_trm_rft",
++            "methods_mapped": [
++                {"name": "V-STaR keep-rejected verifier training", "arxiv_id": "2402.06457"},
++                {"name": "Verifiable process rewards for recursive steps", "arxiv_id": "2605.10325"},
++            ],
++        },
++        4103: {
++            "honest_verdict": "complete: registry_gaps_reconciled",
++            "gaps_updated": ["GAP-TRM-GRID-DISCRIMINATION"],
++            "regression_guard_passed": True,
++            "exp4099_gap": {
++                "gap_id": "GAP-TRM-GRID-DISCRIMINATION",
++                "missing_discriminator": "signal_separating_correct_trm_grid_from_wrong_grid",
++            },
++        },
++        4104: {
++            "honest_verdict": "complete: hardware_continuity",
++            "kv260_terminal_confirmed": True,
++            "per_board_reachability": {"kv260": True, "gatemate": True, "polarfire": True},
++            "gatemate_step_taken": "gatemate_fixture",
++            "polarfire_step_taken": "polarfire_fixture",
++        },
++    }
++
++
++def _write_default_artifacts(root: Path, payloads: dict[int, JsonDict]) -> None:
++    for experiment_id, payload in payloads.items():
++        _write_json(root / mod.DEFAULT_UPSTREAM_PATHS[experiment_id], payload)
++
++
++def test_req_capstone_4105_spec_anchor_exists() -> None:
++    """REQ-CAPSTONE-4105: OpenSpec declares the .379 capstone contract."""
++
++    spec = Path("openspec/capabilities/capstone/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4105" in spec
++    assert "SCENARIO-CAPSTONE-4105" in spec
++    assert "headline_outcome" in spec
++    assert "upstream_provenance" in spec
++    assert "honest_negative_no_grid_discrimination" in spec
++
++
++def test_scenario_capstone_4105_current_artifacts_report_honest_negative() -> None:
++    """SCENARIO-CAPSTONE-4105: current artifacts skip flagged exp4100 metrics."""
++
++    artifact = mod.build_artifact(
++        Path.cwd(),
++        summary_statuses=_summary_statuses(returncodes={4100: 2}),
++        started_s=10.0,
++        now_s=12.0,
++    )
++
++    mod.validate_artifact(artifact)
++
++    assert artifact["headline_outcome"] == "honest_negative_no_grid_discrimination"
++    assert artifact["honest_verdict"].startswith(
++        "complete: capstone_v379_honest_negative_no_grid_discrimination_"
++        "best_K_OF_N_AGREEMENT_captured_0.0000_games11_flagged_skipped1"
++    )
++    assert artifact["headline_answer"]["verifier_beats_trm_vote"] is False
++    assert artifact["headline_answer"]["captured_pp_vs_prior"] == {
++        "prior_captured_pp": 0.0,
++        "captured_pp": 0.0,
++        "delta_vs_prior_pp": 0.0,
++    }
++    assert artifact["trm_grid_discrimination"]["bottleneck"] == (
++        "signal_separating_correct_trm_grid_from_confident_wrong_trm_grid_on_pool"
++    )
++    assert artifact["verifier_rft_followthrough"]["status"] == "skipped_flagged"
++    assert artifact["verifier_rft_followthrough"]["rft_vs_ablation_delta"] is None
++    assert artifact["verifier_rft_followthrough"]["native_trainer_checkpoint"] == "skipped_flagged"
++    assert artifact["total_arc_games_solved"] == 11
++    assert artifact["arc_games"]["target_game"] == "s5i5-18d95033"
++    assert "GAP-TRM-GRID-DISCRIMINATION" in artifact["candidate_v380_directions"][0]
++
++    skipped = artifact["flagged_artifacts_skipped"]
++    assert [row["experiment_id"] for row in skipped] == [4100]
++    assert skipped[0]["sha256"] == hashlib.sha256(
++        Path("results/experiment_4100_trm_verifier_rft_conditional.json").read_bytes()
++    ).hexdigest()
++
++    provenance = {row["experiment_id"]: row for row in artifact["upstream_provenance"]}
++    assert set(provenance) == set(mod.UPSTREAM_IDS)
++    assert provenance[4100]["fields_imported"] == []
++    assert provenance[4100]["skipped"] is True
++    assert provenance[4099]["sha256"] == hashlib.sha256(
++        Path("results/experiment_4099_trm_pool_verifier_discrimination_probe.json").read_bytes()
++    ).hexdigest()
++    assert "verifier_beats_trm_vote" in provenance[4099]["fields_imported"]
++
++
++def test_req_capstone_4105_clean_fixture_validates_verifier_rft(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4105: clean verifier win plus RFT win validates the TRM pivot."""
++
++    _write_default_artifacts(tmp_path, _clean_payloads())
++
++    artifact = mod.build_artifact(
++        tmp_path, summary_statuses=_summary_statuses(), started_s=1.0, now_s=1.5
++    )
++
++    mod.validate_artifact(artifact)
++
++    assert artifact["headline_outcome"] == "verifier_rft_on_trm_validated"
++    assert artifact["honest_verdict"].startswith(
++        "success: capstone_v379_verifier_rft_on_trm_validated_"
++        "best_STACK_ALL_captured_0.0800_games11_flagged_skipped0"
++    )
++    assert artifact["verifier_rft_followthrough"]["status"] == "rft_beats_vote_sft"
++    assert artifact["verifier_rft_followthrough"]["rft_vs_ablation_delta"]["delta"] == 0.06
++    assert artifact["verifier_rft_followthrough"]["rft_vs_ablation_delta"]["ci95"] == [0.01, 0.11]
++    assert artifact["verifier_rft_followthrough"]["native_trainer_checkpoint"] == "checkpoint_ok"
++    assert artifact["headline_answer"]["native_trm_trainer_checkpoint_produced"] is True
++    assert artifact["flagged_artifacts_skipped"] == []
++    assert {row["experiment_id"] for row in artifact["upstream_provenance"]} == set(
++        mod.UPSTREAM_IDS
++    )
++
++
++def test_req_capstone_4105_trainer_derisked_branch_is_distinct(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4105: clean trainer success without RFT win leaves science open."""
++
++    payloads = _clean_payloads()
++    payloads[4100]["rft_vs_ablation_delta"] = {
++        "delta": 0.0,
++        "ci95": [-0.03, 0.03],
++        "metric": "heldout_pass@2",
++        "status": "measured_null",
++    }
++    _write_default_artifacts(tmp_path, payloads)
++
++    artifact = mod.build_artifact(
++        tmp_path, summary_statuses=_summary_statuses(), started_s=2.0, now_s=2.25
++    )
++
++    mod.validate_artifact(artifact)
++
++    assert artifact["headline_outcome"] == "trainer_derisked_science_open"
++    assert artifact["honest_verdict"].startswith(
++        "complete: capstone_v379_trainer_derisked_science_open_"
++        "best_STACK_ALL_captured_0.0800_games11_flagged_skipped0"
++    )
++    assert artifact["verifier_rft_followthrough"]["status"] == "measured_null"
++    assert artifact["headline_answer"]["verifier_rft_beat_vote_sft_ablation"] is False
++    assert artifact["headline_answer"]["native_trm_trainer_checkpoint_produced"] is True
++
++
++def test_scenario_capstone_4105_write_artifact_validates_output(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4105: write_artifact emits the required deliverable JSON."""
++
++    _write_default_artifacts(tmp_path, _clean_payloads())
++
++    output = mod.write_artifact(
++        tmp_path,
++        output_path=Path("results/experiment_4105_capstone_v379.json"),
++        summary_statuses=_summary_statuses(),
++        started_s=3.0,
++        now_s=3.5,
++    )
++
++    payload = json.loads(output.read_text(encoding="utf-8"))
++    mod.validate_artifact(payload)
++    assert payload["experiment_id"] == 4105
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++
++
++def test_req_capstone_4105_validation_and_branch_states(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4105: helpers keep missing, flagged, and invalid states explicit."""
++
++    fallback = tmp_path / "results/experiment_4099_fixture.json"
++    _write_json(fallback, {"honest_verdict": "complete: fallback"})
++    paths = mod.selected_upstream_paths(tmp_path)
++    statuses = mod.summarize_existing_artifacts(tmp_path, paths, {4099: {"returncode": 0}})
++    assert paths[4099] == fallback
++    assert paths[4100] is None
++    assert statuses == {4099: {"returncode": 0}}
++
++    assert mod.float_metric({"x": True}, "x") == 0.0
++    assert mod.int_metric({"x": False}, "x") == 0
++    assert mod.list_float_metric({"ci": "bad"}, "ci") == []
++    assert mod.nested_str({"outer": {"inner": "value"}}, ("outer", "inner")) == "value"
++    assert mod.nested_str({"outer": {"inner": 3}}, ("outer", "inner")) == ""
++    assert mod.nested_bool({"outer": {"inner": True}}, ("outer", "inner")) is True
++    assert mod.nested_int({"outer": {"inner": 4}}, ("outer", "inner")) == 4
++    assert mod.nested_int({"outer": {"inner": True}}, ("outer", "inner")) == 0
++    assert mod.is_sha256("0" * 64) is True
++    assert mod.is_sha256("bad") is False
++
++    missing_disc = mod.trm_grid_discrimination(None, None, was_skipped=False)
++    assert missing_disc["status"] == "missing"
++    skipped_disc = mod.trm_grid_discrimination({"flagged_adversarial": True}, None, was_skipped=True)
++    assert skipped_disc["status"] == "skipped_flagged"
++    blocked_disc = mod.trm_grid_discrimination(
++        {"honest_verdict": "blocked_cache_missing"}, None, was_skipped=False
++    )
++    assert blocked_disc["status"] == "blocked"
++    missing_rft = mod.verifier_rft_followthrough(
++        None,
++        verifier_beat_vote=True,
++        was_skipped=False,
++    )
++    assert missing_rft["status"] == "missing"
++    blocked_rft = mod.verifier_rft_followthrough(
++        {"honest_verdict": "blocked_resources_missing"},
++        verifier_beat_vote=True,
++        was_skipped=False,
++    )
++    assert blocked_rft["status"] == "blocked"
++    not_applicable_rft = mod.verifier_rft_followthrough(
++        {"honest_verdict": "success: would_be_clean"},
++        verifier_beat_vote=False,
++        was_skipped=False,
++    )
++    assert not_applicable_rft["status"] == "not_applicable_no_grid_discrimination"
++    no_checkpoint = mod.verifier_rft_followthrough(
++        {
++            "honest_verdict": "success: rft_win_no_checkpoint",
++            "rft_vs_ablation_delta": {"delta": 0.04, "ci95": [0.01, 0.07]},
++        },
++        verifier_beat_vote=True,
++        was_skipped=False,
++    )
++    assert no_checkpoint["status"] == "rft_beats_without_checkpoint"
++    assert mod.arc_games(None, {"total_games_solved": 10}, was_skipped=True)["status"] == (
++        "skipped_flagged"
++    )
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_statuses={4099: {"returncode": 0}},
++        started_s=1.0,
++        now_s=1.1,
++    )
++    artifact["headline_outcome"] = "not_enumerated"
++    with pytest.raises(ValueError, match="headline_outcome"):
++        mod.validate_artifact(artifact)
++    artifact["headline_outcome"] = "honest_negative_no_grid_discrimination"
++    artifact["upstream_provenance"][0]["sha256"] = "bad"
++    with pytest.raises(ValueError, match="sha256"):
++        mod.validate_artifact(artifact)
+-- 
+2.55.0
+

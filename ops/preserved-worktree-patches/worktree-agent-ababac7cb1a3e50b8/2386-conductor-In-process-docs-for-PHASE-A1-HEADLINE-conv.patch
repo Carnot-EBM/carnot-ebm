@@ -1,0 +1,63 @@
+From b0191ef46d8b691c6b1d38d842d3af934684ee64 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 17:21:17 -0400
+Subject: [PATCH 02386/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20PHASE=20A1=20(HEADLINE;=20convert=20the=20PROVEN=20moat=20?=
+ =?UTF-8?q?into=20a=20generation=20GAIN)=20--=20S3=20STRATIFIED=20VERIFIER?=
+ =?UTF-8?q?-GUIDED=20DENOISING=20SEARCH=20(arXiv:2604.06260=20VERIFIED)=20?=
+ =?UTF-8?q?using=20the=20.401=20LEAK-ROBUST=20scorer.=20.401=20PROVED=20th?=
+ =?UTF-8?q?e=20in-generation=20oracle-distinct=20moat=20exists=20(exp4338,?=
+ =?UTF-8?q?=20leak-robust,=20replicated,=20CI95-excl-0)=20--=20but=20a=20p?=
+ =?UTF-8?q?roven=20moat=20is=20a=20MEASUREMENT;=20the=20north-star=20?=
+ =?UTF-8?q?=C2=A75=20win=20condition=20is=20UTILITY:=20the=20verifier=20ea?=
+ =?UTF-8?q?rns=20its=20place=20when=20it=20makes=20generation=20MORE=20ACC?=
+ =?UTF-8?q?URATE=20AT=20EQUAL=20COMPUTE=20(Pareto-improve=20the=20base=20g?=
+ =?UTF-8?q?enerator).=20S3=20(Stratified=20Scaling=20Search,=202604.06260)?=
+ =?UTF-8?q?=20is=20the=20instrument:=20at=20each=20DiffusionGemma=20denois?=
+ =?UTF-8?q?ing=20step,=20expand=20K=20candidate=20partial=20states,=20scor?=
+ =?UTF-8?q?e=20them=20with=20the=20leak-robust=20exp4337=20scorer=20(the?=
+ =?UTF-8?q?=20in-loop=20verifier),=20resample=20the=20promising=20ones=20w?=
+ =?UTF-8?q?hile=20preserving=20frontier=20diversity=20->=20a=20reward-tilt?=
+ =?UTF-8?q?ed=20sampling=20distribution=20anchored=20to=20the=20model=20pr?=
+ =?UTF-8?q?ior.=20The=20DECISIVE=20test=20is=20at=20a=20FIXED=20NFE=20(den?=
+ =?UTF-8?q?oising=20compute)=20budget:=20does=20S3-Carnot=20beat=20(a)=20b?=
+ =?UTF-8?q?est-of-K@matched-NFE=20(the=20same=20compute=20spent=20on=20K?=
+ =?UTF-8?q?=20independent=20samples=20+=20final=20selection=20--=20the=20m?=
+ =?UTF-8?q?ust-beat=20compute-matched=20baseline),=20(b)=20unguided=20sing?=
+ =?UTF-8?q?le-pass,=20and=20(c)=20self-reward=20SMC=20(2602.01849,=20the?=
+ =?UTF-8?q?=20model's=20INTRINSIC=20confidence=20--=20the=20sharpest=20ora?=
+ =?UTF-8?q?cle-distinct=20test)=3F=20Reuse=20the=20.401=20skeptic-proof=20?=
+ =?UTF-8?q?harness:=20the=20no-op=20DEGENERATE=5FCONTROLS=20guard=20(contr?=
+ =?UTF-8?q?ols=5Fdifferentiated)=20+=20an=20INDEPENDENT=20leak=20re-check?=
+ =?UTF-8?q?=20on=20the=20scorer.=20Emit=20s3=5Fguided=5Fbeats=5Fcontrol=20?=
+ =?UTF-8?q?BARE=20bool=20:=3D=20(S3-Carnot=20-=20best-of-K@NFE=20>=200=20A?=
+ =?UTF-8?q?ND=20its=20CI95=20excludes=200=20AND=20controls=5Fdifferentiate?=
+ =?UTF-8?q?d=20AND=20S3-Carnot=20-=20self-reward-SMC=20>=200)=20at=20FIXED?=
+ =?UTF-8?q?=20NFE,=20n>=3D80,=20>=3D3=20seeds.=20verifier=5Fis=5Foracle=3D?=
+ =?UTF-8?q?false.=20A=20win=20=3D=20the=20moat=20graduates=20'exists'->'us?=
+ =?UTF-8?q?eful'=20(Pareto-improves=20generation).=20An=20honest=20null=20?=
+ =?UTF-8?q?(the=20proven=20scorer=20does=20NOT=20convert=20to=20a=20fixed-?=
+ =?UTF-8?q?NFE=20generation=20gain)=20is=20decision-grade.=20NO=20TRAINING?=
+ =?UTF-8?q?=20(test-time=20search=20only);=20NO=20TRM=20training;=20Diffus?=
+ =?UTF-8?q?ionGemma=20via=20the=20llama.cpp=20PR=20binary.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 45446c5b57..6dd5a1d6d8 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9262,3 +9262,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-17: PHASE E (CAPSTONE .401, UNGATED) -- the verifier scorecard + the DiffusionGemma GATE DECISION (replicate-or-retire), using the ROBUST aggregate-available-report-gaps helper (NO hard-block-all-False). Headline questions: (1) did the in-generation oracle-distinct moat REPLICATE with the LEAK-ROBUST scorer on the 2nd corpus (exp4337 scorer_leak_audit_passed -> exp4338 in_generation_moat_replicates, CI95-excl-0)? -> does the DiffusionGemma gate (diffusiongemma-energy-guided-diffusion-spec.md THE GATE: oracle-distinct learned-verifier win + matched control + CI95-excl-0, LEAK-ROBUST, replicated) now flip MET -- or is the in-generation moat RETIRED as corpus-specific (retire_if_same_verdict fired)? (2) did Phase B/C land the FIRST E3 ARC solve (exp4339 ar25 / exp4340 ka59 / exp4341 sc25 offline_reproduced) -> reproducible_total_levels? (3) did the action-role cross-game encoder transfer (exp4342) or log a 3rd null? Aggregate (skipping flagged, reporting missing as per-axis gaps; HONORING verifier_is_oracle -- the E3 solves are execution-grounded verifier_is_oracle=true ARC progress NOT a moat; the in-generation/self-learning results are oracle-distinct verifier_is_oracle=false). Cite each upstream sha256. Emit in_generation_moat_replicates_headline + diffusiongemma_gate_status + arc_reproducible_total_levels + verifier_thesis_state (one honest string). Compute the G1-G4 publication gate via publication_gate.py. NO gated_on. (✅ Complete) — honest_verdict=complete: v401_in_generation_replicated_leak_robust_gate_MET_oracle_distinct_leak_robust_replicated_arc_levels_17_e3_reproduced_2_self_learning_open_hygiene_passed; results/experiment_4346_capstone_v401.json
+ - 2026-06-17: [conductor] Operational retrospective for milestone 2026.06.401 (results/operational_retro_2026_06_401.json, schema carnot.operational_retro.v64). The authoritative milestone-scoped timing detector again false-zeroed (0 experiment commits since activation), so the locked timing fields are 0/empty (0 experiments, 0 compute-bound, 0 wall-time min) and gpu_idle_on_compute_bound_tasks=null (both RTX 3090s correctly idle at the 19:35Z snapshot -- 0 compute-bound tasks, so idle is correct behaviour, not a bug). Per the ops/changelog.md window read this turn, .401 DID run (exp4336-exp4346 incl. capstone results/experiment_4346_capstone_v401.json), confirming the recurring .363-.400 false-zero now extends to .401. Operational bottleneck = OBSERVABILITY (timing-detector gap + missing per-experiment wall-time telemetry), NOT execution; top action = repair the milestone-scoped timing detector (mtime scan + changelog-window fallback) + write-time duration_s/compute_bound stamping, and emit detector_gap_suspected when artifacts exist on disk but the detector reports 0. No GPU/DualGPURunner change warranted (no compute-bound or parallel multi-model task in the retro's authoritative data; DualGPURunner applies only to 2+ parallel models). estimated_time_savings_pct=5.
+ - 2026-06-17: Archive .401 -> activate .402; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the TRUE .401 close-state truthfully (per exp4346 capstone, corrected for the post-capstone outer-loop tn36 solves): the IN-GENERATION ORACLE-DISTINCT MOAT REPLICATED LEAK-ROBUST -> DiffusionGemma gate MET (exp4338 in_generation_moat_replicates=true, carnot_minus_best_control_delta +0.358, carnot_minus_self_reward_smc_delta +0.321, replication_ci95 [0.283,0.4375] excl 0, n=240, scorer_leak_recheck_passed=true, verifier_is_oracle=false; scorer exp4337 leak-audit passed: masked-answer AUROC 0.56 ~ chance, process-ranking 0.70); FIRST E3 ARC SOLVES (ar25 L1 exp4339, sc25 L1 exp4341); ARC now 21 reproducible levels / 13 games (registry 2026-06-17, authoritative -- the exp4346 capstone's 17 was pre-tn36-L4/L5/L6 outer-loop solves); ka59/tr87/ft09 still partial (E3 0.56/partial); CROSS-GAME VALUE TRANSFER NULLED a 3rd time (exp4342, reduction CI95 [1.0,1.017]) and RETIRED on the exclusion manifest; CROSS-DOMAIN SELECTION stays RETIRED (exp4314); paper_ready=True (FoVer 0.9131, G1-G4 pass). NOTE the exp4346 capstone carried a CIRCULAR_MOAT_OVERCLAIM flag because it omitted verifier_is_oracle (a STAMPING bug -- the underlying exp4338 is correctly verifier_is_oracle=false; the moat is genuinely oracle-distinct). Frame .402 as CONVERT-the-proven-moat-to-a-generation-gain (S3) + E3-ARC-DEEPER + learned-action-cost-self-learning. (⚠️ Research Finding) — honest_verdict=success: archived_v401_v402_active_moat_replicated_leak_robust_gate_MET_arc21_e3_ar25_sc25_cross_game_transfer_retired_pretest_green; results/experiment_4347_archive_v401_activate_v402.json
++- 2026-06-17: PHASE A1 (HEADLINE; convert the PROVEN moat into a generation GAIN) -- S3 STRATIFIED VERIFIER-GUIDED DENOISING SEARCH (arXiv:2604.06260 VERIFIED) using the .401 LEAK-ROBUST scorer. .401 PROVED the in-generation oracle-distinct moat exists (exp4338, leak-robust, replicated, CI95-excl-0) -- but a proven moat is a MEASUREMENT; the north-star §5 win condition is UTILITY: the verifier earns its place when it makes generation MORE ACCURATE AT EQUAL COMPUTE (Pareto-improve the base generator). S3 (Stratified Scaling Search, 2604.06260) is the instrument: at each DiffusionGemma denoising step, expand K candidate partial states, score them with the leak-robust exp4337 scorer (the in-loop verifier), resample the promising ones while preserving frontier diversity -> a reward-tilted sampling distribution anchored to the model prior. The DECISIVE test is at a FIXED NFE (denoising compute) budget: does S3-Carnot beat (a) best-of-K@matched-NFE (the same compute spent on K independent samples + final selection -- the must-beat compute-matched baseline), (b) unguided single-pass, and (c) self-reward SMC (2602.01849, the model's INTRINSIC confidence -- the sharpest oracle-distinct test)? Reuse the .401 skeptic-proof harness: the no-op DEGENERATE_CONTROLS guard (controls_differentiated) + an INDEPENDENT leak re-check on the scorer. Emit s3_guided_beats_control BARE bool := (S3-Carnot - best-of-K@NFE > 0 AND its CI95 excludes 0 AND controls_differentiated AND S3-Carnot - self-reward-SMC > 0) at FIXED NFE, n>=80, >=3 seeds. verifier_is_oracle=false. A win = the moat graduates 'exists'->'useful' (Pareto-improves generation). An honest null (the proven scorer does NOT convert to a fixed-NFE generation gain) is decision-grade. NO TRAINING (test-time search only); NO TRM training; DiffusionGemma via the llama.cpp PR binary. (⚠️ Research Finding) — honest_verdict=controls_not_differentiable; results/experiment_4348_s3_stratified_verifier_guided_search.json
+-- 
+2.55.0
+

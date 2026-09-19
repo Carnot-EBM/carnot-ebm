@@ -1,0 +1,43 @@
+From 6a353374d90c4bfec4f071c95a1dbf5338bf6754 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 13:55:32 -0400
+Subject: [PATCH 04488/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2ee3bae944..60897b5eef 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-27T17:40:19Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-06-27T17:55:30Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dc60cc76c4..10eeb496a6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9458,3 +9458,4 @@ The contro |
+ | 2026-06-27 16:46 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUIN | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ssert specs["b |
+ | 2026-06-27 17:18 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUIN | OK | cache hit: 92 passed, 1 warning in 12.32s |
+ | 2026-06-27 17:38 UTC | PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERI | OK | 111 passed, 1 warning in 10.41s |
++| 2026-06-27 17:53 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBM | OK | 90 passed, 1 warning in 8.91s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index dc39ecbae7..b00c53e03e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-27T17:40:19Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 12, "phase": "iteration_start", "started_at": "2026-06-27T17:55:30Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

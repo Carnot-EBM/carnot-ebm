@@ -1,0 +1,1152 @@
+From c9d43ac27129f7172e3bc200be2c87619f2b7288 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 17:08:54 -0400
+Subject: [PATCH 00215/11362] [conductor] CLEAN corrigendum of exp3729: the
+ .341 kill-gate part-(a) verdict ('energy-as-generator bounded at small scale,
+ STOP') is an INFRASTRUCTURE FALSE-NEGATIVE. Preserve exp3729's numbers,
+ annotate the root cause (exp3728 cwd/import-path bug -> 0 steps; exp3726
+ positive control PASSED), and re-open part-(a) as UNTESTED. exp1850
+ corrigendum pattern. Does NOT retire energy-as-generator.
+
+Automated research step by research conductor.
+Task ID: exp3733-corrigendum-exp3729-false-negative
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/ebt-nrgpt/spec.md       |   6 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...33_corrigendum_exp3729_false_negative.json | 210 ++++++++
+ ...3733_corrigendum_exp3729_false_negative.py | 484 ++++++++++++++++++
+ ...3733_corrigendum_exp3729_false_negative.py | 382 ++++++++++++++
+ 5 files changed, 1083 insertions(+), 1 deletion(-)
+ create mode 100644 results/experiment_3733_corrigendum_exp3729_false_negative.json
+ create mode 100644 scripts/experiment_3733_corrigendum_exp3729_false_negative.py
+ create mode 100644 tests/python/test_experiment_3733_corrigendum_exp3729_false_negative.py
+
+diff --git a/openspec/capabilities/ebt-nrgpt/spec.md b/openspec/capabilities/ebt-nrgpt/spec.md
+index c2d1822d48..21281e7be7 100644
+--- a/openspec/capabilities/ebt-nrgpt/spec.md
++++ b/openspec/capabilities/ebt-nrgpt/spec.md
+@@ -105,6 +105,12 @@ Given Exp 3728 reports no stable bounded EBT convergence evidence, the kill-gate
+ ## SCENARIO-EBT-3729-PASS: Stable Diagnostics Green-Light Matched Compute
+ Given Exp 3728 reports converged finite losses with no NaN or divergence, the kill-gate script writes `ebt_trained_stably=true`, `green_light_342=true`, and a one-line recommended `.342` setup that names the Exp 3728 checkpoint evidence and the Exp 3727 matched FLOP budget.
+ 
++## REQ-EBT-3733: Exp 3729 False-Negative Corrigendum
++The system must provide `scripts/experiment_3733_corrigendum_exp3729_false_negative.py` to write `results/experiment_3733_corrigendum_exp3729_false_negative.json` from checked-in Exp 3726, Exp 3728, and Exp 3729 JSON artifacts only. The corrigendum must preserve Exp 3729's reported fields verbatim under `original_exp3729`, record that Exp 3729's FAIL was caused by the Exp 3728 cwd/import-path precondition bug rather than EBT divergence, record that Exp 3726's single-step positive control passed, set part-(a) to `UNTESTED` at bounded scale rather than bounded, explicitly keep energy-as-generator out of the exclusion manifest, recommend the Exp 3734/3735 fixed-harness rerun, cite imported upstream fields with SHA256 hashes, avoid GGUF/CUDA markers, and pass `scripts/adversarial_verify.py` without a critical flag.
++
++## SCENARIO-EBT-3733: Corrigendum Reopens Part-A As Untested
++Given Exp 3729 reports the .341 Thesis-A kill-gate part-(a) as bounded, Exp 3728 reports `blocked_ebt` with `cumulative_steps_trained=0` and failed `ebt_vendored`/`smoke_passed` preconditions, and Exp 3726 reports finite decreasing single-step EBT smoke evidence, the Exp 3733 workflow writes a clean non-flagged corrigendum artifact with the required principle-annotated fields, preserves the original Exp 3729 values, records the cwd/import-path root cause, sets `part_a_status_corrected` to `UNTESTED_at_bounded_scale_not_bounded`, sets `energy_as_generator_not_retired=true`, and emits the terminal verdict `complete: exp3729_killgate_corrected_infra_false_negative_part_a_reopened_untested_energy_as_generator_not_retired`.
++
+ ## REQ-EBT-3731: Thesis-A EBT Bring-Up Capstone Aggregation
+ The system must provide `scripts/experiment_3731_capstone_v341.py` to aggregate Exp 3724 through Exp 3730 from checked-in JSON artifacts only. The capstone must exclude any upstream artifact carrying `flagged_adversarial=true` from headline aggregation, cite every unflagged upstream artifact with imported fields and SHA256 hashes, preserve the paper-ready and frozen-headline invariants from Exp 3724, carry the kill-gate part-(a) verdict from Exp 3729, and write `results/experiment_3731_capstone_v341.json` with the required principle-annotated fields. The capstone must not claim that energy-as-generator works; `green_light_342=true` only means stable enough to run the matched-compute comparison, while `green_light_342=false` records Thesis-A as bounded at small scale.
+ 
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7778d7b1f1..4649b17705 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2858,
++  "experiments_checked": 2859,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_3733_corrigendum_exp3729_false_negative.json b/results/experiment_3733_corrigendum_exp3729_false_negative.json
+new file mode 100644
+index 0000000000..9e7a2516e0
+--- /dev/null
++++ b/results/experiment_3733_corrigendum_exp3729_false_negative.json
+@@ -0,0 +1,210 @@
++{
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flag_count": 0,
++    "flags": [],
++    "max_severity": -1
++  },
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 3726,
++      "fields_imported": [
++        "honest_verdict",
++        "first_step_losses",
++        "loss_finite",
++        "loss_decreased",
++        "ebt_param_count",
++        "peak_vram_mb",
++        "n_train",
++        "random_seed",
++        "reproducibility_checksum",
++        "duration_s"
++      ],
++      "sha256": "457f07c8772bfc334f2e54da8aef342a98b36311258da44358c2e6d524b2af84"
++    },
++    {
++      "experiment_id": 3728,
++      "fields_imported": [
++        "honest_verdict",
++        "cumulative_steps_trained",
++        "ebt_loss_curve",
++        "ebt_converged",
++        "nan_or_divergence_events",
++        "stabilizers_applied",
++        "peak_vram_mb",
++        "preconditions_checked.ebt_vendored",
++        "preconditions_checked.smoke_passed",
++        "preconditions_checked.corpus_ok",
++        "random_seed",
++        "reproducibility_checksum",
++        "duration_s"
++      ],
++      "sha256": "2df80a1ded8ea93ad18eadb338c384cf2b02fb1876dead0f77e3fdd11fc0bbb9"
++    },
++    {
++      "experiment_id": 3729,
++      "fields_imported": [
++        "schema",
++        "experiment",
++        "honest_verdict",
++        "inference_substrate",
++        "ebt_trained_stably",
++        "green_light_342",
++        "kill_gate_conclusion",
++        "stability_diagnostics",
++        "cited_upstream_artifacts",
++        "field_principles",
++        "random_seed",
++        "reproducibility_checksum",
++        "duration_s"
++      ],
++      "sha256": "80964239741cb3b74580c4be923c4e3d2ef93ffd6e0bfa66f004351841f79112"
++    }
++  ],
++  "corrected_status_label": "part_a_reopened_untested_not_bounded",
++  "correction_note": "Exp3729's FAIL is corrected as an infrastructure false-negative. Exp3728 never trained: cumulative_steps_trained=0 with ebt_vendored=false and smoke_passed=false. Exp3726 proves the missing positive control passed, so the bounded-scale route is UNTESTED, not bounded.",
++  "duration_s": 0.000635,
++  "energy_as_generator_not_retired": true,
++  "exclusion_manifest_update": "none",
++  "exp3728_infra_bug_evidence": {
++    "cumulative_steps_trained": 0,
++    "honest_verdict": "blocked_ebt",
++    "nan_or_divergence_events": false,
++    "not_a_divergence": true,
++    "preconditions_checked": {
++      "corpus_ok": false,
++      "cuda": true,
++      "ebt_vendored": false,
++      "smoke_passed": false
++    }
++  },
++  "experiment": 3733,
++  "false_negative_root_cause": "cwd/import-path bug in exp3728 precondition check: ebt_vendored=false and smoke_passed=false despite importable=true; relative os.path.exists was evaluated from a bad cwd, so exp3728 never ran bounded training.",
++  "field_principles": {
++    "cited_upstream_artifacts": "Provenance for the imported original fields (anti-fabrication audit trail).",
++    "duration_s": "Wall-clock plausibility floor.",
++    "energy_as_generator_not_retired": "Explicitly: this corrigendum does NOT add energy-as-generator to the exclusion manifest; .342 re-runs the genuine kill-gate.",
++    "false_negative_root_cause": "Names the cwd/import-path bug in exp3728 (ebt_vendored=false despite importable=true; relative os.path.exists from a bad cwd) -- the auditable correction.",
++    "honest_verdict": "Terminal prefix; states the correction outcome.",
++    "inference_substrate": "A record correction over upstream JSON, no live model.",
++    "original_exp3729_preserved": "exp1850 discipline: the original numbers are never deleted, only annotated -- preserves the research record.",
++    "part_a_status_corrected": "Sets part-(a) to UNTESTED (not bounded); the load-bearing correction so the route is not falsely enclosed.",
++    "positive_control_passed": "Records that exp3726 single-step smoke PASSED (38M EBT, 1283MB, loss decreasing) -- the missing positive control that makes the null claim unsupported.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift."
++  },
++  "honest_verdict": "complete: exp3729_killgate_corrected_infra_false_negative_part_a_reopened_untested_energy_as_generator_not_retired",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a record correction over upstream JSON, no live model).",
++  "original_exp3729": {
++    "cited_upstream_artifacts": [
++      {
++        "experiment_id": 3725,
++        "fields_imported": [
++          "honest_verdict",
++          "importable",
++          "smoke_energy_value",
++          "upstream_commit_sha",
++          "reproducibility_checksum"
++        ],
++        "sha256": "668f59990b9a716bc4223206c61d948b9852bce97677937b369256975ae07dca"
++      },
++      {
++        "experiment_id": 3726,
++        "fields_imported": [
++          "honest_verdict",
++          "first_step_losses",
++          "loss_finite",
++          "loss_decreased",
++          "ebt_param_count",
++          "peak_vram_mb",
++          "reproducibility_checksum"
++        ],
++        "sha256": "457f07c8772bfc334f2e54da8aef342a98b36311258da44358c2e6d524b2af84"
++      },
++      {
++        "experiment_id": 3728,
++        "fields_imported": [
++          "honest_verdict",
++          "cumulative_steps_trained",
++          "ebt_loss_curve",
++          "ebt_converged",
++          "nan_or_divergence_events",
++          "stabilizers_applied",
++          "peak_vram_mb",
++          "preconditions_checked",
++          "random_seed",
++          "reproducibility_checksum",
++          "duration_s"
++        ],
++        "sha256": "2df80a1ded8ea93ad18eadb338c384cf2b02fb1876dead0f77e3fdd11fc0bbb9"
++      },
++      {
++        "experiment_id": 3727,
++        "fields_imported": [
++          "honest_verdict",
++          "flop_model_description",
++          "matched_compute_report.ebt_total_flops",
++          "matched_compute_report.ar_total_flops",
++          "matched_compute_report.budget_match.ar_best_of_m",
++          "matched_compute_report.budget_match.within_tolerance",
++          "reproducibility_checksum"
++        ],
++        "sha256": "48c65681d7fc3ad52f6d86603e1bb6067d56bb3562e4f2a10158e80bf60972cc"
++      }
++    ],
++    "duration_s": 0.000369453,
++    "ebt_trained_stably": false,
++    "experiment": 3729,
++    "field_principles": {
++      "cited_upstream_artifacts": "Provenance for imported upstream fields.",
++      "duration_s": "Wall-clock plausibility floor.",
++      "ebt_trained_stably": "Kill-gate part-(a) boolean.",
++      "green_light_342": "Controls whether the .342 matched-compute comparison runs.",
++      "honest_verdict": "Terminal prefix stating the kill-gate outcome.",
++      "inference_substrate": "Verdict over upstream diagnostics, no live model.",
++      "kill_gate_conclusion": "One-paragraph scientific conclusion with evidence.",
++      "random_seed": "Determinism precondition.",
++      "reproducibility_checksum": "Content hash catches drift."
++    },
++    "green_light_342": false,
++    "honest_verdict": "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop",
++    "inference_substrate": "aggregation_from_upstream_artifacts (principle: a verdict over upstream diagnostics, no live model).",
++    "kill_gate_conclusion": "BOUNDED: Exp 3728 does not show stable bounded convergence evidence (verdict=blocked_ebt, steps=0, loss_converged=False, nan_or_divergence_events=False). Energy-as-generator is bounded at small scale on this corpus and budget; stop the .342 matched-compute comparison unless a separately budgeted stabilization recipe is explicitly approved.",
++    "random_seed": 3729,
++    "reproducibility_checksum": "2e69e89992f231bc477b7a8772c6f3d0e38ff0c2ff2dcf699f1d35ca1f011c62",
++    "schema": "carnot.experiment_3729_stability_kill_gate_verdict.v1",
++    "stability_diagnostics": {
++      "bounded_steps_present": false,
++      "checkpoint_path": null,
++      "cumulative_steps_trained": 0,
++      "ebt_converged": false,
++      "ebt_loss_curve": [],
++      "ebt_trained_stably": false,
++      "gradient_norms_bounded": false,
++      "loss_converged": false,
++      "nan_or_divergence_events": false,
++      "peak_vram_mb": 0,
++      "source_honest_verdict": "blocked_ebt",
++      "stabilizers_applied": "none",
++      "terminal_complete": false
++    }
++  },
++  "original_exp3729_preserved": true,
++  "part_a_status_corrected": "UNTESTED_at_bounded_scale_not_bounded",
++  "positive_control_evidence": {
++    "ebt_param_count": 37954560,
++    "experiment_id": 3726,
++    "first_step_loss": -0.077116,
++    "last_step_loss": -37.738224,
++    "loss_decreased": true,
++    "loss_finite": true,
++    "peak_vram_mb": 1283
++  },
++  "positive_control_passed": true,
++  "random_seed": 3733,
++  "recommended_342_rerun": "Run exp3734/exp3735 after fixing the cwd/import-path precondition bug, then issue the genuine bounded-training kill-gate verdict from a nonzero-step EBT and matched AR run.",
++  "recommended_rerun_label": "exp3734_exp3735_harness_fixed_rerun",
++  "reproducibility_checksum": "b5279307cedbac642d81069cc4c7d68a1a88ad2459a99e360fcde7918a5c2fd6",
++  "schema": "carnot.exp3729_false_negative_corrigendum.v1",
++  "task_id": "exp3733-corrigendum-exp3729-false-negative"
++}
+diff --git a/scripts/experiment_3733_corrigendum_exp3729_false_negative.py b/scripts/experiment_3733_corrigendum_exp3729_false_negative.py
+new file mode 100644
+index 0000000000..e5b9d010e0
+--- /dev/null
++++ b/scripts/experiment_3733_corrigendum_exp3729_false_negative.py
+@@ -0,0 +1,484 @@
++#!/usr/bin/env python3
++"""Exp 3733 clean corrigendum for the Exp 3729 kill-gate false-negative.
++
++Spec: REQ-EBT-3733, SCENARIO-EBT-3733.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import importlib.util
++import json
++import time
++from collections.abc import Mapping
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++OUTPUT_REL_PATH = Path("results/experiment_3733_corrigendum_exp3729_false_negative.json")
++EXP3726_REL_PATH = Path("results/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json")
++EXP3728_REL_PATH = Path("results/experiment_3728_bounded_checkpointed_train_ebt_and_ar.json")
++EXP3729_REL_PATH = Path("results/experiment_3729_stability_kill_gate_verdict.json")
++
++RANDOM_SEED = 3733
++TERMINAL_VERDICT = (
++    "complete: exp3729_killgate_corrected_infra_false_negative_part_a_reopened_"
++    "untested_energy_as_generator_not_retired"
++)
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: a record correction over "
++    "upstream JSON, no live model)."
++)
++ORIGINAL_EXP3729_VERDICT = (
++    "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_"
++    "honest_negative_stop"
++)
++FALSE_NEGATIVE_ROOT_CAUSE = (
++    "cwd/import-path bug in exp3728 precondition check: ebt_vendored=false and "
++    "smoke_passed=false despite importable=true; relative os.path.exists was "
++    "evaluated from a bad cwd, so exp3728 never ran bounded training."
++)
++PART_A_STATUS = "UNTESTED_at_bounded_scale_not_bounded"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "original_exp3729_preserved",
++    "false_negative_root_cause",
++    "positive_control_passed",
++    "part_a_status_corrected",
++    "energy_as_generator_not_retired",
++    "cited_upstream_artifacts",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; states the correction outcome.",
++    "inference_substrate": (
++        "A record correction over upstream JSON, no live model."
++    ),
++    "original_exp3729_preserved": (
++        "exp1850 discipline: the original numbers are never deleted, only "
++        "annotated -- preserves the research record."
++    ),
++    "false_negative_root_cause": (
++        "Names the cwd/import-path bug in exp3728 (ebt_vendored=false despite "
++        "importable=true; relative os.path.exists from a bad cwd) -- the "
++        "auditable correction."
++    ),
++    "positive_control_passed": (
++        "Records that exp3726 single-step smoke PASSED (38M EBT, 1283MB, loss "
++        "decreasing) -- the missing positive control that makes the null claim "
++        "unsupported."
++    ),
++    "part_a_status_corrected": (
++        "Sets part-(a) to UNTESTED (not bounded); the load-bearing correction "
++        "so the route is not falsely enclosed."
++    ),
++    "energy_as_generator_not_retired": (
++        "Explicitly: this corrigendum does NOT add energy-as-generator to the "
++        "exclusion manifest; .342 re-runs the genuine kill-gate."
++    ),
++    "cited_upstream_artifacts": (
++        "Provenance for the imported original fields (anti-fabrication audit trail)."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++UPSTREAM_FIELDS = {
++    3726: [
++        "honest_verdict",
++        "first_step_losses",
++        "loss_finite",
++        "loss_decreased",
++        "ebt_param_count",
++        "peak_vram_mb",
++        "n_train",
++        "random_seed",
++        "reproducibility_checksum",
++        "duration_s",
++    ],
++    3728: [
++        "honest_verdict",
++        "cumulative_steps_trained",
++        "ebt_loss_curve",
++        "ebt_converged",
++        "nan_or_divergence_events",
++        "stabilizers_applied",
++        "peak_vram_mb",
++        "preconditions_checked.ebt_vendored",
++        "preconditions_checked.smoke_passed",
++        "preconditions_checked.corpus_ok",
++        "random_seed",
++        "reproducibility_checksum",
++        "duration_s",
++    ],
++    3729: [
++        "schema",
++        "experiment",
++        "honest_verdict",
++        "inference_substrate",
++        "ebt_trained_stably",
++        "green_light_342",
++        "kill_gate_conclusion",
++        "stability_diagnostics",
++        "cited_upstream_artifacts",
++        "field_principles",
++        "random_seed",
++        "reproducibility_checksum",
++        "duration_s",
++    ],
++}
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    adversarial_verify_clean: bool = False,
++    adversarial_verify_report: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Build the corrigendum from Exp 3726, Exp 3728, and Exp 3729 artifacts."""
++
++    root_path = Path(root)
++    exp3726 = _read_json_object(root_path / EXP3726_REL_PATH)
++    exp3728 = _read_json_object(root_path / EXP3728_REL_PATH)
++    exp3729 = _read_json_object(root_path / EXP3729_REL_PATH)
++
++    if not _positive_control_passed(exp3726):
++        raise ValueError("exp3726 positive control evidence is required")
++    if not _blocked_zero_step(exp3728):
++        raise ValueError("exp3728 zero-step blocked artifact is required")
++    if not _cwd_import_precondition_bug(exp3728):
++        raise ValueError("exp3728 cwd/import precondition bug evidence is required")
++    if not _original_exp3729_false_negative(exp3729):
++        raise ValueError("original Exp 3729 false-negative verdict shape is required")
++
++    positive_control = _positive_control_evidence(exp3726)
++    compact_report = _compact_verify_report(adversarial_verify_report or {"flags": []})
++    payload: JsonDict = {
++        "schema": "carnot.exp3729_false_negative_corrigendum.v1",
++        "experiment": 3733,
++        "task_id": "exp3733-corrigendum-exp3729-false-negative",
++        "honest_verdict": TERMINAL_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "original_exp3729_preserved": True,
++        "original_exp3729": exp3729,
++        "false_negative_root_cause": FALSE_NEGATIVE_ROOT_CAUSE,
++        "correction_note": (
++            "Exp3729's FAIL is corrected as an infrastructure false-negative. "
++            "Exp3728 never trained: cumulative_steps_trained=0 with "
++            "ebt_vendored=false and smoke_passed=false. Exp3726 proves the "
++            "missing positive control passed, so the bounded-scale route is "
++            "UNTESTED, not bounded."
++        ),
++        "positive_control_passed": True,
++        "positive_control_evidence": positive_control,
++        "part_a_status_corrected": PART_A_STATUS,
++        "energy_as_generator_not_retired": True,
++        "exclusion_manifest_update": "none",
++        "corrected_status_label": "part_a_reopened_untested_not_bounded",
++        "recommended_rerun_label": "exp3734_exp3735_harness_fixed_rerun",
++        "recommended_342_rerun": (
++            "Run exp3734/exp3735 after fixing the cwd/import-path precondition "
++            "bug, then issue the genuine bounded-training kill-gate verdict "
++            "from a nonzero-step EBT and matched AR run."
++        ),
++        "exp3728_infra_bug_evidence": {
++            "honest_verdict": exp3728.get("honest_verdict"),
++            "cumulative_steps_trained": exp3728.get("cumulative_steps_trained"),
++            "preconditions_checked": exp3728.get("preconditions_checked"),
++            "nan_or_divergence_events": exp3728.get("nan_or_divergence_events"),
++            "not_a_divergence": exp3728.get("nan_or_divergence_events") is False,
++        },
++        "cited_upstream_artifacts": [
++            _citation(3726, root_path / EXP3726_REL_PATH, exp3726),
++            _citation(3728, root_path / EXP3728_REL_PATH, exp3728),
++            _citation(3729, root_path / EXP3729_REL_PATH, exp3729),
++        ],
++        "adversarial_verify_clean": bool(adversarial_verify_clean),
++        "adversarial_verify_report": compact_report,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": _duration(started_s, now_s),
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3733 corrigendum schema and correction semantics."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    if "model_specs" in artifact:
++        raise ValueError("model_specs must not be present")
++    if "target_model" in artifact:
++        raise ValueError("target_model must not be present")
++    if artifact.get("honest_verdict") != TERMINAL_VERDICT:
++        raise ValueError("terminal verdict must match Exp 3733 corrigendum")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be the Exp 3733 aggregation substrate")
++    if artifact.get("original_exp3729_preserved") is not True:
++        raise ValueError("original Exp 3729 must be preserved")
++    original = artifact.get("original_exp3729")
++    if not isinstance(original, Mapping) or not _original_exp3729_false_negative(original):
++        raise ValueError("original Exp 3729 false-negative values must be preserved")
++    if artifact.get("false_negative_root_cause") != FALSE_NEGATIVE_ROOT_CAUSE:
++        raise ValueError("root cause must name the cwd/import-path bug")
++    if artifact.get("positive_control_passed") is not True:
++        raise ValueError("positive control must be recorded as passed")
++    if artifact.get("part_a_status_corrected") != PART_A_STATUS:
++        raise ValueError("part_a_status_corrected must be UNTESTED at bounded scale")
++    if artifact.get("energy_as_generator_not_retired") is not True:
++        raise ValueError("energy-as-generator must be recorded as not retired")
++    if not isinstance(artifact.get("corrected_status_label"), str):
++        raise ValueError("corrected status label must be a string")
++    if not isinstance(artifact.get("recommended_rerun_label"), str):
++        raise ValueError("recommended rerun label must be a string")
++    _validate_citations(artifact.get("cited_upstream_artifacts"))
++    if artifact.get("random_seed") != RANDOM_SEED:
++        raise ValueError("random_seed must equal 3733")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, (int, float)) or isinstance(duration, bool) or float(duration) < 0.0001:
++        raise ValueError("duration_s must be numeric with the aggregation plausibility floor")
++    if not _no_forbidden_markers(artifact):
++        raise ValueError("GGUF/CUDA markers must not be present")
++    checksum = artifact.get("reproducibility_checksum")
++    if not _is_sha256(checksum):
++        raise ValueError("reproducibility_checksum must be a sha256 hex string")
++    if checksum != payload_checksum(artifact):
++        raise ValueError("reproducibility_checksum does not match artifact content")
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Write the final clean corrigendum artifact and return its path."""
++
++    root_path = Path(root)
++    start = time.time() if started_s is None else float(started_s)
++    output_path = root_path / OUTPUT_REL_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++
++    payload = build_artifact(root_path, started_s=start, now_s=now_s)
++    _write_json(output_path, payload)
++    verify_report = _run_adversarial_verify(output_path)
++    payload["adversarial_verify_report"] = _compact_verify_report(verify_report)
++    payload["adversarial_verify_clean"] = _adversarial_report_is_clean(verify_report)
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    _write_json(output_path, payload)
++    return output_path
++
++
++def sha256_file(path: Path) -> str:
++    """Return the SHA256 hash for a source artifact."""
++
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return digest.hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return the checksum for the artifact content excluding its checksum field."""
++
++    filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def main(argv: list[str] | None = None) -> int:
++    """CLI entrypoint for the Exp 3733 corrigendum."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    args = parser.parse_args(argv)
++    output_path = write_artifact(args.root)
++    payload = _read_json_object(output_path)
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++def _positive_control_passed(artifact: Mapping[str, Any]) -> bool:
++    losses = artifact.get("first_step_losses")
++    return (
++        artifact.get("loss_finite") is True
++        and artifact.get("loss_decreased") is True
++        and isinstance(losses, list)
++        and len(losses) >= 2
++        and artifact.get("ebt_param_count") == 37_954_560
++        and artifact.get("peak_vram_mb") == 1283
++    )
++
++
++def _positive_control_evidence(artifact: Mapping[str, Any]) -> JsonDict:
++    losses = artifact.get("first_step_losses")
++    if not isinstance(losses, list) or len(losses) < 2:
++        raise ValueError("exp3726 positive control losses are missing")
++    return {
++        "experiment_id": 3726,
++        "ebt_param_count": artifact.get("ebt_param_count"),
++        "peak_vram_mb": artifact.get("peak_vram_mb"),
++        "loss_finite": artifact.get("loss_finite"),
++        "loss_decreased": artifact.get("loss_decreased"),
++        "first_step_loss": losses[0],
++        "last_step_loss": losses[-1],
++    }
++
++
++def _blocked_zero_step(artifact: Mapping[str, Any]) -> bool:
++    return (
++        artifact.get("honest_verdict") == "blocked_ebt"
++        and artifact.get("cumulative_steps_trained") == 0
++    )
++
++
++def _cwd_import_precondition_bug(artifact: Mapping[str, Any]) -> bool:
++    preconditions = artifact.get("preconditions_checked")
++    return (
++        isinstance(preconditions, Mapping)
++        and preconditions.get("ebt_vendored") is False
++        and preconditions.get("smoke_passed") is False
++    )
++
++
++def _original_exp3729_false_negative(artifact: Mapping[str, Any]) -> bool:
++    verdict = str(artifact.get("honest_verdict") or "")
++    conclusion = str(artifact.get("kill_gate_conclusion") or "")
++    return (
++        verdict == ORIGINAL_EXP3729_VERDICT
++        and artifact.get("green_light_342") is False
++        and artifact.get("ebt_trained_stably") is False
++        and "bounded" in conclusion.lower()
++    )
++
++
++def _citation(experiment_id: int, path: Path, artifact: Mapping[str, Any]) -> JsonDict:
++    fields = [
++        field
++        for field in UPSTREAM_FIELDS[experiment_id]
++        if _get_nested(artifact, field) is not None
++    ]
++    return {
++        "experiment_id": experiment_id,
++        "fields_imported": fields,
++        "sha256": sha256_file(path),
++    }
++
++
++def _validate_citations(citations: Any) -> None:
++    if not isinstance(citations, list):
++        raise ValueError("cited_upstream_artifacts must cite exp3726/3728/3729")
++    ids = {item.get("experiment_id") for item in citations if isinstance(item, Mapping)}
++    if ids != {3726, 3728, 3729}:
++        raise ValueError("cited_upstream_artifacts must cite exp3726, exp3728, and exp3729")
++    for item in citations:
++        if not isinstance(item, Mapping):
++            raise ValueError("each citation must be an object")
++        if not item.get("fields_imported"):
++            raise ValueError("each citation must include fields_imported")
++        if not _is_sha256(item.get("sha256")):
++            raise ValueError("each citation must include a sha256 hex string")
++
++
++def _get_nested(artifact: Mapping[str, Any], field: str) -> Any:
++    current: Any = artifact
++    for part in field.split("."):
++        if not isinstance(current, Mapping) or part not in current:
++            return None
++        current = current[part]
++    return current
++
++
++def _compact_verify_report(report: Mapping[str, Any]) -> JsonDict:
++    raw_flags = report.get("flags", [])
++    flags = [dict(flag) for flag in raw_flags if isinstance(flag, Mapping)] if isinstance(raw_flags, list) else []
++    severity_rank = {"info": 0, "warn": 1, "critical": 2}
++    severities = [severity_rank.get(str(flag.get("severity", "")).lower(), -1) for flag in flags]
++    return {
++        "flag_count": len(flags),
++        "max_severity": max(severities) if severities else -1,
++        "flags": flags,
++    }
++
++
++def _adversarial_report_is_clean(report: Mapping[str, Any]) -> bool:
++    flags = report.get("flags")
++    if not isinstance(flags, list):
++        return True
++    return not any(
++        isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        for flag in flags
++    )
++
++
++def _run_adversarial_verify(path: Path) -> JsonDict:
++    verifier_path = REPO_ROOT / "scripts" / "adversarial_verify.py"
++    spec = importlib.util.spec_from_file_location("carnot_adversarial_verify_exp3733", verifier_path)
++    if spec is None or spec.loader is None:  # pragma: no cover
++        raise RuntimeError(f"could not load adversarial verifier from {verifier_path}")
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    report = module.verify_artifact(path)
++    if not isinstance(report, dict):  # pragma: no cover
++        raise RuntimeError("adversarial verifier returned a non-object report")
++    return report
++
++
++def _read_json_object(path: Path) -> JsonDict:
++    data = json.loads(Path(path).read_text(encoding="utf-8"))
++    if not isinstance(data, dict):  # pragma: no cover
++        raise ValueError(f"expected JSON object in {path}")
++    return data
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _duration(started_s: float | None, now_s: float | None) -> float:
++    start = time.time() if started_s is None else float(started_s)
++    end = time.time() if now_s is None else float(now_s)
++    return round(max(0.0001, end - start), 6)
++
++
++def _no_forbidden_markers(artifact: Mapping[str, Any]) -> bool:
++    encoded = json.dumps(artifact, sort_keys=True)
++    return all(marker not in encoded for marker in ("GGUF", "CUDA", "torch.cuda", ".cuda("))
++
++
++def _is_sha256(value: Any) -> bool:
++    if not isinstance(value, str) or len(value) != 64:
++        return False
++    try:
++        int(value, 16)
++    except ValueError:
++        return False
++    return True
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3733_corrigendum_exp3729_false_negative.py b/tests/python/test_experiment_3733_corrigendum_exp3729_false_negative.py
+new file mode 100644
+index 0000000000..20a958eba0
+--- /dev/null
++++ b/tests/python/test_experiment_3733_corrigendum_exp3729_false_negative.py
+@@ -0,0 +1,382 @@
++"""Tests for Exp 3733 clean corrigendum of the Exp 3729 false-negative.
++
++Spec: REQ-EBT-3733, SCENARIO-EBT-3733.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from scripts import experiment_3733_corrigendum_exp3729_false_negative as exp3733
++
++
++SPEC_PATH = Path("openspec/capabilities/ebt-nrgpt/spec.md")
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _seed_upstreams(root: Path) -> dict[str, dict[str, object]]:
++    exp3726: dict[str, object] = {
++        "schema": "carnot.experiment_3726_tiny_ebt_train_smoke.v1",
++        "experiment": 3726,
++        "honest_verdict": (
++            "complete: tiny_ebt_38M_fits_3090_1283mb_single_train_step_loss_"
++            "finite_and_decreasing_corpus_gsm8k_n2048"
++        ),
++        "first_step_losses": [-0.077116, -19.918041, -37.738224],
++        "loss_finite": True,
++        "loss_decreased": True,
++        "ebt_param_count": 37954560,
++        "peak_vram_mb": 1283,
++        "n_train": 2048,
++        "random_seed": 3726,
++        "reproducibility_checksum": "8" * 64,
++        "duration_s": 7.84,
++    }
++    exp3728: dict[str, object] = {
++        "honest_verdict": "blocked_ebt",
++        "cumulative_steps_trained": 0,
++        "ebt_loss_curve": [],
++        "ar_loss_curve": [],
++        "ebt_converged": False,
++        "nan_or_divergence_events": False,
++        "stabilizers_applied": "none",
++        "peak_vram_mb": 0,
++        "preconditions_checked": {
++            "ebt_vendored": False,
++            "smoke_passed": False,
++            "corpus_ok": False,
++        },
++        "random_seed": 3728,
++        "reproducibility_checksum": "0" * 64,
++        "duration_s": 65.5,
++    }
++    exp3729: dict[str, object] = {
++        "schema": "carnot.experiment_3729_stability_kill_gate_verdict.v1",
++        "experiment": 3729,
++        "honest_verdict": (
++            "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_"
++            "small_scale_honest_negative_stop"
++        ),
++        "inference_substrate": (
++            "aggregation_from_upstream_artifacts (principle: a verdict over "
++            "upstream diagnostics, no live model)."
++        ),
++        "ebt_trained_stably": False,
++        "green_light_342": False,
++        "kill_gate_conclusion": (
++            "BOUNDED: Exp 3728 does not show stable bounded convergence "
++            "evidence (verdict=blocked_ebt, steps=0, loss_converged=False, "
++            "nan_or_divergence_events=False). Energy-as-generator is bounded "
++            "at small scale on this corpus and budget; stop the .342 "
++            "matched-compute comparison unless a separately budgeted "
++            "stabilization recipe is explicitly approved."
++        ),
++        "stability_diagnostics": {
++            "source_honest_verdict": "blocked_ebt",
++            "cumulative_steps_trained": 0,
++            "ebt_loss_curve": [],
++            "loss_converged": False,
++            "ebt_converged": False,
++            "nan_or_divergence_events": False,
++            "gradient_norms_bounded": False,
++            "stabilizers_applied": "none",
++            "peak_vram_mb": 0,
++            "checkpoint_path": None,
++            "bounded_steps_present": False,
++            "terminal_complete": False,
++            "ebt_trained_stably": False,
++        },
++        "cited_upstream_artifacts": [],
++        "field_principles": {"honest_verdict": "Terminal prefix."},
++        "random_seed": 3729,
++        "reproducibility_checksum": "2" * 64,
++        "duration_s": 0.000369453,
++    }
++    _write_json(root / exp3733.EXP3726_REL_PATH, exp3726)
++    _write_json(root / exp3733.EXP3728_REL_PATH, exp3728)
++    _write_json(root / exp3733.EXP3729_REL_PATH, exp3729)
++    return {"3726": exp3726, "3728": exp3728, "3729": exp3729}
++
++
++def test_req_ebt_3733_spec_anchor_exists() -> None:
++    """REQ-EBT-3733: OpenSpec declares the corrigendum contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-EBT-3733" in spec
++    assert "SCENARIO-EBT-3733" in spec
++    assert exp3733.OUTPUT_REL_PATH.as_posix() in spec
++
++
++def test_scenario_ebt_3733_builds_clean_corrigendum_contract(tmp_path: Path) -> None:
++    """SCENARIO-EBT-3733: the original FAIL is preserved and corrected."""
++
++    upstreams = _seed_upstreams(tmp_path)
++    artifact = exp3733.build_artifact(
++        tmp_path,
++        started_s=10.0,
++        now_s=10.25,
++        adversarial_verify_clean=True,
++        adversarial_verify_report={"flags": []},
++    )
++
++    exp3733.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == exp3733.TERMINAL_VERDICT
++    assert set(exp3733.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp3733.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == exp3733.INFERENCE_SUBSTRATE
++    assert artifact["original_exp3729_preserved"] is True
++    assert artifact["original_exp3729"] == upstreams["3729"]
++    assert artifact["false_negative_root_cause"] == exp3733.FALSE_NEGATIVE_ROOT_CAUSE
++    assert artifact["positive_control_passed"] is True
++    assert artifact["positive_control_evidence"] == {
++        "experiment_id": 3726,
++        "ebt_param_count": 37954560,
++        "peak_vram_mb": 1283,
++        "loss_finite": True,
++        "loss_decreased": True,
++        "first_step_loss": -0.077116,
++        "last_step_loss": -37.738224,
++    }
++    assert artifact["part_a_status_corrected"] == exp3733.PART_A_STATUS
++    assert artifact["energy_as_generator_not_retired"] is True
++    assert artifact["corrected_status_label"] == "part_a_reopened_untested_not_bounded"
++    assert isinstance(artifact["recommended_rerun_label"], str)
++    assert "exp3734" in artifact["recommended_342_rerun"]
++    assert "exp3735" in artifact["recommended_342_rerun"]
++    assert artifact["adversarial_verify_clean"] is True
++    assert artifact["adversarial_verify_report"] == {
++        "flag_count": 0,
++        "max_severity": -1,
++        "flags": [],
++    }
++    assert artifact["reproducibility_checksum"] == exp3733.payload_checksum(artifact)
++    assert artifact["duration_s"] == 0.25
++
++    citations = {item["experiment_id"]: item for item in artifact["cited_upstream_artifacts"]}
++    assert set(citations) == {3726, 3728, 3729}
++    assert citations[3726]["sha256"] == exp3733.sha256_file(tmp_path / exp3733.EXP3726_REL_PATH)
++    assert citations[3728]["sha256"] == exp3733.sha256_file(tmp_path / exp3733.EXP3728_REL_PATH)
++    assert citations[3729]["sha256"] == exp3733.sha256_file(tmp_path / exp3733.EXP3729_REL_PATH)
++    assert "loss_decreased" in citations[3726]["fields_imported"]
++    assert "preconditions_checked.ebt_vendored" in citations[3728]["fields_imported"]
++    assert "green_light_342" in citations[3729]["fields_imported"]
++
++    encoded = json.dumps(artifact, sort_keys=True)
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++    assert "model_specs" not in artifact
++    assert "target_model" not in artifact
++    assert "candidate_value" not in artifact
++
++
++def test_scenario_ebt_3733_write_runs_adversarial_verify(tmp_path: Path) -> None:
++    """SCENARIO-EBT-3733: the written artifact confirms no critical flag."""
++
++    _seed_upstreams(tmp_path)
++
++    output = exp3733.write_artifact(tmp_path, started_s=1.0, now_s=1.5)
++    payload = json.loads(output.read_text(encoding="utf-8"))
++
++    exp3733.validate_artifact(payload)
++    assert output == tmp_path / exp3733.OUTPUT_REL_PATH
++    assert payload["adversarial_verify_clean"] is True
++    assert payload["adversarial_verify_report"]["max_severity"] < 2
++    assert payload["reproducibility_checksum"] == exp3733.payload_checksum(payload)
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda p: p.pop("original_exp3729_preserved"), "missing required"),
++        (lambda p: p.update(honest_verdict="complete: wrong"), "terminal verdict"),
++        (lambda p: p.update(inference_substrate="aggregation_from_upstream_artifacts"), "inference_substrate"),
++        (lambda p: p.update(original_exp3729_preserved=False), "original Exp 3729"),
++        (lambda p: p["original_exp3729"].update(green_light_342=True), "original Exp 3729"),
++        (lambda p: p.update(false_negative_root_cause="blocked_ebt"), "root cause"),
++        (lambda p: p.update(positive_control_passed=False), "positive control"),
++        (lambda p: p.update(part_a_status_corrected="bounded"), "UNTESTED"),
++        (lambda p: p.update(energy_as_generator_not_retired=False), "not retired"),
++        (lambda p: p.update(corrected_status_label=0.0), "status label"),
++        (lambda p: p.update(cited_upstream_artifacts=[]), "cite"),
++        (lambda p: p.update(random_seed=3729), "random_seed"),
++        (lambda p: p.update(reproducibility_checksum="short"), "sha256"),
++        (lambda p: p.update(duration_s=0.0), "duration_s"),
++        (lambda p: p.update(model_specs={}), "model_specs"),
++        (lambda p: p.update(target_model="forbidden"), "target_model"),
++        (lambda p: p.update(recommended_rerun_label=0.0), "recommended rerun label"),
++        (lambda p: p.update(correction_note="CUDA marker"), "GGUF/CUDA"),
++        (lambda p: p.update(reproducibility_checksum="0" * 64), "does not match"),
++        (lambda p: p.update(field_principles=[]), "field_principles"),
++        (lambda p: p["field_principles"].pop("positive_control_passed"), "field principles"),
++    ],
++)
++def test_req_ebt_3733_validate_rejects_regressions(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-EBT-3733: schema validation blocks dishonest corrigenda."""
++
++    _seed_upstreams(tmp_path)
++    artifact = exp3733.build_artifact(
++        tmp_path,
++        started_s=1.0,
++        now_s=1.25,
++        adversarial_verify_clean=True,
++        adversarial_verify_report={"flags": []},
++    )
++
++    broken = json.loads(json.dumps(artifact))
++    mutate(broken)
++
++    with pytest.raises(ValueError, match=message):
++        exp3733.validate_artifact(broken)
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda p: p.update(cited_upstream_artifacts="bad"), "cite"),
++        (
++            lambda p: p["cited_upstream_artifacts"].append(123),
++            "object",
++        ),
++        (
++            lambda p: p["cited_upstream_artifacts"][0].update(fields_imported=[]),
++            "fields_imported",
++        ),
++        (
++            lambda p: p["cited_upstream_artifacts"][0].update(sha256="bad"),
++            "sha256",
++        ),
++    ],
++)
++def test_req_ebt_3733_validate_rejects_malformed_citations(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-EBT-3733: citation provenance must be shaped for audit."""
++
++    _seed_upstreams(tmp_path)
++    artifact = exp3733.build_artifact(
++        tmp_path,
++        started_s=1.0,
++        now_s=1.25,
++        adversarial_verify_clean=True,
++        adversarial_verify_report={"flags": []},
++    )
++
++    broken = json.loads(json.dumps(artifact))
++    mutate(broken)
++    broken["reproducibility_checksum"] = exp3733.payload_checksum(broken)
++
++    with pytest.raises(ValueError, match=message):
++        exp3733.validate_artifact(broken)
++
++
++def test_req_ebt_3733_defensive_helpers_cover_bad_shapes() -> None:
++    """REQ-EBT-3733: helper guards handle malformed data without fabricating."""
++
++    with pytest.raises(ValueError, match="positive control losses"):
++        exp3733._positive_control_evidence({"first_step_losses": []})
++
++    assert exp3733._get_nested({"a": []}, "a.b") is None
++    assert exp3733._adversarial_report_is_clean({"flags": "bad"}) is True
++    assert exp3733._is_sha256("g" * 64) is False
++
++
++def test_req_ebt_3733_build_fails_closed_on_missing_positive_control(
++    tmp_path: Path,
++) -> None:
++    """REQ-EBT-3733: no positive control means no clean correction claim."""
++
++    _seed_upstreams(tmp_path)
++    _write_json(
++        tmp_path / exp3733.EXP3726_REL_PATH,
++        {
++            "loss_finite": True,
++            "loss_decreased": False,
++            "ebt_param_count": 37954560,
++            "peak_vram_mb": 1283,
++            "first_step_losses": [-0.1, -0.2],
++        },
++    )
++
++    with pytest.raises(ValueError, match="positive control"):
++        exp3733.build_artifact(tmp_path)
++
++
++@pytest.mark.parametrize(
++    ("path_attr", "replacement", "message"),
++    [
++        (
++            "EXP3728_REL_PATH",
++            {
++                "honest_verdict": "blocked_ebt",
++                "cumulative_steps_trained": 1,
++                "preconditions_checked": {
++                    "ebt_vendored": False,
++                    "smoke_passed": False,
++                },
++            },
++            "zero-step",
++        ),
++        (
++            "EXP3728_REL_PATH",
++            {
++                "honest_verdict": "blocked_ebt",
++                "cumulative_steps_trained": 0,
++                "preconditions_checked": {
++                    "ebt_vendored": True,
++                    "smoke_passed": False,
++                },
++            },
++            "cwd/import",
++        ),
++        (
++            "EXP3729_REL_PATH",
++            {
++                "honest_verdict": "complete: green_light",
++                "green_light_342": True,
++                "ebt_trained_stably": True,
++                "kill_gate_conclusion": "STABLE",
++            },
++            "original Exp 3729 false-negative",
++        ),
++    ],
++)
++def test_req_ebt_3733_build_fails_closed_on_wrong_upstream_shape(
++    tmp_path: Path,
++    path_attr: str,
++    replacement: dict[str, object],
++    message: str,
++) -> None:
++    """REQ-EBT-3733: the correction requires the exact infra-false-negative shape."""
++
++    _seed_upstreams(tmp_path)
++    _write_json(tmp_path / getattr(exp3733, path_attr), replacement)
++
++    with pytest.raises(ValueError, match=message):
++        exp3733.build_artifact(tmp_path)
++
++
++def test_req_ebt_3733_cli_writes_artifact(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
++    """REQ-EBT-3733: the script entrypoint writes the required deliverable."""
++
++    _seed_upstreams(tmp_path)
++
++    assert exp3733.main(["--root", str(tmp_path)]) == 0
++    payload = json.loads((tmp_path / exp3733.OUTPUT_REL_PATH).read_text(encoding="utf-8"))
++    printed = capsys.readouterr().out
++
++    assert payload["honest_verdict"] == exp3733.TERMINAL_VERDICT
++    assert exp3733.TERMINAL_VERDICT in printed
+-- 
+2.55.0
+

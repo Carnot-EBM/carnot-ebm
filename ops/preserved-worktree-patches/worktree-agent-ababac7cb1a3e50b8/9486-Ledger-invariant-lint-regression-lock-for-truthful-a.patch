@@ -1,0 +1,570 @@
+From 6ce4a93b6b6a233ec1f9482845a763fb5d81a0dd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 23:27:40 -0400
+Subject: [PATCH 09486/11362] Ledger-invariant lint: regression lock for
+ truthful archival (REQ-CONDUCTOR-ARCHIVE-2)
+
+Conversion 1 of docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md.
+
+scripts/research_complete_ledger_lint.py refuses a commit whose staged
+research-complete.yaml shows the archiver fix (87f209cdcf) regressing:
+a NEW duplicate milestone id, the retired 'OK (conductor)' literal, or
+an OK row whose deliverable does not exist. Forward-only from
+2026-08-22, so the historical corpus (13 duplicate ids / 1,841 surplus
+entries, 57 distinct phantom OK rows) never blocks a commit; repair of
+history stays an operator decision. --report-historical is the
+evidence mode: over the real ledger it counts 13 duplicate ids, 17,874
+retired-literal rows, 1,496 OK rows with missing deliverables.
+
+Fail-closed: an unparseable ledger and an entry with no completed date
+both fail the lint, with reasons in comments per the QA-Layer rule.
+Classified in GUARD_TARGETS (it decides whether the planner's failure
+record may change). Mutations: dedup disabled -> RED, existence check
+disabled -> RED, retired-literal check disabled -> RED; restored GREEN
+(10 tests). Real-corpus default mode: 0 violations, 1.1s.
+
+Also: determination-preservation-lint hook now runs under
+.venv/bin/python. adversarial_verify.py imports carnot.terminal_artifacts
+(landed today in conductor commits); under system python3 the lint
+fail-closed refused every commit that staged a results/*.json file.
+
+The spec.md edit (REQ-CONDUCTOR-ARCHIVE-2 section) is deliberate; the
+test-suite mutation marker that flagged it was removed on purpose per
+the guard's intended-change flow.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .pre-commit-config.yaml                       |  21 +-
+ .../capabilities/research-harnesses/spec.md   |  76 +++++++
+ scripts/qa_layer_authenticity_audit.py        |   6 +
+ scripts/research_complete_ledger_lint.py      | 199 ++++++++++++++++++
+ .../test_research_complete_ledger_lint.py     | 175 +++++++++++++++
+ 5 files changed, 476 insertions(+), 1 deletion(-)
+ create mode 100644 scripts/research_complete_ledger_lint.py
+ create mode 100644 tests/python/test_research_complete_ledger_lint.py
+
+diff --git a/.pre-commit-config.yaml b/.pre-commit-config.yaml
+index 4ba44e0c06..a94071aa26 100644
+--- a/.pre-commit-config.yaml
++++ b/.pre-commit-config.yaml
+@@ -328,9 +328,28 @@ repos:
+         files: ^(python/carnot/agentic/arc_actions_to_progress\.py|python/carnot/agentic/arc_competition_agent\.py|python/carnot/agentic/arc_executable_world_model\.py|python/carnot/agentic/arc_hud_row_schema\.py|python/carnot/agentic/arc_solver_kit\.py|python/carnot/agentic/arc_world_model_trust_energy\.py|python/carnot/experiment_4605_live_integration_scored_agent\.py|python/carnot/experiment_5714_think_mode_rescoped_ab\.py|python/carnot/experiment_5726_thinkingcap_16k_dualgpu_reason_ab\.py|python/carnot/experiment_5760_cegis_refinement_induction_ab\.py|python/carnot/experiment_5764_gemma31b_singleshot_induction_ab\.py|results/first_win_llm_on_20260727/analyse\.py|results/first_win_llm_on_20260727/build_artifact\.py|results/first_win_llm_on_20260727/firstwin\.py|results/first_win_llm_on_20260727/guardtest\.py|results/first_win_llm_on_20260727/recheck_after_commit\.py|results/generator_concurrency_5866/boundary\.py|results/generator_concurrency_5866/build_artifact\.py|results/generator_concurrency_5866/fixprice\.py|results/generator_concurrency_5866/harness\.py|results/generator_concurrency_fix_20260727/build_fix_artifact\.py|results/generator_concurrency_fix_20260727/fixverify\.py|results/generator_concurrency_fix_20260727/mutate\.py|results/inducer_h2h_6021/build_artifact_6021\.py|results/inducer_h2h_6021/h2h_arm_runner\.py\.frozen|results/inducer_h2h_6021/h2h_reason_tag_probe\.py\.frozen|scripts/analyze_arc_early_stop_sweep\.py|scripts/analyze_arc_gateway_accurate_rescore\.py|scripts/analyze_arc_gateway_rescore\.py|scripts/analyze_arc_llm_on_wallclock_envelope\.py|scripts/analyze_arc_max_actions_answer\.py|scripts/analyze_arc_reset_charge_attribution\.py|scripts/analyze_scored_path_lever_ab\.py|scripts/arc_gateway_card_ground_truth\.py|scripts/arc_gateway_exact_attribution\.py|scripts/arc_gateway_rescore\.py|scripts/arc_leaderboard_eval\.py|scripts/arc_llm_on_contention_probe\.py|scripts/arc_llm_on_liveness_lint\.py|scripts/arc_llm_on_wallclock_budget_probe\.py|scripts/arc_per_level_reset_attribution_capture\.py|scripts/arc_scored_path_early_stop_sweep\.py|scripts/arc_scored_path_lever_harness\.py|scripts/experiments/experiment_6011_world_model_change_gate_four_arm\.py|scripts/experiments/experiment_6012_hidden_state_trust_gate_hole\.py|scripts/experiments/experiment_6013_hidden_state_change_gate_closure\.py|scripts/kaggle/submission_kernel/main\.py|scripts/analyze_.*\.py|ops/analyzer_artifact_index\.json|results/.*\.json)$
+         pass_filenames: false
+ 
++      # Ledger-invariant lint (REQ-CONDUCTOR-ARCHIVE-2): the regression lock
++      # for truthful archival (commit 87f209cdcf). Forward-only from
++      # 2026-08-22 -- historical corpus (1,841 surplus duplicate entries, 57
++      # phantom OK rows) never blocks a commit. Refuses: a NEW duplicate
++      # milestone id, the retired 'OK (conductor)' literal, and an OK row
++      # whose deliverable does not exist.
++      - id: research-complete-ledger-lint
++        name: research-complete.yaml holds one truthful entry per milestone
++        entry: .venv/bin/python scripts/research_complete_ledger_lint.py
++        language: system
++        files: ^research-complete\.yaml$
++        pass_filenames: true
++
+       - id: determination-preservation-lint
+         name: Fabrication-gate determinations are not silently dropped
+-        entry: python3 scripts/determination_preservation_lint.py
++        # .venv/bin/python since 2026-08-21: scripts/adversarial_verify.py now
++        # imports the installed carnot package (carnot.terminal_artifacts),
++        # which the system python3 cannot see. Under python3 the lint
++        # fail-closed REFUSED every commit that staged a results/*.json file
++        # ("could not import scripts/adversarial_verify.py"). The venv
++        # interpreter is what spec-coverage already uses.
++        entry: .venv/bin/python scripts/determination_preservation_lint.py
+         language: system
+         # Scoped to results/*.json ONLY -- the determination lives in the artifact, and the
+         # writer that strips it is an arbitrary experiment script, not one auditable code path.
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 273b08fea9..78ca0e9bd9 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -7907,3 +7907,79 @@ SHALL flag VERDICT_CLASS_MISMATCH at critical severity.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-CONDUCTOR-VERDICT-1 | Implemented (`scripts/adversarial_verify.py`: `check_verdict_class_consistency` + `_VERDICT_CLASSES`, wired into `verify_artifact`; planner-prompt `verdict_class` field in the live `_plan_next_milestone`) | Implemented (`tests/python/test_verdict_class_consistency.py`, 7 tests; mutations: oracle cross-check disabled -> RED, enum opened -> RED) |
++
++## REQ-CONDUCTOR-ARCHIVE-2: A Ledger Lint SHALL Refuse Commits That Violate The Truthful-Archival Invariants
++
++Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
++(Conversion 1 — the regression lock for REQ-CONDUCTOR-ARCHIVE-1). The
++archiver fix is one revert away from regressing, and
++`research-complete.yaml` is the planner's failure record. Measured on
++2026-08-21: 1,892 milestone entries for 51 distinct ids (1,841 surplus
++duplicates; worst id `2026.07.510` with 684 copies), and 57 distinct
++task rows stamped `OK (conductor)` whose deliverables never existed.
++
++`scripts/research_complete_ledger_lint.py` SHALL run as a pre-commit
++hook on any commit that stages `research-complete.yaml`. The lint is
++FORWARD-ONLY from the cutoff date `2026-08-22`: it checks entries whose
++`completed` date is on or after the cutoff, so the uncorrected
++historical corpus never blocks a commit. Repair of history stays an
++operator decision (never-prune).
++
++For each checked entry the lint SHALL enforce:
++
++1. **Unique id.** The entry's milestone id appears exactly once in the
++   whole file. A second entry for the same id is the
++   activation-refusal retry-append regressing.
++2. **No retired literal.** No task row carries the result
++   `OK (conductor)`. The archiver derives results now; that exact
++   literal can only reappear if the hardcoded stamp returns.
++3. **OK rows name deliverables that exist.** A task row whose result
++   starts with `OK`, other than `OK_NO_DELIVERABLE`, and which names a
++   deliverable, must name a path that exists on disk (resolved against
++   the ledger file's own directory).
++
++An entry with no `completed` date SHALL be checked (fail-closed: the
++archiver always writes the date, so its absence marks an anomalous new
++entry, not an old one). An unparseable ledger SHALL fail the lint
++(fail-closed: a corrupted record is worse than a blocked commit).
++
++The lint SHALL offer `--report-historical`: apply the same checks to
++ALL entries regardless of cutoff, print the violation counts, and exit
++0. This is the evidence mode — it demonstrates the true-positive
++corpus (the 57 phantom rows, the 1,841 duplicates) without blocking
++anything.
++
++The lint SHALL be listed in `GUARD_TARGETS` of
++`scripts/qa_layer_authenticity_audit.py`: it decides whether the
++research record may change, which is the QA-layer criterion.
++
++#### SCENARIO-CONDUCTOR-ARCHIVE-4
++
++Given a ledger where milestone M has one pre-cutoff entry and a new
++post-cutoff entry is appended for the same M, the lint SHALL exit
++non-zero and name M.
++
++#### SCENARIO-CONDUCTOR-ARCHIVE-5
++
++Given a post-cutoff entry with a task row `result: OK` whose
++deliverable path does not exist, the lint SHALL exit non-zero; given
++the same row with the deliverable present on disk, it SHALL exit 0.
++
++#### SCENARIO-CONDUCTOR-ARCHIVE-6
++
++Given a post-cutoff entry with a task row `result: OK (conductor)`,
++the lint SHALL exit non-zero even when the deliverable exists.
++
++#### SCENARIO-CONDUCTOR-ARCHIVE-7
++
++Given the historical corpus shape (pre-cutoff duplicate entries and
++pre-cutoff phantom `OK (conductor)` rows, verbatim from milestone
++`2026.07.510` / task `exp5710-fr11-isolated-act-on-advice-canary`),
++the default mode SHALL exit 0 and `--report-historical` SHALL count
++the violations.
++
++## Implementation Status (REQ-CONDUCTOR-ARCHIVE-2)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-CONDUCTOR-ARCHIVE-2 | Implemented (`scripts/research_complete_ledger_lint.py`; pre-commit hook `research-complete-ledger-lint`; `GUARD_TARGETS` entry in `scripts/qa_layer_authenticity_audit.py`) | Implemented (`tests/python/test_research_complete_ledger_lint.py`; mutations: dedup check disabled -> RED, existence check disabled -> RED, retired-literal check disabled -> RED) |
+diff --git a/scripts/qa_layer_authenticity_audit.py b/scripts/qa_layer_authenticity_audit.py
+index d057591fdc..16fe195f8d 100644
+--- a/scripts/qa_layer_authenticity_audit.py
++++ b/scripts/qa_layer_authenticity_audit.py
+@@ -221,6 +221,12 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
+         "alone would never have found it -- listed here explicitly, added 2026-08-05 after "
+         "landing 7 hours unclassified.",
+     ),
++    (
++        PROJECT_ROOT / "scripts" / "research_complete_ledger_lint.py",
++        "decides whether the milestone ledger -- the planner's failure record -- may "
++        "change; the regression lock for truthful archival (REQ-CONDUCTOR-ARCHIVE-2, "
++        "2026-08-21: 57 phantom OK rows and 1,841 duplicate entries landed silently)",
++    ),
+ )
+ 
+ # Pre-commit-wired scripts deliberately OUT of QA-layer scope, each with the reason. This
+diff --git a/scripts/research_complete_ledger_lint.py b/scripts/research_complete_ledger_lint.py
+new file mode 100644
+index 0000000000..ca28f6d74e
+--- /dev/null
++++ b/scripts/research_complete_ledger_lint.py
+@@ -0,0 +1,199 @@
++#!/usr/bin/env python3
++"""Ledger-invariant lint for research-complete.yaml (REQ-CONDUCTOR-ARCHIVE-2).
++
++This is the regression lock for the truthful-archival fix (commit
++87f209cdcf). That fix made the conductor derive each archived task's
++`result` from evidence and refuse duplicate milestone appends. This lint
++refuses any commit that would show either behavior returning.
++
++Why a lint on top of the fix: the fix is one revert away from regressing,
++and research-complete.yaml is the planner's failure record. Measured on
++2026-08-21, before the fix: 1,892 milestone entries for 51 distinct ids
++(worst: 684 copies of 2026.07.510) and 57 task rows stamped
++"OK (conductor)" whose deliverables never existed.
++
++FORWARD-ONLY: only entries whose `completed` date is on or after
++2026-08-22 are checked, so the uncorrected historical corpus never blocks
++a commit. Repair of history is an operator decision (never-prune).
++Run with --report-historical to count violations over ALL entries
++(evidence mode; always exits 0).
++
++Fail-closed choices, stated per the QA-Layer Authenticity Discipline:
++  - an unparseable ledger FAILS the lint (a corrupted record is worse
++    than a blocked commit);
++  - an entry with no `completed` date IS checked (the archiver always
++    writes the date; its absence marks an anomalous new entry).
++"""
++
++from __future__ import annotations
++
++import argparse
++import sys
++from pathlib import Path
++
++import yaml
++
++try:
++    _LOADER = yaml.CSafeLoader  # ~10x faster on the 80k-line real ledger
++except AttributeError:  # pragma: no cover - depends on libyaml presence
++    _LOADER = yaml.SafeLoader
++
++# Entries completed on/after this date are checked. Everything in the
++# ledger on 2026-08-21 (the fix date) predates it, so the historical
++# corpus passes untouched while every NEW append is fully checked.
++CUTOFF = "2026-08-22"
++
++# The retired hardcoded stamp. derive_task_result() emits only the derived
++# vocabulary (OK, FLAGGED, OK_NO_DELIVERABLE, ...), so this exact literal
++# can only reappear if the archiver regresses to the fixed string.
++RETIRED_LITERAL = "OK (conductor)"
++
++
++def _entry_is_checked(entry: dict) -> bool:
++    """True when the entry falls under the forward-only window.
++
++    Missing `completed` counts as checked (fail-closed): the archiver
++    always writes the date, so absence marks an anomalous new entry.
++    """
++    completed = entry.get("completed")
++    if completed is None or str(completed).strip() == "":
++        return True
++    return str(completed) >= CUTOFF
++
++
++def _iter_task_violations(entry: dict, root: Path) -> list[str]:
++    """Rule 2 (no retired literal) and rule 3 (OK names an existing deliverable)."""
++    out: list[str] = []
++    mid = str(entry.get("id"))
++    for task in entry.get("tasks") or []:
++        if not isinstance(task, dict):
++            continue
++        tid = str(task.get("id", "?"))
++        result = str(task.get("result", ""))
++        deliverable = str(task.get("deliverable", "") or "").strip()
++        if result == RETIRED_LITERAL:
++            # Note deliverable absence too, so the historical report can
++            # surface the 57 phantom rows the literal was stamping over.
++            also = (
++                "; deliverable also does not exist"
++                if deliverable and not (root / deliverable).exists()
++                else ""
++            )
++            out.append(
++                f"{mid}/{tid}: result is the retired literal '{RETIRED_LITERAL}' — "
++                "the archiver derives results from evidence now; this stamp "
++                f"returning means the hardcoded literal regressed{also} "
++                "(REQ-CONDUCTOR-ARCHIVE-2)"
++            )
++            continue
++        if result.startswith("OK") and result != "OK_NO_DELIVERABLE":
++            if deliverable and not (root / deliverable).exists():
++                out.append(
++                    f"{mid}/{tid}: result {result!r} but deliverable "
++                    f"{deliverable!r} does not exist — an OK row must name a "
++                    "deliverable that is on disk (REQ-CONDUCTOR-ARCHIVE-2)"
++                )
++    return out
++
++
++def _collect(milestones: list[dict], root: Path, forward_only: bool) -> list[str]:
++    checked = [m for m in milestones if isinstance(m, dict)]
++    if forward_only:
++        scope = [m for m in checked if _entry_is_checked(m)]
++    else:
++        scope = checked
++
++    violations: list[str] = []
++
++    # Rule 1: an id in scope must appear exactly once in the WHOLE file.
++    all_ids: dict[str, int] = {}
++    for m in checked:
++        key = str(m.get("id"))
++        all_ids[key] = all_ids.get(key, 0) + 1
++    flagged_ids = set()
++    for m in scope:
++        key = str(m.get("id"))
++        if all_ids.get(key, 0) > 1 and key not in flagged_ids:
++            flagged_ids.add(key)
++            violations.append(
++                f"{key}: duplicate milestone entry ({all_ids[key]} copies) — the "
++                "archiver refuses duplicate appends; a second entry means the "
++                "retry-append regressed (REQ-CONDUCTOR-ARCHIVE-2)"
++            )
++
++    for m in scope:
++        violations.extend(_iter_task_violations(m, root))
++    return violations
++
++
++def check_ledger(ledger_path: Path) -> list[str]:
++    """Forward-only violations for the given ledger file.
++
++    Deliverable paths resolve against the ledger's own directory, so the
++    lint works identically on the real repo root and on a test tmp_path.
++    Raises on an unparseable file — main() maps that to a failure.
++    """
++    data = yaml.load(ledger_path.read_text(), Loader=_LOADER) or {}
++    milestones = data.get("milestones") or []
++    return _collect(milestones, ledger_path.resolve().parent, forward_only=True)
++
++
++def report_historical(ledger_path: Path) -> str:
++    """Evidence mode: count violations over ALL entries, ignore the cutoff."""
++    data = yaml.load(ledger_path.read_text(), Loader=_LOADER) or {}
++    milestones = [m for m in (data.get("milestones") or []) if isinstance(m, dict)]
++    violations = _collect(milestones, ledger_path.resolve().parent, forward_only=False)
++    dup = sum(1 for v in violations if "duplicate milestone entry" in v)
++    literal = sum(1 for v in violations if f"retired literal '{RETIRED_LITERAL}'" in v)
++    missing = sum(1 for v in violations if "does not exist" in v)
++    lines = [
++        f"research-complete.yaml historical report ({len(milestones)} entries):",
++        f"  duplicate milestone ids: {dup}",
++        f"  rows with the retired literal '{RETIRED_LITERAL}': {literal}",
++        f"  OK rows whose deliverable does not exist: {missing}",
++    ]
++    return "\n".join(lines)
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument(
++        "paths",
++        nargs="*",
++        default=["research-complete.yaml"],
++        help="ledger path(s); pre-commit passes the staged filename",
++    )
++    parser.add_argument(
++        "--report-historical",
++        action="store_true",
++        help="count violations over ALL entries (ignores the cutoff); exits 0",
++    )
++    args = parser.parse_args(argv)
++
++    rc = 0
++    for raw in args.paths:
++        path = Path(raw)
++        if args.report_historical:
++            try:
++                print(report_historical(path))
++            except Exception as exc:  # fail-closed even in report mode
++                print(f"LEDGER LINT: cannot read {path}: {exc}", file=sys.stderr)
++                return 1
++            continue
++        try:
++            violations = check_ledger(path)
++        except Exception as exc:
++            # Fail-closed: an unreadable/unparseable ledger blocks the
++            # commit. A guard that answers "clean" when it could not look
++            # is the trusted-and-silent failure mode.
++            print(f"LEDGER LINT: cannot read {path}: {exc}", file=sys.stderr)
++            return 1
++        for v in violations:
++            print(f"LEDGER LINT VIOLATION: {v}", file=sys.stderr)
++        if violations:
++            rc = 1
++    return rc
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_research_complete_ledger_lint.py b/tests/python/test_research_complete_ledger_lint.py
+new file mode 100644
+index 0000000000..043ed05850
+--- /dev/null
++++ b/tests/python/test_research_complete_ledger_lint.py
+@@ -0,0 +1,175 @@
++"""Tests for scripts/research_complete_ledger_lint.py.
++
++REQ: REQ-CONDUCTOR-ARCHIVE-2 (openspec/capabilities/research-harnesses/spec.md).
++SCENARIOs: SCENARIO-CONDUCTOR-ARCHIVE-4,
++SCENARIO-CONDUCTOR-ARCHIVE-5,
++SCENARIO-CONDUCTOR-ARCHIVE-6,
++SCENARIO-CONDUCTOR-ARCHIVE-7.
++
++The lint is the regression lock for the truthful-archival fix (commit
++87f209cdcf): the archiver no longer stamps "OK (conductor)" or appends
++duplicate milestones, and this lint refuses a commit that would show
++either behavior returning. Forward-only from cutoff 2026-08-22 so the
++uncorrected historical corpus (57 phantom rows, 1,841 surplus duplicate
++entries measured 2026-08-21) never blocks a commit.
++
++Every ledger is built under tmp_path — no test reads or writes tracked
++state.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++import yaml
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "scripts"))
++
++import research_complete_ledger_lint as lint  # noqa: E402
++
++# Verbatim shape of a REAL phantom row from the historical corpus:
++# milestone 2026.07.510, task exp5710 — result "OK (conductor)" with a
++# deliverable that was never created (one of the 57).
++REAL_PHANTOM_TASK = {
++    "id": "exp5710-fr11-isolated-act-on-advice-canary",
++    "title": "Gated on Exp5709 prospective promotion: isolated FR-11 act-on-advice canary",
++    "deliverable": "results/experiment_5710_fr11_isolated_act_on_advice_canary.json",
++    "result": "OK (conductor)",
++}
++
++
++def _entry(mid: str, completed: str, tasks: list[dict]) -> dict:
++    return {"id": mid, "title": f"t-{mid}", "completed": completed, "tasks": tasks}
++
++
++def _write(tmp_path: Path, milestones: list[dict]) -> Path:
++    ledger = tmp_path / "research-complete.yaml"
++    ledger.write_text(yaml.safe_dump({"milestones": milestones}, sort_keys=False))
++    return ledger
++
++
++def _ok_task(tmp_path: Path, name: str, create: bool) -> dict:
++    deliverable = f"results/{name}.json"
++    if create:
++        p = tmp_path / deliverable
++        p.parent.mkdir(parents=True, exist_ok=True)
++        p.write_text("{}")
++    return {"id": name, "title": name, "deliverable": deliverable, "result": "OK"}
++
++
++def test_duplicate_post_cutoff_id_fails(tmp_path: Path) -> None:
++    # SCENARIO-CONDUCTOR-ARCHIVE-4: a post-cutoff entry re-using an id
++    # that the file already holds is the retry-append regressing.
++    ledger = _write(
++        tmp_path,
++        [
++            _entry("2026.08.560", "2026-08-19", []),
++            _entry("2026.08.560", "2026-08-25", []),
++        ],
++    )
++    violations = lint.check_ledger(ledger)
++    assert violations, "duplicate post-cutoff id must be a violation"
++    assert any("2026.08.560" in v and "duplicate" in v.lower() for v in violations)
++    assert lint.main([str(ledger)]) == 1
++
++
++def test_ok_row_with_missing_deliverable_fails(tmp_path: Path) -> None:
++    # SCENARIO-CONDUCTOR-ARCHIVE-5 (missing half): OK must mean the
++    # deliverable exists — that is the definition the archiver now derives.
++    task = _ok_task(tmp_path, "experiment_9001_missing", create=False)
++    ledger = _write(tmp_path, [_entry("2026.08.562", "2026-08-25", [task])])
++    violations = lint.check_ledger(ledger)
++    assert any("experiment_9001_missing" in v for v in violations)
++    assert lint.main([str(ledger)]) == 1
++
++
++def test_ok_row_with_present_deliverable_passes(tmp_path: Path) -> None:
++    # SCENARIO-CONDUCTOR-ARCHIVE-5 (present half).
++    task = _ok_task(tmp_path, "experiment_9002_present", create=True)
++    ledger = _write(tmp_path, [_entry("2026.08.562", "2026-08-25", [task])])
++    assert lint.check_ledger(ledger) == []
++    assert lint.main([str(ledger)]) == 0
++
++
++def test_retired_literal_fails_even_with_deliverable(tmp_path: Path) -> None:
++    # SCENARIO-CONDUCTOR-ARCHIVE-6: "OK (conductor)" is the retired
++    # hardcoded stamp. The derived vocabulary cannot produce it, so its
++    # reappearance means the archiver regressed — deliverable or not.
++    task = _ok_task(tmp_path, "experiment_9003_literal", create=True)
++    task["result"] = "OK (conductor)"
++    ledger = _write(tmp_path, [_entry("2026.08.562", "2026-08-25", [task])])
++    violations = lint.check_ledger(ledger)
++    assert any("OK (conductor)" in v for v in violations)
++    assert lint.main([str(ledger)]) == 1
++
++
++def test_historical_corpus_shape_passes_default_mode(tmp_path: Path) -> None:
++    # SCENARIO-CONDUCTOR-ARCHIVE-7: pre-cutoff duplicates and phantom
++    # rows (verbatim real row from milestone .510) never block a commit.
++    milestones = [
++        _entry("2026.07.510", "2026-07-17", [dict(REAL_PHANTOM_TASK)]),
++        _entry("2026.07.510", "2026-07-17", [dict(REAL_PHANTOM_TASK)]),
++        _entry("2026.07.510", "2026-07-17", [dict(REAL_PHANTOM_TASK)]),
++    ]
++    ledger = _write(tmp_path, milestones)
++    assert lint.check_ledger(ledger) == []
++    assert lint.main([str(ledger)]) == 0
++
++
++def test_report_historical_counts_pre_cutoff_violations(tmp_path: Path, capsys) -> None:
++    # SCENARIO-CONDUCTOR-ARCHIVE-7 (evidence mode): the same corpus
++    # shape is counted, not blocked, under --report-historical.
++    milestones = [
++        _entry("2026.07.510", "2026-07-17", [dict(REAL_PHANTOM_TASK)]),
++        _entry("2026.07.510", "2026-07-17", [dict(REAL_PHANTOM_TASK)]),
++    ]
++    ledger = _write(tmp_path, milestones)
++    assert lint.main([str(ledger), "--report-historical"]) == 0
++    out = capsys.readouterr().out
++    assert "duplicate" in out.lower()
++    assert "OK (conductor)" in out
++    # Two entries share one id (1 duplicate id) and both carry the
++    # phantom row (2 phantom rows).
++    assert "duplicate milestone ids: 1" in out
++    assert "rows with the retired literal 'OK (conductor)': 2" in out
++
++
++def test_ok_no_deliverable_is_honest_and_passes(tmp_path: Path) -> None:
++    # REQ-CONDUCTOR-ARCHIVE-2 rule 3 carve-out: OK_NO_DELIVERABLE is the
++    # archiver HONESTLY recording a missing deliverable. It must not be
++    # punished, or the truthful vocabulary becomes worse than the lie.
++    task = {
++        "id": "exp-h",
++        "title": "h",
++        "deliverable": "results/never_created.json",
++        "result": "OK_NO_DELIVERABLE",
++    }
++    ledger = _write(tmp_path, [_entry("2026.08.563", "2026-08-25", [task])])
++    assert lint.check_ledger(ledger) == []
++
++
++def test_missing_completed_date_is_checked_fail_closed(tmp_path: Path) -> None:
++    # REQ-CONDUCTOR-ARCHIVE-2: the archiver always writes `completed`, so
++    # an entry without it is an anomalous NEW entry — checked, not skipped.
++    task = _ok_task(tmp_path, "experiment_9004_nodate", create=False)
++    entry = {"id": "2026.08.564", "title": "t", "tasks": [task]}
++    ledger = _write(tmp_path, [entry])
++    assert lint.main([str(ledger)]) == 1
++
++
++def test_unparseable_ledger_fails_closed(tmp_path: Path) -> None:
++    # REQ-CONDUCTOR-ARCHIVE-2: a corrupted record fails the lint rather
++    # than passing silently — the guard must never be trusted-and-silent.
++    ledger = tmp_path / "research-complete.yaml"
++    ledger.write_text("milestones: [unclosed")
++    assert lint.main([str(ledger)]) == 1
++
++
++def test_deliverable_free_ok_row_passes(tmp_path: Path) -> None:
++    # A task that declares no deliverable can honestly archive OK
++    # (derive_task_result returns OK for log-OK + empty deliverable).
++    task = {"id": "exp-nod", "title": "nod", "deliverable": "", "result": "OK"}
++    ledger = _write(tmp_path, [_entry("2026.08.565", "2026-08-25", [task])])
++    assert lint.check_ledger(ledger) == []
+-- 
+2.55.0
+

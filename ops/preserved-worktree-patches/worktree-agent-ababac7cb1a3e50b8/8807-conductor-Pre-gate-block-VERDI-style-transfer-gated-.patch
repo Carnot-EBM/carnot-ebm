@@ -1,0 +1,61 @@
+From 43ea137012c9c81a82b4f3c2ece4ec2dc8720341 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 11 Aug 2026 04:06:46 -0400
+Subject: [PATCH 08807/11362] [conductor] Pre-gate block: VERDI-style transfer
+ gated on Exp6301 integrity=1 and Exp6304 readiness=1
+
+1 of 2 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.activation_bus_integrity_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...periment_6305_evidence_licensed_cross_family_transfer.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7cd2818c42..e5df8e8ab7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 75, "phase": "iteration_start", "last_beat": "2026-08-11T08:04:43Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 76, "phase": "iteration_start", "last_beat": "2026-08-11T08:06:46Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 515f4c3f76..bd96e9bdeb 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15662,3 +15662,4 @@ Still active  |
+ | 2026-08-11 08:02 UTC | Live three-family shared-state value benchmark gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6302-shared-activation-state-initializer) |
+ | 2026-08-11 08:02 UTC | VERDI-style transfer gated on Exp6301 integrity=1  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
+ | 2026-08-11 08:04 UTC | Live three-family shared-state value benchmark gat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6302-shared-activation-state-initializer) |
++| 2026-08-11 08:04 UTC | VERDI-style transfer gated on Exp6301 integrity=1  | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6301-activation-bus-integrity-audit.act |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4832450f77..311cf0828f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 75, "phase": "iteration_start", "started_at": "2026-08-11T08:04:43Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 76, "phase": "iteration_start", "started_at": "2026-08-11T08:06:46Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6305_evidence_licensed_cross_family_transfer.json b/results/experiment_6305_evidence_licensed_cross_family_transfer.json
+index e005f54ed5..295537dd5c 100644
+--- a/results/experiment_6305_evidence_licensed_cross_family_transfer.json
++++ b/results/experiment_6305_evidence_licensed_cross_family_transfer.json
+@@ -2,8 +2,8 @@
+   "experiment": 6305,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-11",
+-  "started_at": "2026-08-11T08:04:43.719249+00:00",
+-  "finished_at": "2026-08-11T08:04:43.719249+00:00",
++  "started_at": "2026-08-11T08:06:46.138307+00:00",
++  "finished_at": "2026-08-11T08:06:46.138307+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "VERDI-style transfer gated on Exp6301 integrity=1 and Exp6304 readiness=1",
+-- 
+2.55.0
+

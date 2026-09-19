@@ -1,0 +1,82 @@
+From 541bba066bfe22336d3289393e8b3a78547bfee4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 13:55:26 -0400
+Subject: [PATCH 10295/11362] Record what the selfparse A/B can and cannot
+ decide
+
+Operator directive, 2026-08-29, on seeing `mem=True` in an early cell: run-time
+memorization by the live agent is ACCEPTABLE. So long as levels are being banked
+and the challenge score improves, a world model that memorizes is only a defect
+at TRAINING time, before a live challenge run is submitted. My earlier reading of
+that flag as a bad signal was wrong.
+
+It also bounds the experiment. The shards record holdout, visible_fit,
+is_memorizing, memorization_scan and tool_loop_stats -- and NO level progress in
+any form. The arm script imports arc_actions_to_progress solely to build windows
+and never scores with it.
+
+So this A/B selects on offline generalization, which is a proxy. If a memorizing
+engine still banks levels, holdout is not the property driving the score, and an
+A/B selecting on holdout could reject the better live method. A result here
+answers "does the tool loop induce more generalizable engines", not "does it bank
+more levels" -- and only the second decides whether to ship it.
+
+The follow-up that would answer it is an actions-to-progress A/B
+(REQ-ARC-WMTE-5720) over the same arms, counting actions to level-up with
+memorization recorded as an observation rather than a penalty. Not started, and
+named in the run README so it is not rediscovered later.
+
+The run continues unchanged: a mid-run metric change would invalidate the banked
+cells, and the generalization question is still worth answering.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../README.md                                 | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/results/holdout_equalized_ab_selfparse_20260829/README.md b/results/holdout_equalized_ab_selfparse_20260829/README.md
+index 444410d740..0640a312b8 100644
+--- a/results/holdout_equalized_ab_selfparse_20260829/README.md
++++ b/results/holdout_equalized_ab_selfparse_20260829/README.md
+@@ -23,3 +23,37 @@ the arm.
+ 
+ Cost, from the 08-20 stop note: the tool arm averaged 598s per cell, the single arm 4,238s. The
+ tool arm is therefore hours and the control arm is days; the tool arm runs first.
++
++## Scope limit of this A/B's metric (operator directive, 2026-08-29)
++
++Operator, on seeing `mem=True` in an early cell:
++
++> "if the live agent is memorizing at run time, that is acceptable: while it is probably
++>  generally better for efficiency if our world model understands the game, so long as we are
++>  making progress on levels and improving our challenge score in the process, memorization is
++>  only a bad thing here at training time before we submit a live agent challenge run."
++
++This corrects a misreading in the run log's early commentary, and it also bounds what this A/B
++can decide.
++
++**What the shards record:** `holdout`, `visible_fit`, `is_memorizing`, `memorization_scan`,
++`tool_loop_stats`, `elapsed_s`. **What they do not record: level progress, in any form.** The
++arm script imports `arc_actions_to_progress` only to BUILD windows; it never scores with it.
++
++So this A/B selects on OFFLINE GENERALIZATION. That is a legitimate dev-time question — a
++memorizing engine at selection time tells us the draw did not explain the level — but it is a
++PROXY for the deliverable, which is levels banked and challenge score on a hidden game. If a
++memorizing engine still banks levels, holdout is not the property that drives the score, and an
++A/B selecting on holdout could reject the better live method.
++
++**Consequence for reading the result.** A holdout difference between arms answers "does the tool
++loop induce more generalizable engines". It does NOT answer "does the tool loop bank more
++levels", which is the question that decides whether to ship it. Do not let this run's number
++stand in for that.
++
++The follow-up that would answer it is an actions-to-progress A/B (REQ-ARC-WMTE-5720) over the
++same arms — bounded live runs counting actions to level-up, with memorization recorded as an
++observation rather than a penalty. Not started; naming it here so it is not rediscovered.
++
++This run continues unchanged: mid-run metric changes would invalidate the cells already banked,
++and the generalization question is still worth its answer.
+-- 
+2.55.0
+

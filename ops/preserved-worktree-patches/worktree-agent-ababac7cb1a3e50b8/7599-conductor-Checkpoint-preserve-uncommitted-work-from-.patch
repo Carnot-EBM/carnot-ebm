@@ -1,0 +1,70 @@
+From 417abe3826a06bc6f134312275e19c95f087beb5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 23:16:41 -0400
+Subject: [PATCH 07599/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...5828_future_validated_structural_memory.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index aa4335ab4c..5bc94b7d1e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 286, "phase": "iteration_start", "last_beat": "2026-07-23T02:54:31Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 287, "phase": "iteration_start", "last_beat": "2026-07-23T03:16:38Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4702788ef5..eb42e862ea 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14159,3 +14159,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-23 01:57 UTC | Gated on Exp5825 contract: chronological out-of-te | OK | 88 passed, 1 warning in 28.86s |
+ | 2026-07-23 02:18 UTC | Gated on Exp5826 stream: minimal-core and active-q | OK | 88 passed, 1 warning in 21.45s |
+ | 2026-07-23 02:52 UTC | Gated on Exp5827 structural lift: future-validated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5828_future_ |
++| 2026-07-23 03:14 UTC | Gated on Exp5827 structural lift: future-validated | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1ff0cd5dfb..c56cfb1cb1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 286, "phase": "iteration_start", "started_at": "2026-07-23T02:54:31Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 287, "phase": "iteration_start", "started_at": "2026-07-23T03:16:38Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5828_future_validated_structural_memory.json b/results/experiment_5828_future_validated_structural_memory.json
+index 21937bfbe9..c29123c506 100644
+--- a/results/experiment_5828_future_validated_structural_memory.json
++++ b/results/experiment_5828_future_validated_structural_memory.json
+@@ -5958,5 +5958,18 @@
+     "self_learning_spec": "sha256:6b26d4b91d71995e3f70dbeb6818937bcad917cd5187111b5c53a5008321aa95",
+     "tests": "sha256:fddd13a8b250e7ecc3dc25f3604fee990a737333c0d816b3e930b11e6be77597"
+   },
+-  "verifier_is_oracle": true
+-}
++  "verifier_is_oracle": true,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.793358 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

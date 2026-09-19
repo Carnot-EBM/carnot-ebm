@@ -1,0 +1,61 @@
+From e42832b6dd1e0bb82e297d7fd4eb27dead64fb9a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 11:00:17 -0400
+Subject: [PATCH 07085/11362] [conductor] Pre-gate block: Gated on Exp5630
+ nondegeneracy and safety: known-level live-path epistemic-probe A/B
+
+1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototype.epistemic_probe_ready_score (actual=0.0 >= expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                             | 2 +-
+ ops/conductor-log.md                                     | 1 +
+ ops/conductor-state.json                                 | 2 +-
+ results/experiment_5631_arc_epistemic_probe_live_ab.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a275e2438a..3c51f2d6a5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 162, "phase": "iteration_start", "last_beat": "2026-07-14T14:58:14Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 163, "phase": "iteration_start", "last_beat": "2026-07-14T15:00:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index facd25b9d9..6e7f3469fd 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11744,3 +11744,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 14:39 UTC | Gated on Exp5628 continuous-self-learning readines | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5628-conformal-active-spline-kan-csl.un |
+ | 2026-07-14 14:54 UTC | Epistemic object-hypothesis causal-probe prototype | OK | 87 passed, 1 warning in 17.30s |
+ | 2026-07-14 14:56 UTC | Gated on Exp5630 nondegeneracy and safety: known-l | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototy |
++| 2026-07-14 14:58 UTC | Gated on Exp5630 nondegeneracy and safety: known-l | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp5630-arc-epistemic-object-probe-prototy |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 23f7d797c6..8bb0b88901 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 162, "phase": "iteration_start", "started_at": "2026-07-14T14:58:14Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 163, "phase": "iteration_start", "started_at": "2026-07-14T15:00:17Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5631_arc_epistemic_probe_live_ab.json b/results/experiment_5631_arc_epistemic_probe_live_ab.json
+index 0d2a0feb76..3b489dfddf 100644
+--- a/results/experiment_5631_arc_epistemic_probe_live_ab.json
++++ b/results/experiment_5631_arc_epistemic_probe_live_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 5631,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-14",
+-  "started_at": "2026-07-14T14:58:14.929202+00:00",
+-  "finished_at": "2026-07-14T14:58:14.929202+00:00",
++  "started_at": "2026-07-14T15:00:17.588490+00:00",
++  "finished_at": "2026-07-14T15:00:17.588490+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp5630 nondegeneracy and safety: known-level live-path epistemic-probe A/B",
+-- 
+2.55.0
+

@@ -1,0 +1,70 @@
+From 22c0fdde3b03292454c90eae2b1298e58b1c8874 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 20:04:51 -0400
+Subject: [PATCH 00046/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...nt_3682_discrimination_vs_selection_gap.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2870f143f1..eb962c3a2b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 184, "phase": "iteration_start", "last_beat": "2026-06-01T23:48:59Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 185, "phase": "iteration_start", "last_beat": "2026-06-02T00:04:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 2f93abd030..1a9bdd564d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7557,3 +7557,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-01 23:04 UTC | Backend-state diagnostic v3 — third consecutive pr | OK | 89 passed in 4.65s |
+ | 2026-06-01 23:28 UTC | Promote the dependency-aware weighting to a G1-rig | OK | 93 passed in 8.82s |
+ | 2026-06-01 23:46 UTC | Prepare the headline re-freeze PACKAGE for the ope | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-02 00:02 UTC | Diagnose + try to CLOSE the discrimination-vs-sele | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 44fbf0ba82..9f7fc3aaad 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 184, "phase": "iteration_start", "started_at": "2026-06-01T23:48:59Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 185, "phase": "iteration_start", "started_at": "2026-06-02T00:04:50Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3682_discrimination_vs_selection_gap.json b/results/experiment_3682_discrimination_vs_selection_gap.json
+index 82ee8fe95a..337d3ba526 100644
+--- a/results/experiment_3682_discrimination_vs_selection_gap.json
++++ b/results/experiment_3682_discrimination_vs_selection_gap.json
+@@ -123,5 +123,18 @@
+     "n_comparable_pairs": 284,
+     "n_questions": 37,
+     "weighted_tau": 0.14084507042253522
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "ensemble_selection_accuracy=0.3442622950819672 and selection_accuracy_per_question_normalized=0.3442622950819672 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "selection_accuracy_per_question_normalized=0.3442622950819672 and self_certainty_selection_accuracy=0.3442622950819672 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

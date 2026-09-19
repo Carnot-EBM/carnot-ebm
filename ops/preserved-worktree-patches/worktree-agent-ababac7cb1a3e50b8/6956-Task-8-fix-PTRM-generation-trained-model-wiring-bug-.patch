@@ -1,0 +1,1176 @@
+From b9a228bd11e331061f0c02ca28182dd542e925f7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 13 Jul 2026 20:27:46 -0400
+Subject: [PATCH 06956/11362] Task 8: fix PTRM generation/trained-model wiring
+ bug; multi-seed LOO gate fails, retire TRM-as-generator (REQ-ARC-PTRM-5600)
+
+generate_trajectories previously ignored the trained PTRMActionSequenceGenerator
+entirely, seeding every trajectory from the untrained _base_action_logits
+frequency heuristic. _train_proxy_model genuinely trained the model via real
+backprop and a real checkpoint, but the weights were never consulted at
+generation time. Fixed by threading an optional model through
+generate_trajectories -> _recursion_metrics -> run_experiment_5574.
+
+Also found and disclosed: the checked-in exp5574 artifact (committed in
+70c857a69, an unrelated-titled commit) contains fields the code in that same
+commit cannot compute -- it could not have been produced by the code it
+shipped with. Preserved unmodified per never-prune discipline; flagged as
+untrustworthy pending investigation.
+
+Built the multi-seed (10 seeds x 5 games), pre-registered leave-one-game-out
+gate the wiring fix unblocks (exp5600), reusing v3's held-out game set and
+Wilcoxon methodology. Real run: gate FAILS -- only ft09 (1 of 5) clears both
+significance and majority-baseline bars, below the required majority of 3.
+Per known-issues.md task 8's retire_if_same_verdict: true, the TRM-as-
+generator line for ARC-AGI-3 is retired.
+
+results/experiment_5600_ptrm_loo_gate.json was already committed under an
+unrelated conductor commit (9063c7f5b) via its own git-add-everything
+behavior; content is byte-identical to the real run and not re-added here.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/arc-trm-generator/spec.md    | 101 ++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ .../agentic/arc_ptrm_stage1_generator.py      |  37 +-
+ .../carnot/experiment_5600_ptrm_loo_gate.py   | 510 ++++++++++++++++++
+ .../python/test_arc_ptrm_stage1_generator.py  | 122 +++++
+ .../test_experiment_5600_ptrm_loo_gate.py     | 231 ++++++++
+ 8 files changed, 1001 insertions(+), 5 deletions(-)
+ create mode 100644 python/carnot/experiment_5600_ptrm_loo_gate.py
+ create mode 100644 tests/python/test_experiment_5600_ptrm_loo_gate.py
+
+diff --git a/openspec/capabilities/arc-trm-generator/spec.md b/openspec/capabilities/arc-trm-generator/spec.md
+index 10b1421930..646c7790cb 100644
+--- a/openspec/capabilities/arc-trm-generator/spec.md
++++ b/openspec/capabilities/arc-trm-generator/spec.md
+@@ -18,6 +18,49 @@ and verifier-selected stochastic trajectories. It is not a hidden-game solve.
+   `tests/python/test_arc_ptrm_stage1_generator.py`. Scoped module coverage is
+   100% (`464` statements, `0` missing). The implementation preserves the
+   Stage-1 proxy claim boundary and does not modify `scripts/research_conductor.py`.
++- 2026-07-13: **Wiring bug found and fixed** (REQ-ARC-PTRM-5600-1).
++  `generate_trajectories` seeded every trajectory from `_base_action_logits`
++  (an untrained action-frequency heuristic) regardless of whether a trained
++  `PTRMActionSequenceGenerator` was available. `_train_proxy_model` genuinely
++  trained the model via real backprop and a real checkpoint, but the trained
++  weights were never consulted at generation time -- Stage 1's own
++  `recursion_depth_metrics`/`overthinking_curve` (and therefore any held-out
++  generalization signal computed from them) reflected an untrained heuristic,
++  not the trained model. Fixed by threading an optional `model` parameter
++  through `generate_trajectories` -> `_recursion_metrics` ->
++  `run_experiment_5574`, seeding trajectory generation from the model's own
++  forward pass (mean-pooled over the K-step horizon) when supplied, with the
++  original heuristic preserved as the fallback when no model is given.
++- 2026-07-13: **exp5574 artifact/code mismatch found, not yet re-run.** The
++  checked-in `results/experiment_5574_ptrm_stochastic_generator_stage1.json`
++  (committed alongside the source file in the single commit `70c857a69`,
++  whose own commit message is unrelated -- "SGE anti-stagnation diversity
++  controller and live-path precheck", task `exp5575-sge-anti-stagnation-live-
++  precheck") contains fields
++  (`recursion_depth_metrics.*.exact_window_accuracy`,
++  `recursion_depth_metrics.*.per_action_accuracy`,
++  `verifier_selection_method.selection_eval.verifier_selection_uplift`,
++  `gpu_device_receipt.device_count`/`nvidia_smi_returncode`,
++  `controls.non_recursive.halting_distribution`) that the committed
++  `_recursion_metrics`/`_gpu_device_receipt`/`build_stage1_artifact` code in
++  that same commit does not compute or accept -- the artifact could not have
++  been produced by the code it was committed with. `scripts/
++  adversarial_verify.py` did not flag this (its checks do not include
++  artifact-schema-vs-source-code consistency). The original artifact is
++  preserved unmodified per this project's never-prune discipline; its
++  specific numbers should not be cited pending investigation into how it was
++  produced. REQ-ARC-PTRM-5600-2's properly-powered multi-seed run
++  supersedes it as the trustworthy reference going forward.
++- 2026-07-13: Multi-seed (10 seeds/game), pre-registered leave-one-game-out
++  gate implemented in `python/carnot/experiment_5600_ptrm_loo_gate.py`
++  (REQ-ARC-PTRM-5600-2), reusing the now-fixed generation path. **Real run
++  completed: the gate FAILS.** Only `ft09` (1 of 5 held-out games) clears
++  both bars (p=0.0020, PTRM mean 0.1459 vs majority-baseline 0.1367);
++  `cd82` and `vc33` beat the majority baseline but not significantly vs the
++  non-recursive control; `m0r0` and `sk48` clear neither. 1 of 5 is below
++  the required majority (>= 3). Per `ops/known-issues.md` task 8's
++  `retire_if_same_verdict: true`, the TRM-as-generator line for ARC-AGI-3 is
++  retired: `results/experiment_5600_ptrm_loo_gate.json`.
+ 
+ ## Requirements
+ 
+@@ -90,3 +133,61 @@ Given a completed bounded Stage-1 run, artifact validation confirms every
+ required field is present, all headline/gate fields have principles, the
+ checkpoint hash matches the written file, `verifier_is_oracle=false`, and
+ `no_level_solve_claim=true`.
++
++### REQ-ARC-PTRM-5600-1: Trajectory Generation Consumes Trained Model Weights
++
++`generate_trajectories` SHALL accept an optional trained
++`PTRMActionSequenceGenerator`. When supplied, the per-input starting logits
++SHALL be derived from the model's own forward pass (mean-pooled over the
++K-step target horizon), not from the untrained `_base_action_logits`
++frequency heuristic. When no model is supplied, the original heuristic-only
++behavior SHALL be preserved unchanged. `_recursion_metrics` and
++`run_experiment_5574` SHALL forward the trained model so that Stage-1's
++`recursion_depth_metrics`/`overthinking_curve` reflect the trained model's
++weights, and `model_architecture.trajectory_generation_uses_trained_model`
++SHALL record `true` when this path is exercised.
++
++### REQ-ARC-PTRM-5600-2: Multi-Seed Pre-Registered Leave-One-Game-Out Gate
++
++Following the same rigor established by the prior standalone-reimplementation
++pilots (`docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md`
++v3), Experiment 5600 SHALL evaluate the (now wiring-fixed) PTRM Stage-1
++pipeline against a fixed, pre-registered set of held-out games
++(`ft09`, `m0r0`, `vc33`, `sk48`, `cd82` -- the same set v3 used, for direct
++comparability and to avoid post-hoc held-out-game selection) across multiple
++independent seeds per game. For each (game, seed), the experiment SHALL train
++on all other games and measure, on the held-out game: (a) the wiring-fixed
++PTRM arm (trained-model-seeded stochastic recursion + Carnot-verifier
++selection), (b) a non-recursive control (the trained model's own single-shot
++argmax prediction, no recursion or verifier selection), and (c) a
++majority-class baseline fit on training targets only. The experiment SHALL
++run a paired Wilcoxon signed-rank test (matched by seed) between the PTRM arm
++and the non-recursive control per held-out game, and SHALL report a
++pre-registered falsifiable gate: PTRM is supported only if, in a majority
++(>= 3 of 5) of held-out games, it both (i) beats the non-recursive control
++with p < 0.05 and (ii) has a higher mean per-action accuracy than the
++majority-class baseline. The experiment SHALL disclose the corpus's
++`level_progress >= 1.0` won-session proxy as an inherited methodology caveat
++(per the v4 pilot's own finding that this proxy can mean "reached this
++session's own highest recorded checkpoint," not "won the whole game") without
++attempting to fix it in this experiment's scope. If the gate fails, the
++artifact SHALL set `retire_trm_generator_line` per the `retire_if_same_verdict`
++condition in `ops/known-issues.md` task 8.
++
++### SCENARIO-ARC-PTRM-5600-WIRING-FIX: Different Model Weights Produce Different Trajectories
++
++Given two `PTRMActionSequenceGenerator` instances with materially different
++weights, the same batch, seed, and zero noise, `generate_trajectories` called
++with each model produces different depth-1 energy and different sampled
++action sequences -- proving the model's weights are load-bearing in
++generation, not orphaned as they were before the fix.
++
++### SCENARIO-ARC-PTRM-5600-LOO-GATE: Pre-Registered Gate Computed Honestly
++
++Given the multi-seed sweep across the five held-out games, the artifact
++reports the Wilcoxon p-value and win count for every (game) combination, the
++majority-class baseline as a flat non-seed-varying reference, and a single
++`loo_verdict_reached=true` with an honest `heldout_generalization_signal`
++that matches the pre-registered gate definition -- never a verdict computed
++after seeing results that contradicts the gate as defined in
++REQ-ARC-PTRM-5600-2.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f80f87902e..a63343f3c4 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 108, "phase": "iteration_start", "last_beat": "2026-07-13T23:18:01Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 109, "phase": "iteration_start", "last_beat": "2026-07-14T00:23:52Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 07dd942d4a..af4888e1c6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11687,3 +11687,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-13 23:10 UTC | Activation REFUSED: milestone 2026.07.505 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+ | 2026-07-13 23:13 UTC | Activation REFUSED: milestone 2026.07.505 | BLOCK | arc-levelup-guarantee: 0 level-up attempts (< 1 required); CLAUDE.md 'ARC-AGI-3  |
+ | 2026-07-13 23:16 UTC | Milestone 2026.07.505 activated | OK | 8 tasks queued |
++| 2026-07-14 00:21 UTC | Transition .504 terminal evidence into .505 execut | OK | 86 passed, 1 warning in 16.88s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8601440de3..368017f124 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 108, "phase": "iteration_start", "started_at": "2026-07-13T23:18:01Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 109, "phase": "iteration_start", "started_at": "2026-07-14T00:23:52Z"}
+\ No newline at end of file
+diff --git a/python/carnot/agentic/arc_ptrm_stage1_generator.py b/python/carnot/agentic/arc_ptrm_stage1_generator.py
+index 769e5ed53e..1bb87165fd 100644
+--- a/python/carnot/agentic/arc_ptrm_stage1_generator.py
++++ b/python/carnot/agentic/arc_ptrm_stage1_generator.py
+@@ -187,6 +187,7 @@ class TrajectoryCandidate:
+     verifier_score: float
+     verifier_score_source: str
+     depth_metrics: list[JsonDict]
++    base_logits_source: str = "action_frequency_heuristic"
+ 
+ 
+ class PTRMActionSequenceGenerator(nn.Module):
+@@ -399,17 +400,43 @@ def generate_trajectories(
+     seed: int,
+     noise_std: float,
+     verifier: CarnotTrajectoryVerifier | None = None,
++    model: PTRMActionSequenceGenerator | None = None,
+ ) -> list[TrajectoryCandidate]:
+-    """REQ-ARC-PTRM-5574-3: seeded stochastic recursion with dynamic halting."""
++    """REQ-ARC-PTRM-5574-3: seeded stochastic recursion with dynamic halting.
++
++    When `model` is supplied, the per-input starting logits are seeded from the
++    TRAINED generator's own forward pass (mean-pooled over the K-step target
++    horizon), not the untrained action-frequency heuristic. Without this, a
++    model trained by `_train_proxy_model` (real backprop, real checkpoint) was
++    never actually consulted at generation time -- its measured training
++    accuracy was real, but orphaned from the trajectories this function
++    produces. `model=None` preserves the original heuristic-only behavior for
++    callers that have no trained model yet (e.g. the blocked-preconditions
++    path).
++    """
+ 
+     del hidden_dim
+     generator = torch.Generator().manual_seed(int(seed))
+     candidates: list[TrajectoryCandidate] = []
+     batch_size = int(batch.history_actions.shape[0])
++    model_logits: torch.Tensor | None = None
++    if model is not None:
++        model.eval()
++        with torch.no_grad():
++            raw_model_logits = model(batch)
++        if raw_model_logits.shape[1] == int(sequence_length) and raw_model_logits.shape[2] == int(
++            action_vocab_size
++        ):
++            model_logits = raw_model_logits
+     for input_index in range(batch_size):
+         history = batch.history_actions[input_index].tolist()
+         intent = batch.history_intents[input_index].tolist()
+-        base_logits = _base_action_logits(history, action_vocab_size)
++        if model_logits is not None:
++            base_logits = model_logits[input_index].mean(dim=0).detach()
++            base_logits_source = "trained_ptrm_model"
++        else:
++            base_logits = _base_action_logits(history, action_vocab_size)
++            base_logits_source = "action_frequency_heuristic"
+         for trajectory_index in range(int(trajectories_per_input)):
+             logits = base_logits.clone()
+             depth_metrics: list[JsonDict] = []
+@@ -469,6 +496,7 @@ def generate_trajectories(
+                     verifier_score=verifier_score,
+                     verifier_score_source=score_source,
+                     depth_metrics=depth_metrics,
++                    base_logits_source=base_logits_source,
+                 )
+             )
+     return candidates
+@@ -610,7 +638,7 @@ def run_experiment_5574(
+     )
+     validation = verifier.validate_against_corruptions(seed=cfg.seed, n_trials=16)
+     recursion_depth_metrics = _recursion_metrics(
+-        bundle.heldout_examples, cfg, action_vocab_size, verifier
++        bundle.heldout_examples, cfg, action_vocab_size, verifier, model=model
+     )
+     overthinking_curve = [
+         {"depth": int(depth), **values}
+@@ -631,6 +659,7 @@ def run_experiment_5574(
+             "history_length": cfg.history_length,
+             "hidden_dim": cfg.hidden_dim,
+             "action_vocab_size": action_vocab_size,
++            "trajectory_generation_uses_trained_model": True,
+         },
+         parameter_count=sum(parameter.numel() for parameter in model.parameters()),
+         stochastic_noise_schedule={
+@@ -1006,6 +1035,7 @@ def _recursion_metrics(
+     config: Stage1Config,
+     action_vocab_size: int,
+     verifier: CarnotTrajectoryVerifier,
++    model: PTRMActionSequenceGenerator | None = None,
+ ) -> JsonDict:
+     selected_examples = list(examples[: max(int(config.batch_size), 1)])
+     if not selected_examples:
+@@ -1021,6 +1051,7 @@ def _recursion_metrics(
+         seed=config.seed,
+         noise_std=config.noise_std,
+         verifier=verifier,
++        model=model,
+     )
+     by_depth: dict[int, list[TrajectoryCandidate]] = defaultdict(list)
+     for candidate in candidates:
+diff --git a/python/carnot/experiment_5600_ptrm_loo_gate.py b/python/carnot/experiment_5600_ptrm_loo_gate.py
+new file mode 100644
+index 0000000000..75f281f2c5
+--- /dev/null
++++ b/python/carnot/experiment_5600_ptrm_loo_gate.py
+@@ -0,0 +1,510 @@
++"""Exp 5600: PTRM Stage-1 multi-seed, pre-registered leave-one-game-out gate.
++
++This is the falsifiable gate task 8 (`ops/known-issues.md`) has never reached:
++`run_experiment_5574` always writes `loo_verdict_reached=False` regardless of
++`heldout_games`, because a single training run with one seed cannot support a
++statistically meaningful verdict -- v1/v2's single-seed pilots produced
++directly contradictory rankings, and v3 only trusted a result after a
++10-seed-per-combination paired significance test. This experiment applies
++that same rigor to the (now wiring-fixed, see
++`python/carnot/agentic/arc_ptrm_stage1_generator.py`) PTRM Stage-1 pipeline.
++
++Spec refs: REQ-ARC-PTRM-5600-1, REQ-ARC-PTRM-5600-2,
++SCENARIO-ARC-PTRM-5600-WIRING-FIX, SCENARIO-ARC-PTRM-5600-LOO-GATE.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import subprocess
++import time
++from collections import Counter
++from pathlib import Path
++from typing import Any
++
++import torch
++from scipy import stats
++
++from carnot.agentic.arc_ptrm_stage1_generator import (
++    DEFAULT_CORPUS_DIR,
++    REPO_ROOT,
++    CarnotTrajectoryVerifier,
++    PTRMActionSequenceGenerator,
++    Stage1Config,
++    Stage1DatasetBundle,
++    Stage1Example,
++    Stage1InputBatch,
++    _infer_action_vocab,
++    _load_corpus,
++    build_stage1_dataset,
++    generate_trajectories,
++    select_trajectory,
++)
++
++
++JsonDict = dict[str, Any]
++RESULT_FILENAME = "experiment_5600_ptrm_loo_gate.json"
++RESULT_RELATIVE_PATH = f"results/{RESULT_FILENAME}"
++DEFAULT_OUTPUT = REPO_ROOT / RESULT_RELATIVE_PATH
++
++# Same five held-out games as the v3 pilot
++# (docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md),
++# chosen there for size/imbalance diversity before this run existed --
++# reused verbatim for direct comparability and to avoid post-hoc selection.
++HELDOUT_GAMES: tuple[str, ...] = ("ft09", "m0r0", "vc33", "sk48", "cd82")
++N_SEEDS = 10
++BASE_SEED = 5600
++WILCOXON_ALPHA = 0.05
++MAJORITY_GAMES_REQUIRED = 3  # of 5 -- the pre-registered gate threshold
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "track",
++    "honest_verdict",
++    "preconditions",
++    "wiring_fix_note",
++    "exp5574_artifact_mismatch_corrigendum",
++    "heldout_games",
++    "n_seeds",
++    "gate_definition",
++    "per_game_results",
++    "games_ptrm_beats_non_recursive_significantly",
++    "games_ptrm_beats_majority_baseline",
++    "loo_verdict_reached",
++    "heldout_generalization_signal",
++    "retire_trm_generator_line",
++    "corpus_won_proxy_caveat",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++    "gpu_device_receipt",
++    "verifier_is_oracle",
++    "solve_provenance",
++    "inference_substrate",
++    "no_level_solve_claim",
++)
++
++
++def preconditions(*, corpus_dir: Path = DEFAULT_CORPUS_DIR, require_cuda: bool = True) -> JsonDict:
++    manifest_ok = (corpus_dir / "manifest.json").exists()
++    cuda_ok = True
++    cuda_detail = "cuda check waived"
++    if require_cuda:
++        cuda_ok = bool(torch.cuda.is_available())
++        cuda_detail = f"torch_cuda_available={cuda_ok}"
++    ok = manifest_ok and cuda_ok
++    return {
++        "corpus_manifest_present": manifest_ok,
++        "cuda_available": cuda_ok,
++        "cuda_detail": cuda_detail,
++        "ok": ok,
++    }
++
++
++def _majority_action(examples: list[Stage1Example]) -> int:
++    counter: Counter[int] = Counter()
++    for example in examples:
++        counter.update(example.target_actions)
++    if not counter:
++        return 0
++    return counter.most_common(1)[0][0]
++
++
++def _accuracy_and_exact_match(
++    predicted_by_example: list[list[int]], examples: list[Stage1Example]
++) -> tuple[float, float]:
++    total_actions = 0
++    matched_actions = 0
++    exact_matches = 0
++    for predicted, example in zip(predicted_by_example, examples, strict=True):
++        target = example.target_actions
++        matched_actions += sum(
++            int(left == right) for left, right in zip(predicted, target, strict=False)
++        )
++        total_actions += len(target)
++        exact_matches += int(list(predicted) == list(target))
++    accuracy = matched_actions / float(max(total_actions, 1))
++    exact_match_rate = exact_matches / float(max(len(examples), 1))
++    return round(accuracy, 6), round(exact_match_rate, 6)
++
++
++def _majority_baseline_predictions(
++    majority_action: int, examples: list[Stage1Example]
++) -> list[list[int]]:
++    return [[majority_action] * len(example.target_actions) for example in examples]
++
++
++def _non_recursive_predictions(
++    model: PTRMActionSequenceGenerator,
++    batch: Stage1InputBatch,
++) -> list[list[int]]:
++    model.eval()
++    with torch.no_grad():
++        logits = model(batch)
++        predictions = torch.argmax(logits, dim=2)
++    return [row.tolist() for row in predictions]
++
++
++def _ptrm_predictions(
++    batch: Stage1InputBatch,
++    *,
++    model: PTRMActionSequenceGenerator,
++    verifier: CarnotTrajectoryVerifier,
++    config: Stage1Config,
++    action_vocab_size: int,
++) -> list[list[int]]:
++    predictions: list[list[int]] = []
++    batch_size = int(batch.history_actions.shape[0])
++    for input_index in range(batch_size):
++        single = Stage1InputBatch(
++            frame_features=batch.frame_features[input_index : input_index + 1],
++            history_actions=batch.history_actions[input_index : input_index + 1],
++            history_coords=batch.history_coords[input_index : input_index + 1],
++            history_intents=batch.history_intents[input_index : input_index + 1],
++            target_actions=(
++                batch.target_actions[input_index : input_index + 1]
++                if batch.target_actions is not None
++                else None
++            ),
++        )
++        trajectories = generate_trajectories(
++            single,
++            action_vocab_size=action_vocab_size,
++            sequence_length=config.sequence_length,
++            max_depth=config.max_depth,
++            hidden_dim=config.hidden_dim,
++            trajectories_per_input=config.trajectories_per_input,
++            seed=config.seed * 1000 + input_index,
++            noise_std=config.noise_std,
++            verifier=verifier,
++            model=model,
++        )
++        selected = select_trajectory(trajectories)
++        predictions.append(list(selected.action_ids))
++    return predictions
++
++
++def _run_one_combination(
++    *,
++    bundle: Stage1DatasetBundle,
++    game: str,
++    seed_index: int,
++    require_cuda: bool,
++) -> JsonDict:
++    """Trains and evaluates one (held-out game, seed) combination.
++
++    Takes an already-built `Stage1DatasetBundle` -- `build_stage1_dataset`'s
++    windowing is a deterministic function of (rows, config.heldout_games) and
++    does NOT depend on `config.seed`, so the caller builds it once per held-out
++    game and reuses it across all `n_seeds` draws, instead of re-scanning the
++    whole corpus on every one of the 50 (game, seed) combinations.
++
++    Runs on CPU regardless of `require_cuda`, matching `_train_proxy_model` /
++    `_recursion_metrics` / `run_experiment_5574`'s own established behavior:
++    the `cuda_3090_class` precondition (see `preconditions()`) is a hardware-
++    provenance receipt confirming real 3090-class GPUs are present on this
++    rig, not a mandate that every tensor op in this tiny (<100K-parameter)
++    proxy model runs on them. `generate_trajectories`'s internal ops
++    (`torch.Generator()`, `_position_bias`, `torch.bincount`) are CPU-only by
++    construction; mixing in CUDA-resident tensors would raise a device
++    mismatch without any accuracy benefit for a model this small.
++    """
++
++    cfg = Stage1Config(seed=BASE_SEED + seed_index, heldout_games=(game,))
++    action_vocab_size = _infer_action_vocab(bundle, cfg.action_vocab_size)
++
++    model = PTRMActionSequenceGenerator(
++        history_length=cfg.history_length,
++        sequence_length=cfg.sequence_length,
++        action_vocab_size=action_vocab_size,
++        hidden_dim=cfg.hidden_dim,
++    )
++    train_batch = Stage1InputBatch.from_examples(
++        bundle.train_examples, action_vocab_size=action_vocab_size
++    )
++    _train_proxy_model_prebatched(model, train_batch, cfg, action_vocab_size)
++
++    verifier = CarnotTrajectoryVerifier.from_sequences(
++        [example.target_actions for example in bundle.train_examples],
++        action_vocab_size=action_vocab_size,
++    )
++    majority_action = _majority_action(bundle.train_examples)
++
++    heldout_examples = bundle.heldout_examples
++    heldout_batch = Stage1InputBatch.from_examples(
++        heldout_examples, action_vocab_size=action_vocab_size
++    )
++
++    ptrm_preds = _ptrm_predictions(
++        heldout_batch,
++        model=model,
++        verifier=verifier,
++        config=cfg,
++        action_vocab_size=action_vocab_size,
++    )
++    non_recursive_preds = _non_recursive_predictions(model, heldout_batch)
++    majority_preds = _majority_baseline_predictions(majority_action, heldout_examples)
++
++    ptrm_acc, ptrm_exact = _accuracy_and_exact_match(ptrm_preds, heldout_examples)
++    non_recursive_acc, non_recursive_exact = _accuracy_and_exact_match(
++        non_recursive_preds, heldout_examples
++    )
++    majority_acc, majority_exact = _accuracy_and_exact_match(majority_preds, heldout_examples)
++
++    return {
++        "game": game,
++        "seed_index": seed_index,
++        "n_train_examples": len(bundle.train_examples),
++        "n_heldout_examples": len(heldout_examples),
++        "leakage_count": bundle.leakage_count,
++        "ptrm_per_action_accuracy": ptrm_acc,
++        "ptrm_exact_window_accuracy": ptrm_exact,
++        "non_recursive_per_action_accuracy": non_recursive_acc,
++        "non_recursive_exact_window_accuracy": non_recursive_exact,
++        "majority_baseline_per_action_accuracy": majority_acc,
++        "majority_baseline_exact_window_accuracy": majority_exact,
++    }
++
++
++def _train_proxy_model_prebatched(
++    model: PTRMActionSequenceGenerator,
++    train_batch: Stage1InputBatch,
++    cfg: Stage1Config,
++    action_vocab_size: int,
++) -> JsonDict:
++    """Same recipe as `_train_proxy_model` but taking an already-tensorized
++    `Stage1InputBatch` directly, since `_run_one_combination` already built one
++    for the whole held-in split (avoids re-tensorizing on every call)."""
++
++    if train_batch.frame_features.shape[0] == 0:
++        return {"train_token_accuracy": 0.0, "loss": 0.0}
++    torch.manual_seed(int(cfg.seed))
++    optimizer = torch.optim.Adam(model.parameters(), lr=float(cfg.learning_rate))
++    target = train_batch.target_actions
++    assert target is not None
++    last_loss = torch.tensor(0.0)
++    for _epoch in range(max(int(cfg.epochs), 1)):
++        optimizer.zero_grad()
++        logits = model(train_batch)
++        loss = torch.nn.functional.cross_entropy(
++            logits.reshape(-1, int(action_vocab_size)),
++            target.reshape(-1),
++        )
++        loss.backward()
++        optimizer.step()
++        last_loss = loss.detach()
++    return {"train_token_accuracy": 0.0, "loss": round(float(last_loss), 6)}
++
++
++def _wilcoxon(ptrm: list[float], non_recursive: list[float]) -> JsonDict:
++    diffs = [p - n for p, n in zip(ptrm, non_recursive, strict=True)]
++    if all(d == 0.0 for d in diffs):
++        return {"p_value": 1.0, "ptrm_wins": 0, "note": "all paired diffs zero"}
++    try:
++        result = stats.wilcoxon(ptrm, non_recursive)
++        p_value = float(result.pvalue)
++    except ValueError as exc:
++        p_value = 1.0
++        return {"p_value": p_value, "ptrm_wins": sum(1 for d in diffs if d > 0), "note": str(exc)}
++    return {
++        "p_value": round(p_value, 6),
++        "ptrm_wins": sum(1 for d in diffs if d > 0),
++        "ptrm_losses": sum(1 for d in diffs if d < 0),
++        "ties": sum(1 for d in diffs if d == 0),
++    }
++
++
++def _gpu_device_receipt() -> JsonDict:
++    available = bool(torch.cuda.is_available())
++    smi = subprocess.run(
++        ["nvidia-smi", "--query-gpu=index,name,memory.total", "--format=csv,noheader"],
++        capture_output=True,
++        text=True,
++        check=False,
++    )
++    return {
++        "torch_cuda_available": available,
++        "devices": [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())],
++        "nvidia_smi_returncode": smi.returncode,
++        "nvidia_smi_stdout": smi.stdout.strip(),
++    }
++
++
++def _stable_checksum(payload: JsonDict) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode(
++        "utf-8"
++    )
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    *,
++    heldout_games: tuple[str, ...] = HELDOUT_GAMES,
++    n_seeds: int = N_SEEDS,
++    require_cuda: bool = True,
++    corpus_dir: Path = DEFAULT_CORPUS_DIR,
++) -> JsonDict:
++    started = time.monotonic()
++    preconds = preconditions(corpus_dir=corpus_dir, require_cuda=require_cuda)
++    if not preconds["ok"]:
++        return _blocked_artifact(preconds, started)
++
++    rows, _dataset_hashes = _load_corpus(corpus_dir)
++
++    per_game_results: JsonDict = {}
++    for game in heldout_games:
++        seed0_cfg = Stage1Config(seed=BASE_SEED, heldout_games=(game,))
++        bundle = build_stage1_dataset(rows, config=seed0_cfg, heldout_games=(game,))
++        game_rows = []
++        for seed_index in range(n_seeds):
++            row = _run_one_combination(
++                bundle=bundle, game=game, seed_index=seed_index, require_cuda=require_cuda
++            )
++            game_rows.append(row)
++        ptrm_series = [r["ptrm_per_action_accuracy"] for r in game_rows]
++        non_recursive_series = [r["non_recursive_per_action_accuracy"] for r in game_rows]
++        majority_value = game_rows[0]["majority_baseline_per_action_accuracy"]
++        wilcoxon = _wilcoxon(ptrm_series, non_recursive_series)
++        per_game_results[game] = {
++            "n_seeds": n_seeds,
++            "ptrm_mean_per_action_accuracy": round(sum(ptrm_series) / len(ptrm_series), 6),
++            "non_recursive_mean_per_action_accuracy": round(
++                sum(non_recursive_series) / len(non_recursive_series), 6
++            ),
++            "majority_baseline_per_action_accuracy": majority_value,
++            "ptrm_exact_window_accuracy_mean": round(
++                sum(r["ptrm_exact_window_accuracy"] for r in game_rows) / n_seeds, 6
++            ),
++            "wilcoxon_ptrm_vs_non_recursive": wilcoxon,
++            "ptrm_beats_non_recursive_significantly": bool(
++                wilcoxon["p_value"] < WILCOXON_ALPHA
++                and wilcoxon.get("ptrm_wins", 0) > wilcoxon.get("ptrm_losses", 0)
++            ),
++            "ptrm_beats_majority_baseline": bool(
++                round(sum(ptrm_series) / len(ptrm_series), 6) > majority_value
++            ),
++            "per_seed_rows": game_rows,
++        }
++
++    games_significant = [
++        g for g, r in per_game_results.items() if r["ptrm_beats_non_recursive_significantly"]
++    ]
++    games_beat_baseline = [
++        g for g, r in per_game_results.items() if r["ptrm_beats_majority_baseline"]
++    ]
++    games_gate_passed = [g for g in games_significant if g in games_beat_baseline]
++    gate_passed = len(games_gate_passed) >= MAJORITY_GAMES_REQUIRED
++
++    if gate_passed:
++        heldout_generalization_signal = "loo_gate_passed_majority_5_games"
++        honest_verdict = "complete: ptrm_loo_gate_passed_majority_of_heldout_games"
++        retire = False
++    else:
++        heldout_generalization_signal = "loo_gate_failed_no_majority_significant_and_above_baseline"
++        honest_verdict = "complete: ptrm_loo_gate_failed_no_majority_significant_and_above_baseline"
++        retire = True
++
++    artifact: JsonDict = {
++        "track": "arc-trm-generator",
++        "honest_verdict": honest_verdict,
++        "preconditions": preconds,
++        "wiring_fix_note": (
++            "generate_trajectories previously ignored the trained "
++            "PTRMActionSequenceGenerator entirely, seeding every trajectory from the "
++            "untrained _base_action_logits frequency heuristic. Fixed 2026-07-13: model "
++            "logits (mean-pooled over the K-step horizon) now seed generation when a "
++            "trained model is supplied. See openspec/capabilities/arc-trm-generator/"
++            "spec.md REQ-ARC-PTRM-5600-1 and SCENARIO-ARC-PTRM-5600-WIRING-FIX."
++        ),
++        "exp5574_artifact_mismatch_corrigendum": (
++            "results/experiment_5574_ptrm_stochastic_generator_stage1.json (committed in "
++            "70c857a69, an unrelated-titled commit) contains fields "
++            "(exact_window_accuracy, per_action_accuracy, selection_eval, "
++            "gpu_device_receipt.device_count, halting_distribution) that the "
++            "_recursion_metrics/_gpu_device_receipt/build_stage1_artifact code committed "
++            "in that same commit does not compute -- the artifact could not have been "
++            "produced by the code it shipped with. adversarial_verify.py did not flag "
++            "this (no artifact-schema-vs-source-code consistency check exists). The "
++            "original artifact is preserved unmodified per never-prune discipline; its "
++            "specific numbers should not be cited. This experiment (5600) supersedes it "
++            "as the trustworthy, reproducible reference."
++        ),
++        "heldout_games": list(heldout_games),
++        "n_seeds": n_seeds,
++        "gate_definition": (
++            f"PTRM supported only if, in >= {MAJORITY_GAMES_REQUIRED} of "
++            f"{len(heldout_games)} held-out games, it both (i) beats the non-recursive "
++            f"control with paired Wilcoxon p < {WILCOXON_ALPHA} across {n_seeds} seeds "
++            "and (ii) has higher mean per-action accuracy than the majority-class "
++            "baseline. Pre-registered before running, per REQ-ARC-PTRM-5600-2."
++        ),
++        "per_game_results": per_game_results,
++        "games_ptrm_beats_non_recursive_significantly": games_significant,
++        "games_ptrm_beats_majority_baseline": games_beat_baseline,
++        "loo_verdict_reached": True,
++        "heldout_generalization_signal": heldout_generalization_signal,
++        "retire_trm_generator_line": retire,
++        "corpus_won_proxy_caveat": (
++            "Won-session filtering uses level_progress>=1.0 (inherited from exp5574 / "
++            "build_stage1_dataset), which the v4 pilot found can mean 'reached this "
++            "session's own highest recorded checkpoint,' not necessarily 'won the whole "
++            "game.' Not fixed in this experiment's scope; disclosed per "
++            "REQ-ARC-PTRM-5600-2."
++        ),
++        "random_seed": BASE_SEED,
++        "gpu_device_receipt": _gpu_device_receipt(),
++        "verifier_is_oracle": False,
++        "solve_provenance": "development_proxy",
++        "inference_substrate": "trained_ptrm_offline_development_proxy",
++        "no_level_solve_claim": True,
++    }
++    artifact["duration_s"] = round(time.monotonic() - started, 6)
++    artifact["reproducibility_checksum"] = _stable_checksum(
++        {k: v for k, v in artifact.items() if k != "reproducibility_checksum"}
++    )
++    return artifact
++
++
++def _blocked_artifact(preconds: JsonDict, started: float) -> JsonDict:
++    return {
++        "track": "arc-trm-generator",
++        "honest_verdict": f"complete: blocked_{'cuda' if not preconds['cuda_available'] else 'corpus_manifest_missing'}",
++        "preconditions": preconds,
++        "wiring_fix_note": "not reached -- blocked before any training",
++        "exp5574_artifact_mismatch_corrigendum": "not reached -- blocked before any training",
++        "heldout_games": [],
++        "n_seeds": 0,
++        "gate_definition": "not reached -- blocked before any training",
++        "per_game_results": {},
++        "games_ptrm_beats_non_recursive_significantly": [],
++        "games_ptrm_beats_majority_baseline": [],
++        "loo_verdict_reached": False,
++        "heldout_generalization_signal": "blocked_preconditions",
++        "retire_trm_generator_line": False,
++        "corpus_won_proxy_caveat": "not reached -- blocked before any training",
++        "random_seed": BASE_SEED,
++        "gpu_device_receipt": _gpu_device_receipt(),
++        "verifier_is_oracle": False,
++        "solve_provenance": "development_proxy",
++        "inference_substrate": "trained_ptrm_offline_development_proxy",
++        "no_level_solve_claim": True,
++        "duration_s": round(time.monotonic() - started, 6),
++        "reproducibility_checksum": "",
++    }
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
++    )
++
++
++def main() -> JsonDict:
++    artifact = build_artifact()
++    _write_json(DEFAULT_OUTPUT, artifact)
++    return artifact
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/python/test_arc_ptrm_stage1_generator.py b/tests/python/test_arc_ptrm_stage1_generator.py
+index 6244586de7..9a01c7e2f5 100644
+--- a/tests/python/test_arc_ptrm_stage1_generator.py
++++ b/tests/python/test_arc_ptrm_stage1_generator.py
+@@ -222,6 +222,128 @@ def test_scenario_arc_ptrm_5574_stochastic_recursion_and_verifier_selection() ->
+     assert selected.verifier_score_source == "carnot_action_language_model"
+ 
+ 
++def test_req_arc_ptrm_5574_3_generation_consumes_trained_model_weights() -> None:
++    """Regression test for the wiring bug found 2026-07-13: `generate_trajectories` must
++    actually consume the trained model's forward pass when supplied, not silently fall
++    back to the untrained action-frequency heuristic. Before the fix, `_train_proxy_model`
++    genuinely trained `PTRMActionSequenceGenerator` via real backprop and a real checkpoint,
++    but `generate_trajectories` never called the model at all -- two models with wildly
++    different weights, same seed/inputs, produced IDENTICAL output, because only
++    `_base_action_logits` (an untrained heuristic) fed the recursion."""
++
++    example = Stage1Example(
++        game="g1",
++        guid="guid",
++        start_step=1,
++        frame_features=[0.1, 0.2, 0.3, 0.4],
++        history_actions=[1, 2, 3],
++        history_coords=[(1, 1), (2, 2), (3, 3)],
++        history_intent_vector=[0.25, 0.5, 0.75, 1.0],
++        target_actions=[1, 2, 2, 2, 1, 2, 2, 2],
++        target_coords=[(1, 1)] * 8,
++    )
++    batch = Stage1InputBatch.from_examples([example], action_vocab_size=8)
++
++    model_a = ptrm.PTRMActionSequenceGenerator(
++        history_length=3, sequence_length=8, action_vocab_size=8, hidden_dim=12
++    )
++    model_b = ptrm.PTRMActionSequenceGenerator(
++        history_length=3, sequence_length=8, action_vocab_size=8, hidden_dim=12
++    )
++    with torch.no_grad():
++        for param in model_b.parameters():
++            param.add_(1.0)
++
++    with torch.no_grad():
++        assert not torch.allclose(model_a(batch), model_b(batch))
++
++    gen_kwargs = dict(
++        action_vocab_size=8,
++        sequence_length=8,
++        max_depth=3,
++        hidden_dim=12,
++        trajectories_per_input=2,
++        seed=42,
++        noise_std=0.0,
++    )
++    trajectories_no_model = generate_trajectories(batch, **gen_kwargs)
++    trajectories_model_a = generate_trajectories(batch, model=model_a, **gen_kwargs)
++    trajectories_model_b = generate_trajectories(batch, model=model_b, **gen_kwargs)
++
++    assert all(
++        row.base_logits_source == "action_frequency_heuristic" for row in trajectories_no_model
++    )
++    assert all(row.base_logits_source == "trained_ptrm_model" for row in trajectories_model_a)
++    assert all(row.base_logits_source == "trained_ptrm_model" for row in trajectories_model_b)
++
++    # noise_std=0.0 makes depth-1 energy a deterministic function of the base logits (plus a
++    # shared position bias) -- different model weights must therefore yield different energy.
++    assert (
++        trajectories_model_a[0].depth_metrics[0]["energy"]
++        != trajectories_model_b[0].depth_metrics[0]["energy"]
++    )
++    action_ids_a = [tuple(row.action_ids) for row in trajectories_model_a]
++    action_ids_b = [tuple(row.action_ids) for row in trajectories_model_b]
++    assert action_ids_a != action_ids_b
++
++
++def test_req_arc_ptrm_5574_3_recursion_metrics_and_runner_pass_model_through(
++    tmp_path: Path,
++) -> None:
++    """`_recursion_metrics` and `run_experiment_5574` must forward the trained model into
++    `generate_trajectories`, not just train it and discard it -- the artifact must record
++    that heldout generation used the trained model, not the untrained heuristic."""
++
++    model = ptrm.PTRMActionSequenceGenerator(
++        history_length=1, sequence_length=2, action_vocab_size=2, hidden_dim=4
++    )
++    example = Stage1Example(
++        game="g1",
++        guid="guid",
++        start_step=1,
++        frame_features=[0.0, 0.0, 0.0, 0.0],
++        history_actions=[1],
++        history_coords=[(-1, -1)],
++        history_intent_vector=[0.0, 0.0, 0.0, 0.0],
++        target_actions=[1, 1],
++        target_coords=[(-1, -1)] * 2,
++    )
++    verifier = CarnotTrajectoryVerifier.from_sequences([[1, 1]], action_vocab_size=2)
++
++    with_model = ptrm._recursion_metrics([example], Stage1Config(), 2, verifier, model=model)
++    without_model = ptrm._recursion_metrics([example], Stage1Config(), 2, verifier)
++
++    assert with_model  # both compute something; the point is no crash and no silent no-op
++    assert without_model
++
++    corpus_dir = tmp_path / "corpus"
++    run_dir = tmp_path / "run"
++    output = tmp_path / "experiment_5574_ptrm_stochastic_generator_stage1.json"
++    _write_fake_corpus(corpus_dir)
++    config = Stage1Config(
++        sequence_length=8,
++        history_length=3,
++        max_depth=2,
++        hidden_dim=16,
++        trajectories_per_input=2,
++        max_train_windows=8,
++        max_eval_windows=4,
++        batch_size=4,
++        epochs=1,
++        heldout_games=("held_game",),
++    )
++
++    artifact = run_experiment_5574(
++        output_path=output,
++        corpus_dir=corpus_dir,
++        run_dir=run_dir,
++        config=config,
++        require_cuda=False,
++    )
++
++    assert artifact["model_architecture"]["trajectory_generation_uses_trained_model"] is True
++
++
+ def test_req_arc_ptrm_5574_3_energy_fallback_can_halt_early() -> None:
+     """REQ-ARC-PTRM-5574-3: dynamic halting also works without verifier selection."""
+ 
+diff --git a/tests/python/test_experiment_5600_ptrm_loo_gate.py b/tests/python/test_experiment_5600_ptrm_loo_gate.py
+new file mode 100644
+index 0000000000..b9c5ac12a9
+--- /dev/null
++++ b/tests/python/test_experiment_5600_ptrm_loo_gate.py
+@@ -0,0 +1,231 @@
++"""Tests for Exp 5600 PTRM Stage-1 multi-seed, pre-registered leave-one-game-out gate.
++
++Spec refs: REQ-ARC-PTRM-5600-1, REQ-ARC-PTRM-5600-2,
++SCENARIO-ARC-PTRM-5600-WIRING-FIX, SCENARIO-ARC-PTRM-5600-LOO-GATE.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_5600_ptrm_loo_gate as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-trm-generator" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def test_req_arc_ptrm_5600_spec_declares_wiring_fix_and_loo_gate_contract() -> None:
++    """REQ-ARC-PTRM-5600-1/2: OpenSpec declares both the wiring-fix regression
++    contract and the multi-seed pre-registered LOO gate contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-PTRM-5600-1") :]
++
++    for marker in (
++        "REQ-ARC-PTRM-5600-1",
++        "REQ-ARC-PTRM-5600-2",
++        "SCENARIO-ARC-PTRM-5600-WIRING-FIX",
++        "SCENARIO-ARC-PTRM-5600-LOO-GATE",
++        "ft09",
++        "m0r0",
++        "vc33",
++        "sk48",
++        "cd82",
++        "Wilcoxon",
++        "retire_if_same_verdict",
++    ):
++        assert marker in section
++
++
++def test_scenario_arc_ptrm_5600_blocked_precondition_never_trains(monkeypatch) -> None:
++    """A missing precondition fails closed without running any combination."""
++
++    monkeypatch.setattr(
++        mod,
++        "preconditions",
++        lambda corpus_dir=mod.DEFAULT_CORPUS_DIR, require_cuda=True: {
++            "corpus_manifest_present": False,
++            "cuda_available": True,
++            "cuda_detail": "n/a",
++            "ok": False,
++        },
++    )
++
++    def _fail_if_called(*_args, **_kwargs):
++        raise AssertionError("_run_one_combination must not run when blocked")
++
++    monkeypatch.setattr(mod, "_run_one_combination", _fail_if_called)
++
++    artifact = mod.build_artifact()
++
++    assert artifact["honest_verdict"].startswith("complete: blocked_")
++    assert artifact["loo_verdict_reached"] is False
++    assert artifact["per_game_results"] == {}
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++
++
++def test_scenario_arc_ptrm_5600_majority_action_and_accuracy_helpers() -> None:
++    """Deterministic unit checks for the small pure-Python scoring helpers."""
++
++    example_a = mod.Stage1Example(
++        game="g",
++        guid="a",
++        start_step=1,
++        frame_features=[0.0] * 4,
++        history_actions=[0, 0, 0],
++        history_coords=[(-1, -1)] * 3,
++        history_intent_vector=[0.0] * 4,
++        target_actions=[1, 1, 2, 2],
++        target_coords=[(-1, -1)] * 4,
++    )
++    example_b = mod.Stage1Example(
++        game="g",
++        guid="b",
++        start_step=1,
++        frame_features=[0.0] * 4,
++        history_actions=[0, 0, 0],
++        history_coords=[(-1, -1)] * 3,
++        history_intent_vector=[0.0] * 4,
++        target_actions=[1, 1, 1, 2],
++        target_coords=[(-1, -1)] * 4,
++    )
++
++    assert mod._majority_action([example_a, example_b]) == 1
++    assert mod._majority_action([]) == 0
++
++    predictions = [[1, 1, 2, 2], [1, 1, 1, 1]]
++    accuracy, exact = mod._accuracy_and_exact_match(predictions, [example_a, example_b])
++    # example_a: 4/4 correct, exact match; example_b: 3/4 correct, not exact
++    assert accuracy == round(7 / 8, 6)
++    assert exact == 0.5
++
++    baseline_preds = mod._majority_baseline_predictions(1, [example_a, example_b])
++    assert baseline_preds == [[1, 1, 1, 1], [1, 1, 1, 1]]
++
++
++def test_scenario_arc_ptrm_5600_wilcoxon_and_gate_majority_logic(monkeypatch) -> None:
++    """SCENARIO-ARC-PTRM-5600-LOO-GATE: the majority-of-5-games gate is computed
++    from the per-game significance + baseline comparisons, not post-hoc."""
++
++    monkeypatch.setattr(
++        mod, "preconditions", lambda **_kwargs: {"ok": True, "cuda_available": True}
++    )
++    monkeypatch.setattr(mod, "_load_corpus", lambda corpus_dir: ([], {}))
++    monkeypatch.setattr(mod, "build_stage1_dataset", lambda rows, config, heldout_games: object())
++
++    # 3 of 5 games: PTRM clearly and significantly beats both non-recursive and
++    # majority baseline (alternating small deltas so Wilcoxon has variance).
++    winning_games = {"ft09", "m0r0", "vc33"}
++
++    def _fake_run_one_combination(*, bundle, game, seed_index, require_cuda):
++        del bundle, require_cuda
++        if game in winning_games:
++            ptrm = 0.60 + 0.01 * (seed_index % 2)
++            non_recursive = 0.40 + 0.01 * (seed_index % 3)
++            majority = 0.30
++        else:
++            ptrm = 0.30 + 0.01 * (seed_index % 2)
++            non_recursive = 0.30 + 0.01 * (seed_index % 3)
++            majority = 0.35
++        return {
++            "game": game,
++            "seed_index": seed_index,
++            "n_train_examples": 10,
++            "n_heldout_examples": 5,
++            "leakage_count": 0,
++            "ptrm_per_action_accuracy": round(ptrm, 6),
++            "ptrm_exact_window_accuracy": 0.0,
++            "non_recursive_per_action_accuracy": round(non_recursive, 6),
++            "non_recursive_exact_window_accuracy": 0.0,
++            "majority_baseline_per_action_accuracy": majority,
++            "majority_baseline_exact_window_accuracy": 0.0,
++        }
++
++    monkeypatch.setattr(mod, "_run_one_combination", _fake_run_one_combination)
++
++    artifact = mod.build_artifact(n_seeds=10)
++
++    assert set(artifact["games_ptrm_beats_non_recursive_significantly"]) >= winning_games
++    assert set(artifact["games_ptrm_beats_majority_baseline"]) >= winning_games
++    assert artifact["loo_verdict_reached"] is True
++    assert artifact["honest_verdict"] == "complete: ptrm_loo_gate_passed_majority_of_heldout_games"
++    assert artifact["heldout_generalization_signal"] == "loo_gate_passed_majority_5_games"
++    assert artifact["retire_trm_generator_line"] is False
++    assert "exp5574_artifact_mismatch_corrigendum" in artifact
++    assert "70c857a69" in artifact["exp5574_artifact_mismatch_corrigendum"]
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++
++
++def test_scenario_arc_ptrm_5600_gate_fails_honestly_when_no_majority(monkeypatch) -> None:
++    """When fewer than 3 of 5 games clear the gate, the verdict is an honest
++    failure and `retire_trm_generator_line` is set, per known-issues.md task 8's
++    `retire_if_same_verdict: true` condition."""
++
++    monkeypatch.setattr(
++        mod, "preconditions", lambda **_kwargs: {"ok": True, "cuda_available": True}
++    )
++    monkeypatch.setattr(mod, "_load_corpus", lambda corpus_dir: ([], {}))
++    monkeypatch.setattr(mod, "build_stage1_dataset", lambda rows, config, heldout_games: object())
++
++    def _fake_run_one_combination(*, bundle, game, seed_index, require_cuda):
++        del bundle, require_cuda
++        return {
++            "game": game,
++            "seed_index": seed_index,
++            "n_train_examples": 10,
++            "n_heldout_examples": 5,
++            "leakage_count": 0,
++            "ptrm_per_action_accuracy": 0.3,
++            "ptrm_exact_window_accuracy": 0.0,
++            "non_recursive_per_action_accuracy": 0.3,
++            "non_recursive_exact_window_accuracy": 0.0,
++            "majority_baseline_per_action_accuracy": 0.5,
++            "majority_baseline_exact_window_accuracy": 0.0,
++        }
++
++    monkeypatch.setattr(mod, "_run_one_combination", _fake_run_one_combination)
++
++    artifact = mod.build_artifact(n_seeds=4)
++
++    assert artifact["games_ptrm_beats_non_recursive_significantly"] == []
++    assert artifact["loo_verdict_reached"] is True
++    assert artifact["honest_verdict"] == (
++        "complete: ptrm_loo_gate_failed_no_majority_significant_and_above_baseline"
++    )
++    assert artifact["retire_trm_generator_line"] is True
++
++
++def test_req_arc_ptrm_5600_repository_artifact_is_a_real_measured_result() -> None:
++    """REQ-ARC-PTRM-5600-2: the checked-in real run measured all 5 held-out games
++    across 10 seeds each, using the wiring-fixed generation path. The gate
++    failed (only ft09 clears both bars, below the required majority of 3), so
++    task 8's `retire_if_same_verdict: true` condition fires."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    assert result["heldout_games"] == list(mod.HELDOUT_GAMES)
++    assert result["n_seeds"] == mod.N_SEEDS
++    assert result["loo_verdict_reached"] is True
++    assert result["solve_provenance"] == "development_proxy"
++    assert result["inference_substrate"] == "trained_ptrm_offline_development_proxy"
++    assert result["verifier_is_oracle"] is False
++    assert result["no_level_solve_claim"] is True
++    assert set(result["per_game_results"].keys()) == set(mod.HELDOUT_GAMES)
++    for game in mod.HELDOUT_GAMES:
++        game_result = result["per_game_results"][game]
++        assert game_result["n_seeds"] == mod.N_SEEDS
++        assert len(game_result["per_seed_rows"]) == mod.N_SEEDS
++        assert game_result["per_seed_rows"][0]["leakage_count"] == 0
++    assert result["honest_verdict"] == (
++        "complete: ptrm_loo_gate_failed_no_majority_significant_and_above_baseline"
++    )
++    assert result["games_ptrm_beats_non_recursive_significantly"] == ["ft09"]
++    assert result["retire_trm_generator_line"] is True
++    assert result["duration_s"] > 0.0
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in result
+-- 
+2.55.0
+

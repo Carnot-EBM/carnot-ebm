@@ -1,0 +1,2299 @@
+From 4a7a93fe7e21d5d774e927b2fdeedb3c97a4ca2c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 5 Jul 2026 05:46:20 -0400
+Subject: [PATCH 05756/11362] [conductor] PHASE 2 gated on exp5259
+ sota_runtime_ready -- neuron and attention-energy hallucination probe
+
+Automated research step by research conductor.
+Task ID: exp5263-neuron-attention-energy-hallucination-probe-v481
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   86 ++
+ ops/anomaly-escalations.md                    |    5 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...tention_energy_hallucination_probe_v481.py | 1084 +++++++++++++++++
+ ...ntion_energy_hallucination_probe_v481.json |  698 +++++++++++
+ ...tention_energy_hallucination_probe_v481.py |  354 ++++++
+ 6 files changed, 2228 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py
+ create mode 100644 results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json
+ create mode 100644 tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 79711bc830..3836cbd9b2 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -25483,3 +25483,89 @@ and still preserves the precondition receipts and retired-scope guard.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-VERIFY-5262 | Planned (`python/carnot/experiment_5262_solver_grounded_constraint_extraction_v481.py`, `results/experiment_5262_solver_grounded_constraint_extraction_v481.json`) | Planned (`tests/python/test_experiment_5262_solver_grounded_constraint_extraction_v481.py`) |
++
++### REQ-VERIFY-5263: Neuron/Attention/Logit Energy Hallucination Probe V481
++
++The repository SHALL provide Exp 5263 at
++`python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`
++and write
++`results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json`
++without modifying `scripts/research_conductor.py`. The runner SHALL execute
++only when Exp 5259 reports `sota_runtime_ready=true`, SHALL record the Exp
++5259 model/runtime receipts it relies on, and SHALL first determine whether
++the local SOTA GGUF runtime exposes hidden states, attention tensors, logits,
++token logprobs, or only generated text.
++
++If the runtime exposes only generated text, the runner SHALL stop before any
++hallucination pilot and emit a terminal `blocked_internal_signal_unavailable`
++artifact. It SHALL NOT substitute an external generated-text scorer, LLM judge,
++NLI scorer, or any retired Phase D generated-text/logprob scorer.
++
++The mandated `MODEL_SPECS` are exactly:
++`unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe`,
++`unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF` as optional `middle_moe`. `MODEL_SPECS`
++SHALL record model IDs, roles, quantization/file receipts, runtime statuses
++inherited from Exp 5259, and the selected pilot model when a pilot runs.
++
++When hidden states, attention tensors, logits, or token logprobs are available
++with receipts, the runner SHALL build a bounded hallucination fixture set with
++supported and unsupported claims, prompt checksums, and independent labels.
++It SHALL extract only available internal/logit/attention features, compute
++simple pre-registered energy features, and avoid training a flexible probe.
++It MAY report AUROC, precision, and false accepts at a fixed false-accept
++budget only when labels and signal receipts are adequate. It SHALL compare
++against deterministic baselines and SHALL preserve hidden-state and attention
++unavailability rather than pretending logprob access is full internal-state
++access.
++
++The artifact SHALL include these top-level fields:
++`honest_verdict`, `inference_substrate`, `preconditions_checked`,
++`MODEL_SPECS`, `internal_signal_available`,
++`internal_signal_available_principle`,
++`hidden_energy_probe_signal_delta`,
++`hidden_energy_probe_signal_delta_principle`,
++`false_accepts_at_threshold`, `external_text_scorer_used`,
++`fixture_checksums`, and `commands_run`. `internal_signal_available` SHALL be
++a bare boolean. `hidden_energy_probe_signal_delta` SHALL be a bare float.
++`honest_verdict.value` SHALL start with `complete:` or `blocked_` and state
++signal, null, harmful, or unavailable. `inference_substrate.value` SHALL be
++`live_llm_inference_local_gguf_sota` only when internal/logit receipts exist;
++otherwise it SHALL be `llama_cpp_runtime_preflight_no_quality_claim`.
++`external_text_scorer_used.value` SHALL be false.
++
++Required field principles:
++
++- `honest_verdict`: principle "Terminal Exp 5263 verdict; starts with complete: or blocked_ and states whether the available internal/logit/attention signal was useful, null, harmful, or unavailable."
++- `inference_substrate`: principle "Declares live local SOTA GGUF inference only when internal/logit receipts exist; otherwise remains a llama.cpp runtime preflight with no quality claim."
++- `preconditions_checked`: principle "Records Exp 5259 readiness, llama.cpp signal surface, model/runtime receipts, fixture label adequacy, and retired Phase D exclusion before scoring."
++- `MODEL_SPECS`: principle "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, runtime status, and selected pilot model."
++- `internal_signal_available`: principle "Bare boolean; true only when hidden states, attention tensors, logits, or token logprobs are exposed with receipts beyond generated text."
++- `internal_signal_available_principle`: principle "Explains which signal classes were available and whether the runtime was text-only."
++- `hidden_energy_probe_signal_delta`: principle "Unsupported-minus-supported mean of the pre-registered available energy score; zero only for blocked or no-signal artifacts."
++- `false_accepts_at_threshold`: principle "Count of unsupported fixtures accepted as safe at the pre-registered zero false-accept budget threshold."
++- `external_text_scorer_used`: principle "Must be false; Phase D external generated-text/logprob scorers are retired and not reopened."
++- `fixture_checksums`: principle "Records fixture prompt checksums, label checksum, and fixture-set checksum for the bounded supported/unsupported panel."
++- `commands_run`: principle "Commands run to create and validate the artifact, with outcomes."
++
++### SCENARIO-VERIFY-5263: Runtime Signal Receipts Gate Hallucination-Energy Pilot
++
++Given Exp 5259 `sota_runtime_ready=true`, the mandated V481 local SOTA GGUF
++models, and a bounded supported/unsupported hallucination fixture set, when
++Exp 5263 runs, then it records hidden-state, attention, logit, and token
++logprob availability, stops with `blocked_internal_signal_unavailable` if only
++generated text is available, or otherwise extracts available internal/logit
++energy features, computes deterministic baseline comparisons, writes the
++required result artifact, and keeps `external_text_scorer_used.value=false`.
++
++If labels are insufficient, receipts are text-only, Exp 5259 is missing or not
++ready, or every live generation omits logit/logprob/internal receipts, then the
++same runner writes a terminal `blocked_` artifact with exact blockers,
++`internal_signal_available=false`, neutral numeric fields, and no external
++text scorer fallback.
++
++## Implementation Status (REQ-VERIFY-5263)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5263 | Planned (`python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`, `results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json`) | Planned (`tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`) |
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index f224900758..a7909df067 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -917,3 +917,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_5256_capstone_v480.json
++
++## experiment_5262_solver_grounded_constraint_extraction_v481.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_5262_solver_grounded_constraint_extraction_v481.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 6d117a2f43..ce64d24348 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4235,
++  "experiments_checked": 4236,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py b/python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py
+new file mode 100644
+index 0000000000..f6dc740f2b
+--- /dev/null
++++ b/python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py
+@@ -0,0 +1,1084 @@
++"""Exp 5263: bounded neuron/attention/logit hallucination-energy probe.
++
++Spec refs: REQ-VERIFY-5263, SCENARIO-VERIFY-5263.
++
++This experiment is a receipt gate before any larger hallucination verifier
++work. The local GGUF runtime may expose generated text, token logprobs, final
++logits, attention tensors, or hidden states. Only the latter four are useful
++for this task. If the runtime is text-only, the honest result is a blocked
++capability artifact, not a replacement text scorer.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import inspect
++import json
++import math
++from pathlib import Path
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json")
++EXP5259_RELATIVE_PATH = Path("results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json")
++SCHEMA = "carnot.experiment_5263.neuron_attention_energy_hallucination_probe.v481"
++SPEC_REFS = ("REQ-VERIFY-5263", "SCENARIO-VERIFY-5263")
++LIVE_SUBSTRATE = "live_llm_inference_local_gguf_sota"
++PREFLIGHT_SUBSTRATE = "llama_cpp_runtime_preflight_no_quality_claim"
++RANDOM_SEED = 5263
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++SIGNAL_KEYS = ("hidden_states", "attention_tensors", "logits", "token_logprobs")
++
++GGUF_PROBE_CONFIG: JsonDict = {
++    "n_gpu_layers": -1,
++    "n_ctx": 512,
++    "max_tokens": 4,
++    "temperature": 0.0,
++    "seed": RANDOM_SEED,
++    "logprobs": 5,
++    "logits_all": True,
++}
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "honest_verdict": (
++        "Terminal Exp 5263 verdict; starts with complete: or blocked_ and states "
++        "whether the available internal/logit/attention signal was useful, null, "
++        "harmful, or unavailable."
++    ),
++    "inference_substrate": (
++        "Declares live local SOTA GGUF inference only when internal/logit receipts "
++        "exist; otherwise remains a llama.cpp runtime preflight with no quality claim."
++    ),
++    "preconditions_checked": (
++        "Records Exp 5259 readiness, llama.cpp signal surface, model/runtime receipts, "
++        "fixture label adequacy, and retired Phase D exclusion before scoring."
++    ),
++    "MODEL_SPECS": (
++        "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, "
++        "runtime status, and selected pilot model."
++    ),
++    "internal_signal_available": (
++        "Bare boolean; true only when hidden states, attention tensors, logits, or "
++        "token logprobs are exposed with receipts beyond generated text."
++    ),
++    "internal_signal_available_principle": (
++        "Explains which signal classes were available and whether the runtime was text-only."
++    ),
++    "hidden_energy_probe_signal_delta": (
++        "Unsupported-minus-supported mean of the pre-registered available energy score; "
++        "zero only for blocked or no-signal artifacts."
++    ),
++    "false_accepts_at_threshold": (
++        "Count of unsupported fixtures accepted as safe at the pre-registered zero "
++        "false-accept budget threshold."
++    ),
++    "external_text_scorer_used": (
++        "Must be false; Phase D external generated-text/logprob scorers are retired "
++        "and not reopened."
++    ),
++    "fixture_checksums": (
++        "Records fixture prompt checksums, label checksum, and fixture-set checksum for "
++        "the bounded supported/unsupported panel."
++    ),
++    "commands_run": "Commands run to create and validate the artifact, with outcomes.",
++}
++
++MANDATED_MODEL_SPECS: tuple[JsonDict, ...] = (
++    {
++        "slot": "flagship_moe",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "role": "flagship_moe",
++        "quantization": "Q4_K_M",
++    },
++    {
++        "slot": "flagship_dense",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "role": "flagship_dense",
++        "quantization": "Q4_K_M",
++    },
++    {
++        "slot": "middle_moe",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "role": "optional_middle_moe",
++        "quantization": "Q4_K_M",
++    },
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "preconditions_checked",
++    "MODEL_SPECS",
++    "internal_signal_available",
++    "internal_signal_available_principle",
++    "hidden_energy_probe_signal_delta",
++    "hidden_energy_probe_signal_delta_principle",
++    "false_accepts_at_threshold",
++    "external_text_scorer_used",
++    "fixture_checksums",
++    "commands_run",
++)
++WRAPPED_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "preconditions_checked",
++    "MODEL_SPECS",
++    "false_accepts_at_threshold",
++    "external_text_scorer_used",
++    "fixture_checksums",
++)
++
++
++@dataclass(frozen=True)
++class HallucinationFixture:
++    """One local evidence-relative claim with a model-independent label."""
++
++    fixture_id: str
++    evidence: str
++    claim: str
++    unsupported_label: bool
++    label_source: str = "curated_local_evidence_label"
++    category: str = "bounded_factual_claim"
++
++
++GenerationRunner = Callable[[HallucinationFixture, JsonDict, int], JsonDict]
++
++
++def default_fixtures() -> list[HallucinationFixture]:
++    """Return a tiny balanced panel with supported and unsupported claims."""
++
++    return [
++        HallucinationFixture(
++            fixture_id="hae-001-supported-runtime",
++            evidence="Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test.",
++            claim="The Aster-9 battery ran 47 minutes under the amber-load test.",
++            unsupported_label=False,
++        ),
++        HallucinationFixture(
++            fixture_id="hae-002-unsupported-runtime",
++            evidence="Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test.",
++            claim="The Aster-9 battery ran 74 minutes under the amber-load test.",
++            unsupported_label=True,
++        ),
++        HallucinationFixture(
++            fixture_id="hae-003-supported-enrollment",
++            evidence="Mira Vale clinic snippet: Trial Nacre enrolled 18 participants and used a saline control.",
++            claim="Trial Nacre enrolled 18 participants.",
++            unsupported_label=False,
++        ),
++        HallucinationFixture(
++            fixture_id="hae-004-unsupported-manufacturer",
++            evidence="Solenne lab note: reagent Pavo turned violet at pH 5.2.",
++            claim="Reagent Pavo was manufactured by HelioChem.",
++            unsupported_label=True,
++        ),
++        HallucinationFixture(
++            fixture_id="hae-005-supported-route",
++            evidence="Noma transit note: Route 6 skipped Pear Gate during the lantern parade.",
++            claim="Route 6 skipped Pear Gate during the lantern parade.",
++            unsupported_label=False,
++        ),
++        HallucinationFixture(
++            fixture_id="hae-006-unsupported-year",
++            evidence="Tavian school board note: the Cedar lab opened in 2024 with six benches.",
++            claim="The Cedar lab opened in 2023.",
++            unsupported_label=True,
++        ),
++    ]
++
++
++def render_prompt(fixture: HallucinationFixture) -> str:
++    """Render the local verdict prompt without exposing the fixture label."""
++
++    return (
++        "Use only the evidence below. Reply with exactly SUPPORTED or UNSUPPORTED.\n\n"
++        f"Evidence:\n{fixture.evidence}\n\n"
++        f"Claim:\n{fixture.claim}\n\n"
++        "Verdict:"
++    )
++
++
++def fixture_checksums(fixtures: Sequence[HallucinationFixture]) -> JsonDict:
++    """Return stable checksums for prompts and labels used by the pilot."""
++
++    prompt_checksums = {fixture.fixture_id: sha16(render_prompt(fixture)) for fixture in fixtures}
++    labels = {fixture.fixture_id: bool(fixture.unsupported_label) for fixture in fixtures}
++    payload = [
++        {
++            "fixture_id": fixture.fixture_id,
++            "evidence_sha16": sha16(fixture.evidence),
++            "claim_sha16": sha16(fixture.claim),
++            "unsupported_label": fixture.unsupported_label,
++            "prompt_sha16": prompt_checksums[fixture.fixture_id],
++        }
++        for fixture in fixtures
++    ]
++    return {
++        "fixture_count": len(fixtures),
++        "prompt_checksums": prompt_checksums,
++        "label_checksum": sha16(_stable_json(labels)),
++        "fixture_set_checksum": sha16(_stable_json(payload)),
++        "label_source": "curated_local_evidence_label",
++        "supported_count": sum(1 for fixture in fixtures if not fixture.unsupported_label),
++        "unsupported_count": sum(1 for fixture in fixtures if fixture.unsupported_label),
++    }
++
++
++def compute_energy_features(generation: Mapping[str, Any]) -> JsonDict:
++    """Compute the pre-registered energy features from available receipts."""
++
++    token_logprobs = _numeric_values(generation.get("token_logprobs"))
++    top_rows = _top_logprob_rows(generation.get("top_logprobs"))
++    final_logits = _final_logits(generation)
++    full_logit_summary = _full_logit_summary(final_logits) if final_logits else _summary_from_generation(generation)
++
++    top_distribution = _softmax_log_values(list(top_rows[-1].values())) if top_rows else []
++    selected_final_prob = _selected_final_probability(token_logprobs)
++    if top_distribution:
++        final_top1_probability = max(top_distribution)
++    else:
++        final_top1_probability = selected_final_prob
++
++    sequence_spilled = _mean([1.0 - math.exp(min(0.0, value)) for value in token_logprobs])
++    sequence_marginal = -_mean(token_logprobs) if token_logprobs else None
++    final_spilled = 1.0 - final_top1_probability if final_top1_probability is not None else None
++    final_marginal = -math.log(max(final_spilled, 1e-12)) if final_spilled is not None else None
++    full_logit_top1 = _optional_float(full_logit_summary.get("top1_probability"))
++    full_logit_spilled = 1.0 - full_logit_top1 if full_logit_top1 is not None else None
++    primary = sequence_marginal if sequence_marginal is not None else full_logit_spilled
++    if primary is None:
++        primary = final_spilled
++
++    signal_available = bool(token_logprobs or top_rows or final_logits or full_logit_summary)
++    return {
++        "signal_available": signal_available,
++        "token_count": _token_count(generation, token_logprobs),
++        "token_logprob_count": len(token_logprobs),
++        "top_logprobs_count": len(top_rows),
++        "final_logits_count": len(final_logits),
++        "final_token_top1_probability": final_top1_probability,
++        "final_token_spilled_energy": final_spilled,
++        "final_token_marginal_energy": final_marginal,
++        "sequence_spilled_energy": sequence_spilled,
++        "sequence_marginal_energy": sequence_marginal,
++        "full_logit_top1_probability": full_logit_top1,
++        "full_logit_spilled_energy": full_logit_spilled,
++        "full_logit_entropy_topk": full_logit_summary.get("entropy_topk"),
++        "primary_energy": primary,
++        "primary_energy_name": (
++            "sequence_marginal_energy"
++            if sequence_marginal is not None
++            else "full_logit_spilled_energy"
++            if full_logit_spilled is not None
++            else "final_token_spilled_energy"
++        ),
++    }
++
++
++def summarize_energy(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Summarize the fixed energy score without fitting a detector."""
++
++    pairs: list[tuple[int, float]] = []
++    for row in rows:
++        energy = _optional_float(_nested_value(row.get("energy_features", {}), "primary_energy"))
++        if energy is None:
++            continue
++        pairs.append((1 if bool(row.get("unsupported_label")) else 0, energy))
++
++    supported = [score for label, score in pairs if label == 0]
++    unsupported = [score for label, score in pairs if label == 1]
++    threshold = _zero_false_accept_threshold(unsupported)
++    false_accepts = sum(1 for label, score in pairs if label == 1 and threshold is not None and score <= threshold)
++    flagged = [(label, score) for label, score in pairs if threshold is not None and score > threshold]
++    true_flags = sum(1 for label, _score in flagged if label == 1)
++    precision = true_flags / len(flagged) if flagged else None
++    signal_delta = (_mean(unsupported) - _mean(supported)) if supported and unsupported else 0.0
++    return {
++        "n_scored": len(pairs),
++        "label_counts": {"supported": len(supported), "unsupported": len(unsupported)},
++        "supported_mean_energy": _mean(supported),
++        "unsupported_mean_energy": _mean(unsupported),
++        "signal_delta": float(signal_delta),
++        "auroc": _auroc([label for label, _score in pairs], [score for _label, score in pairs]),
++        "threshold_policy": "zero_false_accept_budget_on_unsupported_labels",
++        "threshold": threshold,
++        "false_accepts_at_threshold": int(false_accepts),
++        "precision_at_threshold": precision,
++        "detector_trained": False,
++    }
++
++
++def deterministic_baselines(fixtures: Sequence[HallucinationFixture]) -> JsonDict:
++    """Compute claim/evidence-only baselines for context, not as model scorers."""
++
++    total = len(fixtures)
++    unsupported = sum(1 for fixture in fixtures if fixture.unsupported_label)
++    lexical_predictions = {
++        fixture.fixture_id: not _claim_supported_by_evidence(fixture.claim, fixture.evidence)
++        for fixture in fixtures
++    }
++    lexical_correct = sum(
++        1 for fixture in fixtures if lexical_predictions[fixture.fixture_id] == fixture.unsupported_label
++    )
++    lexical_false_accepts = sum(
++        1 for fixture in fixtures if fixture.unsupported_label and not lexical_predictions[fixture.fixture_id]
++    )
++    return {
++        "always_supported": {
++            "accuracy": (total - unsupported) / total if total else 0.0,
++            "false_accepts": unsupported,
++        },
++        "lexical_claim_terms": {
++            "accuracy": lexical_correct / total if total else 0.0,
++            "false_accepts": lexical_false_accepts,
++            "uses_model_output": False,
++        },
++    }
++
++
++def run_pilot(
++    *,
++    result_path: Path = REPO_ROOT / RESULT_RELATIVE_PATH,
++    preflight_artifact: Mapping[str, Any] | None = None,
++    signal_surface: Mapping[str, Any] | None = None,
++    generation_runner: GenerationRunner | None = None,
++    fixtures: Sequence[HallucinationFixture] | None = None,
++    commands_run: Sequence[Mapping[str, Any]] = (),
++    root: Path = REPO_ROOT,
++    write: bool = True,
++) -> JsonDict:
++    """Gate runtime signals, run the bounded pilot when possible, and write JSON."""
++
++    started = time.perf_counter()
++    root = Path(root)
++    active_preflight = dict(preflight_artifact or load_preflight_artifact(root))
++    active_surface = dict(signal_surface or inspect_llama_cpp_signal_surface())
++    active_fixtures = list(fixtures or default_fixtures())
++    model_specs = _model_specs_from_preflight(active_preflight)
++    selected_model = _select_pilot_model(model_specs)
++
++    if not active_preflight.get("sota_runtime_ready") or selected_model is None:
++        artifact = _blocked_artifact(
++            root=root,
++            preflight_artifact=active_preflight,
++            signal_surface=active_surface,
++            model_specs=model_specs,
++            fixtures=active_fixtures,
++            commands_run=commands_run,
++            blocker="blocked_sota_runtime_unavailable",
++            live_signal_receipts_found=False,
++            duration_s=time.perf_counter() - started,
++        )
++        validate_artifact(artifact)
++        _write_json_if_requested(result_path, artifact, write)
++        return artifact
++
++    if not _surface_has_internal_signal(active_surface):
++        artifact = _blocked_artifact(
++            root=root,
++            preflight_artifact=active_preflight,
++            signal_surface=active_surface,
++            model_specs=model_specs,
++            fixtures=active_fixtures,
++            commands_run=commands_run,
++            blocker="blocked_internal_signal_unavailable",
++            live_signal_receipts_found=False,
++            duration_s=time.perf_counter() - started,
++        )
++        validate_artifact(artifact)
++        _write_json_if_requested(result_path, artifact, write)
++        return artifact
++
++    runner = generation_runner or live_llama_cpp_generation_runner(active_preflight, active_surface)
++    pilot_rows = [
++        _evaluate_fixture(fixture, selected_model, runner, seed=RANDOM_SEED + index)
++        for index, fixture in enumerate(active_fixtures)
++    ]
++    live_signal_receipts_found = any(row["energy_features"]["signal_available"] for row in pilot_rows)
++    label_counts = fixture_checksums(active_fixtures)
++    labels_adequate = bool(label_counts["supported_count"] and label_counts["unsupported_count"])
++    if not live_signal_receipts_found or not labels_adequate:
++        artifact = _blocked_artifact(
++            root=root,
++            preflight_artifact=active_preflight,
++            signal_surface=active_surface,
++            model_specs=model_specs,
++            fixtures=active_fixtures,
++            commands_run=commands_run,
++            blocker="blocked_internal_signal_unavailable",
++            live_signal_receipts_found=live_signal_receipts_found,
++            duration_s=time.perf_counter() - started,
++        )
++        validate_artifact(artifact)
++        _write_json_if_requested(result_path, artifact, write)
++        return artifact
++
++    summary = summarize_energy(pilot_rows)
++    artifact = _complete_artifact(
++        root=root,
++        preflight_artifact=active_preflight,
++        signal_surface=active_surface,
++        model_specs=model_specs,
++        fixtures=active_fixtures,
++        pilot_rows=pilot_rows,
++        separation_summary=summary,
++        commands_run=commands_run,
++        duration_s=time.perf_counter() - started,
++    )
++    validate_artifact(artifact)
++    _write_json_if_requested(result_path, artifact, write)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Raise when an Exp 5263 artifact violates the required schema."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact, f"missing required field {field}"
++    for field in WRAPPED_FIELDS:
++        value = artifact.get(field)
++        assert isinstance(value, Mapping), f"{field} must be principle-wrapped"
++        assert "value" in value and "principle" in value, f"{field} must be principle-wrapped"
++        assert value["principle"] == FIELD_PRINCIPLES[field], f"{field} principle mismatch"
++
++    verdict = artifact["honest_verdict"]["value"]
++    assert isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES), (
++        "honest_verdict.value must start with complete: or blocked_"
++    )
++    assert any(word in verdict for word in ("signal", "null", "harmful", "unavailable")), (
++        "honest_verdict.value must state signal, null, harmful, or unavailable"
++    )
++    substrate = artifact["inference_substrate"]["value"]
++    assert substrate in (LIVE_SUBSTRATE, PREFLIGHT_SUBSTRATE), "inference_substrate.value invalid"
++    assert isinstance(artifact["internal_signal_available"], bool), (
++        "internal_signal_available must be a bare bool"
++    )
++    delta = artifact["hidden_energy_probe_signal_delta"]
++    assert isinstance(delta, int | float) and not isinstance(delta, bool), (
++        "hidden_energy_probe_signal_delta must be a bare float"
++    )
++    assert artifact["hidden_energy_probe_signal_delta_principle"] == FIELD_PRINCIPLES[
++        "hidden_energy_probe_signal_delta"
++    ]
++    assert isinstance(artifact["false_accepts_at_threshold"]["value"], int), (
++        "false_accepts_at_threshold.value must be int"
++    )
++    assert artifact["external_text_scorer_used"]["value"] is False, (
++        "external_text_scorer_used.value must remain false"
++    )
++    assert isinstance(artifact["fixture_checksums"]["value"], Mapping), (
++        "fixture_checksums.value must be object"
++    )
++    assert isinstance(artifact["MODEL_SPECS"]["value"], Mapping), "MODEL_SPECS.value must be object"
++    assert isinstance(artifact["commands_run"], list), "commands_run must be a list"
++
++
++def inspect_llama_cpp_signal_surface() -> JsonDict:  # pragma: no cover - unit tests inject this.
++    """Inspect the installed llama.cpp Python API for non-text signal access."""
++
++    surface: JsonDict = {
++        "hidden_states": False,
++        "attention_tensors": False,
++        "logits": False,
++        "token_logprobs": False,
++        "generated_text": False,
++        "api_receipts": {},
++    }
++    try:
++        from llama_cpp import Llama  # noqa: PLC0415
++    except Exception as exc:
++        surface["api_receipts"]["import_error"] = f"{type(exc).__name__}: {exc}"
++        return surface
++
++    init_sig = inspect.signature(Llama.__init__)
++    call_sig = inspect.signature(Llama.__call__)
++    init_params = set(init_sig.parameters)
++    call_params = set(call_sig.parameters)
++    attrs = set(dir(Llama))
++    surface.update(
++        {
++            "hidden_states": "output_hidden_states" in init_params or any("hidden" in attr.lower() for attr in attrs),
++            "attention_tensors": "output_attentions" in call_params or "attention_scores" in attrs,
++            "logits": "logits_all" in init_params and hasattr(Llama, "eval_logits"),
++            "token_logprobs": "logprobs" in call_params,
++            "generated_text": callable(getattr(Llama, "__call__", None)),
++            "api_receipts": {
++                "Llama.__init__": str(init_sig),
++                "Llama.__call__": str(call_sig),
++                "eval_logits_property": hasattr(Llama, "eval_logits"),
++                "logits_all_parameter": "logits_all" in init_params,
++                "logprobs_parameter": "logprobs" in call_params,
++            },
++        }
++    )
++    return surface
++
++
++def live_llama_cpp_generation_runner(
++    preflight_artifact: Mapping[str, Any],
++    signal_surface: Mapping[str, Any],
++) -> GenerationRunner:  # pragma: no cover - exercised by artifact generation, not unit tests.
++    """Build one live local GGUF runner that returns logprob/logit receipts."""
++
++    model_specs = _model_specs_from_preflight(preflight_artifact)
++    selected = _select_pilot_model(model_specs)
++    if selected is None:
++        raise RuntimeError("no ready mandated GGUF model receipt available")
++    model_path = selected["file_receipts"].get("path")
++    if not model_path:
++        raise RuntimeError("selected GGUF model path unavailable")
++
++    from llama_cpp import Llama  # noqa: PLC0415
++
++    llm = Llama(
++        model_path=str(model_path),
++        n_gpu_layers=int(GGUF_PROBE_CONFIG["n_gpu_layers"]),
++        n_ctx=int(GGUF_PROBE_CONFIG["n_ctx"]),
++        seed=int(GGUF_PROBE_CONFIG["seed"]),
++        logits_all=bool(signal_surface.get("logits")),
++        verbose=False,
++    )
++
++    def run(fixture: HallucinationFixture, model_spec: JsonDict, seed: int) -> JsonDict:
++        del model_spec
++        response = llm(
++            render_prompt(fixture),
++            max_tokens=int(GGUF_PROBE_CONFIG["max_tokens"]),
++            temperature=float(GGUF_PROBE_CONFIG["temperature"]),
++            logprobs=int(GGUF_PROBE_CONFIG["logprobs"]) if signal_surface.get("token_logprobs") else None,
++            echo=False,
++            seed=int(seed),
++        )
++        choice = _first_choice(response)
++        logprobs = choice.get("logprobs") if isinstance(choice, Mapping) else {}
++        token_logprobs = _numeric_values(_nested_value(logprobs, "token_logprobs"))
++        top_logprobs = _top_logprob_rows(_nested_value(logprobs, "top_logprobs"))
++        logits_summary: JsonDict = {}
++        if signal_surface.get("logits"):
++            logits = getattr(llm, "eval_logits", None)
++            if logits:
++                final_logits = logits[-1]
++                logits_summary = _full_logit_summary(final_logits)
++                logits_summary["steps"] = len(logits)
++        return {
++            "raw_response": str(choice.get("text", "")) if isinstance(choice, Mapping) else str(response),
++            "token_logprobs": token_logprobs,
++            "top_logprobs": top_logprobs,
++            "tokens": list(logprobs.get("tokens", [])) if isinstance(logprobs, Mapping) else [],
++            "token_count": len(token_logprobs),
++            "final_logits_summary": logits_summary,
++            "logit_receipt": logits_summary,
++            "seed": int(seed),
++        }
++
++    return run
++
++
++def load_preflight_artifact(root: Path = REPO_ROOT) -> JsonDict:  # pragma: no cover
++    """Load Exp 5259 readiness receipts from the checked-in result artifact."""
++
++    path = root / EXP5259_RELATIVE_PATH
++    if not path.exists():
++        return {"sota_runtime_ready": False, "blocker": f"missing {path}"}
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    return dict(loaded) if isinstance(loaded, Mapping) else {"sota_runtime_ready": False}
++
++
++def sha16(text: str) -> str:
++    """Return a short stable checksum for local prompts and labels."""
++
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
++
++
++def _complete_artifact(
++    *,
++    root: Path,
++    preflight_artifact: Mapping[str, Any],
++    signal_surface: Mapping[str, Any],
++    model_specs: Mapping[str, JsonDict],
++    fixtures: Sequence[HallucinationFixture],
++    pilot_rows: Sequence[Mapping[str, Any]],
++    separation_summary: Mapping[str, Any],
++    commands_run: Sequence[Mapping[str, Any]],
++    duration_s: float,
++) -> JsonDict:
++    delta = float(separation_summary["signal_delta"])
++    return {
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "duration_s": round(duration_s, 6),
++        "honest_verdict": _wrap("honest_verdict", _honest_verdict(delta)),
++        "inference_substrate": _wrap("inference_substrate", LIVE_SUBSTRATE),
++        "preconditions_checked": _preconditions(
++            root,
++            preflight_artifact,
++            signal_surface,
++            fixtures,
++            live_signal_receipts_found=True,
++            blocker="",
++        ),
++        "MODEL_SPECS": _wrap("MODEL_SPECS", model_specs),
++        "internal_signal_available": True,
++        "internal_signal_available_principle": _internal_signal_principle(signal_surface, live_receipts=True),
++        "hidden_energy_probe_signal_delta": delta,
++        "hidden_energy_probe_signal_delta_principle": FIELD_PRINCIPLES["hidden_energy_probe_signal_delta"],
++        "false_accepts_at_threshold": _wrap(
++            "false_accepts_at_threshold",
++            int(separation_summary["false_accepts_at_threshold"]),
++        ),
++        "external_text_scorer_used": _wrap("external_text_scorer_used", False),
++        "fixture_checksums": _wrap("fixture_checksums", fixture_checksums(fixtures)),
++        "commands_run": [dict(row) for row in commands_run],
++        "pilot_rows": [dict(row) for row in pilot_rows],
++        "separation_summary": dict(separation_summary),
++        "deterministic_baselines": deterministic_baselines(fixtures),
++        "feature_preregistration": {
++            "detector_trained": False,
++            "primary_energy_order": [
++                "sequence_marginal_energy",
++                "full_logit_spilled_energy",
++                "final_token_spilled_energy",
++            ],
++            "higher_energy_means_more_unsupported_risk": True,
++        },
++        "reproducibility_checksum": sha16(
++            _stable_json(
++                {
++                    "schema": SCHEMA,
++                    "fixtures": fixture_checksums(fixtures),
++                    "summary": separation_summary,
++                    "model_specs": model_specs,
++                }
++            )
++        ),
++    }
++
++
++def _blocked_artifact(
++    *,
++    root: Path,
++    preflight_artifact: Mapping[str, Any],
++    signal_surface: Mapping[str, Any],
++    model_specs: Mapping[str, JsonDict],
++    fixtures: Sequence[HallucinationFixture],
++    commands_run: Sequence[Mapping[str, Any]],
++    blocker: str,
++    live_signal_receipts_found: bool,
++    duration_s: float,
++) -> JsonDict:
++    verdict_detail = (
++        "unavailable exp5259_sota_runtime_ready_not_true"
++        if blocker == "blocked_sota_runtime_unavailable"
++        else "unavailable local runtime exposes only generated text or no live signal receipts"
++    )
++    return {
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "duration_s": round(duration_s, 6),
++        "honest_verdict": _wrap("honest_verdict", f"{blocker}: {verdict_detail}"),
++        "inference_substrate": _wrap("inference_substrate", PREFLIGHT_SUBSTRATE),
++        "preconditions_checked": _preconditions(
++            root,
++            preflight_artifact,
++            signal_surface,
++            fixtures,
++            live_signal_receipts_found=live_signal_receipts_found,
++            blocker=blocker,
++        ),
++        "MODEL_SPECS": _wrap("MODEL_SPECS", model_specs),
++        "internal_signal_available": False,
++        "internal_signal_available_principle": _internal_signal_principle(signal_surface, live_receipts=False),
++        "hidden_energy_probe_signal_delta": 0.0,
++        "hidden_energy_probe_signal_delta_principle": FIELD_PRINCIPLES["hidden_energy_probe_signal_delta"],
++        "false_accepts_at_threshold": _wrap("false_accepts_at_threshold", 0),
++        "external_text_scorer_used": _wrap("external_text_scorer_used", False),
++        "fixture_checksums": _wrap("fixture_checksums", fixture_checksums(fixtures)),
++        "commands_run": [dict(row) for row in commands_run],
++        "pilot_rows": [],
++        "separation_summary": {
++            "n_scored": 0,
++            "signal_delta": 0.0,
++            "auroc": None,
++            "false_accepts_at_threshold": 0,
++            "blocked_reason": blocker,
++        },
++        "deterministic_baselines": deterministic_baselines(fixtures),
++        "feature_preregistration": {
++            "detector_trained": False,
++            "primary_energy_order": [
++                "sequence_marginal_energy",
++                "full_logit_spilled_energy",
++                "final_token_spilled_energy",
++            ],
++            "higher_energy_means_more_unsupported_risk": True,
++        },
++        "blocker": blocker,
++    }
++
++
++def _evaluate_fixture(
++    fixture: HallucinationFixture,
++    model_spec: JsonDict,
++    generation_runner: GenerationRunner,
++    *,
++    seed: int,
++) -> JsonDict:
++    generation = generation_runner(fixture, model_spec, seed)
++    features = compute_energy_features(generation)
++    raw_response = str(generation.get("raw_response") or generation.get("response_text") or "")
++    return {
++        "fixture_id": fixture.fixture_id,
++        "unsupported_label": bool(fixture.unsupported_label),
++        "label_source": fixture.label_source,
++        "claim_checksum": sha16(fixture.claim),
++        "evidence_checksum": sha16(fixture.evidence),
++        "prompt_checksum": sha16(render_prompt(fixture)),
++        "raw_response_checksum": sha16(raw_response),
++        "raw_response_excerpt": raw_response[:160],
++        "energy_features": features,
++        "signal_receipts": {
++            "token_logprob_count": features["token_logprob_count"],
++            "top_logprobs_count": features["top_logprobs_count"],
++            "final_logits_count": features["final_logits_count"],
++            "logit_receipt": dict(generation.get("logit_receipt") or generation.get("final_logits_summary") or {}),
++        },
++        "seed": int(seed),
++    }
++
++
++def _preconditions(
++    root: Path,
++    preflight_artifact: Mapping[str, Any],
++    signal_surface: Mapping[str, Any],
++    fixtures: Sequence[HallucinationFixture],
++    *,
++    live_signal_receipts_found: bool,
++    blocker: str,
++) -> JsonDict:
++    checksums = fixture_checksums(fixtures)
++    value = {
++        "exp5259_artifact_path": str(root / EXP5259_RELATIVE_PATH),
++        "exp5259_sota_runtime_ready": bool(preflight_artifact.get("sota_runtime_ready")),
++        "exp5259_sota_runtime_ready_principle": preflight_artifact.get("sota_runtime_ready_principle"),
++        "signal_surface": dict(signal_surface),
++        "signal_surface_has_internal_signal": _surface_has_internal_signal(signal_surface),
++        "live_signal_receipts_found": bool(live_signal_receipts_found),
++        "text_only_runtime": bool(signal_surface.get("generated_text")) and not _surface_has_internal_signal(signal_surface),
++        "fixture_label_counts": {
++            "supported": checksums["supported_count"],
++            "unsupported": checksums["unsupported_count"],
++        },
++        "model_runtime_receipts": _model_runtime_receipt_summary(preflight_artifact),
++        "phase_d_external_text_scorer_retired": True,
++        "external_text_scorer_used": False,
++        "blocker": blocker,
++    }
++    return _wrap("preconditions_checked", value)
++
++
++def _model_specs_from_preflight(preflight_artifact: Mapping[str, Any]) -> JsonDict:
++    receipts = _nested_value(preflight_artifact, "model_receipts")
++    if not isinstance(receipts, Mapping):
++        receipts = {}
++    ready_slot = _first_ready_slot(receipts)
++    specs: JsonDict = {}
++    for mandated in MANDATED_MODEL_SPECS:
++        slot = str(mandated["slot"])
++        receipt = receipts.get(slot, {})
++        if not isinstance(receipt, Mapping):
++            receipt = {}
++        specs[slot] = {
++            "slot": slot,
++            "hf_id": str(mandated["hf_id"]),
++            "role": str(mandated["role"]),
++            "quantization": receipt.get("preferred_quant") or mandated["quantization"],
++            "runtime_status": receipt.get("status", "missing_receipt"),
++            "runtime_ready": bool(receipt.get("runtime_ready")),
++            "selected_for_pilot": slot == ready_slot,
++            "file_receipts": {
++                "path": receipt.get("path"),
++                "size_bytes": receipt.get("size_bytes"),
++                "checksum_sha256": receipt.get("checksum_sha256"),
++                "checksum_head_1m_sha256": receipt.get("checksum_head_1m_sha256"),
++            },
++        }
++    return specs
++
++
++def _model_runtime_receipt_summary(preflight_artifact: Mapping[str, Any]) -> JsonDict:
++    return {
++        slot: {
++            "hf_id": spec["hf_id"],
++            "status": spec["runtime_status"],
++            "runtime_ready": spec["runtime_ready"],
++            "path": spec["file_receipts"]["path"],
++        }
++        for slot, spec in _model_specs_from_preflight(preflight_artifact).items()
++    }
++
++
++def _first_ready_slot(receipts: Mapping[str, Any]) -> str | None:
++    for mandated in MANDATED_MODEL_SPECS:
++        slot = str(mandated["slot"])
++        receipt = receipts.get(slot, {})
++        if isinstance(receipt, Mapping) and receipt.get("runtime_ready") and receipt.get("path"):
++            return slot
++    return None
++
++
++def _select_pilot_model(model_specs: Mapping[str, JsonDict]) -> JsonDict | None:
++    for mandated in MANDATED_MODEL_SPECS:
++        slot = str(mandated["slot"])
++        spec = model_specs.get(slot)
++        if spec and spec.get("runtime_ready") and spec.get("file_receipts", {}).get("path"):
++            return dict(spec)
++    return None
++
++
++def _surface_has_internal_signal(surface: Mapping[str, Any]) -> bool:
++    return any(bool(surface.get(key)) for key in SIGNAL_KEYS)
++
++
++def _internal_signal_principle(surface: Mapping[str, Any], *, live_receipts: bool) -> str:
++    available = [key for key in SIGNAL_KEYS if surface.get(key)]
++    if live_receipts and available:
++        return (
++            "internal_signal_available=true because the runtime exposed "
++            f"{available} with live receipts; hidden_states={bool(surface.get('hidden_states'))}, "
++            f"attention_tensors={bool(surface.get('attention_tensors'))}."
++        )
++    if available:
++        return (
++            "internal_signal_available=false because the API surface advertised "
++            f"{available} but the pilot did not receive live non-text receipts."
++        )
++    return "internal_signal_available=false because the runtime was generated-text-only."
++
++
++def _honest_verdict(delta: float) -> str:
++    if delta > 0.05:
++        return f"complete: signal logit-energy unsupported-minus-supported delta={delta:.6f}"
++    if delta < -0.05:
++        return f"complete: harmful logit-energy unsupported-minus-supported delta={delta:.6f}"
++    return f"complete: null logit-energy unsupported-minus-supported delta={delta:.6f}"
++
++
++def _claim_supported_by_evidence(claim: str, evidence: str) -> bool:
++    evidence_terms = set(_content_terms(evidence))
++    return all(term in evidence_terms for term in _content_terms(claim))
++
++
++def _content_terms(text: str) -> list[str]:
++    stopwords = {
++        "a",
++        "an",
++        "and",
++        "as",
++        "by",
++        "in",
++        "of",
++        "on",
++        "the",
++        "to",
++        "under",
++        "was",
++        "with",
++    }
++    cleaned = "".join(char.lower() if char.isalnum() else " " for char in text)
++    return [term for term in cleaned.split() if term and term not in stopwords]
++
++
++def _zero_false_accept_threshold(unsupported_scores: Sequence[float]) -> float | None:
++    if not unsupported_scores:
++        return None
++    return min(unsupported_scores) - 1e-12
++
++
++def _auroc(labels: Sequence[int], scores: Sequence[float]) -> float | None:
++    positives = [score for label, score in zip(labels, scores, strict=False) if label == 1]
++    negatives = [score for label, score in zip(labels, scores, strict=False) if label == 0]
++    if not positives or not negatives:
++        return None
++    wins = 0.0
++    total = 0
++    for positive in positives:
++        for negative in negatives:
++            total += 1
++            if positive > negative:
++                wins += 1.0
++            elif positive == negative:
++                wins += 0.5
++    return wins / total if total else None
++
++
++def _first_choice(response: Any) -> JsonDict:
++    if isinstance(response, Mapping):
++        choices = response.get("choices")
++        if isinstance(choices, list) and choices and isinstance(choices[0], Mapping):
++            return dict(choices[0])
++    return {"text": str(response), "logprobs": {}}
++
++
++def _full_logit_summary(values: Any, *, top_k: int = 8) -> JsonDict:
++    numeric = _numeric_values(values)
++    if not numeric:
++        return {}
++    maximum = max(numeric)
++    weights = [math.exp(value - maximum) for value in numeric]
++    total = sum(weights)
++    if total <= 0.0:  # pragma: no cover - finite exponentials have positive sum.
++        return {}
++    top = sorted(enumerate(numeric), key=lambda item: item[1], reverse=True)[:top_k]
++    top_probs = [math.exp(value - maximum) / total for _index, value in top]
++    top_mass = sum(top_probs)
++    normalized_top = [prob / top_mass for prob in top_probs] if top_mass > 0 else []
++    entropy_topk = -sum(prob * math.log(max(prob, 1e-12)) for prob in normalized_top)
++    return {
++        "vocab_size": len(numeric),
++        "top1_probability": max(weights) / total,
++        "top_mass_probability": top_mass,
++        "entropy_topk": entropy_topk,
++        "top_logits": [
++            {"token_index": int(index), "logit": float(value), "probability": float(prob)}
++            for (index, value), prob in zip(top, top_probs, strict=False)
++        ],
++    }
++
++
++def _summary_from_generation(generation: Mapping[str, Any]) -> JsonDict:
++    summary = generation.get("final_logits_summary") or generation.get("logit_receipt")
++    return dict(summary) if isinstance(summary, Mapping) else {}
++
++
++def _final_logits(generation: Mapping[str, Any]) -> list[float]:
++    for key in ("final_logits", "logits"):
++        values = generation.get(key)
++        if isinstance(values, list):
++            if values and isinstance(values[-1], list):
++                return _numeric_values(values[-1])
++            return _numeric_values(values)
++    return []
++
++
++def _top_logprob_rows(value: Any) -> list[dict[str, float]]:
++    rows: list[dict[str, float]] = []
++    if not isinstance(value, list):
++        return rows
++    for item in value:
++        if isinstance(item, Mapping):
++            converted = {
++                str(key): numeric
++                for key, raw in item.items()
++                if (numeric := _optional_float(raw)) is not None
++            }
++            if converted:
++                rows.append(converted)
++    return rows
++
++
++def _numeric_values(value: Any) -> list[float]:
++    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
++        return []
++    values: list[float] = []
++    for item in value:
++        number = _optional_float(item)
++        if number is not None:
++            values.append(number)
++    return values
++
++
++def _optional_float(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        number = float(value)
++    except (TypeError, ValueError):
++        return None
++    return number if math.isfinite(number) else None
++
++
++def _softmax_log_values(values: Sequence[float]) -> list[float]:
++    numeric = [float(value) for value in values if math.isfinite(float(value))]
++    if not numeric:
++        return []
++    maximum = max(numeric)
++    weights = [math.exp(value - maximum) for value in numeric]
++    total = sum(weights)
++    return [weight / total for weight in weights] if total else []
++
++
++def _selected_final_probability(token_logprobs: Sequence[float]) -> float | None:
++    if not token_logprobs:
++        return None
++    return max(0.0, min(1.0, math.exp(min(0.0, float(token_logprobs[-1])))))
++
++
++def _token_count(generation: Mapping[str, Any], token_logprobs: Sequence[float]) -> int:
++    explicit = generation.get("token_count") or generation.get("tokens_generated")
++    if isinstance(explicit, int) and explicit >= 0:
++        return explicit
++    tokens = generation.get("tokens")
++    if isinstance(tokens, list):
++        return len(tokens)
++    return len(token_logprobs)
++
++
++def _mean(values: Sequence[float]) -> float | None:
++    return sum(values) / len(values) if values else None
++
++
++def _nested_value(payload: Any, field: str) -> Any:
++    if isinstance(payload, Mapping):
++        value = payload.get(field)
++        if isinstance(value, Mapping) and "value" in value:
++            return value["value"]
++        return value
++    return None
++
++
++def _wrap(field: str, value: Any) -> JsonDict:
++    return {"value": value, "principle": FIELD_PRINCIPLES[field]}
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
++
++
++def _write_json_if_requested(path: Path, artifact: Mapping[str, Any], write: bool) -> None:
++    if not write:
++        return
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output", default=str(REPO_ROOT / RESULT_RELATIVE_PATH))
++    parser.add_argument("--preflight", default=str(REPO_ROOT / EXP5259_RELATIVE_PATH))
++    args = parser.parse_args(argv)
++    preflight = json.loads(Path(args.preflight).read_text(encoding="utf-8"))
++    artifact = run_pilot(
++        result_path=Path(args.output),
++        preflight_artifact=preflight,
++        commands_run=[
++            {
++                "command": (
++                    ".venv/bin/python -m carnot.experiment_5263_neuron_attention_energy_hallucination_probe_v481 "
++                    "--output results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json"
++                ),
++                "outcome": "completed module invocation",
++            }
++        ],
++    )
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json b/results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json
+new file mode 100644
+index 0000000000..0510454f03
+--- /dev/null
++++ b/results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json
+@@ -0,0 +1,698 @@
++{
++  "MODEL_SPECS": {
++    "principle": "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, runtime status, and selected pilot model.",
++    "value": {
++      "flagship_dense": {
++        "file_receipts": {
++          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
++          "checksum_sha256": null,
++          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++          "size_bytes": 18323731456
++        },
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "quantization": "Q4_K_M",
++        "role": "flagship_dense",
++        "runtime_ready": true,
++        "runtime_status": "runtime_ready",
++        "selected_for_pilot": false,
++        "slot": "flagship_dense"
++      },
++      "flagship_moe": {
++        "file_receipts": {
++          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
++          "checksum_sha256": null,
++          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++          "size_bytes": 22134528992
++        },
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "quantization": "Q4_K_M",
++        "role": "flagship_moe",
++        "runtime_ready": true,
++        "runtime_status": "runtime_ready",
++        "selected_for_pilot": true,
++        "slot": "flagship_moe"
++      },
++      "middle_moe": {
++        "file_receipts": {
++          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
++          "checksum_sha256": null,
++          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++          "size_bytes": 16947539744
++        },
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "quantization": "Q4_K_M",
++        "role": "optional_middle_moe",
++        "runtime_ready": true,
++        "runtime_status": "runtime_ready",
++        "selected_for_pilot": false,
++        "slot": "middle_moe"
++      }
++    }
++  },
++  "commands_run": [
++    {
++      "command": ".venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py -q -o addopts=",
++      "outcome": "passed: 8 tests"
++    },
++    {
++      "command": ".venv/bin/coverage report --fail-under=100 --show-missing python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py",
++      "outcome": "passed: 100% coverage on new module"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "failed/interrupted after 10m26s at 29%: 57 failed, 13752 passed, 44 skipped; unrelated pre-existing failures and Z3 worker crash observed"
++    },
++    {
++      "command": ".venv/bin/python -m carnot.experiment_5263_neuron_attention_energy_hallucination_probe_v481 --output results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
++      "outcome": "completed via direct run_pilot invocation with command receipts"
++    }
++  ],
++  "deterministic_baselines": {
++    "always_supported": {
++      "accuracy": 0.5,
++      "false_accepts": 3
++    },
++    "lexical_claim_terms": {
++      "accuracy": 1.0,
++      "false_accepts": 0,
++      "uses_model_output": false
++    }
++  },
++  "duration_s": 23.660199,
++  "external_text_scorer_used": {
++    "principle": "Must be false; Phase D external generated-text/logprob scorers are retired and not reopened.",
++    "value": false
++  },
++  "false_accepts_at_threshold": {
++    "principle": "Count of unsupported fixtures accepted as safe at the pre-registered zero false-accept budget threshold.",
++    "value": 0
++  },
++  "feature_preregistration": {
++    "detector_trained": false,
++    "higher_energy_means_more_unsupported_risk": true,
++    "primary_energy_order": [
++      "sequence_marginal_energy",
++      "full_logit_spilled_energy",
++      "final_token_spilled_energy"
++    ]
++  },
++  "fixture_checksums": {
++    "principle": "Records fixture prompt checksums, label checksum, and fixture-set checksum for the bounded supported/unsupported panel.",
++    "value": {
++      "fixture_count": 6,
++      "fixture_set_checksum": "dbc219c147ec4d61",
++      "label_checksum": "99a0936dfad4c287",
++      "label_source": "curated_local_evidence_label",
++      "prompt_checksums": {
++        "hae-001-supported-runtime": "948f0b2038bfd6db",
++        "hae-002-unsupported-runtime": "5beb8184715322af",
++        "hae-003-supported-enrollment": "e4f210e060133d17",
++        "hae-004-unsupported-manufacturer": "e1320b97597ad47e",
++        "hae-005-supported-route": "5bfc4e84b7e0f0f5",
++        "hae-006-unsupported-year": "cd7e4a1cb28dd2ba"
++      },
++      "supported_count": 3,
++      "unsupported_count": 3
++    }
++  },
++  "hidden_energy_probe_signal_delta": 0.004811297384257784,
++  "hidden_energy_probe_signal_delta_principle": "Unsupported-minus-supported mean of the pre-registered available energy score; zero only for blocked or no-signal artifacts.",
++  "honest_verdict": {
++    "principle": "Terminal Exp 5263 verdict; starts with complete: or blocked_ and states whether the available internal/logit/attention signal was useful, null, harmful, or unavailable.",
++    "value": "complete: null logit-energy unsupported-minus-supported delta=0.004811"
++  },
++  "inference_substrate": {
++    "principle": "Declares live local SOTA GGUF inference only when internal/logit receipts exist; otherwise remains a llama.cpp runtime preflight with no quality claim.",
++    "value": "live_llm_inference_local_gguf_sota"
++  },
++  "internal_signal_available": true,
++  "internal_signal_available_principle": "internal_signal_available=true because the runtime exposed ['logits', 'token_logprobs'] with live receipts; hidden_states=False, attention_tensors=False.",
++  "pilot_rows": [
++    {
++      "claim_checksum": "25fc434d9ac705df",
++      "energy_features": {
++        "final_logits_count": 0,
++        "final_token_marginal_energy": 15.216701658610123,
++        "final_token_spilled_energy": 2.463034169952749e-07,
++        "final_token_top1_probability": 0.999999753696583,
++        "full_logit_entropy_topk": 4.373783235203476e-06,
++        "full_logit_spilled_energy": 3.8836692850541255e-07,
++        "full_logit_top1_probability": 0.9999996116330715,
++        "primary_energy": 0.10590792982836916,
++        "primary_energy_name": "sequence_marginal_energy",
++        "sequence_marginal_energy": 0.10590792982836916,
++        "sequence_spilled_energy": 0.08937639075375842,
++        "signal_available": true,
++        "token_count": 4,
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "evidence_checksum": "ecb5d30e95ac186a",
++      "fixture_id": "hae-001-supported-runtime",
++      "label_source": "curated_local_evidence_label",
++      "prompt_checksum": "948f0b2038bfd6db",
++      "raw_response_checksum": "7eb660b90fc62a90",
++      "raw_response_excerpt": "\n\n<think>\n\n</think>",
++      "seed": 5263,
++      "signal_receipts": {
++        "final_logits_count": 0,
++        "logit_receipt": {
++          "entropy_topk": 4.373783235203476e-06,
++          "steps": 68,
++          "top1_probability": 0.9999996116330715,
++          "top_logits": [
++            {
++              "logit": 30.118797302246094,
++              "probability": 0.9999996116330715,
++              "token_index": 248069
++            },
++            {
++              "logit": 14.772486686706543,
++              "probability": 2.16362411569925e-07,
++              "token_index": 510
++            },
++            {
++              "logit": 12.218271255493164,
++              "probability": 1.6822872214482212e-08,
++              "token_index": 332
++            },
++            {
++              "logit": 11.511852264404297,
++              "probability": 8.300538653739012e-09,
++              "token_index": 271
++            },
++            {
++              "logit": 10.967781066894531,
++              "probability": 4.8174715379157135e-09,
++              "token_index": 10638
++            },
++            {
++              "logit": 10.901808738708496,
++              "probability": 4.509908590114146e-09,
++              "token_index": 8
++            },
++            {
++              "logit": 10.890294075012207,
++              "probability": 4.458276343854947e-09,
++              "token_index": 65
++            },
++            {
++              "logit": 10.736390113830566,
++              "probability": 3.822322645247395e-09,
++              "token_index": 14235
++            }
++          ],
++          "top_mass_probability": 0.999999870726873,
++          "vocab_size": 248320
++        },
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "unsupported_label": false
++    },
++    {
++      "claim_checksum": "7760cae167f7f73e",
++      "energy_features": {
++        "final_logits_count": 0,
++        "final_token_marginal_energy": 16.181547195855455,
++        "final_token_spilled_energy": 9.385195942623881e-08,
++        "final_token_top1_probability": 0.9999999061480406,
++        "full_logit_entropy_topk": 1.888731069690965e-06,
++        "full_logit_spilled_energy": 2.600052616541504e-07,
++        "full_logit_top1_probability": 0.9999997399947383,
++        "primary_energy": 0.09792540606576239,
++        "primary_energy_name": "sequence_marginal_energy",
++        "sequence_marginal_energy": 0.09792540606576239,
++        "sequence_spilled_energy": 0.08225245804166129,
++        "signal_available": true,
++        "token_count": 4,
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "evidence_checksum": "ecb5d30e95ac186a",
++      "fixture_id": "hae-002-unsupported-runtime",
++      "label_source": "curated_local_evidence_label",
++      "prompt_checksum": "5beb8184715322af",
++      "raw_response_checksum": "7eb660b90fc62a90",
++      "raw_response_excerpt": "\n\n<think>\n\n</think>",
++      "seed": 5264,
++      "signal_receipts": {
++        "final_logits_count": 0,
++        "logit_receipt": {
++          "entropy_topk": 1.888731069690965e-06,
++          "steps": 68,
++          "top1_probability": 0.9999997399947383,
++          "top_logits": [
++            {
++              "logit": 29.85382080078125,
++              "probability": 0.9999997399947383,
++              "token_index": 248069
++            },
++            {
++              "logit": 13.45693588256836,
++              "probability": 7.566991509995683e-08,
++              "token_index": 510
++            },
++            {
++              "logit": 11.346914291381836,
++              "probability": 9.173868550060054e-09,
++              "token_index": 332
++            },
++            {
++              "logit": 10.696605682373047,
++              "probability": 4.787701577268761e-09,
++              "token_index": 271
++            },
++            {
++              "logit": 10.570493698120117,
++              "probability": 4.220436143635816e-09,
++              "token_index": 328
++            },
++            {
++              "logit": 10.555197715759277,
++              "probability": 4.156371640658627e-09,
++              "token_index": 14235
++            },
++            {
++              "logit": 10.383928298950195,
++              "probability": 3.5021360246865627e-09,
++              "token_index": 10638
++            },
++            {
++              "logit": 10.109004020690918,
++              "probability": 2.660326333007976e-09,
++              "token_index": 1144
++            }
++          ],
++          "top_mass_probability": 0.9999998441654937,
++          "vocab_size": 248320
++        },
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "unsupported_label": true
++    },
++    {
++      "claim_checksum": "a21185afcf559579",
++      "energy_features": {
++        "final_logits_count": 0,
++        "final_token_marginal_energy": 16.338961303943247,
++        "final_token_spilled_energy": 8.018243957685911e-08,
++        "final_token_top1_probability": 0.9999999198175604,
++        "full_logit_entropy_topk": 1.635677567388396e-06,
++        "full_logit_spilled_energy": 1.7511827454796958e-07,
++        "full_logit_top1_probability": 0.9999998248817255,
++        "primary_energy": 0.09648860339074972,
++        "primary_energy_name": "sequence_marginal_energy",
++        "sequence_marginal_energy": 0.09648860339074972,
++        "sequence_spilled_energy": 0.0835588968924934,
++        "signal_available": true,
++        "token_count": 4,
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "evidence_checksum": "b49a7e6acde9304e",
++      "fixture_id": "hae-003-supported-enrollment",
++      "label_source": "curated_local_evidence_label",
++      "prompt_checksum": "e4f210e060133d17",
++      "raw_response_checksum": "7eb660b90fc62a90",
++      "raw_response_excerpt": "\n\n<think>\n\n</think>",
++      "seed": 5265,
++      "signal_receipts": {
++        "final_logits_count": 0,
++        "logit_receipt": {
++          "entropy_topk": 1.635677567388396e-06,
++          "steps": 59,
++          "top1_probability": 0.9999998248817255,
++          "top_logits": [
++            {
++              "logit": 30.629859924316406,
++              "probability": 0.9999998248817255,
++              "token_index": 248069
++            },
++            {
++              "logit": 14.056524276733398,
++              "probability": 6.342956097707343e-08,
++              "token_index": 510
++            },
++            {
++              "logit": 11.957759857177734,
++              "probability": 7.776960609413112e-09,
++              "token_index": 332
++            },
++            {
++              "logit": 11.473041534423828,
++              "probability": 4.789601778410124e-09,
++              "token_index": 10638
++            },
++            {
++              "logit": 11.338411331176758,
++              "probability": 4.186299078049926e-09,
++              "token_index": 8
++            },
++            {
++              "logit": 11.244853973388672,
++              "probability": 3.8124030454189744e-09,
++              "token_index": 56484
++            },
++            {
++              "logit": 11.105411529541016,
++              "probability": 3.316192432332775e-09,
++              "token_index": 62
++            },
++            {
++              "logit": 10.566547393798828,
++              "probability": 1.934701655345968e-09,
++              "token_index": 65
++            }
++          ],
++          "top_mass_probability": 0.999999914127445,
++          "vocab_size": 248320
++        },
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "unsupported_label": false
++    },
++    {
++      "claim_checksum": "ecbdadd4e00ac0dd",
++      "energy_features": {
++        "final_logits_count": 0,
++        "final_token_marginal_energy": 15.770870625271177,
++        "final_token_spilled_energy": 1.4151351312996496e-07,
++        "final_token_top1_probability": 0.9999998584864869,
++        "full_logit_entropy_topk": 2.6461135909596624e-06,
++        "full_logit_spilled_energy": 2.530742780892936e-07,
++        "full_logit_top1_probability": 0.9999997469257219,
++        "primary_energy": 0.11350852577015047,
++        "primary_energy_name": "sequence_marginal_energy",
++        "sequence_marginal_energy": 0.11350852577015047,
++        "sequence_spilled_energy": 0.09207923483949823,
++        "signal_available": true,
++        "token_count": 4,
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "evidence_checksum": "053cfe8ed6539427",
++      "fixture_id": "hae-004-unsupported-manufacturer",
++      "label_source": "curated_local_evidence_label",
++      "prompt_checksum": "e1320b97597ad47e",
++      "raw_response_checksum": "7eb660b90fc62a90",
++      "raw_response_excerpt": "\n\n<think>\n\n</think>",
++      "seed": 5266,
++      "signal_receipts": {
++        "final_logits_count": 0,
++        "logit_receipt": {
++          "entropy_topk": 2.6461135909596624e-06,
++          "steps": 60,
++          "top1_probability": 0.9999997469257219,
++          "top_logits": [
++            {
++              "logit": 30.152538299560547,
++              "probability": 0.9999997469257219,
++              "token_index": 248069
++            },
++            {
++              "logit": 14.224472999572754,
++              "probability": 1.209285994073867e-07,
++              "token_index": 510
++            },
++            {
++              "logit": 11.772122383117676,
++              "probability": 1.0410861825465022e-08,
++              "token_index": 10638
++            },
++            {
++              "logit": 11.233048439025879,
++              "probability": 6.072532436000718e-09,
++              "token_index": 328
++            },
++            {
++              "logit": 10.840621948242188,
++              "probability": 4.101485530315267e-09,
++              "token_index": 8
++            },
++            {
++              "logit": 10.657026290893555,
++              "probability": 3.4135526274579234e-09,
++              "token_index": 332
++            },
++            {
++              "logit": 10.634601593017578,
++              "probability": 3.337856642953179e-09,
++              "token_index": 271
++            },
++            {
++              "logit": 10.395313262939453,
++              "probability": 2.6275202935274235e-09,
++              "token_index": 62
++            }
++          ],
++          "top_mass_probability": 0.9999998978181307,
++          "vocab_size": 248320
++        },
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "unsupported_label": true
++    },
++    {
++      "claim_checksum": "dc1dde213b501cff",
++      "energy_features": {
++        "final_logits_count": 0,
++        "final_token_marginal_energy": 15.037575724380797,
++        "final_token_spilled_energy": 2.946210966303653e-07,
++        "final_token_top1_probability": 0.9999997053789034,
++        "full_logit_entropy_topk": 5.658072092975489e-06,
++        "full_logit_spilled_energy": 6.636047874541973e-07,
++        "full_logit_top1_probability": 0.9999993363952125,
++        "primary_energy": 0.10845831828189034,
++        "primary_energy_name": "sequence_marginal_energy",
++        "sequence_marginal_energy": 0.10845831828189034,
++        "sequence_spilled_energy": 0.09164849381827073,
++        "signal_available": true,
++        "token_count": 4,
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "evidence_checksum": "d7bbae1ca2512bb9",
++      "fixture_id": "hae-005-supported-route",
++      "label_source": "curated_local_evidence_label",
++      "prompt_checksum": "5bfc4e84b7e0f0f5",
++      "raw_response_checksum": "7eb660b90fc62a90",
++      "raw_response_excerpt": "\n\n<think>\n\n</think>",
++      "seed": 5267,
++      "signal_receipts": {
++        "final_logits_count": 0,
++        "logit_receipt": {
++          "entropy_topk": 5.658072092975489e-06,
++          "steps": 57,
++          "top1_probability": 0.9999993363952125,
++          "top_logits": [
++            {
++              "logit": 29.076618194580078,
++              "probability": 0.9999993363952125,
++              "token_index": 248069
++            },
++            {
++              "logit": 13.604459762573242,
++              "probability": 1.9077729277803601e-07,
++              "token_index": 510
++            },
++            {
++              "logit": 12.595258712768555,
++              "probability": 6.954024790707633e-08,
++              "token_index": 332
++            },
++            {
++              "logit": 11.215412139892578,
++              "probability": 1.7497519336014057e-08,
++              "token_index": 10638
++            },
++            {
++              "logit": 11.175085067749023,
++              "probability": 1.6805934137487695e-08,
++              "token_index": 14235
++            },
++            {
++              "logit": 11.169661521911621,
++              "probability": 1.6715033109119574e-08,
++              "token_index": 8
++            },
++            {
++              "logit": 10.55339527130127,
++              "probability": 9.025394814874635e-09,
++              "token_index": 65
++            },
++            {
++              "logit": 10.4516019821167,
++              "probability": 8.151883141571949e-09,
++              "token_index": 16546
++            }
++          ],
++          "top_mass_probability": 0.9999996649085178,
++          "vocab_size": 248320
++        },
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "unsupported_label": false
++    },
++    {
++      "claim_checksum": "97c9e4a72efb799e",
++      "energy_features": {
++        "final_logits_count": 0,
++        "final_token_marginal_energy": 17.184744350072236,
++        "final_token_spilled_energy": 3.441599705222842e-08,
++        "final_token_top1_probability": 0.999999965584003,
++        "full_logit_entropy_topk": 6.831795632362043e-07,
++        "full_logit_spilled_energy": 6.663432472464592e-08,
++        "full_logit_top1_probability": 0.9999999333656753,
++        "primary_energy": 0.11385481181786972,
++        "primary_energy_name": "sequence_marginal_energy",
++        "sequence_marginal_energy": 0.11385481181786972,
++        "sequence_spilled_energy": 0.09245015574941384,
++        "signal_available": true,
++        "token_count": 4,
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "evidence_checksum": "209439d69d4e6d67",
++      "fixture_id": "hae-006-unsupported-year",
++      "label_source": "curated_local_evidence_label",
++      "prompt_checksum": "cd7e4a1cb28dd2ba",
++      "raw_response_checksum": "7eb660b90fc62a90",
++      "raw_response_excerpt": "\n\n<think>\n\n</think>",
++      "seed": 5268,
++      "signal_receipts": {
++        "final_logits_count": 0,
++        "logit_receipt": {
++          "entropy_topk": 6.831795632362043e-07,
++          "steps": 61,
++          "top1_probability": 0.9999999333656753,
++          "top_logits": [
++            {
++              "logit": 31.49237060546875,
++              "probability": 0.9999999333656753,
++              "token_index": 248069
++            },
++            {
++              "logit": 14.161249160766602,
++              "probability": 2.972963398432899e-08,
++              "token_index": 510
++            },
++            {
++              "logit": 11.730295181274414,
++              "probability": 2.6148071472029234e-09,
++              "token_index": 332
++            },
++            {
++              "logit": 10.849051475524902,
++              "probability": 1.0832292654181006e-09,
++              "token_index": 10638
++            },
++            {
++              "logit": 10.757356643676758,
++              "probability": 9.883205490659145e-10,
++              "token_index": 8
++            },
++            {
++              "logit": 10.283794403076172,
++              "probability": 6.15506094266247e-10,
++              "token_index": 271
++            },
++            {
++              "logit": 10.210521697998047,
++              "probability": 5.720189623681117e-10,
++              "token_index": 14235
++            },
++            {
++              "logit": 10.196176528930664,
++              "probability": 5.638718293553383e-10,
++              "token_index": 56484
++            }
++          ],
++          "top_mass_probability": 0.9999999695330631,
++          "vocab_size": 248320
++        },
++        "token_logprob_count": 4,
++        "top_logprobs_count": 4
++      },
++      "unsupported_label": true
++    }
++  ],
++  "preconditions_checked": {
++    "principle": "Records Exp 5259 readiness, llama.cpp signal surface, model/runtime receipts, fixture label adequacy, and retired Phase D exclusion before scoring.",
++    "value": {
++      "blocker": "",
++      "exp5259_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json",
++      "exp5259_sota_runtime_ready": true,
++      "exp5259_sota_runtime_ready_principle": "sota_runtime_ready=true; ready through flagship_moe completing the local GGUF runtime path.",
++      "external_text_scorer_used": false,
++      "fixture_label_counts": {
++        "supported": 3,
++        "unsupported": 3
++      },
++      "live_signal_receipts_found": true,
++      "model_runtime_receipts": {
++        "flagship_dense": {
++          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++          "runtime_ready": true,
++          "status": "runtime_ready"
++        },
++        "flagship_moe": {
++          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++          "runtime_ready": true,
++          "status": "runtime_ready"
++        },
++        "middle_moe": {
++          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++          "runtime_ready": true,
++          "status": "runtime_ready"
++        }
++      },
++      "phase_d_external_text_scorer_retired": true,
++      "signal_surface": {
++        "api_receipts": {
++          "Llama.__call__": "(self, prompt: 'str', suffix: 'Optional[str]' = None, max_tokens: 'Optional[int]' = 16, temperature: 'float' = 0.8, top_p: 'float' = 0.95, min_p: 'float' = 0.05, typical_p: 'float' = 1.0, logprobs: 'Optional[int]' = None, echo: 'bool' = False, stop: 'Optional[Union[str, List[str]]]' = [], frequency_penalty: 'float' = 0.0, presence_penalty: 'float' = 0.0, repeat_penalty: 'float' = 1.0, top_k: 'int' = 40, stream: 'bool' = False, seed: 'Optional[int]' = None, tfs_z: 'float' = 1.0, mirostat_mode: 'int' = 0, mirostat_tau: 'float' = 5.0, mirostat_eta: 'float' = 0.1, model: 'Optional[str]' = None, stopping_criteria: 'Optional[StoppingCriteriaList]' = None, logits_processor: 'Optional[LogitsProcessorList]' = None, grammar: 'Optional[LlamaGrammar]' = None, logit_bias: 'Optional[Dict[int, float]]' = None) -> 'Union[CreateCompletionResponse, Iterator[CreateCompletionStreamResponse]]'",
++          "Llama.__init__": "(self, model_path: 'str', *, n_gpu_layers: 'int' = 0, split_mode: 'int' = 1, main_gpu: 'int' = 0, tensor_split: 'Optional[List[float]]' = None, vocab_only: 'bool' = False, use_mmap: 'bool' = True, use_mlock: 'bool' = False, kv_overrides: 'Optional[Dict[str, Union[bool, int, float, str]]]' = None, seed: 'int' = 4294967295, n_ctx: 'int' = 512, n_batch: 'int' = 512, n_ubatch: 'int' = 512, n_threads: 'Optional[int]' = None, n_threads_batch: 'Optional[int]' = None, rope_scaling_type: 'Optional[int]' = -1, pooling_type: 'int' = -1, attention_type: 'int' = -1, rope_freq_base: 'float' = 0.0, rope_freq_scale: 'float' = 0.0, yarn_ext_factor: 'float' = -1.0, yarn_attn_factor: 'float' = 1.0, yarn_beta_fast: 'float' = 32.0, yarn_beta_slow: 'float' = 1.0, yarn_orig_ctx: 'int' = 0, logits_all: 'bool' = False, embedding: 'bool' = False, offload_kqv: 'bool' = True, flash_attn: 'bool' = False, op_offload: 'Optional[bool]' = None, swa_full: 'Optional[bool]' = None, no_perf: 'bool' = False, last_n_tokens_size: 'int' = 64, lora_base: 'Optional[str]' = None, lora_scale: 'float' = 1.0, lora_path: 'Optional[str]' = None, numa: 'Union[bool, int]' = False, chat_format: 'Optional[str]' = None, chat_handler: 'Optional[llama_chat_format.LlamaChatCompletionHandler]' = None, draft_model: 'Optional[LlamaDraftModel]' = None, tokenizer: 'Optional[BaseLlamaTokenizer]' = None, type_k: 'Optional[int]' = None, type_v: 'Optional[int]' = None, spm_infill: 'bool' = False, verbose: 'bool' = True, **kwargs)",
++          "eval_logits_property": true,
++          "logits_all_parameter": true,
++          "logprobs_parameter": true
++        },
++        "attention_tensors": false,
++        "generated_text": true,
++        "hidden_states": false,
++        "logits": true,
++        "token_logprobs": true
++      },
++      "signal_surface_has_internal_signal": true,
++      "text_only_runtime": false
++    }
++  },
++  "reproducibility_checksum": "83bb2a7e2b3e3116",
++  "schema": "carnot.experiment_5263.neuron_attention_energy_hallucination_probe.v481",
++  "separation_summary": {
++    "auroc": 0.7777777777777778,
++    "detector_trained": false,
++    "false_accepts_at_threshold": 0,
++    "label_counts": {
++      "supported": 3,
++      "unsupported": 3
++    },
++    "n_scored": 6,
++    "precision_at_threshold": 0.6,
++    "signal_delta": 0.004811297384257784,
++    "supported_mean_energy": 0.10361828383366974,
++    "threshold": 0.09792540606476238,
++    "threshold_policy": "zero_false_accept_budget_on_unsupported_labels",
++    "unsupported_mean_energy": 0.10842958121792752
++  },
++  "spec_refs": [
++    "REQ-VERIFY-5263",
++    "SCENARIO-VERIFY-5263"
++  ]
++}
+diff --git a/tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py b/tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py
+new file mode 100644
+index 0000000000..8fa46d35bb
+--- /dev/null
++++ b/tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py
+@@ -0,0 +1,354 @@
++"""Tests for Exp 5263 neuron/attention/logit hallucination-energy probe.
++
++Spec refs: REQ-VERIFY-5263, SCENARIO-VERIFY-5263.
++"""
++
++from __future__ import annotations
++
++import json
++import math
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5263_neuron_attention_energy_hallucination_probe_v481 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/verification/spec.md")
++
++
++def _ready_preflight() -> dict[str, Any]:
++    return {
++        "sota_runtime_ready": True,
++        "sota_runtime_ready_principle": "sota_runtime_ready=true; ready through flagship_moe",
++        "gpu_offload_receipts": {"value": {"llama_cpp": {"version": "0.3.29"}}},
++        "model_receipts": {
++            "value": {
++                "flagship_moe": {
++                    "role": "flagship_moe",
++                    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++                    "preferred_quant": "Q4_K_M",
++                    "path": "/models/qwen.gguf",
++                    "runtime_ready": True,
++                    "status": "runtime_ready",
++                    "size_bytes": 123,
++                    "checksum_head_1m_sha256": "abc",
++                },
++                "flagship_dense": {
++                    "role": "flagship_dense",
++                    "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++                    "preferred_quant": "Q4_K_M",
++                    "path": "/models/gemma31.gguf",
++                    "runtime_ready": True,
++                    "status": "runtime_ready",
++                    "size_bytes": 456,
++                    "checksum_head_1m_sha256": "def",
++                },
++                "middle_moe": {
++                    "role": "middle_moe",
++                    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++                    "preferred_quant": "Q4_K_M",
++                    "path": "/models/gemma26.gguf",
++                    "runtime_ready": False,
++                    "status": "optional_not_loaded",
++                    "size_bytes": 789,
++                    "checksum_head_1m_sha256": "ghi",
++                },
++            }
++        },
++    }
++
++
++def _logprob_signal_surface() -> dict[str, Any]:
++    return {
++        "hidden_states": False,
++        "attention_tensors": False,
++        "logits": True,
++        "token_logprobs": True,
++        "generated_text": True,
++        "api_receipts": {"Llama.__call__": "logprobs parameter present"},
++    }
++
++
++def test_req_verify_5263_spec_declares_signal_probe_contract() -> None:
++    """REQ-VERIFY-5263: OpenSpec anchors the internal-signal contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5263") :]
++
++    for marker in (
++        "REQ-VERIFY-5263",
++        "SCENARIO-VERIFY-5263",
++        str(mod.RESULT_RELATIVE_PATH),
++        "blocked_internal_signal_unavailable",
++        "live_llm_inference_local_gguf_sota",
++        "llama_cpp_runtime_preflight_no_quality_claim",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "external_text_scorer_used.value=false",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_req_verify_5263_fixture_checksums_are_independent_and_deterministic() -> None:
++    """REQ-VERIFY-5263: curated labels and prompt checksums are local receipts."""
++
++    fixtures = mod.default_fixtures()
++    checksums = mod.fixture_checksums(fixtures)
++
++    assert len(fixtures) == 6
++    assert {fixture.unsupported_label for fixture in fixtures} == {False, True}
++    assert checksums["fixture_count"] == 6
++    assert len(checksums["prompt_checksums"]) == 6
++    assert checksums == mod.fixture_checksums(mod.default_fixtures())
++    for fixture in fixtures:
++        prompt = mod.render_prompt(fixture)
++        assert fixture.claim in prompt
++        assert fixture.label_source == "curated_local_evidence_label"
++        assert "expected" not in prompt.lower()
++
++
++def test_req_verify_5263_energy_feature_math_and_threshold_metrics() -> None:
++    """REQ-VERIFY-5263: pre-registered logprob/logit features are deterministic."""
++
++    features = mod.compute_energy_features(
++        {
++            "token_logprobs": [math.log(0.8), math.log(0.5)],
++            "top_logprobs": [{" SAFE": math.log(0.7), " RISK": math.log(0.3)}],
++            "final_logits": [0.0, 1.0],
++        }
++    )
++
++    assert features["signal_available"] is True
++    assert features["sequence_spilled_energy"] == pytest.approx(0.35)
++    assert features["sequence_marginal_energy"] == pytest.approx(-math.log(0.8 * 0.5) / 2)
++    assert features["final_token_spilled_energy"] == pytest.approx(0.3)
++    assert features["full_logit_spilled_energy"] == pytest.approx(1.0 / (1.0 + math.e))
++    assert features["primary_energy"] == pytest.approx(features["sequence_marginal_energy"])
++
++    rows = [
++        {"unsupported_label": False, "energy_features": {"primary_energy": 0.1}},
++        {"unsupported_label": False, "energy_features": {"primary_energy": 0.2}},
++        {"unsupported_label": True, "energy_features": {"primary_energy": 0.8}},
++        {"unsupported_label": True, "energy_features": {"primary_energy": 0.9}},
++    ]
++    summary = mod.summarize_energy(rows)
++
++    assert summary["signal_delta"] == pytest.approx(0.7)
++    assert summary["auroc"] == pytest.approx(1.0)
++    assert summary["false_accepts_at_threshold"] == 0
++    assert summary["precision_at_threshold"] == pytest.approx(1.0)
++    assert mod.deterministic_baselines(mod.default_fixtures())["always_supported"]["false_accepts"] == 3
++
++
++def test_scenario_verify_5263_blocks_text_only_runtime_without_external_scorer(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5263: text-only local runtime exits with a blocked artifact."""
++
++    artifact = mod.run_pilot(
++        result_path=tmp_path / "blocked.json",
++        preflight_artifact=_ready_preflight(),
++        signal_surface={
++            "hidden_states": False,
++            "attention_tensors": False,
++            "logits": False,
++            "token_logprobs": False,
++            "generated_text": True,
++            "api_receipts": {},
++        },
++        generation_runner=lambda fixture, model_spec, seed: {"raw_response": "SUPPORTED"},
++        commands_run=[{"command": "unit blocked", "outcome": "passed"}],
++    )
++
++    assert json.loads((tmp_path / "blocked.json").read_text(encoding="utf-8")) == artifact
++    assert artifact["honest_verdict"]["value"].startswith("blocked_internal_signal_unavailable")
++    assert artifact["inference_substrate"]["value"] == mod.PREFLIGHT_SUBSTRATE
++    assert artifact["internal_signal_available"] is False
++    assert artifact["hidden_energy_probe_signal_delta"] == 0.0
++    assert artifact["false_accepts_at_threshold"]["value"] == 0
++    assert artifact["external_text_scorer_used"]["value"] is False
++    assert artifact["pilot_rows"] == []
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_verify_5263_runs_injected_logprob_pilot(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5263: available logprob receipts produce a bounded pilot."""
++
++    def runner(
++        fixture: mod.HallucinationFixture,
++        model_spec: dict[str, Any],
++        seed: int,
++    ) -> dict[str, Any]:
++        assert model_spec["slot"] == "flagship_moe"
++        base = math.log(0.35 if fixture.unsupported_label else 0.95)
++        return {
++            "raw_response": "UNSUPPORTED" if fixture.unsupported_label else "SUPPORTED",
++            "token_logprobs": [base, base],
++            "top_logprobs": [
++                {
++                    " UNSUPPORTED": math.log(0.55 if fixture.unsupported_label else 0.05),
++                    " SUPPORTED": math.log(0.45 if fixture.unsupported_label else 0.95),
++                }
++            ],
++            "token_count": 2,
++            "seed": seed,
++            "logit_receipt": {"steps": 1, "vocab_size": 4},
++        }
++
++    artifact = mod.run_pilot(
++        result_path=tmp_path / "ready.json",
++        preflight_artifact=_ready_preflight(),
++        signal_surface=_logprob_signal_surface(),
++        generation_runner=runner,
++        commands_run=[{"command": "unit ready", "outcome": "passed"}],
++    )
++
++    mod.validate_artifact(artifact)
++    assert json.loads((tmp_path / "ready.json").read_text(encoding="utf-8")) == artifact
++    assert artifact["honest_verdict"]["value"].startswith("complete: signal")
++    assert artifact["inference_substrate"]["value"] == mod.LIVE_SUBSTRATE
++    assert artifact["internal_signal_available"] is True
++    assert artifact["hidden_energy_probe_signal_delta"] > 0.0
++    assert artifact["separation_summary"]["auroc"] == pytest.approx(1.0)
++    assert artifact["false_accepts_at_threshold"]["value"] == 0
++    assert artifact["MODEL_SPECS"]["value"]["flagship_moe"]["selected_for_pilot"] is True
++    assert len(artifact["pilot_rows"]) == len(mod.default_fixtures())
++    assert all(row["prompt_checksum"] for row in artifact["pilot_rows"])
++    assert artifact["external_text_scorer_used"]["value"] is False
++
++
++def test_req_verify_5263_live_rows_without_receipts_block(tmp_path: Path) -> None:
++    """REQ-VERIFY-5263: API promise is insufficient if live rows are text-only."""
++
++    artifact = mod.run_pilot(
++        result_path=tmp_path / "no-receipts.json",
++        preflight_artifact=_ready_preflight(),
++        signal_surface=_logprob_signal_surface(),
++        generation_runner=lambda fixture, model_spec, seed: {"raw_response": "SUPPORTED"},
++        commands_run=[],
++    )
++
++    assert artifact["honest_verdict"]["value"].startswith("blocked_internal_signal_unavailable")
++    assert artifact["internal_signal_available"] is False
++    assert artifact["preconditions_checked"]["value"]["live_signal_receipts_found"] is False
++    mod.validate_artifact(artifact)
++
++
++def test_req_verify_5263_precondition_and_schema_fail_closed(tmp_path: Path) -> None:
++    """REQ-VERIFY-5263: missing gates and malformed artifacts are rejected."""
++
++    blocked = mod.run_pilot(
++        result_path=tmp_path / "preflight-blocked.json",
++        preflight_artifact={"sota_runtime_ready": False},
++        signal_surface=_logprob_signal_surface(),
++        generation_runner=lambda fixture, model_spec, seed: {"token_logprobs": [-0.1]},
++        commands_run=[],
++    )
++
++    assert blocked["honest_verdict"]["value"].startswith("blocked_sota_runtime_unavailable")
++    assert blocked["internal_signal_available"] is False
++    mod.validate_artifact(blocked)
++
++    valid = mod.run_pilot(
++        result_path=tmp_path / "valid.json",
++        preflight_artifact=_ready_preflight(),
++        signal_surface={
++            "hidden_states": False,
++            "attention_tensors": False,
++            "logits": False,
++            "token_logprobs": False,
++            "generated_text": True,
++            "api_receipts": {},
++        },
++        generation_runner=lambda fixture, model_spec, seed: {},
++        commands_run=[],
++    )
++
++    for mutation, message in (
++        (lambda art: {key: value for key, value in art.items() if key != "honest_verdict"}, "missing required field"),
++        (lambda art: art | {"honest_verdict": {"value": "pending", "principle": mod.FIELD_PRINCIPLES["honest_verdict"]}}, "honest_verdict"),
++        (lambda art: art | {"internal_signal_available": "false"}, "bare bool"),
++        (lambda art: art | {"hidden_energy_probe_signal_delta": "0.0"}, "bare float"),
++        (
++            lambda art: art
++            | {
++                "external_text_scorer_used": {
++                    "value": True,
++                    "principle": mod.FIELD_PRINCIPLES["external_text_scorer_used"],
++                }
++            },
++            "external_text_scorer_used",
++        ),
++        (
++            lambda art: art
++            | {
++                "inference_substrate": {
++                    "value": "cached_text_scorer",
++                    "principle": mod.FIELD_PRINCIPLES["inference_substrate"],
++                }
++            },
++            "inference_substrate",
++        ),
++    ):
++        with pytest.raises(AssertionError, match=message):
++            mod.validate_artifact(mutation(valid))
++
++
++def test_req_verify_5263_defensive_helper_branches(tmp_path: Path) -> None:
++    """REQ-VERIFY-5263: edge helpers remain explicit rather than silently claiming signal."""
++
++    summary = mod.summarize_energy(
++        [
++            {"unsupported_label": False, "energy_features": {"primary_energy": None}},
++            {"unsupported_label": False, "energy_features": {"primary_energy": 0.2}},
++        ]
++    )
++    assert summary["n_scored"] == 1
++    assert summary["threshold"] is None
++    assert summary["auroc"] is None
++
++    tied = mod.summarize_energy(
++        [
++            {"unsupported_label": False, "energy_features": {"primary_energy": 0.5}},
++            {"unsupported_label": True, "energy_features": {"primary_energy": 0.5}},
++        ]
++    )
++    assert tied["auroc"] == pytest.approx(0.5)
++    assert mod._honest_verdict(-0.1).startswith("complete: harmful")
++    assert mod._honest_verdict(0.0).startswith("complete: null")
++
++    assert mod._first_choice({"choices": [{"text": "x", "logprobs": {}}]})["text"] == "x"
++    assert mod._first_choice("raw") == {"text": "raw", "logprobs": {}}
++    assert mod._full_logit_summary([]) == {}
++    assert mod._softmax_log_values([]) == []
++    assert mod._nested_value("not mapping", "field") is None
++    assert mod._optional_float(True) is None
++
++    nested_logits = mod.compute_energy_features({"logits": [[0.0, 1.0]], "tokens": ["a", "b"]})
++    assert nested_logits["signal_available"] is True
++    assert nested_logits["token_count"] == 2
++
++    invalid_receipt_specs = mod._model_specs_from_preflight({"model_receipts": {"value": {"flagship_moe": []}}})
++    assert invalid_receipt_specs["flagship_moe"]["runtime_status"] == "missing_receipt"
++
++    artifact = mod.run_pilot(
++        result_path=tmp_path / "not-written.json",
++        preflight_artifact=_ready_preflight(),
++        signal_surface={
++            "hidden_states": False,
++            "attention_tensors": False,
++            "logits": False,
++            "token_logprobs": False,
++            "generated_text": True,
++            "api_receipts": {},
++        },
++        generation_runner=lambda fixture, model_spec, seed: {},
++        commands_run=[],
++        write=False,
++    )
++    assert artifact["honest_verdict"]["value"].startswith("blocked_internal_signal_unavailable")
++    assert not (tmp_path / "not-written.json").exists()
+-- 
+2.55.0
+

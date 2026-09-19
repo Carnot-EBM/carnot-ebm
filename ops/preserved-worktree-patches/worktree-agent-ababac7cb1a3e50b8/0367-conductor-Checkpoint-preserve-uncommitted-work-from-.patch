@@ -1,0 +1,57 @@
+From fc1f1d96bae8a1aa945568264a8bdd8f96ddb125 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 01:02:11 -0400
+Subject: [PATCH 00367/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/anomaly-escalations.md   | 5 +++++
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 7d801f0c43..6c30a0fcd9 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -51,3 +51,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
+ - artifact: results/experiment_2110_casal_pinet.json
++
++## experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - INVARIANT regression: auroc_within_frozen_ci=True drifted from frozen 0.9131
++- artifact: results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 46a16680e9..ae8fc7b681 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 253975, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-04T03:45:42Z"}
+\ No newline at end of file
++{"pid": 253975, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-04T05:02:09Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 05beddd267..1991fdc1ab 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7730,3 +7730,4 @@ ERROR: {
+ | 2026-06-04 02:42 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
+ | 2026-06-04 03:20 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
+ | 2026-06-04 03:43 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
++| 2026-06-04 05:00 UTC | FR-11 continuous self-learning v18 -- Tier-2 CONST | OK | 90 passed in 4.97s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 90ed07c70e..42addae150 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 253975, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-04T03:45:42Z"}
+\ No newline at end of file
++{"pid": 253975, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-04T05:02:09Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

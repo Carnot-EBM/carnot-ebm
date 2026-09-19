@@ -1,0 +1,1720 @@
+From c1aebc89d1e403e7e80fb26fb09aefb754590c7d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 13:18:46 -0400
+Subject: [PATCH 04478/11362] [conductor] PHASE A4 (ARC NORTH STAR; DEADLINE
+ LANE) -- GENUINELY LIVE held-out first-win readiness on the color-permuted
+ variant harness, on the conductor's GPU-0 generator (drop the iGPU pin, same
+ GPU fix as A1), checkpoint/resume-capable. .448's A4 was a CACHE hit
+ (live_agent_ran=false); .449 MUST produce a FRESH LIVE number for the
+ operator 6/30 go/no-go.
+
+Automated research step by research conductor.
+Task ID: exp4875-a4
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ ...riment_4875_heldout_first_win_readiness.py | 492 +++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ment_4875_heldout_first_win_readiness.json | 301 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...riment_4875_heldout_first_win_readiness.py | 595 ++++++++++++++++++
+ 21 files changed, 1425 insertions(+), 32 deletions(-)
+ create mode 100644 python/carnot/experiment_4875_heldout_first_win_readiness.py
+ create mode 100644 results/experiment_4875_heldout_first_win_readiness.json
+ create mode 100644 tests/python/test_experiment_4875_heldout_first_win_readiness.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 9f85281dd9..780aeeabcd 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -575,6 +575,10 @@
+ - SCENARIO-CAPSTONE-4864: The artifact `results/experiment_4864_heldout_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `heldout_first_win_rate`, `live_agent_ran`, `heldout_first_win_delta_vs_baseline`, `inference_substrate`, `null_delta_methodology_note`, `positive_control_passed`, `checkpoint_emitted`, `solve_provenance`, and `preconditions_checked`; it must also include `heldout_first_win_ci`, `prior_best_heldout_first_win_rate`, `heldout_first_win_delta_vs_prior_best`, `heldout_variant_attempts`, `checkpoint_path`, `partial`, `parity_test_green`, `a1_amortized_prior_decision`, `field_principles`, `duration_s`, and a stable checksum. A cache aggregation must use `aggregation_from_upstream_artifacts`, while a live run or soft-budget partial must use `live_llm_inference` with the 60 second floor.
+ - SCENARIO-CAPSTONE-4864-BLOCKED-PRECONDITION: If the arcade, Exp 4605 harness, Qwen cache, or iGPU-only generator policy precondition fails, the workflow must still write `results/experiment_4864_heldout_first_win_readiness.json` with `honest_verdict=blocked_<resource>`, the failed resource recorded in `preconditions_checked`, `heldout_first_win_rate=null`, empty CI, `checkpoint_emitted=false`, `solve_provenance=development_proxy`, an A1 prior decision record, and no fabricated prior-best improvement.
+ - SCENARIO-CAPSTONE-4864-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; a measured rate is complete_heldout_first_win_<rate> or success_ if it beats prior-best.", `heldout_first_win_rate` = "the deadline-relevant generalization signal -- held-out, fresh.", `live_agent_ran` = "true for a fresh live run (the .448 requirement); false only with an honest cache-hit substrate declaration.", `heldout_first_win_delta_vs_baseline` = "delta vs the 0.04 baseline -- the go/no-go signal.", `inference_substrate` = "live_llm_inference (60s floor) if live; aggregation_from_upstream_artifacts if a cache hit -- declare what ran.", `null_delta_methodology_note` = "for a flat null (rate==0.04), why the agreement is a genuine no-improvement, not a TAUTOLOGY bug.", `positive_control_passed` = "a positive control so a flat null is not a harness artifact.", `checkpoint_emitted` = "a capped run must still emit a usable partial (the 2026-06-25 wall-clock fix).", `solve_provenance` = "development_proxy -- a held-out first-win proxy measurement, declared honestly (not a banked level).", and `preconditions_checked` = "records generator/harness checks; a missing resource emits blocked_."
++- REQ-CAPSTONE-4875: The Exp 4875 held-out first-win readiness workflow SHALL measure or checkpoint-resume the live E3 agent on the Experiment 4605 color-permuted variant harness and write `results/experiment_4875_heldout_first_win_readiness.json`. It SHALL default to a fresh checkpointed live proxy run rather than loading the Exp 4605 cache, SHALL compare the held-out first-win rate and CI against the `0.04` baseline and the prior best from earlier readiness artifacts including Exp 4864, and SHALL keep checkpoint/resume behavior so a wall-clock-capped run still emits a usable partial artifact. The generator precondition SHALL accept the conductor-owned GPU-0 CUDA generator or the iGPU HIP generator, SHALL NOT iGPU-pin or block on ambient `CUDA_VISIBLE_DEVICES`, and SHALL record `generator_backend` as `gpu0_cuda` or `igpu_hip` when live. If live execution is genuinely impossible, the workflow SHALL either emit `blocked_<resource>` with no fabricated rate or declare `inference_substrate=aggregation_from_upstream_artifacts`, `live_agent_ran=false`, and a blocking reason. For a flat null at the `0.04` baseline it SHALL include `null_delta_methodology_note` and `positive_control_passed=true`.
++- SCENARIO-CAPSTONE-4875: The artifact `results/experiment_4875_heldout_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `heldout_first_win_rate`, `live_agent_ran`, `heldout_first_win_delta_vs_baseline`, `generator_backend`, `inference_substrate`, `null_delta_methodology_note`, `positive_control_passed`, `checkpoint_emitted`, `solve_provenance`, and `preconditions_checked`; it must also include `heldout_first_win_ci`, `prior_best_heldout_first_win_rate`, `heldout_first_win_delta_vs_prior_best`, `heldout_variant_attempts`, `checkpoint_path`, `partial`, `parity_test_green`, `a1_amortized_prior_decision`, `model_specs`, `field_principles`, `duration_s`, and a stable checksum. A fresh live run or soft-budget partial must use `live_llm_inference` with the 60 second floor, while cache aggregation is schema-valid only with an explicit live blocking reason.
++- SCENARIO-CAPSTONE-4875-BLOCKED-PRECONDITION: If the arcade, Exp 4605 harness, Qwen cache, or accepted generator backend/health precondition fails, the workflow must still write `results/experiment_4875_heldout_first_win_readiness.json` with `honest_verdict=blocked_<resource>`, the failed resource recorded in `preconditions_checked`, `heldout_first_win_rate=null`, empty CI, `checkpoint_emitted=false`, `solve_provenance=development_proxy`, `generator_backend=null` when no generator served, an A1 prior decision record, and no fabricated prior-best improvement.
++- SCENARIO-CAPSTONE-4875-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; a measured rate is complete_heldout_first_win_<rate> or success_ if it beats prior-best.", `heldout_first_win_rate` = "the deadline-relevant generalization signal -- held-out, fresh.", `live_agent_ran` = "true for the .449 fresh live run requirement; false only with an honest blocking-reason declaration.", `heldout_first_win_delta_vs_baseline` = "delta vs the 0.04 baseline -- the go/no-go signal.", `generator_backend` = "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run.", `inference_substrate` = "live_llm_inference (60s floor) if live; aggregation_from_upstream_artifacts only on an honest cache-hit.", `null_delta_methodology_note` = "for a flat null (rate==0.04), why the agreement is a genuine no-improvement, not a TAUTOLOGY bug.", `positive_control_passed` = "a positive control so a flat null is not a harness artifact.", `checkpoint_emitted` = "a capped run must still emit a usable partial (the 2026-06-25 wall-clock fix).", `solve_provenance` = "development_proxy -- a held-out first-win proxy measurement, declared honestly (not a banked level).", `preconditions_checked` = "records generator/harness checks; a missing resource emits blocked_.", and `model_specs` = "names Qwen3.5-9B-MTP and the served backend for live_llm_inference methodology."
+ - REQ-CAPSTONE-4866: The reserved-infra ARC-AGI-3 Kaggle submission-package re-verification workflow SHALL read the `.447` ready artifact at `results/experiment_4856_submission_package_harden.json`, verify that the submission packaging scripts and `arc_competition_agent` are present, dry-build the Kaggle package without submitting, resolve the frozen live stack from `SUBMITTED_AGENT_CONFIG`, resolve or honestly record the Qwen3.5-9B-MTP GGUF and CUDA `llama-server` paths, estimate the Qwen3.5-9B Q4 + q8 KV VRAM budget against the ~16GB Kaggle deployment gate, cross-check the package against `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md`, diff the current gate state against the `.447` ready package, and write `results/experiment_4866_submission_package_harden.json`. The workflow SHALL produce a final OPERATOR checklist and SHALL mark `submission_package_ready=true` only when the current package dry-builds, the frozen config and model paths resolve, the requirements cross-check passes, the VRAM estimate fits below 16GB with KV plus headroom, the `.447` ready-package regression check passes, and `submitted_to_leaderboard=false`; it SHALL never submit to Kaggle or any external leaderboard.
+ - SCENARIO-CAPSTONE-4866: The artifact `results/experiment_4866_submission_package_harden.json` must emit principle-annotated top-level fields for `honest_verdict`, `submission_package_ready`, `submitted_to_leaderboard`, `vram_estimate_gb`, `package_builds`, and `inference_substrate`; it must also include `preconditions_checked`, `agent_config_resolution`, `model_path_resolution`, `vram_breakdown`, `packaging_requirements_crosscheck`, `ready_package_regression_check`, `operator_checklist`, `operator_only=true`, `field_principles`, `spec_refs`, `duration_s`, `random_seed`, `result_path`, and a stable checksum. A ready artifact must set `honest_verdict=success_submission_package_ready`, keep publication operator-only, include checklist steps that instruct the operator to verify the package and submit only outside this task, declare `inference_substrate=aggregation_from_upstream_artifacts`, and keep `submitted_to_leaderboard=false`.
+ - SCENARIO-CAPSTONE-4866-BLOCKED-PRECONDITION: If submission packaging scripts or `arc_competition_agent` are missing, the workflow must still write `results/experiment_4866_submission_package_harden.json` with `submission_package_ready=false`, `honest_verdict=blocked_packaging_scripts_missing`, `submitted_to_leaderboard=false`, a preserved OPERATOR checklist, and no fabricated operator readiness or external submission claim. If any other dry-build, frozen config, model path, requirements cross-check, `.447` regression, or VRAM gate fails, the workflow must write a terminal `not_ready_` verdict naming the blocked resource.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1d681a3916..be9a4689cf 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-06-27T15:25:06Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-06-27T16:48:20Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index da34412689..f3f05195a0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9455,3 +9455,4 @@ The contro |
+ | 2026-06-27 14:46 UTC | PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- | OK | 89 passed, 1 warning in 9.13s |
+ | 2026-06-27 15:10 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 110 passed, 1 warning in 8.40s |
+ | 2026-06-27 15:23 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 10.77s |
++| 2026-06-27 16:46 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUIN | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ssert specs["b |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2d9e8d2003..361058c78c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 8, "phase": "iteration_start", "started_at": "2026-06-27T15:25:06Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 9, "phase": "iteration_start", "started_at": "2026-06-27T16:48:20Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d60534f3fd..fa69c36fc3 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 201,
+   "code_violations": 0,
+-  "experiments_checked": 3882,
++  "experiments_checked": 3883,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4875_heldout_first_win_readiness.py b/python/carnot/experiment_4875_heldout_first_win_readiness.py
+new file mode 100644
+index 0000000000..2029f23c5e
+--- /dev/null
++++ b/python/carnot/experiment_4875_heldout_first_win_readiness.py
+@@ -0,0 +1,492 @@
++"""Experiment 4875: fresh-live held-out first-win readiness.
++
++Spec refs: REQ-CAPSTONE-4875, SCENARIO-CAPSTONE-4875,
++SCENARIO-CAPSTONE-4875-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4875-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Iterator, Mapping, Sequence
++from contextlib import contextmanager
++import json
++import os
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_4752_held_out_first_win_readiness as exp4752
++from carnot import experiment_4864_heldout_first_win_readiness as previous
++
++
++JsonDict = dict[str, Any]
++PreconditionsChecker = previous.PreconditionsChecker
++ParityCheck = previous.ParityCheck
++ProxyRunner = previous.ProxyRunner
++PriorBestLoader = previous.PriorBestLoader
++PartialProxyLoader = previous.PartialProxyLoader
++A1PriorLoader = previous.A1PriorLoader
++GeneratorChecker = Callable[[], Mapping[str, Any] | bool]
++
++base = previous.base
++REPO_ROOT = previous.REPO_ROOT
++EXPERIMENT = "experiment_4875_heldout_first_win_readiness"
++EXPERIMENT_ID = 4875
++SCHEMA = "carnot.arc.heldout_first_win_readiness_4875.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4875_heldout_first_win_readiness.json"
++PARTIAL_RESULT_RELATIVE_PATH = "results/experiment_4875_heldout_first_win_readiness.partial.json"
++PROXY_RESULT_RELATIVE_PATH = previous.PROXY_RESULT_RELATIVE_PATH
++A1_PRIOR_RESULT_RELATIVE_PATH = previous.A1_PRIOR_RESULT_RELATIVE_PATH
++FIRST_WIN_BASELINE = previous.FIRST_WIN_BASELINE
++MIN_HELD_OUT_VARIANT_ATTEMPTS = previous.MIN_HELD_OUT_VARIANT_ATTEMPTS
++HELD_OUT_VARIANT_ATTEMPT_FLOOR = previous.HELD_OUT_VARIANT_ATTEMPT_FLOOR
++HELD_OUT_VARIANT_IDS = previous.HELD_OUT_VARIANT_IDS
++RANDOM_SEED = 4875
++SOFT_BUDGET_ENV = previous.SOFT_BUDGET_ENV
++DEFAULT_SOFT_BUDGET_S = previous.DEFAULT_SOFT_BUDGET_S
++TERMINAL_PREFIXES = previous.TERMINAL_PREFIXES
++LIVE_SUBSTRATE = previous.LIVE_SUBSTRATE
++AGGREGATION_SUBSTRATE = previous.AGGREGATION_SUBSTRATE
++LIVE_DURATION_FLOOR_S = previous.LIVE_DURATION_FLOOR_S
++AGGREGATION_DURATION_FLOOR_S = previous.AGGREGATION_DURATION_FLOOR_S
++SOLVE_PROVENANCE = previous.SOLVE_PROVENANCE
++GENERATOR_BACKENDS = ("gpu0_cuda", "igpu_hip")
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-4875",
++    "SCENARIO-CAPSTONE-4875",
++    "SCENARIO-CAPSTONE-4875-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4875-FIELD-PRINCIPLES",
++]
++
++PRIOR_READINESS_RESULT_PATHS = previous.PRIOR_READINESS_RESULT_PATHS + (
++    "results/experiment_4864_heldout_first_win_readiness.json",
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; a measured rate is complete_heldout_first_win_<rate> "
++            "or success_ if it beats prior-best."
++        )
++    },
++    "heldout_first_win_rate": {
++        "principle": "the deadline-relevant generalization signal -- held-out, fresh."
++    },
++    "live_agent_ran": {
++        "principle": (
++            "true for the .449 fresh live run requirement; false only with an honest "
++            "blocking-reason declaration."
++        )
++    },
++    "heldout_first_win_delta_vs_baseline": {
++        "principle": "delta vs the 0.04 baseline -- the go/no-go signal."
++    },
++    "generator_backend": {
++        "principle": (
++            "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a "
++            "genuine live run."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "live_llm_inference (60s floor) if live; aggregation_from_upstream_artifacts "
++            "only on an honest cache-hit."
++        )
++    },
++    "null_delta_methodology_note": {
++        "principle": (
++            "for a flat null (rate==0.04), why the agreement is a genuine "
++            "no-improvement, not a TAUTOLOGY bug."
++        )
++    },
++    "positive_control_passed": {
++        "principle": "a positive control so a flat null is not a harness artifact."
++    },
++    "checkpoint_emitted": {
++        "principle": (
++            "a capped run must still emit a usable partial (the 2026-06-25 wall-clock fix)."
++        )
++    },
++    "solve_provenance": {
++        "principle": (
++            "development_proxy -- a held-out first-win proxy measurement, declared honestly "
++            "(not a banked level)."
++        )
++    },
++    "preconditions_checked": {
++        "principle": "records generator/harness checks; a missing resource emits blocked_."
++    },
++    "model_specs": {
++        "principle": (
++            "names Qwen3.5-9B-MTP and the served backend for live_llm_inference methodology."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + tuple(
++    field for field in previous.REQUIRED_ARTIFACT_FIELDS if field not in FIELD_PRINCIPLES
++)
++
++_PATCHED_PREVIOUS_CONSTANTS: dict[str, Any] = {
++    "EXPERIMENT": EXPERIMENT,
++    "EXPERIMENT_ID": EXPERIMENT_ID,
++    "SCHEMA": SCHEMA,
++    "RESULT_RELATIVE_PATH": RESULT_RELATIVE_PATH,
++    "PARTIAL_RESULT_RELATIVE_PATH": PARTIAL_RESULT_RELATIVE_PATH,
++    "RANDOM_SEED": RANDOM_SEED,
++    "SPEC_REFS": SPEC_REFS,
++    "PRIOR_READINESS_RESULT_PATHS": PRIOR_READINESS_RESULT_PATHS,
++    "FIELD_PRINCIPLES": FIELD_PRINCIPLES,
++}
++
++
++@contextmanager
++def _patched_previous_constants() -> Iterator[None]:
++    old_constants = {name: getattr(previous, name) for name in _PATCHED_PREVIOUS_CONSTANTS}
++    old_patched_previous_constants = previous._PATCHED_PREVIOUS_CONSTANTS
++    try:
++        for name, value in _PATCHED_PREVIOUS_CONSTANTS.items():
++            setattr(previous, name, value)
++        previous._PATCHED_PREVIOUS_CONSTANTS = dict(_PATCHED_PREVIOUS_CONSTANTS)
++        yield
++    finally:
++        previous._PATCHED_PREVIOUS_CONSTANTS = old_patched_previous_constants
++        for name, value in old_constants.items():
++            setattr(previous, name, value)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    with _patched_previous_constants():
++        return previous.payload_checksum(artifact)
++
++
++def _optional_float(value: Any) -> float | None:
++    return previous._optional_float(value)
++
++
++def _rate_label(value: Any) -> str:
++    return previous._rate_label(value)
++
++
++def _normalized_honest_verdict(artifact: Mapping[str, Any]) -> str:
++    with _patched_previous_constants():
++        return previous._normalized_honest_verdict(artifact)
++
++
++def _ci_low(ci: Mapping[str, Any]) -> float:
++    return previous._ci_low(ci)
++
++
++def _normalise_generator_result(result: Any) -> JsonDict:
++    if isinstance(result, Mapping):
++        out = dict(result)
++        out["ok"] = bool(out.get("ok"))
++        backend = out.get("generator_backend") or out.get("backend")
++        if backend in GENERATOR_BACKENDS:
++            out["generator_backend"] = str(backend)
++            out["backend"] = str(backend)
++        return out
++    return {"ok": bool(result)}
++
++
++def _selected_generator_backend(
++    server: Path | str,
++    launch_env: Mapping[str, str] | None,
++) -> str | None:
++    server_text = str(server)
++    launch_cuda = None if launch_env is None else launch_env.get("CUDA_VISIBLE_DEVICES")
++    if "build-hip" in server_text:
++        return "igpu_hip"
++    if launch_cuda in (None, "0"):
++        return "gpu0_cuda"
++    return None
++
++
++def _generator_backend_from_preconditions(preconditions: Mapping[str, Any]) -> str | None:
++    direct = preconditions.get("generator_backend")
++    if direct in GENERATOR_BACKENDS:
++        return str(direct)
++    generator = preconditions.get("generator")
++    if isinstance(generator, Mapping):
++        backend = generator.get("generator_backend") or generator.get("backend")
++        if backend in GENERATOR_BACKENDS:
++            return str(backend)
++    return None
++
++
++def _model_specs_from_preconditions(
++    preconditions: Mapping[str, Any],
++    generator_backend: str | None,
++) -> JsonDict:
++    generator = preconditions.get("generator")
++    gen = generator if isinstance(generator, Mapping) else {}
++    cuda_visible = gen.get("launch_env_cuda_visible_devices")
++    if cuda_visible is None:
++        cuda_visible = gen.get("ambient_cuda_visible_devices")
++    return {
++        "name": "Qwen3.5-9B-MTP",
++        "repo_substr": "Qwen3.5-9B-MTP",
++        "backend": generator_backend,
++        "server": gen.get("server"),
++        "port": gen.get("port"),
++        "cuda_visible_devices": cuda_visible,
++        "mtp": True,
++        "kv_quant": "q8_0",
++        "no_think_prefix": True,
++    }
++
++
++def generator_available(*, proposer: Any | None = None) -> JsonDict:
++    from carnot.agentic import arc_executable_world_model as e3
++    from carnot.experiment_4871_generation_wall_fork_probe_gpu_fixed import make_live_qwen_proposer
++
++    server, launch_env = e3._generator_server_and_env()
++    backend = _selected_generator_backend(server, launch_env)
++    detail: JsonDict = {
++        "server": str(server),
++        "launch_env_cuda_visible_devices": (
++            None if launch_env is None else launch_env.get("CUDA_VISIBLE_DEVICES")
++        ),
++        "ambient_cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
++        "model": "Qwen3.5-9B-MTP",
++        "igpu_required": False,
++        "allowed_backends": list(GENERATOR_BACKENDS),
++        "generator_backend": backend,
++        "backend": backend,
++    }
++    if backend not in GENERATOR_BACKENDS:
++        return {**detail, "ok": False, "detail": "generator_backend_not_allowed"}
++    prop = proposer or make_live_qwen_proposer()
++    detail["port"] = getattr(prop, "port", None)
++    ensure = getattr(prop, "_ensure_server", None)
++    if not callable(ensure):
++        return {**detail, "ok": False, "detail": "generator_missing_ensure_server"}
++    ok = bool(ensure())
++    return {**detail, "ok": ok, "detail": "ok" if ok else "qwen_llama_server_unhealthy"}
++
++
++def check_preconditions(
++    root: Path,
++    *,
++    qwen_cache_finder: Callable[[], str | None] = exp4752.find_qwen35_mtp_gguf_cache,
++    generator_checker: GeneratorChecker = generator_available,
++) -> JsonDict:  # pragma: no cover - subprocess/cache/llama boundary, unit-tested via injection.
++    checks = dict(exp4752.check_preconditions(root, qwen_cache_finder=qwen_cache_finder))
++    checks["gpu_generator_device_policy"] = "igpu_hip_or_gpu0_cuda_no_igpu_pin"
++    checks["ambient_cuda_visible_devices"] = os.environ.get("CUDA_VISIBLE_DEVICES")
++    if not checks.get("ok", False):
++        return checks
++
++    generator = _normalise_generator_result(generator_checker())
++    checks["generator"] = generator
++    backend = generator.get("generator_backend")
++    checks["generator_backend"] = backend
++    checks["generator_device"] = backend or ""
++    if generator.get("ok") is not True:
++        checks["ok"] = False
++        checks["blocked_resource"] = str(generator.get("detail") or "qwen_llama_server")
++        return checks
++    checks["ok"] = True
++    return checks
++
++
++def load_a1_amortized_prior_decision(root: Path | str = REPO_ROOT) -> JsonDict:
++    return dict(previous.load_a1_amortized_prior_decision(root))
++
++
++def _attach_4875_fields(artifact: Mapping[str, Any]) -> JsonDict:
++    out = dict(artifact)
++    checks = dict(out.get("preconditions_checked") or {})
++    backend = _generator_backend_from_preconditions(checks)
++    out["generator_backend"] = backend
++    out["model_specs"] = _model_specs_from_preconditions(checks, backend)
++    out["field_principles"] = dict(FIELD_PRINCIPLES)
++    out["preconditions_checked"] = checks
++    out["reproducibility_checksum"] = payload_checksum(out)
++    return out
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    parity_test: Mapping[str, Any],
++    proxy_artifact: Mapping[str, Any],
++    prior_best: Mapping[str, Any],
++    a1_prior_decision: Mapping[str, Any],
++    partial: bool,
++    checkpoint_emitted: bool,
++    live_agent_ran: bool,
++    duration_s: float,
++    budget_exceeded: base._BudgetExceeded | None = None,
++    blocked_reason: str | None = None,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    with _patched_previous_constants():
++        artifact = dict(
++            previous.build_artifact(
++                preconditions_checked=preconditions_checked,
++                parity_test=parity_test,
++                proxy_artifact=proxy_artifact,
++                prior_best=prior_best,
++                a1_prior_decision=a1_prior_decision,
++                partial=partial,
++                checkpoint_emitted=checkpoint_emitted,
++                live_agent_ran=live_agent_ran,
++                duration_s=duration_s,
++                budget_exceeded=budget_exceeded,
++                blocked_reason=blocked_reason,
++                random_seed=random_seed,
++            )
++        )
++    if proxy_artifact.get("live_blocking_reason"):
++        summary = dict(artifact.get("heldout_proxy_summary") or {})
++        summary["live_blocking_reason"] = proxy_artifact.get("live_blocking_reason")
++        artifact["heldout_proxy_summary"] = summary
++    return _attach_4875_fields(artifact)
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    with _patched_previous_constants():
++        errors.extend(previous.artifact_schema_errors(artifact))
++
++    verdict = str(artifact.get("honest_verdict") or "")
++    blocked = verdict.startswith("blocked_") or verdict.startswith("blocked:")
++    backend = artifact.get("generator_backend")
++    live_agent_ran = artifact.get("live_agent_ran") is True
++    if not blocked and live_agent_ran and backend not in GENERATOR_BACKENDS:
++        errors.append("generator_backend")
++    if not blocked and backend is not None and backend not in GENERATOR_BACKENDS:
++        errors.append("generator_backend")
++
++    summary = artifact.get("heldout_proxy_summary")
++    proxy_cache_used = isinstance(summary, Mapping) and summary.get("proxy_cache_used") is True
++    checks = artifact.get("preconditions_checked")
++    live_blocking_reason = ""
++    if isinstance(checks, Mapping):
++        live_blocking_reason = str(checks.get("live_blocking_reason") or "")
++    if isinstance(summary, Mapping) and not live_blocking_reason:
++        live_blocking_reason = str(summary.get("live_blocking_reason") or "")
++    if (
++        proxy_cache_used
++        and not live_agent_ran
++        and not blocked
++        and artifact.get("inference_substrate") == AGGREGATION_SUBSTRATE
++        and not live_blocking_reason.strip()
++    ):
++        errors.append("cache_aggregation_requires_blocking_reason")
++
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return sorted(dict.fromkeys(errors))
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run_held_out_proxy_checkpointed(
++    root: Path,
++    parity_test: Mapping[str, Any],
++    *,
++    now: Callable[[], float] = time.time,
++    soft_budget_s: float | None = None,
++    public_games: Sequence[str] | None = None,
++) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(
++            previous.run_held_out_proxy_checkpointed(
++                root,
++                parity_test,
++                now=now,
++                soft_budget_s=soft_budget_s,
++                public_games=public_games,
++            )
++        )
++
++
++def run_parity_test(root: Path) -> JsonDict:  # pragma: no cover - subprocess boundary.
++    with _patched_previous_constants():
++        return dict(previous.run_parity_test(root))
++
++
++def load_cached_or_run_held_out_proxy(root: Path, parity_test: Mapping[str, Any]) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(previous.load_cached_or_run_held_out_proxy(root, parity_test))
++
++
++def load_prior_best(root: Path) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(previous.load_prior_best(root))
++
++
++def _partial_proxy_from_budget(
++    root: Path,
++    budget_exceeded: base._BudgetExceeded,
++    parity_test: Mapping[str, Any],
++) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(previous._partial_proxy_from_budget(root, budget_exceeded, parity_test))
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    preconditions_checker: PreconditionsChecker = check_preconditions,
++    parity_check: ParityCheck = run_parity_test,
++    proxy_runner: ProxyRunner | None = None,
++    prior_best_loader: PriorBestLoader = load_prior_best,
++    partial_proxy_loader: PartialProxyLoader = _partial_proxy_from_budget,
++    a1_prior_loader: A1PriorLoader = load_a1_amortized_prior_decision,
++    now: Callable[[], float] = time.time,
++    sleep_fn: Callable[[float], None] = time.sleep,
++) -> JsonDict:
++    selected_proxy_runner = proxy_runner or run_held_out_proxy_checkpointed
++    with _patched_previous_constants():
++        artifact = dict(
++            previous.run(
++                root=root,
++                preconditions_checker=preconditions_checker,
++                parity_check=parity_check,
++                proxy_runner=selected_proxy_runner,
++                prior_best_loader=prior_best_loader,
++                partial_proxy_loader=partial_proxy_loader,
++                a1_prior_loader=a1_prior_loader,
++                now=now,
++                sleep_fn=sleep_fn,
++            )
++        )
++    artifact = _attach_4875_fields(artifact)
++    write_artifact(Path(root), artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI shim.
++    artifact = run()
++    print(f"wrote {RESULT_RELATIVE_PATH}")
++    print(f"heldout_first_win_rate={artifact['heldout_first_win_rate']}")
++    print(f"heldout_first_win_ci={json.dumps(artifact['heldout_first_win_ci'], sort_keys=True)}")
++    print(f"heldout_first_win_delta_vs_baseline={artifact['heldout_first_win_delta_vs_baseline']}")
++    print(f"prior_best_heldout_first_win_rate={artifact['prior_best_heldout_first_win_rate']}")
++    print(f"generator_backend={artifact['generator_backend']}")
++    print(f"inference_substrate={artifact['inference_substrate']}")
++    print(f"live_agent_ran={artifact['live_agent_ran']}")
++    print(f"checkpoint_emitted={artifact['checkpoint_emitted']}")
++    print(f"solve_provenance={artifact['solve_provenance']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI shim.
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 0eea06fe7a..50bd67c82e 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T07:28:51.681635+00:00",
+-  "finished_at": "2026-06-27T07:28:51.723739+00:00",
+-  "duration_s": 0.042,
++  "started_at": "2026-06-27T16:56:51.384320+00:00",
++  "finished_at": "2026-06-27T16:56:51.417719+00:00",
++  "duration_s": 0.033,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index bb838d326d..bf2088f742 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-27T07:28:52Z",
++  "run_date": "2026-06-27T16:56:51Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 75abe961a5..10750b2e83 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T07:28:54Z",
+-  "finished_at": "2026-06-27T07:28:54Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-27T16:56:53Z",
++  "finished_at": "2026-06-27T16:56:53Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 9d3bf4033a..1c5a3389b2 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-27T07:28:54Z",
++  "run_date": "2026-06-27T16:56:53Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 7e7740549e..162951566f 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-27T07:28:54Z",
++  "run_date": "2026-06-27T16:56:53Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index a90944954a..6c8836edda 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-27T14:44:38.255043Z",
+-  "duration_s": 0.05524158477783203,
++  "run_date": "2026-06-27T16:54:11.775185Z",
++  "duration_s": 0.05215120315551758,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "256b96e94f6ea6f706b0396f27e5f792b95a6d33da25b2ab702bda0b6c0a7a73",
++  "reproducibility_checksum": "b951f32aedb643b6c5af69b723b407c97a597f91e591f49ae05413c7dfa6bcbb",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "4f5b85b340daa4dcde06d765ad9196d5c5baccfa"
++    "adversarial_verify_version": "f6d38f5d7dc41d7f619b739b58d48fa8054661ee"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 37e527e4a1..b108e4b5a6 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-27T14:44:38.338760Z",
+-  "duration_s": 0.07581377029418945,
++  "run_date": "2026-06-27T16:54:11.858887Z",
++  "duration_s": 0.07657623291015625,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "267b4a7cee5695b803b3545ebf3532d7a4db7ac7cc21b796fcb03c66a448251b",
++  "reproducibility_checksum": "74f67aca7a6527eb694bffe772138145fc080940665220ff5ded1d7f501bbe0c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "4f5b85b340daa4dcde06d765ad9196d5c5baccfa"
++    "adversarial_verify_version": "f6d38f5d7dc41d7f619b739b58d48fa8054661ee"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index d8c76ed35a..fd707e046b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.0880699157714844,
++  "efficiency_gains_ms": 2.1266937255859375,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 53e9b2f4cf..258fd52af4 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.7147543430328369,
++  "duration_s": 0.5724887847900391,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 063deb13c2..9e357cb252 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.330091178417206e-05,
++  "duration_s": 3.476603887975216e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4875_heldout_first_win_readiness.json b/results/experiment_4875_heldout_first_win_readiness.json
+new file mode 100644
+index 0000000000..e2803fa706
+--- /dev/null
++++ b/results/experiment_4875_heldout_first_win_readiness.json
+@@ -0,0 +1,301 @@
++{
++  "a1_amortized_prior_decision": {
++    "exists": true,
++    "first_win_delta_ci95": {
++      "confidence": 0.95,
++      "high": 0.0,
++      "low": 0.0,
++      "n_boot": 1000
++    },
++    "first_win_rate_no_prior_ablation": 0.0,
++    "first_win_rate_with_prior": 0.0,
++    "go_explore_archive_alive": {
++      "actions_injected": 1,
++      "alive": true,
++      "enabled": true,
++      "max_depth": 1,
++      "observations": 2,
++      "prefixes_injected": 1,
++      "selected_prefixes": 1,
++      "stored_cells": 2,
++      "verifier_is_oracle": false
++    },
++    "honest_verdict": "complete_amortized_prior_no_first_win_lift_l1_wall_survives",
++    "included_in_measurement": false,
++    "live_path_reachable": true,
++    "passed": false,
++    "prior_changed_proposals": true,
++    "reason": "a1_prior_not_passed",
++    "source_artifact_path": "results/experiment_4831_amortized_incontext_exploration_prior_live.json"
++  },
++  "checkpoint_emitted": true,
++  "checkpoint_path": "results/experiment_4875_heldout_first_win_readiness.partial.json",
++  "duration_s": 1137.680971,
++  "experiment": "experiment_4875_heldout_first_win_readiness",
++  "experiment_id": 4875,
++  "field_principles": {
++    "checkpoint_emitted": {
++      "principle": "a capped run must still emit a usable partial (the 2026-06-25 wall-clock fix)."
++    },
++    "generator_backend": {
++      "principle": "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
++    },
++    "heldout_first_win_delta_vs_baseline": {
++      "principle": "delta vs the 0.04 baseline -- the go/no-go signal."
++    },
++    "heldout_first_win_rate": {
++      "principle": "the deadline-relevant generalization signal -- held-out, fresh."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; a measured rate is complete_heldout_first_win_<rate> or success_ if it beats prior-best."
++    },
++    "inference_substrate": {
++      "principle": "live_llm_inference (60s floor) if live; aggregation_from_upstream_artifacts only on an honest cache-hit."
++    },
++    "live_agent_ran": {
++      "principle": "true for the .449 fresh live run requirement; false only with an honest blocking-reason declaration."
++    },
++    "model_specs": {
++      "principle": "names Qwen3.5-9B-MTP and the served backend for live_llm_inference methodology."
++    },
++    "null_delta_methodology_note": {
++      "principle": "for a flat null (rate==0.04), why the agreement is a genuine no-improvement, not a TAUTOLOGY bug."
++    },
++    "positive_control_passed": {
++      "principle": "a positive control so a flat null is not a harness artifact."
++    },
++    "preconditions_checked": {
++      "principle": "records generator/harness checks; a missing resource emits blocked_."
++    },
++    "solve_provenance": {
++      "principle": "development_proxy -- a held-out first-win proxy measurement, declared honestly (not a banked level)."
++    }
++  },
++  "first_win_baseline": 0.04,
++  "generator_backend": "gpu0_cuda",
++  "heldout_first_win_ci": {
++    "bootstrap_resamples": 1000,
++    "ci95": [
++      0.0,
++      0.0
++    ],
++    "method": "paired_percentile_bootstrap",
++    "point": 0.0,
++    "random_seed": 4605
++  },
++  "heldout_first_win_ci_lower": 0.0,
++  "heldout_first_win_delta_vs_baseline": 0.0,
++  "heldout_first_win_delta_vs_prior_best": 0.0,
++  "heldout_first_win_rate": 0.04,
++  "heldout_proxy_summary": {
++    "heldout_first_win_ci": {
++      "bootstrap_resamples": 1000,
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "method": "paired_percentile_bootstrap",
++      "point": 0.0,
++      "random_seed": 4605
++    },
++    "heldout_first_win_rate": 0.04,
++    "heldout_variant_attempts": 100,
++    "proxy_cache_reason": "",
++    "proxy_cache_used": false,
++    "proxy_honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++    "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
++  },
++  "heldout_variant_attempt_floor": "B>=100",
++  "heldout_variant_attempts": 100,
++  "honest_verdict": "complete_heldout_first_win_0.04_flat_genuine_null",
++  "inference_substrate": "live_llm_inference",
++  "live_agent_ran": true,
++  "model_specs": {
++    "backend": "gpu0_cuda",
++    "cuda_visible_devices": "0",
++    "kv_quant": "q8_0",
++    "mtp": true,
++    "name": "Qwen3.5-9B-MTP",
++    "no_think_prefix": true,
++    "port": 8931,
++    "repo_substr": "Qwen3.5-9B-MTP",
++    "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++  },
++  "null_delta_methodology_note": "Held-out first-win rate equals the 0.04 baseline with positive-control parity passed; this is a genuine no-improvement result from the scored held-out variant harness, not a TAUTOLOGY bug or fabricated agreement.",
++  "parity_test": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [12 items]\n\n............                                                             [100%]\n============================== 12 passed in 7.92s ==============================\n"
++  },
++  "parity_test_green": true,
++  "partial": false,
++  "positive_control_passed": true,
++  "preconditions_checked": {
++    "a1_amortized_prior_included": false,
++    "a1_amortized_prior_passed": false,
++    "a1_amortized_prior_source": "results/experiment_4831_amortized_incontext_exploration_prior_live.json",
++    "ambient_cuda_visible_devices": null,
++    "experiment_4605_importable": true,
++    "experiment_4605_importable_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot import experiment_4605_live_integration_scored_agent",
++    "experiment_4605_importable_returncode": 0,
++    "generator": {
++      "allowed_backends": [
++        "gpu0_cuda",
++        "igpu_hip"
++      ],
++      "ambient_cuda_visible_devices": null,
++      "backend": "gpu0_cuda",
++      "detail": "ok",
++      "generator_backend": "gpu0_cuda",
++      "igpu_required": false,
++      "launch_env_cuda_visible_devices": "0",
++      "model": "Qwen3.5-9B-MTP",
++      "ok": true,
++      "port": 8931,
++      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++    },
++    "generator_backend": "gpu0_cuda",
++    "generator_device": "gpu0_cuda",
++    "gpu_generator_device_policy": "igpu_hip_or_gpu0_cuda_no_igpu_pin",
++    "offline_arcade": true,
++    "offline_arcade_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
++    "offline_arcade_returncode": 0,
++    "ok": true,
++    "qwen35_mtp_gguf_cached": true,
++    "qwen35_mtp_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
++  },
++  "prior_best": {
++    "candidates": [
++      {
++        "exists": true,
++        "experiment_id": 4691,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4691_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4703,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4703_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4716,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4716_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4740,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4740_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4752,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4752_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4764,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4764_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4774,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4774_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4784,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4784_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4794,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4794_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4804,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4804_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4814,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4814_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4824,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4824_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4834,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4834_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4844,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4844_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4854,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete_heldout_first_win_0.04_flat_genuine_null",
++        "path": "results/experiment_4854_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4864,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete_heldout_first_win_0.04_flat_genuine_null",
++        "path": "results/experiment_4864_heldout_first_win_readiness.json"
++      }
++    ],
++    "prior_best_experiment_id": 4864,
++    "prior_best_heldout_first_win_rate": 0.04,
++    "prior_best_result_path": "results/experiment_4864_heldout_first_win_readiness.json"
++  },
++  "prior_best_heldout_first_win_rate": 0.04,
++  "proxy_artifact_path": "results/experiment_4605_live_integration_scored_agent.json",
++  "random_seed": 4875,
++  "reproducibility_checksum": "sha256:f3bbf44d6811344c2fe6a5147ec7486827fdfa9d009df11db79b965f7f419771",
++  "result_path": "results/experiment_4875_heldout_first_win_readiness.json",
++  "schema": "carnot.arc.heldout_first_win_readiness_4875.v1",
++  "solve_provenance": "development_proxy",
++  "spec_refs": [
++    "REQ-CAPSTONE-4875",
++    "SCENARIO-CAPSTONE-4875",
++    "SCENARIO-CAPSTONE-4875-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4875-FIELD-PRINCIPLES"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 58cf252556..1f9b64aa88 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T14:44:21Z",
+-  "finished_at": "2026-06-27T14:44:21Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-27T16:57:38Z",
++  "finished_at": "2026-06-27T16:57:38Z",
++  "duration_s": 0.009,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 5e90aea408..1755a964a5 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T14:44:21Z",
+-  "finished_at": "2026-06-27T14:44:21Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-27T16:57:38Z",
++  "finished_at": "2026-06-27T16:57:38Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 70be2a10be..a1169827f1 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T14:44:21Z",
+-  "finished_at": "2026-06-27T14:44:21Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-27T16:57:38Z",
++  "finished_at": "2026-06-27T16:57:38Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4875_heldout_first_win_readiness.py b/tests/python/test_experiment_4875_heldout_first_win_readiness.py
+new file mode 100644
+index 0000000000..8be375fe1f
+--- /dev/null
++++ b/tests/python/test_experiment_4875_heldout_first_win_readiness.py
+@@ -0,0 +1,595 @@
++"""Tests for Exp 4875 held-out first-win readiness.
++
++Spec refs: REQ-CAPSTONE-4875, SCENARIO-CAPSTONE-4875,
++SCENARIO-CAPSTONE-4875-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4875-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4864_heldout_first_win_readiness as previous
++from carnot import experiment_4875_heldout_first_win_readiness as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _proxy(
++    *,
++    first_win_rate: float = 0.04,
++    ci_low: float = 0.0,
++    ci_high: float = 0.0,
++    attempts: int = 100,
++    cache_used: bool = False,
++    live_blocking_reason: str = "",
++) -> JsonDict:
++    solved = int(round(first_win_rate * attempts))
++    proxy: JsonDict = {
++        "experiment": "experiment_4605_live_integration_scored_agent",
++        "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++        "first_win_rate_integrated": first_win_rate,
++        "first_win_ci": {
++            "method": "paired_percentile_bootstrap",
++            "point": round(first_win_rate - mod.FIRST_WIN_BASELINE, 6),
++            "ci95": [ci_low, ci_high],
++            "bootstrap_resamples": 1000,
++        },
++        "integrated_measurement": {
++            "variant_attempts_count": attempts,
++            "variant_attempts": [
++                {
++                    "attempted": True,
++                    "first_win": index < solved,
++                    "depth_reached": 1 if index < solved else 0,
++                }
++                for index in range(attempts)
++            ],
++        },
++        "proxy_cache_used": cache_used,
++    }
++    if live_blocking_reason:
++        proxy["live_blocking_reason"] = live_blocking_reason
++    return proxy
++
++
++def _preconditions(backend: str = "gpu0_cuda") -> JsonDict:
++    return {
++        "ok": True,
++        "offline_arcade": True,
++        "experiment_4605_importable": True,
++        "qwen35_mtp_gguf_cached": True,
++        "qwen35_mtp_gguf_path": "/models/Qwen3.5-9B-Q4_K_M.gguf",
++        "generator_backend": backend,
++        "generator_device": backend,
++        "gpu_generator_device_policy": "igpu_hip_or_gpu0_cuda_no_igpu_pin",
++        "generator": {
++            "ok": True,
++            "generator_backend": backend,
++            "backend": backend,
++            "server": "/llama/build/bin/llama-server",
++            "port": 8931,
++            "launch_env_cuda_visible_devices": "0" if backend == "gpu0_cuda" else None,
++            "ambient_cuda_visible_devices": "1",
++        },
++    }
++
++
++def _parity(passed: bool = True) -> JsonDict:
++    return {"passed": passed, "command": "pytest tests/python/test_arc_submitted_agent_parity.py"}
++
++
++def _prior_best(rate: float = 0.04, experiment_id: int = 4864) -> JsonDict:
++    return {
++        "prior_best_heldout_first_win_rate": rate,
++        "prior_best_result_path": "results/experiment_4864_heldout_first_win_readiness.json",
++        "prior_best_experiment_id": experiment_id,
++        "candidates": [
++            {
++                "path": "results/experiment_4864_heldout_first_win_readiness.json",
++                "experiment_id": experiment_id,
++                "heldout_first_win_rate": rate,
++            }
++        ],
++    }
++
++
++def _a1_null() -> JsonDict:
++    return {
++        "source_artifact_path": mod.A1_PRIOR_RESULT_RELATIVE_PATH,
++        "exists": True,
++        "honest_verdict": "complete_amortized_prior_no_first_win_lift_l1_wall_survives",
++        "passed": False,
++        "included_in_measurement": False,
++        "reason": "a1_prior_not_passed",
++        "first_win_rate_with_prior": 0.0,
++        "first_win_rate_no_prior_ablation": 0.0,
++        "first_win_delta_ci95": {"low": 0.0, "high": 0.0},
++        "go_explore_archive_alive": {"alive": True},
++        "prior_changed_proposals": True,
++    }
++
++
++def test_req_capstone_4875_spec_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4875: OpenSpec declares the artifact and field principles."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-4875",
++        "SCENARIO-CAPSTONE-4875",
++        "SCENARIO-CAPSTONE-4875-BLOCKED-PRECONDITION",
++        "SCENARIO-CAPSTONE-4875-FIELD-PRINCIPLES",
++        mod.RESULT_RELATIVE_PATH,
++        "Exp 4864",
++        "gpu0_cuda",
++        "igpu_hip",
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4875_live_artifact_has_required_honesty_fields() -> None:
++    """SCENARIO-CAPSTONE-4875: live run reports rate, backend, CI, and substrate."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions("gpu0_cuda"),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.12, ci_low=0.03, ci_high=0.12),
++        prior_best=_prior_best(0.04),
++        a1_prior_decision=_a1_null(),
++        partial=False,
++        checkpoint_emitted=True,
++        live_agent_ran=True,
++        duration_s=1.0,
++    )
++
++    assert artifact["experiment"] == mod.EXPERIMENT
++    assert artifact["experiment_id"] == 4875
++    assert artifact["result_path"] == mod.RESULT_RELATIVE_PATH
++    assert artifact["checkpoint_path"] == mod.PARTIAL_RESULT_RELATIVE_PATH
++    assert artifact["honest_verdict"] == "success_heldout_first_win_0.12_beats_prior_best_delta_0.08"
++    assert artifact["heldout_first_win_rate"] == 0.12
++    assert artifact["heldout_first_win_ci"]["ci95"] == [0.03, 0.12]
++    assert artifact["heldout_first_win_delta_vs_baseline"] == 0.08
++    assert artifact["heldout_variant_attempts"] == 100
++    assert artifact["prior_best_heldout_first_win_rate"] == 0.04
++    assert artifact["heldout_first_win_delta_vs_prior_best"] == 0.08
++    assert artifact["inference_substrate"] == mod.LIVE_SUBSTRATE
++    assert artifact["duration_s"] == mod.LIVE_DURATION_FLOOR_S
++    assert artifact["checkpoint_emitted"] is True
++    assert artifact["partial"] is False
++    assert artifact["live_agent_ran"] is True
++    assert artifact["generator_backend"] == "gpu0_cuda"
++    assert artifact["model_specs"]["backend"] == "gpu0_cuda"
++    assert artifact["positive_control_passed"] is True
++    assert artifact["solve_provenance"] == mod.SOLVE_PROVENANCE
++    assert ".449 fresh live run requirement" in artifact["field_principles"]["live_agent_ran"]["principle"]
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++    assert artifact["random_seed"] == 4875
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4875_flat_live_null_has_positive_control() -> None:
++    """SCENARIO-CAPSTONE-4875: flat live null carries the TAUTOLOGY guard fields."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions("igpu_hip"),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.04),
++        prior_best=_prior_best(0.04),
++        a1_prior_decision=_a1_null(),
++        partial=False,
++        checkpoint_emitted=True,
++        live_agent_ran=True,
++        duration_s=1.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete_heldout_first_win_0.04_flat_genuine_null"
++    assert artifact["generator_backend"] == "igpu_hip"
++    assert artifact["inference_substrate"] == mod.LIVE_SUBSTRATE
++    assert artifact["positive_control_passed"] is True
++    assert "genuine no-improvement" in artifact["null_delta_methodology_note"]
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4875_default_run_uses_fresh_live_proxy(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-CAPSTONE-4875: default run bypasses the cache-only proxy loader."""
++
++    calls: JsonDict = {"live": 0, "cache": 0}
++
++    def fake_live(root: Path, parity_test: JsonDict, **_kwargs: Any) -> JsonDict:
++        calls["live"] += 1
++        assert root == tmp_path
++        assert parity_test["passed"] is True
++        return _proxy(first_win_rate=0.04, cache_used=False)
++
++    def fake_cache(_root: Path, _parity_test: JsonDict) -> JsonDict:
++        calls["cache"] += 1
++        raise AssertionError("4875 must not default to cache aggregation")
++
++    monkeypatch.setattr(mod, "run_held_out_proxy_checkpointed", fake_live)
++    monkeypatch.setattr(mod, "load_cached_or_run_held_out_proxy", fake_cache)
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: _preconditions("gpu0_cuda"),
++        parity_check=lambda _root: _parity(True),
++        prior_best_loader=lambda _root: _prior_best(0.04),
++        a1_prior_loader=lambda _root: _a1_null(),
++        now=lambda: 0.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert calls == {"live": 1, "cache": 0}
++    assert artifact["live_agent_ran"] is True
++    assert artifact["checkpoint_emitted"] is True
++    assert artifact["inference_substrate"] == mod.LIVE_SUBSTRATE
++    assert artifact["generator_backend"] == "gpu0_cuda"
++    assert mod.artifact_schema_errors(artifact) == []
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++
++
++def test_scenario_capstone_4875_soft_budget_partial_is_live_checkpointed(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4875: a capped live run emits a usable partial artifact."""
++
++    budget_exc = mod.base._BudgetExceeded(done_games=["g1"], remaining_games=["g2"])
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: _preconditions("gpu0_cuda"),
++        parity_check=lambda _root: _parity(True),
++        prior_best_loader=lambda _root: _prior_best(0.04),
++        a1_prior_loader=lambda _root: _a1_null(),
++        proxy_runner=lambda _root, _parity: (_ for _ in ()).throw(budget_exc),
++        partial_proxy_loader=lambda _root, _exc, _parity: _proxy(attempts=4, cache_used=False),
++        now=lambda: 0.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert artifact["partial"] is True
++    assert artifact["checkpoint_emitted"] is True
++    assert artifact["live_agent_ran"] is True
++    assert artifact["inference_substrate"] == mod.LIVE_SUBSTRATE
++    assert artifact["generator_backend"] == "gpu0_cuda"
++    assert "soft_budget_stop_partial" in artifact["honest_verdict"]
++    assert artifact["completed_games"] == ["g1"]
++    assert artifact["remaining_games"] == ["g2"]
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4875_blocked_precondition_has_no_fabricated_rate(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4875-BLOCKED-PRECONDITION: missing generator blocks cleanly."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: {
++            "ok": False,
++            "blocked_resource": "qwen_llama_server_unhealthy",
++            "qwen35_mtp_gguf_cached": True,
++            "generator": {"ok": False, "detail": "qwen_llama_server_unhealthy"},
++        },
++        prior_best_loader=lambda _root: _prior_best(0.04),
++        a1_prior_loader=lambda _root: _a1_null(),
++        now=lambda: 0.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_qwen_llama_server_unhealthy"
++    assert artifact["heldout_first_win_rate"] is None
++    assert artifact["heldout_first_win_ci"] == {}
++    assert artifact["checkpoint_emitted"] is False
++    assert artifact["generator_backend"] is None
++    assert artifact["inference_substrate"] == mod.AGGREGATION_SUBSTRATE
++    assert artifact["solve_provenance"] == mod.SOLVE_PROVENANCE
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4875_gpu0_cuda_precondition_ignores_ambient_cuda(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-CAPSTONE-4875-FIELD-PRINCIPLES: GPU-0 CUDA is accepted, not iGPU-pinned."""
++
++    from carnot.agentic import arc_executable_world_model as e3
++
++    class FakeProposer:
++        def __init__(self, ok: bool = True, with_ensure: bool = True) -> None:
++            self.port = 8931
++            if with_ensure:
++                self._ensure_server = lambda: ok  # type: ignore[method-assign]
++
++    monkeypatch.setenv("CUDA_VISIBLE_DEVICES", "1")
++    monkeypatch.setattr(
++        e3,
++        "_generator_server_and_env",
++        lambda: (Path("/llama/build/bin/llama-server"), None),
++    )
++    gpu0 = mod.generator_available(proposer=FakeProposer())
++
++    monkeypatch.setattr(
++        e3,
++        "_generator_server_and_env",
++        lambda: (Path("/llama/build-hip/bin/llama-server"), None),
++    )
++    igpu = mod.generator_available(proposer=FakeProposer())
++
++    monkeypatch.setattr(
++        e3,
++        "_generator_server_and_env",
++        lambda: (Path("/llama/build/bin/llama-server"), {"CUDA_VISIBLE_DEVICES": "1"}),
++    )
++    disallowed = mod.generator_available(proposer=FakeProposer())
++
++    monkeypatch.setattr(
++        e3,
++        "_generator_server_and_env",
++        lambda: (Path("/llama/build/bin/llama-server"), {"CUDA_VISIBLE_DEVICES": "0"}),
++    )
++    unhealthy = mod.generator_available(proposer=FakeProposer(ok=False))
++    missing_ensure = mod.generator_available(proposer=FakeProposer(with_ensure=False))
++
++    assert gpu0["ok"] is True
++    assert gpu0["generator_backend"] == "gpu0_cuda"
++    assert gpu0["ambient_cuda_visible_devices"] == "1"
++    assert gpu0["igpu_required"] is False
++    assert igpu["ok"] is True
++    assert igpu["generator_backend"] == "igpu_hip"
++    assert disallowed["ok"] is False
++    assert disallowed["detail"] == "generator_backend_not_allowed"
++    assert unhealthy["ok"] is False
++    assert unhealthy["detail"] == "qwen_llama_server_unhealthy"
++    assert missing_ensure["detail"] == "generator_missing_ensure_server"
++
++
++def test_req_capstone_4875_check_preconditions_accepts_generator_health(
++    tmp_path: Path,
++) -> None:
++    """REQ-CAPSTONE-4875: preconditions record accepted backend or missing resource."""
++
++    ok = mod.check_preconditions(
++        tmp_path,
++        qwen_cache_finder=lambda: "/models/Qwen3.5-9B-Q4_K_M.gguf",
++        generator_checker=lambda: {"ok": True, "generator_backend": "gpu0_cuda", "port": 8931},
++    )
++    no_qwen = mod.check_preconditions(
++        tmp_path,
++        qwen_cache_finder=lambda: None,
++        generator_checker=lambda: {"ok": True, "generator_backend": "gpu0_cuda"},
++    )
++    bad_generator = mod.check_preconditions(
++        tmp_path,
++        qwen_cache_finder=lambda: "/models/Qwen3.5-9B-Q4_K_M.gguf",
++        generator_checker=lambda: {
++            "ok": False,
++            "generator_backend": None,
++            "detail": "generator_backend_not_allowed",
++        },
++    )
++
++    assert ok["ok"] is True
++    assert ok["generator_backend"] == "gpu0_cuda"
++    assert ok["gpu_generator_device_policy"] == "igpu_hip_or_gpu0_cuda_no_igpu_pin"
++    assert no_qwen["ok"] is False
++    assert no_qwen["blocked_resource"] == "qwen35_mtp_gguf_cache"
++    assert bad_generator["ok"] is False
++    assert bad_generator["blocked_resource"] == "generator_backend_not_allowed"
++
++
++def test_req_capstone_4875_wrappers_restore_previous_constants(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-4875: 4875 retargets 4864 helpers without leaking constants."""
++
++    old_result_path = previous.RESULT_RELATIVE_PATH
++    old_partial_path = previous.PARTIAL_RESULT_RELATIVE_PATH
++    captured: JsonDict = {}
++
++    def fake_checkpoint_runner(root: Path, parity_test: JsonDict, **kwargs: Any) -> JsonDict:
++        captured["root"] = root
++        captured["parity"] = parity_test
++        captured["result_path"] = previous.RESULT_RELATIVE_PATH
++        captured["partial_path"] = previous.PARTIAL_RESULT_RELATIVE_PATH
++        captured["spec_refs"] = list(previous.SPEC_REFS)
++        captured["kwargs"] = kwargs
++        return _proxy(first_win_rate=0.08, cache_used=False)
++
++    monkeypatch.setattr(previous, "run_held_out_proxy_checkpointed", fake_checkpoint_runner)
++
++    proxy = mod.run_held_out_proxy_checkpointed(tmp_path, _parity(True), soft_budget_s=10.0)
++
++    assert proxy["first_win_rate_integrated"] == 0.08
++    assert captured["result_path"] == mod.RESULT_RELATIVE_PATH
++    assert captured["partial_path"] == mod.PARTIAL_RESULT_RELATIVE_PATH
++    assert captured["spec_refs"] == mod.SPEC_REFS
++    assert captured["kwargs"]["soft_budget_s"] == 10.0
++    assert previous.RESULT_RELATIVE_PATH == old_result_path
++    assert previous.PARTIAL_RESULT_RELATIVE_PATH == old_partial_path
++
++
++def test_req_capstone_4875_loaders_schema_and_cache_guard(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-CAPSTONE-4875-FIELD-PRINCIPLES: loaders and schema guards are strict."""
++
++    prior = tmp_path / "results" / "experiment_4864_heldout_first_win_readiness.json"
++    prior.parent.mkdir(parents=True)
++    prior.write_text(
++        json.dumps({"experiment_id": 4864, "heldout_first_win_rate": 0.08}),
++        encoding="utf-8",
++    )
++    loaded = mod.load_prior_best(tmp_path)
++    assert loaded["prior_best_heldout_first_win_rate"] == 0.08
++    assert loaded["prior_best_experiment_id"] == 4864
++
++    captured: JsonDict = {}
++
++    def fake_cached_loader(root: Path, parity_test: JsonDict) -> JsonDict:
++        captured["cached_result_path"] = previous.RESULT_RELATIVE_PATH
++        captured["cached_parity"] = parity_test
++        return _proxy(first_win_rate=0.04, cache_used=True)
++
++    def fake_partial_loader(root: Path, budget_exc: Any, parity_test: JsonDict) -> JsonDict:
++        captured["partial_result_path"] = previous.RESULT_RELATIVE_PATH
++        captured["partial_checkpoint_path"] = previous.PARTIAL_RESULT_RELATIVE_PATH
++        captured["partial_done"] = list(budget_exc.done_games)
++        captured["partial_parity"] = parity_test
++        return _proxy(first_win_rate=0.04, attempts=4, cache_used=False)
++
++    monkeypatch.setattr(previous, "load_cached_or_run_held_out_proxy", fake_cached_loader)
++    monkeypatch.setattr(previous, "_partial_proxy_from_budget", fake_partial_loader)
++
++    cached = mod.load_cached_or_run_held_out_proxy(tmp_path, _parity(True))
++    partial = mod._partial_proxy_from_budget(
++        tmp_path,
++        mod.base._BudgetExceeded(done_games=["g1"], remaining_games=["g2"]),
++        _parity(True),
++    )
++
++    assert cached["proxy_cache_used"] is True
++    assert partial["integrated_measurement"]["variant_attempts_count"] == 4
++    assert captured["cached_result_path"] == mod.RESULT_RELATIVE_PATH
++    assert captured["partial_result_path"] == mod.RESULT_RELATIVE_PATH
++    assert captured["partial_checkpoint_path"] == mod.PARTIAL_RESULT_RELATIVE_PATH
++    assert captured["partial_done"] == ["g1"]
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions("gpu0_cuda"),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.04, cache_used=False),
++        prior_best=loaded,
++        a1_prior_decision=_a1_null(),
++        partial=False,
++        checkpoint_emitted=True,
++        live_agent_ran=True,
++        duration_s=1.0,
++    )
++    written_path = mod.write_artifact(tmp_path, artifact)
++    assert written_path == tmp_path / mod.RESULT_RELATIVE_PATH
++
++    cache_without_blocker = mod.build_artifact(
++        preconditions_checked=_preconditions("gpu0_cuda"),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.04, cache_used=True),
++        prior_best=loaded,
++        a1_prior_decision=_a1_null(),
++        partial=False,
++        checkpoint_emitted=False,
++        live_agent_ran=False,
++        duration_s=0.0,
++    )
++    assert "cache_aggregation_requires_blocking_reason" in mod.artifact_schema_errors(
++        cache_without_blocker
++    )
++
++    cache_with_blocker = mod.build_artifact(
++        preconditions_checked={**_preconditions("gpu0_cuda"), "live_blocking_reason": "manual_live_block"},
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.04, cache_used=True),
++        prior_best=loaded,
++        a1_prior_decision=_a1_null(),
++        partial=False,
++        checkpoint_emitted=False,
++        live_agent_ran=False,
++        duration_s=0.0,
++    )
++    assert mod.artifact_schema_errors(cache_with_blocker) == []
++
++    proxy_blocker = mod.build_artifact(
++        preconditions_checked=_preconditions("gpu0_cuda"),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(
++            first_win_rate=0.04,
++            cache_used=True,
++            live_blocking_reason="operator_declared_live_block",
++        ),
++        prior_best=loaded,
++        a1_prior_decision=_a1_null(),
++        partial=False,
++        checkpoint_emitted=False,
++        live_agent_ran=False,
++        duration_s=0.0,
++    )
++    assert (
++        proxy_blocker["heldout_proxy_summary"]["live_blocking_reason"]
++        == "operator_declared_live_block"
++    )
++    assert mod.artifact_schema_errors(proxy_blocker) == []
++
++    bad_backend = dict(artifact)
++    bad_backend["generator_backend"] = "cpu"
++    bad_backend["reproducibility_checksum"] = mod.payload_checksum(bad_backend)
++    assert "generator_backend" in mod.artifact_schema_errors(bad_backend)
++
++    bad_fields = dict(artifact)
++    bad_fields["field_principles"] = {}
++    bad_fields["reproducibility_checksum"] = mod.payload_checksum(bad_fields)
++    assert "field_principles" in mod.artifact_schema_errors(bad_fields)
++
++    bad_solve = dict(artifact)
++    bad_solve["solve_provenance"] = "banked_level"
++    bad_solve["reproducibility_checksum"] = mod.payload_checksum(bad_solve)
++    assert "solve_provenance_development_proxy" in mod.artifact_schema_errors(bad_solve)
++
++    missing = dict(artifact)
++    missing.pop("generator_backend")
++    assert "missing required field generator_backend" in mod.artifact_schema_errors(missing)
++
++    with pytest.raises(ValueError, match="generator_backend"):
++        mod.write_artifact(tmp_path, bad_backend)
++
++
++def test_req_capstone_4875_helper_edges(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4875: helper branches keep measured-rate verdicts deterministic."""
++
++    assert mod._rate_label(None) == "unknown"
++    assert mod._optional_float("bad") is None
++    assert mod._ci_low({"ci95": [0.02, 0.07]}) == 0.02
++    assert mod._normalized_honest_verdict(
++        {"honest_verdict": "complete: no_rate", "heldout_first_win_rate": None}
++    ) == "complete: no_rate"
++    assert mod._selected_generator_backend(Path("/llama/build/bin/llama-server"), None) == "gpu0_cuda"
++    assert mod._selected_generator_backend(
++        Path("/llama/build/bin/llama-server"), {"CUDA_VISIBLE_DEVICES": "0"}
++    ) == "gpu0_cuda"
++    assert mod._selected_generator_backend(
++        Path("/llama/build/bin/llama-server"), {"CUDA_VISIBLE_DEVICES": "1"}
++    ) is None
++    assert mod._selected_generator_backend(Path("/llama/build-hip/bin/llama-server"), None) == "igpu_hip"
++    assert mod._normalise_generator_result(True) == {"ok": True}
++    assert mod._normalise_generator_result({"ok": True, "backend": "igpu_hip"})[
++        "generator_backend"
++    ] == "igpu_hip"
++    assert mod._generator_backend_from_preconditions({"generator_backend": "gpu0_cuda"}) == "gpu0_cuda"
++    assert mod._generator_backend_from_preconditions({"generator": {"backend": "igpu_hip"}}) == "igpu_hip"
++
++    specs = mod._model_specs_from_preconditions(
++        _preconditions("gpu0_cuda"),
++        "gpu0_cuda",
++    )
++    assert specs["name"] == "Qwen3.5-9B-MTP"
++    assert specs["backend"] == "gpu0_cuda"
++
++    missing_decision = mod.load_a1_amortized_prior_decision(tmp_path)
++    assert missing_decision["exists"] is False
++    assert missing_decision["included_in_measurement"] is False
++    assert missing_decision["reason"] == "a1_prior_artifact_missing"
+-- 
+2.55.0
+

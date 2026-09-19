@@ -1,0 +1,130 @@
+From 93533e1ad6c74184a7be99724a5c838db59da2f2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 23:27:25 -0400
+Subject: [PATCH 07737/11362] [outer-loop] ARC live-search boundary: reaches
+ tu93 L1 live; deep live solving is an open problem (REQ-ARC-WMTE-5840)
+
+True live-search (StepwiseExplorer on the given env, no separate arcade) + perception
+verifier: reaches tu93 L1 (both baseline and routed), but neither reaches L2/L3 even at
+budget 2000 -- the offline L3 solve needs fresh_env branching (a brand-new env per node),
+unavailable on a single live env (tu93 reset non-idempotent). Perception verifier adds no
+advantage over the baseline explorer online. No clean idempotent nav game in the public
+set for a positive demo. Honest boundary: the chain closes on the offline/dev-twin path
+(tu93 L3, no hand-RE), but deep true-live solving of a non-idempotent maze is an open
+research problem (parity-aware live search / world-model rollout), not a wiring gap.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...c-winner-recipe-reproduction-2026-07-23.md | 22 ++++++
+ ...live_search_characterization_20260723.json | 67 +++++++++++++++++++
+ 2 files changed, 89 insertions(+)
+ create mode 100644 results/outer_loop_arc_live_search_characterization_20260723.json
+
+diff --git a/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md b/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
+index c8cfa719e4..821b0b67f0 100644
+--- a/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
++++ b/docs/research-notes/arc-winner-recipe-reproduction-2026-07-23.md
+@@ -404,3 +404,25 @@ live on the scored env during play' is the next step. Method validation (tu93 L3
+ tu93 L3) -> generic-adapter solve (no hand-RE) -> **scored-path integration (PerceptionNavigationPolicy
+ reaches L3 via run_game, fully autonomous).** The sovereignty-aligned, oracle-distinct path -- not the winner
+ recipe -- self-discovers and reproduces a navigation solve on the scored interface.
++
++## Live-search boundary (5840): reaches tu93 L1 live; deep live solving is an open problem
++
++The plan-then-replay policy (5839) searched a SEPARATE offline arcade twin -- unavailable for a hidden game.
++The true live step is to search the ONE env run_game gives (StepwiseExplorer via CarnotAgentPolicy, no
++separate arcade). Measured with the perception verifier:
++
++- tu93 (budget 2000): baseline explorer AND perception-routed both reach **L1**; NEITHER reaches L2/L3.
++- g50t: both 0 (not pure navigation).
++
++**Honest boundary.** Live single-env search reaches tu93 L1 -- limited live self-discovery on the scored env
++IS achievable. But deep solving (L2/L3) is blocked because the offline L3 solve relied on
++branch_mode='fresh_env' (a brand-new env per search node), which a single live scored env cannot supply
++(tu93's reset is non-idempotent -- a parity toggle). The perception verifier adds no advantage over the
++baseline explorer online (both L1); its proven value is in the OfflineSolver BATCH search (5837/5838/5839),
++not the online explorer. And the public set has no clean idempotent-reset navigation game for a positive
++live-search-beats-baseline demo.
++
++**So:** the autonomous perception->verifier->search chain fully closes on the OFFLINE/dev-twin path (tu93 L3,
++no hand-RE, what arc_loop_solve uses), but deep TRUE-LIVE scored solving of a non-idempotent-reset maze is a
++genuine OPEN research problem -- a parity-aware live search, or a world-model rollout that branches without
++resetting the real env -- not a wiring gap. That is the honest boundary of the whole perception-fix program.
+diff --git a/results/outer_loop_arc_live_search_characterization_20260723.json b/results/outer_loop_arc_live_search_characterization_20260723.json
+new file mode 100644
+index 0000000000..576653dd68
+--- /dev/null
++++ b/results/outer_loop_arc_live_search_characterization_20260723.json
+@@ -0,0 +1,67 @@
++{
++  "experiment": "outer_loop_arc_live_search_characterization",
++  "experiment_id": "REQ-ARC-WMTE-5840",
++  "run_date": "2026-07-23",
++  "schema": "carnot.arc_live_search_characterization.v1",
++  "title": "Live verifier-routed search on the SCORED env (StepwiseExplorer + perception verifier, no separate arcade): budget-independence of the tu93 non-idempotent-reset block + g50t.",
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "verifier_is_oracle": false,
++  "solve_provenance": "development_proxy",
++  "random_seed": 5840,
++  "methodology_note": "CarnotAgentPolicy(force_explore) searches the ONE env run_game gives it via RESET+replay (no separate offline arcade) -- the true live-search engine. Perception value_head = player->goal Manhattan (derived from a recon on the same game). tu93 gets budget 2000 to test whether its block is fundamental (non-idempotent reset -> no live fresh_env) or budget-limited. Public-game frames for offline dev.",
++  "context": "Plan-then-replay (5839) searched a SEPARATE offline arcade twin (unavailable for a hidden game). This tests search ON the given env. Probe 2026-07-23: no clean idempotent-reset nav game in the public set (lp85/s5i5/vc33 derive no pair; only g50t=(9,8), win not pure nav); tu93 is the clean nav game but fresh_env/non-idempotent.",
++  "per_game": [
++    {
++      "game": "tu93",
++      "budget": 2000,
++      "target": {
++        "player": 9,
++        "goal": 14,
++        "target_row": 46.0,
++        "target_col": 46.0
++      },
++      "baseline": {
++        "levels": 1,
++        "reached": 1,
++        "actions": 361
++      },
++      "live_search": {
++        "levels": 1,
++        "reached": 1,
++        "actions": 545
++      }
++    },
++    {
++      "game": "g50t",
++      "budget": 800,
++      "target": {
++        "player": 9,
++        "goal": 8,
++        "target_row": 31.75609756097561,
++        "target_col": 30.5
++      },
++      "baseline": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 793
++      },
++      "live_search": {
++        "levels": 0,
++        "reached": 0,
++        "actions": 756
++      }
++    }
++  ],
++  "tu93_live_reached": 1,
++  "duration_s": 4.2,
++  "reproducibility_checksum": "sha256:ad581dbb22f1f12cb3e154c94e5224b3cd44d2aaf37b342fa59fac5d2e78ad82",
++  "headline": "HONEST BOUNDARY of live-search-on-the-scored-env: (1) live single-env search REACHES tu93 L1 (both the baseline explorer and the perception-routed arm) -- so limited live self-discovery on the scored env IS achievable; but (2) NEITHER reaches L2/L3 even at budget 2000 -- the offline solve's L3 relied on branch_mode='fresh_env' (a brand-new env per search node), which a single live scored env CANNOT supply because tu93's reset is non-idempotent (parity toggle); and (3) the perception verifier does NOT beat the baseline explorer here (both L1) -- its proven value (the OfflineSolver batch search, 5837/5838/5839) does NOT transfer to an advantage over the online StepwiseExplorer. g50t (the one idempotent game with a derived pair) is null both arms -- its win is not pure navigation.",
++  "boundary": {
++    "offline_dev_twin_path": "perception -> verifier -> OfflineSolver (fresh_env) reproduces tu93 L3, no hand-RE (5837/5838/5839). This is what arc_loop_solve/the dev twin uses; legitimate for the registry/dev.",
++    "true_live_scored_path": "search on the ONE scored env. Reaches tu93 L1; DEEP solving (L2/L3) blocked by the non-idempotent reset (no live fresh_env). The perception verifier adds no advantage over the baseline explorer on the tested games.",
++    "why_the_gap": "the offline solve's power comes from fresh_env branching (unlimited independent envs offline); the live scored setting has one env + a non-idempotent reset, so replay-from-reset search cannot reproduce a parity-contingent deep win.",
++    "public_set_limitation": "no clean idempotent-reset navigation game exists in the public set to demonstrate a clean POSITIVE live-search-beats-baseline case (lp85/s5i5/vc33 derive no nav pair; only g50t=(9,8), not pure nav; tu93 is clean-nav but non-idempotent)."
++  },
++  "next_open_problem": "Deep TRUE-LIVE solving of a non-idempotent-reset maze needs either (a) a parity-aware live search (model the reset's hidden-state toggle so replay-from-reset reproduces), or (b) a live search that branches without reset (a learned/deepcopy-able world model to roll forward candidates instead of resetting the real env). Both are genuine open research problems, not wiring gaps.",
++  "honest_verdict": "complete_live_search_reaches_tu93_L1_deep_blocked_by_nonidempotent_reset_perception_verifier_no_advantage_over_baseline_explorer_online"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

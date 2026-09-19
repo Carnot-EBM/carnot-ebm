@@ -1,0 +1,315 @@
+From 04852a51bee67d5979bc3e2aec16ef665bebf327 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 08:34:10 -0400
+Subject: [PATCH 08886/11362] Add sensitivity to goal-predicate scoring; the
+ live veto is inverted at level 1
+
+METRIC FIX. score_goal_predicate_consistency's accuracy is a SPECIFICITY score:
+held-out transitions contain no level-ups, so a predicate returning False for
+everything is 100% correct. It now takes an optional win_grids and returns
+sensitivity_win_grids_tested, sensitivity_win_grids_fired and
+is_degenerate_constant_false, so the constant-False predicate can no longer be
+indistinguishable from a good one. Additive and optional: defaults unchanged, no
+existing caller moves, and with no win grid supplied the flag is None
+(UNMEASURABLE) rather than a pass -- "nobody checked" must not look like "checked
+and fine". 11 tests, including the constant-True opposite degeneracy and a
+backward-compatibility case.
+
+One test was written wrong and the code was right: a predicate that RAISES also
+raises in the specificity loop, so it scores 0.0 and is already failing loudly.
+The degenerate flag is reserved for the SILENT case -- high specificity, no fire --
+which is the one nothing else catches. Test corrected to assert that.
+
+THE BIGGER FINDING, a code-path analysis rather than a live observation. Every
+step verified in source or by test; the conclusion follows by construction:
+
+  1. The live agent sets min_goal_predicate_consistency=1.0 at both reinduction
+     call sites (arc_competition_agent.py:7164 and :7309).
+  2. arc_llm_reinduction rejects a candidate when accuracy < threshold, so a
+     candidate must score EXACTLY 1.0 to survive.
+  3. The scored window is the agent's OWN transitions.
+  4. Before the agent's first level-up, no transition in that window can have
+     level_after > level_before.
+  5. On such a window a constant-False predicate scores exactly 1.0.
+
+So at level 1 on a hidden game -- the moment the agent must break through, and
+where no win exemplar can exist -- the veto ACCEPTS a constant-False predicate and
+REJECTS a discriminating one that fires even once too often. It selects for the
+useless predicate at the only moment that matters. plan_in_model then terminates
+on that predicate, which is exactly the pattern exp6257 measured: 10 of 14
+degenerate games found no plan and 4 produced verified hollow plans. It also
+explains exp6256's 8 of 8 freshly induced predicates never firing on a real win.
+
+From level 2 the window can contain a real level-up and the inversion relaxes, so
+this is a level-1 cold-start defect specifically -- which is where the live agent's
+scored performance is stuck.
+
+DELIBERATELY NOT CHANGED: the live threshold. Lowering it, or rewiring the veto to
+consult the new flag, is a behaviour change on the scored agent and should be a
+measured A/B and an operator decision, not a quiet edit at the end of an
+unattended session. This analysis is the case for running that A/B.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                           |  58 +++++++++
+ .../agentic/arc_executable_world_model.py     |  35 ++++++
+ .../test_goal_predicate_sensitivity_6257.py   | 113 ++++++++++++++++++
+ 3 files changed, 206 insertions(+)
+ create mode 100644 tests/python/test_goal_predicate_sensitivity_6257.py
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 0d19c0430f..011085732c 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -17429,3 +17429,61 @@ planner's termination condition depends on it. The win exemplar is now ruled out
+ The remaining candidates are unchanged from exp6257: make the metric two-sided so a
+ constant-False predicate cannot score perfect, then attack induction of the predicate itself
+ with something other than a prompt exemplar.
++
++## 2026-08-12 THE LIVE GOAL-PREDICATE VETO IS INVERTED AT LEVEL 1 (code-path analysis)
++
++Found while fixing the metric hole from exp6257. This is a CODE-PATH ANALYSIS, not a live
++observation -- no live run was made to confirm it. Every step below was verified in source
++or by test; the conclusion follows by construction.
++
++**The chain.**
++
++1. The live agent sets `min_goal_predicate_consistency=1.0` at BOTH reinduction call sites
++   (`arc_competition_agent.py:7164` and `:7309`). Verified in source.
++2. `arc_llm_reinduction.py` rejects a candidate when
++   `consistency.accuracy < goal_consistency_threshold`, setting
++   `row["skipped"] = "goal_predicate_consistency_failed"`. So a candidate must score EXACTLY
++   1.0 to survive. Verified in source.
++3. The window scored is `consistency_window = list(transitions)` -- the agent's OWN observed
++   transitions. Verified in source.
++4. Before the agent's first level-up, NO transition in that window can have
++   `level_after > level_before`. True by construction, not by measurement.
++5. On a window with no level-ups, `accuracy` is pure specificity, and a predicate that
++   returns False for everything scores exactly **1.0**. Verified by test
++   (`test_goal_predicate_sensitivity_6257.py`).
++
++**The consequence.** At level 1 on a hidden game -- the exact moment the agent must break
++through, and the case where no exemplar can exist -- a veto set to 1.0:
++
++- **ACCEPTS** a constant-False predicate, because it scores a perfect 1.0.
++- **REJECTS** a genuinely discriminating predicate that fires even once too often, because
++  any false positive puts it below 1.0.
++
++The gate selects FOR the useless predicate and AGAINST the imperfect-but-real one, at the
++only moment that matters. `plan_in_model` then terminates on that predicate, so the planner
++either cannot terminate at all or terminates on an in-model false win -- which is exactly the
++pattern exp6257 measured: 10 of 14 degenerate games found no plan, and 4 produced verified
++hollow plans.
++
++**It is consistent with everything measured in this batch.** exp6257: 14 of 21 STORED
++predicates degenerate. exp6256: 8 of 8 FRESHLY induced predicates never fire on a real win.
++A gate that admits only perfect-specificity predicates on level-up-free data is a sufficient
++explanation for both.
++
++**Once the agent HAS won a level the inversion relaxes.** From level 2 the window can contain
++a real level-up, and then a constant-False predicate scores below 1.0 and is correctly
++rejected. So this is a level-1 / cold-start defect specifically, which is also where the live
++agent's scored performance is stuck.
++
++**Fix shipped for the metric, NOT for the gate.** `score_goal_predicate_consistency` now
++takes an optional `win_grids` and returns `sensitivity_win_grids_tested`,
++`sensitivity_win_grids_fired` and `is_degenerate_constant_false`, so a constant-False
++predicate can no longer be indistinguishable from a good one. Defaults are unchanged and
++`win_grids` is optional, so no existing caller's behaviour moves; when no win grid is
++supplied the flag is None (UNMEASURABLE) rather than a pass. 11 tests, including the
++constant-True opposite degeneracy and a backward-compatibility case.
++
++**Deliberately NOT changed: the live threshold.** Lowering `min_goal_predicate_consistency`
++from 1.0, or rewiring the veto to consult the new flag, is a live-path behaviour change on
++the scored agent. It should be a measured A/B and an operator decision, not a quiet edit at
++the end of an unattended session. The analysis above is the case for running that A/B.
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index c794031f13..9ffdd0891b 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -2220,6 +2220,19 @@ class GoalPredicateConsistency:
+     # was compared against, so the decision is reconstructible from the artifact alone.
+     engine_fidelity_used_for_counterfactual_decision: Optional[float] = None
+     min_engine_fidelity_for_counterfactual: Optional[float] = None
++    # SENSITIVITY (REQ-ARC-WMTE-6257, 2026-08-12). `accuracy` above is a SPECIFICITY score:
++    # held-out transitions from `collect_transitions` contain no level-ups, so every row is a
++    # non-win and a predicate returning False for everything is 100% correct. Measured: 14 of
++    # 21 stored predicates scored a perfect 1.0 that way while never firing on a real win. That
++    # matters because `plan_in_model` terminates on this predicate -- 10 of them made planning
++    # impossible and 4 more produced hollow plans ending on an in-model false win.
++    #
++    # These three are the other side. They stay 0/None unless the caller supplies `win_grids`,
++    # because "nobody checked" and "checked and fine" must never look alike.
++    sensitivity_win_grids_tested: int = 0
++    sensitivity_win_grids_fired: int = 0
++    # True = specific-looking but fires on no real win. None = UNMEASURABLE (no win grid given).
++    is_degenerate_constant_false: Optional[bool] = None
+ 
+ 
+ def score_goal_predicate_consistency(
+@@ -2230,6 +2243,7 @@ def score_goal_predicate_consistency(
+     engine: Optional[Callable[[np.ndarray, int, Any], np.ndarray]] = None,
+     engine_change_fidelity: Optional[float] = None,
+     min_engine_fidelity_for_counterfactual: float = 0.5,
++    win_grids: Optional[Sequence[Any]] = None,
+ ) -> GoalPredicateConsistency:
+     """REQ-ARC-WMTE-5593: does `is_level_complete`'s sign match real observed level-ups?
+ 
+@@ -2431,6 +2445,24 @@ def score_goal_predicate_consistency(
+     # transitions" and "your transitions were all ungradeable" are distinct claims, and collapsing
+     # them would silently change a documented return value for every existing caller.
+     all_rows_excluded = bool(len(transitions) > 0 and n == 0)
++    # SENSITIVITY. Measurable only when the caller supplies grids on which a level-up REALLY
++    # happened (`replay_win_transition` produces them). Absent those, the fields stay unmeasured
++    # rather than defaulting to a pass -- a metric that cannot fail is not a metric, which is
++    # the entire reason this side exists.
++    _sens_tested = 0
++    _sens_fired = 0
++    for _wg in win_grids or []:
++        _sens_tested += 1
++        try:
++            if bool(is_level_complete(np.asarray(_wg))):
++                _sens_fired += 1
++        except Exception:  # noqa: BLE001
++            # A predicate that RAISES on a real win state has not fired on it. Counting the
++            # test but not the fire matches how a caller experiences it: the planner would not
++            # terminate here either.
++            pass
++    _spec = 1.0 if all_rows_excluded else float(n_correct / max(1, n))
++    _degenerate = None if _sens_tested == 0 else bool(_sens_fired == 0 and _spec >= 0.9)
+     return GoalPredicateConsistency(
+         n=n,
+         n_correct=n_correct,
+@@ -2447,6 +2479,9 @@ def score_goal_predicate_consistency(
+         min_engine_fidelity_for_counterfactual=(
+             float(min_engine_fidelity_for_counterfactual) if engine is not None else None
+         ),
++        sensitivity_win_grids_tested=_sens_tested,
++        sensitivity_win_grids_fired=_sens_fired,
++        is_degenerate_constant_false=_degenerate,
+     )
+ 
+ 
+diff --git a/tests/python/test_goal_predicate_sensitivity_6257.py b/tests/python/test_goal_predicate_sensitivity_6257.py
+new file mode 100644
+index 0000000000..74dbe91d60
+--- /dev/null
++++ b/tests/python/test_goal_predicate_sensitivity_6257.py
+@@ -0,0 +1,113 @@
++"""REQ-ARC-WMTE-6257: a constant-False goal predicate must not score as perfect.
++
++WHY. `score_goal_predicate_consistency`'s `accuracy` is a SPECIFICITY score. Held-out
++transitions from `collect_transitions` contain no level-ups, so every row is a non-win and a
++predicate returning False for everything is 100% correct. Measured 2026-08-12: 14 of 21
++stored predicates scored a perfect 1.0 that way while never firing on a real win, and
++`plan_in_model` terminates on this predicate -- 10 of them made planning impossible and 4
++produced hollow plans that ended on an in-model false win.
++
++Covers SCENARIO-ARC-WMTE-6257-CONSTANT-FALSE-MUST-NOT-SCORE-PERFECT.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++
++import numpy as np
++
++from carnot.agentic.arc_executable_world_model import score_goal_predicate_consistency
++
++
++@dataclass
++class _T:
++    grid: np.ndarray
++    action: int
++    data: dict | None
++    next_grid: np.ndarray
++    level_before: int = 0
++    level_after: int = 0
++
++
++def _non_win_transitions(n: int = 5) -> list[_T]:
++    """Held-out data as the collector really produces it: no level-ups anywhere."""
++    rng = np.random.default_rng(6257)
++    out = []
++    for _ in range(n):
++        g = rng.integers(0, 4, size=(4, 4))
++        out.append(_T(grid=g, action=1, data=None, next_grid=g + 1))
++    return out
++
++
++def _win_grid() -> np.ndarray:
++    return np.full((4, 4), 9)
++
++
++def test_constant_false_scores_perfect_specificity_but_is_flagged_degenerate() -> None:
++    # The exact failure mode found in the store: looks perfect, decides nothing.
++    out = score_goal_predicate_consistency(
++        lambda g: False, _non_win_transitions(), win_grids=[_win_grid()]
++    )
++    assert out.accuracy == 1.0, "specificity alone still rates it perfect -- that is the point"
++    assert out.sensitivity_win_grids_tested == 1
++    assert out.sensitivity_win_grids_fired == 0
++    assert out.is_degenerate_constant_false is True
++
++
++def test_a_discriminating_predicate_is_not_flagged() -> None:
++    win = _win_grid()
++    out = score_goal_predicate_consistency(
++        lambda g: bool(np.array_equal(np.asarray(g), win)),
++        _non_win_transitions(),
++        win_grids=[win],
++    )
++    assert out.accuracy == 1.0
++    assert out.sensitivity_win_grids_fired == 1
++    assert out.is_degenerate_constant_false is False
++
++
++def test_no_win_grids_leaves_sensitivity_UNMEASURED_not_passing() -> None:
++    # "Nobody checked" must never look like "checked and fine". This is the fail-safe
++    # direction: absent evidence, the field is None rather than False.
++    out = score_goal_predicate_consistency(lambda g: False, _non_win_transitions())
++    assert out.sensitivity_win_grids_tested == 0
++    assert out.is_degenerate_constant_false is None
++
++
++def test_a_predicate_that_raises_counts_as_not_firing_and_fails_specificity_instead() -> None:
++    """A crashing predicate is broken, but it is NOT the looks-perfect degeneracy.
++
++    Written expecting `is_degenerate_constant_false is True`; the code returned False and the
++    code was right. A predicate that raises also raises inside the specificity loop, so it
++    scores 0.0 there and is already failing loudly. The degenerate flag is reserved for the
++    silent case -- high specificity, no fire -- which is the one nothing else catches.
++    """
++
++    def boom(_g):
++        raise RuntimeError("predicate crashed on the win state")
++
++    out = score_goal_predicate_consistency(boom, _non_win_transitions(), win_grids=[_win_grid()])
++    assert out.sensitivity_win_grids_tested == 1
++    assert out.sensitivity_win_grids_fired == 0
++    assert out.accuracy == 0.0, "a raising predicate is caught by specificity"
++    assert out.is_degenerate_constant_false is False
++
++
++def test_constant_true_is_caught_by_specificity_not_by_the_new_flag() -> None:
++    # The opposite degeneracy. It fires on the win, so the new flag is False; specificity
++    # is what fails it. Both sides are needed and neither is redundant.
++    out = score_goal_predicate_consistency(
++        lambda g: True, _non_win_transitions(), win_grids=[_win_grid()]
++    )
++    assert out.accuracy < 0.5
++    assert out.sensitivity_win_grids_fired == 1
++    assert out.is_degenerate_constant_false is False
++
++
++def test_existing_callers_are_unaffected_when_win_grids_is_omitted() -> None:
++    # Backward compatibility: the new parameter is optional and the old fields keep their
++    # meaning, so no existing call site changes behaviour.
++    out = score_goal_predicate_consistency(lambda g: False, _non_win_transitions())
++    assert out.accuracy == 1.0
++    assert out.n == 5
++    assert out.n_real_levelups == 0
+-- 
+2.55.0
+

@@ -1,0 +1,94 @@
+From 368437571337e5ee7e319d28d7c16564fc6a5146 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 10:37:09 -0400
+Subject: [PATCH 10765/11362] Test resolved: second occurrence, and two of my
+ own claims were wrong
+
+exp6885 failed its gate with 7 failed checks. document_yaml_task_contract expected
+13 tasks and observed document 13, yaml 4. yaml_executable_contract expected ids
+6885 through 6897 and observed 6885 through 6888. So the pattern holds two for two:
+602 reserved 11 ids and used 4, 603 reserved 13 and used 4, and the id-range reading
+is supported rather than refuted.
+
+Two corrections to my own record. First, I reported minutes earlier that exp6885
+passed. It logged OK in the conductor log and I read that line instead of the
+artifact, whose verdict is complete_blocked_v603_executable_manifest_branch_contract
+with gate passed false. The artifact is the authority and the Reading-Results
+Discipline exists to prevent exactly this.
+
+Second, the "1 parity failure across 5 replans" base rate I filed an hour ago was
+wrong. It came from grepping results for document_yaml_parity, and 603's equivalent
+check is named document_yaml_task_contract. Searching the check name rather than the
+concept missed a live instance and halved the apparent frequency -- the same
+class-B failure, a pattern narrower than the concept, that this file documents
+elsewhere. Future counts of this class must match the shape, a document-versus-yaml
+task-count comparison, not a literal name.
+
+One difference between the two occurrences is recorded: 602 cascaded and blocked 3
+tasks, while 603 has not cascaded yet, so whether 6886 through 6888 block is the next
+thing to watch.
+
+Also noted without judging it: the conductor logged OK for a task whose gate failed
+seven checks. That may be by design, since complete_blocked_ carries the terminal
+prefix and a blocked verdict is honest rather than failed, but the side effect is
+that the OK count includes blocked tasks and overstates success.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 3ba2ec23ca..2467041158 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -52,6 +52,45 @@ incomplete.
+ Stated so the next check is a yes/no rather than a re-investigation. Recorded against the earlier
+ base rate: 1 parity failure across 5 replans, so a second occurrence would materially change that.
+ 
++
++**TEST RESOLVED: SECOND OCCURRENCE, AND TWO OF MY OWN CLAIMS WERE WRONG (2026-09-02 14:35Z).**
++
++`experiment_6885_v603_executable_manifest_branch_contract` FAILED its gate with 7 failed checks:
++
++| check | expected | observed |
++|---|---|---|
++| `document_yaml_task_contract` | task_count 13 | document 13, **yaml 4** |
++| `yaml_executable_contract` | ids 6885..6897 (13) | ids 6885..6888 (**4**) |
++
++So the pattern holds two for two: 602 reserved 11 ids and used 4; 603 reserved 13 and used 4. The
++ID-RANGE reading above is SUPPORTED, not refuted.
++
++**Correction 1 — I first reported exp6885 as passing.** It logged `OK` in the conductor log at
++14:04 and I read that line instead of the artifact. The artifact's own verdict is
++`complete_blocked_v603_executable_manifest_branch_contract` with `gate passed: False`. The
++conductor's OK and the artifact's gate disagree, and the artifact is the authority — this is
++precisely what the Reading-Results Discipline exists to prevent, committed by the person applying
++it.
++
++**Correction 2 — the "1 parity failure across 5 replans" base rate was wrong.** That count came
++from grepping results for `document_yaml_parity`. Milestone 603's equivalent check is named
++`document_yaml_task_contract`. Searching for the check NAME rather than the CONCEPT missed a live
++instance and produced a base rate that understated the frequency by half. Same class-B failure —
++a pattern list narrower than the concept it names — that this file documents elsewhere. Any future
++count of this class must match on the shape (a document-vs-yaml task-count comparison), not on a
++literal check name.
++
++**Consequence difference between the two.** 602's failure cascaded and GATE_BLOCKed 3 tasks. 603's
++has not cascaded yet (GATE_BLOCK still 5 at 14:35Z); whether 6886/6887/6888 block is the next thing
++to watch.
++
++**Also visible, not yet judged.** The conductor logged `OK` for a task whose gate failed with 7
++checks. That may be correct by design: `complete_blocked_*` carries the `complete_` terminal prefix
++and the Pre-Launch Preconditions Discipline treats a blocked verdict as honest rather than failed.
++The side effect is that the dashboard's OK count includes blocked tasks, so apparent success is
++overstated. Not filed as a defect because the intent is plausibly deliberate; noted so it is not
++re-derived.
++
+ ### NEW 2026-09-02: the operational retrospective never reports the quarantine rate
+ 
+ **The observation.** `results/operational_retro_2026_09_601.json` summarises the milestone as "9
+-- 
+2.55.0
+

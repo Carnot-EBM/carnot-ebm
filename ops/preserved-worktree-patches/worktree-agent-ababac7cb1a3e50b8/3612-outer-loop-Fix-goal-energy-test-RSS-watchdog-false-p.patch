@@ -1,0 +1,35 @@
+From 959ca86cece90449ac2286bfdd2913a7c012c25d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 11:24:20 -0400
+Subject: [PATCH 03612/11362] [outer-loop] Fix goal-energy test RSS-watchdog
+ false-positive (pre-import the torch chain at collection)
+
+plan_in_model -> _model_candidates lazily imports arc_graph_explore (pulls torch ~700MB) on first use; when
+that fired DURING test_plan_in_model_goal_energy, the per-test RSS watchdog (conftest) flagged it as a memory
+leak at teardown. Pre-importing carnot.agentic.arc_graph_explore at module level loads torch at collection,
+before the per-test RSS snapshot -- the test logic was always passing. All 4 goal-energy tests green.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ tests/python/test_arc_goal_energy.py | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tests/python/test_arc_goal_energy.py b/tests/python/test_arc_goal_energy.py
+index 584a3eef98..3f9041fed2 100644
+--- a/tests/python/test_arc_goal_energy.py
++++ b/tests/python/test_arc_goal_energy.py
+@@ -8,6 +8,11 @@ win/non-win states; an ablation control + a silent-failure guard are mandatory i
+ 
+ import numpy as np
+ 
++# Pre-import the heavy chain at COLLECTION time. plan_in_model -> _model_candidates lazily does
++# `from carnot.agentic.arc_graph_explore import _components_detailed`, which pulls in torch (~700 MB) on
++# first use. If that happens DURING a test, the per-test RSS watchdog (conftest) flags it as a memory leak.
++# Importing it here loads torch before the per-test RSS snapshot, so the watchdog sees no growth.
++import carnot.agentic.arc_graph_explore  # noqa: F401
+ from carnot.agentic.arc_agi3_goal_induction import induce_goal_energy
+ from carnot.agentic.arc_agi3_world_model import objects
+ from carnot.agentic.arc_executable_world_model import plan_in_model
+-- 
+2.55.0
+

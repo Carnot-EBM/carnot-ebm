@@ -1,0 +1,2413 @@
+From 07713818ef322d833bec0548b0e443d1b263fe3c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 08:53:09 -0400
+Subject: [PATCH 02311/11362] [conductor] PHASE E2 (hygiene; per
+ Missing-Verifier Gap Logging + registry hygiene) -- reconcile the verifier
+ registry + gaps to .400 truth, run the GAP-4 execution regression guard, and
+ LOG missing-verifier gaps. Record the .400 outcomes: the in-generation moat
+ replication (exp4325 in_generation_moat_replicates +
+ controls_differentiated), the adaptive scale-up (exp4326
+ adaptive_guidance_beats_control + domain_used), the E3 deep-tail solves
+ (exp4327/4328/4329 offline_reproduced + verifier_accuracy_per_round + any
+ missing-world-model-rule gaps), the shallow-tail sweep (exp4330
+ reproducible_total_levels + tn36_schema_finding), the learned-encoder
+ cross-game transfer (exp4331 learned_encoder_transfer_helps). Update
+ ops/verifier_registry.yaml + ops/verifier_gaps.md (e.g. close/sharpen the
+ 'game-invariant ARC value representation' gap per exp4331; log any
+ missing-world-model-rule gaps from E3; the ARC-grid-generation-scorer gap if
+ exp4326's adaptive arm stayed open). Run the GAP-4 execution regression guard
+ (no regression vs .399). Use the robust aggregate-available helper (read
+ available artifacts, report gaps -- do NOT hard-block all-False if one is
+ missing). Emit regression_guard_passed BARE bool.
+
+Automated research step by research conductor.
+Task ID: exp4333-verifier-registry-gaps-hygiene
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  100 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ops/exclusion_manifest.yaml                   |   18 +
+ ops/verifier_gaps.md                          |   70 ++
+ ops/verifier_registry.yaml                    |   93 ++
+ ...ent_4333_verifier_registry_gaps_hygiene.py |   10 +
+ .../verifier_registry_gaps_hygiene_4333.py    | 1072 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...t_4333_verifier_registry_gaps_hygiene.json |  431 +++++++
+ ...ent_4333_verifier_registry_gaps_hygiene.py |   20 +
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...ent_4333_verifier_registry_gaps_hygiene.py |  337 ++++++
+ 17 files changed, 2168 insertions(+), 17 deletions(-)
+ create mode 100644 python/carnot/experiment_4333_verifier_registry_gaps_hygiene.py
+ create mode 100644 python/carnot/reporting/verifier_registry_gaps_hygiene_4333.py
+ create mode 100644 results/experiment_4333_verifier_registry_gaps_hygiene.json
+ create mode 100644 results/experiment_4333_verifier_registry_gaps_hygiene.py
+ create mode 100644 tests/python/test_experiment_4333_verifier_registry_gaps_hygiene.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 373d7904d2..73a80df2bb 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -18347,6 +18347,106 @@ checksum over the reconciled registry, gaps, and manifest files. If the
+ registry, gaps, or manifest cannot parse, then it writes
+ `honest_verdict=blocked_ledgers_unparseable` and stops without reconciliation.
+ 
++### REQ-VERIFY-4333: Verifier Registry And Gaps Hygiene For .400 Truth
++
++The repository SHALL provide Exp 4333 at
++`python/carnot/experiment_4333_verifier_registry_gaps_hygiene.py` and
++`results/experiment_4333_verifier_registry_gaps_hygiene.py` to reconcile
++`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
++`ops/exclusion_manifest.yaml` to the `.400` verifier truth. Before mutating
++ledgers, the runner SHALL parse all three ledgers. If any required ledger cannot
++parse, the runner SHALL write a terminal artifact with
++`honest_verdict=blocked_ledgers_unparseable`, bare bool
++`regression_guard_passed=false`, empty `gaps_logged`, and SHALL stop without
++mutating the registry, gaps, or manifest.
++
++The runner SHALL use the reusable `aggregate_available_report_gaps` helper from
++`python/carnot/reporting/capstone_aggregate_available.py` for the `.400` outcome
++artifacts `results/experiment_4325_in_generation_moat_replicate_second_corpus.json`,
++`results/experiment_4326_adaptive_guided_generation_scaleup.json`,
++`results/experiment_4327_e3_executable_world_model_ar25.json`,
++`results/experiment_4328_e3_executable_world_model_ka59.json`,
++`results/experiment_4329_e3_executable_world_model_tr87_ft09.json`,
++`results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json`,
++and `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json`.
++Missing or flagged `.400` artifacts SHALL be recorded as per-axis gaps in the
++aggregate availability report and SHALL NOT hard-block reconciliation of other
++available axes. The runner SHALL cite
++`results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json`
++as the robust aggregator evidence and require `robust_aggregator_added=true` and
++`aggregator_survives_missing_artifact=true` when that artifact is present.
++
++When ledgers parse, the runner SHALL run the GAP-4 execution regression guard
++against the `.399` recorded standing capability from
++`results/experiment_4321_verifier_registry_gaps_hygiene.json`. The guard SHALL
++replay the canonical cached GAP-4 ARC-1 candidate set and require no regression
++in vote pass@2 `0.4516`, gated pass@2 `0.5806`, `headroom_recovered=4`, and
++`vote_wins_lost=0`. It SHALL expose bare bool `regression_guard_passed`.
++
++The runner SHALL record the `.400` outcomes that are available in the GAP-4 /
++oracle-distinct ARC registry slot: Exp 4325 `in_generation_moat_replicates=false`,
++`controls_differentiated=false`, `scorer_leak_recheck_passed=false`, and
++`honest_verdict=scorer_leaky_on_second_corpus`; Exp 4326
++`adaptive_guidance_beats_control=false`, `domain_used=reasoning_corpus_fallback`,
++`controls_differentiated=true`, `scorer_leak_recheck_passed=true`,
++`carnot_minus_best_control_delta=0.15`, and `adaptive_ci95=[-0.075,0.35]`;
++Exp 4327/4328/4329 E3 partials with `offline_reproduced=false`,
++`reproduced_levels=0`, and their residual missing-world-model-rule classes;
++Exp 4330 `reproducible_total_levels=13`, `games_advanced=[]`, and the tn36
++ACTION6 top-level `{x,y}` schema finding; and Exp 4331
++`learned_encoder_transfer_helps=false`, `cross_game_state_reduction=1.0084925690021231`,
++`cross_game_state_reduction_ci95=[1.0,1.0303068758652514]`, and
++`n_held_out_levels=13`. The `.400` state SHALL show the in-generation replication
++did not hold on the second corpus, adaptive generation stayed bounded/null, E3
++recorded missing world-model-rule gaps without reproduced levels, the shallow-tail
++sweep held the reproducible total at 13 while recording the tn36 schema, and the
++learned frame encoder sharpened rather than closed the game-invariant value gap.
++
++The gaps ledger SHALL log or update missing-verifier backlog entries using the
++schema in `ops/verifier_gaps.md`. At minimum the runner SHALL log a leak-free
++second-corpus partial-state scorer gap from Exp 4325 when the scorer is leaky,
++log `GAP-ARC-GRID-GENERATION-SCORER-4326` when Exp 4326's adaptive arm remains
++open, log per-game missing-world-model-rule gaps from E3 partials including
++`GAP-E3-WORLD-MODEL-RULE-AR25-4327`, `GAP-E3-WORLD-MODEL-RULE-KA59-4328`,
++`GAP-E3-WORLD-MODEL-RULE-TR87-4329`, and
++`GAP-E3-WORLD-MODEL-RULE-FT09-4329`, and update the game-invariant ARC value
++representation gap from Exp 4331. The exclusion
++manifest SHALL reflect the Exp 4314 cross-domain selection retirement so that
++future planners do not re-open the retired domain-bound selection axis without
++operator authorization.
++
++The terminal artifact SHALL write
++`results/experiment_4333_verifier_registry_gaps_hygiene.json` with
++`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_logged`, bare
++bool `registry_reconciled`, bare bool `manifest_reconciled`, `v400_outcomes`,
++`availability_report`, `random_seed`, `reproducibility_checksum`,
++`model_specs`, `field_principles`, `spec_refs`, `duration_s`, and
++`inference_substrate`. Its field principles SHALL include:
++`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled + regression guard result (using the robust aggregator, NOT a hard-block).`;
++`regression_guard_passed` = `BARE bool: the GAP-4 execution numbers did not regress vs .399 -- the standing-capability guard.`;
++`gaps_logged` = `List of new/updated missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.`;
++`reproducibility_checksum` = `Hash of the reconciled registry + gaps + manifest; catches silent drift.`
++
++### SCENARIO-VERIFY-4333: .400 Reconciliation Uses Robust Aggregator And Logs Gaps
++
++Given the registry, gaps, and exclusion manifest parse, the `.400`
++in-generation replication, adaptive guided generation, E3 deep-tail world-model,
++shallow-tail sweep, and learned-encoder cross-game transfer artifacts may be
++partially available, and the Exp 4308 robust aggregate-available helper is
++present, when Exp 4333 runs, then it uses the robust helper to record missing or
++flagged `.400` artifacts as per-axis availability gaps rather than blocking the
++entire run, runs the GAP-4 regression guard against the `.399` recorded replay,
++writes `regression_guard_passed=true`, reconciles the registry to the available
++`.400` truth, records the second-corpus leak, adaptive bounded null, E3 missing
++world-model-rule partials, shallow-tail no-advance plus tn36 schema, and learned
++encoder transfer null, logs or updates `GAP-ARC-GRID-GENERATION-SCORER-4326`,
++the E3 per-game missing-world-model-rule gaps, and `GAP-4331` through
++`gaps_logged`, reflects the cross-domain selection retirement in the exclusion
++manifest, and declares a reproducibility checksum over the reconciled registry,
++gaps, and manifest files. If the registry, gaps, or manifest cannot parse, then
++it writes `honest_verdict=blocked_ledgers_unparseable` and stops without
++reconciliation.
++
+ ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
+ 
+ The repository SHALL provide Exp 4033 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4bde78d5fe..2a4166e045 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 178,
+   "code_violations": 0,
+-  "experiments_checked": 3350,
++  "experiments_checked": 3351,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/exclusion_manifest.yaml b/ops/exclusion_manifest.yaml
+index 44e753f972..bab3c8c641 100644
+--- a/ops/exclusion_manifest.yaml
++++ b/ops/exclusion_manifest.yaml
+@@ -554,3 +554,21 @@ retired_extras:
+   - verifier-as-reward in-loop training
+   - in-loop verifier-as-reward
+   - in_loop verifier reward training
++- id: cross_domain_selection_retired_exp4314_v399
++  experiment_scope: cross-domain verifier selection axis after repeated domain-bound
++    IR3DE/CASCAL/ContextPRM selector verdicts
++  reason: 'retire_if_same_verdict: Exp 4314 repeated Exp 4305''s domain-bound cross-domain
++    selection verdict; future cross-domain selector reruns need a new root cause,
++    a different discriminator, and operator authorization.'
++  experiment_ids:
++  - exp4305
++  - exp4314
++  retired_milestone: 2026.06.400
++  retired_by_artifact: results/experiment_4314_cross_domain_selector_ir3de_cascal.json
++  recorded_by_artifact: results/experiment_4333_verifier_registry_gaps_hygiene.json
++  operator_reopen_required: true
++  retire_if_same_verdict: true
++  blocked_patterns:
++  - cross-domain verifier selection
++  - cross_domain_selector_ir3de_cascal
++  - family-invariant cross-domain selection rerun
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index c670532a7a..3921c3ebe9 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -1175,3 +1175,73 @@ registry version that closed them when a new verifier captures a previously-open
+ - missing discriminator: game-invariant ARC value representation that recognizes progress across navigation, click-placement, rotation, and shallow-tail mechanics.
+ - candidate design: larger encoder with more reproduced games, adapter-conditioned value head, or experience-gated source-relevance features; preserve a CPU/hardware path.
+ - priority: medium
++
++<!-- exp4333-gap-diffusiongemma-second-corpus-leak-free-scorer-4325:start -->
++### GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325: Exp 4333 .400 verifier gap update
++- status: open
++- evidence: results/experiment_4325_in_generation_moat_replicate_second_corpus.json; in_generation_moat_replicates=False; scorer_leak_recheck_passed=False; benchmark_n=0; answer_masked_auroc=0.549719.
++- failure mode: the second-corpus in-generation replication did not run decision-grade rows because the partial-state scorer failed the independent leak recheck
++- missing discriminator: corpus-general leak-free partial-state scorer that remains predictive after answer-bearing cells are masked
++- candidate design: retrain and calibrate the scorer on multiple oracle-distinct corpora with fresh masked held-out AUROC gates before accepting another guided-generation moat
++- priority: high
++<!-- exp4333-gap-diffusiongemma-second-corpus-leak-free-scorer-4325:end -->
++
++<!-- exp4333-gap-arc-grid-generation-scorer-4326:start -->
++### GAP-ARC-GRID-GENERATION-SCORER-4326: Exp 4333 .400 verifier gap update
++- status: open
++- evidence: results/experiment_4326_adaptive_guided_generation_scaleup.json; adaptive_guidance_beats_control=False; domain_used=reasoning_corpus_fallback; adaptive_ci95=[-0.075, 0.35]; carnot_minus_best_control_delta=0.15.
++- failure mode: adaptive DiffusionGemma guidance stayed bounded to a reasoning-corpus null and did not establish an ARC-grid generation scorer
++- missing discriminator: oracle-distinct ARC-grid partial-state generation scorer that can rank candidate grid states during denoising rather than post-hoc reasoning choices
++- candidate design: build a grid-native canvas scorer with masked-cell leak checks, no-adaptation controls, and ARC environment reproduction gates before rerunning adaptive guidance
++- priority: high
++<!-- exp4333-gap-arc-grid-generation-scorer-4326:end -->
++
++<!-- exp4333-gap-e3-world-model-rule-ar25-4327:start -->
++### GAP-E3-WORLD-MODEL-RULE-AR25-4327: Exp 4333 .400 verifier gap update
++- status: open
++- evidence: results/experiment_4327_e3_executable_world_model_ar25.json; game=ar25; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.8875; residual_mismatch_class=missing_world_model_rule_gap_hidden_undo_stack_action7.
++- failure mode: E3 induced world model for ar25 remained partial and could not execute a reproduced level through the real offline environment
++- missing discriminator: ar25 executable world-model rule coverage for missing_world_model_rule_gap_hidden_undo_stack_action7
++- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
++- priority: high
++<!-- exp4333-gap-e3-world-model-rule-ar25-4327:end -->
++
++<!-- exp4333-gap-e3-world-model-rule-ka59-4328:start -->
++### GAP-E3-WORLD-MODEL-RULE-KA59-4328: Exp 4333 .400 verifier gap update
++- status: open
++- evidence: results/experiment_4328_e3_executable_world_model_ka59.json; game=ka59; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.5625; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4_6.
++- failure mode: E3 induced world model for ka59 remained partial and could not execute a reproduced level through the real offline environment
++- missing discriminator: ka59 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4_6
++- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
++- priority: high
++<!-- exp4333-gap-e3-world-model-rule-ka59-4328:end -->
++
++<!-- exp4333-gap-e3-world-model-rule-tr87-4329:start -->
++### GAP-E3-WORLD-MODEL-RULE-TR87-4329: Exp 4333 .400 verifier gap update
++- status: open
++- evidence: results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=tr87; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.0; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4.
++- failure mode: E3 induced world model for tr87 remained partial and could not execute a reproduced level through the real offline environment
++- missing discriminator: tr87 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4
++- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
++- priority: high
++<!-- exp4333-gap-e3-world-model-rule-tr87-4329:end -->
++
++<!-- exp4333-gap-e3-world-model-rule-ft09-4329:start -->
++### GAP-E3-WORLD-MODEL-RULE-FT09-4329: Exp 4333 .400 verifier gap update
++- status: open
++- evidence: results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=ft09; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.1; residual_mismatch_class=missing_world_model_rule_gap_actions_6.
++- failure mode: E3 induced world model for ft09 remained partial and could not execute a reproduced level through the real offline environment
++- missing discriminator: ft09 executable world-model rule coverage for missing_world_model_rule_gap_actions_6
++- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
++- priority: high
++<!-- exp4333-gap-e3-world-model-rule-ft09-4329:end -->
++
++<!-- exp4333-gap-4331:start -->
++### GAP-4331: Exp 4333 .400 verifier gap update
++- status: open_small_encoder_insufficient
++- evidence: results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json; upstream_missing_verifier_gap=true.
++- failure mode: small learned frame encoder over the current solved set did not produce a decision-grade held-out OfflineSolver state reduction
++- missing discriminator: game-invariant ARC value representation
++- candidate design: larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path
++- priority: medium
++<!-- exp4333-gap-4331:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index 0939eeae94..2ecbee9566 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -585,6 +585,77 @@ verifiers:
+     - GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305
+     - GAP-4318
+     - GAP-CODE-EXEC-DEMOFIT
++    eval_exp_4333: results/experiment_4333_verifier_registry_gaps_hygiene.json
++    exp4333_regression_guard_passed: true
++    exp4333_arc1_rule_exec_vote_pass2: 0.4516
++    exp4333_arc1_rule_exec_gated_pass2: 0.5806
++    exp4333_arc1_headroom_recovered: 4
++    exp4333_arc1_vote_wins_lost: 0
++    exp4333_v400_state: second_corpus_scorer_leaky__adaptive_guidance_null__e3_world_models_partial__arc_13_shallow_no_advance__learned_encoder_transfer_null
++    exp4333_robust_aggregator_used: true
++    exp4333_available_artifact_keys:
++    - 4325_in_generation_replication
++    - 4326_adaptive_scaleup
++    - 4327_e3_ar25
++    - 4328_e3_ka59
++    - 4329_e3_tr87_ft09
++    - 4330_shallow_tail_sweep
++    - 4331_learned_encoder_transfer
++    exp4333_missing_upstream_artifacts: []
++    exp4333_flagged_artifacts_excluded: []
++    exp4333_in_generation_artifact: results/experiment_4325_in_generation_moat_replicate_second_corpus.json
++    exp4333_in_generation_moat_replicates: false
++    exp4333_in_generation_controls_differentiated: false
++    exp4333_scorer_leak_recheck_passed: false
++    exp4333_in_generation_benchmark_n: 0
++    exp4333_in_generation_answer_masked_auroc: 0.549719
++    exp4333_adaptive_artifact: results/experiment_4326_adaptive_guided_generation_scaleup.json
++    exp4333_adaptive_guidance_beats_control: false
++    exp4333_adaptive_domain_used: reasoning_corpus_fallback
++    exp4333_adaptive_controls_differentiated: true
++    exp4333_adaptive_scorer_leak_recheck_passed: true
++    exp4333_adaptive_carnot_minus_best_control_delta: 0.15
++    exp4333_adaptive_ci95:
++    - -0.075
++    - 0.35
++    exp4333_e3_reproduced_levels_total: 0
++    exp4333_e3_offline_reproduced_any: false
++    exp4333_shallow_artifact: results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json
++    exp4333_shallow_reproducible_total_levels: 13
++    exp4333_shallow_games_advanced: []
++    exp4333_tn36_schema: 'ACTION6 data must be top-level {"x": int, "y": int}'
++    exp4333_tn36_normalizer: normalise_tn36_click_payload
++    exp4333_learned_encoder_artifact: results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json
++    exp4333_learned_encoder_transfer_helps: false
++    exp4333_cross_game_state_reduction: 1.0084925690021231
++    exp4333_cross_game_state_reduction_ci95:
++    - 1.0
++    - 1.0303068758652514
++    exp4333_cross_game_n_held_out_levels: 13
++    exp4333_gaps_logged:
++    - GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325
++    - GAP-ARC-GRID-GENERATION-SCORER-4326
++    - GAP-E3-WORLD-MODEL-RULE-AR25-4327
++    - GAP-E3-WORLD-MODEL-RULE-KA59-4328
++    - GAP-E3-WORLD-MODEL-RULE-TR87-4329
++    - GAP-E3-WORLD-MODEL-RULE-FT09-4329
++    - GAP-4331
++    exp4333_e3_ar25_offline_reproduced: false
++    exp4333_e3_ar25_reproduced_levels: 0
++    exp4333_e3_ar25_residual_mismatch_class: missing_world_model_rule_gap_hidden_undo_stack_action7
++    exp4333_e3_ar25_verifier_best_accuracy: 0.8875
++    exp4333_e3_ka59_offline_reproduced: false
++    exp4333_e3_ka59_reproduced_levels: 0
++    exp4333_e3_ka59_residual_mismatch_class: missing_world_model_rule_gap_actions_1_2_4_6
++    exp4333_e3_ka59_verifier_best_accuracy: 0.5625
++    exp4333_e3_tr87_offline_reproduced: false
++    exp4333_e3_tr87_reproduced_levels: 0
++    exp4333_e3_tr87_residual_mismatch_class: missing_world_model_rule_gap_actions_1_2_4
++    exp4333_e3_tr87_verifier_best_accuracy: 0.0
++    exp4333_e3_ft09_offline_reproduced: false
++    exp4333_e3_ft09_reproduced_levels: 0
++    exp4333_e3_ft09_residual_mismatch_class: missing_world_model_rule_gap_actions_6
++    exp4333_e3_ft09_verifier_best_accuracy: 0.1
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+@@ -4487,3 +4558,25 @@ verifiers:
+     - GAP-4318
+     - GAP-CODE-EXEC-DEMOFIT
+     eval_exp_4321: results/experiment_4321_verifier_registry_gaps_hygiene.json
++  - role_id: oracle_distinct_v400_registry_gaps_hygiene_4333
++    experiment: results/experiment_4333_verifier_registry_gaps_hygiene.json
++    role: registry_gap_manifest_hygiene_v400
++    status: v400_outcomes_recorded_with_robust_availability
++    v400_state: second_corpus_scorer_leaky__adaptive_guidance_null__e3_world_models_partial__arc_13_shallow_no_advance__learned_encoder_transfer_null
++    robust_aggregator_used: true
++    in_generation_moat_replicates: false
++    adaptive_guidance_beats_control: false
++    e3_reproduced_levels_total: 0
++    shallow_reproducible_total_levels: 13
++    tn36_schema: 'ACTION6 data must be top-level {"x": int, "y": int}'
++    learned_encoder_transfer_helps: false
++    cross_game_state_reduction: 1.0084925690021231
++    gap_ids_logged:
++    - GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325
++    - GAP-ARC-GRID-GENERATION-SCORER-4326
++    - GAP-E3-WORLD-MODEL-RULE-AR25-4327
++    - GAP-E3-WORLD-MODEL-RULE-KA59-4328
++    - GAP-E3-WORLD-MODEL-RULE-TR87-4329
++    - GAP-E3-WORLD-MODEL-RULE-FT09-4329
++    - GAP-4331
++    eval_exp_4333: results/experiment_4333_verifier_registry_gaps_hygiene.json
+diff --git a/python/carnot/experiment_4333_verifier_registry_gaps_hygiene.py b/python/carnot/experiment_4333_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..e82bf126f3
+--- /dev/null
++++ b/python/carnot/experiment_4333_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,10 @@
++"""Run Exp 4333 verifier registry/gaps hygiene.
++
++Spec refs: REQ-VERIFY-4333, SCENARIO-VERIFY-4333.
++"""
++
++from carnot.reporting.verifier_registry_gaps_hygiene_4333 import main
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/python/carnot/reporting/verifier_registry_gaps_hygiene_4333.py b/python/carnot/reporting/verifier_registry_gaps_hygiene_4333.py
+new file mode 100644
+index 0000000000..ee6a7595e0
+--- /dev/null
++++ b/python/carnot/reporting/verifier_registry_gaps_hygiene_4333.py
+@@ -0,0 +1,1072 @@
++"""Exp 4333 registry/gaps/manifest hygiene for .400 verifier outcomes.
++
++Spec refs: REQ-VERIFY-4333, SCENARIO-VERIFY-4333.
++
++This runner is the .400 continuation of Exp 4321. It treats missing .400
++artifacts as axis-local availability gaps through the robust aggregate helper,
++then reconciles the verifier truth ledgers to the decision-grade evidence that
++is present.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++from pathlib import Path
++import time
++from typing import Any, Mapping
++
++import yaml
++
++from carnot.reporting import capstone_aggregate_available as aggregate
++from carnot.reporting import verifier_registry_and_gaps_hygiene_4051 as base
++from carnot.reporting import verifier_registry_gaps_hygiene_4252 as exp4252
++from carnot.reporting import verifier_registry_gaps_hygiene_4310 as exp4310
++from carnot.reporting import verifier_registry_gaps_hygiene_4321 as exp4321
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++RANDOM_SEED = 4333
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++
++EXP4333_ARTIFACT_PATH = "results/experiment_4333_verifier_registry_gaps_hygiene.json"
++REGISTRY_PATH = base.REGISTRY_PATH
++GAPS_PATH = base.GAPS_PATH
++EXCLUSION_MANIFEST_PATH = exp4321.EXCLUSION_MANIFEST_PATH
++GAP4_VERIFIER_ID = base.GAP4_VERIFIER_ID
++ARC1_POOL_PATH = exp4321.ARC1_POOL_PATH
++ARC1_PROGRAMS_PATH = exp4321.ARC1_PROGRAMS_PATH
++
++EXP4321_PATH = exp4321.EXP4321_ARTIFACT_PATH
++EXP4308_PATH = exp4321.EXP4308_PATH
++EXP4314_PATH = exp4321.EXP4314_PATH
++EXP4325_PATH = "results/experiment_4325_in_generation_moat_replicate_second_corpus.json"
++EXP4326_PATH = "results/experiment_4326_adaptive_guided_generation_scaleup.json"
++EXP4327_PATH = "results/experiment_4327_e3_executable_world_model_ar25.json"
++EXP4328_PATH = "results/experiment_4328_e3_executable_world_model_ka59.json"
++EXP4329_PATH = "results/experiment_4329_e3_executable_world_model_tr87_ft09.json"
++EXP4330_PATH = "results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json"
++EXP4331_PATH = "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json"
++
++OUTCOME_ARTIFACT_PATHS = [
++    EXP4325_PATH,
++    EXP4326_PATH,
++    EXP4327_PATH,
++    EXP4328_PATH,
++    EXP4329_PATH,
++    EXP4330_PATH,
++    EXP4331_PATH,
++]
++REQUIRED_COPY_PATHS = [
++    EXP4321_PATH,
++    EXP4308_PATH,
++    *OUTCOME_ARTIFACT_PATHS,
++    ARC1_POOL_PATH,
++    ARC1_PROGRAMS_PATH,
++]
++
++GAP_DIFFUSIONGEMMA_SECOND_CORPUS_SCORER = (
++    "GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325"
++)
++GAP_ARC_GRID_GENERATION_SCORER = "GAP-ARC-GRID-GENERATION-SCORER-4326"
++GAP_E3_WORLD_MODEL_RULE_AR25 = "GAP-E3-WORLD-MODEL-RULE-AR25-4327"
++GAP_E3_WORLD_MODEL_RULE_KA59 = "GAP-E3-WORLD-MODEL-RULE-KA59-4328"
++GAP_E3_WORLD_MODEL_RULE_TR87 = "GAP-E3-WORLD-MODEL-RULE-TR87-4329"
++GAP_E3_WORLD_MODEL_RULE_FT09 = "GAP-E3-WORLD-MODEL-RULE-FT09-4329"
++GAP_GAME_INVARIANT_ARC_VALUE_4331 = "GAP-4331"
++CROSS_DOMAIN_RETIREMENT_ID = "cross_domain_selection_retired_exp4314_v399"
++
++V400_ROLE_ID = "oracle_distinct_v400_registry_gaps_hygiene_4333"
++V400_STATE = (
++    "second_corpus_scorer_leaky__adaptive_guidance_null__"
++    "e3_world_models_partial__arc_13_shallow_no_advance__"
++    "learned_encoder_transfer_null"
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "regression_guard_passed",
++    "gaps_logged",
++    "registry_reconciled",
++    "manifest_reconciled",
++    "v400_outcomes",
++    "availability_report",
++    "random_seed",
++    "reproducibility_checksum",
++    "model_specs",
++    "field_principles",
++    "spec_refs",
++    "duration_s",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. Records the registry/gaps reconciled + regression guard "
++        "result (using the robust aggregator, NOT a hard-block)."
++    ),
++    "regression_guard_passed": (
++        "BARE bool: the GAP-4 execution numbers did not regress vs .399 -- "
++        "the standing-capability guard."
++    ),
++    "gaps_logged": (
++        "List of new/updated missing-verifier gap entries (failure mode + missing "
++        "discriminator + candidate design + priority) -- the verifier build backlog."
++    ),
++    "reproducibility_checksum": (
++        "Hash of the reconciled registry + gaps + manifest; catches silent drift."
++    ),
++}
++
++GAP_ENTRY_REQUIRED_FIELDS = (
++    "gap_id",
++    "failure_mode",
++    "missing_discriminator",
++    "candidate_design",
++    "priority",
++)
++
++ARTIFACT_KEYS = {
++    "4325_in_generation_replication": EXP4325_PATH,
++    "4326_adaptive_scaleup": EXP4326_PATH,
++    "4327_e3_ar25": EXP4327_PATH,
++    "4328_e3_ka59": EXP4328_PATH,
++    "4329_e3_tr87_ft09": EXP4329_PATH,
++    "4330_shallow_tail_sweep": EXP4330_PATH,
++    "4331_learned_encoder_transfer": EXP4331_PATH,
++}
++ARTIFACT_EXPERIMENT_IDS = {
++    "4325_in_generation_replication": 4325,
++    "4326_adaptive_scaleup": 4326,
++    "4327_e3_ar25": 4327,
++    "4328_e3_ka59": 4328,
++    "4329_e3_tr87_ft09": 4329,
++    "4330_shallow_tail_sweep": 4330,
++    "4331_learned_encoder_transfer": 4331,
++}
++
++check_preconditions = exp4321.check_preconditions
++ledger_checksum = exp4321.ledger_checksum
++robust_aggregator_ok = exp4321.robust_aggregator_ok
++_load_optional_json = exp4321._load_optional_json
++_load_manifest = exp4321._load_manifest
++
++
++def run_gap4_regression_guard(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4333: compare cached replay with .399 recorded GAP-4 numbers."""
++    recorded: dict[str, Any] = {}
++    prior_path = EXP4321_PATH
++    try:
++        prior_artifact = base._load_json(repo_root / EXP4321_PATH)
++        recorded = exp4310._recorded_arc1_rule_exec(prior_artifact)
++    except Exception:  # pragma: no cover - defensive fallback for damaged copies.
++        fallback = exp4321.run_gap4_regression_guard(repo_root)
++        recorded = dict(fallback.get("replayed_arc1_rule_exec", {}))
++        prior_path = fallback.get("prior_artifact_path", EXP4321_PATH)
++
++    replay = exp4252.replay_gap4_arc1(repo_root)
++    replayed = dict(replay.get("arc1_rule_exec", {}))
++    passed = (
++        replayed.get("n") == recorded.get("n")
++        and replayed.get("vote_pass2") == recorded.get("vote_pass2")
++        and replayed.get("gated_pass2", 0.0) >= recorded.get("gated_pass2", 0.0)
++        and replayed.get("headroom_recovered", 0) >= recorded.get("headroom_recovered", 0)
++        and replayed.get("vote_wins_lost", 999999) <= recorded.get("vote_wins_lost", 999999)
++    )
++    return {
++        "regression_guard_passed": bool(passed),
++        "prior_artifact_path": prior_path,
++        "recorded_arc1_rule_exec": recorded,
++        "replayed_arc1_rule_exec": replayed,
++        "offline_replay": replay,
++    }
++
++
++def _axis_specs() -> list[aggregate.AxisSpec]:
++    return [
++        aggregate.AxisSpec(
++            name="in_generation_replication",
++            required_keys=("4325_in_generation_replication",),
++            verdict_fn=lambda present: (
++                present["4325_in_generation_replication"].get(
++                    "in_generation_moat_replicates"
++                )
++                is True
++                and present["4325_in_generation_replication"].get(
++                    "scorer_leak_recheck_passed"
++                )
++                is True
++                and present["4325_in_generation_replication"].get(
++                    "controls_differentiated"
++                )
++                is True
++            ),
++        ),
++        aggregate.AxisSpec(
++            name="adaptive_scaleup",
++            required_keys=("4326_adaptive_scaleup",),
++            verdict_fn=lambda present: (
++                present["4326_adaptive_scaleup"].get("adaptive_guidance_beats_control")
++                is True
++                and present["4326_adaptive_scaleup"].get("scorer_leak_recheck_passed")
++                is True
++                and present["4326_adaptive_scaleup"].get("controls_differentiated")
++                is True
++            ),
++        ),
++        aggregate.AxisSpec(
++            name="e3_deep_tail",
++            required_keys=("4327_e3_ar25", "4328_e3_ka59", "4329_e3_tr87_ft09"),
++            verdict_fn=lambda present: (
++                present["4327_e3_ar25"].get("offline_reproduced") is True
++                or present["4328_e3_ka59"].get("offline_reproduced") is True
++                or int(present["4329_e3_tr87_ft09"].get("reproduced_levels_total", 0))
++                > 0
++            ),
++        ),
++        aggregate.AxisSpec(
++            name="shallow_tail_sweep",
++            required_keys=("4330_shallow_tail_sweep",),
++            verdict_fn=lambda present: (
++                present["4330_shallow_tail_sweep"].get("offline_reproduced") is True
++                and int(present["4330_shallow_tail_sweep"].get("reproducible_total_levels", 0))
++                > int(present["4330_shallow_tail_sweep"].get("prior_reproducible_total_levels", 13))
++            ),
++        ),
++        aggregate.AxisSpec(
++            name="learned_encoder_transfer",
++            required_keys=("4331_learned_encoder_transfer",),
++            verdict_fn=lambda present: present["4331_learned_encoder_transfer"].get(
++                "learned_encoder_transfer_helps"
++            )
++            is True,
++        ),
++    ]
++
++
++def load_v400_outcomes(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4333: read available .400 outcomes through robust availability."""
++    raw_artifacts: dict[str, Any] = {}
++    artifact_errors: dict[str, str] = {}
++    for key, rel_path in ARTIFACT_KEYS.items():
++        payload, error = _load_optional_json(repo_root, rel_path)
++        raw_artifacts[key] = payload
++        if error:
++            artifact_errors[key] = error
++
++    availability_report = aggregate.aggregate_available_report_gaps(
++        raw_artifacts,
++        _axis_specs(),
++        artifact_experiment_ids=ARTIFACT_EXPERIMENT_IDS,
++    )
++    robust_payload, robust_error = _load_optional_json(repo_root, EXP4308_PATH)
++
++    return {
++        "v400_outcomes": {
++            "in_generation_replication": _read_in_generation_replication(
++                raw_artifacts.get("4325_in_generation_replication")
++            ),
++            "adaptive_scaleup": _read_adaptive_scaleup(
++                raw_artifacts.get("4326_adaptive_scaleup")
++            ),
++            "e3_deep_tail": _read_e3_deep_tail(raw_artifacts),
++            "shallow_tail_sweep": _read_shallow_tail_sweep(
++                raw_artifacts.get("4330_shallow_tail_sweep")
++            ),
++            "learned_encoder_transfer": _read_learned_encoder_transfer(
++                raw_artifacts.get("4331_learned_encoder_transfer")
++            ),
++            "robust_aggregator": exp4310._read_robust_aggregator_evidence(
++                robust_payload,
++                robust_error,
++            ),
++        },
++        "availability_report": availability_report,
++        "artifact_errors": artifact_errors,
++    }
++
++
++def _read_in_generation_replication(payload: Any) -> dict[str, Any]:
++    if not isinstance(payload, Mapping):
++        return {"artifact_path": EXP4325_PATH, "available": False}
++    return {
++        "artifact_path": EXP4325_PATH,
++        "available": True,
++        "honest_verdict": str(payload.get("honest_verdict", "")),
++        "in_generation_moat_replicates": payload.get("in_generation_moat_replicates")
++        is True,
++        "controls_differentiated": payload.get("controls_differentiated") is True,
++        "scorer_leak_recheck_passed": payload.get("scorer_leak_recheck_passed") is True,
++        "benchmark_n": payload.get("benchmark_n"),
++        "benchmark_n_per_seed": payload.get("benchmark_n_per_seed"),
++        "carnot_minus_best_control_delta": payload.get("carnot_minus_best_control_delta"),
++        "carnot_minus_self_reward_smc_delta": payload.get(
++            "carnot_minus_self_reward_smc_delta"
++        ),
++        "carnot_minus_unguided_delta": payload.get("carnot_minus_unguided_delta"),
++        "replication_ci95": payload.get("replication_ci95"),
++        "independent_leak_recheck": dict(payload.get("independent_leak_recheck", {})),
++        "verifier_is_oracle": payload.get("verifier_is_oracle") is True,
++    }
++
++
++def _read_adaptive_scaleup(payload: Any) -> dict[str, Any]:
++    if not isinstance(payload, Mapping):
++        return {"artifact_path": EXP4326_PATH, "available": False}
++    return {
++        "artifact_path": EXP4326_PATH,
++        "available": True,
++        "honest_verdict": str(payload.get("honest_verdict", "")),
++        "adaptive_guidance_beats_control": payload.get("adaptive_guidance_beats_control")
++        is True,
++        "domain_used": str(payload.get("domain_used", "")),
++        "controls_differentiated": payload.get("controls_differentiated") is True,
++        "scorer_leak_recheck_passed": payload.get("scorer_leak_recheck_passed") is True,
++        "benchmark_n": payload.get("benchmark_n"),
++        "best_control": str(payload.get("best_control", "")),
++        "carnot_minus_best_control_delta": payload.get("carnot_minus_best_control_delta"),
++        "adaptive_ci95": payload.get("adaptive_ci95"),
++        "condition_accuracy": dict(payload.get("condition_accuracy", {})),
++        "verifier_is_oracle": payload.get("verifier_is_oracle") is True,
++    }
++
++
++def _read_e3_deep_tail(raw_artifacts: Mapping[str, Any]) -> dict[str, Any]:
++    games = {
++        "ar25": _read_e3_single(raw_artifacts.get("4327_e3_ar25"), EXP4327_PATH, "ar25"),
++        "ka59": _read_e3_single(raw_artifacts.get("4328_e3_ka59"), EXP4328_PATH, "ka59"),
++    }
++    games.update(_read_e3_multi(raw_artifacts.get("4329_e3_tr87_ft09")))
++    total = sum(
++        int(game.get("reproduced_levels") or 0)
++        for game in games.values()
++        if isinstance(game, Mapping)
++    )
++    return {
++        "artifact_paths": [EXP4327_PATH, EXP4328_PATH, EXP4329_PATH],
++        "available": any(game.get("available") is True for game in games.values()),
++        "offline_reproduced_any": any(
++            game.get("offline_reproduced") is True for game in games.values()
++        ),
++        "reproduced_levels_total": total,
++        "games": games,
++    }
++
++
++def _read_e3_single(payload: Any, artifact_path: str, game: str) -> dict[str, Any]:
++    if not isinstance(payload, Mapping):
++        return {"artifact_path": artifact_path, "game": game, "available": False}
++    return {
++        "artifact_path": artifact_path,
++        "game": str(payload.get("game", game)),
++        "available": True,
++        "honest_verdict": str(payload.get("honest_verdict", "")),
++        "offline_reproduced": payload.get("offline_reproduced") is True,
++        "plan_executed": payload.get("plan_executed") is True,
++        "reproduced_levels": payload.get("reproduced_levels"),
++        "residual_mismatch_class": str(payload.get("residual_mismatch_class", "")),
++        "verifier_best_accuracy": payload.get("verifier_best_accuracy"),
++        "verifier_accuracy_per_round": list(payload.get("verifier_accuracy_per_round", [])),
++        "world_model_path": str(payload.get("world_model_path", "")),
++        "world_model_sha256": str(payload.get("world_model_sha256", "")),
++        "verifier_is_oracle": payload.get("verifier_is_oracle") is True,
++    }
++
++
++def _read_e3_multi(payload: Any) -> dict[str, dict[str, Any]]:
++    if not isinstance(payload, Mapping):
++        return {
++            "tr87": {"artifact_path": EXP4329_PATH, "game": "tr87", "available": False},
++            "ft09": {"artifact_path": EXP4329_PATH, "game": "ft09", "available": False},
++        }
++    scorecard = payload.get("per_game_scorecard")
++    if not isinstance(scorecard, Mapping):
++        scorecard = {}
++    games: dict[str, dict[str, Any]] = {}
++    for game in ("tr87", "ft09"):
++        row = scorecard.get(game)
++        if not isinstance(row, Mapping):
++            games[game] = {"artifact_path": EXP4329_PATH, "game": game, "available": False}
++            continue
++        games[game] = {
++            "artifact_path": EXP4329_PATH,
++            "game": game,
++            "available": True,
++            "honest_verdict": str(row.get("status", payload.get("honest_verdict", ""))),
++            "offline_reproduced": row.get("offline_reproduced") is True,
++            "plan_executed": row.get("plan_executed") is True,
++            "reproduced_levels": row.get("reproduced_levels"),
++            "residual_mismatch_class": str(row.get("residual_mismatch_class", "")),
++            "verifier_best_accuracy": row.get("best_verifier_accuracy"),
++            "verifier_accuracy_per_round": list(row.get("verifier_accuracy_per_round", [])),
++            "world_model_path": str(row.get("world_model_path", "")),
++            "world_model_sha256": str(row.get("world_model_sha256", "")),
++            "verifier_is_oracle": payload.get("verifier_is_oracle") is True,
++        }
++    return games
++
++
++def _read_shallow_tail_sweep(payload: Any) -> dict[str, Any]:
++    if not isinstance(payload, Mapping):
++        return {"artifact_path": EXP4330_PATH, "available": False}
++    return {
++        "artifact_path": EXP4330_PATH,
++        "available": True,
++        "honest_verdict": str(payload.get("honest_verdict", "")),
++        "offline_reproduced": payload.get("offline_reproduced") is True,
++        "reproducible_total_levels": payload.get("reproducible_total_levels"),
++        "prior_reproducible_total_levels": payload.get("prior_reproducible_total_levels"),
++        "games_advanced": list(payload.get("games_advanced", [])),
++        "swept_games": list(payload.get("swept_games", [])),
++        "excluded_games": list(payload.get("excluded_games", [])),
++        "tn36_schema_finding": dict(payload.get("tn36_schema_finding", {})),
++        "verifier_is_oracle": payload.get("verifier_is_oracle") is True,
++    }
++
++
++def _read_learned_encoder_transfer(payload: Any) -> dict[str, Any]:
++    if not isinstance(payload, Mapping):
++        return {
++            "artifact_path": EXP4331_PATH,
++            "available": False,
++            "missing_verifier_gaps": [],
++        }
++    return {
++        "artifact_path": EXP4331_PATH,
++        "available": True,
++        "honest_verdict": str(payload.get("honest_verdict", "")),
++        "acceptance_gate_passed": payload.get("acceptance_gate_passed") is True,
++        "learned_encoder_transfer_helps": payload.get("learned_encoder_transfer_helps")
++        is True,
++        "baseline_solves_held_out": payload.get("baseline_solves_held_out") is True,
++        "cross_game_state_reduction": payload.get("cross_game_state_reduction"),
++        "cross_game_state_reduction_ci95": payload.get("cross_game_state_reduction_ci95"),
++        "n_held_out_levels": payload.get("n_held_out_levels"),
++        "missing_verifier_gaps": list(payload.get("missing_verifier_gaps", [])),
++        "verifier_is_oracle": payload.get("verifier_is_oracle") is True,
++    }
++
++
++def build_gap_entries(outcome_bundle: dict[str, Any]) -> list[dict[str, Any]]:
++    """REQ-VERIFY-4333: log Missing-Verifier gaps exposed by .400 axes."""
++    outcomes = outcome_bundle["v400_outcomes"]
++    gaps: list[dict[str, Any]] = []
++
++    in_generation = outcomes["in_generation_replication"]
++    if (
++        in_generation.get("available") is True
++        and (
++            in_generation.get("in_generation_moat_replicates") is not True
++            or in_generation.get("scorer_leak_recheck_passed") is not True
++        )
++    ):
++        gaps.append(_diffusiongemma_second_corpus_gap(in_generation))
++
++    adaptive = outcomes["adaptive_scaleup"]
++    if (
++        adaptive.get("available") is True
++        and adaptive.get("adaptive_guidance_beats_control") is not True
++    ):
++        gaps.append(_arc_grid_generation_gap(adaptive))
++
++    e3_games = outcomes["e3_deep_tail"]["games"]
++    for game in ("ar25", "ka59", "tr87", "ft09"):
++        row = e3_games.get(game, {})
++        if (
++            isinstance(row, Mapping)
++            and row.get("available") is True
++            and row.get("offline_reproduced") is not True
++            and str(row.get("residual_mismatch_class", "")).startswith(
++                "missing_world_model_rule_gap"
++            )
++        ):
++            gaps.append(_e3_world_model_gap(game, row))
++
++    learned = outcomes["learned_encoder_transfer"]
++    if (
++        learned.get("available") is True
++        and learned.get("learned_encoder_transfer_helps") is not True
++    ):
++        gaps.extend(
++            _upstream_or_fallback(
++                learned.get("missing_verifier_gaps", []),
++                EXP4331_PATH,
++                _learned_encoder_gap(learned),
++            )
++        )
++
++    return _dedupe_gap_entries(gaps)
++
++
++def _upstream_or_fallback(
++    upstream_gaps: Any,
++    evidence_path: str,
++    fallback: dict[str, Any],
++) -> list[dict[str, Any]]:
++    valid = [
++        _normalize_upstream_gap(upstream, evidence_path)
++        for upstream in upstream_gaps
++        if isinstance(upstream, Mapping)
++    ]
++    return valid or [fallback]
++
++
++def _normalize_upstream_gap(upstream: Mapping[str, Any], evidence_path: str) -> dict[str, Any]:
++    priority = str(upstream.get("priority", "medium"))
++    return {
++        "gap_id": str(upstream.get("gap_id", GAP_GAME_INVARIANT_ARC_VALUE_4331)),
++        "status": str(upstream.get("status", "open_small_encoder_insufficient")),
++        "evidence": f"{evidence_path}; upstream_missing_verifier_gap=true",
++        "failure_mode": str(upstream.get("failure_mode", "")),
++        "missing_discriminator": str(upstream.get("missing_discriminator", "")),
++        "candidate_design": str(upstream.get("candidate_design", "")),
++        "priority": priority,
++    }
++
++
++def _diffusiongemma_second_corpus_gap(in_generation: Mapping[str, Any]) -> dict[str, Any]:
++    return {
++        "gap_id": GAP_DIFFUSIONGEMMA_SECOND_CORPUS_SCORER,
++        "status": "open",
++        "evidence": (
++            f"{EXP4325_PATH}; in_generation_moat_replicates="
++            f"{in_generation.get('in_generation_moat_replicates')}; "
++            f"scorer_leak_recheck_passed={in_generation.get('scorer_leak_recheck_passed')}; "
++            f"benchmark_n={in_generation.get('benchmark_n')}; "
++            f"answer_masked_auroc="
++            f"{in_generation.get('independent_leak_recheck', {}).get('answer_masked_auroc')}"
++        ),
++        "failure_mode": (
++            "the second-corpus in-generation replication did not run decision-grade "
++            "rows because the partial-state scorer failed the independent leak recheck"
++        ),
++        "missing_discriminator": (
++            "corpus-general leak-free partial-state scorer that remains predictive "
++            "after answer-bearing cells are masked"
++        ),
++        "candidate_design": (
++            "retrain and calibrate the scorer on multiple oracle-distinct corpora with "
++            "fresh masked held-out AUROC gates before accepting another guided-generation moat"
++        ),
++        "priority": "high",
++    }
++
++
++def _arc_grid_generation_gap(adaptive: Mapping[str, Any]) -> dict[str, Any]:
++    return {
++        "gap_id": GAP_ARC_GRID_GENERATION_SCORER,
++        "status": "open",
++        "evidence": (
++            f"{EXP4326_PATH}; adaptive_guidance_beats_control="
++            f"{adaptive.get('adaptive_guidance_beats_control')}; "
++            f"domain_used={adaptive.get('domain_used')}; "
++            f"adaptive_ci95={adaptive.get('adaptive_ci95')}; "
++            f"carnot_minus_best_control_delta="
++            f"{adaptive.get('carnot_minus_best_control_delta')}"
++        ),
++        "failure_mode": (
++            "adaptive DiffusionGemma guidance stayed bounded to a reasoning-corpus null "
++            "and did not establish an ARC-grid generation scorer"
++        ),
++        "missing_discriminator": (
++            "oracle-distinct ARC-grid partial-state generation scorer that can rank "
++            "candidate grid states during denoising rather than post-hoc reasoning choices"
++        ),
++        "candidate_design": (
++            "build a grid-native canvas scorer with masked-cell leak checks, no-adaptation "
++            "controls, and ARC environment reproduction gates before rerunning adaptive guidance"
++        ),
++        "priority": "high",
++    }
++
++
++def _e3_world_model_gap(game: str, row: Mapping[str, Any]) -> dict[str, Any]:
++    gap_id = {
++        "ar25": GAP_E3_WORLD_MODEL_RULE_AR25,
++        "ka59": GAP_E3_WORLD_MODEL_RULE_KA59,
++        "tr87": GAP_E3_WORLD_MODEL_RULE_TR87,
++        "ft09": GAP_E3_WORLD_MODEL_RULE_FT09,
++    }[game]
++    return {
++        "gap_id": gap_id,
++        "status": "open",
++        "evidence": (
++            f"{row.get('artifact_path')}; game={game}; offline_reproduced="
++            f"{row.get('offline_reproduced')}; reproduced_levels="
++            f"{row.get('reproduced_levels')}; verifier_best_accuracy="
++            f"{row.get('verifier_best_accuracy')}; residual_mismatch_class="
++            f"{row.get('residual_mismatch_class')}"
++        ),
++        "failure_mode": (
++            f"E3 induced world model for {game} remained partial and could not execute "
++            "a reproduced level through the real offline environment"
++        ),
++        "missing_discriminator": (
++            f"{game} executable world-model rule coverage for "
++            f"{row.get('residual_mismatch_class')}"
++        ),
++        "candidate_design": (
++            "mine the divergent transition traces, add the missing action/rule cases "
++            "to the executable model, and keep halt-on-divergence plus reproduce() as the gate"
++        ),
++        "priority": "high",
++    }
++
++
++def _learned_encoder_gap(learned: Mapping[str, Any]) -> dict[str, Any]:
++    return {
++        "gap_id": GAP_GAME_INVARIANT_ARC_VALUE_4331,
++        "status": "open_small_encoder_insufficient",
++        "evidence": (
++            f"{EXP4331_PATH}; learned_encoder_transfer_helps="
++            f"{learned.get('learned_encoder_transfer_helps')}; "
++            f"cross_game_state_reduction={learned.get('cross_game_state_reduction')}; "
++            f"cross_game_state_reduction_ci95="
++            f"{learned.get('cross_game_state_reduction_ci95')}; "
++            f"n_held_out_levels={learned.get('n_held_out_levels')}"
++        ),
++        "failure_mode": (
++            "small learned frame encoder over the current solved set did not produce "
++            "a decision-grade held-out OfflineSolver state reduction"
++        ),
++        "missing_discriminator": "game-invariant ARC value representation",
++        "candidate_design": (
++            "larger learned frame encoder, more reproduced solved traces, or "
++            "adapter-conditioned value head with a hardware-portable path"
++        ),
++        "priority": "medium",
++    }
++
++
++def _dedupe_gap_entries(gaps: list[dict[str, Any]]) -> list[dict[str, Any]]:
++    deduped: dict[str, dict[str, Any]] = {}
++    for gap in gaps:
++        deduped[gap["gap_id"]] = gap
++    return list(deduped.values())
++
++
++def ensure_ledgers_record_v400(
++    registry: dict[str, Any],
++    gaps_text: str,
++    exclusion_manifest: dict[str, Any],
++    regression_guard: dict[str, Any],
++    outcome_bundle: dict[str, Any],
++    gaps_logged: list[dict[str, Any]],
++) -> tuple[dict[str, Any], str, dict[str, Any], dict[str, Any]]:
++    """Return registry, gap text, and manifest with the .400 truth represented."""
++    updated_registry = deepcopy(registry)
++    _ensure_gap4_eval(updated_registry, regression_guard, outcome_bundle, gaps_logged)
++    _ensure_v400_role(updated_registry, outcome_bundle, gaps_logged)
++
++    updated_gaps = gaps_text
++    for gap in gaps_logged:
++        updated_gaps = base._replace_marked_block(
++            updated_gaps,
++            f"exp4333-{gap['gap_id'].lower()}",
++            _gap_entry_block(gap),
++        )
++
++    updated_manifest = deepcopy(exclusion_manifest)
++    _ensure_cross_domain_retirement(updated_manifest)
++    gap_ids = [gap["gap_id"] for gap in gaps_logged]
++    return (
++        updated_registry,
++        updated_gaps,
++        updated_manifest,
++        {
++            "registry_reconciled": registry_contains_v400(updated_registry),
++            "manifest_reconciled": manifest_contains_cross_domain_retirement(
++                updated_manifest
++            ),
++            "gaps_logged_ids": [gap_id for gap_id in gap_ids if gap_id in updated_gaps],
++        },
++    )
++
++
++def _ensure_gap4_eval(
++    registry: dict[str, Any],
++    regression_guard: dict[str, Any],
++    outcome_bundle: dict[str, Any],
++    gaps_logged: list[dict[str, Any]],
++) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:
++        entry = {"verifier_id": GAP4_VERIFIER_ID, "domain": "arc_agi2_grid", "eval": {}}
++        registry.setdefault("verifiers", []).append(entry)
++    outcomes = outcome_bundle["v400_outcomes"]
++    availability = outcome_bundle["availability_report"]
++    arc1 = regression_guard.get("replayed_arc1_rule_exec", {})
++    robust = outcomes["robust_aggregator"]
++    in_generation = outcomes["in_generation_replication"]
++    adaptive = outcomes["adaptive_scaleup"]
++    e3 = outcomes["e3_deep_tail"]
++    e3_games = e3["games"]
++    shallow = outcomes["shallow_tail_sweep"]
++    learned = outcomes["learned_encoder_transfer"]
++    tn36 = shallow.get("tn36_schema_finding", {})
++    eval_update = {
++        "eval_exp_4333": EXP4333_ARTIFACT_PATH,
++        "exp4333_regression_guard_passed": bool(
++            regression_guard.get("regression_guard_passed")
++        ),
++        "exp4333_arc1_rule_exec_vote_pass2": arc1.get("vote_pass2"),
++        "exp4333_arc1_rule_exec_gated_pass2": arc1.get("gated_pass2"),
++        "exp4333_arc1_headroom_recovered": arc1.get("headroom_recovered"),
++        "exp4333_arc1_vote_wins_lost": arc1.get("vote_wins_lost"),
++        "exp4333_v400_state": V400_STATE,
++        "exp4333_robust_aggregator_used": robust_aggregator_ok(robust),
++        "exp4333_available_artifact_keys": list(
++            availability.get("available_artifact_keys", [])
++        ),
++        "exp4333_missing_upstream_artifacts": list(
++            availability.get("missing_upstream_artifacts", [])
++        ),
++        "exp4333_flagged_artifacts_excluded": list(
++            availability.get("flagged_artifacts_excluded", [])
++        ),
++        "exp4333_in_generation_artifact": EXP4325_PATH,
++        "exp4333_in_generation_moat_replicates": in_generation.get(
++            "in_generation_moat_replicates"
++        ),
++        "exp4333_in_generation_controls_differentiated": in_generation.get(
++            "controls_differentiated"
++        ),
++        "exp4333_scorer_leak_recheck_passed": in_generation.get(
++            "scorer_leak_recheck_passed"
++        ),
++        "exp4333_in_generation_benchmark_n": in_generation.get("benchmark_n"),
++        "exp4333_in_generation_answer_masked_auroc": in_generation.get(
++            "independent_leak_recheck", {}
++        ).get("answer_masked_auroc"),
++        "exp4333_adaptive_artifact": EXP4326_PATH,
++        "exp4333_adaptive_guidance_beats_control": adaptive.get(
++            "adaptive_guidance_beats_control"
++        ),
++        "exp4333_adaptive_domain_used": adaptive.get("domain_used"),
++        "exp4333_adaptive_controls_differentiated": adaptive.get(
++            "controls_differentiated"
++        ),
++        "exp4333_adaptive_scorer_leak_recheck_passed": adaptive.get(
++            "scorer_leak_recheck_passed"
++        ),
++        "exp4333_adaptive_carnot_minus_best_control_delta": adaptive.get(
++            "carnot_minus_best_control_delta"
++        ),
++        "exp4333_adaptive_ci95": adaptive.get("adaptive_ci95"),
++        "exp4333_e3_reproduced_levels_total": e3.get("reproduced_levels_total"),
++        "exp4333_e3_offline_reproduced_any": e3.get("offline_reproduced_any"),
++        "exp4333_shallow_artifact": EXP4330_PATH,
++        "exp4333_shallow_reproducible_total_levels": shallow.get(
++            "reproducible_total_levels"
++        ),
++        "exp4333_shallow_games_advanced": shallow.get("games_advanced"),
++        "exp4333_tn36_schema": tn36.get("schema"),
++        "exp4333_tn36_normalizer": tn36.get("normalizer"),
++        "exp4333_learned_encoder_artifact": EXP4331_PATH,
++        "exp4333_learned_encoder_transfer_helps": learned.get(
++            "learned_encoder_transfer_helps"
++        ),
++        "exp4333_cross_game_state_reduction": learned.get("cross_game_state_reduction"),
++        "exp4333_cross_game_state_reduction_ci95": learned.get(
++            "cross_game_state_reduction_ci95"
++        ),
++        "exp4333_cross_game_n_held_out_levels": learned.get("n_held_out_levels"),
++        "exp4333_gaps_logged": [gap["gap_id"] for gap in gaps_logged],
++    }
++    for game, row in e3_games.items():
++        eval_update[f"exp4333_e3_{game}_offline_reproduced"] = row.get(
++            "offline_reproduced"
++        )
++        eval_update[f"exp4333_e3_{game}_reproduced_levels"] = row.get(
++            "reproduced_levels"
++        )
++        eval_update[f"exp4333_e3_{game}_residual_mismatch_class"] = row.get(
++            "residual_mismatch_class"
++        )
++        eval_update[f"exp4333_e3_{game}_verifier_best_accuracy"] = row.get(
++            "verifier_best_accuracy"
++        )
++    entry.setdefault("eval", {}).update(eval_update)
++
++
++def _ensure_v400_role(
++    registry: dict[str, Any],
++    outcome_bundle: dict[str, Any],
++    gaps_logged: list[dict[str, Any]],
++) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:
++        return
++    outcomes = outcome_bundle["v400_outcomes"]
++    shallow = outcomes["shallow_tail_sweep"]
++    role = {
++        "role_id": V400_ROLE_ID,
++        "experiment": EXP4333_ARTIFACT_PATH,
++        "role": "registry_gap_manifest_hygiene_v400",
++        "status": "v400_outcomes_recorded_with_robust_availability",
++        "v400_state": V400_STATE,
++        "robust_aggregator_used": robust_aggregator_ok(outcomes["robust_aggregator"]),
++        "in_generation_moat_replicates": outcomes["in_generation_replication"].get(
++            "in_generation_moat_replicates"
++        ),
++        "adaptive_guidance_beats_control": outcomes["adaptive_scaleup"].get(
++            "adaptive_guidance_beats_control"
++        ),
++        "e3_reproduced_levels_total": outcomes["e3_deep_tail"].get(
++            "reproduced_levels_total"
++        ),
++        "shallow_reproducible_total_levels": shallow.get("reproducible_total_levels"),
++        "tn36_schema": shallow.get("tn36_schema_finding", {}).get("schema"),
++        "learned_encoder_transfer_helps": outcomes["learned_encoder_transfer"].get(
++            "learned_encoder_transfer_helps"
++        ),
++        "cross_game_state_reduction": outcomes["learned_encoder_transfer"].get(
++            "cross_game_state_reduction"
++        ),
++        "gap_ids_logged": [gap["gap_id"] for gap in gaps_logged],
++        "eval_exp_4333": EXP4333_ARTIFACT_PATH,
++    }
++    old_roles = list(entry.get("registry_roles", []))
++    entry["registry_roles"] = [old for old in old_roles if old.get("role_id") != V400_ROLE_ID] + [
++        role
++    ]
++
++
++def _ensure_cross_domain_retirement(manifest: dict[str, Any]) -> None:
++    if manifest_contains_cross_domain_retirement(manifest):
++        return
++    manifest.setdefault("retired_extras", []).append(
++        {
++            "id": CROSS_DOMAIN_RETIREMENT_ID,
++            "experiment_scope": (
++                "cross-domain verifier selection axis after repeated domain-bound "
++                "IR3DE/CASCAL/ContextPRM selector verdicts"
++            ),
++            "reason": (
++                "retire_if_same_verdict: Exp 4314 repeated Exp 4305's domain-bound "
++                "cross-domain selection verdict; future cross-domain selector reruns "
++                "need a new root cause, a different discriminator, and operator authorization."
++            ),
++            "experiment_ids": ["exp4305", "exp4314"],
++            "retired_milestone": "2026.06.400",
++            "retired_by_artifact": EXP4314_PATH,
++            "recorded_by_artifact": EXP4333_ARTIFACT_PATH,
++            "operator_reopen_required": True,
++            "retire_if_same_verdict": True,
++            "blocked_patterns": [
++                "cross-domain verifier selection",
++                "cross_domain_selector_ir3de_cascal",
++                "family-invariant cross-domain selection rerun",
++            ],
++        }
++    )
++
++
++def manifest_contains_cross_domain_retirement(manifest: Mapping[str, Any]) -> bool:
++    for entry in manifest.get("retired_extras", []):
++        if isinstance(entry, Mapping) and entry.get("id") == CROSS_DOMAIN_RETIREMENT_ID:
++            return True
++    return False
++
++
++def _gap_entry_block(gap: dict[str, Any]) -> str:
++    return (
++        f"### {gap['gap_id']}: Exp 4333 .400 verifier gap update\n"
++        f"- status: {gap.get('status', 'open')}\n"
++        f"- evidence: {gap.get('evidence', '')}.\n"
++        f"- failure mode: {gap['failure_mode']}\n"
++        f"- missing discriminator: {gap['missing_discriminator']}\n"
++        f"- candidate design: {gap['candidate_design']}\n"
++        f"- priority: {gap['priority']}\n"
++    )
++
++
++def registry_contains_v400(registry: dict[str, Any]) -> bool:
++    gap4 = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    return bool(
++        gap4
++        and gap4.get("eval", {}).get("eval_exp_4333") == EXP4333_ARTIFACT_PATH
++        and gap4.get("eval", {}).get("exp4333_v400_state") == V400_STATE
++        and any(role.get("role_id") == V400_ROLE_ID for role in gap4.get("registry_roles", []))
++    )
++
++
++def model_specs_for_reconciliation() -> dict[str, Any]:
++    return {
++        "method": "cached_v400_ledger_reconciliation",
++        "gap4_candidate_set": ARC1_POOL_PATH,
++        "gap4_program_outputs": ARC1_PROGRAMS_PATH,
++        "prior_hygiene_artifact": EXP4321_PATH,
++        "upstream_artifacts": list(OUTCOME_ARTIFACT_PATHS),
++        "robust_aggregator_artifact": EXP4308_PATH,
++        "robust_aggregator_helper": "carnot.reporting.capstone_aggregate_available",
++        "codex_calls": 0,
++        "live_model_inference": False,
++        "gguf_inference": False,
++        "gpu_inference": False,
++        "trm_training_touched": False,
++        "stable_checkpoint_write": False,
++    }
++
++
++def build_artifact(
++    *,
++    regression_guard: dict[str, Any],
++    outcome_bundle: dict[str, Any],
++    gaps_logged: list[dict[str, Any]],
++    registry_reconciled: bool,
++    manifest_reconciled: bool,
++    reproducibility_checksum: str,
++    duration_s: float,
++) -> dict[str, Any]:
++    """Build the Exp 4333 terminal JSON payload."""
++    guard_ok = bool(regression_guard.get("regression_guard_passed"))
++    complete = guard_ok and registry_reconciled and manifest_reconciled
++    prefix = "complete:" if complete else "blocked_"
++    separator = " " if prefix.endswith(":") else ""
++    artifact = {
++        "experiment": "experiment_4333_verifier_registry_gaps_hygiene",
++        "schema": "carnot.experiment_4333_verifier_registry_gaps_hygiene.v1",
++        "honest_verdict": (
++            f"{prefix}{separator}registry_gaps_manifest_reconciled_to_v400_truth_"
++            f"regression_guard_passed_{guard_ok}_gaps_logged_{len(gaps_logged)}_"
++            "robust_aggregator_used"
++        ),
++        "regression_guard_passed": guard_ok,
++        "gaps_logged": list(gaps_logged),
++        "registry_reconciled": bool(registry_reconciled),
++        "manifest_reconciled": bool(manifest_reconciled),
++        "v400_outcomes": outcome_bundle["v400_outcomes"],
++        "availability_report": outcome_bundle["availability_report"],
++        "artifact_errors": outcome_bundle.get("artifact_errors", {}),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": reproducibility_checksum,
++        "model_specs": model_specs_for_reconciliation(),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": ["REQ-VERIFY-4333", "SCENARIO-VERIFY-4333"],
++        "duration_s": round(float(duration_s), 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "regression_guard": regression_guard,
++        "registry_path": REGISTRY_PATH,
++        "gaps_path": GAPS_PATH,
++        "exclusion_manifest_path": EXCLUSION_MANIFEST_PATH,
++        "cited_upstream_artifacts": list(OUTCOME_ARTIFACT_PATHS + [EXP4308_PATH]),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _blocked_ledgers_artifact(preflight: dict[str, Any], duration_s: float) -> dict[str, Any]:
++    artifact = {
++        "experiment": "experiment_4333_verifier_registry_gaps_hygiene",
++        "schema": "carnot.experiment_4333_verifier_registry_gaps_hygiene.v1",
++        "honest_verdict": "blocked_ledgers_unparseable",
++        "regression_guard_passed": False,
++        "gaps_logged": [],
++        "registry_reconciled": False,
++        "manifest_reconciled": False,
++        "v400_outcomes": {},
++        "availability_report": {},
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "blocked:ledgers_unparseable",
++        "model_specs": model_specs_for_reconciliation(),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": ["REQ-VERIFY-4333", "SCENARIO-VERIFY-4333"],
++        "duration_s": round(float(duration_s), 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions": preflight,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    """Validate required Exp 4333 fields before writing the artifact."""
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required artifact field: {field}")
++    if not str(artifact["honest_verdict"]).startswith(("complete:", "blocked_", "success:")):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if type(artifact["regression_guard_passed"]) is not bool:
++        raise ValueError("regression_guard_passed must be a BARE bool")
++    if type(artifact["registry_reconciled"]) is not bool:
++        raise ValueError("registry_reconciled must be a bare bool")
++    if type(artifact["manifest_reconciled"]) is not bool:
++        raise ValueError("manifest_reconciled must be a bare bool")
++    if not isinstance(artifact["gaps_logged"], list):
++        raise ValueError("gaps_logged must be a list")
++    for gap in artifact["gaps_logged"]:
++        if not isinstance(gap, dict) or not all(field in gap for field in GAP_ENTRY_REQUIRED_FIELDS):
++            raise ValueError("gaps_logged gap entry is missing required fields")
++    if not isinstance(artifact["v400_outcomes"], dict):
++        raise ValueError("v400_outcomes must be an object")
++    if not isinstance(artifact["availability_report"], dict):
++        raise ValueError("availability_report must be an object")
++    if isinstance(artifact["random_seed"], bool) or not isinstance(artifact["random_seed"], int):
++        raise ValueError("random_seed must be a bare int")
++    if (
++        not isinstance(artifact["reproducibility_checksum"], str)
++        or not artifact["reproducibility_checksum"]
++    ):
++        raise ValueError("reproducibility_checksum must be a non-empty string")
++    if not isinstance(artifact["model_specs"], dict) or not artifact["model_specs"]:
++        raise ValueError("model_specs must be a non-empty object")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required Exp 4333 principles")
++    if artifact["spec_refs"] != ["REQ-VERIFY-4333", "SCENARIO-VERIFY-4333"]:
++        raise ValueError("spec_refs must cite REQ-VERIFY-4333 and SCENARIO-VERIFY-4333")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError(f"inference_substrate must be {INFERENCE_SUBSTRATE}")
++
++
++def run_hygiene(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """Run Exp 4333 and write the terminal artifact plus reconciled ledgers."""
++    started = time.time()
++    preflight = check_preconditions(repo_root)
++    out_path = repo_root / EXP4333_ARTIFACT_PATH
++    if not preflight["ok"]:
++        artifact = _blocked_ledgers_artifact(preflight, time.time() - started)
++        base._write_json(out_path, artifact)
++        return artifact
++
++    registry_path = repo_root / REGISTRY_PATH
++    gaps_path = repo_root / GAPS_PATH
++    manifest_path = repo_root / EXCLUSION_MANIFEST_PATH
++    registry = base._load_registry(registry_path)
++    gaps_text = gaps_path.read_text(encoding="utf-8")
++    manifest = _load_manifest(manifest_path)
++    regression_guard = run_gap4_regression_guard(repo_root)
++    outcome_bundle = load_v400_outcomes(repo_root)
++    gaps_logged = build_gap_entries(outcome_bundle)
++    registry, gaps_text, manifest, ledger_summary = ensure_ledgers_record_v400(
++        registry,
++        gaps_text,
++        manifest,
++        regression_guard,
++        outcome_bundle,
++        gaps_logged,
++    )
++    base._write_registry(registry_path, registry)
++    gaps_path.write_text(gaps_text, encoding="utf-8")
++    manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
++    checksum = ledger_checksum(registry_path, gaps_path, manifest_path)
++    artifact = build_artifact(
++        regression_guard=regression_guard,
++        outcome_bundle=outcome_bundle,
++        gaps_logged=gaps_logged,
++        registry_reconciled=bool(ledger_summary["registry_reconciled"]),
++        manifest_reconciled=bool(ledger_summary["manifest_reconciled"]),
++        reproducibility_checksum=checksum,
++        duration_s=time.time() - started,
++    )
++    base._write_json(out_path, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised through results entrypoint.
++    artifact = run_hygiene(REPO_ROOT)
++    print(f"Wrote {REPO_ROOT / EXP4333_ARTIFACT_PATH}")
++    print(f"honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 56ec438b65..7c83f7e46a 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-17T12:34:24.393882Z",
+-  "duration_s": 0.020376205444335938,
++  "run_date": "2026-06-17T12:51:53.955454Z",
++  "duration_s": 0.021914243698120117,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "32f5463180b01f402962651c09eef9eddfafb305c7142fdcc5d52b2540ccf7a6",
++  "reproducibility_checksum": "75c73dc1eed211a8f4b9b817dd9cf2e8edf5bdaf0f8b30443bca2fdf71358465",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "aee0ce4b7a95602fe0345598e25cd662acf66e26"
++    "adversarial_verify_version": "ca023f9f42bd2151d8f55139a5df835352323feb"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 36d4bfe013..8bad0575db 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-17T12:34:24.419746Z",
+-  "duration_s": 0.021585941314697266,
++  "run_date": "2026-06-17T12:51:53.987714Z",
++  "duration_s": 0.026825666427612305,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e08592d2479baea58b314893dc362a2af5c2f43117ea79abc3c8841c7ce82060",
++  "reproducibility_checksum": "ba5710f00da8dbd57b6919f29fbe9f59ba119ac0d2c26d38314178bddadb8a67",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "aee0ce4b7a95602fe0345598e25cd662acf66e26"
++    "adversarial_verify_version": "ca023f9f42bd2151d8f55139a5df835352323feb"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6b91c40e4b..d2fb243aea 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1085739135742188,
++  "efficiency_gains_ms": 2.145528793334961,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f577daa933..9667d0bbd7 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.422400914132595e-05,
++  "duration_s": 2.8242997359484434e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4333_verifier_registry_gaps_hygiene.json b/results/experiment_4333_verifier_registry_gaps_hygiene.json
+new file mode 100644
+index 0000000000..e21ec4d67b
+--- /dev/null
++++ b/results/experiment_4333_verifier_registry_gaps_hygiene.json
+@@ -0,0 +1,431 @@
++{
++  "artifact_errors": {},
++  "availability_report": {
++    "available_artifact_keys": [
++      "4325_in_generation_replication",
++      "4326_adaptive_scaleup",
++      "4327_e3_ar25",
++      "4328_e3_ka59",
++      "4329_e3_tr87_ft09",
++      "4330_shallow_tail_sweep",
++      "4331_learned_encoder_transfer"
++    ],
++    "axes": {
++      "adaptive_scaleup": {
++        "available_artifact_keys": [
++          "4326_adaptive_scaleup"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": false
++      },
++      "e3_deep_tail": {
++        "available_artifact_keys": [
++          "4327_e3_ar25",
++          "4328_e3_ka59",
++          "4329_e3_tr87_ft09"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": false
++      },
++      "in_generation_replication": {
++        "available_artifact_keys": [
++          "4325_in_generation_replication"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": false
++      },
++      "learned_encoder_transfer": {
++        "available_artifact_keys": [
++          "4331_learned_encoder_transfer"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": false
++      },
++      "shallow_tail_sweep": {
++        "available_artifact_keys": [
++          "4330_shallow_tail_sweep"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": false
++      }
++    },
++    "flagged_artifacts_excluded": [],
++    "missing_upstream_artifacts": []
++  },
++  "cited_upstream_artifacts": [
++    "results/experiment_4325_in_generation_moat_replicate_second_corpus.json",
++    "results/experiment_4326_adaptive_guided_generation_scaleup.json",
++    "results/experiment_4327_e3_executable_world_model_ar25.json",
++    "results/experiment_4328_e3_executable_world_model_ka59.json",
++    "results/experiment_4329_e3_executable_world_model_tr87_ft09.json",
++    "results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json",
++    "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json",
++    "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json"
++  ],
++  "duration_s": 0.510093,
++  "exclusion_manifest_path": "ops/exclusion_manifest.yaml",
++  "experiment": "experiment_4333_verifier_registry_gaps_hygiene",
++  "field_principles": {
++    "gaps_logged": "List of new/updated missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.",
++    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled + regression guard result (using the robust aggregator, NOT a hard-block).",
++    "regression_guard_passed": "BARE bool: the GAP-4 execution numbers did not regress vs .399 -- the standing-capability guard.",
++    "reproducibility_checksum": "Hash of the reconciled registry + gaps + manifest; catches silent drift."
++  },
++  "gaps_logged": [
++    {
++      "candidate_design": "retrain and calibrate the scorer on multiple oracle-distinct corpora with fresh masked held-out AUROC gates before accepting another guided-generation moat",
++      "evidence": "results/experiment_4325_in_generation_moat_replicate_second_corpus.json; in_generation_moat_replicates=False; scorer_leak_recheck_passed=False; benchmark_n=0; answer_masked_auroc=0.549719",
++      "failure_mode": "the second-corpus in-generation replication did not run decision-grade rows because the partial-state scorer failed the independent leak recheck",
++      "gap_id": "GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325",
++      "missing_discriminator": "corpus-general leak-free partial-state scorer that remains predictive after answer-bearing cells are masked",
++      "priority": "high",
++      "status": "open"
++    },
++    {
++      "candidate_design": "build a grid-native canvas scorer with masked-cell leak checks, no-adaptation controls, and ARC environment reproduction gates before rerunning adaptive guidance",
++      "evidence": "results/experiment_4326_adaptive_guided_generation_scaleup.json; adaptive_guidance_beats_control=False; domain_used=reasoning_corpus_fallback; adaptive_ci95=[-0.075, 0.35]; carnot_minus_best_control_delta=0.15",
++      "failure_mode": "adaptive DiffusionGemma guidance stayed bounded to a reasoning-corpus null and did not establish an ARC-grid generation scorer",
++      "gap_id": "GAP-ARC-GRID-GENERATION-SCORER-4326",
++      "missing_discriminator": "oracle-distinct ARC-grid partial-state generation scorer that can rank candidate grid states during denoising rather than post-hoc reasoning choices",
++      "priority": "high",
++      "status": "open"
++    },
++    {
++      "candidate_design": "mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate",
++      "evidence": "results/experiment_4327_e3_executable_world_model_ar25.json; game=ar25; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.8875; residual_mismatch_class=missing_world_model_rule_gap_hidden_undo_stack_action7",
++      "failure_mode": "E3 induced world model for ar25 remained partial and could not execute a reproduced level through the real offline environment",
++      "gap_id": "GAP-E3-WORLD-MODEL-RULE-AR25-4327",
++      "missing_discriminator": "ar25 executable world-model rule coverage for missing_world_model_rule_gap_hidden_undo_stack_action7",
++      "priority": "high",
++      "status": "open"
++    },
++    {
++      "candidate_design": "mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate",
++      "evidence": "results/experiment_4328_e3_executable_world_model_ka59.json; game=ka59; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.5625; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4_6",
++      "failure_mode": "E3 induced world model for ka59 remained partial and could not execute a reproduced level through the real offline environment",
++      "gap_id": "GAP-E3-WORLD-MODEL-RULE-KA59-4328",
++      "missing_discriminator": "ka59 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4_6",
++      "priority": "high",
++      "status": "open"
++    },
++    {
++      "candidate_design": "mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate",
++      "evidence": "results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=tr87; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.0; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4",
++      "failure_mode": "E3 induced world model for tr87 remained partial and could not execute a reproduced level through the real offline environment",
++      "gap_id": "GAP-E3-WORLD-MODEL-RULE-TR87-4329",
++      "missing_discriminator": "tr87 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4",
++      "priority": "high",
++      "status": "open"
++    },
++    {
++      "candidate_design": "mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate",
++      "evidence": "results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=ft09; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.1; residual_mismatch_class=missing_world_model_rule_gap_actions_6",
++      "failure_mode": "E3 induced world model for ft09 remained partial and could not execute a reproduced level through the real offline environment",
++      "gap_id": "GAP-E3-WORLD-MODEL-RULE-FT09-4329",
++      "missing_discriminator": "ft09 executable world-model rule coverage for missing_world_model_rule_gap_actions_6",
++      "priority": "high",
++      "status": "open"
++    },
++    {
++      "candidate_design": "larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path",
++      "evidence": "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json; upstream_missing_verifier_gap=true",
++      "failure_mode": "small learned frame encoder over the current solved set did not produce a decision-grade held-out OfflineSolver state reduction",
++      "gap_id": "GAP-4331",
++      "missing_discriminator": "game-invariant ARC value representation",
++      "priority": "medium",
++      "status": "open_small_encoder_insufficient"
++    }
++  ],
++  "gaps_path": "ops/verifier_gaps.md",
++  "honest_verdict": "complete: registry_gaps_manifest_reconciled_to_v400_truth_regression_guard_passed_True_gaps_logged_7_robust_aggregator_used",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "manifest_reconciled": true,
++  "model_specs": {
++    "codex_calls": 0,
++    "gap4_candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "gap4_program_outputs": "results/arc3_gap4_induced_programs.json",
++    "gguf_inference": false,
++    "gpu_inference": false,
++    "live_model_inference": false,
++    "method": "cached_v400_ledger_reconciliation",
++    "prior_hygiene_artifact": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
++    "robust_aggregator_artifact": "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json",
++    "robust_aggregator_helper": "carnot.reporting.capstone_aggregate_available",
++    "stable_checkpoint_write": false,
++    "trm_training_touched": false,
++    "upstream_artifacts": [
++      "results/experiment_4325_in_generation_moat_replicate_second_corpus.json",
++      "results/experiment_4326_adaptive_guided_generation_scaleup.json",
++      "results/experiment_4327_e3_executable_world_model_ar25.json",
++      "results/experiment_4328_e3_executable_world_model_ka59.json",
++      "results/experiment_4329_e3_executable_world_model_tr87_ft09.json",
++      "results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json",
++      "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json"
++    ]
++  },
++  "random_seed": 4333,
++  "registry_path": "ops/verifier_registry.yaml",
++  "registry_reconciled": true,
++  "regression_guard": {
++    "offline_replay": {
++      "arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      },
++      "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
++      "cached_programs_path": "results/arc3_gap4_induced_programs.json",
++      "expected": {
++        "arc1_rule_exec": {
++          "gated_pass2": 0.5806,
++          "headroom_recovered": 4,
++          "n": 31,
++          "vote_pass2": 0.4516,
++          "vote_wins_lost": 0
++        }
++      },
++      "no_codex_calls": true,
++      "no_gguf_inference": true,
++      "regression_guard_passed": true,
++      "trm_training_touched": false
++    },
++    "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
++    "recorded_arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "regression_guard_passed": true,
++    "replayed_arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    }
++  },
++  "regression_guard_passed": true,
++  "reproducibility_checksum": "sha256:6d3eb1410b6d1c79958e764178294fa558cc3b783352e6b87f73882691ce3c40",
++  "schema": "carnot.experiment_4333_verifier_registry_gaps_hygiene.v1",
++  "spec_refs": [
++    "REQ-VERIFY-4333",
++    "SCENARIO-VERIFY-4333"
++  ],
++  "v400_outcomes": {
++    "adaptive_scaleup": {
++      "adaptive_ci95": [
++        -0.075,
++        0.35
++      ],
++      "adaptive_guidance_beats_control": false,
++      "artifact_path": "results/experiment_4326_adaptive_guided_generation_scaleup.json",
++      "available": true,
++      "benchmark_n": 40,
++      "best_control": "entrgi",
++      "carnot_minus_best_control_delta": 0.15,
++      "condition_accuracy": {
++        "carnot_adaptive": 0.425,
++        "entrgi": 0.275,
++        "unguided": 0.25
++      },
++      "controls_differentiated": true,
++      "domain_used": "reasoning_corpus_fallback",
++      "honest_verdict": "complete: adaptive_guidance_bounded_to_stitching_null",
++      "scorer_leak_recheck_passed": true,
++      "verifier_is_oracle": false
++    },
++    "e3_deep_tail": {
++      "artifact_paths": [
++        "results/experiment_4327_e3_executable_world_model_ar25.json",
++        "results/experiment_4328_e3_executable_world_model_ka59.json",
++        "results/experiment_4329_e3_executable_world_model_tr87_ft09.json"
++      ],
++      "available": true,
++      "games": {
++        "ar25": {
++          "artifact_path": "results/experiment_4327_e3_executable_world_model_ar25.json",
++          "available": true,
++          "game": "ar25",
++          "honest_verdict": "complete_e3_ar25_partial_model_0.89",
++          "offline_reproduced": false,
++          "plan_executed": false,
++          "reproduced_levels": 0,
++          "residual_mismatch_class": "missing_world_model_rule_gap_hidden_undo_stack_action7",
++          "verifier_accuracy_per_round": [
++            0.8875
++          ],
++          "verifier_best_accuracy": 0.8875,
++          "verifier_is_oracle": true,
++          "world_model_path": "results/arc_e3/ar25/world_model.py",
++          "world_model_sha256": "2f25b01b0faa47ccdf02dcc23bdc0be85057163b96aa9d1d0efc950fb4a23005"
++        },
++        "ft09": {
++          "artifact_path": "results/experiment_4329_e3_executable_world_model_tr87_ft09.json",
++          "available": true,
++          "game": "ft09",
++          "honest_verdict": "complete_e3_ft09_partial_model_0.10",
++          "offline_reproduced": false,
++          "plan_executed": false,
++          "reproduced_levels": 0,
++          "residual_mismatch_class": "missing_world_model_rule_gap_actions_6",
++          "verifier_accuracy_per_round": [
++            0.1
++          ],
++          "verifier_best_accuracy": 0.1,
++          "verifier_is_oracle": true,
++          "world_model_path": "results/arc_e3/ft09/world_model.py",
++          "world_model_sha256": "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee"
++        },
++        "ka59": {
++          "artifact_path": "results/experiment_4328_e3_executable_world_model_ka59.json",
++          "available": true,
++          "game": "ka59",
++          "honest_verdict": "complete_e3_ka59_partial_model_0.56",
++          "offline_reproduced": false,
++          "plan_executed": false,
++          "reproduced_levels": 0,
++          "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_4_6",
++          "verifier_accuracy_per_round": [
++            0.5625
++          ],
++          "verifier_best_accuracy": 0.5625,
++          "verifier_is_oracle": true,
++          "world_model_path": "results/arc_e3/ka59/world_model.py",
++          "world_model_sha256": "0da67a03910f1e16d11ca0db25ca5feba9cb4b6e3287ff4fc03c5d3511b8ff57"
++        },
++        "tr87": {
++          "artifact_path": "results/experiment_4329_e3_executable_world_model_tr87_ft09.json",
++          "available": true,
++          "game": "tr87",
++          "honest_verdict": "complete_e3_tr87_partial_model_0.00",
++          "offline_reproduced": false,
++          "plan_executed": false,
++          "reproduced_levels": 0,
++          "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_4",
++          "verifier_accuracy_per_round": [
++            0.0
++          ],
++          "verifier_best_accuracy": 0.0,
++          "verifier_is_oracle": true,
++          "world_model_path": "results/arc_e3/tr87/world_model.py",
++          "world_model_sha256": "1f497c0f688a9d8b4e5439f77cfeea445fc7326599a5aa118037388ff14bd21a"
++        }
++      },
++      "offline_reproduced_any": false,
++      "reproduced_levels_total": 0
++    },
++    "in_generation_replication": {
++      "artifact_path": "results/experiment_4325_in_generation_moat_replicate_second_corpus.json",
++      "available": true,
++      "benchmark_n": 0,
++      "benchmark_n_per_seed": 80,
++      "carnot_minus_best_control_delta": 0.0,
++      "carnot_minus_self_reward_smc_delta": 0.0,
++      "carnot_minus_unguided_delta": 0.0,
++      "controls_differentiated": false,
++      "honest_verdict": "scorer_leaky_on_second_corpus",
++      "in_generation_moat_replicates": false,
++      "independent_leak_recheck": {
++        "answer_masked_auroc": 0.549719,
++        "answer_masked_cells": 102,
++        "auroc_floor": 0.6,
++        "fresh_heldout_n": 990,
++        "fresh_heldout_task_n": 330,
++        "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
++        "scorer_leak_recheck_passed": false,
++        "status": "measured",
++        "unmasked_auroc": 0.548005
++      },
++      "replication_ci95": [
++        0.0,
++        0.0
++      ],
++      "scorer_leak_recheck_passed": false,
++      "verifier_is_oracle": false
++    },
++    "learned_encoder_transfer": {
++      "acceptance_gate_passed": true,
++      "artifact_path": "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json",
++      "available": true,
++      "baseline_solves_held_out": true,
++      "cross_game_state_reduction": 1.0084925690021231,
++      "cross_game_state_reduction_ci95": [
++        1.0,
++        1.0303068758652514
++      ],
++      "honest_verdict": "complete: learned_frame_encoder_transfer_no_improvement_positive_control_passed",
++      "learned_encoder_transfer_helps": false,
++      "missing_verifier_gaps": [
++        {
++          "candidate_design": "larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path",
++          "failure_mode": "small learned frame encoder over the current solved set did not produce a decision-grade held-out OfflineSolver state reduction",
++          "gap_id": "GAP-4331",
++          "missing_discriminator": "game-invariant ARC value representation",
++          "priority": "medium"
++        }
++      ],
++      "n_held_out_levels": 13,
++      "verifier_is_oracle": false
++    },
++    "robust_aggregator": {
++      "aggregator_survives_missing_artifact": true,
++      "artifact_path": "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json",
++      "available": true,
++      "error": "",
++      "honest_verdict": "complete: degenerate_controls_and_robust_capstone_guards_added_tests_pass",
++      "robust_aggregator_added": true
++    },
++    "shallow_tail_sweep": {
++      "artifact_path": "results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json",
++      "available": true,
++      "excluded_games": [
++        "ar25",
++        "ka59",
++        "tr87",
++        "ft09",
++        "sc25"
++      ],
++      "games_advanced": [],
++      "honest_verdict": "complete: adapter_free_shallow_tail_no_advance_real_exploration_total13",
++      "offline_reproduced": false,
++      "prior_reproducible_total_levels": 13,
++      "reproducible_total_levels": 13,
++      "swept_games": [
++        "bp35",
++        "dc22",
++        "g50t",
++        "lf52",
++        "re86",
++        "s5i5",
++        "sb26",
++        "vc33",
++        "tn36"
++      ],
++      "tn36_schema_finding": {
++        "action": "ACTION6",
++        "dead_end_class": "solver_exception_TypeError",
++        "exploration_actions_used": 26,
++        "game": "tn36",
++        "normalizer": "normalise_tn36_click_payload",
++        "payload_schema": {
++          "x": "int display_x",
++          "y": "int display_y"
++        },
++        "rejects_nested_payloads": true,
++        "schema": "ACTION6 data must be top-level {\"x\": int, \"y\": int}",
++        "source_evidence": "self.action.data[\"x\"], self.action.data[\"y\"]",
++        "wrapped_payload_explorer_advanced": false
++      },
++      "verifier_is_oracle": true
++    }
++  }
++}
+diff --git a/results/experiment_4333_verifier_registry_gaps_hygiene.py b/results/experiment_4333_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..3affc62b6a
+--- /dev/null
++++ b/results/experiment_4333_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,20 @@
++"""Run Exp 4333 verifier registry/gaps hygiene from the results entrypoint.
++
++Spec refs: REQ-VERIFY-4333, SCENARIO-VERIFY-4333.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting import verifier_registry_gaps_hygiene_4333 as exp4333  # noqa: E402,I001
++
++
++if __name__ == "__main__":  # pragma: no cover
++    exp4333.main()
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 3591638af6..d158b98de4 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T12:34:14Z",
+-  "finished_at": "2026-06-17T12:34:15Z",
++  "started_at": "2026-06-17T12:51:44Z",
++  "finished_at": "2026-06-17T12:51:44Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 2b017aa450..0a87da2bd3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T12:34:15Z",
+-  "finished_at": "2026-06-17T12:34:15Z",
++  "started_at": "2026-06-17T12:51:44Z",
++  "finished_at": "2026-06-17T12:51:44Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 05494ea21a..2f67d0155e 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260617",
+-  "started_at": "2026-06-17T12:34:15Z",
+-  "finished_at": "2026-06-17T12:34:15Z",
++  "started_at": "2026-06-17T12:51:44Z",
++  "finished_at": "2026-06-17T12:51:44Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4333_verifier_registry_gaps_hygiene.py b/tests/python/test_experiment_4333_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..677e339da8
+--- /dev/null
++++ b/tests/python/test_experiment_4333_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,337 @@
++"""Tests for Exp 4333 verifier registry/gaps hygiene.
++
++Spec refs: REQ-VERIFY-4333, SCENARIO-VERIFY-4333.
++"""
++
++from __future__ import annotations
++
++import json
++import runpy
++import shutil
++import sys
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_4333_verifier_registry_gaps_hygiene as exp4333_wrapper
++from carnot.reporting import verifier_registry_gaps_hygiene_4333 as exp4333
++
++
++REPO_ROOT = Path(__file__).parents[2]
++SPEC_PATH = Path("openspec/capabilities/verification/spec.md")
++RESULTS_WRAPPER_PATH = Path("results/experiment_4333_verifier_registry_gaps_hygiene.py")
++
++
++def _minimal_registry() -> dict[str, Any]:
++    return {
++        "verifiers": [
++            {
++                "verifier_id": exp4333.GAP4_VERIFIER_ID,
++                "domain": "arc_agi2_grid",
++                "version": 1,
++                "kind": "process_verifier",
++                "eval": {"metric": "pass_at_1"},
++                "registry_roles": [],
++            }
++        ]
++    }
++
++
++def _minimal_manifest() -> dict[str, Any]:
++    return {"retired": [], "retired_experiments": [], "retired_extras": []}
++
++
++def _write_minimal_repo(tmp_path: Path, *, omit: set[str] | None = None) -> None:
++    omit = omit or set()
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "verifier_gaps.md").write_text(
++        "# Verifier Gaps\n\nHistorical note remains.\n",
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "exclusion_manifest.yaml").write_text(
++        yaml.safe_dump(_minimal_manifest(), sort_keys=False),
++        encoding="utf-8",
++    )
++    for path in exp4333.REQUIRED_COPY_PATHS:
++        if path in omit:
++            continue
++        source = REPO_ROOT / path
++        target = tmp_path / path
++        target.parent.mkdir(parents=True, exist_ok=True)
++        shutil.copy2(source, target)
++
++
++def test_req_4333_spec_declared() -> None:
++    """REQ-VERIFY-4333: OpenSpec declares the .400 hygiene artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-4333",
++        "SCENARIO-VERIFY-4333",
++        "python/carnot/experiment_4333_verifier_registry_gaps_hygiene.py",
++        RESULTS_WRAPPER_PATH.as_posix(),
++        exp4333.EXP4333_ARTIFACT_PATH,
++        "blocked_ledgers_unparseable",
++        "aggregate_available_report_gaps",
++        "in_generation_moat_replicates=false",
++        "adaptive_guidance_beats_control=false",
++        "reproducible_total_levels=13",
++        "learned_encoder_transfer_helps=false",
++        exp4333.GAP_ARC_GRID_GENERATION_SCORER,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_AR25,
++        exp4333.GAP_GAME_INVARIANT_ARC_VALUE_4331,
++    ):
++        assert marker in spec
++    assert exp4333.FIELD_PRINCIPLES["honest_verdict"] in spec
++    assert exp4333.FIELD_PRINCIPLES["regression_guard_passed"] in spec
++    assert exp4333.FIELD_PRINCIPLES["gaps_logged"] in spec
++    assert exp4333.FIELD_PRINCIPLES["reproducibility_checksum"] in spec
++    assert exp4333_wrapper.main is exp4333.main
++
++
++def test_scenario_4333_preconditions_outcomes_and_robust_availability(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-4333: missing .400 artifacts are per-axis gaps only."""
++
++    _write_minimal_repo(tmp_path, omit={exp4333.EXP4328_PATH})
++
++    preflight = exp4333.check_preconditions(tmp_path)
++    assert preflight["ok"] is True
++    assert preflight["blocked_resource"] is None
++
++    guard = exp4333.run_gap4_regression_guard(tmp_path)
++    assert guard["regression_guard_passed"] is True
++    assert guard["prior_artifact_path"] == exp4333.EXP4321_PATH
++    assert guard["recorded_arc1_rule_exec"] == {
++        "n": 31,
++        "vote_pass2": pytest.approx(0.4516),
++        "gated_pass2": pytest.approx(0.5806),
++        "headroom_recovered": 4,
++        "vote_wins_lost": 0,
++    }
++    assert guard["replayed_arc1_rule_exec"] == guard["recorded_arc1_rule_exec"]
++
++    bundle = exp4333.load_v400_outcomes(tmp_path)
++    outcomes = bundle["v400_outcomes"]
++    availability = bundle["availability_report"]
++    assert availability["axes"]["in_generation_replication"]["verdict"] is False
++    assert availability["axes"]["adaptive_scaleup"]["verdict"] is False
++    assert availability["axes"]["e3_deep_tail"]["missing_artifacts"] == [
++        {
++            "axis": "e3_deep_tail",
++            "artifact_key": "4328_e3_ka59",
++            "experiment_id": 4328,
++        }
++    ]
++    assert availability["axes"]["learned_encoder_transfer"]["verdict"] is False
++    assert outcomes["in_generation_replication"]["in_generation_moat_replicates"] is False
++    assert outcomes["in_generation_replication"]["scorer_leak_recheck_passed"] is False
++    assert outcomes["adaptive_scaleup"]["adaptive_guidance_beats_control"] is False
++    assert outcomes["adaptive_scaleup"]["domain_used"] == "reasoning_corpus_fallback"
++    assert outcomes["e3_deep_tail"]["games"]["ar25"]["residual_mismatch_class"] == (
++        "missing_world_model_rule_gap_hidden_undo_stack_action7"
++    )
++    assert outcomes["e3_deep_tail"]["games"]["ka59"]["available"] is False
++    assert outcomes["shallow_tail_sweep"]["reproducible_total_levels"] == 13
++    assert outcomes["shallow_tail_sweep"]["tn36_schema_finding"]["normalizer"] == (
++        "normalise_tn36_click_payload"
++    )
++    assert outcomes["learned_encoder_transfer"]["learned_encoder_transfer_helps"] is False
++    assert outcomes["learned_encoder_transfer"]["n_held_out_levels"] == 13
++    assert exp4333.robust_aggregator_ok(outcomes["robust_aggregator"]) is True
++
++
++def test_req_4333_ledgers_record_v400_truth_gaps_and_retirement(tmp_path: Path) -> None:
++    """REQ-VERIFY-4333: registry, gaps, and manifest carry the .400 truth."""
++
++    _write_minimal_repo(tmp_path)
++    guard = exp4333.run_gap4_regression_guard(tmp_path)
++    bundle = exp4333.load_v400_outcomes(tmp_path)
++    gaps_logged = exp4333.build_gap_entries(bundle)
++
++    registry, gaps_text, manifest, summary = exp4333.ensure_ledgers_record_v400(
++        _minimal_registry(),
++        "# Verifier Gaps\n\nHistorical note remains.\n",
++        _minimal_manifest(),
++        guard,
++        bundle,
++        gaps_logged,
++    )
++
++    assert [entry["gap_id"] for entry in gaps_logged] == [
++        exp4333.GAP_DIFFUSIONGEMMA_SECOND_CORPUS_SCORER,
++        exp4333.GAP_ARC_GRID_GENERATION_SCORER,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_AR25,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_KA59,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_TR87,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_FT09,
++        exp4333.GAP_GAME_INVARIANT_ARC_VALUE_4331,
++    ]
++    for entry in gaps_logged:
++        assert set(entry) >= {
++            "gap_id",
++            "failure_mode",
++            "missing_discriminator",
++            "candidate_design",
++            "priority",
++        }
++    assert summary == {
++        "registry_reconciled": True,
++        "manifest_reconciled": True,
++        "gaps_logged_ids": [entry["gap_id"] for entry in gaps_logged],
++    }
++
++    gap4 = registry["verifiers"][0]
++    assert gap4["eval"]["eval_exp_4333"] == exp4333.EXP4333_ARTIFACT_PATH
++    assert gap4["eval"]["exp4333_regression_guard_passed"] is True
++    assert gap4["eval"]["exp4333_robust_aggregator_used"] is True
++    assert gap4["eval"]["exp4333_in_generation_moat_replicates"] is False
++    assert gap4["eval"]["exp4333_scorer_leak_recheck_passed"] is False
++    assert gap4["eval"]["exp4333_adaptive_guidance_beats_control"] is False
++    assert gap4["eval"]["exp4333_adaptive_domain_used"] == "reasoning_corpus_fallback"
++    assert gap4["eval"]["exp4333_e3_reproduced_levels_total"] == 0
++    assert gap4["eval"]["exp4333_e3_ar25_residual_mismatch_class"] == (
++        "missing_world_model_rule_gap_hidden_undo_stack_action7"
++    )
++    assert gap4["eval"]["exp4333_shallow_reproducible_total_levels"] == 13
++    assert gap4["eval"]["exp4333_tn36_schema"] == "ACTION6 data must be top-level {\"x\": int, \"y\": int}"
++    assert gap4["eval"]["exp4333_learned_encoder_transfer_helps"] is False
++    assert gap4["eval"]["exp4333_cross_game_state_reduction"] == pytest.approx(1.0084925690021231)
++    assert gap4["eval"]["exp4333_v400_state"] == exp4333.V400_STATE
++    assert gap4["eval"]["exp4333_gaps_logged"] == [entry["gap_id"] for entry in gaps_logged]
++    role = next(role for role in gap4["registry_roles"] if role["role_id"] == exp4333.V400_ROLE_ID)
++    assert role["v400_state"] == exp4333.V400_STATE
++    assert role["learned_encoder_transfer_helps"] is False
++    assert exp4333.registry_contains_v400(registry) is True
++    assert exp4333.registry_contains_v400({}) is False
++
++    missing_registry: dict[str, Any] = {}
++    exp4333._ensure_gap4_eval(missing_registry, guard, bundle, gaps_logged)
++    assert missing_registry["verifiers"][0]["verifier_id"] == exp4333.GAP4_VERIFIER_ID
++    empty_registry: dict[str, Any] = {}
++    exp4333._ensure_v400_role(empty_registry, bundle, gaps_logged)
++    assert empty_registry == {}
++
++    assert "Historical note remains." in gaps_text
++    assert "exp4333-gap-diffusiongemma-second-corpus-leak-free-scorer-4325:start" in gaps_text
++    assert "exp4333-gap-arc-grid-generation-scorer-4326:start" in gaps_text
++    assert "exp4333-gap-e3-world-model-rule-ar25-4327:start" in gaps_text
++    assert "exp4333-gap-4331:start" in gaps_text
++    assert exp4333.manifest_contains_cross_domain_retirement(manifest) is True
++
++
++def test_req_4333_build_artifact_validates_required_fields(tmp_path: Path) -> None:
++    """REQ-VERIFY-4333: terminal artifact exposes the required schema fields."""
++
++    _write_minimal_repo(tmp_path)
++    guard = exp4333.run_gap4_regression_guard(tmp_path)
++    bundle = exp4333.load_v400_outcomes(tmp_path)
++    gaps_logged = exp4333.build_gap_entries(bundle)
++    artifact = exp4333.build_artifact(
++        regression_guard=guard,
++        outcome_bundle=bundle,
++        gaps_logged=gaps_logged,
++        registry_reconciled=True,
++        manifest_reconciled=True,
++        reproducibility_checksum="sha256:" + "0" * 64,
++        duration_s=0.25,
++    )
++
++    exp4333.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["regression_guard_passed"] is True
++    assert artifact["registry_reconciled"] is True
++    assert artifact["manifest_reconciled"] is True
++    assert artifact["gaps_logged"] == gaps_logged
++    assert artifact["field_principles"] == exp4333.FIELD_PRINCIPLES
++    assert artifact["model_specs"]["method"] == "cached_v400_ledger_reconciliation"
++    assert artifact["inference_substrate"] == exp4333.INFERENCE_SUBSTRATE
++
++    for field in exp4333.REQUIRED_ARTIFACT_FIELDS:
++        malformed = dict(artifact)
++        malformed.pop(field)
++        with pytest.raises(ValueError, match=field):
++            exp4333.validate_artifact(malformed)
++    with pytest.raises(ValueError, match="terminal prefix"):
++        exp4333.validate_artifact({**artifact, "honest_verdict": "not terminal"})
++    with pytest.raises(ValueError, match="BARE bool"):
++        exp4333.validate_artifact({**artifact, "regression_guard_passed": "yes"})
++    with pytest.raises(ValueError, match="registry_reconciled"):
++        exp4333.validate_artifact({**artifact, "registry_reconciled": "yes"})
++    with pytest.raises(ValueError, match="manifest_reconciled"):
++        exp4333.validate_artifact({**artifact, "manifest_reconciled": "yes"})
++    with pytest.raises(ValueError, match="gaps_logged"):
++        exp4333.validate_artifact({**artifact, "gaps_logged": "gap"})
++    with pytest.raises(ValueError, match="gap entry"):
++        exp4333.validate_artifact({**artifact, "gaps_logged": [{"gap_id": "GAP"}]})
++    with pytest.raises(ValueError, match="v400_outcomes"):
++        exp4333.validate_artifact({**artifact, "v400_outcomes": []})
++    with pytest.raises(ValueError, match="availability_report"):
++        exp4333.validate_artifact({**artifact, "availability_report": []})
++    with pytest.raises(ValueError, match="random_seed"):
++        exp4333.validate_artifact({**artifact, "random_seed": True})
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        exp4333.validate_artifact({**artifact, "reproducibility_checksum": ""})
++    with pytest.raises(ValueError, match="model_specs"):
++        exp4333.validate_artifact({**artifact, "model_specs": {}})
++    with pytest.raises(ValueError, match="field_principles"):
++        exp4333.validate_artifact({**artifact, "field_principles": {}})
++    with pytest.raises(ValueError, match="spec_refs"):
++        exp4333.validate_artifact({**artifact, "spec_refs": ["REQ-VERIFY-4333"]})
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp4333.validate_artifact({**artifact, "inference_substrate": "live"})
++
++
++def test_req_4333_blocks_only_unparseable_ledgers(tmp_path: Path) -> None:
++    """REQ-VERIFY-4333: ledger parse failure blocks honestly before mutation."""
++
++    _write_minimal_repo(tmp_path)
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text("[not: registry]\n", encoding="utf-8")
++
++    preflight = exp4333.check_preconditions(tmp_path)
++    assert preflight["ok"] is False
++    assert preflight["blocked_resource"] == "verifier_registry"
++
++    artifact = exp4333.run_hygiene(tmp_path)
++    assert artifact["honest_verdict"] == "blocked_ledgers_unparseable"
++    assert artifact["regression_guard_passed"] is False
++    assert artifact["gaps_logged"] == []
++    assert artifact["registry_reconciled"] is False
++    assert artifact["manifest_reconciled"] is False
++
++
++def test_req_4333_results_entrypoint_writes_artifact(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-4333: results entrypoint calls the package runner."""
++
++    _write_minimal_repo(tmp_path)
++    monkeypatch.setattr(sys, "argv", [str(RESULTS_WRAPPER_PATH)])
++    monkeypatch.setattr(exp4333, "REPO_ROOT", tmp_path)
++    python_root = str(REPO_ROOT / "python")
++    monkeypatch.setattr(sys, "path", [entry for entry in sys.path if entry != python_root])
++
++    runpy.run_path(str(REPO_ROOT / RESULTS_WRAPPER_PATH), run_name="__main__")
++
++    payload = json.loads((tmp_path / exp4333.EXP4333_ARTIFACT_PATH).read_text(encoding="utf-8"))
++    assert payload["honest_verdict"].startswith("complete:")
++    assert payload["regression_guard_passed"] is True
++    assert [gap["gap_id"] for gap in payload["gaps_logged"]] == [
++        exp4333.GAP_DIFFUSIONGEMMA_SECOND_CORPUS_SCORER,
++        exp4333.GAP_ARC_GRID_GENERATION_SCORER,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_AR25,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_KA59,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_TR87,
++        exp4333.GAP_E3_WORLD_MODEL_RULE_FT09,
++        exp4333.GAP_GAME_INVARIANT_ARC_VALUE_4331,
++    ]
+-- 
+2.55.0
+

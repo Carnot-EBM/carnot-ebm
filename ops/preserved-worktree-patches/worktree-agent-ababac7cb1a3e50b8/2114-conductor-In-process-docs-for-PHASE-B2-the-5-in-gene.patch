@@ -1,0 +1,51 @@
+From 90cf220a68c4bff2fb61a4b52d4d8a370574700d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 16 Jun 2026 06:27:55 -0400
+Subject: [PATCH 02114/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20PHASE=20B2=20(the=20=C2=A75=20in-generation=20headline;=20?=
+ =?UTF-8?q?GATED=20on=20exp4292=20leak-free=20build)=20--=20DiffusionGemma?=
+ =?UTF-8?q?=20energy-guided=20full=20run=20USING=20the=20learned=20partial?=
+ =?UTF-8?q?-state=20scorer=20+=20matched=20no-Carnot-verifier=20controls.?=
+ =?UTF-8?q?=20GATED=20on=20exp4292=20partial=5Fstate=5Fscorer=5Fbuilt=3D?=
+ =?UTF-8?q?=3Dtrue=20AND=20partial=5Fstate=5Fleak=5Ffree=3D=3Dtrue=20(no?=
+ =?UTF-8?q?=20point=20running=20a=20guided=20benchmark=20without=20a=20lea?=
+ =?UTF-8?q?k-free=20scorer).=20Wire=20the=20exp4292=20partial-state=20scor?=
+ =?UTF-8?q?er=20as=20a=20per-step=20GUIDANCE=20energy=20reweighting=20Diff?=
+ =?UTF-8?q?usionGemma's=20denoising=20token=20selection=20via=20the=20llam?=
+ =?UTF-8?q?a.cpp=20PR=20binary.=20On=20a=20REASONING=20corpus=20(FoVer-ste?=
+ =?UTF-8?q?p/math,=20where=20the=20verifier=20is=20NOT=20the=20executable?=
+ =?UTF-8?q?=20oracle),=20n>=3D30=20per=20arm,=20run=20four=20conditions:?=
+ =?UTF-8?q?=20unguided=20/=20RFG=20(arXiv:2509.25604,=20the=20model's=20OW?=
+ =?UTF-8?q?N=20log-likelihood-ratio=20self-guidance=20--=20the=20NO-extern?=
+ =?UTF-8?q?al-verifier=20control)=20/=20EntRGi=20(arXiv:2602.05000)=20/=20?=
+ =?UTF-8?q?Carnot-partial-state-guided.=20Add=20a=20guidance-dynamics=20di?=
+ =?UTF-8?q?agnostic=20(arXiv:2506.10971:=20mask=20entropy,=20token-change?=
+ =?UTF-8?q?=20covariance,=20trajectory=20stability)=20that=20rejects=20an?=
+ =?UTF-8?q?=20over-guided=20scorer.=20Emit=20diffusiongemma=5Fguidance=5Fm?=
+ =?UTF-8?q?oat=20BARE=20bool=20:=3D=20(Carnot-guided=20-=20RFG=20>=200=20A?=
+ =?UTF-8?q?ND=20CI95-excl-0).=20verifier=5Fis=5Foracle=3Dfalse.=20The=20de?=
+ =?UTF-8?q?epest=20open=20=C2=A75=20question:=20does=20an=20EXTERNAL=20lea?=
+ =?UTF-8?q?rned=20verifier=20IMPROVE=20generation,=20beating=20the=20model?=
+ =?UTF-8?q?'s=20own=20self-guidance=3F=20NO=20TRM=20training;=20NO=20leade?=
+ =?UTF-8?q?rboard=20submission.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index ea609a54e3..47f5a5e9a9 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9203,3 +9203,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-16: Archive .396 -> activate .397; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .396 close-state truthfully: EFFICIENCY = a clean oracle-distinct PARETO WIN (exp4284 energy 0.654 vs Qwen3.6-35B judge 0.212, delta CI95 [0.308,0.577] excludes 0, cost_ratio 1.95e-08, verifier_is_oracle=false) but the judge scored below random so it needs hardening; DiffusionGemma guidance BLOCKED (exp4281 cannot_score_partial_states); cross-GENERATOR STILL OPEN (exp4282 FLAGGED degenerate -- wrong-majority-only pool + 4 candidates, the within-pool win exp4271 +0.40 STANDS); self-learning powered-static-ceiling but tier-2 was a no-op bug (exp4283 FLAGGED tautology); ARC +1 to 21 (exp4285 ls20); paper_ready=True (FoVer 0.9131, G1-G4). Frame .397 as CLOSE-the-cross-GENERATOR-axis + UNBLOCK-the-in-generation-thesis (partial-state scorer) + HARDEN-the-efficiency-Pareto-win. (⚠️ Blocked) — honest_verdict=success: archived_v396_v397_active_efficiency_pareto_True_partial_state_blocked_True_cross_generator_open_True_arc21_pretest_green; results/experiment_4290_archive_v396_activate_v397.json
+ - 2026-06-16: PHASE A1 (THE HEADLINE; P0 oracle-distinct frontier) -- CLOSE the cross-GENERATOR axis with a NON-degenerate ARC-GEN pool. .395 proved the oracle-distinct verifier-beats-vote win generalizes across families CARVED FROM ONE POOL (exp4271 +0.40 held-out, leak-free, 5-seed). The .396 ARC-GEN 2nd-substrate attempt (exp4282) was FLAGGED DEGENERATE: the pool was wrong-majority-only (vote@1=0.0 structural) with 4 candidates/task (correct trivially separable -> set_encoder@1=1.0), giving a meaningless +1.0 CI[1.0,1.0] that measures pool degeneracy, NOT cross-generator transfer (audit: docs/research-notes/exp4282-arcgen-degenerate-audit-2026-06-16.md). The cross-GENERATOR axis -- whether the verifier transfers to a CONSTRUCTION-DISJOINT generator -- is the LAST open axis of the selection moat. REBUILD a NON-degenerate ARC-GEN pool (arXiv:2511.00162, github.com/google/ARC-GEN; gitignore the clone): realistic candidate counts (NOT wrong-majority-only -- include tasks where vote CAN win), report vote@1 well above 0 and an oracle ceiling BELOW 1.0 (headroom the verifier must EARN). Train the set-encoder on train-generators; test beats-vote on HELD-OUT generators. Report per-substrate lift SEPARATELY (original-ARC / ARC-TGI / ARC-GEN). Emit cross_generator_holds BARE bool := (held-out ARC-GEN delta>0 AND CI95-excl-0 AND vote_at_1>0.05 AND oracle_at_k<1.0 AND delta<0.95 -- the non-degenerate guards). verifier_is_oracle=false. HARD-CAP to the window; an honest partial pool (>=5 generators, >=~12 held-out tasks/fold) is fine. (✅ Complete) — honest_verdict=complete: arcgen_cross_generator_generalizes; results/experiment_4291_arcgen_cross_generator_nondegenerate.json
+ - 2026-06-16: PHASE B1 (UNBLOCK the §5 in-generation thesis; harness-first BUILD) -- build + GATE a learned PARTIAL-STATE diffusion scorer for DiffusionGemma masked canvases, with a LEAK audit. .396 (exp4281) BLOCKED the in-generation moat with honest_verdict cannot_score_partial_states: no learned Carnot verifier can score PARTIAL (masked) DiffusionGemma denoising states. Standard PRMs are 'brittle or ill-calibrated' on masked states because they assume a left-to-right prefix (Prism, arXiv:2602.01842). BUILD the missing capability: a small learned value head over masked canvases (Manta-LM 2605.14531 closed-loop control template) that exposes score_partial_state(canvas, step) -> energy, trained on final exact-grid outcomes via the llama.cpp PR binary (~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval). CRITICAL harness-first deliverable: a PASSING test that the scorer scores partial states NON-DEGENERATELY on a HELD-OUT fixture (partial_state_auroc > 0.6 on held-out canvases) -- NOT the full guidance run (that is exp4293, gated on this). CRITICAL leak audit: if partial-target labels LEAK the final answer (the scorer just reads the canvas's revealed cells = the answer), the rerun is CIRCULAR not a learned external moat -- emit partial_state_leak_free BARE bool from a leak ablation (mask the answer-bearing cells; if the scorer still scores, it is leak-free). verifier_is_oracle=false. NO TRM training; an honest partial_state_scorer_built=false (cannot build a non-degenerate, leak-free scorer) is COMPLETE and gates exp4293 off. (⚠️ Research Finding) — honest_verdict=complete: partial_state_diffusion_scorer_built_leak_free; results/experiment_4292_partial_state_diffusion_scorer_build.json
++- 2026-06-16: PHASE B2 (the §5 in-generation headline; GATED on exp4292 leak-free build) -- DiffusionGemma energy-guided full run USING the learned partial-state scorer + matched no-Carnot-verifier controls. GATED on exp4292 partial_state_scorer_built==true AND partial_state_leak_free==true (no point running a guided benchmark without a leak-free scorer). Wire the exp4292 partial-state scorer as a per-step GUIDANCE energy reweighting DiffusionGemma's denoising token selection via the llama.cpp PR binary. On a REASONING corpus (FoVer-step/math, where the verifier is NOT the executable oracle), n>=30 per arm, run four conditions: unguided / RFG (arXiv:2509.25604, the model's OWN log-likelihood-ratio self-guidance -- the NO-external-verifier control) / EntRGi (arXiv:2602.05000) / Carnot-partial-state-guided. Add a guidance-dynamics diagnostic (arXiv:2506.10971: mask entropy, token-change covariance, trajectory stability) that rejects an over-guided scorer. Emit diffusiongemma_guidance_moat BARE bool := (Carnot-guided - RFG > 0 AND CI95-excl-0). verifier_is_oracle=false. The deepest open §5 question: does an EXTERNAL learned verifier IMPROVE generation, beating the model's own self-guidance? NO TRM training; NO leaderboard submission. (✅ Complete) — honest_verdict=complete: diffusiongemma_guidance_moat_won; results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.json
+-- 
+2.55.0
+

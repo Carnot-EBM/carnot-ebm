@@ -1,0 +1,44 @@
+From 881f28b12aec2d90d870f87de2b345b305f4006a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 23 Jul 2026 12:53:39 -0400
+Subject: [PATCH 07658/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 50efadb699..a828e72272 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 311, "phase": "iteration_start", "last_beat": "2026-07-23T16:32:03Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 312, "phase": "iteration_start", "last_beat": "2026-07-23T16:53:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1933188fcb..38cc590162 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14186,3 +14186,5 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-23 16:11 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
+ | 2026-07-23 16:30 UTC | Prospective adaptive-memory lifecycle on an honest | OK | 87 passed, 1 warning in 15.95s |
+ | 2026-07-23 16:32 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
++| 2026-07-23 16:51 UTC | Clean-upstream selective replay with hard-case neg | OK | 87 passed, 1 warning in 16.61s |
++| 2026-07-23 16:53 UTC | Exact-authority shadow routing after a portable en | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5854-portable-comparative-energy-controls |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 36e278aa6c..2fa3c9e336 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 311, "phase": "iteration_start", "started_at": "2026-07-23T16:32:03Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 312, "phase": "iteration_start", "started_at": "2026-07-23T16:53:37Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

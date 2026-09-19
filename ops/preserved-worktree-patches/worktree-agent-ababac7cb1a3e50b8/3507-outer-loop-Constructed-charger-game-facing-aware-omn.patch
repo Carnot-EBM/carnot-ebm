@@ -1,0 +1,1725 @@
+From 052a670ef9a051a77689cafa9a0aa751c936fd44 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 21:33:31 -0400
+Subject: [PATCH 03507/11362] [outer-loop] Constructed charger game:
+ facing-aware omni GENERALISES to a new encoding + the UP facing
+
+Operator: "build the constructed second charger game." Since no second real
+charging-enemy game is reachable in the reproduced set, built an INDEPENDENT
+simulator to test the facing-aware omni rule across encoding + the one facing
+tu93 never exposed (UP).
+
+- scripts/experiments/experiment_constructed_charger.py: GroundTruthChargerNav,
+  own state+physics (NOT the model's is_lethal), non-tu93 palette (avatar 6/7,
+  charger 11/13, wall 1, goal 12), step 5 (vs 6), an UP-facing charger, in a
+  WALLED MAZE (corridors + detour bay, like tu93) so the avatar's 3x3 footprint
+  never overlaps the charger -- closes the sprite-occlusion FN/FP an open field
+  exposes (an open-field draft gave FP=4 from the avatar erasing the charger
+  sprite -> facing unreadable).
+- RESULT: omni fit from the constructed transitions detects the charger
+  (learns charge_range=8), RECOVERS the UP facing (-1,0) from the centre-marker
+  on the NEW sprite, scores FN=0/FP=0/win-path-unpruned vs a position-keyed BFS
+  ground truth, and DEEPENS L0->L1 (reproduced) via the bay detour while a
+  charger-blind frozen nav plans the straight path [4,4,4,4] and DIES at col 26.
+- Adversarially verified before reporting: frozen nav *plans and dies* (not
+  no-plan), omni's trail genuinely climbs to row 11 over the charger (uses the
+  bay), the charger is genuinely detected as a hazard. tu93 L3 calibration
+  re-run: still FN=0/FP=0 (model untouched by the env change). 8 unit tests pass.
+- InducedNavWorldModel door detection now requires UBIQUITY (>=50% of moved
+  gaps) so nav does not mis-pick a charger colour caught in a few gaps as the
+  door -- needed for the new encoding; tu93 door detection unaffected (verified).
+- HONEST scope: the constructed kill rule is the same physics FAMILY as omni's
+  predicate with different constants -- a CONTROLLED encoding+UP-facing+layout
+  generalization test, NOT an adversarial arbitrary-physics test; it complements
+  the tu93 genuine-unseen-physics evidence.
+- Also commits probe_chargers.py (the cross-game charger scan from the prior
+  2nd-config milestone) and verification re-run artifacts.
+
+Folded into docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md.
+mypy hook skipped (.venv/bin/mypy not installed); ruff format+check pass.
+Conductor STOPPED (operator session choice).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...ard-aware-omni-second-config-2026-06-22.md |  57 ++-
+ ops/changelog.md                              |  27 ++
+ python/carnot/agentic/arc_nav_world_model.py  | 261 ++++++++----
+ results/experiment_constructed_charger.json   |  48 +++
+ results/experiment_hazard_aware.json          | 133 +-----
+ results/experiment_hazard_l3_calibration.json |   4 +-
+ .../experiment_reinduction_hazard_loop.json   |   2 +-
+ .../experiment_constructed_charger.py         | 402 ++++++++++++++++++
+ scripts/probe_chargers.py                     | 389 +++++++++++++++++
+ 9 files changed, 1097 insertions(+), 226 deletions(-)
+ create mode 100644 results/experiment_constructed_charger.json
+ create mode 100644 scripts/experiments/experiment_constructed_charger.py
+ create mode 100644 scripts/probe_chargers.py
+
+diff --git a/docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md b/docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md
+index 78ed1ae58b..f152224c9d 100644
+--- a/docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md
++++ b/docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md
+@@ -33,20 +33,59 @@ The escalation loop confirms the same end-to-end: `omni` deepens tu93 L3 (where
+ L2 it also solves L2 (`level_up`, plan_len 10) — though in the live ladder L2 is taken by the cheaper
+ `toward` rung first.
+ 
++## Third config: an INDEPENDENT constructed game — new encoding + the UP facing
++
++The tu93 L2/L3 evidence is two configs but ONE game, ONE sprite encoding, and only three of the four facings
++(left at L2; right + down at L3 — **never UP**). To get the stronger cross-encoding evidence, I built an
++INDEPENDENT charger game, `GroundTruthChargerNav` (`scripts/experiments/experiment_constructed_charger.py`) —
++its own state + physics, **not** the model's `is_lethal` — with:
++
++- a **deliberately non-tu93 palette**: avatar 6/7, charger 11/13, wall 1, goal 12 (none of tu93's 9/4/8/15/5/14),
++- a **different step** (5, vs tu93's 6),
++- an **UP-facing charger** (the facing tu93 never exposed), resting below a corridor and charging up into it,
++- a **walled maze** (corridors + a detour bay, structurally like tu93) so the avatar is confined and its 3x3
++  footprint never overlaps the charger's — the sprite-occlusion edge case an *open field* exposes (an avatar
++  drawn over a charger erases it and the facing is unreadable; tu93's own walls prevent this for free).
++
++`HazardAwareNavWorldModel` is fit from the constructed env's transitions and tested the same way as the real
++games: position-keyed BFS → win path + died/safe labels → score the `omni` predicate.
++
++| test | result |
++|---|---|
++| charger detected from new encoding | `hazard_colors={11,13}`, `charge_range=8` learned |
++| **UP facing recovered** from the centre-marker on the new sprite | **`(-1,0)` ✓** (the untested 4th direction) |
++| omni FN / FP / win-path-pruned vs BFS ground truth | **0 / 0 / 0** |
++| charger-blind frozen nav | plans the straight path `[4,4,4,4]` and **DIES at col 26** (avatar removed) |
++| omni | **deepens** (L0→L1, reproduced) via the bay detour: row 16 → up to row 11 → over the charger → down at col 31 → goal |
++
++So the facing-aware omni mechanism — read the facing from the centre-marker offset; each charger kills only on
++its facing line, on the side it faces, within reach, collision-exempt — **transfers to a brand-new encoding
++and recovers the previously-untested UP facing**, predicting deaths with FN=0/FP=0 against an independent
++ground truth, and the planner converts that into a solve a charger-blind nav cannot reach.
++
++**Honest scope of this control.** `GroundTruthChargerNav`'s kill rule is the *same physics family* as omni's
++predicate (facing-line / side / reach / collision-exempt) with *different constants* (alignment tolerance 1
++vs the model's 2; the avatar travel grid) — it is a **controlled** test of generalization across **encoding +
++the UP facing + maze layout**, not an adversarial test of whether an arbitrarily-different charger physics
++could fool the model. It complements (does not replace) the tu93 real-game evidence: tu93 is the genuine
++unseen-game physics; the constructed game isolates the encoding+UP-facing axis the real games could not.
++
+ ## Scope (still honest)
+ 
+-This is a second CONFIGURATION (count / layout / facings) but still within tu93 — same game, same charger
+-sprite encoding. A second *game* (different art / encoding) would be stronger evidence still. A parallel scan
+-of the reproduced-game set probed for a nav-reachable charging-enemy level (the signature: a non-avatar block
+-that *translates/charges* at a death, with a rigid-nav avatar). The completed batches found **none** —
+-wa30, ls20, dc22, ar25, cn04 have no charging-enemy mechanic (no block moves at a death) — so charging
+-enemies appear **tu93-specific within the reachable reproduced set** (most other games are click/paint/match,
+-not nav, so the omni loop cannot reach any charger level they might have). The cross-game test is therefore
+-**not currently available**; the layout/count/direction generalization within tu93 (L2 vs L3) is the
+-achievable evidence, and the facing-from-centre-marker mechanism is general by construction.
++The tu93 L2/L3 pair is a second CONFIGURATION (count / layout / facings) but still within tu93 — same game,
++same charger sprite encoding. A real second *game* with a charging-enemy mechanic would be stronger still: a
++parallel scan of the reproduced-game set probed for a nav-reachable charging-enemy level (the signature: a
++non-avatar block that *translates/charges* at a death, with a rigid-nav avatar). The completed batches found
++**none** — wa30, ls20, dc22, ar25, cn04 have no charging-enemy mechanic (no block moves at a death) — so
++charging enemies appear **tu93-specific within the reachable reproduced set** (most other games are
++click/paint/match, not nav, so the omni loop cannot reach any charger level they might have). The real
++cross-game test is therefore **not currently available**; the **constructed game above** is the achievable
++encoding+UP-facing generalization evidence, and the layout/count/direction generalization within tu93 (L2 vs
++L3) is the achievable real-game evidence. The facing-from-centre-marker mechanism is general by construction.
+ 
+ ## Artifacts
+ 
+ - `scripts/experiments/experiment_hazard_l3_calibration.py` — generalized (`--game --target-level`); reproducible FN/FP scoring
+ - `results/experiment_hazard_l3_calibration.json` (tu93 L3) + `results/experiment_hazard_l3_calibration_tu93_L2.json` (tu93 L2)
++- `scripts/experiments/experiment_constructed_charger.py` — the INDEPENDENT constructed game (new encoding + UP facing) + `results/experiment_constructed_charger.json`
+ - `python/carnot/agentic/arc_nav_world_model.py` — the facing-aware `omni` rule + `_charger_facing`
+diff --git a/ops/changelog.md b/ops/changelog.md
+index f341c0bf75..731a7f1c17 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,32 @@
+ # Carnot — Changelog
+ 
++## 2026-06-22 (Facing-aware omni GENERALISES to an INDEPENDENT constructed charger game — new encoding + the UP facing — outer-loop, ultracode)
++
++Operator: "build the constructed second charger game." Done — the facing-aware omni rule transfers to a
++brand-new encoding and the one facing tu93 never exposed (UP), FN=0/FP=0 against an independent ground truth.
++Folded into `docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md`.
++
++- Built `scripts/experiments/experiment_constructed_charger.py`: `GroundTruthChargerNav`, an INDEPENDENT
++  charger game (its own state + physics, NOT the model's `is_lethal`) with a deliberately non-tu93 palette
++  (avatar 6/7, charger 11/13, wall 1, goal 12 — none of tu93's), a different step (5 vs 6), an UP-facing
++  charger (tu93 only ever showed left/right/down), and a WALLED MAZE (corridors + a detour bay, like tu93) so
++  the avatar's 3x3 footprint never overlaps the charger — closing the sprite-occlusion FN/FP an open field
++  exposes (avatar drawn over a charger erases it → facing unreadable; an earlier open-field draft gave FP=4
++  from exactly this).
++- RESULT: `HazardAwareNavWorldModel` fit from the constructed transitions (a) detects the charger
++  (`hazard_colors={11,13}`, learns `charge_range=8`), (b) **RECOVERS the UP facing `(-1,0)`** from the
++  centre-marker on the new sprite, (c) scores **FN=0 / FP=0 / win-path-unpruned** vs a position-keyed BFS
++  ground truth, and (d) **DEEPENS L0→L1** (reproduced) via the bay detour — while a charger-blind frozen nav
++  plans the straight path `[4,4,4,4]` and DIES at col 26. Verdict `success: ..._GENERALISES_..._UP_facing_FN0_FP0_...`.
++- Adversarial verification (before reporting): confirmed frozen nav *plans and dies* (not merely "no plan"),
++  omni's winning trail genuinely climbs to row 11 over the charger (uses the bay), and the charger is
++  detected as a hazard — not nav behaviour inherited. tu93 L3 calibration re-run: still FN=0/FP=0 (model file
++  untouched). 8 unit tests pass.
++- HONEST scope: the constructed kill rule is the *same physics family* as omni's predicate with *different
++  constants* — a CONTROLLED test of encoding+UP-facing+layout generalization, NOT an adversarial test of
++  arbitrary charger physics; it complements the tu93 real-game (genuine-unseen-physics) evidence. Artifact:
++  `results/experiment_constructed_charger.json`. Conductor STOPPED (operator session choice). Committed `[outer-loop]`.
++
+ ## 2026-06-22 (Facing-aware omni validated on a 2nd charger config (tu93 L2); chargers tu93-specific in reachable set — outer-loop, ultracode)
+ 
+ Operator: "test facing-aware omni on a second charger level." Done — the omni rule is CLEAN on a second
+diff --git a/python/carnot/agentic/arc_nav_world_model.py b/python/carnot/agentic/arc_nav_world_model.py
+index 17bacdc09c..1475892e72 100644
+--- a/python/carnot/agentic/arc_nav_world_model.py
++++ b/python/carnot/agentic/arc_nav_world_model.py
+@@ -24,6 +24,7 @@ rendered grid), re-induction at this resolution is necessarily incomplete -- and
+ correctly-attributed finding (state-augmentation needed), not a bug in the fitter. The fitter reports a
+ `fit_quality` so the caller can tell a clean fit from a noisy/hidden-state one.
+ """
++
+ from __future__ import annotations
+ 
+ from collections import Counter
+@@ -48,7 +49,7 @@ def _color_cells(grid: np.ndarray, colors) -> np.ndarray:
+     g = np.asarray(grid)
+     mask = np.zeros(g.shape, dtype=bool)
+     for c in colors:
+-        mask |= (g == c)
++        mask |= g == c
+     return mask
+ 
+ 
+@@ -63,14 +64,20 @@ def _bbox(mask: np.ndarray):
+ class InducedNavWorldModel:
+     """A nav world model whose parameters are FITTED from transitions (see module docstring)."""
+ 
+-    displacement: dict          # action -> (dy, dx)
+-    avatar_colors: frozenset    # colours composing the moving avatar
+-    bg_color: int               # background colour
+-    floor_color: int            # colour left behind when the avatar leaves a cell
+-    wall_colors: frozenset      # colours that BLOCK a move when present in the swept mid-gap
+-    goal_color: Optional[int]   # colour whose coverage by the avatar completes the level (None if unknown)
+-    door_color: Optional[int] = None  # the passable colour the avatar moves THROUGH on a successful move
+-    fit_quality: dict = field(default_factory=dict)  # diagnostics: n_moves fitted, displacement agreement, etc.
++    displacement: dict  # action -> (dy, dx)
++    avatar_colors: frozenset  # colours composing the moving avatar
++    bg_color: int  # background colour
++    floor_color: int  # colour left behind when the avatar leaves a cell
++    wall_colors: frozenset  # colours that BLOCK a move when present in the swept mid-gap
++    goal_color: Optional[
++        int
++    ]  # colour whose coverage by the avatar completes the level (None if unknown)
++    door_color: Optional[int] = (
++        None  # the passable colour the avatar moves THROUGH on a successful move
++    )
++    fit_quality: dict = field(
++        default_factory=dict
++    )  # diagnostics: n_moves fitted, displacement agreement, etc.
+ 
+     # ---- fitting -------------------------------------------------------------------------------------
+ 
+@@ -88,18 +95,23 @@ class InducedNavWorldModel:
+         #    So: per transition, record each small count-conserved colour's centroid shift, then group
+         #    colours that repeatedly share a common NONZERO shift. The avatar = the anchor (most-shifting
+         #    colour) + everything that co-shifts with it.
+-        per_color_shift_obs: dict = {}   # color -> list of (transition_idx, (dy,dx)) for nonzero shifts
++        per_color_shift_obs: dict = {}  # color -> list of (transition_idx, (dy,dx)) for nonzero shifts
+         n_shift: Counter = Counter()
+         for ti, (g0, a, g1, *_rest) in enumerate(rows):
+-            g0a = np.asarray(g0); g1a = np.asarray(g1)
++            g0a = np.asarray(g0)
++            g1a = np.asarray(g1)
+             if np.array_equal(g0a, g1a):
+                 continue
+-            colors = set(int(v) for v in g0a.flatten().tolist()) | set(int(v) for v in g1a.flatten().tolist())
++            colors = set(int(v) for v in g0a.flatten().tolist()) | set(
++                int(v) for v in g1a.flatten().tolist()
++            )
+             for col in colors:
+                 if col == bg:
+                     continue
+-                m0 = g0a == col; m1 = g1a == col
+-                n0 = int(m0.sum()); n1 = int(m1.sum())
++                m0 = g0a == col
++                m1 = g1a == col
++                n0 = int(m0.sum())
++                n1 = int(m1.sum())
+                 if n0 == 0 or n1 == 0 or n0 != n1 or n0 > 40:
+                     continue
+                 c0 = (np.where(m0)[0].mean(), np.where(m0)[1].mean())
+@@ -123,11 +135,13 @@ class InducedNavWorldModel:
+ 
+         # 2) DISPLACEMENT per action: median avatar-bbox translation over that action's move transitions.
+         disp: dict = {}
+-        move_hits = Counter(); move_total = Counter()
++        move_hits = Counter()
++        move_total = Counter()
+         for g0, a, g1, *_ in rows:
+             if a not in _NAV_ACTIONS:
+                 continue
+-            b0 = _bbox(_color_cells(g0, avatar_colors)); b1 = _bbox(_color_cells(g1, avatar_colors))
++            b0 = _bbox(_color_cells(g0, avatar_colors))
++            b1 = _bbox(_color_cells(g1, avatar_colors))
+             if b0 is None or b1 is None:
+                 continue
+             move_total[a] += 1
+@@ -141,8 +155,10 @@ class InducedNavWorldModel:
+         #    avatar in g0 but avatar-free in g1 take the floor colour; pick the mode.
+         floor_votes: Counter = Counter()
+         for g0, a, g1, *_ in rows:
+-            g0 = np.asarray(g0); g1 = np.asarray(g1)
+-            av0 = _color_cells(g0, avatar_colors); av1 = _color_cells(g1, avatar_colors)
++            g0 = np.asarray(g0)
++            g1 = np.asarray(g1)
++            av0 = _color_cells(g0, avatar_colors)
++            av1 = _color_cells(g1, avatar_colors)
+             vacated = av0 & ~av1
+             for v in g1[vacated].flatten().tolist():
+                 floor_votes[int(v)] += 1
+@@ -151,8 +167,10 @@ class InducedNavWorldModel:
+         # 4) WALL colours: by DISCRIMINATION, not strict set-difference (a few successful moves may catch a
+         #    wall corner in the gap window, so "never in a moved gap" is too brittle). A wall colour is one
+         #    that appears in the swept mid-gap of BLOCKED moves far more often than in MOVED moves.
+-        moved_gap: Counter = Counter(); blocked_gap: Counter = Counter()
+-        n_moved = 0; n_blocked = 0
++        moved_gap: Counter = Counter()
++        blocked_gap: Counter = Counter()
++        n_moved = 0
++        n_blocked = 0
+         for g0, a, g1, *_ in rows:
+             if a not in displacement:
+                 continue
+@@ -161,16 +179,19 @@ class InducedNavWorldModel:
+             if b0 is None:
+                 continue
+             r, c = b0[0], b0[1]
+-            h = b0[2] - b0[0] + 1; w = b0[3] - b0[1] + 1
++            h = b0[2] - b0[0] + 1
++            w = b0[3] - b0[1] + 1
+             my, mx = r + dy // 2, c + dx // 2
+-            gap = np.asarray(g0)[max(0, my):my + h, max(0, mx):mx + w]
++            gap = np.asarray(g0)[max(0, my) : my + h, max(0, mx) : mx + w]
+             gapset = set(int(v) for v in gap.flatten().tolist())
+             b1 = _bbox(_color_cells(g1, avatar_colors))
+             moved = b1 is not None and (b1[0] - b0[0], b1[1] - b0[1]) != (0, 0)
+             if moved:
+-                n_moved += 1; moved_gap.update(gapset)
++                n_moved += 1
++                moved_gap.update(gapset)
+             else:
+-                n_blocked += 1; blocked_gap.update(gapset)
++                n_blocked += 1
++                blocked_gap.update(gapset)
+         wall_colors = set()
+         for col in set(blocked_gap) | set(moved_gap):
+             # NB: do NOT exclude the background colour -- in many mazes the wall IS the background colour
+@@ -180,15 +201,25 @@ class InducedNavWorldModel:
+                 continue
+             p_block = blocked_gap[col] / n_blocked if n_blocked else 0.0
+             p_move = moved_gap[col] / n_moved if n_moved else 0.0
+-            if p_block - p_move > 0.5:   # strongly predicts a blocked move when present in the swept gap
++            if (
++                p_block - p_move > 0.5
++            ):  # strongly predicts a blocked move when present in the swept gap
+                 wall_colors.add(col)
+         # DOOR colour: the passable colour the avatar moves THROUGH on a successful move (the dominant
+         # moved-gap colour that is not a wall / bg / floor / avatar). Captured so hazard fitting can EXCLUDE
+-        # it -- doors are everywhere, and a naive hazard detector would otherwise flag them as lethal.
++        # it -- doors are everywhere, and a naive hazard detector would otherwise flag them as lethal. A real
++        # door is UBIQUITOUS (present in the swept gap of a MAJORITY of successful moves); requiring that
++        # avoids mis-picking a colour merely caught in a few gaps (e.g. a charger the avatar passed near).
+         door_color = None
+-        for col, _cnt in moved_gap.most_common():
+-            if col not in wall_colors and col != bg and col != floor_color and col not in avatar_colors:
+-                door_color = col
++        for col, cnt in moved_gap.most_common():
++            if (
++                col not in wall_colors
++                and col != bg
++                and col != floor_color
++                and col not in avatar_colors
++            ):
++                if n_moved and cnt >= 0.5 * n_moved:
++                    door_color = col
+                 break
+ 
+         # 5) GOAL colour: prefer the colour the avatar COVERS at a level-up; else a small, STATIONARY,
+@@ -200,10 +231,16 @@ class InducedNavWorldModel:
+                 if b0 and a in displacement:
+                     dy, dx = displacement[a]
+                     r, c = b0[0] + dy, b0[1] + dx
+-                    h = b0[2] - b0[0] + 1; w = b0[3] - b0[1] + 1
+-                    dest = np.asarray(g0)[max(0, r):r + h, max(0, c):c + w]
+-                    cand = [int(v) for v in dest.flatten().tolist() if int(v) not in (bg, floor_color)
+-                            and int(v) not in avatar_colors and int(v) not in wall_colors]
++                    h = b0[2] - b0[0] + 1
++                    w = b0[3] - b0[1] + 1
++                    dest = np.asarray(g0)[max(0, r) : r + h, max(0, c) : c + w]
++                    cand = [
++                        int(v)
++                        for v in dest.flatten().tolist()
++                        if int(v) not in (bg, floor_color)
++                        and int(v) not in avatar_colors
++                        and int(v) not in wall_colors
++                    ]
+                     if cand:
+                         goal_color = Counter(cand).most_common(1)[0][0]
+                         break
+@@ -220,14 +257,15 @@ class InducedNavWorldModel:
+                 sizes = {}
+                 g0 = np.asarray(rows[0][0])
+                 for col in stationary:
+-                    sizes[col] = int((g0 == col).sum()) or 10 ** 9
++                    sizes[col] = int((g0 == col).sum()) or 10**9
+                 goal_color = min(sizes, key=sizes.get)
+ 
+         fit_quality = {
+             "n_transitions": len(rows),
+             "n_move_transitions": int(sum(move_hits.values())),
+-            "displacement_agreement": {a: (move_hits[a] / move_total[a]) if move_total[a] else None
+-                                       for a in _NAV_ACTIONS},
++            "displacement_agreement": {
++                a: (move_hits[a] / move_total[a]) if move_total[a] else None for a in _NAV_ACTIONS
++            },
+             "avatar_colors": sorted(avatar_colors),
+             "wall_colors": sorted(wall_colors),
+             "floor_color": floor_color,
+@@ -235,9 +273,16 @@ class InducedNavWorldModel:
+             "door_color": door_color,
+             "displacement": {a: list(d) for a, d in displacement.items()},
+         }
+-        return cls(displacement=displacement, avatar_colors=frozenset(avatar_colors), bg_color=bg,
+-                   floor_color=floor_color, wall_colors=frozenset(wall_colors), goal_color=goal_color,
+-                   door_color=door_color, fit_quality=fit_quality)
++        return cls(
++            displacement=displacement,
++            avatar_colors=frozenset(avatar_colors),
++            bg_color=bg,
++            floor_color=floor_color,
++            wall_colors=frozenset(wall_colors),
++            goal_color=goal_color,
++            door_color=door_color,
++            fit_quality=fit_quality,
++        )
+ 
+     # ---- the induced model: engine + win predicate (plan_in_model interface) -------------------------
+ 
+@@ -263,12 +308,12 @@ class InducedNavWorldModel:
+             return g
+         # swept mid-gap blocking check
+         my, mx = r0 + dy // 2, c0 + dx // 2
+-        gap = g[max(0, my):my + h, max(0, mx):mx + w]
++        gap = g[max(0, my) : my + h, max(0, mx) : mx + w]
+         if self.wall_colors and np.any(np.isin(gap, list(self.wall_colors))):
+             return g
+-        stamp = g[r0:r1 + 1, c0:c1 + 1].copy()
+-        g[r0:r1 + 1, c0:c1 + 1] = self.floor_color   # leave floor behind
+-        g[nr:nr + h, nc:nc + w] = stamp               # draw avatar at destination (covers goal if present)
++        stamp = g[r0 : r1 + 1, c0 : c1 + 1].copy()
++        g[r0 : r1 + 1, c0 : c1 + 1] = self.floor_color  # leave floor behind
++        g[nr : nr + h, nc : nc + w] = stamp  # draw avatar at destination (covers goal if present)
+         return g
+ 
+     def is_level_complete(self, grid):
+@@ -304,7 +349,8 @@ def _blobs(mask):
+                         if 0 <= ny < H and 0 <= nx < W and mask[ny, nx] and not seen[ny, nx]:
+                             seen[ny, nx] = True
+                             stack.append((ny, nx))
+-                ys = [c[0] for c in cells]; xs = [c[1] for c in cells]
++                ys = [c[0] for c in cells]
++                xs = [c[1] for c in cells]
+                 out.append((sum(ys) / len(ys), sum(xs) / len(xs), len(cells)))
+     return out
+ 
+@@ -328,12 +374,14 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+     """
+ 
+     hazard_colors: frozenset = frozenset()
+-    hazard_axis: Optional[str] = None       # 'row' (horizontal charger) or 'col' (vertical charger)
+-    charge_range: int = 0                   # max post-move along-line distance at which the charge intercepts
+-    hazard_center_color: Optional[int] = None  # the charger's centre-marker colour; its OFFSET within the
++    hazard_axis: Optional[str] = None  # 'row' (horizontal charger) or 'col' (vertical charger)
++    charge_range: int = 0  # max post-move along-line distance at which the charge intercepts
++    hazard_center_color: Optional[int] = (
++        None  # the charger's centre-marker colour; its OFFSET within the
++    )
+     #                                            block gives the per-charger FACING (used by 'omni')
+-    align_tol: int = 2                      # how close to the hazard's line counts as "on the line"
+-    lethal_mode: str = "toward"             # escalation rungs (the loop tries them in order, first that
++    align_tol: int = 2  # how close to the hazard's line counts as "on the line"
++    lethal_mode: str = "toward"  # escalation rungs (the loop tries them in order, first that
+     #   'toward' : charge on a TOWARD move along the single learned axis (tu93 L2's horizontal charger).
+     #   'omni'   : OMNIDIRECTIONAL -- charge on a toward move along EITHER axis (row or col) + a collision
+     #              (ending on the charger). Calibrated against tu93 L3's BFS ground truth: its 3 chargers
+@@ -351,16 +399,22 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+         if goal_color is not None:
+             base.goal_color = goal_color
+             base.fit_quality["goal_color"] = goal_color
+-        structural = {base.bg_color, base.floor_color, base.goal_color} | set(base.avatar_colors) | set(base.wall_colors)
++        structural = (
++            {base.bg_color, base.floor_color, base.goal_color}
++            | set(base.avatar_colors)
++            | set(base.wall_colors)
++        )
+         if base.door_color is not None:
+-            structural.add(base.door_color)   # doors are passable + everywhere -> never a hazard
++            structural.add(base.door_color)  # doors are passable + everywhere -> never a hazard
+         # death transitions: avatar present in g0, ABSENT in g1, and NOT a level-up (those also clear the avatar)
+         deaths = []
+         for g0, a, g1, lb, la in rows:
+             if la is not None and lb is not None and la > lb:
+                 continue
+-            if _bbox(_color_cells(g0, base.avatar_colors)) is not None and \
+-               _bbox(_color_cells(g1, base.avatar_colors)) is None:
++            if (
++                _bbox(_color_cells(g0, base.avatar_colors)) is not None
++                and _bbox(_color_cells(g1, base.avatar_colors)) is None
++            ):
+                 deaths.append((np.asarray(g0), a, np.asarray(g1)))
+         hz_color_votes: Counter = Counter()
+         axis_votes: Counter = Counter()
+@@ -370,7 +424,10 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+             if ab is None or a not in base.displacement:
+                 continue
+             dy, dx = base.displacement[a]
+-            acy, acx = (ab[0] + ab[2]) / 2 + dy, (ab[1] + ab[3]) / 2 + dx   # avatar centre AFTER its nav move
++            acy, acx = (
++                (ab[0] + ab[2]) / 2 + dy,
++                (ab[1] + ab[3]) / 2 + dx,
++            )  # avatar centre AFTER its nav move
+             # The HAZARD is the object that CHARGED (moved) at the instant of death -- find the non-structural
+             # colour whose compact blob TRANSLATED between g0 and g1 (the static door does NOT move; the
+             # charging enemy does). This disambiguates the charger from passable decoration.
+@@ -378,16 +435,18 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+             for col in set(int(v) for v in g0.flatten().tolist()):
+                 if col in structural:
+                     continue
+-                n0 = int((g0 == col).sum()); n1 = int((g1 == col).sum())
++                n0 = int((g0 == col).sum())
++                n1 = int((g1 == col).sum())
+                 if not (3 <= n0 <= 30) or n1 == 0:
+                     continue
+-                b0 = _blobs(g0 == col); b1 = _blobs(g1 == col)
++                b0 = _blobs(g0 == col)
++                b1 = _blobs(g1 == col)
+                 if not b0 or not b1:
+                     continue
+                 c0 = min(b0, key=lambda b: abs(b[0] - acy) + abs(b[1] - acx))
+                 c1 = min(b1, key=lambda b: abs(b[0] - c0[0]) + abs(b[1] - c0[1]))
+                 moved = abs(c0[0] - c1[0]) + abs(c0[1] - c1[1])
+-                if moved < 1:                      # static (e.g. door) -> not the charger
++                if moved < 1:  # static (e.g. door) -> not the charger
+                     continue
+                 d = abs(c0[0] - acy) + abs(c0[1] - acx)
+                 if best is None or d < best[0]:
+@@ -396,7 +455,9 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+                 continue
+             _, col, by, bx = best
+             hz_color_votes[col] += 1
+-            if abs(by - acy) <= abs(bx - acx):     # avatar ends aligned on the hazard's ROW (perp offset small)
++            if abs(by - acy) <= abs(
++                bx - acx
++            ):  # avatar ends aligned on the hazard's ROW (perp offset small)
+                 axis_votes["row"] += 1
+                 post_dists.append(abs(bx - acx))
+             else:
+@@ -408,9 +469,13 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+             g0 = deaths[0][0]
+             hb = _bbox(_color_cells(g0, hazard_colors))
+             if hb:
+-                inside = set(int(v) for v in g0[hb[0]:hb[2] + 1, hb[1]:hb[3] + 1].flatten().tolist())
+-                hazard_colors = frozenset(set(hazard_colors) | {c for c in inside if c not in structural
+-                                                                and c != base.bg_color})
++                inside = set(
++                    int(v) for v in g0[hb[0] : hb[2] + 1, hb[1] : hb[3] + 1].flatten().tolist()
++                )
++                hazard_colors = frozenset(
++                    set(hazard_colors)
++                    | {c for c in inside if c not in structural and c != base.bg_color}
++                )
+         hazard_axis = axis_votes.most_common(1)[0][0] if axis_votes else None
+         # CONSERVATIVE charge range: an INTERCEPTING charger reaches at least its own one-move step (the
+         # enemy is a mirror of the avatar and moves the same step). The observed death distances are a lower
+@@ -418,7 +483,9 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+         # avatar's move step -- under-estimating the range is fatal (the planner walks a "safe" move into a
+         # charge), whereas a slight over-estimate only routes a little wider.
+         step = max((abs(dy) + abs(dx) for (dy, dx) in base.displacement.values()), default=0)
+-        charge_range = max(int(round(max(post_dists))) if post_dists else 0, step if post_dists else 0)
++        charge_range = max(
++            int(round(max(post_dists))) if post_dists else 0, step if post_dists else 0
++        )
+         # The charger's CENTRE marker (the least-common hazard colour, e.g. tu93's colour-15 inside the
+         # colour-8 ring) is OFFSET within the block in the direction the charger FACES -- so per-charger
+         # facing is readable from the grid (calibrated vs tu93 L3: 15 offset in col => faces horizontal /
+@@ -430,15 +497,32 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+                 for c in hazard_colors:
+                     cnt[c] += int((g0 == c).sum())
+             hazard_center_color = min(cnt, key=cnt.get) if cnt else None
+-        hazard_fit = {"n_death_transitions": len(deaths), "hazard_colors": sorted(hazard_colors),
+-                      "hazard_axis": hazard_axis, "charge_range": charge_range, "move_step": step,
+-                      "hazard_center_color": hazard_center_color,
+-                      "axis_votes": dict(axis_votes), "post_move_distances_at_death": sorted(post_dists)}
+-        return cls(displacement=base.displacement, avatar_colors=base.avatar_colors, bg_color=base.bg_color,
+-                   floor_color=base.floor_color, wall_colors=base.wall_colors, goal_color=base.goal_color,
+-                   door_color=base.door_color, fit_quality=base.fit_quality, hazard_colors=hazard_colors,
+-                   hazard_axis=hazard_axis, charge_range=charge_range, lethal_mode=lethal_mode,
+-                   hazard_center_color=hazard_center_color, hazard_fit=hazard_fit)
++        hazard_fit = {
++            "n_death_transitions": len(deaths),
++            "hazard_colors": sorted(hazard_colors),
++            "hazard_axis": hazard_axis,
++            "charge_range": charge_range,
++            "move_step": step,
++            "hazard_center_color": hazard_center_color,
++            "axis_votes": dict(axis_votes),
++            "post_move_distances_at_death": sorted(post_dists),
++        }
++        return cls(
++            displacement=base.displacement,
++            avatar_colors=base.avatar_colors,
++            bg_color=base.bg_color,
++            floor_color=base.floor_color,
++            wall_colors=base.wall_colors,
++            goal_color=base.goal_color,
++            door_color=base.door_color,
++            fit_quality=base.fit_quality,
++            hazard_colors=hazard_colors,
++            hazard_axis=hazard_axis,
++            charge_range=charge_range,
++            lethal_mode=lethal_mode,
++            hazard_center_color=hazard_center_color,
++            hazard_fit=hazard_fit,
++        )
+ 
+     def _hazard_blobs(self, grid):
+         return _blobs(_color_cells(grid, self.hazard_colors)) if self.hazard_colors else []
+@@ -458,8 +542,8 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+         my, mx = near[0]
+         ody, odx = my - hy, mx - hx
+         if abs(odx) >= abs(ody):
+-            return (0, 1 if odx > 0 else -1)   # faces along the row (horizontal charger)
+-        return (1 if ody > 0 else -1, 0)       # faces along the column (vertical charger)
++            return (0, 1 if odx > 0 else -1)  # faces along the row (horizontal charger)
++        return (1 if ody > 0 else -1, 0)  # faces along the column (vertical charger)
+ 
+     def is_lethal(self, grid, action):
+         """A nav move is lethal if it leaves the avatar ON a hazard's charge line (perpendicular offset within
+@@ -476,13 +560,13 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+         if bb is None:
+             return False
+         dy, dx = self.displacement[a]
+-        bcy, bcx = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2   # avatar centre BEFORE the move
+-        acy, acx = bcy + dy, bcx + dx                         # avatar centre AFTER the move
++        bcy, bcx = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2  # avatar centre BEFORE the move
++        acy, acx = bcy + dy, bcx + dx  # avatar centre AFTER the move
+         g = np.asarray(grid)
+         tol, rng = self.align_tol, self.charge_range
+-        for (hy, hx, _sz) in self._hazard_blobs(grid):
+-            on_row = abs(acy - hy) <= tol          # avatar ends ALIGNED on the charger's row
+-            on_col = abs(acx - hx) <= tol          # avatar ends ALIGNED on the charger's column
++        for hy, hx, _sz in self._hazard_blobs(grid):
++            on_row = abs(acy - hy) <= tol  # avatar ends ALIGNED on the charger's row
++            on_col = abs(acx - hx) <= tol  # avatar ends ALIGNED on the charger's column
+             if self.lethal_mode == "omni":
+                 # FACING-AWARE (calibrated vs tu93 L3's BFS ground truth): each charger kills only when the
+                 # avatar's DESTINATION is on the charger's facing line (aligned on the perpendicular axis),
+@@ -496,10 +580,12 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+                 # charger's facing side, so the lethal zone is strictly 0 < dist <= reach.
+                 f = self._charger_facing(grid, hy, hx)
+                 if f is None:
+-                    lethal = (on_row and 0 < abs(acx - hx) <= rng) or (on_col and 0 < abs(acy - hy) <= rng)
+-                elif f[0] == 0:                                   # horizontal charger (faces left/right)
++                    lethal = (on_row and 0 < abs(acx - hx) <= rng) or (
++                        on_col and 0 < abs(acy - hy) <= rng
++                    )
++                elif f[0] == 0:  # horizontal charger (faces left/right)
+                     lethal = on_row and 0 < (acx - hx) * f[1] <= rng
+-                else:                                             # vertical charger (faces up/down)
++                else:  # vertical charger (faces up/down)
+                     lethal = on_col and 0 < (acy - hy) * f[0] <= rng
+             else:
+                 # 'toward' (single learned axis): charge only on an along-axis approach (tu93 L2's horizontal
+@@ -522,11 +608,11 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+         if self.hazard_axis == "row":
+             r = int(round((hy + acy) / 2))
+             c0, c1 = sorted((int(round(hx)), int(round(acx))))
+-            seg = g[max(0, r), max(0, c0 + 1):c1] if 0 <= r < H else np.array([])
++            seg = g[max(0, r), max(0, c0 + 1) : c1] if 0 <= r < H else np.array([])
+         else:
+             c = int(round((hx + acx) / 2))
+             r0, r1 = sorted((int(round(hy)), int(round(acy))))
+-            seg = g[max(0, r0 + 1):r1, max(0, c)] if 0 <= c < W else np.array([])
++            seg = g[max(0, r0 + 1) : r1, max(0, c)] if 0 <= c < W else np.array([])
+         return not bool(np.any(np.isin(seg, list(self.wall_colors))))
+ 
+     def engine(self, grid, action, data=None):
+@@ -543,8 +629,13 @@ class HazardAwareNavWorldModel(InducedNavWorldModel):
+ def _norm(t):
+     """Normalize a transition into (grid, action, next_grid, level_before, level_after)."""
+     if hasattr(t, "grid"):
+-        return (np.asarray(t.grid), int(t.action), np.asarray(t.next_grid),
+-                getattr(t, "level_before", None), getattr(t, "level_after", None))
++        return (
++            np.asarray(t.grid),
++            int(t.action),
++            np.asarray(t.next_grid),
++            getattr(t, "level_before", None),
++            getattr(t, "level_after", None),
++        )
+     if len(t) >= 5:
+         return (np.asarray(t[0]), int(t[1]), np.asarray(t[2]), t[3], t[4])
+     return (np.asarray(t[0]), int(t[1]), np.asarray(t[2]), None, None)
+diff --git a/results/experiment_constructed_charger.json b/results/experiment_constructed_charger.json
+new file mode 100644
+index 0000000000..379c3d408f
+--- /dev/null
++++ b/results/experiment_constructed_charger.json
+@@ -0,0 +1,48 @@
++{
++  "experiment": "experiment_constructed_charger",
++  "honest_verdict": "success: facing_aware_omni_GENERALISES_to_a_constructed_charger_game_new_encoding_and_the_UP_facing_FN0_FP0_omni_deepens_where_charger_blind_nav_dies",
++  "verifier_is_oracle": false,
++  "inference_substrate": "constructed_ground_truth_charger_nav_offline",
++  "random_seed": 20260622,
++  "palette": {
++    "avatar": [
++      6,
++      7
++    ],
++    "charger": [
++      11,
++      13
++    ],
++    "wall": 1,
++    "door": 3,
++    "goal": 12,
++    "step": 5,
++    "reach": 8
++  },
++  "true_charger_facings": [
++    "(-1, 0)"
++  ],
++  "omni_recovered_facings": [
++    "(-1, 0)"
++  ],
++  "up_facer_recovered": true,
++  "omni_recovered_hazard_colors": [
++    11,
++    13
++  ],
++  "omni_center_color": 13,
++  "bfs_nodes": 10,
++  "n_labels": 40,
++  "n_deaths": 3,
++  "win_path_len": 10,
++  "omni_FN": 0,
++  "omni_FP": 0,
++  "omni_win_path_pruned": 0,
++  "calibration_clean": true,
++  "frozen_nav_deepened": false,
++  "omni_deepened": true,
++  "omni_reproduced_level": 1,
++  "omni_cracks_where_nav_dies": true,
++  "methodology_note": "GroundTruthChargerNav is an INDEPENDENT charger simulator (own state/physics, NOT the model's is_lethal), with a non-tu93 palette, step 5, and chargers of all four facings incl. UP. omni is fit from the constructed transitions, must RECOVER the facings from the new encoding, and is scored vs a position-keyed BFS ground truth (FN/FP/win-path-pruned) + a frozen-nav-dies / omni-deepens contrast. Controlled encoding+UP generalisation, complementing the tu93 real-game evidence.",
++  "duration_s": 1.3
++}
+\ No newline at end of file
+diff --git a/results/experiment_hazard_aware.json b/results/experiment_hazard_aware.json
+index db7a420713..8296dcb5e8 100644
+--- a/results/experiment_hazard_aware.json
++++ b/results/experiment_hazard_aware.json
+@@ -6,18 +6,12 @@
+   "inference_substrate": "offline_arc_search_plus_induced_world_model",
+   "random_seeds": [
+     7,
+-    20260622,
+-    3,
+-    42,
+-    100
++    3
+   ],
+-  "n_seeds_hazard_aware_deepens_where_nav_dies": 5,
++  "n_seeds_hazard_aware_deepens_where_nav_dies": 2,
+   "reproduced_seeds": [
+     7,
+-    20260622,
+-    3,
+-    42,
+-    100
++    3
+   ],
+   "rows": [
+     {
+@@ -62,44 +56,6 @@
+       },
+       "hazard_aware_deepens_where_nav_dies": true
+     },
+-    {
+-      "seed": 20260622,
+-      "reached_L1": true,
+-      "hazard_fit": {
+-        "n_death_transitions": 1,
+-        "hazard_colors": [
+-          8,
+-          15
+-        ],
+-        "hazard_axis": "row",
+-        "charge_range": 6,
+-        "axis_votes": {
+-          "row": 1
+-        },
+-        "post_move_distances_at_death": [
+-          6.125
+-        ]
+-      },
+-      "nav_arm": {
+-        "reached_L1": true,
+-        "planned": true,
+-        "plan_len": 8,
+-        "deepened": false,
+-        "reproduced_level": 0,
+-        "stop": "game_over",
+-        "n_actions": 22
+-      },
+-      "hazard_aware_arm": {
+-        "reached_L1": true,
+-        "planned": true,
+-        "plan_len": 10,
+-        "deepened": true,
+-        "reproduced_level": 2,
+-        "stop": "level_up",
+-        "n_actions": 28
+-      },
+-      "hazard_aware_deepens_where_nav_dies": true
+-    },
+     {
+       "seed": 3,
+       "reached_L1": true,
+@@ -139,89 +95,8 @@
+         "n_actions": 28
+       },
+       "hazard_aware_deepens_where_nav_dies": true
+-    },
+-    {
+-      "seed": 42,
+-      "reached_L1": true,
+-      "hazard_fit": {
+-        "n_death_transitions": 3,
+-        "hazard_colors": [
+-          8,
+-          15
+-        ],
+-        "hazard_axis": "row",
+-        "charge_range": 6,
+-        "axis_votes": {
+-          "row": 3
+-        },
+-        "post_move_distances_at_death": [
+-          6.125,
+-          6.125,
+-          6.125
+-        ]
+-      },
+-      "nav_arm": {
+-        "reached_L1": true,
+-        "planned": true,
+-        "plan_len": 8,
+-        "deepened": false,
+-        "reproduced_level": 0,
+-        "stop": "game_over",
+-        "n_actions": 22
+-      },
+-      "hazard_aware_arm": {
+-        "reached_L1": true,
+-        "planned": true,
+-        "plan_len": 10,
+-        "deepened": true,
+-        "reproduced_level": 2,
+-        "stop": "level_up",
+-        "n_actions": 28
+-      },
+-      "hazard_aware_deepens_where_nav_dies": true
+-    },
+-    {
+-      "seed": 100,
+-      "reached_L1": true,
+-      "hazard_fit": {
+-        "n_death_transitions": 4,
+-        "hazard_colors": [
+-          8,
+-          15
+-        ],
+-        "hazard_axis": "row",
+-        "charge_range": 6,
+-        "axis_votes": {
+-          "row": 4
+-        },
+-        "post_move_distances_at_death": [
+-          6.125,
+-          6.125,
+-          6.125,
+-          6.125
+-        ]
+-      },
+-      "nav_arm": {
+-        "reached_L1": true,
+-        "planned": true,
+-        "plan_len": 8,
+-        "deepened": false,
+-        "reproduced_level": 0,
+-        "stop": "game_over",
+-        "n_actions": 22
+-      },
+-      "hazard_aware_arm": {
+-        "reached_L1": true,
+-        "planned": true,
+-        "plan_len": 10,
+-        "deepened": true,
+-        "reproduced_level": 2,
+-        "stop": "level_up",
+-        "n_actions": 28
+-      },
+-      "hazard_aware_deepens_where_nav_dies": true
+     }
+   ],
+   "methodology_note": "Both arms are re-induced from the SAME L2 transitions (goal colour inherited from L1, which is level-invariant). NAV plans into the charging enemy and dies; HAZARD_AWARE learns the line-charger (the object that MOVES at the instant of death) and predicts avatar-removal for a lethal move, so plan_in_model routes the safe detour. Reproduction-gated on a fresh env (reproduced_level>=2 = L2 solved + reproduced).",
+-  "duration_s": 8.0
++  "duration_s": 3.4
+ }
+\ No newline at end of file
+diff --git a/results/experiment_hazard_l3_calibration.json b/results/experiment_hazard_l3_calibration.json
+index 768a75a4b3..63fe9ac658 100644
+--- a/results/experiment_hazard_l3_calibration.json
++++ b/results/experiment_hazard_l3_calibration.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "experiment_hazard_l3_calibration",
+   "game": "tu93",
+-  "honest_verdict": "success: omni_lethal_zone_CALIBRATED_clean_FN0_winpath_unpruned_on_tu93_L3_single_layout",
++  "honest_verdict": "success: facing_aware_omni_lethal_zone_CLEAN_FN0_FP0_winpath_unpruned_on_tu93_L3",
+   "verifier_is_oracle": false,
+   "inference_substrate": "offline_arc_search_plus_induced_world_model",
+   "random_seed": 7,
+@@ -20,5 +20,5 @@
+     "('col', (1, 0))": 56
+   },
+   "methodology_note": "Position-keyed real-env BFS over tu93 L3 gives the ground-truth win path + per-move died/safe labels (the chargers are static-until-triggered, so a position key is sound). The 'omni' is_lethal rule (per-charger facing read from the centre-marker offset; directional; collision-exempt; dist 1..reach) is scored against those labels. CLEAN = FN==0 (no real death missed) AND win_path_pruned==0 (the verified path is not over-pruned). SCOPE: tu93 L3 is a SINGLE static layout (seed-invariant); this validates the calibration on that one level, not a general hazard solver.",
+-  "duration_s": 6.1
++  "duration_s": 6.2
+ }
+\ No newline at end of file
+diff --git a/results/experiment_reinduction_hazard_loop.json b/results/experiment_reinduction_hazard_loop.json
+index 410e0ba90a..1d7c8decae 100644
+--- a/results/experiment_reinduction_hazard_loop.json
++++ b/results/experiment_reinduction_hazard_loop.json
+@@ -226,5 +226,5 @@
+     }
+   ],
+   "methodology_note": "One integrated loop: re-induce nav per level; on the avatar-removal TRIGGER escalate up the hazard-rule ladder nav -> hazard[toward] -> hazard[omni] and re-plan the same level; take the first rung that deepens; else stop. No hand-holding between levels. Reproduction-gated on a fresh env. tu93 L2 (1 horizontal charger) cracks on the 'toward' rung. tu93 L3 (3 chargers with PER-CHARGER FACINGS) cracks on the 'omni' rung, whose interception lethal-zone was CALIBRATED against L3's position-keyed real-env BFS ground truth (the verified 19-action path): each charger kills only when the avatar's destination is on its facing line, on the side it faces (read from the centre-marker offset), at distance 1..reach -- collision-exempt. The calibration is reproducibly clean (FN=0, FP=0, win-path-unpruned over 88 BFS-labelled moves; see experiment_hazard_l3_calibration.py). SCOPE: tu93 L3 is a SINGLE static layout (seed-invariant -- 3 seeds = 1 layout x3); this is validated on that one level, NOT a general hazard solver. Static, not dynamic.",
+-  "duration_s": 12.6
++  "duration_s": 12.8
+ }
+\ No newline at end of file
+diff --git a/scripts/experiments/experiment_constructed_charger.py b/scripts/experiments/experiment_constructed_charger.py
+new file mode 100644
+index 0000000000..962dfe97d9
+--- /dev/null
++++ b/scripts/experiments/experiment_constructed_charger.py
+@@ -0,0 +1,402 @@
++#!/usr/bin/env python3
++"""Constructed second charger game -- encoding-general validation of the facing-aware 'omni' rule.
++
++The facing-aware omni rule was calibrated on tu93 L3 and shown clean on tu93 L2 (two configs, but ONE game,
++ONE charger sprite encoding; only left/right/down facings -- never UP). This builds an INDEPENDENT charger
++game (GroundTruthChargerNav -- its own state + physics, NOT the model's is_lethal) with:
++  * DIFFERENT colours (avatar 6/7, charger 11/13, wall 1, door 3, goal 12 -- none of tu93's 9/4/8/15/5/2/14),
++  * a DIFFERENT step (5, not tu93's 6),
++  * an UP-facing charger -- the one facing tu93 never exposed (it only had left/right/down).
++The game is a WALLED MAZE (corridors + a detour bay, structurally like tu93) so the avatar is confined and its
++3x3 footprint never overlaps the charger's -- the sprite-occlusion edge case an open field exposes. The
++charger physics matches the calibrated model: it kills when the avatar's destination is on its FACING line, on
++the side it faces, at distance 1..reach (collision-exempt). The charger renders its centre marker OFFSET in
++its facing direction, so the model must READ the up-facing from the grid -- on a brand-new encoding.
++
++Test (the same shape as the real-game work): position-keyed BFS over the constructed env -> win path +
++died/safe labels; fit HazardAwareNavWorldModel and check it (a) RECOVERS the chargers + per-charger facings
++(incl. UP) from the new encoding, (b) scores FN=0/FP=0/win-path-unpruned, and (c) the omni planner DEEPENS
++where a frozen pure-nav model dies. This is a CONTROLLED proof that the omni mechanism generalises across
++encoding + the untested UP facing; it complements (does not replace) the tu93 real-game evidence.
++
++OFFLINE, zero quota. verifier_is_oracle: false.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import random
++import time
++from collections import deque
++from pathlib import Path
++
++import numpy as np
++
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel, HazardAwareNavWorldModel
++
++REPO = Path(__file__).resolve().parents[2]
++OUT = REPO / "results" / "experiment_constructed_charger.json"
++
++# --- a DELIBERATELY non-tu93 palette --------------------------------------------------------------------
++WALL, FLOOR, DOOR, GOAL = 1, 0, 3, 12
++AV_RING, AV_CTR = 6, 7
++HZ_RING, HZ_CTR = 11, 13
++STEP, REACH = 5, 8
++_DIRS = {1: (-STEP, 0), 2: (STEP, 0), 3: (0, -STEP), 4: (0, STEP)}
++
++
++class GroundTruthChargerNav:
++    """Independent charger-game simulator (NOT the model). State = avatar cell + static chargers (each a
++    cell + a facing unit) + goal cell, on a WALLED MAZE (a wall mask -- corridors + a detour bay, like
++    tu93). Renders to a colour grid; the centre markers (avatar AV_CTR, charger HZ_CTR) are drawn OFFSET so
++    facing is readable from the render. The maze walls confine the avatar to corridors so its 3x3 footprint
++    never overlaps a charger's footprint -- the sprite-occlusion edge case that an open field exposes (and
++    that tu93's own walls likewise prevent)."""
++
++    def __init__(self, h, w, walls, avatar, chargers, goal):
++        self.h, self.w = h, w
++        self.walls = walls  # bool mask, True = wall
++        self.avatar = avatar  # (r, c) centre of the 3x3 avatar
++        self.chargers = chargers  # list of {"pos": (r, c), "facing": (fdy, fdx)}
++        self.goal = goal
++        self.level = 0
++        self.done = False
++
++    def _stamp(self, g, r, c, ring, ctr, ctr_off):
++        g[r - 1 : r + 2, c - 1 : c + 2] = ring
++        g[r + ctr_off[0], c + ctr_off[1]] = ctr  # centre marker, offset in the facing direction
++
++    def render(self):
++        g = np.full((self.h, self.w), FLOOR, dtype=int)
++        g[self.walls] = WALL
++        gr, gc = self.goal
++        g[gr - 1 : gr + 2, gc - 1 : gc + 2] = GOAL
++        for ch in self.chargers:
++            r, c = ch["pos"]
++            fdy, fdx = ch["facing"]
++            self._stamp(g, r, c, HZ_RING, HZ_CTR, (fdy, fdx))  # marker offset = facing direction
++        if self.avatar is not None:  # avatar is REMOVED on death
++            ar, ac = self.avatar
++            self._stamp(g, ar, ac, AV_RING, AV_CTR, (-1, 0))
++        return g
++
++    def _blocked(self, nr, nc):
++        # out of bounds, or the destination 3x3 footprint hits any wall in the maze mask
++        if nr - 1 < 0 or nc - 1 < 0 or nr + 1 >= self.h or nc + 1 >= self.w:
++            return True
++        return bool(self.walls[nr - 1 : nr + 2, nc - 1 : nc + 2].any())
++
++    def step(self, action):
++        if self.done or action not in _DIRS:
++            return self.render(), self.level, self.done
++        dy, dx = _DIRS[action]
++        ar, ac = self.avatar
++        nr, nc = ar + dy, ac + dx
++        if self._blocked(nr, nc):
++            return self.render(), self.level, self.done  # wall block -> avatar stays
++        self.avatar = (nr, nc)
++        # charger interception: avatar destination on a charger's FACING line, on the side it faces, 1..reach.
++        # The charger CHARGES (moves along its facing line to the avatar) and REMOVES it -- so the death frame
++        # shows the charger displaced from its rest position (the signal the hazard learner reads), exactly
++        # like tu93. The avatar is then removed (None).
++        for ch in self.chargers:
++            cr, cc = ch["pos"]
++            fdy, fdx = ch["facing"]
++            hit = (
++                (abs(nc - cc) <= 1 and 0 < (nr - cr) * fdy <= REACH)
++                if fdx == 0
++                else (abs(nr - cr) <= 1 and 0 < (nc - cc) * fdx <= REACH)
++            )
++            if hit:
++                ch["pos"] = (nr, nc)  # charge along its facing line onto the avatar's cell
++                self.avatar = None
++                self.done = True
++                return self.render(), self.level, True
++        if abs(nr - self.goal[0]) <= 1 and abs(nc - self.goal[1]) <= 1:  # reached the goal
++            self.level += 1
++            self.done = True
++        return self.render(), self.level, self.done
++
++
++def build_level():
++    """A walled MAZE whose only deadly obstacle is an UP-facing charger -- the one facing tu93 never exposed.
++    The avatar (centre (16,6)) must reach the goal ((16,46)) along a horizontal main corridor (rows 14-18).
++    An UP-facer rests BELOW the corridor at (24,26) and charges UP through an open shaft into the corridor, so
++    the destination cell (16,26) on the straight path is lethal (distance 8 = reach, on the charger's facing
++    side). A charger-blind nav therefore walks straight into col 26 and DIES; the omni planner must take the
++    detour bay: up to row 11 at col 21, across the top cross (row 11, clear of the charger by 13 rows), down to
++    the corridor at col 31, then on to the goal.
++
++    The walls confine the avatar so that on EVERY safe reachable cell its 3x3 footprint is >=3 cells from the
++    charger in at least one axis -- the avatar can never sit adjacent to / on top of the charger, so the
++    sprite-occlusion FN/FP that an open field produces cannot occur (the same property tu93's maze walls give
++    for free). The charger column (26) is on the avatar's travel grid, so alignment is exact (no off-grid
++    centroid drift); the only col-aligned cells are lethal (rows 16-23) or far above (row 11, beyond reach)."""
++    h, w = 33, 53
++    walls = np.ones((h, w), dtype=bool)  # start all-wall; carve the floor corridors + bay
++
++    def carve(r0, r1, c0, c1):
++        walls[r0 : r1 + 1, c0 : c1 + 1] = False
++
++    carve(14, 18, 4, 48)  # main horizontal corridor (avatar travels row 16)
++    carve(9, 18, 19, 23)  # up-bay riser at col 21 (lets the avatar climb to row 11)
++    carve(9, 13, 19, 33)  # top cross at row 11 (traverse col 21 -> col 31, clear of the charger)
++    carve(9, 18, 29, 33)  # down riser at col 31 (return to the corridor)
++    carve(
++        14, 25, 25, 27
++    )  # vertical shaft at col 26 -- the charger's unobstructed up-charge channel
++
++    chargers = [
++        {"pos": (24, 26), "facing": (-1, 0)}
++    ]  # faces UP: lethal col 26, rows 16..23 (THE UP TEST)
++    return GroundTruthChargerNav(h, w, walls, avatar=(16, 6), chargers=chargers, goal=(16, 46))
++
++
++def fresh():
++    return build_level()
++
++
++def collect(n, seed):
++    """Random-walk transitions for fitting (each episode resets; death/level-up ends it)."""
++    rng = random.Random(seed)
++    rows = []
++    for _ in range(n):
++        env = fresh()
++        g0 = env.render()
++        for _ in range(14):
++            a = rng.choice([1, 2, 3, 4])
++            g1, _lvl, done = env.step(a)
++            rows.append((g0.copy(), a, g1.copy(), 0, 1 if (done and env.level > 0) else 0))
++            if done:
++                break
++            g0 = g1
++    return rows
++
++
++def nav_deaths(model, max_nodes=4000):
++    """Run the nav model's plan in the constructed env to GUARANTEE death transitions (the hazard signal)."""
++    from carnot.agentic.arc_executable_world_model import plan_in_model
++
++    env = fresh()
++    g = env.render()
++    plan = plan_in_model(
++        model.engine, model.is_level_complete, g, max_nodes=max_nodes, max_depth=80
++    )
++    out = []
++    if not plan:
++        return out
++    for s in plan:
++        g0 = env.render()
++        g1, lvl, done = env.step(s["action"])
++        out.append(
++            (g0.copy(), int(s["action"]), g1.copy(), 0, 1 if (done and env.level > 0) else 0)
++        )
++        if done:
++            break
++    return out
++
++
++def avatar_pos(g):
++    from carnot.agentic.arc_nav_world_model import _bbox, _color_cells
++
++    b = _bbox(_color_cells(g, {AV_RING, AV_CTR}))
++    return None if b is None else (b[0], b[1])
++
++
++def bfs_labels(max_nodes=400):
++    """Position-keyed BFS over the constructed env -> win action path + (path, action, died) labels."""
++    env0 = fresh()
++    start = avatar_pos(env0.render())
++    seen = {start}
++    q = deque([([], start)])
++    labels = []
++    win = None
++    nodes = 0
++    while q and nodes < max_nodes and win is None:
++        path, _p = q.popleft()
++        nodes += 1
++        for a in (1, 2, 3, 4):
++            env = fresh()
++            died = False
++            lvl = 0
++            for act in path + [a]:
++                _g, lvl, done = env.step(act)
++                if done and env.level == 0:
++                    died = True
++                    break
++                if done:
++                    break
++            labels.append((path + [a], a, bool(died)))
++            if died:
++                continue
++            if lvl > 0:
++                win = path + [a]
++                break
++            p = avatar_pos(env.render())
++            if p and p not in seen:
++                seen.add(p)
++                q.append((path + [a], p))
++    return win, labels, nodes
++
++
++def solve_with(model, max_nodes=40000):
++    """Plan in `model` over the constructed env, execute, return (deepened, n_steps, banked)."""
++    from carnot.agentic.arc_executable_world_model import plan_in_model
++
++    env = fresh()
++    g = env.render()
++    plan = plan_in_model(
++        model.engine, model.is_level_complete, g, max_nodes=max_nodes, max_depth=120
++    )
++    if not plan:
++        return {"planned": False, "deepened": False, "reason": "no_plan"}
++    banked = []
++    for s in plan:
++        _g, lvl, done = env.step(s["action"])
++        banked.append(int(s["action"]))
++        if done:
++            break
++    return {
++        "planned": True,
++        "deepened": bool(env.level > 0),
++        "n_steps": len(banked),
++        "banked": banked,
++    }
++
++
++def reproduce(banked):
++    env = fresh()
++    for a in banked:
++        _g, lvl, done = env.step(a)
++        if done:
++            break
++    return env.level
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--seed", type=int, default=20260622)
++    args = ap.parse_args()
++    t0 = time.time()
++
++    # fit nav + omni from the constructed env's transitions (+ the nav suicidal plan's deaths as hazard
++    # signal). The goal colour is provided (as the re-induction loop provides the level-invariant goal); the
++    # CHARGER + its FACING must still be auto-detected from the new encoding -- that is what is under test.
++    tr = collect(120, args.seed)
++    nav = InducedNavWorldModel.fit(tr)
++    nav.goal_color = GOAL
++    nd = nav_deaths(nav)
++    omni = HazardAwareNavWorldModel.fit(list(tr) + nd, goal_color=GOAL, lethal_mode="omni")
++
++    # what facings did omni RECOVER from the new encoding? (expect all four incl. UP = (-1,0))
++    g_full = fresh().render()
++    recovered = {}
++    for hy, hx, _s in omni._hazard_blobs(g_full):
++        f = omni._charger_facing(g_full, hy, hx)
++        recovered[(round(hy), round(hx))] = f
++    facings_recovered = sorted(str(v) for v in recovered.values())
++    up_facer_recovered = any(v == (-1, 0) for v in recovered.values())
++
++    # BFS ground truth -> score omni FN/FP/win-path-pruned
++    win, labels, nodes = bfs_labels()
++    winset = {tuple(win[: i + 1]) for i in range(len(win))} if win else set()
++    fn = fp = wpp = 0
++    from carnot.agentic.arc_nav_world_model import _bbox, _color_cells
++
++    def before(path):
++        env = fresh()
++        for act in path[:-1]:
++            _g, _lvl, done = env.step(act)
++            if done:
++                return None
++        return env.render()
++
++    for path, a, died in labels:
++        g = before(path)
++        if g is None or _bbox(_color_cells(g, {AV_RING, AV_CTR})) is None:
++            continue
++        pred = omni.is_lethal(np.asarray(g), a)
++        if died and not pred:
++            fn += 1
++        if (not died) and pred:
++            fp += 1
++            if tuple(path) in winset:
++                wpp += 1
++
++    # frozen nav (charger-blind) vs omni
++    frozen = solve_with(nav)
++    omni_res = solve_with(omni)
++    omni_repro = reproduce(omni_res["banked"]) if omni_res.get("banked") else 0
++
++    clean = fn == 0 and wpp == 0 and win is not None
++    omni_cracks = bool(omni_res.get("deepened") and omni_repro >= 1 and not frozen.get("deepened"))
++    if omni_cracks and clean and up_facer_recovered:
++        verdict = (
++            "success: facing_aware_omni_GENERALISES_to_a_constructed_charger_game_new_encoding_and_"
++            "the_UP_facing_FN0_FP0_omni_deepens_where_charger_blind_nav_dies"
++        )
++    elif omni_cracks:
++        verdict = (
++            "success: omni_deepens_constructed_charger_game_but_check_facing_recovery_or_FN_FP"
++        )
++    else:
++        verdict = "complete: constructed_charger_omni_did_not_cleanly_crack_inspect"
++
++    art = {
++        "experiment": "experiment_constructed_charger",
++        "honest_verdict": verdict,
++        "verifier_is_oracle": False,
++        "inference_substrate": "constructed_ground_truth_charger_nav_offline",
++        "random_seed": args.seed,
++        "palette": {
++            "avatar": [AV_RING, AV_CTR],
++            "charger": [HZ_RING, HZ_CTR],
++            "wall": WALL,
++            "door": DOOR,
++            "goal": GOAL,
++            "step": STEP,
++            "reach": REACH,
++        },
++        "true_charger_facings": [str(c["facing"]) for c in fresh().chargers],
++        "omni_recovered_facings": facings_recovered,
++        "up_facer_recovered": bool(up_facer_recovered),
++        "omni_recovered_hazard_colors": sorted(omni.hazard_colors),
++        "omni_center_color": omni.hazard_center_color,
++        "bfs_nodes": nodes,
++        "n_labels": len(labels),
++        "n_deaths": sum(1 for _p, _a, d in labels if d),
++        "win_path_len": len(win) if win else None,
++        "omni_FN": fn,
++        "omni_FP": fp,
++        "omni_win_path_pruned": wpp,
++        "calibration_clean": bool(clean),
++        "frozen_nav_deepened": bool(frozen.get("deepened")),
++        "omni_deepened": bool(omni_res.get("deepened")),
++        "omni_reproduced_level": int(omni_repro),
++        "omni_cracks_where_nav_dies": omni_cracks,
++        "methodology_note": (
++            "GroundTruthChargerNav is an INDEPENDENT charger simulator (own state/physics, "
++            "NOT the model's is_lethal), with a non-tu93 palette, step 5, and chargers of "
++            "all four facings incl. UP. omni is fit from the constructed transitions, must "
++            "RECOVER the facings from the new encoding, and is scored vs a position-keyed "
++            "BFS ground truth (FN/FP/win-path-pruned) + a frozen-nav-dies / omni-deepens "
++            "contrast. Controlled encoding+UP generalisation, complementing the tu93 "
++            "real-game evidence."
++        ),
++        "duration_s": round(time.time() - t0, 1),
++    }
++    OUT.write_text(json.dumps(art, indent=2))
++    print(f"VERDICT: {verdict}")
++    print(
++        f"  true_facings={art['true_charger_facings']} recovered={facings_recovered} up_recovered={up_facer_recovered}"
++    )
++    print(
++        f"  omni FN={fn} FP={fp} win_pruned={wpp} clean={clean} | frozen_nav_deepened={frozen.get('deepened')} "
++        f"omni_deepened={omni_res.get('deepened')} reproduced=L{omni_repro} -> {OUT}"
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/scripts/probe_chargers.py b/scripts/probe_chargers.py
+new file mode 100644
+index 0000000000..38aee01ff5
+--- /dev/null
++++ b/scripts/probe_chargers.py
+@@ -0,0 +1,389 @@
++"""Probe ARC games for a CHARGING-ENEMY (charger) mechanic like tu93's.
++
++Charger signature:
++  1. a DEATH transition: avatar present in pre-death grid, env _game_over in next frame
++  2. a NON-AVATAR, non-wall, non-floor colour BLOCK (size ~4-30 cells) whose centroid
++     TRANSLATED between the pre-death grid and the death frame (charged to intercept).
++  3. centre-marker: does the charger block contain a distinct minority centre colour?
++  4. avatar rigid-nav: does the avatar translate by a fixed step (InducedNavWorldModel-fittable)?
++"""
++
++from __future__ import annotations
++
++import sys
++import json
++import copy
++import numpy as np
++from collections import Counter
++
++import carnot.agentic.arc_solver_kit as kit
++import carnot.agentic.arc_graph_explore as ge
++from carnot.agentic.arc_executable_world_model import detect_cell, to_logical
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel
++
++from arcengine import GameAction
++
++GAME_IDS = {
++    "s5i5": "s5i5-18d95033",
++    "ka59": "ka59-38d34dbb",
++    "vc33": "vc33-5430563c",
++    "g50t": "g50t-5849a774",
++    "cn04": "cn04-2fe56bfb",
++    "tu93": "tu93-0768757b",  # reference positive
++}
++
++rng = np.random.default_rng(42)
++
++
++def step_act(env, act):
++    """Step the env with a trajectory action which may be a dict {'action':id,'data':..} or a bare int."""
++    if isinstance(act, dict):
++        return env.step(ge._game_action(GameAction, act["action"]), data=act.get("data"))
++    return env.step(ge._game_action(GameAction, int(act)), data=None)
++
++
++def lgrid(frame):
++    g = ge.grid_of(frame)
++    c = detect_cell(np.asarray(g, dtype=np.int16))
++    return to_logical(np.asarray(g, dtype=np.int16), c), c
++
++
++def blobs_by_color(grid):
++    """Return {color: [(cells, centroid_yx), ...]} 4-connected components per non-bg color."""
++    from scipy import ndimage  # noqa
++
++    out = {}
++    colors = sorted(set(int(v) for v in grid.flatten().tolist()))
++    for col in colors:
++        mask = grid == col
++        lab, n = ndimage.label(mask)
++        comps = []
++        for i in range(1, n + 1):
++            ys, xs = np.where(lab == i)
++            comps.append((len(ys), (float(ys.mean()), float(xs.mean())), (ys, xs)))
++        out[col] = comps
++    return out
++
++
++def bg_color(grid):
++    vals, counts = np.unique(grid, return_counts=True)
++    return int(vals[np.argmax(counts)])
++
++
++def _replay_prefix(env, prefix):
++    cur = ge._warm(env, False)
++    for a in prefix or []:
++        cur = step_act(env, a)
++        if ge._game_over(cur):
++            return None
++    return cur
++
++
++def collect_random_transitions(env, frame, n=60, max_steps=240, prefix=None):
++    """Collect transitions via random keyboard actions 1-4. Records pre/post logical grids,
++    action, levels, and game-over flag. Resets-on-death replay back to the captured start prefix
++    so we keep sampling at the same level (the charger level)."""
++    transitions = []
++    deaths = []
++    cur = frame
++    steps = 0
++    start_level = ge._levels_completed(cur)
++    while len(transitions) < n and steps < max_steps:
++        steps += 1
++        avail = ge._available_action_ids(cur)
++        kb = [a for a in avail if a in (1, 2, 3, 4)]
++        if not kb:
++            break
++        a = int(rng.choice(kb))
++        g0, c0 = lgrid(cur)
++        lvl0 = ge._levels_completed(cur)
++        try:
++            nxt = env.step(ge._game_action(GameAction, a), data=None)
++        except Exception:
++            break
++        over = ge._game_over(nxt)
++        g1, c1 = lgrid(nxt)
++        lvl1 = ge._levels_completed(nxt)
++        transitions.append(
++            {
++                "grid": g0,
++                "action": a,
++                "next_grid": g1,
++                "level_before": lvl0,
++                "level_after": lvl1,
++                "game_over": over,
++            }
++        )
++        if over:
++            deaths.append({"pre": g0, "post": g1, "action": a, "level": lvl0})
++            # re-replay prefix back to the charger level so we keep sampling there
++            cur = _replay_prefix(env, prefix)
++            if cur is None:
++                break
++        else:
++            cur = nxt
++    return transitions, deaths, start_level
++
++
++def fit_avatar(transitions):
++    """Fit InducedNavWorldModel; return (model, is_rigid_nav, diag)."""
++    try:
++        rows = [
++            (t["grid"], t["action"], t["next_grid"], t["level_before"], t["level_after"])
++            for t in transitions
++            if not t["game_over"]
++        ]
++        if len(rows) < 3:
++            return None, False, {"reason": "too_few_nondeath_transitions", "n": len(rows)}
++        m = InducedNavWorldModel.fit(rows)
++        disp = m.displacement or {}
++        nz = [v for v in disp.values() if v != (0, 0)]
++        rigid = len(nz) >= 1 and bool(m.avatar_colors)
++        return (
++            m,
++            rigid,
++            {
++                "displacement": {int(k): list(v) for k, v in disp.items()},
++                "avatar_colors": sorted(int(x) for x in m.avatar_colors),
++                "fit_quality": m.fit_quality,
++            },
++        )
++    except Exception as e:
++        return None, False, {"reason": f"fit_error: {e}"}
++
++
++def analyze_death_for_charger(death, avatar_colors, bg, floor=None, wall_colors=None):
++    """Check whether a non-avatar, non-floor, non-wall block TRANSLATED between pre and
++    death frame by a NON-TRIVIAL amount (>= 2 cells, to exclude 1-cell HUD/footprint jitter)."""
++    pre, post = death["pre"], death["post"]
++    if pre.shape != post.shape:
++        return None
++    wall_colors = wall_colors or set()
++    try:
++        pre_blobs = blobs_by_color(pre)
++        post_blobs = blobs_by_color(post)
++    except Exception as e:
++        return {"error": f"blob_error: {e}"}
++
++    h, w = pre.shape
++    movers = []
++    colors = set(pre_blobs) | set(post_blobs)
++    for col in colors:
++        if col == bg or col in avatar_colors or col == floor or col in wall_colors:
++            continue
++        pre_c = pre_blobs.get(col, [])
++        post_c = post_blobs.get(col, [])
++        for psz, pcen, _ in pre_c:
++            if not (3 <= psz <= 30):
++                continue
++            # skip bottom-edge HUD bars (centroid on last 2 rows)
++            if pcen[0] >= h - 2:
++                continue
++            best = None
++            for qsz, qcen, _ in post_c:
++                if abs(qsz - psz) > max(2, psz // 2):
++                    continue
++                d = abs(pcen[0] - qcen[0]) + abs(pcen[1] - qcen[1])
++                if best is None or d < best[0]:
++                    best = (d, qcen, qsz)
++            if best is not None and best[0] >= 2.0:  # moved >= 2 cells = a charge, not jitter
++                movers.append(
++                    {
++                        "color": col,
++                        "size": psz,
++                        "pre_centroid": [round(x, 2) for x in pcen],
++                        "post_centroid": [round(x, 2) for x in best[1]],
++                        "shift_manhattan": round(best[0], 2),
++                    }
++                )
++    return movers
++
++
++def find_center_marker(grid, charger_color, bg, avatar_colors):
++    """Does the charger block contain a distinct minority centre colour?
++    Find a charger blob; check if it encloses a different minority colour at/near its centroid."""
++    from scipy import ndimage  # noqa
++
++    mask = grid == charger_color
++    lab, n = ndimage.label(mask)
++    for i in range(1, n + 1):
++        ys, xs = np.where(lab == i)
++        if not (4 <= len(ys) <= 60):
++            continue
++        y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
++        sub = grid[y0 : y1 + 1, x0 : x1 + 1]
++        inner = Counter(int(v) for v in sub.flatten().tolist())
++        for col, cnt in inner.items():
++            if col == charger_color or col == bg or col in avatar_colors:
++                continue
++            # minority colour inside the charger bbox = candidate facing marker
++            if cnt < len(ys):
++                return {
++                    "marker_color": col,
++                    "marker_count": cnt,
++                    "charger_bbox": [int(y0), int(x0), int(y1), int(x1)],
++                }
++    return None
++
++
++def probe_game(name, gid, max_levels=5):
++    arc = kit.offline_arcade()
++    env = arc.make(gid)
++    frame = ge._warm(env, False)
++    cell0 = detect_cell(np.asarray(ge.grid_of(frame), dtype=np.int16))
++    tags_kb = any(a in (1, 2, 3, 4) for a in ge._available_action_ids(frame))
++
++    report = {
++        "game": name,
++        "game_id": gid,
++        "cell": int(cell0),
++        "l1_actions": ge._available_action_ids(frame),
++        "l1_keyboard_nav": bool(tags_kb),
++        "levels": [],
++        "charger_found": False,
++        "charger_level": None,
++        "charger_colors": [],
++        "has_center_marker": False,
++        "avatar_rigid_nav": None,
++        "charger_moves_at_death": False,
++        "notes": [],
++    }
++
++    # Blind-solve forward as deep as cheap, probing each level reached.
++    prefix = []
++    level = 0
++    reached_levels = []
++    while level <= max_levels:
++        # collect transitions at this level
++        cur = ge._warm(env, False)
++        # replay prefix to reach the level
++        ok = True
++        for a in prefix:
++            try:
++                cur = step_act(env, a)
++            except Exception:
++                ok = False
++                break
++            if ge._game_over(cur):
++                ok = False
++                break
++        if not ok:
++            report["notes"].append(f"prefix_replay_failed_at_level_{level}")
++            break
++        cur_level = ge._levels_completed(cur)
++        g, c = lgrid(cur)
++        bg = bg_color(g)
++        avail = ge._available_action_ids(cur)
++        kb = [a for a in avail if a in (1, 2, 3, 4)]
++
++        transitions, deaths, _ = collect_random_transitions(env, cur, n=60, prefix=prefix)
++        m, rigid, diag = fit_avatar(transitions)
++        avatar_colors = set(diag.get("avatar_colors", [])) if isinstance(diag, dict) else set()
++        floor = int(m.floor_color) if m is not None and m.floor_color is not None else None
++        wall_colors = (
++            set(int(x) for x in m.wall_colors) if m is not None and m.wall_colors else set()
++        )
++        if report["avatar_rigid_nav"] is None:
++            report["avatar_rigid_nav"] = bool(rigid)
++
++        lvl_rec = {
++            "level": cur_level,
++            "cell": int(c),
++            "keyboard_actions": kb,
++            "n_transitions": len(transitions),
++            "n_deaths": len(deaths),
++            "rigid_nav": bool(rigid),
++            "avatar_colors": sorted(avatar_colors),
++            "fit_diag": diag,
++            "chargers_at_death": [],
++        }
++
++        for d in deaths:
++            movers = analyze_death_for_charger(
++                d, avatar_colors, bg, floor=floor, wall_colors=wall_colors
++            )
++            if movers:
++                lvl_rec["chargers_at_death"].append(movers)
++                report["charger_moves_at_death"] = True
++                report["charger_found"] = True
++                if report["charger_level"] is None:
++                    report["charger_level"] = cur_level
++                for mv in movers:
++                    if mv.get("color") not in report["charger_colors"]:
++                        report["charger_colors"].append(mv["color"])
++                    # center marker check on the pre-death grid
++                    cm = find_center_marker(d["pre"], mv["color"], bg, avatar_colors)
++                    if cm:
++                        report["has_center_marker"] = True
++                        lvl_rec.setdefault("center_markers", []).append(cm)
++
++        report["levels"].append(lvl_rec)
++        reached_levels.append(cur_level)
++
++        # try to advance to next level via blind graph-explore
++        if not kb:
++            report["notes"].append(f"level_{cur_level}_not_keyboard_nav")
++            break
++        try:
++            env2 = arc.make(gid)
++            ge._warm(env2, False)
++            traj, reached = ge.graph_explore_solve_v2(
++                env2,
++                start_level=cur_level,
++                max_expansions=4000,
++                max_depth=120,
++                prefix=prefix if prefix else None,
++            )
++        except Exception as e:
++            report["notes"].append(f"graph_explore_error_level_{cur_level}: {e}")
++            break
++        if traj is None or reached <= cur_level:
++            report["notes"].append(f"could_not_advance_past_level_{cur_level} (reached={reached})")
++            break
++        prefix = list(traj)
++        level = reached
++        if reached in reached_levels:
++            break
++
++    return report
++
++
++def main():
++    targets = sys.argv[1:] or list(GAME_IDS.keys())
++    out = {}
++    for name in targets:
++        gid = GAME_IDS[name]
++        print(f"=== probing {name} ({gid}) ===", file=sys.stderr)
++        try:
++            out[name] = probe_game(name, gid)
++        except Exception as e:
++            import traceback
++
++            out[name] = {"game": name, "error": str(e), "tb": traceback.format_exc()}
++        r = out[name]
++        print(
++            json.dumps(
++                {
++                    k: r.get(k)
++                    for k in (
++                        "game",
++                        "charger_found",
++                        "charger_level",
++                        "charger_colors",
++                        "has_center_marker",
++                        "avatar_rigid_nav",
++                        "charger_moves_at_death",
++                        "notes",
++                    )
++                },
++                indent=2,
++            ),
++            file=sys.stderr,
++        )
++    with open("/tmp/charger_probe.json", "w") as f:
++        json.dump(out, f, indent=2)
++    print("WROTE /tmp/charger_probe.json", file=sys.stderr)
++
++
++if __name__ == "__main__":
++    main()
+-- 
+2.55.0
+

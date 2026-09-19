@@ -1,0 +1,72 @@
+From 403d6d434d9bb626fb6a96356cfdf5250dd35087 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 23:14:09 -0400
+Subject: [PATCH 11140/11171] [outer-loop] Quiet hour: the standing cascade is
+ spent, not stuck
+
+exp6999 reads complete_disqualified_blinded_feature_shortcut_gate with its
+gated score at 0, which is terminal, so that cascade line will show
+permanently. exp7000 correctly reads blocked_gate_check_failed. Nothing is
+wedged; the dashboard reports a resolved condition, the same property already
+recorded for the attention line.
+
+Base rate checked and it refutes the tempting claim: of six recent
+cascade-blocking upstreams, two are terminal and four are blocked_*, so
+'the cascade line usually shows spent cascades' is not supported. Only the two
+the dashboard happened to display this session were terminal, which is an
+anecdote.
+
+Recorded as a thing to watch rather than a finding: both disqualifications are
+shortcut gates firing, on two consecutive milestones, both on feature banks.
+That is the gate working. Whether the planner keeps proposing a shortcut-prone
+design is a question two data points cannot answer.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/ops/status.md b/ops/status.md
+index eb54a5e58f..0de69d1759 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -46,7 +46,34 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
+ verifier already recognizes by pattern. Whether to make that a planner-prompt change
+ is the operator's call.
+ 
+-### 2026-09-05 02:45Z — CORRECTION 6: the flag-ledger bug was not latent, and it hit 18 flags
++### 2026-09-05 03:20Z — quiet hour. One observation, deliberately not turned into a rate.
++
++Nothing needed action. The conductor closed .613 with an honest null capstone (exp7008,
++`complete_null_v613_capstone_no_oracle_distinct_science_positive`, the
++`oracle_distinct_selection_positive` gate observed 0, all 13 gate-contract rows passing). Both
++GPUs idle, conductor child 34 min against the ~80 min cap.
++
++**The standing cascade is spent, not stuck.** `exp6999-blinded-feature-cold-audit` reads
++`complete_disqualified_blinded_feature_shortcut_gate` with `blinded_feature_bank_ready_score: 0`.
++That is terminal: the score will never become 1, so the cascade line will show this pairing
++permanently. `exp7000` correctly reads `blocked_gate_check_failed`. Nothing is wedged; the
++dashboard is reporting a resolved condition, the same property already recorded for the
++`attention` line — both say "this was raised", not "this is open".
++
++**Checked before claiming a pattern, and it does not hold.** Of six recent cascade-blocking
++upstreams, two are terminal (`complete_disqualified_*`) and four are `blocked_*`. So "the cascade
++line usually shows spent cascades" is NOT supported. What is true is narrower: the two cascades
++the dashboard actually displayed this session were both the terminal kind, and n=2 on what was
++displayed is an anecdote.
++
++**One observation worth the line, with its limit stated.** Both disqualifications are SHORTCUT
++GATES firing: `contrast_feature_bank_shortcut_gate` (exp6987, milestone .612) and
++`blinded_feature_shortcut_gate` (exp6999, .613). Two consecutive milestones built a feature bank
++and had it disqualified for a shortcut. That is the gate working, not failing. Whether it
++indicates the planner is repeatedly proposing a shortcut-prone design is a question two data
++points cannot answer, and it is recorded here as a thing to watch rather than a finding.
++
++## 2026-09-05 02:45Z — CORRECTION 6: the flag-ledger bug was not latent, and it hit 18 flags
+ 
+ Commit `3f54902081` says the `flag_states` defect "was latent and I exposed it an hour ago by
+ recording the nulls the operator authorized". **That is wrong.** The commit message stands as
+-- 
+2.55.0
+

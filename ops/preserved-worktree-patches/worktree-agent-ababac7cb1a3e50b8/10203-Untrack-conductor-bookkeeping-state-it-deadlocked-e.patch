@@ -1,0 +1,209 @@
+From b7facabb793ac56541cbfe6b71815c20325b656b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 22:34:05 -0400
+Subject: [PATCH 10203/11362] Untrack conductor bookkeeping state: it
+ deadlocked every commit
+
+Seven ops/.*_state.json escalation-dedupe ledgers were TRACKED while the
+conductor rewrites them every few seconds. A test-suite mutation marker naming
+them can therefore never go clean while the loop runs, so it refused every
+hook-respecting commit indefinitely. The conductor itself was immune, because
+it commits with --no-verify, so the entire cost fell on humans and agents --
+five refused commits in one day, each needing a marker deleted and justified by
+hand. A guard that has to be talked past five times a day is training people to
+talk past it.
+
+Safe to untrack, verified rather than assumed. Both load paths are built for
+absence and return fresh state on OSError or JSONDecodeError, and
+run_stop_authority.py documents its fail direction out loud: "Unreadable state
+= fresh state: persistence restarts, which only DELAYS an action (fail toward
+not killing)." That is the safe direction, and it was the specific protocol
+concern I had about touching stop-authority. The cost on a fresh clone is that
+deduplicated alerts re-fire once, which is self-correcting.
+
+The files stay on disk; only the index entries go. Siblings ops/.agent_scopes/
+and ops/.test_suite_mutation_runs/ were already ignored for exactly this
+reason: per-run local state does not belong in the research record.
+
+Recommended by an independent review that measured the deadlock and correctly
+declined to fix it -- untracking touches the stop-authority and janitor
+protocol, and an attribution carve-out would have weakened the gate instead.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .gitignore                                    | 22 ++++++++++
+ ops/.activation_replan_state.json             |  1 -
+ ...arc_leaderboard_technique_watch_state.json |  5 ---
+ ops/.arc_news_watch_state.json                |  5 ---
+ ops/.audit_findings_ledger_state.json         | 43 -------------------
+ ops/.conductor_reexec_state.json              |  4 --
+ ops/.run_sentinel_state.json                  | 14 ------
+ ops/.stop_authority_state.json                |  6 ---
+ 8 files changed, 22 insertions(+), 78 deletions(-)
+ delete mode 100644 ops/.activation_replan_state.json
+ delete mode 100644 ops/.arc_leaderboard_technique_watch_state.json
+ delete mode 100644 ops/.arc_news_watch_state.json
+ delete mode 100644 ops/.audit_findings_ledger_state.json
+ delete mode 100644 ops/.conductor_reexec_state.json
+ delete mode 100644 ops/.run_sentinel_state.json
+ delete mode 100644 ops/.stop_authority_state.json
+
+diff --git a/.gitignore b/.gitignore
+index 7d1486a63f..b763c77a3c 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -312,3 +312,25 @@ results/arc_leaderboard_eval_runs/
+ # state, like the mutation-check run files. A committed scope would become active for every
+ # session in every checkout and refuse commits nobody could explain.
+ ops/.agent_scopes/
++
++# Conductor bookkeeping state: escalation-dedupe ledgers, rewritten every few seconds by the
++# running loop. TRACKED until 2026-08-29, and that was a standing commit deadlock: a
++# test-suite mutation marker naming them can never go clean while the loop runs, so it
++# refused every hook-respecting commit indefinitely. The conductor itself was immune
++# (--no-verify), so the cost fell entirely on humans and agents -- five refused commits in
++# one day.
++#
++# Safe to untrack: every reader treats absence as fresh state, and run_stop_authority.py
++# documents the fail direction out loud -- "Unreadable state = fresh state: persistence
++# restarts, which only DELAYS an action (fail toward not killing)." The cost on a fresh clone
++# is that deduplicated alerts re-fire once, which is self-correcting.
++#
++# Siblings ops/.agent_scopes/ and ops/.test_suite_mutation_runs/ are already ignored for the
++# same reason: per-run local state does not belong in the research record.
++ops/.activation_replan_state.json
++ops/.arc_leaderboard_technique_watch_state.json
++ops/.arc_news_watch_state.json
++ops/.audit_findings_ledger_state.json
++ops/.conductor_reexec_state.json
++ops/.run_sentinel_state.json
++ops/.stop_authority_state.json
+diff --git a/ops/.activation_replan_state.json b/ops/.activation_replan_state.json
+deleted file mode 100644
+index 9e26dfeeb6..0000000000
+--- a/ops/.activation_replan_state.json
++++ /dev/null
+@@ -1 +0,0 @@
+-{}
+\ No newline at end of file
+diff --git a/ops/.arc_leaderboard_technique_watch_state.json b/ops/.arc_leaderboard_technique_watch_state.json
+deleted file mode 100644
+index 25d55bff8f..0000000000
+--- a/ops/.arc_leaderboard_technique_watch_state.json
++++ /dev/null
+@@ -1,5 +0,0 @@
+-{
+-  "last_findings": "- **New top-five entrant:** **rfbr** (`romainfabre`) is now **#5 at 3.37**, displacing Tony G to #6. No attributable public code, notebook, discussion, repository, or technique writeup was found. **Exploit/general-purpose classification: unknown**; no **POSSIBLE CARNOT LEVER** can be assigned. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Kaggle code profile](https://www.kaggle.com/romainfabre/code)",
+-  "last_checked": "2026-08-27T13:39:15.020305+00:00",
+-  "history_count": 39
+-}
+diff --git a/ops/.arc_news_watch_state.json b/ops/.arc_news_watch_state.json
+deleted file mode 100644
+index a4251dfd99..0000000000
+--- a/ops/.arc_news_watch_state.json
++++ /dev/null
+@@ -1,5 +0,0 @@
+-{
+-  "last_findings": "- The leaderboard changed again: cstl is now #1 (5.99), Lord Han Solo #2 (4.99), and Tufa Labs #3 (4.67). Tong Hui Kang entered #4 (3.39), pushing Tony G to #5 (3.17), Daniel Franzen to #6 (2.88), and wking edewd to #11 (2.70). [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)",
+-  "last_checked": "2026-08-26T13:11:25.653658+00:00",
+-  "history_count": 27
+-}
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+deleted file mode 100644
+index 40f29aad2c..0000000000
+--- a/ops/.audit_findings_ledger_state.json
++++ /dev/null
+@@ -1,43 +0,0 @@
+-{
+- "escalated": {
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::_is_chance_floor_score age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::_is_count_field age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::_is_finite_number age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::_is_identifier_field age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::_is_reference_field age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::_is_verified_arithmetic_delta age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::_name_tokens age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::_numeric_pairs age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|adversarial_verify.py::check_terminal_artifact_readiness age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|arc_artifact_lint.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|arc_count_integrity_lint.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|arc_llm_on_liveness_lint.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|arc_orphan_solver_lint.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|artifact_freshness_lint.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|audit_findings_ledger.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|child_results_guard.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|commit 288ea485f9 (REQ-ARC-WMTE-6710) age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|determination_preservation_lint.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|experiment_6587_v573_constraint_first_method_contract.json age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|experiment_6596_convergeflow_feasible_token_canary.json age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|experiment_6633_gpu_lease_phase_journal.json age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|experiment_6654_prospective_repair_memory_evolution.json age-week 0|": "2026-08-28T00:05:50Z",
+-  "AUDIT_FINDING_UNTRIAGED|harness_integrity_lint.py age-week 0|": "2026-08-29T00:16:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|in_process_doc_reconcile.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|mutation_marker_lint.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|operator_curated_doc_guard.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|research_complete_ledger_lint.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|run_stop_authority.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|scripts/arc_artifact_lint.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|scripts/artifact_freshness_lint.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|scripts/child_results_guard.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|scripts/operator_curated_doc_guard.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|scripts/operator_curated_docs_lint.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|scripts/substrate_alias_evidence_lint.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|scripts/test_suite_mutation_check.py age-week 0|": "2026-08-26T00:17:17Z",
+-  "AUDIT_FINDING_UNTRIAGED|tracked_results_guard.py age-week 0|": "2026-08-27T00:08:48Z",
+-  "AUDIT_FINDING_UNTRIAGED|verifier_authenticity_lint.py age-week 0|": "2026-08-27T00:08:48Z"
+- },
+- "last_scan_notes": [],
+- "last_scan_utc": "2026-08-29T00:16:48Z"
+-}
+\ No newline at end of file
+diff --git a/ops/.conductor_reexec_state.json b/ops/.conductor_reexec_state.json
+deleted file mode 100644
+index bc891bb2ca..0000000000
+--- a/ops/.conductor_reexec_state.json
++++ /dev/null
+@@ -1,4 +0,0 @@
+-{
+- "last_attempt_sha": "fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
+- "attempted_at": "2026-08-25T17:04:35Z"
+-}
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+deleted file mode 100644
+index 80d317e84c..0000000000
+--- a/ops/.run_sentinel_state.json
++++ /dev/null
+@@ -1,14 +0,0 @@
+-{
+- "escalated": {
+-  "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z",
+-  "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json|": "2026-08-23T11:27:27Z",
+-  "ORPHANED_LLAMA_SERVER|host|37365": "2026-08-26T03:03:50Z",
+-  "WRONG_MODEL_LOADED|host|1148452": "2026-08-27T13:52:48Z",
+-  "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z",
+-  "WRONG_MODEL_LOADED|host|2080991": "2026-08-25T07:49:49Z",
+-  "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z",
+-  "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+- },
+- "last_scan_notes": [],
+- "last_scan_utc": "2026-08-29T00:16:48Z"
+-}
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+deleted file mode 100644
+index e1653eedc7..0000000000
+--- a/ops/.stop_authority_state.json
++++ /dev/null
+@@ -1,6 +0,0 @@
+-{
+- "candidates": {},
+- "last_scan_notes": [],
+- "last_scan_utc": "2026-08-29T00:16:48Z",
+- "written": {}
+-}
+\ No newline at end of file
+-- 
+2.55.0
+

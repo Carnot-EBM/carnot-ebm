@@ -1,0 +1,665 @@
+From 085105e76f946fa01988320dfad79218e1d15ba3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 02:56:49 -0400
+Subject: [PATCH 04978/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../change-proposals/research-roadmap-v462.md | 168 ++++++++++++++++++
+ ops/anomaly-escalations.md                    |  35 ++++
+ ops/arc_self_solve_audit_report.md            |  51 +++---
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   2 +
+ ops/conductor-state.json                      |   2 +-
+ ops/docs_audit_report.md                      |  92 +++++-----
+ research-references.md                        |  30 ++++
+ ...sota_ingestion_verifier_moat_guidance.json |  13 +-
+ ...sota_ingestion_verifier_moat_guidance.json |  13 +-
+ results/experiment_4967_capstone_v457.json    |  13 +-
+ results/experiment_4978_capstone_v458.json    |  13 +-
+ results/experiment_4989_capstone_v459.json    |  13 +-
+ results/experiment_5000_capstone_v460.json    |  13 +-
+ ...riment_5008_moat_oracle_distinct_lint.json |  13 +-
+ 15 files changed, 389 insertions(+), 84 deletions(-)
+ create mode 100644 openspec/change-proposals/research-roadmap-v462.md
+
+diff --git a/openspec/change-proposals/research-roadmap-v462.md b/openspec/change-proposals/research-roadmap-v462.md
+new file mode 100644
+index 0000000000..28bb5af5f0
+--- /dev/null
++++ b/openspec/change-proposals/research-roadmap-v462.md
+@@ -0,0 +1,168 @@
++# Research Roadmap v462 — PHASE D (SECOND execution): the FIRST REAL oracle-distinct verifier-moat test
++
++**Milestone:** 2026.06.462
++**Planner:** outer-loop Claude Opus 4.8, 2026-06-30 (UTC).
++**Status of the program:** PHASE D = the off-ARC distributional-energy verifier moat, now the majority
++lever (the ARC-AGI-3 Submission Sprint Forcing Function RETIRED 2026-06-30). `.461` was the first PHASE D
++milestone; `.462` is the first milestone in which the decisive question is actually *measured*.
++
++---
++
++## 1. What the previous milestone (.461) proved — and why .462 is a re-execution, not a continuation
++
++`.461` ran all 13 arms (exp5001→exp5013) but **did not test the decisive question.** All three principled
++constructions failed to *execute* on attempt 1 — an execution failure, not a scientific null:
++
++| Arm | `.461` outcome | Root cause | Was the moat measured? |
++|---|---|---|---|
++| **D1 LoRA-EBM** (exp5003) | `running_..._pretrain_skeleton`, n_pairs=0, train_loss=null, duration 0.99s, `flagged_adversarial` (DURATION_TOO_SHORT) | **Bootstrap-and-bail** — wrote a skeleton artifact and stopped *before loading/training the model*. Preconditions ALL passed (4B cached, CUDA up, candidates + FoVer cached). | **No** — never trained. |
++| **D2 uPRM** (exp5004) | `blocked_uprm_logprob_candidate_cache`, `flagged_adversarial` | The uPRM scorer + first-error formula are **fully implemented**; it blocked only because the per-token-logprob candidate cache was empty and `CARNOT_UPRM_ENABLE_FRESH_GENERATION=''` (generation disabled). | **No** — never scored. |
++| **D3 EBRM** (exp5005) | `complete_ebrm_no_win_musr_plus_0p000`, the SOLE clean arm | **Degenerate**: abstained **97.5%** to a **k=1 "tuned-SC"** strawman, over the weak registry quality ensemble (point-estimate 0.515 < SC 0.585). delta=+0.000 / McNemar p=1.0 is an artifact of always-abstaining-to-SC. | **No** — a real trained verifier was never exercised. |
++| **D4 cross-corpus** (exp5006) | `running_..._mmlu_pro_hard_skeleton`, `flagged_adversarial` | Bootstrap-and-bail (same as D1). | **No.** |
++| **D5 gate** (exp5007) | **MIXED-SCOPED** (not realized, not bounded-retired) | Correct read: no clean positive MuSR arm + no clean D4 confirmation; D1/D2 nulls not clean → cannot bound-retire either. | n/a |
++
++**The honest state: zero real trained-verifier measurements have landed.** The fabrication gate worked
++perfectly (D1/D2/D4 correctly skipped) — the problem was never detection, it was **execution**. The
++capstone `next_milestone_pointer` says `tighten_strongest_arm` (EBRM); the deeper read is that "tightening
++EBRM" requires the two prerequisites the degeneracy exposed — **a real base scorer (D1) and a genuine
++tuned-SC baseline (not k=1)** — both of which `.462` builds. `.461` therefore proved the *harness wiring*
++and surfaced *three concrete, individually-fixable execution defects*; `.462` fixes each and measures the
++question for the first time.
++
++`.461` E1 SOTA-ingestion (today, discover→ingest→plan→experiment) flagged five fresh papers as the `.462`
++inputs (see §8). ARC stayed LOCKED (levels 69 + the publishable FoVer paper); the deepen well is dry
++(flat at 69 for 7 milestones) — ARC is now opportunistic.
++
++## 2. The three biggest gaps between current state and the PRD vision
++
++1. **The verifier moat is UNPROVEN and now UNTESTED** (north-star §5 — the existential gap). With the
++   generator commodity (open local LLM) and energy-as-generator closed-negative, the *verifier* is
++   Carnot's entire value-add, and not one real trained oracle-distinct verifier has yet beaten a genuine
++   tuned-SC on a headroom-present domain. `.462` measures it for the first time (D1/D2/D3).
++2. **The EFFICIENCY axis is unmeasured** (north-star §5 — "equally effective as the LM at lower
++   cost/latency"). Even if every accuracy arm ties SC, a *Pareto* win (equal accuracy at fewer judge calls)
++   is still a moat. `.462` adds the uncertainty-routed cheap→judge cascade (2510.20369) to test it.
++3. **Continuous self-learning** (PRD FR-11 / research-program Tier 3) must keep advancing — the learned
++   verifier should improve across runs. `.462` keeps the ARC self-play checkpoint loop alive (E2).
++
++## 3. Architecture — where PHASE D sits
++
++```
++            PHASE D — oracle-distinct verifier moat (OFF ARC, headroom-present reasoning corpora)
++            ┌──────────────────────────────────────────────────────────────────────────────┐
++ INFRA      │  B1 genuine tuned-SC baseline (K-way majority vote, K swept + reported;        │
++ (run 1st)  │     always-abstain degeneracy guard)        B2 shared logprob-enriched          │
++            │                                              candidate cache (MuSR + 2nd corpus) │
++            └───────────────┬───────────────────────────────────────┬──────────────────────┘
++                            │ (genuine SC baseline)                  │ (K candidates + per-token logprobs)
++            ┌───────────────▼───────────────────────────────────────▼──────────────────────┐
++ ACCURACY   │  D1 LoRA-EBM (TRAIN: Qwen3.5-1.7B + LoRA + energy head, contrastive on FoVer +  │
++ arms       │      gold-labeled candidate pairs; EVAL min-energy select vs genuine tuned-SC)  │
++            │  D2 uPRM (next-token-prob first-error process score; UNSUPERVISED selector)     │
++            │  D3 EBRM (refine the D1 trained scorer; uncertainty head, NON-degenerate        │
++            │      abstention) ── gated_on D1 scorer_trained                                  │
++            └───────────────┬──────────────────────────────────────────────────────────────┘
++                            │ best oracle-distinct verifier (by delta vs genuine tuned-SC on MuSR)
++ EFFICIENCY ┌───────────────▼──────────────┐   CROSS-CORPUS ┌──────────────────────────────┐
++ arm        │  CASCADE: cheap verifier      │   D4: best arm  │  on a 2nd headroom-present    │
++            │  selects when confident, routes│   on a 2nd corpus│  oracle-distinct corpus       │
++            │  uncertain → strong judge;     │   (GPQA /        │  (generalization confirmation)│
++            │  charge judge-call budget      │   MMLU-Pro-hard) └──────────┬───────────────────┘
++            └───────────────┬───────────────┘                            │
++                            └──────────────────────┬─────────────────────┘
++                                                   ▼
++                                  D5 GATE: realize / bounded-retire / scoped
++                                  + DiffusionGemma-gate status (operator-gated)
++```
++
++The verifier is **oracle-distinct** everywhere (`verifier_is_oracle=False`): it scores reasoning quality
++and NEVER reads gold/answer_index/model_id at inference. This is the non-circular moat test the ARC
++generation wall could not host (per CLAUDE.md "Circularity / Oracle-Distinctness Discipline").
++
++## 4. The DiffusionGemma gate this thread resolves
++
++`docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md` is **STILL-PENDING**. Its three
++conditions (headroom present + a non-trivial oracle-distinct verifier + a matched control with CI95
++excluding 0) are exactly the PHASE D gate. A POSITIVE PHASE D arm satisfies the conditions *on the tested
++domain* — but **activation stays operator-gated**: `.462` records
++`diffusiongemma_gate_conditions_satisfied_off_arc` honestly and never autonomously flips the gate to MET
++(per the circularity discipline). ARC's ~13pp headroom remains the canonical un-captured target.
++
++## 5. Phases and the falsifiable gate
++
++- **PHASE 0 (transition):** archive `.461 → activate `.462; assert the active YAML parses + own-test
++  pre-test gate (`--no-cov`); record the `.461 close-state (MIXED-SCOPED moat; the three execution defects).
++- **PHASE B (infra, 2 reserved slots, run FIRST):** B1 genuine tuned-SC baseline + degeneracy guard;
++  B2 shared logprob-enriched candidate cache (unblocks D2, feeds D1/D3/cascade; anti-churn).
++- **PHASE D (verifier moat, the majority):** D1 train+eval LoRA-EBM; D2 uPRM (unblocked); D3 EBRM
++  (non-degenerate, gated on D1); the EFFICIENCY cascade; D4 cross-corpus; D5 gate aggregation.
++- **PHASE C (hardware):** KV260 SSH-only continuity.
++- **PHASE E (standing):** E1 SOTA-ingestion (map onto `.463); E2 ARC self-play (continuous self-learning /
++  FR-11); E3 opportunistic ARC level-up (honest no-bank if dry).
++- **CAPSTONE:** aggregate the moat verdict + the `.463 pointer.
++
++**The falsifiable gate (the only non-circular evidence):** on a headroom-present ORACLE-DISTINCT domain
++(`verifier_is_oracle=False`, `headroom_present=True` = oracle@K − **genuine** tuned-SC ≥ 0.10 ∧ flips>0),
++≥1 of {trained LoRA-EBM (D1), uPRM (D2), EBRM (D3)} beats **genuine tuned-SC** with paired CI95 excluding
++0 (McNemar p<0.05), confirmed on MuSR ∧ ≥1 second corpus (D4). OR the EFFICIENCY arm achieves accuracy
++parity (within CI) at a materially lower judge-call budget (north-star §5 Pareto win).
++`retire_if_same_verdict: true` — if the **properly-executed** LoRA-EBM (D1) AND uPRM (D2) both null with
++CI95 including 0 on every headroom-present oracle-distinct corpus, the off-ARC accuracy-moat retires as
++bounded (a publishable null converging with the ARC tie). A degenerate or skeleton arm is a FAILED
++execution, NOT a null — it does not trigger retirement (this is the `.461 lesson made mechanical).
++
++## 6. Dependency graph
++
++```
++exp5014 (transition)
++   └─> exp5015 (B1 genuine-SC baseline)  ─┐
++   └─> exp5016 (B2 logprob cache)        ─┤ (infra, both feed the D arms)
++                                          ├─> exp5017 (D1 LoRA-EBM train+eval)
++                                          │       └─> exp5019 (D3 EBRM)  [gated_on D1 scorer_trained]
++                                          ├─> exp5018 (D2 uPRM)          [uses B2 logprob cache; LC-ERD fallback]
++                                          └─> exp5020 (cascade efficiency)
++   exp5017 / exp5018 / exp5019 ──(best arm)──> exp5021 (D4 cross-corpus)
++   exp5017..exp5021 ──────────────────────────> exp5022 (D5 gate) ──> exp5027 (capstone)
++exp5023 (C KV260) · exp5024 (E1 SOTA) · exp5025 (E2 self-play) · exp5026 (E3 ARC) ──> exp5027 (capstone)
++```
++
++## 7. Hardware requirements
++
++- **Offline training + scoring on the conductor's dedicated GPU-0 CUDA device** (2026-06-27 allocation;
++  `CARNOT_ARC_GENERATOR_CUDA_GPU=0`, drop-in `40-arc-generator-3090-20260619.conf`). The D arms train a
++  small QLoRA scorer + run live generation-with-logprobs; do NOT iGPU-pin (the iGPU constraint is for the
++  *live ARC submission stack only*, not offline induction/training — CLAUDE.md ARC-sprint GPU rule).
++- **KV260** via SSH-only (`ssh kria`), never the host SD-card path (KV260 SSH-Not-SD-Card Discipline).
++
++## 8. Models (CLAUDE.md SOTA-models rule)
++
++- **Generator (candidate + logprob source):** `unsloth/gemma-4-12B-it-GGUF` on the GPU-0 CUDA llama-server
++  (the .461 D2 confirmed it returns `top_logprobs`). The lightweight SOTA option — fast enough for the
++  per-question K-candidate generation B2 needs.
++- **Trainable verifier base (D1 LoRA-EBM):** `Qwen/Qwen3.5-1.7B` **base** repo (NOT a `-GGUF` repo per the
++  GGUF-tokenizer rule) + LoRA + a scalar energy head. Smaller than `.461's 4B choice → trains + evals in a
++  single codex session (the structural fix for the D1 bail).
++- **`.462 SOTA inputs (E1-ingested, see research-references.md V462 block):** 2606.19818 (UARM uncertainty
++  head), 2606.09073 (distributional-pessimistic), 2602.24040 (RewardUQ calibration), 2510.20369
++  (uncertainty-routed cascade — the efficiency arm), 2605.24005 (LC-ERD — the D2 unblock fallback).
++
++## 9. What this milestone does NOT do (do-not-re-propose ledger)
++
++- **NOT** energy-as-ARC (S0 program CONCLUDED 2026-06-26 — no live ARC value); NOT the ARC dynamics-engine
++  L2 wall, macro/horizon-collapse, click-heatmap, trust-gate, MATM retrieval (NULLED .454), TTT-code-engine,
++  local code inducers, decision-need, action-prefix latents, perception-from-grid, representation #5.
++- **NOT** the verifier-as-REWARD path (exp4247/exp4263, retired): PHASE D trains the verifier/scorer and
++  uses it as an oracle-distinct SELECTOR, never as an RFT reward to train a policy. Each D arm carries
++  `operator_override` for the substring scope-match + a `prior_failures` block for its `.461 predecessor.
++- **NOT** a new ARC majority — ARC is opportunistic post-sprint (E2 self-play + E3 one deepen).
++- **NOT** an autonomous DiffusionGemma activation — a POSITIVE records the satisfied conditions; activation
++  stays operator-gated.
++
++## 10. Agent routing
++
++All experiment tasks `agent_type: codex` / `gpt-5.5` (the 2026-06-30 PHASE D directive + standing
++quota-conserve default; `CODEX_FORCE_EXPERIMENTS=1`). Planner + retro stay Claude Opus 4.8
++(`AGENT_TYPE_PLANNER`/`AGENT_TYPE_RETRO`) — the operator's deliberate quality choice. The D1 training arm
++is de-risked *structurally* (smaller 1.7B base + shared cache + train-first-not-skeleton-first + a gate
++that REQUIRES train_loss non-null) rather than by routing off codex; if it bails a second time,
++`retire_if_same_verdict` surfaces it to the operator (per the `.461 retro's own escalation note).
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 7fe20e55be..98f7b914b9 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -697,3 +697,38 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_5006_moat_second_corpus.json
++
++## experiment_4162_sota_ingestion_verifier_moat_guidance.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
++- artifact: results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
++
++## experiment_4170_sota_ingestion_verifier_moat_guidance.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
++- artifact: results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
++
++## experiment_4967_capstone_v457.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
++- artifact: results/experiment_4967_capstone_v457.json
++
++## experiment_4978_capstone_v458.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
++- artifact: results/experiment_4978_capstone_v458.json
++
++## experiment_4989_capstone_v459.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
++- artifact: results/experiment_4989_capstone_v459.json
++
++## experiment_5000_capstone_v460.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
++- artifact: results/experiment_5000_capstone_v460.json
++
++## experiment_5008_moat_oracle_distinct_lint.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
++- artifact: results/experiment_5008_moat_oracle_distinct_lint.json
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index 420958c158..bbbe8a599a 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -16,43 +16,46 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
+ 
+ ## Hostile LLM review
+ 
+-Grounded. Registry is the receipts: `reproducible_total_levels: 69`, **flat** — and the registry's own progress log self-declares `new_levels_reproduced: 0` for `.405/.406/.408`, with 10+ inline "no new executable level was banked" notes. Here is the audit.
++Verification complete. The data resolves every verdict cleanly. Rendering the audit.
+ 
+ ---
+ 
+-## TL;DR
++## ARC Self-Solve Audit — TL;DR
+ 
+-**VERDICT: PASS on provenance honesty, FAIL on progress — 21 of 23 artifacts are DUPLICATE re-solves (level ≤ registry depth; net new levels = 0, total frozen at 69), 1 is a genuine +1 candidate (dc22), and 1 is a CRITICAL provenance contradiction (`experiment_headway_lp85_capture`: `used_env_source: true` on a `development_proxy` solve).** No outer-loop source-reading drift in the standing loop (good), but the standing offline loop is re-banking already-reproduced depths while the headline metric is dead-flat — textbook north-star §1 churn.
++**VERDICT: 0 self-discovery advances in window. 22 sanctioned development_proxy re-confirmations of already-banked levels (total flat at 69), 1 CRITICAL outer-loop-RE contradiction (lp85 L6, already `flagged_adversarial` + contained). Reachability clean (exit 0). No new live-agent capability was discovered this week — and the registry's own two `live_agent_self_discovery`-labeled attempts (dc22 exp4894, s5i5 exp4959) both banked ZERO.**
+ 
+-## Grounded depth check (artifact level vs registry `levels_reproduced`)
++No `OFF_PATH` (all 46 solver modules in the live closure). The deliverable — a live agent that self-discovers hidden games — is not advanced by anything in this set; it is being *maintained* (reproduction regression-gating), not *grown*.
+ 
+-| Class | Verdict | Games |
+-|---|---|---|
+-| **DUPLICATE** (≤ registry, no new level) | 21 | lp85·L3, r11l·2, ls20·2, tu93·4 (reg 5), tr87·6 (reg 6), vc33·2, g50t·2, s5i5·2, cd82·2, sp80·2, su15·2, sk48·2, ft09·3, ar25·3, m0r0·2, cn04·3, lf52·2, bp35·2, re86·2, ka59·1, sb26·2 |
+-| **NEW-DEEPER (+1) candidate** | 1 | dc22·L3 (reg 2) |
+-| **CRITICAL contradiction** | 1 | `headway_lp85_capture` (lp85·L6, `used_env_source:true`) |
++---
++
++## Per-artifact verdicts
++
++### 1. `experiment_headway_lp85_capture.json` (lp85 L6) — **OUTER_LOOP_RE / CRITICAL**
+ 
+-## Per-artifact
++- **Evidence:** `used_env_source: true` declared alongside `solve_provenance: development_proxy` — the exact contract contradiction (an outer-loop-only input on a non-`outer_loop_re` solve). `honest_verdict: "...bank_trajectory_captured"`; `solution_labels` are 89 frozen absolute pixel coords (`{"x":2,"y":30}`...), i.e. a live-coupled *trajectory*, not a reproducible solver. The L5→L6 "deepen" took 971s/11,069 nodes. Already carries `flagged_adversarial: true` + a `critical` `corrigendum_pending` (Layer 1b caught it).
++- **Containment confirmed:** registry `lp85.levels_reproduced` is still **5**, and `reproducible_total_levels` is **69** — the L6 outer-loop claim did **not** inflate the count. The gate worked.
++- **Recommended action:** Re-stamp `solve_provenance: outer_loop_re` (or remove the `used_env_source` dependency and re-derive from the agent's own attempts). Keep excluded from headline/total (it is). Do not let any capstone cite lp85 as L6.
+ 
+-**The 21 `arc_loop_solve_*` duplicates → DUPLICATE.**
+-- *Evidence:* `solve_provenance: development_proxy`, `outer_loop_inputs_declared: []`, reachability pre-pass green (not OFF_PATH, not OUTER_LOOP_RE on the evidence). Each solved level is **at or below** the registry's recorded depth (e.g. tr87·L6 IS the artifact the registry already cites as "deepest single-game solve"; tu93·L4 sits under banked L5). Registry total unmoved at 69.
+-- *Recommended action:* Stop counting/headlining these as "solves." They are honest dev-twin reproductions (legit for verifier-training/generalization-validation), but they add **zero new live capability**. Rotate targets to **unsolved games / held-out first-win lanes** per the ARC Level-Up Guarantee + the `.432` directed-exploration pivot — the deepen well is dry, and re-running it is the churn the loop is supposed to avoid.
++### 2. `arc_loop_solve_dc22.json` (claims L3) — **DUPLICATE (+ in-file over-count)**
+ 
+-**`arc_loop_solve_dc22.json` (L3 vs reg 2) → SELF_DISCOVERY_ADVANCE (candidate, verify).**
+-- *Evidence:* Only artifact exceeding its registry depth. But `reproducible_total_levels` is still 69, so the +1 is **unbanked or pending** — and it's still `development_proxy` (dev twin, not proof of *live hidden-game* self-discovery).
+-- *Recommended action:* Confirm dc22 L3 passed `kit.reproduce` and actually increments the total to 70; if it didn't bank, downgrade to DUPLICATE. This is the one row worth chasing.
++- **Evidence:** The loop file self-reports `reproduced_levels: 3` with an in-file `reproduction_gate {reached_level:3, reproduced:true}`. The **registry of record contradicts it**: `dc22.levels_reproduced: 2`, and the adjudicating attempt `exp4894` returned `offline_reproduced:false`, `new_levels_banked:0`, `residual_cause: duplicate_depth` (`complete_dc22_no_new_level_residual_duplicate_depth`). So the "L3" is a re-counted depth the registry already holds, correctly rejected — total stays 69. Note also dc22 was a `fallback_exception` to the rotation skip-list (exp4666), and exp4894 stamped `live_agent_self_discovery` while banking nothing.
++- **Recommended action:** Treat the in-file `reproduced_levels: 3` as stale/overstated; the registry (L2) is authoritative. Flag the loop-artifact vs registry-of-record mismatch so a future capstone never reads `reproduced_levels:3` directly. No new capability — do not count.
+ 
+-**`experiment_headway_lp85_capture.json` (lp85·L6) → OUTER_LOOP_RE / CRITICAL.**
+-- *Evidence:* Declares `used_env_source: true` while stamping `solve_provenance: development_proxy` — the discipline names this exact pair a **CRITICAL contradiction** (`adversarial_verify.check_arc_outer_loop_solve` → `flagged_adversarial` → quarantine). It is explicitly the "lp85 **L6 bank conflict** re-run" (methodology_note), and its `solution_labels` are 89 raw `{x,y}` coordinate clicks — the brittle live-coupled-coordinate pattern (registry gotcha #5) — despite claiming `offline_reproduced: true`. Note this is also the single artifact backing the lp85 5→6 NEW-DEEPER, so the deepest-well advance in the whole set is the one carrying the contradiction.
+-- *Recommended action:* **Quarantine; do not count lp85·L6** toward the headline until provenance is reconciled. Either relabel `outer_loop_re` (if env internals were used to calibrate the deepen) or fix the field semantics (see Pattern watch). The other 22 set `used_env_source` ⊥/false while doing the same offline-sim work — so this is either over-disclosure tripping a real wire, or a real RE leak. Resolve which.
++### 3. The remaining 21 `arc_loop_solve_*.json` — **DUPLICATE** (sanctioned dev-twin reproduction; no new live capability)
+ 
+-## Pattern watch
++`r11l, ls20, tu93, tr87, vc33, g50t, s5i5, cd82, sp80, su15, sk48, ft09, ar25, m0r0, cn04, lf52, bp35, re86, ka59, sb26, lp85`(L3)
+ 
+-1. **Primary drift = DUPLICATE CHURN, not source-reading.** 23 "solves" in 7 days, **0 net new reproducible levels**, total pinned at 69 across 3+ milestones. The standing loop re-confirms known depths instead of attacking unsolved games. This is north-star §1 noise (re-measuring the known). The honesty layer is working — the system openly logs "no new level banked" — but the *target selection* isn't. Rotation (`target_rotation: ...peer_targets_avoided`) exists yet the last-7d set is still dominated by registry-depth re-solves.
+-2. **Provenance-field semantics are unreconciled.** `used_env_source` appears in the discipline's "outer-loop-only inputs" bucket, but using the offline `environment_files` sim is what *every* dev-twin solve does. One artifact declared it (and trips CRITICAL); 22 omitted it. Either "used the offline sim" should not live in the outer-loop-RE bucket, or all 22 should declare it and inherit the same scrutiny. Fix the contract so honest disclosure isn't punished and real RE isn't hidden by omission.
+-3. **No live-self-discovery in the window.** Every artifact is `development_proxy`. Nothing here is evidence the **scored `E3AgentPolicy`** advances on a hidden game from its own attempts — which, 1 day from the 6/30 deadline, is the only number that matters. The dev twin is healthy; the live deliverable is unproven by this set.
++- **Evidence:** Every one is `solve_provenance: development_proxy`, `mode: standing_arc_loop_offline_no_quota`, solved via a hand-registered `GameAdapter _<game>` (per-game RE the live agent cannot do on a hidden game). Each artifact's level **matches or sits below** its registry `levels_reproduced` (e.g. lp85 loop=3 vs reg=5; tu93 loop=4 vs reg=5; all others at parity). mtimes are 06-23→06-30, yet `reproducible_total_levels` is unchanged at **69** — these re-gated already-banked depths and banked nothing new.
++- **Not misconduct:** this is the legitimate offline reproduction *regression gate* (the dev twin re-confirming banked levels), reachable from `arc_loop_solve.py`. It is simply **not** evidence of live-agent self-discovery and must never be aggregated as such.
++- **Recommended action:** Keep as reproduction-maintenance. Do not let any capstone phrase these as "solves this milestone" — they are re-confirmations of the standing 69.
+ 
+ ---
+ 
+-Want me to persist this to `ops/arc_self_solve_audit_report.md`, and/or open a quick check on whether dc22·L3 actually banked (total 69→70)?
++## Pattern watch — drift toward maintenance-over-discovery
++
++1. **Self-discovery lane is flat, by the registry's own evidence.** The only two recent attempts stamped `live_agent_self_discovery` — `exp4894` (dc22) and `exp4959` (s5i5) — both returned `new_levels_banked: 0` (`duplicate_depth` / `no_grounded_l3_delta`). Zero net live-agent advance in-window; `reproducible_total_levels` stuck at 69 across 2+ flat milestones (corroborates the final-sprint state note).
++2. **The window is 96% dev-twin re-gating.** 22/23 artifacts are `development_proxy` GameAdapter reproductions. Healthy as a regression net, but if the loop keeps emitting these as the bulk of "ARC solve" output, a capstone reading provenance-blind will read 22 "solves" where there were 0 discoveries. The Incremental-Progress / no-churn ethos (north-star §1) is being violated in spirit: same levels, recent mtimes, no headline movement.
++3. **One live contradiction slipped to disk before Layer-1b backfill** (lp85 capture: `used_env_source` + `development_proxy`). Contained — but it confirms the residual the discipline already admits: a self-contained `scripts/experiments/*` capture can declare a friendly provenance and reach disk; only the per-artifact lint + this review catch it. Watch for repeats of the `used_env_source`/`offline_ground_truth_bfs` + non-`outer_loop_re` pairing.
++
++**Net for the operator:** nothing here proves the live agent solved a hidden game from its own attempts. The mechanical layers held (reachability green, lp85 contained, dc22 over-count rejected by the registry). The real signal is absence: the self-discovery advance count is **zero** this window — that, not misconduct, is what to act on.
+ 
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d6991c8e24..67648e5bc7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 181, "phase": "iteration_start", "last_beat": "2026-06-30T05:58:23Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 183, "phase": "iteration_start", "last_beat": "2026-06-30T06:56:47Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c78f434207..585a4f7720 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9629,3 +9629,5 @@ The contro |
+ | 2026-06-30 05:22 UTC | PHASE E2 (CONTINUOUS SELF-LEARNING / FR-11; ARC se | OK | 109 passed, 1 warning in 10.23s |
+ | 2026-06-30 05:39 UTC | PHASE E3 (OPPORTUNISTIC ARC LEVEL-UP) -- a single  | OK | 89 passed, 1 warning in 9.86s |
+ | 2026-06-30 05:56 UTC | CAPSTONE v461 -- aggregate the FIRST PHASE D miles | OK | 86 passed, 1 warning in 8.48s |
++| 2026-06-30 06:52 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
++| 2026-06-30 06:54 UTC | Milestone 2026.06.462 activated | OK | 14 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 0000b8cc78..70a2538c5d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 181, "phase": "iteration_start", "started_at": "2026-06-30T05:58:23Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 183, "phase": "iteration_start", "started_at": "2026-06-30T06:56:47Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 2745980501..08f6b40d49 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -1,69 +1,73 @@
+-<!-- generated by scripts/pages_adversarial_audit.py — 2026-06-29 -->
++<!-- generated by scripts/pages_adversarial_audit.py — 2026-06-30 -->
+ <!-- per CLAUDE.md 'Adversarial Landing-Page Discipline' — this report is advisory; operator decides what to act on -->
+ 
+-# docs_audit_report — 2026-06-29
++# docs_audit_report — 2026-06-30
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero hooks me — "catch the reasoning errors your LLM states with confidence," a concrete `47 + 28` example, and `pip install carnot-ebm` is a genuinely strong open. But the moment I scroll into the stats bar ("382 Completed milestones") and especially the Results wall (FoVer, SVAMP, CRANE, VeriCoT, GSM8K, PRM, HalluGuard, CCTU — a dozen acronyms I don't know, several with perfect `1.0` / `60/60` scores), my trust erodes fast, and the footer says **Apache 2.0** while the hero badge says **MIT-0**. I'd keep reading with growing skepticism, but a more cynical stranger bounces at the acronym wall.
++The hero is genuinely strong — I know what Carnot does in one sentence and there's a `pip install` — but the moment I scroll, the page turns into a wall of unexplained benchmark acronyms (CCTU, SVAMP, VeriCoT, CRANE, PRM-BiasBench, FoVer-as-both-0.9131-and-0.125) and the license literally contradicts itself (MIT-0 in the badge, Apache 2.0 in the footer). A skeptical stranger reads the perfect scores (1.0, 60/60) plus four blog posts about catching *itself* fabricating results and quietly closes the tab wondering if any of these numbers are real.
+ 
+ ## TOP 3 PROBLEMS
+-1. **License contradiction** — hero badge + meta say "MIT-0", footer says "Apache 2.0 License". A stranger can't tell what they're allowed to do.
+-2. **Results section is an unexplained-acronym wall** — 12 cards citing FoVer/SVAMP/CRANE/VeriCoT/GSM8K/PRM/HalluGuard/CCTU with no glosses; a stranger reads none of them and several show suspiciously perfect numbers.
+-3. **Too many conflicting headline numbers** — AUROC appears as 0.9131, 0.8947, 0.9857 (retracted), 0.91, 0.90, and a below-chance 0.125 "baseline"; HumanEval pass-rate gains appear as +3pp, +15pp, AND +18pp. Nothing tells me which is "the" number.
++1. **License self-contradiction** — hero badge + meta say "MIT-0", footer says "Apache 2.0 License". A factual contradiction on the most basic trust question kills credibility instantly.
++2. **Results section is internal-research alphabet soup** — 12 cards, ~10 distinct unexplained benchmark/method names, several suspiciously-perfect scores (1.0 TP, 60/60, 100%-width bars) with no sample sizes. Reads like a lab notebook, not product evidence.
++3. **Top-of-page vanity metrics + jargon undercut the first impression** — "382 Completed milestones", "Repinned from v2 0.9857", "architecture-only 0.8947", and a "PREM/TTC" card mean nothing to a stranger and the visible 0.9857→0.9131 drop reads as "their headline number is unstable."
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- Results grid (`#results`) — 12 cards, each a different benchmark acronym — under the 20-card cap by count, but cognitively it's bloat: a stranger skims all 12 and absorbs zero. Suggest curating down to the 3–4 you'd stake the project on.
+-- Results provenance disclaimer paragraph — ~52 words of hedging ("infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows are labeled by provenance… synthetic pilots are included only when the card says so") — reads like internal audit-speak and signals nervousness about your own numbers. Cap/trim to one sentence.
+-- Preprint section-desc — ~75 words, dense with "clean continuous-integration checkout in a non-operator environment… within the published confidence interval." Tighten.
+-- Nav bar — 12 link items (Problem, Capabilities, Results, Quick Start, Report, Paper, Writing, Roadmap, + 4 doc links). Cluttered for a landing page.
++- Nav bar (lines 264–277) — **12 links** (Get Started, Tutorial, Concepts, API, Problem, Capabilities, Results, Quick Start, Report, Paper, Writing, Roadmap) — cap at ~5–6. No stranger parses a 12-item nav.
++- Results grid (lines 518–577) — **12 result cards** — under the 20 cap, but each card is a *different* unexplained benchmark. For a stranger this is effectively un-skimmable. Cut to ~4–6 recognizable headline rows.
++- Results intro (lines 510–516) — **~47 words** of defensive provenance hedging ("infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows are labeled by provenance"). Protests too much; reads as nervous.
++- "Recent progress" card (line 312) — ~51 words (under the 60-word r-card cap) but jargon-dense; the bigger issue is its content, not length (see jargon).
++- "Why Energy-Based?" card (lines 396–405) — ~75 words, under the 120 cap; acceptable but borderline.
+ 
+ ### Internal jargon
+-- Stats bar — "382 Completed milestones", "4,398 Experiment runs" — "milestones" is internal project-management vocabulary; a stranger doesn't trust a verifier more because it ran 4,398 experiments. Reads like an internal dashboard.
+-- "Recent progress" card (in stats bar) — "5-seed dual-condition", "architecture-only 0.8947", "Repinned from v2 0.9857" — methodology shorthand and a version label ("v2") only insiders parse.
+-- TTC & PREM card — "scales Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance… intrinsic motivation for continuous self-learning." The single densest, most opaque card on the page. Worst offender.
+-- Results cards — `FoVer`, `SVAMP`, `CRANE`, `VeriCoT`, `GSM8K`, `CoT`, `PRM-BiasBench`, `HalluGuard v3`, `CCTU`, `k=5 ensemble` — none glossed. "CCTU" appears twice (Features + Results), never defined.
+-- Preprint — "non-operator environment", "operator-initiated upload" — "operator" is internal role-speak.
+-- "paper-v6" in the Preprint section title — internal version number; a stranger needs "the paper," not "v6".
++- Stats bar (lines 305–306) — "**4,411 Experiment runs**", "**382 Completed milestones**" — "milestones" is internal project-management speak; a stranger doesn't care how many experiments you ran, only whether it works.
++- "Recent progress" card (line 312) — "**5-seed dual-condition**", "**architecture-only 0.8947**", "**Repinned from v2 0.9857 after pre-submission adversarial audit**" — methodology shorthand + a changelog phrasing no stranger can parse.
++- TTC & PREM card (line 499) — "**Test-Time Compute (TTC)**", "**Process-Reward Energy Model (PREM) variance**", "**intrinsic motivation for continuous self-learning**" — the single most jargon-dense, least-useful card on the page; doesn't tell me what I can *do*.
++- Results cards (lines 530, 549–550, 559, 564, 569, 574) — "**publication gate**", "**EstimationVerifier / SVAMP**", "**VeriCoT / CoT / TP rate / GSM8K**", "**CRANE**", "**PRM-BiasBench / k=5 ensemble**", "**HalluGuard v3**", "**CCTU**", "**Ising-guided fuzzing**", "**KV260 FPGA**" — a stranger recognizes maybe HumanEval/GSM8K; the rest is alphabet soup.
++- Features card (line 451) — "**CCTU**" used with no expansion (also appears in Results).
++- Preprint (lines 584, 591–594) — "**paper-v6**" in a public heading; "**non-operator environment**", "**pending operator-initiated upload**" — "operator" is internal vocabulary for the project owner.
+ 
+ ### Per-milestone narrative
+-- "HalluGuard v3", "HalluGuard v3" cascade card — version-numbered internal component name surfaced as a public result row.
+-- Stats bar leads with milestone/experiment counts, framing the page around the internal research cadence rather than the user benefit.
+-- (No full copy-pasted retro paragraphs found — the page avoids the worst of this. The leakage is at the token level, above.)
++- Stat (line 306) — "**382 Completed milestones**" surfaces internal milestone-counting as a headline number.
++- "Recent progress" card (line 312) — "**Repinned from v2 0.9857 after pre-submission adversarial audit**" reads exactly like a retrospective/changelog entry, not landing-page copy.
++- Version-suffix lineage scattered through Results/Preprint — "**HalluGuard v3**", "**v2 0.9857**", "**paper-v6**", "**CRANE vs rigid grammar**" — internal version trails. (Note: the page is otherwise free of explicit ".NNN" milestone refs — that discipline appears to have held.)
+ 
+ ### Inconsistencies
+-- **License**: "MIT-0 · Open Source" (hero badge + `<meta>`) vs "Apache 2.0 License" (footer). Direct contradiction.
+-- **AUROC values**: 0.9131 (FoVer hero), 0.8947 (architecture-only), 0.9857 (retracted v2), 0.91 (prompt-injection classifier), 0.90 (SVAMP AUC). Two different "0.91" AUROCs for two different things; one openly-retracted number still shown.
+-- **HumanEval pass-rate gain**: "+3.0 points" (verify-repair), "+15pp" (CRANE constrained decoding, HumanEval-50), "+18pp" (Ising-guided fuzzing, HumanEval-50). Three different improvements on the same benchmark name; the distinction (full set vs -50 subset vs method) isn't legible at skim speed.
+-- **Arithmetic example**: intro says the LLM answers "47 + 28 = 76"; the first problem card shows it "committed to '47 + 28 = 7'". Two different wrong strings for the same illustration.
+-- **"Preprint"**: section is titled Preprint and links "arXiv bundle", but the body admits "the arXiv submission is prepared but pending operator-initiated upload" — it isn't actually a preprint yet; "Paper" nav points to a self-hosted `arxiv-paper/main.pdf`.
++- **License: "MIT-0" (line 291 badge, line 7 meta, hero sub line 296) vs "Apache 2.0 License" (line 766 footer).** Direct contradiction.
++- **FoVer means two opposite things:** "0.9131 AUROC … FoVer" as the flagship number (lines 308, 312, 589) vs "0.125 FoVer baseline" as a *weak* baseline (line 550). A stranger sees "FoVer" as both excellent and terrible and can't reconcile it.
++- **Worked example drifts:** problem card says "47 + 28 = **7**" (line 338) while everywhere else uses "47 + 28 = **76**" (lines 329, 343, 628). Looks like a typo in the one place meant to illustrate the core pitch.
++- **Headline number instability shown on the page:** 0.9857 (retracted) presented next to 0.9131 (current) invites "why trust the new one?" — honest, but jarring on a landing page.
++- **Category mismatch:** section labeled "What you can check" / "Seven capabilities" (lines 415–416), but 3 of 7 cards (Research operations, APIs & portable memory, TTC & PREM) are *not* things a user checks — they're dev-process and integration surfaces.
+ 
+ ### Missing essentials
+-- **License is unanswerable** due to the MIT-0/Apache contradiction above — for an open-source tool this is the one fact a stranger most needs.
+-- **Who maintains it / why trust it**: only a "© Ian Blenke" copyright line. No affiliation, no "who is behind this," no external validation surfaced beyond a self-described internal re-computation. The "382 milestones / 4,398 experiments" framing oversells before the stranger learns this is effectively a solo autonomous-research project.
+-- **What Carnot does in one sentence**: ✓ present and good.
+-- **Install**: ✓ `pip install carnot-ebm`, shown twice.
++- **License is effectively unclear** because the two statements contradict (see above).
++- **Who maintains this?** Only "Ian Blenke" in a footer copyright (line 766). No team, affiliation, institution, or contact. A stranger wonders whether this is a one-person hobby or a backed project.
++- **Why trust the numbers** is asserted ("checked-in experiment artifact") but undercut by perfect scores with no sample sizes on the cards.
++- (Present and good: one-sentence what-it-does, install command.)
+ 
+ ### Fabrication signals
+-- "GSM8K extraction TP rate: 0.5 → 1.0" — a perfect 1.0, no sample size, no anchor.
+-- "k=5 ensemble catches 60/60 attacks" — perfect on a small N=60.
+-- "EstimationVerifier SVAMP AUC: 0.90 (vs 0.125 FoVer baseline)" — a 0.125 AUC baseline is *below chance* (worse than 0.5); citing it makes the 0.90 look like a cherry-picked swing rather than a fair comparison. Reads as a red flag, not a strength.
+-- "99.3% of wrong code flagged" (Code card) — extremely high; at least it names HumanEval/164 problems, but pair it with a false-positive rate or it looks too good.
+-- "2.0× speedup, identical losses" — exact 2.0× + "identical" reads idealized (plausible for data-parallel, but unanchored).
++- Line 560 — "GSM8K extraction TP rate: **0.5 → 1.0**" — perfect 1.0, no n, 100%-width bar.
++- Line 565 — "k=5 ensemble catches **60/60 attacks**" — perfect on n=60, 100% bar.
++- Line 431 — "**99.3% of wrong code flagged**" — near-perfect (at least anchored to n=164 HumanEval).
++- Line 570 — "**0.0pp accuracy delta** with 4.4% cost savings" — a zero-delta result framed as a win reads as a non-result to a stranger.
++- Multiple **100%-width meter bars** (lines 536, 541, 561, 566) create a wall of visual perfection. No confidence intervals / sample sizes on most cards.
++- Compounding effect: four blog cards (lines 682, 692, 710, 719) foreground the project catching *its own* fabricated/cheating artifacts. Admirable rigor to some, but to a skeptical stranger it plants "this project has a fabrication problem" right when they're judging the perfect scores above.
+ 
+ ## WHAT'S WORKING
+-- The hero is genuinely strong: a one-sentence value prop a non-expert understands, the concrete `47 + 28` failure, and an install command up top.
+-- The "Extract → Check → Repair" bento and the Python quickstart are clean, concrete, and jargon-light — the best part of the page for building trust.
++- The hero (lines 292–297) nails the one-sentence value prop: "checks whether an answer is internally consistent — and suggests a fix when it isn't," with a visible `pip install carnot-ebm`. Best part of the page.
++- The 47+28 worked example (lines 329–331) and the Extract→Check→Repair three-step (lines 360–407) are concrete and easy to grasp; the Quickstart code (lines 622–634) is clean and credible.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-- Fix the license contradiction first — make the footer match the MIT-0 badge (or vice versa). This is a one-line edit with outsized credibility impact.
+-- Pick ONE headline AUROC and one headline pass-rate gain; move the alternates (architecture-only, retracted v2, the -50 subset variants) into the technical report, not the landing page. Stop showing the retracted 0.9857 on the front door.
+-- Cut the Results grid from 12 cards to the 3–4 you'd defend to a skeptic, and add a 3–5-word plain-English gloss to each remaining benchmark (e.g., "GSM8K — grade-school math word problems"). Drop or footnote the perfect-score (`1.0`, `60/60`) and below-chance-baseline (`0.125`) rows unless each carries a sample size and FP rate.
+-- Rewrite or remove the TTC & PREM card; it's pure insider vocabulary and doesn't answer "what can I check?"
+-- Replace the stats-bar vanity metrics ("382 milestones", "4,398 experiment runs") with stranger-meaningful trust signals (e.g., tests passing, models supported, independent reproduction) — or move them to an About page.
+-- Trim the Results provenance disclaimer to one sentence; the defensive tone undercuts the numbers it's guarding.
+-- Add a one-line "who maintains this / what it's for" note so a stranger knows the project's nature up front.
+-- Reconcile the "Preprint" framing with reality — either post to arXiv or relabel as "Technical paper (PDF)".
++1. **Fix the license contradiction first** — reconcile MIT-0 (badge/meta) vs Apache 2.0 (footer) to one correct value. Highest trust impact, lowest effort.
++2. **Trim Results to ~4–6 recognizable rows** (HumanEval pass-rate, typed-constraint, prompt-injection AUROC, FoVer AUROC); move the acronym-heavy remainder to the technical report, or expand each acronym inline.
++3. **Resolve the FoVer double-meaning** — rename the "0.125 FoVer baseline" card or drop it so "FoVer" isn't simultaneously the flagship and a failure.
++4. **Replace or remove vanity stats** ("382 Completed milestones", "4,411 Experiment runs") with stranger-meaningful numbers, or drop the stats bar's internal entries.
++5. **De-jargon the "Recent progress" and "TTC & PREM" cards** — delete "Repinned from v2 0.9857", "architecture-only 0.8947", "PREM variance", "intrinsic motivation for continuous self-learning."
++6. **Plain-English the Preprint section** — drop "paper-v6", "non-operator environment", "operator-initiated upload"; state plainly that the paper is a draft not yet on arXiv.
++7. **Add sample sizes or remove the perfect-score cards** (1.0 TP rate, 60/60); perfect numbers without n read as fabricated.
++8. **Add a "who's behind this" line** — maintainer/affiliation/contact for credibility.
++9. **Fix "47 + 28 = 7" → "76"** (problem card) to match the rest of the page.
++10. **Cut the nav from 12 links to ~5–6.**
+ 
+-(Advisory only — I did not edit `docs/index.html`; per Public Documentation Discipline the operator owns this page.)
+\ No newline at end of file
++*Advisory only — no edits made to `docs/index.html` per Public Documentation Discipline (operator owns this page).*
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index d71d13f85a..cb768984f0 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -25030,3 +25030,33 @@ arXiv:2605.18871 is already filed; these EXTEND the program). All verified via W
+ - arXiv:2502.11157 - Dyve: Thinking Fast and Slow for Dynamic Process Verification - https://arxiv.org/abs/2502.11157 - fast/slow dynamic verification = the EFFICIENCY-PARITY axis of the north-star win condition ("equally effective as the LM at lower cost/latency", north-star §5): a cheap fast path with selective slow escalation, the Meta-EBM Cascade Router shape. Candidate for the efficiency head-to-head.
+ - arXiv:2408.15240 - Generative Verifiers: Reward Modeling as Next-Token Prediction - https://arxiv.org/abs/2408.15240 - foundational generative-verifier framing (reward modeling as next-token prediction); the lineage THINKPRM (2504.16828) and the distributional EBM (2605.18871) build on. Background/positioning, not a new method to implement.
+ <!-- V457-PLANNER-REFERENCES-END -->
++
++<!-- V462-PLANNER-REFERENCES-START -->
++## V462 planner source set (2026-06-30) — PHASE D second execution: the FIRST REAL oracle-distinct verifier-moat test
++
++`.461` (the FIRST PHASE D milestone) did NOT actually test the decisive question — all three
++principled constructions failed to EXECUTE on attempt 1 (this is an execution failure, not a
++scientific null): D1 LoRA-EBM never trained (`running_..._pretrain_skeleton`, n_pairs=0,
++train_loss=null, bootstrap-and-bail at 0.99s — preconditions ALL passed); D2 uPRM blocked on the
++logprob candidate cache (`blocked_uprm_logprob_candidate_cache` — fresh generation disabled by an
++empty env flag; the uPRM scorer impl + formula are complete); D3 EBRM was the SOLE "clean" arm but
++DEGENERATE — it abstained 97.5% to a **k=1 "tuned-SC"** strawman over the weak registry quality
++ensemble (point-estimate 0.515 < SC 0.585), so its delta=+0.000 / McNemar p=1.0 is an artifact of
++always-abstaining-to-SC, NOT a measured trained-verifier null. D5 correctly read MIXED-SCOPED. So
++`.462` re-executes the three constructions PROPERLY + fixes the two infra defects the failures exposed
++(a genuine K-way tuned-SC baseline; a shared logprob-enriched candidate cache). The `.461` E1
++SOTA-ingestion (discover->ingest->plan->experiment) flagged the five papers below as the `.462` inputs;
++all verified HTTP 200 by E1 and re-confirmed this planning pass (WebSearch 2026-06-30):
++
++- arXiv:2606.19818 - Uncertainty-Aware Reward Modeling for Stable RLHF - https://arxiv.org/abs/2606.19818 - conformal + heteroscedastic uncertainty head over the reward score; the D3 EBRM uncertainty-refinement input (`uarm_uncertainty_head_for_d3_ebrm`). Pitfall: RLHF-domain calibration != a reasoning-selector win.
++- arXiv:2606.09073 - A Unifying Lens on Reward Uncertainty in RLHF - https://arxiv.org/abs/2606.09073 - frames the reward object as a distribution p(r|x,y) with pessimistic log-moment aggregation; the D3 distributional-pessimistic head (`distributional_pessimistic_ebrm_head`). Pitfall: excessive pessimism abstains away the very headroom D3 must capture.
++- arXiv:2602.24040 - RewardUQ: A Unified Framework for Uncertainty-Aware Reward Models - https://arxiv.org/abs/2602.24040 - compares RM uncertainty-quantification methods by accuracy + calibration (ECE, AUROC correct-vs-incorrect); the D1/D3 calibration table (`rewarduq_calibration_gate_for_d1_d3`). Pitfall: better calibration can still TIE SC — the gate must require delta_vs_tuned_sc, not calibration alone.
++- arXiv:2510.20369 - Ask a Strong LLM Judge when Your Reward Model is Uncertain - https://arxiv.org/abs/2510.20369 - routes uncertain cases from a cheap RM to a strong judge, improving the cost-quality tradeoff over random judge calls; the `.462` EFFICIENCY arm (north-star §5 Pareto win: equal accuracy at fewer judge calls). Pitfall: the judge can become the real verifier unless cost + oracle-distinct boundaries are charged explicitly.
++- arXiv:2605.24005 - LC-ERD: Mining Latent Logic for Self-Evolving Reasoning via Consistency-Regulated Reward Decomposition - https://arxiv.org/abs/2605.24005 - derives process utility from consistency-regulated latent logic when explicit process labels / logprobs are scarce; the D2 uPRM unblock fallback. Pitfall: endogenous consensus can preserve generator bias / create a model-identity shortcut — the no-model-id audit stays mandatory.
++
++NEW this planning pass (not in the ingested set; comparator candidates for `.463+`, verified WebSearch 2026-06-30):
++- arXiv:2508.03686 - CompassVerifier: A Unified and Robust Verifier for LLM Evaluation and Outcome Reward - https://arxiv.org/abs/2508.03686 - a unified robust verifier across reasoning domains; candidate as a strong oracle-distinct comparator / the "strong judge" tier in the `.462` cascade arm.
++- arXiv:2408.15240 - Generative Verifiers: Reward Modeling as Next-Token Prediction - https://arxiv.org/abs/2408.15240 - re-confirmed: generative verifiers DO beat standard verifiers on Best-of-N reranking with a fixed generator (the existence proof that a verifier CAN add selection value); but generative judges guide stepwise generation poorly, where dedicated process RMs (uPRM) remain superior — motivates D2 (process) + the cheap-vs-judge cascade.
++
++**Bottom line for the `.462` roadmap:** the moat is still UNTESTED (zero real trained-verifier measurements landed). `.462` builds the prerequisites (genuine tuned-SC baseline B1; shared logprob cache B2) and re-runs D1/D2/D3 to FIRST measure the decisive question, plus adds the efficiency-axis cascade (2510.20369) so a Pareto win is reachable even if every accuracy arm ties SC. Flag for `.463`: if a real arm produces a win, scale it (more corpora + the DiffusionGemma activation proposal); if D1+D2 both cleanly null, the off-ARC moat retires as bounded (a publishable null converging with the ARC tie).
++<!-- V462-PLANNER-REFERENCES-END -->
+diff --git a/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json b/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
+index 6c5d648e8a..1c2d539757 100644
+--- a/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
++++ b/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
+@@ -63,5 +63,14 @@
+       "name": "ARC-AGI-3 technical report",
+       "url": "https://arxiv.org/abs/2603.24621"
+     }
+-  ]
+-}
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/experiment_4170_sota_ingestion_verifier_moat_guidance.json b/results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
+index 0b3a353aab..488b3634f6 100644
+--- a/results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
++++ b/results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
+@@ -71,5 +71,14 @@
+       "queued_diffusiongemma_implication": "For DiffusionGemma, compare external Carnot energy with an internal sequence-level energy baseline so guidance is not just an EBM approximation claim.",
+       "url": "https://arxiv.org/abs/2410.21357"
+     }
+-  ]
+-}
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/experiment_4967_capstone_v457.json b/results/experiment_4967_capstone_v457.json
+index 87ba42823c..c7f1c34618 100644
+--- a/results/experiment_4967_capstone_v457.json
++++ b/results/experiment_4967_capstone_v457.json
+@@ -666,5 +666,14 @@
+     "ready": true,
+     "ready_package_regression_ok": true,
+     "submits": false
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/experiment_4978_capstone_v458.json b/results/experiment_4978_capstone_v458.json
+index b39e7fd003..42df5de3cb 100644
+--- a/results/experiment_4978_capstone_v458.json
++++ b/results/experiment_4978_capstone_v458.json
+@@ -676,5 +676,14 @@
+     "ready": true,
+     "ready_package_regression_ok": true,
+     "submits": false
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/experiment_4989_capstone_v459.json b/results/experiment_4989_capstone_v459.json
+index 4d01cce68b..d0165be285 100644
+--- a/results/experiment_4989_capstone_v459.json
++++ b/results/experiment_4989_capstone_v459.json
+@@ -706,5 +706,14 @@
+     "ready": true,
+     "ready_package_regression_ok": true,
+     "submits": false
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/experiment_5000_capstone_v460.json b/results/experiment_5000_capstone_v460.json
+index 1650e4015b..a657561008 100644
+--- a/results/experiment_5000_capstone_v460.json
++++ b/results/experiment_5000_capstone_v460.json
+@@ -714,5 +714,14 @@
+     "ready": true,
+     "ready_package_regression_ok": true,
+     "submits": false
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/experiment_5008_moat_oracle_distinct_lint.json b/results/experiment_5008_moat_oracle_distinct_lint.json
+index 24dfaa9581..7be2a84dcf 100644
+--- a/results/experiment_5008_moat_oracle_distinct_lint.json
++++ b/results/experiment_5008_moat_oracle_distinct_lint.json
+@@ -171,5 +171,14 @@
+   "spec_refs": [
+     "REQ-VERIFY-5008",
+     "SCENARIO-VERIFY-5008"
+-  ]
+-}
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "MOAT_CLAIM_RIGOR",
++      "severity": "critical",
++      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+-- 
+2.55.0
+

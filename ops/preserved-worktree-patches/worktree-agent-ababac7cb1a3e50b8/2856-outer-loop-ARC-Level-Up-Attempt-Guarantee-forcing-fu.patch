@@ -1,0 +1,99 @@
+From 868c09223516a0f4b98c338ba3eaed2679be464f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 15:06:13 -0400
+Subject: [PATCH 02856/11362] [outer-loop] ARC Level-Up Attempt Guarantee:
+ forcing function + lint (operator 2026-06-19)
+
+Operator: "ensure we ALWAYS have at least one level-up attempt across all games once a roadmap." The
+ARC sprint's headline metric is reproducible_total_levels growing, but a planner can drift to all-meta
+(library induction, benchmarks, hygiene, packaging, generic re-solves of already-banked levels) and
+ship a roadmap with ZERO level-bank attempts = churn. Added scripts/arc_levelup_guarantee_lint.py
+(counts tasks whose gate requires offline_reproduced=true AND a NEW-level condition -- first-contact an
+unsolved game OR +1 deeper on a solved one; exit 1 if < --min, default 1; prints targeted games for
+rotation audit) + a CLAUDE.md MANDATORY forcing function (every ARC-sprint roadmap >=1 level-up
+attempt; rotate targets across games; lint is the backstop, activation-guard wiring pending). Validated:
+.412 PASSES (4 attempts: dc22 solve, sc25 deepen, first-contact a new game, tr87 generic); an all-meta
+roadmap FAILS exit 1.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ CLAUDE.md                             | 40 +++++++++++++++++++++++++++
+ scripts/arc_levelup_guarantee_lint.py | 11 +++-----
+ 2 files changed, 44 insertions(+), 7 deletions(-)
+
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 80a5877ceb..2d2747d421 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -2944,6 +2944,46 @@ CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" + "ARC Solve Reproducibility"
+ CLAUDE.md "Depth-Over-Breadth Forcing Function" (RETIRED; the structural precedent) · `[[project_arc_live_generator]]`
+ (the frozen generator) · `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md` (packaging).
+ 
++## ARC Level-Up Attempt Guarantee (MANDATORY)
++
++**Origin:** 2026-06-19 operator directive — "are we attempting to solve any game levels this roadmap?
++... how do we ensure we ALWAYS have at least one level-up attempt across all games once a roadmap."
++The ARC-sprint headline metric is `reproducible_total_levels` growing monotonically, but a planner can
++drift to all-META work (library induction, LOO benchmarks, registry/gaps hygiene, SOTA ingestion,
++submission packaging, generic-operator *re-solves* of already-banked levels) and ship a roadmap with
++ZERO concrete level-BANK attempts — pure churn (north-star §1). The Submission Sprint Forcing Function
++mandates the *majority* be ARC-solving and that levels grow, but "majority ARC" can be satisfied by
++meta tasks; this rule adds the missing floor.
++
++**The rule.** Every ARC-sprint roadmap (`.412+` through 2026-06-30, and any ARC-headline milestone
++after) MUST contain **at least one LEVEL-UP ATTEMPT**: a task whose acceptance gate requires actually
++BANKING a new reproducible level — `offline_reproduced=true` AND a new-level condition
++(`reproduced_levels>=1` on a first-contact of an UNSOLVED game, OR a NEW deeper level `level > N` on an
++already-solved game). A generic-operator *re-solve* of an already-banked level (generalization
++validation), a benchmark, a library induction, or a hygiene/ingestion/packaging task does **NOT**
++count. Default floor = 1; raise it when the milestone is a pure solving push.
++
++**Target ROTATION (the "across all games" half).** The planner SHOULD rotate the level-up targets so
++every game gets a periodic attempt rather than re-attempting the same one while others are neglected:
++prioritize the UNSOLVED public games (currently re86/sb26/bp35/lf52) for first-contact, plus the
++shallow-solved games for +1-deeper, so coverage sweeps the corpus over successive milestones. The
++lint prints the games targeted each roadmap so rotation is auditable.
++
++**Mechanical enforcement.** `scripts/arc_levelup_guarantee_lint.py [roadmap.yaml] [--min N]` counts the
++level-up attempts and exits non-zero if `< --min` (default 1). Run it on every emitted roadmap; the
++activation guard SHOULD refuse a milestone that fails it (pending wiring, it is planner-discipline +
++outer-loop audit). Validated 2026-06-19: `.412 passes (4 attempts: dc22 solve, sc25 deepen,
++first-contact a new game, tr87 generic-with-new-game); an all-meta roadmap fails with exit 1.
++
++**Why this is in CLAUDE.md.** Same defense-in-depth as the other ARC forcing functions: the planner
++reads CLAUDE.md as required input, so it includes a level-up attempt at design time; the lint is the
++backstop. Without it, a meta-heavy milestone silently produces no banked level = churn.
++
++**Cross-references:** 2026-06-19 operator directive (origin) · `scripts/arc_levelup_guarantee_lint.py`
++· CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" (per-task +1 scoping; this is the per-ROADMAP ≥1
++floor) · "ARC-AGI-3 Submission Sprint Forcing Function" (majority-ARC + monotonic growth) ·
++`ops/arc_solve_registry.yaml` `reproducible_total_levels` (the metric this protects).
++
+ ## ARC Solve Reproducibility + Solver-Reuse Discipline (MANDATORY)
+ 
+ **Origin:** 2026-06-16 operator directive after the outer-loop spent a long
+diff --git a/scripts/arc_levelup_guarantee_lint.py b/scripts/arc_levelup_guarantee_lint.py
+index 171c138654..bf098dac50 100644
+--- a/scripts/arc_levelup_guarantee_lint.py
++++ b/scripts/arc_levelup_guarantee_lint.py
+@@ -56,13 +56,10 @@ def _is_levelup_attempt(prompt: str) -> bool:
+         "+1 deeper",
+         "deeper level",
+     )
+-    if not any(s in p for s in bank_signals):
+-        return False
+-    # exclude a pure generic re-solve of an ALREADY-solved game (no new level): "re-solves ... NOT its
+-    # own recipe" with no NEW-level clause is generalization validation, not a level-up.
+-    if "re-solve" in p and "new" not in p.split("re-solve")[1][:120] and "reproduced_levels>=1" not in p.replace(" ", ""):
+-        return False
+-    return True
++    # A genuine new-level signal is REQUIRED. A pure generic RE-solve of an already-banked level
++    # (generalization validation: "re-solves via the generic operator, NOT its own recipe") carries no
++    # bank_signal, so it is correctly NOT counted -- no fragile exclusion needed.
++    return any(s in p for s in bank_signals)
+ 
+ 
+ def lint_roadmap(path: Path, minimum: int) -> int:
+-- 
+2.55.0
+

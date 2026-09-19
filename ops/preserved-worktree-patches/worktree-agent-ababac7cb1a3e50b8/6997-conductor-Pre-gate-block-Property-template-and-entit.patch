@@ -1,0 +1,86 @@
+From a191e3add6f7cc7c1e569eea19871169403d93a1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 00:37:55 -0400
+Subject: [PATCH 06997/11362] [conductor] Pre-gate block: Property-template and
+ entity-attribution exact verifier extension from clean residuals
+
+2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-panel.panel_complete (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...rty_template_exact_residual_extension.json | 33 +++++++++++++++++++
+ 4 files changed, 36 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5607_property_template_exact_residual_extension.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 77d4a491e0..52af1bf359 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 126, "phase": "iteration_start", "last_beat": "2026-07-14T04:01:52Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 127, "phase": "iteration_start", "last_beat": "2026-07-14T04:37:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 857193697d..fc10b2faee 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11708,3 +11708,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 03:42 UTC | Lossless local-SOTA raw-response evidence envelope | SKIP | Pre-tests failing, self-heal failed: 3 failed, 84 passed, 1 warning in 11.57s |
+ | 2026-07-14 03:45 UTC | Lossless local-SOTA raw-response evidence envelope | SKIP | Pre-tests failing, self-heal failed: 2 failed, 85 passed, 1 warning in 12.23s |
+ | 2026-07-14 03:59 UTC | Lossless local-SOTA raw-response evidence envelope | OK | 118 passed, 1 warning in 14.91s |
++| 2026-07-14 04:35 UTC | Evidence-preserving local-SOTA solve-versus-verify | OK | 122 passed, 1 warning in 13.71s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c5be72b3b4..de1c1de0ab 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 126, "phase": "iteration_start", "started_at": "2026-07-14T04:01:52Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 127, "phase": "iteration_start", "started_at": "2026-07-14T04:37:55Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5607_property_template_exact_residual_extension.json b/results/experiment_5607_property_template_exact_residual_extension.json
+new file mode 100644
+index 0000000000..d6544b1ec1
+--- /dev/null
++++ b/results/experiment_5607_property_template_exact_residual_extension.json
+@@ -0,0 +1,33 @@
++{
++  "experiment": 5607,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-14",
++  "started_at": "2026-07-14T04:37:55.497587+00:00",
++  "finished_at": "2026-07-14T04:37:55.497587+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Property-template and entity-attribution exact verifier extension from clean residuals",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5606-clean-sota-solve-verify-evidence-panel.panel_complete (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5606-clean-sota-solve-verify-evidence-panel",
++      "artifact_field": "panel_complete",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    },
++    {
++      "upstream": "exp5606-clean-sota-solve-verify-evidence-panel",
++      "artifact_field": "maximum_parser_failure_rate",
++      "op": "<=",
++      "expected": 0.05,
++      "actual": 1.0,
++      "passed": false,
++      "reason": "actual=1.0 <= expected=0.05"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

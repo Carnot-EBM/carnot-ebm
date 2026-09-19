@@ -1,0 +1,250 @@
+From 78ac6d539b75e47e6799dea9a487333767ab0ce2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 10:10:58 -0400
+Subject: [PATCH 00812/11362] [outer-loop] Boosted 4-model judge panel: energy
+ verifier DOMINATES all SOTA local judges
+
+Full panel (n=528, internal GPU, conductor paused). Energy verifier AUROC 0.810
+beats EVERY local SOTA judge at the strong 160tok/2048ctx budget AND is
+9,232-16,036x cheaper (walltime):
+  gemma-4-12B-it   judge 0.664  (best judge; 9,232x)
+  Qwen3.6-35B-A3B  judge 0.640  (15,050x)
+  gemma-4-31B-it   judge 0.488  (15,199x)
+  gemma-4-26B-A4B  judge 0.449  (16,036x)
+
+NUANCE (honest): boosting the token budget did NOT rescue all judges. With the
+JUDGE prompt, gemma-4-26B stays ~0.449 even at 160 tok (vs exp3916's 0.663 which
+used the SELF-VERIFY prompt on the same model) -- so prompt framing, not just
+budget, drives the weak judges. Two of four (Qwen-35B, 12B) reach ~0.64-0.66.
+Either way the energy verifier (0.810) dominates the whole panel on accuracy +
+cost. Added a direct-llama fallback loader so gemma-4-12B (newly released; emits a
+leading newline that trips the shared smoke gate) gets a fair real-prompt smoke.
+
+DRAFT artifact; not conductor-wired. Follow-up: also test the self-verify prompt
+framing as the judge to bound the strongest-prompt baseline.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...riment_efficiency_panel_boosted_draft.json | 141 ++++++++++++++++++
+ .../verifier_efficiency_panel_draft.py        |  43 +++++-
+ 2 files changed, 179 insertions(+), 5 deletions(-)
+ create mode 100644 results/experiment_efficiency_panel_boosted_draft.json
+
+diff --git a/results/experiment_efficiency_panel_boosted_draft.json b/results/experiment_efficiency_panel_boosted_draft.json
+new file mode 100644
+index 0000000000..60c5f4cefd
+--- /dev/null
++++ b/results/experiment_efficiency_panel_boosted_draft.json
+@@ -0,0 +1,141 @@
++{
++  "boosted_max_tokens": 160,
++  "boosted_n_ctx": 2048,
++  "caveat": "DRAFT. Closes the exp3917 weak-baseline caveat by running each judge at the strong (160 tok / 2048 ctx) budget across a local SOTA panel. Not conductor-wired.",
++  "duration_s": 2213.60862159729,
++  "energy_auroc": 0.8100177915518825,
++  "experiment": "efficiency_panel_boosted_draft",
++  "field_principles": {
++    "boosted_max_tokens": "160 tok = exp3916 STRONG budget (0.663-capable), not exp3917's hobbled 96.",
++    "energy_accuracy_gte_judge": "Per model: does the energy verifier match-or-beat this judge.",
++    "energy_auroc": "Model-independent energy verifier accuracy on the shared labels.",
++    "max_judge_auroc": "Strongest judge in the panel; energy must match-or-beat to dominate.",
++    "min_cost_ratio_walltime": "Worst-case 'Nx cheaper' across the panel; >10x = cost dominance."
++  },
++  "honest_verdict": "complete: efficiency_panel_ENERGY_DOMINATES_all_cheaper_and_more_accurate_energy0.8100_maxjudge0.6641_mincheaper9232.3x_n4",
++  "inference_substrate": "live_llm_inference:boosted_judge_panel_strong_budget_160tok_2048ctx_plus_exp3905_cost_harness_energy_verifier",
++  "max_judge_auroc": 0.6640625,
++  "min_cost_ratio_walltime": 9232.308899390491,
++  "n_items": 528,
++  "n_models_scored": 4,
++  "panel_results": [
++    {
++      "cached": true,
++      "cost_ratio_flops": 9357195216.682531,
++      "cost_ratio_walltime": 16035.797032570568,
++      "detail": "scored n=528 at 160tok/2048ctx",
++      "energy_accuracy_gte_judge": true,
++      "energy_auroc": 0.8100177915518825,
++      "energy_per_item_ms": 0.07310990909128591,
++      "energy_within_judge_ci": false,
++      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "llm_judge_auroc": 0.4485479797979798,
++      "llm_judge_ci95": {
++        "high": 0.49267578125,
++        "low": 0.40169693660555206
++      },
++      "llm_per_item_ms": 1172.3756632575466,
++      "model_name": "gemma-4-26B-A4B-it",
++      "parameter_count": 26000000000
++    },
++    {
++      "cached": true,
++      "cost_ratio_flops": 12499535016.02827,
++      "cost_ratio_walltime": 15050.373111149971,
++      "detail": "scored n=528 at 160tok/2048ctx",
++      "energy_accuracy_gte_judge": true,
++      "energy_auroc": 0.8100177915518825,
++      "energy_per_item_ms": 0.07375168752332684,
++      "energy_within_judge_ci": false,
++      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "llm_judge_auroc": 0.64036673553719,
++      "llm_judge_ci95": {
++        "high": 0.6852816038076007,
++        "low": 0.5918326350226711
++      },
++      "llm_per_item_ms": 1109.990414803013,
++      "model_name": "Qwen3.6-35B-A3B",
++      "parameter_count": 35000000000
++    },
++    {
++      "cached": true,
++      "cost_ratio_flops": 9247263888.433022,
++      "cost_ratio_walltime": 15199.058919100125,
++      "detail": "scored n=528 at 160tok/2048ctx",
++      "energy_accuracy_gte_judge": true,
++      "energy_auroc": 0.8100177915518825,
++      "energy_per_item_ms": 0.07510144507360758,
++      "energy_within_judge_ci": false,
++      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "llm_judge_auroc": 0.48769656795224975,
++      "llm_judge_ci95": {
++        "high": 0.5384593290441176,
++        "low": 0.44094731102565576
++      },
++      "llm_per_item_ms": 1141.4712885833235,
++      "model_name": "gemma-4-31B-it",
++      "parameter_count": 35000000000
++    },
++    {
++      "cached": true,
++      "cost_ratio_flops": 9724647432.741436,
++      "cost_ratio_walltime": 9232.308899390491,
++      "detail": "scored n=528 at 160tok/2048ctx",
++      "energy_accuracy_gte_judge": true,
++      "energy_auroc": 0.8100177915518825,
++      "energy_per_item_ms": 0.07447691854339968,
++      "energy_within_judge_ci": false,
++      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
++      "llm_judge_auroc": 0.6640625,
++      "llm_judge_ci95": {
++        "high": 0.6956587256027554,
++        "low": 0.6263989228475048
++      },
++      "llm_per_item_ms": 687.5939178674096,
++      "model_name": "gemma-4-12B-it",
++      "parameter_count": 35000000000
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "returncode=0",
++      "resource": "cuda_available"
++    },
++    {
++      "available": true,
++      "detail": "cached: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "resource": "gguf_cached:gemma-4-26B-A4B-it"
++    },
++    {
++      "available": true,
++      "detail": "cached: /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "resource": "gguf_cached:Qwen3.6-35B-A3B"
++    },
++    {
++      "available": true,
++      "detail": "cached: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "resource": "gguf_cached:gemma-4-31B-it"
++    },
++    {
++      "available": true,
++      "detail": "cached: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
++      "resource": "gguf_cached:gemma-4-12B-it"
++    },
++    {
++      "available": true,
++      "detail": "n=528",
++      "resource": "labeled_corpora"
++    }
++  ],
++  "random_seed": 3917,
++  "random_seeds_used": {
++    "bootstrap_llm_judge": 3934,
++    "fover_slice": 3917
++  },
++  "reproducibility_checksum": "36ca6ceb4ddbad72a19021f6d142eed3926bfd8ef3047b02862d8c70c01cf1be",
++  "run_date": "20260607",
++  "smoke": false,
++  "status": "complete: efficiency_panel_ENERGY_DOMINATES_all_cheaper_and_more_accurate_energy0.8100_maxjudge0.6641_mincheaper9232.3x_n4",
++  "title": "verifier_efficiency_panel_draft"
++}
+diff --git a/scripts/experiments/verifier_efficiency_panel_draft.py b/scripts/experiments/verifier_efficiency_panel_draft.py
+index 699adc31b5..47486996dd 100644
+--- a/scripts/experiments/verifier_efficiency_panel_draft.py
++++ b/scripts/experiments/verifier_efficiency_panel_draft.py
+@@ -69,6 +69,7 @@ from carnot.verify.cost_instrumented_verification import (
+     run_energy_verifier,
+ )
+ from carnot.verify.gguf_inference import load_gguf_generator
++from carnot.verify.reasoner_self_verification import build_judge_prompt
+ 
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+ OUTPUT_REL_PATH = Path("results/experiment_efficiency_panel_boosted_draft.json")
+@@ -150,6 +151,42 @@ def _precondition_models(models: Sequence[str]) -> list[PanelModelResult]:
+     return out
+ 
+ 
++def _load_judge_generator(model_name: str, gguf_path: str) -> tuple[Any, dict[str, object]]:
++    """Load a judge generator, falling back to a direct llama.cpp load.
++
++    The shared ``load_gguf_generator`` smoke gate emits a 1-token generic prompt
++    and rejects any model whose first token is whitespace.  gemma-4-12B-it emits a
++    leading newline, so it fails that gate even though it generates valid verdict
++    JSON on a real prompt.  Rather than weaken the shared core loader (which the
++    conductor depends on), this fallback does a *real-prompt* smoke: it builds the
++    actual judge prompt, generates a few tokens, and accepts the model iff the
++    output is non-empty after stripping.  Same fair bar, judge-appropriate prompt.
++    """
++
++    try:
++        return load_gguf_generator(
++            prefer_order=[model_name], n_ctx=BOOSTED_N_CTX, max_n_gpu_layers=-1
++        )
++    except RuntimeError as exc:
++        from llama_cpp import Llama
++
++        llm = Llama(
++            model_path=gguf_path, n_ctx=BOOSTED_N_CTX, n_gpu_layers=-1, verbose=False
++        )
++        probe = llm(build_judge_prompt("47 + 28 = 75."), max_tokens=16, temperature=0.0)
++        text = str(probe["choices"][0]["text"]).strip()
++        if not text:
++            raise RuntimeError(f"{model_name} real-prompt smoke empty after fallback: {exc!r}") from exc
++        meta: dict[str, object] = {
++            "gguf_path": gguf_path,
++            "model_used": model_name,
++            "loader": "direct_llama_fallback_real_prompt_smoke",
++            "fallback_reason": f"shared_loader_smoke_gate_rejected: {exc!r}"[:240],
++            "real_prompt_smoke_tokens": int(probe["usage"]["completion_tokens"]),
++        }
++        return llm, meta
++
++
+ def _score_one_model(
+     model_name: str,
+     gguf_path: str,
+@@ -160,11 +197,7 @@ def _score_one_model(
+ ) -> PanelModelResult:
+     """Load one judge at the STRONG budget, score it + energy back-to-back."""
+ 
+-    generator, meta = load_gguf_generator(
+-        prefer_order=[model_name],
+-        n_ctx=BOOSTED_N_CTX,
+-        max_n_gpu_layers=-1,
+-    )
++    generator, meta = _load_judge_generator(model_name, gguf_path)
+     try:
+         params = model_params_for_path(str(meta.get("gguf_path") or gguf_path))
+         model_specs = {
+-- 
+2.55.0
+

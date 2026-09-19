@@ -1,0 +1,60 @@
+From add6075ce4c8c0353e253d1cefd2d0c08cccd5a3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 13:18:05 -0400
+Subject: [PATCH 03992/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 6b7250c410..da647f8f4c 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">4,111</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">4,121</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c131627621..438ea8a8f7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 190, "phase": "iteration_start", "last_beat": "2026-06-25T16:58:06Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 191, "phase": "iteration_start", "last_beat": "2026-06-25T17:15:10Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e887a99848..e916728c34 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9274,3 +9274,4 @@ The contro |
+ | 2026-06-25 16:23 UTC | PHASE B2 (INFRA reserved slot 2; operator MANDATOR | OK | 89 passed, 1 warning in 7.43s |
+ | 2026-06-25 16:41 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | OK | 132 passed, 1 warning in 13.97s |
+ | 2026-06-25 16:56 UTC | PHASE D (SOTA-INGESTION -- the .436 fallback) -- m | OK | 120 passed, 1 warning in 9.38s |
++| 2026-06-25 17:13 UTC | PHASE E (CAPSTONE .435) -- aggregate the scorecard | OK | 87 passed, 1 warning in 8.88s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bd0ad71755..a27948d0e8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 190, "phase": "iteration_start", "started_at": "2026-06-25T16:58:06Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 191, "phase": "iteration_start", "started_at": "2026-06-25T17:15:10Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

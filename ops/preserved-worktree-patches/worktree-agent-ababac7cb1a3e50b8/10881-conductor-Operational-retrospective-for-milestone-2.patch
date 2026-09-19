@@ -1,0 +1,108 @@
+From 46d7abe139fd97b2a29c9633657c23fa386045a6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 07:10:53 -0400
+Subject: [PATCH 10881/11362] [conductor] Operational retrospective for
+ milestone 2026.09.606
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 11 +++++
+ results/operational_retro_2026_09_606.json | 51 ++++++++++++++++++++++
+ 3 files changed, 69 insertions(+)
+ create mode 100644 results/operational_retro_2026_09_606.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index df5d55d6eb..dc8e50a546 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6563,3 +6563,10 @@ The critical path for milestone .250:
+ - theme: one compute task dominated fallback timing while task-level phase and accelerator traces remained unavailable
+ - key result: honest operational negative — the longest compute task is known, but its cause, full-task GPU efficiency, and parallel-model runner eligibility remain unverified
+ - acceptance: no data available this milestone
++
++### Milestone 2026.09.606
++
++- exp_range: no data available this milestone
++- theme: synthesis-only execution concentrated wall time in the SOTA-ingestion and method-map workflow
++- key result: no compute assessment was possible — the 5.25-minute ingestion-and-mapping entry dominated a 5.5-minute synthesis-only window; compute-task GPU efficiency and parallel-model runner engagement had no data available this milestone
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 030c7f7a27..713706cff0 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18634,3 +18634,14 @@ savings estimate is 0% because no timed alternative is available.
+ - 2026-09-03: Task-owned runtime receipt adoption (⚠️ Research Finding) — honest_verdict=complete_null_task_runtime_receipt_adoption_ready; results/experiment_6924_task_runtime_receipt_adoption.json
+ - 2026-09-03: V606 SOTA ingestion and method map (✅ Complete) — honest_verdict=complete_v606_sota_ingestion_with_one_new_compatibility_finding; results/experiment_6925_v606_sota_ingestion.json
+ - 2026-09-03: Exact span-first relation fixture (⚠️ Research Finding) — honest_verdict=complete_circular_positive_span_first_relation_fixture; results/experiment_6926_span_first_relation_fixture.json
++
++## 2026-09-03 — Milestone 2026.09.606 operational retrospective
++
++Execution stayed on the synthesis path for all 4 entries and consumed 5.5
++minutes. At 5.25 minutes, V606 SOTA ingestion and method map dominated the
++reconstructed clock. Compute-bound duration causes, compute-task GPU
++efficiency, and parallel-model DualGPURunner engagement had no data available
++this milestone. The idle GPU snapshot was correct for synthesis-only work.
++Cache unchanged ingestion inputs and method-map outputs. Add stage timings to
++that workflow. Set the savings estimate to 0%; this milestone has no measured
++alternate workflow.
+diff --git a/results/operational_retro_2026_09_606.json b/results/operational_retro_2026_09_606.json
+new file mode 100644
+index 0000000000..066a65bde4
+--- /dev/null
++++ b/results/operational_retro_2026_09_606.json
+@@ -0,0 +1,51 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.09.606",
++  "generated_at": "2026-09-03T11:05:29Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 5.5,
++  "experiments_completed": 4,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [
++    {
++      "experiment": "V606 SOTA ingestion and method map",
++      "duration_minutes": 5.25,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V606 lifecycle-aware execution and evidence contract",
++      "duration_minutes": 0.25,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Task-owned runtime receipt adoption",
++      "duration_minutes": 0.01,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Exact span-first relation fixture",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "All 4 entries used the synthesis-only path; together they spanned 5.5 minutes. V606 SOTA ingestion and method map dominated at 5.25 minutes. The idle GPUs were expected for this workload; compute-task GPU efficiency and DualGPURunner engagement had no data available this milestone.",
++  "bottlenecks_identified": [
++    "V606 SOTA ingestion and method map consumed 5.25 of the 5.5 milestone minutes, concentrating nearly all observed wall time in one synthesis-only workflow.",
++    "Compute-bound experiment durations and causes: no data available this milestone."
++  ],
++  "improvements_suggested": [
++    "Add an automated, cached SOTA-ingestion and method-map generation path so unchanged source material is not reprocessed.",
++    "Record stage-level timings within the SOTA-ingestion and method-map workflow to isolate retrieval, parsing, mapping, and artifact-writing costs.",
++    "Keep GPU and DualGPURunner checks gated on compute-bound experiment markers; synthesis-only work should remain on the CPU path."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Cache and incrementally update SOTA-ingestion inputs and method-map outputs.",
++    "Instrument the longest synthesis workflow with stage-level timing receipts.",
++    "Preserve workload-aware GPU checks that do not treat synthesis-only GPU idleness as a fault."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The milestone was short and entirely synthesis-only, so its operational evidence supports improving the dominant ingestion-and-mapping workflow rather than changing GPU scheduling. A positive savings estimate would not be evidence-backed without a measured follow-up, so the estimate remains 0."
++}
+-- 
+2.55.0
+

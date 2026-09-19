@@ -1,0 +1,347 @@
+From b766697b0cee358a897d5b2ff31f18edf3abcc2d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 16:37:03 -0400
+Subject: [PATCH 09538/11362] [outer-loop] Apply adversarial review: walk_rows
+ fallback + 5 smaller fixes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Review verdict GAPS_FOUND; all six findings applied:
+1+2. extract_rows falls back to the liveness lint's walk_rows when no
+   top-level rows list exists — row location now matches the lint's row
+   concept, and the SHIPPED path reproduces the published corpus FP
+   numbers exactly (401 files, 0 CRITICAL, 3 WARN, 100 witness-missing).
+3. Mid-write/missing-out skips land in the state file per
+   SCENARIO-CONDUCTOR-SENTINEL-1-MIDWRITE-RACE as written.
+4. Missing out file gets a durable note; relative --out resolves
+   against /proc/<pid>/cwd.
+5. Wiring asserts ignore comment lines (commented-out call reads absent).
+6. Fingerprint no longer drops GPU index 0 (falsy-zero class).
+
+Mutation 10 proven: walk_rows fallback removed -> nested-rows test RED,
+restored -> 39 GREEN. Live dry-run clean; the new missing-out note fired
+truthfully on the live A/B whose first row is not yet written.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   |  7 +-
+ ops/changelog.md                              |  8 +++
+ ops/status.md                                 | 12 ++++
+ scripts/conductor_run_sentinel.py             | 68 ++++++++++++++++---
+ tests/python/test_conductor_run_sentinel.py   | 54 ++++++++++++++-
+ .../python/test_conductor_sentinel_wiring.py  | 11 ++-
+ 6 files changed, 145 insertions(+), 15 deletions(-)
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 054618e9ed..1d0ddbfa16 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -8263,7 +8263,12 @@ Rules:
+ 2. The sentinel SHALL evaluate the run's rows with the SAME per-row
+    evaluator the post-hoc gate uses (`check_row` from
+    `scripts/arc_llm_on_liveness_lint.py`). It SHALL NOT maintain a second
+-   pattern list for row validity.
++   pattern list for row validity. Row LOCATION follows the same rule: when
++   the out file has no top-level `rows` list, the sentinel SHALL fall back
++   to the lint's own `walk_rows` any-depth walker, so a nested per-cell
++   corpus shape is not invisible (2026-08-22 adversarial-review finding:
++   the first ship read top-level `rows` only — a row locator narrower than
++   the lint's row concept).
+ 3. Two or more CONSECUTIVE LLM-on rows carrying FAIL findings SHALL
+    produce an escalation (REQ-CONDUCTOR-SENTINEL-3). The sentinel SHALL
+    NOT kill the run.
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 4b88148d1e..7b34d15ca8 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -37,6 +37,14 @@ reads them while the run is alive.
+   CRITICAL, 3 WARN all inside the documented 2026-07-26 fault corpus;
+   live-box scan clean. 9 mutations RED->GREEN. Commits cb6684fac8,
+   c29766d286, and the wiring commit following them.
++- **Adversarial review applied (same session, GAPS_FOUND -> fixed)**: the
++  FP measure had used the lint's `walk_rows` iterator while the shipped
++  code read top-level `rows` only. The shipped path gained the
++  `walk_rows` fallback (`extract_rows`) and the SHIPPED-path re-measure
++  reproduces the published numbers exactly. Also: skips recorded in the
++  state file per the SCENARIO, relative `--out` resolved against
++  `/proc/<pid>/cwd`, GPU-index-0 fingerprint fix, comment-blind wiring
++  asserts. 10th mutation (fallback removed -> RED); 39 tests.
+ 
+ ## 2026-08-22 (outer-loop, supervisor redirect ledger measurable, commits c6cb2614fd + 9da8b39042)
+ 
+diff --git a/ops/status.md b/ops/status.md
+index 54146ec8df..c9e47184d6 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -112,6 +112,18 @@ other five audit reports (v1 proves the disposition shape on one), systemd
+ unit changes. Still human: ledger dispositions, acting on escalations,
+ judging slow-but-valid runs.
+ 
++Adversarial review (same session): GAPS_FOUND, six findings, all applied.
++The material one: the corpus FP numbers above were first measured with the
++lint's `walk_rows` iterator while the shipped code read top-level `rows`
++only. Resolution: the shipped path gained the `walk_rows` fallback
++(`extract_rows`), and a re-measure with the SHIPPED path reproduces the
++published numbers exactly (401 files, 0 CRITICAL, 3 WARN, 100
++witness-missing). Also applied: mid-write/missing-out skips now land in the
++state file (the SCENARIO as written), relative `--out` resolves against
++`/proc/<pid>/cwd`, fingerprint no longer drops GPU index 0, wiring tests
++ignore comment lines. One more mutation proven (walk_rows fallback removed
++-> RED); 39 tests pass.
++
+ ## Session 2026-08-10 - Milestone 2026.08.542 Research Planning
+ 
+ ### What's Working
+diff --git a/scripts/conductor_run_sentinel.py b/scripts/conductor_run_sentinel.py
+index 162a6de85f..4da353cf75 100644
+--- a/scripts/conductor_run_sentinel.py
++++ b/scripts/conductor_run_sentinel.py
+@@ -192,6 +192,15 @@ def discover_live_runs(proc_root: Path = Path("/proc")) -> list[dict]:
+         out = _flag_value(cmdline, "--out")
+         if not out:
+             continue
++        # A relative --out means relative to the RUN's cwd, not this
++        # sentinel's — /proc/<pid>/cwd is the trustworthy source. On
++        # failure keep the raw path; a wrong guess would be worse
++        # (adversarial-review finding 4, 2026-08-22).
++        if not Path(out).is_absolute():
++            try:
++                out = str((proc_dir / "cwd").readlink() / out)
++            except OSError:
++                pass
+         port = _flag_value(cmdline, "--port")
+         env = _environ(proc_dir)
+         runs.append(
+@@ -257,13 +266,13 @@ def _port_referenced_elsewhere(port: int, server_pid: int, proc_root: Path) -> b
+ # ---------------------------------------------------------------------------
+ 
+ 
+-def read_out_file(path: Path, now_s: float | None = None) -> tuple[list | None, str]:
+-    """Read a harness out file. Returns (rows, reason).
++def read_out_file(path: Path, now_s: float | None = None):
++    """Read a harness out file. Returns (doc, reason).
+ 
+     reason values: "" ok; "missing"; "midwrite" (unparseable but fresh —
+     the harness rewrites the whole file after every row, so this is a
+     normal race, skipped this cycle); "stale_unparseable" (unparseable and
+-    old — a real finding); "no_rows_list" (parses, but not a rows run).
++    old — a real finding).
+     """
+     now_s = time.time() if now_s is None else now_s
+     try:
+@@ -277,10 +286,24 @@ def read_out_file(path: Path, now_s: float | None = None) -> tuple[list | None,
+         except OSError:
+             fresh = False
+         return None, "midwrite" if fresh else "stale_unparseable"
+-    rows = doc.get("rows") if isinstance(doc, dict) else None
+-    if not isinstance(rows, list):
+-        return None, "no_rows_list"
+-    return rows, ""
++    return doc, ""
++
++
++def extract_rows(doc, lint) -> list:
++    """Rows from a parsed out doc, in document order.
++
++    Top-level `rows` is the harness convention; when it is absent the
++    fallback is the liveness lint's OWN any-depth row walker, so a
++    nested/per-cell corpus shape (the 2026-07 corpora use `cells[i].row`)
++    is not invisible. Adversarial-review finding 2026-08-22: the first
++    ship read top-level `rows` only — a row locator narrower than the
++    lint's row concept.
++    """
++    if isinstance(doc, dict):
++        rows = doc.get("rows")
++        if isinstance(rows, list):
++            return rows
++    return [row for _, row in lint.walk_rows(doc)]
+ 
+ 
+ def evaluate_rows(rows: list, lint) -> list[dict]:
+@@ -546,7 +569,15 @@ def load_live_pin() -> tuple[str | None, str | None]:
+ 
+ 
+ def _fingerprint(finding: dict, scope: str) -> str:
+-    extra = finding.get("log_path") or finding.get("gpu_index") or finding.get("pid") or ""
++    # None-checked, not truthiness: GPU index 0 is a real identity and
++    # `or`-chaining would drop it (the falsy-zero class the QA discipline
++    # names; adversarial-review finding 6, 2026-08-22).
++    extra = ""
++    for key in ("log_path", "gpu_index", "pid"):
++        value = finding.get(key)
++        if value is not None:
++            extra = str(value)
++            break
+     return f"{finding['code']}|{scope}|{extra}"
+ 
+ 
+@@ -606,11 +637,16 @@ def escalate(
+     known_issues: Path,
+     state_path: Path,
+     dry_run: bool = False,
++    notes: list[str] | None = None,
+ ) -> dict:
+     """Write deduplicated durable escalations; ALWAYS advance the receipt.
+ 
+     `findings` is a list of (scope, finding) pairs, scope being the stable
+     identity of what was scanned (an out path, a pid, a gpu index).
++    `notes` are non-finding observations (mid-write skips, missing out
++    files); they land in the state file per SCENARIO-CONDUCTOR-SENTINEL-1-
++    MIDWRITE-RACE so a skipped run leaves a durable trace, not a stdout
++    line nobody keeps.
+     """
+     state = load_state(state_path)
+     now = _now_utc()
+@@ -642,6 +678,7 @@ def escalate(
+             state["escalated"][fp] = now_iso
+         written += 1
+     state["last_scan_utc"] = now_iso
++    state["last_scan_notes"] = list(notes or [])
+     if not dry_run:
+         write_state(state_path, state)
+     return {"written": written, "deduplicated": skipped, "last_scan_utc": now_iso}
+@@ -684,10 +721,14 @@ def run_scan(
+     seen_log_dirs: set[str] = set()
+     for run in runs:
+         out_path = Path(run["out_path"])
+-        rows, reason = read_out_file(out_path)
++        doc, reason = read_out_file(out_path)
+         scope = f"pid {run['pid']} {out_path}"
+         if reason == "midwrite":
+             notes.append(f"{scope}: mid-write race, skipped this cycle")
++        elif reason == "missing":
++            # Absent is not zero: a run whose out file never appears is a
++            # run nothing can supervise — say so rather than skip silently.
++            notes.append(f"{scope}: out file missing, run unsupervisable this cycle")
+         elif reason == "stale_unparseable":
+             findings.append(
+                 (
+@@ -699,8 +740,12 @@ def run_scan(
+                     },
+                 )
+             )
+-        elif rows is not None:
+-            findings.extend((scope, f) for f in evaluate_rows(rows, lint))
++        else:
++            rows = extract_rows(doc, lint)
++            if rows:
++                findings.extend((scope, f) for f in evaluate_rows(rows, lint))
++            else:
++                notes.append(f"{scope}: no rows found in out file yet")
+         log_dir = run.get("server_log_dir") or tempfile.gettempdir()
+         seen_log_dirs.add(log_dir)
+         logs = find_server_logs(Path(log_dir), run.get("port"), max_age_h=log_max_age_h)
+@@ -751,6 +796,7 @@ def run_scan(
+         known_issues=known_issues,
+         state_path=state_path,
+         dry_run=dry_run,
++        notes=notes,
+     )
+     summary.update(
+         {
+diff --git a/tests/python/test_conductor_run_sentinel.py b/tests/python/test_conductor_run_sentinel.py
+index 2dcd77db30..f07ec4e286 100644
+--- a/tests/python/test_conductor_run_sentinel.py
++++ b/tests/python/test_conductor_run_sentinel.py
+@@ -199,12 +199,64 @@ def test_contained_streak_is_warn_not_critical(tmp_path):
+ 
+ def test_midwrite_race_is_skipped(tmp_path):
+     """SCENARIO-CONDUCTOR-SENTINEL-1-MIDWRITE-RACE: unparseable + fresh mtime
+-    is the harness's whole-file rewrite, not a finding."""
++    is the harness's whole-file rewrite, not a finding — and the skip lands
++    in the STATE FILE, not only on stdout."""
+     proc_root = _mk_run(tmp_path, [])
+     (tmp_path / "rows.json").write_text('{"rows": [truncated')
+     summary = _scan(tmp_path, proc_root)
+     assert "OUT_FILE_STALE_UNPARSEABLE" not in _codes(summary)
+     assert any("mid-write" in n for n in summary["notes"])
++    state = json.loads((tmp_path / "state.json").read_text())
++    assert any("mid-write" in n for n in state["last_scan_notes"])
++
++
++def test_nested_rows_shape_is_not_invisible(tmp_path):
++    """Row discovery must not be narrower than the lint's row concept:
++    a per-cell nested corpus shape (`cells[i].row`, the 2026-07 corpora)
++    reaches the streak detector through the lint's own walk_rows."""
++    doc = {"cells": [{"row": _invalid_llm_on_row()}, {"row": _invalid_llm_on_row()}]}
++    proc_root = tmp_path / "proc"
++    out = tmp_path / "rows.json"
++    out.write_text(json.dumps(doc))
++    _mk_proc(
++        proc_root,
++        4242,
++        ["python", "scripts/arc_probe_harness.py", "--out", str(out), "--port", "8995"],
++    )
++    summary = _scan(tmp_path, proc_root)
++    assert "CONSECUTIVE_INVALID_LLM_ON_ROWS" in _codes(summary)
++
++
++def test_missing_out_file_is_noted_not_silent(tmp_path):
++    """Absent is not zero: a run whose out file never appears leaves a
++    durable trace in the state file."""
++    proc_root = tmp_path / "proc"
++    _mk_proc(
++        proc_root,
++        4242,
++        ["python", "scripts/arc_x.py", "--out", str(tmp_path / "never.json"), "--port", "1"],
++    )
++    summary = _scan(tmp_path, proc_root)
++    assert any("missing" in n for n in summary["notes"])
++    state = json.loads((tmp_path / "state.json").read_text())
++    assert any("missing" in n for n in state["last_scan_notes"])
++
++
++def test_relative_out_resolves_against_run_cwd(tmp_path):
++    """A relative --out means relative to the RUN's cwd (/proc/<pid>/cwd),
++    not the sentinel's own cwd."""
++    proc_root = tmp_path / "proc"
++    run_cwd = tmp_path / "rundir"
++    run_cwd.mkdir()
++    (run_cwd / "rows.json").write_text(
++        json.dumps({"rows": [_invalid_llm_on_row(), _invalid_llm_on_row()]})
++    )
++    d = _mk_proc(
++        proc_root, 4242, ["python", "scripts/arc_x.py", "--out", "rows.json", "--port", "1"]
++    )
++    os.symlink(run_cwd, d / "cwd")
++    summary = _scan(tmp_path, proc_root)
++    assert "CONSECUTIVE_INVALID_LLM_ON_ROWS" in _codes(summary)
+ 
+ 
+ def test_stale_unparseable_is_a_finding(tmp_path):
+diff --git a/tests/python/test_conductor_sentinel_wiring.py b/tests/python/test_conductor_sentinel_wiring.py
+index 142c727b4e..46e5fbbe38 100644
+--- a/tests/python/test_conductor_sentinel_wiring.py
++++ b/tests/python/test_conductor_sentinel_wiring.py
+@@ -30,17 +30,24 @@ def test_receipt_constants_point_at_state_files():
+     assert rc.AUDIT_LEDGER_STATE == rc.PROJECT_ROOT / "ops" / ".audit_findings_ledger_state.json"
+ 
+ 
++def _code_only(source: str) -> str:
++    """Source minus comment lines, so a commented-out call reads as absent
++    (adversarial-review finding 5, 2026-08-22: substring asserts against
++    raw getsource stayed green when the call was merely commented out)."""
++    return "\n".join(line for line in source.splitlines() if not line.lstrip().startswith("#"))
++
++
+ def test_research_step_invokes_sentinel_with_receipt():
+     """The sentinel call sits inside research_step, receipt-checked against
+     RUN_SENTINEL_STATE (the file the sentinel rewrites on every scan)."""
+-    source = inspect.getsource(rc.research_step)
++    source = _code_only(inspect.getsource(rc.research_step))
+     assert '"run-sentinel"' in source
+     assert "conductor_run_sentinel.py" in source
+     assert "RUN_SENTINEL_STATE" in source
+ 
+ 
+ def test_milestone_close_invokes_ledger_with_receipt():
+-    source = inspect.getsource(rc.research_step)
++    source = _code_only(inspect.getsource(rc.research_step))
+     assert '"audit-findings-ledger"' in source
+     assert "audit_findings_ledger.py" in source
+     assert "AUDIT_LEDGER_STATE" in source
+-- 
+2.55.0
+

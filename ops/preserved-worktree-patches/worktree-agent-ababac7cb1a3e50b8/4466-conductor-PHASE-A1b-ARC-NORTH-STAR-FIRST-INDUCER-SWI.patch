@@ -1,0 +1,2906 @@
+From a9fea011797f76d966e4de16877435b8159da5ff Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 10:45:55 -0400
+Subject: [PATCH 04466/11362] [conductor] PHASE A1b (ARC NORTH STAR; FIRST
+ INDUCER SWING) -- CEGIS executable-world-model REFINEMENT. Gated on A1's
+ low-accuracy INDUCER regime (median_engine_heldout_accuracy < 0.5). Take A1's
+ held-out MISPREDICTED (s,a,s') transitions as counterexamples, ask the LLM
+ inducer to REPAIR the executable engine program (not re-induce from scratch),
+ accept a repair only if it fixes held-out counterexamples without regressing
+ observed-prefix replay, and RE-MEASURE held-out transition accuracy vs A1's
+ baseline. The first attempt to MOVE the ~0.12 inducer wall.
+
+Automated research step by research conductor.
+Task ID: exp4872-a1b
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  77 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...iment_4872_cegis_world_model_refinement.py | 963 ++++++++++++++++++
+ results/arc_e3/wa30/world_model.py            |  90 ++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ent_4872_cegis_world_model_refinement.json | 595 +++++++++++
+ .../cd82.json                                 |  50 +
+ .../cn04.json                                 |  50 +
+ .../ls20.json                                 |  50 +
+ .../m0r0.json                                 |  50 +
+ .../r11l.json                                 |  50 +
+ .../sk48.json                                 |  50 +
+ .../sp80.json                                 |  50 +
+ .../su15.json                                 |  50 +
+ .../wa30.json                                 |  50 +
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...iment_4872_cegis_world_model_refinement.py | 444 ++++++++
+ 22 files changed, 2638 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/experiment_4872_cegis_world_model_refinement.py
+ create mode 100644 results/arc_e3/wa30/world_model.py
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/cd82.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/cn04.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/ls20.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/m0r0.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/r11l.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/sk48.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/sp80.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/su15.json
+ create mode 100644 results/experiment_4872_cegis_world_model_refinement_checkpoints/wa30.json
+ create mode 100644 tests/python/test_experiment_4872_cegis_world_model_refinement.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index a79edfe8b2..36e2cb91d6 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -11091,6 +11091,83 @@ Then it writes a schema-valid artifact with `partial=true`,
+ `checkpoint_emitted=true`, the measured per-game rows preserved, and exit code
+ 0 so the next run can resume from the checkpoints.
+ 
++### REQ-ARC-WMTE-4872: CEGIS World-Model Refinement Accuracy Lift
++
++Experiment 4872 SHALL run only after the Exp 4871 A1 artifact exists and reports
++`median_engine_heldout_accuracy < 0.5`. It SHALL reuse the Exp 4871 GPU-fixed
++generator precondition, held-out game list, live executable world-model path, and
++banked-answer blindness, but SHALL evaluate a bounded counterexample-guided
++repair loop over the induced executable `world_model.py` program rather than a
++parallel solver. If the offline arcade, generator, live path, or A1 low-accuracy
++baseline is unavailable, the workflow SHALL write a terminal `blocked_*`
++artifact instead of fabricating a CEGIS verdict.
++
++For each measured A1 held-out game, the workflow SHALL induce or load the
++initial executable engine, collect real off-path transition mispredictions, split
++those failures into repair counterexamples and a disjoint remeasurement split,
++and invoke the live Qwen3.5-9B-MTP proposer to repair the executable program.
++A repair SHALL be accepted only when it fixes at least one repair
++counterexample and does not regress observed-prefix replay. The loop SHALL be
++bounded, checkpointed per game and round, and SHALL stop on the soft elapsed
++budget with a schema-valid partial artifact.
++
++The final score SHALL compare the A1 baseline held-out accuracy with the refined
++engine accuracy on a split disjoint from the counterexamples used for repair.
++Experiment 4872 SHALL write
++`results/experiment_4872_cegis_world_model_refinement.json` with the median
++per-game held-out accuracy delta, a bootstrap CI95 for that delta, the per-game
++accuracy table, `delta_on_truly_heldout_split=true`, `verifier_is_oracle=false`,
++`live_path_reachable=true` only when the E3 induction/repair import path passes
++orphan-solver lint, and `solve_provenance=development_proxy`.
++
++The falsifiable gate SHALL pass only when the median delta is positive, the CI95
++excludes 0, at least three games are measured, the split is truly disjoint, and
++the positive control records at least one known-correctable misprediction fixed.
++If the CI95 includes 0, the artifact SHALL retire this CEGIS lever with a
++terminal `complete_cegis_no_heldout_accuracy_lift_residual_*` verdict.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; a real lift is success_cegis_engine_accuracy_lift_<delta>; a null is complete_cegis_no_heldout_accuracy_lift_residual_<cause>."
++- `cegis_heldout_accuracy_delta_median`: principle "median (refined - baseline) held-out transition accuracy -- did CEGIS MOVE the inducer wall?"
++- `cegis_heldout_accuracy_delta_ci95`: principle "bootstrap CI95 of the delta; PASS requires it to exclude 0 (not a noise lift)."
++- `per_game_accuracy_delta`: principle "per-game {baseline, refined, delta, counterexamples_fixed, cegis_rounds} -- the quantitative intervention table."
++- `delta_on_truly_heldout_split`: principle "true -- the re-measure split is DISJOINT from the repair counterexamples (B1 audits; else it is a tautology)."
++- `positive_control_passed`: principle "a known-correctable misprediction was fixed -> a flat null is a real ceiling, not a harness no-op."
++- `verifier_is_oracle`: principle "false -- the held-out transition score is oracle-distinct from the env's level-up check (circularity discipline)."
++- `live_path_reachable`: principle "the refinement improves the live e3 induction/repair path (arc_orphan_solver_lint passes), not a parallel solver."
++- `solve_provenance`: principle "development_proxy -- an inducer-accuracy measurement, NOT a banked level."
++- `checkpoint_emitted`: principle "a capped run still emits a usable partial (per-game + per-round checkpointing)."
++- `inference_substrate`: principle "live_llm_inference (60s floor) -- CEGIS repair invokes the LLM on the GPU-0 generator."
++- `model_specs`: principle "names the actual generator (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server)."
++- `preconditions_checked`: principle "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
++- `random_seed`: principle "determinism for the CEGIS stochastic repair search."
++- `reproducibility_checksum`: principle "content hash of (games, A1 baseline, CEGIS config, held-out split) so a replication catches drift."
++
++#### SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE
++
++Given the Exp 4871 artifact is missing, malformed, or has
++`median_engine_heldout_accuracy >= 0.5`
++When Experiment 4872 starts
++Then it writes a terminal `blocked_a1_baseline_missing` or
++`blocked_a1_not_inducer_ceiling` artifact and does not invoke CEGIS repair.
++
++#### SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE
++
++Given a real held-out transition misprediction and observed-prefix replay rows
++When a proposed executable repair is scored
++Then the repair is accepted only if it fixes at least one repair
++counterexample, preserves observed-prefix replay accuracy, and records the
++accepted round in the per-game checkpoint.
++
++#### SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA
++
++Given repair counterexamples and a disjoint remeasurement split
++When Experiment 4872 builds the final artifact
++Then `delta_on_truly_heldout_split=true`, the per-game deltas are computed on
++the remeasurement split rather than the repair examples, and the median delta
++CI95 determines the terminal success or retirement verdict.
++
+ ### REQ-ARC-WMTE-4865: Hostile A1 Induce-Plan Fork Probe Audit
+ 
+ Experiment 4865 SHALL adversarially audit
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 657080ab39..d718b66fd0 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 201,
+   "code_violations": 0,
+-  "experiments_checked": 3879,
++  "experiments_checked": 3880,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4872_cegis_world_model_refinement.py b/python/carnot/experiment_4872_cegis_world_model_refinement.py
+new file mode 100644
+index 0000000000..aff1625d85
+--- /dev/null
++++ b/python/carnot/experiment_4872_cegis_world_model_refinement.py
+@@ -0,0 +1,963 @@
++"""Exp 4872: CEGIS refinement for induced executable ARC world models.
++
++Spec refs: REQ-ARC-WMTE-4872,
++SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE,
++SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE,
++SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import random
++import sys
++import time
++from pathlib import Path
++from statistics import median
++from typing import Any, Callable, Mapping, Sequence
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - script execution path
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot import experiment_4871_generation_wall_fork_probe_gpu_fixed as a1  # noqa: E402
++from carnot.experiment_4851_generation_coverage_diagnostic import (  # noqa: E402
++    offline_arcade_available,
++    run_orphan_lint,
++)
++
++
++EXPERIMENT_ID = 4872
++RESULT_RELATIVE_PATH = "results/experiment_4872_cegis_world_model_refinement.json"
++CHECKPOINT_RELATIVE_DIR = "results/experiment_4872_cegis_world_model_refinement_checkpoints"
++A1_RESULT_RELATIVE_PATH = a1.RESULT_RELATIVE_PATH
++SPEC_REFS = [
++    "REQ-ARC-WMTE-4872",
++    "SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE",
++    "SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE",
++    "SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA",
++]
++DEFAULT_HELDOUT_GAMES = a1.HELDOUT_GAMES
++DEFAULT_HELDOUT_TRANSITIONS = 24
++DEFAULT_OBSERVED_PREFIX_TRANSITIONS = 24
++DEFAULT_MAX_REPAIR_COUNTEREXAMPLES = 4
++DEFAULT_MAX_ROUNDS = 1
++DEFAULT_BOOTSTRAP_ITERATIONS = 1000
++DEFAULT_SOFT_ELAPSED_BUDGET_S = 4200.0
++HIGH_ACCURACY_THRESHOLD = 0.5
++RANDOM_SEED = 20260627
++INFERENCE_SUBSTRATE = "live_llm_inference"
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; a real lift is success_cegis_engine_accuracy_lift_<delta>; "
++            "a null is complete_cegis_no_heldout_accuracy_lift_residual_<cause>."
++        )
++    },
++    "cegis_heldout_accuracy_delta_median": {
++        "principle": (
++            "median (refined - baseline) held-out transition accuracy -- did CEGIS MOVE "
++            "the inducer wall?"
++        )
++    },
++    "cegis_heldout_accuracy_delta_ci95": {
++        "principle": (
++            "bootstrap CI95 of the delta; PASS requires it to exclude 0 (not a noise lift)."
++        )
++    },
++    "per_game_accuracy_delta": {
++        "principle": (
++            "per-game {baseline, refined, delta, counterexamples_fixed, cegis_rounds} -- "
++            "the quantitative intervention table."
++        )
++    },
++    "delta_on_truly_heldout_split": {
++        "principle": (
++            "true -- the re-measure split is DISJOINT from the repair counterexamples "
++            "(B1 audits; else it is a tautology)."
++        )
++    },
++    "positive_control_passed": {
++        "principle": (
++            "a known-correctable misprediction was fixed -> a flat null is a real ceiling, "
++            "not a harness no-op."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "false -- the held-out transition score is oracle-distinct from the env's "
++            "level-up check (circularity discipline)."
++        )
++    },
++    "live_path_reachable": {
++        "principle": (
++            "the refinement improves the live e3 induction/repair path "
++            "(arc_orphan_solver_lint passes), not a parallel solver."
++        )
++    },
++    "solve_provenance": {
++        "principle": (
++            "development_proxy -- an inducer-accuracy measurement, NOT a banked level."
++        )
++    },
++    "checkpoint_emitted": {
++        "principle": (
++            "a capped run still emits a usable partial (per-game + per-round checkpointing)."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "live_llm_inference (60s floor) -- CEGIS repair invokes the LLM on the GPU-0 "
++            "generator."
++        )
++    },
++    "model_specs": {
++        "principle": (
++            "names the actual generator (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server)."
++        )
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
++        )
++    },
++    "random_seed": {"principle": "determinism for the CEGIS stochastic repair search."},
++    "reproducibility_checksum": {
++        "principle": (
++            "content hash of (games, A1 baseline, CEGIS config, held-out split) so a "
++            "replication catches drift."
++        )
++    },
++}
++
++
++JsonDict = dict[str, Any]
++Clock = Callable[[], float]
++
++
++class DiagnosticError(RuntimeError):
++    """Raised when the Exp 4872 artifact would otherwise be invalid."""
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
++
++
++def load_a1_artifact(root: Path | str = REPO_ROOT) -> JsonDict | None:
++    path = Path(root) / A1_RESULT_RELATIVE_PATH
++    if not path.exists():
++        return None
++    try:
++        data = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return None
++    return dict(data) if isinstance(data, Mapping) else None
++
++
++def _normalise_generator_result(result: Any) -> JsonDict:
++    return a1._normalise_generator_result(result)
++
++
++def _generator_backend_from_preconditions(preconditions: Mapping[str, Any]) -> str | None:
++    return a1._generator_backend_from_preconditions(preconditions)
++
++
++def _model_specs_from_preconditions(
++    preconditions: Mapping[str, Any], generator_backend: str | None
++) -> JsonDict:
++    return a1._model_specs_from_preconditions(preconditions, generator_backend)
++
++
++def _cegis_config(
++    *,
++    heldout_transitions: int,
++    observed_prefix_transitions: int,
++    max_repair_counterexamples: int,
++    max_rounds: int,
++    soft_elapsed_budget_s: float,
++    heldout_games: Sequence[str],
++    bootstrap_iterations: int,
++) -> JsonDict:
++    return {
++        "live_path": "arc_executable_world_model.load_engine/refactor -> E3 executable program",
++        "llm_model": "Qwen3.5-9B-MTP",
++        "generator_precondition": "igpu_hip_or_gpu0_cuda",
++        "gpu0_cuda_allowed": True,
++        "a1_artifact": A1_RESULT_RELATIVE_PATH,
++        "a1_low_accuracy_threshold": HIGH_ACCURACY_THRESHOLD,
++        "heldout_transitions": int(heldout_transitions),
++        "observed_prefix_transitions": int(observed_prefix_transitions),
++        "max_repair_counterexamples": int(max_repair_counterexamples),
++        "max_rounds": int(max_rounds),
++        "soft_elapsed_budget_s": float(soft_elapsed_budget_s),
++        "heldout_games": list(heldout_games),
++        "bootstrap_iterations": int(bootstrap_iterations),
++    }
++
++
++def _transition_id(index: int) -> int:
++    return int(index)
++
++
++def score_engine(engine: Callable[..., Any], transitions: Sequence[Any]) -> float:
++    from carnot.agentic import arc_executable_world_model as e3
++
++    return float(e3.WorldModelVerifier(list(transitions)).score(engine).accuracy)
++
++
++def _correct_transition_indices(engine: Callable[..., Any], transitions: Sequence[Any]) -> set[int]:
++    from carnot.agentic import arc_executable_world_model as e3
++
++    score = e3.WorldModelVerifier(list(transitions)).score(engine, max_mismatch=len(transitions) + 1)
++    mismatches = {int(row["i"]) for row in score.mismatches if "i" in row}
++    return set(range(len(transitions))) - mismatches
++
++
++def evaluate_repair_acceptance(
++    *,
++    previous_engine: Callable[..., Any],
++    repaired_engine: Callable[..., Any],
++    repair_counterexamples: Sequence[Any],
++    observed_prefix: Sequence[Any],
++) -> JsonDict:
++    previous_repair_correct = _correct_transition_indices(previous_engine, repair_counterexamples)
++    repaired_repair_correct = _correct_transition_indices(repaired_engine, repair_counterexamples)
++    fixed = sorted(repaired_repair_correct - previous_repair_correct)
++    previous_observed = score_engine(previous_engine, observed_prefix)
++    repaired_observed = score_engine(repaired_engine, observed_prefix)
++    observed_regressed = repaired_observed + 1e-12 < previous_observed
++    accepted = bool(fixed) and not observed_regressed
++    return {
++        "accepted": accepted,
++        "fixed_count": len(fixed),
++        "fixed_transition_ids": [_transition_id(index) for index in fixed],
++        "repair_accuracy_before": round(score_engine(previous_engine, repair_counterexamples), 6),
++        "repair_accuracy_after": round(score_engine(repaired_engine, repair_counterexamples), 6),
++        "observed_prefix_accuracy_before": round(previous_observed, 6),
++        "observed_prefix_accuracy_after": round(repaired_observed, 6),
++        "observed_regressed": bool(observed_regressed),
++    }
++
++
++def select_repair_and_remeasure_splits(
++    *,
++    engine: Callable[..., Any],
++    heldout_transitions: Sequence[Any],
++    max_repair_counterexamples: int,
++    seed: int,
++) -> JsonDict:
++    correct = _correct_transition_indices(engine, heldout_transitions)
++    failures = [i for i in range(len(heldout_transitions)) if i not in correct]
++    rng = random.Random(seed)
++    rng.shuffle(failures)
++    repair_indices = sorted(failures[: max(0, int(max_repair_counterexamples))])
++    remeasure_indices = [i for i in range(len(heldout_transitions)) if i not in set(repair_indices)]
++    return {
++        "repair_indices": repair_indices,
++        "remeasure_indices": remeasure_indices,
++        "repair_counterexamples": [heldout_transitions[i] for i in repair_indices],
++        "remeasure_transitions": [heldout_transitions[i] for i in remeasure_indices],
++    }
++
++
++def _delta_values(per_game_accuracy_delta: Mapping[str, Mapping[str, Any]]) -> list[float]:
++    values: list[float] = []
++    for row in per_game_accuracy_delta.values():
++        if not isinstance(row, Mapping):
++            continue
++        try:
++            values.append(float(row["delta"]))
++        except (KeyError, TypeError, ValueError):
++            continue
++    return values
++
++
++def bootstrap_ci95(values: Sequence[float], *, iterations: int, seed: int) -> list[float | None]:
++    vals = [float(value) for value in values]
++    if not vals:
++        return [None, None]
++    if len(set(vals)) == 1:
++        value = round(vals[0], 6)
++        return [value, value]
++    rng = random.Random(seed)
++    samples: list[float] = []
++    count = max(1, int(iterations))
++    for _ in range(count):
++        draw = [rng.choice(vals) for _ in vals]
++        samples.append(float(median(draw)))
++    samples.sort()
++    lo = samples[int(0.025 * (len(samples) - 1))]
++    hi = samples[int(0.975 * (len(samples) - 1))]
++    return [round(float(lo), 6), round(float(hi), 6)]
++
++
++def _split_is_disjoint(row: Mapping[str, Any]) -> bool:
++    repair = {int(item) for item in row.get("repair_transition_ids") or []}
++    remeasure = {int(item) for item in row.get("remeasure_transition_ids") or []}
++    return bool(remeasure) and repair.isdisjoint(remeasure)
++
++
++def _all_rows_disjoint(per_game_accuracy_delta: Mapping[str, Mapping[str, Any]]) -> bool:
++    if not per_game_accuracy_delta:
++        return True
++    return all(_split_is_disjoint(row) for row in per_game_accuracy_delta.values())
++
++
++def _terminal_verdict(
++    *,
++    median_delta: float | None,
++    ci95: Sequence[float | None],
++    n_games: int,
++    split_disjoint: bool,
++    positive_control_passed: bool,
++    partial: bool,
++) -> str:
++    if partial:
++        return "complete_cegis_no_heldout_accuracy_lift_residual_partial_budget_stop"
++    if n_games < 3:
++        return "complete_cegis_no_heldout_accuracy_lift_residual_too_few_games"
++    if not split_disjoint:
++        return "complete_cegis_no_heldout_accuracy_lift_residual_split_not_disjoint"
++    if not positive_control_passed:
++        return "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed"
++    lo = ci95[0] if len(ci95) >= 1 else None
++    hi = ci95[1] if len(ci95) >= 2 else None
++    if median_delta is None or median_delta <= 0.0:
++        return "complete_cegis_no_heldout_accuracy_lift_residual_nonpositive_delta"
++    if lo is None or hi is None or float(lo) <= 0.0 <= float(hi):
++        return "complete_cegis_no_heldout_accuracy_lift_residual_ci_includes_zero"
++    return f"success_cegis_engine_accuracy_lift_{float(median_delta):.6f}"
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    rows = artifact.get("per_game_accuracy_delta") or {}
++    a1_baselines = {
++        game: row.get("a1_artifact_baseline")
++        for game, row in sorted(rows.items())
++        if isinstance(row, Mapping)
++    }
++    split = {
++        game: {
++            "repair": list(row.get("repair_transition_ids") or []),
++            "remeasure": list(row.get("remeasure_transition_ids") or []),
++        }
++        for game, row in sorted(rows.items())
++        if isinstance(row, Mapping)
++    }
++    payload = {
++        "games": sorted(rows.keys()) if isinstance(rows, Mapping) else [],
++        "a1_baselines": a1_baselines,
++        "cegis_config": artifact.get("cegis_config") or {},
++        "heldout_split": split,
++        "random_seed": artifact.get("random_seed"),
++        "spec_refs": artifact.get("spec_refs") or SPEC_REFS,
++    }
++    return "sha256:" + hashlib.sha256(_json_dumps(payload).encode("utf-8")).hexdigest()
++
++
++def _attach_checksum(artifact: JsonDict) -> JsonDict:
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_blocked_artifact(
++    verdict: str,
++    *,
++    preconditions_checked: Mapping[str, Any],
++    live_path_reachable: bool = False,
++    duration_s: float = 0.0,
++    random_seed: int = RANDOM_SEED,
++    heldout_transitions: int = DEFAULT_HELDOUT_TRANSITIONS,
++    observed_prefix_transitions: int = DEFAULT_OBSERVED_PREFIX_TRANSITIONS,
++    max_repair_counterexamples: int = DEFAULT_MAX_REPAIR_COUNTEREXAMPLES,
++    max_rounds: int = DEFAULT_MAX_ROUNDS,
++    soft_elapsed_budget_s: float = DEFAULT_SOFT_ELAPSED_BUDGET_S,
++    heldout_games: Sequence[str] = DEFAULT_HELDOUT_GAMES,
++    bootstrap_iterations: int = DEFAULT_BOOTSTRAP_ITERATIONS,
++) -> JsonDict:
++    generator_backend = _generator_backend_from_preconditions(preconditions_checked)
++    artifact: JsonDict = {
++        "schema_version": 1,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": str(verdict),
++        "cegis_heldout_accuracy_delta_median": None,
++        "cegis_heldout_accuracy_delta_ci95": [None, None],
++        "per_game_accuracy_delta": {},
++        "delta_on_truly_heldout_split": True,
++        "positive_control_passed": False,
++        "verifier_is_oracle": False,
++        "live_path_reachable": bool(live_path_reachable),
++        "solve_provenance": "development_proxy",
++        "checkpoint_emitted": False,
++        "partial": False,
++        "n_games_measured": 0,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "model_specs": _model_specs_from_preconditions(preconditions_checked, generator_backend),
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": int(random_seed),
++        "cegis_config": _cegis_config(
++            heldout_transitions=heldout_transitions,
++            observed_prefix_transitions=observed_prefix_transitions,
++            max_repair_counterexamples=max_repair_counterexamples,
++            max_rounds=max_rounds,
++            soft_elapsed_budget_s=soft_elapsed_budget_s,
++            heldout_games=heldout_games,
++            bootstrap_iterations=bootstrap_iterations,
++        ),
++        "retire_if_same_verdict": True,
++        "duration_s": float(duration_s),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "reproducibility_checksum": "",
++    }
++    return _attach_checksum(artifact)
++
++
++def build_artifact(
++    *,
++    per_game_accuracy_delta: Mapping[str, Mapping[str, Any]],
++    preconditions_checked: Mapping[str, Any],
++    live_path_reachable: bool,
++    duration_s: float,
++    partial: bool,
++    checkpoint_emitted: bool,
++    positive_control_passed: bool | None = None,
++    random_seed: int = RANDOM_SEED,
++    heldout_transitions: int = DEFAULT_HELDOUT_TRANSITIONS,
++    observed_prefix_transitions: int = DEFAULT_OBSERVED_PREFIX_TRANSITIONS,
++    max_repair_counterexamples: int = DEFAULT_MAX_REPAIR_COUNTEREXAMPLES,
++    max_rounds: int = DEFAULT_MAX_ROUNDS,
++    soft_elapsed_budget_s: float = DEFAULT_SOFT_ELAPSED_BUDGET_S,
++    heldout_games: Sequence[str] = DEFAULT_HELDOUT_GAMES,
++    bootstrap_iterations: int = DEFAULT_BOOTSTRAP_ITERATIONS,
++) -> JsonDict:
++    rows = {str(game): dict(row) for game, row in per_game_accuracy_delta.items()}
++    deltas = _delta_values(rows)
++    med = round(float(median(deltas)), 6) if deltas else None
++    ci95 = bootstrap_ci95(deltas, iterations=bootstrap_iterations, seed=random_seed)
++    split_disjoint = _all_rows_disjoint(rows)
++    positive = (
++        any(int(row.get("counterexamples_fixed") or 0) > 0 for row in rows.values())
++        if positive_control_passed is None
++        else bool(positive_control_passed)
++    )
++    generator_backend = _generator_backend_from_preconditions(preconditions_checked)
++    artifact: JsonDict = {
++        "schema_version": 1,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": _terminal_verdict(
++            median_delta=med,
++            ci95=ci95,
++            n_games=len(rows),
++            split_disjoint=split_disjoint,
++            positive_control_passed=positive,
++            partial=partial,
++        ),
++        "cegis_heldout_accuracy_delta_median": med,
++        "cegis_heldout_accuracy_delta_ci95": ci95,
++        "per_game_accuracy_delta": rows,
++        "delta_on_truly_heldout_split": split_disjoint,
++        "positive_control_passed": positive,
++        "verifier_is_oracle": False,
++        "live_path_reachable": bool(live_path_reachable),
++        "solve_provenance": "development_proxy",
++        "checkpoint_emitted": bool(checkpoint_emitted),
++        "partial": bool(partial),
++        "n_games_measured": len(rows),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "model_specs": _model_specs_from_preconditions(preconditions_checked, generator_backend),
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": int(random_seed),
++        "cegis_config": _cegis_config(
++            heldout_transitions=heldout_transitions,
++            observed_prefix_transitions=observed_prefix_transitions,
++            max_repair_counterexamples=max_repair_counterexamples,
++            max_rounds=max_rounds,
++            soft_elapsed_budget_s=soft_elapsed_budget_s,
++            heldout_games=heldout_games,
++            bootstrap_iterations=bootstrap_iterations,
++        ),
++        "retire_if_same_verdict": True,
++        "duration_s": float(duration_s),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "reproducibility_checksum": "",
++    }
++    return _attach_checksum(artifact)
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:  # pragma: no cover - defensive validator
++    errors: list[str] = []
++    required = set(FIELD_PRINCIPLES) | {
++        "schema_version",
++        "experiment_id",
++        "spec_refs",
++        "partial",
++        "n_games_measured",
++        "cegis_config",
++        "retire_if_same_verdict",
++        "duration_s",
++        "field_principles",
++    }
++    for field in sorted(required):
++        if field not in artifact:
++            errors.append(f"missing_field:{field}")
++    if errors:
++        return errors
++
++    verdict = str(artifact.get("honest_verdict"))
++    if not verdict.startswith(("blocked_", "complete_", "success_")):
++        errors.append("honest_verdict_terminal_prefix")
++    blocked = verdict.startswith("blocked_")
++    partial = artifact.get("partial") is True
++
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles")
++    else:
++        for field, principle in FIELD_PRINCIPLES.items():
++            if principles.get(field) != principle:
++                errors.append(f"field_principles.{field}")
++
++    rows = artifact.get("per_game_accuracy_delta")
++    if not isinstance(rows, Mapping):
++        errors.append("per_game_accuracy_delta")
++        rows = {}
++    for game, row in rows.items():
++        if not isinstance(row, Mapping):
++            errors.append(f"per_game_accuracy_delta.{game}")
++            continue
++        for key in ("baseline", "refined", "delta"):
++            try:
++                value = float(row.get(key))
++            except (TypeError, ValueError):
++                errors.append(f"per_game_accuracy_delta.{game}.{key}")
++                continue
++            if key != "delta" and not 0.0 <= value <= 1.0:
++                errors.append(f"per_game_accuracy_delta.{game}.{key}")
++        for key in ("counterexamples_fixed", "cegis_rounds"):
++            try:
++                if int(row.get(key)) < 0:
++                    errors.append(f"per_game_accuracy_delta.{game}.{key}")
++            except (TypeError, ValueError):
++                errors.append(f"per_game_accuracy_delta.{game}.{key}")
++        if not _split_is_disjoint(row):
++            errors.append(f"per_game_accuracy_delta.{game}.heldout_split")
++
++    try:
++        n_games_measured = int(artifact.get("n_games_measured"))
++    except (TypeError, ValueError):
++        n_games_measured = -1
++    if n_games_measured != len(rows):
++        errors.append("n_games_measured")
++    if artifact.get("delta_on_truly_heldout_split") != _all_rows_disjoint(rows):
++        errors.append("delta_on_truly_heldout_split")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    if artifact.get("solve_provenance") != "development_proxy":
++        errors.append("solve_provenance")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if not isinstance(artifact.get("checkpoint_emitted"), bool):
++        errors.append("checkpoint_emitted")
++    if artifact.get("retire_if_same_verdict") is not True:
++        errors.append("retire_if_same_verdict")
++    if not blocked and not partial and len(rows) >= 3 and artifact.get("live_path_reachable") is not True:
++        errors.append("live_path_reachable")
++    model_specs = artifact.get("model_specs")
++    if not isinstance(model_specs, Mapping) or model_specs.get("name") != "Qwen3.5-9B-MTP":
++        errors.append("model_specs")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def _validate_or_raise(artifact: JsonDict) -> JsonDict:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise DiagnosticError(";".join(errors))
++    return artifact
++
++
++def write_artifact(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++    return path
++
++
++def _write_checkpoint(game: str, row: Mapping[str, Any], *, root: Path | str) -> Path:
++    path = Path(root) / CHECKPOINT_RELATIVE_DIR / f"{game}.json"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(dict(row), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++    return path
++
++
++def _load_checkpoint(game: str, *, root: Path | str) -> JsonDict | None:
++    path = Path(root) / CHECKPOINT_RELATIVE_DIR / f"{game}.json"
++    if not path.exists():
++        return None
++    try:
++        row = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return None
++    return dict(row) if isinstance(row, Mapping) else None
++
++
++def refine_game_with_live_cegis(  # pragma: no cover - live ARC/LLM boundary
++    *,
++    game: str,
++    a1_row: Mapping[str, Any],
++    proposer: Any,
++    heldout_transition_budget: int = DEFAULT_HELDOUT_TRANSITIONS,
++    observed_prefix_budget: int = DEFAULT_OBSERVED_PREFIX_TRANSITIONS,
++    max_repair_counterexamples: int = DEFAULT_MAX_REPAIR_COUNTEREXAMPLES,
++    max_rounds: int = DEFAULT_MAX_ROUNDS,
++    random_seed: int = RANDOM_SEED,
++    root: Path | str = REPO_ROOT,
++    round_checkpoint: Callable[[str, Mapping[str, Any]], Any] | None = None,
++) -> JsonDict:
++    from carnot.agentic import arc_executable_world_model as e3
++
++    root_path = Path(root)
++    seed_base = int(random_seed) + sum(ord(ch) for ch in str(game))
++    observed_prefix, cell = e3.collect_transitions(
++        game, n=int(observed_prefix_budget), warmup=False, seed=seed_base
++    )
++    heldout, _heldout_cell = e3.collect_transitions(
++        game, n=int(heldout_transition_budget), warmup=False, seed=seed_base + 1009
++    )
++    world_model_path = root_path / "results" / "arc_e3" / game / "world_model.py"
++    if not world_model_path.exists():
++        ok, note = proposer.induce(game, observed_prefix, cell)
++        if not ok:
++            return {
++                "game": game,
++                "baseline": 0.0,
++                "refined": 0.0,
++                "delta": 0.0,
++                "a1_artifact_baseline": float(a1_row.get("engine_heldout_accuracy") or 0.0),
++                "counterexamples_fixed": 0,
++                "cegis_rounds": 0,
++                "accepted_repairs": 0,
++                "repair_transition_ids": [],
++                "remeasure_transition_ids": list(range(len(heldout))),
++                "observed_prefix_accuracy_before": 0.0,
++                "observed_prefix_accuracy_after": 0.0,
++                "repair_counterexample_count": 0,
++                "remeasure_transition_count": len(heldout),
++                "rounds": [{"round": 0, "accepted": False, "residual": str(note)[:160]}],
++                "residual": "initial_induction_failed",
++            }
++
++    current_engine, _is_done = e3.load_engine(game)
++    split = select_repair_and_remeasure_splits(
++        engine=current_engine,
++        heldout_transitions=heldout,
++        max_repair_counterexamples=max_repair_counterexamples,
++        seed=seed_base + 202,
++    )
++    repair_counterexamples = list(split["repair_counterexamples"])
++    remeasure_transitions = list(split["remeasure_transitions"])
++    repair_ids = list(split["repair_indices"])
++    remeasure_ids = list(split["remeasure_indices"])
++    baseline = score_engine(current_engine, remeasure_transitions)
++    observed_before = score_engine(current_engine, observed_prefix)
++    rounds: list[JsonDict] = []
++    total_fixed = 0
++    accepted_repairs = 0
++    previous_code = world_model_path.read_text(encoding="utf-8") if world_model_path.exists() else ""
++
++    for round_index in range(1, int(max_rounds) + 1):
++        if not repair_counterexamples:
++            rounds.append({"round": round_index, "accepted": False, "residual": "no_repair_counterexamples"})
++            break
++        vr = e3.WorldModelVerifier(repair_counterexamples).score(current_engine)
++        ok, note = proposer.refactor(game, vr)
++        if not ok:
++            rounds.append({"round": round_index, "accepted": False, "residual": str(note)[:160]})
++            if previous_code:
++                world_model_path.write_text(previous_code, encoding="utf-8")
++            continue
++        try:
++            repaired_engine, _goal = e3.load_engine(game)
++            acceptance = evaluate_repair_acceptance(
++                previous_engine=current_engine,
++                repaired_engine=repaired_engine,
++                repair_counterexamples=repair_counterexamples,
++                observed_prefix=observed_prefix,
++            )
++        except Exception as exc:
++            acceptance = {
++                "accepted": False,
++                "fixed_count": 0,
++                "observed_regressed": True,
++                "residual": repr(exc)[:160],
++            }
++        acceptance["round"] = round_index
++        acceptance["proposer_note"] = str(note)[:160]
++        rounds.append(dict(acceptance))
++        if acceptance.get("accepted") is True:
++            current_engine = repaired_engine
++            accepted_repairs += 1
++            total_fixed += int(acceptance.get("fixed_count") or 0)
++            previous_code = world_model_path.read_text(encoding="utf-8")
++        elif previous_code:
++            world_model_path.write_text(previous_code, encoding="utf-8")
++        if round_checkpoint is not None:
++            round_checkpoint(
++                game,
++                {
++                    "game": game,
++                    "rounds": list(rounds),
++                    "counterexamples_fixed": int(total_fixed),
++                    "accepted_repairs": int(accepted_repairs),
++                },
++            )
++
++    refined = score_engine(current_engine, remeasure_transitions)
++    observed_after = score_engine(current_engine, observed_prefix)
++    return {
++        "game": str(game),
++        "baseline": round(float(baseline), 6),
++        "refined": round(float(refined), 6),
++        "delta": round(float(refined - baseline), 6),
++        "a1_artifact_baseline": round(float(a1_row.get("engine_heldout_accuracy") or 0.0), 6),
++        "counterexamples_fixed": int(total_fixed),
++        "cegis_rounds": len(rounds),
++        "accepted_repairs": int(accepted_repairs),
++        "repair_transition_ids": repair_ids,
++        "remeasure_transition_ids": remeasure_ids,
++        "observed_prefix_accuracy_before": round(float(observed_before), 6),
++        "observed_prefix_accuracy_after": round(float(observed_after), 6),
++        "repair_counterexample_count": len(repair_counterexamples),
++        "remeasure_transition_count": len(remeasure_transitions),
++        "rounds": rounds,
++        "residual": "accepted_repair" if accepted_repairs else "no_accepted_repair",
++    }
++
++
++def _a1_precondition(a1_artifact: Mapping[str, Any] | None) -> JsonDict:
++    if not isinstance(a1_artifact, Mapping):
++        return {"ok": False, "detail": "missing_or_malformed"}
++    per_game = a1_artifact.get("per_game_fork")
++    try:
++        median_accuracy = float(a1_artifact.get("median_engine_heldout_accuracy"))
++    except (TypeError, ValueError):
++        return {"ok": False, "detail": "missing_median_engine_heldout_accuracy"}
++    if not isinstance(per_game, Mapping) or not per_game:
++        return {
++            "ok": False,
++            "detail": "missing_per_game_baselines",
++            "median_engine_heldout_accuracy": median_accuracy,
++        }
++    low = median_accuracy < HIGH_ACCURACY_THRESHOLD
++    return {
++        "ok": bool(low),
++        "detail": "ok" if low else "a1_not_inducer_ceiling",
++        "median_engine_heldout_accuracy": median_accuracy,
++        "per_game_baselines_present": True,
++        "n_games": len(per_game),
++    }
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    offline_arcade_checker: Callable[[], bool] = offline_arcade_available,
++    generator_checker: Callable[[], Any] | None = None,
++    a1_artifact_loader: Callable[[Path], Mapping[str, Any] | None] = load_a1_artifact,
++    live_path_checker: Callable[[Path], bool] = run_orphan_lint,
++    game_refiner: Callable[..., Mapping[str, Any]] = refine_game_with_live_cegis,
++    now: Clock = time.time,
++    write: bool = True,
++    write_checkpoints: bool = True,
++    heldout_games: Sequence[str] = DEFAULT_HELDOUT_GAMES,
++    heldout_transition_budget: int = DEFAULT_HELDOUT_TRANSITIONS,
++    observed_prefix_budget: int = DEFAULT_OBSERVED_PREFIX_TRANSITIONS,
++    max_repair_counterexamples: int = DEFAULT_MAX_REPAIR_COUNTEREXAMPLES,
++    max_rounds: int = DEFAULT_MAX_ROUNDS,
++    soft_elapsed_budget_s: float = DEFAULT_SOFT_ELAPSED_BUDGET_S,
++    bootstrap_iterations: int = DEFAULT_BOOTSTRAP_ITERATIONS,
++    random_seed: int = RANDOM_SEED,
++    proposer: Any | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    started = now()
++    preconditions: JsonDict = {
++        "offline_arcade": {"ok": False},
++        "generator": {
++            "ok": False,
++            "model": "Qwen3.5-9B-MTP",
++            "allowed_backends": list(a1.GENERATOR_BACKENDS),
++        },
++        "a1_baseline": {"ok": False},
++        "live_path": {"ok": False},
++    }
++
++    def _blocked(verdict: str, *, live_path_reachable: bool = False) -> JsonDict:
++        artifact = build_blocked_artifact(
++            verdict,
++            preconditions_checked=preconditions,
++            live_path_reachable=live_path_reachable,
++            duration_s=now() - started,
++            random_seed=random_seed,
++            heldout_transitions=heldout_transition_budget,
++            observed_prefix_transitions=observed_prefix_budget,
++            max_repair_counterexamples=max_repair_counterexamples,
++            max_rounds=max_rounds,
++            soft_elapsed_budget_s=soft_elapsed_budget_s,
++            heldout_games=heldout_games,
++            bootstrap_iterations=bootstrap_iterations,
++        )
++        _validate_or_raise(artifact)
++        if write:
++            write_artifact(artifact, root=root_path)
++        return artifact
++
++    if not bool(offline_arcade_checker()):
++        preconditions["offline_arcade"] = {"ok": False}
++        return _blocked("blocked_offline_arcade_missing")
++    preconditions["offline_arcade"] = {"ok": True}
++
++    prop = proposer
++    if generator_checker is None:
++        prop = prop or a1.make_live_qwen_proposer()
++        generator_result = a1.generator_available(proposer=prop)
++    else:
++        generator_result = generator_checker()
++    preconditions["generator"] = _normalise_generator_result(generator_result)
++    if preconditions["generator"].get("ok") is not True:
++        return _blocked("blocked_generator_unavailable")
++
++    a1_artifact = a1_artifact_loader(root_path)
++    a1_precondition = _a1_precondition(a1_artifact)
++    preconditions["a1_baseline"] = a1_precondition
++    if a1_precondition.get("ok") is not True:
++        detail = a1_precondition.get("detail")
++        verdict = (
++            "blocked_a1_not_inducer_ceiling"
++            if detail == "a1_not_inducer_ceiling"
++            else "blocked_a1_baseline_missing"
++        )
++        return _blocked(verdict)
++
++    live_path_ok = bool(live_path_checker(root_path))
++    preconditions["live_path"] = {"ok": live_path_ok}
++    if not live_path_ok:
++        return _blocked("blocked_live_path_unreachable", live_path_reachable=False)
++
++    prop = prop or a1.make_live_qwen_proposer()
++    a1_rows = dict(a1_artifact.get("per_game_fork") or {})  # type: ignore[union-attr]
++    rows: dict[str, JsonDict] = {}
++    checkpoint_emitted = False
++    partial = False
++
++    def _round_checkpoint(game: str, row: Mapping[str, Any]) -> None:
++        nonlocal checkpoint_emitted
++        if write_checkpoints:
++            _write_checkpoint(game, row, root=root_path)
++            checkpoint_emitted = True
++
++    for game in heldout_games:
++        if game not in a1_rows:
++            continue
++        cached = _load_checkpoint(game, root=root_path)
++        if cached is not None and "delta" in cached:
++            rows[str(game)] = cached
++            checkpoint_emitted = True
++            continue
++        print(f"[4872] refining {game} ({len(rows) + 1}/{len(heldout_games)})", flush=True)
++        row = dict(
++            game_refiner(
++                game=str(game),
++                a1_row=a1_rows[game],
++                proposer=prop,
++                heldout_transition_budget=heldout_transition_budget,
++                observed_prefix_budget=observed_prefix_budget,
++                max_repair_counterexamples=max_repair_counterexamples,
++                max_rounds=max_rounds,
++                random_seed=random_seed,
++                root=root_path,
++                round_checkpoint=_round_checkpoint,
++            )
++        )
++        rows[str(game)] = row
++        if write_checkpoints:
++            _write_checkpoint(str(game), row, root=root_path)
++            checkpoint_emitted = True
++        elapsed = now() - started
++        print(
++            "[4872] "
++            f"{game}: baseline={row.get('baseline')} refined={row.get('refined')} "
++            f"delta={row.get('delta')} fixed={row.get('counterexamples_fixed')} "
++            f"elapsed_s={elapsed:.1f}",
++            flush=True,
++        )
++        if elapsed >= float(soft_elapsed_budget_s):
++            partial = True
++            break
++
++    artifact = build_artifact(
++        per_game_accuracy_delta=rows,
++        preconditions_checked=preconditions,
++        live_path_reachable=True,
++        duration_s=now() - started,
++        partial=partial,
++        checkpoint_emitted=checkpoint_emitted,
++        positive_control_passed=None,
++        random_seed=random_seed,
++        heldout_transitions=heldout_transition_budget,
++        observed_prefix_transitions=observed_prefix_budget,
++        max_repair_counterexamples=max_repair_counterexamples,
++        max_rounds=max_rounds,
++        soft_elapsed_budget_s=soft_elapsed_budget_s,
++        heldout_games=heldout_games,
++        bootstrap_iterations=bootstrap_iterations,
++    )
++    _validate_or_raise(artifact)
++    if write:
++        write_artifact(artifact, root=root_path)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI boundary
++    _ = argv
++    artifact = run(
++        max_rounds=int(os.environ.get("CARNOT_ARC_4872_MAX_ROUNDS", str(DEFAULT_MAX_ROUNDS))),
++        heldout_transition_budget=int(
++            os.environ.get("CARNOT_ARC_4872_HELDOUT_TRANSITIONS", str(DEFAULT_HELDOUT_TRANSITIONS))
++        ),
++        observed_prefix_budget=int(
++            os.environ.get(
++                "CARNOT_ARC_4872_OBSERVED_PREFIX_TRANSITIONS",
++                str(DEFAULT_OBSERVED_PREFIX_TRANSITIONS),
++            )
++        ),
++        max_repair_counterexamples=int(
++            os.environ.get(
++                "CARNOT_ARC_4872_MAX_REPAIR_COUNTEREXAMPLES",
++                str(DEFAULT_MAX_REPAIR_COUNTEREXAMPLES),
++            )
++        ),
++        bootstrap_iterations=int(
++            os.environ.get(
++                "CARNOT_ARC_4872_BOOTSTRAP_ITERATIONS",
++                str(DEFAULT_BOOTSTRAP_ITERATIONS),
++            )
++        ),
++    )
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI boundary
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/results/arc_e3/wa30/world_model.py b/results/arc_e3/wa30/world_model.py
+new file mode 100644
+index 0000000000..ef0c5918c5
+--- /dev/null
++++ b/results/arc_e3/wa30/world_model.py
+@@ -0,0 +1,90 @@
++import numpy as np
++
++def engine(grid, action, data):
++    grid = grid.copy()
++    H, W = grid.shape
++    
++    if action == 1:
++        # Action 1: Fill a vertical column with a specific pattern
++        # Based on observed transitions, Action 1 fills a column at a specific position
++        # The pattern seems to be: 0s, then 14s, then 1s, then 1s
++        # The column position is determined by the data
++        if data is not None:
++            x, y = data['x'], data['y']
++            col = x // 1
++            row_start = y // 1
++            # Fill the column with the pattern
++            # Pattern: 0s, then 14s, then 1s
++            grid[row_start:row_start+4, col] = 0
++            grid[row_start+4:row_start+8, col] = 14
++            grid[row_start+8:row_start+12, col] = 1
++        else:
++            # Default pattern if no data
++            grid[:, 32] = 0
++            grid[4:8, 32] = 14
++            grid[8:12, 32] = 1
++            
++    elif action == 2:
++        # Action 2: Similar to Action 1 but with different pattern
++        # Pattern: 1s, then 14s, then 1s, then 0s
++        if data is not None:
++            x, y = data['x'], data['y']
++            col = x // 1
++            row_start = y // 1
++            grid[row_start:row_start+4, col] = 1
++            grid[row_start+4:row_start+8, col] = 14
++            grid[row_start+8:row_start+12, col] = 1
++            grid[row_start+12:row_start+16, col] = 0
++        else:
++            # Default pattern
++            grid[:, 32] = 1
++            grid[4:8, 32] = 14
++            grid[8:12, 32] = 1
++            grid[12:16, 32] = 0
++            
++    elif action == 4:
++        # Action 4: Fill a rectangular region with a pattern
++        # Pattern: 1s, then 14s, then 0s
++        if data is not None:
++            x, y = data['x'], data['y']
++            col = x // 1
++            row_start = y // 1
++            # Fill a 4x8 region
++            grid[row_start:row_start+4, col:col+8] = 1
++            grid[row_start+4:row_start+8, col:col+8] = 14
++            grid[row_start+8:row_start+12, col:col+8] = 0
++        else:
++            # Default pattern
++            grid[52:56, 32:40] = 1
++            grid[56:60, 32:40] = 14
++            grid[60:64, 32:40] = 0
++            
++    elif action == 5:
++        # Action 5: No change
++        pass
++        
++    elif action == 6:
++        # Action 6: Click action
++        if data is not None:
++            x, y = data['x'], data['y']
++            grid[y, x] = 4
++            
++    elif action == 7:
++        # Action 7: No change
++        pass
++        
++    return grid
++
++def is_level_complete(grid):
++    # Check if the grid is in a win state
++    # Based on the observed transitions, a win state is when the grid is filled with a specific pattern
++    # The pattern seems to be: 1s, then 14s, then 0s
++    H, W = grid.shape
++    
++    # Check if the grid is filled with the win pattern
++    win_pattern = np.zeros((H, W), dtype=int)
++    win_pattern[0:H//4, :] = 1
++    win_pattern[H//4:3*H//4, :] = 14
++    win_pattern[3*H//4:H, :] = 0
++    
++    return np.array_equal(grid, win_pattern)
+\ No newline at end of file
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 2135a05f8a..a90944954a 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-27T12:47:15.762945Z",
+-  "duration_s": 0.0729970932006836,
++  "run_date": "2026-06-27T14:44:38.255043Z",
++  "duration_s": 0.05524158477783203,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "c1616a08eaad68ea5516b7f58829f4171a826bc3860a7cb982437ec0e453deef",
++  "reproducibility_checksum": "256b96e94f6ea6f706b0396f27e5f792b95a6d33da25b2ab702bda0b6c0a7a73",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "0a0a15a3ff7b2780ce535b2309f3b0e319a859c3"
++    "adversarial_verify_version": "4f5b85b340daa4dcde06d765ad9196d5c5baccfa"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 066daa984e..37e527e4a1 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-27T12:47:15.876324Z",
+-  "duration_s": 0.10300517082214355,
++  "run_date": "2026-06-27T14:44:38.338760Z",
++  "duration_s": 0.07581377029418945,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "952af56446a618416745af9c2ee549d2823018678f60219910ccc986b0caa53d",
++  "reproducibility_checksum": "267b4a7cee5695b803b3545ebf3532d7a4db7ac7cc21b796fcb03c66a448251b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "0a0a15a3ff7b2780ce535b2309f3b0e319a859c3"
++    "adversarial_verify_version": "4f5b85b340daa4dcde06d765ad9196d5c5baccfa"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 17dd781163..d8c76ed35a 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.121448516845703,
++  "efficiency_gains_ms": 2.0880699157714844,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index ed43e9a598..063deb13c2 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.118797369301319e-05,
++  "duration_s": 4.330091178417206e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4872_cegis_world_model_refinement.json b/results/experiment_4872_cegis_world_model_refinement.json
+new file mode 100644
+index 0000000000..dc2c1acef1
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement.json
+@@ -0,0 +1,595 @@
++{
++  "cegis_config": {
++    "a1_artifact": "results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
++    "a1_low_accuracy_threshold": 0.5,
++    "bootstrap_iterations": 1000,
++    "generator_precondition": "igpu_hip_or_gpu0_cuda",
++    "gpu0_cuda_allowed": true,
++    "heldout_games": [
++      "cd82",
++      "cn04",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "sk48",
++      "sp80",
++      "su15",
++      "wa30"
++    ],
++    "heldout_transitions": 24,
++    "live_path": "arc_executable_world_model.load_engine/refactor -> E3 executable program",
++    "llm_model": "Qwen3.5-9B-MTP",
++    "max_repair_counterexamples": 4,
++    "max_rounds": 1,
++    "observed_prefix_transitions": 24,
++    "soft_elapsed_budget_s": 4200.0
++  },
++  "cegis_heldout_accuracy_delta_ci95": [
++    0.0,
++    0.0
++  ],
++  "cegis_heldout_accuracy_delta_median": 0.0,
++  "checkpoint_emitted": true,
++  "delta_on_truly_heldout_split": true,
++  "duration_s": 141.88956594467163,
++  "experiment_id": 4872,
++  "field_principles": {
++    "cegis_heldout_accuracy_delta_ci95": {
++      "principle": "bootstrap CI95 of the delta; PASS requires it to exclude 0 (not a noise lift)."
++    },
++    "cegis_heldout_accuracy_delta_median": {
++      "principle": "median (refined - baseline) held-out transition accuracy -- did CEGIS MOVE the inducer wall?"
++    },
++    "checkpoint_emitted": {
++      "principle": "a capped run still emits a usable partial (per-game + per-round checkpointing)."
++    },
++    "delta_on_truly_heldout_split": {
++      "principle": "true -- the re-measure split is DISJOINT from the repair counterexamples (B1 audits; else it is a tautology)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; a real lift is success_cegis_engine_accuracy_lift_<delta>; a null is complete_cegis_no_heldout_accuracy_lift_residual_<cause>."
++    },
++    "inference_substrate": {
++      "principle": "live_llm_inference (60s floor) -- CEGIS repair invokes the LLM on the GPU-0 generator."
++    },
++    "live_path_reachable": {
++      "principle": "the refinement improves the live e3 induction/repair path (arc_orphan_solver_lint passes), not a parallel solver."
++    },
++    "model_specs": {
++      "principle": "names the actual generator (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server)."
++    },
++    "per_game_accuracy_delta": {
++      "principle": "per-game {baseline, refined, delta, counterexamples_fixed, cegis_rounds} -- the quantitative intervention table."
++    },
++    "positive_control_passed": {
++      "principle": "a known-correctable misprediction was fixed -> a flat null is a real ceiling, not a harness no-op."
++    },
++    "preconditions_checked": {
++      "principle": "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
++    },
++    "random_seed": {
++      "principle": "determinism for the CEGIS stochastic repair search."
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash of (games, A1 baseline, CEGIS config, held-out split) so a replication catches drift."
++    },
++    "solve_provenance": {
++      "principle": "development_proxy -- an inducer-accuracy measurement, NOT a banked level."
++    },
++    "verifier_is_oracle": {
++      "principle": "false -- the held-out transition score is oracle-distinct from the env's level-up check (circularity discipline)."
++    }
++  },
++  "honest_verdict": "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed",
++  "inference_substrate": "live_llm_inference",
++  "live_path_reachable": true,
++  "model_specs": {
++    "backend": "gpu0_cuda",
++    "cuda_visible_devices": "0",
++    "kv_quant": "q8_0",
++    "mtp": true,
++    "name": "Qwen3.5-9B-MTP",
++    "no_think_prefix": true,
++    "port": 8931,
++    "repo_substr": "Qwen3.5-9B-MTP",
++    "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++  },
++  "n_games_measured": 9,
++  "partial": false,
++  "per_game_accuracy_delta": {
++    "cd82": {
++      "a1_artifact_baseline": 0.25,
++      "accepted_repairs": 0,
++      "baseline": 0.4,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "cd82",
++      "observed_prefix_accuracy_after": 0.25,
++      "observed_prefix_accuracy_before": 0.25,
++      "refined": 0.4,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        1,
++        2,
++        3,
++        4,
++        5,
++        6,
++        8,
++        9,
++        11,
++        12,
++        13,
++        14,
++        15,
++        16,
++        17,
++        18,
++        19,
++        20,
++        21,
++        23
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        0,
++        7,
++        10,
++        22
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    },
++    "cn04": {
++      "a1_artifact_baseline": 0.208333,
++      "accepted_repairs": 0,
++      "baseline": 0.25,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "cn04",
++      "observed_prefix_accuracy_after": 0.208333,
++      "observed_prefix_accuracy_before": 0.208333,
++      "refined": 0.25,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        1,
++        2,
++        3,
++        4,
++        5,
++        6,
++        7,
++        8,
++        9,
++        11,
++        12,
++        13,
++        14,
++        15,
++        16,
++        17,
++        18,
++        19,
++        20,
++        22
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        0,
++        10,
++        21,
++        23
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    },
++    "ls20": {
++      "a1_artifact_baseline": 0.0,
++      "accepted_repairs": 0,
++      "baseline": 0.0,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "ls20",
++      "observed_prefix_accuracy_after": 0.0,
++      "observed_prefix_accuracy_before": 0.0,
++      "refined": 0.0,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        0,
++        1,
++        2,
++        3,
++        4,
++        5,
++        6,
++        7,
++        8,
++        9,
++        11,
++        12,
++        13,
++        16,
++        17,
++        18,
++        20,
++        21,
++        22,
++        23
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        10,
++        14,
++        15,
++        19
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    },
++    "m0r0": {
++      "a1_artifact_baseline": 0.083333,
++      "accepted_repairs": 0,
++      "baseline": 0.0,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "m0r0",
++      "observed_prefix_accuracy_after": 0.083333,
++      "observed_prefix_accuracy_before": 0.083333,
++      "refined": 0.0,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        0,
++        1,
++        2,
++        3,
++        4,
++        5,
++        6,
++        7,
++        8,
++        10,
++        12,
++        14,
++        15,
++        16,
++        17,
++        18,
++        19,
++        21,
++        22,
++        23
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        9,
++        11,
++        13,
++        20
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    },
++    "r11l": {
++      "a1_artifact_baseline": 0.0,
++      "accepted_repairs": 0,
++      "baseline": 0.0,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "r11l",
++      "observed_prefix_accuracy_after": 0.0,
++      "observed_prefix_accuracy_before": 0.0,
++      "refined": 0.0,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        0,
++        1,
++        2,
++        4,
++        6,
++        7,
++        8,
++        9,
++        10,
++        12,
++        14,
++        15,
++        16,
++        17,
++        18,
++        19,
++        20,
++        21,
++        22,
++        23
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        3,
++        5,
++        11,
++        13
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    },
++    "sk48": {
++      "a1_artifact_baseline": 0.0,
++      "accepted_repairs": 0,
++      "baseline": 0.0,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "sk48",
++      "observed_prefix_accuracy_after": 0.0,
++      "observed_prefix_accuracy_before": 0.0,
++      "refined": 0.0,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        0,
++        1,
++        2,
++        4,
++        5,
++        7,
++        8,
++        9,
++        10,
++        11,
++        13,
++        14,
++        15,
++        16,
++        17,
++        18,
++        19,
++        20,
++        21,
++        22
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        3,
++        6,
++        12,
++        23
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    },
++    "sp80": {
++      "a1_artifact_baseline": 0.0,
++      "accepted_repairs": 0,
++      "baseline": 0.0,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "sp80",
++      "observed_prefix_accuracy_after": 0.0,
++      "observed_prefix_accuracy_before": 0.0,
++      "refined": 0.0,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        0,
++        1,
++        2,
++        3,
++        4,
++        5,
++        6,
++        7,
++        8,
++        9,
++        10,
++        11,
++        12,
++        13,
++        14,
++        15,
++        17,
++        19,
++        20,
++        21
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        16,
++        18,
++        22,
++        23
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    },
++    "su15": {
++      "a1_artifact_baseline": 0.5,
++      "accepted_repairs": 0,
++      "baseline": 0.55,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "su15",
++      "observed_prefix_accuracy_after": 0.5,
++      "observed_prefix_accuracy_before": 0.5,
++      "refined": 0.55,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        0,
++        1,
++        2,
++        3,
++        4,
++        5,
++        6,
++        7,
++        8,
++        9,
++        10,
++        11,
++        12,
++        13,
++        14,
++        16,
++        17,
++        18,
++        20,
++        21
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        15,
++        19,
++        22,
++        23
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    },
++    "wa30": {
++      "a1_artifact_baseline": 0.0,
++      "accepted_repairs": 0,
++      "baseline": 0.2,
++      "cegis_rounds": 1,
++      "counterexamples_fixed": 0,
++      "delta": 0.0,
++      "game": "wa30",
++      "observed_prefix_accuracy_after": 0.125,
++      "observed_prefix_accuracy_before": 0.125,
++      "refined": 0.2,
++      "remeasure_transition_count": 20,
++      "remeasure_transition_ids": [
++        1,
++        2,
++        4,
++        5,
++        6,
++        7,
++        8,
++        9,
++        10,
++        12,
++        13,
++        14,
++        15,
++        17,
++        18,
++        19,
++        20,
++        21,
++        22,
++        23
++      ],
++      "repair_counterexample_count": 4,
++      "repair_transition_ids": [
++        0,
++        3,
++        11,
++        16
++      ],
++      "residual": "no_accepted_repair",
++      "rounds": [
++        {
++          "accepted": false,
++          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++          "round": 1
++        }
++      ]
++    }
++  },
++  "positive_control_passed": false,
++  "preconditions_checked": {
++    "a1_baseline": {
++      "detail": "ok",
++      "median_engine_heldout_accuracy": 0.0,
++      "n_games": 9,
++      "ok": true,
++      "per_game_baselines_present": true
++    },
++    "generator": {
++      "allowed_backends": [
++        "gpu0_cuda",
++        "igpu_hip"
++      ],
++      "ambient_cuda_visible_devices": null,
++      "backend": "gpu0_cuda",
++      "detail": "ok",
++      "generator_backend": "gpu0_cuda",
++      "igpu_required": false,
++      "launch_env_cuda_visible_devices": "0",
++      "model": "Qwen3.5-9B-MTP",
++      "ok": true,
++      "port": 8931,
++      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++    },
++    "live_path": {
++      "ok": true
++    },
++    "offline_arcade": {
++      "ok": true
++    }
++  },
++  "random_seed": 20260627,
++  "reproducibility_checksum": "sha256:b62db7aacf2cec11a5a802cb96ba48a86e4238260073c7275e29a3465fbcfdd6",
++  "retire_if_same_verdict": true,
++  "schema_version": 1,
++  "solve_provenance": "development_proxy",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4872",
++    "SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE",
++    "SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE",
++    "SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/cd82.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/cd82.json
+new file mode 100644
+index 0000000000..10cecd282f
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/cd82.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.25,
++  "accepted_repairs": 0,
++  "baseline": 0.4,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "cd82",
++  "observed_prefix_accuracy_after": 0.25,
++  "observed_prefix_accuracy_before": 0.25,
++  "refined": 0.4,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    1,
++    2,
++    3,
++    4,
++    5,
++    6,
++    8,
++    9,
++    11,
++    12,
++    13,
++    14,
++    15,
++    16,
++    17,
++    18,
++    19,
++    20,
++    21,
++    23
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    0,
++    7,
++    10,
++    22
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/cn04.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/cn04.json
+new file mode 100644
+index 0000000000..d61f99d952
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/cn04.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.208333,
++  "accepted_repairs": 0,
++  "baseline": 0.25,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "cn04",
++  "observed_prefix_accuracy_after": 0.208333,
++  "observed_prefix_accuracy_before": 0.208333,
++  "refined": 0.25,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    1,
++    2,
++    3,
++    4,
++    5,
++    6,
++    7,
++    8,
++    9,
++    11,
++    12,
++    13,
++    14,
++    15,
++    16,
++    17,
++    18,
++    19,
++    20,
++    22
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    0,
++    10,
++    21,
++    23
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/ls20.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/ls20.json
+new file mode 100644
+index 0000000000..d0680e7dbc
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/ls20.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.0,
++  "accepted_repairs": 0,
++  "baseline": 0.0,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "ls20",
++  "observed_prefix_accuracy_after": 0.0,
++  "observed_prefix_accuracy_before": 0.0,
++  "refined": 0.0,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    0,
++    1,
++    2,
++    3,
++    4,
++    5,
++    6,
++    7,
++    8,
++    9,
++    11,
++    12,
++    13,
++    16,
++    17,
++    18,
++    20,
++    21,
++    22,
++    23
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    10,
++    14,
++    15,
++    19
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/m0r0.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/m0r0.json
+new file mode 100644
+index 0000000000..cf29a85d3c
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/m0r0.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.083333,
++  "accepted_repairs": 0,
++  "baseline": 0.0,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "m0r0",
++  "observed_prefix_accuracy_after": 0.083333,
++  "observed_prefix_accuracy_before": 0.083333,
++  "refined": 0.0,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    0,
++    1,
++    2,
++    3,
++    4,
++    5,
++    6,
++    7,
++    8,
++    10,
++    12,
++    14,
++    15,
++    16,
++    17,
++    18,
++    19,
++    21,
++    22,
++    23
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    9,
++    11,
++    13,
++    20
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/r11l.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/r11l.json
+new file mode 100644
+index 0000000000..06233b0274
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/r11l.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.0,
++  "accepted_repairs": 0,
++  "baseline": 0.0,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "r11l",
++  "observed_prefix_accuracy_after": 0.0,
++  "observed_prefix_accuracy_before": 0.0,
++  "refined": 0.0,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    0,
++    1,
++    2,
++    4,
++    6,
++    7,
++    8,
++    9,
++    10,
++    12,
++    14,
++    15,
++    16,
++    17,
++    18,
++    19,
++    20,
++    21,
++    22,
++    23
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    3,
++    5,
++    11,
++    13
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/sk48.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/sk48.json
+new file mode 100644
+index 0000000000..aab8e475de
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/sk48.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.0,
++  "accepted_repairs": 0,
++  "baseline": 0.0,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "sk48",
++  "observed_prefix_accuracy_after": 0.0,
++  "observed_prefix_accuracy_before": 0.0,
++  "refined": 0.0,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    0,
++    1,
++    2,
++    4,
++    5,
++    7,
++    8,
++    9,
++    10,
++    11,
++    13,
++    14,
++    15,
++    16,
++    17,
++    18,
++    19,
++    20,
++    21,
++    22
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    3,
++    6,
++    12,
++    23
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/sp80.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/sp80.json
+new file mode 100644
+index 0000000000..87f884b2d8
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/sp80.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.0,
++  "accepted_repairs": 0,
++  "baseline": 0.0,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "sp80",
++  "observed_prefix_accuracy_after": 0.0,
++  "observed_prefix_accuracy_before": 0.0,
++  "refined": 0.0,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    0,
++    1,
++    2,
++    3,
++    4,
++    5,
++    6,
++    7,
++    8,
++    9,
++    10,
++    11,
++    12,
++    13,
++    14,
++    15,
++    17,
++    19,
++    20,
++    21
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    16,
++    18,
++    22,
++    23
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/su15.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/su15.json
+new file mode 100644
+index 0000000000..43f2079da8
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/su15.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.5,
++  "accepted_repairs": 0,
++  "baseline": 0.55,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "su15",
++  "observed_prefix_accuracy_after": 0.5,
++  "observed_prefix_accuracy_before": 0.5,
++  "refined": 0.55,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    0,
++    1,
++    2,
++    3,
++    4,
++    5,
++    6,
++    7,
++    8,
++    9,
++    10,
++    11,
++    12,
++    13,
++    14,
++    16,
++    17,
++    18,
++    20,
++    21
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    15,
++    19,
++    22,
++    23
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_4872_cegis_world_model_refinement_checkpoints/wa30.json b/results/experiment_4872_cegis_world_model_refinement_checkpoints/wa30.json
+new file mode 100644
+index 0000000000..327af21003
+--- /dev/null
++++ b/results/experiment_4872_cegis_world_model_refinement_checkpoints/wa30.json
+@@ -0,0 +1,50 @@
++{
++  "a1_artifact_baseline": 0.0,
++  "accepted_repairs": 0,
++  "baseline": 0.2,
++  "cegis_rounds": 1,
++  "counterexamples_fixed": 0,
++  "delta": 0.0,
++  "game": "wa30",
++  "observed_prefix_accuracy_after": 0.125,
++  "observed_prefix_accuracy_before": 0.125,
++  "refined": 0.2,
++  "remeasure_transition_count": 20,
++  "remeasure_transition_ids": [
++    1,
++    2,
++    4,
++    5,
++    6,
++    7,
++    8,
++    9,
++    10,
++    12,
++    13,
++    14,
++    15,
++    17,
++    18,
++    19,
++    20,
++    21,
++    22,
++    23
++  ],
++  "repair_counterexample_count": 4,
++  "repair_transition_ids": [
++    0,
++    3,
++    11,
++    16
++  ],
++  "residual": "no_accepted_repair",
++  "rounds": [
++    {
++      "accepted": false,
++      "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
++      "round": 1
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 03914c0606..58cf252556 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T12:51:14Z",
+-  "finished_at": "2026-06-27T12:51:14Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-27T14:44:21Z",
++  "finished_at": "2026-06-27T14:44:21Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index c3908a5003..5e90aea408 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T12:51:14Z",
+-  "finished_at": "2026-06-27T12:51:14Z",
++  "started_at": "2026-06-27T14:44:21Z",
++  "finished_at": "2026-06-27T14:44:21Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 9f1ebbe7b6..70be2a10be 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T12:51:14Z",
+-  "finished_at": "2026-06-27T12:51:14Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-27T14:44:21Z",
++  "finished_at": "2026-06-27T14:44:21Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4872_cegis_world_model_refinement.py b/tests/python/test_experiment_4872_cegis_world_model_refinement.py
+new file mode 100644
+index 0000000000..89c20864f4
+--- /dev/null
++++ b/tests/python/test_experiment_4872_cegis_world_model_refinement.py
+@@ -0,0 +1,444 @@
++"""Tests for Exp 4872 CEGIS executable world-model refinement.
++
++Spec refs: REQ-ARC-WMTE-4872,
++SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE,
++SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE,
++SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++import pytest
++
++from carnot import experiment_4872_cegis_world_model_refinement as mod
++from carnot.agentic.arc_executable_world_model import Transition
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _transition(value: int = 0, next_value: int = 1, *, action: int = 1) -> Transition:
++    grid = np.array([[value, 0], [0, 0]], dtype=int)
++    next_grid = np.array([[next_value, 0], [0, 0]], dtype=int)
++    return Transition(grid, action, None, next_grid, 0, 0)
++
++
++def _identity_engine(grid: np.ndarray, _action: int, _data: Any = None) -> np.ndarray:
++    return np.asarray(grid).copy()
++
++
++def _correct_engine(grid: np.ndarray, action: int, _data: Any = None) -> np.ndarray:
++    out = np.asarray(grid).copy()
++    if int(action) == 1:
++        out[0, 0] = 1
++    return out
++
++
++def _regressing_engine(grid: np.ndarray, action: int, _data: Any = None) -> np.ndarray:
++    out = _correct_engine(grid, action, _data)
++    if int(action) == 5:
++        out[1, 1] = 9
++    return out
++
++
++def _a1_artifact(median: float = 0.0) -> dict[str, Any]:
++    return {
++        "experiment_id": 4871,
++        "median_engine_heldout_accuracy": median,
++        "per_game_fork": {
++            "cd82": {"engine_heldout_accuracy": 0.1},
++            "cn04": {"engine_heldout_accuracy": 0.2},
++            "ls20": {"engine_heldout_accuracy": 0.3},
++        },
++        "model_specs": {"name": "Qwen3.5-9B-MTP", "backend": "gpu0_cuda"},
++    }
++
++
++def _generator_ok() -> dict[str, Any]:
++    return {
++        "ok": True,
++        "generator_backend": "gpu0_cuda",
++        "backend": "gpu0_cuda",
++        "model": "Qwen3.5-9B-MTP",
++        "server": "/fake/llama-server",
++        "port": 8931,
++        "launch_env_cuda_visible_devices": "0",
++    }
++
++
++def _row(game: str, *, baseline: float, refined: float, fixed: int = 1) -> dict[str, Any]:
++    return {
++        "game": game,
++        "baseline": baseline,
++        "refined": refined,
++        "delta": round(refined - baseline, 6),
++        "a1_artifact_baseline": baseline,
++        "counterexamples_fixed": fixed,
++        "cegis_rounds": 1,
++        "accepted_repairs": 1 if fixed else 0,
++        "repair_transition_ids": [0],
++        "remeasure_transition_ids": [1, 2],
++        "observed_prefix_accuracy_before": 1.0,
++        "observed_prefix_accuracy_after": 1.0,
++        "repair_counterexample_count": 1,
++        "remeasure_transition_count": 2,
++        "rounds": [{"round": 1, "accepted": bool(fixed), "fixed_count": fixed}],
++        "residual": "accepted_repair" if fixed else "no_accepted_repair",
++    }
++
++
++def test_req_arc_wmte_4872_spec_declares_cegis_contract() -> None:
++    """REQ-ARC-WMTE-4872: OpenSpec anchors fields, scenarios, and result path."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-ARC-WMTE-4872",
++        "SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE",
++        "SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE",
++        "SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4872_a1_low_accuracy_gate_blocks_before_repair(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE: high/missing A1 skips CEGIS."""
++
++    calls: list[str] = []
++    common = {
++        "root": tmp_path,
++        "offline_arcade_checker": lambda: True,
++        "generator_checker": _generator_ok,
++        "live_path_checker": lambda _root: True,
++        "game_refiner": lambda game, **_kwargs: calls.append(game) or _row(game, baseline=0.0, refined=1.0),
++        "now": iter([1.0, 1.1]).__next__,
++        "write": False,
++    }
++
++    missing = mod.run(**common, a1_artifact_loader=lambda _root: None)
++    high = mod.run(
++        **{**common, "now": iter([2.0, 2.1]).__next__},
++        a1_artifact_loader=lambda _root: _a1_artifact(median=0.5),
++    )
++
++    assert calls == []
++    assert missing["honest_verdict"] == "blocked_a1_baseline_missing"
++    assert high["honest_verdict"] == "blocked_a1_not_inducer_ceiling"
++    assert missing["preconditions_checked"]["a1_baseline"]["ok"] is False
++    assert high["preconditions_checked"]["a1_baseline"]["median_engine_heldout_accuracy"] == 0.5
++
++
++def test_scenario_arc_wmte_4872_repair_acceptance_requires_fix_without_regression() -> None:
++    """SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE: repairs must fix CEs and preserve replay."""
++
++    repair = [_transition()]
++    observed = [_transition(next_value=0, action=5)]
++
++    accepted = mod.evaluate_repair_acceptance(
++        previous_engine=_identity_engine,
++        repaired_engine=_correct_engine,
++        repair_counterexamples=repair,
++        observed_prefix=observed,
++    )
++    no_fix = mod.evaluate_repair_acceptance(
++        previous_engine=_identity_engine,
++        repaired_engine=_identity_engine,
++        repair_counterexamples=repair,
++        observed_prefix=observed,
++    )
++    regression = mod.evaluate_repair_acceptance(
++        previous_engine=_identity_engine,
++        repaired_engine=_regressing_engine,
++        repair_counterexamples=repair,
++        observed_prefix=observed,
++    )
++
++    assert accepted["accepted"] is True
++    assert accepted["fixed_count"] == 1
++    assert accepted["observed_regressed"] is False
++    assert no_fix["accepted"] is False
++    assert no_fix["fixed_count"] == 0
++    assert regression["accepted"] is False
++    assert regression["fixed_count"] == 1
++    assert regression["observed_regressed"] is True
++
++
++def test_req_arc_wmte_4872_helpers_load_split_and_validate(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4872: helper branches preserve deterministic gates and splits."""
++
++    assert mod.load_a1_artifact(tmp_path) is None
++    a1_path = tmp_path / mod.A1_RESULT_RELATIVE_PATH
++    a1_path.parent.mkdir(parents=True)
++    a1_path.write_text("{", encoding="utf-8")
++    assert mod.load_a1_artifact(tmp_path) is None
++    a1_path.write_text(json.dumps(_a1_artifact()), encoding="utf-8")
++    assert mod.load_a1_artifact(tmp_path)["experiment_id"] == 4871
++
++    transitions = [_transition(), _transition(), _transition(next_value=0, action=5)]
++    split = mod.select_repair_and_remeasure_splits(
++        engine=_identity_engine,
++        heldout_transitions=transitions,
++        max_repair_counterexamples=1,
++        seed=1,
++    )
++    assert len(split["repair_indices"]) == 1
++    assert set(split["repair_indices"]).isdisjoint(split["remeasure_indices"])
++
++    assert mod._delta_values({"bad": [], "missing": {}, "ok": {"delta": "0.25"}}) == [0.25]
++    assert mod.bootstrap_ci95([], iterations=10, seed=1) == [None, None]
++    varied = mod.bootstrap_ci95([0.0, 0.5, 1.0], iterations=10, seed=1)
++    assert varied[0] <= varied[1]
++
++    assert mod._a1_precondition({"median_engine_heldout_accuracy": "bad"})["detail"] == (
++        "missing_median_engine_heldout_accuracy"
++    )
++    assert mod._a1_precondition(
++        {"median_engine_heldout_accuracy": 0.0, "per_game_fork": {}}
++    )["detail"] == "missing_per_game_baselines"
++
++    with pytest.raises(mod.DiagnosticError):
++        mod._validate_or_raise({"bad": True})
++
++    assert mod._load_checkpoint("missing", root=tmp_path) is None
++    bad_checkpoint = tmp_path / mod.CHECKPOINT_RELATIVE_DIR / "bad.json"
++    bad_checkpoint.parent.mkdir(parents=True, exist_ok=True)
++    bad_checkpoint.write_text("{", encoding="utf-8")
++    assert mod._load_checkpoint("bad", root=tmp_path) is None
++    mod._write_checkpoint("ok", {"delta": 0.0}, root=tmp_path)
++    assert mod._load_checkpoint("ok", root=tmp_path)["delta"] == 0.0
++
++
++def test_scenario_arc_wmte_4872_truly_heldout_delta_drives_verdict() -> None:
++    """SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA: disjoint CI gates success/null."""
++
++    rows = {
++        "cd82": _row("cd82", baseline=0.0, refined=0.5),
++        "cn04": _row("cn04", baseline=0.0, refined=0.5),
++        "ls20": _row("ls20", baseline=0.0, refined=0.5),
++    }
++    artifact = mod.build_artifact(
++        per_game_accuracy_delta=rows,
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=65.0,
++        partial=False,
++        checkpoint_emitted=True,
++        positive_control_passed=True,
++        bootstrap_iterations=25,
++    )
++    null = mod.build_artifact(
++        per_game_accuracy_delta={
++            "cd82": _row("cd82", baseline=0.5, refined=0.5, fixed=0),
++            "cn04": _row("cn04", baseline=0.5, refined=0.5, fixed=0),
++            "ls20": _row("ls20", baseline=0.5, refined=0.5, fixed=0),
++        },
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=65.0,
++        partial=False,
++        checkpoint_emitted=True,
++        positive_control_passed=False,
++        bootstrap_iterations=25,
++    )
++
++    assert artifact["honest_verdict"] == "success_cegis_engine_accuracy_lift_0.500000"
++    assert artifact["cegis_heldout_accuracy_delta_median"] == 0.5
++    assert artifact["cegis_heldout_accuracy_delta_ci95"] == [0.5, 0.5]
++    assert artifact["delta_on_truly_heldout_split"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert mod.artifact_schema_errors(artifact) == []
++
++    assert null["honest_verdict"] == (
++        "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed"
++    )
++    assert mod.artifact_schema_errors(null) == []
++
++    assert mod.build_artifact(
++        per_game_accuracy_delta={"cd82": _row("cd82", baseline=0.0, refined=1.0)},
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=1.0,
++        partial=False,
++        checkpoint_emitted=True,
++        positive_control_passed=True,
++    )["honest_verdict"].endswith("_too_few_games")
++    bad_split = {
++        "cd82": {**_row("cd82", baseline=0.0, refined=1.0), "remeasure_transition_ids": [0]},
++        "cn04": _row("cn04", baseline=0.0, refined=1.0),
++        "ls20": _row("ls20", baseline=0.0, refined=1.0),
++    }
++    assert mod.build_artifact(
++        per_game_accuracy_delta=bad_split,
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=1.0,
++        partial=False,
++        checkpoint_emitted=True,
++        positive_control_passed=True,
++    )["honest_verdict"].endswith("_split_not_disjoint")
++    assert mod.build_artifact(
++        per_game_accuracy_delta={
++            "cd82": _row("cd82", baseline=0.5, refined=0.5),
++            "cn04": _row("cn04", baseline=0.5, refined=0.5),
++            "ls20": _row("ls20", baseline=0.5, refined=0.5),
++        },
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=1.0,
++        partial=False,
++        checkpoint_emitted=True,
++        positive_control_passed=True,
++    )["honest_verdict"].endswith("_nonpositive_delta")
++    assert mod.build_artifact(
++        per_game_accuracy_delta={
++            "cd82": _row("cd82", baseline=0.0, refined=0.1),
++            "cn04": _row("cn04", baseline=0.2, refined=0.1),
++            "ls20": _row("ls20", baseline=0.0, refined=0.1),
++        },
++        preconditions_checked={"generator": _generator_ok()},
++        live_path_reachable=True,
++        duration_s=1.0,
++        partial=False,
++        checkpoint_emitted=True,
++        positive_control_passed=True,
++        bootstrap_iterations=50,
++    )["honest_verdict"].endswith("_ci_includes_zero")
++
++
++def test_req_arc_wmte_4872_run_writes_checkpoints_and_schema_valid_artifact(
++    tmp_path: Path,
++    monkeypatch: Any,
++) -> None:
++    """REQ-ARC-WMTE-4872: run aggregates rows, checkpoints, and writes the result JSON."""
++
++    rows = {
++        "cd82": _row("cd82", baseline=0.0, refined=0.5),
++        "cn04": _row("cn04", baseline=0.0, refined=0.5),
++        "ls20": _row("ls20", baseline=0.0, refined=0.5),
++    }
++    proposer = object()
++    monkeypatch.setattr(mod.a1, "make_live_qwen_proposer", lambda: proposer)
++    monkeypatch.setattr(
++        mod.a1,
++        "generator_available",
++        lambda *, proposer: {**_generator_ok(), "proposer_id": id(proposer)},
++    )
++
++    def _refine_with_round_checkpoint(game: str, **kwargs: Any) -> dict[str, Any]:
++        kwargs["round_checkpoint"](game, {"delta": 0.0, "rounds": []})
++        return dict(rows[game])
++
++    artifact = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        generator_checker=None,
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: True,
++        game_refiner=_refine_with_round_checkpoint,
++        now=iter([10.0, 10.1, 10.2, 10.3, 75.0]).__next__,
++        write=True,
++        heldout_games=("zzzz", "cd82", "cn04", "ls20"),
++        bootstrap_iterations=25,
++    )
++
++    loaded = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    checkpoint = tmp_path / mod.CHECKPOINT_RELATIVE_DIR / "cd82.json"
++
++    assert loaded == artifact
++    assert checkpoint.exists()
++    assert artifact["positive_control_passed"] is True
++    assert artifact["n_games_measured"] == 3
++    assert artifact["live_path_reachable"] is True
++    assert mod.artifact_schema_errors(artifact) == []
++
++    resumed = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        generator_checker=_generator_ok,
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: True,
++        game_refiner=lambda *_args, **_kwargs: pytest.fail("checkpoint should be reused"),
++        now=iter([80.0, 80.1]).__next__,
++        write=False,
++        heldout_games=("cd82", "cn04", "ls20"),
++        bootstrap_iterations=25,
++    )
++    assert resumed["n_games_measured"] == 3
++
++
++def test_req_arc_wmte_4872_run_blocked_and_partial_paths(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4872: blocked and partial runs stay schema-valid."""
++
++    offline = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: False,
++        generator_checker=_generator_ok,
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: True,
++        now=iter([1.0, 1.1]).__next__,
++        write=True,
++    )
++    generator = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        generator_checker=lambda: {"ok": False, "detail": "missing_qwen"},
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: True,
++        now=iter([2.0, 2.1]).__next__,
++        write=False,
++    )
++    live_path = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        generator_checker=_generator_ok,
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: False,
++        now=iter([3.0, 3.1]).__next__,
++        write=False,
++    )
++    partial = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        generator_checker=_generator_ok,
++        a1_artifact_loader=lambda _root: _a1_artifact(),
++        live_path_checker=lambda _root: True,
++        game_refiner=lambda game, **_kwargs: _row(game, baseline=0.0, refined=0.5),
++        now=iter([4.0, 4.1, 5.0, 5.1]).__next__,
++        write=False,
++        heldout_games=("cd82", "cn04", "ls20"),
++        soft_elapsed_budget_s=0.05,
++    )
++
++    assert offline["honest_verdict"] == "blocked_offline_arcade_missing"
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++    assert generator["honest_verdict"] == "blocked_generator_unavailable"
++    assert live_path["honest_verdict"] == "blocked_live_path_unreachable"
++    assert partial["partial"] is True
++    assert partial["honest_verdict"].endswith("_partial_budget_stop")
++
++
++def test_req_arc_wmte_4872_delivered_result_json_is_valid() -> None:
++    """REQ-ARC-WMTE-4872: final artifact is the requested CEGIS deliverable."""
++
++    artifact_path = REPO / mod.RESULT_RELATIVE_PATH
++    artifact: dict[str, Any] = json.loads(artifact_path.read_text(encoding="utf-8"))
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["delta_on_truly_heldout_split"] is True
++    assert artifact["inference_substrate"] == "live_llm_inference"
++    assert artifact["model_specs"]["name"] == "Qwen3.5-9B-MTP"
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
+-- 
+2.55.0
+

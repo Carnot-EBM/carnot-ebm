@@ -1,0 +1,23 @@
+From 10d7612683aa699b55c057acc9436e4452a8eaeb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 20:19:29 -0400
+Subject: [PATCH 06323/11362] [conductor] In-process docs for PRD gap and
+ agent-failure table for .495
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 3d73723244..1941c03c77 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11203,3 +11203,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-08: Gated hardware timing receipts for p-bit sparsity workload after Exp5448 (✅ Complete) — honest_verdict=complete: Exp5448-gated CPU and reachable-board timing receipts are hash-matched before timing comparison; hardware_speedup_claim=false; results/experiment_5449_gated_hardware_timing_sparsity_receipts_v495.json
+ - 2026-07-08: ARC live-path measurement-access predicate induction +1 level-up attempt (⚠️ Research Finding) — honest_verdict=honest_null: ka59 L2 bounded_budget_no_levelup; results/experiment_5450_arc_measurement_access_live_levelup_v495.json
+ - 2026-07-09: Bounded KAN certificates for verifier-potential and governed-memory claims (✅ Complete) — honest_verdict=complete: bounded measurement-access certificate preserved measured Exp5443 and Exp5446 claims and rejected false or unsupported claims; results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json
++- 2026-07-09: PRD gap and agent-failure table for .495 (⚠️ Blocked) — honest_verdict=complete: .495 PRD gap table read actual Exp5441-Exp5451 artifacts; closed=6, partial=4, blocked=1, honest_null=2, missing=0.; results/experiment_5452_prd_gap_agent_failure_table_v495.json
+-- 
+2.55.0
+

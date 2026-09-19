@@ -1,0 +1,78 @@
+From 71fa28d7f1904ddaa9cfee41b577e92f15f919db Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 11:11:18 -0400
+Subject: [PATCH 08440/11362] [conductor] Pre-gate block: Calibration-only CLUE
+ and residualized linear code selector gated on Exp6189 surface
+
+1 of 1 gate(s) failed; first failure: exp6189-matching-base-code-hidden-state-surface.surface_ready_score (upstream artifact not found for task id 'exp6189-matching-base-code-hidden-state-surface')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...calibration_clue_linear_code_selector.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6190_calibration_clue_linear_code_selector.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5f231d9a4e..873debd503 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 82, "phase": "iteration_start", "last_beat": "2026-08-07T15:09:15Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 83, "phase": "iteration_start", "last_beat": "2026-08-07T15:11:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 81d28c80b9..39944142b7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15455,3 +15455,5 @@ Still active  |
+ | 2026-08-07 15:03 UTC | Authentic Gemma-4-31B executable K=8 code pool gat | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-07 15:05 UTC | Executable-code competence and oracle-headroom aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6187-livecodebench-authentic-k8-pool.po |
+ | 2026-08-07 15:07 UTC | Executable-code competence and oracle-headroom aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6187-livecodebench-authentic-k8-pool.po |
++| 2026-08-07 15:09 UTC | Executable-code competence and oracle-headroom aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6187-livecodebench-authentic-k8-pool.po |
++| 2026-08-07 15:11 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6188-livecodebench-headroom-audit) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3a5142d3e0..b33988c66a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 82, "phase": "iteration_start", "started_at": "2026-08-07T15:09:15Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 83, "phase": "iteration_start", "started_at": "2026-08-07T15:11:17Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6190_calibration_clue_linear_code_selector.json b/results/experiment_6190_calibration_clue_linear_code_selector.json
+new file mode 100644
+index 0000000000..1b340c6848
+--- /dev/null
++++ b/results/experiment_6190_calibration_clue_linear_code_selector.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6190,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-07",
++  "started_at": "2026-08-07T15:11:17.989703+00:00",
++  "finished_at": "2026-08-07T15:11:17.989703+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Calibration-only CLUE and residualized linear code selector gated on Exp6189 surface",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6189-matching-base-code-hidden-state-surface.surface_ready_score (upstream artifact not found for task id 'exp6189-matching-base-code-hidden-state-surface')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6189-matching-base-code-hidden-state-surface",
++      "artifact_field": "surface_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6189-matching-base-code-hidden-state-surface'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

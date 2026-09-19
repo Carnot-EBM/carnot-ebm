@@ -1,0 +1,2391 @@
+From efaaf21f277863ad0c5882ef526c94e413029dee Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 21:11:05 -0400
+Subject: [PATCH 05139/11362] [conductor] PHASE D1 audit -- rerun the powered
+ LoRA-EBM/EORM signal on refreshed SOTA candidates and decide whether the +8pp
+ MuSR margin survives a real candidate refresh.
+
+Automated research step by research conductor.
+Task ID: exp5059-d1-refresh-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   70 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../experiment_5059_d1_sota_refresh_audit.py  |  742 ++++++++++
+ ...experiment_5059_d1_sota_refresh_audit.json | 1198 +++++++++++++++++
+ ...t_experiment_5059_d1_sota_refresh_audit.py |  314 +++++
+ 5 files changed, 2325 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5059_d1_sota_refresh_audit.py
+ create mode 100644 results/experiment_5059_d1_sota_refresh_audit.json
+ create mode 100644 tests/python/test_experiment_5059_d1_sota_refresh_audit.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 8bd34c12c1..e719926e87 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -22205,6 +22205,76 @@ and explicit gate diagnostics.
+ |---|---|---|
+ | REQ-VERIFY-5058 | Proposed (`python/carnot/experiment_5058_sota_candidate_refresh_inwriting.py`, `results/experiment_5058_sota_candidate_refresh_inwriting.json`) | Proposed (`tests/python/test_experiment_5058_sota_candidate_refresh_inwriting.py`) |
+ 
++### REQ-VERIFY-5059: D1 SOTA Refresh Audit Separates Scorer And Candidate-Refresh Value
++
++The repository SHALL provide Exp 5059 at
++`python/carnot/experiment_5059_d1_sota_refresh_audit.py` to audit the D1
++powered LoRA-EBM/EORM MuSR evidence after Exp 5058 writes the mandated SOTA
++candidate-refresh cache, producing
++`results/experiment_5059_d1_sota_refresh_audit.json`.
++
++The runner SHALL load
++`results/experiment_5058_sota_candidate_refresh_inwriting.json` first. If
++`candidate_refresh_ready` is not true, it SHALL fail fast with
++`honest_verdict=blocked_candidate_refresh_unavailable`, SHALL NOT promote the
++frozen `.464` D1 result as refreshed headline evidence, and SHALL still write
++the required terminal fields with blocked/null metrics.
++
++When the candidate refresh is ready, the runner SHALL load the refreshed
++candidate JSONL cache and compare it against the frozen `.464` candidate cache
++on the same MuSR questions. It SHALL score refreshed candidates through the
++existing powered LoRA-EBM/EORM path when candidate-level scores are available,
++or through a documented cached scorer fallback that projects the Exp 5045
++powered D1 selections onto identical refreshed candidate rows. A missing
++trained scorer, null train loss, zero pair count, oracle scorer, or skeleton
++artifact SHALL block the audit instead of producing a complete/null headline.
++
++The artifact SHALL report tuned self-consistency accuracy, verifier-selected
++accuracy, `oracle@K` headroom, paired bootstrap CI95, McNemar exact p, and
++candidate-diversity sensitivity. It SHALL also include an apples-to-apples
++frozen-candidate comparison so `frozen_candidate_delta` isolates scorer value
++from candidate-refresh value. A proper MuSR win SHALL require refreshed
++candidate use, `verifier_is_oracle=false`, headroom present, positive
++`delta_vs_tuned_sc`, paired CI95 excluding zero, and `mcnemar_p<0.05`.
++
++The terminal artifact MUST include `honest_verdict`, `model_specs`,
++`best_arm_available`, `accuracy`, `tuned_sc_accuracy`, `delta_vs_tuned_sc`,
++`paired_ci95`, `mcnemar_p`, `n_questions`, `headroom_present`,
++`candidate_refresh_used`, `frozen_candidate_delta`, `verifier_is_oracle`,
++`proper_musr_win`, and `legacy_models_smoke_only`. It SHOULD also include
++`oracle_at_k`, `oracle_k`, `candidate_refresh_value_delta`,
++`candidate_diversity_sensitivity`, scorer-source diagnostics, upstream
++artifact citations, field principles, and a reproducibility checksum.
++
++### SCENARIO-VERIFY-5059: Candidate Refresh Gate Blocks Before Scoring
++
++Given Exp 5058 is absent, malformed, or has `candidate_refresh_ready=false`,
++when Exp 5059 runs, then it writes
++`honest_verdict=blocked_candidate_refresh_unavailable`, sets
++`candidate_refresh_used=false`, sets `best_arm_available=false`, keeps
++`proper_musr_win=false`, and does not promote frozen `.464` evidence as a
++refreshed candidate result.
++
++### SCENARIO-VERIFY-5059: Refreshed Audit Reports Frozen Comparison And No Skeleton Headline
++
++Given Exp 5058 has a ready mandated-SOTA candidate cache, Exp 5045 has a
++trained powered D1 scorer artifact with non-null train loss and oracle-distinct
++selections, and the frozen `.464` candidate cache is available, when Exp 5059
++runs, then it writes every required field, reports refreshed tuned-SC,
++verifier-selected accuracy, `oracle@K`, paired CI95, McNemar p, and
++candidate-diversity sensitivity, includes a frozen-candidate apples-to-apples
++delta, sets `legacy_models_smoke_only=true`, and sets `proper_musr_win=true`
++only if the strict CI and McNemar gates pass. If the Exp 5045 scorer artifact is
++skeleton-like (`scorer_trained=false`, null `train_loss`, zero `n_pairs`, or
++oracle), Exp 5059 writes a blocked scorer artifact instead of a complete/null
++headline.
++
++## Implementation Status (REQ-VERIFY-5059)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5059 | Proposed (`python/carnot/experiment_5059_d1_sota_refresh_audit.py`, `results/experiment_5059_d1_sota_refresh_audit.json`) | Proposed (`tests/python/test_experiment_5059_d1_sota_refresh_audit.py`) |
++
+ ### REQ-VERIFY-5044: Second-Corpus Candidate Cache Data Product
+ 
+ The repository SHALL provide Exp 5044 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a3af03db47..f40b1eaa9c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4063,
++  "experiments_checked": 4064,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5059_d1_sota_refresh_audit.py b/python/carnot/experiment_5059_d1_sota_refresh_audit.py
+new file mode 100644
+index 0000000000..e6e03b7df3
+--- /dev/null
++++ b/python/carnot/experiment_5059_d1_sota_refresh_audit.py
+@@ -0,0 +1,742 @@
++#!/usr/bin/env python3
++"""Exp 5059: D1 SOTA refresh audit.
++
++Spec refs: REQ-VERIFY-5059, SCENARIO-VERIFY-5059.
++"""
++
++from __future__ import annotations
++
++from collections import OrderedDict
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import math
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - direct script execution
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.moat_benchmark_harness import (  # noqa: E402
++    DEFAULT_RANDOM_SEED,
++    _is_correct,
++    mcnemar_exact_p,
++    oracle_at_k,
++    paired_bootstrap_ci,
++    tuned_self_consistency,
++)
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++Clock = Any
++
++EXPERIMENT_ID = 5059
++EXPERIMENT_NAME = "experiment_5059_d1_sota_refresh_audit"
++SCHEMA = "carnot.experiment_5059_d1_sota_refresh_audit.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5059_d1_sota_refresh_audit.json"
++EXP5058_RESULT_RELATIVE_PATH = "results/experiment_5058_sota_candidate_refresh_inwriting.json"
++EXP5058_CACHE_RELATIVE_PATH = "results/experiment_5058_sota_candidate_refresh_inwriting.jsonl"
++EXP5045_RESULT_RELATIVE_PATH = "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
++FROZEN_CANDIDATE_CACHE_RELATIVE_PATH = (
++    "results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl"
++)
++SPEC_REFS = ["REQ-VERIFY-5059", "SCENARIO-VERIFY-5059"]
++
++MANDATED_MODEL_SPECS: dict[str, str] = {
++    "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++    "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF",
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "model_specs",
++    "best_arm_available",
++    "accuracy",
++    "tuned_sc_accuracy",
++    "delta_vs_tuned_sc",
++    "paired_ci95",
++    "mcnemar_p",
++    "n_questions",
++    "headroom_present",
++    "candidate_refresh_used",
++    "frozen_candidate_delta",
++    "verifier_is_oracle",
++    "proper_musr_win",
++    "legacy_models_smoke_only",
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; blocked refresh/scorer gates or complete/success D1 refresh audit."
++    },
++    "model_specs": {
++        "principle": "mandated SOTA GGUF specs plus Exp5058 provenance and Exp5045 D1 scorer provenance."
++    },
++    "best_arm_available": {
++        "principle": "true iff the powered D1 scorer artifact is trained, non-skeleton, and oracle-distinct."
++    },
++    "accuracy": {"principle": "verifier-selected accuracy on the refreshed candidate pool."},
++    "tuned_sc_accuracy": {
++        "principle": "genuine tuned self-consistency accuracy on the same refreshed candidate pool."
++    },
++    "delta_vs_tuned_sc": {"principle": "accuracy - tuned_sc_accuracy on refreshed candidates."},
++    "paired_ci95": {"principle": "paired bootstrap CI95 for verifier minus tuned-SC."},
++    "mcnemar_p": {"principle": "McNemar exact p for verifier versus tuned-SC."},
++    "n_questions": {"principle": "number of MuSR questions in the refreshed audit pool."},
++    "headroom_present": {
++        "principle": "true iff oracle@K exceeds tuned-SC by the harness headroom gate."
++    },
++    "candidate_refresh_used": {
++        "principle": "true only after Exp5058 candidate_refresh_ready=true and refreshed JSONL rows load."
++    },
++    "frozen_candidate_delta": {
++        "principle": "apples-to-apples frozen .464 D1 delta, isolating scorer value from refresh value."
++    },
++    "verifier_is_oracle": {
++        "principle": "false; cached scorer fallback never reads gold to select answers."
++    },
++    "proper_musr_win": {
++        "principle": "true only when refreshed D1 delta is positive with CI>0, McNemar p<0.05, headroom, and non-oracle scoring."
++    },
++    "legacy_models_smoke_only": {
++        "principle": "true; legacy small models remain smoke-only and are never headline provenance."
++    },
++}
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def _read_json(path: Path) -> Any:
++    try:
++        return json.loads(Path(path).read_text(encoding="utf-8"))
++    except (OSError, ValueError):  # pragma: no cover - malformed local artifact guard
++        return None
++
++
++def _read_jsonl(path: Path) -> list[JsonDict]:
++    try:
++        lines = Path(path).read_text(encoding="utf-8").splitlines()
++    except OSError:  # pragma: no cover - missing cache handled by caller
++        return []
++    rows: list[JsonDict] = []
++    for line in lines:
++        if not line.strip():
++            continue
++        try:
++            row = json.loads(line)
++        except ValueError:  # pragma: no cover - malformed cache rows are skipped
++            continue
++        if isinstance(row, dict):
++            rows.append(row)
++    return rows
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _number(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        number = float(value)
++    except (TypeError, ValueError):
++        return None
++    return number if math.isfinite(number) else None
++
++
++def _round(value: float | None) -> float | None:
++    return None if value is None else round(float(value), 6)
++
++
++def _rate(numerator: int, denominator: int) -> float:
++    return round(numerator / denominator, 6) if denominator else 0.0
++
++
++def _question_id(row: JsonMap) -> str:
++    value = str(row.get("question_id") or "").strip()
++    return value or f"MuSR/murder_mysteries:{int(row.get('question_index') or 0)}"
++
++
++def _question_index(row: JsonMap) -> int:
++    try:
++        return int(row.get("question_index") or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def _candidate_index(row: JsonMap) -> int:
++    try:
++        return int(row.get("candidate_index") or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def _candidate_answer(row: JsonMap, *, refreshed: bool) -> str:
++    if refreshed:
++        return str(row.get("parsed_answer") or row.get("answer_text") or row.get("answer") or "")
++    return str(row.get("answer") or row.get("parsed_answer") or row.get("answer_text") or "")
++
++
++def _refresh_cache_path(root: Path, refresh_artifact: JsonMap) -> Path:
++    raw_path = str(refresh_artifact.get("candidate_cache_path") or "")
++    if raw_path:
++        path = Path(raw_path)
++        return path if path.is_absolute() else root / path
++    return root / EXP5058_CACHE_RELATIVE_PATH
++
++
++def _model_specs(refresh_artifact: JsonMap, scorer_artifact: JsonMap | None = None) -> JsonDict:
++    return {
++        "mandated_sota": dict(MANDATED_MODEL_SPECS),
++        "exp5058_model_specs": dict(refresh_artifact.get("model_specs") or {}),
++        "powered_d1_scorer": {
++            "source": EXP5045_RESULT_RELATIVE_PATH,
++            "scorer_trained": bool((scorer_artifact or {}).get("scorer_trained")),
++            "checkpoint_path": (scorer_artifact or {}).get("checkpoint_path"),
++        },
++    }
++
++
++def _frozen_gold_by_question(frozen_rows: Sequence[JsonMap]) -> dict[str, Any]:
++    gold_by_question: dict[str, Any] = {}
++    for row in frozen_rows:
++        if row.get("gold") is not None:
++            gold_by_question.setdefault(_question_id(row), row.get("gold"))
++    return gold_by_question
++
++
++def _build_eval_rows(
++    candidate_rows: Sequence[JsonMap],
++    *,
++    frozen_rows: Sequence[JsonMap],
++    refreshed: bool,
++) -> list[JsonDict]:
++    gold_by_question = _frozen_gold_by_question(frozen_rows)
++    grouped: OrderedDict[str, JsonDict] = OrderedDict()
++    for row in sorted(
++        candidate_rows, key=lambda item: (_question_index(item), _candidate_index(item))
++    ):
++        answer = _candidate_answer(row, refreshed=refreshed).strip()
++        question_id = _question_id(row)
++        if not answer or question_id not in gold_by_question:
++            continue
++        if question_id not in grouped:
++            grouped[question_id] = {
++                "row_id": question_id,
++                "question_id": question_id,
++                "question_index": _question_index(row),
++                "corpus": str(row.get("corpus") or "MuSR/murder_mysteries"),
++                "question": str(row.get("question") or ""),
++                "choices": list(row.get("choices") or []),
++                "gold": gold_by_question[question_id],
++                "candidates": [],
++            }
++        candidate_id = str(row.get("row_id") or row.get("candidate_id") or "")
++        source = (
++            row.get("source_provenance")
++            if isinstance(row.get("source_provenance"), Mapping)
++            else {}
++        )
++        grouped[question_id]["candidates"].append(
++            {
++                "candidate_id": candidate_id or f"{question_id}/candidate-{_candidate_index(row)}",
++                "answer": answer,
++                "candidate_index": _candidate_index(row),
++                "source_candidate_id": source.get("source_candidate_id"),
++                "source": "exp5058_refresh" if refreshed else "frozen_464",
++            }
++        )
++    return list(grouped.values())
++
++
++def _deduplicate_answer_rows(rows: Sequence[JsonMap]) -> list[JsonDict]:
++    deduped_rows: list[JsonDict] = []
++    for row in rows:
++        seen: set[str] = set()
++        candidates: list[JsonDict] = []
++        for candidate in row.get("candidates", []):
++            answer = str(candidate.get("answer") or "")
++            if answer in seen:
++                continue
++            seen.add(answer)
++            candidates.append(dict(candidate))
++        deduped = dict(row)
++        deduped["candidates"] = candidates
++        deduped_rows.append(deduped)
++    return deduped_rows
++
++
++def _candidate_diversity(rows: Sequence[JsonMap]) -> JsonDict:
++    candidates = [candidate for row in rows for candidate in row.get("candidates", [])]
++    unique_answers = {str(candidate.get("answer") or "") for candidate in candidates}
++    per_question_unique = [
++        len({str(candidate.get("answer") or "") for candidate in row.get("candidates", [])})
++        for row in rows
++    ]
++    unique_per_question_total = sum(per_question_unique)
++    return {
++        "n_candidates": len(candidates),
++        "unique_answers": len(unique_answers),
++        "unique_answer_rate": _rate(len(unique_answers), len(candidates)),
++        "mean_unique_answers_per_question": _round(
++            sum(per_question_unique) / len(per_question_unique) if per_question_unique else 0.0
++        ),
++        "duplicate_answer_rate": _rate(
++            len(candidates) - unique_per_question_total, len(candidates)
++        ),
++    }
++
++
++def _projection_metrics(
++    rows: Sequence[JsonMap],
++    predictions: Sequence[Any],
++    *,
++    seed: int,
++    bootstrap_samples: int,
++) -> JsonDict:
++    rows_list = [dict(row) for row in rows if row.get("candidates")]
++    if len(predictions) < len(rows_list):
++        raise ValueError(
++            f"cached scorer predictions length {len(predictions)} < row count {len(rows_list)}"
++        )
++    predictions_list = [
++        str(value) if value is not None else None for value in predictions[: len(rows_list)]
++    ]
++    tuned = tuned_self_consistency(rows_list)
++    sc_correct = [int(value) for value in tuned.get("correct", [])]
++    oracle_k = int(tuned.get("candidates_per_question") or 0)
++    oracle_temperature = tuned.get("config", {}).get("temperature")
++    oracle_accuracy, oracle_correct = oracle_at_k(
++        rows_list,
++        k=oracle_k,
++        temperature=oracle_temperature,
++    )
++    verifier_correct = [
++        _is_correct(prediction, row.get("gold"))
++        for prediction, row in zip(predictions_list, rows_list)
++    ]
++    accuracy = sum(verifier_correct) / len(rows_list) if rows_list else 0.0
++    tuned_accuracy = float(tuned.get("accuracy") or 0.0)
++    delta = accuracy - tuned_accuracy
++    n_flips_possible = sum(
++        1 for sc_ok, oracle_ok in zip(sc_correct, oracle_correct) if not sc_ok and oracle_ok
++    )
++    return {
++        "n_questions": len(rows_list),
++        "accuracy": round(accuracy, 6),
++        "tuned_sc_accuracy": round(tuned_accuracy, 6),
++        "delta_vs_tuned_sc": round(delta, 6),
++        "paired_ci95": paired_bootstrap_ci(
++            verifier_correct,
++            sc_correct,
++            seed=seed,
++            samples=bootstrap_samples,
++        ),
++        "mcnemar_p": mcnemar_exact_p(verifier_correct, sc_correct),
++        "oracle_at_k": float(oracle_accuracy),
++        "oracle_k": oracle_k,
++        "n_flips_possible": int(n_flips_possible),
++        "headroom_present": bool(
++            (float(oracle_accuracy) - tuned_accuracy) >= 0.10 and n_flips_possible > 0
++        ),
++        "predictions": predictions_list,
++        "paired_correct": {
++            "verifier": verifier_correct,
++            "tuned_self_consistency": sc_correct,
++            "oracle_at_k": oracle_correct,
++        },
++        "tuned_self_consistency": {
++            "config": dict(tuned.get("config") or {}),
++            "k_sweep": dict(tuned.get("k_sweep") or {}),
++            "candidate_pool_counts": list(tuned.get("candidate_pool_counts") or []),
++        },
++    }
++
++
++def _scorer_gate(scorer_artifact: Any) -> tuple[bool, str]:
++    if not isinstance(scorer_artifact, Mapping):
++        return False, "missing_or_malformed_exp5045_artifact"
++    if scorer_artifact.get("scorer_trained") is not True:
++        return False, "scorer_trained_false"
++    train_loss = _number(scorer_artifact.get("train_loss"))
++    if train_loss is None:
++        return False, "train_loss_missing"
++    if int(scorer_artifact.get("n_pairs") or 0) <= 0:
++        return False, "n_pairs_zero"
++    if not str(scorer_artifact.get("checkpoint_path") or "").strip():
++        return False, "checkpoint_path_missing"
++    if scorer_artifact.get("verifier_is_oracle") is not False:
++        return False, "verifier_is_oracle"
++    predictions = (scorer_artifact.get("evaluation") or {}).get("verifier", {}).get("predictions")
++    if not isinstance(predictions, list) or not predictions:
++        return False, "cached_predictions_missing"
++    return True, "trained_powered_d1_cached_predictions_available"
++
++
++def _proper_musr_win(
++    metrics: JsonMap, *, verifier_is_oracle: bool, candidate_refresh_used: bool
++) -> bool:
++    ci95 = metrics.get("paired_ci95")
++    p_value = _number(metrics.get("mcnemar_p"))
++    delta = _number(metrics.get("delta_vs_tuned_sc"))
++    return (
++        candidate_refresh_used
++        and verifier_is_oracle is False
++        and metrics.get("headroom_present") is True
++        and delta is not None
++        and delta > 0.0
++        and isinstance(ci95, list)
++        and len(ci95) == 2
++        and _number(ci95[0]) is not None
++        and float(ci95[0]) > 0.0
++        and p_value is not None
++        and p_value < 0.05
++    )
++
++
++def _delta_label(delta: float | None) -> str:
++    if delta is None:
++        return "unknown"
++    prefix = "plus" if delta >= 0 else "minus"
++    return f"{prefix}_{abs(delta):.3f}".replace(".", "p")
++
++
++def _checksum(artifact: JsonMap) -> str:
++    basis = {
++        "experiment_id": artifact.get("experiment_id"),
++        "honest_verdict": artifact.get("honest_verdict"),
++        "accuracy": artifact.get("accuracy"),
++        "tuned_sc_accuracy": artifact.get("tuned_sc_accuracy"),
++        "delta_vs_tuned_sc": artifact.get("delta_vs_tuned_sc"),
++        "frozen_candidate_delta": artifact.get("frozen_candidate_delta"),
++        "candidate_refresh_value_delta": artifact.get("candidate_refresh_value_delta"),
++        "candidate_refresh_used": artifact.get("candidate_refresh_used"),
++        "scorer_source": artifact.get("scorer_source"),
++    }
++    return "sha256:" + hashlib.sha256(_json_dumps(basis).encode("utf-8")).hexdigest()
++
++
++def _base_artifact(
++    *,
++    root: Path,
++    artifact_path: Path,
++    honest_verdict: str,
++    refresh_artifact: JsonMap,
++    scorer_artifact: JsonMap | None = None,
++    candidate_refresh_used: bool = False,
++    n_questions: int = 0,
++    scorer_source: JsonMap | None = None,
++    duration_s: float = 0.0,
++) -> JsonDict:
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": artifact_path.as_posix(),
++        "honest_verdict": honest_verdict,
++        "model_specs": _model_specs(refresh_artifact, scorer_artifact),
++        "best_arm_available": False,
++        "accuracy": None,
++        "tuned_sc_accuracy": None,
++        "delta_vs_tuned_sc": None,
++        "paired_ci95": None,
++        "mcnemar_p": None,
++        "n_questions": int(n_questions),
++        "headroom_present": False,
++        "candidate_refresh_used": bool(candidate_refresh_used),
++        "frozen_candidate_delta": None,
++        "verifier_is_oracle": False,
++        "proper_musr_win": False,
++        "legacy_models_smoke_only": bool(refresh_artifact.get("legacy_models_smoke_only", True)),
++        "oracle_at_k": None,
++        "oracle_k": 0,
++        "candidate_refresh_value_delta": None,
++        "candidate_diversity_sensitivity": {},
++        "cached_scorer_fallback_used": False,
++        "scorer_source": dict(scorer_source or {}),
++        "upstream_artifacts": {
++            "exp5058": (root / EXP5058_RESULT_RELATIVE_PATH).as_posix(),
++            "exp5045": (root / EXP5045_RESULT_RELATIVE_PATH).as_posix(),
++            "frozen_candidates": (root / FROZEN_CANDIDATE_CACHE_RELATIVE_PATH).as_posix(),
++        },
++        "duration_s": round(max(0.0, float(duration_s)), 6),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def _diversity_sensitivity(
++    rows: Sequence[JsonMap],
++    predictions: Sequence[Any],
++    *,
++    full_metrics: JsonMap,
++    seed: int,
++    bootstrap_samples: int,
++) -> JsonDict:
++    deduped = _deduplicate_answer_rows(rows)
++    deduped_metrics = _projection_metrics(
++        deduped,
++        predictions,
++        seed=seed,
++        bootstrap_samples=bootstrap_samples,
++    )
++    return {
++        "full_pool": {
++            **_candidate_diversity(rows),
++            "accuracy": full_metrics["accuracy"],
++            "tuned_sc_accuracy": full_metrics["tuned_sc_accuracy"],
++            "oracle_at_k": full_metrics["oracle_at_k"],
++            "delta_vs_tuned_sc": full_metrics["delta_vs_tuned_sc"],
++        },
++        "deduplicated_answers": {
++            **_candidate_diversity(deduped),
++            "accuracy": deduped_metrics["accuracy"],
++            "tuned_sc_accuracy": deduped_metrics["tuned_sc_accuracy"],
++            "oracle_at_k": deduped_metrics["oracle_at_k"],
++            "delta_vs_tuned_sc": deduped_metrics["delta_vs_tuned_sc"],
++        },
++        "accuracy_shift_after_dedup": round(
++            float(deduped_metrics["accuracy"]) - float(full_metrics["accuracy"]),
++            6,
++        ),
++        "delta_shift_after_dedup": round(
++            float(deduped_metrics["delta_vs_tuned_sc"]) - float(full_metrics["delta_vs_tuned_sc"]),
++            6,
++        ),
++    }
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(field)
++    if artifact.get("schema") != SCHEMA:
++        errors.append("schema")
++    if artifact.get("spec_refs") != SPEC_REFS:
++        errors.append("spec_refs")
++    if not isinstance(artifact.get("model_specs"), Mapping):
++        errors.append("model_specs")
++    for field in (
++        "best_arm_available",
++        "headroom_present",
++        "candidate_refresh_used",
++        "verifier_is_oracle",
++        "proper_musr_win",
++        "legacy_models_smoke_only",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(field)
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    if artifact.get("legacy_models_smoke_only") is not True:
++        errors.append("legacy_models_smoke_only")
++    if not str(artifact.get("honest_verdict") or "").startswith(
++        ("blocked_", "complete_", "success_")
++    ):
++        errors.append("honest_verdict")
++    if not isinstance(artifact.get("n_questions"), int) or int(artifact.get("n_questions", -1)) < 0:
++        errors.append("n_questions")
++    for field in ("accuracy", "tuned_sc_accuracy", "mcnemar_p"):
++        value = artifact.get(field)
++        if value is not None and not isinstance(value, (int, float)):
++            errors.append(field)
++        if isinstance(value, (int, float)) and not 0.0 <= float(value) <= 1.0:
++            errors.append(field)
++    for field in ("delta_vs_tuned_sc", "frozen_candidate_delta"):
++        value = artifact.get(field)
++        if value is not None and not isinstance(value, (int, float)):
++            errors.append(field)
++    ci95 = artifact.get("paired_ci95")
++    if ci95 is not None and (
++        not isinstance(ci95, list)
++        or len(ci95) != 2
++        or not all(isinstance(value, (int, float)) for value in ci95)
++    ):
++        errors.append("paired_ci95")
++    return sorted(set(errors))
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    artifact_path: Path | None = None,
++    bootstrap_samples: int = 2000,
++    seed: int = DEFAULT_RANDOM_SEED,
++    now: Clock = time.perf_counter,
++    write: bool = True,
++) -> JsonDict:
++    root = Path(root)
++    artifact_path = Path(artifact_path) if artifact_path else root / RESULT_RELATIVE_PATH
++    start = float(now())
++    refresh_artifact = _read_json(root / EXP5058_RESULT_RELATIVE_PATH)
++    if (
++        not isinstance(refresh_artifact, dict)
++        or refresh_artifact.get("candidate_refresh_ready") is not True
++    ):
++        artifact = _base_artifact(
++            root=root,
++            artifact_path=artifact_path,
++            honest_verdict="blocked_candidate_refresh_unavailable",
++            refresh_artifact=refresh_artifact if isinstance(refresh_artifact, dict) else {},
++            duration_s=float(now()) - start,
++        )
++        if write:
++            write_json(artifact_path, artifact)
++        return artifact
++
++    refresh_rows_raw = _read_jsonl(_refresh_cache_path(root, refresh_artifact))
++    frozen_rows_raw = _read_jsonl(root / FROZEN_CANDIDATE_CACHE_RELATIVE_PATH)
++    refresh_question_ids = {_question_id(row) for row in refresh_rows_raw}
++    frozen_rows_raw = [row for row in frozen_rows_raw if _question_id(row) in refresh_question_ids]
++    refresh_rows = _build_eval_rows(refresh_rows_raw, frozen_rows=frozen_rows_raw, refreshed=True)
++    frozen_rows = _build_eval_rows(frozen_rows_raw, frozen_rows=frozen_rows_raw, refreshed=False)
++
++    scorer_artifact_raw = _read_json(root / EXP5045_RESULT_RELATIVE_PATH)
++    scorer_ok, scorer_reason = _scorer_gate(scorer_artifact_raw)
++    if not scorer_ok:
++        artifact = _base_artifact(
++            root=root,
++            artifact_path=artifact_path,
++            honest_verdict="blocked_powered_scorer_unavailable",
++            refresh_artifact=refresh_artifact,
++            scorer_artifact=scorer_artifact_raw if isinstance(scorer_artifact_raw, dict) else {},
++            candidate_refresh_used=bool(refresh_rows),
++            n_questions=len(refresh_rows),
++            scorer_source={
++                "blocked_reason": scorer_reason,
++                "source_artifact": (root / EXP5045_RESULT_RELATIVE_PATH).as_posix(),
++            },
++            duration_s=float(now()) - start,
++        )
++        if write:
++            write_json(artifact_path, artifact)
++        return artifact
++
++    scorer_artifact = dict(scorer_artifact_raw)
++    predictions = list(scorer_artifact["evaluation"]["verifier"]["predictions"])
++    scorer_source = {
++        "method": "cached_exp5045_powered_d1_selection_projection",
++        "source_artifact": (root / EXP5045_RESULT_RELATIVE_PATH).as_posix(),
++        "fallback_reason": (
++            "candidate-level LoRA energies are not stored in Exp5058 rows; "
++            "Exp5045 oracle-distinct selections are projected onto identical question order"
++        ),
++    }
++    refresh_metrics = _projection_metrics(
++        refresh_rows,
++        predictions,
++        seed=seed,
++        bootstrap_samples=bootstrap_samples,
++    )
++    frozen_metrics = _projection_metrics(
++        frozen_rows,
++        predictions,
++        seed=seed,
++        bootstrap_samples=bootstrap_samples,
++    )
++    verifier_is_oracle = bool(scorer_artifact.get("verifier_is_oracle"))
++    proper_win = _proper_musr_win(
++        refresh_metrics,
++        verifier_is_oracle=verifier_is_oracle,
++        candidate_refresh_used=True,
++    )
++    refresh_delta = float(refresh_metrics["delta_vs_tuned_sc"])
++    frozen_delta = float(frozen_metrics["delta_vs_tuned_sc"])
++    honest_verdict = (
++        f"success_d1_sota_refresh_audit_proper_musr_win_{_delta_label(refresh_delta)}"
++        if proper_win
++        else f"complete_d1_sota_refresh_audit_no_proper_win_{_delta_label(refresh_delta)}"
++    )
++    artifact = _base_artifact(
++        root=root,
++        artifact_path=artifact_path,
++        honest_verdict=honest_verdict,
++        refresh_artifact=refresh_artifact,
++        scorer_artifact=scorer_artifact,
++        candidate_refresh_used=True,
++        n_questions=int(refresh_metrics["n_questions"]),
++        scorer_source=scorer_source,
++        duration_s=float(now()) - start,
++    )
++    artifact.update(
++        {
++            "best_arm_available": True,
++            "accuracy": float(refresh_metrics["accuracy"]),
++            "tuned_sc_accuracy": float(refresh_metrics["tuned_sc_accuracy"]),
++            "delta_vs_tuned_sc": refresh_delta,
++            "paired_ci95": list(refresh_metrics["paired_ci95"]),
++            "mcnemar_p": float(refresh_metrics["mcnemar_p"]),
++            "headroom_present": bool(refresh_metrics["headroom_present"]),
++            "frozen_candidate_delta": frozen_delta,
++            "verifier_is_oracle": verifier_is_oracle,
++            "proper_musr_win": bool(proper_win),
++            "legacy_models_smoke_only": bool(refresh_artifact.get("legacy_models_smoke_only")),
++            "oracle_at_k": float(refresh_metrics["oracle_at_k"]),
++            "oracle_k": int(refresh_metrics["oracle_k"]),
++            "candidate_refresh_value_delta": round(refresh_delta - frozen_delta, 6),
++            "candidate_diversity_sensitivity": _diversity_sensitivity(
++                refresh_rows,
++                predictions,
++                full_metrics=refresh_metrics,
++                seed=seed,
++                bootstrap_samples=bootstrap_samples,
++            ),
++            "cached_scorer_fallback_used": True,
++            "scorer_source": scorer_source,
++            "refreshed_candidate_metrics": refresh_metrics,
++            "frozen_candidate_comparison": {
++                "accuracy": float(frozen_metrics["accuracy"]),
++                "tuned_sc_accuracy": float(frozen_metrics["tuned_sc_accuracy"]),
++                "delta_vs_tuned_sc": frozen_delta,
++                "paired_ci95": list(frozen_metrics["paired_ci95"]),
++                "mcnemar_p": float(frozen_metrics["mcnemar_p"]),
++                "oracle_at_k": float(frozen_metrics["oracle_at_k"]),
++                "headroom_present": bool(frozen_metrics["headroom_present"]),
++            },
++        }
++    )
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    if write:
++        write_json(artifact_path, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI entrypoint
++    _ = argv
++    artifact = run()
++    print(
++        json.dumps(
++            {
++                "result_path": str(REPO_ROOT / RESULT_RELATIVE_PATH),
++                "honest_verdict": artifact.get("honest_verdict"),
++                "accuracy": artifact.get("accuracy"),
++                "tuned_sc_accuracy": artifact.get("tuned_sc_accuracy"),
++                "delta_vs_tuned_sc": artifact.get("delta_vs_tuned_sc"),
++                "proper_musr_win": artifact.get("proper_musr_win"),
++            },
++            sort_keys=True,
++        )
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        print(f"schema_errors={errors}", file=sys.stderr)
++        return 1
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/results/experiment_5059_d1_sota_refresh_audit.json b/results/experiment_5059_d1_sota_refresh_audit.json
+new file mode 100644
+index 0000000000..1213e8bc27
+--- /dev/null
++++ b/results/experiment_5059_d1_sota_refresh_audit.json
+@@ -0,0 +1,1198 @@
++{
++  "accuracy": 0.665,
++  "best_arm_available": true,
++  "cached_scorer_fallback_used": true,
++  "candidate_diversity_sensitivity": {
++    "accuracy_shift_after_dedup": 0.0,
++    "deduplicated_answers": {
++      "accuracy": 0.665,
++      "delta_vs_tuned_sc": 0.08,
++      "duplicate_answer_rate": 0.0,
++      "mean_unique_answers_per_question": 1.815,
++      "n_candidates": 363,
++      "oracle_at_k": 0.585,
++      "tuned_sc_accuracy": 0.585,
++      "unique_answer_rate": 0.443526,
++      "unique_answers": 161
++    },
++    "delta_shift_after_dedup": 0.0,
++    "full_pool": {
++      "accuracy": 0.665,
++      "delta_vs_tuned_sc": 0.08,
++      "duplicate_answer_rate": 0.761967,
++      "mean_unique_answers_per_question": 1.815,
++      "n_candidates": 1525,
++      "oracle_at_k": 0.865,
++      "tuned_sc_accuracy": 0.585,
++      "unique_answer_rate": 0.105574,
++      "unique_answers": 161
++    }
++  },
++  "candidate_refresh_used": true,
++  "candidate_refresh_value_delta": 0.0,
++  "delta_vs_tuned_sc": 0.08,
++  "duration_s": 0.419143,
++  "experiment": "experiment_5059_d1_sota_refresh_audit",
++  "experiment_id": 5059,
++  "field_principles": {
++    "accuracy": {
++      "principle": "verifier-selected accuracy on the refreshed candidate pool."
++    },
++    "best_arm_available": {
++      "principle": "true iff the powered D1 scorer artifact is trained, non-skeleton, and oracle-distinct."
++    },
++    "candidate_refresh_used": {
++      "principle": "true only after Exp5058 candidate_refresh_ready=true and refreshed JSONL rows load."
++    },
++    "delta_vs_tuned_sc": {
++      "principle": "accuracy - tuned_sc_accuracy on refreshed candidates."
++    },
++    "frozen_candidate_delta": {
++      "principle": "apples-to-apples frozen .464 D1 delta, isolating scorer value from refresh value."
++    },
++    "headroom_present": {
++      "principle": "true iff oracle@K exceeds tuned-SC by the harness headroom gate."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; blocked refresh/scorer gates or complete/success D1 refresh audit."
++    },
++    "legacy_models_smoke_only": {
++      "principle": "true; legacy small models remain smoke-only and are never headline provenance."
++    },
++    "mcnemar_p": {
++      "principle": "McNemar exact p for verifier versus tuned-SC."
++    },
++    "model_specs": {
++      "principle": "mandated SOTA GGUF specs plus Exp5058 provenance and Exp5045 D1 scorer provenance."
++    },
++    "n_questions": {
++      "principle": "number of MuSR questions in the refreshed audit pool."
++    },
++    "paired_ci95": {
++      "principle": "paired bootstrap CI95 for verifier minus tuned-SC."
++    },
++    "proper_musr_win": {
++      "principle": "true only when refreshed D1 delta is positive with CI>0, McNemar p<0.05, headroom, and non-oracle scoring."
++    },
++    "tuned_sc_accuracy": {
++      "principle": "genuine tuned self-consistency accuracy on the same refreshed candidate pool."
++    },
++    "verifier_is_oracle": {
++      "principle": "false; cached scorer fallback never reads gold to select answers."
++    }
++  },
++  "frozen_candidate_comparison": {
++    "accuracy": 0.665,
++    "delta_vs_tuned_sc": 0.08,
++    "headroom_present": true,
++    "mcnemar_p": 0.076369,
++    "oracle_at_k": 0.865,
++    "paired_ci95": [
++      0.0,
++      0.165
++    ],
++    "tuned_sc_accuracy": 0.585
++  },
++  "frozen_candidate_delta": 0.08,
++  "headroom_present": true,
++  "honest_verdict": "complete_d1_sota_refresh_audit_no_proper_win_plus_0p080",
++  "legacy_models_smoke_only": true,
++  "mcnemar_p": 0.076369,
++  "model_specs": {
++    "exp5058_model_specs": {
++      "flagship_dense": {
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++      },
++      "flagship_moe": {
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++      },
++      "middle_moe": {
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "missing_diagnostic": null,
++        "preferred_quant": "Q4_K_M",
++        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++      }
++    },
++    "mandated_sota": {
++      "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
++      "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
++    },
++    "powered_d1_scorer": {
++      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5031_lora_ebm_scorer_musr_v3/epoch_1",
++      "scorer_trained": true,
++      "source": "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
++    }
++  },
++  "n_questions": 200,
++  "oracle_at_k": 0.865,
++  "oracle_k": 5,
++  "paired_ci95": [
++    0.0,
++    0.165
++  ],
++  "proper_musr_win": false,
++  "refreshed_candidate_metrics": {
++    "accuracy": 0.665,
++    "delta_vs_tuned_sc": 0.08,
++    "headroom_present": true,
++    "mcnemar_p": 0.076369,
++    "n_flips_possible": 56,
++    "n_questions": 200,
++    "oracle_at_k": 0.865,
++    "oracle_k": 5,
++    "paired_ci95": [
++      0.0,
++      0.165
++    ],
++    "paired_correct": {
++      "oracle_at_k": [
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1
++      ],
++      "tuned_self_consistency": [
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        0,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        0,
++        1,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        0,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        0,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        0,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        0,
++        1,
++        0,
++        0,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        0,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        0,
++        0,
++        1,
++        1,
++        1,
++        0,
++        0,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        0
++      ],
++      "verifier": [
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        0,
++        0,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        0,
++        0,
++        1,
++        0,
++        0,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        0,
++        0,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        0,
++        0,
++        1,
++        1,
++        1,
++        1,
++        0,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        0,
++        1,
++        0,
++        0,
++        0,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        0,
++        1,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        0,
++        1,
++        1,
++        0,
++        1,
++        0,
++        0,
++        1,
++        1,
++        1,
++        1,
++        0,
++        1,
++        0,
++        1,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1,
++        0,
++        1,
++        0,
++        0,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        1,
++        0,
++        0,
++        1,
++        1,
++        0,
++        1,
++        1,
++        1,
++        0,
++        1,
++        1
++      ]
++    },
++    "predictions": [
++      "Mackenzie",
++      "Ana",
++      "Rosemary",
++      "Rosemary",
++      "Amelia",
++      "Emma",
++      "Nelson",
++      "Nelson",
++      "Julia",
++      "Julia",
++      "Unity",
++      "Vivian",
++      "Milton",
++      "Emma",
++      "Lance",
++      "Harper",
++      "Roscoe",
++      "Roscoe",
++      "Angela",
++      "Roy",
++      "Ervin",
++      "Andrew",
++      "Brianna",
++      "Brianna",
++      "Autumn",
++      "Jay",
++      "Anthony",
++      "Max",
++      "Xochitl",
++      "Martin",
++      "Willard",
++      "Miles",
++      "Maria",
++      "Maria",
++      "Alicia",
++      "Paige",
++      "Karl",
++      "Jay",
++      "Fred",
++      "Imogen",
++      "Ricky",
++      "Ricky",
++      "Lillian",
++      "Lillian",
++      "Peyton",
++      "Isolde",
++      "Jacqueline",
++      "Jacqueline",
++      "Harvey",
++      "Harvey",
++      "Francis",
++      "Francis",
++      "Addison",
++      "Irving",
++      "Letti",
++      "Deborah",
++      "Daisy",
++      "Daisy",
++      "Wilfred",
++      "Wilfred",
++      "Marianne",
++      "Marianne",
++      "Melody",
++      "Penelope",
++      "Rosemary",
++      "Mia",
++      "Richard",
++      "Richard",
++      "Paige",
++      "Marianne",
++      "Isla",
++      "Isla",
++      "Alice",
++      "Alice",
++      "Russell",
++      "Alice",
++      "Zara",
++      "Catherine",
++      "Naomi",
++      "Lloyd",
++      "Bernard",
++      "Bernard",
++      "Stacey",
++      "Hector",
++      "Russell",
++      "Travis",
++      "Madelyn",
++      "Madelyn",
++      "Frederick",
++      "Jerome",
++      "Lucy",
++      "Clara",
++      "Madison",
++      "Madison",
++      "Erika",
++      "Erika",
++      "Gary",
++      "Dale",
++      "Addison",
++      "Octavia",
++      "Maurice",
++      "Rex",
++      "Randy",
++      "Isla",
++      "Frederick",
++      "Frederick",
++      "Eric",
++      "Priscilla",
++      "Nathaniel",
++      "Nathaniel",
++      "Aubrey",
++      "Aubrey",
++      "Aubrey",
++      "Aubrey",
++      "Abigail",
++      "Veronica",
++      "Sam",
++      "Sam",
++      "Wade",
++      "Wade",
++      "Taylor",
++      "Mack",
++      "Paul",
++      "Paul",
++      "Lillian",
++      "Lillian",
++      "Timothy",
++      "Adam",
++      "Troy",
++      "Troy",
++      "Francis",
++      "Camille",
++      "Jesse",
++      "Brian",
++      "Mya",
++      "Mya",
++      "Jim",
++      "Woodrow",
++      "Chester",
++      "Chester",
++      "Freya",
++      "Leona",
++      "Bella",
++      "Bella",
++      "Charlotte",
++      "Rachel",
++      "Hugo",
++      "Hugo",
++      "Sophia",
++      "Virgil",
++      "Bruce",
++      "Norris",
++      "Clarence",
++      "Ivy",
++      "Clayton",
++      "Madelyn",
++      "Alice",
++      "Alice",
++      "Everett",
++      "Bryan",
++      "Serenity",
++      "Naomi",
++      "Glenn",
++      "Tessa",
++      "Eddie",
++      "Eddie",
++      "Gloria",
++      "Gloria",
++      "Bethany",
++      "Bethany",
++      "Hailey",
++      "Hailey",
++      "Rex",
++      "Mandy",
++      "Ruben",
++      "Ruben",
++      "Meredith",
++      "Kinsley",
++      "Dennis",
++      "Dennis",
++      "Clara",
++      "Homer",
++      "Julius",
++      "Yolanda",
++      "Isabelle",
++      "Nicole",
++      "Dale",
++      "Letti",
++      "Zelda",
++      "Zelda",
++      "Danielle",
++      "Danielle",
++      "Warren",
++      "Warren",
++      "Tessa",
++      "Van",
++      "Elizabeth",
++      "Elizabeth",
++      "Priscilla",
++      "Xenia"
++    ],
++    "tuned_sc_accuracy": 0.585,
++    "tuned_self_consistency": {
++      "candidate_pool_counts": [
++        7,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        6,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        7,
++        8,
++        6,
++        7,
++        6,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8,
++        7,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8,
++        7,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8,
++        8,
++        7,
++        8,
++        8,
++        7,
++        7,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        7,
++        8,
++        7,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        6,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        6,
++        7,
++        7,
++        5,
++        8,
++        8,
++        8,
++        8,
++        7,
++        6,
++        8,
++        6,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8,
++        7,
++        7,
++        8,
++        7,
++        8,
++        8,
++        8,
++        7,
++        7,
++        8,
++        8,
++        8,
++        7,
++        8,
++        5,
++        8,
++        8,
++        8,
++        8,
++        6,
++        5,
++        7,
++        8,
++        8,
++        7,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8,
++        8,
++        7,
++        6,
++        8,
++        6,
++        8,
++        8,
++        8,
++        6,
++        8,
++        8,
++        8,
++        8,
++        8,
++        7,
++        8,
++        8,
++        7,
++        7,
++        8,
++        8,
++        8,
++        8,
++        7,
++        6,
++        7,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        8,
++        6,
++        8,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        7,
++        8,
++        8,
++        8,
++        8
++      ],
++      "config": {
++        "k": 1,
++        "temperature": "cached"
++      },
++      "k_sweep": {
++        "1": 0.585,
++        "3": 0.53,
++        "5": 0.575
++      }
++    }
++  },
++  "reproducibility_checksum": "sha256:f76aad753d42b3d8c2137e26e0d42e15bae2d455df5b0df800b8f753b52a23f2",
++  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5059_d1_sota_refresh_audit.json",
++  "schema": "carnot.experiment_5059_d1_sota_refresh_audit.v1",
++  "scorer_source": {
++    "fallback_reason": "candidate-level LoRA energies are not stored in Exp5058 rows; Exp5045 oracle-distinct selections are projected onto identical question order",
++    "method": "cached_exp5045_powered_d1_selection_projection",
++    "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json"
++  },
++  "spec_refs": [
++    "REQ-VERIFY-5059",
++    "SCENARIO-VERIFY-5059"
++  ],
++  "tuned_sc_accuracy": 0.585,
++  "upstream_artifacts": {
++    "exp5045": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
++    "exp5058": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.json",
++    "frozen_candidates": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl"
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/tests/python/test_experiment_5059_d1_sota_refresh_audit.py b/tests/python/test_experiment_5059_d1_sota_refresh_audit.py
+new file mode 100644
+index 0000000000..b63dbec358
+--- /dev/null
++++ b/tests/python/test_experiment_5059_d1_sota_refresh_audit.py
+@@ -0,0 +1,314 @@
++"""Tests for Exp 5059 D1 SOTA refresh audit.
++
++Spec refs: REQ-VERIFY-5059, SCENARIO-VERIFY-5059.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5059_d1_sota_refresh_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
++        encoding="utf-8",
++    )
++
++
++def _question_fixture() -> list[tuple[str, str, list[str], list[str]]]:
++    return [
++        ("fixture:0", "A", ["A", "B"], ["B", "A", "A"]),
++        ("fixture:1", "C", ["C", "D"], ["D", "C", "D"]),
++        ("fixture:2", "E", ["E", "F"], ["E", "F", "F"]),
++        ("fixture:3", "G", ["G", "H"], ["H", "G", "H"]),
++    ]
++
++
++def _frozen_rows() -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for question_index, (question_id, gold, choices, answers) in enumerate(_question_fixture()):
++        for candidate_index, answer in enumerate(answers):
++            rows.append(
++                {
++                    "schema": "carnot.shared_logprob_candidate_cache_v2.candidate_row.v1",
++                    "candidate_id": f"{question_id}/cached-{candidate_index}",
++                    "question_id": question_id,
++                    "question_index": question_index,
++                    "candidate_index": candidate_index,
++                    "corpus": "MuSR/murder_mysteries",
++                    "question": "Who is the most likely murderer?",
++                    "context": "Small fixture case.",
++                    "choices": choices,
++                    "answer": answer,
++                    "gold": gold,
++                    "source": "fixture_frozen_464_cache",
++                }
++            )
++    return rows
++
++
++def _refreshed_rows() -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for frozen in _frozen_rows():
++        answer = str(frozen["answer"])
++        question_id = str(frozen["question_id"])
++        candidate_index = int(frozen["candidate_index"])
++        rows.append(
++            {
++                "schema": "carnot.experiment_5058_sota_candidate_refresh_inwriting.row.v1",
++                "row_id": f"{question_id}/sota5058-{candidate_index:04d}",
++                "question_id": question_id,
++                "question_index": int(frozen["question_index"]),
++                "candidate_index": candidate_index,
++                "corpus": "MuSR/murder_mysteries",
++                "question": frozen["question"],
++                "choices": list(frozen["choices"]),
++                "answer_text": answer,
++                "parsed_answer": answer,
++                "parse_status": "parsed",
++                "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++                "model_role": "flagship_moe",
++                "model_path": "/models/qwen.gguf",
++                "legacy_model_used": False,
++                "source_provenance": {
++                    "source": "frozen_464_musr_candidate_cache",
++                    "source_candidate_id": frozen["candidate_id"],
++                    "source_answer_text": answer,
++                },
++            }
++        )
++    return rows
++
++
++def _refresh_artifact(root: Path, *, ready: bool = True) -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_5058_sota_candidate_refresh_inwriting.v1",
++        "honest_verdict": "complete_sota_candidate_refresh_ready_d1_d6"
++        if ready
++        else "complete_sota_candidate_refresh_not_ready_d1_d6",
++        "candidate_refresh_ready": ready,
++        "candidate_cache_path": (root / mod.EXP5058_CACHE_RELATIVE_PATH).as_posix(),
++        "n_questions": 4 if ready else 0,
++        "n_candidates": 12 if ready else 0,
++        "parse_rate": 1.0 if ready else 0.0,
++        "duplicate_rate": 1.0 if ready else 0.0,
++        "answer_diversity": {
++            "unique_answers": 8 if ready else 0,
++            "unique_answer_rate": 0.666667 if ready else 0.0,
++            "mean_unique_answers_per_question": 2.0 if ready else 0.0,
++        },
++        "legacy_models_smoke_only": True,
++        "model_specs": {
++            "flagship_moe": {"hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"},
++            "flagship_dense": {"hf_id": "unsloth/gemma-4-31B-it-GGUF"},
++            "middle_moe": {"hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"},
++        },
++    }
++
++
++def _powered_scorer_artifact(*, skeleton: bool = False) -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_5045_powered_lora_ebm_eorm_musr.v1",
++        "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
++        "powered_scorer_available": not skeleton,
++        "scorer_trained": not skeleton,
++        "train_loss": None if skeleton else 0.123,
++        "n_pairs": 0 if skeleton else 64,
++        "duration_evidence_s": 0.0 if skeleton else 90.0,
++        "checkpoint_path": "" if skeleton else "/checkpoints/d1/epoch_1",
++        "verifier_is_oracle": False,
++        "headroom_present": True,
++        "evaluation": {
++            "verifier": {"predictions": ["A", "C", "E", "H"]},
++            "paired_correct": {"verifier": [1, 1, 1, 0]},
++        },
++    }
++
++
++def _setup_ready_root(tmp_path: Path, *, skeleton: bool = False) -> Path:
++    root = tmp_path / "root"
++    _write_json(root / mod.EXP5058_RESULT_RELATIVE_PATH, _refresh_artifact(root))
++    _write_jsonl(root / mod.EXP5058_CACHE_RELATIVE_PATH, _refreshed_rows())
++    _write_jsonl(root / mod.FROZEN_CANDIDATE_CACHE_RELATIVE_PATH, _frozen_rows())
++    _write_json(
++        root / mod.EXP5045_RESULT_RELATIVE_PATH, _powered_scorer_artifact(skeleton=skeleton)
++    )
++    return root
++
++
++def test_req_verify_5059_spec_declares_refresh_audit_contract() -> None:
++    """REQ-VERIFY-5059: OpenSpec anchors the Exp5059 audit artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-5059",
++        "SCENARIO-VERIFY-5059",
++        "experiment_5059_d1_sota_refresh_audit.py",
++        "results/experiment_5059_d1_sota_refresh_audit.json",
++        "blocked_candidate_refresh_unavailable",
++        "frozen_candidate_delta",
++        "candidate_diversity_sensitivity",
++        "proper_musr_win",
++        "legacy_models_smoke_only",
++    ):
++        assert marker in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_verify_5059_blocks_before_scoring_when_refresh_unavailable(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5059: refresh gate failure blocks frozen promotion."""
++
++    root = tmp_path / "root"
++    _write_json(root / mod.EXP5058_RESULT_RELATIVE_PATH, _refresh_artifact(root, ready=False))
++
++    artifact = mod.run(root=root, artifact_path=tmp_path / "out.json", write=True)
++
++    assert artifact["honest_verdict"] == "blocked_candidate_refresh_unavailable"
++    assert artifact["candidate_refresh_used"] is False
++    assert artifact["best_arm_available"] is False
++    assert artifact["proper_musr_win"] is False
++    assert artifact["accuracy"] is None
++    assert artifact["frozen_candidate_delta"] is None
++    assert mod.artifact_schema_errors(artifact) == []
++    assert json.loads((tmp_path / "out.json").read_text(encoding="utf-8")) == artifact
++
++
++def test_scenario_verify_5059_reports_refresh_metrics_and_frozen_comparison(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5059: refreshed audit isolates scorer and refresh value."""
++
++    root = _setup_ready_root(tmp_path)
++
++    artifact = mod.run(
++        root=root,
++        artifact_path=tmp_path / "out.json",
++        bootstrap_samples=100,
++        write=True,
++    )
++
++    assert artifact["honest_verdict"].startswith("complete_d1_sota_refresh_audit_no_proper_win")
++    assert artifact["candidate_refresh_used"] is True
++    assert artifact["best_arm_available"] is True
++    assert artifact["legacy_models_smoke_only"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["n_questions"] == 4
++    assert artifact["accuracy"] == pytest.approx(0.75)
++    assert artifact["tuned_sc_accuracy"] == pytest.approx(0.25)
++    assert artifact["delta_vs_tuned_sc"] == pytest.approx(0.5)
++    assert artifact["oracle_at_k"] == pytest.approx(1.0)
++    assert artifact["headroom_present"] is True
++    assert artifact["mcnemar_p"] == pytest.approx(0.5)
++    assert artifact["proper_musr_win"] is False
++    assert artifact["frozen_candidate_delta"] == pytest.approx(0.5)
++    assert artifact["candidate_refresh_value_delta"] == pytest.approx(0.0)
++    assert artifact["cached_scorer_fallback_used"] is True
++    assert artifact["scorer_source"]["source_artifact"].endswith(
++        "experiment_5045_powered_lora_ebm_eorm_musr.json"
++    )
++    assert artifact["candidate_diversity_sensitivity"]["full_pool"][
++        "unique_answer_rate"
++    ] == pytest.approx(0.666667)
++    assert artifact["candidate_diversity_sensitivity"]["deduplicated_answers"]["n_candidates"] == 8
++    assert mod.artifact_schema_errors(artifact) == []
++    assert json.loads((tmp_path / "out.json").read_text(encoding="utf-8")) == artifact
++
++
++def test_skeleton_powered_scorer_blocks_instead_of_headlining(tmp_path: Path) -> None:
++    """REQ-VERIFY-5059: skeleton scorer evidence cannot become a headline."""
++
++    root = _setup_ready_root(tmp_path, skeleton=True)
++
++    artifact = mod.run(root=root, artifact_path=tmp_path / "out.json", write=True)
++
++    assert artifact["honest_verdict"] == "blocked_powered_scorer_unavailable"
++    assert artifact["candidate_refresh_used"] is True
++    assert artifact["best_arm_available"] is False
++    assert artifact["proper_musr_win"] is False
++    assert artifact["scorer_source"]["blocked_reason"] == "scorer_trained_false"
++    assert mod.artifact_schema_errors(artifact) == []
++    assert json.loads((tmp_path / "out.json").read_text(encoding="utf-8")) == artifact
++
++
++def test_scorer_gate_and_helper_edge_cases(tmp_path: Path) -> None:
++    """REQ-VERIFY-5059: helper gates fail closed on malformed inputs."""
++
++    valid = _powered_scorer_artifact()
++    cases = [
++        (None, "missing_or_malformed_exp5045_artifact"),
++        (dict(valid, train_loss=None), "train_loss_missing"),
++        (dict(valid, n_pairs=0), "n_pairs_zero"),
++        (dict(valid, checkpoint_path=""), "checkpoint_path_missing"),
++        (dict(valid, verifier_is_oracle=True), "verifier_is_oracle"),
++        (dict(valid, evaluation={"verifier": {"predictions": []}}), "cached_predictions_missing"),
++    ]
++    for payload, expected_reason in cases:
++        ok, reason = mod._scorer_gate(payload)
++        assert ok is False
++        assert reason == expected_reason
++
++    blank_jsonl = tmp_path / "blank.jsonl"
++    blank_jsonl.write_text("\n{}\n", encoding="utf-8")
++    assert mod._read_jsonl(blank_jsonl) == [{}]
++    assert mod._number(True) is None
++    assert mod._number("bad") is None
++    assert mod._question_index({"question_index": "bad"}) == 0
++    assert mod._candidate_index({"candidate_index": "bad"}) == 0
++    assert mod._refresh_cache_path(tmp_path, {}) == tmp_path / mod.EXP5058_CACHE_RELATIVE_PATH
++    assert mod._delta_label(None) == "unknown"
++    assert (
++        mod._build_eval_rows(
++            [{"question_id": "missing-gold", "parsed_answer": "A"}],
++            frozen_rows=_frozen_rows(),
++            refreshed=True,
++        )
++        == []
++    )
++    rows = mod._build_eval_rows(_refreshed_rows(), frozen_rows=_frozen_rows(), refreshed=True)
++    with pytest.raises(ValueError, match="cached scorer predictions length"):
++        mod._projection_metrics(rows, [], seed=1, bootstrap_samples=2)
++
++
++def test_artifact_schema_errors_report_malformed_required_fields(tmp_path: Path) -> None:
++    """REQ-VERIFY-5059: schema validation catches malformed audit artifacts."""
++
++    root = _setup_ready_root(tmp_path)
++    artifact = mod.run(root=root, artifact_path=tmp_path / "out.json", write=False)
++
++    cases = [
++        (lambda a: (a.pop("honest_verdict"), a)[1], "honest_verdict"),
++        (lambda a: dict(a, schema="wrong"), "schema"),
++        (lambda a: dict(a, spec_refs=["WRONG"]), "spec_refs"),
++        (lambda a: dict(a, model_specs=[]), "model_specs"),
++        (lambda a: dict(a, candidate_refresh_used="yes"), "candidate_refresh_used"),
++        (lambda a: dict(a, best_arm_available="yes"), "best_arm_available"),
++        (lambda a: dict(a, verifier_is_oracle=True), "verifier_is_oracle"),
++        (lambda a: dict(a, legacy_models_smoke_only=False), "legacy_models_smoke_only"),
++        (lambda a: dict(a, n_questions=-1), "n_questions"),
++        (lambda a: dict(a, paired_ci95=[0.0]), "paired_ci95"),
++        (lambda a: dict(a, accuracy="bad"), "accuracy"),
++        (lambda a: dict(a, accuracy=2.0), "accuracy"),
++        (lambda a: dict(a, delta_vs_tuned_sc="bad"), "delta_vs_tuned_sc"),
++    ]
++    for mutate, expected in cases:
++        assert expected in mod.artifact_schema_errors(mutate(dict(artifact)))
+-- 
+2.55.0
+

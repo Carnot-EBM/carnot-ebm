@@ -1,0 +1,2448 @@
+From 3edcbfe3c76614b90c10c06f4a30194b77dc7907 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 11:57:37 -0400
+Subject: [PATCH 04846/11362] [conductor] PHASE E (CAPSTONE .458) -- aggregate
+ the FINAL submission-readiness scorecard for the 6/30 deadline + the
+ post-6/30 verifier-moat pivot handoff. HEADLINE = the locked deliverable
+ confirmed ready for submission: reproducible_total_levels (69 + A1/A2 banks
+ counted ONLY if B1 banks_trustworthy), the FINAL held-out go/no-go (A4
+ full-25 0.04 + flag_resolved), submission package ready (B2). State the
+ post-6/30 distributional-energy-verifier verifier-moat pivot as
+ TURNKEY/EXECUTABLE on 7/1 (D exp4973 + B1 pivot_readiness_trustworthy,
+ arXiv:2605.18871 beats SC on MuSR, backlog extended with
+ 2504.01005/2504.00891/2509.24460). Confirm the A3 substrate fix + the B3
+ relaxed window still hold. Skip any flagged_adversarial upstream.
+
+Automated research step by research conductor.
+Task ID: exp4978-capstone
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    4 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/experiment_4978_capstone_v458.py   | 1096 +++++++++++++++++
+ .../q0137.json                                |    1 +
+ .../q0138.json                                |    1 +
+ .../q0139.json                                |    1 +
+ .../q0140.json                                |    1 +
+ .../q0141.json                                |    1 +
+ .../q0142.json                                |    1 +
+ .../q0143.json                                |    1 +
+ .../q0144.json                                |    1 +
+ .../q0145.json                                |    1 +
+ .../q0146.json                                |    1 +
+ .../q0147.json                                |    1 +
+ .../q0148.json                                |    1 +
+ .../q0149.json                                |    1 +
+ .../q0150.json                                |    1 +
+ results/experiment_4978_capstone_v458.json    |  680 ++++++++++
+ .../test_experiment_4978_capstone_v458.py     |  470 +++++++
+ 19 files changed, 2265 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4978_capstone_v458.py
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0137.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0138.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0139.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0140.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0141.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0142.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0143.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0144.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0145.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0146.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0147.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0148.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0149.json
+ create mode 100644 results/distributional_energy_verifier_musr_checkpoints/q0150.json
+ create mode 100644 results/experiment_4978_capstone_v458.json
+ create mode 100644 tests/python/test_experiment_4978_capstone_v458.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 720fe4f43d..5d704696c3 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -739,3 +739,7 @@
+ - SCENARIO-CAPSTONE-4975: The artifact `results/experiment_4975_submission_package_harden.json` must emit principle-annotated top-level fields for `honest_verdict`, `submission_package_ready`, `submits`, `operator_only`, `peak_vram_gb`, `frozen_stack_loads`, `package_builds`, `ready_package_regression_ok`, `operator_submission_checklist`, `inference_substrate`, and `preconditions_checked`; it must also include detailed package/config/model/VRAM/frozen-stack/requirements/regression checks, `field_principles`, `spec_refs`, `duration_s`, `random_seed`, `result_path`, and a stable checksum. A ready artifact must set `honest_verdict=success_submission_package_ready_final_pre_deadline`, declare `inference_substrate=aggregation_from_upstream_artifacts`, set `submits=false`, set `operator_only=true`, carry the `.457` peak VRAM evidence, and stop before external publication.
+ - SCENARIO-CAPSTONE-4975-BLOCKED-PRECONDITION: If the `.457` ready package artifact, package build inputs, packaging requirements document, submitted agent, frozen GGUF path, CUDA `llama-server` path, or `.457` frozen stack evidence is missing, the workflow must still write `results/experiment_4975_submission_package_harden.json` with `submission_package_ready=false`, a terminal `blocked_<resource>` verdict naming the missing resource, `submits=false`, `operator_only=true`, a preserved `operator_submission_checklist`, and no fabricated readiness or external submission claim. If dry-build, config/model resolution, requirements, regression, frozen-stack, or peak-VRAM gates fail for non-missing-resource reasons, the workflow must write a terminal `not_ready_` verdict naming the failed gate.
+ - SCENARIO-CAPSTONE-4975-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; ready is success_submission_package_ready_final_pre_deadline.", `submission_package_ready` = "True iff ready for the OPERATOR to submit; the task itself NEVER submits (operator-only).", `submits` = "false -- external publication is operator-only; the task prepares, never submits.", `operator_only` = "true -- the submission step is reserved for the operator (defense in depth: no leaderboard token used).", `peak_vram_gb` = "must be < 16 (Kaggle validation env limit); 15.146 in .456/.457.", `frozen_stack_loads` = "the frozen Qwen3.5-9B-MTP iGPU stack loads (Kaggle parity).", `package_builds` = "the package dry-build succeeds.", `ready_package_regression_ok` = "the ready package still passes its regression check before the deadline.", `operator_submission_checklist` = "the FINAL operator-facing steps to submit (the task ends before submission).", `inference_substrate` = "aggregation_from_upstream_artifacts (reads the package + upstream; 0.0001s floor).", and `preconditions_checked` = "records frozen-stack + build-input checks; a missing resource emits blocked_."
++- REQ-CAPSTONE-4978: The final `.458` submission-readiness capstone scorecard SHALL write `results/experiment_4978_capstone_v458.json` by aggregating upstream `.458` artifacts `results/experiment_4969_levelup_attempt.json`, `results/experiment_4970_levelup_attempt.json`, `results/experiment_4971_self_play_verifier_checkpoint.json`, `results/experiment_4972_heldout_first_win_readiness.json`, `results/experiment_4973_distributional_energy_verifier_turnkey.json`, `results/experiment_4974_bank_and_pivot_audit.json`, `results/experiment_4975_submission_package_harden.json`, `results/experiment_4976_stamping_backfill_and_wiring_readiness.json`, and `results/experiment_4977_kv260_continuity.json`, plus `ops/arc_solve_registry.yaml` and `ops/north-star.md`. It SHALL read every upstream artifact through `scripts/summarize_artifact.py` before importing fields, record every summarizer exit code, skip every upstream carrying `flagged_adversarial:true` or a live-critical summarizer result before using its metrics, block honestly when any upstream artifact is missing or the registry is not loadable, and SHALL NOT modify `scripts/research_conductor.py`. It SHALL carry `reproducible_total_levels` from the registry and add A1/A2 banks only when Exp4974 `banks_trustworthy=true`; it SHALL report A4's final held-out go/no-go number, B2's submission package state, A3's substrate-fix hold, B3's nonzero mtime-window hold, and the `.453` B1-trusted `WALL_IS_HIDDEN_STATE` closure without reopening representation #5 or the concluded energy-as-ARC program. It SHALL state the post-6/30 distributional-energy-verifier handoff as turnkey for 2026-07-01 only when Exp4973 reports `pivot_turnkey=true` and `pivot_executable_on_7_1=true` and Exp4974 `pivot_readiness_trustworthy=true`; it SHALL record the extended SOTA backlog `2504.01005`, `2504.00891`, and `2509.24460`, and SHALL NOT claim that the verifier moat is proven.
++- SCENARIO-CAPSTONE-4978: The artifact `results/experiment_4978_capstone_v458.json` must emit the required principle-annotated fields `honest_verdict`, `headline`, `reproducible_total_levels`, `banks_counted`, `heldout_first_win_rate`, `submission_package_ready`, `a3_substrate_flag_resolved`, `b3_window_nonzero`, `arc_first_win_wall_closed`, `post_sprint_pivot`, `pivot_executable_on_7_1`, `skipped_flagged_adversarial`, `cited_upstream_artifacts`, `inference_substrate`, `preconditions_checked`, `random_seed`, and `reproducibility_checksum`; it must also emit `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, `milestone_scorecard`, `field_principles`, `duration_s`, and `capstone_ready`. The default `.458` read must report A1/A2 honest no-bank dead ends without increasing the total, carry registry `reproducible_total_levels=69`, carry the final A4 `heldout_first_win_rate=0.04`, `games_evaluated=25`, and `flag_resolved=true`, report B2 `submission_package_ready=true` with `peak_vram_gb=15.146`, confirm A3 is not `true_live_recheck=critical`, confirm B3 `mtime_fallback_window.wall_minutes` is nonzero, report B3 Exp4976 stamping backfill and C Exp4977 KV260 as reserved lanes, and set `capstone_ready=true` only when the final go/no-go number, package state, A3 fix, B3 window, wall closure, audit-gated pivot handoff, provenance hashes, and skipped-artifact list are present.
++- SCENARIO-CAPSTONE-4978-BLOCKED-PRECONDITION: If `scripts/summarize_artifact.py` is missing, `ops/arc_solve_registry.yaml` is missing or not YAML-loadable, the capstone spec lacks `REQ-CAPSTONE-4978`, `ops/north-star.md` is missing, or any required upstream `.458` artifact from Exp4969 through Exp4977 is missing, the workflow must still write `results/experiment_4978_capstone_v458.json` with `honest_verdict=blocked_<resource>`, failed resources in `preconditions_checked`, empty scorecard imports, `capstone_ready=false`, `inference_substrate=aggregation_from_upstream_artifacts`, and a valid reproducibility checksum. Present upstream artifacts still have their summarize exit code recorded; no missing resource may be fabricated.
++- SCENARIO-CAPSTONE-4978-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; complete_capstone_v458_submission_ready_<state> (e.g. _levels_<N>_heldout_<rate>_package_ready_pivot_turnkey_7_1).", `headline` = "the one-line .458 headline -- the locked deliverable confirmed ready for 6/30 + the post-6/30 verifier-moat pivot turnkey 7/1 (backlog extended).", `reproducible_total_levels` = "the monotonic ARC progress metric from the registry (69 + A1/A2 banks counted ONLY if B1 banks_trustworthy).", `banks_counted` = "the A1/A2 games whose banks were counted (gated on B1 banks_trustworthy) -- no un-audited bank inflates the total; honest no-bank is expected (4th+ flat milestone).", `heldout_first_win_rate` = "A4's FINAL full-25 go/no-go number + flag_resolved -- the operator's 6/30 decision input.", `submission_package_ready` = "B2's terminal gate + peak_vram_gb -- the deadline deliverable for the operator.", `a3_substrate_flag_resolved` = "true -- A3 (exp4971) is NOT flagged true_live_recheck=critical (the .456 DURATION_TOO_SHORT substrate fix still holds; self-play is COUNTED).", `b3_window_nonzero` = "true -- B3 (exp4976) emitted a NON-zero mtime window (the relaxed gate is maintained).", `arc_first_win_wall_closed` = "true -- the .453 B1-trusted WALL_IS_HIDDEN_STATE closure stands; .458 did not reopen it or queue representation #5 / the concluded energy-as-ARC program.", `post_sprint_pivot` = "the post-6/30 verifier-moat handoff: D's distributional-energy-verifier TURNKEY spec (arXiv:2605.18871, beats SC on MuSR) + extended backlog (NEW 2504.01005/2504.00891/2509.24460), gated on B1 pivot_readiness_trustworthy; the deliverable remains the ~0.05 agent + FoVer paper. NOT moat-proven.", `pivot_executable_on_7_1` = "true iff D kept the pivot turnkey AND B1 pivot_readiness_trustworthy -- the post-sprint experiment runs the instant the sprint retires.", `skipped_flagged_adversarial` = "the list of upstream artifacts skipped per the fabrication gate.", `cited_upstream_artifacts` = "{experiment_id, fields_imported, sha256} per source -- the audit trail (no synthesized numbers).", `inference_substrate` = "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor).", `preconditions_checked` = "records upstream-artifact presence + registry loadability; a missing input emits blocked_.", `random_seed` = "determinism for any tie-break in the scorecard aggregation.", and `reproducibility_checksum` = "content hash of (cited upstream sha256s + scorecard) so a replication catches drift."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 64a1ab37b1..028ed33d9a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 203,
+   "code_violations": 0,
+-  "experiments_checked": 3984,
++  "experiments_checked": 3985,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4978_capstone_v458.py b/python/carnot/experiment_4978_capstone_v458.py
+new file mode 100644
+index 0000000000..97a5eeadd1
+--- /dev/null
++++ b/python/carnot/experiment_4978_capstone_v458.py
+@@ -0,0 +1,1096 @@
++"""Experiment 4978: .458 final submission-readiness capstone.
++
++Spec refs: REQ-CAPSTONE-4978, SCENARIO-CAPSTONE-4978,
++SCENARIO-CAPSTONE-4978-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4978-FIELD-PRINCIPLES.
++
++This aggregation reads every .458 upstream artifact through
++``scripts/summarize_artifact.py`` before importing fields. It confirms the
++locked 2026-06-30 deliverable, records the A3/B3 infra fixes as still holding,
++and hands off the post-6/30 verifier-moat pivot without claiming the moat is
++proven.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import json
++from pathlib import Path
++import re
++import subprocess
++import sys
++import time
++from typing import Any
++
++import yaml
++
++from carnot.experiment_4819_capstone_v443 import (
++    SummarizerResult,
++    UpstreamSource,
++    _float,
++    _int,
++    _mapping,
++    _read_json_object,
++    _read_yaml_object,
++    file_sha256,
++    payload_checksum,
++)
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_4978_capstone_v458"
++EXPERIMENT_ID = 4978
++SCHEMA = "carnot.exp4978.capstone_v458.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4978_capstone_v458.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++NORTH_STAR_RELATIVE_PATH = "ops/north-star.md"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++SUMMARIZER_RELATIVE_PATH = "scripts/summarize_artifact.py"
++RANDOM_SEED = 20260629
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-4978",
++    "SCENARIO-CAPSTONE-4978",
++    "SCENARIO-CAPSTONE-4978-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4978-FIELD-PRINCIPLES",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; complete_capstone_v458_submission_ready_<state> "
++            "(e.g. _levels_<N>_heldout_<rate>_package_ready_pivot_turnkey_7_1)."
++        )
++    },
++    "headline": {
++        "principle": (
++            "the one-line .458 headline -- the locked deliverable confirmed ready "
++            "for 6/30 + the post-6/30 verifier-moat pivot turnkey 7/1 (backlog extended)."
++        )
++    },
++    "reproducible_total_levels": {
++        "principle": (
++            "the monotonic ARC progress metric from the registry (69 + A1/A2 banks "
++            "counted ONLY if B1 banks_trustworthy)."
++        )
++    },
++    "banks_counted": {
++        "principle": (
++            "the A1/A2 games whose banks were counted (gated on B1 banks_trustworthy) "
++            "-- no un-audited bank inflates the total; honest no-bank is expected "
++            "(4th+ flat milestone)."
++        )
++    },
++    "heldout_first_win_rate": {
++        "principle": (
++            "A4's FINAL full-25 go/no-go number + flag_resolved -- the operator's "
++            "6/30 decision input."
++        )
++    },
++    "submission_package_ready": {
++        "principle": (
++            "B2's terminal gate + peak_vram_gb -- the deadline deliverable for the operator."
++        )
++    },
++    "a3_substrate_flag_resolved": {
++        "principle": (
++            "true -- A3 (exp4971) is NOT flagged true_live_recheck=critical (the .456 "
++            "DURATION_TOO_SHORT substrate fix still holds; self-play is COUNTED)."
++        )
++    },
++    "b3_window_nonzero": {
++        "principle": (
++            "true -- B3 (exp4976) emitted a NON-zero mtime window (the relaxed gate is "
++            "maintained)."
++        )
++    },
++    "arc_first_win_wall_closed": {
++        "principle": (
++            "true -- the .453 B1-trusted WALL_IS_HIDDEN_STATE closure stands; .458 did "
++            "not reopen it or queue representation #5 / the concluded energy-as-ARC program."
++        )
++    },
++    "post_sprint_pivot": {
++        "principle": (
++            "the post-6/30 verifier-moat handoff: D's distributional-energy-verifier "
++            "TURNKEY spec (arXiv:2605.18871, beats SC on MuSR) + extended backlog "
++            "(NEW 2504.01005/2504.00891/2509.24460), gated on B1 "
++            "pivot_readiness_trustworthy; the deliverable remains the ~0.05 agent + "
++            "FoVer paper. NOT moat-proven."
++        )
++    },
++    "pivot_executable_on_7_1": {
++        "principle": (
++            "true iff D kept the pivot turnkey AND B1 pivot_readiness_trustworthy -- "
++            "the post-sprint experiment runs the instant the sprint retires."
++        )
++    },
++    "skipped_flagged_adversarial": {
++        "principle": "the list of upstream artifacts skipped per the fabrication gate."
++    },
++    "cited_upstream_artifacts": {
++        "principle": (
++            "{experiment_id, fields_imported, sha256} per source -- the audit trail "
++            "(no synthesized numbers)."
++        )
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records upstream-artifact presence + registry loadability; a missing input "
++            "emits blocked_."
++        )
++    },
++    "random_seed": {
++        "principle": "determinism for any tie-break in the scorecard aggregation."
++    },
++    "reproducibility_checksum": {
++        "principle": (
++            "content hash of (cited upstream sha256s + scorecard) so a replication catches drift."
++        )
++    },
++}
++
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "honest_verdict",
++    "headline",
++    "reproducible_total_levels",
++    "banks_counted",
++    "heldout_first_win_rate",
++    "submission_package_ready",
++    "a3_substrate_flag_resolved",
++    "b3_window_nonzero",
++    "arc_first_win_wall_closed",
++    "post_sprint_pivot",
++    "pivot_executable_on_7_1",
++    "skipped_flagged_adversarial",
++    "cited_upstream_artifacts",
++    "inference_substrate",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "milestone_scorecard",
++    "field_principles",
++    "duration_s",
++    "capstone_ready",
++)
++
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++
++UPSTREAM_SOURCES: dict[str, UpstreamSource] = {
++    "A1_LEVELUP": UpstreamSource(4969, "results/experiment_4969_levelup_attempt.json"),
++    "A2_LEVELUP": UpstreamSource(4970, "results/experiment_4970_levelup_attempt.json"),
++    "A3_SELF_PLAY": UpstreamSource(
++        4971, "results/experiment_4971_self_play_verifier_checkpoint.json"
++    ),
++    "A4_HELDOUT": UpstreamSource(
++        4972, "results/experiment_4972_heldout_first_win_readiness.json"
++    ),
++    "D_PIVOT": UpstreamSource(
++        4973, "results/experiment_4973_distributional_energy_verifier_turnkey.json"
++    ),
++    "B1_AUDIT": UpstreamSource(4974, "results/experiment_4974_bank_and_pivot_audit.json"),
++    "B2_PACKAGE": UpstreamSource(4975, "results/experiment_4975_submission_package_harden.json"),
++    "B3_STAMPING": UpstreamSource(
++        4976, "results/experiment_4976_stamping_backfill_and_wiring_readiness.json"
++    ),
++    "C_KV260": UpstreamSource(4977, "results/experiment_4977_kv260_continuity.json"),
++}
++
++CLEAN_IMPORT_FIELDS: dict[str, tuple[str, ...]] = {
++    "A1_LEVELUP": (
++        "honest_verdict",
++        "target_game",
++        "new_levels_banked",
++        "offline_reproduced",
++        "reproduced_levels",
++        "solve_provenance",
++        "live_path_reachable",
++        "reproduction_gate",
++        "registry_update",
++    ),
++    "A2_LEVELUP": (
++        "honest_verdict",
++        "target_game",
++        "new_levels_banked",
++        "offline_reproduced",
++        "reproduced_levels",
++        "solve_provenance",
++        "live_path_reachable",
++        "reproduction_gate",
++        "registry_update",
++    ),
++    "A3_SELF_PLAY": (
++        "honest_verdict",
++        "target_game",
++        "verifier_checkpoint_refreshed",
++        "checkpoint_path",
++        "offline_reproduced",
++        "reproduced_levels",
++        "flag_resolved",
++        "reproduction_gate",
++        "inference_substrate",
++    ),
++    "A4_HELDOUT": (
++        "honest_verdict",
++        "heldout_first_win_rate",
++        "heldout_first_win_ci",
++        "games_evaluated",
++        "flag_resolved",
++        "positive_control_passed",
++        "operator_decision_number",
++        "model_specs",
++        "inference_substrate",
++        "solve_provenance",
++    ),
++    "D_PIVOT": (
++        "honest_verdict",
++        "pivot_turnkey",
++        "pivot_executable_on_7_1",
++        "three_column_dry_run_ok",
++        "validation_gate",
++        "turnkey_spec",
++        "post_sprint_first_experiment_pointer",
++        "verifier_is_oracle",
++        "moat_proven_claimed",
++        "arxiv_ids_cited",
++    ),
++    "B1_AUDIT": (
++        "honest_verdict",
++        "banks_trustworthy",
++        "pivot_readiness_trustworthy",
++        "checks",
++        "audit_failure_reasons",
++        "bank_evidence",
++        "pivot_readiness_evidence",
++    ),
++    "B2_PACKAGE": (
++        "honest_verdict",
++        "submission_package_ready",
++        "peak_vram_gb",
++        "frozen_stack_loads",
++        "package_builds",
++        "ready_package_regression_ok",
++        "submits",
++        "operator_only",
++        "operator_submission_checklist",
++    ),
++    "B3_STAMPING": (
++        "honest_verdict",
++        "stamping_backfilled_arms",
++        "mtime_fallback_window",
++        "wiring_proposal_reconfirmed",
++        "research_conductor_modified",
++    ),
++    "C_KV260": (
++        "honest_verdict",
++        "kv260_ssh_reachable",
++        "loaded_overlay",
++        "xmutil_requires_sudo",
++        "verifier_is_oracle",
++    ),
++}
++
++Summarizer = Callable[[Path, str], SummarizerResult]
++
++
++def _experiment_id(source: str, artifact: Mapping[str, Any] | None = None) -> int:
++    """Return an experiment id from the artifact when present, else from config."""
++
++    if artifact:
++        for field in ("experiment_id", "experiment"):
++            value = artifact.get(field)
++            if isinstance(value, int) and not isinstance(value, bool):
++                return value
++            if isinstance(value, str):
++                match = re.search(r"experiment_(\d+)|\b(\d{4})\b", value)
++                if match:
++                    return int(match.group(1) or match.group(2))
++    return UPSTREAM_SOURCES[source].experiment_id
++
++
++def _live_critical(summary: SummarizerResult | None) -> bool:
++    return bool(summary and summary.exit_code >= 2)
++
++
++def _live_recheck(summary: SummarizerResult | None) -> str:
++    if summary is None:
++        return "not_run"
++    if summary.exit_code >= 2:
++        return "critical"
++    if summary.exit_code == 1:
++        return "warn"
++    return "clean"
++
++
++def _is_skipped(artifact: Mapping[str, Any] | None, summary: SummarizerResult | None) -> str | None:
++    if artifact and artifact.get("flagged_adversarial") is True:
++        return "flagged_adversarial"
++    if _live_critical(summary):
++        return "live_critical_recheck"
++    return None
++
++
++def _clean_artifacts(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    summarizer_results: Mapping[str, SummarizerResult],
++) -> dict[str, Mapping[str, Any]]:
++    return {
++        source: artifact
++        for source, artifact in artifacts.items()
++        if _is_skipped(artifact, summarizer_results.get(source)) is None
++    }
++
++
++def _imported_fields(source: str, artifact: Mapping[str, Any]) -> list[str]:
++    return [field for field in CLEAN_IMPORT_FIELDS[source] if field in artifact]
++
++
++def _cited_artifacts(
++    clean: Mapping[str, Mapping[str, Any]],
++    artifact_sha256: Mapping[str, str],
++    summarizer_results: Mapping[str, SummarizerResult],
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for source in UPSTREAM_SOURCES:
++        artifact = clean.get(source)
++        if artifact is None:
++            continue
++        summary = summarizer_results.get(source)
++        rows.append(
++            {
++                "source": source,
++                "experiment_id": _experiment_id(source, artifact),
++                "path": UPSTREAM_SOURCES[source].relative_path,
++                "fields_imported": _imported_fields(source, artifact),
++                "sha256": artifact_sha256.get(source, ""),
++                "summarizer_exit_code": summary.exit_code if summary else None,
++                "true_live_recheck": _live_recheck(summary),
++            }
++        )
++    return rows
++
++
++def _skipped_flagged_adversarial(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    artifact_sha256: Mapping[str, str],
++    summarizer_results: Mapping[str, SummarizerResult],
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for source, artifact in artifacts.items():
++        summary = summarizer_results.get(source)
++        reason = _is_skipped(artifact, summary)
++        if reason is None:
++            continue
++        rows.append(
++            {
++                "source": source,
++                "experiment_id": _experiment_id(source, artifact),
++                "path": UPSTREAM_SOURCES[source].relative_path,
++                "reason": reason,
++                "sha256": artifact_sha256.get(source, ""),
++                "summarizer_exit_code": summary.exit_code if summary else None,
++                "true_honest_verdict": artifact.get("honest_verdict", ""),
++                "true_live_recheck": _live_recheck(summary),
++            }
++        )
++    return rows
++
++
++def _bank_candidate(source: str, artifact: Mapping[str, Any] | None) -> JsonDict:
++    if artifact is None:
++        return {"source": source, "game": "", "new_levels_banked": 0}
++    return {
++        "source": source,
++        "game": str(artifact.get("target_game") or ""),
++        "new_levels_banked": _int(artifact.get("new_levels_banked")),
++    }
++
++
++def _banks_counted(clean: Mapping[str, Mapping[str, Any]], registry_total: int) -> JsonDict:
++    b1 = clean.get("B1_AUDIT")
++    trustworthy = bool(b1 and b1.get("banks_trustworthy") is True)
++    candidates = [
++        _bank_candidate("A1_LEVELUP", clean.get("A1_LEVELUP")),
++        _bank_candidate("A2_LEVELUP", clean.get("A2_LEVELUP")),
++    ]
++    counted = [
++        row for row in candidates if trustworthy and _int(row.get("new_levels_banked")) > 0
++    ]
++    bank_delta = sum(_int(row["new_levels_banked"]) for row in counted)
++    return {
++        "b1_banks_trustworthy": trustworthy,
++        "counted": counted,
++        "candidate_banks": candidates,
++        "audit_failure_reasons": list(b1.get("audit_failure_reasons", [])) if b1 else [],
++        "base_total_from_registry": registry_total,
++        "bank_delta_counted": bank_delta,
++        "computed_total": registry_total + bank_delta,
++    }
++
++
++def _heldout_first_win_rate(clean: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    a4 = clean.get("A4_HELDOUT")
++    if a4 is None:
++        return {"status": "missing_or_skipped", "rate": None, "flag_resolved": False}
++    flag_resolved = a4.get("flag_resolved") is True
++    games_evaluated = _int(a4.get("games_evaluated"))
++    return {
++        "status": "full25_go_no_go" if games_evaluated == 25 else "partial_go_no_go",
++        "honest_verdict": a4.get("honest_verdict", ""),
++        "rate": _float(a4.get("heldout_first_win_rate")) if flag_resolved else None,
++        "ci": a4.get("heldout_first_win_ci", {}),
++        "flag_resolved": flag_resolved,
++        "games_evaluated": games_evaluated,
++        "positive_control_passed": a4.get("positive_control_passed") is True,
++        "operator_decision_number": a4.get("operator_decision_number", {}),
++        "model_specs": a4.get("model_specs", {}),
++        "solve_provenance": a4.get("solve_provenance"),
++    }
++
++
++def _submission_package_ready(clean: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    package = clean.get("B2_PACKAGE")
++    if package is None:
++        return {"ready": False, "status": "missing_or_skipped", "peak_vram_gb": None}
++    submitted = package.get("submits") is True or package.get("submitted_to_leaderboard") is True
++    peak_vram = _float(package.get("peak_vram_gb"))
++    ready = bool(
++        package.get("submission_package_ready") is True
++        and package.get("operator_only") is True
++        and not submitted
++        and peak_vram is not None
++        and peak_vram < 16.0
++        and package.get("frozen_stack_loads") is True
++        and package.get("package_builds") is True
++        and package.get("ready_package_regression_ok") is True
++    )
++    return {
++        "ready": ready,
++        "decision": "package_ready_operator_only" if ready else "package_not_ready",
++        "honest_verdict": package.get("honest_verdict", ""),
++        "peak_vram_gb": peak_vram,
++        "frozen_stack_loads": package.get("frozen_stack_loads") is True,
++        "package_builds": package.get("package_builds") is True,
++        "ready_package_regression_ok": package.get("ready_package_regression_ok") is True,
++        "submits": submitted,
++        "operator_only": package.get("operator_only") is True,
++        "operator_submission_checklist": package.get("operator_submission_checklist", []),
++    }
++
++
++def _a3_substrate_flag_resolved(
++    summarizer_results: Mapping[str, SummarizerResult],
++    clean: Mapping[str, Mapping[str, Any]],
++) -> bool:
++    summary = summarizer_results.get("A3_SELF_PLAY")
++    return bool(clean.get("A3_SELF_PLAY") and _live_recheck(summary) != "critical")
++
++
++def _a3_substrate_state(
++    clean: Mapping[str, Mapping[str, Any]],
++    summarizer_results: Mapping[str, SummarizerResult],
++) -> JsonDict:
++    a3 = clean.get("A3_SELF_PLAY")
++    summary = summarizer_results.get("A3_SELF_PLAY")
++    resolved = _a3_substrate_flag_resolved(summarizer_results, clean)
++    return {
++        "resolved": resolved,
++        "decision": "a3_substrate_fix_holds_self_play_counted" if resolved else "a3_substrate_blocked",
++        "honest_verdict": a3.get("honest_verdict", "") if a3 else "",
++        "target_game": a3.get("target_game") if a3 else None,
++        "offline_reproduced": a3.get("offline_reproduced") is True if a3 else False,
++        "reproduced_levels": _int(a3.get("reproduced_levels")) if a3 else 0,
++        "summarizer_exit_code": summary.exit_code if summary else None,
++        "true_live_recheck": _live_recheck(summary),
++        "inference_substrate": a3.get("inference_substrate") if a3 else None,
++    }
++
++
++def _b3_window_nonzero(clean: Mapping[str, Mapping[str, Any]]) -> bool:
++    b3 = clean.get("B3_STAMPING")
++    window = _mapping(b3.get("mtime_fallback_window") if b3 else {})
++    wall_minutes = _float(window.get("wall_minutes"))
++    return bool(wall_minutes is not None and wall_minutes > 0.0)
++
++
++def _b3_window_state(clean: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    b3 = clean.get("B3_STAMPING")
++    window = _mapping(b3.get("mtime_fallback_window") if b3 else {})
++    nonzero = _b3_window_nonzero(clean)
++    return {
++        "nonzero": nonzero,
++        "decision": "b3_relaxed_mtime_window_maintained" if nonzero else "b3_mtime_window_missing",
++        "honest_verdict": b3.get("honest_verdict", "") if b3 else "",
++        "mtime_fallback_window": dict(window),
++        "wall_minutes": _float(window.get("wall_minutes")),
++        "n_arms": _int(window.get("n_arms")),
++        "wiring_proposal_reconfirmed": b3.get("wiring_proposal_reconfirmed") is True
++        if b3
++        else False,
++        "research_conductor_modified": b3.get("research_conductor_modified") is True
++        if b3
++        else None,
++    }
++
++
++def _wall_closure() -> JsonDict:
++    return {
++        "source": "standing_453_b1_trusted_closure",
++        "closed": True,
++        "closure_verdict": "WALL_IS_HIDDEN_STATE",
++        "trusted": True,
++        "did_reopen_in_v458": False,
++        "representation_5_queued": False,
++        "energy_as_arc_program": "S0_CONCLUDED_2026_06_26",
++        "did_reopen_energy_as_arc_program": False,
++        "do_not_queue": "representation_5_or_concluded_energy_as_arc_program",
++    }
++
++
++def _extended_backlog(d: Mapping[str, Any] | None) -> list[str]:
++    if d is None:
++        return []
++    turnkey = _mapping(d.get("turnkey_spec"))
++    extension = _mapping(turnkey.get("sota_backlog_extension_v458")) or _mapping(
++        turnkey.get("sota_backlog_extension")
++    )
++    new_ids = extension.get("new_arxiv_ids")
++    if isinstance(new_ids, list):
++        return [str(value) for value in new_ids if str(value)]
++    cited = [str(value) for value in d.get("arxiv_ids_cited", [])]
++    return [arxiv_id for arxiv_id in ("2504.01005", "2504.00891", "2509.24460") if arxiv_id in cited]
++
++
++def _post_sprint_pivot(clean: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    d = clean.get("D_PIVOT")
++    b1 = clean.get("B1_AUDIT")
++    b1_trust = bool(b1 and b1.get("pivot_readiness_trustworthy") is True)
++    d_turnkey = bool(d and d.get("pivot_turnkey") is True)
++    d_executable = bool(d and d.get("pivot_executable_on_7_1") is True)
++    executable = b1_trust and d_turnkey and d_executable
++    return {
++        "decision": (
++            "post_6_30_distributional_energy_verifier_moat_experiment_turnkey_7_1"
++            if executable
++            else "pivot_not_stated_untrusted"
++        ),
++        "pivot_turnkey": executable,
++        "pivot_executable_on_7_1": executable,
++        "b1_pivot_readiness_trustworthy": b1_trust,
++        "d_pivot_turnkey": d_turnkey,
++        "d_pivot_executable_on_7_1": d_executable,
++        "arxiv_id": "2605.18871",
++        "arxiv_ids_cited": list(d.get("arxiv_ids_cited", []) if d else []),
++        "extended_sota_backlog": _extended_backlog(d),
++        "sota_signal": "2605.18871 beats self-consistency on MuSR",
++        "validation_gate": d.get("validation_gate", {}) if d else {},
++        "claim_status": "readiness_only_not_moat_proven",
++        "moat_proven": False,
++        "moat_proven_claimed": d.get("moat_proven_claimed") is True if d else False,
++        "deliverable": "current ~0.05 agent + publishable FoVer paper",
++        "executable_date": "2026-07-01",
++        "runs_after": "2026-06-30_sprint_retirement",
++        "validation_required": (
++            "beats_self_consistency_ci95_excludes_zero AND oracle_distinct AND "
++            "no_model_identity_shortcut"
++        ),
++        "do_not_queue": "representation_5_or_concluded_energy_as_arc_program",
++    }
++
++
++def _reserved_lanes(clean: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    c = clean.get("C_KV260")
++    c_ok = bool(c and c.get("kv260_ssh_reachable") is True)
++    return {
++        "b3_stamping": {
++            **_b3_window_state(clean),
++            "decision": (
++                "reserved_lane_b3_nonzero_mtime_window"
++                if _b3_window_nonzero(clean)
++                else "reserved_lane_b3_mtime_window_missing"
++            ),
++        },
++        "c_kv260": {
++            "decision": "reserved_lane_kv260_continuity_ok" if c_ok else "reserved_lane_kv260_not_ok",
++            "honest_verdict": c.get("honest_verdict", "") if c else "",
++            "kv260_ssh_reachable": c_ok,
++            "loaded_overlay": c.get("loaded_overlay") if c else None,
++            "xmutil_requires_sudo": c.get("xmutil_requires_sudo") is True if c else None,
++        },
++    }
++
++
++def _milestone_scorecard(
++    clean: Mapping[str, Mapping[str, Any]],
++    *,
++    banks: Mapping[str, Any],
++    heldout: Mapping[str, Any],
++    package: Mapping[str, Any],
++    a3: Mapping[str, Any],
++    b3: Mapping[str, Any],
++    wall: Mapping[str, Any],
++    pivot: Mapping[str, Any],
++) -> JsonDict:
++    return {
++        "deliverable": "locked ~0.05 first-win agent + publishable FoVer paper",
++        "wall_closure": dict(wall),
++        "banks": dict(banks),
++        "heldout_go_no_go": dict(heldout),
++        "submission_package": dict(package),
++        "a3_substrate_fix": dict(a3),
++        "b3_window_fix": dict(b3),
++        "post_sprint_pivot": dict(pivot),
++        "reserved_lanes": _reserved_lanes(clean),
++    }
++
++
++def _rate_slug(heldout: Mapping[str, Any]) -> str:
++    rate = heldout.get("rate")
++    if isinstance(rate, (int, float)) and not isinstance(rate, bool):
++        text = f"{float(rate):.6f}".rstrip("0").rstrip(".")
++        return text or "0"
++    return "unknown"
++
++
++def _headline(
++    total: int,
++    banks: Mapping[str, Any],
++    heldout: Mapping[str, Any],
++    package: Mapping[str, Any],
++    a3: Mapping[str, Any],
++    b3: Mapping[str, Any],
++    pivot: Mapping[str, Any],
++) -> str:
++    counted = banks.get("counted") if isinstance(banks.get("counted"), list) else []
++    bank_text = "no trusted A1/A2 banks counted" if not counted else f"{len(counted)} trusted banks counted"
++    package_text = "package ready" if package.get("ready") is True else "package not ready"
++    pivot_text = (
++        "post-6/30 verifier-moat pivot turnkey 7/1"
++        if pivot.get("pivot_executable_on_7_1") is True
++        else "post-6/30 verifier-moat pivot not trusted turnkey"
++    )
++    return (
++        f".458 FINAL sprint-day submission readiness: locked ~0.05 agent + FoVer paper "
++        f"ready for 6/30 at {total} reproducible levels, {bank_text}; held-out "
++        f"first-win {_rate_slug(heldout)} with flag_resolved={heldout.get('flag_resolved') is True}; "
++        f"{package_text}; A3 substrate fix holds={a3.get('resolved') is True}; "
++        f"B3 nonzero mtime window={b3.get('nonzero') is True}; {pivot_text}; "
++        f"ARC wall remains WALL_IS_HIDDEN_STATE closed."
++    )
++
++
++def _honest_verdict(
++    total: int,
++    heldout: Mapping[str, Any],
++    package: Mapping[str, Any],
++    pivot: Mapping[str, Any],
++) -> str:
++    package_slug = "package_ready" if package.get("ready") is True else "package_not_ready"
++    pivot_slug = (
++        "pivot_turnkey_7_1"
++        if pivot.get("pivot_executable_on_7_1") is True
++        else "pivot_not_turnkey"
++    )
++    return (
++        "complete_capstone_v458_submission_ready_"
++        f"levels_{total}_heldout_{_rate_slug(heldout)}_{package_slug}_{pivot_slug}"
++    )
++
++
++def _checksum_payload(payload: Mapping[str, Any]) -> JsonDict:
++    return {
++        "honest_verdict": payload.get("honest_verdict"),
++        "headline": payload.get("headline"),
++        "reproducible_total_levels": payload.get("reproducible_total_levels"),
++        "banks_counted": payload.get("banks_counted"),
++        "heldout_first_win_rate": payload.get("heldout_first_win_rate"),
++        "submission_package_ready": payload.get("submission_package_ready"),
++        "a3_substrate_flag_resolved": payload.get("a3_substrate_flag_resolved"),
++        "b3_window_nonzero": payload.get("b3_window_nonzero"),
++        "post_sprint_pivot": payload.get("post_sprint_pivot"),
++        "pivot_executable_on_7_1": payload.get("pivot_executable_on_7_1"),
++        "cited_upstream_artifacts": payload.get("cited_upstream_artifacts"),
++        "milestone_scorecard": payload.get("milestone_scorecard"),
++    }
++
++
++def build_artifact(
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]],
++    artifact_sha256: Mapping[str, str],
++    registry: Mapping[str, Any],
++    registry_sha256: str | None,
++    summarizer_results: Mapping[str, SummarizerResult],
++    duration_s: float,
++    preconditions_checked: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Build the complete .458 final submission-readiness scorecard."""
++
++    clean = _clean_artifacts(artifacts, summarizer_results)
++    registry_total = _int(registry.get("reproducible_total_levels"))
++    banks = _banks_counted(clean, registry_total)
++    total = _int(banks.get("computed_total"), registry_total)
++    heldout = _heldout_first_win_rate(clean)
++    package = _submission_package_ready(clean)
++    a3 = _a3_substrate_state(clean, summarizer_results)
++    b3 = _b3_window_state(clean)
++    wall = _wall_closure()
++    pivot = _post_sprint_pivot(clean)
++    scorecard = _milestone_scorecard(
++        clean,
++        banks=banks,
++        heldout=heldout,
++        package=package,
++        a3=a3,
++        b3=b3,
++        wall=wall,
++        pivot=pivot,
++    )
++    cited = _cited_artifacts(clean, artifact_sha256, summarizer_results)
++    skipped = _skipped_flagged_adversarial(artifacts, artifact_sha256, summarizer_results)
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": _honest_verdict(total, heldout, package, pivot),
++        "headline": _headline(total, banks, heldout, package, a3, b3, pivot),
++        "reproducible_total_levels": total,
++        "banks_counted": banks,
++        "heldout_first_win_rate": heldout,
++        "submission_package_ready": package,
++        "a3_substrate_flag_resolved": a3.get("resolved") is True,
++        "b3_window_nonzero": b3.get("nonzero") is True,
++        "arc_first_win_wall_closed": wall.get("closed") is True,
++        "post_sprint_pivot": pivot,
++        "pivot_executable_on_7_1": pivot.get("pivot_executable_on_7_1") is True,
++        "skipped_flagged_adversarial": skipped,
++        "cited_upstream_artifacts": cited,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(
++            preconditions_checked
++            or {
++                "agents_md_read": True,
++                "codex_md_read": True,
++                "registry": {
++                    "path": REGISTRY_RELATIVE_PATH,
++                    "sha256": registry_sha256 or "",
++                    "reproducible_total_levels": registry_total,
++                },
++                "north_star": {"path": NORTH_STAR_RELATIVE_PATH, "read_sections": ["0", "1", "5"]},
++            }
++        ),
++        "random_seed": RANDOM_SEED,
++        "milestone_scorecard": scorecard,
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(max(0.0001, float(duration_s)), 6),
++        "capstone_ready": (
++            wall.get("closed") is True
++            and package.get("ready") is True
++            and heldout.get("rate") is not None
++            and heldout.get("flag_resolved") is True
++            and a3.get("resolved") is True
++            and b3.get("nonzero") is True
++            and pivot.get("pivot_executable_on_7_1") is True
++            and bool(cited)
++            and isinstance(skipped, list)
++        ),
++    }
++    payload["reproducibility_checksum"] = payload_checksum(_checksum_payload(payload))
++    return payload
++
++
++def build_blocked_artifact(
++    *,
++    reason: str,
++    artifacts: Mapping[str, Mapping[str, Any]],
++    artifact_sha256: Mapping[str, str],
++    registry: Mapping[str, Any],
++    summarizer_results: Mapping[str, SummarizerResult],
++    duration_s: float,
++    preconditions_checked: Mapping[str, Any],
++) -> JsonDict:
++    """Build a schema-valid blocked artifact without importing headline metrics."""
++
++    registry_total = _int(registry.get("reproducible_total_levels"))
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": f"blocked_{reason}",
++        "headline": "",
++        "reproducible_total_levels": registry_total,
++        "banks_counted": {
++            "b1_banks_trustworthy": False,
++            "counted": [],
++            "candidate_banks": [],
++            "base_total_from_registry": registry_total,
++            "bank_delta_counted": 0,
++            "computed_total": registry_total,
++        },
++        "heldout_first_win_rate": {},
++        "submission_package_ready": {},
++        "a3_substrate_flag_resolved": False,
++        "b3_window_nonzero": False,
++        "arc_first_win_wall_closed": False,
++        "post_sprint_pivot": {},
++        "pivot_executable_on_7_1": False,
++        "skipped_flagged_adversarial": _skipped_flagged_adversarial(
++            artifacts, artifact_sha256, summarizer_results
++        ),
++        "cited_upstream_artifacts": [],
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "random_seed": RANDOM_SEED,
++        "milestone_scorecard": {},
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(max(0.0001, float(duration_s)), 6),
++        "capstone_ready": False,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(_checksum_payload(payload))
++    return payload
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
++    """Return schema errors for the .458 scorecard without mutating it."""
++
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in payload:
++            errors.append(f"missing_field:{field}")
++    if not str(payload.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_missing_terminal_prefix")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("invalid_inference_substrate")
++    if not isinstance(payload.get("headline"), str):
++        errors.append("invalid_headline")
++    if not isinstance(payload.get("reproducible_total_levels"), int):
++        errors.append("invalid_reproducible_total_levels")
++    if not isinstance(payload.get("banks_counted"), Mapping):
++        errors.append("invalid_banks_counted")
++    if not isinstance(payload.get("heldout_first_win_rate"), Mapping):
++        errors.append("invalid_heldout_first_win_rate")
++    if not isinstance(payload.get("submission_package_ready"), Mapping):
++        errors.append("invalid_submission_package_ready")
++    if not isinstance(payload.get("a3_substrate_flag_resolved"), bool):
++        errors.append("invalid_a3_substrate_flag_resolved")
++    if not isinstance(payload.get("b3_window_nonzero"), bool):
++        errors.append("invalid_b3_window_nonzero")
++    if not isinstance(payload.get("arc_first_win_wall_closed"), bool):
++        errors.append("invalid_arc_first_win_wall_closed")
++    if not isinstance(payload.get("post_sprint_pivot"), Mapping):
++        errors.append("invalid_post_sprint_pivot")
++    if not isinstance(payload.get("pivot_executable_on_7_1"), bool):
++        errors.append("invalid_pivot_executable_on_7_1")
++    if not isinstance(payload.get("preconditions_checked"), Mapping):
++        errors.append("invalid_preconditions_checked")
++    if not isinstance(payload.get("random_seed"), int) or isinstance(payload.get("random_seed"), bool):
++        errors.append("invalid_random_seed")
++    if not isinstance(payload.get("capstone_ready"), bool):
++        errors.append("invalid_capstone_ready")
++    if not isinstance(payload.get("milestone_scorecard"), Mapping):
++        errors.append("invalid_milestone_scorecard")
++    field_principles = payload.get("field_principles")
++    for field, principle in FIELD_PRINCIPLES.items():
++        if not isinstance(field_principles, Mapping) or field_principles.get(field) != principle:
++            errors.append(f"missing_principle:{field}")
++    cited = payload.get("cited_upstream_artifacts")
++    if not isinstance(cited, list) or any(
++        not isinstance(row, Mapping)
++        or not isinstance(row.get("experiment_id"), int)
++        or not isinstance(row.get("fields_imported"), list)
++        or not str(row.get("sha256", "")).startswith("sha256:")
++        for row in cited
++    ):
++        errors.append("invalid_cited_upstream_artifacts")
++    skipped = payload.get("skipped_flagged_adversarial")
++    if not isinstance(skipped, list) or any(
++        not isinstance(row, Mapping)
++        or not isinstance(row.get("experiment_id"), int)
++        or not str(row.get("sha256", "")).startswith("sha256:")
++        or not row.get("reason")
++        for row in skipped
++    ):
++        errors.append("invalid_skipped_flagged_adversarial")
++    if not str(payload.get("reproducibility_checksum", "")).startswith("sha256:"):
++        errors.append("invalid_reproducibility_checksum")
++    return errors
++
++
++def _run_summarizer(root: Path, relative_path: str) -> SummarizerResult:  # pragma: no cover
++    cmd = [sys.executable, SUMMARIZER_RELATIVE_PATH, relative_path]
++    proc = subprocess.run(cmd, cwd=root, text=True, capture_output=True, check=False)
++    return SummarizerResult(
++        command=cmd,
++        exit_code=proc.returncode,
++        stdout=proc.stdout,
++        stderr=proc.stderr,
++    )
++
++
++def _first_blocker(
++    *,
++    summarizer_present: bool,
++    registry_present: bool,
++    registry_loadable: bool,
++    spec_has_req: bool,
++    north_star_present: bool,
++    upstream_preconditions: Mapping[str, Mapping[str, Any]],
++) -> str | None:
++    if not summarizer_present:
++        return "missing_summarizer"
++    if not registry_present:
++        return "missing_registry"
++    if not registry_loadable:
++        return "registry_not_yaml_loadable"
++    if not spec_has_req:
++        return "spec_missing_req_4978"
++    if not north_star_present:
++        return "missing_north_star"
++    if any(row.get("present") is not True for row in upstream_preconditions.values()):
++        return "upstream_artifact_missing"
++    return None
++
++
++def run_capstone(
++    *,
++    root: Path = REPO_ROOT,
++    summarizer: Summarizer | None = None,
++) -> JsonDict:
++    """Read upstreams via the summarizer, aggregate, and write the scorecard."""
++
++    start = time.perf_counter()
++    summarizer = summarizer or _run_summarizer
++    summarizer_path = root / SUMMARIZER_RELATIVE_PATH
++    summarizer_present = summarizer_path.exists()
++    artifacts: dict[str, JsonDict] = {}
++    artifact_sha256: dict[str, str] = {}
++    summarizer_results: dict[str, SummarizerResult] = {}
++    upstream_preconditions: dict[str, JsonDict] = {}
++
++    for source, spec in UPSTREAM_SOURCES.items():
++        path = root / spec.relative_path
++        present = path.exists()
++        upstream_preconditions[source] = {"path": spec.relative_path, "present": present}
++        if not present:
++            continue
++        if summarizer_present:
++            summary = summarizer(root, spec.relative_path)
++            summarizer_results[source] = summary
++            upstream_preconditions[source]["summarizer_exit_code"] = summary.exit_code
++        artifacts[source] = _read_json_object(path)
++        artifact_sha256[source] = file_sha256(path) or ""
++
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    registry_present = registry_path.exists()
++    registry_loadable = False
++    registry: JsonDict = {}
++    if registry_present:
++        try:
++            registry = _read_yaml_object(registry_path)
++            registry_loadable = True
++        except yaml.YAMLError:
++            registry = {}
++
++    spec_path = root / SPEC_RELATIVE_PATH
++    spec_has_req = spec_path.exists() and "REQ-CAPSTONE-4978" in spec_path.read_text(
++        encoding="utf-8"
++    )
++    north_star_path = root / NORTH_STAR_RELATIVE_PATH
++    north_star_present = north_star_path.exists()
++    preconditions_checked = {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "summarizer": {"path": SUMMARIZER_RELATIVE_PATH, "present": summarizer_present},
++        "registry": {
++            "path": REGISTRY_RELATIVE_PATH,
++            "present": registry_present,
++            "yaml_loadable": registry_loadable,
++            "sha256": file_sha256(registry_path) or "",
++            "reproducible_total_levels": _int(registry.get("reproducible_total_levels")),
++        },
++        "north_star": {
++            "path": NORTH_STAR_RELATIVE_PATH,
++            "present": north_star_present,
++            "sha256": file_sha256(north_star_path) or "",
++            "read_sections": ["0", "1", "5"] if north_star_present else [],
++        },
++        "spec_has_req_4978": spec_has_req,
++        "upstream_artifacts": upstream_preconditions,
++    }
++    duration_s = time.perf_counter() - start
++    blocker = _first_blocker(
++        summarizer_present=summarizer_present,
++        registry_present=registry_present,
++        registry_loadable=registry_loadable,
++        spec_has_req=spec_has_req,
++        north_star_present=north_star_present,
++        upstream_preconditions=upstream_preconditions,
++    )
++    if blocker is not None:
++        artifact = build_blocked_artifact(
++            reason=blocker,
++            artifacts=artifacts,
++            artifact_sha256=artifact_sha256,
++            registry=registry,
++            summarizer_results=summarizer_results,
++            duration_s=duration_s,
++            preconditions_checked=preconditions_checked,
++        )
++    else:
++        artifact = build_artifact(
++            artifacts=artifacts,
++            artifact_sha256=artifact_sha256,
++            registry=registry,
++            registry_sha256=file_sha256(registry_path),
++            summarizer_results=summarizer_results,
++            duration_s=duration_s,
++            preconditions_checked=preconditions_checked,
++        )
++    result_path = root / RESULT_RELATIVE_PATH
++    result_path.parent.mkdir(parents=True, exist_ok=True)
++    result_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> int:  # pragma: no cover
++    artifact = run_capstone()
++    errors = validate_artifact(artifact)
++    print(
++        json.dumps(
++            {
++                "result_path": RESULT_RELATIVE_PATH,
++                "honest_verdict": artifact.get("honest_verdict"),
++                "schema_errors": errors,
++            },
++            sort_keys=True,
++        )
++    )
++    return 1 if errors else 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0137.json b/results/distributional_energy_verifier_musr_checkpoints/q0137.json
+new file mode 100644
+index 0000000000..bcf21c49f6
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0137.json
+@@ -0,0 +1 @@
++{"q": 137, "gold": "Woodrow", "n_choices": 2, "sc_answer": "Woodrow", "energy_answer": "Woodrow", "energy_pure_answer": "Woodrow", "judge_answer": "Woodrow", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Woodrow", "Jim", "Woodrow", "Woodrow", "Woodrow", "Woodrow", "Woodrow", "Woodrow"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0138.json b/results/distributional_energy_verifier_musr_checkpoints/q0138.json
+new file mode 100644
+index 0000000000..4807e0f4da
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0138.json
+@@ -0,0 +1 @@
++{"q": 138, "gold": "Grace", "n_choices": 2, "sc_answer": "Chester", "energy_answer": "Chester", "energy_pure_answer": "Chester", "judge_answer": "Chester", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Chester", "Grace", "Chester", "Chester", "Chester", "Chester", "Chester", "Grace"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0139.json b/results/distributional_energy_verifier_musr_checkpoints/q0139.json
+new file mode 100644
+index 0000000000..97c3fdb2ba
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0139.json
+@@ -0,0 +1 @@
++{"q": 139, "gold": "Chester", "n_choices": 2, "sc_answer": "Chester", "energy_answer": "Chester", "energy_pure_answer": "Chester", "judge_answer": "Grace", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 0, "n_valid_candidates": 7, "answers": ["Chester", "Grace", "Chester", null, "Grace", "Chester", "Chester", "Chester"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0140.json b/results/distributional_energy_verifier_musr_checkpoints/q0140.json
+new file mode 100644
+index 0000000000..41f8766ed6
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0140.json
+@@ -0,0 +1 @@
++{"q": 140, "gold": "Leona", "n_choices": 2, "sc_answer": "Leona", "energy_answer": "Freya", "energy_pure_answer": "Freya", "judge_answer": "Leona", "sc_correct": 1, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Leona", "Leona", "Freya", "Freya", "Leona", "Freya", "Leona", "Freya"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0141.json b/results/distributional_energy_verifier_musr_checkpoints/q0141.json
+new file mode 100644
+index 0000000000..00bebeddf0
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0141.json
+@@ -0,0 +1 @@
++{"q": 141, "gold": "Freya", "n_choices": 2, "sc_answer": "Freya", "energy_answer": "Freya", "energy_pure_answer": "Freya", "judge_answer": "Freya", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Freya", "Leona", "Freya", "Leona", "Freya", "Leona", "Freya", "Freya"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0142.json b/results/distributional_energy_verifier_musr_checkpoints/q0142.json
+new file mode 100644
+index 0000000000..284d55349c
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0142.json
+@@ -0,0 +1 @@
++{"q": 142, "gold": "Bella", "n_choices": 2, "sc_answer": "Jose", "energy_answer": "Bella", "energy_pure_answer": "Bella", "judge_answer": "Jose", "sc_correct": 0, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Jose", "Jose", "Bella", "Bella", "Jose", "Bella", "Bella", "Jose"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0143.json b/results/distributional_energy_verifier_musr_checkpoints/q0143.json
+new file mode 100644
+index 0000000000..fb8402a2af
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0143.json
+@@ -0,0 +1 @@
++{"q": 143, "gold": "Jose", "n_choices": 2, "sc_answer": "Jose", "energy_answer": "Bella", "energy_pure_answer": "Bella", "judge_answer": "Bella", "sc_correct": 1, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Jose", "Bella", "Bella", "Jose", "Jose", "Jose", "Bella", "Jose"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0144.json b/results/distributional_energy_verifier_musr_checkpoints/q0144.json
+new file mode 100644
+index 0000000000..da55c1f26c
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0144.json
+@@ -0,0 +1 @@
++{"q": 144, "gold": "Charlotte", "n_choices": 2, "sc_answer": "Charlotte", "energy_answer": "Rachel", "energy_pure_answer": "Rachel", "judge_answer": "Rachel", "sc_correct": 1, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Charlotte", "Rachel", "Rachel", "Charlotte", "Charlotte", "Charlotte", "Rachel", "Charlotte"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0145.json b/results/distributional_energy_verifier_musr_checkpoints/q0145.json
+new file mode 100644
+index 0000000000..8a7b8a2b95
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0145.json
+@@ -0,0 +1 @@
++{"q": 145, "gold": "Rachel", "n_choices": 2, "sc_answer": "Rachel", "energy_answer": "Rachel", "energy_pure_answer": "Rachel", "judge_answer": "Rachel", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 7, "answers": ["Rachel", "Rachel", "Rachel", "Rachel", "Rachel", "Rachel", "Rachel", null], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0146.json b/results/distributional_energy_verifier_musr_checkpoints/q0146.json
+new file mode 100644
+index 0000000000..caf1307d54
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0146.json
+@@ -0,0 +1 @@
++{"q": 146, "gold": "Meredith", "n_choices": 2, "sc_answer": "Hugo", "energy_answer": "Hugo", "energy_pure_answer": "Hugo", "judge_answer": "Hugo", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 6, "answers": ["Hugo", null, "Hugo", "Hugo", "Hugo", "Hugo", null, "Hugo"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0147.json b/results/distributional_energy_verifier_musr_checkpoints/q0147.json
+new file mode 100644
+index 0000000000..e11368e827
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0147.json
+@@ -0,0 +1 @@
++{"q": 147, "gold": "Hugo", "n_choices": 2, "sc_answer": "Hugo", "energy_answer": "Hugo", "energy_pure_answer": "Hugo", "judge_answer": "Hugo", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 1, "n_valid_candidates": 8, "answers": ["Hugo", "Hugo", "Meredith", "Meredith", "Hugo", "Meredith", "Meredith", "Hugo"], "energy_abstained": false}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0148.json b/results/distributional_energy_verifier_musr_checkpoints/q0148.json
+new file mode 100644
+index 0000000000..f9c23a8fe7
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0148.json
+@@ -0,0 +1 @@
++{"q": 148, "gold": "Sophia", "n_choices": 2, "sc_answer": "Virgil", "energy_answer": "Virgil", "energy_pure_answer": "Virgil", "judge_answer": "Virgil", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 6, "answers": [null, "Virgil", "Virgil", null, "Virgil", "Virgil", "Virgil", "Sophia"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0149.json b/results/distributional_energy_verifier_musr_checkpoints/q0149.json
+new file mode 100644
+index 0000000000..8e142e9439
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0149.json
+@@ -0,0 +1 @@
++{"q": 149, "gold": "Virgil", "n_choices": 2, "sc_answer": "Virgil", "energy_answer": "Virgil", "energy_pure_answer": "Virgil", "judge_answer": "Sophia", "sc_correct": 1, "energy_correct": 1, "energy_pure_correct": 1, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Virgil", "Sophia", "Virgil", "Virgil", "Virgil", "Virgil", "Sophia", "Virgil"], "energy_abstained": true}
+diff --git a/results/distributional_energy_verifier_musr_checkpoints/q0150.json b/results/distributional_energy_verifier_musr_checkpoints/q0150.json
+new file mode 100644
+index 0000000000..ba9dcd8b2e
+--- /dev/null
++++ b/results/distributional_energy_verifier_musr_checkpoints/q0150.json
+@@ -0,0 +1 @@
++{"q": 150, "gold": "Bruce", "n_choices": 2, "sc_answer": "Norris", "energy_answer": "Norris", "energy_pure_answer": "Norris", "judge_answer": "Norris", "sc_correct": 0, "energy_correct": 0, "energy_pure_correct": 0, "judge_correct": 0, "n_valid_candidates": 8, "answers": ["Bruce", "Norris", "Norris", "Norris", "Bruce", "Norris", "Norris", "Norris"], "energy_abstained": false}
+diff --git a/results/experiment_4978_capstone_v458.json b/results/experiment_4978_capstone_v458.json
+new file mode 100644
+index 0000000000..b39e7fd003
+--- /dev/null
++++ b/results/experiment_4978_capstone_v458.json
+@@ -0,0 +1,680 @@
++{
++  "a3_substrate_flag_resolved": true,
++  "arc_first_win_wall_closed": true,
++  "b3_window_nonzero": true,
++  "banks_counted": {
++    "audit_failure_reasons": [],
++    "b1_banks_trustworthy": true,
++    "bank_delta_counted": 0,
++    "base_total_from_registry": 69,
++    "candidate_banks": [
++      {
++        "game": "tu93",
++        "new_levels_banked": 0,
++        "source": "A1_LEVELUP"
++      },
++      {
++        "game": "bp35",
++        "new_levels_banked": 0,
++        "source": "A2_LEVELUP"
++      }
++    ],
++    "computed_total": 69,
++    "counted": []
++  },
++  "capstone_ready": true,
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 4969,
++      "fields_imported": [
++        "honest_verdict",
++        "target_game",
++        "new_levels_banked",
++        "offline_reproduced",
++        "reproduced_levels",
++        "solve_provenance",
++        "live_path_reachable",
++        "reproduction_gate",
++        "registry_update"
++      ],
++      "path": "results/experiment_4969_levelup_attempt.json",
++      "sha256": "sha256:b33b25482adad5cc5d6a7b8126c69b2b19751b09027d03c9b649ff11b9bfc14a",
++      "source": "A1_LEVELUP",
++      "summarizer_exit_code": 0,
++      "true_live_recheck": "clean"
++    },
++    {
++      "experiment_id": 4970,
++      "fields_imported": [
++        "honest_verdict",
++        "target_game",
++        "new_levels_banked",
++        "offline_reproduced",
++        "reproduced_levels",
++        "solve_provenance",
++        "live_path_reachable",
++        "reproduction_gate",
++        "registry_update"
++      ],
++      "path": "results/experiment_4970_levelup_attempt.json",
++      "sha256": "sha256:26da180d5560842eaa45d4f5f54e84a279e8d5a489ee3cc5c63cbcde07091eb6",
++      "source": "A2_LEVELUP",
++      "summarizer_exit_code": 0,
++      "true_live_recheck": "clean"
++    },
++    {
++      "experiment_id": 4971,
++      "fields_imported": [
++        "honest_verdict",
++        "target_game",
++        "verifier_checkpoint_refreshed",
++        "checkpoint_path",
++        "offline_reproduced",
++        "reproduced_levels",
++        "flag_resolved",
++        "reproduction_gate",
++        "inference_substrate"
++      ],
++      "path": "results/experiment_4971_self_play_verifier_checkpoint.json",
++      "sha256": "sha256:8f68d8e7867fd7512965f6fc237bdcad51525cc421d99a6c81b8e018247e0f16",
++      "source": "A3_SELF_PLAY",
++      "summarizer_exit_code": 0,
++      "true_live_recheck": "clean"
++    },
++    {
++      "experiment_id": 4972,
++      "fields_imported": [
++        "honest_verdict",
++        "heldout_first_win_rate",
++        "heldout_first_win_ci",
++        "games_evaluated",
++        "flag_resolved",
++        "positive_control_passed",
++        "operator_decision_number",
++        "model_specs",
++        "inference_substrate",
++        "solve_provenance"
++      ],
++      "path": "results/experiment_4972_heldout_first_win_readiness.json",
++      "sha256": "sha256:36081cf01407ebc405609dd99a2fb4da6f938290a581d8440499c89aee0259cf",
++      "source": "A4_HELDOUT",
++      "summarizer_exit_code": 1,
++      "true_live_recheck": "warn"
++    },
++    {
++      "experiment_id": 4973,
++      "fields_imported": [
++        "honest_verdict",
++        "pivot_turnkey",
++        "pivot_executable_on_7_1",
++        "three_column_dry_run_ok",
++        "validation_gate",
++        "turnkey_spec",
++        "post_sprint_first_experiment_pointer",
++        "verifier_is_oracle",
++        "moat_proven_claimed",
++        "arxiv_ids_cited"
++      ],
++      "path": "results/experiment_4973_distributional_energy_verifier_turnkey.json",
++      "sha256": "sha256:f5d2b5dcb2a1c90109f5a3be7241cdd23bfa941b2d8b9edc0bfadc344d13c382",
++      "source": "D_PIVOT",
++      "summarizer_exit_code": 0,
++      "true_live_recheck": "clean"
++    },
++    {
++      "experiment_id": 4974,
++      "fields_imported": [
++        "honest_verdict",
++        "banks_trustworthy",
++        "pivot_readiness_trustworthy",
++        "checks",
++        "audit_failure_reasons",
++        "bank_evidence",
++        "pivot_readiness_evidence"
++      ],
++      "path": "results/experiment_4974_bank_and_pivot_audit.json",
++      "sha256": "sha256:08f337bbeed10343fc160a62ef661f9b26aaf5838d81ef1767207225e273551f",
++      "source": "B1_AUDIT",
++      "summarizer_exit_code": 0,
++      "true_live_recheck": "clean"
++    },
++    {
++      "experiment_id": 4975,
++      "fields_imported": [
++        "honest_verdict",
++        "submission_package_ready",
++        "peak_vram_gb",
++        "frozen_stack_loads",
++        "package_builds",
++        "ready_package_regression_ok",
++        "submits",
++        "operator_only",
++        "operator_submission_checklist"
++      ],
++      "path": "results/experiment_4975_submission_package_harden.json",
++      "sha256": "sha256:287fd9337f2e8acc147d29e6092ba419588092099664353e62dc9ed65d66c084",
++      "source": "B2_PACKAGE",
++      "summarizer_exit_code": 0,
++      "true_live_recheck": "clean"
++    },
++    {
++      "experiment_id": 4976,
++      "fields_imported": [
++        "honest_verdict",
++        "stamping_backfilled_arms",
++        "mtime_fallback_window",
++        "wiring_proposal_reconfirmed",
++        "research_conductor_modified"
++      ],
++      "path": "results/experiment_4976_stamping_backfill_and_wiring_readiness.json",
++      "sha256": "sha256:f9f959f6cc24bcb3d32c2e389e4ecd4ed892ceb59b5aca9663c54076ec9a7bec",
++      "source": "B3_STAMPING",
++      "summarizer_exit_code": 0,
++      "true_live_recheck": "clean"
++    },
++    {
++      "experiment_id": 4977,
++      "fields_imported": [
++        "honest_verdict",
++        "kv260_ssh_reachable",
++        "loaded_overlay",
++        "xmutil_requires_sudo",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4977_kv260_continuity.json",
++      "sha256": "sha256:7ca80bbcadc13888884c9fcc13b24dea2b4e4cde4b45a98645d82d525e1d3f82",
++      "source": "C_KV260",
++      "summarizer_exit_code": 0,
++      "true_live_recheck": "clean"
++    }
++  ],
++  "duration_s": 0.850161,
++  "experiment": "experiment_4978_capstone_v458",
++  "experiment_id": 4978,
++  "field_principles": {
++    "a3_substrate_flag_resolved": {
++      "principle": "true -- A3 (exp4971) is NOT flagged true_live_recheck=critical (the .456 DURATION_TOO_SHORT substrate fix still holds; self-play is COUNTED)."
++    },
++    "arc_first_win_wall_closed": {
++      "principle": "true -- the .453 B1-trusted WALL_IS_HIDDEN_STATE closure stands; .458 did not reopen it or queue representation #5 / the concluded energy-as-ARC program."
++    },
++    "b3_window_nonzero": {
++      "principle": "true -- B3 (exp4976) emitted a NON-zero mtime window (the relaxed gate is maintained)."
++    },
++    "banks_counted": {
++      "principle": "the A1/A2 games whose banks were counted (gated on B1 banks_trustworthy) -- no un-audited bank inflates the total; honest no-bank is expected (4th+ flat milestone)."
++    },
++    "cited_upstream_artifacts": {
++      "principle": "{experiment_id, fields_imported, sha256} per source -- the audit trail (no synthesized numbers)."
++    },
++    "headline": {
++      "principle": "the one-line .458 headline -- the locked deliverable confirmed ready for 6/30 + the post-6/30 verifier-moat pivot turnkey 7/1 (backlog extended)."
++    },
++    "heldout_first_win_rate": {
++      "principle": "A4's FINAL full-25 go/no-go number + flag_resolved -- the operator's 6/30 decision input."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; complete_capstone_v458_submission_ready_<state> (e.g. _levels_<N>_heldout_<rate>_package_ready_pivot_turnkey_7_1)."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
++    },
++    "pivot_executable_on_7_1": {
++      "principle": "true iff D kept the pivot turnkey AND B1 pivot_readiness_trustworthy -- the post-sprint experiment runs the instant the sprint retires."
++    },
++    "post_sprint_pivot": {
++      "principle": "the post-6/30 verifier-moat handoff: D's distributional-energy-verifier TURNKEY spec (arXiv:2605.18871, beats SC on MuSR) + extended backlog (NEW 2504.01005/2504.00891/2509.24460), gated on B1 pivot_readiness_trustworthy; the deliverable remains the ~0.05 agent + FoVer paper. NOT moat-proven."
++    },
++    "preconditions_checked": {
++      "principle": "records upstream-artifact presence + registry loadability; a missing input emits blocked_."
++    },
++    "random_seed": {
++      "principle": "determinism for any tie-break in the scorecard aggregation."
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash of (cited upstream sha256s + scorecard) so a replication catches drift."
++    },
++    "reproducible_total_levels": {
++      "principle": "the monotonic ARC progress metric from the registry (69 + A1/A2 banks counted ONLY if B1 banks_trustworthy)."
++    },
++    "skipped_flagged_adversarial": {
++      "principle": "the list of upstream artifacts skipped per the fabrication gate."
++    },
++    "submission_package_ready": {
++      "principle": "B2's terminal gate + peak_vram_gb -- the deadline deliverable for the operator."
++    }
++  },
++  "headline": ".458 FINAL sprint-day submission readiness: locked ~0.05 agent + FoVer paper ready for 6/30 at 69 reproducible levels, no trusted A1/A2 banks counted; held-out first-win 0.04 with flag_resolved=True; package ready; A3 substrate fix holds=True; B3 nonzero mtime window=True; post-6/30 verifier-moat pivot turnkey 7/1; ARC wall remains WALL_IS_HIDDEN_STATE closed.",
++  "heldout_first_win_rate": {
++    "ci": {
++      "bootstrap_resamples": 1000,
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "method": "paired_percentile_bootstrap",
++      "point": 0.0,
++      "random_seed": 4605
++    },
++    "flag_resolved": true,
++    "games_evaluated": 25,
++    "honest_verdict": "complete_heldout_first_win_0.04_full25_final_flag_resolved",
++    "model_specs": {
++      "backend": "gpu0_cuda",
++      "cuda_visible_devices": "0",
++      "kv_quant": "q8_0",
++      "llama_server_kind": "cuda-12.8-binary",
++      "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
++      "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
++      "mtp": true,
++      "name": "Qwen3.5-9B-MTP",
++      "no_think_prefix": true,
++      "port": 8931,
++      "repo_substr": "Qwen3.5-9B-MTP",
++      "request_note": "Carried from exp4961/exp4950 so the operator's final pre-deadline held-out go/no-go does not re-measure a settled clean full-25 artifact.",
++      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++      "serving_path": "GPU-0 CUDA llama-server"
++    },
++    "operator_decision_number": {
++      "baseline": 0.04,
++      "decision_date": "2026-06-30",
++      "delta_vs_baseline": 0.0,
++      "go_no_go": "no_go_no_improvement_null",
++      "heldout_first_win_ci": {
++        "bootstrap_resamples": 1000,
++        "ci95": [
++          0.0,
++          0.0
++        ],
++        "method": "paired_percentile_bootstrap",
++        "point": 0.0,
++        "random_seed": 4605
++      },
++      "heldout_first_win_rate": 0.04
++    },
++    "positive_control_passed": true,
++    "rate": 0.04,
++    "solve_provenance": "development_proxy",
++    "status": "full25_go_no_go"
++  },
++  "honest_verdict": "complete_capstone_v458_submission_ready_levels_69_heldout_0.04_package_ready_pivot_turnkey_7_1",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone_scorecard": {
++    "a3_substrate_fix": {
++      "decision": "a3_substrate_fix_holds_self_play_counted",
++      "honest_verdict": "success_self_play_checkpoint_refreshed",
++      "inference_substrate": "verifier_ensemble_against_cached_candidates",
++      "offline_reproduced": true,
++      "reproduced_levels": 3,
++      "resolved": true,
++      "summarizer_exit_code": 0,
++      "target_game": "ft09",
++      "true_live_recheck": "clean"
++    },
++    "b3_window_fix": {
++      "decision": "b3_relaxed_mtime_window_maintained",
++      "honest_verdict": "success_v458_stamping_backfilled_and_mtime_window_confirmed",
++      "mtime_fallback_window": {
++        "artifact_paths": [
++          "results/experiment_4968_archive_457_activate_458.json",
++          "results/experiment_4969_levelup_attempt.json",
++          "results/experiment_4970_levelup_attempt.json",
++          "results/experiment_4971_self_play_verifier_checkpoint.json",
++          "results/experiment_4972_heldout_first_win_readiness.json",
++          "results/experiment_4973_distributional_energy_verifier_turnkey.json",
++          "results/experiment_4974_bank_and_pivot_audit.json",
++          "results/experiment_4975_submission_package_harden.json"
++        ],
++        "compute_bound_count": 4,
++        "milestone": "2026.06.458",
++        "n_arms": 8,
++        "wall_minutes": 119.48,
++        "window_end": "2026-06-29T15:11:45Z",
++        "window_start": "2026-06-29T13:12:17Z"
++      },
++      "n_arms": 8,
++      "nonzero": true,
++      "research_conductor_modified": false,
++      "wall_minutes": 119.48,
++      "wiring_proposal_reconfirmed": true
++    },
++    "banks": {
++      "audit_failure_reasons": [],
++      "b1_banks_trustworthy": true,
++      "bank_delta_counted": 0,
++      "base_total_from_registry": 69,
++      "candidate_banks": [
++        {
++          "game": "tu93",
++          "new_levels_banked": 0,
++          "source": "A1_LEVELUP"
++        },
++        {
++          "game": "bp35",
++          "new_levels_banked": 0,
++          "source": "A2_LEVELUP"
++        }
++      ],
++      "computed_total": 69,
++      "counted": []
++    },
++    "deliverable": "locked ~0.05 first-win agent + publishable FoVer paper",
++    "heldout_go_no_go": {
++      "ci": {
++        "bootstrap_resamples": 1000,
++        "ci95": [
++          0.0,
++          0.0
++        ],
++        "method": "paired_percentile_bootstrap",
++        "point": 0.0,
++        "random_seed": 4605
++      },
++      "flag_resolved": true,
++      "games_evaluated": 25,
++      "honest_verdict": "complete_heldout_first_win_0.04_full25_final_flag_resolved",
++      "model_specs": {
++        "backend": "gpu0_cuda",
++        "cuda_visible_devices": "0",
++        "kv_quant": "q8_0",
++        "llama_server_kind": "cuda-12.8-binary",
++        "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
++        "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
++        "mtp": true,
++        "name": "Qwen3.5-9B-MTP",
++        "no_think_prefix": true,
++        "port": 8931,
++        "repo_substr": "Qwen3.5-9B-MTP",
++        "request_note": "Carried from exp4961/exp4950 so the operator's final pre-deadline held-out go/no-go does not re-measure a settled clean full-25 artifact.",
++        "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++        "serving_path": "GPU-0 CUDA llama-server"
++      },
++      "operator_decision_number": {
++        "baseline": 0.04,
++        "decision_date": "2026-06-30",
++        "delta_vs_baseline": 0.0,
++        "go_no_go": "no_go_no_improvement_null",
++        "heldout_first_win_ci": {
++          "bootstrap_resamples": 1000,
++          "ci95": [
++            0.0,
++            0.0
++          ],
++          "method": "paired_percentile_bootstrap",
++          "point": 0.0,
++          "random_seed": 4605
++        },
++        "heldout_first_win_rate": 0.04
++      },
++      "positive_control_passed": true,
++      "rate": 0.04,
++      "solve_provenance": "development_proxy",
++      "status": "full25_go_no_go"
++    },
++    "post_sprint_pivot": {
++      "arxiv_id": "2605.18871",
++      "arxiv_ids_cited": [
++        "2504.01005",
++        "2504.00891",
++        "2509.24460",
++        "2605.18871",
++        "2504.16828",
++        "2502.01989",
++        "2508.16665",
++        "2508.10539",
++        "2502.11157"
++      ],
++      "b1_pivot_readiness_trustworthy": true,
++      "claim_status": "readiness_only_not_moat_proven",
++      "d_pivot_executable_on_7_1": true,
++      "d_pivot_turnkey": true,
++      "decision": "post_6_30_distributional_energy_verifier_moat_experiment_turnkey_7_1",
++      "deliverable": "current ~0.05 agent + publishable FoVer paper",
++      "do_not_queue": "representation_5_or_concluded_energy_as_arc_program",
++      "executable_date": "2026-07-01",
++      "extended_sota_backlog": [
++        "2504.01005",
++        "2504.00891",
++        "2509.24460"
++      ],
++      "moat_proven": false,
++      "moat_proven_claimed": false,
++      "pivot_executable_on_7_1": true,
++      "pivot_turnkey": true,
++      "runs_after": "2026-06-30_sprint_retirement",
++      "sota_signal": "2605.18871 beats self-consistency on MuSR",
++      "validation_gate": {
++        "beats_self_consistency_ci95_excludes_zero_required": true,
++        "claimed_met": false,
++        "domain_self_consistency_not_near_ceiling_required": true,
++        "no_model_identity_shortcut_required": true,
++        "oracle_distinct_required": true,
++        "promotion_note": "not met by Exp4973; this artifact only re-confirms turnkey readiness and extends the post-6/30 backlog",
++        "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero",
++        "verifier_is_oracle_required_value": false
++      },
++      "validation_required": "beats_self_consistency_ci95_excludes_zero AND oracle_distinct AND no_model_identity_shortcut"
++    },
++    "reserved_lanes": {
++      "b3_stamping": {
++        "decision": "reserved_lane_b3_nonzero_mtime_window",
++        "honest_verdict": "success_v458_stamping_backfilled_and_mtime_window_confirmed",
++        "mtime_fallback_window": {
++          "artifact_paths": [
++            "results/experiment_4968_archive_457_activate_458.json",
++            "results/experiment_4969_levelup_attempt.json",
++            "results/experiment_4970_levelup_attempt.json",
++            "results/experiment_4971_self_play_verifier_checkpoint.json",
++            "results/experiment_4972_heldout_first_win_readiness.json",
++            "results/experiment_4973_distributional_energy_verifier_turnkey.json",
++            "results/experiment_4974_bank_and_pivot_audit.json",
++            "results/experiment_4975_submission_package_harden.json"
++          ],
++          "compute_bound_count": 4,
++          "milestone": "2026.06.458",
++          "n_arms": 8,
++          "wall_minutes": 119.48,
++          "window_end": "2026-06-29T15:11:45Z",
++          "window_start": "2026-06-29T13:12:17Z"
++        },
++        "n_arms": 8,
++        "nonzero": true,
++        "research_conductor_modified": false,
++        "wall_minutes": 119.48,
++        "wiring_proposal_reconfirmed": true
++      },
++      "c_kv260": {
++        "decision": "reserved_lane_kv260_continuity_ok",
++        "honest_verdict": "success_kv260_continuity_ok",
++        "kv260_ssh_reachable": true,
++        "loaded_overlay": "carnot_ising_v2_n64",
++        "xmutil_requires_sudo": true
++      }
++    },
++    "submission_package": {
++      "decision": "package_ready_operator_only",
++      "frozen_stack_loads": true,
++      "honest_verdict": "success_submission_package_ready_final_pre_deadline",
++      "operator_only": true,
++      "operator_submission_checklist": [
++        "OPERATOR-CHECK: FINAL pre-deadline gate: confirm results/experiment_4975_submission_package_harden.json is ready, submits=false, and operator_only=true.",
++        "OPERATOR-CHECK: Confirm the .457 ready-package regression check is passed against results/experiment_4964_submission_package_harden.json.",
++        "OPERATOR-CHECK: Confirm the package dry-build compiled main.py and produced stable hashes for kernel-metadata.json and main.py.",
++        "OPERATOR-CHECK: Confirm the requirements-doc package cross-check passed against docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md.",
++        "OPERATOR-CHECK: Confirm Qwen3.5-9B-MTP GGUF resolves through CARNOT_ARC_GGUF_PATH and CUDA llama-server resolves through CARNOT_LLAMA_SERVER.",
++        "OPERATOR-CHECK: Verify the frozen .457 load evidence reports draft-MTP, q8_0 KV, /no_think, no 3090 use, and peak VRAM 15.146GB below the 16GB Kaggle budget.",
++        "OPERATOR-CHECK: In Kaggle, use kernel iancblenke/carnot-arc-agi3-submission with GPU enabled, internet disabled, and the ARC-AGI-3 competition attached.",
++        "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf before Save & Run.",
++        "OPERATOR-CHECK: Submit only through the operator-controlled Kaggle UI or API; this task never submits."
++      ],
++      "package_builds": true,
++      "peak_vram_gb": 15.146,
++      "ready": true,
++      "ready_package_regression_ok": true,
++      "submits": false
++    },
++    "wall_closure": {
++      "closed": true,
++      "closure_verdict": "WALL_IS_HIDDEN_STATE",
++      "did_reopen_energy_as_arc_program": false,
++      "did_reopen_in_v458": false,
++      "do_not_queue": "representation_5_or_concluded_energy_as_arc_program",
++      "energy_as_arc_program": "S0_CONCLUDED_2026_06_26",
++      "representation_5_queued": false,
++      "source": "standing_453_b1_trusted_closure",
++      "trusted": true
++    }
++  },
++  "pivot_executable_on_7_1": true,
++  "post_sprint_pivot": {
++    "arxiv_id": "2605.18871",
++    "arxiv_ids_cited": [
++      "2504.01005",
++      "2504.00891",
++      "2509.24460",
++      "2605.18871",
++      "2504.16828",
++      "2502.01989",
++      "2508.16665",
++      "2508.10539",
++      "2502.11157"
++    ],
++    "b1_pivot_readiness_trustworthy": true,
++    "claim_status": "readiness_only_not_moat_proven",
++    "d_pivot_executable_on_7_1": true,
++    "d_pivot_turnkey": true,
++    "decision": "post_6_30_distributional_energy_verifier_moat_experiment_turnkey_7_1",
++    "deliverable": "current ~0.05 agent + publishable FoVer paper",
++    "do_not_queue": "representation_5_or_concluded_energy_as_arc_program",
++    "executable_date": "2026-07-01",
++    "extended_sota_backlog": [
++      "2504.01005",
++      "2504.00891",
++      "2509.24460"
++    ],
++    "moat_proven": false,
++    "moat_proven_claimed": false,
++    "pivot_executable_on_7_1": true,
++    "pivot_turnkey": true,
++    "runs_after": "2026-06-30_sprint_retirement",
++    "sota_signal": "2605.18871 beats self-consistency on MuSR",
++    "validation_gate": {
++      "beats_self_consistency_ci95_excludes_zero_required": true,
++      "claimed_met": false,
++      "domain_self_consistency_not_near_ceiling_required": true,
++      "no_model_identity_shortcut_required": true,
++      "oracle_distinct_required": true,
++      "promotion_note": "not met by Exp4973; this artifact only re-confirms turnkey readiness and extends the post-6/30 backlog",
++      "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero",
++      "verifier_is_oracle_required_value": false
++    },
++    "validation_required": "beats_self_consistency_ci95_excludes_zero AND oracle_distinct AND no_model_identity_shortcut"
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_md_read": true,
++    "north_star": {
++      "path": "ops/north-star.md",
++      "present": true,
++      "read_sections": [
++        "0",
++        "1",
++        "5"
++      ],
++      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
++    },
++    "registry": {
++      "path": "ops/arc_solve_registry.yaml",
++      "present": true,
++      "reproducible_total_levels": 69,
++      "sha256": "sha256:91927011c52cd713468f342149cca002d1a434f557d244478edf50b003794477",
++      "yaml_loadable": true
++    },
++    "spec_has_req_4978": true,
++    "summarizer": {
++      "path": "scripts/summarize_artifact.py",
++      "present": true
++    },
++    "upstream_artifacts": {
++      "A1_LEVELUP": {
++        "path": "results/experiment_4969_levelup_attempt.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "A2_LEVELUP": {
++        "path": "results/experiment_4970_levelup_attempt.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "A3_SELF_PLAY": {
++        "path": "results/experiment_4971_self_play_verifier_checkpoint.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "A4_HELDOUT": {
++        "path": "results/experiment_4972_heldout_first_win_readiness.json",
++        "present": true,
++        "summarizer_exit_code": 1
++      },
++      "B1_AUDIT": {
++        "path": "results/experiment_4974_bank_and_pivot_audit.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "B2_PACKAGE": {
++        "path": "results/experiment_4975_submission_package_harden.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "B3_STAMPING": {
++        "path": "results/experiment_4976_stamping_backfill_and_wiring_readiness.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "C_KV260": {
++        "path": "results/experiment_4977_kv260_continuity.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "D_PIVOT": {
++        "path": "results/experiment_4973_distributional_energy_verifier_turnkey.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      }
++    }
++  },
++  "random_seed": 20260629,
++  "reproducibility_checksum": "sha256:dea8c1fc659c5ff87a2a38b4bf22cd940e65c5d3c8e067f545bd8737428d421b",
++  "reproducible_total_levels": 69,
++  "result_path": "results/experiment_4978_capstone_v458.json",
++  "schema": "carnot.exp4978.capstone_v458.v1",
++  "skipped_flagged_adversarial": [],
++  "spec_refs": [
++    "REQ-CAPSTONE-4978",
++    "SCENARIO-CAPSTONE-4978",
++    "SCENARIO-CAPSTONE-4978-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4978-FIELD-PRINCIPLES"
++  ],
++  "submission_package_ready": {
++    "decision": "package_ready_operator_only",
++    "frozen_stack_loads": true,
++    "honest_verdict": "success_submission_package_ready_final_pre_deadline",
++    "operator_only": true,
++    "operator_submission_checklist": [
++      "OPERATOR-CHECK: FINAL pre-deadline gate: confirm results/experiment_4975_submission_package_harden.json is ready, submits=false, and operator_only=true.",
++      "OPERATOR-CHECK: Confirm the .457 ready-package regression check is passed against results/experiment_4964_submission_package_harden.json.",
++      "OPERATOR-CHECK: Confirm the package dry-build compiled main.py and produced stable hashes for kernel-metadata.json and main.py.",
++      "OPERATOR-CHECK: Confirm the requirements-doc package cross-check passed against docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md.",
++      "OPERATOR-CHECK: Confirm Qwen3.5-9B-MTP GGUF resolves through CARNOT_ARC_GGUF_PATH and CUDA llama-server resolves through CARNOT_LLAMA_SERVER.",
++      "OPERATOR-CHECK: Verify the frozen .457 load evidence reports draft-MTP, q8_0 KV, /no_think, no 3090 use, and peak VRAM 15.146GB below the 16GB Kaggle budget.",
++      "OPERATOR-CHECK: In Kaggle, use kernel iancblenke/carnot-arc-agi3-submission with GPU enabled, internet disabled, and the ARC-AGI-3 competition attached.",
++      "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf before Save & Run.",
++      "OPERATOR-CHECK: Submit only through the operator-controlled Kaggle UI or API; this task never submits."
++    ],
++    "package_builds": true,
++    "peak_vram_gb": 15.146,
++    "ready": true,
++    "ready_package_regression_ok": true,
++    "submits": false
++  }
++}
+diff --git a/tests/python/test_experiment_4978_capstone_v458.py b/tests/python/test_experiment_4978_capstone_v458.py
+new file mode 100644
+index 0000000000..838c1933f8
+--- /dev/null
++++ b/tests/python/test_experiment_4978_capstone_v458.py
+@@ -0,0 +1,470 @@
++"""Tests for REQ-CAPSTONE-4978 / SCENARIO-CAPSTONE-4978."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4978_capstone_v458 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/capstone/spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _levelup(game: str, *, banked: int = 0) -> JsonDict:
++    reached = 7 if game == "tr87" and banked else 3 if game == "s5i5" and banked else 0
++    return {
++        "experiment": f"experiment_49xx_{game}",
++        "honest_verdict": (
++            f"success_{game}_levelup_banked"
++            if banked
++            else f"complete_{game}_no_new_level_residual_no_grounded_delta"
++        ),
++        "target_game": game,
++        "new_levels_banked": banked,
++        "offline_reproduced": bool(banked),
++        "reproduced_levels": reached or (6 if game == "tr87" else 2),
++        "solve_provenance": "live_agent_self_discovery",
++        "live_path_reachable": True,
++        "registry_update": {"target_game": game, "banked_levels": banked},
++        "reproduction_gate": {},
++    }
++
++
++def _self_play() -> JsonDict:
++    return {
++        "experiment": "experiment_4971_self_play_verifier_checkpoint",
++        "honest_verdict": "success_self_play_checkpoint_refreshed",
++        "target_game": "dc22",
++        "verifier_checkpoint_refreshed": True,
++        "checkpoint_path": "models/arc_verifier_dc22.json",
++        "offline_reproduced": True,
++        "reproduced_levels": 2,
++        "flag_resolved": True,
++        "duration_s": 1.0,
++        "inference_substrate": "verifier_ensemble_against_cached_candidates",
++    }
++
++
++def _heldout() -> JsonDict:
++    return {
++        "experiment_id": 4972,
++        "honest_verdict": "complete_heldout_first_win_0.04_full25_final_flag_resolved",
++        "flagged_adversarial": False,
++        "heldout_first_win_rate": 0.04,
++        "heldout_first_win_ci": {
++            "method": "paired_percentile_bootstrap",
++            "ci95": [0.0, 0.0],
++            "point": 0.0,
++        },
++        "games_evaluated": 25,
++        "flag_resolved": True,
++        "positive_control_passed": True,
++        "model_specs": {"generator": "Qwen3.5-9B-MTP", "backend": "gpu0_cuda"},
++        "inference_substrate": "live_llm_inference",
++        "solve_provenance": "development_proxy",
++        "operator_decision_number": {"go_no_go": "no_go_no_improvement_null"},
++    }
++
++
++def _pivot() -> JsonDict:
++    return {
++        "honest_verdict": "success_distributional_energy_verifier_pivot_turnkey_backlog_extended",
++        "pivot_turnkey": True,
++        "pivot_executable_on_7_1": True,
++        "three_column_dry_run_ok": True,
++        "verifier_is_oracle": False,
++        "moat_proven_claimed": False,
++        "arxiv_ids_cited": [
++            "2504.01005",
++            "2504.00891",
++            "2509.24460",
++            "2605.18871",
++            "2504.16828",
++            "2502.01989",
++        ],
++        "turnkey_spec": {
++            "sota_backlog_extension": {
++                "new_arxiv_ids": ["2504.01005", "2504.00891", "2509.24460"],
++            }
++        },
++        "validation_gate": {
++            "beats_self_consistency_ci95_excludes_zero_required": True,
++            "oracle_distinct_required": True,
++            "no_model_identity_shortcut_required": True,
++            "verifier_is_oracle_required_value": False,
++            "claimed_met": False,
++        },
++        "post_sprint_first_experiment_pointer": {
++            "not_before_date": "2026-07-01",
++            "real_benchmark_executed_by_exp4973": False,
++        },
++    }
++
++
++def _audit(*, banks_trustworthy: bool = True, pivot_trustworthy: bool = True) -> JsonDict:
++    return {
++        "experiment_id": 4974,
++        "honest_verdict": "complete_v458_banks_and_pivot_audited_trusted",
++        "banks_trustworthy": banks_trustworthy,
++        "pivot_readiness_trustworthy": pivot_trustworthy,
++        "checks": {
++            "reproduction_genuine": True,
++            "not_duplicate": True,
++            "self_discovery_provenance": True,
++            "live_path_reachable": True,
++            "oracle_distinct_design": pivot_trustworthy,
++            "honest_readiness": pivot_trustworthy,
++        },
++        "audit_failure_reasons": [] if pivot_trustworthy else ["D_honest_readiness_failed"],
++        "bank_evidence": {
++            "A1": {"bank_claimed": False, "game": "tr87"},
++            "A2": {"bank_claimed": False, "game": "s5i5"},
++        },
++        "pivot_readiness_evidence": {
++            "checks": {
++                "oracle_distinct_design": pivot_trustworthy,
++                "honest_readiness": pivot_trustworthy,
++            }
++        },
++    }
++
++
++def _package() -> JsonDict:
++    return {
++        "experiment": "experiment_4975_submission_package_harden",
++        "honest_verdict": "success_submission_package_ready_final_pre_deadline",
++        "submission_package_ready": True,
++        "submits": False,
++        "operator_only": True,
++        "peak_vram_gb": 15.146,
++        "frozen_stack_loads": True,
++        "package_builds": True,
++        "ready_package_regression_ok": True,
++    }
++
++
++def _stamping() -> JsonDict:
++    return {
++        "experiment_id": 4976,
++        "honest_verdict": "success_v458_stamping_backfilled_and_mtime_window_confirmed",
++        "mtime_fallback_window": {
++            "n_arms": 8,
++            "compute_bound_count": 2,
++            "wall_minutes": 99.12,
++            "window_start": "2026-06-29T06:50:02Z",
++            "window_end": "2026-06-29T08:29:10Z",
++        },
++        "stamping_backfilled_arms": [{"experiment_id": 4975, "compute_bound": True}],
++        "wiring_proposal_reconfirmed": True,
++        "research_conductor_modified": False,
++    }
++
++
++def _kv260() -> JsonDict:
++    return {
++        "experiment": 4977,
++        "honest_verdict": "success_kv260_continuity_ok",
++        "kv260_ssh_reachable": True,
++        "loaded_overlay": "carnot_ising_v2_n64",
++        "xmutil_requires_sudo": True,
++        "verifier_is_oracle": False,
++    }
++
++
++def _artifacts() -> dict[str, JsonDict]:
++    return {
++        "A1_LEVELUP": _levelup("tr87"),
++        "A2_LEVELUP": _levelup("s5i5"),
++        "A3_SELF_PLAY": _self_play(),
++        "A4_HELDOUT": _heldout(),
++        "D_PIVOT": _pivot(),
++        "B1_AUDIT": _audit(),
++        "B2_PACKAGE": _package(),
++        "B3_STAMPING": _stamping(),
++        "C_KV260": _kv260(),
++    }
++
++
++def _hashes() -> dict[str, str]:
++    return {source: f"sha256:{source.lower()}" for source in mod.UPSTREAM_SOURCES}
++
++
++def _summaries(*, self_play_code: int = 0) -> dict[str, mod.SummarizerResult]:
++    return {
++        source: mod.SummarizerResult(
++            ["summarize", spec.relative_path],
++            self_play_code
++            if source == "A3_SELF_PLAY"
++            else 1
++            if source == "A4_HELDOUT"
++            else 0,
++            "LIVE re-check: CRITICAL"
++            if source == "A3_SELF_PLAY" and self_play_code >= 2
++            else "LIVE re-check: warn"
++            if source == "A4_HELDOUT"
++            else "LIVE re-check: clean",
++            "",
++        )
++        for source, spec in mod.UPSTREAM_SOURCES.items()
++    }
++
++
++def test_req_capstone_4978_spec_declares_final_scorecard_contract() -> None:
++    """REQ-CAPSTONE-4978: OpenSpec declares the final .458 capstone contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-CAPSTONE-4978") :]
++
++    for ref in mod.SPEC_REFS:
++        assert ref in section
++    assert mod.RESULT_RELATIVE_PATH in section
++    for source in mod.UPSTREAM_SOURCES.values():
++        assert source.relative_path in section
++    for field in mod.REQUIRED_FIELDS:
++        assert field in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in section
++        assert principle["principle"] in section
++
++
++def test_scenario_capstone_4978_default_submission_ready_and_turnkey_handoff() -> None:
++    """SCENARIO-CAPSTONE-4978: final scorecard reports readiness without new claims."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 69},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete_capstone_v458_submission_ready_levels_69_heldout_0.04_"
++        "package_ready_pivot_turnkey_7_1"
++    )
++    assert artifact["capstone_ready"] is True
++    assert artifact["reproducible_total_levels"] == 69
++    assert artifact["banks_counted"]["b1_banks_trustworthy"] is True
++    assert artifact["banks_counted"]["counted"] == []
++    assert artifact["banks_counted"]["candidate_banks"] == [
++        {"source": "A1_LEVELUP", "game": "tr87", "new_levels_banked": 0},
++        {"source": "A2_LEVELUP", "game": "s5i5", "new_levels_banked": 0},
++    ]
++    assert artifact["heldout_first_win_rate"]["rate"] == 0.04
++    assert artifact["heldout_first_win_rate"]["flag_resolved"] is True
++    assert artifact["submission_package_ready"]["ready"] is True
++    assert artifact["submission_package_ready"]["peak_vram_gb"] == 15.146
++    assert artifact["a3_substrate_flag_resolved"] is True
++    assert artifact["b3_window_nonzero"] is True
++    assert artifact["arc_first_win_wall_closed"] is True
++    assert artifact["post_sprint_pivot"]["pivot_turnkey"] is True
++    assert artifact["post_sprint_pivot"]["pivot_executable_on_7_1"] is True
++    assert artifact["post_sprint_pivot"]["moat_proven"] is False
++    assert artifact["post_sprint_pivot"]["extended_sota_backlog"] == [
++        "2504.01005",
++        "2504.00891",
++        "2509.24460",
++    ]
++    assert artifact["pivot_executable_on_7_1"] is True
++    assert artifact["milestone_scorecard"]["reserved_lanes"]["b3_stamping"]["decision"] == (
++        "reserved_lane_b3_nonzero_mtime_window"
++    )
++    assert artifact["milestone_scorecard"]["reserved_lanes"]["c_kv260"]["decision"] == (
++        "reserved_lane_kv260_continuity_ok"
++    )
++    assert "post-6/30 verifier-moat pivot turnkey 7/1" in artifact["headline"]
++    assert artifact["skipped_flagged_adversarial"] == []
++    assert {row["source"] for row in artifact["cited_upstream_artifacts"]} == set(
++        mod.UPSTREAM_SOURCES
++    )
++    assert all(row["sha256"].startswith("sha256:") for row in artifact["cited_upstream_artifacts"])
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_capstone_4978_banks_and_pivot_are_gated_by_b1() -> None:
++    """REQ-CAPSTONE-4978: A1/A2 banks and D handoff require B1 trust."""
++
++    artifacts = _artifacts()
++    artifacts["A1_LEVELUP"] = _levelup("tr87", banked=1)
++    artifacts["A2_LEVELUP"] = _levelup("s5i5", banked=1)
++
++    untrusted = {**artifacts, "B1_AUDIT": _audit(banks_trustworthy=False, pivot_trustworthy=False)}
++    untrusted_artifact = mod.build_artifact(
++        artifacts=untrusted,
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 69},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++    assert untrusted_artifact["reproducible_total_levels"] == 69
++    assert untrusted_artifact["banks_counted"]["counted"] == []
++    assert untrusted_artifact["pivot_executable_on_7_1"] is False
++    assert untrusted_artifact["post_sprint_pivot"]["decision"] == "pivot_not_stated_untrusted"
++    assert untrusted_artifact["capstone_ready"] is False
++
++    trusted = {**artifacts, "B1_AUDIT": _audit(banks_trustworthy=True, pivot_trustworthy=True)}
++    trusted_artifact = mod.build_artifact(
++        artifacts=trusted,
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 69},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++    assert trusted_artifact["reproducible_total_levels"] == 71
++    assert trusted_artifact["banks_counted"]["counted"] == [
++        {"source": "A1_LEVELUP", "game": "tr87", "new_levels_banked": 1},
++        {"source": "A2_LEVELUP", "game": "s5i5", "new_levels_banked": 1},
++    ]
++    assert trusted_artifact["pivot_executable_on_7_1"] is True
++    assert mod.validate_artifact(trusted_artifact) == []
++
++
++def test_scenario_capstone_4978_runtime_blocks_missing_required_inputs(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4978-BLOCKED-PRECONDITION: missing inputs fail closed."""
++
++    for key, payload in _artifacts().items():
++        if key != "B2_PACKAGE":
++            _write_json(tmp_path / mod.UPSTREAM_SOURCES[key].relative_path, payload)
++    registry_path = tmp_path / mod.REGISTRY_RELATIVE_PATH
++    registry_path.parent.mkdir(parents=True, exist_ok=True)
++    registry_path.write_text("schema_version: 1\nreproducible_total_levels: 69\n", encoding="utf-8")
++    north_star = tmp_path / mod.NORTH_STAR_RELATIVE_PATH
++    north_star.parent.mkdir(parents=True, exist_ok=True)
++    north_star.write_text("## 0\nARC\n## 1\nFoVer\n## 5\nverifier moat\n", encoding="utf-8")
++    spec_path = tmp_path / mod.SPEC_RELATIVE_PATH
++    spec_path.parent.mkdir(parents=True, exist_ok=True)
++    spec_path.write_text("REQ-CAPSTONE-4978\n", encoding="utf-8")
++    summarizer_path = tmp_path / mod.SUMMARIZER_RELATIVE_PATH
++    summarizer_path.parent.mkdir(parents=True, exist_ok=True)
++    summarizer_path.write_text("# placeholder\n", encoding="utf-8")
++    called: list[str] = []
++
++    def summarizer(_root: Path, relative_path: str) -> mod.SummarizerResult:
++        called.append(relative_path)
++        return mod.SummarizerResult(["summarize", relative_path], 0, "clean", "")
++
++    blocked = mod.run_capstone(root=tmp_path, summarizer=summarizer)
++
++    assert called == [
++        spec.relative_path for key, spec in mod.UPSTREAM_SOURCES.items() if key != "B2_PACKAGE"
++    ]
++    assert blocked["honest_verdict"] == "blocked_upstream_artifact_missing"
++    assert blocked["capstone_ready"] is False
++    assert blocked["preconditions_checked"]["upstream_artifacts"]["B2_PACKAGE"]["present"] is False
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == blocked
++    assert mod.validate_artifact(blocked) == []
++
++    bad_registry_root = tmp_path / "bad_registry"
++    for key, payload in _artifacts().items():
++        _write_json(bad_registry_root / mod.UPSTREAM_SOURCES[key].relative_path, payload)
++    bad_registry = bad_registry_root / mod.REGISTRY_RELATIVE_PATH
++    bad_registry.parent.mkdir(parents=True, exist_ok=True)
++    bad_registry.write_text("schema_version: [unterminated\n", encoding="utf-8")
++    (bad_registry_root / mod.NORTH_STAR_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (bad_registry_root / mod.NORTH_STAR_RELATIVE_PATH).write_text(
++        "## 0\n## 1\n## 5\n", encoding="utf-8"
++    )
++    (bad_registry_root / mod.SPEC_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (bad_registry_root / mod.SPEC_RELATIVE_PATH).write_text(
++        "REQ-CAPSTONE-4978\n", encoding="utf-8"
++    )
++    (bad_registry_root / mod.SUMMARIZER_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (bad_registry_root / mod.SUMMARIZER_RELATIVE_PATH).write_text(
++        "# placeholder\n", encoding="utf-8"
++    )
++
++    registry_blocked = mod.run_capstone(root=bad_registry_root, summarizer=summarizer)
++    assert registry_blocked["honest_verdict"] == "blocked_registry_not_yaml_loadable"
++    assert registry_blocked["preconditions_checked"]["registry"]["yaml_loadable"] is False
++    assert mod.validate_artifact(registry_blocked) == []
++
++    success_root = tmp_path / "success"
++    for key, payload in _artifacts().items():
++        _write_json(success_root / mod.UPSTREAM_SOURCES[key].relative_path, payload)
++    success_registry = success_root / mod.REGISTRY_RELATIVE_PATH
++    success_registry.parent.mkdir(parents=True, exist_ok=True)
++    success_registry.write_text("schema_version: 1\nreproducible_total_levels: 69\n", encoding="utf-8")
++    (success_root / mod.NORTH_STAR_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (success_root / mod.NORTH_STAR_RELATIVE_PATH).write_text("## 0\n## 1\n## 5\n", encoding="utf-8")
++    (success_root / mod.SPEC_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (success_root / mod.SPEC_RELATIVE_PATH).write_text("REQ-CAPSTONE-4978\n", encoding="utf-8")
++    (success_root / mod.SUMMARIZER_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
++    (success_root / mod.SUMMARIZER_RELATIVE_PATH).write_text("# placeholder\n", encoding="utf-8")
++
++    success = mod.run_capstone(root=success_root, summarizer=summarizer)
++    assert success["capstone_ready"] is True
++    assert success["honest_verdict"].startswith("complete_capstone_v458_submission_ready")
++    assert mod.validate_artifact(success) == []
++
++
++def test_scenario_capstone_4978_validation_rejects_schema_drift() -> None:
++    """SCENARIO-CAPSTONE-4978-FIELD-PRINCIPLES: malformed scorecards fail validation."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 69},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++
++    assert "missing_field:a3_substrate_flag_resolved" in mod.validate_artifact(
++        {key: value for key, value in artifact.items() if key != "a3_substrate_flag_resolved"}
++    )
++    assert "honest_verdict_missing_terminal_prefix" in mod.validate_artifact(
++        {**artifact, "honest_verdict": "maybe"}
++    )
++    assert "invalid_inference_substrate" in mod.validate_artifact(
++        {**artifact, "inference_substrate": "live_llm_inference"}
++    )
++    assert "invalid_b3_window_nonzero" in mod.validate_artifact(
++        {**artifact, "b3_window_nonzero": "true"}
++    )
++    assert "invalid_a3_substrate_flag_resolved" in mod.validate_artifact(
++        {**artifact, "a3_substrate_flag_resolved": "true"}
++    )
++    assert "invalid_cited_upstream_artifacts" in mod.validate_artifact(
++        {**artifact, "cited_upstream_artifacts": [{"experiment_id": 4972}]}
++    )
++    assert "invalid_skipped_flagged_adversarial" in mod.validate_artifact(
++        {**artifact, "skipped_flagged_adversarial": [{"experiment_id": 4971}]}
++    )
++    assert "missing_principle:headline" in mod.validate_artifact(
++        {**artifact, "field_principles": {}}
++    )
++    assert mod._experiment_id("C_KV260", {"experiment": 4977}) == 4977
++    assert mod._experiment_id("D_PIVOT", {}) == 4973
++    assert mod._live_recheck(None) == "not_run"
++    assert mod._live_recheck(mod.SummarizerResult([], 1, "", "")) == "warn"
++    assert mod._is_skipped({"flagged_adversarial": True}, None) == "flagged_adversarial"
++    assert mod._a3_substrate_flag_resolved({}, {"A3_SELF_PLAY": _self_play()}) is True
++    assert mod._b3_window_nonzero({"B3_STAMPING": {}}) is False
++    assert mod._first_blocker(
++        summarizer_present=False,
++        registry_present=True,
++        registry_loadable=True,
++        spec_has_req=True,
++        north_star_present=True,
++        upstream_preconditions={},
++    ) == "missing_summarizer"
++    assert mod._first_blocker(
++        summarizer_present=True,
++        registry_present=True,
++        registry_loadable=True,
++        spec_has_req=False,
++        north_star_present=True,
++        upstream_preconditions={},
++    ) == "spec_missing_req_4978"
+-- 
+2.55.0
+

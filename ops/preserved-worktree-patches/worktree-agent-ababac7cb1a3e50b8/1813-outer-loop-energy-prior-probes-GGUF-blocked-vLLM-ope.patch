@@ -1,0 +1,248 @@
+From 3ac7e29011e360ddc6a032c094e982a7c09a2fa9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 15:30:42 -0400
+Subject: [PATCH 01813/11362] [outer-loop] energy-prior probes: GGUF (blocked)
+ + vLLM (operator path)
+
+GGUF/llama.cpp path dead-ended: GGUF valid (arch=diffusion-gemma) but released
+llama-cpp-python 0.3.29 errors 'unknown model architecture: diffusion-gemma' (support is
+llama.cpp-master-only). Pivoted to vLLM per operator (native DiffusionGemma support,
+vllm.ai/blog/2026-06-10) installed in an ISOLATED venv (~/.cache/vllm-venv) to protect the
+conductor from vLLM's strict torch/transformers pins. vLLM probe extracts prompt_logprobs
+(= the per-position score, log p(x_i|ctx) ~ -E component); fp8 TP=2 fits 26B on 2x3090.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../exp_diffusiongemma_energy_prior_gguf.py   | 111 ++++++++++++++++++
+ .../exp_diffusiongemma_energy_prior_vllm.py   | 101 ++++++++++++++++
+ 2 files changed, 212 insertions(+)
+ create mode 100644 scripts/exp_diffusiongemma_energy_prior_gguf.py
+ create mode 100644 scripts/exp_diffusiongemma_energy_prior_vllm.py
+
+diff --git a/scripts/exp_diffusiongemma_energy_prior_gguf.py b/scripts/exp_diffusiongemma_energy_prior_gguf.py
+new file mode 100644
+index 0000000000..e8d9b31314
+--- /dev/null
++++ b/scripts/exp_diffusiongemma_energy_prior_gguf.py
+@@ -0,0 +1,111 @@
++#!/usr/bin/env python3
++"""DiffusionGemma energy-prior probe via the pre-quantized Q4_K_M GGUF (llama.cpp).
++
++Operator-directed 2026-06-14: the transformers 4-bit path loaded but the diffusion forward
++API + device-map meta-tensor offload blocked score extraction. The unsloth Q4_K_M GGUF
++(16.8GB, fits one 3090) loaded by llama.cpp sidesteps all of that AND exposes per-position
++vocab logits directly -- which IS the score object (-grad E over tokens; the denoiser's
++learned distribution). This probe confirms: (1) llama.cpp supports the diffusion-gemma arch
++(loads), (2) we can extract a per-position score/logit distribution from the frozen weights.
++
++Honest scope: this is the FEASIBILITY step for UC3 [REAL] (is the pretrained energy-prior
++accessible?). It does NOT yet do proper noise-level denoising-score extraction or compose
++with the Carnot verifier -- it confirms the score is extractable, the precondition for all of
++that. verifier_is_oracle: N/A (generator introspection, not a verifier-value claim).
++
++Output: results/diffusiongemma_energy_prior_gguf.json
++"""
++from __future__ import annotations
++
++import glob
++import json
++import math
++import time
++import traceback
++from pathlib import Path
++
++GGUF_GLOB = "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/*/diffusiongemma-26B-A4B-it-Q4_K_M.gguf"
++OUT = Path("/home/ianblenke/github.com/ianblenke/carnot/results/diffusiongemma_energy_prior_gguf.json")
++
++
++def main() -> None:
++    t0 = time.time()
++    rep: dict = {
++        "experiment": "diffusiongemma_energy_prior_gguf",
++        "inference_substrate": "live_llm_inference",
++        "quant": "Q4_K_M_gguf",
++        "verifier_is_oracle": None,
++    }
++    try:
++        paths = glob.glob(GGUF_GLOB)
++        if not paths:
++            rep["honest_verdict"] = "blocked_gguf_not_found"
++            OUT.write_text(json.dumps(rep, indent=2))
++            print("[gguf probe] GGUF not found", flush=True)
++            return
++        gguf = paths[0]
++        rep["gguf_path"] = gguf
++        from llama_cpp import Llama
++
++        # n_gpu_layers=-1 offloads all layers if the build is CUDA; falls back to CPU otherwise.
++        llm = Llama(
++            model_path=gguf,
++            n_gpu_layers=-1,
++            logits_all=True,
++            n_ctx=512,
++            verbose=False,
++        )
++        rep["model_loaded"] = True
++        rep["arch_supported"] = True  # if it loaded, llama.cpp recognized diffusion-gemma
++        rep["n_vocab"] = int(llm.n_vocab())
++
++        prompt = "def add(a, b):\n    return a + b\n# add(2,3) =="
++        # create_completion with logprobs surfaces the per-token distribution (the score) at
++        # the generation position -- a version-stable way to confirm score extractability.
++        out = llm.create_completion(prompt, max_tokens=1, logprobs=10, temperature=0.0)
++        rep["completion_token"] = out["choices"][0].get("text", "")
++        lp = out["choices"][0].get("logprobs", {}) or {}
++        top = (lp.get("top_logprobs") or [{}])[0]
++        # top is {token: logprob}; logprob = log p(x_i|context) = the per-position score component
++        rep["top10_token_logprob"] = sorted(top.items(), key=lambda kv: -kv[1])[:10]
++        rep["score_extracted"] = bool(top)
++
++        # also pull the raw last-position logit vector if available (the full score vector)
++        try:
++            scores = getattr(llm, "scores", None)
++            if scores is not None:
++                import numpy as np
++
++                arr = np.asarray(scores)
++                # last non-zero row = last evaluated position
++                rep["raw_logits_shape"] = list(arr.shape)
++                last = arr[arr.any(axis=1)][-1] if arr.ndim == 2 and arr.any() else None
++                if last is not None:
++                    rep["raw_logits_finite"] = bool(np.isfinite(last).all())
++                    rep["raw_logits_absmax"] = float(np.abs(last).max())
++        except Exception as e_raw:
++            rep["raw_logits_note"] = repr(e_raw)[:150]
++
++        rep["honest_verdict"] = (
++            "complete: energy_prior_accessible_via_gguf_score_extracted"
++            if rep["score_extracted"]
++            else "complete: gguf_loaded_score_extraction_incomplete"
++        )
++    except Exception as e:
++        rep["model_loaded"] = False
++        rep["error"] = repr(e)[:300]
++        rep["traceback"] = traceback.format_exc()[-1500:]
++        # distinguish "arch unsupported" from other load errors
++        if "architecture" in repr(e).lower() or "unknown model" in repr(e).lower():
++            rep["arch_supported"] = False
++            rep["honest_verdict"] = "blocked_llamacpp_arch_unsupported_needs_update"
++        else:
++            rep["honest_verdict"] = "blocked_gguf_load_failed"
++
++    rep["duration_s"] = round(time.time() - t0, 1)
++    OUT.write_text(json.dumps(rep, indent=2))
++    print(f"[gguf probe] DONE verdict={rep.get('honest_verdict')} -> {OUT}", flush=True)
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/scripts/exp_diffusiongemma_energy_prior_vllm.py b/scripts/exp_diffusiongemma_energy_prior_vllm.py
+new file mode 100644
+index 0000000000..f443a8d03d
+--- /dev/null
++++ b/scripts/exp_diffusiongemma_energy_prior_vllm.py
+@@ -0,0 +1,101 @@
++#!/usr/bin/env python3
++"""DiffusionGemma energy-prior probe via vLLM (operator-directed 2026-06-14).
++
++vLLM has native DiffusionGemma support (vllm.ai/blog/2026-06-10-diffusion-gemma), sidestepping
++the transformers diffusion-API/meta-tensor issues AND the llama.cpp arch gap (released
++llama-cpp-python 0.3.29 lacks 'diffusion-gemma'). vLLM exposes per-position PROMPT LOGPROBS,
++which ARE the score object we want: logprob(x_i | context) = a component of -E(x). This probe
++confirms the pretrained energy-prior is EXTRACTABLE from the frozen weights (UC3 [REAL]
++feasibility) -- the precondition for composing it with the Carnot verifier + energy-descent.
++
++Run with the ISOLATED vllm venv: /home/ianblenke/.cache/vllm-venv/bin/python.
++Memory: 26B on 2x24GB -> tensor_parallel_size=2 + fp8 (online) + tiny max_model_len.
++Output: results/diffusiongemma_energy_prior_vllm.json
++"""
++from __future__ import annotations
++
++import json
++import time
++import traceback
++from pathlib import Path
++
++REPO = "google/diffusiongemma-26B-A4B-it"
++OUT = Path("/home/ianblenke/github.com/ianblenke/carnot/results/diffusiongemma_energy_prior_vllm.json")
++
++
++def main() -> None:
++    t0 = time.time()
++    rep: dict = {
++        "experiment": "diffusiongemma_energy_prior_vllm",
++        "repo": REPO,
++        "inference_substrate": "live_llm_inference",
++        "verifier_is_oracle": None,  # generator introspection, not a verifier-value claim
++    }
++    try:
++        from vllm import LLM, SamplingParams
++
++        import vllm
++
++        rep["vllm_version"] = vllm.__version__
++        load_mode = None
++        llm = None
++        # fp8 TP=2 fits 26B on 2x3090 (~13GB/GPU) with room for a tiny KV cache.
++        for kw, tag in [
++            (dict(tensor_parallel_size=2, quantization="fp8", max_model_len=1024,
++                  gpu_memory_utilization=0.88, enforce_eager=True), "fp8_tp2"),
++            (dict(tensor_parallel_size=2, max_model_len=512, gpu_memory_utilization=0.92,
++                  enforce_eager=True), "bf16_tp2"),
++        ]:
++            try:
++                llm = LLM(model=REPO, dtype="auto", trust_remote_code=False, **kw)
++                load_mode = tag
++                break
++            except Exception as e_load:
++                rep[f"load_attempt_{tag}_error"] = repr(e_load)[:200]
++        if llm is None:
++            rep["model_loaded"] = False
++            rep["honest_verdict"] = "blocked_vllm_load_failed"
++            OUT.write_text(json.dumps(rep, indent=2))
++            print(f"[vllm probe] DONE verdict={rep['honest_verdict']}", flush=True)
++            return
++
++        rep["model_loaded"] = True
++        rep["load_mode"] = load_mode
++
++        # prompt_logprobs returns, per prompt position, a dict of {token_id: Logprob} = the
++        # model's learned per-position distribution = the score component log p(x_i | context).
++        prompt = "def add(a, b):\n    return a + b\n# add(2,3) =="
++        sp = SamplingParams(max_tokens=1, temperature=0.0, prompt_logprobs=10)
++        out = llm.generate([prompt], sp)
++        o = out[0]
++        plp = o.prompt_logprobs  # list[None | dict[int, Logprob]]
++        nz = [d for d in (plp or []) if d]
++        rep["n_prompt_positions_with_logprobs"] = len(nz)
++        if nz:
++            last = nz[-1]
++            top = sorted(last.items(), key=lambda kv: -kv[1].logprob)[:10]
++            rep["last_pos_top10"] = [
++                [getattr(lp, "decoded_token", str(tid)), round(float(lp.logprob), 3)]
++                for tid, lp in top
++            ]
++            rep["score_extracted"] = True
++        else:
++            rep["score_extracted"] = False
++        rep["honest_verdict"] = (
++            "complete: energy_prior_accessible_via_vllm_score_extracted"
++            if rep.get("score_extracted")
++            else "complete: vllm_loaded_prompt_logprobs_empty"
++        )
++    except Exception as e:
++        rep["model_loaded"] = rep.get("model_loaded", False)
++        rep["error"] = repr(e)[:300]
++        rep["traceback"] = traceback.format_exc()[-1500:]
++        rep["honest_verdict"] = "blocked_vllm_probe_error"
++
++    rep["duration_s"] = round(time.time() - t0, 1)
++    OUT.write_text(json.dumps(rep, indent=2))
++    print(f"[vllm probe] DONE verdict={rep.get('honest_verdict')} -> {OUT}", flush=True)
++
++
++if __name__ == "__main__":
++    main()
+-- 
+2.55.0
+

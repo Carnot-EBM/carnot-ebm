@@ -1,0 +1,61 @@
+From 04790ed2181ca4f9c80c57ad61baa6071da04c99 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 10 Aug 2026 04:41:11 -0400
+Subject: [PATCH 08682/11362] [conductor] Pre-gate block: Gated on Exp6264
+ familiarity: chronological two-timescale continuous self-learning A/B
+
+1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.familiarity_gate_ready_score (actual=0.0 == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_6265_chronological_two_timescale_csl_ab.json   | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0f3302984e..5e78798b59 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-10T08:39:08Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-08-10T08:41:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 185016df1a..b78b705ed5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15581,3 +15581,4 @@ Still active  |
+ | 2026-08-10 07:54 UTC | Clean immutable local-SOTA event corpus to chronol | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ["honest_verdi |
+ | 2026-08-10 08:06 UTC | Clean immutable local-SOTA event corpus to chronol | OK | 98 passed, 1 warning in 14.54s |
+ | 2026-08-10 08:37 UTC | Gated on Exp6263 clean replay: task-conditional en | OK | 87 passed, 1 warning in 8.46s |
++| 2026-08-10 08:39 UTC | Gated on Exp6264 familiarity: chronological two-ti | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6264-energy-familiarity-memory-gate.fam |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 99b6ef8066..c724f2c23e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-10T08:39:08Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 8, "phase": "iteration_start", "started_at": "2026-08-10T08:41:11Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6265_chronological_two_timescale_csl_ab.json b/results/experiment_6265_chronological_two_timescale_csl_ab.json
+index 9bc2160a36..8fee181a8c 100644
+--- a/results/experiment_6265_chronological_two_timescale_csl_ab.json
++++ b/results/experiment_6265_chronological_two_timescale_csl_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 6265,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-10",
+-  "started_at": "2026-08-10T08:39:08.678373+00:00",
+-  "finished_at": "2026-08-10T08:39:08.678373+00:00",
++  "started_at": "2026-08-10T08:41:11.099965+00:00",
++  "finished_at": "2026-08-10T08:41:11.099965+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6264 familiarity: chronological two-timescale continuous self-learning A/B",
+-- 
+2.55.0
+

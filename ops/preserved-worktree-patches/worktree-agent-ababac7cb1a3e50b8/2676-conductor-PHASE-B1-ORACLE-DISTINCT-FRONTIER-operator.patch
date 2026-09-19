@@ -1,0 +1,2136 @@
+From 76b2d6a366eda1b553afdfcc787d64e56f0bba55 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 21:25:40 -0400
+Subject: [PATCH 02676/11362] [conductor] PHASE B1 (ORACLE-DISTINCT FRONTIER;
+ operator P0; DEFINITIVE FALSIFICATION; verifier_is_oracle=false) --
+ Hidden-state first-error localization AUDIT (arXiv:2605.13772 GeoReason
+ hidden-state transport, the .407 SOTA-ingestion method). The TEXT first-error
+ localizer is RETIRED (.407 exp4403: on FoVer the content-blind POSITION-ONLY
+ baseline F1=1.0 -- first-error onset is near-deterministic in POSITION, ~zero
+ CONTENT headroom in text; the real-intervention localizer tied it,
+ delta_vs_position_only=0.0; retire_if_same_verdict fired). This is the ONE
+ remaining oracle-distinct first-error question worth a SINGLE bounded shot:
+ does the signal exist OFF-TEXT -- does a model HIDDEN-STATE transport margin
+ carry ANY recoverable NON-position first-error signal that text position
+ alone does not? A DIAGNOSTIC FALSIFICATION (NOT a redeployable localizer):
+ (1) capture per-step hidden states from a LOCAL open model over the cached
+ FoVer step-labeled traces; (2) compute a hidden-state transport/margin
+ feature per step; (3) compare its first-error localization F1 against the
+ content-blind position-only baseline on a held-out split, n>=1000. Emit
+ hidden_state_localizer_has_nonposition_signal BARE bool := (the hidden-state
+ localizer beats the position-only baseline, delta CI95-excl-0). A CLEAN NULL
+ conclusively CLOSES the entire first-error-localizer program (text AND
+ hidden-state both position-bound -- do not revisit). A weak signal is LOGGED
+ as a missing-verifier gap (the off-text discriminator), NOT redeployed as a
+ headline. verifier_is_oracle=false (a learned probe over hidden states; the
+ reference prefix-check defines correctness). Cached corpus; the hidden-state
+ capture is a single bounded forward pass; NO live training, NO generator SFT,
+ NO TRM training.
+
+Automated research step by research conductor.
+Task ID: exp4416-hidden-state-localizer-falsification-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   67 +
+ ops/conductor-heartbeat.json                  |    2 +-
+ ops/conductor-log.md                          |    1 +
+ ops/conductor-state.json                      |    2 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...den_state_localizer_falsification_audit.py | 1132 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...n_state_localizer_falsification_audit.json |  173 +++
+ ...den_state_localizer_falsification_audit.py |   10 +
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ .../experiments/arc3_layerb_ar_model_test.py  |   22 +-
+ .../experiments/arc3_layerb_repeat_bench.py   |   98 ++
+ ...den_state_localizer_falsification_audit.py |  356 ++++++
+ 17 files changed, 1873 insertions(+), 28 deletions(-)
+ create mode 100644 python/carnot/experiment_4416_hidden_state_localizer_falsification_audit.py
+ create mode 100644 results/experiment_4416_hidden_state_localizer_falsification_audit.json
+ create mode 100644 results/experiment_4416_hidden_state_localizer_falsification_audit.py
+ create mode 100644 scripts/experiments/arc3_layerb_repeat_bench.py
+ create mode 100644 tests/python/test_experiment_4416_hidden_state_localizer_falsification_audit.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 9ce1828d65..12b95fd1bc 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -19718,6 +19718,73 @@ clean powered null rather than graduating the localizer headline.
+ |---|---|---|
+ | REQ-VERIFY-4403 | Planned (`python/carnot/experiment_4403_real_intervention_localizer_deconfound.py`, `results/experiment_4403_real_intervention_localizer_deconfound.py`) | Planned (`tests/python/test_experiment_4403_real_intervention_localizer_deconfound.py`) |
+ 
++### REQ-VERIFY-4416: Hidden-State First-Error Localizer Falsification Audit
++
++The repository SHALL provide Exp 4416 at
++`python/carnot/experiment_4416_hidden_state_localizer_falsification_audit.py`
++and `results/experiment_4416_hidden_state_localizer_falsification_audit.py` to
++settle whether a local open model's hidden-state transport/margin feature
++carries any oracle-distinct, non-position first-error localization signal beyond
++the Exp 4403 content-blind position-only baseline. The experiment SHALL use
++cached FoVer traces only, SHALL run forward-pass hidden-state capture only,
++SHALL NOT train TRM, generator, SFT, or RL models, and SHALL respect the GGUF tokenizer rule
++by using a base HuggingFace repository when `transformers`
++hidden states are required.
++
++Before hidden-state capture, the runner SHALL check that the cached FoVer corpus
++from the Exp 2850/Exp 4403 lineage can supply at least 1000 verifier-checked
++failed FoVer traces with first-error labels, that a local open model can emit
++hidden states through a HuggingFace `output_hidden_states` path or an equivalent
++documented local extraction path, and that TRM training is stood down. If the
++cached corpus is missing or cannot supply the powered failed-trace requirement,
++the runner SHALL write `honest_verdict=blocked_cached_corpus_unavailable` and
++stop without capture. If no hidden-state extraction path exists, it SHALL write
++`honest_verdict=blocked_no_hidden_state_extraction_path` and stop without
++fabricating hidden-state metrics.
++
++When preconditions hold, the runner SHALL capture per-step hidden states for at
++least 1000 FoVer failed traces, compute a GeoReason-style transport/margin
++feature per step, record the captured trace count per first-error position bin,
++fit a CPU probe on train traces, evaluate first-error F1 on a held-out split of
++at least 1000 failed traces, and compare the held-out hidden-state probe against
++a content-blind position-only baseline fit only from empirical first-error
++position counts and against Exp 4403's text-localizer FoVer F1. The delta
++against position-only SHALL use at least 2000 paired bootstrap resamples, and
++`hidden_state_localizer_has_nonposition_signal` SHALL be true only when the
++hidden-state probe F1 exceeds the position-only baseline and the delta CI95
++excludes zero.
++
++The terminal artifact SHALL write
++`results/experiment_4416_hidden_state_localizer_falsification_audit.json` with
++top-level fields `honest_verdict`, bare bool
++`hidden_state_localizer_has_nonposition_signal`,
++`localization_f1_comparison`, bare float `position_only_baseline_f1`, bare int
++`n_traces`, bare bool `verifier_is_oracle=false`, `preconditions_checked`,
++`random_seed`, `reproducibility_checksum`, `model_specs`,
++`hidden_state_capture_receipts`, `missing_verifier_gaps`, `field_principles`,
++`spec_refs`, `duration_s`, `inference_substrate`, and `adversarial_verify`.
++Clean nulls SHALL be decision-grade and close the first-error localizer line
++when hidden-state transport/margin features tie the position-only baseline.
++
++### SCENARIO-VERIFY-4416: Hidden-State Probe Is Judged Against Position Only
++
++Given a cached powered FoVer failed-trace corpus and a local HuggingFace base
++checkpoint that can emit hidden states, when Exp 4416 runs, then it records
++precondition receipts, captures hidden states without model training, computes
++transport/margin features, evaluates a held-out first-error split against the
++position-only baseline and Exp 4403's text-localizer F1, records bootstrap CI95,
++sets `verifier_is_oracle=false`, records model specs and a reproducibility
++checksum, and runs adversarial verification. If the hidden-state probe ties or
++fails to beat the position-only baseline with CI95 excluding zero, then
++`hidden_state_localizer_has_nonposition_signal=false` and the artifact reports a
++clean null rather than redeploying the localizer.
++
++## Implementation Status (REQ-VERIFY-4416)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-4416 | Planned (`python/carnot/experiment_4416_hidden_state_localizer_falsification_audit.py`, `results/experiment_4416_hidden_state_localizer_falsification_audit.py`) | Planned (`tests/python/test_experiment_4416_hidden_state_localizer_falsification_audit.py`) |
++
+ ### REQ-VERIFY-4407: Active-Learning First-Error Localizer Compounding Curve
+ 
+ The repository SHALL provide Exp 4407 at
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 17e6e7d465..ad0d34f7af 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 132, "phase": "iteration_start", "last_beat": "2026-06-19T00:49:12Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 133, "phase": "iteration_start", "last_beat": "2026-06-19T01:06:06Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4114992004..78200869c5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8765,3 +8765,4 @@ c |
+ | 2026-06-19 00:16 UTC | Milestone 2026.06.408 activated | OK | 11 tasks queued |
+ | 2026-06-19 00:34 UTC | Archive .407 -> activate .408. Assert research-com | OK | 96 passed, 1 warning in 5.61s |
+ | 2026-06-19 00:47 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 84 passed, 1 warning in 12.64s |
++| 2026-06-19 01:04 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; flag | OK | 92 passed, 1 warning in 8.57s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 64816c6015..c839620e72 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 132, "phase": "iteration_start", "started_at": "2026-06-19T00:49:12Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 133, "phase": "iteration_start", "started_at": "2026-06-19T01:06:06Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 2c804c0148..85a6615579 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 180,
+   "code_violations": 0,
+-  "experiments_checked": 3428,
++  "experiments_checked": 3429,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4416_hidden_state_localizer_falsification_audit.py b/python/carnot/experiment_4416_hidden_state_localizer_falsification_audit.py
+new file mode 100644
+index 0000000000..d4da62b51e
+--- /dev/null
++++ b/python/carnot/experiment_4416_hidden_state_localizer_falsification_audit.py
+@@ -0,0 +1,1132 @@
++"""Exp 4416: hidden-state first-error localizer falsification audit.
++
++Spec refs: REQ-VERIFY-4416, SCENARIO-VERIFY-4416.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import math
++import random
++import subprocess
++import sys
++import time
++from collections import Counter
++from collections.abc import Callable, Sequence
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4403_real_intervention_localizer_deconfound as exp4403
++from carnot.experiment_4381_biprm_detector_localization_abstention import (
++    NoStepLabelsError,
++    load_step_labeled_traces,
++)
++
++
++ROOT = Path(__file__).resolve().parents[2]
++ARTIFACT_PATH = ROOT / "results" / "experiment_4416_hidden_state_localizer_falsification_audit.json"
++FOVER_ROW_CORPUS_PATH = ROOT / "data" / "fover_corpus.jsonl"
++FOVER_STEP_CORPUS_PATH = ROOT / "data" / "step_level_prm_training.jsonl"
++EXP2850_ARTIFACT_PATH = ROOT / "results" / "experiment_2850_fover_dual_condition_integrity_v4.json"
++EXP4403_ARTIFACT_PATH = ROOT / "results" / "experiment_4403_real_intervention_localizer_deconfound.json"
++VERIFIER_GAPS_PATH = ROOT / "ops" / "verifier_gaps.md"
++
++RANDOM_SEED = 4416
++RANDOM_SEEDS_USED = (4416,)
++BOOTSTRAP_RESAMPLES = 2500
++MIN_CAPTURE_ERROR_TRACES = 1250
++MIN_HELDOUT_TRACES = 1000
++HELDOUT_FRACTION = 0.8
++DEFAULT_HF_MODEL_ID = "Qwen/Qwen2.5-0.5B"
++DEFAULT_MAX_LENGTH = 96
++DEFAULT_BATCH_SIZE = 16
++INFERENCE_SUBSTRATE = "local_hf_hidden_state_forward_pass"
++SPEC_REFS = ["REQ-VERIFY-4416", "SCENARIO-VERIFY-4416"]
++
++HIDDEN_FEATURE_NAMES = (
++    "hidden_norm",
++    "transport_from_prev_l2",
++    "transport_to_next_l2",
++    "trace_center_l2",
++    "local_transport_margin",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. A measured off-text signal (logged as a gap) and "
++        "a CLEAN NULL (the localizer program conclusively closed) are BOTH "
++        "decision-grade."
++    ),
++    "hidden_state_localizer_has_nonposition_signal": (
++        "BARE bool: the capstone reads this; true iff the hidden-state probe's "
++        "held-out first-error F1 exceeds the content-blind position-only "
++        "baseline (delta CI95-excl-0) -- the one remaining oracle-distinct "
++        "first-error question, settled off-text."
++    ),
++    "localization_f1_comparison": (
++        "dict: {position_only_baseline_f1, text_localizer_f1_exp4403, "
++        "hidden_state_probe_f1, delta_vs_position_only, delta_ci95, n_traces} "
++        "-- the head-to-head that settles whether off-text adds anything."
++    ),
++    "position_only_baseline_f1": (
++        "BARE float: the content-blind position-only baseline F1 on the "
++        "held-out split -- the bar the hidden-state probe must clear "
++        "CI95-excl-0 (the .407 confound made explicit)."
++    ),
++    "n_traces": (
++        "BARE int: held-out evaluation trace count -- MUST be >= 1000 for the "
++        "localization claim (sample-size rigor)."
++    ),
++    "verifier_is_oracle": (
++        "BARE bool=false -- a learned probe over model hidden states; the "
++        "reference prefix-check defines correctness, the probe estimates WHICH "
++        "step -- oracle-DISTINCT."
++    ),
++    "preconditions_checked": (
++        "Records the cached-corpus + the hidden-state-extraction-path + "
++        "TRM-stand-down verified; pre-empts the silent-missing-resource "
++        "fabrication mode."
++    ),
++    "random_seed": "Determinism precondition for the capture + the probe fit + the bootstrap.",
++    "reproducibility_checksum": (
++        "Hash of the hidden-state capture + the probe config + the held-out "
++        "split + the controls; lets a third party re-run."
++    ),
++    "model_specs": (
++        "The LOCAL open model used for hidden-state capture (HF base repo or "
++        "documented local extraction path) + the FoVer corpus + the position-only "
++        "baseline + n; required methodology + the oracle-distinct declaration."
++    ),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "hidden_state_localizer_has_nonposition_signal",
++    "localization_f1_comparison",
++    "position_only_baseline_f1",
++    "n_traces",
++    "verifier_is_oracle",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "model_specs",
++)
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One prerequisite checked before hidden-state capture."""
++
++    resource: str
++    available: bool
++    detail: str
++
++    def as_dict(self) -> dict[str, Any]:
++        return {
++            "resource": self.resource,
++            "available": bool(self.available),
++            "detail": self.detail,
++        }
++
++
++@dataclass(frozen=True)
++class HiddenStatePathStatus:
++    """Result of probing the local hidden-state extraction path."""
++
++    available: bool
++    detail: str
++    model_specs: dict[str, Any]
++
++
++@dataclass(frozen=True)
++class HiddenStateTrace:
++    """One cached FoVer failed trace used for first-error localization."""
++
++    trace_id: str
++    steps: tuple[str, ...]
++    first_error_index: int
++    position_bin: str
++    source_row_id: str
++    error_class: str = "fover_row_single_step"
++
++
++@dataclass(frozen=True)
++class StepFeatureRecord:
++    """One per-step hidden transport/margin feature vector."""
++
++    trace_id: str
++    step_index: int
++    n_steps: int
++    first_error_index: int
++    is_first_error: bool
++    features: dict[str, float]
++
++
++@dataclass(frozen=True)
++class PositionOnlyBaseline:
++    """Content-blind predictor using empirical first-error position counts."""
++
++    position_counts: dict[int, int]
++
++    @classmethod
++    def fit(cls, traces: Sequence[HiddenStateTrace]) -> "PositionOnlyBaseline":
++        counts: Counter[int] = Counter(int(trace.first_error_index) for trace in traces)
++        return cls(position_counts=dict(sorted(counts.items())))
++
++    def predict_first_error_index(self, trace: HiddenStateTrace) -> int | None:
++        if not trace.steps or not self.position_counts:
++            return None
++        valid = [idx for idx in self.position_counts if idx < len(trace.steps)]
++        if not valid:
++            return len(trace.steps) - 1
++        return max(valid, key=lambda idx: (self.position_counts[idx], -idx))
++
++
++@dataclass(frozen=True)
++class HiddenStateMarginProbe:
++    """CPU-only linear probe over non-position hidden transport features."""
++
++    weights: dict[str, float]
++    training_summary: dict[str, Any]
++
++    @classmethod
++    def fit(cls, records: Sequence[StepFeatureRecord]) -> "HiddenStateMarginProbe":
++        positives = [record.features for record in records if record.is_first_error]
++        negatives = [record.features for record in records if not record.is_first_error]
++        weights: dict[str, float] = {}
++        for name in HIDDEN_FEATURE_NAMES:
++            if positives and negatives:
++                pos_mean = sum(float(row.get(name, 0.0)) for row in positives) / len(positives)
++                neg_mean = sum(float(row.get(name, 0.0)) for row in negatives) / len(negatives)
++                weights[name] = pos_mean - neg_mean
++            else:
++                weights[name] = 0.0
++        return cls(
++            weights=weights,
++            training_summary={
++                "training_step_count": len(records),
++                "positive_first_error_steps": len(positives),
++                "negative_non_first_error_steps": len(negatives),
++                "feature_names": list(HIDDEN_FEATURE_NAMES),
++                "position_features_used": False,
++            },
++        )
++
++    def score(self, record: StepFeatureRecord) -> float:
++        return sum(
++            float(self.weights.get(name, 0.0)) * float(record.features.get(name, 0.0))
++            for name in HIDDEN_FEATURE_NAMES
++        )
++
++    def predict_first_error_index(self, trace_id: str, records: Sequence[StepFeatureRecord]) -> int | None:
++        trace_records = [record for record in records if record.trace_id == trace_id]
++        if not trace_records:
++            return None
++        best = max(trace_records, key=lambda record: (self.score(record), -record.step_index))
++        return int(best.step_index)
++
++    def as_dict(self) -> dict[str, Any]:
++        return {
++            "model_type": "linear_hidden_transport_margin_probe",
++            "weights": {key: round_float(value) for key, value in sorted(self.weights.items())},
++            "training_summary": self.training_summary,
++        }
++
++
++@dataclass(frozen=True)
++class ExperimentConfig:
++    """Runtime configuration for Exp 4416."""
++
++    repo_root: Path = ROOT
++    fover_row_corpus_path: Path = FOVER_ROW_CORPUS_PATH
++    fover_step_corpus_path: Path = FOVER_STEP_CORPUS_PATH
++    exp2850_artifact_path: Path = EXP2850_ARTIFACT_PATH
++    exp4403_artifact_path: Path = EXP4403_ARTIFACT_PATH
++    verifier_gaps_path: Path = VERIFIER_GAPS_PATH
++    artifact_path: Path = ARTIFACT_PATH
++    hf_model_id: str = DEFAULT_HF_MODEL_ID
++    min_capture_error_traces: int = MIN_CAPTURE_ERROR_TRACES
++    min_eval_traces: int = MIN_HELDOUT_TRACES
++    heldout_fraction: float = HELDOUT_FRACTION
++    bootstrap_resamples: int = BOOTSTRAP_RESAMPLES
++    random_seed: int = RANDOM_SEED
++    started_at: float | None = None
++    clock: Callable[[], float] = time.time
++
++    def start_time(self) -> float:
++        return self.clock() if self.started_at is None else self.started_at
++
++
++AdversarialVerifyRunner = Callable[[Path], dict[str, Any]]
++
++
++class TransformersHiddenStateExtractor:  # pragma: no cover - exercised by the real result run.
++    """Local HuggingFace hidden-state extractor for the default experiment path."""
++
++    def __init__(
++        self,
++        model_id: str,
++        *,
++        cache_dir: Path | None = None,
++        max_length: int = DEFAULT_MAX_LENGTH,
++        batch_size: int = DEFAULT_BATCH_SIZE,
++    ) -> None:
++        self.model_id = model_id
++        self.cache_dir = cache_dir
++        self.max_length = max_length
++        self.batch_size = batch_size
++        self._tokenizer: Any | None = None
++        self._model: Any | None = None
++        self._torch: Any | None = None
++        self._device: str | None = None
++        self._snapshot_path: Path | None = None
++
++    def _resolve_snapshot(self) -> Path:
++        if "gguf" in self.model_id.lower():
++            raise RuntimeError("gguf-only repositories are not valid transformers hidden-state paths")
++        cache_root = self.cache_dir or Path.home() / ".cache" / "huggingface" / "hub"
++        repo_dir = cache_root / ("models--" + self.model_id.replace("/", "--"))
++        refs_main = repo_dir / "refs" / "main"
++        if not refs_main.is_file():
++            raise RuntimeError(f"local HF cache ref missing for {self.model_id}")
++        snapshot = repo_dir / "snapshots" / refs_main.read_text(encoding="utf-8").strip()
++        if not snapshot.is_dir():
++            raise RuntimeError(f"local HF snapshot missing for {self.model_id}")
++        has_tokenizer = any(
++            (snapshot / name).exists()
++            for name in ("tokenizer.json", "tokenizer.model", "tokenizer_config.json")
++        )
++        if not (snapshot / "config.json").exists() or not has_tokenizer:
++            raise RuntimeError(f"HF base config/tokenizer files missing for {self.model_id}")
++        self._snapshot_path = snapshot
++        return snapshot
++
++    def _load(self) -> None:
++        if self._model is not None and self._tokenizer is not None:
++            return
++        snapshot = self._resolve_snapshot()
++        import torch
++        from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
++
++        self._torch = torch
++        self._device = "cuda" if torch.cuda.is_available() else "cpu"
++        self._tokenizer = AutoTokenizer.from_pretrained(
++            str(snapshot),
++            local_files_only=True,
++            trust_remote_code=True,
++        )
++        if getattr(self._tokenizer, "pad_token", None) is None:
++            self._tokenizer.pad_token = self._tokenizer.eos_token
++        try:
++            model = AutoModel.from_pretrained(
++                str(snapshot),
++                local_files_only=True,
++                trust_remote_code=True,
++            )
++        except Exception:
++            model = AutoModelForCausalLM.from_pretrained(
++                str(snapshot),
++                local_files_only=True,
++                trust_remote_code=True,
++            )
++        self._model = model.to(self._device)
++        self._model.eval()
++
++    def check(self) -> HiddenStatePathStatus:
++        try:
++            self.capture(
++                [
++                    HiddenStateTrace(
++                        trace_id="hidden_state_probe_check",
++                        steps=("Compute 1 + 1 = 2.",),
++                        first_error_index=0,
++                        position_bin="0",
++                        source_row_id="hidden_state_probe_check",
++                    )
++                ]
++            )
++        except Exception as exc:
++            return HiddenStatePathStatus(False, f"{type(exc).__name__}: {exc}", {})
++        hidden_size = int(getattr(getattr(self._model, "config", None), "hidden_size", 0) or 0)
++        layer_count = int(getattr(getattr(self._model, "config", None), "num_hidden_layers", 0) or 0)
++        return HiddenStatePathStatus(
++            True,
++            "transformers output_hidden_states probe succeeded",
++            {
++                "model_id": self.model_id,
++                "snapshot_path": str(self._snapshot_path),
++                "device": self._device,
++                "hidden_size": hidden_size,
++                "num_hidden_layers": layer_count,
++                "max_length": self.max_length,
++                "batch_size": self.batch_size,
++                "hidden_state_extraction_path": "transformers.AutoModel(output_hidden_states=True)",
++                "gguf_tokenizer_rule": "base_hf_repo_used_not_gguf_only_repo",
++            },
++        )
++
++    def capture(self, traces: Sequence[HiddenStateTrace]) -> list[list[list[float]]]:
++        self._load()
++        assert self._model is not None
++        assert self._tokenizer is not None
++        assert self._torch is not None
++        assert self._device is not None
++
++        flat_texts = [step for trace in traces for step in trace.steps]
++        flat_vectors: list[list[float]] = []
++        for start in range(0, len(flat_texts), self.batch_size):
++            batch = flat_texts[start : start + self.batch_size]
++            encoded = self._tokenizer(
++                batch,
++                return_tensors="pt",
++                padding=True,
++                truncation=True,
++                max_length=self.max_length,
++            )
++            encoded = {key: value.to(self._device) for key, value in encoded.items()}
++            with self._torch.inference_mode():
++                outputs = self._model(
++                    **encoded,
++                    output_hidden_states=True,
++                    return_dict=True,
++                )
++            hidden = outputs.hidden_states[-1]
++            lengths = encoded["attention_mask"].sum(dim=1) - 1
++            batch_indices = self._torch.arange(hidden.shape[0], device=hidden.device)
++            vectors = hidden[batch_indices, lengths].detach().float().cpu().tolist()
++            flat_vectors.extend([[float(value) for value in vector] for vector in vectors])
++
++        captured: list[list[list[float]]] = []
++        cursor = 0
++        for trace in traces:
++            width = len(trace.steps)
++            captured.append(flat_vectors[cursor : cursor + width])
++            cursor += width
++        return captured
++
++
++def round_float(value: float | None, digits: int = 6) -> float | None:
++    if value is None:
++        return None
++    if isinstance(value, float) and math.isnan(value):
++        return None
++    return round(float(value), digits)
++
++
++def _read_json(path: Path) -> Any:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _read_jsonl(path: Path) -> list[dict[str, Any]]:
++    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
++
++
++def _write_artifact(path: Path, artifact: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _f1(successes: Sequence[int]) -> float:
++    return sum(int(value) for value in successes) / len(successes) if successes else 0.0
++
++
++def _l2(left: Sequence[float], right: Sequence[float]) -> float:
++    return math.sqrt(sum((float(a) - float(b)) ** 2 for a, b in zip(left, right, strict=True)))
++
++
++def _norm(vector: Sequence[float]) -> float:
++    return math.sqrt(sum(float(value) ** 2 for value in vector))
++
++
++def _vector_mean(vectors: Sequence[Sequence[float]]) -> list[float]:
++    if not vectors:
++        return []
++    width = len(vectors[0])
++    return [sum(float(vector[idx]) for vector in vectors) / len(vectors) for idx in range(width)]
++
++
++def build_real_fover_error_traces_from_rows(rows: Sequence[dict[str, Any]]) -> list[HiddenStateTrace]:
++    """Convert Exp 4403 verifier-checked failed rows into first-error traces."""
++
++    labels = exp4403.build_fover_intervention_labels_from_rows(rows)
++    traces: list[HiddenStateTrace] = []
++    for label in labels:
++        if label.trace.first_error_index is None or not label.intervention_verified:
++            continue
++        steps = tuple(step.text for step in label.trace.steps)
++        if not steps:  # pragma: no cover - Exp 4403 labels always contain one row step.
++            continue
++        first_error = int(label.trace.first_error_index)
++        traces.append(
++            HiddenStateTrace(
++                trace_id=label.trace.trace_id,
++                steps=steps,
++                first_error_index=first_error,
++                position_bin=str(first_error),
++                source_row_id=label.source_row_id,
++                error_class=label.family,
++            )
++        )
++    return sorted(traces, key=lambda trace: trace.trace_id)
++
++
++def load_real_fover_error_traces(path: Path, *, limit: int | None = None) -> list[HiddenStateTrace]:
++    traces = build_real_fover_error_traces_from_rows(_read_jsonl(path))
++    if limit is not None:
++        return traces[:limit]
++    return traces
++
++
++def position_bin_counts(traces: Sequence[HiddenStateTrace]) -> dict[str, int]:
++    return dict(sorted(Counter(trace.position_bin for trace in traces).items()))
++
++
++def split_train_heldout(
++    traces: Sequence[HiddenStateTrace],
++    *,
++    seed: int,
++    heldout_fraction: float,
++    min_eval_traces: int,
++) -> tuple[list[HiddenStateTrace], list[HiddenStateTrace]]:
++    ordered = sorted(traces, key=lambda trace: trace.trace_id)
++    rng = random.Random(seed)
++    shuffled = list(ordered)
++    rng.shuffle(shuffled)
++    heldout_n = max(min_eval_traces, int(round(len(shuffled) * heldout_fraction)))
++    heldout_n = min(len(shuffled) - 1, heldout_n)
++    heldout = sorted(shuffled[:heldout_n], key=lambda trace: trace.trace_id)
++    train = sorted(shuffled[heldout_n:], key=lambda trace: trace.trace_id)
++    return train, heldout
++
++
++def transport_margin_features(
++    traces: Sequence[HiddenStateTrace],
++    hidden_states: Sequence[Sequence[Sequence[float]]],
++) -> list[StepFeatureRecord]:
++    """Compute non-position hidden-state transport/margin features per step."""
++
++    records: list[StepFeatureRecord] = []
++    for trace, states in zip(traces, hidden_states, strict=True):
++        state_list = [[float(value) for value in state] for state in states]
++        if len(state_list) != len(trace.steps):
++            raise ValueError(f"hidden state count mismatch for {trace.trace_id}")
++        center = _vector_mean(state_list)
++        for idx, state in enumerate(state_list):
++            prev_l2 = _l2(state, state_list[idx - 1]) if idx > 0 else 0.0
++            next_l2 = _l2(state, state_list[idx + 1]) if idx + 1 < len(state_list) else 0.0
++            center_l2 = _l2(state, center) if center else 0.0
++            features = {
++                "hidden_norm": _norm(state),
++                "transport_from_prev_l2": prev_l2,
++                "transport_to_next_l2": next_l2,
++                "trace_center_l2": center_l2,
++                "local_transport_margin": next_l2 - prev_l2,
++            }
++            records.append(
++                StepFeatureRecord(
++                    trace_id=trace.trace_id,
++                    step_index=idx,
++                    n_steps=len(trace.steps),
++                    first_error_index=int(trace.first_error_index),
++                    is_first_error=idx == int(trace.first_error_index),
++                    features=features,
++                )
++            )
++    return records
++
++
++def _records_by_trace(records: Sequence[StepFeatureRecord]) -> dict[str, list[StepFeatureRecord]]:
++    grouped: dict[str, list[StepFeatureRecord]] = {}
++    for record in records:
++        grouped.setdefault(record.trace_id, []).append(record)
++    return {key: sorted(value, key=lambda record: record.step_index) for key, value in grouped.items()}
++
++
++def _position_successes(
++    traces: Sequence[HiddenStateTrace],
++    baseline: PositionOnlyBaseline,
++) -> list[int]:
++    return [int(baseline.predict_first_error_index(trace) == trace.first_error_index) for trace in traces]
++
++
++def _probe_successes(
++    traces: Sequence[HiddenStateTrace],
++    features: Sequence[StepFeatureRecord],
++    probe: HiddenStateMarginProbe,
++) -> list[int]:
++    grouped = _records_by_trace(features)
++    return [
++        int(probe.predict_first_error_index(trace.trace_id, grouped.get(trace.trace_id, ())) == trace.first_error_index)
++        for trace in traces
++    ]
++
++
++def _paired_delta_ci95(
++    left_successes: Sequence[int],
++    right_successes: Sequence[int],
++    *,
++    seed: int,
++    resamples: int,
++) -> list[float | None]:
++    if not left_successes or len(left_successes) != len(right_successes) or resamples <= 0:
++        return [None, None]
++    rng = random.Random(seed)
++    values: list[float] = []
++    n = len(left_successes)
++    for _ in range(resamples):
++        delta_sum = 0
++        for _idx in range(n):
++            item = rng.randrange(n)
++            delta_sum += int(left_successes[item]) - int(right_successes[item])
++        values.append(delta_sum / n)
++    values.sort()
++    lo = int(0.025 * (len(values) - 1))
++    hi = int(0.975 * (len(values) - 1))
++    return [round_float(values[lo]), round_float(values[hi])]
++
++
++def evaluate_hidden_state_probe(
++    heldout_traces: Sequence[HiddenStateTrace],
++    heldout_features: Sequence[StepFeatureRecord],
++    probe: HiddenStateMarginProbe,
++    position_baseline: PositionOnlyBaseline,
++    *,
++    text_localizer_f1: float | None,
++    seed: int,
++    bootstrap_resamples: int,
++) -> dict[str, Any]:
++    hidden_successes = _probe_successes(heldout_traces, heldout_features, probe)
++    position_successes = _position_successes(heldout_traces, position_baseline)
++    hidden_f1 = _f1(hidden_successes)
++    position_f1 = _f1(position_successes)
++    return {
++        "position_only_baseline_f1": round_float(position_f1),
++        "text_localizer_f1_exp4403": round_float(text_localizer_f1),
++        "hidden_state_probe_f1": round_float(hidden_f1),
++        "delta_vs_position_only": round_float(hidden_f1 - position_f1),
++        "delta_ci95": _paired_delta_ci95(
++            hidden_successes,
++            position_successes,
++            seed=seed,
++            resamples=bootstrap_resamples,
++        ),
++        "n_traces": int(len(heldout_traces)),
++        "hidden_exact_match_count": int(sum(hidden_successes)),
++        "position_exact_match_count": int(sum(position_successes)),
++    }
++
++
++def has_nonposition_signal(comparison: dict[str, Any]) -> bool:
++    ci95 = comparison.get("delta_ci95")
++    if not isinstance(ci95, list | tuple) or len(ci95) != 2:
++        return False
++    delta = comparison.get("delta_vs_position_only")
++    return bool(delta is not None and float(delta) > 0.0 and ci95[0] is not None and float(ci95[0]) > 0.0)
++
++
++def text_localizer_f1_from_exp4403(payload: dict[str, Any]) -> float | None:
++    domain = payload.get("localization_f1_by_domain", {}).get("FoVer")
++    if not isinstance(domain, dict):
++        return None
++    value = domain.get("real_intervention_localizer")
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else None
++
++
++def reproducibility_checksum(source_paths: Sequence[Path], payload: dict[str, Any]) -> str:
++    digest = hashlib.sha256()
++    for path in sorted({Path(path) for path in source_paths}, key=lambda item: str(item)):
++        digest.update(str(path).encode("utf-8"))
++        if not path.exists():
++            digest.update(b"\0MISSING\0")
++            continue
++        with path.open("rb") as handle:
++            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++                digest.update(chunk)
++    digest.update(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8"))
++    return "sha256:" + digest.hexdigest()
++
++
++def _capture_checksum(
++    traces: Sequence[HiddenStateTrace],
++    hidden_states: Sequence[Sequence[Sequence[float]]],
++) -> str:
++    digest = hashlib.sha256()
++    for trace, states in zip(traces, hidden_states, strict=True):
++        digest.update(trace.trace_id.encode("utf-8"))
++        digest.update(str(trace.first_error_index).encode("utf-8"))
++        for state in states:
++            digest.update(json.dumps([round_float(float(value), 8) for value in state]).encode("utf-8"))
++    return "sha256:" + digest.hexdigest()
++
++
++def _load_exp2850_check(path: Path) -> PreconditionCheck:
++    if not path.is_file():
++        return PreconditionCheck("exp2850_fover_corpus", False, "missing")
++    try:
++        payload = _read_json(path)
++    except Exception as exc:
++        return PreconditionCheck("exp2850_fover_corpus", False, f"unreadable: {exc}")
++    n_examples = int(payload.get("n_examples") or 0) if isinstance(payload, dict) else 0
++    return PreconditionCheck("exp2850_fover_corpus", n_examples >= 1000, f"n_examples={n_examples}")
++
++
++def _step_corpus_check(path: Path) -> PreconditionCheck:
++    if not path.is_file():
++        return PreconditionCheck("cached_step_labeled_fover_corpus", False, "missing")
++    try:
++        traces = load_step_labeled_traces(path)
++    except NoStepLabelsError as exc:
++        return PreconditionCheck("cached_step_labeled_fover_corpus", False, f"no step labels: {exc}")
++    except Exception as exc:
++        return PreconditionCheck("cached_step_labeled_fover_corpus", False, f"unreadable: {exc}")
++    error_traces = sum(1 for trace in traces if trace.has_error)
++    return PreconditionCheck(
++        "cached_step_labeled_fover_corpus",
++        bool(traces),
++        f"step_traces={len(traces)}; error_traces={error_traces}",
++    )
++
++
++def _text_localizer_payload(path: Path) -> dict[str, Any]:
++    if not path.is_file():
++        return {}
++    try:
++        payload = _read_json(path)
++    except Exception:
++        return {}
++    return payload if isinstance(payload, dict) else {}
++
++
++def _blocked_reason(checks: Sequence[PreconditionCheck]) -> str | None:
++    if all(check.available for check in checks):
++        return None
++    by_resource = {check.resource: check for check in checks}
++    hidden = by_resource.get("hidden_state_extraction_path")
++    if hidden is not None and not hidden.available:
++        return "blocked_no_hidden_state_extraction_path"
++    return "blocked_cached_corpus_unavailable"
++
++
++def _missing_gap(comparison: dict[str, Any], n_captured: int) -> dict[str, Any]:
++    return {
++        "gap_id": "GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED",
++        "status": "open",
++        "parent_gap": "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
++        "evidence": str(ARTIFACT_PATH),
++        "failure_mode": (
++            "The hidden-state transport/margin probe tied the content-blind "
++            "position-only first-error baseline; the available FoVer failed "
++            "traces are position-saturated at first step."
++        ),
++        "missing_discriminator": (
++            "A model-native signal that separates earliest causal error from "
++            "position and downstream consequence under non-degenerate "
++            "multi-step FoVer labels."
++        ),
++        "candidate_design": (
++            "Collect typed multi-step FoVer traces with non-first-position "
++            "first errors before any localizer redeployment; do not revive the "
++            "position-saturated text or hidden-state localizer line."
++        ),
++        "priority": "medium",
++        "n_captured_traces": int(n_captured),
++        "delta_vs_position_only": comparison.get("delta_vs_position_only"),
++        "delta_ci95": comparison.get("delta_ci95"),
++    }
++
++
++def _model_specs(
++    *,
++    hidden_status: HiddenStatePathStatus,
++    capture_receipts: dict[str, Any],
++    probe: HiddenStateMarginProbe | None,
++    comparison: dict[str, Any],
++    config: ExperimentConfig,
++) -> dict[str, Any]:
++    specs = dict(hidden_status.model_specs)
++    specs.update(
++        {
++            "fover_row_corpus": str(config.fover_row_corpus_path),
++            "fover_step_corpus": str(config.fover_step_corpus_path),
++            "exp2850_artifact": str(config.exp2850_artifact_path),
++            "exp4403_text_localizer_artifact": str(config.exp4403_artifact_path),
++            "capture_n": capture_receipts.get("n_captured_traces", 0),
++            "heldout_n": comparison.get("n_traces", 0),
++            "position_only_baseline": {
++                "content_blind": True,
++                "position_counts": capture_receipts.get("n_per_position_bin", {}),
++            },
++            "hidden_state_probe": probe.as_dict() if probe is not None else None,
++            "bootstrap_resamples": int(config.bootstrap_resamples),
++            "random_seed": int(config.random_seed),
++            "random_seeds_used": list(RANDOM_SEEDS_USED),
++            "trm_training": "stood_down_not_invoked",
++            "generator_training": "stood_down_not_invoked",
++            "live_generation": False,
++            "verifier_is_oracle": False,
++        }
++    )
++    return specs
++
++
++def build_complete_artifact(
++    *,
++    traces: Sequence[HiddenStateTrace],
++    train_traces: Sequence[HiddenStateTrace],
++    heldout_traces: Sequence[HiddenStateTrace],
++    hidden_states: Sequence[Sequence[Sequence[float]]],
++    train_features: Sequence[StepFeatureRecord],
++    heldout_features: Sequence[StepFeatureRecord],
++    hidden_status: HiddenStatePathStatus,
++    preconditions_checked: list[dict[str, Any]],
++    comparison: dict[str, Any],
++    probe: HiddenStateMarginProbe,
++    source_paths: Sequence[Path],
++    duration_s: float,
++    config: ExperimentConfig,
++) -> dict[str, Any]:
++    signal = has_nonposition_signal(comparison)
++    capture_receipts = {
++        "n_captured_traces": int(len(traces)),
++        "n_captured_steps": int(sum(len(trace.steps) for trace in traces)),
++        "n_train_traces": int(len(train_traces)),
++        "n_heldout_traces": int(len(heldout_traces)),
++        "n_per_position_bin": position_bin_counts(traces),
++        "feature_names": list(HIDDEN_FEATURE_NAMES),
++        "hidden_state_capture_sha256": _capture_checksum(traces, hidden_states),
++    }
++    checksum_payload = {
++        "comparison": comparison,
++        "capture_receipts": capture_receipts,
++        "probe": probe.as_dict(),
++        "random_seed": config.random_seed,
++        "bootstrap_resamples": config.bootstrap_resamples,
++    }
++    verdict = (
++        "complete: hidden_state_nonposition_signal_detected"
++        if signal
++        else "complete: clean_powered_null_position_only_not_beaten"
++    )
++    artifact = {
++        "experiment": "experiment_4416_hidden_state_localizer_falsification_audit",
++        "schema": "carnot.hidden_state_localizer_falsification_audit.v1",
++        "honest_verdict": verdict,
++        "hidden_state_localizer_has_nonposition_signal": signal,
++        "localization_f1_comparison": comparison,
++        "position_only_baseline_f1": float(comparison["position_only_baseline_f1"]),
++        "n_traces": int(comparison["n_traces"]),
++        "verifier_is_oracle": False,
++        "preconditions_checked": preconditions_checked,
++        "random_seed": int(config.random_seed),
++        "random_seeds_used": list(RANDOM_SEEDS_USED),
++        "reproducibility_checksum": reproducibility_checksum(source_paths, checksum_payload),
++        "model_specs": _model_specs(
++            hidden_status=hidden_status,
++            capture_receipts=capture_receipts,
++            probe=probe,
++            comparison=comparison,
++            config=config,
++        ),
++        "hidden_state_capture_receipts": capture_receipts,
++        "missing_verifier_gaps": [] if signal else [_missing_gap(comparison, len(traces))],
++        "methodology_note": (
++            "The default powered FoVer failed rows are verifier-checked one-step "
++            "intervention traces from Exp 4403. Their first-error position is "
++            "deterministic at step 0, so a hidden-state F1 tie at 1.0 is the "
++            "expected content-blind null rather than evidence of a useful "
++            "localizer."
++        ),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "duration_s": round_float(duration_s, 3),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++    }
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    honest_verdict: str,
++    preconditions_checked: list[dict[str, Any]],
++    hidden_status: HiddenStatePathStatus,
++    text_localizer_f1: float | None,
++    source_paths: Sequence[Path],
++    duration_s: float,
++    config: ExperimentConfig,
++) -> dict[str, Any]:
++    comparison = {
++        "position_only_baseline_f1": None,
++        "text_localizer_f1_exp4403": round_float(text_localizer_f1),
++        "hidden_state_probe_f1": None,
++        "delta_vs_position_only": None,
++        "delta_ci95": [None, None],
++        "n_traces": 0,
++    }
++    capture_receipts = {
++        "n_captured_traces": 0,
++        "n_captured_steps": 0,
++        "n_train_traces": 0,
++        "n_heldout_traces": 0,
++        "n_per_position_bin": {},
++        "feature_names": list(HIDDEN_FEATURE_NAMES),
++        "hidden_state_capture_sha256": None,
++    }
++    return {
++        "experiment": "experiment_4416_hidden_state_localizer_falsification_audit",
++        "schema": "carnot.hidden_state_localizer_falsification_audit.v1",
++        "honest_verdict": honest_verdict,
++        "hidden_state_localizer_has_nonposition_signal": False,
++        "localization_f1_comparison": comparison,
++        "position_only_baseline_f1": None,
++        "n_traces": 0,
++        "verifier_is_oracle": False,
++        "preconditions_checked": preconditions_checked,
++        "random_seed": int(config.random_seed),
++        "random_seeds_used": list(RANDOM_SEEDS_USED),
++        "reproducibility_checksum": reproducibility_checksum(
++            source_paths,
++            {
++                "blocked": honest_verdict,
++                "preconditions": preconditions_checked,
++                "random_seed": config.random_seed,
++            },
++        ),
++        "model_specs": _model_specs(
++            hidden_status=hidden_status,
++            capture_receipts=capture_receipts,
++            probe=None,
++            comparison=comparison,
++            config=config,
++        ),
++        "hidden_state_capture_receipts": capture_receipts,
++        "missing_verifier_gaps": [],
++        "methodology_note": "blocked before hidden-state capture; no hidden-state metrics fabricated",
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "duration_s": round_float(duration_s, 3),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "adversarial_verify": {"returncode": None, "skipped": "blocked"},
++    }
++
++
++def run_adversarial_verify(path: Path, repo_root: Path = ROOT) -> dict[str, Any]:
++    script = repo_root / "scripts" / "adversarial_verify.py"
++    if not script.is_file():
++        return {"returncode": None, "stderr_tail": "scripts/adversarial_verify.py missing"}
++    proc = subprocess.run(
++        [sys.executable, str(script), str(path)],
++        cwd=str(repo_root),
++        text=True,
++        capture_output=True,
++        timeout=180,
++        check=False,
++    )
++    return {
++        "returncode": int(proc.returncode),
++        "stdout_tail": proc.stdout[-2000:],
++        "stderr_tail": proc.stderr[-2000:],
++    }
++
++
++def artifact_schema_errors(artifact: dict[str, Any]) -> list[str]:
++    errors: list[str] = []
++    blocked = str(artifact.get("honest_verdict", "")).startswith("blocked_")
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:") or verdict.startswith("blocked_")
++    ):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if not isinstance(artifact.get("hidden_state_localizer_has_nonposition_signal"), bool):
++        errors.append("hidden_state_localizer_has_nonposition_signal must be bare bool")
++    if not isinstance(artifact.get("localization_f1_comparison"), dict):
++        errors.append("localization_f1_comparison must be dict")
++    position_f1 = artifact.get("position_only_baseline_f1")
++    if not blocked and (not isinstance(position_f1, float) or isinstance(position_f1, bool)):
++        errors.append("position_only_baseline_f1 must be bare float")
++    if not isinstance(artifact.get("n_traces"), int) or isinstance(artifact.get("n_traces"), bool):
++        errors.append("n_traces must be bare int")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if not isinstance(artifact.get("preconditions_checked"), list):
++        errors.append("preconditions_checked must be list")
++    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
++        errors.append("random_seed must be int")
++    if not isinstance(artifact.get("reproducibility_checksum"), str):
++        errors.append("reproducibility_checksum must be string")
++    if not isinstance(artifact.get("model_specs"), dict):
++        errors.append("model_specs must be dict")
++    return errors
++
++
++def run_experiment(
++    config: ExperimentConfig | None = None,
++    *,
++    hidden_state_extractor: Any | None = None,
++    adversarial_verify_runner: AdversarialVerifyRunner = run_adversarial_verify,
++    write: bool = True,
++) -> dict[str, Any]:
++    cfg = config or ExperimentConfig()
++    started = cfg.start_time()
++    source_paths = [
++        cfg.fover_row_corpus_path,
++        cfg.fover_step_corpus_path,
++        cfg.exp2850_artifact_path,
++        cfg.exp4403_artifact_path,
++    ]
++    checks: list[PreconditionCheck] = [
++        _load_exp2850_check(cfg.exp2850_artifact_path),
++        _step_corpus_check(cfg.fover_step_corpus_path),
++    ]
++    exp4403_payload = _text_localizer_payload(cfg.exp4403_artifact_path)
++    text_f1 = text_localizer_f1_from_exp4403(exp4403_payload)
++
++    traces: list[HiddenStateTrace] = []
++    if cfg.fover_row_corpus_path.is_file():
++        try:
++            traces = load_real_fover_error_traces(
++                cfg.fover_row_corpus_path,
++                limit=cfg.min_capture_error_traces,
++            )
++            checks.append(
++                PreconditionCheck(
++                    "cached_real_fover_failed_traces",
++                    len(traces) >= cfg.min_capture_error_traces,
++                    f"failed_traces={len(traces)}; required>={cfg.min_capture_error_traces}",
++                )
++            )
++        except Exception as exc:
++            checks.append(
++                PreconditionCheck(
++                    "cached_real_fover_failed_traces",
++                    False,
++                    f"unreadable: {type(exc).__name__}: {exc}",
++                )
++            )
++    else:
++        checks.append(PreconditionCheck("cached_real_fover_failed_traces", False, "missing"))
++
++    if len(traces) > cfg.min_eval_traces:
++        train_preview, heldout_preview = split_train_heldout(
++            traces,
++            seed=cfg.random_seed,
++            heldout_fraction=cfg.heldout_fraction,
++            min_eval_traces=cfg.min_eval_traces,
++        )
++        checks.append(
++            PreconditionCheck(
++                "heldout_first_error_eval_split",
++                len(heldout_preview) >= cfg.min_eval_traces and bool(train_preview),
++                f"train={len(train_preview)}; heldout={len(heldout_preview)}; required_heldout>={cfg.min_eval_traces}",
++            )
++        )
++    else:
++        checks.append(
++            PreconditionCheck(
++                "heldout_first_error_eval_split",
++                False,
++                f"captured_candidates={len(traces)}; required_heldout>={cfg.min_eval_traces}",
++            )
++        )
++
++    extractor = hidden_state_extractor or TransformersHiddenStateExtractor(cfg.hf_model_id)
++    hidden_status = HiddenStatePathStatus(False, "not checked", {})
++    if all(check.available for check in checks):
++        hidden_status = extractor.check()
++        checks.append(
++            PreconditionCheck(
++                "hidden_state_extraction_path",
++                hidden_status.available,
++                hidden_status.detail,
++            )
++        )
++    checks.append(
++        PreconditionCheck(
++            "trm_training_stand_down",
++            True,
++            "not invoked; this experiment runs forward-pass capture plus CPU probe only",
++        )
++    )
++    preconditions = [check.as_dict() for check in checks]
++    blocked = _blocked_reason(checks)
++    if blocked is not None:
++        artifact = build_blocked_artifact(
++            honest_verdict=blocked,
++            preconditions_checked=preconditions,
++            hidden_status=hidden_status,
++            text_localizer_f1=text_f1,
++            source_paths=source_paths,
++            duration_s=cfg.clock() - started,
++            config=cfg,
++        )
++        if write:
++            _write_artifact(cfg.artifact_path, artifact)
++        return artifact
++
++    train_traces, heldout_traces = split_train_heldout(
++        traces,
++        seed=cfg.random_seed,
++        heldout_fraction=cfg.heldout_fraction,
++        min_eval_traces=cfg.min_eval_traces,
++    )
++    hidden_states = extractor.capture(traces)
++    all_features = transport_margin_features(traces, hidden_states)
++    grouped = _records_by_trace(all_features)
++    train_features = [record for trace in train_traces for record in grouped[trace.trace_id]]
++    heldout_features = [record for trace in heldout_traces for record in grouped[trace.trace_id]]
++    probe = HiddenStateMarginProbe.fit(train_features)
++    position_baseline = PositionOnlyBaseline.fit(train_traces)
++    comparison = evaluate_hidden_state_probe(
++        heldout_traces,
++        heldout_features,
++        probe,
++        position_baseline,
++        text_localizer_f1=text_f1,
++        seed=cfg.random_seed,
++        bootstrap_resamples=cfg.bootstrap_resamples,
++    )
++    artifact = build_complete_artifact(
++        traces=traces,
++        train_traces=train_traces,
++        heldout_traces=heldout_traces,
++        hidden_states=hidden_states,
++        train_features=train_features,
++        heldout_features=heldout_features,
++        hidden_status=hidden_status,
++        preconditions_checked=preconditions,
++        comparison=comparison,
++        probe=probe,
++        source_paths=source_paths,
++        duration_s=cfg.clock() - started,
++        config=cfg,
++    )
++    if write:
++        _write_artifact(cfg.artifact_path, artifact)
++        artifact["adversarial_verify"] = adversarial_verify_runner(cfg.artifact_path)
++        if artifact["adversarial_verify"].get("returncode") not in (0, None):
++            artifact["flagged_adversarial"] = True
++        _write_artifact(cfg.artifact_path, artifact)
++    else:
++        artifact["adversarial_verify"] = {"returncode": None, "skipped": True}
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper.
++    artifact = run_experiment(write=True)
++    print(
++        "[exp4416] "
++        f"{artifact['honest_verdict']} "
++        f"hidden_state_localizer_has_nonposition_signal="
++        f"{artifact['hidden_state_localizer_has_nonposition_signal']} "
++        f"n_traces={artifact['n_traces']} -> {ARTIFACT_PATH}",
++        flush=True,
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 2482f80cdb..48ab4e2064 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-19T01:02:13.300595Z",
+-  "duration_s": 0.022291898727416992,
++  "run_date": "2026-06-19T01:24:57.071113Z",
++  "duration_s": 0.05962252616882324,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "6a1ed52b8b23138f4daaf82093f289f6d813a9791d588d43f9dbad5c3fded3e4",
++  "reproducibility_checksum": "ae1a339568971f9e9fb87bee51f46e7a49632833b4545b058a84074b5a5b81d5",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "faf35d2165cb3692b017d4239bbe46caed9990d4"
++    "adversarial_verify_version": "c1275e4036e2adb2400fbd628f945c06e62867ac"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 646ecd21ef..8088d3e0f8 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-19T01:02:13.329152Z",
+-  "duration_s": 0.023567676544189453,
++  "run_date": "2026-06-19T01:24:57.147550Z",
++  "duration_s": 0.056596994400024414,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "eeae8e629e439690a059c63e359499afd0c90b34044413eca933dd48529850a3",
++  "reproducibility_checksum": "f341719ca3172dff382daf527d1e0f933c8dff1dad237f41561322f856a17af9",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "faf35d2165cb3692b017d4239bbe46caed9990d4"
++    "adversarial_verify_version": "c1275e4036e2adb2400fbd628f945c06e62867ac"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index b323344498..24c0c747fb 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.639806527644396e-05,
++  "duration_s": 0.00011975504457950592,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4416_hidden_state_localizer_falsification_audit.json b/results/experiment_4416_hidden_state_localizer_falsification_audit.json
+new file mode 100644
+index 0000000000..508d97fd29
+--- /dev/null
++++ b/results/experiment_4416_hidden_state_localizer_falsification_audit.json
+@@ -0,0 +1,173 @@
++{
++  "adversarial_verify": {
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
++  },
++  "duration_s": 15.452,
++  "experiment": "experiment_4416_hidden_state_localizer_falsification_audit",
++  "field_principles": {
++    "hidden_state_localizer_has_nonposition_signal": "BARE bool: the capstone reads this; true iff the hidden-state probe's held-out first-error F1 exceeds the content-blind position-only baseline (delta CI95-excl-0) -- the one remaining oracle-distinct first-error question, settled off-text.",
++    "honest_verdict": "Terminal-prefixed. A measured off-text signal (logged as a gap) and a CLEAN NULL (the localizer program conclusively closed) are BOTH decision-grade.",
++    "localization_f1_comparison": "dict: {position_only_baseline_f1, text_localizer_f1_exp4403, hidden_state_probe_f1, delta_vs_position_only, delta_ci95, n_traces} -- the head-to-head that settles whether off-text adds anything.",
++    "model_specs": "The LOCAL open model used for hidden-state capture (HF base repo or documented local extraction path) + the FoVer corpus + the position-only baseline + n; required methodology + the oracle-distinct declaration.",
++    "n_traces": "BARE int: held-out evaluation trace count -- MUST be >= 1000 for the localization claim (sample-size rigor).",
++    "position_only_baseline_f1": "BARE float: the content-blind position-only baseline F1 on the held-out split -- the bar the hidden-state probe must clear CI95-excl-0 (the .407 confound made explicit).",
++    "preconditions_checked": "Records the cached-corpus + the hidden-state-extraction-path + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
++    "random_seed": "Determinism precondition for the capture + the probe fit + the bootstrap.",
++    "reproducibility_checksum": "Hash of the hidden-state capture + the probe config + the held-out split + the controls; lets a third party re-run.",
++    "verifier_is_oracle": "BARE bool=false -- a learned probe over model hidden states; the reference prefix-check defines correctness, the probe estimates WHICH step -- oracle-DISTINCT."
++  },
++  "hidden_state_capture_receipts": {
++    "feature_names": [
++      "hidden_norm",
++      "transport_from_prev_l2",
++      "transport_to_next_l2",
++      "trace_center_l2",
++      "local_transport_margin"
++    ],
++    "hidden_state_capture_sha256": "sha256:3a4f70d3c31856aed8c1d4d047eeca0d554318a8d5490c3fd7f636bdbe16b91e",
++    "n_captured_steps": 1250,
++    "n_captured_traces": 1250,
++    "n_heldout_traces": 1000,
++    "n_per_position_bin": {
++      "0": 1250
++    },
++    "n_train_traces": 250
++  },
++  "hidden_state_localizer_has_nonposition_signal": false,
++  "honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
++  "inference_substrate": "local_hf_hidden_state_forward_pass",
++  "localization_f1_comparison": {
++    "delta_ci95": [
++      0.0,
++      0.0
++    ],
++    "delta_vs_position_only": 0.0,
++    "hidden_exact_match_count": 1000,
++    "hidden_state_probe_f1": 1.0,
++    "n_traces": 1000,
++    "position_exact_match_count": 1000,
++    "position_only_baseline_f1": 1.0,
++    "text_localizer_f1_exp4403": 1.0
++  },
++  "methodology_note": "The default powered FoVer failed rows are verifier-checked one-step intervention traces from Exp 4403. Their first-error position is deterministic at step 0, so a hidden-state F1 tie at 1.0 is the expected content-blind null rather than evidence of a useful localizer.",
++  "missing_verifier_gaps": [
++    {
++      "candidate_design": "Collect typed multi-step FoVer traces with non-first-position first errors before any localizer redeployment; do not revive the position-saturated text or hidden-state localizer line.",
++      "delta_ci95": [
++        0.0,
++        0.0
++      ],
++      "delta_vs_position_only": 0.0,
++      "evidence": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4416_hidden_state_localizer_falsification_audit.json",
++      "failure_mode": "The hidden-state transport/margin probe tied the content-blind position-only first-error baseline; the available FoVer failed traces are position-saturated at first step.",
++      "gap_id": "GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED",
++      "missing_discriminator": "A model-native signal that separates earliest causal error from position and downstream consequence under non-degenerate multi-step FoVer labels.",
++      "n_captured_traces": 1250,
++      "parent_gap": "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
++      "priority": "medium",
++      "status": "open"
++    }
++  ],
++  "model_specs": {
++    "batch_size": 16,
++    "bootstrap_resamples": 2500,
++    "capture_n": 1250,
++    "device": "cuda",
++    "exp2850_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
++    "exp4403_text_localizer_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4403_real_intervention_localizer_deconfound.json",
++    "fover_row_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
++    "fover_step_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/step_level_prm_training.jsonl",
++    "generator_training": "stood_down_not_invoked",
++    "gguf_tokenizer_rule": "base_hf_repo_used_not_gguf_only_repo",
++    "heldout_n": 1000,
++    "hidden_size": 896,
++    "hidden_state_extraction_path": "transformers.AutoModel(output_hidden_states=True)",
++    "hidden_state_probe": {
++      "model_type": "linear_hidden_transport_margin_probe",
++      "training_summary": {
++        "feature_names": [
++          "hidden_norm",
++          "transport_from_prev_l2",
++          "transport_to_next_l2",
++          "trace_center_l2",
++          "local_transport_margin"
++        ],
++        "negative_non_first_error_steps": 0,
++        "position_features_used": false,
++        "positive_first_error_steps": 393,
++        "training_step_count": 393
++      },
++      "weights": {
++        "hidden_norm": 0.0,
++        "local_transport_margin": 0.0,
++        "trace_center_l2": 0.0,
++        "transport_from_prev_l2": 0.0,
++        "transport_to_next_l2": 0.0
++      }
++    },
++    "live_generation": false,
++    "max_length": 96,
++    "model_id": "Qwen/Qwen2.5-0.5B",
++    "num_hidden_layers": 24,
++    "position_only_baseline": {
++      "content_blind": true,
++      "position_counts": {
++        "0": 1250
++      }
++    },
++    "random_seed": 4416,
++    "random_seeds_used": [
++      4416
++    ],
++    "snapshot_path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B/snapshots/060db6499f32faf8b98477b0a26969ef7d8b9987",
++    "trm_training": "stood_down_not_invoked",
++    "verifier_is_oracle": false
++  },
++  "n_traces": 1000,
++  "position_only_baseline_f1": 1.0,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "n_examples=1000",
++      "resource": "exp2850_fover_corpus"
++    },
++    {
++      "available": true,
++      "detail": "step_traces=6548; error_traces=114",
++      "resource": "cached_step_labeled_fover_corpus"
++    },
++    {
++      "available": true,
++      "detail": "failed_traces=1250; required>=1250",
++      "resource": "cached_real_fover_failed_traces"
++    },
++    {
++      "available": true,
++      "detail": "train=250; heldout=1000; required_heldout>=1000",
++      "resource": "heldout_first_error_eval_split"
++    },
++    {
++      "available": true,
++      "detail": "transformers output_hidden_states probe succeeded",
++      "resource": "hidden_state_extraction_path"
++    },
++    {
++      "available": true,
++      "detail": "not invoked; this experiment runs forward-pass capture plus CPU probe only",
++      "resource": "trm_training_stand_down"
++    }
++  ],
++  "random_seed": 4416,
++  "random_seeds_used": [
++    4416
++  ],
++  "reproducibility_checksum": "sha256:3be67173672bf3f6793b9db1c3832968ebc7aadbe2e85573419c5df48ef9bfa4",
++  "schema": "carnot.hidden_state_localizer_falsification_audit.v1",
++  "spec_refs": [
++    "REQ-VERIFY-4416",
++    "SCENARIO-VERIFY-4416"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_4416_hidden_state_localizer_falsification_audit.py b/results/experiment_4416_hidden_state_localizer_falsification_audit.py
+new file mode 100644
+index 0000000000..fbf86ffc76
+--- /dev/null
++++ b/results/experiment_4416_hidden_state_localizer_falsification_audit.py
+@@ -0,0 +1,10 @@
++#!/usr/bin/env python3
++"""CLI shim for Exp 4416 hidden-state localizer falsification audit."""
++
++from __future__ import annotations
++
++from carnot.experiment_4416_hidden_state_localizer_falsification_audit import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 24d0f418d5..bcad485cdc 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T01:02:03Z",
+-  "finished_at": "2026-06-19T01:02:03Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-19T01:24:33Z",
++  "finished_at": "2026-06-19T01:24:33Z",
++  "duration_s": 0.007,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index e842af29ec..aad5fde1e6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T01:02:03Z",
+-  "finished_at": "2026-06-19T01:02:03Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-19T01:24:34Z",
++  "finished_at": "2026-06-19T01:24:34Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 71c517d78a..15b8206862 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T01:02:03Z",
+-  "finished_at": "2026-06-19T01:02:03Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-19T01:24:34Z",
++  "finished_at": "2026-06-19T01:24:34Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/arc3_layerb_ar_model_test.py b/scripts/experiments/arc3_layerb_ar_model_test.py
+index 72a5ff84e1..b9009369c7 100644
+--- a/scripts/experiments/arc3_layerb_ar_model_test.py
++++ b/scripts/experiments/arc3_layerb_ar_model_test.py
+@@ -95,9 +95,20 @@ def start_server(gguf, mtp=False):
+     return None
+ 
+ 
+-def gen(prompt, n_predict=1100):
+-    body = json.dumps({"prompt": prompt, "n_predict": n_predict, "temperature": 0.2, "cache_prompt": True}).encode()
+-    req = urllib.request.Request(f"http://127.0.0.1:{PORT}/completion", data=body, headers={"Content-Type": "application/json"})
++# the fairness clarification (reused by the repeated-benchmark driver): ka59's reference region is not
++# static, so tell models the digest counts are fixed constants -- measures whether they find the right
++# RELATION, not whether they hardcode vs recompute a non-static reference.
++CLARIFY = ("IMPORTANT: the per-colour counts in the reference digest are FIXED values measured "
++           "once; use those numbers as numeric CONSTANTS in your predicate. Do NOT recompute "
++           "reference-region counts from the live `grid` (the reference region is not static).\n\n")
++
++
++def gen(prompt, n_predict=1100, seed=None):
++    body = {"prompt": prompt, "n_predict": n_predict, "temperature": 0.2, "cache_prompt": True}
++    if seed is not None:
++        body["seed"] = int(seed)
++    req = urllib.request.Request(f"http://127.0.0.1:{PORT}/completion", data=json.dumps(body).encode(),
++                                 headers={"Content-Type": "application/json"})
+     t0 = time.time()
+     with urllib.request.urlopen(req, timeout=900) as r:
+         resp = json.load(r)
+@@ -139,10 +150,7 @@ def main():
+             # (better) dynamic-recompute rule and were penalised. Tell every model the digest counts are
+             # fixed constants so the comparison measures whether they find the right RELATION, not whether
+             # they happened to hardcode vs recompute a non-static reference.
+-            clarify = ("IMPORTANT: the per-colour counts in the reference digest are FIXED values measured "
+-                       "once; use those numbers as numeric CONSTANTS in your predicate. Do NOT recompute "
+-                       "reference-region counts from the live `grid` (the reference region is not static).\n\n")
+-            prompt = (no_think or "") + clarify + prompt
++            prompt = (no_think or "") + CLARIFY + prompt
+             if len(prompt) // 4 > 4500:
+                 rows.append({"game": g, "tier": "SKIPPED_PROMPT_TOO_LARGE"}); print(f"  {g}: SKIPPED big prompt", flush=True); continue
+             try:
+diff --git a/scripts/experiments/arc3_layerb_repeat_bench.py b/scripts/experiments/arc3_layerb_repeat_bench.py
+new file mode 100644
+index 0000000000..742a5b4230
+--- /dev/null
++++ b/scripts/experiments/arc3_layerb_repeat_bench.py
+@@ -0,0 +1,98 @@
++"""Repeated-seed Layer-B grounding-RATE benchmark -- beats down the 2-game small-sample noise.
++
++Operator 2026-06-19: run base Qwen3.5-9B-MTP vs DeepSeek-V4-Flash-MTP 3-5x each on ka59+tn36 (different
++seeds) for a grounding RATE, and raise the token cap to rule out truncation (DeepSeek-Flash hit the 1100
++cap on both games -- was it rambling, or just truncated before finishing a correct rule?).
++
++Reuses the AR harness wholesale (server lifecycle, prompt build, /no_think + fairness CLARIFY, _best_code
++extraction, verify). Loads the model server ONCE, then runs each game N times at seeds 0..N-1 with a higher
++n_predict, recording grounded/not per run -> per-game grounding rate. iGPU, offline, --mtp optional.
++
++Usage: python scripts/experiments/arc3_layerb_repeat_bench.py <model_key> [--repeat N] [--n-predict M] [--mtp] [games...]"""
++from __future__ import annotations
++
++import importlib.util
++import json
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++_spec = importlib.util.spec_from_file_location(
++    "ar", str(REPO / "scripts" / "experiments" / "arc3_layerb_ar_model_test.py"))
++ar = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(ar)
++
++
++def _argval(flag, default):
++    if flag in sys.argv:
++        return sys.argv[sys.argv.index(flag) + 1]
++    return default
++
++
++def main():
++    if not sys.argv[1:] or sys.argv[1] not in ar.MODELS:
++        print(f"usage: <model_key in {list(ar.MODELS)}> [--repeat N] [--n-predict M] [--mtp] [games...]", flush=True); return 1
++    key = sys.argv[1]
++    repeat = int(_argval("--repeat", 4))
++    n_predict = int(_argval("--n-predict", 2560))
++    mtp = "--mtp" in sys.argv
++    skip = {"--repeat", "--n-predict", "--mtp", _argval("--repeat", None), _argval("--n-predict", None), key}
++    games = [a for a in sys.argv[2:] if a not in skip] or ["ka59", "tn36"]
++    glob_pat, no_think = ar.MODELS[key]
++    hits = list(ar.HUB.glob(glob_pat))
++    if not hits:
++        print(f"  GGUF not found for {key}", flush=True); return 1
++    gguf = str(hits[0])
++    print(f"== REPEAT bench: {key} mtp={mtp} repeat={repeat} n_predict={n_predict} games={games} ==", flush=True)
++    sf = ar._scaffold()
++    proc = ar.start_server(gguf, mtp=mtp)
++    if proc is None:
++        print("  server failed", flush=True); return 1
++    per_game = {}
++    try:
++        for g in games:
++            sf.GAME = g
++            scene, eb, bg, ref_box, win, ch, nonwins = sf.collect()
++            if eb is None or win is None or len(nonwins) < 2:
++                per_game[g] = {"blocked": True}; print(f"  {g}: BLOCKED", flush=True); continue
++            win_sub = sf._edit_sub(win, eb)
++            base_prompt = (no_think or "") + ar.CLARIFY + sf.build_prompt(scene, eb, bg, ref_box, win, nonwins)
++            runs = []
++            for s in range(repeat):
++                try:
++                    raw, dt, ntok = ar.gen(base_prompt, n_predict=n_predict, seed=s)
++                except Exception as ex:
++                    runs.append({"seed": s, "error": str(ex)[:80]}); continue
++                code = ar._best_code(raw)
++                grounded = False; capped = (ntok >= n_predict)
++                if "def is_win" in code:
++                    ns = {}
++                    try:
++                        exec(code, ns)  # noqa: S102
++                        v = sf.verify(ns.get("is_win", lambda x: False), win, nonwins)
++                        fpr = v.get("false_positive_rate")
++                        grounded = bool(v.get("fires_on_win")) and fpr is not None and fpr < 0.2
++                    except Exception:
++                        pass
++                runs.append({"seed": s, "grounded": grounded, "tokens": ntok, "capped": capped, "tok_per_s": round(ntok / max(dt, 0.01), 2)})
++            n_gnd = sum(1 for r in runs if r.get("grounded"))
++            n_cap = sum(1 for r in runs if r.get("capped"))
++            per_game[g] = {"grounded_rate": f"{n_gnd}/{repeat}", "n_grounded": n_gnd, "n_capped": n_cap, "runs": runs}
++            mt = sum(r.get("tokens", 0) for r in runs) / max(1, len(runs))
++            print(f"  {g}: grounded {n_gnd}/{repeat} | capped {n_cap}/{repeat} | mean_tokens {mt:.0f} | "
++                  f"per-seed: {[ (r.get('grounded'), r.get('tokens')) for r in runs ]}", flush=True)
++    finally:
++        proc.terminate()
++    out = {"experiment": "arc3_layerb_repeat_bench", "model_key": key, "mtp": mtp, "repeat": repeat,
++           "n_predict": n_predict, "per_game": per_game,
++           "honest_verdict": f"complete_repeatbench_{key.replace('.','_').replace('-','_')}_mtp_{mtp}",
++           "inference_substrate": f"offline_arc_agi3_{key}{'_mtp' if mtp else ''}_iGPU_repeat{repeat}"}
++    tag = key.replace('.', '_') + ("_mtp" if mtp else "")
++    (REPO / "results" / f"arc3_layerb_repeat_bench_{tag}.json").write_text(json.dumps(out, indent=2, default=str))
++    print(f"  -> {out['honest_verdict']}", flush=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_4416_hidden_state_localizer_falsification_audit.py b/tests/python/test_experiment_4416_hidden_state_localizer_falsification_audit.py
+new file mode 100644
+index 0000000000..0765d48fea
+--- /dev/null
++++ b/tests/python/test_experiment_4416_hidden_state_localizer_falsification_audit.py
+@@ -0,0 +1,356 @@
++"""Tests for Exp 4416 hidden-state first-error falsification audit.
++
++Spec refs: REQ-VERIFY-4416, SCENARIO-VERIFY-4416.
++"""
++
++from __future__ import annotations
++
++import json
++import math
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4416_hidden_state_localizer_falsification_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload), encoding="utf-8")
++
++
++def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
++
++
++def _fover_rows(n_bad: int = 8, *, family: str = "fixture") -> list[dict[str, Any]]:
++    rows = [
++        {
++            "question_id": f"{family}_correct",
++            "source": family,
++            "label": "correct",
++            "confidence": 0.95,
++            "step_text": f"{family} verified reference step",
++        }
++    ]
++    for idx in range(n_bad):
++        rows.append(
++            {
++                "question_id": f"{family}_bad_{idx}",
++                "source": family,
++                "label": "incorrect",
++                "confidence": 0.15,
++                "step_text": f"{family} failed step {idx}",
++            }
++        )
++    return rows
++
++
++class FakeExtractor:
++    def __init__(self, *, available: bool = True) -> None:
++        self.available = available
++
++    def check(self) -> mod.HiddenStatePathStatus:
++        return mod.HiddenStatePathStatus(
++            available=self.available,
++            detail="fake extractor ready" if self.available else "fake extractor unavailable",
++            model_specs={
++                "model_id": "fixture-hidden-model",
++                "hidden_state_extraction_path": "injected_test_extractor",
++                "gguf_tokenizer_rule": "not_gguf",
++            },
++        )
++
++    def capture(self, traces: list[mod.HiddenStateTrace]) -> list[list[list[float]]]:
++        captured: list[list[list[float]]] = []
++        for trace in traces:
++            per_trace: list[list[float]] = []
++            for step_index, _text in enumerate(trace.steps):
++                if step_index == trace.first_error_index:
++                    per_trace.append([2.0, 0.0])
++                else:
++                    per_trace.append([0.1, 0.0])
++            captured.append(per_trace)
++        return captured
++
++
++def _fixture_config(
++    tmp_path: Path,
++    *,
++    artifact_name: str = "experiment_4416.json",
++    n_bad: int = 8,
++    min_capture_error_traces: int = 8,
++    min_eval_traces: int = 3,
++) -> mod.ExperimentConfig:
++    fover_path = tmp_path / "data" / f"{artifact_name}.fover.jsonl"
++    step_path = tmp_path / "data" / f"{artifact_name}.steps.jsonl"
++    exp2850_path = tmp_path / "results" / f"{artifact_name}.2850.json"
++    exp4403_path = tmp_path / "results" / f"{artifact_name}.4403.json"
++    _write_jsonl(fover_path, _fover_rows(n_bad=n_bad))
++    _write_jsonl(step_path, [{"question_id": "s", "step_label": "wrong", "partial_cot": "bad"}])
++    _write_json(exp2850_path, {"n_examples": 1000, "honest_verdict": "complete: fixture"})
++    _write_json(
++        exp4403_path,
++        {
++            "localization_f1_by_domain": {"FoVer": {"real_intervention_localizer": 1.0}},
++            "position_only_baseline_f1": 1.0,
++            "honest_verdict": "complete: clean_powered_null_position_only_not_beaten",
++        },
++    )
++    return mod.ExperimentConfig(
++        repo_root=tmp_path,
++        fover_row_corpus_path=fover_path,
++        fover_step_corpus_path=step_path,
++        exp2850_artifact_path=exp2850_path,
++        exp4403_artifact_path=exp4403_path,
++        verifier_gaps_path=tmp_path / "ops" / "verifier_gaps.md",
++        artifact_path=tmp_path / "results" / artifact_name,
++        min_capture_error_traces=min_capture_error_traces,
++        min_eval_traces=min_eval_traces,
++        heldout_fraction=0.75,
++        bootstrap_resamples=40,
++        started_at=10.0,
++        clock=lambda: 12.0,
++    )
++
++
++def test_req_verify_4416_spec_declares_hidden_state_audit_contract() -> None:
++    """REQ-VERIFY-4416: OpenSpec declares the hidden-state falsification audit."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-4416",
++        "SCENARIO-VERIFY-4416",
++        "experiment_4416_hidden_state_localizer_falsification_audit.json",
++        "hidden_state_localizer_has_nonposition_signal",
++        "localization_f1_comparison",
++        "position_only_baseline_f1",
++        "blocked_no_hidden_state_extraction_path",
++        "GGUF tokenizer rule",
++    ):
++        assert marker in spec
++
++
++def test_req_verify_4416_builds_powered_real_fover_error_traces() -> None:
++    """REQ-VERIFY-4416: real FoVer failed rows become first-error traces."""
++
++    traces = mod.build_real_fover_error_traces_from_rows(_fover_rows(n_bad=5))
++
++    assert len(traces) == 5
++    assert all(trace.first_error_index == 0 for trace in traces)
++    assert all(trace.position_bin == "0" for trace in traces)
++    assert mod.position_bin_counts(traces) == {"0": 5}
++
++
++def test_req_verify_4416_hidden_margin_probe_requires_nonposition_delta() -> None:
++    """REQ-VERIFY-4416: hidden signal is true only when CI beats position-only."""
++
++    train = [
++        mod.HiddenStateTrace("train-a", ("bad", "downstream"), 0, "0", "a"),
++        mod.HiddenStateTrace("train-b", ("bad", "downstream"), 0, "0", "b"),
++        mod.HiddenStateTrace("train-c", ("prefix", "bad"), 1, "1", "c"),
++        mod.HiddenStateTrace("train-d", ("prefix", "bad"), 1, "1", "d"),
++    ]
++    heldout = [
++        mod.HiddenStateTrace("held-a", ("prefix", "bad"), 1, "1", "c"),
++        mod.HiddenStateTrace("held-b", ("prefix", "bad"), 1, "1", "d"),
++    ]
++    extractor = FakeExtractor()
++    train_features = mod.transport_margin_features(train, extractor.capture(train))
++    heldout_features = mod.transport_margin_features(heldout, extractor.capture(heldout))
++    probe = mod.HiddenStateMarginProbe.fit(train_features)
++    baseline = mod.PositionOnlyBaseline.fit(train)
++
++    report = mod.evaluate_hidden_state_probe(
++        heldout,
++        heldout_features,
++        probe,
++        baseline,
++        text_localizer_f1=1.0,
++        seed=4416,
++        bootstrap_resamples=30,
++    )
++
++    assert report["hidden_state_probe_f1"] == pytest.approx(1.0)
++    assert report["position_only_baseline_f1"] == pytest.approx(0.0)
++    assert report["delta_vs_position_only"] == pytest.approx(1.0)
++    assert report["delta_ci95"] == [1.0, 1.0]
++    assert mod.has_nonposition_signal(report) is True
++
++
++def test_scenario_verify_4416_run_experiment_writes_clean_null(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4416: position-saturated hidden states close the localizer."""
++
++    config = _fixture_config(tmp_path)
++    artifact = mod.run_experiment(
++        config,
++        hidden_state_extractor=FakeExtractor(),
++        adversarial_verify_runner=lambda _path: {"returncode": 0, "stdout_tail": "clean"},
++        write=True,
++    )
++
++    assert config.artifact_path.is_file()
++    assert artifact["honest_verdict"] == "complete: clean_powered_null_position_only_not_beaten"
++    assert artifact["hidden_state_localizer_has_nonposition_signal"] is False
++    assert artifact["localization_f1_comparison"]["position_only_baseline_f1"] == pytest.approx(1.0)
++    assert artifact["localization_f1_comparison"]["hidden_state_probe_f1"] == pytest.approx(1.0)
++    assert artifact["localization_f1_comparison"]["delta_vs_position_only"] == pytest.approx(0.0)
++    assert artifact["position_only_baseline_f1"] == pytest.approx(1.0)
++    assert artifact["n_traces"] == 6
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["hidden_state_capture_receipts"]["n_per_position_bin"] == {"0": 8}
++    assert artifact["adversarial_verify"]["returncode"] == 0
++    assert artifact["missing_verifier_gaps"][0]["gap_id"] == (
++        "GAP-FOVER-HIDDEN-STATE-LOCALIZATION-POSITION-SATURATED"
++    )
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_verify_4416_blocks_before_capture_on_missing_resources(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4416: blocked corpus and hidden-path verdicts are terminal."""
++
++    missing = mod.run_experiment(
++        _fixture_config(tmp_path, artifact_name="missing.json", n_bad=2, min_capture_error_traces=4),
++        hidden_state_extractor=FakeExtractor(),
++        write=True,
++    )
++    assert missing["honest_verdict"] == "blocked_cached_corpus_unavailable"
++    assert missing["adversarial_verify"]["skipped"] == "blocked"
++    assert missing["hidden_state_capture_receipts"]["n_captured_traces"] == 0
++    assert mod.artifact_schema_errors(missing) == []
++
++    hidden = mod.run_experiment(
++        _fixture_config(tmp_path, artifact_name="hidden.json"),
++        hidden_state_extractor=FakeExtractor(available=False),
++        write=True,
++    )
++    assert hidden["honest_verdict"] == "blocked_no_hidden_state_extraction_path"
++    assert hidden["preconditions_checked"][-2]["resource"] == "hidden_state_extraction_path"
++    assert hidden["adversarial_verify"]["skipped"] == "blocked"
++    assert mod.artifact_schema_errors(hidden) == []
++
++
++def test_req_verify_4416_schema_and_repro_helpers_are_strict(tmp_path: Path) -> None:
++    """REQ-VERIFY-4416: schema helpers reject non-bare gate fields."""
++
++    assert mod.round_float(None) is None
++    assert mod.round_float(math.nan) is None
++    assert mod._paired_delta_ci95([], [], seed=1, resamples=10) == [None, None]
++    assert mod._vector_mean([]) == []
++    assert mod.text_localizer_f1_from_exp4403({}) is None
++    assert mod.text_localizer_f1_from_exp4403({"position_only_baseline_f1": 1.0}) is None
++    assert (
++        mod.text_localizer_f1_from_exp4403(
++            {"localization_f1_by_domain": {"FoVer": {"real_intervention_localizer": 0.75}}}
++        )
++        == pytest.approx(0.75)
++    )
++
++    path = tmp_path / "missing.json"
++    checksum = mod.reproducibility_checksum(
++        source_paths=[path],
++        payload={"b": 2, "a": 1},
++    )
++    assert checksum.startswith("sha256:")
++    assert mod._load_exp2850_check(path).available is False
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{bad", encoding="utf-8")
++    assert mod._load_exp2850_check(bad_json).available is False
++    assert mod._text_localizer_payload(path) == {}
++    assert mod._text_localizer_payload(bad_json) == {}
++
++    step_missing = mod._step_corpus_check(tmp_path / "missing_steps.jsonl")
++    assert step_missing.available is False
++    no_labels = tmp_path / "no_labels.jsonl"
++    _write_jsonl(no_labels, [{"question_id": "x", "partial_cot": "no label"}])
++    assert mod._step_corpus_check(no_labels).available is False
++    bad_step = tmp_path / "bad_steps.jsonl"
++    bad_step.write_text("{bad\n", encoding="utf-8")
++    assert mod._step_corpus_check(bad_step).available is False
++
++    trace = mod.HiddenStateTrace("short", ("only",), 0, "0", "row")
++    assert mod.PositionOnlyBaseline({}).predict_first_error_index(trace) is None
++    assert mod.PositionOnlyBaseline({5: 2}).predict_first_error_index(trace) == 0
++    assert mod.HiddenStateMarginProbe.fit([]).predict_first_error_index("missing", []) is None
++    assert mod.has_nonposition_signal({"delta_ci95": "bad"}) is False
++    with pytest.raises(ValueError, match="hidden state count mismatch"):
++        mod.transport_margin_features([trace], [[[0.0], [1.0]]])
++
++    all_rows_path = tmp_path / "all_rows.jsonl"
++    _write_jsonl(all_rows_path, _fover_rows(n_bad=1))
++    assert len(mod.load_real_fover_error_traces(all_rows_path)) == 1
++
++    missing_verify = mod.run_adversarial_verify(tmp_path / "artifact.json", repo_root=tmp_path)
++    assert missing_verify["returncode"] is None
++    script = tmp_path / "scripts" / "adversarial_verify.py"
++    script.parent.mkdir(parents=True, exist_ok=True)
++    script.write_text("import sys\nprint('ok')\nsys.exit(0)\n", encoding="utf-8")
++    verify = mod.run_adversarial_verify(tmp_path / "artifact.json", repo_root=tmp_path)
++    assert verify["returncode"] == 0
++    assert "ok" in verify["stdout_tail"]
++
++    errors = mod.artifact_schema_errors(
++        {
++            "honest_verdict": "bad",
++            "hidden_state_localizer_has_nonposition_signal": "false",
++            "localization_f1_comparison": [],
++            "position_only_baseline_f1": 1,
++            "n_traces": "0",
++            "verifier_is_oracle": True,
++        }
++    )
++    assert "missing preconditions_checked" in errors
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "hidden_state_localizer_has_nonposition_signal must be bare bool" in errors
++    assert "localization_f1_comparison must be dict" in errors
++    assert "position_only_baseline_f1 must be bare float" in errors
++    assert "n_traces must be bare int" in errors
++    assert "verifier_is_oracle must be false" in errors
++
++
++def test_scenario_verify_4416_dry_run_flagged_and_bad_row_branches(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4416: dry-run, flagged, and unreadable row paths stay explicit."""
++
++    dry = mod.run_experiment(
++        _fixture_config(tmp_path, artifact_name="dry.json"),
++        hidden_state_extractor=FakeExtractor(),
++        write=False,
++    )
++    assert dry["adversarial_verify"] == {"returncode": None, "skipped": True}
++
++    flagged = mod.run_experiment(
++        _fixture_config(tmp_path, artifact_name="flagged.json"),
++        hidden_state_extractor=FakeExtractor(),
++        adversarial_verify_runner=lambda _path: {"returncode": 1, "stdout_tail": "flag"},
++        write=True,
++    )
++    assert flagged["flagged_adversarial"] is True
++
++    config = _fixture_config(tmp_path, artifact_name="bad_rows.json")
++    config.fover_row_corpus_path.write_text("{bad\n", encoding="utf-8")
++    blocked = mod.run_experiment(
++        config,
++        hidden_state_extractor=FakeExtractor(),
++        write=True,
++    )
++    assert blocked["honest_verdict"] == "blocked_cached_corpus_unavailable"
++    assert any(
++        check["resource"] == "cached_real_fover_failed_traces" and "unreadable" in check["detail"]
++        for check in blocked["preconditions_checked"]
++    )
++
++    missing_config = _fixture_config(tmp_path, artifact_name="missing_rows.json")
++    missing_config.fover_row_corpus_path.unlink()
++    missing = mod.run_experiment(
++        missing_config,
++        hidden_state_extractor=FakeExtractor(),
++        write=True,
++    )
++    assert missing["honest_verdict"] == "blocked_cached_corpus_unavailable"
+-- 
+2.55.0
+

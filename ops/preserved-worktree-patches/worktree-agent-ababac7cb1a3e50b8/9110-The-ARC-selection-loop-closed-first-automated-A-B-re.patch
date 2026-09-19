@@ -1,0 +1,131 @@
+From 1e3ad593a262269ff1a6f28b65b041122bd10fb0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 21:59:30 -0400
+Subject: [PATCH 09110/11362] The ARC selection loop closed: first automated
+ A/B refused a flag that loses ft09
+
+End-to-end proof that REQ-ARC-BENCH-6267 and REQ-ARC-FLAG-LEDGER-6268 work
+together, plus a diagnosis for the sc25 anomaly the baseline surfaced.
+
+CARNOT_ARC_SMALL_OBJECT_FIRST -- REFUSED. Its source comment read "the SUBMITTED
+agent is unchanged until an A/B greenlights it" (REQ-ARC-FCP-5758). The A/B had
+never run. It ran now:
+
+  baseline  8 levels   364,730 actions
+  arm       7 levels   364,468 actions
+
+The flag loses ft09, a game the baseline clears, and makes lp85, su15 and vc33
+more expensive. Total actions move 0.07 percent, so reading the aggregate alone
+would have called it neutral and shipped it. The per-game rule caught the lost
+game -- the exact failure the regression gate was written for, firing on real
+data rather than a fixture, on the first measurement ever taken.
+
+Not a verdict on the idea, which may still be right for the games it was designed
+around. A verdict on turning it on globally, recorded with evidence instead of
+left open for another six months.
+
+SC25's 24-ACTION COLLAPSE, diagnosed. At the default state key every action
+dedups to an already-seen state, the frontier empties, and search exits after 24
+steps while every other unsolved game spends 8,000 to 75,000. Measured at 1500
+expansions: unset 24 steps, SUFFIX_K=1 4,463 steps, K=2 and K=4 3,876. The game
+is not hard, it is unexplorable.
+
+Still clears no level, so the rule correctly does not promote it -- "explores
+more" is neither a level nor an efficiency gain, and rewarding extra actions
+would invert the scored metric. The fix belongs in the state key, not a flag: a
+key that collapses distinct states makes sc25 invisible to every future
+measurement, because no flag can change an outcome decided before search runs.
+---
+ ops/arc_flag_ledger.yaml | 22 ++++++++++++++++++--
+ ops/known-issues.md      | 45 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 65 insertions(+), 2 deletions(-)
+
+diff --git a/ops/arc_flag_ledger.yaml b/ops/arc_flag_ledger.yaml
+index 0fe0db8923..dcd9463708 100644
+--- a/ops/arc_flag_ledger.yaml
++++ b/ops/arc_flag_ledger.yaml
+@@ -324,8 +324,26 @@ flags:
+     evidence: []
+     state: unevaluated
+   CARNOT_ARC_SMALL_OBJECT_FIRST:
+-    discovered: '2026-08-14'
+-    evidence: []
++    benchmark_reachable: true
++    discovered: '2026-08-14'
++    evidence:
++    - arm_total_levels: 7
++      baseline_total_levels: 8
++      date: '2026-08-14'
++      games_compared: 25
++      levels_improved: []
++      levels_regressed:
++      - ft09
++      same_levels_cheaper: []
++      same_levels_costlier:
++      - lp85
++      - su15
++      - vc33
++      value: '1'
++      verdict: 'REFUSED: regressed on [''ft09'']. A flag that breaks a game it used to clear is not promoted,
++        whatever the aggregate says.'
++    last_measured: '2026-08-14'
++    promotable: false
+     state: unevaluated
+   CARNOT_ARC_STALL_REFACTOR_LOOP:
+     discovered: '2026-08-14'
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index f912384b51..e1f36caa9e 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -17929,3 +17929,48 @@ is decided before the search runs.
+ **Do not quote these numbers as hidden-game results.** They are public games with
+ the hand-written adapter bypassed. That removes the hand-written route, not the
+ knowledge that produced it.
++
++## 2026-08-13 First automated ARC flag A/B: refused, and sc25's search collapse explained
++
++The selection loop ran end to end for the first time.
++
++**`CARNOT_ARC_SMALL_OBJECT_FIRST` -- REFUSED.** Its own source comment said "the
++SUBMITTED agent is unchanged until an A/B greenlights it" (REQ-ARC-FCP-5758,
++diagnosed on r11l/su15). That A/B had never run. It has now.
++
++| | baseline | arm |
++|---|---|---|
++| levels cleared | 8 | **7** |
++| actions spent | 364,730 | 364,468 |
++
++The flag loses ft09, a game the baseline clears, and makes lp85, su15 and vc33
++more expensive. Total actions move by 0.07 percent, so anyone reading the
++aggregate alone would have called it neutral and shipped it. The per-game rule
++caught the lost game. That is the failure mode the regression gate exists for,
++and it fired on real data rather than a fixture on the first measurement taken.
++
++Not a verdict on the idea. Small-object-first click ranking may still be right
++for the games it was designed around. It is a verdict on turning it on globally,
++and it is recorded with evidence in `ops/arc_flag_ledger.yaml` rather than left
++as an open question for another six months.
++
++**sc25's 24-action collapse is a state-key problem, and it is fixable.** Measured
++directly at 1500 expansions:
++
++| `CARNOT_ARC_STATE_KEY_SUFFIX_K` | env steps | level |
++|---|---|---|
++| unset (default) | 24 | 0 |
++| 1 | 4,463 | 0 |
++| 2 | 3,876 | 0 |
++| 4 | 3,876 | 0 |
++
++At the default state key every action dedups to an already-seen state, so the
++frontier empties after 24 steps and search exits. The game is not hard here; it
++is unexplorable. With the suffix key set it explores normally.
++
++It still clears no level, so the promotion rule correctly does not promote it --
++"explores more" is neither a level nor an efficiency gain, and rewarding extra
++actions would invert the scored metric. The right fix is the state key itself,
++not a flag: a key that collapses distinct states makes sc25 invisible to every
++future flag measurement, because no flag can change an outcome decided before
++the search runs.
+-- 
+2.55.0
+

@@ -1,0 +1,1489 @@
+From a79ea039274097be8a4b1ce6a5d722b7dbc64eac Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 19:09:47 -0400
+Subject: [PATCH 05121/11362] [conductor] CAPSTONE v464 -- aggregate powered
+ moat, second-corpus/cascade confirmation, FR-11 self-learning, hardware,
+ SOTA, and ARC continuity; write the .465 pointer.
+
+Automated research step by research conductor.
+Task ID: exp5055-capstone
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5055_capstone_v464.py   | 584 ++++++++++++++++++
+ results/experiment_5055_capstone_v464.json    | 439 +++++++++++++
+ .../test_experiment_5055_capstone_v464.py     | 382 ++++++++++++
+ 6 files changed, 1414 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5055_capstone_v464.py
+ create mode 100644 results/experiment_5055_capstone_v464.json
+ create mode 100644 tests/python/test_experiment_5055_capstone_v464.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 958d80914e..b5ad836a17 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -804,6 +804,9 @@
+ - SCENARIO-CAPSTONE-5042: The artifact `results/experiment_5042_archive_463_activate_464.json` must emit top-level fields `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, `prior_milestone`, `next_milestone`, `honest_verdict`, `inference_substrate`, `preconditions_checked`, `pretest_gate`, `transition`, `transition_performed`, `close_state_463`, `d1_delta_vs_tuned_sc`, `d1_ci_touches_zero`, `d6_blocked_reason`, `d4_blocked_reason`, `lora_ebm_signal`, `scalar_uprm_result`, `ebrm_result`, `blocked_confirmation_axes`, `kv260_continuity_live`, `no_arc_level_bank`, `leaderboard_submission`, `cited_upstream_artifacts`, `field_principles`, `duration_s`, `random_seed`, and `reproducibility_checksum`. A complete artifact must terminal-prefix `honest_verdict` as `complete_463_archived_464_activated_phase_d_power_confirmation`, record `prior_milestone=2026.06.463`, `next_milestone=2026.06.464`, record D1 as real but underpowered LoRA-EBM (`d1_delta_vs_tuned_sc=0.08`, `d1_ci_touches_zero=true`, MuSR, CI `[0.0, 0.165]`), record D2 scalar/uPRM as a clean negative (`-0.110`), record D3 EBRM as tied with D1 rather than improved, record D6 as `blocked_judge_server`, record D4 as `blocked_second_corpus_unavailable`, record live KV260 continuity, record no ARC level bank, and preserve the `.463` capstone decision as execution-incomplete rather than moat-realized or bounded-retired.
+ - SCENARIO-CAPSTONE-5042-BLOCKED-YAML: If either present roadmap file fails `yaml.safe_load`, the workflow must still write `results/experiment_5042_archive_463_activate_464.json` with `honest_verdict=blocked_yaml_parse`, failed YAML details in `preconditions_checked`, `transition.transition_performed=false`, skipped `pretest_gate`, and no fabricated close-state metrics.
+ - SCENARIO-CAPSTONE-5042-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; clean transition is complete_463_archived_464_activated_phase_d_power_confirmation.", `d1_delta_vs_tuned_sc` = "the real but underpowered LoRA-EBM MuSR delta (+0.080) from Exp5031/Exp5041; CI touches zero so no moat claim.", `d1_ci_touches_zero` = "true iff the paired CI lower bound is <=0<=upper bound; explains why the D1 signal is underpowered.", `d6_blocked_reason` = "blocked_judge_server from Exp5034, one of the two missing confirmation axes.", `d4_blocked_reason` = "blocked_second_corpus_unavailable from Exp5035, the second missing confirmation axis.", `kv260_continuity_live` = "true iff Exp5037 reports KV260 reachable with overlay/energy smoke OK.", `no_arc_level_bank` = "true iff Exp5040/capstone reports zero new ARC levels banked and total remains 69.", and `inference_substrate` = "aggregation_from_upstream_artifacts (reads roadmap + upstream JSON, no LLM; 0.0001s floor)."
++- REQ-CAPSTONE-5055: The `.464` capstone scorecard in `python/carnot/experiment_5055_capstone_v464.py` SHALL write `results/experiment_5055_capstone_v464.json` without modifying `scripts/research_conductor.py`. It SHALL aggregate Exp5050 through Exp5054, preserve blocked, flagged, missing, and no-bank evidence from those artifacts, and emit one blunt milestone verdict: realized moat, MuSR-scoped positive, bounded retirement, or execution-incomplete. The scorecard SHALL state whether FR-11 self-learning produced credible positive evidence.
++- SCENARIO-CAPSTONE-5055: The artifact `results/experiment_5055_capstone_v464.json` must emit top-level fields `honest_verdict`, `capstone_ready`, `milestone`, `moat_state`, `best_arm_and_delta`, `best_verifier_evidence`, `second_corpus_state`, `cascade_state`, `fr11_state`, `fr11_self_learning_result`, `hardware_state`, `hardware_result`, `arc_state`, `arc_result`, `next_milestone_pointer`, and `docs_updated`. It must include `spec_refs` with `REQ-CAPSTONE-5055` and `SCENARIO-CAPSTONE-5055`, cite all imported Exp5050 through Exp5054 artifacts with sha256 provenance, preserve Exp5050 blocked/flagged/missing reasons, preserve Exp5054 no-bank ARC state, and provide concrete `.465` experiment-class pointers for realized moat, MuSR-scoped positive, bounded retirement, and execution-incomplete states.
++- SCENARIO-CAPSTONE-5055-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; complete_capstone_v464_<realized_moat|musr_scoped_positive|bounded_retirement|execution_incomplete>_<fr11_state>.", `moat_state` = "the blunt .464 verdict imported from Exp5050, constrained to realized moat, MuSR-scoped positive, bounded retirement, or execution-incomplete.", `best_arm_and_delta` = "the strongest verifier evidence from Exp5050, including arm id, delta, CI, and whether the evidence is headline-countable.", `fr11_self_learning_result` = "whether Exp5051 produced credible positive FR-11 self-learning evidence, with held-out delta and guardrail state.", `hardware_result` = "the Exp5052 local KV260 timing-ratio packet state without promoting it to a general speedup claim.", `arc_result` = "the Exp5054 live-path ARC result, including no-bank and duplicate-depth state.", `next_milestone_pointer` = "the concrete .465 experiment-class routing table for all four moat states plus the selected route.", and `docs_updated` = "records only the docs touched by this capstone run; ops reconciliation may be intentionally delegated."
+ - REQ-CAPSTONE-5028: The `.462` to `.463` transition recorder SHALL write `results/experiment_5028_archive_462_activate_463.json` without modifying `scripts/research_conductor.py`, without submitting to any leaderboard, and without fabricating missing resources. It SHALL run the active-roadmap YAML precondition by checking `research-roadmap.yaml` first and falling back to `research-roadmap-next.yaml` only when the active file is absent, then run `arc_solver_kit.offline_arcade()` before transition work; a consumed or absent `research-roadmap-next.yaml` SHALL NOT block when the active roadmap parses. If neither roadmap file parses, offline arcade is unavailable, the registry is not loadable, or the `.462` capstone is missing or unloadable, it SHALL still write the deliverable with a terminal `blocked_<resource>` verdict and skip the pre-test gate. The pre-test gate SHALL be exactly the recorder's own test file with `--no-cov`: `.venv/bin/pytest tests/python/test_experiment_5028_archive_462_activate_463.py -q --no-cov`. It SHALL read `ops/arc_solve_registry.yaml`, `research-roadmap.yaml`, `results/experiment_5027_capstone_v462.json`, `.462` B1/B2/D-arm artifacts when present, and `python/carnot/moat_benchmark_harness.py`, carry forward the true `.462` close-state, record the active roadmap state, and carry `reproducible_total_levels` from the registry.
+ - SCENARIO-CAPSTONE-5028: The artifact `results/experiment_5028_archive_462_activate_463.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `phase_d_third_execution_attempt`, `prior_milestone_root_causes`, `reusable_b1_baseline`, and `reproducible_total_levels`; it must also include `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, `archived_milestone`, `activated_milestone`, `preconditions_checked`, `pretest_gate`, `transition`, `transition_performed`, `poison_test_resolved`, `close_state_462`, `diffusiongemma_gate_status`, `phase_d_majority_lever`, `arc_locked`, `leaderboard_submission`, `cited_upstream_artifacts`, `field_principles`, `duration_s`, `random_seed`, and `reproducibility_checksum`. A complete artifact must terminal-prefix `honest_verdict` as `complete_462_archived_463_activated_phase_d_third_attempt`, record `.463` active or already active, run the own-file `--no-cov` pre-test gate, record the `.462` capstone as `EXECUTION-INCOMPLETE` with `moat_realized=false` and `moat_retired_bounded=false`, record the next pointer as `rerun_unexecuted_arm` with the route-off-Codex warning, record the two `.462` infra root causes as D1's nonexistent `Qwen/Qwen3.5-1.7B` Hugging Face repository and B2's 379s zero-row logprob cache, record D2 and D3 as cascaded blocks, record D1/D2/D6/D4 as flagged-adversarial skipped execution failures, reuse B1's genuine tuned-SC baseline (`0.585`), `oracle_at_k=0.865`, `headroom_present=true`, and degeneracy guard from `python/carnot/moat_benchmark_harness.py`, record DiffusionGemma as `STILL-PENDING` and not autonomously flipped, keep `reproducible_total_levels=69`, state that PHASE D remains the `.463` majority lever, and keep energy-as-ARC plus verifier-as-reward out of the queue.
+ - SCENARIO-CAPSTONE-5028-BLOCKED-PRECONDITION: If neither roadmap file parses, offline arcade is unavailable, the registry is missing or not loadable, or the `.462` capstone is missing or unloadable, the workflow must still write `results/experiment_5028_archive_462_activate_463.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `transition.transition_performed=false`, a skipped `pretest_gate`, no fabricated activation, and the available `.462` close-state preserved.
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 889437776c..f3bee6bc33 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -757,3 +757,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_5051_verifier_trace_self_learning.json
++
++## experiment_5054_arc_live_path_self_discovery.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT', 'LEVER_EXERCISE_EVIDENCE_DEGENERATE'] on a non-negative verdict
++- artifact: results/experiment_5054_arc_live_path_self_discovery.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 598e859b61..baef7492a5 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4059,
++  "experiments_checked": 4060,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5055_capstone_v464.py b/python/carnot/experiment_5055_capstone_v464.py
+new file mode 100644
+index 0000000000..214509eb11
+--- /dev/null
++++ b/python/carnot/experiment_5055_capstone_v464.py
+@@ -0,0 +1,584 @@
++#!/usr/bin/env python3
++"""Exp 5055: .464 capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-5055, SCENARIO-CAPSTONE-5055,
++SCENARIO-CAPSTONE-5055-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_5055_capstone_v464"
++EXPERIMENT_ID = 5055
++SCHEMA = "carnot.experiment_5055_capstone_v464.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5055_capstone_v464.json"
++MILESTONE = "2026.06.464"
++RANDOM_SEED = 5055
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SPEC_REFS = [
++    "REQ-CAPSTONE-5055",
++    "SCENARIO-CAPSTONE-5055",
++    "SCENARIO-CAPSTONE-5055-FIELD-PRINCIPLES",
++]
++
++VALID_MOAT_STATES = {
++    "moat_realized",
++    "musr_scoped_positive",
++    "retired_bounded",
++    "execution_incomplete",
++}
++MOAT_STATE_LABELS = {
++    "moat_realized": "realized_moat",
++    "musr_scoped_positive": "musr_scoped_positive",
++    "retired_bounded": "bounded_retirement",
++    "execution_incomplete": "execution_incomplete",
++}
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; complete_capstone_v464_"
++            "<realized_moat|musr_scoped_positive|bounded_retirement|execution_incomplete>_"
++            "<fr11_state>."
++        )
++    },
++    "moat_state": {
++        "principle": (
++            "the blunt .464 verdict imported from Exp5050, constrained to realized moat, "
++            "MuSR-scoped positive, bounded retirement, or execution-incomplete."
++        )
++    },
++    "best_arm_and_delta": {
++        "principle": (
++            "the strongest verifier evidence from Exp5050, including arm id, delta, CI, "
++            "and whether the evidence is headline-countable."
++        )
++    },
++    "fr11_self_learning_result": {
++        "principle": (
++            "whether Exp5051 produced credible positive FR-11 self-learning evidence, "
++            "with held-out delta and guardrail state."
++        )
++    },
++    "hardware_result": {
++        "principle": (
++            "the Exp5052 local KV260 timing-ratio packet state without promoting it to a "
++            "general speedup claim."
++        )
++    },
++    "arc_result": {
++        "principle": (
++            "the Exp5054 live-path ARC result, including no-bank and duplicate-depth state."
++        )
++    },
++    "next_milestone_pointer": {
++        "principle": (
++            "the concrete .465 experiment-class routing table for all four moat states "
++            "plus the selected route."
++        )
++    },
++    "docs_updated": {
++        "principle": (
++            "records only the docs touched by this capstone run; ops reconciliation may "
++            "be intentionally delegated."
++        )
++    },
++}
++
++REQUIRED_FIELDS = (
++    "honest_verdict",
++    "capstone_ready",
++    "milestone",
++    "moat_state",
++    "best_arm_and_delta",
++    "best_verifier_evidence",
++    "second_corpus_state",
++    "cascade_state",
++    "fr11_state",
++    "fr11_self_learning_result",
++    "hardware_state",
++    "hardware_result",
++    "arc_state",
++    "arc_result",
++    "next_milestone_pointer",
++    "docs_updated",
++)
++
++
++@dataclass(frozen=True)
++class UpstreamSource:
++    """One source artifact imported into the .464 capstone."""
++
++    experiment_id: int
++    relative_path: str
++    imported_fields: tuple[str, ...]
++
++
++UPSTREAMS: dict[str, UpstreamSource] = {
++    "moat_gate": UpstreamSource(
++        5050,
++        "results/experiment_5050_moat_gate_resolution_v464.json",
++        (
++            "honest_verdict",
++            "moat_state",
++            "best_arm",
++            "best_arm_delta",
++            "best_arm_ci",
++            "second_corpus_confirmed",
++            "cascade_efficiency_win",
++            "execution_incomplete_reasons",
++            "blocked_upstream_artifacts",
++            "flagged_upstream_artifacts",
++            "missing_upstream_artifacts",
++            "per_arm_table",
++            "cascade_artifact",
++            "second_corpus_artifact",
++        ),
++    ),
++    "fr11_self_learning": UpstreamSource(
++        5051,
++        "results/experiment_5051_verifier_trace_self_learning.json",
++        (
++            "honest_verdict",
++            "self_learning_loop_executed",
++            "near_miss_count",
++            "verified_trace_count",
++            "pre_update_accuracy",
++            "post_update_accuracy",
++            "heldout_delta",
++            "contamination_guard_passed",
++            "fr11_evidence",
++            "delta_vs_genuine_tuned_sc",
++            "checkpoint_or_memory_path",
++        ),
++    ),
++    "hardware": UpstreamSource(
++        5052,
++        "results/experiment_5052_kv260_pbit_timing_ratio.json",
++        (
++            "honest_verdict",
++            "kv260_ssh_reachable",
++            "overlay_loaded",
++            "loaded_overlay",
++            "timing_ratio_packet_built",
++            "cpu_reference_ok",
++            "kv260_result_ok",
++            "local_claim_scope",
++            "timing_ratio_packet",
++        ),
++    ),
++    "sota": UpstreamSource(
++        5053,
++        "results/experiment_5053_sota_ingestion_v465.json",
++        (
++            "honest_verdict",
++            "research_references_updated",
++            "n_sources_checked",
++            "next_milestone_candidates",
++        ),
++    ),
++    "arc": UpstreamSource(
++        5054,
++        "results/experiment_5054_arc_live_path_self_discovery.json",
++        (
++            "honest_verdict",
++            "target_game",
++            "target_level",
++            "prior_reproduced_level",
++            "new_levels_banked",
++            "offline_reproduced",
++            "duplicate_solve_avoided",
++            "registry_precheck_passed",
++            "reproducible_total_levels_before",
++            "reproducible_total_levels_after",
++            "solve_claim",
++        ),
++    ),
++}
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def read_json_object(path: Path) -> JsonDict:
++    return dict(json.loads(path.read_text(encoding="utf-8")))
++
++
++def file_sha256(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def payload_checksum(payload: JsonMap) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def _number(value: Any) -> float | None:
++    return float(value) if isinstance(value, (int, float)) and not isinstance(value, bool) else None
++
++
++def _int(value: Any) -> int:
++    number = _number(value)
++    return int(number) if number is not None else 0
++
++
++def _mapping(value: Any) -> JsonDict:
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _list(value: Any) -> list[Any]:
++    return list(value) if isinstance(value, list) else []
++
++
++def _moat_state(gate: JsonMap) -> str:
++    state = str(gate.get("moat_state") or "execution_incomplete")
++    return state if state in VALID_MOAT_STATES else "execution_incomplete"
++
++
++def _best_row(gate: JsonMap) -> JsonDict:
++    best_arm = str(gate.get("best_arm") or "")
++    rows = {
++        str(row.get("arm_id")): dict(row)
++        for row in _list(gate.get("per_arm_table"))
++        if isinstance(row, Mapping)
++    }
++    return rows.get(best_arm, {})
++
++
++def _best_arm_and_delta(gate: JsonMap, state: str) -> JsonDict:
++    row = _best_row(gate)
++    status = str(row.get("execution_status") or "unknown")
++    return {
++        "arm_id": gate.get("best_arm"),
++        "delta": _number(gate.get("best_arm_delta")),
++        "ci95": gate.get("best_arm_ci") if isinstance(gate.get("best_arm_ci"), list) else None,
++        "evidence_status": status,
++        "headline_countable": status == "clean" and state in {"moat_realized", "musr_scoped_positive"},
++    }
++
++
++def _moat_resolution(gate: JsonMap, state: str) -> JsonDict:
++    return {
++        "state": state,
++        "honest_verdict": str(gate.get("honest_verdict") or ""),
++        "second_corpus_confirmed": gate.get("second_corpus_confirmed") is True,
++        "cascade_efficiency_win": gate.get("cascade_efficiency_win") is True,
++        "bounded_retirement_ok": gate.get("bounded_retirement_ok") is True,
++        "execution_incomplete_reasons": [
++            str(reason) for reason in _list(gate.get("execution_incomplete_reasons"))
++        ],
++        "blocked_upstream_artifacts": _list(gate.get("blocked_upstream_artifacts")),
++        "flagged_upstream_artifacts": _list(gate.get("flagged_upstream_artifacts")),
++        "missing_upstream_artifacts": _list(gate.get("missing_upstream_artifacts")),
++    }
++
++
++def _second_corpus_state(gate: JsonMap) -> JsonDict:
++    row = _mapping(gate.get("second_corpus_artifact"))
++    status = str(row.get("execution_status") or "missing")
++    state = "confirmed_clean" if gate.get("second_corpus_confirmed") is True and status == "clean" else f"{status}_not_counted"
++    return {
++        "state": state,
++        "execution_status": status,
++        "honest_verdict": str(row.get("honest_verdict") or ""),
++        "best_arm": row.get("best_arm"),
++        "reported_confirmed": row.get("second_corpus_confirmed") is True,
++        "headline_counted": gate.get("second_corpus_confirmed") is True and status == "clean",
++        "delta_vs_tuned_sc_second": _number(row.get("delta_vs_tuned_sc_second")),
++        "paired_ci95_second": row.get("paired_ci95_second")
++        if isinstance(row.get("paired_ci95_second"), list)
++        else None,
++    }
++
++
++def _cascade_state(gate: JsonMap) -> JsonDict:
++    row = _mapping(gate.get("cascade_artifact"))
++    status = str(row.get("execution_status") or "missing")
++    state = "efficiency_win" if gate.get("cascade_efficiency_win") is True else status
++    return {
++        "state": state,
++        "execution_status": status,
++        "honest_verdict": str(row.get("honest_verdict") or ""),
++        "efficiency_win": gate.get("cascade_efficiency_win") is True,
++        "judge_call_fraction": _number(row.get("judge_call_fraction")),
++        "paired_ci95": row.get("paired_ci95") if isinstance(row.get("paired_ci95"), list) else None,
++    }
++
++
++def _fr11_result(payload: JsonMap) -> JsonDict:
++    heldout_delta = _number(payload.get("heldout_delta"))
++    loop_executed = payload.get("self_learning_loop_executed") is True
++    guard_passed = payload.get("contamination_guard_passed") is True
++    credible = bool(loop_executed and guard_passed and heldout_delta is not None and heldout_delta > 0.0)
++    state = "credible_positive" if credible else "guarded_negative" if loop_executed and guard_passed else "not_credible"
++    return {
++        "state": state,
++        "credible_evidence": credible,
++        "credible_evidence_scope": (
++            "credible positive FR-11 held-out improvement"
++            if credible
++            else "no credible positive FR-11 self-learning evidence"
++        ),
++        "self_learning_loop_executed": loop_executed,
++        "contamination_guard_passed": guard_passed,
++        "near_miss_count": _int(payload.get("near_miss_count")),
++        "verified_trace_count": _int(payload.get("verified_trace_count")),
++        "pre_update_accuracy": _number(payload.get("pre_update_accuracy")),
++        "post_update_accuracy": _number(payload.get("post_update_accuracy")),
++        "heldout_delta": heldout_delta,
++        "delta_vs_genuine_tuned_sc": _number(payload.get("delta_vs_genuine_tuned_sc")),
++        "checkpoint_or_memory_path": payload.get("checkpoint_or_memory_path"),
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++    }
++
++
++def _hardware_result(payload: JsonMap) -> JsonDict:
++    packet_built = payload.get("timing_ratio_packet_built") is True
++    return {
++        "state": "packet_built" if packet_built else "blocked_or_not_built",
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++        "kv260_ssh_reachable": payload.get("kv260_ssh_reachable") is True,
++        "overlay_loaded": payload.get("overlay_loaded") is True,
++        "loaded_overlay": payload.get("loaded_overlay"),
++        "timing_ratio_packet_built": packet_built,
++        "cpu_reference_ok": payload.get("cpu_reference_ok") is True,
++        "kv260_result_ok": payload.get("kv260_result_ok") is True,
++        "claim_scope": str(payload.get("local_claim_scope") or ""),
++        "timing_ratio_packet": _mapping(payload.get("timing_ratio_packet")),
++    }
++
++
++def _arc_result(payload: JsonMap) -> JsonDict:
++    missing = not payload
++    banked = _int(payload.get("new_levels_banked"))
++    offline_reproduced = payload.get("offline_reproduced") is True
++    state = "missing" if missing else "banked_new_level" if banked > 0 and offline_reproduced else "no_bank"
++    return {
++        "state": state,
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++        "target_game": payload.get("target_game"),
++        "target_level": _int(payload.get("target_level")),
++        "prior_reproduced_level": _int(payload.get("prior_reproduced_level")),
++        "new_levels_banked": banked,
++        "offline_reproduced": offline_reproduced,
++        "duplicate_solve_avoided": payload.get("duplicate_solve_avoided") is True,
++        "registry_precheck_passed": payload.get("registry_precheck_passed") is True,
++        "reproducible_total_levels_before": _int(payload.get("reproducible_total_levels_before")),
++        "reproducible_total_levels_after": _int(payload.get("reproducible_total_levels_after")),
++        "solve_claim": _mapping(payload.get("solve_claim")),
++    }
++
++
++def _sota_state(payload: JsonMap) -> JsonDict:
++    candidates = [dict(row) for row in _list(payload.get("next_milestone_candidates")) if isinstance(row, Mapping)]
++    return {
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++        "research_references_updated": payload.get("research_references_updated") is True,
++        "n_sources_checked": _int(payload.get("n_sources_checked")),
++        "next_milestone_candidates": candidates,
++    }
++
++
++def _next_milestone_pointer(state: str, sota: JsonMap) -> JsonDict:
++    candidate_names = [str(row.get("candidate")) for row in _sota_state(sota)["next_milestone_candidates"]]
++    pointers = {
++        "moat_realized": {
++            "experiment_class": "scale_realized_verifier",
++            "concrete_next": "Scale the winning verifier arm with locked oracle-distinct controls and operator-gated activation.",
++        },
++        "musr_scoped_positive": {
++            "experiment_class": "second_corpus_confirmation",
++            "concrete_next": "Run non-flagged second-corpus confirmation plus cascade cost accounting for the winning MuSR arm.",
++        },
++        "retired_bounded": {
++            "experiment_class": "new_verifier_direction_from_sota",
++            "concrete_next": "Retire the bounded D1/D2/D3 family and pick a fresh .465 verifier direction from SOTA ingestion.",
++            "candidate_classes": candidate_names,
++        },
++        "execution_incomplete": {
++            "experiment_class": "phase_d_execution_repair_and_confirmation",
++            "concrete_next": "Repair blocked or flagged Phase D arms before treating any result as a null: D1 SOTA refresh, D6 cascade, and D2/D4 audit cleanup.",
++        },
++    }
++    return {
++        "selected_state": state,
++        "selected": pointers[state],
++        "by_moat_state": pointers,
++    }
++
++
++def _honest_verdict(state: str, fr11: JsonMap) -> str:
++    fr11_label = "fr11_credible_positive" if fr11.get("credible_evidence") is True else "fr11_no_credible_positive_evidence"
++    return f"complete_capstone_v464_{MOAT_STATE_LABELS[state]}_{fr11_label}"
++
++
++def _docs_updated() -> JsonDict:
++    return {
++        "openspec_capstone_spec": True,
++        "ops_status": False,
++        "ops_changelog": False,
++        "_bmad_traceability": False,
++        "reason": "operator stop rule delegates ops/status/changelog/traceability reconciliation",
++    }
++
++
++def _imported_fields(source: str, payload: JsonMap) -> list[str]:
++    return [field for field in UPSTREAMS[source].imported_fields if field in payload]
++
++
++def _artifact_state(source: str, payload: JsonMap | None) -> JsonDict:
++    config = UPSTREAMS[source]
++    if payload is None:
++        return {
++            "source": source,
++            "experiment_id": config.experiment_id,
++            "path": config.relative_path,
++            "state": "missing",
++            "honest_verdict": "",
++        }
++    return {
++        "source": source,
++        "experiment_id": config.experiment_id,
++        "path": config.relative_path,
++        "state": "present",
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++    }
++
++
++def load_upstream_artifacts(root: Path = REPO_ROOT) -> JsonDict:
++    artifacts: dict[str, JsonDict] = {}
++    citations: list[JsonDict] = []
++    missing: list[JsonDict] = []
++    states: list[JsonDict] = []
++    for source, config in UPSTREAMS.items():
++        path = Path(root) / config.relative_path
++        if path.exists():
++            payload = read_json_object(path)
++            artifacts[source] = payload
++            citations.append(
++                {
++                    "source": source,
++                    "experiment_id": config.experiment_id,
++                    "path": config.relative_path,
++                    "fields_imported": _imported_fields(source, payload),
++                    "sha256": file_sha256(path),
++                    "honest_verdict": str(payload.get("honest_verdict") or ""),
++                }
++            )
++            states.append(_artifact_state(source, payload))
++        else:
++            missing.append(
++                {
++                    "source": source,
++                    "experiment_id": config.experiment_id,
++                    "path": config.relative_path,
++                }
++            )
++            states.append(_artifact_state(source, None))
++    return {
++        "artifacts": artifacts,
++        "cited_upstream_artifacts": citations,
++        "missing_capstone_inputs": missing,
++        "source_artifact_states": states,
++    }
++
++
++def build_artifact(loaded: JsonMap, duration_s: float) -> JsonDict:
++    artifacts = _mapping(loaded.get("artifacts"))
++    gate = _mapping(artifacts.get("moat_gate"))
++    fr11_source = _mapping(artifacts.get("fr11_self_learning"))
++    hardware_source = _mapping(artifacts.get("hardware"))
++    sota_source = _mapping(artifacts.get("sota"))
++    arc_source = _mapping(artifacts.get("arc"))
++    state = _moat_state(gate)
++    fr11 = _fr11_result(fr11_source)
++    hardware = _hardware_result(hardware_source)
++    arc = _arc_result(arc_source)
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "milestone": MILESTONE,
++        "honest_verdict": _honest_verdict(state, fr11),
++        "capstone_ready": not _list(loaded.get("missing_capstone_inputs")),
++        "moat_state": state,
++        "moat_resolution": _moat_resolution(gate, state),
++        "best_arm_and_delta": _best_arm_and_delta(gate, state),
++        "best_verifier_evidence": _best_row(gate),
++        "second_corpus_state": _second_corpus_state(gate),
++        "cascade_state": _cascade_state(gate),
++        "fr11_state": fr11["state"],
++        "fr11_self_learning_result": fr11,
++        "hardware_state": hardware["state"],
++        "hardware_result": hardware,
++        "arc_state": arc["state"],
++        "arc_result": arc,
++        "sota_state": _sota_state(sota_source),
++        "next_milestone_pointer": _next_milestone_pointer(state, sota_source),
++        "docs_updated": _docs_updated(),
++        "cited_upstream_artifacts": _list(loaded.get("cited_upstream_artifacts")),
++        "missing_capstone_inputs": _list(loaded.get("missing_capstone_inputs")),
++        "source_artifact_states": _list(loaded.get("source_artifact_states")),
++        "field_principles": FIELD_PRINCIPLES,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(max(float(duration_s), 0.0001), 6),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            errors.append(field)
++    if not str(artifact.get("honest_verdict") or "").startswith("complete_capstone_v464_"):
++        errors.append("honest_verdict")
++    if artifact.get("moat_state") not in VALID_MOAT_STATES:
++        errors.append("moat_state")
++    if not isinstance(artifact.get("capstone_ready"), bool):
++        errors.append("capstone_ready")
++    if not isinstance(artifact.get("fr11_self_learning_result"), Mapping):
++        errors.append("fr11_self_learning_result")
++    docs = _mapping(artifact.get("docs_updated"))
++    if docs.get("ops_status") is not False or docs.get("ops_changelog") is not False:
++        errors.append("docs_updated")
++    return sorted(set(errors))
++
++
++def run(root: Path = REPO_ROOT, artifact_path: Path | None = None) -> JsonDict:
++    started = time.perf_counter()
++    loaded = load_upstream_artifacts(root)
++    artifact = build_artifact(loaded, duration_s=time.perf_counter() - started)
++    write_json(artifact_path or Path(root) / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main(root: Path = REPO_ROOT, artifact_path: Path | None = None) -> int:
++    artifact = run(root=root, artifact_path=artifact_path)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - direct experiment entrypoint
++    raise SystemExit(main())
+diff --git a/results/experiment_5055_capstone_v464.json b/results/experiment_5055_capstone_v464.json
+new file mode 100644
+index 0000000000..df05ed1b6a
+--- /dev/null
++++ b/results/experiment_5055_capstone_v464.json
+@@ -0,0 +1,439 @@
++{
++  "arc_result": {
++    "duplicate_solve_avoided": true,
++    "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
++    "new_levels_banked": 0,
++    "offline_reproduced": false,
++    "prior_reproduced_level": 5,
++    "registry_precheck_passed": true,
++    "reproducible_total_levels_after": 69,
++    "reproducible_total_levels_before": 69,
++    "solve_claim": {
++      "claimed": false,
++      "provenance": "live_agent_self_discovery",
++      "provenance_evidence": {
++        "hand_built_adapter_used": false,
++        "llm_reasoning_invoked": false,
++        "offline_source_reading_used": false,
++        "per_game_bfs_used": false,
++        "runtime_self_discovery": true,
++        "solution_labels_from_live_run": false
++      },
++      "reproduction_gate": {
++        "claimed_level": 0,
++        "game": "tu93",
++        "mode": "offline_reproduction_gate_no_new_level_claim",
++        "reached_level": 0,
++        "reproduced": false
++      }
++    },
++    "state": "no_bank",
++    "target_game": "tu93",
++    "target_level": 6
++  },
++  "arc_state": "no_bank",
++  "best_arm_and_delta": {
++    "arm_id": "D1",
++    "ci95": [
++      0.0,
++      0.165
++    ],
++    "delta": 0.08,
++    "evidence_status": "blocked",
++    "headline_countable": false
++  },
++  "best_verifier_evidence": {
++    "accuracy": 0.665,
++    "arm": "powered_lora_ebm_eorm",
++    "arm_id": "D1",
++    "clean_no_win": false,
++    "delta_vs_tuned_sc": 0.08,
++    "execution_status": "blocked",
++    "experiment_id": 5045,
++    "headroom_present": true,
++    "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
++    "mcnemar_p": 0.076369,
++    "n_questions": 200,
++    "paired_ci95": [
++      0.0,
++      0.165
++    ],
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
++    "proper_musr_win": false,
++    "sha256": "sha256:46efb4450502088e94e53157bb9acba6c8a048e000e94f7210eac61a36f2ebff",
++    "verifier_is_oracle": false
++  },
++  "capstone_ready": true,
++  "cascade_state": {
++    "efficiency_win": false,
++    "execution_status": "blocked",
++    "honest_verdict": "blocked_gate_check_failed",
++    "judge_call_fraction": null,
++    "paired_ci95": null,
++    "state": "blocked"
++  },
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 5050,
++      "fields_imported": [
++        "honest_verdict",
++        "moat_state",
++        "best_arm",
++        "best_arm_delta",
++        "best_arm_ci",
++        "second_corpus_confirmed",
++        "cascade_efficiency_win",
++        "execution_incomplete_reasons",
++        "blocked_upstream_artifacts",
++        "flagged_upstream_artifacts",
++        "missing_upstream_artifacts",
++        "per_arm_table",
++        "cascade_artifact",
++        "second_corpus_artifact"
++      ],
++      "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
++      "path": "results/experiment_5050_moat_gate_resolution_v464.json",
++      "sha256": "sha256:f6f8ec5513b719982e49ea10139f22a6c1f849305f41bf894df8ae619f578c5d",
++      "source": "moat_gate"
++    },
++    {
++      "experiment_id": 5051,
++      "fields_imported": [
++        "honest_verdict",
++        "self_learning_loop_executed",
++        "near_miss_count",
++        "verified_trace_count",
++        "pre_update_accuracy",
++        "post_update_accuracy",
++        "heldout_delta",
++        "contamination_guard_passed",
++        "fr11_evidence",
++        "delta_vs_genuine_tuned_sc",
++        "checkpoint_or_memory_path"
++      ],
++      "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
++      "path": "results/experiment_5051_verifier_trace_self_learning.json",
++      "sha256": "sha256:c4337ccdf401318008c707d0d57f8849335faad39ebefb2aa42774d2154bd28a",
++      "source": "fr11_self_learning"
++    },
++    {
++      "experiment_id": 5052,
++      "fields_imported": [
++        "honest_verdict",
++        "kv260_ssh_reachable",
++        "overlay_loaded",
++        "loaded_overlay",
++        "timing_ratio_packet_built",
++        "cpu_reference_ok",
++        "kv260_result_ok",
++        "local_claim_scope",
++        "timing_ratio_packet"
++      ],
++      "honest_verdict": "success_kv260_pbit_timing_ratio_packet_built",
++      "path": "results/experiment_5052_kv260_pbit_timing_ratio.json",
++      "sha256": "sha256:7efedb3f6549131af20166273362889364162805308828d50890d9a4af0f967a",
++      "source": "hardware"
++    },
++    {
++      "experiment_id": 5053,
++      "fields_imported": [
++        "honest_verdict",
++        "research_references_updated",
++        "n_sources_checked",
++        "next_milestone_candidates"
++      ],
++      "honest_verdict": "success_sota_ingestion_v465_actionable_references_added",
++      "path": "results/experiment_5053_sota_ingestion_v465.json",
++      "sha256": "sha256:a1ef03a0d4b42e1884fe2bcfb17ec4941cad4fad4ac87eee96e51c0989e0bce5",
++      "source": "sota"
++    },
++    {
++      "experiment_id": 5054,
++      "fields_imported": [
++        "honest_verdict",
++        "target_game",
++        "target_level",
++        "prior_reproduced_level",
++        "new_levels_banked",
++        "offline_reproduced",
++        "duplicate_solve_avoided",
++        "registry_precheck_passed",
++        "reproducible_total_levels_before",
++        "reproducible_total_levels_after",
++        "solve_claim"
++      ],
++      "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
++      "path": "results/experiment_5054_arc_live_path_self_discovery.json",
++      "sha256": "sha256:4a3097b7c9192ff3ee33cac14151b8560fdffa08e7bf04faa29e07bdc2ec13a1",
++      "source": "arc"
++    }
++  ],
++  "docs_updated": {
++    "_bmad_traceability": false,
++    "openspec_capstone_spec": true,
++    "ops_changelog": false,
++    "ops_status": false,
++    "reason": "operator stop rule delegates ops/status/changelog/traceability reconciliation"
++  },
++  "duration_s": 0.000558,
++  "experiment": "experiment_5055_capstone_v464",
++  "experiment_id": 5055,
++  "field_principles": {
++    "arc_result": {
++      "principle": "the Exp5054 live-path ARC result, including no-bank and duplicate-depth state."
++    },
++    "best_arm_and_delta": {
++      "principle": "the strongest verifier evidence from Exp5050, including arm id, delta, CI, and whether the evidence is headline-countable."
++    },
++    "docs_updated": {
++      "principle": "records only the docs touched by this capstone run; ops reconciliation may be intentionally delegated."
++    },
++    "fr11_self_learning_result": {
++      "principle": "whether Exp5051 produced credible positive FR-11 self-learning evidence, with held-out delta and guardrail state."
++    },
++    "hardware_result": {
++      "principle": "the Exp5052 local KV260 timing-ratio packet state without promoting it to a general speedup claim."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; complete_capstone_v464_<realized_moat|musr_scoped_positive|bounded_retirement|execution_incomplete>_<fr11_state>."
++    },
++    "moat_state": {
++      "principle": "the blunt .464 verdict imported from Exp5050, constrained to realized moat, MuSR-scoped positive, bounded retirement, or execution-incomplete."
++    },
++    "next_milestone_pointer": {
++      "principle": "the concrete .465 experiment-class routing table for all four moat states plus the selected route."
++    }
++  },
++  "fr11_self_learning_result": {
++    "checkpoint_or_memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/replay_memory/experiment_5051_verifier_trace_self_learning_memory.json",
++    "contamination_guard_passed": true,
++    "credible_evidence": false,
++    "credible_evidence_scope": "no credible positive FR-11 self-learning evidence",
++    "delta_vs_genuine_tuned_sc": 0.125,
++    "heldout_delta": -0.05,
++    "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
++    "near_miss_count": 312,
++    "post_update_accuracy": 0.65,
++    "pre_update_accuracy": 0.7,
++    "self_learning_loop_executed": true,
++    "state": "guarded_negative",
++    "verified_trace_count": 225
++  },
++  "fr11_state": "guarded_negative",
++  "hardware_result": {
++    "claim_scope": "local_ssh_attached_kv260_python_parity_workload_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
++    "cpu_reference_ok": true,
++    "honest_verdict": "success_kv260_pbit_timing_ratio_packet_built",
++    "kv260_result_ok": true,
++    "kv260_ssh_reachable": true,
++    "loaded_overlay": "carnot_ising_v2_n64",
++    "overlay_loaded": true,
++    "state": "packet_built",
++    "timing_ratio_packet": {
++      "cpu_to_kv260_board_workload_ratio": 0.031477449031,
++      "cpu_to_kv260_command_wall_ratio": 0.002849813606,
++      "cpu_wall_clock_s": 0.00181530905,
++      "flips": 3800,
++      "iterations": 128,
++      "kv260_board_reported_workload_s": 0.057670145005,
++      "kv260_command_wall_clock_s": 0.636992204003,
++      "n_variables": 64,
++      "parity_match": true,
++      "ratio_claim_scope": "local_ssh_attached_kv260_python_parity_workload_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
++      "workload_name": "bounded_sparse_pbit_parity_n64"
++    },
++    "timing_ratio_packet_built": true
++  },
++  "hardware_state": "packet_built",
++  "honest_verdict": "complete_capstone_v464_execution_incomplete_fr11_no_credible_positive_evidence",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone": "2026.06.464",
++  "missing_capstone_inputs": [],
++  "moat_resolution": {
++    "blocked_upstream_artifacts": [
++      {
++        "arm": "powered_lora_ebm_eorm",
++        "arm_id": "D1",
++        "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
++        "status": null
++      },
++      {
++        "arm": "cross_model_cascade",
++        "arm_id": "D6",
++        "honest_verdict": "blocked_gate_check_failed",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_d6.json",
++        "status": "blocked"
++      }
++    ],
++    "bounded_retirement_ok": false,
++    "cascade_efficiency_win": false,
++    "execution_incomplete_reasons": [
++      "D1 blocked: blocked_sota_candidate_refresh_unavailable",
++      "D2 flagged: complete_process_reward_no_win_musr_minus_0p030",
++      "D6 blocked: blocked_gate_check_failed",
++      "D6 missing: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_cross_model_cascade_repair.json"
++    ],
++    "flagged_upstream_artifacts": [
++      {
++        "arm": "vpr_process_reward",
++        "arm_id": "D2",
++        "honest_verdict": "complete_process_reward_no_win_musr_minus_0p030",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5046_vpr_process_reward_repair.json",
++        "status": null
++      },
++      {
++        "arm": "second_corpus_confirmation",
++        "arm_id": "D4",
++        "honest_verdict": "success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5049_second_corpus_confirmation.json",
++        "status": null
++      }
++    ],
++    "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
++    "missing_upstream_artifacts": [
++      {
++        "arm": "cross_model_cascade",
++        "arm_id": "D6",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_cross_model_cascade_repair.json"
++      }
++    ],
++    "second_corpus_confirmed": false,
++    "state": "execution_incomplete"
++  },
++  "moat_state": "execution_incomplete",
++  "next_milestone_pointer": {
++    "by_moat_state": {
++      "execution_incomplete": {
++        "concrete_next": "Repair blocked or flagged Phase D arms before treating any result as a null: D1 SOTA refresh, D6 cascade, and D2/D4 audit cleanup.",
++        "experiment_class": "phase_d_execution_repair_and_confirmation"
++      },
++      "moat_realized": {
++        "concrete_next": "Scale the winning verifier arm with locked oracle-distinct controls and operator-gated activation.",
++        "experiment_class": "scale_realized_verifier"
++      },
++      "musr_scoped_positive": {
++        "concrete_next": "Run non-flagged second-corpus confirmation plus cascade cost accounting for the winning MuSR arm.",
++        "experiment_class": "second_corpus_confirmation"
++      },
++      "retired_bounded": {
++        "candidate_classes": [
++          "Tool-first verifier gate before judge fallback",
++          "Constraint-guided verifier replay set",
++          "Guided decoding cost frontier",
++          "Uncertainty-calibrated factuality loop"
++        ],
++        "concrete_next": "Retire the bounded D1/D2/D3 family and pick a fresh .465 verifier direction from SOTA ingestion.",
++        "experiment_class": "new_verifier_direction_from_sota"
++      }
++    },
++    "selected": {
++      "concrete_next": "Repair blocked or flagged Phase D arms before treating any result as a null: D1 SOTA refresh, D6 cascade, and D2/D4 audit cleanup.",
++      "experiment_class": "phase_d_execution_repair_and_confirmation"
++    },
++    "selected_state": "execution_incomplete"
++  },
++  "random_seed": 5055,
++  "reproducibility_checksum": "sha256:af375b60b8227d695c2cafbeab8b0fab45d2bc0f167068e20c6226ac64ad42fd",
++  "result_path": "results/experiment_5055_capstone_v464.json",
++  "schema": "carnot.experiment_5055_capstone_v464.v1",
++  "second_corpus_state": {
++    "best_arm": "D1",
++    "delta_vs_tuned_sc_second": 0.37,
++    "execution_status": "flagged",
++    "headline_counted": false,
++    "honest_verdict": "success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370",
++    "paired_ci95_second": [
++      0.28,
++      0.47
++    ],
++    "reported_confirmed": true,
++    "state": "flagged_not_counted"
++  },
++  "sota_state": {
++    "honest_verdict": "success_sota_ingestion_v465_actionable_references_added",
++    "n_sources_checked": 8,
++    "next_milestone_candidates": [
++      {
++        "candidate": "Tool-first verifier gate before judge fallback",
++        "candidate_flag": "flagged_for_v465 (.465): tool_first_small_verifier_gate",
++        "source_ids": [
++          "2504.04718",
++          "2604.01993"
++        ],
++        "why": "T1 and SAFE give a low-cost path where tools and evidence checks reduce the burden on a small verifier before expensive judge escalation."
++      },
++      {
++        "candidate": "Constraint-guided verifier replay set",
++        "candidate_flag": "flagged_for_v465 (.465): constraint_replay_continual_verifier",
++        "source_ids": [
++          "2510.08992",
++          "2605.26942",
++          "2606.26108"
++        ],
++        "why": "Constraint traces, neuro-symbolic checks, and scale taxonomy can be converted into verifier replay fixtures that distinguish constraint following from generic model scale."
++      },
++      {
++        "candidate": "Guided decoding cost frontier",
++        "candidate_flag": "flagged_for_v465 (.465): guided_decoding_cost_frontier",
++        "source_ids": [
++          "2602.07223",
++          "2605.28020"
++        ],
++        "why": "Verification-guided sparse attention and reward-guided decoding let .465 measure whether sampling-time guidance buys accuracy per token instead of only per model call."
++      },
++      {
++        "candidate": "Uncertainty-calibrated factuality loop",
++        "candidate_flag": "flagged_for_v465 (.465): uncertainty_calibrated_factuality_loop",
++        "source_ids": [
++          "2604.01993",
++          "2604.12046"
++        ],
++        "why": "Evidence-grounded verification plus uncertainty trace calibration gives a concrete hallucination-mitigation loop for continual verifier learning."
++      }
++    ],
++    "research_references_updated": true
++  },
++  "source_artifact_states": [
++    {
++      "experiment_id": 5050,
++      "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
++      "path": "results/experiment_5050_moat_gate_resolution_v464.json",
++      "source": "moat_gate",
++      "state": "present"
++    },
++    {
++      "experiment_id": 5051,
++      "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
++      "path": "results/experiment_5051_verifier_trace_self_learning.json",
++      "source": "fr11_self_learning",
++      "state": "present"
++    },
++    {
++      "experiment_id": 5052,
++      "honest_verdict": "success_kv260_pbit_timing_ratio_packet_built",
++      "path": "results/experiment_5052_kv260_pbit_timing_ratio.json",
++      "source": "hardware",
++      "state": "present"
++    },
++    {
++      "experiment_id": 5053,
++      "honest_verdict": "success_sota_ingestion_v465_actionable_references_added",
++      "path": "results/experiment_5053_sota_ingestion_v465.json",
++      "source": "sota",
++      "state": "present"
++    },
++    {
++      "experiment_id": 5054,
++      "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
++      "path": "results/experiment_5054_arc_live_path_self_discovery.json",
++      "source": "arc",
++      "state": "present"
++    }
++  ],
++  "spec_refs": [
++    "REQ-CAPSTONE-5055",
++    "SCENARIO-CAPSTONE-5055",
++    "SCENARIO-CAPSTONE-5055-FIELD-PRINCIPLES"
++  ]
++}
+diff --git a/tests/python/test_experiment_5055_capstone_v464.py b/tests/python/test_experiment_5055_capstone_v464.py
+new file mode 100644
+index 0000000000..83b19309ef
+--- /dev/null
++++ b/tests/python/test_experiment_5055_capstone_v464.py
+@@ -0,0 +1,382 @@
++"""Tests for Exp 5055 .464 capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-5055, SCENARIO-CAPSTONE-5055,
++SCENARIO-CAPSTONE-5055-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5055_capstone_v464 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/capstone/spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _gate(state: str = "execution_incomplete") -> JsonDict:
++    return {
++        "experiment": "experiment_5050_moat_gate_resolution_v464",
++        "experiment_id": 5050,
++        "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
++        "moat_state": state,
++        "best_arm": "D1",
++        "best_arm_delta": 0.08,
++        "best_arm_ci": [0.0, 0.165],
++        "second_corpus_confirmed": False,
++        "cascade_efficiency_win": False,
++        "bounded_retirement_ok": state == "retired_bounded",
++        "execution_incomplete_reasons": [
++            "D1 blocked: blocked_sota_candidate_refresh_unavailable",
++            "D2 flagged: complete_process_reward_no_win_musr_minus_0p030",
++            "D6 blocked: blocked_gate_check_failed",
++            "D6 missing: /repo/results/experiment_5048_cross_model_cascade_repair.json",
++        ],
++        "blocked_upstream_artifacts": [
++            {
++                "arm": "powered_lora_ebm_eorm",
++                "arm_id": "D1",
++                "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
++                "path": "/repo/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
++            },
++            {
++                "arm": "cross_model_cascade",
++                "arm_id": "D6",
++                "honest_verdict": "blocked_gate_check_failed",
++                "path": "/repo/results/experiment_5048_d6.json",
++                "status": "blocked",
++            },
++        ],
++        "flagged_upstream_artifacts": [
++            {
++                "arm": "vpr_process_reward",
++                "arm_id": "D2",
++                "honest_verdict": "complete_process_reward_no_win_musr_minus_0p030",
++            },
++            {
++                "arm": "second_corpus_confirmation",
++                "arm_id": "D4",
++                "honest_verdict": "success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370",
++            },
++        ],
++        "missing_upstream_artifacts": [
++            {
++                "arm": "cross_model_cascade",
++                "arm_id": "D6",
++                "path": "/repo/results/experiment_5048_cross_model_cascade_repair.json",
++            }
++        ],
++        "per_arm_table": [
++            {
++                "arm": "powered_lora_ebm_eorm",
++                "arm_id": "D1",
++                "delta_vs_tuned_sc": 0.08,
++                "paired_ci95": [0.0, 0.165],
++                "execution_status": "blocked",
++                "proper_musr_win": False,
++                "clean_no_win": False,
++                "verifier_is_oracle": False,
++                "headroom_present": True,
++                "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
++            },
++            {
++                "arm": "kan_purm_energy_calibration",
++                "arm_id": "D3",
++                "delta_vs_tuned_sc": 0.02,
++                "paired_ci95": [-0.105, -0.015],
++                "execution_status": "clean",
++                "proper_musr_win": False,
++                "clean_no_win": True,
++                "verifier_is_oracle": False,
++                "headroom_present": True,
++            },
++        ],
++        "cascade_artifact": {
++            "arm": "cross_model_cascade",
++            "arm_id": "D6",
++            "execution_status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "efficiency_win": False,
++            "judge_call_fraction": None,
++            "paired_ci95": None,
++        },
++        "second_corpus_artifact": {
++            "arm": "second_corpus_confirmation",
++            "arm_id": "D4",
++            "best_arm": "D1",
++            "execution_status": "flagged",
++            "honest_verdict": "success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370",
++            "second_corpus_confirmed": True,
++            "delta_vs_tuned_sc_second": 0.37,
++            "paired_ci95_second": [0.28, 0.47],
++        },
++    }
++
++
++def _fr11(heldout_delta: float = -0.05) -> JsonDict:
++    return {
++        "experiment": "experiment_5051_verifier_trace_self_learning",
++        "experiment_id": 5051,
++        "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
++        "self_learning_loop_executed": True,
++        "near_miss_count": 312,
++        "verified_trace_count": 225,
++        "pre_update_accuracy": 0.7,
++        "post_update_accuracy": round(0.7 + heldout_delta, 6),
++        "heldout_delta": heldout_delta,
++        "contamination_guard_passed": True,
++        "delta_vs_genuine_tuned_sc": 0.125,
++        "checkpoint_or_memory_path": "results/replay_memory/experiment_5051_verifier_trace_self_learning_memory.json",
++        "fr11_evidence": {
++            "prd_ref": "FR-11",
++            "objective_evaluator": "held-out verifier accuracy delta",
++            "guardrails": ["contamination guard"],
++        },
++    }
++
++
++def _hardware() -> JsonDict:
++    return {
++        "experiment": 5052,
++        "experiment_id": 5052,
++        "honest_verdict": "success_kv260_pbit_timing_ratio_packet_built",
++        "kv260_ssh_reachable": True,
++        "overlay_loaded": True,
++        "loaded_overlay": "carnot_ising_v2_n64",
++        "timing_ratio_packet_built": True,
++        "cpu_reference_ok": True,
++        "kv260_result_ok": True,
++        "local_claim_scope": "local_ssh_attached_kv260_python_parity_workload_only_no_general_fpga_speedup_claim",
++        "timing_ratio_packet": {
++            "parity_match": True,
++            "cpu_to_kv260_board_workload_ratio": 0.031477449031,
++        },
++    }
++
++
++def _sota() -> JsonDict:
++    return {
++        "experiment": "experiment_5053_sota_ingestion_v465",
++        "experiment_id": 5053,
++        "honest_verdict": "success_sota_ingestion_v465_actionable_references_added",
++        "research_references_updated": True,
++        "n_sources_checked": 8,
++        "next_milestone_candidates": [
++            {
++                "candidate": "Tool-first verifier gate before judge fallback",
++                "candidate_flag": "flagged_for_v465 (.465): tool_first_small_verifier_gate",
++                "source_ids": ["2504.04718", "2604.01993"],
++            }
++        ],
++    }
++
++
++def _arc() -> JsonDict:
++    return {
++        "experiment": "experiment_5054_arc_live_path_self_discovery",
++        "experiment_id": 5054,
++        "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
++        "target_game": "tu93",
++        "target_level": 6,
++        "prior_reproduced_level": 5,
++        "new_levels_banked": 0,
++        "offline_reproduced": False,
++        "duplicate_solve_avoided": True,
++        "registry_precheck_passed": True,
++        "reproducible_total_levels_before": 69,
++        "reproducible_total_levels_after": 69,
++        "solve_claim": {
++            "claimed": False,
++            "provenance": "live_agent_self_discovery",
++            "reproduction_gate": {"reproduced": False, "reached_level": 0},
++        },
++    }
++
++
++def _write_all(
++    root: Path,
++    *,
++    gate: JsonDict | None = None,
++    fr11: JsonDict | None = None,
++    omit: set[str] | None = None,
++) -> None:
++    payloads = {
++        "moat_gate": gate if gate is not None else _gate(),
++        "fr11_self_learning": fr11 if fr11 is not None else _fr11(),
++        "hardware": _hardware(),
++        "sota": _sota(),
++        "arc": _arc(),
++    }
++    omitted = omit or set()
++    for source, payload in payloads.items():
++        if source not in omitted:
++            _write_json(root / mod.UPSTREAMS[source].relative_path, payload)
++
++
++def test_req_capstone_5055_spec_declares_v464_capstone_contract() -> None:
++    """REQ-CAPSTONE-5055: OpenSpec anchors the .464 capstone artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-5055",
++        "SCENARIO-CAPSTONE-5055",
++        "SCENARIO-CAPSTONE-5055-FIELD-PRINCIPLES",
++        "experiment_5055_capstone_v464.py",
++        "results/experiment_5055_capstone_v464.json",
++        "fr11_self_learning_result",
++        "next_milestone_pointer",
++        "execution-incomplete",
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_5055_aggregates_current_execution_incomplete_state(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-5055: blocked and no-bank evidence is preserved."""
++
++    _write_all(tmp_path)
++
++    artifact = mod.run(root=tmp_path, artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH)
++
++    assert artifact["honest_verdict"] == (
++        "complete_capstone_v464_execution_incomplete_fr11_no_credible_positive_evidence"
++    )
++    assert artifact["capstone_ready"] is True
++    assert artifact["milestone"] == "2026.06.464"
++    assert artifact["moat_state"] == "execution_incomplete"
++    assert artifact["best_arm_and_delta"] == {
++        "arm_id": "D1",
++        "delta": 0.08,
++        "ci95": [0.0, 0.165],
++        "evidence_status": "blocked",
++        "headline_countable": False,
++    }
++    assert artifact["best_verifier_evidence"]["honest_verdict"] == (
++        "blocked_sota_candidate_refresh_unavailable"
++    )
++    assert "D6 missing" in "\n".join(artifact["moat_resolution"]["execution_incomplete_reasons"])
++    assert artifact["second_corpus_state"]["state"] == "flagged_not_counted"
++    assert artifact["cascade_state"]["state"] == "blocked"
++    assert artifact["fr11_self_learning_result"]["credible_evidence"] is False
++    assert artifact["fr11_self_learning_result"]["state"] == "guarded_negative"
++    assert artifact["fr11_self_learning_result"]["heldout_delta"] == -0.05
++    assert artifact["hardware_result"]["timing_ratio_packet_built"] is True
++    assert artifact["hardware_result"]["claim_scope"].endswith("no_general_fpga_speedup_claim")
++    assert artifact["arc_result"]["state"] == "no_bank"
++    assert artifact["arc_result"]["new_levels_banked"] == 0
++    assert artifact["arc_result"]["reproducible_total_levels_after"] == 69
++    assert artifact["next_milestone_pointer"]["selected"]["experiment_class"] == (
++        "phase_d_execution_repair_and_confirmation"
++    )
++    assert set(artifact["next_milestone_pointer"]["by_moat_state"]) == {
++        "moat_realized",
++        "musr_scoped_positive",
++        "retired_bounded",
++        "execution_incomplete",
++    }
++    assert artifact["docs_updated"] == {
++        "openspec_capstone_spec": True,
++        "ops_status": False,
++        "ops_changelog": False,
++        "_bmad_traceability": False,
++        "reason": "operator stop rule delegates ops/status/changelog/traceability reconciliation",
++    }
++    assert {row["source"] for row in artifact["cited_upstream_artifacts"]} == set(mod.UPSTREAMS)
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++@pytest.mark.parametrize(
++    ("state", "label", "experiment_class"),
++    [
++        ("moat_realized", "realized_moat", "scale_realized_verifier"),
++        ("musr_scoped_positive", "musr_scoped_positive", "second_corpus_confirmation"),
++        ("retired_bounded", "bounded_retirement", "new_verifier_direction_from_sota"),
++        (
++            "execution_incomplete",
++            "execution_incomplete",
++            "phase_d_execution_repair_and_confirmation",
++        ),
++    ],
++)
++def test_scenario_capstone_5055_routes_every_blunt_moat_state(
++    tmp_path: Path,
++    state: str,
++    label: str,
++    experiment_class: str,
++) -> None:
++    """SCENARIO-CAPSTONE-5055: .465 pointers cover all allowed capstone states."""
++
++    _write_all(tmp_path, gate=_gate(state), fr11=_fr11(heldout_delta=0.04))
++
++    artifact = mod.run(root=tmp_path, artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH)
++
++    assert artifact["honest_verdict"] == f"complete_capstone_v464_{label}_fr11_credible_positive"
++    assert artifact["next_milestone_pointer"]["selected_state"] == state
++    assert artifact["next_milestone_pointer"]["selected"]["experiment_class"] == experiment_class
++    assert artifact["fr11_self_learning_result"]["credible_evidence"] is True
++    assert artifact["fr11_self_learning_result"]["state"] == "credible_positive"
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_capstone_5055_missing_inputs_and_validation_edges(
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-CAPSTONE-5055: missing capstone inputs are explicit, not fabricated."""
++
++    _write_all(tmp_path, omit={"arc"})
++    loaded = mod.load_upstream_artifacts(tmp_path)
++    artifact = mod.build_artifact(loaded, duration_s=0.0)
++
++    assert artifact["capstone_ready"] is False
++    assert artifact["missing_capstone_inputs"] == [
++        {
++            "source": "arc",
++            "experiment_id": 5054,
++            "path": "results/experiment_5054_arc_live_path_self_discovery.json",
++        }
++    ]
++    assert artifact["arc_result"]["state"] == "missing"
++    assert artifact["duration_s"] == 0.0001
++    assert "honest_verdict" in mod.artifact_schema_errors({})
++
++    invalid = dict(artifact)
++    invalid["honest_verdict"] = "bad"
++    invalid["moat_state"] = "bad"
++    invalid["capstone_ready"] = "yes"
++    invalid["fr11_self_learning_result"] = []
++    invalid["docs_updated"] = {"ops_status": True}
++    errors = mod.artifact_schema_errors(invalid)
++    for field in (
++        "honest_verdict",
++        "moat_state",
++        "capstone_ready",
++        "fr11_self_learning_result",
++        "docs_updated",
++    ):
++        assert field in errors
++
++    _write_all(tmp_path)
++    exit_code = mod.main(root=tmp_path, artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH)
++    captured = capsys.readouterr()
++    printed = json.loads(captured.out)
++    assert exit_code == 0
++    assert printed["experiment"] == mod.EXPERIMENT
++    assert printed["reproducibility_checksum"] == mod.payload_checksum(printed)
+-- 
+2.55.0
+

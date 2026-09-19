@@ -1,0 +1,43 @@
+From 448ec4b243bcf764ac60dcfaf87b14cc2c6d15ff Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 20:44:38 -0400
+Subject: [PATCH 07940/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9b6f0d2458..35c642cbb3 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1187494, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-07-26T00:19:27Z"}
+\ No newline at end of file
++{"pid": 1187494, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-07-26T00:44:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4d25bb8c04..94ac0460e7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14302,3 +14302,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-26 00:16 UTC | Gated on Exp5924 ready: adaptive-state ABI v2 Pyth | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:    assert arti |
+ | 2026-07-26 00:18 UTC | Gated on Exp5923 stream and Exp5924 fixture: prosp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5923-sota-schema-supported-constraintir-a |
+ | 2026-07-26 00:19 UTC | Gated on Exp5923 stream and Exp5924 fixture: prosp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5923-sota-schema-supported-constraintir-a |
++| 2026-07-26 00:42 UTC | Gated on Exp5924 ready: adaptive-state ABI v2 Pyth | OK | 200 passed, 1 warning in 14.34s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 95be472a2b..f042a15387 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1187494, "iteration": 1, "phase": "iteration_start", "started_at": "2026-07-26T00:19:27Z"}
+\ No newline at end of file
++{"pid": 1187494, "iteration": 2, "phase": "iteration_start", "started_at": "2026-07-26T00:44:35Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

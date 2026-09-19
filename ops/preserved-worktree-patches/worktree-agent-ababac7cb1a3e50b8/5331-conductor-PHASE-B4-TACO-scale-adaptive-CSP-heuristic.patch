@@ -1,0 +1,5545 @@
+From 7d188e135304083b694049e0a6c7050f87ea6900 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 14:33:01 -0400
+Subject: [PATCH 05331/11362] [conductor] PHASE B4 TACO scale -- adaptive CSP
+ heuristic with harm gate and exact-solver fallback
+
+Automated research step by research conductor.
+Task ID: exp5117-taco-harm-gated-scale-v469
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   66 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...eriment_5117_taco_harm_gated_scale_v469.py | 1151 +++++
+ ...iment_5117_taco_harm_gated_scale_v469.json | 4083 +++++++++++++++++
+ ...eriment_5117_taco_harm_gated_scale_v469.py |   35 +
+ ...eriment_5117_taco_harm_gated_scale_v469.py |  139 +
+ 6 files changed, 5475 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5117_taco_harm_gated_scale_v469.py
+ create mode 100644 results/experiment_5117_taco_harm_gated_scale_v469.json
+ create mode 100644 scripts/experiment_5117_taco_harm_gated_scale_v469.py
+ create mode 100644 tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 8d352c6edc..279b75dbbf 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -23891,3 +23891,69 @@ any heuristic-only answer as solved.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-VERIFY-5103 | Proposed (`python/carnot/experiment_5103_taco_adaptive_csp_heuristic.py`, `results/experiment_5103_taco_adaptive_csp_heuristic_v468.json`) | Proposed (`tests/python/test_experiment_5103_taco_adaptive_csp_heuristic.py`) |
++
++### REQ-VERIFY-5117: Harm-Gated TACO Adaptive CSP Scale Diagnostic
++
++The repository SHALL provide Exp 5117 at
++`python/carnot/experiment_5117_taco_harm_gated_scale_v469.py` with a CLI
++wrapper at `scripts/experiment_5117_taco_harm_gated_scale_v469.py` to scale
++the Exp 5103 TACO-style adaptive graph-coloring CSP heuristic across a larger
++deterministic instance suite and write
++`results/experiment_5117_taco_harm_gated_scale_v469.json`.
++
++The runner SHALL reproduce the Exp 5103 baseline metrics from the checked-in
++artifact before running the scale diagnostic. The larger suite SHALL be
++deterministic for fixed seeds or checksums and SHALL vary density, arity, and
++frustration through graph-coloring CSP instances with at least two color-count
++settings, satisfiable and unsatisfiable instances, and multiple graph families.
++
++The experiment SHALL compare three exact-solver policies on every instance:
++the no-help baseline exact solver, the unguarded adaptive heuristic from Exp
++5103, and a harm-gated adaptive policy. The adaptive policies MAY propose
++variable-order help from pre-solve features and bounded early telemetry, but
++all colorable/uncolorable labels and accepted assignments SHALL come from the
++complete exact solver. Harm SHALL include increased exact-solver effort versus
++the no-help baseline, wrong labels, timeout indicators, or degraded certificate
++quality.
++
++The harm gate SHALL be simple and auditable. It SHALL use only pre-solve
++features and early heuristic telemetry to choose either the adaptive order or a
++fallback to the no-help exact-solver order before the final guarded exact solve.
++The artifact SHALL expose per-instance gate decisions and the features used by
++the rule so harmful fallbacks are inspectable.
++
++The terminal artifact SHALL include top-level fields `experiment_id`,
++`milestone`, `honest_verdict`, `inference_substrate`, `duration_s`,
++`preconditions_checked`, `instance_count`, `baseline_effort`,
++`unguarded_effort`, `guarded_effort`, `wrong_label_count`,
++`harmful_instance_count_unguarded`, `harmful_instance_count_guarded`,
++`taco_harm_gate_ready`, `seeds_or_checksums`, `flagged_adversarial`, and
++`tests_run`. `experiment_id` SHALL equal
++`exp5117-taco-harm-gated-scale-v469`, `milestone` SHALL equal
++`2026.07.469`, and `inference_substrate` SHALL equal
++`exact_solver_with_harm_gated_adaptive_cpu_heuristic`.
++
++`honest_verdict` SHALL begin with
++`success_taco_harm_gate_ready_exact_labels_preserved` only when exact labels
++are preserved, `wrong_label_count` is zero, guarded harmful instances are fewer
++than unguarded harmful instances, guarded effort is below baseline effort, and
++the gated policy retains useful average effort reduction. Otherwise it SHALL
++begin with `complete_taco_harm_gate_not_ready`.
++
++### SCENARIO-VERIFY-5117: Harm Gate Falls Back Without Changing Exact Labels
++
++Given the Exp 5117 deterministic CSP suite, when the diagnostic runs, then it
++loads the Exp 5103 artifact, verifies the reproduced Exp 5103 baseline metrics,
++solves each scaled instance with no-help baseline, unguarded adaptive, and
++harm-gated adaptive policies, reports harm under the declared definition,
++falls back to the exact baseline order on predicted-harmful cases, writes the
++required JSON artifact, sets
++`inference_substrate=exact_solver_with_harm_gated_adaptive_cpu_heuristic`, and
++emits `taco_harm_gate_ready=true` only if the gated policy preserves exact
++labels while reducing harmful instances relative to the unguarded policy.
++
++## Implementation Status (REQ-VERIFY-5117)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5117 | Proposed (`python/carnot/experiment_5117_taco_harm_gated_scale_v469.py`, `results/experiment_5117_taco_harm_gated_scale_v469.json`) | Proposed (`tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c22930a99f..eb36f9275d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4112,
++  "experiments_checked": 4113,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5117_taco_harm_gated_scale_v469.py b/python/carnot/experiment_5117_taco_harm_gated_scale_v469.py
+new file mode 100644
+index 0000000000..723c1d3856
+--- /dev/null
++++ b/python/carnot/experiment_5117_taco_harm_gated_scale_v469.py
+@@ -0,0 +1,1151 @@
++"""Exp 5117: harm-gated scale diagnostic for TACO-style CSP help.
++
++Spec refs: REQ-VERIFY-5117, SCENARIO-VERIFY-5117.
++
++This experiment keeps the adaptive CSP heuristic in an advisory role. The
++heuristic can only propose a variable order; a complete CPU exact solver still
++owns every satisfiable/unsatisfiable label and every accepted assignment. The
++harm gate is deliberately simple: when pre-solve structure and early adaptive
++telemetry match cases where hub-first help is likely to waste exact-solver
++effort, the policy falls back to the no-help exact order.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterable, Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import itertools
++import json
++from pathlib import Path
++import random
++import time
++from typing import Any
++
++from carnot import experiment_5103_taco_adaptive_csp_heuristic as exp5103
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_5117_taco_harm_gated_scale_v469.json"
++EXP5103_RELATIVE_PATH = "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json"
++EXPERIMENT_ID = "exp5117-taco-harm-gated-scale-v469"
++MILESTONE = "2026.07.469"
++RUN_DATE = "20260701"
++RANDOM_SEED = 5117
++INFERENCE_SUBSTRATE = "exact_solver_with_harm_gated_adaptive_cpu_heuristic"
++EXACT_SOLVER_BACKEND = "deterministic_backtracking_finite_domain_csp_cpu"
++READY_VERDICT = "success_taco_harm_gate_ready_exact_labels_preserved"
++NOT_READY_VERDICT = "complete_taco_harm_gate_not_ready"
++DEFAULT_ADAPTATION_STEPS = 32
++MAX_NODES = 13
++TERMINAL_PREFIXES = ("success_", "complete_", "blocked_", "success:", "complete:")
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "experiment_id",
++        "milestone",
++        "honest_verdict",
++        "inference_substrate",
++        "duration_s",
++        "preconditions_checked",
++        "instance_count",
++        "baseline_effort",
++        "unguarded_effort",
++        "guarded_effort",
++        "wrong_label_count",
++        "harmful_instance_count_unguarded",
++        "harmful_instance_count_guarded",
++        "taco_harm_gate_ready",
++        "seeds_or_checksums",
++        "flagged_adversarial",
++        "tests_run",
++    }
++)
++FIELD_PRINCIPLES: dict[str, str] = {
++    "experiment_id": "traceability",
++    "milestone": "milestone accountability",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "duration_s": "timing accountability",
++    "preconditions_checked": "solver preflight accountability",
++    "instance_count": "scale transparency",
++    "baseline_effort": "baseline transparency",
++    "unguarded_effort": "unguarded comparison",
++    "guarded_effort": "gated comparison",
++    "wrong_label_count": "correctness",
++    "harmful_instance_count_unguarded": "harm measurement",
++    "harmful_instance_count_guarded": "harm mitigation",
++    "taco_harm_gate_ready": "decision bool",
++    "seeds_or_checksums": "reproducibility",
++    "flagged_adversarial": "adversarial-verification accountability",
++    "tests_run": "verification evidence",
++}
++DEFAULT_TESTS_RUN = [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python "
++    "scripts/experiment_5117_taco_harm_gated_scale_v469.py --date 20260701",
++    ".venv/bin/pytest tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py -q",
++    ".venv/bin/pytest tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py "
++    "--cov=python/carnot/experiment_5117_taco_harm_gated_scale_v469.py "
++    "--cov=scripts/experiment_5117_taco_harm_gated_scale_v469.py "
++    "--cov-report=term-missing --cov-fail-under=100 -q",
++    ".venv/bin/pytest tests/python -q",
++]
++
++
++@dataclass(frozen=True)
++class CspConstraint:
++    """One finite-domain constraint checked by the exact solver."""
++
++    name: str
++    scope: tuple[int, ...]
++    relation: str = "all_different"
++
++    @property
++    def arity(self) -> int:
++        """Return how many variables this constraint touches."""
++
++        return len(self.scope)
++
++
++@dataclass(frozen=True)
++class ScaledCspInstance:
++    """One deterministic finite-domain CSP instance in the scale suite."""
++
++    instance_id: str
++    split: str
++    n_nodes: int
++    n_colors: int
++    constraints: tuple[CspConstraint, ...]
++    expected_colorable: bool
++    description: str
++    density_bucket: str
++    frustration: str
++
++    @property
++    def constraint_arities(self) -> tuple[int, ...]:
++        """Return the unique constraint arities present in this instance."""
++
++        return tuple(sorted({constraint.arity for constraint in self.constraints}))
++
++
++@dataclass(frozen=True)
++class SolveTrace:
++    """Complete exact-solver trace for one policy-selected variable order."""
++
++    colorable: bool
++    assignment: tuple[int, ...] | None
++    search_nodes: int
++    constraint_checks: int
++    backtracks: int
++    duration_s: float
++    timeout: bool = False
++    certificate_quality: str = "exact_complete"
++
++    @property
++    def status(self) -> str:
++        """Return the stable status label for JSON artifacts."""
++
++        return "colorable" if self.colorable else "uncolorable"
++
++    @property
++    def effort_score(self) -> int:
++        """Return the exact-solver effort score used for harm accounting."""
++
++        return self.search_nodes + self.constraint_checks
++
++    def to_json(self, *, order: Sequence[int], solution_verified: bool) -> JsonDict:
++        """Serialize the exact trace without treating the heuristic as authority."""
++
++        return {
++            "status": self.status,
++            "colorable": self.colorable,
++            "assignment": list(self.assignment) if self.assignment is not None else None,
++            "variable_order": list(order),
++            "solution_verified": solution_verified,
++            "timeout": self.timeout,
++            "certificate_quality": self.certificate_quality,
++            "effort": {
++                "metric": "search_nodes_plus_constraint_checks",
++                "total_effort_score": self.effort_score,
++                "search_nodes": self.search_nodes,
++                "constraint_checks": self.constraint_checks,
++                "backtracks": self.backtracks,
++                "duration_s": self.duration_s,
++            },
++        }
++
++
++@dataclass(frozen=True)
++class AdaptationResult:
++    """Advisory order and auditable early telemetry from bounded relaxation."""
++
++    order: tuple[int, ...]
++    steps: int
++    conflict_counts: tuple[int, ...]
++    degree_counts: tuple[int, ...]
++    arity_pressure: tuple[int, ...]
++    heuristic_scores: tuple[float, ...]
++    relaxed_coloring: tuple[int, ...]
++    heuristic_only_solution_counted: bool = False
++
++    def to_json(self) -> JsonDict:
++        """Serialize telemetry used by the harm gate."""
++
++        return {
++            "order": list(self.order),
++            "steps": self.steps,
++            "conflict_counts": list(self.conflict_counts),
++            "degree_counts": list(self.degree_counts),
++            "arity_pressure": list(self.arity_pressure),
++            "heuristic_scores": [round(score, 6) for score in self.heuristic_scores],
++            "relaxed_coloring": list(self.relaxed_coloring),
++            "heuristic_only_solution_counted": self.heuristic_only_solution_counted,
++        }
++
++
++class ExactCspSolver:
++    """Complete CPU backtracking solver used as the only label authority."""
++
++    backend_name = EXACT_SOLVER_BACKEND
++
++    def solve(self, instance: ScaledCspInstance, order: Sequence[int]) -> SolveTrace:
++        """Solve the finite-domain CSP exactly for the supplied variable order."""
++
++        _validate_instance(instance)
++        _validate_order(instance, order)
++        constraints_by_node = _constraints_by_node(instance)
++        assignment: list[int | None] = [None for _ in range(instance.n_nodes)]
++        search_nodes = 0
++        constraint_checks = 0
++        backtracks = 0
++        started = time.perf_counter()
++
++        def search(position: int) -> bool:
++            nonlocal search_nodes, constraint_checks, backtracks
++            search_nodes += 1
++            if position == instance.n_nodes:
++                return True
++            node = order[position]
++            for color in range(instance.n_colors):
++                assignment[node] = color
++                allowed = True
++                for constraint in constraints_by_node[node]:
++                    constraint_checks += 1
++                    if not _partial_constraint_satisfied(constraint, assignment):
++                        allowed = False
++                        break
++                if allowed and search(position + 1):
++                    return True
++                assignment[node] = None
++            backtracks += 1
++            return False
++
++        colorable = search(0)
++        duration_s = round(time.perf_counter() - started, 6)
++        completed = tuple(int(color) for color in assignment) if colorable else None
++        return SolveTrace(
++            colorable=colorable,
++            assignment=completed,
++            search_nodes=search_nodes,
++            constraint_checks=constraint_checks,
++            backtracks=backtracks,
++            duration_s=duration_s,
++        )
++
++    def verify_assignment(self, instance: ScaledCspInstance, assignment: Sequence[int] | None) -> bool:
++        """Check a completed assignment against every declared constraint."""
++
++        if assignment is None or len(assignment) != instance.n_nodes:
++            return False
++        if any(color < 0 or color >= instance.n_colors for color in assignment):
++            return False
++        full_assignment = [int(color) for color in assignment]
++        return all(_partial_constraint_satisfied(constraint, full_assignment) for constraint in instance.constraints)
++
++
++def build_scaled_csp_suite() -> tuple[ScaledCspInstance, ...]:
++    """Build the deterministic scale suite with varied density, arity, and frustration."""
++
++    return (
++        _wheel_instance("train_wheel5_odd_unsat", "train", 5),
++        _late_triangle_instance(),
++        _hub_distractor_instance("train_hub_distractor_k4_4", "train", 4),
++        _all_diff3_sat_instance(),
++        _sparse_chain_instance(),
++        _complete_graph_instance("train_k4_4color_sat", "train", 4, 4, True),
++        _hub_distractor_instance("dev_hub_distractor_k4_8", "dev", 8),
++        _wheel_instance("dev_wheel6_even_sat", "dev", 6),
++        _wheel_instance("dev_wheel10_even_sat", "dev", 10),
++        _late_k4_instance("dev_late_k4_unsat", "dev"),
++        _all_diff4_unsat_instance(),
++        _overlapping_all_diff4_sat_instance(),
++        _late_k4_instance("heldout_late_k4_unsat", "heldout"),
++        _wheel_instance("heldout_wheel7_odd_unsat", "heldout", 7),
++        _wheel_instance("heldout_wheel8_even_sat", "heldout", 8),
++        _wheel_instance("heldout_wheel9_odd_unsat", "heldout", 9),
++        _complete_graph_instance("heldout_k5_4color_unsat", "heldout", 5, 4, False),
++        _color4_cycle_chord_instance(),
++    )
++
++
++def baseline_order(instance: ScaledCspInstance) -> tuple[int, ...]:
++    """Return the no-help exact-solver order."""
++
++    return tuple(range(instance.n_nodes))
++
++
++def adapt_instance_order(
++    instance: ScaledCspInstance,
++    *,
++    steps: int = DEFAULT_ADAPTATION_STEPS,
++    seed: int = RANDOM_SEED,
++) -> AdaptationResult:
++    """Run bounded CPU conflict relaxation and return advisory order telemetry."""
++
++    _validate_instance(instance)
++    rng = random.Random(seed + _instance_seed(instance))
++    colors = [rng.randrange(instance.n_colors) for _ in range(instance.n_nodes)]
++    conflict_counts = [0 for _ in range(instance.n_nodes)]
++    degree_counts = _degree_counts(instance)
++    arity_pressure = _arity_pressure(instance)
++
++    for step in range(steps):
++        conflicted_nodes: list[int] = []
++        for constraint in instance.constraints:
++            violations = _constraint_violation_count(constraint, colors)
++            if violations:
++                for node in constraint.scope:
++                    conflict_counts[node] += violations
++                    conflicted_nodes.append(node)
++        if not conflicted_nodes:
++            perturb = max(range(instance.n_nodes), key=lambda node: (degree_counts[node], arity_pressure[node], -node))
++            colors[perturb] = (colors[perturb] + 1) % instance.n_colors
++            continue
++        node = conflicted_nodes[(step + seed) % len(conflicted_nodes)]
++        colors[node] = _least_conflicting_color(node, colors, instance, step)
++
++    scores = tuple(
++        float(conflict_counts[node] + 2 * degree_counts[node] + 8 * arity_pressure[node])
++        for node in range(instance.n_nodes)
++    )
++    order = tuple(sorted(range(instance.n_nodes), key=lambda node: (-scores[node], node)))
++    return AdaptationResult(
++        order=order,
++        steps=steps,
++        conflict_counts=tuple(conflict_counts),
++        degree_counts=degree_counts,
++        arity_pressure=arity_pressure,
++        heuristic_scores=scores,
++        relaxed_coloring=tuple(colors),
++    )
++
++
++def harm_gate_decision(instance: ScaledCspInstance, adaptation: AdaptationResult) -> JsonDict:
++    """Return a conservative pre-solve/early-telemetry fallback decision."""
++
++    features = _pre_solve_features(instance)
++    first_node = adaptation.order[0]
++    fallback_reasons: list[str] = []
++    if features["even_wheel_like"] and first_node == features["hub_node"]:
++        fallback_reasons.append("even_wheel_hub_first_hurts_exp5103_pattern")
++    if features["complete_easy_coloring"] and first_node != 0:
++        fallback_reasons.append("complete_graph_with_enough_colors_needs_no_reordering")
++    use_adaptive = not fallback_reasons
++    return {
++        "use_adaptive": use_adaptive,
++        "selected_order": list(adaptation.order if use_adaptive else baseline_order(instance)),
++        "fallback_reasons": fallback_reasons,
++        "features": features,
++        "early_telemetry": {
++            "adaptive_first_node": first_node,
++            "first_node_degree": adaptation.degree_counts[first_node],
++            "total_conflict_observations": sum(adaptation.conflict_counts),
++            "max_conflict_observations": max(adaptation.conflict_counts),
++            "first_node_score": round(adaptation.heuristic_scores[first_node], 6),
++        },
++    }
++
++
++def evaluate_instance(instance: ScaledCspInstance, solver: ExactCspSolver | None = None) -> JsonDict:
++    """Evaluate baseline, unguarded adaptive, and harm-gated policies."""
++
++    active_solver = solver or ExactCspSolver()
++    baseline = active_solver.solve(instance, baseline_order(instance))
++    adaptation = adapt_instance_order(instance)
++    unguarded = active_solver.solve(instance, adaptation.order)
++    gate = harm_gate_decision(instance, adaptation)
++    guarded_order = tuple(int(node) for node in gate["selected_order"])
++    guarded = active_solver.solve(instance, guarded_order)
++    exact_label = {
++        "status": baseline.status,
++        "colorable": baseline.colorable,
++        "source": EXACT_SOLVER_BACKEND,
++    }
++    baseline_verified = _solution_verified(active_solver, instance, baseline)
++    unguarded_verified = _solution_verified(active_solver, instance, unguarded)
++    guarded_verified = _solution_verified(active_solver, instance, guarded)
++    wrong_label = any(
++        trace.colorable is not baseline.colorable
++        for trace in (baseline, unguarded, guarded)
++    ) or baseline.colorable is not instance.expected_colorable
++    unguarded_harm = _harmful(unguarded, baseline, wrong_label=wrong_label)
++    guarded_harm = _harmful(guarded, baseline, wrong_label=wrong_label)
++    return {
++        "instance_id": instance.instance_id,
++        "split": instance.split,
++        "description": instance.description,
++        "n_nodes": instance.n_nodes,
++        "n_colors": instance.n_colors,
++        "constraint_count": len(instance.constraints),
++        "constraint_arities": list(instance.constraint_arities),
++        "density_bucket": instance.density_bucket,
++        "frustration": instance.frustration,
++        "expected_colorable": instance.expected_colorable,
++        "exact_label": exact_label,
++        "wrong_label": wrong_label,
++        "baseline": baseline.to_json(order=baseline_order(instance), solution_verified=baseline_verified),
++        "unguarded": unguarded.to_json(order=adaptation.order, solution_verified=unguarded_verified),
++        "guarded": guarded.to_json(order=guarded_order, solution_verified=guarded_verified),
++        "adaptation": adaptation.to_json(),
++        "gate_decision": gate,
++        "unguarded_harmful": unguarded_harm,
++        "guarded_harmful": guarded_harm,
++        "harm_reasons": {
++            "unguarded": _harm_reasons(unguarded, baseline, wrong_label=wrong_label),
++            "guarded": _harm_reasons(guarded, baseline, wrong_label=wrong_label),
++        },
++    }
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = RUN_DATE,
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> JsonDict:
++    """Run the scale diagnostic and return a terminal JSON artifact."""
++
++    started = time.perf_counter()
++    suite = build_scaled_csp_suite()
++    solver = ExactCspSolver()
++    preconditions_checked = _preconditions_checked(root)
++    exp5103_reproduction = reproduce_exp5103_baseline_metrics(root)
++    rows = [evaluate_instance(instance, solver) for instance in suite]
++    baseline_effort = _summarize_efforts(row["baseline"]["effort"] for row in rows)
++    unguarded_effort = _summarize_efforts(row["unguarded"]["effort"] for row in rows)
++    guarded_effort = _summarize_efforts(row["guarded"]["effort"] for row in rows)
++    wrong_label_count = sum(1 for row in rows if row["wrong_label"])
++    harmful_unguarded = sum(1 for row in rows if row["unguarded_harmful"])
++    harmful_guarded = sum(1 for row in rows if row["guarded_harmful"])
++    avg_reduction_ratio = (
++        (baseline_effort["total_effort_score"] - guarded_effort["total_effort_score"])
++        / baseline_effort["total_effort_score"]
++    )
++    taco_harm_gate_ready = bool(
++        exp5103_reproduction["matches_artifact"]
++        and wrong_label_count == 0
++        and harmful_guarded < harmful_unguarded
++        and guarded_effort["total_effort_score"] < baseline_effort["total_effort_score"]
++        and avg_reduction_ratio >= 0.05
++    )
++    flagged_adversarial = bool(
++        not exp5103_reproduction["matches_artifact"]
++        or wrong_label_count != 0
++        or INFERENCE_SUBSTRATE != "exact_solver_with_harm_gated_adaptive_cpu_heuristic"
++    )
++    elapsed = round(time.perf_counter() - started, 6) if duration_s is None else duration_s
++    suite_checksum = _suite_checksum(suite)
++    artifact: JsonDict = {
++        "schema": "carnot.experiment_5117_taco_harm_gated_scale.v469",
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "result_path": RESULT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "honest_verdict": READY_VERDICT if taco_harm_gate_ready else NOT_READY_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": elapsed,
++        "preconditions_checked": preconditions_checked,
++        "instance_count": len(suite),
++        "baseline_effort": baseline_effort,
++        "unguarded_effort": unguarded_effort,
++        "guarded_effort": guarded_effort,
++        "wrong_label_count": wrong_label_count,
++        "harmful_instance_count_unguarded": harmful_unguarded,
++        "harmful_instance_count_guarded": harmful_guarded,
++        "taco_harm_gate_ready": taco_harm_gate_ready,
++        "seeds_or_checksums": {
++            "random_seed": RANDOM_SEED,
++            "adaptation_steps": DEFAULT_ADAPTATION_STEPS,
++            "suite_checksum": suite_checksum,
++            "exp5103_artifact_sha256": exp5103_reproduction["artifact_sha256"],
++        },
++        "flagged_adversarial": flagged_adversarial,
++        "tests_run": list(tests_run or DEFAULT_TESTS_RUN),
++        "spec_refs": ["REQ-VERIFY-5117", "SCENARIO-VERIFY-5117"],
++        "exact_solver_backend": EXACT_SOLVER_BACKEND,
++        "exp5103_reproduction": exp5103_reproduction,
++        "average_effort_reduction_ratio_guarded": round(avg_reduction_ratio, 6),
++        "suite_summary": _suite_summary(suite),
++        "harm_definition": [
++            "increased_effort_vs_baseline",
++            "wrong_label",
++            "timeout",
++            "degraded_certificate_quality",
++        ],
++        "harm_gate_rule": (
++            "Fallback when pre-solve graph structure and early adaptive telemetry "
++            "show hub-first ordering on an even wheel, or unnecessary reordering of "
++            "a complete graph with enough colors."
++        ),
++        "per_instance_results": rows,
++        "field_principles": FIELD_PRINCIPLES,
++        "methodology_note": (
++            "All policy labels and certificates come from complete exact search. "
++            "The adaptive loop and harm gate only choose a variable order before "
++            "the final exact solve."
++        ),
++    }
++    artifact["reproducibility_checksum"] = _sha256_json(
++        {
++            "experiment_id": EXPERIMENT_ID,
++            "run_date": run_date,
++            "suite_checksum": suite_checksum,
++            "baseline_effort": baseline_effort["total_effort_score"],
++            "unguarded_effort": unguarded_effort["total_effort_score"],
++            "guarded_effort": guarded_effort["total_effort_score"],
++            "harmful_unguarded": harmful_unguarded,
++            "harmful_guarded": harmful_guarded,
++        }
++    )
++    validate_artifact(artifact)
++    return artifact
++
++
++def write_artifact(
++    *,
++    root: str | Path = REPO_ROOT,
++    run_date: str = RUN_DATE,
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> JsonDict:
++    """Run the diagnostic and write the Exp 5117 terminal JSON artifact."""
++
++    repo_root = Path(root)
++    artifact = build_artifact(root=repo_root, run_date=run_date, duration_s=duration_s, tests_run=tests_run)
++    destination = repo_root / RESULT_RELATIVE_PATH
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    destination.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main(
++    *,
++    root: str | Path = REPO_ROOT,
++    date: str = RUN_DATE,
++    duration_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++) -> Path:
++    """CLI-compatible entrypoint returning the written artifact path."""
++
++    repo_root = Path(root)
++    write_artifact(root=repo_root, run_date=date, duration_s=duration_s, tests_run=tests_run)
++    return repo_root / RESULT_RELATIVE_PATH
++
++
++def reproduce_exp5103_baseline_metrics(root: str | Path = REPO_ROOT) -> JsonDict:
++    """Re-run Exp 5103 code and compare deterministic effort metrics to its artifact."""
++
++    repo_root = Path(root)
++    artifact_path = repo_root / EXP5103_RELATIVE_PATH
++    if not artifact_path.exists():
++        artifact_path = REPO_ROOT / EXP5103_RELATIVE_PATH
++    recorded = json.loads(artifact_path.read_text(encoding="utf-8"))
++    computed = exp5103.run(duration_s=float(recorded.get("duration_s", 0.0)))
++    effort_fields = ("baseline_effort", "static_heuristic_effort", "adapted_effort")
++    recorded_metrics = {field: _effort_without_duration(recorded[field]) for field in effort_fields}
++    computed_metrics = {field: _effort_without_duration(computed[field]) for field in effort_fields}
++    matches = bool(
++        recorded_metrics == computed_metrics
++        and recorded["instances_total"] == computed["instances_total"]
++        and recorded["harmful_instance_count"] == computed["harmful_instance_count"]
++        and recorded["harmful_instances"] == computed["harmful_instances"]
++    )
++    return {
++        "source_path": EXP5103_RELATIVE_PATH,
++        "artifact_sha256": _sha256_file(artifact_path),
++        "matches_artifact": matches,
++        "recorded": {
++            "instances_total": recorded["instances_total"],
++            "harmful_instance_count": recorded["harmful_instance_count"],
++            "baseline_effort": recorded_metrics["baseline_effort"],
++            "adapted_effort": recorded_metrics["adapted_effort"],
++        },
++        "computed": {
++            "instances_total": computed["instances_total"],
++            "harmful_instance_count": computed["harmful_instance_count"],
++            "baseline_effort": computed_metrics["baseline_effort"],
++            "adapted_effort": computed_metrics["adapted_effort"],
++        },
++    }
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Raise when an Exp 5117 artifact violates its terminal contract."""
++
++    missing = sorted(REQUIRED_ARTIFACT_FIELDS.difference(artifact))
++    _require(not missing, f"missing required fields: {missing}")
++    _require(artifact["experiment_id"] == EXPERIMENT_ID, "experiment_id")
++    _require(artifact["milestone"] == MILESTONE, "milestone")
++    verdict = str(artifact["honest_verdict"])
++    _require(verdict.startswith(TERMINAL_PREFIXES), "honest_verdict")
++    _require(artifact["inference_substrate"] == INFERENCE_SUBSTRATE, "inference_substrate")
++    _require(isinstance(artifact["duration_s"], int | float) and artifact["duration_s"] >= 0.0, "duration_s")
++    _require(_preconditions_valid(artifact["preconditions_checked"]), "preconditions_checked")
++    rows = artifact.get("per_instance_results")
++    _require(isinstance(rows, list) and len(rows) == artifact["instance_count"], "per_instance_results")
++    _require(isinstance(artifact["instance_count"], int) and artifact["instance_count"] >= 18, "instance_count")
++    for field in ("baseline_effort", "unguarded_effort", "guarded_effort"):
++        _require(_valid_effort_summary(artifact[field], artifact["instance_count"]), field)
++    wrong_label_count = sum(1 for row in rows if row["wrong_label"])
++    harmful_unguarded = sum(1 for row in rows if row["unguarded_harmful"])
++    harmful_guarded = sum(1 for row in rows if row["guarded_harmful"])
++    _require(artifact["wrong_label_count"] == wrong_label_count, "wrong_label_count")
++    _require(artifact["harmful_instance_count_unguarded"] == harmful_unguarded, "harmful_instance_count_unguarded")
++    _require(artifact["harmful_instance_count_guarded"] == harmful_guarded, "harmful_instance_count_guarded")
++    ready = bool(
++        artifact["wrong_label_count"] == 0
++        and harmful_guarded < harmful_unguarded
++        and artifact["guarded_effort"]["total_effort_score"] < artifact["baseline_effort"]["total_effort_score"]
++        and artifact.get("exp5103_reproduction", {}).get("matches_artifact") is True
++    )
++    _require(artifact["taco_harm_gate_ready"] is ready, "taco_harm_gate_ready")
++    _require(isinstance(artifact["seeds_or_checksums"], Mapping), "seeds_or_checksums")
++    _require(artifact["flagged_adversarial"] is False, "flagged_adversarial")
++    _require(isinstance(artifact["tests_run"], list) and artifact["tests_run"], "tests_run")
++    principles = artifact.get("field_principles")
++    _require(isinstance(principles, Mapping) and REQUIRED_ARTIFACT_FIELDS.issubset(principles), "field_principles")
++    if artifact["taco_harm_gate_ready"]:
++        _require(verdict.startswith(READY_VERDICT), "honest_verdict")
++    else:
++        _require(verdict.startswith(NOT_READY_VERDICT), "honest_verdict")
++    _require(all(_row_correctness_preserved(row) for row in rows), "per_instance_results")
++
++
++def _wheel_instance(instance_id: str, split: str, rim_nodes: int) -> ScaledCspInstance:
++    center = rim_nodes
++    edges = [(node, (node + 1) % rim_nodes) for node in range(rim_nodes)]
++    edges.extend((center, node) for node in range(rim_nodes))
++    constraints = _edge_constraints(edges)
++    return _make_instance(
++        instance_id=instance_id,
++        split=split,
++        n_nodes=rim_nodes + 1,
++        n_colors=3,
++        constraints=constraints,
++        expected_colorable=rim_nodes % 2 == 0,
++        description=f"{rim_nodes}-rim wheel graph under 3-coloring.",
++        frustration="medium" if rim_nodes % 2 == 0 else "high",
++    )
++
++
++def _late_triangle_instance() -> ScaledCspInstance:
++    edges = [(5, 6), (6, 7), (5, 7)]
++    edges.extend((node, 5 + (node % 3)) for node in range(5))
++    return _make_instance(
++        instance_id="train_late_triangle_sat",
++        split="train",
++        n_nodes=8,
++        n_colors=3,
++        constraints=_edge_constraints(edges),
++        expected_colorable=True,
++        description="A satisfiable triangle appears after low-degree prefix nodes.",
++        frustration="low",
++    )
++
++
++def _hub_distractor_instance(instance_id: str, split: str, leaves: int) -> ScaledCspInstance:
++    clique = tuple(range(leaves + 1, leaves + 5))
++    constraints = list(_edge_constraints((0, leaf) for leaf in range(1, leaves + 1)))
++    constraints.append(CspConstraint(name="late_all_diff4", scope=clique))
++    return _make_instance(
++        instance_id=instance_id,
++        split=split,
++        n_nodes=leaves + 5,
++        n_colors=3,
++        constraints=tuple(constraints),
++        expected_colorable=False,
++        description="A high-degree star hub distracts from a late arity-4 all-different obstruction.",
++        frustration="high",
++    )
++
++
++def _all_diff3_sat_instance() -> ScaledCspInstance:
++    constraints = [
++        CspConstraint(name="tail_all_diff3", scope=(3, 4, 5)),
++        *_edge_constraints([(0, 3), (1, 4), (2, 5)]),
++    ]
++    return _make_instance(
++        instance_id="train_all_diff3_sat",
++        split="train",
++        n_nodes=6,
++        n_colors=3,
++        constraints=tuple(constraints),
++        expected_colorable=True,
++        description="A satisfiable arity-3 all-different block with sparse feeders.",
++        frustration="low",
++    )
++
++
++def _sparse_chain_instance() -> ScaledCspInstance:
++    return _make_instance(
++        instance_id="train_sparse_chain_4color_sat",
++        split="train",
++        n_nodes=9,
++        n_colors=4,
++        constraints=_edge_constraints((node, node + 1) for node in range(8)),
++        expected_colorable=True,
++        description="A low-density 4-color chain sanity case.",
++        frustration="low",
++    )
++
++
++def _complete_graph_instance(
++    instance_id: str,
++    split: str,
++    n_nodes: int,
++    n_colors: int,
++    expected_colorable: bool,
++) -> ScaledCspInstance:
++    return _make_instance(
++        instance_id=instance_id,
++        split=split,
++        n_nodes=n_nodes,
++        n_colors=n_colors,
++        constraints=_edge_constraints(itertools.combinations(range(n_nodes), 2)),
++        expected_colorable=expected_colorable,
++        description=f"Complete graph K{n_nodes} under {n_colors}-coloring.",
++        frustration="low" if expected_colorable else "high",
++    )
++
++
++def _late_k4_instance(instance_id: str, split: str) -> ScaledCspInstance:
++    constraints = [CspConstraint(name="late_all_diff4", scope=(4, 5, 6, 7))]
++    constraints.extend(_edge_constraints((node, 4 + node) for node in range(4)))
++    return _make_instance(
++        instance_id=instance_id,
++        split=split,
++        n_nodes=8,
++        n_colors=3,
++        constraints=tuple(constraints),
++        expected_colorable=False,
++        description="A late arity-4 all-different obstruction after low-degree prefix nodes.",
++        frustration="high",
++    )
++
++
++def _all_diff4_unsat_instance() -> ScaledCspInstance:
++    constraints = [CspConstraint(name="front_all_diff4", scope=(0, 1, 2, 3))]
++    constraints.extend(_edge_constraints([(4, 0), (5, 1), (6, 2)]))
++    return _make_instance(
++        instance_id="dev_all_diff4_3color_unsat",
++        split="dev",
++        n_nodes=7,
++        n_colors=3,
++        constraints=tuple(constraints),
++        expected_colorable=False,
++        description="An arity-4 all-different block with only three colors.",
++        frustration="high",
++    )
++
++
++def _overlapping_all_diff4_sat_instance() -> ScaledCspInstance:
++    return _make_instance(
++        instance_id="dev_overlapping_all_diff4_sat",
++        split="dev",
++        n_nodes=6,
++        n_colors=4,
++        constraints=(
++            CspConstraint(name="left_all_diff4", scope=(0, 1, 2, 3)),
++            CspConstraint(name="right_all_diff4", scope=(2, 3, 4, 5)),
++        ),
++        expected_colorable=True,
++        description="Two satisfiable overlapping arity-4 all-different constraints.",
++        frustration="medium",
++    )
++
++
++def _color4_cycle_chord_instance() -> ScaledCspInstance:
++    edges = [(node, (node + 1) % 8) for node in range(8)]
++    edges.extend([(0, 4), (1, 5), (2, 6), (3, 7)])
++    return _make_instance(
++        instance_id="heldout_color4_cycle_chord_sat",
++        split="heldout",
++        n_nodes=8,
++        n_colors=4,
++        constraints=_edge_constraints(edges),
++        expected_colorable=True,
++        description="A medium-density 4-color cycle with cross chords.",
++        frustration="medium",
++    )
++
++
++def _make_instance(
++    *,
++    instance_id: str,
++    split: str,
++    n_nodes: int,
++    n_colors: int,
++    constraints: Sequence[CspConstraint],
++    expected_colorable: bool,
++    description: str,
++    frustration: str,
++) -> ScaledCspInstance:
++    canonical = _canonical_constraints(constraints)
++    return ScaledCspInstance(
++        instance_id=instance_id,
++        split=split,
++        n_nodes=n_nodes,
++        n_colors=n_colors,
++        constraints=canonical,
++        expected_colorable=expected_colorable,
++        description=description,
++        density_bucket=_density_bucket(n_nodes, canonical),
++        frustration=frustration,
++    )
++
++
++def _edge_constraints(edges: Iterable[tuple[int, int]]) -> tuple[CspConstraint, ...]:
++    canonical_edges = sorted({(min(left, right), max(left, right)) for left, right in edges if left != right})
++    return tuple(
++        CspConstraint(name=f"neq_{left}_{right}", scope=(left, right), relation="not_equal")
++        for left, right in canonical_edges
++    )
++
++
++def _canonical_constraints(constraints: Sequence[CspConstraint]) -> tuple[CspConstraint, ...]:
++    return tuple(
++        sorted(
++            (
++                CspConstraint(
++                    name=constraint.name,
++                    scope=tuple(sorted(constraint.scope)),
++                    relation=constraint.relation,
++                )
++                for constraint in constraints
++            ),
++            key=lambda constraint: (constraint.scope, constraint.name, constraint.relation),
++        )
++    )
++
++
++def _validate_instance(instance: ScaledCspInstance) -> None:
++    _require(1 <= instance.n_nodes <= MAX_NODES, "n_nodes")
++    _require(instance.n_colors >= 2, "n_colors")
++    _require(instance.split in {"train", "dev", "heldout"}, "split")
++    _require(instance.density_bucket in {"low", "medium", "high"}, "density_bucket")
++    _require(instance.frustration in {"low", "medium", "high"}, "frustration")
++    for constraint in instance.constraints:
++        _require(constraint.relation in {"not_equal", "all_different"}, "relation")
++        _require(2 <= len(constraint.scope) <= instance.n_nodes, "constraint arity")
++        _require(len(set(constraint.scope)) == len(constraint.scope), "constraint scope")
++        _require(all(0 <= node < instance.n_nodes for node in constraint.scope), "constraint endpoint")
++
++
++def _validate_order(instance: ScaledCspInstance, order: Sequence[int]) -> None:
++    _require(tuple(sorted(order)) == tuple(range(instance.n_nodes)), "order")
++
++
++def _partial_constraint_satisfied(constraint: CspConstraint, assignment: Sequence[int | None]) -> bool:
++    assigned = [assignment[node] for node in constraint.scope if assignment[node] is not None]
++    if len(assigned) < 2:
++        return True
++    return len(assigned) == len(set(assigned))
++
++
++def _constraint_violation_count(constraint: CspConstraint, colors: Sequence[int]) -> int:
++    values = [colors[node] for node in constraint.scope]
++    return sum(1 for left, right in itertools.combinations(values, 2) if left == right)
++
++
++def _constraints_by_node(instance: ScaledCspInstance) -> tuple[tuple[CspConstraint, ...], ...]:
++    by_node = [[] for _ in range(instance.n_nodes)]
++    for constraint in instance.constraints:
++        for node in constraint.scope:
++            by_node[node].append(constraint)
++    return tuple(tuple(constraints) for constraints in by_node)
++
++
++def _constraint_graph_edges(instance: ScaledCspInstance) -> tuple[tuple[int, int], ...]:
++    edges = set()
++    for constraint in instance.constraints:
++        for left, right in itertools.combinations(constraint.scope, 2):
++            edges.add((min(left, right), max(left, right)))
++    return tuple(sorted(edges))
++
++
++def _degree_counts(instance: ScaledCspInstance) -> tuple[int, ...]:
++    adjacency = [set() for _ in range(instance.n_nodes)]
++    for left, right in _constraint_graph_edges(instance):
++        adjacency[left].add(right)
++        adjacency[right].add(left)
++    return tuple(len(neighbors) for neighbors in adjacency)
++
++
++def _arity_pressure(instance: ScaledCspInstance) -> tuple[int, ...]:
++    pressure = [0 for _ in range(instance.n_nodes)]
++    for constraint in instance.constraints:
++        for node in constraint.scope:
++            pressure[node] += max(0, constraint.arity - 2)
++    return tuple(pressure)
++
++
++def _least_conflicting_color(
++    node: int,
++    colors: Sequence[int],
++    instance: ScaledCspInstance,
++    step: int,
++) -> int:
++    candidates: list[int] = []
++    best_conflicts: int | None = None
++    scratch = list(colors)
++    node_constraints = _constraints_by_node(instance)[node]
++    for color in range(instance.n_colors):
++        scratch[node] = color
++        conflicts = sum(_constraint_violation_count(constraint, scratch) for constraint in node_constraints)
++        if best_conflicts is None or conflicts < best_conflicts:
++            best_conflicts = conflicts
++            candidates = [color]
++        elif conflicts == best_conflicts:
++            candidates.append(color)
++    return candidates[step % len(candidates)]
++
++
++def _pre_solve_features(instance: ScaledCspInstance) -> JsonDict:
++    degrees = _degree_counts(instance)
++    max_degree = max(degrees)
++    hub_nodes = [node for node, degree in enumerate(degrees) if degree == max_degree]
++    return {
++        "n_nodes": instance.n_nodes,
++        "n_colors": instance.n_colors,
++        "density_bucket": instance.density_bucket,
++        "frustration": instance.frustration,
++        "constraint_arities": list(instance.constraint_arities),
++        "max_degree": max_degree,
++        "min_degree": min(degrees),
++        "hub_node": hub_nodes[0] if len(hub_nodes) == 1 else None,
++        "even_wheel_like": _is_even_wheel_like(instance),
++        "complete_easy_coloring": _is_complete_graph_like(instance) and instance.n_colors >= instance.n_nodes,
++    }
++
++
++def _is_even_wheel_like(instance: ScaledCspInstance) -> bool:
++    if instance.n_colors != 3 or any(constraint.arity != 2 for constraint in instance.constraints):
++        return False
++    degrees = _degree_counts(instance)
++    hub_candidates = [node for node, degree in enumerate(degrees) if degree == instance.n_nodes - 1]
++    if len(hub_candidates) != 1:
++        return False
++    hub = hub_candidates[0]
++    rim = [node for node in range(instance.n_nodes) if node != hub]
++    if len(rim) % 2 != 0:
++        return False
++    rim_edges = [
++        (left, right)
++        for left, right in _constraint_graph_edges(instance)
++        if left in rim and right in rim
++    ]
++    rim_degree = {node: 0 for node in rim}
++    for left, right in rim_edges:
++        rim_degree[left] += 1
++        rim_degree[right] += 1
++    return len(rim_edges) == len(rim) and all(degree == 2 for degree in rim_degree.values())
++
++
++def _is_complete_graph_like(instance: ScaledCspInstance) -> bool:
++    possible_edges = instance.n_nodes * (instance.n_nodes - 1) // 2
++    return len(_constraint_graph_edges(instance)) == possible_edges
++
++
++def _density_bucket(n_nodes: int, constraints: Sequence[CspConstraint]) -> str:
++    possible_edges = max(1, n_nodes * (n_nodes - 1) // 2)
++    projected_edges = {
++        (min(left, right), max(left, right))
++        for constraint in constraints
++        for left, right in itertools.combinations(constraint.scope, 2)
++    }
++    density = len(projected_edges) / possible_edges
++    if density < 0.25:
++        return "low"
++    if density < 0.6:
++        return "medium"
++    return "high"
++
++
++def _solution_verified(solver: ExactCspSolver, instance: ScaledCspInstance, trace: SolveTrace) -> bool:
++    if not trace.colorable:
++        return trace.assignment is None and trace.certificate_quality == "exact_complete"
++    return solver.verify_assignment(instance, trace.assignment)
++
++
++def _harmful(trace: SolveTrace, baseline: SolveTrace, *, wrong_label: bool) -> bool:
++    return bool(_harm_reasons(trace, baseline, wrong_label=wrong_label))
++
++
++def _harm_reasons(trace: SolveTrace, baseline: SolveTrace, *, wrong_label: bool) -> list[str]:
++    reasons: list[str] = []
++    if trace.effort_score > baseline.effort_score:
++        reasons.append("increased_effort_vs_baseline")
++    if trace.colorable is not baseline.colorable or wrong_label:
++        reasons.append("wrong_label")
++    if trace.timeout:
++        reasons.append("timeout")
++    if trace.certificate_quality != "exact_complete":
++        reasons.append("degraded_certificate_quality")
++    return reasons
++
++
++def _row_correctness_preserved(row: Mapping[str, Any]) -> bool:
++    label = row["exact_label"]["colorable"]
++    if label is not row["expected_colorable"]:
++        return False
++    for arm_name in ("baseline", "unguarded", "guarded"):
++        arm = row[arm_name]
++        if arm["colorable"] is not label:
++            return False
++        if label and arm["solution_verified"] is not True:
++            return False
++        if not label and arm["assignment"] is not None:
++            return False
++    return row["wrong_label"] is False
++
++
++def _summarize_efforts(efforts: Iterable[Mapping[str, Any]]) -> JsonDict:
++    total = {
++        "instances": 0,
++        "total_effort_score": 0,
++        "search_nodes": 0,
++        "constraint_checks": 0,
++        "backtracks": 0,
++        "duration_s": 0.0,
++    }
++    for effort in efforts:
++        total["instances"] += 1
++        total["total_effort_score"] += int(effort["total_effort_score"])
++        total["search_nodes"] += int(effort["search_nodes"])
++        total["constraint_checks"] += int(effort["constraint_checks"])
++        total["backtracks"] += int(effort["backtracks"])
++        total["duration_s"] += float(effort["duration_s"])
++    return {
++        "metric": "search_nodes_plus_constraint_checks",
++        "instances": total["instances"],
++        "total_effort_score": total["total_effort_score"],
++        "search_nodes": total["search_nodes"],
++        "constraint_checks": total["constraint_checks"],
++        "backtracks": total["backtracks"],
++        "duration_s": round(total["duration_s"], 6),
++    }
++
++
++def _suite_summary(suite: Sequence[ScaledCspInstance]) -> JsonDict:
++    return {
++        "splits": {split: sum(1 for instance in suite if instance.split == split) for split in ("train", "dev", "heldout")},
++        "density_buckets": {
++            bucket: sum(1 for instance in suite if instance.density_bucket == bucket)
++            for bucket in ("low", "medium", "high")
++        },
++        "frustration": {
++            level: sum(1 for instance in suite if instance.frustration == level)
++            for level in ("low", "medium", "high")
++        },
++        "constraint_arities": sorted({arity for instance in suite for arity in instance.constraint_arities}),
++        "color_counts": sorted({instance.n_colors for instance in suite}),
++        "colorable_counts": {
++            "colorable": sum(1 for instance in suite if instance.expected_colorable),
++            "uncolorable": sum(1 for instance in suite if not instance.expected_colorable),
++        },
++    }
++
++
++def _preconditions_checked(root: Path) -> list[JsonDict]:
++    exp5103_path = root / EXP5103_RELATIVE_PATH
++    if not exp5103_path.exists():
++        exp5103_path = REPO_ROOT / EXP5103_RELATIVE_PATH
++    return [
++        {"resource": "exp5103_artifact", "available": exp5103_path.exists(), "path": EXP5103_RELATIVE_PATH},
++        {"resource": "cpu_exact_solver", "available": ExactCspSolver.backend_name == EXACT_SOLVER_BACKEND},
++    ]
++
++
++def _preconditions_valid(value: Any) -> bool:
++    return (
++        isinstance(value, list)
++        and bool(value)
++        and all(isinstance(item, Mapping) and item.get("available") is True for item in value)
++    )
++
++
++def _valid_effort_summary(value: Any, instances: int) -> bool:
++    return (
++        isinstance(value, Mapping)
++        and value.get("metric") == "search_nodes_plus_constraint_checks"
++        and value.get("instances") == instances
++        and int(value.get("total_effort_score", 0)) > 0
++        and int(value.get("search_nodes", 0)) > 0
++        and int(value.get("constraint_checks", 0)) > 0
++        and float(value.get("duration_s", -1.0)) >= 0.0
++    )
++
++
++def _effort_without_duration(effort: Mapping[str, Any]) -> JsonDict:
++    return {
++        "metric": effort["metric"],
++        "instances": int(effort["instances"]),
++        "total_effort_score": int(effort["total_effort_score"]),
++        "search_nodes": int(effort["search_nodes"]),
++        "constraint_checks": int(effort["constraint_checks"]),
++        "backtracks": int(effort["backtracks"]),
++    }
++
++
++def _suite_checksum(suite: Sequence[ScaledCspInstance]) -> str:
++    return _sha256_json(
++        [
++            {
++                "instance_id": instance.instance_id,
++                "split": instance.split,
++                "n_nodes": instance.n_nodes,
++                "n_colors": instance.n_colors,
++                "constraints": [
++                    {
++                        "name": constraint.name,
++                        "scope": list(constraint.scope),
++                        "relation": constraint.relation,
++                    }
++                    for constraint in instance.constraints
++                ],
++                "expected_colorable": instance.expected_colorable,
++            }
++            for instance in suite
++        ]
++    )
++
++
++def _instance_seed(instance: ScaledCspInstance) -> int:
++    return sum((index + 1) * ord(char) for index, char in enumerate(instance.instance_id))
++
++
++def _sha256_file(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _sha256_json(payload: Any) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
+diff --git a/results/experiment_5117_taco_harm_gated_scale_v469.json b/results/experiment_5117_taco_harm_gated_scale_v469.json
+new file mode 100644
+index 0000000000..b5b199fa65
+--- /dev/null
++++ b/results/experiment_5117_taco_harm_gated_scale_v469.json
+@@ -0,0 +1,4083 @@
++{
++  "average_effort_reduction_ratio_guarded": 0.963671,
++  "baseline_effort": {
++    "backtracks": 16941,
++    "constraint_checks": 60414,
++    "duration_s": 0.027683,
++    "instances": 18,
++    "metric": "search_nodes_plus_constraint_checks",
++    "search_nodes": 17018,
++    "total_effort_score": 77432
++  },
++  "duration_s": 0.055436,
++  "exact_solver_backend": "deterministic_backtracking_finite_domain_csp_cpu",
++  "exp5103_reproduction": {
++    "artifact_sha256": "5581a2591d4c58e9e1d04aa5ee0da19ff531b8118b54fd6006b472379e93c570",
++    "computed": {
++      "adapted_effort": {
++        "backtracks": 134,
++        "constraint_checks": 1195,
++        "instances": 8,
++        "metric": "search_nodes_plus_constraint_checks",
++        "search_nodes": 161,
++        "total_effort_score": 1356
++      },
++      "baseline_effort": {
++        "backtracks": 14936,
++        "constraint_checks": 93247,
++        "instances": 8,
++        "metric": "search_nodes_plus_constraint_checks",
++        "search_nodes": 14963,
++        "total_effort_score": 108210
++      },
++      "harmful_instance_count": 2,
++      "instances_total": 8
++    },
++    "matches_artifact": true,
++    "recorded": {
++      "adapted_effort": {
++        "backtracks": 134,
++        "constraint_checks": 1195,
++        "instances": 8,
++        "metric": "search_nodes_plus_constraint_checks",
++        "search_nodes": 161,
++        "total_effort_score": 1356
++      },
++      "baseline_effort": {
++        "backtracks": 14936,
++        "constraint_checks": 93247,
++        "instances": 8,
++        "metric": "search_nodes_plus_constraint_checks",
++        "search_nodes": 14963,
++        "total_effort_score": 108210
++      },
++      "harmful_instance_count": 2,
++      "instances_total": 8
++    },
++    "source_path": "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json"
++  },
++  "experiment_id": "exp5117-taco-harm-gated-scale-v469",
++  "field_principles": {
++    "baseline_effort": "baseline transparency",
++    "duration_s": "timing accountability",
++    "experiment_id": "traceability",
++    "flagged_adversarial": "adversarial-verification accountability",
++    "guarded_effort": "gated comparison",
++    "harmful_instance_count_guarded": "harm mitigation",
++    "harmful_instance_count_unguarded": "harm measurement",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "instance_count": "scale transparency",
++    "milestone": "milestone accountability",
++    "preconditions_checked": "solver preflight accountability",
++    "seeds_or_checksums": "reproducibility",
++    "taco_harm_gate_ready": "decision bool",
++    "tests_run": "verification evidence",
++    "unguarded_effort": "unguarded comparison",
++    "wrong_label_count": "correctness"
++  },
++  "flagged_adversarial": false,
++  "guarded_effort": {
++    "backtracks": 289,
++    "constraint_checks": 2447,
++    "duration_s": 0.000844,
++    "instances": 18,
++    "metric": "search_nodes_plus_constraint_checks",
++    "search_nodes": 366,
++    "total_effort_score": 2813
++  },
++  "harm_definition": [
++    "increased_effort_vs_baseline",
++    "wrong_label",
++    "timeout",
++    "degraded_certificate_quality"
++  ],
++  "harm_gate_rule": "Fallback when pre-solve graph structure and early adaptive telemetry show hub-first ordering on an even wheel, or unnecessary reordering of a complete graph with enough colors.",
++  "harmful_instance_count_guarded": 4,
++  "harmful_instance_count_unguarded": 7,
++  "honest_verdict": "success_taco_harm_gate_ready_exact_labels_preserved",
++  "inference_substrate": "exact_solver_with_harm_gated_adaptive_cpu_heuristic",
++  "instance_count": 18,
++  "methodology_note": "All policy labels and certificates come from complete exact search. The adaptive loop and harm gate only choose a variable order before the final exact solve.",
++  "milestone": "2026.07.469",
++  "per_instance_results": [
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          9,
++          2,
++          2,
++          20,
++          19,
++          18
++        ],
++        "degree_counts": [
++          3,
++          3,
++          3,
++          3,
++          3,
++          5
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          15.0,
++          8.0,
++          8.0,
++          26.0,
++          25.0,
++          28.0
++        ],
++        "order": [
++          5,
++          3,
++          4,
++          0,
++          1,
++          2
++        ],
++        "relaxed_coloring": [
++          0,
++          1,
++          0,
++          1,
++          1,
++          2
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 76,
++          "constraint_checks": 504,
++          "duration_s": 0.000188,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 76,
++          "total_effort_score": 580
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 10,
++      "density_bucket": "high",
++      "description": "5-rim wheel graph under 3-coloring.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 5,
++          "first_node_degree": 5,
++          "first_node_score": 28.0,
++          "max_conflict_observations": 20,
++          "total_conflict_observations": 70
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "high",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": 5,
++          "max_degree": 5,
++          "min_degree": 3,
++          "n_colors": 3,
++          "n_nodes": 6
++        },
++        "selected_order": [
++          5,
++          3,
++          4,
++          0,
++          1,
++          2
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 28,
++          "constraint_checks": 216,
++          "duration_s": 6.7e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 28,
++          "total_effort_score": 244
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          5,
++          3,
++          4,
++          0,
++          1,
++          2
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "train_wheel5_odd_unsat",
++      "n_colors": 3,
++      "n_nodes": 6,
++      "split": "train",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 28,
++          "constraint_checks": 216,
++          "duration_s": 7e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 28,
++          "total_effort_score": 244
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          5,
++          3,
++          4,
++          0,
++          1,
++          2
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          0,
++          1,
++          0,
++          0,
++          1,
++          16,
++          18,
++          0
++        ],
++        "degree_counts": [
++          1,
++          1,
++          1,
++          1,
++          1,
++          4,
++          4,
++          3
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          2.0,
++          3.0,
++          2.0,
++          2.0,
++          3.0,
++          24.0,
++          26.0,
++          6.0
++        ],
++        "order": [
++          6,
++          5,
++          7,
++          1,
++          4,
++          0,
++          2,
++          3
++        ],
++        "relaxed_coloring": [
++          2,
++          0,
++          1,
++          2,
++          2,
++          0,
++          1,
++          2
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          0,
++          1,
++          0,
++          0,
++          1,
++          2,
++          0
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 33,
++          "constraint_checks": 235,
++          "duration_s": 8e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 42,
++          "total_effort_score": 277
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 8,
++      "density_bucket": "medium",
++      "description": "A satisfiable triangle appears after low-degree prefix nodes.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "low",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 6,
++          "first_node_degree": 4,
++          "first_node_score": 26.0,
++          "max_conflict_observations": 18,
++          "total_conflict_observations": 36
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "low",
++          "hub_node": null,
++          "max_degree": 4,
++          "min_degree": 1,
++          "n_colors": 3,
++          "n_nodes": 8
++        },
++        "selected_order": [
++          6,
++          5,
++          7,
++          1,
++          4,
++          0,
++          2,
++          3
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": [
++          0,
++          1,
++          0,
++          0,
++          1,
++          1,
++          0,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 26,
++          "duration_s": 1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 9,
++          "total_effort_score": 35
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          6,
++          5,
++          7,
++          1,
++          4,
++          0,
++          2,
++          3
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "train_late_triangle_sat",
++      "n_colors": 3,
++      "n_nodes": 8,
++      "split": "train",
++      "unguarded": {
++        "assignment": [
++          0,
++          1,
++          0,
++          0,
++          1,
++          1,
++          0,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 26,
++          "duration_s": 1.1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 9,
++          "total_effort_score": 35
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          6,
++          5,
++          7,
++          1,
++          4,
++          0,
++          2,
++          3
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          2,
++          2,
++          2,
++          2
++        ],
++        "conflict_counts": [
++          3,
++          2,
++          1,
++          0,
++          0,
++          33,
++          33,
++          33,
++          33
++        ],
++        "degree_counts": [
++          4,
++          1,
++          1,
++          1,
++          1,
++          3,
++          3,
++          3,
++          3
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          11.0,
++          4.0,
++          3.0,
++          2.0,
++          2.0,
++          55.0,
++          55.0,
++          55.0,
++          55.0
++        ],
++        "order": [
++          5,
++          6,
++          7,
++          8,
++          0,
++          1,
++          2,
++          3,
++          4
++        ],
++        "relaxed_coloring": [
++          2,
++          1,
++          0,
++          0,
++          0,
++          1,
++          1,
++          2,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 814,
++          "constraint_checks": 2451,
++          "duration_s": 0.001192,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 814,
++          "total_effort_score": 3265
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8
++        ]
++      },
++      "constraint_arities": [
++        2,
++        4
++      ],
++      "constraint_count": 5,
++      "density_bucket": "medium",
++      "description": "A high-degree star hub distracts from a late arity-4 all-different obstruction.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 5,
++          "first_node_degree": 3,
++          "first_node_score": 55.0,
++          "max_conflict_observations": 33,
++          "total_conflict_observations": 138
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2,
++            4
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": 0,
++          "max_degree": 4,
++          "min_degree": 1,
++          "n_colors": 3,
++          "n_nodes": 9
++        },
++        "selected_order": [
++          5,
++          6,
++          7,
++          8,
++          0,
++          1,
++          2,
++          3,
++          4
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 48,
++          "duration_s": 2.4e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 64
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          5,
++          6,
++          7,
++          8,
++          0,
++          1,
++          2,
++          3,
++          4
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "train_hub_distractor_k4_4",
++      "n_colors": 3,
++      "n_nodes": 9,
++      "split": "train",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 48,
++          "duration_s": 2.5e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 64
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          5,
++          6,
++          7,
++          8,
++          0,
++          1,
++          2,
++          3,
++          4
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          1,
++          1,
++          1
++        ],
++        "conflict_counts": [
++          7,
++          4,
++          0,
++          27,
++          24,
++          20
++        ],
++        "degree_counts": [
++          1,
++          1,
++          1,
++          3,
++          3,
++          3
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          9.0,
++          6.0,
++          2.0,
++          41.0,
++          38.0,
++          34.0
++        ],
++        "order": [
++          3,
++          4,
++          5,
++          0,
++          1,
++          2
++        ],
++        "relaxed_coloring": [
++          2,
++          1,
++          1,
++          2,
++          1,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          0,
++          1,
++          1,
++          2,
++          0
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 5,
++          "constraint_checks": 39,
++          "duration_s": 1.6e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 12,
++          "total_effort_score": 51
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5
++        ]
++      },
++      "constraint_arities": [
++        2,
++        3
++      ],
++      "constraint_count": 4,
++      "density_bucket": "medium",
++      "description": "A satisfiable arity-3 all-different block with sparse feeders.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "low",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 3,
++          "first_node_degree": 3,
++          "first_node_score": 41.0,
++          "max_conflict_observations": 27,
++          "total_conflict_observations": 82
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2,
++            3
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "low",
++          "hub_node": null,
++          "max_degree": 3,
++          "min_degree": 1,
++          "n_colors": 3,
++          "n_nodes": 6
++        },
++        "selected_order": [
++          3,
++          4,
++          5,
++          0,
++          1,
++          2
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": [
++          1,
++          0,
++          0,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 16,
++          "duration_s": 8e-06,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 7,
++          "total_effort_score": 23
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          3,
++          4,
++          5,
++          0,
++          1,
++          2
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "train_all_diff3_sat",
++      "n_colors": 3,
++      "n_nodes": 6,
++      "split": "train",
++      "unguarded": {
++        "assignment": [
++          1,
++          0,
++          0,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 16,
++          "duration_s": 8e-06,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 7,
++          "total_effort_score": 23
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          3,
++          4,
++          5,
++          0,
++          1,
++          2
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          12,
++          14,
++          2,
++          0,
++          1,
++          1,
++          0,
++          2,
++          2
++        ],
++        "degree_counts": [
++          1,
++          2,
++          2,
++          2,
++          2,
++          2,
++          2,
++          2,
++          1
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          14.0,
++          18.0,
++          6.0,
++          4.0,
++          5.0,
++          5.0,
++          4.0,
++          6.0,
++          4.0
++        ],
++        "order": [
++          1,
++          0,
++          2,
++          7,
++          4,
++          5,
++          3,
++          6,
++          8
++        ],
++        "relaxed_coloring": [
++          2,
++          2,
++          0,
++          3,
++          2,
++          0,
++          1,
++          2,
++          3
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 20,
++          "duration_s": 1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 10,
++          "total_effort_score": 30
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 8,
++      "density_bucket": "low",
++      "description": "A low-density 4-color chain sanity case.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "low",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 1,
++          "first_node_degree": 2,
++          "first_node_score": 18.0,
++          "max_conflict_observations": 14,
++          "total_conflict_observations": 34
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "low",
++          "even_wheel_like": false,
++          "frustration": "low",
++          "hub_node": null,
++          "max_degree": 2,
++          "min_degree": 1,
++          "n_colors": 4,
++          "n_nodes": 9
++        },
++        "selected_order": [
++          1,
++          0,
++          2,
++          7,
++          4,
++          5,
++          3,
++          6,
++          8
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": [
++          1,
++          0,
++          1,
++          2,
++          0,
++          1,
++          2,
++          0,
++          1
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 26,
++          "duration_s": 1.1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 10,
++          "total_effort_score": 36
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          1,
++          0,
++          2,
++          7,
++          4,
++          5,
++          3,
++          6,
++          8
++        ]
++      },
++      "guarded_harmful": true,
++      "harm_reasons": {
++        "guarded": [
++          "increased_effort_vs_baseline"
++        ],
++        "unguarded": [
++          "increased_effort_vs_baseline"
++        ]
++      },
++      "instance_id": "train_sparse_chain_4color_sat",
++      "n_colors": 4,
++      "n_nodes": 9,
++      "split": "train",
++      "unguarded": {
++        "assignment": [
++          1,
++          0,
++          1,
++          2,
++          0,
++          1,
++          2,
++          0,
++          1
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 26,
++          "duration_s": 1.1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 10,
++          "total_effort_score": 36
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          1,
++          0,
++          2,
++          7,
++          4,
++          5,
++          3,
++          6,
++          8
++        ]
++      },
++      "unguarded_harmful": true,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          16,
++          0,
++          16,
++          0
++        ],
++        "degree_counts": [
++          3,
++          3,
++          3,
++          3
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          22.0,
++          6.0,
++          22.0,
++          6.0
++        ],
++        "order": [
++          0,
++          2,
++          1,
++          3
++        ],
++        "relaxed_coloring": [
++          1,
++          3,
++          2,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          1,
++          2,
++          3
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 22,
++          "duration_s": 8e-06,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 5,
++          "total_effort_score": 27
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 6,
++      "density_bucket": "high",
++      "description": "Complete graph K4 under 4-coloring.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "low",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 0,
++          "first_node_degree": 3,
++          "first_node_score": 22.0,
++          "max_conflict_observations": 16,
++          "total_conflict_observations": 32
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": true,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "high",
++          "even_wheel_like": false,
++          "frustration": "low",
++          "hub_node": null,
++          "max_degree": 3,
++          "min_degree": 3,
++          "n_colors": 4,
++          "n_nodes": 4
++        },
++        "selected_order": [
++          0,
++          2,
++          1,
++          3
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": [
++          0,
++          2,
++          1,
++          3
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 22,
++          "duration_s": 8e-06,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 5,
++          "total_effort_score": 27
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          2,
++          1,
++          3
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "train_k4_4color_sat",
++      "n_colors": 4,
++      "n_nodes": 4,
++      "split": "train",
++      "unguarded": {
++        "assignment": [
++          0,
++          2,
++          1,
++          3
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 22,
++          "duration_s": 9e-06,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 5,
++          "total_effort_score": 27
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          2,
++          1,
++          3
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          2,
++          2,
++          2,
++          2
++        ],
++        "conflict_counts": [
++          3,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          3,
++          0,
++          33,
++          33,
++          33,
++          33
++        ],
++        "degree_counts": [
++          8,
++          1,
++          1,
++          1,
++          1,
++          1,
++          1,
++          1,
++          1,
++          3,
++          3,
++          3,
++          3
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          19.0,
++          2.0,
++          2.0,
++          2.0,
++          2.0,
++          2.0,
++          2.0,
++          5.0,
++          2.0,
++          55.0,
++          55.0,
++          55.0,
++          55.0
++        ],
++        "order": [
++          9,
++          10,
++          11,
++          12,
++          0,
++          7,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          8
++        ],
++        "relaxed_coloring": [
++          0,
++          2,
++          1,
++          1,
++          2,
++          2,
++          2,
++          1,
++          1,
++          1,
++          1,
++          2,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 13054,
++          "constraint_checks": 39183,
++          "duration_s": 0.019648,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 13054,
++          "total_effort_score": 52237
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8,
++          9,
++          10,
++          11,
++          12
++        ]
++      },
++      "constraint_arities": [
++        2,
++        4
++      ],
++      "constraint_count": 9,
++      "density_bucket": "low",
++      "description": "A high-degree star hub distracts from a late arity-4 all-different obstruction.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 9,
++          "first_node_degree": 3,
++          "first_node_score": 55.0,
++          "max_conflict_observations": 33,
++          "total_conflict_observations": 138
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2,
++            4
++          ],
++          "density_bucket": "low",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": 0,
++          "max_degree": 8,
++          "min_degree": 1,
++          "n_colors": 3,
++          "n_nodes": 13
++        },
++        "selected_order": [
++          9,
++          10,
++          11,
++          12,
++          0,
++          7,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          8
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 48,
++          "duration_s": 2.5e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 64
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          9,
++          10,
++          11,
++          12,
++          0,
++          7,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          8
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "dev_hub_distractor_k4_8",
++      "n_colors": 3,
++      "n_nodes": 13,
++      "split": "dev",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 48,
++          "duration_s": 2.5e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 64
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          9,
++          10,
++          11,
++          12,
++          0,
++          7,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          8
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          3,
++          13,
++          5,
++          18,
++          9,
++          11,
++          45
++        ],
++        "degree_counts": [
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          6
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          9.0,
++          19.0,
++          11.0,
++          24.0,
++          15.0,
++          17.0,
++          57.0
++        ],
++        "order": [
++          6,
++          3,
++          1,
++          5,
++          4,
++          2,
++          0
++        ],
++        "relaxed_coloring": [
++          1,
++          2,
++          1,
++          0,
++          1,
++          0,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 30,
++          "duration_s": 1.3e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 8,
++          "total_effort_score": 38
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 12,
++      "density_bucket": "medium",
++      "description": "6-rim wheel graph under 3-coloring.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "medium",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 6,
++          "first_node_degree": 6,
++          "first_node_score": 57.0,
++          "max_conflict_observations": 45,
++          "total_conflict_observations": 104
++        },
++        "fallback_reasons": [
++          "even_wheel_hub_first_hurts_exp5103_pattern"
++        ],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": true,
++          "frustration": "medium",
++          "hub_node": 6,
++          "max_degree": 6,
++          "min_degree": 3,
++          "n_colors": 3,
++          "n_nodes": 7
++        },
++        "selected_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6
++        ],
++        "use_adaptive": false
++      },
++      "guarded": {
++        "assignment": [
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 30,
++          "duration_s": 1.1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 8,
++          "total_effort_score": 38
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": [
++          "increased_effort_vs_baseline"
++        ]
++      },
++      "instance_id": "dev_wheel6_even_sat",
++      "n_colors": 3,
++      "n_nodes": 7,
++      "split": "dev",
++      "unguarded": {
++        "assignment": [
++          2,
++          1,
++          2,
++          1,
++          2,
++          1,
++          0
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 45,
++          "duration_s": 1.7e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 8,
++          "total_effort_score": 53
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          6,
++          3,
++          1,
++          5,
++          4,
++          2,
++          0
++        ]
++      },
++      "unguarded_harmful": true,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          22,
++          12,
++          15,
++          8,
++          13,
++          11,
++          17,
++          10,
++          9,
++          9,
++          66
++        ],
++        "degree_counts": [
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          10
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          28.0,
++          18.0,
++          21.0,
++          14.0,
++          19.0,
++          17.0,
++          23.0,
++          16.0,
++          15.0,
++          15.0,
++          86.0
++        ],
++        "order": [
++          10,
++          0,
++          6,
++          2,
++          4,
++          1,
++          5,
++          7,
++          8,
++          9,
++          3
++        ],
++        "relaxed_coloring": [
++          1,
++          2,
++          1,
++          1,
++          2,
++          1,
++          2,
++          1,
++          2,
++          0,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 48,
++          "duration_s": 1.7e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 12,
++          "total_effort_score": 60
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8,
++          9,
++          10
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 20,
++      "density_bucket": "medium",
++      "description": "10-rim wheel graph under 3-coloring.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "medium",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 10,
++          "first_node_degree": 10,
++          "first_node_score": 86.0,
++          "max_conflict_observations": 66,
++          "total_conflict_observations": 192
++        },
++        "fallback_reasons": [
++          "even_wheel_hub_first_hurts_exp5103_pattern"
++        ],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": true,
++          "frustration": "medium",
++          "hub_node": 10,
++          "max_degree": 10,
++          "min_degree": 3,
++          "n_colors": 3,
++          "n_nodes": 11
++        },
++        "selected_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8,
++          9,
++          10
++        ],
++        "use_adaptive": false
++      },
++      "guarded": {
++        "assignment": [
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 48,
++          "duration_s": 1.7e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 12,
++          "total_effort_score": 60
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8,
++          9,
++          10
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": [
++          "increased_effort_vs_baseline"
++        ]
++      },
++      "instance_id": "dev_wheel10_even_sat",
++      "n_colors": 3,
++      "n_nodes": 11,
++      "split": "dev",
++      "unguarded": {
++        "assignment": [
++          1,
++          2,
++          1,
++          2,
++          1,
++          2,
++          1,
++          2,
++          1,
++          2,
++          0
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 75,
++          "duration_s": 2.6e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 12,
++          "total_effort_score": 87
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          10,
++          0,
++          6,
++          2,
++          4,
++          1,
++          5,
++          7,
++          8,
++          9,
++          3
++        ]
++      },
++      "unguarded_harmful": true,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          2,
++          2,
++          2,
++          2
++        ],
++        "conflict_counts": [
++          2,
++          0,
++          0,
++          0,
++          36,
++          34,
++          34,
++          34
++        ],
++        "degree_counts": [
++          1,
++          1,
++          1,
++          1,
++          4,
++          4,
++          4,
++          4
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          4.0,
++          2.0,
++          2.0,
++          2.0,
++          60.0,
++          58.0,
++          58.0,
++          58.0
++        ],
++        "order": [
++          4,
++          5,
++          6,
++          7,
++          0,
++          1,
++          2,
++          3
++        ],
++        "relaxed_coloring": [
++          2,
++          1,
++          0,
++          0,
++          1,
++          0,
++          2,
++          1
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 643,
++          "constraint_checks": 3135,
++          "duration_s": 0.001259,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 643,
++          "total_effort_score": 3778
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7
++        ]
++      },
++      "constraint_arities": [
++        2,
++        4
++      ],
++      "constraint_count": 5,
++      "density_bucket": "medium",
++      "description": "A late arity-4 all-different obstruction after low-degree prefix nodes.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 4,
++          "first_node_degree": 4,
++          "first_node_score": 60.0,
++          "max_conflict_observations": 36,
++          "total_conflict_observations": 140
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2,
++            4
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": null,
++          "max_degree": 4,
++          "min_degree": 1,
++          "n_colors": 3,
++          "n_nodes": 8
++        },
++        "selected_order": [
++          4,
++          5,
++          6,
++          7,
++          0,
++          1,
++          2,
++          3
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 96,
++          "duration_s": 3.1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 112
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          4,
++          5,
++          6,
++          7,
++          0,
++          1,
++          2,
++          3
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "dev_late_k4_unsat",
++      "n_colors": 3,
++      "n_nodes": 8,
++      "split": "dev",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 96,
++          "duration_s": 3.4e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 112
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          4,
++          5,
++          6,
++          7,
++          0,
++          1,
++          2,
++          3
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          2,
++          2,
++          2,
++          2,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          43,
++          43,
++          41,
++          39,
++          4,
++          4,
++          2
++        ],
++        "degree_counts": [
++          4,
++          4,
++          4,
++          3,
++          1,
++          1,
++          1
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          67.0,
++          67.0,
++          65.0,
++          61.0,
++          6.0,
++          6.0,
++          4.0
++        ],
++        "order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6
++        ],
++        "relaxed_coloring": [
++          2,
++          1,
++          2,
++          0,
++          1,
++          0,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 63,
++          "duration_s": 2.8e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 79
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6
++        ]
++      },
++      "constraint_arities": [
++        2,
++        4
++      ],
++      "constraint_count": 4,
++      "density_bucket": "medium",
++      "description": "An arity-4 all-different block with only three colors.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 0,
++          "first_node_degree": 4,
++          "first_node_score": 67.0,
++          "max_conflict_observations": 43,
++          "total_conflict_observations": 176
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2,
++            4
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": null,
++          "max_degree": 4,
++          "min_degree": 1,
++          "n_colors": 3,
++          "n_nodes": 7
++        },
++        "selected_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 63,
++          "duration_s": 2.7e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 79
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "dev_all_diff4_3color_unsat",
++      "n_colors": 3,
++      "n_nodes": 7,
++      "split": "dev",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 63,
++          "duration_s": 2.8e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 79
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          2,
++          2,
++          4,
++          4,
++          2,
++          2
++        ],
++        "conflict_counts": [
++          22,
++          22,
++          41,
++          41,
++          19,
++          19
++        ],
++        "degree_counts": [
++          3,
++          3,
++          5,
++          5,
++          3,
++          3
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          44.0,
++          44.0,
++          83.0,
++          83.0,
++          41.0,
++          41.0
++        ],
++        "order": [
++          2,
++          3,
++          0,
++          1,
++          4,
++          5
++        ],
++        "relaxed_coloring": [
++          2,
++          0,
++          3,
++          1,
++          2,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          1,
++          2,
++          3,
++          0,
++          1
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 15,
++          "duration_s": 8e-06,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 7,
++          "total_effort_score": 22
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5
++        ]
++      },
++      "constraint_arities": [
++        4
++      ],
++      "constraint_count": 2,
++      "density_bucket": "high",
++      "description": "Two satisfiable overlapping arity-4 all-different constraints.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "medium",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 2,
++          "first_node_degree": 5,
++          "first_node_score": 83.0,
++          "max_conflict_observations": 41,
++          "total_conflict_observations": 164
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            4
++          ],
++          "density_bucket": "high",
++          "even_wheel_like": false,
++          "frustration": "medium",
++          "hub_node": null,
++          "max_degree": 5,
++          "min_degree": 3,
++          "n_colors": 4,
++          "n_nodes": 6
++        },
++        "selected_order": [
++          2,
++          3,
++          0,
++          1,
++          4,
++          5
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": [
++          2,
++          3,
++          0,
++          1,
++          2,
++          3
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 19,
++          "duration_s": 1.1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 7,
++          "total_effort_score": 26
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          2,
++          3,
++          0,
++          1,
++          4,
++          5
++        ]
++      },
++      "guarded_harmful": true,
++      "harm_reasons": {
++        "guarded": [
++          "increased_effort_vs_baseline"
++        ],
++        "unguarded": [
++          "increased_effort_vs_baseline"
++        ]
++      },
++      "instance_id": "dev_overlapping_all_diff4_sat",
++      "n_colors": 4,
++      "n_nodes": 6,
++      "split": "dev",
++      "unguarded": {
++        "assignment": [
++          2,
++          3,
++          0,
++          1,
++          2,
++          3
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 19,
++          "duration_s": 1.1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 7,
++          "total_effort_score": 26
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          2,
++          3,
++          0,
++          1,
++          4,
++          5
++        ]
++      },
++      "unguarded_harmful": true,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          2,
++          2,
++          2,
++          2
++        ],
++        "conflict_counts": [
++          0,
++          0,
++          0,
++          0,
++          36,
++          36,
++          36,
++          36
++        ],
++        "degree_counts": [
++          1,
++          1,
++          1,
++          1,
++          4,
++          4,
++          4,
++          4
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          2.0,
++          2.0,
++          2.0,
++          2.0,
++          60.0,
++          60.0,
++          60.0,
++          60.0
++        ],
++        "order": [
++          4,
++          5,
++          6,
++          7,
++          0,
++          1,
++          2,
++          3
++        ],
++        "relaxed_coloring": [
++          2,
++          0,
++          2,
++          2,
++          1,
++          2,
++          1,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 643,
++          "constraint_checks": 3135,
++          "duration_s": 0.001265,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 643,
++          "total_effort_score": 3778
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7
++        ]
++      },
++      "constraint_arities": [
++        2,
++        4
++      ],
++      "constraint_count": 5,
++      "density_bucket": "medium",
++      "description": "A late arity-4 all-different obstruction after low-degree prefix nodes.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 4,
++          "first_node_degree": 4,
++          "first_node_score": 60.0,
++          "max_conflict_observations": 36,
++          "total_conflict_observations": 144
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2,
++            4
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": null,
++          "max_degree": 4,
++          "min_degree": 1,
++          "n_colors": 3,
++          "n_nodes": 8
++        },
++        "selected_order": [
++          4,
++          5,
++          6,
++          7,
++          0,
++          1,
++          2,
++          3
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 96,
++          "duration_s": 3.1e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 112
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          4,
++          5,
++          6,
++          7,
++          0,
++          1,
++          2,
++          3
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "heldout_late_k4_unsat",
++      "n_colors": 3,
++      "n_nodes": 8,
++      "split": "heldout",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 16,
++          "constraint_checks": 96,
++          "duration_s": 3.4e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 16,
++          "total_effort_score": 112
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          4,
++          5,
++          6,
++          7,
++          0,
++          1,
++          2,
++          3
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          3,
++          7,
++          7,
++          6,
++          4,
++          14,
++          12,
++          19
++        ],
++        "degree_counts": [
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          7
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          9.0,
++          13.0,
++          13.0,
++          12.0,
++          10.0,
++          20.0,
++          18.0,
++          33.0
++        ],
++        "order": [
++          7,
++          5,
++          6,
++          1,
++          2,
++          3,
++          4,
++          0
++        ],
++        "relaxed_coloring": [
++          1,
++          2,
++          1,
++          2,
++          1,
++          2,
++          1,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 316,
++          "constraint_checks": 2130,
++          "duration_s": 0.000732,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 316,
++          "total_effort_score": 2446
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 14,
++      "density_bucket": "medium",
++      "description": "7-rim wheel graph under 3-coloring.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 7,
++          "first_node_degree": 7,
++          "first_node_score": 33.0,
++          "max_conflict_observations": 19,
++          "total_conflict_observations": 72
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": 7,
++          "max_degree": 7,
++          "min_degree": 3,
++          "n_colors": 3,
++          "n_nodes": 8
++        },
++        "selected_order": [
++          7,
++          5,
++          6,
++          1,
++          2,
++          3,
++          4,
++          0
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 58,
++          "constraint_checks": 432,
++          "duration_s": 0.000144,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 58,
++          "total_effort_score": 490
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          7,
++          5,
++          6,
++          1,
++          2,
++          3,
++          4,
++          0
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "heldout_wheel7_odd_unsat",
++      "n_colors": 3,
++      "n_nodes": 8,
++      "split": "heldout",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 58,
++          "constraint_checks": 432,
++          "duration_s": 0.000144,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 58,
++          "total_effort_score": 490
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          7,
++          5,
++          6,
++          1,
++          2,
++          3,
++          4,
++          0
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          1,
++          12,
++          5,
++          16,
++          11,
++          15,
++          13,
++          9,
++          54
++        ],
++        "degree_counts": [
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          8
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          7.0,
++          18.0,
++          11.0,
++          22.0,
++          17.0,
++          21.0,
++          19.0,
++          15.0,
++          70.0
++        ],
++        "order": [
++          8,
++          3,
++          5,
++          6,
++          1,
++          4,
++          7,
++          2,
++          0
++        ],
++        "relaxed_coloring": [
++          2,
++          1,
++          2,
++          1,
++          2,
++          0,
++          2,
++          1,
++          1
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 39,
++          "duration_s": 1.4e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 10,
++          "total_effort_score": 49
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 16,
++      "density_bucket": "medium",
++      "description": "8-rim wheel graph under 3-coloring.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "medium",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 8,
++          "first_node_degree": 8,
++          "first_node_score": 70.0,
++          "max_conflict_observations": 54,
++          "total_conflict_observations": 136
++        },
++        "fallback_reasons": [
++          "even_wheel_hub_first_hurts_exp5103_pattern"
++        ],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": true,
++          "frustration": "medium",
++          "hub_node": 8,
++          "max_degree": 8,
++          "min_degree": 3,
++          "n_colors": 3,
++          "n_nodes": 9
++        },
++        "selected_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8
++        ],
++        "use_adaptive": false
++      },
++      "guarded": {
++        "assignment": [
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 39,
++          "duration_s": 1.3e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 10,
++          "total_effort_score": 49
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": [
++          "increased_effort_vs_baseline"
++        ]
++      },
++      "instance_id": "heldout_wheel8_even_sat",
++      "n_colors": 3,
++      "n_nodes": 9,
++      "split": "heldout",
++      "unguarded": {
++        "assignment": [
++          2,
++          1,
++          2,
++          1,
++          2,
++          1,
++          2,
++          1,
++          0
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 60,
++          "duration_s": 2e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 10,
++          "total_effort_score": 70
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          8,
++          3,
++          5,
++          6,
++          1,
++          4,
++          7,
++          2,
++          0
++        ]
++      },
++      "unguarded_harmful": true,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          7,
++          7,
++          0,
++          1,
++          3,
++          3,
++          5,
++          18,
++          24,
++          32
++        ],
++        "degree_counts": [
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          9
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          13.0,
++          13.0,
++          6.0,
++          7.0,
++          9.0,
++          9.0,
++          11.0,
++          24.0,
++          30.0,
++          50.0
++        ],
++        "order": [
++          9,
++          8,
++          7,
++          0,
++          1,
++          6,
++          4,
++          5,
++          3,
++          2
++        ],
++        "relaxed_coloring": [
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          0,
++          1,
++          1,
++          2
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 1276,
++          "constraint_checks": 8652,
++          "duration_s": 0.002955,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 1276,
++          "total_effort_score": 9928
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7,
++          8,
++          9
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 18,
++      "density_bucket": "medium",
++      "description": "9-rim wheel graph under 3-coloring.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 9,
++          "first_node_degree": 9,
++          "first_node_score": 50.0,
++          "max_conflict_observations": 32,
++          "total_conflict_observations": 100
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": 9,
++          "max_degree": 9,
++          "min_degree": 3,
++          "n_colors": 3,
++          "n_nodes": 10
++        },
++        "selected_order": [
++          9,
++          8,
++          7,
++          0,
++          1,
++          6,
++          4,
++          5,
++          3,
++          2
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 58,
++          "constraint_checks": 456,
++          "duration_s": 0.000149,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 58,
++          "total_effort_score": 514
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          9,
++          8,
++          7,
++          0,
++          1,
++          6,
++          4,
++          5,
++          3,
++          2
++        ]
++      },
++      "guarded_harmful": false,
++      "harm_reasons": {
++        "guarded": [],
++        "unguarded": []
++      },
++      "instance_id": "heldout_wheel9_odd_unsat",
++      "n_colors": 3,
++      "n_nodes": 10,
++      "split": "heldout",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 58,
++          "constraint_checks": 456,
++          "duration_s": 0.000152,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 58,
++          "total_effort_score": 514
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          9,
++          8,
++          7,
++          0,
++          1,
++          6,
++          4,
++          5,
++          3,
++          2
++        ]
++      },
++      "unguarded_harmful": false,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          10,
++          11,
++          31,
++          9,
++          11
++        ],
++        "degree_counts": [
++          4,
++          4,
++          4,
++          4,
++          4
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          18.0,
++          19.0,
++          39.0,
++          17.0,
++          19.0
++        ],
++        "order": [
++          2,
++          1,
++          4,
++          0,
++          3
++        ],
++        "relaxed_coloring": [
++          1,
++          3,
++          3,
++          0,
++          2
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 65,
++          "constraint_checks": 680,
++          "duration_s": 0.000237,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 65,
++          "total_effort_score": 745
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 10,
++      "density_bucket": "high",
++      "description": "Complete graph K5 under 4-coloring.",
++      "exact_label": {
++        "colorable": false,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "uncolorable"
++      },
++      "expected_colorable": false,
++      "frustration": "high",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 2,
++          "first_node_degree": 4,
++          "first_node_score": 39.0,
++          "max_conflict_observations": 31,
++          "total_conflict_observations": 72
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "high",
++          "even_wheel_like": false,
++          "frustration": "high",
++          "hub_node": null,
++          "max_degree": 4,
++          "min_degree": 4,
++          "n_colors": 4,
++          "n_nodes": 5
++        },
++        "selected_order": [
++          2,
++          1,
++          4,
++          0,
++          3
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 65,
++          "constraint_checks": 732,
++          "duration_s": 0.000245,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 65,
++          "total_effort_score": 797
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          2,
++          1,
++          4,
++          0,
++          3
++        ]
++      },
++      "guarded_harmful": true,
++      "harm_reasons": {
++        "guarded": [
++          "increased_effort_vs_baseline"
++        ],
++        "unguarded": [
++          "increased_effort_vs_baseline"
++        ]
++      },
++      "instance_id": "heldout_k5_4color_unsat",
++      "n_colors": 4,
++      "n_nodes": 5,
++      "split": "heldout",
++      "unguarded": {
++        "assignment": null,
++        "certificate_quality": "exact_complete",
++        "colorable": false,
++        "effort": {
++          "backtracks": 65,
++          "constraint_checks": 732,
++          "duration_s": 0.00025,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 65,
++          "total_effort_score": 797
++        },
++        "solution_verified": true,
++        "status": "uncolorable",
++        "timeout": false,
++        "variable_order": [
++          2,
++          1,
++          4,
++          0,
++          3
++        ]
++      },
++      "unguarded_harmful": true,
++      "wrong_label": false
++    },
++    {
++      "adaptation": {
++        "arity_pressure": [
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0,
++          0
++        ],
++        "conflict_counts": [
++          19,
++          15,
++          0,
++          0,
++          3,
++          1,
++          0,
++          2
++        ],
++        "degree_counts": [
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3,
++          3
++        ],
++        "heuristic_only_solution_counted": false,
++        "heuristic_scores": [
++          25.0,
++          21.0,
++          6.0,
++          6.0,
++          9.0,
++          7.0,
++          6.0,
++          8.0
++        ],
++        "order": [
++          0,
++          1,
++          4,
++          7,
++          5,
++          2,
++          3,
++          6
++        ],
++        "relaxed_coloring": [
++          2,
++          3,
++          1,
++          3,
++          0,
++          1,
++          2,
++          0
++        ],
++        "steps": 32
++      },
++      "baseline": {
++        "assignment": [
++          0,
++          1,
++          0,
++          1,
++          2,
++          0,
++          1,
++          2
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 33,
++          "duration_s": 1.3e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 9,
++          "total_effort_score": 42
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          2,
++          3,
++          4,
++          5,
++          6,
++          7
++        ]
++      },
++      "constraint_arities": [
++        2
++      ],
++      "constraint_count": 12,
++      "density_bucket": "medium",
++      "description": "A medium-density 4-color cycle with cross chords.",
++      "exact_label": {
++        "colorable": true,
++        "source": "deterministic_backtracking_finite_domain_csp_cpu",
++        "status": "colorable"
++      },
++      "expected_colorable": true,
++      "frustration": "medium",
++      "gate_decision": {
++        "early_telemetry": {
++          "adaptive_first_node": 0,
++          "first_node_degree": 3,
++          "first_node_score": 25.0,
++          "max_conflict_observations": 19,
++          "total_conflict_observations": 40
++        },
++        "fallback_reasons": [],
++        "features": {
++          "complete_easy_coloring": false,
++          "constraint_arities": [
++            2
++          ],
++          "density_bucket": "medium",
++          "even_wheel_like": false,
++          "frustration": "medium",
++          "hub_node": null,
++          "max_degree": 3,
++          "min_degree": 3,
++          "n_colors": 4,
++          "n_nodes": 8
++        },
++        "selected_order": [
++          0,
++          1,
++          4,
++          7,
++          5,
++          2,
++          3,
++          6
++        ],
++        "use_adaptive": true
++      },
++      "guarded": {
++        "assignment": [
++          0,
++          1,
++          0,
++          2,
++          1,
++          0,
++          2,
++          1
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 34,
++          "duration_s": 1.2e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 9,
++          "total_effort_score": 43
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          4,
++          7,
++          5,
++          2,
++          3,
++          6
++        ]
++      },
++      "guarded_harmful": true,
++      "harm_reasons": {
++        "guarded": [
++          "increased_effort_vs_baseline"
++        ],
++        "unguarded": [
++          "increased_effort_vs_baseline"
++        ]
++      },
++      "instance_id": "heldout_color4_cycle_chord_sat",
++      "n_colors": 4,
++      "n_nodes": 8,
++      "split": "heldout",
++      "unguarded": {
++        "assignment": [
++          0,
++          1,
++          0,
++          2,
++          1,
++          0,
++          2,
++          1
++        ],
++        "certificate_quality": "exact_complete",
++        "colorable": true,
++        "effort": {
++          "backtracks": 0,
++          "constraint_checks": 34,
++          "duration_s": 1.2e-05,
++          "metric": "search_nodes_plus_constraint_checks",
++          "search_nodes": 9,
++          "total_effort_score": 43
++        },
++        "solution_verified": true,
++        "status": "colorable",
++        "timeout": false,
++        "variable_order": [
++          0,
++          1,
++          4,
++          7,
++          5,
++          2,
++          3,
++          6
++        ]
++      },
++      "unguarded_harmful": true,
++      "wrong_label": false
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "path": "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json",
++      "resource": "exp5103_artifact"
++    },
++    {
++      "available": true,
++      "resource": "cpu_exact_solver"
++    }
++  ],
++  "random_seed": 5117,
++  "reproducibility_checksum": "1fcafb60cd84eeb5ff56fc58114a4aad31c490b1d03f005f3da6cdf9934fcdb1",
++  "result_path": "results/experiment_5117_taco_harm_gated_scale_v469.json",
++  "run_date": "20260701",
++  "schema": "carnot.experiment_5117_taco_harm_gated_scale.v469",
++  "seeds_or_checksums": {
++    "adaptation_steps": 32,
++    "exp5103_artifact_sha256": "5581a2591d4c58e9e1d04aa5ee0da19ff531b8118b54fd6006b472379e93c570",
++    "random_seed": 5117,
++    "suite_checksum": "53d0d7c5ca4fbc2017de44ebd41941a5a37d448e05b3e3c82d2c818b9e777680"
++  },
++  "spec_refs": [
++    "REQ-VERIFY-5117",
++    "SCENARIO-VERIFY-5117"
++  ],
++  "suite_summary": {
++    "color_counts": [
++      3,
++      4
++    ],
++    "colorable_counts": {
++      "colorable": 9,
++      "uncolorable": 9
++    },
++    "constraint_arities": [
++      2,
++      3,
++      4
++    ],
++    "density_buckets": {
++      "high": 4,
++      "low": 2,
++      "medium": 12
++    },
++    "frustration": {
++      "high": 9,
++      "low": 4,
++      "medium": 5
++    },
++    "splits": {
++      "dev": 6,
++      "heldout": 6,
++      "train": 6
++    }
++  },
++  "taco_harm_gate_ready": true,
++  "tests_run": [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5117_taco_harm_gated_scale_v469.py --date 20260701",
++    ".venv/bin/pytest tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py -q",
++    ".venv/bin/pytest tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py --cov=python/carnot/experiment_5117_taco_harm_gated_scale_v469.py --cov=scripts/experiment_5117_taco_harm_gated_scale_v469.py --cov-report=term-missing --cov-fail-under=100 -q",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "unguarded_effort": {
++    "backtracks": 289,
++    "constraint_checks": 2510,
++    "duration_s": 0.000887,
++    "instances": 18,
++    "metric": "search_nodes_plus_constraint_checks",
++    "search_nodes": 366,
++    "total_effort_score": 2876
++  },
++  "wrong_label_count": 0
++}
+diff --git a/scripts/experiment_5117_taco_harm_gated_scale_v469.py b/scripts/experiment_5117_taco_harm_gated_scale_v469.py
+new file mode 100644
+index 0000000000..71862f4955
+--- /dev/null
++++ b/scripts/experiment_5117_taco_harm_gated_scale_v469.py
+@@ -0,0 +1,35 @@
++#!/usr/bin/env python3
++"""CLI entrypoint for Exp 5117 TACO harm-gated CSP scale diagnostic."""
++
++from __future__ import annotations
++
++import argparse
++from pathlib import Path
++
++from carnot.experiment_5117_taco_harm_gated_scale_v469 import (
++    REPO_ROOT,
++    main as run_main,
++)
++
++
++def main(
++    root: Path = REPO_ROOT,
++    *,
++    date: str = "20260701",
++    duration_s: float | None = None,
++    tests_run: list[str] | None = None,
++) -> Path:
++    """Run the tested Exp 5117 implementation and return the artifact path."""
++
++    return run_main(root=root, date=date, duration_s=duration_s, tests_run=tests_run)
++
++
++def _parse_args() -> argparse.Namespace:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default="20260701", help="Run label date, formatted YYYYMMDD.")
++    return parser.parse_args()
++
++
++if __name__ == "__main__":  # pragma: no cover
++    args = _parse_args()
++    main(date=args.date)
+diff --git a/tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py b/tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py
+new file mode 100644
+index 0000000000..dcb51b04b9
+--- /dev/null
++++ b/tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py
+@@ -0,0 +1,139 @@
++"""Tests for Exp 5117 TACO harm-gated CSP scale diagnostic.
++
++Spec refs: REQ-VERIFY-5117, SCENARIO-VERIFY-5117.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_5117_taco_harm_gated_scale_v469 as exp
++from scripts import experiment_5117_taco_harm_gated_scale_v469 as script_mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/verification/spec.md"
++ARTIFACT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++
++
++def test_req_verify_5117_spec_declares_harm_gate_contract() -> None:
++    """REQ-VERIFY-5117: OpenSpec anchors the harm-gated scale diagnostic."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5117") :]
++
++    for marker in (
++        "REQ-VERIFY-5117",
++        "SCENARIO-VERIFY-5117",
++        "harm-gated adaptive policy",
++        exp.RESULT_RELATIVE_PATH,
++        exp.EXPERIMENT_ID,
++        exp.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_req_verify_5117_scale_suite_varies_density_arity_and_frustration() -> None:
++    """REQ-VERIFY-5117: deterministic suite spans varied CSP structure."""
++
++    first = exp.build_scaled_csp_suite()
++    second = exp.build_scaled_csp_suite()
++
++    assert first == second
++    assert len(first) >= 18
++    assert {instance.split for instance in first} == {"train", "dev", "heldout"}
++    assert len({instance.n_colors for instance in first}) >= 2
++    assert {instance.expected_colorable for instance in first} == {False, True}
++    assert len({instance.density_bucket for instance in first}) >= 3
++    assert {arity for instance in first for arity in instance.constraint_arities} >= {2, 3, 4}
++    assert len({instance.frustration for instance in first}) >= 3
++
++
++def test_scenario_verify_5117_guard_falls_back_on_known_harmful_even_wheel() -> None:
++    """SCENARIO-VERIFY-5117: predicted harm falls back to the exact baseline order."""
++
++    family = {instance.instance_id: instance for instance in exp.build_scaled_csp_suite()}
++    solver = exp.ExactCspSolver()
++    instance = family["dev_wheel6_even_sat"]
++    result = exp.evaluate_instance(instance, solver)
++
++    assert result["unguarded_harmful"] is True
++    assert result["guarded_harmful"] is False
++    assert result["gate_decision"]["use_adaptive"] is False
++    assert result["guarded"]["variable_order"] == list(exp.baseline_order(instance))
++    assert result["guarded"]["effort"]["total_effort_score"] == result["baseline"]["effort"]["total_effort_score"]
++    assert result["baseline"]["colorable"] is result["guarded"]["colorable"]
++
++
++def test_req_verify_5117_no_wrong_label_regressions_across_all_policies() -> None:
++    """REQ-VERIFY-5117: baseline, unguarded, and guarded labels all match exact authority."""
++
++    solver = exp.ExactCspSolver()
++
++    for instance in exp.build_scaled_csp_suite():
++        row = exp.evaluate_instance(instance, solver)
++        exact_label = row["exact_label"]["colorable"]
++        assert row["wrong_label"] is False
++        assert exact_label is instance.expected_colorable
++        for arm_name in ("baseline", "unguarded", "guarded"):
++            arm = row[arm_name]
++            assert arm["colorable"] is exact_label
++            if exact_label:
++                assert arm["solution_verified"] is True
++            else:
++                assert arm["assignment"] is None
++
++
++def test_req_verify_5117_artifact_gate_metrics_and_exp5103_reproduction(tmp_path: Path) -> None:
++    """REQ-VERIFY-5117: artifact reports required fields and conservative harm reduction."""
++
++    artifact = exp.write_artifact(
++        root=tmp_path,
++        run_date="20260701",
++        duration_s=1.0,
++        tests_run=["tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py"],
++    )
++    payload = json.loads((tmp_path / exp.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert payload == artifact
++    exp.validate_artifact(artifact)
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS).issubset(artifact)
++    assert artifact["experiment_id"] == exp.EXPERIMENT_ID
++    assert artifact["milestone"] == exp.MILESTONE
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["exp5103_reproduction"]["matches_artifact"] is True
++    assert artifact["wrong_label_count"] == 0
++    assert artifact["taco_harm_gate_ready"] is True
++    assert artifact["guarded_effort"]["total_effort_score"] < artifact["baseline_effort"]["total_effort_score"]
++    assert artifact["harmful_instance_count_guarded"] < artifact["harmful_instance_count_unguarded"]
++    assert artifact["flagged_adversarial"] is False
++    assert artifact["tests_run"] == ["tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py"]
++
++
++def test_scenario_verify_5117_script_entrypoint_writes_artifact(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5117: CLI wrapper writes the terminal JSON artifact."""
++
++    path = script_mod.main(
++        root=tmp_path,
++        date="20260701",
++        duration_s=1.0,
++        tests_run=["tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py"],
++    )
++    payload = json.loads(path.read_text(encoding="utf-8"))
++
++    assert path == tmp_path / exp.RESULT_RELATIVE_PATH
++    exp.validate_artifact(payload)
++    assert payload["taco_harm_gate_ready"] is True
++
++
++def test_deliverable_file_validates_for_scenario_verify_5117() -> None:
++    """SCENARIO-VERIFY-5117: checked-in deliverable satisfies the terminal schema."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++
++    exp.validate_artifact(artifact)
++    assert artifact["experiment_id"] == exp.EXPERIMENT_ID
++    assert artifact["wrong_label_count"] == 0
+-- 
+2.55.0
+

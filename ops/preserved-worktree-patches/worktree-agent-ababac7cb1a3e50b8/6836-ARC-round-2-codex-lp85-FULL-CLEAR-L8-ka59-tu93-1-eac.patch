@@ -1,0 +1,373 @@
+From 29eeef1c5fd7699dc6e71c49aa305ab895a62b2d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 11 Jul 2026 23:34:29 -0400
+Subject: [PATCH 06836/11362] ARC round-2 (codex): lp85 FULL CLEAR (L8) +
+ ka59/tu93 +1 each
+
+Continuation of the same-day breadth-campaign game loop. lp85 reaches its
+terminal level: L7 -> L8, frame reports state=WIN and win_levels=8, no
+further level exists. tu93 -- a game with a documented prior honest null
+(v19: "richest adversary dossier of the session... genuine two-lock wall")
+-- broke through this round: it was a charger-ordering dependency puzzle,
+not a dead end, confirming v19's own "enter from above pre-fires the
+charger harmlessly" hypothesis was the right unlock direction. ka59 solved
+L5 (confirming a prior scouting pass's mod-3 phase-readout hypothesis) and
+made partial L6 progress (stuck in an isolated one-way chamber, not banked).
+
+Fixed a resolver bug found while verifying tu93: its artifact stores labels
+as bare ints, but the GameAdapter's apply() expects a JSON-object string
+({"action": N}) -- added the missing serialization step (same bug class as
+several fixes earlier this session).
+
+Every claimed win independently re-verified per project discipline (5x
+fresh env.reset() + replay via the correct GameAdapter) before being
+recorded. reproducible_total_levels: 128 -> 131 (verified against a fresh
+sum). 12 of 18 round-2 games now processed; remaining: lf52, r11l, re86,
+s5i5, su15.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   | 79 ++++++++++++++++---
+ ...experiment_4460_submission_package_prep.py | 56 +++++++++++++
+ results/outer_loop_codex_ka59_probe.json      | 23 ++++++
+ results/outer_loop_codex_lp85_probe.json      | 31 +++++---
+ results/outer_loop_codex_tu93_probe.json      | 29 +++++++
+ 5 files changed, 194 insertions(+), 24 deletions(-)
+ create mode 100644 results/outer_loop_codex_ka59_probe.json
+ create mode 100644 results/outer_loop_codex_tu93_probe.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 69735a056f..2233e81afa 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -1566,7 +1566,9 @@ games:
+     reproducibility_checksum: 0b0e0a84b86476ac8666433e7dddb7fe4bf8d7b8c3d102ab1ade076cbee4ee0f
+ - game: lp85
+   reproducibility: reproduced
+-  levels_reproduced: 7
++  levels_reproduced: 8
++  full_game_clear: true
++  final_game_state: 'GameState.WIN'
+   win_condition: 'align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite
+     at (+1,+1) via button rotations. L6-L7 add per-sprite hidden IDENTITY state (period-3
+     cycling) on top of the visible click-button mechanic -- identical rendered arrangements
+@@ -1594,6 +1596,18 @@ games:
+   - deepcopy-injection WORKS for lp85 (unlike sc25).
+   - dedup by goal-relevant key (goal positions), not full grid hash, or the search
+     explodes (26k states -> fails).
++  - 'FULL CLEAR, L8 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
++    campaign round 2): L8 has three same-colored 2x2 tokens and three targets
++    disguised as sets of four tiny 1x1 corner dots. Paired glyphs at right are
++    reversible per-row spacing controls; paired glyphs at bottom advance/
++    reverse a shared wrapping conveyor. Row settings synchronize each token''s
++    socket-arrival phase (top-left once, middle-right x3, bottom-right x3
++    makes two conveyor advances align all three simultaneously). Self-run
++    reproduction gate passed cleanly this time (reproduced=true,
++    reached_level=8) AND the outer loop independently re-verified: 5x fresh
++    env.reset() + replay via the fixed resolver, all 5 confirmed
++    reached_level=8 AND state=GameState.WIN. The winning frame itself reports
++    win_levels=8 -- lp85 is a confirmed full clear, no further level exists.'
+   - 'L6-L7 (2026-07-11, gpt-5.6-sol via codex): the action that wins a level
+     immediately renders the NEXT level, so the solved board state is never
+     externally visible -- do not search for a "solved" frame, search for the
+@@ -2074,7 +2088,7 @@ games:
+     reproducibility_checksum: 9dbb41f8fb53f3bc34ee92bc4864bc985e199933ea2407b031a6b5fe82bfea84
+ - game: tu93
+   reproducibility: reproduced
+-  levels_reproduced: 5
++  levels_reproduced: 6
+   mechanic_class: graph_explore
+   win_condition: L1-L4 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed
+     best-first search (player->goal Manhattan).
+@@ -2106,6 +2120,25 @@ games:
+     the impact cell, leaving a passage-sealing remnant; a charger''s exact
+     disarm/trigger rule was not fully pinned down. Co-location with any
+     patroller (including a mover-mover swap) is instant death.'
++  - 'L6 SOLVED round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30 breadth
++    campaign): the two-lock wall in v19 below was broken -- it is a
++    CHARGER-ORDERING dependency puzzle, not a genuine dead end. Direction-
++    marked color-8 chargers are not walls: horizontal entry REMOVES a
++    vertical charger and occupies its cell, but another aligned charger can
++    fire through that contact cell and kill the player, so chargers must be
++    cleared in dependency order. Winning order: remove the two upper vertical
++    chargers, enter the bottom corridor, remove the two supporting bottom
++    chargers, then remove the central horizontal and vertical chargers. A
++    two-move loop on the now-cleared bottom track shifts the patroller phase
++    (the c1 period-4 guard from v19) so the only return cell is safe -- this
++    confirms v19''s "entering a charger''s column from above pre-fires it
++    harmlessly" hypothesis was the right unlock direction. Independently
++    re-verified by the outer loop: 5x fresh env.reset() + replay via the
++    fixed resolver (the artifact stores bare-int labels, not the expected
++    JSON-object shape -- fixed the resolver to json.dumps({"action": ...})
++    before replay), all 5 confirmed reached_level=6,
++    state=GameState.NOT_FINISHED. L7 was visually inspected but not explored
++    (only 2 of 700 steps remained after the gate).'
+   dead_ends:
+   - 'v19 (results/outer_loop_fable5_tu93_probe.json, 2026-07-11, claude-fable-5,
+     honest null, NOT banked -- levels_reproduced stays 5): the richest
+@@ -2596,7 +2629,7 @@ games:
+     reproducibility_checksum: 80c3407496706b32fd1eaa057b1da9f5ef8b56c0be32ccc59cf80b08872a5a43
+ - game: ka59
+   reproducibility: reproduced
+-  levels_reproduced: 4
++  levels_reproduced: 5
+   win_condition: 'E3 executable-world-model L1: use the selected 3x3 block to push
+     the second block through the central wall, place the left block on the left target,
+     then place the pushed block on the right target. L2-L4 (2026-07-11,
+@@ -2647,15 +2680,35 @@ games:
+     on e-framed (color 14) blocks; color-11 plus-crosses are pushable but NOT
+     selectable. ACTION5 is a no-op. The step-budget HUD consumes 1 pixel per 2
+     actions (~128 actions/level budget), refilling on level-up.'
+-  - 'L5 (scouted this session, unsolved, not banked -- preserved for a future
+-    attempt): a genuinely new timing/extraction mechanic -- a vertical channel
+-    holds a 6-row two-color (c/d) stack whose color boundary self-cycles one row
+-    per ANY action (including sideways moves and clicks, period ~6) -- there is no
+-    way to "wait" without advancing the phase. Pushing the stack launches all 6
+-    rows with the color composition FROZEN at the strike phase. A 3-cell legend
+-    beside a 3x3 target box gives a mod-3 phase readout, presumably specifying the
+-    required delivery composition, but the exact win condition was not determined
+-    -- remaining session budget could not both crack it and gate-verify it.'
++  - 'L5 SOLVED, L6 progress round 2 (2026-07-11, gpt-5.6-sol via codex, post-wa30
++    breadth campaign): confirmed the scouted stack cycles one c-row per
++    directional action (period 6, matching the "no way to wait" finding below).
++    Approaching the stack at the correct spacing FREEZES its phase; the next
++    push launches the six-row object over the ceiling. The 3x3 modulo glyph
++    beside the socket encodes the stack''s c-row count MODULO 3 (confirms the
++    "mod-3 phase readout" hypothesis below) -- push the glyph left to clear the
++    socket, then move the selected e-framed 3x3 block left into the vacated
++    socket to win. L5 begins behind a completed-level transition frame: one
++    further action is required to reveal it. L6 adds phase-dependent transport:
++    striking the lower cycling stack can route the selected block through a
++    six-row wall into an isolated upper chamber -- explored through action 293
++    but the plus-shaped object got stuck isolated in the upper-left chamber
++    with no observable escape (three-pixel void strips make that chamber
++    one-way); stopped there rather than force it. Independently re-verified by
++    the outer loop: 5x fresh env.reset() + replay via the fixed resolver, all 5
++    confirmed reached_level=5, state=GameState.NOT_FINISHED. No L6 win banked
++    this session.'
++  - 'L5 (scouted in a PRIOR session, unsolved at the time, not banked then --
++    confirmed correct by the entry above): a genuinely new timing/extraction
++    mechanic -- a vertical channel holds a 6-row two-color (c/d) stack whose
++    color boundary self-cycles one row per ANY action (including sideways
++    moves and clicks, period ~6) -- there is no way to "wait" without
++    advancing the phase. Pushing the stack launches all 6 rows with the color
++    composition FROZEN at the strike phase. A 3-cell legend beside a 3x3
++    target box gives a mod-3 phase readout, presumably specifying the required
++    delivery composition, but the exact win condition was not determined THEN
++    (now solved, see above) -- remaining session budget could not both crack
++    it and gate-verify it.'
+ - game: ft09
+   reproducibility: reproduced
+   levels_reproduced: 6
+@@ -3396,7 +3449,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 128
++reproducible_total_levels: 131
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index a1200f7fcb..fa2cf91515 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -312,6 +312,24 @@ def resolve_replay_plan(
+             "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py",
+             _apply_ar25_label,
+         )
++    if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 5:
++        from arcengine import GameAction
++        from carnot.agentic.arc_agi3_live_adapter import _game_action
++        from carnot.experiment_4340_e3_explore_verify_plan_ka59 import _label_to_action_data
++
++        rel_path = "results/outer_loop_codex_ka59_probe.json"
++        artifact = _load_json(root / rel_path)
++        labels = [str(label) for label in artifact.get("action_sequence") or []]
++
++        def _apply_ka59_extended_label_v2(env: Any, label: str, _frame: Any) -> Any:
++            if label.startswith("6:"):
++                _, x_str, y_str = label.split(":")
++                action, data = 6, {"x": int(x_str), "y": int(y_str)}
++            else:
++                action, data = _label_to_action_data(env, label)
++            return env.step(_game_action(GameAction, action), data=data)
++
++        return ReplayPlan(game, labels, rel_path, _apply_ka59_extended_label_v2)
+     if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 4:
+         from arcengine import GameAction
+         from carnot.agentic.arc_agi3_live_adapter import _game_action
+@@ -403,6 +421,28 @@ def resolve_replay_plan(
+             exp4446.RESULT_RELATIVE_PATH,
+             exp4446.apply_vc33_label,
+         )
++    if game == "tu93" and _as_int(entry.get("levels_reproduced")) >= 6:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_codex_tu93_probe.json"
++        artifact = _load_json(root / rel_path)
++        raw_labels = artifact.get("action_sequence") or []
++        # This artifact stores labels as bare ints; the adapter's apply() does
++        # json.loads(label)["action"], which requires a JSON-object string.
++        labels = [
++            label if isinstance(label, str) else json.dumps({"action": int(label)})
++            for label in raw_labels
++        ]
++        if adapter is None:
++            raise RuntimeError("tu93 adapter missing")
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "tu93" and _as_int(entry.get("levels_reproduced")) >= 5:
+         from carnot import experiment_4436_deepen_plus_primitive_consolidation as exp4436
+         from carnot.agentic.arc_game_adapters import get_adapter
+@@ -418,6 +458,22 @@ def resolve_replay_plan(
+             adapter.apply,
+             warmup_label=adapter.warmup_label,
+         )
++    if game == "lp85" and _as_int(entry.get("levels_reproduced")) >= 8:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_codex_lp85_probe.json"
++        artifact = _load_json(root / rel_path)
++        labels = [str(label) for label in artifact.get("action_sequence") or []]
++        if adapter is None:
++            raise RuntimeError("lp85 adapter missing")
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "lp85" and _as_int(entry.get("levels_reproduced")) >= 7:
+         from carnot.agentic.arc_game_adapters import get_adapter
+ 
+diff --git a/results/outer_loop_codex_ka59_probe.json b/results/outer_loop_codex_ka59_probe.json
+new file mode 100644
+index 0000000000..fa104204d3
+--- /dev/null
++++ b/results/outer_loop_codex_ka59_probe.json
+@@ -0,0 +1,23 @@
++{
++  "game": "ka59",
++  "model": "gpt-5.6-sol",
++  "starting_level": 4,
++  "max_level_reached": 5,
++  "total_env_steps_used": 527,
++  "reproduction_verified": true,
++  "action_sequence": [
++    "4", "4", "4", "3", "2", "3", "3", "3", "C:1", "1", "4", "1", "1", "1", "1", "3", "6:19:44", "1", "1", "1", "6:44:47", "3", "3", "3", "3", "6:37:43", "2", "3", "6:17:47", "1", "1", "1", "6:19:20", "1", "1", "1", "3", "3", "3", "6:17:41", "2", "3", "3", "3", "6:41:34", "4", "4", "4", "4", "4", "2", "2", "6:37:46", "2", "2", "4", "4", "4", "4", "4", "3", "3", "3", "3", "3", "3", "3", "3", "3", "2", "2", "2", "2", "2", "2", "2", "2", "4", "1", "1", "1", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "1", "3", "3", "3", "3", "3", "3", "3", "2", "3", "3", "3", "2", "2", "6:30:33", "3", "3", "3", "3", "2", "6:18:51", "2", "2", "4", "1", "6:24:33", "6:18:33", "1", "1", "4", "4", "2", "6:21:57", "3", "1", "1", "1", "4", "6:24:27", "4", "4", "4", "4", "4", "2", "2", "6:18:48", "2", "4", "4", "4", "4", "4", "4", "1", "5", "3", "3", "2", "2", "2", "4", "1", "6:39:27", "2", "6:33:54", "1", "1", "1", "4", "2", "1", "2", "1", "2", "3", "2", "2", "2", "4", "1", "6:39:27", "3", "3", "2", "2", "2", "4", "1", "1", "1", "1", "1", "1", "1", "6:36:57", "1", "4", "6:36:21", "2", "2", "2", "4", "4", "4", "4", "4", "5", "3", "4", "3", "4", "3", "4", "3", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "2", "3", "3", "3"
++  ],
++  "levels_won_this_session": [5],
++  "novel_mechanics_found": "L5 begins behind a completed-level transition frame: one further action is required to reveal it. Its 6x6 c/d stack cycles through one additional c-row on each directional action (period 6); approaching the stack at the correct spacing freezes a phase, and the next push launches the six-row object over the ceiling. A dynamic 3x3 modulo glyph beside the socket encodes the stack's c-row count modulo 3. The glyph itself is ballistic: push it left to clear the socket, then move the selected e-framed 3x3 block left into the vacated socket to win. L6 adds phase-dependent transport: striking the lower cycling stack can route the selected block through a six-row wall into an isolated upper chamber while leaving the stack behind.",
++  "narrative": "Replayed the resolver's 201-action prefix from a fresh reset and confirmed frame.levels_completed == 4. After probing the six stack phases, I froze and extracted the L5 stack, navigated the selected block around the ceiling, launched the derived glyph left, and moved the block into its socket; the live frame advanced to 5 at action 234. I continued through action 293 on L6. The chosen lower-stack phase routed the block into the upper-right chamber, where I filled the square socket, but the three-pixel void strips made that chamber one-way and left the plus-shaped object isolated in the upper-left chamber. With no observable escape from that branch, I stopped and ran reproduce() on the 234-action prefix; it reached level 5 with reproduced=true.",
++  "gotchas": [
++    "The frame returned by the L4 winning action is still the completed L4 board even though levels_completed is already 4; one additional action reveals L5.",
++    "Directional actions advance L5/L6 color phases, but ineffective ACTION6 clicks do not; clicks can therefore hold a phase while consuming an env.step call.",
++    "A first contact with the cycling L5 stack freezes/arms it and a subsequent push performs the long extraction; apparent blocked approaches can be phase-sensitive.",
++    "In L5 the 3x3 c/d glyph begins immediately beside and partly over the socket border. Launch it left first; the selected e block then needs only the final leftward move into the cleared socket.",
++    "L6 contains three-pixel color-2 void strips, not walkable corridors. The selected 3x3 block cannot cross them or contact the upper cycling stacks through them.",
++    "L6 lower-stack transport is phase/direction sensitive and can be one-way. The phase used in this run sent the block to the upper-right chamber before the left plus target was solved, which appears to be an unrecoverable ordering trap."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+diff --git a/results/outer_loop_codex_lp85_probe.json b/results/outer_loop_codex_lp85_probe.json
+index 0c9cb44e2b..d9cfb29f32 100644
+--- a/results/outer_loop_codex_lp85_probe.json
++++ b/results/outer_loop_codex_lp85_probe.json
+@@ -1,9 +1,9 @@
+ {
+   "game": "lp85",
+   "model": "gpt-5.6-sol",
+-  "starting_level": 5,
+-  "max_level_reached": 7,
+-  "total_env_steps_used": 700,
++  "starting_level": 7,
++  "max_level_reached": 8,
++  "total_env_steps_used": 649,
+   "reproduction_verified": true,
+   "action_sequence": [
+     "{\"x\": 2, \"y\": 30}",
+@@ -101,19 +101,28 @@
+     "{\"x\": 20, \"y\": 33}",
+     "{\"x\": 20, \"y\": 20}",
+     "{\"x\": 20, \"y\": 20}",
+-    "{\"x\": 29, \"y\": 43}"
++    "{\"x\": 29, \"y\": 43}",
++    "{\"x\": 49, \"y\": 24}",
++    "{\"x\": 53, \"y\": 29}",
++    "{\"x\": 53, \"y\": 29}",
++    "{\"x\": 53, \"y\": 29}",
++    "{\"x\": 53, \"y\": 34}",
++    "{\"x\": 53, \"y\": 34}",
++    "{\"x\": 53, \"y\": 34}",
++    "{\"x\": 31, \"y\": 57}",
++    "{\"x\": 31, \"y\": 57}"
+   ],
+   "levels_won_this_session": [
+-    6,
+-    7
++    8
+   ],
+-  "novel_mechanics_found": "Level 7 has four independently cycled sprite identities with period three: identical rendered color arrangements can hide different identity states, so frame deduplication alone is insufficient. Level 8 reveals three magenta movable pieces, three magenta-corner sockets, row switches that alter relative piece spacing, and a shared wrapping conveyor that can move a piece out of a socket rather than locking it.",
+-  "narrative": "The 52-click registry prefix reproduced level 5. A prior non-registry project provenance artifact supplied an L6 candidate tail; I replayed it live, observed level 6, then independently explored L7 from rendered frames. A directed ternary Gray-code sweep over the four identity controls found the L7 win, and the resulting 96-click full sequence passed reproduce() from a fresh reset with reached_level 7. I spent the remaining budget investigating L8, routed individual magenta pieces into sockets at several intermediate states, but did not find a simultaneous three-piece alignment before the 700-step session cap.",
++  "novel_mechanics_found": "Level 8 contains three same-colored 2x2 tokens and three targets disguised as sets of four tiny 1x1 corner dots. The paired glyphs at right are reversible per-row spacing controls, while the paired glyphs at bottom advance or reverse a shared wrapping conveyor. The row settings synchronize each token's socket-arrival phase: top-left once, middle-right three times, and bottom-right three times make two conveyor advances align all three simultaneously.",
++  "narrative": "The resolver's 96-click prefix was replayed unchanged and confirmed levels_completed=7 before exploration. Frame-only probing identified the three corner-marked sockets and showed that row shifts alter relative conveyor arrival phases; after an exploratory episode hit the level action limit, a clean episode synchronized the three phases and observed the terminal level-8 win live. The reduced 105-click full line then passed reproduce() from a fresh reset with reached_level=8 and reproduced=true; the winning frame reports state=WIN and win_levels=8, so no further level remains.",
+   "gotchas": [
+     "The action that wins a level immediately renders the next level, so the solved board is not externally visible.",
+-    "The left-edge vertical strip records clicks and changes the frame even when the puzzle arrangement cycles back; exclude it when comparing visible puzzle states.",
+-    "On L7, two action histories can render identically while differing in sprite identity and win eligibility.",
+-    "On L8, the shared conveyor wraps pieces out of completed sockets; sockets do not lock pieces in place."
++    "On L8, the three targets are the 2x2 empty regions enclosed by four tiny corner pixels; the larger paired glyphs are controls, not targets.",
++    "The right-side left/right halves reversibly shift row spacing, and the bottom left/right halves advance/reverse the global conveyor.",
++    "Tokens do not lock when they enter a socket; all three must occupy their sockets on the same conveyor phase.",
++    "L8 has a bounded action counter and returns GAME_OVER when exhausted, so cancel exploratory control pairs and replay the reduced configuration on a clean episode."
+   ],
+   "solve_provenance": "live_agent_self_discovery"
+ }
+diff --git a/results/outer_loop_codex_tu93_probe.json b/results/outer_loop_codex_tu93_probe.json
+new file mode 100644
+index 0000000000..b1e01f121e
+--- /dev/null
++++ b/results/outer_loop_codex_tu93_probe.json
+@@ -0,0 +1,29 @@
++{
++  "game": "tu93",
++  "model": "gpt-5.6-sol",
++  "starting_level": 5,
++  "max_level_reached": 6,
++  "total_env_steps_used": 698,
++  "reproduction_verified": true,
++  "action_sequence": [
++    4, 2, 2, 4, 1, 4, 2, 2, 3, 3, 2, 4, 4, 2, 4, 1, 4, 2, 1, 4,
++    4, 2, 4, 4, 1, 4, 4, 1, 1, 1, 4, 1, 3, 3, 1, 3, 3, 2, 4, 2,
++    3, 3, 3, 2, 4, 2, 4, 4, 3, 4, 4, 4, 1, 1, 4, 2, 1, 3, 1, 3,
++    1, 3, 2, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 2, 2, 2, 1, 1, 2, 2,
++    4, 2, 2, 4, 4, 4, 1, 2, 1, 1, 2, 1, 3, 3, 3, 2, 2, 4, 3, 3,
++    3, 4, 4, 4, 3, 4, 2, 2, 3, 2, 3, 3, 4, 4, 3, 4, 1, 3, 3, 1,
++    3, 1, 1, 1, 3
++  ],
++  "levels_won_this_session": [6],
++  "novel_mechanics_found": "The player's otherwise-unexplained off-center color-4 pixel points left, drawing attention to charger contact behavior. Direction-marked color-8 chargers are not walls: horizontal entry removes a vertical charger and occupies its cell. However, another aligned charger can fire through that contact cell and kill the player, so L6 requires clearing chargers in dependency order. The successful order removes the two upper vertical chargers, enters the bottom corridor, removes the two supporting bottom chargers, then removes the central horizontal and vertical chargers. A two-move loop on the now-cleared bottom track shifts the patroller phase so the only return cell is safe.",
++  "narrative": "The resolver's 93-action prefix was replayed from a fresh environment and confirmed to reach levels_completed=5. Live frame-only exploration found that the prior apparent two-lock dead end is a charger-ordering puzzle: chargers can be entered and removed horizontally, but supporting chargers and a moving patroller make the naive order lethal. After clearing all six chargers in dependency order and inserting two parity-adjusting track loops, the player reached the goal and advanced to level 6. The complete 125-action sequence then passed reproduce('tu93', ..., claimed_level=6) from a fresh reset. The reproduction gate left only two of the 700 allowed steps, so level 7 could only be inspected visually, not meaningfully explored.",
++  "gotchas": [
++    "tu93 reset is parity-poisoned; every recovery used a newly constructed env and fresh scorecard rather than env.reset() reuse.",
++    "The 93-action resolver prefix reaches levels_completed=5 at prefix action 93; the verified L6 suffix is 32 actions.",
++    "Blocked moves consume the row-63 meter but do not advance patrollers, so they cannot serve as wait actions.",
++    "A charger that appears safely removable can still be backed by an aligned charger that fires through the contacted cell; clear the supporting charger first.",
++    "The bottom horizontal patroller can be visually hidden while overlapping a charger and reappear on its next tick; route using its inferred phase, not only the currently visible color-12 pixels.",
++    "The successful suffix contains two separate two-move loops: one before descending into the bottom corridor and one before climbing back out, both needed to avoid patroller collisions."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

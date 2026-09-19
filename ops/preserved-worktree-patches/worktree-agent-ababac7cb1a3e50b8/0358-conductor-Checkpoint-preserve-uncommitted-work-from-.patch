@@ -1,0 +1,43 @@
+From 54b3d57d36132376e810f756c25adc56b467c807 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 22:20:56 -0400
+Subject: [PATCH 00358/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index df3468c93e..a89a26830f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 182505, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-04T02:05:20Z"}
+\ No newline at end of file
++{"pid": 182505, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-04T02:20:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8c57ddb012..e520be1849 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7726,3 +7726,4 @@ ERROR: {
+ | 2026-06-03 19:15 UTC | Capstone .345 -- aggregate the product-banking REC | OK | 89 passed in 4.63s |
+ | 2026-06-04 02:00 UTC | Plan milestone 2026.06.346 | OK | 10 tasks proposed |
+ | 2026-06-04 02:03 UTC | Milestone 2026.06.346 activated | OK | 10 tasks queued |
++| 2026-06-04 02:18 UTC | Archive milestone .345 (PRODUCT-BANKING RECOVERY - | OK | 106 passed in 4.65s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9d5cc95c65..1393495fbc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 182505, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-04T02:05:20Z"}
+\ No newline at end of file
++{"pid": 182505, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-04T02:20:55Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

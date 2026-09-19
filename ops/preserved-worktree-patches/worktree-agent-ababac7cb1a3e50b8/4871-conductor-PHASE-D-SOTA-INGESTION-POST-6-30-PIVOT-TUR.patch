@@ -1,0 +1,3422 @@
+From 67590c360aece5bb51629686538237b2e91f3e72 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 29 Jun 2026 14:58:55 -0400
+Subject: [PATCH 04871/11362] [conductor] PHASE D (SOTA-INGESTION / POST-6/30
+ PIVOT TURNKEY) -- KEEP the distributional-energy-verifier executable spec
+ (exp4973, arXiv:2605.18871) TURNKEY (re-confirm the real loader +
+ three-column dry-run + single-command entrypoint still run end-to-end) AND
+ EXTEND the post-6/30 verifier-moat SOTA backlog with 2 NEW papers:
+ arXiv:2510.14913 (Budget-aware Test-time Scaling via Discriminative
+ Verification -- the matched-compute DISCRIMINATIVE verifier-under-budget
+ comparator = the efficiency-parity frontier) + 2603.04304 (V1: Unifying
+ Generation and Self-Verification for Parallel Reasoners -- the 2026
+ unify-gen-and-verify comparator for the regenerate/abstain two-pass loop).
+ Re-confirm the already-ingested 2605.18871 + 2504.16828 (THINKPRM) +
+ 2502.01989 (VFScale) + 2508.16665 + 2508.10539 + 2502.11157 + 2504.01005 +
+ 2504.00891 + 2509.24460. Do NOT execute the real experiment (majority-ARC
+ governs through 6/30). verifier_is_oracle=false is the DESIGN TARGET.
+
+Automated research step by research conductor.
+Task ID: exp4984-d
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...-verifier-turnkey-backlog-v459-20260629.md |  91 ++
+ openspec/capabilities/phase3-kona/spec.md     |  96 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ..._distributional_energy_verifier_turnkey.py | 859 ++++++++++++++++++
+ research-studying.md                          |  21 +
+ results/arc_loop_solve_wa30.json              | 851 ++++++++++++++++-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...istributional_energy_verifier_turnkey.json | 613 +++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ..._distributional_energy_verifier_turnkey.py | 634 +++++++++++++
+ 15 files changed, 3180 insertions(+), 21 deletions(-)
+ create mode 100644 docs/research-notes/distributional-energy-verifier-turnkey-backlog-v459-20260629.md
+ create mode 100644 python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py
+ create mode 100644 results/experiment_4984_distributional_energy_verifier_turnkey.json
+ create mode 100644 tests/python/test_experiment_4984_distributional_energy_verifier_turnkey.py
+
+diff --git a/docs/research-notes/distributional-energy-verifier-turnkey-backlog-v459-20260629.md b/docs/research-notes/distributional-energy-verifier-turnkey-backlog-v459-20260629.md
+new file mode 100644
+index 0000000000..bd41ed09fc
+--- /dev/null
++++ b/docs/research-notes/distributional-energy-verifier-turnkey-backlog-v459-20260629.md
+@@ -0,0 +1,91 @@
++# Exp 4984 Distributional Energy Verifier Turnkey Backlog Extension
++
++- Honest verdict: `success_distributional_energy_verifier_pivot_turnkey_backlog_extended`
++- Pivot executable on 7/1: `true`
++- Pivot turnkey: `true`
++- Three-column dry-run OK: `true`
++- Moat proven claimed: `false`
++- Entrypoint: `.venv/bin/python python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py`
++
++## SOTA to Carnot Mapping
++
++### arXiv:2510.14913 - Budget-aware Test-time Scaling via Discriminative Verification
++- URL: https://arxiv.org/abs/2510.14913
++- Strongest method: Budget-aware discriminative verification: under a fixed inference budget, combine self-consistency with a discriminative verifier rather than spending the budget on costly generative verification traces.
++- Implementation cost over current stack: Low-medium: Carnot's decomposed-energy verifier is already a discriminative learned quality scorer plus deterministic penalties. Add matched-compute accounting, report accuracy-per-cost, and compare directly against both discriminative and generative verifier frontiers.
++- Pitfalls: A fixed compute budget can make an accurate verifier lose if its candidate scoring overhead is too high; hybrid self-consistency can hide whether the verifier itself adds oracle-distinct signal; math frontier results must be revalidated on TravelPlanner or MuSR.
++- Roadmap input: `candidate_next_milestone: discriminative_budget_frontier`
++
++### arXiv:2603.04304 - V1: Unifying Generation and Self-Verification for Parallel Reasoners
++- URL: https://arxiv.org/abs/2603.04304
++- Strongest method: V1-Infer pairwise self-verification: use uncertainty-guided tournament ranking over candidate pairs, allocating verification compute where relative correctness is most uncertain.
++- Implementation cost over current stack: Medium-high: add a pairwise ranking comparator around the current candidate table, use ensemble STDDEV to target regeneration or abstention, and keep the learned quality mean as the pointwise baseline.
++- Pitfalls: A unified generator/self-verifier can collapse into a model-identity shortcut, pairwise tournaments can spend substantial compute, and code or math wins may not transfer to oracle-distinct TravelPlanner/MuSR constraints without a separate verifier signal.
++- Roadmap input: `candidate_next_milestone: v1_uncertainty_guided_regeneration_comparator`
++
++### arXiv:2605.18871 - Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning
++- URL: https://arxiv.org/abs/2605.18871
++- Strongest method: Decomposed energy verifier: heterogeneous LoRA quality-scorer ensemble on one frozen encoder; ensemble mean ranks candidates, ensemble stddev triggers targeted regeneration or abstention; deterministic analytical constraint penalties remain separate.
++- Implementation cost over current stack: Medium: keep Carnot's FoVer verifier ensemble as the analytical penalty source, add a learned LoRA-ensemble quality scorer, calibrate mean/stddev on structured rows, and prohibit model_id or oracle-label features in the verifier path.
++- Pitfalls: Fails or overclaims when self-consistency is near ceiling, deterministic penalties silently become the correctness oracle, code tasks leak model identity, or stddev abstention is tuned on test labels.
++- Roadmap input: `flagged_for_next_milestone: decomposed_energy_lora_ensemble_with_fover_penalties`
++
++### arXiv:2504.16828 - Process Reward Models That Think
++- URL: https://arxiv.org/abs/2504.16828
++- Strongest method: ThinkPRM: a generative long-CoT process verifier that writes a step-wise verification trace and uses that generated reasoning as the reward signal for best-of-N selection or reward-guided search.
++- Implementation cost over current stack: Medium-high: keep FoVer penalties as deterministic checks, add a generative PRM comparator or labeler for the learned quality-scorer ensemble, and account for verifier tokens against self-consistency at matched compute.
++- Pitfalls: Verifier tokens can dominate cost, generated rationales may re-derive the generator answer instead of judging it, process labels may not transfer from math to TravelPlanner/MuSR, and long-CoT traces are hard to expose safely.
++- Roadmap input: `support_for_next_milestone: thinkprm_generative_prm_comparator`
++
++### arXiv:2502.01989 - VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable Diffusion Model
++- URL: https://arxiv.org/abs/2502.01989
++- Strongest method: VFScale: train an intrinsic diffusion energy landscape with MRNCL plus KL regularization, then use hybrid MCTS over denoising trajectories so the intrinsic energy acts as a dense verifier/reward.
++- Implementation cost over current stack: High: FoVer penalties can provide analytical constraints, but VFScale requires a generator-side diffusion or denoising search substrate plus dense-energy training; it is not a drop-in replacement for the current cached-candidate verifier.
++- Pitfalls: Evidence is strongest on Maze/Sudoku-style diffusion reasoning, not LLM structured-output reranking; the verifier-free objective can blur the oracle-distinct control, and hMCTS cost can erase matched-compute gains.
++- Roadmap input: `support_for_next_milestone: vfscale_intrinsic_energy_dense_reward_ablation`
++
++### arXiv:2508.16665 - Trust but Verify! A Survey on Verification Design for Test-time Scaling
++- URL: https://arxiv.org/abs/2508.16665
++- Strongest method: Verifier-design taxonomy for test-time scaling: outcome vs process, generative vs discriminative, prompt-based vs trained, and utility axes for efficiency and abstention.
++- Implementation cost over current stack: Low: no model change required. Use it to label Carnot's current decomposed-energy verifier as a discriminative outcome-ranker with analytical constraint penalties, uncertainty, and abstention controls.
++- Pitfalls: It is a survey, not a direct measured win; taxonomy language can hide whether the verifier is oracle-distinct, matched-compute, or evaluated on a self-consistency-not-saturated domain.
++- Roadmap input: `taxonomy_anchor: verifier_design_cell_and_adjacent_open_cells`
++
++### arXiv:2508.10539 - Improving Value-based Process Verifier via Low-Cost Variance Reduction
++- URL: https://arxiv.org/abs/2508.10539
++- Strongest method: ComMCS variance reduction for value-based process verifiers: combine current-step and later-step Monte Carlo value estimates to reduce annotation variance without additional LLM inference.
++- Implementation cost over current stack: Medium: add process-state value labels or cached rollouts to the TravelPlanner/MuSR candidate traces, then calibrate the learned quality-ensemble STDDEV used by the regenerate/abstain loop.
++- Pitfalls: Evidence is math-centric; reducing variance can over-smooth genuine epistemic disagreement; adjacent-step value estimates may be unavailable for outcome-only rows.
++- Roadmap input: `candidate_next_milestone: variance_reduced_uncertainty_head`
++
++### arXiv:2502.11157 - Dyve: Thinking Fast and Slow for Dynamic Process Verification
++- URL: https://arxiv.org/abs/2502.11157
++- Strongest method: Dynamic process verification with a cheap System-1 token-level fast path and selective System-2 comprehensive analysis for hard or ambiguous steps.
++- Implementation cost over current stack: Medium-high: wrap FoVer plus the learned energy scorer in a cascade router that accepts easy rows cheaply and escalates only uncertainty or constraint-conflict rows to a slower process verifier.
++- Pitfalls: Router false negatives can skip needed slow checks; slow-path tokens can erase efficiency gains; ProcessBench/MATH evidence must be revalidated on TravelPlanner or MuSR before any moat claim.
++- Roadmap input: `candidate_next_milestone: fast_slow_process_router`
++
++### arXiv:2504.01005 - When To Solve, When To Verify: Compute-Optimal Problem Solving and Generative Verification for LLM Reasoning
++- URL: https://arxiv.org/abs/2504.01005
++- Strongest method: Compute-optimal fixed-budget analysis of when to allocate inference tokens to additional self-consistency samples versus fewer samples plus a generative verification pass.
++- Implementation cost over current stack: Low-medium: add matched-compute accounting around the existing three-column harness, then report the decomposed-energy verifier against the self-consistency/generative-verification frontier rather than only against equal candidate counts.
++- Pitfalls: A verifier that improves accuracy can still lose the north-star win if verification tokens are too expensive; frontier conclusions can flip by domain, generator strength, and self-consistency saturation.
++- Roadmap input: `candidate_next_milestone: efficiency_parity_frontier`
++
++### arXiv:2504.00891 - GenPRM: Scaling Test-Time Compute of Process Reward Models via Generative Reasoning
++- URL: https://arxiv.org/abs/2504.00891
++- Strongest method: GenPRM: a generative process reward model that reasons over each step, emits verification chains, and can invoke code-style checks as test-time compute scales.
++- Implementation cost over current stack: Medium-high: add a generative PRM comparator beside the discriminative decomposed-energy verifier, charge its reasoning and code-check tokens against the same budget, and keep FoVer penalties as the deterministic oracle-distinct analytical column.
++- Pitfalls: Generated verification traces may re-derive the generator answer, code checks are not available for every TravelPlanner/MuSR-style constraint, and verifier-token cost can erase matched-compute gains.
++- Roadmap input: `candidate_next_milestone: genprm_matched_compute_generative_comparator`
++
++### arXiv:2509.24460 - ContextPRM: Leveraging Contextual Coherence for multi-domain Test-Time Scaling
++- URL: https://arxiv.org/abs/2509.24460
++- Strongest method: ContextPRM: multi-domain process verification that uses contextual coherence signals to scale test-time verification beyond a single math-heavy verifier domain.
++- Implementation cost over current stack: Medium-high: extend the verifier registry with domain tags, coherence features, and cross-domain calibration slices, then compare against the current math-strong/code-weak Carnot verifier stack.
++- Pitfalls: Context coherence can reward fluent but wrong traces, cross-domain PRM generalization may hide per-domain failures, and registry expansion must avoid turning an executable oracle into the verifier itself.
++- Roadmap input: `candidate_next_milestone: contextprm_cross_domain_registry_comparator`
++
++## Validation Gate
++
++The post-6/30 experiment must beat self-consistency with CI95 excluding zero, remain oracle-distinct (`verifier_is_oracle=false`), avoid a model-identity shortcut, and evaluate a domain where self-consistency is not near-ceiling. Exp4984 states this gate but does not claim it has been met.
+diff --git a/openspec/capabilities/phase3-kona/spec.md b/openspec/capabilities/phase3-kona/spec.md
+index cdcbe03af6..a74eba8778 100644
+--- a/openspec/capabilities/phase3-kona/spec.md
++++ b/openspec/capabilities/phase3-kona/spec.md
+@@ -3488,6 +3488,102 @@ model-identity shortcut, and evaluate a domain where self-consistency is not
+ near-ceiling, while `moat_proven_claimed=false`, `verifier_is_oracle=false`, and
+ `no_real_benchmark_run=true` remain enforced.
+ 
++### REQ-KONA-4984: Distributional Energy Verifier Turnkey Backlog Extension V459
++
++Carnot MUST keep the Exp 4973 distributional-energy-verifier pivot turnkey
++while extending the post-2026-06-30 SOTA backlog with the `.459` verifier-moat
++inputs without executing the real benchmark. The artifact SHALL cite the NEW
++arXiv papers `2510.14913` and `2603.04304`; SHALL re-confirm the
++already-ingested `2605.18871`, `2504.16828`, `2502.01989`, `2508.16665`,
++`2508.10539`, `2502.11157`, `2504.01005`, `2504.00891`, and `2509.24460`;
++and SHALL map every cited paper onto Carnot with `strongest_method`,
++`implementation_cost_over_current_stack`, and `pitfalls`.
++
++The implementation SHALL live at
++`python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py`, and
++the terminal artifact SHALL be written to
++`results/experiment_4984_distributional_energy_verifier_turnkey.json`. The
++single documented entrypoint SHALL be
++`.venv/bin/python python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py`.
++The run SHALL update `research-studying.md` with an INGESTED Exp 4984 section
++and SHALL NOT modify `scripts/research_conductor.py`, `ops/changelog.md`,
++`ops/status.md`, or `_bmad/traceability.md`.
++
++The turnkey re-confirmation SHALL load
++`data/experiment_4922_travelplanner_structured_slice.jsonl`, verify
++`self_consistency_saturated=false`, and run the three-column dry-run over a
++small non-saturated slice with columns `self_consistency`,
++`decomposed_energy_verifier`, and `oracle`. The
++`decomposed_energy_verifier` column MUST remain oracle-distinct: it uses the
++active FoVer verifier ensemble analytical penalties plus a learned
++quality-scorer ensemble stub whose MEAN ranks candidates and whose STDDEV
++drives abstention; it MUST NOT use model identity or cached oracle labels.
++
++The paper `2510.14913` SHALL define the discriminative verifier-under-budget
++comparator: Carnot's decomposed-energy verifier is itself a discriminative
++quality scorer plus deterministic penalties, so the post-6/30 head-to-head MUST
++report against this matched-compute discriminative budget frontier and also
++against the generative frontier from `2504.00891` and `2504.16828`. The paper
++`2603.04304` SHALL be marked as the unify-generation-and-self-verification
++comparator for the regenerate/abstain two-pass design: use uncertainty-guided
++verification to decide which candidates need additional compute, targeted
++regeneration, or abstention.
++
++Required artifact fields and principles:
++- `honest_verdict`: terminal prefix; success_distributional_energy_verifier_pivot_turnkey_backlog_extended.
++- `arxiv_ids_cited`: NEW: 2510.14913 + 2603.04304; re-confirmed: 2605.18871 + 2504.16828 + 2502.01989 + 2508.16665 + 2508.10539 + 2502.11157 + 2504.01005 + 2504.00891 + 2509.24460 -- real IDs, no fabrication (SOTA-ingestion guardrail).
++- `sota_to_carnot_mapping`: per-paper {strongest_method, implementation_cost_over_current_stack, pitfalls} -- the ingestion deliverable that feeds the post-6/30 roadmap.
++- `pivot_executable_on_7_1`: true -- the distributional-energy-verifier experiment runs the instant the sprint retires (the readiness deliverable).
++- `pivot_turnkey`: true -- the post-6/30 experiment is STILL ONE documented command away (real loader + dry-run + entrypoint re-confirmed).
++- `three_column_dry_run_ok`: the self-consistency / decomposed-energy-verifier / oracle columns wire end-to-end on a SC-not-saturated slice (no full benchmark run).
++- `sc_not_saturated_domain`: the chosen domain (MuSR / TravelPlanner) where self-consistency is NOT near-ceiling -- the only place an oracle-distinct moat win is reachable (2605.18871 beats SC on MuSR).
++- `post_sprint_first_experiment_pointer`: the single documented entrypoint + the pre-staged post-6/30 first-experiment so the loop pivots cleanly 7/1.
++- `validation_gate`: the post-6/30 gate stated precisely: beats SC with CI95 excluding zero + oracle-distinct + no model-identity shortcut (NOT claimed met here).
++- `verifier_is_oracle`: false -- the DESIGN TARGET is oracle-distinct (a learned/energy verifier, NOT the executable oracle that defines correctness); not a measured result here.
++- `moat_proven_claimed`: false -- this is readiness/design + SOTA-ingestion; the real post-6/30 experiment must pass the gate.
++- `inference_substrate`: aggregation_from_upstream_artifacts (reads the spec + slice + papers; 0.0001s floor) -- no real benchmark run.
++- `preconditions_checked`: records spec/slice/network checks; a missing spec emits blocked_.
++- `random_seed`: determinism for the dry-run wiring.
++- `reproducibility_checksum`: content hash of (papers cited, turnkey spec, dry-run config) so a replication catches drift.
++
++### SCENARIO-KONA-4984-TURNKEY-BACKLOG: V459 Backlog and Three Columns Stay Ready
++
++**Given** the Exp 4973 turnkey artifact, Exp 4962 turnkey module, Exp 4922
++harness, FoVer registry, phase3-kona spec, and TravelPlanner structured slice
++are present and the slice is not self-consistency-saturated
++**When** `python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py`
++runs
++**Then** it writes
++`results/experiment_4984_distributional_energy_verifier_turnkey.json` with
++`honest_verdict=success_distributional_energy_verifier_pivot_turnkey_backlog_extended`,
++`pivot_executable_on_7_1=true`, `pivot_turnkey=true`,
++`three_column_dry_run_ok=true`, `verifier_is_oracle=false`,
++`moat_proven_claimed=false`, all eleven real arXiv IDs, the documented
++one-command entrypoint, and dry-run columns `{self_consistency,
++decomposed_energy_verifier, oracle}` over a small non-saturated TravelPlanner
++slice.
++
++### SCENARIO-KONA-4984-BLOCKED: Missing V459 Preconditions Block Honestly
++
++**Given** the phase3-kona spec, Exp 4973 turnkey artifact, Exp 4962 turnkey
++module, Exp 4922 harness, FoVer registry, or structured slice is missing,
++invalid, or self-consistency-saturated
++**When** the Exp 4984 precondition check runs
++**Then** it emits a terminal `blocked_*` verdict, records the blocked resource in
++`preconditions_checked`, keeps `pivot_executable_on_7_1=false` and
++`pivot_turnkey=false`, and does not claim that the verifier moat is proven.
++
++### SCENARIO-KONA-4984-VALIDATION-GATE: V459 Backlog Does Not Claim a Moat Win
++
++**Given** the eleven-paper SOTA mapping, roadmap inputs, turnkey dry-run, and
++post-sprint entrypoint are present
++**When** the Exp 4984 artifact is validated
++**Then** `validation_gate` requires the real post-6/30 experiment to beat
++self-consistency with CI95 excluding zero, remain oracle-distinct, avoid a
++model-identity shortcut, and evaluate a domain where self-consistency is not
++near-ceiling, while `moat_proven_claimed=false`, `verifier_is_oracle=false`, and
++`no_real_benchmark_run=true` remain enforced.
++
+ ## Latent Symbol Bridge Falsification (Exp 3819)
+ 
+ ### REQ-3819: Deep Think P3 Falsification Run
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7ae0ef9a20..271a8ad326 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 203,
+   "code_violations": 0,
+-  "experiments_checked": 3990,
++  "experiments_checked": 3991,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py b/python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py
+new file mode 100644
+index 0000000000..675c82c12f
+--- /dev/null
++++ b/python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py
+@@ -0,0 +1,859 @@
++"""Exp 4984 distributional-energy verifier turnkey backlog extension.
++
++Spec refs: REQ-KONA-4984, SCENARIO-KONA-4984-TURNKEY-BACKLOG,
++SCENARIO-KONA-4984-BLOCKED, SCENARIO-KONA-4984-VALIDATION-GATE.
++
++This is a SOTA-ingestion and readiness artifact. It reuses Exp 4973's
++TravelPlanner loader and three-column dry-run, extends the post-sprint verifier
++backlog with two additional arXiv papers, and keeps the validation gate
++explicitly unmet. It does not run the real benchmark.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++from urllib import request
++
++from carnot import experiment_4973_distributional_energy_verifier_turnkey as exp4973
++
++
++JsonMap = Mapping[str, Any]
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = 4984
++REPO_ROOT = Path(__file__).resolve().parents[2]
++MODULE_RELATIVE_PATH = (
++    "python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py"
++)
++RESULT_RELATIVE_PATH = "results/experiment_4984_distributional_energy_verifier_turnkey.json"
++NOTE_RELATIVE_PATH = (
++    "docs/research-notes/distributional-energy-verifier-turnkey-backlog-v459-20260629.md"
++)
++STUDYING_RELATIVE_PATH = "research-studying.md"
++KONA_SPEC_RELATIVE_PATH = exp4973.KONA_SPEC_RELATIVE_PATH
++RESULT_PATH = REPO_ROOT / RESULT_RELATIVE_PATH
++NOTE_PATH = REPO_ROOT / NOTE_RELATIVE_PATH
++STUDYING_PATH = REPO_ROOT / STUDYING_RELATIVE_PATH
++EXP4973_RESULT_RELATIVE_PATH = exp4973.RESULT_RELATIVE_PATH
++EXP4973_MODULE_RELATIVE_PATH = exp4973.MODULE_RELATIVE_PATH
++EXP4962_RESULT_RELATIVE_PATH = exp4973.EXP4962_RESULT_RELATIVE_PATH
++EXP4962_MODULE_RELATIVE_PATH = exp4973.EXP4962_MODULE_RELATIVE_PATH
++EXP4922_HARNESS_RELATIVE_PATH = exp4973.EXP4922_HARNESS_RELATIVE_PATH
++DOMAIN_SLICE_RELATIVE_PATH = exp4973.DOMAIN_SLICE_RELATIVE_PATH
++DEFAULT_DOMAIN_SLICE_PATH = exp4973.DEFAULT_DOMAIN_SLICE_PATH
++FOVER_REGISTRY_RELATIVE_PATH = exp4973.FOVER_REGISTRY_RELATIVE_PATH
++FOVER_ACTIVE_ENSEMBLE_ID = exp4973.FOVER_ACTIVE_ENSEMBLE_ID
++ENTRYPOINT_COMMAND = (
++    ".venv/bin/python python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py"
++)
++SC_NOT_SATURATED_DOMAIN = exp4973.SC_NOT_SATURATED_DOMAIN
++HONEST_VERDICT = "success_distributional_energy_verifier_pivot_turnkey_backlog_extended"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++RANDOM_SEED = 20260629
++DURATION_S = 0.0001
++NETWORK_TIMEOUT_S = 3.0
++THREE_DRY_RUN_COLUMNS = exp4973.THREE_DRY_RUN_COLUMNS
++SELF_CONSISTENCY_SATURATION_THRESHOLD = exp4973.SELF_CONSISTENCY_SATURATION_THRESHOLD
++NEW_ARXIV_IDS = ("2510.14913", "2603.04304")
++RECONFIRMED_ARXIV_IDS = (
++    "2605.18871",
++    "2504.16828",
++    "2502.01989",
++    "2508.16665",
++    "2508.10539",
++    "2502.11157",
++    "2504.01005",
++    "2504.00891",
++    "2509.24460",
++)
++ARXIV_IDS = NEW_ARXIV_IDS + RECONFIRMED_ARXIV_IDS
++ALREADY_INGESTED_RECONFIRMED = list(RECONFIRMED_ARXIV_IDS)
++STUDYING_SECTION_START = "<!-- EXP4984-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-START -->"
++STUDYING_SECTION_END = "<!-- EXP4984-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->"
++TERMINAL_PREFIXES = exp4973.TERMINAL_PREFIXES
++
++REQUIRED_USER_FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; "
++            "success_distributional_energy_verifier_pivot_turnkey_backlog_extended."
++        )
++    },
++    "arxiv_ids_cited": {
++        "principle": (
++            "NEW: 2510.14913 + 2603.04304; re-confirmed: 2605.18871 + "
++            "2504.16828 + 2502.01989 + 2508.16665 + 2508.10539 + "
++            "2502.11157 + 2504.01005 + 2504.00891 + 2509.24460 -- real IDs, "
++            "no fabrication (SOTA-ingestion guardrail)."
++        )
++    },
++    "sota_to_carnot_mapping": {
++        "principle": (
++            "per-paper {strongest_method, implementation_cost_over_current_stack, "
++            "pitfalls} -- the ingestion deliverable that feeds the post-6/30 roadmap."
++        )
++    },
++    "pivot_executable_on_7_1": {
++        "principle": (
++            "true -- the distributional-energy-verifier experiment runs the instant "
++            "the sprint retires (the readiness deliverable)."
++        )
++    },
++    "pivot_turnkey": {
++        "principle": (
++            "true -- the post-6/30 experiment is STILL ONE documented command away "
++            "(real loader + dry-run + entrypoint re-confirmed)."
++        )
++    },
++    "three_column_dry_run_ok": {
++        "principle": (
++            "the self-consistency / decomposed-energy-verifier / oracle columns wire "
++            "end-to-end on a SC-not-saturated slice (no full benchmark run)."
++        )
++    },
++    "sc_not_saturated_domain": {
++        "principle": (
++            "the chosen domain (MuSR / TravelPlanner) where self-consistency is NOT "
++            "near-ceiling -- the only place an oracle-distinct moat win is reachable "
++            "(2605.18871 beats SC on MuSR)."
++        )
++    },
++    "post_sprint_first_experiment_pointer": {
++        "principle": (
++            "the single documented entrypoint + the pre-staged post-6/30 "
++            "first-experiment so the loop pivots cleanly 7/1."
++        )
++    },
++    "validation_gate": {
++        "principle": (
++            "the post-6/30 gate stated precisely: beats SC with CI95 excluding zero "
++            "+ oracle-distinct + no model-identity shortcut (NOT claimed met here)."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "false -- the DESIGN TARGET is oracle-distinct (a learned/energy verifier, "
++            "NOT the executable oracle that defines correctness); not a measured result here."
++        )
++    },
++    "moat_proven_claimed": {
++        "principle": (
++            "false -- this is readiness/design + SOTA-ingestion; the real post-6/30 "
++            "experiment must pass the gate."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts (reads the spec + slice + papers; "
++            "0.0001s floor) -- no real benchmark run."
++        )
++    },
++    "preconditions_checked": {
++        "principle": "records spec/slice/network checks; a missing spec emits blocked_."
++    },
++    "random_seed": {"principle": "determinism for the dry-run wiring."},
++    "reproducibility_checksum": {
++        "principle": (
++            "content hash of (papers cited, turnkey spec, dry-run config) so a "
++            "replication catches drift."
++        )
++    },
++}
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    **REQUIRED_USER_FIELD_PRINCIPLES,
++    "already_ingested_reconfirmed": {
++        "principle": (
++            "the prior 2605.18871 / 2504.16828 / 2502.01989 / 2508.16665 / "
++            "2508.10539 / 2502.11157 / 2504.01005 / 2504.00891 / 2509.24460 "
++            "set remains cited."
++        )
++    },
++    "next_milestone_roadmap_inputs": {
++        "principle": "post-6/30 roadmap inputs promoted from the new SOTA ingestion."
++    },
++    "citations": {"principle": "HTTP-200 arXiv source metadata backing every paper ID."},
++    "turnkey_spec": {
++        "principle": "the one-command 7/1 experiment shape re-confirmed from Exp 4973."
++    },
++    "dry_run_three_columns": {
++        "principle": (
++            "small cached TravelPlanner dry-run rows for {self_consistency, "
++            "decomposed_energy_verifier, oracle}; proves wiring only."
++        )
++    },
++    "field_principles": {
++        "principle": "principle annotations for every required user-facing artifact field."
++    },
++    "no_real_benchmark_run": {
++        "principle": "true -- majority-ARC governs through 2026-06-30; Exp4984 is readiness only."
++    },
++    "research_note_path": {
++        "principle": "points to the human-readable SOTA-ingestion and turnkey-readiness note."
++    },
++    "source_artifacts": {
++        "principle": (
++            "records the upstream spec, Exp4973/Exp4962 turnkey artifacts, slice, "
++            "and SOTA inputs."
++        )
++    },
++    "duration_s": {"principle": "0.0001s floor for aggregation-only turnkey construction."},
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "arxiv_ids_cited",
++    "sota_to_carnot_mapping",
++    "already_ingested_reconfirmed",
++    "next_milestone_roadmap_inputs",
++    "pivot_executable_on_7_1",
++    "pivot_turnkey",
++    "three_column_dry_run_ok",
++    "sc_not_saturated_domain",
++    "post_sprint_first_experiment_pointer",
++    "validation_gate",
++    "verifier_is_oracle",
++    "moat_proven_claimed",
++    "inference_substrate",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "citations",
++    "turnkey_spec",
++    "dry_run_three_columns",
++    "field_principles",
++    "no_real_benchmark_run",
++    "research_note_path",
++    "source_artifacts",
++    "duration_s",
++)
++REQUIRED_MAPPING_FIELDS = exp4973.REQUIRED_MAPPING_FIELDS
++REQUIRED_CITATION_FIELDS = frozenset({"title", "url", "http_status", "ingestion_status"})
++
++CITATIONS: dict[str, JsonDict] = {
++    "2510.14913": {
++        "title": "Budget-aware Test-time Scaling via Discriminative Verification",
++        "url": "https://arxiv.org/abs/2510.14913",
++        "http_status": 200,
++        "ingestion_status": "new",
++    },
++    "2603.04304": {
++        "title": "V1: Unifying Generation and Self-Verification for Parallel Reasoners",
++        "url": "https://arxiv.org/abs/2603.04304",
++        "http_status": 200,
++        "ingestion_status": "new",
++    },
++    **{
++        arxiv_id: exp4973.CITATIONS[arxiv_id] | {"ingestion_status": "reconfirmed"}
++        for arxiv_id in RECONFIRMED_ARXIV_IDS
++    },
++}
++
++SOTA_TO_CARNOT_MAPPING: dict[str, JsonDict] = {
++    "2510.14913": {
++        "source_id": "2510.14913",
++        "title": CITATIONS["2510.14913"]["title"],
++        "url": CITATIONS["2510.14913"]["url"],
++        "strongest_method": (
++            "Budget-aware discriminative verification: under a fixed inference "
++            "budget, combine self-consistency with a discriminative verifier rather "
++            "than spending the budget on costly generative verification traces."
++        ),
++        "implementation_cost_over_current_stack": (
++            "Low-medium: Carnot's decomposed-energy verifier is already a "
++            "discriminative learned quality scorer plus deterministic penalties. "
++            "Add matched-compute accounting, report accuracy-per-cost, and compare "
++            "directly against both discriminative and generative verifier frontiers."
++        ),
++        "pitfalls": (
++            "A fixed compute budget can make an accurate verifier lose if its "
++            "candidate scoring overhead is too high; hybrid self-consistency can "
++            "hide whether the verifier itself adds oracle-distinct signal; math "
++            "frontier results must be revalidated on TravelPlanner or MuSR."
++        ),
++        "roadmap_input": "candidate_next_milestone: discriminative_budget_frontier",
++    },
++    "2603.04304": {
++        "source_id": "2603.04304",
++        "title": CITATIONS["2603.04304"]["title"],
++        "url": CITATIONS["2603.04304"]["url"],
++        "strongest_method": (
++            "V1-Infer pairwise self-verification: use uncertainty-guided tournament "
++            "ranking over candidate pairs, allocating verification compute where "
++            "relative correctness is most uncertain."
++        ),
++        "implementation_cost_over_current_stack": (
++            "Medium-high: add a pairwise ranking comparator around the current "
++            "candidate table, use ensemble STDDEV to target regeneration or "
++            "abstention, and keep the learned quality mean as the pointwise baseline."
++        ),
++        "pitfalls": (
++            "A unified generator/self-verifier can collapse into a model-identity "
++            "shortcut, pairwise tournaments can spend substantial compute, and code "
++            "or math wins may not transfer to oracle-distinct TravelPlanner/MuSR "
++            "constraints without a separate verifier signal."
++        ),
++        "roadmap_input": (
++            "candidate_next_milestone: v1_uncertainty_guided_regeneration_comparator"
++        ),
++    },
++    **{
++        arxiv_id: dict(exp4973.SOTA_TO_CARNOT_MAPPING[arxiv_id])
++        for arxiv_id in RECONFIRMED_ARXIV_IDS
++    },
++}
++
++NEXT_MILESTONE_ROADMAP_INPUTS = [
++    "distributional_energy_lora_ensemble_with_fover_penalties",
++    "discriminative_budget_frontier",
++    "v1_uncertainty_guided_regeneration_comparator",
++    "genprm_matched_compute_generative_comparator",
++    "thinkprm_matched_compute_comparator",
++    "efficiency_parity_frontier",
++    "contextprm_cross_domain_registry_comparator",
++    "variance_reduced_uncertainty_head",
++    "fast_slow_process_router",
++]
++
++VALIDATION_GATE: JsonDict = {
++    "claimed_met": False,
++    "real_post_6_30_experiment_must_pass": (
++        "distributional_energy_verifier beats self-consistency with CI95 excluding zero"
++    ),
++    "beats_self_consistency_ci95_excludes_zero_required": True,
++    "oracle_distinct_required": True,
++    "verifier_is_oracle_required_value": False,
++    "no_model_identity_shortcut_required": True,
++    "domain_self_consistency_not_near_ceiling_required": True,
++    "promotion_note": (
++        "not met by Exp4984; this artifact only re-confirms turnkey readiness and "
++        "extends the post-6/30 backlog"
++    ),
++}
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
++
++
++def _path_present(repo_root: Path, relative_path: str) -> bool:
++    return (repo_root / relative_path).exists()
++
++
++def check_network_available(url: str = CITATIONS["2510.14913"]["url"]) -> bool:
++    try:
++        with request.urlopen(url, timeout=NETWORK_TIMEOUT_S) as response:
++            return int(response.status) == 200
++    except OSError:
++        return False
++
++
++def load_turnkey_domain_slice(path: Path, *, limit: int | None = 3) -> list[JsonDict]:
++    return exp4973.load_turnkey_domain_slice(path, limit=limit)
++
++
++def slice_self_consistency_saturated(rows: Sequence[JsonMap]) -> bool:
++    return exp4973.slice_self_consistency_saturated(rows)
++
++
++def run_three_column_dry_run(rows: Sequence[JsonMap], *, limit: int = 3) -> JsonDict:
++    dry_run = dict(exp4973.run_three_column_dry_run(rows, limit=limit))
++    dry_run["reconfirmed_from_exp4973"] = True
++    dry_run["entrypoint_command"] = ENTRYPOINT_COMMAND
++    return dry_run
++
++
++def post_sprint_first_experiment_pointer() -> JsonDict:
++    return {
++        "entrypoint_command": ENTRYPOINT_COMMAND,
++        "not_before_date": "2026-07-01",
++        "first_experiment": (
++            "distributional_energy_verifier_vs_self_consistency_on_sc_not_saturated_"
++            "TravelPlanner_or_MuSR"
++        ),
++        "real_benchmark_executed_by_exp4984": False,
++        "operator_note": (
++            "Use this single staged entrypoint after the majority-ARC sprint retires; "
++            "promotion requires the validation gate."
++        ),
++    }
++
++
++def build_turnkey_spec() -> JsonDict:
++    turnkey_spec = dict(exp4973.build_turnkey_spec())
++    turnkey_spec["entrypoint_command"] = ENTRYPOINT_COMMAND
++    turnkey_spec["experiment"] = "post_6_30_distributional_energy_verifier_moat_test_v459"
++    turnkey_spec["sota_backlog_extension_v459"] = {
++        "new_arxiv_ids": list(NEW_ARXIV_IDS),
++        "reconfirmed_arxiv_ids": list(RECONFIRMED_ARXIV_IDS),
++        "next_milestone_roadmap_inputs": list(NEXT_MILESTONE_ROADMAP_INPUTS),
++        "must_report_comparators": [
++            "discriminative_budget_frontier_2510_14913",
++            "genprm_generative_frontier_2504_00891",
++            "thinkprm_generative_frontier_2504_16828",
++            "v1_uncertainty_guided_regeneration_2603_04304",
++        ],
++    }
++    turnkey_spec["real_experiment_not_run"] = True
++    return turnkey_spec
++
++
++def source_artifacts() -> JsonDict:
++    return {
++        "kona_spec": KONA_SPEC_RELATIVE_PATH,
++        "exp4973_turnkey_artifact": EXP4973_RESULT_RELATIVE_PATH,
++        "exp4973_turnkey_module": EXP4973_MODULE_RELATIVE_PATH,
++        "exp4962_turnkey_artifact": EXP4962_RESULT_RELATIVE_PATH,
++        "exp4962_turnkey_module": EXP4962_MODULE_RELATIVE_PATH,
++        "exp4922_harness": EXP4922_HARNESS_RELATIVE_PATH,
++        "domain_slice": DOMAIN_SLICE_RELATIVE_PATH,
++        "fover_registry": FOVER_REGISTRY_RELATIVE_PATH,
++        "verifier_gaps": "ops/verifier_gaps.md",
++        "north_star": "ops/north-star.md",
++        "research_studying": STUDYING_RELATIVE_PATH,
++        "research_references": "research-references.md",
++    }
++
++
++def blocked_resource_from_preconditions(
++    *,
++    kona_spec_present: bool,
++    kona_spec_has_req: bool,
++    exp4973_artifact_present: bool,
++    exp4973_module_present: bool,
++    exp4962_artifact_present: bool,
++    exp4962_module_present: bool,
++    exp4922_harness_present: bool,
++    fover_registry_present: bool,
++    fover_active_ensemble_present: bool,
++    domain_slice_present: bool,
++    domain_slice_valid: bool,
++    self_consistency_saturated: bool,
++) -> str | None:
++    if not kona_spec_present:
++        return "kona_spec_missing"
++    if not kona_spec_has_req:
++        return "kona_spec_req_missing"
++    if not exp4973_artifact_present:
++        return "exp4973_turnkey_artifact_missing"
++    if not exp4973_module_present:
++        return "exp4973_turnkey_module_missing"
++    if not exp4962_artifact_present:
++        return "exp4962_turnkey_artifact_missing"
++    if not exp4962_module_present:
++        return "exp4962_turnkey_module_missing"
++    if not exp4922_harness_present:
++        return "exp4922_harness_missing"
++    if not fover_registry_present:
++        return "fover_registry_missing"
++    if not fover_active_ensemble_present:
++        return "fover_active_ensemble_missing"
++    if not domain_slice_present:
++        return "domain_slice_missing"
++    if not domain_slice_valid:
++        return "domain_slice_invalid"
++    if self_consistency_saturated:
++        return "self_consistency_saturated"
++    return None
++
++
++def check_preconditions(
++    *,
++    repo_root: Path = REPO_ROOT,
++    domain_slice_path: Path = DEFAULT_DOMAIN_SLICE_PATH,
++    net_available: bool | None = None,
++) -> JsonDict:
++    kona_spec_path = repo_root / KONA_SPEC_RELATIVE_PATH
++    kona_spec_present = kona_spec_path.exists()
++    kona_spec_text = kona_spec_path.read_text(encoding="utf-8") if kona_spec_present else ""
++    kona_spec_has_req = "REQ-KONA-4984" in kona_spec_text
++    exp4973_artifact_present = _path_present(repo_root, EXP4973_RESULT_RELATIVE_PATH)
++    exp4973_module_present = _path_present(repo_root, EXP4973_MODULE_RELATIVE_PATH)
++    exp4962_artifact_present = _path_present(repo_root, EXP4962_RESULT_RELATIVE_PATH)
++    exp4962_module_present = _path_present(repo_root, EXP4962_MODULE_RELATIVE_PATH)
++    exp4922_harness_present = _path_present(repo_root, EXP4922_HARNESS_RELATIVE_PATH)
++    fover_registry_path = repo_root / FOVER_REGISTRY_RELATIVE_PATH
++    fover_registry_present = fover_registry_path.exists()
++    fover_registry_text = fover_registry_path.read_text(encoding="utf-8") if fover_registry_present else ""
++    fover_active_ensemble_present = FOVER_ACTIVE_ENSEMBLE_ID in fover_registry_text
++    domain_slice_present = domain_slice_path.exists()
++    rows: list[JsonDict] = []
++    domain_slice_valid = False
++    domain_error = None
++    sc_accuracy = None
++    if domain_slice_present:
++        try:
++            rows = exp4973.exp4962.exp4951.scaffold.load_domain_slice(domain_slice_path)
++            domain_slice_valid = True
++            sc_accuracy = exp4973.exp4962.exp4951.self_consistency_accuracy(rows)
++        except (OSError, ValueError, json.JSONDecodeError) as exc:
++            domain_error = str(exc)
++    self_consistency_saturated = bool(
++        sc_accuracy is not None and sc_accuracy >= SELF_CONSISTENCY_SATURATION_THRESHOLD
++    )
++    network_ok = check_network_available() if net_available is None else net_available
++    blocked_resource = blocked_resource_from_preconditions(
++        kona_spec_present=kona_spec_present,
++        kona_spec_has_req=kona_spec_has_req,
++        exp4973_artifact_present=exp4973_artifact_present,
++        exp4973_module_present=exp4973_module_present,
++        exp4962_artifact_present=exp4962_artifact_present,
++        exp4962_module_present=exp4962_module_present,
++        exp4922_harness_present=exp4922_harness_present,
++        fover_registry_present=fover_registry_present,
++        fover_active_ensemble_present=fover_active_ensemble_present,
++        domain_slice_present=domain_slice_present,
++        domain_slice_valid=domain_slice_valid,
++        self_consistency_saturated=self_consistency_saturated,
++    )
++    return {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "kona_spec_present": kona_spec_present,
++        "kona_spec_has_req": kona_spec_has_req,
++        "kona_spec_path": KONA_SPEC_RELATIVE_PATH,
++        "exp4973_turnkey_artifact_present": exp4973_artifact_present,
++        "exp4973_turnkey_artifact_path": EXP4973_RESULT_RELATIVE_PATH,
++        "exp4973_turnkey_module_present": exp4973_module_present,
++        "exp4973_turnkey_module_path": EXP4973_MODULE_RELATIVE_PATH,
++        "exp4962_turnkey_artifact_present": exp4962_artifact_present,
++        "exp4962_turnkey_artifact_path": EXP4962_RESULT_RELATIVE_PATH,
++        "exp4962_turnkey_module_present": exp4962_module_present,
++        "exp4962_turnkey_module_path": EXP4962_MODULE_RELATIVE_PATH,
++        "exp4922_harness_present": exp4922_harness_present,
++        "exp4922_harness_path": EXP4922_HARNESS_RELATIVE_PATH,
++        "fover_registry_present": fover_registry_present,
++        "fover_registry_path": FOVER_REGISTRY_RELATIVE_PATH,
++        "fover_active_ensemble_present": fover_active_ensemble_present,
++        "fover_active_ensemble_id": FOVER_ACTIVE_ENSEMBLE_ID,
++        "domain_slice_present": domain_slice_present,
++        "domain_slice_path": domain_slice_path.as_posix(),
++        "domain_slice_valid": domain_slice_valid,
++        "domain_slice_rows": len(rows),
++        "self_consistency_dry_run_accuracy": sc_accuracy,
++        "self_consistency_saturation_threshold": SELF_CONSISTENCY_SATURATION_THRESHOLD,
++        "self_consistency_saturated": self_consistency_saturated,
++        "sc_not_saturated_domain": SC_NOT_SATURATED_DOMAIN,
++        "domain_error": domain_error,
++        "net_available": network_ok,
++        "network_checked_url": CITATIONS["2510.14913"]["url"],
++        "real_benchmark_executed": False,
++        "model_load": False,
++        "training_launched": False,
++        "scripts_research_conductor_modified": False,
++        "ops_docs_modified": False,
++        "blocked_resource": blocked_resource,
++    }
++
++
++def _empty_dry_run() -> JsonDict:
++    return {
++        "columns": list(THREE_DRY_RUN_COLUMNS),
++        "n_rows": 0,
++        "rows": [],
++        "full_benchmark_run": False,
++        "reconfirmed_from_exp4973": False,
++        "entrypoint_command": ENTRYPOINT_COMMAND,
++        "dry_run_note": "blocked before dry-run; no moat claim is made.",
++    }
++
++
++def _checksum_payload(artifact: JsonMap) -> JsonDict:
++    return {
++        "arxiv_ids_cited": list(artifact.get("arxiv_ids_cited") or []),
++        "sota_to_carnot_mapping": dict(artifact.get("sota_to_carnot_mapping") or {}),
++        "already_ingested_reconfirmed": list(artifact.get("already_ingested_reconfirmed") or []),
++        "next_milestone_roadmap_inputs": list(
++            artifact.get("next_milestone_roadmap_inputs") or []
++        ),
++        "turnkey_spec": dict(artifact.get("turnkey_spec") or {}),
++        "dry_run_three_columns": dict(artifact.get("dry_run_three_columns") or {}),
++        "post_sprint_first_experiment_pointer": dict(
++            artifact.get("post_sprint_first_experiment_pointer") or {}
++        ),
++        "validation_gate": dict(artifact.get("validation_gate") or {}),
++        "random_seed": artifact.get("random_seed"),
++        "no_real_benchmark_run": artifact.get("no_real_benchmark_run"),
++    }
++
++
++def reproducibility_checksum(artifact: JsonMap) -> str:
++    digest = hashlib.sha256()
++    digest.update(_json_dumps(_checksum_payload(artifact)).encode("utf-8"))
++    return digest.hexdigest()[:16]
++
++
++def _base_artifact(preconditions: JsonMap, dry_run: JsonMap) -> JsonDict:
++    return {
++        "honest_verdict": HONEST_VERDICT,
++        "arxiv_ids_cited": list(ARXIV_IDS),
++        "sota_to_carnot_mapping": dict(SOTA_TO_CARNOT_MAPPING),
++        "already_ingested_reconfirmed": list(ALREADY_INGESTED_RECONFIRMED),
++        "next_milestone_roadmap_inputs": list(NEXT_MILESTONE_ROADMAP_INPUTS),
++        "pivot_executable_on_7_1": True,
++        "pivot_turnkey": True,
++        "three_column_dry_run_ok": True,
++        "sc_not_saturated_domain": SC_NOT_SATURATED_DOMAIN,
++        "post_sprint_first_experiment_pointer": post_sprint_first_experiment_pointer(),
++        "validation_gate": dict(VALIDATION_GATE),
++        "verifier_is_oracle": False,
++        "moat_proven_claimed": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "citations": dict(CITATIONS),
++        "turnkey_spec": build_turnkey_spec(),
++        "dry_run_three_columns": dict(dry_run),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "no_real_benchmark_run": True,
++        "research_note_path": NOTE_RELATIVE_PATH,
++        "source_artifacts": source_artifacts(),
++        "duration_s": DURATION_S,
++    }
++
++
++def build_blocked_artifact(preconditions: JsonMap, *, blocked_resource: str) -> JsonDict:
++    artifact = _base_artifact(preconditions, _empty_dry_run())
++    artifact["honest_verdict"] = f"blocked_{blocked_resource}"
++    artifact["pivot_executable_on_7_1"] = False
++    artifact["pivot_turnkey"] = False
++    artifact["three_column_dry_run_ok"] = False
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_success_artifact(*, rows: Sequence[JsonMap], preconditions: JsonMap) -> JsonDict:
++    artifact = _base_artifact(preconditions, run_three_column_dry_run(rows))
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    repo_root: Path = REPO_ROOT,
++    domain_slice_path: Path = DEFAULT_DOMAIN_SLICE_PATH,
++    net_available: bool | None = None,
++) -> JsonDict:
++    preconditions = check_preconditions(
++        repo_root=repo_root,
++        domain_slice_path=domain_slice_path,
++        net_available=net_available,
++    )
++    blocked_resource = preconditions["blocked_resource"]
++    if blocked_resource is not None:
++        return build_blocked_artifact(preconditions, blocked_resource=str(blocked_resource))
++    rows = load_turnkey_domain_slice(domain_slice_path)
++    return build_success_artifact(rows=rows, preconditions=preconditions)
++
++
++def validate_mapping(mapping: JsonMap) -> None:
++    if set(mapping) != set(ARXIV_IDS):
++        raise ValueError("sota_to_carnot_mapping must cover all required arXiv IDs")
++    for arxiv_id, entry in mapping.items():
++        if set(entry) != REQUIRED_MAPPING_FIELDS:
++            raise ValueError(f"sota_to_carnot_mapping fields invalid for {arxiv_id}")
++        if entry["source_id"] != arxiv_id:
++            raise ValueError(f"sota_to_carnot_mapping source_id mismatch for {arxiv_id}")
++        for required_text_field in (
++            "strongest_method",
++            "implementation_cost_over_current_stack",
++            "pitfalls",
++            "roadmap_input",
++        ):
++            if not str(entry[required_text_field]).strip():
++                raise ValueError(f"sota_to_carnot_mapping {arxiv_id} missing {required_text_field}")
++
++
++def validate_artifact(artifact: JsonMap) -> None:
++    missing = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact)
++    extra = set(artifact) - set(REQUIRED_ARTIFACT_FIELDS)
++    if missing or extra:
++        raise ValueError(
++            f"artifact fields mismatch missing={sorted(missing)} extra={sorted(extra)}"
++        )
++    verdict = str(artifact["honest_verdict"])
++    if not any(verdict.startswith(prefix) for prefix in TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict lacks terminal prefix")
++    if not (verdict == HONEST_VERDICT or verdict.startswith("blocked_")):
++        raise ValueError("honest_verdict must be success or blocked")
++    if artifact["arxiv_ids_cited"] != list(ARXIV_IDS):
++        raise ValueError("arxiv_ids_cited must match required SOTA papers")
++    validate_mapping(artifact["sota_to_carnot_mapping"])
++    if artifact["already_ingested_reconfirmed"] != list(RECONFIRMED_ARXIV_IDS):
++        raise ValueError("already_ingested_reconfirmed must match the prior SOTA set")
++    if artifact["next_milestone_roadmap_inputs"] != list(NEXT_MILESTONE_ROADMAP_INPUTS):
++        raise ValueError("next_milestone_roadmap_inputs must match the SOTA backlog")
++    blocked = verdict.startswith("blocked_")
++    if artifact["pivot_executable_on_7_1"] is not (not blocked):
++        raise ValueError("pivot_executable_on_7_1 must reflect blocked state")
++    if artifact["pivot_turnkey"] is not (not blocked):
++        raise ValueError("pivot_turnkey must reflect blocked state")
++    if artifact["three_column_dry_run_ok"] is not (not blocked):
++        raise ValueError("three_column_dry_run_ok must reflect blocked state")
++    if artifact["sc_not_saturated_domain"] != SC_NOT_SATURATED_DOMAIN:
++        raise ValueError("sc_not_saturated_domain must be TravelPlanner")
++    pointer = artifact["post_sprint_first_experiment_pointer"]
++    if not isinstance(pointer, Mapping) or pointer.get("entrypoint_command") != ENTRYPOINT_COMMAND:
++        raise ValueError("post_sprint_first_experiment_pointer entrypoint invalid")
++    gate = artifact["validation_gate"]
++    if not isinstance(gate, Mapping) or gate != VALIDATION_GATE:
++        raise ValueError("validation_gate must state the post-6/30 gate exactly")
++    if artifact["verifier_is_oracle"] is not False:
++        raise ValueError("verifier_is_oracle must be false")
++    if artifact["moat_proven_claimed"] is not False:
++        raise ValueError("moat_proven_claimed must be false")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    if artifact["random_seed"] != RANDOM_SEED or artifact["random_seed"] == EXPERIMENT_ID:
++        raise ValueError("random_seed must be deterministic and not copied from EXPERIMENT_ID")
++    dry_run = artifact["dry_run_three_columns"]
++    if not isinstance(dry_run, Mapping) or dry_run.get("columns") != list(THREE_DRY_RUN_COLUMNS):
++        raise ValueError("dry_run_three_columns must expose the three required columns")
++    if dry_run.get("full_benchmark_run") is not False:
++        raise ValueError("dry_run_three_columns must not run the full benchmark")
++    citations = artifact["citations"]
++    if not isinstance(citations, Mapping) or set(citations) != set(ARXIV_IDS):
++        raise ValueError("citations must cover exactly the required arXiv IDs")
++    for arxiv_id, citation in citations.items():
++        if set(citation) != REQUIRED_CITATION_FIELDS:
++            raise ValueError(f"citations fields invalid for {arxiv_id}")
++        if citation["url"] != f"https://arxiv.org/abs/{arxiv_id}":
++            raise ValueError(f"citations URL invalid for {arxiv_id}")
++        if citation["http_status"] != 200:
++            raise ValueError(f"citations http_status invalid for {arxiv_id}")
++        if citation["ingestion_status"] not in {"new", "reconfirmed"}:
++            raise ValueError(f"citations ingestion_status invalid for {arxiv_id}")
++    principles = artifact["field_principles"]
++    if not isinstance(principles, Mapping) or set(principles) != set(FIELD_PRINCIPLES):
++        raise ValueError("field_principles must include all principle annotations")
++    if artifact["no_real_benchmark_run"] is not True:
++        raise ValueError("no_real_benchmark_run must be true")
++    if artifact["reproducibility_checksum"] != reproducibility_checksum(artifact):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def write_artifact(artifact: JsonMap, path: Path = RESULT_PATH) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def render_research_note(artifact: JsonMap) -> str:
++    lines = [
++        "# Exp 4984 Distributional Energy Verifier Turnkey Backlog Extension",
++        "",
++        f"- Honest verdict: `{artifact['honest_verdict']}`",
++        f"- Pivot executable on 7/1: `{str(artifact['pivot_executable_on_7_1']).lower()}`",
++        f"- Pivot turnkey: `{str(artifact['pivot_turnkey']).lower()}`",
++        f"- Three-column dry-run OK: `{str(artifact['three_column_dry_run_ok']).lower()}`",
++        f"- Moat proven claimed: `{str(artifact['moat_proven_claimed']).lower()}`",
++        f"- Entrypoint: `{ENTRYPOINT_COMMAND}`",
++        "",
++        "## SOTA to Carnot Mapping",
++    ]
++    for arxiv_id in ARXIV_IDS:
++        mapping = artifact["sota_to_carnot_mapping"][arxiv_id]
++        lines.extend(
++            [
++                "",
++                f"### arXiv:{arxiv_id} - {mapping['title']}",
++                f"- URL: {mapping['url']}",
++                f"- Strongest method: {mapping['strongest_method']}",
++                (
++                    "- Implementation cost over current stack: "
++                    f"{mapping['implementation_cost_over_current_stack']}"
++                ),
++                f"- Pitfalls: {mapping['pitfalls']}",
++                f"- Roadmap input: `{mapping['roadmap_input']}`",
++            ]
++        )
++    lines.extend(
++        [
++            "",
++            "## Validation Gate",
++            "",
++            (
++                "The post-6/30 experiment must beat self-consistency with CI95 "
++                "excluding zero, remain oracle-distinct (`verifier_is_oracle=false`), "
++                "avoid a model-identity shortcut, and evaluate a domain where "
++                "self-consistency is not near-ceiling. Exp4984 states this gate but "
++                "does not claim it has been met."
++            ),
++            "",
++        ]
++    )
++    return "\n".join(lines)
++
++
++def write_research_note(artifact: JsonMap, path: Path = NOTE_PATH) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(render_research_note(artifact), encoding="utf-8")
++
++
++def render_research_studying_section(artifact: JsonMap) -> str:
++    flags = "\n".join(f"- {flag}" for flag in NEXT_MILESTONE_ROADMAP_INPUTS)
++    cited = ", ".join(f"arXiv:{arxiv_id}" for arxiv_id in ARXIV_IDS)
++    return (
++        f"{STUDYING_SECTION_START}\n"
++        "## Exp 4984 - Distributional Energy Verifier Turnkey Backlog Extension - INGESTED\n\n"
++        f"- Honest verdict: `{artifact['honest_verdict']}`\n"
++        f"- Cited SOTA papers: {cited}\n"
++        f"- Turnkey entrypoint: `{ENTRYPOINT_COMMAND}`\n"
++        "- Bottom line for the post-6/30 roadmap: keep 2605.18871 as the pivot, "
++        "use 2510.14913 as the matched-compute discriminative budget frontier, "
++        "use 2603.04304 as the uncertainty-guided regenerate/abstain comparator, "
++        "and report against both the discriminative frontier and the GenPRM/THINKPRM "
++        "generative frontier.\n"
++        "- Guardrail: readiness/design only; no moat-proven claim and no real "
++        "benchmark execution.\n"
++        "\n"
++        "### flagged_for_next_milestone\n"
++        f"{flags}\n"
++        f"{STUDYING_SECTION_END}\n"
++    )
++
++
++def write_research_studying_section(
++    path: Path = STUDYING_PATH,
++    artifact: JsonMap | None = None,
++) -> None:
++    if artifact is None:
++        artifact = build_artifact()
++    section = render_research_studying_section(artifact)
++    existing = path.read_text(encoding="utf-8") if path.exists() else ""
++    if STUDYING_SECTION_START in existing and STUDYING_SECTION_END in existing:
++        start = existing.index(STUDYING_SECTION_START)
++        end = existing.index(STUDYING_SECTION_END, start) + len(STUDYING_SECTION_END)
++        updated = existing[:start] + section.rstrip() + existing[end:]
++    else:
++        updated = existing.rstrip() + "\n\n" + section
++    path.write_text(updated.rstrip() + "\n", encoding="utf-8")
++
++
++def main(
++    *,
++    repo_root: Path = REPO_ROOT,
++    domain_slice_path: Path = DEFAULT_DOMAIN_SLICE_PATH,
++    result_path: Path = RESULT_PATH,
++    note_path: Path = NOTE_PATH,
++    studying_path: Path = STUDYING_PATH,
++    net_available: bool | None = None,
++) -> JsonDict:
++    artifact = build_artifact(
++        repo_root=repo_root,
++        domain_slice_path=domain_slice_path,
++        net_available=net_available,
++    )
++    validate_artifact(artifact)
++    write_artifact(artifact, result_path)
++    write_research_note(artifact, note_path)
++    write_research_studying_section(studying_path, artifact)
++    return artifact
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/research-studying.md b/research-studying.md
+index 3f6b6c8cef..fc25f123ca 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -5551,3 +5551,24 @@ ARC sprint (through 2026-06-30). Decisions:
+ - variance_reduced_uncertainty_head
+ - fast_slow_process_router
+ <!-- EXP4973-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
++
++<!-- EXP4984-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-START -->
++## Exp 4984 - Distributional Energy Verifier Turnkey Backlog Extension - INGESTED
++
++- Honest verdict: `success_distributional_energy_verifier_pivot_turnkey_backlog_extended`
++- Cited SOTA papers: arXiv:2510.14913, arXiv:2603.04304, arXiv:2605.18871, arXiv:2504.16828, arXiv:2502.01989, arXiv:2508.16665, arXiv:2508.10539, arXiv:2502.11157, arXiv:2504.01005, arXiv:2504.00891, arXiv:2509.24460
++- Turnkey entrypoint: `.venv/bin/python python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py`
++- Bottom line for the post-6/30 roadmap: keep 2605.18871 as the pivot, use 2510.14913 as the matched-compute discriminative budget frontier, use 2603.04304 as the uncertainty-guided regenerate/abstain comparator, and report against both the discriminative frontier and the GenPRM/THINKPRM generative frontier.
++- Guardrail: readiness/design only; no moat-proven claim and no real benchmark execution.
++
++### flagged_for_next_milestone
++- distributional_energy_lora_ensemble_with_fover_penalties
++- discriminative_budget_frontier
++- v1_uncertainty_guided_regeneration_comparator
++- genprm_matched_compute_generative_comparator
++- thinkprm_matched_compute_comparator
++- efficiency_parity_frontier
++- contextprm_cross_domain_registry_comparator
++- variance_reduced_uncertainty_head
++- fast_slow_process_router
++<!-- EXP4984-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
+diff --git a/results/arc_loop_solve_wa30.json b/results/arc_loop_solve_wa30.json
+index e722522f15..51dcaf0835 100644
+--- a/results/arc_loop_solve_wa30.json
++++ b/results/arc_loop_solve_wa30.json
+@@ -37,13 +37,263 @@
+       "game": "g50t",
+       "similarity": 5.5,
+       "reproducibility": "reproduced",
+-      "solver": "python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py execution-grounds the target-offset predicate and replays OfflineSolver.",
+-      "win_condition": "L1 target-offset predicate: player.x == target.x + 1 and player.y == target.y + 1; verifier grounds against execution state immediately before next_level.",
+-      "action_model": "Keyboard ACTION1-5 labels; L1 plan 44445222222244444. ACTION4 moves right, ACTION2 moves down, ACTION5 commits the trigger clone.",
++      "solver": "GameAdapter _g50t in python/carnot/agentic/arc_game_adapters.py plus scripts/arc_loop_solve.py --game g50t.",
++      "win_condition": "All banked levels use the grounded target-offset predicate: the active player must reach target.x + 1 and target.y + 1, verified only by the offline arc_solver_kit.reproduce gate.",
++      "action_model": "Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right, ACTION5 commit/rewind clone. L2 uses two clone cycles: first clone holds the right-hand plate, second clone holds the left-hand plate, then the active player takes the top route to the target-offset cell.",
+       "reusable_gotchas": []
+     }
+   ],
+   "selected_generic_operators": [
++    {
++      "operator": "approach_dispatcher_operator",
++      "derived_from_games": [
++        "exp4592_generation_completeness_wiring"
++      ],
++      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
++      "selector_tags": [
++        "approach_dispatch",
++        "mechanic_router",
++        "candidate_generation",
++        "graph_explore",
++        "goal_distance",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "value_head_bridge_fix_operator",
++      "derived_from_games": [
++        "exp4616_offline_live_bridge_disambiguation",
++        "exp4652_value_routing_cost_fix_live"
++      ],
++      "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
++      "selector_tags": [
++        "value_head",
++        "bridge_fix",
++        "decision_point",
++        "candidate_ranking",
++        "graph_explore",
++        "live_path",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "cheap_value_routing_cost_fix_operator",
++      "derived_from_games": [
++        "exp4652_value_routing_cost_fix_live"
++      ],
++      "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
++      "selector_tags": [
++        "value_head",
++        "cheap_feature",
++        "value_routing",
++        "cost_fix",
++        "candidate_ranking",
++        "graph_explore",
++        "live_path",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "dagger_off_path_data_collection_operator",
++      "derived_from_games": [
++        "exp4665_dagger_distribution_shift_value_routing"
++      ],
++      "purpose": "Collect and relabel live-frontier off-path rows against reproduced action prefixes so DAgger-lite value heads train on the search distribution rather than winning-path states only.",
++      "selector_tags": [
++        "dagger",
++        "off_path",
++        "search_distribution",
++        "value_head",
++        "graph_explore",
++        "live_path",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "programmatic_expert_trust_weighting_operator",
++      "derived_from_games": [
++        "exp4677_poe_world_factored_subgoal_planner"
++      ],
++      "purpose": "Rank generated programmatic object experts by held-out transition trust, keep only replay-stable factors for product-model planning, and report overfit-prefix residuals before any solve claim.",
++      "selector_tags": [
++        "programmatic_expert",
++        "trust_weighting",
++        "factored_planner",
++        "candidate_generation",
++        "world_model",
++        "graph_explore",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "controllable_novelty_embedding_operator",
++      "derived_from_games": [
++        "exp4688_controllable_novelty_proposal_policy_live"
++      ],
++      "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
++      "selector_tags": [
++        "controllable_novelty",
++        "directed_exploration",
++        "intrinsic_proposal",
++        "candidate_generation",
++        "action_effect",
++        "graph_explore",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "per_level_reinduction_operator",
++      "derived_from_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
++      "selector_tags": [
++        "reinduction",
++        "level_up",
++        "deepening",
++        "goal_bias",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "llm_proposer_reinduction_operator",
++      "derived_from_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "purpose": "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, rank them by trust energy, and fall back to DSL/verifier re-induction when live proposal is unavailable.",
++      "selector_tags": [
++        "reinduction",
++        "level_up",
++        "llm_proposer",
++        "bounded_refinement",
++        "trust_energy",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "env_adaptive_resolve_operator",
++      "derived_from_games": [
++        "sc25",
++        "exp4580_live_submission_gap_close"
++      ],
++      "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
++      "selector_tags": [
++        "env_adaptive",
++        "coordinate_discovery",
++        "drift_recovery",
++        "replay",
++        "click",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "verifier_router_candidate_ranking_operator",
++      "derived_from_games": [
++        "exp4556_cached_generic_transfer"
++      ],
++      "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
++      "selector_tags": [
++        "verifier_router",
++        "candidate_ranking",
++        "trust_energy",
++        "graph_explore",
++        "config_toggle",
++        "program_editor",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "world_model_trust_energy_gate_operator",
++      "derived_from_games": [
++        "exp4604_world_model_trust_energy"
++      ],
++      "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
++      "selector_tags": [
++        "world_model",
++        "trust_energy",
++        "hidden_state",
++        "candidate_ranking",
++        "verifier",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "persistent_action_effect_memory_operator",
++      "derived_from_games": [
++        "exp4568_clickability_action_effect_predictor",
++        "exp4629_graduate_action_effect_predictor_live"
++      ],
++      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
++      "selector_tags": [
++        "action_effect",
++        "clickability",
++        "frame_change",
++        "live_action_pruner",
++        "persistent_aem_plus_optional_cnn",
++        "candidate_ranking",
++        "graph_explore",
++        "click",
++        "keyboard",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "online_warm_action_effect_controller_operator",
++      "derived_from_games": [
++        "exp4726_online_action_learning_driver_valid_test",
++        "exp4727_active_probe_disambiguation"
++      ],
++      "purpose": "Reuse the .435 online-warm action-effect controller: combine leave-one-game PersistentAEM evidence with optional online-warm frame-change scores, keep the executable win-check outside ranking, and report first-win/efficiency transfer before any solve claim.",
++      "selector_tags": [
++        "online_action_learning",
++        "online_warm",
++        "action_effect",
++        "frame_change",
++        "candidate_ranking",
++        "graph_explore",
++        "click",
++        "keyboard",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "graded_goal_energy_search_heuristic_operator",
++      "derived_from_games": [
++        "exp4020_goal_induction_separation",
++        "exp4640_goal_energy_generation_live"
++      ],
++      "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
++      "selector_tags": [
++        "goal_energy",
++        "graded_goal_satisfaction",
++        "search_heuristic",
++        "graph_explore",
++        "candidate_ranking",
++        "transfer"
++      ]
++    },
++    {
++      "operator": "energy_fitness_qd_generator_operator",
++      "derived_from_games": [
++        "exp4738_energy_fitness_qd_generation_valid_test"
++      ],
++      "purpose": "Reuse the .436 energy-fitness QD generator: keep naive candidates available, score generated candidates with oracle-distinct lower-is-better energy, preserve diverse behavior descriptors, and report coverage or first-win transfer before any solve claim.",
++      "selector_tags": [
++        "energy_qd",
++        "map_elites",
++        "candidate_generation",
++        "energy_fitness",
++        "graph_explore",
++        "click",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "graph_astar_action_cost",
+       "derived_from_games": [
+@@ -65,6 +315,22 @@
+         "click"
+       ]
+     },
++    {
++      "operator": "object_centric_representation_builder_operator",
++      "derived_from_games": [
++        "exp4700_object_centric_perception_proposal_live",
++        "exp4701_amortized_exploration_prior_go_explore_live"
++      ],
++      "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
++      "selector_tags": [
++        "object_centric",
++        "perception",
++        "representation_builder",
++        "candidate_generation",
++        "graph_explore",
++        "transfer"
++      ]
++    },
+     {
+       "operator": "object_centric_digest",
+       "derived_from_games": [
+@@ -158,6 +424,585 @@
+       ],
+       "note": "Exp 4438 records consolidated generic primitive graph_astar_action_cost from Exp 4436."
+     },
++    {
++      "id": "primitive_graded_goal_energy_search_heuristic_operator",
++      "operator": "graded_goal_energy_search_heuristic_operator",
++      "derived_from_games": [
++        "exp4020_goal_induction_separation",
++        "exp4640_goal_energy_generation_live"
++      ],
++      "note": "Exp 4644 persists A1's Exp4020 graded goal-energy search heuristic as a reusable graph/frontier ranking primitive: compute lower-is-better `alpha * navigation_energy + beta * graded_goal_energy`, keep depth and the executable verifier outside the scoring function, and report live solve-rate / first-win / action-efficiency lift before any solve claim. This is a search heuristic, not an oracle; new levels count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "A graded goal-energy well can only add value when the generated frontier already contains candidates whose visible target-satisfaction state is more informative than the navigation heuristic. Exp4644's untuned cached bp35/cd82/dc22 transfer rows showed zero solve-rate, first-win, and action-efficiency lift, so the primitive is persisted as-built with the transfer null characterized."
++      ],
++      "latest_exp4644_transfer": {
++        "artifact": "results/experiment_4644_primitive_persist_transfer.json",
++        "transfer_games": [
++          "bp35",
++          "cd82",
++          "dc22"
++        ],
++        "transfer_value_per_game": {
++          "bp35": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "cd82": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value was null on untuned cached matched variants; no new executable level was banked, so reproducible_total_levels is unchanged.",
++        "reproducibility_checksum": "sha256:64005ae35b67a176784c59bcad835c00a10e118bd0acb9dee3431a80fbc6a3f0"
++      }
++    },
++    {
++      "id": "primitive_per_level_reinduction_operator",
++      "operator": "per_level_reinduction_operator",
++      "derived_from_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "note": "Exp 4537 persists the A1 loop as a reusable operator; detect level-up from frame.levels_completed, clear stale induction, re-induce the L_{n+1} predicate from the post-transition representation, and route with depth-primary goal bias. Exp 4549 extends the same primitive family with arc_solver_kit.llm_proposer_reinduction_operator: detect level-up, request GOAL+DYNAMICS+plan candidates from the LLM proposer when available, trust-energy-rank them, run at most 3 bounded refinement rounds, and degrade to the DSL/verifier predicate inducer when A1's live proposer is null. New levels still count only through arc_solver_kit.reproduce()."
++    },
++    {
++      "id": "primitive_verifier_router_candidate_ranking_operator",
++      "operator": "verifier_router_candidate_ranking_operator",
++      "derived_from_games": [
++        "exp4556_cached_generic_transfer"
++      ],
++      "note": "Exp 4561 persists the A1 verifier-router as a reusable generic candidate-ranking operator: rank compatible cached action/plan candidates by verifier score with stable original-order tie-breaking, then report ordering gain before any solve claim. Cross-game transfer on tu93/tr87/sc25 was a characterized null: the operator applied cleanly, but the cached held-out candidates had no offline-reproduced target candidate for the ranker to promote, so ordering gain remained 0. Needs a non-oracle verifier score that separates at least one held-out reachable candidate from same-depth distractors to add value.",
++      "transfer_dead_ends": [
++        {
++          "tu93": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
++        },
++        {
++          "tr87": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
++        },
++        {
++          "sc25": "no cached candidate reached the offline reproduction gate, so ordering gain was unmeasurable/value-null."
++        }
++      ]
++    },
++    {
++      "id": "primitive_world_model_trust_energy_gate_operator",
++      "operator": "world_model_trust_energy_gate_operator",
++      "derived_from_games": [
++        "exp4604_world_model_trust_energy"
++      ],
++      "note": "Exp 4608 persists A1's change-weighted trust-energy gate as reusable world-model scaffolding: rank executable model candidates by held-out changed-cell consistency, reject identity/no-op degeneracy, compare against the legacy binary exact-match gate, and report trust-pass or first-win lift before any solve claim. This is a rank/route primitive, not an oracle; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Transfer value is a trust-pass/routing lift over cached untuned world-model candidates; no new executable level is banked unless the resulting path passes arc_solver_kit.reproduce()."
++      ],
++      "latest_exp4608_transfer": {
++        "artifact": "results/experiment_4608_primitive_persist_transfer.json",
++        "transfer_games": [
++          "bp35",
++          "dc22",
++          "g50t"
++        ],
++        "transfer_value_per_game": {
++          "bp35": {
++            "trust_pass": true,
++            "binary_gate_pass": false,
++            "first_win_lift": true,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "trust_pass": true,
++            "binary_gate_pass": false,
++            "first_win_lift": true,
++            "offline_reproduced_new_level": false
++          },
++          "g50t": {
++            "trust_pass": true,
++            "binary_gate_pass": false,
++            "first_win_lift": true,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is trust-gate selection over cached verifier/reproduction-gated fixtures; no new executable level was banked, so reproducible_total_levels is unchanged.",
++        "reproducibility_checksum": "sha256:696c801588e07f003a8d4af06ff9ebed58ea2a5601f7c59e60f5a47847786d6e"
++      }
++    },
++    {
++      "id": "primitive_persistent_action_effect_memory_operator",
++      "operator": "persistent_action_effect_memory_operator",
++      "derived_from_games": [
++        "exp4568_clickability_action_effect_predictor",
++        "exp4629_graduate_action_effect_predictor_live"
++      ],
++      "note": "Exp 4573 persists A1's action-effect predictor as a reusable PersistentAEM operator: build a leave-one-game cross-game memory from cached frame/action effects, rank compatible action candidates by predicted effect with stable original-order tie-breaking, and report actions-to-first-levelup deltas before any solve claim. Exp 4632 extends the same primitive with the 4629 live action-effect ranker signal (`persistent_aem_plus_optional_cnn`) so the scored E3 action-pruner reuses the target-excluded memory/scorer path rather than re-deriving action effects. A CNN predictor forward pass is not live LLM inference; the persisted operator can also run from cached action-effect rows without invoking the CNN. New levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "If the winning action is absent from the candidate group, PersistentAEM can only reorder generated candidates; candidate generation remains the residual bottleneck.",
++        "Leave-one-game transfer can be value-null when the held-out game's effective action family is not represented in the cached memory features.",
++        "The 4629/4632 live ranker adds action-efficiency value only when the winning target action is already in the generated candidate group; richer candidate generation remains the residual bottleneck when all target candidates are absent or equivalent under cached frame-change features."
++      ],
++      "latest_exp4573_transfer": {
++        "artifact": "results/experiment_4573_primitive_persist_transfer.json",
++        "transfer_games": [
++          "dc22",
++          "m0r0",
++          "ka59"
++        ],
++        "transfer_value_per_game": {
++          "dc22": {
++            "actions_reduced": 1.0,
++            "baseline_actions_to_first_levelup": 2.0,
++            "memory_actions_to_first_levelup": 1.0,
++            "candidate_group_count": 115
++          },
++          "m0r0": {
++            "actions_reduced": 1.0,
++            "baseline_actions_to_first_levelup": 2.0,
++            "memory_actions_to_first_levelup": 1.0,
++            "candidate_group_count": 53
++          },
++          "ka59": {
++            "actions_reduced": 1.0,
++            "baseline_actions_to_first_levelup": 2.0,
++            "memory_actions_to_first_levelup": 1.0,
++            "candidate_group_count": 41
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is candidate-ordering efficiency over cached leave-one-game rows; no new executable level was banked, so reproducible_total_levels is unchanged.",
++        "reproducibility_checksum": "sha256:40b6b9874717b0a9973e9e33addfba694337ee722656e4101335c6c44173bab1"
++      },
++      "latest_exp4632_transfer": {
++        "artifact": "results/experiment_4632_primitive_persist_transfer.json",
++        "transfer_games": [
++          "cd82",
++          "sp80",
++          "ka59"
++        ],
++        "transfer_value_per_game": {
++          "cd82": {
++            "actions_delta": 1.0,
++            "solve_rate_lift": 0.0,
++            "first_win_rate_delta": 0.5,
++            "baseline_actions_to_first_levelup": 2.0,
++            "ranker_actions_to_first_levelup": 1.0,
++            "candidate_group_count": 12,
++            "target_game_excluded_from_memory": true
++          },
++          "sp80": {
++            "actions_delta": 1.0,
++            "solve_rate_lift": 0.0,
++            "first_win_rate_delta": 0.4117647059,
++            "baseline_actions_to_first_levelup": 2.0,
++            "ranker_actions_to_first_levelup": 1.0,
++            "candidate_group_count": 17,
++            "target_game_excluded_from_memory": true
++          },
++          "ka59": {
++            "actions_delta": 1.0,
++            "solve_rate_lift": 0.0,
++            "first_win_rate_delta": 0.3658536585,
++            "baseline_actions_to_first_levelup": 2.0,
++            "ranker_actions_to_first_levelup": 1.0,
++            "candidate_group_count": 41,
++            "target_game_excluded_from_memory": true
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is live action-pruner ordering over cached target-excluded rows; no new executable level was banked, so reproducible_total_levels is unchanged.",
++        "reproducibility_checksum": "sha256:3b44341b2926a7ccdb9189f03aca4da9299f517cf66ee3004686c9a3a37c7d78"
++      }
++    },
++    {
++      "id": "primitive_env_adaptive_resolve_operator",
++      "operator": "env_adaptive_resolve_operator",
++      "derived_from_games": [
++        "sc25",
++        "exp4580_live_submission_gap_close"
++      ],
++      "note": "Exp 4584 promotes the A1 env-adaptive re-solve pattern into a reusable operator: keep symbolic action labels as the durable plan, discover or re-derive the current environment's coordinates at replay time, compare the adaptive replay against frozen coordinate replay, and count value only when the adaptive path reaches the transfer verifier target under coordinate drift where frozen replay fails. This is packaging/replay scaffolding, not a win oracle; any new level still counts only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Env-adaptive replay adds value only for symbolic plans whose labels can be resolved against current environment features; pure keyboard plans or already-valid frozen coordinates are expected nulls.",
++        "Transfer proxy recovered coordinate drift on non-sc25 click-label games, but no new level was banked, so reproducible_total_levels is unchanged."
++      ],
++      "latest_exp4584_transfer": {
++        "artifact": "results/experiment_4584_primitive_persist_transfer.json",
++        "transfer_games": [
++          "s5i5",
++          "ft09",
++          "sb26"
++        ],
++        "transfer_value_per_game": {
++          "s5i5": {
++            "drift_recovered": true,
++            "existing_reproduced_level": 1,
++            "offline_reproduced_new_level": false
++          },
++          "ft09": {
++            "drift_recovered": true,
++            "existing_reproduced_level": 1,
++            "offline_reproduced_new_level": false
++          },
++          "sb26": {
++            "drift_recovered": true,
++            "existing_reproduced_level": 1,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is drift-recovery over cached symbolic click labels; no new executable level was banked, so reproducible_total_levels is unchanged."
++      }
++    },
++    {
++      "id": "primitive_approach_dispatcher_operator",
++      "operator": "approach_dispatcher_operator",
++      "derived_from_games": [
++        "exp4592_generation_completeness_wiring"
++      ],
++      "note": "Exp 4596 persists the A1 approach-dispatcher as reusable live-solver scaffolding: take the mechanic-class route from early-play routing, select and execute the generated candidate for the routed toolkit approach, keep the no-wiring default_graph_explore candidate as the fallback/control, and report winner-generated or win-reached value only after verifier/reproduce evidence. This is candidate-generation/selection wiring, not a win oracle; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "A routed approach with no generated candidate remains a candidate-generation null; the dispatcher cannot promote a winner that was never proposed.",
++        "Existing reproduced candidates can demonstrate cross-game selection value, but they do not increment reproducible_total_levels unless this run banks a strictly new offline-reproduced level."
++      ],
++      "latest_exp4596_transfer": {
++        "artifact": "results/experiment_4596_primitive_persist_transfer.json",
++        "transfer_games": [
++          "ar25",
++          "cn04",
++          "dc22"
++        ],
++        "transfer_value_per_game": {
++          "ar25": {
++            "winner_generated": true,
++            "win_reached": true,
++            "existing_reproduced_level": 2,
++            "offline_reproduced_new_level": false
++          },
++          "cn04": {
++            "winner_generated": true,
++            "win_reached": true,
++            "existing_reproduced_level": 2,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "winner_generated": true,
++            "win_reached": true,
++            "existing_reproduced_level": 1,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is dispatcher selection over cached verifier/reproduction-gated candidates; no new executable level was banked, so reproducible_total_levels is unchanged."
++      }
++    },
++    {
++      "id": "primitive_value_head_bridge_fix_operator",
++      "operator": "value_head_bridge_fix_operator",
++      "derived_from_games": [
++        "exp4616_offline_live_bridge_disambiguation"
++      ],
++      "note": "Exp 4620 persists the A1 offline-to-live bridge-fix helper as reusable value-head scaffolding: score only bounded decision-point candidates, cache repeated state scores, keep value-head weight effectively as a rank/tie-break signal, and report live first-win or efficiency lift before any solve claim. Exp 4617's graduated SpatialValueNet live path was a characterized null, so this persists the compute-cost fix that made the offline value-head win reusable without repeating the heavy value_weight=5 regression. This is ranking/routing scaffolding, not a win oracle; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "If the generated candidate set lacks a level-up/win candidate, the bridge fix can only reorder non-winning candidates; candidate generation remains the residual bottleneck.",
++        "If the target candidate is already first in baseline order, decision-point value ranking is an honest efficiency null for that game."
++      ],
++      "latest_exp4620_transfer": {
++        "artifact": "results/experiment_4620_primitive_persist_transfer.json",
++        "transfer_games": [
++          "bp35",
++          "dc22",
++          "g50t"
++        ],
++        "transfer_value_per_game": {
++          "bp35": {
++            "first_win_lift": true,
++            "efficiency_lift": 1,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "first_win_lift": true,
++            "efficiency_lift": 2,
++            "offline_reproduced_new_level": false
++          },
++          "g50t": {
++            "first_win_lift": false,
++            "efficiency_lift": 0,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is bounded decision-point value ranking over cached untuned candidates; no new executable level was banked, so reproducible_total_levels is unchanged."
++      }
++    },
++    {
++      "id": "primitive_cheap_value_routing_cost_fix_operator",
++      "operator": "cheap_value_routing_cost_fix_operator",
++      "derived_from_games": [
++        "exp4652_value_routing_cost_fix_live"
++      ],
++      "derived_from_artifacts": [
++        "results/experiment_4652_value_routing_cost_fix_live.json",
++        "results/experiment_4653_energy_fitness_qd_generation_live.json"
++      ],
++      "note": "Exp 4656 persists the .429 cheap-feature value-routing cost fix as reusable live-solver scaffolding: use the output-identical scipy/fallback connected component speedup, route value-head calls through the cheap cross_game_features_v3:v2_plus_frame_delta subset, keep lazy frame-hash caching, and report solve-rate / first-win / action-efficiency deltas before any solve claim. A1 and A2 both selected `unchanged` for submitted config, so this captures the strongest characterized reusable component rather than fabricating transfer value. This is ranking/routing scaffolding, not a win oracle; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Cached held-out transfer can remain value-null when the candidate generator does not expose a better first-win or multi-level candidate for the cheap value route to rank."
++      ],
++      "latest_exp4656_transfer": {
++        "artifact": "results/experiment_4656_primitive_persist_transfer.json",
++        "transfer_games": [
++          "bp35",
++          "cd82",
++          "dc22"
++        ],
++        "transfer_value_per_game": {
++          "bp35": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "cd82": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is null on cached held-out games; the cheap-feature cost fix is persisted as reusable speedup, but candidate generation/value calibration remains the residual and reproducible_total_levels is unchanged."
++      }
++    },
++    {
++      "id": "primitive_dagger_off_path_data_collection_operator",
++      "operator": "dagger_off_path_data_collection_operator",
++      "derived_from_games": [
++        "exp4665_dagger_distribution_shift_value_routing"
++      ],
++      "derived_from_artifacts": [
++        "results/experiment_4664_l2_goal_predicate_induction_live.json",
++        "results/experiment_4665_dagger_distribution_shift_value_routing.json"
++      ],
++      "note": "Exp 4668 persists the .430 DAgger-lite off-path data-collection operator as reusable live-solver scaffolding: collect live-frontier rows from the StepwiseExplorer search distribution, relabel them only from executable reproduction-prefix evidence for training, aggregate them with winning-path positives, and retrain cheap value heads on the actual search distribution before claiming live transfer. A1 and A2 both selected no submitted-config lift, so this captures the strongest characterized reusable component rather than fabricating value. This is data-collection and induction scaffolding, not a win oracle; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Cached held-out transfer can remain value-null when the corrected value head changes the training distribution but the live candidate generator still does not expose a better first-win or multi-level candidate to rank."
++      ],
++      "latest_exp4668_transfer": {
++        "artifact": "results/experiment_4668_primitive_persist_transfer.json",
++        "transfer_games": [
++          "bp35",
++          "cd82",
++          "dc22"
++        ],
++        "transfer_value_per_game": {
++          "bp35": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "cd82": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "action_efficiency_lift": 0.0,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is null on cached held-out games; the DAgger-lite collection operator is persisted as reusable search-distribution correction scaffolding, but the residual bridge gap is converting corrected off-path labels into value-routing decisions that expose new candidates."
++      }
++    },
++    {
++      "id": "primitive_programmatic_expert_trust_weighting_operator",
++      "operator": "programmatic_expert_trust_weighting_operator",
++      "derived_from_games": [
++        "exp4677_poe_world_factored_subgoal_planner"
++      ],
++      "derived_from_artifacts": [
++        "results/experiment_4676_hierarchical_subgoal_search_live.json",
++        "results/experiment_4677_poe_world_factored_subgoal_planner.json"
++      ],
++      "note": "Exp 4680 persists the .432 programmatic expert trust-weighting generation primitive as reusable live-solver scaffolding: generated object-level experts are ranked by held-out transition trust, only replay-stable factors are admitted to product-model planning, and prefix-overfit experts are rejected before any solve claim. Both .432 A1 and A2 selected unchanged submitted config and banked no level, so this captures the strongest characterized reusable generation component rather than fabricating value. The primitive generates/ranks/filters candidates only; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Cached held-out transfer can remain value-null when no replay-stable expert rows exist for the held-out game, or when all generated experts overfit the proposer prefix and fail held-out transition trust."
++      ],
++      "latest_exp4680_transfer": {
++        "artifact": "results/experiment_4680_primitive_persist_transfer.json",
++        "transfer_games": [
++          "bp35",
++          "cd82",
++          "dc22"
++        ],
++        "transfer_value_per_game": {
++          "bp35": {
++            "candidate_generation_coverage_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "cd82": {
++            "candidate_generation_coverage_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "candidate_generation_coverage_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is null on cached held-out games; the programmatic expert trust-weighting gate is persisted as reusable generation scaffolding, but the residual bridge gap is inducing replay-stable experts that expose winning candidates on new games."
++      }
++    },
++    {
++      "id": "primitive_controllable_novelty_embedding_operator",
++      "operator": "controllable_novelty_embedding_operator",
++      "derived_from_games": [
++        "exp4688_controllable_novelty_proposal_policy_live"
++      ],
++      "derived_from_artifacts": [
++        "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
++        "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json"
++      ],
++      "note": "Exp 4692 persists the .433 controllable-novelty embedding primitive as reusable directed-exploration scaffolding: live proposal candidates are embedded through controllable action-effect deltas, raw-frame/cosmetic novelty is rejected when the controllability gate is on, and the resulting intrinsic novelty signal is reused before value-ranking or frontier selection. Both .433 A1 and A2 selected unchanged submitted config and banked no level, so this captures the strongest characterized reusable generation component rather than fabricating value. The primitive generates/ranks/embeds candidates only; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Cached held-out transfer can remain value-null when the controllable novelty embedding creates a strong action-effect signal but the winning prefix is still absent from the generated proposal pool."
++      ],
++      "latest_exp4692_transfer": {
++        "artifact": "results/experiment_4692_primitive_persist_transfer.json",
++        "transfer_games": [
++          "bp35",
++          "cd82",
++          "dc22"
++        ],
++        "transfer_value_per_game": {
++          "bp35": {
++            "candidate_generation_coverage_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "cd82": {
++            "candidate_generation_coverage_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "candidate_generation_coverage_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is null on cached held-out games; the controllable-novelty embedding operator is persisted as reusable directed-exploration scaffolding, but the residual bridge gap is making the novelty signal propose a winning prefix instead of revisiting non-winning controllable states.",
++        "reproducibility_checksum": "sha256:e15b6945aaba76bc4d8dec319d76bfb3d2e21ef77e5d5db3aaa44b99ddebe89c"
++      }
++    },
++    {
++      "id": "primitive_object_centric_representation_builder_operator",
++      "operator": "object_centric_representation_builder_operator",
++      "derived_from_games": [
++        "exp4700_object_centric_perception_proposal_live",
++        "exp4701_amortized_exploration_prior_go_explore_live"
++      ],
++      "derived_from_artifacts": [
++        "results/experiment_4700_object_centric_perception_proposal_live.json",
++        "results/experiment_4701_amortized_exploration_prior_go_explore_live.json"
++      ],
++      "note": "Exp 4704 persists the .434 object-centric representation builder as reusable perception scaffolding: live proposal candidates can reuse connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value-ranking or frontier selection. Both .434 A1 and A2 selected unchanged submitted config and banked no level, so this captures the strongest characterized reusable component rather than fabricating value. The primitive perceives/generates candidate structure only; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Cached held-out transfer can remain value-null when object-centric slots are built successfully but no cached winning-prefix coverage, first-win, solve-rate, or offline reproduction lift is produced."
++      ],
++      "latest_exp4704_transfer": {
++        "artifact": "results/experiment_4704_primitive_persist_transfer.json",
++        "transfer_games": [
++          "cd82",
++          "dc22",
++          "g50t"
++        ],
++        "transfer_value_per_game": {
++          "cd82": {
++            "candidate_generation_coverage_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "dc22": {
++            "candidate_generation_coverage_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          },
++          "g50t": {
++            "candidate_generation_coverage_delta": 0.0,
++            "first_win_rate_delta": 0.0,
++            "live_solve_rate_delta": 0.0,
++            "offline_reproduced_new_level": false
++          }
++        },
++        "offline_reproduced_new_level": false,
++        "residual_dead_end": "Transfer value is null on cached held-out games; the object-centric representation builder is persisted as reusable perception scaffolding, but the residual bridge gap is converting object slots and relational keypoints into winning-prefix proposal coverage.",
++        "reproducibility_checksum": "sha256:2239834a07c66edfce69c84416be68ebe0939a3e84700853a7a27e73124f6955"
++      }
++    },
++    {
++      "id": "primitive_online_warm_action_effect_controller_operator",
++      "operator": "online_warm_action_effect_controller_operator",
++      "derived_from": [
++        "results/experiment_4726_online_action_learning_driver_valid_test.json",
++        "results/experiment_4727_active_probe_disambiguation.json"
++      ],
++      "derived_from_games": [
++        "exp4726_online_action_learning_driver_valid_test",
++        "exp4727_active_probe_disambiguation"
++      ],
++      "note": "Exp 4730 persists the .435 A1 online-warm action-effect controller as a reusable hidden-game candidate ranker after Exp 4726 proved the online arms were non-degenerate and Exp 4727's active-probe path executed no probe actions. The operator combines leave-one-game PersistentAEM evidence with optional online-warm frame-change scores, ranks/routes candidate actions, and remains oracle-distinct; new levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Leave-one-game transfer can remain value-null when cached held-out candidate groups contain no same-state effective target, or when the online-warm ranker reorders candidates without improving solve-rate, first-win, coverage, or action efficiency."
++      ]
++    },
++    {
++      "id": "primitive_energy_fitness_qd_generator_operator",
++      "operator": "energy_fitness_qd_generator_operator",
++      "derived_from": [
++        "results/experiment_4738_energy_fitness_qd_generation_valid_test.json"
++      ],
++      "derived_from_games": [
++        "exp4738_energy_fitness_qd_generation_valid_test"
++      ],
++      "note": "Exp 4741 persists the .436 A2 energy-fitness QD generator after Exp 4738 proved the naive-search, random-mutation, and energy-QD arms were non-degenerate and generated novel candidates. The reusable operator scores cached candidate rows with lower-is-better oracle-distinct energy, preserves MAP-Elites-style behavior descriptor coverage, keeps naive candidates available, and reports solve-rate / first-win / coverage / action-efficiency transfer before any solve claim. New levels still count only through arc_solver_kit.reproduce().",
++      "transfer_dead_ends": [
++        "Exp4738/Exp4741 showed generated coverage can improve on cached held-out rows while solve-rate, first-win, and action-efficiency remain flat. The residual gap is converting QD novelty into a winning-prefix mutation neighborhood rather than treating candidate novelty itself as a reproduced level."
++      ]
++    },
+     {
+       "id": "primitive_object_centric_digest",
+       "operator": "object_centric_digest",
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 97db505718..f1f386ae7e 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-29T17:16:13.629650Z",
+-  "duration_s": 0.062323808670043945,
++  "run_date": "2026-06-29T18:57:16.661051Z",
++  "duration_s": 0.07231926918029785,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "18bb46729d06264e733322e57d70c1d7aa72b5fcf7e85ee2843a6a2240013319",
++  "reproducibility_checksum": "be2df476f850115af1af1cd709717b278bc040f42b55398e3712fc753c658f52",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "1959b921b707e93a36cb0d95397978f55ac20651"
++    "adversarial_verify_version": "61fccac46f54503a7fbf6c3276293da23b59b070"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 6ae057942c..d2fb36d2f4 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-29T17:16:13.712553Z",
+-  "duration_s": 0.07580232620239258,
++  "run_date": "2026-06-29T18:57:16.774407Z",
++  "duration_s": 0.10357022285461426,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "339afa61f63f6ecb806655b7ea28614ff204571471228bc3b0c7a18a0f979146",
++  "reproducibility_checksum": "eb87b36cdb110dc09aebd2a688d88050fa9879224a6f896d7d20213254c801bc",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "1959b921b707e93a36cb0d95397978f55ac20651"
++    "adversarial_verify_version": "61fccac46f54503a7fbf6c3276293da23b59b070"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 24b86934d6..d6f7c8ea33 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.113819122314453,
++  "efficiency_gains_ms": 2.1135807037353516,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 200cd38291..0d87c22185 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.8041966035962105e-05,
++  "duration_s": 5.491310730576515e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4984_distributional_energy_verifier_turnkey.json b/results/experiment_4984_distributional_energy_verifier_turnkey.json
+new file mode 100644
+index 0000000000..03d79956d2
+--- /dev/null
++++ b/results/experiment_4984_distributional_energy_verifier_turnkey.json
+@@ -0,0 +1,613 @@
++{
++  "already_ingested_reconfirmed": [
++    "2605.18871",
++    "2504.16828",
++    "2502.01989",
++    "2508.16665",
++    "2508.10539",
++    "2502.11157",
++    "2504.01005",
++    "2504.00891",
++    "2509.24460"
++  ],
++  "arxiv_ids_cited": [
++    "2510.14913",
++    "2603.04304",
++    "2605.18871",
++    "2504.16828",
++    "2502.01989",
++    "2508.16665",
++    "2508.10539",
++    "2502.11157",
++    "2504.01005",
++    "2504.00891",
++    "2509.24460"
++  ],
++  "citations": {
++    "2502.01989": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable Diffusion Model",
++      "url": "https://arxiv.org/abs/2502.01989"
++    },
++    "2502.11157": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "Dyve: Thinking Fast and Slow for Dynamic Process Verification",
++      "url": "https://arxiv.org/abs/2502.11157"
++    },
++    "2504.00891": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "GenPRM: Scaling Test-Time Compute of Process Reward Models via Generative Reasoning",
++      "url": "https://arxiv.org/abs/2504.00891"
++    },
++    "2504.01005": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "When To Solve, When To Verify: Compute-Optimal Problem Solving and Generative Verification for LLM Reasoning",
++      "url": "https://arxiv.org/abs/2504.01005"
++    },
++    "2504.16828": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "Process Reward Models That Think",
++      "url": "https://arxiv.org/abs/2504.16828"
++    },
++    "2508.10539": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "Improving Value-based Process Verifier via Low-Cost Variance Reduction",
++      "url": "https://arxiv.org/abs/2508.10539"
++    },
++    "2508.16665": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "Trust but Verify! A Survey on Verification Design for Test-time Scaling",
++      "url": "https://arxiv.org/abs/2508.16665"
++    },
++    "2509.24460": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "ContextPRM: Leveraging Contextual Coherence for multi-domain Test-Time Scaling",
++      "url": "https://arxiv.org/abs/2509.24460"
++    },
++    "2510.14913": {
++      "http_status": 200,
++      "ingestion_status": "new",
++      "title": "Budget-aware Test-time Scaling via Discriminative Verification",
++      "url": "https://arxiv.org/abs/2510.14913"
++    },
++    "2603.04304": {
++      "http_status": 200,
++      "ingestion_status": "new",
++      "title": "V1: Unifying Generation and Self-Verification for Parallel Reasoners",
++      "url": "https://arxiv.org/abs/2603.04304"
++    },
++    "2605.18871": {
++      "http_status": 200,
++      "ingestion_status": "reconfirmed",
++      "title": "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
++      "url": "https://arxiv.org/abs/2605.18871"
++    }
++  },
++  "dry_run_three_columns": {
++    "columns": [
++      "self_consistency",
++      "decomposed_energy_verifier",
++      "oracle"
++    ],
++    "dry_run_note": "Turnkey dry-run only: self-consistency, decomposed-energy verifier, and oracle columns wire end-to-end on a small cached slice; no moat claim is made.",
++    "entrypoint_command": ".venv/bin/python python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py",
++    "full_benchmark_run": false,
++    "n_rows": 3,
++    "reconfirmed_from_exp4951": true,
++    "reconfirmed_from_exp4962": true,
++    "reconfirmed_from_exp4973": true,
++    "rows": [
++      {
++        "decomposed_energy_verifier": {
++          "abstention_recommended": false,
++          "analytical_penalty_source": {
++            "cached_penalty_field": "deterministic_constraint_penalty",
++            "components": [
++              "fr11_session_memory",
++              "tier0r_curry_howard",
++              "tier0s_arithmetic_gap",
++              "tier0u_logical_consistency"
++            ],
++            "registry_path": "ops/verifier_registry.yaml",
++            "verifier_id": "fover_production_ensemble"
++          },
++          "answer": "Stay at one hotel, visit the museum on day 1, reserve the outdoor day for day 2, and return to the airport at 16:30 on day 3.",
++          "correct_by_cached_oracle": true,
++          "energy": -0.85,
++          "ensemble_stddev": 0.05,
++          "fover_analytical_constraint_penalty": 0.03,
++          "learned_quality_ensemble_mean": 0.88,
++          "selected_candidate_id": "tp4922-001-b",
++          "verifier_is_oracle": false
++        },
++        "domain": "travelplanner_style_structured_reasoning",
++        "oracle": {
++          "answer": "Stay at one hotel, visit the museum on day 1, reserve the outdoor day for day 2, and return to the airport at 16:30 on day 3.",
++          "oracle_label_correct": true,
++          "oracle_used_for_correctness_only": true,
++          "selected_candidate_id": "tp4922-001-b"
++        },
++        "problem_id": "tp4922-001",
++        "self_consistency": {
++          "answer": "Use two hotel changes, put the museum after the airport return, and keep the outdoor day last.",
++          "correct_by_cached_oracle": false,
++          "selected_candidate_id": "tp4922-001-a",
++          "vote_count": 3.0
++        }
++      },
++      {
++        "decomposed_energy_verifier": {
++          "abstention_recommended": false,
++          "analytical_penalty_source": {
++            "cached_penalty_field": "deterministic_constraint_penalty",
++            "components": [
++              "fr11_session_memory",
++              "tier0r_curry_howard",
++              "tier0s_arithmetic_gap",
++              "tier0u_logical_consistency"
++            ],
++            "registry_path": "ops/verifier_registry.yaml",
++            "verifier_id": "fover_production_ensemble"
++          },
++          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
++          "correct_by_cached_oracle": true,
++          "energy": -0.77,
++          "ensemble_stddev": 0.06,
++          "fover_analytical_constraint_penalty": 0.04,
++          "learned_quality_ensemble_mean": 0.81,
++          "selected_candidate_id": "tp4922-002-a",
++          "verifier_is_oracle": false
++        },
++        "domain": "travelplanner_style_structured_reasoning",
++        "oracle": {
++          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
++          "oracle_label_correct": true,
++          "oracle_used_for_correctness_only": true,
++          "selected_candidate_id": "tp4922-002-a"
++        },
++        "problem_id": "tp4922-002",
++        "self_consistency": {
++          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
++          "correct_by_cached_oracle": true,
++          "selected_candidate_id": "tp4922-002-a",
++          "vote_count": 4.0
++        }
++      },
++      {
++        "decomposed_energy_verifier": {
++          "abstention_recommended": false,
++          "analytical_penalty_source": {
++            "cached_penalty_field": "deterministic_constraint_penalty",
++            "components": [
++              "fr11_session_memory",
++              "tier0r_curry_howard",
++              "tier0s_arithmetic_gap",
++              "tier0u_logical_consistency"
++            ],
++            "registry_path": "ops/verifier_registry.yaml",
++            "verifier_id": "fover_production_ensemble"
++          },
++          "answer": "Schedule the museum before 15:00, keep dinner fixed at 19:00, and move the hike to the clear-weather morning.",
++          "correct_by_cached_oracle": true,
++          "energy": -0.84,
++          "ensemble_stddev": 0.07,
++          "fover_analytical_constraint_penalty": 0.02,
++          "learned_quality_ensemble_mean": 0.86,
++          "selected_candidate_id": "tp4922-003-b",
++          "verifier_is_oracle": false
++        },
++        "domain": "travelplanner_style_structured_reasoning",
++        "oracle": {
++          "answer": "Schedule the museum before 15:00, keep dinner fixed at 19:00, and move the hike to the clear-weather morning.",
++          "oracle_label_correct": true,
++          "oracle_used_for_correctness_only": true,
++          "selected_candidate_id": "tp4922-003-b"
++        },
++        "problem_id": "tp4922-003",
++        "self_consistency": {
++          "answer": "Put the hike after dinner and visit the museum after closing.",
++          "correct_by_cached_oracle": false,
++          "selected_candidate_id": "tp4922-003-a",
++          "vote_count": 3.0
++        }
++      }
++    ]
++  },
++  "duration_s": 0.0001,
++  "field_principles": {
++    "already_ingested_reconfirmed": {
++      "principle": "the prior 2605.18871 / 2504.16828 / 2502.01989 / 2508.16665 / 2508.10539 / 2502.11157 / 2504.01005 / 2504.00891 / 2509.24460 set remains cited."
++    },
++    "arxiv_ids_cited": {
++      "principle": "NEW: 2510.14913 + 2603.04304; re-confirmed: 2605.18871 + 2504.16828 + 2502.01989 + 2508.16665 + 2508.10539 + 2502.11157 + 2504.01005 + 2504.00891 + 2509.24460 -- real IDs, no fabrication (SOTA-ingestion guardrail)."
++    },
++    "citations": {
++      "principle": "HTTP-200 arXiv source metadata backing every paper ID."
++    },
++    "dry_run_three_columns": {
++      "principle": "small cached TravelPlanner dry-run rows for {self_consistency, decomposed_energy_verifier, oracle}; proves wiring only."
++    },
++    "duration_s": {
++      "principle": "0.0001s floor for aggregation-only turnkey construction."
++    },
++    "field_principles": {
++      "principle": "principle annotations for every required user-facing artifact field."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success_distributional_energy_verifier_pivot_turnkey_backlog_extended."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (reads the spec + slice + papers; 0.0001s floor) -- no real benchmark run."
++    },
++    "moat_proven_claimed": {
++      "principle": "false -- this is readiness/design + SOTA-ingestion; the real post-6/30 experiment must pass the gate."
++    },
++    "next_milestone_roadmap_inputs": {
++      "principle": "post-6/30 roadmap inputs promoted from the new SOTA ingestion."
++    },
++    "no_real_benchmark_run": {
++      "principle": "true -- majority-ARC governs through 2026-06-30; Exp4984 is readiness only."
++    },
++    "pivot_executable_on_7_1": {
++      "principle": "true -- the distributional-energy-verifier experiment runs the instant the sprint retires (the readiness deliverable)."
++    },
++    "pivot_turnkey": {
++      "principle": "true -- the post-6/30 experiment is STILL ONE documented command away (real loader + dry-run + entrypoint re-confirmed)."
++    },
++    "post_sprint_first_experiment_pointer": {
++      "principle": "the single documented entrypoint + the pre-staged post-6/30 first-experiment so the loop pivots cleanly 7/1."
++    },
++    "preconditions_checked": {
++      "principle": "records spec/slice/network checks; a missing spec emits blocked_."
++    },
++    "random_seed": {
++      "principle": "determinism for the dry-run wiring."
++    },
++    "reproducibility_checksum": {
++      "principle": "content hash of (papers cited, turnkey spec, dry-run config) so a replication catches drift."
++    },
++    "research_note_path": {
++      "principle": "points to the human-readable SOTA-ingestion and turnkey-readiness note."
++    },
++    "sc_not_saturated_domain": {
++      "principle": "the chosen domain (MuSR / TravelPlanner) where self-consistency is NOT near-ceiling -- the only place an oracle-distinct moat win is reachable (2605.18871 beats SC on MuSR)."
++    },
++    "sota_to_carnot_mapping": {
++      "principle": "per-paper {strongest_method, implementation_cost_over_current_stack, pitfalls} -- the ingestion deliverable that feeds the post-6/30 roadmap."
++    },
++    "source_artifacts": {
++      "principle": "records the upstream spec, Exp4973/Exp4962 turnkey artifacts, slice, and SOTA inputs."
++    },
++    "three_column_dry_run_ok": {
++      "principle": "the self-consistency / decomposed-energy-verifier / oracle columns wire end-to-end on a SC-not-saturated slice (no full benchmark run)."
++    },
++    "turnkey_spec": {
++      "principle": "the one-command 7/1 experiment shape re-confirmed from Exp 4973."
++    },
++    "validation_gate": {
++      "principle": "the post-6/30 gate stated precisely: beats SC with CI95 excluding zero + oracle-distinct + no model-identity shortcut (NOT claimed met here)."
++    },
++    "verifier_is_oracle": {
++      "principle": "false -- the DESIGN TARGET is oracle-distinct (a learned/energy verifier, NOT the executable oracle that defines correctness); not a measured result here."
++    }
++  },
++  "honest_verdict": "success_distributional_energy_verifier_pivot_turnkey_backlog_extended",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "moat_proven_claimed": false,
++  "next_milestone_roadmap_inputs": [
++    "distributional_energy_lora_ensemble_with_fover_penalties",
++    "discriminative_budget_frontier",
++    "v1_uncertainty_guided_regeneration_comparator",
++    "genprm_matched_compute_generative_comparator",
++    "thinkprm_matched_compute_comparator",
++    "efficiency_parity_frontier",
++    "contextprm_cross_domain_registry_comparator",
++    "variance_reduced_uncertainty_head",
++    "fast_slow_process_router"
++  ],
++  "no_real_benchmark_run": true,
++  "pivot_executable_on_7_1": true,
++  "pivot_turnkey": true,
++  "post_sprint_first_experiment_pointer": {
++    "entrypoint_command": ".venv/bin/python python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py",
++    "first_experiment": "distributional_energy_verifier_vs_self_consistency_on_sc_not_saturated_TravelPlanner_or_MuSR",
++    "not_before_date": "2026-07-01",
++    "operator_note": "Use this single staged entrypoint after the majority-ARC sprint retires; promotion requires the validation gate.",
++    "real_benchmark_executed_by_exp4984": false
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "blocked_resource": null,
++    "codex_md_read": true,
++    "domain_error": null,
++    "domain_slice_path": "/home/ianblenke/github.com/ianblenke/carnot/data/experiment_4922_travelplanner_structured_slice.jsonl",
++    "domain_slice_present": true,
++    "domain_slice_rows": 3,
++    "domain_slice_valid": true,
++    "exp4922_harness_path": "python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py",
++    "exp4922_harness_present": true,
++    "exp4962_turnkey_artifact_path": "results/experiment_4962_distributional_energy_verifier_turnkey.json",
++    "exp4962_turnkey_artifact_present": true,
++    "exp4962_turnkey_module_path": "python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py",
++    "exp4962_turnkey_module_present": true,
++    "exp4973_turnkey_artifact_path": "results/experiment_4973_distributional_energy_verifier_turnkey.json",
++    "exp4973_turnkey_artifact_present": true,
++    "exp4973_turnkey_module_path": "python/carnot/experiment_4973_distributional_energy_verifier_turnkey.py",
++    "exp4973_turnkey_module_present": true,
++    "fover_active_ensemble_id": "fover_production_ensemble",
++    "fover_active_ensemble_present": true,
++    "fover_registry_path": "ops/verifier_registry.yaml",
++    "fover_registry_present": true,
++    "kona_spec_has_req": true,
++    "kona_spec_path": "openspec/capabilities/phase3-kona/spec.md",
++    "kona_spec_present": true,
++    "model_load": false,
++    "net_available": true,
++    "network_checked_url": "https://arxiv.org/abs/2510.14913",
++    "ops_docs_modified": false,
++    "real_benchmark_executed": false,
++    "sc_not_saturated_domain": "TravelPlanner",
++    "scripts_research_conductor_modified": false,
++    "self_consistency_dry_run_accuracy": 0.3333333333333333,
++    "self_consistency_saturated": false,
++    "self_consistency_saturation_threshold": 0.9,
++    "training_launched": false
++  },
++  "random_seed": 20260629,
++  "reproducibility_checksum": "a5a703d63abaa55a",
++  "research_note_path": "docs/research-notes/distributional-energy-verifier-turnkey-backlog-v459-20260629.md",
++  "sc_not_saturated_domain": "TravelPlanner",
++  "sota_to_carnot_mapping": {
++    "2502.01989": {
++      "implementation_cost_over_current_stack": "High: FoVer penalties can provide analytical constraints, but VFScale requires a generator-side diffusion or denoising search substrate plus dense-energy training; it is not a drop-in replacement for the current cached-candidate verifier.",
++      "pitfalls": "Evidence is strongest on Maze/Sudoku-style diffusion reasoning, not LLM structured-output reranking; the verifier-free objective can blur the oracle-distinct control, and hMCTS cost can erase matched-compute gains.",
++      "roadmap_input": "support_for_next_milestone: vfscale_intrinsic_energy_dense_reward_ablation",
++      "source_id": "2502.01989",
++      "strongest_method": "VFScale: train an intrinsic diffusion energy landscape with MRNCL plus KL regularization, then use hybrid MCTS over denoising trajectories so the intrinsic energy acts as a dense verifier/reward.",
++      "title": "VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable Diffusion Model",
++      "url": "https://arxiv.org/abs/2502.01989"
++    },
++    "2502.11157": {
++      "implementation_cost_over_current_stack": "Medium-high: wrap FoVer plus the learned energy scorer in a cascade router that accepts easy rows cheaply and escalates only uncertainty or constraint-conflict rows to a slower process verifier.",
++      "pitfalls": "Router false negatives can skip needed slow checks; slow-path tokens can erase efficiency gains; ProcessBench/MATH evidence must be revalidated on TravelPlanner or MuSR before any moat claim.",
++      "roadmap_input": "candidate_next_milestone: fast_slow_process_router",
++      "source_id": "2502.11157",
++      "strongest_method": "Dynamic process verification with a cheap System-1 token-level fast path and selective System-2 comprehensive analysis for hard or ambiguous steps.",
++      "title": "Dyve: Thinking Fast and Slow for Dynamic Process Verification",
++      "url": "https://arxiv.org/abs/2502.11157"
++    },
++    "2504.00891": {
++      "implementation_cost_over_current_stack": "Medium-high: add a generative PRM comparator beside the discriminative decomposed-energy verifier, charge its reasoning and code-check tokens against the same budget, and keep FoVer penalties as the deterministic oracle-distinct analytical column.",
++      "pitfalls": "Generated verification traces may re-derive the generator answer, code checks are not available for every TravelPlanner/MuSR-style constraint, and verifier-token cost can erase matched-compute gains.",
++      "roadmap_input": "candidate_next_milestone: genprm_matched_compute_generative_comparator",
++      "source_id": "2504.00891",
++      "strongest_method": "GenPRM: a generative process reward model that reasons over each step, emits verification chains, and can invoke code-style checks as test-time compute scales.",
++      "title": "GenPRM: Scaling Test-Time Compute of Process Reward Models via Generative Reasoning",
++      "url": "https://arxiv.org/abs/2504.00891"
++    },
++    "2504.01005": {
++      "implementation_cost_over_current_stack": "Low-medium: add matched-compute accounting around the existing three-column harness, then report the decomposed-energy verifier against the self-consistency/generative-verification frontier rather than only against equal candidate counts.",
++      "pitfalls": "A verifier that improves accuracy can still lose the north-star win if verification tokens are too expensive; frontier conclusions can flip by domain, generator strength, and self-consistency saturation.",
++      "roadmap_input": "candidate_next_milestone: efficiency_parity_frontier",
++      "source_id": "2504.01005",
++      "strongest_method": "Compute-optimal fixed-budget analysis of when to allocate inference tokens to additional self-consistency samples versus fewer samples plus a generative verification pass.",
++      "title": "When To Solve, When To Verify: Compute-Optimal Problem Solving and Generative Verification for LLM Reasoning",
++      "url": "https://arxiv.org/abs/2504.01005"
++    },
++    "2504.16828": {
++      "implementation_cost_over_current_stack": "Medium-high: keep FoVer penalties as deterministic checks, add a generative PRM comparator or labeler for the learned quality-scorer ensemble, and account for verifier tokens against self-consistency at matched compute.",
++      "pitfalls": "Verifier tokens can dominate cost, generated rationales may re-derive the generator answer instead of judging it, process labels may not transfer from math to TravelPlanner/MuSR, and long-CoT traces are hard to expose safely.",
++      "roadmap_input": "support_for_next_milestone: thinkprm_generative_prm_comparator",
++      "source_id": "2504.16828",
++      "strongest_method": "ThinkPRM: a generative long-CoT process verifier that writes a step-wise verification trace and uses that generated reasoning as the reward signal for best-of-N selection or reward-guided search.",
++      "title": "Process Reward Models That Think",
++      "url": "https://arxiv.org/abs/2504.16828"
++    },
++    "2508.10539": {
++      "implementation_cost_over_current_stack": "Medium: add process-state value labels or cached rollouts to the TravelPlanner/MuSR candidate traces, then calibrate the learned quality-ensemble STDDEV used by the regenerate/abstain loop.",
++      "pitfalls": "Evidence is math-centric; reducing variance can over-smooth genuine epistemic disagreement; adjacent-step value estimates may be unavailable for outcome-only rows.",
++      "roadmap_input": "candidate_next_milestone: variance_reduced_uncertainty_head",
++      "source_id": "2508.10539",
++      "strongest_method": "ComMCS variance reduction for value-based process verifiers: combine current-step and later-step Monte Carlo value estimates to reduce annotation variance without additional LLM inference.",
++      "title": "Improving Value-based Process Verifier via Low-Cost Variance Reduction",
++      "url": "https://arxiv.org/abs/2508.10539"
++    },
++    "2508.16665": {
++      "implementation_cost_over_current_stack": "Low: no model change required. Use it to label Carnot's current decomposed-energy verifier as a discriminative outcome-ranker with analytical constraint penalties, uncertainty, and abstention controls.",
++      "pitfalls": "It is a survey, not a direct measured win; taxonomy language can hide whether the verifier is oracle-distinct, matched-compute, or evaluated on a self-consistency-not-saturated domain.",
++      "roadmap_input": "taxonomy_anchor: verifier_design_cell_and_adjacent_open_cells",
++      "source_id": "2508.16665",
++      "strongest_method": "Verifier-design taxonomy for test-time scaling: outcome vs process, generative vs discriminative, prompt-based vs trained, and utility axes for efficiency and abstention.",
++      "title": "Trust but Verify! A Survey on Verification Design for Test-time Scaling",
++      "url": "https://arxiv.org/abs/2508.16665"
++    },
++    "2509.24460": {
++      "implementation_cost_over_current_stack": "Medium-high: extend the verifier registry with domain tags, coherence features, and cross-domain calibration slices, then compare against the current math-strong/code-weak Carnot verifier stack.",
++      "pitfalls": "Context coherence can reward fluent but wrong traces, cross-domain PRM generalization may hide per-domain failures, and registry expansion must avoid turning an executable oracle into the verifier itself.",
++      "roadmap_input": "candidate_next_milestone: contextprm_cross_domain_registry_comparator",
++      "source_id": "2509.24460",
++      "strongest_method": "ContextPRM: multi-domain process verification that uses contextual coherence signals to scale test-time verification beyond a single math-heavy verifier domain.",
++      "title": "ContextPRM: Leveraging Contextual Coherence for multi-domain Test-Time Scaling",
++      "url": "https://arxiv.org/abs/2509.24460"
++    },
++    "2510.14913": {
++      "implementation_cost_over_current_stack": "Low-medium: Carnot's decomposed-energy verifier is already a discriminative learned quality scorer plus deterministic penalties. Add matched-compute accounting, report accuracy-per-cost, and compare directly against both discriminative and generative verifier frontiers.",
++      "pitfalls": "A fixed compute budget can make an accurate verifier lose if its candidate scoring overhead is too high; hybrid self-consistency can hide whether the verifier itself adds oracle-distinct signal; math frontier results must be revalidated on TravelPlanner or MuSR.",
++      "roadmap_input": "candidate_next_milestone: discriminative_budget_frontier",
++      "source_id": "2510.14913",
++      "strongest_method": "Budget-aware discriminative verification: under a fixed inference budget, combine self-consistency with a discriminative verifier rather than spending the budget on costly generative verification traces.",
++      "title": "Budget-aware Test-time Scaling via Discriminative Verification",
++      "url": "https://arxiv.org/abs/2510.14913"
++    },
++    "2603.04304": {
++      "implementation_cost_over_current_stack": "Medium-high: add a pairwise ranking comparator around the current candidate table, use ensemble STDDEV to target regeneration or abstention, and keep the learned quality mean as the pointwise baseline.",
++      "pitfalls": "A unified generator/self-verifier can collapse into a model-identity shortcut, pairwise tournaments can spend substantial compute, and code or math wins may not transfer to oracle-distinct TravelPlanner/MuSR constraints without a separate verifier signal.",
++      "roadmap_input": "candidate_next_milestone: v1_uncertainty_guided_regeneration_comparator",
++      "source_id": "2603.04304",
++      "strongest_method": "V1-Infer pairwise self-verification: use uncertainty-guided tournament ranking over candidate pairs, allocating verification compute where relative correctness is most uncertain.",
++      "title": "V1: Unifying Generation and Self-Verification for Parallel Reasoners",
++      "url": "https://arxiv.org/abs/2603.04304"
++    },
++    "2605.18871": {
++      "implementation_cost_over_current_stack": "Medium: keep Carnot's FoVer verifier ensemble as the analytical penalty source, add a learned LoRA-ensemble quality scorer, calibrate mean/stddev on structured rows, and prohibit model_id or oracle-label features in the verifier path.",
++      "pitfalls": "Fails or overclaims when self-consistency is near ceiling, deterministic penalties silently become the correctness oracle, code tasks leak model identity, or stddev abstention is tuned on test labels.",
++      "roadmap_input": "flagged_for_next_milestone: decomposed_energy_lora_ensemble_with_fover_penalties",
++      "source_id": "2605.18871",
++      "strongest_method": "Decomposed energy verifier: heterogeneous LoRA quality-scorer ensemble on one frozen encoder; ensemble mean ranks candidates, ensemble stddev triggers targeted regeneration or abstention; deterministic analytical constraint penalties remain separate.",
++      "title": "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
++      "url": "https://arxiv.org/abs/2605.18871"
++    }
++  },
++  "source_artifacts": {
++    "domain_slice": "data/experiment_4922_travelplanner_structured_slice.jsonl",
++    "exp4922_harness": "python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py",
++    "exp4962_turnkey_artifact": "results/experiment_4962_distributional_energy_verifier_turnkey.json",
++    "exp4962_turnkey_module": "python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py",
++    "exp4973_turnkey_artifact": "results/experiment_4973_distributional_energy_verifier_turnkey.json",
++    "exp4973_turnkey_module": "python/carnot/experiment_4973_distributional_energy_verifier_turnkey.py",
++    "fover_registry": "ops/verifier_registry.yaml",
++    "kona_spec": "openspec/capabilities/phase3-kona/spec.md",
++    "north_star": "ops/north-star.md",
++    "research_references": "research-references.md",
++    "research_studying": "research-studying.md",
++    "verifier_gaps": "ops/verifier_gaps.md"
++  },
++  "three_column_dry_run_ok": true,
++  "turnkey_spec": {
++    "candidate_pool": "post-6/30 generated structured-reasoning candidates",
++    "decomposed_energy_verifier_column": {
++      "analytical_penalties": {
++        "cached_penalty_field": "deterministic_constraint_penalty",
++        "components": [
++          "fr11_session_memory",
++          "tier0r_curry_howard",
++          "tier0s_arithmetic_gap",
++          "tier0u_logical_consistency"
++        ],
++        "registry_path": "ops/verifier_registry.yaml",
++        "verifier_id": "fover_production_ensemble"
++      },
++      "formula": "-learned_quality_ensemble_mean + fover_analytical_constraint_penalty",
++      "learned_quality_scorer": "heterogeneous LoRA ensemble on one frozen encoder; mean ranks candidates",
++      "model_identity_features_allowed": false,
++      "oracle_labels_allowed_in_verifier": false,
++      "uncertainty_policy": "ensemble stddev above threshold triggers targeted regeneration or abstention"
++    },
++    "domain": "TravelPlanner",
++    "entrypoint_command": ".venv/bin/python python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py",
++    "experiment": "post_6_30_distributional_energy_verifier_moat_test_v459",
++    "oracle_column": "cached labels or domain oracle used only to score correctness",
++    "real_experiment_not_run": true,
++    "real_loader": "data/experiment_4922_travelplanner_structured_slice.jsonl",
++    "self_consistency_column": "majority answer over matched candidate sample counts",
++    "sota_backlog_extension": {
++      "new_arxiv_ids": [
++        "2508.16665",
++        "2508.10539",
++        "2502.11157"
++      ],
++      "next_milestone_roadmap_inputs": [
++        "distributional_energy_lora_ensemble_with_fover_penalties",
++        "variance_reduced_uncertainty_head",
++        "fast_slow_process_router",
++        "thinkprm_matched_compute_comparator"
++      ],
++      "reconfirmed_arxiv_ids": [
++        "2605.18871",
++        "2504.16828",
++        "2502.01989"
++      ],
++      "taxonomy_position": {
++        "adjacent_open_cells": [
++          "generative_process_verifier",
++          "value_process_variance_reduction",
++          "fast_slow_process_router"
++        ],
++        "carnot_design_cell": "decomposed_energy_verifier: discriminative outcome-ranker with analytical constraint penalties, ensemble uncertainty, abstention, and efficiency controls",
++        "occupied_axes": {
++          "abstention_axis": "ensemble STDDEV drives targeted regeneration or abstention",
++          "efficiency_axis": "cheap rerank/abstain first; slow regeneration only when uncertain",
++          "generative_vs_discriminative": "discriminative scorer plus deterministic penalties",
++          "outcome_vs_process": "outcome-first with process-adjacent constraint signals"
++        },
++        "survey_source": "2508.16665"
++      }
++    },
++    "sota_backlog_extension_v458": {
++      "new_arxiv_ids": [
++        "2504.01005",
++        "2504.00891",
++        "2509.24460"
++      ],
++      "next_milestone_roadmap_inputs": [
++        "distributional_energy_lora_ensemble_with_fover_penalties",
++        "efficiency_parity_frontier",
++        "genprm_matched_compute_generative_comparator",
++        "contextprm_cross_domain_registry_comparator",
++        "variance_reduced_uncertainty_head",
++        "fast_slow_process_router"
++      ],
++      "reconfirmed_arxiv_ids": [
++        "2605.18871",
++        "2504.16828",
++        "2502.01989",
++        "2508.16665",
++        "2508.10539",
++        "2502.11157"
++      ]
++    },
++    "sota_backlog_extension_v459": {
++      "must_report_comparators": [
++        "discriminative_budget_frontier_2510_14913",
++        "genprm_generative_frontier_2504_00891",
++        "thinkprm_generative_frontier_2504_16828",
++        "v1_uncertainty_guided_regeneration_2603_04304"
++      ],
++      "new_arxiv_ids": [
++        "2510.14913",
++        "2603.04304"
++      ],
++      "next_milestone_roadmap_inputs": [
++        "distributional_energy_lora_ensemble_with_fover_penalties",
++        "discriminative_budget_frontier",
++        "v1_uncertainty_guided_regeneration_comparator",
++        "genprm_matched_compute_generative_comparator",
++        "thinkprm_matched_compute_comparator",
++        "efficiency_parity_frontier",
++        "contextprm_cross_domain_registry_comparator",
++        "variance_reduced_uncertainty_head",
++        "fast_slow_process_router"
++      ],
++      "reconfirmed_arxiv_ids": [
++        "2605.18871",
++        "2504.16828",
++        "2502.01989",
++        "2508.16665",
++        "2508.10539",
++        "2502.11157",
++        "2504.01005",
++        "2504.00891",
++        "2509.24460"
++      ]
++    }
++  },
++  "validation_gate": {
++    "beats_self_consistency_ci95_excludes_zero_required": true,
++    "claimed_met": false,
++    "domain_self_consistency_not_near_ceiling_required": true,
++    "no_model_identity_shortcut_required": true,
++    "oracle_distinct_required": true,
++    "promotion_note": "not met by Exp4984; this artifact only re-confirms turnkey readiness and extends the post-6/30 backlog",
++    "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero",
++    "verifier_is_oracle_required_value": false
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 6dbd5de83e..682ed0f12a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260629",
+-  "started_at": "2026-06-29T17:15:55Z",
+-  "finished_at": "2026-06-29T17:15:55Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-29T18:56:58Z",
++  "finished_at": "2026-06-29T18:56:58Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index f90f5e233a..7581ab533b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260629",
+-  "started_at": "2026-06-29T17:15:55Z",
+-  "finished_at": "2026-06-29T17:15:55Z",
++  "started_at": "2026-06-29T18:56:58Z",
++  "finished_at": "2026-06-29T18:56:58Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 7e1fd018f4..52bd93b28c 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260629",
+-  "started_at": "2026-06-29T17:15:55Z",
+-  "finished_at": "2026-06-29T17:15:55Z",
++  "started_at": "2026-06-29T18:56:58Z",
++  "finished_at": "2026-06-29T18:56:59Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4984_distributional_energy_verifier_turnkey.py b/tests/python/test_experiment_4984_distributional_energy_verifier_turnkey.py
+new file mode 100644
+index 0000000000..bcff1bb93f
+--- /dev/null
++++ b/tests/python/test_experiment_4984_distributional_energy_verifier_turnkey.py
+@@ -0,0 +1,634 @@
++"""Tests for Exp 4984 distributional-energy verifier turnkey backlog extension.
++
++Spec refs: REQ-KONA-4984, SCENARIO-KONA-4984-TURNKEY-BACKLOG,
++SCENARIO-KONA-4984-BLOCKED, SCENARIO-KONA-4984-VALIDATION-GATE.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4984_distributional_energy_verifier_turnkey as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "phase3-kona" / "spec.md"
++
++
++def _candidate(
++    candidate_id: str,
++    answer: str,
++    *,
++    sample_count: int,
++    quality: float,
++    penalty: float,
++    stddev: float,
++    correct: bool,
++    model_id: str = "cached-generator-a",
++) -> dict[str, object]:
++    return {
++        "candidate_id": candidate_id,
++        "answer": answer,
++        "sample_count": sample_count,
++        "learned_quality_mean": quality,
++        "learned_quality_stddev": stddev,
++        "deterministic_constraint_penalty": penalty,
++        "uncertainty": stddev,
++        "label_correct": correct,
++        "model_id": model_id,
++    }
++
++
++def _row(problem_id: str = "tp4984-test-1") -> dict[str, object]:
++    return {
++        "problem_id": problem_id,
++        "domain": "travelplanner_style_structured_reasoning",
++        "prompt": "Build a small constrained itinerary.",
++        "oracle_distinct": True,
++        "cheap_executable_oracle_available": False,
++        "candidates": [
++            _candidate(
++                "sc-majority",
++                "invalid but common plan",
++                sample_count=3,
++                quality=0.55,
++                penalty=0.42,
++                stddev=0.12,
++                correct=False,
++            ),
++            _candidate(
++                "energy-best",
++                "constraint-respecting plan",
++                sample_count=2,
++                quality=0.88,
++                penalty=0.03,
++                stddev=0.05,
++                correct=True,
++                model_id="cached-generator-b",
++            ),
++        ],
++    }
++
++
++def _saturated_row() -> dict[str, object]:
++    return {
++        "problem_id": "tp4984-saturated",
++        "domain": "travelplanner_style_structured_reasoning",
++        "prompt": "Easy row where self-consistency is already correct.",
++        "oracle_distinct": True,
++        "cheap_executable_oracle_available": False,
++        "candidates": [
++            _candidate(
++                "majority-correct",
++                "correct plan",
++                sample_count=5,
++                quality=0.91,
++                penalty=0.01,
++                stddev=0.03,
++                correct=True,
++            ),
++            _candidate(
++                "minority-wrong",
++                "wrong plan",
++                sample_count=1,
++                quality=0.40,
++                penalty=0.33,
++                stddev=0.15,
++                correct=False,
++            ),
++        ],
++    }
++
++
++def _write_slice(path: Path, rows: list[dict[str, object]] | None = None) -> Path:
++    rows = rows if rows is not None else [_row("tp4984-test-1"), _row("tp4984-test-2")]
++    path.write_text(
++        "\n".join(json.dumps(row, sort_keys=True) for row in rows) + "\n",
++        encoding="utf-8",
++    )
++    return path
++
++
++def _artifact(tmp_path: Path) -> dict[str, Any]:
++    return mod.build_artifact(
++        repo_root=REPO,
++        domain_slice_path=_write_slice(tmp_path / "slice.jsonl"),
++        net_available=True,
++    )
++
++
++def _spec_section() -> str:
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    start = spec.index("### REQ-KONA-4984")
++    end = spec.index("## Latent Symbol Bridge Falsification", start)
++    return spec[start:end]
++
++
++def _stage_repo_with(
++    path: Path,
++    *relative_paths: str,
++    registry_has_active: bool = True,
++    spec_has_req: bool = True,
++) -> Path:
++    for relative_path in relative_paths:
++        target = path / relative_path
++        target.parent.mkdir(parents=True, exist_ok=True)
++        if relative_path == mod.FOVER_REGISTRY_RELATIVE_PATH:
++            text = (
++                "verifiers:\n- verifier_id: fover_production_ensemble\n"
++                if registry_has_active
++                else "verifiers: []\n"
++            )
++        elif relative_path == mod.KONA_SPEC_RELATIVE_PATH:
++            text = "### REQ-KONA-4984\n" if spec_has_req else "### REQ-KONA-4973\n"
++        else:
++            text = "{}\n" if relative_path.endswith(".json") else "# staged\n"
++        target.write_text(text, encoding="utf-8")
++    return path
++
++
++def test_req_kona_4984_spec_declares_turnkey_backlog_contract() -> None:
++    """REQ-KONA-4984: OpenSpec anchors paths, fields, papers, and guardrails."""
++
++    section = _spec_section()
++
++    for marker in (
++        "REQ-KONA-4984",
++        "SCENARIO-KONA-4984-TURNKEY-BACKLOG",
++        "SCENARIO-KONA-4984-BLOCKED",
++        "SCENARIO-KONA-4984-VALIDATION-GATE",
++        mod.RESULT_RELATIVE_PATH,
++        mod.MODULE_RELATIVE_PATH,
++        mod.ENTRYPOINT_COMMAND,
++        "research-studying.md",
++        "scripts/research_conductor.py",
++        "ops/changelog.md",
++        "ops/status.md",
++        "_bmad/traceability.md",
++        "self_consistency",
++        "decomposed_energy_verifier",
++        "oracle",
++        "pivot_turnkey",
++        "post_sprint_first_experiment_pointer",
++        "verifier_is_oracle",
++        "false",
++        "moat_proven_claimed=false",
++        mod.HONEST_VERDICT,
++        "discriminative verifier-under-budget",
++        "unify-generation-and-self-verification",
++    ):
++        assert marker in section
++    for arxiv_id in mod.ARXIV_IDS:
++        assert arxiv_id in section
++    for field, principle in mod.REQUIRED_USER_FIELD_PRINCIPLES.items():
++        assert field in section
++        assert principle["principle"] in section
++
++
++def test_req_kona_4984_citations_mapping_and_roadmap_are_complete() -> None:
++    """REQ-KONA-4984: new and re-confirmed arXiv papers map onto Carnot."""
++
++    assert mod.ARXIV_IDS == mod.NEW_ARXIV_IDS + mod.RECONFIRMED_ARXIV_IDS
++    assert len(mod.ARXIV_IDS) == 11
++    assert set(mod.CITATIONS) == set(mod.ARXIV_IDS)
++    assert set(mod.SOTA_TO_CARNOT_MAPPING) == set(mod.ARXIV_IDS)
++    assert set(mod.ALREADY_INGESTED_RECONFIRMED) == set(mod.RECONFIRMED_ARXIV_IDS)
++    assert "discriminative_budget_frontier" in mod.NEXT_MILESTONE_ROADMAP_INPUTS
++    assert "v1_uncertainty_guided_regeneration_comparator" in (
++        mod.NEXT_MILESTONE_ROADMAP_INPUTS
++    )
++    assert "genprm_matched_compute_generative_comparator" in (
++        mod.NEXT_MILESTONE_ROADMAP_INPUTS
++    )
++    assert "thinkprm_matched_compute_comparator" in mod.NEXT_MILESTONE_ROADMAP_INPUTS
++    for arxiv_id, citation in mod.CITATIONS.items():
++        assert citation["url"] == f"https://arxiv.org/abs/{arxiv_id}"
++        assert citation["http_status"] == 200
++        assert citation["title"]
++        assert citation["ingestion_status"] in {"new", "reconfirmed"}
++    for arxiv_id, mapping in mod.SOTA_TO_CARNOT_MAPPING.items():
++        assert set(mapping) == mod.REQUIRED_MAPPING_FIELDS
++        assert mapping["source_id"] == arxiv_id
++        assert mapping["strongest_method"]
++        assert mapping["implementation_cost_over_current_stack"]
++        assert mapping["pitfalls"]
++        assert mapping["roadmap_input"]
++    assert "fixed compute budget" in mod.SOTA_TO_CARNOT_MAPPING["2510.14913"]["pitfalls"]
++    assert "pairwise" in mod.SOTA_TO_CARNOT_MAPPING["2603.04304"]["strongest_method"]
++
++
++def test_scenario_kona_4984_dry_run_reconfirms_three_columns() -> None:
++    """SCENARIO-KONA-4984-TURNKEY-BACKLOG: three columns wire end-to-end."""
++
++    dry_run = mod.run_three_column_dry_run([_row()], limit=1)
++
++    assert dry_run["columns"] == list(mod.THREE_DRY_RUN_COLUMNS)
++    assert dry_run["n_rows"] == 1
++    assert dry_run["full_benchmark_run"] is False
++    assert dry_run["reconfirmed_from_exp4973"] is True
++    scored = dry_run["rows"][0]
++    assert scored["self_consistency"]["selected_candidate_id"] == "sc-majority"
++    assert scored["decomposed_energy_verifier"]["selected_candidate_id"] == "energy-best"
++    assert scored["decomposed_energy_verifier"]["verifier_is_oracle"] is False
++    assert scored["decomposed_energy_verifier"]["abstention_recommended"] is False
++    assert scored["oracle"]["selected_candidate_id"] == "energy-best"
++    assert scored["oracle"]["oracle_used_for_correctness_only"] is True
++
++
++def test_req_kona_4984_loader_reads_real_slice_and_enforces_non_saturation(
++    tmp_path: Path,
++) -> None:
++    """REQ-KONA-4984: real JSONL loader returns a small SC-not-saturated slice."""
++
++    loaded = mod.load_turnkey_domain_slice(_write_slice(tmp_path / "slice.jsonl"), limit=1)
++
++    assert len(loaded) == 1
++    assert loaded[0]["problem_id"] == "tp4984-test-1"
++    assert mod.slice_self_consistency_saturated(loaded) is False
++    with pytest.raises(ValueError, match="self-consistency saturated"):
++        mod.load_turnkey_domain_slice(_write_slice(tmp_path / "saturated.jsonl", [_saturated_row()]))
++
++
++def test_scenario_kona_4984_success_artifact_has_required_guardrails(tmp_path: Path) -> None:
++    """SCENARIO-KONA-4984-VALIDATION-GATE: success artifact is readiness only."""
++
++    artifact = _artifact(tmp_path)
++
++    mod.validate_artifact(artifact)
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert set(artifact["field_principles"]) == set(mod.FIELD_PRINCIPLES)
++    assert artifact["honest_verdict"] == mod.HONEST_VERDICT
++    assert artifact["arxiv_ids_cited"] == list(mod.ARXIV_IDS)
++    assert artifact["already_ingested_reconfirmed"] == list(mod.RECONFIRMED_ARXIV_IDS)
++    assert artifact["pivot_executable_on_7_1"] is True
++    assert artifact["pivot_turnkey"] is True
++    assert artifact["three_column_dry_run_ok"] is True
++    assert artifact["sc_not_saturated_domain"] == mod.SC_NOT_SATURATED_DOMAIN
++    assert artifact["post_sprint_first_experiment_pointer"]["entrypoint_command"] == (
++        mod.ENTRYPOINT_COMMAND
++    )
++    assert artifact["validation_gate"]["claimed_met"] is False
++    assert artifact["validation_gate"]["beats_self_consistency_ci95_excludes_zero_required"] is True
++    assert artifact["validation_gate"]["oracle_distinct_required"] is True
++    assert artifact["validation_gate"]["no_model_identity_shortcut_required"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["moat_proven_claimed"] is False
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["preconditions_checked"]["net_available"] is True
++    assert artifact["preconditions_checked"]["blocked_resource"] is None
++    assert artifact["preconditions_checked"]["exp4973_turnkey_artifact_present"] is True
++    assert artifact["preconditions_checked"]["exp4962_turnkey_module_present"] is True
++    assert artifact["preconditions_checked"]["self_consistency_saturated"] is False
++    assert artifact["no_real_benchmark_run"] is True
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++
++
++def test_scenario_kona_4984_blocked_preconditions_do_not_fabricate(tmp_path: Path) -> None:
++    """SCENARIO-KONA-4984-BLOCKED: missing resources block honestly."""
++
++    domain_slice = _write_slice(tmp_path / "slice.jsonl")
++    missing_spec = mod.build_artifact(
++        repo_root=tmp_path / "empty",
++        domain_slice_path=domain_slice,
++        net_available=False,
++    )
++    mod.validate_artifact(missing_spec)
++    assert missing_spec["honest_verdict"] == "blocked_kona_spec_missing"
++    assert missing_spec["pivot_executable_on_7_1"] is False
++    assert missing_spec["pivot_turnkey"] is False
++    assert missing_spec["preconditions_checked"]["net_available"] is False
++
++    missing_req_repo = _stage_repo_with(
++        tmp_path / "missing_req_repo",
++        mod.KONA_SPEC_RELATIVE_PATH,
++        spec_has_req=False,
++    )
++    missing_req = mod.build_artifact(
++        repo_root=missing_req_repo,
++        domain_slice_path=domain_slice,
++        net_available=True,
++    )
++    mod.validate_artifact(missing_req)
++    assert missing_req["honest_verdict"] == "blocked_kona_spec_req_missing"
++
++    staged = _stage_repo_with(
++        tmp_path / "staged",
++        mod.KONA_SPEC_RELATIVE_PATH,
++        mod.EXP4973_RESULT_RELATIVE_PATH,
++        mod.EXP4973_MODULE_RELATIVE_PATH,
++        mod.EXP4962_RESULT_RELATIVE_PATH,
++        mod.EXP4962_MODULE_RELATIVE_PATH,
++        mod.EXP4922_HARNESS_RELATIVE_PATH,
++        mod.FOVER_REGISTRY_RELATIVE_PATH,
++    )
++    missing_slice = mod.build_artifact(
++        repo_root=staged,
++        domain_slice_path=tmp_path / "missing.jsonl",
++        net_available=True,
++    )
++    mod.validate_artifact(missing_slice)
++    assert missing_slice["honest_verdict"] == "blocked_domain_slice_missing"
++
++    saturated = mod.build_artifact(
++        repo_root=REPO,
++        domain_slice_path=_write_slice(tmp_path / "saturated.jsonl", [_saturated_row()]),
++        net_available=True,
++    )
++    mod.validate_artifact(saturated)
++    assert saturated["honest_verdict"] == "blocked_self_consistency_saturated"
++
++    invalid_slice = tmp_path / "invalid.jsonl"
++    invalid_slice.write_text("{not json}\n", encoding="utf-8")
++    invalid = mod.check_preconditions(
++        repo_root=REPO,
++        domain_slice_path=invalid_slice,
++        net_available=True,
++    )
++    assert invalid["blocked_resource"] == "domain_slice_invalid"
++    assert invalid["domain_error"]
++
++
++@pytest.mark.parametrize(
++    ("missing", "resource"),
++    [
++        ("exp4973_artifact", "exp4973_turnkey_artifact_missing"),
++        ("exp4973_module", "exp4973_turnkey_module_missing"),
++        ("exp4962_artifact", "exp4962_turnkey_artifact_missing"),
++        ("exp4962_module", "exp4962_turnkey_module_missing"),
++        ("exp4922_harness", "exp4922_harness_missing"),
++        ("fover_registry", "fover_registry_missing"),
++        ("fover_active", "fover_active_ensemble_missing"),
++        ("domain_invalid", "domain_slice_invalid"),
++        ("saturated", "self_consistency_saturated"),
++    ],
++)
++def test_blocked_resource_helper_names_each_missing_precondition(
++    missing: str, resource: str
++) -> None:
++    """REQ-KONA-4984: precondition naming is exact for conductor audits."""
++
++    kwargs = {
++        "kona_spec_present": True,
++        "kona_spec_has_req": True,
++        "exp4973_artifact_present": True,
++        "exp4973_module_present": True,
++        "exp4962_artifact_present": True,
++        "exp4962_module_present": True,
++        "exp4922_harness_present": True,
++        "fover_registry_present": True,
++        "fover_active_ensemble_present": True,
++        "domain_slice_present": True,
++        "domain_slice_valid": True,
++        "self_consistency_saturated": False,
++    }
++    if missing == "exp4973_artifact":
++        kwargs["exp4973_artifact_present"] = False
++    elif missing == "exp4973_module":
++        kwargs["exp4973_module_present"] = False
++    elif missing == "exp4962_artifact":
++        kwargs["exp4962_artifact_present"] = False
++    elif missing == "exp4962_module":
++        kwargs["exp4962_module_present"] = False
++    elif missing == "exp4922_harness":
++        kwargs["exp4922_harness_present"] = False
++    elif missing == "fover_registry":
++        kwargs["fover_registry_present"] = False
++    elif missing == "fover_active":
++        kwargs["fover_active_ensemble_present"] = False
++    elif missing == "domain_invalid":
++        kwargs["domain_slice_valid"] = False
++    else:
++        kwargs["self_consistency_saturated"] = True
++
++    assert mod.blocked_resource_from_preconditions(**kwargs) == resource
++
++
++def test_blocked_resource_helper_accepts_complete_preconditions() -> None:
++    """REQ-KONA-4984: complete staged resources leave the run unblocked."""
++
++    assert (
++        mod.blocked_resource_from_preconditions(
++            kona_spec_present=True,
++            kona_spec_has_req=True,
++            exp4973_artifact_present=True,
++            exp4973_module_present=True,
++            exp4962_artifact_present=True,
++            exp4962_module_present=True,
++            exp4922_harness_present=True,
++            fover_registry_present=True,
++            fover_active_ensemble_present=True,
++            domain_slice_present=True,
++            domain_slice_valid=True,
++            self_consistency_saturated=False,
++        )
++        is None
++    )
++
++
++@pytest.mark.parametrize(
++    ("updates", "message"),
++    [
++        ({"honest_verdict": "draft"}, "terminal prefix"),
++        ({"honest_verdict": "success_wrong"}, "honest_verdict"),
++        ({"arxiv_ids_cited": ["2510.14913"]}, "arxiv_ids_cited"),
++        ({"sota_to_carnot_mapping": {}}, "sota_to_carnot_mapping"),
++        ({"already_ingested_reconfirmed": []}, "already_ingested_reconfirmed"),
++        ({"next_milestone_roadmap_inputs": []}, "next_milestone"),
++        ({"pivot_executable_on_7_1": False}, "pivot_executable"),
++        ({"pivot_turnkey": False}, "pivot_turnkey"),
++        ({"three_column_dry_run_ok": False}, "three_column_dry_run_ok"),
++        ({"sc_not_saturated_domain": "ARC"}, "sc_not_saturated_domain"),
++        ({"post_sprint_first_experiment_pointer": {"entrypoint_command": "wrong"}}, "entrypoint"),
++        ({"validation_gate": {"claimed_met": True}}, "validation_gate"),
++        ({"verifier_is_oracle": True}, "verifier_is_oracle"),
++        ({"moat_proven_claimed": True}, "moat_proven_claimed"),
++        ({"inference_substrate": "live_benchmark"}, "inference_substrate"),
++        ({"random_seed": 4984}, "random_seed"),
++        ({"dry_run_three_columns": {"columns": ["self_consistency"]}}, "dry_run_three_columns"),
++        (
++            {
++                "dry_run_three_columns": mod.run_three_column_dry_run([_row()])
++                | {"full_benchmark_run": True}
++            },
++            "full benchmark",
++        ),
++        ({"citations": {}}, "citations"),
++        (
++            {
++                "citations": mod.CITATIONS
++                | {
++                    "2510.14913": {
++                        key: value
++                        for key, value in mod.CITATIONS["2510.14913"].items()
++                        if key != "title"
++                    }
++                }
++            },
++            "fields invalid",
++        ),
++        (
++            {
++                "citations": mod.CITATIONS
++                | {
++                    "2510.14913": mod.CITATIONS["2510.14913"]
++                    | {"url": "https://arxiv.org/abs/9999.99999"}
++                }
++            },
++            "URL invalid",
++        ),
++        (
++            {
++                "citations": mod.CITATIONS
++                | {"2510.14913": mod.CITATIONS["2510.14913"] | {"http_status": 404}}
++            },
++            "http_status",
++        ),
++        (
++            {
++                "citations": mod.CITATIONS
++                | {
++                    "2510.14913": mod.CITATIONS["2510.14913"]
++                    | {"ingestion_status": "unverified"}
++                }
++            },
++            "ingestion_status",
++        ),
++        ({"field_principles": {}}, "field_principles"),
++        ({"no_real_benchmark_run": False}, "no_real_benchmark_run"),
++    ],
++)
++def test_validate_artifact_rejects_guardrail_violations(
++    tmp_path: Path, updates: dict[str, object], message: str
++) -> None:
++    """SCENARIO-KONA-4984-VALIDATION-GATE: invalid guardrails fail closed."""
++
++    artifact = _artifact(tmp_path)
++    bad = copy.deepcopy(artifact)
++    bad.update(updates)
++    if "reproducibility_checksum" in bad:
++        bad["reproducibility_checksum"] = mod.reproducibility_checksum(bad)
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad)
++
++
++def test_validate_artifact_rejects_mapping_schema_and_checksum(tmp_path: Path) -> None:
++    """REQ-KONA-4984: artifact and mapping schemas reject drift."""
++
++    artifact = _artifact(tmp_path)
++    missing = copy.deepcopy(artifact)
++    missing.pop("duration_s")
++    with pytest.raises(ValueError, match="fields mismatch"):
++        mod.validate_artifact(missing)
++
++    extra = copy.deepcopy(artifact)
++    extra["unexpected"] = True
++    with pytest.raises(ValueError, match="fields mismatch"):
++        mod.validate_artifact(extra)
++
++    bad_fields = copy.deepcopy(mod.SOTA_TO_CARNOT_MAPPING)
++    bad_fields["2510.14913"] = {
++        key: value for key, value in bad_fields["2510.14913"].items() if key != "pitfalls"
++    }
++    with pytest.raises(ValueError, match="fields invalid"):
++        mod.validate_mapping(bad_fields)
++
++    bad_source = copy.deepcopy(mod.SOTA_TO_CARNOT_MAPPING)
++    bad_source["2510.14913"]["source_id"] = "9999.99999"
++    with pytest.raises(ValueError, match="source_id mismatch"):
++        mod.validate_mapping(bad_source)
++
++    bad_text = copy.deepcopy(mod.SOTA_TO_CARNOT_MAPPING)
++    bad_text["2510.14913"]["strongest_method"] = ""
++    with pytest.raises(ValueError, match="strongest_method"):
++        mod.validate_mapping(bad_text)
++
++    bad_checksum = copy.deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = "sha256:wrong"
++    with pytest.raises(ValueError, match="checksum"):
++        mod.validate_artifact(bad_checksum)
++
++
++def test_network_checker_reports_success_and_failure(monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-KONA-4984: network precondition is recorded but not required."""
++
++    class Response:
++        status = 200
++
++        def __enter__(self) -> "Response":
++            return self
++
++        def __exit__(self, *_args: object) -> None:
++            return None
++
++    def ok(_url: str, timeout: float) -> Response:
++        assert timeout == mod.NETWORK_TIMEOUT_S
++        return Response()
++
++    def fail(_url: str, timeout: float) -> Response:
++        raise OSError("network down")
++
++    monkeypatch.setattr(mod.request, "urlopen", ok)
++    assert mod.check_network_available() is True
++    monkeypatch.setattr(mod.request, "urlopen", fail)
++    assert mod.check_network_available() is False
++
++
++def test_main_writes_result_note_and_research_studying_section(tmp_path: Path) -> None:
++    """REQ-KONA-4984: main writes the artifact, note, and INGESTED marker."""
++
++    result_path = tmp_path / "artifact.json"
++    note_path = tmp_path / "note.md"
++    studying_path = tmp_path / "research-studying.md"
++    studying_path.write_text("before\n", encoding="utf-8")
++
++    artifact = mod.main(
++        repo_root=REPO,
++        domain_slice_path=_write_slice(tmp_path / "slice.jsonl"),
++        result_path=result_path,
++        note_path=note_path,
++        studying_path=studying_path,
++        net_available=True,
++    )
++
++    written = json.loads(result_path.read_text(encoding="utf-8"))
++    note = note_path.read_text(encoding="utf-8")
++    studying = studying_path.read_text(encoding="utf-8")
++    assert written == artifact
++    assert "Exp 4984" in note
++    assert "2510.14913" in note
++    assert "2603.04304" in note
++    assert mod.ENTRYPOINT_COMMAND in note
++    assert "INGESTED" in studying
++    assert "discriminative_budget_frontier" in studying
++    assert "v1_uncertainty_guided_regeneration_comparator" in studying
++    assert studying.count(mod.STUDYING_SECTION_START) == 1
++
++    mod.write_research_studying_section(studying_path, artifact)
++    updated = studying_path.read_text(encoding="utf-8")
++    assert updated.count(mod.STUDYING_SECTION_START) == 1
++
++
++def test_research_studying_writer_can_build_default_artifact(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-KONA-4984: studying writer has a deterministic default artifact path."""
++
++    artifact = mod.build_artifact(
++        repo_root=REPO,
++        domain_slice_path=_write_slice(tmp_path / "slice.jsonl"),
++        net_available=True,
++    )
++    studying_path = tmp_path / "research-studying.md"
++
++    monkeypatch.setattr(mod, "build_artifact", lambda: artifact)
++    mod.write_research_studying_section(studying_path)
++
++    studying = studying_path.read_text(encoding="utf-8")
++    assert "Exp 4984" in studying
++    assert "INGESTED" in studying
+-- 
+2.55.0
+

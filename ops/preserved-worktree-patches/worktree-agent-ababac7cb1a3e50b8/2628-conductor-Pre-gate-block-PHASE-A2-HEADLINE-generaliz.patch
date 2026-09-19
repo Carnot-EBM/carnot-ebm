@@ -1,0 +1,95 @@
+From 8c0cf65d16acc2b18a915809850d4a9e6bc0bfd3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 17:02:03 -0400
+Subject: [PATCH 02628/11362] =?UTF-8?q?[conductor]=20Pre-gate=20block:=20P?=
+ =?UTF-8?q?HASE=20A2=20(HEADLINE=20generalization;=20GATED=20on=20exp4403?=
+ =?UTF-8?q?=20localizer=5Fgenuinely=5Fbeats=5Fposition=5Fonly=3D=3Dtrue)?=
+ =?UTF-8?q?=20--=20does=20the=20DECONFOUNDED=20localizer=20GENERALIZE:=20(?=
+ =?UTF-8?q?a)=20cross-domain=20to=20the=20GAP-4=20ARC=20split=20+=20a=20he?=
+ =?UTF-8?q?ld-out=20FoVer=20template=20family,=20and=20(b)=20agree=20with?=
+ =?UTF-8?q?=20an=20INDEPENDENT=20typed=20first-error=20taxonomy=20monitor?=
+ =?UTF-8?q?=20(arXiv:2603.25412=20'Reasoning=20Safety=20Monitor')=3F=20exp?=
+ =?UTF-8?q?4403=20(gated)=20shows=20a=20real-intervention=20localizer=20th?=
+ =?UTF-8?q?at=20beats=20the=20content-blind=20position-only=20baseline=20o?=
+ =?UTF-8?q?n=20a=20held-out=20FoVer=20family.=20Before=20it=20graduates=20?=
+ =?UTF-8?q?to=20a=20cross-domain=20headline,=20(1)=20build=20an=20INDEPEND?=
+ =?UTF-8?q?ENT=20typed=20first-error=20discriminator=20(a=20typed=20reason?=
+ =?UTF-8?q?ing-vulnerability=20taxonomy=20as=20a=20SEPARATE=20label/audit?=
+ =?UTF-8?q?=20channel)=20and=20compare=20its=20onset=20labels=20with=20the?=
+ =?UTF-8?q?=20localizer's=20--=20require=20a=20disagreement=20analysis=20(?=
+ =?UTF-8?q?per-type=20false-positive=20+=20domain-competence)=20before=20a?=
+ =?UTF-8?q?ccepting=20an=20earliest-error=20claim;=20(2)=20test=20cross-do?=
+ =?UTF-8?q?main=20generalization=20(does=20the=20localizer's=20content-dep?=
+ =?UTF-8?q?endent=20advantage=20hold=20on=20GAP-4=20ARC,=20where=20the=20m?=
+ =?UTF-8?q?echanic=20differs=20from=20FoVer-math=3F).=20Emit=20localizer?=
+ =?UTF-8?q?=5Fgeneralizes=5Ftyped=20BARE=20bool=20:=3D=20(the=20deconfound?=
+ =?UTF-8?q?ed=20localizer=20beats=20the=20position-only=20baseline=20CI95-?=
+ =?UTF-8?q?excl-0=20on=20>=3D1=20NON-FoVer=20domain=20AND=20its=20onset=20?=
+ =?UTF-8?q?labels=20agree=20with=20the=20independent=20typed-taxonomy=20mo?=
+ =?UTF-8?q?nitor=20above=20chance,=20with=20per-type=20FP=20reported).=20v?=
+ =?UTF-8?q?erifier=5Fis=5Foracle=3Dfalse.=20A=20pass=20=3D=20the=20oracle-?=
+ =?UTF-8?q?distinct=20localizer=20is=20a=20cross-domain=20capability=20(no?=
+ =?UTF-8?q?rth-star=20=C2=A70=20step=202);=20a=20fail=20=3D=20it=20is=20Fo?=
+ =?UTF-8?q?Ver-family-bound=20(logged=20as=20a=20missing-verifier=20gap,?=
+ =?UTF-8?q?=20the=20localizer=20is=20domain-narrow).=20This=20DIAGNOSTIC?=
+ =?UTF-8?q?=20reuses=20exp4403's=20localizer;=20no=20new=20label=20infra,?=
+ =?UTF-8?q?=20no=20live=20training.=20NO=20TRM=20training;=20CPU-offline.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+1 of 1 gate(s) failed; first failure: exp4403-real-intervention-localizer-deconfound.localizer_genuinely_beats_position_only (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...experiment_4404_localizer_typed_taxonomy_cross_domain.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6cad612ca9..e645b842d9 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 118, "phase": "iteration_start", "last_beat": "2026-06-18T21:00:00Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 119, "phase": "iteration_start", "last_beat": "2026-06-18T21:02:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ab0cca79ba..4d4a4179b7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8751,3 +8751,4 @@ c |
+ | 2026-06-18 20:35 UTC | Archive .406 -> activate .407. Assert research-com | OK | 96 passed, 1 warning in 14.14s |
+ | 2026-06-18 20:55 UTC | PHASE A1 (HEADLINE; oracle-distinct LOCALIZER, DEC | OK | 88 passed, 1 warning in 10.62s |
+ | 2026-06-18 20:58 UTC | PHASE A2 (HEADLINE generalization; GATED on exp440 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4403-real-intervention-localizer-deconf |
++| 2026-06-18 21:00 UTC | PHASE A2 (HEADLINE generalization; GATED on exp440 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4403-real-intervention-localizer-deconf |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index af6e5b2220..3c48b85c2b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 118, "phase": "iteration_start", "started_at": "2026-06-18T21:00:00Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 119, "phase": "iteration_start", "started_at": "2026-06-18T21:02:03Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4404_localizer_typed_taxonomy_cross_domain.json b/results/experiment_4404_localizer_typed_taxonomy_cross_domain.json
+index d0ffe8e2fd..b19c74e65a 100644
+--- a/results/experiment_4404_localizer_typed_taxonomy_cross_domain.json
++++ b/results/experiment_4404_localizer_typed_taxonomy_cross_domain.json
+@@ -2,8 +2,8 @@
+   "experiment": 4404,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-06-18",
+-  "started_at": "2026-06-18T21:00:00.916104+00:00",
+-  "finished_at": "2026-06-18T21:00:00.916104+00:00",
++  "started_at": "2026-06-18T21:02:03.576112+00:00",
++  "finished_at": "2026-06-18T21:02:03.576112+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "PHASE A2 (HEADLINE generalization; GATED on exp4403 localizer_genuinely_beats_position_only==true) -- does the DECONFOUNDED localizer GENERALIZE: (a) cross-domain to the GAP-4 ARC split + a held-out FoVer template family, and (b) agree with an INDEPENDENT typed first-error taxonomy monitor (arXiv:2603.25412 'Reasoning Safety Monitor')? exp4403 (gated) shows a real-intervention localizer that beats the content-blind position-only baseline on a held-out FoVer family. Before it graduates to a cross-domain headline, (1) build an INDEPENDENT typed first-error discriminator (a typed reasoning-vulnerability taxonomy as a SEPARATE label/audit channel) and compare its onset labels with the localizer's -- require a disagreement analysis (per-type false-positive + domain-competence) before accepting an earliest-error claim; (2) test cross-domain generalization (does the localizer's content-dependent advantage hold on GAP-4 ARC, where the mechanic differs from FoVer-math?). Emit localizer_generalizes_typed BARE bool := (the deconfounded localizer beats the position-only baseline CI95-excl-0 on >=1 NON-FoVer domain AND its onset labels agree with the independent typed-taxonomy monitor above chance, with per-type FP reported). verifier_is_oracle=false. A pass = the oracle-distinct localizer is a cross-domain capability (north-star \u00a70 step 2); a fail = it is FoVer-family-bound (logged as a missing-verifier gap, the localizer is domain-narrow). This DIAGNOSTIC reuses exp4403's localizer; no new label infra, no live training. NO TRM training; CPU-offline.",
+-- 
+2.55.0
+

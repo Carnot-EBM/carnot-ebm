@@ -1,0 +1,31 @@
+From cd0310f318b7c702c450d8c583e45dfef49995b8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 11:47:56 -0400
+Subject: [PATCH 03251/11362] [outer-loop] remove gemma4-agentic harness entry
+ (eval done: 9B kept)
+
+The 2026-06-21 candidate (yuxinlu1/gemma-4-12B-agentic) lost to qwen3.5-9b-mtp on Layer-B
+grounding (60% vs 90% over ka59+tn36 x5 seeds; tied ka59 4/5 but collapsed tn36 2/5 vs 5/5),
+so the generator stays frozen at Qwen3.5-9B-MTP. Removes the experimental MODELS entry that a
+conductor git-add-A checkpoint swept in; deletes the one-off model. Partial commit, only this file.
+---
+ scripts/experiments/arc3_layerb_ar_model_test.py | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/scripts/experiments/arc3_layerb_ar_model_test.py b/scripts/experiments/arc3_layerb_ar_model_test.py
+index 98a71e9fb2..b9009369c7 100644
+--- a/scripts/experiments/arc3_layerb_ar_model_test.py
++++ b/scripts/experiments/arc3_layerb_ar_model_test.py
+@@ -47,9 +47,6 @@ MODELS = {
+     # coder beats the small Q4 models on accuracy. Qwen3.6-based, so /no_think applies.
+     "qwopus-q3km": ("models--Jackrong--Qwopus3.6-27B-Coder-MTP-GGUF/snapshots/*/Qwopus3.6-27B-Coder-MTP-Q3_K_M.gguf", "/no_think\n"),
+     "gemma-12b": ("models--unsloth--gemma-4-12B-it-GGUF/snapshots/*/gemma-4-12b-it-Q4_K_M.gguf", None),
+-    # candidate (operator 2026-06-21): gemma-4-12B agentic/tau2/composer fine-tune (yuxinlu1) -- tests
+-    # whether an agentic-tuned gemma-4-12B beats base Qwen3.5-9B-MTP on Layer-B grounding for the ARC generator.
+-    "gemma4-agentic": ("models--yuxinlu1--gemma-4-12B-agentic*GGUF/snapshots/*/gemma4-v2-Q4_K_M.gguf", None),
+ }
+ 
+ 
+-- 
+2.55.0
+

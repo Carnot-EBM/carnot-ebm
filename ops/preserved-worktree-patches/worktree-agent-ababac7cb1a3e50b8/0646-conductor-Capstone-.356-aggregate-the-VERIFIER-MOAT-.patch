@@ -1,0 +1,1695 @@
+From 6413c7cc681abb691f9e40a41df52fd345415d14 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 11:00:39 -0400
+Subject: [PATCH 00646/11362] =?UTF-8?q?[conductor]=20Capstone=20.356=20?=
+ =?UTF-8?q?=E2=80=94=20aggregate=20the=20VERIFIER-MOAT=20DURABILITY=20verd?=
+ =?UTF-8?q?ict=20(does=20the=20moat=20survive=20at=20scale=20with=20MEASUR?=
+ =?UTF-8?q?ED=20independence=3F),=20the=20facts-domain=20graph-grounding?=
+ =?UTF-8?q?=20prototype=20outcome,=20the=20FR-11=20v23=20self-learning=20r?=
+ =?UTF-8?q?esult,=20the=20LDT-margin=20sharpening,=20and=20the=20two=20FPG?=
+ =?UTF-8?q?A=20boards.=20paper=5Fready=20stays=20TRUE;=20frozen=200.9131?=
+ =?UTF-8?q?=20unchanged.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3868-capstone-v356
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/capstone/spec.md        |   2 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../reporting/capstone_v356_moat_3868.py      | 710 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3868_capstone_v356.json    | 238 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../experiment_3868_capstone_v356.py          |  19 +
+ .../test_experiment_3868_capstone_v356.py     | 382 ++++++++++
+ 22 files changed, 1381 insertions(+), 30 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v356_moat_3868.py
+ create mode 100644 results/experiment_3868_capstone_v356.json
+ create mode 100644 scripts/experiments/experiment_3868_capstone_v356.py
+ create mode 100644 tests/python/test_experiment_3868_capstone_v356.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 61cb04e1de..9c99120f3d 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -5,3 +5,5 @@
+ - SCENARIO-CAPSTONE-3843: The final artifact must accurately state the honest verdict, formal core status, tier 4 status, edlm kill gate status, and paper ready boolean.
+ - REQ-CAPSTONE-3845: Archive .354 and activate .355, generating the artifact with `archived_milestone`, `activated_milestone`, and preserving `paper_ready` and `frozen_fover_auroc_unchanged`.
+ - SCENARIO-CAPSTONE-3845: The archive script verifies prior experiments and creates `results/experiment_3845_archive_v354_activate_v355.json` with required schema fields.
++- REQ-CAPSTONE-3868: The .356 capstone must aggregate only non-flagged upstream artifacts through the Reading-Results discipline and must condition the moat-durability verdict on both the exp3859 scissor result and the exp3860 independence audit.
++- SCENARIO-CAPSTONE-3868: The capstone artifact must emit principle-annotated fields for moat durability, independence reality, ThinkPRM complementarity, facts-domain architecture, FR-11 v23 self-learning, LDT margin, hardware board states, paper readiness, frozen FoVer AUROC preservation, skipped flagged artifacts, operator recommendation, provenance with sha256, and a terminal-prefix honest verdict.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f841315aa8..f2c9f28187 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 154,
+   "code_violations": 0,
+-  "experiments_checked": 2950,
++  "experiments_checked": 2951,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v356_moat_3868.py b/python/carnot/reporting/capstone_v356_moat_3868.py
+new file mode 100644
+index 0000000000..b24116d5da
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v356_moat_3868.py
+@@ -0,0 +1,710 @@
++"""Build the Exp 3868 v356 moat-durability capstone artifact.
++
++Spec refs: REQ-CAPSTONE-3868, SCENARIO-CAPSTONE-3868.
++
++This is an aggregation artifact. It reads upstream experiment outputs, excludes
++fabrication-gated evidence, and states the moat verdict only after conditioning
++the exp3859 scissor result on the exp3860 independence audit. The module does
++not run a model and does not move the frozen FoVer 0.9131 headline.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script import guard.
++    sys.path.insert(0, str(REPO_ROOT))
++
++OUTPUT_REL_PATH = Path("results/experiment_3868_capstone_v356.json")
++RANDOM_SEED = 3868
++FROZEN_FOVER_AUROC = 0.9131
++RESIDUAL_CATCH_HIGH_LOWER_BOUND = 0.50
++RESIDUAL_CATCH_SUBSUMED_UPPER_BOUND = 0.30
++LOW_ERROR_CORRELATION_MAX = 0.20
++LDT_TARGET_MARGIN = 0.010
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: capstone reads upstream "
++    "JSON plus summarize_artifact status; no live model or hardware action)."
++)
++
++UPSTREAM_IDS = tuple(range(3858, 3868))
++DEFAULT_UPSTREAM_PATHS: Mapping[int, Path] = {
++    3858: Path("data/step_error_balanced_v2.json"),
++    3859: Path("results/experiment_3859_moat_scissor_at_scale_v3.json"),
++    3860: Path("results/experiment_3860_verifier_reasoner_independence_audit.json"),
++    3861: Path("results/experiment_3861_thinkprm_complementarity.json"),
++    3862: Path("results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json"),
++    3863: Path("results/experiment_3863_graph_verifier_facts_complementarity_v2.json"),
++    3864: Path("results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json"),
++    3865: Path("results/experiment_3865_ldt_lattice_margin_sharpening_v2.json"),
++    3866: Path("results/experiment_3866_gatemate_ising_tile_flash_v2.json"),
++    3867: Path("results/experiment_3867_polarfire_soc_smoke_v4.json"),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "moat_durability_verdict",
++    "moat_is_real_independence",
++    "thinkprm_complementarity_summary",
++    "facts_new_architecture_outcome",
++    "self_learning_v23_outcome",
++    "ldt_margin_outcome",
++    "hardware_board_states",
++    "paper_ready",
++    "frozen_fover_auroc_unchanged",
++    "artifacts_skipped_flagged",
++    "operator_forward_recommendation",
++    "preconditions_checked",
++    "cited_upstream_artifacts",
++    "inference_substrate",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefix milestone result matching the required capstone_v356 "
++        "acceptance shape."
++    ),
++    "moat_durability_verdict": (
++        "THE milestone headline -- the scissor verdict CONDITIONED on the "
++        "independence audit; the single sentence the operator needs to decide "
++        "product-forward strategy."
++    ),
++    "moat_is_real_independence": (
++        "Bare bool -- true only if residual_catch CI lower bound is high AND "
++        "reasoner_carnot_error_correlation is low (exp3860); guards against "
++        "citing a fake moat (2604.07650)."
++    ),
++    "thinkprm_complementarity_summary": (
++        "Does the cheap ensemble add catch over a strong generative PRM."
++    ),
++    "facts_new_architecture_outcome": (
++        "Did graph-grounding open the earned-negative facts domain (a forward "
++        "path off the domain-bound ceiling)?"
++    ),
++    "self_learning_v23_outcome": (
++        "Self-learning invariant held and whether the v23 independence state "
++        "preserved the frozen headline CI."
++    ),
++    "ldt_margin_outcome": (
++        "Self-learning invariant held + whether the LDT lattice edge is real "
++        "or marginal."
++    ),
++    "hardware_board_states": (
++        "GateMate + PolarFire terminal/partial states -- hardware-continuity "
++        "compliance."
++    ),
++    "paper_ready": "Bare bool -- G1-G4 converged invariant; MUST stay true.",
++    "frozen_fover_auroc_unchanged": (
++        "Bare bool -- the 0.9131 headline did not move."
++    ),
++    "artifacts_skipped_flagged": (
++        "Which upstream artifacts were excluded for flagged_adversarial==true "
++        "(Fabrication Gate transparency)."
++    ),
++    "operator_forward_recommendation": (
++        "The loop scaffolds, the operator decides (Verification Trap P3) -- "
++        "the concrete next-paradigm or freeze recommendation given the moat "
++        "verdict."
++    ),
++    "preconditions_checked": (
++        "Aggregation substrate (0.0001s floor); records upstream existence, "
++        "summarize_artifact return codes, Fabrication Gate status, and "
++        "publication-gate evaluation."
++    ),
++    "cited_upstream_artifacts": (
++        "Aggregation substrate (0.0001s floor); full provenance of the "
++        "capstone numbers with sha256 for every aggregated upstream artifact."
++    ),
++    "inference_substrate": (
++        "Aggregation substrate (0.0001s floor); no live model or hardware "
++        "execution is performed by the capstone."
++    ),
++    "duration_s": (
++        "Aggregation substrate (0.0001s floor); wall-clock duration with a "
++        "floor so fast aggregation is still explicit."
++    ),
++}
++
++
++def is_sha256(value: object) -> bool:
++    """Return whether a value is a lowercase/uppercase SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdefABCDEF" for c in value)
++
++
++def resolve_upstream_path(root: Path | str, experiment_id: int) -> Path:
++    """Resolve an upstream experiment id to the path this capstone expects."""
++
++    return Path(root) / DEFAULT_UPSTREAM_PATHS[experiment_id]
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read a JSON object and fail if the artifact is not a mapping."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} did not contain a JSON object")  # pragma: no cover - defensive.
++    return payload
++
++
++def sha256_file(path: Path) -> str:
++    """Hash an upstream artifact so the capstone can cite exact provenance."""
++
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def numeric(value: object) -> float | None:
++    """Convert JSON scalar metrics to float while rejecting booleans."""
++
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, (int, float)):
++        return float(value)
++    return None
++
++
++def ci_low(ci95: object) -> float | None:
++    """Extract a lower CI bound from the dict/list shapes used by experiments."""
++
++    if isinstance(ci95, Mapping):
++        for key in ("low", "lower", "lower_bound", "ci95_low"):
++            found = numeric(ci95.get(key))
++            if found is not None:
++                return found
++    if isinstance(ci95, list | tuple) and ci95:
++        return numeric(ci95[0])
++    return None
++
++
++def has_live_critical(report: Mapping[str, Any] | None) -> bool:
++    """Return whether adversarial_verify found a live critical flag."""
++
++    if not isinstance(report, Mapping):
++        return False
++    for flag in report.get("flags", []):
++        if isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical":
++            return True
++    return False
++
++
++def conditioned_moat_verdict(
++    scissor: Mapping[str, Any] | None,
++    independence_audit: Mapping[str, Any] | None,
++) -> JsonDict:
++    """Condition exp3859's residual catch on exp3860's error-independence audit."""
++
++    if not isinstance(scissor, Mapping) or not isinstance(independence_audit, Mapping):
++        return {
++            "verdict": "INCONCLUSIVE",
++            "moat_is_real_independence": False,
++            "rationale": (
++                "exp3859 scissor or exp3860 independence audit is missing, so "
++                "residual_catch cannot be cited as a moat."
++            ),
++            "residual_catch_ci95_low": None,
++            "reasoner_carnot_error_correlation": None,
++        }
++
++    scissor_verdict = str(scissor.get("honest_verdict", ""))
++    audit_verdict = str(independence_audit.get("honest_verdict", ""))
++    if scissor_verdict.startswith("blocked") or audit_verdict.startswith("blocked"):
++        return {
++            "verdict": "INCONCLUSIVE",
++            "moat_is_real_independence": False,
++            "rationale": (
++                "at least one required upstream gate blocked, so the scissor "
++                "cannot support a durable-moat conclusion."
++            ),
++            "residual_catch_ci95_low": ci_low(scissor.get("residual_catch_ci95")),
++            "reasoner_carnot_error_correlation": numeric(
++                independence_audit.get("reasoner_carnot_error_correlation")
++            ),
++        }
++
++    residual_low = ci_low(scissor.get("residual_catch_ci95"))
++    correlation = numeric(independence_audit.get("reasoner_carnot_error_correlation"))
++    independence_is_real = independence_audit.get("independence_is_real") is True
++    if residual_low is None or correlation is None:
++        return {
++            "verdict": "INCONCLUSIVE",
++            "moat_is_real_independence": False,
++            "rationale": (
++                "residual_catch_ci95 or reasoner_carnot_error_correlation is "
++                "absent, so the conditioned moat gate cannot fire."
++            ),
++            "residual_catch_ci95_low": residual_low,
++            "reasoner_carnot_error_correlation": correlation,
++        }
++
++    low_corr = correlation <= LOW_ERROR_CORRELATION_MAX
++    high_residual = residual_low >= RESIDUAL_CATCH_HIGH_LOWER_BOUND
++    if high_residual and low_corr and independence_is_real:
++        verdict = "MOAT DURABLE"
++        rationale = (
++            f"residual CI lower bound {residual_low:.3f} is high and error "
++            f"correlation {correlation:.3f} is low."
++        )
++        moat_real = True
++    elif high_residual:
++        verdict = "MOAT FAKE-INDEPENDENCE"
++        rationale = (
++            f"residual CI lower bound {residual_low:.3f} is high, but error "
++            f"correlation {correlation:.3f} or independence_is_real={independence_is_real} "
++            "makes it a fake moat."
++        )
++        moat_real = False
++    elif residual_low <= RESIDUAL_CATCH_SUBSUMED_UPPER_BOUND:
++        verdict = "MOAT SUBSUMED"
++        rationale = (
++            f"residual CI lower bound {residual_low:.3f} is too low to show "
++            "durable catch beyond the reasoner."
++        )
++        moat_real = False
++    else:
++        verdict = "INCONCLUSIVE"
++        rationale = (
++            f"residual CI lower bound {residual_low:.3f} sits between the "
++            "subsumed and durable thresholds."
++        )
++        moat_real = False
++
++    return {
++        "verdict": verdict,
++        "moat_is_real_independence": moat_real,
++        "rationale": rationale,
++        "residual_catch_ci95_low": residual_low,
++        "reasoner_carnot_error_correlation": correlation,
++        "residual_catch_rate": numeric(scissor.get("residual_catch_rate")),
++        "overlap": scissor.get("overlap"),
++    }
++
++
++def summarize_thinkprm(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Summarize exp3861's cheap-ensemble lift over ThinkPRM."""
++
++    if not isinstance(payload, Mapping):
++        return {"outcome": "missing_exp3861", "cheap_ensemble_adds_catch": False}
++    lift = numeric(payload.get("union_lift_over_thinkprm"))
++    adds = payload.get("cheap_ensemble_adds_catch_over_thinkprm") is True or (lift is not None and lift > 0.0)
++    return {
++        "outcome": "adds_catch_over_thinkprm" if adds else "no_lift_over_thinkprm",
++        "cheap_ensemble_adds_catch": adds,
++        "union_lift_over_thinkprm": lift,
++        "thinkprm_catch_rate": numeric(payload.get("thinkprm_catch_rate")),
++        "union_catch_rate": numeric(payload.get("union_catch_rate")),
++        "source_verdict": payload.get("honest_verdict"),
++    }
++
++
++def summarize_facts_domain(
++    clean_upstreams: Mapping[int, Mapping[str, Any]],
++    *,
++    any_facts_excluded: bool,
++) -> JsonDict:
++    """Summarize whether graph-grounding opened the facts-domain ceiling."""
++
++    payload = clean_upstreams.get(3863) or clean_upstreams.get(3862)
++    if not isinstance(payload, Mapping):
++        outcome = "excluded_flagged_or_live_critical" if any_facts_excluded else "missing_facts_artifact"
++        return {"outcome": outcome, "new_architecture_opened": False}
++    lift = numeric(payload.get("union_lift_over_math_ensemble"))
++    delta = numeric(payload.get("facts_catch_delta"))
++    opened = payload.get("extended_ensemble_recommended") is True or (lift is not None and lift > 0.0) or (delta is not None and delta > 0.0)
++    return {
++        "outcome": "new_architecture_opened" if opened else "domain_ceiling_not_opened",
++        "new_architecture_opened": opened,
++        "union_lift_over_math_ensemble": lift,
++        "facts_catch_delta": delta,
++        "graph_facts_catch_rate": numeric(payload.get("graph_facts_catch_rate")),
++        "math_ensemble_facts_catch_rate": numeric(payload.get("math_ensemble_facts_catch_rate")),
++        "source_verdict": payload.get("honest_verdict"),
++    }
++
++
++def summarize_self_learning(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Summarize exp3864's FR-11 v23 invariant."""
++
++    if not isinstance(payload, Mapping):
++        return {"outcome": "missing_exp3864", "auroc_in_frozen_ci": False}
++    held = payload.get("auroc_in_frozen_ci") is True and payload.get("memory_ablation_contribution_preserved") is True
++    return {
++        "outcome": "self_learning_v23_invariant_held" if held else "self_learning_v23_regressed",
++        "auroc_in_frozen_ci": payload.get("auroc_in_frozen_ci") is True,
++        "memory_ablation_contribution_preserved": payload.get("memory_ablation_contribution_preserved") is True,
++        "reweighted_ensemble_auroc": numeric(payload.get("reweighted_ensemble_auroc")),
++        "frozen_headline_ensemble_auroc": numeric(payload.get("frozen_headline_ensemble_auroc")),
++        "state_persisted_path": payload.get("state_persisted_path"),
++        "source_verdict": payload.get("honest_verdict"),
++    }
++
++
++def summarize_ldt_margin(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Summarize exp3865 and explicitly test whether the 0.010 margin held."""
++
++    if not isinstance(payload, Mapping):
++        return {"outcome": "missing_exp3865", "threshold_0_010_held": False}
++    margin = numeric(payload.get("ensemble_vs_score_matched_margin"))
++    lower = ci_low(payload.get("margin_ci95"))
++    threshold_held = margin is not None and margin >= LDT_TARGET_MARGIN and lower is not None and lower > 0.0
++    real_edge = lower is not None and lower > 0.0
++    if threshold_held:
++        edge = "real_at_or_above_0_010"
++    elif real_edge:
++        edge = "real_but_below_0_010"
++    else:
++        edge = "marginal_or_unproven"
++    return {
++        "outcome": edge,
++        "edge": edge,
++        "threshold_0_010_held": threshold_held,
++        "ensemble_vs_score_matched_margin": margin,
++        "margin_ci95": payload.get("margin_ci95"),
++        "frozen_fover_auroc_unchanged": payload.get("frozen_fover_auroc_unchanged") is True,
++        "source_verdict": payload.get("honest_verdict"),
++    }
++
++
++def summarize_hardware(
++    clean_upstreams: Mapping[int, Mapping[str, Any]],
++    flagged_ids: set[int],
++) -> JsonDict:
++    """Summarize GateMate and PolarFire terminal/partial states."""
++
++    gatemate = clean_upstreams.get(3866)
++    polarfire = clean_upstreams.get(3867)
++    if 3866 in flagged_ids:
++        gatemate_state = {"state": "excluded_flagged"}
++    elif isinstance(gatemate, Mapping):
++        flashed = gatemate.get("gatemate_bitstream_flashed") is True or str(gatemate.get("honest_verdict", "")).startswith("success")
++        gatemate_state = {"state": "terminal_flashed" if flashed else "partial_or_unproven", "source_verdict": gatemate.get("honest_verdict")}
++    else:
++        gatemate_state = {"state": "missing_exp3866"}
++
++    if isinstance(polarfire, Mapping):
++        terminal = polarfire.get("polarfire_workload_validated") is True and polarfire.get("result_hash_match") is True
++        polarfire_state = {
++            "state": "terminal_hash_verified" if terminal else "partial_or_unproven",
++            "no_fpga_fabric_claim": polarfire.get("no_fpga_fabric_claim") is True,
++            "source_verdict": polarfire.get("honest_verdict"),
++        }
++    else:
++        polarfire_state = {"state": "missing_exp3867"}
++    return {"gatemate": gatemate_state, "polarfire": polarfire_state}
++
++
++def operator_recommendation(moat_verdict: str) -> str:
++    """Return the operator-facing next action under Verification Trap P3."""
++
++    if moat_verdict == "MOAT DURABLE":
++        return (
++            "Treat the verifier moat as product-forward evidence, but keep "
++            "the loop operator-seeded: freeze FoVer 0.9131 and let the "
++            "operator choose the next paradigm."
++        )
++    if moat_verdict == "MOAT FAKE-INDEPENDENCE":
++        return (
++            "Do not product-forward the moat; cite the frozen FoVer 0.9131 "
++            "headline only, and have the operator choose either a new "
++            "architecture path or an explicit freeze."
++        )
++    if moat_verdict == "MOAT SUBSUMED":
++        return (
++            "Treat the moat as subsumed by the reasoner; freeze the current "
++            "paper-ready headline unless the operator seeds a new architecture."
++        )
++    return (
++        "Do not self-seed a product claim; rerun the missing scissor/audit "
++        "chain and let the operator decide the next paradigm after the "
++        "conditioned verdict lands."
++    )
++
++
++def slug_for_moat(verdict: str) -> str:
++    """Map the moat enum to the required honest_verdict slug."""
++
++    return {
++        "MOAT DURABLE": "durable",
++        "MOAT SUBSUMED": "subsumed",
++        "MOAT FAKE-INDEPENDENCE": "fake_independence",
++        "INCONCLUSIVE": "inconclusive",
++    }.get(verdict, "inconclusive")
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    adversarial_reports: Mapping[int, Mapping[str, Any]] | None = None,
++    publication_gate_data: Mapping[str, Any] | None = None,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the v356 capstone from existing upstream artifacts."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = {experiment_id: resolve_upstream_path(root_path, experiment_id) for experiment_id in UPSTREAM_IDS}
++    upstreams = {
++        experiment_id: read_json_object(path) if path.exists() else None
++        for experiment_id, path in paths.items()
++    }
++    reports = (
++        {experiment_id: dict(report) for experiment_id, report in adversarial_reports.items()}
++        if adversarial_reports is not None
++        else verify_upstreams(paths)
++    )
++    summaries = (
++        {experiment_id: dict(status) for experiment_id, status in summary_statuses.items()}
++        if summary_statuses is not None
++        else run_summarize_statuses(root_path, paths)
++    )
++    publication_gate = dict(publication_gate_data) if publication_gate_data is not None else publication_gate_state()
++
++    flagged_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++    }
++    live_critical_ids = {
++        experiment_id
++        for experiment_id, report in reports.items()
++        if has_live_critical(report)
++    } - flagged_ids
++    clean_upstreams = {
++        experiment_id: payload
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping)
++        and experiment_id not in flagged_ids
++        and experiment_id not in live_critical_ids
++    }
++
++    moat = conditioned_moat_verdict(clean_upstreams.get(3859), clean_upstreams.get(3860))
++    facts_excluded = bool(({3862, 3863} & flagged_ids) or ({3862, 3863} & live_critical_ids))
++    facts = summarize_facts_domain(clean_upstreams, any_facts_excluded=facts_excluded)
++    thinkprm = summarize_thinkprm(clean_upstreams.get(3861))
++    self_learning = summarize_self_learning(clean_upstreams.get(3864))
++    ldt = summarize_ldt_margin(clean_upstreams.get(3865))
++    hardware = summarize_hardware(clean_upstreams, flagged_ids)
++    paper_ready = publication_gate.get("paper_ready") is True
++    frozen_fover_auroc_unchanged = (
++        paper_ready
++        and (
++            self_learning.get("frozen_headline_ensemble_auroc") == FROZEN_FOVER_AUROC
++            or ldt.get("frozen_fover_auroc_unchanged") is True
++        )
++    )
++
++    cited = [
++        {
++            "experiment_id": experiment_id,
++            "path": str(paths[experiment_id].relative_to(root_path)),
++            "sha256": sha256_file(paths[experiment_id]),
++            "honest_verdict": payload.get("honest_verdict"),
++            "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++        }
++        for experiment_id, payload in sorted(clean_upstreams.items())
++    ]
++    skipped_flagged = [
++        {
++            "experiment_id": experiment_id,
++            "path": str(paths[experiment_id].relative_to(root_path)),
++            "reason": "flagged_adversarial==true",
++            "honest_verdict": upstreams[experiment_id].get("honest_verdict") if isinstance(upstreams[experiment_id], Mapping) else None,
++        }
++        for experiment_id in sorted(flagged_ids)
++    ]
++    skipped_live_critical = [
++        {
++            "experiment_id": experiment_id,
++            "path": str(paths[experiment_id].relative_to(root_path)),
++            "reason": "live_adversarial_verify_critical",
++            "honest_verdict": upstreams[experiment_id].get("honest_verdict") if isinstance(upstreams[experiment_id], Mapping) else None,
++        }
++        for experiment_id in sorted(live_critical_ids)
++    ]
++    preconditions = {
++        "upstream_artifacts": {
++            experiment_id: {
++                "path": str(path.relative_to(root_path)),
++                "exists": upstreams[experiment_id] is not None,
++                "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++                "flagged_adversarial": experiment_id in flagged_ids,
++                "live_critical": experiment_id in live_critical_ids,
++            }
++            for experiment_id, path in paths.items()
++        },
++        "publication_gate_checked": True,
++        "publication_gate_unmet": publication_gate.get("unmet_gates", []),
++    }
++
++    moat_slug = slug_for_moat(moat["verdict"])
++    independence_slug = "real" if moat["moat_is_real_independence"] else ("fake" if moat["verdict"] == "MOAT FAKE-INDEPENDENCE" else "mixed")
++    facts_slug = {
++        "new_architecture_opened": "new_architecture_opened",
++        "domain_ceiling_not_opened": "not_opened",
++        "excluded_flagged_or_live_critical": "excluded",
++    }.get(str(facts.get("outcome")), "missing")
++    honest_verdict = (
++        f"complete: capstone_v356_moat_{moat_slug}_independence_{independence_slug}_"
++        f"facts_{facts_slug}_paper_ready_{str(paper_ready).lower()}_"
++        f"frozen_headline_{'unchanged' if frozen_fover_auroc_unchanged else 'changed'}"
++    )
++
++    end = time.perf_counter() if now_s is None else float(now_s)
++    duration_s = max(0.0001, end - start)
++    artifact: JsonDict = {
++        "honest_verdict": honest_verdict,
++        "moat_durability_verdict": f"{moat['verdict']} - {moat['rationale']}",
++        "moat_is_real_independence": moat["moat_is_real_independence"],
++        "moat_conditioning_details": moat,
++        "thinkprm_complementarity_summary": thinkprm,
++        "facts_new_architecture_outcome": facts,
++        "self_learning_v23_outcome": self_learning,
++        "ldt_margin_outcome": ldt,
++        "hardware_board_states": hardware,
++        "paper_ready": paper_ready,
++        "publication_gate": publication_gate,
++        "frozen_fover_auroc_unchanged": frozen_fover_auroc_unchanged,
++        "frozen_fover_auroc": FROZEN_FOVER_AUROC,
++        "artifacts_skipped_flagged": skipped_flagged,
++        "artifacts_skipped_live_critical": skipped_live_critical,
++        "operator_forward_recommendation": operator_recommendation(moat["verdict"]),
++        "preconditions_checked": preconditions,
++        "cited_upstream_artifacts": cited,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash the artifact payload while excluding its self-referential checksum."""
++
++    normalized = dict(payload)
++    normalized.pop("reproducibility_checksum", None)
++    return hashlib.sha256(json.dumps(normalized, sort_keys=True, default=str).encode("utf-8")).hexdigest()
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the schema constraints that keep this capstone honest."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")  # pragma: no cover - defensive.
++    field_principles = artifact.get("field_principles")
++    if not isinstance(field_principles, Mapping):
++        raise ValueError("field_principles must be a mapping")  # pragma: no cover - defensive.
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in field_principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")  # pragma: no cover - defensive.
++    if not str(artifact.get("honest_verdict", "")).startswith(("complete:", "blocked:", "success:", "failure:")):
++        raise ValueError("honest_verdict must start with a terminal prefix")  # pragma: no cover - defensive.
++    if not isinstance(artifact.get("moat_is_real_independence"), bool):
++        raise ValueError("moat_is_real_independence must be a bare bool")  # pragma: no cover - defensive.
++    if not isinstance(artifact.get("paper_ready"), bool):
++        raise ValueError("paper_ready must be a bare bool")  # pragma: no cover - defensive.
++    if not isinstance(artifact.get("frozen_fover_auroc_unchanged"), bool):
++        raise ValueError("frozen_fover_auroc_unchanged must be a bare bool")  # pragma: no cover - defensive.
++    if numeric(artifact.get("duration_s")) is None or numeric(artifact.get("duration_s")) < 0.0001:
++        raise ValueError("duration_s must respect the 0.0001s floor")  # pragma: no cover - defensive.
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")  # pragma: no cover - defensive.
++    for citation in artifact.get("cited_upstream_artifacts", []):
++        if not is_sha256(citation.get("sha256")):
++            raise ValueError("cited_upstream_artifacts entries need sha256")  # pragma: no cover - defensive.
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: str | Path = OUTPUT_REL_PATH,
++    adversarial_reports: Mapping[int, Mapping[str, Any]] | None = None,
++    publication_gate_data: Mapping[str, Any] | None = None,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and write the Exp 3868 capstone artifact."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        adversarial_reports=adversarial_reports,
++        publication_gate_data=publication_gate_data,
++        summary_statuses=summary_statuses,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    validate_artifact(artifact)
++    output = root_path / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def verify_upstreams(paths: Mapping[int, Path]) -> dict[int, JsonDict]:  # pragma: no cover - host verifier wrapper.
++    """Run the live adversarial verifier over upstream artifacts."""
++
++    from scripts import adversarial_verify
++
++    reports: dict[int, JsonDict] = {}
++    for experiment_id, path in paths.items():
++        reports[experiment_id] = adversarial_verify.verify_artifact(path) if path.exists() else {"flags": []}
++    return reports
++
++
++def publication_gate_state() -> JsonDict:  # pragma: no cover - thin wrapper around existing gate.
++    """Evaluate the stable G1-G4 publication gate."""
++
++    from scripts import publication_gate
++
++    return publication_gate.evaluate()
++
++
++def run_summarize_statuses(root: Path, paths: Mapping[int, Path]) -> dict[int, JsonDict]:  # pragma: no cover - subprocess IO.
++    """Run summarize_artifact.py for each available upstream path."""
++
++    statuses: dict[int, JsonDict] = {}
++    summarizer = root / "scripts" / "summarize_artifact.py"
++    for experiment_id, path in paths.items():
++        if not path.exists():
++            statuses[experiment_id] = {"returncode": 1, "missing": True}
++            continue
++        result = subprocess.run(
++            [sys.executable, str(summarizer), str(path.relative_to(root))],
++            cwd=root,
++            text=True,
++            capture_output=True,
++            check=False,
++        )
++        statuses[experiment_id] = {
++            "returncode": result.returncode,
++            "summary_excerpt": result.stdout[:1000],
++            "stderr_excerpt": result.stderr[:1000],
++        }
++    return statuses
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper.
++    output = write_artifact(REPO_ROOT)
++    print(output)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 37f6541e3a..0a57498f19 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T14:43:52.074201+00:00",
+-  "finished_at": "2026-06-05T14:43:52.097186+00:00",
+-  "duration_s": 0.023,
++  "started_at": "2026-06-05T15:00:18.413040+00:00",
++  "finished_at": "2026-06-05T15:00:18.437176+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 927dffd2d2..3c22f77ea7 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-05T14:43:52Z",
++  "run_date": "2026-06-05T15:00:18Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 0d4d08290d..e96f61c393 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T14:43:53Z",
+-  "finished_at": "2026-06-05T14:43:53Z",
++  "started_at": "2026-06-05T15:00:19Z",
++  "finished_at": "2026-06-05T15:00:19Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index bdac84272b..1f155637d0 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-05T14:43:53Z",
++  "run_date": "2026-06-05T15:00:19Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 0d19256ca0..27a2b4e26b 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-05T14:43:53Z",
++  "run_date": "2026-06-05T15:00:19Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index d91571a980..128c4e2f16 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-05T14:42:12.860901Z",
+-  "duration_s": 0.010393381118774414,
++  "run_date": "2026-06-05T14:58:38.986285Z",
++  "duration_s": 0.008353710174560547,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "d0cfd57c38072925b499e6df41ed74255a3fb57457e679fd67238f2dfe720c99",
++  "reproducibility_checksum": "eea32a70704304e14b571500ec40e0bbc87f32b80747fb81e32a06ecd024327c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "64e887525d2f581955551234c5ce414cd540dbd3"
++    "adversarial_verify_version": "cf3e00fa0bcb9b8ee096ddb6c3bd89ab2089597d"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index a457ecc462..000b5be907 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-05T14:42:12.873475Z",
+-  "duration_s": 0.009265661239624023,
++  "run_date": "2026-06-05T14:58:38.997559Z",
++  "duration_s": 0.008855342864990234,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "cb1e730b96ef7815b6b4da39f43911878405153930a3d6ebcda360fa099bd50d",
++  "reproducibility_checksum": "b09f403206e54c5f5b1a231a085520fafbaad20efebcb247a402a662b450160a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "64e887525d2f581955551234c5ce414cd540dbd3"
++    "adversarial_verify_version": "cf3e00fa0bcb9b8ee096ddb6c3bd89ab2089597d"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index f41dfade8a..8fb0f56ba3 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 5.643129348754883,
++  "efficiency_gains_ms": 4.618167877197266,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 9bf9a797ec..144548b4ee 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.29216623306274414,
++  "duration_s": 0.31095409393310547,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index da9c1d8f8c..60a7a194bf 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0009210109710693359,
++  "duration_s": 0.0013821125030517578,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index cccec39650..12be382dae 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.9085000278428197e-05,
++  "duration_s": 2.4827000743243843e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 7880cf377b..0f06b80d7e 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.910042091272771e-07,
++  "duration_s": 6.72000169288367e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index c8faab5360..940fdad7d4 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 5.030632019042969e-05,
++  "duration_s": 4.863739013671875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3868_capstone_v356.json b/results/experiment_3868_capstone_v356.json
+new file mode 100644
+index 0000000000..52216d2c4f
+--- /dev/null
++++ b/results/experiment_3868_capstone_v356.json
+@@ -0,0 +1,238 @@
++{
++  "artifacts_skipped_flagged": [
++    {
++      "experiment_id": 3862,
++      "honest_verdict": "complete: graph_grounding_prototype_SIGNAL_auroc0.643_delta0.232_new_architecture_has_facts_traction",
++      "path": "results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json",
++      "reason": "flagged_adversarial==true"
++    },
++    {
++      "experiment_id": 3866,
++      "honest_verdict": "success: gatemate_ising_tile_n16_flashed_terminal_lut19_fmax139.12_timingnone_no_readback",
++      "path": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
++      "reason": "flagged_adversarial==true"
++    }
++  ],
++  "artifacts_skipped_live_critical": [
++    {
++      "experiment_id": 3863,
++      "honest_verdict": "blocked_graph_prototype_unavailable",
++      "path": "results/experiment_3863_graph_verifier_facts_complementarity_v2.json",
++      "reason": "live_adversarial_verify_critical"
++    }
++  ],
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 3858,
++      "honest_verdict": "complete: balanced_step_error_corpus_v2_n1000_nincorrect500_sourceprmbench_9axistrue_schema_ok",
++      "path": "data/step_error_balanced_v2.json",
++      "sha256": "decaf6672426262388a46861cdb9afe45c8c52336ced5bc020cdbc54fbd6dd8c",
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 3859,
++      "honest_verdict": "blocked_gate_check_failed",
++      "path": "results/experiment_3859_moat_scissor_at_scale_v3.json",
++      "sha256": "e9a2ad9f7d60f0ac593411115a7567c2e55026c89a7acf127cdede2e40fd76c7",
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 3864,
++      "honest_verdict": "complete: fr11_v23_independence_reweighting_learned_auroc0.9059_in_frozen_ci_memory_contribution_preserved_state_persisted",
++      "path": "results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json",
++      "sha256": "3a52f9e0f8a327b2381d69eb84182d67da6fd462d94c31c014245955551034f7",
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 3865,
++      "honest_verdict": "complete: ldt_margin_LATTICE_REAL_scorematched_margin0.006_ci0.002-0.008_genuine_deductive_power",
++      "path": "results/experiment_3865_ldt_lattice_margin_sharpening_v2.json",
++      "sha256": "3f023d9c28fcd16966615ae1e5536e70ceda97185bc1a4223aa49f6678e06cbc",
++      "summarize_artifact_returncode": 0
++    },
++    {
++      "experiment_id": 3867,
++      "honest_verdict": "success: polarfire_carnot_dispatch_hash_verified_terminal_duration12.61s_tempunknown",
++      "path": "results/experiment_3867_polarfire_soc_smoke_v4.json",
++      "sha256": "dd7b6e03c0572c128e10bc2ef08078eda310886cea4efb8dcf42034484d7de47",
++      "summarize_artifact_returncode": 0
++    }
++  ],
++  "duration_s": 0.422142941999482,
++  "facts_new_architecture_outcome": {
++    "new_architecture_opened": false,
++    "outcome": "excluded_flagged_or_live_critical"
++  },
++  "field_principles": {
++    "artifacts_skipped_flagged": "Which upstream artifacts were excluded for flagged_adversarial==true (Fabrication Gate transparency).",
++    "cited_upstream_artifacts": "Aggregation substrate (0.0001s floor); full provenance of the capstone numbers with sha256 for every aggregated upstream artifact.",
++    "duration_s": "Aggregation substrate (0.0001s floor); wall-clock duration with a floor so fast aggregation is still explicit.",
++    "facts_new_architecture_outcome": "Did graph-grounding open the earned-negative facts domain (a forward path off the domain-bound ceiling)?",
++    "frozen_fover_auroc_unchanged": "Bare bool -- the 0.9131 headline did not move.",
++    "hardware_board_states": "GateMate + PolarFire terminal/partial states -- hardware-continuity compliance.",
++    "honest_verdict": "Terminal-prefix milestone result matching the required capstone_v356 acceptance shape.",
++    "inference_substrate": "Aggregation substrate (0.0001s floor); no live model or hardware execution is performed by the capstone.",
++    "ldt_margin_outcome": "Self-learning invariant held + whether the LDT lattice edge is real or marginal.",
++    "moat_durability_verdict": "THE milestone headline -- the scissor verdict CONDITIONED on the independence audit; the single sentence the operator needs to decide product-forward strategy.",
++    "moat_is_real_independence": "Bare bool -- true only if residual_catch CI lower bound is high AND reasoner_carnot_error_correlation is low (exp3860); guards against citing a fake moat (2604.07650).",
++    "operator_forward_recommendation": "The loop scaffolds, the operator decides (Verification Trap P3) -- the concrete next-paradigm or freeze recommendation given the moat verdict.",
++    "paper_ready": "Bare bool -- G1-G4 converged invariant; MUST stay true.",
++    "preconditions_checked": "Aggregation substrate (0.0001s floor); records upstream existence, summarize_artifact return codes, Fabrication Gate status, and publication-gate evaluation.",
++    "self_learning_v23_outcome": "Self-learning invariant held and whether the v23 independence state preserved the frozen headline CI.",
++    "thinkprm_complementarity_summary": "Does the cheap ensemble add catch over a strong generative PRM."
++  },
++  "frozen_fover_auroc": 0.9131,
++  "frozen_fover_auroc_unchanged": true,
++  "hardware_board_states": {
++    "gatemate": {
++      "state": "excluded_flagged"
++    },
++    "polarfire": {
++      "no_fpga_fabric_claim": true,
++      "source_verdict": "success: polarfire_carnot_dispatch_hash_verified_terminal_duration12.61s_tempunknown",
++      "state": "terminal_hash_verified"
++    }
++  },
++  "honest_verdict": "complete: capstone_v356_moat_inconclusive_independence_mixed_facts_excluded_paper_ready_true_frozen_headline_unchanged",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: capstone reads upstream JSON plus summarize_artifact status; no live model or hardware action).",
++  "ldt_margin_outcome": {
++    "edge": "real_but_below_0_010",
++    "ensemble_vs_score_matched_margin": 0.005634645292,
++    "frozen_fover_auroc_unchanged": true,
++    "margin_ci95": [
++      0.002183821363,
++      0.007993519741
++    ],
++    "outcome": "real_but_below_0_010",
++    "source_verdict": "complete: ldt_margin_LATTICE_REAL_scorematched_margin0.006_ci0.002-0.008_genuine_deductive_power",
++    "threshold_0_010_held": false
++  },
++  "moat_conditioning_details": {
++    "moat_is_real_independence": false,
++    "rationale": "exp3859 scissor or exp3860 independence audit is missing, so residual_catch cannot be cited as a moat.",
++    "reasoner_carnot_error_correlation": null,
++    "residual_catch_ci95_low": null,
++    "verdict": "INCONCLUSIVE"
++  },
++  "moat_durability_verdict": "INCONCLUSIVE - exp3859 scissor or exp3860 independence audit is missing, so residual_catch cannot be cited as a moat.",
++  "moat_is_real_independence": false,
++  "operator_forward_recommendation": "Do not self-seed a product claim; rerun the missing scissor/audit chain and let the operator decide the next paradigm after the conditioned verdict lands.",
++  "paper_ready": true,
++  "preconditions_checked": {
++    "publication_gate_checked": true,
++    "publication_gate_unmet": [],
++    "upstream_artifacts": {
++      "3858": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "live_critical": false,
++        "path": "data/step_error_balanced_v2.json",
++        "summarize_artifact_returncode": 0
++      },
++      "3859": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "live_critical": false,
++        "path": "results/experiment_3859_moat_scissor_at_scale_v3.json",
++        "summarize_artifact_returncode": 0
++      },
++      "3860": {
++        "exists": false,
++        "flagged_adversarial": false,
++        "live_critical": false,
++        "path": "results/experiment_3860_verifier_reasoner_independence_audit.json",
++        "summarize_artifact_returncode": 1
++      },
++      "3861": {
++        "exists": false,
++        "flagged_adversarial": false,
++        "live_critical": false,
++        "path": "results/experiment_3861_thinkprm_complementarity.json",
++        "summarize_artifact_returncode": 1
++      },
++      "3862": {
++        "exists": true,
++        "flagged_adversarial": true,
++        "live_critical": false,
++        "path": "results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json",
++        "summarize_artifact_returncode": 2
++      },
++      "3863": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "live_critical": true,
++        "path": "results/experiment_3863_graph_verifier_facts_complementarity_v2.json",
++        "summarize_artifact_returncode": 2
++      },
++      "3864": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "live_critical": false,
++        "path": "results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json",
++        "summarize_artifact_returncode": 0
++      },
++      "3865": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "live_critical": false,
++        "path": "results/experiment_3865_ldt_lattice_margin_sharpening_v2.json",
++        "summarize_artifact_returncode": 0
++      },
++      "3866": {
++        "exists": true,
++        "flagged_adversarial": true,
++        "live_critical": false,
++        "path": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
++        "summarize_artifact_returncode": 2
++      },
++      "3867": {
++        "exists": true,
++        "flagged_adversarial": false,
++        "live_critical": false,
++        "path": "results/experiment_3867_polarfire_soc_smoke_v4.json",
++        "summarize_artifact_returncode": 0
++      }
++    }
++  },
++  "publication_gate": {
++    "gates": {
++      "G1": {
++        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      },
++      "G2": {
++        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++        "pass": true
++      },
++      "G3": {
++        "detail": "no retracted phrasings asserted as live claims",
++        "hits": [],
++        "pass": true
++      },
++      "G4": {
++        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      }
++    },
++    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
++    "paper_ready": true,
++    "unmet_gates": []
++  },
++  "random_seed": 3868,
++  "reproducibility_checksum": "8649ae4049cda752d5a24e4e8b34d078d45e591d6b38618bee988ee2be07672b",
++  "self_learning_v23_outcome": {
++    "auroc_in_frozen_ci": true,
++    "frozen_headline_ensemble_auroc": 0.9131,
++    "memory_ablation_contribution_preserved": true,
++    "outcome": "self_learning_v23_invariant_held",
++    "reweighted_ensemble_auroc": 0.90592,
++    "source_verdict": "complete: fr11_v23_independence_reweighting_learned_auroc0.9059_in_frozen_ci_memory_contribution_preserved_state_persisted",
++    "state_persisted_path": "results/experiment_3864_fr11_v23_independence_reweighting_state.json"
++  },
++  "thinkprm_complementarity_summary": {
++    "cheap_ensemble_adds_catch": false,
++    "outcome": "missing_exp3861"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e95ec06961..be8865b35b 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T14:42:04Z",
+-  "finished_at": "2026-06-05T14:42:04Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-05T14:58:30Z",
++  "finished_at": "2026-06-05T14:58:30Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 774d8b1a09..ea76f7ad1a 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T14:42:04Z",
+-  "finished_at": "2026-06-05T14:42:04Z",
++  "started_at": "2026-06-05T14:58:30Z",
++  "finished_at": "2026-06-05T14:58:30Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 828e2ee285..2fa800947a 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T14:42:04Z",
+-  "finished_at": "2026-06-05T14:42:04Z",
++  "started_at": "2026-06-05T14:58:30Z",
++  "finished_at": "2026-06-05T14:58:30Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/experiment_3868_capstone_v356.py b/scripts/experiments/experiment_3868_capstone_v356.py
+new file mode 100644
+index 0000000000..b1baa93fc0
+--- /dev/null
++++ b/scripts/experiments/experiment_3868_capstone_v356.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run Exp 3868 capstone v356 moat adjudication."""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.reporting.capstone_v356_moat_3868 import write_artifact
++
++
++if __name__ == "__main__":  # pragma: no cover
++    print(write_artifact(REPO_ROOT))
+diff --git a/tests/python/test_experiment_3868_capstone_v356.py b/tests/python/test_experiment_3868_capstone_v356.py
+new file mode 100644
+index 0000000000..67aae502d7
+--- /dev/null
++++ b/tests/python/test_experiment_3868_capstone_v356.py
+@@ -0,0 +1,382 @@
++"""Tests for Exp 3868 capstone v356 moat adjudication.
++
++Spec refs: REQ-CAPSTONE-3868, SCENARIO-CAPSTONE-3868.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import capstone_v356_moat_3868 as exp3868
++
++
++SPEC_PATH = Path("openspec/capabilities/capstone/spec.md")
++
++
++def _write_json(root: Path, rel_path: str, payload: dict[str, object]) -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _publication_gate() -> dict[str, object]:
++    return {
++        "paper_ready": True,
++        "gates": {
++            "G1": {"pass": True},
++            "G2": {"pass": True},
++            "G3": {"pass": True},
++            "G4": {"pass": True},
++        },
++        "unmet_gates": [],
++    }
++
++
++def _clean_reports() -> dict[int, dict[str, object]]:
++    return {experiment_id: {"flags": []} for experiment_id in exp3868.UPSTREAM_IDS}
++
++
++def _write_complete_fixture(root: Path) -> None:
++    _write_json(
++        root,
++        "data/step_error_balanced_v2.json",
++        {
++            "honest_verdict": "complete: balanced_step_error_corpus_v2_n1000",
++            "n_items": 1000,
++            "n_incorrect_steps": 500,
++            "primary_source": "prmbench",
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "a" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3859_moat_scissor_at_scale_v3.json",
++        {
++            "honest_verdict": "complete: moat_scissor_residual_catch_high",
++            "n_residual_errors": 80,
++            "residual_catch_rate": 0.76,
++            "residual_catch_ci95": {"low": 0.71, "high": 0.82},
++            "overlap": 0.11,
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "b" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3860_verifier_reasoner_independence_audit.json",
++        {
++            "honest_verdict": "complete: independence_audit_high_correlation",
++            "reasoner_carnot_error_correlation": 0.73,
++            "independence_is_real": False,
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "c" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3861_thinkprm_complementarity.json",
++        {
++            "honest_verdict": "complete: thinkprm_complementarity_union_lift_positive",
++            "thinkprm_catch_rate": 0.81,
++            "cheap_ensemble_catch_rate": 0.47,
++            "union_catch_rate": 0.86,
++            "union_lift_over_thinkprm": 0.05,
++            "cheap_ensemble_adds_catch_over_thinkprm": True,
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "d" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json",
++        {
++            "honest_verdict": "complete: graph_grounding_signal_flagged",
++            "flagged_adversarial": True,
++            "facts_catch_delta": 0.23,
++            "reproducibility_checksum": "e" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3863_graph_verifier_facts_complementarity_v2.json",
++        {
++            "honest_verdict": "complete: graph_facts_complementarity_positive",
++            "graph_facts_catch_rate": 0.72,
++            "math_ensemble_facts_catch_rate": 0.51,
++            "union_facts_catch_rate": 0.79,
++            "union_lift_over_math_ensemble": 0.28,
++            "extended_ensemble_recommended": True,
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "f" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json",
++        {
++            "honest_verdict": "complete: fr11_v23_state_preserved",
++            "auroc_in_frozen_ci": True,
++            "memory_ablation_contribution_preserved": True,
++            "reweighted_ensemble_auroc": 0.90592,
++            "frozen_headline_ensemble_auroc": 0.9131,
++            "state_persisted_path": "results/state.json",
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "1" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3865_ldt_lattice_margin_sharpening_v2.json",
++        {
++            "honest_verdict": "complete: ldt_margin_LATTICE_REAL",
++            "ensemble_vs_score_matched_margin": 0.0056,
++            "margin_ci95": [0.0021, 0.0080],
++            "frozen_fover_auroc_unchanged": True,
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "2" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
++        {
++            "honest_verdict": "success: gatemate_flashed_terminal_flagged",
++            "gatemate_bitstream_flashed": True,
++            "flagged_adversarial": True,
++            "reproducibility_checksum": "3" * 64,
++        },
++    )
++    _write_json(
++        root,
++        "results/experiment_3867_polarfire_soc_smoke_v4.json",
++        {
++            "honest_verdict": "success: polarfire_hash_verified_terminal",
++            "polarfire_workload_validated": True,
++            "result_hash_match": True,
++            "no_fpga_fabric_claim": True,
++            "flagged_adversarial": False,
++            "reproducibility_checksum": "4" * 64,
++        },
++    )
++
++
++def test_req_capstone_3868_spec_declares_conditioned_moat_contract() -> None:
++    """REQ-CAPSTONE-3868: OpenSpec names the conditioned moat contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-3868" in spec
++    assert "SCENARIO-CAPSTONE-3868" in spec
++    assert "condition the moat-durability verdict" in spec
++    assert "exp3860 independence audit" in spec
++
++
++def test_req_capstone_3868_conditioned_verdict_never_uses_residual_alone() -> None:
++    """REQ-CAPSTONE-3868: residual catch is gated by exp3860 independence."""
++
++    scissor_high = {
++        "residual_catch_ci95": {"low": 0.72, "high": 0.86},
++        "residual_catch_rate": 0.79,
++        "overlap": 0.12,
++    }
++
++    fake = exp3868.conditioned_moat_verdict(
++        scissor_high,
++        {"reasoner_carnot_error_correlation": 0.74, "independence_is_real": False},
++    )
++    durable = exp3868.conditioned_moat_verdict(
++        scissor_high,
++        {"reasoner_carnot_error_correlation": 0.08, "independence_is_real": True},
++    )
++    subsumed = exp3868.conditioned_moat_verdict(
++        {"residual_catch_ci95": [0.05, 0.18], "residual_catch_rate": 0.11},
++        {"reasoner_carnot_error_correlation": 0.04, "independence_is_real": True},
++    )
++    blocked = exp3868.conditioned_moat_verdict(
++        {"honest_verdict": "blocked_gate_check_failed", "residual_catch_ci95": None},
++        {"reasoner_carnot_error_correlation": 0.04, "independence_is_real": True},
++    )
++    absent_metric = exp3868.conditioned_moat_verdict(
++        {"residual_catch_ci95": None},
++        {"reasoner_carnot_error_correlation": 0.04, "independence_is_real": True},
++    )
++    middle = exp3868.conditioned_moat_verdict(
++        {"residual_catch_ci95": [0.42, 0.51]},
++        {"reasoner_carnot_error_correlation": 0.04, "independence_is_real": True},
++    )
++    missing = exp3868.conditioned_moat_verdict(scissor_high, None)
++
++    assert fake["verdict"] == "MOAT FAKE-INDEPENDENCE"
++    assert fake["moat_is_real_independence"] is False
++    assert "fake moat" in fake["rationale"]
++    assert durable["verdict"] == "MOAT DURABLE"
++    assert durable["moat_is_real_independence"] is True
++    assert subsumed["verdict"] == "MOAT SUBSUMED"
++    assert blocked["verdict"] == "INCONCLUSIVE"
++    assert absent_metric["verdict"] == "INCONCLUSIVE"
++    assert middle["verdict"] == "INCONCLUSIVE"
++    assert missing["verdict"] == "INCONCLUSIVE"
++    assert missing["moat_is_real_independence"] is False
++    assert exp3868.numeric("not-a-number") is None
++    assert exp3868.ci_low("not-a-ci") is None
++    assert exp3868.has_live_critical(None) is False
++    assert exp3868.summarize_self_learning(None)["outcome"] == "missing_exp3864"
++    assert exp3868.summarize_ldt_margin(None)["outcome"] == "missing_exp3865"
++    assert exp3868.summarize_ldt_margin(
++        {"ensemble_vs_score_matched_margin": 0.012, "margin_ci95": [0.011, 0.014]}
++    )["edge"] == "real_at_or_above_0_010"
++    assert exp3868.summarize_ldt_margin(
++        {"ensemble_vs_score_matched_margin": 0.004, "margin_ci95": [-0.001, 0.006]}
++    )["edge"] == "marginal_or_unproven"
++    assert exp3868.summarize_hardware(
++        {3866: {"gatemate_bitstream_flashed": True, "honest_verdict": "success: ok"}},
++        set(),
++    ) == {
++        "gatemate": {"state": "terminal_flashed", "source_verdict": "success: ok"},
++        "polarfire": {"state": "missing_exp3867"},
++    }
++    assert exp3868.operator_recommendation("MOAT DURABLE").startswith("Treat the verifier moat")
++    assert exp3868.operator_recommendation("MOAT SUBSUMED").startswith("Treat the moat as subsumed")
++
++
++def test_scenario_capstone_3868_complete_fixture_excludes_flagged_and_writes_schema(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-3868: complete aggregation excludes Fabrication Gate inputs."""
++
++    _write_complete_fixture(tmp_path)
++    artifact = exp3868.build_artifact(
++        tmp_path,
++        adversarial_reports=_clean_reports(),
++        publication_gate_data=_publication_gate(),
++        summary_statuses={experiment_id: {"returncode": 0} for experiment_id in exp3868.UPSTREAM_IDS},
++        started_s=1.0,
++        now_s=1.00005,
++    )
++
++    exp3868.validate_artifact(artifact)
++    skipped_ids = {item["experiment_id"] for item in artifact["artifacts_skipped_flagged"]}
++    cited_ids = {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]}
++
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v356_moat_fake_independence_independence_fake_"
++        "facts_new_architecture_opened_paper_ready_true_frozen_headline_unchanged"
++    )
++    assert artifact["moat_durability_verdict"].startswith("MOAT FAKE-INDEPENDENCE")
++    assert artifact["moat_is_real_independence"] is False
++    assert artifact["thinkprm_complementarity_summary"]["cheap_ensemble_adds_catch"] is True
++    assert artifact["facts_new_architecture_outcome"]["outcome"] == "new_architecture_opened"
++    assert artifact["ldt_margin_outcome"]["threshold_0_010_held"] is False
++    assert artifact["ldt_margin_outcome"]["edge"] == "real_but_below_0_010"
++    assert artifact["hardware_board_states"]["gatemate"]["state"] == "excluded_flagged"
++    assert artifact["hardware_board_states"]["polarfire"]["state"] == "terminal_hash_verified"
++    assert artifact["paper_ready"] is True
++    assert artifact["frozen_fover_auroc_unchanged"] is True
++    assert skipped_ids == {3862, 3866}
++    assert {3862, 3866}.isdisjoint(cited_ids)
++    assert artifact["duration_s"] == pytest.approx(0.0001)
++    assert exp3868.is_sha256(artifact["reproducibility_checksum"])
++    assert set(exp3868.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++
++    output = exp3868.write_artifact(
++        tmp_path,
++        output_path="results/out.json",
++        adversarial_reports=_clean_reports(),
++        publication_gate_data=_publication_gate(),
++        summary_statuses={experiment_id: {"returncode": 0} for experiment_id in exp3868.UPSTREAM_IDS},
++        started_s=1.0,
++        now_s=1.2,
++    )
++    saved = json.loads(output.read_text(encoding="utf-8"))
++    exp3868.validate_artifact(saved)
++    assert saved["honest_verdict"] == artifact["honest_verdict"]
++
++
++def test_req_capstone_3868_missing_audit_and_live_critical_are_inconclusive(
++    tmp_path: Path,
++) -> None:
++    """REQ-CAPSTONE-3868: missing exp3860 blocks a real-moat claim."""
++
++    _write_json(
++        tmp_path,
++        "data/step_error_balanced_v2.json",
++        {"honest_verdict": "complete: corpus", "n_incorrect_steps": 500},
++    )
++    _write_json(
++        tmp_path,
++        "results/experiment_3859_moat_scissor_at_scale_v3.json",
++        {"honest_verdict": "blocked_gate_check_failed", "status": "blocked"},
++    )
++    _write_json(
++        tmp_path,
++        "results/experiment_3863_graph_verifier_facts_complementarity_v2.json",
++        {
++            "honest_verdict": "blocked_graph_prototype_unavailable",
++            "flagged_adversarial": False,
++        },
++    )
++    _write_json(
++        tmp_path,
++        "results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json",
++        {
++            "honest_verdict": "complete: fr11_v23",
++            "auroc_in_frozen_ci": True,
++            "memory_ablation_contribution_preserved": True,
++            "reweighted_ensemble_auroc": 0.90592,
++            "frozen_headline_ensemble_auroc": 0.9131,
++        },
++    )
++    _write_json(
++        tmp_path,
++        "results/experiment_3865_ldt_lattice_margin_sharpening_v2.json",
++        {
++            "honest_verdict": "complete: ldt_margin_LATTICE_REAL",
++            "ensemble_vs_score_matched_margin": 0.0056,
++            "margin_ci95": [0.0021, 0.0080],
++            "frozen_fover_auroc_unchanged": True,
++        },
++    )
++    _write_json(
++        tmp_path,
++        "results/experiment_3867_polarfire_soc_smoke_v4.json",
++        {
++            "honest_verdict": "success: polarfire_hash_verified_terminal",
++            "polarfire_workload_validated": True,
++            "result_hash_match": True,
++        },
++    )
++    reports = _clean_reports()
++    reports[3863] = {
++        "flags": [
++            {
++                "severity": "critical",
++                "kind": "DURATION_TOO_SHORT",
++                "detail": "fixture critical",
++            }
++        ]
++    }
++
++    artifact = exp3868.build_artifact(
++        tmp_path,
++        adversarial_reports=reports,
++        publication_gate_data=_publication_gate(),
++        summary_statuses={3858: {"returncode": 0}, 3859: {"returncode": 0}},
++        started_s=2.0,
++        now_s=2.25,
++    )
++
++    exp3868.validate_artifact(artifact)
++    assert artifact["moat_durability_verdict"].startswith("INCONCLUSIVE")
++    assert artifact["moat_is_real_independence"] is False
++    assert artifact["facts_new_architecture_outcome"]["outcome"] == "excluded_flagged_or_live_critical"
++    assert artifact["artifacts_skipped_live_critical"][0]["experiment_id"] == 3863
++    assert artifact["preconditions_checked"]["upstream_artifacts"][3860]["exists"] is False
++    assert artifact["preconditions_checked"]["upstream_artifacts"][3861]["exists"] is False
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v356_moat_inconclusive_independence_mixed_"
++        "facts_excluded_paper_ready_true_frozen_headline_unchanged"
++    )
+-- 
+2.55.0
+

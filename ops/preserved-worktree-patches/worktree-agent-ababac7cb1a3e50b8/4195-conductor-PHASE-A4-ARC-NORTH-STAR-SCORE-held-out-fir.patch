@@ -1,0 +1,1406 @@
+From 636d64c4e433e01631707064d87b128d5c0714ae Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 09:12:10 -0400
+Subject: [PATCH 04195/11362] [conductor] PHASE A4 (ARC NORTH STAR; SCORE --
+ held-out first-win readiness) -- measure the live agent's held-out first-win
+ rate on the color-permuted variant harness, checkpoint/resume-capable.
+
+Automated research step by research conductor.
+Task ID: exp4794-a4
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   4 +-
+ ...riment_4794_heldout_first_win_readiness.py | 261 +++++++++++
+ research-roadmap-next.yaml                    | 412 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ment_4794_heldout_first_win_readiness.json | 165 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...riment_4794_heldout_first_win_readiness.py | 325 ++++++++++++++
+ 16 files changed, 1189 insertions(+), 21 deletions(-)
+ create mode 100644 python/carnot/experiment_4794_heldout_first_win_readiness.py
+ create mode 100644 research-roadmap-next.yaml
+ create mode 100644 results/experiment_4794_heldout_first_win_readiness.json
+ create mode 100644 tests/python/test_experiment_4794_heldout_first_win_readiness.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index ad48d73f1b..fc2d661bec 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -439,6 +439,10 @@
+ - SCENARIO-CAPSTONE-4784: The artifact `results/experiment_4784_heldout_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `heldout_first_win_rate`, `inference_substrate`, `null_delta_methodology_note`, `checkpoint_emitted`, and `preconditions_checked`; it must also include `heldout_first_win_ci`, `prior_best_heldout_first_win_rate`, `heldout_first_win_delta_vs_prior_best`, `heldout_variant_attempts`, `checkpoint_path`, `partial`, `positive_control_passed`, `parity_test_green`, `field_principles`, `duration_s`, and a stable checksum. A cache aggregation must use `aggregation_from_upstream_artifacts`, while a live run or soft-budget partial must use `live_llm_inference` with the 60 second floor.
+ - SCENARIO-CAPSTONE-4784-BLOCKED-PRECONDITION: If the arcade, Exp 4605 harness, Qwen cache, or iGPU-only generator policy precondition fails, the workflow must still write `results/experiment_4784_heldout_first_win_readiness.json` with `honest_verdict=blocked_<resource>`, the failed resource recorded in `preconditions_checked`, `heldout_first_win_rate=null`, empty CI, `checkpoint_emitted=false`, and no fabricated prior-best improvement.
+ - SCENARIO-CAPSTONE-4784-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; a measured rate is complete_/success_."; `heldout_first_win_rate` = "the deadline-relevant generalization signal -- held-out, not in-sample."; `inference_substrate` = "live_llm_inference (60s floor) ONLY if the agent ran live; aggregation_from_upstream_artifacts if a checkpoint/cache hit -- declare what actually ran."; `null_delta_methodology_note` = "for a flat null (rate == baseline 0.04), explains why the agreement is a genuine no-improvement result, not a TAUTOLOGY bug."; `checkpoint_emitted` = "a capped run must still emit a usable partial artifact."; `preconditions_checked` = "records generator/harness checks; a missing resource emits blocked_, never a fabricated rate."
++- REQ-CAPSTONE-4794: The Exp 4794 held-out first-win readiness workflow SHALL measure or checkpoint-resume the live E3 agent on the Experiment 4605 color-permuted variant harness and write `results/experiment_4794_heldout_first_win_readiness.json`. It SHALL verify `arc_solver_kit.offline_arcade()`, `experiment_4605_live_integration_scored_agent` importability, the Qwen3.5-9B-MTP GGUF cache, and `qwen_generator_device_policy=iGPU_only_no_3090s` before proxy work; missing resources SHALL emit `blocked_<resource>` with no fabricated scored rate. It SHALL report held-out first-win rate with CI over at least 100 held-out variant attempts, compare against the prior best from earlier readiness artifacts including Exp 4784, and keep checkpoint/resume behavior so a wall-clock-capped run still emits a usable partial artifact. It SHALL declare `inference_substrate=live_llm_inference` only if this invocation actually ran the agent live, otherwise `inference_substrate=aggregation_from_upstream_artifacts`. For a flat null at the 0.04 baseline it SHALL include `null_delta_methodology_note` and `positive_control_passed=true`.
++- SCENARIO-CAPSTONE-4794: The artifact `results/experiment_4794_heldout_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `heldout_first_win_rate`, `inference_substrate`, `null_delta_methodology_note`, `checkpoint_emitted`, and `preconditions_checked`; it must also include `heldout_first_win_ci`, `prior_best_heldout_first_win_rate`, `heldout_first_win_delta_vs_prior_best`, `heldout_variant_attempts`, `checkpoint_path`, `partial`, `positive_control_passed`, `parity_test_green`, `field_principles`, `duration_s`, and a stable checksum. A cache aggregation must use `aggregation_from_upstream_artifacts`, while a live run or soft-budget partial must use `live_llm_inference` with the 60 second floor.
++- SCENARIO-CAPSTONE-4794-BLOCKED-PRECONDITION: If the arcade, Exp 4605 harness, Qwen cache, or iGPU-only generator policy precondition fails, the workflow must still write `results/experiment_4794_heldout_first_win_readiness.json` with `honest_verdict=blocked_<resource>`, the failed resource recorded in `preconditions_checked`, `heldout_first_win_rate=null`, empty CI, `checkpoint_emitted=false`, and no fabricated prior-best improvement.
++- SCENARIO-CAPSTONE-4794-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; a measured rate is complete_/success_."; `heldout_first_win_rate` = "the deadline-relevant generalization signal -- held-out, not in-sample."; `inference_substrate` = "live_llm_inference (60s floor) ONLY if the agent ran live; aggregation_from_upstream_artifacts if a checkpoint/cache hit -- declare what actually ran."; `null_delta_methodology_note` = "for a flat null (rate == baseline 0.04), explains why the agreement is a genuine no-improvement result, not a TAUTOLOGY bug."; `checkpoint_emitted` = "a capped run must still emit a usable partial artifact."; `preconditions_checked` = "records generator/harness checks; a missing resource emits blocked_, never a fabricated rate."
+ - REQ-CAPSTONE-4776: The reserved-infra ARC-AGI-3 Kaggle submission-package hardening workflow SHALL verify the submission packaging scripts and `arc_competition_agent` are present, dry-build the Kaggle package without submitting, resolve the frozen live stack from `SUBMITTED_AGENT_CONFIG`, resolve the Qwen3.5-9B-MTP GGUF and CUDA-12.8 `llama-server` paths, estimate the MTP + q8 KV VRAM budget against the ~16GB Kaggle deployment gate, and write `results/experiment_4776_submission_package_harden.json`. The workflow SHALL mark `submission_package_ready=true` only when the package dry-builds, the frozen config and model paths resolve, the VRAM estimate fits below 16GB with headroom, and `submitted_to_leaderboard=false`.
+ - SCENARIO-CAPSTONE-4776: The artifact `results/experiment_4776_submission_package_harden.json` must emit principle-annotated top-level fields for `honest_verdict`, `submission_package_ready`, `vram_estimate_gb`, and `inference_substrate`; it must also include `preconditions_checked`, `package_builds`, `agent_config_resolution`, `model_path_resolution`, `vram_breakdown`, `operator_checklist`, `submitted_to_leaderboard=false`, `operator_only=true`, `field_principles`, `spec_refs`, `duration_s`, `random_seed`, and a stable checksum. A ready artifact must use a terminal success prefix, keep publication operator-only, and include checklist steps that instruct the operator to verify the package and submit only outside this task.
+ - SCENARIO-CAPSTONE-4776-BLOCKED-PRECONDITION: If any precondition, dry-build, frozen config, model path, or VRAM gate fails, the workflow must still write `results/experiment_4776_submission_package_harden.json` with `submission_package_ready=false`, a terminal `complete_` not-ready verdict naming the blocked resource, `submitted_to_leaderboard=false`, and no fabricated operator readiness.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c7acb65f27..af273b11b4 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 264, "phase": "iteration_start", "last_beat": "2026-06-26T12:50:19Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 265, "phase": "iteration_start", "last_beat": "2026-06-26T13:02:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dbea3a89c0..1389ad2a50 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9348,3 +9348,4 @@ The contro |
+ | 2026-06-26 12:15 UTC | PHASE 0 (TRANSITION) -- archive .440 -> activate . | OK | 86 passed, 1 warning in 8.06s |
+ | 2026-06-26 12:33 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; opera | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+ | 2026-06-26 12:48 UTC | PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 93 passed, 1 warning in 7.97s |
++| 2026-06-26 13:00 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 151 passed, 1 warning in 7.43s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f30d7febad..5f17f5dfe8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 264, "phase": "iteration_start", "started_at": "2026-06-26T12:50:19Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 265, "phase": "iteration_start", "started_at": "2026-06-26T13:02:26Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 2ef0695c5b..f0988b5001 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -1,8 +1,8 @@
+ {
+   "patterns": {},
+-  "brace_fixes": 194,
++  "brace_fixes": 195,
+   "code_violations": 0,
+-  "experiments_checked": 3802,
++  "experiments_checked": 3803,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4794_heldout_first_win_readiness.py b/python/carnot/experiment_4794_heldout_first_win_readiness.py
+new file mode 100644
+index 0000000000..8ca4e3512b
+--- /dev/null
++++ b/python/carnot/experiment_4794_heldout_first_win_readiness.py
+@@ -0,0 +1,261 @@
++"""Experiment 4794: held-out first-win readiness.
++
++Spec refs: REQ-CAPSTONE-4794, SCENARIO-CAPSTONE-4794,
++SCENARIO-CAPSTONE-4794-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4794-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Iterator, Mapping, Sequence
++from contextlib import contextmanager
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_4774_heldout_first_win_readiness as previous
++
++
++JsonDict = dict[str, Any]
++PreconditionsChecker = previous.PreconditionsChecker
++ParityCheck = previous.ParityCheck
++ProxyRunner = previous.ProxyRunner
++PriorBestLoader = previous.PriorBestLoader
++PartialProxyLoader = previous.PartialProxyLoader
++
++base = previous.base
++REPO_ROOT = previous.REPO_ROOT
++EXPERIMENT = "experiment_4794_heldout_first_win_readiness"
++EXPERIMENT_ID = 4794
++SCHEMA = "carnot.arc.heldout_first_win_readiness_4794.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4794_heldout_first_win_readiness.json"
++PARTIAL_RESULT_RELATIVE_PATH = "results/experiment_4794_heldout_first_win_readiness.partial.json"
++PROXY_RESULT_RELATIVE_PATH = previous.PROXY_RESULT_RELATIVE_PATH
++FIRST_WIN_BASELINE = previous.FIRST_WIN_BASELINE
++MIN_HELD_OUT_VARIANT_ATTEMPTS = previous.MIN_HELD_OUT_VARIANT_ATTEMPTS
++HELD_OUT_VARIANT_ATTEMPT_FLOOR = previous.HELD_OUT_VARIANT_ATTEMPT_FLOOR
++HELD_OUT_VARIANT_IDS = previous.HELD_OUT_VARIANT_IDS
++RANDOM_SEED = 4794
++SOFT_BUDGET_ENV = previous.SOFT_BUDGET_ENV
++DEFAULT_SOFT_BUDGET_S = previous.DEFAULT_SOFT_BUDGET_S
++TERMINAL_PREFIXES = previous.TERMINAL_PREFIXES
++LIVE_SUBSTRATE = previous.LIVE_SUBSTRATE
++AGGREGATION_SUBSTRATE = previous.AGGREGATION_SUBSTRATE
++LIVE_DURATION_FLOOR_S = previous.LIVE_DURATION_FLOOR_S
++AGGREGATION_DURATION_FLOOR_S = previous.AGGREGATION_DURATION_FLOOR_S
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-4794",
++    "SCENARIO-CAPSTONE-4794",
++    "SCENARIO-CAPSTONE-4794-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4794-FIELD-PRINCIPLES",
++]
++
++PRIOR_READINESS_RESULT_PATHS = previous.PRIOR_READINESS_RESULT_PATHS + (
++    "results/experiment_4774_heldout_first_win_readiness.json",
++    "results/experiment_4784_heldout_first_win_readiness.json",
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; a measured rate is complete_/success_."
++    },
++    "heldout_first_win_rate": {
++        "principle": "the deadline-relevant generalization signal -- held-out, not in-sample."
++    },
++    "inference_substrate": {
++        "principle": (
++            "live_llm_inference (60s floor) ONLY if the agent ran live; "
++            "aggregation_from_upstream_artifacts if a checkpoint/cache hit -- declare what "
++            "actually ran."
++        )
++    },
++    "null_delta_methodology_note": {
++        "principle": (
++            "for a flat null (rate == baseline 0.04), explains why the agreement is a "
++            "genuine no-improvement result, not a TAUTOLOGY bug."
++        )
++    },
++    "checkpoint_emitted": {
++        "principle": "a capped run must still emit a usable partial artifact."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records generator/harness checks; a missing resource emits blocked_, never a "
++            "fabricated rate."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + tuple(
++    field for field in previous.REQUIRED_ARTIFACT_FIELDS if field not in FIELD_PRINCIPLES
++)
++
++_PATCHED_PREVIOUS_CONSTANTS: dict[str, Any] = {
++    "EXPERIMENT": EXPERIMENT,
++    "EXPERIMENT_ID": EXPERIMENT_ID,
++    "SCHEMA": SCHEMA,
++    "RESULT_RELATIVE_PATH": RESULT_RELATIVE_PATH,
++    "PARTIAL_RESULT_RELATIVE_PATH": PARTIAL_RESULT_RELATIVE_PATH,
++    "RANDOM_SEED": RANDOM_SEED,
++    "SPEC_REFS": SPEC_REFS,
++    "PRIOR_READINESS_RESULT_PATHS": PRIOR_READINESS_RESULT_PATHS,
++    "FIELD_PRINCIPLES": FIELD_PRINCIPLES,
++    "REQUIRED_ARTIFACT_FIELDS": REQUIRED_ARTIFACT_FIELDS,
++}
++
++
++@contextmanager
++def _patched_previous_constants() -> Iterator[None]:
++    old_constants = {
++        name: getattr(previous, name)
++        for name in _PATCHED_PREVIOUS_CONSTANTS
++    }
++    old_patched_base_constants = previous._PATCHED_BASE_CONSTANTS
++    try:
++        for name, value in _PATCHED_PREVIOUS_CONSTANTS.items():
++            setattr(previous, name, value)
++        previous._PATCHED_BASE_CONSTANTS = dict(_PATCHED_PREVIOUS_CONSTANTS)
++        yield
++    finally:
++        previous._PATCHED_BASE_CONSTANTS = old_patched_base_constants
++        for name, value in old_constants.items():
++            setattr(previous, name, value)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    with _patched_previous_constants():
++        return previous.payload_checksum(artifact)
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    parity_test: Mapping[str, Any],
++    proxy_artifact: Mapping[str, Any],
++    prior_best: Mapping[str, Any],
++    partial: bool,
++    checkpoint_emitted: bool,
++    live_agent_ran: bool,
++    duration_s: float,
++    budget_exceeded: base._BudgetExceeded | None = None,
++    blocked_reason: str | None = None,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(
++            previous.build_artifact(
++                preconditions_checked=preconditions_checked,
++                parity_test=parity_test,
++                proxy_artifact=proxy_artifact,
++                prior_best=prior_best,
++                partial=partial,
++                checkpoint_emitted=checkpoint_emitted,
++                live_agent_ran=live_agent_ran,
++                duration_s=duration_s,
++                budget_exceeded=budget_exceeded,
++                blocked_reason=blocked_reason,
++                random_seed=random_seed,
++            )
++        )
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    with _patched_previous_constants():
++        return previous.artifact_schema_errors(artifact)
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    with _patched_previous_constants():
++        return previous.write_artifact(root, artifact)
++
++
++def run_held_out_proxy_checkpointed(
++    root: Path,
++    parity_test: Mapping[str, Any],
++    *,
++    now: Callable[[], float] = time.time,
++    soft_budget_s: float | None = None,
++    public_games: Sequence[str] | None = None,
++) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(
++            previous.run_held_out_proxy_checkpointed(
++                root,
++                parity_test,
++                now=now,
++                soft_budget_s=soft_budget_s,
++                public_games=public_games,
++            )
++        )
++
++
++def check_preconditions(root: Path) -> JsonDict:  # pragma: no cover - subprocess/cache boundary.
++    with _patched_previous_constants():
++        return dict(previous.check_preconditions(root))
++
++
++def run_parity_test(root: Path) -> JsonDict:  # pragma: no cover - subprocess boundary.
++    with _patched_previous_constants():
++        return dict(previous.run_parity_test(root))
++
++
++def load_cached_or_run_held_out_proxy(root: Path, parity_test: Mapping[str, Any]) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(previous.load_cached_or_run_held_out_proxy(root, parity_test))
++
++
++def load_prior_best(root: Path) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(previous.load_prior_best(root))
++
++
++def _partial_proxy_from_budget(
++    root: Path,
++    budget_exceeded: base._BudgetExceeded,
++    parity_test: Mapping[str, Any],
++) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(previous._partial_proxy_from_budget(root, budget_exceeded, parity_test))
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    preconditions_checker: PreconditionsChecker = check_preconditions,
++    parity_check: ParityCheck = run_parity_test,
++    proxy_runner: ProxyRunner | None = None,
++    prior_best_loader: PriorBestLoader = load_prior_best,
++    partial_proxy_loader: PartialProxyLoader = _partial_proxy_from_budget,
++    now: Callable[[], float] = time.time,
++    sleep_fn: Callable[[float], None] = time.sleep,
++) -> JsonDict:
++    with _patched_previous_constants():
++        return dict(
++            previous.run(
++                root=root,
++                preconditions_checker=preconditions_checker,
++                parity_check=parity_check,
++                proxy_runner=proxy_runner,
++                prior_best_loader=prior_best_loader,
++                partial_proxy_loader=partial_proxy_loader,
++                now=now,
++                sleep_fn=sleep_fn,
++            )
++        )
++
++
++def main() -> int:  # pragma: no cover - CLI shim.
++    artifact = run()
++    print(f"wrote {RESULT_RELATIVE_PATH}")
++    print(f"heldout_first_win_rate={artifact['heldout_first_win_rate']}")
++    print(f"heldout_first_win_ci={json.dumps(artifact['heldout_first_win_ci'], sort_keys=True)}")
++    print(f"prior_best_heldout_first_win_rate={artifact['prior_best_heldout_first_win_rate']}")
++    print(f"inference_substrate={artifact['inference_substrate']}")
++    print(f"checkpoint_emitted={artifact['checkpoint_emitted']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI shim.
++    raise SystemExit(main())
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..805b8d17c7
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,412 @@
++# Pre-staged .442 roadmap (Pre-Staged Roadmap Convention). Operator-directed 2026-06-26 'a+b':
++# S2-v2 diverse-pool off-path trust gate (fixes the exp4791 degenerate non-test). Built by scripts/_build_roadmap_442.py.
++milestone: 2026.06.442
++planned_by: outer-loop (Claude Opus 4.8 planner, 2026-06-26, operator-directed 'a+b'). S2 (.441 A1, exp4791)
++  was a DEGENERATE NON-TEST (2/5 effective games; energy_minus_accuracy_delta=0.0 an artifact of non-diverse
++  candidate pools), NOT a bounded null. S2-v2 re-tests with an ENFORCED behaviorally-diverse candidate
++  pool + per-game logging + an effective-games gate. The degenerate-pool detector ships as adversarial_verify.check_engine_selection_candidate_diversity
++  (DEGENERATE_CANDIDATE_POOL).
++milestone_title: S2-v2 OFF-PATH TRUST GATE on a DIVERSE candidate pool -- fix the exp4791 degenerate non-test.
++  Generate K behaviorally-diverse candidate engines per game (varied refinement rounds/seeds spanning
++  held-out off-path cell_recall), log per-game energy-vs-accuracy selections, and gate on >=5 EFFECTIVE
++  games so a 0-delta from non-diverse candidates returns INCONCLUSIVE, not a fake null. PASS -> S3 generation
++  lift; GENUINE bounded (diverse pool) -> pivot the energy to S3 directly. Plus the sprint-mandated level-up
++  (rotated), self-play, readiness, reserved infra/hardware/SOTA/capstone.
++milestone_doc: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md
++theme: 'S2 (exp4791) over-claimed a bounded null from a degenerate candidate pool -- the operator caught
++  it and directed (a) an S2-v2 with enforced candidate diversity + per-game logging + an effective-games
++  gate, and (b) a degenerate-pool detector (now shipped as DEGENERATE_CANDIDATE_POOL in adversarial_verify).
++  S2-v2 is the corrected first live test of whether the structural energy beats cheap execution-grounded
++  accuracy at selecting among induced world-models. The honest outcome space: WIN (-> S3), GENUINE bounded
++  (the energy doesn''t beat accuracy on a real diverse test -> pivot to S3 generation), or INCONCLUSIVE
++  (still can''t assemble a diverse pool -> retire the trust-gate framing). S3-S4 remain gated.'
++sprint_forcing_function: ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1
++  S2-v2 energy headline + A2 level-up + A3 self-play + A4 readiness); >=1 level-up attempt (Level-Up Attempt
++  Guarantee -- A2, rotated); self-play EVERY milestone (A3); 2 reserved infra (B1 silent-bug + S2-v2 candidate-diversity
++  check, B2 submission harden); 1 hardware continuity (C KV260, SSH-only, NO host-device literal); 1 SOTA-ingestion
++  (D energy-guided generation). Operator standing directive authorizes the structural-energy depth track.
++tasks:
++- id: exp4800-phase0
++  title: PHASE 0 (TRANSITION) -- archive .441 -> activate .442; assert YAML parses + pre-test gate green;
++    DETECT + RESOLVE any poison pre-test. RECORD the true .441 close-state (S2 was a DEGENERATE NON-TEST
++    -- inconclusive, NOT bounded; S2-v2 re-tests with a diverse pool).
++  priority: critical
++  track: transition
++  max_turns: 40
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4800_archive_441_activate_442.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (archive-v441-activate-v442).'
++  prompt: "CONTEXT ({date}). Milestone 2026.06.441 completed. Mechanically transition to 2026.06.442,\
++    \ resolve any\npoison pre-test, RECORD the true .441 close-state. Routine (codex). The conductor may\
++    \ have already archived/\nactivated (no-op, EXPECTED). You MUST still WRITE the deliverable.\n\nKEY\
++    \ .441 CLOSE-STATE: S2 (A1, exp4791) reported energy_minus_accuracy_delta=0.0 'no_live_trust_value'\
++    \ BUT it\nwas a DEGENERATE NON-TEST -- 2/5 games had behaviorally-identical candidate engines, only\
++    \ 2/5 genuinely\ntested the selection. The energy direction is INCONCLUSIVE at S2 (NOT bounded, NOT\
++    \ passed). S2-v2 (.442 A1)\nre-tests with an enforced behaviorally-diverse candidate pool. Record\
++    \ S2 as 'inconclusive_degenerate_pool',\nnot 'bounded'.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: `.venv/bin/python\
++    \ -c \"import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('ok')\"\
++    ` exits 0; arc_solver_kit.offline_arcade() exits 0.\n  1. Archive .441 -> activate .442 (no-op if\
++    \ already done). Record S2 as inconclusive_degenerate_pool.\n  2. Run the pre-test gate; resolve any\
++    \ poison test. WRITE the deliverable.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
++    \    principle: \"terminal prefix; clean transition is complete_441_archived_442_activated_<state>.\"\
++    \n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (reads upstream JSON,\
++    \ no LLM; 0.0001s floor).\"\n  s2_recorded_as_inconclusive:\n    principle: \"S2 (exp4791) was a degenerate\
++    \ non-test, NOT a bounded null -- the record must not pause the energy direction on it.\"\n  reproducible_total_levels:\n\
++    \    principle: \"the authoritative ARC progress metric carried from the registry, not re-counted.\"\
++    \n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4801-a1
++  title: PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator-directed) -- S2-v2 OFF-PATH TRUST GATE
++    with an ENFORCED behaviorally-DIVERSE candidate pool. S2 (exp4791) was a degenerate non-test (candidate
++    engines bit-identical on held-out transitions, so any selector scored the same). S2-v2 generates a
++    candidate pool that genuinely spans off-path generalization, logs per-game selections, and uses an
++    EFFECTIVE-GAMES gate so a 0-delta from non-diverse candidates returns INCONCLUSIVE, not a fake null.
++  priority: critical
++  track: arc-north-star
++  max_turns: 180
++  inference_substrate: verifier_ensemble_against_cached_candidates
++  deliverable: results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json
++  operator_override: '2026-06-26 operator directive (''a+b'': pre-stage S2-v2 with diversity enforcement
++    + per-game logging + a minimum-effective-games gate). S2 (exp4791) was a degenerate non-test; S2-v2
++    is the corrected re-test, NOT a doomed rerun. Spec: docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md.'
++  prior_failures:
++  - experiment_id: exp4791-structural-energy-s2-offpath-trust-gate
++    verdict: complete_structural_energy_s2_no_live_trust_value (DEGENERATE NON-TEST -- inconclusive, not
++      a genuine bounded null)
++    addressed_by: 'exp4791 reported energy_minus_accuracy_delta=0.0 (CI [0,0]) but the candidate engine
++      pools were behaviorally degenerate: 2/5 games had bit-identical candidate predictions (same off-path
++      energy + cell_recall) and a 3rd had equal recalls, so only 2/5 games genuinely tested the selection
++      -- the 0-delta is an artifact of non-diverse candidates, NOT a null. S2-v2 is DIFFERENT: (1) it
++      GENERATES a behaviorally-diverse candidate pool per game (K engines induced from varied refinement-round
++      snapshots / seeds so they span a range of held-out off-path cell_recall); (2) it ENFORCES an effective-games
++      gate (only games whose candidates have >=2 distinct held-out off-path cell_recall count); (3) it
++      LOGS per-game selections (which engine energy picked vs accuracy, their off-path recalls). retire_if_same_verdict:
++      true means: if S2-v2 STILL cannot assemble >= the required effective games, it returns INCONCLUSIVE
++      (blocked_insufficient_candidate_diversity), and the off-path-trust-gate approach is retired in favor
++      of testing the energy on a different live use (e.g. S3 generation directly) -- NOT re-run again
++      on degenerate pools.'
++    retire_if_same_verdict: true
++  prompt: "CONTEXT ({date}). OPERATOR-DIRECTED HEADLINE. S2 (.441 A1, exp4791) was a DEGENERATE NON-TEST:\n\
++    energy_minus_accuracy_delta=0.0 'no_live_trust_value', but 2/5 games had behaviorally-IDENTICAL candidate\n\
++    engines (bit-identical off-path energy 189.1448 + cell_recall 1.0 on ar25; same on ka59) and a 3rd\
++    \ (cd82)\nhad equal recalls -- only 2/5 games (cn04, sc25) genuinely tested whether the energy beats\
++    \ the accuracy\ngate. A 0-delta from non-diverse candidates is a NON-TEST, not a null. S2-v2 fixes\
++    \ this. Spec:\ndocs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md (S2). The\
++    \ degenerate-pool\ndetector now ships as adversarial_verify.check_engine_selection_candidate_diversity\
++    \ (DEGENERATE_CANDIDATE_POOL).\n\nTHE BUILD (three required changes vs S2):\n  1. GENERATE a behaviorally-DIVERSE\
++    \ candidate pool per game. The S2 pools were near-duplicate induction\n     snapshots. For each held-out\
++    \ game, assemble K>=3 candidate engines that genuinely DIFFER in held-out\n     off-path generalization\
++    \ -- e.g. snapshots from DIFFERENT refinement rounds (an early rambling engine,\n     a mid engine,\
++    \ a refined engine) and/or DIFFERENT induction seeds/temperatures. The pool MUST span a\n     range\
++    \ of held-out off-path cell_recall (verify >=2 distinct values per game before counting it).\n  2.\
++    \ EFFECTIVE-GAMES gate. A game is EFFECTIVE only if its candidate pool has >=2 distinct held-out\n\
++    \     off-path cell_recall (the selection genuinely matters). Require >= MIN_EFFECTIVE (set min_heldout_games\n\
++    \     = the number of effective games actually achieved, and require it to be >= 5). If fewer than\
++    \ 5\n     effective games can be assembled, return honest_verdict\n     complete_structural_energy_s2v2_inconclusive_insufficient_candidate_diversity\
++    \ -- do NOT report a 0-delta\n     as a bounded null.\n  3. PER-GAME selection logging. For each game\
++    \ record: the candidate_rows (each with off-path\n     structural_energy + held-out cell_recall +\
++    \ prefix/held-out accuracy), the energy-selected candidate,\n     the accuracy-gate-selected candidate,\
++    \ whether they DIFFER, and each selection's off-path cell_recall.\n\nLIVE-PATH-REACHABILITY (unchanged\
++    \ from S2): the energy gate MUST stay in the E3AgentPolicy import closure\n(arc_orphan_solver_lint\
++    \ passes).\n\nEXISTING CODE TO READ FIRST:\n  - {project_root}/results/experiment_4791_structural_energy_s2_offpath_trust_gate.json\
++    \ (the degenerate S2 -- see candidate_rows / game_results)\n  - {project_root}/python/carnot/experiment_4791_structural_energy_s2_offpath_trust_gate.py\
++    \ (the S2 code to extend)\n  - {project_root}/python/carnot/agentic/arc_executable_world_model.py\
++    \ (WorldModelVerifier + induction/refinement rounds for snapshotting diverse candidates)\n  - {project_root}/scripts/adversarial_verify.py\
++    \ (check_engine_selection_candidate_diversity -- your gate must satisfy this: effective games >= min_heldout_games)\n\
++    \nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"from\
++    \ carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"` exits 0. Else blocked_offline_arcade_missing,\
++    \ EXIT.\n     b. `.venv/bin/python -c \"from carnot.agentic.arc_executable_world_model import WorldModelVerifier\"\
++    ` imports. Else blocked_world_model_verifier_missing, EXIT.\n  1. For each held-out game, GENERATE\
++    \ K>=3 behaviorally-diverse candidate engines (varied refinement\n     rounds / seeds); compute each\
++    \ candidate's held-out off-path cell_recall + off-path structural energy.\n  2. Mark a game EFFECTIVE\
++    \ iff its candidates have >=2 distinct held-out off-path cell_recall. Require >=5\n     effective\
++    \ games; else return the INCONCLUSIVE verdict (above) -- no fake 0-delta.\n  3. On the effective games:\
++    \ select an engine by (a) off-path energy ranking vs (b) the incumbent binary\n     accuracy<0.5 gate;\
++    \ measure each selected engine's held-out off-path cell_recall; bootstrap the\n     energy-minus-accuracy\
++    \ delta. LOG per-game selections.\n  4. WRITE the artifact with verifier_is_oracle=false + min_heldout_games=<effective\
++    \ count> + per-game\n     game_results (so check_engine_selection_candidate_diversity passes only\
++    \ on a genuine test).\n\nFALSIFIABLE GATE:\n  PASS (-> S3 generation lift, .443) iff on >=5 EFFECTIVE\
++    \ games the energy-selected off-path cell_recall\n  MINUS accuracy-selected > 0 with bootstrap CI95\
++    \ EXCLUDING 0. BOUNDED iff >=5 effective games AND the delta\n  CI95 includes 0 (a GENUINE null on\
++    \ a real diverse test -> the energy does not beat cheap accuracy at\n  engine selection; the direction\
++    \ pivots to testing the energy on S3 generation directly).\n  retire_if_same_verdict: true -- if <5\
++    \ effective games can be assembled (still degenerate), return\n  INCONCLUSIVE and retire the off-path-trust-gate\
++    \ framing (do NOT re-run on degenerate pools); the energy's\n  next live test becomes S3 generation.\n\
++    \n  The artifact MUST pass adversarial_verify.check_engine_selection_candidate_diversity: effective_games\n\
++    \  (games with >=2 distinct candidate cell_recall) >= min_heldout_games. A 0-delta with effective<required\n\
++    \  is correctly flagged DEGENERATE_CANDIDATE_POOL -- so a bounded verdict is only valid on a diverse\
++    \ pool.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal\
++    \ prefix; a live trust win is success_structural_energy_s2v2_trust_gate_authorizes_s3, a genuine null\
++    \ on a diverse pool is complete_structural_energy_s2v2_bounded_diverse_pool, an under-diverse non-test\
++    \ is complete_structural_energy_s2v2_inconclusive_insufficient_candidate_diversity.\"\n  verifier_is_oracle:\n\
++    \    principle: \"MUST be false for the energy ranking (oracle-distinct); the binary-accuracy CONTROL\
++    \ is execution-grounded.\"\n  n_effective_games:\n    principle: \"games whose candidate pool has\
++    \ >=2 distinct held-out off-path cell_recall -- the ONLY games that genuinely test selection; the\
++    \ exp4791 failure was n_effective=2 of 5.\"\n  min_heldout_games:\n    principle: \"set to n_effective;\
++    \ check_engine_selection_candidate_diversity requires effective>=this, so a degenerate pool cannot\
++    \ pass as a null.\"\n  game_results:\n    principle: \"per-game candidate_rows + energy-selected vs\
++    \ accuracy-selected candidate + each off-path cell_recall -- the per-game logging exp4791 lacked (it\
++    \ only reported the aggregate).\"\n  candidate_pool_diversity:\n    principle: \"records distinct\
++    \ off-path cell_recall count per game -- proves the pool genuinely spans generalization, not near-duplicate\
++    \ induction snapshots.\"\n  energy_minus_accuracy_delta_ci95:\n    principle: \"must EXCLUDE 0 (energy>accuracy)\
++    \ for PASS, on >=5 EFFECTIVE games -- a 0-delta is only meaningful on a diverse pool.\"\n  live_path_reachable:\n\
++    \    principle: \"the energy gate must be in the E3AgentPolicy import closure (arc_orphan_solver_lint).\"\
++    \n  preconditions_checked:\n    principle: \"records the arcade / WorldModelVerifier import checks\
++    \ so a silent-missing-resource run cannot fabricate a cell_recall.\"\n  random_seed:\n    principle:\
++    \ \"determinism for the candidate generation + selection + bootstrap.\"\n  reproducibility_checksum:\n\
++    \    principle: \"content hash of (candidate engines, folds, energy config) so a replication catches\
++    \ drift.\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4802-a2
++  title: PHASE A2 (ARC NORTH STAR; operator MANDATORY; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible
++    level on a ROTATED unsolved target (bp35/sb26). offline_reproduced gated.
++  priority: critical
++  track: arc-north-star
++  max_turns: 160
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4802_levelup_attempt.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (ARC Level-Up Attempt Guarantee; rotate
++    to bp35/sb26).'
++  prompt: "CONTEXT ({date}). The ARC Level-Up Attempt Guarantee requires >=1 task per roadmap whose gate\
++    \ BANKS a\nnew reproducible level. ROTATE the target (ka59/lf52/re86/sc25 covered recently) -- pick\
++    \ bp35 or sb26 for\nfirst-contact, else +1 deepen on the shallowest already-solved game.\n\nSTANDING\
++    \ ENTRYPOINT: `.venv/bin/python scripts/arc_loop_solve.py --game <target>`. Reuse arc_solver_kit +\n\
++    registry general_gotchas; reverse-engineer only the per-game DELTA.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\
++    \ arc_solver_kit.offline_arcade() exits 0; Qwen generator on the iGPU (NEVER 3090s) if\n     induction\
++    \ is needed; if the target offline env is missing -> blocked_<game>_offline_env_missing.\n  1. Read\
++    \ ops/arc_solve_registry.yaml; pick the rotated target. recommend_approach(game).\n  2. Run arc_loop_solve.py\
++    \ --game <target>; register a GameAdapter for the DELTA if needed.\n  3. Run the reproduction gate;\
++    \ update the registry; record DEAD-ENDS.\n\nFALSIFIABLE GATE: >=1 NEW level offline-reproduced, solve_provenance=live_agent_self_discovery,\
++    \ registry\nupdated. retire_if_same_verdict: true -- if no new level banks, document the residual\
++    \ and ROTATE again.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
++    \ \"terminal prefix; a banked level is success_, a no-bank is complete_<game>_no_new_level_residual_<cause>.\"\
++    \n  solve_provenance:\n    principle: \"live_agent_self_discovery -- the agent advanced via its OWN\
++    \ attempts; NOT outer_loop_re (CRITICAL).\"\n  offline_reproduced:\n    principle: \"only reproduced\
++    \ levels count.\"\n  reproduced_levels:\n    principle: \"the new reproducible depth; the monotonic\
++    \ ARC progress metric.\"\n  inference_substrate:\n    principle: \"live_llm_inference if induction\
++    \ runs (60s floor).\"\n  verifier_is_oracle:\n    principle: \"the reproduction gate is execution-grounded\
++    \ (true); this is a SOLVE task.\"\n  preconditions_checked:\n    principle: \"records arcade/env/generator\
++    \ checks so a missing-resource run emits blocked_, never a fabricated solve.\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4803-a3
++  title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone) -- run the standing self-improvement loop
++    on a banked game: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
++  priority: high
++  track: arc-north-star
++  max_turns: 140
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4803_self_play_verifier_checkpoint.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (self-play-every-milestone; standing arc_loop_solve
++    loop).'
++  prompt: "CONTEXT ({date}). The ARC sprint mandates self-play EVERY milestone. Run arc_loop_solve.py\
++    \ on a banked\ngame (warm-started by the saved verifier) to advance +1 level AND refresh the checkpoint.\n\
++    \nCONCRETE STEPS:\n  0. PRECONDITIONS: arc_solver_kit.offline_arcade() exits 0; target has a banked\
++    \ level in the registry.\n  1. `.venv/bin/python scripts/arc_loop_solve.py --game <banked-target>`\
++    \ (or --auto): warm-starts, runs the\n     verifier-routed search + reproduction gate, trains + checkpoints.\n\
++    \  2. Confirm the checkpoint mtime advanced; record the search-state count.\n\nFALSIFIABLE GATE: the\
++    \ learned verifier checkpoint is refreshed (mtime advances) AND the reproduction gate\npasses on >=1\
++    \ level. A failed run records the residual; it does NOT fabricate a checkpoint.\n\nREQUIRED ARTIFACT\
++    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; checkpoint refreshed\
++    \ + gate green is success_.\"\n  verifier_checkpoint_refreshed:\n    principle: \"the self-improvement\
++    \ signal.\"\n  inference_substrate:\n    principle: \"live_llm_inference (60s floor).\"\n  solve_provenance:\n\
++    \    principle: \"live_agent_self_discovery -- self-play is the agent improving on its own attempts.\"\
++    \n  preconditions_checked:\n    principle: \"records arcade/registry checks; a missing target emits\
++    \ blocked_, never a fabricated checkpoint.\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4804-a4
++  title: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness) -- measure the live agent's
++    held-out first-win rate on the color-permuted variant harness, checkpoint/resume-capable.
++  priority: high
++  track: arc-north-star
++  max_turns: 120
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4804_heldout_first_win_readiness.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (held-out first-win readiness lane).'
++  prompt: "CONTEXT ({date}). Measure the live E3 agent's held-out first-win rate on the experiment_4605\n\
++    color-permuted variant harness. MUST checkpoint/resume so a wall-clock-capped run still emits a usable\n\
++    partial artifact.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arcade + the variant harness present; Qwen\
++    \ generator on the iGPU (NEVER 3090s). Scope the\n     game/seed count under the codex wall-clock\
++    \ cap (or checkpoint/resume).\n  1. Run the held-out first-win measurement with periodic checkpointing;\
++    \ on cap, emit the partial artifact.\n  2. Report held-out first-win rate + CI, vs the prior best.\n\
++    \  3. SUBSTRATE HONESTY (exp4752 fix): if you RESUME from a checkpoint / lever-cache and do NOT run\
++    \ the live\n     agent this turn, declare inference_substrate=aggregation_from_upstream_artifacts\
++    \ (NOT live_llm_inference).\n     For a FLAT null (rate == baseline 0.04) add a null_delta_methodology_note\
++    \ + positive_control_passed=true.\n\nFALSIFIABLE GATE: a non-fabricated held-out first-win rate with\
++    \ CI; a capped run still emits a partial artifact.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
++    \  honest_verdict:\n    principle: \"terminal prefix; a measured rate is complete_/success_.\"\n \
++    \ heldout_first_win_rate:\n    principle: \"the deadline-relevant generalization signal -- held-out,\
++    \ not in-sample.\"\n  inference_substrate:\n    principle: \"live_llm_inference (60s floor) ONLY if\
++    \ the agent ran live; aggregation_from_upstream_artifacts if a checkpoint/cache hit -- declare what\
++    \ actually ran.\"\n  null_delta_methodology_note:\n    principle: \"for a flat null (rate == baseline\
++    \ 0.04), explains why the agreement is a genuine no-improvement result, not a TAUTOLOGY bug.\"\n \
++    \ checkpoint_emitted:\n    principle: \"a capped run must still emit a usable partial artifact.\"\n\
++    \  preconditions_checked:\n    principle: \"records generator/harness checks; a missing resource emits\
++    \ blocked_, never a fabricated rate.\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4805-b1
++  title: 'PHASE B1 (INFRA reserved slot 1) -- SILENT-BUG AUDIT of the .442 ARC nulls + RUN the degenerate-pool
++    detector on S2-v2: confirm n_effective_games >= min_heldout_games (the candidate pool is genuinely
++    diverse) so a bounded/0-delta verdict is a real test, not a degenerate non-test like S2 (exp4791).'
++  priority: high
++  track: infra
++  max_turns: 100
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4805_silent_bug_audit.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved infra slot 1; silent-bug audit
++    + S2-v2 candidate-diversity check).'
++  prompt: "CONTEXT ({date}). Reserved infra slot. Audit the milestone's ARC nulls for silent bugs. For\
++    \ S2-v2\n(exp4801) specifically: RUN adversarial_verify.check_engine_selection_candidate_diversity\
++    \ on the artifact and\nconfirm it does NOT flag DEGENERATE_CANDIDATE_POOL -- i.e. n_effective_games\
++    \ (games with >=2 distinct\nheld-out off-path cell_recall) >= min_heldout_games. If it DOES flag,\
++    \ S2-v2's pool is still degenerate and\nits verdict is a non-test; record that. Also confirm the per-game\
++    \ selections were logged (game_results with\nenergy-vs-accuracy picks) and the graft stayed live-path-reachable\
++    \ (arc_orphan_solver_lint).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .442 result artifacts present.\n\
++    \  1. `.venv/bin/python -c \"import json,sys; sys.path.insert(0,'scripts'); import adversarial_verify\
++    \ as av;\n     d=json.load(open('results/experiment_4801_structural_energy_s2v2_diverse_trust_gate.json'));\n\
++    \     f=[]; av.check_engine_selection_candidate_diversity(d,f); print('DEGENERATE_CANDIDATE_POOL:',\
++    \ [x.kind for x in f])\"`\n  2. For each other ARC null, verify the lever was genuinely exercised.\n\
++    \  3. WRITE the audit appending to ops/arc_null_silent_bug_audit.md.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
++    \  honest_verdict:\n    principle: \"terminal prefix; audit complete is complete_/success_.\"\n  s2v2_candidate_pool_diverse:\n\
++    \    principle: \"the load-bearing check -- DEGENERATE_CANDIDATE_POOL must NOT fire on S2-v2, else\
++    \ its verdict is again a non-test.\"\n  nulls_audited:\n    principle: \"count of nulls re-examined.\"\
++    \n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4806-b2
++  title: 'PHASE B2 (INFRA reserved slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE harden: verify the
++    Kaggle ARC-AGI-3 agent package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; operator
++    checklist.'
++  priority: high
++  track: infra
++  max_turns: 100
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4806_submission_package_harden.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved infra slot 2; submission-package
++    readiness, operator-only submit).'
++  prompt: "CONTEXT ({date}). Reserved infra slot, deadline-relevant. Verify the ARC-AGI-3 Kaggle submission\n\
++    package builds and the frozen live stack packages within ~16GB. Produce an OPERATOR checklist -- NEVER\
++    \ submits.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the submission packaging scripts + arc_competition_agent\
++    \ present.\n  1. Dry-build the package; verify the agent config + model paths resolve; estimate VRAM\
++    \ vs 16GB.\n  2. WRITE the operator checklist; submission_package_ready reflects operator-readiness,\
++    \ the task does not submit.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
++    \    principle: \"terminal prefix; package builds is success_/complete_.\"\n  submission_package_ready:\n\
++    \    principle: \"True iff ready for the OPERATOR to submit; the task itself NEVER submits.\"\n  vram_estimate_gb:\n\
++    \    principle: \"must fit ~16GB Kaggle with KV + headroom.\"\n  inference_substrate:\n    principle:\
++    \ \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4807-c
++  title: 'PHASE C (HARDWARE continuity -- KV260, the sovereignty anchor) -- the per-milestone KV260 continuity
++    task: SSH-reachability, loaded overlay, next concrete forward step. SSH precondition ONLY.'
++  priority: medium
++  track: hardware
++  max_turns: 80
++  inference_substrate: hardware_smoke
++  deliverable: results/experiment_4807_kv260_continuity.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (hardware-continuity; KV260 per-milestone).'
++  prompt: "CONTEXT ({date}). KV260 hardware-continuity. Interact with the board via SSH ONLY -- host SD-card\n\
++    device nodes are PERMANENTLY retired for KV260 (KV260 SSH-Not-SD-Card Discipline). Do NOT use any\
++    \ host\nblock-device precondition.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE any other step):\n\
++    \     a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero -> honest_verdict\n\
++    \        blocked_kv260_ssh_unreachable, EXIT (do NOT fall back to a host SD-card check).\n  1. Report\
++    \ the loaded overlay (`ssh kria 'xmutil listapps'`) + the board state.\n  2. Record the next concrete\
++    \ forward step; if it needs operator action, queue a documentation/audit step.\n\nREQUIRED ARTIFACT\
++    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; reachable is\
++    \ success_/complete_; unreachable is blocked_kv260_ssh_unreachable.\"\n  inference_substrate:\n  \
++    \  principle: \"hardware_smoke (SSH-attached board test).\"\n  kv260_ssh_reachable:\n    principle:\
++    \ \"the SSH reachability check -- the ONLY valid KV260 precondition.\"\n  preconditions_checked:\n\
++    \    principle: \"records the SSH check so a wrong-mechanism precondition cannot escalate the operator\
++    \ for a no-op.\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4808-d
++  title: PHASE D (SOTA-INGESTION -- the .443 frontier = energy-guided GENERATION) -- ingest the literature
++    on using a learned energy/value to GUIDE candidate generation (energy-guided sampling, score guidance,
++    energy-as-fitness search) to inform S3. Real arXiv IDs only.
++  priority: medium
++  track: sota-ingestion
++  max_turns: 100
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4808_sota_ingestion_energy_guided_generation.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (reserved SOTA-ingestion slot; headline=energy
++    trust gate -> generation lift).'
++  prompt: "CONTEXT ({date}). Reserved SOTA-ingestion slot. S3 will use the energy to GUIDE generation\
++    \ (put a\nwinner INTO the pool). Ingest the literature on energy/value-guided GENERATION: energy-guided\
++    \ sampling,\nclassifier/score guidance, energy-as-fitness evolutionary search, plan-with-energy. Use\
++    \ the RELIABLE channel\n(sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch).\
++    \ Do NOT invoke /deep-research.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: research-studying.md / research-references.md\
++    \ present.\n  1. Read the discovered corpus filtered to energy-guided generation; focused fresh sweep\
++    \ (top 5-8 papers).\n  2. Synthesize a SOTA->S3 mapping note. Cite REAL arXiv IDs.\n  3. Flag the\
++    \ strongest method(s) for the .443 roadmap; mark ingested in research-studying.md.\n\nREQUIRED ARTIFACT\
++    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; mapping emitted\
++    \ is success_sota_ingestion_energy_guided_generation_mapped.\"\n  methods_mapped:\n    principle:\
++    \ \"the strongest 3-5 methods mapped onto S3, each with a real arXiv ID.\"\n  arxiv_ids_cited:\n \
++    \   principle: \"every method claim must cite a verifiable arXiv ID.\"\n  flagged_for_v443:\n    principle:\
++    \ \"the strongest method(s) flagged so the .443 planner reads the mapping.\"\n  inference_substrate:\n\
++    \    principle: \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4809-e
++  title: 'PHASE E (CAPSTONE .442) -- aggregate the .442 scorecard: the S2-v2 verdict (trust win -> S3,
++    GENUINE bounded on a DIVERSE pool, or still-inconclusive), the level-up bank, self-play, readiness.
++    SKIP genuinely-flagged artifacts; record S2-v2''s true verdict ONLY if DEGENERATE_CANDIDATE_POOL did
++    NOT fire.'
++  priority: high
++  track: capstone
++  max_turns: 120
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4809_capstone_v442.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
++    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint
++    majority-ARC + reserved infra/hardware/sota/capstone slots. (capstone aggregation; codex default).'
++  prompt: "CONTEXT ({date}). Capstone for .442. The HEADLINE is the S2-v2 verdict: on a behaviorally-DIVERSE\n\
++    candidate pool (>=5 effective games), does off-path energy-ranking BEAT the binary accuracy gate (CI95\
++    \ excl\n0 -> S3 authorized), is it a GENUINE bounded null (diverse pool, CI incl 0 -> energy doesn't\
++    \ beat accuracy\nat engine selection; pivot the energy to S3 generation), or still INCONCLUSIVE (insufficient\
++    \ diversity)?\n\nIMPORTANT: read each upstream artifact via scripts/summarize_artifact.py (PATCHED\
++    \ linter). For S2-v2, the\nverdict is ONLY trustworthy if check_engine_selection_candidate_diversity\
++    \ did NOT fire DEGENERATE_CANDIDATE_\nPOOL (n_effective_games >= min_heldout_games). If it fired,\
++    \ record S2-v2 as inconclusive, not bounded.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .442 upstream\
++    \ artifacts present.\n  1. Read each upstream artifact. Honor verifier_is_oracle + the DEGENERATE_CANDIDATE_POOL\
++    \ check.\n  2. Aggregate: S2-v2 verdict (win / genuine-bounded / inconclusive); level-up; self-play;\
++    \ readiness. Cite sha256/ids.\n  3. WRITE the capstone scorecard.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
++    \  honest_verdict:\n    principle: \"terminal prefix; capstone_ready=true is success_/complete_.\"\
++    \n  s2v2_structural_energy_verdict:\n    principle: \"the headline -- trust WIN (S3 authorized) /\
++    \ GENUINE bounded (diverse pool) / inconclusive (degenerate pool); recorded only if DEGENERATE_CANDIDATE_POOL\
++    \ did not fire.\"\n  reproducible_total_levels:\n    principle: \"the monotonic ARC progress metric\
++    \ carried from the registry.\"\n  cited_upstream_artifacts:\n    principle: \"list of {{experiment_id,\
++    \ fields_imported, sha256}} -- the audit trail.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts\
++    \ (0.0001s floor).\"\n"
++  milestone: 2026.06.442
++  agent_type: codex
++  model: gpt-5.5
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 4ccc623e9b..0c17940aad 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-26T12:47:03.455853Z",
+-  "duration_s": 0.07208919525146484,
++  "run_date": "2026-06-26T13:11:00.488656Z",
++  "duration_s": 0.05151247978210449,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "8ad7c17c411e27efd2e4a0c3d04fcb237e460b84dab35790488c835640f8ee57",
++  "reproducibility_checksum": "59588e5e1380b64a051d79b67d372149113f3acbc109fb85f4c407a54de3ea94",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "694fb4cae7d7f6609321c416e03a68fa6a3c21c4"
++    "adversarial_verify_version": "539b45ba6e91599b256e831be9aa039e6bb89d77"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 656fab8ad0..6bab8cd656 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-26T12:47:03.568533Z",
+-  "duration_s": 0.10154175758361816,
++  "run_date": "2026-06-26T13:11:00.573957Z",
++  "duration_s": 0.07741999626159668,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "29ece52131eed4d06dd4e746b8151e5223e5a4bdf76a57edb0853b6179bd3335",
++  "reproducibility_checksum": "b14d04253ded8727e49c1930c079a8339d048a74ba862ad68f11530448462b43",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "694fb4cae7d7f6609321c416e03a68fa6a3c21c4"
++    "adversarial_verify_version": "539b45ba6e91599b256e831be9aa039e6bb89d77"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 17dd781163..7d264378d2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.121448516845703,
++  "efficiency_gains_ms": 12.174844741821289,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 93a146373e..de55daa747 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.182802513241768e-05,
++  "duration_s": 3.4624943509697914e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4794_heldout_first_win_readiness.json b/results/experiment_4794_heldout_first_win_readiness.json
+new file mode 100644
+index 0000000000..473f97dbbb
+--- /dev/null
++++ b/results/experiment_4794_heldout_first_win_readiness.json
+@@ -0,0 +1,165 @@
++{
++  "checkpoint_emitted": false,
++  "checkpoint_path": "results/experiment_4794_heldout_first_win_readiness.partial.json",
++  "duration_s": 10.587576,
++  "experiment": "experiment_4794_heldout_first_win_readiness",
++  "experiment_id": 4794,
++  "field_principles": {
++    "checkpoint_emitted": {
++      "principle": "a capped run must still emit a usable partial artifact."
++    },
++    "heldout_first_win_rate": {
++      "principle": "the deadline-relevant generalization signal -- held-out, not in-sample."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; a measured rate is complete_/success_."
++    },
++    "inference_substrate": {
++      "principle": "live_llm_inference (60s floor) ONLY if the agent ran live; aggregation_from_upstream_artifacts if a checkpoint/cache hit -- declare what actually ran."
++    },
++    "null_delta_methodology_note": {
++      "principle": "for a flat null (rate == baseline 0.04), explains why the agreement is a genuine no-improvement result, not a TAUTOLOGY bug."
++    },
++    "preconditions_checked": {
++      "principle": "records generator/harness checks; a missing resource emits blocked_, never a fabricated rate."
++    }
++  },
++  "first_win_baseline": 0.04,
++  "heldout_first_win_ci": {
++    "bootstrap_resamples": 1000,
++    "ci95": [
++      0.0,
++      0.0
++    ],
++    "method": "paired_percentile_bootstrap",
++    "point": 0.0,
++    "random_seed": 4605
++  },
++  "heldout_first_win_ci_lower": 0.0,
++  "heldout_first_win_delta_vs_baseline": 0.0,
++  "heldout_first_win_delta_vs_prior_best": 0.0,
++  "heldout_first_win_rate": 0.04,
++  "heldout_proxy_summary": {
++    "heldout_first_win_ci": {
++      "bootstrap_resamples": 1000,
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "method": "paired_percentile_bootstrap",
++      "point": 0.0,
++      "random_seed": 4605
++    },
++    "heldout_first_win_rate": 0.04,
++    "heldout_variant_attempts": 100,
++    "proxy_cache_reason": "Existing Experiment 4605 held-out proxy is SCORE-compatible; Exp 4764 aggregates that upstream evidence and therefore declares aggregation_from_upstream_artifacts.",
++    "proxy_cache_used": true,
++    "proxy_honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++    "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
++  },
++  "heldout_variant_attempt_floor": "B>=100",
++  "heldout_variant_attempts": 100,
++  "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "live_agent_ran": false,
++  "null_delta_methodology_note": "Held-out first-win rate equals the 0.04 baseline with positive-control parity passed; this is a genuine no-improvement result from the scored held-out variant harness, not a TAUTOLOGY bug or fabricated agreement.",
++  "parity_test": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [12 items]\n\n............                                                             [100%]\n============================== 12 passed in 6.78s ==============================\n"
++  },
++  "parity_test_green": true,
++  "partial": false,
++  "positive_control_passed": true,
++  "preconditions_checked": {
++    "experiment_4605_importable": true,
++    "experiment_4605_importable_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot import experiment_4605_live_integration_scored_agent",
++    "experiment_4605_importable_returncode": 0,
++    "forbidden_3090s_used": false,
++    "generator_device": "iGPU",
++    "offline_arcade": true,
++    "offline_arcade_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
++    "offline_arcade_returncode": 0,
++    "ok": true,
++    "qwen35_mtp_gguf_cached": true,
++    "qwen35_mtp_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
++    "qwen_generator_device_policy": "iGPU_only_no_3090s"
++  },
++  "prior_best": {
++    "candidates": [
++      {
++        "exists": true,
++        "experiment_id": 4691,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4691_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4703,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4703_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4716,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4716_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4740,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4740_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4752,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
++        "path": "results/experiment_4752_held_out_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4764,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4764_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4774,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4774_heldout_first_win_readiness.json"
++      },
++      {
++        "exists": true,
++        "experiment_id": 4784,
++        "heldout_first_win_rate": 0.04,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "path": "results/experiment_4784_heldout_first_win_readiness.json"
++      }
++    ],
++    "prior_best_experiment_id": 4784,
++    "prior_best_heldout_first_win_rate": 0.04,
++    "prior_best_result_path": "results/experiment_4784_heldout_first_win_readiness.json"
++  },
++  "prior_best_heldout_first_win_rate": 0.04,
++  "proxy_artifact_path": "results/experiment_4605_live_integration_scored_agent.json",
++  "random_seed": 4794,
++  "reproducibility_checksum": "sha256:2d1f81a06b8791b8760aed516b46f540a39452a38860938fd991b03fa62b3bc6",
++  "result_path": "results/experiment_4794_heldout_first_win_readiness.json",
++  "schema": "carnot.arc.heldout_first_win_readiness_4794.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4794",
++    "SCENARIO-CAPSTONE-4794",
++    "SCENARIO-CAPSTONE-4794-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4794-FIELD-PRINCIPLES"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index a2d990fd00..2cb6997290 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T12:46:37Z",
+-  "finished_at": "2026-06-26T12:46:37Z",
++  "started_at": "2026-06-26T13:10:34Z",
++  "finished_at": "2026-06-26T13:10:34Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index af0ecd1595..0bdef5a518 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T12:46:38Z",
+-  "finished_at": "2026-06-26T12:46:38Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-26T13:10:34Z",
++  "finished_at": "2026-06-26T13:10:34Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 1aafad2404..3085df0479 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T12:46:38Z",
+-  "finished_at": "2026-06-26T12:46:38Z",
++  "started_at": "2026-06-26T13:10:34Z",
++  "finished_at": "2026-06-26T13:10:34Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4794_heldout_first_win_readiness.py b/tests/python/test_experiment_4794_heldout_first_win_readiness.py
+new file mode 100644
+index 0000000000..bb7a0f542e
+--- /dev/null
++++ b/tests/python/test_experiment_4794_heldout_first_win_readiness.py
+@@ -0,0 +1,325 @@
++"""Tests for Exp 4794 held-out first-win readiness.
++
++Spec refs: REQ-CAPSTONE-4794, SCENARIO-CAPSTONE-4794,
++SCENARIO-CAPSTONE-4794-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4794-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4774_heldout_first_win_readiness as previous
++from carnot import experiment_4794_heldout_first_win_readiness as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _proxy(
++    *,
++    first_win_rate: float = 0.04,
++    ci_low: float = 0.0,
++    ci_high: float = 0.0,
++    attempts: int = 100,
++    cache_used: bool = True,
++) -> JsonDict:
++    solved = int(round(first_win_rate * attempts))
++    return {
++        "experiment": "experiment_4605_live_integration_scored_agent",
++        "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++        "first_win_rate_integrated": first_win_rate,
++        "first_win_ci": {
++            "method": "paired_percentile_bootstrap",
++            "point": round(first_win_rate - mod.FIRST_WIN_BASELINE, 6),
++            "ci95": [ci_low, ci_high],
++            "bootstrap_resamples": 1000,
++        },
++        "integrated_measurement": {
++            "variant_attempts_count": attempts,
++            "variant_attempts": [
++                {
++                    "attempted": True,
++                    "first_win": index < solved,
++                    "depth_reached": 1 if index < solved else 0,
++                }
++                for index in range(attempts)
++            ],
++        },
++        "proxy_cache_used": cache_used,
++    }
++
++
++def _preconditions() -> JsonDict:
++    return {
++        "ok": True,
++        "offline_arcade": True,
++        "experiment_4605_importable": True,
++        "qwen35_mtp_gguf_cached": True,
++        "qwen35_mtp_gguf_path": "/models/Qwen3.5-9B-Q4_K_M.gguf",
++        "generator_device": "iGPU",
++        "forbidden_3090s_used": False,
++        "qwen_generator_device_policy": "iGPU_only_no_3090s",
++    }
++
++
++def _parity(passed: bool = True) -> JsonDict:
++    return {"passed": passed, "command": "pytest tests/python/test_arc_submitted_agent_parity.py"}
++
++
++def _prior_best(rate: float = 0.04, experiment_id: int = 4784) -> JsonDict:
++    return {
++        "prior_best_heldout_first_win_rate": rate,
++        "prior_best_result_path": "results/experiment_4784_heldout_first_win_readiness.json",
++        "prior_best_experiment_id": experiment_id,
++        "candidates": [
++            {
++                "path": "results/experiment_4784_heldout_first_win_readiness.json",
++                "experiment_id": experiment_id,
++                "heldout_first_win_rate": rate,
++            }
++        ],
++    }
++
++
++def test_req_capstone_4794_spec_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4794: OpenSpec declares the artifact and field principles."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-4794",
++        "SCENARIO-CAPSTONE-4794",
++        "SCENARIO-CAPSTONE-4794-BLOCKED-PRECONDITION",
++        "SCENARIO-CAPSTONE-4794-FIELD-PRINCIPLES",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4794_cache_hit_declares_aggregation_substrate() -> None:
++    """SCENARIO-CAPSTONE-4794: cache aggregation reports the held-out null honestly."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.04, cache_used=True),
++        prior_best=_prior_best(0.04),
++        partial=False,
++        checkpoint_emitted=False,
++        live_agent_ran=False,
++        duration_s=0.0,
++    )
++
++    assert artifact["experiment"] == mod.EXPERIMENT
++    assert artifact["experiment_id"] == 4794
++    assert artifact["result_path"] == mod.RESULT_RELATIVE_PATH
++    assert artifact["checkpoint_path"] == mod.PARTIAL_RESULT_RELATIVE_PATH
++    assert artifact["honest_verdict"] == "complete: heldout_first_win_flat_genuine_null"
++    assert artifact["heldout_first_win_rate"] == 0.04
++    assert artifact["heldout_first_win_ci"]["ci95"] == [0.0, 0.0]
++    assert artifact["heldout_variant_attempts"] == 100
++    assert artifact["prior_best_heldout_first_win_rate"] == 0.04
++    assert artifact["heldout_first_win_delta_vs_prior_best"] == 0.0
++    assert artifact["inference_substrate"] == mod.AGGREGATION_SUBSTRATE
++    assert artifact["duration_s"] == mod.AGGREGATION_DURATION_FLOOR_S
++    assert artifact["checkpoint_emitted"] is False
++    assert artifact["partial"] is False
++    assert artifact["live_agent_ran"] is False
++    assert artifact["positive_control_passed"] is True
++    assert "genuine no-improvement" in artifact["null_delta_methodology_note"]
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++    assert artifact["random_seed"] == 4794
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4794_soft_budget_partial_is_checkpointed(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4794: a capped live run emits a usable partial artifact."""
++
++    budget_exc = mod.base._BudgetExceeded(done_games=["g1"], remaining_games=["g2"])
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: _preconditions(),
++        parity_check=lambda _root: _parity(True),
++        prior_best_loader=lambda _root: _prior_best(0.04),
++        proxy_runner=lambda _root, _parity: (_ for _ in ()).throw(budget_exc),
++        partial_proxy_loader=lambda _root, _exc, _parity: _proxy(attempts=4, cache_used=False),
++        now=lambda: 0.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert artifact["partial"] is True
++    assert artifact["checkpoint_emitted"] is True
++    assert artifact["inference_substrate"] == mod.LIVE_SUBSTRATE
++    assert artifact["duration_s"] == mod.LIVE_DURATION_FLOOR_S
++    assert "soft_budget_stop_partial" in artifact["honest_verdict"]
++    assert artifact["completed_games"] == ["g1"]
++    assert artifact["remaining_games"] == ["g2"]
++    assert artifact["completed_variants"] == [
++        "g1~color01",
++        "g1~color02",
++        "g1~color03",
++        "g1~color04",
++    ]
++    assert mod.artifact_schema_errors(artifact) == []
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++
++
++def test_scenario_capstone_4794_blocked_precondition_has_no_fabricated_rate(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4794-BLOCKED-PRECONDITION: missing Qwen cache blocks cleanly."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: {
++            "ok": False,
++            "blocked_resource": "qwen35_mtp_gguf_cache",
++            "qwen35_mtp_gguf_cached": False,
++        },
++        prior_best_loader=lambda _root: _prior_best(0.04),
++        now=lambda: 0.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_qwen35_mtp_gguf_cache"
++    assert artifact["heldout_first_win_rate"] is None
++    assert artifact["heldout_first_win_ci"] == {}
++    assert artifact["checkpoint_emitted"] is False
++    assert artifact["inference_substrate"] == mod.AGGREGATION_SUBSTRATE
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_capstone_4794_wrappers_restore_previous_constants(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-4794: 4794 retargets 4774 helpers without leaking constants."""
++
++    old_result_path = previous.RESULT_RELATIVE_PATH
++    old_partial_path = previous.PARTIAL_RESULT_RELATIVE_PATH
++    captured: JsonDict = {}
++
++    def fake_checkpoint_runner(root: Path, parity_test: JsonDict, **kwargs: Any) -> JsonDict:
++        captured["root"] = root
++        captured["parity"] = parity_test
++        captured["result_path"] = previous.RESULT_RELATIVE_PATH
++        captured["partial_path"] = previous.PARTIAL_RESULT_RELATIVE_PATH
++        captured["spec_refs"] = list(previous.SPEC_REFS)
++        captured["kwargs"] = kwargs
++        return _proxy(first_win_rate=0.08, cache_used=False)
++
++    monkeypatch.setattr(previous, "run_held_out_proxy_checkpointed", fake_checkpoint_runner)
++
++    proxy = mod.run_held_out_proxy_checkpointed(tmp_path, _parity(True), soft_budget_s=10.0)
++
++    assert proxy["first_win_rate_integrated"] == 0.08
++    assert captured["result_path"] == mod.RESULT_RELATIVE_PATH
++    assert captured["partial_path"] == mod.PARTIAL_RESULT_RELATIVE_PATH
++    assert captured["spec_refs"] == mod.SPEC_REFS
++    assert captured["kwargs"]["soft_budget_s"] == 10.0
++    assert previous.RESULT_RELATIVE_PATH == old_result_path
++    assert previous.PARTIAL_RESULT_RELATIVE_PATH == old_partial_path
++
++
++def test_req_capstone_4794_cached_and_partial_proxy_wrappers(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-4794: proxy-loader wrappers use 4794 paths during delegated calls."""
++
++    captured: JsonDict = {}
++
++    def fake_cached_loader(root: Path, parity_test: JsonDict) -> JsonDict:
++        captured["cached_result_path"] = previous.RESULT_RELATIVE_PATH
++        captured["cached_parity"] = parity_test
++        return _proxy(first_win_rate=0.04, cache_used=True)
++
++    def fake_partial_loader(root: Path, budget_exc: Any, parity_test: JsonDict) -> JsonDict:
++        captured["partial_result_path"] = previous.RESULT_RELATIVE_PATH
++        captured["partial_checkpoint_path"] = previous.PARTIAL_RESULT_RELATIVE_PATH
++        captured["partial_done"] = list(budget_exc.done_games)
++        captured["partial_parity"] = parity_test
++        return _proxy(first_win_rate=0.04, attempts=4, cache_used=False)
++
++    monkeypatch.setattr(previous, "load_cached_or_run_held_out_proxy", fake_cached_loader)
++    monkeypatch.setattr(previous, "_partial_proxy_from_budget", fake_partial_loader)
++
++    cached = mod.load_cached_or_run_held_out_proxy(tmp_path, _parity(True))
++    partial = mod._partial_proxy_from_budget(
++        tmp_path,
++        mod.base._BudgetExceeded(done_games=["g1"], remaining_games=["g2"]),
++        _parity(True),
++    )
++
++    assert cached["proxy_cache_used"] is True
++    assert partial["integrated_measurement"]["variant_attempts_count"] == 4
++    assert captured["cached_result_path"] == mod.RESULT_RELATIVE_PATH
++    assert captured["partial_result_path"] == mod.RESULT_RELATIVE_PATH
++    assert captured["partial_checkpoint_path"] == mod.PARTIAL_RESULT_RELATIVE_PATH
++    assert captured["partial_done"] == ["g1"]
++
++
++def test_req_capstone_4794_prior_best_and_schema_guards(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4794-FIELD-PRINCIPLES: prior-best and schema guards are strict."""
++
++    prior = tmp_path / "results" / "experiment_4784_heldout_first_win_readiness.json"
++    prior.parent.mkdir(parents=True)
++    prior.write_text(
++        json.dumps({"experiment_id": 4784, "heldout_first_win_rate": 0.08}),
++        encoding="utf-8",
++    )
++    loaded = mod.load_prior_best(tmp_path)
++    assert loaded["prior_best_heldout_first_win_rate"] == 0.08
++    assert loaded["prior_best_experiment_id"] == 4784
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.04, cache_used=True),
++        prior_best=loaded,
++        partial=False,
++        checkpoint_emitted=False,
++        live_agent_ran=False,
++        duration_s=0.0,
++    )
++
++    written_path = mod.write_artifact(tmp_path, artifact)
++    assert written_path == tmp_path / mod.RESULT_RELATIVE_PATH
++
++    bad_live = dict(artifact)
++    bad_live["inference_substrate"] = mod.LIVE_SUBSTRATE
++    bad_live["duration_s"] = mod.LIVE_DURATION_FLOOR_S
++    bad_live["reproducibility_checksum"] = mod.payload_checksum(bad_live)
++    assert "live_substrate_without_live_agent" in mod.artifact_schema_errors(bad_live)
++
++    bad_partial = dict(artifact)
++    bad_partial["partial"] = True
++    bad_partial["checkpoint_emitted"] = False
++    bad_partial["reproducibility_checksum"] = mod.payload_checksum(bad_partial)
++    assert "partial_requires_checkpoint" in mod.artifact_schema_errors(bad_partial)
++
++    bad_fields = dict(artifact)
++    bad_fields["field_principles"] = {}
++    bad_fields["reproducibility_checksum"] = mod.payload_checksum(bad_fields)
++    assert "field_principles" in mod.artifact_schema_errors(bad_fields)
++
++    missing = dict(artifact)
++    missing.pop("heldout_first_win_rate")
++    assert "missing required field heldout_first_win_rate" in mod.artifact_schema_errors(missing)
++    with pytest.raises(ValueError, match="missing required field heldout_first_win_rate"):
++        mod.write_artifact(tmp_path, missing)
+-- 
+2.55.0
+

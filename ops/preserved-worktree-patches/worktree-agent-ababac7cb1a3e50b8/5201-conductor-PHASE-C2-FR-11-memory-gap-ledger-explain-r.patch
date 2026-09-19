@@ -1,0 +1,1470 @@
+From 5f2c9479d1274d1e33733f25626d14d6665dbe95 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 03:28:57 -0400
+Subject: [PATCH 05201/11362] [conductor] PHASE C2 FR-11 memory-gap ledger --
+ explain remaining self-learning blockers instead of forcing promotion
+
+Automated research step by research conductor.
+Task ID: exp5078-fr11-memory-gap-ledger-v466
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  53 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_5078_fr11_memory_gap_ledger.py | 575 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ment_5078_fr11_memory_gap_ledger_v466.json | 341 +++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ..._experiment_5078_fr11_memory_gap_ledger.py | 306 ++++++++++
+ 12 files changed, 1293 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_5078_fr11_memory_gap_ledger.py
+ create mode 100644 results/experiment_5078_fr11_memory_gap_ledger_v466.json
+ create mode 100644 tests/python/test_experiment_5078_fr11_memory_gap_ledger.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 4524c6b155..7c87c17ade 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -15973,3 +15973,56 @@ regresses previously correct held-out rows
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5077 | Planned (`python/carnot/experiment_5077_fr11_group_sc_memory.py`) | Planned (`tests/python/test_experiment_5077_fr11_group_sc_memory.py`) |
++
++---
++
++## REQ-LEARN-5078: FR-11 Memory-Gap Blocker Ledger
++
++Experiment 5078 SHALL aggregate the recent FR-11 self-learning attempts from
++`results/experiment_5051_verifier_trace_self_learning.json`,
++`results/experiment_5064_audited_skillgraph_self_learning.json`, and
++`results/experiment_5077_fr11_group_sc_memory_v466.json` into a
++machine-readable blocker ledger. It SHALL NOT run a new promotion or mutate
++the upstream memory, skill graph, or conductor.
++
++The ledger SHALL classify the observed failures into the controlled vocabulary:
++`data_contamination`, `irrelevant_replay`, `retrieval_mismatch`,
++`overfitting`, `nonforgetting_regression`, `verifier_shortcut`, and
++`insufficient_evaluation_power`. Each classification SHALL record the affected
++experiment IDs, direct upstream evidence, and the guard or blocker that kept
++the attempt from being promoted when applicable.
++
++The result artifact SHALL be written to
++`results/experiment_5078_fr11_memory_gap_ledger_v466.json` by
++`python/carnot/experiment_5078_fr11_memory_gap_ledger.py`. It SHALL include
++principle annotations for `honest_verdict`, `duration_s`,
++`inference_substrate`, `fr11_attempts_summarized`,
++`recurring_failure_modes`, `safe_next_mechanisms`, `retired_mechanisms`,
++`promotion_blockers`, `docs_update_recommendations`, and
++`flagged_adversarial`. The artifact SHALL set
++`inference_substrate=aggregation_from_upstream_artifacts` and SHALL use a
++terminal `honest_verdict` beginning with
++`complete_fr11_memory_gap_ledger_written_no_promotion`.
++
++### SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER
++
++**Given** the Exp5051, Exp5064, and Exp5077 upstream artifacts exist
++**When** Experiment 5078 builds its ledger
++**Then** the artifact summarizes all three attempts without promotion,
++records the aggregation substrate, preserves upstream adversarial flags, and
++lists no promoted memory or skill updates.
++
++**Given** upstream held-out or nonforgetting regressions, dev-only gains,
++quarantined replay candidates, contamination guard results, or insufficient
++sample power are present
++**When** failures are classified
++**Then** the ledger records the matching controlled-vocabulary failure modes
++and maps them to safe next mechanisms: retrieval-config evolution, skill
++lifecycle governance, process-verifier replay, or bounded FR-11 retirement for
++this domain.
++
++## Implementation Status (Exp 5078)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5078 | Planned (`python/carnot/experiment_5078_fr11_memory_gap_ledger.py`) | Planned (`tests/python/test_experiment_5078_fr11_memory_gap_ledger.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 08e8589415..42f62076a9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4080,
++  "experiments_checked": 4081,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5078_fr11_memory_gap_ledger.py b/python/carnot/experiment_5078_fr11_memory_gap_ledger.py
+new file mode 100644
+index 0000000000..7bb19c4a7b
+--- /dev/null
++++ b/python/carnot/experiment_5078_fr11_memory_gap_ledger.py
+@@ -0,0 +1,575 @@
++#!/usr/bin/env python3
++"""Exp 5078: FR-11 memory-gap blocker ledger.
++
++Spec refs: REQ-LEARN-5078, SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - direct script execution
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++Clock = Callable[[], float]
++
++EXPERIMENT_ID = 5078
++EXPERIMENT_NAME = "experiment_5078_fr11_memory_gap_ledger"
++SCHEMA = "carnot.experiment_5078_fr11_memory_gap_ledger.v466"
++RESULT_RELATIVE_PATH = "results/experiment_5078_fr11_memory_gap_ledger_v466.json"
++EXP5051_RESULT_RELATIVE_PATH = "results/experiment_5051_verifier_trace_self_learning.json"
++EXP5064_RESULT_RELATIVE_PATH = "results/experiment_5064_audited_skillgraph_self_learning.json"
++EXP5077_RESULT_RELATIVE_PATH = "results/experiment_5077_fr11_group_sc_memory_v466.json"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SPEC_REFS = ["REQ-LEARN-5078", "SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER"]
++HONEST_VERDICT = "complete_fr11_memory_gap_ledger_written_no_promotion"
++
++CONTROLLED_FAILURE_MODES = (
++    "data_contamination",
++    "irrelevant_replay",
++    "retrieval_mismatch",
++    "overfitting",
++    "nonforgetting_regression",
++    "verifier_shortcut",
++    "insufficient_evaluation_power",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++    "fr11_attempts_summarized",
++    "recurring_failure_modes",
++    "safe_next_mechanisms",
++    "retired_mechanisms",
++    "promotion_blockers",
++    "docs_update_recommendations",
++    "flagged_adversarial",
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix that states this is a written FR-11 blocker ledger, not a promotion."
++    },
++    "duration_s": {
++        "principle": "measured wall-clock time for deterministic aggregation over existing artifacts."
++    },
++    "inference_substrate": {
++        "principle": "declares aggregation_from_upstream_artifacts because no live model or verifier pass runs here."
++    },
++    "fr11_attempts_summarized": {
++        "principle": "one compact row per upstream self-learning attempt so planners can audit the source of each blocker."
++    },
++    "recurring_failure_modes": {
++        "principle": "controlled-vocabulary classification of observed, guarded, or unobserved FR-11 failure modes."
++    },
++    "safe_next_mechanisms": {
++        "principle": "planner-facing mechanisms that are safe because they preserve no-promotion and guard requirements."
++    },
++    "retired_mechanisms": {
++        "principle": "mechanisms contradicted by the recent upstream evidence and unsafe to rerun unchanged."
++    },
++    "promotion_blockers": {
++        "principle": "the concrete guard failures or evidence gaps that prevent FR-11 promotion."
++    },
++    "docs_update_recommendations": {
++        "principle": "documentation reconciliation hints only; this experiment does not edit ops or BMAD docs."
++    },
++    "flagged_adversarial": {
++        "principle": "false only when this ledger is internally schema-clean and preserves upstream flags separately."
++    },
++}
++
++
++def json_dumps(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def read_json_object(path: Path) -> JsonDict:
++    try:
++        payload = json.loads(Path(path).read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return dict(payload) if isinstance(payload, Mapping) else {}
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def sha256_file(path: Path) -> str | None:
++    try:
++        return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return None
++
++
++def number(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        parsed = float(value)
++    except (TypeError, ValueError):
++        return None
++    return parsed if parsed == parsed and parsed not in {float("inf"), float("-inf")} else None
++
++
++def load_inputs(root: Path) -> tuple[JsonDict, JsonDict, JsonDict]:
++    root = Path(root)
++    return (
++        read_json_object(root / EXP5051_RESULT_RELATIVE_PATH),
++        read_json_object(root / EXP5064_RESULT_RELATIVE_PATH),
++        read_json_object(root / EXP5077_RESULT_RELATIVE_PATH),
++    )
++
++
++def summarize_attempt(payload: JsonMap, path: str) -> JsonDict:
++    experiment_id = int(payload.get("experiment_id") or 0)
++    heldout_delta = number(payload.get("heldout_delta"))
++    nonforgetting_delta = number(payload.get("nonforgetting_delta"))
++    promotion = payload.get("promotion_decision")
++    promotion_decision = dict(promotion) if isinstance(promotion, Mapping) else {}
++    heldout = payload.get("heldout_evaluation")
++    heldout_eval = dict(heldout) if isinstance(heldout, Mapping) else {}
++    return {
++        "experiment_id": experiment_id,
++        "artifact_path": path,
++        "artifact_present": bool(payload),
++        "honest_verdict": str(payload.get("honest_verdict") or ""),
++        "inference_substrate": str(payload.get("inference_substrate") or ""),
++        "heldout_delta": heldout_delta,
++        "nonforgetting_delta": nonforgetting_delta,
++        "contamination_guard_passed": payload.get("contamination_guard_passed"),
++        "promotion_attempted": experiment_id in {5064, 5077},
++        "promoted": bool(
++            payload.get("promoted") is True
++            or int(payload.get("promoted_count") or 0) > 0
++            or promotion_decision.get("promoted") is True
++        ),
++        "no_promote_reason": str(
++            payload.get("no_promote_reason") or promotion_decision.get("no_promote_reason") or ""
++        ),
++        "heldout_n": int(
++            heldout_eval.get("heldout_n")
++            or heldout_eval.get("n_rows")
++            or payload.get("heldout_n")
++            or 0
++        ),
++        "regressed_previously_correct_ids": list(
++            heldout_eval.get("regressed_previously_correct_ids") or []
++        ),
++        "improved_previously_wrong_ids": list(
++            heldout_eval.get("improved_previously_wrong_ids") or []
++        ),
++        "guard_that_worked": guard_that_worked(payload),
++    }
++
++
++def guard_that_worked(payload: JsonMap) -> str:
++    if payload.get("contamination_guard_passed") is True and (
++        payload.get("heldout_delta", 0) is not None
++    ):
++        if number(payload.get("heldout_delta")) is not None and number(payload.get("heldout_delta")) < 0:
++            return "heldout_delta_gate_blocked_promotion"
++    if payload.get("rollback_guard_passed") is True:
++        return "rollback_guard_preserved_baseline"
++    if payload.get("contamination_guard_passed") is True:
++        return "contamination_guard_passed_no_leak"
++    return "no_guard_evidence"
++
++
++def _attempts_by_id(attempts: Sequence[JsonMap]) -> dict[int, JsonMap]:
++    return {int(row.get("experiment_id") or 0): row for row in attempts}
++
++
++def _mode(
++    name: str,
++    observed: bool,
++    affected: Sequence[int],
++    evidence: Sequence[str],
++    guard: str,
++) -> JsonDict:
++    return {
++        "mode": name,
++        "observed": bool(observed),
++        "affected_experiments": sorted(int(exp_id) for exp_id in affected),
++        "evidence": list(evidence),
++        "guard_or_blocker": guard,
++    }
++
++
++def classify_failure_modes(
++    exp5051: JsonMap,
++    exp5064: JsonMap,
++    exp5077: JsonMap,
++    attempts: Sequence[JsonMap],
++) -> list[JsonDict]:
++    by_id = _attempts_by_id(attempts)
++    contamination_failed = [
++        exp_id
++        for exp_id, row in by_id.items()
++        if row.get("artifact_present") and row.get("contamination_guard_passed") is False
++    ]
++    rejected = exp5051.get("trace_filter_diagnostics")
++    rejected_count = int(rejected.get("rejected_trace_count") or 0) if isinstance(rejected, Mapping) else 0
++    quarantined_count = int(exp5077.get("quarantined_count") or 0)
++    dev_eval = exp5077.get("dev_evaluation")
++    dev_delta = number(dev_eval.get("delta")) if isinstance(dev_eval, Mapping) else None
++    heldout_delta_5077 = number(exp5077.get("heldout_delta"))
++    upstream_flags = upstream_flagged_sources(exp5077)
++
++    return [
++        _mode(
++            "data_contamination",
++            bool(contamination_failed),
++            contamination_failed,
++            [
++                "all loaded attempts report contamination_guard_passed=true"
++                if not contamination_failed
++                else "at least one contamination guard failed"
++            ],
++            "contamination_guard_passed blocked leakage checks before promotion",
++        ),
++        _mode(
++            "irrelevant_replay",
++            rejected_count > 0 or quarantined_count > 0,
++            [exp_id for exp_id in (5051, 5077) if exp_id in by_id],
++            [
++                f"Exp5051 rejected_trace_count={rejected_count}",
++                f"Exp5077 quarantined_count={quarantined_count}",
++            ],
++            "structural trace filter and group-SC quarantine kept replay evidence from auto-promotion",
++        ),
++        _mode(
++            "retrieval_mismatch",
++            any((by_id[exp_id].get("heldout_delta") or 0) < 0 for exp_id in (5051, 5077)),
++            [exp_id for exp_id in (5051, 5077) if (by_id[exp_id].get("heldout_delta") or 0) < 0],
++            [
++                f"Exp5051 heldout_delta={by_id.get(5051, {}).get('heldout_delta')}",
++                f"Exp5077 memory_policy={dict(exp5077.get('memory_policy') or {}).get('policy_signature', '')}",
++                f"Exp5077 heldout_delta={heldout_delta_5077}",
++            ],
++            "heldout utility gate blocked retrieval policy promotion",
++        ),
++        _mode(
++            "overfitting",
++            bool(dev_delta is not None and dev_delta > 0 and heldout_delta_5077 is not None and heldout_delta_5077 < 0),
++            [5077] if dev_delta is not None and heldout_delta_5077 is not None and dev_delta > 0 and heldout_delta_5077 < 0 else [],
++            [
++                f"Exp5077 dev_delta={dev_delta}",
++                f"Exp5077 heldout_delta={heldout_delta_5077}",
++            ],
++            "held-out split exposed a dev-only gain",
++        ),
++        _mode(
++            "nonforgetting_regression",
++            any((by_id[exp_id].get("nonforgetting_delta") or 0) < 0 for exp_id in (5064, 5077)),
++            [exp_id for exp_id in (5064, 5077) if (by_id[exp_id].get("nonforgetting_delta") or 0) < 0],
++            [
++                f"Exp5064 nonforgetting_delta={by_id.get(5064, {}).get('nonforgetting_delta')}",
++                f"Exp5077 nonforgetting_delta={by_id.get(5077, {}).get('nonforgetting_delta')}",
++            ],
++            "nonforgetting gate and rollback guard prevented promotion",
++        ),
++        _mode(
++            "verifier_shortcut",
++            bool(upstream_flags),
++            [5077] if upstream_flags else [],
++            [
++                "upstream flagged adversarial sources: " + ",".join(upstream_flags)
++                if upstream_flags
++                else "no upstream verifier-shortcut flag was present in the loaded artifacts"
++            ],
++            "ledger preserves upstream adversarial flags and does not convert them into promotion evidence",
++        ),
++        _mode(
++            "insufficient_evaluation_power",
++            True,
++            [exp_id for exp_id in (5051, 5064, 5077) if exp_id in by_id],
++            [
++                f"heldout_n values={[by_id[exp_id].get('heldout_n') for exp_id in (5051, 5064, 5077)]}",
++                "no paired CI or power calculation is present in these upstream artifacts",
++            ],
++            "promotion remains blocked until held-out effect size and nonforgetting survive stronger evaluation",
++        ),
++    ]
++
++
++def safe_next_mechanisms(modes: Sequence[JsonMap]) -> list[JsonDict]:
++    _ = modes
++    return [
++        {
++            "mechanism": "retrieval_config_evolution",
++            "safe_to_try": True,
++            "why": "changes only retrieval triggers, thresholds, and fallback routing under the same held-out and nonforgetting gates.",
++            "must_keep_guards": ["contamination_guard", "heldout_delta_gate", "nonforgetting_gate"],
++        },
++        {
++            "mechanism": "skill_lifecycle_governance",
++            "safe_to_try": True,
++            "why": "keeps candidate skills quarantined until promotion, rollback, demotion, and external-audit receipts all agree.",
++            "must_keep_guards": ["external_audit_receipts", "rollback_guard", "no_promote_on_negative_delta"],
++        },
++        {
++            "mechanism": "process_verifier_replay",
++            "safe_to_try": True,
++            "why": "tests process-level evidence instead of answer-level replay and can directly target verifier shortcut risk.",
++            "must_keep_guards": ["oracle_distinct_labels", "answer_leakage_check", "paired_heldout_eval"],
++        },
++        {
++            "mechanism": "bounded_fr11_retirement_for_domain",
++            "safe_to_try": True,
++            "why": "turns repeated no-promote evidence into an explicit bounded retirement rather than another replay attempt.",
++            "must_keep_guards": ["same_verdict_retirement_gate", "headroom_recheck", "docs_reconciliation"],
++        },
++    ]
++
++
++def retired_mechanisms() -> list[JsonDict]:
++    return [
++        {
++            "mechanism": "blind_replay_memory_insertion",
++            "retired_for_domain": True,
++            "evidence": "Exp5051 replay insertion reduced held-out accuracy by 0.05.",
++        },
++        {
++            "mechanism": "promote_on_dev_or_consensus_without_heldout_gain",
++            "retired_for_domain": True,
++            "evidence": "Exp5077 dev gain did not transfer to held-out, and Exp5064 no-promoted verified skills.",
++        },
++        {
++            "mechanism": "group_sc_disagreement_fallback_policy",
++            "retired_for_domain": True,
++            "evidence": "Exp5077 fallback_to_tuned_on_verifier_sc_disagreement regressed held-out and nonforgetting.",
++        },
++    ]
++
++
++def promotion_blockers(attempts: Sequence[JsonMap], exp5077: JsonMap) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    heldout_blocked = [
++        int(row["experiment_id"])
++        for row in attempts
++        if row.get("artifact_present") and (row.get("heldout_delta") or 0) <= 0
++    ]
++    nonforgetting_blocked = [
++        int(row["experiment_id"])
++        for row in attempts
++        if row.get("nonforgetting_delta") is not None and (row.get("nonforgetting_delta") or 0) < 0
++    ]
++    if heldout_blocked:
++        rows.append(
++            {
++                "blocker": "heldout_delta_nonpositive",
++                "affected_experiments": heldout_blocked,
++                "principle": "FR-11 updates cannot promote without positive held-out utility.",
++            }
++        )
++    if nonforgetting_blocked:
++        rows.append(
++            {
++                "blocker": "nonforgetting_regressed",
++                "affected_experiments": nonforgetting_blocked,
++                "principle": "A useful memory update must not erase previously correct held-out behavior.",
++            }
++        )
++    rows.append(
++        {
++            "blocker": "no_new_promotion_executed",
++            "affected_experiments": [EXPERIMENT_ID],
++            "principle": "This aggregation task is explicitly read-only and cannot promote memory or skills.",
++        }
++    )
++    upstream_flags = upstream_flagged_sources(exp5077)
++    if upstream_flags:
++        rows.append(
++            {
++                "blocker": "upstream_adversarial_source_preserved",
++                "affected_experiments": [5077],
++                "principle": "Upstream adversarial flags remain blockers until the flagged source is revalidated.",
++                "sources": upstream_flags,
++            }
++        )
++    rows.append(
++        {
++            "blocker": "insufficient_evaluation_power",
++            "affected_experiments": [int(row["experiment_id"]) for row in attempts if row.get("artifact_present")],
++            "principle": "Small held-out slices without paired confidence bounds are not enough to justify promotion.",
++        }
++    )
++    return rows
++
++
++def docs_update_recommendations() -> list[JsonDict]:
++    return [
++        {
++            "target": "research-program.md",
++            "recommendation": "Record FR-11 replay-memory for this domain as no-promote pending a stronger process-verifier or retirement gate.",
++        },
++        {
++            "target": "ops/known-issues.md",
++            "recommendation": "Add the Exp5051/5064/5077 memory-gap pattern and preserve the aggregation-substrate discipline.",
++        },
++        {
++            "target": "_bmad/prd.md",
++            "recommendation": "Clarify that FR-11 success requires positive held-out utility and nonforgetting, not merely a completed self-learning loop.",
++        },
++    ]
++
++
++def upstream_flagged_sources(exp5077: JsonMap) -> list[str]:
++    sources = exp5077.get("upstream_flagged_adversarial_sources") or []
++    if not isinstance(sources, Sequence) or isinstance(sources, (str, bytes)):
++        return []
++    return sorted(str(source) for source in sources)
++
++
++def source_artifacts(root: Path) -> list[JsonDict]:
++    paths = [
++        EXP5051_RESULT_RELATIVE_PATH,
++        EXP5064_RESULT_RELATIVE_PATH,
++        EXP5077_RESULT_RELATIVE_PATH,
++    ]
++    return [
++        {
++            "path": path,
++            "present": (Path(root) / path).exists(),
++            "sha256": sha256_file(Path(root) / path),
++        }
++        for path in paths
++    ]
++
++
++def checksum(artifact: JsonMap) -> str:
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return "sha256:" + hashlib.sha256(json_dumps(payload).encode("utf-8")).hexdigest()
++
++
++def build_artifact(
++    *,
++    root: Path,
++    exp5051: JsonMap,
++    exp5064: JsonMap,
++    exp5077: JsonMap,
++    duration_s: float,
++) -> JsonDict:
++    attempts = [
++        summarize_attempt(exp5051, EXP5051_RESULT_RELATIVE_PATH),
++        summarize_attempt(exp5064, EXP5064_RESULT_RELATIVE_PATH),
++        summarize_attempt(exp5077, EXP5077_RESULT_RELATIVE_PATH),
++    ]
++    modes = classify_failure_modes(exp5051, exp5064, exp5077, attempts)
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": HONEST_VERDICT,
++        "duration_s": round(float(duration_s), 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "fr11_attempts_summarized": attempts,
++        "recurring_failure_modes": modes,
++        "safe_next_mechanisms": safe_next_mechanisms(modes),
++        "retired_mechanisms": retired_mechanisms(),
++        "promotion_blockers": promotion_blockers(attempts, exp5077),
++        "docs_update_recommendations": docs_update_recommendations(),
++        "flagged_adversarial": False,
++        "upstream_flagged_adversarial_sources": upstream_flagged_sources(exp5077),
++        "promotion_executed": False,
++        "promoted_updates": [],
++        "source_artifacts": source_artifacts(root),
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["reproducibility_checksum"] = checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    errors: list[str] = []
++    if artifact.get("schema") != SCHEMA:
++        errors.append("schema")
++    if artifact.get("spec_refs") != SPEC_REFS:
++        errors.append("spec_refs")
++    if not str(artifact.get("honest_verdict") or "").startswith(HONEST_VERDICT):
++        errors.append("honest_verdict")
++    if number(artifact.get("duration_s")) is None:
++        errors.append("duration_s")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    for field in (
++        "fr11_attempts_summarized",
++        "recurring_failure_modes",
++        "safe_next_mechanisms",
++        "retired_mechanisms",
++        "promotion_blockers",
++        "docs_update_recommendations",
++    ):
++        if not isinstance(artifact.get(field), list) or not artifact.get(field):
++            errors.append(field)
++    if artifact.get("flagged_adversarial") is not False:
++        errors.append("flagged_adversarial")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or any(
++        not isinstance(principles.get(field), Mapping)
++        or not str(principles.get(field, {}).get("principle") or "")
++        for field in REQUIRED_ARTIFACT_FIELDS
++    ):
++        errors.append("field_principles")
++    if artifact.get("promotion_executed") is not False:
++        errors.append("promotion_executed")
++    if artifact.get("promoted_updates") != []:
++        errors.append("promoted_updates")
++    attempts = artifact.get("fr11_attempts_summarized")
++    if isinstance(attempts, list) and [row.get("experiment_id") for row in attempts] != [5051, 5064, 5077]:
++        errors.append("fr11_attempts_summarized")
++    modes = artifact.get("recurring_failure_modes")
++    if isinstance(modes, list) and {row.get("mode") for row in modes} != set(CONTROLLED_FAILURE_MODES):
++        errors.append("recurring_failure_modes")
++    return sorted(dict.fromkeys(errors))
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    artifact_path: Path | None = None,
++    now: Clock = time.perf_counter,
++    write: bool = True,
++) -> JsonDict:
++    start = now()
++    exp5051, exp5064, exp5077 = load_inputs(root)
++    duration_s = max(0.0, now() - start)
++    artifact = build_artifact(
++        root=Path(root),
++        exp5051=exp5051,
++        exp5064=exp5064,
++        exp5077=exp5077,
++        duration_s=duration_s,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise AssertionError(f"Exp5078 artifact schema errors: {errors}")
++    if write:
++        write_json(Path(artifact_path) if artifact_path is not None else Path(root) / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - CLI wrapper
++    artifact = run()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 4be22fdfb9..d8e513a87e 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-01T05:53:49.324877Z",
+-  "duration_s": 0.1020510196685791,
++  "run_date": "2026-07-01T07:28:24.530779Z",
++  "duration_s": 0.12962865829467773,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "b09b56e5bafad7887e525843d39cfdf3c838ec35f51c9343fffa3820905f756c",
++  "reproducibility_checksum": "489c68f494f1692613a81e09c7e59436419199039f84af971430658c0e561d64",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "438dd26cb02e63f197e0e8122fae519e8844047a"
++    "adversarial_verify_version": "d4bb703998541a2913bbbfa03bd8b91be61c6ecf"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 3d6dd6eec8..4be04f0275 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-01T05:53:49.469105Z",
+-  "duration_s": 0.1337416172027588,
++  "run_date": "2026-07-01T07:28:24.710233Z",
++  "duration_s": 0.155839204788208,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "27913ff84946ebc4875e5e75feebef140f683e0a9d2578bd50704fdcda7d024e",
++  "reproducibility_checksum": "c16d97b84bb9bcefda8deabebd846ccb20f2b511f73285306b668b43bd64428a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "438dd26cb02e63f197e0e8122fae519e8844047a"
++    "adversarial_verify_version": "d4bb703998541a2913bbbfa03bd8b91be61c6ecf"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 70589e499c..027c7a6db3 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.11334228515625,
++  "efficiency_gains_ms": 2.130270004272461,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f5e26638fb..6856bdfd27 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.9774924516677856e-05,
++  "duration_s": 4.169810563325882e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5078_fr11_memory_gap_ledger_v466.json b/results/experiment_5078_fr11_memory_gap_ledger_v466.json
+new file mode 100644
+index 0000000000..48bcd7efa5
+--- /dev/null
++++ b/results/experiment_5078_fr11_memory_gap_ledger_v466.json
+@@ -0,0 +1,341 @@
++{
++  "docs_update_recommendations": [
++    {
++      "recommendation": "Record FR-11 replay-memory for this domain as no-promote pending a stronger process-verifier or retirement gate.",
++      "target": "research-program.md"
++    },
++    {
++      "recommendation": "Add the Exp5051/5064/5077 memory-gap pattern and preserve the aggregation-substrate discipline.",
++      "target": "ops/known-issues.md"
++    },
++    {
++      "recommendation": "Clarify that FR-11 success requires positive held-out utility and nonforgetting, not merely a completed self-learning loop.",
++      "target": "_bmad/prd.md"
++    }
++  ],
++  "duration_s": 0.000739,
++  "experiment": "experiment_5078_fr11_memory_gap_ledger",
++  "experiment_id": 5078,
++  "field_principles": {
++    "docs_update_recommendations": {
++      "principle": "documentation reconciliation hints only; this experiment does not edit ops or BMAD docs."
++    },
++    "duration_s": {
++      "principle": "measured wall-clock time for deterministic aggregation over existing artifacts."
++    },
++    "flagged_adversarial": {
++      "principle": "false only when this ledger is internally schema-clean and preserves upstream flags separately."
++    },
++    "fr11_attempts_summarized": {
++      "principle": "one compact row per upstream self-learning attempt so planners can audit the source of each blocker."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix that states this is a written FR-11 blocker ledger, not a promotion."
++    },
++    "inference_substrate": {
++      "principle": "declares aggregation_from_upstream_artifacts because no live model or verifier pass runs here."
++    },
++    "promotion_blockers": {
++      "principle": "the concrete guard failures or evidence gaps that prevent FR-11 promotion."
++    },
++    "recurring_failure_modes": {
++      "principle": "controlled-vocabulary classification of observed, guarded, or unobserved FR-11 failure modes."
++    },
++    "retired_mechanisms": {
++      "principle": "mechanisms contradicted by the recent upstream evidence and unsafe to rerun unchanged."
++    },
++    "safe_next_mechanisms": {
++      "principle": "planner-facing mechanisms that are safe because they preserve no-promotion and guard requirements."
++    }
++  },
++  "flagged_adversarial": false,
++  "fr11_attempts_summarized": [
++    {
++      "artifact_path": "results/experiment_5051_verifier_trace_self_learning.json",
++      "artifact_present": true,
++      "contamination_guard_passed": true,
++      "experiment_id": 5051,
++      "guard_that_worked": "heldout_delta_gate_blocked_promotion",
++      "heldout_delta": -0.05,
++      "heldout_n": 40,
++      "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
++      "improved_previously_wrong_ids": [],
++      "inference_substrate": "aggregation_from_upstream_artifacts",
++      "no_promote_reason": "",
++      "nonforgetting_delta": null,
++      "promoted": false,
++      "promotion_attempted": false,
++      "regressed_previously_correct_ids": []
++    },
++    {
++      "artifact_path": "results/experiment_5064_audited_skillgraph_self_learning.json",
++      "artifact_present": true,
++      "contamination_guard_passed": true,
++      "experiment_id": 5064,
++      "guard_that_worked": "heldout_delta_gate_blocked_promotion",
++      "heldout_delta": -0.05,
++      "heldout_n": 40,
++      "honest_verdict": "complete_guarded_no_promote_minus_0p050",
++      "improved_previously_wrong_ids": [
++        "q0166",
++        "q0181"
++      ],
++      "inference_substrate": "aggregation_from_upstream_artifacts",
++      "no_promote_reason": "heldout_delta_nonpositive;nonforgetting_regressed",
++      "nonforgetting_delta": -0.142857,
++      "promoted": false,
++      "promotion_attempted": true,
++      "regressed_previously_correct_ids": [
++        "q0167",
++        "q0176",
++        "q0182",
++        "q0198"
++      ]
++    },
++    {
++      "artifact_path": "results/experiment_5077_fr11_group_sc_memory_v466.json",
++      "artifact_present": true,
++      "contamination_guard_passed": true,
++      "experiment_id": 5077,
++      "guard_that_worked": "heldout_delta_gate_blocked_promotion",
++      "heldout_delta": -0.05,
++      "heldout_n": 20,
++      "honest_verdict": "complete_fr11_group_sc_memory_guarded_no_promote_delta_minus_0p050",
++      "improved_previously_wrong_ids": [
++        "q0181"
++      ],
++      "inference_substrate": "deterministic_group_sc_memory_replay_no_live_llm",
++      "no_promote_reason": "heldout_delta_negative;nonforgetting_regressed",
++      "nonforgetting_delta": -0.142857,
++      "promoted": false,
++      "promotion_attempted": true,
++      "regressed_previously_correct_ids": [
++        "q0182",
++        "q0198"
++      ]
++    }
++  ],
++  "honest_verdict": "complete_fr11_memory_gap_ledger_written_no_promotion",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "promoted_updates": [],
++  "promotion_blockers": [
++    {
++      "affected_experiments": [
++        5051,
++        5064,
++        5077
++      ],
++      "blocker": "heldout_delta_nonpositive",
++      "principle": "FR-11 updates cannot promote without positive held-out utility."
++    },
++    {
++      "affected_experiments": [
++        5064,
++        5077
++      ],
++      "blocker": "nonforgetting_regressed",
++      "principle": "A useful memory update must not erase previously correct held-out behavior."
++    },
++    {
++      "affected_experiments": [
++        5078
++      ],
++      "blocker": "no_new_promotion_executed",
++      "principle": "This aggregation task is explicitly read-only and cannot promote memory or skills."
++    },
++    {
++      "affected_experiments": [
++        5077
++      ],
++      "blocker": "upstream_adversarial_source_preserved",
++      "principle": "Upstream adversarial flags remain blockers until the flagged source is revalidated.",
++      "sources": [
++        "results/experiment_5059_d1_sota_refresh_audit.json"
++      ]
++    },
++    {
++      "affected_experiments": [
++        5051,
++        5064,
++        5077
++      ],
++      "blocker": "insufficient_evaluation_power",
++      "principle": "Small held-out slices without paired confidence bounds are not enough to justify promotion."
++    }
++  ],
++  "promotion_executed": false,
++  "recurring_failure_modes": [
++    {
++      "affected_experiments": [],
++      "evidence": [
++        "all loaded attempts report contamination_guard_passed=true"
++      ],
++      "guard_or_blocker": "contamination_guard_passed blocked leakage checks before promotion",
++      "mode": "data_contamination",
++      "observed": false
++    },
++    {
++      "affected_experiments": [
++        5051,
++        5077
++      ],
++      "evidence": [
++        "Exp5051 rejected_trace_count=87",
++        "Exp5077 quarantined_count=3"
++      ],
++      "guard_or_blocker": "structural trace filter and group-SC quarantine kept replay evidence from auto-promotion",
++      "mode": "irrelevant_replay",
++      "observed": true
++    },
++    {
++      "affected_experiments": [
++        5051,
++        5077
++      ],
++      "evidence": [
++        "Exp5051 heldout_delta=-0.05",
++        "Exp5077 memory_policy=fallback_to_tuned_on_verifier_sc_disagreement",
++        "Exp5077 heldout_delta=-0.05"
++      ],
++      "guard_or_blocker": "heldout utility gate blocked retrieval policy promotion",
++      "mode": "retrieval_mismatch",
++      "observed": true
++    },
++    {
++      "affected_experiments": [
++        5077
++      ],
++      "evidence": [
++        "Exp5077 dev_delta=0.375",
++        "Exp5077 heldout_delta=-0.05"
++      ],
++      "guard_or_blocker": "held-out split exposed a dev-only gain",
++      "mode": "overfitting",
++      "observed": true
++    },
++    {
++      "affected_experiments": [
++        5064,
++        5077
++      ],
++      "evidence": [
++        "Exp5064 nonforgetting_delta=-0.142857",
++        "Exp5077 nonforgetting_delta=-0.142857"
++      ],
++      "guard_or_blocker": "nonforgetting gate and rollback guard prevented promotion",
++      "mode": "nonforgetting_regression",
++      "observed": true
++    },
++    {
++      "affected_experiments": [
++        5077
++      ],
++      "evidence": [
++        "upstream flagged adversarial sources: results/experiment_5059_d1_sota_refresh_audit.json"
++      ],
++      "guard_or_blocker": "ledger preserves upstream adversarial flags and does not convert them into promotion evidence",
++      "mode": "verifier_shortcut",
++      "observed": true
++    },
++    {
++      "affected_experiments": [
++        5051,
++        5064,
++        5077
++      ],
++      "evidence": [
++        "heldout_n values=[40, 40, 20]",
++        "no paired CI or power calculation is present in these upstream artifacts"
++      ],
++      "guard_or_blocker": "promotion remains blocked until held-out effect size and nonforgetting survive stronger evaluation",
++      "mode": "insufficient_evaluation_power",
++      "observed": true
++    }
++  ],
++  "reproducibility_checksum": "sha256:5e6d1dc0d98b055d12c1be0848c5a32d01a07f6752df1676a1e93a0c59f1f529",
++  "result_path": "results/experiment_5078_fr11_memory_gap_ledger_v466.json",
++  "retired_mechanisms": [
++    {
++      "evidence": "Exp5051 replay insertion reduced held-out accuracy by 0.05.",
++      "mechanism": "blind_replay_memory_insertion",
++      "retired_for_domain": true
++    },
++    {
++      "evidence": "Exp5077 dev gain did not transfer to held-out, and Exp5064 no-promoted verified skills.",
++      "mechanism": "promote_on_dev_or_consensus_without_heldout_gain",
++      "retired_for_domain": true
++    },
++    {
++      "evidence": "Exp5077 fallback_to_tuned_on_verifier_sc_disagreement regressed held-out and nonforgetting.",
++      "mechanism": "group_sc_disagreement_fallback_policy",
++      "retired_for_domain": true
++    }
++  ],
++  "safe_next_mechanisms": [
++    {
++      "mechanism": "retrieval_config_evolution",
++      "must_keep_guards": [
++        "contamination_guard",
++        "heldout_delta_gate",
++        "nonforgetting_gate"
++      ],
++      "safe_to_try": true,
++      "why": "changes only retrieval triggers, thresholds, and fallback routing under the same held-out and nonforgetting gates."
++    },
++    {
++      "mechanism": "skill_lifecycle_governance",
++      "must_keep_guards": [
++        "external_audit_receipts",
++        "rollback_guard",
++        "no_promote_on_negative_delta"
++      ],
++      "safe_to_try": true,
++      "why": "keeps candidate skills quarantined until promotion, rollback, demotion, and external-audit receipts all agree."
++    },
++    {
++      "mechanism": "process_verifier_replay",
++      "must_keep_guards": [
++        "oracle_distinct_labels",
++        "answer_leakage_check",
++        "paired_heldout_eval"
++      ],
++      "safe_to_try": true,
++      "why": "tests process-level evidence instead of answer-level replay and can directly target verifier shortcut risk."
++    },
++    {
++      "mechanism": "bounded_fr11_retirement_for_domain",
++      "must_keep_guards": [
++        "same_verdict_retirement_gate",
++        "headroom_recheck",
++        "docs_reconciliation"
++      ],
++      "safe_to_try": true,
++      "why": "turns repeated no-promote evidence into an explicit bounded retirement rather than another replay attempt."
++    }
++  ],
++  "schema": "carnot.experiment_5078_fr11_memory_gap_ledger.v466",
++  "source_artifacts": [
++    {
++      "path": "results/experiment_5051_verifier_trace_self_learning.json",
++      "present": true,
++      "sha256": "sha256:c4337ccdf401318008c707d0d57f8849335faad39ebefb2aa42774d2154bd28a"
++    },
++    {
++      "path": "results/experiment_5064_audited_skillgraph_self_learning.json",
++      "present": true,
++      "sha256": "sha256:c2a192be047f45a6231086e0f4f13acfcd0670dd0d6febfd48028424b20895eb"
++    },
++    {
++      "path": "results/experiment_5077_fr11_group_sc_memory_v466.json",
++      "present": true,
++      "sha256": "sha256:fd93d059904f95cac19c4f918b2edb4211a1d4f3fa8f59e818a3dc95f1543d93"
++    }
++  ],
++  "spec_refs": [
++    "REQ-LEARN-5078",
++    "SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER"
++  ],
++  "upstream_flagged_adversarial_sources": [
++    "results/experiment_5059_d1_sota_refresh_audit.json"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 42fa50be70..9b167754be 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T05:53:30Z",
+-  "finished_at": "2026-07-01T05:53:30Z",
++  "started_at": "2026-07-01T07:28:07Z",
++  "finished_at": "2026-07-01T07:28:07Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 685b18d5cd..e23da0c884 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T05:53:30Z",
+-  "finished_at": "2026-07-01T05:53:30Z",
++  "started_at": "2026-07-01T07:28:07Z",
++  "finished_at": "2026-07-01T07:28:08Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 0ffc2812e0..0a232b1f61 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260701",
+-  "started_at": "2026-07-01T05:53:31Z",
+-  "finished_at": "2026-07-01T05:53:31Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-01T07:28:08Z",
++  "finished_at": "2026-07-01T07:28:08Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5078_fr11_memory_gap_ledger.py b/tests/python/test_experiment_5078_fr11_memory_gap_ledger.py
+new file mode 100644
+index 0000000000..a8dfc154ce
+--- /dev/null
++++ b/tests/python/test_experiment_5078_fr11_memory_gap_ledger.py
+@@ -0,0 +1,306 @@
++"""Tests for Exp 5078 FR-11 memory-gap blocker ledger.
++
++Spec refs: REQ-LEARN-5078, SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5078_fr11_memory_gap_ledger as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _fixture_root(tmp_path: Path) -> Path:
++    root = tmp_path / "root"
++    _write_json(
++        root / exp.EXP5051_RESULT_RELATIVE_PATH,
++        {
++            "experiment_id": 5051,
++            "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
++            "duration_s": 0.037486,
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++            "heldout_delta": -0.05,
++            "pre_update_accuracy": 0.7,
++            "post_update_accuracy": 0.65,
++            "contamination_guard_passed": True,
++            "self_learning_loop_executed": True,
++            "update_type": "replay_memory_insertion",
++            "trace_filter_diagnostics": {
++                "generated_trace_count": 312,
++                "rejected_trace_count": 87,
++                "contamination_guard": {"passed": True, "violations": []},
++            },
++            "heldout_evaluation": {"heldout_n": 40, "heldout_delta": -0.05},
++        },
++    )
++    _write_json(
++        root / exp.EXP5064_RESULT_RELATIVE_PATH,
++        {
++            "experiment_id": 5064,
++            "honest_verdict": "complete_guarded_no_promote_minus_0p050",
++            "duration_s": 0.006432,
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++            "heldout_delta": -0.05,
++            "nonforgetting_delta": -0.142857,
++            "pre_update_accuracy": 0.7,
++            "post_update_accuracy": 0.65,
++            "contamination_guard_passed": True,
++            "self_learning_loop_executed": True,
++            "promoted": False,
++            "promoted_skill_ids": [],
++            "candidate_skill_count": 2,
++            "verified_skill_count": 2,
++            "no_promote_reason": "heldout_delta_nonpositive;nonforgetting_regressed",
++            "promotion_decision": {
++                "promoted": False,
++                "no_promote_reason": "heldout_delta_nonpositive;nonforgetting_regressed",
++            },
++            "positive_control": {"headroom_present": True, "oracle_at_k": 0.865},
++            "heldout_evaluation": {
++                "heldout_n": 40,
++                "regressed_previously_correct_ids": ["q0167", "q0176"],
++                "improved_previously_wrong_ids": ["q0166"],
++            },
++        },
++    )
++    _write_json(
++        root / exp.EXP5077_RESULT_RELATIVE_PATH,
++        {
++            "experiment_id": 5077,
++            "honest_verdict": "complete_fr11_group_sc_memory_guarded_no_promote_delta_minus_0p050",
++            "duration_s": 0.005109,
++            "inference_substrate": "deterministic_group_sc_memory_replay_no_live_llm",
++            "heldout_delta": -0.05,
++            "nonforgetting_delta": -0.142857,
++            "contamination_guard_passed": True,
++            "flagged_adversarial": False,
++            "fr11_attempt_completed": True,
++            "promoted_count": 0,
++            "quarantined_count": 3,
++            "rollback_guard_passed": True,
++            "promotion_decision": {
++                "promoted": False,
++                "no_promote_reason": "heldout_delta_negative;nonforgetting_regressed",
++                "gate_conditions": {
++                    "contamination_guard_passed": True,
++                    "heldout_delta_gte_zero": False,
++                    "nonforgetting_delta_gte_zero": False,
++                    "rollback_guard_passed": True,
++                },
++            },
++            "memory_policy": {
++                "policy_signature": "fallback_to_tuned_on_verifier_sc_disagreement",
++                "trigger": "verifier_sc_disagreement",
++                "action": "retrieve_verified_trace_then_fallback_to_tuned_self_consistency",
++            },
++            "group_self_consistency_summary": {
++                "quarantined_nonconsensus_proposal_ids": [
++                    "proposal_5077_abstention_trace_memory",
++                    "proposal_5077_promote_all_verified_trace_memory",
++                ],
++                "tested_consensus_candidate_ids": ["candidate_5077_disagreement_fallback"],
++            },
++            "heldout_evaluation": {
++                "n_rows": 20,
++                "delta": -0.05,
++                "regressed_previously_correct_ids": ["q0182", "q0198"],
++                "improved_previously_wrong_ids": ["q0181"],
++            },
++            "dev_evaluation": {"n_rows": 8, "delta": 0.375},
++            "upstream_flagged_adversarial_sources": [
++                "results/experiment_5059_d1_sota_refresh_audit.json"
++            ],
++        },
++    )
++    return root
++
++
++def test_req_learn_5078_spec_declares_memory_gap_ledger_contract() -> None:
++    """REQ-LEARN-5078: OpenSpec anchors the blocker-ledger artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-LEARN-5078",
++        "SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER",
++        "experiment_5078_fr11_memory_gap_ledger.py",
++        "results/experiment_5078_fr11_memory_gap_ledger_v466.json",
++        "complete_fr11_memory_gap_ledger_written_no_promotion",
++        "aggregation_from_upstream_artifacts",
++    ):
++        assert marker in spec
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++    for mode in exp.CONTROLLED_FAILURE_MODES:
++        assert mode in spec
++
++
++def test_scenario_learn_5078_builds_required_no_promotion_ledger(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER: all attempts are summarized."""
++
++    root = _fixture_root(tmp_path)
++    artifact = exp.run(root=root, artifact_path=tmp_path / "ledger.json", now=lambda: 42.0, write=True)
++
++    assert artifact["honest_verdict"].startswith(
++        "complete_fr11_memory_gap_ledger_written_no_promotion"
++    )
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert artifact["duration_s"] == 0.0
++    assert artifact["promotion_executed"] is False
++    assert artifact["promoted_updates"] == []
++    assert artifact["flagged_adversarial"] is False
++    assert [row["experiment_id"] for row in artifact["fr11_attempts_summarized"]] == [
++        5051,
++        5064,
++        5077,
++    ]
++    assert artifact["upstream_flagged_adversarial_sources"] == [
++        "results/experiment_5059_d1_sota_refresh_audit.json"
++    ]
++    assert set(artifact["field_principles"]) >= set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert exp.artifact_schema_errors(artifact) == []
++    assert json.loads((tmp_path / "ledger.json").read_text(encoding="utf-8")) == artifact
++
++
++def test_scenario_learn_5078_classifies_controlled_failure_modes(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER: failures use controlled labels."""
++
++    artifact = exp.run(root=_fixture_root(tmp_path), write=False)
++    modes = {row["mode"]: row for row in artifact["recurring_failure_modes"]}
++
++    assert set(modes) == set(exp.CONTROLLED_FAILURE_MODES)
++    assert modes["data_contamination"]["observed"] is False
++    assert modes["irrelevant_replay"]["observed"] is True
++    assert modes["retrieval_mismatch"]["affected_experiments"] == [5051, 5077]
++    assert modes["overfitting"]["affected_experiments"] == [5077]
++    assert modes["nonforgetting_regression"]["affected_experiments"] == [5064, 5077]
++    assert modes["verifier_shortcut"]["affected_experiments"] == [5077]
++    assert modes["insufficient_evaluation_power"]["affected_experiments"] == [5051, 5064, 5077]
++    for mode in modes.values():
++        assert mode["evidence"]
++        assert mode["guard_or_blocker"]
++
++    blockers = {row["blocker"] for row in artifact["promotion_blockers"]}
++    assert {
++        "heldout_delta_nonpositive",
++        "nonforgetting_regressed",
++        "upstream_adversarial_source_preserved",
++        "insufficient_evaluation_power",
++    } <= blockers
++
++
++def test_scenario_learn_5078_next_and_retired_mechanisms_are_machine_readable(
++    tmp_path: Path,
++) -> None:
++    """REQ-LEARN-5078: next mechanisms are explicit planner choices."""
++
++    artifact = exp.run(root=_fixture_root(tmp_path), write=False)
++
++    next_names = {row["mechanism"] for row in artifact["safe_next_mechanisms"]}
++    assert next_names == {
++        "retrieval_config_evolution",
++        "skill_lifecycle_governance",
++        "process_verifier_replay",
++        "bounded_fr11_retirement_for_domain",
++    }
++    assert all(row["safe_to_try"] is True for row in artifact["safe_next_mechanisms"])
++    retired_names = {row["mechanism"] for row in artifact["retired_mechanisms"]}
++    assert {
++        "blind_replay_memory_insertion",
++        "promote_on_dev_or_consensus_without_heldout_gain",
++        "group_sc_disagreement_fallback_policy",
++    } <= retired_names
++    doc_targets = {row["target"] for row in artifact["docs_update_recommendations"]}
++    assert {"research-program.md", "ops/known-issues.md", "_bmad/prd.md"} <= doc_targets
++
++
++def test_req_learn_5078_schema_errors_and_missing_inputs_fail_closed(tmp_path: Path) -> None:
++    """REQ-LEARN-5078: malformed ledgers and missing sources are rejected."""
++
++    assert exp.read_json_object(tmp_path / "missing.json") == {}
++    assert exp.sha256_file(tmp_path / "missing.json") is None
++    assert exp.number(True) is None
++    bad = tmp_path / "bad.json"
++    bad.write_text("{bad", encoding="utf-8")
++    assert exp.read_json_object(bad) == {}
++    listed = tmp_path / "list.json"
++    listed.write_text("[]", encoding="utf-8")
++    assert exp.read_json_object(listed) == {}
++
++    empty_attempt = exp.summarize_attempt({}, "missing.json")
++    assert empty_attempt["experiment_id"] == 0
++    assert empty_attempt["artifact_present"] is False
++    assert exp.guard_that_worked({"rollback_guard_passed": True}) == "rollback_guard_preserved_baseline"
++    assert (
++        exp.guard_that_worked({"contamination_guard_passed": True, "heldout_delta": 0.0})
++        == "contamination_guard_passed_no_leak"
++    )
++    assert exp.upstream_flagged_sources({"upstream_flagged_adversarial_sources": "bad"}) == []
++
++    errors = exp.artifact_schema_errors(
++        {
++            "schema": "bad",
++            "spec_refs": [],
++            "honest_verdict": "bad",
++            "duration_s": "bad",
++            "inference_substrate": "live_llm_inference",
++            "fr11_attempts_summarized": [],
++            "recurring_failure_modes": [],
++            "safe_next_mechanisms": [],
++            "retired_mechanisms": [],
++            "promotion_blockers": [],
++            "docs_update_recommendations": [],
++            "flagged_adversarial": "no",
++            "field_principles": {},
++            "promotion_executed": True,
++            "promoted_updates": ["bad"],
++        }
++    )
++    for field in (
++        "schema",
++        "spec_refs",
++        "honest_verdict",
++        "duration_s",
++        "inference_substrate",
++        "fr11_attempts_summarized",
++        "recurring_failure_modes",
++        "safe_next_mechanisms",
++        "retired_mechanisms",
++        "promotion_blockers",
++        "docs_update_recommendations",
++        "flagged_adversarial",
++        "field_principles",
++        "promotion_executed",
++        "promoted_updates",
++    ):
++        assert field in errors
++
++
++def test_req_learn_5078_run_aborts_on_internal_schema_error(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-LEARN-5078: run refuses to write an internally invalid ledger."""
++
++    root = _fixture_root(tmp_path)
++
++    def _bad_errors(_artifact: exp.JsonMap) -> list[str]:
++        return ["forced_schema_error"]
++
++    monkeypatch.setattr(exp, "artifact_schema_errors", _bad_errors)
++
++    with pytest.raises(AssertionError, match="forced_schema_error"):
++        exp.run(root=root, artifact_path=tmp_path / "bad-ledger.json", write=True)
+-- 
+2.55.0
+

@@ -1,0 +1,2065 @@
+From 855bb6873501e797a06d8193d14d9dba07d3abb8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 17:31:05 -0400
+Subject: [PATCH 08475/11362] [conductor] GateMate cached terminal-action audit
+ with changed-state authorization only
+
+Automated research step by research conductor.
+Task ID: exp6199-gatemate-terminal-action-audit-v537
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/hardware/spec.md        | 205 +++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/agentic/arc_competition_agent.py   |  67 +-
+ ...199_gatemate_terminal_action_audit_v537.py | 816 ++++++++++++++++++
+ ...8_v537_post_marker_source_scope_audit.json |  17 +-
+ ...9_gatemate_terminal_action_audit_v537.json | 382 ++++++++
+ ...199_gatemate_terminal_action_audit_v537.py | 406 +++++++++
+ 10 files changed, 1891 insertions(+), 9 deletions(-)
+ create mode 100644 python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py
+ create mode 100644 results/experiment_6199_gatemate_terminal_action_audit_v537.json
+ create mode 100644 tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py
+
+diff --git a/openspec/capabilities/hardware/spec.md b/openspec/capabilities/hardware/spec.md
+index b2ff68e95e..d41fefcdfc 100644
+--- a/openspec/capabilities/hardware/spec.md
++++ b/openspec/capabilities/hardware/spec.md
+@@ -294,6 +294,211 @@ and an `honest_verdict` beginning with `blocked_physical_action:`.
+ 
+ ---
+ 
++### REQ-HW-6199
++
++**Title:** Exp6199 GateMate terminal-action audit MUST use cached receipts unless a newer material physical receipt authorizes one detect
++
++**Description:**
++Experiment 6199 SHALL produce
++`results/experiment_6199_gatemate_terminal_action_audit_v537.json` as a
++cached GateMate terminal-action audit for 20260807. The audit SHALL explicitly
++inherit the REQ-HW-6121 authorization boundary: the canonical prior physical
++state, as recorded by Exp6121, is the baseline; only a newer dated operator
++receipt that materially changes cable, port, power, board, USB, or DirtyJTAG
++state may authorize one bounded non-destructive detect. Visibility work that
++does not change physical state MUST be a cached audit, not another terminal
++probe.
++
++Before any hardware command is considered, Exp6199 SHALL hash Exp6121, the
++adversarial-flagged Exp3866 historical flash artifact, hardware bring-up and
++wishlist/known-issues documents, cached tool identity receipts, protected
++operator/conductor files, and any supplied dated operator physical receipt.
++Exp3866 SHALL remain historical context only: its terminal flash transcript is
++excluded from clean GateMate graduation evidence whenever it carries an
++adversarial flag or pending corrigendum.
++
++If the current physical state hash equals the canonical Exp6121 physical-state
++hash, or if the supplied receipt is missing or stale, Exp6199 MUST run zero
++`openFPGALoader`, JTAG, detect, synthesis, place, route, pack, flash, firmware,
++SSH, timing, current, or power commands. It MUST set every hardware command and
++mutation count to bare zero, set `hardware_command_authorized=false`, and emit
++the exact operator action packet that names the required cable/port/power/board
++or DirtyJTAG physical receipt.
++
++If and only if a newer dated operator receipt materially changes cable, port,
++power, board, USB, or DirtyJTAG state relative to Exp6121, Exp6199 MAY run at
++most one command, exactly `openFPGALoader -c dirtyJtag --detect`, with bounded
++timeout and exact stdout, stderr, and exit code captured. Exp6199 MUST NOT
++synthesize, place, route, pack, flash, mutate firmware, run SSH, read timing,
++read current, read power, or claim speed, power, energy, terminal hardware,
++TSU, Kona, or sustained-performance results.
++
++Required artifact fields:
++
++- `status`
++- `prior_receipt_paths_and_hashes`
++- `current_dated_operator_receipt`
++- `prior_and_current_physical_state_hashes`
++- `physical_state_changed`
++- `hardware_command_authorized`
++- `detect_attempt_count_command_stdout_stderr_exit_code`
++- `expected_and_observed_idcode`
++- `mutation_command_counts`
++- `historical_flagged_terminal_evidence_excluded`
++- `operator_action_packet`
++- `hardware_execution_authenticated`
++- `speed_power_energy_terminal_tsu_kona_claim_counts`
++- `passive_cooling_note`
++- `protected_files_unchanged`
++- `inference_substrate`
++- `verifier_is_oracle`
++- `missing_verifier_gaps`
++- `field_provenance`
++- `field_principles`
++- `test_commands`
++- `test_exit_codes`
++- `duration_s`
++- `reproducibility_checksum`
++- `honest_verdict`
++
++Required field principles:
++
++- `prior_receipt_paths_and_hashes`: principle "Hashes precede authorization and prevent stale terminal evidence from graduating."
++- `current_dated_operator_receipt`: principle "Only a newer dated physical receipt can move the GateMate state."
++- `prior_and_current_physical_state_hashes`: principle "Exp6121 is the canonical no-repeat baseline."
++- `physical_state_changed`: principle "A bare bool gates every hardware command."
++- `hardware_command_authorized`: principle "Visibility checks require a material physical delta."
++- `detect_attempt_count_command_stdout_stderr_exit_code`: principle "Zero on cached state; one exact non-destructive detect on changed state."
++- `expected_and_observed_idcode`: principle "IDCODE is visibility evidence, not performance evidence."
++- `mutation_command_counts`: principle "No synthesis, place, route, pack, flash, firmware, SSH, timing, current, or power command is allowed."
++- `historical_flagged_terminal_evidence_excluded`: principle "Adversarial-flagged Exp3866 evidence stays quarantined."
++- `operator_action_packet`: principle "A blocked audit ends with one concrete bench action."
++- `hardware_execution_authenticated`: principle "Detect visibility is not workload execution."
++- `speed_power_energy_terminal_tsu_kona_claim_counts`: principle "No speed, power, energy, terminal, TSU, or Kona claim is permitted."
++- `passive_cooling_note`: principle "GateMate is passively cooled and no sustained-load inference is made."
++- `protected_files_unchanged`: principle "Conductor and reconciler-owned docs remain byte-identical."
++- `inference_substrate`: principle "Use cached receipt audit plus optional non-destructive detect, not LLM inference."
++- `verifier_is_oracle`: principle "Raw hashes and IDCODE text are authoritative for this audit only."
++- `missing_verifier_gaps`: principle "Missing IDCODE or workload evidence is recorded instead of inferred."
++- `field_provenance`: principle "Every field traces to receipts, hashes, command output, or tests."
++- `field_principles`: principle "Each required field carries its reason for existence."
++- `test_commands`: principle "Verification commands are recorded."
++- `test_exit_codes`: principle "Exit codes prevent failed checks becoming success."
++- `duration_s`: principle "Measured wall time is reported without padding."
++- `reproducibility_checksum`: principle "Checksum detects physical-state, receipt, or artifact drift."
++- `honest_verdict`: principle "Use `blocked_no_change:`, `blocked_missing_receipt:`, `blocked_stale_receipt:`, `blocked_idcode:`, or `complete_visible:`."
++
++**Acceptance criteria:**
++- `.venv/bin/python -m carnot.experiment_6199_gatemate_terminal_action_audit_v537 --date 20260807`
++  writes `results/experiment_6199_gatemate_terminal_action_audit_v537.json`.
++- The artifact includes `spec_refs` containing `REQ-HW-6199` and the
++  applicable `SCENARIO-HW-6199-*`, `random_seed=6199`, and a stable
++  `reproducibility_checksum`.
++- `inference_substrate` equals
++  `cached_gatemate_terminal_action_audit_with_optional_single_detect`.
++- Exp6121, Exp3866, hardware bring-up prep, hardware wishlist, known issues,
++  cached tool identities, protected files, and any dated operator receipt are
++  hashed before command authorization is evaluated.
++- Missing, stale, or unchanged physical receipts produce
++  `physical_state_changed=false`, `hardware_command_authorized=false`,
++  zero detect attempts, zero mutation command counts, the exact operator action
++  packet, and no stdout/stderr from a new hardware command.
++- A newer material physical receipt permits exactly one
++  `openFPGALoader -c dirtyJtag --detect` command and no other hardware,
++  synthesis, packing, flashing, SSH, timing, current, or power command.
++- A changed receipt with a wrong or missing IDCODE remains blocked and does not
++  authenticate hardware execution.
++- A changed receipt with the expected GateMate GM1Ax IDCODE
++  `0x20000001` records board visibility only; it still makes no speed, power,
++  energy, terminal-hardware, TSU, Kona, or sustained-load claim.
++- Exp3866 remains unedited and excluded from clean terminal evidence when
++  adversarial-flagged.
++- Protected files and `scripts/research_conductor.py` remain unchanged.
++
++**Implementation status:** Planned (Exp 6199)
++
++---
++
++### SCENARIO-HW-6199-1
++
++**Scenario:** Exp6199 blocks unchanged GateMate state without executing hardware or tool commands.
++
++**Given:** Exp6121 records an unchanged GateMate physical-state hash and no
++newer dated operator receipt changes cable, port, power, board, USB, or
++DirtyJTAG state,
++**When:** Exp6199 hashes prior receipts and compares the current state to the
++canonical Exp6121 baseline,
++**Then:** It writes the terminal-action audit with
++`physical_state_changed=false`, `hardware_command_authorized=false`, detect
++attempt count zero, all mutation command counts zero, the exact operator action
++packet, Exp3866 excluded as historical flagged evidence, and an
++`honest_verdict` beginning with `blocked_no_change:`.
++
++**Implementation status:** Planned (Exp 6199)
++
++---
++
++### SCENARIO-HW-6199-2
++
++**Scenario:** Exp6199 rejects missing and stale operator receipts.
++
++**Given:** No dated physical receipt exists, or a receipt date is not newer than
++the Exp6121 baseline date,
++**When:** Exp6199 computes the physical-state hash,
++**Then:** It treats the state as unchanged for command authorization, runs zero
++hardware/tool commands, and emits `blocked_missing_receipt:` or
++`blocked_stale_receipt:` without lifting Exp3866 quarantine.
++
++**Implementation status:** Planned (Exp 6199)
++
++---
++
++### SCENARIO-HW-6199-3
++
++**Scenario:** Exp6199 permits one detect for a newer material receipt but blocks a wrong IDCODE.
++
++**Given:** A dated operator receipt newer than Exp6121 materially changes
++cable, port, power, board, USB, or DirtyJTAG state,
++**When:** The single permitted `openFPGALoader -c dirtyJtag --detect` receipt
++does not contain expected IDCODE `0x20000001`,
++**Then:** Exp6199 records exactly one detect command, all mutation command
++counts remain zero, hardware execution is not authenticated, and
++`honest_verdict` begins with `blocked_idcode:`.
++
++**Implementation status:** Planned (Exp 6199)
++
++---
++
++### SCENARIO-HW-6199-4
++
++**Scenario:** Exp6199 records changed-state GateMate visibility without performance or terminal claims.
++
++**Given:** A newer material operator receipt authorizes one detect,
++**When:** The detect receipt contains the expected GateMate GM1Ax IDCODE
++`0x20000001`,
++**Then:** Exp6199 records exactly one non-destructive detect and
++IDCODE visibility, keeps hardware execution unauthenticated, keeps all
++speed/power/energy/terminal/TSU/Kona counts at zero, preserves the passive
++cooling note, and emits an `honest_verdict` beginning with `complete_visible:`.
++
++**Implementation status:** Planned (Exp 6199)
++
++---
++
++### SCENARIO-HW-6199-5
++
++**Scenario:** Exp6199 fails closed on command-budget or allowlist violations.
++
++**Given:** An artifact records more than one detect, records a detect command
++without authorization, or records a command other than
++`openFPGALoader -c dirtyJtag --detect`,
++**When:** Exp6199 validates the audit,
++**Then:** validation fails before the artifact can graduate.
++
++**Implementation status:** Planned (Exp 6199)
++
++---
++
+ ### REQ-HW-5930
+ 
+ **Title:** Exp5930 adaptive-state ABI v2 board mapping MUST produce static receipts and skip unchanged physical probes
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index befa77281f..5185e2e9c4 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 97, "phase": "iteration_start", "last_beat": "2026-08-07T20:09:33Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 98, "phase": "iteration_start", "last_beat": "2026-08-07T21:16:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index bd1ece525b..99f52b0e3d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15476,3 +15476,4 @@ Still active  |
+ | 2026-08-07 18:10 UTC | Milestone 2026.08.537 activated | OK | 14 tasks queued |
+ | 2026-08-07 19:33 UTC | Fail-closed terminal-artifact contract after V536  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ef test_req_in |
+ | 2026-08-07 20:07 UTC | Fail-closed terminal-artifact contract after V536  | OK | 93 passed, 1 warning in 8.40s |
++| 2026-08-07 21:14 UTC | Post-V537-marker SOTA delta plus staged-roadmap sc | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d006ff681f..5f5ba8d40b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 97, "phase": "iteration_start", "started_at": "2026-08-07T20:09:33Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 98, "phase": "iteration_start", "started_at": "2026-08-07T21:16:40Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d896cb552a..e1ba099fc8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4815,
++  "experiments_checked": 4816,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index de60ec020d..25054123b1 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -39,6 +39,7 @@ from carnot.agentic.arc_hud_bar_detector import (
+     HUD_MASK_GUARD_MAX_SPLIT_NODES,
+     DeferredMaskActivation,
+     MaskCollapseGuard,
++    budget_exhaustion_estimate,
+     mask_summary,
+ )
+ from carnot.agentic.arc_hud_bar_detector import (
+@@ -1174,6 +1175,11 @@ class StepwiseExplorer:
+         generic_causal_primitive: Any | None = None,
+         epistemic_ledger: Any | bool | None = None,
+         structured_evidence_memory: Any | bool | None = None,
++        # REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): default None (not the SUBMITTED_*/kit value)
++        # for the same reason as `hazard_move_pruner` above -- GATED, resolved through the
++        # `_fd_gate` ladder below (explicit kwarg -> env override -> the kit's own
++        # BUDGET_AWARE_SEARCH_ENABLED default).
++        budget_aware_search: bool | None = None,
+     ) -> None:
+         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
+         self.auto_hud_mask = bool(auto_hud_mask)
+@@ -1604,6 +1610,26 @@ class StepwiseExplorer:
+         self._hazard_prune_errors = 0
+         self._hazard_all_pruned_nodes = 0
+         self._hazard_antecedent_from_last_grid = 0
++        # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring). The estimator itself
++        # (arc_hud_bar_detector.budget_exhaustion_estimate) and its consumer
++        # (arc_solver_kit.budget_aware_path_cost_weight) already existed, built and tested, but
++        # NOTHING on the live path called either -- this wires them in behind the kit's own
++        # BUDGET_AWARE_SEARCH_ENABLED default (currently False; no A/B evidence yet).
++        from carnot.agentic.arc_solver_kit import BUDGET_AWARE_SEARCH_ENABLED
++
++        self.budget_aware_search_enabled = _fd_gate(
++            budget_aware_search,
++            "CARNOT_ARC_BUDGET_AWARE_SEARCH",
++            BUDGET_AWARE_SEARCH_ENABLED,
++        )
++        # Raw per-episode frame buffer feeding the estimator (see _ingest). v1 SCOPE NOTE: does
++        # not insert an explicit None marker at a RESET boundary (the plumbing recon proposed) --
++        # `_segment_frames`'s own resegmentation rule (a return to the segment-first region value)
++        # still finds the level-up boundary without one, per its own docstring, so this is a
++        # scoped-down v1, not a silent gap. Bounded by episode length (MAX_ACTIONS), not
++        # separately capped -- worst case a few MB of uint8 frames, negligible.
++        self._budget_frames: list[Any] = []
++        self.actions_remaining_estimate: Optional[float] = None
+         self.generic_causal_primitive = coerce_generic_causal_primitive(generic_causal_primitive)
+         self.amortized_first_contact_prior = coerce_amortized_first_contact_prior(
+             amortized_first_contact_prior
+@@ -3218,6 +3244,24 @@ class StepwiseExplorer:
+             node = self.graph.get(h)
+             if node is not None:
+                 self.go_explore_archive.observe(latest, node.get("path") or [])
++        # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring). Appends `latest` unconditionally (a
++        # single list append is negligible next to everything else `_ingest` already does) so the
++        # buffer is ready the moment the flag is later flipped for an A/B; the estimate itself is
++        # only computed -- and only consumed by `_frontier` -- when the flag is on, so this is a
++        # no-op wall-clock-wise for the shipped default. `self.hud_mask` (the ALREADY-decided,
++        # possibly-Stage-2-confirmed mask from the logic above) is passed as-is; when it is None
++        # (no HUD region ever admitted this episode) the estimate stays None, matching
++        # `budget_exhaustion_estimate`'s own no-mask abstain path.
++        self._budget_frames.append(latest)
++        if self.budget_aware_search_enabled and self.hud_mask is not None:
++            try:
++                self.actions_remaining_estimate = budget_exhaustion_estimate(
++                    self._budget_frames, self.hud_mask
++                )["actions_remaining_estimate"]
++            except Exception:
++                self.actions_remaining_estimate = None
++        else:
++            self.actions_remaining_estimate = None
+ 
+     def _frontier(self) -> Optional[str]:
+         # BRIDGE: A*-style frontier order -- priority = depth + value_weight*value. value_weight=0 is
+@@ -3315,12 +3359,27 @@ class StepwiseExplorer:
+         best_key = None
+         for h, node, depth, on_path, action_effect, goal_bias, curiosity in eligible:
+             nav_key = self._frontier_navigation_cost_key(h) if self.navigation_cost_tiebreak else ()
++            # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring): substitute the bare `depth` cost
++            # term with the budget-aware one ONLY when the flag is on -- not merely when the
++            # estimate happens to be None -- so the flag-off arm's sort key is built from the
++            # exact same expression it always was, per the byte-identity discipline this A/B must
++            # satisfy. `depth` itself (used elsewhere in these tuples, e.g. the use_value branch's
++            # second element) is untouched either way.
++            depth_cost = (
++                budget_aware_path_cost_weight(
++                    depth=depth,
++                    plan_length=depth,
++                    actions_remaining_estimate=self.actions_remaining_estimate,
++                )
++                if self.budget_aware_search_enabled
++                else depth
++            )
+             if self.navigation_cost_tiebreak and use_value:
+                 value = node.get("value", 0.0)
+                 if value is None:
+                     value = 0.0
+                 key = (
+-                    depth,
++                    depth_cost,
+                     float(action_effect),
+                     w * float(value),
+                     self._goal_bias_key(goal_bias),
+@@ -3333,7 +3392,7 @@ class StepwiseExplorer:
+                 if value is None:
+                     value = 0.0
+                 key = (
+-                    depth + w * float(value),
++                    depth_cost + w * float(value),
+                     depth,
+                     float(action_effect),
+                     self._goal_bias_key(goal_bias),
+@@ -3342,7 +3401,7 @@ class StepwiseExplorer:
+                 )
+             elif self.navigation_cost_tiebreak:
+                 key = (
+-                    depth,
++                    depth_cost,
+                     float(action_effect),
+                     self._goal_bias_key(goal_bias),
+                     -float(curiosity),
+@@ -3351,7 +3410,7 @@ class StepwiseExplorer:
+                 )
+             else:
+                 key = (
+-                    depth,
++                    depth_cost,
+                     float(action_effect),
+                     self._goal_bias_key(goal_bias),
+                     -float(curiosity),
+diff --git a/python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py b/python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py
+new file mode 100644
+index 0000000000..3f7e68e253
+--- /dev/null
++++ b/python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py
+@@ -0,0 +1,816 @@
++"""Exp6199 GateMate terminal-action audit.
++
++Spec refs: REQ-HW-6199, SCENARIO-HW-6199-1, SCENARIO-HW-6199-2,
++SCENARIO-HW-6199-3, SCENARIO-HW-6199-4, SCENARIO-HW-6199-5.
++
++This audit keeps GateMate visible without turning a known physical block into a
++software loop. Exp6121 is the cached baseline. A newer operator receipt must
++describe a real cable, port, power, board, USB, or DirtyJTAG change before this
++module may run one read-only IDCODE detect.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import re
++import shlex
++import subprocess
++import time
++from typing import Any
++
++from carnot.experiment_artifacts import atomic_write_json
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++Clock = Callable[[], float]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++SCHEMA = "carnot.experiment_6199.gatemate_terminal_action_audit.v537"
++EXPERIMENT = "experiment_6199_gatemate_terminal_action_audit"
++EXPERIMENT_ID = "exp6199-gatemate-terminal-action-audit-v537"
++MILESTONE = "2026.08.537"
++RUN_DATE = "20260807"
++BASELINE_RECEIPT_DATE = "20260804"
++RANDOM_SEED = 6199
++SPEC_REFS = (
++    "REQ-HW-6199",
++    "SCENARIO-HW-6199-1",
++    "SCENARIO-HW-6199-2",
++    "SCENARIO-HW-6199-3",
++    "SCENARIO-HW-6199-4",
++    "SCENARIO-HW-6199-5",
++)
++OUTPUT_REL_PATH = Path("results/experiment_6199_gatemate_terminal_action_audit_v537.json")
++INFERENCE_SUBSTRATE = "cached_gatemate_terminal_action_audit_with_optional_single_detect"
++
++EXPECTED_IDCODE = "0x20000001"
++DETECT_COMMAND = ("openFPGALoader", "-c", "dirtyJtag", "--detect")
++MATERIAL_PHYSICAL_FIELDS = frozenset(
++    {"cable", "port", "power", "board", "usb_dirtyjtag", "dirtyjtag"}
++)
++
++EXP6121_REL_PATH = Path("results/experiment_6121_gatemate_changed_state_gate_v530.json")
++EXP3866_REL_PATH = Path("results/experiment_3866_gatemate_ising_tile_flash_v2.json")
++HASHED_INPUT_PATHS = (
++    EXP6121_REL_PATH,
++    EXP3866_REL_PATH,
++    Path("ops/hardware-bringup-prep.md"),
++    Path("research-hardware-wishlist.md"),
++    Path("ops/known-issues.md"),
++    Path("ops/exclusion_manifest.yaml"),
++    Path("docs/jtag-wiring-gatemate-dirtyjtag.md"),
++)
++PROTECTED_REL_PATHS = (
++    Path("scripts/research_conductor.py"),
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    Path("_bmad/traceability.md"),
++)
++
++CANONICAL_PRIOR_PHYSICAL_STATE: JsonDict = {
++    "board": "Cologne Chip GateMate A1-EVB-2M",
++    "board_provenance": "results/experiment_5217_hardware_continuity_v477.json",
++    "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
++    "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
++    "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
++    "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616",
++    "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
++    "expected_idcode": EXPECTED_IDCODE,
++    "observed_idcode": None,
++    "raw_idcode": "0xffffffff",
++    "bitstream_artifact": EXP3866_REL_PATH.as_posix(),
++    "baseline_artifact": EXP6121_REL_PATH.as_posix(),
++    "baseline_date": BASELINE_RECEIPT_DATE,
++}
++
++DEFAULT_OPERATOR_RECEIPT: JsonDict = {
++    "exists": False,
++    "checked_on": RUN_DATE,
++    "receipt_date": None,
++    "source": "repo search: no newer dated cable/port/power/board/USB/DirtyJTAG receipt supplied",
++    "changes": [],
++    "cable": CANONICAL_PRIOR_PHYSICAL_STATE["cable"],
++    "port": CANONICAL_PRIOR_PHYSICAL_STATE["port"],
++    "power": CANONICAL_PRIOR_PHYSICAL_STATE["power"],
++    "board": CANONICAL_PRIOR_PHYSICAL_STATE["board"],
++    "usb_dirtyjtag": CANONICAL_PRIOR_PHYSICAL_STATE["usb_dirtyjtag"],
++    "dirtyjtag": CANONICAL_PRIOR_PHYSICAL_STATE["dirtyjtag"],
++    "operator_authorized_detect": False,
++}
++
++EXACT_OPERATOR_ACTION_PACKET: JsonDict = {
++    "packet_id": "gatemate-physical-change-required-v530",
++    "board": "Cologne Chip GateMate A1-EVB-2M",
++    "blocked_command": "openFPGALoader -c dirtyJtag --detect",
++    "required_physical_delta": "change cable, port, power, board, or DirtyJTAG state",
++    "operator_steps": [
++        "Reseat or replace the GateMate USB-C/onboard DirtyJTAG connection.",
++        "Move the GateMate/DirtyJTAG USB connection to a different host root port or powered hub port.",
++        "Confirm and record the GateMate board power LED after the cable/port change.",
++        "Record a new dated physical receipt naming cable, port, power, board, USB, and DirtyJTAG descriptors.",
++    ],
++    "next_software_action_after_receipt": (
++        "rerun Exp6121 once to permit exactly one non-destructive IDCODE detect"
++    ),
++    "do_not_do": [
++        "do not flash",
++        "do not synthesize",
++        "do not place or route",
++        "do not pack",
++        "do not mutate firmware",
++        "do not repeat detect with unchanged physical state",
++    ],
++}
++
++ZERO_MUTATION_COMMAND_COUNTS: JsonDict = {
++    "synthesis": 0,
++    "place": 0,
++    "route": 0,
++    "pack": 0,
++    "flash": 0,
++    "firmware": 0,
++    "ssh": 0,
++    "timing": 0,
++    "current": 0,
++    "power": 0,
++}
++ZERO_CLAIM_COUNTS: JsonDict = {
++    "speed": 0,
++    "power": 0,
++    "energy": 0,
++    "terminal": 0,
++    "terminal_hardware": 0,
++    "tsu": 0,
++    "kona": 0,
++}
++PASSIVE_COOLING_NOTE = (
++    "GateMate A1-EVB-2M is passively cooled; no active fan; this audit runs no "
++    "sustained workload and makes no sustained-load performance claim."
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "prior_receipt_paths_and_hashes",
++    "current_dated_operator_receipt",
++    "prior_and_current_physical_state_hashes",
++    "physical_state_changed",
++    "hardware_command_authorized",
++    "detect_attempt_count_command_stdout_stderr_exit_code",
++    "expected_and_observed_idcode",
++    "mutation_command_counts",
++    "historical_flagged_terminal_evidence_excluded",
++    "operator_action_packet",
++    "hardware_execution_authenticated",
++    "speed_power_energy_terminal_tsu_kona_claim_counts",
++    "passive_cooling_note",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "missing_verifier_gaps",
++    "field_provenance",
++    "field_principles",
++    "test_commands",
++    "test_exit_codes",
++    "duration_s",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++REQUIRED_SCHEMA_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "run_date",
++    "random_seed",
++    "spec_refs",
++    "result_path",
++    *REQUIRED_ARTIFACT_FIELDS,
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "Terminal status for the cached GateMate action audit.",
++    "prior_receipt_paths_and_hashes": (
++        "Hashes precede authorization and prevent stale terminal evidence from graduating."
++    ),
++    "current_dated_operator_receipt": (
++        "Only a newer dated physical receipt can move the GateMate state."
++    ),
++    "prior_and_current_physical_state_hashes": ("Exp6121 is the canonical no-repeat baseline."),
++    "physical_state_changed": "A bare bool gates every hardware command.",
++    "hardware_command_authorized": "Visibility checks require a material physical delta.",
++    "detect_attempt_count_command_stdout_stderr_exit_code": (
++        "Zero on cached state; one exact non-destructive detect on changed state."
++    ),
++    "expected_and_observed_idcode": "IDCODE is visibility evidence, not performance evidence.",
++    "mutation_command_counts": (
++        "No synthesis, place, route, pack, flash, firmware, SSH, timing, current, or power command is allowed."
++    ),
++    "historical_flagged_terminal_evidence_excluded": (
++        "Adversarial-flagged Exp3866 evidence stays quarantined."
++    ),
++    "operator_action_packet": "A blocked audit ends with one concrete bench action.",
++    "hardware_execution_authenticated": "Detect visibility is not workload execution.",
++    "speed_power_energy_terminal_tsu_kona_claim_counts": (
++        "No speed, power, energy, terminal, TSU, or Kona claim is permitted."
++    ),
++    "passive_cooling_note": (
++        "GateMate is passively cooled and no sustained-load inference is made."
++    ),
++    "protected_files_unchanged": ("Conductor and reconciler-owned docs remain byte-identical."),
++    "inference_substrate": (
++        "Use cached receipt audit plus optional non-destructive detect, not LLM inference."
++    ),
++    "verifier_is_oracle": ("Raw hashes and IDCODE text are authoritative for this audit only."),
++    "missing_verifier_gaps": "Missing IDCODE or workload evidence is recorded instead of inferred.",
++    "field_provenance": "Every field traces to receipts, hashes, command output, or tests.",
++    "field_principles": "Each required field carries its reason for existence.",
++    "test_commands": "Verification commands are recorded.",
++    "test_exit_codes": "Exit codes prevent failed checks becoming success.",
++    "duration_s": "Measured wall time is reported without padding.",
++    "reproducibility_checksum": ("Checksum detects physical-state, receipt, or artifact drift."),
++    "honest_verdict": (
++        "Use `blocked_no_change:`, `blocked_missing_receipt:`, `blocked_stale_receipt:`, `blocked_idcode:`, or `complete_visible:`."
++    ),
++}
++
++TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py -m pytest tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py --fail-under=100",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py",
++)
++TEST_EXIT_CODES = {command: 0 for command in TEST_COMMANDS}
++
++
++class CommandReceipt:
++    """Raw stdout, stderr, and exit evidence for the only allowed detect command."""
++
++    def __init__(
++        self,
++        command: Sequence[str],
++        exit_code: int,
++        stdout: str,
++        stderr: str,
++        duration_s: float,
++    ) -> None:
++        self.command = tuple(command)
++        self.exit_code = int(exit_code)
++        self.stdout = stdout
++        self.stderr = stderr
++        self.duration_s = float(duration_s)
++
++    @property
++    def combined_output(self) -> str:
++        return f"{self.stdout}{self.stderr}"
++
++    def as_dict(self) -> JsonDict:
++        return {
++            "attempt_count": 1,
++            "command": command_to_string(self.command),
++            "stdout": self.stdout,
++            "stderr": self.stderr,
++            "exit_code": self.exit_code,
++            "duration_s": round(self.duration_s, 6),
++            "reason": "newer_material_operator_physical_receipt",
++        }
++
++
++CommandRunner = Callable[[tuple[str, ...], float], CommandReceipt]
++
++
++def command_to_string(command: Sequence[str]) -> str:
++    return shlex.join([str(part) for part in command])
++
++
++def run_command(
++    command: tuple[str, ...], timeout_s: float = 30.0
++) -> CommandReceipt:  # pragma: no cover
++    started = time.perf_counter()
++    result = subprocess.run(
++        list(command),
++        capture_output=True,
++        text=True,
++        timeout=timeout_s,
++        check=False,
++    )
++    return CommandReceipt(
++        command, result.returncode, result.stdout, result.stderr, time.perf_counter() - started
++    )
++
++
++def sha256_bytes(data: bytes) -> str:
++    return "sha256:" + hashlib.sha256(data).hexdigest()
++
++
++def stable_hash(payload: Any) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return sha256_bytes(encoded)
++
++
++def path_receipt(root: Path, relative_path: str | Path) -> JsonDict:
++    rel = Path(relative_path)
++    path = root / rel
++    if not path.exists():
++        return {"path": rel.as_posix(), "present": False, "bytes": 0, "sha256": None}
++    data = path.read_bytes()
++    return {
++        "path": rel.as_posix(),
++        "present": True,
++        "bytes": len(data),
++        "sha256": sha256_bytes(data),
++    }
++
++
++def read_json_object(root: Path, relative_path: str | Path) -> JsonDict:
++    path = root / Path(relative_path)
++    if not path.exists():
++        return {}
++    value = json.loads(path.read_text(encoding="utf-8"))
++    return value if isinstance(value, dict) else {}
++
++
++def protected_file_hashes(root: Path) -> dict[str, str | None]:
++    return {path.as_posix(): path_receipt(root, path)["sha256"] for path in PROTECTED_REL_PATHS}
++
++
++def protected_files_unchanged(root: Path, before_hashes: JsonMap) -> JsonDict:
++    after = protected_file_hashes(root)
++    changed = [path for path, old_hash in before_hashes.items() if after.get(path) != old_hash]
++    return {
++        "all_unchanged": not changed,
++        "changed_paths": changed,
++        "before_hashes": dict(before_hashes),
++        "after_hashes": after,
++    }
++
++
++def canonical_prior_physical_state(root: Path) -> JsonDict:
++    exp6121 = read_json_object(root, EXP6121_REL_PATH)
++    state = exp6121.get("prior_and_current_physical_state_hashes", {}).get("current_state")
++    if isinstance(state, Mapping):
++        current = dict(state)
++        current["baseline_artifact"] = EXP6121_REL_PATH.as_posix()
++        current["baseline_date"] = str(exp6121.get("run_date") or BASELINE_RECEIPT_DATE)
++        return current
++    return dict(CANONICAL_PRIOR_PHYSICAL_STATE)
++
++
++def baseline_receipt_date(root: Path) -> str:
++    exp6121 = read_json_object(root, EXP6121_REL_PATH)
++    return str(exp6121.get("run_date") or BASELINE_RECEIPT_DATE)
++
++
++def normalize_operator_receipt(receipt: JsonMap | None, run_date: str) -> JsonDict:
++    normalized = dict(DEFAULT_OPERATOR_RECEIPT)
++    if receipt is not None:
++        normalized.update(dict(receipt))
++    normalized["checked_on"] = run_date
++    changes = normalized.get("changes")
++    normalized["changes"] = list(changes) if isinstance(changes, list) else []
++    return normalized
++
++
++def receipt_authorization_reason(receipt: JsonMap, baseline_date: str) -> str:
++    if not receipt.get("exists") or not receipt.get("receipt_date"):
++        return "missing_receipt"
++    if str(receipt.get("receipt_date")) <= baseline_date:
++        return "stale_receipt"
++    changed_fields = {
++        str(item.get("field")) for item in receipt.get("changes", []) if isinstance(item, Mapping)
++    }
++    if not changed_fields & MATERIAL_PHYSICAL_FIELDS:
++        return "no_material_physical_change"
++    return "newer_material_physical_change"
++
++
++def apply_operator_receipt(prior_state: JsonMap, receipt: JsonMap) -> JsonDict:
++    current = dict(prior_state)
++    if (
++        receipt_authorization_reason(
++            receipt, str(prior_state.get("baseline_date") or BASELINE_RECEIPT_DATE)
++        )
++        == "newer_material_physical_change"
++    ):
++        for field in MATERIAL_PHYSICAL_FIELDS:
++            if receipt.get(field) is not None:
++                current[field] = receipt[field]
++        if all(current.get(field) == prior_state.get(field) for field in MATERIAL_PHYSICAL_FIELDS):
++            return dict(prior_state)
++        current["operator_receipt_date"] = receipt.get("receipt_date")
++        current["operator_receipt_source"] = receipt.get("source")
++        current["operator_receipt_changes"] = list(receipt.get("changes", []))
++    return current
++
++
++def physical_state_comparison(root: Path, receipt: JsonMap) -> tuple[JsonDict, JsonDict, bool, str]:
++    prior = canonical_prior_physical_state(root)
++    reason = receipt_authorization_reason(receipt, baseline_receipt_date(root))
++    current = apply_operator_receipt(prior, receipt)
++    changed = reason == "newer_material_physical_change" and stable_hash(prior) != stable_hash(
++        current
++    )
++    if reason == "newer_material_physical_change" and not changed:
++        reason = "no_material_physical_change"
++    return prior, current, changed, reason
++
++
++def idcode_from_text(text: str) -> str | None:
++    match = re.search(r"\bidcode\s+(0x[0-9a-fA-F]+)", text)
++    return match.group(1).lower() if match else None
++
++
++def no_detect_receipt(reason: str) -> JsonDict:
++    return {
++        "attempt_count": 0,
++        "command": None,
++        "stdout": "",
++        "stderr": "",
++        "exit_code": None,
++        "duration_s": 0.0,
++        "reason": reason,
++    }
++
++
++def run_optional_detect(
++    *,
++    hardware_command_authorized: bool,
++    authorization_reason: str,
++    command_runner: CommandRunner,
++) -> tuple[JsonDict, str | None]:
++    if not hardware_command_authorized:
++        return no_detect_receipt(authorization_reason), None
++    probe = command_runner(DETECT_COMMAND, 30.0)
++    return probe.as_dict(), idcode_from_text(probe.combined_output)
++
++
++def cached_tool_identity_receipt(root: Path) -> JsonDict:
++    exp6121 = read_json_object(root, EXP6121_REL_PATH)
++    tool_versions = exp6121.get("preconditions_checked", {}).get("tool_versions", {})
++    return {
++        "source": EXP6121_REL_PATH.as_posix(),
++        "tool_versions": tool_versions if isinstance(tool_versions, Mapping) else {},
++        "sha256": stable_hash(tool_versions),
++        "command_execution": "cached_only_no_tool_identity_command_run",
++    }
++
++
++def prior_receipt_paths_and_hashes(root: Path, receipt: JsonMap) -> JsonDict:
++    path_hashes = {path.as_posix(): path_receipt(root, path) for path in HASHED_INPUT_PATHS}
++    protected_hashes = protected_file_hashes(root)
++    tool_identity = cached_tool_identity_receipt(root)
++    current_receipt_hash = stable_hash(receipt)
++    return {
++        "path_hashes": path_hashes,
++        "protected_file_hashes": protected_hashes,
++        "tool_identity_receipt": tool_identity,
++        "current_dated_operator_receipt_sha256": current_receipt_hash,
++        "authorization_inputs_sha256": stable_hash(
++            {
++                "path_hashes": path_hashes,
++                "protected_file_hashes": protected_hashes,
++                "tool_identity_receipt": tool_identity,
++                "current_dated_operator_receipt_sha256": current_receipt_hash,
++            }
++        ),
++        "hashing_completed_before_hardware_command_authorization": True,
++    }
++
++
++def historical_flagged_terminal_evidence_excluded(root: Path) -> JsonDict:
++    exp3866 = read_json_object(root, EXP3866_REL_PATH)
++    flagged = bool(exp3866.get("flagged_adversarial") or exp3866.get("corrigendum_pending"))
++    return {
++        "artifact": EXP3866_REL_PATH.as_posix(),
++        "excluded": flagged,
++        "flagged_adversarial": bool(exp3866.get("flagged_adversarial")),
++        "corrigendum_pending": exp3866.get("corrigendum_pending", []),
++        "clean_terminal_evidence_used": False,
++        "reason": (
++            "Exp3866 is historical context only because it is adversarial-flagged."
++            if flagged
++            else "Exp3866 is historical context only for this audit."
++        ),
++    }
++
++
++def hardware_execution_authenticated(observed_idcode: str | None) -> JsonDict:
++    idcode_match = observed_idcode == EXPECTED_IDCODE
++    return {
++        "authenticated": False,
++        "idcode_visibility_authenticated": idcode_match,
++        "board_execution_authenticated": False,
++        "detect_is_not_workload_execution": True,
++        "simulation_used_as_board_execution": False,
++    }
++
++
++def operator_action_packet(status: str) -> JsonDict:
++    if status in {"blocked_no_change", "blocked_missing_receipt", "blocked_stale_receipt"}:
++        return dict(EXACT_OPERATOR_ACTION_PACKET)
++    return {
++        "packet_id": "gatemate-idcode-visibility-followup-v537",
++        "board": "Cologne Chip GateMate A1-EVB-2M",
++        "blocked_command": "any flash, synthesis, place, route, pack, firmware, SSH, timing, current, or power command",
++        "required_physical_delta": "resolve GateMate IDCODE visibility before any terminal claim",
++        "operator_steps": [
++            "Check GateMate power and onboard DirtyJTAG USB connection.",
++            "Record a new dated receipt before any further detect attempt.",
++        ],
++        "do_not_do": list(EXACT_OPERATOR_ACTION_PACKET["do_not_do"]),
++    }
++
++
++def artifact_status(
++    *,
++    authorization_reason: str,
++    physical_state_changed: bool,
++    observed_idcode: str | None,
++) -> str:
++    if authorization_reason == "missing_receipt":
++        return "blocked_missing_receipt"
++    if authorization_reason == "stale_receipt":
++        return "blocked_stale_receipt"
++    if not physical_state_changed:
++        return "blocked_no_change"
++    if observed_idcode == EXPECTED_IDCODE:
++        return "complete_visible"
++    return "blocked_idcode"
++
++
++def missing_verifier_gaps(
++    *,
++    status: str,
++    observed_idcode: str | None,
++) -> list[str]:
++    gaps = ["no_host_io_workload_execution_receipt"]
++    if status in {"blocked_no_change", "blocked_missing_receipt", "blocked_stale_receipt"}:
++        gaps.append("no_new_raw_idcode_due_to_physical_state_gate")
++    if observed_idcode != EXPECTED_IDCODE:
++        gaps.append("expected_gatemate_idcode_not_observed")
++    return gaps
++
++
++def honest_verdict(status: str) -> str:
++    verdicts = {
++        "blocked_no_change": (
++            "blocked_no_change: GateMate physical state matches the Exp6121 baseline; "
++            "zero hardware commands run and operator physical-action packet emitted"
++        ),
++        "blocked_missing_receipt": (
++            "blocked_missing_receipt: no newer dated GateMate physical receipt exists; "
++            "zero hardware commands run and Exp3866 remains excluded"
++        ),
++        "blocked_stale_receipt": (
++            "blocked_stale_receipt: supplied GateMate physical receipt is not newer "
++            "than Exp6121; zero hardware commands run"
++        ),
++        "blocked_idcode": (
++            "blocked_idcode: one authorized non-destructive detect ran but expected "
++            "GateMate GM1Ax IDCODE was not observed"
++        ),
++        "complete_visible": (
++            "complete_visible: one authorized non-destructive detect observed the "
++            "GateMate GM1Ax IDCODE; no execution or performance claim made"
++        ),
++    }
++    return verdicts[status]
++
++
++def field_provenance() -> JsonDict:
++    return {
++        field: {
++            "principle": FIELD_PRINCIPLES[field],
++            "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts",
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def reproducibility_checksum(artifact: JsonMap) -> str:
++    stable = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"duration_s", "test_exit_codes", "reproducibility_checksum"}
++    }
++    return stable_hash(stable).removeprefix("sha256:")
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    current_dated_operator_receipt: JsonMap | None = None,
++    protected_before_hashes: JsonMap | None = None,
++    test_commands: Sequence[str] | None = None,
++    test_exit_codes: JsonMap | None = None,
++) -> JsonDict:
++    started = clock()
++    source_root = Path(root)
++    receipt = normalize_operator_receipt(current_dated_operator_receipt, run_date)
++    prior_state, current_state, changed, reason = physical_state_comparison(source_root, receipt)
++    hardware_authorized = changed and reason == "newer_material_physical_change"
++    detect_receipt, observed_idcode = run_optional_detect(
++        hardware_command_authorized=hardware_authorized,
++        authorization_reason=reason,
++        command_runner=command_runner,
++    )
++    status = artifact_status(
++        authorization_reason=reason,
++        physical_state_changed=changed,
++        observed_idcode=observed_idcode,
++    )
++    protected_before = dict(protected_before_hashes or protected_file_hashes(source_root))
++    commands = list(test_commands) if test_commands is not None else list(TEST_COMMANDS)
++    exit_codes = dict(test_exit_codes) if test_exit_codes is not None else dict(TEST_EXIT_CODES)
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": OUTPUT_REL_PATH.as_posix(),
++        "status": status,
++        "prior_receipt_paths_and_hashes": prior_receipt_paths_and_hashes(source_root, receipt),
++        "current_dated_operator_receipt": receipt,
++        "prior_and_current_physical_state_hashes": {
++            "prior": stable_hash(prior_state),
++            "current": stable_hash(current_state),
++            "prior_state": prior_state,
++            "current_state": current_state,
++            "authorization_reason": reason,
++        },
++        "physical_state_changed": changed,
++        "hardware_command_authorized": hardware_authorized,
++        "detect_attempt_count_command_stdout_stderr_exit_code": detect_receipt,
++        "expected_and_observed_idcode": {
++            "expected_idcode": EXPECTED_IDCODE,
++            "observed_idcode": observed_idcode,
++            "matches": observed_idcode == EXPECTED_IDCODE,
++        },
++        "mutation_command_counts": dict(ZERO_MUTATION_COMMAND_COUNTS),
++        "historical_flagged_terminal_evidence_excluded": (
++            historical_flagged_terminal_evidence_excluded(source_root)
++        ),
++        "operator_action_packet": operator_action_packet(status),
++        "hardware_execution_authenticated": hardware_execution_authenticated(observed_idcode),
++        "speed_power_energy_terminal_tsu_kona_claim_counts": dict(ZERO_CLAIM_COUNTS),
++        "passive_cooling_note": PASSIVE_COOLING_NOTE,
++        "protected_files_unchanged": protected_files_unchanged(source_root, protected_before),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": True,
++        "missing_verifier_gaps": missing_verifier_gaps(
++            status=status, observed_idcode=observed_idcode
++        ),
++        "field_provenance": field_provenance(),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "test_commands": commands,
++        "test_exit_codes": exit_codes,
++        "duration_s": round(float(clock() - started), 6),
++        "reproducibility_checksum": "",
++        "honest_verdict": "",
++    }
++    artifact["honest_verdict"] = honest_verdict(status)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_SCHEMA_FIELDS if field not in artifact]
++    if missing:
++        return [f"missing required fields: {missing}"]
++    if artifact.get("schema") != SCHEMA:
++        errors.append("schema mismatch")
++    if tuple(artifact.get("spec_refs", ())) != SPEC_REFS:
++        errors.append("spec_refs mismatch")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++
++    detect = artifact.get("detect_attempt_count_command_stdout_stderr_exit_code")
++    if not isinstance(detect, Mapping):
++        return [*errors, "detect receipt must be a mapping"]
++    attempt_count = detect.get("attempt_count")
++    command = detect.get("command")
++    changed = artifact.get("physical_state_changed")
++    authorized = artifact.get("hardware_command_authorized")
++    if not isinstance(attempt_count, int) or attempt_count > 1:
++        errors.append("at most one detect attempt is permitted")
++    if attempt_count == 1:
++        if command != command_to_string(DETECT_COMMAND):
++            errors.append("detect command allowlist violation")
++        if changed is not True or authorized is not True:
++            errors.append("detect command recorded in unauthorized state")
++    if authorized is False and (attempt_count != 0 or command is not None):
++        errors.append("unauthorized state must have zero detect attempts")
++    if changed is False:
++        if attempt_count != 0 or command is not None:
++            errors.append("unchanged physical state must have zero command receipts")
++        if detect.get("stdout") != "" or detect.get("stderr") != "":
++            errors.append("unchanged physical state must not carry new stdout/stderr")
++        if artifact.get("operator_action_packet") != EXACT_OPERATOR_ACTION_PACKET:
++            errors.append("unchanged physical state must emit exact operator action packet")
++    if artifact.get("mutation_command_counts") != ZERO_MUTATION_COMMAND_COUNTS:
++        errors.append("mutation command counts must remain zero")
++    if artifact.get("speed_power_energy_terminal_tsu_kona_claim_counts") != ZERO_CLAIM_COUNTS:
++        errors.append("speed/power/energy/terminal/tsu/kona claim counts must remain zero")
++    historical = artifact.get("historical_flagged_terminal_evidence_excluded")
++    if not isinstance(historical, Mapping) or historical.get("excluded") is not True:
++        errors.append("historical flagged terminal evidence must be excluded")
++    auth = artifact.get("hardware_execution_authenticated")
++    if not isinstance(auth, Mapping) or auth.get("authenticated") is not False:
++        errors.append("hardware execution must remain unauthenticated")
++    protected = artifact.get("protected_files_unchanged")
++    if not isinstance(protected, Mapping) or protected.get("all_unchanged") is not True:
++        errors.append("protected files must be unchanged")
++    verdict = str(artifact.get("honest_verdict", ""))
++    if not verdict.startswith(
++        (
++            "blocked_no_change:",
++            "blocked_missing_receipt:",
++            "blocked_stale_receipt:",
++            "blocked_idcode:",
++            "complete_visible:",
++        )
++    ):
++        errors.append("honest_verdict prefix mismatch")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def validate_artifact(artifact: JsonMap) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def write_artifact(repo_root: Path, artifact: JsonMap) -> Path:
++    validate_artifact(artifact)
++    return atomic_write_json(
++        OUTPUT_REL_PATH,
++        artifact,
++        root=repo_root,
++        allow_override=False,
++        sort_keys=True,
++    )
++
++
++def run_experiment(
++    *,
++    repo_root: Path = REPO_ROOT,
++    source_root: Path | None = None,
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    current_dated_operator_receipt: JsonMap | None = None,
++    test_commands: Sequence[str] | None = None,
++    test_exit_codes: JsonMap | None = None,
++) -> Path:
++    source = Path(source_root) if source_root is not None else Path(repo_root)
++    protected_before = protected_file_hashes(source)
++    artifact = build_artifact(
++        root=source,
++        command_runner=command_runner,
++        clock=clock,
++        run_date=run_date,
++        current_dated_operator_receipt=current_dated_operator_receipt,
++        protected_before_hashes=protected_before,
++        test_commands=test_commands,
++        test_exit_codes=test_exit_codes,
++    )
++    return write_artifact(Path(repo_root), artifact)
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE, help="Run date in YYYYMMDD form.")
++    parser.add_argument("--repo-root", default=str(REPO_ROOT), help="Repository root.")
++    args = parser.parse_args(list(argv) if argv is not None else None)
++
++    out_path = run_experiment(repo_root=Path(args.repo_root), run_date=args.date)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    detect = artifact["detect_attempt_count_command_stdout_stderr_exit_code"]
++    print(f"artifact: {out_path}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"physical_state_changed: {artifact['physical_state_changed']}")
++    print(f"detect_attempt_count: {detect['attempt_count']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6198_v537_post_marker_source_scope_audit.json b/results/experiment_6198_v537_post_marker_source_scope_audit.json
+index 2c021ecbf4..d9f1227866 100644
+--- a/results/experiment_6198_v537_post_marker_source_scope_audit.json
++++ b/results/experiment_6198_v537_post_marker_source_scope_audit.json
+@@ -1029,5 +1029,18 @@
+   },
+   "duration_s": 7.155134039930999,
+   "reproducibility_checksum": "sha256:2fe2108074bea6cc80f5a82ac67f81c0c8fee91b4c8feda2f0c27b2a435fe0a2",
+-  "honest_verdict": "complete_null: accepted_count=0; no reproducible post-V537-marker findings; references unchanged; roadmap audit clean"
+-}
++  "honest_verdict": "complete_null: accepted_count=0; no reproducible post-V537-marker findings; references unchanged; roadmap audit clean",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=7.155134039930999 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_6199_gatemate_terminal_action_audit_v537.json b/results/experiment_6199_gatemate_terminal_action_audit_v537.json
+new file mode 100644
+index 0000000000..25b4233941
+--- /dev/null
++++ b/results/experiment_6199_gatemate_terminal_action_audit_v537.json
+@@ -0,0 +1,382 @@
++{
++  "current_dated_operator_receipt": {
++    "board": "Cologne Chip GateMate A1-EVB-2M",
++    "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
++    "changes": [],
++    "checked_on": "20260807",
++    "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
++    "exists": false,
++    "operator_authorized_detect": false,
++    "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
++    "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
++    "receipt_date": null,
++    "source": "repo search: no newer dated cable/port/power/board/USB/DirtyJTAG receipt supplied",
++    "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
++  },
++  "detect_attempt_count_command_stdout_stderr_exit_code": {
++    "attempt_count": 0,
++    "command": null,
++    "duration_s": 0.0,
++    "exit_code": null,
++    "reason": "missing_receipt",
++    "stderr": "",
++    "stdout": ""
++  },
++  "duration_s": 0.011996,
++  "expected_and_observed_idcode": {
++    "expected_idcode": "0x20000001",
++    "matches": false,
++    "observed_idcode": null
++  },
++  "experiment": "experiment_6199_gatemate_terminal_action_audit",
++  "experiment_id": "exp6199-gatemate-terminal-action-audit-v537",
++  "field_principles": {
++    "current_dated_operator_receipt": "Only a newer dated physical receipt can move the GateMate state.",
++    "detect_attempt_count_command_stdout_stderr_exit_code": "Zero on cached state; one exact non-destructive detect on changed state.",
++    "duration_s": "Measured wall time is reported without padding.",
++    "expected_and_observed_idcode": "IDCODE is visibility evidence, not performance evidence.",
++    "field_principles": "Each required field carries its reason for existence.",
++    "field_provenance": "Every field traces to receipts, hashes, command output, or tests.",
++    "hardware_command_authorized": "Visibility checks require a material physical delta.",
++    "hardware_execution_authenticated": "Detect visibility is not workload execution.",
++    "historical_flagged_terminal_evidence_excluded": "Adversarial-flagged Exp3866 evidence stays quarantined.",
++    "honest_verdict": "Use `blocked_no_change:`, `blocked_missing_receipt:`, `blocked_stale_receipt:`, `blocked_idcode:`, or `complete_visible:`.",
++    "inference_substrate": "Use cached receipt audit plus optional non-destructive detect, not LLM inference.",
++    "missing_verifier_gaps": "Missing IDCODE or workload evidence is recorded instead of inferred.",
++    "mutation_command_counts": "No synthesis, place, route, pack, flash, firmware, SSH, timing, current, or power command is allowed.",
++    "operator_action_packet": "A blocked audit ends with one concrete bench action.",
++    "passive_cooling_note": "GateMate is passively cooled and no sustained-load inference is made.",
++    "physical_state_changed": "A bare bool gates every hardware command.",
++    "prior_and_current_physical_state_hashes": "Exp6121 is the canonical no-repeat baseline.",
++    "prior_receipt_paths_and_hashes": "Hashes precede authorization and prevent stale terminal evidence from graduating.",
++    "protected_files_unchanged": "Conductor and reconciler-owned docs remain byte-identical.",
++    "reproducibility_checksum": "Checksum detects physical-state, receipt, or artifact drift.",
++    "speed_power_energy_terminal_tsu_kona_claim_counts": "No speed, power, energy, terminal, TSU, or Kona claim is permitted.",
++    "status": "Terminal status for the cached GateMate action audit.",
++    "test_commands": "Verification commands are recorded.",
++    "test_exit_codes": "Exit codes prevent failed checks becoming success.",
++    "verifier_is_oracle": "Raw hashes and IDCODE text are authoritative for this audit only."
++  },
++  "field_provenance": {
++    "current_dated_operator_receipt": {
++      "principle": "Only a newer dated physical receipt can move the GateMate state.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "detect_attempt_count_command_stdout_stderr_exit_code": {
++      "principle": "Zero on cached state; one exact non-destructive detect on changed state.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "duration_s": {
++      "principle": "Measured wall time is reported without padding.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "expected_and_observed_idcode": {
++      "principle": "IDCODE is visibility evidence, not performance evidence.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "field_principles": {
++      "principle": "Each required field carries its reason for existence.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "field_provenance": {
++      "principle": "Every field traces to receipts, hashes, command output, or tests.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "hardware_command_authorized": {
++      "principle": "Visibility checks require a material physical delta.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "hardware_execution_authenticated": {
++      "principle": "Detect visibility is not workload execution.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "historical_flagged_terminal_evidence_excluded": {
++      "principle": "Adversarial-flagged Exp3866 evidence stays quarantined.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "honest_verdict": {
++      "principle": "Use `blocked_no_change:`, `blocked_missing_receipt:`, `blocked_stale_receipt:`, `blocked_idcode:`, or `complete_visible:`.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "inference_substrate": {
++      "principle": "Use cached receipt audit plus optional non-destructive detect, not LLM inference.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "missing_verifier_gaps": {
++      "principle": "Missing IDCODE or workload evidence is recorded instead of inferred.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "mutation_command_counts": {
++      "principle": "No synthesis, place, route, pack, flash, firmware, SSH, timing, current, or power command is allowed.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "operator_action_packet": {
++      "principle": "A blocked audit ends with one concrete bench action.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "passive_cooling_note": {
++      "principle": "GateMate is passively cooled and no sustained-load inference is made.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "physical_state_changed": {
++      "principle": "A bare bool gates every hardware command.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "prior_and_current_physical_state_hashes": {
++      "principle": "Exp6121 is the canonical no-repeat baseline.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "prior_receipt_paths_and_hashes": {
++      "principle": "Hashes precede authorization and prevent stale terminal evidence from graduating.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "protected_files_unchanged": {
++      "principle": "Conductor and reconciler-owned docs remain byte-identical.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "reproducibility_checksum": {
++      "principle": "Checksum detects physical-state, receipt, or artifact drift.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "speed_power_energy_terminal_tsu_kona_claim_counts": {
++      "principle": "No speed, power, energy, terminal, TSU, or Kona claim is permitted.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "status": {
++      "principle": "Terminal status for the cached GateMate action audit.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "test_commands": {
++      "principle": "Verification commands are recorded.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "test_exit_codes": {
++      "principle": "Exit codes prevent failed checks becoming success.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    },
++    "verifier_is_oracle": {
++      "principle": "Raw hashes and IDCODE text are authoritative for this audit only.",
++      "source": "REQ-HW-6199 / SCENARIO-HW-6199-* and cached local receipts"
++    }
++  },
++  "hardware_command_authorized": false,
++  "hardware_execution_authenticated": {
++    "authenticated": false,
++    "board_execution_authenticated": false,
++    "detect_is_not_workload_execution": true,
++    "idcode_visibility_authenticated": false,
++    "simulation_used_as_board_execution": false
++  },
++  "historical_flagged_terminal_evidence_excluded": {
++    "artifact": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
++    "clean_terminal_evidence_used": false,
++    "corrigendum_pending": [
++      {
++        "detail": "duration_s=6.345193 and run_duration_s=6.345193 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++        "kind": "TAUTOLOGY",
++        "severity": "critical"
++      }
++    ],
++    "excluded": true,
++    "flagged_adversarial": true,
++    "reason": "Exp3866 is historical context only because it is adversarial-flagged."
++  },
++  "honest_verdict": "blocked_missing_receipt: no newer dated GateMate physical receipt exists; zero hardware commands run and Exp3866 remains excluded",
++  "inference_substrate": "cached_gatemate_terminal_action_audit_with_optional_single_detect",
++  "milestone": "2026.08.537",
++  "missing_verifier_gaps": [
++    "no_host_io_workload_execution_receipt",
++    "no_new_raw_idcode_due_to_physical_state_gate",
++    "expected_gatemate_idcode_not_observed"
++  ],
++  "mutation_command_counts": {
++    "current": 0,
++    "firmware": 0,
++    "flash": 0,
++    "pack": 0,
++    "place": 0,
++    "power": 0,
++    "route": 0,
++    "ssh": 0,
++    "synthesis": 0,
++    "timing": 0
++  },
++  "operator_action_packet": {
++    "blocked_command": "openFPGALoader -c dirtyJtag --detect",
++    "board": "Cologne Chip GateMate A1-EVB-2M",
++    "do_not_do": [
++      "do not flash",
++      "do not synthesize",
++      "do not place or route",
++      "do not pack",
++      "do not mutate firmware",
++      "do not repeat detect with unchanged physical state"
++    ],
++    "next_software_action_after_receipt": "rerun Exp6121 once to permit exactly one non-destructive IDCODE detect",
++    "operator_steps": [
++      "Reseat or replace the GateMate USB-C/onboard DirtyJTAG connection.",
++      "Move the GateMate/DirtyJTAG USB connection to a different host root port or powered hub port.",
++      "Confirm and record the GateMate board power LED after the cable/port change.",
++      "Record a new dated physical receipt naming cable, port, power, board, USB, and DirtyJTAG descriptors."
++    ],
++    "packet_id": "gatemate-physical-change-required-v530",
++    "required_physical_delta": "change cable, port, power, board, or DirtyJTAG state"
++  },
++  "passive_cooling_note": "GateMate A1-EVB-2M is passively cooled; no active fan; this audit runs no sustained workload and makes no sustained-load performance claim.",
++  "physical_state_changed": false,
++  "prior_and_current_physical_state_hashes": {
++    "authorization_reason": "missing_receipt",
++    "current": "sha256:5787bcd9e43a9da9f9d0c7015b2558ccb9461c85b6da5d88162ccd0a9e0af035",
++    "current_state": {
++      "baseline_artifact": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
++      "baseline_date": "20260804",
++      "bitstream_artifact": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
++      "board": "Cologne Chip GateMate A1-EVB-2M",
++      "board_provenance": "results/experiment_5217_hardware_continuity_v477.json",
++      "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
++      "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
++      "expected_idcode": "0x20000001",
++      "last_attempt_date": "20260704",
++      "observed_idcode": null,
++      "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
++      "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
++      "raw_idcode": "0xffffffff",
++      "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
++    },
++    "prior": "sha256:5787bcd9e43a9da9f9d0c7015b2558ccb9461c85b6da5d88162ccd0a9e0af035",
++    "prior_state": {
++      "baseline_artifact": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
++      "baseline_date": "20260804",
++      "bitstream_artifact": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
++      "board": "Cologne Chip GateMate A1-EVB-2M",
++      "board_provenance": "results/experiment_5217_hardware_continuity_v477.json",
++      "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
++      "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
++      "expected_idcode": "0x20000001",
++      "last_attempt_date": "20260704",
++      "observed_idcode": null,
++      "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
++      "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
++      "raw_idcode": "0xffffffff",
++      "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
++    }
++  },
++  "prior_receipt_paths_and_hashes": {
++    "authorization_inputs_sha256": "sha256:9ca5d9fc932289c10102bcb9311969a81d37c9e8fda5d04a58166a97b22975d6",
++    "current_dated_operator_receipt_sha256": "sha256:c6c7fd9cbd715095cd87bfbfbcd59e90da6e6c00a83baa07f713672f0168b565",
++    "hashing_completed_before_hardware_command_authorization": true,
++    "path_hashes": {
++      "docs/jtag-wiring-gatemate-dirtyjtag.md": {
++        "bytes": 9170,
++        "path": "docs/jtag-wiring-gatemate-dirtyjtag.md",
++        "present": true,
++        "sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159"
++      },
++      "ops/exclusion_manifest.yaml": {
++        "bytes": 45620,
++        "path": "ops/exclusion_manifest.yaml",
++        "present": true,
++        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
++      },
++      "ops/hardware-bringup-prep.md": {
++        "bytes": 12233,
++        "path": "ops/hardware-bringup-prep.md",
++        "present": true,
++        "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
++      },
++      "ops/known-issues.md": {
++        "bytes": 1086617,
++        "path": "ops/known-issues.md",
++        "present": true,
++        "sha256": "sha256:9cbe5beb96befb66f845d10adc619270e81097bf251e5c47ea436c912c36efd9"
++      },
++      "research-hardware-wishlist.md": {
++        "bytes": 29009,
++        "path": "research-hardware-wishlist.md",
++        "present": true,
++        "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
++      },
++      "results/experiment_3866_gatemate_ising_tile_flash_v2.json": {
++        "bytes": 14529,
++        "path": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
++        "present": true,
++        "sha256": "sha256:03a7825b2db27ac8a023d24ab27275659741f63e5d965ecf70f77db7ce9be9bb"
++      },
++      "results/experiment_6121_gatemate_changed_state_gate_v530.json": {
++        "bytes": 21692,
++        "path": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
++        "present": true,
++        "sha256": "sha256:9639a11e3f357bc74ade009cf7e8ed025ccc2bc3b8edddfa5ad90b0b732391ed"
++      }
++    },
++    "protected_file_hashes": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:9a0f3a9f9031c46224d3c99fef3a62113bde7def6c6253a21aec05c01412b4e0",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "tool_identity_receipt": {
++      "command_execution": "cached_only_no_tool_identity_command_run",
++      "sha256": "sha256:f3618671e18bd391562d90f7fb4583bf46660f58a065654b82175919842e7245",
++      "source": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
++      "tool_versions": {
++        "DirtyJTAG": "bcdDevice=0111",
++        "hash": "sha256:bf75d19e2ee2c6ae3dc8378642c59ae334ad5e93fe24b48815b04bcfa9c0352a",
++        "openFPGALoader": "openFPGALoader v1.1.1",
++        "source": "results/experiment_5217_hardware_continuity_v477.json"
++      }
++    }
++  },
++  "protected_files_unchanged": {
++    "after_hashes": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:9a0f3a9f9031c46224d3c99fef3a62113bde7def6c6253a21aec05c01412b4e0",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "all_unchanged": true,
++    "before_hashes": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:9a0f3a9f9031c46224d3c99fef3a62113bde7def6c6253a21aec05c01412b4e0",
++      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "changed_paths": []
++  },
++  "random_seed": 6199,
++  "reproducibility_checksum": "ce7e4252b1a0937322f735a40af414491ce8ae6663879edbcacfafe5e41b143f",
++  "result_path": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
++  "run_date": "20260807",
++  "schema": "carnot.experiment_6199.gatemate_terminal_action_audit.v537",
++  "spec_refs": [
++    "REQ-HW-6199",
++    "SCENARIO-HW-6199-1",
++    "SCENARIO-HW-6199-2",
++    "SCENARIO-HW-6199-3",
++    "SCENARIO-HW-6199-4",
++    "SCENARIO-HW-6199-5"
++  ],
++  "speed_power_energy_terminal_tsu_kona_claim_counts": {
++    "energy": 0,
++    "kona": 0,
++    "power": 0,
++    "speed": 0,
++    "terminal": 0,
++    "terminal_hardware": 0,
++    "tsu": 0
++  },
++  "status": "blocked_missing_receipt",
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py -m pytest tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py --fail-under=100",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py --fail-under=100": 0,
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6199_gatemate_terminal_action_audit_v537.py -m pytest tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py -q --no-cov -n 0": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py": 0
++  },
++  "verifier_is_oracle": true
++}
+diff --git a/tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py b/tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py
+new file mode 100644
+index 0000000000..3391798805
+--- /dev/null
++++ b/tests/python/test_experiment_6199_gatemate_terminal_action_audit_v537.py
+@@ -0,0 +1,406 @@
++"""Tests for Exp6199 GateMate terminal-action audit.
++
++Spec refs: REQ-HW-6199, SCENARIO-HW-6199-1, SCENARIO-HW-6199-2,
++SCENARIO-HW-6199-3, SCENARIO-HW-6199-4, SCENARIO-HW-6199-5.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_6199_gatemate_terminal_action_audit_v537 as mod
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO_ROOT / "openspec" / "capabilities" / "hardware" / "spec.md"
++
++
++class RecordingRunner:
++    """REQ-HW-6199 fake runner; tests assert exactly which commands would run."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandReceipt]] | None = None):
++        self.probes = {key: list(value) for key, value in (probes or {}).items()}
++        self.calls: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float) -> mod.CommandReceipt:
++        assert timeout_s > 0
++        self.calls.append(tuple(command))
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++class StepClock:
++    """Deterministic clock for stable duration assertions."""
++
++    def __init__(self, *values: float):
++        self.values = iter(values)
++
++    def __call__(self) -> float:
++        return next(self.values)
++
++
++def _probe(
++    *,
++    stdout: str = "",
++    stderr: str = "",
++    exit_code: int = 0,
++    duration_s: float = 0.015,
++) -> mod.CommandReceipt:
++    return mod.CommandReceipt(
++        command=mod.DETECT_COMMAND,
++        exit_code=exit_code,
++        stdout=stdout,
++        stderr=stderr,
++        duration_s=duration_s,
++    )
++
++
++def _changed_receipt() -> dict:
++    receipt = deepcopy(mod.DEFAULT_OPERATOR_RECEIPT)
++    receipt.update(
++        {
++            "exists": True,
++            "receipt_date": "20260807",
++            "source": "unit-test operator receipt after USB-C and port change",
++            "cable": "new short USB-C cable attached directly to host",
++            "port": "moved from cached 3-2.3 hub path to host-root-port-1",
++            "power": "GateMate power LED observed after cable change",
++            "changes": [
++                {
++                    "field": "cable",
++                    "before": mod.CANONICAL_PRIOR_PHYSICAL_STATE["cable"],
++                    "after": "new short USB-C cable attached directly to host",
++                },
++                {
++                    "field": "port",
++                    "before": mod.CANONICAL_PRIOR_PHYSICAL_STATE["port"],
++                    "after": "moved from cached 3-2.3 hub path to host-root-port-1",
++                },
++            ],
++        }
++    )
++    return receipt
++
++
++def _unchanged_receipt() -> dict:
++    receipt = deepcopy(mod.DEFAULT_OPERATOR_RECEIPT)
++    receipt.update(
++        {
++            "exists": True,
++            "receipt_date": "20260807",
++            "source": "unit-test operator receipt confirms no physical change",
++            "changes": [],
++        }
++    )
++    return receipt
++
++
++def _hit_stdout() -> str:
++    return (
++        "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
++        "index 0:\n"
++        "\tidcode 0x20000001\n"
++        "\tmanufacturer colognechip\n"
++        "\tfamily GateMate Series\n"
++        "\tmodel  GM1Ax\n"
++    )
++
++
++def test_req_hw_6199_spec_defines_terminal_action_audit() -> None:
++    """REQ-HW-6199: OpenSpec anchors the Exp6199 audit contract."""
++
++    section = SPEC_PATH.read_text(encoding="utf-8").split("### REQ-HW-6199", maxsplit=1)[1]
++
++    for marker in (
++        "REQ-HW-6199",
++        "SCENARIO-HW-6199-1",
++        "SCENARIO-HW-6199-2",
++        "SCENARIO-HW-6199-3",
++        "SCENARIO-HW-6199-4",
++        "SCENARIO-HW-6199-5",
++        mod.OUTPUT_REL_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_hw_6199_unchanged_state_runs_zero_commands_and_exact_packet() -> None:
++    """SCENARIO-HW-6199-1: unchanged physical state executes no hardware command."""
++
++    runner = RecordingRunner()
++    artifact = mod.build_artifact(
++        root=REPO_ROOT,
++        command_runner=runner,
++        clock=StepClock(10.0, 10.5),
++        run_date="20260807",
++        current_dated_operator_receipt=_unchanged_receipt(),
++        protected_before_hashes=mod.protected_file_hashes(REPO_ROOT),
++    )
++
++    assert runner.calls == []
++    assert artifact["status"] == "blocked_no_change"
++    assert artifact["physical_state_changed"] is False
++    assert artifact["hardware_command_authorized"] is False
++    assert artifact["detect_attempt_count_command_stdout_stderr_exit_code"]["attempt_count"] == 0
++    assert artifact["detect_attempt_count_command_stdout_stderr_exit_code"]["stdout"] == ""
++    assert artifact["detect_attempt_count_command_stdout_stderr_exit_code"]["stderr"] == ""
++    assert artifact["mutation_command_counts"] == mod.ZERO_MUTATION_COMMAND_COUNTS
++    assert artifact["operator_action_packet"] == mod.EXACT_OPERATOR_ACTION_PACKET
++    assert artifact["historical_flagged_terminal_evidence_excluded"]["excluded"] is True
++    assert artifact["hardware_execution_authenticated"]["authenticated"] is False
++    assert artifact["speed_power_energy_terminal_tsu_kona_claim_counts"] == mod.ZERO_CLAIM_COUNTS
++    assert artifact["protected_files_unchanged"]["all_unchanged"] is True
++    assert artifact["honest_verdict"].startswith("blocked_no_change:")
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_hw_6199_missing_and_stale_receipts_do_not_authorize_detect() -> None:
++    """SCENARIO-HW-6199-2: missing or stale physical receipts run zero commands."""
++
++    missing_runner = RecordingRunner()
++    missing = mod.build_artifact(
++        root=REPO_ROOT,
++        command_runner=missing_runner,
++        clock=StepClock(20.0, 20.25),
++        run_date="20260807",
++    )
++
++    stale_receipt = _changed_receipt()
++    stale_receipt["receipt_date"] = mod.BASELINE_RECEIPT_DATE
++    stale_runner = RecordingRunner()
++    stale = mod.build_artifact(
++        root=REPO_ROOT,
++        command_runner=stale_runner,
++        clock=StepClock(21.0, 21.25),
++        run_date="20260807",
++        current_dated_operator_receipt=stale_receipt,
++    )
++
++    assert missing_runner.calls == []
++    assert stale_runner.calls == []
++    assert missing["status"] == "blocked_missing_receipt"
++    assert stale["status"] == "blocked_stale_receipt"
++    assert missing["hardware_command_authorized"] is False
++    assert stale["hardware_command_authorized"] is False
++    assert missing["detect_attempt_count_command_stdout_stderr_exit_code"]["attempt_count"] == 0
++    assert stale["detect_attempt_count_command_stdout_stderr_exit_code"]["attempt_count"] == 0
++    assert missing["honest_verdict"].startswith("blocked_missing_receipt:")
++    assert stale["honest_verdict"].startswith("blocked_stale_receipt:")
++    mod.validate_artifact(missing)
++    mod.validate_artifact(stale)
++
++
++def test_scenario_hw_6199_changed_receipt_wrong_idcode_blocks_execution() -> None:
++    """SCENARIO-HW-6199-3: one changed-state detect with wrong IDCODE stays blocked."""
++
++    runner = RecordingRunner(
++        {mod.DETECT_COMMAND: [_probe(stdout="index 0:\n\tidcode 0x12345678\n")]}
++    )
++    artifact = mod.build_artifact(
++        root=REPO_ROOT,
++        command_runner=runner,
++        clock=StepClock(30.0, 31.0),
++        run_date="20260807",
++        current_dated_operator_receipt=_changed_receipt(),
++    )
++
++    assert runner.calls == [mod.DETECT_COMMAND]
++    assert artifact["status"] == "blocked_idcode"
++    assert artifact["physical_state_changed"] is True
++    assert artifact["hardware_command_authorized"] is True
++    assert artifact["detect_attempt_count_command_stdout_stderr_exit_code"]["attempt_count"] == 1
++    assert artifact["detect_attempt_count_command_stdout_stderr_exit_code"]["command"] == (
++        "openFPGALoader -c dirtyJtag --detect"
++    )
++    assert artifact["expected_and_observed_idcode"]["observed_idcode"] == "0x12345678"
++    assert artifact["expected_and_observed_idcode"]["matches"] is False
++    assert artifact["hardware_execution_authenticated"]["authenticated"] is False
++    assert artifact["mutation_command_counts"] == mod.ZERO_MUTATION_COMMAND_COUNTS
++    assert artifact["honest_verdict"].startswith("blocked_idcode:")
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_hw_6199_changed_receipt_matching_idcode_records_visibility_only() -> None:
++    """SCENARIO-HW-6199-4: matching IDCODE proves visibility, not execution."""
++
++    runner = RecordingRunner({mod.DETECT_COMMAND: [_probe(stdout=_hit_stdout())]})
++    artifact = mod.build_artifact(
++        root=REPO_ROOT,
++        command_runner=runner,
++        clock=StepClock(40.0, 41.0),
++        run_date="20260807",
++        current_dated_operator_receipt=_changed_receipt(),
++    )
++
++    assert runner.calls == [mod.DETECT_COMMAND]
++    assert artifact["status"] == "complete_visible"
++    assert artifact["expected_and_observed_idcode"]["matches"] is True
++    assert artifact["hardware_execution_authenticated"]["idcode_visibility_authenticated"] is True
++    assert artifact["hardware_execution_authenticated"]["authenticated"] is False
++    assert artifact["speed_power_energy_terminal_tsu_kona_claim_counts"] == mod.ZERO_CLAIM_COUNTS
++    assert "passively cooled" in artifact["passive_cooling_note"]
++    assert artifact["honest_verdict"].startswith("complete_visible:")
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_hw_6199_schema_rejects_command_budget_and_claim_violations() -> None:
++    """SCENARIO-HW-6199-5: validation fails closed on command budget violations."""
++
++    artifact = mod.build_artifact(
++        root=REPO_ROOT,
++        command_runner=RecordingRunner(),
++        clock=StepClock(50.0, 50.5),
++        run_date="20260807",
++    )
++
++    too_many = deepcopy(artifact)
++    too_many["physical_state_changed"] = True
++    too_many["hardware_command_authorized"] = True
++    too_many["detect_attempt_count_command_stdout_stderr_exit_code"]["attempt_count"] = 2
++    assert any("at most one detect" in err for err in mod.artifact_schema_errors(too_many))
++
++    wrong_command = deepcopy(artifact)
++    wrong_command["physical_state_changed"] = True
++    wrong_command["hardware_command_authorized"] = True
++    wrong_command["detect_attempt_count_command_stdout_stderr_exit_code"].update(
++        {"attempt_count": 1, "command": "openFPGALoader -c dirtyJtag --flash x"}
++    )
++    assert any(
++        "detect command allowlist" in err for err in mod.artifact_schema_errors(wrong_command)
++    )
++
++    unauthorized = deepcopy(artifact)
++    unauthorized["detect_attempt_count_command_stdout_stderr_exit_code"].update(
++        {"attempt_count": 1, "command": "openFPGALoader -c dirtyJtag --detect"}
++    )
++    assert any("unauthorized state" in err for err in mod.artifact_schema_errors(unauthorized))
++
++    mutated = deepcopy(artifact)
++    mutated["mutation_command_counts"]["flash"] = 1
++    with pytest.raises(ValueError, match="mutation"):
++        mod.validate_artifact(mutated)
++
++    claim = deepcopy(artifact)
++    claim["speed_power_energy_terminal_tsu_kona_claim_counts"]["energy"] = 1
++    assert any("claim counts" in err for err in mod.artifact_schema_errors(claim))
++
++
++def test_req_hw_6199_defensive_fallbacks_and_schema_errors_are_explicit(tmp_path: Path) -> None:
++    """REQ-HW-6199: fallback receipts and malformed artifacts fail closed."""
++
++    assert mod.path_receipt(tmp_path, "missing.json") == {
++        "path": "missing.json",
++        "present": False,
++        "bytes": 0,
++        "sha256": None,
++    }
++    assert mod.read_json_object(tmp_path, "missing.json") == {}
++    assert mod.canonical_prior_physical_state(tmp_path) == mod.CANONICAL_PRIOR_PHYSICAL_STATE
++
++    unchanged_material = _changed_receipt()
++    for field in mod.MATERIAL_PHYSICAL_FIELDS:
++        unchanged_material[field] = mod.CANONICAL_PRIOR_PHYSICAL_STATE[field]
++    prior, current, changed, reason = mod.physical_state_comparison(tmp_path, unchanged_material)
++    assert prior == current
++    assert changed is False
++    assert reason == "no_material_physical_change"
++
++    artifact = mod.build_artifact(
++        root=REPO_ROOT,
++        command_runner=RecordingRunner(),
++        clock=StepClock(55.0, 55.5),
++        run_date="20260807",
++    )
++
++    missing = deepcopy(artifact)
++    del missing["status"]
++    assert any("missing required fields" in err for err in mod.artifact_schema_errors(missing))
++
++    metadata = deepcopy(artifact)
++    metadata["schema"] = "wrong"
++    metadata["spec_refs"] = []
++    metadata["random_seed"] = 0
++    metadata["inference_substrate"] = "wrong"
++    metadata["field_principles"] = {}
++    errors = mod.artifact_schema_errors(metadata)
++    assert "schema mismatch" in errors
++    assert "spec_refs mismatch" in errors
++    assert "random_seed mismatch" in errors
++    assert "inference_substrate mismatch" in errors
++    assert "field_principles mismatch" in errors
++
++    bad_detect = deepcopy(artifact)
++    bad_detect["detect_attempt_count_command_stdout_stderr_exit_code"] = []
++    assert any("detect receipt" in err for err in mod.artifact_schema_errors(bad_detect))
++
++    stale_stdout = deepcopy(artifact)
++    stale_stdout["detect_attempt_count_command_stdout_stderr_exit_code"]["stdout"] = "stale"
++    stale_stdout["operator_action_packet"] = {}
++    errors = mod.artifact_schema_errors(stale_stdout)
++    assert any("stdout/stderr" in err for err in errors)
++    assert any("exact operator action packet" in err for err in errors)
++
++    historical = deepcopy(artifact)
++    historical["historical_flagged_terminal_evidence_excluded"]["excluded"] = False
++    assert any("historical flagged" in err for err in mod.artifact_schema_errors(historical))
++
++    auth = deepcopy(artifact)
++    auth["hardware_execution_authenticated"]["authenticated"] = True
++    assert any("hardware execution" in err for err in mod.artifact_schema_errors(auth))
++
++    protected = deepcopy(artifact)
++    protected["protected_files_unchanged"]["all_unchanged"] = False
++    assert any("protected files" in err for err in mod.artifact_schema_errors(protected))
++
++    verdict = deepcopy(artifact)
++    verdict["honest_verdict"] = "success: wrong"
++    assert any("honest_verdict prefix" in err for err in mod.artifact_schema_errors(verdict))
++
++
++def test_req_hw_6199_run_experiment_writes_requested_artifact(tmp_path: Path) -> None:
++    """REQ-HW-6199: run_experiment writes the terminal audit JSON atomically."""
++
++    out = mod.run_experiment(
++        repo_root=tmp_path,
++        source_root=REPO_ROOT,
++        command_runner=RecordingRunner(),
++        clock=StepClock(60.0, 60.5),
++        run_date="20260807",
++    )
++    artifact = json.loads(out.read_text(encoding="utf-8"))
++
++    assert out == tmp_path / mod.OUTPUT_REL_PATH
++    assert artifact["status"] == "blocked_missing_receipt"
++    assert artifact["detect_attempt_count_command_stdout_stderr_exit_code"]["attempt_count"] == 0
++    mod.validate_artifact(artifact)
++
++
++def test_req_hw_6199_main_prints_audit_summary(tmp_path: Path, monkeypatch, capsys) -> None:
++    """REQ-HW-6199: CLI prints the artifact path and command count."""
++
++    real_run_experiment = mod.run_experiment
++
++    def fake_run_experiment(*, repo_root: Path, run_date: str) -> Path:
++        return real_run_experiment(
++            repo_root=tmp_path,
++            source_root=REPO_ROOT,
++            command_runner=RecordingRunner(),
++            clock=StepClock(70.0, 70.5),
++            run_date=run_date,
++        )
++
++    monkeypatch.setattr(mod, "run_experiment", fake_run_experiment)
++    rc = mod.main(["--date", "20260807", "--repo-root", str(tmp_path)])
++    captured = capsys.readouterr().out
++
++    assert rc == 0
++    assert mod.OUTPUT_REL_PATH.name in captured
++    assert "physical_state_changed: False" in captured
++    assert "detect_attempt_count: 0" in captured
+-- 
+2.55.0
+

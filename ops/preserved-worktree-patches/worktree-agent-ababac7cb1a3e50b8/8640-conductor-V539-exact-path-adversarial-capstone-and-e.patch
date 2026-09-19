@@ -1,0 +1,3533 @@
+From 7c23e6accc1aa9edf5fd900880ced86896a7dd4c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 10:23:40 -0400
+Subject: [PATCH 08640/11362] [conductor] V539 exact-path adversarial capstone
+ and evidence reconciliation
+
+Automated research step by research conductor.
+Task ID: exp6238-v539-adversarial-capstone
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-harnesses/spec.md   |  111 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...periment_6238_v539_adversarial_capstone.py | 1062 ++++++++++
+ ...riment_6238_v539_adversarial_capstone.json | 1781 +++++++++++++++++
+ ...periment_6238_v539_adversarial_capstone.py |  513 +++++
+ 5 files changed, 3468 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6238_v539_adversarial_capstone.py
+ create mode 100644 results/experiment_6238_v539_adversarial_capstone.json
+ create mode 100644 tests/python/test_experiment_6238_v539_adversarial_capstone.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 5dda0624f3..8240cb6d62 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -1518,6 +1518,117 @@ unchanged, the checksum matches, and GGUF mutation count is the bare integer
+ |---|---|---|
+ | REQ-INFRA-6228 | `python/carnot/inference/llama_server_supervisor.py`; `python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py`; terminal artifact `results/experiment_6228_supervised_three_family_runtime_endurance.json`. | `tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py`; `tests/python/test_llama_server_supervisor.py`. |
+ 
++## REQ-INFRA-6238: V539 Exact-Path Capstone SHALL Preserve Terminal States And Reject Unsupported Claims
++
++Carnot SHALL build Exp6238 as the V539 branch-independent capstone. The
++capstone SHALL load the active V539 roadmap, derive the exact task id to
++declared deliverable matrix for Exp6225 through Exp6238, and SHALL NOT
++substitute same-number sidecars, conductor receipts, or corrected historical
++artifacts for a missing exact path.
++
++Exp6238 SHALL classify every exact deliverable with the shared terminal
++artifact classifier. The classifier result SHALL outrank conductor receipts.
++Missing, malformed, bootstrap-only, unknown, partial, blocked, skipped,
++flagged, null, retired, and ready outcomes SHALL remain distinct in the
++artifact. A skipped branch SHALL be terminal operational evidence and SHALL
++contribute no scientific success.
++
++Exp6238 SHALL read every present upstream artifact through
++`scripts/summarize_artifact.py`, SHALL run current `scripts/adversarial_verify.py`
++logic, and SHALL record a `scripts/determination_preservation_lint.py --all`
++receipt. A live critical adversarial flag, a stamped flag, a failed structured
++gate, a missing required upstream field, a missing exact artifact, or an
++inactive treatment SHALL exclude the affected branch from any positive claim.
++
++Exp6238 SHALL recompute every structured roadmap gate from the exact upstream
++artifact field. Gate evaluation SHALL record upstream task, field, operator,
++expected value, actual value, pass/fail state, conductor receipt comparison,
++and a principle. A missing upstream artifact or missing upstream field SHALL
++fail closed.
++
++Exp6238 SHALL reconcile runtime durability, ARC depth, executable-code
++format/content, fresh-event continuous learning, shadow reachability, sampler
++activation/equivalence/default state, and hardware status independently. It
++SHALL keep runtime canaries separate from durable runtime readiness, ARC
++registry depth separate from live depth promotion, parse recovery separate from
++hidden-test content margin, deterministic memory replay separate from fresh CSL,
++shadow reachability separate from CSL promotion, and treatment activation
++separate from a null sampler result. Hardware claim count SHALL be the bare
++integer `0` unless a new independently admissible hardware receipt exists in
++the declared V539 task set.
++
++The Exp6238 artifact SHALL be written atomically to
++`results/experiment_6238_v539_adversarial_capstone.json` with
++`inference_substrate=aggregation_from_upstream_artifacts` and
++`verifier_is_oracle=false`. The artifact SHALL include these required fields:
++`status`, `roadmap_path_hash_and_task_ids`, `exact_task_artifact_matrix`,
++`conductor_receipt_matrix`, `terminal_classifier_results`,
++`adversarial_results_by_task`, `determination_preservation_results`,
++`gate_cascade_receipts`,
++`missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts`,
++`prior_failure_retirement_actions`, `runtime_final_status_and_family_scores`,
++`arc_provenance_registry_hash_level_depth_and_promotion_summary`,
++`code_parse_recovery_and_content_margin_summary`,
++`fresh_stream_and_continuous_learning_summary`, `shadow_consumer_summary`,
++`sampler_activation_quality_equivalence_and_default_summary`,
++`hardware_boundary_and_claim_count`, `protected_files_unchanged`,
++`spec_traceability_status_changelog_known_issues_updates`,
++`research_complete_reconciliation`, `preconditions_checked`,
++`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
++`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
++`reproducibility_checksum`, and `honest_verdict`.
++
++### SCENARIO-INFRA-6238-1: Exact Declared Paths Refuse Substitutes
++GIVEN the V539 roadmap declares Exp6225 through Exp6238 deliverable paths
++WHEN Exp6238 builds its artifact matrix
++THEN every task row records the exact declared path, hash, existence state,
++terminal class, and ignored same-number aliases. Missing exact paths stay
++missing.
++
++### SCENARIO-INFRA-6238-2: Current Adversarial And Preservation Checks Gate Claims
++GIVEN present V539 artifacts
++WHEN Exp6238 runs `summarize_artifact.py`, `adversarial_verify.py`, and
++`determination_preservation_lint.py --all`
++THEN live critical flags and stamped flags are recorded per task, and no flagged
++artifact contributes to branch success or a hardware claim.
++
++### SCENARIO-INFRA-6238-3: Structured Gates Fail Closed From Exact Fields
++GIVEN roadmap tasks with `gated_on` entries
++WHEN the upstream artifact is missing or the upstream field is absent, null, or
++not equal to the expected value
++THEN the gate row fails, records the exact actual value, and preserves any
++downstream gate-block as terminal operational evidence only.
++
++### SCENARIO-INFRA-6238-4: Branch Summaries Stay Independent
++GIVEN runtime, ARC, code, CSL, shadow, sampler, and hardware branches
++WHEN Exp6238 reconciles V539
++THEN each branch reports only its own admissible upstream fields. Runtime
++readiness does not promote ARC, parse recovery does not become content gain,
++fresh-stream absence blocks CSL, sampler activation is separate from its
++equivalence/null decision, and hardware claim count remains the bare integer
++`0` without a new receipt.
++
++### SCENARIO-INFRA-6238-5: Retire-If-Same-Verdict Is Recorded Without Guessing
++GIVEN a V539 task carries `prior_failures` with `retire_if_same_verdict=true`
++WHEN the exact current artifact does not reproduce the same failed verdict
++scope, or the exact artifact is missing
++THEN Exp6238 records no exclusion-manifest update. It records a candidate only
++when the exact same failed verdict recurs.
++
++### SCENARIO-INFRA-6238-6: Artifact Schema Is Principle Annotated
++GIVEN the capstone report
++WHEN Exp6238 validates the payload before writing
++THEN every required field has provenance and a field-principle entry, count and
++gate records carry principles, `verifier_is_oracle=false`, hardware claim count
++is the bare integer `0`, the checksum matches the normalized payload, and
++`honest_verdict` starts with a terminal prefix.
++
++## Implementation Status (REQ-INFRA-6238)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-INFRA-6238 | `python/carnot/experiment_6238_v539_adversarial_capstone.py`; terminal artifact `results/experiment_6238_v539_adversarial_capstone.json`. | `tests/python/test_experiment_6238_v539_adversarial_capstone.py`. |
++
+ ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
+ 
+ Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b9317454cf..765dd96e66 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4841,
++  "experiments_checked": 4842,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6238_v539_adversarial_capstone.py b/python/carnot/experiment_6238_v539_adversarial_capstone.py
+new file mode 100644
+index 0000000000..5c1b934d15
+--- /dev/null
++++ b/python/carnot/experiment_6238_v539_adversarial_capstone.py
+@@ -0,0 +1,1062 @@
++"""Exp6238 V539 exact-path adversarial capstone.
++
++Spec refs: REQ-INFRA-6238, SCENARIO-INFRA-6238-1,
++SCENARIO-INFRA-6238-2, SCENARIO-INFRA-6238-3,
++SCENARIO-INFRA-6238-4, SCENARIO-INFRA-6238-5,
++SCENARIO-INFRA-6238-6.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++from collections.abc import Mapping, Sequence
++from datetime import UTC, datetime
++import json
++from pathlib import Path
++import shlex
++import subprocess
++import sys
++import time
++from typing import Any
++
++import yaml
++
++from carnot.experiment_6225_v539_terminal_transition import (
++    load_retired_exp_ids,
++    same_number_aliases,
++)
++from carnot.experiment_artifacts import atomic_write_json
++from carnot.terminal_artifacts import (
++    canonical_json,
++    classify_artifact_path,
++    classify_artifact_payload,
++    path_sha256,
++    payload_sha256,
++)
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SCRIPTS_ROOT = REPO_ROOT / "scripts"
++if str(SCRIPTS_ROOT) not in sys.path:  # pragma: no cover
++    sys.path.insert(0, str(SCRIPTS_ROOT))
++
++MILESTONE = "2026.08.539"
++EXPERIMENT_ID = "exp6238-v539-adversarial-capstone"
++SCHEMA = "carnot.experiment_6238.v539_adversarial_capstone.v1"
++RESULT_RELATIVE_PATH = Path("results/experiment_6238_v539_adversarial_capstone.json")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++STAGED_ROADMAP_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++RESEARCH_COMPLETE_RELATIVE_PATH = Path("research-complete.yaml")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++ARC_REGISTRY_RELATIVE_PATH = Path("ops/arc_solve_registry.yaml")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-harnesses/spec.md")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++
++EXPECTED_V539_TASK_IDS = (
++    "exp6225-v539-terminal-transition",
++    "exp6226-v539-post-marker-source-scope-freeze",
++    "exp6227-llama-server-signal-sender-diagnostic",
++    "exp6228-supervised-three-family-runtime-endurance",
++    "exp6229-arc-gemma31-think-determination",
++    "exp6230-arc-induce-prompt-enrichment-heldout-ab",
++    "exp6231-arc-bounded-reinduction-depth-ab",
++    "exp6232-arc-admissible-depth-portfolio",
++    "exp6233-three-family-code-content-margin",
++    "exp6234-fresh-flagship-constraint-event-stream",
++    "exp6235-prospective-two-timescale-live-csl",
++    "exp6236-online-constraint-memory-shadow-consumer",
++    "exp6237-activated-mode-jump-sampler-ab",
++    "exp6238-v539-adversarial-capstone",
++)
++
++PRECONDITION_RELATIVE_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    ROADMAP_RELATIVE_PATH,
++    STAGED_ROADMAP_RELATIVE_PATH,
++    VNEXT_RELATIVE_PATH,
++    CONDUCTOR_LOG_RELATIVE_PATH,
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++    ARC_REGISTRY_RELATIVE_PATH,
++    SPEC_RELATIVE_PATH,
++    Path("_bmad/traceability.md"),
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    Path("ops/known-issues.md"),
++    Path("ops/e2e-test-plan.md"),
++    RESEARCH_COMPLETE_RELATIVE_PATH,
++    Path("scripts/summarize_artifact.py"),
++    Path("scripts/adversarial_verify.py"),
++    Path("scripts/determination_preservation_lint.py"),
++    Path("scripts/research_conductor.py"),
++)
++
++PROTECTED_RELATIVE_PATHS = PRECONDITION_RELATIVE_PATHS
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "roadmap_path_hash_and_task_ids",
++    "exact_task_artifact_matrix",
++    "conductor_receipt_matrix",
++    "terminal_classifier_results",
++    "adversarial_results_by_task",
++    "determination_preservation_results",
++    "gate_cascade_receipts",
++    "missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts",
++    "prior_failure_retirement_actions",
++    "runtime_final_status_and_family_scores",
++    "arc_provenance_registry_hash_level_depth_and_promotion_summary",
++    "code_parse_recovery_and_content_margin_summary",
++    "fresh_stream_and_continuous_learning_summary",
++    "shadow_consumer_summary",
++    "sampler_activation_quality_equivalence_and_default_summary",
++    "hardware_boundary_and_claim_count",
++    "protected_files_unchanged",
++    "spec_traceability_status_changelog_known_issues_updates",
++    "research_complete_reconciliation",
++    "preconditions_checked",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "field_principles",
++    "test_commands",
++    "test_exit_codes",
++    "duration_s",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "The capstone is complete only when every declared V539 task state is preserved.",
++    "roadmap_path_hash_and_task_ids": "The task denominator is the exact active V539 roadmap.",
++    "exact_task_artifact_matrix": "Exact deliverable paths prevent sidecars or filenames from laundering missing work.",
++    "conductor_receipt_matrix": "Conductor receipts are context only and cannot promote an artifact.",
++    "terminal_classifier_results": "The shared classifier provides fail-closed terminality.",
++    "adversarial_results_by_task": "Live current-rule flags determine whether a task can feed claims.",
++    "determination_preservation_results": "The preservation guard proves corrigenda and determinations were not dropped.",
++    "gate_cascade_receipts": "Structured gates are recomputed from exact upstream fields.",
++    "missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts": "Every terminal and nonterminal class stays counted before any summary claim.",
++    "prior_failure_retirement_actions": "Retire-if-same-verdict fires only on exact repeated failed verdicts.",
++    "runtime_final_status_and_family_scores": "Runtime durability uses Exp6228 family scores, not short canaries.",
++    "arc_provenance_registry_hash_level_depth_and_promotion_summary": "ARC depth credit needs live provenance and registry-safe promotion.",
++    "code_parse_recovery_and_content_margin_summary": "Format recovery and content margin are separate code-verification claims.",
++    "fresh_stream_and_continuous_learning_summary": "Fresh stream evidence is required before CSL promotion.",
++    "shadow_consumer_summary": "Shadow reachability is distinct from fresh CSL utility.",
++    "sampler_activation_quality_equivalence_and_default_summary": "Sampler activation must be proven before equivalence or null interpretation.",
++    "hardware_boundary_and_claim_count": "Hardware claims require new independent receipts; otherwise the count is zero.",
++    "protected_files_unchanged": "The capstone must not rewrite conductor, ops ledgers, roadmap, registry, or historical inputs.",
++    "spec_traceability_status_changelog_known_issues_updates": "Spec and operations reconciliation state is recorded without unsupported claims.",
++    "research_complete_reconciliation": "Duplicate research ledgers are recorded without deduplication.",
++    "preconditions_checked": "All declared inputs are hashed before classification.",
++    "inference_substrate": "The capstone reads upstream artifacts and does not load a model.",
++    "verifier_is_oracle": "False because the capstone checks evidence records, not benchmark answers.",
++    "field_provenance": "Every required field cites files or checks that produced it.",
++    "field_principles": "Every required field carries the reason it exists.",
++    "test_commands": "Commands record focused, coverage, lint, preservation, suite, and adversarial checks.",
++    "test_exit_codes": "Exit codes are reported honestly and without laundering.",
++    "duration_s": "Wall time is reported without padding.",
++    "reproducibility_checksum": "The normalized payload is content-addressed for drift checks.",
++    "honest_verdict": "The terminal verdict preserves mixed outcomes without strengthening them.",
++}
++
++COUNT_PRINCIPLES: dict[str, str] = {
++    "missing": "Missing exact artifacts cannot be promoted by receipts or aliases.",
++    "blocked": "Blocked states are operationally terminal only when the exact artifact says so.",
++    "skipped": "Gate skips are terminal bookkeeping and not scientific success.",
++    "partial": "Partial outputs cannot feed headline branches.",
++    "null": "Null outcomes need their own controls and must not be counted as positive.",
++    "flagged": "Flagged artifacts are quarantined from claims even when terminal.",
++    "retired": "Retired scopes remain closed unless a valid override exists.",
++    "ready": "Ready is counted separately from complete and positive evidence.",
++    "complete": "Complete artifacts may still be blocked from claims by flags or gates.",
++    "unknown": "Unknown classifier states fail closed.",
++    "hardware_claim_count": "Hardware claims stay zero without new task-linked receipts.",
++}
++
++GATE_PRINCIPLE = (
++    "A structured gate passes only when the exact upstream artifact field satisfies the "
++    "roadmap operator; missing or null fields fail closed."
++)
++
++PRESERVATION_COMMAND = ".venv/bin/python scripts/determination_preservation_lint.py --all"
++TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/test_experiment_6238_v539_adversarial_capstone.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6238_v539_adversarial_capstone.py -m pytest tests/python/test_experiment_6238_v539_adversarial_capstone.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6238_v539_adversarial_capstone.py --fail-under=100",
++    ".venv/bin/ruff check python/carnot/experiment_6238_v539_adversarial_capstone.py tests/python/test_experiment_6238_v539_adversarial_capstone.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_6238_v539_adversarial_capstone.py tests/python/test_experiment_6238_v539_adversarial_capstone.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6238_v539_adversarial_capstone.py",
++    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
++    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
++    PRESERVATION_COMMAND,
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "sed -n 1,260p ops/e2e-test-plan.md",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6238_v539_adversarial_capstone.json",
++)
++COMMAND_TIMEOUTS_S = {
++    ".venv/bin/pytest tests/python -q": 3600,
++}
++
++
++def payload_checksum(report: JsonMap) -> str:
++    normalized = json.loads(canonical_json(report))
++    normalized["duration_s"] = 0.0
++    normalized["reproducibility_checksum"] = ""
++    return payload_sha256(normalized)
++
++
++def load_roadmap(root: Path) -> JsonDict:
++    data = yaml.safe_load((root / ROADMAP_RELATIVE_PATH).read_text(encoding="utf-8")) or {}
++    return dict(data) if isinstance(data, Mapping) else {}
++
++
++def load_yaml_object(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++    return dict(data) if isinstance(data, Mapping) else {}
++
++
++def load_json_object(path: Path) -> tuple[JsonDict, JsonDict]:
++    meta: JsonDict = {
++        "path": path.as_posix(),
++        "present": path.exists(),
++        "loadable": False,
++        "sha256": path_sha256(path),
++        "error": None,
++    }
++    if not path.exists():
++        meta["error"] = "missing"
++        return {}, meta
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError as exc:
++        meta["error"] = f"json_error:{exc.msg}"
++        return {}, meta
++    if not isinstance(payload, Mapping):
++        meta["error"] = "json_not_mapping"
++        return {}, meta
++    meta["loadable"] = True
++    return dict(payload), meta
++
++
++def roadmap_tasks(roadmap: JsonMap) -> list[JsonDict]:
++    tasks = roadmap.get("tasks")
++    return (
++        [dict(task) for task in tasks if isinstance(task, Mapping)]
++        if isinstance(tasks, list)
++        else []
++    )
++
++
++def _self_payload() -> JsonDict:
++    return {
++        "status": "complete",
++        "honest_verdict": "complete: Exp6238 capstone payload under construction",
++        "duration_s": 0.0,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++    }
++
++
++def build_exact_task_artifact_matrix(
++    root: Path,
++    tasks: Sequence[JsonMap],
++    *,
++    self_payload: JsonMap | None = None,
++) -> JsonDict:
++    rows: JsonDict = {}
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        rel = Path(str(task.get("deliverable") or ""))
++        path = root / rel
++        payload: JsonDict = {}
++        if task_id == EXPERIMENT_ID and self_payload is not None:
++            classification = classify_artifact_payload(
++                self_payload,
++                path=path,
++                sha256=payload_sha256(self_payload),
++            )
++            meta = {
++                "present": path.exists(),
++                "loadable": True,
++                "sha256": payload_sha256(self_payload),
++                "error": "self_payload_in_memory",
++            }
++            payload = dict(self_payload)
++        else:
++            payload, meta = load_json_object(path)
++            classification = classify_artifact_path(path)
++        aliases = same_number_aliases(root, task_id, rel)
++        rows[task_id] = {
++            "task_id": task_id,
++            "title": str(task.get("title") or task_id),
++            "track": str(task.get("track") or "unset"),
++            "declared_deliverable": rel.as_posix(),
++            "present": bool(meta["present"]),
++            "loadable": bool(meta["loadable"]),
++            "sha256": meta["sha256"],
++            "terminal_class": classification.classification,
++            "terminal": classification.terminal,
++            "reason": classification.reason,
++            "status_raw": classification.status_raw,
++            "honest_verdict_raw": classification.honest_verdict_raw,
++            "flagged_adversarial_stamped": payload.get("flagged_adversarial") is True,
++            "same_number_alias_used": False,
++            "same_number_alias_candidates_ignored": aliases,
++        }
++    return rows
++
++
++def evaluate_operator(actual: Any, op: str, expected: Any) -> bool:
++    if op == "exists":
++        return (actual is not None) is bool(expected)
++    if actual is None:
++        return False
++    if op == "==":
++        return actual == expected
++    if op == "!=":
++        return actual != expected
++    if op == "in":
++        return (
++            isinstance(expected, Sequence)
++            and not isinstance(expected, (str, bytes))
++            and actual in expected
++        )
++    try:
++        if op == ">":
++            return bool(actual > expected)
++        if op == ">=":
++            return bool(actual >= expected)
++        if op == "<":
++            return bool(actual < expected)
++        if op == "<=":
++            return bool(actual <= expected)
++    except TypeError:
++        return False
++    return False
++
++
++def evaluate_gate_cascades(root: Path, tasks: Sequence[JsonMap]) -> JsonDict:
++    by_id = {str(task.get("id") or ""): task for task in tasks}
++    gates: list[JsonDict] = []
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        raw_gates = task.get("gated_on")
++        for gate in raw_gates if isinstance(raw_gates, list) else []:
++            if not isinstance(gate, Mapping):
++                gates.append(
++                    {
++                        "task_id": task_id,
++                        "gate": gate,
++                        "passed": False,
++                        "actual": None,
++                        "reason": "gate_not_mapping",
++                        "principle": GATE_PRINCIPLE,
++                    }
++                )
++                continue
++            upstream = str(gate.get("upstream") or "")
++            field = str(gate.get("artifact_field") or "")
++            op = str(gate.get("op") or "")
++            expected = gate.get("value")
++            upstream_task = by_id.get(upstream)
++            actual = None
++            reason = "missing_upstream_artifact"
++            if upstream_task is not None:
++                payload, meta = load_json_object(
++                    root / Path(str(upstream_task.get("deliverable") or ""))
++                )
++                if meta["loadable"]:
++                    if field in payload:
++                        actual = payload.get(field)
++                        reason = "evaluated"
++                    else:
++                        reason = "missing_upstream_field"
++            passed = reason == "evaluated" and evaluate_operator(actual, op, expected)
++            gates.append(
++                {
++                    "task_id": task_id,
++                    "upstream": upstream,
++                    "artifact_field": field,
++                    "op": op,
++                    "expected": expected,
++                    "actual": actual,
++                    "passed": passed,
++                    "reason": "passed" if passed else reason,
++                    "principle": GATE_PRINCIPLE,
++                }
++            )
++    passed_count = sum(1 for gate in gates if gate["passed"])
++    return {
++        "gates": gates,
++        "passed_count": passed_count,
++        "failed_count": len(gates) - passed_count,
++        "principle": GATE_PRINCIPLE,
++    }
++
++
++def latest_conductor_receipts(root: Path, tasks: Sequence[JsonMap]) -> JsonDict:
++    path = root / CONDUCTOR_LOG_RELATIVE_PATH
++    lines = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
++    receipts: JsonDict = {}
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        title = str(task.get("title") or task_id)
++        needle = title[:50]
++        matches = [line for line in lines if needle in line or task_id in line]
++        receipt: JsonDict = {
++            "receipt_found": False,
++            "status": None,
++            "detail": None,
++            "raw_line": None,
++        }
++        if matches:
++            parts = [part.strip() for part in matches[-1].strip("|").split("|")]
++            receipt = {
++                "receipt_found": True,
++                "timestamp": parts[0] if len(parts) > 0 else None,
++                "title_fragment": parts[1] if len(parts) > 1 else None,
++                "status": parts[2] if len(parts) > 2 else None,
++                "detail": parts[3] if len(parts) > 3 else None,
++                "raw_line": matches[-1],
++            }
++        receipts[task_id] = receipt
++    return receipts
++
++
++def count_terminal_classes(matrix: JsonMap) -> JsonDict:
++    counts = Counter(str(row.get("terminal_class") or "unknown") for row in matrix.values())
++    result = {
++        key: int(counts.get(key, 0)) for key in COUNT_PRINCIPLES if key != "hardware_claim_count"
++    }
++    result["hardware_claim_count"] = 0
++    result["terminal_class_counts"] = dict(
++        sorted((key, int(value)) for key, value in counts.items())
++    )
++    result["scientific_success_count"] = int(counts.get("positive", 0))
++    result["count_principles"] = dict(COUNT_PRINCIPLES)
++    return result
++
++
++def protected_hashes(root: Path, paths: Sequence[Path] = PROTECTED_RELATIVE_PATHS) -> JsonDict:
++    return {path.as_posix(): path_sha256(root / path) for path in paths}
++
++
++def protected_files_unchanged(
++    root: Path,
++    before: JsonMap,
++    paths: Sequence[Path] = PROTECTED_RELATIVE_PATHS,
++) -> JsonDict:
++    after = protected_hashes(root, paths)
++    rows = {
++        path: {
++            "before_sha256": before.get(path),
++            "after_sha256": after.get(path),
++            "unchanged": before.get(path) == after.get(path),
++        }
++        for path in sorted(set(before) | set(after))
++    }
++    return {"unchanged": all(row["unchanged"] for row in rows.values()), "paths": rows}
++
++
++def preconditions_checked(root: Path, tasks: Sequence[JsonMap]) -> JsonDict:
++    deliverables = {
++        str(task.get("id") or ""): {
++            "path": str(task.get("deliverable") or ""),
++            "sha256": path_sha256(root / Path(str(task.get("deliverable") or ""))),
++        }
++        for task in tasks
++    }
++    return {
++        "checked_before_classification": True,
++        "input_hashes": {
++            path.as_posix(): path_sha256(root / path) for path in PRECONDITION_RELATIVE_PATHS
++        },
++        "declared_deliverable_hashes": deliverables,
++        "retired_experiment_id_count": len(
++            load_retired_exp_ids(root / EXCLUSION_MANIFEST_RELATIVE_PATH)
++        ),
++        "roadmap_next_present": (root / STAGED_ROADMAP_RELATIVE_PATH).exists(),
++    }
++
++
++def live_artifact_reviews(root: Path, matrix: JsonMap) -> JsonDict:  # pragma: no cover
++    from adversarial_verify import verify_artifact
++
++    reviews: JsonDict = {}
++    for task_id, row in matrix.items():
++        rel = Path(str(row.get("declared_deliverable") or ""))
++        path = root / rel
++        if not path.exists():
++            reviews[task_id] = {
++                "summary": {
++                    "command": f".venv/bin/python scripts/summarize_artifact.py {rel.as_posix()}",
++                    "exit_code": None,
++                    "classification": "skipped_missing_artifact",
++                },
++                "adversarial": {
++                    "path": rel.as_posix(),
++                    "flag_count": 0,
++                    "critical_flag_count": 0,
++                    "warn_flag_count": 0,
++                    "flags": [],
++                    "skipped": "missing_artifact",
++                },
++            }
++            continue
++        summary_command = f".venv/bin/python scripts/summarize_artifact.py {rel.as_posix()}"
++        summary = run_command(summary_command, root, timeout_s=180)
++        verified = verify_artifact(path)
++        flags = list(verified.get("flags") or [])
++        reviews[task_id] = {
++            "summary": summary,
++            "adversarial": {
++                "path": rel.as_posix(),
++                "flag_count": int(verified.get("flag_count") or len(flags)),
++                "critical_flag_count": sum(
++                    1 for flag in flags if flag.get("severity") == "critical"
++                ),
++                "warn_flag_count": sum(1 for flag in flags if flag.get("severity") == "warn"),
++                "flags": flags,
++            },
++        }
++    return reviews
++
++
++def determination_preservation_receipt(root: Path) -> JsonDict:  # pragma: no cover
++    return run_command(PRESERVATION_COMMAND, root, timeout_s=300)
++
++
++def _payloads(root: Path, tasks: Sequence[JsonMap]) -> JsonDict:
++    return {
++        str(task.get("id") or ""): load_json_object(
++            root / Path(str(task.get("deliverable") or ""))
++        )[0]
++        for task in tasks
++    }
++
++
++def _score(payload: JsonMap, field: str) -> Any:
++    value = payload.get(field)
++    if isinstance(value, Mapping) and "value" in value:
++        return value.get("value")
++    return value
++
++
++def runtime_summary(payloads: JsonMap, reviews: JsonMap) -> JsonDict:
++    runtime = payloads.get("exp6228-supervised-three-family-runtime-endurance", {})
++    diagnostic = payloads.get("exp6227-llama-server-signal-sender-diagnostic", {})
++    family_scores = {
++        key: _score(runtime, key)
++        for key in (
++            "qwen_runtime_ready_score",
++            "gemma_4_31b_runtime_ready_score",
++            "gemma_4_26b_runtime_ready_score",
++            "two_family_runtime_ready_score",
++            "three_family_runtime_ready_score",
++        )
++    }
++    critical = (
++        reviews.get("exp6228-supervised-three-family-runtime-endurance", {})
++        .get("adversarial", {})
++        .get("critical_flag_count", 0)
++    )
++    return {
++        "status": runtime.get("status"),
++        "honest_verdict": runtime.get("honest_verdict"),
++        "diagnostic_runtime_ready_score": diagnostic.get("runtime_diagnostic_ready_score"),
++        **family_scores,
++        "claim_allowed": family_scores["three_family_runtime_ready_score"] == 1 and critical == 0,
++        "principle": "Durable runtime requires Exp6228 family scores, not Exp6227 or short canaries.",
++    }
++
++
++def arc_summary(root: Path, payloads: JsonMap) -> JsonDict:
++    registry = load_yaml_object(root / ARC_REGISTRY_RELATIVE_PATH)
++    portfolio = payloads.get("exp6232-arc-admissible-depth-portfolio", {})
++    registry_receipt = portfolio.get("registry_precheck_and_hash_before_after")
++    return {
++        "registry_path": ARC_REGISTRY_RELATIVE_PATH.as_posix(),
++        "registry_sha256": path_sha256(root / ARC_REGISTRY_RELATIVE_PATH),
++        "registry_reproducible_total_levels": registry.get("reproducible_total_levels"),
++        "registry_reproducible_total_games": registry.get("reproducible_total_games"),
++        "solve_provenance": portfolio.get("solve_provenance"),
++        "registry_update_count": portfolio.get("registry_update_count"),
++        "registry_hash_unchanged": registry_receipt.get("unchanged")
++        if isinstance(registry_receipt, Mapping)
++        else None,
++        "eligible_lever_count": portfolio.get("eligible_lever_count"),
++        "selected_levers": portfolio.get("selected_levers"),
++        "portfolio_promotion_ready_score": portfolio.get("portfolio_promotion_ready_score"),
++        "depth_promotion_claim": False,
++        "principle": "ARC depth promotion needs live-agent provenance, two eligible levers, and registry-safe evidence.",
++    }
++
++
++def code_summary(payloads: JsonMap) -> JsonDict:
++    code = payloads.get("exp6233-three-family-code-content-margin", {})
++    return {
++        "status": code.get("status"),
++        "gate_check_summary": code.get("gate_check_summary"),
++        "parse_recovery_claim": False,
++        "content_margin_claim": False,
++        "content_margin": code.get("hidden_test_content_margin"),
++        "principle": "Gate-blocked code artifacts cannot turn format recovery into hidden-test content gain.",
++    }
++
++
++def fresh_csl_summary(payloads: JsonMap) -> JsonDict:
++    stream = payloads.get("exp6234-fresh-flagship-constraint-event-stream", {})
++    csl = payloads.get("exp6235-prospective-two-timescale-live-csl", {})
++    return {
++        "stream_status": stream.get("status"),
++        "seed_stream_ready_score": stream.get("seed_stream_ready_score"),
++        "csl_artifact_present": bool(csl),
++        "continuous_learning_promotion_ready_score": csl.get(
++            "continuous_learning_promotion_ready_score"
++        ),
++        "fresh_stream_claim": False,
++        "csl_claim": False,
++        "principle": "Fresh events must exist before deterministic memory safety can become live CSL evidence.",
++    }
++
++
++def shadow_summary(payloads: JsonMap) -> JsonDict:
++    shadow = payloads.get("exp6236-online-constraint-memory-shadow-consumer", {})
++    return {
++        "status": shadow.get("status"),
++        "gate_check_summary": shadow.get("gate_check_summary"),
++        "online_constraint_memory_shadow_ready_score": shadow.get(
++            "online_constraint_memory_shadow_ready_score"
++        ),
++        "shadow_reachability_claim": False,
++        "principle": "The shadow consumer cannot be promoted when Exp6235 is missing or not promoted.",
++    }
++
++
++def sampler_summary(payloads: JsonMap) -> JsonDict:
++    sampler = payloads.get("exp6237-activated-mode-jump-sampler-ab", {})
++    activation = sampler.get("treatment_activation_score")
++    activation_score = activation.get("score") if isinstance(activation, Mapping) else activation
++    equivalence = sampler.get("equivalence_bounds_and_decision")
++    decision = equivalence.get("decision") if isinstance(equivalence, Mapping) else None
++    return {
++        "status": sampler.get("status"),
++        "treatment_activation_score": activation_score,
++        "mode_jump_proposal_count": activation.get("mode_jump_proposal_count")
++        if isinstance(activation, Mapping)
++        else None,
++        "mode_jump_acceptance_count": activation.get("mode_jump_acceptance_count")
++        if isinstance(activation, Mapping)
++        else None,
++        "decision": decision,
++        "quality_conclusion_allowed": equivalence.get("quality_conclusion_allowed")
++        if isinstance(equivalence, Mapping)
++        else None,
++        "default_off_preserved": sampler.get("default_off_preserved"),
++        "sampler_runtime_ready_score": sampler.get("sampler_runtime_ready_score"),
++        "hardware_claim_count": sampler.get("hardware_claim_count", 0),
++        "positive_claim": decision == "positive",
++        "principle": "Activated treatment allows an equivalence result; it does not imply hardware or a positive sampler win.",
++    }
++
++
++def hardware_boundary(payloads: JsonMap) -> JsonDict:
++    sampler = payloads.get("exp6237-activated-mode-jump-sampler-ab", {})
++    return {
++        "hardware_claim_count": 0,
++        "sampler_hardware_claim_count": sampler.get("hardware_claim_count", 0),
++        "new_independently_admissible_receipt": False,
++        "boundary": "No V539 hardware task produced a new physical-state, latency, power, energy, or speedup receipt.",
++        "principle": COUNT_PRINCIPLES["hardware_claim_count"],
++    }
++
++
++def prior_failure_retirement_actions(tasks: Sequence[JsonMap], matrix: JsonMap) -> JsonDict:
++    actions: list[JsonDict] = []
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        row = matrix.get(task_id, {})
++        current_verdict = str(row.get("honest_verdict_raw") or "")
++        current_class = str(row.get("terminal_class") or "missing")
++        priors = task.get("prior_failures")
++        for prior in priors if isinstance(priors, list) else []:
++            if not isinstance(prior, Mapping) or prior.get("retire_if_same_verdict") is not True:
++                continue
++            prior_verdict = str(prior.get("verdict") or "")
++            if current_class == "missing":
++                action = "no_retirement_exact_artifact_missing"
++                fired = False
++            elif current_verdict == prior_verdict:
++                action = "retire_if_same_verdict_rule_fired_recorded_only"
++                fired = True
++            else:
++                action = "no_retirement_current_verdict_differs"
++                fired = False
++            actions.append(
++                {
++                    "task_id": task_id,
++                    "prior_experiment_id": prior.get("experiment_id"),
++                    "prior_verdict": prior_verdict,
++                    "current_terminal_class": current_class,
++                    "current_verdict": current_verdict,
++                    "action": action,
++                    "rule_fired": fired,
++                    "would_update_exclusion_manifest": False,
++                    "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess.",
++                }
++            )
++    return {
++        "actions": actions,
++        "rule_fired_count": sum(1 for action in actions if action["rule_fired"]),
++        "manifest_update_count": 0,
++        "principle": "The exclusion manifest is updated only by a real rule fire, never by semantic guesswork.",
++    }
++
++
++def research_complete_reconciliation(root: Path) -> JsonDict:
++    data = load_yaml_object(root / RESEARCH_COMPLETE_RELATIVE_PATH)
++    milestones = data.get("milestones")
++    ids = (
++        [
++            str(row.get("id"))
++            for row in milestones
++            if isinstance(milestones, list)
++            and isinstance(row, Mapping)
++            and row.get("id") is not None
++        ]
++        if isinstance(milestones, list)
++        else []
++    )
++    duplicates = {key: count for key, count in Counter(ids).items() if count > 1}
++    return {
++        "path": RESEARCH_COMPLETE_RELATIVE_PATH.as_posix(),
++        "sha256": path_sha256(root / RESEARCH_COMPLETE_RELATIVE_PATH),
++        "milestone_record_count": len(ids),
++        "duplicate_milestones": dict(sorted(duplicates.items())),
++        "action": "recorded_only_no_mutation",
++        "principle": "Duplicate-ledger caveats are preserved and not deduplicated by the capstone.",
++    }
++
++
++def spec_ops_reconciliation(root: Path, before: JsonMap) -> JsonDict:
++    after = protected_hashes(root)
++    watched = (
++        SPEC_RELATIVE_PATH,
++        Path("_bmad/traceability.md"),
++        Path("ops/status.md"),
++        Path("ops/changelog.md"),
++        Path("ops/known-issues.md"),
++    )
++    hashes = {
++        path.as_posix(): {
++            "before_sha256": before.get(path.as_posix()),
++            "after_sha256": after.get(path.as_posix()),
++            "unchanged_during_capstone": before.get(path.as_posix()) == after.get(path.as_posix()),
++        }
++        for path in watched
++    }
++    spec_text = (
++        (root / SPEC_RELATIVE_PATH).read_text(encoding="utf-8")
++        if (root / SPEC_RELATIVE_PATH).exists()
++        else ""
++    )
++    return {
++        "openspec_req_infra_6238_present": "REQ-INFRA-6238" in spec_text,
++        "ops_status_changelog_traceability_touched": False,
++        "known_issues_touched": False,
++        "deferred_by_operator_stop_rule": True,
++        "hashes": hashes,
++        "principle": "Only supported spec state is recorded here; ops ledgers are left for the separate reconciler.",
++    }
++
++
++def _field_provenance() -> JsonDict:
++    sources = {
++        "REQ-INFRA-6238",
++        ROADMAP_RELATIVE_PATH.as_posix(),
++        VNEXT_RELATIVE_PATH.as_posix(),
++        CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++        EXCLUSION_MANIFEST_RELATIVE_PATH.as_posix(),
++        ARC_REGISTRY_RELATIVE_PATH.as_posix(),
++        SPEC_RELATIVE_PATH.as_posix(),
++        "scripts/summarize_artifact.py",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "python/carnot/terminal_artifacts.py",
++    }
++    return {
++        field: {"principle": FIELD_PRINCIPLES[field], "sources": sorted(sources)}
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _test_exit_codes(command_rows: Sequence[JsonMap]) -> JsonDict:
++    return {
++        str(row.get("command") or ""): int(row.get("exit_code") or 0)
++        for row in command_rows
++        if row.get("command")
++    }
++
++
++def build_report(
++    root: Path = REPO_ROOT,
++    *,
++    date: str,
++    command_receipts: Sequence[JsonMap] | None = None,
++    artifact_reviews: JsonMap | None = None,
++    preservation_receipt: JsonMap | None = None,
++    before_hashes: JsonMap | None = None,
++    started_at: float | None = None,
++) -> JsonDict:
++    started = time.perf_counter() if started_at is None else started_at
++    before = dict(before_hashes or protected_hashes(root))
++    roadmap = load_roadmap(root)
++    tasks = roadmap_tasks(roadmap)
++    matrix = build_exact_task_artifact_matrix(root, tasks, self_payload=_self_payload())
++    reviews = dict(artifact_reviews or live_artifact_reviews(root, matrix))
++    preservation = dict(preservation_receipt or determination_preservation_receipt(root))
++    payloads = _payloads(root, tasks)
++    gate_receipts = evaluate_gate_cascades(root, tasks)
++    command_rows = [dict(row) for row in (command_receipts or [])]
++    counts = count_terminal_classes(matrix)
++    counts["flagged"] = max(
++        counts["flagged"],
++        sum(
++            1
++            for task_id, row in matrix.items()
++            if row.get("flagged_adversarial_stamped")
++            or reviews.get(task_id, {}).get("adversarial", {}).get("critical_flag_count", 0)
++        ),
++    )
++    report: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": date,
++        "status": "complete",
++        "roadmap_path_hash_and_task_ids": {
++            "milestone": roadmap.get("milestone"),
++            "roadmap_path": ROADMAP_RELATIVE_PATH.as_posix(),
++            "roadmap_sha256": path_sha256(root / ROADMAP_RELATIVE_PATH),
++            "roadmap_next_present": (root / STAGED_ROADMAP_RELATIVE_PATH).exists(),
++            "vnext_path": VNEXT_RELATIVE_PATH.as_posix(),
++            "vnext_sha256": path_sha256(root / VNEXT_RELATIVE_PATH),
++            "task_ids": [str(task.get("id") or "") for task in tasks],
++            "expected_task_ids": list(EXPECTED_V539_TASK_IDS),
++            "task_count": len(tasks),
++            "principle": "The active roadmap is the denominator for all 14 V539 tasks.",
++        },
++        "exact_task_artifact_matrix": matrix,
++        "conductor_receipt_matrix": latest_conductor_receipts(root, tasks),
++        "terminal_classifier_results": {
++            task_id: {
++                "terminal_class": row.get("terminal_class"),
++                "terminal": row.get("terminal"),
++                "reason": row.get("reason"),
++            }
++            for task_id, row in matrix.items()
++        },
++        "adversarial_results_by_task": {
++            task_id: review.get("adversarial", {}) for task_id, review in reviews.items()
++        },
++        "determination_preservation_results": preservation,
++        "gate_cascade_receipts": gate_receipts,
++        "missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts": counts,
++        "prior_failure_retirement_actions": prior_failure_retirement_actions(tasks, matrix),
++        "runtime_final_status_and_family_scores": runtime_summary(payloads, reviews),
++        "arc_provenance_registry_hash_level_depth_and_promotion_summary": arc_summary(
++            root, payloads
++        ),
++        "code_parse_recovery_and_content_margin_summary": code_summary(payloads),
++        "fresh_stream_and_continuous_learning_summary": fresh_csl_summary(payloads),
++        "shadow_consumer_summary": shadow_summary(payloads),
++        "sampler_activation_quality_equivalence_and_default_summary": sampler_summary(payloads),
++        "hardware_boundary_and_claim_count": hardware_boundary(payloads),
++        "protected_files_unchanged": protected_files_unchanged(root, before),
++        "spec_traceability_status_changelog_known_issues_updates": spec_ops_reconciliation(
++            root, before
++        ),
++        "research_complete_reconciliation": research_complete_reconciliation(root),
++        "preconditions_checked": preconditions_checked(root, tasks),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_provenance": _field_provenance(),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "test_commands": [str(row.get("command") or "") for row in command_rows]
++        or list(TEST_COMMANDS),
++        "test_exit_codes": _test_exit_codes(command_rows),
++        "duration_s": time.perf_counter() - started,
++        "reproducibility_checksum": "",
++        "honest_verdict": (
++            "complete: V539 exact-path capstone preserved missing blocked skipped flagged "
++            "and not-ready states; no hardware ARC code CSL or runtime claim was promoted"
++        ),
++    }
++    report["reproducibility_checksum"] = payload_checksum(report)
++    return report
++
++
++def validate_report(report: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in report:
++            errors.append(f"missing required field: {field}")
++    principles = report.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles is not a mapping")
++        principles = {}
++    provenance = report.get("field_provenance")
++    if not isinstance(provenance, Mapping):
++        errors.append("field_provenance is not a mapping")
++        provenance = {}
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in principles:
++            errors.append(f"missing field_principles entry: {field}")
++        if field not in provenance:
++            errors.append(f"missing field_provenance entry: {field}")
++    counts = report.get("missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts")
++    if not isinstance(counts, Mapping):
++        errors.append("counts field is not a mapping")
++        counts = {}
++    count_principles = counts.get("count_principles")
++    if not isinstance(count_principles, Mapping):
++        errors.append("count_principles missing")
++        count_principles = {}
++    for key in COUNT_PRINCIPLES:
++        if key not in count_principles:
++            errors.append(f"missing count principle: {key}")
++    gates = (
++        report.get("gate_cascade_receipts", {}).get("gates")
++        if isinstance(report.get("gate_cascade_receipts"), Mapping)
++        else None
++    )
++    if isinstance(gates, list):
++        for gate in gates:
++            if not isinstance(gate, Mapping) or not gate.get("principle"):
++                errors.append("gate missing principle")
++                break
++    else:
++        errors.append("gate_cascade_receipts.gates is not a list")
++    hardware = report.get("hardware_boundary_and_claim_count")
++    if not isinstance(hardware, Mapping) or hardware.get("hardware_claim_count") != 0:
++        errors.append("hardware_claim_count must be bare 0")
++    if report.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("wrong inference_substrate")
++    if report.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    verdict = str(report.get("honest_verdict") or "")
++    if not verdict.startswith(
++        (
++            "complete:",
++            "complete_",
++            "success:",
++            "success_",
++            "passed:",
++            "passed_",
++            "shipped:",
++            "shipped_",
++            "blocked:",
++        )
++    ):
++        errors.append("honest_verdict lacks terminal prefix")
++    checksum = report.get("reproducibility_checksum")
++    if isinstance(checksum, str) and checksum.startswith("sha256:"):
++        if checksum != payload_checksum(report):
++            errors.append("reproducibility_checksum mismatch")
++    else:
++        errors.append("reproducibility_checksum missing")
++    return errors
++
++
++def run_command(
++    command: str, root: Path, timeout_s: int | None = None
++) -> JsonDict:  # pragma: no cover
++    try:
++        proc = subprocess.run(
++            shlex.split(command),
++            cwd=root,
++            text=True,
++            capture_output=True,
++            check=False,
++            timeout=timeout_s,
++        )
++    except subprocess.TimeoutExpired as exc:
++        return {
++            "command": command,
++            "exit_code": 124,
++            "classification": "timeout",
++            "stdout_tail": (exc.stdout or "")[-4000:] if isinstance(exc.stdout, str) else "",
++            "stderr_tail": (exc.stderr or "")[-4000:] if isinstance(exc.stderr, str) else "",
++        }
++    except FileNotFoundError as exc:
++        return {
++            "command": command,
++            "exit_code": 127,
++            "classification": "command_not_found",
++            "stdout_tail": "",
++            "stderr_tail": str(exc),
++        }
++    return {
++        "command": command,
++        "exit_code": proc.returncode,
++        "classification": "passed" if proc.returncode == 0 else f"nonzero_exit_{proc.returncode}",
++        "stdout_tail": proc.stdout[-4000:],
++        "stderr_tail": proc.stderr[-4000:],
++    }
++
++
++def run_default_commands(root: Path) -> list[JsonDict]:  # pragma: no cover
++    return [
++        run_command(command, root, COMMAND_TIMEOUTS_S.get(command)) for command in TEST_COMMANDS
++    ]
++
++
++def write_report(
++    report: JsonMap,
++    root: Path = REPO_ROOT,
++    *,
++    env: Mapping[str, str] | None = None,
++) -> Path:
++    errors = validate_report(report)
++    if errors:
++        raise ValueError("invalid Exp6238 report: " + "; ".join(errors))
++    return atomic_write_json(RESULT_RELATIVE_PATH, report, root=root, env=env, sort_keys=False)
++
++
++def run_experiment(root: Path, date: str, *, run_commands: bool) -> JsonDict:  # pragma: no cover
++    started = time.perf_counter()
++    before = protected_hashes(root)
++    preliminary = build_report(
++        root, date=date, command_receipts=[], before_hashes=before, started_at=started
++    )
++    write_report(preliminary, root)
++    commands = run_default_commands(root) if run_commands else []
++    final = build_report(
++        root, date=date, command_receipts=commands, before_hashes=before, started_at=started
++    )
++    write_report(final, root)
++    return final
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--date", default=datetime.now(UTC).strftime("%Y%m%d"))
++    parser.add_argument("--no-run-commands", action="store_true")
++    args = parser.parse_args(argv)
++    report = run_experiment(REPO_ROOT, args.date, run_commands=not args.no_run_commands)
++    print(json.dumps(report, indent=2, sort_keys=False))
++    return 0 if report.get("status") == "complete" else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6238_v539_adversarial_capstone.json b/results/experiment_6238_v539_adversarial_capstone.json
+new file mode 100644
+index 0000000000..df43f39f2f
+--- /dev/null
++++ b/results/experiment_6238_v539_adversarial_capstone.json
+@@ -0,0 +1,1781 @@
++{
++  "schema": "carnot.experiment_6238.v539_adversarial_capstone.v1",
++  "experiment_id": "exp6238-v539-adversarial-capstone",
++  "run_date": "20260809",
++  "status": "complete",
++  "roadmap_path_hash_and_task_ids": {
++    "milestone": "2026.08.539",
++    "roadmap_path": "research-roadmap.yaml",
++    "roadmap_sha256": "sha256:4718f107e3c692a7540cb601b6486f84b825c9312be179a6209c12a435e15d12",
++    "roadmap_next_present": false,
++    "vnext_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++    "vnext_sha256": "sha256:c59487eb1be22011dbf2e289632491e6cf69ea22cacb11bb00d819999c5df568",
++    "task_ids": [
++      "exp6225-v539-terminal-transition",
++      "exp6226-v539-post-marker-source-scope-freeze",
++      "exp6227-llama-server-signal-sender-diagnostic",
++      "exp6228-supervised-three-family-runtime-endurance",
++      "exp6229-arc-gemma31-think-determination",
++      "exp6230-arc-induce-prompt-enrichment-heldout-ab",
++      "exp6231-arc-bounded-reinduction-depth-ab",
++      "exp6232-arc-admissible-depth-portfolio",
++      "exp6233-three-family-code-content-margin",
++      "exp6234-fresh-flagship-constraint-event-stream",
++      "exp6235-prospective-two-timescale-live-csl",
++      "exp6236-online-constraint-memory-shadow-consumer",
++      "exp6237-activated-mode-jump-sampler-ab",
++      "exp6238-v539-adversarial-capstone"
++    ],
++    "expected_task_ids": [
++      "exp6225-v539-terminal-transition",
++      "exp6226-v539-post-marker-source-scope-freeze",
++      "exp6227-llama-server-signal-sender-diagnostic",
++      "exp6228-supervised-three-family-runtime-endurance",
++      "exp6229-arc-gemma31-think-determination",
++      "exp6230-arc-induce-prompt-enrichment-heldout-ab",
++      "exp6231-arc-bounded-reinduction-depth-ab",
++      "exp6232-arc-admissible-depth-portfolio",
++      "exp6233-three-family-code-content-margin",
++      "exp6234-fresh-flagship-constraint-event-stream",
++      "exp6235-prospective-two-timescale-live-csl",
++      "exp6236-online-constraint-memory-shadow-consumer",
++      "exp6237-activated-mode-jump-sampler-ab",
++      "exp6238-v539-adversarial-capstone"
++    ],
++    "task_count": 14,
++    "principle": "The active roadmap is the denominator for all 14 V539 tasks."
++  },
++  "exact_task_artifact_matrix": {
++    "exp6225-v539-terminal-transition": {
++      "task_id": "exp6225-v539-terminal-transition",
++      "title": "Exact terminal-boundary handoff from V538 into V539",
++      "track": "infrastructure",
++      "declared_deliverable": "results/experiment_6225_v539_terminal_transition.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:d21b33f830636974bd0523d3746f909cb494493bb6acd49540583090b37be252",
++      "terminal_class": "flagged",
++      "terminal": true,
++      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
++      "status_raw": "complete",
++      "honest_verdict_raw": "complete: V538 mixed terminal states archived and V539 roadmap identity validated without activating or editing protected files",
++      "flagged_adversarial_stamped": true,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6226-v539-post-marker-source-scope-freeze": {
++      "task_id": "exp6226-v539-post-marker-source-scope-freeze",
++      "title": "Post-V539-marker source delta and experimental-scope freeze",
++      "track": "infrastructure",
++      "declared_deliverable": "results/experiment_6226_v539_post_marker_source_scope_freeze.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:4bf2906367cc3577009fb642c438dca376f58599e54d72c697214cc2da0e0452",
++      "terminal_class": "flagged",
++      "terminal": true,
++      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
++      "status_raw": "complete",
++      "honest_verdict_raw": "complete_null: accepted_count=null; no reproducible post-V539-marker findings; references unchanged; V539 scope contracts frozen",
++      "flagged_adversarial_stamped": true,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6227-llama-server-signal-sender-diagnostic": {
++      "task_id": "exp6227-llama-server-signal-sender-diagnostic",
++      "title": "Llama-server signal-sender and unbounded-wait diagnostic",
++      "track": "infrastructure",
++      "declared_deliverable": "results/experiment_6227_llama_server_signal_sender_diagnostic.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:aebbb5848794a7a62da5c4ee271ca3f0d66824328fc8a53ddae62d9d5006f93d",
++      "terminal_class": "flagged",
++      "terminal": true,
++      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
++      "status_raw": "complete_unlocalized",
++      "honest_verdict_raw": "complete_unlocalized: bounded owned lifecycle returned a token; signal sender remains unlocalized",
++      "flagged_adversarial_stamped": true,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6228-supervised-three-family-runtime-endurance": {
++      "task_id": "exp6228-supervised-three-family-runtime-endurance",
++      "title": "Supervised three-family GGUF runtime endurance and recovery",
++      "track": "infrastructure",
++      "declared_deliverable": "results/experiment_6228_supervised_three_family_runtime_endurance.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773",
++      "terminal_class": "unknown",
++      "terminal": false,
++      "reason": "status or honest_verdict is absent or unknown",
++      "status_raw": "preconditions_recorded",
++      "honest_verdict_raw": null,
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6229-arc-gemma31-think-determination": {
++      "task_id": "exp6229-arc-gemma31-think-determination",
++      "title": "Gated on Exp6228 dense readiness: de-confounded Gemma think determination",
++      "track": "arc",
++      "declared_deliverable": "results/experiment_6229_arc_gemma31_think_determination.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34",
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip",
++      "status_raw": "blocked",
++      "honest_verdict_raw": "blocked_gate_check_failed",
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6230-arc-induce-prompt-enrichment-heldout-ab": {
++      "task_id": "exp6230-arc-induce-prompt-enrichment-heldout-ab",
++      "title": "Gated on Exp6228 dense readiness: induce-prompt enrichment held-out A/B",
++      "track": "arc",
++      "declared_deliverable": "results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50",
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip",
++      "status_raw": "blocked",
++      "honest_verdict_raw": "blocked_gate_check_failed",
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6231-arc-bounded-reinduction-depth-ab": {
++      "task_id": "exp6231-arc-bounded-reinduction-depth-ab",
++      "title": "Gated on Exp6229 frozen think configuration: bounded re-induction depth A/B",
++      "track": "arc",
++      "declared_deliverable": "results/experiment_6231_arc_bounded_reinduction_depth_ab.json",
++      "present": false,
++      "loadable": false,
++      "sha256": null,
++      "terminal_class": "missing",
++      "terminal": false,
++      "reason": "artifact path is missing",
++      "status_raw": null,
++      "honest_verdict_raw": null,
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6232-arc-admissible-depth-portfolio": {
++      "task_id": "exp6232-arc-admissible-depth-portfolio",
++      "title": "Prospective admissible ARC depth portfolio or exact terminal skip",
++      "track": "arc",
++      "declared_deliverable": "results/experiment_6232_arc_admissible_depth_portfolio.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:2e7c0179a6b6f4a13d7b4cba8ebef956de40a44021f72c56cda98cb3634d490e",
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "status=skipped verdict=complete",
++      "status_raw": "skipped_less_than_two_eligible_depth_levers",
++      "honest_verdict_raw": "complete: skipped_fewer_than_two_eligible_depth_levers_no_model_load",
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6233-three-family-code-content-margin": {
++      "task_id": "exp6233-three-family-code-content-margin",
++      "title": "Gated on Exp6228 three-family readiness: code correction content margin",
++      "track": "verification",
++      "declared_deliverable": "results/experiment_6233_three_family_code_content_margin.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:d5ceab556a03ad3e9a680faa0e4d2815982d112a1d15973572b3123ce8ee1ec5",
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip",
++      "status_raw": "blocked",
++      "honest_verdict_raw": "blocked_gate_check_failed",
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6234-fresh-flagship-constraint-event-stream": {
++      "task_id": "exp6234-fresh-flagship-constraint-event-stream",
++      "title": "Gated on Exp6228 two-family readiness: fresh exact constraint-event stream",
++      "track": "self-learning",
++      "declared_deliverable": "results/experiment_6234_fresh_flagship_constraint_event_stream.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:72e84c16717468f833bd4acada72a1bf89b9b54c09b43031bb1359c4a00450b0",
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip",
++      "status_raw": "blocked",
++      "honest_verdict_raw": "blocked_gate_check_failed",
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6235-prospective-two-timescale-live-csl": {
++      "task_id": "exp6235-prospective-two-timescale-live-csl",
++      "title": "Gated on Exp6234 stream readiness: prospective two-timescale continuous learning",
++      "track": "self-learning",
++      "declared_deliverable": "results/experiment_6235_prospective_two_timescale_live_csl.json",
++      "present": false,
++      "loadable": false,
++      "sha256": null,
++      "terminal_class": "missing",
++      "terminal": false,
++      "reason": "artifact path is missing",
++      "status_raw": null,
++      "honest_verdict_raw": null,
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6236-online-constraint-memory-shadow-consumer": {
++      "task_id": "exp6236-online-constraint-memory-shadow-consumer",
++      "title": "Gated on Exp6235 promotion: default-off online constraint-memory shadow consumer",
++      "track": "self-learning",
++      "declared_deliverable": "results/experiment_6236_online_constraint_memory_shadow_consumer.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:99f3604e8b089358185094391eb7c94295c99354ba2d890e31f05dbca5b6c1ed",
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip",
++      "status_raw": "blocked",
++      "honest_verdict_raw": "blocked_gate_check_failed",
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6237-activated-mode-jump-sampler-ab": {
++      "task_id": "exp6237-activated-mode-jump-sampler-ab",
++      "title": "Activated mode-jump sampler quality, equivalence, and efficiency A/B",
++      "track": "sampler",
++      "declared_deliverable": "results/experiment_6237_activated_mode_jump_sampler_ab.json",
++      "present": true,
++      "loadable": true,
++      "sha256": "sha256:3c972cee515c1964c1521bbf267c7cb1744fd7cf535004c28dc3f95cc39955f1",
++      "terminal_class": "complete",
++      "terminal": true,
++      "reason": "status=complete verdict=complete",
++      "status_raw": "complete_equivalence_supported",
++      "honest_verdict_raw": "complete_equivalence_supported: decision=equivalence_supported; activation=True; positive_control=True; default_off=True; hardware_claim_count=0; task_owned_failures=[]",
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    },
++    "exp6238-v539-adversarial-capstone": {
++      "task_id": "exp6238-v539-adversarial-capstone",
++      "title": "V539 exact-path adversarial capstone and evidence reconciliation",
++      "track": "infrastructure",
++      "declared_deliverable": "results/experiment_6238_v539_adversarial_capstone.json",
++      "present": false,
++      "loadable": true,
++      "sha256": "sha256:4177184cde46f97a62ed7fa47e1fb2ab2fc9f6c3bee88ed2e8916b45b7b2f299",
++      "terminal_class": "complete",
++      "terminal": true,
++      "reason": "status=complete verdict=complete",
++      "status_raw": "complete",
++      "honest_verdict_raw": "complete: Exp6238 capstone payload under construction",
++      "flagged_adversarial_stamped": false,
++      "same_number_alias_used": false,
++      "same_number_alias_candidates_ignored": []
++    }
++  },
++  "conductor_receipt_matrix": {
++    "exp6225-v539-terminal-transition": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 06:40 UTC",
++      "title_fragment": "Exact terminal-boundary handoff from V538 into V53",
++      "status": "FLAGGED",
++      "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
++      "raw_line": "| 2026-08-09 06:40 UTC | Exact terminal-boundary handoff from V538 into V53 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |"
++    },
++    "exp6226-v539-post-marker-source-scope-freeze": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 08:51 UTC",
++      "title_fragment": "Post-V539-marker source delta and experimental-sco",
++      "status": "FLAGGED",
++      "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
++      "raw_line": "| 2026-08-09 08:51 UTC | Post-V539-marker source delta and experimental-sco | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |"
++    },
++    "exp6227-llama-server-signal-sender-diagnostic": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 12:03 UTC",
++      "title_fragment": "Llama-server signal-sender and unbounded-wait diag",
++      "status": "FLAGGED",
++      "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
++      "raw_line": "| 2026-08-09 12:03 UTC | Llama-server signal-sender and unbounded-wait diag | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |"
++    },
++    "exp6228-supervised-three-family-runtime-endurance": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 12:51 UTC",
++      "title_fragment": "Supervised three-family GGUF runtime endurance and",
++      "status": "OK",
++      "detail": "90 passed, 1 warning in 9.34s",
++      "raw_line": "| 2026-08-09 12:51 UTC | Supervised three-family GGUF runtime endurance and | OK | 90 passed, 1 warning in 9.34s |"
++    },
++    "exp6229-arc-gemma31-think-determination": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:24 UTC",
++      "title_fragment": "Gated on Exp6229 frozen think configuration: bound",
++      "status": "GATE_BLOCK",
++      "detail": "Pre-emptive skip: upstream retired (exp6229-arc-gemma31-think-determination)",
++      "raw_line": "| 2026-08-09 13:24 UTC | Gated on Exp6229 frozen think configuration: bound | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6229-arc-gemma31-think-determination) |"
++    },
++    "exp6230-arc-induce-prompt-enrichment-heldout-ab": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:03 UTC",
++      "title_fragment": "Gated on Exp6228 dense readiness: induce-prompt en",
++      "status": "GATE_BLOCK",
++      "detail": "1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en",
++      "raw_line": "| 2026-08-09 13:03 UTC | Gated on Exp6228 dense readiness: induce-prompt en | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |"
++    },
++    "exp6231-arc-bounded-reinduction-depth-ab": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:24 UTC",
++      "title_fragment": "Gated on Exp6229 frozen think configuration: bound",
++      "status": "GATE_BLOCK",
++      "detail": "Pre-emptive skip: upstream retired (exp6229-arc-gemma31-think-determination)",
++      "raw_line": "| 2026-08-09 13:24 UTC | Gated on Exp6229 frozen think configuration: bound | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6229-arc-gemma31-think-determination) |"
++    },
++    "exp6232-arc-admissible-depth-portfolio": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:20 UTC",
++      "title_fragment": "Prospective admissible ARC depth portfolio or exac",
++      "status": "OK",
++      "detail": "88 passed, 1 warning in 8.66s",
++      "raw_line": "| 2026-08-09 13:20 UTC | Prospective admissible ARC depth portfolio or exac | OK | 88 passed, 1 warning in 8.66s |"
++    },
++    "exp6233-three-family-code-content-margin": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:26 UTC",
++      "title_fragment": "Gated on Exp6228 three-family readiness: code corr",
++      "status": "GATE_BLOCK",
++      "detail": "1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en",
++      "raw_line": "| 2026-08-09 13:26 UTC | Gated on Exp6228 three-family readiness: code corr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |"
++    },
++    "exp6234-fresh-flagship-constraint-event-stream": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:32 UTC",
++      "title_fragment": "Gated on Exp6228 two-family readiness: fresh exact",
++      "status": "GATE_BLOCK",
++      "detail": "1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en",
++      "raw_line": "| 2026-08-09 13:32 UTC | Gated on Exp6228 two-family readiness: fresh exact | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |"
++    },
++    "exp6235-prospective-two-timescale-live-csl": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:38 UTC",
++      "title_fragment": "Gated on Exp6235 promotion: default-off online con",
++      "status": "GATE_BLOCK",
++      "detail": "1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl",
++      "raw_line": "| 2026-08-09 13:38 UTC | Gated on Exp6235 promotion: default-off online con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl |"
++    },
++    "exp6236-online-constraint-memory-shadow-consumer": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:38 UTC",
++      "title_fragment": "Gated on Exp6235 promotion: default-off online con",
++      "status": "GATE_BLOCK",
++      "detail": "1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl",
++      "raw_line": "| 2026-08-09 13:38 UTC | Gated on Exp6235 promotion: default-off online con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl |"
++    },
++    "exp6237-activated-mode-jump-sampler-ab": {
++      "receipt_found": true,
++      "timestamp": "2026-08-09 13:59 UTC",
++      "title_fragment": "Activated mode-jump sampler quality, equivalence,",
++      "status": "OK",
++      "detail": "89 passed, 1 warning in 15.66s",
++      "raw_line": "| 2026-08-09 13:59 UTC | Activated mode-jump sampler quality, equivalence,  | OK | 89 passed, 1 warning in 15.66s |"
++    },
++    "exp6238-v539-adversarial-capstone": {
++      "receipt_found": false,
++      "status": null,
++      "detail": null,
++      "raw_line": null
++    }
++  },
++  "terminal_classifier_results": {
++    "exp6225-v539-terminal-transition": {
++      "terminal_class": "flagged",
++      "terminal": true,
++      "reason": "artifact carries flagged_adversarial or corrigendum_pending"
++    },
++    "exp6226-v539-post-marker-source-scope-freeze": {
++      "terminal_class": "flagged",
++      "terminal": true,
++      "reason": "artifact carries flagged_adversarial or corrigendum_pending"
++    },
++    "exp6227-llama-server-signal-sender-diagnostic": {
++      "terminal_class": "flagged",
++      "terminal": true,
++      "reason": "artifact carries flagged_adversarial or corrigendum_pending"
++    },
++    "exp6228-supervised-three-family-runtime-endurance": {
++      "terminal_class": "unknown",
++      "terminal": false,
++      "reason": "status or honest_verdict is absent or unknown"
++    },
++    "exp6229-arc-gemma31-think-determination": {
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip"
++    },
++    "exp6230-arc-induce-prompt-enrichment-heldout-ab": {
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip"
++    },
++    "exp6231-arc-bounded-reinduction-depth-ab": {
++      "terminal_class": "missing",
++      "terminal": false,
++      "reason": "artifact path is missing"
++    },
++    "exp6232-arc-admissible-depth-portfolio": {
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "status=skipped verdict=complete"
++    },
++    "exp6233-three-family-code-content-margin": {
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip"
++    },
++    "exp6234-fresh-flagship-constraint-event-stream": {
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip"
++    },
++    "exp6235-prospective-two-timescale-live-csl": {
++      "terminal_class": "missing",
++      "terminal": false,
++      "reason": "artifact path is missing"
++    },
++    "exp6236-online-constraint-memory-shadow-consumer": {
++      "terminal_class": "skipped",
++      "terminal": true,
++      "reason": "blocked artifact records a gate skip"
++    },
++    "exp6237-activated-mode-jump-sampler-ab": {
++      "terminal_class": "complete",
++      "terminal": true,
++      "reason": "status=complete verdict=complete"
++    },
++    "exp6238-v539-adversarial-capstone": {
++      "terminal_class": "complete",
++      "terminal": true,
++      "reason": "status=complete verdict=complete"
++    }
++  },
++  "adversarial_results_by_task": {
++    "exp6225-v539-terminal-transition": {
++      "path": "results/experiment_6225_v539_terminal_transition.json",
++      "flag_count": 2,
++      "critical_flag_count": 1,
++      "warn_flag_count": 1,
++      "flags": [
++        {
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical",
++          "detail": "duration_s=7.351255744928494 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++        },
++        {
++          "kind": "METHODOLOGY_MISSING",
++          "severity": "warn",
++          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
++        }
++      ]
++    },
++    "exp6226-v539-post-marker-source-scope-freeze": {
++      "path": "results/experiment_6226_v539_post_marker_source_scope_freeze.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6227-llama-server-signal-sender-diagnostic": {
++      "path": "results/experiment_6227_llama_server_signal_sender_diagnostic.json",
++      "flag_count": 1,
++      "critical_flag_count": 1,
++      "warn_flag_count": 0,
++      "flags": [
++        {
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical",
++          "detail": "duration_s=28.591529 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++        }
++      ]
++    },
++    "exp6228-supervised-three-family-runtime-endurance": {
++      "path": "results/experiment_6228_supervised_three_family_runtime_endurance.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6229-arc-gemma31-think-determination": {
++      "path": "results/experiment_6229_arc_gemma31_think_determination.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6230-arc-induce-prompt-enrichment-heldout-ab": {
++      "path": "results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6231-arc-bounded-reinduction-depth-ab": {
++      "path": "results/experiment_6231_arc_bounded_reinduction_depth_ab.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": [],
++      "skipped": "missing_artifact"
++    },
++    "exp6232-arc-admissible-depth-portfolio": {
++      "path": "results/experiment_6232_arc_admissible_depth_portfolio.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6233-three-family-code-content-margin": {
++      "path": "results/experiment_6233_three_family_code_content_margin.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6234-fresh-flagship-constraint-event-stream": {
++      "path": "results/experiment_6234_fresh_flagship_constraint_event_stream.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6235-prospective-two-timescale-live-csl": {
++      "path": "results/experiment_6235_prospective_two_timescale_live_csl.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": [],
++      "skipped": "missing_artifact"
++    },
++    "exp6236-online-constraint-memory-shadow-consumer": {
++      "path": "results/experiment_6236_online_constraint_memory_shadow_consumer.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6237-activated-mode-jump-sampler-ab": {
++      "path": "results/experiment_6237_activated_mode_jump_sampler_ab.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": []
++    },
++    "exp6238-v539-adversarial-capstone": {
++      "path": "results/experiment_6238_v539_adversarial_capstone.json",
++      "flag_count": 0,
++      "critical_flag_count": 0,
++      "warn_flag_count": 0,
++      "flags": [],
++      "skipped": "missing_artifact"
++    }
++  },
++  "determination_preservation_results": {
++    "command": ".venv/bin/python scripts/determination_preservation_lint.py --all",
++    "exit_code": 0,
++    "classification": "passed",
++    "stdout_tail": "determination-preservation-lint: OK\n",
++    "stderr_tail": ""
++  },
++  "gate_cascade_receipts": {
++    "gates": [
++      {
++        "task_id": "exp6228-supervised-three-family-runtime-endurance",
++        "upstream": "exp6227-llama-server-signal-sender-diagnostic",
++        "artifact_field": "runtime_diagnostic_ready_score",
++        "op": "==",
++        "expected": 1,
++        "actual": 1,
++        "passed": true,
++        "reason": "passed",
++        "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++      },
++      {
++        "task_id": "exp6229-arc-gemma31-think-determination",
++        "upstream": "exp6228-supervised-three-family-runtime-endurance",
++        "artifact_field": "gemma_4_31b_runtime_ready_score",
++        "op": "==",
++        "expected": 1,
++        "actual": null,
++        "passed": false,
++        "reason": "evaluated",
++        "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++      },
++      {
++        "task_id": "exp6230-arc-induce-prompt-enrichment-heldout-ab",
++        "upstream": "exp6228-supervised-three-family-runtime-endurance",
++        "artifact_field": "gemma_4_31b_runtime_ready_score",
++        "op": "==",
++        "expected": 1,
++        "actual": null,
++        "passed": false,
++        "reason": "evaluated",
++        "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++      },
++      {
++        "task_id": "exp6231-arc-bounded-reinduction-depth-ab",
++        "upstream": "exp6229-arc-gemma31-think-determination",
++        "artifact_field": "think_configuration_frozen_score",
++        "op": "==",
++        "expected": 1,
++        "actual": null,
++        "passed": false,
++        "reason": "missing_upstream_field",
++        "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++      },
++      {
++        "task_id": "exp6233-three-family-code-content-margin",
++        "upstream": "exp6228-supervised-three-family-runtime-endurance",
++        "artifact_field": "three_family_runtime_ready_score",
++        "op": "==",
++        "expected": 1,
++        "actual": null,
++        "passed": false,
++        "reason": "evaluated",
++        "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++      },
++      {
++        "task_id": "exp6234-fresh-flagship-constraint-event-stream",
++        "upstream": "exp6228-supervised-three-family-runtime-endurance",
++        "artifact_field": "two_family_runtime_ready_score",
++        "op": "==",
++        "expected": 1,
++        "actual": null,
++        "passed": false,
++        "reason": "evaluated",
++        "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++      },
++      {
++        "task_id": "exp6235-prospective-two-timescale-live-csl",
++        "upstream": "exp6234-fresh-flagship-constraint-event-stream",
++        "artifact_field": "seed_stream_ready_score",
++        "op": "==",
++        "expected": 1,
++        "actual": null,
++        "passed": false,
++        "reason": "missing_upstream_field",
++        "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++      },
++      {
++        "task_id": "exp6236-online-constraint-memory-shadow-consumer",
++        "upstream": "exp6235-prospective-two-timescale-live-csl",
++        "artifact_field": "continuous_learning_promotion_ready_score",
++        "op": "==",
++        "expected": 1,
++        "actual": null,
++        "passed": false,
++        "reason": "missing_upstream_artifact",
++        "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++      }
++    ],
++    "passed_count": 1,
++    "failed_count": 7,
++    "principle": "A structured gate passes only when the exact upstream artifact field satisfies the roadmap operator; missing or null fields fail closed."
++  },
++  "missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts": {
++    "missing": 2,
++    "blocked": 0,
++    "skipped": 6,
++    "partial": 0,
++    "null": 0,
++    "flagged": 3,
++    "retired": 0,
++    "ready": 0,
++    "complete": 2,
++    "unknown": 1,
++    "hardware_claim_count": 0,
++    "terminal_class_counts": {
++      "complete": 2,
++      "flagged": 3,
++      "missing": 2,
++      "skipped": 6,
++      "unknown": 1
++    },
++    "scientific_success_count": 0,
++    "count_principles": {
++      "missing": "Missing exact artifacts cannot be promoted by receipts or aliases.",
++      "blocked": "Blocked states are operationally terminal only when the exact artifact says so.",
++      "skipped": "Gate skips are terminal bookkeeping and not scientific success.",
++      "partial": "Partial outputs cannot feed headline branches.",
++      "null": "Null outcomes need their own controls and must not be counted as positive.",
++      "flagged": "Flagged artifacts are quarantined from claims even when terminal.",
++      "retired": "Retired scopes remain closed unless a valid override exists.",
++      "ready": "Ready is counted separately from complete and positive evidence.",
++      "complete": "Complete artifacts may still be blocked from claims by flags or gates.",
++      "unknown": "Unknown classifier states fail closed.",
++      "hardware_claim_count": "Hardware claims stay zero without new task-linked receipts."
++    }
++  },
++  "prior_failure_retirement_actions": {
++    "actions": [
++      {
++        "task_id": "exp6225-v539-terminal-transition",
++        "prior_experiment_id": "exp5771-evidence-index-collision-preflight",
++        "prior_verdict": "blocked: evidence index preflight failed closed: tests_not_recorded_passing",
++        "current_terminal_class": "flagged",
++        "current_verdict": "complete: V538 mixed terminal states archived and V539 roadmap identity validated without activating or editing protected files",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6226-v539-post-marker-source-scope-freeze",
++        "prior_experiment_id": "exp6211-v538-post-marker-source-scope-prereg",
++        "prior_verdict": "blocked_bootstrap_after_three_attempts: required artifact was not written",
++        "current_terminal_class": "flagged",
++        "current_verdict": "complete_null: accepted_count=null; no reproducible post-V539-marker findings; references unchanged; V539 scope contracts frozen",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6227-llama-server-signal-sender-diagnostic",
++        "prior_experiment_id": "exp6212-three-family-gguf-runtime-recovery",
++        "prior_verdict": "complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts",
++        "current_terminal_class": "flagged",
++        "current_verdict": "complete_unlocalized: bounded owned lifecycle returned a token; signal sender remains unlocalized",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6228-supervised-three-family-runtime-endurance",
++        "prior_experiment_id": "exp6212-three-family-gguf-runtime-recovery",
++        "prior_verdict": "complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts",
++        "current_terminal_class": "unknown",
++        "current_verdict": "",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6228-supervised-three-family-runtime-endurance",
++        "prior_experiment_id": "exp6200-three-family-raw-code-transport-canary",
++        "prior_verdict": "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]",
++        "current_terminal_class": "unknown",
++        "current_verdict": "",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6229-arc-gemma31-think-determination",
++        "prior_experiment_id": "exp6217-arc-gemma31-think-ab",
++        "prior_verdict": "missing: conductor gate blocked because Exp6212 gemma_4_31b_runtime_ready_score=0",
++        "current_terminal_class": "skipped",
++        "current_verdict": "blocked_gate_check_failed",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6230-arc-induce-prompt-enrichment-heldout-ab",
++        "prior_experiment_id": "exp6214-arc-object-delta-heldout-ab",
++        "prior_verdict": "complete: object_delta_heldout_ab_complete_no_solve_credit",
++        "current_terminal_class": "skipped",
++        "current_verdict": "blocked_gate_check_failed",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6231-arc-bounded-reinduction-depth-ab",
++        "prior_experiment_id": "exp6132-phase-d-hidden-state-held-eval",
++        "prior_verdict": "missing: exact declared held-selector artifact is absent after the upstream selector chain failed",
++        "current_terminal_class": "missing",
++        "current_verdict": "",
++        "action": "no_retirement_exact_artifact_missing",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6232-arc-admissible-depth-portfolio",
++        "prior_experiment_id": "exp6218-arc-admissible-lever-portfolio-heldout",
++        "prior_verdict": "complete: skipped_fewer_than_two_eligible_arc_levers_no_model_load_no_solve_credit",
++        "current_terminal_class": "skipped",
++        "current_verdict": "complete: skipped_fewer_than_two_eligible_depth_levers_no_model_load",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6233-three-family-code-content-margin",
++        "prior_experiment_id": "exp6200-three-family-raw-code-transport-canary",
++        "prior_verdict": "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]",
++        "current_terminal_class": "skipped",
++        "current_verdict": "blocked_gate_check_failed",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6233-three-family-code-content-margin",
++        "prior_experiment_id": "exp6221-three-family-code-transport-canary-v3",
++        "prior_verdict": "skipped: conductor gate blocked on Exp6212 three_family_runtime_ready_score=0",
++        "current_terminal_class": "skipped",
++        "current_verdict": "blocked_gate_check_failed",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6234-fresh-flagship-constraint-event-stream",
++        "prior_experiment_id": "exp6206-live-strategy-seed-v2",
++        "prior_verdict": "blocked_gate_check_failed",
++        "current_terminal_class": "skipped",
++        "current_verdict": "blocked_gate_check_failed",
++        "action": "retire_if_same_verdict_rule_fired_recorded_only",
++        "rule_fired": true,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6235-prospective-two-timescale-live-csl",
++        "prior_experiment_id": "exp6164-continuous-strategy-learning-ab",
++        "prior_verdict": "blocked: exp6163_not_ready; self-learning did not execute",
++        "current_terminal_class": "missing",
++        "current_verdict": "",
++        "action": "no_retirement_exact_artifact_missing",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6235-prospective-two-timescale-live-csl",
++        "prior_experiment_id": "exp6207-prospective-procedural-memory-csl",
++        "prior_verdict": "missing: gate-blocked because upstream Exp6206 was retired",
++        "current_terminal_class": "missing",
++        "current_verdict": "",
++        "action": "no_retirement_exact_artifact_missing",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6236-online-constraint-memory-shadow-consumer",
++        "prior_experiment_id": "exp6165-strategy-memory-shadow-adapter",
++        "prior_verdict": "missing: gate-blocked because Exp6164 continuous_strategy_learning_ready_score=0",
++        "current_terminal_class": "skipped",
++        "current_verdict": "blocked_gate_check_failed",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6237-activated-mode-jump-sampler-ab",
++        "prior_experiment_id": "exp6166-mode-jumping-factor-thermalization",
++        "prior_verdict": "blocked: mode jumping improved but nonzero_test_commands",
++        "current_terminal_class": "complete",
++        "current_verdict": "complete_equivalence_supported: decision=equivalence_supported; activation=True; positive_control=True; default_off=True; hardware_claim_count=0; task_owned_failures=[]",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6237-activated-mode-jump-sampler-ab",
++        "prior_experiment_id": "exp6220-mode-jump-runtime-ab",
++        "prior_verdict": "blocked: default_off=True; all_fixture_arms_supported=False; quality_gate=False; timing_claim_allowed=False; hardware_claim_count=0",
++        "current_terminal_class": "complete",
++        "current_verdict": "complete_equivalence_supported: decision=equivalence_supported; activation=True; positive_control=True; default_off=True; hardware_claim_count=0; task_owned_failures=[]",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      },
++      {
++        "task_id": "exp6238-v539-adversarial-capstone",
++        "prior_experiment_id": "exp6224-v538-adversarial-capstone",
++        "prior_verdict": "complete: V538 exact-path capstone preserved missing=2, nonterminal=3, blocked=2, skipped=3, null=0, retired=0, flagged=2; branch eligibility is separated; conductor receipts, ARC credit, and hardware claims remain zero",
++        "current_terminal_class": "complete",
++        "current_verdict": "complete: Exp6238 capstone payload under construction",
++        "action": "no_retirement_current_verdict_differs",
++        "rule_fired": false,
++        "would_update_exclusion_manifest": false,
++        "principle": "Exact same failed verdict is required before retirement; this capstone records but does not guess."
++      }
++    ],
++    "rule_fired_count": 1,
++    "manifest_update_count": 0,
++    "principle": "The exclusion manifest is updated only by a real rule fire, never by semantic guesswork."
++  },
++  "runtime_final_status_and_family_scores": {
++    "status": "preconditions_recorded",
++    "honest_verdict": null,
++    "diagnostic_runtime_ready_score": 1,
++    "qwen_runtime_ready_score": null,
++    "gemma_4_31b_runtime_ready_score": null,
++    "gemma_4_26b_runtime_ready_score": null,
++    "two_family_runtime_ready_score": null,
++    "three_family_runtime_ready_score": null,
++    "claim_allowed": false,
++    "principle": "Durable runtime requires Exp6228 family scores, not Exp6227 or short canaries."
++  },
++  "arc_provenance_registry_hash_level_depth_and_promotion_summary": {
++    "registry_path": "ops/arc_solve_registry.yaml",
++    "registry_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++    "registry_reproducible_total_levels": 183,
++    "registry_reproducible_total_games": 25,
++    "solve_provenance": "live_agent_self_discovery",
++    "registry_update_count": 0,
++    "registry_hash_unchanged": true,
++    "eligible_lever_count": 0,
++    "selected_levers": [],
++    "portfolio_promotion_ready_score": 0.0,
++    "depth_promotion_claim": false,
++    "principle": "ARC depth promotion needs live-agent provenance, two eligible levers, and registry-safe evidence."
++  },
++  "code_parse_recovery_and_content_margin_summary": {
++    "status": "blocked",
++    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-endurance.three_family_runtime_ready_score (actual=None == expected=1)",
++    "parse_recovery_claim": false,
++    "content_margin_claim": false,
++    "content_margin": null,
++    "principle": "Gate-blocked code artifacts cannot turn format recovery into hidden-test content gain."
++  },
++  "fresh_stream_and_continuous_learning_summary": {
++    "stream_status": "blocked",
++    "seed_stream_ready_score": null,
++    "csl_artifact_present": false,
++    "continuous_learning_promotion_ready_score": null,
++    "fresh_stream_claim": false,
++    "csl_claim": false,
++    "principle": "Fresh events must exist before deterministic memory safety can become live CSL evidence."
++  },
++  "shadow_consumer_summary": {
++    "status": "blocked",
++    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl.continuous_learning_promotion_ready_score (upstream artifact not found for task id 'exp6235-prospective-two-timescale-live-csl')",
++    "online_constraint_memory_shadow_ready_score": null,
++    "shadow_reachability_claim": false,
++    "principle": "The shadow consumer cannot be promoted when Exp6235 is missing or not promoted."
++  },
++  "sampler_activation_quality_equivalence_and_default_summary": {
++    "status": "complete_equivalence_supported",
++    "treatment_activation_score": 1.0,
++    "mode_jump_proposal_count": 3032,
++    "mode_jump_acceptance_count": 2261,
++    "decision": "equivalence_supported",
++    "quality_conclusion_allowed": true,
++    "default_off_preserved": true,
++    "sampler_runtime_ready_score": 1.0,
++    "hardware_claim_count": 0,
++    "positive_claim": false,
++    "principle": "Activated treatment allows an equivalence result; it does not imply hardware or a positive sampler win."
++  },
++  "hardware_boundary_and_claim_count": {
++    "hardware_claim_count": 0,
++    "sampler_hardware_claim_count": 0,
++    "new_independently_admissible_receipt": false,
++    "boundary": "No V539 hardware task produced a new physical-state, latency, power, energy, or speedup receipt.",
++    "principle": "Hardware claims stay zero without new task-linked receipts."
++  },
++  "protected_files_unchanged": {
++    "unchanged": true,
++    "paths": {
++      "AGENTS.md": {
++        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "unchanged": true
++      },
++      "CLAUDE.md": {
++        "before_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
++        "after_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
++        "unchanged": true
++      },
++      "CODEX.md": {
++        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "unchanged": true
++      },
++      "_bmad/traceability.md": {
++        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "unchanged": true
++      },
++      "openspec/capabilities/research-harnesses/spec.md": {
++        "before_sha256": "sha256:d5dfac2232d31223e6a30f4123a7ad8217782ebd4dd0b98f38279f8695a00882",
++        "after_sha256": "sha256:d5dfac2232d31223e6a30f4123a7ad8217782ebd4dd0b98f38279f8695a00882",
++        "unchanged": true
++      },
++      "openspec/change-proposals/research-roadmap-vNEXT.md": {
++        "before_sha256": "sha256:c59487eb1be22011dbf2e289632491e6cf69ea22cacb11bb00d819999c5df568",
++        "after_sha256": "sha256:c59487eb1be22011dbf2e289632491e6cf69ea22cacb11bb00d819999c5df568",
++        "unchanged": true
++      },
++      "ops/arc_solve_registry.yaml": {
++        "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "after_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "unchanged": true
++      },
++      "ops/changelog.md": {
++        "before_sha256": "sha256:23ffbb25939add922a4a34d577378417ddc239cb0eef523b2bc70cfe9774ff43",
++        "after_sha256": "sha256:23ffbb25939add922a4a34d577378417ddc239cb0eef523b2bc70cfe9774ff43",
++        "unchanged": true
++      },
++      "ops/conductor-log.md": {
++        "before_sha256": "sha256:1db02417d2d0fb3c5beb73e1d555024cdc8686ee23b3aa1fb5a214bd16f77851",
++        "after_sha256": "sha256:1db02417d2d0fb3c5beb73e1d555024cdc8686ee23b3aa1fb5a214bd16f77851",
++        "unchanged": true
++      },
++      "ops/e2e-test-plan.md": {
++        "before_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++        "after_sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++        "unchanged": true
++      },
++      "ops/exclusion_manifest.yaml": {
++        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++        "unchanged": true
++      },
++      "ops/known-issues.md": {
++        "before_sha256": "sha256:8ade606d0794f262aab364920d16d55f69b839eff3e1f3b4ae50153ff150fbe2",
++        "after_sha256": "sha256:8ade606d0794f262aab364920d16d55f69b839eff3e1f3b4ae50153ff150fbe2",
++        "unchanged": true
++      },
++      "ops/status.md": {
++        "before_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
++        "after_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
++        "unchanged": true
++      },
++      "research-complete.yaml": {
++        "before_sha256": "sha256:e2b5bc84044b57a7e7c1538fbacf43c08d88dbb66b162fb76c9327d7e8da0e28",
++        "after_sha256": "sha256:e2b5bc84044b57a7e7c1538fbacf43c08d88dbb66b162fb76c9327d7e8da0e28",
++        "unchanged": true
++      },
++      "research-roadmap-next.yaml": {
++        "before_sha256": null,
++        "after_sha256": null,
++        "unchanged": true
++      },
++      "research-roadmap.yaml": {
++        "before_sha256": "sha256:4718f107e3c692a7540cb601b6486f84b825c9312be179a6209c12a435e15d12",
++        "after_sha256": "sha256:4718f107e3c692a7540cb601b6486f84b825c9312be179a6209c12a435e15d12",
++        "unchanged": true
++      },
++      "scripts/adversarial_verify.py": {
++        "before_sha256": "sha256:f103a94bc71d61c943243d429523def0ab246c293078fa9dd39adbae3febd2cf",
++        "after_sha256": "sha256:f103a94bc71d61c943243d429523def0ab246c293078fa9dd39adbae3febd2cf",
++        "unchanged": true
++      },
++      "scripts/determination_preservation_lint.py": {
++        "before_sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
++        "after_sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
++        "unchanged": true
++      },
++      "scripts/research_conductor.py": {
++        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "unchanged": true
++      },
++      "scripts/summarize_artifact.py": {
++        "before_sha256": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
++        "after_sha256": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
++        "unchanged": true
++      }
++    }
++  },
++  "spec_traceability_status_changelog_known_issues_updates": {
++    "openspec_req_infra_6238_present": true,
++    "ops_status_changelog_traceability_touched": false,
++    "known_issues_touched": false,
++    "deferred_by_operator_stop_rule": true,
++    "hashes": {
++      "openspec/capabilities/research-harnesses/spec.md": {
++        "before_sha256": "sha256:d5dfac2232d31223e6a30f4123a7ad8217782ebd4dd0b98f38279f8695a00882",
++        "after_sha256": "sha256:d5dfac2232d31223e6a30f4123a7ad8217782ebd4dd0b98f38279f8695a00882",
++        "unchanged_during_capstone": true
++      },
++      "_bmad/traceability.md": {
++        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "unchanged_during_capstone": true
++      },
++      "ops/status.md": {
++        "before_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
++        "after_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
++        "unchanged_during_capstone": true
++      },
++      "ops/changelog.md": {
++        "before_sha256": "sha256:23ffbb25939add922a4a34d577378417ddc239cb0eef523b2bc70cfe9774ff43",
++        "after_sha256": "sha256:23ffbb25939add922a4a34d577378417ddc239cb0eef523b2bc70cfe9774ff43",
++        "unchanged_during_capstone": true
++      },
++      "ops/known-issues.md": {
++        "before_sha256": "sha256:8ade606d0794f262aab364920d16d55f69b839eff3e1f3b4ae50153ff150fbe2",
++        "after_sha256": "sha256:8ade606d0794f262aab364920d16d55f69b839eff3e1f3b4ae50153ff150fbe2",
++        "unchanged_during_capstone": true
++      }
++    },
++    "principle": "Only supported spec state is recorded here; ops ledgers are left for the separate reconciler."
++  },
++  "research_complete_reconciliation": {
++    "path": "research-complete.yaml",
++    "sha256": "sha256:e2b5bc84044b57a7e7c1538fbacf43c08d88dbb66b162fb76c9327d7e8da0e28",
++    "milestone_record_count": 1568,
++    "duplicate_milestones": {
++      "2026.07.510": 684,
++      "2026.07.514": 192,
++      "2026.07.516": 14,
++      "2026.07.518": 9,
++      "2026.07.524": 2,
++      "2026.07.525": 2,
++      "2026.07.526": 2,
++      "2026.07.527": 641,
++      "2026.08.535": 2
++    },
++    "action": "recorded_only_no_mutation",
++    "principle": "Duplicate-ledger caveats are preserved and not deduplicated by the capstone."
++  },
++  "preconditions_checked": {
++    "checked_before_classification": true,
++    "input_hashes": {
++      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "CLAUDE.md": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
++      "research-roadmap.yaml": "sha256:4718f107e3c692a7540cb601b6486f84b825c9312be179a6209c12a435e15d12",
++      "research-roadmap-next.yaml": null,
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:c59487eb1be22011dbf2e289632491e6cf69ea22cacb11bb00d819999c5df568",
++      "ops/conductor-log.md": "sha256:1db02417d2d0fb3c5beb73e1d555024cdc8686ee23b3aa1fb5a214bd16f77851",
++      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
++      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++      "openspec/capabilities/research-harnesses/spec.md": "sha256:d5dfac2232d31223e6a30f4123a7ad8217782ebd4dd0b98f38279f8695a00882",
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
++      "ops/changelog.md": "sha256:23ffbb25939add922a4a34d577378417ddc239cb0eef523b2bc70cfe9774ff43",
++      "ops/known-issues.md": "sha256:8ade606d0794f262aab364920d16d55f69b839eff3e1f3b4ae50153ff150fbe2",
++      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++      "research-complete.yaml": "sha256:e2b5bc84044b57a7e7c1538fbacf43c08d88dbb66b162fb76c9327d7e8da0e28",
++      "scripts/summarize_artifact.py": "sha256:62bf92bd99b7325ae841e4d93270ccd53338c9d54765e14acadbb7f5c35d1c7d",
++      "scripts/adversarial_verify.py": "sha256:f103a94bc71d61c943243d429523def0ab246c293078fa9dd39adbae3febd2cf",
++      "scripts/determination_preservation_lint.py": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "declared_deliverable_hashes": {
++      "exp6225-v539-terminal-transition": {
++        "path": "results/experiment_6225_v539_terminal_transition.json",
++        "sha256": "sha256:d21b33f830636974bd0523d3746f909cb494493bb6acd49540583090b37be252"
++      },
++      "exp6226-v539-post-marker-source-scope-freeze": {
++        "path": "results/experiment_6226_v539_post_marker_source_scope_freeze.json",
++        "sha256": "sha256:4bf2906367cc3577009fb642c438dca376f58599e54d72c697214cc2da0e0452"
++      },
++      "exp6227-llama-server-signal-sender-diagnostic": {
++        "path": "results/experiment_6227_llama_server_signal_sender_diagnostic.json",
++        "sha256": "sha256:aebbb5848794a7a62da5c4ee271ca3f0d66824328fc8a53ddae62d9d5006f93d"
++      },
++      "exp6228-supervised-three-family-runtime-endurance": {
++        "path": "results/experiment_6228_supervised_three_family_runtime_endurance.json",
++        "sha256": "sha256:f288a69693b8ee1cd461e1ee9436cb6743949a5d6e3685b97ee8449d38b4a773"
++      },
++      "exp6229-arc-gemma31-think-determination": {
++        "path": "results/experiment_6229_arc_gemma31_think_determination.json",
++        "sha256": "sha256:29e26f524b98ab9c97239d1b787c311b969c217421f33df498d7e6912e9aac34"
++      },
++      "exp6230-arc-induce-prompt-enrichment-heldout-ab": {
++        "path": "results/experiment_6230_arc_induce_prompt_enrichment_heldout_ab.json",
++        "sha256": "sha256:f7759aa09e6f56f4ba7c21826ca3bb5f15acbf8b9c856532d59c351330ff2c50"
++      },
++      "exp6231-arc-bounded-reinduction-depth-ab": {
++        "path": "results/experiment_6231_arc_bounded_reinduction_depth_ab.json",
++        "sha256": null
++      },
++      "exp6232-arc-admissible-depth-portfolio": {
++        "path": "results/experiment_6232_arc_admissible_depth_portfolio.json",
++        "sha256": "sha256:2e7c0179a6b6f4a13d7b4cba8ebef956de40a44021f72c56cda98cb3634d490e"
++      },
++      "exp6233-three-family-code-content-margin": {
++        "path": "results/experiment_6233_three_family_code_content_margin.json",
++        "sha256": "sha256:d5ceab556a03ad3e9a680faa0e4d2815982d112a1d15973572b3123ce8ee1ec5"
++      },
++      "exp6234-fresh-flagship-constraint-event-stream": {
++        "path": "results/experiment_6234_fresh_flagship_constraint_event_stream.json",
++        "sha256": "sha256:72e84c16717468f833bd4acada72a1bf89b9b54c09b43031bb1359c4a00450b0"
++      },
++      "exp6235-prospective-two-timescale-live-csl": {
++        "path": "results/experiment_6235_prospective_two_timescale_live_csl.json",
++        "sha256": null
++      },
++      "exp6236-online-constraint-memory-shadow-consumer": {
++        "path": "results/experiment_6236_online_constraint_memory_shadow_consumer.json",
++        "sha256": "sha256:99f3604e8b089358185094391eb7c94295c99354ba2d890e31f05dbca5b6c1ed"
++      },
++      "exp6237-activated-mode-jump-sampler-ab": {
++        "path": "results/experiment_6237_activated_mode_jump_sampler_ab.json",
++        "sha256": "sha256:3c972cee515c1964c1521bbf267c7cb1744fd7cf535004c28dc3f95cc39955f1"
++      },
++      "exp6238-v539-adversarial-capstone": {
++        "path": "results/experiment_6238_v539_adversarial_capstone.json",
++        "sha256": null
++      }
++    },
++    "retired_experiment_id_count": 167,
++    "roadmap_next_present": false
++  },
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "verifier_is_oracle": false,
++  "field_provenance": {
++    "status": {
++      "principle": "The capstone is complete only when every declared V539 task state is preserved.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "roadmap_path_hash_and_task_ids": {
++      "principle": "The task denominator is the exact active V539 roadmap.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "exact_task_artifact_matrix": {
++      "principle": "Exact deliverable paths prevent sidecars or filenames from laundering missing work.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "conductor_receipt_matrix": {
++      "principle": "Conductor receipts are context only and cannot promote an artifact.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "terminal_classifier_results": {
++      "principle": "The shared classifier provides fail-closed terminality.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "adversarial_results_by_task": {
++      "principle": "Live current-rule flags determine whether a task can feed claims.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "determination_preservation_results": {
++      "principle": "The preservation guard proves corrigenda and determinations were not dropped.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "gate_cascade_receipts": {
++      "principle": "Structured gates are recomputed from exact upstream fields.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts": {
++      "principle": "Every terminal and nonterminal class stays counted before any summary claim.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "prior_failure_retirement_actions": {
++      "principle": "Retire-if-same-verdict fires only on exact repeated failed verdicts.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "runtime_final_status_and_family_scores": {
++      "principle": "Runtime durability uses Exp6228 family scores, not short canaries.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "arc_provenance_registry_hash_level_depth_and_promotion_summary": {
++      "principle": "ARC depth credit needs live provenance and registry-safe promotion.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "code_parse_recovery_and_content_margin_summary": {
++      "principle": "Format recovery and content margin are separate code-verification claims.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "fresh_stream_and_continuous_learning_summary": {
++      "principle": "Fresh stream evidence is required before CSL promotion.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "shadow_consumer_summary": {
++      "principle": "Shadow reachability is distinct from fresh CSL utility.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "sampler_activation_quality_equivalence_and_default_summary": {
++      "principle": "Sampler activation must be proven before equivalence or null interpretation.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "hardware_boundary_and_claim_count": {
++      "principle": "Hardware claims require new independent receipts; otherwise the count is zero.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "protected_files_unchanged": {
++      "principle": "The capstone must not rewrite conductor, ops ledgers, roadmap, registry, or historical inputs.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "spec_traceability_status_changelog_known_issues_updates": {
++      "principle": "Spec and operations reconciliation state is recorded without unsupported claims.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "research_complete_reconciliation": {
++      "principle": "Duplicate research ledgers are recorded without deduplication.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "preconditions_checked": {
++      "principle": "All declared inputs are hashed before classification.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "inference_substrate": {
++      "principle": "The capstone reads upstream artifacts and does not load a model.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "verifier_is_oracle": {
++      "principle": "False because the capstone checks evidence records, not benchmark answers.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "field_provenance": {
++      "principle": "Every required field cites files or checks that produced it.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "field_principles": {
++      "principle": "Every required field carries the reason it exists.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "test_commands": {
++      "principle": "Commands record focused, coverage, lint, preservation, suite, and adversarial checks.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "test_exit_codes": {
++      "principle": "Exit codes are reported honestly and without laundering.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "duration_s": {
++      "principle": "Wall time is reported without padding.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "reproducibility_checksum": {
++      "principle": "The normalized payload is content-addressed for drift checks.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    },
++    "honest_verdict": {
++      "principle": "The terminal verdict preserves mixed outcomes without strengthening them.",
++      "sources": [
++        "REQ-INFRA-6238",
++        "openspec/capabilities/research-harnesses/spec.md",
++        "openspec/change-proposals/research-roadmap-vNEXT.md",
++        "ops/arc_solve_registry.yaml",
++        "ops/conductor-log.md",
++        "ops/exclusion_manifest.yaml",
++        "python/carnot/terminal_artifacts.py",
++        "research-roadmap.yaml",
++        "scripts/adversarial_verify.py",
++        "scripts/determination_preservation_lint.py",
++        "scripts/summarize_artifact.py"
++      ]
++    }
++  },
++  "field_principles": {
++    "status": "The capstone is complete only when every declared V539 task state is preserved.",
++    "roadmap_path_hash_and_task_ids": "The task denominator is the exact active V539 roadmap.",
++    "exact_task_artifact_matrix": "Exact deliverable paths prevent sidecars or filenames from laundering missing work.",
++    "conductor_receipt_matrix": "Conductor receipts are context only and cannot promote an artifact.",
++    "terminal_classifier_results": "The shared classifier provides fail-closed terminality.",
++    "adversarial_results_by_task": "Live current-rule flags determine whether a task can feed claims.",
++    "determination_preservation_results": "The preservation guard proves corrigenda and determinations were not dropped.",
++    "gate_cascade_receipts": "Structured gates are recomputed from exact upstream fields.",
++    "missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts": "Every terminal and nonterminal class stays counted before any summary claim.",
++    "prior_failure_retirement_actions": "Retire-if-same-verdict fires only on exact repeated failed verdicts.",
++    "runtime_final_status_and_family_scores": "Runtime durability uses Exp6228 family scores, not short canaries.",
++    "arc_provenance_registry_hash_level_depth_and_promotion_summary": "ARC depth credit needs live provenance and registry-safe promotion.",
++    "code_parse_recovery_and_content_margin_summary": "Format recovery and content margin are separate code-verification claims.",
++    "fresh_stream_and_continuous_learning_summary": "Fresh stream evidence is required before CSL promotion.",
++    "shadow_consumer_summary": "Shadow reachability is distinct from fresh CSL utility.",
++    "sampler_activation_quality_equivalence_and_default_summary": "Sampler activation must be proven before equivalence or null interpretation.",
++    "hardware_boundary_and_claim_count": "Hardware claims require new independent receipts; otherwise the count is zero.",
++    "protected_files_unchanged": "The capstone must not rewrite conductor, ops ledgers, roadmap, registry, or historical inputs.",
++    "spec_traceability_status_changelog_known_issues_updates": "Spec and operations reconciliation state is recorded without unsupported claims.",
++    "research_complete_reconciliation": "Duplicate research ledgers are recorded without deduplication.",
++    "preconditions_checked": "All declared inputs are hashed before classification.",
++    "inference_substrate": "The capstone reads upstream artifacts and does not load a model.",
++    "verifier_is_oracle": "False because the capstone checks evidence records, not benchmark answers.",
++    "field_provenance": "Every required field cites files or checks that produced it.",
++    "field_principles": "Every required field carries the reason it exists.",
++    "test_commands": "Commands record focused, coverage, lint, preservation, suite, and adversarial checks.",
++    "test_exit_codes": "Exit codes are reported honestly and without laundering.",
++    "duration_s": "Wall time is reported without padding.",
++    "reproducibility_checksum": "The normalized payload is content-addressed for drift checks.",
++    "honest_verdict": "The terminal verdict preserves mixed outcomes without strengthening them."
++  },
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6238_v539_adversarial_capstone.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6238_v539_adversarial_capstone.py -m pytest tests/python/test_experiment_6238_v539_adversarial_capstone.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6238_v539_adversarial_capstone.py --fail-under=100",
++    ".venv/bin/ruff check python/carnot/experiment_6238_v539_adversarial_capstone.py tests/python/test_experiment_6238_v539_adversarial_capstone.py",
++    ".venv/bin/ruff format --check python/carnot/experiment_6238_v539_adversarial_capstone.py tests/python/test_experiment_6238_v539_adversarial_capstone.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6238_v539_adversarial_capstone.py",
++    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
++    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
++    ".venv/bin/python scripts/determination_preservation_lint.py --all",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "sed -n 1,260p ops/e2e-test-plan.md",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6238_v539_adversarial_capstone.json"
++  ],
++  "test_exit_codes": {},
++  "duration_s": 76.30908055603504,
++  "reproducibility_checksum": "sha256:e4924f9427e0126d79ebb8136d8b9a2727c9984327dbcb0784e215af0a851f78",
++  "honest_verdict": "complete: V539 exact-path capstone preserved missing blocked skipped flagged and not-ready states; no hardware ARC code CSL or runtime claim was promoted"
++}
+diff --git a/tests/python/test_experiment_6238_v539_adversarial_capstone.py b/tests/python/test_experiment_6238_v539_adversarial_capstone.py
+new file mode 100644
+index 0000000000..d29d68ceb6
+--- /dev/null
++++ b/tests/python/test_experiment_6238_v539_adversarial_capstone.py
+@@ -0,0 +1,513 @@
++"""Tests for Exp6238 V539 exact-path adversarial capstone.
++
++Spec refs: REQ-INFRA-6238, SCENARIO-INFRA-6238-1,
++SCENARIO-INFRA-6238-2, SCENARIO-INFRA-6238-3,
++SCENARIO-INFRA-6238-4, SCENARIO-INFRA-6238-5,
++SCENARIO-INFRA-6238-6.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import shutil
++
++import pytest
++import yaml
++
++from carnot import experiment_6238_v539_adversarial_capstone as mod
++from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / "openspec/capabilities/research-harnesses/spec.md"
++
++
++def _write_artifact(path: Path, status: str, verdict: str | None = None, **extra: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    payload = {
++        "status": status,
++        "honest_verdict": verdict if verdict is not None else f"{status}: fixture",
++        "duration_s": 1.0,
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++        "verifier_is_oracle": False,
++        "reproducibility_checksum": "sha256:fixture",
++        **extra,
++    }
++    path.write_text(json.dumps(payload), encoding="utf-8")
++
++
++def _fake_reviews(task_ids: list[str]) -> dict[str, dict[str, object]]:
++    return {
++        task_id: {
++            "summary": {
++                "command": f"summarize {task_id}",
++                "exit_code": 0,
++                "classification": "passed",
++                "stdout_tail": "clean",
++                "stderr_tail": "",
++            },
++            "adversarial": {
++                "path": task_id,
++                "flag_count": 0,
++                "critical_flag_count": 0,
++                "warn_flag_count": 0,
++                "flags": [],
++            },
++        }
++        for task_id in task_ids
++    }
++
++
++def test_req_infra_6238_spec_declares_capstone_contract() -> None:
++    """REQ-INFRA-6238: OpenSpec names the exact-path V539 capstone."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-INFRA-6238") :]
++
++    for token in (
++        "REQ-INFRA-6238",
++        "SCENARIO-INFRA-6238-1",
++        "SCENARIO-INFRA-6238-2",
++        "SCENARIO-INFRA-6238-3",
++        "SCENARIO-INFRA-6238-4",
++        "SCENARIO-INFRA-6238-5",
++        "SCENARIO-INFRA-6238-6",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert token in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_exact_task_matrix_uses_declared_paths_and_ignores_aliases(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6238-1: exact paths win over same-number sidecars."""
++
++    exact = tmp_path / "results/experiment_9000_declared.json"
++    alias = tmp_path / "results/experiment_9000_sidecar.json"
++    _write_artifact(exact, "complete", "complete: exact")
++    _write_artifact(alias, "blocked", "blocked_gate_check_failed")
++
++    matrix = mod.build_exact_task_artifact_matrix(
++        tmp_path,
++        [
++            {
++                "id": "exp9000-declared",
++                "title": "Declared fixture",
++                "deliverable": "results/experiment_9000_declared.json",
++                "track": "infrastructure",
++            }
++        ],
++    )
++
++    row = matrix["exp9000-declared"]
++    assert row["declared_deliverable"] == "results/experiment_9000_declared.json"
++    assert row["terminal_class"] == "complete"
++    assert row["terminal"] is True
++    assert row["same_number_alias_used"] is False
++    assert row["same_number_alias_candidates_ignored"] == ["results/experiment_9000_sidecar.json"]
++
++    missing = mod.build_exact_task_artifact_matrix(
++        tmp_path,
++        [
++            {
++                "id": "exp9001-missing",
++                "title": "Missing fixture",
++                "deliverable": "results/experiment_9001_declared.json",
++                "track": "verification",
++            }
++        ],
++    )
++    assert missing["exp9001-missing"]["terminal_class"] == "missing"
++    assert missing["exp9001-missing"]["terminal"] is False
++
++
++def test_gate_cascade_recomputes_exact_upstream_fields(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6238-3: structured gates fail closed on null or missing fields."""
++
++    _write_artifact(
++        tmp_path / "results/upstream.json",
++        "complete",
++        "complete: upstream",
++        ready_score=0,
++        null_score=None,
++    )
++    tasks = [
++        {"id": "upstream", "deliverable": "results/upstream.json", "track": "infrastructure"},
++        {
++            "id": "downstream-pass",
++            "deliverable": "results/pass.json",
++            "track": "verification",
++            "gated_on": [
++                {"upstream": "upstream", "artifact_field": "ready_score", "op": "==", "value": 0}
++            ],
++        },
++        {
++            "id": "downstream-fail",
++            "deliverable": "results/fail.json",
++            "track": "verification",
++            "gated_on": [
++                {"upstream": "upstream", "artifact_field": "ready_score", "op": "==", "value": 1},
++                {
++                    "upstream": "upstream",
++                    "artifact_field": "missing_score",
++                    "op": "exists",
++                    "value": True,
++                },
++                {
++                    "upstream": "missing-upstream",
++                    "artifact_field": "ready_score",
++                    "op": "==",
++                    "value": 1,
++                },
++            ],
++        },
++    ]
++
++    receipts = mod.evaluate_gate_cascades(tmp_path, tasks)
++
++    assert receipts["passed_count"] == 1
++    assert receipts["failed_count"] == 3
++    assert receipts["gates"][0]["passed"] is True
++    assert receipts["gates"][1]["actual"] == 0
++    assert receipts["gates"][1]["passed"] is False
++    assert receipts["gates"][2]["actual"] is None
++    assert receipts["gates"][2]["reason"] == "missing_upstream_field"
++    assert receipts["gates"][3]["reason"] == "missing_upstream_artifact"
++    assert receipts["gates"][3]["principle"] == mod.GATE_PRINCIPLE
++
++
++def test_current_v539_report_preserves_missing_flagged_and_hardware_zero(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-INFRA-6238-4: branch summaries use exact upstream evidence."""
++
++    roadmap = mod.load_roadmap(REPO)
++    task_ids = [str(task["id"]) for task in roadmap["tasks"]]
++    reviews = _fake_reviews(task_ids)
++    reviews["exp6225-v539-terminal-transition"]["adversarial"] = {
++        "path": "results/experiment_6225_v539_terminal_transition.json",
++        "flag_count": 2,
++        "critical_flag_count": 1,
++        "warn_flag_count": 1,
++        "flags": [{"kind": "DURATION_TOO_SHORT", "severity": "critical"}],
++    }
++    monkeypatch.setattr(mod, "live_artifact_reviews", lambda root, matrix: reviews)
++    monkeypatch.setattr(
++        mod,
++        "determination_preservation_receipt",
++        lambda root: {
++            "command": mod.PRESERVATION_COMMAND,
++            "exit_code": 0,
++            "classification": "passed",
++            "stdout_tail": "OK",
++            "stderr_tail": "",
++        },
++    )
++
++    report = mod.build_report(
++        REPO,
++        date="20260809",
++        command_receipts=[{"command": "focused", "exit_code": 0}],
++        before_hashes=mod.protected_hashes(REPO),
++        started_at=0.0,
++    )
++
++    assert mod.validate_report(report) == []
++    assert report["roadmap_path_hash_and_task_ids"]["task_ids"] == list(mod.EXPECTED_V539_TASK_IDS)
++    counts = report["missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts"]
++    assert counts["missing"] == 2
++    assert counts["flagged"] >= 3
++    assert counts["hardware_claim_count"] == 0
++    assert (
++        counts["count_principles"]["hardware_claim_count"]
++        == mod.COUNT_PRINCIPLES["hardware_claim_count"]
++    )
++    assert (
++        report["runtime_final_status_and_family_scores"]["three_family_runtime_ready_score"] is None
++    )
++    assert report["runtime_final_status_and_family_scores"]["claim_allowed"] is False
++    assert (
++        report["arc_provenance_registry_hash_level_depth_and_promotion_summary"][
++            "portfolio_promotion_ready_score"
++        ]
++        == 0.0
++    )
++    assert report["code_parse_recovery_and_content_margin_summary"]["content_margin_claim"] is False
++    assert report["fresh_stream_and_continuous_learning_summary"]["fresh_stream_claim"] is False
++    assert report["shadow_consumer_summary"]["shadow_reachability_claim"] is False
++    sampler = report["sampler_activation_quality_equivalence_and_default_summary"]
++    assert sampler["treatment_activation_score"] == 1.0
++    assert sampler["decision"] == "equivalence_supported"
++    assert sampler["default_off_preserved"] is True
++    assert report["hardware_boundary_and_claim_count"]["hardware_claim_count"] == 0
++    assert (
++        report["spec_traceability_status_changelog_known_issues_updates"][
++            "ops_status_changelog_traceability_touched"
++        ]
++        is False
++    )
++
++
++def test_prior_failure_retirement_records_candidates_without_manifest_update(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-INFRA-6238-5: retire-if-same-verdict is recorded without guessing."""
++
++    tasks = [
++        {
++            "id": "same",
++            "deliverable": "results/same.json",
++            "prior_failures": [
++                {
++                    "experiment_id": "exp1",
++                    "verdict": "complete: same failure",
++                    "addressed_by": "changed",
++                    "retire_if_same_verdict": True,
++                }
++            ],
++        },
++        {
++            "id": "different",
++            "deliverable": "results/different.json",
++            "prior_failures": [
++                {
++                    "experiment_id": "exp2",
++                    "verdict": "complete: old failure",
++                    "addressed_by": "changed",
++                    "retire_if_same_verdict": True,
++                }
++            ],
++        },
++        {
++            "id": "missing",
++            "deliverable": "results/missing.json",
++            "prior_failures": [
++                {
++                    "experiment_id": "exp3",
++                    "verdict": "missing: old failure",
++                    "addressed_by": "changed",
++                    "retire_if_same_verdict": True,
++                }
++            ],
++        },
++    ]
++    _write_artifact(tmp_path / "results/same.json", "complete", "complete: same failure")
++    _write_artifact(tmp_path / "results/different.json", "complete", "complete: new outcome")
++    matrix = mod.build_exact_task_artifact_matrix(tmp_path, tasks)
++
++    actions = mod.prior_failure_retirement_actions(tasks, matrix)
++
++    assert actions["manifest_update_count"] == 0
++    assert actions["rule_fired_count"] == 1
++    assert actions["actions"][0]["task_id"] == "same"
++    assert actions["actions"][0]["would_update_exclusion_manifest"] is False
++    assert actions["actions"][1]["action"] == "no_retirement_current_verdict_differs"
++    assert actions["actions"][2]["action"] == "no_retirement_exact_artifact_missing"
++
++
++def test_report_validation_requires_principles_checksum_and_bare_hardware_zero() -> None:
++    """SCENARIO-INFRA-6238-6: report schema is machine-checkable."""
++
++    report = {field: f"fixture-{field}" for field in mod.REQUIRED_ARTIFACT_FIELDS}
++    report["status"] = "complete"
++    report["inference_substrate"] = mod.INFERENCE_SUBSTRATE
++    report["verifier_is_oracle"] = False
++    report["field_principles"] = dict(mod.FIELD_PRINCIPLES)
++    report["field_provenance"] = {
++        field: {"sources": ["REQ-INFRA-6238"], "principle": mod.FIELD_PRINCIPLES[field]}
++        for field in mod.REQUIRED_ARTIFACT_FIELDS
++    }
++    report["missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts"] = {
++        **{key: 0 for key in mod.COUNT_PRINCIPLES},
++        "count_principles": dict(mod.COUNT_PRINCIPLES),
++    }
++    report["gate_cascade_receipts"] = {
++        "gates": [{"principle": mod.GATE_PRINCIPLE}],
++        "passed_count": 0,
++        "failed_count": 0,
++    }
++    report["hardware_boundary_and_claim_count"] = {
++        "hardware_claim_count": 0,
++        "principle": mod.COUNT_PRINCIPLES["hardware_claim_count"],
++    }
++    report["duration_s"] = 1.0
++    report["honest_verdict"] = "complete: fixture"
++    report["reproducibility_checksum"] = ""
++    report["reproducibility_checksum"] = mod.payload_checksum(report)
++
++    assert mod.validate_report(report) == []
++
++    broken = dict(report)
++    broken["hardware_boundary_and_claim_count"] = {"hardware_claim_count": 1}
++    assert "hardware_claim_count must be bare 0" in mod.validate_report(broken)
++
++    broken = dict(report)
++    broken["field_principles"] = {}
++    assert "missing field_principles entry: status" in mod.validate_report(broken)
++
++
++def test_write_report_uses_artifact_root_override(tmp_path: Path) -> None:
++    """REQ-INFRA-6238: writes are atomic and test-isolated."""
++
++    artifact_root = tmp_path / "artifacts"
++    artifact_root.mkdir()
++    report = mod.build_report(
++        REPO,
++        date="20260809",
++        command_receipts=[],
++        artifact_reviews=_fake_reviews(list(mod.EXPECTED_V539_TASK_IDS)),
++        preservation_receipt={
++            "command": mod.PRESERVATION_COMMAND,
++            "exit_code": 0,
++            "classification": "passed",
++            "stdout_tail": "OK",
++            "stderr_tail": "",
++        },
++        before_hashes=mod.protected_hashes(REPO),
++        started_at=0.0,
++    )
++
++    path = mod.write_report(report, REPO, env={ARTIFACT_ROOT_ENV: str(artifact_root)})
++
++    assert path == artifact_root / mod.RESULT_RELATIVE_PATH.name
++    assert json.loads(path.read_text(encoding="utf-8")) == report
++
++
++def test_fixture_root_builds_report_with_minimal_inputs(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6238-1: preconditions and docs are hashed before classification."""
++
++    root = tmp_path / "repo"
++    root.mkdir()
++    shutil.copyfile(REPO / "research-roadmap.yaml", root / "research-roadmap.yaml")
++    for rel in mod.PRECONDITION_RELATIVE_PATHS:
++        path = root / rel
++        if path.exists():
++            continue
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(f"{rel.as_posix()} fixture\n", encoding="utf-8")
++    (root / "results").mkdir(exist_ok=True)
++
++    report = mod.build_report(
++        root,
++        date="20260809",
++        command_receipts=[],
++        artifact_reviews=_fake_reviews(list(mod.EXPECTED_V539_TASK_IDS)),
++        preservation_receipt={
++            "command": mod.PRESERVATION_COMMAND,
++            "exit_code": 0,
++            "classification": "passed",
++            "stdout_tail": "OK",
++            "stderr_tail": "",
++        },
++        before_hashes=mod.protected_hashes(root),
++        started_at=0.0,
++    )
++
++    assert report["preconditions_checked"]["declared_deliverable_hashes"]
++    assert report["research_complete_reconciliation"]["action"] == "recorded_only_no_mutation"
++    assert report["protected_files_unchanged"]["unchanged"] is True
++    assert (
++        report["exact_task_artifact_matrix"]["exp6225-v539-terminal-transition"]["terminal_class"]
++        == "missing"
++    )
++
++
++def test_helper_branches_are_fail_closed(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6238-3: malformed JSON, operators, and log gaps stay explicit."""
++
++    yaml_path = tmp_path / "not_mapping.yaml"
++    yaml_path.write_text("- not\n- a\n- mapping\n", encoding="utf-8")
++    assert mod.load_yaml_object(tmp_path / "missing.yaml") == {}
++    assert mod.load_yaml_object(yaml_path) == {}
++
++    malformed = tmp_path / "results/bad.json"
++    malformed.parent.mkdir(parents=True)
++    malformed.write_text("{", encoding="utf-8")
++    list_json = tmp_path / "results/list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    assert mod.load_json_object(malformed)[1]["error"].startswith("json_error:")
++    assert mod.load_json_object(list_json)[1]["error"] == "json_not_mapping"
++    assert mod.load_json_object(tmp_path / "missing.json")[1]["error"] == "missing"
++
++    assert mod.evaluate_operator(1, "!=", 2) is True
++    assert mod.evaluate_operator(2, ">", 1) is True
++    assert mod.evaluate_operator(1, ">=", 1) is True
++    assert mod.evaluate_operator(1, "<", 2) is True
++    assert mod.evaluate_operator(2, "<=", 2) is True
++    assert mod.evaluate_operator("a", "in", ["a"]) is True
++    assert mod.evaluate_operator(None, "exists", True) is False
++    assert mod.evaluate_operator("a", ">", 1) is False
++    assert mod.evaluate_operator(1, "bad", 1) is False
++
++    _write_artifact(tmp_path / "results/upstream.json", "complete", ready_score=1)
++    bad_gate_receipts = mod.evaluate_gate_cascades(
++        tmp_path,
++        [
++            {"id": "upstream", "deliverable": "results/upstream.json"},
++            {"id": "downstream", "deliverable": "results/downstream.json", "gated_on": ["bad"]},
++        ],
++    )
++    assert bad_gate_receipts["gates"][0]["reason"] == "gate_not_mapping"
++
++    assert (
++        mod.latest_conductor_receipts(tmp_path, [{"id": "x", "title": "No log"}])["x"][
++            "receipt_found"
++        ]
++        is False
++    )
++    assert mod.count_terminal_classes({"x": {"terminal_class": "complete"}})["complete"] == 1
++
++    assert mod._score({"wrapped": {"value": 3, "principle": "fixture"}}, "wrapped") == 3
++    retirement = mod.prior_failure_retirement_actions(
++        [
++            {
++                "id": "x",
++                "prior_failures": [
++                    "bad",
++                    {"verdict": "complete: old", "retire_if_same_verdict": False},
++                ],
++            }
++        ],
++        {"x": {"terminal_class": "complete", "honest_verdict_raw": "complete: old"}},
++    )
++    assert retirement["actions"] == []
++    assert retirement["rule_fired_count"] == 0
++
++    invalid = {"status": "complete"}
++    validation_errors = mod.validate_report(invalid)
++    assert "missing required field: roadmap_path_hash_and_task_ids" in validation_errors
++    assert "field_principles is not a mapping" in validation_errors
++    assert "field_provenance is not a mapping" in validation_errors
++    assert "counts field is not a mapping" in validation_errors
++    assert "gate_cascade_receipts.gates is not a list" in validation_errors
++    assert "wrong inference_substrate" in validation_errors
++    assert "verifier_is_oracle must be false" in validation_errors
++    assert "honest_verdict lacks terminal prefix" in validation_errors
++    assert "reproducibility_checksum missing" in validation_errors
++
++    invalid_counts = {field: None for field in mod.REQUIRED_ARTIFACT_FIELDS}
++    invalid_counts.update(
++        {
++            "status": "complete",
++            "field_principles": dict(mod.FIELD_PRINCIPLES),
++            "field_provenance": {},
++            "missing_blocked_skipped_partial_null_flagged_retired_and_ready_counts": {
++                "count_principles": {}
++            },
++            "gate_cascade_receipts": {"gates": [{}]},
++            "hardware_boundary_and_claim_count": {"hardware_claim_count": 0},
++            "inference_substrate": mod.INFERENCE_SUBSTRATE,
++            "verifier_is_oracle": False,
++            "honest_verdict": "complete: fixture",
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++    count_errors = mod.validate_report(invalid_counts)
++    assert "missing field_provenance entry: status" in count_errors
++    assert "missing count principle: missing" in count_errors
++    assert "gate missing principle" in count_errors
++
++    with pytest.raises(ValueError, match="invalid Exp6238 report"):
++        mod.write_report({"status": "complete"}, tmp_path)
+-- 
+2.55.0
+

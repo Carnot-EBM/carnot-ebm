@@ -1,0 +1,933 @@
+From b10c353e4fc75d13734dc78b1d6854d93d2de6bc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 19:12:37 -0400
+Subject: [PATCH 02654/11362] =?UTF-8?q?[conductor]=20PHASE=20E3=20(HARDWAR?=
+ =?UTF-8?q?E=20CONTINUITY;=20KV260=20opportunistic=20per=20north-star=20?=
+ =?UTF-8?q?=C2=A73)=20--=20KV260=20SSH-reachability=20+=20loaded-bitstream?=
+ =?UTF-8?q?=20continuity=20check.=20Per=20north-star=20=C2=A73,=20KV260=20?=
+ =?UTF-8?q?is=20THE=20sovereignty=20story=20(drive=20to=20terminal,=20then?=
+ =?UTF-8?q?=20freeze);=20GateMate/PolarFire=20are=20opportunistic-only.=20?=
+ =?UTF-8?q?SSH-reachability=20precondition=20ONLY=20(NEVER=20a=20host=20SD?=
+ =?UTF-8?q?-card=20precondition=20per=20KV260=20SSH-Not-SD-Card=20Discipli?=
+ =?UTF-8?q?ne).=20If=20the=20board=20is=20reachable,=20record=20the=20load?=
+ =?UTF-8?q?ed=20overlay=20(xmutil=20listapps)=20+=20a=20lightweight=20live?=
+ =?UTF-8?q?ness=20check=20(the=20carnot=5Fising=20bitstream=20UIO=20device?=
+ =?UTF-8?q?=20present).=20If=20unreachable=20->=20honest=5Fverdict=20block?=
+ =?UTF-8?q?ed=5Fkv260=5Fssh=5Funreachable=20(a=20clean=20documented=20skip?=
+ =?UTF-8?q?,=20NOT=20a=20fabrication).=20This=20keeps=20the=20board=20visi?=
+ =?UTF-8?q?ble=20in=20the=20milestone=20retro=20without=20burning=20a=20de?=
+ =?UTF-8?q?ep=20task=20slot.=20NO=20host=20SD-card-device=20precondition?=
+ =?UTF-8?q?=20(the=20retired=20mechanism).=20NO=20TRM=20training.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4411-hardware-continuity-kv260
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  81 +++++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...periment_4411_hardware_continuity_kv260.py | 206 +++++++++++++++++
+ results/_diff_prompt.txt                      |  43 ++++
+ results/arc3_layerb_diffusiongemma_test.json  |  27 +++
+ ...riment_4411_hardware_continuity_kv260.json |  98 ++++++++
+ ...periment_4411_hardware_continuity_kv260.py |  29 +++
+ .../arc3_layerb_diffusiongemma_test.py        | 116 ++++++++++
+ ...periment_4411_hardware_continuity_kv260.py | 216 ++++++++++++++++++
+ 9 files changed, 817 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4411_hardware_continuity_kv260.py
+ create mode 100644 results/_diff_prompt.txt
+ create mode 100644 results/arc3_layerb_diffusiongemma_test.json
+ create mode 100644 results/experiment_4411_hardware_continuity_kv260.json
+ create mode 100644 results/experiment_4411_hardware_continuity_kv260.py
+ create mode 100644 scripts/experiments/arc3_layerb_diffusiongemma_test.py
+ create mode 100644 tests/python/test_experiment_4411_hardware_continuity_kv260.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index 20dac9a6c5..ffb36ba8af 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -8645,6 +8645,87 @@ KV260 host SD-card precondition.
+ 
+ ---
+ 
++### REQ-HW-4411
++
++**Title:** KV260 continuity check MUST preserve SSH-only reachability and loaded-bitstream reporting
++
++**Description:**
++Experiment 4411 MUST produce
++`results/experiment_4411_hardware_continuity_kv260.json` as a lightweight
++KV260-only continuity artifact. Per north-star §3, KV260 remains the
++sovereignty story, but this experiment is only an SSH-reachability plus
++loaded-bitstream continuity check, not a deep hardware build. The only valid
++KV260 precondition is:
++
++`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
++
++Host SD-card presence is NEVER a valid precondition for this task; host block
++device probes such as `/dev/mmcblk*` MUST NOT appear in the JSON artifact.
++
++If the SSH precondition fails, the experiment MUST write an honest
++`blocked_kv260_ssh_unreachable` verdict, set `kv260_reachable` to bare
++`false`, populate `preconditions_checked` with the failed SSH command, and stop
++without running the overlay or UIO probes. If SSH succeeds, the experiment MUST
++record the loaded overlay with:
++
++`ssh kria 'xmutil listapps'`
++
++and the UIO device presence with:
++
++`ssh kria 'ls /dev/uio*'`
++
++The artifact MUST read the prior KV260 continuity context from
++`results/experiment_4400_hardware_continuity_kv260.json` when available and
++MUST NOT fabricate terminal status when evidence is absent. If the terminal
++board-latency transcript is available, the artifact MUST capture it through the
++existing terminal-state evidence fields.
++
++The artifact MUST include `field_principles` entries for the required fields:
++
++- `honest_verdict`: `Terminal-prefixed (success_kv260_continuity_... or blocked_kv260_ssh_unreachable) -- a clean documented skip is honest, NOT a fabrication.`
++- `kv260_reachable`: `BARE bool: SSH reachability (the ONLY valid precondition; host SD-card presence is the retired wrong mechanism).`
++- `loaded_overlay`: `string: the xmutil listapps overlay + UIO liveness -- the board-state record that keeps the sovereignty board visible without a deep task slot.`
++- `preconditions_checked`: `Records the SSH reachability check (NOT a host SD-card check); pre-empts the retired-mechanism + fabrication modes.`
++- `random_seed`: `Determinism precondition for any sampled probe ordering.`
++
++**Acceptance criteria:**
++- `python3 results/experiment_4411_hardware_continuity_kv260.py` writes
++  `results/experiment_4411_hardware_continuity_kv260.json`.
++- If KV260 is unreachable, `honest_verdict` is exactly
++  `blocked_kv260_ssh_unreachable`, `kv260_reachable` is a bare boolean false,
++  `preconditions_checked` records the KV260 SSH command and exit code, and no
++  overlay/UIO probe is run.
++- If KV260 is reachable, `kv260_reachable` is a bare boolean true,
++  `loaded_overlay` records the `ssh kria 'xmutil listapps'` transcript,
++  `uio_device_presence` records the `ssh kria 'ls /dev/uio*'` transcript, and
++  the loaded bitstream/UIO liveness state is reported.
++- The JSON artifact includes `preconditions_checked`, the required
++  `field_principles`, deterministic seed, checksum, `hardware_smoke`
++  substrate, no fabric speedup claim, and no KV260 host SD-card precondition.
++- `honest_verdict` is either exactly `blocked_kv260_ssh_unreachable` or starts
++  with `success_kv260_continuity_`.
++
++**Implementation status:** Implemented (Exp 4411)
++
++---
++
++### SCENARIO-HW-4411
++
++**Scenario:** Exp 4411 records KV260 SSH reachability, loaded overlay, and UIO liveness.
++
++**Given:** KV260 is checked only through board SSH reachability and never
++through host SD-card presence.
++**When:** Experiment 4411 runs the KV260 SSH precondition and, only when it
++succeeds, runs `xmutil listapps` and `/dev/uio*` listing over SSH.
++**Then:** It writes `results/experiment_4411_hardware_continuity_kv260.json`
++with a terminal-prefixed verdict, bare `kv260_reachable`, `loaded_overlay`,
++`preconditions_checked`, UIO evidence, prior Exp 4400 context, deterministic
++seed, checksum, no speedup claim, and no KV260 host SD-card precondition.
++
++**Implementation status:** Implemented (Exp 4411)
++
++---
++
+ ### SCENARIO-HW-4334
+ 
+ **Scenario:** Exp 4334 reports KV260, PolarFire, and GateMate continuity without milestone blocking.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ba8e988364..633e37b52e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 180,
+   "code_violations": 0,
+-  "experiments_checked": 3423,
++  "experiments_checked": 3424,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4411_hardware_continuity_kv260.py b/python/carnot/experiment_4411_hardware_continuity_kv260.py
+new file mode 100644
+index 0000000000..4c7b756fc4
+--- /dev/null
++++ b/python/carnot/experiment_4411_hardware_continuity_kv260.py
+@@ -0,0 +1,206 @@
++"""Exp 4411 KV260 SSH reachability and loaded-bitstream continuity check.
++
++This continuation keeps the KV260 visible in the milestone retro without
++turning the task into a hardware build. The board is allowed to participate
++only through SSH reachability: if SSH fails, the artifact records a clean
++blocked verdict and stops before any overlay or device probe.
++
++Spec refs: REQ-HW-4411, SCENARIO-HW-4411.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_4356_hardware_continuity_kv260 as _base
++from carnot import experiment_4400_hardware_continuity_kv260 as _previous
++
++
++EXPERIMENT_ID = 4411
++SCHEMA = _previous.SCHEMA
++SPEC_REFS = ["REQ-HW-4411", "SCENARIO-HW-4411"]
++OUTPUT_REL_PATH = Path("results") / "experiment_4411_hardware_continuity_kv260.json"
++RANDOM_SEED = 4411
++INFERENCE_SUBSTRATE = _previous.INFERENCE_SUBSTRATE
++
++KV260_SSH_PRECONDITION = _previous.KV260_SSH_PRECONDITION
++KV260_LISTAPPS_COMMAND = _previous.KV260_LISTAPPS_COMMAND
++KV260_UIO_COMMAND = _previous.KV260_UIO_COMMAND
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "kv260_reachable",
++    "loaded_overlay",
++    "preconditions_checked",
++    "random_seed",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed (success_kv260_continuity_... or "
++        "blocked_kv260_ssh_unreachable) -- a clean documented skip is honest, "
++        "NOT a fabrication."
++    ),
++    "kv260_reachable": (
++        "BARE bool: SSH reachability (the ONLY valid precondition; host SD-card "
++        "presence is the retired wrong mechanism)."
++    ),
++    "loaded_overlay": (
++        "string: the xmutil listapps overlay + UIO liveness -- the board-state "
++        "record that keeps the sovereignty board visible without a deep task slot."
++    ),
++    "preconditions_checked": (
++        "Records the SSH reachability check (NOT a host SD-card check); pre-empts "
++        "the retired-mechanism + fabrication modes."
++    ),
++    "random_seed": "Determinism precondition for any sampled probe ordering.",
++}
++
++CommandProbe = _previous.CommandProbe
++CommandRunner = _previous.CommandRunner
++Clock = _previous.Clock
++
++run_command = _previous.run_command
++prepend_oss_cad_suite = _previous.prepend_oss_cad_suite
++command_to_string = _previous.command_to_string
++payload_checksum = _previous.payload_checksum
++
++
++def build_artifact(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++) -> dict[str, Any]:
++    """Build the Exp 4411 artifact from live or injected KV260 SSH probes."""
++    root = Path(repo_root)
++    artifact = _previous.build_artifact(
++        repo_root=root,
++        command_runner=command_runner,
++        clock=clock,
++    )
++    artifact.update(
++        {
++            "experiment": EXPERIMENT_ID,
++            "spec_refs": list(SPEC_REFS),
++            "random_seed": RANDOM_SEED,
++            "field_principles": dict(FIELD_PRINCIPLES),
++            "source_context": _source_context(root),
++        }
++    )
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = ""
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def honest_verdict(artifact: dict[str, Any]) -> str:
++    """Return the terminal-prefixed Exp 4411 verdict."""
++    return _previous.honest_verdict(artifact)
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++) -> Path:
++    """Run Exp 4411 and write the requested KV260 continuity JSON artifact."""
++    prepend_oss_cad_suite()
++    artifact = build_artifact(repo_root=repo_root, command_runner=command_runner, clock=clock)
++    return write_artifact(repo_root, artifact)
++
++
++def write_artifact(repo_root: str | Path, artifact: dict[str, Any]) -> Path:
++    path = Path(repo_root) / OUTPUT_REL_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    _require(artifact.get("schema") == SCHEMA, "schema must identify KV260 continuity")
++    _require(artifact.get("experiment") == EXPERIMENT_ID, "experiment must be 4411")
++    _require(artifact.get("spec_refs") == SPEC_REFS, "spec_refs must name REQ/SCENARIO 4411")
++    _require(artifact.get("random_seed") == RANDOM_SEED, "random_seed must be 4411")
++    missing = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact)
++    _require(not missing, f"missing required artifact fields: {sorted(missing)}")
++    _validate_principles(artifact)
++    _base._validate_bare_bool(artifact, "kv260_reachable")
++    _base._validate_bare_bool(artifact, "kv260_terminal_state_reached")
++    _base._validate_preconditions(artifact)
++    _base._validate_overlay(artifact)
++    _base._validate_uio(artifact)
++    _base._validate_transcript(artifact)
++    _validate_source_context(artifact)
++    _require(
++        "mmcblk" not in json.dumps(artifact, sort_keys=True, default=str).lower(),
++        "SD-card precondition marker is forbidden",
++    )
++    _require(
++        artifact.get("inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate must be hardware_smoke",
++    )
++    _require(artifact.get("honest_verdict") == honest_verdict(artifact), "stale verdict")
++    _require(artifact.get("fabric_acceleration_claimed") is False, "no fabric acceleration claim")
++    _require(artifact.get("speedup_claim_made") is False, "no speedup claim")
++    _require(artifact.get("reproducibility_checksum") == payload_checksum(artifact), "bad checksum")
++
++
++def _validate_principles(artifact: dict[str, Any]) -> None:
++    principles = artifact.get("field_principles")
++    _require(isinstance(principles, dict), "field_principles must be dict")
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _require(principles.get(field) == FIELD_PRINCIPLES[field], f"{field} principle mismatch")
++        _require(
++            not (
++                isinstance(artifact[field], dict) and set(artifact[field]) == {"value", "principle"}
++            ),
++            f"{field} must remain a bare value",
++        )
++
++
++def _source_context(repo_root: Path) -> dict[str, Any]:
++    prior_path = repo_root / "results" / "experiment_4400_hardware_continuity_kv260.json"
++    prior_payload = _base._read_json(prior_path)
++    return {
++        "previous_experiment": 4400,
++        "most_recent_hardware_continuity_artifact": str(prior_path),
++        "previous_artifact_read": bool(prior_payload),
++        "previous_honest_verdict": prior_payload.get("honest_verdict"),
++        "previous_kv260_reachable": prior_payload.get("kv260_reachable"),
++    }
++
++
++def _validate_source_context(artifact: dict[str, Any]) -> None:
++    source = artifact.get("source_context")
++    _require(isinstance(source, dict), "source_context must be present")
++    _require(source.get("previous_experiment") == 4400, "source_context must read Exp 4400")
++    _require(
++        str(source.get("most_recent_hardware_continuity_artifact", "")).endswith(
++            "experiment_4400_hardware_continuity_kv260.json"
++        ),
++        "source_context must point at Exp 4400",
++    )
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def main() -> None:  # pragma: no cover
++    out_path = run_experiment(repo_root=Path(__file__).resolve().parents[2])
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"kv260_reachable: {artifact['kv260_reachable']}")
++    print(f"loaded_overlay: {artifact['loaded_overlay']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/_diff_prompt.txt b/results/_diff_prompt.txt
+new file mode 100644
+index 0000000000..14481785e0
+--- /dev/null
++++ b/results/_diff_prompt.txt
+@@ -0,0 +1,43 @@
++You are inducing the WIN RULE of an ARC-AGI-3 configuration puzzle ('tn36'). I have already
++done the hard perception work for you -- you do NOT need to read a full 64x64 grid. Reason ONLY over the
++small extracted regions below.
++
++The player edits the EDITABLE region: rows 1..1, cols 2..61 (background colour=5).
++The level COMPLETES when the editable region's values satisfy a rule defined by the static REFERENCE
++region elsewhere in the scene.
++
++EDITABLE region in the WINNING configuration (exact values + per-colour counts; do NOT re-count by eye):
++  WIN: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3]  counts={3: 6, 9: 54}
++
++EDITABLE region in NON-winning configurations:
++  NON-WIN 1: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3]  counts={3: 1, 9: 59}
++  NON-WIN 2: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 11, 9: 49}
++  NON-WIN 3: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 21, 9: 39}
++  NON-WIN 4: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 31, 9: 29}
++  NON-WIN 5: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 41, 9: 19}
++
++The static REFERENCE region (the 'rule area'); it does not change as the player edits:
++reference region rows 8..59, cols 13..50 (component coords are RELATIVE to r8,c13):
++  colour 0: total_cells=353, components=1 (r0-42,c0-37,n353)
++  colour 1: total_cells=18, components=6 (r34-34,c12-14,n3) (r34-34,c22-24,n3) (r34-34,c27-29,n3) (r36-38,c13-13,n3) (r36-38,c23-23,n3) (r36-38,c28-28,n3)
++  colour 4: total_cells=550, components=36 (r1-4,c5-8,n16) (r1-4,c13-16,n16) (r1-4,c21-24,n16) (r1-4,c29-32,n16) (r5-8,c1-4,n16) (r5-8,c9-12,n16)
++  colour 9: total_cells=69, components=1 (r43-51,c19-27,n69)
++  colour 11: total_cells=30, components=2 (r5-8,c17-20,n14) (r25-29,c16-21,n16)
++
++Write a Python predicate that recomputes the rule and returns True ONLY for winning configurations:
++
++    import numpy as np
++    def is_win(grid):
++        # grid: 64x64 numpy int array.
++        e = grid[1:2, 2:62]   # the editable region
++        # Return True iff e satisfies the win rule implied by the reference region.
++        ...
++
++Rules:
++- Derive a RELATION between the editable region and the reference region (e.g. e equals / mirrors /
++  encodes / counts the reference). Do NOT hardcode the literal winning array -- that will not generalize
++  to other levels and is wrong.
++- Use ONLY numpy + stdlib. Make is_win deterministic. Start immediately with `import numpy as np`.
++
++Return ONLY one ```python code block with def is_win.
++```python
+diff --git a/results/arc3_layerb_diffusiongemma_test.json b/results/arc3_layerb_diffusiongemma_test.json
+new file mode 100644
+index 0000000000..e0264d8011
+--- /dev/null
++++ b/results/arc3_layerb_diffusiongemma_test.json
+@@ -0,0 +1,27 @@
++{
++  "experiment": "arc3_layerb_diffusiongemma_test",
++  "model": "diffusiongemma-26B-A4B-it-Q4_K_M",
++  "runner": "llama-diffusion-cli (HIP/iGPU)",
++  "n_predict": 384,
++  "per_game": [
++    {
++      "game": "ka59",
++      "wall_s": 48.7,
++      "tok_per_s": null,
++      "coherent": false,
++      "raw_sample": "\n<|channel>thought\n*   Editable region: `grid[63:64, 26:64]` (1x38 cells).\n    *   Reference region: `grid[21:42, 9:53]` (21x45 cells).\n    *   Goal: Find a rule that connects the reference region to the editable region.\n\n    *   Colour 0: 1 cell, 1 component.\n    *   Colour 1: 607 cells, 5 components.\n    *   Colour 4: 32 cells, 2 components.\n    *   Colour 5: 1 cell, 1 component.\n    *   Colour 14: 16 cells, 2 components.\n    *   Colour 15: 126 cells, 1 component.\n\n    Wait, let's re-count the total cells in the reference region:\n    *   0: 1\n    *   1: 607\n    *   4: 32\n    *   5: 1\n    *  ",
++      "tier": "TIER0_FAIL"
++    },
++    {
++      "game": "tn36",
++      "wall_s": 59.8,
++      "tok_per_s": null,
++      "coherent": false,
++      "raw_sample": "\n<|channel>thought\n*   Editable region: `grid[1:2, 2:62]` (1x60).\n    *   Background color: 5.\n    *   Reference region: `grid[8:60, 13:51]` (52x38).\n\n    *   Color 0: 353 cells, 1 component.\n    *   Color 1: 18 cells, 6 components.\n    *   Color 4: 550 cells, 36 components.\n    *   Color 9: 69 cells, 1 component.\n    *   Color 11: 30 cells, 2 components.\n\n    *   WIN: {3: 6, 9: 54}\n    *   NON-WIN 1: {3: 1, 9: 59}\n    *   NON-WIN 2: {3: 11, 9: 49}\n    *   NON-WIN 3: {3: 21, 9: 39}\n    *   NON-WIN 4: {3: 31, 9: 29}\n    *   NON-WIN 5: {3: 41, 9: 19}\n\n    Wait, the total number of cells in the e",
++      "tier": "TIER0_FAIL"
++    }
++  ],
++  "grounded_games": [],
++  "honest_verdict": "complete_diffusiongemma_layerb_grounded_0",
++  "inference_substrate": "offline_arc_agi3_diffusiongemma26b_block_diffusion_iGPU"
++}
+\ No newline at end of file
+diff --git a/results/experiment_4411_hardware_continuity_kv260.json b/results/experiment_4411_hardware_continuity_kv260.json
+new file mode 100644
+index 0000000000..60690ff244
+--- /dev/null
++++ b/results/experiment_4411_hardware_continuity_kv260.json
+@@ -0,0 +1,98 @@
++{
++  "board_state_transcript": [
++    {
++      "board": "kv260",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.607114,
++      "exit_code": 0,
++      "output_excerpt": "returncode=0",
++      "stage": "kv260_ssh_precondition"
++    },
++    {
++      "board": "kv260",
++      "command": "ssh kria 'xmutil listapps'",
++      "duration_s": 0.76052,
++      "exit_code": 1,
++      "output_excerpt": "xmutil should be called with root privileges. Please try again using 'sudo'.",
++      "stage": "kv260_xmutil_listapps"
++    },
++    {
++      "board": "kv260",
++      "command": "ssh kria 'ls /dev/uio*'",
++      "duration_s": 0.466569,
++      "exit_code": 0,
++      "output_excerpt": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3",
++      "stage": "kv260_uio_device_presence"
++    }
++  ],
++  "duration_s": 5.835192,
++  "experiment": 4411,
++  "fabric_acceleration_claimed": false,
++  "field_principles": {
++    "honest_verdict": "Terminal-prefixed (success_kv260_continuity_... or blocked_kv260_ssh_unreachable) -- a clean documented skip is honest, NOT a fabrication.",
++    "kv260_reachable": "BARE bool: SSH reachability (the ONLY valid precondition; host SD-card presence is the retired wrong mechanism).",
++    "loaded_overlay": "string: the xmutil listapps overlay + UIO liveness -- the board-state record that keeps the sovereignty board visible without a deep task slot.",
++    "preconditions_checked": "Records the SSH reachability check (NOT a host SD-card check); pre-empts the retired-mechanism + fabrication modes.",
++    "random_seed": "Determinism precondition for any sampled probe ordering."
++  },
++  "honest_verdict": "success_kv260_continuity_terminal_reached",
++  "inference_substrate": "hardware_smoke",
++  "kv260_reachable": true,
++  "kv260_terminal_state_reached": true,
++  "loaded_overlay": {
++    "carnot_ising_loaded": false,
++    "command": "ssh kria 'xmutil listapps'",
++    "exit_code": 1,
++    "output_excerpt": "xmutil should be called with root privileges. Please try again using 'sudo'.",
++    "overlay_names": [],
++    "status": "xmutil_listapps_returncode_1"
++  },
++  "preconditions_checked": [
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.607114,
++      "exit_code": 0,
++      "mechanism": "ssh",
++      "observed": "returncode=0",
++      "resource": "kv260_ssh"
++    }
++  ],
++  "random_seed": 4411,
++  "reproducibility_checksum": "60a90fe2c135bb93bb4b3cfeeb967bfc099949b0bf9d069b4c300a2a6a2f6ff7",
++  "schema": "carnot.hardware_continuity_kv260_ssh_overlay.v1",
++  "source_context": {
++    "most_recent_hardware_continuity_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4400_hardware_continuity_kv260.json",
++    "previous_artifact_read": true,
++    "previous_experiment": 4400,
++    "previous_honest_verdict": "success_kv260_continuity_terminal_reached",
++    "previous_kv260_reachable": true
++  },
++  "spec_refs": [
++    "REQ-HW-4411",
++    "SCENARIO-HW-4411"
++  ],
++  "speedup_claim_made": false,
++  "terminal_state_evidence": {
++    "board_latency_transcript_present": true,
++    "kv260_synthesis_succeeded": true,
++    "latency_mean_us": 3.183,
++    "n_cycles_measured": 100,
++    "source": "results/experiment_2742_kv260_latency_transcript_terminal.json",
++    "source_read": true,
++    "terminal_state_reached": true
++  },
++  "uio_device_presence": {
++    "command": "ssh kria 'ls /dev/uio*'",
++    "devices": [
++      "/dev/uio0",
++      "/dev/uio1",
++      "/dev/uio2",
++      "/dev/uio3"
++    ],
++    "exit_code": 0,
++    "output_excerpt": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3",
++    "status": "uio_devices_present",
++    "uio_devices_present": true
++  }
++}
+diff --git a/results/experiment_4411_hardware_continuity_kv260.py b/results/experiment_4411_hardware_continuity_kv260.py
+new file mode 100644
+index 0000000000..e12d0f7991
+--- /dev/null
++++ b/results/experiment_4411_hardware_continuity_kv260.py
+@@ -0,0 +1,29 @@
++#!/usr/bin/env python3
++"""Runner for Exp 4411 KV260 SSH-only hardware continuity.
++
++Spec refs: REQ-HW-4411, SCENARIO-HW-4411.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++
++def main() -> None:
++    from carnot.experiment_4411_hardware_continuity_kv260 import run_experiment
++
++    out_path = run_experiment(repo_root=REPO_ROOT)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path.relative_to(REPO_ROOT)}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"kv260_reachable: {artifact['kv260_reachable']}")
++    print(f"loaded_overlay: {artifact['loaded_overlay']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/scripts/experiments/arc3_layerb_diffusiongemma_test.py b/scripts/experiments/arc3_layerb_diffusiongemma_test.py
+new file mode 100644
+index 0000000000..1842aaf780
+--- /dev/null
++++ b/scripts/experiments/arc3_layerb_diffusiongemma_test.py
+@@ -0,0 +1,116 @@
++"""DiffusionGemma-26B-A4B (block-diffusion, ~4B active MoE) on Config Layer B -- speed + accuracy, vs
++gemma-4-12B and Qwopus-27B. Operator request (2026-06-18): compare the new
++unsloth/diffusiongemma-26B-A4B-it-GGUF.
++
++DiffusionGemma is NON-autoregressive: it denoises a fixed-length masked canvas over N steps (the whole
++canvas in PARALLEL per step), via the dedicated `llama-diffusion-cli` runner (standard llama-server
++cannot generate from it). We built llama-diffusion-cli for the HIP/iGPU backend (port-free CLI, NOT the
++3090s, per the 2026-06-17 directive). Smoke: 18.4 tok/s effective (256-tok canvas, 11 entropy-bound
++steps) -- ~4x gemma-12B's 4.2 tok/s because the canvas denoises in parallel. This is ALSO the project's
++pending DiffusionGemma gate model (docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md).
++
++Runs the SAME scaffolded Layer-B prompt as the gemma + Qwopus sweeps (prompt via -f file; is_win code
++extracted from stdout; grounded by the same verifier), so results are directly comparable. Reports the
++diffusion throughput (from the CLI's own timing line) + the grounding tier.
++
++Usage: python scripts/experiments/arc3_layerb_diffusiongemma_test.py [game ...]   (default: ka59 tn36)"""
++from __future__ import annotations
++
++import importlib.util
++import json
++import re
++import subprocess
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++DIFF_CLI = Path.home() / ".cache" / "llama.cpp-master" / "build-hip" / "bin" / "llama-diffusion-cli"
++N_PREDICT = 1024  # this is a REASONING model (<|channel>thought); the fixed canvas must hold
++# the chain-of-thought AND the code. 384 filled with reasoning before the code; 1024 lets it finish.
++
++
++def _find_gguf():
++    hits = list((Path.home() / ".cache" / "huggingface" / "hub").glob(
++        "models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/*/diffusiongemma-26B-A4B-it-Q4_K_M.gguf"))
++    return str(hits[0]) if hits else None
++
++
++def _scaffold():
++    spec = importlib.util.spec_from_file_location(
++        "sf", str(REPO / "scripts" / "experiments" / "arc3_config_layerb_scaffolded.py"))
++    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
++    return m
++
++
++def diffusion_generate(gguf, prompt):
++    """Run llama-diffusion-cli on the iGPU; return (stdout_text, wall_s, tok_per_s)."""
++    pf = REPO / "results" / "_diff_prompt.txt"
++    pf.write_text(prompt)
++    t0 = time.time()
++    proc = subprocess.run([str(DIFF_CLI), "-m", gguf, "-ngl", "999", "-n", str(N_PREDICT), "-f", str(pf)],
++                          capture_output=True, text=True, timeout=600)
++    dt = time.time() - t0
++    tps = None
++    ms = re.findall(r"throughput:\s*([\d.]+)\s*tok/s", proc.stderr)
++    if ms:
++        tps = float(ms[-1])
++    return proc.stdout, dt, tps
++
++
++def main():
++    games = sys.argv[1:] or ["ka59", "tn36"]
++    print(f"== DiffusionGemma-26B-A4B Layer-B test games={games} (iGPU, block-diffusion) ==", flush=True)
++    gguf = _find_gguf()
++    if not gguf or not DIFF_CLI.exists():
++        print(f"  blocked: gguf={bool(gguf)} cli={DIFF_CLI.exists()}", flush=True); return 1
++    sf = _scaffold()
++    from carnot.agentic.arc_executable_world_model import _extract_python
++    rows = []
++    for g in games:
++        sf.GAME = g
++        scene, eb, bg, ref_box, win, ch, nonwins = sf.collect()
++        if eb is None or win is None or len(nonwins) < 2:
++            rows.append({"game": g, "tier": "BLOCKED"}); print(f"  {g}: BLOCKED", flush=True); continue
++        win_sub = sf._edit_sub(win, eb)
++        prompt = sf.build_prompt(scene, eb, bg, ref_box, win, nonwins)
++        if len(prompt) // 4 > 4500:
++            rows.append({"game": g, "tier": "SKIPPED_PROMPT_TOO_LARGE", "approx_tok": len(prompt) // 4})
++            print(f"  {g}: SKIPPED (~{len(prompt)//4} tok)", flush=True); continue
++        try:
++            out, dt, tps = diffusion_generate(gguf, prompt)
++        except Exception as ex:
++            rows.append({"game": g, "tier": "GEN_ERROR", "err": str(ex)[:120]}); print(f"  {g}: GEN_ERROR {ex}", flush=True); continue
++        code = _extract_python(out) or out
++        row = {"game": g, "wall_s": round(dt, 1), "tok_per_s": tps, "coherent": "def is_win" in code, "raw_sample": out[:600]}
++        if "def is_win" in code:
++            ns = {}
++            try:
++                exec(code, ns)  # noqa: S102
++                v = sf.verify(ns.get("is_win", lambda x: False), win, nonwins)
++                fpr = v.get("false_positive_rate")
++                grounded = bool(v.get("fires_on_win")) and fpr is not None and fpr < 0.2
++                literal = sf._looks_literal_hardcode(code, win_sub)
++                row["verification"] = v; row["grounded"] = grounded; row["literal"] = bool(literal)
++                row["tier"] = ("TIER2_GROUNDED_RELATIONAL" if grounded and not literal else
++                               "TIER1_GROUNDED_LITERAL" if grounded else "TIER0_COHERENT_NOT_GROUNDED")
++            except Exception as ex:
++                row["tier"] = "TIER0_UNCOMPILABLE"; row["exec_error"] = str(ex)[:100]
++        else:
++            row["tier"] = "TIER0_FAIL"
++        rows.append(row)
++        print(f"  {g}: {row['tier']:28} {tps} tok/s ({row['wall_s']}s) coherent={row.get('coherent')}", flush=True)
++    out = {"experiment": "arc3_layerb_diffusiongemma_test", "model": "diffusiongemma-26B-A4B-it-Q4_K_M",
++           "runner": "llama-diffusion-cli (HIP/iGPU)", "n_predict": N_PREDICT, "per_game": rows,
++           "grounded_games": [r["game"] for r in rows if r.get("grounded")],
++           "honest_verdict": f"complete_diffusiongemma_layerb_grounded_{len([r for r in rows if r.get('grounded')])}",
++           "inference_substrate": "offline_arc_agi3_diffusiongemma26b_block_diffusion_iGPU"}
++    (REPO / "results" / "arc3_layerb_diffusiongemma_test.json").write_text(json.dumps(out, indent=2, default=str))
++    print(f"\n  grounded={out['grounded_games']} -> {out['honest_verdict']}", flush=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_4411_hardware_continuity_kv260.py b/tests/python/test_experiment_4411_hardware_continuity_kv260.py
+new file mode 100644
+index 0000000000..ecbf6257f2
+--- /dev/null
++++ b/tests/python/test_experiment_4411_hardware_continuity_kv260.py
+@@ -0,0 +1,216 @@
++"""Tests for Exp 4411 KV260 SSH-only hardware continuity.
++
++Spec refs: REQ-HW-4411, SCENARIO-HW-4411.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4411_hardware_continuity_kv260 as mod
++
++
++class RecordingRunner:
++    """SCENARIO-HW-4411 command runner with queued KV260 transcripts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        del timeout_s
++        command = tuple(command)
++        self.commands.append(command)
++        if command in self.probes and self.probes[command]:
++            return self.probes[command].pop(0)
++        raise AssertionError(f"unexpected command: {command!r}")
++
++
++def _probe(
++    command: tuple[str, ...],
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _write_previous_4400(repo_root: Path) -> None:
++    results = repo_root / "results"
++    results.mkdir(parents=True, exist_ok=True)
++    (results / "experiment_4400_hardware_continuity_kv260.json").write_text(
++        json.dumps(
++            {
++                "honest_verdict": "success_kv260_continuity_terminal_reached",
++                "kv260_reachable": True,
++                "loaded_overlay": {"carnot_ising_loaded": False},
++            }
++        ),
++        encoding="utf-8",
++    )
++
++
++def _write_terminal_2742(repo_root: Path) -> None:
++    results = repo_root / "results"
++    results.mkdir(parents=True, exist_ok=True)
++    (results / "experiment_2742_kv260_latency_transcript_terminal.json").write_text(
++        json.dumps(
++            {
++                "kv260_synthesis_succeeded": True,
++                "kv260_terminal": True,
++                "n_cycles_measured": 100,
++                "kv260_latency_mean_us": 3.183,
++            }
++        ),
++        encoding="utf-8",
++    )
++
++
++def test_req_hw_4411_spec_entry_declares_required_artifact_contract() -> None:
++    """REQ-HW-4411: OpenSpec anchors fields, principles, and SSH-only commands."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-HW-4411" in spec
++    assert "SCENARIO-HW-4411" in spec
++    assert "experiment_4411_hardware_continuity_kv260.json" in spec
++    assert "experiment_4400_hardware_continuity_kv260.json" in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert mod.FIELD_PRINCIPLES[field] in spec
++    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'" in spec
++    assert "ssh kria 'xmutil listapps'" in spec
++    assert "ssh kria 'ls /dev/uio*'" in spec
++    assert "blocked_kv260_ssh_unreachable" in spec
++    assert "Host SD-card presence is NEVER a valid precondition" in spec
++
++
++def test_scenario_hw_4411_reachable_records_loaded_overlay_uio_and_terminal(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-HW-4411: reachable KV260 records overlay, UIO, and terminal evidence."""
++    _write_previous_4400(tmp_path)
++    _write_terminal_2742(tmp_path)
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [_probe(mod.KV260_SSH_PRECONDITION, duration_s=0.2)],
++            mod.KV260_LISTAPPS_COMMAND: [
++                _probe(
++                    mod.KV260_LISTAPPS_COMMAND,
++                    stdout=(
++                        "Accelerator Accel_type Base Pid\n"
++                        "carnot_ising_v4 XRT_FLAT carnot_ising_v4 id_ok\n"
++                    ),
++                    duration_s=0.3,
++                )
++            ],
++            mod.KV260_UIO_COMMAND: [
++                _probe(mod.KV260_UIO_COMMAND, stdout="/dev/uio0\n/dev/uio3\n", duration_s=0.4)
++            ],
++        }
++    )
++
++    artifact = mod.build_artifact(repo_root=tmp_path, command_runner=runner)
++    out_path = mod.write_artifact(tmp_path, artifact)
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert runner.commands == [
++        mod.KV260_SSH_PRECONDITION,
++        mod.KV260_LISTAPPS_COMMAND,
++        mod.KV260_UIO_COMMAND,
++    ]
++    assert saved["experiment"] == mod.EXPERIMENT_ID
++    assert saved["spec_refs"] == mod.SPEC_REFS
++    assert saved["random_seed"] == mod.RANDOM_SEED
++    assert saved["field_principles"]["random_seed"] == mod.FIELD_PRINCIPLES["random_seed"]
++    assert saved["source_context"]["previous_experiment"] == 4400
++    assert saved["source_context"]["previous_artifact_read"] is True
++    assert saved["source_context"]["previous_honest_verdict"] == (
++        "success_kv260_continuity_terminal_reached"
++    )
++    assert saved["kv260_reachable"] is True
++    assert saved["loaded_overlay"]["carnot_ising_loaded"] is True
++    assert saved["loaded_overlay"]["overlay_names"] == ["carnot_ising_v4"]
++    assert saved["uio_device_presence"]["uio_devices_present"] is True
++    assert saved["uio_device_presence"]["devices"] == ["/dev/uio0", "/dev/uio3"]
++    assert saved["kv260_terminal_state_reached"] is True
++    assert saved["honest_verdict"] == "success_kv260_continuity_terminal_reached"
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    assert "mmcblk" not in json.dumps(saved).lower()
++    mod.validate_artifact(saved)
++
++
++def test_req_hw_4411_blocks_without_overlay_or_uio_when_kv260_ssh_fails(
++    tmp_path: Path,
++) -> None:
++    """REQ-HW-4411: KV260 SSH failure is an honest blocked non-fabrication."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [
++                _probe(mod.KV260_SSH_PRECONDITION, 255, stderr="ssh timeout", duration_s=0.6)
++            ],
++        }
++    )
++
++    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=runner)
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert runner.commands == [mod.KV260_SSH_PRECONDITION]
++    assert saved["honest_verdict"] == "blocked_kv260_ssh_unreachable"
++    assert saved["kv260_reachable"] is False
++    assert saved["loaded_overlay"]["status"] == "not_run_kv260_ssh_unreachable"
++    assert saved["uio_device_presence"]["status"] == "not_run_kv260_ssh_unreachable"
++    assert saved["kv260_terminal_state_reached"] is False
++    assert saved["preconditions_checked"][0]["resource"] == "kv260_ssh"
++    assert saved["preconditions_checked"][0]["available"] is False
++    assert "xmutil listapps" not in json.dumps(saved["loaded_overlay"])
++    assert "ls /dev/uio" not in json.dumps(saved["uio_device_presence"])
++    mod.validate_artifact(saved)
++
++
++def test_req_hw_4411_validation_rejects_stale_identity_and_bad_source_context(
++    tmp_path: Path,
++) -> None:
++    """REQ-HW-4411: validation rejects stale identity and missing Exp 4400 context."""
++    _write_previous_4400(tmp_path)
++    artifact = mod.build_artifact(repo_root=tmp_path, command_runner=_valid_runner())
++    artifact["experiment"] = 4400
++
++    with pytest.raises(ValueError, match="experiment must be 4411"):
++        mod.validate_artifact(artifact)
++
++    artifact = mod.build_artifact(repo_root=tmp_path, command_runner=_valid_runner())
++    artifact["source_context"]["previous_experiment"] = 4389
++    artifact["reproducibility_checksum"] = mod.payload_checksum(artifact)
++
++    with pytest.raises(ValueError, match="Exp 4400"):
++        mod.validate_artifact(artifact)
++
++
++def test_req_hw_4411_required_runner_lives_under_results() -> None:
++    """REQ-HW-4411: the required `python3 results/...` runner is present."""
++    runner = Path("results/experiment_4411_hardware_continuity_kv260.py")
++
++    assert runner.exists()
++    text = runner.read_text(encoding="utf-8")
++    assert "experiment_4411_hardware_continuity_kv260" in text
++    assert "run_experiment" in text
++
++
++def _valid_runner() -> RecordingRunner:
++    return RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [_probe(mod.KV260_SSH_PRECONDITION, duration_s=0.2)],
++            mod.KV260_LISTAPPS_COMMAND: [
++                _probe(
++                    mod.KV260_LISTAPPS_COMMAND,
++                    stdout="carnot_ising_v4 id_ok\n",
++                    duration_s=0.3,
++                )
++            ],
++            mod.KV260_UIO_COMMAND: [_probe(mod.KV260_UIO_COMMAND, stdout="/dev/uio4\n")],
++        }
++    )
+-- 
+2.55.0
+

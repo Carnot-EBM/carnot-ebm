@@ -1,0 +1,2187 @@
+From c539fecd245d39a8a130850059432a36f2c1f079 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 13:38:14 -0400
+Subject: [PATCH 04482/11362] [conductor] PHASE B1 (INFRA slot 1; ADVERSARIAL
+ CHECK) -- VERIFY the A1 fork probe RAN GENUINELY LIVE on the conductor's
+ GPU-0 generator (NOT iGPU-blocked / DURATION_TOO_SHORT again -- the .448
+ failure mode), was planner-blind, the tu93 positive control genuinely
+ migrated, and the numbers match the fork verdict. ALSO verify A1b's CEGIS
+ held-out-accuracy delta is REAL (measured on a held-out split disjoint from
+ the repair counterexamples, not a tautology).
+
+Automated research step by research conductor.
+Task ID: exp4876-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |   70 ++
+ ops/arc_null_silent_bug_audit.md              |   24 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...xperiment_4876_fork_probe_inducer_audit.py | 1030 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...eriment_4876_fork_probe_inducer_audit.json |  238 ++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...xperiment_4876_fork_probe_inducer_audit.py |  609 ++++++++++
+ 13 files changed, 1991 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_4876_fork_probe_inducer_audit.py
+ create mode 100644 results/experiment_4876_fork_probe_inducer_audit.json
+ create mode 100644 tests/python/test_experiment_4876_fork_probe_inducer_audit.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 80a07398b2..c5ce89fe73 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -11168,6 +11168,76 @@ Then `delta_on_truly_heldout_split=true`, the per-game deltas are computed on
+ the remeasurement split rather than the repair examples, and the median delta
+ CI95 determines the terminal success or retirement verdict.
+ 
++### REQ-ARC-WMTE-4876: A1 GPU-Fixed Fork Probe And A1b CEGIS Adversarial Audit
++
++Experiment 4876 SHALL adversarially audit the `.449` A1 fork probe artifact
++`results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json`, its source
++`python/carnot/experiment_4871_generation_wall_fork_probe_gpu_fixed.py`, and
++the optional A1b CEGIS refinement artifact
++`results/experiment_4872_cegis_world_model_refinement.json` before any capstone
++trusts the fork verdict or inducer delta. If the A1 artifact or source is
++missing, the workflow SHALL write
++`results/experiment_4876_fork_probe_inducer_audit.json` with
++`honest_verdict=blocked_a1_artifact_missing`, preserve the required fields with
++false gates, append the audit report, and stop without fabricating A1/A1b
++passes.
++
++The A1 audit SHALL run `scripts/summarize_artifact.py` and
++`scripts/adversarial_verify.py` on the A1 artifact, inspect the source
++induce-plan path, and run `scripts/arc_orphan_solver_lint.py`. The falsifiable
++gate `a1_genuinely_diagnostic` SHALL be true iff A1 ran live on an accepted
++GPU-0 CUDA or iGPU HIP generator, cleared the 60-second live-inference duration
++floor, was not flagged adversarial, kept induction/planning blind to the banked
++winner until post-planning classification, passed the real `tu93` positive
++control with high accuracy and `COVERED`, had per-game accuracy/bucket numbers
++supporting the claimed fork verdict with `n_games_measured>=3`, and remained
++live-path-reachable.
++
++If the A1b artifact ran, Experiment 4876 SHALL run
++`scripts/adversarial_verify.py` on it, verify every repair counterexample split
++is disjoint from its remeasurement split, verify the reported median delta and
++CI95 match the per-game deltas, record whether its positive control passed,
++confirm `verifier_is_oracle=false`, and confirm the live E3 repair path is
++reachable. The falsifiable gate `a1b_delta_trustworthy` SHALL be true iff A1b's
++delta is on a truly held-out disjoint split and oracle-distinct, or iff A1b was
++gate-skipped because A1 was high-accuracy or blocked. A1b positive-control
++failure SHALL be recorded as residual evidence even when the held-out/oracle
++mechanics are trustworthy.
++
++Experiment 4876 SHALL append an idempotent section to
++`ops/arc_null_silent_bug_audit.md` and write
++`results/experiment_4876_fork_probe_inducer_audit.json`. The artifact SHALL
++include the required principle-annotated fields:
++
++- `honest_verdict`: principle "terminal prefix; audit complete is complete_a1_a1b_audited."
++- `a1_genuinely_diagnostic`: principle "the load-bearing check -- ran-live-on-GPU0 AND planner-blind AND positive-control-migrated AND numbers-match-fork AND live-path-reachable; else A1's fork verdict is void."
++- `a1_ran_live_on_gpu0`: principle "true iff generator_backend is gpu0_cuda/igpu_hip AND duration clears the 60s floor AND not flagged_adversarial -- proves the .448 cuda_3090_generator_disallowed block is gone."
++- `planner_blind_confirmed`: principle "true iff the banked winner was used only to classify, never to seed induction/planning."
++- `positive_control_confirmed`: principle "true iff tu93 really came out HIGH accuracy + COVERED."
++- `numbers_match_fork`: principle "true iff the per-game accuracy x bucket numbers support the claimed fork_verdict."
++- `a1b_delta_trustworthy`: principle "true iff A1b's accuracy delta is on a held-out split DISJOINT from the repair set and oracle-distinct (or A1b was gate-skipped)."
++- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
++
++#### SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT
++
++Given the Exp 4871 artifact and source are present, and the Exp 4872 artifact
++is present or was gate-skipped
++When Experiment 4876 audits A1 and A1b
++Then it writes `results/experiment_4876_fork_probe_inducer_audit.json`, appends
++the audit report, sets `a1_genuinely_diagnostic=true` only when every A1
++load-bearing check passes, sets `a1b_delta_trustworthy=true` only for a
++disjoint held-out oracle-distinct A1b delta or an explicit gate skip, and
++records failed positive-control or numeric checks as reasons that void the
++corresponding A1 fork verdict or A1b lift.
++
++#### SCENARIO-ARC-WMTE-4876-BLOCKED-A1-ARTIFACT
++
++Given the Exp 4871 A1 artifact or source is missing
++When Experiment 4876 starts
++Then it writes a terminal `blocked_a1_artifact_missing` artifact with the
++required principle fields, false diagnostic gates, precondition evidence, and no
++fabricated A1b trust result.
++
+ ### REQ-ARC-WMTE-4865: Hostile A1 Induce-Plan Fork Probe Audit
+ 
+ Experiment 4865 SHALL adversarially audit
+diff --git a/ops/arc_null_silent_bug_audit.md b/ops/arc_null_silent_bug_audit.md
+index d394ece4e7..cae5059a8c 100644
+--- a/ops/arc_null_silent_bug_audit.md
++++ b/ops/arc_null_silent_bug_audit.md
+@@ -227,3 +227,27 @@
+ 
+ - Source artifact checksum: `sha256:fe40e39d556c549cd113e4c6850b78263c73cd856060c028e6cbebd28db906d3`
+ - Source script checksum: `sha256:c0e890c4540d72e7656d2ece898bdde7162c27e3d9e369fc66a01269a95fd998`
++## Experiment 4876 A1/A1b Audit
++
++- Verdict: `complete_a1_a1b_audited`
++- a1_genuinely_diagnostic: `False`
++- a1_ran_live_on_gpu0: `True`
++- a1b_delta_trustworthy: `True`
++- A1 reasons: `positive_control_not_migrated, positive_control_not_covered, positive_control_low_accuracy, fork_verdict_missing`
++- A1b reasons: `-`
++- A1b residuals: `a1b_positive_control_failed`
++- Inference substrate: `aggregation_from_upstream_artifacts`
++
++| Check | Passed | Detail |
++|---|---:|---|
++| `a1_live_gpu` | `True` | `{"duration_floor_s": 60.0, "duration_s": 587.0132269859314, "flagged_adversarial": false, "generator_backend": "gpu0_cuda"}` |
++| `a1_planner_blind_to_banked_answer` | `True` | `{"allowed_only_in_classify_planned_pool": true, "artifact_flag": true, "disallowed_refs": [], "function_present": true, "winning_prefix_refs": 1}` |
++| `a1_positive_control` | `False` | `{"artifact_positive_control_migrated": false, "engine_heldout_accuracy": 0.0, "high_accuracy_threshold": 0.5, "planned_bucket": "NEVER_ENUMERATED", "positive_control_game": "tu93", "row_game": "tu93"}` |
++| `a1_numbers_match_fork` | `False` | `{"computed_coverage_migration_count": 0, "computed_fork_verdict": "INDUCER_CEILING", "computed_median_engine_heldout_accuracy": 0.0, "invalid_games": [], "per_game_count": 9, "reported_coverage_migration_count": 0, "reported_fork_verdict": null, "reported_median_engine_heldout_accuracy": 0.0, "reported_n_games_measured": 9}` |
++| `a1_live_path` | `True` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": true, "solve_provenance": "development_proxy", "source_live_path": {"calls": ["_collect_cold_policy_transitions", "list", "int", "_heldout_transitions", "normalize_sequence", "classify_planned_pool", "row.update", "policy._induce_and_plan", "e3.load_engine", "live_methods.append", "score", "float", "float", "_execute_plan_reaches_l1", "max", "e3.plan_in_model", "live_methods.append", "round", "round", "len", "len", "int", "list", "repr", "sum", "e3.WorldModelVerifier", "float", "float", "getattr", "int", "int", "repr", "ord"], "function_present": true, "induce_and_plan_called": true, "load_engine_called": true, "passed": true, "plan_in_model_called": true}, "source_live_path_called": true}` |
++| `a1_summarizer_and_adversarial_verify` | `True` | `{"adversarial_flag_count": 0, "adversarial_loaded": true, "summarizer_returncode": 0}` |
++| `a1b_delta` | `True` | `{"adversarial_flag_count": 1, "artifact_delta_on_truly_heldout_split": true, "circular_moat_flag_count": 0, "computed_ci95": [0.0, 0.0], "computed_median": 0.0, "live_path_reachable": true, "n_games_measured": 9, "oracle_distinct": true, "positive_control_passed": false, "reported_ci95": [0.0, 0.0], "reported_median": 0.0, "split_disjoint": true, "status": "ran", "verifier_is_oracle": false}` |
++
++- A1 artifact checksum: `sha256:f223196660e020cef86c8f3901aedebe269012ab3eee7c1c9be6e4cea9bac081`
++- A1 script checksum: `sha256:3a96f5b124687b1562ec0e1578e810852adebf85034150f50e4b389b506049bf`
++- A1b artifact checksum: `sha256:0afdde35fa4ca01fd551d6df3136e2f4cff5b7d7b694df969c035e89d9b03bd8`
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index fa69c36fc3..6c0093112c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 201,
+   "code_violations": 0,
+-  "experiments_checked": 3883,
++  "experiments_checked": 3884,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4876_fork_probe_inducer_audit.py b/python/carnot/experiment_4876_fork_probe_inducer_audit.py
+new file mode 100644
+index 0000000000..e596808af1
+--- /dev/null
++++ b/python/carnot/experiment_4876_fork_probe_inducer_audit.py
+@@ -0,0 +1,1030 @@
++"""Experiment 4876: adversarial audit of the GPU-fixed A1 fork and A1b CEGIS delta.
++
++Spec refs: REQ-ARC-WMTE-4876,
++SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT,
++SCENARIO-ARC-WMTE-4876-BLOCKED-A1-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++import ast
++from contextlib import redirect_stdout
++import hashlib
++import io
++import json
++import math
++from pathlib import Path
++import random
++import subprocess
++import sys
++import time
++from statistics import median
++from typing import Any, Callable, Mapping
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++for import_root in (REPO_ROOT, PYTHON_ROOT):  # pragma: no cover - direct script guard.
++    if str(import_root) not in sys.path:
++        sys.path.insert(0, str(import_root))
++
++EXPERIMENT = "experiment_4876_fork_probe_inducer_audit"
++EXPERIMENT_ID = 4876
++SCHEMA = "carnot.arc.a1_a1b_fork_probe_inducer_audit_4876.v1"
++A1_ARTIFACT_RELATIVE_PATH = "results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json"
++A1_SCRIPT_RELATIVE_PATH = "python/carnot/experiment_4871_generation_wall_fork_probe_gpu_fixed.py"
++A1B_ARTIFACT_RELATIVE_PATH = "results/experiment_4872_cegis_world_model_refinement.json"
++RESULT_RELATIVE_PATH = "results/experiment_4876_fork_probe_inducer_audit.json"
++AUDIT_REPORT_RELATIVE_PATH = "ops/arc_null_silent_bug_audit.md"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++DURATION_FLOOR_S = 0.0001
++LIVE_LLM_DURATION_FLOOR_S = 60.0
++HIGH_ACCURACY_THRESHOLD = 0.5
++RANDOM_SEED = 4876
++BUCKETS = ("COVERED", "ENUMERATED_BUT_LOST", "NEVER_ENUMERATED")
++FORK_VERDICTS = ("GUIDANCE_WALL", "PLANNER_GAP", "INDUCER_CEILING")
++GENERATOR_BACKENDS = ("gpu0_cuda", "igpu_hip")
++TERMINAL_PREFIXES = ("complete_", "blocked_", "success_")
++
++SPEC_REFS = [
++    "REQ-ARC-WMTE-4876",
++    "SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT",
++    "SCENARIO-ARC-WMTE-4876-BLOCKED-A1-ARTIFACT",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; audit complete is complete_a1_a1b_audited."
++    },
++    "a1_genuinely_diagnostic": {
++        "principle": (
++            "the load-bearing check -- ran-live-on-GPU0 AND planner-blind AND "
++            "positive-control-migrated AND numbers-match-fork AND live-path-reachable; "
++            "else A1's fork verdict is void."
++        )
++    },
++    "a1_ran_live_on_gpu0": {
++        "principle": (
++            "true iff generator_backend is gpu0_cuda/igpu_hip AND duration clears the "
++            "60s floor AND not flagged_adversarial -- proves the .448 "
++            "cuda_3090_generator_disallowed block is gone."
++        )
++    },
++    "planner_blind_confirmed": {
++        "principle": (
++            "true iff the banked winner was used only to classify, never to seed "
++            "induction/planning."
++        )
++    },
++    "positive_control_confirmed": {
++        "principle": "true iff tu93 really came out HIGH accuracy + COVERED."
++    },
++    "numbers_match_fork": {
++        "principle": (
++            "true iff the per-game accuracy x bucket numbers support the claimed fork_verdict."
++        )
++    },
++    "a1b_delta_trustworthy": {
++        "principle": (
++            "true iff A1b's accuracy delta is on a held-out split DISJOINT from the "
++            "repair set and oracle-distinct (or A1b was gate-skipped)."
++        )
++    },
++    "inference_substrate": {"principle": "aggregation_from_upstream_artifacts (0.0001s floor)."},
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "experiment_id",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "a1_artifact_path",
++    "a1_script_path",
++    "a1b_artifact_path",
++    "a1_artifact_checksum",
++    "a1_script_checksum",
++    "a1b_artifact_checksum",
++    "a1_source_honest_verdict",
++    "a1_source_fork_verdict",
++    "a1_source_n_games_measured",
++    "a1b_source_honest_verdict",
++    "a1b_delta_median",
++    "a1b_delta_ci95",
++    "field_principles",
++    "checks",
++    "a1_failure_reasons",
++    "a1b_failure_reasons",
++    "a1b_residual_reasons",
++    "a1_summarizer_result",
++    "a1_adversarial_result",
++    "a1b_adversarial_result",
++    "live_lint_result",
++    "preconditions_checked",
++    "audit_report_path",
++    "random_seed",
++    "duration_s",
++    "reproducibility_checksum",
++)
++
++JsonDict = dict[str, Any]
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _finite_float(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        parsed = float(value)
++    except (TypeError, ValueError):
++        return None
++    return parsed if math.isfinite(parsed) else None
++
++
++def _read_json(path: Path) -> JsonDict:
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(loaded, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return loaded
++
++
++def _stable_json(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def file_checksum(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _tail(text: str, limit: int = 2000) -> str:
++    return text[-limit:] if len(text) > limit else text
++
++
++def run_summarizer(path: Path) -> JsonDict:
++    from scripts import summarize_artifact
++
++    buffer = io.StringIO()
++    with redirect_stdout(buffer):
++        returncode = summarize_artifact.summarize(path)
++    return {"returncode": int(returncode), "stdout": buffer.getvalue(), "stderr": ""}
++
++
++def run_adversarial_verify(path: Path) -> JsonDict:
++    from scripts import adversarial_verify
++
++    return dict(adversarial_verify.verify_artifact(path))
++
++
++def run_arc_orphan_solver_lint(root: Path | str) -> JsonDict:
++    command = [sys.executable, "scripts/arc_orphan_solver_lint.py"]
++    proc = subprocess.run(
++        command,
++        cwd=Path(root),
++        capture_output=True,
++        text=True,
++        timeout=90,
++        check=False,
++    )
++    return {
++        "command": " ".join(command),
++        "passed": proc.returncode == 0,
++        "returncode": int(proc.returncode),
++        "stdout_tail": _tail(proc.stdout),
++        "stderr_tail": _tail(proc.stderr),
++    }
++
++
++def _full_call_name(callable_node: ast.AST) -> str:
++    if isinstance(callable_node, ast.Name):
++        return callable_node.id
++    if isinstance(callable_node, ast.Attribute):
++        prefix = _full_call_name(callable_node.value)
++        return f"{prefix}.{callable_node.attr}" if prefix else callable_node.attr
++    return ""
++
++
++def _call_name(callable_node: ast.AST) -> str:
++    if isinstance(callable_node, ast.Name):
++        return callable_node.id
++    if isinstance(callable_node, ast.Attribute):
++        return callable_node.attr
++    return ""
++
++
++def _attach_ast_parents(tree: ast.AST) -> None:
++    for parent in ast.walk(tree):
++        for child in ast.iter_child_nodes(parent):
++            child.__dict__["_parent"] = parent
++
++
++def _find_function(tree: ast.AST, name: str) -> ast.FunctionDef | None:
++    for node in ast.walk(tree):
++        if isinstance(node, ast.FunctionDef) and node.name == name:
++            return node
++    return None
++
++
++def _first_parent_call(node: ast.AST) -> ast.Call | None:
++    parent = getattr(node, "_parent", None)
++    while parent is not None:
++        if isinstance(parent, ast.Call):
++            return parent
++        parent = getattr(parent, "_parent", None)
++    return None
++
++
++def _source_checks(source_text: str, artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str], JsonDict, list[str]]:
++    planner_reasons: list[str] = []
++    live_reasons: list[str] = []
++    if artifact.get("planner_blind_to_banked_answer") is not True:
++        planner_reasons.append("artifact_planner_blind_flag_false")
++    try:
++        tree = ast.parse(source_text)
++    except SyntaxError as exc:
++        return (
++            {"passed": False, "parse_error": str(exc), "disallowed_refs": []},
++            planner_reasons + ["a1_source_not_parseable"],
++            {"passed": False, "parse_error": str(exc), "calls": []},
++            ["source_live_path_uninspectable"],
++        )
++
++    _attach_ast_parents(tree)
++    function = _find_function(tree, "measure_game_with_live_induce_plan")
++    if function is None:
++        return (
++            {"passed": False, "function_present": False, "disallowed_refs": []},
++            planner_reasons + ["measure_game_with_live_induce_plan_missing"],
++            {"passed": False, "function_present": False, "calls": []},
++            ["measure_game_with_live_induce_plan_missing"],
++        )
++
++    winning_prefix_refs: list[JsonDict] = []
++    disallowed_refs: list[JsonDict] = []
++    calls: list[str] = []
++    for node in ast.walk(function):
++        if isinstance(node, ast.Call):
++            calls.append(_full_call_name(node.func))
++        if isinstance(node, ast.Name) and node.id == "winning_prefix":
++            call = _first_parent_call(node)
++            call_name = _call_name(call.func) if call is not None else ""
++            record = {"line": int(getattr(node, "lineno", 0)), "call": call_name or None}
++            winning_prefix_refs.append(record)
++            if call_name != "classify_planned_pool":
++                disallowed_refs.append(record)
++
++    if not winning_prefix_refs:
++        planner_reasons.append("winning_prefix_not_used_for_classification")
++    if disallowed_refs:
++        planner_reasons.append("banked_answer_used_before_classification")
++
++    has_induce = any(name.endswith("._induce_and_plan") for name in calls)
++    has_load = any(name.endswith(".load_engine") or name == "load_engine" for name in calls)
++    has_plan = any(name.endswith(".plan_in_model") or name == "plan_in_model" for name in calls)
++    if not has_induce:
++        live_reasons.append("induce_and_plan_not_called")
++    if not has_load:
++        live_reasons.append("load_engine_not_called")
++    if not has_plan:
++        live_reasons.append("plan_in_model_not_called")
++
++    return (
++        {
++            "passed": not planner_reasons,
++            "artifact_flag": artifact.get("planner_blind_to_banked_answer"),
++            "function_present": True,
++            "winning_prefix_refs": len(winning_prefix_refs),
++            "disallowed_refs": disallowed_refs,
++            "allowed_only_in_classify_planned_pool": not disallowed_refs and bool(winning_prefix_refs),
++        },
++        list(dict.fromkeys(planner_reasons)),
++        {
++            "passed": not live_reasons,
++            "function_present": True,
++            "calls": calls,
++            "induce_and_plan_called": has_induce,
++            "load_engine_called": has_load,
++            "plan_in_model_called": has_plan,
++        },
++        list(dict.fromkeys(live_reasons)),
++    )
++
++
++def _generator_backend(artifact: Mapping[str, Any]) -> str | None:
++    if artifact.get("generator_backend") in GENERATOR_BACKENDS:
++        return str(artifact.get("generator_backend"))
++    model_specs = _mapping(artifact.get("model_specs"))
++    if model_specs.get("backend") in GENERATOR_BACKENDS:
++        return str(model_specs.get("backend"))
++    generator = _mapping(_mapping(artifact.get("preconditions_checked")).get("generator"))
++    backend = generator.get("generator_backend") or generator.get("backend")
++    return str(backend) if backend in GENERATOR_BACKENDS else None
++
++
++def _a1_live_gpu_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str], bool]:
++    backend = _generator_backend(artifact)
++    duration = _finite_float(artifact.get("duration_s"))
++    flagged = artifact.get("flagged_adversarial") is True
++    reasons: list[str] = []
++    if backend not in GENERATOR_BACKENDS or duration is None or duration < LIVE_LLM_DURATION_FLOOR_S or flagged:
++        reasons.append("a1_not_live_on_gpu0")
++    if backend not in GENERATOR_BACKENDS:
++        reasons.append("a1_generator_backend_not_gpu0_or_igpu")
++    if duration is None or duration < LIVE_LLM_DURATION_FLOOR_S:
++        reasons.append("a1_duration_below_live_floor")
++    if flagged:
++        reasons.append("a1_flagged_adversarial")
++    return (
++        {
++            "passed": not reasons,
++            "generator_backend": backend,
++            "duration_s": artifact.get("duration_s"),
++            "duration_floor_s": LIVE_LLM_DURATION_FLOOR_S,
++            "flagged_adversarial": flagged,
++        },
++        list(dict.fromkeys(reasons)),
++        not reasons,
++    )
++
++
++def _positive_control_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    row = _mapping(artifact.get("positive_control_fork"))
++    accuracy = _finite_float(row.get("engine_heldout_accuracy"))
++    reasons: list[str] = []
++    if artifact.get("positive_control_migrated") is not True:
++        reasons.append("positive_control_not_migrated")
++    if not row:
++        reasons.append("positive_control_row_missing")
++    if artifact.get("positive_control_game") != "tu93" or row.get("game") != "tu93":
++        reasons.append("positive_control_not_tu93")
++    if row.get("planned_bucket") != "COVERED":
++        reasons.append("positive_control_not_covered")
++    if accuracy is None or accuracy < HIGH_ACCURACY_THRESHOLD:
++        reasons.append("positive_control_low_accuracy")
++    return (
++        {
++            "passed": not reasons,
++            "positive_control_game": artifact.get("positive_control_game"),
++            "artifact_positive_control_migrated": artifact.get("positive_control_migrated"),
++            "row_game": row.get("game"),
++            "planned_bucket": row.get("planned_bucket"),
++            "engine_heldout_accuracy": row.get("engine_heldout_accuracy"),
++            "high_accuracy_threshold": HIGH_ACCURACY_THRESHOLD,
++        },
++        list(dict.fromkeys(reasons)),
++    )
++
++
++def _computed_fork_verdict(per_game_fork: Mapping[str, Any]) -> str | None:
++    accuracies: list[float] = []
++    migrations = 0
++    valid_rows = 0
++    for row in per_game_fork.values():
++        if not isinstance(row, Mapping):
++            continue
++        bucket = row.get("planned_bucket")
++        accuracy = _finite_float(row.get("engine_heldout_accuracy"))
++        if bucket not in BUCKETS or accuracy is None:
++            continue
++        valid_rows += 1
++        accuracies.append(accuracy)
++        if bucket == "COVERED":
++            migrations += 1
++    if valid_rows < 3 or not accuracies:
++        return None
++    if float(median(accuracies)) >= HIGH_ACCURACY_THRESHOLD and migrations >= 1:
++        return "GUIDANCE_WALL"
++    if float(median(accuracies)) >= HIGH_ACCURACY_THRESHOLD:
++        return "PLANNER_GAP"
++    return "INDUCER_CEILING"
++
++
++def _numbers_match_fork_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    per_game = _mapping(artifact.get("per_game_fork"))
++    reasons: list[str] = []
++    accuracies: list[float] = []
++    migrations = 0
++    invalid_games: list[str] = []
++    for game, row_value in per_game.items():
++        row = _mapping(row_value)
++        bucket = row.get("planned_bucket")
++        accuracy = _finite_float(row.get("engine_heldout_accuracy"))
++        migrated = row.get("migrated")
++        if bucket not in BUCKETS:
++            reasons.append("invalid_planned_bucket")
++            invalid_games.append(str(game))
++        if accuracy is None or not 0.0 <= accuracy <= 1.0:
++            reasons.append("invalid_engine_heldout_accuracy")
++            invalid_games.append(str(game))
++        else:
++            accuracies.append(accuracy)
++        if not isinstance(migrated, bool):
++            reasons.append("invalid_migrated_flag")
++            invalid_games.append(str(game))
++        elif bucket in BUCKETS and migrated != (bucket == "COVERED"):
++            reasons.append("row_migrated_mismatch")
++            invalid_games.append(str(game))
++        if bucket == "COVERED":
++            migrations += 1
++
++    try:
++        n_games = int(artifact.get("n_games_measured"))
++    except (TypeError, ValueError):
++        n_games = -1
++        reasons.append("n_games_measured_not_integer")
++    if n_games != len(per_game):
++        reasons.append("n_games_measured_mismatch")
++    if n_games < 3 or len(per_game) < 3:
++        reasons.append("n_games_measured_below_3")
++
++    computed_median = round(float(median(accuracies)), 6) if accuracies else None
++    reported_median = _finite_float(artifact.get("median_engine_heldout_accuracy"))
++    if computed_median is None or reported_median is None or abs(reported_median - computed_median) > 1e-9:
++        reasons.append("median_engine_heldout_accuracy_mismatch")
++
++    computed_fork = _computed_fork_verdict(per_game)
++    reported_fork = artifact.get("fork_verdict")
++    if reported_fork is None:
++        reasons.append("fork_verdict_missing")
++    elif reported_fork not in FORK_VERDICTS:
++        reasons.append("invalid_fork_verdict")
++    elif computed_fork != reported_fork:
++        reasons.append("fork_verdict_mismatch")
++    if artifact.get("coverage_migration_count") != migrations:
++        reasons.append("coverage_migration_count_mismatch")
++
++    unique_reasons = list(dict.fromkeys(reasons))
++    return (
++        {
++            "passed": not unique_reasons,
++            "reported_fork_verdict": reported_fork,
++            "computed_fork_verdict": computed_fork,
++            "reported_n_games_measured": artifact.get("n_games_measured"),
++            "per_game_count": len(per_game),
++            "reported_coverage_migration_count": artifact.get("coverage_migration_count"),
++            "computed_coverage_migration_count": migrations,
++            "reported_median_engine_heldout_accuracy": artifact.get("median_engine_heldout_accuracy"),
++            "computed_median_engine_heldout_accuracy": computed_median,
++            "invalid_games": sorted(set(invalid_games)),
++        },
++        unique_reasons,
++    )
++
++
++def _tool_cleanliness_check(
++    summarizer_result: Mapping[str, Any], adversarial_result: Mapping[str, Any]
++) -> tuple[JsonDict, list[str]]:
++    summarizer_clean = summarizer_result.get("returncode") == 0
++    adversarial_clean = (
++        adversarial_result.get("loaded") is not False and int(adversarial_result.get("flag_count") or 0) == 0
++    )
++    reasons: list[str] = []
++    if not summarizer_clean:
++        reasons.append("a1_summarizer_failed")
++    if not adversarial_clean:
++        reasons.append("a1_adversarial_verify_flagged")
++    return (
++        {
++            "passed": summarizer_clean and adversarial_clean,
++            "summarizer_returncode": summarizer_result.get("returncode"),
++            "adversarial_flag_count": adversarial_result.get("flag_count"),
++            "adversarial_loaded": adversarial_result.get("loaded"),
++        },
++        reasons,
++    )
++
++
++def _live_path_check(
++    artifact: Mapping[str, Any],
++    live_lint_result: Mapping[str, Any],
++    source_live_check: Mapping[str, Any],
++    source_live_reasons: list[str],
++) -> tuple[JsonDict, list[str], bool]:
++    lint_passed = live_lint_result.get("passed") is True
++    artifact_live = artifact.get("live_path_reachable") is True
++    source_live = source_live_check.get("passed") is True
++    provenance = artifact.get("solve_provenance")
++    reasons: list[str] = []
++    if not (lint_passed and artifact_live and source_live):
++        reasons.append("live_path_unreachable")
++    if provenance != "development_proxy":
++        reasons.append("solve_provenance_not_development_proxy")
++    reasons.extend(source_live_reasons)
++    return (
++        {
++            "passed": not reasons,
++            "arc_orphan_solver_lint_passed": lint_passed,
++            "artifact_live_path_reachable": artifact_live,
++            "source_live_path_called": source_live,
++            "source_live_path": dict(source_live_check),
++            "solve_provenance": provenance,
++        },
++        list(dict.fromkeys(reasons)),
++        lint_passed and artifact_live and source_live,
++    )
++
++
++def _delta_values(per_game_delta: Mapping[str, Any]) -> list[float]:
++    values: list[float] = []
++    for row_value in per_game_delta.values():
++        row = _mapping(row_value)
++        value = _finite_float(row.get("delta"))
++        if value is not None:
++            values.append(value)
++    return values
++
++
++def _bootstrap_ci95(values: list[float], *, iterations: int = 1000, seed: int = 20260627) -> list[float | None]:
++    if not values:
++        return [None, None]
++    vals = [float(value) for value in values]
++    if len(set(vals)) == 1:
++        value = round(vals[0], 6)
++        return [value, value]
++    rng = random.Random(seed)
++    medians: list[float] = []
++    for _ in range(max(1, int(iterations))):
++        medians.append(float(median([rng.choice(vals) for _ in vals])))
++    medians.sort()
++    return [
++        round(float(medians[int(0.025 * (len(medians) - 1))]), 6),
++        round(float(medians[int(0.975 * (len(medians) - 1))]), 6),
++    ]
++
++
++def _split_is_disjoint(row: Mapping[str, Any]) -> bool:
++    try:
++        repair = {int(item) for item in row.get("repair_transition_ids") or []}
++        remeasure = {int(item) for item in row.get("remeasure_transition_ids") or []}
++    except (TypeError, ValueError):
++        return False
++    return bool(remeasure) and repair.isdisjoint(remeasure)
++
++
++def _a1b_gate_skipped(a1_artifact: Mapping[str, Any]) -> bool:
++    verdict = str(a1_artifact.get("honest_verdict") or "")
++    median_accuracy = _finite_float(a1_artifact.get("median_engine_heldout_accuracy"))
++    return verdict.startswith("blocked_") or (
++        median_accuracy is not None and median_accuracy >= HIGH_ACCURACY_THRESHOLD
++    )
++
++
++def _a1b_delta_check(
++    *,
++    a1_artifact: Mapping[str, Any],
++    a1b_artifact: Mapping[str, Any] | None,
++    a1b_adversarial_result: Mapping[str, Any] | None,
++    live_lint_result: Mapping[str, Any],
++) -> tuple[JsonDict, list[str], list[str], bool]:
++    if a1b_artifact is None:
++        skipped = _a1b_gate_skipped(a1_artifact)
++        return (
++            {
++                "passed": skipped,
++                "status": "gate_skipped" if skipped else "missing",
++                "reason": "a1_high_accuracy_or_blocked" if skipped else "a1b_missing_after_inducer_ceiling_a1",
++            },
++            [] if skipped else ["a1b_artifact_missing_after_inducer_ceiling_a1"],
++            [],
++            skipped,
++        )
++
++    rows = _mapping(a1b_artifact.get("per_game_accuracy_delta"))
++    deltas = _delta_values(rows)
++    computed_median = round(float(median(deltas)), 6) if deltas else None
++    computed_ci95 = _bootstrap_ci95(deltas)
++    reported_median = _finite_float(a1b_artifact.get("cegis_heldout_accuracy_delta_median"))
++    reported_ci95 = a1b_artifact.get("cegis_heldout_accuracy_delta_ci95")
++    split_disjoint = bool(rows) and all(_split_is_disjoint(_mapping(row)) for row in rows.values())
++    artifact_split = a1b_artifact.get("delta_on_truly_heldout_split") is True
++    verifier_oracle = a1b_artifact.get("verifier_is_oracle") is True
++    circular_flags = [
++        flag
++        for flag in (a1b_adversarial_result or {}).get("flags", [])
++        if isinstance(flag, Mapping) and flag.get("kind") == "CIRCULAR_MOAT_OVERCLAIM"
++    ]
++    oracle_distinct = not verifier_oracle and not circular_flags
++    live_path = a1b_artifact.get("live_path_reachable") is True and live_lint_result.get("passed") is True
++    median_honest = computed_median is not None and reported_median is not None and abs(computed_median - reported_median) <= 1e-9
++    ci_honest = isinstance(reported_ci95, list) and list(reported_ci95) == computed_ci95
++
++    failure_reasons: list[str] = []
++    residual_reasons: list[str] = []
++    if not split_disjoint or not artifact_split:
++        failure_reasons.append("a1b_split_not_disjoint")
++    if not oracle_distinct:
++        failure_reasons.append("a1b_verifier_is_oracle" if verifier_oracle else "a1b_circular_moat_overclaim")
++    if not median_honest:
++        failure_reasons.append("a1b_delta_median_mismatch")
++    if not ci_honest:
++        failure_reasons.append("a1b_delta_ci95_mismatch")
++    if not live_path:
++        residual_reasons.append("a1b_live_path_unreachable")
++    if a1b_artifact.get("positive_control_passed") is not True:
++        residual_reasons.append("a1b_positive_control_failed")
++
++    trustworthy = not failure_reasons
++    return (
++        {
++            "passed": trustworthy,
++            "status": "ran",
++            "n_games_measured": a1b_artifact.get("n_games_measured"),
++            "split_disjoint": split_disjoint,
++            "artifact_delta_on_truly_heldout_split": artifact_split,
++            "oracle_distinct": oracle_distinct,
++            "verifier_is_oracle": a1b_artifact.get("verifier_is_oracle"),
++            "circular_moat_flag_count": len(circular_flags),
++            "reported_median": a1b_artifact.get("cegis_heldout_accuracy_delta_median"),
++            "computed_median": computed_median,
++            "reported_ci95": reported_ci95,
++            "computed_ci95": computed_ci95,
++            "positive_control_passed": a1b_artifact.get("positive_control_passed"),
++            "live_path_reachable": live_path,
++            "adversarial_flag_count": (a1b_adversarial_result or {}).get("flag_count"),
++        },
++        list(dict.fromkeys(failure_reasons)),
++        list(dict.fromkeys(residual_reasons)),
++        trustworthy,
++    )
++
++
++def audit_sources(
++    *,
++    a1_artifact: Mapping[str, Any],
++    a1_source_text: str,
++    a1_summarizer_result: Mapping[str, Any],
++    a1_adversarial_result: Mapping[str, Any],
++    a1b_artifact: Mapping[str, Any] | None,
++    a1b_adversarial_result: Mapping[str, Any] | None,
++    live_lint_result: Mapping[str, Any],
++) -> JsonDict:
++    source_check, planner_reasons, source_live_check, source_live_reasons = _source_checks(
++        a1_source_text, a1_artifact
++    )
++    live_gpu_check, live_gpu_reasons, ran_live = _a1_live_gpu_check(a1_artifact)
++    positive_check, positive_reasons = _positive_control_check(a1_artifact)
++    numbers_check, number_reasons = _numbers_match_fork_check(a1_artifact)
++    tool_check, tool_reasons = _tool_cleanliness_check(a1_summarizer_result, a1_adversarial_result)
++    live_path_check, live_path_reasons, live_path_confirmed = _live_path_check(
++        a1_artifact, live_lint_result, source_live_check, source_live_reasons
++    )
++    a1b_check, a1b_reasons, a1b_residuals, a1b_trustworthy = _a1b_delta_check(
++        a1_artifact=a1_artifact,
++        a1b_artifact=dict(a1b_artifact) if a1b_artifact is not None else None,
++        a1b_adversarial_result=a1b_adversarial_result,
++        live_lint_result=live_lint_result,
++    )
++
++    a1_reasons = list(
++        dict.fromkeys(
++            live_gpu_reasons
++            + planner_reasons
++            + positive_reasons
++            + number_reasons
++            + tool_reasons
++            + live_path_reasons
++        )
++    )
++    planner_blind = not planner_reasons
++    positive_control = not positive_reasons
++    numbers_match = not number_reasons
++    diagnostic = ran_live and planner_blind and positive_control and numbers_match and live_path_confirmed and not tool_reasons
++    return {
++        "honest_verdict": "complete_a1_a1b_audited",
++        "a1_genuinely_diagnostic": diagnostic,
++        "a1_ran_live_on_gpu0": ran_live,
++        "planner_blind_confirmed": planner_blind,
++        "positive_control_confirmed": positive_control,
++        "numbers_match_fork": numbers_match,
++        "a1b_delta_trustworthy": a1b_trustworthy,
++        "a1_failure_reasons": a1_reasons,
++        "a1b_failure_reasons": a1b_reasons,
++        "a1b_residual_reasons": a1b_residuals,
++        "checks": {
++            "a1_live_gpu": live_gpu_check,
++            "a1_planner_blind_to_banked_answer": source_check,
++            "a1_positive_control": positive_check,
++            "a1_numbers_match_fork": numbers_check,
++            "a1_live_path": live_path_check,
++            "a1_summarizer_and_adversarial_verify": tool_check,
++            "a1b_delta": a1b_check,
++        },
++    }
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:
++    repo = Path(root)
++    spec_text = (repo / SPEC_RELATIVE_PATH).read_text(encoding="utf-8") if (repo / SPEC_RELATIVE_PATH).exists() else ""
++    return {
++        "ok": (
++            (repo / A1_ARTIFACT_RELATIVE_PATH).exists()
++            and (repo / A1_SCRIPT_RELATIVE_PATH).exists()
++            and "REQ-ARC-WMTE-4876" in spec_text
++            and (repo / "scripts/summarize_artifact.py").exists()
++            and (repo / "scripts/adversarial_verify.py").exists()
++            and (repo / "scripts/arc_orphan_solver_lint.py").exists()
++        ),
++        "a1_artifact_present": (repo / A1_ARTIFACT_RELATIVE_PATH).exists(),
++        "a1_script_present": (repo / A1_SCRIPT_RELATIVE_PATH).exists(),
++        "a1b_artifact_present": (repo / A1B_ARTIFACT_RELATIVE_PATH).exists(),
++        "spec_has_req_4876": "REQ-ARC-WMTE-4876" in spec_text,
++        "summarizer_script_present": (repo / "scripts/summarize_artifact.py").exists(),
++        "adversarial_verify_script_present": (repo / "scripts/adversarial_verify.py").exists(),
++        "arc_orphan_solver_lint_present": (repo / "scripts/arc_orphan_solver_lint.py").exists(),
++    }
++
++
++def blocked_artifact(preconditions_checked: Mapping[str, Any], *, duration_s: float) -> JsonDict:
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "a1_artifact_path": A1_ARTIFACT_RELATIVE_PATH,
++        "a1_script_path": A1_SCRIPT_RELATIVE_PATH,
++        "a1b_artifact_path": A1B_ARTIFACT_RELATIVE_PATH,
++        "a1_artifact_checksum": None,
++        "a1_script_checksum": None,
++        "a1b_artifact_checksum": None,
++        "a1_source_honest_verdict": None,
++        "a1_source_fork_verdict": None,
++        "a1_source_n_games_measured": None,
++        "a1b_source_honest_verdict": None,
++        "a1b_delta_median": None,
++        "a1b_delta_ci95": None,
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_verdict": "blocked_a1_artifact_missing",
++        "a1_genuinely_diagnostic": False,
++        "a1_ran_live_on_gpu0": False,
++        "planner_blind_confirmed": False,
++        "positive_control_confirmed": False,
++        "numbers_match_fork": False,
++        "a1b_delta_trustworthy": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "checks": {},
++        "a1_failure_reasons": ["missing_a1_artifact_or_script"],
++        "a1b_failure_reasons": ["not_audited_without_a1"],
++        "a1b_residual_reasons": [],
++        "a1_summarizer_result": {},
++        "a1_adversarial_result": {},
++        "a1b_adversarial_result": {},
++        "live_lint_result": {},
++        "preconditions_checked": dict(preconditions_checked),
++        "audit_report_path": AUDIT_REPORT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(DURATION_FLOOR_S, duration_s), 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    root: Path | str,
++    a1_artifact: Mapping[str, Any],
++    a1b_artifact: Mapping[str, Any] | None,
++    audit: Mapping[str, Any],
++    a1_summarizer_result: Mapping[str, Any],
++    a1_adversarial_result: Mapping[str, Any],
++    a1b_adversarial_result: Mapping[str, Any] | None,
++    live_lint_result: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++) -> JsonDict:
++    repo = Path(root)
++    a1_path = repo / A1_ARTIFACT_RELATIVE_PATH
++    a1_script = repo / A1_SCRIPT_RELATIVE_PATH
++    a1b_path = repo / A1B_ARTIFACT_RELATIVE_PATH
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "a1_artifact_path": A1_ARTIFACT_RELATIVE_PATH,
++        "a1_script_path": A1_SCRIPT_RELATIVE_PATH,
++        "a1b_artifact_path": A1B_ARTIFACT_RELATIVE_PATH,
++        "a1_artifact_checksum": file_checksum(a1_path),
++        "a1_script_checksum": file_checksum(a1_script),
++        "a1b_artifact_checksum": file_checksum(a1b_path) if a1b_path.exists() else None,
++        "a1_source_honest_verdict": a1_artifact.get("honest_verdict"),
++        "a1_source_fork_verdict": a1_artifact.get("fork_verdict"),
++        "a1_source_n_games_measured": a1_artifact.get("n_games_measured"),
++        "a1b_source_honest_verdict": None if a1b_artifact is None else a1b_artifact.get("honest_verdict"),
++        "a1b_delta_median": None
++        if a1b_artifact is None
++        else a1b_artifact.get("cegis_heldout_accuracy_delta_median"),
++        "a1b_delta_ci95": None if a1b_artifact is None else a1b_artifact.get("cegis_heldout_accuracy_delta_ci95"),
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_verdict": audit.get("honest_verdict"),
++        "a1_genuinely_diagnostic": audit.get("a1_genuinely_diagnostic"),
++        "a1_ran_live_on_gpu0": audit.get("a1_ran_live_on_gpu0"),
++        "planner_blind_confirmed": audit.get("planner_blind_confirmed"),
++        "positive_control_confirmed": audit.get("positive_control_confirmed"),
++        "numbers_match_fork": audit.get("numbers_match_fork"),
++        "a1b_delta_trustworthy": audit.get("a1b_delta_trustworthy"),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "checks": dict(_mapping(audit.get("checks"))),
++        "a1_failure_reasons": list(audit.get("a1_failure_reasons") or []),
++        "a1b_failure_reasons": list(audit.get("a1b_failure_reasons") or []),
++        "a1b_residual_reasons": list(audit.get("a1b_residual_reasons") or []),
++        "a1_summarizer_result": dict(a1_summarizer_result),
++        "a1_adversarial_result": dict(a1_adversarial_result),
++        "a1b_adversarial_result": dict(a1b_adversarial_result or {}),
++        "live_lint_result": dict(live_lint_result),
++        "preconditions_checked": dict(preconditions_checked),
++        "audit_report_path": AUDIT_REPORT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(DURATION_FLOOR_S, duration_s), 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing:{field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_missing_terminal_prefix")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles_mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_mismatch")
++    for field in (
++        "a1_genuinely_diagnostic",
++        "a1_ran_live_on_gpu0",
++        "planner_blind_confirmed",
++        "positive_control_confirmed",
++        "numbers_match_fork",
++        "a1b_delta_trustworthy",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(f"{field}_must_be_bool")
++    if not isinstance(artifact.get("checks"), dict):
++        errors.append("checks_must_be_dict")
++    for field in ("a1_failure_reasons", "a1b_failure_reasons", "a1b_residual_reasons"):
++        if not isinstance(artifact.get(field), list):
++            errors.append(f"{field}_must_be_list")
++    if artifact.get("a1_genuinely_diagnostic") is True and artifact.get("a1_failure_reasons"):
++        errors.append("diagnostic_artifact_has_a1_failure_reasons")
++    if artifact.get("a1b_delta_trustworthy") is True and artifact.get("a1b_failure_reasons"):
++        errors.append("trustworthy_a1b_has_failure_reasons")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed_mismatch")
++    duration = _finite_float(artifact.get("duration_s"))
++    if duration is None or duration < DURATION_FLOOR_S:
++        errors.append("duration_below_aggregation_floor")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++    return path
++
++
++def render_markdown_section(artifact: Mapping[str, Any]) -> str:
++    rows = [
++        "",
++        "## Experiment 4876 A1/A1b Audit",
++        "",
++        f"- Verdict: `{artifact.get('honest_verdict')}`",
++        f"- a1_genuinely_diagnostic: `{artifact.get('a1_genuinely_diagnostic')}`",
++        f"- a1_ran_live_on_gpu0: `{artifact.get('a1_ran_live_on_gpu0')}`",
++        f"- a1b_delta_trustworthy: `{artifact.get('a1b_delta_trustworthy')}`",
++        f"- A1 reasons: `{', '.join(artifact.get('a1_failure_reasons') or []) or '-'}`",
++        f"- A1b reasons: `{', '.join(artifact.get('a1b_failure_reasons') or []) or '-'}`",
++        f"- A1b residuals: `{', '.join(artifact.get('a1b_residual_reasons') or []) or '-'}`",
++        f"- Inference substrate: `{artifact.get('inference_substrate')}`",
++        "",
++        "| Check | Passed | Detail |",
++        "|---|---:|---|",
++    ]
++    for name, check in _mapping(artifact.get("checks")).items():
++        if isinstance(check, Mapping):
++            detail = {key: value for key, value in check.items() if key != "passed"}
++            rows.append(
++                f"| `{name}` | `{check.get('passed')}` | `{json.dumps(detail, sort_keys=True)}` |"
++            )
++    rows.extend(
++        [
++            "",
++            f"- A1 artifact checksum: `{artifact.get('a1_artifact_checksum')}`",
++            f"- A1 script checksum: `{artifact.get('a1_script_checksum')}`",
++            f"- A1b artifact checksum: `{artifact.get('a1b_artifact_checksum')}`",
++            "",
++        ]
++    )
++    return "\n".join(rows)
++
++
++def append_markdown_report(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    report_path = Path(root) / AUDIT_REPORT_RELATIVE_PATH
++    marker = "## Experiment 4876 A1/A1b Audit"
++    if report_path.exists():
++        current = report_path.read_text(encoding="utf-8")
++        if marker in current:
++            return report_path
++    else:
++        report_path.parent.mkdir(parents=True, exist_ok=True)
++        current = "# ARC Null Silent-Bug Audit\n"
++    report_path.write_text(current.rstrip() + render_markdown_section(artifact), encoding="utf-8")
++    return report_path
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    now: Callable[[], float] | None = None,
++) -> JsonDict:
++    repo = Path(root)
++    clock = now or time.monotonic
++    start = clock()
++    preconditions = check_preconditions(repo)
++    if not preconditions["ok"]:
++        artifact = blocked_artifact(preconditions, duration_s=clock() - start)
++        if write:
++            write_artifact(artifact, root=repo)
++            append_markdown_report(artifact, root=repo)
++        return artifact
++
++    a1_path = repo / A1_ARTIFACT_RELATIVE_PATH
++    a1_script = repo / A1_SCRIPT_RELATIVE_PATH
++    a1b_path = repo / A1B_ARTIFACT_RELATIVE_PATH
++    a1_artifact = _read_json(a1_path)
++    a1_source = a1_script.read_text(encoding="utf-8")
++    a1b_artifact = _read_json(a1b_path) if a1b_path.exists() else None
++    a1_summary = run_summarizer(a1_path)
++    a1_adversarial = run_adversarial_verify(a1_path)
++    a1b_adversarial = run_adversarial_verify(a1b_path) if a1b_artifact is not None else None
++    live_lint = run_arc_orphan_solver_lint(repo)
++    audit = audit_sources(
++        a1_artifact=a1_artifact,
++        a1_source_text=a1_source,
++        a1_summarizer_result=a1_summary,
++        a1_adversarial_result=a1_adversarial,
++        a1b_artifact=a1b_artifact,
++        a1b_adversarial_result=a1b_adversarial,
++        live_lint_result=live_lint,
++    )
++    artifact = build_artifact(
++        root=repo,
++        a1_artifact=a1_artifact,
++        a1b_artifact=a1b_artifact,
++        audit=audit,
++        a1_summarizer_result=a1_summary,
++        a1_adversarial_result=a1_adversarial,
++        a1b_adversarial_result=a1b_adversarial,
++        live_lint_result=live_lint,
++        preconditions_checked=preconditions,
++        duration_s=clock() - start,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(artifact, root=repo)
++        append_markdown_report(artifact, root=repo)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper.
++    artifact = run()
++    print(
++        json.dumps(
++            {
++                "honest_verdict": artifact["honest_verdict"],
++                "a1_genuinely_diagnostic": artifact["a1_genuinely_diagnostic"],
++                "a1b_delta_trustworthy": artifact["a1b_delta_trustworthy"],
++                "result": RESULT_RELATIVE_PATH,
++            },
++            indent=2,
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 6c8836edda..9e0b121ca3 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-27T16:54:11.775185Z",
+-  "duration_s": 0.05215120315551758,
++  "run_date": "2026-06-27T17:37:39.822775Z",
++  "duration_s": 0.07280659675598145,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "b951f32aedb643b6c5af69b723b407c97a597f91e591f49ae05413c7dfa6bcbb",
++  "reproducibility_checksum": "047ad02633367101b9f04012acbcc67f6c5e4fd7d5367f8fac75e72c44ccf829",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "f6d38f5d7dc41d7f619b739b58d48fa8054661ee"
++    "adversarial_verify_version": "c786151abe8ab022fd6272fc433c2be1fc66ecfc"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index b108e4b5a6..0190d2b653 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-27T16:54:11.858887Z",
+-  "duration_s": 0.07657623291015625,
++  "run_date": "2026-06-27T17:37:39.913866Z",
++  "duration_s": 0.08110904693603516,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "74f67aca7a6527eb694bffe772138145fc080940665220ff5ded1d7f501bbe0c",
++  "reproducibility_checksum": "e5b95db8f308ef787dd5c393aae5e48e0fd1f17d1472d884c86c4be470208377",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "f6d38f5d7dc41d7f619b739b58d48fa8054661ee"
++    "adversarial_verify_version": "c786151abe8ab022fd6272fc433c2be1fc66ecfc"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index fd707e046b..fca20b24a3 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1266937255859375,
++  "efficiency_gains_ms": 2.1462440490722656,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 9e357cb252..7fe4dd2fb3 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.476603887975216e-05,
++  "duration_s": 4.299101419746876e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4876_fork_probe_inducer_audit.json b/results/experiment_4876_fork_probe_inducer_audit.json
+new file mode 100644
+index 0000000000..7794c60fc8
+--- /dev/null
++++ b/results/experiment_4876_fork_probe_inducer_audit.json
+@@ -0,0 +1,238 @@
++{
++  "a1_adversarial_result": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
++    "exp_id": 4871,
++    "flag_count": 0,
++    "flags": [],
++    "honest_verdict": "complete_generation_wall_fork_probe_retired_positive_control_failed",
++    "loaded": true,
++    "max_severity": -1,
++    "title": ""
++  },
++  "a1_artifact_checksum": "sha256:f223196660e020cef86c8f3901aedebe269012ab3eee7c1c9be6e4cea9bac081",
++  "a1_artifact_path": "results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
++  "a1_failure_reasons": [
++    "positive_control_not_migrated",
++    "positive_control_not_covered",
++    "positive_control_low_accuracy",
++    "fork_verdict_missing"
++  ],
++  "a1_genuinely_diagnostic": false,
++  "a1_ran_live_on_gpu0": true,
++  "a1_script_checksum": "sha256:3a96f5b124687b1562ec0e1578e810852adebf85034150f50e4b389b506049bf",
++  "a1_script_path": "python/carnot/experiment_4871_generation_wall_fork_probe_gpu_fixed.py",
++  "a1_source_fork_verdict": null,
++  "a1_source_honest_verdict": "complete_generation_wall_fork_probe_retired_positive_control_failed",
++  "a1_source_n_games_measured": 9,
++  "a1_summarizer_result": {
++    "returncode": 0,
++    "stderr": "",
++    "stdout": "==============================================================================\nARTIFACT  experiment_4871_generation_wall_fork_probe_gpu_fixed.json\n------------------------------------------------------------------------------\n  verdict          : complete_generation_wall_fork_probe_retired_positive_control_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 587.0132269859314   substrate: live_llm_inference\n  duration floor   : live_llm_inference >=60.0s (live_model)\n  headline metrics :\n      median_engine_heldout_accuracy = 0.0\n  adversarial flags: none\n"
++  },
++  "a1b_adversarial_result": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4872_cegis_world_model_refinement.json",
++    "exp_id": 4872,
++    "flag_count": 1,
++    "flags": [
++      {
++        "detail": "cegis_heldout_accuracy_delta_median=0.0 (exactly zero). Confirm this is not a stub default.",
++        "kind": "IMPLAUSIBLE_PERFECT",
++        "severity": "info"
++      }
++    ],
++    "honest_verdict": "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed",
++    "loaded": true,
++    "max_severity": 0,
++    "title": ""
++  },
++  "a1b_artifact_checksum": "sha256:0afdde35fa4ca01fd551d6df3136e2f4cff5b7d7b694df969c035e89d9b03bd8",
++  "a1b_artifact_path": "results/experiment_4872_cegis_world_model_refinement.json",
++  "a1b_delta_ci95": [
++    0.0,
++    0.0
++  ],
++  "a1b_delta_median": 0.0,
++  "a1b_delta_trustworthy": true,
++  "a1b_failure_reasons": [],
++  "a1b_residual_reasons": [
++    "a1b_positive_control_failed"
++  ],
++  "a1b_source_honest_verdict": "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed",
++  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
++  "checks": {
++    "a1_live_gpu": {
++      "duration_floor_s": 60.0,
++      "duration_s": 587.0132269859314,
++      "flagged_adversarial": false,
++      "generator_backend": "gpu0_cuda",
++      "passed": true
++    },
++    "a1_live_path": {
++      "arc_orphan_solver_lint_passed": true,
++      "artifact_live_path_reachable": true,
++      "passed": true,
++      "solve_provenance": "development_proxy",
++      "source_live_path": {
++        "calls": [
++          "_collect_cold_policy_transitions",
++          "list",
++          "int",
++          "_heldout_transitions",
++          "normalize_sequence",
++          "classify_planned_pool",
++          "row.update",
++          "policy._induce_and_plan",
++          "e3.load_engine",
++          "live_methods.append",
++          "score",
++          "float",
++          "float",
++          "_execute_plan_reaches_l1",
++          "max",
++          "e3.plan_in_model",
++          "live_methods.append",
++          "round",
++          "round",
++          "len",
++          "len",
++          "int",
++          "list",
++          "repr",
++          "sum",
++          "e3.WorldModelVerifier",
++          "float",
++          "float",
++          "getattr",
++          "int",
++          "int",
++          "repr",
++          "ord"
++        ],
++        "function_present": true,
++        "induce_and_plan_called": true,
++        "load_engine_called": true,
++        "passed": true,
++        "plan_in_model_called": true
++      },
++      "source_live_path_called": true
++    },
++    "a1_numbers_match_fork": {
++      "computed_coverage_migration_count": 0,
++      "computed_fork_verdict": "INDUCER_CEILING",
++      "computed_median_engine_heldout_accuracy": 0.0,
++      "invalid_games": [],
++      "passed": false,
++      "per_game_count": 9,
++      "reported_coverage_migration_count": 0,
++      "reported_fork_verdict": null,
++      "reported_median_engine_heldout_accuracy": 0.0,
++      "reported_n_games_measured": 9
++    },
++    "a1_planner_blind_to_banked_answer": {
++      "allowed_only_in_classify_planned_pool": true,
++      "artifact_flag": true,
++      "disallowed_refs": [],
++      "function_present": true,
++      "passed": true,
++      "winning_prefix_refs": 1
++    },
++    "a1_positive_control": {
++      "artifact_positive_control_migrated": false,
++      "engine_heldout_accuracy": 0.0,
++      "high_accuracy_threshold": 0.5,
++      "passed": false,
++      "planned_bucket": "NEVER_ENUMERATED",
++      "positive_control_game": "tu93",
++      "row_game": "tu93"
++    },
++    "a1_summarizer_and_adversarial_verify": {
++      "adversarial_flag_count": 0,
++      "adversarial_loaded": true,
++      "passed": true,
++      "summarizer_returncode": 0
++    },
++    "a1b_delta": {
++      "adversarial_flag_count": 1,
++      "artifact_delta_on_truly_heldout_split": true,
++      "circular_moat_flag_count": 0,
++      "computed_ci95": [
++        0.0,
++        0.0
++      ],
++      "computed_median": 0.0,
++      "live_path_reachable": true,
++      "n_games_measured": 9,
++      "oracle_distinct": true,
++      "passed": true,
++      "positive_control_passed": false,
++      "reported_ci95": [
++        0.0,
++        0.0
++      ],
++      "reported_median": 0.0,
++      "split_disjoint": true,
++      "status": "ran",
++      "verifier_is_oracle": false
++    }
++  },
++  "duration_s": 0.664567,
++  "experiment": "experiment_4876_fork_probe_inducer_audit",
++  "experiment_id": 4876,
++  "field_principles": {
++    "a1_genuinely_diagnostic": {
++      "principle": "the load-bearing check -- ran-live-on-GPU0 AND planner-blind AND positive-control-migrated AND numbers-match-fork AND live-path-reachable; else A1's fork verdict is void."
++    },
++    "a1_ran_live_on_gpu0": {
++      "principle": "true iff generator_backend is gpu0_cuda/igpu_hip AND duration clears the 60s floor AND not flagged_adversarial -- proves the .448 cuda_3090_generator_disallowed block is gone."
++    },
++    "a1b_delta_trustworthy": {
++      "principle": "true iff A1b's accuracy delta is on a held-out split DISJOINT from the repair set and oracle-distinct (or A1b was gate-skipped)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; audit complete is complete_a1_a1b_audited."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
++    },
++    "numbers_match_fork": {
++      "principle": "true iff the per-game accuracy x bucket numbers support the claimed fork_verdict."
++    },
++    "planner_blind_confirmed": {
++      "principle": "true iff the banked winner was used only to classify, never to seed induction/planning."
++    },
++    "positive_control_confirmed": {
++      "principle": "true iff tu93 really came out HIGH accuracy + COVERED."
++    }
++  },
++  "honest_verdict": "complete_a1_a1b_audited",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "live_lint_result": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (42 modules in the live closure).\n"
++  },
++  "numbers_match_fork": false,
++  "planner_blind_confirmed": true,
++  "positive_control_confirmed": false,
++  "preconditions_checked": {
++    "a1_artifact_present": true,
++    "a1_script_present": true,
++    "a1b_artifact_present": true,
++    "adversarial_verify_script_present": true,
++    "arc_orphan_solver_lint_present": true,
++    "ok": true,
++    "spec_has_req_4876": true,
++    "summarizer_script_present": true
++  },
++  "random_seed": 4876,
++  "reproducibility_checksum": "sha256:4d2ac89a12b3bdf52b6173c1f81716603e8bf89d3d94f5ebddc1fc5362060b82",
++  "result_path": "results/experiment_4876_fork_probe_inducer_audit.json",
++  "schema": "carnot.arc.a1_a1b_fork_probe_inducer_audit_4876.v1",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4876",
++    "SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT",
++    "SCENARIO-ARC-WMTE-4876-BLOCKED-A1-ARTIFACT"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1f9b64aa88..468a268f38 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T16:57:38Z",
+-  "finished_at": "2026-06-27T16:57:38Z",
+-  "duration_s": 0.009,
++  "started_at": "2026-06-27T17:37:22Z",
++  "finished_at": "2026-06-27T17:37:22Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 1755a964a5..221e3a1cbc 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T16:57:38Z",
+-  "finished_at": "2026-06-27T16:57:38Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-27T17:37:22Z",
++  "finished_at": "2026-06-27T17:37:22Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index a1169827f1..a346627846 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T16:57:38Z",
+-  "finished_at": "2026-06-27T16:57:38Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-27T17:37:22Z",
++  "finished_at": "2026-06-27T17:37:23Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4876_fork_probe_inducer_audit.py b/tests/python/test_experiment_4876_fork_probe_inducer_audit.py
+new file mode 100644
+index 0000000000..1a0dc150ae
+--- /dev/null
++++ b/tests/python/test_experiment_4876_fork_probe_inducer_audit.py
+@@ -0,0 +1,609 @@
++"""Tests for Exp 4876 A1/A1b adversarial fork-probe audit.
++
++Spec refs: REQ-ARC-WMTE-4876,
++SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT,
++SCENARIO-ARC-WMTE-4876-BLOCKED-A1-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4876_fork_probe_inducer_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++
++def _row(game: str, *, accuracy: float, bucket: str) -> dict[str, Any]:
++    return {
++        "game": game,
++        "engine_heldout_accuracy": accuracy,
++        "planned_bucket": bucket,
++        "migrated": bucket == "COVERED",
++        "winning_prefix_len": 2,
++        "planned_pool_size": 1 if bucket != "NEVER_ENUMERATED" else 0,
++        "heldout_transition_count": 5,
++        "live_path_methods_called": [
++            "E3AgentPolicy._induce_and_plan",
++            "arc_executable_world_model.load_engine",
++            "arc_executable_world_model.plan_in_model",
++        ],
++    }
++
++
++def _a1_artifact() -> dict[str, Any]:
++    return {
++        "experiment_id": 4871,
++        "honest_verdict": "complete_generation_wall_guidance_wall_high_accuracy_migration",
++        "generator_backend": "gpu0_cuda",
++        "duration_s": 65.0,
++        "flagged_adversarial": False,
++        "inference_substrate": "live_llm_inference",
++        "fork_verdict": "GUIDANCE_WALL",
++        "per_game_fork": {
++            "cd82": _row("cd82", accuracy=0.8, bucket="COVERED"),
++            "cn04": _row("cn04", accuracy=0.7, bucket="NEVER_ENUMERATED"),
++            "ls20": _row("ls20", accuracy=0.9, bucket="ENUMERATED_BUT_LOST"),
++        },
++        "coverage_migration_count": 1,
++        "median_engine_heldout_accuracy": 0.8,
++        "positive_control_game": "tu93",
++        "positive_control_migrated": True,
++        "positive_control_fork": _row("tu93", accuracy=0.9, bucket="COVERED"),
++        "planner_blind_to_banked_answer": True,
++        "n_games_measured": 3,
++        "live_path_reachable": True,
++        "solve_provenance": "development_proxy",
++        "preconditions_checked": {
++            "generator": {
++                "ok": True,
++                "generator_backend": "gpu0_cuda",
++                "detail": "ok",
++                "launch_env_cuda_visible_devices": "0",
++            }
++        },
++    }
++
++
++def _a1_source(*, injected: bool = False) -> str:
++    if injected:
++        return """
++def measure_game_with_live_induce_plan(game, winning_prefix, proposer):
++    policy = seeded_frontier(winning_prefix)
++    policy._induce_and_plan()
++    engine, is_done = e3.load_engine(game)
++    plan = e3.plan_in_model(engine, is_done, policy.root_grid, hint=winning_prefix)
++    return classify_planned_pool(game, winning_prefix, plan)
++"""
++    return """
++def measure_game_with_live_induce_plan(game, winning_prefix, proposer):
++    policy = cold_policy(game, proposer)
++    policy._induce_and_plan()
++    engine, is_done = e3.load_engine(game)
++    plan = e3.plan_in_model(engine, is_done, policy.root_grid)
++    return classify_planned_pool(game, winning_prefix, plan)
++"""
++
++
++def _delta_row(game: str, *, delta: float = 0.5) -> dict[str, Any]:
++    return {
++        "game": game,
++        "baseline": 0.1,
++        "refined": round(0.1 + delta, 6),
++        "delta": delta,
++        "repair_transition_ids": [0, 2],
++        "remeasure_transition_ids": [1, 3, 4],
++        "repair_counterexample_count": 2,
++        "remeasure_transition_count": 3,
++        "counterexamples_fixed": 1,
++        "accepted_repairs": 1,
++        "cegis_rounds": 1,
++    }
++
++
++def _a1b_artifact() -> dict[str, Any]:
++    return {
++        "experiment_id": 4872,
++        "honest_verdict": "success_cegis_engine_accuracy_lift_0.500000",
++        "per_game_accuracy_delta": {
++            "cd82": _delta_row("cd82"),
++            "cn04": _delta_row("cn04"),
++            "ls20": _delta_row("ls20"),
++        },
++        "cegis_heldout_accuracy_delta_median": 0.5,
++        "cegis_heldout_accuracy_delta_ci95": [0.5, 0.5],
++        "delta_on_truly_heldout_split": True,
++        "positive_control_passed": True,
++        "verifier_is_oracle": False,
++        "live_path_reachable": True,
++        "solve_provenance": "development_proxy",
++    }
++
++
++def _tool_results() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
++    return (
++        {"returncode": 0, "stdout": "LIVE re-check: clean", "stderr": ""},
++        {"loaded": True, "flag_count": 0, "flags": []},
++        {"loaded": True, "flag_count": 0, "flags": []},
++        {"passed": True, "returncode": 0, "stdout_tail": "OK", "stderr_tail": ""},
++    )
++
++
++def test_req_arc_wmte_4876_spec_declares_audit_contract() -> None:
++    """REQ-ARC-WMTE-4876: OpenSpec anchors fields, scenarios, and result path."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-ARC-WMTE-4876",
++        "SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT",
++        "SCENARIO-ARC-WMTE-4876-BLOCKED-A1-ARTIFACT",
++        mod.RESULT_RELATIVE_PATH,
++        mod.AUDIT_REPORT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4876_good_a1_and_a1b_pass_gates() -> None:
++    """SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT: all load-bearing gates pass."""
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++    audit = mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )
++
++    assert audit["honest_verdict"] == "complete_a1_a1b_audited"
++    assert audit["a1_genuinely_diagnostic"] is True
++    assert audit["a1_ran_live_on_gpu0"] is True
++    assert audit["planner_blind_confirmed"] is True
++    assert audit["positive_control_confirmed"] is True
++    assert audit["numbers_match_fork"] is True
++    assert audit["a1b_delta_trustworthy"] is True
++    assert audit["a1_failure_reasons"] == []
++    assert audit["a1b_failure_reasons"] == []
++    assert audit["checks"]["a1_numbers_match_fork"]["computed_fork_verdict"] == "GUIDANCE_WALL"
++    assert audit["checks"]["a1b_delta"]["computed_ci95"] == [0.5, 0.5]
++
++
++def test_scenario_arc_wmte_4876_adversarial_variants_fail_closed() -> None:
++    """SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT: hostile variants are explicit non-tests."""
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++
++    too_short = _a1_artifact()
++    too_short["duration_s"] = 59.0
++    too_short["generator_backend"] = "cpu"
++
++    control_failed = _a1_artifact()
++    control_failed["positive_control_migrated"] = False
++    control_failed["positive_control_fork"] = _row("tu93", accuracy=0.0, bucket="NEVER_ENUMERATED")
++
++    wrong_fork = _a1_artifact()
++    wrong_fork["fork_verdict"] = "PLANNER_GAP"
++
++    bad_split = _a1b_artifact()
++    bad_split["per_game_accuracy_delta"]["cd82"]["remeasure_transition_ids"] = [0, 1]
++    bad_split["delta_on_truly_heldout_split"] = False
++
++    oracle = _a1b_artifact()
++    oracle["verifier_is_oracle"] = True
++
++    cases = [
++        (too_short, _a1_source(), _a1b_artifact(), "a1_not_live_on_gpu0"),
++        (_a1_artifact(), _a1_source(injected=True), _a1b_artifact(), "banked_answer_used_before_classification"),
++        (control_failed, _a1_source(), _a1b_artifact(), "positive_control_not_migrated"),
++        (wrong_fork, _a1_source(), _a1b_artifact(), "fork_verdict_mismatch"),
++        (_a1_artifact(), _a1_source(), bad_split, "a1b_split_not_disjoint"),
++        (_a1_artifact(), _a1_source(), oracle, "a1b_verifier_is_oracle"),
++    ]
++
++    for a1_artifact, source_text, a1b_artifact, reason in cases:
++        audit = mod.audit_sources(
++            a1_artifact=a1_artifact,
++            a1_source_text=source_text,
++            a1_summarizer_result=summary,
++            a1_adversarial_result=a1_adv,
++            a1b_artifact=a1b_artifact,
++            a1b_adversarial_result=a1b_adv,
++            live_lint_result=lint,
++        )
++        all_reasons = audit["a1_failure_reasons"] + audit["a1b_failure_reasons"]
++        assert reason in all_reasons
++        if reason.startswith("a1b_"):
++            assert audit["a1b_delta_trustworthy"] is False
++        else:
++            assert audit["a1_genuinely_diagnostic"] is False
++
++
++def test_req_arc_wmte_4876_a1b_gate_skip_is_trustworthy_but_missing_artifact_is_not() -> None:
++    """REQ-ARC-WMTE-4876: only explicit A1b gate skips count as delta trustworthy."""
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++    high_a1 = _a1_artifact()
++    high_a1["fork_verdict"] = "PLANNER_GAP"
++    high_a1["coverage_migration_count"] = 0
++    for row in high_a1["per_game_fork"].values():
++        row["planned_bucket"] = "NEVER_ENUMERATED"
++        row["migrated"] = False
++
++    skipped = mod.audit_sources(
++        a1_artifact=high_a1,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=None,
++        a1b_adversarial_result=None,
++        live_lint_result=lint,
++    )
++    low_a1 = _a1_artifact()
++    low_a1["fork_verdict"] = "INDUCER_CEILING"
++    low_a1["coverage_migration_count"] = 0
++    low_a1["median_engine_heldout_accuracy"] = 0.1
++    for row in low_a1["per_game_fork"].values():
++        row["engine_heldout_accuracy"] = 0.1
++        row["planned_bucket"] = "NEVER_ENUMERATED"
++        row["migrated"] = False
++    missing = mod.audit_sources(
++        a1_artifact=low_a1,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=None,
++        a1b_adversarial_result=None,
++        live_lint_result=lint,
++    )
++
++    assert skipped["a1b_delta_trustworthy"] is True
++    assert skipped["checks"]["a1b_delta"]["status"] == "gate_skipped"
++    assert missing["a1b_delta_trustworthy"] is False
++    assert "a1b_artifact_missing_after_inducer_ceiling_a1" in missing["a1b_failure_reasons"]
++
++
++def test_req_arc_wmte_4876_build_schema_write_and_blocked_report(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4876: artifacts are checksum-stable and report appends are idempotent."""
++
++    source = tmp_path / mod.A1_ARTIFACT_RELATIVE_PATH
++    script = tmp_path / mod.A1_SCRIPT_RELATIVE_PATH
++    a1b = tmp_path / mod.A1B_ARTIFACT_RELATIVE_PATH
++    source.parent.mkdir(parents=True)
++    script.parent.mkdir(parents=True)
++    source.write_text(json.dumps(_a1_artifact()), encoding="utf-8")
++    script.write_text(_a1_source(), encoding="utf-8")
++    a1b.write_text(json.dumps(_a1b_artifact()), encoding="utf-8")
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++    audit = mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        a1_artifact=_a1_artifact(),
++        a1b_artifact=_a1b_artifact(),
++        audit=audit,
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++        preconditions_checked={"ok": True},
++        duration_s=0.0,
++    )
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["duration_s"] == mod.DURATION_FLOOR_S
++    assert artifact["a1_artifact_checksum"] == mod.file_checksum(source)
++    assert artifact["a1_script_checksum"] == mod.file_checksum(script)
++    assert artifact["a1b_artifact_checksum"] == mod.file_checksum(a1b)
++
++    result_path = mod.write_artifact(artifact, root=tmp_path)
++    report_path = mod.append_markdown_report(artifact, root=tmp_path)
++    mod.append_markdown_report(artifact, root=tmp_path)
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert report_path.read_text(encoding="utf-8").count("## Experiment 4876 A1/A1b Audit") == 1
++
++    blocked = mod.blocked_artifact({"ok": False}, duration_s=0.0)
++    assert blocked["honest_verdict"] == "blocked_a1_artifact_missing"
++    assert mod.artifact_schema_errors(blocked) == []
++
++    broken = dict(artifact)
++    broken.update(
++        {
++            "a1_genuinely_diagnostic": "yes",
++            "a1_ran_live_on_gpu0": "yes",
++            "planner_blind_confirmed": "yes",
++            "positive_control_confirmed": "yes",
++            "numbers_match_fork": "yes",
++            "a1b_delta_trustworthy": "yes",
++            "field_principles": {},
++            "inference_substrate": "live_llm_inference",
++            "checks": [],
++            "a1_failure_reasons": "none",
++            "a1b_failure_reasons": "none",
++            "duration_s": 0.0,
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++    errors = mod.artifact_schema_errors(broken)
++    for expected in (
++        "a1_genuinely_diagnostic_must_be_bool",
++        "a1_ran_live_on_gpu0_must_be_bool",
++        "planner_blind_confirmed_must_be_bool",
++        "positive_control_confirmed_must_be_bool",
++        "numbers_match_fork_must_be_bool",
++        "a1b_delta_trustworthy_must_be_bool",
++        "field_principles_mismatch",
++        "inference_substrate_mismatch",
++        "checks_must_be_dict",
++        "a1_failure_reasons_must_be_list",
++        "a1b_failure_reasons_must_be_list",
++        "duration_below_aggregation_floor",
++        "reproducibility_checksum_mismatch",
++    ):
++        assert expected in errors
++
++
++def test_req_arc_wmte_4876_run_checked_in_artifacts() -> None:
++    """REQ-ARC-WMTE-4876: checked-in A1/A1b artifacts produce the requested audit."""
++
++    artifact = mod.run(root=REPO, write=False)
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "complete_a1_a1b_audited"
++    assert artifact["a1_ran_live_on_gpu0"] is True
++    assert artifact["planner_blind_confirmed"] is True
++    assert artifact["positive_control_confirmed"] is False
++    assert artifact["numbers_match_fork"] is False
++    assert artifact["a1_genuinely_diagnostic"] is False
++    assert artifact["a1b_delta_trustworthy"] is True
++    assert artifact["checks"]["a1_live_gpu"]["generator_backend"] == "gpu0_cuda"
++    assert "positive_control_not_migrated" in artifact["a1_failure_reasons"]
++    assert "fork_verdict_missing" in artifact["a1_failure_reasons"]
++    assert artifact["checks"]["a1b_delta"]["positive_control_passed"] is False
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++
++def test_req_arc_wmte_4876_defensive_branches(tmp_path: Path, monkeypatch: Any) -> None:
++    """REQ-ARC-WMTE-4876: malformed inputs fail closed without fabricating passes."""
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++
++    assert mod._finite_float(True) is None
++    assert mod._finite_float("not-a-number") is None
++    non_object = tmp_path / "not_object.json"
++    non_object.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError):
++        mod._read_json(non_object)
++
++    assert mod._call_name(__import__("ast").Constant(value=1)) == ""
++    assert mod._find_function(__import__("ast").parse("x = 1"), "missing") is None
++    assert mod._first_parent_call(__import__("ast").Name(id="winning_prefix")) is None
++
++    syntax = mod.audit_sources(
++        a1_artifact={**_a1_artifact(), "planner_blind_to_banked_answer": False},
++        a1_source_text="def measure_game_with_live_induce_plan(",
++        a1_summarizer_result={"returncode": 2},
++        a1_adversarial_result={"loaded": True, "flag_count": 1, "flags": []},
++        a1b_artifact=None,
++        a1b_adversarial_result=None,
++        live_lint_result={"passed": False},
++    )
++    assert "a1_source_not_parseable" in syntax["a1_failure_reasons"]
++    assert "artifact_planner_blind_flag_false" in syntax["a1_failure_reasons"]
++    assert "a1_summarizer_failed" in syntax["a1_failure_reasons"]
++    assert "a1_adversarial_verify_flagged" in syntax["a1_failure_reasons"]
++    assert "live_path_unreachable" in syntax["a1_failure_reasons"]
++
++    missing_function = mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text="def not_the_path():\n    return None\n",
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )
++    assert "measure_game_with_live_induce_plan_missing" in missing_function["a1_failure_reasons"]
++
++    missing_calls = mod.audit_sources(
++        a1_artifact={**_a1_artifact(), "solve_provenance": "live_agent_self_discovery"},
++        a1_source_text="def measure_game_with_live_induce_plan(game, winning_prefix, proposer):\n    return []\n",
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )
++    for reason in (
++        "winning_prefix_not_used_for_classification",
++        "induce_and_plan_not_called",
++        "load_engine_not_called",
++        "plan_in_model_not_called",
++        "solve_provenance_not_development_proxy",
++    ):
++        assert reason in missing_calls["a1_failure_reasons"]
++
++    backend_from_model = _a1_artifact()
++    backend_from_model.pop("generator_backend")
++    backend_from_model["model_specs"] = {"backend": "igpu_hip"}
++    assert mod.audit_sources(
++        a1_artifact=backend_from_model,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )["a1_ran_live_on_gpu0"] is True
++
++    flagged = _a1_artifact()
++    flagged["flagged_adversarial"] = True
++    assert "a1_flagged_adversarial" in mod.audit_sources(
++        a1_artifact=flagged,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )["a1_failure_reasons"]
++
++    bad_backend = _a1_artifact()
++    bad_backend["generator_backend"] = "cpu"
++    bad_backend.pop("preconditions_checked")
++    assert "a1_generator_backend_not_gpu0_or_igpu" in mod.audit_sources(
++        a1_artifact=bad_backend,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )["a1_failure_reasons"]
++
++    bad_control = _a1_artifact()
++    bad_control["positive_control_game"] = "not_tu93"
++    bad_control.pop("positive_control_fork")
++    control_reasons = mod.audit_sources(
++        a1_artifact=bad_control,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )["a1_failure_reasons"]
++    assert "positive_control_row_missing" in control_reasons
++    assert "positive_control_not_tu93" in control_reasons
++
++    invalid_numbers = _a1_artifact()
++    invalid_numbers["per_game_fork"] = {
++        "bad": {"planned_bucket": "NOPE", "engine_heldout_accuracy": 2.0, "migrated": "no"},
++        "bad2": {"planned_bucket": "COVERED", "engine_heldout_accuracy": "x", "migrated": False},
++    }
++    invalid_numbers["n_games_measured"] = "x"
++    invalid_numbers["median_engine_heldout_accuracy"] = "x"
++    invalid_numbers["fork_verdict"] = "UNKNOWN"
++    invalid_numbers["coverage_migration_count"] = 99
++    number_reasons = mod.audit_sources(
++        a1_artifact=invalid_numbers,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )["a1_failure_reasons"]
++    for reason in (
++        "invalid_planned_bucket",
++        "invalid_engine_heldout_accuracy",
++        "invalid_migrated_flag",
++        "row_migrated_mismatch",
++        "n_games_measured_not_integer",
++        "n_games_measured_mismatch",
++        "n_games_measured_below_3",
++        "median_engine_heldout_accuracy_mismatch",
++        "invalid_fork_verdict",
++        "coverage_migration_count_mismatch",
++    ):
++        assert reason in number_reasons
++    assert mod._computed_fork_verdict({"not_a_row": []}) is None
++
++    assert mod._bootstrap_ci95([], iterations=2) == [None, None]
++    varied_ci = mod._bootstrap_ci95([0.0, 1.0, 2.0], iterations=5, seed=1)
++    assert varied_ci[0] <= varied_ci[1]
++    assert mod._split_is_disjoint({"repair_transition_ids": ["bad"], "remeasure_transition_ids": [1]}) is False
++
++    bad_a1b = _a1b_artifact()
++    bad_a1b["cegis_heldout_accuracy_delta_median"] = 9.0
++    bad_a1b["cegis_heldout_accuracy_delta_ci95"] = [9.0, 9.0]
++    bad_a1b["live_path_reachable"] = False
++    audit = mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=bad_a1b,
++        a1b_adversarial_result={
++            "loaded": True,
++            "flag_count": 1,
++            "flags": [{"kind": "CIRCULAR_MOAT_OVERCLAIM"}],
++        },
++        live_lint_result=lint,
++    )
++    assert "a1b_delta_median_mismatch" in audit["a1b_failure_reasons"]
++    assert "a1b_delta_ci95_mismatch" in audit["a1b_failure_reasons"]
++    assert "a1b_circular_moat_overclaim" in audit["a1b_failure_reasons"]
++    assert "a1b_live_path_unreachable" in audit["a1b_residual_reasons"]
++
++    blocked = mod.run(root=tmp_path, write=True, now=iter([1.0, 1.1]).__next__)
++    assert blocked["honest_verdict"] == "blocked_a1_artifact_missing"
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++    source = tmp_path / mod.A1_ARTIFACT_RELATIVE_PATH
++    script = tmp_path / mod.A1_SCRIPT_RELATIVE_PATH
++    a1b = tmp_path / mod.A1B_ARTIFACT_RELATIVE_PATH
++    spec = tmp_path / mod.SPEC_RELATIVE_PATH
++    for path, content in (
++        (source, json.dumps(_a1_artifact())),
++        (script, _a1_source()),
++        (a1b, json.dumps(_a1b_artifact())),
++        (spec, "REQ-ARC-WMTE-4876"),
++        (tmp_path / "scripts/summarize_artifact.py", ""),
++        (tmp_path / "scripts/adversarial_verify.py", ""),
++        (tmp_path / "scripts/arc_orphan_solver_lint.py", ""),
++    ):
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(content, encoding="utf-8")
++    monkeypatch.setattr(mod, "run_summarizer", lambda _path: summary)
++    monkeypatch.setattr(mod, "run_adversarial_verify", lambda _path: a1b_adv)
++    monkeypatch.setattr(mod, "run_arc_orphan_solver_lint", lambda _root: lint)
++    complete = mod.run(root=tmp_path, write=True, now=iter([2.0, 2.1]).__next__)
++    assert complete["honest_verdict"] == "complete_a1_a1b_audited"
++
++    broken = dict(complete)
++    broken.update(
++        {
++            "honest_verdict": "bad",
++            "a1_genuinely_diagnostic": True,
++            "a1_failure_reasons": ["still_bad"],
++            "a1b_delta_trustworthy": True,
++            "a1b_failure_reasons": ["still_bad"],
++            "random_seed": 0,
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++    schema_errors = mod.artifact_schema_errors(broken)
++    for expected in (
++        "honest_verdict_missing_terminal_prefix",
++        "diagnostic_artifact_has_a1_failure_reasons",
++        "trustworthy_a1b_has_failure_reasons",
++        "random_seed_mismatch",
++    ):
++        assert expected in schema_errors
++    with pytest.raises(ValueError):
++        mod.write_artifact(broken, root=tmp_path)
++
++    monkeypatch.setattr(mod, "artifact_schema_errors", lambda _artifact: ["forced"])
++    with pytest.raises(ValueError):
++        mod.run(root=tmp_path, write=False, now=iter([3.0, 3.1]).__next__)
+-- 
+2.55.0
+

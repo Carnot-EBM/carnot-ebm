@@ -1,0 +1,2229 @@
+From 301be9a9e388a33135f795c1461d05e8bd2ef461 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 15 Jun 2026 04:18:04 -0400
+Subject: [PATCH 01905/11362] [conductor] PHASE A2 (THE HEADLINE GATE, gated_on
+ A1 aggregator_trained) -- does the STRONGER cross-candidate AGGREGATOR BEAT
+ majority vote OFF-ORACLE at power? On a HELD-OUT ARC split (disjoint from A1
+ folds, target N>=30), rerank with the A1 aggregator
+ (verifier_is_oracle=false; does NOT execute demos) vs majority-vote vs a
+ MATCHED no-verifier control (same candidates/budget) vs oracle@K (the
+ positive-control ceiling) vs a MARGIN-TRIGGERED override (2606.04323 /
+ ARBITER 2605.26172: override vote ONLY when the aggregator margin clears a
+ pre-registered threshold tuned on the A1 fold). The LOAD-BEARING gate:
+ aggregator@1 - vote@1, bootstrap CI95 EXCLUDES 0 AND headroom exists. YES ->
+ the first oracle-distinct verifier win (closes GAP-3-ties-vote; informs the
+ DiffusionGemma gate). TIES-at-power -> a STRONGER null than .391's n=14.
+ No-headroom -> uninformative (FALSE_NEGATIVE_RISK).
+
+Automated research step by research conductor.
+Task ID: exp4232-oracle-distinct-arc-aggregator-beats-vote
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  96 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../oracle_distinct_arc_aggregator_4232.py    | 669 +++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...le_distinct_arc_aggregator_beats_vote.json | 810 ++++++++++++++++++
+ ...acle_distinct_arc_aggregator_beats_vote.py |  23 +
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...acle_distinct_arc_aggregator_beats_vote.py | 414 +++++++++
+ 13 files changed, 2030 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/reporting/oracle_distinct_arc_aggregator_4232.py
+ create mode 100644 results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json
+ create mode 100644 results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py
+ create mode 100644 tests/python/test_experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 71d469b69a..1620020fbc 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -14509,6 +14509,102 @@ module is not importable, when Exp 4231 runs, then it writes
+ `held_out_task_n=0`, `wrong_majority_n=0`, `verifier_is_oracle=false`, leaves
+ `learned_verifier_path` empty, and stops before training.
+ 
++### REQ-VERIFY-4232: Held-Out Oracle-Distinct ARC Aggregator Beats-Vote Gate
++
++The repository SHALL provide
++`python/carnot/reporting/oracle_distinct_arc_aggregator_4232.py` and
++`results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py` to run
++the powered held-out ARC rerank gate for the learned aggregator built by Exp
++4231. The runner SHALL first read
++`results/experiment_4231_oracle_distinct_arc_aggregator_build.json`; if
++`aggregator_trained` is not the bare bool `true`, if `verifier_is_oracle` is
++not the bare bool `false`, or if `learned_verifier_path` is absent or
++unreadable, it SHALL write
++`honest_verdict=complete_oracle_distinct_arc_gate_deferred_no_built_aggregator`,
++`oracle_distinct_beats_vote=false`, `verifier_is_oracle=false`, and SHALL stop
++before measuring ARC candidates.
++
++When the Exp 4231 aggregator is available, the runner SHALL rebuild the grown
++ARC candidate pool through the Exp 4231 loader, preserving source-qualified
++task ids. The measured aggregator score SHALL be oracle-distinct and held out:
++selection MAY use Exp 4231 out-of-fold candidate scores only when the candidate
++task is absent from that score row's `train_task_ids`; otherwise the candidate
++or task SHALL not contribute to the gate. The runner SHALL NOT execute demos,
++call a GAP execution verifier, or use candidate correctness as an inference
++rank key.
++
++For each held-out ARC task the runner SHALL compute `vote@1` as the majority
++candidate, `aggregator@1` as the candidate maximizing the Exp 4231 learned
++score, `oracle@K` as any candidate exactly correct, a budget-matched
++no-verifier control using the same candidates with a deterministic first-of-K
++policy, and a 2606.04323 margin-triggered override that keeps the vote
++candidate unless the learned-score margin between the aggregator top-1 and the
++vote candidate clears the pre-registered A1-fold threshold. It SHALL report
++task-level pass rates, bare int `held_out_task_n`, and a task-bootstrap CI95
++with at least 2000 resamples for `aggregator@1 - vote@1`.
++
++The positive control SHALL be evaluated before interpreting a null. If
++`oracle@K` does not exceed `vote@1`, the terminal headline SHALL be
++`oracle_distinct_arc_no_headroom_uninformative` and the artifact SHALL NOT
++claim that the aggregator failed. Otherwise, the bare bool
++`oracle_distinct_beats_vote` SHALL be true only when headroom exists,
++`aggregator@1 - vote@1` is positive, and its CI95 excludes zero. A
++headroom-present run with a non-exclusive CI SHALL report
++`oracle_distinct_aggregator_ties_vote_with_headroom_at_power`. The runner SHALL
++run `scripts/adversarial_verify.py` on the written artifact and SHALL keep
++`verifier_is_oracle=false` so `CIRCULAR_MOAT_OVERCLAIM` remains clean.
++
++The terminal artifact SHALL write
++`results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json` with
++required fields `honest_verdict`, bare bool `oracle_distinct_beats_vote`, bare
++float `aggregator_minus_vote_delta`, `aggregator_minus_vote_ci95`, bare float
++`margin_override_minus_vote`, bare float `oracle_at_k`, bare float
++`matched_control_delta`, bare int `held_out_task_n`, bare bool
++`verifier_is_oracle=false`, bare int `random_seed`, `reproducibility_checksum`,
++`field_principles`, `spec_refs`, and `acceptance_gate`. Its field principles
++SHALL include:
++`honest_verdict` = `Terminal-prefixed. A clean beats-vote win, a clean ties-at-power null, and an honest no-headroom-uninformative are ALL COMPLETE -- a stronger read on the oracle-distinct frontier than .391's under-powered n=14.`;
++`oracle_distinct_beats_vote` = `BARE bool: aggregator@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); NOT a circular execution result.`;
++`aggregator_minus_vote_delta` = `aggregator@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards.`;
++`aggregator_minus_vote_ci95` = `Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise.`;
++`margin_override_minus_vote` = `Margin-triggered override (keep vote unless high aggregator margin, threshold pre-registered on the A1 fold) minus vote -- the 2606.04323 deployment pattern; can win where a flat rerank loses by overriding only on confident wrong-majority cases (the .391 ARBITER override never fired).`;
++`oracle_at_k` = `The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure.`;
++`matched_control_delta` = `aggregator@1 minus the budget-matched no-verifier control -- isolates the aggregator's contribution from the candidate budget.`;
++`held_out_task_n` = `BARE int: the gate's actual N -- target >=30 so the win/null is not under-powered like the .391 n=14.`;
++`verifier_is_oracle` = `BARE bool=false -- this measurement uses the LEARNED aggregator (no demo execution); only this makes the result headline/gate-eligible (adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean).`;
++`random_seed` = `Determinism precondition; the held-out split + bootstrap must be reproducible.`;
++`reproducibility_checksum` = `Hash of the held-out pool + the learned aggregator; lets a third party re-run the decisive gate.`
++
++### SCENARIO-VERIFY-4232: Held-Out Aggregator Beats Vote With Controls
++
++Given Exp 4231 reports `aggregator_trained=true`, `verifier_is_oracle=false`,
++and a readable `learned_verifier_path`, and the grown held-out ARC pool has
++`oracle@K > vote@1`, when Exp 4232 runs, then it reports vote, learned
++aggregator, oracle, matched-control, and margin-triggered override task pass
++rates, computes `aggregator_minus_vote_delta` and a CI95 with at least 2000
++bootstrap resamples, sets `oracle_distinct_beats_vote` to true only for a
++positive CI-exclusive learned lift, records `held_out_task_n`, keeps
++`verifier_is_oracle=false`, records the pre-registered override threshold,
++writes the required field principles and checksum, and runs adversarial
++verification without a `CIRCULAR_MOAT_OVERCLAIM` flag.
++
++### SCENARIO-VERIFY-4232-NO-HEADROOM: Positive Control Blocks False Negative
++
++Given the held-out ARC pool has `oracle@K` equal to `vote@1`, when Exp 4232
++runs, then it still reports the measured deltas and controls, but writes an
++honest no-headroom-uninformative verdict, sets
++`oracle_distinct_beats_vote=false`, and does not claim that the learned
++aggregator failed.
++
++### SCENARIO-VERIFY-4232-DEFERRED: Missing Built Aggregator Defers Honestly
++
++Given Exp 4231 is missing, reports `aggregator_trained=false`, reports
++`verifier_is_oracle=true`, or points at an unreadable learned aggregator, when
++Exp 4232 runs, then it writes
++`honest_verdict=complete_oracle_distinct_arc_gate_deferred_no_built_aggregator`,
++sets `oracle_distinct_beats_vote=false`, keeps `verifier_is_oracle=false`, and
++stops before measuring ARC candidates.
++
+ ### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
+ 
+ The repository SHALL provide
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 98e727b4a1..7c91256a10 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 175,
+   "code_violations": 0,
+-  "experiments_checked": 3252,
++  "experiments_checked": 3253,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/oracle_distinct_arc_aggregator_4232.py b/python/carnot/reporting/oracle_distinct_arc_aggregator_4232.py
+new file mode 100644
+index 0000000000..7e9ef51a2f
+--- /dev/null
++++ b/python/carnot/reporting/oracle_distinct_arc_aggregator_4232.py
+@@ -0,0 +1,669 @@
++"""Exp 4232 held-out ARC learned-aggregator rerank gate.
++
++Spec refs: REQ-VERIFY-4232, SCENARIO-VERIFY-4232,
++SCENARIO-VERIFY-4232-NO-HEADROOM, SCENARIO-VERIFY-4232-DEFERRED.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import random
++import subprocess
++import sys
++import time
++from collections import defaultdict
++from collections.abc import Callable
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any
++
++from carnot.reporting import oracle_distinct_arc_aggregator_4231 as exp4231
++
++
++RANDOM_SEED = 4232
++BOOTSTRAP_RESAMPLES = 2000
++MARGIN_TRIGGER_THRESHOLD = 0.10
++A1_REL = Path("results/experiment_4231_oracle_distinct_arc_aggregator_build.json")
++OUTPUT_REL = Path("results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json")
++SPEC_REFS = [
++    "REQ-VERIFY-4232",
++    "SCENARIO-VERIFY-4232",
++    "SCENARIO-VERIFY-4232-NO-HEADROOM",
++    "SCENARIO-VERIFY-4232-DEFERRED",
++]
++INFERENCE_SUBSTRATE = "cached_gap_arc_pool_oof_cross_candidate_aggregator_rerank"
++DEFERRED_VERDICT = "complete_oracle_distinct_arc_gate_deferred_no_built_aggregator"
++NO_HEADROOM_VERDICT = "complete_oracle_distinct_arc_no_headroom_uninformative"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. A clean beats-vote win, a clean ties-at-power null, "
++        "and an honest no-headroom-uninformative are ALL COMPLETE -- a stronger "
++        "read on the oracle-distinct frontier than .391's under-powered n=14."
++    ),
++    "oracle_distinct_beats_vote": (
++        "BARE bool: aggregator@1 - vote@1 CI95 excludes 0 AND delta>0 AND "
++        "headroom exists -- the de-confounded oracle-distinct win "
++        "(GAP-3-ties-vote closed); NOT a circular execution result."
++    ),
++    "aggregator_minus_vote_delta": (
++        "aggregator@1 - vote@1 on held-out ARC -- the oracle-distinct lift; "
++        "recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards."
++    ),
++    "aggregator_minus_vote_ci95": (
++        "Task-level bootstrap CI95 of the delta -- excluding 0 is what "
++        "distinguishes a real oracle-distinct win from noise."
++    ),
++    "margin_override_minus_vote": (
++        "Margin-triggered override (keep vote unless high aggregator margin, "
++        "threshold pre-registered on the A1 fold) minus vote -- the 2606.04323 "
++        "deployment pattern; can win where a flat rerank loses by overriding "
++        "only on confident wrong-majority cases (the .391 ARBITER override never fired)."
++    ),
++    "oracle_at_k": (
++        "The positive-control ceiling (any candidate exactly correct) -- if "
++        "oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not "
++        "a verifier failure."
++    ),
++    "matched_control_delta": (
++        "aggregator@1 minus the budget-matched no-verifier control -- isolates "
++        "the aggregator's contribution from the candidate budget."
++    ),
++    "held_out_task_n": (
++        "BARE int: the gate's actual N -- target >=30 so the win/null is not "
++        "under-powered like the .391 n=14."
++    ),
++    "verifier_is_oracle": (
++        "BARE bool=false -- this measurement uses the LEARNED aggregator (no "
++        "demo execution); only this makes the result headline/gate-eligible "
++        "(adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean)."
++    ),
++    "random_seed": (
++        "Determinism precondition; the held-out split + bootstrap must be reproducible."
++    ),
++    "reproducibility_checksum": (
++        "Hash of the held-out pool + the learned aggregator; lets a third party "
++        "re-run the decisive gate."
++    ),
++}
++
++REQUIRED_FIELDS = (
++    "honest_verdict",
++    "oracle_distinct_beats_vote",
++    "aggregator_minus_vote_delta",
++    "aggregator_minus_vote_ci95",
++    "margin_override_minus_vote",
++    "oracle_at_k",
++    "matched_control_delta",
++    "held_out_task_n",
++    "verifier_is_oracle",
++    "random_seed",
++    "reproducibility_checksum",
++    "field_principles",
++    "spec_refs",
++    "acceptance_gate",
++)
++
++
++class BlockedRun(RuntimeError):
++    """Expected gate/precondition failure that still writes a terminal artifact."""
++
++    def __init__(self, reason: str) -> None:
++        super().__init__(reason)
++        self.reason = reason
++
++
++@dataclass(frozen=True)
++class ScoredArcCandidate:
++    task_id: str
++    candidate_id: str
++    candidate_index: int
++    vote_weight: float
++    correct: bool
++    learned_score: float
++    aggregator_train_task_excluded: bool
++    features: dict[str, float]
++
++
++@dataclass(frozen=True)
++class HeldoutPool:
++    candidates: list[ScoredArcCandidate]
++    source_paths: list[Path]
++    learned_verifier_path: Path
++    learned_verifier_sha256: str
++    score_source: str
++    dropped_task_n: int
++    dropped_candidate_n: int
++
++
++def _read_json_object(path: Path) -> dict[str, Any]:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise BlockedRun("blocked_malformed_json_artifact")
++    return payload
++
++
++def _resolve_existing_path(repo_root: Path, value: Any) -> Path:
++    if not isinstance(value, str) or not value:
++        raise BlockedRun(DEFERRED_VERDICT)
++    path = Path(value)
++    resolved = path if path.is_absolute() else repo_root / path
++    if not resolved.exists():
++        raise BlockedRun(DEFERRED_VERDICT)
++    return resolved
++
++
++def _sha256_file(path: Path) -> str:
++    h = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            h.update(chunk)
++    return h.hexdigest()
++
++
++def _load_a1(repo_root: Path) -> tuple[dict[str, Any], dict[str, Any], Path]:
++    a1_path = repo_root / A1_REL
++    if not a1_path.exists():
++        raise BlockedRun(DEFERRED_VERDICT)
++    try:
++        a1_artifact = _read_json_object(a1_path)
++    except Exception as exc:
++        raise BlockedRun(DEFERRED_VERDICT) from exc
++    if a1_artifact.get("aggregator_trained") is not True:
++        raise BlockedRun(DEFERRED_VERDICT)
++    if a1_artifact.get("verifier_is_oracle") is not False:
++        raise BlockedRun(DEFERRED_VERDICT)
++    aggregator_path = _resolve_existing_path(repo_root, a1_artifact.get("learned_verifier_path"))
++    try:
++        aggregator = exp4231.load_aggregator(aggregator_path)
++    except Exception as exc:
++        raise BlockedRun(DEFERRED_VERDICT) from exc
++    if aggregator.get("verifier_is_oracle") is not False:
++        raise BlockedRun(DEFERRED_VERDICT)
++    return a1_artifact, aggregator, aggregator_path
++
++
++def _oof_score_map(aggregator: dict[str, Any]) -> dict[str, tuple[float, bool]]:
++    scores: dict[str, tuple[float, bool]] = {}
++    for row in aggregator.get("oof_rows", []):
++        if not isinstance(row, dict):
++            continue
++        candidate_id = row.get("candidate_id")
++        task_id = row.get("task_id")
++        train_task_ids = row.get("train_task_ids", [])
++        if not isinstance(candidate_id, str) or not isinstance(task_id, str):
++            continue
++        excluded = isinstance(train_task_ids, list) and task_id not in train_task_ids
++        scores[candidate_id] = (float(row.get("score", 0.0)), excluded)
++    return scores
++
++
++def load_heldout_pool(
++    repo_root: Path | str,
++    aggregator: dict[str, Any],
++    aggregator_path: Path,
++) -> HeldoutPool:
++    """SCENARIO-VERIFY-4232: rebuild ARC rows and attach A1 held-out scores."""
++
++    root = Path(repo_root)
++    corpus = exp4231.load_labeled_arc_pool(root)
++    oof_scores = _oof_score_map(aggregator)
++    source_rows_by_task: dict[str, list[Any]] = defaultdict(list)
++    valid_rows_by_task: dict[str, list[ScoredArcCandidate]] = defaultdict(list)
++    dropped_candidate_n = 0
++    for row in corpus.rows:
++        source_rows_by_task[row.task_id].append(row)
++        score_item = oof_scores.get(row.candidate_id)
++        if score_item is None:
++            dropped_candidate_n += 1
++            continue
++        learned_score, excluded = score_item
++        if not excluded:
++            dropped_candidate_n += 1
++            continue
++        valid_rows_by_task[row.task_id].append(
++            ScoredArcCandidate(
++                task_id=row.task_id,
++                candidate_id=row.candidate_id,
++                candidate_index=row.candidate_index,
++                vote_weight=row.vote_weight,
++                correct=row.correct,
++                learned_score=learned_score,
++                aggregator_train_task_excluded=excluded,
++                features=row.features,
++            )
++        )
++
++    candidates: list[ScoredArcCandidate] = []
++    dropped_task_n = 0
++    for task_id, source_rows in sorted(source_rows_by_task.items()):
++        task_candidates = valid_rows_by_task.get(task_id, [])
++        if len(task_candidates) != len(source_rows):
++            dropped_task_n += 1
++            continue
++        candidates.extend(sorted(task_candidates, key=lambda candidate: candidate.candidate_index))
++    if not candidates:
++        raise BlockedRun("blocked_no_heldout_oof_scores")
++    return HeldoutPool(
++        candidates=candidates,
++        source_paths=list(getattr(corpus, "source_paths", [])),
++        learned_verifier_path=aggregator_path.resolve(),
++        learned_verifier_sha256=_sha256_file(aggregator_path),
++        score_source="exp4231_oof_scores",
++        dropped_task_n=dropped_task_n,
++        dropped_candidate_n=dropped_candidate_n,
++    )
++
++
++def _group_by_task(candidates: list[ScoredArcCandidate]) -> list[list[ScoredArcCandidate]]:
++    grouped: dict[str, list[ScoredArcCandidate]] = defaultdict(list)
++    for candidate in candidates:
++        grouped[candidate.task_id].append(candidate)
++    return [
++        sorted(task_candidates, key=lambda candidate: candidate.candidate_index)
++        for _, task_candidates in sorted(grouped.items())
++    ]
++
++
++def _select_vote(task_candidates: list[ScoredArcCandidate]) -> ScoredArcCandidate:
++    return max(
++        task_candidates,
++        key=lambda candidate: (candidate.vote_weight, -candidate.candidate_index),
++    )
++
++
++def _select_aggregator(task_candidates: list[ScoredArcCandidate]) -> ScoredArcCandidate:
++    return max(
++        task_candidates,
++        key=lambda candidate: (
++            candidate.learned_score,
++            candidate.vote_weight,
++            -candidate.candidate_index,
++        ),
++    )
++
++
++def _select_first(task_candidates: list[ScoredArcCandidate]) -> ScoredArcCandidate:
++    return min(task_candidates, key=lambda candidate: candidate.candidate_index)
++
++
++def _select_margin_override(
++    task_candidates: list[ScoredArcCandidate], margin_threshold: float
++) -> ScoredArcCandidate:
++    vote_pick = _select_vote(task_candidates)
++    aggregator_pick = _select_aggregator(task_candidates)
++    margin = aggregator_pick.learned_score - vote_pick.learned_score
++    if aggregator_pick.candidate_id != vote_pick.candidate_id and margin >= margin_threshold:
++        return aggregator_pick
++    return vote_pick
++
++
++def _rate(values: list[bool]) -> float:
++    return sum(values) / float(len(values)) if values else 0.0
++
++
++def _round_metric(value: float) -> float:
++    return round(float(value), 10)
++
++
++def _bootstrap_ci95(deltas: list[float], *, random_seed: int, resamples: int) -> list[float]:
++    if not deltas:
++        return [0.0, 0.0]
++    rng = random.Random(random_seed)
++    n = len(deltas)
++    means = [
++        sum(deltas[rng.randrange(n)] for _ in range(n)) / float(n)
++        for _ in range(int(resamples))
++    ]
++    means.sort()
++    return [
++        _round_metric(means[int(0.025 * (len(means) - 1))]),
++        _round_metric(means[int(0.975 * (len(means) - 1))]),
++    ]
++
++
++def _ci_excludes_zero(ci95: list[float]) -> bool:
++    return bool(len(ci95) == 2 and (ci95[0] > 0.0 or ci95[1] < 0.0))
++
++
++def _measure_pool(
++    pool: HeldoutPool,
++    *,
++    random_seed: int,
++    bootstrap_resamples: int,
++    margin_threshold: float,
++) -> dict[str, Any]:
++    tasks = _group_by_task(pool.candidates)
++    task_rows: list[dict[str, Any]] = []
++    deltas_aggregator_vote: list[float] = []
++    deltas_aggregator_control: list[float] = []
++    deltas_override_vote: list[float] = []
++    oracle_hits: list[bool] = []
++    vote_hits: list[bool] = []
++    aggregator_hits: list[bool] = []
++    control_hits: list[bool] = []
++    override_hits: list[bool] = []
++    for task_candidates in tasks:
++        vote_pick = _select_vote(task_candidates)
++        aggregator_pick = _select_aggregator(task_candidates)
++        control_pick = _select_first(task_candidates)
++        override_pick = _select_margin_override(task_candidates, margin_threshold)
++        oracle_hit = any(candidate.correct for candidate in task_candidates)
++        vote_hit = vote_pick.correct
++        aggregator_hit = aggregator_pick.correct
++        control_hit = control_pick.correct
++        override_hit = override_pick.correct
++        oracle_hits.append(oracle_hit)
++        vote_hits.append(vote_hit)
++        aggregator_hits.append(aggregator_hit)
++        control_hits.append(control_hit)
++        override_hits.append(override_hit)
++        deltas_aggregator_vote.append(float(aggregator_hit) - float(vote_hit))
++        deltas_aggregator_control.append(float(aggregator_hit) - float(control_hit))
++        deltas_override_vote.append(float(override_hit) - float(vote_hit))
++        task_rows.append(
++            {
++                "task_id": vote_pick.task_id,
++                "oracle_hit": oracle_hit,
++                "vote_candidate_id": vote_pick.candidate_id,
++                "vote_correct": vote_hit,
++                "aggregator_candidate_id": aggregator_pick.candidate_id,
++                "aggregator_correct": aggregator_hit,
++                "aggregator_score_margin_vs_vote": _round_metric(
++                    aggregator_pick.learned_score - vote_pick.learned_score
++                ),
++                "aggregator_train_task_excluded": all(
++                    candidate.aggregator_train_task_excluded for candidate in task_candidates
++                ),
++                "matched_control_candidate_id": control_pick.candidate_id,
++                "matched_control_correct": control_hit,
++                "margin_override_candidate_id": override_pick.candidate_id,
++                "margin_override_correct": override_hit,
++            }
++        )
++
++    vote_at_1 = _rate(vote_hits)
++    aggregator_at_1 = _rate(aggregator_hits)
++    oracle_at_k = _rate(oracle_hits)
++    control_at_1 = _rate(control_hits)
++    override_at_1 = _rate(override_hits)
++    aggregator_minus_vote = _round_metric(aggregator_at_1 - vote_at_1)
++    ci95 = _bootstrap_ci95(
++        deltas_aggregator_vote,
++        random_seed=random_seed,
++        resamples=bootstrap_resamples,
++    )
++    matched_control_delta = _round_metric(
++        sum(deltas_aggregator_control) / float(len(deltas_aggregator_control))
++        if deltas_aggregator_control
++        else 0.0
++    )
++    override_delta = _round_metric(
++        sum(deltas_override_vote) / float(len(deltas_override_vote))
++        if deltas_override_vote
++        else 0.0
++    )
++    headroom_exists = oracle_at_k > vote_at_1
++    beats_vote = bool(headroom_exists and aggregator_minus_vote > 0.0 and ci95[0] > 0.0)
++    if not headroom_exists:
++        headline = "oracle_distinct_arc_no_headroom_uninformative"
++        honest_verdict = NO_HEADROOM_VERDICT
++    elif beats_vote:
++        headline = "oracle_distinct_aggregator_beats_vote"
++        honest_verdict = f"complete: {headline}"
++    else:
++        headline = "oracle_distinct_aggregator_ties_vote_with_headroom_at_power"
++        honest_verdict = f"complete: {headline}"
++    return {
++        "headline_outcome": headline,
++        "honest_verdict": honest_verdict,
++        "oracle_distinct_beats_vote": beats_vote,
++        "aggregator_minus_vote_delta": aggregator_minus_vote,
++        "aggregator_minus_vote_ci95": ci95,
++        "margin_override_minus_vote": override_delta,
++        "oracle_at_k": _round_metric(oracle_at_k),
++        "matched_control_delta": matched_control_delta,
++        "held_out_task_n": len(tasks),
++        "pass_rates": {
++            "vote_at_1": _round_metric(vote_at_1),
++            "aggregator_at_1": _round_metric(aggregator_at_1),
++            "matched_control_at_1": _round_metric(control_at_1),
++            "margin_override_at_1": _round_metric(override_at_1),
++        },
++        "oracle_minus_vote": _round_metric(oracle_at_k - vote_at_1),
++        "headroom_exists": headroom_exists,
++        "candidate_count": len(pool.candidates),
++        "bootstrap_resamples": int(bootstrap_resamples),
++        "margin_trigger_threshold": float(margin_threshold),
++        "margin_threshold_policy": "pre_registered_a1_fold_fixed_threshold",
++        "matched_control_policy": "deterministic_first_of_k_no_verifier",
++        "clt_floor_caveat": len(tasks) < 30,
++        "task_rows": task_rows,
++        "ci95_excludes_zero": _ci_excludes_zero(ci95),
++    }
++
++
++def reproducibility_checksum(pool: HeldoutPool, metrics: dict[str, Any], random_seed: int) -> str:
++    payload = {
++        "candidate_scores": [
++            {
++                "candidate_id": candidate.candidate_id,
++                "correct": candidate.correct,
++                "learned_score": _round_metric(candidate.learned_score),
++                "task_id": candidate.task_id,
++                "vote_weight": _round_metric(candidate.vote_weight),
++            }
++            for candidate in pool.candidates
++        ],
++        "learned_aggregator_sha256": pool.learned_verifier_sha256,
++        "margin_trigger_threshold": metrics["margin_trigger_threshold"],
++        "random_seed": int(random_seed),
++        "score_source": pool.score_source,
++        "source_paths": [str(path) for path in pool.source_paths],
++    }
++    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def _deferred_artifact(
++    reason: str,
++    *,
++    random_seed: int,
++    checksum: str,
++    duration_s: float,
++) -> dict[str, Any]:
++    headline = reason.replace("complete_", "", 1)
++    return {
++        "experiment": "experiment_4232_oracle_distinct_arc_aggregator_beats_vote",
++        "schema": "carnot.oracle_distinct_arc_aggregator_4232.v1",
++        "status": "complete",
++        "headline_outcome": headline,
++        "honest_verdict": reason,
++        "oracle_distinct_beats_vote": False,
++        "aggregator_minus_vote_delta": 0.0,
++        "aggregator_minus_vote_ci95": [0.0, 0.0],
++        "margin_override_minus_vote": 0.0,
++        "oracle_at_k": 0.0,
++        "matched_control_delta": 0.0,
++        "held_out_task_n": 0,
++        "verifier_is_oracle": False,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": checksum,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "acceptance_gate": True,
++        "pass_rates": {
++            "vote_at_1": 0.0,
++            "aggregator_at_1": 0.0,
++            "matched_control_at_1": 0.0,
++            "margin_override_at_1": 0.0,
++        },
++        "oracle_minus_vote": 0.0,
++        "headroom_exists": False,
++        "candidate_count": 0,
++        "bootstrap_resamples": 0,
++        "margin_trigger_threshold": MARGIN_TRIGGER_THRESHOLD,
++        "margin_threshold_policy": "pre_registered_a1_fold_fixed_threshold",
++        "matched_control_policy": "deterministic_first_of_k_no_verifier",
++        "clt_floor_caveat": True,
++        "task_rows": [],
++        "ci95_excludes_zero": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(duration_s, 6),
++        "adversarial_verify": {"status": "pending"},
++    }
++
++
++def _complete_artifact(
++    pool: HeldoutPool,
++    metrics: dict[str, Any],
++    *,
++    checksum: str,
++    random_seed: int,
++    duration_s: float,
++) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4232_oracle_distinct_arc_aggregator_beats_vote",
++        "schema": "carnot.oracle_distinct_arc_aggregator_4232.v1",
++        "status": "complete",
++        **metrics,
++        "verifier_is_oracle": False,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": checksum,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "acceptance_gate": True,
++        "score_source": pool.score_source,
++        "learned_verifier_path": str(pool.learned_verifier_path),
++        "candidate_pool_sources": [str(path) for path in pool.source_paths],
++        "dropped_task_n": pool.dropped_task_n,
++        "dropped_candidate_n": pool.dropped_candidate_n,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(duration_s, 6),
++        "adversarial_verify": {"status": "pending"},
++    }
++
++
++def _run_adversarial_verify(repo_root: Path, artifact_path: Path) -> dict[str, Any]:  # pragma: no cover
++    proc = subprocess.run(
++        [sys.executable, str(repo_root / "scripts" / "adversarial_verify.py"), "--json", str(artifact_path)],
++        capture_output=True,
++        text=True,
++        timeout=30,
++        check=False,
++    )
++    try:
++        payload = json.loads(proc.stdout)
++    except json.JSONDecodeError:
++        payload = {"stdout": proc.stdout, "stderr": proc.stderr}
++    payload["returncode"] = proc.returncode
++    return payload
++
++
++def _clean_adversarial_report(report: dict[str, Any]) -> dict[str, Any]:
++    flags: list[dict[str, Any]] = []
++    for item in report.get("reports", []):
++        if isinstance(item, dict):
++            flags.extend(flag for flag in item.get("flags", []) if isinstance(flag, dict))
++    circular_clean = not any(flag.get("kind") == "CIRCULAR_MOAT_OVERCLAIM" for flag in flags)
++    return {
++        "status": "clean" if not flags else "flagged",
++        "circular_moat_overclaim_clean": circular_clean,
++        "flag_count": len(flags),
++        "flags": flags,
++        "returncode": int(report.get("returncode", 0) or 0),
++    }
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    missing = [field for field in REQUIRED_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:") or verdict.startswith("complete_")
++    ):
++        raise ValueError("honest_verdict must be terminal-prefixed")
++    if type(artifact["oracle_distinct_beats_vote"]) is not bool:
++        raise ValueError("oracle_distinct_beats_vote must be a bare bool")
++    for field in (
++        "aggregator_minus_vote_delta",
++        "margin_override_minus_vote",
++        "oracle_at_k",
++        "matched_control_delta",
++    ):
++        if isinstance(artifact[field], bool) or not isinstance(artifact[field], (int, float)):
++            raise ValueError(f"{field} must be a bare float")
++    ci95 = artifact["aggregator_minus_vote_ci95"]
++    if (
++        not isinstance(ci95, list)
++        or len(ci95) != 2
++        or any(isinstance(value, bool) or not isinstance(value, (int, float)) for value in ci95)
++    ):
++        raise ValueError("aggregator_minus_vote_ci95 must be a two-number ci95")
++    if type(artifact["held_out_task_n"]) is not int:
++        raise ValueError("held_out_task_n must be a bare int")
++    if artifact["verifier_is_oracle"] is not False:
++        raise ValueError("verifier_is_oracle must be the bare bool false")
++    if type(artifact["random_seed"]) is not int:
++        raise ValueError("random_seed must be a bare int")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles do not match REQ-VERIFY-4232")
++    if artifact["spec_refs"] != SPEC_REFS:
++        raise ValueError("spec_refs do not match REQ-VERIFY-4232")
++
++
++def _blocked_checksum(reason: str, random_seed: int) -> str:
++    raw = json.dumps({"reason": reason, "random_seed": random_seed}, sort_keys=True)
++    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def run(
++    repo_root: Path | str = Path("."),
++    *,
++    random_seed: int = RANDOM_SEED,
++    bootstrap_resamples: int = BOOTSTRAP_RESAMPLES,
++    margin_threshold: float = MARGIN_TRIGGER_THRESHOLD,
++    adversarial_runner: Callable[[Path], dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    start = time.perf_counter()
++    root = Path(repo_root)
++    output_path = root / OUTPUT_REL
++    try:
++        _a1_artifact, aggregator, aggregator_path = _load_a1(root)
++        pool = load_heldout_pool(root, aggregator, aggregator_path)
++        metrics = _measure_pool(
++            pool,
++            random_seed=random_seed,
++            bootstrap_resamples=bootstrap_resamples,
++            margin_threshold=margin_threshold,
++        )
++        checksum = reproducibility_checksum(pool, metrics, random_seed)
++        artifact = _complete_artifact(
++            pool,
++            metrics,
++            checksum=checksum,
++            random_seed=random_seed,
++            duration_s=time.perf_counter() - start,
++        )
++    except BlockedRun:
++        reason = DEFERRED_VERDICT
++        artifact = _deferred_artifact(
++            reason,
++            random_seed=random_seed,
++            checksum=_blocked_checksum(reason, random_seed),
++            duration_s=time.perf_counter() - start,
++        )
++    validate_artifact(artifact)
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    raw_report = (
++        adversarial_runner(output_path)
++        if adversarial_runner is not None
++        else _run_adversarial_verify(root, output_path)
++    )
++    artifact["adversarial_verify"] = _clean_adversarial_report(raw_report)
++    validate_artifact(artifact)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 7047f84026..57a2e4956b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-15T07:56:37.944543Z",
+-  "duration_s": 0.02180767059326172,
++  "run_date": "2026-06-15T08:16:19.004843Z",
++  "duration_s": 0.02175736427307129,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "a1c1861065f0d5e8071d87dc30d7f5d0fccd63fea9ece94710214c24cb17de29",
++  "reproducibility_checksum": "79ca627036cbd057d93376e8fdd5308d0961219c06b32bf77bfa87269646b9e0",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "29ce5ad42b5c1d9fe59161bcffdda76d06c3f3bf"
++    "adversarial_verify_version": "902049afb103cbc5924b0541361e487f66077308"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index f732cde477..5c13d48996 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-15T07:56:37.975594Z",
+-  "duration_s": 0.025577545166015625,
++  "run_date": "2026-06-15T08:16:19.036228Z",
++  "duration_s": 0.025880098342895508,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "c97bb79d18a033d1e55db1def2817185d0a41b67d13cfed67f5eccb1c3b1326b",
++  "reproducibility_checksum": "016495a081abddeda98c89b848a2988c06215b1b4c2101c05ded3054934bdd8b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "29ce5ad42b5c1d9fe59161bcffdda76d06c3f3bf"
++    "adversarial_verify_version": "902049afb103cbc5924b0541361e487f66077308"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 70589e499c..56d7d4a096 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.11334228515625,
++  "efficiency_gains_ms": 2.1524429321289062,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 20699ac3c0..6da1c68a75 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.9604998417198658e-05,
++  "duration_s": 3.114898572675884e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json b/results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json
+new file mode 100644
+index 0000000000..48f8cdef36
+--- /dev/null
++++ b/results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json
+@@ -0,0 +1,810 @@
++{
++  "acceptance_gate": true,
++  "adversarial_verify": {
++    "circular_moat_overclaim_clean": true,
++    "flag_count": 1,
++    "flags": [
++      {
++        "detail": "aggregator_minus_vote_delta=0.0 (exactly zero). Confirm this is not a stub default.",
++        "kind": "IMPLAUSIBLE_PERFECT",
++        "severity": "info"
++      }
++    ],
++    "returncode": 1,
++    "status": "flagged"
++  },
++  "aggregator_minus_vote_ci95": [
++    0.0,
++    0.0
++  ],
++  "aggregator_minus_vote_delta": 0.0,
++  "bootstrap_resamples": 2000,
++  "candidate_count": 28419,
++  "candidate_pool_sources": [
++    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
++    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_induced_programs.json",
++    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_eval_pool.json.gz",
++    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_induced_programs.json"
++  ],
++  "ci95_excludes_zero": false,
++  "clt_floor_caveat": false,
++  "dropped_candidate_n": 0,
++  "dropped_task_n": 0,
++  "duration_s": 27.124755,
++  "experiment": "experiment_4232_oracle_distinct_arc_aggregator_beats_vote",
++  "field_principles": {
++    "aggregator_minus_vote_ci95": "Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise.",
++    "aggregator_minus_vote_delta": "aggregator@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards.",
++    "held_out_task_n": "BARE int: the gate's actual N -- target >=30 so the win/null is not under-powered like the .391 n=14.",
++    "honest_verdict": "Terminal-prefixed. A clean beats-vote win, a clean ties-at-power null, and an honest no-headroom-uninformative are ALL COMPLETE -- a stronger read on the oracle-distinct frontier than .391's under-powered n=14.",
++    "margin_override_minus_vote": "Margin-triggered override (keep vote unless high aggregator margin, threshold pre-registered on the A1 fold) minus vote -- the 2606.04323 deployment pattern; can win where a flat rerank loses by overriding only on confident wrong-majority cases (the .391 ARBITER override never fired).",
++    "matched_control_delta": "aggregator@1 minus the budget-matched no-verifier control -- isolates the aggregator's contribution from the candidate budget.",
++    "oracle_at_k": "The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure.",
++    "oracle_distinct_beats_vote": "BARE bool: aggregator@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); NOT a circular execution result.",
++    "random_seed": "Determinism precondition; the held-out split + bootstrap must be reproducible.",
++    "reproducibility_checksum": "Hash of the held-out pool + the learned aggregator; lets a third party re-run the decisive gate.",
++    "verifier_is_oracle": "BARE bool=false -- this measurement uses the LEARNED aggregator (no demo execution); only this makes the result headline/gate-eligible (adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean)."
++  },
++  "headline_outcome": "oracle_distinct_aggregator_ties_vote_with_headroom_at_power",
++  "headroom_exists": true,
++  "held_out_task_n": 52,
++  "honest_verdict": "complete: oracle_distinct_aggregator_ties_vote_with_headroom_at_power",
++  "inference_substrate": "cached_gap_arc_pool_oof_cross_candidate_aggregator_rerank",
++  "learned_verifier_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4231_oracle_distinct_arc_aggregator_model.json",
++  "margin_override_minus_vote": 0.0,
++  "margin_threshold_policy": "pre_registered_a1_fold_fixed_threshold",
++  "margin_trigger_threshold": 0.1,
++  "matched_control_delta": 0.0384615385,
++  "matched_control_policy": "deterministic_first_of_k_no_verifier",
++  "oracle_at_k": 0.3653846154,
++  "oracle_distinct_beats_vote": false,
++  "oracle_minus_vote": 0.1730769231,
++  "pass_rates": {
++    "aggregator_at_1": 0.1923076923,
++    "margin_override_at_1": 0.1923076923,
++    "matched_control_at_1": 0.1538461538,
++    "vote_at_1": 0.1923076923
++  },
++  "random_seed": 4232,
++  "reproducibility_checksum": "dd1bd55f0432aafe7021cc4b8a9d40a7f201a38311d376b5821c89eee9a1ff54",
++  "schema": "carnot.oracle_distinct_arc_aggregator_4232.v1",
++  "score_source": "exp4231_oof_scores",
++  "spec_refs": [
++    "REQ-VERIFY-4232",
++    "SCENARIO-VERIFY-4232",
++    "SCENARIO-VERIFY-4232-NO-HEADROOM",
++    "SCENARIO-VERIFY-4232-DEFERRED"
++  ],
++  "status": "complete",
++  "task_rows": [
++    {
++      "aggregator_candidate_id": "gap3_stage2:0b17323b::candidate7",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:0b17323b::candidate7",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:0b17323b::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:0b17323b",
++      "vote_candidate_id": "gap3_stage2:0b17323b::candidate7",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:17cae0c1::candidate3",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:17cae0c1::candidate3",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:17cae0c1::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:17cae0c1",
++      "vote_candidate_id": "gap3_stage2:17cae0c1::candidate3",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:1a2e2828::candidate0",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:1a2e2828::candidate0",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:1a2e2828::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:1a2e2828",
++      "vote_candidate_id": "gap3_stage2:1a2e2828::candidate0",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:1a6449f1::candidate170",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0006777843,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:1a6449f1::candidate267",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:1a6449f1::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:1a6449f1",
++      "vote_candidate_id": "gap3_stage2:1a6449f1::candidate267",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:2072aba6::candidate0",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:2072aba6::candidate0",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:2072aba6::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:2072aba6",
++      "vote_candidate_id": "gap3_stage2:2072aba6::candidate0",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:25094a63::candidate0",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:25094a63::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:25094a63::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:25094a63",
++      "vote_candidate_id": "gap3_stage2:25094a63::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:2f0c5170::candidate9",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 1.11632e-05,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:2f0c5170::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:2f0c5170::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:2f0c5170",
++      "vote_candidate_id": "gap3_stage2:2f0c5170::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:3ee1011a::candidate4",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:3ee1011a::candidate4",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:3ee1011a::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:3ee1011a",
++      "vote_candidate_id": "gap3_stage2:3ee1011a::candidate4",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:4e469f39::candidate1",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:4e469f39::candidate1",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:4e469f39::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:4e469f39",
++      "vote_candidate_id": "gap3_stage2:4e469f39::candidate1",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:505fff84::candidate105",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0003724769,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:505fff84::candidate15",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:505fff84::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:505fff84",
++      "vote_candidate_id": "gap3_stage2:505fff84::candidate15",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:50a16a69::candidate0",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:50a16a69::candidate0",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:50a16a69::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:50a16a69",
++      "vote_candidate_id": "gap3_stage2:50a16a69::candidate0",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:5833af48::candidate179",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 1.2897e-06,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:5833af48::candidate20",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:5833af48::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:5833af48",
++      "vote_candidate_id": "gap3_stage2:5833af48::candidate20",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:66e6c45b::candidate0",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:66e6c45b::candidate0",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:66e6c45b::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:66e6c45b",
++      "vote_candidate_id": "gap3_stage2:66e6c45b::candidate0",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:692cd3b6::candidate0",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:692cd3b6::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:692cd3b6::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:692cd3b6",
++      "vote_candidate_id": "gap3_stage2:692cd3b6::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:712bf12e::candidate1",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:712bf12e::candidate1",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:712bf12e::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:712bf12e",
++      "vote_candidate_id": "gap3_stage2:712bf12e::candidate1",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:79fb03f4::candidate14",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:79fb03f4::candidate14",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:79fb03f4::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:79fb03f4",
++      "vote_candidate_id": "gap3_stage2:79fb03f4::candidate14",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:81c0276b::candidate9",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:81c0276b::candidate9",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:81c0276b::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:81c0276b",
++      "vote_candidate_id": "gap3_stage2:81c0276b::candidate9",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:8719f442::candidate0",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:8719f442::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:8719f442::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:8719f442",
++      "vote_candidate_id": "gap3_stage2:8719f442::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:96a8c0cd::candidate42",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:96a8c0cd::candidate42",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:96a8c0cd::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:96a8c0cd",
++      "vote_candidate_id": "gap3_stage2:96a8c0cd::candidate42",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:a57f2f04::candidate13",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:a57f2f04::candidate13",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:a57f2f04::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:a57f2f04",
++      "vote_candidate_id": "gap3_stage2:a57f2f04::candidate13",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:a59b95c0::candidate0",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:a59b95c0::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:a59b95c0::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:a59b95c0",
++      "vote_candidate_id": "gap3_stage2:a59b95c0::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:ac3e2b04::candidate0",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:ac3e2b04::candidate0",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:ac3e2b04::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:ac3e2b04",
++      "vote_candidate_id": "gap3_stage2:ac3e2b04::candidate0",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:b9630600::candidate0",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:b9630600::candidate0",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:b9630600::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:b9630600",
++      "vote_candidate_id": "gap3_stage2:b9630600::candidate0",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:be03b35f::candidate1",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:be03b35f::candidate1",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:be03b35f::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:be03b35f",
++      "vote_candidate_id": "gap3_stage2:be03b35f::candidate1",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:c3202e5a::candidate215",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0004456767,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:c3202e5a::candidate31",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:c3202e5a::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:c3202e5a",
++      "vote_candidate_id": "gap3_stage2:c3202e5a::candidate31",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:c7d4e6ad::candidate0",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:c7d4e6ad::candidate0",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:c7d4e6ad::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:c7d4e6ad",
++      "vote_candidate_id": "gap3_stage2:c7d4e6ad::candidate0",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:f0df5ff0::candidate0",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:f0df5ff0::candidate0",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap3_stage2:f0df5ff0::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:f0df5ff0",
++      "vote_candidate_id": "gap3_stage2:f0df5ff0::candidate0",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:f3e62deb::candidate0",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.6687788664,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:f3e62deb::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:f3e62deb::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap3_stage2:f3e62deb",
++      "vote_candidate_id": "gap3_stage2:f3e62deb::candidate2",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap3_stage2:fafd9572::candidate23",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap3_stage2:fafd9572::candidate23",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap3_stage2:fafd9572::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap3_stage2:fafd9572",
++      "vote_candidate_id": "gap3_stage2:fafd9572::candidate23",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:13e47133::candidate543",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.3278918403,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:13e47133::candidate543",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:13e47133::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:13e47133",
++      "vote_candidate_id": "gap4_arc2:13e47133::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:16b78196::candidate586",
++      "aggregator_correct": true,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:16b78196::candidate586",
++      "margin_override_correct": true,
++      "matched_control_candidate_id": "gap4_arc2:16b78196::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap4_arc2:16b78196",
++      "vote_candidate_id": "gap4_arc2:16b78196::candidate586",
++      "vote_correct": true
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:21897d95::candidate83",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.3282103506,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:21897d95::candidate83",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:21897d95::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap4_arc2:21897d95",
++      "vote_candidate_id": "gap4_arc2:21897d95::candidate140",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:269e22fb::candidate322",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0012164735,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:269e22fb::candidate5",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:269e22fb::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:269e22fb",
++      "vote_candidate_id": "gap4_arc2:269e22fb::candidate5",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:28a6681f::candidate14",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:28a6681f::candidate14",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:28a6681f::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:28a6681f",
++      "vote_candidate_id": "gap4_arc2:28a6681f::candidate14",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:2b83f449::candidate11",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:2b83f449::candidate11",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:2b83f449::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:2b83f449",
++      "vote_candidate_id": "gap4_arc2:2b83f449::candidate11",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:2c181942::candidate23",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:2c181942::candidate23",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:2c181942::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:2c181942",
++      "vote_candidate_id": "gap4_arc2:2c181942::candidate23",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:2d0172a1::candidate3",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:2d0172a1::candidate3",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:2d0172a1::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:2d0172a1",
++      "vote_candidate_id": "gap4_arc2:2d0172a1::candidate3",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:3a25b0d8::candidate290",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 9.69048e-05,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:3a25b0d8::candidate286",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:3a25b0d8::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap4_arc2:3a25b0d8",
++      "vote_candidate_id": "gap4_arc2:3a25b0d8::candidate286",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:3dc255db::candidate5",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 3.49e-08,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:3dc255db::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:3dc255db::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:3dc255db",
++      "vote_candidate_id": "gap4_arc2:3dc255db::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:446ef5d2::candidate506",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0038911159,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:446ef5d2::candidate176",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:446ef5d2::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:446ef5d2",
++      "vote_candidate_id": "gap4_arc2:446ef5d2::candidate176",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:58490d8a::candidate20",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:58490d8a::candidate20",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:58490d8a::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:58490d8a",
++      "vote_candidate_id": "gap4_arc2:58490d8a::candidate20",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:58f5dbd5::candidate7",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:58f5dbd5::candidate7",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:58f5dbd5::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:58f5dbd5",
++      "vote_candidate_id": "gap4_arc2:58f5dbd5::candidate7",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:6e453dd6::candidate31",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:6e453dd6::candidate31",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:6e453dd6::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:6e453dd6",
++      "vote_candidate_id": "gap4_arc2:6e453dd6::candidate31",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:6ffbe589::candidate564",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0001349665,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:6ffbe589::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:6ffbe589::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "gap4_arc2:6ffbe589",
++      "vote_candidate_id": "gap4_arc2:6ffbe589::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:7b80bb43::candidate0",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:7b80bb43::candidate0",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:7b80bb43::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:7b80bb43",
++      "vote_candidate_id": "gap4_arc2:7b80bb43::candidate0",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:9aaea919::candidate7",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:9aaea919::candidate7",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:9aaea919::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:9aaea919",
++      "vote_candidate_id": "gap4_arc2:9aaea919::candidate7",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:a6f40cea::candidate164",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:a6f40cea::candidate164",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:a6f40cea::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:a6f40cea",
++      "vote_candidate_id": "gap4_arc2:a6f40cea::candidate164",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:aa4ec2a5::candidate9",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:aa4ec2a5::candidate9",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:aa4ec2a5::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:aa4ec2a5",
++      "vote_candidate_id": "gap4_arc2:aa4ec2a5::candidate9",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:b10624e5::candidate351",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0001144158,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:b10624e5::candidate11",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:b10624e5::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:b10624e5",
++      "vote_candidate_id": "gap4_arc2:b10624e5::candidate11",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:b9e38dc0::candidate7",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:b9e38dc0::candidate7",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:b9e38dc0::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:b9e38dc0",
++      "vote_candidate_id": "gap4_arc2:b9e38dc0::candidate7",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:d8e07eb2::candidate1",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 0.0,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:d8e07eb2::candidate1",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:d8e07eb2::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:d8e07eb2",
++      "vote_candidate_id": "gap4_arc2:d8e07eb2::candidate1",
++      "vote_correct": false
++    },
++    {
++      "aggregator_candidate_id": "gap4_arc2:dd6b8c4b::candidate1",
++      "aggregator_correct": false,
++      "aggregator_score_margin_vs_vote": 5.37752e-05,
++      "aggregator_train_task_excluded": true,
++      "margin_override_candidate_id": "gap4_arc2:dd6b8c4b::candidate5",
++      "margin_override_correct": false,
++      "matched_control_candidate_id": "gap4_arc2:dd6b8c4b::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": false,
++      "task_id": "gap4_arc2:dd6b8c4b",
++      "vote_candidate_id": "gap4_arc2:dd6b8c4b::candidate5",
++      "vote_correct": false
++    }
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py b/results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py
+new file mode 100644
+index 0000000000..713b716a31
+--- /dev/null
++++ b/results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py
+@@ -0,0 +1,23 @@
++#!/usr/bin/env python3
++"""Run Exp 4232 held-out oracle-distinct ARC aggregator beats-vote gate.
++
++Spec refs: REQ-VERIFY-4232, SCENARIO-VERIFY-4232,
++SCENARIO-VERIFY-4232-NO-HEADROOM, SCENARIO-VERIFY-4232-DEFERRED.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT))
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.oracle_distinct_arc_aggregator_4232 import run  # noqa: E402
++
++
++if __name__ == "__main__":
++    print(json.dumps(run(REPO_ROOT), indent=2, sort_keys=True))
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 6a6f359946..2df25b84cf 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T07:56:28Z",
+-  "finished_at": "2026-06-15T07:56:28Z",
++  "started_at": "2026-06-15T08:16:10Z",
++  "finished_at": "2026-06-15T08:16:10Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6f93b4a6d3..80ce99dd06 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T07:56:28Z",
+-  "finished_at": "2026-06-15T07:56:29Z",
++  "started_at": "2026-06-15T08:16:10Z",
++  "finished_at": "2026-06-15T08:16:10Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 0ab53ba5f2..fe85da4732 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T07:56:29Z",
+-  "finished_at": "2026-06-15T07:56:29Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-15T08:16:10Z",
++  "finished_at": "2026-06-15T08:16:10Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py b/tests/python/test_experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py
+new file mode 100644
+index 0000000000..7c5fc05410
+--- /dev/null
++++ b/tests/python/test_experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py
+@@ -0,0 +1,414 @@
++"""Tests for Exp 4232 held-out oracle-distinct ARC aggregator rerank.
++
++Spec refs: REQ-VERIFY-4232, SCENARIO-VERIFY-4232,
++SCENARIO-VERIFY-4232-NO-HEADROOM, SCENARIO-VERIFY-4232-DEFERRED.
++"""
++
++from __future__ import annotations
++
++import gzip
++import inspect
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import oracle_distinct_arc_aggregator_4232 as mod
++
++
++def _write_json(path: Path, payload: dict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++@pytest.fixture(autouse=True)
++def _stub_exp4208_detector(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Keep tests on the lightweight Exp 4231 loader path."""
++
++    class FakeDetector:
++        @staticmethod
++        def load_arc_rows(pool_path: Path, programs_path: Path) -> list[dict]:
++            with gzip.open(pool_path, "rt", encoding="utf-8") as handle:
++                entries = json.load(handle).get("entries", [])
++            json.loads(programs_path.read_text(encoding="utf-8"))
++            return [
++                {"domain": "arc", "output": f"{entry.get('task')}:{candidate_index}"}
++                for entry in entries
++                if isinstance(entry, dict)
++                for candidate_index, _candidate in enumerate(entry.get("candidates", []))
++            ]
++
++    monkeypatch.setattr(mod.exp4231, "_import_detector_module", lambda: FakeDetector)
++
++
++def _adversarial_clean(_path: Path) -> dict:
++    return {
++        "returncode": 0,
++        "flagged_count": 0,
++        "reports": [
++            {
++                "flags": [],
++                "flag_count": 0,
++                "max_severity": 0,
++            }
++        ],
++    }
++
++
++def _write_arc_gate_fixture(
++    root: Path,
++    *,
++    correct_indices: list[int],
++    vote_weights: list[list[int]],
++    learned_scores: list[list[float]],
++) -> Path:
++    entries = []
++    programs = []
++    raw_task_ids = [f"arc-task-{index}" for index in range(len(correct_indices))]
++    task_ids = [f"gap3_stage2:{task_id}" for task_id in raw_task_ids]
++    for task_index, (raw_task_id, correct_index) in enumerate(
++        zip(raw_task_ids, correct_indices, strict=True)
++    ):
++        pred_grid = [[9, 9], [9, 9]]
++        candidates = []
++        for candidate_index, votes in enumerate(vote_weights[task_index]):
++            candidates.append(
++                {
++                    "votes": votes,
++                    "q_mean": 0.8 if candidate_index == correct_index else 0.2,
++                    "correct": candidate_index != correct_index,
++                    "grid": pred_grid if candidate_index == correct_index else [[0, 0], [0, 0]],
++                }
++            )
++        entries.append(
++            {"task": raw_task_id, "demos": [], "test_input": [[0]], "candidates": candidates}
++        )
++        programs.append(
++            {
++                "entry_i": task_index,
++                "task": raw_task_id,
++                "demo_fit": 1.0,
++                "pred_grid": pred_grid,
++                "code": f"def transform(grid):\n    return {task_index}\n",
++            }
++        )
++
++    pool_path = root / "results" / "arc3_gap3_stage2_eval_pool.json.gz"
++    pool_path.parent.mkdir(parents=True, exist_ok=True)
++    with gzip.open(pool_path, "wt", encoding="utf-8") as handle:
++        json.dump({"entries": entries}, handle)
++    _write_json(root / "results" / "arc3_gap4_induced_programs.json", {"programs": programs})
++
++    oof_rows = []
++    for task_id, scores in zip(task_ids, learned_scores, strict=True):
++        for candidate_index, score in enumerate(scores):
++            oof_rows.append(
++                {
++                    "candidate_id": f"{task_id}::candidate{candidate_index}",
++                    "correct": candidate_index == correct_indices[task_ids.index(task_id)],
++                    "fold": 0,
++                    "score": score,
++                    "task_id": task_id,
++                    "train_task_ids": [other for other in task_ids if other != task_id],
++                }
++            )
++    aggregator_path = root / "results" / "experiment_4231_oracle_distinct_arc_aggregator_model.json"
++    _write_json(
++        aggregator_path,
++        {
++            "model_type": "constant_score",
++            "feature_names": list(mod.exp4231.FEATURE_NAMES),
++            "constant_score": 0.5,
++            "fold_task_ids": [task_ids],
++            "held_out_task_n": len(task_ids),
++            "oof_rows": oof_rows,
++            "random_seed": 4231,
++            "reproducibility_checksum": "fixture-a1",
++            "verifier_is_oracle": False,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4231_oracle_distinct_arc_aggregator_build.json",
++        {
++            "honest_verdict": "complete: fixture",
++            "aggregator_trained": True,
++            "learned_verifier_path": str(aggregator_path),
++            "verifier_is_oracle": False,
++            "wrong_majority_n": sum(
++                int(weights.index(max(weights)) != correct)
++                for correct, weights in zip(correct_indices, vote_weights, strict=True)
++            ),
++        },
++    )
++    return root
++
++
++def test_req_4232_spec_declares_heldout_aggregator_gate_contract() -> None:
++    """REQ-VERIFY-4232: OpenSpec declares the powered held-out gate."""
++
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-4232",
++        "SCENARIO-VERIFY-4232",
++        "SCENARIO-VERIFY-4232-NO-HEADROOM",
++        "SCENARIO-VERIFY-4232-DEFERRED",
++        "python/carnot/reporting/oracle_distinct_arc_aggregator_4232.py",
++        "results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py",
++        "oracle_distinct_beats_vote",
++        "aggregator_minus_vote_delta",
++        "aggregator_minus_vote_ci95",
++        "margin_override_minus_vote",
++        "matched_control_delta",
++        "held_out_task_n",
++        "verifier_is_oracle=false",
++    ):
++        assert marker in spec
++    for principle in mod.FIELD_PRINCIPLES.values():
++        assert principle in spec
++
++
++def test_heldout_aggregator_beats_vote_with_controls(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4232: learned OOF scores beat vote with headroom."""
++
++    _write_arc_gate_fixture(
++        tmp_path,
++        correct_indices=[1, 0, 2, 1],
++        vote_weights=[[9, 1, 0], [9, 1, 0], [9, 0, 1], [9, 1, 0]],
++        learned_scores=[[0.1, 0.9, 0.2], [0.8, 0.2, 0.1], [0.1, 0.2, 0.9], [0.1, 0.9, 0.2]],
++    )
++
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++
++    mod.validate_artifact(artifact)
++    assert artifact["headline_outcome"] == "oracle_distinct_aggregator_beats_vote"
++    assert artifact["honest_verdict"] == "complete: oracle_distinct_aggregator_beats_vote"
++    assert artifact["oracle_distinct_beats_vote"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["held_out_task_n"] == 4
++    assert artifact["pass_rates"]["vote_at_1"] == pytest.approx(0.25)
++    assert artifact["pass_rates"]["aggregator_at_1"] == pytest.approx(1.0)
++    assert artifact["oracle_at_k"] == pytest.approx(1.0)
++    assert artifact["pass_rates"]["matched_control_at_1"] == pytest.approx(0.25)
++    assert artifact["aggregator_minus_vote_delta"] == pytest.approx(0.75)
++    assert artifact["aggregator_minus_vote_ci95"][0] > 0.0
++    assert artifact["matched_control_delta"] == pytest.approx(0.75)
++    assert artifact["margin_override_minus_vote"] == pytest.approx(0.75)
++    assert artifact["bootstrap_resamples"] >= 2000
++    assert artifact["margin_trigger_threshold"] == pytest.approx(mod.MARGIN_TRIGGER_THRESHOLD)
++    assert artifact["headroom_exists"] is True
++    assert artifact["clt_floor_caveat"] is True
++    assert artifact["acceptance_gate"] is True
++    assert artifact["adversarial_verify"]["status"] == "clean"
++    assert artifact["task_rows"][0]["aggregator_train_task_excluded"] is True
++
++
++def test_no_headroom_positive_control_is_uninformative_not_failure(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4232-NO-HEADROOM: oracle@K ~= vote blocks a false null."""
++
++    _write_arc_gate_fixture(
++        tmp_path,
++        correct_indices=[0, 0, 0],
++        vote_weights=[[9, 1], [8, 2], [7, 3]],
++        learned_scores=[[0.1, 0.9], [0.8, 0.2], [0.7, 0.1]],
++    )
++
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++
++    mod.validate_artifact(artifact)
++    assert artifact["headline_outcome"] == "oracle_distinct_arc_no_headroom_uninformative"
++    assert artifact["honest_verdict"] == "complete_oracle_distinct_arc_no_headroom_uninformative"
++    assert artifact["oracle_distinct_beats_vote"] is False
++    assert artifact["oracle_at_k"] == artifact["pass_rates"]["vote_at_1"] == pytest.approx(1.0)
++    assert artifact["headroom_exists"] is False
++    assert artifact["acceptance_gate"] is True
++    assert "aggregator_fails" not in artifact["honest_verdict"]
++
++    tied_root = tmp_path / "tied"
++    _write_arc_gate_fixture(
++        tied_root,
++        correct_indices=[1, 0],
++        vote_weights=[[9, 1], [9, 1]],
++        learned_scores=[[0.9, 0.1], [0.9, 0.1]],
++    )
++    tied = mod.run(tied_root, adversarial_runner=_adversarial_clean)
++    assert tied["headline_outcome"] == (
++        "oracle_distinct_aggregator_ties_vote_with_headroom_at_power"
++    )
++    assert tied["headroom_exists"] is True
++    assert tied["oracle_distinct_beats_vote"] is False
++    assert tied["aggregator_minus_vote_ci95"] == [0.0, 0.0]
++
++
++def test_missing_or_unreadable_a1_aggregator_defers_honestly(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4232-DEFERRED: missing built aggregator stops before scoring."""
++
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == (
++        "complete_oracle_distinct_arc_gate_deferred_no_built_aggregator"
++    )
++    assert artifact["headline_outcome"] == "oracle_distinct_arc_gate_deferred_no_built_aggregator"
++    assert artifact["oracle_distinct_beats_vote"] is False
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["held_out_task_n"] == 0
++    assert artifact["acceptance_gate"] is True
++
++    _write_json(
++        tmp_path / "results" / "experiment_4231_oracle_distinct_arc_aggregator_build.json",
++        {
++            "aggregator_trained": True,
++            "verifier_is_oracle": False,
++            "learned_verifier_path": str(tmp_path / "results" / "missing.json"),
++        },
++    )
++    unreadable = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++    assert unreadable["honest_verdict"] == artifact["honest_verdict"]
++
++    bad_cases = [
++        {"aggregator_trained": False, "verifier_is_oracle": False, "learned_verifier_path": ""},
++        {"aggregator_trained": True, "verifier_is_oracle": True, "learned_verifier_path": ""},
++        {"aggregator_trained": True, "verifier_is_oracle": False, "learned_verifier_path": ""},
++    ]
++    for index, a1_payload in enumerate(bad_cases):
++        case_root = tmp_path / f"bad-a1-{index}"
++        _write_json(
++            case_root / "results" / "experiment_4231_oracle_distinct_arc_aggregator_build.json",
++            a1_payload,
++        )
++        assert mod.run(case_root, adversarial_runner=_adversarial_clean)["honest_verdict"] == (
++            artifact["honest_verdict"]
++        )
++
++    malformed_root = tmp_path / "malformed-a1"
++    malformed_path = (
++        malformed_root
++        / "results"
++        / "experiment_4231_oracle_distinct_arc_aggregator_build.json"
++    )
++    malformed_path.parent.mkdir(parents=True, exist_ok=True)
++    malformed_path.write_text("[]", encoding="utf-8")
++    assert mod.run(malformed_root, adversarial_runner=_adversarial_clean)["honest_verdict"] == (
++        artifact["honest_verdict"]
++    )
++
++    list_aggregator_root = tmp_path / "list-aggregator"
++    list_aggregator = list_aggregator_root / "results" / "aggregator.json"
++    list_aggregator.parent.mkdir(parents=True, exist_ok=True)
++    list_aggregator.write_text("[]", encoding="utf-8")
++    _write_json(
++        list_aggregator_root
++        / "results"
++        / "experiment_4231_oracle_distinct_arc_aggregator_build.json",
++        {
++            "aggregator_trained": True,
++            "verifier_is_oracle": False,
++            "learned_verifier_path": str(list_aggregator),
++        },
++    )
++    assert mod.run(list_aggregator_root, adversarial_runner=_adversarial_clean)[
++        "honest_verdict"
++    ] == artifact["honest_verdict"]
++
++    oracle_aggregator_root = tmp_path / "oracle-aggregator"
++    oracle_aggregator = oracle_aggregator_root / "results" / "aggregator.json"
++    _write_json(oracle_aggregator, {"verifier_is_oracle": True})
++    _write_json(
++        oracle_aggregator_root
++        / "results"
++        / "experiment_4231_oracle_distinct_arc_aggregator_build.json",
++        {
++            "aggregator_trained": True,
++            "verifier_is_oracle": False,
++            "learned_verifier_path": str(oracle_aggregator),
++        },
++    )
++    assert mod.run(oracle_aggregator_root, adversarial_runner=_adversarial_clean)[
++        "honest_verdict"
++    ] == artifact["honest_verdict"]
++
++
++def test_validation_and_helper_edges_are_explicit(tmp_path: Path) -> None:
++    """REQ-VERIFY-4232: schema, bootstrap, and adversarial parsing are deterministic."""
++
++    base = mod._deferred_artifact(
++        "complete_oracle_distinct_arc_gate_deferred_no_built_aggregator",
++        random_seed=mod.RANDOM_SEED,
++        checksum="abc",
++        duration_s=0.1,
++    )
++    invalid_cases = [
++        ({k: v for k, v in base.items() if k != "oracle_at_k"}, "missing required"),
++        ({**base, "honest_verdict": "pending"}, "terminal-prefixed"),
++        ({**base, "oracle_distinct_beats_vote": {"value": False}}, "bare bool"),
++        ({**base, "aggregator_minus_vote_delta": None}, "bare float"),
++        ({**base, "aggregator_minus_vote_ci95": [0.0]}, "ci95"),
++        ({**base, "held_out_task_n": 4232.0}, "bare int"),
++        ({**base, "verifier_is_oracle": True}, "verifier_is_oracle"),
++        ({**base, "random_seed": 4232.0}, "bare int"),
++        ({**base, "field_principles": {}}, "field_principles"),
++        ({**base, "spec_refs": []}, "spec_refs"),
++    ]
++    for payload, message in invalid_cases:
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(payload)
++
++    assert mod._rate([]) == 0.0
++    assert mod._bootstrap_ci95([], random_seed=1, resamples=10) == [0.0, 0.0]
++    assert mod._ci_excludes_zero([0.1, 0.2]) is True
++    assert mod._ci_excludes_zero([-0.2, -0.1]) is True
++    assert mod._ci_excludes_zero([-0.1, 0.1]) is False
++    assert mod._clean_adversarial_report({"reports": [{"flags": []}]})["status"] == "clean"
++    flagged = mod._clean_adversarial_report(
++        {"reports": [{"flags": [{"kind": "CIRCULAR_MOAT_OVERCLAIM", "severity": "critical"}]}]}
++    )
++    assert flagged["status"] == "flagged"
++    assert flagged["circular_moat_overclaim_clean"] is False
++    assert mod._oof_score_map(
++        {"oof_rows": [None, {"candidate_id": 7}, {"candidate_id": "c", "task_id": "t"}]}
++    ) == {"c": (0.0, True)}
++
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    with pytest.raises(mod.BlockedRun, match="blocked_malformed_json_artifact"):
++        mod._read_json_object(list_json)
++
++    fallback_root = _write_arc_gate_fixture(
++        tmp_path / "fallback",
++        correct_indices=[0],
++        vote_weights=[[1, 0]],
++        learned_scores=[[0.8, 0.1]],
++    )
++    aggregator_path = fallback_root / "results" / "experiment_4231_oracle_distinct_arc_aggregator_model.json"
++    aggregator = {
++        "model_type": "constant_score",
++        "feature_names": list(mod.exp4231.FEATURE_NAMES),
++        "constant_score": 0.25,
++        "verifier_is_oracle": False,
++    }
++    with pytest.raises(mod.BlockedRun, match="no_heldout_oof_scores"):
++        mod.load_heldout_pool(fallback_root, aggregator, aggregator_path)
++
++    class EmptyCorpus:
++        rows: list = []
++        source_paths = []
++
++    original_loader = mod.exp4231.load_labeled_arc_pool
++    mod.exp4231.load_labeled_arc_pool = lambda _root: EmptyCorpus()
++    try:
++        with pytest.raises(mod.BlockedRun, match="no_heldout_oof_scores"):
++            mod.load_heldout_pool(tmp_path, aggregator, aggregator_path)
++    finally:
++        mod.exp4231.load_labeled_arc_pool = original_loader
++
++
++def test_module_does_not_rank_with_execution_or_correctness() -> None:
++    """REQ-VERIFY-4232: learned inference remains oracle-distinct."""
++
++    source = inspect.getsource(mod)
++    assert "arc_gap4_execution_verifier" not in source
++    assert "Gap4ExecutionVerifier" not in source
++    assert "extract_dsl_rules" not in source
++    assert "apply_rule" not in source
++    assert "get_consistency_energy" not in source
++    assert "key=lambda candidate: (candidate.correct" not in source
+-- 
+2.55.0
+

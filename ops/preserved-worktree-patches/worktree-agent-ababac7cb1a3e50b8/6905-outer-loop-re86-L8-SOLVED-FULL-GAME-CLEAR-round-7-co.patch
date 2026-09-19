@@ -1,0 +1,2227 @@
+From a6d29da2e192592f1f2266ab22fa880f34b3134d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 13:17:31 -0400
+Subject: [PATCH 06905/11362] [outer-loop] re86: L8 SOLVED, FULL GAME CLEAR
+ (round 7, codex)
+
+Round-7 gpt-5.6-sol session confirmed round 6's own diagnosis: returned
+to round 5's FULL per-fixture route (not the shortcut round 6 ruled
+out) and it worked. Confirmed the load-bearing mechanic precisely: a
+22x4 outline must be shifted LEFT to x=3..24 before descending from its
+color swatch -- the tempting x=6..27 position is adjacency-unsafe,
+silently repainting the neighboring swatch, which is exactly what
+caused round 6's null.
+
+Applied that one-step safety shift to both the color-11 and color-6
+rectangles via the shared corridor and palette-wall opening, placing
+both target geometries simultaneously. levels_completed advanced 7->8
+on action 689 of a 689-action sequence.
+
+Independently re-verified by the outer loop: 5x fresh env.reset() +
+replay via a new resolver priority branch (dict-shaped labels,
+JSON-normalized), all 5 confirmed level=8, state=GameState.WIN -- L8
+is the FINAL level. The game is fully solved.
+
+ops/arc_solve_registry.yaml: re86 levels_reproduced 7 -> 8,
+full_game_clear: true, final_game_state: GameState.WIN.
+reproducible_total_levels 162 -> 163 (sum-checked;
+arc_count_integrity_lint exit 0).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   |   28 +-
+ ...experiment_4460_submission_package_prep.py |   23 +
+ ...oop_fable5_re86_probe_round7_20260712.json | 2092 +++++++++++++++++
+ 3 files changed, 2141 insertions(+), 2 deletions(-)
+ create mode 100644 results/outer_loop_fable5_re86_probe_round7_20260712.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 1d695f2a55..977e3ab678 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -4306,7 +4306,9 @@ games:
+     reproducibility_checksum: bdae6a8349846c9a4aa7eb2367ad8eaf94d80e565064cb4b8f4a48bb81ea7daa
+ - game: re86
+   reproducibility: reproduced
+-  levels_reproduced: 7
++  levels_reproduced: 8
++  full_game_clear: true
++  final_game_state: 'GameState.WIN'
+   mechanic_class: pattern_match_sprite_resize
+   win_condition: >-
+     L1 sprite-overlay pattern match plus L2 verifier-derived post-L1 overlay
+@@ -4455,6 +4457,28 @@ games:
+     new level banked; frontier stays at level 7. Next attempt should
+     return to round 5''s FULL per-fixture route (not the shortcut) for the
+     second rectangle''s crossing.'
++  - 'L8 SOLVED, FULL GAME CLEAR, round 7 (2026-07-12, gpt-5.6-sol via
++    codex, results/outer_loop_fable5_re86_probe_round7_20260712.json):
++    round 6''s own diagnosis was correct -- returned to round 5''s FULL
++    per-fixture route (not the shortcut round 6 ruled out) and it
++    worked. Confirmed the load-bearing mechanic precisely: a 22x4
++    outline must be shifted LEFT to x=3..24 before descending from its
++    color swatch; the tempting x=6..27 position is adjacency-unsafe --
++    collision adjacency there reaches the neighboring swatch and
++    silently repaints it, which is what caused round 6''s null. Applying
++    that one-step safety shift independently to the color-11 rectangle
++    (routed to a 7x19 outline at x=9..15,y=39..57) and the color-6
++    rectangle (routed to a 16x10 outline at x=6..21,y=45..54), via the
++    shared corridor (x=36..57,y=15..18) and palette-wall opening
++    (x=44..49), placed both target geometries simultaneously.
++    levels_completed advanced from 7 to 8 on action 689 of a 689-action
++    sequence (519-action banked L7 prefix + 170-action L8 tail). The
++    source agent''s own reproduction_verified is honestly false (only 10
++    of 700 calls remained after the win), but the outer loop
++    independently verified regardless: 5x fresh env.reset() + replay via
++    a new resolver priority branch (dict-shaped labels, JSON-normalized),
++    all 5 confirmed level=8, state=GameState.WIN -- L8 is the FINAL
++    level; the game is fully solved.'
+   - 'L6 (previewed for free in a PRIOR session, not attempted at the time --
+     solved by the entry above): 8 rings (four 9-colored, four 11-colored in a
+     rectangle) plus color-1 objects that are a genuinely NEW element not seen
+@@ -4686,7 +4710,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 162
++reproducible_total_levels: 163
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index b5b44426cb..66ad821975 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -1183,7 +1183,30 @@ def resolve_replay_plan(
+             adapter.apply,
+             warmup_label=adapter.warmup_label,
+         )
++    if game == "re86" and _as_int(entry.get("levels_reproduced")) >= 8:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_fable5_re86_probe_round7_20260712.json"
++        artifact = _load_json(root / rel_path)
++        raw_labels = artifact.get("action_sequence") or []
++        if adapter is None:
++            raise RuntimeError("re86 adapter missing")
++        labels = [
++            label if isinstance(label, str) else json.dumps(label, sort_keys=True)
++            for label in raw_labels
++        ]
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "re86" and _as_int(entry.get("levels_reproduced")) >= 7:
++        # NOTE: unreachable for the live registry entry (which is >=8 as of the
++        # round-7 full-game-clear win); retained as historical dead code
++        # documenting the round-4-and-later (level-7) resolution.
+         from carnot.agentic.arc_game_adapters import get_adapter
+ 
+         adapter = get_adapter(game)
+diff --git a/results/outer_loop_fable5_re86_probe_round7_20260712.json b/results/outer_loop_fable5_re86_probe_round7_20260712.json
+new file mode 100644
+index 0000000000..2980d37317
+--- /dev/null
++++ b/results/outer_loop_fable5_re86_probe_round7_20260712.json
+@@ -0,0 +1,2092 @@
++{
++  "game": "re86",
++  "model": "gpt-5-codex",
++  "starting_level": 7,
++  "max_level_reached": 8,
++  "total_env_steps_used": 690,
++  "reproduction_verified": false,
++  "action_sequence": [
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    }
++  ],
++  "levels_won_this_session": [
++    8
++  ],
++  "novel_mechanics_found": "Confirmed the load-bearing paint-then-route mechanic for level 8. A 22x4 outline must be shifted left to x=3..24 before descending from its color swatch; at x=6..27, collision adjacency reaches the neighboring swatch and silently repaints it. Applying that safety shift independently to the color-11 and color-6 rectangles, then using the y=15..18 corridor, compressing to 4x22 at the upper fixture, crossing the x=44..49 opening, and restoring at the lower fixture placed both target geometries simultaneously and advanced to level 8.",
++  "narrative": "Resolved the 519-action level-7 prefix through resolve_replay_plan, replayed it from a fresh env.reset(), and directly confirmed frame_level(frame)==7. I then executed a corrected 170-action level-8 tail: paint and safely route the color-11 rectangle to x=9..15,y=39..57, select the second rectangle, paint it color 6 with the same one-step safety margin, route it through the corridor/opening, and restore it to 16x10. The second rectangle triggered the live 7->8 transition at full-sequence action 689. One already-queued post-win diagnostic action was also sent (session call 690) and encountered the empty terminal frame; the periodic checkpoint had already preserved the exact 689-action winning line. Only 10 calls remained, far fewer than the 689 needed for a fresh-reset reproduction gate, so reproduction_verified is honestly false.",
++  "gotchas": [
++    "The first 519 actions exactly match results/outer_loop_fable5_re86_probe.json and were freshly replayed to frame_level 7 in this session.",
++    "For both wide 22x4 rectangles, paint at the intended swatch and shift to x=3..24 before moving vertically into or out of the paint row. The tempting x=6..27 position is adjacency-unsafe and caused the round-6 null.",
++    "The safe transit lattice is x=36..57,y=15..18 before upper-fixture compression; the actual palette-wall opening is x=44..49.",
++    "The color-11 target is a 7x19 outline at x=9..15,y=39..57. The color-6 target is a 16x10 outline at x=6..21,y=45..54.",
++    "The win occurred on action 689, during the eighth final ACTION3 after four restoration ACTION2 moves for the color-6 rectangle. Two further ACTION3 moves from the queued batch are not part of the checkpointed candidate.",
++    "A post-win frame may be an empty grid; compact numpy diff code must shape-check before comparing it with the preceding 64x64 frame.",
++    "The session used 690 env.step calls total: 519 prefix, 170 actions through the live win, and one already-queued post-win diagnostic call."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

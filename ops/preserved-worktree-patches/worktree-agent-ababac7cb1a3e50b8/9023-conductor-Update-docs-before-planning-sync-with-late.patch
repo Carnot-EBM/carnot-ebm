@@ -1,0 +1,60 @@
+From e40dfdce0cb1858b1d7ee4676e4bfa098947f03a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 06:12:21 -0400
+Subject: [PATCH 09023/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 1095884588..84dd93ae26 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,579</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,598</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c26b1169b8..1d1a47b385 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-08-13T09:40:41Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-08-13T10:09:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 58136c1551..5b6577e4c1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15771,3 +15771,4 @@ code |
+ | 2026-08-13 09:34 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
+ | 2026-08-13 09:36 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
+ | 2026-08-13 09:38 UTC | Gated on Exp6388 improvement: default-off live ARC | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6388-arc-goal-evidence-response-calibra |
++| 2026-08-13 10:07 UTC | V549 adversarial capstone and PRD-gap reconciliati | OK | 87 passed, 1 warning in 41.65s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 089bcb5f09..da8c2bcd77 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 29, "phase": "iteration_start", "started_at": "2026-08-13T09:40:41Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 30, "phase": "iteration_start", "started_at": "2026-08-13T10:09:50Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

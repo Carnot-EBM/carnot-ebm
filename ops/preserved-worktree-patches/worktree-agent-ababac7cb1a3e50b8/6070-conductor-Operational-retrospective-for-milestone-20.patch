@@ -1,0 +1,79 @@
+From d1a6fa2767dd79f36494d3f7ad1e5a3b4fb04cd9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 18:38:33 -0400
+Subject: [PATCH 06070/11362] [conductor] Operational retrospective for
+ milestone 2026.07.489
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 ++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_489.json | 32 ++++++++++++++++++++++
+ 3 files changed, 39 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_489.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 87de96e4d7..ecdb44012b 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5799,3 +5799,9 @@ The critical path for milestone .250:
+ - theme: operational retrospective for synthesis-heavy throughput with one visible compute-bound slow path
+ - key result: 29 experiments completed in 246.4 minutes with 3 compute-bound tasks; Exp 5354 is the only visible compute-bound slow path at 15.6 minutes, gpu_idle_on_compute_bound_tasks=false, and no 2+ parallel-model DualGPURunner miss is supported
+ - acceptance: 4/4 operational questions answered
++
++### Milestone 2026.07.489
++- exp_range: no data available this milestone
++- theme: timing-integrity mismatch blocks operational throughput accounting
++- key result: no data available this milestone; the timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments while also reporting changelog references, so compute-bound duration, GPU utilization efficiency, and DualGPURunner questions have no measurable basis
++- acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for acceptance scoring
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 6a5c6760bd..fa2f6fb0f4 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11062,3 +11062,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-07: ARC live-path salience repair and re86 +1 deeper level-up attempt (⚠️ Research Finding) — honest_verdict=no-bank: re86 L3 not reproduced within bounded live attempt; results/experiment_5373_arc_salience_re86_levelup_v489.json
+ - 2026-07-07: Exp 5374 hardware continuity receipts for KV260, PolarFire, and GateMate (⚠️ Blocked) — honest_verdict={"principle":"One-line continuity summary naming KV260, PolarFire, GateMate, and no-speedup status.","value":"complete: kv260=unreachable polarfire=reachable/workload_receipt gatemate=blocked_physical_or_jtag hardware_speedup_claim=false repeatability_evidence_present=false"}; status.value=complete; kv260_status=unreachable; polarfire_status=reachable/workload_receipt; polarfire_workload_hash=82fc092ab159c3e4778fbbf17cd452c6cbcef1919347984d2edf2e56339a156b; gatemate_status=blocked_physical_or_jtag; hardware_speedup_claim=false; repeatability_evidence_present=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5374_hardware_continuity_receipts_v489.json
+ - 2026-07-07: Capstone synthesis for .489 grammar, self-learning, solver, ARC, and hardware gates (⚠️ Blocked) — honest_verdict=complete: .489 closed with grammar preflight ready but structured/constraint gates blocked, self-learning and solver guidance ready, p-bit CPU-only, token future signal disallowed, ARC no-bank, hardware_speedup_claim=false; missing_expected=2; results/experiment_5375_capstone_v489.json
++- 2026-07-07: Operational retrospective for milestone 2026.07.489 (Complete) -- no data available this milestone; TIMING INTEGRITY MISMATCH: total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null. Both live git-log and disk-mtime reconstruction found 0 experiment commits while ops/changelog.md contains 2026.07.489 references, so no experiment IDs, durations, compute-bound slowest run, GPU-idle bottleneck, or DualGPURunner finding is inferred. estimated_time_savings_pct=0; results/operational_retro_2026_07_489.json
+diff --git a/results/operational_retro_2026_07_489.json b/results/operational_retro_2026_07_489.json
+new file mode 100644
+index 0000000000..a888d7b1b8
+--- /dev/null
++++ b/results/operational_retro_2026_07_489.json
+@@ -0,0 +1,32 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.489",
++  "generated_at": "2026-07-07T22:32:47Z",
++  "retro_type": "operational_full",
++  "summary": "No data available this milestone for experiment-duration accounting: total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0. The timing block explicitly reports a TIMING INTEGRITY MISMATCH because both authorized reconstruction paths found 0 experiment commits while ops/changelog.md contains milestone references, so no experiment IDs, durations, compute-bound slow paths, GPU-efficiency finding, or DualGPURunner finding can be inferred.",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "slowest_experiments": [],
++  "bottlenecks_identified": [
++    "Timing assembly is the only supported bottleneck: the live git-log path and disk-mtime reconstruction found 0 experiment commits, while ops/changelog.md contains references to milestone 2026.07.489.",
++    "No data available this milestone for compute-bound throughput because compute_bound_experiments_count=0 and slowest_experiments is empty.",
++    "The GPU monitor snapshot cannot be promoted to a bottleneck because the timing block contains no compute-bound tasks and gpu_idle_on_compute_bound_tasks is null."
++  ],
++  "improvements_suggested": [
++    "Fix the timing-assembly mismatch path so changelog milestone references are reconciled to an explicit timing source or emitted as a structured no-data diagnostic.",
++    "Persist the milestone activation boundary and source-of-truth timing window in the retro skeleton so git-log and disk-mtime reconstruction use the same scope.",
++    "Require each timing row to carry compute_bound and runner-eligibility fields before any GPU-idle or DualGPURunner recommendation is generated.",
++    "Keep estimated savings at 0 when the timing block contains no experiment rows, even when a tooling fix is clearly needed."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Repair the timing assembler so milestone references in ops/changelog.md cannot coexist with an unqualified zero-experiment reconstruction.",
++    "Record the exact activation boundary and reconstruction mode in each operational retro artifact before analysis starts.",
++    "Add a pre-retro validation check that refuses GPU-efficiency conclusions unless at least one compute-bound timing row is present."
++  ],
++  "compute_bound_experiments_count": 0,
++  "gpu_idle_on_compute_bound_tasks": null,
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The honest retrospective is a no-data report plus an integrity finding. The idle GPU snapshot is informational only, and the next milestone should fix timing provenance before drawing operational conclusions from changelog text.",
++  "reconstructed_from_disk_mtime": false,
++  "timing_integrity_mismatch": true
++}
+\ No newline at end of file
+-- 
+2.55.0
+

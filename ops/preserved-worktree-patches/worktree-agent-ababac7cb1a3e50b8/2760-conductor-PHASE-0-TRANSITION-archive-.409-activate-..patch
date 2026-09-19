@@ -1,0 +1,2728 @@
+From d1e76b857f8285ea903b7e710e3b902056ba794a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 06:16:20 -0400
+Subject: [PATCH 02760/11362] [conductor] PHASE 0 (TRANSITION) -- archive .409
+ -> activate .410; assert YAML parses + smart-subset pre-test gate green;
+ RECORD the TRUE .409 close-state.
+
+Automated research step by research conductor.
+Task ID: exp4431-archive-409-activate-410
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |   78 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../archive_409_activate_410_4431.py          | 1061 +++++++++++++++++
+ research-complete.yaml                        |    3 +-
+ research-roadmap-next.yaml                    |  422 +++++++
+ ...eriment_4431_archive_409_activate_410.json |  341 ++++++
+ ...xperiment_4431_archive_409_activate_410.py |  736 ++++++++++++
+ 7 files changed, 2641 insertions(+), 2 deletions(-)
+ create mode 100644 python/carnot/reporting/archive_409_activate_410_4431.py
+ create mode 100644 research-roadmap-next.yaml
+ create mode 100644 results/experiment_4431_archive_409_activate_410.json
+ create mode 100644 tests/python/test_experiment_4431_archive_409_activate_410.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index e66bad58bf..d9f7eed708 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -24848,6 +24848,84 @@ the audit output, and reports per-experiment `.409` reproduction-gate status.
+ |---|---|---|
+ | REQ-REPORT-4426 | Planned (`python/carnot/experiment_4426_arc_registry_repro_audit.py`, `results/experiment_4426_arc_registry_repro_audit.json`) | Planned (`tests/python/test_experiment_4426_arc_registry_repro_audit.py`) |
+ 
++### REQ-REPORT-4431: Archive .409, Activate .410, And Preserve The ARC Generic-Solver Close-State
++
++The Exp 4431 workflow SHALL archive milestone `2026.06.409`, confirm milestone
++`2026.06.410` is active, and write the record-only transition artifact
++`results/experiment_4431_archive_409_activate_410.json`. It SHALL run no TRM
++training and SHALL submit nothing to any leaderboard. Its `inference_substrate`
++SHALL equal `aggregation_from_upstream_artifacts`.
++
++Before writing a complete artifact, the workflow SHALL verify that
++`research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
++`research-roadmap-next.yaml` parse under `yaml.safe_load`, that the active
++roadmap milestone is `2026.06.410`, and that the smart-subset pre-test gate is
++green. If any precondition fails, the workflow SHALL write a blocked artifact
++and SHALL NOT claim that `.409` was archived.
++
++The workflow SHALL ensure `research-complete.yaml` contains a single top-level
++`.409` record, updating the canonical close-state and collapsing duplicate
++`.409` records when needed. The canonical close-state SHALL be derived from the
++Exp 4430 `.409` capstone, `ops/arc_solve_registry.yaml`, and the non-flagged
++upstream artifacts. It SHALL skip every upstream artifact stamped
++`flagged_adversarial:true`, SHALL record Exp 4421 as quarantined
++`DURATION_TOO_SHORT`, SHALL record Exp 4422 glyph rewrite as the clean
++reproduction-gated glyph advance, SHALL record Exp 4423 as a skipped partial
++verdict with its missing verifier gap, SHALL record Exp 4424 truthfully from the
++capstone instead of manufacturing a deeper-level success, and SHALL record Exp
++4425 config-rule vocabulary transfer as excluded or false according to the clean
++non-flagged evidence.
++
++The artifact SHALL carry the required principle-annotated fields
++`honest_verdict` and `reproducible_total_levels`. Complete-path
++`honest_verdict` SHALL start with one of `complete:`, `complete_`, `success:`,
++`success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`.
++`reproducible_total_levels` SHALL be a bare integer derived from the ARC solve
++registry's reproduced entries and reconciled against the `.409` capstone audit.
++The artifact SHALL also record `reproducible_total_games`,
++`v409_close_state`, `preconditions_checked`, `verifier_is_oracle=true`,
++`trm_training_ran=false`, and `leaderboard_submission=false`.
++
++The required field principles are:
++
++- `honest_verdict`: "terminal-prefixed self-declared state lets the reconciler classify without re-running"
++- `reproducible_total_levels`: "the bare authoritative count from ops/arc_solve_registry.yaml; the sprint's monotonic progress metric"
++
++#### SCENARIO-REPORT-4431: The Archive Preserves The Honest .409 ARC Close-State
++
++**Given** the `.409` capstone records Exp 4421 as flagged but registry-audit
++execution-grounded, Exp 4422 as glyph-rewrite grounded and offline solved, Exp
++4423 as a partial missing-verifier-gap verdict, Exp 4424 as a mechanic-repair
++no-new-level outcome, Exp 4425 as flagged or no clean vocabulary transfer, and
++the ARC solve registry records reproduced games and levels
++**And** `research-complete.yaml`, `ops/exclusion_manifest.yaml`, and
++`research-roadmap-next.yaml` parse; the smart-subset gate is green; and `.410`
++is active
++**When** the Exp 4431 archive workflow runs
++**Then** it archives `.409`, confirms `.410`, keeps the YAML history parseable
++with one `.409` record, writes
++`results/experiment_4431_archive_409_activate_410.json`, records the true Phase
++A bank/quarantine/skip states, records the final reproducible levels and games,
++records the config-rule vocabulary-transfer outcome, declares
++`verifier_is_oracle=true` while not treating execution-grounded ARC solves as an
++oracle-distinct moat headline, and emits a terminal-prefixed honest verdict.
++
++#### SCENARIO-REPORT-4431-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
++
++**Given** any required YAML parse, source artifact, active-roadmap, or
++smart-subset precondition is absent or red
++**When** the Exp 4431 archive workflow runs
++**Then** it writes a blocked artifact whose `honest_verdict` starts with
++`blocked_`, records the failed resource in `preconditions_checked`, does not
++edit the `.409` history record as complete, and does not claim `.409` was
++archived successfully.
++
++## Implementation Status (REQ-REPORT-4431)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4431 | Planned (`python/carnot/reporting/archive_409_activate_410_4431.py`, `results/experiment_4431_archive_409_activate_410.json`) | Planned (`tests/python/test_experiment_4431_archive_409_activate_410.py`) |
++
+ ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+ 
+ The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e14cfc83b6..c4d2833db7 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3449,
++  "experiments_checked": 3450,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/archive_409_activate_410_4431.py b/python/carnot/reporting/archive_409_activate_410_4431.py
+new file mode 100644
+index 0000000000..ef991fb144
+--- /dev/null
++++ b/python/carnot/reporting/archive_409_activate_410_4431.py
+@@ -0,0 +1,1061 @@
++"""Archive .409, activate .410, and record the true ARC close-state.
++
++Spec refs: REQ-REPORT-4431, SCENARIO-REPORT-4431,
++SCENARIO-REPORT-4431-BLOCKED-PRECONDITION.
++
++This is a record-only transition. It reads the .409 capstone and registry,
++skips flagged artifacts, and writes the exact handoff state that the .410
++roadmap needs. The important discipline is that execution-grounded ARC solves
++can count as reproduced ARC progress, but they do not become an oracle-distinct
++verifier moat headline.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++import re
++import time
++from typing import Any
++
++import yaml
++
++from carnot.reporting.archive_v391_activate_v392_4230 import (
++    CommandResult,
++    duration_from,
++    file_sha256,
++    is_sha256,
++    payload_checksum,
++    read_active_milestone,
++    read_json_object,
++    run_smart_subset,
++    write_payload,
++    yaml_parses,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++ARCHIVED_MILESTONE = "2026.06.409"
++ACTIVATED_MILESTONE = "2026.06.410"
++RANDOM_SEED = 4431
++OUTPUT_REL_PATH = Path("results/experiment_4431_archive_409_activate_410.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++EXCLUSION_MANIFEST_REL_PATH = Path("ops/exclusion_manifest.yaml")
++RESEARCH_ROADMAP_NEXT_REL_PATH = Path("research-roadmap-next.yaml")
++ARC_REGISTRY_REL_PATH = Path("ops/arc_solve_registry.yaml")
++CAPSTONE_REL_PATH = Path("results/experiment_4430_capstone_409.json")
++CONFIG_RULE_REL_PATH = Path("results/experiment_4421_config_rule_solve_unseen.json")
++GLYPH_REL_PATH = Path("results/experiment_4422_glyph_rewrite_perception.json")
++FIRST_CONTACT_REL_PATH = Path("results/experiment_4423_generic_first_contact_breadth.json")
++DEEPENING_REL_PATH = Path("results/experiment_4424_deeper_solved_game.json")
++VOCABULARY_REL_PATH = Path("results/experiment_4425_config_rule_vocabulary_transfer.json")
++REGISTRY_AUDIT_REL_PATH = Path("results/experiment_4426_arc_registry_repro_audit.json")
++SOTA_REL_PATH = Path("results/experiment_4429_sota_ingestion_409.json")
++
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SCHEMA = "carnot.archive_activation.v409_to_v410_4431.v1"
++TASK_ID = "exp4431-archive-409-activate-410"
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++RECORD_ID_RE = re.compile(r"^- id:\s*['\"]?2026\.06\.409['\"]?\s*$")
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal-prefixed self-declared state lets the reconciler classify without re-running"
++    ),
++    "reproducible_total_levels": (
++        "the bare authoritative count from ops/arc_solve_registry.yaml; the sprint's monotonic progress metric"
++    ),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "reproducible_total_levels",
++    "reproducible_total_games",
++    "v409_close_state",
++    "preconditions_checked",
++    "verifier_is_oracle",
++    "trm_training_ran",
++    "leaderboard_submission",
++    "duration_s",
++    "inference_substrate",
++    "random_seed",
++    "reproducibility_checksum",
++)
++
++SOURCE_ARTIFACTS: tuple[JsonDict, ...] = (
++    {"experiment_id": "4430", "deliverable": str(CAPSTONE_REL_PATH), "required": True},
++    {"experiment_id": "4421", "deliverable": str(CONFIG_RULE_REL_PATH), "required": True},
++    {"experiment_id": "4422", "deliverable": str(GLYPH_REL_PATH), "required": True},
++    {"experiment_id": "4423", "deliverable": str(FIRST_CONTACT_REL_PATH), "required": True},
++    {"experiment_id": "4424", "deliverable": str(DEEPENING_REL_PATH), "required": True},
++    {"experiment_id": "4425", "deliverable": str(VOCABULARY_REL_PATH), "required": True},
++    {"experiment_id": "4426", "deliverable": str(REGISTRY_AUDIT_REL_PATH), "required": True},
++    {"experiment_id": "4429", "deliverable": str(SOTA_REL_PATH), "required": True},
++)
++
++SOURCE_MISSING_REASONS = {
++    "4430": "blocked_v409_capstone_missing",
++    "4421": "blocked_config_rule_artifact_missing",
++    "4422": "blocked_glyph_rewrite_artifact_missing",
++    "4423": "blocked_generic_first_contact_artifact_missing",
++    "4424": "blocked_deeper_solved_game_artifact_missing",
++    "4425": "blocked_vocabulary_artifact_missing",
++    "4426": "blocked_registry_audit_artifact_missing",
++    "4429": "blocked_sota_ingestion_artifact_missing",
++}
++
++
++def _number(value: Any, default: float = 0.0) -> float:
++    return (
++        float(value)
++        if isinstance(value, int | float) and not isinstance(value, bool)
++        else float(default)
++    )
++
++
++def _int(value: Any, default: int = 0) -> int:
++    return int(_number(value, default))
++
++
++def _bool(value: Any, default: bool = False) -> bool:
++    return value if isinstance(value, bool) else default
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _list(value: Any) -> list[Any]:
++    return value if isinstance(value, list) else []
++
++
++def _record_id(line: str) -> str | None:
++    if not line.startswith("- id:"):
++        return None
++    return line.split(":", 1)[1].strip().strip("\"'")
++
++
++def _yaml_quote(value: str) -> str:
++    return "'" + value.replace("'", "''") + "'"
++
++
++def _insert_before_tasks(lines: list[str], new_line: str) -> list[str]:
++    for index, line in enumerate(lines):
++        if line == "  tasks:":
++            return lines[:index] + [new_line] + lines[index:]
++    return lines + [new_line]
++
++
++def _terminal_prefixed(value: Any) -> bool:
++    return isinstance(value, str) and value.startswith(TERMINAL_PREFIXES)
++
++
++def archive_record_count(text: str) -> int:
++    """Count top-level `.409` archive records without counting nested task ids."""
++
++    return sum(1 for line in text.splitlines() if RECORD_ID_RE.match(line))
++
++
++def _is_flagged(payload: Mapping[str, Any]) -> bool:
++    return payload.get("flagged_adversarial") is True
++
++
++def _corrigendum_kinds(payload: Mapping[str, Any]) -> list[str]:
++    return [
++        str(item.get("kind"))
++        for item in _list(payload.get("corrigendum_pending"))
++        if isinstance(item, Mapping) and item.get("kind")
++    ]
++
++
++def _source_id_from_key(key: str) -> int:
++    return int(key) if key.isdigit() else 0
++
++
++def registry_totals_from_text(text: str) -> JsonDict:
++    """Compute reproduced totals from registry entries and preserve declared totals.
++
++    The registry sometimes carries a stale top-level total after individual game
++    entries have already advanced. The task asks for the authoritative count from
++    the registry, so this helper sums reproduced entries while preserving the
++    declared count as a discrepancy diagnostic.
++    """
++
++    loaded = yaml.safe_load(text)
++    if not isinstance(loaded, Mapping):
++        return {
++            "declared_reproducible_total_levels": 0,
++            "declared_reproducible_total_games": 0,
++            "entry_sum_reproducible_total_levels": 0,
++            "entry_sum_reproducible_total_games": 0,
++            "authoritative_reproducible_total_levels": 0,
++            "authoritative_reproducible_total_games": 0,
++            "registry_total_discrepancy": False,
++            "reproduced_games": [],
++        }
++
++    reproduced_games: list[JsonDict] = []
++    for item in _list(loaded.get("games")):
++        game = _mapping(item)
++        if game.get("reproducibility") != "reproduced":
++            continue
++        levels = _int(game.get("levels_reproduced"))
++        reproduced_games.append({"game": str(game.get("game", "")), "levels_reproduced": levels})
++
++    entry_levels = sum(_int(item["levels_reproduced"]) for item in reproduced_games)
++    entry_games = len(reproduced_games)
++    declared_levels = _int(loaded.get("reproducible_total_levels"))
++    declared_games = _int(loaded.get("reproducible_total_games"))
++    authoritative_levels = entry_levels or declared_levels
++    authoritative_games = entry_games or declared_games
++    return {
++        "declared_reproducible_total_levels": declared_levels,
++        "declared_reproducible_total_games": declared_games,
++        "entry_sum_reproducible_total_levels": entry_levels,
++        "entry_sum_reproducible_total_games": entry_games,
++        "authoritative_reproducible_total_levels": authoritative_levels,
++        "authoritative_reproducible_total_games": authoritative_games,
++        "registry_total_discrepancy": (declared_levels, declared_games)
++        != (authoritative_levels, authoritative_games),
++        "reproduced_games": reproduced_games,
++    }
++
++
++def _flagged_ids_from_capstone(capstone: Mapping[str, Any]) -> list[int]:
++    ids: set[int] = set()
++    for row in _list(capstone.get("flagged_artifacts_excluded")):
++        mapping = _mapping(row)
++        exp_id = mapping.get("experiment_id")
++        if isinstance(exp_id, int):
++            ids.add(exp_id)
++    return sorted(ids)
++
++
++def _registry_counted_flagged_config(capstone: Mapping[str, Any]) -> bool:
++    for row in _list(capstone.get("flagged_sources_counted_by_registry_audit")):
++        mapping = _mapping(row)
++        if mapping.get("experiment") == "exp4421" and _int(mapping.get("new_levels_counted")) > 0:
++            return True
++    registry = _mapping(capstone.get("registry_audit"))
++    for row in _list(registry.get("flagged_sources_counted")):
++        mapping = _mapping(row)
++        if mapping.get("experiment") == "exp4421" and _int(mapping.get("new_levels_counted")) > 0:
++            return True
++    return False
++
++
++def _a1_config_state(capstone: Mapping[str, Any], config: Mapping[str, Any]) -> JsonDict:
++    flagged = _is_flagged(config)
++    duration_flagged = "DURATION_TOO_SHORT" in _corrigendum_kinds(config)
++    return {
++        "phase": "A1",
++        "experiment_id": 4421,
++        "artifact": str(CONFIG_RULE_REL_PATH),
++        "status": "quarantined_duration_too_short"
++        if flagged and duration_flagged
++        else "excluded_flagged_adversarial"
++        if flagged
++        else "clean_execution_grounded",
++        "direct_artifact_imported": not flagged,
++        "flagged_adversarial": flagged,
++        "corrigendum_kinds": _corrigendum_kinds(config),
++        "registry_audit_counted_execution_grounded": _registry_counted_flagged_config(capstone),
++        "offline_reproduced": _bool(config.get("offline_reproduced")),
++        "reproduced_levels": _int(config.get("reproduced_levels")),
++        "new_levels_reproduced": 0 if flagged else _int(config.get("new_levels_reproduced")),
++        "verifier_is_oracle": _bool(config.get("verifier_is_oracle"), True),
++        "honest_verdict": str(config.get("honest_verdict", "")),
++    }
++
++
++def _a2_glyph_state(capstone: Mapping[str, Any], glyph: Mapping[str, Any]) -> JsonDict:
++    flagged = _is_flagged(glyph)
++    cap_glyph = _mapping(capstone.get("glyph_rewrite"))
++    state = str(capstone.get("glyph_rewrite_state", cap_glyph.get("state", "")))
++    solved = (
++        not flagged
++        and state == "grounded_and_offline_solved"
++        and _bool(glyph.get("offline_reproduced", cap_glyph.get("offline_reproduced")))
++    )
++    return {
++        "phase": "A2",
++        "experiment_id": 4422,
++        "artifact": str(GLYPH_REL_PATH),
++        "status": state or ("excluded_flagged_adversarial" if flagged else "missing_state"),
++        "banked_reproducible_level": solved,
++        "new_levels_banked": 1 if solved else 0,
++        "target_game": str(glyph.get("target_game", cap_glyph.get("target_game", "tr87"))),
++        "offline_reproduced": _bool(glyph.get("offline_reproduced", cap_glyph.get("offline_reproduced"))),
++        "reproduced_levels": _int(glyph.get("reproduced_levels", cap_glyph.get("reproduced_levels"))),
++        "verifier_is_oracle": _bool(glyph.get("verifier_is_oracle", cap_glyph.get("verifier_is_oracle")), True),
++        "honest_verdict": str(glyph.get("honest_verdict", cap_glyph.get("honest_verdict", ""))),
++    }
++
++
++def _a3_first_contact_state(capstone: Mapping[str, Any], first: Mapping[str, Any]) -> JsonDict:
++    cap_first = _mapping(capstone.get("generic_first_contact"))
++    verdict = str(first.get("honest_verdict", cap_first.get("honest_verdict", "")))
++    state = str(capstone.get("generic_first_contact_state", cap_first.get("state", "")))
++    partial = verdict.startswith("partial:")
++    return {
++        "phase": "A3",
++        "experiment_id": 4423,
++        "artifact": str(FIRST_CONTACT_REL_PATH),
++        "status": "skipped_partial_verdict" if partial else state or "no_new_game",
++        "new_game_added": False
++        if partial
++        else _bool(first.get("offline_reproduced", cap_first.get("offline_reproduced"))),
++        "offline_reproduced": _bool(first.get("offline_reproduced", cap_first.get("offline_reproduced"))),
++        "reproduced_levels": _int(first.get("reproduced_levels", cap_first.get("reproduced_levels"))),
++        "target_game": str(first.get("target_game", cap_first.get("target_game", ""))),
++        "missing_verifier_gaps": _list(
++            first.get("missing_verifier_gaps", cap_first.get("missing_verifier_gaps"))
++        ),
++        "verifier_is_oracle": _bool(first.get("verifier_is_oracle", cap_first.get("verifier_is_oracle"))),
++        "honest_verdict": verdict,
++    }
++
++
++def _a4_deepening_state(capstone: Mapping[str, Any], deepening: Mapping[str, Any]) -> JsonDict:
++    cap_deep = _mapping(capstone.get("multi_level_deepening"))
++    state = str(capstone.get("multi_level_deepening_state", cap_deep.get("state", "")))
++    new_levels = _int(deepening.get("new_levels_reproduced", cap_deep.get("new_levels_reproduced")))
++    offline = _bool(deepening.get("offline_reproduced", cap_deep.get("offline_reproduced")))
++    banked = offline and new_levels > 0
++    return {
++        "phase": "A4",
++        "experiment_id": 4424,
++        "artifact": str(DEEPENING_REL_PATH),
++        "status": state or ("new_level_added" if banked else "mechanic_repair_no_new_level"),
++        "banked_reproducible_level": banked,
++        "new_levels_reproduced": new_levels if banked else 0,
++        "offline_reproduced": offline,
++        "reproduced_levels": _int(deepening.get("reproduced_levels", cap_deep.get("reproduced_levels"))),
++        "target_game": str(deepening.get("game", cap_deep.get("game", "sc25"))),
++        "residual_failing_mechanic": str(
++            deepening.get("residual_failing_mechanic", cap_deep.get("residual_failing_mechanic", ""))
++        ),
++        "verifier_is_oracle": _bool(
++            deepening.get("verifier_is_oracle", cap_deep.get("verifier_is_oracle")),
++            True,
++        ),
++        "honest_verdict": str(deepening.get("honest_verdict", cap_deep.get("honest_verdict", ""))),
++    }
++
++
++def _vocabulary_state(capstone: Mapping[str, Any], vocabulary: Mapping[str, Any]) -> JsonDict:
++    flagged = _is_flagged(vocabulary)
++    cap_vocab = _mapping(capstone.get("config_rule_vocabulary_transfer"))
++    if flagged:
++        status = "excluded_flagged_adversarial"
++        transfers = False
++    else:
++        transfers = _bool(
++            vocabulary.get(
++                "config_rule_vocabulary_transfers",
++                cap_vocab.get("config_rule_vocabulary_transfers"),
++            )
++        )
++        status = "transfers" if transfers else "no_transfer"
++    return {
++        "experiment_id": 4425,
++        "artifact": str(VOCABULARY_REL_PATH),
++        "status": status,
++        "config_rule_vocabulary_transfers": transfers,
++        "flagged_adversarial": flagged,
++        "corrigendum_kinds": _corrigendum_kinds(vocabulary),
++        "verifier_is_oracle": _bool(vocabulary.get("verifier_is_oracle")),
++        "honest_verdict": str(vocabulary.get("honest_verdict", "")),
++    }
++
++
++def read_v409_sources(root: Path) -> dict[str, JsonDict]:
++    """Read all source artifacts that carry the `.409` close-state."""
++
++    return {
++        "4430": read_json_object(root / CAPSTONE_REL_PATH),
++        "4421": read_json_object(root / CONFIG_RULE_REL_PATH),
++        "4422": read_json_object(root / GLYPH_REL_PATH),
++        "4423": read_json_object(root / FIRST_CONTACT_REL_PATH),
++        "4424": read_json_object(root / DEEPENING_REL_PATH),
++        "4425": read_json_object(root / VOCABULARY_REL_PATH),
++        "4426": read_json_object(root / REGISTRY_AUDIT_REL_PATH),
++        "4429": read_json_object(root / SOTA_REL_PATH),
++    }
++
++
++def build_v409_close_state(
++    sources: Mapping[str, JsonDict],
++    registry_totals: Mapping[str, Any],
++) -> JsonDict:
++    """Build the true `.409` close-state from capstone, registry, and clean artifacts."""
++
++    capstone = _mapping(sources.get("4430"))
++    config = _mapping(sources.get("4421"))
++    glyph = _mapping(sources.get("4422"))
++    first = _mapping(sources.get("4423"))
++    deepening = _mapping(sources.get("4424"))
++    vocabulary = _mapping(sources.get("4425"))
++    registry_audit = _mapping(sources.get("4426"))
++    sota = _mapping(sources.get("4429"))
++
++    flagged_ids = set(_flagged_ids_from_capstone(capstone))
++    for key, payload in sources.items():
++        if _is_flagged(_mapping(payload)):
++            flagged_ids.add(_source_id_from_key(key))
++    flagged_ids.discard(0)
++
++    a1 = _a1_config_state(capstone, config)
++    a2 = _a2_glyph_state(capstone, glyph)
++    a3 = _a3_first_contact_state(capstone, first)
++    a4 = _a4_deepening_state(capstone, deepening)
++    vocab = _vocabulary_state(capstone, vocabulary)
++
++    authoritative_levels = _int(registry_totals.get("authoritative_reproducible_total_levels"))
++    authoritative_games = _int(registry_totals.get("authoritative_reproducible_total_games"))
++    capstone_levels = _int(capstone.get("reproducible_total_levels"))
++    audit_levels = _int(registry_audit.get("reproducible_total_levels"))
++    flagged_for_v410 = str(
++        _mapping(capstone.get("sota_ingestion")).get(
++            "flagged_for_v410",
++            sota.get("flagged_for_v410", ""),
++        )
++    )
++
++    return {
++        "summary": (
++            "glyph_rewrite_banked_config_rule_quarantined_first_contact_partial_"
++            "deepening_no_new_level_vocab_excluded"
++        ),
++        "capstone_honest_verdict": str(capstone.get("honest_verdict", "")),
++        "phase_a_tasks": {
++            "A1_config_rule_unseen": a1,
++            "A2_glyph_rewrite": a2,
++            "A3_generic_first_contact": a3,
++            "A4_deeper_solved_game": a4,
++        },
++        "phase_a_banked_reproducible_level_tasks": [
++            task["phase"]
++            for task in (a1, a2, a3, a4)
++            if task.get("banked_reproducible_level") is True
++        ],
++        "phase_a_quarantined_or_skipped_tasks": [
++            task["phase"]
++            for task in (a1, a2, a3, a4)
++            if str(task.get("status", "")).startswith(("quarantined", "skipped"))
++        ],
++        "config_rule_vocabulary_transfer": vocab,
++        "config_rule_vocabulary_transfer_outcome": vocab["status"],
++        "reproducible_total_levels": authoritative_levels,
++        "reproducible_total_games": authoritative_games,
++        "registry_declared_reproducible_total_levels": _int(
++            registry_totals.get("declared_reproducible_total_levels")
++        ),
++        "registry_declared_reproducible_total_games": _int(
++            registry_totals.get("declared_reproducible_total_games")
++        ),
++        "registry_entry_sum_reproducible_total_levels": _int(
++            registry_totals.get("entry_sum_reproducible_total_levels")
++        ),
++        "registry_entry_sum_reproducible_total_games": _int(
++            registry_totals.get("entry_sum_reproducible_total_games")
++        ),
++        "registry_total_discrepancy": _bool(registry_totals.get("registry_total_discrepancy")),
++        "capstone_reproducible_total_levels": capstone_levels,
++        "registry_audit_reproducible_total_levels": audit_levels,
++        "new_levels_since_v408": max(0, authoritative_levels - 34),
++        "new_games_since_v408": max(0, authoritative_games - 17),
++        "flagged_artifacts_skipped": sorted(flagged_ids),
++        "flagged_for_v410": flagged_for_v410,
++        "paper_ready": _bool(_mapping(capstone.get("publication_gate")).get("paper_ready"), True),
++        "publication_unmet_gates": _list(_mapping(capstone.get("publication_gate")).get("unmet_gates")),
++        "verifier_is_oracle_honored": True,
++        "verifier_is_oracle": True,
++        "circular_execution_grounded_arc_solve_not_moat_headline": True,
++        "trm_training_ran": False,
++        "leaderboard_submission": False,
++    }
++
++
++def canonical_finding(close_state: Mapping[str, Any]) -> str:
++    """Build the `.409` archive finding from the true close-state."""
++
++    levels = _int(close_state.get("reproducible_total_levels"))
++    games = _int(close_state.get("reproducible_total_games"))
++    phase = _mapping(close_state.get("phase_a_tasks"))
++    a1 = _mapping(phase.get("A1_config_rule_unseen"))
++    a2 = _mapping(phase.get("A2_glyph_rewrite"))
++    a3 = _mapping(phase.get("A3_generic_first_contact"))
++    a4 = _mapping(phase.get("A4_deeper_solved_game"))
++    vocab = _mapping(close_state.get("config_rule_vocabulary_transfer"))
++    return (
++        ".409 close-state: archive truth from exp4430 capstone and the ARC registry. "
++        f"Final reproduced registry total is {levels} levels across {games} games "
++        f"(registry declared {_int(close_state.get('registry_declared_reproducible_total_levels'))}, "
++        f"entry-sum {_int(close_state.get('registry_entry_sum_reproducible_total_levels'))}). "
++        f"PHASE A1 config-rule artifact is {a1.get('status')} and skipped from direct aggregation; "
++        "its execution-grounded registry audit is not a moat headline. "
++        f"PHASE A2 glyph rewrite banked execution-grounded tr87 progress: "
++        f"banked={a2.get('banked_reproducible_level')}, reproduced_levels={a2.get('reproduced_levels')}. "
++        f"PHASE A3 first-contact is {a3.get('status')} with verdict {a3.get('honest_verdict')}. "
++        f"PHASE A4 deeper game is {a4.get('status')}, banked={a4.get('banked_reproducible_level')}. "
++        f"Config-rule vocabulary transfer outcome is {vocab.get('status')} / "
++        f"transfers={vocab.get('config_rule_vocabulary_transfers')}. "
++        f"flagged_for_v410={close_state.get('flagged_for_v410')}. "
++        "verifier_is_oracle=true is honored: execution-grounded ARC solves are progress, not a circular moat claim."
++    )
++
++
++def build_canonical_record(close_state: Mapping[str, Any]) -> str:
++    """Build a minimal `.409` archive record for an absent-history case."""
++
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        f"  title: {_yaml_quote('Archive .409 and activate .410; record true ARC generic-solver close-state')}",
++        "  completed: '2026-06-19'",
++        f"  finding: {_yaml_quote(canonical_finding(close_state))}",
++        "  activation_recorded: exp4431-archive-409-activate-410",
++        "  tasks:",
++        "  - id: exp4421-config-rule-solve-unseen",
++        "    result: 'quarantined flagged_adversarial DURATION_TOO_SHORT; no direct import'",
++        "  - id: exp4422-glyph-rewrite-perception",
++        "    result: 'glyph rewrite banked execution-grounded tr87 progress'",
++        "  - id: exp4423-generic-first-contact-breadth",
++        "    result: 'skipped partial verdict; missing verifier gap logged'",
++        "  - id: exp4424-deeper-solved-game",
++        "    result: 'mechanic repair only; no new reproduced level'",
++        "  - id: exp4425-config-rule-vocabulary-transfer",
++        "    result: 'vocabulary transfer excluded or false from clean evidence'",
++        "  - id: exp4430-capstone-409",
++        "    result: 'archive source capstone; verifier_is_oracle honored'",
++    ]
++    return "\n".join(lines) + "\n"
++
++
++def _canonicalize_target_span(lines: list[str], close_state: Mapping[str, Any]) -> list[str]:
++    out: list[str] = []
++    finding_written = False
++    activation_written = False
++    for line in lines:
++        if line.startswith("  finding:"):
++            if not finding_written:
++                out.append(f"  finding: {_yaml_quote(canonical_finding(close_state))}")
++                finding_written = True
++            continue
++        if line.startswith("  activation_recorded:"):
++            if not activation_written:
++                out.append("  activation_recorded: exp4431-archive-409-activate-410")
++                activation_written = True
++            continue
++        out.append(line)
++    if not finding_written:
++        out = _insert_before_tasks(out, f"  finding: {_yaml_quote(canonical_finding(close_state))}")
++    if not activation_written:
++        out = _insert_before_tasks(out, "  activation_recorded: exp4431-archive-409-activate-410")
++    return out
++
++
++def dedupe_or_update_record(text: str, close_state: Mapping[str, Any]) -> tuple[str, int, str]:
++    """Ensure exactly one top-level `.409` record exists and carries the truth."""
++
++    lines = text.split("\n")
++    starts = [index for index, line in enumerate(lines) if _record_id(line) is not None]
++    spans = [
++        (start, starts[index + 1] if index + 1 < len(starts) else len(lines))
++        for index, start in enumerate(starts)
++    ]
++    target_spans = [
++        (start, end) for start, end in spans if _record_id(lines[start]) == ARCHIVED_MILESTONE
++    ]
++    if not target_spans:
++        return f"{text.rstrip()}\n{build_canonical_record(close_state)}", 0, "appended"
++
++    first_start, first_end = target_spans[0]
++    remove: set[int] = set()
++    for start, end in target_spans[1:]:
++        remove.update(range(start, end))
++
++    replacement = _canonicalize_target_span(lines[first_start:first_end], close_state)
++    rebuilt: list[str] = []
++    for index, line in enumerate(lines):
++        if first_start <= index < first_end:
++            if index == first_start:
++                rebuilt.extend(replacement)
++            continue
++        if index in remove:
++            continue
++        rebuilt.append(line)
++
++    new_text = "\n".join(rebuilt)
++    if len(target_spans) > 1:
++        return new_text, len(target_spans) - 1, "deduped"
++    if new_text != text:
++        return new_text, 0, "updated"
++    return text, 0, "unchanged"
++
++
++def terminal_verdict(close_state: Mapping[str, Any]) -> str:
++    levels = _int(close_state.get("reproducible_total_levels"))
++    games = _int(close_state.get("reproducible_total_games"))
++    return (
++        "complete: archived_v409_v410_active_arc_levels_"
++        f"{levels}_games_{games}_glyph_banked_config_quarantined_first_contact_skipped_"
++        "vocab_excluded_verifier_oracle_honored"
++    )
++
++
++def build_complete_artifact(
++    *,
++    v409_close_state: Mapping[str, Any],
++    registry_totals: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    active_roadmap_path: str,
++    research_complete_record_action: str,
++    research_complete_duplicates_removed: int,
++    cited_upstream_artifacts: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    """Build the terminal Exp 4431 archive artifact."""
++
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": 4431,
++        "task_id": TASK_ID,
++        "random_seed": RANDOM_SEED,
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": ACTIVATED_MILESTONE,
++        "active_roadmap_path": active_roadmap_path,
++        "research_complete_yaml_parses": True,
++        "exclusion_manifest_parses": True,
++        "research_roadmap_next_yaml_parses": True,
++        "pretest_suite_green": True,
++        "verifier_is_oracle": True,
++        "preconditions_checked": dict(preconditions_checked),
++        "v409_close_state": dict(v409_close_state),
++        "reproducible_total_levels": _int(v409_close_state.get("reproducible_total_levels")),
++        "reproducible_total_games": _int(v409_close_state.get("reproducible_total_games")),
++        "registry_declared_reproducible_total_levels": _int(
++            registry_totals.get("declared_reproducible_total_levels")
++        ),
++        "registry_declared_reproducible_total_games": _int(
++            registry_totals.get("declared_reproducible_total_games")
++        ),
++        "registry_entry_sum_reproducible_total_levels": _int(
++            registry_totals.get("entry_sum_reproducible_total_levels")
++        ),
++        "registry_entry_sum_reproducible_total_games": _int(
++            registry_totals.get("entry_sum_reproducible_total_games")
++        ),
++        "registry_total_discrepancy": _bool(registry_totals.get("registry_total_discrepancy")),
++        "research_complete_record_action": research_complete_record_action,
++        "research_complete_duplicates_removed": research_complete_duplicates_removed,
++        "cited_upstream_artifacts": [dict(item) for item in cited_upstream_artifacts],
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "required_artifact_fields": list(REQUIRED_ARTIFACT_FIELDS),
++        "honest_verdict": terminal_verdict(v409_close_state),
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "trm_training_ran": False,
++        "leaderboard_submission": False,
++        "spec_refs": ["REQ-REPORT-4431", "SCENARIO-REPORT-4431"],
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def build_blocked_artifact(
++    reason: str,
++    *,
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    active_milestone_confirmed: str,
++    active_roadmap_path: str,
++) -> JsonDict:
++    """Build a blocked artifact without claiming the archive succeeded."""
++
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": 4431,
++        "task_id": TASK_ID,
++        "random_seed": RANDOM_SEED,
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": active_milestone_confirmed,
++        "active_roadmap_path": active_roadmap_path,
++        "research_complete_yaml_parses": bool(
++            _mapping(preconditions_checked.get("research_complete_yaml")).get("parses", False)
++        ),
++        "exclusion_manifest_parses": bool(
++            _mapping(preconditions_checked.get("exclusion_manifest_yaml")).get("parses", False)
++        ),
++        "research_roadmap_next_yaml_parses": bool(
++            _mapping(preconditions_checked.get("research_roadmap_next_yaml")).get("parses", False)
++        ),
++        "pretest_suite_green": bool(
++            _mapping(preconditions_checked.get("smart_subset_pretest")).get("green", False)
++        ),
++        "verifier_is_oracle": False,
++        "v409_close_state": {},
++        "reproducible_total_levels": 0,
++        "reproducible_total_games": 0,
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "honest_verdict": reason,
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "trm_training_ran": False,
++        "leaderboard_submission": False,
++        "spec_refs": ["REQ-REPORT-4431", "SCENARIO-REPORT-4431-BLOCKED-PRECONDITION"],
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def _command_check(result: CommandResult) -> JsonDict:
++    return {
++        "command": result.command,
++        "exit_code": result.exit_code,
++        "green": result.exit_code == 0,
++        "stdout_tail": result.stdout[-1000:],
++        "stderr_tail": result.stderr[-1000:],
++    }
++
++
++def _source_checks(root: Path) -> JsonDict:
++    checks: JsonDict = {}
++    for source in SOURCE_ARTIFACTS:
++        path = root / str(source["deliverable"])
++        checks[str(source["experiment_id"])] = {
++            "path": str(source["deliverable"]),
++            "exists": path.exists(),
++            "required": bool(source["required"]),
++            "sha256": file_sha256(path),
++        }
++    return checks
++
++
++def build_cited_upstream(root: Path) -> list[JsonDict]:
++    cited: list[JsonDict] = []
++    for source in SOURCE_ARTIFACTS:
++        rel = str(source["deliverable"])
++        cited.append(
++            {
++                "kind": "artifact",
++                "experiment_id": str(source["experiment_id"]),
++                "deliverable": rel,
++                "required": bool(source["required"]),
++                "sha256": file_sha256(root / rel),
++            }
++        )
++    cited.append(
++        {
++            "kind": "registry",
++            "experiment_id": "arc_solve_registry",
++            "deliverable": str(ARC_REGISTRY_REL_PATH),
++            "required": True,
++            "sha256": file_sha256(root / ARC_REGISTRY_REL_PATH),
++        }
++    )
++    return cited
++
++
++def _blocked(
++    root: Path,
++    reason: str,
++    *,
++    preconditions_checked: Mapping[str, Any],
++    started_s: float | None,
++    now_s: float | None,
++    active_milestone_confirmed: str = "",
++    active_roadmap_path: str = "research-roadmap.yaml",
++) -> Path:
++    output_path = root / OUTPUT_REL_PATH
++    payload = build_blocked_artifact(
++        reason,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_from(started_s, now_s),
++        active_milestone_confirmed=active_milestone_confirmed,
++        active_roadmap_path=active_roadmap_path,
++    )
++    write_payload(output_path, payload)
++    return output_path
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    pretest_result: CommandResult | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Run the archive workflow and write the terminal artifact."""
++
++    root = Path(root)
++    start = time.perf_counter() if started_s is None else started_s
++    preconditions: JsonDict = {}
++
++    research_path = root / RESEARCH_COMPLETE_REL_PATH
++    if not research_path.exists():
++        preconditions["research_complete_yaml"] = {
++            "path": str(RESEARCH_COMPLETE_REL_PATH),
++            "exists": False,
++            "parses": False,
++        }
++        return _blocked(
++            root,
++            "blocked_research_complete_yaml_missing",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++        )
++    research_text = research_path.read_text(encoding="utf-8")
++    research_parses = yaml_parses(research_text)
++    preconditions["research_complete_yaml"] = {
++        "path": str(RESEARCH_COMPLETE_REL_PATH),
++        "exists": True,
++        "parses": research_parses,
++    }
++    if not research_parses:
++        return _blocked(
++            root,
++            "blocked_research_complete_yaml_poison",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++        )
++
++    exclusion_path = root / EXCLUSION_MANIFEST_REL_PATH
++    if not exclusion_path.exists():
++        preconditions["exclusion_manifest_yaml"] = {
++            "path": str(EXCLUSION_MANIFEST_REL_PATH),
++            "exists": False,
++            "parses": False,
++        }
++        return _blocked(
++            root,
++            "blocked_exclusion_manifest_missing",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++        )
++    exclusion_text = exclusion_path.read_text(encoding="utf-8")
++    exclusion_parses = yaml_parses(exclusion_text)
++    preconditions["exclusion_manifest_yaml"] = {
++        "path": str(EXCLUSION_MANIFEST_REL_PATH),
++        "exists": True,
++        "parses": exclusion_parses,
++    }
++    if not exclusion_parses:
++        return _blocked(
++            root,
++            "blocked_exclusion_manifest_yaml_poison",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++        )
++
++    next_path = root / RESEARCH_ROADMAP_NEXT_REL_PATH
++    if not next_path.exists():
++        preconditions["research_roadmap_next_yaml"] = {
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "exists": False,
++            "parses": False,
++        }
++        return _blocked(
++            root,
++            "blocked_research_roadmap_next_missing",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++        )
++    next_text = next_path.read_text(encoding="utf-8")
++    next_parses = yaml_parses(next_text)
++    preconditions["research_roadmap_next_yaml"] = {
++        "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++        "exists": True,
++        "parses": next_parses,
++    }
++    if not next_parses:
++        return _blocked(
++            root,
++            "blocked_research_roadmap_next_yaml_poison",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++        )
++
++    active_milestone, active_path = read_active_milestone(root)
++    preconditions["active_milestone"] = {
++        "expected": ACTIVATED_MILESTONE,
++        "actual": active_milestone,
++        "path": active_path,
++        "matches": active_milestone == ACTIVATED_MILESTONE,
++    }
++    if active_milestone != ACTIVATED_MILESTONE:
++        return _blocked(
++            root,
++            "blocked_v410_not_active",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++            active_milestone_confirmed=active_milestone,
++            active_roadmap_path=active_path,
++        )
++
++    source_checks = _source_checks(root)
++    preconditions["source_artifacts"] = source_checks
++    for exp_id, check in source_checks.items():
++        if check["required"] and not check["exists"]:
++            return _blocked(
++                root,
++                SOURCE_MISSING_REASONS.get(exp_id, f"blocked_source_{exp_id}_missing"),
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                active_milestone_confirmed=active_milestone,
++                active_roadmap_path=active_path,
++            )
++
++    registry_path = root / ARC_REGISTRY_REL_PATH
++    if not registry_path.exists():
++        preconditions["arc_solve_registry_yaml"] = {
++            "path": str(ARC_REGISTRY_REL_PATH),
++            "exists": False,
++            "parses": False,
++        }
++        return _blocked(
++            root,
++            "blocked_arc_solve_registry_missing",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++            active_milestone_confirmed=active_milestone,
++            active_roadmap_path=active_path,
++        )
++    registry_text = registry_path.read_text(encoding="utf-8")
++    registry_parses = yaml_parses(registry_text)
++    preconditions["arc_solve_registry_yaml"] = {
++        "path": str(ARC_REGISTRY_REL_PATH),
++        "exists": True,
++        "parses": registry_parses,
++    }
++    if not registry_parses:
++        return _blocked(
++            root,
++            "blocked_arc_solve_registry_yaml_poison",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++            active_milestone_confirmed=active_milestone,
++            active_roadmap_path=active_path,
++        )
++
++    pretest = pretest_result if pretest_result is not None else run_smart_subset(root)
++    preconditions["smart_subset_pretest"] = _command_check(pretest)
++    if pretest.exit_code != 0:
++        return _blocked(
++            root,
++            "blocked_smart_subset_pretest_not_green",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++            active_milestone_confirmed=active_milestone,
++            active_roadmap_path=active_path,
++        )
++
++    registry_totals = registry_totals_from_text(registry_text)
++    sources = read_v409_sources(root)
++    close_state = build_v409_close_state(sources, registry_totals)
++    new_text, duplicates_removed, record_action = dedupe_or_update_record(research_text, close_state)
++    if not yaml_parses(new_text):
++        return _blocked(
++            root,
++            "blocked_research_complete_edit_invalid",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++            active_milestone_confirmed=active_milestone,
++            active_roadmap_path=active_path,
++        )
++
++    research_path.write_text(new_text, encoding="utf-8")
++    if not yaml_parses(research_path.read_text(encoding="utf-8")):
++        return _blocked(
++            root,
++            "blocked_research_complete_yaml_poison_after_edit",
++            preconditions_checked=preconditions,
++            started_s=start,
++            now_s=now_s,
++            active_milestone_confirmed=active_milestone,
++            active_roadmap_path=active_path,
++        )
++
++    output_path = root / OUTPUT_REL_PATH
++    payload = build_complete_artifact(
++        v409_close_state=close_state,
++        registry_totals=registry_totals,
++        preconditions_checked=preconditions,
++        duration_s=duration_from(start, now_s),
++        active_roadmap_path=active_path,
++        research_complete_record_action=record_action,
++        research_complete_duplicates_removed=duplicates_removed,
++        cited_upstream_artifacts=build_cited_upstream(root),
++    )
++    validate_artifact(payload)
++    write_payload(output_path, payload)
++    return output_path
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> None:
++    """Validate the artifact contract before writing a complete JSON record."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in payload:
++            raise ValueError(f"missing required artifact field: {field}")
++    if not _terminal_prefixed(payload.get("honest_verdict")):
++        raise ValueError("honest_verdict lacks a complete-path terminal prefix")
++    if payload.get("field_principles", {}).get("honest_verdict") != FIELD_PRINCIPLES["honest_verdict"]:
++        raise ValueError("honest_verdict principle mismatch")
++    if payload.get("field_principles", {}).get("reproducible_total_levels") != FIELD_PRINCIPLES[
++        "reproducible_total_levels"
++    ]:
++        raise ValueError("reproducible_total_levels principle mismatch")
++    if payload.get("verifier_is_oracle") is not True:
++        raise ValueError("verifier_is_oracle must be true for this execution-grounded transition")
++    if payload.get("trm_training_ran") is not False:
++        raise ValueError("TRM training must stay false")
++    if payload.get("leaderboard_submission") is not False:
++        raise ValueError("leaderboard submission must stay false")
++    close = _mapping(payload.get("v409_close_state"))
++    if _int(payload.get("reproducible_total_levels")) != _int(
++        close.get("reproducible_total_levels")
++    ):
++        raise ValueError("reproducible_total_levels does not match close-state")
++    if _int(payload.get("reproducible_total_games")) != _int(
++        close.get("reproducible_total_games")
++    ):
++        raise ValueError("reproducible_total_games does not match close-state")
++    if not is_sha256(payload.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be a SHA-256 hex digest")
++
++
++def main(root: Path = REPO_ROOT) -> int:
++    run(root)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/research-complete.yaml b/research-complete.yaml
+index e7d79f53b7..3184385cbe 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -43364,7 +43364,8 @@ milestones:
+     (FoVer 0.9131, G1-G4) is the FROZEN headline.'
+   doc: ''
+   completed: '2026-06-19'
+-  finding: See conductor log for per-experiment results.
++  finding: '.409 close-state: archive truth from exp4430 capstone and the ARC registry. Final reproduced registry total is 36 levels across 18 games (registry declared 35, entry-sum 36). PHASE A1 config-rule artifact is quarantined_duration_too_short and skipped from direct aggregation; its execution-grounded registry audit is not a moat headline. PHASE A2 glyph rewrite banked execution-grounded tr87 progress: banked=True, reproduced_levels=6. PHASE A3 first-contact is skipped_partial_verdict with verdict partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged. PHASE A4 deeper game is mechanic_repair_no_new_level, banked=False. Config-rule vocabulary transfer outcome is excluded_flagged_adversarial / transfers=False. flagged_for_v410=Executable ARC-AGI-3 world-model agent with verifier-grounded planning (arXiv:2605.05138). verifier_is_oracle=true is honored: execution-grounded ARC solves are progress, not a circular moat claim.'
++  activation_recorded: exp4431-archive-409-activate-410
+   tasks:
+   - id: exp4420-archive-408-activate-409
+     title: PHASE 0 (TRANSITION) -- archive .408 -> activate .409; assert YAML parses + smart-subset pre-test gate green; RECORD
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..4ee64b376b
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,422 @@
++milestone: 2026.06.410
++milestone_title: >-
++  CLOSE THE GENERIC-SOLVER GAP: turn the corpus of WORKING per-game solutions into a GENERIC live
++  solver that solves UNSEEN games WITHOUT per-game reverse-engineering. Today the 20 reproducible
++  games are solved by a HETEROGENEOUS mix (hand-RE'd GameAdapters tr87/tu93, per-game E3
++  world_models sc25/ar25/ka59/ft09, frozen trajectory replays r11l/ls20/wa30, graph-explore
++  trajectories, config-rule induction) -- only arc_loop_solve's standing loop is truly generic, and
++  every unseen game still needs delta-RE. The Kaggle eval is HELD-OUT private games, so GENERIC
++  solving is the entire competitive value. Operator insight 2026-06-19: "we have examples of working
++  level solutions -- that should help us get generic live solves." .410 mines that example corpus:
++  (A) a LEAVE-ONE-OUT generic-solve benchmark that QUANTIFIES how many solved games are re-derivable
++  from the OTHER games' examples alone; (B) example-corpus-conditioned win-condition + action-model
++  induction for held-out games; (C) the A3 generic-first-contact fix so a routed game actually SOLVES;
++  (D) consolidation of the per-game solver primitives into composable generic operators in
++  arc_solver_kit. Monotonically grow reproducible_total_levels (currently 35/18). ALL experiments
++  agent_type=codex/gpt-5.5 (operator quota-conserve 2026-06-19; the Claude planner is SKIPPED via this
++  pre-staged roadmap; planner/retro stay Claude). The live generator is Qwen3.5-9B-MTP
++  ([[project_arc_live_generator]]). paper_ready=True (FoVer 0.9131, G1-G4) is the FROZEN headline.
++milestone_overview: |
++  .409 accelerated the per-game pipeline; .410 attacks the GENERIC gap directly using the working
++  solutions as an example library, because the leaderboard is unseen games. Every ARC SOLVE task is
++  reproduction-gated (arc_solver_kit.reproduce -> only reproduced levels count) and Incremental-
++  Progress-scoped (+1..+n levels on ONE game; never "solve them all"). Every task DECLARES
++  inference_substrate (fixes the .409 DURATION_TOO_SHORT false-positive class) and uses a TERMINAL-
++  prefixed honest_verdict (fixes the .409 exp4423 partial: FAIL-loop). Reserved: 2 infra slots, 1 per
++  attached FPGA board (Hardware-Task Continuity), 1 SOTA-ingestion slot.
++
++    PHASE 0 -- TRANSITION: exp4431 archive .409 -> activate .410; record the TRUE close-state.
++
++    PHASE A -- GENERIC LIVE SOLVING FROM THE EXAMPLE CORPUS (operator MANDATORY; the headline):
++      A1 (exp4432) LEAVE-ONE-OUT generic-solve benchmark -- how many solved games re-solve from the
++        OTHER games' registry recipes alone (the falsifiable measure of generic capability).
++      A2 (exp4433) example-corpus-conditioned WIN-CONDITION induction on a HELD-OUT game.
++      A3 (exp4434) example-corpus-conditioned ACTION-MODEL (E3 world_model) induction on a HELD-OUT game.
++      A4 (exp4435) FIX + harden the generic first-contact solver (the .409 exp4423 partial: bug) so a
++        ROUTED game actually banks +1 reproducible level.
++      A5 (exp4436) DEEPER (+1 level on an already-solved game) + consolidate per-game solver PRIMITIVES
++        into composable generic operators in arc_solver_kit.
++    PHASE B -- RESERVED INFRA (2 slots): exp4437 (ARC-task artifact-discipline template + lint),
++      exp4438 (registry/gaps hygiene + GAP-4 regression guard).
++    PHASE C -- HARDWARE CONTINUITY (1 per attached board): exp4439.
++    PHASE D -- SOTA-INGESTION (.410 bleeding-edge track -- generic program-induction / few-shot
++      world-model induction): exp4440.
++    PHASE E -- CAPSTONE: exp4441.
++
++tasks:
++  - id: exp4431-archive-409-activate-410
++    milestone: 2026.06.410
++    title: "PHASE 0 (TRANSITION) -- archive .409 -> activate .410; assert YAML parses + smart-subset pre-test gate green; RECORD the TRUE .409 close-state."
++    priority: critical
++    track: infra
++    max_turns: 60
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive scope-match vs prior archive-v* tasks; mechanical archive+activate, never a doomed rerun."
++    inference_substrate: aggregation_from_upstream_artifacts
++    deliverable: results/experiment_4431_archive_409_activate_410.json
++    prompt: |
++      Archive .409 into research-complete.yaml and activate .410. Assert research-complete.yaml +
++      ops/exclusion_manifest.yaml + research-roadmap-next.yaml parse under yaml.safe_load; run the
++      smart-subset pre-test gate green. RECORD the TRUE .409 close-state truthfully from the .409
++      capstone: which PHASE A tasks banked reproducible levels (A2 glyph +1; A4 deeper) vs were
++      quarantined (A1 DURATION_TOO_SHORT) or skipped (A3 partial: verdict), the final
++      reproducible_total_levels/games, and the config-rule-vocabulary transfer outcome. SKIP any
++      flagged_adversarial artifact; HONOR verifier_is_oracle (a circular/execution-grounded ARC solve
++      is NOT a moat headline). REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed self-declared state lets the reconciler classify without re-running"}}
++        reproducible_total_levels: {{principle: "the bare authoritative count from ops/arc_solve_registry.yaml; the sprint's monotonic progress metric"}}
++      honest_verdict MUST start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_.
++      verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission.
++
++  - id: exp4432-loo-generic-solve-benchmark
++    milestone: 2026.06.410
++    title: "PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY) -- LEAVE-ONE-OUT generic-solve benchmark: how many solved games re-solve from the OTHER games' example recipes alone (the falsifiable measure of the generic gap)."
++    priority: critical
++    track: arc-north-star
++    max_turns: 150
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-06-19 operator direction: we have working per-game solutions -- measure how much generic transfer they already enable, the prerequisite to closing the per-game-RE gap for live unseen-game solving. New benchmark (no prior failure); the falsifiable baseline for .410+ generic work."
++    inference_substrate: live_llm_inference
++    deliverable: results/experiment_4432_loo_generic_solve_benchmark.json
++    prompt: |
++      GOAL: QUANTIFY the current generic capability. For a held-out set of K>=6 already-solved games
++      with CLEAN reproducible solves (pick from: tr87, tu93, lp85, vc33, sc25, ka59, ar25, ft09 -- read
++      ops/arc_solve_registry.yaml for the current reproducible set), run a LEAVE-ONE-OUT test: for each
++      target game, TEMPORARILY withhold its OWN per-game recipe (its GameAdapter / world_model /
++      trajectory / config-rule) and attempt to solve it from scratch using ONLY (a) the generic
++      arc_loop_solve standing loop, (b) transfer-routing (arc_solve_learning.recommend_approach routes
++      to the closest OTHER solved game's recipe), and (c) the OTHER games' registry general_gotchas +
++      primitives. Run the reproduction gate (arc_solver_kit.reproduce) on each attempt -- only an
++      offline-reproduced solve counts.
++      PRECONDITIONS (check FIRST; on any miss write honest_verdict blocked_<resource> and STOP, no
++      fabrication): (a) the offline env files exist (ls environment_files/ non-empty);
++      (b) python -c "import carnot.agentic.arc_solver_kit, carnot.agentic.arc_solve_learning" succeeds;
++      (c) the live generator GGUF is cached IF a game needs LLM induction
++      (ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/ non-empty) -- else mark that
++      game blocked_model_not_cached and continue the rest.
++      Do NOT mutate the real registry during the test -- snapshot/restore, or route around the target's
++      own entry in-memory. Record per-game: solved_without_own_recipe (bool, reproduction-gated),
++      routed_to (which other game's recipe), residual_delta (the mechanic the generic path could NOT
++      induce). FALSIFIABLE GATE: generic_loo_solve_count >= 2 of K (at least 2 solved games are
++      re-derivable from the example corpus alone => the example corpus already enables some generic
++      transfer; if 0, the gap is total and A2/A3 are the levers). This counts NO new levels (it
++      re-solves known games) -- it is the BASELINE measurement, not a level-banking task.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed (this benchmark ALWAYS completes with a measurement -- positive, partial, or zero -- so it is terminal, never partial:)"}}
++        generic_loo_solve_count: {{principle: "bare int: the count of games re-solved from the example corpus WITHOUT their own recipe -- the headline generic-capability number"}}
++        per_game: {principle: "list of {{game, solved_without_own_recipe, routed_to, residual_delta}} -- shows EXACTLY which mechanics the example corpus does and does not transfer"}
++        offline_reproduced: {{principle: "every claimed re-solve is reproduction-gated -- a non-reproducible solve does not count (ARC Solve Reproducibility Discipline)"}}
++        missing_verifier_gaps: {{principle: "each residual_delta the generic path could not induce is a missing-verifier/missing-primitive gap -- the .410 A2-A5 build backlog"}}
++        random_seed: {{principle: "determinism precondition for a third party to re-run the benchmark"}}
++        reproducibility_checksum: {{principle: "content hash of the example-corpus snapshot used, so the LOO result is reproducible"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle=true
++      (execution-grounded reproduction). NO leaderboard submission.
++
++  - id: exp4433-example-conditioned-win-condition-induction
++    milestone: 2026.06.410
++    title: "PHASE A2 (ARC NORTH STAR) -- example-corpus-conditioned WIN-CONDITION induction: few-shot the solved games' grounded win-rules to induce is_win() for a HELD-OUT game (+1 reproducible level if it grounds + solves)."
++    priority: critical
++    track: arc-north-star
++    max_turns: 150
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-06-19 operator direction: use working level solutions as few-shot examples to generalize win-condition induction to unseen games. Versioned continuation of the .408/.409 config-rule inducer with a STATED forward difference: the prompt is now CONDITIONED on the registry's solved-game win-rules as few-shot examples (not a single-game inducer)."
++    inference_substrate: live_llm_inference
++    deliverable: results/experiment_4433_example_conditioned_win_induction.json
++    prior_failures:
++      - experiment_id: exp4421
++        verdict: config_rule_grounded_but_duration_too_short_quarantined
++        addressed_by: "Declares inference_substrate=live_llm_inference (real LLM induction >60s) so a real solve is not DURATION_TOO_SHORT-quarantined; and conditions induction on the solved-game win-rule corpus instead of inducing one game cold."
++        retire_if_same_verdict: true
++    prompt: |
++      GOAL: take ONE HELD-OUT config/toggle game (NOT already solved) from 0 -> +1 reproducible level by
++      inducing its win-condition USING the corpus of already-grounded win-rules as few-shot examples.
++      PRECONDITIONS (check FIRST; on any miss write honest_verdict blocked_<resource> and STOP, no
++      fabrication): (a) live generator GGUF cached
++      (ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/ non-empty) OR the local
++      iGPU llama-server path (NEVER the 3090s -- conductor-sacrosanct); (b) the offline env files exist;
++      (c) ops/arc_solve_registry.yaml has >=3 grounded win-rule examples to few-shot from.
++      METHOD: gather the grounded win-rules of the SOLVED config/relational games (ka59 count_4==32,
++      s5i5, etc.) as few-shot examples; hand the held-out game's object-centric digest (values+counts +
++      component features -- the structured scaffolding validated 2026-06-18) PLUS those examples to the
++      Qwen3.5-9B-MTP generator; have it PROPOSE is_win(grid); the verifier GROUNDS/REJECTS the proposed
++      predicate (propose-then-ground, verifier_is_oracle=true); drive the grounded predicate as the
++      OfflineSolver win-check and run arc_solver_kit.reproduce. INCREMENTAL: +1 level (L1).
++      FALSIFIABLE GATE: offline_reproduced=true AND reproduced_levels>=1 on the HELD-OUT game; an honest
++      partial (grounded Tier-2 predicate but no reproduced level, with the residual logged as a gap) is
++      PROGRESS but is reported with a TERMINAL complete: prefix, never partial:.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed -- a fully-run induction that grounds-but-does-not-solve is COMPLETE (a negative-but-real outcome), so use complete: not partial: (the .409 exp4423 FAIL-loop fix)"}}
++        reproduced_levels: {{principle: "bare int; only reproduction-gated levels count (ARC Solve Reproducibility)"}}
++        offline_reproduced: {{principle: "the reproduction gate -- a live-only solve does not count"}}
++        few_shot_examples_used: {{principle: "list of which solved-game win-rules conditioned the induction -- proves the example corpus is the lever, the core .410 hypothesis"}}
++        verifier_is_oracle: {{principle: "true: the verifier GROUNDS the LLM-proposed predicate (execution-grounded), so this is NOT a learned-verifier moat claim -- honest framing per Circularity Discipline"}}
++        random_seed: {{principle: "determinism for re-run"}}
++        reproducibility_checksum: {{principle: "content hash of corpus+prompt for reproducibility"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. NO 3090 inference; NO
++      leaderboard submission.
++
++  - id: exp4434-example-conditioned-action-model-induction
++    milestone: 2026.06.410
++    title: "PHASE A3 (ARC NORTH STAR) -- example-corpus-conditioned ACTION-MODEL (E3 world_model) induction: few-shot the solved games' world_models to synthesize a HELD-OUT game's transition model faster/more accurately."
++    priority: high
++    track: arc-north-star
++    max_turns: 150
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-06-19 operator direction: reuse the solved E3 world_models (sc25/ar25/ka59/ft09) as examples so an unseen game's action-model is induced from analogy, not cold. Versioned continuation of the .402 E3 explore-verify-plan with a STATED forward difference: few-shot conditioning on the existing world_model corpus."
++    inference_substrate: live_llm_inference
++    deliverable: results/experiment_4434_example_conditioned_action_model.json
++    prompt: |
++      GOAL: on ONE HELD-OUT (non-spatial, mechanic-limited) game, measure whether conditioning the E3
++      world-model synthesis on the EXISTING solved world_models raises world-model accuracy and/or
++      reaches +1 reproducible level vs cold synthesis.
++      PRECONDITIONS (check FIRST; on any miss honest_verdict blocked_<resource>, STOP, no fabrication):
++      (a) offline env files exist; (b) codex is the world-model proposer (it WRITES
++      results/arc_e3/<game>/world_model.py); (c) >=2 existing world_models present under results/arc_e3/
++      to few-shot from.
++      METHOD: gather the solved games' world_model.py files (sc25/ar25/ka59/ft09) as few-shot examples;
++      run active-data collection (coverage-driven: balance every action, diverse object-config
++      signatures, avoid deadly) THEN codex synthesizes the held-out game's world_model.py CONDITIONED on
++      the examples; explore-verify-plan (AERA 2605.25931 + Agent2World 2512.22336); reproduction-gate any
++      plan. INCREMENTAL: +1 level (L1). Report world_model_accuracy WITH-examples vs a cold-synthesis
++      control arm (positive control: does conditioning actually help, or is the held-out mechanic just
++      out-of-distribution relative to the example corpus?).
++      FALSIFIABLE GATE: EITHER offline_reproduced=true AND reproduced_levels>=1, OR
++      world_model_accuracy_with_examples > world_model_accuracy_cold by a real margin (positive control
++      confirming the example corpus helps). A clean negative (examples did NOT help; the mechanic is OOD)
++      is a REAL finding reported with a terminal complete: prefix + the residual as a missing-world-model
++      gap.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed; a measured no-help result is complete (negative-but-real), not partial:"}}
++        reproduced_levels: {{principle: "bare int; reproduction-gated"}}
++        offline_reproduced: {{principle: "the gate"}}
++        world_model_accuracy_with_examples: {{principle: "the example-conditioned arm metric -- the .410 hypothesis under test"}}
++        world_model_accuracy_cold: {{principle: "the cold-synthesis positive-control arm -- without it a no-improvement result is uninterpretable (FALSE_NEGATIVE_RISK)"}}
++        missing_verifier_gaps: {{principle: "the residual mechanic class the examples could not transfer -- the build backlog"}}
++        random_seed: {{principle: "determinism"}}
++        reproducibility_checksum: {{principle: "content hash for reproducibility"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle=true. NO 3090
++      inference; NO leaderboard submission.
++
++  - id: exp4435-fix-generic-first-contact-solver
++    milestone: 2026.06.410
++    title: "PHASE A4 (ARC NORTH STAR; operator MANDATORY) -- FIX the generic first-contact solver (the .409 exp4423 partial: FAIL-loop) so a ROUTED unseen game actually banks +1 reproducible level."
++    priority: critical
++    track: arc-north-star
++    max_turns: 150
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-06-19 operator direction: the generic first-contact solver is the live-solver capability and it 3-fail-SKIPPED every .409 milestone on a verdict-vocabulary bug; fixing it is required forward work. Versioned continuation of exp4423 with a STATED forward difference: the atomic verdict-contract fix + a real routed-solve target."
++    inference_substrate: live_llm_inference
++    deliverable: results/experiment_4435_generic_first_contact_fixed.json
++    prior_failures:
++      - experiment_id: exp4423
++        verdict: artifact_not_updated_past_bootstrap_partial_verdict_rejected
++        addressed_by: "Atomic 5-point fix per ops/known-issues.md (2026-06-19): the routed-no-level branch emits a CONDUCTOR-ACCEPTED terminal prefix (complete: generic_first_contact_<game>_routed_no_new_level_gap_logged), co-updating _terminal_prefixed (accept complete:), artifact_schema_errors, and the hard-asserting test tests/python/test_experiment_4423_generic_first_contact_breadth.py:185 + the partial-requires-gap assertions -- ALL in one commit so the pre-test gate stays green. THEN drives an actual routed solve to +1 reproducible level."
++        retire_if_same_verdict: true
++    prompt: |
++      GOAL part 1 (FIX): exp4423's routed-no-level branch emits honest_verdict "partial: ..." which the
++      CONDUCTOR reconciler treats as a non-terminal retry token -> 3-fail-SKIP. Apply the atomic 5-point
++      fix documented in ops/known-issues.md (2026-06-19 entry): (1) emission
++      python/carnot/experiment_4423_generic_first_contact_breadth.py:454 -> "complete:
++      generic_first_contact_<game>_routed_no_new_level_gap_logged"; (2) _terminal_prefixed (line ~360)
++      accept "complete:"; (3) artifact_schema_errors partial-branch (~421) updated; (4) the
++      hard-asserting test tests/python/test_experiment_4423_generic_first_contact_breadth.py:185 and the
++      partial-requires-gap assertions (~229-234) updated to the new vocabulary; (5) run
++      `.venv/bin/pytest tests/python/test_experiment_4423_generic_first_contact_breadth.py` GREEN before
++      proceeding -- ALL in ONE commit so the pre-test gate never sees a half-edited contract (the
++      2026-06-10 poison-test cascade pattern). GOAL part 2 (SOLVE): then run the generic first-contact
++      solver on ONE UNSEEN game, route it (recommend_approach), and drive an ACTUAL solve to +1
++      reproducible level (arc_solver_kit.reproduce) -- not just routing. If the routed game still cannot
++      be solved generically, that is a complete: routed_no_new_level result WITH the residual mechanic
++      logged as a gap (honest, terminal).
++      PRECONDITIONS (check FIRST; on any miss honest_verdict blocked_<resource>, STOP): offline env files
++      exist; the pytest above is GREEN after the fix; live generator GGUF cached if LLM induction needed.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed complete:/success: -- the whole point of this task is to stop emitting the conductor-rejected partial:"}}
++        verdict_contract_fixed: {{principle: "bare bool: the 5-point atomic fix landed AND the test is green (the pre-test gate will not poison)"}}
++        reproduced_levels: {{principle: "bare int; reproduction-gated; a routed game that actually SOLVES banks a real level"}}
++        offline_reproduced: {{principle: "the gate"}}
++        random_seed: {{principle: "determinism"}}
++        reproducibility_checksum: {{principle: "content hash for reproducibility"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle=true. NO 3090
++      inference; NO leaderboard submission.
++
++  - id: exp4436-deepen-plus-primitive-consolidation
++    milestone: 2026.06.410
++    title: "PHASE A5 (ARC NORTH STAR; MULTI-LEVEL) -- take an already-solved game +1 DEEPER level AND consolidate the per-game solver primitives into composable generic operators in arc_solver_kit."
++    priority: high
++    track: arc-north-star
++    max_turns: 150
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-06-19 operator direction: extract what the per-game solvers share into reusable generic operators so the live solver composes them on unseen games. Versioned continuation of the .409 A4 multi-level + the standing arc_solver_kit consolidation with a STATED forward difference: primitive EXTRACTION into composable operators, not just a deeper solve."
++    inference_substrate: live_llm_inference
++    deliverable: results/experiment_4436_deepen_plus_primitive_consolidation.json
++    prompt: |
++      GOAL part 1 (DEEPEN): take ONE already-solved game +1 deeper reproducible level (monotonic,
++      Incremental-Progress-scoped), reproduction-gated. GOAL part 2 (CONSOLIDATE): identify the solver
++      PRIMITIVES that recur across the per-game solvers (the tr87 glyph/rewrite matcher, the config-rule
++      grounding inducer, the graph-explore A* + learned action-cost heuristic, the object-centric digest,
++      active-data collection) and refactor them into clearly-named, composable generic operators in
++      python/carnot/agentic/arc_solver_kit.py that the standing loop selects among -- ADDITIVE and
++      backward-compatible (existing per-game solves must still reproduce). Document each consolidated
++      primitive + which games it derives from in ops/arc_solve_registry.yaml general_gotchas.
++      PRECONDITIONS (check FIRST; on any miss honest_verdict blocked_<resource>, STOP): offline env files
++      exist; `.venv/bin/pytest -k arc_solver_kit` GREEN after the refactor (backward-compat proof).
++      FALSIFIABLE GATE: reproduced_levels>=1 on the deepened game AND every PRE-EXISTING reproducible
++      solve still passes arc_solver_kit.reproduce after the consolidation (no regression).
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed"}}
++        reproduced_levels: {{principle: "bare int; the +1 deeper level, reproduction-gated"}}
++        offline_reproduced: {{principle: "the gate"}}
++        primitives_consolidated: {principle: "list of {{operator, derived_from_games}} -- the reusable generic operators the live solver now composes"}
++        no_regression: {{principle: "bare bool: every prior reproducible solve still reproduces after the refactor -- additive-only guarantee"}}
++        random_seed: {{principle: "determinism"}}
++        reproducibility_checksum: {{principle: "content hash"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle=true. NO 3090
++      inference; NO leaderboard submission.
++
++  - id: exp4437-arc-artifact-discipline-template-lint
++    milestone: 2026.06.410
++    title: "PHASE B1 (RESERVED INFRA) -- ship an ARC-SOLVE task artifact-discipline template + lint so fast deterministic solves declare inference_substrate (kills the .409 DURATION_TOO_SHORT false-positive class) and emit terminal verdicts."
++    priority: high
++    track: infra
++    max_turns: 90
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing): reserved infrastructure slot; not an experiment rerun -- a planner/agent discipline tool addressing the .409 artifact-discipline gaps logged in ops/known-issues.md (2026-06-19)."
++    inference_substrate: aggregation_from_upstream_artifacts
++    deliverable: results/experiment_4437_arc_artifact_discipline_template.json
++    prompt: |
++      GOAL: prevent the .409 artifact-discipline losses from recurring. (1) Add an ARC-SOLVE artifact
++      helper/template (e.g. in scripts/ or python/carnot/agentic/) that REQUIRES every ARC solve/scoring
++      artifact to set inference_substrate correctly: a sub-60s deterministic offline reproduction =
++      aggregation_from_upstream_artifacts (100us floor) or verifier_ensemble_against_cached_candidates
++      (1s floor); a real LLM-induction solve = live_llm_inference (60s floor). (2) Add a lightweight lint
++      (extend scripts/adversarial_verify.py usage OR a new scripts/arc_artifact_lint.py) that FLAGS any
++      results/experiment_*arc*/*solve*/*config_rule* artifact missing inference_substrate or using a
++      non-terminal partial: verdict, with an allow-list for legitimately-live tasks. (3) Unit tests for
++      the helper + lint (every test asserts; no skips). Do NOT retroactively rewrite past artifacts.
++      PRECONDITIONS: `.venv/bin/python -c "import scripts.adversarial_verify"` succeeds.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed"}}
++        template_shipped: {{principle: "bare bool: the helper + lint + tests landed green"}}
++        tests_pass: {{principle: "bare bool: the new unit tests run and assert (Tests-Must-Run-and-Assert)"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
++
++  - id: exp4438-registry-gaps-hygiene-gap4-guard
++    milestone: 2026.06.410
++    title: "PHASE B2 (RESERVED INFRA) -- registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .410 outcomes; verify the capstone verifier_is_oracle stamping stays durable."
++    priority: high
++    track: infra
++    max_turns: 90
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing): reserved infrastructure slot; the standing per-milestone registry/gaps hygiene + regression guard, never a doomed rerun."
++    inference_substrate: aggregation_from_upstream_artifacts
++    deliverable: results/experiment_4438_registry_gaps_hygiene.json
++    prompt: |
++      Reconcile ops/verifier_registry.yaml + ops/verifier_gaps.md + ops/arc_solve_registry.yaml with the
++      .410 outcomes: the LOO generic-solve benchmark residual_deltas (exp4432 -> new missing-primitive/
++      missing-verifier gaps); the example-conditioned win-induction + action-model results (exp4433/4434);
++      the generic-first-contact fix + any new routed solve (exp4435); the consolidated primitives
++      (exp4436). Update reproducible_total_levels/games. Run the GAP-4 execution regression guard (the
++      ARC oracle-distinct verifier-beats-vote result must not silently regress); emit
++      regression_guard_passed BARE bool. Verify the capstone verifier_is_oracle stamping fix is STILL
++      durable. Use the robust aggregate-available helper (read available artifacts, report gaps -- do NOT
++      hard-block all-False if one is missing). SKIP any flagged_adversarial artifact. NO production
++      verifier edits (audit-only per Verifier Authenticity Discipline).
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed"}}
++        regression_guard_passed: {{principle: "BARE bool (gated-fields-must-be-bare): the GAP-4 result did not regress"}}
++        reproducible_total_levels: {{principle: "the reconciled authoritative count"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
++
++  - id: exp4439-hardware-continuity
++    milestone: 2026.06.410
++    title: "PHASE C (HARDWARE CONTINUITY; one task per attached board) -- KV260 (SSH, NOT SD-card) + GateMate + PolarFire forward step or audit; never forget the FPGAs."
++    priority: medium
++    track: hardware
++    max_turns: 90
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task mandated by Hardware-Task Continuity Discipline until each board reaches terminal state; false-positive scope-match vs retired hardware exps, required forward work."
++    inference_substrate: hardware_smoke
++    deliverable: results/experiment_4439_hardware_continuity.json
++    prompt: |
++      One forward step (or documentation/audit if blocked on operator action) per attached board. KV260:
++      PRECONDITION ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' (SSH-reachability is the ONLY
++      valid KV260 precondition; the retired host SD-card-device mechanism is forbidden per KV260
++      SSH-Not-SD-Card Discipline); if unreachable, honest_verdict blocked_kv260_ssh_unreachable. GateMate:
++      nextpnr-himbaechel (NOT nextpnr-gatemate) + openFPGALoader -c dirtyJtag --detect. PolarFire:
++      ssh polarfire 'true'. For each reachable board take the next concrete step (latency transcript /
++      bitstream pack / sampler smoke per its track); for each blocked board emit a precondition-gated
++      blocked_<resource> + a one-line audit.
++      REQUIRED ARTIFACT FIELDS:
++        preconditions_checked: {principle: "list of {{resource, available}}; pre-empts the fabricate-when-resource-missing mode"}
++        per_board_status: {{principle: "one status per attached board so each stays visible in the milestone retro (Hardware-Task Continuity)"}}
++        honest_verdict: {{principle: "terminal-prefixed; a clean SSH-unreachable is blocked_, an audit-only step is complete_"}}
++      honest_verdict MUST start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_/blocked_.
++
++  - id: exp4440-sota-ingestion-410
++    milestone: 2026.06.410
++    title: "PHASE D (SOTA-INGESTION; .410 bleeding-edge track) -- ingest SOTA for GENERIC program-induction + few-shot world-model induction across games; map the strongest 3-5 methods onto the .411 roadmap."
++    priority: medium
++    track: sota-ingestion
++    max_turns: 90
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-06-11 operator directive (standing): reserved SOTA-ingestion slot for the milestone's bleeding-edge headline (here: generic cross-game solver induction); RELIABLE channel only, never /deep-research."
++    inference_substrate: aggregation_from_upstream_artifacts
++    deliverable: results/experiment_4440_sota_ingestion_410.json
++    prompt: |
++      Ingest the SOTA for the .410 headline (GENERIC live solving from an example corpus): few-shot /
++      in-context program induction across tasks, library-learning (DreamCoder-class) for reusable solver
++      primitives, analogical world-model transfer, and meta-solvers that generalize across ARC-AGI-3-style
++      interactive games. RELIABLE channel ONLY: scripts/sweep_clusters.py / sweep_semscholar.py (arXiv /
++      Semantic-Scholar) + low-concurrency WebSearch/WebFetch of the top 5-8 papers. DO NOT invoke
++      /deep-research (banned from the autonomous loop). Every method MUST carry a real, VERIFIED arXiv
++      ID/URL (no citation = fabrication). Emit a SOTA->experiment mapping note
++      (docs/research-notes/) + flag the single strongest method for the .411 planner. Update
++      research-studying.md (mark ingested).
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed"}}
++        methods: {principle: "list of {{name, arxiv_id, what_it_takes_over_our_stack, pitfalls}} -- each with a VERIFIED citation (no citation = fabrication)"}
++        flagged_for_v411: {{principle: "the single strongest method fed forward so SOTA flows into the next milestone's experiments (discover->ingest->plan->experiment)"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. NO leaderboard submission.
++
++  - id: exp4441-capstone-410
++    milestone: 2026.06.410
++    title: "PHASE E (CAPSTONE .410) -- the milestone scorecard + the GENERIC-SOLVER HEADLINE DECISION: did the example corpus measurably close the per-game-RE gap?"
++    priority: critical
++    track: infra
++    max_turns: 120
++    agent_type: codex
++    model: gpt-5.5
++    operator_override: "2026-05-29 operator directive (standing): routine capstone task -- false-positive scope-match vs prior capstone-v* tasks; mechanical aggregation of the milestone's artifacts, never a doomed rerun."
++    inference_substrate: aggregation_from_upstream_artifacts
++    deliverable: results/experiment_4441_capstone_v410.json
++    prompt: |
++      Aggregate the .410 milestone. HEADLINE QUESTIONS: (1) generic_loo_solve_count (exp4432) -- how many
++      solved games re-solve from the example corpus alone, and which residual_deltas remain? (2) did
++      example-conditioned win-induction (exp4433) bank a held-out level, and did the few-shot examples
++      demonstrably help? (3) did example-conditioned action-model induction (exp4434) help vs the cold
++      control? (4) did the generic-first-contact fix (exp4435) land verdict_contract_fixed=true AND bank a
++      routed solve? (5) how many primitives were consolidated (exp4436) with no_regression=true? Emit
++      generic_solver_gap_state (one honest string: closing / partial / total-gap), reproducible_total_levels,
++      and the .411 build backlog (the residual_deltas + missing gaps). SKIP any flagged_adversarial
++      artifact; HONOR verifier_is_oracle (execution-grounded ARC solves are NOT moat headlines). Compute
++      the G1-G4 publication gate via publication_gate.py. Use the robust aggregate-available-report-gaps
++      helper (NO hard-block-all-False). CARRY verifier_is_oracle correctly so the capstone does NOT trip
++      CIRCULAR_MOAT_OVERCLAIM. NO gated_on.
++      REQUIRED ARTIFACT FIELDS:
++        honest_verdict: {{principle: "terminal-prefixed"}}
++        generic_solver_gap_state: {{principle: "one honest string (closing/partial/total-gap) -- the .410 headline answer to 'can the example corpus give us generic live solves?'"}}
++        reproducible_total_levels: {{principle: "the authoritative monotonic sprint metric"}}
++        next_backlog: {{principle: "the residual_deltas + missing primitives that become the .411 generic-solver build backlog"}}
++      honest_verdict MUST start with complete:/success:/passed:/shipped:. verifier_is_oracle handled per
++      Circularity Discipline. NO leaderboard submission.
+diff --git a/results/experiment_4431_archive_409_activate_410.json b/results/experiment_4431_archive_409_activate_410.json
+new file mode 100644
+index 0000000000..36cf6532c3
+--- /dev/null
++++ b/results/experiment_4431_archive_409_activate_410.json
+@@ -0,0 +1,341 @@
++{
++  "activated_milestone": "2026.06.410",
++  "active_milestone_confirmed": "2026.06.410",
++  "active_roadmap_path": "research-roadmap.yaml",
++  "archived_milestone": "2026.06.409",
++  "cited_upstream_artifacts": [
++    {
++      "deliverable": "results/experiment_4430_capstone_409.json",
++      "experiment_id": "4430",
++      "kind": "artifact",
++      "required": true,
++      "sha256": "9d0a09d9be743d439ca90ef1252655a81fa507aedfc9cf16aa67e3cfdd6018a0"
++    },
++    {
++      "deliverable": "results/experiment_4421_config_rule_solve_unseen.json",
++      "experiment_id": "4421",
++      "kind": "artifact",
++      "required": true,
++      "sha256": "4541de52c2b6e8b8a5a32492122764c1675e60c202fded9ecbb35519abbf579d"
++    },
++    {
++      "deliverable": "results/experiment_4422_glyph_rewrite_perception.json",
++      "experiment_id": "4422",
++      "kind": "artifact",
++      "required": true,
++      "sha256": "e877087d7050a3a43f4d068c28a5d9870d41078f201b4ee3fdc76c28acb2a7c0"
++    },
++    {
++      "deliverable": "results/experiment_4423_generic_first_contact_breadth.json",
++      "experiment_id": "4423",
++      "kind": "artifact",
++      "required": true,
++      "sha256": "a7238a4623e0456f511d862d46c161d889c3f49e9643f64cde52a74a9c2ff1bf"
++    },
++    {
++      "deliverable": "results/experiment_4424_deeper_solved_game.json",
++      "experiment_id": "4424",
++      "kind": "artifact",
++      "required": true,
++      "sha256": "0b2dc02d8e53ac46a08edfa8b7a9ca74aa24f02634c9319823381d3da8a1a3af"
++    },
++    {
++      "deliverable": "results/experiment_4425_config_rule_vocabulary_transfer.json",
++      "experiment_id": "4425",
++      "kind": "artifact",
++      "required": true,
++      "sha256": "ef89aaa139a7d482c025a29d18250c02ddd7365b8f43a9a623094e864f0ed8f3"
++    },
++    {
++      "deliverable": "results/experiment_4426_arc_registry_repro_audit.json",
++      "experiment_id": "4426",
++      "kind": "artifact",
++      "required": true,
++      "sha256": "cf38e79d31048010f2246f2e9c2170f9d6aefde0fb268ddcf04ed14d56d987d2"
++    },
++    {
++      "deliverable": "results/experiment_4429_sota_ingestion_409.json",
++      "experiment_id": "4429",
++      "kind": "artifact",
++      "required": true,
++      "sha256": "1896bb54de7768feb97da5ab41a0d8b3d5687a01985fce09c10fd3a94b3fc04a"
++    },
++    {
++      "deliverable": "ops/arc_solve_registry.yaml",
++      "experiment_id": "arc_solve_registry",
++      "kind": "registry",
++      "required": true,
++      "sha256": "214fe1323f4cf67ef2db34d3479061ab760e094ac8f137def5fcad5889e529b9"
++    }
++  ],
++  "duration_s": 14.443444,
++  "exclusion_manifest_parses": true,
++  "experiment_id": 4431,
++  "field_principles": {
++    "honest_verdict": "terminal-prefixed self-declared state lets the reconciler classify without re-running",
++    "reproducible_total_levels": "the bare authoritative count from ops/arc_solve_registry.yaml; the sprint's monotonic progress metric"
++  },
++  "honest_verdict": "complete: archived_v409_v410_active_arc_levels_36_games_18_glyph_banked_config_quarantined_first_contact_skipped_vocab_excluded_verifier_oracle_honored",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "leaderboard_submission": false,
++  "preconditions_checked": {
++    "active_milestone": {
++      "actual": "2026.06.410",
++      "expected": "2026.06.410",
++      "matches": true,
++      "path": "research-roadmap.yaml"
++    },
++    "arc_solve_registry_yaml": {
++      "exists": true,
++      "parses": true,
++      "path": "ops/arc_solve_registry.yaml"
++    },
++    "exclusion_manifest_yaml": {
++      "exists": true,
++      "parses": true,
++      "path": "ops/exclusion_manifest.yaml"
++    },
++    "research_complete_yaml": {
++      "exists": true,
++      "parses": true,
++      "path": "research-complete.yaml"
++    },
++    "research_roadmap_next_yaml": {
++      "exists": true,
++      "parses": true,
++      "path": "research-roadmap-next.yaml"
++    },
++    "smart_subset_pretest": {
++      "command": [
++        ".venv/bin/pytest",
++        "tests/python/test_pipeline_extract.py",
++        "tests/python/test_docs.py",
++        "tests/python/test_experiment_4431_archive_409_activate_410.py",
++        "-q",
++        "--no-header",
++        "-n",
++        "0",
++        "--no-cov",
++        "-o",
++        "addopts="
++      ],
++      "exit_code": 0,
++      "green": true,
++      "stderr_tail": "",
++      "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n91 passed, 1 warning in 5.42s\n"
++    },
++    "source_artifacts": {
++      "4421": {
++        "exists": true,
++        "path": "results/experiment_4421_config_rule_solve_unseen.json",
++        "required": true,
++        "sha256": "4541de52c2b6e8b8a5a32492122764c1675e60c202fded9ecbb35519abbf579d"
++      },
++      "4422": {
++        "exists": true,
++        "path": "results/experiment_4422_glyph_rewrite_perception.json",
++        "required": true,
++        "sha256": "e877087d7050a3a43f4d068c28a5d9870d41078f201b4ee3fdc76c28acb2a7c0"
++      },
++      "4423": {
++        "exists": true,
++        "path": "results/experiment_4423_generic_first_contact_breadth.json",
++        "required": true,
++        "sha256": "a7238a4623e0456f511d862d46c161d889c3f49e9643f64cde52a74a9c2ff1bf"
++      },
++      "4424": {
++        "exists": true,
++        "path": "results/experiment_4424_deeper_solved_game.json",
++        "required": true,
++        "sha256": "0b2dc02d8e53ac46a08edfa8b7a9ca74aa24f02634c9319823381d3da8a1a3af"
++      },
++      "4425": {
++        "exists": true,
++        "path": "results/experiment_4425_config_rule_vocabulary_transfer.json",
++        "required": true,
++        "sha256": "ef89aaa139a7d482c025a29d18250c02ddd7365b8f43a9a623094e864f0ed8f3"
++      },
++      "4426": {
++        "exists": true,
++        "path": "results/experiment_4426_arc_registry_repro_audit.json",
++        "required": true,
++        "sha256": "cf38e79d31048010f2246f2e9c2170f9d6aefde0fb268ddcf04ed14d56d987d2"
++      },
++      "4429": {
++        "exists": true,
++        "path": "results/experiment_4429_sota_ingestion_409.json",
++        "required": true,
++        "sha256": "1896bb54de7768feb97da5ab41a0d8b3d5687a01985fce09c10fd3a94b3fc04a"
++      },
++      "4430": {
++        "exists": true,
++        "path": "results/experiment_4430_capstone_409.json",
++        "required": true,
++        "sha256": "9d0a09d9be743d439ca90ef1252655a81fa507aedfc9cf16aa67e3cfdd6018a0"
++      }
++    }
++  },
++  "pretest_suite_green": true,
++  "random_seed": 4431,
++  "registry_declared_reproducible_total_games": 18,
++  "registry_declared_reproducible_total_levels": 35,
++  "registry_entry_sum_reproducible_total_games": 18,
++  "registry_entry_sum_reproducible_total_levels": 36,
++  "registry_total_discrepancy": true,
++  "reproducibility_checksum": "c23ca5f82e364096da12989af833f2a931862b249b64b3e909fb93420764f0d8",
++  "reproducible_total_games": 18,
++  "reproducible_total_levels": 36,
++  "required_artifact_fields": [
++    "honest_verdict",
++    "reproducible_total_levels",
++    "reproducible_total_games",
++    "v409_close_state",
++    "preconditions_checked",
++    "verifier_is_oracle",
++    "trm_training_ran",
++    "leaderboard_submission",
++    "duration_s",
++    "inference_substrate",
++    "random_seed",
++    "reproducibility_checksum"
++  ],
++  "research_complete_duplicates_removed": 0,
++  "research_complete_record_action": "updated",
++  "research_complete_yaml_parses": true,
++  "research_roadmap_next_yaml_parses": true,
++  "schema": "carnot.archive_activation.v409_to_v410_4431.v1",
++  "spec_refs": [
++    "REQ-REPORT-4431",
++    "SCENARIO-REPORT-4431"
++  ],
++  "task_id": "exp4431-archive-409-activate-410",
++  "trm_training_ran": false,
++  "v409_close_state": {
++    "capstone_honest_verdict": "complete: v409_levels_36_new_levels_2_new_games_1_config_rule_flagged_registry_execution_grounded_glyph_solved_first_contact_gap_deepening_no_plus1_vocab_skipped_publication_ready",
++    "capstone_reproducible_total_levels": 36,
++    "circular_execution_grounded_arc_solve_not_moat_headline": true,
++    "config_rule_vocabulary_transfer": {
++      "artifact": "results/experiment_4425_config_rule_vocabulary_transfer.json",
++      "config_rule_vocabulary_transfers": false,
++      "corrigendum_kinds": [
++        "DURATION_TOO_SHORT"
++      ],
++      "experiment_id": 4425,
++      "flagged_adversarial": true,
++      "honest_verdict": "complete: null_config_rule_vocabulary_transfer_seeded_arm_missing",
++      "status": "excluded_flagged_adversarial",
++      "verifier_is_oracle": false
++    },
++    "config_rule_vocabulary_transfer_outcome": "excluded_flagged_adversarial",
++    "flagged_artifacts_skipped": [
++      4421,
++      4425
++    ],
++    "flagged_for_v410": "Executable ARC-AGI-3 world-model agent with verifier-grounded planning (arXiv:2605.05138)",
++    "leaderboard_submission": false,
++    "new_games_since_v408": 1,
++    "new_levels_since_v408": 2,
++    "paper_ready": true,
++    "phase_a_banked_reproducible_level_tasks": [
++      "A2"
++    ],
++    "phase_a_quarantined_or_skipped_tasks": [
++      "A1",
++      "A3"
++    ],
++    "phase_a_tasks": {
++      "A1_config_rule_unseen": {
++        "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
++        "corrigendum_kinds": [
++          "DURATION_TOO_SHORT",
++          "METHODOLOGY_MISSING"
++        ],
++        "direct_artifact_imported": false,
++        "experiment_id": 4421,
++        "flagged_adversarial": true,
++        "honest_verdict": "success_s5i5_L1_offline_reproduced",
++        "new_levels_reproduced": 0,
++        "offline_reproduced": true,
++        "phase": "A1",
++        "registry_audit_counted_execution_grounded": true,
++        "reproduced_levels": 1,
++        "status": "quarantined_duration_too_short",
++        "verifier_is_oracle": true
++      },
++      "A2_glyph_rewrite": {
++        "artifact": "results/experiment_4422_glyph_rewrite_perception.json",
++        "banked_reproducible_level": true,
++        "experiment_id": 4422,
++        "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
++        "new_levels_banked": 1,
++        "offline_reproduced": true,
++        "phase": "A2",
++        "reproduced_levels": 6,
++        "status": "grounded_and_offline_solved",
++        "target_game": "tr87",
++        "verifier_is_oracle": true
++      },
++      "A3_generic_first_contact": {
++        "artifact": "results/experiment_4423_generic_first_contact_breadth.json",
++        "experiment_id": 4423,
++        "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
++        "missing_verifier_gaps": [
++          {
++            "candidate_design": "adapt Exp 4421 config-rule predicate grounding to this game's visible toggles",
++            "failure_mode": "needs_per_game_RE",
++            "game": "g50t",
++            "gap_id": "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT",
++            "loop_result_summary": {
++              "mode": "standing_arc_loop_routing_only",
++              "offline_reproduced": false,
++              "reproduced_levels": 0
++            },
++            "missing_discriminator": "selectable verifier that distinguishes the target's winning delta from the explored non-winning states",
++            "routed_recipe": {
++              "action_model": null,
++              "game": "ls20",
++              "solver": "results/experiment_4285 solve_trace.actions.",
++              "win_condition": "first-solve L1; ACTION + kind sequence replays offline."
++            },
++            "status": "open"
++          }
++        ],
++        "new_game_added": false,
++        "offline_reproduced": false,
++        "phase": "A3",
++        "reproduced_levels": 0,
++        "status": "skipped_partial_verdict",
++        "target_game": "g50t",
++        "verifier_is_oracle": false
++      },
++      "A4_deeper_solved_game": {
++        "artifact": "results/experiment_4424_deeper_solved_game.json",
++        "banked_reproducible_level": false,
++        "experiment_id": 4424,
++        "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
++        "new_levels_reproduced": 0,
++        "offline_reproduced": false,
++        "phase": "A4",
++        "reproduced_levels": 1,
++        "residual_failing_mechanic": "sc25_l2_route_search_still_missing_after_hud_cleanup",
++        "status": "mechanic_repair_no_new_level",
++        "target_game": "sc25",
++        "verifier_is_oracle": true
++      }
++    },
++    "publication_unmet_gates": [],
++    "registry_audit_reproducible_total_levels": 36,
++    "registry_declared_reproducible_total_games": 18,
++    "registry_declared_reproducible_total_levels": 35,
++    "registry_entry_sum_reproducible_total_games": 18,
++    "registry_entry_sum_reproducible_total_levels": 36,
++    "registry_total_discrepancy": true,
++    "reproducible_total_games": 18,
++    "reproducible_total_levels": 36,
++    "summary": "glyph_rewrite_banked_config_rule_quarantined_first_contact_partial_deepening_no_new_level_vocab_excluded",
++    "trm_training_ran": false,
++    "verifier_is_oracle": true,
++    "verifier_is_oracle_honored": true
++  },
++  "verifier_is_oracle": true
++}
+diff --git a/tests/python/test_experiment_4431_archive_409_activate_410.py b/tests/python/test_experiment_4431_archive_409_activate_410.py
+new file mode 100644
+index 0000000000..5a2a706593
+--- /dev/null
++++ b/tests/python/test_experiment_4431_archive_409_activate_410.py
+@@ -0,0 +1,736 @@
++"""Tests for Exp 4431 `.409` archive / `.410` activation.
++
++Spec refs: REQ-REPORT-4431, SCENARIO-REPORT-4431,
++SCENARIO-REPORT-4431-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import copy
++import importlib
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import archive_409_activate_410_4431 as mod
++
++
++GREEN = mod.CommandResult(command=["pytest"], exit_code=0, stdout="43 passed", stderr="")
++RED = mod.CommandResult(command=["pytest"], exit_code=1, stdout="FAILED smart subset", stderr="")
++
++
++def _write_json(path: Path, payload: dict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _research_complete_text(*, duplicates: int = 1) -> str:
++    head = (
++        "# Carnot Research - Completed Experiments\n"
++        "milestones:\n"
++        "- id: 2026.06.408\n"
++        "  finding: prior milestone\n"
++    )
++    block = (
++        "- id: 2026.06.409\n"
++        "  title: old conductor row\n"
++        "  completed: '2026-06-19'\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp4430-capstone-409\n"
++        "    result: OK (conductor)\n"
++    )
++    return head + block * duplicates
++
++
++def _registry_text() -> str:
++    games = [
++        ("r11l", 1),
++        ("ls20", 1),
++        ("wa30", 1),
++        ("s5i5", 1),
++        ("lp85", 5),
++        ("sc25", 1),
++        ("cd82", 1),
++        ("sp80", 1),
++        ("su15", 1),
++        ("tu93", 4),
++        ("tn36", 7),
++        ("cn04", 1),
++        ("m0r0", 1),
++        ("sk48", 1),
++        ("ar25", 1),
++        ("ka59", 1),
++        ("ft09", 1),
++        ("tr87", 6),
++    ]
++    lines = [
++        "schema_version: 1",
++        "updated: '2026-06-19'",
++        "games:",
++    ]
++    for game, levels in games:
++        lines.extend(
++            [
++                f"- game: {game}",
++                "  reproducibility: reproduced",
++                f"  levels_reproduced: {levels}",
++            ]
++        )
++    lines.extend(
++        [
++            "reproducible_total_levels: 35",
++            "reproducible_total_games: 18",
++        ]
++    )
++    return "\n".join(lines) + "\n"
++
++
++def _capstone(**overrides: object) -> dict:
++    payload = {
++        "honest_verdict": (
++            "complete: v409_levels_36_new_levels_2_new_games_1_"
++            "config_rule_flagged_registry_execution_grounded_glyph_solved_"
++            "first_contact_gap_deepening_no_plus1_vocab_skipped_publication_ready"
++        ),
++        "reproducible_total_levels": 36,
++        "new_levels": 2,
++        "new_games": 1,
++        "verifier_is_oracle": False,
++        "config_rule_unseen_state": "direct_artifact_flagged_registry_audit_counted_execution_grounded",
++        "glyph_rewrite_state": "grounded_and_offline_solved",
++        "generic_first_contact_state": "verifier_gap_logged_no_new_game",
++        "multi_level_deepening_state": "mechanic_repair_no_new_level",
++        "config_rule_vocabulary_transfer_state": "excluded_flagged_adversarial",
++        "config_rule_vocabulary_transfers": False,
++        "flagged_artifacts_excluded": [
++            {
++                "artifact_key": "4421_config_rule",
++                "experiment_id": 4421,
++                "path": "results/experiment_4421_config_rule_solve_unseen.json",
++                "reason": "flagged_adversarial",
++            },
++            {
++                "artifact_key": "4425_vocabulary",
++                "experiment_id": 4425,
++                "path": "results/experiment_4425_config_rule_vocabulary_transfer.json",
++                "reason": "flagged_adversarial",
++            },
++        ],
++        "flagged_sources_counted_by_registry_audit": [
++            {
++                "experiment": "exp4421",
++                "artifact_flagged_adversarial": True,
++                "new_levels_counted": 1,
++                "offline_reproduced": True,
++                "reproduced_levels": 1,
++                "honest_verdict": "success_s5i5_L1_offline_reproduced",
++            }
++        ],
++        "glyph_rewrite": {
++            "state": "grounded_and_offline_solved",
++            "target_game": "tr87",
++            "offline_reproduced": True,
++            "reproduced_levels": 6,
++            "verifier_is_oracle": True,
++            "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
++        },
++        "generic_first_contact": {
++            "state": "verifier_gap_logged_no_new_game",
++            "target_game": "g50t",
++            "offline_reproduced": False,
++            "reproduced_levels": 0,
++            "verifier_is_oracle": False,
++            "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
++            "missing_verifier_gaps": [
++                {"gap_id": "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT", "status": "open"}
++            ],
++        },
++        "multi_level_deepening": {
++            "state": "mechanic_repair_no_new_level",
++            "game": "sc25",
++            "offline_reproduced": False,
++            "new_levels_reproduced": 0,
++            "reproduced_levels": 1,
++            "verifier_is_oracle": True,
++            "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
++        },
++        "config_rule_vocabulary_transfer": {
++            "state": "excluded_flagged_adversarial",
++            "config_rule_vocabulary_transfers": False,
++        },
++        "registry_audit": {
++            "reproducible_total_levels": 36,
++            "registry_claimed_reproducible_total_levels": 35,
++            "registry_claimed_reproducible_total_games": 18,
++            "all_counted_entries_reproduced": True,
++        },
++        "sota_ingestion": {
++            "flagged_for_v410": (
++                "Executable ARC-AGI-3 world-model agent with verifier-grounded planning "
++                "(arXiv:2605.05138)"
++            )
++        },
++        "publication_gate": {"paper_ready": True, "unmet_gates": []},
++        "capstone_live_adversarial_recheck": {"status": "clean", "circular_moat_overclaim": False},
++    }
++    payload.update(overrides)
++    return payload
++
++
++def _config_rule() -> dict:
++    return {
++        "honest_verdict": "success_s5i5_L1_offline_reproduced",
++        "offline_reproduced": True,
++        "new_levels_reproduced": 1,
++        "reproduced_levels": 1,
++        "verifier_is_oracle": True,
++        "flagged_adversarial": True,
++        "corrigendum_pending": [{"kind": "DURATION_TOO_SHORT", "severity": "critical"}],
++    }
++
++
++def _glyph(**overrides: object) -> dict:
++    payload = {
++        "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
++        "offline_reproduced": True,
++        "reproduced_levels": 6,
++        "target_game": "tr87",
++        "verifier_is_oracle": True,
++        "flagged_adversarial": False,
++    }
++    payload.update(overrides)
++    return payload
++
++
++def _first_contact() -> dict:
++    return {
++        "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
++        "offline_reproduced": False,
++        "reproduced_levels": 0,
++        "target_game": "g50t",
++        "missing_verifier_gaps": [{"gap_id": "GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT"}],
++        "verifier_is_oracle": False,
++    }
++
++
++def _deepening() -> dict:
++    return {
++        "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
++        "offline_reproduced": False,
++        "new_levels_reproduced": 0,
++        "reproduced_levels": 1,
++        "game": "sc25",
++        "verifier_is_oracle": True,
++    }
++
++
++def _vocabulary(**overrides: object) -> dict:
++    payload = {
++        "honest_verdict": "complete: null_config_rule_vocabulary_transfer_seeded_arm_missing",
++        "config_rule_vocabulary_transfers": False,
++        "verifier_is_oracle": False,
++        "flagged_adversarial": True,
++        "corrigendum_pending": [{"kind": "DURATION_TOO_SHORT", "severity": "critical"}],
++    }
++    payload.update(overrides)
++    return payload
++
++
++def _registry_audit() -> dict:
++    return {
++        "honest_verdict": "complete: registry_repro_audit_total_35_asserted_36_audited",
++        "reproducible_total_levels": 36,
++        "registry_claimed_reproducible_total_levels": 35,
++        "registry_claimed_reproducible_total_games": 18,
++        "all_counted_entries_reproduced": True,
++        "inference_substrate": "offline_arc_registry_repro_audit_cpu_no_llm",
++    }
++
++
++def _sota() -> dict:
++    return {
++        "honest_verdict": "complete: sota_ingestion_409_mapped",
++        "flagged_for_v410": (
++            "Executable ARC-AGI-3 world-model agent with verifier-grounded planning "
++            "(arXiv:2605.05138)"
++        ),
++        "inference_substrate": "cpu_reliable_channel_sota_ingestion_no_training",
++    }
++
++
++def _make_root(tmp_path: Path, *, duplicates: int = 1) -> Path:
++    (tmp_path / "ops").mkdir(parents=True)
++    (tmp_path / "results").mkdir(parents=True)
++    (tmp_path / "research-complete.yaml").write_text(
++        _research_complete_text(duplicates=duplicates), encoding="utf-8"
++    )
++    (tmp_path / "ops/exclusion_manifest.yaml").write_text(
++        "retired_extras:\n- id: circular_arc_solve_not_moat\n", encoding="utf-8"
++    )
++    (tmp_path / "ops/arc_solve_registry.yaml").write_text(_registry_text(), encoding="utf-8")
++    (tmp_path / "research-roadmap.yaml").write_text("milestone: 2026.06.410\n", encoding="utf-8")
++    (tmp_path / "research-roadmap-next.yaml").write_text(
++        "milestone: 2026.06.410\ntasks: []\n", encoding="utf-8"
++    )
++    _write_json(tmp_path / "results/experiment_4430_capstone_409.json", _capstone())
++    _write_json(tmp_path / "results/experiment_4421_config_rule_solve_unseen.json", _config_rule())
++    _write_json(tmp_path / "results/experiment_4422_glyph_rewrite_perception.json", _glyph())
++    _write_json(
++        tmp_path / "results/experiment_4423_generic_first_contact_breadth.json",
++        _first_contact(),
++    )
++    _write_json(tmp_path / "results/experiment_4424_deeper_solved_game.json", _deepening())
++    _write_json(
++        tmp_path / "results/experiment_4425_config_rule_vocabulary_transfer.json",
++        _vocabulary(),
++    )
++    _write_json(tmp_path / "results/experiment_4426_arc_registry_repro_audit.json", _registry_audit())
++    _write_json(tmp_path / "results/experiment_4429_sota_ingestion_409.json", _sota())
++    return tmp_path
++
++
++def test_req_report_4431_spec_anchor_declares_required_contract() -> None:
++    """REQ-REPORT-4431: OpenSpec declares the archive contract."""
++
++    spec = Path("openspec/capabilities/research-reporting/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4431" in spec
++    assert "SCENARIO-REPORT-4431" in spec
++    assert "results/experiment_4431_archive_409_activate_410.json" in spec
++    assert "research-roadmap-next.yaml" in spec
++    assert mod.FIELD_PRINCIPLES["honest_verdict"] in spec
++    assert mod.FIELD_PRINCIPLES["reproducible_total_levels"] in spec
++
++
++def test_run_archives_v409_and_records_true_close_state(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4431: complete path records .409 truth."""
++
++    root = _make_root(tmp_path, duplicates=2)
++    output = mod.run(root, pretest_result=GREEN, started_s=100.0, now_s=101.25)
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++
++    assert artifact["honest_verdict"].startswith(
++        ("complete:", "complete_", "success:", "success_", "passed:", "passed_", "shipped:", "shipped_")
++    )
++    assert artifact["archived_milestone"] == "2026.06.409"
++    assert artifact["activated_milestone"] == "2026.06.410"
++    assert artifact["active_milestone_confirmed"] == "2026.06.410"
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["exclusion_manifest_parses"] is True
++    assert artifact["research_roadmap_next_yaml_parses"] is True
++    assert artifact["pretest_suite_green"] is True
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["trm_training_ran"] is False
++    assert artifact["leaderboard_submission"] is False
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert artifact["field_principles"]["honest_verdict"] == mod.FIELD_PRINCIPLES["honest_verdict"]
++    assert artifact["field_principles"]["reproducible_total_levels"] == (
++        mod.FIELD_PRINCIPLES["reproducible_total_levels"]
++    )
++
++    assert artifact["reproducible_total_levels"] == 36
++    assert artifact["reproducible_total_games"] == 18
++    assert artifact["registry_declared_reproducible_total_levels"] == 35
++    assert artifact["registry_entry_sum_reproducible_total_levels"] == 36
++    assert artifact["registry_total_discrepancy"] is True
++
++    close = artifact["v409_close_state"]
++    assert close["phase_a_tasks"]["A1_config_rule_unseen"]["status"] == "quarantined_duration_too_short"
++    assert close["phase_a_tasks"]["A1_config_rule_unseen"]["direct_artifact_imported"] is False
++    assert close["phase_a_tasks"]["A2_glyph_rewrite"]["banked_reproducible_level"] is True
++    assert close["phase_a_tasks"]["A2_glyph_rewrite"]["target_game"] == "tr87"
++    assert close["phase_a_tasks"]["A3_generic_first_contact"]["status"] == "skipped_partial_verdict"
++    assert close["phase_a_tasks"]["A3_generic_first_contact"]["honest_verdict"].startswith("partial:")
++    assert close["phase_a_tasks"]["A4_deeper_solved_game"]["banked_reproducible_level"] is False
++    assert close["phase_a_tasks"]["A4_deeper_solved_game"]["status"] == "mechanic_repair_no_new_level"
++    assert close["config_rule_vocabulary_transfer"]["status"] == "excluded_flagged_adversarial"
++    assert close["config_rule_vocabulary_transfer"]["config_rule_vocabulary_transfers"] is False
++    assert close["flagged_artifacts_skipped"] == [4421, 4425]
++    assert close["verifier_is_oracle_honored"] is True
++    assert close["circular_execution_grounded_arc_solve_not_moat_headline"] is True
++
++    history = (root / "research-complete.yaml").read_text(encoding="utf-8")
++    assert mod.archive_record_count(history) == 1
++    assert "activation_recorded: exp4431-archive-409-activate-410" in history
++    assert "glyph rewrite banked execution-grounded tr87 progress" in history
++
++
++def test_flagged_vocabulary_artifact_cannot_create_transfer_win(tmp_path: Path) -> None:
++    """REQ-REPORT-4431: flagged vocabulary artifacts are skipped."""
++
++    root = _make_root(tmp_path)
++    _write_json(
++        root / "results/experiment_4425_config_rule_vocabulary_transfer.json",
++        _vocabulary(config_rule_vocabulary_transfers=True, flagged_adversarial=True),
++    )
++
++    artifact = json.loads(
++        mod.run(root, pretest_result=GREEN, started_s=10.0, now_s=10.5).read_text(
++            encoding="utf-8"
++        )
++    )
++
++    transfer = artifact["v409_close_state"]["config_rule_vocabulary_transfer"]
++    assert transfer["status"] == "excluded_flagged_adversarial"
++    assert transfer["config_rule_vocabulary_transfers"] is False
++
++
++def test_clean_vocabulary_artifact_can_record_transfer_win(tmp_path: Path) -> None:
++    """REQ-REPORT-4431: clean non-oracle vocabulary evidence may transfer."""
++
++    root = _make_root(tmp_path)
++    _write_json(
++        root / "results/experiment_4425_config_rule_vocabulary_transfer.json",
++        _vocabulary(config_rule_vocabulary_transfers=True, flagged_adversarial=False),
++    )
++
++    artifact = json.loads(
++        mod.run(root, pretest_result=GREEN, started_s=10.0, now_s=10.5).read_text(
++            encoding="utf-8"
++        )
++    )
++
++    transfer = artifact["v409_close_state"]["config_rule_vocabulary_transfer"]
++    assert transfer["status"] == "transfers"
++    assert transfer["config_rule_vocabulary_transfers"] is True
++
++
++def test_registry_total_helper_covers_non_mapping_and_unsolved_rows() -> None:
++    """REQ-REPORT-4431: registry totals handle malformed and unsolved rows."""
++
++    empty = mod.registry_totals_from_text("- just\n- a\n- list\n")
++    assert empty["authoritative_reproducible_total_levels"] == 0
++    assert empty["reproduced_games"] == []
++
++    totals = mod.registry_totals_from_text(
++        "games:\n"
++        "- game: solved\n"
++        "  reproducibility: reproduced\n"
++        "  levels_reproduced: 2\n"
++        "- game: open\n"
++        "  reproducibility: unsolved\n"
++        "  levels_reproduced: 99\n"
++        "reproducible_total_levels: 2\n"
++        "reproducible_total_games: 1\n"
++    )
++    assert totals["entry_sum_reproducible_total_levels"] == 2
++    assert totals["entry_sum_reproducible_total_games"] == 1
++
++
++def test_registry_nested_flagged_count_source_is_detected() -> None:
++    """REQ-REPORT-4431: capstone registry audit can carry flagged counted rows."""
++
++    capstone = _capstone(flagged_sources_counted_by_registry_audit=[])
++    capstone["registry_audit"] = {
++        "flagged_sources_counted": [
++            {"experiment": "exp4421", "new_levels_counted": 1},
++        ]
++    }
++
++    close = mod.build_v409_close_state(
++        {
++            "4430": capstone,
++            "4421": _config_rule(),
++            "4422": _glyph(),
++            "4423": _first_contact(),
++            "4424": _deepening(),
++            "4425": _vocabulary(),
++            "4426": _registry_audit(),
++            "4429": _sota(),
++        },
++        mod.registry_totals_from_text(_registry_text()),
++    )
++
++    assert close["phase_a_tasks"]["A1_config_rule_unseen"][
++        "registry_audit_counted_execution_grounded"
++    ] is True
++
++
++@pytest.mark.parametrize(
++    ("mutate", "reason"),
++    [
++        (
++            lambda root: (root / "research-complete.yaml").unlink(),
++            "blocked_research_complete_yaml_missing",
++        ),
++        (
++            lambda root: (root / "research-complete.yaml").write_text("milestones: [", encoding="utf-8"),
++            "blocked_research_complete_yaml_poison",
++        ),
++        (
++            lambda root: (root / "ops/exclusion_manifest.yaml").unlink(),
++            "blocked_exclusion_manifest_missing",
++        ),
++        (
++            lambda root: (root / "ops/exclusion_manifest.yaml").write_text("retired_extras: [", encoding="utf-8"),
++            "blocked_exclusion_manifest_yaml_poison",
++        ),
++        (
++            lambda root: (root / "research-roadmap-next.yaml").unlink(),
++            "blocked_research_roadmap_next_missing",
++        ),
++        (
++            lambda root: (root / "research-roadmap-next.yaml").write_text("milestone: [", encoding="utf-8"),
++            "blocked_research_roadmap_next_yaml_poison",
++        ),
++        (
++            lambda root: (root / "research-roadmap.yaml").write_text("milestone: 2026.06.409\n", encoding="utf-8"),
++            "blocked_v410_not_active",
++        ),
++        (
++            lambda root: (root / "results/experiment_4430_capstone_409.json").unlink(),
++            "blocked_v409_capstone_missing",
++        ),
++        (
++            lambda root: (root / "ops/arc_solve_registry.yaml").unlink(),
++            "blocked_arc_solve_registry_missing",
++        ),
++        (
++            lambda root: (root / "ops/arc_solve_registry.yaml").write_text("games: [", encoding="utf-8"),
++            "blocked_arc_solve_registry_yaml_poison",
++        ),
++    ],
++)
++def test_run_blocks_each_precondition_failure(tmp_path: Path, mutate: object, reason: str) -> None:
++    """SCENARIO-REPORT-4431-BLOCKED-PRECONDITION: failures do not archive."""
++
++    root = _make_root(tmp_path)
++    mutate(root)
++    history_path = root / "research-complete.yaml"
++    post_mutation_history = (
++        history_path.read_text(encoding="utf-8") if history_path.exists() else None
++    )
++
++    artifact = json.loads(
++        mod.run(root, pretest_result=GREEN, started_s=1.0, now_s=1.5).read_text(encoding="utf-8")
++    )
++
++    assert artifact["honest_verdict"] == reason
++    assert artifact["honest_verdict"].startswith("blocked_")
++    assert artifact["v409_close_state"] == {}
++    assert (history_path.read_text(encoding="utf-8") if history_path.exists() else None) == (
++        post_mutation_history
++    )
++
++
++def test_run_uses_internal_smart_subset_when_no_result_is_injected(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-4431: production run path executes the smart-subset gate."""
++
++    root = _make_root(tmp_path)
++    monkeypatch.setattr(mod, "run_smart_subset", lambda _: GREEN)
++
++    artifact = json.loads(
++        mod.run(root, started_s=1.0, now_s=1.5).read_text(encoding="utf-8")
++    )
++
++    assert artifact["preconditions_checked"]["smart_subset_pretest"]["green"] is True
++
++
++def test_run_blocks_when_pretest_red_without_editing_history(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4431-BLOCKED-PRECONDITION: pretest red blocks archive."""
++
++    root = _make_root(tmp_path)
++    before = (root / "research-complete.yaml").read_text(encoding="utf-8")
++
++    artifact = json.loads(
++        mod.run(root, pretest_result=RED, started_s=1.0, now_s=1.5).read_text(encoding="utf-8")
++    )
++
++    assert artifact["honest_verdict"] == "blocked_smart_subset_pretest_not_green"
++    assert artifact["preconditions_checked"]["smart_subset_pretest"]["green"] is False
++    assert artifact["v409_close_state"] == {}
++    assert (root / "research-complete.yaml").read_text(encoding="utf-8") == before
++
++
++def test_run_blocks_if_research_complete_edit_would_not_parse(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-REPORT-4431-BLOCKED-PRECONDITION: invalid generated history blocks."""
++
++    root = _make_root(tmp_path)
++
++    def poisoned(_: str, __: dict) -> tuple[str, int, str]:
++        return "milestones: [", 0, "updated"
++
++    monkeypatch.setattr(mod, "dedupe_or_update_record", poisoned)
++    artifact = json.loads(
++        mod.run(root, pretest_result=GREEN, started_s=1.0, now_s=1.5).read_text(
++            encoding="utf-8"
++        )
++    )
++
++    assert artifact["honest_verdict"] == "blocked_research_complete_edit_invalid"
++    assert artifact["v409_close_state"] == {}
++
++
++def test_run_blocks_if_written_research_complete_turns_invalid(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-REPORT-4431-BLOCKED-PRECONDITION: post-write parse is checked."""
++
++    root = _make_root(tmp_path)
++    calls = {"n": 0}
++    original = mod.yaml_parses
++
++    def fails_after_write(text: str) -> bool:
++        calls["n"] += 1
++        if calls["n"] >= 6 and "glyph rewrite banked" in text:
++            return False
++        return original(text)
++
++    monkeypatch.setattr(mod, "yaml_parses", fails_after_write)
++    artifact = json.loads(
++        mod.run(root, pretest_result=GREEN, started_s=1.0, now_s=1.5).read_text(
++            encoding="utf-8"
++        )
++    )
++
++    assert artifact["honest_verdict"] == "blocked_research_complete_yaml_poison_after_edit"
++    assert artifact["v409_close_state"] == {}
++
++
++def test_validate_artifact_rejects_false_success() -> None:
++    """REQ-REPORT-4431: complete artifacts must preserve terminal and count contracts."""
++
++    payload = mod.build_complete_artifact(
++        v409_close_state=mod.build_v409_close_state(
++            {
++                "4430": _capstone(),
++                "4421": _config_rule(),
++                "4422": _glyph(),
++                "4423": _first_contact(),
++                "4424": _deepening(),
++                "4425": _vocabulary(),
++                "4426": _registry_audit(),
++                "4429": _sota(),
++            },
++            mod.registry_totals_from_text(_registry_text()),
++        ),
++        registry_totals=mod.registry_totals_from_text(_registry_text()),
++        preconditions_checked={"smart_subset_pretest": {"green": True}},
++        duration_s=0.25,
++        active_roadmap_path="research-roadmap.yaml",
++        research_complete_record_action="updated",
++        research_complete_duplicates_removed=0,
++        cited_upstream_artifacts=[],
++    )
++    bad = copy.deepcopy(payload)
++    bad["honest_verdict"] = "done_without_terminal_prefix"
++
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(bad)
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda payload: payload.pop("v409_close_state"), "missing required artifact field"),
++        (lambda payload: payload["field_principles"].update(honest_verdict="wrong"), "principle"),
++        (
++            lambda payload: payload["field_principles"].update(reproducible_total_levels="wrong"),
++            "principle",
++        ),
++        (lambda payload: payload.update(verifier_is_oracle=False), "verifier_is_oracle"),
++        (lambda payload: payload.update(trm_training_ran=True), "TRM training"),
++        (lambda payload: payload.update(leaderboard_submission=True), "leaderboard"),
++        (lambda payload: payload.update(reproducible_total_levels=0), "reproducible_total_levels"),
++        (lambda payload: payload.update(reproducible_total_games=0), "reproducible_total_games"),
++        (lambda payload: payload.update(reproducibility_checksum="bad"), "reproducibility_checksum"),
++    ],
++)
++def test_validate_artifact_rejects_each_contract_violation(
++    mutate: object, message: str
++) -> None:
++    """REQ-REPORT-4431: every required complete-artifact invariant is enforced."""
++
++    close = mod.build_v409_close_state(
++        {
++            "4430": _capstone(),
++            "4421": _config_rule(),
++            "4422": _glyph(),
++            "4423": _first_contact(),
++            "4424": _deepening(),
++            "4425": _vocabulary(),
++            "4426": _registry_audit(),
++            "4429": _sota(),
++        },
++        mod.registry_totals_from_text(_registry_text()),
++    )
++    payload = mod.build_complete_artifact(
++        v409_close_state=close,
++        registry_totals=mod.registry_totals_from_text(_registry_text()),
++        preconditions_checked={"smart_subset_pretest": {"green": True}},
++        duration_s=0.25,
++        active_roadmap_path="research-roadmap.yaml",
++        research_complete_record_action="updated",
++        research_complete_duplicates_removed=0,
++        cited_upstream_artifacts=[],
++    )
++    bad = copy.deepcopy(payload)
++    mutate(bad)
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad)
++
++
++def test_record_helpers_cover_append_update_and_unchanged_paths() -> None:
++    """REQ-REPORT-4431: history record helper handles standard archive paths."""
++
++    close = mod.build_v409_close_state(
++        {
++            "4430": _capstone(),
++            "4421": _config_rule(),
++            "4422": _glyph(),
++            "4423": _first_contact(),
++            "4424": _deepening(),
++            "4425": _vocabulary(),
++            "4426": _registry_audit(),
++            "4429": _sota(),
++        },
++        mod.registry_totals_from_text(_registry_text()),
++    )
++
++    appended, removed, action = mod.dedupe_or_update_record("milestones:\n", close)
++    assert action == "appended"
++    assert removed == 0
++    assert mod.archive_record_count(appended) == 1
++
++    unchanged, removed_again, action_again = mod.dedupe_or_update_record(appended, close)
++    assert action_again == "unchanged"
++    assert removed_again == 0
++    assert unchanged == appended
++
++    updated, removed_update, action_update = mod.dedupe_or_update_record(
++        (
++            "milestones:\n"
++            "- id: 2026.06.409\n"
++            "  title: old\n"
++            "  activation_recorded: stale\n"
++        ),
++        close,
++    )
++    assert action_update == "updated"
++    assert removed_update == 0
++    assert "finding:" in updated
++    assert "activation_recorded: exp4431-archive-409-activate-410" in updated
++
++
++def test_main_delegates_to_run(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
++    """REQ-REPORT-4431: module entry point delegates to run."""
++
++    called = {"root": None}
++
++    def fake_run(root: Path = mod.REPO_ROOT) -> Path:
++        called["root"] = root
++        return tmp_path / "sentinel.json"
++
++    monkeypatch.setattr(mod, "run", fake_run)
++    assert mod.main(tmp_path) == 0
++    assert called["root"] == tmp_path
++
++    reloaded = importlib.reload(mod)
++    assert hasattr(reloaded, "main")
+-- 
+2.55.0
+

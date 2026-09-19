@@ -1,0 +1,73 @@
+From f16ce2e2317422f0d8e94c159971b32c946259ad Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 05:14:02 -0400
+Subject: [PATCH 09896/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 5 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 870369c05e..39a55b7a96 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,788</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,792</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 5a0f60e880..c26d167502 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -7,5 +7,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T08:52:39Z"
++ "last_scan_utc": "2026-08-25T09:11:06Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 206f89c4d7..3f65382980 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4109305, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-25T08:52:38Z"}
+\ No newline at end of file
++{"pid": 4109305, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-25T09:11:05Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 91bce523ed..76e876d377 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16443,3 +16443,4 @@ code |
+ | 2026-08-25 08:47 UTC | Qwen3.6 bounded constraint-first stream | FAIL | Post-tests failed: 1 failed, 192 passed, 1 warning in 18.14s |
+ | 2026-08-25 08:49 UTC | Qwen3.6 bounded constraint-first stream | OK | Deliverable already exists in repo |
+ | 2026-08-25 08:50 UTC | Gemma 4 31B bounded constraint-first stream | SKIP | Pre-tests failing, self-heal failed: # check that cries wolf gets bypassed, whic |
++| 2026-08-25 09:09 UTC | Gemma 4 31B bounded constraint-first stream | OK | 95 passed, 1 warning in 13.34s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 48ab55e8f0..d7b3009782 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4109305, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-25T08:52:38Z"}
+\ No newline at end of file
++{"pid": 4109305, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-25T09:11:05Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

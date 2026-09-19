@@ -1,0 +1,519 @@
+From 696cb322240f54f83113995ed6c70a2a8113486a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 14:33:21 -0400
+Subject: [PATCH 09837/11362] [outer-loop] Demote and repair
+ verification_commands; file the red suite
+
+Operator directive: demote and repair, do not delete.
+
+DEMOTE. The repository-wide suite is out of the pre-launch precondition
+set in both flagship shard modules. A precondition exists to prove the
+resources a run needs are present; repo-wide suite health is not one,
+and gating a live model load on it blocked the run for a reason
+unrelated to the measurement. The set is now six focused commands, all
+of which already exited 0 in both blocked artifacts, at about 25s
+against the 900-2400s the full suite consumed.
+
+REPAIR. The inline expression became focused_verification_ok(), a named
+function in a tested seam -- the old check lived inside a
+pragma-no-cover function and was never under test. It fails closed: an
+empty set is False, and a row with no exit_code is False. The repo's
+opposite pattern (experiment_6457:1246, exit_code in (0, None)) treats
+never-ran as a pass and is not copied.
+
+Blast radius was one decision point, not two: exp6582 imports exp6581
+as shared and delegates _collect_preconditions.
+
+Spec: REQ-REPORT-6581-VERIFY-SCOPE and
+SCENARIO-REPORT-6581-VERIFY-FAIL-CLOSED added.
+REQ-REPORT-6582-VERIFICATION-BUDGET, which mandated the full suite at a
+4801s timeout, is superseded in place with its text preserved and its
+still-valid second and third sentences kept in force.
+
+Mutation proofs, each applied then restored: removing the empty-set
+guard goes RED; the fail-open (0, None) variant goes RED; re-adding the
+full suite goes RED in both modules. Restored GREEN, 26 passed, 100%
+coverage on both modules, ruff and spec coverage clean.
+
+COST, stated rather than hidden: this removes the last reporter of the
+red suite (87/68/470/433 failures over twelve days). Nothing else runs
+it -- research_conductor.run_tests has a correct full=True branch but
+every call site passes full=False. The signal is filed in
+ops/known-issues.md with the measurements, the coverage/xdist caveat,
+and three ordered steps toward a real home.
+
+Not touched: idle_supported_gpu, which correctly detected a busy GPU;
+and the retirement state of either experiment.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...n-commands-demote-and-repair-2026-08-24.md | 159 ++++++++++++++++++
+ .../capabilities/research-reporting/spec.md   |  33 ++++
+ ops/known-issues.md                           |  49 ++++++
+ ...iment_6581_qwen36_flagship_source_shard.py |  27 ++-
+ ...t_6582_gemma4_31b_flagship_source_shard.py |   4 -
+ ...iment_6581_qwen36_flagship_source_shard.py |  37 ++++
+ ...t_6582_gemma4_31b_flagship_source_shard.py |  19 ++-
+ 7 files changed, 312 insertions(+), 16 deletions(-)
+ create mode 100644 docs/research-notes/verification-commands-demote-and-repair-2026-08-24.md
+
+diff --git a/docs/research-notes/verification-commands-demote-and-repair-2026-08-24.md b/docs/research-notes/verification-commands-demote-and-repair-2026-08-24.md
+new file mode 100644
+index 0000000000..15a229dba7
+--- /dev/null
++++ b/docs/research-notes/verification-commands-demote-and-repair-2026-08-24.md
+@@ -0,0 +1,159 @@
++# verification_commands: demote and repair (2026-08-24)
++
++What changed, why, and what it costs. The diagnosis this implements is
++`flagship-source-shard-precondition-diagnosis-2026-08-24.md`.
++
++Operator directive: demote and repair, do not delete.
++
++## Blast radius, corrected
++
++The handover said two files carry the check. It is **one**.
++`experiment_6582_gemma4_31b_flagship_source_shard.py:27` imports
++`experiment_6581_qwen36_flagship_source_shard as shared` and delegates
++`_collect_preconditions` to it, so the `checks` dict is defined once at
++`6581:1513`. Both files did define their own `FULL_PYTEST_COMMAND` and their own
++`_checkpoint_tests` command tuple, so both needed editing — but there is a
++single decision point, not two.
++
++## What changed
++
++**1. Demote — the repository-wide suite is out of the precondition set.**
++`FULL_PYTEST_COMMAND` is removed from `_checkpoint_tests` in both modules, and
++the constant is deleted. The set is now six focused commands: the module's own
++test file, its coverage run and report, ruff check, ruff format, and spec
++coverage. All six ran and exited 0 in both blocked artifacts; total cost about
++25 seconds against the 900-2400 seconds the full suite consumed.
++
++Rationale in the spec, not just here: a pre-launch precondition exists to prove
++the resources a run needs are present. Repo-wide suite health is not such a
++resource. Gating a live model load on it blocks the run for a reason unrelated
++to the measurement, which is exactly what happened.
++
++**2. Repair — fail-closed, in a tested seam.** The inline expression became a
++named function so it can be tested at all. The old check lived inside
++`_collect_preconditions`, which is `# pragma: no cover`, so it was never under
++test.
++
++```python
++def focused_verification_ok(tests_run: Sequence[Mapping[str, Any]]) -> bool:
++    rows = list(tests_run)
++    if not rows:
++        return False
++    return all(row.get("exit_code") == 0 for row in rows)
++```
++
++**3. Regression guards.** Two new tests in the exp6581 suite and one rewritten
++test in the exp6582 suite assert no command targets the whole `tests/python`
++tree, and that every pytest command carries `--no-cov`.
++
++**4. Spec.** `REQ-REPORT-6581-VERIFY-SCOPE` and
++`SCENARIO-REPORT-6581-VERIFY-FAIL-CLOSED` added to
++`openspec/capabilities/research-reporting/spec.md`.
++
++**5. A contradicting requirement superseded.** The working tree already held an
++uncommitted `REQ-REPORT-6582-VERIFICATION-BUDGET` requiring the task to "run the
++exact full Python suite once with a bounded timeout of at least 4,801 seconds" —
++the third timeout escalation, written into the spec. It was preserve-committed
++first (`3b9cbf77d3`), then superseded in place rather than deleted, per
++never-prune: the original text is quoted, its first sentence is marked
++superseded by `REQ-REPORT-6581-VERIFY-SCOPE`, and its second and third sentences
++(verification must not consume the 4,200-second family budget; the family
++deadline starts after verification) are explicitly kept in force. Its test was
++rewritten to assert the opposite of what it used to assert — see mutation 3.
++
++## Fail direction: closed, deliberately
++
++**A verification that could not run blocks the run.** Empty set is False. A row
++with no `exit_code`, or `exit_code: None`, is False. Only a non-empty, all-zero
++set passes.
++
++Why closed: the six remaining commands are all scoped to this experiment's own
++module and test file. If they cannot run, the experiment's own code is not
++known-good, and a measurement produced by code that failed its own tests is not
++evidence. This is the narrow, resource-shaped question a precondition should
++ask. The cost of a false block is one cheap re-run; the cost of a false pass is
++a fabricated-looking artifact.
++
++The repo contains the opposite pattern, and it should not be copied:
++`experiment_6457_independent_verifier_bounded_csl_audit.py:1246-1247` has
++
++```python
++def _tests_passed_or_pending(tests): return all(row.get("exit_code") in (0, None) for row in tests)
++```
++
++which treats "never ran" as a pass. That is the trusted-and-silent state
++CLAUDE.md calls the worst state for a guard. Mutation 2 below is exactly this
++pattern applied to the new helper, and a test refuses it.
++
++## Mutation proofs
++
++Each mutation applied, suite run, then restored. All at
++`pytest ... -q --no-cov -n 0`.
++
++| # | Mutation | Result |
++|---|---|---|
++| 1 | Delete the `if not rows: return False` guard | **RED** — `test_focused_verification_fails_closed`, `assert True is False` |
++| 2 | `== 0` becomes `in (0, None)` (the exp6457 fail-open pattern) | **RED** — same test |
++| 3 | Re-add `FULL_PYTEST_COMMAND` to both command tuples | **RED** ×2 — `test_verification_scope_excludes_repository_suite` (`assert not True`) and exp6582's `test_verification_is_bounded_without_spending_family_runtime` (`assert 7 == 6`) |
++| — | Restored | **GREEN** — 26 passed |
++
++Also green after the change: 100% coverage on both modules under their own
++`--fail-under=100` command (381 and 199 statements), ruff check, ruff format,
++spec coverage.
++
++## What this costs — the red suite
++
++**This change removes the last thing that reported the red suite.** Stated
++plainly because it is the part worth arguing with.
++
++The suite is genuinely red: 87, 68, 470, 433 failures across artifacts over
++twelve days. The check was reporting a true fact in the wrong place.
++
++Nothing else in the loop runs it. `scripts/research_conductor.py:1467`
++`run_tests(full: bool = False)` has a correct full-suite branch at `:1525-1538`
++(`--no-cov -o addopts=`), but **every call site passes `full=False`** —
++`:6125`, `:6181`, `:6671`, `:6798`, two commented "full suite hangs serially".
++The `full=True` branch is dead code.
++
++So the signal is filed in `ops/known-issues.md` under **NEW 2026-08-24**, with
++the measurements, the caveat that coverage and xdist collateral inflate the
++counts, and three ordered steps: get one `--no-cov` baseline, triage against
++`--cov-fail-under=99`, then give the check a real home (revive the conductor's
++dead `full=True` branch on a low cadence, or a periodic job).
++
++That entry, not this fix, is where the red suite now lives. If it is closed
++without a baseline, the signal is lost for real.
++
++## What could break
++
++- **Weaker per-experiment regression coverage.** These two experiments no longer
++  notice a repo-wide break. Accepted: they never noticed it usefully — the check
++  returned non-zero on every measured run, so it could not distinguish a new
++  break from the standing one, and it cost 15-40 minutes and the model load each
++  time.
++- **Nothing else.** Structured gates, negative fixtures, attack rows,
++  protected-file hashes and the six focused commands are untouched and pass.
++- **Not addressed on purpose:** `idle_supported_gpu`, which exp6582 also failed.
++  It correctly detected a busy GPU (GPU 1 held at 20686 MB by the seed sweep).
++  Left alone per operator instruction. exp6582 therefore still will not run
++  while the box is contended, harness fix or not.
++- **Retirement unchanged.** exp6582 stays retired; exp6581 stays un-retired.
++  Not my call, and not touched.
++
++## Related defect, not fixed here
++
++`experiment_6580_v572_source_and_joint_method_protocol.py:320` records
++`{"command": FULL_PYTEST_COMMAND, "exit_code": 0, "duration_s": 0.1}` — a
++declared full-suite pass in 0.1 seconds. The corpus scan behind the diagnosis
++found 92 of 97 full-suite rows carry only `{command, exit_code, summary}` with
++no duration, and 57 of those declare exit 0. Those declared passes should not be
++read as the suite being green. Out of scope for this fix; worth its own pass.
++
++## Files
++
++- `python/carnot/experiment_6581_qwen36_flagship_source_shard.py` — helper, check, command set
++- `python/carnot/experiment_6582_gemma4_31b_flagship_source_shard.py` — command set, override map
++- `tests/python/test_experiment_6581_qwen36_flagship_source_shard.py` — two new tests
++- `tests/python/test_experiment_6582_gemma4_31b_flagship_source_shard.py` — rewritten scope test
++- `openspec/capabilities/research-reporting/spec.md` — REQ and SCENARIO
++- `ops/known-issues.md` — the red-suite entry
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 9b6ac1a838..0195593fe8 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -54879,6 +54879,24 @@ shard completeness only. It SHALL make no cross-family or quality claim.
+   artifact by same-directory atomic replacement. The checksum SHALL exclude
+   only its self-referential checksum field.
+ 
++- REQ-REPORT-6581-VERIFY-SCOPE: The `verification_commands` precondition SHALL
++  cover only commands scoped to this experiment's own module and test file.
++  It SHALL NOT run the repository-wide test suite. A pre-launch precondition
++  exists to prove the resources this run needs are present, per the Pre-Launch
++  Preconditions Discipline. Repository-wide suite health is not such a
++  resource, and gating a live model run on it blocks the run for a reason
++  unrelated to the measurement. Every pytest command in the set SHALL disable
++  coverage explicitly, because this repository's default `addopts` inject
++  `--cov`, which slows the run about fifteen times and can abort the
++  interpreter.
++
++- SCENARIO-REPORT-6581-VERIFY-FAIL-CLOSED: WHEN the focused verification set
++  is empty, or any command in it is missing an exit code, or any command
++  exits non-zero, THEN `verification_commands` SHALL be false. A command that
++  could not run SHALL NOT count as a pass. A verification that silently
++  passes when it could not execute is the trusted-and-silent state this
++  project treats as the worst state for a guard.
++
+ The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+ `gate_check_summary`, `model_specs`, `model_revision_and_hash_receipt`,
+ `rows`, `raw_response_receipts`, `process_and_gpu_receipts`,
+@@ -54955,6 +54973,21 @@ completeness only. It SHALL make no cross-family or model-quality claim.
+   before a model process starts. A failed gate SHALL produce one terminal
+   blocked artifact. The gate summary SHALL name the exact upstream path,
+   artifact hash, field, expected value, and observed value.
++- REQ-REPORT-6582-VERIFICATION-BUDGET: SUPERSEDED 2026-08-24 in its first
++  sentence by REQ-REPORT-6581-VERIFY-SCOPE. Original text, preserved per the
++  never-prune rule: "The task SHALL run the exact full Python suite once with a
++  bounded timeout of at least 4,801 seconds. Verification time SHALL NOT consume
++  the frozen 4,200-second family runtime budget. The family deadline SHALL start
++  only after prelaunch verification and resource checks finish."
++
++  Why superseded: raising the timeout was the third escalation (900 to 2,400 to
++  7,200 seconds) against a command that could not pass at any timeout, because a
++  bare `pytest` inherits `--cov` from `pyproject.toml` and the repository suite
++  is red. The task SHALL NOT run the repository-wide suite at all.
++
++  Still in force: the second and third sentences. Verification time SHALL NOT
++  consume the frozen 4,200-second family runtime budget, and the family deadline
++  SHALL start only after prelaunch verification and resource checks finish.
+ - REQ-REPORT-6582-IDENTITY: The model receipt SHALL bind the repository,
+   revision, trusted GGUF blob hash, snapshot path, content-derived
+   architecture, quantization, tensor count, and embedded tokenizer. Positive
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index ec84d910f2..7a0f6137d0 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -4,6 +4,55 @@
+ 
+ ## CURRENT ACTIVE PRIORITIES (20260507 audit)
+ 
++### NEW 2026-08-24: the repository-wide test suite is RED, and after today's fix nothing reports it
++
++**The finding.** `pytest tests/python` does not pass. Measured from artifacts
++that ran it, over twelve days:
++
++| Artifact | Reported |
++|---|---|
++| exp6582 (first run, `b40a131bfd`) | `87 failed, 10326 passed, 9 skipped` |
++| exp6510 | "stopped after 68 failed, 9638 passed ... xdist worker MemoryError" |
++| exp6506 | "interrupted after unrelated repository-wide failures, missing optional ONNX deps, tracked result mutations, and JAX worker aborts" |
++| exp6403 / exp6426 | 470 and 433 failures |
++
++**Why this entry exists.** Until today the only thing running the full suite was
++a precondition inside the exp6581 / exp6582 flagship shard experiments. That
++check blocked the model load on unrelated suite health, so it was removed
++(REQ-REPORT-6581-VERIFY-SCOPE). Removing it takes the last reporter away. This
++entry is where the signal now lives until it has a proper home.
++
++**Nothing else in the loop runs it.** `scripts/research_conductor.py:1467`
++`run_tests(full: bool = False)` has a correct full-suite branch at `:1525-1538`
++using `--no-cov -o addopts=`, but **every call site passes `full=False`**
++(`:6125`, `:6181`, `:6671`, `:6798`), two of them commented "full suite hangs
++serially". The `full=True` branch is dead code.
++
++**Read the counts with care.** They come from runs of the bare command, which
++inherits `--cov` and `-n 4` from `pyproject.toml` `addopts`. Coverage makes the
++suite about fifteen times slower and the observed crash was an xdist worker
++`MemoryError`. So an unknown share of those failures may be coverage or worker
++collateral rather than product breakage.
++
++**What is needed, in order.**
++
++1. One measured baseline with `--no-cov -o addopts= -n 0`. No such receipt
++   exists anywhere in the corpus. Until it does, nobody knows the real number.
++   It rewrites `results/**` and takes 18+ minutes, so it needs a run that owns
++   the box, not an experiment slot.
++2. Triage the real failures against `--cov-fail-under=99`, which the project's
++   own documented command applies.
++3. Give the check a home: revive the conductor's `full=True` branch on a low
++   cadence, or a periodic job. Not a per-experiment precondition.
++
++**Do not close this by re-adding the check to an experiment.** That is the
++defect that was just fixed; `test_verification_scope_excludes_repository_suite`
++will refuse it.
++
++**Cross-references:** `docs/research-notes/flagship-source-shard-precondition-diagnosis-2026-08-24.md`
++· commits `1c9fdb53f2`, `48b9d444d3` · CLAUDE.md "Pre-Launch Preconditions
++Discipline", "Test-Run Record Integrity Discipline".
++
+ ### NEW 2026-08-18: the scored induce budget cannot be spent inside the scored induce timeout, and concurrency widens the gap
+ 
+ **The arithmetic.** `scripts/kaggle/submission_kernel/main.py:589-590` sets
+diff --git a/python/carnot/experiment_6581_qwen36_flagship_source_shard.py b/python/carnot/experiment_6581_qwen36_flagship_source_shard.py
+index ae5cbccea1..ac7e5f325b 100644
+--- a/python/carnot/experiment_6581_qwen36_flagship_source_shard.py
++++ b/python/carnot/experiment_6581_qwen36_flagship_source_shard.py
+@@ -166,7 +166,6 @@ COVERAGE_REPORT_COMMAND = (
+     "--include=python/carnot/experiment_6581_qwen36_flagship_source_shard.py "
+     "--fail-under=100 --show-missing"
+ )
+-FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
+ RUFF_CHECK_COMMAND = f".venv/bin/ruff check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
+ RUFF_FORMAT_COMMAND = f".venv/bin/ruff format --check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
+ SPEC_COVERAGE_COMMAND = f".venv/bin/python scripts/check_spec_coverage.py {TEST_RELATIVE_PATH}"
+@@ -1452,14 +1451,33 @@ def _offloaded_layers(stderr_bytes: bytes) -> int:  # pragma: no cover
+     return max(values, default=0)
+ 
+ 
++def focused_verification_ok(tests_run: Sequence[Mapping[str, Any]]) -> bool:
++    """Say whether every focused verification command ran AND exited zero.
++
++    Fails closed on purpose (REQ-REPORT-6581-VERIFY-SCOPE). An empty set means
++    nothing was verified, and a row with no exit code means the command never
++    reported. Both answer False. Treating "did not run" as a pass is the
++    trusted-and-silent state this project treats as the worst state for a guard.
++    """
++
++    rows = list(tests_run)
++    if not rows:
++        return False
++    return all(row.get("exit_code") == 0 for row in rows)
++
++
+ def _checkpoint_tests(repo_root: Path) -> list[JsonDict]:  # pragma: no cover
+-    """Run focused, added-code coverage, full tests, lint, and spec coverage once."""
++    """Run focused tests, added-code coverage, lint, and spec coverage once.
++
++    The repository-wide suite is deliberately absent (REQ-REPORT-6581-VERIFY-SCOPE).
++    It is not a resource this run needs, and it blocked the model load for a
++    reason unrelated to the measurement. See the 2026-08-24 research note.
++    """
+ 
+     commands = (
+         (FOCUSED_TEST_COMMAND, 180.0),
+         (COVERAGE_RUN_COMMAND, 180.0),
+         (COVERAGE_REPORT_COMMAND, 60.0),
+-        (FULL_PYTEST_COMMAND, 2400.0),
+         (RUFF_CHECK_COMMAND, 60.0),
+         (RUFF_FORMAT_COMMAND, 60.0),
+         (SPEC_COVERAGE_COMMAND, 60.0),
+@@ -1510,8 +1528,7 @@ def _collect_preconditions(
+         and initial.get("compute_query_exit_code") == 0,
+         "idle_supported_gpu": selection.get("eligible") is True,
+         "fresh_qwen_process": not task_pids,
+-        "verification_commands": bool(tests_run)
+-        and all(row.get("exit_code") == 0 for row in tests_run),
++        "verification_commands": focused_verification_ok(tests_run),
+         "atomic_output_ready": os.access((repo_root / RESULT_RELATIVE_PATH).parent, os.W_OK),
+     }
+     return (
+diff --git a/python/carnot/experiment_6582_gemma4_31b_flagship_source_shard.py b/python/carnot/experiment_6582_gemma4_31b_flagship_source_shard.py
+index 1b1dcfa7f8..da3d4ca626 100644
+--- a/python/carnot/experiment_6582_gemma4_31b_flagship_source_shard.py
++++ b/python/carnot/experiment_6582_gemma4_31b_flagship_source_shard.py
+@@ -97,11 +97,9 @@ COVERAGE_REPORT_COMMAND = (
+     "--include=python/carnot/experiment_6582_gemma4_31b_flagship_source_shard.py "
+     "--fail-under=100 --show-missing"
+ )
+-FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
+ RUFF_CHECK_COMMAND = f".venv/bin/ruff check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
+ RUFF_FORMAT_COMMAND = f".venv/bin/ruff format --check {MODULE_RELATIVE_PATH} {TEST_RELATIVE_PATH}"
+ SPEC_COVERAGE_COMMAND = f".venv/bin/python scripts/check_spec_coverage.py {TEST_RELATIVE_PATH}"
+-FULL_PYTEST_TIMEOUT_S = 7200.0
+ 
+ 
+ # These helpers are byte- and family-neutral. Aliases keep one canonical hash,
+@@ -142,7 +140,6 @@ def _family_configuration() -> Iterator[None]:
+         "FOCUSED_TEST_COMMAND": FOCUSED_TEST_COMMAND,
+         "COVERAGE_RUN_COMMAND": COVERAGE_RUN_COMMAND,
+         "COVERAGE_REPORT_COMMAND": COVERAGE_REPORT_COMMAND,
+-        "FULL_PYTEST_COMMAND": FULL_PYTEST_COMMAND,
+         "RUFF_CHECK_COMMAND": RUFF_CHECK_COMMAND,
+         "RUFF_FORMAT_COMMAND": RUFF_FORMAT_COMMAND,
+         "SPEC_COVERAGE_COMMAND": SPEC_COVERAGE_COMMAND,
+@@ -442,7 +439,6 @@ def _checkpoint_tests(repo_root: Path) -> list[JsonDict]:  # pragma: no cover -
+         (FOCUSED_TEST_COMMAND, 180.0),
+         (COVERAGE_RUN_COMMAND, 180.0),
+         (COVERAGE_REPORT_COMMAND, 60.0),
+-        (FULL_PYTEST_COMMAND, FULL_PYTEST_TIMEOUT_S),
+         (RUFF_CHECK_COMMAND, 60.0),
+         (RUFF_FORMAT_COMMAND, 60.0),
+         (SPEC_COVERAGE_COMMAND, 60.0),
+diff --git a/tests/python/test_experiment_6581_qwen36_flagship_source_shard.py b/tests/python/test_experiment_6581_qwen36_flagship_source_shard.py
+index 0955187b37..f98f194589 100644
+--- a/tests/python/test_experiment_6581_qwen36_flagship_source_shard.py
++++ b/tests/python/test_experiment_6581_qwen36_flagship_source_shard.py
+@@ -301,13 +301,50 @@ def test_spec_declares_exp6581_requirements_and_scenarios() -> None:
+         "REQ-REPORT-6581-ATTACKS",
+         "REQ-REPORT-6581-REDUCER",
+         "REQ-REPORT-6581-ATOMIC",
++        "REQ-REPORT-6581-VERIFY-SCOPE",
+         "SCENARIO-REPORT-6581-GATE-BLOCK",
+         "SCENARIO-REPORT-6581-RAW-FIRST",
+         "SCENARIO-REPORT-6581-UNLOAD",
++        "SCENARIO-REPORT-6581-VERIFY-FAIL-CLOSED",
+     ):
+         assert anchor in text
+ 
+ 
++def test_focused_verification_fails_closed() -> None:
++    """SCENARIO-REPORT-6581-VERIFY-FAIL-CLOSED: unrun is not a pass."""
++
++    # Nothing ran, so nothing was verified.
++    assert mod.focused_verification_ok([]) is False
++    # A command that never reported an exit code did not pass.
++    assert mod.focused_verification_ok([{"command": "a"}]) is False
++    assert mod.focused_verification_ok([{"command": "a", "exit_code": None}]) is False
++    # A real failure is still a failure, including a timeout (124).
++    assert mod.focused_verification_ok([{"exit_code": 0}, {"exit_code": 124}]) is False
++    assert mod.focused_verification_ok([{"exit_code": 1}]) is False
++    # Only an all-zero, non-empty set passes.
++    assert mod.focused_verification_ok([{"exit_code": 0}, {"exit_code": 0}]) is True
++
++
++def test_verification_scope_excludes_repository_suite() -> None:
++    """REQ-REPORT-6581-VERIFY-SCOPE: no command runs the whole tests/python tree."""
++
++    commands = (
++        mod.FOCUSED_TEST_COMMAND,
++        mod.COVERAGE_RUN_COMMAND,
++        mod.COVERAGE_REPORT_COMMAND,
++        mod.RUFF_CHECK_COMMAND,
++        mod.RUFF_FORMAT_COMMAND,
++        mod.SPEC_COVERAGE_COMMAND,
++    )
++    # The repo-wide form blocked the model load on unrelated suite health.
++    assert not hasattr(mod, "FULL_PYTEST_COMMAND")
++    for text in commands:
++        assert "tests/python " not in f"{text} "
++        if "pytest" in text:
++            # A bare pytest inherits --cov from pyproject addopts.
++            assert "--no-cov" in text
++
++
+ def test_hash_and_json_helpers_are_stable(tmp_path: Path) -> None:
+     """REQ-REPORT-6581-ATOMIC: hashes use stable bytes and exclude self-fields."""
+ 
+diff --git a/tests/python/test_experiment_6582_gemma4_31b_flagship_source_shard.py b/tests/python/test_experiment_6582_gemma4_31b_flagship_source_shard.py
+index 100bd10fc0..93aba81011 100644
+--- a/tests/python/test_experiment_6582_gemma4_31b_flagship_source_shard.py
++++ b/tests/python/test_experiment_6582_gemma4_31b_flagship_source_shard.py
+@@ -496,7 +496,7 @@ def test_precondition_key_normalization_is_family_specific() -> None:
+ def test_verification_is_bounded_without_spending_family_runtime(
+     monkeypatch: pytest.MonkeyPatch,
+ ) -> None:
+-    """REQ-REPORT-6582-VERIFICATION-BUDGET: tests do not shorten model work."""
++    """REQ-REPORT-6581-VERIFY-SCOPE: verification stays focused, never repo-wide."""
+ 
+     calls: list[tuple[str, Path, float]] = []
+ 
+@@ -507,10 +507,15 @@ def test_verification_is_bounded_without_spending_family_runtime(
+     root = Path("/bounded-exp6582-fixture")
+     monkeypatch.setattr(shared, "_run_named_test", fake_run)
+     receipts = mod._checkpoint_tests(root)
+-    full_suite = [call for call in calls if call[0] == mod.FULL_PYTEST_COMMAND]
+-
+-    assert len(receipts) == 7
+-    assert len(full_suite) == 1
+-    assert full_suite[0][1] == root
+-    assert full_suite[0][2] >= 4801.0
++    commands = [call[0] for call in calls]
++
++    assert len(receipts) == 6
++    # No command may target the whole tests/python tree. That gate blocked the
++    # model load for a reason unrelated to the measurement — see the 2026-08-24
++    # research note and commit 48b9d444d3.
++    assert not [text for text in commands if "tests/python " in f"{text} "]
++    # A bare pytest inherits --cov from pyproject addopts, which is ~15x slower
++    # and can abort the interpreter. Every pytest command must opt out.
++    assert all("--no-cov" in text for text in commands if "pytest" in text)
++    assert all(call[1] == root for call in calls)
+     assert mod.family_task_deadline(_protocol(), now=1000.0) == 5200.0
+-- 
+2.55.0
+

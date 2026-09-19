@@ -1,0 +1,79 @@
+From 8e05b4eb3035ace427ac313faad44568f601abe8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 17:59:47 -0400
+Subject: [PATCH 09477/11362] Correct the AVO entry: the ARC result is not the
+ evolutionary loop
+
+The entry committed hours ago in 4d66a16c4d described AVO as agent-as-mutation-
+operator inside an evolutionary search, then said it also scored 100% on the
+ARC-AGI-3 public set. Those are two different results and the entry read as
+though one mechanism produced both. Correcting it, because the planner reads
+this file as required input and would have planned against the wrong mechanism.
+
+Established from primary sources this time. arXiv 2603.24517 is "AVO: Agentic
+Variation Operators for Autonomous Evolutionary Search"; its abstract covers
+attention-kernel optimization on Blackwell only and does not mention ARC-AGI-3
+at all -- verified by fetching the paper. The evolutionary operator, the seven
+days, the 500+ directions and the 40 committed kernel versions are the KERNEL
+work. For ARC, NVIDIA's blog says the agent built no explicit world models and
+acted directly on text-only 64x64 grids, and credits persistent memory,
+supervision, and long-horizon scaffolding around a frontier reasoner. Public
+games only, no component ablations, no published cost.
+
+The consequence is not cosmetic. Copying the evolutionary operator because of
+the ARC score copies the wrong mechanism. And the half of the directive that
+survives is the harder one: what NVIDIA credits for ARC is a frontier reasoner,
+which is exactly what the scored path may not use. Supervision and persistent
+memory transfer; open-ended strategy generation does not.
+
+Appended rather than rewritten, per never-prune. The original paragraph stays as
+written because it is what the operator directive was issued against, and a
+reader needs to see what was believed at the time.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ CLAUDE.md | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/CLAUDE.md b/CLAUDE.md
+index b2657c772a..e75d5874ca 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -4071,6 +4071,33 @@ also scored 100% on the ARC-AGI-3 public set of 183 puzzles with no prior
+ instruction, against about 30% for the bare model. Treat every number here as
+ SECONDARY-SOURCE until confirmed against NVIDIA's own writeup.
+ 
++**CORRECTION 2026-08-21, same day, from the primary sources (append-only; the
++paragraph above is left as written because it is what the directive was issued
++against).** The paragraph above conflates two different results, and the
++conflation matters more than any number in it.
++
++- The AVO paper is arXiv 2603.24517, "AVO: Agentic Variation Operators for
++  Autonomous Evolutionary Search". Its abstract covers attention-kernel
++  optimization on Blackwell ONLY. It does not mention ARC-AGI-3 at all.
++  Confirmed by fetching the paper directly.
++- Agent-as-mutation-operator, `Vary(P) = Agent(P, K, f)`, is the KERNEL result.
++  Seven days, 500+ directions, 40 committed kernel versions, correctness-then-
++  throughput fitness, a git commit per version.
++- **For ARC, AVO did NOT run the evolutionary code loop.** NVIDIA's blog states
++  the agent built no explicit world models and acted directly on text-only 64x64
++  grids: form a hypothesis, act, observe, update state, continue. The credited
++  components are persistent memory, supervision, and long-horizon scaffolding
++  around a frontier reasoner. 100.00 RHAE, 183/183, PUBLIC games only --
++  explicitly not the semi-private or private sets -- with zero component
++  ablations and no published cost or wall-clock.
++
++So "copy the evolutionary operator because of the ARC score" copies the wrong
++mechanism. It is also the harder half of this directive that survives the
++correction, not the easier one: the component NVIDIA credits for ARC is a
++frontier reasoner, which is precisely what we may not use. Supervision and
++persistent memory are the parts that transfer; open-ended strategy generation is
++the part that does not.
++
+ **Why this matters to Carnot.** Our public-set result is also 183/183
+ (`ops/arc_solve_registry.yaml`). We reached it with 25 hand-built per-game
+ adapters in `python/carnot/agentic/arc_game_adapters.py`. AVO reached it
+-- 
+2.55.0
+

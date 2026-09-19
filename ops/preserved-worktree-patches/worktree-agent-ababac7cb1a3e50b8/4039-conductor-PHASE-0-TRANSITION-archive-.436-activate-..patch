@@ -1,0 +1,1743 @@
+From e9197330fd87b77dbe35545666a9acafafd89fab Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 19:04:33 -0400
+Subject: [PATCH 04039/11362] [conductor] PHASE 0 (TRANSITION) -- archive .436
+ -> activate .437; assert YAML parses + the smart-subset pre-test gate is
+ green; DETECT + RESOLVE any poison pre-test (the .434/.435 cascade-skip
+ signature: a "1 failed, N passed" focused-test failure asserting a
+ now-correct honest verdict). RECORD the TRUE .436 close-state from
+ results/experiment_4747_capstone_v436.json (bridge_crossed_for_solve,
+ reproducible_total_levels, the A1/A2 guidance-class generation verdicts) so
+ the record is honest, and the .437 pivot: FIX the induction-quality wall (A1
+ structured ProductWorldModel engine, A2 structural-alignment detector).
+
+Automated research step by research conductor.
+Task ID: exp4748-phase0
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_4748_archive_436_activate_437.py | 801 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...eriment_4748_archive_436_activate_437.json | 249 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xperiment_4748_archive_436_activate_437.py | 484 +++++++++++
+ 12 files changed, 1556 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4748_archive_436_activate_437.py
+ create mode 100644 results/experiment_4748_archive_436_activate_437.json
+ create mode 100644 tests/python/test_experiment_4748_archive_436_activate_437.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 7f68bdf20d..eeafd79b26 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -382,6 +382,10 @@
+ - SCENARIO-CAPSTONE-4747: The artifact `results/experiment_4747_capstone_v436.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `bridge_crossed_for_solve`, `a1_goal_energy_result`, `a2_energy_qd_result`, `a3_banked_level`, `b1_carveout_fix_confirmed`, `submission_package_ready`, `reproducible_total_levels_delta`, `publication_gate`, `verifier_is_oracle_confirmed_false`, `skipped_artifacts`, `next_milestone_fallback`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit `headline_decision`, `scorecard`, `cited_upstream_artifacts`, `missing_artifacts`, `field_principles`, `spec_refs`, `schema`, `experiment`, `result_path`, `duration_s`, `leaderboard_submission`, `reproducible_total_levels`, and `solve_provenance_confirmed`. The default .436 read must answer whether A1 proved non-degenerate arms and beat baseline by at least +0.05 or deepened to L2, whether A2 generated the winner where naive search misses it, whether A3 banked +1 from 64 to 65, whether B1 stopped the honest non-degenerate-zero-lift null from being quarantined and flagged the declared-but-unrun mechanism, and whether B2 reports the submission package ready; no new solve claim may be made by the capstone itself.
+ - SCENARIO-CAPSTONE-4747-BLOCKED-PRECONDITION: If any required upstream artifact from Exp4737 through Exp4746 is missing, `results/experiment_4735_capstone_v435.json` is missing, `ops/arc_solve_registry.yaml` is missing or not YAML-loadable, `scripts/summarize_artifact.py` is unavailable, `scripts/publication_gate.py --json` is unavailable, or the capstone spec lacks `REQ-CAPSTONE-4747`, the workflow must still write `results/experiment_4747_capstone_v436.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `bridge_crossed_for_solve=false`, no clean headline bridge win, the missing artifacts listed explicitly, and a valid reproducibility checksum.
+ - SCENARIO-CAPSTONE-4747-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; complete: <capability_grew_64_to_65 | bridge_crossed_for_solve_<game>_L<n>> -- the honest one-line milestone outcome."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `bridge_crossed_for_solve` = "the HEADLINE DECISION -- True only if a GENERIC agent banked a NEW level via self-discovery (A1 goal-energy L2 | A2 energy-QD L2), offline-reproduced, control-passed; False if only capability/depth grew."; `a1_goal_energy_result` = "did A1 prove arms_non_degenerate AND beat baseline by >=+0.05 / deepen to L2 -- or confirm goal_energy_generation_arms_degenerate (a harness bug) or a real non-degenerate null?"; `a2_energy_qd_result` = "did A2 generate the winner (a NEW level via energy-fitness QD where naive search misses it) -- or confirm a harness bug / a real null?"; `a3_banked_level` = "did A3 bank +1 (64->65)? the Level-Up Guarantee + self-play-every-milestone outcome."; `b1_carveout_fix_confirmed` = "did B1 (INFRA) stop the honest non-degenerate-zero-lift null from being quarantined (the .435-A1 escape) + flag the declared-but-unrun mechanism (the .435-A2 escape)?"; `submission_package_ready` = "B2's submission-readiness (5 days to deadline) -- is the frozen-stack package ready for the operator to submit?"; `reproducible_total_levels_delta` = "the registry header delta this milestone (64->65 if A1/A2/A3 banked) -- the monotonic north-star metric."; `publication_gate` = "the G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py --json; FoVer 0.9131 frozen, never substituted."; `verifier_is_oracle_confirmed_false` = "confirms every aggregated value claim carries verifier_is_oracle:false (no circular moat over-claim)."; `skipped_artifacts` = "the artifacts skipped for flagged_adversarial / control-failed / ablation-missing -- the fabrication-gate discipline (never aggregate a flagged number)."; `next_milestone_fallback` = "the .437 direction (D's flagged_for_v437 + the deferred reopens P1/P4/A2-active-probe + the strongest open lever) -- the convergence hand-off."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash of the aggregated artifact set."; `preconditions_checked` = "records resources verified (upstream artifacts present, summarize/publication tools runnable); pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4748: The .436-to-.437 transition recorder SHALL write `results/experiment_4748_archive_436_activate_437.json` without modifying `scripts/research_conductor.py`, without submitting to the leaderboard, and without fabricating missing resources. It SHALL verify `AGENTS.md` and `CODEX.md` or `OPENCODE.md` were read, attempt the literal `research-roadmap-next.yaml` YAML precondition, verify `arc_solver_kit.offline_arcade()`, accept a missing literal next roadmap only when active `research-roadmap.yaml` already parses as milestone `2026.06.437`, assert the smart-subset pre-test gate is green on any complete path, read `ops/arc_solve_registry.yaml` as authoritative with `reproducible_total_levels=64`, cite `results/experiment_4747_capstone_v436.json` and `ops/conductor-log.md`, and record whether any single-failure poison pre-test was fixed or quarantined. If any blocking precondition fails, it SHALL still write the artifact with `honest_verdict=blocked_<resource>`, failed resources in `preconditions_checked`, and no fabricated `close_state_436` or `v437_pivot`. The complete path SHALL record the true .436 close-state: `bridge_crossed_for_solve=false`, `reproducible_total_levels=64`, `reproducible_total_levels_delta=0`, A1 goal-energy candidate generation as a non-degenerate zero-lift null, A2 energy-fitness QD generation as a non-degenerate zero-lift null with eight novel candidates but no generated winner, and A3 no clean registry bank. It SHALL record the .437 pivot as fixing the induction-quality wall by wiring the existing ProductWorldModel structured action-effect engine and fixing the existing perception-grounded structural-alignment detector.
++- SCENARIO-CAPSTONE-4748: The artifact `results/experiment_4748_archive_436_activate_437.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `poison_pretest_resolved`, `close_state_436`, and `v437_pivot`; it must also emit `transition`, `cited_upstream_artifacts`, `field_provenance`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, and `leaderboard_submission`. The complete path must terminal-prefix `honest_verdict`, set `inference_substrate` to `aggregation_from_upstream_artifacts`, confirm active milestone `2026.06.437`, assert the smart-subset pre-test gate is green, cite upstream artifacts by sha256, record any poison pre-test id and reason or an explicit no-poison-observed note, and never submit to the leaderboard.
++- SCENARIO-CAPSTONE-4748-BLOCKED-PRECONDITION: If neither parseable literal `research-roadmap-next.yaml` nor already-active `.437` is available, `offline_arcade()` fails, the smart-subset pre-test gate is red, the registry is missing or not at `64`, `results/experiment_4747_capstone_v436.json` is missing, `ops/conductor-log.md` is missing, or the capstone spec lacks `REQ-CAPSTONE-4748`, the workflow must still write `results/experiment_4748_archive_436_activate_437.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `transition.activation_state=blocked_missing_or_failed_precondition`, and empty `close_state_436` and `v437_pivot`.
++- SCENARIO-CAPSTONE-4748-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."; `inference_substrate` = "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."; `preconditions_checked` = "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."; `poison_pretest_resolved` = "any poison pre-test (id + reason) that would cascade-skip the .437 tail is fixed/quarantined."; `close_state_436` = "the honest .436 numbers carried forward from the capstone so the record does not drift."; `v437_pivot` = "the .437 headline (FIX induction-quality: A1 structured engine, A2 structural-alignment detector) recorded so milestone intent is traceable."
+ - REQ-CAPSTONE-4736: The .435-to-.436 transition recorder SHALL write `results/experiment_4736_archive_435_activate_436.json` without modifying `scripts/research_conductor.py`, without submitting to the leaderboard, and without fabricating missing resources. It SHALL verify `AGENTS.md` and `CODEX.md` or `OPENCODE.md` were read, attempt the literal `research-roadmap-next.yaml` YAML precondition, verify `arc_solver_kit.offline_arcade()`, accept a missing literal next roadmap only when active `research-roadmap.yaml` already parses as milestone `2026.06.436`, assert the smart-subset pre-test gate is green on any complete path, read `ops/arc_solve_registry.yaml` as authoritative with `reproducible_total_levels=64`, cite `results/experiment_4735_capstone_v435.json`, `results/experiment_4725_silent_bug_audit.json`, `results/experiment_4726_online_action_learning_driver_valid_test.json`, `results/experiment_4727_active_probe_disambiguation.json`, `results/experiment_4728_levelup_selfplay.json`, `ops/conductor-log.md`, and the `.436` design doc. If any blocking precondition fails, it SHALL still write the artifact with `honest_verdict=blocked_<resource>`, failed resources in `preconditions_checked`, and no fabricated `close_state_435` or `v436_pivot`. The complete path SHALL record the true .435 close-state: A3 banked +1 through `ar25` L3 offline reproduction and moved `reproducible_total_levels` `63->64`; A1 Exp4726 was validly tested with `arms_non_degenerate=true`, 66 online train steps, distinct action distributions, `online_warm_vs_frozen_delta=0.0`, and retires as a genuine no-lift null; A2 Exp4727 was dead code with `probe_actions_taken=0`, `hypothesis_posterior_built=false`, and `reason=probe_mechanism_did_not_run`; B1 Exp4725 audited 12 nulls and found 5 `silent_bug_must_reopen`, including guidance-class generation levers `experiment_4640_goal_energy_generation_live` and `experiment_4653_energy_fitness_qd_generation_live`; and Exp4735 recorded `bridge_crossed_for_solve=false`, the 11th consecutive false bridge-crossed milestone, `paper_ready=true`, and frozen FoVer `0.9131`. It SHALL record the .436 pivot as valid-testing the guidance-class generation levers: A1 goal-energy candidate generation reopening Exp4640 and A2 energy-fitness QD generation reopening Exp4653, with inline non-degeneracy gates and honest-null markers.
+ - SCENARIO-CAPSTONE-4736: The artifact `results/experiment_4736_archive_435_activate_436.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `poison_pretest_resolved`, `close_state_435`, and `v436_pivot`; it must also emit `transition`, `cited_upstream_artifacts`, `field_provenance`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, and `leaderboard_submission`. The complete path must terminal-prefix `honest_verdict`, set `inference_substrate` to `aggregation_from_upstream_artifacts`, confirm active milestone `2026.06.436`, assert the smart-subset pre-test gate is green, cite upstream artifacts by sha256, record any poison pre-test id and reason or an explicit no-poison-observed note, and never submit to the leaderboard.
+ - SCENARIO-CAPSTONE-4736-BLOCKED-PRECONDITION: If neither parseable literal `research-roadmap-next.yaml` nor already-active `.436` is available, `offline_arcade()` fails, the smart-subset pre-test gate is red, the registry is missing or not at `64`, Exp4725, Exp4726, Exp4727, Exp4728, Exp4735, `ops/conductor-log.md`, or the .436 design doc is missing, the workflow must still write `results/experiment_4736_archive_435_activate_436.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `transition.activation_state=blocked_missing_or_failed_precondition`, and empty `close_state_435` and `v436_pivot`.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c035487f32..5a62534c46 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 190,
+   "code_violations": 0,
+-  "experiments_checked": 3756,
++  "experiments_checked": 3757,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4748_archive_436_activate_437.py b/python/carnot/experiment_4748_archive_436_activate_437.py
+new file mode 100644
+index 0000000000..70740fdc32
+--- /dev/null
++++ b/python/carnot/experiment_4748_archive_436_activate_437.py
+@@ -0,0 +1,801 @@
++"""Experiment 4748: archive `.436`, activate `.437`, and record `.436` honestly.
++
++Spec refs: REQ-CAPSTONE-4748, SCENARIO-CAPSTONE-4748,
++SCENARIO-CAPSTONE-4748-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4748-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import json
++from pathlib import Path
++import re
++import sys
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting.archive_v391_activate_v392_4230 import (  # noqa: E402
++    CommandResult,
++    duration_from,
++    file_sha256,
++    is_sha256,
++    payload_checksum,
++    run_smart_subset,
++)
++
++
++JsonDict = dict[str, Any]
++OfflineArcadeChecker = Callable[[], bool]
++SmartSubsetChecker = Callable[[Path], CommandResult]
++
++EXPERIMENT = "experiment_4748_archive_436_activate_437"
++EXPERIMENT_ID = 4748
++SCHEMA = "carnot.archive_activation.v436_to_v437_4748.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4748_archive_436_activate_437.json"
++OUTPUT_REL_PATH = Path(RESULT_RELATIVE_PATH)
++RESEARCH_ROADMAP_REL_PATH = Path("research-roadmap.yaml")
++RESEARCH_ROADMAP_NEXT_REL_PATH = Path("research-roadmap-next.yaml")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++REGISTRY_REL_PATH = Path("ops/arc_solve_registry.yaml")
++CAPSTONE_SPEC_REL_PATH = Path("openspec/capabilities/capstone/spec.md")
++CAPSTONE_REL_PATH = Path("results/experiment_4747_capstone_v436.json")
++CONDUCTOR_LOG_REL_PATH = Path("ops/conductor-log.md")
++
++ARCHIVED_MILESTONE = "2026.06.436"
++ACTIVATED_MILESTONE = "2026.06.437"
++BASELINE_REPRODUCIBLE_TOTAL_LEVELS = 64
++RANDOM_SEED = 4748
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SPEC_REFS = [
++    "REQ-CAPSTONE-4748",
++    "SCENARIO-CAPSTONE-4748",
++    "SCENARIO-CAPSTONE-4748-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4748-FIELD-PRINCIPLES",
++]
++
++FIELD_PROVENANCE = {
++    "honest_verdict": {
++        "principle": (
++            "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/"
++            "passed_/shipped:/shipped_ so the reconciler classifies it terminal."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us "
++            "floor, not the 60s live-model floor."
++        )
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
++        )
++    },
++    "poison_pretest_resolved": {
++        "principle": (
++            "any poison pre-test (id + reason) that would cascade-skip the .437 tail is "
++            "fixed/quarantined."
++        )
++    },
++    "close_state_436": {
++        "principle": "the honest .436 numbers carried forward from the capstone so the record does not drift."
++    },
++    "v437_pivot": {
++        "principle": (
++            "the .437 headline (FIX induction-quality: A1 structured engine, A2 "
++            "structural-alignment detector) recorded so milestone intent is traceable."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "honest_verdict",
++    "inference_substrate",
++    "preconditions_checked",
++    "poison_pretest_resolved",
++    "transition",
++    "close_state_436",
++    "v437_pivot",
++    "cited_upstream_artifacts",
++    "field_provenance",
++    "leaderboard_submission",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++)
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return round(float(value), 6)
++    return default
++
++
++def _int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return int(value)
++    return default
++
++
++def _read_text(path: Path) -> str | None:
++    return path.read_text(encoding="utf-8") if path.exists() else None
++
++
++def _yaml_info(path: Path) -> JsonDict:
++    text = _read_text(path)
++    if text is None:
++        return {"path": str(path), "available": False, "parses": False, "milestone": None}
++    try:
++        loaded = yaml.safe_load(text)
++    except yaml.YAMLError as exc:
++        return {
++            "path": str(path),
++            "available": True,
++            "parses": False,
++            "milestone": None,
++            "error": str(exc),
++        }
++    milestone = loaded.get("milestone") if isinstance(loaded, Mapping) else None
++    return {
++        "path": str(path),
++        "available": True,
++        "parses": True,
++        "milestone": str(milestone) if milestone is not None else None,
++    }
++
++
++def _json_object(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _registry_total_levels(path: Path) -> int | None:
++    if not path.exists():
++        return None
++    try:
++        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except yaml.YAMLError:
++        return None
++    if not isinstance(loaded, Mapping):
++        return None
++    value = loaded.get("reproducible_total_levels")
++    return None if isinstance(value, bool) or not isinstance(value, int | float) else int(value)
++
++
++def _command_check(result: CommandResult | None) -> JsonDict:
++    if result is None:
++        return {
++            "command": [],
++            "exit_code": None,
++            "stdout_tail": "",
++            "stderr_tail": "",
++            "passed": None,
++            "not_run_reason": "blocked_before_smart_subset_gate",
++        }
++    return {
++        "command": result.command,
++        "exit_code": result.exit_code,
++        "stdout_tail": result.stdout[-500:],
++        "stderr_tail": result.stderr[-500:],
++        "passed": result.exit_code == 0,
++    }
++
++
++def _default_offline_arcade_checker() -> bool:  # pragma: no cover - integration smoke wrapper
++    from carnot.agentic import arc_solver_kit as kit
++
++    kit.offline_arcade()
++    return True
++
++
++def _default_smart_subset_checker(root: Path) -> CommandResult:  # pragma: no cover - subprocess wrapper
++    return run_smart_subset(root)
++
++
++def _next_roadmap_ready(next_info: Mapping[str, Any]) -> bool:
++    return (
++        next_info.get("available") is True
++        and next_info.get("parses") is True
++        and next_info.get("milestone") == ACTIVATED_MILESTONE
++    )
++
++
++def _active_437_ready(active_info: Mapping[str, Any]) -> bool:
++    return active_info.get("parses") is True and active_info.get("milestone") == ACTIVATED_MILESTONE
++
++
++def _activate_next_roadmap(root: Path, *, next_info: Mapping[str, Any]) -> tuple[bool, str]:
++    if not _next_roadmap_ready(next_info):
++        return False, ""
++    next_path = root / RESEARCH_ROADMAP_NEXT_REL_PATH
++    active_path = root / RESEARCH_ROADMAP_REL_PATH
++    try:
++        active_path.write_text(next_path.read_text(encoding="utf-8"), encoding="utf-8")
++    except OSError as exc:  # pragma: no cover - filesystem defensive path
++        return False, str(exc)
++    return True, ""
++
++
++def _poison_signature(text: str) -> str:
++    match = re.search(r"1 failed,\s*\d+ passed[^|\n]*", text)
++    return match.group(0).strip() if match else ""
++
++
++def _transition_log_scope(text: str) -> str:
++    marker = "Milestone 2026.06.436 activated"
++    marker_index = text.rfind(marker)
++    return text[marker_index:] if marker_index >= 0 else text
++
++
++def _poison_test_id(text: str) -> str:
++    match = re.search(r"\b(test_[A-Za-z0-9_]+)\b", text)
++    return match.group(1) if match else "unknown_focused_pretest"
++
++
++def _preconditions(
++    root: Path,
++    *,
++    offline_arcade_checker: OfflineArcadeChecker,
++    smart_subset_checker: SmartSubsetChecker,
++) -> JsonDict:
++    next_info = _yaml_info(root / RESEARCH_ROADMAP_NEXT_REL_PATH)
++    active_before = _yaml_info(root / RESEARCH_ROADMAP_REL_PATH)
++
++    try:
++        offline_ok = bool(offline_arcade_checker())
++        offline_error = ""
++    except Exception as exc:  # pragma: no cover - defensive integration reporting
++        offline_ok = False
++        offline_error = str(exc)
++
++    activation_attempted = False
++    activation_error = ""
++    if offline_ok and _next_roadmap_ready(next_info):
++        activation_attempted, activation_error = _activate_next_roadmap(root, next_info=next_info)
++
++    active_info = _yaml_info(root / RESEARCH_ROADMAP_REL_PATH)
++    registry_levels = _registry_total_levels(root / REGISTRY_REL_PATH)
++    spec_text = _read_text(root / CAPSTONE_SPEC_REL_PATH) or ""
++    conductor_text = _read_text(root / CONDUCTOR_LOG_REL_PATH) or ""
++    conductor_scope = _transition_log_scope(conductor_text)
++    research_complete_text = _read_text(root / RESEARCH_COMPLETE_REL_PATH) or ""
++    accepted_missing_next = (
++        not _next_roadmap_ready(next_info)
++        and _active_437_ready(active_info)
++        and next_info.get("available") is False
++    )
++    roadmap_ready = _next_roadmap_ready(next_info) or accepted_missing_next
++    should_run_smart_subset = roadmap_ready and offline_ok and activation_error == ""
++    smart_subset = smart_subset_checker(root) if should_run_smart_subset else None
++
++    return {
++        "agents_md": {"path": "AGENTS.md", "available": (root / "AGENTS.md").exists()},
++        "codex_or_opencode_md": {
++            "path": "CODEX.md|OPENCODE.md",
++            "available": (root / "CODEX.md").exists() or (root / "OPENCODE.md").exists(),
++        },
++        "research_roadmap_next_yaml": {
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "available": next_info["available"],
++            "parses": next_info["parses"],
++            "milestone": next_info["milestone"],
++            "literal_precondition_command": (
++                ".venv/bin/python -c \"import yaml; yaml.safe_load(open("
++                "'research-roadmap-next.yaml')); print('yaml_ok')\""
++            ),
++            "literal_precondition_passed": _next_roadmap_ready(next_info),
++            "activation_attempted": activation_attempted,
++            "activation_error": activation_error,
++            "accepted_missing_because_already_active": accepted_missing_next,
++        },
++        "active_research_roadmap_yaml": {
++            "path": str(RESEARCH_ROADMAP_REL_PATH),
++            "available": active_info["available"],
++            "parses": active_info["parses"],
++            "milestone": active_info["milestone"],
++            "milestone_before_activation": active_before["milestone"],
++        },
++        "research_complete_yaml": {
++            "path": str(RESEARCH_COMPLETE_REL_PATH),
++            "available": (root / RESEARCH_COMPLETE_REL_PATH).exists(),
++            "contains_2026_06_436": ARCHIVED_MILESTONE in research_complete_text,
++        },
++        "offline_arcade": {
++            "available": offline_ok,
++            "command": (
++                ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; "
++                "k.offline_arcade()\""
++            ),
++            "error": offline_error,
++        },
++        "smart_subset_pretest_gate": _command_check(smart_subset),
++        "registry": {
++            "path": str(REGISTRY_REL_PATH),
++            "available": registry_levels is not None,
++            "reproducible_total_levels": registry_levels,
++        },
++        "capstone_spec": {
++            "path": str(CAPSTONE_SPEC_REL_PATH),
++            "available": (root / CAPSTONE_SPEC_REL_PATH).exists(),
++            "has_req_4748": "REQ-CAPSTONE-4748" in spec_text,
++        },
++        "capstone_4747": {"path": str(CAPSTONE_REL_PATH), "available": (root / CAPSTONE_REL_PATH).exists()},
++        "conductor_log": {
++            "path": str(CONDUCTOR_LOG_REL_PATH),
++            "available": (root / CONDUCTOR_LOG_REL_PATH).exists(),
++            "poison_scan_scope": "after_2026.06.436_activation_when_marker_present",
++            "poison_signature_observed": bool(_poison_signature(conductor_scope)),
++            "poison_signature": _poison_signature(conductor_scope),
++        },
++    }
++
++
++def _first_blocker(preconditions: Mapping[str, Any]) -> str | None:
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    offline = _mapping(preconditions.get("offline_arcade"))
++    smart = _mapping(preconditions.get("smart_subset_pretest_gate"))
++    registry = _mapping(preconditions.get("registry"))
++    capstone_spec = _mapping(preconditions.get("capstone_spec"))
++
++    roadmap_ready = _next_roadmap_ready(next_info) or (
++        next_info.get("accepted_missing_because_already_active") is True and _active_437_ready(active)
++    )
++    if not roadmap_ready:
++        return "research_roadmap_437_unavailable"
++    if offline.get("available") is not True:
++        return "offline_arcade"
++    if smart.get("passed") is not True:
++        return "smart_subset_pretest_gate"
++    if _mapping(preconditions.get("agents_md")).get("available") is not True:
++        return "missing_agents_md"
++    if _mapping(preconditions.get("codex_or_opencode_md")).get("available") is not True:
++        return "missing_codex_or_opencode_md"
++    if capstone_spec.get("has_req_4748") is not True:
++        return "missing_capstone_spec_req_4748"
++    if registry.get("available") is not True:
++        return "arc_solve_registry"
++    if registry.get("reproducible_total_levels") != BASELINE_REPRODUCIBLE_TOTAL_LEVELS:
++        return "arc_solve_registry_total_levels_not_64"
++    for key, reason in (
++        ("capstone_4747", "missing_experiment_4747_capstone_v436"),
++        ("conductor_log", "missing_conductor_log"),
++    ):
++        if _mapping(preconditions.get(key)).get("available") is not True:
++            return reason
++    return None
++
++
++def _transition(preconditions: Mapping[str, Any], *, complete: bool) -> JsonDict:
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    archive = _mapping(preconditions.get("research_complete_yaml"))
++    if not complete:
++        activation_state = "blocked_missing_or_failed_precondition"
++    elif next_info.get("activation_attempted") is True:
++        activation_state = "activated_from_research_roadmap_next"
++    else:
++        activation_state = "already_activated_by_conductor"
++    return {
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": bool(complete and _active_437_ready(active)),
++        "activation_state": activation_state,
++        "archive_state": (
++            "research_complete_contains_2026.06.436"
++            if archive.get("contains_2026_06_436") is True
++            else "archive_noop_or_already_recorded"
++        ),
++    }
++
++
++def _poison_pretest_resolution(preconditions: Mapping[str, Any]) -> JsonDict:
++    smart = _mapping(preconditions.get("smart_subset_pretest_gate"))
++    conductor = _mapping(preconditions.get("conductor_log"))
++    combined_output = f"{smart.get('stdout_tail', '')}\n{smart.get('stderr_tail', '')}"
++    historical_signature = str(conductor.get("poison_signature") or _poison_signature(combined_output))
++    historical_observed = bool(conductor.get("poison_signature_observed") or historical_signature)
++    current_passed = smart.get("passed")
++    if current_passed is True:
++        return {
++            "resolved": True,
++            "current_gate_passed": True,
++            "historical_signature_observed": historical_observed,
++            "historical_signature": historical_signature,
++            "poison_tests": [],
++            "action": (
++                "historical_poison_signature_resolved_current_gate_green"
++                if historical_observed
++                else "no_poison_observed_current_gate_green"
++            ),
++        }
++    poison_tests = []
++    if current_passed is False and "1 failed" in combined_output:
++        poison_tests.append(
++            {
++                "id": _poison_test_id(combined_output),
++                "reason": "single-failure smart-subset signature matches a stale honest-verdict expectation",
++                "action": "blocked_for_fix_or_quarantine_before_tail_continues",
++            }
++        )
++    return {
++        "resolved": False,
++        "current_gate_passed": current_passed,
++        "historical_signature_observed": historical_observed,
++        "historical_signature": historical_signature,
++        "poison_tests": poison_tests,
++        "action": "blocked_before_or_without_green_current_gate",
++    }
++
++
++def _cited_upstream(root: Path) -> list[JsonDict]:
++    return [
++        {
++            "source": "active_research_roadmap_yaml",
++            "path": str(RESEARCH_ROADMAP_REL_PATH),
++            "fields_imported": ["milestone"],
++            "sha256": file_sha256(root / RESEARCH_ROADMAP_REL_PATH),
++        },
++        {
++            "source": "research_roadmap_next_yaml",
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "fields_imported": ["milestone"],
++            "sha256": file_sha256(root / RESEARCH_ROADMAP_NEXT_REL_PATH),
++        },
++        {
++            "source": "experiment_4747_capstone_v436",
++            "path": str(CAPSTONE_REL_PATH),
++            "fields_imported": [
++                "honest_verdict",
++                "bridge_crossed_for_solve",
++                "reproducible_total_levels",
++                "reproducible_total_levels_delta",
++                "a1_goal_energy_result",
++                "a2_energy_qd_result",
++                "a3_banked_level",
++            ],
++            "sha256": file_sha256(root / CAPSTONE_REL_PATH),
++        },
++        {
++            "source": "arc_solve_registry",
++            "path": str(REGISTRY_REL_PATH),
++            "fields_imported": ["reproducible_total_levels"],
++            "sha256": file_sha256(root / REGISTRY_REL_PATH),
++        },
++        {
++            "source": "conductor_log",
++            "path": str(CONDUCTOR_LOG_REL_PATH),
++            "fields_imported": ["poison pre-test signature", "activation rows"],
++            "sha256": file_sha256(root / CONDUCTOR_LOG_REL_PATH),
++        },
++    ]
++
++
++def _close_state_436(capstone: Mapping[str, Any], registry_total_levels: int) -> JsonDict:
++    a1 = _mapping(capstone.get("a1_goal_energy_result"))
++    a2 = _mapping(capstone.get("a2_energy_qd_result"))
++    a3 = _mapping(capstone.get("a3_banked_level"))
++    return {
++        "source_capstone_honest_verdict": capstone.get("honest_verdict"),
++        "bridge_crossed_for_solve": capstone.get("bridge_crossed_for_solve") is True,
++        "reproducible_total_levels": registry_total_levels,
++        "capstone_reported_reproducible_total_levels": _int(
++            capstone.get("reproducible_total_levels"), registry_total_levels
++        ),
++        "reproducible_total_levels_delta": _int(capstone.get("reproducible_total_levels_delta")),
++        "a1_guidance_class_generation": {
++            "arms_non_degenerate": a1.get("arms_non_degenerate") is True,
++            "beat_baseline_by_0_05": a1.get("beat_baseline_by_0_05") is True,
++            "deepened_to_l2": a1.get("deepened_to_l2") is True,
++            "generated": a1.get("generated") is True,
++            "banked": a1.get("banked") is True,
++            "baseline_first_win": _float(a1.get("baseline_first_win")),
++            "goal_energy_first_win": _float(a1.get("goal_energy_first_win")),
++            "goal_energy_vs_baseline_delta": _float(a1.get("goal_energy_vs_baseline_delta")),
++            "offline_reproduced": a1.get("offline_reproduced") is True,
++            "reproduced_levels": _int(a1.get("reproduced_levels")),
++            "solve_provenance": str(a1.get("solve_provenance", "")),
++            "reason": str(a1.get("reason", "")),
++        },
++        "a2_guidance_class_generation": {
++            "arms_non_degenerate": a2.get("arms_non_degenerate") is True,
++            "generated_winner_where_naive_missed": a2.get("generated_winner_where_naive_missed") is True,
++            "deepened_to_l2": a2.get("deepened_to_l2") is True,
++            "generated": a2.get("generated") is True,
++            "banked": a2.get("banked") is True,
++            "novel_candidates_generated": _int(a2.get("novel_candidates_generated")),
++            "naive_search_first_win": _float(a2.get("naive_search_first_win")),
++            "energy_qd_first_win": _float(a2.get("energy_qd_first_win")),
++            "energy_qd_vs_naive_delta": _float(a2.get("energy_qd_vs_naive_delta")),
++            "offline_reproduced": a2.get("offline_reproduced") is True,
++            "reproduced_levels": _int(a2.get("reproduced_levels")),
++            "target_game": str(a2.get("target_game", "")),
++            "solve_provenance": str(a2.get("solve_provenance", "")),
++            "reason": str(a2.get("reason", "")),
++        },
++        "a3_level_up_guarantee": {
++            "banked": a3.get("banked") is True,
++            "new_levels_banked": _int(a3.get("new_levels_banked")),
++            "reproducible_total_levels_before": _int(
++                a3.get("reproducible_total_levels_before"), BASELINE_REPRODUCIBLE_TOTAL_LEVELS
++            ),
++            "reproducible_total_levels_after": _int(
++                a3.get("reproducible_total_levels_after"), registry_total_levels
++            ),
++            "reproduced_levels": _int(a3.get("reproduced_levels")),
++            "target_game": str(a3.get("target_game", "")),
++            "reason": str(a3.get("reason", "")),
++        },
++        "net_436": {
++            "bridge_crossed_for_solve": capstone.get("bridge_crossed_for_solve") is True,
++            "capability_grew": _int(capstone.get("reproducible_total_levels_delta")) > 0,
++            "guidance_class_generation_validly_tested": a1.get("arms_non_degenerate") is True
++            and a2.get("arms_non_degenerate") is True,
++            "registry_total_after": registry_total_levels,
++        },
++    }
++
++
++def _v437_pivot() -> JsonDict:
++    return {
++        "headline": "FIX induction-quality wall",
++        "a1_structured_engine": {
++            "action": "wire existing ProductWorldModel programmatic experts as the action-effect engine",
++            "replaces": "0.12-accurate free-form codex engine",
++            "existing_scaffold": "python/carnot/agentic/arc_executable_world_model.py:ProductWorldModel",
++        },
++        "a2_structural_alignment_detector": {
++            "action": "fix perception-grounded structural-alignment detector segmentation and pairing",
++            "resolves": "exp4712 over-segmentation: goal_count=42 aligned_piece_count=0",
++            "existing_scaffold": "python/carnot/agentic/arc_value_learner.py structural alignment pipeline",
++        },
++        "retired_retries": ["pure prompt-engineering retry", "retired CNN driver"],
++    }
++
++
++def _blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: Mapping[str, Any],
++    poison_pretest_resolved: Mapping[str, Any],
++    duration_s: float,
++    cited_upstream_artifacts: list[JsonDict],
++) -> JsonDict:
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": f"blocked_{reason}",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "poison_pretest_resolved": dict(poison_pretest_resolved),
++        "transition": _transition(preconditions_checked, complete=False),
++        "close_state_436": {},
++        "v437_pivot": {},
++        "cited_upstream_artifacts": cited_upstream_artifacts,
++        "field_provenance": FIELD_PROVENANCE,
++        "leaderboard_submission": False,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    root_path = Path(root)
++    duration_s = duration_from(started_s, now_s)
++    preconditions = _preconditions(
++        root_path,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    cited = _cited_upstream(root_path)
++    poison = _poison_pretest_resolution(preconditions)
++    blocker = _first_blocker(preconditions)
++    if blocker is not None:
++        artifact = _blocked_artifact(
++            reason=blocker,
++            preconditions_checked=preconditions,
++            poison_pretest_resolved=poison,
++            duration_s=duration_s,
++            cited_upstream_artifacts=cited,
++        )
++        validate_artifact(artifact)
++        return artifact
++
++    registry_total_levels = int(_mapping(preconditions["registry"])["reproducible_total_levels"])
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": "complete: archive_436_activate_437_true_close_state_recorded",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": preconditions,
++        "poison_pretest_resolved": poison,
++        "transition": _transition(preconditions, complete=True),
++        "close_state_436": _close_state_436(
++            _json_object(root_path / CAPSTONE_REL_PATH),
++            registry_total_levels,
++        ),
++        "v437_pivot": _v437_pivot(),
++        "cited_upstream_artifacts": cited,
++        "field_provenance": FIELD_PROVENANCE,
++        "leaderboard_submission": False,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def _validate_checksum(artifact: Mapping[str, Any]) -> None:
++    checksum = artifact.get("reproducibility_checksum")
++    _require(
++        isinstance(checksum, str)
++        and checksum.startswith("sha256:")
++        and is_sha256(checksum.removeprefix("sha256:")),
++        "reproducibility_checksum must be sha256-prefixed",
++    )
++    expected = "sha256:" + payload_checksum(artifact)
++    _require(checksum == expected, "reproducibility_checksum does not match payload")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _require(not missing, f"missing required artifact fields: {missing}")
++
++    verdict = artifact.get("honest_verdict")
++    _require(isinstance(verdict, str), "honest_verdict must be a string")
++    blocked = verdict.startswith("blocked_")
++    if not blocked:
++        _require(verdict.startswith(TERMINAL_PREFIXES), "honest_verdict must be terminal-prefixed")
++
++    _require(
++        artifact.get("inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate must be aggregation_from_upstream_artifacts",
++    )
++    _require(artifact.get("leaderboard_submission") is False, "leaderboard_submission must remain false")
++    _require(artifact.get("field_provenance") == FIELD_PROVENANCE, "field_provenance principles drifted")
++
++    close = _mapping(artifact.get("close_state_436"))
++    pivot = _mapping(artifact.get("v437_pivot"))
++    poison = _mapping(artifact.get("poison_pretest_resolved"))
++    transition = _mapping(artifact.get("transition"))
++    if blocked:
++        _require(close == {} and pivot == {}, "blocked artifacts must not carry fabricated close-state")
++        _validate_checksum(artifact)
++        return
++
++    _require(poison.get("resolved") is True, "poison pre-test resolution must be recorded")
++    _require(transition.get("active_milestone_confirmed") is True, "active .437 milestone must be confirmed")
++    _require(close.get("bridge_crossed_for_solve") is False, "bridge must remain false for .436")
++    _require(
++        close.get("reproducible_total_levels") == BASELINE_REPRODUCIBLE_TOTAL_LEVELS
++        and close.get("reproducible_total_levels_delta") == 0,
++        "registry total and zero delta must be recorded",
++    )
++
++    a1 = _mapping(close.get("a1_guidance_class_generation"))
++    _require(
++        a1.get("arms_non_degenerate") is True
++        and a1.get("beat_baseline_by_0_05") is False
++        and a1.get("deepened_to_l2") is False
++        and a1.get("reason") == "goal_energy_real_non_degenerate_zero_lift_null",
++        "A1 non-degenerate zero-lift null must be recorded",
++    )
++
++    a2 = _mapping(close.get("a2_guidance_class_generation"))
++    _require(
++        a2.get("arms_non_degenerate") is True
++        and a2.get("generated_winner_where_naive_missed") is False
++        and a2.get("novel_candidates_generated") == 8
++        and a2.get("reason") == "energy_qd_real_non_degenerate_zero_lift_null",
++        "A2 non-degenerate zero-lift null must be recorded",
++    )
++
++    net = _mapping(close.get("net_436"))
++    _require(
++        net.get("bridge_crossed_for_solve") is False
++        and net.get("capability_grew") is False
++        and net.get("guidance_class_generation_validly_tested") is True,
++        ".436 net close-state must preserve no bridge, no capability growth, valid tests",
++    )
++
++    _require(
++        pivot.get("headline") == "FIX induction-quality wall"
++        and "ProductWorldModel" in str(_mapping(pivot.get("a1_structured_engine")).get("action"))
++        and "structural-alignment detector"
++        in str(_mapping(pivot.get("a2_structural_alignment_detector")).get("action")),
++        "v437 pivot must record structured engine and structural-alignment detector",
++    )
++    _validate_checksum(artifact)
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    write: bool = True,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        started_s=started_s,
++        now_s=now_s,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    if write:
++        output_path = root_path / OUTPUT_REL_PATH
++        output_path.parent.mkdir(parents=True, exist_ok=True)
++        output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++if __name__ == "__main__":  # pragma: no cover - script entrypoint
++    result = run()
++    print(
++        json.dumps(
++            {
++                "honest_verdict": result["honest_verdict"],
++                "result_path": result["result_path"],
++            },
++            sort_keys=True,
++        )
++    )
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 385fc8e3fe..f1664a5984 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-25T22:42:56.056736Z",
+-  "duration_s": 0.05913281440734863,
++  "run_date": "2026-06-25T23:03:19.103160Z",
++  "duration_s": 0.07064270973205566,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "da8dc7ea6771938452fb1bcd691ebb2a04c3e000632de8f0e813585f794ec2bb",
++  "reproducibility_checksum": "faeab28dddb5ec088fa5919797b3db12230d2ca004f6f4530f0309f2ca9dbb58",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "e7c698fcd2d7ec65c6633347a1cb215dc2767fd2"
++    "adversarial_verify_version": "8253bf6252ef436e77a3d852ba37246dffadeb0a"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 196a3a2466..0faa646eea 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-25T22:42:56.145498Z",
+-  "duration_s": 0.08167433738708496,
++  "run_date": "2026-06-25T23:03:19.201433Z",
++  "duration_s": 0.08877110481262207,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "b96273a91827acc6df8fbdd7734c1f2b76e5ec3320de70013d6e17a37983e021",
++  "reproducibility_checksum": "5d85d6fbf1a44a85159a6d0cf626833f836be7fc5a666be5b634f98b3858a0f3",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "e7c698fcd2d7ec65c6633347a1cb215dc2767fd2"
++    "adversarial_verify_version": "8253bf6252ef436e77a3d852ba37246dffadeb0a"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 1f7995d09d..76c6994900 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.160787582397461,
++  "efficiency_gains_ms": 2.1140575408935547,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 79c7657ff3..50a59c1325 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.1207997128367424e-05,
++  "duration_s": 4.046596586704254e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4748_archive_436_activate_437.json b/results/experiment_4748_archive_436_activate_437.json
+new file mode 100644
+index 0000000000..cc5ecc8493
+--- /dev/null
++++ b/results/experiment_4748_archive_436_activate_437.json
+@@ -0,0 +1,249 @@
++{
++  "cited_upstream_artifacts": [
++    {
++      "fields_imported": [
++        "milestone"
++      ],
++      "path": "research-roadmap.yaml",
++      "sha256": "c59ef3528000b8efbb35696c3cad6fa8603de9a28a80393d355519de736e1155",
++      "source": "active_research_roadmap_yaml"
++    },
++    {
++      "fields_imported": [
++        "milestone"
++      ],
++      "path": "research-roadmap-next.yaml",
++      "sha256": null,
++      "source": "research_roadmap_next_yaml"
++    },
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "bridge_crossed_for_solve",
++        "reproducible_total_levels",
++        "reproducible_total_levels_delta",
++        "a1_goal_energy_result",
++        "a2_energy_qd_result",
++        "a3_banked_level"
++      ],
++      "path": "results/experiment_4747_capstone_v436.json",
++      "sha256": "2440a4633a8d468265693cb2f4f72c322acbcb94e80da204dc41ecd4656f3774",
++      "source": "experiment_4747_capstone_v436"
++    },
++    {
++      "fields_imported": [
++        "reproducible_total_levels"
++      ],
++      "path": "ops/arc_solve_registry.yaml",
++      "sha256": "ed6204230f5d08b9a0d58e477bbdd4572708f31aef52c61ee40e581121a603bb",
++      "source": "arc_solve_registry"
++    },
++    {
++      "fields_imported": [
++        "poison pre-test signature",
++        "activation rows"
++      ],
++      "path": "ops/conductor-log.md",
++      "sha256": "643aa789c9bafeaae2a3de0b474c3b40b712ddb0586d100e1cc0e3fda18dd1c5",
++      "source": "conductor_log"
++    }
++  ],
++  "close_state_436": {
++    "a1_guidance_class_generation": {
++      "arms_non_degenerate": true,
++      "banked": false,
++      "baseline_first_win": 0.0,
++      "beat_baseline_by_0_05": false,
++      "deepened_to_l2": false,
++      "generated": false,
++      "goal_energy_first_win": 0.0,
++      "goal_energy_vs_baseline_delta": 0.0,
++      "offline_reproduced": false,
++      "reason": "goal_energy_real_non_degenerate_zero_lift_null",
++      "reproduced_levels": 1,
++      "solve_provenance": "live_agent_self_discovery"
++    },
++    "a2_guidance_class_generation": {
++      "arms_non_degenerate": true,
++      "banked": false,
++      "deepened_to_l2": false,
++      "energy_qd_first_win": 0.0,
++      "energy_qd_vs_naive_delta": 0.0,
++      "generated": false,
++      "generated_winner_where_naive_missed": false,
++      "naive_search_first_win": 0.0,
++      "novel_candidates_generated": 8,
++      "offline_reproduced": false,
++      "reason": "energy_qd_real_non_degenerate_zero_lift_null",
++      "reproduced_levels": 1,
++      "solve_provenance": "live_agent_self_discovery",
++      "target_game": "energy_qd"
++    },
++    "a3_level_up_guarantee": {
++      "banked": false,
++      "new_levels_banked": 0,
++      "reason": "no_clean_registry_bank",
++      "reproduced_levels": 2,
++      "reproducible_total_levels_after": 64,
++      "reproducible_total_levels_before": 64,
++      "target_game": "re86"
++    },
++    "bridge_crossed_for_solve": false,
++    "capstone_reported_reproducible_total_levels": 64,
++    "net_436": {
++      "bridge_crossed_for_solve": false,
++      "capability_grew": false,
++      "guidance_class_generation_validly_tested": true,
++      "registry_total_after": 64
++    },
++    "reproducible_total_levels": 64,
++    "reproducible_total_levels_delta": 0,
++    "source_capstone_honest_verdict": "complete: no_bridge_crossed_capability_unchanged"
++  },
++  "duration_s": 0.0001,
++  "experiment": "experiment_4748_archive_436_activate_437",
++  "experiment_id": 4748,
++  "field_provenance": {
++    "close_state_436": {
++      "principle": "the honest .436 numbers carried forward from the capstone so the record does not drift."
++    },
++    "honest_verdict": {
++      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
++    },
++    "poison_pretest_resolved": {
++      "principle": "any poison pre-test (id + reason) that would cascade-skip the .437 tail is fixed/quarantined."
++    },
++    "preconditions_checked": {
++      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
++    },
++    "v437_pivot": {
++      "principle": "the .437 headline (FIX induction-quality: A1 structured engine, A2 structural-alignment detector) recorded so milestone intent is traceable."
++    }
++  },
++  "honest_verdict": "complete: archive_436_activate_437_true_close_state_recorded",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "leaderboard_submission": false,
++  "poison_pretest_resolved": {
++    "action": "no_poison_observed_current_gate_green",
++    "current_gate_passed": true,
++    "historical_signature": "",
++    "historical_signature_observed": false,
++    "poison_tests": [],
++    "resolved": true
++  },
++  "preconditions_checked": {
++    "active_research_roadmap_yaml": {
++      "available": true,
++      "milestone": "2026.06.437",
++      "milestone_before_activation": "2026.06.437",
++      "parses": true,
++      "path": "research-roadmap.yaml"
++    },
++    "agents_md": {
++      "available": true,
++      "path": "AGENTS.md"
++    },
++    "capstone_4747": {
++      "available": true,
++      "path": "results/experiment_4747_capstone_v436.json"
++    },
++    "capstone_spec": {
++      "available": true,
++      "has_req_4748": true,
++      "path": "openspec/capabilities/capstone/spec.md"
++    },
++    "codex_or_opencode_md": {
++      "available": true,
++      "path": "CODEX.md|OPENCODE.md"
++    },
++    "conductor_log": {
++      "available": true,
++      "path": "ops/conductor-log.md",
++      "poison_scan_scope": "after_2026.06.436_activation_when_marker_present",
++      "poison_signature": "",
++      "poison_signature_observed": false
++    },
++    "offline_arcade": {
++      "available": true,
++      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
++      "error": ""
++    },
++    "registry": {
++      "available": true,
++      "path": "ops/arc_solve_registry.yaml",
++      "reproducible_total_levels": 64
++    },
++    "research_complete_yaml": {
++      "available": true,
++      "contains_2026_06_436": true,
++      "path": "research-complete.yaml"
++    },
++    "research_roadmap_next_yaml": {
++      "accepted_missing_because_already_active": true,
++      "activation_attempted": false,
++      "activation_error": "",
++      "available": false,
++      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('yaml_ok')\"",
++      "literal_precondition_passed": false,
++      "milestone": null,
++      "parses": false,
++      "path": "research-roadmap-next.yaml"
++    },
++    "smart_subset_pretest_gate": {
++      "command": [
++        ".venv/bin/pytest",
++        "tests/python/test_pipeline_extract.py",
++        "tests/python/test_docs.py",
++        "tests/python/test_experiment_4748_archive_436_activate_437.py",
++        "-q",
++        "--no-header",
++        "-n",
++        "0",
++        "--no-cov",
++        "-o",
++        "addopts="
++      ],
++      "exit_code": 0,
++      "passed": true,
++      "stderr_tail": "",
++      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 6.58s\n"
++    }
++  },
++  "random_seed": 4748,
++  "reproducibility_checksum": "sha256:a1e7635e825e23a2f8496702c5aaad69f064e778aa104d6d0eca9d741a515d28",
++  "result_path": "results/experiment_4748_archive_436_activate_437.json",
++  "schema": "carnot.archive_activation.v436_to_v437_4748.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4748",
++    "SCENARIO-CAPSTONE-4748",
++    "SCENARIO-CAPSTONE-4748-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4748-FIELD-PRINCIPLES"
++  ],
++  "transition": {
++    "activated_milestone": "2026.06.437",
++    "activation_state": "already_activated_by_conductor",
++    "active_milestone_confirmed": true,
++    "archive_state": "research_complete_contains_2026.06.436",
++    "archived_milestone": "2026.06.436"
++  },
++  "v437_pivot": {
++    "a1_structured_engine": {
++      "action": "wire existing ProductWorldModel programmatic experts as the action-effect engine",
++      "existing_scaffold": "python/carnot/agentic/arc_executable_world_model.py:ProductWorldModel",
++      "replaces": "0.12-accurate free-form codex engine"
++    },
++    "a2_structural_alignment_detector": {
++      "action": "fix perception-grounded structural-alignment detector segmentation and pairing",
++      "existing_scaffold": "python/carnot/agentic/arc_value_learner.py structural alignment pipeline",
++      "resolves": "exp4712 over-segmentation: goal_count=42 aligned_piece_count=0"
++    },
++    "headline": "FIX induction-quality wall",
++    "retired_retries": [
++      "pure prompt-engineering retry",
++      "retired CNN driver"
++    ]
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 0516ac2427..f10835d724 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T22:42:31Z",
+-  "finished_at": "2026-06-25T22:42:31Z",
++  "started_at": "2026-06-25T23:02:52Z",
++  "finished_at": "2026-06-25T23:02:52Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index c3eab7f30e..cced35bf13 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T22:42:31Z",
+-  "finished_at": "2026-06-25T22:42:31Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-25T23:02:52Z",
++  "finished_at": "2026-06-25T23:02:52Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 16ddca0ee4..1f43ec32ad 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260625",
+-  "started_at": "2026-06-25T22:42:31Z",
+-  "finished_at": "2026-06-25T22:42:31Z",
++  "started_at": "2026-06-25T23:02:52Z",
++  "finished_at": "2026-06-25T23:02:53Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4748_archive_436_activate_437.py b/tests/python/test_experiment_4748_archive_436_activate_437.py
+new file mode 100644
+index 0000000000..a6cdd85e6b
+--- /dev/null
++++ b/tests/python/test_experiment_4748_archive_436_activate_437.py
+@@ -0,0 +1,484 @@
++"""Tests for Exp 4748 `.436` archive / `.437` activation record.
++
++Spec refs: REQ-CAPSTONE-4748, SCENARIO-CAPSTONE-4748,
++SCENARIO-CAPSTONE-4748-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4748-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4748_archive_436_activate_437 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _green_smart_subset(_root: Path) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=["pytest", "smart-subset"],
++        exit_code=0,
++        stdout="123 passed, 1 warning",
++        stderr="",
++    )
++
++
++def _red_poison_smart_subset(_root: Path) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=["pytest", "smart-subset"],
++        exit_code=1,
++        stdout="1 failed, 123 passed, 1 warning",
++        stderr="test_expected_stale_honest_verdict failed against now-correct complete verdict",
++    )
++
++
++def _capstone_4747() -> JsonDict:
++    return {
++        "honest_verdict": "complete: no_bridge_crossed_capability_unchanged",
++        "bridge_crossed_for_solve": False,
++        "reproducible_total_levels": 64,
++        "reproducible_total_levels_delta": 0,
++        "a1_goal_energy_result": {
++            "arms_non_degenerate": True,
++            "banked": False,
++            "baseline_first_win": 0.0,
++            "beat_baseline_by_0_05": False,
++            "crossed": False,
++            "deepened_to_l2": False,
++            "generated": False,
++            "goal_energy_first_win": 0.0,
++            "goal_energy_vs_baseline_delta": 0.0,
++            "included_in_headline": True,
++            "offline_reproduced": False,
++            "reason": "goal_energy_real_non_degenerate_zero_lift_null",
++            "reproduced_levels": 1,
++            "solve_provenance": "live_agent_self_discovery",
++        },
++        "a2_energy_qd_result": {
++            "arms_non_degenerate": True,
++            "banked": False,
++            "crossed": False,
++            "deepened_to_l2": False,
++            "energy_qd_first_win": 0.0,
++            "energy_qd_vs_naive_delta": 0.0,
++            "generated": False,
++            "generated_winner_where_naive_missed": False,
++            "included_in_headline": True,
++            "naive_search_first_win": 0.0,
++            "novel_candidates_generated": 8,
++            "offline_reproduced": False,
++            "reason": "energy_qd_real_non_degenerate_zero_lift_null",
++            "reproduced_levels": 1,
++            "solve_provenance": "live_agent_self_discovery",
++            "target_game": "energy_qd",
++        },
++        "a3_banked_level": {
++            "banked": False,
++            "crossed": False,
++            "generated": False,
++            "new_levels_banked": 0,
++            "reason": "no_clean_registry_bank",
++            "reproduced_levels": 2,
++            "reproducible_total_levels_after": 64,
++            "reproducible_total_levels_before": 64,
++            "solve_provenance": "development_proxy",
++            "target_game": "re86",
++        },
++        "headline_decision": {
++            "bridge_crossed_for_solve": False,
++            "capability_delta": 0,
++            "a1_arms_non_degenerate": True,
++            "a1_beat_baseline_by_0_05": False,
++            "a1_deepened_to_l2": False,
++            "a2_generated_winner_where_naive_missed": False,
++            "a2_deepened_to_l2": False,
++            "a3_banked_64_to_65": False,
++        },
++        "next_milestone_fallback": {
++            "strongest_open_lever": "A2_energy_qd_generation",
++            "deferred_reopens": ["P1_go_explore", "P4_subgoal", "A2_active_probe"],
++        },
++    }
++
++
++def _write_repo_fixture(
++    root: Path,
++    *,
++    active_milestone: str = "2026.06.437",
++    next_present: bool = False,
++    registry_total: int = 64,
++    capstone_present: bool = True,
++    conductor_text: str = "| 2026-06-25 22:48 UTC | Milestone 2026.06.437 activated | OK | 12 tasks queued |\n",
++) -> None:
++    (root / "AGENTS.md").write_text("# test\n", encoding="utf-8")
++    (root / "CODEX.md").write_text("# test\n", encoding="utf-8")
++    (root / "research-roadmap.yaml").write_text(
++        f"milestone: {active_milestone}\n"
++        "tasks:\n"
++        "  - id: exp4748-phase0\n"
++        "    deliverable: results/experiment_4748_archive_436_activate_437.json\n",
++        encoding="utf-8",
++    )
++    if next_present:
++        (root / "research-roadmap-next.yaml").write_text(
++            "milestone: 2026.06.437\n"
++            "tasks:\n"
++            "  - id: exp4748-phase0\n"
++            "    deliverable: results/experiment_4748_archive_436_activate_437.json\n",
++            encoding="utf-8",
++        )
++    registry = root / "ops" / "arc_solve_registry.yaml"
++    registry.parent.mkdir(parents=True, exist_ok=True)
++    registry.write_text(
++        "schema_version: 1\n"
++        "updated: '2026-06-25'\n"
++        f"reproducible_total_levels: {registry_total}\n",
++        encoding="utf-8",
++    )
++    spec = root / "openspec" / "capabilities" / "capstone" / "spec.md"
++    spec.parent.mkdir(parents=True, exist_ok=True)
++    spec.write_text("REQ-CAPSTONE-4748\n", encoding="utf-8")
++    complete = root / "research-complete.yaml"
++    complete.write_text("- id: 2026.06.436\n  finding: archived by conductor\n", encoding="utf-8")
++    log = root / "ops" / "conductor-log.md"
++    log.write_text(conductor_text, encoding="utf-8")
++    if capstone_present:
++        _write_json(root / "results" / "experiment_4747_capstone_v436.json", _capstone_4747())
++
++
++def _artifact(root: Path) -> JsonDict:
++    _write_repo_fixture(root)
++    return mod.build_artifact(
++        root,
++        started_s=1.0,
++        now_s=1.25,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++
++def test_req_capstone_4748_spec_anchor_declares_transition_contract() -> None:
++    """REQ-CAPSTONE-4748: OpenSpec declares the transition contract first."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4748" in spec
++    assert "SCENARIO-CAPSTONE-4748" in spec
++    assert "SCENARIO-CAPSTONE-4748-BLOCKED-PRECONDITION" in spec
++    assert "SCENARIO-CAPSTONE-4748-FIELD-PRINCIPLES" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    assert "A1 goal-energy candidate generation as a non-degenerate zero-lift null" in spec
++    assert "ProductWorldModel structured action-effect engine" in spec
++    assert "structural-alignment detector" in spec
++    for field, provenance in mod.FIELD_PROVENANCE.items():
++        assert field in spec
++        assert provenance["principle"] in spec
++
++
++def test_scenario_capstone_4748_records_true_close_state_when_already_activated(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4748: active `.437` allows a complete record without next YAML."""
++
++    _write_repo_fixture(tmp_path)
++    artifact = mod.run(
++        root=tmp_path,
++        write=True,
++        started_s=2.0,
++        now_s=2.3,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert json.loads((tmp_path / mod.OUTPUT_REL_PATH).read_text(encoding="utf-8")) == artifact
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) == set(artifact)
++    assert artifact["honest_verdict"] == "complete: archive_436_activate_437_true_close_state_recorded"
++    assert artifact["transition"] == {
++        "archived_milestone": "2026.06.436",
++        "activated_milestone": "2026.06.437",
++        "active_milestone_confirmed": True,
++        "activation_state": "already_activated_by_conductor",
++        "archive_state": "research_complete_contains_2026.06.436",
++    }
++    next_check = artifact["preconditions_checked"]["research_roadmap_next_yaml"]
++    assert next_check["available"] is False
++    assert next_check["literal_precondition_passed"] is False
++    assert next_check["accepted_missing_because_already_active"] is True
++    assert artifact["preconditions_checked"]["active_research_roadmap_yaml"]["milestone"] == "2026.06.437"
++    assert artifact["preconditions_checked"]["smart_subset_pretest_gate"]["passed"] is True
++
++    poison = artifact["poison_pretest_resolved"]
++    assert poison == {
++        "resolved": True,
++        "current_gate_passed": True,
++        "historical_signature_observed": False,
++        "historical_signature": "",
++        "poison_tests": [],
++        "action": "no_poison_observed_current_gate_green",
++    }
++
++    close = artifact["close_state_436"]
++    assert close["source_capstone_honest_verdict"] == "complete: no_bridge_crossed_capability_unchanged"
++    assert close["bridge_crossed_for_solve"] is False
++    assert close["reproducible_total_levels"] == 64
++    assert close["reproducible_total_levels_delta"] == 0
++    assert close["a1_guidance_class_generation"]["reason"] == "goal_energy_real_non_degenerate_zero_lift_null"
++    assert close["a1_guidance_class_generation"]["arms_non_degenerate"] is True
++    assert close["a1_guidance_class_generation"]["beat_baseline_by_0_05"] is False
++    assert close["a2_guidance_class_generation"]["reason"] == "energy_qd_real_non_degenerate_zero_lift_null"
++    assert close["a2_guidance_class_generation"]["novel_candidates_generated"] == 8
++    assert close["a2_guidance_class_generation"]["generated_winner_where_naive_missed"] is False
++    assert close["a3_level_up_guarantee"]["new_levels_banked"] == 0
++    assert close["net_436"] == {
++        "bridge_crossed_for_solve": False,
++        "capability_grew": False,
++        "guidance_class_generation_validly_tested": True,
++        "registry_total_after": 64,
++    }
++
++    assert artifact["v437_pivot"] == {
++        "headline": "FIX induction-quality wall",
++        "a1_structured_engine": {
++            "action": "wire existing ProductWorldModel programmatic experts as the action-effect engine",
++            "replaces": "0.12-accurate free-form codex engine",
++            "existing_scaffold": "python/carnot/agentic/arc_executable_world_model.py:ProductWorldModel",
++        },
++        "a2_structural_alignment_detector": {
++            "action": "fix perception-grounded structural-alignment detector segmentation and pairing",
++            "resolves": "exp4712 over-segmentation: goal_count=42 aligned_piece_count=0",
++            "existing_scaffold": "python/carnot/agentic/arc_value_learner.py structural alignment pipeline",
++        },
++        "retired_retries": ["pure prompt-engineering retry", "retired CNN driver"],
++    }
++    assert artifact["leaderboard_submission"] is False
++    assert mod.validate_artifact(artifact) is None
++
++
++def test_scenario_capstone_4748_can_activate_literal_next_roadmap(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4748: present next roadmap is activated onto the active YAML."""
++
++    _write_repo_fixture(tmp_path, active_milestone="2026.06.436", next_present=True)
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=False,
++        started_s=3.0,
++        now_s=3.4,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8").startswith(
++        "milestone: 2026.06.437"
++    )
++    assert artifact["transition"]["activation_state"] == "activated_from_research_roadmap_next"
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"]["activation_attempted"] is True
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"][
++        "accepted_missing_because_already_active"
++    ] is False
++
++
++def test_scenario_capstone_4748_blockers_and_poison_signature_are_explicit(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4748-BLOCKED-PRECONDITION: blocked paths do not fabricate."""
++
++    _write_repo_fixture(tmp_path, active_milestone="2026.06.436", next_present=False)
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=True,
++        started_s=4.0,
++        now_s=4.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_research_roadmap_437_unavailable"
++    assert artifact["transition"]["activation_state"] == "blocked_missing_or_failed_precondition"
++    assert artifact["preconditions_checked"]["smart_subset_pretest_gate"]["passed"] is None
++    assert artifact["poison_pretest_resolved"]["resolved"] is False
++    assert artifact["close_state_436"] == {}
++    assert artifact["v437_pivot"] == {}
++    assert (tmp_path / mod.OUTPUT_REL_PATH).exists()
++
++    checks = _artifact(tmp_path)["preconditions_checked"]
++    assert mod._first_blocker(checks) is None
++
++    for key, expected in {
++        "agents_md": "missing_agents_md",
++        "codex_or_opencode_md": "missing_codex_or_opencode_md",
++        "capstone_spec": "missing_capstone_spec_req_4748",
++        "registry": "arc_solve_registry",
++        "capstone_4747": "missing_experiment_4747_capstone_v436",
++        "conductor_log": "missing_conductor_log",
++    }.items():
++        bad = copy.deepcopy(checks)
++        bad[key]["available"] = False
++        if key == "capstone_spec":
++            bad[key]["has_req_4748"] = False
++        assert mod._first_blocker(bad) == expected
++
++    offline_bad = copy.deepcopy(checks)
++    offline_bad["offline_arcade"]["available"] = False
++    assert mod._first_blocker(offline_bad) == "offline_arcade"
++
++    smart_bad = copy.deepcopy(checks)
++    smart_bad["smart_subset_pretest_gate"]["passed"] = False
++    assert mod._first_blocker(smart_bad) == "smart_subset_pretest_gate"
++
++    registry_bad = copy.deepcopy(checks)
++    registry_bad["registry"]["reproducible_total_levels"] = 63
++    assert mod._first_blocker(registry_bad) == "arc_solve_registry_total_levels_not_64"
++
++    bad_smart = mod.build_artifact(
++        tmp_path,
++        started_s=5.0,
++        now_s=5.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_red_poison_smart_subset,
++    )
++    assert bad_smart["honest_verdict"] == "blocked_smart_subset_pretest_gate"
++    assert bad_smart["poison_pretest_resolved"]["poison_tests"] == [
++        {
++            "id": "test_expected_stale_honest_verdict",
++            "reason": "single-failure smart-subset signature matches a stale honest-verdict expectation",
++            "action": "blocked_for_fix_or_quarantine_before_tail_continues",
++        }
++    ]
++
++
++def test_scenario_capstone_4748_field_principle_validation_fails_closed(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4748-FIELD-PRINCIPLES: schema drift fails loudly."""
++
++    valid = _artifact(tmp_path)
++
++    missing = copy.deepcopy(valid)
++    del missing["honest_verdict"]
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    bad_verdict = copy.deepcopy(valid)
++    bad_verdict["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(bad_verdict)
++
++    bad_substrate = copy.deepcopy(valid)
++    bad_substrate["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    bad_provenance = copy.deepcopy(valid)
++    bad_provenance["field_provenance"] = {}
++    with pytest.raises(ValueError, match="field_provenance"):
++        mod.validate_artifact(bad_provenance)
++
++    bad_poison = copy.deepcopy(valid)
++    bad_poison["poison_pretest_resolved"]["resolved"] = False
++    with pytest.raises(ValueError, match="poison"):
++        mod.validate_artifact(bad_poison)
++
++    blocked = mod._blocked_artifact(
++        reason="unit_test",
++        preconditions_checked=valid["preconditions_checked"],
++        poison_pretest_resolved=valid["poison_pretest_resolved"],
++        duration_s=0.1,
++        cited_upstream_artifacts=valid["cited_upstream_artifacts"],
++    )
++    blocked["close_state_436"] = {"fabricated": True}
++    blocked["reproducibility_checksum"] = "sha256:" + mod.payload_checksum(blocked)
++    with pytest.raises(ValueError, match="blocked artifacts"):
++        mod.validate_artifact(blocked)
++
++    inactive = copy.deepcopy(valid)
++    inactive["transition"]["active_milestone_confirmed"] = False
++    with pytest.raises(ValueError, match="active .437"):
++        mod.validate_artifact(inactive)
++
++    wrong_bridge = copy.deepcopy(valid)
++    wrong_bridge["close_state_436"]["bridge_crossed_for_solve"] = True
++    with pytest.raises(ValueError, match="bridge"):
++        mod.validate_artifact(wrong_bridge)
++
++    wrong_levels = copy.deepcopy(valid)
++    wrong_levels["close_state_436"]["reproducible_total_levels"] = 65
++    with pytest.raises(ValueError, match="registry"):
++        mod.validate_artifact(wrong_levels)
++
++    wrong_a1 = copy.deepcopy(valid)
++    wrong_a1["close_state_436"]["a1_guidance_class_generation"]["arms_non_degenerate"] = False
++    with pytest.raises(ValueError, match="A1"):
++        mod.validate_artifact(wrong_a1)
++
++    wrong_a2 = copy.deepcopy(valid)
++    wrong_a2["close_state_436"]["a2_guidance_class_generation"][
++        "generated_winner_where_naive_missed"
++    ] = True
++    with pytest.raises(ValueError, match="A2"):
++        mod.validate_artifact(wrong_a2)
++
++    wrong_pivot = copy.deepcopy(valid)
++    wrong_pivot["v437_pivot"]["headline"] = "retry prompt engineering"
++    with pytest.raises(ValueError, match="v437 pivot"):
++        mod.validate_artifact(wrong_pivot)
++
++    bad_checksum_prefix = copy.deepcopy(valid)
++    bad_checksum_prefix["reproducibility_checksum"] = "not-a-checksum"
++    with pytest.raises(ValueError, match="sha256-prefixed"):
++        mod.validate_artifact(bad_checksum_prefix)
++
++    bad_checksum = copy.deepcopy(valid)
++    bad_checksum["reproducibility_checksum"] = "sha256:" + ("0" * 64)
++    with pytest.raises(ValueError, match="does not match"):
++        mod.validate_artifact(bad_checksum)
++
++    assert mod._float(True, 7.0) == 7.0
++    assert mod._float("bad", 9.0) == 9.0
++    assert mod._int(False, 2) == 2
++    assert mod._int("bad", 3) == 3
++    assert mod._registry_total_levels(tmp_path / "missing.yaml") is None
++    assert mod._activate_next_roadmap(tmp_path, next_info={"available": False}) == (False, "")
++    assert mod._json_object(tmp_path / "missing.json") == {}
++    assert (
++        mod._poison_signature(
++            mod._transition_log_scope(
++                "old row: 1 failed, 91 passed\nMilestone 2026.06.436 activated\nall green"
++            )
++        )
++        == ""
++    )
++    assert (
++        mod._poison_signature(
++            mod._transition_log_scope("Milestone 2026.06.436 activated\n1 failed, 86 passed")
++        )
++        == "1 failed, 86 passed"
++    )
++
++    bad_yaml = tmp_path / "bad.yaml"
++    bad_yaml.write_text("milestone: [\n", encoding="utf-8")
++    assert mod._yaml_info(bad_yaml)["parses"] is False
++    assert mod._registry_total_levels(bad_yaml) is None
++
++    list_yaml = tmp_path / "list.yaml"
++    list_yaml.write_text("- not-a-map\n", encoding="utf-8")
++    assert mod._yaml_info(list_yaml)["milestone"] is None
++    assert mod._registry_total_levels(list_yaml) is None
++
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[1]\n", encoding="utf-8")
++    assert mod._json_object(list_json) == {}
+-- 
+2.55.0
+

@@ -1,0 +1,3164 @@
+From 90e80da740cf9ea04c859beb2523206d91049125 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 19:35:50 -0400
+Subject: [PATCH 00843/11362] =?UTF-8?q?[conductor]=20MOAT=20SCISSOR=20repl?=
+ =?UTF-8?q?ication=20on=20an=20INDEPENDENT=20corpus=20(defeats=20the=20in-?=
+ =?UTF-8?q?distribution-tuning=20critique):=20re-run=20the=20exp3916=20sci?=
+ =?UTF-8?q?ssor=20(strong=20boosted=20self-verify=20arm=20via=20the=20exp3?=
+ =?UTF-8?q?915=20robust=20harness=20+=20bootstrap=20CI=20residual-catch=20?=
+ =?UTF-8?q?+=20error-overlap=20Jaccard)=20on=20a=20SECOND=20held-out=20cor?=
+ =?UTF-8?q?pus=20=E2=80=94=20a=20ProcessBench=20math=20slice=20(HuggingFac?=
+ =?UTF-8?q?e=20Qwen/ProcessBench),=20FALLBACK=20the=20local=20held-out=20d?=
+ =?UTF-8?q?ata/fover=5Ftest=5Fv4.json=20=E2=80=94=20that=20neither=20the?=
+ =?UTF-8?q?=20energy=20ensemble=20nor=20the=20FoVer-tuned=20probe=20was=20?=
+ =?UTF-8?q?trained=20on.=20Confirm=20MOAT=5FSURVIVES=20(residual=5Fcatch?=
+ =?UTF-8?q?=5Fci95.low>0.5=20AND=20overlap<0.6=20AND=20n=5Fres>=3D30)=20re?=
+ =?UTF-8?q?plicates=20off=20the=20original=20corpus.=20Disk-reads=20exp391?=
+ =?UTF-8?q?5=20(no=20hard=20gate).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3928-moat-scissor-replication-second-corpus
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/verification/spec.md    |  84 ++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   4 +
+ .../eval/moat_scissor_replication_3928.py     | 893 ++++++++++++++++++
+ .../experiment_631/checkpoint.json            |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1845_hiled.json            |   2 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2083_kan4cbc.json          |   2 +-
+ results/experiment_2090_crane_humaneval.json  |   8 +-
+ results/experiment_2093_retro.json            |   4 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2481_capstone_v239.json    |   2 +-
+ results/experiment_2516_capstone_v242.json    |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  56 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   6 +-
+ results/experiment_3408_kona_global_opt.json  |   2 +-
+ ..._kv260_terminal_latency_transcript_v1.json |   4 +-
+ ...eriment_3420_kv260_terminal_transcript.log |   2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |   2 +-
+ results/experiment_3571_capstone_v328.json    |   2 +-
+ ...factual_hallucination_error_detection.json |   2 +-
+ ..._3576_verifier_cross_domain_synthesis.json |   4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |   4 +-
+ results/experiment_3582_capstone_v329.json    |   2 +-
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |   6 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |   2 +-
+ results/experiment_3843.json                  |   4 +-
+ ...eriment_3928_moat_scissor_replication.json | 104 ++
+ results/experiment_542_fover_expansion.json   |   4 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ results/experiment_696_icalm_abstention.json  |   6 +-
+ ...iment_833_constraint_delta_root_cause.json |   6 +-
+ ...periment_885_spectral_attention_probe.json |   6 +-
+ .../experiment_911_drift_probe_tier0i.json    |  18 +-
+ ...eriment_meta_verifier_selection_draft.json | 107 ++-
+ ...xperiment_3928_moat_scissor_replication.py |  19 +
+ ...eta_verifier_experiment_selection_draft.py |  45 +
+ ...xperiment_3928_moat_scissor_replication.py | 624 ++++++++++++
+ 70 files changed, 1980 insertions(+), 184 deletions(-)
+ create mode 100644 python/carnot/eval/moat_scissor_replication_3928.py
+ create mode 100644 results/experiment_3928_moat_scissor_replication.json
+ create mode 100644 scripts/experiments/experiment_3928_moat_scissor_replication.py
+ create mode 100644 tests/python/test_experiment_3928_moat_scissor_replication.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 9a0b91629d..72be72ecfc 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -11452,6 +11452,90 @@ split counts, no escalation claim, and a measured duration.
+ |---|---|---|
+ | REQ-VERIFY-3927 | Implemented (`python/carnot/eval/non_degenerate_cascade_router_3927.py`, `scripts/experiments/experiment_3927_non_degenerate_cascade_router.py`) | Implemented (`tests/python/test_experiment_3927_non_degenerate_cascade_router.py`) |
+ 
++### REQ-VERIFY-3928: Independent-Corpus Moat Scissor Replication
++
++The repository SHALL provide an Exp 3928 moat-scissor replication runner at
++`python/carnot/eval/moat_scissor_replication_3928.py` and
++`scripts/experiments/experiment_3928_moat_scissor_replication.py` that writes
++`results/experiment_3928_moat_scissor_replication.json`. The runner SHALL
++replicate the Exp 3916 residual-catch and error-overlap definitions on a
++second, independent held-out corpus that neither verifier was tuned on.
++
++Before scoring, the runner SHALL verify CUDA with the repository virtualenv
++Python and SHALL disk-read
++`results/experiment_3915_robust_gguf_inference_harness.json`, requiring
++`unit_test_passed=true` and `smoke_tokens>0`. Failed hard preconditions SHALL
++write a terminal `blocked_<resource>` artifact without fabricated scissor
++metrics. The Exp 3915 readiness check SHALL be recorded as disk evidence, not
++inferred from imports or prior logs.
++
++For runnable inputs, the runner SHALL first try to load a ProcessBench math
++slice from `datasets.load_dataset("Qwen/ProcessBench", ...)`, retaining at
++least 120 items with human first-incorrect-step labels when available. On any
++dataset load, schema, size, or label failure, it SHALL fall back to
++`data/fover_test_v4.json`. The chosen corpus SHALL be recorded as
++`corpus_used` with value `processbench_slice` or `fover_test_v4_fallback`,
++and `n_items` SHALL match the exact scored item count.
++
++The runner SHALL score every retained step with the Exp 2837 production energy
++ensemble path (`tier0r`, `tier0u`, and FR-11 session-memory contribution) and
++SHALL run only the strong boosted per-step reasoner self-verification arm
++through `python/carnot/verify/reasoner_self_verification.py`, backed by the
++robust generator loaded via `python/carnot/verify/gguf_inference.py`. It SHALL
++partition gold-incorrect steps into reasoner-caught and reasoner-missed
++residual errors, compute `residual_catch_rate` over the residual set, bootstrap
++CI95 with at least 1000 resamples, compute `error_overlap_jaccard` over
++gold-incorrect catches, record AUROC for both the reasoner and energy ensemble,
++and require `n_residual_errors >= 30` for a conclusive moat replication.
++
++The terminal artifact SHALL include bare top-level fields `corpus_used`,
++`residual_catch_rate`, `residual_catch_ci95`, `error_overlap_jaccard`,
++`n_residual_errors`, `reasoner_auroc_strong`, `carnot_ensemble_auroc`,
++`moat_replicates`, `n_items`, `preconditions_checked`, `model_specs`,
++`random_seed`, `random_seeds_used`, `reproducibility_checksum`, `duration_s`,
++`inference_substrate`, and `honest_verdict`, with field-principle strings and
++no `{value, principle}` wrappers around bare metric fields. The artifact SHALL
++also include per-step score evidence sufficient to audit labels, reasoner
++catches, energy catches, and the selected corpus without aggregating
++`flagged_adversarial` artifacts. The frozen FoVer AUROC headline `0.9131`
++SHALL remain unchanged and only be cited as prior context.
++
++The falsification gate SHALL emit
++`complete: moat_scissor_REPLICATES_on_<corpus_used>_residcatch<mean>_ci<lo>-<hi>_overlap<j>_nres<N>_not_a_corpus_artifact`
++only when the residual-catch CI95 lower bound is above `0.5`,
++`error_overlap_jaccard < 0.6`, and `n_residual_errors >= 30`. It SHALL emit
++`complete: moat_scissor_NOT_REPLICATED_on_<corpus_used>_residcatch<mean>_overlap<j>_corpus_sensitivity_finding`
++when the residual-catch CI95 upper bound is below `0.3` or
++`error_overlap_jaccard > 0.7`. It SHALL emit
++`complete: moat_scissor_INCONCLUSIVE_nres<N>_on_<corpus_used>` when fewer than
++30 residual errors remain.
++
++### SCENARIO-VERIFY-3928: Independent Heldout Corpus Writes Replication Artifact
++
++Given CUDA is available, Exp 3915 reports a ready robust GGUF generator, and
++ProcessBench or the FoVer heldout fallback provides labeled step items, when
++Exp 3928 runs, then it writes
++`results/experiment_3928_moat_scissor_replication.json`, records the selected
++independent corpus, scores every retained step with the production energy
++ensemble, scores the same steps with the boosted reasoner self-verifier through
++the robust GGUF path, computes residual catch, CI95, overlap Jaccard, AUROCs,
++residual count, reproducibility seeds and checksum, enforces the 60-second
++live-run floor, and chooses the terminal verdict from the replication gate.
++
++### SCENARIO-VERIFY-3928-BLOCKED: Missing Robust Resources Do Not Fabricate Replication
++
++Given CUDA or Exp 3915 readiness is unavailable, when Exp 3928 runs, then it
++writes `results/experiment_3928_moat_scissor_replication.json` with a terminal
++`blocked_<resource>` honest verdict, populated precondition evidence, null
++replication metrics, `moat_replicates=false`, zero item and residual counts,
++no per-step score claims, and a measured duration.
++
++## Implementation Status (REQ-VERIFY-3928)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-3928 | Implemented (`python/carnot/eval/moat_scissor_replication_3928.py`, `scripts/experiments/experiment_3928_moat_scissor_replication.py`) | Implemented (`tests/python/test_experiment_3928_moat_scissor_replication.py`) |
++
+ ### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
+ 
+ The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index df236f4430..6abf28682f 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -319,5 +319,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index dff0639bb1..7213b7d8dd 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 159,
+   "code_violations": 0,
+-  "experiments_checked": 2988,
++  "experiments_checked": 2989,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 9b52d90a19..71f310fb3c 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7663,5 +7663,9 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/python/carnot/eval/moat_scissor_replication_3928.py b/python/carnot/eval/moat_scissor_replication_3928.py
+new file mode 100644
+index 0000000000..46ee2e63e5
+--- /dev/null
++++ b/python/carnot/eval/moat_scissor_replication_3928.py
+@@ -0,0 +1,893 @@
++"""Exp 3928 independent-corpus moat scissor replication.
++
++This evaluator repeats the Exp 3916 residual-catch property measurement on a
++second held-out corpus. It tries ProcessBench first because that benchmark has
++human first-incorrect-step labels; if that cannot be loaded in the local
++environment, it falls back to the repository's held-out FoVer test file.
++
++Spec refs: REQ-VERIFY-3928, SCENARIO-VERIFY-3928,
++SCENARIO-VERIFY-3928-BLOCKED.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import statistics
++import subprocess
++import time
++from collections.abc import Callable, Iterable, Mapping, Sequence
++from dataclasses import dataclass, replace
++from datetime import UTC, datetime
++from pathlib import Path
++from typing import Any
++
++from carnot.eval.fover_memory_leakage_v3 import (
++    _fr11_memory_score,
++    _label_to_int,
++    _load_fr11_memory_index,
++    _score_text_verifiers,
++)
++from carnot.eval.moat_scissor_accuracy_3916 import (
++    EXP3915_ARTIFACT_REL_PATH,
++    GGUF_HARNESS_MODULE_PATH,
++    load_exp3915_gguf_harness_source,
++    load_robust_generator,
++    score_reasoner_arm_with_robust_generator,
++)
++from carnot.eval.moat_scissor_in_distribution import _score_digest, _sha256_file
++from carnot.eval.moat_scissor_regated import (
++    SelfVerifyArmScoring,
++    compute_arm_scissor_metrics,
++)
++from carnot.eval.verifier_error_independence_scissor_at_scale import (
++    ScissorMetrics,
++    _checksum,
++)
++
++
++OUTPUT_REL_PATH = Path("results/experiment_3928_moat_scissor_replication.json")
++TITLE = "moat_scissor_replication"
++EXPERIMENT_ID = 3928
++DEFAULT_RANDOM_SEED = 3928
++DEFAULT_BOOTSTRAP_SEED = 3928
++DEFAULT_BOOTSTRAP_RESAMPLES = 1000
++DEFAULT_PROCESSBENCH_MIN_ITEMS = 120
++PROCESSBENCH_DATASET = "Qwen/ProcessBench"
++FOVER_FALLBACK_REL_PATH = Path("data/fover_test_v4.json")
++LIVE_FLOOR_S = 60.0
++FROZEN_FOVER_AUROC = 0.9131
++INFERENCE_SUBSTRATE = (
++    "live_llm_inference:robust_gguf_generator_self_verify_plus_independent_corpus_energy_ensemble"
++)
++
++REQUIRED_PRINCIPLE_FIELDS = (
++    "corpus_used",
++    "residual_catch_rate",
++    "residual_catch_ci95",
++    "error_overlap_jaccard",
++    "n_residual_errors",
++    "reasoner_auroc_strong",
++    "carnot_ensemble_auroc",
++    "moat_replicates",
++    "n_items",
++    "preconditions_checked",
++    "model_specs",
++    "random_seed",
++    "random_seeds_used",
++    "reproducibility_checksum",
++    "duration_s",
++    "inference_substrate",
++)
++
++METHODOLOGY_PRINCIPLE = (
++    "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent "
++    "corpus takes wall-clock (live floor 60s); <60s = fabrication."
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "corpus_used": (
++        "Which independent corpus loaded (processbench_slice / fover_test_v4_fallback) - "
++        "neither verifier was tuned on it."
++    ),
++    "residual_catch_rate": (
++        "THE moat metric on the independent corpus - of the reasoner's MISSED errors, "
++        "the fraction energy catches."
++    ),
++    "residual_catch_ci95": "Bootstrap CI95; the gate is on the lower bound (>0.5).",
++    "error_overlap_jaccard": (
++        "Independence - low overlap => different null spaces (the moat replicates); high => redundant."
++    ),
++    "n_residual_errors": "Size of set B; the residual CI is meaningful only if >=30.",
++    "reasoner_auroc_strong": (
++        "FINDING - the strong self-verify AUROC on the independent corpus."
++    ),
++    "carnot_ensemble_auroc": (
++        "The energy ensemble AUROC on the independent corpus (records cross-corpus discrimination)."
++    ),
++    "moat_replicates": (
++        "BARE BOOL - residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30 on the SECOND corpus."
++    ),
++    "n_items": METHODOLOGY_PRINCIPLE,
++    "preconditions_checked": METHODOLOGY_PRINCIPLE,
++    "model_specs": METHODOLOGY_PRINCIPLE,
++    "random_seed": METHODOLOGY_PRINCIPLE,
++    "random_seeds_used": METHODOLOGY_PRINCIPLE,
++    "reproducibility_checksum": METHODOLOGY_PRINCIPLE,
++    "duration_s": METHODOLOGY_PRINCIPLE,
++    "inference_substrate": METHODOLOGY_PRINCIPLE,
++}
++
++WRAPPED_VALUE_FORBIDDEN_FIELDS = (
++    "corpus_used",
++    "residual_catch_rate",
++    "residual_catch_ci95",
++    "error_overlap_jaccard",
++    "n_residual_errors",
++    "reasoner_auroc_strong",
++    "carnot_ensemble_auroc",
++    "moat_replicates",
++    "n_items",
++    "duration_s",
++)
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One resource checked before the Exp 3928 live replication run."""
++
++    resource: str
++    available: bool
++    detail: str
++
++    def as_dict(self) -> dict[str, object]:
++        return {"resource": self.resource, "available": self.available, "detail": self.detail}
++
++
++@dataclass(frozen=True)
++class ExperimentConfig:
++    """Runtime configuration for Exp 3928."""
++
++    repo_root: Path
++    output_path: Path | None = None
++    random_seed: int = DEFAULT_RANDOM_SEED
++    bootstrap_seed: int = DEFAULT_BOOTSTRAP_SEED
++    bootstrap_resamples: int = DEFAULT_BOOTSTRAP_RESAMPLES
++    min_processbench_items: int = DEFAULT_PROCESSBENCH_MIN_ITEMS
++    processbench_dataset: str = PROCESSBENCH_DATASET
++    started_at: float | None = None
++    clock: Callable[[], float] = time.time
++    max_tokens_weak: int = 96
++    max_tokens_strong: int = 160
++    n_ctx: int = 2048
++    cuda_probe_timeout_s: int = 60
++
++    def resolved_output_path(self) -> Path:
++        return self.output_path if self.output_path is not None else self.repo_root / OUTPUT_REL_PATH
++
++    def start_time(self) -> float:
++        return self.clock() if self.started_at is None else self.started_at
++
++    def venv_python(self) -> Path:
++        return self.repo_root / ".venv" / "bin" / "python"
++
++
++@dataclass(frozen=True)
++class IndependentPanel:
++    """Independent held-out rows plus stable labels and corpus provenance."""
++
++    rows: tuple[dict[str, Any], ...]
++    labels: tuple[int, ...]
++    texts: tuple[str, ...]
++    corpus_used: str
++    panel_sha256: str
++    corpus_source: dict[str, object]
++
++
++@dataclass(frozen=True)
++class EnergyScoring:
++    """Production energy ensemble scores and thresholded catches."""
++
++    scores: Sequence[float]
++    error_preds: Sequence[int]
++    threshold: float
++
++
++CorpusLoader = Callable[[ExperimentConfig], IndependentPanel]
++GeneratorLoader = Callable[[dict[str, object], ExperimentConfig], tuple[object, dict[str, object]]]
++ReasonerScorer = Callable[[IndependentPanel, object, dict[str, object], ExperimentConfig], SelfVerifyArmScoring]
++EnergyScorer = Callable[[IndependentPanel, Path], EnergyScoring]
++CudaProbe = Callable[[ExperimentConfig], PreconditionCheck]
++
++
++def _read_json(path: Path) -> Any:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _iso(ts: float) -> str:
++    return datetime.fromtimestamp(ts, tz=UTC).isoformat().replace("+00:00", "Z")
++
++
++def _terminal_verdict(verdict: str) -> bool:
++    return verdict.startswith(("complete:", "blocked_"))
++
++
++def _json_rows(payload: Any) -> list[dict[str, Any]]:
++    if isinstance(payload, list):
++        candidates = payload
++    elif isinstance(payload, dict):
++        candidates = payload.get("items") or payload.get("examples") or payload.get("data") or payload.get("rows") or []
++    else:
++        candidates = []
++    return [dict(row) for row in candidates if isinstance(row, dict)]
++
++
++def _relative_to_repo(repo_root: Path, path: Path) -> str:
++    try:
++        return path.relative_to(repo_root).as_posix()
++    except ValueError:
++        return path.as_posix()
++
++
++def _panel_sha(rows: Sequence[Mapping[str, object]], corpus_used: str) -> str:
++    payload = [
++        {
++            "corpus_used": corpus_used,
++            "corpus_item_id": row.get("corpus_item_id"),
++            "question_id": row.get("question_id"),
++            "label": row.get("label"),
++            "step_text_sha256": hashlib.sha256(
++                str(row.get("step_text", "")).encode("utf-8")
++            ).hexdigest(),
++        }
++        for row in rows
++    ]
++    return _checksum(payload)
++
++
++def _labels_have_both_classes(labels: Sequence[int]) -> bool:
++    return len({int(label) for label in labels}) == 2
++
++
++def _first_error_index(row: Mapping[str, object]) -> int:
++    value = row.get("label", row.get("first_error_step", row.get("first_incorrect_step", -1)))
++    if isinstance(value, bool):
++        raise ValueError("first-error label must be an integer index, not bool")
++    return int(value)
++
++
++def panel_from_processbench_rows(
++    rows: Sequence[Mapping[str, object]],
++    *,
++    source_detail: str,
++    min_problem_items: int,
++) -> IndependentPanel:
++    """Normalize ProcessBench first-error problem rows into per-step labels."""
++
++    normalized: list[dict[str, Any]] = []
++    problem_items = 0
++    for problem_index, row in enumerate(rows):
++        raw_steps = row.get("steps")
++        if not isinstance(raw_steps, list) or not raw_steps:
++            continue
++        steps = [str(step).strip() for step in raw_steps if str(step).strip()]
++        if not steps:
++            continue
++        try:
++            first_error = _first_error_index(row)
++        except (TypeError, ValueError):
++            continue
++        if first_error >= len(steps):
++            continue
++        if first_error < -1:
++            continue
++        problem_id = str(row.get("id") or row.get("problem_id") or f"processbench-{problem_index}")
++        problem_items += 1
++        for step_index, step_text in enumerate(steps):
++            incorrect = step_index == first_error
++            normalized.append(
++                {
++                    "corpus_item_id": f"{problem_id}:step{step_index}",
++                    "question_id": problem_id,
++                    "problem": row.get("problem"),
++                    "step_index": step_index,
++                    "first_error_step": first_error,
++                    "step_text": step_text,
++                    "label": "incorrect" if incorrect else "correct",
++                    "source": "Qwen/ProcessBench",
++                    "generator": row.get("generator"),
++                    "synthetic": False,
++                }
++            )
++    if problem_items < min_problem_items:
++        raise ValueError(
++            f"ProcessBench yielded {problem_items} labeled problem items; required>={min_problem_items}"
++        )
++    labels = tuple(_label_to_int(row["label"]) for row in normalized)
++    if not _labels_have_both_classes(labels):
++        raise ValueError("ProcessBench slice must contain both correct and first-error step labels")
++    texts = tuple(str(row["step_text"]) for row in normalized)
++    corpus_source = {
++        "dataset": PROCESSBENCH_DATASET,
++        "source_detail": source_detail,
++        "processbench_problem_items": problem_items,
++        "n_items": len(normalized),
++        "n_incorrect": sum(labels),
++        "label_semantics": "step is incorrect only at the human first-incorrect-step index",
++    }
++    return IndependentPanel(
++        rows=tuple(normalized),
++        labels=labels,
++        texts=texts,
++        corpus_used="processbench_slice",
++        panel_sha256=_panel_sha(normalized, "processbench_slice"),
++        corpus_source=corpus_source,
++    )
++
++
++def _take_rows(dataset: Iterable[Mapping[str, object]], limit: int) -> list[Mapping[str, object]]:
++    rows: list[Mapping[str, object]] = []
++    for row in dataset:
++        rows.append(dict(row))
++        if len(rows) >= limit:
++            break
++    return rows
++
++
++def load_processbench_panel(config: ExperimentConfig) -> IndependentPanel:
++    """Load a ProcessBench GSM8K/math slice with first-error labels."""
++
++    from datasets import load_dataset  # pragma: no cover - import is environment-dependent.
++
++    attempts: list[str] = []
++    candidates = (
++        ("gsm8k", "test"),
++        ("math", "test"),
++        ("default", "gsm8k"),
++        ("default", "math"),
++    )
++    for config_name, split_name in candidates:
++        try:
++            dataset = load_dataset(
++                config.processbench_dataset,
++                config_name,
++                split=split_name,
++                streaming=True,
++            )
++            rows = _take_rows(dataset, config.min_processbench_items)
++            return panel_from_processbench_rows(
++                rows,
++                source_detail=f"config={config_name},split={split_name},streaming=true",
++                min_problem_items=config.min_processbench_items,
++            )
++        except Exception as exc:  # pragma: no cover - exercised through fallback tests by monkeypatch.
++            attempts.append(f"{config_name}/{split_name}: {exc!r}")
++    raise RuntimeError("; ".join(attempts))
++
++
++def load_fover_fallback_panel(
++    config: ExperimentConfig,
++    *,
++    processbench_failure: Exception,
++) -> IndependentPanel:
++    """Load the local held-out FoVer fallback corpus."""
++
++    path = config.repo_root / FOVER_FALLBACK_REL_PATH
++    if not path.is_file():
++        raise FileNotFoundError(f"{FOVER_FALLBACK_REL_PATH.as_posix()} is missing")
++    rows: list[dict[str, Any]] = []
++    for index, row in enumerate(_json_rows(_read_json(path))):
++        step_text = str(row.get("step_text", "")).strip()
++        if not step_text:
++            continue
++        try:
++            label = _label_to_int(row.get("label"))
++        except ValueError:
++            continue
++        rows.append(
++            {
++                **row,
++                "corpus_item_id": str(row.get("corpus_item_id") or f"fover_test_v4:{index}"),
++                "question_id": str(row.get("question_id") or f"fover_test_v4:{index}"),
++                "step_text": step_text,
++                "label": "incorrect" if label == 1 else "correct",
++                "source": row.get("source", "fover_test_v4"),
++                "synthetic": bool(row.get("synthetic", False)),
++            }
++        )
++    labels = tuple(_label_to_int(row["label"]) for row in rows)
++    if not rows or not _labels_have_both_classes(labels):
++        raise ValueError("fover_test_v4 fallback must contain both labels")
++    corpus_source = {
++        "corpus_path": FOVER_FALLBACK_REL_PATH.as_posix(),
++        "corpus_sha256": _sha256_file(path),
++        "n_items": len(rows),
++        "n_incorrect": sum(labels),
++        "processbench_failure": repr(processbench_failure),
++        "flagged_adversarial": False,
++    }
++    return IndependentPanel(
++        rows=tuple(rows),
++        labels=labels,
++        texts=tuple(str(row["step_text"]) for row in rows),
++        corpus_used="fover_test_v4_fallback",
++        panel_sha256=_panel_sha(rows, "fover_test_v4_fallback"),
++        corpus_source=corpus_source,
++    )
++
++
++def load_independent_corpus(config: ExperimentConfig) -> IndependentPanel:
++    """Try ProcessBench first and fall back to the local held-out FoVer corpus."""
++
++    try:
++        return load_processbench_panel(config)
++    except Exception as exc:
++        return load_fover_fallback_panel(config, processbench_failure=exc)
++
++
++def score_energy_ensemble(
++    panel: IndependentPanel,
++    repo_root: Path,
++    *,
++    verifier_scorer: Callable[[Sequence[str]], dict[str, list[float]]] = _score_text_verifiers,
++    memory_loader: Callable[[Path], dict[str, object]] = _load_fr11_memory_index,
++) -> EnergyScoring:
++    """Score rows with the Exp 2837 production energy ensemble aggregation."""
++
++    verifier_scores = verifier_scorer(tuple(panel.texts))
++    tier0r = verifier_scores["tier0r_curry_howard"]
++    tier0u = verifier_scores["tier0u_logical_consistency"]
++    if len(tier0r) != len(panel.texts) or len(tier0u) != len(panel.texts):
++        raise ValueError("energy verifier score lengths do not match panel")
++    memory_index = memory_loader(repo_root)
++    scores = tuple(
++        float((0.9 * r_score) + (0.1 * u_score) + _fr11_memory_score(row, memory_index))
++        for row, r_score, u_score in zip(panel.rows, tier0r, tier0u, strict=True)
++    )
++    threshold = float(statistics.median(scores))
++    preds = tuple(1 if score > threshold else 0 for score in scores)
++    return EnergyScoring(scores=scores, error_preds=preds, threshold=threshold)
++
++
++def score_strong_reasoner(
++    panel: IndependentPanel,
++    generator: object,
++    model_specs: dict[str, object],
++    config: ExperimentConfig,
++) -> SelfVerifyArmScoring:
++    """Run the boosted strong self-verification arm through the robust generator."""
++
++    return score_reasoner_arm_with_robust_generator(
++        panel,
++        generator,
++        model_specs,
++        arm="strong",
++        max_tokens=config.max_tokens_strong,
++        random_seed=config.random_seed,
++    )
++
++
++def _moat_replicates(metrics: ScissorMetrics) -> bool:
++    return (
++        float(metrics.residual_catch_ci95["low"]) > 0.5
++        and metrics.error_overlap_jaccard < 0.6
++        and metrics.n_residual_errors >= 30
++    )
++
++
++def classify_verdict(metrics: ScissorMetrics, *, corpus_used: str) -> str:
++    """Apply the Exp 3928 independent-corpus falsification gate."""
++
++    if metrics.n_residual_errors < 30:
++        return f"complete: moat_scissor_INCONCLUSIVE_nres{metrics.n_residual_errors}_on_{corpus_used}"
++    ci_low = float(metrics.residual_catch_ci95["low"])
++    ci_high = float(metrics.residual_catch_ci95["high"])
++    overlap = metrics.error_overlap_jaccard
++    if ci_low > 0.5 and overlap < 0.6:
++        return (
++            "complete: "
++            f"moat_scissor_REPLICATES_on_{corpus_used}_"
++            f"residcatch{metrics.residual_catch_rate:.4f}_"
++            f"ci{ci_low:.4f}-{ci_high:.4f}_overlap{overlap:.4f}_"
++            f"nres{metrics.n_residual_errors}_not_a_corpus_artifact"
++        )
++    if ci_high < 0.3 or overlap > 0.7:
++        return (
++            "complete: "
++            f"moat_scissor_NOT_REPLICATED_on_{corpus_used}_"
++            f"residcatch{metrics.residual_catch_rate:.4f}_"
++            f"overlap{overlap:.4f}_corpus_sensitivity_finding"
++        )
++    return f"complete: moat_scissor_INCONCLUSIVE_boundary_on_{corpus_used}"
++
++
++def _build_per_step_results(
++    panel: IndependentPanel,
++    reasoner: SelfVerifyArmScoring,
++    energy: EnergyScoring,
++) -> list[dict[str, object]]:
++    return [
++        {
++            "index": index,
++            "corpus_item_id": row.get("corpus_item_id"),
++            "question_id": row.get("question_id"),
++            "step_index": row.get("step_index"),
++            "label": row.get("label"),
++            "corpus_used": panel.corpus_used,
++            "reasoner_strong_raw_response": str(reasoner.raw_responses[index]),
++            "reasoner_strong_score": float(reasoner.error_scores[index]),
++            "reasoner_strong_rejects": int(reasoner.error_preds[index]) == 1,
++            "carnot_score": float(energy.scores[index]),
++            "carnot_rejects": int(energy.error_preds[index]) == 1,
++            "energy_threshold": float(energy.threshold),
++        }
++        for index, row in enumerate(panel.rows)
++    ]
++
++
++def build_artifact_from_metrics(
++    *,
++    metrics: ScissorMetrics,
++    config: ExperimentConfig,
++    preconditions_checked: Sequence[PreconditionCheck],
++    model_specs: dict[str, object],
++    corpus_used: str,
++    corpus_source: dict[str, object],
++    panel_sha256: str,
++    reasoner_error_scores: Sequence[float],
++    carnot_error_scores: Sequence[float],
++    per_step_results: Sequence[dict[str, object]] | None = None,
++) -> dict[str, object]:
++    """Build the terminal Exp 3928 artifact from computed scissor metrics."""
++
++    started_at = config.start_time()
++    finished_at = config.clock()
++    duration_s = finished_at - started_at
++    verdict = (
++        "blocked_live_duration_floor"
++        if duration_s < LIVE_FLOOR_S
++        else classify_verdict(metrics, corpus_used=corpus_used)
++    )
++    checksum_payload = {
++        "experiment": EXPERIMENT_ID,
++        "corpus_used": corpus_used,
++        "corpus_source": corpus_source,
++        "panel_sha256": panel_sha256,
++        "model_specs": model_specs,
++        "random_seed": config.random_seed,
++        "bootstrap_seed": config.bootstrap_seed,
++        "reasoner_error_scores_digest": _score_digest(reasoner_error_scores),
++        "carnot_error_scores_digest": _score_digest(carnot_error_scores),
++        "metrics": {
++            "residual_catch_rate": metrics.residual_catch_rate,
++            "residual_catch_ci95": metrics.residual_catch_ci95,
++            "error_overlap_jaccard": metrics.error_overlap_jaccard,
++            "reasoner_auroc_strong": metrics.reasoner_self_verify_auroc,
++            "carnot_ensemble_auroc": metrics.carnot_ensemble_auroc,
++            "n_residual_errors": metrics.n_residual_errors,
++        },
++    }
++    artifact: dict[str, object] = {
++        "experiment": EXPERIMENT_ID,
++        "title": TITLE,
++        "run_date": datetime.fromtimestamp(finished_at, tz=UTC).strftime("%Y%m%d"),
++        "started_at": _iso(started_at),
++        "finished_at": _iso(finished_at),
++        "honest_verdict": verdict,
++        "status": verdict,
++        "corpus_used": corpus_used,
++        "residual_catch_rate": metrics.residual_catch_rate,
++        "residual_catch_ci95": metrics.residual_catch_ci95,
++        "error_overlap_jaccard": metrics.error_overlap_jaccard,
++        "n_residual_errors": metrics.n_residual_errors,
++        "reasoner_auroc_strong": metrics.reasoner_self_verify_auroc,
++        "carnot_ensemble_auroc": metrics.carnot_ensemble_auroc,
++        "moat_replicates": _moat_replicates(metrics) and verdict.startswith("complete:"),
++        "corpus_source": corpus_source,
++        "n_items": metrics.n_items,
++        "n_gold_incorrect": metrics.n_gold_incorrect,
++        "n_reasoner_caught_errors_strong": len(metrics.reasoner_caught_error_indices),
++        "n_carnot_caught_errors": len(metrics.carnot_caught_error_indices),
++        "preconditions_checked": [check.as_dict() for check in preconditions_checked],
++        "model_specs": model_specs,
++        "random_seed": config.random_seed,
++        "random_seeds_used": {
++            "corpus_selection": config.random_seed,
++            "reasoner_self_verify_strong": config.random_seed,
++            "bootstrap": config.bootstrap_seed,
++        },
++        "panel_sha256": panel_sha256,
++        "reasoner_error_scores_sha256": _score_digest(reasoner_error_scores),
++        "carnot_error_scores_sha256": _score_digest(carnot_error_scores),
++        "frozen_fover_auroc_unchanged": FROZEN_FOVER_AUROC,
++        "reproducibility_checksum": _checksum(checksum_payload),
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "methodology_note": (
++            "This is an error-set independence measurement on a second corpus, not a "
++            "generation test. Flagged adversarial artifacts are not aggregated."
++        ),
++        "per_step_results": list(per_step_results or []),
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: Sequence[PreconditionCheck],
++    duration_s: float,
++    model_specs: dict[str, object] | None = None,
++    corpus_source: dict[str, object] | None = None,
++) -> dict[str, object]:
++    """Build a terminal blocked artifact without metric claims."""
++
++    artifact: dict[str, object] = {
++        "experiment": EXPERIMENT_ID,
++        "title": TITLE,
++        "honest_verdict": reason,
++        "status": reason,
++        "corpus_used": None,
++        "residual_catch_rate": None,
++        "residual_catch_ci95": None,
++        "error_overlap_jaccard": None,
++        "n_residual_errors": 0,
++        "reasoner_auroc_strong": None,
++        "carnot_ensemble_auroc": None,
++        "moat_replicates": False,
++        "corpus_source": corpus_source,
++        "n_items": 0,
++        "n_gold_incorrect": 0,
++        "preconditions_checked": [check.as_dict() for check in preconditions_checked],
++        "model_specs": model_specs or {},
++        "random_seed": None,
++        "random_seeds_used": {},
++        "reproducibility_checksum": _checksum(
++            {
++                "experiment": EXPERIMENT_ID,
++                "reason": reason,
++                "preconditions_checked": [check.as_dict() for check in preconditions_checked],
++                "model_specs": model_specs or {},
++                "corpus_source": corpus_source,
++            }
++        ),
++        "duration_s": duration_s,
++        "inference_substrate": "none_blocked_preflight",
++        "per_step_results": [],
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def write_artifact(output_path: Path, artifact: dict[str, object]) -> None:
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def validate_artifact(artifact: dict[str, object]) -> None:
++    """Validate Exp 3928 schema, bare-field discipline, and terminal verdicts."""
++
++    required = {"honest_verdict", "status", "field_principles", *REQUIRED_PRINCIPLE_FIELDS}
++    missing = sorted(required - artifact.keys())
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = str(artifact["honest_verdict"])
++    if not _terminal_verdict(verdict):
++        raise ValueError(f"honest_verdict lacks terminal prefix: {verdict}")
++    principles = artifact["field_principles"]
++    if not isinstance(principles, dict):
++        raise ValueError("field_principles must be a dict")
++    for field in REQUIRED_PRINCIPLE_FIELDS:
++        note = principles.get(field)
++        if not isinstance(note, str) or not note:
++            raise ValueError(f"missing string principle note for {field}")
++    for field in WRAPPED_VALUE_FORBIDDEN_FIELDS:
++        value = artifact.get(field)
++        if isinstance(value, dict) and {"value", "principle"} <= set(value):
++            raise ValueError(f"{field} must be a bare value, not a wrapper")
++    if not isinstance(artifact.get("moat_replicates"), bool):
++        raise ValueError("moat_replicates must be a bare bool")
++    for field in ("n_items", "n_residual_errors"):
++        value = artifact.get(field)
++        if not isinstance(value, int):
++            raise ValueError(f"{field} must be a bare int")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, int | float):
++        raise ValueError("duration_s must be a bare number")
++    checksum = str(artifact.get("reproducibility_checksum") or "")
++    if len(checksum) != 64 or any(char not in "0123456789abcdef" for char in checksum.lower()):
++        raise ValueError("reproducibility_checksum must be a sha256 hex string")
++
++
++def _probe_cuda_with_venv(config: ExperimentConfig) -> PreconditionCheck:  # pragma: no cover
++    try:
++        proc = subprocess.run(
++            [str(config.venv_python()), "-c", "import torch; assert torch.cuda.is_available()"],
++            capture_output=True,
++            cwd=config.repo_root,
++            text=True,
++            timeout=config.cuda_probe_timeout_s,
++            check=False,
++        )
++    except Exception as exc:
++        return PreconditionCheck("cuda_available", False, repr(exc))
++    detail = (proc.stdout or proc.stderr or f"returncode={proc.returncode}").strip()
++    return PreconditionCheck("cuda_available", proc.returncode == 0, detail)
++
++
++def probe_preconditions(
++    config: ExperimentConfig,
++    *,
++    cuda_probe: CudaProbe = _probe_cuda_with_venv,
++) -> tuple[tuple[PreconditionCheck, ...], str | None, dict[str, object] | None]:
++    """Check hard Exp 3928 resources before any live model scoring."""
++
++    checks: list[PreconditionCheck] = [cuda_probe(config)]
++    gguf_source: dict[str, object] | None = None
++    try:
++        gguf_source = load_exp3915_gguf_harness_source(config.repo_root)
++        checks.append(
++            PreconditionCheck(
++                "exp3915_gguf_harness_ready",
++                True,
++                (
++                    f"model_used={gguf_source.get('model_used')} "
++                    f"smoke_tokens={gguf_source.get('smoke_tokens')}"
++                ),
++            )
++        )
++    except Exception as exc:
++        checks.append(PreconditionCheck("exp3915_gguf_harness_ready", False, repr(exc)))
++
++    available = {check.resource: check.available for check in checks}
++    blocked_reason = None
++    if not available.get("cuda_available", False):
++        blocked_reason = "blocked_no_cuda"
++    elif not available.get("exp3915_gguf_harness_ready", False):
++        blocked_reason = "blocked_upstream_gguf_harness_not_ready"
++    return tuple(checks), blocked_reason, gguf_source
++
++
++def run_experiment(
++    config: ExperimentConfig | None = None,
++    *,
++    corpus_loader: CorpusLoader = load_independent_corpus,
++    generator_loader: GeneratorLoader = load_robust_generator,
++    reasoner_scorer: ReasonerScorer = score_strong_reasoner,
++    energy_scorer: EnergyScorer = score_energy_ensemble,
++    cuda_probe: CudaProbe = _probe_cuda_with_venv,
++    write: bool = True,
++) -> dict[str, object]:
++    """Run Exp 3928 end to end, or write a blocked artifact on failed gates."""
++
++    if config is None:  # pragma: no cover
++        config = ExperimentConfig(repo_root=Path(__file__).resolve().parents[3])
++    started = config.start_time()
++    active_config = replace(config, started_at=started)
++    checks, blocked_reason, gguf_source = probe_preconditions(active_config, cuda_probe=cuda_probe)
++    if blocked_reason is not None:
++        artifact = build_blocked_artifact(
++            reason=blocked_reason,
++            preconditions_checked=checks,
++            duration_s=active_config.clock() - started,
++            model_specs=gguf_source or {},
++        )
++        if write:
++            write_artifact(active_config.resolved_output_path(), artifact)
++        return artifact
++    if gguf_source is None:
++        artifact = build_blocked_artifact(
++            reason="blocked_upstream_gguf_harness_not_ready",
++            preconditions_checked=checks,
++            duration_s=active_config.clock() - started,
++        )
++        if write:
++            write_artifact(active_config.resolved_output_path(), artifact)
++        return artifact
++
++    try:
++        panel = corpus_loader(active_config)
++    except Exception as exc:
++        fail_checks = (*checks, PreconditionCheck("independent_corpus", False, repr(exc)))
++        artifact = build_blocked_artifact(
++            reason="blocked_independent_corpus_unavailable",
++            preconditions_checked=fail_checks,
++            duration_s=active_config.clock() - started,
++            model_specs=gguf_source,
++        )
++        if write:
++            write_artifact(active_config.resolved_output_path(), artifact)
++        return artifact
++
++    try:
++        energy = energy_scorer(panel, active_config.repo_root)
++    except Exception as exc:
++        fail_checks = (*checks, PreconditionCheck("energy_ensemble_scoring", False, repr(exc)))
++        artifact = build_blocked_artifact(
++            reason="blocked_energy_ensemble_scoring_failed",
++            preconditions_checked=fail_checks,
++            duration_s=active_config.clock() - started,
++            model_specs=gguf_source,
++            corpus_source=panel.corpus_source,
++        )
++        if write:
++            write_artifact(active_config.resolved_output_path(), artifact)
++        return artifact
++
++    try:
++        generator, generator_meta = generator_loader(gguf_source, active_config)
++    except Exception as exc:
++        fail_checks = (*checks, PreconditionCheck("robust_gguf_generator_load", False, repr(exc)))
++        artifact = build_blocked_artifact(
++            reason="blocked_all_gguf_inference_failed",
++            preconditions_checked=fail_checks,
++            duration_s=active_config.clock() - started,
++            model_specs=gguf_source,
++            corpus_source=panel.corpus_source,
++        )
++        if write:
++            write_artifact(active_config.resolved_output_path(), artifact)
++        return artifact
++
++    model_specs = {**gguf_source, **generator_meta}
++    try:
++        reasoner = reasoner_scorer(panel, generator, model_specs, active_config)
++    except Exception as exc:
++        fail_checks = (*checks, PreconditionCheck("reasoner_self_verify_inference", False, repr(exc)))
++        artifact = build_blocked_artifact(
++            reason="blocked_reasoner_self_verify_inference_failed",
++            preconditions_checked=fail_checks,
++            duration_s=active_config.clock() - started,
++            model_specs=model_specs,
++            corpus_source=panel.corpus_source,
++        )
++        if write:
++            write_artifact(active_config.resolved_output_path(), artifact)
++        return artifact
++
++    metrics = compute_arm_scissor_metrics(
++        labels=panel.labels,
++        reasoner_error_scores=reasoner.error_scores,
++        reasoner_error_preds=reasoner.error_preds,
++        carnot_error_scores=energy.scores,
++        carnot_error_preds=energy.error_preds,
++        bootstrap_seed=active_config.bootstrap_seed,
++        bootstrap_resamples=active_config.bootstrap_resamples,
++    )
++    artifact = build_artifact_from_metrics(
++        metrics=metrics,
++        config=active_config,
++        preconditions_checked=checks,
++        model_specs=model_specs,
++        corpus_used=panel.corpus_used,
++        corpus_source=panel.corpus_source,
++        panel_sha256=panel.panel_sha256,
++        reasoner_error_scores=reasoner.error_scores,
++        carnot_error_scores=energy.scores,
++        per_step_results=_build_per_step_results(panel, reasoner, energy),
++    )
++    if write:
++        write_artifact(active_config.resolved_output_path(), artifact)
++    return artifact
++
++
++def cli_main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[3])
++    parser.add_argument("--output-path", type=Path, default=None)
++    args = parser.parse_args(argv)
++    artifact = run_experiment(
++        ExperimentConfig(repo_root=args.repo_root, output_path=args.output_path),
++        write=True,
++    )
++    output_path = args.output_path if args.output_path is not None else args.repo_root / OUTPUT_REL_PATH
++    print(f"{output_path.name} wrote {artifact['honest_verdict']}")
++    return 0 if str(artifact["honest_verdict"]).startswith("complete:") else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(cli_main())
+diff --git a/results/checkpoints/experiment_631/checkpoint.json b/results/checkpoints/experiment_631/checkpoint.json
+index 13f66f4eff..198d9ef38f 100644
+--- a/results/checkpoints/experiment_631/checkpoint.json
++++ b/results/checkpoints/experiment_631/checkpoint.json
+@@ -4,5 +4,5 @@
+     "lambda_calib_selected": 0.1,
+     "step": "lambda_sweep_done"
+   },
+-  "saved_at": "2026-06-05T10:32:52Z"
++  "saved_at": "2026-06-07T23:24:23Z"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index a46b594b97..6eb10fbb7b 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:30:14.748620+00:00",
+-  "finished_at": "2026-06-07T22:30:14.772047+00:00",
++  "started_at": "2026-06-07T23:04:30.354356+00:00",
++  "finished_at": "2026-06-07T23:04:30.377688+00:00",
+   "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 8eca81852d..f201ec7e68 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-07T22:30:14Z",
++  "run_date": "2026-06-07T23:04:30Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 1cfa661418..bee4e230e0 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:30:15Z",
+-  "finished_at": "2026-06-07T22:30:15Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-07T23:04:31Z",
++  "finished_at": "2026-06-07T23:04:31Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index e3596b5c4c..b319cd19f3 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-07T22:30:15Z",
++  "run_date": "2026-06-07T23:04:31Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 07555f0d59..0f924fb123 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-07T22:30:15Z",
++  "run_date": "2026-06-07T23:04:31Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index aa613b0201..dd3c78bf27 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-07T22:28:28.791670Z",
+-  "duration_s": 0.0085906982421875,
++  "run_date": "2026-06-07T23:02:40.432084Z",
++  "duration_s": 0.016239404678344727,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "5e9ae5878c0e6a7b2f0e8f3addd05b87b0938108549e470fd4f16605569dc1d5",
++  "reproducibility_checksum": "27b6728b896a8830dea8da18acd966d9cd6873651acd9d14b76af56d4b2ce24d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "c874d066adfa13464dc44f3136e65feeb5977b00"
++    "adversarial_verify_version": "d9f9b396c7e2560bd49c683f151f05b74ba0ccac"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 815c6d1299..ec410d52d8 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-07T22:30:35.982935Z",
+-  "duration_s": 22.534934997558594,
++  "run_date": "2026-06-07T23:04:52.993268Z",
++  "duration_s": 23.412976026535034,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index a675ff3dc6..f151390ada 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-07T22:30:53.156237+00:00",
+-  "duration_s": 0.0029327869415283203,
++  "run_date": "2026-06-07T23:05:09.287127+00:00",
++  "duration_s": 0.002295970916748047,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 25f001b277..b871230ce8 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-07T22:28:28.804143Z",
+-  "duration_s": 0.009409666061401367,
++  "run_date": "2026-06-07T23:02:40.453163Z",
++  "duration_s": 0.017764806747436523,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "0db7308a2559db107398601aeefa6930aa9cf7127237e00f52341b8d785e9be1",
++  "reproducibility_checksum": "db24170a170d098e1b515f16ff327917c31a317ad91067cddade38f823db1183",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "c874d066adfa13464dc44f3136e65feeb5977b00"
++    "adversarial_verify_version": "d9f9b396c7e2560bd49c683f151f05b74ba0ccac"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 893bbc3f24..50ae1e0aaa 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.60s, user: 2.36s, system: 0.19s, MEM: 115.76 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.43s, user: 2.19s, system: 0.18s, MEM: 116.52 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 78% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 77% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1845_hiled.json b/results/experiment_1845_hiled.json
+index 45743c6888..c7a8806eb0 100644
+--- a/results/experiment_1845_hiled.json
++++ b/results/experiment_1845_hiled.json
+@@ -2,6 +2,6 @@
+     "target": "KV260",
+     "pipeline_invocations": 1,
+     "simulated_energy_minimized": true,
+-    "latency_ms": 10.117053985595703,
++    "latency_ms": 10.090827941894531,
+     "honest_verdict": "HILED interface successfully simulated."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 179521c0e0..098c61e799 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,10 +243,5 @@
+         "success": true
+       }
+     }
+-  ],
+-  "corrigendum_2026_05_187_audit": {
+-    "classification": "METHODOLOGY_MISSING",
+-    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
+-    "follow_up_action": "Add missing methodology fields."
+-  }
++  ]
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 3ee417aa0f..6949989f9a 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.127408981323242,
++  "efficiency_gains_ms": 2.109050750732422,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index b6911cc24b..aa2b987a50 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-07T22:31:08.192596Z",
++  "run_date": "2026-06-07T23:05:24.169660Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index f7e9245d11..9ea10c6a9a 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00015576198347844183,
+-  "latency_domino_seconds": 0.000270488002570346,
++  "latency_legacy_seconds": 0.00019150000298395753,
++  "latency_domino_seconds": 0.00035285198828205466,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 33e9ecefd7..fa06e261c9 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:31:34Z",
+-  "finished_at": "2026-06-07T22:31:34Z",
++  "started_at": "2026-06-07T23:05:50Z",
++  "finished_at": "2026-06-07T23:05:50Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2083_kan4cbc.json b/results/experiment_2083_kan4cbc.json
+index fc1a6d0c09..e429296f24 100644
+--- a/results/experiment_2083_kan4cbc.json
++++ b/results/experiment_2083_kan4cbc.json
+@@ -1,6 +1,6 @@
+ {
+   "artifact_path": "results/experiment_2083_kan4cbc.json",
+-  "execution_time_s": 0.001302957534790039,
++  "execution_time_s": 0.0007660388946533203,
+   "experiment_id": 2083,
+   "honest_verdict": "complete: kan4cbc_smt_robustness_verification",
+   "is_robust": true,
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 4b146533e6..49c4a319f4 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:32:14Z",
+-  "finished_at": "2026-06-07T22:32:14Z",
+-  "duration_s": 0.008,
++  "started_at": "2026-06-07T23:06:31Z",
++  "finished_at": "2026-06-07T23:06:31Z",
++  "duration_s": 0.01,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.08893013000488281,
++  "latency_ms": 0.11682510375976562,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2093_retro.json b/results/experiment_2093_retro.json
+index cf9ffe042b..3033729f78 100644
+--- a/results/experiment_2093_retro.json
++++ b/results/experiment_2093_retro.json
+@@ -4,8 +4,8 @@
+   "title": "Milestone Retrospective 2093",
+   "milestone": "2093",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T10:51:51.205788+00:00",
+-  "finished_at": "2026-06-07T10:51:51.205791+00:00",
++  "started_at": "2026-06-07T23:22:14.952798+00:00",
++  "finished_at": "2026-06-07T23:22:14.952801+00:00",
+   "status": "complete",
+   "honest_verdict": "complete: milestone_retro_filed_pem_crane_closed_hardnet_blocked",
+   "criteria_results": {
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 3a3be4181a..7378ff02bf 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008951616287231445,
+-  "avg_eqm_time": 0.08799820899963379,
++  "avg_pem_time": 0.000983729362487793,
++  "avg_eqm_time": 0.08509003162384034,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 1f075bc732..47a7df1f61 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 319.48308634757996,
++  "duration_s": 331.2432813644409,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2481_capstone_v239.json b/results/experiment_2481_capstone_v239.json
+index 134a363682..9968256254 100644
+--- a/results/experiment_2481_capstone_v239.json
++++ b/results/experiment_2481_capstone_v239.json
+@@ -15,7 +15,7 @@
+   "best_239_auroc": 0.935065,
+   "best_239_auroc_source": "exp2473.best_calibrated_auroc",
+   "carnot_runs_on_polarfire": false,
+-  "duration_s": 0.000947,
++  "duration_s": 0.00629,
+   "experiment": "2481_capstone_v239",
+   "external_baselines": {
+     "hive_external_auroc": 0.9236,
+diff --git a/results/experiment_2516_capstone_v242.json b/results/experiment_2516_capstone_v242.json
+index cc213d3687..d1990bd883 100644
+--- a/results/experiment_2516_capstone_v242.json
++++ b/results/experiment_2516_capstone_v242.json
+@@ -31,7 +31,7 @@
+       "severity": "warn"
+     }
+   ],
+-  "duration_s": 0.000228,
++  "duration_s": 0.001595,
+   "ensemble_v7_auroc": null,
+   "experiment": "2516_capstone_v242",
+   "external_baselines": {
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index fa27fda82d..76bc3bb55a 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.030027151107788086,
++  "duration_s": 0.02915334701538086,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 9a26ed84b8..08b47f9118 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-07T22:35:26Z",
++  "run_date": "2026-06-07T23:09:48Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 7441455381..175f69c639 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000089406967163,
++  "duration_s": 5.000112533569336,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 6a7f4ecf86..40f60cf9f4 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000105142593384,
++  "duration_s": 10.000410795211792,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index c2bb0e0053..8ad405e6be 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.41952013969421387,
++  "duration_s": 0.3086566925048828,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 40a4696e06..6ba9110d7b 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.05756081102299504,
++  "duration_s": 0.07075502799125388,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index facfcb3157..1cb3640394 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,17 +1,17 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_memory": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
+-      },
+-      "MBPP": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
++      "MBPP": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
+       "HumanEval": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+@@ -23,20 +23,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_low": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,20 +45,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_low": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -67,15 +67,15 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_transfer",
+-    "tier_specific"
++    "tier_specific",
++    "tier_transfer"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 69fea8d774..ffe56b7a59 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.000827789306640625,
++  "duration_s": 0.0008983612060546875,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index c20338936b..ff554048be 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.9385002562776208e-05,
++  "duration_s": 3.23799904435873e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index abdd25f043..801127ed43 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 9.420036803930998e-07,
++  "duration_s": 4.709581844508648e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 06718284bf..67a845c225 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 0.00010657310485839844,
++  "duration_s": 5.53131103515625e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index 83064c1e24..844889538b 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 19.427627325057983, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 19.84440779685974, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 09a5e5d034..db301d1ad5 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.008776279095560313,
++  "nonforgetting_metric_random": 0.010892889231443405,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index f9ad8ac8cc..b2fc7dada6 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -2,9 +2,9 @@
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:31:12Z",
+-  "finished_at": "2026-06-07T22:31:13Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-07T23:05:29Z",
++  "finished_at": "2026-06-07T23:05:29Z",
++  "duration_s": 0.001,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index ec3cd54fb4..217b08f28d 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 20.798729181289673, "autoregressive_time_to_solution": 311.9809377193451, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 21.076836585998535, "autoregressive_time_to_solution": 316.152548789978, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index 58da5d8521..6021dc03c8 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 8.737397729419172e-05,
++  "duration_s": 0.00010091898730024695,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-07T22:31:59Z",
++  "generated_at": "2026-06-07T23:06:17Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index 0811c760af..7fe5ade391 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-07T22:31:59Z
++experiment_3420 started_at=2026-06-07T23:06:17Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index ceb2dd02aa..f2b93f2a09 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.053748626000015065,
++  "duration_s": 0.059510488994419575,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3571_capstone_v328.json b/results/experiment_3571_capstone_v328.json
+index 6468d0112e..3e254dfd12 100644
+--- a/results/experiment_3571_capstone_v328.json
++++ b/results/experiment_3571_capstone_v328.json
+@@ -29,5 +29,5 @@
+   "capstone_v328_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "9ee3572680c4200c",
+-  "duration_s": 5.14984130859375e-05
++  "duration_s": 5.459785461425781e-05
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index ab3bec50e8..0f6b26369c 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.009466886520385742
++  "duration_s": 0.00953531265258789
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index c759b1da5e..6758930e99 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "be73b7d649b6e0fd3c1daa449d24e19770f4a6ac8173eba4df40a68890af70c6"
++    "150b9355157358514051159665dc31a5253ddf8de3fdc8729ebd88cdbd304b0f"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.00021576881408691406
++  "duration_s": 0.0002608299255371094
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index 98ac1b519b..c33960ab27 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.07768607139587402,
+-  "reproducibility_checksum": "62f037eb3a506c84814ad0489d471eee"
++  "duration_s": 0.08260750770568848,
++  "reproducibility_checksum": "8e863ba9165a9325d75d300dbee75251"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index 10cf35008a..05983c7411 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.0002930164337158203
++  "duration_s": 0.0002968311309814453
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index 9158c0b8b6..b8e89e6325 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 11,
+   "random_seed": 42,
+-  "duration_s": 2.0552878379821777,
+-  "reproducibility_checksum": "94a2526997c464e6873db9c5cab6c04de077e3bb69a0d1fecb173f420ba82c74"
++  "duration_s": 1.9121057987213135,
++  "reproducibility_checksum": "370f20339bb6ae9e55cb0c8754928ad19a5b3e2fbafdec7c823f339e8631497f"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index fa1078b72e..fec79a4b3c 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+   "run_date": "2026-06-07",
+-  "started_at": "2026-06-07T22:30:37.769888+00:00",
+-  "finished_at": "2026-06-07T22:30:37.769888+00:00",
++  "started_at": "2026-06-07T23:04:51.159954+00:00",
++  "finished_at": "2026-06-07T23:04:51.159954+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+@@ -32,5 +32,5 @@
+   ],
+   "random_seed": 42,
+   "reproducibility_checksum": "a5a63d9b90e6bfe9261e70b66afec721",
+-  "duration_s": 0.10000071525573731
++  "duration_s": 0.10000095367431641
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index 75d12818f5..3b7e51182c 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.004027605056762695,
+-  "reproducibility_checksum": "d318873c740aa94d31ca612f3903072cbb2a720f5b9174990764577d2a2bd778"
++  "duration_s": 0.003659486770629883,
++  "reproducibility_checksum": "2fddd76372e27febdf013f11f991f22fabbd22e761589b7553a662659085d54e"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index c9bc7db5fd..f2d19df8c5 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,5 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.37
++  "duration_s": 0.3
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index 15896af60c..b3b1535034 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 0.03227877616882324,
++  "duration_s": 0.016683101654052734,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "1ea26ed5ac370845d0dfce4acfc7ba6bc7df8d0d601c086e3fcea3874ecd4a49"
++  "reproducibility_checksum": "bf2640c5707c7fe43f1931b91f6fe374f53097190dfbed0c79aacc4c738724ac"
+ }
+diff --git a/results/experiment_3928_moat_scissor_replication.json b/results/experiment_3928_moat_scissor_replication.json
+new file mode 100644
+index 0000000000..06566a1b32
+--- /dev/null
++++ b/results/experiment_3928_moat_scissor_replication.json
+@@ -0,0 +1,104 @@
++{
++  "carnot_ensemble_auroc": null,
++  "corpus_source": {
++    "dataset": "Qwen/ProcessBench",
++    "label_semantics": "step is incorrect only at the human first-incorrect-step index",
++    "n_incorrect": 120,
++    "n_items": 650,
++    "processbench_problem_items": 120,
++    "source_detail": "config=default,split=gsm8k,streaming=true"
++  },
++  "corpus_used": null,
++  "duration_s": 13.105805397033691,
++  "error_overlap_jaccard": null,
++  "experiment": 3928,
++  "field_principles": {
++    "carnot_ensemble_auroc": "The energy ensemble AUROC on the independent corpus (records cross-corpus discrimination).",
++    "corpus_used": "Which independent corpus loaded (processbench_slice / fover_test_v4_fallback) - neither verifier was tuned on it.",
++    "duration_s": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
++    "error_overlap_jaccard": "Independence - low overlap => different null spaces (the moat replicates); high => redundant.",
++    "inference_substrate": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
++    "moat_replicates": "BARE BOOL - residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30 on the SECOND corpus.",
++    "model_specs": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
++    "n_items": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
++    "n_residual_errors": "Size of set B; the residual CI is meaningful only if >=30.",
++    "preconditions_checked": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
++    "random_seed": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
++    "random_seeds_used": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
++    "reasoner_auroc_strong": "FINDING - the strong self-verify AUROC on the independent corpus.",
++    "reproducibility_checksum": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
++    "residual_catch_ci95": "Bootstrap CI95; the gate is on the lower bound (>0.5).",
++    "residual_catch_rate": "THE moat metric on the independent corpus - of the reasoner's MISSED errors, the fraction energy catches."
++  },
++  "honest_verdict": "blocked_all_gguf_inference_failed",
++  "inference_substrate": "none_blocked_preflight",
++  "moat_replicates": false,
++  "model_specs": {
++    "artifact_path": "results/experiment_3915_robust_gguf_inference_harness.json",
++    "artifact_sha256": "11bc3a3b4ec9da8f7a56cc3b03f2b83833e61b01c47e40ddefef5ac23408146f",
++    "harness_module_path": "python/carnot/verify/gguf_inference.py",
++    "harness_module_sha256": "523db678305ffc1a7a7b74dd8f77eb2a85b9f6499c8fb5c745a29fb3961de8b4",
++    "honest_verdict": "complete: gguf_inference_harness_READY_modelgemma-4-26B-A4B-it_ngl-1_smoke1_live_path_unblocked",
++    "model_specs": {
++      "candidate_paths": {
++        "Qwen3.6-35B-A3B": [
++          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++        ],
++        "gemma-4-26B-A4B-it": [
++          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++        ],
++        "gemma-4-31B-it": []
++      },
++      "loader": "llama_cpp.Llama",
++      "max_n_gpu_layers": -1,
++      "n_ctx": 1024,
++      "prefer_order": [
++        "gemma-4-26B-A4B-it",
++        "Qwen3.6-35B-A3B",
++        "gemma-4-31B-it"
++      ],
++      "selected": {
++        "fallback_index": 0,
++        "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "load_s": 8.399896144866943,
++        "model_used": "gemma-4-26B-A4B-it",
++        "n_gpu_layers_used": -1,
++        "smoke_s": 0.17024779319763184,
++        "smoke_tokens": 1
++      }
++    },
++    "model_used": "gemma-4-26B-A4B-it",
++    "n_gpu_layers_used": -1,
++    "smoke_tokens": 1,
++    "unit_test_passed": true
++  },
++  "n_gold_incorrect": 0,
++  "n_items": 0,
++  "n_residual_errors": 0,
++  "per_step_results": [],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "returncode=0",
++      "resource": "cuda_available"
++    },
++    {
++      "available": true,
++      "detail": "model_used=gemma-4-26B-A4B-it smoke_tokens=1",
++      "resource": "exp3915_gguf_harness_ready"
++    },
++    {
++      "available": false,
++      "detail": "AttributeError(\"'ExperimentConfig' object has no attribute 'max_tokens_weak'\")",
++      "resource": "robust_gguf_generator_load"
++    }
++  ],
++  "random_seed": null,
++  "random_seeds_used": {},
++  "reasoner_auroc_strong": null,
++  "reproducibility_checksum": "7fa12f941644ac87b2c0850687f7b95ffb84564dbe407c78ae163fe1a47e2d93",
++  "residual_catch_ci95": null,
++  "residual_catch_rate": null,
++  "status": "blocked_all_gguf_inference_failed",
++  "title": "moat_scissor_replication"
++}
+diff --git a/results/experiment_542_fover_expansion.json b/results/experiment_542_fover_expansion.json
+index 1068d218ef..7e19e52539 100644
+--- a/results/experiment_542_fover_expansion.json
++++ b/results/experiment_542_fover_expansion.json
+@@ -2,8 +2,8 @@
+   "experiment": 542,
+   "title": "FOVER Corpus Expansion",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T10:41:13Z",
+-  "finished_at": "2026-06-07T10:41:13Z",
++  "started_at": "2026-06-07T23:30:25Z",
++  "finished_at": "2026-06-07T23:30:25Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 132f2841ed..a38726a002 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:35:34Z",
+-  "finished_at": "2026-06-07T22:35:34Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-07T23:24:02Z",
++  "finished_at": "2026-06-07T23:24:02Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 9e0515252f..27d1135c05 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:35:34Z",
+-  "finished_at": "2026-06-07T22:35:34Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-07T23:24:02Z",
++  "finished_at": "2026-06-07T23:24:02Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e9571ef02d..2b74ec35da 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:35:34Z",
+-  "finished_at": "2026-06-07T22:35:34Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-07T23:24:02Z",
++  "finished_at": "2026-06-07T23:24:02Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index f5cf4032b1..12833e57cb 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -2,9 +2,9 @@
+   "experiment": 696,
+   "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:43:53Z",
+-  "finished_at": "2026-06-07T22:43:53Z",
+-  "duration_s": 0.011,
++  "started_at": "2026-06-07T23:17:50Z",
++  "finished_at": "2026-06-07T23:17:50Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index cb0a7f0799..9985695e7c 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -2,9 +2,9 @@
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:37:47Z",
+-  "finished_at": "2026-06-07T22:37:48Z",
+-  "duration_s": 1.24,
++  "started_at": "2026-06-07T23:11:54Z",
++  "finished_at": "2026-06-07T23:11:55Z",
++  "duration_s": 1.056,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_885_spectral_attention_probe.json b/results/experiment_885_spectral_attention_probe.json
+index 7cc1a8bd3c..1ac4b8cfa7 100644
+--- a/results/experiment_885_spectral_attention_probe.json
++++ b/results/experiment_885_spectral_attention_probe.json
+@@ -2,9 +2,9 @@
+   "experiment": 885,
+   "title": "SpectralAttentionProbe Tier 0h \u2014 bigram Laplacian hallucination signal",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:37:13Z",
+-  "finished_at": "2026-06-07T22:37:14Z",
+-  "duration_s": 0.087,
++  "started_at": "2026-06-07T23:11:35Z",
++  "finished_at": "2026-06-07T23:11:35Z",
++  "duration_s": 0.078,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_911_drift_probe_tier0i.json b/results/experiment_911_drift_probe_tier0i.json
+index a4cb8cf364..0fbff755c7 100644
+--- a/results/experiment_911_drift_probe_tier0i.json
++++ b/results/experiment_911_drift_probe_tier0i.json
+@@ -2,14 +2,14 @@
+   "experiment": 911,
+   "title": "DRIFTProbe Tier 0i \u2014 Multi-Layer Hidden-State Drift (GSM8K)",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T22:37:22Z",
+-  "finished_at": "2026-06-07T22:37:23Z",
+-  "duration_s": 1.814,
++  "started_at": "2026-06-07T23:11:43Z",
++  "finished_at": "2026-06-07T23:11:45Z",
++  "duration_s": 1.961,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+   "metrics_used": "unknown",
+-  "ood_auc_drift": 0.9275,
++  "ood_auc_drift": 0.9550000000000001,
+   "honest_verdict": "tier0i_viable",
+   "inference_mode": "synthetic_runner",
+   "model_name": "Qwen/Qwen3.5-0.8B",
+@@ -26,13 +26,13 @@
+   "n_train_correct": 80,
+   "n_train_halluc": 80,
+   "n_eval_pairs": 20,
+-  "mean_correct_drift": 0.006882401183247566,
+-  "mean_halluc_drift": 0.4716183841228485,
++  "mean_correct_drift": 0.006879662629216909,
++  "mean_halluc_drift": 0.47245046496391296,
+   "probe_coef": [
+     [
+-      1.791238363436397,
+-      2.272828670530351,
+-      2.6374409513699213
++      1.7799353797323285,
++      2.282849468079255,
++      2.628410711256622
+     ]
+   ],
+   "decision_class": "detect",
+diff --git a/results/experiment_meta_verifier_selection_draft.json b/results/experiment_meta_verifier_selection_draft.json
+index 46fa86fd3a..4147d6bffc 100644
+--- a/results/experiment_meta_verifier_selection_draft.json
++++ b/results/experiment_meta_verifier_selection_draft.json
+@@ -1,47 +1,47 @@
+ {
+-  "base_wasted_rate": 0.3231,
++  "base_wasted_rate": 0.3218,
+   "churn_scope_fraction": 0.4419,
+   "experiment": "meta_verifier_selection_draft",
+   "holdout_split_milestone_order": 491,
+-  "holdout_wasted_auroc": 0.5713050371663817,
+-  "honest_verdict": "complete: meta_verifier_feasibility_wasted_auroc0.571_base0.323",
++  "holdout_wasted_auroc": 0.570470231761692,
++  "honest_verdict": "complete: meta_verifier_feasibility_wasted_auroc0.570_base0.322",
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+   "label_proxy_caveat": "WASTED = verdict blocked_/doomed/skipped/flagged (clean). CHURN = title-scope proxy (no ground-truth decisiveness field). Join is by exp-number; legacy p1-* tasks are counted as unjoined, not dropped.",
+   "logreg_weights": {
+-    "bias": -0.9723,
+-    "build_train": -0.3098,
+-    "churn_aggregate": 0.5296,
+-    "churn_version": -0.1471,
+-    "deliv_doc": 0.0076,
++    "bias": -0.9857,
++    "build_train": -0.3016,
++    "churn_aggregate": 0.5332,
++    "churn_version": -0.1445,
++    "deliv_doc": 0.0077,
+     "deliv_experiment": 0.0,
+-    "deliv_hardware": 0.0562,
++    "deliv_hardware": 0.0588,
+     "deliv_test": 0.0,
+     "deliv_verify_module": 0.0,
+-    "hardware": 0.0062,
+-    "infra_harness": 0.5075,
+-    "is_churn_scope": 0.2758,
+-    "science_probe": -0.1756
++    "hardware": 0.0099,
++    "infra_harness": 0.5097,
++    "is_churn_scope": 0.2848,
++    "science_probe": -0.1975
+   },
+-  "n_churn_scope_titles": 3494,
+-  "n_tasks_joined_to_verdict": 5348,
+-  "n_tasks_total": 7906,
++  "n_churn_scope_titles": 3498,
++  "n_tasks_joined_to_verdict": 5358,
++  "n_tasks_total": 7916,
+   "n_unjoined_legacy_or_missing": 2558,
+-  "n_wasted": 1728,
++  "n_wasted": 1724,
+   "per_scope_wasted_lift": {
+     "build_train": {
+       "lift_vs_base": 0.82,
+-      "n": 1019,
+-      "wasted_rate": 0.265
++      "n": 1020,
++      "wasted_rate": 0.2637
+     },
+     "churn_aggregate": {
+       "lift_vs_base": 1.3,
+-      "n": 1108,
+-      "wasted_rate": 0.4188
++      "n": 1111,
++      "wasted_rate": 0.4185
+     },
+     "churn_version": {
+       "lift_vs_base": 1.04,
+-      "n": 1352,
+-      "wasted_rate": 0.3351
++      "n": 1353,
++      "wasted_rate": 0.3348
+     },
+     "deliv_doc": {
+       "lift_vs_base": 1.24,
+@@ -54,22 +54,47 @@
+       "wasted_rate": 0.5058
+     },
+     "hardware": {
+-      "lift_vs_base": 1.5,
++      "lift_vs_base": 1.51,
+       "n": 463,
+       "wasted_rate": 0.486
+     },
+     "infra_harness": {
+-      "lift_vs_base": 1.41,
+-      "n": 112,
+-      "wasted_rate": 0.4554
++      "lift_vs_base": 1.37,
++      "n": 116,
++      "wasted_rate": 0.4397
+     },
+     "science_probe": {
+-      "lift_vs_base": 0.73,
+-      "n": 194,
+-      "wasted_rate": 0.2371
++      "lift_vs_base": 0.71,
++      "n": 196,
++      "wasted_rate": 0.2296
+     }
+   },
++  "preventable_pct_of_all_tasks": 2.5,
++  "preventable_pct_of_wasted": 11.4,
++  "preventable_waste_n": 197,
+   "title": "meta_verifier_experiment_selection",
++  "wasted_category_breakdown": {
++    "honest_gate_negative": {
++      "n": 707,
++      "pct_of_wasted": 41.0
++    },
++    "other_blocked": {
++      "n": 820,
++      "pct_of_wasted": 47.6
++    },
++    "preventable_cascade_skip": {
++      "n": 24,
++      "pct_of_wasted": 1.4
++    },
++    "preventable_doomed_rerun": {
++      "n": 5,
++      "pct_of_wasted": 0.3
++    },
++    "preventable_precondition": {
++      "n": 168,
++      "pct_of_wasted": 9.7
++    }
++  },
+   "wasted_rate_by_quartile": [
+     {
+       "milestone_order_range": [
+@@ -78,34 +103,34 @@
+       ],
+       "n": 1639,
+       "quartile": 1,
+-      "wasted_rate": 0.1861
++      "wasted_rate": 0.1843
+     },
+     {
+       "milestone_order_range": [
+         172,
+-        344
++        345
+       ],
+       "n": 936,
+       "quartile": 2,
+-      "wasted_rate": 0.3942
++      "wasted_rate": 0.3921
+     },
+     {
+       "milestone_order_range": [
+-        344,
+-        517
++        345,
++        518
+       ],
+-      "n": 1135,
++      "n": 1137,
+       "quartile": 3,
+-      "wasted_rate": 0.4123
++      "wasted_rate": 0.4125
+     },
+     {
+       "milestone_order_range": [
+-        517,
+-        689
++        518,
++        690
+       ],
+-      "n": 1638,
++      "n": 1646,
+       "quartile": 4,
+-      "wasted_rate": 0.3578
++      "wasted_rate": 0.356
+     }
+   ]
+ }
+diff --git a/scripts/experiments/experiment_3928_moat_scissor_replication.py b/scripts/experiments/experiment_3928_moat_scissor_replication.py
+new file mode 100644
+index 0000000000..63f34af74a
+--- /dev/null
++++ b/scripts/experiments/experiment_3928_moat_scissor_replication.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run Exp 3928 independent-corpus moat scissor replication."""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.eval.moat_scissor_replication_3928 import cli_main
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(cli_main(["--repo-root", str(REPO_ROOT)]))
+diff --git a/scripts/experiments/meta_verifier_experiment_selection_draft.py b/scripts/experiments/meta_verifier_experiment_selection_draft.py
+index b6aa5200f2..a9f3ce1849 100644
+--- a/scripts/experiments/meta_verifier_experiment_selection_draft.py
++++ b/scripts/experiments/meta_verifier_experiment_selection_draft.py
+@@ -133,6 +133,31 @@ def _scope_features(title: str) -> dict[str, int]:
+     return feats
+ 
+ 
++# v3: decompose WASTED into PREVENTABLE vs honest-negative. Not all "blocked" is
++# avoidable waste -- a gate-failed experiment is a legitimate NEGATIVE result.
++_PRECONDITION_KEYS = (
++    "unreachable", "ssh", "not_cached", "model_not", "not_ready", "toolchain",
++    "credential", "no_cuda", "cuda_unavailable", "board", "vivado", "sd_card",
++    "mmcblk", "pynq", "llama_cpp", "model_load", "checkpoint", "bitfile",
++    "flash_failed", "no_bitfile", "prereq", "sklearn", "selected_python",
++)
++
++
++def _wasted_category(verdict: str) -> str:
++    """Classify a WASTED verdict by whether a cheap pre-check could prevent it."""
++
++    v = verdict.split("\t")[0]
++    if any(k in v for k in _PRECONDITION_KEYS):
++        return "preventable_precondition"  # a live pre-flight check catches this
++    if "doomed" in v:
++        return "preventable_doomed_rerun"  # the failure-ledger should catch this
++    if "skipped" in v:
++        return "preventable_cascade_skip"  # poison-test / 3-fail cascade
++    if "gate_check_failed" in v or "gate_block" in v or "gate_closed" in v:
++        return "honest_gate_negative"  # ran/blocked on an acceptance gate -- a RESULT
++    return "other_blocked"
++
++
+ def _label(verdict: str | None) -> str:
+     """WASTED (clean) / COMPLETED, from the joined verdict string."""
+ 
+@@ -212,6 +237,7 @@ def run(write: bool = True) -> dict[str, Any]:
+                     "label": label,
+                     "is_wasted": 1 if label == "WASTED" else 0,
+                     "is_churn_scope": 1 if any(feats[b] for b in CHURN_BUCKETS) else 0,
++                    "wasted_category": _wasted_category(verdict) if label == "WASTED" else None,
+                     **feats,
+                     **dfeats,
+                 }
+@@ -273,9 +299,28 @@ def run(write: bool = True) -> dict[str, Any]:
+                 "lift_vs_base": round(rate / base_rate, 2) if base_rate else None,
+             }
+ 
++    # v3: decompose the WASTED set into preventable vs honest-negative.
++    waste_cats: dict[str, int] = {}
++    for r in joined:
++        if r["is_wasted"]:
++            c = r["wasted_category"] or "other_blocked"
++            waste_cats[c] = waste_cats.get(c, 0) + 1
++    n_w = sum(waste_cats.values()) or 1
++    waste_breakdown = {
++        c: {"n": n, "pct_of_wasted": round(100 * n / n_w, 1)}
++        for c, n in sorted(waste_cats.items(), key=lambda kv: -kv[1])
++    }
++    preventable = sum(
++        n for c, n in waste_cats.items() if c.startswith("preventable_")
++    )
++
+     artifact = {
+         "experiment": "meta_verifier_selection_draft",
+         "title": "meta_verifier_experiment_selection",
++        "wasted_category_breakdown": waste_breakdown,
++        "preventable_waste_n": preventable,
++        "preventable_pct_of_wasted": round(100 * preventable / n_w, 1),
++        "preventable_pct_of_all_tasks": round(100 * preventable / n_total, 1) if n_total else 0.0,
+         "honest_verdict": (
+             f"complete: meta_verifier_feasibility_wasted_auroc{auroc:.3f}_base{base_rate:.3f}"
+             if auroc is not None
+diff --git a/tests/python/test_experiment_3928_moat_scissor_replication.py b/tests/python/test_experiment_3928_moat_scissor_replication.py
+new file mode 100644
+index 0000000000..f94f5396c5
+--- /dev/null
++++ b/tests/python/test_experiment_3928_moat_scissor_replication.py
+@@ -0,0 +1,624 @@
++"""Tests for Exp 3928 independent-corpus moat scissor replication.
++
++Spec refs: REQ-VERIFY-3928, SCENARIO-VERIFY-3928,
++SCENARIO-VERIFY-3928-BLOCKED.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++import types
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.eval import moat_scissor_replication_3928 as exp3928
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO_ROOT / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
++
++
++def _write_exp3915_fixture(
++    root: Path,
++    *,
++    unit_test_passed: bool = True,
++    smoke_tokens: int = 1,
++) -> None:
++    module_path = root / exp3928.GGUF_HARNESS_MODULE_PATH
++    module_path.parent.mkdir(parents=True, exist_ok=True)
++    module_path.write_text("# fixture robust gguf harness\n", encoding="utf-8")
++    _write_json(
++        root / exp3928.EXP3915_ARTIFACT_REL_PATH,
++        {
++            "honest_verdict": "complete: gguf_inference_harness_READY_fixture",
++            "harness_module_path": exp3928.GGUF_HARNESS_MODULE_PATH,
++            "model_used": "gemma-4-26B-A4B-it",
++            "n_gpu_layers_used": -1,
++            "smoke_tokens": smoke_tokens,
++            "unit_test_passed": unit_test_passed,
++            "model_specs": {"model_used": "gemma-4-26B-A4B-it"},
++        },
++    )
++
++
++def _write_fover_fixture(root: Path) -> None:
++    rows = [
++        {"question_id": "q0", "step_text": "2 + 2 = 4", "label": "correct"},
++        {"question_id": "q1", "step_text": "2 + 2 = 5", "label": "incorrect"},
++        {"question_id": "q2", "step_text": "3 * 3 = 9", "label": "correct"},
++        {"question_id": "q3", "step_text": "3 * 3 = 8", "label": "incorrect"},
++    ]
++    _write_json(root / "data" / "fover_test_v4.json", rows)
++
++
++def _metrics(**overrides: Any) -> exp3928.ScissorMetrics:
++    base = {
++        "residual_catch_rate": 0.62,
++        "residual_catch_ci95": {
++            "mean": 0.62,
++            "low": 0.51,
++            "high": 0.72,
++            "n_resamples": 1000,
++            "bootstrap_seed": 3928,
++        },
++        "error_overlap_jaccard": 0.5,
++        "reasoner_self_verify_auroc": 0.7,
++        "carnot_ensemble_auroc": 0.8,
++        "n_items": 120,
++        "n_residual_errors": 50,
++        "n_gold_incorrect": 60,
++        "reasoner_caught_error_indices": tuple(range(10)),
++        "carnot_caught_error_indices": tuple(range(60)),
++    }
++    base.update(overrides)
++    return exp3928.ScissorMetrics(**base)
++
++
++def _panel(n_items: int = 4) -> exp3928.IndependentPanel:
++    rows = tuple(
++        {
++            "corpus_item_id": f"row-{idx}",
++            "question_id": f"q-{idx}",
++            "step_text": f"step {idx}",
++            "label": "incorrect" if idx % 2 else "correct",
++        }
++        for idx in range(n_items)
++    )
++    return exp3928.IndependentPanel(
++        rows=rows,
++        labels=tuple(1 if idx % 2 else 0 for idx in range(n_items)),
++        texts=tuple(str(row["step_text"]) for row in rows),
++        corpus_used="processbench_slice",
++        panel_sha256="p" * 64,
++        corpus_source={"dataset": "fixture"},
++    )
++
++
++def _energy(n_items: int = 4) -> exp3928.EnergyScoring:
++    return exp3928.EnergyScoring(
++        scores=tuple(0.9 if idx % 2 else 0.1 for idx in range(n_items)),
++        error_preds=tuple(1 if idx % 2 else 0 for idx in range(n_items)),
++        threshold=0.5,
++    )
++
++
++def _reasoner(n_items: int = 4) -> exp3928.SelfVerifyArmScoring:
++    return exp3928.SelfVerifyArmScoring(
++        raw_responses=tuple("incorrect" if idx == 1 else "correct" for idx in range(n_items)),
++        error_scores=tuple(0.9 if idx == 1 else 0.1 for idx in range(n_items)),
++        error_preds=tuple(1 if idx == 1 else 0 for idx in range(n_items)),
++        parsed_count=n_items,
++        unparsed_count=0,
++        parser_constant_prediction=False,
++    )
++
++
++def test_req_verify_3928_spec_anchor_exists() -> None:
++    """REQ-VERIFY-3928: the independent-corpus replication is OpenSpec anchored."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-VERIFY-3928" in spec
++    assert "SCENARIO-VERIFY-3928" in spec
++    assert "moat_scissor_replication_3928.py" in spec
++    assert exp3928.OUTPUT_REL_PATH.as_posix() in spec
++
++
++def test_req_verify_3928_processbench_first_error_rows_normalize_to_step_panel() -> None:
++    """REQ-VERIFY-3928: ProcessBench first-error labels become per-step gold labels."""
++
++    rows = [
++        {
++            "id": "gsm8k-0",
++            "generator": "fixture",
++            "problem": "How many?",
++            "steps": ["start correct", "first wrong", "after wrong"],
++            "label": 1,
++        },
++        {
++            "id": "gsm8k-1",
++            "generator": "fixture",
++            "problem": "How many now?",
++            "steps": ["wrong immediately", "later"],
++            "label": 0,
++        },
++    ]
++
++    panel = exp3928.panel_from_processbench_rows(rows, source_detail="fixture", min_problem_items=2)
++
++    assert panel.corpus_used == "processbench_slice"
++    assert panel.labels == (0, 1, 0, 1, 0)
++    assert [row["corpus_item_id"] for row in panel.rows] == [
++        "gsm8k-0:step0",
++        "gsm8k-0:step1",
++        "gsm8k-0:step2",
++        "gsm8k-1:step0",
++        "gsm8k-1:step1",
++    ]
++    assert panel.corpus_source["processbench_problem_items"] == 2
++
++
++def test_req_verify_3928_processbench_loader_and_invalid_row_branches(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-3928: ProcessBench loader tries math configs and rejects malformed labels."""
++
++    assert exp3928.ExperimentConfig(repo_root=tmp_path).venv_python() == tmp_path / ".venv" / "bin" / "python"
++    assert exp3928._json_rows({"rows": [{"x": 1}]}) == [{"x": 1}]
++    assert exp3928._json_rows("bad") == []
++    assert exp3928._relative_to_repo(tmp_path, tmp_path / "data" / "x.json") == "data/x.json"
++    assert exp3928._relative_to_repo(tmp_path, Path("/outside/x.json")) == "/outside/x.json"
++    with pytest.raises(ValueError, match="not bool"):
++        exp3928._first_error_index({"label": True})
++
++    bad_rows = [
++        {"id": "no-steps", "steps": [], "label": 0},
++        {"id": "empty-step", "steps": [" "], "label": 0},
++        {"id": "bool-label", "steps": ["x"], "label": True},
++        {"id": "too-large", "steps": ["x"], "label": 1},
++        {"id": "too-small", "steps": ["x"], "label": -2},
++    ]
++    with pytest.raises(ValueError, match="yielded 0"):
++        exp3928.panel_from_processbench_rows(bad_rows, source_detail="bad", min_problem_items=1)
++    with pytest.raises(ValueError, match="both correct"):
++        exp3928.panel_from_processbench_rows(
++            [{"id": "all-correct", "steps": ["a", "b"], "label": -1}],
++            source_detail="bad",
++            min_problem_items=1,
++        )
++
++    assert exp3928._take_rows(({"i": idx} for idx in range(3)), 2) == [{"i": 0}, {"i": 1}]
++
++    calls: list[tuple[str, str]] = []
++
++    def fake_load_dataset(_name: str, config_name: str, *, split: str, streaming: bool) -> list[dict[str, object]]:
++        assert streaming is True
++        calls.append((config_name, split))
++        if len(calls) < 3:
++            raise ValueError("missing builder")
++        return [
++            {"id": "p0", "steps": ["ok", "bad"], "label": 1},
++            {"id": "p1", "steps": ["bad", "later"], "label": 0},
++        ]
++
++    monkeypatch.setitem(sys.modules, "datasets", types.SimpleNamespace(load_dataset=fake_load_dataset))
++    panel = exp3928.load_processbench_panel(
++        exp3928.ExperimentConfig(repo_root=tmp_path, min_processbench_items=2)
++    )
++
++    assert calls == [("gsm8k", "test"), ("math", "test"), ("default", "gsm8k")]
++    assert panel.corpus_used == "processbench_slice"
++
++    monkeypatch.setitem(
++        sys.modules,
++        "datasets",
++        types.SimpleNamespace(
++            load_dataset=lambda _name, _config_name, *, split, streaming: (_ for _ in ()).throw(
++                RuntimeError(f"failed {split} {streaming}")
++            )
++        ),
++    )
++    with pytest.raises(RuntimeError, match="gsm8k/test"):
++        exp3928.load_processbench_panel(
++            exp3928.ExperimentConfig(repo_root=tmp_path, min_processbench_items=2)
++        )
++
++
++def test_req_verify_3928_falls_back_to_local_fover_when_processbench_fails(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-3928: ProcessBench failures use data/fover_test_v4.json without fabrication."""
++
++    _write_fover_fixture(tmp_path)
++
++    def boom(_config: exp3928.ExperimentConfig) -> exp3928.IndependentPanel:
++        raise RuntimeError("network or schema unavailable")
++
++    monkeypatch.setattr(exp3928, "load_processbench_panel", boom)
++
++    panel = exp3928.load_independent_corpus(
++        exp3928.ExperimentConfig(repo_root=tmp_path, min_processbench_items=2)
++    )
++
++    assert panel.corpus_used == "fover_test_v4_fallback"
++    assert panel.labels == (0, 1, 0, 1)
++    assert panel.corpus_source["processbench_failure"] == "RuntimeError('network or schema unavailable')"
++    assert panel.corpus_source["corpus_path"] == "data/fover_test_v4.json"
++
++
++def test_req_verify_3928_fover_fallback_validation_branches(tmp_path: Path) -> None:
++    """REQ-VERIFY-3928: malformed fallback files fail before scoring claims."""
++
++    cfg = exp3928.ExperimentConfig(repo_root=tmp_path)
++    with pytest.raises(FileNotFoundError, match="fover_test_v4"):
++        exp3928.load_fover_fallback_panel(cfg, processbench_failure=RuntimeError("pb"))
++
++    _write_json(
++        tmp_path / "data" / "fover_test_v4.json",
++        [
++            {"question_id": "empty", "step_text": " ", "label": "correct"},
++            {"question_id": "bad", "step_text": "x", "label": "maybe"},
++            {"question_id": "only", "step_text": "x", "label": "correct"},
++        ],
++    )
++    with pytest.raises(ValueError, match="both labels"):
++        exp3928.load_fover_fallback_panel(cfg, processbench_failure=RuntimeError("pb"))
++
++
++def test_req_verify_3928_energy_ensemble_scores_use_exp2837_aggregation(tmp_path: Path) -> None:
++    """REQ-VERIFY-3928: energy scoring reuses the tier0r/tier0u plus FR-11 path."""
++
++    panel = exp3928.IndependentPanel(
++        rows=(
++            {"question_id": "a", "step_text": "correct", "label": "correct"},
++            {"question_id": "b", "step_text": "incorrect", "label": "incorrect"},
++        ),
++        labels=(0, 1),
++        texts=("correct", "incorrect"),
++        corpus_used="fover_test_v4_fallback",
++        panel_sha256="p" * 64,
++        corpus_source={"corpus_path": "data/fover_test_v4.json"},
++    )
++
++    def fake_verifiers(texts: tuple[str, ...]) -> dict[str, list[float]]:
++        assert texts == ("correct", "incorrect")
++        return {
++            "tier0r_curry_howard": [0.2, 0.8],
++            "tier0u_logical_consistency": [0.0, 1.0],
++        }
++
++    def fake_memory(_repo_root: Path) -> dict[str, object]:
++        return {"question_ids": {"b"}, "prompt_token_sets": []}
++
++    scores = exp3928.score_energy_ensemble(
++        panel,
++        tmp_path,
++        verifier_scorer=fake_verifiers,
++        memory_loader=fake_memory,
++    )
++
++    assert scores.scores == pytest.approx((0.18, 1.82))
++    assert scores.error_preds == (0, 1)
++    assert scores.threshold == pytest.approx(1.0)
++
++    with pytest.raises(ValueError, match="score lengths"):
++        exp3928.score_energy_ensemble(
++            panel,
++            tmp_path,
++            verifier_scorer=lambda _texts: {
++                "tier0r_curry_howard": [0.1],
++                "tier0u_logical_consistency": [0.1],
++            },
++            memory_loader=fake_memory,
++        )
++
++
++def test_req_verify_3928_strong_reasoner_wrapper_uses_boosted_arm(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-3928: strong reasoner scoring delegates to the robust 3916 path."""
++
++    calls: list[dict[str, object]] = []
++
++    def fake_score(panel: exp3928.IndependentPanel, generator: object, model_specs: dict[str, object], **kwargs: object) -> exp3928.SelfVerifyArmScoring:
++        calls.append({"panel": panel, "generator": generator, "model_specs": model_specs, **kwargs})
++        return _reasoner(len(panel.rows))
++
++    monkeypatch.setattr(exp3928, "score_reasoner_arm_with_robust_generator", fake_score)
++    generator = object()
++    result = exp3928.score_strong_reasoner(
++        _panel(),
++        generator,
++        {"model_used": "fixture"},
++        exp3928.ExperimentConfig(repo_root=tmp_path, random_seed=7, max_tokens_strong=11),
++    )
++
++    assert result.parsed_count == 4
++    assert calls[0]["arm"] == "strong"
++    assert calls[0]["max_tokens"] == 11
++    assert calls[0]["random_seed"] == 7
++
++
++def test_scenario_verify_3928_artifact_fields_and_replication_gate(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-3928: artifacts expose bare fields and the moat gate."""
++
++    artifact = exp3928.build_artifact_from_metrics(
++        metrics=_metrics(),
++        config=exp3928.ExperimentConfig(repo_root=tmp_path, started_at=0.0, clock=lambda: 65.0),
++        preconditions_checked=[exp3928.PreconditionCheck("cuda_available", True, "ok")],
++        model_specs={"model_used": "gemma-4-26B-A4B-it"},
++        corpus_used="processbench_slice",
++        corpus_source={"dataset": "Qwen/ProcessBench"},
++        panel_sha256="p" * 64,
++        reasoner_error_scores=[0.9, 0.1],
++        carnot_error_scores=[0.8, 0.2],
++        per_step_results=[{"index": 0, "label": "correct"}],
++    )
++
++    exp3928.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete: moat_scissor_REPLICATES_on_processbench_slice")
++    assert artifact["moat_replicates"] is True
++    assert artifact["duration_s"] == 65.0
++    assert not isinstance(artifact["residual_catch_rate"], dict)
++    assert set(exp3928.REQUIRED_PRINCIPLE_FIELDS) <= set(artifact["field_principles"])
++
++
++def test_req_verify_3928_verdict_branches_and_validation(tmp_path: Path) -> None:
++    """REQ-VERIFY-3928: terminal gates and schema validation fail closed."""
++
++    inconclusive = exp3928.classify_verdict(
++        _metrics(n_residual_errors=12),
++        corpus_used="fover_test_v4_fallback",
++    )
++    assert inconclusive == "complete: moat_scissor_INCONCLUSIVE_nres12_on_fover_test_v4_fallback"
++
++    not_replicated = exp3928.classify_verdict(
++        _metrics(
++            residual_catch_rate=0.1,
++            residual_catch_ci95={"mean": 0.1, "low": 0.0, "high": 0.2, "n_resamples": 1000, "bootstrap_seed": 1},
++            error_overlap_jaccard=0.2,
++        ),
++        corpus_used="processbench_slice",
++    )
++    assert not_replicated.startswith("complete: moat_scissor_NOT_REPLICATED_on_processbench_slice")
++    boundary = exp3928.classify_verdict(
++        _metrics(
++            residual_catch_ci95={"mean": 0.45, "low": 0.4, "high": 0.6, "n_resamples": 1000, "bootstrap_seed": 1},
++            error_overlap_jaccard=0.4,
++        ),
++        corpus_used="processbench_slice",
++    )
++    assert boundary == "complete: moat_scissor_INCONCLUSIVE_boundary_on_processbench_slice"
++
++    blocked = exp3928.build_blocked_artifact(
++        reason="blocked_no_cuda",
++        preconditions_checked=[],
++        duration_s=0.1,
++    )
++    exp3928.validate_artifact(blocked)
++    assert blocked["moat_replicates"] is False
++    assert blocked["residual_catch_rate"] is None
++    floor = exp3928.build_artifact_from_metrics(
++        metrics=_metrics(),
++        config=exp3928.ExperimentConfig(repo_root=tmp_path, started_at=0.0, clock=lambda: 1.0),
++        preconditions_checked=[],
++        model_specs={},
++        corpus_used="processbench_slice",
++        corpus_source={},
++        panel_sha256="p" * 64,
++        reasoner_error_scores=[0.1, 0.9],
++        carnot_error_scores=[0.1, 0.9],
++    )
++    assert floor["honest_verdict"] == "blocked_live_duration_floor"
++    assert floor["moat_replicates"] is False
++
++    for mutation, pattern in (
++        ({}, "missing required"),
++        ({"honest_verdict": "not-terminal"}, "terminal prefix"),
++        ({"field_principles": []}, "field_principles"),
++        ({"field_principles": {**blocked["field_principles"], "n_items": ""}}, "n_items"),
++        ({"moat_replicates": "false"}, "bare bool"),
++        ({"residual_catch_rate": {"value": 0.1, "principle": "bad"}}, "bare value"),
++        ({"n_residual_errors": 1.2}, "bare int"),
++        ({"duration_s": "1.0"}, "bare number"),
++        ({"reproducibility_checksum": "short"}, "sha256"),
++    ):
++        candidate = dict(blocked)
++        if mutation:
++            candidate.update(mutation)
++        else:
++            candidate.pop("random_seed")
++        with pytest.raises(ValueError, match=pattern):
++            exp3928.validate_artifact(candidate)
++
++
++def test_req_verify_3928_preflight_blocks_unready_exp3915(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-3928-BLOCKED: Exp 3915 disk-read readiness is enforced."""
++
++    _write_exp3915_fixture(tmp_path, unit_test_passed=False)
++
++    checks, blocked_reason, source = exp3928.probe_preconditions(
++        exp3928.ExperimentConfig(repo_root=tmp_path),
++        cuda_probe=lambda _cfg: exp3928.PreconditionCheck("cuda_available", True, "fixture cuda"),
++    )
++
++    assert blocked_reason == "blocked_upstream_gguf_harness_not_ready"
++    assert source is None
++    assert [check.resource for check in checks] == ["cuda_available", "exp3915_gguf_harness_ready"]
++
++    _write_exp3915_fixture(tmp_path, unit_test_passed=True)
++    checks, blocked_reason, source = exp3928.probe_preconditions(
++        exp3928.ExperimentConfig(repo_root=tmp_path),
++        cuda_probe=lambda _cfg: exp3928.PreconditionCheck("cuda_available", True, "fixture cuda"),
++    )
++    assert blocked_reason is None
++    assert source is not None
++    assert checks[-1].available is True
++
++    checks, blocked_reason, _source = exp3928.probe_preconditions(
++        exp3928.ExperimentConfig(repo_root=tmp_path),
++        cuda_probe=lambda _cfg: exp3928.PreconditionCheck("cuda_available", False, "no cuda"),
++    )
++    assert blocked_reason == "blocked_no_cuda"
++    assert checks[0].available is False
++
++
++def test_req_verify_3928_injected_run_writes_success_without_live_llm(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-3928: injected scorers keep unit tests off live GGUF inference."""
++
++    panel = exp3928.IndependentPanel(
++        rows=tuple(
++            {"corpus_item_id": f"row-{idx}", "question_id": f"q-{idx}", "step_text": f"step {idx}", "label": "incorrect" if idx < 60 else "correct"}
++            for idx in range(120)
++        ),
++        labels=tuple(1 if idx < 60 else 0 for idx in range(120)),
++        texts=tuple(f"step {idx}" for idx in range(120)),
++        corpus_used="processbench_slice",
++        panel_sha256="p" * 64,
++        corpus_source={"dataset": "fixture"},
++    )
++    reasoner = exp3928.SelfVerifyArmScoring(
++        raw_responses=tuple("incorrect" if idx < 10 else "correct" for idx in range(120)),
++        error_scores=tuple(0.9 if idx < 10 else 0.1 for idx in range(120)),
++        error_preds=tuple(1 if idx < 10 else 0 for idx in range(120)),
++        parsed_count=120,
++        unparsed_count=0,
++        parser_constant_prediction=False,
++    )
++    energy = exp3928.EnergyScoring(
++        scores=tuple(0.9 if idx < 60 else 0.1 for idx in range(120)),
++        error_preds=tuple(1 if idx < 60 else 0 for idx in range(120)),
++        threshold=0.5,
++    )
++    output_path = tmp_path / "results" / "exp3928.json"
++
++    monkeypatch.setattr(
++        exp3928,
++        "probe_preconditions",
++        lambda _config, cuda_probe=exp3928._probe_cuda_with_venv: (
++            (exp3928.PreconditionCheck("cuda_available", True, "ok"),),
++            None,
++            {"model_used": "gemma-4-26B-A4B-it", "n_gpu_layers_used": -1},
++        ),
++    )
++
++    artifact = exp3928.run_experiment(
++        exp3928.ExperimentConfig(
++            repo_root=tmp_path,
++            output_path=output_path,
++            started_at=0.0,
++            clock=lambda: 65.0,
++        ),
++        corpus_loader=lambda _config: panel,
++        generator_loader=lambda _source, _config: (
++            object(),
++            {"model_used": "gemma-4-26B-A4B-it", "gguf_path": "fixture.gguf"},
++        ),
++        reasoner_scorer=lambda _panel, _generator, _model_specs, _config: reasoner,
++        energy_scorer=lambda _panel, _root: energy,
++        write=True,
++    )
++
++    assert output_path.is_file()
++    assert artifact == json.loads(output_path.read_text(encoding="utf-8"))
++    assert artifact["n_items"] == 120
++    assert artifact["n_residual_errors"] == 50
++    assert artifact["moat_replicates"] is True
++    assert artifact["per_step_results"][0]["reasoner_strong_rejects"] is True
++    assert artifact["per_step_results"][-1]["carnot_rejects"] is False
++
++
++@pytest.mark.parametrize(
++    ("stage", "expected"),
++    [
++        ("preflight_blocked", "blocked_no_cuda"),
++        ("missing_gguf_source", "blocked_upstream_gguf_harness_not_ready"),
++        ("corpus", "blocked_independent_corpus_unavailable"),
++        ("energy", "blocked_energy_ensemble_scoring_failed"),
++        ("generator", "blocked_all_gguf_inference_failed"),
++        ("reasoner", "blocked_reasoner_self_verify_inference_failed"),
++    ],
++)
++def test_req_verify_3928_run_experiment_blocked_branches(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    stage: str,
++    expected: str,
++) -> None:
++    """SCENARIO-VERIFY-3928-BLOCKED: every runtime failure writes a terminal artifact."""
++
++    gguf_source = {"model_used": "fixture", "n_gpu_layers_used": -1}
++    checks = (exp3928.PreconditionCheck("cuda_available", stage != "preflight_blocked", "fixture"),)
++    if stage == "preflight_blocked":
++        preflight = (checks, "blocked_no_cuda", gguf_source)
++    elif stage == "missing_gguf_source":
++        preflight = (checks, None, None)
++    else:
++        preflight = (checks, None, gguf_source)
++    monkeypatch.setattr(exp3928, "probe_preconditions", lambda _config, cuda_probe=exp3928._probe_cuda_with_venv: preflight)
++
++    panel = _panel()
++    artifact = exp3928.run_experiment(
++        exp3928.ExperimentConfig(
++            repo_root=tmp_path,
++            output_path=tmp_path / f"{stage}.json",
++            started_at=0.0,
++            clock=lambda: 2.0,
++        ),
++        corpus_loader=(
++            (lambda _config: (_ for _ in ()).throw(RuntimeError("corpus failed")))
++            if stage == "corpus"
++            else (lambda _config: panel)
++        ),
++        energy_scorer=(
++            (lambda _panel, _root: (_ for _ in ()).throw(RuntimeError("energy failed")))
++            if stage == "energy"
++            else (lambda _panel, _root: _energy())
++        ),
++        generator_loader=(
++            (lambda _source, _config: (_ for _ in ()).throw(RuntimeError("load failed")))
++            if stage == "generator"
++            else (lambda _source, _config: (object(), {"model_used": "fixture"}))
++        ),
++        reasoner_scorer=(
++            (lambda _panel, _generator, _model_specs, _config: (_ for _ in ()).throw(RuntimeError("judge failed")))
++            if stage == "reasoner"
++            else (lambda _panel, _generator, _model_specs, _config: _reasoner())
++        ),
++        write=True,
++    )
++
++    assert artifact["honest_verdict"] == expected
++    assert (tmp_path / f"{stage}.json").is_file()
++
++
++def test_req_verify_3928_cli_reports_terminal_status(
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++    tmp_path: Path,
++) -> None:
++    """REQ-VERIFY-3928: CLI adapter returns nonzero only for blocked artifacts."""
++
++    monkeypatch.setattr(exp3928, "run_experiment", lambda _config, write: {"honest_verdict": "complete: fixture"})
++    assert exp3928.cli_main(["--repo-root", str(tmp_path)]) == 0
++    assert exp3928.OUTPUT_REL_PATH.name in capsys.readouterr().out
++
++    monkeypatch.setattr(exp3928, "run_experiment", lambda _config, write: {"honest_verdict": "blocked_no_cuda"})
++    assert exp3928.cli_main(["--repo-root", str(tmp_path), "--output-path", str(tmp_path / "out.json")]) == 1
++    assert "blocked_no_cuda" in capsys.readouterr().out
+-- 
+2.55.0
+

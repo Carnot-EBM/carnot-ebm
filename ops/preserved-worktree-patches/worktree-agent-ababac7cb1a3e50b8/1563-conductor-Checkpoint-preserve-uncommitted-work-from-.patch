@@ -1,0 +1,653 @@
+From 4935820b1b82623d3301050c2c1f62add1055ea3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 03:42:14 -0400
+Subject: [PATCH 01563/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../change-proposals/research-roadmap-v383.md | 242 ++++++++++++++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   2 +
+ ops/conductor-state.json                      |   2 +-
+ ops/docs_audit_report.md                      | 178 +++++++++----
+ research-references.md                        |  52 ++++
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ results/experiment_696_icalm_abstention.json  |  11 +-
+ 10 files changed, 473 insertions(+), 49 deletions(-)
+ create mode 100644 openspec/change-proposals/research-roadmap-v383.md
+
+diff --git a/openspec/change-proposals/research-roadmap-v383.md b/openspec/change-proposals/research-roadmap-v383.md
+new file mode 100644
+index 0000000000..6fb5d853f8
+--- /dev/null
++++ b/openspec/change-proposals/research-roadmap-v383.md
+@@ -0,0 +1,242 @@
++# Research Roadmap v383 — Converge the Sudoku-Extreme TRM baseline to ~0.87 with the FIXED LR schedule, THEN run the decisive verifier-as-reward graft (the test never yet run on a faithful baseline)
++
++**Milestone:** 2026.06.383
++**Planned:** 2026-06-13 (planning agent, Claude Opus 4.8)
++**Prior:** 2026.06.382 (openspec/change-proposals/research-roadmap-v382.md — inline)
++**North star:** solve ARC-AGI-3 accurately AND efficiently (ops/north-star.md §0).
++Post-reframe (§5): energy VERIFIES, a learned recursive refiner GENERATES. The
++verifier is Carnot's existential value-add and its value is still UNPROVEN. This
++milestone runs the cheapest DECISIVE test of that value: does the executable Carnot
++verifier add value as reward/reranker on a FAITHFUL recursive-reasoner baseline?
++
++---
++
++## 1. What .382 proved (the honest read, from the artifacts not the prose)
++
++.382's headline question was: **did the LR-resume fix make resumable training
++ACCUMULATE, and did the Sudoku-Extreme baseline converge toward 0.87?** Capstone
++exp4133 verdict: `lr_fixed_accumulating_v383_continues`. The answer is a clean,
++load-bearing YES on the mechanism:
++
++| Track | .382 task | Outcome | Evidence |
++|---|---|---|---|
++| **LR-resume FIX (headline)** | exp4126 | **FIXED — schedule now continues across resume** | Root cause: `TRMModule.manual_step` reset to 0 each process + `training_step` pinned LR to `base_lr` after warmup instead of calling the cosine schedule. After fix, a resumed pass starts at `train/lr=9.999e-05` (continues), not the `2.45e-6` fresh-warmup reset. `lr_continuous_across_resume=true`. |
++| **ACCUMULATION** | exp4127 | **val 0.106 -> 0.278 in ONE corrected pass** | `delta=+0.172` vs .381's `+0.01/pass` = **~17x faster**. `per_pass_delta_vs_v381.beats_v381=true`. Bounded (~3396s). Still `matches_published_087=false` (0.278 vs 0.87). |
++| **GRAFT** | exp4128 | **DEFERRED — baseline not yet faithful** | `graft_deferred=true`, `baseline_val=0.2782`, `estimated_passes_to_converge_for_383=4`. `verifier_value_added=false` (because deferred, NOT because tested). |
++| **ACCURACY (ARC)** | exp4129 | **+1 game, real-env-confirmed** | `total_games_solved=13`, a new non-spatial game solved at action 16, `real_env_confirmed=true`. |
++| SOTA / registry / hardware | exp4130/4131/4132 | recorded | registry regression-guard green; GateMate unreachable, PolarFire CPU-dispatch hash-verified, KV260 terminal. |
++
++**The diagnosis (load-bearing for this milestone).** Two facts define .383:
++
++1. **The bottleneck is now PURELY convergence, and it is no longer a mechanism
++   bug — it is wall-clock.** The LR fix changed the regime from `+0.01/pass`
++   (glacial, the .381 re-warm) to `+0.172/pass` (real accumulation). At the
++   .382-measured rate, the baseline needs an estimated **~4 more bounded passes**
++   (exp4128) from 0.278 to reach the published ~0.87. **.383 therefore schedules
++   FOUR accumulate passes, not three** — three would land ~0.79 (and convergence
++   decelerates near the ceiling), so the decisive RFT arm would defer a 4th time.
++   This is depth, not churn: continuing accumulation is the prerequisite for the
++   decisive graft, and the regime change (proven 17x) makes it tractable.
++
++2. **The verifier-as-reward graft has NEVER been tested on a faithful baseline.**
++   exp4109 (.380) ran a "graft" on the *interrupted* 0.0232 checkpoint — not a real
++   test. exp4119 (.381, val=0.106) and exp4128 (.382, val=0.278) both honestly
++   DEFERRED. So the central question of the whole post-reframe program — *does the
++   executable Carnot verifier add value over the vote on a domain where it provably
++   discriminates?* — is still OPEN. .383 exists to answer it on a faithful baseline.
++
++This sequencing is mandated by the operator's 2026-06-13 "queued but not competing"
++directive: the DiffusionGemma energy-guided-diffusion scale-up
++(`docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md`) is GATED on
++the TRM graft reporting `verifier_value_added==true`. The TRM-Sudoku test is the
++cheapest DECISIVE version of that same question; it must close first.
++
++---
++
++## 2. The three biggest gaps between current state and the PRD vision
++
++1. **No faithful recursive-reasoner baseline yet (the convergence gap).** The PRD's
++   Phase-3 endgame and the north-star §5 hybrid both need a *working generator* to
++   verify. The TRM baseline is 0.278/0.87. Closing this is the gating prerequisite
++   for every downstream verifier-value claim on this domain.
++
++2. **The verifier's value is UNPROVEN where it should be strongest (the moat gap).**
++   On non-executable ARC grids the verifier *anti*-discriminated (exp4099, captured
++   -0.23pp). Sudoku is the opposite — row/col/box validity is an EXACT executable
++   check, essentially a perfect oracle. If the verifier cannot add value HERE, the
++   verifier-as-reward thesis is in serious trouble. This is the decisive measurement.
++
++3. **The headroom question is unanswered (the false-negative gap).** Every prior
++   single-verifier "no value" finding (exp4099/4109/4128 ~0.0pp) risks being a
++   FALSE_NEGATIVE_RISK: if TRM's pass@K pool has no headroom (oracle == vote), NO
++   reranker could win and the null is uninformative. .383 makes the oracle-vs-vote
++   positive control a FIRST-CLASS, mandatory step before any verifier verdict.
++
++---
++
++## 3. Architecture — the converge-then-graft pipeline
++
++```
++  STABLE CHECKPOINT  results/trm_runs/sudoku_extreme_baseline/last.ckpt
++  (val=0.278, FIXED LR schedule, exp4127)
++          |
++          v
++  PHASE A — BASELINE CONVERGENCE (depth; the prerequisite)
++  +----------------------------------------------------------------+
++  | exp4135 pass1  resume (fixed LR) <=60min -> val, save back      |
++  | exp4136 pass2  defensive read; resume <=60min -> val            |
++  |   PLATEAU FLOOR: if val did NOT improve vs prior -> config      |
++  |   audit instead of blind-training (Failed-Rerun Discipline)     |
++  | exp4137 pass3  defensive; resume <=60min -> matches_087?        |
++  +----------------------------------------------------------------+
++          |  faithful baseline (target val ~0.87; gate val>=0.85)
++          v
++  PHASE B — THE DECISIVE GRAFT (the payoff)
++  +----------------------------------------------------------------+
++  | exp4138  sample K candidates per held-out puzzle from the      |
++  |          faithful TRM                                            |
++  |   (0) HEADROOM POSITIVE CONTROL (mandatory, FIRST):             |
++  |        oracle(best-of-K, executable validity) vs vote pass@1.   |
++  |        oracle==vote -> NO HEADROOM -> uninformative null, STOP   |
++  |        the verifier verdict (FALSE_NEGATIVE_RISK).               |
++  |   (A) RERANK arm: executable-verifier rerank pass@1 vs vote,    |
++  |        bootstrap CI; (Weaver fallback: weighted ensemble of     |
++  |        executable + text-stat verifiers if single is headroom-  |
++  |        limited).                                                 |
++  |   (B) RFT arm (de-confound): A=verifier-certified corpus vs     |
++  |        B=vote-certified corpus, N-matched, same TRM, same pool, |
++  |        resume-train each (FIXED schedule); held-out exact-acc,  |
++  |        CI95 excl 0.                                              |
++  |   -> verifier_value_added (bool). Unlocks/kills DiffusionGemma. |
++  +----------------------------------------------------------------+
++
++  PHASE C — NORTH-STAR BREADTH + MANDATED SLOTS
++    exp4139  ARC-AGI-3 incremental +1 (monotonic; offline explore-induce-verify)
++    exp4140  SOTA-ingestion (GRAM 97%, RLVR-TRM-thinking-reward, Weaver)
++    exp4141  verifier-registry + gaps hygiene (GAP-4 regression guard)
++    exp4142  hardware continuity (GateMate + PolarFire; KV260 terminal)
++
++  PHASE D — CLOSE
++    exp4134  archive .382 -> activate .383  (runs FIRST, mechanical)
++    exp4143  capstone .383 (UNGATED aggregation; does verifier_value_added flip?)
++```
++
++**Why bounded passes, not a detached contiguous run.** exp4126 raised the
++contiguous-run alternative, but two facts close it: (a) bounded passes now WORK
++(proven +0.172 with the fix), and (b) the split-BUILD-background-COLLECT mechanism
++has failed three milestones (memory `incident_powering_run_background_mechanism_fails`).
++The proven-robust pattern is **single synchronous resume-accumulate per task with
++per-task progress prints** (so codex's idle-timeout never fires) and a stable
++(corpus+model)-keyed checkpoint. Each of exp4135/4136/4137 is exactly that.
++
++---
++
++## 4. Phase descriptions
++
++### Phase A — Baseline convergence (exp4135 / 4136 / 4137) — `track: trm-baseline`
++Three bounded (≤60min, `trainer.max_time`) resume-accumulate passes from the stable
++checkpoint with the FIXED LR schedule, each saving back to the stable path so the
++next pass continues. Each pass is DEFENSIVE: it reads the prior pass's val and, if
++val did **not** improve, runs a SHORT config audit instead of blind-training the next
++pass (Failed-Experiment Rerun Discipline — no blind plateau-burning). Deliverable per
++pass: `val_exact_accuracy`, `delta_vs_previous`, `matches_published_087`,
++`stable_checkpoint_path`. Target val ≈ 0.87; the Phase-B gate is val ≥ 0.85.
++
++### Phase B — The decisive verifier-as-reward graft (exp4138) — `track: verifier-as-reward`
++On the faithful baseline, the single most important experiment of the milestone.
++Built-in **headroom positive control first** (oracle best-of-K vs vote — if equal,
++the null is uninformative and we say so). Then the RERANK arm (executable-verifier
++rerank vs vote, bootstrap CI; Weaver weighted-ensemble fallback) and the RFT arm
++(A=verifier-certified vs B=vote-certified, de-confounded, CI95 excl 0). Defensive: if
++val ≥ 0.85 → full graft; if 0.75 ≤ val < 0.85 → rerank+headroom arm only (the rerank
++question is answerable at 0.75+), defer RFT; if val < 0.75 → defer with the
++passes-to-converge estimate for .384. `verifier_value_added` is the headline answer
++and the DiffusionGemma gate.
++
++### Phase C — North-star breadth + mandated slots (exp4139–4142)
++- **exp4139 ARC-AGI-3 incremental** (`track: arc`): advance the solved-level count
++  monotonically by ≥1 — next-unsolved non-spatial game's L1, OR (the non-spatial pool
++  is thinning: `n_nonspatial=6`, exp4120 reported "no unsolved strict non-spatial
++  candidates") advance an already-started game (e.g. r11l, the survey top-pick) to its
++  next level. Offline explore→induce→GAP-4-verify→act. Honest no-solve is COMPLETE.
++- **exp4140 SOTA-ingestion** (`track: research`): ingest GRAM (97% Sudoku-Extreme,
++  the new SOTA baseline), the RLVR+GRPO TRM-as-thinking-reward precedent, and Weaver
++  (weak-verifier ensemble); flag the strongest for .384. Real arXiv IDs/URLs only.
++- **exp4141 verifier-registry + gaps hygiene** (`track: infra`): bit-exact GAP-4 ARC-1
++  regression replay (vote 0.4516 → gated 0.5806) + record the .383 graft outcome.
++- **exp4142 hardware continuity** (`track: hardware`): GateMate + PolarFire
++  drive-to-terminal; KV260 opportunistic-confirm. SSH/USB-detect preconditions ONLY.
++
++### Phase D — Close (exp4134 archive, exp4143 capstone)
++exp4134 runs FIRST (archive .382 → activate .383, mechanical, codex). exp4143
++aggregates the milestone into one honest headline: did the baseline reach ~0.87, and
++did `verifier_value_added` flip true (unlocking DiffusionGemma) or honestly null?
++
++---
++
++## 5. Dependency graph
++
++```
++  exp4134 (archive/activate)  ── runs first
++  exp4135 ─> exp4136 ─> exp4137   (accumulate chain; each resumes the prior's ckpt)
++                          │
++                          v
++                       exp4138  (graft; defensive read of exp4137 baseline val)
++  exp4139, exp4140, exp4141, exp4142   (independent; any order)
++  exp4143 (capstone) ── reads 4135-4142, runs last, UNGATED
++```
++
++No `gated_on` fields: the accumulate chain and the graft are DEFENSIVE (they read
++upstream artifacts and branch internally), and the capstone aggregates whatever
++exists — the proven .380/.381/.382 pattern. This keeps every task producing
++decision-grade signal even when an upstream pass under-converges.
++
++---
++
++## 6. Hardware requirements
++
++- **2x RTX 3090 (CUDA), GPU 0 primary** — Phase A training (3 bounded ≤60min nano-trm
++  passes) and the Phase B RFT arm. Phase B rerank + headroom are CPU verifier-scoring.
++- **GateMate A1-EVB-2M + PolarFire SoC Discovery Kit** — continuity (exp4142),
++  SSH/USB-detect preconditions only. KV260 is terminal (opportunistic confirm).
++- No new hardware required. DiffusionGemma (the next scale-up) would need the
++  Apache-2.0 DiffusionGemma 26B/4B-active weights cached — but it is GATED behind this
++  milestone's graft verdict and is NOT part of .383.
++
++---
++
++## 7. Risks and mitigations
++
++| Risk | Mitigation |
++|---|---|
++| 3 passes under-converge (land ~0.79–0.85, not 0.87) | Phase-B graft is graded/defensive: rerank+headroom answerable at val≥0.75; full RFT at ≥0.85; else defer to .384 with a passes estimate. Convergence still advanced materially. |
++| Convergence plateaus below target | Each accumulate pass has a PLATEAU FLOOR: no-improvement → config audit, not blind retrain (Failed-Rerun Discipline). |
++| Verifier "no value" is a false negative (no headroom) | Mandatory oracle-vs-vote positive control FIRST; an uninformative null is labeled FALSE_NEGATIVE_RISK, never propagated as "verifier fails". |
++| Single executable verifier headroom-limited | Weaver weighted-ensemble fallback (executable validity + text-stat verifiers). |
++| ARC non-spatial pool exhausted | exp4139 may advance an already-started game's level (incremental-progress discipline allows +1 level), not only first-solves. |
++
++---
++
++## 8. Compliance with mandated disciplines
++
++- **Codex-Default v2** — all 10 tasks `agent_type: codex` + `model: gpt-5.5`. Planner
++  (this doc) stays Opus via env.
++- **Failed-Experiment Rerun / Exclusion-Manifest Cross-Check** — every
++  lineage-continuation task (accumulate, graft, ARC, archive, capstone, SOTA, registry,
++  hardware) carries an `operator_override:` per the 2026-05-29 standing auto-override
++  (classes 1/2/3), citing the false-positive scope-match + the forward difference. No
++  task scope-matches a retired exp_id in `ops/exclusion_manifest.yaml`.
++- **Verdict Terminal-Prefix** — every `honest_verdict` spec starts `complete:`/etc.
++- **Principle-Annotated Artifact Fields** — every REQUIRED ARTIFACT FIELD + gate
++  carries a `principle:`.
++- **Pre-Launch Preconditions** — every compute-bound task has a PRECONDITIONS step 0
++  (uv + nano-trm + CUDA + stable checkpoint; SSH/USB for hardware) → `blocked_*` on miss.
++- **Inference-Substrate Declaration** — each task declares `inference_substrate`.
++- **ARC-AGI-3 Incremental-Progress Scoping** — exp4139 targets +1 level, never a
++  FULL/all-levels solve.
++- **SOTA-Ingestion Cycle** — exp4140 reserved; reliable channel, not /deep-research.
++- **Hardware-Task Continuity** — exp4142 reserves one task for the non-terminal boards.
++- **Reserved infra slots** — exp4134 (archive), exp4141 (registry hygiene), exp4143
++  (capstone) cover the ≥2 infra-slot reservation.
++- **Depth-Over-Breadth ethos (north-star §1)** — the milestone is weighted to the
++  load-bearing converge+graft depth (4 of 10 tasks), not vN+1 re-measurement churn.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0e066d0001..9804537b1e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-06-13T06:52:55Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-06-13T07:42:12Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4d491e601c..0200e334eb 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8404,3 +8404,5 @@ c |
+ | 2026-06-13 05:42 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-13 06:32 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed, 1 warning in 5.79s |
+ | 2026-06-13 06:50 UTC | Capstone .382 (UNGATED): headline question is DID  | OK | 87 passed, 1 warning in 5.04s |
++| 2026-06-13 07:37 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
++| 2026-06-13 07:40 UTC | Milestone 2026.06.383 activated | OK | 11 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d95bb49265..18b7c86800 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 8, "phase": "iteration_start", "started_at": "2026-06-13T06:52:55Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 10, "phase": "iteration_start", "started_at": "2026-06-13T07:42:12Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 1a12ad3660..4e3a211c7f 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -1,67 +1,159 @@
+-<!-- generated by scripts/pages_adversarial_audit.py — 2026-06-12 -->
++<!-- generated by scripts/pages_adversarial_audit.py — 2026-06-13 -->
+ <!-- per CLAUDE.md 'Adversarial Landing-Page Discipline' — this report is advisory; operator decides what to act on -->
+ 
+-# docs_audit_report — 2026-06-12
++I've verified the file matches and confirmed the structural details (notably the `r-card` jammed inside `.stats-bar` at lines 309–314). Here is my hostile-stranger review.
++
++```
++# docs_audit_report — 2026-06-13
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero is genuinely strong — the `47 + 28 = 76` example, `pip install carnot-ebm`, and "second pair of eyes" land the value prop in five seconds. But the moment I scroll, trust erodes: a "Recent progress" card written like an internal changelog, a benchmark name (FoVer) that appears as both a 0.91 triumph and a 0.125 below-random baseline, a wall of jargon-dense result cards with suspiciously perfect numbers, and a blog whose headline posts are "Caught Cheating" and "Two Retractions." A skeptical conference-goer keeps reading past the hero, then starts doubting the numbers.
++The hero is genuinely good — one clear sentence about what it does, a `pip install`
++line, Apache 2.0 — but a numerate stranger bounces within 30 seconds because the page
++argues with itself about its own headline number (six different AUROC/AUC figures, one
++of them a nonsensical "0.125 baseline") and the very first card under the stats is a
++visually-broken box full of insider jargon ("Repinned from v2 0.9857"). The Evidence
++section reads as acronym soup, and the blog directly below it is a reel of "here's how
++our own numbers got caught cheating / retracted." I'd click GitHub if I were charitable,
++close the tab if I were skeptical.
+ 
+ ## TOP 3 PROBLEMS
+-1. **Above-the-fold internal changelog** — the hero "Recent progress" card hits the stranger with "Repinned from v2 0.9857 after pre-submission adversarial audit," "architecture-only 0.8947," "dual-condition," "canonical source repository" — the first prose after the headline reads like a commit message.
+-2. **FoVer self-contradiction** — headline stat says "0.9131 AUROC — FoVer," but the results card "Math reasoning — EstimationVerifier SVAMP AUC" says "0.90 AUC (vs 0.125 FoVer baseline)." Same benchmark name, one stellar number, one *below-random* (0.125 < 0.5) number, zero explanation.
+-3. **Perfect-number + confessional-blog trust hole** — the Results grid is studded with too-clean numbers (1.0 TP rate, 60/60 attacks, exactly 2.0× "identical losses," 0.0pp delta), and the blog's top three teasers advertise the project repeatedly catching *itself* fabricating. To a stranger that signals a fabrication-prone project, not a rigorous one.
++1. The AUROC zoo + a sub-random "baseline" — Evidence section + hero stats bar. Six
++   competing figures (0.9131 / 0.8947 / 0.9857 / 0.91 / 0.90 / 0.125), "FoVer" used as
++   both the win and a weak baseline, and several suspiciously-perfect scores destroy
++   trust in every number on the page.
++2. The hero's "Recent progress" card is broken AND jargon-laden — it is crammed inside
++   the four-column stats flexbox (renders as a misaligned bordered box; there's even a
++   stray `</div>`) and the first prose a stranger reads is "Repinned from v2 0.9857 ...
++   architecture-only 0.8947 ... 5-seed dual-condition."
++3. The blog section reads as a confession reel — "Caught Cheating," "Two Retractions
++   and a Rescue," "Regex in an NTK Costume," "Why We Report Two AUROCs" sit right under
++   the Evidence grid and tell a stranger the project's numbers repeatedly get
++   fabricated/retracted.
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- Individual bento/result cards are within word caps (longest, "Why Energy-Based?", ~75 words < 120; result cards have near-empty bodies). So no per-card word violation — but:
+-- **Nav bar — 12 text links** (Get Started, Tutorial, Concepts, API, Problem, Capabilities, Results, Quick Start, Report, Paper, Writing, Roadmap) + 2 buttons — cluttered; cap to ~5-6 primary links.
+-- **Cumulative card load — 26 cards** across three stacked grids (Features 7, Results 12, Blog 7). Under the 20-per-section cap individually, but a stranger skims none of a 12-card jargon grid. Trim Results to the 5-6 strongest, provenance-clean rows.
+-- **Hero stats-bar is overloaded** — 4 vanity stats *plus* an embedded paragraph "Recent progress" r-card crammed into the headline-numbers band. The card does not belong in a stats bar.
++- Evidence section-desc (lines 511–515) — ~55 words of defensive hedging
++  ("infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows are
++  labeled by provenance ... they are not model-generation headline claims"). A stranger
++  doesn't need a fabrication-disclaimer above the results; it reads as pre-emptive
++  self-defense and signals the opposite of confidence. Cut to one sentence.
++- Hero "Recent progress" r-card (line 312) — ~47 words; under the 60-word cap, but for
++  the FIRST card on the page it should be ~20 words of plain English, not a changelog
++  entry. Suggested cap: 25 words, zero version numbers.
++- Results grid — 12 cards is under the 20-card cap, but a stranger will skim none of
++  them because every tag is an unfamiliar acronym (see jargon). Volume + opacity
++  compound. Suggest 4–6 headline cards with plain-English tags.
++- Nav — 11 text links + 2 buttons (lines 265–284). Choice overload; "Get Started" /
++  "Tutorial" / "Quick Start" are three overlapping entry points, and "Report" / "Paper"
++  / "Writing" are three more. Suggest ~5 links max.
+ 
+ ### Internal jargon
+-- **Hero "Recent progress" card** — "Repinned from v2 0.9857", "architecture-only 0.8947", "5-seed dual-condition", "canonical source repository" — a stranger knows none of: what "repinned" means, what "v2" was, why two AUROCs exist here.
+-- **Hero stats** — "382 Completed milestones" — "milestones" is internal cadence; meaningless and faintly boastful to an outsider. "3,416 Experiment runs" is similar vanity.
+-- **Preprint section title** — "Carnot position paper (**paper-v6**)" — version number is internal. "pending **operator**-initiated upload", "**non-operator** environment" — "operator" is project-internal vocabulary.
+-- **Results cards** — "publication gate", "**EstimationVerifier**", "**VeriCoT**", "**CCTU**" (undefined acronym, appears twice), "**PRM**-BiasBench-style", "**k=5** ensemble", "**HalluGuard v3**" (versioned internal name), "**CRANE**", "TP rate" — a dense cluster no stranger can parse.
+-- **Features → "Test-Time Compute (TTC) & PREM" card** — "Process-Reward Energy Model (PREM) variance," "intrinsic motivation for continuous self-learning" — expansions are themselves jargon; the card says nothing a stranger can act on.
+-- **Features → "Multi-step reasoning"** — "AND-composed"; **Blog** — "NTK" (unexpanded), "Deep Think" (internal ritual name).
++- Hero "Recent progress" card (line 312) — "Repinned from v2 0.9857", "architecture-only
++  0.8947", "5-seed dual-condition", "FoVer". A stranger has no idea what "repinned"
++  means, why there was a previous "v2" number, or what "architecture-only" excludes.
++  This is changelog narrative, not landing-page copy.
++- Features card "Test-Time Compute (TTC) & PREM" (lines 497–499) — "Process-Reward
++  Energy Model (PREM) variance", "intrinsic motivation for continuous self-learning."
++  Highest jargon density on the page; near-unparseable to a non-insider. Expanding the
++  acronyms inline doesn't help when the underlying concept is never explained.
++- Features card "Research operations" (lines 469–477) — "adversarial-verify pass",
++  "methodology-incomplete artifacts", "headline claims." This is internal dev-process,
++  not a capability a user "checks" (and the section is titled "What you can check").
++- Results tags — acronym soup with zero glosses: "SVAMP" (549), "VeriCoT ... CoT" (559),
++  "CRANE" (554), "PRM-BiasBench" (564), "HalluGuard v3" (569), "CCTU" (451, 574),
++  "GSM8K ... TP rate" (560), "Ising-guided fuzzing" (544). A stranger can't tell which
++  are datasets, methods, or competitors.
++- Preprint section (lines 584, 591–594) — "(paper-v6)" in the title, plus "non-operator
++  environment" and "operator-initiated upload." "Operator" is internal terminology for
++  the maintainer; a stranger reads it as oddly impersonal/robotic.
++- "AUROC" / "AUC" used throughout with no one-line gloss for a non-ML reader (e.g. hero
++  stat line 308). Borderline — acceptable for an ML audience, but the page otherwise
++  pitches to a general "stranger at a conference."
+ 
+ ### Per-milestone narrative
+-- "**382 Completed milestones**" surfaced as a top-level headline stat.
+-- "Repinned from **v2** 0.9857" and "**HalluGuard v3**" — version-bump narrative that belongs in a changelog, not landing copy.
+-- "an **adversarial-verify pass** catches fabricated or methodology-incomplete artifacts before they influence headline claims" (Research operations card) — describes the *internal dev loop*, not anything the user gets.
++- Hero "Recent progress" card (line 312) — "Repinned from v2 0.9857 after pre-submission
++  adversarial audit" is a status-update sentence lifted from internal process, not copy
++  written for a reader.
++- "HalluGuard v3" (line 569) and "(paper-v6)" (line 584) — bare internal version numbers
++  surfaced on public cards; a stranger neither knows nor cares there were a v1/v2 or
++  five prior paper drafts.
+ 
+ ### Inconsistencies
+-- **FoVer**: "0.9131 AUROC — FoVer" (stat) vs "0.125 FoVer baseline" (SVAMP card). An AUC of 0.125 is *below* random (0.5) and contradicts the same name's headline triumph.
+-- **The 47+28 example**: problem intro and code sample use "76" (correct 75), but the "One-word-at-a-time" card uses "47 + 28 = **7**". Reads like a typo.
+-- **Two ~0.91 AUROCs**: "0.9131 — FoVer" and "0.91 AUROC — Prompt-injection (publication gate)" — different things, similar numbers, easy to conflate.
+-- **"What you can check" framing** vs cards that aren't checks: "Research operations," "APIs & portable memory," "Test-Time Compute" are features/infra, not things you check.
+-- **Meter bars don't track their numbers**: "+3.0 points" → 14.6% bar, but "+4.9 points" → 66.7% bar. Same unit, wildly different scale.
+-- **Possible structural bug**: the "Test-Time Compute & PREM" card appears *after* a `</div>` that closes the `.bento-grid`, so it likely renders orphaned/full-width outside the Features grid.
++- "FoVer" is the benchmark Carnot WINS on (line 308: "0.9131 Verifier AUROC — FoVer
++  math step-errors") AND simultaneously a weak BASELINE it crushes (line 550: "0.90 AUC
++  vs 0.125 FoVer baseline"). Same name, two contradictory roles. A stranger cannot tell
++  whether FoVer is the test, a rival, or Carnot's own component.
++- Headline number is not stable across the page: 0.9131 (line 308), 0.8947 (line 312),
++  0.9857 (line 312, the retracted "v2"), 0.91 (line 530, prompt-injection), 0.90 (line
++  550). The two ~0.91 figures (FoVer 0.9131 vs prompt-injection 0.91) are different
++  things but round to the same value — a skimmer conflates them.
++- Meter widths don't encode a consistent scale: "+3.0 points" → 14.6% bar (line 521)
++  but "+4.9 points" → 66.7% bar (line 526). The bars imply +4.9 is ~4.5× bigger than
++  +3.0; it isn't. Meanwhile the "4% → 12%" card (line 576) shows a near-empty 12% bar
++  that visually reads as a failure.
++- Problem section (line 338) shows the LLM "committed to '47 + 28 = 7'" while the intro
++  and the other card say the wrong answer is "76" (lines 329, 343). The intermediate
++  "= 7" looks like a third arithmetic typo stacked on the example; the point (mid-stream
++  commitment) is lost on a fast reader.
+ 
+ ### Missing essentials
+-- Most are covered: one-sentence "what it does" ✓ (hero), install ✓ (`pip install carnot-ebm`), license ✓ (Apache 2.0, multiple places), maintainer ✓ (Ian Blenke, footer).
+-- **"Why trust the numbers" is undercut, not absent.** Reproducibility is claimed (independent CI recompute of 0.9131), but the perfect-number cards and the FoVer contradiction actively erode the trust the page is trying to build.
+-- **Single-name maintainer** ("© 2026 Ian Blenke") with no org/team — for a project boasting 30k tests and 382 milestones, a stranger may wonder whether this is one person's research diary.
++- No single trustworthy headline number a stranger can walk away repeating. "What's THE
++  result?" has six candidate answers and no clear winner.
++- "Why should I trust the numbers?" is actively undermined: the Evidence desc pre-defends
++  against fabrication, the cards show implausibly perfect scores, and the blog advertises
++  repeated self-caught cheating/retractions. (What it DOES does, install, license, and
++  maintainer are all present — those essentials are fine.)
++- "Preprint" with a "Read paper" button that is a self-hosted PDF, not an arXiv listing
++  ("arXiv submission is prepared but pending ... upload," line 593). Calling it a
++  preprint when it isn't posted is a small credibility liability for a careful stranger.
+ 
+ ### Fabrication signals
+-- "GSM8K extraction **TP rate: 0.5 → 1.0**" — a perfect 1.0 with no sample size shown.
+-- "**60/60** attacks" caught by k=5 ensemble — perfect on a small set.
+-- "Two-GPU parallel retrain: **2.0× speedup, identical losses**" — exactly 2.0× and "identical" is implausibly clean.
+-- "**0.0pp** accuracy delta with 4.4% cost savings" — exact zero.
+-- "**0.125 FoVer baseline**" — below-random AUC is a red flag (mislabeled metric or anti-correlated classifier); a stranger who knows AUC stops here.
+-- "**99.3%** of wrong code flagged" — high, though anchored to the 164-problem HumanEval set, so the most defensible of the set.
++- "GSM8K extraction TP rate: 0.5 → 1.0" (line 560) — a perfect 1.0 true-positive rate
++  with no sample size or anchor. Reads as too-clean.
++- "k=5 ensemble catches 60/60 attacks" (line 565) — 100% catch rate, no false-positive
++  rate shown. 60/60 is at least a concrete denominator, but a perfect score with no FPR
++  context invites suspicion.
++- "0.90 AUC (vs 0.125 FoVer baseline)" (line 550) — an AUC of 0.125 is FAR below random
++  (0.5); a real classifier scoring 0.125 would simply be inverted to 0.875. A "baseline"
++  this bad looks either mislabeled or chosen to flatter the 0.90. Biggest single
++  credibility flag on the page.
++- Two result meters pinned to 100% with perfect/round claims ("identical losses" 2.0×,
++  line 540; "Ising sampler live on silicon," line 535) — individually defensible, but in
++  aggregate with the above they reinforce a too-perfect impression.
+ 
+ ## WHAT'S WORKING
+-- **The hero and Problem section are excellent stranger-facing copy** — the `47 + 28` worked example, "LLMs predict, they don't check," and the Extract→Check→Repair triptych explain the product in under a minute with no jargon.
+-- **Install, license, and maintainer are all answerable in 30 seconds**, and the preprint section's "independently re-computed from a clean CI checkout" is exactly the kind of trust anchor a skeptic wants (it's just buried below the contradictions).
++- The hero nails the one-sentence pitch: "checks whether an answer is internally
++  consistent — and suggests a fix when it isn't," with `pip install carnot-ebm` and the
++  Apache 2.0 badge right there. A stranger immediately knows what it is and that it's
++  free/open.
++- The "How it works: Extract → Check → Repair" section and the 47+28 worked example are
++  concrete, jargon-light, and genuinely explain the idea to a non-specialist. The Quick
++  Start code block is clean and credible.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. **Rewrite the hero "Recent progress" card** in stranger language: state the one headline number with its sample/seed context, drop "repinned/v2 0.9857/architecture-only/dual-condition/canonical repository." Move the two-AUROC nuance to a single linked sentence ("how we measure" → blog).
+-2. **Fix the FoVer contradiction** — either relabel the "0.125 FoVer baseline" (it's below random and collides with the 0.9131 headline) or remove that card. This is the single most credibility-damaging line on the page.
+-3. **Cut the Results grid from 12 to ~5-6 provenance-clean, non-perfect rows.** Drop or caveat the 1.0 / 60-of-60 / exactly-2.0× / 0.0pp cards; perfect numbers without sample sizes read as fabrication to a skeptic.
+-4. **De-jargon the surviving cards** — define or remove CCTU, EstimationVerifier, VeriCoT, CRANE, HalluGuard v3, PRM, k=5, "publication gate." If a token needs the changelog to parse, it doesn't belong on the landing page.
+-5. **Replace internal vanity stats** ("382 Completed milestones," "3,416 Experiment runs") with stranger-legible signals (tests passing, benchmarks covered, models supported).
+-6. **Fix the small breakages**: the "47 + 28 = 7" typo, the orphaned TTC card outside the bento-grid, and the meter-bar widths that don't track their numbers.
+-7. **Rethink the blog ordering** — leading with "Caught Cheating," "Two Retractions," and "Regex in an NTK Costume" tells a first-time stranger the project fabricates. Lead with the value/theory posts; keep the integrity posts, but not as the first impression.
+\ No newline at end of file
++1. Pick ONE headline number, state it once, and make every other figure consistent with
++   it. Resolve the "FoVer = win and FoVer = 0.125 baseline" contradiction (rename one).
++   Drop or footnote the retracted 0.9857.
++2. Fix the hero: move the "Recent progress" card OUT of the `.stats-bar` flexbox (it
++   renders broken; also remove the stray `</div>` at line 314), and rewrite its body in
++   plain English with no "Repinned/v2/architecture-only/5-seed" jargon.
++3. Drop or rewrite the "0.125 FoVer baseline" card — a sub-random baseline reads as
++   cherry-picking and taints the whole Evidence grid. Add sample sizes / FPR to the
++   perfect-score cards (1.0 TP rate, 60/60).
++4. Translate the Results tags into plain English (e.g. "Catching wrong math steps,"
++   "Constrained tool calls") and cut the grid to ~4–6 cards. Move raw benchmark/acronym
++   detail to the Technical Report.
++5. Retitle/curate the blog so the Evidence-adjacent strip isn't four "we caught ourselves
++   cheating / retracted" headlines in a row; lead with the theory/value posts and let the
++   integrity posts live deeper in /blog.
++6. Cut the Features "Research operations" and "TTC & PREM" cards (or move them off a
++   page titled "What you can check"), and reconcile the "Seven capabilities" count with
++   what's actually user-facing.
++7. Trim the nav to ~5 links and consolidate the redundant Get-Started/Tutorial/Quick-Start
++   and Report/Paper/Writing entries.
++8. Either post the paper to arXiv or stop calling the section "Preprint"; label it
++   "Draft (PDF)" until it's actually submitted.
++```
++
++This is advisory only — I have not edited `docs/index.html`, which is operator-curated. The most damaging issue for a stranger is trust: the page's own numbers don't cohere (especially the 0.125 "baseline" and the v2/v6 version leakage), and the blog strip underneath the Evidence grid amplifies the doubt rather than resolving it.
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index 01042ea8b0..da89c40cad 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -22294,3 +22294,55 @@ openspec/change-proposals/research-roadmap-v376.md §3.
+ Sources (this sweep): arxiv.org/abs/2403.07974 (LiveCodeBench v6); arxiv.org/abs/2305.01210
+ (EvalPlus); arxiv.org/abs/2603.10282 (update-free on-policy steering via verifiers);
+ arxiv.org/abs/2602.01070 (online verification); arxiv.org/abs/2507.14843 (The Invisible Leash).
++
++## 2026-06-13 Post-.382 Planning Sweep (Milestone 2026.06.383)
++
++**Planning agent (Claude Opus 4.8). Theme: .382 LANDED the LR-resume-correctness fix —
++the nano-trm Sudoku-Extreme baseline finally ACCUMULATES (val 0.106 -> 0.278 in one
++corrected-schedule pass, +0.172 vs .381's +0.01/pass = ~17x). The baseline is now
++genuinely climbing toward the published ~0.87; the Carnot verifier-as-reward graft has
++NEVER been tested on a FAITHFUL baseline (deferred .380/.381/.382). .383 converges the
++baseline (~3 bounded passes) THEN runs the decisive graft. Three findings directly shape
++that headline:**
++
++- **GRAM (Generative Recursive reAsoning Models) — NEW SOTA on the EXACT benchmark we
++  reproduce.** Junyeob Baek et al. report **97.0% exact-accuracy on Sudoku-Extreme with
++  ~10M params**, beating TRM (87.4%) and HRM (55.0%). GRAM "turns recursion itself into a
++  stochastic latent trajectory" (deterministic recursive refinement -> stochastic latent
++  trajectories). **Strategic significance for Carnot:** (a) our ~0.87 TRM-baseline target
++  is now mid-table — GRAM is the stronger generator to consider grafting onto AFTER the
++  TRM graft answers the verifier-value question; (b) a stochastic-latent generator emits a
++  *distribution* of candidate trajectories per puzzle — the natural input to an
++  energy-VERIFIER reranker (the north-star §5 hybrid: GRAM/TRM generates, Carnot energy
++  verifies), which is more headroom for a reranker than a near-deterministic TRM. Candidate
++  .384+ follow-on IF the TRM graft shows verifier_value_added. (digg.com/ai/kl9f5x93;
++  learnopencv.com/trm-tiny-ai-models-outsmarting-giants-on-complex-puzzles)
++- **RLVR + GRPO with TRM-as-thinking-reward — published precedent for the EXACT graft
++  shape Carnot tests.** Recent work integrates a TRM as an auxiliary reward inside GRPO:
++  "TRM provides a thinking reward that evaluates the quality of the underlying reasoning
++  trace, and since it is trained exclusively on verified-correct traces, it is used to
++  rank and shape alternative correct reasoning paths." This is verbatim the Carnot
++  verifier-as-reward thesis (a verifier trained on correct-only/cert-only traces used to
++  rank+shape). Corroborates the .383 RFT arm (A=verifier-certified vs B=vote-certified)
++  and warns the de-confound matters: "trained on verified-correct traces" is exactly the
++  arm we must isolate from the vote-label arm. (learnopencv.com TRM writeup)
++- **Weaver — "Shrinking the Generation-Verification Gap with Weak Verifiers" (Stanford
++  Scaling Intelligence).** A weighted ENSEMBLE of weak/noisy verifiers beats majority vote
++  by a wide margin where any SINGLE weak verifier does not. **Direct relevance to the
++  .380/.382 finding that NO single verifier beat TRM-vote (exp4099/4109/4128 captured
++  ~0.0pp):** the Sudoku executable verifier is a STRONG (exact) checker, not weak, so the
++  single-verifier rerank should capture the oracle headroom IF headroom exists — but
++  Weaver is the fallback design if the executable rerank is headroom-limited: combine the
++  executable validity check with the cheap text-stat verifiers as a weighted ensemble.
++  Mandatory positive control inherited: measure oracle(best-of-K) vs vote FIRST — if
++  oracle == vote there is NO headroom and any rerank null is uninformative
++  (FALSE_NEGATIVE_RISK). (scalingintelligence.stanford.edu/pubs/weaver.pdf)
++- **Symbol-Equivariant Recurrent Reasoning Models (arXiv:2603.02193)** and **HRM-Agent
++  (arXiv:2510.22832, recurrent reasoner trained with RL)** — adjacent recurrent-reasoning
++  advances; filed for the SOTA-ingestion slot, not load-bearing for .383.
++
++Sources (this sweep): digg.com/ai/kl9f5x93 (GRAM 97% Sudoku-Extreme);
++learnopencv.com/trm-tiny-ai-models-outsmarting-giants-on-complex-puzzles (TRM + RLVR/GRPO
++thinking-reward); scalingintelligence.stanford.edu/pubs/weaver.pdf (Weaver weak-verifier
++ensemble); arxiv.org/abs/2603.02193 (Symbol-Equivariant RRM); arxiv.org/abs/2510.22832
++(HRM-Agent); arxiv.org/abs/2510.04871 (TRM foundational); arxiv.org/abs/2511.02886 (TTA-TRM).
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index d459cb19a5..f708382ee4 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,14 @@
+     0.6748976707458496
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757112
++  "gradient_stability_ratio": 0.9999999989757112,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762872695922852 and ce_grad_norm=9.762872695922852 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 754043130d..28734c384a 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,14 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.010050058364868164
++  "duration_s": 0.010050058364868164,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index 5dffed777a..7e2948104d 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -100,5 +100,14 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": []
++  "invariant_violations": [],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From 88851f92079d6bc9a8c6171c09bb07e4acaa17b2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 10:08:10 -0400
+Subject: [PATCH 10528/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 889ee1bcec..3faef3dc9a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 40, "phase": "iteration_start", "last_beat": "2026-08-31T13:55:11Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 41, "phase": "iteration_start", "last_beat": "2026-08-31T14:08:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9b145d353e..fd0ca46817 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16920,3 +16920,4 @@ The l |
+ | 2026-08-31 13:21 UTC | Obligation-routed actions-to-progress A/B v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6820-arc-tool-gap-obligation-transport-v2 |
+ | 2026-08-31 13:21 UTC | Independent ARC causal adoption audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6819-arc-stepwise-strategy-accrual, exp68 |
+ | 2026-08-31 13:53 UTC | V595 evidence synthesis and branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6823_v595_br |
++| 2026-08-31 14:06 UTC | V595 evidence synthesis and branch disposition | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6823_v595_br |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 824d37bd58..a7375c406d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 40, "phase": "iteration_start", "started_at": "2026-08-31T13:55:11Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 41, "phase": "iteration_start", "started_at": "2026-08-31T14:08:03Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

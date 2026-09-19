@@ -1,0 +1,43 @@
+From b09763f4946e3f551b76752067e40a5ce6da0c11 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 28 Jun 2026 09:09:39 -0400
+Subject: [PATCH 04637/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1a84399f67..3364ab0fe0 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 66, "phase": "iteration_start", "last_beat": "2026-06-28T12:53:00Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 67, "phase": "iteration_start", "last_beat": "2026-06-28T13:09:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 447edd5084..3de3c190b2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9513,3 +9513,4 @@ The contro |
+ | 2026-06-28 11:25 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 8.52s |
+ | 2026-06-28 12:36 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERAB | OK | 81 passed, 1 warning in 7.14s |
+ | 2026-06-28 12:51 UTC | PHASE B1 (RESERVED INFRA 1) -- ADVERSARIAL AUDIT o | OK | 87 passed, 1 warning in 6.18s |
++| 2026-06-28 13:07 UTC | PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- subm | OK | 89 passed, 1 warning in 8.40s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 04e9e002da..62b5500fcc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 74395, "iteration": 66, "phase": "iteration_start", "started_at": "2026-06-28T12:53:00Z"}
+\ No newline at end of file
++{"pid": 74395, "iteration": 67, "phase": "iteration_start", "started_at": "2026-06-28T13:09:37Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

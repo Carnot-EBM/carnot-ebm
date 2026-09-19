@@ -1,0 +1,3206 @@
+From 3b77cd5c34bc61a323814cce9053287c036c87b4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 14:49:03 -0400
+Subject: [PATCH 07105/11362] [conductor] Execution-time V509 source delta,
+ citation-trail refresh, and scope deduplication
+
+Automated research step by research conductor.
+Task ID: exp5637-v509-source-delta-ingestion
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  106 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...riment_5637_v509_source_delta_ingestion.py |  803 +++++++++
+ research-references.md                        |    6 +
+ results/experiment_1035_dualgpu_rocm_v3.json  |    6 +-
+ .../experiment_1038_milestone_retro_80.json   |    2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |    4 +-
+ .../experiment_1089_milestone_retro_84.json   |    2 +-
+ .../experiment_1103_milestone_retro_85.json   |    2 +-
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ results/experiment_2031.json                  |    4 +-
+ results/experiment_2090_crane_humaneval.json  |   10 +-
+ results/experiment_2097_eqm_eval.json         |   17 -
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...ment_5637_v509_source_delta_ingestion.json | 1548 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...riment_5637_v509_source_delta_ingestion.py |  369 ++++
+ 22 files changed, 2867 insertions(+), 52 deletions(-)
+ create mode 100644 python/carnot/experiment_5637_v509_source_delta_ingestion.py
+ delete mode 100644 results/experiment_2097_eqm_eval.json
+ create mode 100644 results/experiment_5637_v509_source_delta_ingestion.json
+ create mode 100644 tests/python/test_experiment_5637_v509_source_delta_ingestion.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 8ebd69aaaf..c625e5b76d 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -41502,3 +41502,109 @@ prefix.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-5626 | Implemented (`python/carnot/experiment_5626_v508_source_delta_ingestion.py`, `results/experiment_5626_v508_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5626_v508_source_delta_ingestion.py`) |
++
++### REQ-REPORT-5637: Ingest V509 Execution-Time Source Delta Without Reopening Closed Scopes
++
++The Exp5637 workflow SHALL read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
++`research-program.md`, `research-references.md`, `research-complete.yaml`,
++`research-roadmap.yaml`, `research-roadmap-next.yaml` when present,
++`openspec/change-proposals/research-roadmap-vNEXT.md`,
++`ops/exclusion_manifest.yaml`, `ops/known-issues.md`, and
++`results/experiment_5636_transition_v509.json`. If
++`research-roadmap-next.yaml` is absent because the conductor has already
++activated the staged roadmap, the workflow SHALL read `research-roadmap.yaml`
++instead and SHALL NOT recreate `research-roadmap-next.yaml`. It SHALL NOT
++modify `scripts/research_conductor.py`, `research-roadmap-next.yaml`,
++`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`.
++
++The workflow SHALL begin from the
++`V509 Planner Refresh - 20260714` marker in `research-references.md` and SHALL
++record that execution-time source checks covered arXiv records for EBM
++verification and reasoning, neural constraint satisfaction, Ising ML, LLM
++hallucination detection and mitigation, KANs, energy-guided decoding,
++accelerated sampling, and continual or online constraint learning; OpenReview;
++Extropic writing; direct Semantic Scholar citation routes for EBT `2507.02092`
++and ARM-EBM `2512.15605`; Hugging Face Papers; GitHub discovery and trending
++routes; Logical Intelligence public updates; Carnot's complete reference
++history; `research-complete.yaml`; previous roadmap proposals; conductor
++results; the exclusion manifest; and known-issues scope notes.
++
++The workflow SHALL append at most one `V509 Execution Refresh - 20260714` block
++only when a candidate is both non-duplicate and executable for planned `.509`
++experiments `exp5638` through `exp5646` through an exact, local, non-retired
++Carnot hook without changing the dependency graph. An honest no-op is valid
++and SHALL leave `research-references.md` unchanged. The workflow SHALL NOT
++remap already-planned papers merely to create work and SHALL NOT reopen retired
++native runtime, external generated-text scorer, solver-guidance, ARC
++epistemic-object, hardware-speedup, board, SNN, proprietary TSU, Kona, or Aleph
++scopes. It SHALL record proprietary, unavailable, withdrawn, workshop-only,
++externally hosted, domain-mismatched, or non-local systems as duplicate,
++watch-only, or excluded rather than as executable claims. It SHALL declare
++`inference_substrate="aggregation_from_upstream_artifacts"` and SHALL write
++`results/experiment_5637_v509_source_delta_ingestion.json`.
++
++The artifact SHALL include required fields `field_principles`,
++`planner_marker_found`, `sources_checked`, `search_timestamp_utc`,
++`new_references_added`, `duplicates_suppressed`, `experiment_mappings`,
++`watch_only_items`, `closed_scopes_reopened`, `inference_substrate`,
++`reproducibility_checksum`, and `honest_verdict`. It SHOULD also record
++`research_references_updated`, `citation_trails_checked`,
++`dedupe_corpus_checked`, `source_link_checks`, `marker_checks`,
++`duplicate_checks`, `closed_scope_review`, `duration_s`, `random_seed`, and
++`spec_refs` so the sweep remains auditable without rerunning public searches.
++
++Required field principles:
++
++- `field_principles`: principle "One-line annotations for every required headline and gate field."
++- `planner_marker_found`: principle "the search window is explicit"
++- `sources_checked`: principle "coverage is auditable"
++- `search_timestamp_utc`: principle "recency is reproducible"
++- `new_references_added`: principle "duplicates do not count"
++- `duplicates_suppressed`: principle "repeated ideas create no work"
++- `experiment_mappings`: principle "sources need executable hooks"
++- `watch_only_items`: principle "unavailable systems support no claim"
++- `closed_scopes_reopened`: principle "retirement requires authority"
++- `inference_substrate`: principle "this is source synthesis"
++- `reproducibility_checksum`: principle "source set is stable"
++- `honest_verdict`: principle "a no-op is terminal"
++
++#### SCENARIO-REPORT-5637-APPEND-DELTA: New Actionable Finding Appends Execution Refresh
++
++**Given** `research-references.md` contains the
++`V509 Planner Refresh - 20260714` marker
++**And** execution-time search finds a non-duplicate source with an exact local
++hook for Exp5641 or another Exp5638 through Exp5646 task
++**When** the Exp5637 workflow runs
++**Then** it appends one `V509 Execution Refresh - 20260714` block after the
++V509 planner marker, records the accepted source in `new_references_added`,
++maps it only to Exp5638 through Exp5646 task ids, keeps
++`closed_scopes_reopened=false`, declares
++`inference_substrate=aggregation_from_upstream_artifacts`, and emits a terminal
++artifact.
++
++#### SCENARIO-REPORT-5637-BLOCKED-MARKER: Missing Planner Marker Blocks Mutation
++
++**Given** `research-references.md` lacks the
++`V509 Planner Refresh - 20260714` marker
++**When** the Exp5637 workflow runs
++**Then** it leaves `research-references.md` unchanged, sets
++`planner_marker_found=false`, keeps `new_references_added=[]`, keeps
++`closed_scopes_reopened=false`, and writes a terminal blocked artifact rather
++than appending an unanchored source block.
++
++#### SCENARIO-REPORT-5637-FIELD-PRINCIPLES: Source Delta Fields Stay Annotated
++
++**Given** the Exp5637 artifact is emitted
++**When** the artifact schema is validated
++**Then** every required headline and gate field has a one-line
++`field_principles` entry, `closed_scopes_reopened` is false,
++`inference_substrate` is `aggregation_from_upstream_artifacts`,
++`planner_marker_found` is a boolean, `search_timestamp_utc` is populated,
++`reproducibility_checksum` is populated, and `honest_verdict` has a terminal
++prefix.
++
++## Implementation Status (REQ-REPORT-5637)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5637 | Planned (`python/carnot/experiment_5637_v509_source_delta_ingestion.py`, `results/experiment_5637_v509_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_5637_v509_source_delta_ingestion.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5c68f340f7..0b1f5e59a6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4563,
++  "experiments_checked": 4564,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5637_v509_source_delta_ingestion.py b/python/carnot/experiment_5637_v509_source_delta_ingestion.py
+new file mode 100644
+index 0000000000..75c6f0e2d2
+--- /dev/null
++++ b/python/carnot/experiment_5637_v509_source_delta_ingestion.py
+@@ -0,0 +1,803 @@
++"""Exp5637: ingest the V509 execution-time source delta.
++
++Spec refs: REQ-REPORT-5637, SCENARIO-REPORT-5637-APPEND-DELTA,
++SCENARIO-REPORT-5637-BLOCKED-MARKER,
++SCENARIO-REPORT-5637-FIELD-PRINCIPLES.
++
++This module records a literature freshness sweep as a deterministic artifact.
++The web search itself is deliberately kept outside the code because public
++indexes, citation counts, and search rankings drift. The code preserves the
++research decision that downstream automation needs: the V509 planner marker
++anchors the search window, one genuinely new executable source may be appended
++once, duplicate ideas do not create work, and unavailable systems remain
++watch-only rather than becoming claims.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from datetime import UTC, datetime
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5637_v509_source_delta_ingestion.json")
++RESEARCH_REFERENCES_RELATIVE_PATH = Path("research-references.md")
++RESEARCH_COMPLETE_RELATIVE_PATH = Path("research-complete.yaml")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++VNEXT_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++KNOWN_ISSUES_RELATIVE_PATH = Path("ops/known-issues.md")
++EXP5636_RELATIVE_PATH = Path("results/experiment_5636_transition_v509.json")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++
++EXPERIMENT = "experiment_5637_v509_source_delta_ingestion"
++EXPERIMENT_ID = "exp5637-v509-source-delta-ingestion"
++MILESTONE = "2026.07.509"
++RUN_DATE = "20260714"
++SEARCH_CUTOFF = "2026-07-14"
++SCHEMA = "carnot.experiment_5637.v509_source_delta_ingestion.v1"
++RANDOM_SEED = 5637
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++CLOSED_SCOPES_REOPENED = False
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++PLANNER_MARKER = "## V509 Planner Refresh - 20260714"
++PLANNER_MARKER_COMPACT = PLANNER_MARKER.replace("-", "")
++PLANNER_END_MARKER = "<!-- V509-PLANNER-REFRESH-20260714-END -->"
++EXECUTION_REFRESH_HEADING = "## V509 Execution Refresh - 20260714"
++
++ALLOWED_MAPPING_IDS = {
++    "exp5638-fr11-gate-schema-corrigendum",
++    "exp5639-anytime-valid-csl-independent-audit",
++    "exp5640-fr11-shadow-pipeline-integration",
++    "exp5641-arc-counterexample-executable-model",
++    "exp5642-arc-executable-model-live-ab",
++    "exp5643-arc-live-self-discovery-levelup-v509",
++    "exp5644-two-axis-parallel-tempering-exact-audit",
++    "exp5645-two-axis-tempering-hard-constraint-quality",
++    "exp5646-two-axis-tempering-rust-parity",
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "planner_marker_found",
++    "sources_checked",
++    "search_timestamp_utc",
++    "new_references_added",
++    "duplicates_suppressed",
++    "experiment_mappings",
++    "watch_only_items",
++    "closed_scopes_reopened",
++    "inference_substrate",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "field_principles": "One-line annotations for every required headline and gate field.",
++    "planner_marker_found": "the search window is explicit",
++    "sources_checked": "coverage is auditable",
++    "search_timestamp_utc": "recency is reproducible",
++    "new_references_added": "duplicates do not count",
++    "duplicates_suppressed": "repeated ideas create no work",
++    "experiment_mappings": "sources need executable hooks",
++    "watch_only_items": "unavailable systems support no claim",
++    "closed_scopes_reopened": "retirement requires authority",
++    "inference_substrate": "this is source synthesis",
++    "reproducibility_checksum": "source set is stable",
++    "honest_verdict": "a no-op is terminal",
++}
++
++SPEC_REFS = (
++    "REQ-REPORT-5637",
++    "SCENARIO-REPORT-5637-APPEND-DELTA",
++    "SCENARIO-REPORT-5637-BLOCKED-MARKER",
++    "SCENARIO-REPORT-5637-FIELD-PRINCIPLES",
++)
++
++SOURCES_CHECKED: tuple[JsonDict, ...] = (
++    {
++        "surface": "arXiv",
++        "queries": [
++            "EBM verification/reasoning",
++            "neural constraint satisfaction",
++            "Ising ML",
++            "hallucination detection/mitigation",
++            "KANs",
++            "energy-guided decoding",
++            "accelerated sampling",
++            "continual/online constraint learning",
++            "executable world models counterexample repair",
++        ],
++        "status": "checked_arxiv_api_and_primary_abs_pages",
++        "decision": "accepted Baba in Wonderland; other fresh hits were duplicate, non-local, or closed-scope",
++    },
++    {
++        "surface": "OpenReview",
++        "queries": [
++            "executable world models counterexample",
++            "world-model repair",
++            "neural constraint satisfaction",
++            "energy-based reasoning",
++        ],
++        "status": "checked_public_search_and_forum_results",
++        "decision": "no cleaner V509 local dependency than arXiv primary sources and planner PatchWorld/ESBM pair",
++    },
++    {
++        "surface": "Semantic Scholar",
++        "queries": ["arXiv:2507.02092 citation route", "arXiv:2512.15605 citation route"],
++        "status": "direct_api_returned_http_429_for_both_routes",
++        "decision": "no citation-count or citation-delta claim is made",
++    },
++    {
++        "surface": "Hugging Face Papers",
++        "queries": [
++            "Baba in Wonderland 2605.16725",
++            "energy-based verification",
++            "hallucination detection",
++            "KAN conformal",
++        ],
++        "status": "checked_public_papers_search",
++        "decision": "no HF-only executable V509 delta",
++    },
++    {
++        "surface": "GitHub discovery/trending",
++        "queries": [
++            "Baba in Wonderland executable world models",
++            "PatchWorld executable world models",
++            "energy based model constraint satisfaction pushed after 2026-07-01",
++        ],
++        "status": "checked_github_api_search_and_direct_repository_links",
++        "decision": "PatchWorld repository is duplicate planner evidence; no Baba implementation repository was found",
++    },
++    {
++        "surface": "Extropic writing",
++        "queries": ["TSU", "XTR-0", "X0", "Z1", "thermodynamic computing"],
++        "status": "checked_public_writing_index_http_200",
++        "decision": "public TSU context remains unavailable for Carnot execution",
++    },
++    {
++        "surface": "Logical Intelligence public pages",
++        "queries": ["Kona 1.0", "Aleph", "energy-based models", "constraint enforcement"],
++        "status": "checked_public_site_http_200",
++        "decision": "proprietary public updates do not provide local weights or receipts",
++    },
++    {
++        "surface": "local Carnot ledgers",
++        "queries": [
++            "research-references.md after V509 marker",
++            "research-complete.yaml",
++            "openspec/change-proposals/*.md",
++            "results/experiment_5636_transition_v509.json",
++            "ops/exclusion_manifest.yaml",
++            "ops/known-issues.md",
++        ],
++        "status": "checked",
++        "decision": "Baba in Wonderland was absent locally; G-RRM and p-bit 2D-PT were duplicates",
++    },
++)
++
++SOURCE_LINK_CHECKS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "baba_in_wonderland_2605_16725",
++        "url": "https://arxiv.org/abs/2605.16725",
++        "status": "primary_arxiv_api_opened_accepted_non_duplicate",
++    },
++    {
++        "source_id": "patchworld_2605_30880",
++        "url": "https://arxiv.org/abs/2605.30880",
++        "status": "primary_arxiv_api_opened_duplicate_planner_source",
++    },
++    {
++        "source_id": "esbm_2606_07127",
++        "url": "https://arxiv.org/abs/2606.07127",
++        "status": "planner_source_duplicate_not_remapped",
++    },
++    {
++        "source_id": "scratchworld_2606_31689",
++        "url": "https://arxiv.org/abs/2606.31689",
++        "status": "primary_arxiv_api_opened_watch_only_external_benchmark",
++    },
++    {
++        "source_id": "confidently_wrong_internal_states_2607_11414",
++        "url": "https://arxiv.org/abs/2607.11414",
++        "status": "primary_arxiv_api_opened_watch_only_no_exact_v509_hook",
++    },
++    {
++        "source_id": "g_rrm_2607_02491",
++        "url": "https://arxiv.org/abs/2607.02491",
++        "status": "primary_arxiv_api_opened_duplicate_solver_guidance_history",
++    },
++    {
++        "source_id": "two_dimensional_pt_2506_14781",
++        "url": "https://arxiv.org/abs/2506.14781",
++        "status": "primary_arxiv_api_opened_duplicate_planner_source",
++    },
++    {
++        "source_id": "pbit_2d_pt_2601_09037",
++        "url": "https://arxiv.org/abs/2601.09037",
++        "status": "primary_arxiv_api_opened_duplicate_prior_reference",
++    },
++    {
++        "source_id": "semantic_scholar_ebt_route",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092",
++        "status": "http_429_no_fresh_count_claim",
++    },
++    {
++        "source_id": "semantic_scholar_arm_ebm_route",
++        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605",
++        "status": "http_429_no_fresh_count_claim",
++    },
++    {
++        "source_id": "github_patchworld",
++        "url": "https://github.com/HKBU-KnowComp/PatchWorld",
++        "status": "http_200_duplicate_planner_repository",
++    },
++    {
++        "source_id": "github_baba_query",
++        "url": "https://api.github.com/search/repositories?q=%22Baba%20in%20Wonderland%22%20%22Executable%20World%20Models%22",
++        "status": "total_count_0_no_repository_claim",
++    },
++    {
++        "source_id": "extropic_writing",
++        "url": "https://extropic.ai/writing",
++        "status": "http_200_watch_only_no_local_tsu",
++    },
++    {
++        "source_id": "logical_intelligence_public",
++        "url": "https://logicalintelligence.com/",
++        "status": "http_200_watch_only_proprietary",
++    },
++)
++
++CITATION_TRAILS_CHECKED: tuple[JsonDict, ...] = (
++    {
++        "paper": "Energy-Based Transformers",
++        "paper_id": "2507.02092",
++        "route": "Semantic Scholar direct API plus web-search fallback",
++        "status": "api_rate_limited_429",
++        "promoted_delta": False,
++        "note": "No citation-count update is claimed; existing EBT theory remains context only.",
++    },
++    {
++        "paper": "ARM-EBM",
++        "paper_id": "2512.15605",
++        "route": "Semantic Scholar direct API plus web-search fallback",
++        "status": "api_rate_limited_429",
++        "promoted_delta": False,
++        "note": "Search fallback did not expose a new exact local V509 hook.",
++    },
++)
++
++CANDIDATE_FINDINGS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "baba_in_wonderland_2605_16725",
++        "title": "Baba in Wonderland: Online Self-Supervised Dynamics Discovery for Executable World Models",
++        "url": "https://arxiv.org/abs/2605.16725",
++        "published": "2026-05-16",
++        "accepted_as": "non_duplicate_actionable_execution_delta",
++        "evidence_boundary": "primary arXiv preprint; no external benchmark result is imported",
++        "local_exact_hook": (
++            "Use preservation-conflict counterexamples and class-aware transition coverage as "
++            "controls inside the existing Exp5641 ARC transition-hypothesis patcher."
++        ),
++        "experiment_ids": [
++            "exp5641-arc-counterexample-executable-model",
++            "exp5642-arc-executable-model-live-ab",
++        ],
++        "dependency_graph_changed": False,
++    },
++)
++
++DUPLICATE_SUPPRESSED_BASE: tuple[JsonDict, ...] = (
++    {
++        "source_id": "anytime_valid_crc_2602_04364",
++        "title": "Anytime-Valid Conformal Risk Control",
++        "url": "https://arxiv.org/abs/2602.04364",
++        "reason": "Already accepted in the V509 planner block for Exp5639 anytime-valid audit.",
++    },
++    {
++        "source_id": "conformal_selective_acting_2605_20270",
++        "title": "Conformal Selective Acting",
++        "url": "https://arxiv.org/abs/2605.20270",
++        "reason": "Already promoted as V509 selective-release context; not remapped.",
++    },
++    {
++        "source_id": "patchworld_2605_30880",
++        "title": "PatchWorld: Gradient-Free Optimization of Executable World Models",
++        "url": "https://arxiv.org/abs/2605.30880",
++        "reason": "Already accepted in the V509 planner block for Exp5641.",
++    },
++    {
++        "source_id": "esbm_2606_07127",
++        "title": "Learning Explicit Behavioral Models with Adaptive Questions and World-Model Probes",
++        "url": "https://arxiv.org/abs/2606.07127",
++        "reason": "Already accepted in the V509 planner block for mechanism-question probes.",
++    },
++    {
++        "source_id": "two_dimensional_pt_2506_14781",
++        "title": "Two-dimensional Parallel Tempering for Constrained Optimization",
++        "url": "https://arxiv.org/abs/2506.14781",
++        "reason": "Already accepted in the V509 planner block for Exp5644-Exp5646.",
++    },
++    {
++        "source_id": "pbit_2d_pt_2601_09037",
++        "title": "Probabilistic Computers for MIMO Detection: From Sparsification to 2D Parallel Tempering",
++        "url": "https://arxiv.org/abs/2601.09037",
++        "reason": "Already indexed in Carnot's p-bit and 2D parallel tempering history.",
++    },
++    {
++        "source_id": "g_rrm_2607_02491",
++        "title": "G-RRM: Guiding Symbolic Solvers with Recurrent Reasoning Models",
++        "url": "https://arxiv.org/abs/2607.02491",
++        "reason": "Already indexed and completed as overwrite-capable solver guidance, outside the V509 dependency graph.",
++    },
++)
++
++WATCH_ONLY_ITEMS: tuple[JsonDict, ...] = (
++    {
++        "source_id": "confidently_wrong_internal_states_2607_11414",
++        "title": "Confidently Wrong: Detecting Hallucinations in Financial Question Answering from LLM Internal States",
++        "url": "https://arxiv.org/abs/2607.11414",
++        "classification": "watch_only_external_internal_state_probe",
++        "evidence_status": "fresh_primary_arxiv_no_exact_local_v509_hook",
++        "reason": "The result is a domain-specific residual-stream probe and would reopen internal-state hallucination scoring rather than support Exp5638-Exp5646 exact hooks.",
++    },
++    {
++        "source_id": "scratchworld_2606_31689",
++        "title": "ScratchWorld: Evaluating If World Models Compute Executable Consequences",
++        "url": "https://arxiv.org/abs/2606.31689",
++        "classification": "watch_only_external_benchmark",
++        "evidence_status": "primary_arxiv_benchmark_no_local_scratch_vm_or_arc_receipts",
++        "reason": "Changed-field F1 is useful context, but the benchmark substrate is external and not the agent-owned ARC receipt stream required by Exp5641.",
++    },
++    {
++        "source_id": "github_baba_query",
++        "title": "GitHub search for Baba in Wonderland implementation",
++        "url": "https://api.github.com/search/repositories?q=%22Baba%20in%20Wonderland%22%20%22Executable%20World%20Models%22",
++        "classification": "watch_only_no_public_repository_found",
++        "evidence_status": "github_api_total_count_0",
++        "reason": "No repository is needed or claimed; Carnot implements the local control idea if Exp5641 consumes the paper.",
++    },
++    {
++        "source_id": "openreview_world_model_workshop_pages",
++        "title": "OpenReview world-model and program-repair pages",
++        "url": "https://openreview.net/search?term=executable%20world%20models%20counterexample",
++        "classification": "watch_only_workshop_or_domain_context",
++        "evidence_status": "public_openreview_search_no_cleaner_local_dependency",
++        "reason": "Workshop and program-repair world-model pages do not supersede the accepted arXiv/local ARC hook.",
++    },
++    {
++        "source_id": "extropic_tsu_xtr_z1",
++        "title": "Extropic TSU, XTR-0, X0, and Z1 writing",
++        "url": "https://extropic.ai/writing",
++        "classification": "watch_only_unavailable_hardware",
++        "evidence_status": "public_writing_no_local_execution_path",
++        "reason": "No authenticated local TSU path or matched Carnot sampler-speed receipt exists.",
++    },
++    {
++        "source_id": "logical_intelligence_public_updates",
++        "title": "Logical Intelligence Kona and Aleph public updates",
++        "url": "https://logicalintelligence.com/",
++        "classification": "watch_only_proprietary_system",
++        "evidence_status": "public_pages_no_local_weights_or_reproducible_receipt",
++        "reason": "Kona and Aleph remain proprietary context and cannot be V509 baselines or execution evidence.",
++    },
++)
++
++
++def _clone_json(value: Any) -> Any:
++    return json.loads(json.dumps(value, sort_keys=True))
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def path_sha256(path: Path) -> str:
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _read_text_if_present(path: Path) -> str:
++    if not path.exists():
++        return ""
++    return path.read_text(encoding="utf-8")
++
++
++def _planner_marker_found(references_text: str) -> bool:
++    compact_text = references_text.replace("-", "")
++    return PLANNER_MARKER in references_text or PLANNER_MARKER_COMPACT in compact_text
++
++
++def _planner_marker_line(references_text: str) -> int | None:
++    index = references_text.find(PLANNER_MARKER)
++    if index < 0:
++        return None
++    return references_text[:index].count("\n") + 1
++
++
++def _proposal_paths(root: Path) -> list[Path]:
++    proposal_dir = root / "openspec/change-proposals"
++    if not proposal_dir.exists():
++        return []
++    return sorted(proposal_dir.glob("*.md"))
++
++
++def _dedupe_paths(root: Path) -> list[Path]:
++    paths = [
++        root / RESEARCH_REFERENCES_RELATIVE_PATH,
++        root / RESEARCH_COMPLETE_RELATIVE_PATH,
++        root / VNEXT_RELATIVE_PATH,
++        root / EXCLUSION_MANIFEST_RELATIVE_PATH,
++        root / KNOWN_ISSUES_RELATIVE_PATH,
++        root / EXP5636_RELATIVE_PATH,
++        root / CONDUCTOR_RELATIVE_PATH,
++    ]
++    paths.extend(_proposal_paths(root))
++    return list(dict.fromkeys(paths))
++
++
++def _relative_path(root: Path, path: Path) -> str:
++    try:
++        return path.relative_to(root).as_posix()
++    except ValueError:
++        return str(path)
++
++
++def _dedupe_corpus(root: Path) -> tuple[str, list[JsonDict]]:
++    chunks: list[str] = []
++    checked: list[JsonDict] = []
++    for path in _dedupe_paths(root):
++        exists = path.exists()
++        text = _read_text_if_present(path)
++        if text:
++            chunks.append(text)
++        checked.append(
++            {
++                "path": _relative_path(root, path),
++                "exists": exists,
++                "sha256": path_sha256(path) if exists else None,
++            }
++        )
++    return "\n".join(chunks), checked
++
++
++def _roadmap_context(root: Path) -> JsonDict:
++    relative = (
++        ROADMAP_NEXT_RELATIVE_PATH
++        if (root / ROADMAP_NEXT_RELATIVE_PATH).exists()
++        else ROADMAP_RELATIVE_PATH
++    )
++    parsed = yaml.safe_load(_read_text_if_present(root / relative)) or {}
++    tasks = parsed.get("tasks", []) if isinstance(parsed, Mapping) else []
++    task_ids = [
++        str(task.get("id")) for task in tasks if isinstance(task, Mapping) and task.get("id")
++    ]
++    milestone = str(parsed.get("milestone", "")) if isinstance(parsed, Mapping) else ""
++    return {"source": relative.as_posix(), "milestone": milestone, "task_ids": task_ids}
++
++
++def _accepted_findings() -> list[JsonDict]:
++    return [_clone_json(row) for row in CANDIDATE_FINDINGS]
++
++
++def _duplicate_candidates() -> list[JsonDict]:
++    return [_clone_json(row) for row in DUPLICATE_SUPPRESSED_BASE]
++
++
++def build_experiment_mappings() -> list[JsonDict]:
++    return [
++        {
++            "lane": "FR-11 gate contract, anytime audit, and shadow integration",
++            "experiment_ids": [
++                "exp5638-fr11-gate-schema-corrigendum",
++                "exp5639-anytime-valid-csl-independent-audit",
++                "exp5640-fr11-shadow-pipeline-integration",
++            ],
++            "source_ids": [
++                "anytime_valid_crc_2602_04364",
++                "conformal_selective_acting_2605_20270",
++            ],
++            "source_status": "duplicate_planner_context",
++            "mapping": "Keep the planner-defined anytime certificate path; no execution-time source changed this lane.",
++        },
++        {
++            "lane": "counterexample-patched ARC executable transition models",
++            "experiment_ids": [
++                "exp5641-arc-counterexample-executable-model",
++                "exp5642-arc-executable-model-live-ab",
++            ],
++            "source_ids": [
++                "patchworld_2605_30880",
++                "esbm_2606_07127",
++                "baba_in_wonderland_2605_16725",
++                "scratchworld_2606_31689",
++            ],
++            "source_status": "one_new_actionable_plus_planner_duplicates_and_watch_only",
++            "mapping": (
++                "Baba's preservation-conflict control maps locally to Exp5641; Exp5642 may "
++                "consume it only through the existing gated live-path A/B."
++            ),
++        },
++        {
++            "lane": "unconditional ARC live attempt",
++            "experiment_ids": ["exp5643-arc-live-self-discovery-levelup-v509"],
++            "source_ids": ["baba_in_wonderland_2605_16725"],
++            "source_status": "advisory_only_no_dependency_change",
++            "mapping": "The source delta does not gate or alter the mandatory live attempt.",
++        },
++        {
++            "lane": "two-axis constrained tempering and Rust parity",
++            "experiment_ids": [
++                "exp5644-two-axis-parallel-tempering-exact-audit",
++                "exp5645-two-axis-tempering-hard-constraint-quality",
++                "exp5646-two-axis-tempering-rust-parity",
++            ],
++            "source_ids": [
++                "two_dimensional_pt_2506_14781",
++                "pbit_2d_pt_2601_09037",
++            ],
++            "source_status": "duplicate_planner_or_prior_reference",
++            "mapping": "No new hardware or speedup claim is created; V509 remains exactness, quality, then parity.",
++        },
++    ]
++
++
++def _honest_verdict(
++    planner_marker_found: bool, accepted_findings: Sequence[Mapping[str, Any]]
++) -> str:
++    if not planner_marker_found:
++        return "blocked: V509 planner refresh marker missing; source-delta append refused"
++    if accepted_findings:
++        return (
++            f"complete: accepted {len(accepted_findings)} non-duplicate actionable V509 "
++            "source delta and kept retired scopes closed"
++        )
++    return "complete: no new non-duplicate actionable V509 source deltas; references left unchanged"
++
++
++def _closed_scope_review() -> JsonDict:
++    return {
++        "native_runtime_certificate_reopened": False,
++        "external_generated_text_scorer_reopened": False,
++        "solver_guidance_scope_reopened": False,
++        "arc_epistemic_object_probe_reopened": False,
++        "board_snn_or_hardware_speedup_reopened": False,
++        "proprietary_tsu_kona_aleph_reopened": False,
++        "operator_authorized_differentiator": None,
++    }
++
++
++def _normalize_timestamp(search_timestamp_utc: str | None) -> str:
++    timestamp = search_timestamp_utc or datetime.now(UTC).replace(microsecond=0).isoformat()
++    if timestamp.endswith("+00:00"):
++        timestamp = timestamp[:-6] + "Z"
++    return timestamp
++
++
++def _execution_refresh_block(findings: Sequence[Mapping[str, Any]]) -> str:
++    lines = [
++        EXECUTION_REFRESH_HEADING,
++        "",
++        (
++            "Execution-time source check after the V509 planner marker accepted one "
++            "non-duplicate local hook and left the dependency graph unchanged."
++        ),
++        "",
++    ]
++    for finding in findings:
++        lines.extend(
++            [
++                (
++                    f"- **{finding['title']}** - arXiv:2605.16725, {finding['url']}. "
++                    "The paper treats preservation conflicts as structural signal when a "
++                    "candidate update explains a new transition but breaks earlier ones. "
++                    "Carnot hook: add preservation-conflict and class-aware counterexample "
++                    "controls to Exp5641's generic ARC transition-hypothesis patcher using "
++                    "only agent-owned observation/action receipts. Downstream Exp5642 may "
++                    "consume the hook only if Exp5641 replay safety gates pass. Do not "
++                    "import Baba rules, external code, or benchmark results as Carnot evidence."
++                ),
++                "",
++            ]
++        )
++    return "\n".join(lines).rstrip() + "\n"
++
++
++def _insert_after_planner_block(references_text: str, block: str) -> str:
++    end_index = references_text.find(PLANNER_END_MARKER)
++    if end_index >= 0:
++        insertion_index = end_index + len(PLANNER_END_MARKER)
++        while insertion_index < len(references_text) and references_text[insertion_index] == "\n":
++            insertion_index += 1
++        prefix = references_text[:insertion_index].rstrip() + "\n\n"
++        suffix = references_text[insertion_index:].lstrip("\n")
++        return prefix + block + ("\n" + suffix if suffix else "")
++    return references_text.rstrip() + "\n\n" + block
++
++
++def _append_execution_refresh_if_needed(
++    root: Path,
++    planner_marker_found: bool,
++    accepted_findings: Sequence[Mapping[str, Any]],
++) -> bool:
++    if not planner_marker_found or not accepted_findings:
++        return False
++    references_path = root / RESEARCH_REFERENCES_RELATIVE_PATH
++    references_text = _read_text_if_present(references_path)
++    if EXECUTION_REFRESH_HEADING in references_text:
++        return False
++    updated = _insert_after_planner_block(references_text, _execution_refresh_block(accepted_findings))
++    references_path.write_text(updated, encoding="utf-8")
++    return True
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    search_timestamp_utc: str | None = None,
++    run_date: str = RUN_DATE,
++    duration_s: float = 0.0,
++    research_references_updated: bool = False,
++) -> JsonDict:
++    references_text = _read_text_if_present(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    planner_marker_found = _planner_marker_found(references_text)
++    accepted_findings = _accepted_findings() if planner_marker_found else []
++    _corpus_text, dedupe_checked = _dedupe_corpus(root)
++    duplicates = _duplicate_candidates()
++    status = "complete" if planner_marker_found else "blocked"
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "status": status,
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "search_cutoff": SEARCH_CUTOFF,
++        "search_timestamp_utc": _normalize_timestamp(search_timestamp_utc),
++        "result_path": RESULT_RELATIVE_PATH.as_posix(),
++        "spec_refs": list(SPEC_REFS),
++        "sources_checked": _clone_json(SOURCES_CHECKED),
++        "source_link_checks": _clone_json(SOURCE_LINK_CHECKS),
++        "citation_trails_checked": _clone_json(CITATION_TRAILS_CHECKED),
++        "dedupe_corpus_checked": dedupe_checked,
++        "marker_checks": {
++            "planner_marker": PLANNER_MARKER,
++            "planner_marker_found": planner_marker_found,
++            "planner_marker_line": _planner_marker_line(references_text),
++            "search_window": "strictly_after_planner_marker",
++            "execution_refresh_heading": EXECUTION_REFRESH_HEADING,
++            "execution_refresh_present": EXECUTION_REFRESH_HEADING in references_text,
++        },
++        "duplicate_checks": {
++            "candidate_count": len(CANDIDATE_FINDINGS),
++            "accepted_count": len(accepted_findings),
++            "duplicates_suppressed_count": len(duplicates),
++            "dedupe_sources_count": len(dedupe_checked),
++        },
++        "new_references_added": accepted_findings,
++        "duplicates_suppressed": duplicates,
++        "research_references_updated": bool(research_references_updated),
++        "planner_marker_found": planner_marker_found,
++        "experiment_mappings": build_experiment_mappings(),
++        "watch_only_items": _clone_json(WATCH_ONLY_ITEMS),
++        "closed_scopes_reopened": CLOSED_SCOPES_REOPENED,
++        "closed_scope_review": _closed_scope_review(),
++        "roadmap_context": _roadmap_context(root),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "honest_verdict": _honest_verdict(planner_marker_found, accepted_findings),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _require(not missing, f"missing required fields: {missing}")
++    _require(
++        isinstance(artifact["field_principles"], Mapping),
++        "field_principles must be a mapping",
++    )
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _require(field in artifact["field_principles"], f"field_principles missing {field}")
++        _require(str(artifact["field_principles"][field]).strip(), f"empty principle for {field}")
++    _require(isinstance(artifact["planner_marker_found"], bool), "planner_marker_found bool")
++    _require(artifact["closed_scopes_reopened"] is False, "closed_scopes_reopened must be false")
++    _require(
++        artifact["inference_substrate"] == INFERENCE_SUBSTRATE,
++        "inference_substrate mismatch",
++    )
++    timestamp = str(artifact["search_timestamp_utc"])
++    _require(timestamp.endswith("Z"), "timestamp must be UTC with Z suffix")
++    _require(
++        str(artifact["honest_verdict"]).startswith(TERMINAL_PREFIXES),
++        "honest_verdict must use terminal prefix",
++    )
++    for finding in artifact["new_references_added"]:
++        experiment_ids = set(finding.get("experiment_ids", []))
++        _require(experiment_ids <= ALLOWED_MAPPING_IDS, "finding maps outside Exp5638-Exp5646")
++        _require(not finding.get("dependency_graph_changed", True), "finding changed dependency graph")
++    for mapping in artifact["experiment_mappings"]:
++        experiment_ids = set(mapping.get("experiment_ids", []))
++        _require(experiment_ids <= ALLOWED_MAPPING_IDS, "mapping outside Exp5638-Exp5646")
++    _require(artifact["reproducibility_checksum"] == payload_checksum(artifact), "checksum mismatch")
++    _require(
++        isinstance(artifact["sources_checked"], Sequence) and artifact["sources_checked"],
++        "sources_checked must be non-empty",
++    )
++    _require(isinstance(artifact["duplicates_suppressed"], Sequence), "duplicates_suppressed list")
++    _require(isinstance(artifact["watch_only_items"], Sequence), "watch_only_items list")
++
++
++def build_and_write_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    search_timestamp_utc: str | None = None,
++    duration_s: float = 0.0,
++) -> JsonDict:
++    references_text = _read_text_if_present(root / RESEARCH_REFERENCES_RELATIVE_PATH)
++    marker_found = _planner_marker_found(references_text)
++    accepted = _accepted_findings() if marker_found else []
++    references_updated = _append_execution_refresh_if_needed(root, marker_found, accepted)
++    artifact = build_artifact(
++        root=root,
++        search_timestamp_utc=search_timestamp_utc,
++        duration_s=duration_s,
++        research_references_updated=references_updated,
++    )
++    validate_artifact(artifact)
++    write_json(root / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--search-timestamp-utc", default=None)
++    args = parser.parse_args(argv)
++
++    started = time.perf_counter()
++    duration_s = max(0.0, time.perf_counter() - started)
++    artifact = build_and_write_artifact(
++        root=args.root,
++        search_timestamp_utc=args.search_timestamp_utc,
++        duration_s=duration_s,
++    )
++    print(json.dumps({"result_path": artifact["result_path"], "status": artifact["status"]}))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/research-references.md b/research-references.md
+index 3c45d44382..0287b277f0 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -29811,3 +29811,9 @@ previously indexed work; duplicate discovery is not presented as novelty.
+   one-axis sampler and retire the extension.
+ 
+ <!-- V509-PLANNER-REFRESH-20260714-END -->
++
++## V509 Execution Refresh - 20260714
++
++Execution-time source check after the V509 planner marker accepted one non-duplicate local hook and left the dependency graph unchanged.
++
++- **Baba in Wonderland: Online Self-Supervised Dynamics Discovery for Executable World Models** - arXiv:2605.16725, https://arxiv.org/abs/2605.16725. The paper treats preservation conflicts as structural signal when a candidate update explains a new transition but breaks earlier ones. Carnot hook: add preservation-conflict and class-aware counterexample controls to Exp5641's generic ARC transition-hypothesis patcher using only agent-owned observation/action receipts. Downstream Exp5642 may consume the hook only if Exp5641 replay safety gates pass. Do not import Baba rules, external code, or benchmark results as Carnot evidence.
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 93a6585a08..14dfc2b89a 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T17:42:52.880537+00:00",
+-  "finished_at": "2026-07-14T17:42:52.910855+00:00",
+-  "duration_s": 0.03,
++  "started_at": "2026-07-14T18:48:41.034734+00:00",
++  "finished_at": "2026-07-14T18:48:41.067635+00:00",
++  "duration_s": 0.033,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index f5d5f504c8..525d81db07 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-14T17:42:53Z",
++  "run_date": "2026-07-14T18:48:41Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 5a3f03fb48..c4788cb150 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T17:42:54Z",
+-  "finished_at": "2026-07-14T17:42:54Z",
++  "started_at": "2026-07-14T18:48:42Z",
++  "finished_at": "2026-07-14T18:48:43Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 6633268f2e..562a98f439 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-14T17:42:54Z",
++  "run_date": "2026-07-14T18:48:43Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 34e95a3196..29d9f1ea7c 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-14T17:42:54Z",
++  "run_date": "2026-07-14T18:48:43Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 813cb080a5..3ba7b79c30 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-14T17:42:12.581111Z",
+-  "duration_s": 0.06884980201721191,
++  "run_date": "2026-07-14T18:48:02.284016Z",
++  "duration_s": 0.06828093528747559,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "efb45f95e21801ba15f831b32d088c949ab9931a0f258e3b7b683d1e6edde8df",
++  "reproducibility_checksum": "09702d474cee2ef2e7d27619c975c0d186d2b80d18426de16f3b706df09cc4ac",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "a135027e3ecf2318bce8a07b1538cd02962eacd5"
++    "adversarial_verify_version": "7ffa847b94f0797979e7fbede8a23b9b9bf70533"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 668406a5a9..06f40cfcd5 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-14T17:42:12.687172Z",
+-  "duration_s": 0.09799528121948242,
++  "run_date": "2026-07-14T18:48:02.392942Z",
++  "duration_s": 0.09960079193115234,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "b5f390fd3ca1d2d2845ea9e4a726349efcf9fe7742551996761508f6547a5e69",
++  "reproducibility_checksum": "19a037f1245c6f29a6e457a5a67c14ccfd76365dda9be5c69aa77f1a49a89e5b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "a135027e3ecf2318bce8a07b1538cd02962eacd5"
++    "adversarial_verify_version": "7ffa847b94f0797979e7fbede8a23b9b9bf70533"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index f467459945..303851d9f1 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1364688873291016,
++  "efficiency_gains_ms": 2.146482467651367,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 818733bcc7..a0dd1e111c 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T17:42:17Z",
+-  "finished_at": "2026-07-14T17:42:17Z",
++  "started_at": "2026-07-14T18:48:07Z",
++  "finished_at": "2026-07-14T18:48:07Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 4ec3c86cf1..e3cadc2a23 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T17:42:53Z",
+-  "finished_at": "2026-07-14T17:42:53Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-14T18:48:42Z",
++  "finished_at": "2026-07-14T18:48:42Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.058650970458984375,
++  "latency_ms": 0.07367134094238281,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+@@ -35,7 +35,7 @@
+       {
+         "kind": "duration_too_short",
+         "field": "duration_s",
+-        "detail": "duration_s=0.002 below 60.0s live-model floor"
++        "detail": "duration_s=0.003 below 60.0s live-model floor"
+       },
+       {
+         "kind": "missing_methodology_receipt",
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+deleted file mode 100644
+index 3087a53b12..0000000000
+--- a/results/experiment_2097_eqm_eval.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-{
+-  "schema": "experiment_result",
+-  "experiment_id": "2097",
+-  "spec_refs": [
+-    "REQ-KONA-2097",
+-    "SCENARIO-KONA-2097"
+-  ],
+-  "num_instances": 50,
+-  "avg_pem_energy": 437.4525486167846,
+-  "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0009103727340698242,
+-  "avg_eqm_time": 0.07538130283355712,
+-  "pem_satisfaction_rate": 0.12,
+-  "eqm_satisfaction_rate": 0.0,
+-  "eqm_superior": false,
+-  "honest_verdict": "SUCCESS: eqm_eval_complete"
+-}
+\ No newline at end of file
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 772798784d..83e28d3b58 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.7118725776672363,
++  "duration_s": 0.6198256015777588,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index fbd8a21db9..a0dd63a9b1 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 8.81750020198524e-05,
++  "duration_s": 5.0986011046916246e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5637_v509_source_delta_ingestion.json b/results/experiment_5637_v509_source_delta_ingestion.json
+new file mode 100644
+index 0000000000..3f2dd41500
+--- /dev/null
++++ b/results/experiment_5637_v509_source_delta_ingestion.json
+@@ -0,0 +1,1548 @@
++{
++  "citation_trails_checked": [
++    {
++      "note": "No citation-count update is claimed; existing EBT theory remains context only.",
++      "paper": "Energy-Based Transformers",
++      "paper_id": "2507.02092",
++      "promoted_delta": false,
++      "route": "Semantic Scholar direct API plus web-search fallback",
++      "status": "api_rate_limited_429"
++    },
++    {
++      "note": "Search fallback did not expose a new exact local V509 hook.",
++      "paper": "ARM-EBM",
++      "paper_id": "2512.15605",
++      "promoted_delta": false,
++      "route": "Semantic Scholar direct API plus web-search fallback",
++      "status": "api_rate_limited_429"
++    }
++  ],
++  "closed_scope_review": {
++    "arc_epistemic_object_probe_reopened": false,
++    "board_snn_or_hardware_speedup_reopened": false,
++    "external_generated_text_scorer_reopened": false,
++    "native_runtime_certificate_reopened": false,
++    "operator_authorized_differentiator": null,
++    "proprietary_tsu_kona_aleph_reopened": false,
++    "solver_guidance_scope_reopened": false
++  },
++  "closed_scopes_reopened": false,
++  "dedupe_corpus_checked": [
++    {
++      "exists": true,
++      "path": "research-references.md",
++      "sha256": "sha256:2bc821e56b7b62badebbb374db33f1f97de74a802c9999217f99fbaf5d1ce715"
++    },
++    {
++      "exists": true,
++      "path": "research-complete.yaml",
++      "sha256": "sha256:80b0b834c26fd29060d0c12d0d3b2afe37ed54fe546f19830270e28c47cb7a4d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "sha256:9ec1b28de0e5de9697ff8851bd19a96d3593d0414fa28634302dac5b260bca1f"
++    },
++    {
++      "exists": true,
++      "path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:64d4d6008f10e715c85cafa08dac718778c383d2cbf732bac4a89d48d3664d53"
++    },
++    {
++      "exists": true,
++      "path": "ops/known-issues.md",
++      "sha256": "sha256:49d50386fd6d92b618af7d1ea9fc562728ab6ed87cf716f32d6ebb1d91876a31"
++    },
++    {
++      "exists": true,
++      "path": "results/experiment_5636_transition_v509.json",
++      "sha256": "sha256:f70ff33d63d913a2d73d85686add66e9242f57efd1ec560d91c7c2c5fb016087"
++    },
++    {
++      "exists": true,
++      "path": "scripts/research_conductor.py",
++      "sha256": "sha256:409e5e8ca53a6665d7de54c1b08f226ad742c680b342595592eb82830e37a340"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/anomaly-escalation-conductor-hook.md",
++      "sha256": "sha256:be21a8526dd98c3ec24e2d7768c9b6b0396f12d49c3bad7f0ba848689e3664b5"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/arxiv-scan-20260405.md",
++      "sha256": "sha256:37b46c9b3ae48e9604c05a9a6c4f83688f0a98e168ef7f323cdd4ff42736b56e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/carnot-v2-langevin-act-rdt-architecture.md",
++      "sha256": "sha256:a5718c1c04ef5072bc2b506b2e3e52c78d60b7259cb5b3c5353ddad3048a9498"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/cem-architecture.md",
++      "sha256": "sha256:b5ac9cd20289842a305103af9774cf02147a65143c8a30f9246e652637196e9c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/closed-weight-frontier-llm-integration.md",
++      "sha256": "sha256:e98d8d56d09015472aa9b9b9413f2bfcd27bd52e10e4efc5df627870b9916bac"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/conductor-auto-rebuild-public-docs.md",
++      "sha256": "sha256:29ca4637935ef261bb5abd00948bacf56c9a6a23fc119e77b5476c30462b23d5"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/conductor-fastpath-bootstrap-skip.md",
++      "sha256": "sha256:d7ed444a4515d976df87577a05615002e141c51609662665e76ae0e1dcaba58e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/conductor-otel-tracing.md",
++      "sha256": "sha256:5a2bf6feab2d5410a1920bdc74189570da0168b498699aa54ccfe7e7096a9540"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/conductor-process-isolation.md",
++      "sha256": "sha256:1a4ab3dcdbc762cf27277739396e5b2c64de7ff6bce3a7e9d062cc14f0a21005"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/conductor-regression-prevention.md",
++      "sha256": "sha256:634b96e5bb64df7d88b1b7d2fdbdb299dab0955ac36104809f8973db5f1a6ba0"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/conductor-self-protection-safeguard.md",
++      "sha256": "sha256:63a32dfcbc7868e3076aa5c91a01800ebabac887c874cf5594f74eccdb3d72c0"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/conductor-supervisor.md",
++      "sha256": "sha256:32853eac27da05616bcab13928dd38478911af149f07d189d496dd0a49a4616d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/continuous-to-ising-transpiler.md",
++      "sha256": "sha256:b3c4030a5031a11aef25de4287247d09b45bf9e56191ca72f303890e6295a47f"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/differential-agent-routing.md",
++      "sha256": "sha256:65bd9524be8b305a737a8b37a2c15dcd4b7465a1480e7c8a311314352fe52d31"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/ebm-pipeline-protective-prefix-and-task-router.md",
++      "sha256": "sha256:24b25e0a23203a99d3db2edef28c21a849d7edbb823ba6f48bb82dea73c01810"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/emotion-vectors-for-steering.md",
++      "sha256": "sha256:6d98adae92e21722c0c2f7e4e378a3c054f6752d45b7fc37151a0bca33b86070"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/env-hardening-and-reruns.md",
++      "sha256": "sha256:34d1d1426b6450d6400fc8b8d47a3135eeffec8ee2dfbfc23b18a218ee096656"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/eval-metrics-canonical-and-self-heal-production-bug-detector.md",
++      "sha256": "sha256:72e14dc4b5fc55039d54a03874a0c5595acfe17d29baab4b8b657250ecf999ac"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/explicit-factor-graph-abstraction.md",
++      "sha256": "sha256:084f5ff33bd4da1cf7320c60ab5cd5be0e1171401d17ceea53ebf3b3da3f0b62"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/failed-experiment-rerun-enforcement.md",
++      "sha256": "sha256:b90b6ee4b3085b18bbe35a15322232d6bd120db2ef42d0c0b40cd16a45f6e2b7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/failure-ledger-v2-and-planner-discipline.md",
++      "sha256": "sha256:060e6771598a3121094c4454d63292c6c13fa7b4cacbf525103602468fb7a34c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/fpga-vs-gpu-ising-baseline.md",
++      "sha256": "sha256:8df6113166bdb7cb499a06d631f7faf48cb7390592a4fcffa4305ef46f4287b8"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/garak-red-team-integration.md",
++      "sha256": "sha256:04e87ff2e67cdf1fc7ee5d8229956eab7e1752d8a76a529f12ae74a0ece4a6eb"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/generative-time-safety-gate.md",
++      "sha256": "sha256:afc9f5475776796d9b0f1f9058a8a474619fd301c66389563f58665b3171f753"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/gpu-compute-proposals.md",
++      "sha256": "sha256:d042b9e36bc7196ddfcc926312d5c8c8670760c3e40bc26ccfa8ec1c6f7c265b"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/huggingface-spaces-sudoku-demo.md",
++      "sha256": "sha256:a2385c8bb059ac70283e395794e2fc3173c2a10ba59a75322c910f6680224bd1"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/in-situ-training-phase5-derisking.md",
++      "sha256": "sha256:1418012c6a4a46dc18cb3a489018f1e82af3e1e96db78c7502755d35b593e21d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/issue-001-probability-calibration-verifier.md",
++      "sha256": "sha256:24e03405d1bf9100750c8b796655855d1577b39d0c42ed1d94a475d1adbab172"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/issue-002-bounded-time-verification-api.md",
++      "sha256": "sha256:430836da150403ecfe88b249d2b66536ef0f31ce23da95971f36051dd0eb89e9"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/issue-003-structured-verdict-record.md",
++      "sha256": "sha256:a20b15d0c651bc6f658e4cb52a44baa1e7d0bd151514c65483501f1da50627db"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/issue-004-ecp5-nexus-open-fpga.md",
++      "sha256": "sha256:c5dd4ba99d29581f3822e744ad4fb760e4353f7c1e15228bf2cd19a4ceb3cfc7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/issue-005-session-memory-json-schema.md",
++      "sha256": "sha256:832bc52456bdf5e9083f79a315c1ad9b0cb325e909d4ee5ac64c8c2d125cc10e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/issue-006-manipulable-signal-dependency.md",
++      "sha256": "sha256:f219784aa34f650f5359e0ebb2b6833c0be9832c07c1a9907113ed45aa3e4411"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/issue-007-streaming-verification-api.md",
++      "sha256": "sha256:5f6bffba0885b47366cc584e3b3f954f2383a5ba3a0298e65999c89faed3bf78"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/llm-weight-introspection.md",
++      "sha256": "sha256:033694adfa27ff923e98cce5cddd6f90acf563826f6545f50f1514d29b066a3c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/multi-agent-routing.md",
++      "sha256": "sha256:d6b452e3127d06f0070d85531010056d1f06fcafb700595027e28c89b9f9a2c9"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/no-permanent-retirement-on-environmental-failures.md",
++      "sha256": "sha256:dbad27eee5e7cb8b1474821ef91520ba54d1781ea08df94cfcd769c788823b04"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/paper-v5-integrity-remediation.md",
++      "sha256": "sha256:35ab854e64e3b9726c4fd35683da0b4e99c5d90d200a6f83ef094fc3acf85a9a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/parallel-multi-agent-conductor.md",
++      "sha256": "sha256:6b73740ec6db2b0818951659385ec3d1dc82bd9f612d658e579e68814834f06a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/prompt-injection-ebm.md",
++      "sha256": "sha256:929f65fa19c8106dc783025157384d48c4f7bfbe438cb1d921b20f707cf90d6a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/prompt-validator-dialogue-schema-v1.md",
++      "sha256": "sha256:b8225bf94f9fb400d03ae1e64f6c51c1106cf7555a4963d0b3fb97b95218a463"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/recursive-extractor-and-verify-stream-alignment.md",
++      "sha256": "sha256:8545ceef2a0fbc3dfaa5b7a5011f2466ef7a781819247e370a1330a0ab3181bc"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-informed-roadmap.md",
++      "sha256": "sha256:2933d3c843f3f93cb538d47b1d3db6de28e89c8a94dee6375114a87fd9a11220"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v10.md",
++      "sha256": "sha256:b97ec41c99409b6dd16206b1734aeb12de67966458e5468725aa79f17cd87f87"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v11.md",
++      "sha256": "sha256:67e13025204705fedd37e1ca31c1f8d94b50d80e0ac54d74cecb8678a36d438a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v12.md",
++      "sha256": "sha256:e7bcfd8191ae9cdf55e3fbef2aa68e298a38ff5d40a71b39b34e896c579d61fb"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v13.md",
++      "sha256": "sha256:a43a1711e65bc0118e3ef1fd6f67325da12e83f51c4b899d000e8e748c37b19e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v14.md",
++      "sha256": "sha256:32630040817ea9631d48522ab939cac966d7fe65d45b48f7dd0432006a4a2b3f"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v140.md",
++      "sha256": "sha256:cab9c4a7938503a3504b7bffc9f4f08d69cced5b0c179192b1b070b315d41af7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v158.md",
++      "sha256": "sha256:0359133dc1f9b025511041a7dad9ebe94a84d8e92127374c10731b79a502b3be"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v159.md",
++      "sha256": "sha256:f2cee6ce33349068044aa4cd716677a086de306fc52d690ece1a7b2b8adbd68c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v161.md",
++      "sha256": "sha256:4a6d2fbacdf64ff21faf929a2990f3c66c3db508bead0f5b5d88f633c844ae99"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v2.md",
++      "sha256": "sha256:be1d9ef6f068f04027293e4b70fdf0adbe50abb7bb826f6a310f733f820cee66"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v2026.05.125.md",
++      "sha256": "sha256:6e237bb42f263a7a0f32d36785e8256a46eb1859cfd1dd886bddaf3c4749ecc6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v2026.05.203.md",
++      "sha256": "sha256:37160f246f1bfc6a25349f2b76836d46536db64cc068d93b79bf43e1a089d580"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v2026.05.205.md",
++      "sha256": "sha256:f3ce0865570881e49f25cb0f9674c5e4f80132c28bfab98ddd7bf22c214085be"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v2026.05.206.md",
++      "sha256": "sha256:4e8e7eac95cc03b6c99528aaf63cbbbff0bd052257f11ad56dc37236756aaee5"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v2026.05.207.md",
++      "sha256": "sha256:447fe4c3f968b0c81266f8859be6646498cb7ca658dfa754a52c33bff8bc51a5"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v2026.05.208.md",
++      "sha256": "sha256:0e459907ebecf5e1a9cffd20c15a47857cf84941ca762dca08708471f9b40c37"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v220.md",
++      "sha256": "sha256:ede9f5821ac8d8d15c97a716687439ed42ca277cba3857cf4dc3d9877570da23"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v223.md",
++      "sha256": "sha256:91db374f6bed3026d1815968adae457e9cb19f840e8d7a0640d9da45f05719d6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v224.md",
++      "sha256": "sha256:888808aee8dcd4db44068f8aee8d61848c1a19ef1f24add50a8906b4354847af"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v225.md",
++      "sha256": "sha256:85f6a965a54a866dca926e3534c848a1b948a1a1535c2e357f6b30ef0ca2696b"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v226.md",
++      "sha256": "sha256:b2670928b9d15e93bf408383655fed2dda3c419df90b7ce24041a49bb8e0c2fd"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v227.md",
++      "sha256": "sha256:5f3fb66f9a39921c2731e72bd044ca8d9aa5abb947f20e704041da659a25627d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v228.md",
++      "sha256": "sha256:990baa6552021ee9b1e912dc2dddb35c845b25b718424aefb9180de0dbd824b4"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v229.md",
++      "sha256": "sha256:34092f0354b3e8f7346e46d4d35986f97b90fa8acddf07a0491b761ab53e64a2"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v230.md",
++      "sha256": "sha256:f3671397c1d222bd846f2b88f56d40901a9569aa5251deca6d8f34ae7e550a81"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v231.md",
++      "sha256": "sha256:31ffacd317e6b65194ec6f526faadda990960977dfee16ee341aaf3c02c5af81"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v232.md",
++      "sha256": "sha256:1116802c269d67e70c827b94619ee0894e4fd1c7191c9df9d799ed341e377f06"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v233.md",
++      "sha256": "sha256:f7ccd6a1a7a56c31e10ec5ce5b22f6d9b47048ad9f8cdd5586c5210ccd26c950"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v234.md",
++      "sha256": "sha256:8d4564f90beeee641018004fdb4e7b756d230c147bd87207b5b45c97b9909579"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v235.md",
++      "sha256": "sha256:2b54d9d05b0a5ab40256738db830d6cabeebb3be748f4856edc4d74afa2abbfc"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v236.md",
++      "sha256": "sha256:0e0e8f1bf44643cff41259cc65aa5ebce8377c3c5a6e3a6fd02519ab0645a1c8"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v237.md",
++      "sha256": "sha256:91dcdeb4bf323a36e36c539fc3945ae0f3d5304783e5a42bc7ea3d20397cfc72"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v238.md",
++      "sha256": "sha256:063f8a61531f5e330f19286a6c1ff7a72c7fc5f0edbea93f9d522d9e330dc6a4"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v239.md",
++      "sha256": "sha256:3ab93fb6921941ead365bd5efbc09937084a324eb038585e5de0966a19ac27da"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v240.md",
++      "sha256": "sha256:48a476439eb4ba1a1478599dd02285b4c5adabfd4f7dec7bd1cc1b524045ef83"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v241.md",
++      "sha256": "sha256:1b8519800b95fb36ca31edb97abb9da477c16446cae95bb90244314dc852e5ec"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v242.md",
++      "sha256": "sha256:463999cd1cbcf5ad40ac4462202a8a388241c3b1f18ab36895533ab1d6e77c43"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v243.md",
++      "sha256": "sha256:b8dd9f8aea1634302ad22b941d6508159e3770457c5f5bb18d847f71afbc459e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v244.md",
++      "sha256": "sha256:0e92d0150c6f9b709c7b3e477892eb126c9d179fadcdde57343cc11fec43b62a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v245.md",
++      "sha256": "sha256:1da0c18c0ef3b28e8d2b4d4009257e44c9af1b73f0d3f96e9f1e848b8ad1d721"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v246.md",
++      "sha256": "sha256:1ed1cf4fb7e4fe8cd5999f4a39c5964d69d056ab64503b4ad5fcb6032743bf00"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v247.md",
++      "sha256": "sha256:d3e8b030d714e97490ddce4da987de77d278a61eba40d0d356a20f61f5e2ce67"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v248.md",
++      "sha256": "sha256:4ef9a539b68e9661e0853126dca44111409be3fbcc3a85d03ece7bf3a5e6458f"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v249.md",
++      "sha256": "sha256:53304be2e1baddaaebb506dc3dc070367511a1cf3d10c13ec65ca1f6adbcf211"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v25.md",
++      "sha256": "sha256:c7781eaddf685bf773a3584b35705296ba895131031b1c4f201d6003ed253604"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v250.md",
++      "sha256": "sha256:8eb6763806b986f327bc82b5601f02b9fad94ce29b0e318f3747c27eb1d881ae"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v251.md",
++      "sha256": "sha256:cb9049c89c5a616ec6d7e0e8f2525cade0f1c0b6460c1098bd0c25eda264cc2d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v252.md",
++      "sha256": "sha256:5f87b651233259d05c2108b1b3da2032383d093c5cc8d7b602cc6a60db0ce5d7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v253.md",
++      "sha256": "sha256:0107a4129faea1f0970e8a93386be75fbc59969a894c0e6495661aa526dede3c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v254.md",
++      "sha256": "sha256:166934a489edd4108a0708a2178a20ea368c27dbdb208ca62285be2d42131e3a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v255.md",
++      "sha256": "sha256:35c35c74af538ac21133cffa2f5ae1724efe2d49025d96572a893f41bdc63b6e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v256.md",
++      "sha256": "sha256:413d12a677cf6d72aac99c0763a2ceb2809f44e7a1cb4941742424da2e7daf6a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v257.md",
++      "sha256": "sha256:a0fb2f43370dcc5e457503d0d9f00a7c028572f25fabf6f534edb6198ca660f3"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v258.md",
++      "sha256": "sha256:6cb01396c8c131a2ddd365db46ea17f6313ce6fc34ee8c36c79435f2d0d13c2c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v259.md",
++      "sha256": "sha256:13f066335ef9397581cdd33b1a89e040ff4ad4cd0d8b511ceae78b5f7be44af9"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v260.md",
++      "sha256": "sha256:c1627d3e9f019610ac4c45d04a33a0dfc3ff3e007de420dfea299f8e7d6a87f2"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v261.md",
++      "sha256": "sha256:eafac0cdc522f55799e7628d19e28e9b7256e9820c943bd9f672d33c910bfd39"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v262.md",
++      "sha256": "sha256:98b7a602e3f324016227512d50e69ba8b7249d706a71b4f061bafe9fee5a7e27"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v263.md",
++      "sha256": "sha256:b7c9f0bb6c7db3c9b9f70aa3427e9f0fdf58289f2cda79f5f6d517ab5df86f20"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v264.md",
++      "sha256": "sha256:e2c50085729a82bc196e1ec94c39e02bea64d5e2131f25bf0fe091d909492d12"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v266.md",
++      "sha256": "sha256:e7d6bb4f731a9f8ec777b4a08c0409eac5128ec62b32193dae0e6910f6691766"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v267.md",
++      "sha256": "sha256:84bafe48d474da325d1229e627de92235072f8b8ff39a3c4ce913ec9a3ad521b"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v28.md",
++      "sha256": "sha256:b225f6679c79d258ea395410374c518e41eaeb7cb35320220303e0daa86c74ff"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v3.md",
++      "sha256": "sha256:ddbb094f4872f24fdf641cec8c2b34eae8d4773005e5586b7cff8bd40941f140"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v311.md",
++      "sha256": "sha256:264cbf355c698968c946015f327c2b3a2ddbabcfa443b5e3571c22e50b093fb7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v353.md",
++      "sha256": "sha256:2ab2364bc9cb46265b9a82b6050abf4da07433b907dfaef1e24b5ff40eda187e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v355.md",
++      "sha256": "sha256:4e7aa2d69bc6d8b9edb3cf2b2d8475837433bc9ebbd305114e6cf83da502f966"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v356.md",
++      "sha256": "sha256:5b6ea5a4da36100c9e8da4b684e813a8f12a65f274b9942e3727de4a401bbeed"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v359.md",
++      "sha256": "sha256:d0ddcbb606319be8aeb7d5ff5ee475c84be5462051e20f148283e4ef7485fb4f"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v36.md",
++      "sha256": "sha256:aac46e094afcbd8174a4ef702fb6869c7c3d153c70793f7b4686107d3af34388"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v360.md",
++      "sha256": "sha256:46004641f63e4a1bf579bbbf5cfda7b7e446d9c7863c69cf0a6d988ad704a02a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v366.md",
++      "sha256": "sha256:a4d83fd40139a1d2d055f47510792c9313ecdcd181ad4790df4ccb9b5f880ba6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v368.md",
++      "sha256": "sha256:0641b5ee29fc8fe8747cd41f6eb1eef194eb58a8e0f9828b429b254a0b6585eb"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v37.md",
++      "sha256": "sha256:3119a5902bb2e197ab8a36e12fb51f6fa3eb7cd5831f4c513a6e8bb8d0dd8d5d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v370.md",
++      "sha256": "sha256:31445dbd194aade6329e3f80016f08cdf4175ec98b91002ad9d80f4c0eb4a3ed"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v371.md",
++      "sha256": "sha256:425d1976e7fa7e8ee8c83c40f5a3f3c384944615ff1bb07b268f6916dbfd33d5"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v373.md",
++      "sha256": "sha256:8c96e4ebbeacea5927f86af206b97387b927591faab3fb4a8f65ddaa0d9a6486"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v374.md",
++      "sha256": "sha256:a8e00495b2b17119deb7667b6ae8d1c5361109cf870ca804780f2ea03571b1e8"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v375.md",
++      "sha256": "sha256:941a452a20850a3b81531a1816fbd622cc9b32a10f4454d456d9d758572722b6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v376.md",
++      "sha256": "sha256:ba19bb1f83fb726de3199e5aee2865bc383d350e29a209b8a76c9ad45efb15d6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v378.md",
++      "sha256": "sha256:e0fc07949cacbb2a205a30e875facd7f060639c46e1cb932b43d1572e91adcf4"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v38.md",
++      "sha256": "sha256:876d11a6fa1808ffeee596e3b73d278976b643ee48a8462550793b7989043e5a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v383.md",
++      "sha256": "sha256:6bfd2ce064bfa2a390d8afb968e16932f70d977dc554b61d6d6290cd6ba56ca8"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v385.md",
++      "sha256": "sha256:492e46487c3e2c3feffae7717e2b55e4c736dae363c5be7e026c6b033be884d6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v387.md",
++      "sha256": "sha256:88ec85ac53857e8b2727b63ed77cf562b0f374a73283a19c668c2a022600cd15"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v388.md",
++      "sha256": "sha256:2a3a4bee194ac57dbcf1efb61f5b5495cbfd25f9efe12bb4328c1509470da9b5"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v389.md",
++      "sha256": "sha256:bf25e0ca18139732e18e9a3ccfbc5e08fccef08eba08f44ea9597642d05fef05"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v39.md",
++      "sha256": "sha256:1836028492c144c975f811f0a384eb5c64cd32952a8ca3c21d39c58f13be1312"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v390.md",
++      "sha256": "sha256:889140544e9b777924960b237bdbead41a388b425dcf772f036eca05bebaf2db"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v391.md",
++      "sha256": "sha256:526457d4ae481a19092628f2f5861e23620b7f2ed979cf5238ed9ffb1b0cdc24"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v392.md",
++      "sha256": "sha256:3ad3a8d26fc8e3c01fdbf5ad55767b0af2de92707a3cce2606456c480dc2274e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v394.md",
++      "sha256": "sha256:b8b64142aab911324a6bf7916bf2b991d53a945c5a12dc7a94bf44f23ba5f0fd"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v395.md",
++      "sha256": "sha256:f470b6fcbf37a583b0df8d1dd53f1fa73052073567a32bd26d1658b2616ff4ba"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v396.md",
++      "sha256": "sha256:3eb7d47e0ad75cb0783c66975018b2ca14c0f258fc8ad5151f50360ea7da278f"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v397.md",
++      "sha256": "sha256:40f6844e376c6e15681cea94159f35a98b397ca825cb6d1a761439df52674cd7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v398.md",
++      "sha256": "sha256:3d39c3ca50fdb011417baab483a49d21502fee7e5eb3e7ff1c1d76fd0b50bd0d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v4.md",
++      "sha256": "sha256:b88413332f430062044353514300ed030f2b95fc24caccf2fcac8ec8985627b2"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v40.md",
++      "sha256": "sha256:d61f24dd72e48ff0907bf076e978104ff60afb9896b6646e853eb855cd395a61"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v400.md",
++      "sha256": "sha256:1f5c1495352d946afe0cc235077d21a0a1f22848390e40cf6a4899304321dc1e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v401.md",
++      "sha256": "sha256:2b19c3fbebf066cdc5aa30ea9ba5b6fb044b49b7be290e179f67b35dd7994ae9"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v402.md",
++      "sha256": "sha256:ccd00f956a21f43059d92fd93390c5fdf584a414def4b3b38f4b637564cca7bc"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v403.md",
++      "sha256": "sha256:ded22212a23b3010fde22988b8226b635acff0d8780782877d1d1e51fed11abf"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v404.md",
++      "sha256": "sha256:46da544ed3e8283dad4d44b32c8e875531613ad82fa6a0607a180c5a0b421673"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v405.md",
++      "sha256": "sha256:96f79fd0a56e0e5a46a884be142ab76598fe3a43619765294b4ca6e2ec6bd6da"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v406.md",
++      "sha256": "sha256:93869e15889612f2130ee7810e8003dec14228d434013dab67593514f88a4b80"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v407.md",
++      "sha256": "sha256:2e84b0477d4ad89b57fc4517c365e95939551df05ad4e5b835ca3521cc4d5502"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v408.md",
++      "sha256": "sha256:eed83f2c3ac6ba4ce92461eb75a9782815a67b463f91dcb7f57be6115a6b9eda"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v41.md",
++      "sha256": "sha256:126502fa49737288bbdd64921889dfe398412bc343e2b7065cc97f23f40ccb9a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v412.md",
++      "sha256": "sha256:9b86effb14c1403203d45939171226a563269e177f610596dd53df0820399cc4"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v413.md",
++      "sha256": "sha256:905925a1bf0e6ee9286a2fb1c67f6932c5b73b35e07937f6bcabd61f18fd41a0"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v414.md",
++      "sha256": "sha256:00ed7556011c4e57ae0ab943598ed2655f765dc33a2b29b96e8c8ca762e87ce2"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v415.md",
++      "sha256": "sha256:1f9a672275ef233e7c5d45018f1bd423a2432fd93a53fb605d22104a69d9f019"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v416.md",
++      "sha256": "sha256:862ae3fdc7b9f4edb9016f3a1aff216e3e29db39e11093311adc6f8091f4d00a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v417.md",
++      "sha256": "sha256:79e0c03b8488db5be0b867fd1eab039cac72f889709f71cc180b5e57c798772f"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v42.md",
++      "sha256": "sha256:b55918ea63e9fb7273ad7820077de22e3fa120dbebe4e2d5102aa41ad468ff30"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v43.md",
++      "sha256": "sha256:82eb54e25477dc081a4bc1c16946214d1947b5cfb92f2a0aef66c6f61a754a8f"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v44.md",
++      "sha256": "sha256:de9f1786da8709c9c973147571e9dbac344b9d8fb5977c9ee25ec1ac630579b8"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v447.md",
++      "sha256": "sha256:9e9989b668694cbd30011f6adb13e518979a0de89dbec57ba56524bb09978822"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v448.md",
++      "sha256": "sha256:842e1ffd710840e30a4fd84981c94d7b73fa83ec7720ac4014cf385390159864"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v449.md",
++      "sha256": "sha256:d2b73f329f946599ec777737ade8bcc63e359ec15a6cc07e6bce47a936ac1dd1"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v45.md",
++      "sha256": "sha256:c7c752e133607b9eba1f7de73a68cdebd4c8d68010927f257ae8478c269a3b6b"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v451.md",
++      "sha256": "sha256:d017be11cd18a11931870bc0efb64a920a006352ac43853ad8a25bc4c024d25d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v452.md",
++      "sha256": "sha256:98eb73d538f195fd6bec7f6cd5cf31c95a8e9bb020e8b7802be947d3eb1864dc"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v453.md",
++      "sha256": "sha256:451c73806ac876229416fd3558fae9f86d4ff5aa11dcbba7cfa059edbf4a2d4c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v454.md",
++      "sha256": "sha256:0cc4969d849e17d25fca72adda7530061ff4c3a72f6246fc12dab4a2f7ae563e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v455.md",
++      "sha256": "sha256:09e20cbcf852dc65cb69729378fac2d7a52c07191c5587e695779fc0b45ebe2b"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v456.md",
++      "sha256": "sha256:2eb980d7ed42c3501440dae146a1b29b87c4fc9ca09b04304f8749d5d452fe29"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v457.md",
++      "sha256": "sha256:a1e1b952ea41e8099130d0f348684c66108c4f42fff1bbc29e143c15ce2f3b45"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v458.md",
++      "sha256": "sha256:48aecc59c75b2bc912a1079b81f5deca47dc97c270528da9107f64061b24475f"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v459.md",
++      "sha256": "sha256:b7ba366afb1936bec5d2a505b3265466adb6948f67896b9fdc633ccb97a645ee"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v460.md",
++      "sha256": "sha256:2ead7a62bf244eca574658092495dcee0c46217313782d4c3eb162a5b751a751"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v461.md",
++      "sha256": "sha256:78328e160f763ff2975f018ad74fd5ed23fed68617ec37b52d4fa071a1784b8e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v462.md",
++      "sha256": "sha256:f0a41770c38c8aa267ce48f35589a7b2b85c0d1f9b520fa8c72edd77cc5d31fd"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v463.md",
++      "sha256": "sha256:6063bc9885ffb2e786eaedd0fa159c048ee3b14d8ffd4ab44b91e3bb8db104c0"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v5.md",
++      "sha256": "sha256:f8e8469b38c3661e7108d238ad409f3fdef3c0caca6d422b781ff9ce0077ceb6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v50.md",
++      "sha256": "sha256:e815b49b619622acbfdd054f34dc0ccc593dc11ae97e3d9a74cd23417c0adca9"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v51.md",
++      "sha256": "sha256:e790c553ebb5e8da5536975f6818bcc10bc02a2e5e08c49a3e5709c964caf25d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v59.md",
++      "sha256": "sha256:b922180accbe807ddcc828926a55cdd037a7f7eaa50c06d67478531f79e37a1d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v6.md",
++      "sha256": "sha256:b64dc3dbd887de4528187610aa2958c308c5b3113d6b85aa53a3eb1ad6bc278d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v62.md",
++      "sha256": "sha256:b0dafbce431aa921cf759b2c9ecd43920c4e561e8b10624bc67868fe51f49bd7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v67.md",
++      "sha256": "sha256:d5000d7a70f653a2d88b5d04cb5587d20faa44198d28d56777209c8df60caf7b"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v68.md",
++      "sha256": "sha256:810c56eb97effdcc3a6a4f94eced85a3650a2125983913c717cb15be0ccbfc6c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v69.md",
++      "sha256": "sha256:b0fa35ce5d2f296d2fe914f70842d09a5397f8c481a9aa51b57f0247379a9370"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v7.md",
++      "sha256": "sha256:b94b0775d037e4f849c70e502b9f4c173878f3c019edf17e6d99306e65205cc5"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v70.md",
++      "sha256": "sha256:53064c8d751e016c3f79b85b6d8b1a5a049766e681bd3d01e4d725809d8daea7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v71.md",
++      "sha256": "sha256:7bd2555a7df67a25961a927e32c90b788c7567d60744d126f3b8bac3ef3b318e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v72.md",
++      "sha256": "sha256:5c0615a43eec76d6c9eca8d135da4cd52d043256ef32160b91dcf679135ffcdc"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v73.md",
++      "sha256": "sha256:d3037e5970f7c5e1fbebe131712db9e87edf28025957724674d55dc24108293e"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v74.md",
++      "sha256": "sha256:c9214b0494a3560f6285b3bcff72ad1ff7ddc3e9b905bfc13830ecb28a4268ce"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v75.md",
++      "sha256": "sha256:9b3b7ed62327b5d3b3207eeca5a476aa43d2acec6ebf6e83e316eaf0806a53b7"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v76.md",
++      "sha256": "sha256:f7508160f755b5d89900c6fc1be04ff57b10552735ad42064cc73e0e8474e860"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v77.md",
++      "sha256": "sha256:406b80d067a3ee611ff9e208009831909590c7b19a4f2f5f9e93441e1813fa38"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v78.md",
++      "sha256": "sha256:65334888e248005f5181e4b0daecb5470cf89a2b490b77b291baca78abb36b96"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v79.md",
++      "sha256": "sha256:1d45b43d4d02c1c1811f2a03a22ba46bc6c0d7c50c3beda8db443d4fc43dd794"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v8.md",
++      "sha256": "sha256:8bd637461f097b5f162175f21bcccf9b4a5e53f335aae1224b873eeb018a7266"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v81.md",
++      "sha256": "sha256:76fcbdb9854618dd91bc5f0999fb08d9a5fce8a413a62e65994f183b67c8f27a"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v82.md",
++      "sha256": "sha256:396e0eeb2ad87e6cab0c7670f20a874c7c03fe039bd926122ea8099b83866b8b"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v83.md",
++      "sha256": "sha256:d2960015d36c25256adfe76471d74d32f941aab5e50ebf679922262bf3ab421d"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v84.md",
++      "sha256": "sha256:54d4ee79c62e1332363e309c4a834392152e2b9def6f505644116f85045909d1"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v85.md",
++      "sha256": "sha256:63d39d600487d4023bc369a21c2fc8d872d52f9c157662694965a05355baac31"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v86.md",
++      "sha256": "sha256:ffd09879b5881f1d2ccaa7a8839a528f22f1e0ad7411d05501e10148af0ee721"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v87.md",
++      "sha256": "sha256:f8075f3751fd4a461e29e768f46a16ad0d755983e3f618469ac69f61da7e1251"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v9.md",
++      "sha256": "sha256:a5a403dead576e53d61463510e857b1b13f819db36a660f030d81863729458c6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-v97.md",
++      "sha256": "sha256:76320dda7d1f9546ecc145935a1010ea9dfd8127e05a22b8cb70c70be8242915"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-vNEXT-dspy-signatures.md",
++      "sha256": "sha256:d82c924f8a38faa84b37486d7ff571c80e51031b6872b6f468e179eaf710422b"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/roadmap-schema-validation.md",
++      "sha256": "sha256:833e90718b56bc2eb6a4aa493f25350812b03f7f66f56a5f2a50b3d50ecb83ea"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/tier21-jepa-reasoner-probe.md",
++      "sha256": "sha256:5a53b0ac629f9816fc9e1af224fadb0c7e2dd60f5f4435ba89dbeb78369168fe"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/topological-architecture-followups.md",
++      "sha256": "sha256:e106ff151727a440d614398046e63fc71877c988d22aa261537b59ab13f18d1c"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/verdict-naming-convention.md",
++      "sha256": "sha256:157c70310075a1d97fa3729c781bdc47cb874617d3faa2f5000d5cbb0575bab2"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/verdict-reproducibility-audit.md",
++      "sha256": "sha256:83cabfa487e27abdffc7b47c5e7b8bc1dd163ca7a2a85f65bbab9e39c6916129"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/wire-trace2skill-into-conductor.md",
++      "sha256": "sha256:10a7fa440352b3253704c5f35b51b505f762b9dd0efa26b0d16045cc8cbd61f6"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/wopr-games-gallery-extension.md",
++      "sha256": "sha256:2608326887ebf2ffc9855b0120bb8c2d5388eea8c88c16bc646b2435461196fa"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/zenil-grounded-self-distillation-deployable-stack.md",
++      "sha256": "sha256:ae46d8fbbb9199d1895f463b5661dd4f75fed01b10a5a9d8e4d083060f33f43f"
++    }
++  ],
++  "duplicate_checks": {
++    "accepted_count": 1,
++    "candidate_count": 1,
++    "dedupe_sources_count": 223,
++    "duplicates_suppressed_count": 7
++  },
++  "duplicates_suppressed": [
++    {
++      "reason": "Already accepted in the V509 planner block for Exp5639 anytime-valid audit.",
++      "source_id": "anytime_valid_crc_2602_04364",
++      "title": "Anytime-Valid Conformal Risk Control",
++      "url": "https://arxiv.org/abs/2602.04364"
++    },
++    {
++      "reason": "Already promoted as V509 selective-release context; not remapped.",
++      "source_id": "conformal_selective_acting_2605_20270",
++      "title": "Conformal Selective Acting",
++      "url": "https://arxiv.org/abs/2605.20270"
++    },
++    {
++      "reason": "Already accepted in the V509 planner block for Exp5641.",
++      "source_id": "patchworld_2605_30880",
++      "title": "PatchWorld: Gradient-Free Optimization of Executable World Models",
++      "url": "https://arxiv.org/abs/2605.30880"
++    },
++    {
++      "reason": "Already accepted in the V509 planner block for mechanism-question probes.",
++      "source_id": "esbm_2606_07127",
++      "title": "Learning Explicit Behavioral Models with Adaptive Questions and World-Model Probes",
++      "url": "https://arxiv.org/abs/2606.07127"
++    },
++    {
++      "reason": "Already accepted in the V509 planner block for Exp5644-Exp5646.",
++      "source_id": "two_dimensional_pt_2506_14781",
++      "title": "Two-dimensional Parallel Tempering for Constrained Optimization",
++      "url": "https://arxiv.org/abs/2506.14781"
++    },
++    {
++      "reason": "Already indexed in Carnot's p-bit and 2D parallel tempering history.",
++      "source_id": "pbit_2d_pt_2601_09037",
++      "title": "Probabilistic Computers for MIMO Detection: From Sparsification to 2D Parallel Tempering",
++      "url": "https://arxiv.org/abs/2601.09037"
++    },
++    {
++      "reason": "Already indexed and completed as overwrite-capable solver guidance, outside the V509 dependency graph.",
++      "source_id": "g_rrm_2607_02491",
++      "title": "G-RRM: Guiding Symbolic Solvers with Recurrent Reasoning Models",
++      "url": "https://arxiv.org/abs/2607.02491"
++    }
++  ],
++  "duration_s": 2.400047378614545e-07,
++  "experiment": "experiment_5637_v509_source_delta_ingestion",
++  "experiment_id": "exp5637-v509-source-delta-ingestion",
++  "experiment_mappings": [
++    {
++      "experiment_ids": [
++        "exp5638-fr11-gate-schema-corrigendum",
++        "exp5639-anytime-valid-csl-independent-audit",
++        "exp5640-fr11-shadow-pipeline-integration"
++      ],
++      "lane": "FR-11 gate contract, anytime audit, and shadow integration",
++      "mapping": "Keep the planner-defined anytime certificate path; no execution-time source changed this lane.",
++      "source_ids": [
++        "anytime_valid_crc_2602_04364",
++        "conformal_selective_acting_2605_20270"
++      ],
++      "source_status": "duplicate_planner_context"
++    },
++    {
++      "experiment_ids": [
++        "exp5641-arc-counterexample-executable-model",
++        "exp5642-arc-executable-model-live-ab"
++      ],
++      "lane": "counterexample-patched ARC executable transition models",
++      "mapping": "Baba's preservation-conflict control maps locally to Exp5641; Exp5642 may consume it only through the existing gated live-path A/B.",
++      "source_ids": [
++        "patchworld_2605_30880",
++        "esbm_2606_07127",
++        "baba_in_wonderland_2605_16725",
++        "scratchworld_2606_31689"
++      ],
++      "source_status": "one_new_actionable_plus_planner_duplicates_and_watch_only"
++    },
++    {
++      "experiment_ids": [
++        "exp5643-arc-live-self-discovery-levelup-v509"
++      ],
++      "lane": "unconditional ARC live attempt",
++      "mapping": "The source delta does not gate or alter the mandatory live attempt.",
++      "source_ids": [
++        "baba_in_wonderland_2605_16725"
++      ],
++      "source_status": "advisory_only_no_dependency_change"
++    },
++    {
++      "experiment_ids": [
++        "exp5644-two-axis-parallel-tempering-exact-audit",
++        "exp5645-two-axis-tempering-hard-constraint-quality",
++        "exp5646-two-axis-tempering-rust-parity"
++      ],
++      "lane": "two-axis constrained tempering and Rust parity",
++      "mapping": "No new hardware or speedup claim is created; V509 remains exactness, quality, then parity.",
++      "source_ids": [
++        "two_dimensional_pt_2506_14781",
++        "pbit_2d_pt_2601_09037"
++      ],
++      "source_status": "duplicate_planner_or_prior_reference"
++    }
++  ],
++  "field_principles": {
++    "closed_scopes_reopened": "retirement requires authority",
++    "duplicates_suppressed": "repeated ideas create no work",
++    "experiment_mappings": "sources need executable hooks",
++    "field_principles": "One-line annotations for every required headline and gate field.",
++    "honest_verdict": "a no-op is terminal",
++    "inference_substrate": "this is source synthesis",
++    "new_references_added": "duplicates do not count",
++    "planner_marker_found": "the search window is explicit",
++    "reproducibility_checksum": "source set is stable",
++    "search_timestamp_utc": "recency is reproducible",
++    "sources_checked": "coverage is auditable",
++    "watch_only_items": "unavailable systems support no claim"
++  },
++  "honest_verdict": "complete: accepted 1 non-duplicate actionable V509 source delta and kept retired scopes closed",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "marker_checks": {
++    "execution_refresh_heading": "## V509 Execution Refresh - 20260714",
++    "execution_refresh_present": true,
++    "planner_marker": "## V509 Planner Refresh - 20260714",
++    "planner_marker_found": true,
++    "planner_marker_line": 29715,
++    "search_window": "strictly_after_planner_marker"
++  },
++  "milestone": "2026.07.509",
++  "new_references_added": [
++    {
++      "accepted_as": "non_duplicate_actionable_execution_delta",
++      "dependency_graph_changed": false,
++      "evidence_boundary": "primary arXiv preprint; no external benchmark result is imported",
++      "experiment_ids": [
++        "exp5641-arc-counterexample-executable-model",
++        "exp5642-arc-executable-model-live-ab"
++      ],
++      "local_exact_hook": "Use preservation-conflict counterexamples and class-aware transition coverage as controls inside the existing Exp5641 ARC transition-hypothesis patcher.",
++      "published": "2026-05-16",
++      "source_id": "baba_in_wonderland_2605_16725",
++      "title": "Baba in Wonderland: Online Self-Supervised Dynamics Discovery for Executable World Models",
++      "url": "https://arxiv.org/abs/2605.16725"
++    }
++  ],
++  "planner_marker_found": true,
++  "random_seed": 5637,
++  "reproducibility_checksum": "sha256:2d238603ecf2eac25e22c64e2783d4d17f97b79a8834cea2b9236bd3f7955711",
++  "research_references_updated": true,
++  "result_path": "results/experiment_5637_v509_source_delta_ingestion.json",
++  "roadmap_context": {
++    "milestone": "2026.07.509",
++    "source": "research-roadmap.yaml",
++    "task_ids": [
++      "exp5636-transition-v509",
++      "exp5637-v509-source-delta-ingestion",
++      "exp5638-fr11-gate-schema-corrigendum",
++      "exp5639-anytime-valid-csl-independent-audit",
++      "exp5640-fr11-shadow-pipeline-integration",
++      "exp5641-arc-counterexample-executable-model",
++      "exp5642-arc-executable-model-live-ab",
++      "exp5643-arc-live-self-discovery-levelup-v509",
++      "exp5644-two-axis-parallel-tempering-exact-audit",
++      "exp5645-two-axis-tempering-hard-constraint-quality",
++      "exp5646-two-axis-tempering-rust-parity",
++      "exp5647-v509-capstone-reconciliation"
++    ]
++  },
++  "run_date": "20260714",
++  "schema": "carnot.experiment_5637.v509_source_delta_ingestion.v1",
++  "search_cutoff": "2026-07-14",
++  "search_timestamp_utc": "2026-07-14T18:46:26Z",
++  "source_link_checks": [
++    {
++      "source_id": "baba_in_wonderland_2605_16725",
++      "status": "primary_arxiv_api_opened_accepted_non_duplicate",
++      "url": "https://arxiv.org/abs/2605.16725"
++    },
++    {
++      "source_id": "patchworld_2605_30880",
++      "status": "primary_arxiv_api_opened_duplicate_planner_source",
++      "url": "https://arxiv.org/abs/2605.30880"
++    },
++    {
++      "source_id": "esbm_2606_07127",
++      "status": "planner_source_duplicate_not_remapped",
++      "url": "https://arxiv.org/abs/2606.07127"
++    },
++    {
++      "source_id": "scratchworld_2606_31689",
++      "status": "primary_arxiv_api_opened_watch_only_external_benchmark",
++      "url": "https://arxiv.org/abs/2606.31689"
++    },
++    {
++      "source_id": "confidently_wrong_internal_states_2607_11414",
++      "status": "primary_arxiv_api_opened_watch_only_no_exact_v509_hook",
++      "url": "https://arxiv.org/abs/2607.11414"
++    },
++    {
++      "source_id": "g_rrm_2607_02491",
++      "status": "primary_arxiv_api_opened_duplicate_solver_guidance_history",
++      "url": "https://arxiv.org/abs/2607.02491"
++    },
++    {
++      "source_id": "two_dimensional_pt_2506_14781",
++      "status": "primary_arxiv_api_opened_duplicate_planner_source",
++      "url": "https://arxiv.org/abs/2506.14781"
++    },
++    {
++      "source_id": "pbit_2d_pt_2601_09037",
++      "status": "primary_arxiv_api_opened_duplicate_prior_reference",
++      "url": "https://arxiv.org/abs/2601.09037"
++    },
++    {
++      "source_id": "semantic_scholar_ebt_route",
++      "status": "http_429_no_fresh_count_claim",
++      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092"
++    },
++    {
++      "source_id": "semantic_scholar_arm_ebm_route",
++      "status": "http_429_no_fresh_count_claim",
++      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605"
++    },
++    {
++      "source_id": "github_patchworld",
++      "status": "http_200_duplicate_planner_repository",
++      "url": "https://github.com/HKBU-KnowComp/PatchWorld"
++    },
++    {
++      "source_id": "github_baba_query",
++      "status": "total_count_0_no_repository_claim",
++      "url": "https://api.github.com/search/repositories?q=%22Baba%20in%20Wonderland%22%20%22Executable%20World%20Models%22"
++    },
++    {
++      "source_id": "extropic_writing",
++      "status": "http_200_watch_only_no_local_tsu",
++      "url": "https://extropic.ai/writing"
++    },
++    {
++      "source_id": "logical_intelligence_public",
++      "status": "http_200_watch_only_proprietary",
++      "url": "https://logicalintelligence.com/"
++    }
++  ],
++  "sources_checked": [
++    {
++      "decision": "accepted Baba in Wonderland; other fresh hits were duplicate, non-local, or closed-scope",
++      "queries": [
++        "EBM verification/reasoning",
++        "neural constraint satisfaction",
++        "Ising ML",
++        "hallucination detection/mitigation",
++        "KANs",
++        "energy-guided decoding",
++        "accelerated sampling",
++        "continual/online constraint learning",
++        "executable world models counterexample repair"
++      ],
++      "status": "checked_arxiv_api_and_primary_abs_pages",
++      "surface": "arXiv"
++    },
++    {
++      "decision": "no cleaner V509 local dependency than arXiv primary sources and planner PatchWorld/ESBM pair",
++      "queries": [
++        "executable world models counterexample",
++        "world-model repair",
++        "neural constraint satisfaction",
++        "energy-based reasoning"
++      ],
++      "status": "checked_public_search_and_forum_results",
++      "surface": "OpenReview"
++    },
++    {
++      "decision": "no citation-count or citation-delta claim is made",
++      "queries": [
++        "arXiv:2507.02092 citation route",
++        "arXiv:2512.15605 citation route"
++      ],
++      "status": "direct_api_returned_http_429_for_both_routes",
++      "surface": "Semantic Scholar"
++    },
++    {
++      "decision": "no HF-only executable V509 delta",
++      "queries": [
++        "Baba in Wonderland 2605.16725",
++        "energy-based verification",
++        "hallucination detection",
++        "KAN conformal"
++      ],
++      "status": "checked_public_papers_search",
++      "surface": "Hugging Face Papers"
++    },
++    {
++      "decision": "PatchWorld repository is duplicate planner evidence; no Baba implementation repository was found",
++      "queries": [
++        "Baba in Wonderland executable world models",
++        "PatchWorld executable world models",
++        "energy based model constraint satisfaction pushed after 2026-07-01"
++      ],
++      "status": "checked_github_api_search_and_direct_repository_links",
++      "surface": "GitHub discovery/trending"
++    },
++    {
++      "decision": "public TSU context remains unavailable for Carnot execution",
++      "queries": [
++        "TSU",
++        "XTR-0",
++        "X0",
++        "Z1",
++        "thermodynamic computing"
++      ],
++      "status": "checked_public_writing_index_http_200",
++      "surface": "Extropic writing"
++    },
++    {
++      "decision": "proprietary public updates do not provide local weights or receipts",
++      "queries": [
++        "Kona 1.0",
++        "Aleph",
++        "energy-based models",
++        "constraint enforcement"
++      ],
++      "status": "checked_public_site_http_200",
++      "surface": "Logical Intelligence public pages"
++    },
++    {
++      "decision": "Baba in Wonderland was absent locally; G-RRM and p-bit 2D-PT were duplicates",
++      "queries": [
++        "research-references.md after V509 marker",
++        "research-complete.yaml",
++        "openspec/change-proposals/*.md",
++        "results/experiment_5636_transition_v509.json",
++        "ops/exclusion_manifest.yaml",
++        "ops/known-issues.md"
++      ],
++      "status": "checked",
++      "surface": "local Carnot ledgers"
++    }
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5637",
++    "SCENARIO-REPORT-5637-APPEND-DELTA",
++    "SCENARIO-REPORT-5637-BLOCKED-MARKER",
++    "SCENARIO-REPORT-5637-FIELD-PRINCIPLES"
++  ],
++  "status": "complete",
++  "watch_only_items": [
++    {
++      "classification": "watch_only_external_internal_state_probe",
++      "evidence_status": "fresh_primary_arxiv_no_exact_local_v509_hook",
++      "reason": "The result is a domain-specific residual-stream probe and would reopen internal-state hallucination scoring rather than support Exp5638-Exp5646 exact hooks.",
++      "source_id": "confidently_wrong_internal_states_2607_11414",
++      "title": "Confidently Wrong: Detecting Hallucinations in Financial Question Answering from LLM Internal States",
++      "url": "https://arxiv.org/abs/2607.11414"
++    },
++    {
++      "classification": "watch_only_external_benchmark",
++      "evidence_status": "primary_arxiv_benchmark_no_local_scratch_vm_or_arc_receipts",
++      "reason": "Changed-field F1 is useful context, but the benchmark substrate is external and not the agent-owned ARC receipt stream required by Exp5641.",
++      "source_id": "scratchworld_2606_31689",
++      "title": "ScratchWorld: Evaluating If World Models Compute Executable Consequences",
++      "url": "https://arxiv.org/abs/2606.31689"
++    },
++    {
++      "classification": "watch_only_no_public_repository_found",
++      "evidence_status": "github_api_total_count_0",
++      "reason": "No repository is needed or claimed; Carnot implements the local control idea if Exp5641 consumes the paper.",
++      "source_id": "github_baba_query",
++      "title": "GitHub search for Baba in Wonderland implementation",
++      "url": "https://api.github.com/search/repositories?q=%22Baba%20in%20Wonderland%22%20%22Executable%20World%20Models%22"
++    },
++    {
++      "classification": "watch_only_workshop_or_domain_context",
++      "evidence_status": "public_openreview_search_no_cleaner_local_dependency",
++      "reason": "Workshop and program-repair world-model pages do not supersede the accepted arXiv/local ARC hook.",
++      "source_id": "openreview_world_model_workshop_pages",
++      "title": "OpenReview world-model and program-repair pages",
++      "url": "https://openreview.net/search?term=executable%20world%20models%20counterexample"
++    },
++    {
++      "classification": "watch_only_unavailable_hardware",
++      "evidence_status": "public_writing_no_local_execution_path",
++      "reason": "No authenticated local TSU path or matched Carnot sampler-speed receipt exists.",
++      "source_id": "extropic_tsu_xtr_z1",
++      "title": "Extropic TSU, XTR-0, X0, and Z1 writing",
++      "url": "https://extropic.ai/writing"
++    },
++    {
++      "classification": "watch_only_proprietary_system",
++      "evidence_status": "public_pages_no_local_weights_or_reproducible_receipt",
++      "reason": "Kona and Aleph remain proprietary context and cannot be V509 baselines or execution evidence.",
++      "source_id": "logical_intelligence_public_updates",
++      "title": "Logical Intelligence Kona and Aleph public updates",
++      "url": "https://logicalintelligence.com/"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 2db0129847..e98d1204d1 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:12:12Z",
+-  "finished_at": "2026-07-14T18:12:12Z",
++  "started_at": "2026-07-14T18:47:45Z",
++  "finished_at": "2026-07-14T18:47:45Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index b228d85f37..53e0ccfc81 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:12:12Z",
+-  "finished_at": "2026-07-14T18:12:12Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-14T18:47:45Z",
++  "finished_at": "2026-07-14T18:47:46Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 9c26a80f23..85d97a4304 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260714",
+-  "started_at": "2026-07-14T18:12:13Z",
+-  "finished_at": "2026-07-14T18:12:13Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-14T18:47:46Z",
++  "finished_at": "2026-07-14T18:47:46Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5637_v509_source_delta_ingestion.py b/tests/python/test_experiment_5637_v509_source_delta_ingestion.py
+new file mode 100644
+index 0000000000..e430db8bbe
+--- /dev/null
++++ b/tests/python/test_experiment_5637_v509_source_delta_ingestion.py
+@@ -0,0 +1,369 @@
++"""Tests for Exp5637 V509 execution source-delta ingestion.
++
++Spec refs: REQ-REPORT-5637, SCENARIO-REPORT-5637-APPEND-DELTA,
++SCENARIO-REPORT-5637-BLOCKED-MARKER,
++SCENARIO-REPORT-5637-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot import experiment_5637_v509_source_delta_ingestion as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++
++
++def _roadmap() -> str:
++    tasks = [
++        {
++            "id": task_id,
++            "milestone": mod.MILESTONE,
++            "title": task_id,
++            "deliverable": f"results/{task_id}.json",
++        }
++        for task_id in (
++            "exp5636-transition-v509",
++            "exp5637-v509-source-delta-ingestion",
++            "exp5638-fr11-gate-schema-corrigendum",
++            "exp5639-anytime-valid-csl-independent-audit",
++            "exp5640-fr11-shadow-pipeline-integration",
++            "exp5641-arc-counterexample-executable-model",
++            "exp5642-arc-executable-model-live-ab",
++            "exp5643-arc-live-self-discovery-levelup-v509",
++            "exp5644-two-axis-parallel-tempering-exact-audit",
++            "exp5645-two-axis-tempering-hard-constraint-quality",
++            "exp5646-two-axis-tempering-rust-parity",
++            "exp5647-v509-capstone-reconciliation",
++        )
++    ]
++    return yaml.safe_dump({"milestone": mod.MILESTONE, "tasks": tasks}, sort_keys=False)
++
++
++def _planner_references() -> str:
++    return (
++        "## V509 Planner Refresh - 20260714\n\n"
++        "- **PatchWorld: Gradient-Free Optimization of Executable World Models** - "
++        "arXiv:2605.30880.\n"
++        "- **Learning Explicit Behavioral Models with Adaptive Questions and "
++        "World-Model Probes** - arXiv:2606.07127.\n"
++        "<!-- V509-PLANNER-REFRESH-20260714-END -->\n"
++    )
++
++
++def _make_repo(root: Path, references_text: str, *, roadmap_next: bool = False) -> Path:
++    root.mkdir(parents=True, exist_ok=True)
++    for relative in ("AGENTS.md", "CODEX.md", "CLAUDE.md", "research-program.md"):
++        (root / relative).write_text("fixture\n", encoding="utf-8")
++    (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).write_text(
++        references_text,
++        encoding="utf-8",
++    )
++    (root / mod.RESEARCH_COMPLETE_RELATIVE_PATH).write_text(
++        (
++            "experiments:\n"
++            "- id: exp5626-v508-source-delta-ingestion\n"
++            "  title: Execution-time V508 source delta\n"
++            "  source: arXiv:2607.08897\n"
++        ),
++        encoding="utf-8",
++    )
++    (root / mod.ROADMAP_RELATIVE_PATH).write_text(_roadmap(), encoding="utf-8")
++    if roadmap_next:
++        (root / mod.ROADMAP_NEXT_RELATIVE_PATH).write_text(_roadmap(), encoding="utf-8")
++    (root / "openspec/change-proposals").mkdir(parents=True, exist_ok=True)
++    (root / mod.VNEXT_RELATIVE_PATH).write_text(
++        "# Research Roadmap vNEXT\n"
++        "**Milestone:** 2026.07.509\n"
++        "**Task range:** Exp5636-Exp5647\n"
++        "Exp5637 searches after the V509 planner marker.\n",
++        encoding="utf-8",
++    )
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / mod.EXCLUSION_MANIFEST_RELATIVE_PATH).write_text(
++        "retired: []\nretired_extras: []\n", encoding="utf-8"
++    )
++    (root / mod.KNOWN_ISSUES_RELATIVE_PATH).write_text(
++        "External generated-text scorers, native runtime certificates, "
++        "solver-guidance reruns, ARC epistemic-object probes, hardware speedup, "
++        "board, SNN, TSU, Kona, and Aleph scopes remain closed.\n",
++        encoding="utf-8",
++    )
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "scripts/research_conductor.py").write_text("# fixture\n", encoding="utf-8")
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / mod.EXP5636_RELATIVE_PATH).write_text(
++        json.dumps(
++            {
++                "experiment_id": "exp5636-transition-v509",
++                "current_task_range": "exp5636-exp5647",
++                "dependency_map": {
++                    "executable_arc_model_to_live_attempt": {
++                        "tasks": [
++                            "exp5641-arc-counterexample-executable-model",
++                            "exp5642-arc-executable-model-live-ab",
++                            "exp5643-arc-live-self-discovery-levelup-v509",
++                        ]
++                    }
++                },
++                "retired_scopes": [
++                    {"key": "arc_epistemic_object_probe", "closed": True},
++                    {"key": "timing_hardware_claims", "closed": True},
++                ],
++            },
++            sort_keys=True,
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    return root
++
++
++def test_req_report_5637_spec_declares_v509_source_delta_contract() -> None:
++    """REQ-REPORT-5637: OpenSpec anchors V509 source-delta fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5637") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-REPORT-5637",
++        "SCENARIO-REPORT-5637-APPEND-DELTA",
++        "SCENARIO-REPORT-5637-BLOCKED-MARKER",
++        "SCENARIO-REPORT-5637-FIELD-PRINCIPLES",
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.INFERENCE_SUBSTRATE,
++        "`search_timestamp_utc`",
++        "`reproducibility_checksum`",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_report_5637_append_delta_updates_references_once(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5637-APPEND-DELTA: one new exact hook appends once."""
++
++    root = _make_repo(tmp_path, _planner_references(), roadmap_next=True)
++
++    artifact = mod.build_and_write_artifact(
++        root=root,
++        search_timestamp_utc="2026-07-14T18:38:01Z",
++        duration_s=0.5,
++    )
++
++    mod.validate_artifact(artifact)
++    references = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++    result_text = (root / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")
++
++    assert result_text.endswith("\n")
++    assert references.count(mod.EXECUTION_REFRESH_HEADING) == 1
++    assert references.index(mod.EXECUTION_REFRESH_HEADING) > references.index(mod.PLANNER_MARKER)
++    assert "Baba in Wonderland" in references
++    assert "arXiv:2605.16725" in references
++    assert artifact["planner_marker_found"] is True
++    assert artifact["research_references_updated"] is True
++    assert artifact["closed_scopes_reopened"] is False
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["search_timestamp_utc"] == "2026-07-14T18:38:01Z"
++    assert artifact["roadmap_context"]["source"] == "research-roadmap-next.yaml"
++    assert artifact["honest_verdict"].startswith("complete:")
++
++    accepted_ids = {row["source_id"] for row in artifact["new_references_added"]}
++    assert accepted_ids == {"baba_in_wonderland_2605_16725"}
++    mapping_ids = {
++        experiment_id
++        for row in artifact["experiment_mappings"]
++        for experiment_id in row["experiment_ids"]
++    }
++    assert mapping_ids <= mod.ALLOWED_MAPPING_IDS
++    assert {
++        "exp5641-arc-counterexample-executable-model",
++        "exp5642-arc-executable-model-live-ab",
++    }.issubset(mapping_ids)
++    assert "exp5647-v509-capstone-reconciliation" not in mapping_ids
++
++    artifact_second = mod.build_and_write_artifact(
++        root=root,
++        search_timestamp_utc="2026-07-14T18:38:02Z",
++        duration_s=0.5,
++    )
++    references_second = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(
++        encoding="utf-8"
++    )
++    assert references_second.count(mod.EXECUTION_REFRESH_HEADING) == 1
++    assert artifact_second["research_references_updated"] is False
++
++
++def test_scenario_report_5637_missing_planner_marker_blocks_append(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5637-BLOCKED-MARKER: missing marker blocks mutation."""
++
++    references_text = "## Earlier Refresh\n\nKnown references only.\n"
++    root = _make_repo(tmp_path, references_text)
++
++    artifact = mod.build_and_write_artifact(
++        root=root,
++        search_timestamp_utc="2026-07-14T18:38:01Z",
++        duration_s=0.5,
++    )
++
++    mod.validate_artifact(artifact)
++    references = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++    assert references == references_text
++    assert artifact["planner_marker_found"] is False
++    assert artifact["research_references_updated"] is False
++    assert artifact["new_references_added"] == []
++    assert artifact["honest_verdict"].startswith("blocked:")
++
++
++def test_scenario_report_5637_source_checks_and_watch_boundaries(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-5637-APPEND-DELTA: checks classify non-local sources."""
++
++    root = _make_repo(tmp_path, _planner_references())
++    artifact = mod.build_artifact(
++        root=root,
++        search_timestamp_utc="2026-07-14T18:38:01Z",
++        duration_s=0.5,
++        research_references_updated=True,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["marker_checks"]["planner_marker"] == mod.PLANNER_MARKER
++    assert artifact["marker_checks"]["planner_marker_found"] is True
++    assert artifact["duplicate_checks"]["candidate_count"] == len(mod.CANDIDATE_FINDINGS)
++    assert artifact["duplicate_checks"]["accepted_count"] == len(mod.CANDIDATE_FINDINGS)
++    assert artifact["duplicate_checks"]["duplicates_suppressed_count"] == len(
++        artifact["duplicates_suppressed"]
++    )
++    assert any(
++        row["path"] == mod.RESEARCH_COMPLETE_RELATIVE_PATH.as_posix()
++        for row in artifact["dedupe_corpus_checked"]
++    )
++    assert any(
++        row["source_id"] == "semantic_scholar_ebt_route"
++        and row["status"] == "http_429_no_fresh_count_claim"
++        for row in artifact["source_link_checks"]
++    )
++    assert any(
++        row["source_id"] == "confidently_wrong_internal_states_2607_11414"
++        and row["classification"] == "watch_only_external_internal_state_probe"
++        for row in artifact["watch_only_items"]
++    )
++    assert any(
++        row["source_id"] == "scratchworld_2606_31689"
++        and row["classification"] == "watch_only_external_benchmark"
++        for row in artifact["watch_only_items"]
++    )
++    surfaces = {row["surface"] for row in artifact["sources_checked"]}
++    assert {
++        "arXiv",
++        "OpenReview",
++        "Semantic Scholar",
++        "Hugging Face Papers",
++        "GitHub discovery/trending",
++        "Extropic writing",
++        "Logical Intelligence public pages",
++        "local Carnot ledgers",
++    }.issubset(surfaces)
++
++
++def test_scenario_report_5637_sparse_repo_defaults_to_blocked_noop(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5637-BLOCKED-MARKER: absent ledgers stay terminal."""
++
++    artifact = mod.build_artifact(root=tmp_path, duration_s=0.5)
++
++    mod.validate_artifact(artifact)
++    assert artifact["planner_marker_found"] is False
++    assert artifact["research_references_updated"] is False
++    assert artifact["new_references_added"] == []
++    assert artifact["roadmap_context"] == {
++        "source": "research-roadmap.yaml",
++        "milestone": "",
++        "task_ids": [],
++    }
++    assert artifact["search_timestamp_utc"].endswith("Z")
++    assert artifact["honest_verdict"].startswith("blocked:")
++
++
++def test_scenario_report_5637_field_principle_validation_rejects_bad_artifact(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-5637-FIELD-PRINCIPLES: malformed fields fail closed."""
++
++    root = _make_repo(tmp_path, _planner_references())
++    artifact = mod.build_artifact(
++        root=root,
++        search_timestamp_utc="2026-07-14T18:38:01Z",
++        duration_s=0.5,
++        research_references_updated=True,
++    )
++    mod.validate_artifact(artifact)
++
++    broken = dict(artifact)
++    broken["field_principles"] = dict(artifact["field_principles"])
++    broken["field_principles"].pop("reproducibility_checksum")
++    with pytest.raises(ValueError, match="field_principles"):
++        mod.validate_artifact(broken)
++
++    broken = dict(artifact)
++    broken["closed_scopes_reopened"] = True
++    with pytest.raises(ValueError, match="closed_scopes_reopened"):
++        mod.validate_artifact(broken)
++
++    broken = dict(artifact)
++    broken["search_timestamp_utc"] = "2026-07-14T18:38:01"
++    with pytest.raises(ValueError, match="timestamp"):
++        mod.validate_artifact(broken)
++
++    broken = dict(artifact)
++    broken["experiment_mappings"] = [
++        {"lane": "bad", "experiment_ids": ["exp5647-v509-capstone-reconciliation"]}
++    ]
++    with pytest.raises(ValueError, match="mapping"):
++        mod.validate_artifact(broken)
++
++
++def test_scenario_report_5637_defensive_helpers_cover_edge_cases(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """SCENARIO-REPORT-5637-FIELD-PRINCIPLES: helper boundaries stay explicit."""
++
++    root = _make_repo(tmp_path, _planner_references())
++    original = (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8")
++    assert mod._relative_path(tmp_path, Path("/outside/root.txt")) == "/outside/root.txt"
++    assert mod._honest_verdict(False, []).startswith("blocked:")
++    assert mod._honest_verdict(True, []).startswith("complete: no new")
++    assert mod._honest_verdict(True, [{"source_id": "accepted"}]).startswith(
++        "complete: accepted 1 non-duplicate actionable V509"
++    )
++    assert mod._append_execution_refresh_if_needed(root, False, mod._accepted_findings()) is False
++    assert (root / mod.RESEARCH_REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8") == original
++    fallback_insert = mod._insert_after_planner_block(
++        "## V509 Planner Refresh - 20260714\nNo end marker.\n",
++        "## V509 Execution Refresh - 20260714\n\nBody.\n",
++    )
++    assert fallback_insert.endswith("Body.\n")
++
++    cli_root = _make_repo(tmp_path / "cli", _planner_references())
++    assert (
++        mod.main(
++            [
++                "--root",
++                str(cli_root),
++                "--search-timestamp-utc",
++                "2026-07-14T18:38:03Z",
++            ]
++        )
++        == 0
++    )
++    captured = capsys.readouterr()
++    assert mod.RESULT_RELATIVE_PATH.as_posix() in captured.out
+-- 
+2.55.0
+

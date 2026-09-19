@@ -1,0 +1,2339 @@
+From 175be2e061ab702860e2d0f66ac33d83ad5d5cdf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 17:40:51 -0400
+Subject: [PATCH 05349/11362] [conductor] PHASE A0 runtime gate -- clean local
+ SOTA GGUF completion/logprob/cache provenance with duration floor
+
+Automated research step by research conductor.
+Task ID: exp5124-clean-sota-runtime-provenance-v470
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/llm-ebm-inference/spec.md    |   66 ++
+ ops/anomaly-escalations.md                    |    5 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...ment_5124_clean_sota_runtime_provenance.py | 1056 +++++++++++++++++
+ ...24_clean_sota_runtime_provenance_v470.json |  588 +++++++++
+ ...4_clean_sota_runtime_provenance_v470.jsonl |    1 +
+ .../llamacpp_server.log                       |  138 +++
+ ...5124_clean_sota_runtime_provenance_v470.py |   20 +
+ ...ment_5124_clean_sota_runtime_provenance.py |  359 ++++++
+ 9 files changed, 2234 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5124_clean_sota_runtime_provenance.py
+ create mode 100644 results/experiment_5124_clean_sota_runtime_provenance_v470.json
+ create mode 100644 results/experiment_5124_clean_sota_runtime_provenance_v470.jsonl
+ create mode 100644 results/raw/experiment_5124_clean_sota_runtime_provenance/llamacpp_server.log
+ create mode 100644 scripts/experiment_5124_clean_sota_runtime_provenance_v470.py
+ create mode 100644 tests/python/test_experiment_5124_clean_sota_runtime_provenance.py
+
+diff --git a/openspec/capabilities/llm-ebm-inference/spec.md b/openspec/capabilities/llm-ebm-inference/spec.md
+index 5e255c589c..bb66fe5c5e 100644
+--- a/openspec/capabilities/llm-ebm-inference/spec.md
++++ b/openspec/capabilities/llm-ebm-inference/spec.md
+@@ -1799,6 +1799,71 @@ floor
+ **And** `root_cause_tree` records the applicable blocker class
+ **And** the verdict begins with `blocked_`.
+ 
++### REQ-INFER-SOTA-029: Exp 5124 Clean SOTA Runtime Provenance Gate
++
++The system SHALL provide an Exp 5124 runtime-provenance artifact at
++`results/experiment_5124_clean_sota_runtime_provenance_v470.json` that proves
++or blocks the local endpoint/cache/logprob substrate before downstream LLM
++experiments run.  Exp 5124 SHALL resolve `MODEL_SPECS` by calling
++`cached_sota_pair()` first, SHALL record the exact `model_path` values returned
++for the mandated local GGUFs, and SHALL use only llama.cpp / GGUF paths for
++runtime checks.  It SHALL NOT call `AutoTokenizer` on `*-GGUF` repositories.
++
++Exp 5124 SHALL attempt a real nontrivial local completion through an
++already-running llama.cpp-compatible endpoint or by starting a bounded local
++`llama-server` for one resolved mandated GGUF.  The artifact SHALL record
++`completion_proof`, `logprob_proof`, `endpoint_lifetime_s`,
++`request_response_transcript`, `cache_receipts`, and cache write/read evidence.
++It SHALL record real wall-clock `duration_s`; it SHALL NOT mock or pad timing.
++For clean live claims it SHALL include `duration_floor_evidence` explaining why
++repository adversarial verification should not raise `DURATION_TOO_SHORT`.
++
++The artifact SHALL expose these fields: `experiment_id`, `milestone`,
++`honest_verdict`, `inference_substrate`, `duration_s`, `MODEL_SPECS`,
++`cached_sota_pair_attempted`, `gguf_paths`, `completion_proof`,
++`logprob_proof`, `cache_ready`, `cache_receipts`, `endpoint_lifetime_s`,
++`request_response_transcript`, `duration_floor_evidence`,
++`adversarial_verify_passed`, `sota_runtime_clean`, `conductor_modified`, and
++`tests_run`.  `experiment_id` SHALL equal
++`exp5124-clean-sota-runtime-provenance-v470`, `milestone` SHALL equal
++`2026.07.470`, `inference_substrate` SHALL equal
++`local_sota_gguf_llamacpp_runtime_or_blocked`, and `conductor_modified` SHALL
++be false.
++
++`sota_runtime_clean` SHALL be true only when completion evidence, logprob
++evidence, cache write/read evidence, and adversarial verification all pass.  If
++any precondition fails, Exp 5124 SHALL write a terminal blocked artifact with
++`sota_runtime_clean=false`, `cache_ready=false`, an honest `blocked_` verdict,
++and a machine-readable `root_cause_tree`.
++
++### SCENARIO-INFER-SOTA-029-CLEAN: Live Completion Logprobs Cache And Verifier Pass
++
++**Given** `cached_sota_pair()` returns two mandated local GGUF model specs with
++`model_path` values
++**And** the intended local llama.cpp-compatible backend returns non-empty
++completion text plus token logprob or top-logprob evidence
++**And** the smoke cache writes and reads back at least one row
++**When** Exp 5124 records real wall-clock duration and adversarial verification
++returns no critical flags
++**Then** `completion_proof.ready=true`
++**And** `logprob_proof.ready=true`
++**And** `cache_ready=true`
++**And** `adversarial_verify_passed=true`
++**And** `sota_runtime_clean=true`
++**And** the verdict begins with `success_` or `complete_`.
++
++### SCENARIO-INFER-SOTA-029-BLOCKED: Missing Runtime Evidence Blocks Downstream Gate
++
++**Given** the mandated GGUF cache resolution attempt is recorded
++**But** completion, logprob, cache, or adversarial verification evidence is
++missing or failed
++**When** Exp 5124 completes
++**Then** `sota_runtime_clean=false`
++**And** `cache_ready=false`
++**And** `root_cause_tree` records the failed precondition
++**And** the verdict begins with `blocked_`
++**And** downstream verifier experiments are not run by this task.
++
+ ### REQ-INFER-018: EBT Abstraction Layer
+ 
+ The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
+@@ -1932,6 +1997,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an
+ | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
+ | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
+ | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
++| REQ-INFER-SOTA-029 | Planned (`python/carnot/experiment_5124_clean_sota_runtime_provenance.py`, `scripts/experiment_5124_clean_sota_runtime_provenance_v470.py`, `results/experiment_5124_clean_sota_runtime_provenance_v470.json`) | Planned (`tests/python/test_experiment_5124_clean_sota_runtime_provenance.py`) |
+ | REQ-INFER-2041 | Proposed | Proposed |
+ | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
+ 
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index ba9b644f60..cc7e98bfbb 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -837,3 +837,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_5121_capstone_v469.json
++
++## experiment_5123_v470_source_scope_audit.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_5123_v470_source_scope_audit.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c0852fbe4b..c7d6c02c20 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4118,
++  "experiments_checked": 4119,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5124_clean_sota_runtime_provenance.py b/python/carnot/experiment_5124_clean_sota_runtime_provenance.py
+new file mode 100644
+index 0000000000..a3e8731398
+--- /dev/null
++++ b/python/carnot/experiment_5124_clean_sota_runtime_provenance.py
+@@ -0,0 +1,1056 @@
++#!/usr/bin/env python3
++"""Exp 5124: clean local SOTA GGUF runtime provenance.
++
++Spec refs: REQ-INFER-SOTA-029,
++SCENARIO-INFER-SOTA-029-CLEAN,
++SCENARIO-INFER-SOTA-029-BLOCKED.
++
++This module proves only the reusable local endpoint/cache/logprob substrate.
++It deliberately stops before downstream verifier experiments so a clean
++runtime gate cannot be confused with a benchmark result.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++import datetime as dt
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import shutil
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct execution
++    sys.path.insert(0, str(REPO_ROOT))
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - direct execution
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.inference.sota_models import cached_sota_pair, resolve_cached_gguf  # noqa: E402
++from scripts import experiment_3013_sota_gguf_logprob_telemetry_preflight_v1 as exp3013  # noqa: E402
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++ModelResolver = Callable[[str, str], str | None]
++CachedPairFn = Callable[..., list[dict[str, Any]] | None]
++PreconditionProbe = Callable[[Path, Mapping[str, str]], JsonDict]
++EndpointProbe = Callable[[list[str], float], JsonDict]
++EndpointSample = Callable[[str, float], JsonDict]
++CacheSample = Callable[[int, str, JsonDict], JsonDict]
++ServerFinder = Callable[[Mapping[str, str]], JsonDict]
++FreePort = Callable[[str], JsonDict]
++ServerStart = Callable[[list[str], dict[str, str], Path], Any]
++ServerCleanup = Callable[[Any], JsonDict]
++DurationFloorProbe = Callable[..., JsonDict]
++AdversarialVerify = Callable[[Path], JsonDict]
++Clock = Callable[[], float]
++
++EXPERIMENT_ID = "exp5124-clean-sota-runtime-provenance-v470"
++EXPERIMENT_NUMERIC_ID = 5124
++EXPERIMENT_NAME = "experiment_5124_clean_sota_runtime_provenance"
++MILESTONE = "2026.07.470"
++SCHEMA = "carnot.experiment_5124_clean_sota_runtime_provenance.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5124_clean_sota_runtime_provenance_v470.json"
++CACHE_RELATIVE_PATH = "results/experiment_5124_clean_sota_runtime_provenance_v470.jsonl"
++RAW_LOG_RELATIVE_PATH = "results/raw/experiment_5124_clean_sota_runtime_provenance/llamacpp_server.log"
++DEFAULT_PREFERRED_QUANT = "Q4_K_M"
++DEFAULT_ENDPOINTS = ("http://127.0.0.1:8080",)
++DEFAULT_ENDPOINT_TIMEOUT_S = 5.0
++DEFAULT_SERVER_START_TIMEOUT_S = 120.0
++DEFAULT_DURATION_FLOOR_S = 60.0
++DEFAULT_PROMPT = (
++    "Compute 19 * 23, state the arithmetic result, and add the phrase "
++    "exp5124 runtime provenance live."
++)
++RANDOM_SEED = 20260701
++INFERENCE_SUBSTRATE = "local_sota_gguf_llamacpp_runtime_or_blocked"
++SUCCESS_VERDICT = "success_clean_sota_runtime_provenance_ready"
++BLOCKED_PAIR_VERDICT = "blocked_clean_sota_runtime_provenance_cached_pair_unavailable"
++BLOCKED_RUNTIME_VERDICT = "blocked_clean_sota_runtime_provenance_runtime_evidence_missing"
++BLOCKED_ADVERSARIAL_VERDICT = "blocked_clean_sota_runtime_provenance_adversarial_flag"
++CACHE_ROW_SCHEMA = "carnot.experiment_5124_clean_sota_runtime_provenance.row.v1"
++
++MANDATED_MODEL_IDS: tuple[str, ...] = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++)
++MODEL_NAMES = {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": "Qwen3.6-35B-A3B",
++    "unsloth/gemma-4-31B-it-GGUF": "Gemma4-31B-it",
++    "unsloth/gemma-4-26B-A4B-it-GGUF": "Gemma4-26B-A4B-it",
++}
++MODEL_ROLES = {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": "flagship_moe",
++    "unsloth/gemma-4-31B-it-GGUF": "flagship_dense",
++    "unsloth/gemma-4-26B-A4B-it-GGUF": "middle_moe",
++}
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "experiment_id": {"principle": "traceability"},
++    "milestone": {"principle": "milestone accountability"},
++    "honest_verdict": {"principle": "terminal verdict with complete_/success_/blocked_ prefix"},
++    "inference_substrate": {"principle": "substrate honesty"},
++    "duration_s": {"principle": "timing accountability"},
++    "MODEL_SPECS": {"principle": "mandated local SOTA model provenance"},
++    "cached_sota_pair_attempted": {"principle": "local-first discipline"},
++    "gguf_paths": {"principle": "loader-path accountability"},
++    "completion_proof": {"principle": "live response evidence"},
++    "logprob_proof": {"principle": "process telemetry evidence"},
++    "cache_ready": {"principle": "reusable substrate"},
++    "cache_receipts": {"principle": "cache provenance"},
++    "endpoint_lifetime_s": {"principle": "duration-floor evidence"},
++    "request_response_transcript": {"principle": "reproducibility"},
++    "duration_floor_evidence": {"principle": "adversarial verification readiness"},
++    "adversarial_verify_passed": {"principle": "no quarantined runtime headline"},
++    "sota_runtime_clean": {"principle": "structured downstream gate"},
++    "conductor_modified": {"principle": "conductor immutability"},
++    "tests_run": {"principle": "verification evidence"},
++}
++REQUIRED_ARTIFACT_FIELDS: tuple[str, ...] = tuple(FIELD_PRINCIPLES)
++
++
++def _utc_now() -> str:
++    return dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def _sha256_payload(payload: Any) -> str:
++    return "sha256:" + hashlib.sha256(_json_dumps(payload).encode("utf-8")).hexdigest()
++
++
++def _sha256_file(path: Path) -> str | None:
++    if not path.exists() or not path.is_file():
++        return None
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _finite_float(value: Any) -> float | None:
++    if value is None or isinstance(value, bool):
++        return None
++    try:
++        parsed = float(value)
++    except (TypeError, ValueError):
++        return None
++    return parsed if math.isfinite(parsed) else None
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def write_jsonl(path: Path, rows: Sequence[JsonMap]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "".join(json.dumps(row, sort_keys=True, ensure_ascii=True) + "\n" for row in rows),
++        encoding="utf-8",
++    )
++
++
++def read_jsonl_rows(path: Path) -> list[JsonDict]:
++    if not path.exists():
++        return []
++    rows: list[JsonDict] = []
++    for line in path.read_text(encoding="utf-8").splitlines():
++        if line.strip():
++            loaded = json.loads(line)
++            if isinstance(loaded, dict):
++                rows.append(loaded)
++    return rows
++
++
++def default_precondition_probe(root: Path, env: Mapping[str, str]) -> JsonDict:  # pragma: no cover
++    del env
++    cuda_available = False
++    gpu_count = 0
++    try:
++        import torch
++
++        cuda_available = bool(torch.cuda.is_available())
++        gpu_count = int(torch.cuda.device_count())
++    except Exception:
++        pass
++    disk = shutil.disk_usage(root)
++    return {
++        "cuda_status": {"cuda_available": cuda_available, "gpu_count": gpu_count},
++        "llama_cpp_python": _llama_cpp_import_status(),
++        "disk_ram": {
++            "disk_free_bytes": int(disk.free),
++            "disk_free_gib": round(disk.free / (1024**3), 3),
++        },
++    }
++
++
++def _llama_cpp_import_status() -> JsonDict:  # pragma: no cover
++    try:
++        import llama_cpp
++
++        return {
++            "available": True,
++            "version": getattr(llama_cpp, "__version__", None),
++            "detail": "llama_cpp import ok",
++        }
++    except Exception as exc:
++        return {"available": False, "version": None, "detail": f"{type(exc).__name__}: {exc}"}
++
++
++def default_endpoint_sample(endpoint: str, timeout_s: float) -> JsonDict:  # pragma: no cover
++    route = endpoint.rstrip("/") + "/completion"
++    payload = {
++        "prompt": DEFAULT_PROMPT,
++        "n_predict": exp3013.SAMPLE_MAX_TOKENS,
++        "temperature": 0.0,
++        "seed": RANDOM_SEED,
++        "n_probs": exp3013.LOGPROBS_REQUESTED,
++    }
++    try:
++        status, parsed = exp3013._http_post_json(route, payload, timeout_s)
++    except Exception as exc:
++        return _empty_sample(route=route, error=exp3013._http_error_detail(exc))
++    parsed_sample = exp3013._parse_endpoint_sample_payload(parsed)
++    text = str(parsed_sample["text"]).strip()
++    token_logprobs = list(parsed_sample["token_logprobs"])
++    top_logprobs = list(parsed_sample["top_logprobs"])
++    if 200 <= status < 300 and text:
++        return {
++            "ready": True,
++            "route": route,
++            "status": status,
++            "completion_text": text,
++            "logprob_ready": bool(token_logprobs),
++            "top_logprob_ready": bool(top_logprobs),
++            "confidence_ready": False,
++            "telemetry_signal": "top_logprobs" if top_logprobs else None,
++            "evidence": {
++                "token_logprob_count": len(token_logprobs),
++                "top_logprob_row_count": len(top_logprobs),
++                "token_logprobs": token_logprobs[:8],
++                "top_logprobs": top_logprobs[:4],
++                "raw_response_keys": sorted(parsed.keys()) if isinstance(parsed, Mapping) else [],
++            },
++            "error": None,
++        }
++    return _empty_sample(route=route, status=status, error="empty completion from endpoint")
++
++
++def default_cache_sample(row_index: int, endpoint: str, selected_model: JsonDict) -> JsonDict:  # pragma: no cover
++    del selected_model
++    route = endpoint.rstrip("/") + "/completion"
++    payload = {
++        "prompt": f"Exp5124 cache row {row_index}: compute 19 * 23 and answer briefly.",
++        "n_predict": 24,
++        "temperature": 0.0,
++        "seed": RANDOM_SEED + row_index,
++        "n_probs": exp3013.LOGPROBS_REQUESTED,
++    }
++    try:
++        status, parsed = exp3013._http_post_json(route, payload, DEFAULT_ENDPOINT_TIMEOUT_S)
++    except Exception as exc:
++        return _empty_sample(route=route, error=exp3013._http_error_detail(exc))
++    parsed_sample = exp3013._parse_endpoint_sample_payload(parsed)
++    return {
++        "ready": bool(200 <= status < 300 and parsed_sample["text"]),
++        "route": route,
++        "status": status,
++        "completion_text": str(parsed_sample["text"]),
++        "logprob_ready": bool(parsed_sample["token_logprobs"]),
++        "top_logprob_ready": bool(parsed_sample["top_logprobs"]),
++        "confidence_ready": False,
++        "telemetry_signal": "top_logprobs" if parsed_sample["top_logprobs"] else None,
++        "evidence": {
++            "token_logprob_count": len(parsed_sample["token_logprobs"]),
++            "top_logprob_row_count": len(parsed_sample["top_logprobs"]),
++            "token_logprobs": list(parsed_sample["token_logprobs"])[:8],
++            "top_logprobs": list(parsed_sample["top_logprobs"])[:4],
++            "raw_response_keys": sorted(parsed.keys()) if isinstance(parsed, Mapping) else [],
++        },
++        "error": None,
++    }
++
++
++def default_adversarial_verify(path: Path) -> JsonDict:  # pragma: no cover
++    from scripts import adversarial_verify
++
++    report = adversarial_verify.verify_artifact(path)
++    return report if isinstance(report, dict) else {"flags": []}
++
++
++def _empty_sample(route: str | None = None, status: int | None = None, error: str | None = None) -> JsonDict:
++    return {
++        "ready": False,
++        "route": route,
++        "status": status,
++        "completion_text": "",
++        "logprob_ready": False,
++        "top_logprob_ready": False,
++        "confidence_ready": False,
++        "telemetry_signal": None,
++        "evidence": {
++            "token_logprob_count": 0,
++            "top_logprob_row_count": 0,
++            "token_logprobs": [],
++            "top_logprobs": [],
++            "raw_response_keys": [],
++        },
++        "error": error,
++    }
++
++
++def _recorded_env_vars(env: Mapping[str, str]) -> JsonDict:
++    keys = (
++        "CUDA_VISIBLE_DEVICES",
++        "CARNOT_5124_ENDPOINTS",
++        "CARNOT_LLAMA_ENDPOINTS",
++        "CARNOT_JUDGE_ENDPOINTS",
++        "CARNOT_JUDGE_SERVER_URL",
++        "CARNOT_LLAMA_SERVER",
++        "LLAMA_SERVER",
++        "CARNOT_LLAMA_SERVER_ARGS",
++        "CARNOT_LLAMA_SERVER_START_TIMEOUT_S",
++        "HUGGINGFACE_HUB_CACHE",
++    )
++    return {key: env[key] for key in keys if key in env}
++
++
++def _default_endpoint_list(env: Mapping[str, str]) -> list[str]:
++    raw = (
++        env.get("CARNOT_5124_ENDPOINTS")
++        or env.get("CARNOT_LLAMA_ENDPOINTS")
++        or env.get("CARNOT_JUDGE_ENDPOINTS")
++        or env.get("CARNOT_JUDGE_SERVER_URL")
++        or ""
++    )
++    endpoints = [part.strip().rstrip("/") for part in raw.split(",") if part.strip()]
++    return endpoints or list(DEFAULT_ENDPOINTS)
++
++
++def _normalize_endpoints(endpoints: Sequence[str] | None, env: Mapping[str, str]) -> list[str]:
++    raw = list(endpoints) if endpoints is not None else _default_endpoint_list(env)
++    normalized: list[str] = []
++    for endpoint in raw:
++        value = str(endpoint).strip().rstrip("/")
++        if value and value not in normalized:
++            normalized.append(value)
++    return normalized or list(DEFAULT_ENDPOINTS)
++
++
++def _file_evidence(path: str | None) -> JsonDict:
++    p = Path(path) if path else None
++    exists = bool(p and p.exists() and p.is_file())
++    return {
++        "exists": exists,
++        "path": str(p) if p is not None else None,
++        "size_bytes": p.stat().st_size if exists and p is not None else None,
++        "sha256": _sha256_file(p) if exists and p is not None else None,
++    }
++
++
++def resolve_model_specs(
++    *,
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    cached_pair_fn: CachedPairFn = cached_sota_pair,
++    preferred_quant: str = DEFAULT_PREFERRED_QUANT,
++) -> tuple[list[JsonDict], dict[str, str | None], JsonDict, list[JsonDict]]:
++    pair_error = None
++    try:
++        pair_rows = cached_pair_fn(gpu_indices=(0, 1), preferred_quant=preferred_quant) or []
++    except Exception as exc:  # pragma: no cover - defensive external resolver guard
++        pair_rows = []
++        pair_error = f"{type(exc).__name__}: {exc}"
++    pair_by_hf = {str(row.get("hf_id")): dict(row) for row in pair_rows if isinstance(row, Mapping)}
++    specs: list[JsonDict] = []
++    gguf_paths: dict[str, str | None] = {}
++    usable: list[JsonDict] = []
++    for hf_id in MANDATED_MODEL_IDS:
++        pair_row = pair_by_hf.get(hf_id, {})
++        path = pair_row.get("model_path") or model_resolver(hf_id, preferred_quant)
++        evidence = _file_evidence(str(path) if path else None)
++        cache_status = "resolved" if path and evidence["exists"] else "missing"
++        spec = {
++            "name": pair_row.get("name") or MODEL_NAMES[hf_id],
++            "role": MODEL_ROLES[hf_id],
++            "hf_id": hf_id,
++            "gpu": pair_row.get("gpu"),
++            "preferred_quant": pair_row.get("preferred_quant") or preferred_quant,
++            "model_path": str(path) if path else None,
++            "resolved_path": str(path) if path else None,
++            "cache_status": cache_status,
++            "from_cached_sota_pair": hf_id in pair_by_hf,
++            "loader": "llama.cpp",
++            "file_evidence": evidence,
++            "missing_diagnostic": None if cache_status == "resolved" else f"missing cached GGUF for {hf_id}",
++        }
++        specs.append(spec)
++        gguf_paths[hf_id] = spec["model_path"] if cache_status == "resolved" else None
++        if cache_status == "resolved":
++            usable.append(
++                {
++                    "hf_id": hf_id,
++                    "name": spec["name"],
++                    "role": spec["role"],
++                    "gpu": spec["gpu"],
++                    "model_path": spec["model_path"],
++                    "size_bytes": evidence["size_bytes"],
++                }
++            )
++    pair = {
++        "attempted": True,
++        "preferred_quant": preferred_quant,
++        "rows": list(pair_rows),
++        "error": pair_error,
++        "ready": len(pair_rows) >= 2 and all(row.get("model_path") for row in pair_rows[:2]),
++    }
++    return specs, gguf_paths, pair, usable
++
++
++def _select_bringup_model(usable: Sequence[JsonMap]) -> JsonDict | None:
++    candidates = [dict(row) for row in usable if row.get("model_path")]
++    if not candidates:
++        return None
++    return min(
++        candidates,
++        key=lambda row: (
++            row.get("size_bytes") is None,
++            int(row.get("size_bytes") or 0),
++            str(row.get("hf_id") or ""),
++        ),
++    )
++
++
++def _sample_evidence(sample: JsonMap) -> JsonDict:
++    evidence = sample.get("evidence") if isinstance(sample.get("evidence"), Mapping) else {}
++    token_logprobs = [
++        float(value)
++        for value in evidence.get("token_logprobs") or []
++        if _finite_float(value) is not None
++    ]
++    top_logprobs = [
++        {str(token): float(value) for token, value in row.items() if _finite_float(value) is not None}
++        for row in evidence.get("top_logprobs") or []
++        if isinstance(row, Mapping)
++    ]
++    return {
++        "token_logprob_count": int(evidence.get("token_logprob_count") or len(token_logprobs)),
++        "top_logprob_row_count": int(evidence.get("top_logprob_row_count") or len(top_logprobs)),
++        "token_logprobs": token_logprobs,
++        "top_logprobs": top_logprobs,
++        "raw_response_keys": list(evidence.get("raw_response_keys") or []),
++    }
++
++
++def _has_logprob_evidence(sample: JsonMap) -> bool:
++    evidence = _sample_evidence(sample)
++    return bool(evidence["token_logprob_count"] > 0 or evidence["top_logprob_row_count"] > 0)
++
++
++def _completion_proof(sample: JsonMap, selected_model: JsonMap | None) -> JsonDict:
++    text = str(sample.get("completion_text") or "")
++    ready = bool(sample.get("ready") and text.strip())
++    return {
++        "ready": ready,
++        "prompt": DEFAULT_PROMPT,
++        "route": sample.get("route"),
++        "status": sample.get("status"),
++        "text": text if ready else "",
++        "model_hf_id": (selected_model or {}).get("hf_id"),
++        "model_path": (selected_model or {}).get("model_path"),
++        "error": sample.get("error"),
++    }
++
++
++def _logprob_proof(sample: JsonMap) -> JsonDict:
++    evidence = _sample_evidence(sample)
++    return {
++        "ready": bool(evidence["token_logprob_count"] > 0 or evidence["top_logprob_row_count"] > 0),
++        "route": sample.get("route"),
++        "status": sample.get("status"),
++        "telemetry_signal": sample.get("telemetry_signal"),
++        "token_logprob_count": evidence["token_logprob_count"],
++        "top_logprob_row_count": evidence["top_logprob_row_count"],
++        "token_logprobs": evidence["token_logprobs"],
++        "top_logprobs": evidence["top_logprobs"],
++        "raw_response_keys": evidence["raw_response_keys"],
++        "error": sample.get("error"),
++    }
++
++
++def build_cache_row(row_index: int, sample: JsonMap, endpoint: str, selected_model: JsonMap) -> JsonDict:
++    evidence = _sample_evidence(sample)
++    completion_text = str(sample.get("completion_text") or "")
++    prompt = f"exp5124-cache-smoke-row-{row_index}"
++    return {
++        "schema": CACHE_ROW_SCHEMA,
++        "row_id": f"exp5124-cache-smoke-{row_index:04d}",
++        "row_index": int(row_index),
++        "endpoint_used": str(sample.get("route") or endpoint.rstrip("/") + "/completion"),
++        "model_hf_id": str(selected_model.get("hf_id") or ""),
++        "gguf_path": str(selected_model.get("model_path") or ""),
++        "prompt_hash": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
++        "completion_text": completion_text,
++        "completion_hash": hashlib.sha256(completion_text.encode("utf-8")).hexdigest(),
++        "token_logprobs": evidence["token_logprobs"],
++        "top_logprobs": evidence["top_logprobs"],
++        "token_logprob_count": evidence["token_logprob_count"],
++        "top_logprob_row_count": evidence["top_logprob_row_count"],
++        "random_seed": RANDOM_SEED + int(row_index),
++        "source_sample_status": sample.get("status"),
++        "telemetry_signal": sample.get("telemetry_signal"),
++    }
++
++
++def validate_cache_row(row: JsonMap) -> list[str]:
++    errors: list[str] = []
++    if row.get("schema") != CACHE_ROW_SCHEMA:
++        errors.append("schema")
++    for field in ("row_id", "endpoint_used", "model_hf_id", "gguf_path", "prompt_hash", "completion_hash"):
++        if not str(row.get(field) or ""):
++            errors.append(field)
++    if str(row.get("model_hf_id") or "") not in MANDATED_MODEL_IDS:
++        errors.append("model_hf_id")
++    if int(row.get("token_logprob_count") or 0) <= 0 and int(row.get("top_logprob_row_count") or 0) <= 0:
++        errors.append("logprob_evidence")
++    return sorted(set(errors))
++
++
++def _write_read_cache(cache_path: Path, rows: Sequence[JsonMap], *, write: bool) -> JsonDict:
++    if not rows:
++        return {
++            "ready": False,
++            "path": cache_path.as_posix(),
++            "rows_written": 0,
++            "rows_read": 0,
++            "readback_matches": False,
++            "sha256": None,
++            "errors": ["no_rows"],
++        }
++    if write:
++        write_jsonl(cache_path, rows)
++    read_rows = read_jsonl_rows(cache_path) if cache_path.exists() else []
++    rows_written = len(rows) if write else 0
++    readback_matches = read_rows == list(rows)
++    return {
++        "ready": bool(rows_written == len(rows) and readback_matches),
++        "path": cache_path.as_posix(),
++        "rows_written": rows_written,
++        "rows_read": len(read_rows),
++        "readback_matches": readback_matches,
++        "sha256": _sha256_file(cache_path),
++        "sample_row_ids": [str(row.get("row_id")) for row in read_rows[:3]],
++        "errors": [] if readback_matches else ["cache_readback_mismatch"],
++    }
++
++
++def _duration_floor_from_measured(
++    *,
++    live_ready: bool,
++    duration_s: float,
++    duration_floor_s: float,
++    external_evidence: JsonMap | None,
++) -> JsonDict:
++    if not live_ready:
++        return {
++            "completed": False,
++            "target_duration_s": float(duration_floor_s),
++            "duration_after_s": float(duration_s),
++            "reason": "no_live_completion_logprob_claim",
++        }
++    if external_evidence is not None:
++        return dict(external_evidence)
++    completed = float(duration_s) >= float(duration_floor_s)
++    return {
++        "completed": completed,
++        "target_duration_s": float(duration_floor_s),
++        "duration_after_s": float(duration_s),
++        "reason": "measured_wall_clock_duration_met_floor"
++        if completed
++        else "measured_wall_clock_duration_below_floor",
++    }
++
++
++def _critical_flags(report: JsonMap) -> list[JsonDict]:
++    flags = report.get("flags")
++    if not isinstance(flags, list):
++        return []
++    return [
++        dict(flag)
++        for flag in flags
++        if isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++    ]
++
++
++def build_root_cause_tree(
++    *,
++    pair_ready: bool,
++    completion_ready: bool,
++    logprob_ready: bool,
++    cache_ready: bool,
++    duration_floor_ready: bool,
++    critical_flags: Sequence[JsonMap],
++    runtime_detail: str | None,
++) -> JsonDict:
++    tree: JsonDict = {
++        "cached_sota_pair": {
++            "present": not pair_ready,
++            "detail": None if pair_ready else "cached_sota_pair() did not return two model_path rows",
++        },
++        "completion": {
++            "present": not completion_ready,
++            "detail": None if completion_ready else runtime_detail or "completion proof missing",
++        },
++        "logprob": {
++            "present": not logprob_ready,
++            "detail": None if logprob_ready else runtime_detail or "token/top-logprob proof missing",
++        },
++        "cache": {
++            "present": not cache_ready,
++            "detail": None if cache_ready else "cache write/read receipt missing",
++        },
++        "duration_floor": {
++            "present": not duration_floor_ready,
++            "detail": None if duration_floor_ready else "live runtime did not clear duration floor",
++        },
++        "adversarial_verify": {
++            "present": bool(critical_flags),
++            "critical_flags": [dict(flag) for flag in critical_flags],
++        },
++    }
++    if all(not row["present"] for row in tree.values()):
++        tree["summary"] = "clean_runtime_provenance"
++    else:
++        priority = (
++            "cached_sota_pair",
++            "completion",
++            "logprob",
++            "cache",
++            "duration_floor",
++            "adversarial_verify",
++        )
++        tree["summary"] = next(f"blocked_{key}" for key in priority if tree[key]["present"])
++    return tree
++
++
++def _reproducibility_checksum(payload: JsonMap) -> str:
++    basis = {
++        "experiment_id": payload.get("experiment_id"),
++        "milestone": payload.get("milestone"),
++        "MODEL_SPECS": payload.get("MODEL_SPECS"),
++        "gguf_paths": payload.get("gguf_paths"),
++        "completion_proof": payload.get("completion_proof"),
++        "logprob_proof": payload.get("logprob_proof"),
++        "cache_receipts": payload.get("cache_receipts"),
++        "duration_floor_evidence": payload.get("duration_floor_evidence"),
++        "random_seed": payload.get("random_seed"),
++    }
++    return _sha256_payload(basis)
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    errors = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    principles = artifact.get("field_principles", {})
++    errors.extend([f"field_principles.{field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in principles])
++    ids = [row.get("hf_id") for row in artifact.get("MODEL_SPECS", []) if isinstance(row, Mapping)]
++    checks = (
++        ("schema", artifact.get("schema") != SCHEMA),
++        ("experiment_id", artifact.get("experiment_id") != EXPERIMENT_ID),
++        ("milestone", artifact.get("milestone") != MILESTONE),
++        ("inference_substrate", artifact.get("inference_substrate") != INFERENCE_SUBSTRATE),
++        ("conductor_modified", artifact.get("conductor_modified") is not False),
++        ("MODEL_SPECS", ids != list(MANDATED_MODEL_IDS)),
++        (
++            "clean_gate_mismatch",
++            bool(artifact.get("sota_runtime_clean"))
++            != (
++                bool((artifact.get("completion_proof") or {}).get("ready"))
++                and bool((artifact.get("logprob_proof") or {}).get("ready"))
++                and bool(artifact.get("cache_ready"))
++                and bool(artifact.get("adversarial_verify_passed"))
++            ),
++        ),
++    )
++    errors.extend(name for name, failed in checks if failed)
++    return sorted(set(errors))
++
++
++def _default_tests_run() -> list[JsonDict]:
++    return [
++        {
++            "command": ".venv/bin/pytest tests/python/test_experiment_5124_clean_sota_runtime_provenance.py -q",
++            "status": "expected_or_completed",
++        },
++        {
++            "command": ".venv/bin/pytest tests/python/test_experiment_5124_clean_sota_runtime_provenance.py --cov=python/carnot/experiment_5124_clean_sota_runtime_provenance.py --cov-report=term-missing --cov-fail-under=100 -q",
++            "status": "expected_or_completed",
++        },
++        {"command": ".venv/bin/pytest tests/python -q", "status": "expected_or_completed"},
++        {
++            "command": "python scripts/adversarial_verify.py results/experiment_5124_clean_sota_runtime_provenance_v470.json",
++            "status": "expected_or_completed",
++        },
++    ]
++
++
++def _maybe_start_server_sample(  # pragma: no cover - host/process dependent
++    *,
++    root: Path,
++    env: Mapping[str, str],
++    selected_model: JsonDict,
++    server: JsonMap,
++    free: JsonMap,
++    endpoint_probe: EndpointProbe,
++    endpoint_sample: EndpointSample,
++    endpoint_timeout_s: float,
++    server_start_timeout_s: float,
++    server_start: ServerStart,
++    server_cleanup: ServerCleanup,
++) -> tuple[str, JsonDict, JsonDict, list[str], list[str] | None, int | None, Any, float | None]:
++    endpoint_url = str(free["endpoint_url"])
++    log_path = root / RAW_LOG_RELATIVE_PATH
++    command = exp3013._build_server_command(
++        server_path=str(server["selected_path"]),
++        model_path=str(selected_model["model_path"]),
++        host=str(free["host"]),
++        port=int(free["port"]),
++        extra_args=env.get("CARNOT_LLAMA_SERVER_ARGS"),
++    )
++    errors: list[str] = []
++    process = None
++    server_started_wall: float | None = None
++    sample = _empty_sample(error="server bring-up did not produce sample")
++    endpoint_summary: JsonDict = {"completion_ready": False, "selected_endpoint": None}
++    del server_cleanup
++    try:
++        process = server_start(command, dict(env), log_path)
++        server_started_wall = time.monotonic()
++        deadline = time.monotonic() + server_start_timeout_s
++        while time.monotonic() <= deadline:
++            endpoint_summary = endpoint_probe([endpoint_url], endpoint_timeout_s)
++            if endpoint_summary.get("completion_ready"):
++                sample = endpoint_sample(endpoint_url, endpoint_timeout_s)
++                break
++            if getattr(process, "poll", lambda: None)() is not None:
++                errors.append("server process exited before endpoint became ready")
++                break
++            time.sleep(min(1.0, max(0.0, deadline - time.monotonic())))
++    except Exception as exc:
++        errors.append(f"{type(exc).__name__}: {exc}")
++    return (
++        endpoint_url,
++        endpoint_summary,
++        sample,
++        errors,
++        command,
++        getattr(process, "pid", None) if process is not None else None,
++        process,
++        server_started_wall,
++    )
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    artifact_path: Path | None = None,
++    cache_path: Path | None = None,
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    cached_pair_fn: CachedPairFn = cached_sota_pair,
++    precondition_probe: PreconditionProbe = default_precondition_probe,
++    endpoint_probe: EndpointProbe = exp3013._probe_endpoint_summary,
++    endpoint_sample: EndpointSample = default_endpoint_sample,
++    cache_sample: CacheSample = default_cache_sample,
++    server_finder: ServerFinder = exp3013._llama_server_availability,
++    free_port: FreePort = exp3013._find_free_port,
++    server_start: ServerStart = exp3013._start_llama_server_process,
++    server_cleanup: ServerCleanup = exp3013._cleanup_llama_server_process,
++    duration_floor_probe: DurationFloorProbe = exp3013._run_duration_floor_endpoint_probe,
++    adversarial_verify: AdversarialVerify = default_adversarial_verify,
++    endpoints: Sequence[str] | None = None,
++    env: Mapping[str, str] | None = None,
++    now: Clock = time.monotonic,
++    duration_floor_s: float = DEFAULT_DURATION_FLOOR_S,
++    endpoint_timeout_s: float = DEFAULT_ENDPOINT_TIMEOUT_S,
++    server_start_timeout_s: float = DEFAULT_SERVER_START_TIMEOUT_S,
++    tests_run: Sequence[JsonMap] | None = None,
++    write: bool = True,
++) -> JsonDict:
++    root = Path(root)
++    destination = Path(artifact_path) if artifact_path else root / RESULT_RELATIVE_PATH
++    cache_destination = Path(cache_path) if cache_path else root / CACHE_RELATIVE_PATH
++    merged_env = dict(os.environ)
++    if env:
++        merged_env.update(env)
++    started_s = now()
++    observed_started_wall = time.monotonic()
++    started_at = _utc_now()
++    model_specs, gguf_paths, pair, usable = resolve_model_specs(
++        model_resolver=model_resolver,
++        cached_pair_fn=cached_pair_fn,
++    )
++    preflight = precondition_probe(root, merged_env)
++    selected_model = _select_bringup_model(usable)
++    server = server_finder(merged_env)
++    free = free_port("127.0.0.1")
++    normalized_endpoints = _normalize_endpoints(endpoints, merged_env)
++    endpoint_summary: JsonDict = {
++        "candidate_endpoints": normalized_endpoints,
++        "selected_endpoint": None,
++        "completion_ready": False,
++        "top_logprob_ready": False,
++        "confidence_ready": False,
++        "telemetry_signal": None,
++        "probes": [],
++    }
++    endpoint_url = normalized_endpoints[0]
++    sample = _empty_sample(error="cached_sota_pair unavailable")
++    server_command = None
++    server_pid = None
++    server_errors: list[str] = []
++    shutdown_behavior: JsonDict = {"started_by_preflight": False, "terminated": False}
++    startup_log = {"path": (root / RAW_LOG_RELATIVE_PATH).as_posix(), "exists": False, "tail": ""}
++    server_process = None
++    server_started_wall: float | None = None
++    floor_probe_result: JsonDict | None = None
++    pair_ready = bool(pair["ready"])
++
++    if pair_ready:
++        endpoint_summary = endpoint_probe(normalized_endpoints, endpoint_timeout_s)
++        endpoint_url = str(endpoint_summary.get("selected_endpoint") or normalized_endpoints[0])
++        if endpoint_summary.get("completion_ready"):
++            sample = endpoint_sample(endpoint_url, endpoint_timeout_s)
++        elif selected_model and server.get("available") and free.get("available") and free.get("endpoint_url"):
++            (
++                endpoint_url,
++                endpoint_summary,
++                sample,
++                server_errors,
++                server_command,
++                server_pid,
++                server_process,
++                server_started_wall,
++            ) = _maybe_start_server_sample(
++                root=root,
++                env=merged_env,
++                selected_model=selected_model,
++                server=server,
++                free=free,
++                endpoint_probe=endpoint_probe,
++                endpoint_sample=endpoint_sample,
++                endpoint_timeout_s=endpoint_timeout_s,
++                server_start_timeout_s=server_start_timeout_s,
++                server_start=server_start,
++                server_cleanup=server_cleanup,
++            )
++        else:
++            sample = _empty_sample(
++                route=endpoint_url.rstrip("/") + "/completion",
++                error=str(server.get("missing_diagnostic") or "endpoint unavailable"),
++            )
++
++    completion_ready = bool(sample.get("ready") and str(sample.get("completion_text") or "").strip())
++    logprob_ready = _has_logprob_evidence(sample)
++    live_ready = bool(pair_ready and completion_ready and logprob_ready)
++    if live_ready and duration_floor_s > 0.0 and now is time.monotonic:
++        floor_probe_result = duration_floor_probe(
++            endpoint_url,
++            run_started_s=started_s,
++            target_duration_s=duration_floor_s,
++            timeout_s=endpoint_timeout_s,
++            max_probes=20,
++        )
++
++    cache_rows: list[JsonDict] = []
++    cache_row_errors: list[str] = []
++    if live_ready and selected_model is not None:
++        cache_probe = cache_sample(0, endpoint_url, selected_model)
++        if _has_logprob_evidence(cache_probe):
++            row = build_cache_row(0, cache_probe, endpoint_url, selected_model)
++            cache_row_errors = validate_cache_row(row)
++            if not cache_row_errors:
++                cache_rows.append(row)
++        else:
++            cache_row_errors = ["cache_sample_missing_logprobs"]
++    cache_receipts = _write_read_cache(cache_destination, cache_rows, write=write)
++
++    if server_process is not None:
++        shutdown_behavior = server_cleanup(server_process)
++        log_path = root / RAW_LOG_RELATIVE_PATH
++        startup_log = {
++            "path": log_path.as_posix(),
++            "exists": log_path.exists(),
++            "tail": exp3013._tail_file(log_path),
++        }
++
++    finished_s = now()
++    observed_finished_wall = time.monotonic()
++    finished_at = _utc_now()
++    duration_s = round(float(finished_s - started_s), 6)
++    if now is time.monotonic and server_started_wall is not None:
++        endpoint_lifetime_s = round(float(observed_finished_wall - server_started_wall), 6)
++    elif now is time.monotonic:
++        endpoint_lifetime_s = round(float(observed_finished_wall - observed_started_wall), 6)
++    else:
++        endpoint_lifetime_s = duration_s if completion_ready else 0.0
++    duration_floor_evidence = _duration_floor_from_measured(
++        live_ready=live_ready,
++        duration_s=duration_s,
++        duration_floor_s=duration_floor_s,
++        external_evidence=floor_probe_result,
++    )
++    duration_floor_ready = bool(duration_floor_evidence.get("completed"))
++    cache_ready = bool(cache_receipts.get("ready") and not cache_row_errors)
++    completion_proof = _completion_proof(sample, selected_model)
++    logprob_proof = _logprob_proof(sample)
++    runtime_detail = str(sample.get("error") or "; ".join(server_errors) or "")
++    preliminary_clean = bool(live_ready and cache_ready and duration_floor_ready)
++    preliminary_verdict = SUCCESS_VERDICT if preliminary_clean else (
++        BLOCKED_PAIR_VERDICT if not pair_ready else BLOCKED_RUNTIME_VERDICT
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_numeric_id": EXPERIMENT_NUMERIC_ID,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "spec_refs": [
++            "REQ-INFER-SOTA-029",
++            "SCENARIO-INFER-SOTA-029-CLEAN",
++            "SCENARIO-INFER-SOTA-029-BLOCKED",
++        ],
++        "result_path": destination.as_posix(),
++        "cache_path": cache_destination.as_posix(),
++        "started_at": started_at,
++        "finished_at": finished_at,
++        "honest_verdict": preliminary_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "preconditions_checked": {
++            "recorded_before_live_inference": True,
++            "cuda_status": preflight.get("cuda_status", {}),
++            "llama_cpp_python": preflight.get("llama_cpp_python", {}),
++            "llama_cpp_server": server,
++            "disk_ram": preflight.get("disk_ram", {}),
++            "free_port": free,
++            "environment_variables": _recorded_env_vars(merged_env),
++        },
++        "MODEL_SPECS": model_specs,
++        "model_specs": model_specs,
++        "cached_sota_pair_attempted": bool(pair["attempted"]),
++        "cached_sota_pair_result": pair,
++        "gguf_paths": gguf_paths,
++        "selected_model": selected_model,
++        "endpoint_url": endpoint_url,
++        "endpoint_summary": endpoint_summary,
++        "endpoint_lifetime_s": endpoint_lifetime_s,
++        "server_command": server_command,
++        "server_pid": server_pid,
++        "server_errors": server_errors,
++        "startup_log": startup_log,
++        "shutdown_behavior": shutdown_behavior,
++        "completion_proof": completion_proof,
++        "logprob_proof": logprob_proof,
++        "cache_ready": cache_ready,
++        "cache_receipts": cache_receipts,
++        "cache_row_errors": cache_row_errors,
++        "request_response_transcript": {
++            "completion_request": {
++                "endpoint": sample.get("route") or endpoint_url.rstrip("/") + "/completion",
++                "prompt": DEFAULT_PROMPT,
++                "max_tokens": exp3013.SAMPLE_MAX_TOKENS,
++                "logprobs_requested": exp3013.LOGPROBS_REQUESTED,
++            },
++            "completion_response": {
++                "status": sample.get("status"),
++                "text": sample.get("completion_text") if completion_ready else "",
++                "error": sample.get("error"),
++            },
++            "logprob_response": logprob_proof,
++        },
++        "duration_floor_evidence": duration_floor_evidence,
++        "root_cause_tree": build_root_cause_tree(
++            pair_ready=pair_ready,
++            completion_ready=completion_ready,
++            logprob_ready=logprob_ready,
++            cache_ready=cache_ready,
++            duration_floor_ready=duration_floor_ready,
++            critical_flags=[],
++            runtime_detail=runtime_detail,
++        ),
++        "flagged_adversarial": False,
++        "adversarial_verify_passed": False,
++        "adversarial_verify_report": {"flags": []},
++        "sota_runtime_clean": False,
++        "conductor_modified": False,
++        "tests_run": list(tests_run) if tests_run is not None else _default_tests_run(),
++        "field_principles": FIELD_PRINCIPLES,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = _reproducibility_checksum(artifact)
++    write_json(destination, artifact)
++    report = adversarial_verify(destination)
++    critical = _critical_flags(report)
++    artifact["adversarial_verify_report"] = report
++    artifact["adversarial_verify_passed"] = not critical
++    artifact["flagged_adversarial"] = bool(critical)
++    final_clean = bool(preliminary_clean and not critical)
++    artifact["sota_runtime_clean"] = final_clean
++    artifact["cache_ready"] = bool(cache_ready and not critical)
++    if final_clean:
++        artifact["honest_verdict"] = SUCCESS_VERDICT
++    elif critical:
++        artifact["honest_verdict"] = BLOCKED_ADVERSARIAL_VERDICT
++    artifact["root_cause_tree"] = build_root_cause_tree(
++        pair_ready=pair_ready,
++        completion_ready=completion_ready,
++        logprob_ready=logprob_ready,
++        cache_ready=bool(cache_ready and not critical),
++        duration_floor_ready=duration_floor_ready,
++        critical_flags=critical,
++        runtime_detail=runtime_detail,
++    )
++    artifact["reproducibility_checksum"] = _reproducibility_checksum(artifact)
++    if write:
++        write_json(destination, artifact)
++    return artifact
++
++
++def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=None)
++    parser.add_argument("--output", type=Path, default=None)
++    parser.add_argument("--cache", type=Path, default=None)
++    parser.add_argument("--endpoint", action="append", default=None)
++    parser.add_argument("--endpoint-timeout-s", type=float, default=DEFAULT_ENDPOINT_TIMEOUT_S)
++    parser.add_argument("--server-start-timeout-s", type=float, default=DEFAULT_SERVER_START_TIMEOUT_S)
++    parser.add_argument("--duration-floor-s", type=float, default=DEFAULT_DURATION_FLOOR_S)
++    return parser.parse_args(argv)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    args = _parse_args(argv)
++    run(
++        artifact_path=args.output,
++        cache_path=args.cache,
++        endpoints=args.endpoint,
++        endpoint_timeout_s=args.endpoint_timeout_s,
++        server_start_timeout_s=args.server_start_timeout_s,
++        duration_floor_s=args.duration_floor_s,
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5124_clean_sota_runtime_provenance_v470.json b/results/experiment_5124_clean_sota_runtime_provenance_v470.json
+new file mode 100644
+index 0000000000..2507779d80
+--- /dev/null
++++ b/results/experiment_5124_clean_sota_runtime_provenance_v470.json
+@@ -0,0 +1,588 @@
++{
++  "MODEL_SPECS": [
++    {
++      "cache_status": "resolved",
++      "file_evidence": {
++        "exists": true,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "size_bytes": 22134528992
++      },
++      "from_cached_sota_pair": true,
++      "gpu": 0,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "loader": "llama.cpp",
++      "missing_diagnostic": null,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "name": "Qwen3.6-35B-A3B",
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "role": "flagship_moe"
++    },
++    {
++      "cache_status": "resolved",
++      "file_evidence": {
++        "exists": true,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "size_bytes": 18323731456
++      },
++      "from_cached_sota_pair": false,
++      "gpu": null,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "loader": "llama.cpp",
++      "missing_diagnostic": null,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "name": "Gemma4-31B-it",
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "role": "flagship_dense"
++    },
++    {
++      "cache_status": "resolved",
++      "file_evidence": {
++        "exists": true,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "size_bytes": 16947539744
++      },
++      "from_cached_sota_pair": true,
++      "gpu": 1,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "loader": "llama.cpp",
++      "missing_diagnostic": null,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "name": "Gemma4-26B-A4B-it",
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "role": "middle_moe"
++    }
++  ],
++  "adversarial_verify_passed": true,
++  "adversarial_verify_report": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5124_clean_sota_runtime_provenance_v470.json",
++    "exp_id": "experiment_5124_clean_sota_runtime_provenance",
++    "flag_count": 0,
++    "flags": [],
++    "honest_verdict": "success_clean_sota_runtime_provenance_ready",
++    "loaded": true,
++    "max_severity": -1,
++    "title": ""
++  },
++  "cache_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5124_clean_sota_runtime_provenance_v470.jsonl",
++  "cache_ready": true,
++  "cache_receipts": {
++    "errors": [],
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5124_clean_sota_runtime_provenance_v470.jsonl",
++    "readback_matches": true,
++    "ready": true,
++    "rows_read": 1,
++    "rows_written": 1,
++    "sample_row_ids": [
++      "exp5124-cache-smoke-0000"
++    ],
++    "sha256": "sha256:be94101d4a7c69ebae63944afa1df1fdd656fd176d86718a86c290f517e15bb4"
++  },
++  "cache_row_errors": [],
++  "cached_sota_pair_attempted": true,
++  "cached_sota_pair_result": {
++    "attempted": true,
++    "error": null,
++    "preferred_quant": "Q4_K_M",
++    "ready": true,
++    "rows": [
++      {
++        "gpu": 0,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "name": "Qwen3.6-35B-A3B"
++      },
++      {
++        "gpu": 1,
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "name": "Gemma4-26B-A4B-it"
++      }
++    ]
++  },
++  "completion_proof": {
++    "error": null,
++    "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++    "prompt": "Compute 19 * 23, state the arithmetic result, and add the phrase exp5124 runtime provenance live.",
++    "ready": true,
++    "route": "http://127.0.0.1:59725/completion",
++    "status": 200,
++    "text": "<|channel>thought indeed<channel|>To compute 19 * 23, you can"
++  },
++  "conductor_modified": false,
++  "duration_floor_evidence": {
++    "completed": true,
++    "duration_after_s": 143.366125,
++    "error": null,
++    "probes": [],
++    "route": "http://127.0.0.1:59725/completion",
++    "target_duration_s": 60.0
++  },
++  "duration_s": 145.640749,
++  "endpoint_lifetime_s": 22.505432,
++  "endpoint_summary": {
++    "candidate_endpoints": [
++      "http://127.0.0.1:59725"
++    ],
++    "completion_ready": true,
++    "confidence_ready": false,
++    "duration_s": 0.388723,
++    "probes": [
++      {
++        "completion_probe": {
++          "detail": "completion returned non-empty content (7 chars)",
++          "ready": true,
++          "route": "http://127.0.0.1:59725/completion",
++          "status": 200
++        },
++        "endpoint": "http://127.0.0.1:59725",
++        "telemetry_probe": {
++          "detail": "top-logprob telemetry present",
++          "ready": true,
++          "route": "http://127.0.0.1:59725/completion",
++          "signal": "top_logprobs",
++          "status": 200
++        }
++      }
++    ],
++    "selected_endpoint": "http://127.0.0.1:59725",
++    "telemetry_signal": "top_logprobs",
++    "top_logprob_ready": true
++  },
++  "endpoint_url": "http://127.0.0.1:59725",
++  "experiment": "experiment_5124_clean_sota_runtime_provenance",
++  "experiment_id": "exp5124-clean-sota-runtime-provenance-v470",
++  "experiment_numeric_id": 5124,
++  "field_principles": {
++    "MODEL_SPECS": {
++      "principle": "mandated local SOTA model provenance"
++    },
++    "adversarial_verify_passed": {
++      "principle": "no quarantined runtime headline"
++    },
++    "cache_ready": {
++      "principle": "reusable substrate"
++    },
++    "cache_receipts": {
++      "principle": "cache provenance"
++    },
++    "cached_sota_pair_attempted": {
++      "principle": "local-first discipline"
++    },
++    "completion_proof": {
++      "principle": "live response evidence"
++    },
++    "conductor_modified": {
++      "principle": "conductor immutability"
++    },
++    "duration_floor_evidence": {
++      "principle": "adversarial verification readiness"
++    },
++    "duration_s": {
++      "principle": "timing accountability"
++    },
++    "endpoint_lifetime_s": {
++      "principle": "duration-floor evidence"
++    },
++    "experiment_id": {
++      "principle": "traceability"
++    },
++    "gguf_paths": {
++      "principle": "loader-path accountability"
++    },
++    "honest_verdict": {
++      "principle": "terminal verdict with complete_/success_/blocked_ prefix"
++    },
++    "inference_substrate": {
++      "principle": "substrate honesty"
++    },
++    "logprob_proof": {
++      "principle": "process telemetry evidence"
++    },
++    "milestone": {
++      "principle": "milestone accountability"
++    },
++    "request_response_transcript": {
++      "principle": "reproducibility"
++    },
++    "sota_runtime_clean": {
++      "principle": "structured downstream gate"
++    },
++    "tests_run": {
++      "principle": "verification evidence"
++    }
++  },
++  "finished_at": "2026-07-01T21:38:31Z",
++  "flagged_adversarial": false,
++  "gguf_paths": {
++    "unsloth/Qwen3.6-35B-A3B-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++    "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++    "unsloth/gemma-4-31B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
++  },
++  "honest_verdict": "success_clean_sota_runtime_provenance_ready",
++  "inference_substrate": "local_sota_gguf_llamacpp_runtime_or_blocked",
++  "logprob_proof": {
++    "error": null,
++    "raw_response_keys": [
++      "completion_probabilities",
++      "content",
++      "generation_settings",
++      "has_new_line",
++      "id_slot",
++      "index",
++      "model",
++      "prompt",
++      "stop",
++      "stop_type",
++      "stopping_word",
++      "timings",
++      "tokens",
++      "tokens_cached",
++      "tokens_evaluated",
++      "tokens_predicted",
++      "truncated"
++    ],
++    "ready": true,
++    "route": "http://127.0.0.1:59725/completion",
++    "status": 200,
++    "telemetry_signal": "top_logprobs",
++    "token_logprob_count": 16,
++    "token_logprobs": [
++      -0.7362843751907349,
++      -0.3249898850917816,
++      -1.4922224283218384,
++      -0.6610642671585083,
++      -0.11210998147726059,
++      -1.609338323760312e-05,
++      -0.06904076784849167,
++      0.0
++    ],
++    "top_logprob_row_count": 16,
++    "top_logprobs": [
++      {
++        "\n": -2.0886430740356445,
++        "\n\n": -1.2104579210281372,
++        "    ": -2.6378326416015625,
++        "<|channel>": -0.7362843751907349,
++        "thought": -4.583608627319336
++      },
++      {
++        ".": -9.043533325195312,
++        "1": -8.678254127502441,
++        "<channel|>": -10.833529472351074,
++        "<|channel>": -1.2834182977676392,
++        "thought": -0.3249898850917816
++      },
++      {
++        " indeed": -1.4922224283218384,
++        " probabilities": -1.863526701927185,
++        " well": -2.5866165161132812,
++        "udent": -2.700674533843994,
++        "urity": -2.7791993618011475
++      },
++      {
++        " much": -4.099356651306152,
++        "!": -3.180158853530884,
++        ",": -1.513656735420227,
++        ".": -1.8589059114456177,
++        "<channel|>": -0.6610642671585083
++      }
++    ]
++  },
++  "milestone": "2026.07.470",
++  "model_specs": [
++    {
++      "cache_status": "resolved",
++      "file_evidence": {
++        "exists": true,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "size_bytes": 22134528992
++      },
++      "from_cached_sota_pair": true,
++      "gpu": 0,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "loader": "llama.cpp",
++      "missing_diagnostic": null,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "name": "Qwen3.6-35B-A3B",
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "role": "flagship_moe"
++    },
++    {
++      "cache_status": "resolved",
++      "file_evidence": {
++        "exists": true,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "size_bytes": 18323731456
++      },
++      "from_cached_sota_pair": false,
++      "gpu": null,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "loader": "llama.cpp",
++      "missing_diagnostic": null,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "name": "Gemma4-31B-it",
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "role": "flagship_dense"
++    },
++    {
++      "cache_status": "resolved",
++      "file_evidence": {
++        "exists": true,
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "size_bytes": 16947539744
++      },
++      "from_cached_sota_pair": true,
++      "gpu": 1,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "loader": "llama.cpp",
++      "missing_diagnostic": null,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "name": "Gemma4-26B-A4B-it",
++      "preferred_quant": "Q4_K_M",
++      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "role": "middle_moe"
++    }
++  ],
++  "preconditions_checked": {
++    "cuda_status": {
++      "cuda_available": true,
++      "gpu_count": 2
++    },
++    "disk_ram": {
++      "disk_free_bytes": 1488612052992,
++      "disk_free_gib": 1386.378
++    },
++    "environment_variables": {},
++    "free_port": {
++      "available": true,
++      "endpoint_url": "http://127.0.0.1:59725",
++      "error": null,
++      "host": "127.0.0.1",
++      "port": 59725
++    },
++    "llama_cpp_python": {
++      "available": true,
++      "detail": "llama_cpp import ok",
++      "version": "0.3.29"
++    },
++    "llama_cpp_server": {
++      "available": true,
++      "candidates": [
++        {
++          "executable": true,
++          "exists": true,
++          "is_file": true,
++          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++          "source": "well_known_path"
++        },
++        {
++          "executable": true,
++          "exists": true,
++          "is_file": true,
++          "path": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
++          "source": "well_known_path"
++        },
++        {
++          "executable": false,
++          "exists": false,
++          "is_file": false,
++          "path": "/usr/local/bin/llama-server",
++          "source": "well_known_path"
++        },
++        {
++          "executable": false,
++          "exists": false,
++          "is_file": false,
++          "path": "/usr/bin/llama-server",
++          "source": "well_known_path"
++        }
++      ],
++      "missing_diagnostic": null,
++      "selected_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
++    },
++    "recorded_before_live_inference": true
++  },
++  "random_seed": 20260701,
++  "reproducibility_checksum": "sha256:86d0524a56783b952d04c9ed798e0aeb68a1a3a0e79a683928c522dc95846511",
++  "request_response_transcript": {
++    "completion_request": {
++      "endpoint": "http://127.0.0.1:59725/completion",
++      "logprobs_requested": 5,
++      "max_tokens": 16,
++      "prompt": "Compute 19 * 23, state the arithmetic result, and add the phrase exp5124 runtime provenance live."
++    },
++    "completion_response": {
++      "error": null,
++      "status": 200,
++      "text": "<|channel>thought indeed<channel|>To compute 19 * 23, you can"
++    },
++    "logprob_response": {
++      "error": null,
++      "raw_response_keys": [
++        "completion_probabilities",
++        "content",
++        "generation_settings",
++        "has_new_line",
++        "id_slot",
++        "index",
++        "model",
++        "prompt",
++        "stop",
++        "stop_type",
++        "stopping_word",
++        "timings",
++        "tokens",
++        "tokens_cached",
++        "tokens_evaluated",
++        "tokens_predicted",
++        "truncated"
++      ],
++      "ready": true,
++      "route": "http://127.0.0.1:59725/completion",
++      "status": 200,
++      "telemetry_signal": "top_logprobs",
++      "token_logprob_count": 16,
++      "token_logprobs": [
++        -0.7362843751907349,
++        -0.3249898850917816,
++        -1.4922224283218384,
++        -0.6610642671585083,
++        -0.11210998147726059,
++        -1.609338323760312e-05,
++        -0.06904076784849167,
++        0.0
++      ],
++      "top_logprob_row_count": 16,
++      "top_logprobs": [
++        {
++          "\n": -2.0886430740356445,
++          "\n\n": -1.2104579210281372,
++          "    ": -2.6378326416015625,
++          "<|channel>": -0.7362843751907349,
++          "thought": -4.583608627319336
++        },
++        {
++          ".": -9.043533325195312,
++          "1": -8.678254127502441,
++          "<channel|>": -10.833529472351074,
++          "<|channel>": -1.2834182977676392,
++          "thought": -0.3249898850917816
++        },
++        {
++          " indeed": -1.4922224283218384,
++          " probabilities": -1.863526701927185,
++          " well": -2.5866165161132812,
++          "udent": -2.700674533843994,
++          "urity": -2.7791993618011475
++        },
++        {
++          " much": -4.099356651306152,
++          "!": -3.180158853530884,
++          ",": -1.513656735420227,
++          ".": -1.8589059114456177,
++          "<channel|>": -0.6610642671585083
++        }
++      ]
++    }
++  },
++  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5124_clean_sota_runtime_provenance_v470.json",
++  "root_cause_tree": {
++    "adversarial_verify": {
++      "critical_flags": [],
++      "present": false
++    },
++    "cache": {
++      "detail": null,
++      "present": false
++    },
++    "cached_sota_pair": {
++      "detail": null,
++      "present": false
++    },
++    "completion": {
++      "detail": null,
++      "present": false
++    },
++    "duration_floor": {
++      "detail": null,
++      "present": false
++    },
++    "logprob": {
++      "detail": null,
++      "present": false
++    },
++    "summary": "clean_runtime_provenance"
++  },
++  "schema": "carnot.experiment_5124_clean_sota_runtime_provenance.v1",
++  "selected_model": {
++    "gpu": 1,
++    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++    "name": "Gemma4-26B-A4B-it",
++    "role": "middle_moe",
++    "size_bytes": 16947539744
++  },
++  "server_command": [
++    "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++    "-m",
++    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++    "--host",
++    "127.0.0.1",
++    "--port",
++    "59725",
++    "-ngl",
++    "999",
++    "-c",
++    "1024"
++  ],
++  "server_errors": [],
++  "server_pid": 2986105,
++  "shutdown_behavior": {
++    "already_exited": false,
++    "returncode": 0,
++    "started_by_preflight": true,
++    "terminated": true
++  },
++  "sota_runtime_clean": true,
++  "spec_refs": [
++    "REQ-INFER-SOTA-029",
++    "SCENARIO-INFER-SOTA-029-CLEAN",
++    "SCENARIO-INFER-SOTA-029-BLOCKED"
++  ],
++  "started_at": "2026-07-01T21:36:05Z",
++  "startup_log": {
++    "exists": true,
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_5124_clean_sota_runtime_provenance/llamacpp_server.log",
++    "tail": "task -1 | saving idle slot to prompt cache\n0.18.238.516 W srv   prompt_save:  - saving prompt with length 6, total state size = 1.290 MiB (draft: 0.000 MiB)\n0.18.239.961 I srv        update:  - cache state: 2 prompts, 3.401 MiB (limits: 8192.000 MiB, 1024 tokens, 33717 est)\n0.18.239.963 I srv        update:    - prompt 0x555a42e4e910:       8 tokens, checkpoints:  1,     1.916 MiB\n0.18.239.964 I srv        update:    - prompt 0x555a42e4d6b0:       6 tokens, checkpoints:  1,     1.486 MiB\n0.18.239.965 I slot prompt_clear: id  3 | task -1 | clearing prompt with 6 tokens\n0.18.471.754 I slot create_check: id  2 | task 9 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 23, n_tokens = 24, size = 4.688 MiB)\n0.19.042.609 I slot print_timing: id  2 | task 9 | prompt eval time =     245.70 ms /    28 tokens (    8.77 ms per token,   113.96 tokens per second)\n0.19.042.625 I slot print_timing: id  2 | task 9 |        eval time =     530.55 ms /    16 tokens (   33.16 ms per token,    30.16 tokens per second)\n0.19.042.627 I slot print_timing: id  2 | task 9 |       total time =     776.25 ms /    44 tokens\n0.19.042.629 I slot print_timing: id  2 | task 9 |    graphs reused =         17\n0.19.042.677 I slot      release: id  2 | task 9 | stop processing: n_tokens = 43, truncated = 0\n0.19.042.699 I srv  update_slots: all slots are idle\n0.19.045.538 I slot get_availabl: id  1 | task -1 | selected slot by LRU, t_last = -1\n0.19.045.540 I srv  get_availabl: updating prompt cache\n0.19.045.543 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000\n0.19.045.547 I srv        update:  - cache state: 2 prompts, 3.401 MiB (limits: 8192.000 MiB, 1024 tokens, 33717 est)\n0.19.045.548 I srv        update:    - prompt 0x555a42e4e910:       8 tokens, checkpoints:  1,     1.916 MiB\n0.19.045.549 I srv        update:    - prompt 0x555a42e4d6b0:       6 tokens, checkpoints:  1,     1.486 MiB\n0.19.045.550 I srv  get_availabl: prompt cache update took 0.01 ms\n0.19.045.579 I slot launch_slot_: id  1 | task 27 | processing task, is_child = 0\n0.19.045.580 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache\n0.19.045.581 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens\n0.19.045.591 I slot process_sing: id  2 | task -1 | saving idle slot to prompt cache\n0.19.045.612 W srv   prompt_save:  - saving prompt with length 43, total state size = 9.240 MiB (draft: 0.000 MiB)\n0.19.053.011 I srv        update:  - cache state: 3 prompts, 17.330 MiB (limits: 8192.000 MiB, 1024 tokens, 26944 est)\n0.19.053.014 I srv        update:    - prompt 0x555a42e4e910:       8 tokens, checkpoints:  1,     1.916 MiB\n0.19.053.015 I srv        update:    - prompt 0x555a42e4d6b0:       6 tokens, checkpoints:  1,     1.486 MiB\n0.19.053.016 I srv        update:    - prompt 0x555a427e1df0:      43 tokens, checkpoints:  1,    13.928 MiB\n0.19.053.016 I slot prompt_clear: id  2 | task -1 | clearing prompt with 43 tokens\n0.19.053.051 I slot process_sing: id  3 | task -1 | saving idle slot to prompt cache\n0.19.053.052 I slot prompt_clear: id  3 | task -1 | clearing prompt with 0 tokens\n0.19.084.131 I slot create_check: id  1 | task 27 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 18, n_tokens = 19, size = 3.712 MiB)\n0.19.936.469 I slot print_timing: id  1 | task 27 | prompt eval time =      49.98 ms /    23 tokens (    2.17 ms per token,   460.15 tokens per second)\n0.19.936.476 I slot print_timing: id  1 | task 27 |        eval time =     812.31 ms /    24 tokens (   33.85 ms per token,    29.55 tokens per second)\n0.19.936.477 I slot print_timing: id  1 | task 27 |       total time =     862.29 ms /    47 tokens\n0.19.936.479 I slot print_timing: id  1 | task 27 |    graphs reused =         39\n0.19.936.504 I slot      release: id  1 | task 27 | stop processing: n_tokens = 46, truncated = 0\n0.19.936.509 I srv  update_slots: all slots are idle\n0.19.945.946 I srv    operator(): operator(): cleaning up before exit...\n"
++  },
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5124_clean_sota_runtime_provenance.py -q",
++      "status": "expected_or_completed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5124_clean_sota_runtime_provenance.py --cov=python/carnot/experiment_5124_clean_sota_runtime_provenance.py --cov-report=term-missing --cov-fail-under=100 -q",
++      "status": "expected_or_completed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "status": "expected_or_completed"
++    },
++    {
++      "command": "python scripts/adversarial_verify.py results/experiment_5124_clean_sota_runtime_provenance_v470.json",
++      "status": "expected_or_completed"
++    }
++  ]
++}
+diff --git a/results/experiment_5124_clean_sota_runtime_provenance_v470.jsonl b/results/experiment_5124_clean_sota_runtime_provenance_v470.jsonl
+new file mode 100644
+index 0000000000..c9b18d9d0b
+--- /dev/null
++++ b/results/experiment_5124_clean_sota_runtime_provenance_v470.jsonl
+@@ -0,0 +1 @@
++{"completion_hash": "f8f8d1a44f35b72554578453234bcee0a1e12d3d8207bc39f9a6aa3963e66b63", "completion_text": "cache row 0: compute 19 * 23 and answer briefly.\ncache row 0:", "endpoint_used": "http://127.0.0.1:59725/completion", "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "prompt_hash": "0d623976c4c317588f358cb7fec3cfe7bdb3faf93359ec133e111a51709d4c99", "random_seed": 20260701, "row_id": "exp5124-cache-smoke-0000", "row_index": 0, "schema": "carnot.experiment_5124_clean_sota_runtime_provenance.row.v1", "source_sample_status": 200, "telemetry_signal": "top_logprobs", "token_logprob_count": 24, "token_logprobs": [-0.10207074880599976, -0.28552740812301636, -0.002697526477277279, -5.960482212685747e-06, -4.410753263073275e-06, -0.00010860556358238682, -0.1973145306110382, -0.0002833410107996315], "top_logprob_row_count": 24, "top_logprobs": [{"": -4.535965919494629, "\n": -0.10207074880599976, "\n\n": -3.2253756523132324, " ": -3.2044286727905273, "  ": -7.253348350524902}, {"1": -5.109041690826416, "2": -4.559257507324219, "5": -2.980158805847168, "Exp": -1.7473746538162231, "cache": -0.28552740812301636}, {" ": -7.324225902557373, " E": -8.494858741760254, " Ex": -8.856913566589355, " Exp": -6.700158596038818, " row": -0.002697526477277279}, {" ": -5.960482212685747e-06, " $": -13.302608489990234, " index": -14.439474105834961, " |": -13.93253231048584, "[": -14.382414817810059}]}
+diff --git a/results/raw/experiment_5124_clean_sota_runtime_provenance/llamacpp_server.log b/results/raw/experiment_5124_clean_sota_runtime_provenance/llamacpp_server.log
+new file mode 100644
+index 0000000000..f275c70ef0
+--- /dev/null
++++ b/results/raw/experiment_5124_clean_sota_runtime_provenance/llamacpp_server.log
+@@ -0,0 +1,138 @@
++0.00.556.476 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.556.483 I device_info:
++0.00.985.462 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.01.419.573 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.01.419.598 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.01.419.781 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.01.419.793 I srv  llama_server: n_parallel is set to auto, using n_parallel = 4 and kv_unified = true
++0.01.422.579 I srv          init: running without SSL
++0.01.424.017 I srv          init: using 23 threads for HTTP server
++0.01.424.287 I srv         start: binding port with default address family
++0.01.425.855 I srv  llama_server: loading model
++0.01.426.249 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf'
++0.01.426.300 I common_init_result: fitting params to device memory ...
++0.01.426.301 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
++0.08.272.690 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.08.273.243 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.08.280.353 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.08.301.569 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
++0.17.096.358 W llama_context: n_ctx_seq (1024) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.17.118.107 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.17.346.792 I srv    load_model: initializing slots, n_slots = 4
++0.17.424.839 W common_speculative_init: no implementations specified for speculative decoding
++0.17.424.855 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 1024
++0.17.424.865 I slot   load_model: id  1 | task -1 | new slot, n_ctx = 1024
++0.17.424.865 I slot   load_model: id  2 | task -1 | new slot, n_ctx = 1024
++0.17.424.865 I slot   load_model: id  3 | task -1 | new slot, n_ctx = 1024
++0.17.424.928 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.17.424.929 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.17.424.930 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.17.424.930 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.17.430.454 I srv          init: idle slots will be saved to prompt cache and cleared upon starting a new task
++0.17.451.306 I init: chat template, example_format: '<|turn>system
++<|think|>
++You are a helpful assistant<turn|>
++<|turn>user
++Hello<turn|>
++<|turn>model
++Hi there<turn|>
++<|turn>user
++How are you?<turn|>
++<|turn>model
++'
++0.17.451.917 I srv          init: init: chat template, thinking = 1
++0.17.451.972 I srv  llama_server: model loaded
++0.17.451.979 I srv  llama_server: server is listening on http://127.0.0.1:59725
++0.17.452.923 I srv  update_slots: all slots are idle
++0.17.850.823 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
++0.17.850.830 I srv  get_availabl: updating prompt cache
++0.17.850.843 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.17.850.855 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 1024 tokens, 8589934592 est)
++0.17.850.857 I srv  get_availabl: prompt cache update took 0.03 ms
++0.17.850.906 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
++0.17.850.907 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache
++0.17.850.910 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens
++0.17.850.922 I slot process_sing: id  1 | task -1 | saving idle slot to prompt cache
++0.17.850.922 I slot prompt_clear: id  1 | task -1 | clearing prompt with 0 tokens
++0.17.850.925 I slot process_sing: id  2 | task -1 | saving idle slot to prompt cache
++0.17.850.925 I slot prompt_clear: id  2 | task -1 | clearing prompt with 0 tokens
++0.17.928.383 I slot create_check: id  3 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 0, n_tokens = 1, size = 0.196 MiB)
++0.18.185.812 I slot print_timing: id  3 | task 0 | prompt eval time =     203.14 ms /     5 tokens (   40.63 ms per token,    24.61 tokens per second)
++0.18.185.821 I slot print_timing: id  3 | task 0 |        eval time =     128.10 ms /     4 tokens (   32.02 ms per token,    31.23 tokens per second)
++0.18.185.822 I slot print_timing: id  3 | task 0 |       total time =     331.24 ms /     9 tokens
++0.18.185.827 I slot print_timing: id  3 | task 0 |    graphs reused =          3
++0.18.185.867 I slot      release: id  3 | task 0 | stop processing: n_tokens = 8, truncated = 0
++0.18.185.873 I srv  update_slots: all slots are idle
++0.18.191.826 I slot get_availabl: id  3 | task -1 | selected slot by LCP similarity, sim_best = 0.333 (> 0.100 thold), f_keep = 0.250
++0.18.191.831 I srv  get_availabl: updating prompt cache
++0.18.191.871 W srv   prompt_save:  - saving prompt with length 8, total state size = 1.720 MiB (draft: 0.000 MiB)
++0.18.194.223 I srv          load:  - looking for better prompt, base f_keep = 0.250, sim = 0.333
++0.18.194.230 I srv        update:  - cache state: 1 prompts, 1.916 MiB (limits: 8192.000 MiB, 1024 tokens, 34212 est)
++0.18.194.232 I srv        update:    - prompt 0x555a42e4e910:       8 tokens, checkpoints:  1,     1.916 MiB
++0.18.194.233 I srv  get_availabl: prompt cache update took 2.40 ms
++0.18.194.285 I slot launch_slot_: id  3 | task 6 | processing task, is_child = 0
++0.18.194.288 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache
++0.18.194.289 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens
++0.18.194.293 I slot process_sing: id  1 | task -1 | saving idle slot to prompt cache
++0.18.194.294 I slot prompt_clear: id  1 | task -1 | clearing prompt with 0 tokens
++0.18.194.296 I slot process_sing: id  2 | task -1 | saving idle slot to prompt cache
++0.18.194.297 I slot prompt_clear: id  2 | task -1 | clearing prompt with 0 tokens
++0.18.194.311 I slot update_slots: id  3 | task 6 | Checking checkpoint with [0, 0] against 0...
++0.18.195.023 W slot update_slots: id  3 | task 6 | restored context checkpoint (pos_min = 0, pos_max = 0, n_tokens = 1, n_past = 1, size = 0.196 MiB)
++0.18.235.395 I slot print_timing: id  3 | task 6 | prompt eval time =      19.43 ms /     5 tokens (    3.89 ms per token,   257.37 tokens per second)
++0.18.235.401 I slot print_timing: id  3 | task 6 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.18.235.402 I slot print_timing: id  3 | task 6 |       total time =      19.43 ms /     6 tokens
++0.18.235.404 I slot print_timing: id  3 | task 6 |    graphs reused =          3
++0.18.235.423 I slot      release: id  3 | task 6 | stop processing: n_tokens = 6, truncated = 0
++0.18.235.434 I srv  update_slots: all slots are idle
++0.18.238.436 I slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = -1
++0.18.238.439 I srv  get_availabl: updating prompt cache
++0.18.238.443 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.18.238.448 I srv        update:  - cache state: 1 prompts, 1.916 MiB (limits: 8192.000 MiB, 1024 tokens, 34212 est)
++0.18.238.450 I srv        update:    - prompt 0x555a42e4e910:       8 tokens, checkpoints:  1,     1.916 MiB
++0.18.238.451 I srv  get_availabl: prompt cache update took 0.01 ms
++0.18.238.476 I slot launch_slot_: id  2 | task 9 | processing task, is_child = 0
++0.18.238.477 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache
++0.18.238.479 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens
++0.18.238.485 I slot process_sing: id  1 | task -1 | saving idle slot to prompt cache
++0.18.238.486 I slot prompt_clear: id  1 | task -1 | clearing prompt with 0 tokens
++0.18.238.499 I slot process_sing: id  3 | task -1 | saving idle slot to prompt cache
++0.18.238.516 W srv   prompt_save:  - saving prompt with length 6, total state size = 1.290 MiB (draft: 0.000 MiB)
++0.18.239.961 I srv        update:  - cache state: 2 prompts, 3.401 MiB (limits: 8192.000 MiB, 1024 tokens, 33717 est)
++0.18.239.963 I srv        update:    - prompt 0x555a42e4e910:       8 tokens, checkpoints:  1,     1.916 MiB
++0.18.239.964 I srv        update:    - prompt 0x555a42e4d6b0:       6 tokens, checkpoints:  1,     1.486 MiB
++0.18.239.965 I slot prompt_clear: id  3 | task -1 | clearing prompt with 6 tokens
++0.18.471.754 I slot create_check: id  2 | task 9 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 23, n_tokens = 24, size = 4.688 MiB)
++0.19.042.609 I slot print_timing: id  2 | task 9 | prompt eval time =     245.70 ms /    28 tokens (    8.77 ms per token,   113.96 tokens per second)
++0.19.042.625 I slot print_timing: id  2 | task 9 |        eval time =     530.55 ms /    16 tokens (   33.16 ms per token,    30.16 tokens per second)
++0.19.042.627 I slot print_timing: id  2 | task 9 |       total time =     776.25 ms /    44 tokens
++0.19.042.629 I slot print_timing: id  2 | task 9 |    graphs reused =         17
++0.19.042.677 I slot      release: id  2 | task 9 | stop processing: n_tokens = 43, truncated = 0
++0.19.042.699 I srv  update_slots: all slots are idle
++0.19.045.538 I slot get_availabl: id  1 | task -1 | selected slot by LRU, t_last = -1
++0.19.045.540 I srv  get_availabl: updating prompt cache
++0.19.045.543 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.19.045.547 I srv        update:  - cache state: 2 prompts, 3.401 MiB (limits: 8192.000 MiB, 1024 tokens, 33717 est)
++0.19.045.548 I srv        update:    - prompt 0x555a42e4e910:       8 tokens, checkpoints:  1,     1.916 MiB
++0.19.045.549 I srv        update:    - prompt 0x555a42e4d6b0:       6 tokens, checkpoints:  1,     1.486 MiB
++0.19.045.550 I srv  get_availabl: prompt cache update took 0.01 ms
++0.19.045.579 I slot launch_slot_: id  1 | task 27 | processing task, is_child = 0
++0.19.045.580 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache
++0.19.045.581 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens
++0.19.045.591 I slot process_sing: id  2 | task -1 | saving idle slot to prompt cache
++0.19.045.612 W srv   prompt_save:  - saving prompt with length 43, total state size = 9.240 MiB (draft: 0.000 MiB)
++0.19.053.011 I srv        update:  - cache state: 3 prompts, 17.330 MiB (limits: 8192.000 MiB, 1024 tokens, 26944 est)
++0.19.053.014 I srv        update:    - prompt 0x555a42e4e910:       8 tokens, checkpoints:  1,     1.916 MiB
++0.19.053.015 I srv        update:    - prompt 0x555a42e4d6b0:       6 tokens, checkpoints:  1,     1.486 MiB
++0.19.053.016 I srv        update:    - prompt 0x555a427e1df0:      43 tokens, checkpoints:  1,    13.928 MiB
++0.19.053.016 I slot prompt_clear: id  2 | task -1 | clearing prompt with 43 tokens
++0.19.053.051 I slot process_sing: id  3 | task -1 | saving idle slot to prompt cache
++0.19.053.052 I slot prompt_clear: id  3 | task -1 | clearing prompt with 0 tokens
++0.19.084.131 I slot create_check: id  1 | task 27 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 18, n_tokens = 19, size = 3.712 MiB)
++0.19.936.469 I slot print_timing: id  1 | task 27 | prompt eval time =      49.98 ms /    23 tokens (    2.17 ms per token,   460.15 tokens per second)
++0.19.936.476 I slot print_timing: id  1 | task 27 |        eval time =     812.31 ms /    24 tokens (   33.85 ms per token,    29.55 tokens per second)
++0.19.936.477 I slot print_timing: id  1 | task 27 |       total time =     862.29 ms /    47 tokens
++0.19.936.479 I slot print_timing: id  1 | task 27 |    graphs reused =         39
++0.19.936.504 I slot      release: id  1 | task 27 | stop processing: n_tokens = 46, truncated = 0
++0.19.936.509 I srv  update_slots: all slots are idle
++0.19.945.946 I srv    operator(): operator(): cleaning up before exit...
+diff --git a/scripts/experiment_5124_clean_sota_runtime_provenance_v470.py b/scripts/experiment_5124_clean_sota_runtime_provenance_v470.py
+new file mode 100644
+index 0000000000..d5f990081c
+--- /dev/null
++++ b/scripts/experiment_5124_clean_sota_runtime_provenance_v470.py
+@@ -0,0 +1,20 @@
++#!/usr/bin/env python3
++"""CLI wrapper for Exp 5124 clean local SOTA runtime provenance."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++if str(REPO_ROOT) not in sys.path:
++    sys.path.insert(0, str(REPO_ROOT))
++if str(REPO_ROOT / "python") not in sys.path:
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.experiment_5124_clean_sota_runtime_provenance import main  # noqa: E402
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_5124_clean_sota_runtime_provenance.py b/tests/python/test_experiment_5124_clean_sota_runtime_provenance.py
+new file mode 100644
+index 0000000000..1a25733758
+--- /dev/null
++++ b/tests/python/test_experiment_5124_clean_sota_runtime_provenance.py
+@@ -0,0 +1,359 @@
++"""Tests for Exp 5124 clean local SOTA runtime provenance.
++
++Spec refs: REQ-INFER-SOTA-029,
++SCENARIO-INFER-SOTA-029-CLEAN,
++SCENARIO-INFER-SOTA-029-BLOCKED.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5124_clean_sota_runtime_provenance as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "llm-ebm-inference" / "spec.md"
++QWEN = "unsloth/Qwen3.6-35B-A3B-GGUF"
++GEMMA31 = "unsloth/gemma-4-31B-it-GGUF"
++GEMMA26 = "unsloth/gemma-4-26B-A4B-it-GGUF"
++
++
++def _write_models(tmp_path: Path) -> dict[str, str]:
++    paths: dict[str, str] = {}
++    sizes = {QWEN: 30, GEMMA31: 20, GEMMA26: 10}
++    for hf_id, size in sizes.items():
++        model_name = hf_id.split("/", 1)[1]
++        path = tmp_path / "models" / model_name / f"{model_name}-Q4_K_M.gguf"
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text("x" * size, encoding="utf-8")
++        paths[hf_id] = path.as_posix()
++    return paths
++
++
++def _resolver(paths: dict[str, str]) -> mod.ModelResolver:
++    return lambda hf_id, preferred_quant: paths.get(hf_id)
++
++
++def _cached_pair(paths: dict[str, str]) -> mod.CachedPairFn:
++    def fake(*, gpu_indices: tuple[int, int], preferred_quant: str) -> list[dict[str, Any]]:
++        return [
++            {
++                "name": "Qwen3.6-35B-A3B",
++                "hf_id": QWEN,
++                "gpu": gpu_indices[0],
++                "model_path": paths[QWEN],
++                "preferred_quant": preferred_quant,
++            },
++            {
++                "name": "Gemma4-26B-A4B-it",
++                "hf_id": GEMMA26,
++                "gpu": gpu_indices[1],
++                "model_path": paths[GEMMA26],
++                "preferred_quant": preferred_quant,
++            },
++        ]
++
++    return fake
++
++
++def _preconditions() -> dict[str, Any]:
++    return {
++        "cuda_status": {
++            "cuda_available": True,
++            "gpu_count": 2,
++            "gpus": [
++                {"index": 0, "name": "RTX 3090", "free_vram_mb": 22000},
++                {"index": 1, "name": "RTX 3090", "free_vram_mb": 21900},
++            ],
++        },
++        "llama_cpp_python": {"available": True, "detail": "llama_cpp import ok"},
++        "disk_ram": {"disk_free_gib": 100.0, "ram_available_gib": 64.0},
++    }
++
++
++def _server_unavailable(_env: dict[str, str]) -> dict[str, Any]:
++    return {
++        "available": False,
++        "selected_path": None,
++        "candidates": [],
++        "missing_diagnostic": "llama-server binary not found or not executable",
++    }
++
++
++def _free_port(port: int = 45124) -> dict[str, Any]:
++    return {
++        "available": True,
++        "host": "127.0.0.1",
++        "port": port,
++        "endpoint_url": f"http://127.0.0.1:{port}",
++        "error": None,
++    }
++
++
++def _blocked_probe(endpoints: list[str], timeout_s: float) -> dict[str, Any]:
++    return {
++        "candidate_endpoints": list(endpoints),
++        "selected_endpoint": None,
++        "completion_ready": False,
++        "top_logprob_ready": False,
++        "confidence_ready": False,
++        "telemetry_signal": None,
++        "duration_s": timeout_s,
++        "probes": [
++            {
++                "endpoint": endpoints[0],
++                "completion_probe": {"ready": False, "detail": "connection refused"},
++                "telemetry_probe": {"ready": False, "detail": "completion probe failed"},
++            }
++        ],
++    }
++
++
++def _ready_probe(endpoints: list[str], timeout_s: float) -> dict[str, Any]:
++    del timeout_s
++    return {
++        "candidate_endpoints": list(endpoints),
++        "selected_endpoint": endpoints[0],
++        "completion_ready": True,
++        "top_logprob_ready": True,
++        "confidence_ready": False,
++        "telemetry_signal": "top_logprobs",
++        "duration_s": 0.25,
++        "probes": [],
++    }
++
++
++def _ready_sample(endpoint: str, timeout_s: float) -> dict[str, Any]:
++    del timeout_s
++    return {
++        "ready": True,
++        "route": endpoint.rstrip("/") + "/completion",
++        "status": 200,
++        "completion_text": "The product 19 x 23 is 437, so exp5124 telemetry is live.",
++        "logprob_ready": True,
++        "top_logprob_ready": True,
++        "confidence_ready": False,
++        "telemetry_signal": "top_logprobs",
++        "evidence": {
++            "token_logprob_count": 3,
++            "top_logprob_row_count": 2,
++            "token_logprobs": [-0.11, -0.22, -0.33],
++            "top_logprobs": [{" The": -0.11, " A": -1.3}, {" product": -0.22}],
++            "raw_response_keys": ["content", "completion_probabilities"],
++        },
++        "error": None,
++    }
++
++
++def _cache_sample(row_index: int, endpoint: str, selected_model: dict[str, Any]) -> dict[str, Any]:
++    del selected_model
++    sample = _ready_sample(endpoint, 5.0)
++    sample["completion_text"] = f"cache row {row_index}: 19*23=437"
++    return sample
++
++
++def _clean_adversarial(_path: Path) -> dict[str, Any]:
++    return {"flags": [], "summary": {"critical_count": 0}}
++
++
++def test_req_infer_sota_029_spec_declares_exp5124_contract() -> None:
++    """REQ-INFER-SOTA-029: OpenSpec anchors exp5124 fields and scenarios."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    source = Path(mod.__file__).read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-INFER-SOTA-029",
++        "SCENARIO-INFER-SOTA-029-CLEAN",
++        "SCENARIO-INFER-SOTA-029-BLOCKED",
++        mod.EXPERIMENT_ID,
++        mod.MILESTONE,
++        mod.RESULT_RELATIVE_PATH,
++        QWEN,
++        GEMMA31,
++        GEMMA26,
++        "cached_sota_pair()",
++        "duration_floor_evidence",
++    ):
++        assert marker in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++        assert field in mod.FIELD_PRINCIPLES
++    assert "AutoTokenizer" not in source
++
++
++def test_scenario_infer_sota_029_blocked_records_cached_pair_failure(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-INFER-SOTA-029-BLOCKED: missing cached pair blocks the clean gate."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        cache_path=tmp_path / mod.CACHE_RELATIVE_PATH,
++        model_resolver=lambda hf_id, preferred_quant: None,
++        cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
++        precondition_probe=lambda root, env: _preconditions(),
++        endpoint_probe=lambda endpoints, timeout_s: pytest.fail("endpoint probe must not run"),
++        endpoint_sample=lambda endpoint, timeout_s: pytest.fail("sample must not run"),
++        cache_sample=lambda row_index, endpoint, selected_model: pytest.fail("cache must not run"),
++        server_finder=_server_unavailable,
++        free_port=lambda host: _free_port(),
++        adversarial_verify=_clean_adversarial,
++        now=iter([10.0, 11.25]).__next__,
++        duration_floor_s=60.0,
++        tests_run=[{"command": "pytest tests/python/test_experiment_5124_clean_sota_runtime_provenance.py", "status": "passed"}],
++        write=True,
++    )
++
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["milestone"] == mod.MILESTONE
++    assert artifact["honest_verdict"] == "blocked_clean_sota_runtime_provenance_cached_pair_unavailable"
++    assert artifact["inference_substrate"] == "local_sota_gguf_llamacpp_runtime_or_blocked"
++    assert artifact["cached_sota_pair_attempted"] is True
++    assert artifact["cache_ready"] is False
++    assert artifact["sota_runtime_clean"] is False
++    assert artifact["conductor_modified"] is False
++    assert artifact["completion_proof"]["ready"] is False
++    assert artifact["logprob_proof"]["ready"] is False
++    assert artifact["cache_receipts"]["ready"] is False
++    assert artifact["duration_floor_evidence"]["completed"] is False
++    assert artifact["root_cause_tree"]["cached_sota_pair"]["present"] is True
++    assert artifact["adversarial_verify_passed"] is True
++    assert artifact["flagged_adversarial"] is False
++    assert not (tmp_path / mod.CACHE_RELATIVE_PATH).exists()
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_infer_sota_029_clean_records_runtime_cache_and_duration_evidence(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-INFER-SOTA-029-CLEAN: live logprobs plus cache readback open the gate."""
++
++    paths = _write_models(tmp_path)
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        cache_path=tmp_path / mod.CACHE_RELATIVE_PATH,
++        model_resolver=_resolver(paths),
++        cached_pair_fn=_cached_pair(paths),
++        precondition_probe=lambda root, env: _preconditions(),
++        endpoint_probe=_ready_probe,
++        endpoint_sample=_ready_sample,
++        cache_sample=_cache_sample,
++        server_finder=_server_unavailable,
++        free_port=lambda host: _free_port(),
++        adversarial_verify=_clean_adversarial,
++        endpoints=["http://ready.test", "http://ready.test/"],
++        now=iter([100.0, 165.0]).__next__,
++        duration_floor_s=60.0,
++        tests_run=[{"command": "pytest tests/python -q", "status": "passed"}],
++        write=True,
++    )
++
++    assert artifact["honest_verdict"] == "success_clean_sota_runtime_provenance_ready"
++    assert artifact["completion_proof"]["ready"] is True
++    assert artifact["completion_proof"]["prompt"] == mod.DEFAULT_PROMPT
++    assert artifact["logprob_proof"]["ready"] is True
++    assert artifact["logprob_proof"]["token_logprob_count"] == 3
++    assert artifact["cache_ready"] is True
++    assert artifact["cache_receipts"]["ready"] is True
++    assert artifact["cache_receipts"]["rows_written"] == 1
++    assert artifact["cache_receipts"]["rows_read"] == 1
++    assert artifact["cache_receipts"]["readback_matches"] is True
++    assert artifact["duration_s"] == pytest.approx(65.0)
++    assert artifact["endpoint_lifetime_s"] == pytest.approx(65.0)
++    assert artifact["duration_floor_evidence"]["completed"] is True
++    assert artifact["duration_floor_evidence"]["reason"] == "measured_wall_clock_duration_met_floor"
++    assert artifact["request_response_transcript"]["completion_request"]["endpoint"] == (
++        "http://ready.test/completion"
++    )
++    assert artifact["request_response_transcript"]["completion_response"]["text"].startswith(
++        "The product 19 x 23 is 437"
++    )
++    assert [row["hf_id"] for row in artifact["MODEL_SPECS"]] == [QWEN, GEMMA31, GEMMA26]
++    assert artifact["MODEL_SPECS"][0]["model_path"] == paths[QWEN]
++    assert artifact["MODEL_SPECS"][2]["model_path"] == paths[GEMMA26]
++    assert artifact["gguf_paths"][GEMMA31] == paths[GEMMA31]
++    assert artifact["adversarial_verify_passed"] is True
++    assert artifact["sota_runtime_clean"] is True
++    assert artifact["root_cause_tree"]["summary"] == "clean_runtime_provenance"
++    assert mod.artifact_schema_errors(artifact) == []
++
++    cache_rows = mod.read_jsonl_rows(tmp_path / mod.CACHE_RELATIVE_PATH)
++    assert len(cache_rows) == 1
++    assert cache_rows[0]["schema"] == mod.CACHE_ROW_SCHEMA
++    assert cache_rows[0]["token_logprob_count"] == 3
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++
++
++def test_req_infer_sota_029_adversarial_critical_flag_blocks_clean_gate(
++    tmp_path: Path,
++) -> None:
++    """REQ-INFER-SOTA-029: adversarial verification is part of the clean gate."""
++
++    paths = _write_models(tmp_path)
++
++    def flagged(_path: Path) -> dict[str, Any]:
++        return {
++            "flags": [
++                {
++                    "kind": "DURATION_TOO_SHORT",
++                    "severity": "critical",
++                    "detail": "test critical flag",
++                }
++            ]
++        }
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        cache_path=tmp_path / mod.CACHE_RELATIVE_PATH,
++        model_resolver=_resolver(paths),
++        cached_pair_fn=_cached_pair(paths),
++        precondition_probe=lambda root, env: _preconditions(),
++        endpoint_probe=_ready_probe,
++        endpoint_sample=_ready_sample,
++        cache_sample=_cache_sample,
++        server_finder=_server_unavailable,
++        free_port=lambda host: _free_port(),
++        adversarial_verify=flagged,
++        endpoints=["http://ready.test"],
++        now=iter([100.0, 165.0]).__next__,
++        duration_floor_s=60.0,
++        tests_run=[],
++        write=True,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_clean_sota_runtime_provenance_adversarial_flag"
++    assert artifact["adversarial_verify_passed"] is False
++    assert artifact["flagged_adversarial"] is True
++    assert artifact["sota_runtime_clean"] is False
++    assert artifact["cache_ready"] is False
++    assert artifact["root_cause_tree"]["adversarial_verify"]["present"] is True
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_infer_sota_029_committed_artifact_is_schema_valid() -> None:
++    """REQ-INFER-SOTA-029: the checked-in deliverable satisfies the exp5124 schema."""
++
++    artifact_path = REPO / mod.RESULT_RELATIVE_PATH
++    assert artifact_path.exists()
++    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["milestone"] == mod.MILESTONE
++    assert artifact["inference_substrate"] == "local_sota_gguf_llamacpp_runtime_or_blocked"
++    assert artifact["conductor_modified"] is False
++    assert artifact["sota_runtime_clean"] is (
++        bool(artifact["completion_proof"]["ready"])
++        and bool(artifact["logprob_proof"]["ready"])
++        and bool(artifact["cache_ready"])
++        and bool(artifact["adversarial_verify_passed"])
++    )
+-- 
+2.55.0
+

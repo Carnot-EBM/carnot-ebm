@@ -1,0 +1,194 @@
+From 6fba583c74659a80b161ba0dcfc7a989140585df Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 11:54:37 -0400
+Subject: [PATCH 02567/11362] [outer-loop] multi-object push state: adaptive
+ key-granularity (no regression); ka59 doubly-blocked
+
+Goal was to unlock ka59 (push) by adding the pushed block's position to the exploration state key.
+Building it surfaced a real tension and a second blocker, both now precisely diagnosed:
+
+1. TENSION (caught a regression before shipping): tracking the block's position is the right CONCEPT,
+   but a naive "track all piece-sized objects" key OVER-FRAGMENTS navigation games -- ar25 has many
+   moving objects, so the multi-object key blew up its state space and BROKE its previously-working
+   solve. Navigation games need a MINIMAL key (agent position); push games need the block too. The
+   right granularity is genuinely game-dependent.
+
+2. FIX -- ADAPTIVE granularity: try the minimal agent-position key first; only ESCALATE to the
+   multi-object pieces key if the minimal search dries up. RESULT (no regression, all first-contact,
+   no banked solve): sp80/cn04/ar25 solve on the AGENT key (4/14/15 actions); ka59 escalates to the
+   pieces key.
+
+3. ka59's SECOND blocker (discovered mid-build): its win sequence is [4,4,4,3,2,3,3,3,C:1,1,4] (per
+   ops/arc_solve_registry.yaml) -- it includes a CLICK (C:1), but the explorer is keyboard-only. So
+   ka59 is DOUBLY blocked: it needs multi-object state (now available via escalation) AND
+   click-capable exploration. The state-key escalation alone cannot unlock it.
+
+NET: first-contact solves hold at 3/4 (sp80, cn04, ar25), no regression; the multi-object machinery
+(identify_movers, pieces-key, adaptive escalation) is built and correct; the push/click class (ka59)
+is now precisely characterized as needing click-capable exploration on top of multi-object state --
+a separate, named gap rather than a single tweak. Adversarial-verify: clean.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/arc3_test_time_goal_induction.json    | 75 ++++++++++++++++++-
+ .../arc3_test_time_goal_induction.py          | 28 +++++--
+ 2 files changed, 94 insertions(+), 9 deletions(-)
+
+diff --git a/results/arc3_test_time_goal_induction.json b/results/arc3_test_time_goal_induction.json
+index ecf6506203..efea15eb59 100644
+--- a/results/arc3_test_time_goal_induction.json
++++ b/results/arc3_test_time_goal_induction.json
+@@ -1,13 +1,82 @@
+ {
+   "experiment": "arc3_test_time_goal_induction",
+   "games": [
++    "sp80",
++    "cn04",
++    "ar25",
+     "ka59"
+   ],
+-  "first_contact_solves": [],
++  "first_contact_solves": [
++    "sp80",
++    "cn04",
++    "ar25"
++  ],
+   "per_game": [
++    {
++      "game": "sp80",
++      "explore_mode": "curious_adaptive_bfs",
++      "state_key_used": "agent",
++      "agent": {
++        "color": 9
++      },
++      "movers": [
++        9
++      ],
++      "win_stumbled": true,
++      "induced_goal_color": 6,
++      "induced_goal_solve": {
++        "solved": true,
++        "actions": 4,
++        "nodes": 321
++      },
++      "solves_first_contact": true
++    },
++    {
++      "game": "cn04",
++      "explore_mode": "curious_adaptive_bfs",
++      "state_key_used": "agent",
++      "agent": {
++        "color": 0
++      },
++      "movers": [
++        0,
++        0,
++        0
++      ],
++      "win_stumbled": true,
++      "induced_goal_color": 8,
++      "induced_goal_solve": {
++        "solved": true,
++        "actions": 14,
++        "nodes": 929
++      },
++      "solves_first_contact": true
++    },
++    {
++      "game": "ar25",
++      "explore_mode": "curious_adaptive_bfs",
++      "state_key_used": "agent",
++      "agent": {
++        "color": 4
++      },
++      "movers": [
++        4,
++        5,
++        4
++      ],
++      "win_stumbled": true,
++      "induced_goal_color": 11,
++      "induced_goal_solve": {
++        "solved": true,
++        "actions": 15,
++        "nodes": 2460
++      },
++      "solves_first_contact": true
++    },
+     {
+       "game": "ka59",
+-      "explore_mode": "curious_multiobject_bfs",
++      "explore_mode": "curious_adaptive_bfs",
++      "state_key_used": "pieces_escalated",
+       "agent": {
+         "color": 14
+       },
+@@ -20,6 +89,6 @@
+     }
+   ],
+   "interpretation": "Fully first-contact (NO banked solve): explore -> stumble a win -> induce the agent (general method) -> induce the GOAL OBJECT colour (what the agent reached) -> solve via best_first_search guided by agent-to-goal-colour distance. A first-contact solve = the unseen-game pipeline works end to end on that game. Honest limit: only games whose win is STUMBLE-ABLE within the explore budget can have a goal induced this way; deep-solve games need curious/directed exploration or goal PERCEPTION (the remaining frontier).",
+-  "honest_verdict": "complete_test_time_goal_induction_zero_first_contact_solves",
++  "honest_verdict": "complete_test_time_goal_induction_first_contact_solves_sp80_cn04_ar25",
+   "inference_substrate": "offline_arc_agi3_test_time_goal_induction_no_banked_solve"
+ }
+\ No newline at end of file
+diff --git a/scripts/experiments/arc3_test_time_goal_induction.py b/scripts/experiments/arc3_test_time_goal_induction.py
+index 32a6e414b6..e941c5b9ad 100644
+--- a/scripts/experiments/arc3_test_time_goal_induction.py
++++ b/scripts/experiments/arc3_test_time_goal_induction.py
+@@ -128,7 +128,8 @@ def _pieces_key(grid, min_size=4, max_size=30):
+     return tuple(sorted(parts))
+ 
+ 
+-def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000, movers=None):
++def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000, movers=None,
++                            key_mode="agent"):
+     """CURIOUS/DIRECTED exploration: BFS over the reachable AGENT-POSITION graph (dedup on the agent's
+     centroid, not the full grid), trying every action at each newly-reached position, until a level-up.
+     For navigation/movement games the agent position is the state variable that matters, so covering
+@@ -144,9 +145,15 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
+     start_level = _levels_completed(f0)
+ 
+     def key(grid):
+-        pk = _pieces_key(grid)                          # joint positions of ALL piece-sized objects
+-        if pk:
+-            return ("pieces",) + pk
++        # 'agent' (default): minimal key = agent position -- right for NAVIGATION games (cn04/sp80/ar25),
++        #   which over-fragment under a multi-object key. 'pieces': all piece-sized objects -- needed for
++        #   PUSH games (ka59) where the pushed block's position is part of the state, but it explodes the
++        #   state space of multi-object navigation puzzles, so it is opt-in (the granularity is genuinely
++        #   game-dependent; the principled fix is to ESCALATE granularity only when 'agent' search dries up).
++        if key_mode == "pieces":
++            pk = _pieces_key(grid)
++            if pk:
++                return ("pieces",) + pk
+         if agent is not None:
+             ac = H._agent_centroid(grid, agent)
+             if ac is not None:
+@@ -262,12 +269,21 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
+                                   fromlist=["collect_transitions"]).collect_transitions(game, n=150)
+     agent = H.identify_agent(explore_trans)
+     movers = identify_movers(explore_trans)
++    key_used = None
+     if curious:
++        # ADAPTIVE granularity: try the minimal AGENT-position key first (right for navigation, no
++        # over-fragmentation); only if it dries up, ESCALATE to the multi-object PIECES key (push games).
+         prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
+-                                         max_expansions=explore_budget, movers=movers)
++                                         max_expansions=explore_budget, key_mode="agent")
++        key_used = "agent"
++        if prewin is None:
++            prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
++                                             max_expansions=explore_budget, key_mode="pieces")
++            key_used = "pieces_escalated"
+     else:
+         prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
+-    rec = {"game": game, "explore_mode": ("curious_multiobject_bfs" if curious else "random"),
++    rec = {"game": game, "explore_mode": ("curious_adaptive_bfs" if curious else "random"),
++           "state_key_used": key_used,
+            "agent": (None if agent is None else {"color": agent["color"]}),
+            "movers": [m["color"] for m in movers], "win_stumbled": prewin is not None}
+     if prewin is None or agent is None:
+-- 
+2.55.0
+

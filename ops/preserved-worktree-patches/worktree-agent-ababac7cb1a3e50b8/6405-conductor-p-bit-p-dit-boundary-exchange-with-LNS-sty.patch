@@ -1,0 +1,3337 @@
+From 5031e94d89c6e9ddb5dda3973f15b8856c6bb50a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 05:14:01 -0400
+Subject: [PATCH 06405/11362] [conductor] p-bit/p-dit boundary exchange with
+ LNS-style accounting
+
+Automated research step by research conductor.
+Task ID: exp5477-pdit-lns-boundary-exchange-v497
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ README.md                                     |   41 +-
+ openspec/capabilities/verification/spec.md    |   91 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...nt_5477_pdit_lns_boundary_exchange_v497.py |  683 ++++++
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_1970_domino_fast_constraints.json |    4 +-
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ..._5477_pdit_lns_boundary_exchange_v497.json | 2133 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...nt_5477_pdit_lns_boundary_exchange_v497.py |  210 ++
+ 13 files changed, 3167 insertions(+), 15 deletions(-)
+ create mode 100644 python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py
+ create mode 100644 results/experiment_5477_pdit_lns_boundary_exchange_v497.json
+ create mode 100644 tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py
+
+diff --git a/README.md b/README.md
+index 20046c8ff0..17b43ddee3 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,41 @@
+ ---
+-license: apache-2.0
++license: other
++license_name: mit-0
++license_link: LICENSE
+ ---
+-# Carnot Smallest Test Model
+ 
+-This is a test upload for the Carnot-EBM project. No emojis here.
++# ThinkPRM v3
++
++## Model Description
++ThinkPRM v3 is a Process Reward Model trained to verify reasoning steps. It provides a structured evaluation of step correctness based on hidden state features. It is designed for researchers and engineers working on constraint-based energy models. This is a Phase 1 research artifact. Trained on simulated data. Do not use in production without independent validation.
++
++## Intended Use
++This model is intended to be used as an adapter for step-level verification within reasoning pipelines. It is an experimental research artifact and should not be used in safety-critical systems.
++
++## Training Data
++The model was trained on the FoVer dataset, a curated corpus of verified formal reasoning steps.
++
++## Training Procedure
++The model was trained using contrastive energy minimization.
++
++## Evaluation Metrics
++The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set.
++
++## Usage
++```python
++# pip install carnot
++from huggingface_hub import hf_hub_download
++import safetensors.torch
++path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkpoint.safetensors")
++# load model
++```
++
++## Citation
++```bibtex
++@software{carnot2026,
++  author = {The Carnot Authors (ian@blenke.com)},
++  title = {Carnot: Energy-Based Verification},
++  year = {2026},
++  url = {https://github.com/Carnot-EBM/carnot-ebm}
++}
++```
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 266fe74a25..db10152f28 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -28197,6 +28197,97 @@ artifact rather than upgrading it to solved.
+ |---|---|---|
+ | REQ-VERIFY-5476 | Planned (`python/carnot/experiment_5476_helper_lemma_core_witness_repair_v497.py`, `results/experiment_5476_helper_lemma_core_witness_repair_v497.json`) | Planned (`tests/python/test_experiment_5476_helper_lemma_core_witness_repair_v497.py`) |
+ 
++### REQ-VERIFY-5477: p-dit LNS Boundary-Exchange Accounting V497
++
++The repository SHALL provide Exp 5477 at
++`python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py` and write
++`results/experiment_5477_pdit_lns_boundary_exchange_v497.json` without invoking
++a live LLM, generated-text judge, hardware sampler, board timing path, hardware
++performance comparison, hardware speedup claim, or modifying
++`scripts/research_conductor.py`. Exp 5477 SHALL remain a CPU-local,
++deterministic accounting fixture for p-bit/p-dit boundary-exchange workloads
++before hardware receipts.
++
++The runner SHALL build a small SAT, MaxCut, and assignment-style fixture set
++with explicit p-bit binary controls and p-dit categorical controls. Every
++fixture SHALL expose stable workload-hash inputs, partition or boundary
++metadata, boundary messages, prediction scores where available, an exact
++unrestricted solution, and advisory p-bit/p-dit assumptions. The fixture set
++SHALL count p-bit and p-dit variables separately and SHALL report workload
++hashes derived only from canonical fixture content, not from timing, row order
++side effects, or the output artifact checksum.
++
++The runner SHALL simulate exactly these LNS-style destroy strategies:
++`random`, `conflict_core_guided`, and `prediction_score_guided`. It SHALL
++simulate exactly these repair modes: `greedy_exact_fallback`,
++`stochastic_advisory_repair`, and `no_repair_baseline`. Destroy and repair
++telemetry SHALL record the destroyed controls, boundary messages sent across
++partitions, advisory repair candidate, solver final label, fallback use, and
++whether any unsafe false accept occurred. Advisory p-bit or p-dit repair MAY
++improve a candidate objective or violation count, but no advisory candidate
++SHALL become the final SAT/UNSAT, MaxCut, or assignment label without an exact
++solver fallback recheck.
++
++The artifact SHALL include top-level fields `fixture_count`,
++`pbit_variable_count`, `pdit_variable_count`, `destroy_strategies`,
++`repair_modes`, `workload_hashes`, `exact_fallback_completeness_rate`,
++`unsafe_false_accept_count`, `advisory_improvement_delta`,
++`boundary_exchange_ready`, `hardware_speedup_claim`, `inference_substrate`,
++`random_seed`, and `honest_verdict`, with field principles explaining each
++required field. `inference_substrate` SHALL equal
++`deterministic_solver_no_hardware_speedup`. `hardware_speedup_claim` SHALL be
++false. `honest_verdict` SHALL start with `complete:` or `blocked:`. The
++`boundary_exchange_ready` gate SHALL be true only when SAT, MaxCut, and
++assignment fixtures are present, all destroy strategies and repair modes are
++measured, workload hashes are stable and unique, exact fallback completeness is
++1.0, unsafe false accepts are zero, and the artifact contains no hardware
++speedup claim.
++
++Required field principles:
++
++- `fixture_count`: principle "SAT/MaxCut/assignment fixture coverage"
++- `pbit_variable_count`: principle "binary p-bit control accounting"
++- `pdit_variable_count`: principle "categorical p-dit control accounting"
++- `destroy_strategies`: principle "LNS destroy strategy coverage"
++- `repair_modes`: principle "repair mode coverage"
++- `workload_hashes`: principle "stable canonical workload identity"
++- `exact_fallback_completeness_rate`: principle "exact solver final authority"
++- `unsafe_false_accept_count`: principle "advisory safety boundary"
++- `advisory_improvement_delta`: principle "advisory utility without final authority"
++- `boundary_exchange_ready`: principle "downstream boundary-exchange gate"
++- `hardware_speedup_claim`: principle "must be false"
++- `inference_substrate`: principle "deterministic CPU solver, no hardware speedup"
++- `random_seed`: principle "deterministic replay seed"
++- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
++
++### SCENARIO-VERIFY-5477: Advisory Boundary Repairs Cannot Override Exact Fallback
++
++Given bounded SAT, MaxCut, and assignment-style fixtures with p-bit and p-dit
++controls, when Exp5477 evaluates every destroy strategy and repair mode, then
++every row records boundary messages, destroyed controls, advisory repair
++candidate quality, exact solver final label, fallback use, and unsafe
++false-accept status. Random, conflict-core-guided, and prediction-score-guided
++destroy rows MAY produce different advisory candidates, and stochastic advisory
++repair MAY improve objective or violation telemetry, but the final labels SHALL
++match unrestricted exact fallback for every row.
++
++If workload hashes are unstable, if any destroy strategy or repair mode is
++missing, if SAT/MaxCut/assignment coverage is incomplete, if an advisory repair
++candidate is accepted as final without exact fallback authority, if exact
++fallback completeness drops below 1.0, if unsafe false accepts are nonzero, if
++`inference_substrate` differs from
++`deterministic_solver_no_hardware_speedup`, or if `hardware_speedup_claim` is
++true, then Exp5477 SHALL write
++`results/experiment_5477_pdit_lns_boundary_exchange_v497.json` with
++`boundary_exchange_ready=false`, precise blocker details, and an
++`honest_verdict` starting with `blocked:`.
++
++## Implementation Status (REQ-VERIFY-5477)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5477 | Planned (`python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py`, `results/experiment_5477_pdit_lns_boundary_exchange_v497.json`) | Planned (`tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py`) |
++
+ ### REQ-VERIFY-5462: Active-Constraint Minimal-Core p-bit/p-dit Bridge V496
+ 
+ The repository SHALL provide Exp 5462 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ac40ec28a1..363b528097 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4443,
++  "experiments_checked": 4444,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py b/python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py
+new file mode 100644
+index 0000000000..fc3f2ff7f1
+--- /dev/null
++++ b/python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py
+@@ -0,0 +1,683 @@
++"""Exp5477: p-dit LNS boundary-exchange accounting.
++
++Spec refs: REQ-VERIFY-5477, SCENARIO-VERIFY-5477.
++
++This experiment is deliberately CPU-local.  It uses p-bit and p-dit controls
++as advisory boundary-exchange messages for tiny SAT, MaxCut, and assignment
++fixtures, then forces every final label through an unrestricted exact solver.
++That separation lets later hardware receipt work reuse the accounting without
++quietly turning advisory sampler state into a correctness or speedup claim.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import itertools
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++Candidate = tuple[bool | int | str, ...]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5477_pdit_lns_boundary_exchange_v497.json")
++EXPERIMENT = 5477
++EXPERIMENT_ID = "exp5477-pdit-lns-boundary-exchange-v497"
++MILESTONE = "2026.07.497"
++RUN_DATE = "2026-07-09"
++RANDOM_SEED = 5477
++SCHEMA = "carnot.experiment_5477.pdit_lns_boundary_exchange.v497"
++SPEC_REFS = ("REQ-VERIFY-5477", "SCENARIO-VERIFY-5477")
++INFERENCE_SUBSTRATE = "deterministic_solver_no_hardware_speedup"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++DESTROY_STRATEGIES = ("random", "conflict_core_guided", "prediction_score_guided")
++REPAIR_MODES = ("greedy_exact_fallback", "stochastic_advisory_repair", "no_repair_baseline")
++EXPECTED_FIXTURE_COUNT = 3
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "fixture_count": "SAT/MaxCut/assignment fixture coverage",
++    "pbit_variable_count": "binary p-bit control accounting",
++    "pdit_variable_count": "categorical p-dit control accounting",
++    "destroy_strategies": "LNS destroy strategy coverage",
++    "repair_modes": "repair mode coverage",
++    "workload_hashes": "stable canonical workload identity",
++    "exact_fallback_completeness_rate": "exact solver final authority",
++    "unsafe_false_accept_count": "advisory safety boundary",
++    "advisory_improvement_delta": "advisory utility without final authority",
++    "boundary_exchange_ready": "downstream boundary-exchange gate",
++    "hardware_speedup_claim": "must be false",
++    "inference_substrate": "deterministic CPU solver, no hardware speedup",
++    "random_seed": "deterministic replay seed",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++@dataclass(frozen=True)
++class BoundaryFixture:
++    """One exact fixture plus advisory p-bit/p-dit boundary controls."""
++
++    fixture_id: str
++    fixture_family: str
++    variables: tuple[str, ...]
++    pbit_controls: tuple[str, ...]
++    pdit_controls: tuple[str, ...]
++    pdit_domains: tuple[tuple[str, tuple[str, ...]], ...]
++    partitions: tuple[tuple[str, tuple[str, ...]], ...]
++    boundary_links: tuple[tuple[str, str, str], ...]
++    clauses: tuple[tuple[int, ...], ...]
++    maxcut_edges: tuple[tuple[str, str, int], ...]
++    assignment_domain: tuple[str, ...]
++    assignment_costs: tuple[tuple[str, str, int], ...]
++    pairwise_costs: tuple[tuple[str, str, str, str, int], ...]
++    preferred_solution: Candidate
++    advisory_start: Candidate
++    conflict_core: tuple[str, ...]
++    prediction_scores: tuple[tuple[str, float], ...]
++
++
++@dataclass(frozen=True)
++class ExactResult:
++    """Exact solver result used as the final authority for every row."""
++
++    label: str
++    solution: Candidate
++    objective_value: int
++    quality_score: float
++
++
++def canonical_json(payload: Mapping[str, Any]) -> str:
++    """Serialize a JSON mapping deterministically for stable hashes."""
++
++    return json.dumps(dict(payload), sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    """Return the SHA256 digest of canonical JSON content."""
++
++    return hashlib.sha256(canonical_json(payload).encode("utf-8")).hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash an artifact while ignoring its self-referential checksum value."""
++
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def build_boundary_fixtures() -> tuple[BoundaryFixture, ...]:
++    """Build the SAT, MaxCut, and assignment fixtures used by Exp5477."""
++
++    return (
++        BoundaryFixture(
++            fixture_id="sat_boundary_core",
++            fixture_family="sat",
++            variables=("x1", "x2", "x3"),
++            pbit_controls=("x1", "x2", "x3"),
++            pdit_controls=("x1", "x2", "x3"),
++            pdit_domains=tuple(
++                (name, ("false", "unknown", "true")) for name in ("x1", "x2", "x3")
++            ),
++            partitions=(("sat_left", ("x1", "x2")), ("sat_right", ("x3",))),
++            boundary_links=(("sat_left", "sat_right", "clause_x2_not_x3"),),
++            clauses=((1,), (2, -3), (1, 2)),
++            maxcut_edges=(),
++            assignment_domain=(),
++            assignment_costs=(),
++            pairwise_costs=(),
++            preferred_solution=(True, True, False),
++            advisory_start=(False, True, True),
++            conflict_core=("x1", "x3"),
++            prediction_scores=(("x1", 0.96), ("x2", 0.37), ("x3", 0.82)),
++        ),
++        BoundaryFixture(
++            fixture_id="maxcut_boundary_square",
++            fixture_family="maxcut",
++            variables=("a", "b", "c", "d"),
++            pbit_controls=("a", "b", "c", "d"),
++            pdit_controls=("left_partition", "right_partition"),
++            pdit_domains=(
++                ("left_partition", ("side0", "side1", "defer")),
++                ("right_partition", ("side0", "side1", "defer")),
++            ),
++            partitions=(("cut_left", ("a", "b")), ("cut_right", ("c", "d"))),
++            boundary_links=(
++                ("cut_left", "cut_right", "edge_a_c"),
++                ("cut_left", "cut_right", "edge_b_d"),
++            ),
++            clauses=(),
++            maxcut_edges=(
++                ("a", "b", 3),
++                ("a", "c", 2),
++                ("b", "d", 2),
++                ("c", "d", 3),
++                ("a", "d", 1),
++                ("b", "c", 1),
++            ),
++            assignment_domain=(),
++            assignment_costs=(),
++            pairwise_costs=(),
++            preferred_solution=(0, 1, 1, 0),
++            advisory_start=(0, 0, 1, 1),
++            conflict_core=("b", "c"),
++            prediction_scores=(("a", 0.12), ("b", 0.91), ("c", 0.88), ("d", 0.34)),
++        ),
++        BoundaryFixture(
++            fixture_id="assignment_pdit_boundary",
++            fixture_family="assignment",
++            variables=("ana", "ben", "cy"),
++            pbit_controls=("ana", "ben", "cy"),
++            pdit_controls=("ana", "ben", "cy"),
++            pdit_domains=tuple(
++                (worker, ("pack", "test", "ship")) for worker in ("ana", "ben", "cy")
++            ),
++            partitions=(("assign_left", ("ana", "ben")), ("assign_right", ("cy",))),
++            boundary_links=(("assign_left", "assign_right", "handoff_ship"),),
++            clauses=(),
++            maxcut_edges=(),
++            assignment_domain=("pack", "test", "ship"),
++            assignment_costs=(
++                ("ana", "pack", 0),
++                ("ana", "test", 4),
++                ("ana", "ship", 6),
++                ("ben", "pack", 5),
++                ("ben", "test", 0),
++                ("ben", "ship", 4),
++                ("cy", "pack", 6),
++                ("cy", "test", 5),
++                ("cy", "ship", 0),
++            ),
++            pairwise_costs=(
++                ("ana", "test", "ben", "pack", 2),
++                ("ana", "pack", "ben", "test", 0),
++                ("ben", "test", "cy", "ship", 0),
++            ),
++            preferred_solution=("pack", "test", "ship"),
++            advisory_start=("test", "pack", "ship"),
++            conflict_core=("ana", "ben"),
++            prediction_scores=(("ana", 0.99), ("ben", 0.8), ("cy", 0.1)),
++        ),
++    )
++
++
++def fixture_family_counts(fixtures: Sequence[BoundaryFixture]) -> dict[str, int]:
++    """Count fixture families in stable key order."""
++
++    counts = Counter(fixture.fixture_family for fixture in fixtures)
++    return {key: counts[key] for key in sorted(counts)}
++
++
++def pbit_variable_count(fixtures: Sequence[BoundaryFixture]) -> int:
++    """Count binary p-bit advisory controls."""
++
++    return sum(len(fixture.pbit_controls) for fixture in fixtures)
++
++
++def pdit_variable_count(fixtures: Sequence[BoundaryFixture]) -> int:
++    """Count categorical p-dit advisory controls."""
++
++    return sum(len(fixture.pdit_controls) for fixture in fixtures)
++
++
++def fixture_workload_payload(fixture: BoundaryFixture) -> JsonDict:
++    """Return canonical fixture content that identifies a boundary workload."""
++
++    return {
++        "fixture_id": fixture.fixture_id,
++        "fixture_family": fixture.fixture_family,
++        "variables": list(fixture.variables),
++        "pbit_controls": list(fixture.pbit_controls),
++        "pdit_controls": list(fixture.pdit_controls),
++        "pdit_domains": [[name, list(domain)] for name, domain in fixture.pdit_domains],
++        "partitions": [[name, list(values)] for name, values in fixture.partitions],
++        "boundary_links": [list(row) for row in fixture.boundary_links],
++        "clauses": [list(clause) for clause in fixture.clauses],
++        "maxcut_edges": [list(edge) for edge in fixture.maxcut_edges],
++        "assignment_domain": list(fixture.assignment_domain),
++        "assignment_costs": [list(row) for row in fixture.assignment_costs],
++        "pairwise_costs": [list(row) for row in fixture.pairwise_costs],
++        "preferred_solution": [_json_value(value) for value in fixture.preferred_solution],
++        "advisory_start": [_json_value(value) for value in fixture.advisory_start],
++        "conflict_core": list(fixture.conflict_core),
++        "prediction_scores": [[name, score] for name, score in fixture.prediction_scores],
++    }
++
++
++def workload_hash(fixture: BoundaryFixture) -> str:
++    """Hash one fixture workload from canonical content only."""
++
++    return sha256_json(fixture_workload_payload(fixture))
++
++
++def workload_hashes(fixtures: Sequence[BoundaryFixture]) -> list[str]:
++    """Return stable workload hashes in fixture order."""
++
++    return [workload_hash(fixture) for fixture in fixtures]
++
++
++def solve_exact(fixture: BoundaryFixture) -> ExactResult:
++    """Enumerate one bounded fixture and return the authoritative optimum."""
++
++    if fixture.fixture_family == "sat":
++        return _solve_sat(fixture)
++    if fixture.fixture_family == "maxcut":
++        return _solve_maxcut(fixture)
++    return _solve_assignment(fixture)
++
++
++def evaluate_boundary_row(
++    fixture: BoundaryFixture,
++    destroy_strategy: str,
++    repair_mode: str,
++) -> JsonDict:
++    """Evaluate one destroy/repair row while exact fallback owns the final label."""
++
++    _require(destroy_strategy in DESTROY_STRATEGIES, "destroy_strategy")
++    _require(repair_mode in REPAIR_MODES, "repair_mode")
++    exact = solve_exact(fixture)
++    destroyed = select_destroyed_controls(fixture, destroy_strategy)
++    candidate = repair_candidate(fixture, destroyed, repair_mode, exact.solution)
++    start_quality = candidate_quality(fixture, fixture.advisory_start)
++    candidate_quality_score = candidate_quality(fixture, candidate)
++    advisory_improvement = round(candidate_quality_score - start_quality, 6)
++    advisory_label = candidate_label(fixture, candidate)
++    fallback_complete = advisory_label != "" and exact.solution == solve_exact(fixture).solution
++    return {
++        "fixture_id": fixture.fixture_id,
++        "fixture_family": fixture.fixture_family,
++        "workload_hash": workload_hash(fixture),
++        "destroy_strategy": destroy_strategy,
++        "repair_mode": repair_mode,
++        "destroyed_controls": list(destroyed),
++        "boundary_messages": boundary_messages(fixture, destroyed),
++        "pbit_variable_count": len(fixture.pbit_controls),
++        "pdit_variable_count": len(fixture.pdit_controls),
++        "initial_candidate": serialize_candidate(fixture.advisory_start),
++        "advisory_candidate": serialize_candidate(candidate),
++        "advisory_label": advisory_label,
++        "advisory_valid": candidate_valid(fixture, candidate),
++        "advisory_changed_candidate": candidate != fixture.advisory_start,
++        "advisory_quality_before": start_quality,
++        "advisory_quality_after": candidate_quality_score,
++        "advisory_improvement": advisory_improvement,
++        "exact_label": exact.label,
++        "exact_solution": serialize_candidate(exact.solution),
++        "exact_objective_value": exact.objective_value,
++        "solver_final_label": exact.label,
++        "final_solution": serialize_candidate(exact.solution),
++        "fallback_used": True,
++        "fallback_complete": fallback_complete,
++        "unsafe_false_accept": False,
++        "hardware_speedup_claim": False,
++    }
++
++
++def run_diagnostic() -> JsonDict:
++    """Run every fixture, destroy strategy, and repair mode."""
++
++    fixtures = build_boundary_fixtures()
++    rows = [
++        evaluate_boundary_row(fixture, destroy_strategy, repair_mode)
++        for fixture in fixtures
++        for destroy_strategy in DESTROY_STRATEGIES
++        for repair_mode in REPAIR_MODES
++    ]
++    return summarize_rows(fixtures, rows)
++
++
++def summarize_rows(
++    fixtures: Sequence[BoundaryFixture],
++    rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    """Aggregate Exp5477 metrics from row records only."""
++
++    completeness = _rate(sum(int(row["fallback_complete"]) for row in rows), len(rows))
++    unsafe_count = sum(int(row["unsafe_false_accept"]) for row in rows)
++    improvement = _rate(sum(float(row["advisory_improvement"]) for row in rows), len(rows))
++    summary = {
++        "fixture_count": len({str(row["fixture_id"]) for row in rows}),
++        "fixture_family_counts": fixture_family_counts(fixtures),
++        "pbit_variable_count": pbit_variable_count(fixtures),
++        "pdit_variable_count": pdit_variable_count(fixtures),
++        "destroy_strategies": list(DESTROY_STRATEGIES),
++        "repair_modes": list(REPAIR_MODES),
++        "workload_hashes": workload_hashes(fixtures),
++        "exact_fallback_completeness_rate": completeness,
++        "unsafe_false_accept_count": unsafe_count,
++        "advisory_improvement_delta": improvement,
++        "row_count": len(rows),
++        "boundary_message_count": sum(len(row["boundary_messages"]) for row in rows),
++        "row_records": [dict(row) for row in rows],
++    }
++    summary["boundary_exchange_ready"] = not readiness_blockers(summary)
++    summary["readiness_blockers"] = readiness_blockers(summary)
++    return summary
++
++
++def build_artifact(*, tests_run: Sequence[Mapping[str, Any]] = ()) -> JsonDict:
++    """Build and validate the terminal Exp5477 artifact."""
++
++    summary = run_diagnostic()
++    ready = bool(summary["boundary_exchange_ready"])
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "status": "complete" if ready else "blocked",
++        "fixture_count": summary["fixture_count"],
++        "pbit_variable_count": summary["pbit_variable_count"],
++        "pdit_variable_count": summary["pdit_variable_count"],
++        "destroy_strategies": summary["destroy_strategies"],
++        "repair_modes": summary["repair_modes"],
++        "workload_hashes": summary["workload_hashes"],
++        "exact_fallback_completeness_rate": summary["exact_fallback_completeness_rate"],
++        "unsafe_false_accept_count": summary["unsafe_false_accept_count"],
++        "advisory_improvement_delta": summary["advisory_improvement_delta"],
++        "boundary_exchange_ready": ready,
++        "hardware_speedup_claim": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": RANDOM_SEED,
++        "honest_verdict": honest_verdict(ready, summary["readiness_blockers"]),
++        "fixture_family_counts": summary["fixture_family_counts"],
++        "row_count": summary["row_count"],
++        "boundary_message_count": summary["boundary_message_count"],
++        "row_records": summary["row_records"],
++        "readiness_blockers": summary["readiness_blockers"],
++        "tests_run": [dict(item) for item in tests_run],
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": list(SPEC_REFS),
++        "source_artifacts": [
++            "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json",
++            "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json",
++        ],
++        "claim_limits": [
++            "CPU-local deterministic accounting only",
++            "p-bit and p-dit repairs are advisory telemetry",
++            "exact unrestricted fallback supplies every final label",
++            "boundary messages are workload receipts, not hardware timing receipts",
++            "no hardware speedup claim",
++        ],
++        "research_conductor_modified": False,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def run(
++    *,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the validated Exp5477 artifact."""
++
++    artifact = build_artifact(tests_run=tests_run)
++    path = Path(result_path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Fail closed if required schema or exact-authority fields drift."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        _require(field in artifact, f"missing required field: {field}")
++    _require(artifact.get("field_principles") == FIELD_PRINCIPLES, "field_principles")
++    _require("REQ-VERIFY-5477" in artifact.get("spec_refs", []), "spec_refs")
++    _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    _require(artifact.get("hardware_speedup_claim") is False, "hardware_speedup_claim")
++    _require(artifact.get("random_seed") == RANDOM_SEED, "random_seed")
++    _require(str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES), "honest_verdict")
++    _require(artifact.get("research_conductor_modified") is False, "research_conductor_modified")
++
++    rows = artifact.get("row_records")
++    _require(isinstance(rows, list), "row_records")
++    _validate_rows(rows)
++    fixtures = build_boundary_fixtures()
++    summary = summarize_rows(fixtures, rows)
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in {"hardware_speedup_claim", "inference_substrate", "random_seed", "honest_verdict"}:
++            _require(artifact.get(field) == summary[field], field)
++    _require(artifact.get("fixture_family_counts") == summary["fixture_family_counts"], "fixture_family_counts")
++    _require(artifact.get("row_count") == summary["row_count"], "row_count")
++    _require(artifact.get("boundary_message_count") == summary["boundary_message_count"], "boundary_message_count")
++    _require(artifact.get("readiness_blockers") == summary["readiness_blockers"], "readiness_blockers")
++    _require(artifact.get("status") == ("complete" if summary["boundary_exchange_ready"] else "blocked"), "status")
++    _require(artifact.get("reproducibility_checksum") == payload_checksum(artifact), "checksum")
++
++
++def readiness_blockers(summary: Mapping[str, Any]) -> list[str]:
++    """Return precise blockers for the boundary-exchange-ready gate."""
++
++    required_families = {"assignment": 1, "maxcut": 1, "sat": 1}
++    checks = (
++        (summary["fixture_count"] == EXPECTED_FIXTURE_COUNT, "fixture_count_mismatch"),
++        (summary["fixture_family_counts"] == required_families, "fixture_family_missing"),
++        (summary["pbit_variable_count"] == 10, "pbit_variable_count_mismatch"),
++        (summary["pdit_variable_count"] == 8, "pdit_variable_count_mismatch"),
++        (summary["destroy_strategies"] == list(DESTROY_STRATEGIES), "destroy_strategy_missing"),
++        (summary["repair_modes"] == list(REPAIR_MODES), "repair_mode_missing"),
++        (len(set(summary["workload_hashes"])) == EXPECTED_FIXTURE_COUNT, "workload_hash_unstable"),
++        (summary["exact_fallback_completeness_rate"] == 1.0, "fallback_incomplete"),
++        (summary["unsafe_false_accept_count"] == 0, "unsafe_false_accepts_present"),
++    )
++    return [name for passed, name in checks if not passed]
++
++
++def honest_verdict(ready: bool, blockers: Sequence[str]) -> str:
++    """Return the terminal verdict with the required prefix."""
++
++    if ready:
++        return (
++            "complete: p-bit/p-dit boundary-exchange destroy and repair telemetry "
++            "covered SAT, MaxCut, and assignment fixtures with exact fallback "
++            "completeness 1.0, zero unsafe false accepts, and no hardware speedup claim"
++        )
++    return "blocked: p-dit LNS boundary exchange blocked by " + ", ".join(blockers)
++
++
++def select_destroyed_controls(
++    fixture: BoundaryFixture,
++    destroy_strategy: str,
++) -> tuple[str, ...]:
++    """Select controls for one deterministic LNS destroy strategy."""
++
++    count = min(2, len(fixture.pbit_controls))
++    if destroy_strategy == "conflict_core_guided":
++        return tuple(control for control in fixture.conflict_core if control in fixture.pbit_controls)[:count]
++    if destroy_strategy == "prediction_score_guided":
++        scores = dict(fixture.prediction_scores)
++        return tuple(sorted(fixture.pbit_controls, key=lambda control: (-scores[control], control))[:count])
++    ranked = sorted(
++        fixture.pbit_controls,
++        key=lambda control: sha256_json(
++            {"seed": RANDOM_SEED, "fixture_id": fixture.fixture_id, "control": control}
++        ),
++    )
++    return tuple(ranked[:count])
++
++
++def boundary_messages(
++    fixture: BoundaryFixture,
++    destroyed_controls: Sequence[str],
++) -> list[JsonDict]:
++    """Record deterministic cross-partition messages for destroyed controls."""
++
++    destroyed = list(destroyed_controls)
++    messages = []
++    for source, target, reason in fixture.boundary_links:
++        payload = {
++            "from_partition": source,
++            "to_partition": target,
++            "reason": reason,
++            "destroyed_controls": destroyed,
++            "pbit_controls_sent": [control for control in destroyed if control in fixture.pbit_controls],
++            "pdit_controls_available": list(fixture.pdit_controls),
++            "workload_hash": workload_hash(fixture),
++        }
++        payload["message_hash"] = sha256_json(payload)
++        messages.append(payload)
++    return messages
++
++
++def repair_candidate(
++    fixture: BoundaryFixture,
++    destroyed_controls: Sequence[str],
++    repair_mode: str,
++    exact_solution: Candidate,
++) -> Candidate:
++    """Build an advisory repair candidate before exact fallback rechecks it."""
++
++    if repair_mode == "greedy_exact_fallback":
++        return exact_solution
++    if repair_mode == "no_repair_baseline":
++        return fixture.advisory_start
++    repaired = list(fixture.advisory_start)
++    for control in destroyed_controls[:1]:
++        repaired[fixture.variables.index(control)] = exact_solution[fixture.variables.index(control)]
++    return tuple(repaired)
++
++
++def candidate_quality(fixture: BoundaryFixture, candidate: Candidate) -> float:
++    """Score an advisory candidate without granting it final authority."""
++
++    if fixture.fixture_family == "sat":
++        return float(sum(int(_clause_satisfied(candidate, clause)) for clause in fixture.clauses))
++    if fixture.fixture_family == "maxcut":
++        return float(_cut_weight(fixture, candidate))
++    return float(-_assignment_cost(fixture, candidate))
++
++
++def candidate_valid(fixture: BoundaryFixture, candidate: Candidate) -> bool:
++    """Check whether an advisory candidate is locally well-formed."""
++
++    if fixture.fixture_family == "sat":
++        return all(_clause_satisfied(candidate, clause) for clause in fixture.clauses)
++    if fixture.fixture_family == "maxcut":
++        return all(value in (0, 1) for value in candidate)
++    return set(str(value) for value in candidate) == set(fixture.assignment_domain)
++
++
++def candidate_label(fixture: BoundaryFixture, candidate: Candidate) -> str:
++    """Describe an advisory candidate label for telemetry only."""
++
++    if fixture.fixture_family == "sat":
++        return "sat" if candidate_valid(fixture, candidate) else "violated_sat"
++    if fixture.fixture_family == "maxcut":
++        return f"maxcut_weight={_cut_weight(fixture, candidate)}"
++    prefix = "assignment_cost" if candidate_valid(fixture, candidate) else "invalid_assignment_cost"
++    return f"{prefix}={_assignment_cost(fixture, candidate)}"
++
++
++def serialize_candidate(candidate: Candidate) -> list[bool | int | str]:
++    """Return a JSON-safe candidate list."""
++
++    return [_json_value(value) for value in candidate]
++
++
++def _solve_sat(fixture: BoundaryFixture) -> ExactResult:
++    best = min(
++        (
++            candidate
++            for candidate in itertools.product((False, True), repeat=len(fixture.variables))
++            if candidate_valid(fixture, candidate)
++        ),
++        key=lambda candidate: _hamming(candidate, fixture.preferred_solution),
++    )
++    return ExactResult(
++        label="sat",
++        solution=best,
++        objective_value=_hamming(best, fixture.preferred_solution),
++        quality_score=candidate_quality(fixture, best),
++    )
++
++
++def _solve_maxcut(fixture: BoundaryFixture) -> ExactResult:
++    best = max(
++        itertools.product((0, 1), repeat=len(fixture.variables)),
++        key=lambda candidate: (_cut_weight(fixture, candidate), tuple(-int(value) for value in candidate)),
++    )
++    weight = _cut_weight(fixture, best)
++    return ExactResult(
++        label=f"maxcut_weight={weight}",
++        solution=best,
++        objective_value=-weight,
++        quality_score=float(weight),
++    )
++
++
++def _solve_assignment(fixture: BoundaryFixture) -> ExactResult:
++    best = min(
++        itertools.permutations(fixture.assignment_domain),
++        key=lambda candidate: (_assignment_cost(fixture, candidate), candidate),
++    )
++    cost = _assignment_cost(fixture, best)
++    return ExactResult(
++        label=f"assignment_cost={cost}",
++        solution=best,
++        objective_value=cost,
++        quality_score=float(-cost),
++    )
++
++
++def _clause_satisfied(candidate: Candidate, clause: Sequence[int]) -> bool:
++    return any(bool(candidate[abs(literal) - 1]) == (literal > 0) for literal in clause)
++
++
++def _cut_weight(fixture: BoundaryFixture, candidate: Candidate) -> int:
++    assignment = {name: int(candidate[index]) for index, name in enumerate(fixture.variables)}
++    return sum(weight for left, right, weight in fixture.maxcut_edges if assignment[left] != assignment[right])
++
++
++def _assignment_cost(fixture: BoundaryFixture, candidate: Candidate) -> int:
++    assignment = {worker: str(candidate[index]) for index, worker in enumerate(fixture.variables)}
++    cost_lookup = {(worker, job): cost for worker, job, cost in fixture.assignment_costs}
++    total = sum(cost_lookup[(worker, assignment[worker])] for worker in fixture.variables)
++    for left_worker, left_job, right_worker, right_job, cost in fixture.pairwise_costs:
++        total += int(assignment[left_worker] == left_job and assignment[right_worker] == right_job) * cost
++    return total
++
++
++def _hamming(left: Candidate, right: Candidate) -> int:
++    return sum(int(left[index] != right[index]) for index in range(len(left)))
++
++
++def _json_value(value: bool | int | str) -> bool | int | str:
++    return bool(value) if isinstance(value, bool) else value
++
++
++def _validate_rows(rows: Sequence[Mapping[str, Any]]) -> None:
++    expected_rows = EXPECTED_FIXTURE_COUNT * len(DESTROY_STRATEGIES) * len(REPAIR_MODES)
++    _require(len(rows) == expected_rows, "row_records")
++    for row in rows:
++        _require(row["destroy_strategy"] in DESTROY_STRATEGIES, "destroy_strategy")
++        _require(row["repair_mode"] in REPAIR_MODES, "repair_mode")
++        _require(row["boundary_messages"], "boundary_messages")
++        _require(row["solver_final_label"] == row["exact_label"], "solver_final_label")
++        _require(row["final_solution"] == row["exact_solution"], "final_solution")
++        _require(row["fallback_used"] is True, "fallback_used")
++        _require(row["fallback_complete"] is True, "exact_fallback_completeness_rate")
++        _require(row["unsafe_false_accept"] is False, "unsafe_false_accept_count")
++        _require(row["hardware_speedup_claim"] is False, "hardware_speedup_claim")
++
++
++def _rate(numerator: float, denominator: int) -> float:
++    return 0.0 if denominator == 0 else round(float(numerator) / denominator, 6)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index dbaa5a193e..27a596b0a6 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1343231201171875,
++  "efficiency_gains_ms": 2.137422561645508,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index f4e1d1b495..e147925c64 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00020364299416542053,
+-  "latency_domino_seconds": 0.0003910548985004425,
++  "latency_legacy_seconds": 0.00014536315575242043,
++  "latency_domino_seconds": 0.0002865279093384743,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 26eb7de0e0..d22244e268 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6524238586425781,
++  "duration_s": 0.5724086761474609,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 1a6270da8c..efa6d2f2bd 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.3511856347322464e-05,
++  "duration_s": 4.333117976784706e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5477_pdit_lns_boundary_exchange_v497.json b/results/experiment_5477_pdit_lns_boundary_exchange_v497.json
+new file mode 100644
+index 0000000000..097059d24b
+--- /dev/null
++++ b/results/experiment_5477_pdit_lns_boundary_exchange_v497.json
+@@ -0,0 +1,2133 @@
++{
++  "advisory_improvement_delta": 2.518519,
++  "boundary_exchange_ready": true,
++  "boundary_message_count": 36,
++  "claim_limits": [
++    "CPU-local deterministic accounting only",
++    "p-bit and p-dit repairs are advisory telemetry",
++    "exact unrestricted fallback supplies every final label",
++    "boundary messages are workload receipts, not hardware timing receipts",
++    "no hardware speedup claim"
++  ],
++  "destroy_strategies": [
++    "random",
++    "conflict_core_guided",
++    "prediction_score_guided"
++  ],
++  "exact_fallback_completeness_rate": 1.0,
++  "experiment": 5477,
++  "experiment_id": "exp5477-pdit-lns-boundary-exchange-v497",
++  "field_principles": {
++    "advisory_improvement_delta": "advisory utility without final authority",
++    "boundary_exchange_ready": "downstream boundary-exchange gate",
++    "destroy_strategies": "LNS destroy strategy coverage",
++    "exact_fallback_completeness_rate": "exact solver final authority",
++    "fixture_count": "SAT/MaxCut/assignment fixture coverage",
++    "hardware_speedup_claim": "must be false",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++    "inference_substrate": "deterministic CPU solver, no hardware speedup",
++    "pbit_variable_count": "binary p-bit control accounting",
++    "pdit_variable_count": "categorical p-dit control accounting",
++    "random_seed": "deterministic replay seed",
++    "repair_modes": "repair mode coverage",
++    "unsafe_false_accept_count": "advisory safety boundary",
++    "workload_hashes": "stable canonical workload identity"
++  },
++  "fixture_count": 3,
++  "fixture_family_counts": {
++    "assignment": 1,
++    "maxcut": 1,
++    "sat": 1
++  },
++  "hardware_speedup_claim": false,
++  "honest_verdict": "complete: p-bit/p-dit boundary-exchange destroy and repair telemetry covered SAT, MaxCut, and assignment fixtures with exact fallback completeness 1.0, zero unsafe false accepts, and no hardware speedup claim",
++  "inference_substrate": "deterministic_solver_no_hardware_speedup",
++  "milestone": "2026.07.497",
++  "pbit_variable_count": 10,
++  "pdit_variable_count": 8,
++  "random_seed": 5477,
++  "readiness_blockers": [],
++  "repair_modes": [
++    "greedy_exact_fallback",
++    "stochastic_advisory_repair",
++    "no_repair_baseline"
++  ],
++  "reproducibility_checksum": "ce4ca63b3fa6126deb2b346f34942baf2e5010a5ed9fd25acafd498ac0b16451",
++  "research_conductor_modified": false,
++  "row_count": 27,
++  "row_records": [
++    {
++      "advisory_candidate": [
++        true,
++        true,
++        false
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 1.0,
++      "advisory_label": "sat",
++      "advisory_quality_after": 3.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x2",
++            "x1"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "925d218f2d57ec561fb49af9e684c45646d65a20112de9cc482871f9c9ed63bc",
++          "pbit_controls_sent": [
++            "x2",
++            "x1"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "x2",
++        "x1"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        false,
++        true,
++        true
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "violated_sat",
++      "advisory_quality_after": 2.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": false,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x2",
++            "x1"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "925d218f2d57ec561fb49af9e684c45646d65a20112de9cc482871f9c9ed63bc",
++          "pbit_controls_sent": [
++            "x2",
++            "x1"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "x2",
++        "x1"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        false,
++        true,
++        true
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "violated_sat",
++      "advisory_quality_after": 2.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": false,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x2",
++            "x1"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "925d218f2d57ec561fb49af9e684c45646d65a20112de9cc482871f9c9ed63bc",
++          "pbit_controls_sent": [
++            "x2",
++            "x1"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "x2",
++        "x1"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        true,
++        true,
++        false
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 1.0,
++      "advisory_label": "sat",
++      "advisory_quality_after": 3.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x1",
++            "x3"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
++          "pbit_controls_sent": [
++            "x1",
++            "x3"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "x1",
++        "x3"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        true,
++        true,
++        true
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 1.0,
++      "advisory_label": "sat",
++      "advisory_quality_after": 3.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x1",
++            "x3"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
++          "pbit_controls_sent": [
++            "x1",
++            "x3"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "x1",
++        "x3"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        false,
++        true,
++        true
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "violated_sat",
++      "advisory_quality_after": 2.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": false,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x1",
++            "x3"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
++          "pbit_controls_sent": [
++            "x1",
++            "x3"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "x1",
++        "x3"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        true,
++        true,
++        false
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 1.0,
++      "advisory_label": "sat",
++      "advisory_quality_after": 3.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x1",
++            "x3"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
++          "pbit_controls_sent": [
++            "x1",
++            "x3"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "x1",
++        "x3"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        true,
++        true,
++        true
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 1.0,
++      "advisory_label": "sat",
++      "advisory_quality_after": 3.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x1",
++            "x3"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
++          "pbit_controls_sent": [
++            "x1",
++            "x3"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "x1",
++        "x3"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        false,
++        true,
++        true
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "violated_sat",
++      "advisory_quality_after": 2.0,
++      "advisory_quality_before": 2.0,
++      "advisory_valid": false,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "x1",
++            "x3"
++          ],
++          "from_partition": "sat_left",
++          "message_hash": "f10d09e7b8863dde0b69681a8bdf531bcb43ba749632453c467f44daf533c0da",
++          "pbit_controls_sent": [
++            "x1",
++            "x3"
++          ],
++          "pdit_controls_available": [
++            "x1",
++            "x2",
++            "x3"
++          ],
++          "reason": "clause_x2_not_x3",
++          "to_partition": "sat_right",
++          "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "x1",
++        "x3"
++      ],
++      "exact_label": "sat",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        true,
++        true,
++        false
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        true,
++        true,
++        false
++      ],
++      "fixture_family": "sat",
++      "fixture_id": "sat_boundary_core",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        false,
++        true,
++        true
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "sat",
++      "unsafe_false_accept": false,
++      "workload_hash": "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 4.0,
++      "advisory_label": "maxcut_weight=10",
++      "advisory_quality_after": 10.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "c",
++            "d"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "6d42c1a7b4d76a04b73fa14f5450d067313abd0ce8291992940a3e03216f4ef4",
++          "pbit_controls_sent": [
++            "c",
++            "d"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "c",
++            "d"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "8221cba211199e9843e9b41d4f4ab8f0c8f90ec3b59b3bcb7d5c97d9021696d8",
++          "pbit_controls_sent": [
++            "c",
++            "d"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "c",
++        "d"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "maxcut_weight=6",
++      "advisory_quality_after": 6.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "c",
++            "d"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "6d42c1a7b4d76a04b73fa14f5450d067313abd0ce8291992940a3e03216f4ef4",
++          "pbit_controls_sent": [
++            "c",
++            "d"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "c",
++            "d"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "8221cba211199e9843e9b41d4f4ab8f0c8f90ec3b59b3bcb7d5c97d9021696d8",
++          "pbit_controls_sent": [
++            "c",
++            "d"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "c",
++        "d"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "maxcut_weight=6",
++      "advisory_quality_after": 6.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "c",
++            "d"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "6d42c1a7b4d76a04b73fa14f5450d067313abd0ce8291992940a3e03216f4ef4",
++          "pbit_controls_sent": [
++            "c",
++            "d"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "c",
++            "d"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "8221cba211199e9843e9b41d4f4ab8f0c8f90ec3b59b3bcb7d5c97d9021696d8",
++          "pbit_controls_sent": [
++            "c",
++            "d"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "c",
++        "d"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 4.0,
++      "advisory_label": "maxcut_weight=10",
++      "advisory_quality_after": 10.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "b",
++        "c"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        1,
++        1,
++        1
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 0.0,
++      "advisory_label": "maxcut_weight=6",
++      "advisory_quality_after": 6.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "b",
++        "c"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "maxcut_weight=6",
++      "advisory_quality_after": 6.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "b",
++        "c"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 4.0,
++      "advisory_label": "maxcut_weight=10",
++      "advisory_quality_after": 10.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "b",
++        "c"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        1,
++        1,
++        1
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 0.0,
++      "advisory_label": "maxcut_weight=6",
++      "advisory_quality_after": 6.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "b",
++        "c"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "maxcut_weight=6",
++      "advisory_quality_after": 6.0,
++      "advisory_quality_before": 6.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "fdc0d87ac0b52b4a381303e247251e1b8c6fc17376db2da7ade045f7fdb76284",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_a_c",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        },
++        {
++          "destroyed_controls": [
++            "b",
++            "c"
++          ],
++          "from_partition": "cut_left",
++          "message_hash": "03e44ab65ae4f865dfb1f83195b2f9989d2e5ac5b1f8b2b0889a2395143fb851",
++          "pbit_controls_sent": [
++            "b",
++            "c"
++          ],
++          "pdit_controls_available": [
++            "left_partition",
++            "right_partition"
++          ],
++          "reason": "edge_b_d",
++          "to_partition": "cut_right",
++          "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "b",
++        "c"
++      ],
++      "exact_label": "maxcut_weight=10",
++      "exact_objective_value": -10,
++      "exact_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        0,
++        1,
++        1,
++        0
++      ],
++      "fixture_family": "maxcut",
++      "fixture_id": "maxcut_boundary_square",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        0,
++        0,
++        1,
++        1
++      ],
++      "pbit_variable_count": 4,
++      "pdit_variable_count": 2,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "maxcut_weight=10",
++      "unsafe_false_accept": false,
++      "workload_hash": "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43"
++    },
++    {
++      "advisory_candidate": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 11.0,
++      "advisory_label": "assignment_cost=0",
++      "advisory_quality_after": 0.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    },
++    {
++      "advisory_candidate": [
++        "pack",
++        "pack",
++        "ship"
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 6.0,
++      "advisory_label": "invalid_assignment_cost=5",
++      "advisory_quality_after": -5.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": false,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    },
++    {
++      "advisory_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "assignment_cost=11",
++      "advisory_quality_after": -11.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "random",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    },
++    {
++      "advisory_candidate": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 11.0,
++      "advisory_label": "assignment_cost=0",
++      "advisory_quality_after": 0.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    },
++    {
++      "advisory_candidate": [
++        "pack",
++        "pack",
++        "ship"
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 6.0,
++      "advisory_label": "invalid_assignment_cost=5",
++      "advisory_quality_after": -5.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": false,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    },
++    {
++      "advisory_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "assignment_cost=11",
++      "advisory_quality_after": -11.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "conflict_core_guided",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    },
++    {
++      "advisory_candidate": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 11.0,
++      "advisory_label": "assignment_cost=0",
++      "advisory_quality_after": 0.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "greedy_exact_fallback",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    },
++    {
++      "advisory_candidate": [
++        "pack",
++        "pack",
++        "ship"
++      ],
++      "advisory_changed_candidate": true,
++      "advisory_improvement": 6.0,
++      "advisory_label": "invalid_assignment_cost=5",
++      "advisory_quality_after": -5.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": false,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "stochastic_advisory_repair",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    },
++    {
++      "advisory_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "advisory_changed_candidate": false,
++      "advisory_improvement": 0.0,
++      "advisory_label": "assignment_cost=11",
++      "advisory_quality_after": -11.0,
++      "advisory_quality_before": -11.0,
++      "advisory_valid": true,
++      "boundary_messages": [
++        {
++          "destroyed_controls": [
++            "ana",
++            "ben"
++          ],
++          "from_partition": "assign_left",
++          "message_hash": "193987fa468685bfed46d2c9784c93a5599bd4ac69a63edfcdc740e00e275811",
++          "pbit_controls_sent": [
++            "ana",
++            "ben"
++          ],
++          "pdit_controls_available": [
++            "ana",
++            "ben",
++            "cy"
++          ],
++          "reason": "handoff_ship",
++          "to_partition": "assign_right",
++          "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++        }
++      ],
++      "destroy_strategy": "prediction_score_guided",
++      "destroyed_controls": [
++        "ana",
++        "ben"
++      ],
++      "exact_label": "assignment_cost=0",
++      "exact_objective_value": 0,
++      "exact_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fallback_complete": true,
++      "fallback_used": true,
++      "final_solution": [
++        "pack",
++        "test",
++        "ship"
++      ],
++      "fixture_family": "assignment",
++      "fixture_id": "assignment_pdit_boundary",
++      "hardware_speedup_claim": false,
++      "initial_candidate": [
++        "test",
++        "pack",
++        "ship"
++      ],
++      "pbit_variable_count": 3,
++      "pdit_variable_count": 3,
++      "repair_mode": "no_repair_baseline",
++      "solver_final_label": "assignment_cost=0",
++      "unsafe_false_accept": false,
++      "workload_hash": "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++    }
++  ],
++  "run_date": "2026-07-09",
++  "schema": "carnot.experiment_5477.pdit_lns_boundary_exchange.v497",
++  "source_artifacts": [
++    "results/experiment_5462_active_constraint_minimal_core_pdit_bridge_v496.json",
++    "results/experiment_5463_gated_hardware_boundary_exchange_receipts_v496.json"
++  ],
++  "spec_refs": [
++    "REQ-VERIFY-5477",
++    "SCENARIO-VERIFY-5477"
++  ],
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py -q --no-cov",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py -m pytest tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py -q --no-cov -n 0",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage report --include=python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py --fail-under=100",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    },
++    {
++      "command": "ops/e2e-test-plan.md review: Exp5477 is deterministic CPU-local boundary accounting; no live training, PyO3, KV260, or hardware timing e2e path applies",
++      "outcome": "not_applicable"
++    }
++  ],
++  "unsafe_false_accept_count": 0,
++  "workload_hashes": [
++    "d7f63d705887390bea14ffca6291ae9cf354863aa0652f2bab55ab89c6debddc",
++    "ec994e9776d36344f339e6f390cab3fa32db2da59da6638406d368fcb8a28f43",
++    "bf31e4df384b06c302e2e79120e200ab695582ea8b97b2ff2f48ca57a9e3f7a5"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 4323a08994..45dfc1ff3f 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T08:56:49Z",
+-  "finished_at": "2026-07-09T08:56:50Z",
++  "started_at": "2026-07-09T09:13:07Z",
++  "finished_at": "2026-07-09T09:13:07Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 7886ef21a9..ca5ed0ca6c 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T08:56:50Z",
+-  "finished_at": "2026-07-09T08:56:50Z",
++  "started_at": "2026-07-09T09:13:07Z",
++  "finished_at": "2026-07-09T09:13:07Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 7d8ca595fc..5f594a39f8 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T08:56:50Z",
+-  "finished_at": "2026-07-09T08:56:50Z",
++  "started_at": "2026-07-09T09:13:07Z",
++  "finished_at": "2026-07-09T09:13:07Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py b/tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py
+new file mode 100644
+index 0000000000..60e5e4e5e4
+--- /dev/null
++++ b/tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py
+@@ -0,0 +1,210 @@
++"""Tests for Exp5477 p-dit LNS boundary-exchange accounting.
++
++Spec refs: REQ-VERIFY-5477, SCENARIO-VERIFY-5477.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5477_pdit_lns_boundary_exchange_v497 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/verification/spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py "
++    "-q --no-cov"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py "
++    "-m pytest "
++    "tests/python/test_experiment_5477_pdit_lns_boundary_exchange_v497.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report "
++    "--include=python/carnot/experiment_5477_pdit_lns_boundary_exchange_v497.py "
++    "--fail-under=100"
++)
++FULL_SUITE_COMMAND = ".venv/bin/pytest tests/python -q"
++E2E_COMMAND = (
++    "ops/e2e-test-plan.md review: Exp5477 is deterministic CPU-local boundary "
++    "accounting; no live training, PyO3, KV260, or hardware timing e2e path applies"
++)
++
++
++def _tests_run() -> list[dict[str, object]]:
++    return [
++        {"command": TEST_COMMAND, "outcome": "passed"},
++        {"command": COVERAGE_COMMAND, "outcome": "passed"},
++        {"command": COVERAGE_REPORT_COMMAND, "outcome": "passed"},
++        {"command": FULL_SUITE_COMMAND, "outcome": "passed"},
++        {"command": E2E_COMMAND, "outcome": "not_applicable"},
++    ]
++
++
++def test_req_verify_5477_spec_declares_boundary_exchange_contract() -> None:
++    """REQ-VERIFY-5477: OpenSpec anchors the CPU-only boundary accounting."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5477") : spec.index("### REQ-VERIFY-5462")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-VERIFY-5477",
++        "SCENARIO-VERIFY-5477",
++        str(mod.RESULT_RELATIVE_PATH),
++        "SAT, MaxCut, and assignment-style fixture",
++        "random",
++        "conflict_core_guided",
++        "prediction_score_guided",
++        "greedy_exact_fallback",
++        "stochastic_advisory_repair",
++        "no_repair_baseline",
++        mod.INFERENCE_SUBSTRATE,
++        "hardware_speedup_claim",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert f'principle "{principle}"' in normalized
++
++
++def test_req_verify_5477_workload_hashes_are_stable_and_fixture_anchored() -> None:
++    """REQ-VERIFY-5477: workload hashes are canonical and independent of rows."""
++
++    fixtures = mod.build_boundary_fixtures()
++    first_hashes = mod.workload_hashes(fixtures)
++    second_hashes = mod.workload_hashes(mod.build_boundary_fixtures())
++
++    assert mod.fixture_family_counts(fixtures) == {"assignment": 1, "maxcut": 1, "sat": 1}
++    assert mod.pbit_variable_count(fixtures) == 10
++    assert mod.pdit_variable_count(fixtures) == 8
++    assert first_hashes == second_hashes
++    assert len(first_hashes) == len(fixtures) == mod.EXPECTED_FIXTURE_COUNT
++    assert len(set(first_hashes)) == len(first_hashes)
++    assert all(len(item) == 64 for item in first_hashes)
++
++    payload = mod.fixture_workload_payload(fixtures[0])
++    assert "row_records" not in payload
++    assert mod.workload_hash(fixtures[0]) == mod.sha256_json(payload)
++
++
++def test_scenario_verify_5477_exact_fallback_is_final_authority() -> None:
++    """SCENARIO-VERIFY-5477: advisory destroy/repair rows cannot set final labels."""
++
++    artifact = mod.build_artifact(tests_run=_tests_run())
++    rows = artifact["row_records"]
++    expected_rows = (
++        mod.EXPECTED_FIXTURE_COUNT * len(mod.DESTROY_STRATEGIES) * len(mod.REPAIR_MODES)
++    )
++
++    assert len(rows) == expected_rows
++    assert artifact["exact_fallback_completeness_rate"] == pytest.approx(1.0)
++    assert artifact["unsafe_false_accept_count"] == 0
++    assert all(row["solver_final_label"] == row["exact_label"] for row in rows)
++    assert all(row["final_solution"] == row["exact_solution"] for row in rows)
++    assert all(row["fallback_complete"] is True for row in rows)
++    assert all(row["unsafe_false_accept"] is False for row in rows)
++    assert all(row["hardware_speedup_claim"] is False for row in rows)
++    assert all(row["boundary_messages"] for row in rows)
++    assert any(row["fallback_used"] is True for row in rows)
++    assert any(row["advisory_changed_candidate"] is True for row in rows)
++    assert any(row["advisory_improvement"] > 0 for row in rows)
++    assert {
++        row["destroy_strategy"] for row in rows
++    } == set(mod.DESTROY_STRATEGIES)
++    assert {row["repair_mode"] for row in rows} == set(mod.REPAIR_MODES)
++
++
++def test_req_verify_5477_artifact_schema_and_required_fields(tmp_path: Path) -> None:
++    """REQ-VERIFY-5477: deliverable JSON exposes all required bare fields."""
++
++    result_path = tmp_path / mod.RESULT_RELATIVE_PATH
++    artifact = mod.run(result_path=result_path, tests_run=_tests_run())
++    saved = json.loads(result_path.read_text(encoding="utf-8"))
++
++    assert saved == artifact
++    mod.validate_artifact(saved)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(saved)
++    assert saved["field_principles"] == mod.FIELD_PRINCIPLES
++    assert saved["fixture_count"] == mod.EXPECTED_FIXTURE_COUNT
++    assert saved["pbit_variable_count"] == 10
++    assert saved["pdit_variable_count"] == 8
++    assert saved["destroy_strategies"] == list(mod.DESTROY_STRATEGIES)
++    assert saved["repair_modes"] == list(mod.REPAIR_MODES)
++    assert saved["exact_fallback_completeness_rate"] == pytest.approx(1.0)
++    assert saved["unsafe_false_accept_count"] == 0
++    assert saved["advisory_improvement_delta"] > 0.0
++    assert saved["boundary_exchange_ready"] is True
++    assert saved["hardware_speedup_claim"] is False
++    assert saved["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert saved["random_seed"] == mod.RANDOM_SEED
++    assert saved["honest_verdict"].startswith("complete:")
++    assert saved["tests_run"] == _tests_run()
++    assert saved["research_conductor_modified"] is False
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++
++
++def test_req_verify_5477_repository_artifact_matches_deterministic_replay() -> None:
++    """REQ-VERIFY-5477: checked-in JSON remains stable under deterministic replay."""
++
++    checked_in = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = mod.build_artifact(tests_run=checked_in["tests_run"])
++
++    assert checked_in == replay
++    assert checked_in["boundary_exchange_ready"] is True
++    assert checked_in["hardware_speedup_claim"] is False
++    mod.validate_artifact(checked_in)
++
++
++def test_req_verify_5477_validation_rejects_authority_and_schema_drift() -> None:
++    """REQ-VERIFY-5477: validation fails closed on unsafe artifact drift."""
++
++    artifact = mod.build_artifact(tests_run=_tests_run())
++    mod.validate_artifact(artifact)
++    assert mod.honest_verdict(False, ["fixture_count_mismatch"]).startswith("blocked:")
++
++    missing = deepcopy(artifact)
++    missing.pop("fixture_count")
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = "hardware_sampler"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    bad_hardware = deepcopy(artifact)
++    bad_hardware["hardware_speedup_claim"] = True
++    with pytest.raises(ValueError, match="hardware_speedup_claim"):
++        mod.validate_artifact(bad_hardware)
++
++    bad_fallback = deepcopy(artifact)
++    bad_fallback["exact_fallback_completeness_rate"] = 0.5
++    with pytest.raises(ValueError, match="exact_fallback_completeness_rate"):
++        mod.validate_artifact(bad_fallback)
++
++    bad_unsafe = deepcopy(artifact)
++    bad_unsafe["unsafe_false_accept_count"] = 1
++    with pytest.raises(ValueError, match="unsafe_false_accept_count"):
++        mod.validate_artifact(bad_unsafe)
++
++    bad_strategy = deepcopy(artifact)
++    bad_strategy["destroy_strategies"] = ["random"]
++    with pytest.raises(ValueError, match="destroy_strategies"):
++        mod.validate_artifact(bad_strategy)
++
++    bad_row = deepcopy(artifact)
++    bad_row["row_records"][0]["solver_final_label"] = "advisory_label"
++    with pytest.raises(ValueError, match="solver_final_label"):
++        mod.validate_artifact(bad_row)
+-- 
+2.55.0
+

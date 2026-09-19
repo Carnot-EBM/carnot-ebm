@@ -1,0 +1,60 @@
+From 0f0188c90d8be529f4a2461572171fbfa0fcfe3a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 12:22:46 -0400
+Subject: [PATCH 09701/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 6 ++----
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index f3cf03cb5b..c295f51a51 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -4,8 +4,6 @@
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json|": "2026-08-23T11:27:27Z",
+   "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z"
+  },
+- "last_scan_notes": [
+-  "pid 1725523 /home/ianblenke/.claude/jobs/ad0c053d/tmp/greenrun/rows.json: out file missing, run unsupervisable this cycle"
+- ],
+- "last_scan_utc": "2026-08-23T16:05:49Z"
++ "last_scan_notes": [],
++ "last_scan_utc": "2026-08-23T16:22:42Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b974eb588b..8a5e378f89 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1940365, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-23T15:59:44Z"}
+\ No newline at end of file
++{"pid": 1940365, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-23T16:22:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e7fcd75d72..a53204b27e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16342,3 +16342,4 @@ code |
+ | 2026-08-23 15:21 UTC | Rust/PyO3 Safety-Net request and decision parity | OK | Deliverable already exists in repo |
+ | 2026-08-23 15:38 UTC | Independent production Safety-Net and cross-langua | OK | 98 passed, 1 warning in 15.56s |
+ | 2026-08-23 15:57 UTC | Hysteretic active, dormant, and retired conflict m | OK | 87 passed, 1 warning in 12.81s |
++| 2026-08-23 16:20 UTC | Prospective SOTA chronological continuous self-lea | OK | 86 passed, 1 warning in 12.21s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2a9913eaad..e86b5ef967 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1940365, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-23T15:59:44Z"}
+\ No newline at end of file
++{"pid": 1940365, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-23T16:22:42Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

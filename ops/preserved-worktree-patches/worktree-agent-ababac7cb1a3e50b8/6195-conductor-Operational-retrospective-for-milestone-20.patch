@@ -1,0 +1,111 @@
+From 7e83af17cb3394860039deae35b1cd5197158437 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 07:10:07 -0400
+Subject: [PATCH 06195/11362] [conductor] Operational retrospective for
+ milestone 2026.07.492
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ ops/status.md                              | 24 ++++++++++++++++-
+ results/operational_retro_2026_07_492.json | 30 ++++++++++++++++++++++
+ 4 files changed, 60 insertions(+), 1 deletion(-)
+ create mode 100644 results/operational_retro_2026_07_492.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 159b675e8c..aa5a2f165a 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5817,3 +5817,9 @@ The critical path for milestone .250:
+ - theme: operational retrospective for a milestone with no experiment commits after activation
+ - key result: no data available this milestone; the timing block found no milestone-scoped experiment commits by live git-log or disk-mtime reconstruction, so compute-bound duration ranking, GPU efficiency, and DualGPURunner assessment cannot be derived
+ - acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for acceptance scoring
++
++### Milestone 2026.07.492
++- exp_range: no data available this milestone
++- theme: timing integrity mismatch blocks operational runtime accounting
++- key result: honest negative -- no data available this milestone; both authorized timing paths found 0 experiment commits while ops/changelog.md contains 2026.07.492 references, so compute-bound duration ranking, GPU utilization efficiency, and DualGPURunner assessment are not derivable
++- acceptance: 0/0 criteria met -- the supplied timing block contains no milestone-scoped experiment entries to score
+diff --git a/ops/changelog.md b/ops/changelog.md
+index ed7f202b99..443634ec7b 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11122,3 +11122,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-08: KAN active-constraint counterexample certificate extension (✅ Complete) — honest_verdict=complete: bounded active-constraint certificate rejected stale and adversarial false hint-routing properties while preserving exact candidate hints and making no broad KAN verification claim; results/experiment_5412_kan_active_constraint_certificate_v492.json
+ - 2026-07-08: PRD evidence table and gap analysis for .492 (⚠️ Blocked) — honest_verdict=complete: .492 evidence table emitted with 5 closed, 4 partial, 3 blocked, and 0 missing rows; headline-ready lanes are formal encoding, structured safety/action, resource-accounted CSL, and uncertainty-gated promotion while ARC, hardware speedup, and token/internal backend claims remain non-headline.; results/experiment_5413_evidence_table_prd_gap_analysis_v492.json
+ - 2026-07-08: Capstone truth table and next-roadmap recommendations for .492 (✅ Complete) — honest_verdict=complete: .492 capstone emitted from actual artifacts; formal corrigendum, structured safety/action, resource-accounted CSL, and uncertainty-gated promotion are headline-ready; active-constraint, p-bit/QUBO, KAN, and local SOTA inference remain bounded; ARC no-bank, hardware has repeatability but no hardware speedup, and token/internal lane closed.; results/experiment_5414_capstone_v492.json
++- 2026-07-08: Operational retrospective for milestone 2026.07.492 (Complete) -- no data available this milestone for experiment-level timing; locked fields remain total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null. TIMING INTEGRITY MISMATCH: both live git-log and disk-mtime reconstruction found 0 experiment commits while ops/changelog.md contains 2026.07.492 references, so no experiment ID, duration, compute-bound slowest run, GPU-idle bottleneck, or DualGPURunner finding is inferred. estimated_time_savings_pct=0; results/operational_retro_2026_07_492.json
+diff --git a/ops/status.md b/ops/status.md
+index bac67bcabf..a6d2ddab02 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,28 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-07-08 (Milestone 2026.07.492 Planning Staged)
++**Last Updated:** 2026-07-08 (Milestone 2026.07.492 Operational Retro Complete)
++
++## Session 2026-07-08 - Milestone 2026.07.492 Operational Retro
++
++Filled `results/operational_retro_2026_07_492.json` from the locked timing
++artifact values and appended the corresponding entries to `ops/changelog.md`
++and `docs/research-log.md`. The locked fields record 0 wall-time minutes, 0
++completed experiments, 0 compute-bound tasks, an empty slowest-experiments
++list, and `gpu_idle_on_compute_bound_tasks: null`.
++
++The operational finding is a timing integrity mismatch, not an experiment
++runtime finding: both authorized timing assembly paths found 0 experiment
++commits while `ops/changelog.md` contains `2026.07.492` references. No
++experiment ID, duration, compute-bound slowest run, GPU-idle bottleneck, or
++DualGPURunner miss was inferred from the changelog.
++
++Validation for this documentation/results-only task: JSON parsing,
++locked-field assertions, protected-file diff check, touched-file
++`git diff --check`, and `scripts/operator_curated_docs_lint.py` passed.
++Repo-wide `scripts/validate-reconciliation.sh` and
++`scripts/check_spec_coverage.py` still fail on pre-existing stale-documentation
++metadata and spec-traceability issues outside this retrospective. No E2E
++model-training or hardware check applies to this operational retrospective.
+ 
+ ## Session 2026-07-08 - Milestone 2026.07.492 Planning Staged
+ 
+diff --git a/results/operational_retro_2026_07_492.json b/results/operational_retro_2026_07_492.json
+new file mode 100644
+index 0000000000..b3f4b4a9fd
+--- /dev/null
++++ b/results/operational_retro_2026_07_492.json
+@@ -0,0 +1,30 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.492",
++  "generated_at": "2026-07-08T11:04:52Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": false,
++  "timing_integrity_mismatch": true,
++  "summary": "No data available this milestone for experiment-level throughput: the locked fields record 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. The authoritative timing block reports a timing integrity mismatch because both assembly paths found 0 experiment commits while ops/changelog.md contains 2026.07.492 references, so no experiment IDs, durations, slowest runs, GPU-efficiency finding, or DualGPURunner miss is inferred.",
++  "bottlenecks_identified": [
++    "Timing integrity mismatch: live git-log and disk-mtime reconstruction both found 0 experiment commits while ops/changelog.md contains 2026.07.492 references, preventing milestone-scoped throughput accounting.",
++    "No compute-bound timing rows are available this milestone, so longest compute-bound runs, compute-bound GPU utilization, and 2+ parallel-model DualGPURunner coverage have no data available this milestone."
++  ],
++  "improvements_suggested": [
++    "Add a retro timing reconciliation gate that reports changelog-versus-timing disagreement before writing a full operational interpretation.",
++    "Persist a machine-readable milestone execution manifest as experiments complete, then use it as the primary source before falling back to git-log or disk-mtime reconstruction.",
++    "Keep GPU and DualGPURunner recommendations gated on explicit compute-bound timing rows so synthesis-only or no-data milestones do not produce false bottleneck claims."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Repair the timing assembly bug that allows changelog references and reconstructed experiment commits to disagree for 2026.07.492.",
++    "Add a regression fixture for the mismatch case where changelog references exist but both timing reconstruction paths return 0 experiment commits.",
++    "Emit a structured no-data diagnostic in the retro artifact when experiment rows are absent, including why GPU-idle and DualGPURunner questions are unanswerable."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "This retrospective treats the changelog references only as evidence of a timing-assembly mismatch, not as a source for experiment IDs, counts, durations, or metrics. With 0 compute-bound timing rows, the GPU snapshot remains observational context and is not promoted into a compute-bound bottleneck."
++}
+-- 
+2.55.0
+

@@ -1,0 +1,61 @@
+From 24fec7f999118e5b43c05e026162648ab53793df Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 12:53:47 -0400
+Subject: [PATCH 07912/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                | 2 +-
+ ops/conductor-log.md                        | 1 +
+ ops/conductor-state.json                    | 2 +-
+ results/experiment_542_fover_expansion.json | 6 +++---
+ 4 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 13c7864282..29c27ff477 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 127403, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-07-25T16:14:57Z"}
+\ No newline at end of file
++{"pid": 127403, "iteration": 32, "phase": "iteration_start", "last_beat": "2026-07-25T16:53:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 039a773602..07024187ed 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14288,3 +14288,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-25 13:25 UTC | Milestone 2026.07.526 activated | OK | 14 tasks queued |
+ | 2026-07-25 14:49 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: duplicate_hist |
+ | 2026-07-25 16:12 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ent_5918_trans |
++| 2026-07-25 16:51 UTC | Exact terminal-boundary handoff from .525 into .52 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5918_transit |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 842e531eb1..ba79230b62 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 127403, "iteration": 31, "phase": "iteration_start", "started_at": "2026-07-25T16:14:57Z"}
+\ No newline at end of file
++{"pid": 127403, "iteration": 32, "phase": "iteration_start", "started_at": "2026-07-25T16:53:42Z"}
+\ No newline at end of file
+diff --git a/results/experiment_542_fover_expansion.json b/results/experiment_542_fover_expansion.json
+index 9290cdfcac..eed34559c2 100644
+--- a/results/experiment_542_fover_expansion.json
++++ b/results/experiment_542_fover_expansion.json
+@@ -2,9 +2,9 @@
+   "experiment": 542,
+   "title": "FOVER Corpus Expansion",
+   "run_date": "20260725",
+-  "started_at": "2026-07-25T15:36:25Z",
+-  "finished_at": "2026-07-25T15:36:25Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-25T16:52:36Z",
++  "finished_at": "2026-07-25T16:52:36Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+-- 
+2.55.0
+

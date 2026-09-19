@@ -1,0 +1,43 @@
+From d6e19fbe3f4e57a71976b79432ccb96669f6030f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 15:13:41 -0400
+Subject: [PATCH 00833/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9b79b635dc..f44f429ddb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 894085, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-07T19:11:10Z"}
+\ No newline at end of file
++{"pid": 894085, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-07T19:13:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a780a6a511..806bb50a99 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8013,3 +8013,4 @@ c |
+ | 2026-06-07 15:40 UTC | Milestone 2026.06.363 activated | OK | 10 tasks queued |
+ | 2026-06-07 15:58 UTC | Archive .362 -> activate .363; GREEN-GATE de-risk  | OK | 110 passed in 5.44s |
+ | 2026-06-07 16:38 UTC | DIAGNOSE + FIX the .362 below-chance LLM-judge int | SKIP | Pre-tests failing, self-heal failed: 1 failed, 106 passed in 17.99s |
++| 2026-06-07 19:11 UTC | DIAGNOSE + FIX the .362 below-chance LLM-judge int | SKIP | Pre-tests failing, self-heal failed: 1 failed, 106 passed in 16.83s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9670848ce7..fe2ddf9a75 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 894085, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-07T19:11:10Z"}
+\ No newline at end of file
++{"pid": 894085, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-07T19:13:40Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

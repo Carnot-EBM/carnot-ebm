@@ -1,0 +1,3907 @@
+From 8f9f746488339e7a6795849ab8c6a5c696b339f1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 14 Aug 2026 03:06:37 -0400
+Subject: [PATCH 09120/11362] [conductor] Independent V551 powered-claim
+ integrity audit and additive corrigendum boundary
+
+Automated research step by research conductor.
+Task ID: exp6412-v551-powered-claim-integrity-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  125 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...6412_v551_powered_claim_integrity_audit.py | 1290 +++++++++++
+ ...12_v551_powered_claim_integrity_audit.json | 2062 +++++++++++++++++
+ ...im_integrity_audit.json.claim_ledger.jsonl |    1 +
+ ...laim_integrity_audit.json.corrigendum.json |   14 +
+ ...6412_v551_powered_claim_integrity_audit.py |  333 +++
+ 7 files changed, 3826 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py
+ create mode 100644 results/experiment_6412_v551_powered_claim_integrity_audit.json
+ create mode 100644 results/experiment_6412_v551_powered_claim_integrity_audit.json.claim_ledger.jsonl
+ create mode 100644 results/experiment_6412_v551_powered_claim_integrity_audit.json.corrigendum.json
+ create mode 100644 tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index bb2e9fe411..66b8a6a980 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -246,6 +246,131 @@ false.
+ |---|---|---|
+ | REQ-REPORT-6411 | Planned (`python/carnot/experiment_6411_v552_post_marker_source_scope_freeze.py`, terminal artifact `results/experiment_6411_v552_post_marker_source_scope_freeze.json`) | Planned (`tests/python/test_experiment_6411_v552_post_marker_source_scope_freeze.py`) |
+ 
++### REQ-REPORT-6412: V551 Powered Claim Integrity Audit
++
++Carnot SHALL build Exp6412 as a dated V551 claim-integrity audit for planning
++date 20260814. The audit SHALL read Exp6407, Exp6408, and Exp6409 from source
++to artifact. It SHALL hash every audited source, artifact, sidecar, conductor
++record, and determination record before it classifies any claim.
++
++Exp6412 SHALL classify every audited runtime, model, GPU, raw-output, event,
++exact-check, future-evaluation, readiness, public-factor, and FR11 field as
++`measured`, `derived`, `constant`, `inherited`, or `absent`. It SHALL record
++the artifact field, the source line or upstream artifact that produced it, and
++the claim risk for each field.
++
++Exp6412 SHALL confirm whether each audited experiment opened a model file,
++ran a model process, generated tokens, stored raw output bytes, sampled GPU
++telemetry against a PID, and observed exact outcomes after admission. Missing
++receipts SHALL be explicit. A model name, model path, static duration, host
++snapshot, inherited row, synthetic byte hash, or fixed success count SHALL NOT
++count as powered execution evidence.
++
++Exp6412 SHALL rerun adversarial verification and determination-preservation
++lint without changing the audited inputs. It SHALL keep stamped historical
++findings separate from current live findings.
++
++Exp6412 SHALL write an additive corrigendum sidecar and an additive
++claim-ledger sidecar next to its terminal artifact. It SHALL NOT edit or clear
++Exp6407, Exp6408, Exp6409, their sidecars, historical adversarial flags,
++historical corrigenda, conductor records, or determination records.
++
++Exp6412 SHALL mark deterministic protocol readiness, deterministic replay,
++powered GGUF admission, prospective CSL, public factor eligibility, and FR11
++progress independently. Powered and prospective claims SHALL be unproven when
++model-open, process, token, raw-output, PID-bound GPU, or temporal exact-outcome
++receipts are absent. Deterministic replay MAY remain eligible when all replay
++inputs are immutable and no powered claim is used.
++
++Exp6412 SHALL mutation-test the audit with constant durations, forged PIDs,
++model-name-only rows, inherited outputs, missing raw hashes, and fabricated GPU
++samples. Every mutation attack SHALL lose powered eligibility.
++
++The Exp6412 artifact SHALL be written atomically to
++`results/experiment_6412_v551_powered_claim_integrity_audit.json` with
++`inference_substrate=aggregation_from_upstream_artifacts_no_llm` and
++`verifier_is_oracle=false`.
++
++The Exp6412 artifact SHALL include these required fields: `status`,
++`audited_source_artifact_sidecar_and_log_hashes`,
++`per_experiment_field_provenance_matrix`, `model_file_open_evidence`,
++`model_process_execution_evidence`, `token_generation_evidence`,
++`raw_output_byte_evidence`, `pid_bound_gpu_telemetry_evidence`,
++`exact_outcome_temporal_evidence`, `constant_and_inherited_field_findings`,
++`stamped_and_current_adversarial_findings`,
++`determination_preservation_results`,
++`deterministic_protocol_claim_eligibility`,
++`deterministic_replay_claim_eligibility`,
++`powered_gguf_claim_eligibility`, `prospective_csl_claim_eligibility`,
++`public_factor_claim_eligibility`, `fr11_claim_eligibility`,
++`additive_corrigendum_path_and_hash`,
++`additive_claim_ledger_path_entry_and_hash`, `historical_artifacts_modified`,
++`historical_determinations_preserved`, `mutation_attack_matrix`,
++`powered_false_accept_count`, `v551_claim_boundary_ready_score`,
++`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
++`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
++`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
++`field_principles` SHALL map every claim eligibility and
++`v551_claim_boundary_ready_score` to its purpose. `field_provenance` SHALL cover
++every required field with `measured`, `derived`, `constant`, `inherited`, or
++`absent` provenance.
++
++#### SCENARIO-REPORT-6412-1: Field Provenance Separates Evidence Classes
++
++**Given** Exp6407, Exp6408, and Exp6409 artifacts and sources exist
++**When** Exp6412 builds the audit matrix
++**Then** every claimed receipt and result is classified as measured, derived,
++constant, inherited, or absent with a source line or upstream artifact.
++
++#### SCENARIO-REPORT-6412-2: Powered Receipts Fail Closed
++
++**Given** Exp6408 reports model paths, CUDA state, fixed model durations, and
++derived peak memory
++**When** Exp6412 checks powered evidence
++**Then** powered GGUF eligibility is false unless model-open, process, token,
++raw-output, PID-bound GPU, and temporal exact-outcome receipts are present.
++
++#### SCENARIO-REPORT-6412-3: Inherited CSL Does Not Become Prospective Proof
++
++**Given** Exp6409 imports Exp6408 and inherits its runtime surface
++**When** Exp6412 checks CSL claims
++**Then** deterministic replay can remain eligible but prospective CSL
++eligibility is false without fresh powered execution receipts.
++
++#### SCENARIO-REPORT-6412-4: Historical Records Stay Immutable
++
++**Given** Exp6407 has a stamped adversarial flag and corrigendum record
++**When** Exp6412 writes its additive audit, corrigendum, and claim ledger
++**Then** Exp6407, Exp6408, Exp6409, their sidecars, and determination records
++remain byte-identical.
++
++#### SCENARIO-REPORT-6412-5: Mutation Attacks Lose Powered Eligibility
++
++**Given** constant durations, forged PIDs, model-name-only rows, inherited
++outputs, missing raw hashes, and fabricated GPU samples
++**When** Exp6412 evaluates the mutation attack matrix
++**Then** every attack fails closed and `powered_false_accept_count` is zero.
++
++#### SCENARIO-REPORT-6412-6: Claim Boundary Ready Score Is Conjunctive
++
++**Given** field provenance is complete, additive sidecars are immutable, and
++historical determinations are preserved
++**When** no unpowered or prospective claim remains eligible as powered
++**Then** `v551_claim_boundary_ready_score` is 1.0 and the terminal verdict
++uses an allowed complete prefix.
++
++## Implementation Status (REQ-REPORT-6412)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6412 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`, terminal artifact `results/experiment_6412_v551_powered_claim_integrity_audit.json`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
++| SCENARIO-REPORT-6412-1 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
++| SCENARIO-REPORT-6412-2 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
++| SCENARIO-REPORT-6412-3 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
++| SCENARIO-REPORT-6412-4 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
++| SCENARIO-REPORT-6412-5 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
++| SCENARIO-REPORT-6412-6 | Planned (`python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py`) | Planned (`tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py`) |
++
+ ### REQ-REPORT-6143: Experiment Test Artifact Isolation
+ 
+ Carnot experiment artifact writers SHALL resolve output paths through one
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ff5146b375..6ca77c936c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4953,
++  "experiments_checked": 4954,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py b/python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py
+new file mode 100644
+index 0000000000..9ef102cba8
+--- /dev/null
++++ b/python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py
+@@ -0,0 +1,1290 @@
++"""Build the Exp6412 V551 powered claim integrity audit.
++
++Spec refs: REQ-REPORT-6412, SCENARIO-REPORT-6412-1,
++SCENARIO-REPORT-6412-2, SCENARIO-REPORT-6412-3,
++SCENARIO-REPORT-6412-4, SCENARIO-REPORT-6412-5,
++SCENARIO-REPORT-6412-6.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import os
++import subprocess
++import time
++from typing import Any
++
++from carnot.experiment_artifacts import (
++    atomic_write_json,
++    resolve_experiment_artifact_path,
++)
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RUN_DATE = "20260814"
++SCHEMA = "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1"
++RESULT_RELATIVE_PATH = Path("results/experiment_6412_v551_powered_claim_integrity_audit.json")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py")
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py"
++)
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts_no_llm"
++CORRIGENDUM_SUFFIX = ".corrigendum.json"
++CLAIM_LEDGER_SUFFIX = ".claim_ledger.jsonl"
++EXTERNAL_TEST_RECEIPTS_ENV = "CARNOT_EXP6412_TEST_RECEIPTS"
++EXTERNAL_TEST_RECEIPT_PATH = Path("/tmp/carnot_exp6412_test_receipts.json")
++
++EXP6407_ID = "exp6407-provenance-tiered-factor-memory-protocol"
++EXP6408_ID = "exp6408-powered-write-time-factor-admission-ab"
++EXP6409_ID = "exp6409-graph-local-multisession-continuous-learning"
++EXPERIMENT_IDS = (EXP6407_ID, EXP6408_ID, EXP6409_ID)
++ARTIFACT_BY_ID = {
++    EXP6407_ID: Path("results/experiment_6407_provenance_tiered_factor_memory_protocol.json"),
++    EXP6408_ID: Path("results/experiment_6408_powered_write_time_factor_admission_ab.json"),
++    EXP6409_ID: Path("results/experiment_6409_graph_local_multisession_continuous_learning.json"),
++}
++SOURCE_BY_ID = {
++    EXP6407_ID: Path("python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py"),
++    EXP6408_ID: Path("python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py"),
++    EXP6409_ID: Path(
++        "python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py"
++    ),
++}
++SIDECARS_BY_ID = {
++    EXP6407_ID: (
++        Path("results/experiment_6407_provenance_tiered_factor_memory_protocol.json"),
++        Path("results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_ledger.jsonl"),
++        Path(
++            "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_record_schema.json"
++        ),
++        Path(
++            "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph.json"
++        ),
++        Path(
++            "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph_schema.json"
++        ),
++        Path(
++            "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.contamination_manifest.json"
++        ),
++    ),
++    EXP6408_ID: (
++        Path("results/experiment_6408_powered_write_time_factor_admission_ab.json"),
++        Path("results/experiment_6408_powered_write_time_factor_admission_ab.json.fresh_held_manifest.json"),
++    ),
++    EXP6409_ID: (
++        Path("results/experiment_6409_graph_local_multisession_continuous_learning.json"),
++        Path(
++            "results/experiment_6409_graph_local_multisession_continuous_learning.json.chronological_manifest.json"
++        ),
++    ),
++}
++
++LOG_AND_DETERMINATION_PATHS = (
++    Path("ops/conductor-log.md"),
++    Path("ops/known-issues.md"),
++    Path("ops/claim-eligibility-ledger.json"),
++    Path("scripts/adversarial_verify.py"),
++    Path("scripts/determination_preservation_lint.py"),
++    Path("python/carnot/terminal_artifacts.py"),
++)
++CONTEXT_SOURCE_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    SPEC_RELATIVE_PATH,
++    MODULE_RELATIVE_PATH,
++    TEST_RELATIVE_PATH,
++    *SOURCE_BY_ID.values(),
++)
++PROTECTED_RELATIVE_PATHS = (
++    Path("scripts/research_conductor.py"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++    *ARTIFACT_BY_ID.values(),
++    *[path for paths in SIDECARS_BY_ID.values() for path in paths],
++    Path("ops/conductor-log.md"),
++    Path("ops/known-issues.md"),
++)
++AUDITED_RELATIVE_PATHS = (
++    *CONTEXT_SOURCE_PATHS,
++    *ARTIFACT_BY_ID.values(),
++    *[path for paths in SIDECARS_BY_ID.values() for path in paths],
++    *LOG_AND_DETERMINATION_PATHS,
++)
++
++MODEL_PROCESS_PATTERNS = ("llama_cpp.Llama(", ".create_completion(", ".generate(", "subprocess.run(")
++POWERED_REQUIRED_RECEIPTS = (
++    "model_file_opened",
++    "model_process_ran",
++    "tokens_generated",
++    "raw_output_bytes_stored",
++    "pid_bound_gpu_samples",
++    "exact_outcomes_observed_after_admission",
++    "nonconstant_runtime_duration",
++)
++MUTATION_ATTACK_IDS = (
++    "constant_durations",
++    "forged_pids",
++    "model_name_only_rows",
++    "inherited_outputs",
++    "missing_raw_hashes",
++    "fabricated_gpu_samples",
++)
++ALLOWED_PROVENANCE_CLASSES = {"measured", "derived", "constant", "inherited", "absent"}
++ALLOWED_HONEST_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++
++RUN_COMMAND = (
++    "cd /home/ianblenke/github.com/ianblenke/carnot && "
++    ".venv/bin/python -m carnot.experiment_6412_v551_powered_claim_integrity_audit "
++    "--date 20260814"
++)
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_RUN_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py "
++    "-m pytest tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py "
++    "--fail-under=100 --show-missing"
++)
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COVERAGE_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6407_provenance_tiered_factor_memory_protocol.json "
++    "results/experiment_6408_powered_write_time_factor_admission_ab.json "
++    "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++)
++DETERMINATION_COMMAND = ".venv/bin/python scripts/determination_preservation_lint.py"
++ROOT_CLUTTER_COMMAND = ".venv/bin/python scripts/root_clutter_sweep.py"
++DEFAULT_TEST_COMMANDS = (
++    FOCUSED_TEST_COMMAND,
++    COVERAGE_RUN_COMMAND,
++    COVERAGE_REPORT_COMMAND,
++    SPEC_COVERAGE_COMMAND,
++    ADVERSARIAL_COMMAND,
++    DETERMINATION_COMMAND,
++    ROOT_CLUTTER_COMMAND,
++    FULL_PYTEST_COMMAND,
++    RUN_COMMAND,
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "audited_source_artifact_sidecar_and_log_hashes",
++    "per_experiment_field_provenance_matrix",
++    "model_file_open_evidence",
++    "model_process_execution_evidence",
++    "token_generation_evidence",
++    "raw_output_byte_evidence",
++    "pid_bound_gpu_telemetry_evidence",
++    "exact_outcome_temporal_evidence",
++    "constant_and_inherited_field_findings",
++    "stamped_and_current_adversarial_findings",
++    "determination_preservation_results",
++    "deterministic_protocol_claim_eligibility",
++    "deterministic_replay_claim_eligibility",
++    "powered_gguf_claim_eligibility",
++    "prospective_csl_claim_eligibility",
++    "public_factor_claim_eligibility",
++    "fr11_claim_eligibility",
++    "additive_corrigendum_path_and_hash",
++    "additive_claim_ledger_path_entry_and_hash",
++    "historical_artifacts_modified",
++    "historical_determinations_preserved",
++    "mutation_attack_matrix",
++    "powered_false_accept_count",
++    "v551_claim_boundary_ready_score",
++    "protected_files_unchanged",
++    "preconditions_checked",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_principles",
++    "field_provenance",
++    "random_seed",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "The status states whether the claim boundary is complete.",
++    "audited_source_artifact_sidecar_and_log_hashes": "All audited inputs are hash-pinned before analysis.",
++    "per_experiment_field_provenance_matrix": "Each audited claim field names its evidence class and source.",
++    "model_file_open_evidence": "Model path receipts cannot stand in for a model file opened by a runtime.",
++    "model_process_execution_evidence": "Powered claims require a model process, not source-only replay.",
++    "token_generation_evidence": "Powered claims require generated tokens, not tokenizer prechecks.",
++    "raw_output_byte_evidence": "Powered claims require stored raw model output bytes.",
++    "pid_bound_gpu_telemetry_evidence": "Powered claims require GPU samples bound to the model PID.",
++    "exact_outcome_temporal_evidence": "Outcome receipts must occur after admission, not come from constants.",
++    "constant_and_inherited_field_findings": "Constant and inherited fields are barred from powered proof.",
++    "stamped_and_current_adversarial_findings": "Stamped historical findings and current verifier output stay separate.",
++    "determination_preservation_results": "The preservation lint confirms no historical determination was cleared.",
++    "deterministic_protocol_claim_eligibility": "This gate controls deterministic protocol readiness reuse.",
++    "deterministic_replay_claim_eligibility": "This gate allows deterministic replay only within checked-in evidence.",
++    "powered_gguf_claim_eligibility": "This gate blocks powered GGUF claims without execution receipts.",
++    "prospective_csl_claim_eligibility": "This gate blocks CSL progress without fresh powered evidence.",
++    "public_factor_claim_eligibility": "This gate blocks public factor claims from unproven receipts.",
++    "fr11_claim_eligibility": "This gate blocks FR11 progress claims from this audit-only artifact.",
++    "additive_corrigendum_path_and_hash": "The corrigendum is additive and names the corrected claim boundary.",
++    "additive_claim_ledger_path_entry_and_hash": "The ledger records the exact claim boundary as an append-only row.",
++    "historical_artifacts_modified": "Historical artifacts must remain byte-identical.",
++    "historical_determinations_preserved": "Historical flags and corrigenda must remain present.",
++    "mutation_attack_matrix": "Mutation attacks prove powered eligibility fails closed.",
++    "powered_false_accept_count": "This count must stay zero for the boundary to be ready.",
++    "v551_claim_boundary_ready_score": "This score is one only when provenance is complete and overclaims are blocked.",
++    "protected_files_unchanged": "Protected historical files remain unchanged during the run.",
++    "preconditions_checked": "Preconditions record date, hashes, missing inputs, and command context.",
++    "inference_substrate": "This audit reads artifacts and source only. It does not run a model.",
++    "verifier_is_oracle": "The verifier is not an oracle. It audits evidence provenance only.",
++    "field_principles": "Each required field states the guard it serves.",
++    "field_provenance": "Each required field has a measured, derived, constant, inherited, or absent class.",
++    "random_seed": "No random sampling is used by this audit.",
++    "duration_s": "Wall time is measured without padding.",
++    "tests_run": "Verification command receipts are recorded for the audit.",
++    "reproducibility_checksum": "The checksum detects drift outside known volatile fields.",
++    "honest_verdict": "The verdict uses a terminal prefix and states the claim boundary.",
++}
++FIELD_PROVENANCE: dict[str, str] = {
++    "status": "derived",
++    "audited_source_artifact_sidecar_and_log_hashes": "measured",
++    "per_experiment_field_provenance_matrix": "derived",
++    "model_file_open_evidence": "derived",
++    "model_process_execution_evidence": "absent",
++    "token_generation_evidence": "absent",
++    "raw_output_byte_evidence": "derived",
++    "pid_bound_gpu_telemetry_evidence": "absent",
++    "exact_outcome_temporal_evidence": "derived",
++    "constant_and_inherited_field_findings": "derived",
++    "stamped_and_current_adversarial_findings": "measured",
++    "determination_preservation_results": "measured",
++    "deterministic_protocol_claim_eligibility": "derived",
++    "deterministic_replay_claim_eligibility": "derived",
++    "powered_gguf_claim_eligibility": "derived",
++    "prospective_csl_claim_eligibility": "derived",
++    "public_factor_claim_eligibility": "derived",
++    "fr11_claim_eligibility": "derived",
++    "additive_corrigendum_path_and_hash": "measured",
++    "additive_claim_ledger_path_entry_and_hash": "measured",
++    "historical_artifacts_modified": "measured",
++    "historical_determinations_preserved": "measured",
++    "mutation_attack_matrix": "derived",
++    "powered_false_accept_count": "derived",
++    "v551_claim_boundary_ready_score": "derived",
++    "protected_files_unchanged": "measured",
++    "preconditions_checked": "derived",
++    "inference_substrate": "constant",
++    "verifier_is_oracle": "constant",
++    "field_principles": "constant",
++    "field_provenance": "constant",
++    "random_seed": "constant",
++    "duration_s": "measured",
++    "tests_run": "measured",
++    "reproducibility_checksum": "derived",
++    "honest_verdict": "derived",
++}
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_bytes(value: bytes) -> str:
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    return sha256_bytes(canonical_json(value).encode("utf-8"))
++
++
++def sha256_file(path: str | Path) -> str | None:
++    path = Path(path)
++    if not path.is_file():
++        return None
++    return sha256_bytes(path.read_bytes())
++
++
++def as_mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def read_json_mapping(path: Path) -> JsonDict:
++    value = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(value, dict):
++        raise ValueError(f"json_top_level_not_object:{path}")
++    return value
++
++
++def relative_or_absolute(path: Path, root: Path) -> str:
++    try:
++        return path.resolve(strict=False).relative_to(root.resolve()).as_posix()
++    except ValueError:
++        return path.as_posix()
++
++
++def path_receipt(path: str | Path, root: Path, *, digest: str | None = None) -> JsonDict:
++    path = Path(path)
++    return {
++        "path": relative_or_absolute(path, root),
++        "present": path.is_file(),
++        "sha256": digest if digest is not None else sha256_file(path),
++        "size_bytes": path.stat().st_size if path.is_file() else 0,
++    }
++
++
++def line_hits(source: str, patterns: Sequence[str]) -> list[JsonDict]:
++    hits: list[JsonDict] = []
++    for number, line in enumerate(source.splitlines(), start=1):
++        if any(pattern in line for pattern in patterns):
++            hits.append({"line": number, "text": line.strip()})
++    return hits
++
++
++def protected_hashes(root: Path = REPO_ROOT) -> dict[str, str | None]:
++    return {path.as_posix(): sha256_file(root / path) for path in PROTECTED_RELATIVE_PATHS}
++
++
++def protected_unchanged_receipt(
++    before: Mapping[str, str | None],
++    after: Mapping[str, str | None],
++) -> JsonDict:
++    files = {
++        path: {
++            "before": before.get(path),
++            "after": after.get(path),
++            "unchanged": before.get(path) == after.get(path),
++        }
++        for path in sorted(set(before) | set(after))
++    }
++    return {
++        "schema": SCHEMA + ".protected_files",
++        "files": files,
++        "ok": all(row["unchanged"] for row in files.values()),
++        "changed_paths": [path for path, row in files.items() if not row["unchanged"]],
++    }
++
++
++def audited_hashes(root: Path) -> JsonDict:
++    by_category = {
++        "sources": CONTEXT_SOURCE_PATHS,
++        "artifacts": tuple(ARTIFACT_BY_ID.values()),
++        "sidecars": tuple(path for paths in SIDECARS_BY_ID.values() for path in paths),
++        "logs_and_determinations": LOG_AND_DETERMINATION_PATHS,
++    }
++    receipts = {
++        category: {path.as_posix(): path_receipt(root / path, root) for path in paths}
++        for category, paths in by_category.items()
++    }
++    missing = [
++        path
++        for rows in receipts.values()
++        for path, receipt in rows.items()
++        if receipt["present"] is not True
++    ]
++    return {
++        "schema": SCHEMA + ".audited_hashes",
++        "hashes_recorded_before_analysis": True,
++        **receipts,
++        "missing_paths": sorted(missing),
++    }
++
++
++def load_payloads(root: Path) -> dict[str, JsonDict]:
++    return {
++        exp_id: read_json_mapping(root / artifact_path)
++        for exp_id, artifact_path in ARTIFACT_BY_ID.items()
++    }
++
++
++def load_sources(root: Path) -> dict[str, str]:
++    return {
++        exp_id: (root / source_path).read_text(encoding="utf-8")
++        for exp_id, source_path in SOURCE_BY_ID.items()
++    }
++
++
++def classify_top_level_field(exp_id: str, field: str) -> str:
++    if field in {"duration_s", "protected_files_unchanged"}:
++        return "measured"
++    if field in {"random_seed", "inference_substrate", "verifier_is_oracle"}:
++        return "constant"
++    if exp_id == EXP6409_ID and field in {
++        "MODEL_SPECS",
++        "models_used",
++        "cached_sota_pair_receipts",
++        "embedded_gguf_tokenizer_receipts",
++        "cuda_offload_runtime_peak_memory_and_duration_receipts_by_model",
++    }:
++        return "inherited"
++    if exp_id == EXP6408_ID and field in {"MODEL_SPECS", "cached_sota_pair_receipts"}:
++        return "inherited"
++    return "derived"
++
++
++def provenance_row(
++    classification: str,
++    source: str,
++    *,
++    source_lines: Sequence[Mapping[str, Any]] | None = None,
++    artifact_field: str | None = None,
++    claim_risk: str = "bounded",
++) -> JsonDict:
++    return {
++        "classification": classification,
++        "source": source,
++        "source_lines": list(source_lines or []),
++        "artifact_field": artifact_field,
++        "claim_risk": claim_risk,
++    }
++
++
++def build_field_provenance_matrix(
++    payloads: Mapping[str, JsonDict],
++    sources: Mapping[str, str],
++) -> JsonDict:
++    matrix: JsonDict = {}
++    for exp_id, payload in payloads.items():
++        source_path = SOURCE_BY_ID[exp_id].as_posix()
++        rows = {
++            f"top_level.{field}": provenance_row(
++                classify_top_level_field(exp_id, field),
++                ARTIFACT_BY_ID[exp_id].as_posix(),
++                artifact_field=field,
++            )
++            for field in sorted(payload)
++        }
++        matrix[exp_id] = rows
++
++    source6408 = sources[EXP6408_ID]
++    source6409 = sources[EXP6409_ID]
++    matrix[EXP6408_ID].update(
++        {
++            "runtime.duration_s": provenance_row(
++                "constant",
++                SOURCE_BY_ID[EXP6408_ID].as_posix(),
++                source_lines=line_hits(source6408, ["0.25 + 0.05 * index"]),
++                artifact_field="cuda_offload_runtime_peak_memory_and_duration_receipts_by_model.by_model.*.duration_s",
++                claim_risk="powered_runtime_overclaim",
++            ),
++            "runtime.peak_memory_mb": provenance_row(
++                "derived",
++                SOURCE_BY_ID[EXP6408_ID].as_posix(),
++                source_lines=line_hits(source6408, ["used_mb + 1024 + 128 * index"]),
++                artifact_field="cuda_offload_runtime_peak_memory_and_duration_receipts_by_model.by_model.*.peak_memory_mb",
++                claim_risk="derived_gpu_memory_overclaim",
++            ),
++            "raw_model_bytes_sha256": provenance_row(
++                "derived",
++                SOURCE_BY_ID[EXP6408_ID].as_posix(),
++                source_lines=line_hits(source6408, ["raw_bytes = canonical_json", "raw_model_bytes_sha256"]),
++                artifact_field="raw_bytes_source_effect_diagnostic_checker_disposition_and_head_freeze_records.rows.*.raw_model_bytes_sha256",
++                claim_risk="synthetic_raw_output_hash",
++            ),
++            "future_exact_success_count": provenance_row(
++                "constant",
++                SOURCE_BY_ID[EXP6408_ID].as_posix(),
++                source_lines=line_hits(source6408, ["return int(total * 0.75)", "return int(total * 0.55)", "return int(total * 0.50)"]),
++                artifact_field="exact_future_yield_by_arm.*.future_exact_success_count",
++                claim_risk="constant_future_outcome",
++            ),
++        }
++    )
++    matrix[EXP6409_ID].update(
++        {
++            "runtime.duration_s": provenance_row(
++                "inherited",
++                SOURCE_BY_ID[EXP6409_ID].as_posix(),
++                source_lines=line_hits(
++                    source6409,
++                    ['upstream.get("cuda_offload_runtime_peak_memory_and_duration_receipts_by_model")'],
++                ),
++                artifact_field="cuda_offload_runtime_peak_memory_and_duration_receipts_by_model.by_model.*.duration_s",
++                claim_risk="inherited_runtime_surface",
++            ),
++            "future_exact_success_count": provenance_row(
++                "constant",
++                SOURCE_BY_ID[EXP6409_ID].as_posix(),
++                source_lines=line_hits(source6409, ['"success_count": 12', '"success_count": 10']),
++                artifact_field="untouched_future_evaluation_receipts.by_arm.*.success_count",
++                claim_risk="constant_future_outcome",
++            ),
++            "matched_work.llm_call_count": provenance_row(
++                "derived",
++                SOURCE_BY_ID[EXP6409_ID].as_posix(),
++                source_lines=line_hits(source6409, ["llm_call_count"]),
++                artifact_field="matched_work_receipts.by_session.*.*.llm_call_count",
++                claim_risk="derived_call_count_without_process",
++            ),
++        }
++    )
++    return matrix
++
++
++def model_file_open_evidence(payloads: Mapping[str, JsonDict], sources: Mapping[str, str]) -> JsonDict:
++    exp6408_models = list(payloads[EXP6408_ID].get("MODEL_SPECS", []))
++    exp6408_model_paths = [row.get("model_path") for row in exp6408_models if isinstance(row, Mapping)]
++    source6408 = sources[EXP6408_ID]
++    source6409 = sources[EXP6409_ID]
++    return {
++        "exp6407": {
++            "classification": "absent",
++            "model_paths_present": False,
++            "model_file_opened_by_model_runtime": False,
++            "note": "Exp6407 is deterministic protocol replay.",
++        },
++        "exp6408": {
++            "classification": "absent",
++            "model_paths_present": bool(exp6408_model_paths),
++            "model_file_opened_by_model_runtime": False,
++            "path_identity_checks_only": True,
++            "model_path_count": len(exp6408_model_paths),
++            "source_lines": line_hits(source6408, ["model_path = Path", "model_path.is_file"]),
++        },
++        "exp6409": {
++            "classification": "inherited",
++            "model_paths_present": bool(exp6408_model_paths),
++            "model_file_opened_by_model_runtime": False,
++            "inherited_from": EXP6408_ID,
++            "source_lines": line_hits(source6409, ["model_specs = list(upstream.get"]),
++        },
++    }
++
++
++def model_process_execution_evidence(sources: Mapping[str, str]) -> JsonDict:
++    return {
++        short_id: {
++            "classification": "absent",
++            "model_process_ran": False,
++            "process_invocation_patterns_absent": {
++                pattern: pattern not in source for pattern in MODEL_PROCESS_PATTERNS
++            },
++            "source_lines": line_hits(source, MODEL_PROCESS_PATTERNS),
++        }
++        for short_id, source in {
++            "exp6407": sources[EXP6407_ID],
++            "exp6408": sources[EXP6408_ID],
++            "exp6409": sources[EXP6409_ID],
++        }.items()
++    }
++
++
++def token_generation_evidence(payloads: Mapping[str, JsonDict]) -> JsonDict:
++    return {
++        "exp6407": {
++            "classification": "absent",
++            "generated_token_count_present": False,
++            "tokenizer_precheck_only": False,
++        },
++        "exp6408": {
++            "classification": "absent",
++            "generated_token_count_present": "generated_token_count" in payloads[EXP6408_ID],
++            "tokenizer_precheck_only": True,
++            "autotokenizer_usage_count": payloads[EXP6408_ID].get("autotokenizer_usage_count"),
++        },
++        "exp6409": {
++            "classification": "absent",
++            "generated_token_count_present": "generated_token_count" in payloads[EXP6409_ID],
++            "tokenizer_precheck_only": True,
++            "autotokenizer_usage_count": payloads[EXP6409_ID].get("autotokenizer_usage_count"),
++        },
++    }
++
++
++def raw_output_byte_evidence(payloads: Mapping[str, JsonDict], sources: Mapping[str, str]) -> JsonDict:
++    exp6408_records = as_mapping(
++        payloads[EXP6408_ID].get(
++            "raw_bytes_source_effect_diagnostic_checker_disposition_and_head_freeze_records"
++        )
++    )
++    rows = [as_mapping(row) for row in exp6408_records.get("rows", [])]
++    hash_count = sum(1 for row in rows if row.get("raw_model_bytes_sha256"))
++    return {
++        "exp6407": {
++            "classification": "derived",
++            "raw_output_bytes_stored": False,
++            "raw_hashes_present": True,
++            "raw_bytes_are_model_output": False,
++            "source": "raw ledger rows are deterministic fixture rows.",
++        },
++        "exp6408": {
++            "classification": "derived",
++            "raw_model_hashes_present": hash_count > 0,
++            "raw_hash_count": hash_count,
++            "raw_output_bytes_stored": False,
++            "raw_bytes_are_model_output": False,
++            "source_lines": line_hits(
++                sources[EXP6408_ID],
++                ["raw_bytes = canonical_json", "raw_model_bytes_sha256"],
++            ),
++        },
++        "exp6409": {
++            "classification": "absent",
++            "raw_model_hashes_present": False,
++            "raw_output_bytes_stored": False,
++            "raw_bytes_are_model_output": False,
++        },
++    }
++
++
++def pid_bound_gpu_telemetry_evidence(payloads: Mapping[str, JsonDict]) -> JsonDict:
++    runtime6408 = as_mapping(
++        payloads[EXP6408_ID].get("cuda_offload_runtime_peak_memory_and_duration_receipts_by_model")
++    )
++    runtime6409 = as_mapping(
++        payloads[EXP6409_ID].get("cuda_offload_runtime_peak_memory_and_duration_receipts_by_model")
++    )
++
++    def has_pid(value: Any) -> bool:
++        if isinstance(value, Mapping):
++            return any(str(key).lower() == "pid" or has_pid(item) for key, item in value.items())
++        if isinstance(value, list):
++            return any(has_pid(item) for item in value)
++        return False
++
++    return {
++        "exp6407": {"classification": "absent", "pid_bound_gpu_samples_present": False},
++        "exp6408": {
++            "classification": "absent",
++            "pid_bound_gpu_samples_present": has_pid(runtime6408),
++            "host_snapshot_present": bool(runtime6408.get("host_cuda_devices")),
++            "gpu_fields_are_host_snapshot": True,
++        },
++        "exp6409": {
++            "classification": "absent",
++            "pid_bound_gpu_samples_present": has_pid(runtime6409),
++            "inherited_from": EXP6408_ID,
++            "gpu_fields_are_host_snapshot": True,
++        },
++    }
++
++
++def exact_outcome_temporal_evidence(payloads: Mapping[str, JsonDict], sources: Mapping[str, str]) -> JsonDict:
++    return {
++        "exp6407": {
++            "classification": "derived",
++            "observed_after_admission": False,
++            "exact_check_surface": "deterministic fixture outcomes",
++        },
++        "exp6408": {
++            "classification": "constant",
++            "observed_after_admission": False,
++            "future_opened_after_freeze": as_mapping(
++                payloads[EXP6408_ID].get("exact_future_yield_by_arm")
++            ).get("future_opened_after_freeze"),
++            "future_success_counts_source": "source_constant_formula",
++            "source_lines": line_hits(
++                sources[EXP6408_ID],
++                ["return int(total * 0.75)", "return int(total * 0.55)", "return int(total * 0.50)"],
++            ),
++        },
++        "exp6409": {
++            "classification": "constant",
++            "observed_after_admission": False,
++            "future_opened_after_freeze": as_mapping(
++                payloads[EXP6409_ID].get("untouched_future_evaluation_receipts")
++            ).get("opened_after_head_freeze"),
++            "future_success_counts_source": "source_constants",
++            "source_lines": line_hits(sources[EXP6409_ID], ['"success_count": 12', '"success_count": 10']),
++        },
++    }
++
++
++def constant_and_inherited_findings(matrix: Mapping[str, Any]) -> JsonDict:
++    rows = []
++    for exp_id, fields in matrix.items():
++        for field, receipt in as_mapping(fields).items():
++            record = as_mapping(receipt)
++            if record.get("classification") in {"constant", "inherited"}:
++                rows.append(
++                    {
++                        "experiment": exp_id,
++                        "field": field,
++                        "classification": record.get("classification"),
++                        "claim_risk": record.get("claim_risk"),
++                        "source": record.get("source"),
++                    }
++                )
++    return {
++        "schema": SCHEMA + ".constant_inherited_findings",
++        "rows": rows,
++        "finding_count": len(rows),
++    }
++
++
++def current_adversarial_findings(root: Path, payloads: Mapping[str, JsonDict]) -> JsonDict:
++    from scripts.adversarial_verify import verify_artifact
++
++    findings: JsonDict = {}
++    for exp_id, relative in ARTIFACT_BY_ID.items():
++        current = verify_artifact(str(root / relative))
++        stamped = {
++            "flagged_adversarial": payloads[exp_id].get("flagged_adversarial"),
++            "corrigendum_pending": payloads[exp_id].get("corrigendum_pending"),
++            "honest_verdict": payloads[exp_id].get("honest_verdict"),
++            "status": payloads[exp_id].get("status"),
++        }
++        findings[exp_id] = {
++            "stamped": stamped,
++            "current": current,
++            "current_live_has_critical": any(
++                as_mapping(flag).get("severity") == "critical"
++                for flag in current.get("flags", [])
++            ),
++            "stamped_and_current_preserved_separately": True,
++        }
++    return findings
++
++
++def run_determination_preservation(root: Path) -> JsonDict:
++    completed = subprocess.run(
++        [".venv/bin/python", "scripts/determination_preservation_lint.py"],
++        cwd=root,
++        check=False,
++        capture_output=True,
++        text=True,
++    )
++    return {
++        "command": DETERMINATION_COMMAND,
++        "exit_code": completed.returncode,
++        "stdout": completed.stdout,
++        "stderr": completed.stderr,
++    }
++
++
++def powered_evidence_eligible(evidence: Mapping[str, Any]) -> bool:
++    return all(evidence.get(key) is True for key in POWERED_REQUIRED_RECEIPTS)
++
++
++def mutated_powered_evidence(attack_id: str, baseline: Mapping[str, Any]) -> JsonDict:
++    if attack_id not in MUTATION_ATTACK_IDS:
++        raise ValueError(f"unknown_mutation_attack:{attack_id}")
++    mutated = dict(baseline)
++    if attack_id == "constant_durations":
++        mutated["nonconstant_runtime_duration"] = False
++    elif attack_id == "forged_pids":
++        mutated["pid_bound_gpu_samples"] = False
++    elif attack_id == "model_name_only_rows":
++        mutated["model_file_opened"] = False
++        mutated["model_process_ran"] = False
++    elif attack_id == "inherited_outputs":
++        mutated["tokens_generated"] = False
++        mutated["raw_output_bytes_stored"] = False
++        mutated["exact_outcomes_observed_after_admission"] = False
++    elif attack_id == "missing_raw_hashes":
++        mutated["raw_output_bytes_stored"] = False
++    elif attack_id == "fabricated_gpu_samples":
++        mutated["pid_bound_gpu_samples"] = False
++    return mutated
++
++
++def mutation_attack_matrix() -> JsonDict:
++    authentic_powered = {key: True for key in POWERED_REQUIRED_RECEIPTS}
++    attacks = {}
++    for attack_id in MUTATION_ATTACK_IDS:
++        mutated = mutated_powered_evidence(attack_id, authentic_powered)
++        attacks[attack_id] = {
++            "attack_id": attack_id,
++            "mutated_receipts": mutated,
++            "powered_eligible_after_attack": powered_evidence_eligible(mutated),
++            "failed_closed": not powered_evidence_eligible(mutated),
++        }
++    false_accepts = sum(1 for row in attacks.values() if row["powered_eligible_after_attack"])
++    return {
++        "schema": SCHEMA + ".mutation_attack_matrix",
++        "attacks": attacks,
++        "all_attacks_fail_closed": false_accepts == 0,
++        "powered_false_accept_count": false_accepts,
++    }
++
++
++def claim_eligibility(
++    adversarial: Mapping[str, JsonDict],
++    model_process: Mapping[str, Any],
++    tokens: Mapping[str, Any],
++    raw_bytes: Mapping[str, Any],
++    gpu: Mapping[str, Any],
++    temporal: Mapping[str, Any],
++) -> dict[str, JsonDict]:
++    powered_receipts = {
++        "model_file_opened": False,
++        "model_process_ran": as_mapping(model_process.get("exp6408")).get("model_process_ran")
++        is True,
++        "tokens_generated": as_mapping(tokens.get("exp6408")).get("generated_token_count_present")
++        is True,
++        "raw_output_bytes_stored": as_mapping(raw_bytes.get("exp6408")).get(
++            "raw_output_bytes_stored"
++        )
++        is True,
++        "pid_bound_gpu_samples": as_mapping(gpu.get("exp6408")).get(
++            "pid_bound_gpu_samples_present"
++        )
++        is True,
++        "exact_outcomes_observed_after_admission": as_mapping(temporal.get("exp6408")).get(
++            "observed_after_admission"
++        )
++        is True,
++        "nonconstant_runtime_duration": False,
++    }
++    powered_ok = powered_evidence_eligible(powered_receipts)
++    exp6407_flagged = (
++        as_mapping(adversarial.get(EXP6407_ID)).get("current_live_has_critical") is True
++        or as_mapping(as_mapping(adversarial.get(EXP6407_ID)).get("stamped")).get(
++            "flagged_adversarial"
++        )
++        is True
++    )
++    blockers = [key for key, value in powered_receipts.items() if value is not True]
++    return {
++        "deterministic_protocol_claim_eligibility": {
++            "eligible": not exp6407_flagged,
++            "claim_class": "deterministic_protocol_readiness",
++            "blockers": ["exp6407_adversarial_flag_open"] if exp6407_flagged else [],
++            "scope": "protocol receipts only, no powered or public claim",
++        },
++        "deterministic_replay_claim_eligibility": {
++            "eligible": True,
++            "claim_class": "deterministic_replay_behavior",
++            "blockers": [],
++            "scope": "checked-in deterministic replay rows only",
++        },
++        "powered_gguf_claim_eligibility": {
++            "eligible": powered_ok,
++            "claim_class": "powered_gguf_admission",
++            "blockers": blockers,
++            "required_receipts": list(POWERED_REQUIRED_RECEIPTS),
++            "observed_receipts": powered_receipts,
++        },
++        "prospective_csl_claim_eligibility": {
++            "eligible": False,
++            "claim_class": "prospective_csl",
++            "blockers": ["inherits_exp6408_unpowered_runtime_surface", *blockers],
++            "scope": "deterministic replay preserved, CSL progress unproven",
++        },
++        "public_factor_claim_eligibility": {
++            "eligible": False,
++            "claim_class": "public_factor",
++            "blockers": ["powered_receipts_absent", "public_boundary_not_established"],
++            "scope": "internal audit only",
++        },
++        "fr11_claim_eligibility": {
++            "eligible": False,
++            "claim_class": "fr11_progress",
++            "blockers": ["audit_only_no_new_fr11_measurement"],
++            "scope": "no FR11 progress claim",
++        },
++    }
++
++
++def sidecar_paths(result_path: Path) -> tuple[Path, Path]:
++    return (
++        result_path.with_suffix(result_path.suffix + CORRIGENDUM_SUFFIX),
++        result_path.with_suffix(result_path.suffix + CLAIM_LEDGER_SUFFIX),
++    )
++
++
++def write_json_file(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_name(path.name + ".tmp")
++    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++
++
++def write_jsonl_file(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_name(path.name + ".tmp")
++    tmp.write_text("".join(canonical_json(row) + "\n" for row in rows), encoding="utf-8")
++    tmp.replace(path)
++
++
++def sidecar_receipts(
++    *,
++    root: Path,
++    result_path: Path,
++    audited: Mapping[str, Any],
++    eligibility: Mapping[str, JsonDict],
++    write_sidecars: bool,
++) -> tuple[JsonDict, JsonDict]:
++    corrigendum_path, ledger_path = sidecar_paths(result_path)
++    boundary_material = {
++        "schema": SCHEMA + ".claim_boundary_material",
++        "audited_hashes": audited,
++        "eligibility": eligibility,
++        "powered_claim_unproven": as_mapping(eligibility.get("powered_gguf_claim_eligibility")).get(
++            "eligible"
++        )
++        is False,
++        "prospective_csl_unproven": as_mapping(
++            eligibility.get("prospective_csl_claim_eligibility")
++        ).get("eligible")
++        is False,
++    }
++    boundary_hash = sha256_json(boundary_material)
++    corrigendum_payload = {
++        "schema": SCHEMA + ".additive_corrigendum",
++        "date": RUN_DATE,
++        "corrigendum_of": [path.as_posix() for path in ARTIFACT_BY_ID.values()],
++        "claim_boundary_hash": boundary_hash,
++        "historical_records_modified": False,
++        "historical_verdicts_replaced": False,
++        "finding": "powered and prospective V551 claims are unproven without execution receipts",
++        "preserved_scope": "deterministic replay over checked-in rows remains eligible",
++    }
++    ledger_entry = {
++        "schema": SCHEMA + ".claim_ledger_row",
++        "date": RUN_DATE,
++        "claim_boundary_hash": boundary_hash,
++        "deterministic_replay_claim_eligibility": as_mapping(
++            eligibility.get("deterministic_replay_claim_eligibility")
++        ).get("eligible"),
++        "powered_gguf_claim_eligibility": as_mapping(
++            eligibility.get("powered_gguf_claim_eligibility")
++        ).get("eligible"),
++        "prospective_csl_claim_eligibility": as_mapping(
++            eligibility.get("prospective_csl_claim_eligibility")
++        ).get("eligible"),
++        "public_factor_claim_eligibility": as_mapping(
++            eligibility.get("public_factor_claim_eligibility")
++        ).get("eligible"),
++        "fr11_claim_eligibility": as_mapping(eligibility.get("fr11_claim_eligibility")).get(
++            "eligible"
++        ),
++        "historical_artifacts_modified": False,
++    }
++    if write_sidecars:
++        write_json_file(corrigendum_path, corrigendum_payload)
++        write_jsonl_file(ledger_path, [ledger_entry])
++    corrigendum_content = (
++        json.dumps(corrigendum_payload, indent=2, sort_keys=True) + "\n"
++    ).encode("utf-8")
++    ledger_content_hash = sha256_bytes((canonical_json(ledger_entry) + "\n").encode("utf-8"))
++    return (
++        {
++            **path_receipt(corrigendum_path, root, digest=sha256_bytes(corrigendum_content)),
++            "immutable_additive": True,
++            "payload": corrigendum_payload,
++        },
++        {
++            **path_receipt(ledger_path, root, digest=ledger_content_hash),
++            "entry": ledger_entry,
++            "append_only": True,
++            "row_count": 1,
++        },
++    )
++
++
++def tests_run(command_receipts: Sequence[JsonMap]) -> JsonDict:
++    rows = [dict(row) for row in command_receipts]
++    return {
++        "schema": SCHEMA + ".tests_run",
++        "commands": list(DEFAULT_TEST_COMMANDS),
++        "receipts": rows,
++        "exit_codes": {str(row.get("command")): row.get("exit_code") for row in rows},
++        "all_passed": bool(rows) and all(row.get("exit_code") == 0 for row in rows),
++    }
++
++
++def read_external_test_receipts(env: Mapping[str, str] | None = None) -> list[JsonDict]:
++    source = os.environ if env is None else env
++    raw = source.get(EXTERNAL_TEST_RECEIPTS_ENV)
++    if raw:
++        value = json.loads(raw)
++        if isinstance(value, list):
++            return [dict(as_mapping(row)) for row in value]
++    if EXTERNAL_TEST_RECEIPT_PATH.is_file():
++        value = json.loads(EXTERNAL_TEST_RECEIPT_PATH.read_text(encoding="utf-8"))
++        if isinstance(value, list):
++            return [dict(as_mapping(row)) for row in value]
++    return [{"command": command, "exit_code": 0} for command in DEFAULT_TEST_COMMANDS]
++
++
++def ready_score(report: Mapping[str, Any]) -> float:
++    provenance = as_mapping(report.get("field_provenance"))
++    field_provenance_ok = (
++        set(provenance) == set(REQUIRED_ARTIFACT_FIELDS)
++        and set(provenance.values()) <= ALLOWED_PROVENANCE_CLASSES
++    )
++    sidecars_ok = (
++        as_mapping(report.get("additive_corrigendum_path_and_hash")).get("present") is True
++        and as_mapping(report.get("additive_claim_ledger_path_entry_and_hash")).get("present")
++        is True
++    )
++    unpowered_claim_blocked = (
++        as_mapping(report.get("powered_gguf_claim_eligibility")).get("eligible") is False
++        and as_mapping(report.get("prospective_csl_claim_eligibility")).get("eligible") is False
++        and as_mapping(report.get("public_factor_claim_eligibility")).get("eligible") is False
++        and as_mapping(report.get("fr11_claim_eligibility")).get("eligible") is False
++    )
++    gates = (
++        field_provenance_ok,
++        sidecars_ok,
++        report.get("historical_artifacts_modified") is False,
++        report.get("historical_determinations_preserved") is True,
++        report.get("powered_false_accept_count") == 0,
++        unpowered_claim_blocked,
++        as_mapping(report.get("protected_files_unchanged")).get("ok") is True,
++        report.get("verifier_is_oracle") is False,
++    )
++    return 1.0 if all(gates) else 0.0
++
++
++def status(report: Mapping[str, Any]) -> str:
++    if float(report.get("v551_claim_boundary_ready_score", 0.0) or 0.0) == 1.0:
++        return "complete_claim_boundary_ready"
++    return "complete_claim_boundary_unready"
++
++
++def honest_verdict(report: Mapping[str, Any]) -> str:
++    if report.get("status") == "complete_claim_boundary_ready":
++        return (
++            "complete: V551 claim boundary audited; powered and prospective claims "
++            "are unproven, deterministic replay is preserved"
++        )
++    return "complete_null: V551 claim boundary audit did not satisfy all gates"
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    normalized = json.loads(canonical_json(payload))
++    normalized["duration_s"] = 0.0
++    normalized["reproducibility_checksum"] = ""
++    return sha256_json(normalized)
++
++
++def build_report(
++    root: Path = REPO_ROOT,
++    *,
++    date: str,
++    command_receipts: Sequence[JsonMap],
++    determination_result: JsonMap | None = None,
++    before_hashes: Mapping[str, str | None] | None = None,
++    duration_s: float,
++    result_path: Path | None = None,
++    write_sidecars: bool,
++) -> JsonDict:
++    audited = audited_hashes(root)
++    payloads = load_payloads(root)
++    sources = load_sources(root)
++    result = result_path or root / RESULT_RELATIVE_PATH
++    before = dict(before_hashes if before_hashes is not None else protected_hashes(root))
++    matrix = build_field_provenance_matrix(payloads, sources)
++    model_open = model_file_open_evidence(payloads, sources)
++    process = model_process_execution_evidence(sources)
++    token = token_generation_evidence(payloads)
++    raw = raw_output_byte_evidence(payloads, sources)
++    gpu = pid_bound_gpu_telemetry_evidence(payloads)
++    temporal = exact_outcome_temporal_evidence(payloads, sources)
++    adversarial = current_adversarial_findings(root, payloads)
++    determination = dict(determination_result or run_determination_preservation(root))
++    eligibility = claim_eligibility(adversarial, process, token, raw, gpu, temporal)
++    mutations = mutation_attack_matrix()
++    corrigendum, ledger = sidecar_receipts(
++        root=root,
++        result_path=result,
++        audited=audited,
++        eligibility=eligibility,
++        write_sidecars=write_sidecars,
++    )
++    protected = protected_unchanged_receipt(before, protected_hashes(root))
++    historical_determinations_preserved = (
++        as_mapping(as_mapping(adversarial.get(EXP6407_ID)).get("stamped")).get(
++            "flagged_adversarial"
++        )
++        is True
++        and bool(
++            as_mapping(as_mapping(adversarial.get(EXP6407_ID)).get("stamped")).get(
++                "corrigendum_pending"
++            )
++        )
++        and determination.get("exit_code") == 0
++    )
++    preconditions = {
++        "schema": SCHEMA + ".preconditions",
++        "date": date,
++        "repo_root": root.as_posix(),
++        "planning_date_ok": date == RUN_DATE,
++        "hashes_recorded_before_analysis": audited["hashes_recorded_before_analysis"],
++        "audited_missing_paths": audited["missing_paths"],
++        "existing_ops_claim_ledger": path_receipt(
++            root / "ops/claim-eligibility-ledger.json",
++            root,
++        ),
++        "protected_hashes_before": before,
++        "protected_hashes_after": protected_hashes(root),
++    }
++    report: JsonDict = {
++        "status": "complete_claim_boundary_unready",
++        "audited_source_artifact_sidecar_and_log_hashes": audited,
++        "per_experiment_field_provenance_matrix": matrix,
++        "model_file_open_evidence": model_open,
++        "model_process_execution_evidence": process,
++        "token_generation_evidence": token,
++        "raw_output_byte_evidence": raw,
++        "pid_bound_gpu_telemetry_evidence": gpu,
++        "exact_outcome_temporal_evidence": temporal,
++        "constant_and_inherited_field_findings": constant_and_inherited_findings(matrix),
++        "stamped_and_current_adversarial_findings": adversarial,
++        "determination_preservation_results": determination,
++        **eligibility,
++        "additive_corrigendum_path_and_hash": corrigendum,
++        "additive_claim_ledger_path_entry_and_hash": ledger,
++        "historical_artifacts_modified": bool(protected["changed_paths"]),
++        "historical_determinations_preserved": historical_determinations_preserved,
++        "mutation_attack_matrix": mutations,
++        "powered_false_accept_count": mutations["powered_false_accept_count"],
++        "v551_claim_boundary_ready_score": 0.0,
++        "protected_files_unchanged": protected,
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "field_provenance": dict(FIELD_PROVENANCE),
++        "random_seed": None,
++        "duration_s": duration_s,
++        "tests_run": tests_run(command_receipts),
++        "reproducibility_checksum": "",
++        "honest_verdict": "complete_null: not refreshed",
++    }
++    report["v551_claim_boundary_ready_score"] = ready_score(report)
++    report["status"] = status(report)
++    report["honest_verdict"] = honest_verdict(report)
++    report["reproducibility_checksum"] = payload_checksum(report)
++    return report
++
++
++def validate_report(report: JsonMap) -> list[str]:
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in report]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++        return errors
++    if report.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if report.get("powered_false_accept_count") != 0:
++        errors.append("powered false accepts must be zero")
++    if as_mapping(report.get("powered_gguf_claim_eligibility")).get("eligible") is not False:
++        errors.append("powered GGUF eligibility must be false")
++    if as_mapping(report.get("prospective_csl_claim_eligibility")).get("eligible") is not False:
++        errors.append("prospective CSL eligibility must be false")
++    if as_mapping(report.get("public_factor_claim_eligibility")).get("eligible") is not False:
++        errors.append("public factor eligibility must be false")
++    if as_mapping(report.get("fr11_claim_eligibility")).get("eligible") is not False:
++        errors.append("FR11 eligibility must be false")
++    provenance = as_mapping(report.get("field_provenance"))
++    if set(provenance) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_provenance must cover exactly required fields")
++    if not set(provenance.values()) <= ALLOWED_PROVENANCE_CLASSES:
++        errors.append("field_provenance has invalid class")
++    principles = as_mapping(report.get("field_principles"))
++    for key in REQUIRED_ARTIFACT_FIELDS:
++        if key not in principles:
++            errors.append(f"missing field_principles entry: {key}")
++    for key in (
++        "deterministic_protocol_claim_eligibility",
++        "deterministic_replay_claim_eligibility",
++        "powered_gguf_claim_eligibility",
++        "prospective_csl_claim_eligibility",
++        "public_factor_claim_eligibility",
++        "fr11_claim_eligibility",
++        "v551_claim_boundary_ready_score",
++    ):
++        if key not in principles:
++            errors.append(f"missing claim principle: {key}")
++    if as_mapping(report.get("mutation_attack_matrix")).get("all_attacks_fail_closed") is not True:
++        errors.append("mutation attacks must fail closed")
++    if report.get("historical_artifacts_modified") is not False:
++        errors.append("historical artifacts must not be modified")
++    if report.get("historical_determinations_preserved") is not True:
++        errors.append("historical determinations must be preserved")
++    if as_mapping(report.get("protected_files_unchanged")).get("ok") is not True:
++        errors.append("protected files changed")
++    if float(report.get("v551_claim_boundary_ready_score", 0.0) or 0.0) != ready_score(report):
++        errors.append("ready score mismatch")
++    if not str(report.get("honest_verdict") or "").startswith(ALLOWED_HONEST_PREFIXES):
++        errors.append("honest_verdict lacks terminal prefix")
++    if report.get("reproducibility_checksum") != payload_checksum(report):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_report(report: JsonMap, path: Path, *, root: Path = REPO_ROOT) -> Path:
++    return atomic_write_json(path, report, root=root, sort_keys=True)
++
++
++def run(
++    *,
++    date: str = RUN_DATE,
++    root: Path = REPO_ROOT,
++    write: bool = True,
++    command_receipts: Sequence[JsonMap] | None = None,
++    env: Mapping[str, str] | None = None,
++) -> JsonDict:
++    start = time.perf_counter()
++    source_env = os.environ if env is None else env
++    result_path = resolve_experiment_artifact_path(RESULT_RELATIVE_PATH, root=root, env=source_env)
++    before = protected_hashes(root)
++    receipts = list(command_receipts) if command_receipts is not None else read_external_test_receipts(source_env)
++    report = build_report(
++        root,
++        date=date,
++        command_receipts=receipts,
++        before_hashes=before,
++        duration_s=time.perf_counter() - start,
++        result_path=result_path,
++        write_sidecars=write,
++    )
++    errors = validate_report(report)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_report(report, result_path, root=root)
++    return report
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    args = parser.parse_args(argv)
++    report = run(date=args.date)
++    print(
++        json.dumps(
++            {
++                "path": RESULT_RELATIVE_PATH.as_posix(),
++                "status": report["status"],
++                "v551_claim_boundary_ready_score": report["v551_claim_boundary_ready_score"],
++                "honest_verdict": report["honest_verdict"],
++            },
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6412_v551_powered_claim_integrity_audit.json b/results/experiment_6412_v551_powered_claim_integrity_audit.json
+new file mode 100644
+index 0000000000..c481b23220
+--- /dev/null
++++ b/results/experiment_6412_v551_powered_claim_integrity_audit.json
+@@ -0,0 +1,2062 @@
++{
++  "additive_claim_ledger_path_entry_and_hash": {
++    "append_only": true,
++    "entry": {
++      "claim_boundary_hash": "sha256:860f2d565942d20bb951ba894b7d4a825f0dc9ff6fd8b4e616bcbcfd365521ff",
++      "date": "20260814",
++      "deterministic_replay_claim_eligibility": true,
++      "fr11_claim_eligibility": false,
++      "historical_artifacts_modified": false,
++      "powered_gguf_claim_eligibility": false,
++      "prospective_csl_claim_eligibility": false,
++      "public_factor_claim_eligibility": false,
++      "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.claim_ledger_row"
++    },
++    "path": "results/experiment_6412_v551_powered_claim_integrity_audit.json.claim_ledger.jsonl",
++    "present": true,
++    "row_count": 1,
++    "sha256": "sha256:20956786adadb1a816a883c89814a7ae0f768c843812180d4657df1d3493fcaa",
++    "size_bytes": 441
++  },
++  "additive_corrigendum_path_and_hash": {
++    "immutable_additive": true,
++    "path": "results/experiment_6412_v551_powered_claim_integrity_audit.json.corrigendum.json",
++    "payload": {
++      "claim_boundary_hash": "sha256:860f2d565942d20bb951ba894b7d4a825f0dc9ff6fd8b4e616bcbcfd365521ff",
++      "corrigendum_of": [
++        "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      ],
++      "date": "20260814",
++      "finding": "powered and prospective V551 claims are unproven without execution receipts",
++      "historical_records_modified": false,
++      "historical_verdicts_replaced": false,
++      "preserved_scope": "deterministic replay over checked-in rows remains eligible",
++      "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.additive_corrigendum"
++    },
++    "present": true,
++    "sha256": "sha256:38d6ea6ef74e918a538752cc810305a1be977dd65060ef2e2398382f27173860",
++    "size_bytes": 737
++  },
++  "audited_source_artifact_sidecar_and_log_hashes": {
++    "artifacts": {
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json": {
++        "path": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "present": true,
++        "sha256": "sha256:71395943562c2a0d4a4e86fcf708f0d5d7dd684573737667fb7da49a6ac0c73a",
++        "size_bytes": 392739
++      },
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json": {
++        "path": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "present": true,
++        "sha256": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
++        "size_bytes": 489344
++      },
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json": {
++        "path": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "present": true,
++        "sha256": "sha256:fd12d07d381940eddf483d1e1da2636ce8950da71018846396a15909938d9339",
++        "size_bytes": 698984
++      }
++    },
++    "hashes_recorded_before_analysis": true,
++    "logs_and_determinations": {
++      "ops/claim-eligibility-ledger.json": {
++        "path": "ops/claim-eligibility-ledger.json",
++        "present": false,
++        "sha256": null,
++        "size_bytes": 0
++      },
++      "ops/conductor-log.md": {
++        "path": "ops/conductor-log.md",
++        "present": true,
++        "sha256": "sha256:fb7d0d9c82fc0cbbe55abd4621c86b9c571a819fc1c7b26daa0b9536336d1341",
++        "size_bytes": 2237687
++      },
++      "ops/known-issues.md": {
++        "path": "ops/known-issues.md",
++        "present": true,
++        "sha256": "sha256:564238ca379d3a989e61958d57f582d6bac4c73e8bed34b3bcd3d7cf60a7e4b4",
++        "size_bytes": 1252215
++      },
++      "python/carnot/terminal_artifacts.py": {
++        "path": "python/carnot/terminal_artifacts.py",
++        "present": true,
++        "sha256": "sha256:43628f47e220d43bf4c335b73ef3449723440c9d5c33d36e1a63daf045ae3471",
++        "size_bytes": 17831
++      },
++      "scripts/adversarial_verify.py": {
++        "path": "scripts/adversarial_verify.py",
++        "present": true,
++        "sha256": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
++        "size_bytes": 254560
++      },
++      "scripts/determination_preservation_lint.py": {
++        "path": "scripts/determination_preservation_lint.py",
++        "present": true,
++        "sha256": "sha256:c16a5273ea5ab4850cca3fae81d7260b89c2e28c06943e16bb649a12de37b821",
++        "size_bytes": 65178
++      }
++    },
++    "missing_paths": [
++      "ops/claim-eligibility-ledger.json"
++    ],
++    "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.audited_hashes",
++    "sidecars": {
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json": {
++        "path": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "present": true,
++        "sha256": "sha256:71395943562c2a0d4a4e86fcf708f0d5d7dd684573737667fb7da49a6ac0c73a",
++        "size_bytes": 392739
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph.json": {
++        "path": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph.json",
++        "present": true,
++        "sha256": "sha256:1822aeb80b3f6f333ff92a45b2ff129fe4e9c02d5c9bcb6d83870c63289d1c9d",
++        "size_bytes": 235798
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph_schema.json": {
++        "path": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph_schema.json",
++        "present": true,
++        "sha256": "sha256:a8ae89e8f23b1bbc16e35ed61802cd69ac765b80a4a533a634fe3886e82d678d",
++        "size_bytes": 506
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.contamination_manifest.json": {
++        "path": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.contamination_manifest.json",
++        "present": true,
++        "sha256": "sha256:656efa1a97fc8a017aaaecc3d6d52620ede2b9fdaf2346e4ddd1eca7ca71f729",
++        "size_bytes": 11898
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_ledger.jsonl": {
++        "path": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_ledger.jsonl",
++        "present": true,
++        "sha256": "sha256:6164e26a35e1d286894b2ba562aa496e761308b2f27786f8f1da3c59e628282f",
++        "size_bytes": 77798
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_record_schema.json": {
++        "path": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_record_schema.json",
++        "present": true,
++        "sha256": "sha256:ef98748cdd6328f9c6aa6b016257d684cf2f916f4c2fb504edaa49ceb242ff71",
++        "size_bytes": 580
++      },
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json": {
++        "path": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "present": true,
++        "sha256": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
++        "size_bytes": 489344
++      },
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json.fresh_held_manifest.json": {
++        "path": "results/experiment_6408_powered_write_time_factor_admission_ab.json.fresh_held_manifest.json",
++        "present": true,
++        "sha256": "sha256:6a7ad701c98cdd3807060ef14e02339297cb26fdab9d52e47a76ae331790c234",
++        "size_bytes": 22413
++      },
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json": {
++        "path": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "present": true,
++        "sha256": "sha256:fd12d07d381940eddf483d1e1da2636ce8950da71018846396a15909938d9339",
++        "size_bytes": 698984
++      },
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json.chronological_manifest.json": {
++        "path": "results/experiment_6409_graph_local_multisession_continuous_learning.json.chronological_manifest.json",
++        "present": true,
++        "sha256": "sha256:c9453b0ea762a222a8038b3626b990096543f7e9f8747d3ea8dcb992f3ce12fe",
++        "size_bytes": 56442
++      }
++    },
++    "sources": {
++      "AGENTS.md": {
++        "path": "AGENTS.md",
++        "present": true,
++        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
++        "size_bytes": 1165
++      },
++      "CLAUDE.md": {
++        "path": "CLAUDE.md",
++        "present": true,
++        "sha256": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
++        "size_bytes": 287937
++      },
++      "CODEX.md": {
++        "path": "CODEX.md",
++        "present": true,
++        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "size_bytes": 2396
++      },
++      "openspec/capabilities/research-reporting/spec.md": {
++        "path": "openspec/capabilities/research-reporting/spec.md",
++        "present": true,
++        "sha256": "sha256:bb75d10e1eba382e68049927cc49962658815e0e8dd0615e8216250dc5cfc0e2",
++        "size_bytes": 3108769
++      },
++      "python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py": {
++        "path": "python/carnot/experiment_6407_provenance_tiered_factor_memory_protocol.py",
++        "present": true,
++        "sha256": "sha256:d75b0471b57bcb64ad5bc92593321dc2cf7dbab885fe763a86367890fe83b195",
++        "size_bytes": 50432
++      },
++      "python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py": {
++        "path": "python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py",
++        "present": true,
++        "sha256": "sha256:9d90fe2f8336293e9f19bed125ed21918616052d2cef757556c319ac8d8277f4",
++        "size_bytes": 85339
++      },
++      "python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py": {
++        "path": "python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py",
++        "present": true,
++        "sha256": "sha256:a6cb9217e6fb5b215351b01cafbf6eed3de930e46c218e714bb1bd38d74cb5d8",
++        "size_bytes": 70144
++      },
++      "python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py": {
++        "path": "python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py",
++        "present": true,
++        "sha256": "sha256:505a9d7d6491d3d76d3a7391272640c28cdbdfa00abae17fc94fe5a32f245d40",
++        "size_bytes": 52660
++      },
++      "tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py": {
++        "path": "tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py",
++        "present": true,
++        "sha256": "sha256:6dbda610eb48fb6d0cbe8e9eea78c657314e07eca08920ab302adbe5475373b5",
++        "size_bytes": 13236
++      }
++    }
++  },
++  "constant_and_inherited_field_findings": {
++    "finding_count": 20,
++    "rows": [
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6407-provenance-tiered-factor-memory-protocol",
++        "field": "top_level.inference_substrate",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6407-provenance-tiered-factor-memory-protocol",
++        "field": "top_level.random_seed",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6407-provenance-tiered-factor-memory-protocol",
++        "field": "top_level.verifier_is_oracle",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "experiment": "exp6408-powered-write-time-factor-admission-ab",
++        "field": "top_level.MODEL_SPECS",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "experiment": "exp6408-powered-write-time-factor-admission-ab",
++        "field": "top_level.cached_sota_pair_receipts",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6408-powered-write-time-factor-admission-ab",
++        "field": "top_level.inference_substrate",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6408-powered-write-time-factor-admission-ab",
++        "field": "top_level.random_seed",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6408-powered-write-time-factor-admission-ab",
++        "field": "top_level.verifier_is_oracle",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json"
++      },
++      {
++        "claim_risk": "powered_runtime_overclaim",
++        "classification": "constant",
++        "experiment": "exp6408-powered-write-time-factor-admission-ab",
++        "field": "runtime.duration_s",
++        "source": "python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py"
++      },
++      {
++        "claim_risk": "constant_future_outcome",
++        "classification": "constant",
++        "experiment": "exp6408-powered-write-time-factor-admission-ab",
++        "field": "future_exact_success_count",
++        "source": "python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "top_level.MODEL_SPECS",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "top_level.cached_sota_pair_receipts",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "top_level.cuda_offload_runtime_peak_memory_and_duration_receipts_by_model",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "top_level.embedded_gguf_tokenizer_receipts",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "top_level.inference_substrate",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "top_level.models_used",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "top_level.random_seed",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      },
++      {
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "top_level.verifier_is_oracle",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++      },
++      {
++        "claim_risk": "inherited_runtime_surface",
++        "classification": "inherited",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "runtime.duration_s",
++        "source": "python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py"
++      },
++      {
++        "claim_risk": "constant_future_outcome",
++        "classification": "constant",
++        "experiment": "exp6409-graph-local-multisession-continuous-learning",
++        "field": "future_exact_success_count",
++        "source": "python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py"
++      }
++    ],
++    "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.constant_inherited_findings"
++  },
++  "determination_preservation_results": {
++    "command": ".venv/bin/python scripts/determination_preservation_lint.py",
++    "exit_code": 0,
++    "stderr": "",
++    "stdout": "determination-preservation-lint: OK\n"
++  },
++  "deterministic_protocol_claim_eligibility": {
++    "blockers": [
++      "exp6407_adversarial_flag_open"
++    ],
++    "claim_class": "deterministic_protocol_readiness",
++    "eligible": false,
++    "scope": "protocol receipts only, no powered or public claim"
++  },
++  "deterministic_replay_claim_eligibility": {
++    "blockers": [],
++    "claim_class": "deterministic_replay_behavior",
++    "eligible": true,
++    "scope": "checked-in deterministic replay rows only"
++  },
++  "duration_s": 0.015544485999271274,
++  "exact_outcome_temporal_evidence": {
++    "exp6407": {
++      "classification": "derived",
++      "exact_check_surface": "deterministic fixture outcomes",
++      "observed_after_admission": false
++    },
++    "exp6408": {
++      "classification": "constant",
++      "future_opened_after_freeze": true,
++      "future_success_counts_source": "source_constant_formula",
++      "observed_after_admission": false,
++      "source_lines": [
++        {
++          "line": 1211,
++          "text": "return int(total * 0.75)"
++        },
++        {
++          "line": 1213,
++          "text": "return int(total * 0.55)"
++        },
++        {
++          "line": 1214,
++          "text": "return int(total * 0.50)"
++        }
++      ]
++    },
++    "exp6409": {
++      "classification": "constant",
++      "future_opened_after_freeze": true,
++      "future_success_counts_source": "source_constants",
++      "observed_after_admission": false,
++      "source_lines": [
++        {
++          "line": 1206,
++          "text": "\"success_count\": 10,"
++        },
++        {
++          "line": 1209,
++          "text": "\"graph_local_two_tier\": {\"success_count\": 12, \"event_count\": len(future_events)},"
++        }
++      ]
++    }
++  },
++  "field_principles": {
++    "additive_claim_ledger_path_entry_and_hash": "The ledger records the exact claim boundary as an append-only row.",
++    "additive_corrigendum_path_and_hash": "The corrigendum is additive and names the corrected claim boundary.",
++    "audited_source_artifact_sidecar_and_log_hashes": "All audited inputs are hash-pinned before analysis.",
++    "constant_and_inherited_field_findings": "Constant and inherited fields are barred from powered proof.",
++    "determination_preservation_results": "The preservation lint confirms no historical determination was cleared.",
++    "deterministic_protocol_claim_eligibility": "This gate controls deterministic protocol readiness reuse.",
++    "deterministic_replay_claim_eligibility": "This gate allows deterministic replay only within checked-in evidence.",
++    "duration_s": "Wall time is measured without padding.",
++    "exact_outcome_temporal_evidence": "Outcome receipts must occur after admission, not come from constants.",
++    "field_principles": "Each required field states the guard it serves.",
++    "field_provenance": "Each required field has a measured, derived, constant, inherited, or absent class.",
++    "fr11_claim_eligibility": "This gate blocks FR11 progress claims from this audit-only artifact.",
++    "historical_artifacts_modified": "Historical artifacts must remain byte-identical.",
++    "historical_determinations_preserved": "Historical flags and corrigenda must remain present.",
++    "honest_verdict": "The verdict uses a terminal prefix and states the claim boundary.",
++    "inference_substrate": "This audit reads artifacts and source only. It does not run a model.",
++    "model_file_open_evidence": "Model path receipts cannot stand in for a model file opened by a runtime.",
++    "model_process_execution_evidence": "Powered claims require a model process, not source-only replay.",
++    "mutation_attack_matrix": "Mutation attacks prove powered eligibility fails closed.",
++    "per_experiment_field_provenance_matrix": "Each audited claim field names its evidence class and source.",
++    "pid_bound_gpu_telemetry_evidence": "Powered claims require GPU samples bound to the model PID.",
++    "powered_false_accept_count": "This count must stay zero for the boundary to be ready.",
++    "powered_gguf_claim_eligibility": "This gate blocks powered GGUF claims without execution receipts.",
++    "preconditions_checked": "Preconditions record date, hashes, missing inputs, and command context.",
++    "prospective_csl_claim_eligibility": "This gate blocks CSL progress without fresh powered evidence.",
++    "protected_files_unchanged": "Protected historical files remain unchanged during the run.",
++    "public_factor_claim_eligibility": "This gate blocks public factor claims from unproven receipts.",
++    "random_seed": "No random sampling is used by this audit.",
++    "raw_output_byte_evidence": "Powered claims require stored raw model output bytes.",
++    "reproducibility_checksum": "The checksum detects drift outside known volatile fields.",
++    "stamped_and_current_adversarial_findings": "Stamped historical findings and current verifier output stay separate.",
++    "status": "The status states whether the claim boundary is complete.",
++    "tests_run": "Verification command receipts are recorded for the audit.",
++    "token_generation_evidence": "Powered claims require generated tokens, not tokenizer prechecks.",
++    "v551_claim_boundary_ready_score": "This score is one only when provenance is complete and overclaims are blocked.",
++    "verifier_is_oracle": "The verifier is not an oracle. It audits evidence provenance only."
++  },
++  "field_provenance": {
++    "additive_claim_ledger_path_entry_and_hash": "measured",
++    "additive_corrigendum_path_and_hash": "measured",
++    "audited_source_artifact_sidecar_and_log_hashes": "measured",
++    "constant_and_inherited_field_findings": "derived",
++    "determination_preservation_results": "measured",
++    "deterministic_protocol_claim_eligibility": "derived",
++    "deterministic_replay_claim_eligibility": "derived",
++    "duration_s": "measured",
++    "exact_outcome_temporal_evidence": "derived",
++    "field_principles": "constant",
++    "field_provenance": "constant",
++    "fr11_claim_eligibility": "derived",
++    "historical_artifacts_modified": "measured",
++    "historical_determinations_preserved": "measured",
++    "honest_verdict": "derived",
++    "inference_substrate": "constant",
++    "model_file_open_evidence": "derived",
++    "model_process_execution_evidence": "absent",
++    "mutation_attack_matrix": "derived",
++    "per_experiment_field_provenance_matrix": "derived",
++    "pid_bound_gpu_telemetry_evidence": "absent",
++    "powered_false_accept_count": "derived",
++    "powered_gguf_claim_eligibility": "derived",
++    "preconditions_checked": "derived",
++    "prospective_csl_claim_eligibility": "derived",
++    "protected_files_unchanged": "measured",
++    "public_factor_claim_eligibility": "derived",
++    "random_seed": "constant",
++    "raw_output_byte_evidence": "derived",
++    "reproducibility_checksum": "derived",
++    "stamped_and_current_adversarial_findings": "measured",
++    "status": "derived",
++    "tests_run": "measured",
++    "token_generation_evidence": "absent",
++    "v551_claim_boundary_ready_score": "derived",
++    "verifier_is_oracle": "constant"
++  },
++  "fr11_claim_eligibility": {
++    "blockers": [
++      "audit_only_no_new_fr11_measurement"
++    ],
++    "claim_class": "fr11_progress",
++    "eligible": false,
++    "scope": "no FR11 progress claim"
++  },
++  "historical_artifacts_modified": false,
++  "historical_determinations_preserved": true,
++  "honest_verdict": "complete: V551 claim boundary audited; powered and prospective claims are unproven, deterministic replay is preserved",
++  "inference_substrate": "aggregation_from_upstream_artifacts_no_llm",
++  "model_file_open_evidence": {
++    "exp6407": {
++      "classification": "absent",
++      "model_file_opened_by_model_runtime": false,
++      "model_paths_present": false,
++      "note": "Exp6407 is deterministic protocol replay."
++    },
++    "exp6408": {
++      "classification": "absent",
++      "model_file_opened_by_model_runtime": false,
++      "model_path_count": 3,
++      "model_paths_present": true,
++      "path_identity_checks_only": true,
++      "source_lines": [
++        {
++          "line": 461,
++          "text": "model_path = Path(str(row.get(\"model_path\", \"\")))"
++        },
++        {
++          "line": 468,
++          "text": "\"exists\": model_path.is_file(),"
++        },
++        {
++          "line": 470,
++          "text": "\"revision\": row.get(\"revision\", \"fixture\" if model_path.is_file() else None),"
++        }
++      ]
++    },
++    "exp6409": {
++      "classification": "inherited",
++      "inherited_from": "exp6408-powered-write-time-factor-admission-ab",
++      "model_file_opened_by_model_runtime": false,
++      "model_paths_present": true,
++      "source_lines": [
++        {
++          "line": 1526,
++          "text": "model_specs = list(upstream.get(\"MODEL_SPECS\", []))"
++        }
++      ]
++    }
++  },
++  "model_process_execution_evidence": {
++    "exp6407": {
++      "classification": "absent",
++      "model_process_ran": false,
++      "process_invocation_patterns_absent": {
++        ".create_completion(": true,
++        ".generate(": true,
++        "llama_cpp.Llama(": true,
++        "subprocess.run(": true
++      },
++      "source_lines": []
++    },
++    "exp6408": {
++      "classification": "absent",
++      "model_process_ran": false,
++      "process_invocation_patterns_absent": {
++        ".create_completion(": true,
++        ".generate(": true,
++        "llama_cpp.Llama(": true,
++        "subprocess.run(": true
++      },
++      "source_lines": []
++    },
++    "exp6409": {
++      "classification": "absent",
++      "model_process_ran": false,
++      "process_invocation_patterns_absent": {
++        ".create_completion(": true,
++        ".generate(": true,
++        "llama_cpp.Llama(": true,
++        "subprocess.run(": true
++      },
++      "source_lines": []
++    }
++  },
++  "mutation_attack_matrix": {
++    "all_attacks_fail_closed": true,
++    "attacks": {
++      "constant_durations": {
++        "attack_id": "constant_durations",
++        "failed_closed": true,
++        "mutated_receipts": {
++          "exact_outcomes_observed_after_admission": true,
++          "model_file_opened": true,
++          "model_process_ran": true,
++          "nonconstant_runtime_duration": false,
++          "pid_bound_gpu_samples": true,
++          "raw_output_bytes_stored": true,
++          "tokens_generated": true
++        },
++        "powered_eligible_after_attack": false
++      },
++      "fabricated_gpu_samples": {
++        "attack_id": "fabricated_gpu_samples",
++        "failed_closed": true,
++        "mutated_receipts": {
++          "exact_outcomes_observed_after_admission": true,
++          "model_file_opened": true,
++          "model_process_ran": true,
++          "nonconstant_runtime_duration": true,
++          "pid_bound_gpu_samples": false,
++          "raw_output_bytes_stored": true,
++          "tokens_generated": true
++        },
++        "powered_eligible_after_attack": false
++      },
++      "forged_pids": {
++        "attack_id": "forged_pids",
++        "failed_closed": true,
++        "mutated_receipts": {
++          "exact_outcomes_observed_after_admission": true,
++          "model_file_opened": true,
++          "model_process_ran": true,
++          "nonconstant_runtime_duration": true,
++          "pid_bound_gpu_samples": false,
++          "raw_output_bytes_stored": true,
++          "tokens_generated": true
++        },
++        "powered_eligible_after_attack": false
++      },
++      "inherited_outputs": {
++        "attack_id": "inherited_outputs",
++        "failed_closed": true,
++        "mutated_receipts": {
++          "exact_outcomes_observed_after_admission": false,
++          "model_file_opened": true,
++          "model_process_ran": true,
++          "nonconstant_runtime_duration": true,
++          "pid_bound_gpu_samples": true,
++          "raw_output_bytes_stored": false,
++          "tokens_generated": false
++        },
++        "powered_eligible_after_attack": false
++      },
++      "missing_raw_hashes": {
++        "attack_id": "missing_raw_hashes",
++        "failed_closed": true,
++        "mutated_receipts": {
++          "exact_outcomes_observed_after_admission": true,
++          "model_file_opened": true,
++          "model_process_ran": true,
++          "nonconstant_runtime_duration": true,
++          "pid_bound_gpu_samples": true,
++          "raw_output_bytes_stored": false,
++          "tokens_generated": true
++        },
++        "powered_eligible_after_attack": false
++      },
++      "model_name_only_rows": {
++        "attack_id": "model_name_only_rows",
++        "failed_closed": true,
++        "mutated_receipts": {
++          "exact_outcomes_observed_after_admission": true,
++          "model_file_opened": false,
++          "model_process_ran": false,
++          "nonconstant_runtime_duration": true,
++          "pid_bound_gpu_samples": true,
++          "raw_output_bytes_stored": true,
++          "tokens_generated": true
++        },
++        "powered_eligible_after_attack": false
++      }
++    },
++    "powered_false_accept_count": 0,
++    "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.mutation_attack_matrix"
++  },
++  "per_experiment_field_provenance_matrix": {
++    "exp6407-provenance-tiered-factor-memory-protocol": {
++      "top_level.affected_neighborhood_equations_and_receipts": {
++        "artifact_field": "affected_neighborhood_equations_and_receipts",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.compiled_cache_authority_claimed": {
++        "artifact_field": "compiled_cache_authority_claimed",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.compiled_typed_graph_schema_path_hash_node_and_edge_types": {
++        "artifact_field": "compiled_typed_graph_schema_path_hash_node_and_edge_types",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.contamination_manifest_path_hash_counts_classes_and_partition_seals": {
++        "artifact_field": "contamination_manifest_path_hash_counts_classes_and_partition_seals",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.corrigendum_pending": {
++        "artifact_field": "corrigendum_pending",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.diagnostic_admission_feature_contract": {
++        "artifact_field": "diagnostic_admission_feature_contract",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.duration_s": {
++        "artifact_field": "duration_s",
++        "claim_risk": "bounded",
++        "classification": "measured",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.exact_veto_override_count": {
++        "artifact_field": "exact_veto_override_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.field_principles": {
++        "artifact_field": "field_principles",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.field_provenance": {
++        "artifact_field": "field_provenance",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.flagged_adversarial": {
++        "artifact_field": "flagged_adversarial",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.honest_verdict": {
++        "artifact_field": "honest_verdict",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.inference_substrate": {
++        "artifact_field": "inference_substrate",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.learning_utility_claimed": {
++        "artifact_field": "learning_utility_claimed",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.local_vs_full_replay_equivalence_results": {
++        "artifact_field": "local_vs_full_replay_equivalence_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.orphan_forgery_cycle_neighborhood_head_atomic_duplicate_expiry_and_restart_attack_matrix": {
++        "artifact_field": "orphan_forgery_cycle_neighborhood_head_atomic_duplicate_expiry_and_restart_attack_matrix",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.preconditions_checked": {
++        "artifact_field": "preconditions_checked",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.protected_files_unchanged": {
++        "artifact_field": "protected_files_unchanged",
++        "claim_risk": "bounded",
++        "classification": "measured",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.provenance_tiered_memory_protocol_ready_score": {
++        "artifact_field": "provenance_tiered_memory_protocol_ready_score",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.random_seed": {
++        "artifact_field": "random_seed",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.raw_record_schema_path_hash_and_required_fields": {
++        "artifact_field": "raw_record_schema_path_hash_and_required_fields",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.raw_tier_escalation_rules_and_tests": {
++        "artifact_field": "raw_tier_escalation_rules_and_tests",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.raw_to_compiled_provenance_link_receipts": {
++        "artifact_field": "raw_to_compiled_provenance_link_receipts",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.reproducibility_checksum": {
++        "artifact_field": "reproducibility_checksum",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.status": {
++        "artifact_field": "status",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.supported_contradicted_implicit_stale_duplicate_replay_supersession_poison_and_negative_fixture_results": {
++        "artifact_field": "supported_contradicted_implicit_stale_duplicate_replay_supersession_poison_and_negative_fixture_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.tests_run": {
++        "artifact_field": "tests_run",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.upstream_factor_head_release_ledger_lifecycle_checker_and_license_hashes": {
++        "artifact_field": "upstream_factor_head_release_ledger_lifecycle_checker_and_license_hashes",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      },
++      "top_level.verifier_is_oracle": {
++        "artifact_field": "verifier_is_oracle",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "source_lines": []
++      }
++    },
++    "exp6408-powered-write-time-factor-admission-ab": {
++      "future_exact_success_count": {
++        "artifact_field": "exact_future_yield_by_arm.*.future_exact_success_count",
++        "claim_risk": "constant_future_outcome",
++        "classification": "constant",
++        "source": "python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py",
++        "source_lines": [
++          {
++            "line": 1211,
++            "text": "return int(total * 0.75)"
++          },
++          {
++            "line": 1213,
++            "text": "return int(total * 0.55)"
++          },
++          {
++            "line": 1214,
++            "text": "return int(total * 0.50)"
++          }
++        ]
++      },
++      "raw_model_bytes_sha256": {
++        "artifact_field": "raw_bytes_source_effect_diagnostic_checker_disposition_and_head_freeze_records.rows.*.raw_model_bytes_sha256",
++        "claim_risk": "synthetic_raw_output_hash",
++        "classification": "derived",
++        "source": "python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py",
++        "source_lines": [
++          {
++            "line": 1130,
++            "text": "raw_bytes = canonical_json("
++          },
++          {
++            "line": 1146,
++            "text": "\"raw_model_bytes_sha256\": sha256_bytes(raw_bytes),"
++          }
++        ]
++      },
++      "runtime.duration_s": {
++        "artifact_field": "cuda_offload_runtime_peak_memory_and_duration_receipts_by_model.by_model.*.duration_s",
++        "claim_risk": "powered_runtime_overclaim",
++        "classification": "constant",
++        "source": "python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py",
++        "source_lines": [
++          {
++            "line": 781,
++            "text": "\"duration_s\": rounded(0.25 + 0.05 * index),"
++          }
++        ]
++      },
++      "runtime.peak_memory_mb": {
++        "artifact_field": "cuda_offload_runtime_peak_memory_and_duration_receipts_by_model.by_model.*.peak_memory_mb",
++        "claim_risk": "derived_gpu_memory_overclaim",
++        "classification": "derived",
++        "source": "python/carnot/experiment_6408_powered_write_time_factor_admission_ab.py",
++        "source_lines": [
++          {
++            "line": 764,
++            "text": "peak_mb = used_mb + 1024 + 128 * index"
++          }
++        ]
++      },
++      "top_level.MODEL_SPECS": {
++        "artifact_field": "MODEL_SPECS",
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.autotokenizer_usage_count": {
++        "artifact_field": "autotokenizer_usage_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.cached_sota_pair_receipts": {
++        "artifact_field": "cached_sota_pair_receipts",
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.confidence_intervals_and_effective_sample_sizes": {
++        "artifact_field": "confidence_intervals_and_effective_sample_sizes",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.contamination_propagation_rate_by_arm": {
++        "artifact_field": "contamination_propagation_rate_by_arm",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.cuda_offload_runtime_peak_memory_and_duration_receipts_by_model": {
++        "artifact_field": "cuda_offload_runtime_peak_memory_and_duration_receipts_by_model",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.delta_contamination_propagation_rate": {
++        "artifact_field": "delta_contamination_propagation_rate",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.delta_future_exact_yield": {
++        "artifact_field": "delta_future_exact_yield",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.duration_s": {
++        "artifact_field": "duration_s",
++        "claim_risk": "bounded",
++        "classification": "measured",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.embedded_gguf_tokenizer_receipts": {
++        "artifact_field": "embedded_gguf_tokenizer_receipts",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.exact_future_yield_by_arm": {
++        "artifact_field": "exact_future_yield_by_arm",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.exact_veto_override_count": {
++        "artifact_field": "exact_veto_override_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.exp6406_and_exp6407_gate_receipts": {
++        "artifact_field": "exp6406_and_exp6407_gate_receipts",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.false_accept_false_reject_and_negative_transfer_results": {
++        "artifact_field": "false_accept_false_reject_and_negative_transfer_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.field_principles": {
++        "artifact_field": "field_principles",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.field_provenance": {
++        "artifact_field": "field_provenance",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.harm_underpowered_missing_and_flagged_cells": {
++        "artifact_field": "harm_underpowered_missing_and_flagged_cells",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.held_manifest_path_hash_counts_balance_partition_seals_and_disjointness": {
++        "artifact_field": "held_manifest_path_hash_counts_balance_partition_seals_and_disjointness",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.honest_verdict": {
++        "artifact_field": "honest_verdict",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.inference_substrate": {
++        "artifact_field": "inference_substrate",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.license_and_frozen_harness_bindings": {
++        "artifact_field": "license_and_frozen_harness_bindings",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.matched_work_receipts": {
++        "artifact_field": "matched_work_receipts",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.model_file_hashes_revisions_quantizations_and_tokenizers": {
++        "artifact_field": "model_file_hashes_revisions_quantizations_and_tokenizers",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.model_license_harness_source_checker_diagnostic_head_duplicate_pooling_and_leakage_attack_matrix": {
++        "artifact_field": "model_license_harness_source_checker_diagnostic_head_duplicate_pooling_and_leakage_attack_matrix",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.model_weight_change_count": {
++        "artifact_field": "model_weight_change_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.models_used": {
++        "artifact_field": "models_used",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.per_arm_model_family_contamination_admission_yield_harm_escalation_abstention_and_cost_results": {
++        "artifact_field": "per_arm_model_family_contamination_admission_yield_harm_escalation_abstention_and_cost_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.powered_write_time_admission_ready_score": {
++        "artifact_field": "powered_write_time_admission_ready_score",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.preconditions_checked": {
++        "artifact_field": "preconditions_checked",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.preregistered_frozen_write_everything_and_exact_admission_arm_contract": {
++        "artifact_field": "preregistered_frozen_write_everything_and_exact_admission_arm_contract",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.protected_files_unchanged": {
++        "artifact_field": "protected_files_unchanged",
++        "claim_risk": "bounded",
++        "classification": "measured",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.protected_leakage_count": {
++        "artifact_field": "protected_leakage_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.public_factor_claim_eligibility": {
++        "artifact_field": "public_factor_claim_eligibility",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.random_seed": {
++        "artifact_field": "random_seed",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.raw_bytes_source_effect_diagnostic_checker_disposition_and_head_freeze_records": {
++        "artifact_field": "raw_bytes_source_effect_diagnostic_checker_disposition_and_head_freeze_records",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.reproducibility_checksum": {
++        "artifact_field": "reproducibility_checksum",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.silent_fallback_count": {
++        "artifact_field": "silent_fallback_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.status": {
++        "artifact_field": "status",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.tests_run": {
++        "artifact_field": "tests_run",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.universal_support_claimed": {
++        "artifact_field": "universal_support_claimed",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.unlicensed_and_rejected_cell_abstention_records": {
++        "artifact_field": "unlicensed_and_rejected_cell_abstention_records",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      },
++      "top_level.verifier_is_oracle": {
++        "artifact_field": "verifier_is_oracle",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "source_lines": []
++      }
++    },
++    "exp6409-graph-local-multisession-continuous-learning": {
++      "future_exact_success_count": {
++        "artifact_field": "untouched_future_evaluation_receipts.by_arm.*.success_count",
++        "claim_risk": "constant_future_outcome",
++        "classification": "constant",
++        "source": "python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py",
++        "source_lines": [
++          {
++            "line": 1206,
++            "text": "\"success_count\": 10,"
++          },
++          {
++            "line": 1209,
++            "text": "\"graph_local_two_tier\": {\"success_count\": 12, \"event_count\": len(future_events)},"
++          }
++        ]
++      },
++      "matched_work.llm_call_count": {
++        "artifact_field": "matched_work_receipts.by_session.*.*.llm_call_count",
++        "claim_risk": "derived_call_count_without_process",
++        "classification": "derived",
++        "source": "python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py",
++        "source_lines": [
++          {
++            "line": 696,
++            "text": "\"llm_call_count\": len(session_events) * contract[\"llm_calls_per_event\"],"
++          }
++        ]
++      },
++      "runtime.duration_s": {
++        "artifact_field": "cuda_offload_runtime_peak_memory_and_duration_receipts_by_model.by_model.*.duration_s",
++        "claim_risk": "inherited_runtime_surface",
++        "classification": "inherited",
++        "source": "python/carnot/experiment_6409_graph_local_multisession_continuous_learning.py",
++        "source_lines": [
++          {
++            "line": 1533,
++            "text": "upstream.get(\"cuda_offload_runtime_peak_memory_and_duration_receipts_by_model\")"
++          }
++        ]
++      },
++      "top_level.MODEL_SPECS": {
++        "artifact_field": "MODEL_SPECS",
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.atomic_disposition_records": {
++        "artifact_field": "atomic_disposition_records",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.autotokenizer_usage_count": {
++        "artifact_field": "autotokenizer_usage_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.backward_retention_forgetting_and_negative_transfer_results": {
++        "artifact_field": "backward_retention_forgetting_and_negative_transfer_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.cached_sota_pair_receipts": {
++        "artifact_field": "cached_sota_pair_receipts",
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.chronological_manifest_path_hash_session_drift_update_restart_expiry_supersession_counts_balance_and_partition_seals": {
++        "artifact_field": "chronological_manifest_path_hash_session_drift_update_restart_expiry_supersession_counts_balance_and_partition_seals",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.commit_reject_quarantine_and_defer_counts_by_session": {
++        "artifact_field": "commit_reject_quarantine_and_defer_counts_by_session",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.contamination_propagation_rate": {
++        "artifact_field": "contamination_propagation_rate",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.cuda_offload_runtime_peak_memory_and_duration_receipts_by_model": {
++        "artifact_field": "cuda_offload_runtime_peak_memory_and_duration_receipts_by_model",
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.delta_future_exact_yield_over_frozen": {
++        "artifact_field": "delta_future_exact_yield_over_frozen",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.duration_s": {
++        "artifact_field": "duration_s",
++        "claim_risk": "bounded",
++        "classification": "measured",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.embedded_gguf_tokenizer_receipts": {
++        "artifact_field": "embedded_gguf_tokenizer_receipts",
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.exp6408_gate_receipts": {
++        "artifact_field": "exp6408_gate_receipts",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.factor_growth_and_capacity_results": {
++        "artifact_field": "factor_growth_and_capacity_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.factor_head_and_graph_transition_history": {
++        "artifact_field": "factor_head_and_graph_transition_history",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.field_principles": {
++        "artifact_field": "field_principles",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.field_provenance": {
++        "artifact_field": "field_provenance",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.forgetting_delta": {
++        "artifact_field": "forgetting_delta",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.forward_transfer_results": {
++        "artifact_field": "forward_transfer_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.graph_local_multisession_csl_ready_score": {
++        "artifact_field": "graph_local_multisession_csl_ready_score",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.harm_underpowered_missing_and_flagged_cells": {
++        "artifact_field": "harm_underpowered_missing_and_flagged_cells",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.honest_verdict": {
++        "artifact_field": "honest_verdict",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.inference_substrate": {
++        "artifact_field": "inference_substrate",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.initial_raw_ledger_graph_and_factor_head_hashes": {
++        "artifact_field": "initial_raw_ledger_graph_and_factor_head_hashes",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.license_and_harness_bindings": {
++        "artifact_field": "license_and_harness_bindings",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.local_vs_full_replay_decision_and_work_results": {
++        "artifact_field": "local_vs_full_replay_decision_and_work_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.matched_work_receipts": {
++        "artifact_field": "matched_work_receipts",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.model_weight_change_count": {
++        "artifact_field": "model_weight_change_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.models_used": {
++        "artifact_field": "models_used",
++        "claim_risk": "bounded",
++        "classification": "inherited",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.preconditions_checked": {
++        "artifact_field": "preconditions_checked",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.predecessor_license_checker_neighborhood_expiry_and_supersession_bindings": {
++        "artifact_field": "predecessor_license_checker_neighborhood_expiry_and_supersession_bindings",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.prequential_exact_yield_by_arm_and_session": {
++        "artifact_field": "prequential_exact_yield_by_arm_and_session",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.preregistered_frozen_flat_and_graph_local_arm_contract": {
++        "artifact_field": "preregistered_frozen_flat_and_graph_local_arm_contract",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.protected_files_unchanged": {
++        "artifact_field": "protected_files_unchanged",
++        "claim_risk": "bounded",
++        "classification": "measured",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.protected_leakage_count": {
++        "artifact_field": "protected_leakage_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.public_factor_claim_eligibility": {
++        "artifact_field": "public_factor_claim_eligibility",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.random_seed": {
++        "artifact_field": "random_seed",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.raw_escalation_trigger_accuracy_and_cost_results": {
++        "artifact_field": "raw_escalation_trigger_accuracy_and_cost_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.reproducibility_checksum": {
++        "artifact_field": "reproducibility_checksum",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.restart_recovery_results": {
++        "artifact_field": "restart_recovery_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.same_step_write_count": {
++        "artifact_field": "same_step_write_count",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.selective_rollback_results": {
++        "artifact_field": "selective_rollback_results",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.stale_duplicate_concurrency_interrupt_expiry_supersession_cache_model_and_restart_attack_matrix": {
++        "artifact_field": "stale_duplicate_concurrency_interrupt_expiry_supersession_cache_model_and_restart_attack_matrix",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.status": {
++        "artifact_field": "status",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.tests_run": {
++        "artifact_field": "tests_run",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.typed_candidate_and_raw_evidence_records": {
++        "artifact_field": "typed_candidate_and_raw_evidence_records",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.universal_support_claimed": {
++        "artifact_field": "universal_support_claimed",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.unlicensed_cell_abstention_records": {
++        "artifact_field": "unlicensed_cell_abstention_records",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.untouched_future_evaluation_receipts": {
++        "artifact_field": "untouched_future_evaluation_receipts",
++        "claim_risk": "bounded",
++        "classification": "derived",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      },
++      "top_level.verifier_is_oracle": {
++        "artifact_field": "verifier_is_oracle",
++        "claim_risk": "bounded",
++        "classification": "constant",
++        "source": "results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "source_lines": []
++      }
++    }
++  },
++  "pid_bound_gpu_telemetry_evidence": {
++    "exp6407": {
++      "classification": "absent",
++      "pid_bound_gpu_samples_present": false
++    },
++    "exp6408": {
++      "classification": "absent",
++      "gpu_fields_are_host_snapshot": true,
++      "host_snapshot_present": true,
++      "pid_bound_gpu_samples_present": false
++    },
++    "exp6409": {
++      "classification": "absent",
++      "gpu_fields_are_host_snapshot": true,
++      "inherited_from": "exp6408-powered-write-time-factor-admission-ab",
++      "pid_bound_gpu_samples_present": false
++    }
++  },
++  "powered_false_accept_count": 0,
++  "powered_gguf_claim_eligibility": {
++    "blockers": [
++      "model_file_opened",
++      "model_process_ran",
++      "tokens_generated",
++      "raw_output_bytes_stored",
++      "pid_bound_gpu_samples",
++      "exact_outcomes_observed_after_admission",
++      "nonconstant_runtime_duration"
++    ],
++    "claim_class": "powered_gguf_admission",
++    "eligible": false,
++    "observed_receipts": {
++      "exact_outcomes_observed_after_admission": false,
++      "model_file_opened": false,
++      "model_process_ran": false,
++      "nonconstant_runtime_duration": false,
++      "pid_bound_gpu_samples": false,
++      "raw_output_bytes_stored": false,
++      "tokens_generated": false
++    },
++    "required_receipts": [
++      "model_file_opened",
++      "model_process_ran",
++      "tokens_generated",
++      "raw_output_bytes_stored",
++      "pid_bound_gpu_samples",
++      "exact_outcomes_observed_after_admission",
++      "nonconstant_runtime_duration"
++    ]
++  },
++  "preconditions_checked": {
++    "audited_missing_paths": [
++      "ops/claim-eligibility-ledger.json"
++    ],
++    "date": "20260814",
++    "existing_ops_claim_ledger": {
++      "path": "ops/claim-eligibility-ledger.json",
++      "present": false,
++      "sha256": null,
++      "size_bytes": 0
++    },
++    "hashes_recorded_before_analysis": true,
++    "planning_date_ok": true,
++    "protected_hashes_after": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:e1f8ab1ed4ba73766f818ef09086929bb8948a954b0be62ef6474463c644f423",
++      "ops/conductor-log.md": "sha256:fb7d0d9c82fc0cbbe55abd4621c86b9c571a819fc1c7b26daa0b9536336d1341",
++      "ops/known-issues.md": "sha256:564238ca379d3a989e61958d57f582d6bac4c73e8bed34b3bcd3d7cf60a7e4b4",
++      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json": "sha256:71395943562c2a0d4a4e86fcf708f0d5d7dd684573737667fb7da49a6ac0c73a",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph.json": "sha256:1822aeb80b3f6f333ff92a45b2ff129fe4e9c02d5c9bcb6d83870c63289d1c9d",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph_schema.json": "sha256:a8ae89e8f23b1bbc16e35ed61802cd69ac765b80a4a533a634fe3886e82d678d",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.contamination_manifest.json": "sha256:656efa1a97fc8a017aaaecc3d6d52620ede2b9fdaf2346e4ddd1eca7ca71f729",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_ledger.jsonl": "sha256:6164e26a35e1d286894b2ba562aa496e761308b2f27786f8f1da3c59e628282f",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_record_schema.json": "sha256:ef98748cdd6328f9c6aa6b016257d684cf2f916f4c2fb504edaa49ceb242ff71",
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json.fresh_held_manifest.json": "sha256:6a7ad701c98cdd3807060ef14e02339297cb26fdab9d52e47a76ae331790c234",
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json": "sha256:fd12d07d381940eddf483d1e1da2636ce8950da71018846396a15909938d9339",
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json.chronological_manifest.json": "sha256:c9453b0ea762a222a8038b3626b990096543f7e9f8747d3ea8dcb992f3ce12fe",
++      "scripts/research_conductor.py": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949"
++    },
++    "protected_hashes_before": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "ops/changelog.md": "sha256:e1f8ab1ed4ba73766f818ef09086929bb8948a954b0be62ef6474463c644f423",
++      "ops/conductor-log.md": "sha256:fb7d0d9c82fc0cbbe55abd4621c86b9c571a819fc1c7b26daa0b9536336d1341",
++      "ops/known-issues.md": "sha256:564238ca379d3a989e61958d57f582d6bac4c73e8bed34b3bcd3d7cf60a7e4b4",
++      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json": "sha256:71395943562c2a0d4a4e86fcf708f0d5d7dd684573737667fb7da49a6ac0c73a",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph.json": "sha256:1822aeb80b3f6f333ff92a45b2ff129fe4e9c02d5c9bcb6d83870c63289d1c9d",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph_schema.json": "sha256:a8ae89e8f23b1bbc16e35ed61802cd69ac765b80a4a533a634fe3886e82d678d",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.contamination_manifest.json": "sha256:656efa1a97fc8a017aaaecc3d6d52620ede2b9fdaf2346e4ddd1eca7ca71f729",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_ledger.jsonl": "sha256:6164e26a35e1d286894b2ba562aa496e761308b2f27786f8f1da3c59e628282f",
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_record_schema.json": "sha256:ef98748cdd6328f9c6aa6b016257d684cf2f916f4c2fb504edaa49ceb242ff71",
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json.fresh_held_manifest.json": "sha256:6a7ad701c98cdd3807060ef14e02339297cb26fdab9d52e47a76ae331790c234",
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json": "sha256:fd12d07d381940eddf483d1e1da2636ce8950da71018846396a15909938d9339",
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json.chronological_manifest.json": "sha256:c9453b0ea762a222a8038b3626b990096543f7e9f8747d3ea8dcb992f3ce12fe",
++      "scripts/research_conductor.py": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949"
++    },
++    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
++    "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.preconditions"
++  },
++  "prospective_csl_claim_eligibility": {
++    "blockers": [
++      "inherits_exp6408_unpowered_runtime_surface",
++      "model_file_opened",
++      "model_process_ran",
++      "tokens_generated",
++      "raw_output_bytes_stored",
++      "pid_bound_gpu_samples",
++      "exact_outcomes_observed_after_admission",
++      "nonconstant_runtime_duration"
++    ],
++    "claim_class": "prospective_csl",
++    "eligible": false,
++    "scope": "deterministic replay preserved, CSL progress unproven"
++  },
++  "protected_files_unchanged": {
++    "changed_paths": [],
++    "files": {
++      "_bmad/traceability.md": {
++        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "unchanged": true
++      },
++      "ops/changelog.md": {
++        "after": "sha256:e1f8ab1ed4ba73766f818ef09086929bb8948a954b0be62ef6474463c644f423",
++        "before": "sha256:e1f8ab1ed4ba73766f818ef09086929bb8948a954b0be62ef6474463c644f423",
++        "unchanged": true
++      },
++      "ops/conductor-log.md": {
++        "after": "sha256:fb7d0d9c82fc0cbbe55abd4621c86b9c571a819fc1c7b26daa0b9536336d1341",
++        "before": "sha256:fb7d0d9c82fc0cbbe55abd4621c86b9c571a819fc1c7b26daa0b9536336d1341",
++        "unchanged": true
++      },
++      "ops/known-issues.md": {
++        "after": "sha256:564238ca379d3a989e61958d57f582d6bac4c73e8bed34b3bcd3d7cf60a7e4b4",
++        "before": "sha256:564238ca379d3a989e61958d57f582d6bac4c73e8bed34b3bcd3d7cf60a7e4b4",
++        "unchanged": true
++      },
++      "ops/status.md": {
++        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++        "unchanged": true
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json": {
++        "after": "sha256:71395943562c2a0d4a4e86fcf708f0d5d7dd684573737667fb7da49a6ac0c73a",
++        "before": "sha256:71395943562c2a0d4a4e86fcf708f0d5d7dd684573737667fb7da49a6ac0c73a",
++        "unchanged": true
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph.json": {
++        "after": "sha256:1822aeb80b3f6f333ff92a45b2ff129fe4e9c02d5c9bcb6d83870c63289d1c9d",
++        "before": "sha256:1822aeb80b3f6f333ff92a45b2ff129fe4e9c02d5c9bcb6d83870c63289d1c9d",
++        "unchanged": true
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.compiled_typed_graph_schema.json": {
++        "after": "sha256:a8ae89e8f23b1bbc16e35ed61802cd69ac765b80a4a533a634fe3886e82d678d",
++        "before": "sha256:a8ae89e8f23b1bbc16e35ed61802cd69ac765b80a4a533a634fe3886e82d678d",
++        "unchanged": true
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.contamination_manifest.json": {
++        "after": "sha256:656efa1a97fc8a017aaaecc3d6d52620ede2b9fdaf2346e4ddd1eca7ca71f729",
++        "before": "sha256:656efa1a97fc8a017aaaecc3d6d52620ede2b9fdaf2346e4ddd1eca7ca71f729",
++        "unchanged": true
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_ledger.jsonl": {
++        "after": "sha256:6164e26a35e1d286894b2ba562aa496e761308b2f27786f8f1da3c59e628282f",
++        "before": "sha256:6164e26a35e1d286894b2ba562aa496e761308b2f27786f8f1da3c59e628282f",
++        "unchanged": true
++      },
++      "results/experiment_6407_provenance_tiered_factor_memory_protocol.json.raw_record_schema.json": {
++        "after": "sha256:ef98748cdd6328f9c6aa6b016257d684cf2f916f4c2fb504edaa49ceb242ff71",
++        "before": "sha256:ef98748cdd6328f9c6aa6b016257d684cf2f916f4c2fb504edaa49ceb242ff71",
++        "unchanged": true
++      },
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json": {
++        "after": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
++        "before": "sha256:65c04f35ff4879dbd579c420180f9dfa7c7e27396a85f98524577ec0794a5dbb",
++        "unchanged": true
++      },
++      "results/experiment_6408_powered_write_time_factor_admission_ab.json.fresh_held_manifest.json": {
++        "after": "sha256:6a7ad701c98cdd3807060ef14e02339297cb26fdab9d52e47a76ae331790c234",
++        "before": "sha256:6a7ad701c98cdd3807060ef14e02339297cb26fdab9d52e47a76ae331790c234",
++        "unchanged": true
++      },
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json": {
++        "after": "sha256:fd12d07d381940eddf483d1e1da2636ce8950da71018846396a15909938d9339",
++        "before": "sha256:fd12d07d381940eddf483d1e1da2636ce8950da71018846396a15909938d9339",
++        "unchanged": true
++      },
++      "results/experiment_6409_graph_local_multisession_continuous_learning.json.chronological_manifest.json": {
++        "after": "sha256:c9453b0ea762a222a8038b3626b990096543f7e9f8747d3ea8dcb992f3ce12fe",
++        "before": "sha256:c9453b0ea762a222a8038b3626b990096543f7e9f8747d3ea8dcb992f3ce12fe",
++        "unchanged": true
++      },
++      "scripts/research_conductor.py": {
++        "after": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
++        "before": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
++        "unchanged": true
++      }
++    },
++    "ok": true,
++    "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.protected_files"
++  },
++  "public_factor_claim_eligibility": {
++    "blockers": [
++      "powered_receipts_absent",
++      "public_boundary_not_established"
++    ],
++    "claim_class": "public_factor",
++    "eligible": false,
++    "scope": "internal audit only"
++  },
++  "random_seed": null,
++  "raw_output_byte_evidence": {
++    "exp6407": {
++      "classification": "derived",
++      "raw_bytes_are_model_output": false,
++      "raw_hashes_present": true,
++      "raw_output_bytes_stored": false,
++      "source": "raw ledger rows are deterministic fixture rows."
++    },
++    "exp6408": {
++      "classification": "derived",
++      "raw_bytes_are_model_output": false,
++      "raw_hash_count": 108,
++      "raw_model_hashes_present": true,
++      "raw_output_bytes_stored": false,
++      "source_lines": [
++        {
++          "line": 1130,
++          "text": "raw_bytes = canonical_json("
++        },
++        {
++          "line": 1146,
++          "text": "\"raw_model_bytes_sha256\": sha256_bytes(raw_bytes),"
++        }
++      ]
++    },
++    "exp6409": {
++      "classification": "absent",
++      "raw_bytes_are_model_output": false,
++      "raw_model_hashes_present": false,
++      "raw_output_bytes_stored": false
++    }
++  },
++  "reproducibility_checksum": "sha256:3effa4f8d06d161e82d3dbe3eaffdcdc2a2d60d9a657fee48f5e1cfadfd79d42",
++  "stamped_and_current_adversarial_findings": {
++    "exp6407-provenance-tiered-factor-memory-protocol": {
++      "current": {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++        "exp_id": null,
++        "flag_count": 2,
++        "flags": [
++          {
++            "detail": "duration_s=0.036034676014 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++            "kind": "DURATION_TOO_SHORT",
++            "severity": "critical"
++          },
++          {
++            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
++            "kind": "METHODOLOGY_MISSING",
++            "severity": "warn"
++          }
++        ],
++        "honest_verdict": "complete: provenance tiered factor memory protocol ready; cache has no authority",
++        "loaded": true,
++        "max_severity": 2,
++        "title": ""
++      },
++      "current_live_has_critical": true,
++      "stamped": {
++        "corrigendum_pending": [
++          {
++            "detail": "duration_s=0.036034676014 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++            "kind": "DURATION_TOO_SHORT",
++            "severity": "critical"
++          },
++          {
++            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
++            "kind": "METHODOLOGY_MISSING",
++            "severity": "warn"
++          }
++        ],
++        "flagged_adversarial": true,
++        "honest_verdict": "complete: provenance tiered factor memory protocol ready; cache has no authority",
++        "status": "complete_positive"
++      },
++      "stamped_and_current_preserved_separately": true
++    },
++    "exp6408-powered-write-time-factor-admission-ab": {
++      "current": {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6408_powered_write_time_factor_admission_ab.json",
++        "exp_id": null,
++        "flag_count": 0,
++        "flags": [],
++        "honest_verdict": "complete: powered write-time admission ran in four Exp6395 licensed cells and be",
++        "loaded": true,
++        "max_severity": -1,
++        "title": ""
++      },
++      "current_live_has_critical": false,
++      "stamped": {
++        "corrigendum_pending": null,
++        "flagged_adversarial": null,
++        "honest_verdict": "complete: powered write-time admission ran in four Exp6395 licensed cells and beat write-everything with lower contamination",
++        "status": "complete_positive"
++      },
++      "stamped_and_current_preserved_separately": true
++    },
++    "exp6409-graph-local-multisession-continuous-learning": {
++      "current": {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "exp_id": null,
++        "flag_count": 0,
++        "flags": [],
++        "honest_verdict": "complete: graph-local multisession CSL improved future exact yield with zero con",
++        "loaded": true,
++        "max_severity": -1,
++        "title": ""
++      },
++      "current_live_has_critical": false,
++      "stamped": {
++        "corrigendum_pending": null,
++        "flagged_adversarial": null,
++        "honest_verdict": "complete: graph-local multisession CSL improved future exact yield with zero contamination and rollback-clean retention",
++        "status": "complete_positive"
++      },
++      "stamped_and_current_preserved_separately": true
++    }
++  },
++  "status": "complete_claim_boundary_ready",
++  "tests_run": {
++    "all_passed": true,
++    "commands": [
++      ".venv/bin/pytest tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py -q --no-cov -n 0",
++      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py -m pytest tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py -q --no-cov -n 0",
++      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py --fail-under=100 --show-missing",
++      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py",
++      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6407_provenance_tiered_factor_memory_protocol.json results/experiment_6408_powered_write_time_factor_admission_ab.json results/experiment_6409_graph_local_multisession_continuous_learning.json",
++      ".venv/bin/python scripts/determination_preservation_lint.py",
++      ".venv/bin/python scripts/root_clutter_sweep.py",
++      ".venv/bin/pytest tests/python -q",
++      "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6412_v551_powered_claim_integrity_audit --date 20260814"
++    ],
++    "exit_codes": {
++      ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py --fail-under=100 --show-missing": 0,
++      ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py -m pytest tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py -q --no-cov -n 0": 0,
++      ".venv/bin/pytest tests/python -q": 0,
++      ".venv/bin/pytest tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py -q --no-cov -n 0": 0,
++      ".venv/bin/python scripts/adversarial_verify.py results/experiment_6407_provenance_tiered_factor_memory_protocol.json results/experiment_6408_powered_write_time_factor_admission_ab.json results/experiment_6409_graph_local_multisession_continuous_learning.json": 0,
++      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py": 0,
++      ".venv/bin/python scripts/determination_preservation_lint.py": 0,
++      ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++      "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6412_v551_powered_claim_integrity_audit --date 20260814": 0
++    },
++    "receipts": [
++      {
++        "command": ".venv/bin/pytest tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py -q --no-cov -n 0",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py -m pytest tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py -q --no-cov -n 0",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6412_v551_powered_claim_integrity_audit.py --fail-under=100 --show-missing",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6407_provenance_tiered_factor_memory_protocol.json results/experiment_6408_powered_write_time_factor_admission_ab.json results/experiment_6409_graph_local_multisession_continuous_learning.json",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/python scripts/determination_preservation_lint.py",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/python scripts/root_clutter_sweep.py",
++        "exit_code": 0
++      },
++      {
++        "command": ".venv/bin/pytest tests/python -q",
++        "exit_code": 0
++      },
++      {
++        "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6412_v551_powered_claim_integrity_audit --date 20260814",
++        "exit_code": 0
++      }
++    ],
++    "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.tests_run"
++  },
++  "token_generation_evidence": {
++    "exp6407": {
++      "classification": "absent",
++      "generated_token_count_present": false,
++      "tokenizer_precheck_only": false
++    },
++    "exp6408": {
++      "autotokenizer_usage_count": 0,
++      "classification": "absent",
++      "generated_token_count_present": false,
++      "tokenizer_precheck_only": true
++    },
++    "exp6409": {
++      "autotokenizer_usage_count": 0,
++      "classification": "absent",
++      "generated_token_count_present": false,
++      "tokenizer_precheck_only": true
++    }
++  },
++  "v551_claim_boundary_ready_score": 1.0,
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_6412_v551_powered_claim_integrity_audit.json.claim_ledger.jsonl b/results/experiment_6412_v551_powered_claim_integrity_audit.json.claim_ledger.jsonl
+new file mode 100644
+index 0000000000..3c84058490
+--- /dev/null
++++ b/results/experiment_6412_v551_powered_claim_integrity_audit.json.claim_ledger.jsonl
+@@ -0,0 +1 @@
++{"claim_boundary_hash":"sha256:860f2d565942d20bb951ba894b7d4a825f0dc9ff6fd8b4e616bcbcfd365521ff","date":"20260814","deterministic_replay_claim_eligibility":true,"fr11_claim_eligibility":false,"historical_artifacts_modified":false,"powered_gguf_claim_eligibility":false,"prospective_csl_claim_eligibility":false,"public_factor_claim_eligibility":false,"schema":"carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.claim_ledger_row"}
+diff --git a/results/experiment_6412_v551_powered_claim_integrity_audit.json.corrigendum.json b/results/experiment_6412_v551_powered_claim_integrity_audit.json.corrigendum.json
+new file mode 100644
+index 0000000000..888bb7140d
+--- /dev/null
++++ b/results/experiment_6412_v551_powered_claim_integrity_audit.json.corrigendum.json
+@@ -0,0 +1,14 @@
++{
++  "claim_boundary_hash": "sha256:860f2d565942d20bb951ba894b7d4a825f0dc9ff6fd8b4e616bcbcfd365521ff",
++  "corrigendum_of": [
++    "results/experiment_6407_provenance_tiered_factor_memory_protocol.json",
++    "results/experiment_6408_powered_write_time_factor_admission_ab.json",
++    "results/experiment_6409_graph_local_multisession_continuous_learning.json"
++  ],
++  "date": "20260814",
++  "finding": "powered and prospective V551 claims are unproven without execution receipts",
++  "historical_records_modified": false,
++  "historical_verdicts_replaced": false,
++  "preserved_scope": "deterministic replay over checked-in rows remains eligible",
++  "schema": "carnot.experiment_6412.v551_powered_claim_integrity_audit.v1.additive_corrigendum"
++}
+diff --git a/tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py b/tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py
+new file mode 100644
+index 0000000000..96bb6d87c6
+--- /dev/null
++++ b/tests/python/test_experiment_6412_v551_powered_claim_integrity_audit.py
+@@ -0,0 +1,333 @@
++"""Tests for Exp6412 V551 powered claim integrity audit.
++
++Spec refs: REQ-REPORT-6412, SCENARIO-REPORT-6412-1,
++SCENARIO-REPORT-6412-2, SCENARIO-REPORT-6412-3,
++SCENARIO-REPORT-6412-4, SCENARIO-REPORT-6412-5,
++SCENARIO-REPORT-6412-6.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_6412_v551_powered_claim_integrity_audit as mod
++from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++
++
++def _command_receipts() -> list[dict[str, object]]:
++    return [{"command": command, "exit_code": 0} for command in mod.DEFAULT_TEST_COMMANDS]
++
++
++def _determination() -> dict[str, object]:
++    return {
++        "command": ".venv/bin/python scripts/determination_preservation_lint.py",
++        "exit_code": 0,
++        "stdout": "determination-preservation-lint: OK\n",
++        "stderr": "",
++    }
++
++
++def _report(tmp_path: Path, *, write_sidecars: bool = True) -> dict[str, object]:
++    result_path = tmp_path / mod.RESULT_RELATIVE_PATH.name
++    before = mod.protected_hashes(REPO)
++    return mod.build_report(
++        REPO,
++        date="20260814",
++        command_receipts=_command_receipts(),
++        determination_result=_determination(),
++        before_hashes=before,
++        duration_s=1.0,
++        result_path=result_path,
++        write_sidecars=write_sidecars,
++    )
++
++
++def test_req_report_6412_spec_declares_fields_and_scenarios() -> None:
++    """REQ-REPORT-6412: OpenSpec owns the Exp6412 audit contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-REPORT-6412") : text.index("REQ-REPORT-6143")]
++
++    for marker in (
++        "SCENARIO-REPORT-6412-1",
++        "SCENARIO-REPORT-6412-2",
++        "SCENARIO-REPORT-6412-3",
++        "SCENARIO-REPORT-6412-4",
++        "SCENARIO-REPORT-6412-5",
++        "SCENARIO-REPORT-6412-6",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_report_6412_field_matrix_traces_claim_sources(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6412-1 and 2: provenance classes are explicit."""
++
++    report = _report(tmp_path)
++
++    assert mod.validate_report(report) == []
++    matrix = report["per_experiment_field_provenance_matrix"]
++    exp6408 = matrix["exp6408-powered-write-time-factor-admission-ab"]
++    exp6409 = matrix["exp6409-graph-local-multisession-continuous-learning"]
++
++    assert exp6408["runtime.duration_s"]["classification"] == "constant"
++    assert exp6408["runtime.duration_s"]["source_lines"]
++    assert exp6408["runtime.peak_memory_mb"]["classification"] == "derived"
++    assert exp6408["raw_model_bytes_sha256"]["classification"] == "derived"
++    assert exp6408["future_exact_success_count"]["classification"] == "constant"
++    assert exp6409["runtime.duration_s"]["classification"] == "inherited"
++    assert exp6409["future_exact_success_count"]["classification"] == "constant"
++    assert exp6409["matched_work.llm_call_count"]["classification"] == "derived"
++
++    model_open = report["model_file_open_evidence"]
++    assert model_open["exp6408"]["model_paths_present"] is True
++    assert model_open["exp6408"]["model_file_opened_by_model_runtime"] is False
++    assert model_open["exp6408"]["classification"] == "absent"
++
++    process = report["model_process_execution_evidence"]
++    assert process["exp6408"]["model_process_ran"] is False
++    assert process["exp6409"]["model_process_ran"] is False
++
++    token = report["token_generation_evidence"]
++    assert token["exp6408"]["generated_token_count_present"] is False
++    assert token["exp6409"]["classification"] == "absent"
++
++    raw = report["raw_output_byte_evidence"]
++    assert raw["exp6408"]["raw_model_hashes_present"] is True
++    assert raw["exp6408"]["raw_bytes_are_model_output"] is False
++
++    gpu = report["pid_bound_gpu_telemetry_evidence"]
++    assert gpu["exp6408"]["pid_bound_gpu_samples_present"] is False
++    assert gpu["exp6409"]["classification"] == "absent"
++
++    temporal = report["exact_outcome_temporal_evidence"]
++    assert temporal["exp6408"]["future_success_counts_source"] == "source_constant_formula"
++    assert temporal["exp6409"]["observed_after_admission"] is False
++
++
++def test_scenario_report_6412_claim_boundary_and_mutations(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6412-3, 5, and 6: powered claims fail closed."""
++
++    report = _report(tmp_path)
++
++    assert report["deterministic_protocol_claim_eligibility"]["eligible"] is False
++    assert report["deterministic_replay_claim_eligibility"]["eligible"] is True
++    assert report["powered_gguf_claim_eligibility"]["eligible"] is False
++    assert report["prospective_csl_claim_eligibility"]["eligible"] is False
++    assert report["public_factor_claim_eligibility"]["eligible"] is False
++    assert report["fr11_claim_eligibility"]["eligible"] is False
++    assert report["v551_claim_boundary_ready_score"] == 1.0
++    assert report["powered_false_accept_count"] == 0
++
++    attacks = report["mutation_attack_matrix"]
++    assert set(attacks["attacks"]) == set(mod.MUTATION_ATTACK_IDS)
++    assert attacks["all_attacks_fail_closed"] is True
++    for row in attacks["attacks"].values():
++        assert row["powered_eligible_after_attack"] is False
++
++    for key in (
++        "deterministic_protocol_claim_eligibility",
++        "deterministic_replay_claim_eligibility",
++        "powered_gguf_claim_eligibility",
++        "prospective_csl_claim_eligibility",
++        "public_factor_claim_eligibility",
++        "fr11_claim_eligibility",
++        "v551_claim_boundary_ready_score",
++    ):
++        assert key in report["field_principles"]
++
++
++def test_scenario_report_6412_additive_sidecars_preserve_history(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6412-4: sidecars are additive and protected files stay fixed."""
++
++    report = _report(tmp_path)
++
++    corrigendum = report["additive_corrigendum_path_and_hash"]
++    ledger = report["additive_claim_ledger_path_entry_and_hash"]
++    assert Path(corrigendum["path"]).is_file()
++    assert Path(ledger["path"]).is_file()
++    assert mod.sha256_file(corrigendum["path"]) == corrigendum["sha256"]
++    assert mod.sha256_file(ledger["path"]) == ledger["sha256"]
++
++    ledger_lines = Path(ledger["path"]).read_text(encoding="utf-8").splitlines()
++    assert len(ledger_lines) == 1
++    assert json.loads(ledger_lines[0]) == ledger["entry"]
++
++    assert report["historical_artifacts_modified"] is False
++    assert report["historical_determinations_preserved"] is True
++    assert report["protected_files_unchanged"]["ok"] is True
++    assert report["protected_files_unchanged"]["changed_paths"] == []
++    assert report["preconditions_checked"]["existing_ops_claim_ledger"]["present"] is False
++
++
++def test_req_report_6412_validation_rejects_overclaims(tmp_path: Path) -> None:
++    """REQ-REPORT-6412: validation rejects oracle and powered overclaims."""
++
++    report = _report(tmp_path)
++    assert report["reproducibility_checksum"] == mod.payload_checksum(report)
++
++    bad = copy.deepcopy(report)
++    bad["verifier_is_oracle"] = True
++    assert "verifier_is_oracle must be false" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["powered_false_accept_count"] = 1
++    assert "powered false accepts must be zero" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["powered_gguf_claim_eligibility"]["eligible"] = True
++    assert "powered GGUF eligibility must be false" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["prospective_csl_claim_eligibility"]["eligible"] = True
++    assert "prospective CSL eligibility must be false" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["public_factor_claim_eligibility"]["eligible"] = True
++    assert "public factor eligibility must be false" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["fr11_claim_eligibility"]["eligible"] = True
++    assert "FR11 eligibility must be false" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_provenance"].pop("status")
++    assert "field_provenance must cover exactly required fields" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_provenance"]["status"] = "oracle"
++    assert "field_provenance has invalid class" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_principles"].pop("status")
++    assert "missing field_principles entry: status" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_principles"].pop("powered_gguf_claim_eligibility")
++    assert (
++        "missing field_principles entry: powered_gguf_claim_eligibility"
++        in mod.validate_report(bad)
++    )
++
++    bad = copy.deepcopy(report)
++    bad["mutation_attack_matrix"]["all_attacks_fail_closed"] = False
++    assert "mutation attacks must fail closed" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["historical_artifacts_modified"] = True
++    assert "historical artifacts must not be modified" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["historical_determinations_preserved"] = False
++    assert "historical determinations must be preserved" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["protected_files_unchanged"]["ok"] = False
++    assert "protected files changed" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["v551_claim_boundary_ready_score"] = 0.0
++    assert "ready score mismatch" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["honest_verdict"] = "blocked_claim_boundary"
++    assert "honest_verdict lacks terminal prefix" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad.pop("status")
++    assert mod.validate_report(bad)[0].startswith("missing required fields:")
++
++    unready = copy.deepcopy(report)
++    unready["v551_claim_boundary_ready_score"] = 0.0
++    assert mod.status(unready) == "complete_claim_boundary_unready"
++    unready["status"] = "complete_claim_boundary_unready"
++    assert mod.honest_verdict(unready).startswith("complete_null:")
++
++
++def test_scenario_report_6412_powered_evidence_requires_all_receipts() -> None:
++    """SCENARIO-REPORT-6412-2 and 5: every powered receipt is required."""
++
++    baseline = {
++        "model_file_opened": True,
++        "model_process_ran": True,
++        "tokens_generated": True,
++        "raw_output_bytes_stored": True,
++        "pid_bound_gpu_samples": True,
++        "exact_outcomes_observed_after_admission": True,
++        "nonconstant_runtime_duration": True,
++    }
++    assert mod.powered_evidence_eligible(baseline) is True
++
++    for attack_id in mod.MUTATION_ATTACK_IDS:
++        mutated = mod.mutated_powered_evidence(attack_id, baseline)
++        assert mod.powered_evidence_eligible(mutated) is False
++
++    with pytest.raises(ValueError, match="unknown_mutation_attack"):
++        mod.mutated_powered_evidence("unknown", baseline)
++
++
++def test_req_report_6412_receipt_loader_and_error_edges(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-6412: loader and run error edges are deterministic."""
++
++    not_object = tmp_path / "not_object.json"
++    not_object.write_text("[]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="json_top_level_not_object"):
++        mod.read_json_mapping(not_object)
++
++    receipt_path = tmp_path / "receipts.json"
++    receipt_path.write_text(
++        json.dumps([{"command": "from-file", "exit_code": 0}]),
++        encoding="utf-8",
++    )
++    monkeypatch.setattr(mod, "EXTERNAL_TEST_RECEIPT_PATH", receipt_path)
++    assert mod.read_external_test_receipts({}) == [{"command": "from-file", "exit_code": 0}]
++
++    monkeypatch.setattr(mod, "EXTERNAL_TEST_RECEIPT_PATH", tmp_path / "missing.json")
++    defaults = mod.read_external_test_receipts({})
++    assert defaults[0]["command"] == mod.DEFAULT_TEST_COMMANDS[0]
++
++    monkeypatch.setattr(mod, "build_report", lambda *args, **kwargs: {})
++    monkeypatch.setattr(mod, "validate_report", lambda report: ["forced error"])
++    with pytest.raises(ValueError, match="forced error"):
++        mod.run(date="20260814", write=False)
++
++
++def test_scenario_report_6412_main_writes_to_artifact_override(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """SCENARIO-REPORT-6412-4 and 6: CLI writes additive artifacts safely."""
++
++    out_root = tmp_path / "artifacts"
++    out_root.mkdir()
++    monkeypatch.setenv(ARTIFACT_ROOT_ENV, str(out_root))
++    monkeypatch.setenv(
++        "CARNOT_EXP6412_TEST_RECEIPTS",
++        json.dumps(_command_receipts(), sort_keys=True),
++    )
++
++    assert mod.main(["--date", "20260814"]) == 0
++    captured = json.loads(capsys.readouterr().out)
++    written = out_root / mod.RESULT_RELATIVE_PATH.name
++
++    assert captured["path"] == mod.RESULT_RELATIVE_PATH.as_posix()
++    assert written.is_file()
++    payload = json.loads(written.read_text(encoding="utf-8"))
++    assert payload["status"] == "complete_claim_boundary_ready"
++    assert payload["v551_claim_boundary_ready_score"] == 1.0
++    assert mod.validate_report(payload) == []
+-- 
+2.55.0
+

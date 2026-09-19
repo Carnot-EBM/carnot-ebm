@@ -1,0 +1,79 @@
+From 8e89bb2f4bbaae4bc179da4a7982aa0619930c54 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 23:51:49 -0400
+Subject: [PATCH 01878/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md                           |  5 +++++
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...ent_4223_verifier_as_reward_3arm_synchronous.json | 12 ++++++++++--
+ 5 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 541f21e211..2211c17227 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -431,3 +431,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json
++
++## experiment_4223_verifier_as_reward_3arm_synchronous.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4223_verifier_as_reward_3arm_synchronous.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 26754130ed..9144d2d193 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-06-15T02:41:43Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-06-15T03:51:47Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4b189752c0..99f52ad786 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8515,3 +8515,4 @@ c |
+ | 2026-06-15 02:13 UTC | PHASE A2 (THE HEADLINE GATE, gated_on A1 selector_ | OK | 87 passed, 1 warning in 6.48s |
+ | 2026-06-15 02:29 UTC | PHASE B1 (HARNESS-FIRST, the .360 discipline) -- F | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_4222_verifie |
+ | 2026-06-15 02:39 UTC | PHASE B1 (HARNESS-FIRST, the .360 discipline) -- F | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-15 03:49 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7a96ba0fb2..0e0c62f5fb 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 15, "phase": "iteration_start", "started_at": "2026-06-15T02:41:43Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 16, "phase": "iteration_start", "started_at": "2026-06-15T03:51:47Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4223_verifier_as_reward_3arm_synchronous.json b/results/experiment_4223_verifier_as_reward_3arm_synchronous.json
+index 5ccc18ca62..360ec2dcd0 100644
+--- a/results/experiment_4223_verifier_as_reward_3arm_synchronous.json
++++ b/results/experiment_4223_verifier_as_reward_3arm_synchronous.json
+@@ -178,5 +178,13 @@
+   },
+   "verifier_is_oracle": true,
+   "verifier_label_carries_signal": false,
+-  "youden_j": 0.4137931034482759
+-}
++  "youden_j": 0.4137931034482759,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=36.694545 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

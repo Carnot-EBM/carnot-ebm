@@ -1,0 +1,43 @@
+From cc293ff07bc0c20bcb75a92d289f6d75973189fa Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 04:49:02 -0400
+Subject: [PATCH 10363/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 889e480b8e..8c9d4b0cec 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-30T08:23:08Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-08-30T08:48:54Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 55ae21f157..8da885a560 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16818,3 +16818,4 @@ The l |
+ | 2026-08-30 07:52 UTC | Plan milestone 2026.08.590 | OK | 13 tasks proposed |
+ | 2026-08-30 07:54 UTC | Milestone 2026.08.590 activated | OK | 13 tasks queued |
+ | 2026-08-30 08:21 UTC | Exact-invalid targetable proof panel expansion | OK | 101 passed, 1 warning in 18.30s |
++| 2026-08-30 08:46 UTC | Environment-indexed proof grammar fixture v2 | OK | 107 passed, 1 warning in 15.72s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cf8c74f411..30b21fa5f4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-30T08:23:08Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 12, "phase": "iteration_start", "started_at": "2026-08-30T08:48:54Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

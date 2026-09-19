@@ -1,0 +1,161 @@
+From 4bdf404d71073c09251635b45a2afbf843beb17e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 20:32:33 -0400
+Subject: [PATCH 05938/11362] [outer-loop] run the TRM sequence-refiner pilot:
+ gate fails, for a different reason than v1-v3
+
+Pursued the second unbuilt alternative directly per operator request.
+Built the more faithful version of the TRM hypothesis: refine a whole
+K=8-action candidate window jointly toward a KNOWN winning target,
+matching how TRM actually works on Sudoku (refine the whole candidate
+jointly), rather than single-action behavioral-cloning classification.
+
+Trained only on the 144 genuinely-won trajectories, correctly
+cross-referenced against the raw corpus's own won field -- caught and
+corrected an important distinction before building on the wrong signal:
+level_progress=1.0 in the staged shards means "reached this session's
+own highest recorded checkpoint," not "won the whole game," a weaker
+proxy than the raw won field.
+
+Caught a real data bug before it corrupted the result: cn04's action
+IDs are recorded as word labels (ACTION1-ACTION6, RESET) rather than
+the numeral strings most other games use -- every cn04 row was being
+silently dropped by the action-vocabulary filter until this was found
+and fixed (RESET->0, ACTIONn->n, this project's own action-space
+convention). Verified the fix recovered all 144 won sessions correctly
+before launching the real run.
+
+Pre-registered gate (same discipline as the prior multi-seed test):
+recursion supported only if p<0.05 on exact-full-window-match accuracy
+in a majority of 3 held-out games (sk48/m0r0/cn04), 5 seeds each.
+
+Result: gate fails again, 0 of 3 games significant. But the more
+important finding is why: per-action accuracy for BOTH recursive and
+non-recursive arms sits at or below rough chance level (~14% for a
+~7-action vocabulary) across all three games -- a different failure
+mode from the earlier pilots' class-imbalance-driven low headroom.
+Predicting 8 steps ahead from a single static frame with zero
+action-history context is very likely under-determined -- the same
+frame plausibly precedes very different sequences depending on
+invisible player intent.
+
+Documented in docs/research-notes/trm-leave-one-game-out-pilot-results-
+2026-07-05.md's "v4" section with the honest overall assessment: after
+four attempts this week (v1-v3 properly ruled out with statistical
+rigor, v4 inconclusive for a task-design reason), a reasonable point to
+deprioritize further pilot iteration on this standalone-reimplementation
+approach rather than keep varying the task framing. A genuinely
+informative next test would need history/intent context, not another
+framing variant.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+---
+ ...e-one-game-out-pilot-results-2026-07-05.md | 51 +++++++++++++++++++
+ ops/known-issues.md                           | 29 +++++++++++
+ 2 files changed, 80 insertions(+)
+
+diff --git a/docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md b/docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md
+index 20ed66f75c..fb36500955 100644
+--- a/docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md
++++ b/docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md
+@@ -192,6 +192,57 @@ constraint-satisfaction shape vs. noisy human-behavior prediction), or training
+ cannot distinguish between those explanations, only that the *toy* version does not replicate the
+ effect here.
+ 
++## v4 (2026-07-06): the more faithful sequence-refiner test — gate fails again, for a different reason
++
++Operator authorized pursuing the second unbuilt alternative directly. This is a materially different
++design from v1-v3: instead of single-action behavioral-cloning classification, this task matches how
++TRM actually works on Sudoku — refine a WHOLE candidate jointly toward a KNOWN CORRECT target. Trained
++only on the 144 genuinely-won trajectories (cross-referenced by guid against the raw corpus's own
++`won` field, not the `level_progress=1.0` proxy, which turned out to mean "reached this session's own
++highest recorded checkpoint," not "won the whole game" — an important distinction caught before
++building on the wrong signal). Task: given the frame at step *i*, predict/refine the full next K=8
++actions taken en route to victory, all 8 slots jointly per recursion step. Pre-registered gate (same
++discipline as v3): recursion supported only if p<0.05 on exact-full-window-match accuracy in a
++majority of 3 held-out games (`sk48`, `m0r0`, `cn04`, chosen for size/action-vocabulary diversity), 5
++seeds each.
++
++**A real data bug caught before it could corrupt the result**: `cn04`'s action IDs are recorded as
++word labels (`"ACTION1"`-`"ACTION6"`, `"RESET"`) rather than the numeral strings (`"0"`-`"7"`) most
++other games use — a genuine inconsistency in the underlying corpus, not a bug in this pilot. Caught
++because `cn04` initially loaded zero windows; traced it to every one of its rows being silently
++dropped by the action-vocabulary filter. Fixed by mapping `RESET`→0, `ACTION`*n*→*n* (this project's
++own established action-space convention), verified the fix recovered all 144 won sessions correctly
++before running anything.
++
++**Result: the gate fails again — 0 of 3 games significant in recursion's favor.**
++
++| Held-out game | Recursive exact-match | Baseline exact-match | Recursive per-action | Baseline per-action | p-value |
++|---|---|---|---|---|---|
++| sk48 | 0.24% | 0.23% | 4.1% | 4.7% | 1.00 |
++| m0r0 | 0.05% | 0.07% | 12.8% | 12.9% | 1.00 |
++| cn04 | 0.21% | 0.17% | 13.1% | 13.9% | 0.75 |
++
++**The more important, honest finding is not the gate failure itself — it's that per-action accuracy
++for BOTH arms sits at or below rough chance level for a ~7-action vocabulary (~14%).** Predicting 8
++steps into the future from a single static frame, with zero action-history context, is very likely an
++under-determined task: the same frame plausibly precedes wildly different action sequences depending
++on a human player's current, invisible intent. This is a *different* failure mode from v1-v3's
++class-imbalance-driven low headroom — there, the trivial baseline was strong and hard to beat; here,
++neither trained model appears to be learning much of anything, so there's no real basis to compare
++architectures at all.
++
++**Honest overall assessment across all four pilots run this week**: the narrow behavioral-cloning
++proxy (v1-v3) was properly ruled out with statistical rigor. This more faithful sequence-refinement
++attempt (v4) also shows no recursive advantage, but for a reason that points at the *task design*
++(missing history/intent context) rather than definitively closing the underlying architectural
++question. A genuinely informative next test would need to give the model *some* signal about intent
++— e.g., condition on recent action history the way v2 did, or shrink the prediction horizon, or
++restrict to the final, most goal-directed portion of trajectories near a level-up moment. Absent that,
++this line of inquiry has now had four honest attempts (three properly ruled out, one inconclusive for
++a task-design reason) without a positive signal — a reasonable point to deprioritize further pilot
++iteration on this specific standalone-reimplementation approach rather than keep varying the task
++framing.
++
+ ## What this note is NOT claiming
+ 
+ - Not claiming TRM-style recursive refinement is proven to generalize to ARC-AGI-3. Finding 1 is a
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 4653081c8e..a0fe7ce99c 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -2167,6 +2167,35 @@ CLAUDE.md "Codex-Default for Experiments v2" exception #1 updated to reflect thi
+ (never an auto-revert-on-quota-reset expectation — re-enabling Claude for this tier needs
+ an explicit operator directive, same standing-default discipline as the experiment default).
+ 
++### RESULT: TRM-as-sequence-refiner (v4) also gate-fails, for a different reason than v1-v3 2026-07-06 (outer-loop, "let's continue the second alternative here in this outer loop")
++
++Full writeup: `docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md` "v4" section.
++Built the more faithful version of the TRM hypothesis this time -- refine a whole K=8-action
++candidate window jointly toward a KNOWN winning target (matching how TRM actually works on Sudoku),
++trained only on the 144 genuinely-won trajectories (correctly cross-referenced by the raw corpus's
++own `won` field, not the `level_progress=1.0` proxy, which turned out to mean something weaker --
++"reached this session's own highest recorded checkpoint," not "won the whole game").
++
++Caught a real data bug before it corrupted anything: `cn04`'s action IDs are word labels
++(`ACTION1`-`ACTION6`, `RESET`) not the numeral strings other games use -- every cn04 row was silently
++dropped until this was found and fixed (`RESET`->0, `ACTIONn`->n, this project's own action-space
++convention).
++
++**Gate fails again: 0 of 3 held-out games (sk48/m0r0/cn04) significant, 5 seeds each.** But the more
++important finding: per-action accuracy for BOTH recursive and non-recursive arms sits at or below
++rough chance level (~14% for a ~7-action vocabulary) across all three games. This is a DIFFERENT
++failure mode from v1-v3's class-imbalance-driven low headroom -- there the baseline was too strong to
++beat; here neither model appears to be learning much at all, most likely because predicting 8 steps
++ahead from a single static frame with zero action-history context is under-determined (the same frame
++plausibly precedes very different sequences depending on invisible player intent).
++
++**Overall assessment after four honest attempts this week (v1-v3 properly ruled out with statistical
++rigor, v4 inconclusive for a task-design reason): a reasonable point to deprioritize further pilot
++iteration on this standalone-reimplementation approach.** A genuinely informative next test would
++need history/intent context (condition on recent actions like v2 did, shorten the horizon, or
++restrict to the goal-directed tail of trajectories near a level-up) -- not another variant of the
++current framing.
++
+ ### BUILT: exp4544's Family-B counterexample gap closed 2026-07-06 (outer-loop, "can we pursue the ARC-AGI-3 unbuilt alternatives here in the outer loop?")
+ 
+ Picked up the first of the two unbuilt alternatives flagged 2026-07-04 (see the TRM entries below
+-- 
+2.55.0
+

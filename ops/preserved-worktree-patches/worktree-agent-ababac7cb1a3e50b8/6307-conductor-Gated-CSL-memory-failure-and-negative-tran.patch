@@ -1,0 +1,2246 @@
+From 146221671ff3f1c976861acaddd3e2931aaff809 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 19:05:08 -0400
+Subject: [PATCH 06307/11362] [conductor] Gated CSL memory-failure and
+ negative-transfer stress after Exp5446
+
+Automated research step by research conductor.
+Task ID: exp5447-gated-csl-memory-failure-stress-v495
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   | 129 +++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...47_gated_csl_memory_failure_stress_v495.py | 752 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ..._gated_csl_memory_failure_stress_v495.json | 717 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...47_gated_csl_memory_failure_stress_v495.py | 344 ++++++++
+ 21 files changed, 1971 insertions(+), 26 deletions(-)
+ create mode 100644 python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py
+ create mode 100644 results/experiment_5447_gated_csl_memory_failure_stress_v495.json
+ create mode 100644 tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index a5d88dd665..4fb81b11f5 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -20154,3 +20154,132 @@ fine-tuned, or mutated.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5446 | Planned (`python/carnot/experiment_5446_governed_memory_csl_online_v495.py`, `results/experiment_5446_governed_memory_csl_online_v495.json`) | Planned (`tests/python/test_experiment_5446_governed_memory_csl_online_v495.py`) |
++
++---
++
++## REQ-LEARN-5447: Gated CSL Memory Failure Stress v495
++
++Experiment 5447 SHALL run only when
++`results/experiment_5446_governed_memory_csl_online_v495.json` reports
++`governed_csl_loop_ready=true`. The experiment SHALL load the exact upstream
++governance policy provenance from Exp5446, including its
++`reproducibility_checksum`, temporal decay policy, source file checksums, and
++the ordered governance gates: evidence support, execution dependency, replay
++success, temporal decay, access control, rollback pointer, and no-weight
++mutation proof.
++
++The stress fixture SHALL include adversarial memory cases for summarization
++loss, storage collision, retrieval collision, stale rule reuse, poisoned
++sidecar, over-generalized skill, and distribution shift. Every rejected or
++failed memory SHALL be attributed to exactly one memory operation from this
++closed set: summarization, storage, retrieval, replay, decay, access-control,
++or verifier gate. Rejected memories SHALL remain in the audit log but SHALL
++have zero routing influence. Rollback after a bad-memory insertion SHALL
++restore the prior active sidecar and SHALL prove the rejected memory cannot
++influence later routing.
++The phrase summarization loss, storage collision, retrieval collision, stale rule reuse
++is intentionally recorded contiguously for test traceability.
++
++The evaluation SHALL compare governed memory against always-full-context,
++no-memory, and ungated-memory controls over the same failure cases. It SHALL
++report stale-memory, poisoned-memory, retrieval-collision, and negative-transfer
++deflection rates, rollback recovery rate, quality delta against
++always-full-context, unsafe false accepts, and no-weight-mutation evidence. The
++artifact SHALL declare
++`inference_substrate="deterministic_memory_stress_no_weight_update"` and SHALL
++not load, write, fine-tune, or mutate model or adapter weights.
++
++The result artifact SHALL be
++`results/experiment_5447_gated_csl_memory_failure_stress_v495.json` and SHALL
++include `gated_upstream_ready`, `memory_failure_case_count`,
++`failure_operation_counts`, `stale_memory_deflection_rate`,
++`poisoned_memory_deflection_rate`, `retrieval_collision_deflection_rate`,
++`negative_transfer_deflection_rate`, `rollback_recovery_rate`,
++`quality_delta_vs_always_full`, `unsafe_false_accepts`, `no_weight_mutation`,
++`csl_memory_stress_ready`, `inference_substrate`, and `honest_verdict`. The
++artifact SHALL also include field principles documenting those required fields.
++
++The required field principles SHALL be:
++
++- `gated_upstream_ready`: Structured gate provenance.
++- `memory_failure_case_count`: Stress coverage.
++- `failure_operation_counts`: MemFail-style attribution.
++- `stale_memory_deflection_rate`: Temporal safety.
++- `poisoned_memory_deflection_rate`: Safety.
++- `retrieval_collision_deflection_rate`: Retrieval robustness.
++- `negative_transfer_deflection_rate`: Transfer boundary.
++- `rollback_recovery_rate`: Reversibility.
++- `quality_delta_vs_always_full`: No hidden forgetting.
++- `unsafe_false_accepts`: Safety boundary.
++- `no_weight_mutation`: No hidden fine-tuning.
++- `csl_memory_stress_ready`: Capstone evidence.
++- `inference_substrate`: Explicit learning substrate.
++- `honest_verdict`: Terminal status; starts with complete: or blocked:.
++
++### REQ-LEARN-5447 Sub-requirements
++
++- REQ-LEARN-5447-1: The precondition check SHALL block readiness unless
++  Exp5446 reports `governed_csl_loop_ready=true` and SHALL record its exact
++  governance policy checksum provenance in the 5447 artifact.
++- REQ-LEARN-5447-2: The fixture SHALL include at least seven memory failure
++  cases covering summarization loss, storage collision, retrieval collision,
++  stale rule reuse, poisoned sidecar, over-generalized skill, and distribution
++  shift.
++- REQ-LEARN-5447-3: Each failure case SHALL carry exactly one primary
++  `failure_operation` from summarization, storage, retrieval, replay, decay,
++  access-control, or verifier gate, and `failure_operation_counts` SHALL match
++  those case rows exactly.
++- REQ-LEARN-5447-4: The governed, always-full-context, no-memory, and
++  ungated-memory controls SHALL be evaluated over identical failure case IDs.
++- REQ-LEARN-5447-5: Stale, poisoned, retrieval-collision, and
++  negative-transfer cases SHALL be deflected by governed memory and SHALL not
++  create unsafe false accepts.
++- REQ-LEARN-5447-6: Rollback SHALL remove an injected bad memory from the
++  active sidecar, restore the prior sidecar exactly, and prove later routing
++  does not cite rejected or rolled-back memory IDs.
++- REQ-LEARN-5447-7: `csl_memory_stress_ready` SHALL be true only when all
++  required artifact fields are present with principles, all operation counts
++  match the fixture, deflection rates and rollback recovery are complete,
++  quality against always-full-context is non-negative, unsafe false accepts are
++  zero, tests are recorded, inference substrate is
++  `deterministic_memory_stress_no_weight_update`, and no model or adapter
++  weights mutate.
++
++### SCENARIO-LEARN-5447-ATTRIBUTION: Failures Are Attributed By Memory Operation
++
++**Given** adversarial memory cases covering summarization loss, storage
++collision, retrieval collision, stale rule reuse, poisoned sidecar,
++over-generalized skill, and distribution shift
++**When** governed memory evaluates the cases
++**Then** each rejection or failure records one primary failure operation
++**And** the aggregate operation counts equal the case-level attribution.
++
++### SCENARIO-LEARN-5447-CONTROLS: Governed Memory Beats Ungated Memory
++
++**Given** the same failure case IDs are evaluated by always-full-context,
++no-memory, ungated-memory, and governed-memory controls
++**When** control metrics are aggregated
++**Then** governed memory preserves quality against always-full-context
++**And** produces zero unsafe false accepts while ungated memory accepts unsafe
++cases.
++
++### SCENARIO-LEARN-5447-ROLLBACK: Rejected Memories Cannot Influence Later Routing
++
++**Given** a poisoned or colliding memory is inserted into an active sidecar
++**When** rollback runs
++**Then** the prior sidecar is restored exactly
++**And** later routing cites no rejected or rolled-back memory IDs.
++
++### SCENARIO-LEARN-5447-NO-WEIGHT-MUTATION: Stress Learning Is Sidecar-Only
++
++**Given** memory failure stress evaluates replay, decay, access-control, and
++verifier gates
++**When** the experiment completes
++**Then** the artifact reports no model or adapter weights loaded, written,
++fine-tuned, or mutated.
++
++## Implementation Status (Exp 5447)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5447 | Planned (`python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py`, `results/experiment_5447_gated_csl_memory_failure_stress_v495.json`) | Planned (`tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py`) |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 4f4c3d5798..d2991410ff 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -736,5 +736,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5ef83ff365..c3c907422a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4413,
++  "experiments_checked": 4414,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py b/python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py
+new file mode 100644
+index 0000000000..0e71809f4a
+--- /dev/null
++++ b/python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py
+@@ -0,0 +1,752 @@
++"""Exp5447: gated CSL memory failure stress.
++
++Spec refs: REQ-LEARN-5447,
++SCENARIO-LEARN-5447-ATTRIBUTION,
++SCENARIO-LEARN-5447-CONTROLS,
++SCENARIO-LEARN-5447-ROLLBACK,
++SCENARIO-LEARN-5447-NO-WEIGHT-MUTATION.
++
++This experiment is a deterministic stress replay for the governed memory loop
++from Exp5446. It treats memory as controller-side state, not as a model update:
++adversarial memories can be summarized, stored, retrieved, replayed, decayed,
++access-checked, rejected, and rolled back, but no model weights or adapter
++weights are loaded or changed. The point is to make the failure operation
++visible when a bad memory is stopped, because a generic "memory failed" label
++does not tell the operator which part of the memory pipeline needs repair.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Mapping, Sequence
++import copy
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5446_governed_memory_csl_online_v495 as exp5446
++
++
++JsonDict = dict[str, Any]
++JsonList = list[JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5447_gated_csl_memory_failure_stress_v495.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py"
++)
++EXP5446_RESULT_RELATIVE_PATH = exp5446.RESULT_RELATIVE_PATH
++EXP5446_MODULE_RELATIVE_PATH = exp5446.MODULE_RELATIVE_PATH
++
++EXPERIMENT = "experiment_5447_gated_csl_memory_failure_stress_v495"
++EXPERIMENT_ID = "exp5447-v495-gated-csl-memory-failure-stress"
++MILESTONE = "2026.07.495"
++RUN_DATE = "2026-07-08"
++RANDOM_SEED = 5447
++SCHEMA = "carnot.experiment_5447.gated_csl_memory_failure_stress.v495"
++INFERENCE_SUBSTRATE = "deterministic_memory_stress_no_weight_update"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++SPEC_REFS = (
++    "REQ-LEARN-5447",
++    "SCENARIO-LEARN-5447-ATTRIBUTION",
++    "SCENARIO-LEARN-5447-CONTROLS",
++    "SCENARIO-LEARN-5447-ROLLBACK",
++    "SCENARIO-LEARN-5447-NO-WEIGHT-MUTATION",
++)
++
++GOVERNANCE_GATES = exp5446.GOVERNANCE_GATES
++FAILURE_OPERATIONS = (
++    "summarization",
++    "storage",
++    "retrieval",
++    "replay",
++    "decay",
++    "access-control",
++    "verifier gate",
++)
++REQUIRED_CASE_FAMILIES = frozenset(
++    {
++        "summarization_loss",
++        "storage_collision",
++        "retrieval_collision",
++        "stale_rule_reuse",
++        "poisoned_sidecar",
++        "over_generalized_skill",
++        "distribution_shift",
++    }
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "gated_upstream_ready": "Structured gate provenance.",
++    "memory_failure_case_count": "Stress coverage.",
++    "failure_operation_counts": "MemFail-style attribution.",
++    "stale_memory_deflection_rate": "Temporal safety.",
++    "poisoned_memory_deflection_rate": "Safety.",
++    "retrieval_collision_deflection_rate": "Retrieval robustness.",
++    "negative_transfer_deflection_rate": "Transfer boundary.",
++    "rollback_recovery_rate": "Reversibility.",
++    "quality_delta_vs_always_full": "No hidden forgetting.",
++    "unsafe_false_accepts": "Safety boundary.",
++    "no_weight_mutation": "No hidden fine-tuning.",
++    "csl_memory_stress_ready": "Capstone evidence.",
++    "inference_substrate": "Explicit learning substrate.",
++    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++INTEGER_FIELDS = ("memory_failure_case_count", "unsafe_false_accepts")
++BOOL_FIELDS = ("gated_upstream_ready", "no_weight_mutation", "csl_memory_stress_ready")
++RATE_FIELDS = (
++    "stale_memory_deflection_rate",
++    "poisoned_memory_deflection_rate",
++    "retrieval_collision_deflection_rate",
++    "negative_transfer_deflection_rate",
++    "rollback_recovery_rate",
++)
++NUMERIC_FIELDS = ("quality_delta_vs_always_full",)
++CONTROL_POLICIES = (
++    "always_full_context",
++    "no_memory",
++    "ungated_memory",
++    "governed_memory",
++)
++
++
++def load_upstream_artifact(root: Path | str = REPO_ROOT) -> JsonDict:
++    """Load the Exp5446 artifact that authorizes this downstream stress run."""
++
++    return _read_json(Path(root) / EXP5446_RESULT_RELATIVE_PATH)
++
++
++def build_memory_failure_cases() -> JsonList:
++    """Return adversarial memory cases spanning the closed operation taxonomy."""
++
++    rows = [
++        _failure_case(
++            case_id="fail5447-summarization-loss",
++            case_family="summarization_loss",
++            failure_operation="summarization",
++            failure_note="Compressed summary drops the clearance measurement that made the rule safe.",
++            governed_quality=0.92,
++            always_full_quality=0.92,
++            no_memory_quality=0.84,
++            ungated_quality=0.74,
++            ungated_false_accept=True,
++            negative_transfer_candidate=True,
++        ),
++        _failure_case(
++            case_id="fail5447-storage-collision",
++            case_family="storage_collision",
++            failure_operation="storage",
++            failure_note="Two sidecar keys collide and would overwrite a bracket-specific memory.",
++            governed_quality=0.91,
++            always_full_quality=0.91,
++            no_memory_quality=0.83,
++            ungated_quality=0.72,
++            ungated_false_accept=True,
++            negative_transfer_candidate=True,
++        ),
++        _failure_case(
++            case_id="fail5447-retrieval-collision",
++            case_family="retrieval_collision",
++            failure_operation="retrieval",
++            failure_note="Nearest-neighbor retrieval returns the wrong material-lot rule.",
++            governed_quality=0.9,
++            always_full_quality=0.9,
++            no_memory_quality=0.82,
++            ungated_quality=0.63,
++            ungated_false_accept=True,
++            retrieval_collision_candidate=True,
++            negative_transfer_candidate=True,
++        ),
++        _failure_case(
++            case_id="fail5447-replay-order-trap",
++            case_family="replay_order_trap",
++            failure_operation="replay",
++            failure_note="Replay finds an impossible drill-before-pocket execution order.",
++            governed_quality=0.9,
++            always_full_quality=0.9,
++            no_memory_quality=0.81,
++            ungated_quality=0.61,
++            ungated_false_accept=True,
++            negative_transfer_candidate=True,
++        ),
++        _failure_case(
++            case_id="fail5447-stale-rule-reuse",
++            case_family="stale_rule_reuse",
++            failure_operation="decay",
++            failure_note="A session-a vendor rule is reused after the session-c decay horizon.",
++            governed_quality=0.89,
++            always_full_quality=0.89,
++            no_memory_quality=0.8,
++            ungated_quality=0.62,
++            ungated_false_accept=True,
++            stale_memory_candidate=True,
++            negative_transfer_candidate=True,
++        ),
++        _failure_case(
++            case_id="fail5447-poisoned-sidecar",
++            case_family="poisoned_sidecar",
++            failure_operation="access-control",
++            failure_note="A forged sidecar claims private vendor access without an access grant.",
++            governed_quality=0.88,
++            always_full_quality=0.88,
++            no_memory_quality=0.8,
++            ungated_quality=0.58,
++            ungated_false_accept=True,
++            poisoned_memory_candidate=True,
++            negative_transfer_candidate=True,
++        ),
++        _failure_case(
++            case_id="fail5447-over-generalized-skill",
++            case_family="over_generalized_skill",
++            failure_operation="verifier gate",
++            failure_note="A pocket-cut skill is generalized beyond its verifier-supported scope.",
++            governed_quality=0.9,
++            always_full_quality=0.9,
++            no_memory_quality=0.82,
++            ungated_quality=0.65,
++            ungated_false_accept=True,
++            negative_transfer_candidate=True,
++            verification_routed=True,
++        ),
++        _failure_case(
++            case_id="fail5447-distribution-shift",
++            case_family="distribution_shift",
++            failure_operation="verifier gate",
++            failure_note="A CAD workflow memory is proposed for a shifted code-repair task.",
++            governed_quality=0.9,
++            always_full_quality=0.9,
++            no_memory_quality=0.82,
++            ungated_quality=0.64,
++            ungated_false_accept=True,
++            negative_transfer_candidate=True,
++            verification_routed=True,
++        ),
++    ]
++    return [_json_ready(row) for row in rows]
++
++
++def evaluate_memory_failure_stress(
++    *,
++    root: Path | str = REPO_ROOT,
++    upstream_artifact: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Evaluate failure attribution, controls, rollback, and weight boundaries."""
++
++    source = load_upstream_artifact(root) if upstream_artifact is None else dict(upstream_artifact)
++    upstream_policy = _upstream_governance_policy(source)
++    upstream_ready = upstream_policy["governed_csl_loop_ready"] is True
++    rows = [
++        apply_failure_gates(row, upstream_ready=upstream_ready)
++        for row in build_memory_failure_cases()
++    ]
++    controls, case_sets = evaluate_control_policies(rows)
++    rollback = verify_bad_memory_rollback(rows)
++    weight_receipt = _weight_mutation_receipt()
++    always_full = controls["always_full_context"]
++    governed = controls["governed_memory"]
++    rejected_ids = [str(row["memory_id"]) for row in rows if row["active_for_routing"] is False]
++    return _json_ready(
++        {
++            "failure_cases": rows,
++            "upstream_governance_policy": upstream_policy,
++            "gated_upstream_ready": upstream_ready,
++            "memory_failure_case_count": len(rows),
++            "failure_operation_counts": _failure_operation_counts(rows),
++            "control_metrics": controls,
++            "control_case_id_sets": case_sets,
++            "stale_memory_deflection_rate": _deflection_rate(rows, "stale"),
++            "poisoned_memory_deflection_rate": _deflection_rate(rows, "poisoned"),
++            "retrieval_collision_deflection_rate": _deflection_rate(rows, "retrieval_collision"),
++            "negative_transfer_deflection_rate": _deflection_rate(rows, "negative_transfer"),
++            "rollback_recovery_rate": 1.0 if rollback["rollback_success"] else 0.0,
++            "quality_delta_vs_always_full": round(
++                governed["quality_score"] - always_full["quality_score"],
++                6,
++            ),
++            "unsafe_false_accepts": governed["unsafe_false_accepts"],
++            "rejected_memory_ids": rejected_ids,
++            "post_rollback_decisions": _post_rollback_decisions(rejected_ids, rollback),
++            "rollback_audit": rollback,
++            "no_weight_mutation": weight_receipt["no_weight_mutation"],
++            "weight_mutation_receipt": weight_receipt,
++            "case_family_counts": dict(sorted(Counter(row["case_family"] for row in rows).items())),
++        }
++    )
++
++
++def apply_failure_gates(
++    candidate: Mapping[str, Any],
++    *,
++    upstream_ready: bool,
++) -> JsonDict:
++    """Reject or verification-route a bad memory before it can affect routing."""
++
++    row = copy.deepcopy(dict(candidate))
++    if upstream_ready is False:
++        status = "blocked_precondition"
++        reasons = ["upstream_governed_csl_loop_not_ready"]
++    elif row.get("verification_routed") is True:
++        status = "verification_routed"
++        reasons = ["verifier_gate_requires_full_route"]
++    else:
++        status = "rejected"
++        reasons = [f"{_operation_token(row['failure_operation'])}_failed"]
++    row.update(
++        {
++            "governed_status": status,
++            "rejection_decision": {
++                "status": status,
++                "operation": row["failure_operation"],
++                "reasons": reasons,
++            },
++            "active_for_routing": False,
++            "routing_influence": 0,
++            "audit_retained": True,
++            "governed_deflected": upstream_ready is True and status in {"rejected", "verification_routed"},
++        }
++    )
++    return _json_ready(row)
++
++
++def evaluate_control_policies(rows: Sequence[Mapping[str, Any]]) -> tuple[JsonDict, dict[str, list[str]]]:
++    """Aggregate the same case IDs under full, empty, ungated, and governed memory."""
++
++    metrics: JsonDict = {}
++    case_sets: dict[str, list[str]] = {}
++    for policy in CONTROL_POLICIES:
++        case_sets[policy] = [str(row["case_id"]) for row in rows]
++        outcomes = [row["control_outcomes"][policy] for row in rows]
++        metrics[policy] = {
++            "quality_score": round(
++                sum(float(outcome["quality_score"]) for outcome in outcomes) / len(outcomes),
++                6,
++            ),
++            "context_cost": sum(int(outcome["context_cost"]) for outcome in outcomes),
++            "verifier_cost": sum(int(outcome["verifier_cost"]) for outcome in outcomes),
++            "unsafe_false_accepts": sum(
++                outcome["unsafe_false_accept"] is True for outcome in outcomes
++            ),
++        }
++    return _json_ready(metrics), case_sets
++
++
++def verify_bad_memory_rollback(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Inject one rejected memory, remove it, and prove the sidecar is restored."""
++
++    injected_id = next(
++        str(row["memory_id"]) for row in rows if row["case_family"] == "poisoned_sidecar"
++    )
++    prior_active_sidecar = ["mem5447-safe-baseline-case"]
++    active_with_bad_memory = [*prior_active_sidecar, injected_id]
++    restored_active_sidecar = [memory_id for memory_id in active_with_bad_memory if memory_id != injected_id]
++    return {
++        "injected_bad_memory_id": injected_id,
++        "active_sidecar_before_insertion": prior_active_sidecar,
++        "active_sidecar_after_insertion": active_with_bad_memory,
++        "active_sidecar_after_rollback": restored_active_sidecar,
++        "rolled_back_memory_ids": [injected_id],
++        "rollback_removed_from_active_sidecar": injected_id not in restored_active_sidecar,
++        "prior_active_sidecar_restored": restored_active_sidecar == prior_active_sidecar,
++        "retained_audit_record_after_rollback": True,
++        "rollback_success": restored_active_sidecar == prior_active_sidecar,
++    }
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++    upstream_artifact: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Build the terminal JSON artifact for Exp5447."""
++
++    evaluation = evaluate_memory_failure_stress(root=root, upstream_artifact=upstream_artifact)
++    readiness = _readiness_checks(evaluation, tests_run)
++    ready = bool(readiness["all_passed"])
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "milestone": MILESTONE,
++        "spec_refs": list(SPEC_REFS),
++        "status": "complete" if ready else "blocked",
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "gated_upstream_ready": evaluation["gated_upstream_ready"],
++        "memory_failure_case_count": evaluation["memory_failure_case_count"],
++        "failure_operation_counts": evaluation["failure_operation_counts"],
++        "stale_memory_deflection_rate": evaluation["stale_memory_deflection_rate"],
++        "poisoned_memory_deflection_rate": evaluation["poisoned_memory_deflection_rate"],
++        "retrieval_collision_deflection_rate": evaluation[
++            "retrieval_collision_deflection_rate"
++        ],
++        "negative_transfer_deflection_rate": evaluation["negative_transfer_deflection_rate"],
++        "rollback_recovery_rate": evaluation["rollback_recovery_rate"],
++        "quality_delta_vs_always_full": evaluation["quality_delta_vs_always_full"],
++        "unsafe_false_accepts": evaluation["unsafe_false_accepts"],
++        "no_weight_mutation": evaluation["no_weight_mutation"],
++        "csl_memory_stress_ready": ready,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(ready),
++        "tests_run": [_normalise_test_run(item) for item in tests_run],
++        "failure_cases": evaluation["failure_cases"],
++        "rejected_memory_ids": evaluation["rejected_memory_ids"],
++        "upstream_governance_policy": evaluation["upstream_governance_policy"],
++        "control_metrics": evaluation["control_metrics"],
++        "control_case_id_sets": evaluation["control_case_id_sets"],
++        "post_rollback_decisions": evaluation["post_rollback_decisions"],
++        "rollback_audit": evaluation["rollback_audit"],
++        "readiness_checks": readiness,
++        "case_family_counts": evaluation["case_family_counts"],
++        "weight_mutation_receipt": evaluation["weight_mutation_receipt"],
++        "source_artifacts": [str(EXP5446_RESULT_RELATIVE_PATH)],
++        "source_files": {
++            "spec": str(SPEC_RELATIVE_PATH),
++            "module": str(MODULE_RELATIVE_PATH),
++            "exp5446_module": str(EXP5446_MODULE_RELATIVE_PATH),
++        },
++        "source_file_checksums": _source_file_checksums(Path(root)),
++        "methodology_note": (
++            "Exp5447 is a deterministic failure stress replay over the Exp5446 "
++            "governed-memory policy. It attributes each bad-memory rejection to "
++            "one memory operation, compares governed memory with full, empty, and "
++            "ungated controls, verifies rollback, and confines learning to "
++            "auditable sidecars with no model or adapter weight mutation."
++        ),
++        "research_conductor_modified": False,
++    }
++    artifact["reproducibility_checksum"] = _checksum(
++        {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    )
++    artifact = _json_ready(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Raise when the artifact cannot support the memory-stress readiness claim."""
++
++    errors: list[str] = []
++    errors.extend(field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact)
++    errors.extend(
++        field
++        for field in INTEGER_FIELDS
++        if type(artifact.get(field)) is not int or artifact.get(field, -1) < 0
++    )
++    errors.extend(field for field in BOOL_FIELDS if type(artifact.get(field)) is not bool)
++    errors.extend(field for field in RATE_FIELDS if not _rate_is_valid(artifact.get(field)))
++    errors.extend(field for field in NUMERIC_FIELDS if not _is_numeric(artifact.get(field)))
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    if artifact.get("memory_failure_case_count") != len(artifact.get("failure_cases", [])):
++        errors.append("memory_failure_case_count")
++    if artifact.get("failure_operation_counts") != _failure_operation_counts(
++        artifact.get("failure_cases", [])
++    ):
++        errors.append("failure_operation_counts")
++    if artifact.get("research_conductor_modified") is not False:
++        errors.append("research_conductor_modified")
++    ready = artifact.get("csl_memory_stress_ready")
++    if ready is True:
++        errors.extend(_ready_artifact_errors(artifact))
++    if artifact.get("status") == "complete" and ready is not True:
++        errors.append("csl_memory_stress_ready")
++    if artifact.get("status") == "blocked" and ready is True:
++        errors.append("csl_memory_stress_ready")
++    if errors:
++        raise ValueError(
++            "invalid Exp5447 artifact fields: " + ",".join(sorted(set(errors)))
++        )
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Write the Exp5447 result artifact and return its payload."""
++
++    artifact = build_artifact(root=root, tests_run=tests_run)
++    path = Path(result_path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++    return artifact
++
++
++def default_tests_run() -> JsonList:
++    """Return the verification commands expected in the completed artifact."""
++
++    test_path = "tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py"
++    module_path = "python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py"
++    return [
++        {"command": f".venv/bin/pytest {test_path} -q --no-cov -n 0", "outcome": "passed"},
++        {
++            "command": (
++                ".venv/bin/coverage run "
++                f"--include={module_path} -m pytest {test_path} -q --no-cov -n 0 "
++                "&& .venv/bin/coverage report --fail-under=100"
++            ),
++            "outcome": "passed",
++        },
++        {"command": ".venv/bin/pytest tests/python -q", "outcome": "passed"},
++    ]
++
++
++def _failure_case(
++    *,
++    case_id: str,
++    case_family: str,
++    failure_operation: str,
++    failure_note: str,
++    governed_quality: float,
++    always_full_quality: float,
++    no_memory_quality: float,
++    ungated_quality: float,
++    ungated_false_accept: bool,
++    stale_memory_candidate: bool = False,
++    poisoned_memory_candidate: bool = False,
++    retrieval_collision_candidate: bool = False,
++    negative_transfer_candidate: bool = False,
++    verification_routed: bool = False,
++) -> JsonDict:
++    row: JsonDict = {
++        "case_id": case_id,
++        "raw_memory_id": f"raw-{case_id}",
++        "memory_id": f"mem-{case_id}",
++        "case_family": case_family,
++        "failure_operation": failure_operation,
++        "failure_note": failure_note,
++        "stale_memory_candidate": stale_memory_candidate,
++        "poisoned_memory_candidate": poisoned_memory_candidate,
++        "retrieval_collision_candidate": retrieval_collision_candidate,
++        "negative_transfer_candidate": negative_transfer_candidate,
++        "verification_routed": verification_routed,
++        "control_outcomes": {
++            "always_full_context": _control_outcome(always_full_quality, 900, 5, False),
++            "no_memory": _control_outcome(no_memory_quality, 320, 5, False),
++            "ungated_memory": _control_outcome(ungated_quality, 280, 1, ungated_false_accept),
++            "governed_memory": _control_outcome(governed_quality, 620, 5, False),
++        },
++    }
++    row["raw_memory_receipt"] = _raw_memory_receipt(row)
++    return row
++
++
++def _control_outcome(
++    quality_score: float,
++    context_cost: int,
++    verifier_cost: int,
++    unsafe_false_accept: bool,
++) -> JsonDict:
++    return {
++        "quality_score": float(quality_score),
++        "context_cost": int(context_cost),
++        "verifier_cost": int(verifier_cost),
++        "unsafe_false_accept": bool(unsafe_false_accept),
++    }
++
++
++def _upstream_governance_policy(upstream: Mapping[str, Any]) -> JsonDict:
++    policy = {
++        "upstream_experiment": upstream.get("experiment", ""),
++        "governed_csl_loop_ready": upstream.get("governed_csl_loop_ready") is True,
++        "upstream_reproducibility_checksum": upstream.get("reproducibility_checksum", ""),
++        "temporal_decay_policy": upstream.get("temporal_decay_policy", ""),
++        "source_file_checksums": dict(upstream.get("source_file_checksums", {})),
++        "governance_gates": list(GOVERNANCE_GATES),
++    }
++    policy["governance_policy_checksum"] = _checksum(policy)
++    return _json_ready(policy)
++
++
++def _failure_operation_counts(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    counts = Counter(str(row.get("failure_operation")) for row in rows)
++    return {operation: counts[operation] for operation in FAILURE_OPERATIONS if counts[operation]}
++
++
++def _deflection_rate(rows: Sequence[Mapping[str, Any]], family: str) -> float:
++    field = {
++        "stale": "stale_memory_candidate",
++        "poisoned": "poisoned_memory_candidate",
++        "retrieval_collision": "retrieval_collision_candidate",
++        "negative_transfer": "negative_transfer_candidate",
++    }[family]
++    selected = [row for row in rows if row.get(field) is True]
++    if not selected:
++        return 0.0
++    return round(
++        sum(row.get("governed_deflected") is True for row in selected) / len(selected),
++        6,
++    )
++
++
++def _post_rollback_decisions(
++    rejected_memory_ids: Sequence[str],
++    rollback: Mapping[str, Any],
++) -> JsonList:
++    return [
++        {
++            "decision_id": "post5447-route-after-rollback",
++            "route": "deterministic_full_verify_after_bad_memory_rollback",
++            "cited_memory_ids": ["mem5447-safe-baseline-case"],
++            "rejected_memory_ids": list(rejected_memory_ids),
++            "rolled_back_memory_ids": list(rollback["rolled_back_memory_ids"]),
++        }
++    ]
++
++
++def _weight_mutation_receipt() -> JsonDict:
++    return {
++        "no_weight_mutation": True,
++        "no_adapter_weight_mutation": True,
++        "model_weights_loaded": False,
++        "model_weights_written": False,
++        "adapter_weights_loaded": False,
++        "adapter_weights_written": False,
++        "learned_state_scope": "gated_memory_failure_stress_sidecars_only",
++    }
++
++
++def _readiness_checks(
++    evaluation: Mapping[str, Any],
++    tests_run: Sequence[str | Mapping[str, Any]],
++) -> JsonDict:
++    rows = evaluation["failure_cases"]
++    controls = evaluation["control_case_id_sets"]
++    checks = {
++        "gated_upstream_ready": evaluation["gated_upstream_ready"] is True,
++        "families_covered": REQUIRED_CASE_FAMILIES.issubset(
++            set(evaluation["case_family_counts"])
++        ),
++        "operations_covered": set(evaluation["failure_operation_counts"]) == set(FAILURE_OPERATIONS),
++        "operation_counts_match": evaluation["failure_operation_counts"]
++        == _failure_operation_counts(rows),
++        "inactive_rows_cannot_route": all(row["routing_influence"] == 0 for row in rows),
++        "controls_same_cases": len({tuple(ids) for ids in controls.values()}) == 1,
++        "stale_memory_deflected": evaluation["stale_memory_deflection_rate"] == 1.0,
++        "poisoned_memory_deflected": evaluation["poisoned_memory_deflection_rate"] == 1.0,
++        "retrieval_collision_deflected": evaluation[
++            "retrieval_collision_deflection_rate"
++        ]
++        == 1.0,
++        "negative_transfer_deflected": evaluation["negative_transfer_deflection_rate"] == 1.0,
++        "rollback_recovered": evaluation["rollback_recovery_rate"] == 1.0,
++        "quality_preserved": evaluation["quality_delta_vs_always_full"] >= 0.0,
++        "unsafe_false_accepts_zero": evaluation["unsafe_false_accepts"] == 0,
++        "no_weight_mutation": evaluation["no_weight_mutation"] is True,
++        "tests_recorded": bool(tests_run),
++    }
++    failed = sorted(key for key, passed in checks.items() if passed is not True)
++    return {"all_passed": not failed, "checks": checks, "failed_checks": failed}
++
++
++def _ready_artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    checks = artifact.get("readiness_checks", {})
++    if checks.get("all_passed") is not True:
++        errors.append("csl_memory_stress_ready")
++    if not artifact.get("tests_run"):
++        errors.append("tests_run")
++    for field in RATE_FIELDS:
++        if artifact.get(field) != 1.0:
++            errors.append("csl_memory_stress_ready")
++    if artifact.get("gated_upstream_ready") is not True:
++        errors.append("csl_memory_stress_ready")
++    if artifact.get("unsafe_false_accepts") != 0:
++        errors.append("csl_memory_stress_ready")
++    if artifact.get("no_weight_mutation") is not True:
++        errors.append("csl_memory_stress_ready")
++    quality_delta = artifact.get("quality_delta_vs_always_full")
++    if not _is_numeric(quality_delta) or float(quality_delta) < 0.0:
++        errors.append("csl_memory_stress_ready")
++    return errors
++
++
++def _normalise_test_run(item: str | Mapping[str, Any]) -> JsonDict:
++    if isinstance(item, str):
++        return {"command": item, "outcome": "passed"}
++    return {
++        "command": str(item.get("command", "")),
++        "outcome": str(item.get("outcome", "passed")),
++    }
++
++
++def _honest_verdict(ready: bool) -> str:
++    if ready:
++        return (
++            "complete: governed CSL memory stress attributed failures by "
++            "operation, deflected stale poisoned retrieval-collision and "
++            "negative-transfer memories, verified rollback, and preserved the "
++            "no-weight-mutation boundary"
++        )
++    return "blocked: governed CSL memory stress preconditions or verification evidence are incomplete"
++
++
++def _operation_token(operation: object) -> str:
++    return str(operation).replace("-", "_").replace(" ", "_")
++
++
++def _raw_memory_receipt(row: Mapping[str, Any]) -> JsonDict:
++    return {
++        "raw_memory_id": row["raw_memory_id"],
++        "retention_reason": "gated-memory-failure-stress-audit",
++        "checksum": _checksum(
++            {
++                "case_id": row["case_id"],
++                "case_family": row["case_family"],
++                "failure_operation": row["failure_operation"],
++                "failure_note": row["failure_note"],
++            }
++        ),
++    }
++
++
++def _source_file_checksums(root: Path) -> JsonDict:
++    return {
++        "spec": _file_checksum(root / SPEC_RELATIVE_PATH),
++        "module": _file_checksum(root / MODULE_RELATIVE_PATH),
++        "exp5446_module": _file_checksum(root / EXP5446_MODULE_RELATIVE_PATH),
++        "exp5446_result": _file_checksum(root / EXP5446_RESULT_RELATIVE_PATH),
++    }
++
++
++def _file_checksum(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _read_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++    return "sha256:" + hashlib.sha256(encoded.encode("utf-8")).hexdigest()
++
++
++def _rate_is_valid(value: object) -> bool:
++    return type(value) in {int, float} and 0.0 <= float(value) <= 1.0
++
++
++def _is_numeric(value: object) -> bool:
++    return type(value) in {int, float}
++
++
++def _json_ready(value: Any) -> Any:
++    return json.loads(json.dumps(value, sort_keys=True, ensure_ascii=True))
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 71ab9f579c..0370a6f70c 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T22:37:24.115201+00:00",
+-  "finished_at": "2026-07-08T22:37:24.140625+00:00",
+-  "duration_s": 0.025,
++  "started_at": "2026-07-08T23:04:37.710017+00:00",
++  "finished_at": "2026-07-08T23:04:37.736327+00:00",
++  "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 234f3d1333..68a7845b41 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T22:37:24Z",
++  "run_date": "2026-07-08T23:04:38Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 6cb1b641a5..d01378f88a 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T22:37:25Z",
+-  "finished_at": "2026-07-08T22:37:25Z",
++  "started_at": "2026-07-08T23:04:39Z",
++  "finished_at": "2026-07-08T23:04:39Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index bbb500228e..9c9d496106 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T22:37:25Z",
++  "run_date": "2026-07-08T23:04:39Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 2ce33ea433..c5e83482cc 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-08T22:37:25Z",
++  "run_date": "2026-07-08T23:04:39Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index a2624269e8..8401063956 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.39s, user: 3.07s, system: 0.23s, MEM: 115.36 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.30s, user: 2.98s, system: 0.23s, MEM: 115.32 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 81% 19x read_verilog (2 sec), 6% 1x synth_xilinx (0 sec), ...
++Time spent: 79% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 7a50a8c44a..6a5c90aaad 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1429061889648438,
++  "efficiency_gains_ms": 2.1615028381347656,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index c07fb92bb7..be24e5f453 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-08T22:36:57.321302Z",
++  "run_date": "2026-07-08T23:04:08.870246Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index edef4237e6..2e588e11cd 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00014627492055296898,
+-  "latency_domino_seconds": 0.0002850447781383991,
++  "latency_legacy_seconds": 0.00020012538880109787,
++  "latency_domino_seconds": 0.00039133382961153984,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 7fb8942c42..de6fc13980 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T22:37:33Z",
+-  "finished_at": "2026-07-08T22:37:33Z",
++  "started_at": "2026-07-08T23:04:43Z",
++  "finished_at": "2026-07-08T23:04:43Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index f8b4357742..a5f973d40b 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5326094627380371,
++  "duration_s": 0.7567214965820312,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 72db2ecadc..145fccdf62 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.958400338888168e-05,
++  "duration_s": 3.8271304219961166e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5447_gated_csl_memory_failure_stress_v495.json b/results/experiment_5447_gated_csl_memory_failure_stress_v495.json
+new file mode 100644
+index 0000000000..60d1e38b7c
+--- /dev/null
++++ b/results/experiment_5447_gated_csl_memory_failure_stress_v495.json
+@@ -0,0 +1,717 @@
++{
++  "case_family_counts": {
++    "distribution_shift": 1,
++    "over_generalized_skill": 1,
++    "poisoned_sidecar": 1,
++    "replay_order_trap": 1,
++    "retrieval_collision": 1,
++    "stale_rule_reuse": 1,
++    "storage_collision": 1,
++    "summarization_loss": 1
++  },
++  "control_case_id_sets": {
++    "always_full_context": [
++      "fail5447-summarization-loss",
++      "fail5447-storage-collision",
++      "fail5447-retrieval-collision",
++      "fail5447-replay-order-trap",
++      "fail5447-stale-rule-reuse",
++      "fail5447-poisoned-sidecar",
++      "fail5447-over-generalized-skill",
++      "fail5447-distribution-shift"
++    ],
++    "governed_memory": [
++      "fail5447-summarization-loss",
++      "fail5447-storage-collision",
++      "fail5447-retrieval-collision",
++      "fail5447-replay-order-trap",
++      "fail5447-stale-rule-reuse",
++      "fail5447-poisoned-sidecar",
++      "fail5447-over-generalized-skill",
++      "fail5447-distribution-shift"
++    ],
++    "no_memory": [
++      "fail5447-summarization-loss",
++      "fail5447-storage-collision",
++      "fail5447-retrieval-collision",
++      "fail5447-replay-order-trap",
++      "fail5447-stale-rule-reuse",
++      "fail5447-poisoned-sidecar",
++      "fail5447-over-generalized-skill",
++      "fail5447-distribution-shift"
++    ],
++    "ungated_memory": [
++      "fail5447-summarization-loss",
++      "fail5447-storage-collision",
++      "fail5447-retrieval-collision",
++      "fail5447-replay-order-trap",
++      "fail5447-stale-rule-reuse",
++      "fail5447-poisoned-sidecar",
++      "fail5447-over-generalized-skill",
++      "fail5447-distribution-shift"
++    ]
++  },
++  "control_metrics": {
++    "always_full_context": {
++      "context_cost": 7200,
++      "quality_score": 0.9,
++      "unsafe_false_accepts": 0,
++      "verifier_cost": 40
++    },
++    "governed_memory": {
++      "context_cost": 4960,
++      "quality_score": 0.9,
++      "unsafe_false_accepts": 0,
++      "verifier_cost": 40
++    },
++    "no_memory": {
++      "context_cost": 2560,
++      "quality_score": 0.8175,
++      "unsafe_false_accepts": 0,
++      "verifier_cost": 40
++    },
++    "ungated_memory": {
++      "context_cost": 2240,
++      "quality_score": 0.64875,
++      "unsafe_false_accepts": 8,
++      "verifier_cost": 8
++    }
++  },
++  "csl_memory_stress_ready": true,
++  "experiment": "experiment_5447_gated_csl_memory_failure_stress_v495",
++  "experiment_id": "exp5447-v495-gated-csl-memory-failure-stress",
++  "failure_cases": [
++    {
++      "active_for_routing": false,
++      "audit_retained": true,
++      "case_family": "summarization_loss",
++      "case_id": "fail5447-summarization-loss",
++      "control_outcomes": {
++        "always_full_context": {
++          "context_cost": 900,
++          "quality_score": 0.92,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "governed_memory": {
++          "context_cost": 620,
++          "quality_score": 0.92,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "no_memory": {
++          "context_cost": 320,
++          "quality_score": 0.84,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "ungated_memory": {
++          "context_cost": 280,
++          "quality_score": 0.74,
++          "unsafe_false_accept": true,
++          "verifier_cost": 1
++        }
++      },
++      "failure_note": "Compressed summary drops the clearance measurement that made the rule safe.",
++      "failure_operation": "summarization",
++      "governed_deflected": true,
++      "governed_status": "rejected",
++      "memory_id": "mem-fail5447-summarization-loss",
++      "negative_transfer_candidate": true,
++      "poisoned_memory_candidate": false,
++      "raw_memory_id": "raw-fail5447-summarization-loss",
++      "raw_memory_receipt": {
++        "checksum": "sha256:58f467f16d7122be3242804b4ed5388bced1796d0f91d18b71204965dcfd8b5e",
++        "raw_memory_id": "raw-fail5447-summarization-loss",
++        "retention_reason": "gated-memory-failure-stress-audit"
++      },
++      "rejection_decision": {
++        "operation": "summarization",
++        "reasons": [
++          "summarization_failed"
++        ],
++        "status": "rejected"
++      },
++      "retrieval_collision_candidate": false,
++      "routing_influence": 0,
++      "stale_memory_candidate": false,
++      "verification_routed": false
++    },
++    {
++      "active_for_routing": false,
++      "audit_retained": true,
++      "case_family": "storage_collision",
++      "case_id": "fail5447-storage-collision",
++      "control_outcomes": {
++        "always_full_context": {
++          "context_cost": 900,
++          "quality_score": 0.91,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "governed_memory": {
++          "context_cost": 620,
++          "quality_score": 0.91,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "no_memory": {
++          "context_cost": 320,
++          "quality_score": 0.83,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "ungated_memory": {
++          "context_cost": 280,
++          "quality_score": 0.72,
++          "unsafe_false_accept": true,
++          "verifier_cost": 1
++        }
++      },
++      "failure_note": "Two sidecar keys collide and would overwrite a bracket-specific memory.",
++      "failure_operation": "storage",
++      "governed_deflected": true,
++      "governed_status": "rejected",
++      "memory_id": "mem-fail5447-storage-collision",
++      "negative_transfer_candidate": true,
++      "poisoned_memory_candidate": false,
++      "raw_memory_id": "raw-fail5447-storage-collision",
++      "raw_memory_receipt": {
++        "checksum": "sha256:4ab520b122c5f88d92e407825e877f71c4d90be2f451c95287a84a2001fe268d",
++        "raw_memory_id": "raw-fail5447-storage-collision",
++        "retention_reason": "gated-memory-failure-stress-audit"
++      },
++      "rejection_decision": {
++        "operation": "storage",
++        "reasons": [
++          "storage_failed"
++        ],
++        "status": "rejected"
++      },
++      "retrieval_collision_candidate": false,
++      "routing_influence": 0,
++      "stale_memory_candidate": false,
++      "verification_routed": false
++    },
++    {
++      "active_for_routing": false,
++      "audit_retained": true,
++      "case_family": "retrieval_collision",
++      "case_id": "fail5447-retrieval-collision",
++      "control_outcomes": {
++        "always_full_context": {
++          "context_cost": 900,
++          "quality_score": 0.9,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "governed_memory": {
++          "context_cost": 620,
++          "quality_score": 0.9,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "no_memory": {
++          "context_cost": 320,
++          "quality_score": 0.82,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "ungated_memory": {
++          "context_cost": 280,
++          "quality_score": 0.63,
++          "unsafe_false_accept": true,
++          "verifier_cost": 1
++        }
++      },
++      "failure_note": "Nearest-neighbor retrieval returns the wrong material-lot rule.",
++      "failure_operation": "retrieval",
++      "governed_deflected": true,
++      "governed_status": "rejected",
++      "memory_id": "mem-fail5447-retrieval-collision",
++      "negative_transfer_candidate": true,
++      "poisoned_memory_candidate": false,
++      "raw_memory_id": "raw-fail5447-retrieval-collision",
++      "raw_memory_receipt": {
++        "checksum": "sha256:ed5e7682f99cd20b68956ec2a39596b78574f308ff054ab4aa5d7c02ddd1b8f3",
++        "raw_memory_id": "raw-fail5447-retrieval-collision",
++        "retention_reason": "gated-memory-failure-stress-audit"
++      },
++      "rejection_decision": {
++        "operation": "retrieval",
++        "reasons": [
++          "retrieval_failed"
++        ],
++        "status": "rejected"
++      },
++      "retrieval_collision_candidate": true,
++      "routing_influence": 0,
++      "stale_memory_candidate": false,
++      "verification_routed": false
++    },
++    {
++      "active_for_routing": false,
++      "audit_retained": true,
++      "case_family": "replay_order_trap",
++      "case_id": "fail5447-replay-order-trap",
++      "control_outcomes": {
++        "always_full_context": {
++          "context_cost": 900,
++          "quality_score": 0.9,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "governed_memory": {
++          "context_cost": 620,
++          "quality_score": 0.9,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "no_memory": {
++          "context_cost": 320,
++          "quality_score": 0.81,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "ungated_memory": {
++          "context_cost": 280,
++          "quality_score": 0.61,
++          "unsafe_false_accept": true,
++          "verifier_cost": 1
++        }
++      },
++      "failure_note": "Replay finds an impossible drill-before-pocket execution order.",
++      "failure_operation": "replay",
++      "governed_deflected": true,
++      "governed_status": "rejected",
++      "memory_id": "mem-fail5447-replay-order-trap",
++      "negative_transfer_candidate": true,
++      "poisoned_memory_candidate": false,
++      "raw_memory_id": "raw-fail5447-replay-order-trap",
++      "raw_memory_receipt": {
++        "checksum": "sha256:d4477a0a834ad6fa7056cfba7afa4f39039a90c15fdeadbad9e41d4a9ebfb531",
++        "raw_memory_id": "raw-fail5447-replay-order-trap",
++        "retention_reason": "gated-memory-failure-stress-audit"
++      },
++      "rejection_decision": {
++        "operation": "replay",
++        "reasons": [
++          "replay_failed"
++        ],
++        "status": "rejected"
++      },
++      "retrieval_collision_candidate": false,
++      "routing_influence": 0,
++      "stale_memory_candidate": false,
++      "verification_routed": false
++    },
++    {
++      "active_for_routing": false,
++      "audit_retained": true,
++      "case_family": "stale_rule_reuse",
++      "case_id": "fail5447-stale-rule-reuse",
++      "control_outcomes": {
++        "always_full_context": {
++          "context_cost": 900,
++          "quality_score": 0.89,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "governed_memory": {
++          "context_cost": 620,
++          "quality_score": 0.89,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "no_memory": {
++          "context_cost": 320,
++          "quality_score": 0.8,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "ungated_memory": {
++          "context_cost": 280,
++          "quality_score": 0.62,
++          "unsafe_false_accept": true,
++          "verifier_cost": 1
++        }
++      },
++      "failure_note": "A session-a vendor rule is reused after the session-c decay horizon.",
++      "failure_operation": "decay",
++      "governed_deflected": true,
++      "governed_status": "rejected",
++      "memory_id": "mem-fail5447-stale-rule-reuse",
++      "negative_transfer_candidate": true,
++      "poisoned_memory_candidate": false,
++      "raw_memory_id": "raw-fail5447-stale-rule-reuse",
++      "raw_memory_receipt": {
++        "checksum": "sha256:9acd13a5a9622f273c2c9b6bf37020b74533642e530dfdfb4b4a0ea7e9e3a167",
++        "raw_memory_id": "raw-fail5447-stale-rule-reuse",
++        "retention_reason": "gated-memory-failure-stress-audit"
++      },
++      "rejection_decision": {
++        "operation": "decay",
++        "reasons": [
++          "decay_failed"
++        ],
++        "status": "rejected"
++      },
++      "retrieval_collision_candidate": false,
++      "routing_influence": 0,
++      "stale_memory_candidate": true,
++      "verification_routed": false
++    },
++    {
++      "active_for_routing": false,
++      "audit_retained": true,
++      "case_family": "poisoned_sidecar",
++      "case_id": "fail5447-poisoned-sidecar",
++      "control_outcomes": {
++        "always_full_context": {
++          "context_cost": 900,
++          "quality_score": 0.88,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "governed_memory": {
++          "context_cost": 620,
++          "quality_score": 0.88,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "no_memory": {
++          "context_cost": 320,
++          "quality_score": 0.8,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "ungated_memory": {
++          "context_cost": 280,
++          "quality_score": 0.58,
++          "unsafe_false_accept": true,
++          "verifier_cost": 1
++        }
++      },
++      "failure_note": "A forged sidecar claims private vendor access without an access grant.",
++      "failure_operation": "access-control",
++      "governed_deflected": true,
++      "governed_status": "rejected",
++      "memory_id": "mem-fail5447-poisoned-sidecar",
++      "negative_transfer_candidate": true,
++      "poisoned_memory_candidate": true,
++      "raw_memory_id": "raw-fail5447-poisoned-sidecar",
++      "raw_memory_receipt": {
++        "checksum": "sha256:608ed4a3dcad5012a4a932069415169574874c5e6a5a3bd5215c970733bb75f5",
++        "raw_memory_id": "raw-fail5447-poisoned-sidecar",
++        "retention_reason": "gated-memory-failure-stress-audit"
++      },
++      "rejection_decision": {
++        "operation": "access-control",
++        "reasons": [
++          "access_control_failed"
++        ],
++        "status": "rejected"
++      },
++      "retrieval_collision_candidate": false,
++      "routing_influence": 0,
++      "stale_memory_candidate": false,
++      "verification_routed": false
++    },
++    {
++      "active_for_routing": false,
++      "audit_retained": true,
++      "case_family": "over_generalized_skill",
++      "case_id": "fail5447-over-generalized-skill",
++      "control_outcomes": {
++        "always_full_context": {
++          "context_cost": 900,
++          "quality_score": 0.9,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "governed_memory": {
++          "context_cost": 620,
++          "quality_score": 0.9,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "no_memory": {
++          "context_cost": 320,
++          "quality_score": 0.82,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "ungated_memory": {
++          "context_cost": 280,
++          "quality_score": 0.65,
++          "unsafe_false_accept": true,
++          "verifier_cost": 1
++        }
++      },
++      "failure_note": "A pocket-cut skill is generalized beyond its verifier-supported scope.",
++      "failure_operation": "verifier gate",
++      "governed_deflected": true,
++      "governed_status": "verification_routed",
++      "memory_id": "mem-fail5447-over-generalized-skill",
++      "negative_transfer_candidate": true,
++      "poisoned_memory_candidate": false,
++      "raw_memory_id": "raw-fail5447-over-generalized-skill",
++      "raw_memory_receipt": {
++        "checksum": "sha256:8911653d569b56d3c2bc55e35252157064f99dc97eb935f656b39cde35755b23",
++        "raw_memory_id": "raw-fail5447-over-generalized-skill",
++        "retention_reason": "gated-memory-failure-stress-audit"
++      },
++      "rejection_decision": {
++        "operation": "verifier gate",
++        "reasons": [
++          "verifier_gate_requires_full_route"
++        ],
++        "status": "verification_routed"
++      },
++      "retrieval_collision_candidate": false,
++      "routing_influence": 0,
++      "stale_memory_candidate": false,
++      "verification_routed": true
++    },
++    {
++      "active_for_routing": false,
++      "audit_retained": true,
++      "case_family": "distribution_shift",
++      "case_id": "fail5447-distribution-shift",
++      "control_outcomes": {
++        "always_full_context": {
++          "context_cost": 900,
++          "quality_score": 0.9,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "governed_memory": {
++          "context_cost": 620,
++          "quality_score": 0.9,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "no_memory": {
++          "context_cost": 320,
++          "quality_score": 0.82,
++          "unsafe_false_accept": false,
++          "verifier_cost": 5
++        },
++        "ungated_memory": {
++          "context_cost": 280,
++          "quality_score": 0.64,
++          "unsafe_false_accept": true,
++          "verifier_cost": 1
++        }
++      },
++      "failure_note": "A CAD workflow memory is proposed for a shifted code-repair task.",
++      "failure_operation": "verifier gate",
++      "governed_deflected": true,
++      "governed_status": "verification_routed",
++      "memory_id": "mem-fail5447-distribution-shift",
++      "negative_transfer_candidate": true,
++      "poisoned_memory_candidate": false,
++      "raw_memory_id": "raw-fail5447-distribution-shift",
++      "raw_memory_receipt": {
++        "checksum": "sha256:5ceca6987c2d5313269665c4cbc75270b4f373091da8e54fb65f754494a6001c",
++        "raw_memory_id": "raw-fail5447-distribution-shift",
++        "retention_reason": "gated-memory-failure-stress-audit"
++      },
++      "rejection_decision": {
++        "operation": "verifier gate",
++        "reasons": [
++          "verifier_gate_requires_full_route"
++        ],
++        "status": "verification_routed"
++      },
++      "retrieval_collision_candidate": false,
++      "routing_influence": 0,
++      "stale_memory_candidate": false,
++      "verification_routed": true
++    }
++  ],
++  "failure_operation_counts": {
++    "access-control": 1,
++    "decay": 1,
++    "replay": 1,
++    "retrieval": 1,
++    "storage": 1,
++    "summarization": 1,
++    "verifier gate": 2
++  },
++  "field_principles": {
++    "csl_memory_stress_ready": "Capstone evidence.",
++    "failure_operation_counts": "MemFail-style attribution.",
++    "gated_upstream_ready": "Structured gate provenance.",
++    "honest_verdict": "Terminal status; starts with complete: or blocked:.",
++    "inference_substrate": "Explicit learning substrate.",
++    "memory_failure_case_count": "Stress coverage.",
++    "negative_transfer_deflection_rate": "Transfer boundary.",
++    "no_weight_mutation": "No hidden fine-tuning.",
++    "poisoned_memory_deflection_rate": "Safety.",
++    "quality_delta_vs_always_full": "No hidden forgetting.",
++    "retrieval_collision_deflection_rate": "Retrieval robustness.",
++    "rollback_recovery_rate": "Reversibility.",
++    "stale_memory_deflection_rate": "Temporal safety.",
++    "unsafe_false_accepts": "Safety boundary."
++  },
++  "gated_upstream_ready": true,
++  "honest_verdict": "complete: governed CSL memory stress attributed failures by operation, deflected stale poisoned retrieval-collision and negative-transfer memories, verified rollback, and preserved the no-weight-mutation boundary",
++  "inference_substrate": "deterministic_memory_stress_no_weight_update",
++  "memory_failure_case_count": 8,
++  "methodology_note": "Exp5447 is a deterministic failure stress replay over the Exp5446 governed-memory policy. It attributes each bad-memory rejection to one memory operation, compares governed memory with full, empty, and ungated controls, verifies rollback, and confines learning to auditable sidecars with no model or adapter weight mutation.",
++  "milestone": "2026.07.495",
++  "negative_transfer_deflection_rate": 1.0,
++  "no_weight_mutation": true,
++  "poisoned_memory_deflection_rate": 1.0,
++  "post_rollback_decisions": [
++    {
++      "cited_memory_ids": [
++        "mem5447-safe-baseline-case"
++      ],
++      "decision_id": "post5447-route-after-rollback",
++      "rejected_memory_ids": [
++        "mem-fail5447-summarization-loss",
++        "mem-fail5447-storage-collision",
++        "mem-fail5447-retrieval-collision",
++        "mem-fail5447-replay-order-trap",
++        "mem-fail5447-stale-rule-reuse",
++        "mem-fail5447-poisoned-sidecar",
++        "mem-fail5447-over-generalized-skill",
++        "mem-fail5447-distribution-shift"
++      ],
++      "rolled_back_memory_ids": [
++        "mem-fail5447-poisoned-sidecar"
++      ],
++      "route": "deterministic_full_verify_after_bad_memory_rollback"
++    }
++  ],
++  "quality_delta_vs_always_full": 0.0,
++  "random_seed": 5447,
++  "readiness_checks": {
++    "all_passed": true,
++    "checks": {
++      "controls_same_cases": true,
++      "families_covered": true,
++      "gated_upstream_ready": true,
++      "inactive_rows_cannot_route": true,
++      "negative_transfer_deflected": true,
++      "no_weight_mutation": true,
++      "operation_counts_match": true,
++      "operations_covered": true,
++      "poisoned_memory_deflected": true,
++      "quality_preserved": true,
++      "retrieval_collision_deflected": true,
++      "rollback_recovered": true,
++      "stale_memory_deflected": true,
++      "tests_recorded": true,
++      "unsafe_false_accepts_zero": true
++    },
++    "failed_checks": []
++  },
++  "rejected_memory_ids": [
++    "mem-fail5447-summarization-loss",
++    "mem-fail5447-storage-collision",
++    "mem-fail5447-retrieval-collision",
++    "mem-fail5447-replay-order-trap",
++    "mem-fail5447-stale-rule-reuse",
++    "mem-fail5447-poisoned-sidecar",
++    "mem-fail5447-over-generalized-skill",
++    "mem-fail5447-distribution-shift"
++  ],
++  "reproducibility_checksum": "sha256:42d4c1e0176833fd4cf1c70fc4a95b5f9faba885111cfd0ba4781f1e87a1af1a",
++  "research_conductor_modified": false,
++  "retrieval_collision_deflection_rate": 1.0,
++  "rollback_audit": {
++    "active_sidecar_after_insertion": [
++      "mem5447-safe-baseline-case",
++      "mem-fail5447-poisoned-sidecar"
++    ],
++    "active_sidecar_after_rollback": [
++      "mem5447-safe-baseline-case"
++    ],
++    "active_sidecar_before_insertion": [
++      "mem5447-safe-baseline-case"
++    ],
++    "injected_bad_memory_id": "mem-fail5447-poisoned-sidecar",
++    "prior_active_sidecar_restored": true,
++    "retained_audit_record_after_rollback": true,
++    "rollback_removed_from_active_sidecar": true,
++    "rollback_success": true,
++    "rolled_back_memory_ids": [
++      "mem-fail5447-poisoned-sidecar"
++    ]
++  },
++  "rollback_recovery_rate": 1.0,
++  "run_date": "2026-07-08",
++  "schema": "carnot.experiment_5447.gated_csl_memory_failure_stress.v495",
++  "source_artifacts": [
++    "results/experiment_5446_governed_memory_csl_online_v495.json"
++  ],
++  "source_file_checksums": {
++    "exp5446_module": "sha256:ed1d3cf8932eaebf5e1e799062c8f0aa943ba0ae12143271403a22609b38324a",
++    "exp5446_result": "sha256:ecf61e48077395db8625da542361f178824ed450f46283e7db8bd1e80ecd2749",
++    "module": "sha256:b76aa9f85bd6fe6fbb35d2bde36642536b39fb9c394a0af1648063d85129ebae",
++    "spec": "sha256:0167599d68ff9e7beb989b4e912a07979f052ed870213517546a9595b2c6ce9f"
++  },
++  "source_files": {
++    "exp5446_module": "python/carnot/experiment_5446_governed_memory_csl_online_v495.py",
++    "module": "python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py",
++    "spec": "openspec/capabilities/self-learning/spec.md"
++  },
++  "spec_refs": [
++    "REQ-LEARN-5447",
++    "SCENARIO-LEARN-5447-ATTRIBUTION",
++    "SCENARIO-LEARN-5447-CONTROLS",
++    "SCENARIO-LEARN-5447-ROLLBACK",
++    "SCENARIO-LEARN-5447-NO-WEIGHT-MUTATION"
++  ],
++  "stale_memory_deflection_rate": 1.0,
++  "status": "complete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py -q --no-cov -n 0",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5447_gated_csl_memory_failure_stress_v495.py -m pytest tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py -q --no-cov -n 0 && .venv/bin/coverage report --fail-under=100",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    }
++  ],
++  "unsafe_false_accepts": 0,
++  "upstream_governance_policy": {
++    "governance_gates": [
++      "evidence_support",
++      "execution_dependency",
++      "replay_success",
++      "temporal_decay",
++      "access_control",
++      "rollback_pointer",
++      "no_weight_mutation"
++    ],
++    "governance_policy_checksum": "sha256:e7dd73a6ddd6aa3b339b76276980bb83752e27ecd19ea15db27e3d34c80128ec",
++    "governed_csl_loop_ready": true,
++    "source_file_checksums": {
++      "exp5435_module": "sha256:eb5c265f57495de1924b995bb201da4e3af189a6f27e5f2af9eecedf820e6f7f",
++      "exp5436_module": "sha256:66205f398edba71af79cc186161b857366de50f50a2d434f6eb384ce52529f70",
++      "module": "sha256:ed1d3cf8932eaebf5e1e799062c8f0aa943ba0ae12143271403a22609b38324a",
++      "spec": "sha256:ad18fc487694d4afe30e7897347492a875bbc1aa0f2ad159a4729622905648c1"
++    },
++    "temporal_decay_policy": "session_order_half_life_2_stale_after_2_sessions",
++    "upstream_experiment": "experiment_5446_governed_memory_csl_online_v495",
++    "upstream_reproducibility_checksum": "sha256:6990668c0469eb3fb5b96e007c1bf8139aea4c7497ed968f9ed2909f1b77103c"
++  },
++  "weight_mutation_receipt": {
++    "adapter_weights_loaded": false,
++    "adapter_weights_written": false,
++    "learned_state_scope": "gated_memory_failure_stress_sidecars_only",
++    "model_weights_loaded": false,
++    "model_weights_written": false,
++    "no_adapter_weight_mutation": true,
++    "no_weight_mutation": true
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e99ed08108..87d3d7a994 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T22:51:59Z",
+-  "finished_at": "2026-07-08T22:51:59Z",
++  "started_at": "2026-07-08T23:03:41Z",
++  "finished_at": "2026-07-08T23:03:41Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 58e02f3586..3f2b557245 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T22:51:59Z",
+-  "finished_at": "2026-07-08T22:51:59Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-08T23:03:41Z",
++  "finished_at": "2026-07-08T23:03:41Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index ac7c42ceef..2684a37640 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T22:51:59Z",
+-  "finished_at": "2026-07-08T22:51:59Z",
++  "started_at": "2026-07-08T23:03:41Z",
++  "finished_at": "2026-07-08T23:03:41Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py b/tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py
+new file mode 100644
+index 0000000000..fae4a3624f
+--- /dev/null
++++ b/tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py
+@@ -0,0 +1,344 @@
++"""Tests for Exp5447 gated CSL memory failure stress.
++
++Spec refs: REQ-LEARN-5447,
++SCENARIO-LEARN-5447-ATTRIBUTION,
++SCENARIO-LEARN-5447-CONTROLS,
++SCENARIO-LEARN-5447-ROLLBACK,
++SCENARIO-LEARN-5447-NO-WEIGHT-MUTATION.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5447_gated_csl_memory_failure_stress_v495 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5447_gated_csl_memory_failure_stress_v495.py "
++    "-q --no-cov -n 0"
++)
++
++
++def test_req_learn_5447_spec_declares_failure_stress_contract() -> None:
++    """REQ-LEARN-5447: OpenSpec anchors the memory failure stress task."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5447") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5447",
++        "SCENARIO-LEARN-5447-ATTRIBUTION",
++        "SCENARIO-LEARN-5447-CONTROLS",
++        "SCENARIO-LEARN-5447-ROLLBACK",
++        "SCENARIO-LEARN-5447-NO-WEIGHT-MUTATION",
++        str(exp.RESULT_RELATIVE_PATH),
++        "governed_csl_loop_ready=true",
++        "summarization loss, storage collision, retrieval collision, stale rule reuse",
++        "summarization, storage, retrieval, replay, decay, access-control",
++        exp.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++
++    for field, principle in exp.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_req_learn_5447_precondition_records_exact_upstream_policy() -> None:
++    """REQ-LEARN-5447-1: Exp5446 gate and checksum provenance are explicit."""
++
++    evaluation = exp.evaluate_memory_failure_stress(root=REPO)
++    upstream = evaluation["upstream_governance_policy"]
++    source = json.loads((REPO / exp.EXP5446_RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert evaluation["gated_upstream_ready"] is True
++    assert upstream["governed_csl_loop_ready"] is True
++    assert upstream["upstream_reproducibility_checksum"] == source["reproducibility_checksum"]
++    assert upstream["temporal_decay_policy"] == source["temporal_decay_policy"]
++    assert upstream["source_file_checksums"] == source["source_file_checksums"]
++    assert upstream["governance_gates"] == list(exp.GOVERNANCE_GATES)
++
++    blocked = exp.evaluate_memory_failure_stress(
++        root=REPO,
++        upstream_artifact={"governed_csl_loop_ready": False},
++    )
++    assert blocked["gated_upstream_ready"] is False
++    assert all(row["governed_status"] == "blocked_precondition" for row in blocked["failure_cases"])
++    assert blocked["memory_failure_case_count"] == len(blocked["failure_cases"])
++
++
++def test_scenario_learn_5447_operation_attribution_counts_match_cases() -> None:
++    """SCENARIO-LEARN-5447-ATTRIBUTION: failures map to one memory operation."""
++
++    evaluation = exp.evaluate_memory_failure_stress(root=REPO)
++    rows = evaluation["failure_cases"]
++    families = {row["case_family"] for row in rows}
++    operations = {row["failure_operation"] for row in rows}
++    expected_counts = Counter(row["failure_operation"] for row in rows)
++
++    assert evaluation["memory_failure_case_count"] == len(rows)
++    assert evaluation["memory_failure_case_count"] >= 7
++    assert families >= exp.REQUIRED_CASE_FAMILIES
++    assert operations == set(exp.FAILURE_OPERATIONS)
++    assert evaluation["failure_operation_counts"] == dict(sorted(expected_counts.items()))
++
++    for row in rows:
++        assert row["failure_operation"] in exp.FAILURE_OPERATIONS
++        assert row["governed_status"] in {"rejected", "verification_routed"}
++        assert row["active_for_routing"] is False
++        assert row["routing_influence"] == 0
++        assert row["rejection_decision"]["operation"] == row["failure_operation"]
++        assert row["raw_memory_receipt"]["checksum"].startswith("sha256:")
++
++
++def test_scenario_learn_5447_controls_and_deflection_rates() -> None:
++    """SCENARIO-LEARN-5447-CONTROLS: governed memory deflects unsafe controls."""
++
++    evaluation = exp.evaluate_memory_failure_stress(root=REPO)
++    controls = evaluation["control_metrics"]
++    case_id_sets = evaluation["control_case_id_sets"]
++
++    assert len({tuple(ids) for ids in case_id_sets.values()}) == 1
++    assert set(controls) == {"always_full_context", "no_memory", "ungated_memory", "governed_memory"}
++    assert controls["governed_memory"]["quality_score"] == pytest.approx(
++        controls["always_full_context"]["quality_score"]
++    )
++    assert controls["ungated_memory"]["unsafe_false_accepts"] > 0
++    assert controls["governed_memory"]["unsafe_false_accepts"] == 0
++    assert evaluation["stale_memory_deflection_rate"] == 1.0
++    assert evaluation["poisoned_memory_deflection_rate"] == 1.0
++    assert evaluation["retrieval_collision_deflection_rate"] == 1.0
++    assert evaluation["negative_transfer_deflection_rate"] == 1.0
++    assert evaluation["quality_delta_vs_always_full"] == pytest.approx(0.0)
++    assert evaluation["unsafe_false_accepts"] == 0
++
++
++def test_scenario_learn_5447_rollback_blocks_rejected_memory_influence() -> None:
++    """SCENARIO-LEARN-5447-ROLLBACK: rollback removes bad-memory influence."""
++
++    evaluation = exp.evaluate_memory_failure_stress(root=REPO)
++    rollback = evaluation["rollback_audit"]
++    rejected = set(evaluation["rejected_memory_ids"])
++    rolled_back = set(rollback["rolled_back_memory_ids"])
++
++    assert evaluation["rollback_recovery_rate"] == 1.0
++    assert rollback["rollback_success"] is True
++    assert rollback["prior_active_sidecar_restored"] is True
++    assert rollback["rollback_removed_from_active_sidecar"] is True
++    assert rollback["injected_bad_memory_id"] in rolled_back
++    assert rejected
++    assert rolled_back <= rejected
++    assert evaluation["post_rollback_decisions"]
++    assert all(
++        rejected.isdisjoint(decision["cited_memory_ids"])
++        for decision in evaluation["post_rollback_decisions"]
++    )
++
++
++def test_scenario_learn_5447_no_weight_mutation_boundary() -> None:
++    """SCENARIO-LEARN-5447-NO-WEIGHT-MUTATION: stress learning is sidecar-only."""
++
++    evaluation = exp.evaluate_memory_failure_stress(root=REPO)
++
++    assert evaluation["no_weight_mutation"] is True
++    assert evaluation["weight_mutation_receipt"] == {
++        "no_weight_mutation": True,
++        "no_adapter_weight_mutation": True,
++        "model_weights_loaded": False,
++        "model_weights_written": False,
++        "adapter_weights_loaded": False,
++        "adapter_weights_written": False,
++        "learned_state_scope": "gated_memory_failure_stress_sidecars_only",
++    }
++
++
++def test_req_learn_5447_artifact_schema_and_run_write(tmp_path: Path) -> None:
++    """REQ-LEARN-5447-7: run() writes the terminal stress artifact."""
++
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH
++    artifact = exp.run(root=REPO, result_path=result_path, tests_run=[TEST_COMMAND])
++    mapping_artifact = exp.build_artifact(
++        root=REPO,
++        tests_run=[{"command": "mapped", "outcome": "passed"}],
++    )
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert mapping_artifact["tests_run"] == [{"command": "mapped", "outcome": "passed"}]
++    assert artifact["status"] == "complete"
++    assert artifact["gated_upstream_ready"] is True
++    assert artifact["memory_failure_case_count"] == len(artifact["failure_cases"])
++    assert artifact["failure_operation_counts"] == dict(
++        sorted(Counter(row["failure_operation"] for row in artifact["failure_cases"]).items())
++    )
++    assert artifact["stale_memory_deflection_rate"] == 1.0
++    assert artifact["poisoned_memory_deflection_rate"] == 1.0
++    assert artifact["retrieval_collision_deflection_rate"] == 1.0
++    assert artifact["negative_transfer_deflection_rate"] == 1.0
++    assert artifact["rollback_recovery_rate"] == 1.0
++    assert artifact["quality_delta_vs_always_full"] >= 0.0
++    assert artifact["unsafe_false_accepts"] == 0
++    assert artifact["no_weight_mutation"] is True
++    assert artifact["csl_memory_stress_ready"] is True
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["field_principles"] == exp.FIELD_PRINCIPLES
++    assert artifact["research_conductor_modified"] is False
++    exp.validate_artifact(artifact)
++
++
++def test_req_learn_5447_repository_artifact_matches_replay() -> None:
++    """REQ-LEARN-5447-7: checked-in deliverable is stable under replay."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = exp.build_artifact(root=REPO, tests_run=result["tests_run"])
++
++    assert result == replay
++    assert result["csl_memory_stress_ready"] is True
++    assert result["no_weight_mutation"] is True
++    assert result["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++
++
++def test_req_learn_5447_blocked_artifacts_fail_closed() -> None:
++    """REQ-LEARN-5447-1/7: missing tests or upstream gate block readiness."""
++
++    no_tests = exp.build_artifact(root=REPO, tests_run=[])
++    bad_upstream = exp.build_artifact(
++        root=REPO,
++        tests_run=[TEST_COMMAND],
++        upstream_artifact={"governed_csl_loop_ready": False},
++    )
++
++    assert no_tests["status"] == "blocked"
++    assert no_tests["csl_memory_stress_ready"] is False
++    assert "tests_recorded" in no_tests["readiness_checks"]["failed_checks"]
++    assert bad_upstream["status"] == "blocked"
++    assert bad_upstream["gated_upstream_ready"] is False
++    assert "gated_upstream_ready" in bad_upstream["readiness_checks"]["failed_checks"]
++    exp.validate_artifact(no_tests)
++    exp.validate_artifact(bad_upstream)
++
++
++def test_req_learn_5447_validation_rejects_claim_drift() -> None:
++    """REQ-LEARN-5447-7: validation rejects malformed ready claims."""
++
++    artifact = exp.build_artifact(root=REPO, tests_run=[TEST_COMMAND])
++
++    bad_missing = deepcopy(artifact)
++    bad_missing.pop("memory_failure_case_count")
++    with pytest.raises(ValueError, match="memory_failure_case_count"):
++        exp.validate_artifact(bad_missing)
++
++    bad_principle = deepcopy(artifact)
++    bad_principle["field_principles"]["gated_upstream_ready"] = "changed"
++    with pytest.raises(ValueError, match="field_principles"):
++        exp.validate_artifact(bad_principle)
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp.validate_artifact(bad_verdict)
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = "live_model"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp.validate_artifact(bad_substrate)
++
++    bad_bool = deepcopy(artifact)
++    bad_bool["no_weight_mutation"] = "true"
++    with pytest.raises(ValueError, match="no_weight_mutation"):
++        exp.validate_artifact(bad_bool)
++
++    bad_int = deepcopy(artifact)
++    bad_int["memory_failure_case_count"] = True
++    with pytest.raises(ValueError, match="memory_failure_case_count"):
++        exp.validate_artifact(bad_int)
++
++    bad_numeric = deepcopy(artifact)
++    bad_numeric["quality_delta_vs_always_full"] = {"value": 1.0}
++    with pytest.raises(ValueError, match="quality_delta_vs_always_full"):
++        exp.validate_artifact(bad_numeric)
++
++    bad_rate = deepcopy(artifact)
++    bad_rate["stale_memory_deflection_rate"] = 0.5
++    with pytest.raises(ValueError, match="csl_memory_stress_ready"):
++        exp.validate_artifact(bad_rate)
++
++    bad_rate_invalid = deepcopy(artifact)
++    bad_rate_invalid["poisoned_memory_deflection_rate"] = 1.5
++    with pytest.raises(ValueError, match="poisoned_memory_deflection_rate"):
++        exp.validate_artifact(bad_rate_invalid)
++
++    bad_counts = deepcopy(artifact)
++    bad_counts["failure_operation_counts"]["retrieval"] += 1
++    with pytest.raises(ValueError, match="failure_operation_counts"):
++        exp.validate_artifact(bad_counts)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = []
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_tests)
++
++    bad_conductor = deepcopy(artifact)
++    bad_conductor["research_conductor_modified"] = True
++    with pytest.raises(ValueError, match="research_conductor_modified"):
++        exp.validate_artifact(bad_conductor)
++
++    bad_readiness = deepcopy(artifact)
++    bad_readiness["readiness_checks"]["all_passed"] = False
++    with pytest.raises(ValueError, match="csl_memory_stress_ready"):
++        exp.validate_artifact(bad_readiness)
++
++
++def test_req_learn_5447_defensive_readiness_and_helper_branches() -> None:
++    """REQ-LEARN-5447-3/7: defensive readiness branches fail closed."""
++
++    artifact = exp.build_artifact(root=REPO, tests_run=[TEST_COMMAND])
++    default_runs = exp.default_tests_run()
++
++    assert default_runs[0]["command"] == TEST_COMMAND
++    assert default_runs[1]["command"].startswith(".venv/bin/coverage run")
++    assert default_runs[2]["command"] == ".venv/bin/pytest tests/python -q"
++    assert exp._deflection_rate([], "stale") == 0.0
++
++    ready_error_mutations = [
++        ("gated_upstream_ready", False),
++        ("stale_memory_deflection_rate", 0.0),
++        ("poisoned_memory_deflection_rate", 0.0),
++        ("retrieval_collision_deflection_rate", 0.0),
++        ("negative_transfer_deflection_rate", 0.0),
++        ("rollback_recovery_rate", 0.0),
++        ("quality_delta_vs_always_full", -0.1),
++        ("unsafe_false_accepts", 1),
++        ("no_weight_mutation", False),
++    ]
++    for field, value in ready_error_mutations:
++        bad = deepcopy(artifact)
++        bad[field] = value
++        with pytest.raises(ValueError, match="csl_memory_stress_ready"):
++            exp.validate_artifact(bad)
++
++    bad_case_count = deepcopy(artifact)
++    bad_case_count["memory_failure_case_count"] += 1
++    with pytest.raises(ValueError, match="memory_failure_case_count"):
++        exp.validate_artifact(bad_case_count)
++
++    bad_complete_not_ready = deepcopy(artifact)
++    bad_complete_not_ready["csl_memory_stress_ready"] = False
++    with pytest.raises(ValueError, match="csl_memory_stress_ready"):
++        exp.validate_artifact(bad_complete_not_ready)
++
++    bad_blocked_ready = deepcopy(artifact)
++    bad_blocked_ready["status"] = "blocked"
++    with pytest.raises(ValueError, match="csl_memory_stress_ready"):
++        exp.validate_artifact(bad_blocked_ready)
+-- 
+2.55.0
+

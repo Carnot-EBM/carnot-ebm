@@ -1,0 +1,379 @@
+From 5623fef574a067cf750c3e0ae0ae60278885c8ef Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 05:26:43 -0400
+Subject: [PATCH 11214/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.arc_bench_rotation.json              |  2 +-
+ ops/arc_bench_latest.json                 | 62 +++++++++++------------
+ ops/arc_self_solve_audit_report.md        |  2 +-
+ ops/conductor-heartbeat.json              |  2 +-
+ ops/conductor-log.md                      |  2 +
+ ops/conductor-state.json                  |  2 +-
+ ops/qa_layer_authenticity_audit_report.md | 40 +++++++--------
+ 7 files changed, 57 insertions(+), 55 deletions(-)
+
+diff --git a/ops/.arc_bench_rotation.json b/ops/.arc_bench_rotation.json
+index 2ffe045280..804f008023 100644
+--- a/ops/.arc_bench_rotation.json
++++ b/ops/.arc_bench_rotation.json
+@@ -1,4 +1,4 @@
+ {
+   "roster_signature": "cfc9b7268c8eeff9",
+-  "offset": 7
++  "offset": 15
+ }
+\ No newline at end of file
+diff --git a/ops/arc_bench_latest.json b/ops/arc_bench_latest.json
+index 521e526df5..6bdd8d9609 100644
+--- a/ops/arc_bench_latest.json
++++ b/ops/arc_bench_latest.json
+@@ -9,75 +9,75 @@
+   "held_out_caveat": "These are the 25 PUBLIC games with their hand-written GameAdapter bypassed. Disabling the adapter removes the hand-written route, not the knowledge that produced it, so this is a proxy for hidden-game performance and not a hidden-game result.",
+   "per_game_rows": [
+     {
+-      "game": "wa30",
++      "game": "ka59",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 20310,
++      "actions_spent": 13855,
+       "solution_len": 0,
+-      "wall_s": 3.86,
++      "wall_s": 4.41,
+       "error": null
+     },
+     {
+-      "game": "ar25",
++      "game": "lf52",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 15539,
++      "actions_spent": 16693,
+       "solution_len": 0,
+-      "wall_s": 5.54,
++      "wall_s": 12.57,
+       "error": null
+     },
+     {
+-      "game": "bp35",
++      "game": "lp85",
+       "adapter_used": false,
+-      "levels_cleared": 0,
+-      "actions_spent": 8432,
+-      "solution_len": 0,
+-      "wall_s": 17.52,
++      "levels_cleared": 1,
++      "actions_spent": 1159,
++      "solution_len": 5,
++      "wall_s": 0.53,
+       "error": null
+     },
+     {
+-      "game": "cd82",
++      "game": "ls20",
+       "adapter_used": false,
+       "levels_cleared": 1,
+-      "actions_spent": 3199,
+-      "solution_len": 5,
+-      "wall_s": 1.04,
++      "actions_spent": 17197,
++      "solution_len": 13,
++      "wall_s": 10.95,
+       "error": null
+     },
+     {
+-      "game": "cn04",
++      "game": "m0r0",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 12477,
++      "actions_spent": 22624,
+       "solution_len": 0,
+-      "wall_s": 3.4,
++      "wall_s": 5.75,
+       "error": null
+     },
+     {
+-      "game": "dc22",
++      "game": "r11l",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 11737,
++      "actions_spent": 8155,
+       "solution_len": 0,
+-      "wall_s": 5.56,
++      "wall_s": 3.38,
+       "error": null
+     },
+     {
+-      "game": "ft09",
++      "game": "re86",
+       "adapter_used": false,
+-      "levels_cleared": 1,
+-      "actions_spent": 8768,
+-      "solution_len": 4,
+-      "wall_s": 3.31,
++      "levels_cleared": 0,
++      "actions_spent": 16555,
++      "solution_len": 0,
++      "wall_s": 4.55,
+       "error": null
+     },
+     {
+-      "game": "g50t",
++      "game": "s5i5",
+       "adapter_used": false,
+       "levels_cleared": 0,
+-      "actions_spent": 74700,
++      "actions_spent": 15051,
+       "solution_len": 0,
+-      "wall_s": 43.61,
++      "wall_s": 3.45,
+       "error": null
+     }
+   ],
+@@ -85,7 +85,7 @@
+   "games_errored": 0,
+   "games_cleared_at_least_one_level": 2,
+   "total_levels_cleared": 2,
+-  "total_actions_spent": 155162,
++  "total_actions_spent": 111289,
+   "clear_rate": 0.25,
+-  "actions_per_level_cleared": 77581.0
++  "actions_per_level_cleared": 55644.5
+ }
+\ No newline at end of file
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index fde6ab175e..ab1df9b0e2 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -25,7 +25,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhigh
+ reasoning summaries: none
+-session id: 01a070d5-0e37-7570-9086-fc52a4001321
++session id: 01a070df-3e65-7f22-b882-4a2fcfff036c
+ --------
+ user
+ You are a HOSTILE revie)
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 054748f102..5d6c27ad20 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3455204, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-09-05T09:13:11Z"}
+\ No newline at end of file
++{"pid": 3455204, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-09-05T09:24:20Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 80372c6c4d..dcac4c3b16 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17331,3 +17331,5 @@ code |
+ | 2026-09-05 08:59 UTC | Plan next milestone | FAIL | Codex CLI error: ` not found. Defaulting to fallback metadata; this can degra |
+ | 2026-09-05 09:05 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
+ | 2026-09-05 09:11 UTC | Plan next milestone | FAIL | Codex CLI error: ` not found. Defaulting to fallback metadata; this can degra |
++| 2026-09-05 09:17 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
++| 2026-09-05 09:22 UTC | Plan next milestone | FAIL | Codex CLI error: ` not found. Defaulting to fallback metadata; this can degra |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 29dde0b81f..00fa4b188c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3455204, "iteration": 16, "phase": "iteration_start", "started_at": "2026-09-05T09:13:11Z"}
+\ No newline at end of file
++{"pid": 3455204, "iteration": 17, "phase": "iteration_start", "started_at": "2026-09-05T09:24:20Z"}
+\ No newline at end of file
+diff --git a/ops/qa_layer_authenticity_audit_report.md b/ops/qa_layer_authenticity_audit_report.md
+index 2becd5da30..f10499abbc 100644
+--- a/ops/qa_layer_authenticity_audit_report.md
++++ b/ops/qa_layer_authenticity_audit_report.md
+@@ -19,7 +19,7 @@ Scanned 20 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21
+ 
+ ---
+ 
+-## adversarial_verify.py::_has_positive_multilevel_solve_rate
++## adversarial_verify.py::check_engine_selection_candidate_diversity
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -30,7 +30,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_harness_target_levels
++## adversarial_verify.py::check_world_model_trust_degeneracy
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -41,7 +41,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_harness_break_at_first_win
++## adversarial_verify.py::_is_arc_outer_loop_calibration_solve
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -52,7 +52,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_has_fixed_multilevel_metric_harness
++## adversarial_verify.py::check_arc_outer_loop_solve
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -63,7 +63,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_nontrivial_subgoal_decomposition
++## adversarial_verify.py::_verify_artifact_impl
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -74,7 +74,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_has_nontrivial_subgoal_decomposition
++## adversarial_verify.py::verify_artifact
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -85,7 +85,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_real_field_all_true
++## adversarial_verify.py::sweep_milestone_range
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -96,7 +96,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::check_subgoal_search_decomposition_overclaim
++## adversarial_verify.py::_claims_live_model
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -107,7 +107,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_claims_generation_coverage_up
++## adversarial_verify.py::backfill_stamps
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -118,7 +118,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::check_novelty_proposal_ablation_overclaim
++## adversarial_verify.py::main
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -129,7 +129,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_claims_proposal_filter_coverage_up
++## worktree_import_guard.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -140,7 +140,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim
++## capstone_milestone_rot_lint.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -151,7 +151,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::check_perception_overclaim
++## harness_integrity_lint.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -162,7 +162,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_claims_world_model_trust_pass
++## eval_run_consumer_field_lint.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -173,7 +173,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_grid_changing_correct_evidence
++## substrate_alias_evidence_lint.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -184,7 +184,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_has_s2_schema_signal
++## determination_preservation_lint.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -195,7 +195,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_engine_selection_game_rows
++## test_suite_mutation_check.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -206,7 +206,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_candidate_outcome_values
++## operator_curated_docs_lint.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -217,7 +217,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_count_effective_selection_games
++## operator_curated_doc_guard.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+@@ -228,7 +228,7 @@ approval: never
+ sandbox: danger-full-access
+ reasoning effort: xhig)
+ 
+-## adversarial_verify.py::_draws_selection_conclusion
++## child_results_guard.py
+ 
+ (audit call failed: codex exit 1: OpenAI Codex v0.149.1
+ --------
+-- 
+2.55.0
+

@@ -1,0 +1,297 @@
+From cec4c3a125c44bcb9e5c66c84cfb4894cd365dd4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 16:23:46 -0400
+Subject: [PATCH 06924/11362] [outer-loop] sk48: L5 SOLVED round 9 (codex,
+ first attempt at fresh territory)
+
+Round-9 gpt-5.6-sol session solved L5 on the first attempt. L5 returns
+to a single checked chain/guide pair (target 8->9->8) but splits the
+movable rack with a fixed blocker at x=29, requiring a vertical detour
+around it and staged assembly on different rows. Found a new
+boundary-jamming asymmetry: during horizontal retraction a
+boundary-blocked block stays fixed while the chain retracts through
+it, but during perpendicular row movement an analogous blocked push
+cancels the entire row move instead.
+
+The source agent's own fresh-environment reproduction gate confirmed
+reached_level=5 independently. The outer loop independently
+re-verified regardless: 5x fresh env.reset() + replay via a new
+resolver priority branch, all 5 confirmed level=5,
+state=GameState.NOT_FINISHED.
+
+ops/arc_solve_registry.yaml: sk48 levels_reproduced 4 -> 5.
+reproducible_total_levels 171 -> 172 (sum-checked;
+arc_count_integrity_lint exit 0).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   |  29 ++-
+ ...experiment_4460_submission_package_prep.py |  19 ++
+ ...op_codex55_sk48_probe_round9_20260712.json | 169 ++++++++++++++++++
+ 3 files changed, 215 insertions(+), 2 deletions(-)
+ create mode 100644 results/outer_loop_codex55_sk48_probe_round9_20260712.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 2a7fa203e1..585048e4fa 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -3344,7 +3344,7 @@ games:
+     reproducibility_checksum: a13c3bf2d2b789492b1977b2d1d2965656582466da28eef26fd29aed7c396ceb
+ - game: sk48
+   reproducibility: reproduced
+-  levels_reproduced: 4
++  levels_reproduced: 5
+   mechanic_class: chain_color_reorder
+   win_condition: >-
+     L1 chain navigation plus L2 chain-segment color/order matching: replay the
+@@ -3505,6 +3505,31 @@ games:
+     independently re-verified regardless: 5x fresh env.reset() +
+     replay via a new resolver priority branch, all 5 confirmed
+     level=4, state=GameState.NOT_FINISHED.'
++  - 'L5 SOLVED round 9 (2026-07-12, gpt-5.6-sol via codex,
++    results/outer_loop_codex55_sk48_probe_round9_20260712.json): first
++    attempt at fresh L5 territory. L5 returns to a SINGLE checked
++    horizontal chain/guide pair (unlike L4''s two simultaneous pairs),
++    but splits the movable rack with a FIXED BLOCKER at x=29: the
++    target guide order is 8->9->8, with three 9-blocks starting left
++    of the blocker and three 8-blocks starting right of it. The
++    blocker prevents forward extension across it on the rack row and
++    also prevents a long cross-divider carrier from moving
++    perpendicularly into that row -- the chain must detour vertically
++    around it, staging blocks on different rows before assembling the
++    target via endpoint passage and selective retraction. New
++    boundary-jamming subtlety confirmed: during horizontal retraction,
++    a covered block whose push is blocked by the PLAYFIELD BOUNDARY
++    stays fixed while the chain retracts through it, but during
++    perpendicular row movement, an analogous blocked push cancels the
++    ENTIRE row move instead (an asymmetry between the two movement
++    types). levels_completed advanced to 5 at full-sequence label 144
++    (106-action L4 prefix + a 38-action L5 tail). The source agent ran
++    its own fresh-environment reproduction gate on the full 144-action
++    sequence and independently got the same result
++    (reproduction_verified: true), and the outer loop independently
++    re-verified regardless: 5x fresh env.reset() + replay via a new
++    resolver priority branch, all 5 confirmed level=5,
++    state=GameState.NOT_FINISHED.'
+   latest_exp4751_levelup_selfplay:
+     artifact: results/experiment_4751_levelup_selfplay.json
+     loop_artifact: results/arc_loop_solve_sk48.json
+@@ -5294,7 +5319,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 171
++reproducible_total_levels: 172
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index 5c0838df89..76dedfc05b 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -672,7 +672,26 @@ def resolve_replay_plan(
+             adapter.apply,
+             warmup_label=adapter.warmup_label,
+         )
++    if game == "sk48" and _as_int(entry.get("levels_reproduced")) >= 5:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_codex55_sk48_probe_round9_20260712.json"
++        artifact = _load_json(root / rel_path)
++        labels = [str(label) for label in artifact.get("action_sequence") or []]
++        if adapter is None:
++            raise RuntimeError("sk48 adapter missing")
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "sk48" and _as_int(entry.get("levels_reproduced")) >= 4:
++        # NOTE: unreachable for the live registry entry (which is >=5 as of the
++        # round-9 L5 win); retained as historical dead code documenting the
++        # round-8 (level-4) resolution.
+         from carnot.agentic.arc_game_adapters import get_adapter
+ 
+         adapter = get_adapter(game)
+diff --git a/results/outer_loop_codex55_sk48_probe_round9_20260712.json b/results/outer_loop_codex55_sk48_probe_round9_20260712.json
+new file mode 100644
+index 0000000000..46157d2f9b
+--- /dev/null
++++ b/results/outer_loop_codex55_sk48_probe_round9_20260712.json
+@@ -0,0 +1,169 @@
++{
++  "game": "sk48",
++  "model": "gpt-5",
++  "starting_level": 4,
++  "max_level_reached": 5,
++  "total_env_steps_used": 288,
++  "reproduction_verified": true,
++  "action_sequence": [
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":3}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}"
++  ],
++  "levels_won_this_session": [
++    5
++  ],
++  "novel_mechanics_found": "Level 5 returns to one checked horizontal chain/guide pair, but splits the movable rack with a fixed blocker at x=29. The target guide order is 8 -> 9 -> 8; three 9 blocks begin left of the blocker and three 8 blocks begin right of it. The carrier must detour vertically around the blocker, stage blocks on different rows, and use endpoint passage plus selective retraction to assemble the target. A new boundary-jamming subtlety was verified: during horizontal retraction, a covered block whose push is blocked by the playfield boundary stays fixed while the chain retracts through it; during perpendicular row movement, an analogous blocked push cancels the whole row move.",
++  "narrative": "The mandated resolver selected results/outer_loop_codex_sk48_probe_round8_20260712.json. A fresh env.reset() followed by all 106 labels reproduced frame_level 4 with GameState.NOT_FINISHED exactly. Live component dumps mapped L5 as a single horizontal checked pair with target 8,9,8, six movable rack blocks split into left-side 9,9,9 and right-side 8,8,8, and a fixed blocker at x=29. Five geometry-neutral live probes verified vertical carrying, the blocked forward extension at the divider, and retraction/extension behavior. A source-grounded settled-state transition model was refined against direct game-logic execution, including boundary and blocker collision behavior, then searched to a 33-action candidate. Every intermediate candidate state matched direct game-logic execution. Applied live after the five probes, the final ACTION4 changed frame_level 4 -> 5 at full-sequence label 144. A second fresh offline environment replayed the exact 144-label sequence and independently reproduced all transitions 0->1 at label 14, 1->2 at 44, 2->3 at 81, 3->4 at 106, and 4->5 at 144, ending GameState.NOT_FINISHED.",
++  "gotchas": [
++    "L5 has one checked pair, not multiple simultaneous pairs: the bottom guide requires exactly the first three seen colors 8,9,8.",
++    "The fixed x=29 blocker prevents forward extension across it on the rack row and prevents a long cross-divider carrier from moving perpendicularly into that row; the chain must cross on another row.",
++    "A colored block moves with a horizontal push only when its entire same-direction push component has a legal destination. If the boundary or blocker jams that component, horizontal segments may pass through while the block stays fixed.",
++    "For a perpendicular carrier move, one jammed carried component cancels the entire row move rather than allowing the remaining components and chain head to move.",
++    "The five mapping probes are retained in the submitted action_sequence. They return the geometry to the exact initial L5 arrangement before the 33-action solve tail, but still consume energy and env.step calls.",
++    "FrameDataRaw.frame is an animation-frame stack on this game; authoritative progress is frame_level(frame) plus settled sprite/component coordinates, not a naive whole-stack array comparison.",
++    "The winning ACTION4 returns the next level in the same env.step call; label 144 is therefore both the final L5 gate action and the first returned frame at level 5."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

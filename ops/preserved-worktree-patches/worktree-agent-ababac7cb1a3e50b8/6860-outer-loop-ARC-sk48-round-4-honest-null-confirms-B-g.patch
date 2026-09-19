@@ -1,0 +1,128 @@
+From 64131ff71a87795c348ff9f5c438cc2a049e465e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 08:37:40 -0400
+Subject: [PATCH 06860/11362] [outer-loop] ARC sk48 round-4: honest null,
+ confirms B glyph is level-3-only obstacle
+
+Round-4 codex gpt-5.6-sol attempt on sk48 tried direct probes, the L2
+construction, scaled row-reversal plans, and explicit interaction with the
+color-11 B glyph -- none advanced level 3. Confirms round-3's diagnosis
+that the B glyph (absent in L1/L2) is the level-3-specific obstacle
+resisting the pull/lift/merge/row-reversal constructions that solved
+L1/L2, and reconfirms direct ACTION6/ACTION5 interaction has no visible
+effect on it.
+
+Chose to preserve budget for the reproduction gate (passed for level 2)
+rather than risk an unverified level-3 claim. No registry count change.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml               | 18 +++++++
+ results/outer_loop_fable5_sk48_probe.json | 65 +++++++++++++++++++++++
+ 2 files changed, 83 insertions(+)
+ create mode 100644 results/outer_loop_fable5_sk48_probe.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 33994ae935..d6e9e1e006 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -2840,6 +2840,24 @@ games:
+     brown head and bottom reference head produced no visible effect. No new
+     level banked; stopped at the verified L2 ceiling with budget remaining
+     for analysis but not for another fresh L3 candidate plus its gate.'
++  - 'L3 progress round 4, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex,
++    round-4 breadth campaign, results/outer_loop_fable5_sk48_probe.json):
++    reconstructed the prior rounds'' transition mechanics from rendered
++    frames and tried direct probes, the L2 30-action construction, several
++    scaled row-reversal plans, and explicit interaction with the color-11 B
++    glyph atop the vertically-anchored E-9-8-C chain -- none advanced level
++    3; multiple superficially analogous plans left the anchored column
++    unchanged. Confirms round-3''s color-11 B glyph is the level-3-specific
++    obstacle (absent in L1/L2): actions 1/2 move the color-6 patterned
++    actuator vertically, actions 3/4 extend/retract its horizontal body;
++    the anchored column resists the same pull/lift/merge/row-reversal
++    constructions that solved L1/L2. Direct ACTION6 clicks and ACTION5 on
++    both glyphs produced no visible selection/release effect at any tested
++    coordinate -- reconfirms round 1''s finding that the glyph does not
++    respond to direct interaction. Stopped with 35 steps unspent, choosing
++    to preserve budget for the reproduction gate (passed for level 2)
++    rather than risk an unverified level-3 claim. No new level banked;
++    frontier stays at level 2.'
+   latest_exp4751_levelup_selfplay:
+     artifact: results/experiment_4751_levelup_selfplay.json
+     loop_artifact: results/arc_loop_solve_sk48.json
+diff --git a/results/outer_loop_fable5_sk48_probe.json b/results/outer_loop_fable5_sk48_probe.json
+new file mode 100644
+index 0000000000..4e87e68923
+--- /dev/null
++++ b/results/outer_loop_fable5_sk48_probe.json
+@@ -0,0 +1,65 @@
++{
++  "game": "sk48",
++  "model": "claude-fable-5",
++  "starting_level": 2,
++  "max_level_reached": 2,
++  "total_env_steps_used": 565,
++  "reproduction_verified": true,
++  "action_sequence": [
++    {"action": 1},
++    {"action": 1},
++    {"action": 1},
++    {"action": 4},
++    {"action": 4},
++    {"action": 4},
++    {"action": 4},
++    {"action": 3},
++    {"action": 2},
++    {"action": 2},
++    {"action": 4},
++    {"action": 3},
++    {"action": 1},
++    {"action": 4},
++    {"action": 1},
++    {"action": 1},
++    {"action": 4},
++    {"action": 4},
++    {"action": 4},
++    {"action": 4},
++    {"action": 4},
++    {"action": 1},
++    {"action": 4},
++    {"action": 3},
++    {"action": 3},
++    {"action": 1},
++    {"action": 4},
++    {"action": 4},
++    {"action": 3},
++    {"action": 3},
++    {"action": 3},
++    {"action": 1},
++    {"action": 4},
++    {"action": 4},
++    {"action": 4},
++    {"action": 3},
++    {"action": 3},
++    {"action": 3},
++    {"action": 3},
++    {"action": 1},
++    {"action": 4},
++    {"action": 4},
++    {"action": 4},
++    {"action": 4}
++  ],
++  "levels_won_this_session": [],
++  "novel_mechanics_found": "Level 3 introduces a previously absent color-11 B glyph at the top of a vertically anchored E-9-8-C chain. Actions 1/2 move the color-6 patterned actuator vertically and actions 4/3 extend or retract its patterned horizontal body. In the earlier banked levels, colored blocks can ride vertically on the body and contiguous rows shift together; the level-3 B-anchored column resisted the same pull, lift, merge, and row-reversal constructions. Direct ACTION6 clicks on both glyphs and ACTION5 produced no visible selection or release effect at the tested rendered coordinates.",
++  "narrative": "The 44-action resolver prefix was replayed first and reached levels_completed=2. I reconstructed the prior transition mechanics from rendered frames, then tried direct probes, the prior level's 30-action construction, several scaled row-reversal plans, and explicit interaction with the unexplained B glyph. None advanced level 3; multiple superficially analogous plans ended with the anchored vertical column unchanged. I stopped with 35 steps unspent because no candidate win had been observed and retained enough budget to run the mandatory fresh-reset reproduction gate, which passed for level 2.",
++  "gotchas": [
++    "frame.frame is an animation stack for this game; inspect its final 64x64 slice rather than treating the full stack as one grid.",
++    "The color-6 actuator begins one grid cell farther left on level 3 than on the first banked level, so horizontal action counts do not transfer literally.",
++    "A horizontal body may visually overlap a colored 4x4 block without moving it; color-count changes caused by overlay are not evidence that the block was detached or collected.",
++    "The first two levels contain no visible B glyph, while level 3 does; treating the new vertical column as an ordinary unanchored block row led to repeatable no-progress loops.",
++    "ACTION6 clicks at the rendered centers/corners of B and the color-6 glyph, and an ACTION5 probe, caused no visible mode change in this session."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

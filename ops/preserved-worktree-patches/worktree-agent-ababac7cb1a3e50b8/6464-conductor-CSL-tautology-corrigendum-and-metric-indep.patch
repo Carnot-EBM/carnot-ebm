@@ -1,0 +1,1675 @@
+From 104feeb8cb30a0db63db9e8bcffd5bf88cd3f769 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 14:36:24 -0400
+Subject: [PATCH 06464/11362] [conductor] CSL tautology corrigendum and
+ metric-independence audit
+
+Automated research step by research conductor.
+Task ID: exp5502-csl-tautology-static-corrigendum-v499
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   | 119 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...2_csl_tautology_static_corrigendum_v499.py | 741 ++++++++++++++++++
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...csl_tautology_static_corrigendum_v499.json | 409 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...2_csl_tautology_static_corrigendum_v499.py | 265 +++++++
+ 10 files changed, 1544 insertions(+), 10 deletions(-)
+ create mode 100644 python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py
+ create mode 100644 results/experiment_5502_csl_tautology_static_corrigendum_v499.json
+ create mode 100644 tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 50b56c379c..89f49a0526 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -20849,3 +20849,122 @@ results and per-row decision-path evidence.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5475 | Planned (`python/carnot/experiment_5475_csl_behavioral_memory_ladder_v497.py`, `results/experiment_5475_csl_behavioral_memory_ladder_v497.json`) | Planned (`tests/python/test_experiment_5475_csl_behavioral_memory_ladder_v497.py`) |
++
++---
++
++## REQ-LEARN-5502: CSL Tautology Static Corrigendum v499
++
++Experiment 5502 SHALL emit a deterministic, aggregation-only corrigendum for
++the Exp5474 CSL scale-up artifact that was backfilled with a critical
++TAUTOLOGY flag. The audit SHALL NOT run local SOTA GGUF inference. It SHALL
++read the upstream Exp5474, Exp5473, Exp5475, and Exp5461 artifacts, reconstruct
++the metric graph, and decide whether Exp5474 is clean prior evidence, bounded
++evidence requiring a same-scope rerun, or evidence that must be retired if the
++same metric coupling repeats.
++
++The metric graph SHALL classify every relevant Exp5474 and upstream metric as
++one of: upstream feature, policy decision, evaluator outcome, baseline outcome,
++or derived summary. Policy-score inputs SHALL include the Exp5473 surrogate
++feature fields, surrogate scores, acceptance thresholds, acceptance margins,
++threshold offsets, and surrogate accept decisions. Outcome fields SHALL include
++Exp5474 exact-validator row outcomes, downstream action outcomes, no-memory and
++naive-ICL baseline scores, KAN-assured CSL score, exact-validator pass rate,
++negative-transfer deflection, and reported deltas.
++
++The audit SHALL fail metric independence if any Exp5474 headline outcome is
++computed from the same scalar family used to select or accept the action or
++memory route. In particular, the audit SHALL detect that Exp5473
++`surrogate_rows.features.prior_success` is sourced from Exp5461
++`condition_metrics.*.quality_score`, while Exp5474 headline quality fields are
++computed from the same exact-validator quality-score surface. The corrigendum
++SHALL also record the adversarial TAUTOLOGY equality between
++`delta_vs_naive_icl` and `naive_icl_score` as an already adjudicated top-level
++summary collision, not as clean headline evidence.
++
++The Exp5473 and Exp5475 cross-check SHALL be explicit. Exp5473 may support a
++bounded statement that exact validators and negative-transfer controls are
++present, but it SHALL NOT independently clean the Exp5474 CSL scale headline
++when its policy-score input reuses quality-score information. Exp5475 may
++support bounded behavioral-memory evidence when support-removal, conflict,
++downstream-action, stale-memory, and exact-validator fields are present and
++final authority is not bypassed.
++
++The result artifact SHALL be
++`results/experiment_5502_csl_tautology_static_corrigendum_v499.json` and SHALL
++include `audited_artifacts`, `metric_graph_nodes`, `policy_score_fields`,
++`outcome_metric_fields`, `independence_violations`,
++`metric_independence_clean`, `tautology_flag_resolved`,
++`csl_scale_headline_allowed`, `downstream_recommendation`,
++`retire_same_scope_if_repeated`, `inference_substrate`, and `honest_verdict`.
++The artifact SHALL set
++`inference_substrate="aggregation_from_upstream_artifacts"`. A non-clean audit
++SHALL set `csl_scale_headline_allowed=false`; when independent behavioral
++support exists but the Exp5474 scale headline is not independent, it SHALL set
++`downstream_recommendation="bounded_requires_rerun"` and
++`retire_same_scope_if_repeated=true`.
++
++The required field principles SHALL be:
++
++- `audited_artifacts`: Exact upstream artifacts read by the static corrigendum.
++- `metric_graph_nodes`: Classified policy, outcome, baseline, and summary dependency graph.
++- `policy_score_fields`: Fields that can affect action or memory-route acceptance.
++- `outcome_metric_fields`: Fields that report exact-validator, baseline, or derived outcomes.
++- `independence_violations`: Reasons Exp5474 cannot be clean headline evidence.
++- `metric_independence_clean`: False when policy-score inputs overlap headline outcomes.
++- `tautology_flag_resolved`: True only when the prior TAUTOLOGY is adjudicated downstream.
++- `csl_scale_headline_allowed`: False unless Exp5474 can be cited as clean scale evidence.
++- `downstream_recommendation`: clean, bounded_requires_rerun, or retire_same_scope_if_repeated.
++- `retire_same_scope_if_repeated`: Whether a repeated same-scope coupling should retire the lane.
++- `inference_substrate`: Aggregation-only audit; no local SOTA inference is run.
++- `honest_verdict`: Terminal summary starting with complete: or blocked:.
++
++### REQ-LEARN-5502 Sub-requirements
++
++- REQ-LEARN-5502-1: The audit SHALL reconstruct and emit metric graph nodes
++  for policy-score inputs, memory/action decisions, exact-validator outcomes,
++  baseline outcomes, and derived summary fields.
++- REQ-LEARN-5502-2: The audit SHALL mark each metric graph node with exactly
++  one classification from upstream feature, policy decision, evaluator
++  outcome, baseline outcome, or derived summary.
++- REQ-LEARN-5502-3: The audit SHALL fail `metric_independence_clean` when a
++  headline outcome depends on the same quality-score scalar family as a
++  policy-score input used in action or memory-route acceptance.
++- REQ-LEARN-5502-4: The Exp5473 and Exp5475 cross-check SHALL distinguish
++  bounded independent behavioral-memory evidence from the blocked Exp5474
++  local SOTA CSL scale headline.
++- REQ-LEARN-5502-5: The artifact SHALL resolve the pending tautology flag by
++  issuing a downstream recommendation without permitting the Exp5474 CSL scale
++  headline.
++
++### SCENARIO-LEARN-5502-METRIC-GRAPH: Policy Scores Stay Separate From Outcomes
++
++**Given** Exp5474 and its Exp5473 assurance source are present
++**When** the static corrigendum reconstructs metric dependencies
++**Then** policy-score fields and outcome metric fields SHALL be listed
++separately
++**And** reuse of `condition_metrics.*.quality_score` through
++`surrogate_rows.features.prior_success` SHALL be reported as an independence
++violation for Exp5474 headline quality outcomes.
++
++### SCENARIO-LEARN-5502-CROSS-CHECK: Behavioral Memory Evidence Is Bounded
++
++**Given** Exp5475 contains support-removal, conflict-handling,
++downstream-action, stale-memory, and exact-validator replay fields
++**When** Exp5502 cross-checks the CSL evidence
++**Then** those fields SHALL count as bounded independent behavioral-memory
++support
++**And** they SHALL NOT permit the Exp5474 CSL scale headline.
++
++### SCENARIO-LEARN-5502-ARTIFACT: Corrigendum Recommendation Is Deterministic
++
++**Given** the audited upstream artifacts are unchanged
++**When** Exp5502 writes its deliverable JSON
++**Then** the required fields SHALL be stable under replay
++**And** the terminal recommendation SHALL be `bounded_requires_rerun` with
++`retire_same_scope_if_repeated=true`.
++
++## Implementation Status (Exp 5502)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5502 | Planned (`python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py`, `results/experiment_5502_csl_tautology_static_corrigendum_v499.json`) | Planned (`tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f3cd315cdc..3f5755abdc 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4460,
++  "experiments_checked": 4461,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py b/python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py
+new file mode 100644
+index 0000000000..8c57752fc9
+--- /dev/null
++++ b/python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py
+@@ -0,0 +1,741 @@
++"""Exp5502 CSL metric-independence tautology corrigendum.
++
++Spec refs: REQ-LEARN-5502,
++SCENARIO-LEARN-5502-METRIC-GRAPH,
++SCENARIO-LEARN-5502-CROSS-CHECK,
++SCENARIO-LEARN-5502-ARTIFACT.
++
++This module does not rerun local SOTA GGUF inference. It reads the prior CSL
++artifacts, reconstructs which fields were policy inputs versus final
++validator outcomes, and emits the downstream decision that Exp5474 cannot be a
++clean CSL scale headline until a same-scope rerun separates those surfaces.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import re
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5502_csl_tautology_static_corrigendum_v499.json")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py"
++)
++EXP5474_RELATIVE_PATH = Path("results/experiment_5474_sota_csl_scale_v497.json")
++EXP5473_RELATIVE_PATH = Path("results/experiment_5473_csl_kan_surrogate_assurance_v497.json")
++EXP5475_RELATIVE_PATH = Path("results/experiment_5475_csl_behavioral_memory_ladder_v497.json")
++EXP5461_RELATIVE_PATH = Path("results/experiment_5461_gated_sota_csl_memory_routing_v496.json")
++
++EXPERIMENT_ID = "experiment_5502_csl_tautology_static_corrigendum_v499"
++TASK_ID = "exp5502-csl-tautology-static-corrigendum-v499"
++MILESTONE = "2026.07.499"
++RUN_DATE = "2026-07-09"
++RANDOM_SEED = 5502
++SCHEMA = "carnot.experiment_5502.csl_tautology_static_corrigendum.v499"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++SPEC_REFS = (
++    "REQ-LEARN-5502",
++    "SCENARIO-LEARN-5502-METRIC-GRAPH",
++    "SCENARIO-LEARN-5502-CROSS-CHECK",
++    "SCENARIO-LEARN-5502-ARTIFACT",
++)
++
++CLASSIFICATIONS = {
++    "upstream feature",
++    "policy decision",
++    "evaluator outcome",
++    "baseline outcome",
++    "derived summary",
++}
++RECOMMENDATIONS = {
++    "clean",
++    "bounded_requires_rerun",
++    "retire_same_scope_if_repeated",
++}
++
++PRIOR_SUCCESS_FIELD = "experiment_5473.surrogate_rows.features.prior_success"
++QUALITY_SCORE_SURFACE = "condition_metrics.*.quality_score / row.accepted_by_final_authority"
++POLICY_ACCEPT_FIELD = "experiment_5473.surrogate_rows.surrogate_accept"
++HEADLINE_OUTCOME_FIELDS = (
++    "experiment_5474.kan_assured_csl_score",
++    "experiment_5474.exact_validator_pass_rate",
++    "experiment_5474.csl_scale_ready",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "audited_artifacts": "Exact upstream artifacts read by the static corrigendum.",
++    "metric_graph_nodes": "Classified policy, outcome, baseline, and summary dependency graph.",
++    "policy_score_fields": "Fields that can affect action or memory-route acceptance.",
++    "outcome_metric_fields": "Fields that report exact-validator, baseline, or derived outcomes.",
++    "independence_violations": "Reasons Exp5474 cannot be clean headline evidence.",
++    "metric_independence_clean": "False when policy-score inputs overlap headline outcomes.",
++    "tautology_flag_resolved": "True only when the prior TAUTOLOGY is adjudicated downstream.",
++    "csl_scale_headline_allowed": "False unless Exp5474 can be cited as clean scale evidence.",
++    "downstream_recommendation": "clean, bounded_requires_rerun, or retire_same_scope_if_repeated.",
++    "retire_same_scope_if_repeated": "Whether a repeated same-scope coupling should retire the lane.",
++    "inference_substrate": "Aggregation-only audit; no local SOTA inference is run.",
++    "honest_verdict": "Terminal summary starting with complete: or blocked:.",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = REPO_ROOT / RESULT_RELATIVE_PATH,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++    write: bool = True,
++) -> JsonDict:
++    """Build, validate, and optionally write the Exp5502 corrigendum JSON."""
++
++    artifact = build_artifact(root=root, tests_run=tests_run)
++    validate_artifact(artifact)
++    if write:
++        destination = Path(result_path)
++        destination.parent.mkdir(parents=True, exist_ok=True)
++        destination.write_text(
++            json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++            encoding="utf-8",
++        )
++    return artifact
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Return the deterministic static corrigendum from upstream artifacts."""
++
++    root_path = Path(root)
++    exp5474 = _read_json(root_path / EXP5474_RELATIVE_PATH)
++    exp5473 = _read_json(root_path / EXP5473_RELATIVE_PATH)
++    exp5475 = _read_json(root_path / EXP5475_RELATIVE_PATH)
++    exp5461 = _read_json(root_path / EXP5461_RELATIVE_PATH)
++
++    metric_graph_nodes = build_metric_graph_nodes()
++    policy_score_fields = [
++        node["field"]
++        for node in metric_graph_nodes
++        if node["classification"] in {"upstream feature", "policy decision"}
++    ]
++    outcome_metric_fields = [
++        node["field"]
++        for node in metric_graph_nodes
++        if node["classification"] in {"evaluator outcome", "baseline outcome", "derived summary"}
++    ]
++    tautology_fields = adversarial_tautology_fields(exp5474)
++    violations = independence_violations(
++        exp5474=exp5474,
++        exp5473=exp5473,
++        exp5461=exp5461,
++        tautology_fields=tautology_fields,
++    )
++    cross_check = cross_check_summary(
++        exp5474=exp5474,
++        exp5473=exp5473,
++        exp5475=exp5475,
++        tautology_fields=tautology_fields,
++    )
++    clean = not violations
++    recommendation = downstream_recommendation(
++        metric_independence_clean=clean,
++        bounded_behavioral_memory_support=bool(
++            cross_check["exp5475"]["bounded_behavioral_memory_support"]
++        ),
++    )
++    headline_allowed = clean and recommendation == "clean"
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "status": "complete",
++        "audited_artifacts": audited_artifacts(),
++        "metric_graph_nodes": metric_graph_nodes,
++        "policy_score_fields": policy_score_fields,
++        "outcome_metric_fields": outcome_metric_fields,
++        "independence_violations": violations,
++        "metric_independence_clean": clean,
++        "tautology_flag_resolved": bool(tautology_fields and not headline_allowed),
++        "csl_scale_headline_allowed": headline_allowed,
++        "downstream_recommendation": recommendation,
++        "retire_same_scope_if_repeated": recommendation != "clean",
++        "cross_check_summary": cross_check,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": honest_verdict(
++            metric_independence_clean=clean,
++            recommendation=recommendation,
++        ),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "tests_run": _normalise_tests_run(tests_run),
++        "source_files": {
++            "module": str(MODULE_RELATIVE_PATH),
++            "spec": str(SPEC_RELATIVE_PATH),
++        },
++        "source_file_checksums": source_file_checksums(root_path),
++        "research_conductor_modified": False,
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return _json_ready(artifact)
++
++
++def audited_artifacts() -> list[str]:
++    """Return the upstream artifacts read by this static audit."""
++
++    return [
++        str(EXP5474_RELATIVE_PATH),
++        str(EXP5473_RELATIVE_PATH),
++        str(EXP5475_RELATIVE_PATH),
++        str(EXP5461_RELATIVE_PATH),
++    ]
++
++
++def build_metric_graph_nodes() -> list[JsonDict]:
++    """Classify the Exp5474 policy/outcome metric graph."""
++
++    nodes = [
++        _node(
++            "experiment_5473.surrogate_rows.features.context_cost",
++            "upstream feature",
++            str(EXP5473_RELATIVE_PATH),
++            ["experiment_5461.row_results.context_cost"],
++            "KAN surrogate cost input.",
++        ),
++        _node(
++            "experiment_5473.surrogate_rows.features.verifier_cost",
++            "upstream feature",
++            str(EXP5473_RELATIVE_PATH),
++            ["experiment_5461.row_results.verifier_cost"],
++            "KAN surrogate verifier-cost input.",
++        ),
++        _node(
++            PRIOR_SUCCESS_FIELD,
++            "upstream feature",
++            str(EXP5473_RELATIVE_PATH),
++            ["experiment_5461.condition_metrics.*.quality_score"],
++            "Policy-score input copied from exact-validator quality score.",
++        ),
++        _node(
++            "experiment_5473.surrogate_rows.features.conflict_risk",
++            "upstream feature",
++            str(EXP5473_RELATIVE_PATH),
++            ["experiment_5461.memory_receipt.negative_transfer_candidate"],
++            "Conflict-risk input for memory-route scoring.",
++        ),
++        _node(
++            "experiment_5473.surrogate_rows.features.memory_age",
++            "upstream feature",
++            str(EXP5473_RELATIVE_PATH),
++            ["experiment_5461.memory_receipt.stale_memory_candidate"],
++            "Stale-memory input for memory-route scoring.",
++        ),
++        _node(
++            "experiment_5473.surrogate_rows.features.constraint_violation_history",
++            "upstream feature",
++            str(EXP5473_RELATIVE_PATH),
++            ["experiment_5461.row_results.negative_transfer_detected"],
++            "Risk input derived from prior unsafe memory behavior.",
++        ),
++        _node(
++            "experiment_5473.surrogate_rows.surrogate_score",
++            "policy decision",
++            str(EXP5473_RELATIVE_PATH),
++            [
++                "experiment_5473.surrogate_rows.features.context_cost",
++                "experiment_5473.surrogate_rows.features.verifier_cost",
++                PRIOR_SUCCESS_FIELD,
++                "experiment_5473.surrogate_rows.features.conflict_risk",
++                "experiment_5473.surrogate_rows.features.memory_age",
++                "experiment_5473.surrogate_rows.features.constraint_violation_history",
++            ],
++            "Additive KAN-style score used for acceptance.",
++        ),
++        _node(
++            "experiment_5473.surrogate_rows.acceptance_threshold",
++            "policy decision",
++            str(EXP5473_RELATIVE_PATH),
++            [
++                "experiment_5473.surrogate_rows.features.conflict_risk",
++                "experiment_5473.surrogate_rows.features.memory_age",
++                "experiment_5473.surrogate_rows.features.constraint_violation_history",
++            ],
++            "Risk-adjusted policy threshold.",
++        ),
++        _node(
++            "experiment_5473.surrogate_rows.acceptance_margin",
++            "policy decision",
++            str(EXP5473_RELATIVE_PATH),
++            [
++                "experiment_5473.surrogate_rows.surrogate_score",
++                "experiment_5473.surrogate_rows.acceptance_threshold",
++            ],
++            "Score minus threshold.",
++        ),
++        _node(
++            POLICY_ACCEPT_FIELD,
++            "policy decision",
++            str(EXP5473_RELATIVE_PATH),
++            ["experiment_5473.surrogate_rows.acceptance_margin"],
++            "Boolean route acceptance from surrogate margin.",
++        ),
++        _node(
++            "experiment_5474.panel_rows.threshold_offset",
++            "policy decision",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5473.surrogate_rows.acceptance_threshold"],
++            "Conservative KAN threshold offset copied into Exp5474 rows.",
++        ),
++        _node(
++            "experiment_5474.panel_rows.surrogate_acceptance_margin",
++            "policy decision",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5473.surrogate_rows.acceptance_margin"],
++            "KAN margin copied into Exp5474 rows.",
++        ),
++        _node(
++            "experiment_5474.panel_rows.memory_decision",
++            "policy decision",
++            str(EXP5474_RELATIVE_PATH),
++            [POLICY_ACCEPT_FIELD, "experiment_5461.row_results.memory_receipt"],
++            "Effective no-memory, naive, or governed-memory route.",
++        ),
++        _node(
++            "experiment_5474.panel_rows.action_decision.selected_answer",
++            "policy decision",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5474.panel_rows.memory_decision"],
++            "Selected action/answer before final validator aggregation.",
++        ),
++        _node(
++            "experiment_5474.panel_rows.accepted_by_final_authority",
++            "evaluator outcome",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5461.row_results.exact_verifier_witness.accepted"],
++            "Exact task verifier outcome copied per row.",
++        ),
++        _node(
++            "experiment_5474.panel_rows.action_decision.downstream_action_passed",
++            "evaluator outcome",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5474.panel_rows.accepted_by_final_authority"],
++            "Downstream action pass derived from exact row acceptance.",
++        ),
++        _node(
++            "experiment_5474.no_memory_score",
++            "baseline outcome",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5474.panel_rows.accepted_by_final_authority"],
++            "Exact-validator no-memory baseline.",
++        ),
++        _node(
++            "experiment_5474.naive_icl_score",
++            "baseline outcome",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5474.panel_rows.accepted_by_final_authority"],
++            "Exact-validator naive-ICL baseline.",
++        ),
++        _node(
++            "experiment_5474.kan_assured_csl_score",
++            "evaluator outcome",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5474.panel_rows.accepted_by_final_authority"],
++            "Exact-validator KAN-assured CSL score.",
++        ),
++        _node(
++            "experiment_5474.exact_validator_pass_rate",
++            "evaluator outcome",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5474.kan_assured_csl_score"],
++            "Alias of the KAN condition exact-validator score.",
++        ),
++        _node(
++            "experiment_5474.negative_transfer_deflection_rate",
++            "evaluator outcome",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5473.negative_transfer_deflection_rate"],
++            "Risky memory rows deflected according to exact-validator outcomes.",
++        ),
++        _node(
++            "experiment_5474.delta_vs_no_memory",
++            "derived summary",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5474.kan_assured_csl_score", "experiment_5474.no_memory_score"],
++            "Reported KAN minus no-memory delta.",
++        ),
++        _node(
++            "experiment_5474.delta_vs_naive_icl",
++            "derived summary",
++            str(EXP5474_RELATIVE_PATH),
++            ["experiment_5474.kan_assured_csl_score", "experiment_5474.naive_icl_score"],
++            "Reported KAN minus naive-ICL delta.",
++        ),
++        _node(
++            "experiment_5474.csl_scale_ready",
++            "derived summary",
++            str(EXP5474_RELATIVE_PATH),
++            [
++                "experiment_5474.kan_assured_csl_score",
++                "experiment_5474.exact_validator_pass_rate",
++                "experiment_5474.negative_transfer_deflection_rate",
++            ],
++            "Headline readiness gate.",
++        ),
++        _node(
++            "experiment_5475.axis_details.support_removal.accepted_by_exact_validator",
++            "evaluator outcome",
++            str(EXP5475_RELATIVE_PATH),
++            ["experiment_5475.row_results.exact_validator_results.accepted"],
++            "Independent deterministic replay support-removal validator.",
++        ),
++        _node(
++            "experiment_5475.axis_details.conflict_handling.accepted_by_exact_validator",
++            "evaluator outcome",
++            str(EXP5475_RELATIVE_PATH),
++            ["experiment_5475.row_results.exact_validator_results.accepted"],
++            "Independent deterministic replay conflict validator.",
++        ),
++        _node(
++            "experiment_5475.axis_details.downstream_action_use.accepted_by_exact_validator",
++            "evaluator outcome",
++            str(EXP5475_RELATIVE_PATH),
++            ["experiment_5475.row_results.exact_validator_results.accepted"],
++            "Independent deterministic replay downstream-action validator.",
++        ),
++    ]
++    return sorted(nodes, key=lambda item: str(item["field"]))
++
++
++def independence_violations(
++    *,
++    exp5474: Mapping[str, Any],
++    exp5473: Mapping[str, Any],
++    exp5461: Mapping[str, Any],
++    tautology_fields: Sequence[str],
++) -> list[JsonDict]:
++    """Return metric-independence violations found in the audited artifacts."""
++
++    violations: list[JsonDict] = []
++    prior_success_values = {
++        float(_mapping(row.get("features")).get("prior_success", -1.0))
++        for row in _rows(exp5473.get("surrogate_rows"))
++        if row.get("condition") == "policy_selected"
++    }
++    policy_quality = _quality_score(exp5461, "policy_selected")
++    headline_values = {
++        float(exp5474.get("kan_assured_csl_score", -2.0)),
++        float(exp5474.get("exact_validator_pass_rate", -3.0)),
++    }
++    if policy_quality in prior_success_values and policy_quality in headline_values:
++        violations.append(
++            {
++                "kind": "policy_outcome_scalar_overlap",
++                "policy_score_field": PRIOR_SUCCESS_FIELD,
++                "policy_decision_field": POLICY_ACCEPT_FIELD,
++                "headline_outcome_fields": list(HEADLINE_OUTCOME_FIELDS),
++                "shared_scalar_family": QUALITY_SCORE_SURFACE,
++                "source_artifacts": [str(EXP5473_RELATIVE_PATH), str(EXP5461_RELATIVE_PATH)],
++                "detail": (
++                    "Exp5473 prior_success is populated from Exp5461 condition quality "
++                    "scores, and Exp5474 headline quality/pass-rate fields are computed "
++                    "from the same exact-validator acceptance surface."
++                ),
++            }
++        )
++    if list(tautology_fields) == ["delta_vs_naive_icl", "naive_icl_score"]:
++        violations.append(
++            {
++                "kind": "top_level_summary_collision",
++                "policy_score_field": None,
++                "headline_outcome_fields": [
++                    "experiment_5474.delta_vs_naive_icl",
++                    "experiment_5474.naive_icl_score",
++                ],
++                "shared_scalar_family": "reported_top_level_scalar_equality",
++                "source_artifacts": [str(EXP5474_RELATIVE_PATH)],
++                "detail": (
++                    "The adversarial backfill observed delta_vs_naive_icl and "
++                    "naive_icl_score at the same scalar value, so the summary must "
++                    "not be treated as clean headline evidence."
++                ),
++            }
++        )
++    return violations
++
++
++def cross_check_summary(
++    *,
++    exp5474: Mapping[str, Any],
++    exp5473: Mapping[str, Any],
++    exp5475: Mapping[str, Any],
++    tautology_fields: Sequence[str],
++) -> JsonDict:
++    """Summarize what the adjacent CSL artifacts can and cannot support."""
++
++    axis_details = _mapping(exp5475.get("axis_details"))
++    independent_axes = sorted(
++        axis
++        for axis, rows in axis_details.items()
++        if isinstance(rows, list)
++        and any(
++            isinstance(row, Mapping)
++            and row.get("axis_pass") is True
++            and row.get("accepted_by_exact_validator") is True
++            for row in rows
++        )
++    )
++    exp5475_rows = _rows(exp5475.get("row_results"))
++    exact_validator_ok = bool(exp5475_rows) and all(
++        _mapping(row.get("exact_validator_results")).get("authority")
++        == "deterministic_replay_validator"
++        and row.get("final_authority_bypassed") is False
++        for row in exp5475_rows
++    )
++    if exact_validator_ok:
++        independent_axes.append("exact_validator")
++    required_axes = {
++        "support_removal",
++        "conflict_handling",
++        "downstream_action_use",
++        "stale_memory_rejection",
++        "exact_validator",
++    }
++    policy_prior_reused = any(
++        _mapping(row.get("features")).get("prior_success") == exp5473.get("governed_policy_score")
++        for row in _rows(exp5473.get("surrogate_rows"))
++        if row.get("condition") == "policy_selected"
++    )
++    exp5474_rows = _rows(exp5474.get("panel_rows"))
++    return {
++        "exp5474": {
++            "prior_flagged_adversarial": exp5474.get("flagged_adversarial") is True,
++            "adversarial_tautology_fields": list(tautology_fields),
++            "exact_validator_authority_ok": bool(exp5474_rows)
++            and all(row.get("exact_validator_authority") == "exact_task_verifier" for row in exp5474_rows),
++            "final_authority_bypassed_count": sum(
++                1 for row in exp5474_rows if row.get("final_authority_bypassed") is True
++            ),
++        },
++        "exp5473": {
++            "csl_kan_surrogate_ready": exp5473.get("csl_kan_surrogate_ready") is True,
++            "policy_quality_score_reused_as_prior_success": policy_prior_reused,
++            "independent_for_scale_headline": not policy_prior_reused,
++            "bounded_validator_support": exp5473.get("constraint_violation_count") == 0,
++            "negative_transfer_deflection_rate": exp5473.get("negative_transfer_deflection_rate"),
++        },
++        "exp5475": {
++            "csl_behavioral_memory_ready": exp5475.get("csl_behavioral_memory_ready") is True,
++            "independent_axes_present": sorted(set(independent_axes)),
++            "bounded_behavioral_memory_support": required_axes.issubset(set(independent_axes)),
++            "headline_permission": False,
++        },
++    }
++
++
++def adversarial_tautology_fields(exp5474: Mapping[str, Any]) -> list[str]:
++    """Extract field names from the prior Exp5474 TAUTOLOGY detail."""
++
++    fields: set[str] = set()
++    for flag in exp5474.get("corrigendum_pending", []):
++        flag_map = _mapping(flag)
++        if flag_map.get("kind") == "TAUTOLOGY":
++            fields.update(
++                re.findall(r"([A-Za-z_][A-Za-z0-9_]*)=", str(flag_map.get("detail", "")))
++            )
++    return sorted(fields)
++
++
++def downstream_recommendation(
++    *,
++    metric_independence_clean: bool,
++    bounded_behavioral_memory_support: bool,
++) -> str:
++    """Choose the downstream state requested by REQ-LEARN-5502."""
++
++    if metric_independence_clean:
++        return "clean"
++    if bounded_behavioral_memory_support:
++        return "bounded_requires_rerun"
++    return "retire_same_scope_if_repeated"
++
++
++def honest_verdict(*, metric_independence_clean: bool, recommendation: str) -> str:
++    """Return a terminal verdict that does not launder the Exp5474 headline."""
++
++    if metric_independence_clean:
++        return "complete: Exp5474 CSL metric graph is clean for prior headline use"
++    return (
++        "complete: Exp5474 CSL scale headline is bounded, not clean; "
++        f"recommendation={recommendation} after policy-score/outcome overlap audit"
++    )
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Raise when the Exp5502 corrigendum is malformed or laundering evidence."""
++
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return schema, recommendation, and dependency-classification errors."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must be aggregation_from_upstream_artifacts")
++    if artifact.get("research_conductor_modified") is not False:
++        errors.append("scripts/research_conductor.py must not be modified")
++    if not isinstance(artifact.get("audited_artifacts"), list):
++        errors.append("audited_artifacts must be a list")
++    graph_nodes = artifact.get("metric_graph_nodes")
++    if not isinstance(graph_nodes, list):
++        errors.append("metric_graph_nodes must be a list")
++        graph_nodes = []
++    if any(_mapping(node).get("classification") not in CLASSIFICATIONS for node in graph_nodes):
++        errors.append("metric graph classifications must be known")
++    policy_score_fields = artifact.get("policy_score_fields")
++    if not isinstance(policy_score_fields, list) or PRIOR_SUCCESS_FIELD not in policy_score_fields:
++        errors.append("policy_score_fields must include prior_success")
++    outcome_metric_fields = artifact.get("outcome_metric_fields")
++    if not isinstance(outcome_metric_fields, list) or "experiment_5474.kan_assured_csl_score" not in outcome_metric_fields:
++        errors.append("outcome_metric_fields must include Exp5474 headline score")
++    violations = artifact.get("independence_violations")
++    if not isinstance(violations, list):
++        errors.append("independence_violations must be a list")
++        violations = []
++    if artifact.get("metric_independence_clean") != (not violations):
++        errors.append("metric_independence_clean must match independence_violations")
++    if artifact.get("tautology_flag_resolved") is not True:
++        errors.append("tautology_flag_resolved must be true after bounded adjudication")
++    if violations and artifact.get("csl_scale_headline_allowed") is not False:
++        errors.append("csl_scale_headline_allowed must be false when violations exist")
++    recommendation = artifact.get("downstream_recommendation")
++    if recommendation not in RECOMMENDATIONS:
++        errors.append("downstream_recommendation must be recognized")
++    if violations and recommendation != "bounded_requires_rerun":
++        errors.append("downstream_recommendation must be bounded_requires_rerun")
++    if recommendation != "clean" and artifact.get("retire_same_scope_if_repeated") is not True:
++        errors.append("retire_same_scope_if_repeated must be true for non-clean recommendations")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or "\n" in verdict or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with complete: or blocked:")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed mismatch")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def source_file_checksums(root: Path) -> JsonDict:
++    """Hash the module, spec, and upstream artifacts used by the audit."""
++
++    paths = {
++        "module": root / MODULE_RELATIVE_PATH,
++        "spec": root / SPEC_RELATIVE_PATH,
++        "exp5474": root / EXP5474_RELATIVE_PATH,
++        "exp5473": root / EXP5473_RELATIVE_PATH,
++        "exp5475": root / EXP5475_RELATIVE_PATH,
++        "exp5461": root / EXP5461_RELATIVE_PATH,
++    }
++    return {name: _sha256_file(path) for name, path in paths.items()}
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact while excluding the self-referential checksum field."""
++
++    return _sha256_json(
++        {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    )
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--result-path", type=Path, default=REPO_ROOT / RESULT_RELATIVE_PATH)
++    args = parser.parse_args(argv)
++    artifact = run(root=args.root, result_path=args.result_path, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True))
++    return 0 if artifact["tautology_flag_resolved"] else 1
++
++
++def _node(
++    field: str,
++    classification: str,
++    source_artifact: str,
++    depends_on: Sequence[str],
++    note: str,
++) -> JsonDict:
++    return {
++        "field": field,
++        "classification": classification,
++        "source_artifact": source_artifact,
++        "depends_on": list(depends_on),
++        "note": note,
++    }
++
++
++def _quality_score(artifact: Mapping[str, Any], condition: str) -> float:
++    return float(
++        _mapping(_mapping(artifact.get("condition_metrics")).get(condition)).get(
++            "quality_score", -1.0
++        )
++    )
++
++
++def _normalise_tests_run(tests_run: Sequence[str | Mapping[str, Any]]) -> list[JsonDict]:
++    return [
++        dict(item) if isinstance(item, Mapping) else {"command": str(item), "outcome": "reported"}
++        for item in tests_run
++    ]
++
++
++def _read_json(path: Path) -> JsonDict:
++    return dict(json.loads(path.read_text(encoding="utf-8")))
++
++
++def _rows(value: Any) -> list[JsonDict]:
++    return [dict(row) for row in value if isinstance(row, Mapping)] if isinstance(value, list) else []
++
++
++def _mapping(value: Any) -> JsonDict:
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _sha256_file(path: Path) -> str:
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _sha256_json(payload: Any) -> str:
++    blob = json.dumps(_json_ready(payload), sort_keys=True, ensure_ascii=True, separators=(",", ":"))
++    return "sha256:" + hashlib.sha256(blob.encode("utf-8")).hexdigest()
++
++
++def _json_ready(value: Any) -> Any:
++    return json.loads(json.dumps(value, sort_keys=True, ensure_ascii=True))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 7e46718086..741b960967 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00012553483247756958,
+-  "latency_domino_seconds": 0.00024493876844644547,
++  "latency_legacy_seconds": 0.000199934933334589,
++  "latency_domino_seconds": 0.0003938088193535805,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index daf83650a9..a68f799166 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.525399923324585,
++  "duration_s": 0.5080196857452393,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_5502_csl_tautology_static_corrigendum_v499.json b/results/experiment_5502_csl_tautology_static_corrigendum_v499.json
+new file mode 100644
+index 0000000000..db123196cf
+--- /dev/null
++++ b/results/experiment_5502_csl_tautology_static_corrigendum_v499.json
+@@ -0,0 +1,409 @@
++{
++  "audited_artifacts": [
++    "results/experiment_5474_sota_csl_scale_v497.json",
++    "results/experiment_5473_csl_kan_surrogate_assurance_v497.json",
++    "results/experiment_5475_csl_behavioral_memory_ladder_v497.json",
++    "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
++  ],
++  "cross_check_summary": {
++    "exp5473": {
++      "bounded_validator_support": true,
++      "csl_kan_surrogate_ready": true,
++      "independent_for_scale_headline": false,
++      "negative_transfer_deflection_rate": 1.0,
++      "policy_quality_score_reused_as_prior_success": true
++    },
++    "exp5474": {
++      "adversarial_tautology_fields": [
++        "delta_vs_naive_icl",
++        "naive_icl_score"
++      ],
++      "exact_validator_authority_ok": true,
++      "final_authority_bypassed_count": 0,
++      "prior_flagged_adversarial": true
++    },
++    "exp5475": {
++      "bounded_behavioral_memory_support": true,
++      "csl_behavioral_memory_ready": true,
++      "headline_permission": false,
++      "independent_axes_present": [
++        "conflict_handling",
++        "downstream_action_use",
++        "exact_validator",
++        "locality",
++        "paraphrase_robustness",
++        "stale_memory_rejection",
++        "support_removal"
++      ]
++    }
++  },
++  "csl_scale_headline_allowed": false,
++  "downstream_recommendation": "bounded_requires_rerun",
++  "experiment_id": "experiment_5502_csl_tautology_static_corrigendum_v499",
++  "field_principles": {
++    "audited_artifacts": "Exact upstream artifacts read by the static corrigendum.",
++    "csl_scale_headline_allowed": "False unless Exp5474 can be cited as clean scale evidence.",
++    "downstream_recommendation": "clean, bounded_requires_rerun, or retire_same_scope_if_repeated.",
++    "honest_verdict": "Terminal summary starting with complete: or blocked:.",
++    "independence_violations": "Reasons Exp5474 cannot be clean headline evidence.",
++    "inference_substrate": "Aggregation-only audit; no local SOTA inference is run.",
++    "metric_graph_nodes": "Classified policy, outcome, baseline, and summary dependency graph.",
++    "metric_independence_clean": "False when policy-score inputs overlap headline outcomes.",
++    "outcome_metric_fields": "Fields that report exact-validator, baseline, or derived outcomes.",
++    "policy_score_fields": "Fields that can affect action or memory-route acceptance.",
++    "retire_same_scope_if_repeated": "Whether a repeated same-scope coupling should retire the lane.",
++    "tautology_flag_resolved": "True only when the prior TAUTOLOGY is adjudicated downstream."
++  },
++  "honest_verdict": "complete: Exp5474 CSL scale headline is bounded, not clean; recommendation=bounded_requires_rerun after policy-score/outcome overlap audit",
++  "independence_violations": [
++    {
++      "detail": "Exp5473 prior_success is populated from Exp5461 condition quality scores, and Exp5474 headline quality/pass-rate fields are computed from the same exact-validator acceptance surface.",
++      "headline_outcome_fields": [
++        "experiment_5474.kan_assured_csl_score",
++        "experiment_5474.exact_validator_pass_rate",
++        "experiment_5474.csl_scale_ready"
++      ],
++      "kind": "policy_outcome_scalar_overlap",
++      "policy_decision_field": "experiment_5473.surrogate_rows.surrogate_accept",
++      "policy_score_field": "experiment_5473.surrogate_rows.features.prior_success",
++      "shared_scalar_family": "condition_metrics.*.quality_score / row.accepted_by_final_authority",
++      "source_artifacts": [
++        "results/experiment_5473_csl_kan_surrogate_assurance_v497.json",
++        "results/experiment_5461_gated_sota_csl_memory_routing_v496.json"
++      ]
++    },
++    {
++      "detail": "The adversarial backfill observed delta_vs_naive_icl and naive_icl_score at the same scalar value, so the summary must not be treated as clean headline evidence.",
++      "headline_outcome_fields": [
++        "experiment_5474.delta_vs_naive_icl",
++        "experiment_5474.naive_icl_score"
++      ],
++      "kind": "top_level_summary_collision",
++      "policy_score_field": null,
++      "shared_scalar_family": "reported_top_level_scalar_equality",
++      "source_artifacts": [
++        "results/experiment_5474_sota_csl_scale_v497.json"
++      ]
++    }
++  ],
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "metric_graph_nodes": [
++    {
++      "classification": "policy decision",
++      "depends_on": [
++        "experiment_5473.surrogate_rows.surrogate_score",
++        "experiment_5473.surrogate_rows.acceptance_threshold"
++      ],
++      "field": "experiment_5473.surrogate_rows.acceptance_margin",
++      "note": "Score minus threshold.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "policy decision",
++      "depends_on": [
++        "experiment_5473.surrogate_rows.features.conflict_risk",
++        "experiment_5473.surrogate_rows.features.memory_age",
++        "experiment_5473.surrogate_rows.features.constraint_violation_history"
++      ],
++      "field": "experiment_5473.surrogate_rows.acceptance_threshold",
++      "note": "Risk-adjusted policy threshold.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "upstream feature",
++      "depends_on": [
++        "experiment_5461.memory_receipt.negative_transfer_candidate"
++      ],
++      "field": "experiment_5473.surrogate_rows.features.conflict_risk",
++      "note": "Conflict-risk input for memory-route scoring.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "upstream feature",
++      "depends_on": [
++        "experiment_5461.row_results.negative_transfer_detected"
++      ],
++      "field": "experiment_5473.surrogate_rows.features.constraint_violation_history",
++      "note": "Risk input derived from prior unsafe memory behavior.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "upstream feature",
++      "depends_on": [
++        "experiment_5461.row_results.context_cost"
++      ],
++      "field": "experiment_5473.surrogate_rows.features.context_cost",
++      "note": "KAN surrogate cost input.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "upstream feature",
++      "depends_on": [
++        "experiment_5461.memory_receipt.stale_memory_candidate"
++      ],
++      "field": "experiment_5473.surrogate_rows.features.memory_age",
++      "note": "Stale-memory input for memory-route scoring.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "upstream feature",
++      "depends_on": [
++        "experiment_5461.condition_metrics.*.quality_score"
++      ],
++      "field": "experiment_5473.surrogate_rows.features.prior_success",
++      "note": "Policy-score input copied from exact-validator quality score.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "upstream feature",
++      "depends_on": [
++        "experiment_5461.row_results.verifier_cost"
++      ],
++      "field": "experiment_5473.surrogate_rows.features.verifier_cost",
++      "note": "KAN surrogate verifier-cost input.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "policy decision",
++      "depends_on": [
++        "experiment_5473.surrogate_rows.acceptance_margin"
++      ],
++      "field": "experiment_5473.surrogate_rows.surrogate_accept",
++      "note": "Boolean route acceptance from surrogate margin.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "policy decision",
++      "depends_on": [
++        "experiment_5473.surrogate_rows.features.context_cost",
++        "experiment_5473.surrogate_rows.features.verifier_cost",
++        "experiment_5473.surrogate_rows.features.prior_success",
++        "experiment_5473.surrogate_rows.features.conflict_risk",
++        "experiment_5473.surrogate_rows.features.memory_age",
++        "experiment_5473.surrogate_rows.features.constraint_violation_history"
++      ],
++      "field": "experiment_5473.surrogate_rows.surrogate_score",
++      "note": "Additive KAN-style score used for acceptance.",
++      "source_artifact": "results/experiment_5473_csl_kan_surrogate_assurance_v497.json"
++    },
++    {
++      "classification": "derived summary",
++      "depends_on": [
++        "experiment_5474.kan_assured_csl_score",
++        "experiment_5474.exact_validator_pass_rate",
++        "experiment_5474.negative_transfer_deflection_rate"
++      ],
++      "field": "experiment_5474.csl_scale_ready",
++      "note": "Headline readiness gate.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "derived summary",
++      "depends_on": [
++        "experiment_5474.kan_assured_csl_score",
++        "experiment_5474.naive_icl_score"
++      ],
++      "field": "experiment_5474.delta_vs_naive_icl",
++      "note": "Reported KAN minus naive-ICL delta.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "derived summary",
++      "depends_on": [
++        "experiment_5474.kan_assured_csl_score",
++        "experiment_5474.no_memory_score"
++      ],
++      "field": "experiment_5474.delta_vs_no_memory",
++      "note": "Reported KAN minus no-memory delta.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "evaluator outcome",
++      "depends_on": [
++        "experiment_5474.kan_assured_csl_score"
++      ],
++      "field": "experiment_5474.exact_validator_pass_rate",
++      "note": "Alias of the KAN condition exact-validator score.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "evaluator outcome",
++      "depends_on": [
++        "experiment_5474.panel_rows.accepted_by_final_authority"
++      ],
++      "field": "experiment_5474.kan_assured_csl_score",
++      "note": "Exact-validator KAN-assured CSL score.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "baseline outcome",
++      "depends_on": [
++        "experiment_5474.panel_rows.accepted_by_final_authority"
++      ],
++      "field": "experiment_5474.naive_icl_score",
++      "note": "Exact-validator naive-ICL baseline.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "evaluator outcome",
++      "depends_on": [
++        "experiment_5473.negative_transfer_deflection_rate"
++      ],
++      "field": "experiment_5474.negative_transfer_deflection_rate",
++      "note": "Risky memory rows deflected according to exact-validator outcomes.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "baseline outcome",
++      "depends_on": [
++        "experiment_5474.panel_rows.accepted_by_final_authority"
++      ],
++      "field": "experiment_5474.no_memory_score",
++      "note": "Exact-validator no-memory baseline.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "evaluator outcome",
++      "depends_on": [
++        "experiment_5461.row_results.exact_verifier_witness.accepted"
++      ],
++      "field": "experiment_5474.panel_rows.accepted_by_final_authority",
++      "note": "Exact task verifier outcome copied per row.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "evaluator outcome",
++      "depends_on": [
++        "experiment_5474.panel_rows.accepted_by_final_authority"
++      ],
++      "field": "experiment_5474.panel_rows.action_decision.downstream_action_passed",
++      "note": "Downstream action pass derived from exact row acceptance.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "policy decision",
++      "depends_on": [
++        "experiment_5474.panel_rows.memory_decision"
++      ],
++      "field": "experiment_5474.panel_rows.action_decision.selected_answer",
++      "note": "Selected action/answer before final validator aggregation.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "policy decision",
++      "depends_on": [
++        "experiment_5473.surrogate_rows.surrogate_accept",
++        "experiment_5461.row_results.memory_receipt"
++      ],
++      "field": "experiment_5474.panel_rows.memory_decision",
++      "note": "Effective no-memory, naive, or governed-memory route.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "policy decision",
++      "depends_on": [
++        "experiment_5473.surrogate_rows.acceptance_margin"
++      ],
++      "field": "experiment_5474.panel_rows.surrogate_acceptance_margin",
++      "note": "KAN margin copied into Exp5474 rows.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "policy decision",
++      "depends_on": [
++        "experiment_5473.surrogate_rows.acceptance_threshold"
++      ],
++      "field": "experiment_5474.panel_rows.threshold_offset",
++      "note": "Conservative KAN threshold offset copied into Exp5474 rows.",
++      "source_artifact": "results/experiment_5474_sota_csl_scale_v497.json"
++    },
++    {
++      "classification": "evaluator outcome",
++      "depends_on": [
++        "experiment_5475.row_results.exact_validator_results.accepted"
++      ],
++      "field": "experiment_5475.axis_details.conflict_handling.accepted_by_exact_validator",
++      "note": "Independent deterministic replay conflict validator.",
++      "source_artifact": "results/experiment_5475_csl_behavioral_memory_ladder_v497.json"
++    },
++    {
++      "classification": "evaluator outcome",
++      "depends_on": [
++        "experiment_5475.row_results.exact_validator_results.accepted"
++      ],
++      "field": "experiment_5475.axis_details.downstream_action_use.accepted_by_exact_validator",
++      "note": "Independent deterministic replay downstream-action validator.",
++      "source_artifact": "results/experiment_5475_csl_behavioral_memory_ladder_v497.json"
++    },
++    {
++      "classification": "evaluator outcome",
++      "depends_on": [
++        "experiment_5475.row_results.exact_validator_results.accepted"
++      ],
++      "field": "experiment_5475.axis_details.support_removal.accepted_by_exact_validator",
++      "note": "Independent deterministic replay support-removal validator.",
++      "source_artifact": "results/experiment_5475_csl_behavioral_memory_ladder_v497.json"
++    }
++  ],
++  "metric_independence_clean": false,
++  "milestone": "2026.07.499",
++  "outcome_metric_fields": [
++    "experiment_5474.csl_scale_ready",
++    "experiment_5474.delta_vs_naive_icl",
++    "experiment_5474.delta_vs_no_memory",
++    "experiment_5474.exact_validator_pass_rate",
++    "experiment_5474.kan_assured_csl_score",
++    "experiment_5474.naive_icl_score",
++    "experiment_5474.negative_transfer_deflection_rate",
++    "experiment_5474.no_memory_score",
++    "experiment_5474.panel_rows.accepted_by_final_authority",
++    "experiment_5474.panel_rows.action_decision.downstream_action_passed",
++    "experiment_5475.axis_details.conflict_handling.accepted_by_exact_validator",
++    "experiment_5475.axis_details.downstream_action_use.accepted_by_exact_validator",
++    "experiment_5475.axis_details.support_removal.accepted_by_exact_validator"
++  ],
++  "policy_score_fields": [
++    "experiment_5473.surrogate_rows.acceptance_margin",
++    "experiment_5473.surrogate_rows.acceptance_threshold",
++    "experiment_5473.surrogate_rows.features.conflict_risk",
++    "experiment_5473.surrogate_rows.features.constraint_violation_history",
++    "experiment_5473.surrogate_rows.features.context_cost",
++    "experiment_5473.surrogate_rows.features.memory_age",
++    "experiment_5473.surrogate_rows.features.prior_success",
++    "experiment_5473.surrogate_rows.features.verifier_cost",
++    "experiment_5473.surrogate_rows.surrogate_accept",
++    "experiment_5473.surrogate_rows.surrogate_score",
++    "experiment_5474.panel_rows.action_decision.selected_answer",
++    "experiment_5474.panel_rows.memory_decision",
++    "experiment_5474.panel_rows.surrogate_acceptance_margin",
++    "experiment_5474.panel_rows.threshold_offset"
++  ],
++  "random_seed": 5502,
++  "reproducibility_checksum": "sha256:6cd0330e411810353270e29b9e56513c536401e029c03b0ab693a8ef320a8bf2",
++  "research_conductor_modified": false,
++  "retire_same_scope_if_repeated": true,
++  "run_date": "2026-07-09",
++  "schema": "carnot.experiment_5502.csl_tautology_static_corrigendum.v499",
++  "source_file_checksums": {
++    "exp5461": "sha256:465d9e8de5afca22def9a46a7d1e8867516742ec8fee9b8b6c37cf1d65590db9",
++    "exp5473": "sha256:7431ddbb25410c26c1138e5cf7951fedb7100c0d8b66651490df362107cfa2e2",
++    "exp5474": "sha256:1aabd00e661d836e36d588d81510a573a61f19e0528412358fb0d8c8312717af",
++    "exp5475": "sha256:198636ba25a725e24aef7fe115ad25d2f82e58886d510b05038b900fb105a7f6",
++    "module": "sha256:db613bb15b91c2ab5f88c5d2c64555efab99f3fcb47e06441b7eed358ed42f83",
++    "spec": "sha256:75d43da219f4ae6086d5643ea65f951b3db54d56d8cff3445a883f13c94afe6d"
++  },
++  "source_files": {
++    "module": "python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py",
++    "spec": "openspec/capabilities/self-learning/spec.md"
++  },
++  "spec_refs": [
++    "REQ-LEARN-5502",
++    "SCENARIO-LEARN-5502-METRIC-GRAPH",
++    "SCENARIO-LEARN-5502-CROSS-CHECK",
++    "SCENARIO-LEARN-5502-ARTIFACT"
++  ],
++  "status": "complete",
++  "task_id": "exp5502-csl-tautology-static-corrigendum-v499",
++  "tautology_flag_resolved": true,
++  "tests_run": []
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 96799b3522..e84b196426 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:21:09Z",
+-  "finished_at": "2026-07-09T18:21:09Z",
++  "started_at": "2026-07-09T18:35:50Z",
++  "finished_at": "2026-07-09T18:35:50Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 30559a97b7..3fbc60fd77 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:21:09Z",
+-  "finished_at": "2026-07-09T18:21:09Z",
++  "started_at": "2026-07-09T18:35:50Z",
++  "finished_at": "2026-07-09T18:35:50Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index febe749cc0..67f93c2828 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:21:10Z",
+-  "finished_at": "2026-07-09T18:21:10Z",
++  "started_at": "2026-07-09T18:35:50Z",
++  "finished_at": "2026-07-09T18:35:51Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py b/tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py
+new file mode 100644
+index 0000000000..9dbe18aee7
+--- /dev/null
++++ b/tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py
+@@ -0,0 +1,265 @@
++"""Tests for Exp5502 CSL tautology static corrigendum.
++
++Spec refs: REQ-LEARN-5502,
++SCENARIO-LEARN-5502-METRIC-GRAPH,
++SCENARIO-LEARN-5502-CROSS-CHECK,
++SCENARIO-LEARN-5502-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5502_csl_tautology_static_corrigendum_v499 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py "
++    "-m pytest tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py "
++    "--fail-under=100"
++)
++
++
++def _artifact() -> dict[str, object]:
++    return mod.build_artifact(root=REPO, tests_run=[TEST_COMMAND, COVERAGE_COMMAND])
++
++
++def test_req_learn_5502_spec_declares_static_corrigendum_contract() -> None:
++    """REQ-LEARN-5502: OpenSpec anchors the metric-independence audit."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5502") :]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-LEARN-5502",
++        "SCENARIO-LEARN-5502-METRIC-GRAPH",
++        "SCENARIO-LEARN-5502-CROSS-CHECK",
++        "SCENARIO-LEARN-5502-ARTIFACT",
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.INFERENCE_SUBSTRATE,
++        "surrogate_rows.features.prior_success",
++        "condition_metrics.*.quality_score",
++        "delta_vs_naive_icl",
++        "bounded_requires_rerun",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_learn_5502_metric_graph_fails_quality_score_overlap() -> None:
++    """SCENARIO-LEARN-5502-METRIC-GRAPH: policy/outcome reuse blocks headline."""
++
++    artifact = _artifact()
++
++    mod.validate_artifact(artifact)
++    assert artifact["metric_independence_clean"] is False
++    assert artifact["tautology_flag_resolved"] is True
++    assert artifact["csl_scale_headline_allowed"] is False
++    assert artifact["downstream_recommendation"] == "bounded_requires_rerun"
++    assert artifact["retire_same_scope_if_repeated"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++
++    policy_fields = set(artifact["policy_score_fields"])
++    outcome_fields = set(artifact["outcome_metric_fields"])
++    assert "experiment_5473.surrogate_rows.features.prior_success" in policy_fields
++    assert "experiment_5474.kan_assured_csl_score" in outcome_fields
++    assert "experiment_5474.delta_vs_naive_icl" in outcome_fields
++
++    violations = artifact["independence_violations"]
++    assert {violation["kind"] for violation in violations} == {
++        "policy_outcome_scalar_overlap",
++        "top_level_summary_collision",
++    }
++    overlap = next(v for v in violations if v["kind"] == "policy_outcome_scalar_overlap")
++    assert overlap["policy_score_field"] == "experiment_5473.surrogate_rows.features.prior_success"
++    assert "condition_metrics.*.quality_score" in overlap["shared_scalar_family"]
++    assert "experiment_5474.kan_assured_csl_score" in overlap["headline_outcome_fields"]
++
++    graph = {node["field"]: node for node in artifact["metric_graph_nodes"]}
++    assert graph["experiment_5473.surrogate_rows.features.prior_success"][
++        "classification"
++    ] == "upstream feature"
++    assert graph["experiment_5473.surrogate_rows.surrogate_accept"][
++        "classification"
++    ] == "policy decision"
++    assert graph["experiment_5474.panel_rows.accepted_by_final_authority"][
++        "classification"
++    ] == "evaluator outcome"
++    assert graph["experiment_5474.naive_icl_score"]["classification"] == "baseline outcome"
++    assert graph["experiment_5474.delta_vs_naive_icl"]["classification"] == "derived summary"
++
++
++def test_scenario_learn_5502_cross_check_bounds_independent_behavioral_support() -> None:
++    """SCENARIO-LEARN-5502-CROSS-CHECK: Exp5475 supports behavior, not headline."""
++
++    artifact = _artifact()
++    cross_check = artifact["cross_check_summary"]
++
++    assert cross_check["exp5473"]["independent_for_scale_headline"] is False
++    assert cross_check["exp5473"]["policy_quality_score_reused_as_prior_success"] is True
++    assert cross_check["exp5475"]["bounded_behavioral_memory_support"] is True
++    assert cross_check["exp5475"]["headline_permission"] is False
++    assert set(cross_check["exp5475"]["independent_axes_present"]) >= {
++        "support_removal",
++        "conflict_handling",
++        "downstream_action_use",
++        "stale_memory_rejection",
++        "exact_validator",
++    }
++    assert cross_check["exp5474"]["prior_flagged_adversarial"] is True
++    assert cross_check["exp5474"]["adversarial_tautology_fields"] == [
++        "delta_vs_naive_icl",
++        "naive_icl_score",
++    ]
++
++
++def test_scenario_learn_5502_run_writes_stable_artifact(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5502-ARTIFACT: run() writes deterministic JSON."""
++
++    destination = tmp_path / mod.RESULT_RELATIVE_PATH
++    artifact = mod.run(
++        root=REPO,
++        result_path=destination,
++        tests_run=[TEST_COMMAND, COVERAGE_COMMAND],
++        write=True,
++    )
++    no_write_path = tmp_path / "no-write.json"
++    no_write = mod.run(
++        root=REPO,
++        result_path=no_write_path,
++        tests_run=[TEST_COMMAND, COVERAGE_COMMAND],
++        write=False,
++    )
++
++    assert json.loads(destination.read_text(encoding="utf-8")) == artifact
++    assert no_write == artifact
++    assert not no_write_path.exists()
++    mod.validate_artifact(artifact)
++    assert artifact["source_file_checksums"]["module"].startswith("sha256:")
++    assert artifact["source_file_checksums"]["spec"].startswith("sha256:")
++
++
++def test_req_learn_5502_validation_fails_closed_on_schema_or_claim_drift() -> None:
++    """REQ-LEARN-5502-3/5: malformed or laundering artifacts fail validation."""
++
++    artifact = _artifact()
++
++    assert mod.downstream_recommendation(
++        metric_independence_clean=True,
++        bounded_behavioral_memory_support=False,
++    ) == "clean"
++    assert mod.downstream_recommendation(
++        metric_independence_clean=False,
++        bounded_behavioral_memory_support=False,
++    ) == "retire_same_scope_if_repeated"
++    assert mod.honest_verdict(
++        metric_independence_clean=True,
++        recommendation="clean",
++    ).startswith("complete:")
++
++    mutations = []
++    missing = deepcopy(artifact)
++    missing.pop("audited_artifacts")
++    mutations.append((missing, "missing required fields"))
++
++    bad_principles = deepcopy(artifact)
++    bad_principles["field_principles"] = {}
++    mutations.append((bad_principles, "field_principles"))
++
++    bad_substrate = deepcopy(artifact)
++    bad_substrate["inference_substrate"] = "live_llm_inference"
++    mutations.append((bad_substrate, "inference_substrate"))
++
++    bad_conductor = deepcopy(artifact)
++    bad_conductor["research_conductor_modified"] = True
++    mutations.append((bad_conductor, "scripts/research_conductor.py"))
++
++    bad_audited = deepcopy(artifact)
++    bad_audited["audited_artifacts"] = {}
++    mutations.append((bad_audited, "audited_artifacts"))
++
++    bad_graph_type = deepcopy(artifact)
++    bad_graph_type["metric_graph_nodes"] = {}
++    mutations.append((bad_graph_type, "metric_graph_nodes"))
++
++    bad_clean = deepcopy(artifact)
++    bad_clean["metric_independence_clean"] = True
++    mutations.append((bad_clean, "metric_independence_clean"))
++
++    bad_headline = deepcopy(artifact)
++    bad_headline["csl_scale_headline_allowed"] = True
++    mutations.append((bad_headline, "csl_scale_headline_allowed"))
++
++    bad_recommendation = deepcopy(artifact)
++    bad_recommendation["downstream_recommendation"] = "clean"
++    mutations.append((bad_recommendation, "downstream_recommendation"))
++
++    unknown_recommendation = deepcopy(artifact)
++    unknown_recommendation["downstream_recommendation"] = "unknown"
++    mutations.append((unknown_recommendation, "downstream_recommendation must be recognized"))
++
++    bad_retire = deepcopy(artifact)
++    bad_retire["retire_same_scope_if_repeated"] = False
++    mutations.append((bad_retire, "retire_same_scope_if_repeated"))
++
++    bad_verdict = deepcopy(artifact)
++    bad_verdict["honest_verdict"] = "done"
++    mutations.append((bad_verdict, "honest_verdict"))
++
++    bad_graph = deepcopy(artifact)
++    bad_graph["metric_graph_nodes"][0]["classification"] = "mystery"
++    mutations.append((bad_graph, "metric graph classifications"))
++
++    bad_policy = deepcopy(artifact)
++    bad_policy["policy_score_fields"] = []
++    mutations.append((bad_policy, "policy_score_fields"))
++
++    bad_outcomes = deepcopy(artifact)
++    bad_outcomes["outcome_metric_fields"] = []
++    mutations.append((bad_outcomes, "outcome_metric_fields"))
++
++    bad_violations = deepcopy(artifact)
++    bad_violations["independence_violations"] = {}
++    mutations.append((bad_violations, "independence_violations"))
++
++    bad_tautology = deepcopy(artifact)
++    bad_tautology["tautology_flag_resolved"] = False
++    mutations.append((bad_tautology, "tautology_flag_resolved"))
++
++    bad_seed = deepcopy(artifact)
++    bad_seed["random_seed"] = 1
++    mutations.append((bad_seed, "random_seed"))
++
++    for payload, expected in mutations:
++        with pytest.raises(ValueError, match=expected):
++            mod.validate_artifact(payload)
++
++
++def test_req_learn_5502_repository_artifact_is_valid() -> None:
++    """REQ-LEARN-5502-5: committed deliverable keeps Exp5474 bounded."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(result)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(result)
++    assert result["downstream_recommendation"] == "bounded_requires_rerun"
++    assert result["csl_scale_headline_allowed"] is False
+-- 
+2.55.0
+

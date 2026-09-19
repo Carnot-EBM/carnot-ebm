@@ -1,0 +1,2142 @@
+From 9833e18c3ff27549683970a5b1654f0546c17fbe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 10:23:01 -0400
+Subject: [PATCH 04211/11362] [conductor] PHASE E (CAPSTONE .441) -- aggregate
+ the .441 scorecard: the S2 off-path trust-gate verdict (live trust value ->
+ S3 authorized, or bounded), the level-up bank, self-play, readiness,
+ reproducible_total_levels. SKIP genuinely-flagged artifacts but record the S2
+ true verdict from the gate numbers (note any stale-conductor false-positive).
+
+Automated research step by research conductor.
+Task ID: exp4799-e
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    4 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/experiment_4799_capstone_v441.py   | 1024 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ results/experiment_4799_capstone_v441.json    |  386 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ .../test_experiment_4799_capstone_v441.py     |  527 +++++++++
+ 12 files changed, 1959 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4799_capstone_v441.py
+ create mode 100644 results/experiment_4799_capstone_v441.json
+ create mode 100644 tests/python/test_experiment_4799_capstone_v441.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index c09ddcf60f..fc2ae05a69 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -467,6 +467,10 @@
+ - SCENARIO-CAPSTONE-4790: The artifact `results/experiment_4790_archive_440_activate_441.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `s1_pass_recorded`, and `reproducible_total_levels`; it must also emit `transition`, `preconditions_checked`, `close_state_440`, `v441_pivot`, `cited_upstream_artifacts`, `field_principles`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, `poison_test_resolved`, and `leaderboard_submission`. The complete path must terminal-prefix `honest_verdict` as `complete_440_archived_441_activated_<state>`, set `inference_substrate` to `aggregation_from_upstream_artifacts`, confirm active milestone `2026.06.441`, assert the smart-subset pre-test gate is green, cite upstream artifacts by sha256, record any poison pre-test id and reason or an explicit no-poison-observed note, take `reproducible_total_levels` from the registry rather than re-counting, record `s1_pass_recorded=true`, and never submit to the leaderboard.
+ - SCENARIO-CAPSTONE-4790-BLOCKED-PRECONDITION: If neither parseable literal `research-roadmap-next.yaml` nor already-active `.441` is available, `offline_arcade()` fails, the smart-subset pre-test gate is red, the registry is missing or not at `65`, `results/experiment_4789_capstone_v440.json` is missing, `results/experiment_4781_structural_energy_s1_contrastive_landscape.json` is missing, or the capstone spec lacks `REQ-CAPSTONE-4790`, the workflow must still write `results/experiment_4790_archive_440_activate_441.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `transition.activation_state=blocked_missing_or_failed_precondition`, `s1_pass_recorded=false`, and empty `close_state_440` and `v441_pivot`.
+ - SCENARIO-CAPSTONE-4790-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; clean transition is complete_440_archived_441_activated_<state>.", `inference_substrate` = "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).", `s1_pass_recorded` = "the .440 headline (S1 PASSED -> S2 authorized) carried forward.", `reproducible_total_levels` = "the authoritative ARC progress metric carried from the registry, not re-counted.", `poison_test_resolved` = "records whether a poison pre-test was found+fixed -- the cascade-skip guard.", `close_state_440` = "the honest `.440` close-state carried from Exp4789 plus the Exp4781 S1 gate result so the S2 authorization does not drift.", and `v441_pivot` = "the `.441` headline rationale (S2 off-path trust gate) recorded so milestone intent is traceable."
++- REQ-CAPSTONE-4799: The .441 capstone scorecard SHALL write `results/experiment_4799_capstone_v441.json` by aggregating upstream artifacts `results/experiment_4791_structural_energy_s2_offpath_trust_gate.json` through `results/experiment_4798_sota_ingestion_energy_guided_generation.json` plus `ops/arc_solve_registry.yaml`. It SHALL read each upstream artifact through `scripts/summarize_artifact.py` before importing any field, honor `verifier_is_oracle` declarations, carry `reproducible_total_levels` from the registry rather than re-counting, cite every upstream artifact by sha256, and emit stale false-positive notes when a conductor-stamped `flagged_adversarial:true` artifact is clean under the live summarizer re-check. The headline SHALL be the S2 off-path structural-energy trust-gate verdict: `trust_gate_win` with S3 authorized only when clean non-oracle S2 evidence reports `s3_authorized=true`, positive `energy_minus_accuracy_delta`, and a CI95 lower bound strictly above zero over at least the required held-out-game floor with live-path reachability; otherwise the verdict is `bounded`. A stale-conductor false-positive SHALL NOT erase a genuine S2 pass when the live re-check is clean, but any live-critical or genuinely fabricated upstream SHALL be skipped before metric import.
++- SCENARIO-CAPSTONE-4799: The artifact `results/experiment_4799_capstone_v441.json` must emit principle-annotated top-level fields for `honest_verdict`, `s2_structural_energy_verdict`, `reproducible_total_levels`, `cited_upstream_artifacts`, `stale_false_positive_notes`, and `inference_substrate`; it must also emit `levelup_bank`, `self_play_checkpoint`, `readiness`, `silent_bug_audit`, `submission_package_state`, `hardware_continuity`, `sota_handoff`, `upstream_oracle_declarations`, `flagged_artifacts_skipped`, `preconditions_checked`, `field_principles`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, and `result_path`. The default .441 read must produce a terminal-prefix `honest_verdict`, set `inference_substrate=aggregation_from_upstream_artifacts`, derive `s2_structural_energy_verdict.verdict=bounded` from Exp4791 live-critical TAUTOLOGY plus degenerate candidate-pool re-check and from the zero `energy_minus_accuracy_delta=0.0` / `energy_minus_accuracy_delta_ci95=[0.0,0.0]`, record Exp4792 as a zero-delta level-up bank with oracle declaration honored as not-a-moat, record Exp4793 as a refreshed self-play checkpoint, record Exp4794 readiness as a flat held-out first-win null with WARN-only declared-null TAUTOLOGY, record Exp4795's S2 trustworthy-null audit without overriding the live-critical Exp4791 skip, carry registry `reproducible_total_levels=65`, and cite upstream sha256 values.
++- SCENARIO-CAPSTONE-4799-BLOCKED-PRECONDITION: If `scripts/summarize_artifact.py` is missing, `ops/arc_solve_registry.yaml` is missing or not YAML-loadable, the capstone spec lacks `REQ-CAPSTONE-4799`, or any required upstream artifact from Exp4791 through Exp4798 is missing, the workflow must still write `results/experiment_4799_capstone_v441.json` with `honest_verdict=blocked_<resource>`, failed resources in `preconditions_checked`, empty metric imports, empty stale false-positive notes except for any present stamped-clean artifact evidence, `inference_substrate=aggregation_from_upstream_artifacts`, and a valid reproducibility checksum.
++- SCENARIO-CAPSTONE-4799-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; capstone_ready=true is success_/complete_.", `s2_structural_energy_verdict` = "the headline -- live off-path trust-gate WIN (S3 authorized) or BOUNDED; recorded from the gate numbers even if stale-flagged.", `reproducible_total_levels` = "the monotonic ARC progress metric carried from the registry.", `cited_upstream_artifacts` = "list of {experiment_id, fields_imported, sha256} -- the audit trail.", `stale_false_positive_notes` = "records which conductor flags were stale-linter false-positives (live re-check clean) vs genuine.", and `inference_substrate` = "aggregation_from_upstream_artifacts (0.0001s floor)."
+ - REQ-CAPSTONE-4796: The reserved-infra ARC-AGI-3 Kaggle submission-package hardening workflow SHALL verify that the submission packaging scripts and `arc_competition_agent` are present, dry-build the Kaggle package without submitting, resolve the frozen live stack from `SUBMITTED_AGENT_CONFIG`, resolve the Qwen3.5-9B-MTP GGUF and CUDA-12.8 `llama-server` paths, estimate the MTP + q8 KV VRAM budget against the ~16GB Kaggle deployment gate, and write `results/experiment_4796_submission_package_harden.json`. The workflow SHALL produce an operator checklist and SHALL mark `submission_package_ready=true` only when the package dry-builds, the frozen config and model paths resolve, the VRAM estimate fits below 16GB with headroom, and `submitted_to_leaderboard=false`; it SHALL never submit to Kaggle or any external leaderboard.
+ - SCENARIO-CAPSTONE-4796: The artifact `results/experiment_4796_submission_package_harden.json` must emit principle-annotated top-level fields for `honest_verdict`, `submission_package_ready`, `vram_estimate_gb`, and `inference_substrate`; it must also include `preconditions_checked`, `package_builds`, `agent_config_resolution`, `model_path_resolution`, `vram_breakdown`, `operator_checklist`, `submitted_to_leaderboard=false`, `operator_only=true`, `field_principles`, `spec_refs`, `duration_s`, `random_seed`, and a stable checksum. A ready artifact must use a terminal success prefix, keep publication operator-only, include checklist steps that instruct the operator to verify the package and submit only outside this task, and declare `inference_substrate=aggregation_from_upstream_artifacts`.
+ - SCENARIO-CAPSTONE-4796-BLOCKED-PRECONDITION: If any precondition, dry-build, frozen config, model path, or VRAM gate fails, the workflow must still write `results/experiment_4796_submission_package_harden.json` with `submission_package_ready=false`, a terminal `complete_` not-ready verdict naming the blocked resource, `submitted_to_leaderboard=false`, a preserved operator checklist, and no fabricated operator readiness or external submission claim.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e47d1ba90a..2a2a5a4251 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 195,
+   "code_violations": 0,
+-  "experiments_checked": 3807,
++  "experiments_checked": 3808,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4799_capstone_v441.py b/python/carnot/experiment_4799_capstone_v441.py
+new file mode 100644
+index 0000000000..dd87410883
+--- /dev/null
++++ b/python/carnot/experiment_4799_capstone_v441.py
+@@ -0,0 +1,1024 @@
++"""Experiment 4799: .441 S2 off-path trust-gate capstone.
++
++Spec refs: REQ-CAPSTONE-4799, SCENARIO-CAPSTONE-4799,
++SCENARIO-CAPSTONE-4799-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4799-FIELD-PRINCIPLES.
++
++The scorecard is aggregation-only. It reads upstream artifacts through the
++patched artifact summarizer before importing fields, then decides whether S2
++structural energy beat the incumbent binary accuracy gate on held-out off-path
++cell recall. A stale conductor flag can be overridden only by a clean live
++summarizer re-check; a live-critical upstream is bounded and cannot authorize S3.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_4799_capstone_v441"
++EXPERIMENT_ID = 4799
++SCHEMA = "carnot.exp4799.capstone_v441.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4799_capstone_v441.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++SUMMARIZER_RELATIVE_PATH = "scripts/summarize_artifact.py"
++RANDOM_SEED = 4799
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++KNOWN_STALE_CONDUCTOR_COMMIT = "unknown_20260626_stale_linter"
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-4799",
++    "SCENARIO-CAPSTONE-4799",
++    "SCENARIO-CAPSTONE-4799-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4799-FIELD-PRINCIPLES",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {"principle": "terminal prefix; capstone_ready=true is success_/complete_."},
++    "s2_structural_energy_verdict": {
++        "principle": (
++            "the headline -- live off-path trust-gate WIN (S3 authorized) or "
++            "BOUNDED; recorded from the gate numbers even if stale-flagged."
++        )
++    },
++    "reproducible_total_levels": {
++        "principle": "the monotonic ARC progress metric carried from the registry."
++    },
++    "cited_upstream_artifacts": {
++        "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail."
++    },
++    "stale_false_positive_notes": {
++        "principle": (
++            "records which conductor flags were stale-linter false-positives "
++            "(live re-check clean) vs genuine."
++        )
++    },
++    "inference_substrate": {"principle": "aggregation_from_upstream_artifacts (0.0001s floor)."},
++}
++
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "honest_verdict",
++    "s2_structural_energy_verdict",
++    "reproducible_total_levels",
++    "cited_upstream_artifacts",
++    "stale_false_positive_notes",
++    "inference_substrate",
++    "levelup_bank",
++    "self_play_checkpoint",
++    "readiness",
++    "silent_bug_audit",
++    "submission_package_state",
++    "hardware_continuity",
++    "sota_handoff",
++    "upstream_oracle_declarations",
++    "flagged_artifacts_skipped",
++    "preconditions_checked",
++    "field_principles",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++)
++
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++
++
++@dataclass(frozen=True)
++class UpstreamSource:
++    """One upstream result that can feed the capstone after live checks."""
++
++    experiment_id: int
++    relative_path: str
++
++
++@dataclass(frozen=True)
++class SummarizerResult:
++    """Captured `scripts/summarize_artifact.py` result for one upstream artifact."""
++
++    command: list[str]
++    exit_code: int
++    stdout: str
++    stderr: str
++
++
++Summarizer = Callable[[Path, str], SummarizerResult]
++
++UPSTREAM_SOURCES: dict[str, UpstreamSource] = {
++    "S2": UpstreamSource(
++        4791, "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json"
++    ),
++    "LEVELUP": UpstreamSource(4792, "results/experiment_4792_levelup_attempt.json"),
++    "SELF_PLAY": UpstreamSource(4793, "results/experiment_4793_self_play_verifier_checkpoint.json"),
++    "HELDOUT": UpstreamSource(4794, "results/experiment_4794_heldout_first_win_readiness.json"),
++    "BUG_AUDIT": UpstreamSource(4795, "results/experiment_4795_silent_bug_audit.json"),
++    "PACKAGE": UpstreamSource(4796, "results/experiment_4796_submission_package_harden.json"),
++    "HARDWARE": UpstreamSource(4797, "results/experiment_4797_kv260_continuity.json"),
++    "SOTA": UpstreamSource(
++        4798, "results/experiment_4798_sota_ingestion_energy_guided_generation.json"
++    ),
++}
++
++CLEAN_IMPORT_FIELDS: dict[str, tuple[str, ...]] = {
++    "S2": (
++        "honest_verdict",
++        "s3_authorized",
++        "verifier_is_oracle",
++        "live_path_reachable",
++        "energy_selected_offpath_cell_recall",
++        "accuracy_gate_selected_offpath_cell_recall",
++        "energy_minus_accuracy_delta",
++        "energy_minus_accuracy_delta_ci95",
++        "n_heldout_games",
++        "min_heldout_games",
++        "game_results",
++        "candidate_sets",
++    ),
++    "LEVELUP": (
++        "honest_verdict",
++        "new_levels_banked",
++        "offline_reproduced",
++        "reproduced_levels",
++        "target_game",
++        "registry_update",
++        "attempted_games",
++        "dead_ends",
++        "solve_provenance",
++        "verifier_is_oracle",
++    ),
++    "SELF_PLAY": (
++        "honest_verdict",
++        "verifier_checkpoint_refreshed",
++        "target_game",
++        "self_play_residual",
++        "offline_reproduced",
++        "reproduced_levels",
++        "reproduction_gate",
++        "solve_provenance",
++        "verifier_is_oracle",
++    ),
++    "HELDOUT": (
++        "honest_verdict",
++        "heldout_first_win_rate",
++        "first_win_baseline",
++        "prior_best_heldout_first_win_rate",
++        "heldout_first_win_delta_vs_baseline",
++        "heldout_first_win_delta_vs_prior_best",
++        "heldout_variant_attempts",
++        "positive_control_passed",
++        "parity_test_green",
++        "null_delta_methodology_note",
++        "verifier_is_oracle",
++    ),
++    "BUG_AUDIT": (
++        "honest_verdict",
++        "nulls_audited",
++        "trusted_nulls",
++        "silent_bugs_found",
++        "per_null_verdicts",
++        "verifier_is_oracle",
++    ),
++    "PACKAGE": (
++        "honest_verdict",
++        "submission_package_ready",
++        "submitted_to_leaderboard",
++        "operator_only",
++        "vram_estimate_gb",
++        "package_builds",
++        "verifier_is_oracle",
++    ),
++    "HARDWARE": (
++        "honest_verdict",
++        "kv260_ssh_reachable",
++        "loaded_overlay",
++        "board_state",
++        "verifier_is_oracle",
++    ),
++    "SOTA": (
++        "honest_verdict",
++        "flagged_for_v442",
++        "methods_mapped",
++        "s1_s2_context",
++        "arxiv_ids_cited",
++        "verifier_is_oracle",
++    ),
++}
++
++
++def stable_json(value: Any) -> str:
++    """Encode JSON deterministically so checksums track content drift only."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def sha256_bytes(data: bytes) -> str:
++    """Return the repository's normal `sha256:<hex>` provenance string."""
++
++    return "sha256:" + hashlib.sha256(data).hexdigest()
++
++
++def file_sha256(path: Path) -> str | None:
++    """Hash a file when it exists; missing files are recorded separately."""
++
++    return sha256_bytes(path.read_bytes()) if path.exists() else None
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash artifact content while excluding the checksum field itself."""
++
++    filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    return sha256_bytes(stable_json(filtered).encode("utf-8"))
++
++
++def _read_json_object(path: Path) -> JsonDict:
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _read_yaml_object(path: Path) -> JsonDict:
++    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return int(value)
++    return default
++
++
++def _float(value: Any) -> float | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, int | float):
++        return round(float(value), 12)
++    return None
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _experiment_id(source: str, artifact: Mapping[str, Any] | None = None) -> int:
++    if artifact:
++        for field in ("experiment_id", "experiment"):
++            value = artifact.get(field)
++            if isinstance(value, int) and not isinstance(value, bool):
++                return value
++    return UPSTREAM_SOURCES[source].experiment_id
++
++
++def _is_flagged(artifact: Mapping[str, Any] | None) -> bool:
++    return bool(artifact and artifact.get("flagged_adversarial") is True)
++
++
++def _oracle_declared(artifact: Mapping[str, Any] | None) -> bool:
++    return bool(artifact and artifact.get("verifier_is_oracle") is True)
++
++
++def _live_clean(summary: SummarizerResult | None) -> bool:
++    return summary is not None and summary.exit_code == 0
++
++
++def _live_critical(summary: SummarizerResult | None) -> bool:
++    return bool(summary and summary.exit_code >= 2)
++
++
++def _stale_false_positive(
++    artifact: Mapping[str, Any] | None,
++    summary: SummarizerResult | None,
++) -> bool:
++    return _is_flagged(artifact) and _live_clean(summary)
++
++
++def _skip_metrics(
++    artifact: Mapping[str, Any] | None,
++    summary: SummarizerResult | None,
++) -> bool:
++    if artifact is None:
++        return True
++    return _live_critical(summary) or (
++        _is_flagged(artifact) and not _stale_false_positive(artifact, summary)
++    )
++
++
++def _imported_fields(
++    source: str,
++    artifact: Mapping[str, Any],
++    summary: SummarizerResult | None,
++) -> list[str]:
++    if _skip_metrics(artifact, summary):
++        return ["flagged_adversarial"] if _is_flagged(artifact) else ["live_critical_recheck"]
++    fields = [field for field in CLEAN_IMPORT_FIELDS[source] if field in artifact]
++    return ["flagged_adversarial", *fields] if _is_flagged(artifact) else fields
++
++
++def _cited_artifacts(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    artifact_sha256: Mapping[str, str],
++    summarizer_results: Mapping[str, SummarizerResult],
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for source in UPSTREAM_SOURCES:
++        artifact = artifacts.get(source)
++        if artifact is None:
++            continue
++        rows.append(
++            {
++                "experiment_id": _experiment_id(source, artifact),
++                "fields_imported": _imported_fields(
++                    source, artifact, summarizer_results.get(source)
++                ),
++                "sha256": artifact_sha256.get(source, ""),
++            }
++        )
++    return rows
++
++
++def _flagged_artifacts_skipped(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    artifact_sha256: Mapping[str, str],
++    summarizer_results: Mapping[str, SummarizerResult],
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for source, artifact in artifacts.items():
++        summary = summarizer_results.get(source)
++        if not _skip_metrics(artifact, summary):
++            continue
++        reason = "live_critical_recheck" if _live_critical(summary) else "flagged_adversarial"
++        rows.append(
++            {
++                "source": source,
++                "experiment_id": _experiment_id(source, artifact),
++                "path": UPSTREAM_SOURCES[source].relative_path,
++                "reason": reason,
++                "sha256": artifact_sha256.get(source, ""),
++            }
++        )
++    return rows
++
++
++def _stale_false_positive_notes(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    summarizer_results: Mapping[str, SummarizerResult],
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for source, artifact in artifacts.items():
++        if not _is_flagged(artifact):
++            continue
++        summary = summarizer_results.get(source)
++        stale = _stale_false_positive(artifact, summary)
++        rows.append(
++            {
++                "source": source,
++                "experiment_id": _experiment_id(source, artifact),
++                "status": "stale_false_positive" if stale else "genuine_or_unresolved",
++                "live_recheck_exit_code": summary.exit_code if summary else None,
++                "metrics_imported": stale,
++                "known_stale_conductor_commit": KNOWN_STALE_CONDUCTOR_COMMIT if stale else "",
++                "note": (
++                    "live summarizer re-check clean; gate numbers may be read"
++                    if stale
++                    else "stamped flag was not live-clean; metrics skipped"
++                ),
++            }
++        )
++    return rows
++
++
++def _oracle_declarations(artifacts: Mapping[str, Mapping[str, Any]]) -> dict[str, JsonDict]:
++    declarations: dict[str, JsonDict] = {}
++    for source, artifact in artifacts.items():
++        declared = _oracle_declared(artifact)
++        declarations[source] = {
++            "experiment_id": _experiment_id(source, artifact),
++            "verifier_is_oracle": declared,
++            "moat_claim_allowed": not declared,
++        }
++    return declarations
++
++
++def _ci_lower_positive(value: Any) -> bool:
++    return (
++        isinstance(value, list)
++        and len(value) == 2
++        and _float(value[0]) is not None
++        and float(value[0]) > 0.0
++    )
++
++
++def _s2_verdict(
++    artifact: Mapping[str, Any] | None,
++    summary: SummarizerResult | None,
++) -> JsonDict:
++    if artifact is None:
++        return {}
++
++    delta = _float(artifact.get("energy_minus_accuracy_delta"))
++    ci95 = artifact.get("energy_minus_accuracy_delta_ci95")
++    ci95 = ci95 if isinstance(ci95, list) else []
++    if _skip_metrics(artifact, summary):
++        return {
++            "source": "S2",
++            "experiment_id": _experiment_id("S2", artifact),
++            "upstream_honest_verdict": artifact.get("honest_verdict", ""),
++            "verdict": "bounded",
++            "s3_authorized": False,
++            "reason": "s2_artifact_skipped_live_or_genuine_flag",
++            "artifact_skipped": True,
++            "metrics_imported": False,
++            "reported_energy_minus_accuracy_delta": delta,
++            "reported_energy_minus_accuracy_delta_ci95": ci95,
++            "verifier_is_oracle": _oracle_declared(artifact),
++        }
++
++    oracle = _oracle_declared(artifact)
++    n_games = _int(artifact.get("n_heldout_games"))
++    min_games = _int(artifact.get("min_heldout_games"), 5)
++    live_path = artifact.get("live_path_reachable") is True
++    delta_positive = delta is not None and delta > 0.0
++    ci_positive = _ci_lower_positive(ci95)
++    upstream_authorized = artifact.get("s3_authorized") is True
++    floor_met = n_games >= min_games and min_games > 0
++    passed = bool(
++        upstream_authorized
++        and live_path
++        and floor_met
++        and delta_positive
++        and ci_positive
++        and not oracle
++    )
++    reason = (
++        "s2_oracle_not_moat"
++        if oracle
++        else ("s2_gate_numbers_authorize_s3" if passed else "s2_gate_numbers_do_not_authorize_s3")
++    )
++    return {
++        "source": "S2",
++        "experiment_id": _experiment_id("S2", artifact),
++        "upstream_honest_verdict": artifact.get("honest_verdict", ""),
++        "verdict": "trust_gate_win" if passed else "bounded",
++        "s3_authorized": passed,
++        "reason": reason,
++        "artifact_skipped": False,
++        "metrics_imported": True,
++        "upstream_s3_authorized": upstream_authorized,
++        "energy_selected_offpath_cell_recall": _float(
++            artifact.get("energy_selected_offpath_cell_recall")
++        ),
++        "accuracy_gate_selected_offpath_cell_recall": _float(
++            artifact.get("accuracy_gate_selected_offpath_cell_recall")
++        ),
++        "energy_minus_accuracy_delta": delta,
++        "energy_minus_accuracy_delta_ci95": ci95,
++        "ci_excludes_zero": ci_positive,
++        "live_path_reachable": live_path,
++        "n_heldout_games": n_games,
++        "min_heldout_games": min_games,
++        "heldout_game_floor_met": floor_met,
++        "verifier_is_oracle": oracle,
++    }
++
++
++def _levelup_bank(artifact: Mapping[str, Any] | None) -> JsonDict:
++    if artifact is None:
++        return {}
++    registry_update = _mapping(artifact.get("registry_update"))
++    before = _int(registry_update.get("reproducible_total_levels_before"))
++    after = _int(registry_update.get("reproducible_total_levels_after"), before)
++    oracle = _oracle_declared(artifact)
++    return {
++        "source": "LEVELUP",
++        "experiment_id": _experiment_id("LEVELUP", artifact),
++        "target_game": artifact.get("target_game"),
++        "new_levels_banked": _int(artifact.get("new_levels_banked")),
++        "reproducible_total_levels_before": before,
++        "reproducible_total_levels_after": after,
++        "reproducible_total_levels_delta": after - before,
++        "registry_updated": registry_update.get("updated") is True,
++        "offline_reproduced": artifact.get("offline_reproduced") is True,
++        "reproduced_levels": _int(artifact.get("reproduced_levels")),
++        "verifier_is_oracle": oracle,
++        "moat_claim": bool(after > before and not oracle),
++    }
++
++
++def _self_play_checkpoint(artifact: Mapping[str, Any] | None) -> JsonDict:
++    if artifact is None:
++        return {}
++    refreshed = artifact.get("verifier_checkpoint_refreshed") is True
++    return {
++        "source": "SELF_PLAY",
++        "experiment_id": _experiment_id("SELF_PLAY", artifact),
++        "decision": "checkpoint_refreshed" if refreshed else "checkpoint_not_refreshed",
++        "verifier_checkpoint_refreshed": refreshed,
++        "target_game": artifact.get("target_game"),
++        "self_play_residual": artifact.get("self_play_residual"),
++        "offline_reproduced": artifact.get("offline_reproduced") is True,
++        "reproduced_levels": _int(artifact.get("reproduced_levels")),
++        "solve_provenance": artifact.get("solve_provenance", ""),
++    }
++
++
++def _heldout_readiness(artifact: Mapping[str, Any] | None) -> JsonDict:
++    if artifact is None:
++        return {}
++    baseline_delta = _float(artifact.get("heldout_first_win_delta_vs_baseline"))
++    prior_delta = _float(artifact.get("heldout_first_win_delta_vs_prior_best"))
++    flat = baseline_delta == 0.0 and prior_delta == 0.0
++    return {
++        "source": "HELDOUT",
++        "experiment_id": _experiment_id("HELDOUT", artifact),
++        "decision": "flat_null_no_readiness_gain" if flat else "heldout_readiness_changed",
++        "heldout_first_win_rate": _float(artifact.get("heldout_first_win_rate")),
++        "first_win_baseline": _float(artifact.get("first_win_baseline")),
++        "prior_best_heldout_first_win_rate": _float(
++            artifact.get("prior_best_heldout_first_win_rate")
++        ),
++        "heldout_first_win_delta_vs_baseline": baseline_delta,
++        "heldout_first_win_delta_vs_prior_best": prior_delta,
++        "heldout_variant_attempts": _int(artifact.get("heldout_variant_attempts")),
++        "parity_test_green": artifact.get("parity_test_green") is True,
++        "positive_control_passed": artifact.get("positive_control_passed") is True,
++        "null_delta_methodology_note_present": bool(artifact.get("null_delta_methodology_note")),
++    }
++
++
++def _silent_bug_audit(artifact: Mapping[str, Any] | None) -> JsonDict:
++    if artifact is None:
++        return {}
++    per_null = artifact.get("per_null_verdicts")
++    per_null = per_null if isinstance(per_null, list) else []
++    s2_rows = [
++        row
++        for row in per_null
++        if isinstance(row, Mapping)
++        and row.get("null_id") == "experiment_4791_structural_energy_s2_offpath_trust_gate"
++    ]
++    s2_trusted = any(row.get("verdict") == "trustworthy_null" for row in s2_rows)
++    silent_bugs = artifact.get("silent_bugs_found")
++    silent_bugs = silent_bugs if isinstance(silent_bugs, list) else []
++    reopened_ids = [
++        row.get("null_id")
++        for row in silent_bugs
++        if isinstance(row, Mapping) and row.get("verdict") == "silent_bug_must_reopen"
++    ]
++    return {
++        "source": "BUG_AUDIT",
++        "experiment_id": _experiment_id("BUG_AUDIT", artifact),
++        "nulls_audited": _int(artifact.get("nulls_audited")),
++        "trusted_nulls": artifact.get("trusted_nulls")
++        if isinstance(artifact.get("trusted_nulls"), list)
++        else [],
++        "silent_bugs_found_count": len(silent_bugs),
++        "reopened_null_ids": reopened_ids,
++        "s2_null_audited_trustworthy": s2_trusted,
++        "s2_audit_note": "s2_null_audited_as_trustworthy"
++        if s2_trusted
++        else "no_s2_trustworthy_null_note",
++    }
++
++
++def _submission_package_state(artifact: Mapping[str, Any] | None) -> JsonDict:
++    if artifact is None:
++        return {}
++    ready = artifact.get("submission_package_ready") is True
++    submitted = artifact.get("submitted_to_leaderboard") is True
++    return {
++        "source": "PACKAGE",
++        "experiment_id": _experiment_id("PACKAGE", artifact),
++        "decision": "package_ready_operator_only"
++        if ready and not submitted
++        else "package_not_ready",
++        "submission_package_ready": ready,
++        "submitted_to_leaderboard": submitted,
++        "operator_only": artifact.get("operator_only") is True,
++        "vram_estimate_gb": _float(artifact.get("vram_estimate_gb")),
++    }
++
++
++def _hardware_continuity(artifact: Mapping[str, Any] | None) -> JsonDict:
++    if artifact is None:
++        return {}
++    reachable = artifact.get("kv260_ssh_reachable") is True
++    board_state = _mapping(artifact.get("board_state"))
++    return {
++        "source": "HARDWARE",
++        "experiment_id": _experiment_id("HARDWARE", artifact),
++        "decision": "kv260_reachable" if reachable else "kv260_unreachable",
++        "kv260_ssh_reachable": reachable,
++        "loaded_overlay": artifact.get("loaded_overlay"),
++        "board_hostname": board_state.get("hostname"),
++        "uio_device_count": _int(board_state.get("uio_device_count")),
++    }
++
++
++def _sota_handoff(artifact: Mapping[str, Any] | None) -> JsonDict:
++    if artifact is None:
++        return {}
++    flagged = artifact.get("flagged_for_v442")
++    flagged = flagged if isinstance(flagged, list) else []
++    methods = artifact.get("methods_mapped")
++    methods = methods if isinstance(methods, list) else []
++    return {
++        "source": "SOTA",
++        "experiment_id": _experiment_id("SOTA", artifact),
++        "decision": "sota_handoff_mapped" if methods else "sota_handoff_empty",
++        "flagged_for_v442_candidates": [
++            row.get("candidate") for row in flagged if isinstance(row, Mapping)
++        ],
++        "methods_mapped_count": len(methods),
++        "s1_s2_context": dict(_mapping(artifact.get("s1_s2_context"))),
++        "arxiv_ids_cited": artifact.get("arxiv_ids_cited")
++        if isinstance(artifact.get("arxiv_ids_cited"), list)
++        else [],
++    }
++
++
++def _readiness(
++    s2_verdict: Mapping[str, Any],
++    heldout: Mapping[str, Any],
++    package: Mapping[str, Any],
++) -> JsonDict:
++    heldout_changed = heldout.get("decision") == "heldout_readiness_changed"
++    package_ready = package.get("decision") == "package_ready_operator_only"
++    trust_gate_win = s2_verdict.get("verdict") == "trust_gate_win"
++    return {
++        "s2_verdict": s2_verdict.get("verdict", ""),
++        "heldout_decision": heldout.get("decision", ""),
++        "submission_package_decision": package.get("decision", ""),
++        "ready_for_operator_submit": bool(trust_gate_win and heldout_changed and package_ready),
++        "reason": "requires_s2_trust_gate_win_clean_package_and_heldout_gain",
++    }
++
++
++def _default_preconditions(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    *,
++    registry_present: bool,
++    registry_loadable: bool,
++    registry_sha256: str | None,
++    spec_has_req: bool,
++    summarizer_present: bool,
++    summarizer_results: Mapping[str, SummarizerResult],
++) -> JsonDict:
++    return {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "summarizer": {
++            "path": SUMMARIZER_RELATIVE_PATH,
++            "present": summarizer_present,
++        },
++        "registry": {
++            "path": REGISTRY_RELATIVE_PATH,
++            "present": registry_present,
++            "yaml_loadable": registry_loadable,
++            "sha256": registry_sha256 or "",
++        },
++        "spec_has_req_4799": spec_has_req,
++        "upstream_artifacts": {
++            source: {
++                "path": spec.relative_path,
++                "present": source in artifacts,
++                "summarizer_exit_code": summarizer_results[source].exit_code
++                if source in summarizer_results
++                else None,
++            }
++            for source, spec in UPSTREAM_SOURCES.items()
++        },
++    }
++
++
++def build_artifact(
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]],
++    artifact_sha256: Mapping[str, str],
++    registry: Mapping[str, Any],
++    registry_sha256: str | None,
++    summarizer_results: Mapping[str, SummarizerResult],
++    duration_s: float,
++    preconditions_checked: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Build the complete .441 capstone after live summaries have run."""
++
++    s2 = _s2_verdict(artifacts.get("S2"), summarizer_results.get("S2"))
++    honest_verdict = (
++        "success_s2_structural_energy_trust_gate_s3_authorized"
++        if s2.get("verdict") == "trust_gate_win"
++        else "complete_s2_structural_energy_bounded_v441_capstone_ready"
++    )
++    heldout = _heldout_readiness(artifacts.get("HELDOUT"))
++    package = _submission_package_state(artifacts.get("PACKAGE"))
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": honest_verdict,
++        "s2_structural_energy_verdict": s2,
++        "reproducible_total_levels": _int(registry.get("reproducible_total_levels")),
++        "cited_upstream_artifacts": _cited_artifacts(
++            artifacts, artifact_sha256, summarizer_results
++        ),
++        "stale_false_positive_notes": _stale_false_positive_notes(artifacts, summarizer_results),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "levelup_bank": _levelup_bank(artifacts.get("LEVELUP")),
++        "self_play_checkpoint": _self_play_checkpoint(artifacts.get("SELF_PLAY")),
++        "readiness": _readiness(s2, heldout, package),
++        "heldout_readiness": heldout,
++        "silent_bug_audit": _silent_bug_audit(artifacts.get("BUG_AUDIT")),
++        "submission_package_state": package,
++        "hardware_continuity": _hardware_continuity(artifacts.get("HARDWARE")),
++        "sota_handoff": _sota_handoff(artifacts.get("SOTA")),
++        "upstream_oracle_declarations": _oracle_declarations(artifacts),
++        "flagged_artifacts_skipped": _flagged_artifacts_skipped(
++            artifacts, artifact_sha256, summarizer_results
++        ),
++        "preconditions_checked": dict(
++            preconditions_checked
++            or _default_preconditions(
++                artifacts,
++                registry_present=bool(registry),
++                registry_loadable=bool(registry),
++                registry_sha256=registry_sha256,
++                spec_has_req=True,
++                summarizer_present=True,
++                summarizer_results=summarizer_results,
++            )
++        ),
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(max(0.0001, float(duration_s)), 6),
++        "random_seed": RANDOM_SEED,
++        "capstone_ready": True,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def build_blocked_artifact(
++    *,
++    reason: str,
++    artifacts: Mapping[str, Mapping[str, Any]],
++    artifact_sha256: Mapping[str, str],
++    registry: Mapping[str, Any],
++    summarizer_results: Mapping[str, SummarizerResult],
++    duration_s: float,
++    preconditions_checked: Mapping[str, Any],
++) -> JsonDict:
++    """Build a schema-valid blocked artifact without importing metric claims."""
++
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": f"blocked_{reason}",
++        "s2_structural_energy_verdict": {},
++        "reproducible_total_levels": _int(registry.get("reproducible_total_levels")),
++        "cited_upstream_artifacts": [],
++        "stale_false_positive_notes": _stale_false_positive_notes(artifacts, summarizer_results),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "levelup_bank": {},
++        "self_play_checkpoint": {},
++        "readiness": {},
++        "heldout_readiness": {},
++        "silent_bug_audit": {},
++        "submission_package_state": {},
++        "hardware_continuity": {},
++        "sota_handoff": {},
++        "upstream_oracle_declarations": _oracle_declarations(artifacts),
++        "flagged_artifacts_skipped": _flagged_artifacts_skipped(
++            artifacts, artifact_sha256, summarizer_results
++        ),
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(max(0.0001, float(duration_s)), 6),
++        "random_seed": RANDOM_SEED,
++        "capstone_ready": False,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
++    """Return schema errors for the scorecard without mutating the artifact."""
++
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in payload:
++            errors.append(f"missing_field:{field}")
++    if not str(payload.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_missing_terminal_prefix")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("invalid_inference_substrate")
++    if not isinstance(payload.get("reproducible_total_levels"), int):
++        errors.append("invalid_reproducible_total_levels")
++    field_principles = payload.get("field_principles")
++    for field, principle in FIELD_PRINCIPLES.items():
++        if not isinstance(field_principles, Mapping) or field_principles.get(field) != principle:
++            errors.append(f"missing_principle:{field}")
++    s2 = payload.get("s2_structural_energy_verdict")
++    if isinstance(s2, Mapping) and s2:
++        if s2.get("verdict") not in {"trust_gate_win", "bounded"}:
++            errors.append("invalid_s2_verdict")
++    cited = payload.get("cited_upstream_artifacts")
++    if not isinstance(cited, list) or any(
++        not isinstance(row, Mapping)
++        or not isinstance(row.get("experiment_id"), int)
++        or not isinstance(row.get("fields_imported"), list)
++        or not str(row.get("sha256", "")).startswith("sha256:")
++        for row in cited
++    ):
++        errors.append("invalid_cited_upstream_artifacts")
++    flagged_ids = {
++        row.get("experiment_id")
++        for row in payload.get("flagged_artifacts_skipped", [])
++        if isinstance(row, Mapping)
++    }
++    if isinstance(cited, list):
++        for row in cited:
++            if (
++                isinstance(row, Mapping)
++                and row.get("experiment_id") in flagged_ids
++                and row.get("fields_imported") != ["flagged_adversarial"]
++            ):
++                errors.append(f"flagged_artifact_imported_metrics:{row.get('experiment_id')}")
++    if not str(payload.get("reproducibility_checksum", "")).startswith("sha256:"):
++        errors.append("invalid_reproducibility_checksum")
++    return errors
++
++
++def _run_summarizer(root: Path, relative_path: str) -> SummarizerResult:  # pragma: no cover
++    cmd = [sys.executable, SUMMARIZER_RELATIVE_PATH, relative_path]
++    proc = subprocess.run(cmd, cwd=root, text=True, capture_output=True, check=False)
++    return SummarizerResult(
++        command=cmd,
++        exit_code=proc.returncode,
++        stdout=proc.stdout,
++        stderr=proc.stderr,
++    )
++
++
++def _first_blocker(
++    *,
++    summarizer_present: bool,
++    registry_present: bool,
++    registry_loadable: bool,
++    spec_has_req: bool,
++    upstream_preconditions: Mapping[str, Mapping[str, Any]],
++) -> str | None:
++    if not summarizer_present:
++        return "missing_summarizer"
++    if not registry_present:
++        return "missing_registry"
++    if not registry_loadable:
++        return "registry_not_yaml_loadable"
++    if not spec_has_req:
++        return "spec_missing_req_4799"
++    for source, info in upstream_preconditions.items():
++        if info.get("present") is not True:
++            return f"missing_upstream:{source}"
++    return None
++
++
++def run_capstone(
++    *,
++    root: Path = REPO_ROOT,
++    summarizer: Summarizer | None = None,
++) -> JsonDict:
++    """Read upstreams via the summarizer, aggregate, and write the scorecard."""
++
++    start = time.perf_counter()
++    summarizer = summarizer or _run_summarizer
++    summarizer_path = root / SUMMARIZER_RELATIVE_PATH
++    summarizer_present = summarizer_path.exists()
++    artifacts: dict[str, JsonDict] = {}
++    artifact_sha256: dict[str, str] = {}
++    summarizer_results: dict[str, SummarizerResult] = {}
++    upstream_preconditions: dict[str, JsonDict] = {}
++
++    for source, spec in UPSTREAM_SOURCES.items():
++        path = root / spec.relative_path
++        present = path.exists()
++        upstream_preconditions[source] = {"path": spec.relative_path, "present": present}
++        if not present:
++            continue
++        if summarizer_present:
++            summary = summarizer(root, spec.relative_path)
++            summarizer_results[source] = summary
++            upstream_preconditions[source]["summarizer_exit_code"] = summary.exit_code
++        artifacts[source] = _read_json_object(path)
++        artifact_sha256[source] = file_sha256(path) or ""
++
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    registry_present = registry_path.exists()
++    registry_loadable = False
++    registry: JsonDict = {}
++    if registry_present:
++        try:
++            registry = _read_yaml_object(registry_path)
++            registry_loadable = True
++        except yaml.YAMLError:
++            registry = {}
++
++    spec_path = root / SPEC_RELATIVE_PATH
++    spec_has_req = spec_path.exists() and "REQ-CAPSTONE-4799" in spec_path.read_text(
++        encoding="utf-8"
++    )
++    preconditions_checked = {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "summarizer": {
++            "path": SUMMARIZER_RELATIVE_PATH,
++            "present": summarizer_present,
++        },
++        "registry": {
++            "path": REGISTRY_RELATIVE_PATH,
++            "present": registry_present,
++            "yaml_loadable": registry_loadable,
++            "sha256": file_sha256(registry_path) or "",
++        },
++        "spec_has_req_4799": spec_has_req,
++        "upstream_artifacts": upstream_preconditions,
++    }
++    duration_s = time.perf_counter() - start
++    blocker = _first_blocker(
++        summarizer_present=summarizer_present,
++        registry_present=registry_present,
++        registry_loadable=registry_loadable,
++        spec_has_req=spec_has_req,
++        upstream_preconditions=upstream_preconditions,
++    )
++    if blocker is not None:
++        artifact = build_blocked_artifact(
++            reason=blocker,
++            artifacts=artifacts,
++            artifact_sha256=artifact_sha256,
++            registry=registry,
++            summarizer_results=summarizer_results,
++            duration_s=duration_s,
++            preconditions_checked=preconditions_checked,
++        )
++    else:
++        artifact = build_artifact(
++            artifacts=artifacts,
++            artifact_sha256=artifact_sha256,
++            registry=registry,
++            registry_sha256=file_sha256(registry_path),
++            summarizer_results=summarizer_results,
++            duration_s=duration_s,
++            preconditions_checked=preconditions_checked,
++        )
++    result_path = root / RESULT_RELATIVE_PATH
++    result_path.parent.mkdir(parents=True, exist_ok=True)
++    result_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI boundary
++    artifact = run_capstone()
++    errors = validate_artifact(artifact)
++    print(
++        json.dumps(
++            {
++                "result_path": RESULT_RELATIVE_PATH,
++                "honest_verdict": artifact.get("honest_verdict"),
++                "schema_errors": errors,
++            },
++            sort_keys=True,
++        )
++    )
++    return 1 if errors else 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 077492f0f5..7104bee5fc 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-26T13:51:58.744197Z",
+-  "duration_s": 0.07255697250366211,
++  "run_date": "2026-06-26T14:21:45.355300Z",
++  "duration_s": 0.06641173362731934,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "0275ec241eb23167319fbaa4dae893bfdf6f6a724564014b58fbca096d309623",
++  "reproducibility_checksum": "81e1228e1eb5f5ea8a8d77f7a00007427c162ca759da093e25236102a9f17b28",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "29c9e29475b4535aa60fa27c47a835781ea8f7c9"
++    "adversarial_verify_version": "abab19b4f85d6203bf1eba3c9b879cd95e97a1e2"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 60145eddd5..b9612961e2 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-26T13:51:58.860512Z",
+-  "duration_s": 0.10657787322998047,
++  "run_date": "2026-06-26T14:21:45.463270Z",
++  "duration_s": 0.09961700439453125,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "6d60be15dd86d2e33e9867fb90e1691956342951f6da1e8a54b54626f9e3969b",
++  "reproducibility_checksum": "5d47a5b76c6dabca03bde1e4db325763580e33e9b129e375644d9541b8e249f1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "29c9e29475b4535aa60fa27c47a835781ea8f7c9"
++    "adversarial_verify_version": "abab19b4f85d6203bf1eba3c9b879cd95e97a1e2"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index a67ad2a125..24b86934d6 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 12.344837188720703,
++  "efficiency_gains_ms": 2.113819122314453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 0636214d8a..7bd2b73e25 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.2298884838819504e-05,
++  "duration_s": 5.125603638589382e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4799_capstone_v441.json b/results/experiment_4799_capstone_v441.json
+new file mode 100644
+index 0000000000..928add1411
+--- /dev/null
++++ b/results/experiment_4799_capstone_v441.json
+@@ -0,0 +1,386 @@
++{
++  "capstone_ready": true,
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 4791,
++      "fields_imported": [
++        "flagged_adversarial"
++      ],
++      "sha256": "sha256:70b99967e82744cfd6b1f96a17d16804bcfa4325857b48e02b81a918195a2047"
++    },
++    {
++      "experiment_id": 4792,
++      "fields_imported": [
++        "honest_verdict",
++        "new_levels_banked",
++        "offline_reproduced",
++        "reproduced_levels",
++        "target_game",
++        "registry_update",
++        "attempted_games",
++        "dead_ends",
++        "solve_provenance",
++        "verifier_is_oracle"
++      ],
++      "sha256": "sha256:cd478028017ec8007eee5e3c767559f8b1f02fcf556fc3ef5e0d3b446d16918a"
++    },
++    {
++      "experiment_id": 4793,
++      "fields_imported": [
++        "honest_verdict",
++        "verifier_checkpoint_refreshed",
++        "target_game",
++        "self_play_residual",
++        "offline_reproduced",
++        "reproduced_levels",
++        "reproduction_gate",
++        "solve_provenance"
++      ],
++      "sha256": "sha256:8d1eb1445f10c02c5c4bd52feddbd45f269ad53d069d0c01f779869ee8781405"
++    },
++    {
++      "experiment_id": 4794,
++      "fields_imported": [
++        "honest_verdict",
++        "heldout_first_win_rate",
++        "first_win_baseline",
++        "prior_best_heldout_first_win_rate",
++        "heldout_first_win_delta_vs_baseline",
++        "heldout_first_win_delta_vs_prior_best",
++        "heldout_variant_attempts",
++        "positive_control_passed",
++        "parity_test_green",
++        "null_delta_methodology_note"
++      ],
++      "sha256": "sha256:0654b39f23c70f647d76bedac2064f1e03bf89c25298cfdf3afeae4e08300cef"
++    },
++    {
++      "experiment_id": 4795,
++      "fields_imported": [
++        "honest_verdict",
++        "nulls_audited",
++        "trusted_nulls",
++        "silent_bugs_found",
++        "per_null_verdicts"
++      ],
++      "sha256": "sha256:556f1698012d66595d4321436b3e3793fb7415b73fb8157dd735ce3c25c2af88"
++    },
++    {
++      "experiment_id": 4796,
++      "fields_imported": [
++        "honest_verdict",
++        "submission_package_ready",
++        "submitted_to_leaderboard",
++        "operator_only",
++        "vram_estimate_gb",
++        "package_builds"
++      ],
++      "sha256": "sha256:14f3c89d3eb85857aa5d2eabe7da47dae7f19641f7967ba49368db1ca039d222"
++    },
++    {
++      "experiment_id": 4797,
++      "fields_imported": [
++        "honest_verdict",
++        "kv260_ssh_reachable",
++        "loaded_overlay",
++        "board_state",
++        "verifier_is_oracle"
++      ],
++      "sha256": "sha256:8afaa4b7f2212b5b767d88297f1302f5e25a0453efc444300e2c0e015a8cdd2c"
++    },
++    {
++      "experiment_id": 4798,
++      "fields_imported": [
++        "honest_verdict",
++        "flagged_for_v442",
++        "methods_mapped",
++        "s1_s2_context",
++        "arxiv_ids_cited"
++      ],
++      "sha256": "sha256:b4a74cada6fa15938b7317377c917a77af76eba3da4217d4dbbed00e2d99cb8f"
++    }
++  ],
++  "duration_s": 0.461246,
++  "experiment": "experiment_4799_capstone_v441",
++  "experiment_id": 4799,
++  "field_principles": {
++    "cited_upstream_artifacts": {
++      "principle": "list of {experiment_id, fields_imported, sha256} -- the audit trail."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; capstone_ready=true is success_/complete_."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
++    },
++    "reproducible_total_levels": {
++      "principle": "the monotonic ARC progress metric carried from the registry."
++    },
++    "s2_structural_energy_verdict": {
++      "principle": "the headline -- live off-path trust-gate WIN (S3 authorized) or BOUNDED; recorded from the gate numbers even if stale-flagged."
++    },
++    "stale_false_positive_notes": {
++      "principle": "records which conductor flags were stale-linter false-positives (live re-check clean) vs genuine."
++    }
++  },
++  "flagged_artifacts_skipped": [
++    {
++      "experiment_id": 4791,
++      "path": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
++      "reason": "live_critical_recheck",
++      "sha256": "sha256:70b99967e82744cfd6b1f96a17d16804bcfa4325857b48e02b81a918195a2047",
++      "source": "S2"
++    }
++  ],
++  "hardware_continuity": {
++    "board_hostname": "kv260",
++    "decision": "kv260_reachable",
++    "experiment_id": 4797,
++    "kv260_ssh_reachable": true,
++    "loaded_overlay": "carnot_ising_v2_n64",
++    "source": "HARDWARE",
++    "uio_device_count": 5
++  },
++  "heldout_readiness": {
++    "decision": "flat_null_no_readiness_gain",
++    "experiment_id": 4794,
++    "first_win_baseline": 0.04,
++    "heldout_first_win_delta_vs_baseline": 0.0,
++    "heldout_first_win_delta_vs_prior_best": 0.0,
++    "heldout_first_win_rate": 0.04,
++    "heldout_variant_attempts": 100,
++    "null_delta_methodology_note_present": true,
++    "parity_test_green": true,
++    "positive_control_passed": true,
++    "prior_best_heldout_first_win_rate": 0.04,
++    "source": "HELDOUT"
++  },
++  "honest_verdict": "complete_s2_structural_energy_bounded_v441_capstone_ready",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "levelup_bank": {
++    "experiment_id": 4792,
++    "moat_claim": false,
++    "new_levels_banked": 0,
++    "offline_reproduced": false,
++    "registry_updated": false,
++    "reproduced_levels": 0,
++    "reproducible_total_levels_after": 65,
++    "reproducible_total_levels_before": 65,
++    "reproducible_total_levels_delta": 0,
++    "source": "LEVELUP",
++    "target_game": "sb26",
++    "verifier_is_oracle": true
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_md_read": true,
++    "registry": {
++      "path": "ops/arc_solve_registry.yaml",
++      "present": true,
++      "sha256": "sha256:392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
++      "yaml_loadable": true
++    },
++    "spec_has_req_4799": true,
++    "summarizer": {
++      "path": "scripts/summarize_artifact.py",
++      "present": true
++    },
++    "upstream_artifacts": {
++      "BUG_AUDIT": {
++        "path": "results/experiment_4795_silent_bug_audit.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "HARDWARE": {
++        "path": "results/experiment_4797_kv260_continuity.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "HELDOUT": {
++        "path": "results/experiment_4794_heldout_first_win_readiness.json",
++        "present": true,
++        "summarizer_exit_code": 1
++      },
++      "LEVELUP": {
++        "path": "results/experiment_4792_levelup_attempt.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "PACKAGE": {
++        "path": "results/experiment_4796_submission_package_harden.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "S2": {
++        "path": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
++        "present": true,
++        "summarizer_exit_code": 2
++      },
++      "SELF_PLAY": {
++        "path": "results/experiment_4793_self_play_verifier_checkpoint.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      },
++      "SOTA": {
++        "path": "results/experiment_4798_sota_ingestion_energy_guided_generation.json",
++        "present": true,
++        "summarizer_exit_code": 0
++      }
++    }
++  },
++  "random_seed": 4799,
++  "readiness": {
++    "heldout_decision": "flat_null_no_readiness_gain",
++    "ready_for_operator_submit": false,
++    "reason": "requires_s2_trust_gate_win_clean_package_and_heldout_gain",
++    "s2_verdict": "bounded",
++    "submission_package_decision": "package_ready_operator_only"
++  },
++  "reproducibility_checksum": "sha256:bdaa7ca44176f7e336ba70db2368e7352852631605f0b0c830d26f5a9b32aa32",
++  "reproducible_total_levels": 65,
++  "result_path": "results/experiment_4799_capstone_v441.json",
++  "s2_structural_energy_verdict": {
++    "artifact_skipped": true,
++    "experiment_id": 4791,
++    "metrics_imported": false,
++    "reason": "s2_artifact_skipped_live_or_genuine_flag",
++    "reported_energy_minus_accuracy_delta": 0.0,
++    "reported_energy_minus_accuracy_delta_ci95": [
++      0.0,
++      0.0
++    ],
++    "s3_authorized": false,
++    "source": "S2",
++    "upstream_honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
++    "verdict": "bounded",
++    "verifier_is_oracle": false
++  },
++  "schema": "carnot.exp4799.capstone_v441.v1",
++  "self_play_checkpoint": {
++    "decision": "checkpoint_refreshed",
++    "experiment_id": 4793,
++    "offline_reproduced": true,
++    "reproduced_levels": 2,
++    "self_play_residual": "checkpoint_refreshed_gate_passed",
++    "solve_provenance": "live_agent_self_discovery",
++    "source": "SELF_PLAY",
++    "target_game": "re86",
++    "verifier_checkpoint_refreshed": true
++  },
++  "silent_bug_audit": {
++    "experiment_id": 4795,
++    "nulls_audited": 3,
++    "reopened_null_ids": [],
++    "s2_audit_note": "s2_null_audited_as_trustworthy",
++    "s2_null_audited_trustworthy": true,
++    "silent_bugs_found_count": 0,
++    "source": "BUG_AUDIT",
++    "trusted_nulls": [
++      "experiment_4791_structural_energy_s2_offpath_trust_gate",
++      "experiment_4792_levelup_attempt",
++      "experiment_4794_heldout_first_win_readiness"
++    ]
++  },
++  "sota_handoff": {
++    "arxiv_ids_cited": [
++      "1806.10230",
++      "1909.06878",
++      "2012.04322",
++      "2105.05233",
++      "2202.11705",
++      "2207.12598",
++      "2309.15028",
++      "2502.07202"
++    ],
++    "decision": "sota_handoff_mapped",
++    "experiment_id": 4798,
++    "flagged_for_v442_candidates": [
++      "cold_cfg_value_tree_generator_for_s3",
++      "energy_fitness_qd_pool_inserter"
++    ],
++    "methods_mapped_count": 5,
++    "s1_s2_context": {
++      "generation_constraint": "Use S1/S2 lower-is-better energy to guide new candidate generation and trust gating, not as an environment oracle or solve claim.",
++      "s1_energy_ranking_loo_auroc_mean": 0.7134961314270525,
++      "s1_gate_passed": true,
++      "s1_imported_honest_verdict": "success_structural_energy_s1_landscape_authorizes_s2",
++      "s1_source_artifact": "results/experiment_4781_structural_energy_s1_contrastive_landscape.json",
++      "s2_candidate_pool_size": 11,
++      "s2_energy_minus_accuracy_delta": 0.0,
++      "s2_imported_honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
++      "s2_live_path_reachable": true,
++      "s2_n_heldout_games": 5,
++      "s2_source_artifact": "results/experiment_4791_structural_energy_s2_offpath_trust_gate.json",
++      "s3_generation_allowed": true
++    },
++    "source": "SOTA"
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-4799",
++    "SCENARIO-CAPSTONE-4799",
++    "SCENARIO-CAPSTONE-4799-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4799-FIELD-PRINCIPLES"
++  ],
++  "stale_false_positive_notes": [
++    {
++      "experiment_id": 4791,
++      "known_stale_conductor_commit": "",
++      "live_recheck_exit_code": 2,
++      "metrics_imported": false,
++      "note": "stamped flag was not live-clean; metrics skipped",
++      "source": "S2",
++      "status": "genuine_or_unresolved"
++    }
++  ],
++  "submission_package_state": {
++    "decision": "package_ready_operator_only",
++    "experiment_id": 4796,
++    "operator_only": true,
++    "source": "PACKAGE",
++    "submission_package_ready": true,
++    "submitted_to_leaderboard": false,
++    "vram_estimate_gb": 15.146
++  },
++  "upstream_oracle_declarations": {
++    "BUG_AUDIT": {
++      "experiment_id": 4795,
++      "moat_claim_allowed": true,
++      "verifier_is_oracle": false
++    },
++    "HARDWARE": {
++      "experiment_id": 4797,
++      "moat_claim_allowed": true,
++      "verifier_is_oracle": false
++    },
++    "HELDOUT": {
++      "experiment_id": 4794,
++      "moat_claim_allowed": true,
++      "verifier_is_oracle": false
++    },
++    "LEVELUP": {
++      "experiment_id": 4792,
++      "moat_claim_allowed": false,
++      "verifier_is_oracle": true
++    },
++    "PACKAGE": {
++      "experiment_id": 4796,
++      "moat_claim_allowed": true,
++      "verifier_is_oracle": false
++    },
++    "S2": {
++      "experiment_id": 4791,
++      "moat_claim_allowed": true,
++      "verifier_is_oracle": false
++    },
++    "SELF_PLAY": {
++      "experiment_id": 4793,
++      "moat_claim_allowed": true,
++      "verifier_is_oracle": false
++    },
++    "SOTA": {
++      "experiment_id": 4798,
++      "moat_claim_allowed": true,
++      "verifier_is_oracle": false
++    }
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 756adc8935..e3f59853c1 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T13:51:31Z",
+-  "finished_at": "2026-06-26T13:51:31Z",
++  "started_at": "2026-06-26T14:21:16Z",
++  "finished_at": "2026-06-26T14:21:16Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6520caed39..17150e9e98 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T13:51:31Z",
+-  "finished_at": "2026-06-26T13:51:32Z",
++  "started_at": "2026-06-26T14:21:16Z",
++  "finished_at": "2026-06-26T14:21:16Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 4b817b75eb..0c18e95d5a 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T13:51:32Z",
+-  "finished_at": "2026-06-26T13:51:32Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-26T14:21:16Z",
++  "finished_at": "2026-06-26T14:21:16Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4799_capstone_v441.py b/tests/python/test_experiment_4799_capstone_v441.py
+new file mode 100644
+index 0000000000..bddcb6f850
+--- /dev/null
++++ b/tests/python/test_experiment_4799_capstone_v441.py
+@@ -0,0 +1,527 @@
++"""Tests for REQ-CAPSTONE-4799 / SCENARIO-CAPSTONE-4799."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4799_capstone_v441 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _s2(
++    *,
++    flagged: bool = False,
++    delta: float = 0.125,
++    ci: list[float] | None = None,
++    s3: bool = True,
++    oracle: bool = False,
++    live_path: bool = True,
++) -> JsonDict:
++    ci = [0.04, 0.21] if ci is None else ci
++    artifact: JsonDict = {
++        "experiment": "experiment_4791_structural_energy_s2_offpath_trust_gate",
++        "experiment_id": 4791,
++        "honest_verdict": "success_structural_energy_s2_trust_gate_authorizes_s3"
++        if s3
++        else "complete_structural_energy_s2_no_live_trust_value",
++        "verifier_is_oracle": oracle,
++        "live_path_reachable": live_path,
++        "energy_selected_offpath_cell_recall": 0.56,
++        "accuracy_gate_selected_offpath_cell_recall": 0.56 - delta,
++        "energy_minus_accuracy_delta": delta,
++        "energy_minus_accuracy_delta_ci95": ci,
++        "n_heldout_games": 5,
++        "min_heldout_games": 5,
++        "s3_authorized": s3,
++        "game_results": [{"game": f"g{i}", "energy_minus_accuracy_delta": delta} for i in range(5)],
++        "candidate_sets": {"g0": ["a", "b"]},
++    }
++    if flagged:
++        artifact["flagged_adversarial"] = True
++    return artifact
++
++
++def _levelup() -> JsonDict:
++    return {
++        "experiment": "experiment_4792_levelup_attempt",
++        "honest_verdict": "complete_sb26_no_new_level_residual_existing_depth",
++        "new_levels_banked": 0,
++        "offline_reproduced": False,
++        "reproduced_levels": 0,
++        "target_game": "sb26",
++        "registry_update": {
++            "reproducible_total_levels_before": 65,
++            "reproducible_total_levels_after": 65,
++            "updated": False,
++        },
++        "attempted_games": [{"game": "sb26", "reached_level": 2}],
++        "dead_ends": ["existing depth only"],
++        "solve_provenance": "live_agent_self_discovery",
++        "verifier_is_oracle": True,
++    }
++
++
++def _self_play() -> JsonDict:
++    return {
++        "experiment": "experiment_4793_self_play_verifier_checkpoint",
++        "honest_verdict": "success_re86_L2_checkpoint_refreshed",
++        "verifier_checkpoint_refreshed": True,
++        "target_game": "re86",
++        "self_play_residual": "checkpoint_refreshed_gate_passed",
++        "offline_reproduced": True,
++        "reproduced_levels": 2,
++        "reproduction_gate": {"reproduced": True, "game": "re86", "claimed_level": 2},
++        "solve_provenance": "live_agent_self_discovery",
++    }
++
++
++def _heldout(*, changed: bool = False) -> JsonDict:
++    return {
++        "experiment": "experiment_4794_heldout_first_win_readiness",
++        "experiment_id": 4794,
++        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
++        "heldout_first_win_rate": 0.08 if changed else 0.04,
++        "first_win_baseline": 0.04,
++        "prior_best_heldout_first_win_rate": 0.04,
++        "heldout_first_win_delta_vs_baseline": 0.04 if changed else 0.0,
++        "heldout_first_win_delta_vs_prior_best": 0.04 if changed else 0.0,
++        "heldout_variant_attempts": 100,
++        "positive_control_passed": True,
++        "parity_test_green": True,
++        "null_delta_methodology_note": "genuine no-improvement result",
++    }
++
++
++def _audit() -> JsonDict:
++    return {
++        "experiment": "experiment_4795_silent_bug_audit",
++        "honest_verdict": "complete_arc_null_silent_bug_audit_3_nulls_0_reopen",
++        "nulls_audited": 3,
++        "trusted_nulls": [
++            "experiment_4791_structural_energy_s2_offpath_trust_gate",
++            "experiment_4792_levelup_attempt",
++            "experiment_4794_heldout_first_win_readiness",
++        ],
++        "silent_bugs_found": [],
++        "per_null_verdicts": [
++            {
++                "null_id": "experiment_4791_structural_energy_s2_offpath_trust_gate",
++                "verdict": "trustworthy_null",
++                "s2_live_path_reachable_confirmed": True,
++                "s2_control_check": {"checked_games": 5},
++            }
++        ],
++        "verifier_is_oracle": False,
++    }
++
++
++def _package() -> JsonDict:
++    return {
++        "experiment": "experiment_4796_submission_package_harden",
++        "honest_verdict": "success_package_builds_vram_gate_green",
++        "submission_package_ready": True,
++        "submitted_to_leaderboard": False,
++        "operator_only": True,
++        "vram_estimate_gb": 15.146,
++        "package_builds": {"dry_build_ran": True},
++    }
++
++
++def _hardware() -> JsonDict:
++    return {
++        "experiment": 4797,
++        "honest_verdict": "success: kv260_continuity_recorded",
++        "kv260_ssh_reachable": True,
++        "loaded_overlay": "carnot_ising_v2_n64",
++        "board_state": {"hostname": "kv260", "uio_device_count": 5},
++        "verifier_is_oracle": False,
++    }
++
++
++def _sota() -> JsonDict:
++    return {
++        "honest_verdict": "success_sota_ingestion_energy_guided_generation_mapped",
++        "flagged_for_v442": [
++            {"candidate": "cold_cfg_value_tree_generator_for_s3"},
++            {"candidate": "energy_fitness_qd_pool_inserter"},
++        ],
++        "methods_mapped": [{"method": "Energy-constrained Langevin candidate generator"}],
++        "s1_s2_context": {
++            "s2_energy_minus_accuracy_delta": 0.0,
++            "s2_imported_honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
++        },
++        "arxiv_ids_cited": ["2202.11705"],
++    }
++
++
++def _artifacts(
++    *, s2: JsonDict | None = None, heldout: JsonDict | None = None
++) -> dict[str, JsonDict]:
++    return {
++        "S2": s2 or _s2(),
++        "LEVELUP": _levelup(),
++        "SELF_PLAY": _self_play(),
++        "HELDOUT": heldout or _heldout(),
++        "BUG_AUDIT": _audit(),
++        "PACKAGE": _package(),
++        "HARDWARE": _hardware(),
++        "SOTA": _sota(),
++    }
++
++
++def _hashes() -> dict[str, str]:
++    return {key: f"sha256:{key.lower()}" for key in mod.UPSTREAM_SOURCES}
++
++
++def _summaries(*, s2_code: int = 0, heldout_code: int = 1) -> dict[str, mod.SummarizerResult]:
++    summaries = {
++        key: mod.SummarizerResult(
++            command=["python", "scripts/summarize_artifact.py", spec.relative_path],
++            exit_code=0,
++            stdout="LIVE re-check: clean",
++            stderr="",
++        )
++        for key, spec in mod.UPSTREAM_SOURCES.items()
++    }
++    summaries["S2"] = mod.SummarizerResult(
++        command=[
++            "python",
++            "scripts/summarize_artifact.py",
++            mod.UPSTREAM_SOURCES["S2"].relative_path,
++        ],
++        exit_code=s2_code,
++        stdout="LIVE re-check: clean" if s2_code == 0 else "LIVE re-check: CRITICAL",
++        stderr="",
++    )
++    summaries["HELDOUT"] = mod.SummarizerResult(
++        command=[
++            "python",
++            "scripts/summarize_artifact.py",
++            mod.UPSTREAM_SOURCES["HELDOUT"].relative_path,
++        ],
++        exit_code=heldout_code,
++        stdout="LIVE re-check: warn",
++        stderr="",
++    )
++    return summaries
++
++
++def test_req_capstone_4799_spec_declares_scorecard_contract() -> None:
++    """REQ-CAPSTONE-4799: OpenSpec declares the .441 scorecard before code."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for ref in mod.SPEC_REFS:
++        assert ref in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4799_imports_stale_flagged_s2_pass() -> None:
++    """SCENARIO-CAPSTONE-4799: live-clean stale flags do not erase an S2 win."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(s2=_s2(flagged=True), heldout=_heldout(changed=True)),
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 65},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "success_s2_structural_energy_trust_gate_s3_authorized"
++    verdict = artifact["s2_structural_energy_verdict"]
++    assert verdict["verdict"] == "trust_gate_win"
++    assert verdict["s3_authorized"] is True
++    assert verdict["energy_minus_accuracy_delta"] == pytest.approx(0.125)
++    assert verdict["energy_minus_accuracy_delta_ci95"] == [0.04, 0.21]
++    assert verdict["ci_excludes_zero"] is True
++    assert artifact["stale_false_positive_notes"][0]["source"] == "S2"
++    assert artifact["stale_false_positive_notes"][0]["status"] == "stale_false_positive"
++    assert artifact["flagged_artifacts_skipped"] == []
++    assert (
++        "energy_minus_accuracy_delta" in artifact["cited_upstream_artifacts"][0]["fields_imported"]
++    )
++    assert artifact["levelup_bank"]["moat_claim"] is False
++    assert artifact["self_play_checkpoint"]["decision"] == "checkpoint_refreshed"
++    assert artifact["readiness"]["ready_for_operator_submit"] is True
++    assert artifact["silent_bug_audit"]["s2_audit_note"] == "s2_null_audited_as_trustworthy"
++    assert artifact["submission_package_state"]["decision"] == "package_ready_operator_only"
++    assert artifact["hardware_continuity"]["decision"] == "kv260_reachable"
++    assert artifact["sota_handoff"]["flagged_for_v442_candidates"] == [
++        "cold_cfg_value_tree_generator_for_s3",
++        "energy_fitness_qd_pool_inserter",
++    ]
++    assert artifact["upstream_oracle_declarations"]["LEVELUP"]["verifier_is_oracle"] is True
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_capstone_4799_bounded_for_live_critical_or_failed_gate() -> None:
++    """SCENARIO-CAPSTONE-4799: S2 is bounded unless non-oracle gate numbers pass."""
++
++    zero_delta = mod.build_artifact(
++        artifacts=_artifacts(s2=_s2(delta=0.0, ci=[0.0, 0.0], s3=False)),
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 65},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++    oracle = mod.build_artifact(
++        artifacts=_artifacts(s2=_s2(oracle=True)),
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 65},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++    live_unreachable = mod.build_artifact(
++        artifacts=_artifacts(s2=_s2(live_path=False)),
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 65},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++    critical = mod.build_artifact(
++        artifacts=_artifacts(s2=_s2(flagged=True, delta=0.0, ci=[0.0, 0.0], s3=False)),
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 65},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(s2_code=2),
++        duration_s=0.001,
++    )
++
++    assert (
++        zero_delta["s2_structural_energy_verdict"]["reason"]
++        == "s2_gate_numbers_do_not_authorize_s3"
++    )
++    assert oracle["s2_structural_energy_verdict"]["reason"] == "s2_oracle_not_moat"
++    assert (
++        live_unreachable["s2_structural_energy_verdict"]["reason"]
++        == "s2_gate_numbers_do_not_authorize_s3"
++    )
++    assert (
++        critical["s2_structural_energy_verdict"]["reason"]
++        == "s2_artifact_skipped_live_or_genuine_flag"
++    )
++    assert critical["s2_structural_energy_verdict"]["reported_energy_minus_accuracy_delta"] == 0.0
++    assert critical["s2_structural_energy_verdict"]["metrics_imported"] is False
++    assert critical["cited_upstream_artifacts"][0]["fields_imported"] == ["flagged_adversarial"]
++    assert critical["stale_false_positive_notes"][0]["status"] == "genuine_or_unresolved"
++    assert critical["flagged_artifacts_skipped"][0]["reason"] == "live_critical_recheck"
++
++
++def test_run_capstone_invokes_summarizer_for_every_upstream_and_writes(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4799: runtime aggregation reads every upstream via the summarizer."""
++
++    for key, payload in _artifacts().items():
++        _write_json(tmp_path / mod.UPSTREAM_SOURCES[key].relative_path, payload)
++    registry_path = tmp_path / mod.REGISTRY_RELATIVE_PATH
++    registry_path.parent.mkdir(parents=True, exist_ok=True)
++    registry_path.write_text("schema_version: 1\nreproducible_total_levels: 65\n", encoding="utf-8")
++    spec_path = tmp_path / mod.SPEC_RELATIVE_PATH
++    spec_path.parent.mkdir(parents=True, exist_ok=True)
++    spec_path.write_text("REQ-CAPSTONE-4799\n", encoding="utf-8")
++    summarizer_path = tmp_path / mod.SUMMARIZER_RELATIVE_PATH
++    summarizer_path.parent.mkdir(parents=True, exist_ok=True)
++    summarizer_path.write_text("# placeholder\n", encoding="utf-8")
++
++    called: list[str] = []
++
++    def summarizer(_root: Path, relative_path: str) -> mod.SummarizerResult:
++        called.append(relative_path)
++        code = 1 if "heldout" in relative_path else 0
++        return mod.SummarizerResult(["summarize", relative_path], code, "LIVE re-check: clean", "")
++
++    artifact = mod.run_capstone(root=tmp_path, summarizer=summarizer)
++
++    assert sorted(called) == sorted(spec.relative_path for spec in mod.UPSTREAM_SOURCES.values())
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++    assert artifact["preconditions_checked"]["summarizer"]["present"] is True
++    assert artifact["reproducibility_checksum"].startswith("sha256:")
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_run_capstone_blocks_on_missing_required_upstream(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4799-BLOCKED-PRECONDITION: missing upstreams fail closed."""
++
++    for key, payload in _artifacts().items():
++        if key != "SOTA":
++            _write_json(tmp_path / mod.UPSTREAM_SOURCES[key].relative_path, payload)
++    registry_path = tmp_path / mod.REGISTRY_RELATIVE_PATH
++    registry_path.parent.mkdir(parents=True, exist_ok=True)
++    registry_path.write_text("schema_version: 1\nreproducible_total_levels: 65\n", encoding="utf-8")
++    spec_path = tmp_path / mod.SPEC_RELATIVE_PATH
++    spec_path.parent.mkdir(parents=True, exist_ok=True)
++    spec_path.write_text("REQ-CAPSTONE-4799\n", encoding="utf-8")
++    summarizer_path = tmp_path / mod.SUMMARIZER_RELATIVE_PATH
++    summarizer_path.parent.mkdir(parents=True, exist_ok=True)
++    summarizer_path.write_text("# placeholder\n", encoding="utf-8")
++
++    artifact = mod.run_capstone(
++        root=tmp_path,
++        summarizer=lambda _root, relative_path: mod.SummarizerResult(
++            ["summarize", relative_path], 0, "LIVE re-check: clean", ""
++        ),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_missing_upstream:SOTA"
++    assert artifact["s2_structural_energy_verdict"] == {}
++    assert artifact["cited_upstream_artifacts"] == []
++    assert artifact["preconditions_checked"]["upstream_artifacts"]["SOTA"]["present"] is False
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_validate_artifact_rejects_schema_violations() -> None:
++    """SCENARIO-CAPSTONE-4799: malformed scorecards fail validation."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        artifact_sha256=_hashes(),
++        registry={"reproducible_total_levels": 65},
++        registry_sha256="sha256:registry",
++        summarizer_results=_summaries(),
++        duration_s=0.001,
++    )
++
++    assert "missing_field:honest_verdict" in mod.validate_artifact(
++        {key: value for key, value in artifact.items() if key != "honest_verdict"}
++    )
++    assert "honest_verdict_missing_terminal_prefix" in mod.validate_artifact(
++        {**artifact, "honest_verdict": "not terminal"}
++    )
++    assert "invalid_cited_upstream_artifacts" in mod.validate_artifact(
++        {**artifact, "cited_upstream_artifacts": [{"experiment_id": 4791}]}
++    )
++    assert "flagged_artifact_imported_metrics:4791" in mod.validate_artifact(
++        {
++            **artifact,
++            "flagged_artifacts_skipped": [{"experiment_id": 4791}],
++            "cited_upstream_artifacts": [
++                {
++                    "experiment_id": 4791,
++                    "fields_imported": ["energy_minus_accuracy_delta"],
++                    "sha256": "sha256:s2",
++                }
++            ],
++        }
++    )
++    assert "invalid_s2_verdict" in mod.validate_artifact(
++        {**artifact, "s2_structural_energy_verdict": {"verdict": "maybe"}}
++    )
++    assert "invalid_inference_substrate" in mod.validate_artifact(
++        {**artifact, "inference_substrate": "live_model"}
++    )
++    assert "invalid_reproducible_total_levels" in mod.validate_artifact(
++        {**artifact, "reproducible_total_levels": "65"}
++    )
++    assert "missing_principle:honest_verdict" in mod.validate_artifact(
++        {**artifact, "field_principles": {}}
++    )
++    assert "invalid_reproducibility_checksum" in mod.validate_artifact(
++        {**artifact, "reproducibility_checksum": ""}
++    )
++
++
++def test_defensive_branches_and_registry_yaml_error_are_recorded(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4799-BLOCKED-PRECONDITION: defensive branches fail closed."""
++
++    assert mod._int(True, 7) == 7
++    assert mod._int("x", 9) == 9
++    assert mod._float(True) is None
++    assert mod._float("x") is None
++    assert mod._ci_lower_positive("bad") is False
++    assert mod._skip_metrics(None, None) is True
++    assert mod._cited_artifacts({"LEVELUP": _levelup()}, {}, {})[0]["experiment_id"] == 4792
++    assert mod._s2_verdict(None, None) == {}
++    assert mod._levelup_bank(None) == {}
++    assert mod._self_play_checkpoint(None) == {}
++    assert mod._heldout_readiness(None) == {}
++    assert mod._silent_bug_audit(None) == {}
++    assert mod._submission_package_state(None) == {}
++    assert mod._hardware_continuity(None) == {}
++    assert mod._sota_handoff(None) == {}
++
++    upstream_present = {
++        key: {"present": True, "path": spec.relative_path}
++        for key, spec in mod.UPSTREAM_SOURCES.items()
++    }
++    assert (
++        mod._first_blocker(
++            summarizer_present=False,
++            registry_present=False,
++            registry_loadable=False,
++            spec_has_req=False,
++            upstream_preconditions=upstream_present,
++        )
++        == "missing_summarizer"
++    )
++    assert (
++        mod._first_blocker(
++            summarizer_present=True,
++            registry_present=False,
++            registry_loadable=False,
++            spec_has_req=False,
++            upstream_preconditions=upstream_present,
++        )
++        == "missing_registry"
++    )
++    assert (
++        mod._first_blocker(
++            summarizer_present=True,
++            registry_present=True,
++            registry_loadable=False,
++            spec_has_req=False,
++            upstream_preconditions=upstream_present,
++        )
++        == "registry_not_yaml_loadable"
++    )
++    assert (
++        mod._first_blocker(
++            summarizer_present=True,
++            registry_present=True,
++            registry_loadable=True,
++            spec_has_req=False,
++            upstream_preconditions=upstream_present,
++        )
++        == "spec_missing_req_4799"
++    )
++
++    for key, payload in _artifacts().items():
++        _write_json(tmp_path / mod.UPSTREAM_SOURCES[key].relative_path, payload)
++    registry_path = tmp_path / mod.REGISTRY_RELATIVE_PATH
++    registry_path.parent.mkdir(parents=True, exist_ok=True)
++    registry_path.write_text("schema_version: [unterminated\n", encoding="utf-8")
++    spec_path = tmp_path / mod.SPEC_RELATIVE_PATH
++    spec_path.parent.mkdir(parents=True, exist_ok=True)
++    spec_path.write_text("REQ-CAPSTONE-4799\n", encoding="utf-8")
++    summarizer_path = tmp_path / mod.SUMMARIZER_RELATIVE_PATH
++    summarizer_path.parent.mkdir(parents=True, exist_ok=True)
++    summarizer_path.write_text("# placeholder\n", encoding="utf-8")
++
++    artifact = mod.run_capstone(
++        root=tmp_path,
++        summarizer=lambda _root, relative_path: mod.SummarizerResult(
++            ["summarize", relative_path], 0, "LIVE re-check: clean", ""
++        ),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_registry_not_yaml_loadable"
++    assert artifact["preconditions_checked"]["registry"]["yaml_loadable"] is False
++    assert mod.validate_artifact(artifact) == []
+-- 
+2.55.0
+

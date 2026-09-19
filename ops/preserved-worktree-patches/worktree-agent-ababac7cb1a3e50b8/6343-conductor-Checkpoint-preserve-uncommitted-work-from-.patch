@@ -1,0 +1,64 @@
+From c5fe9ecf2165d7054fed7bcd634b21fb9fd96ddd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 22:41:00 -0400
+Subject: [PATCH 06343/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                           |  2 +-
+ ops/conductor-log.md                                   |  1 +
+ ops/conductor-state.json                               |  2 +-
+ ...57_gated_sota_distortion_guarded_decoding_v496.json | 10 +++++++++-
+ 4 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 183c830e83..e026971d45 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 346, "phase": "iteration_start", "last_beat": "2026-07-09T02:18:22Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 347, "phase": "iteration_start", "last_beat": "2026-07-09T02:40:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 00a8e9d18e..91b8484f42 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10597,3 +10597,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-09 01:38 UTC | Transition .495 outcomes into .496 execution conte | OK | 87 passed, 1 warning in 10.62s |
+ | 2026-07-09 01:53 UTC | Execution-time 2025-2026 source delta for .496 | OK | 121 passed, 1 warning in 9.00s |
+ | 2026-07-09 02:16 UTC | Guided-decoding tautology corrigendum for Exp5444 | OK | 88 passed, 1 warning in 11.22s |
++| 2026-07-09 02:38 UTC | Gated local SOTA distortion-guarded verifier-poten | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 598abd892b..24d93a145e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 346, "phase": "iteration_start", "started_at": "2026-07-09T02:18:22Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 347, "phase": "iteration_start", "started_at": "2026-07-09T02:40:58Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json b/results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json
+index 9eea7ec9c4..8e0de3a80a 100644
+--- a/results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json
++++ b/results/experiment_5457_gated_sota_distortion_guarded_decoding_v496.json
+@@ -2343,5 +2343,13 @@
+       "outcome": "passed"
+     }
+   ],
+-  "verifier_guided_decoding_ready": false
++  "verifier_guided_decoding_ready": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "accepted_validity_rate=0.6666666666666666 and guided_validity_delta_vs_unconstrained=0.6666666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

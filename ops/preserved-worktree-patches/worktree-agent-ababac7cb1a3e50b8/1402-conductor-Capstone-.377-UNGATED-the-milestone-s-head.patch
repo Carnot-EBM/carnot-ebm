@@ -1,0 +1,1647 @@
+From adf819e0eadc80fe932b374080500acd4957a072 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 03:55:34 -0400
+Subject: [PATCH 01402/11362] [conductor] Capstone .377 (UNGATED): the
+ milestone's headline question is DID VERIFIER-AS-REWARD RFT BEAT GOLD-SFT
+ HELD-OUT -- the pivot's first decision-grade result? Aggregate: PIVOT =
+ exp4079 (rft_heldout vs cold_base CI-excl-0 AND vs sft; the
+ verifier-as-reward gate) + exp4080 (Sudoku positive control reproduced -> is
+ the ARC result trustworthy?); DECENTRALIZATION-AS-DISTILLATION = did
+ exp4079's RFT move the local rate toward codex (abstraction latent)?;
+ ACCURACY = exp4082 (total_games_solved); SOTA = exp4081. Honest verdict on
+ whether the pivot's first experiment validated verifier-as-reward (or
+ produced an honest negative + a logged gap). SKIP any flagged_adversarial
+ artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists.
+
+Automated research step by research conductor.
+Task ID: exp4085-capstone-v377
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   2 +
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/reporting/capstone_v377_4085.py | 735 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_4085_capstone_v377.json    | 271 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../test_experiment_4085_capstone_v377.py     | 305 ++++++++
+ 21 files changed, 1342 insertions(+), 29 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v377_4085.py
+ create mode 100644 results/experiment_4085_capstone_v377.json
+ create mode 100644 tests/python/test_experiment_4085_capstone_v377.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index b98d755e0d..328ce2d0f4 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -37,3 +37,5 @@
+ - SCENARIO-CAPSTONE-4065: The capstone artifact must emit principle-annotated top-level fields for `honest_verdict`, bare boolean `verifier_transferred_off_arc_significantly`, bare integer `off_arc_accumulated_n`, `decentralization_diagnosis`, bare boolean `verifier_pruner_efficiency_gain`, bare integer `total_games_solved`, `flagged_artifacts_skipped`, `cited_upstream_artifacts`, and `inference_substrate`, with G1 defined from exp4057 best-arm CI, accumulated-N, and whether the CI excludes zero with headroom; G3 defined from exp4059 accumulated MoE coverage against the 0.2581 baseline, accumulated-N, and latent/absent/accumulating/uninformative/flagged-skipped diagnosis; EFFICIENCY defined from exp4061 action reduction and solverate parity; and accuracy, self-learning, and hardware deltas imported from clean exp4060, exp4062, and exp4064 while recording missing upstreams honestly.
+ - REQ-CAPSTONE-4075: The .376 capstone must summarize every landed upstream artifact from exp4066 through exp4074 through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` before importing metrics, cite every included upstream artifact by sha256, and honestly aggregate the single-synchronous resume-accumulate mechanism fix, G1 off-ARC transfer, G3 sovereign-base MoE coverage, verifier-as-action-pruner efficiency, and accuracy/self-learning/hardware deltas without treating clean negative, uninformative, or accumulating outcomes as launch failures.
+ - SCENARIO-CAPSTONE-4075: The capstone artifact must emit principle-annotated top-level fields for `honest_verdict`, bare boolean `mechanism_fix_produced_measurement`, bare boolean `verifier_transferred_off_arc_significantly`, bare integer `off_arc_accumulated_n`, `decentralization_diagnosis`, bare boolean `verifier_pruner_efficiency_gain`, bare integer `total_games_solved`, `flagged_artifacts_skipped`, `cited_upstream_artifacts`, and `inference_substrate`, with G1 defined from exp4068 corpus routing, accumulated-N, demo-fit and best-arm CIs, oracle headroom, and whether the CI excludes zero with headroom; G3 defined from exp4069 accumulated MoE coverage against the 0.2581 baseline, accumulated-N, and latent/absent/accumulating/uninformative/flagged-skipped diagnosis; EFFICIENCY defined from exp4071 action reduction and solverate parity; and accuracy, self-learning, and hardware deltas imported from clean exp4070, exp4072, and exp4074 while recording flagged or missing upstreams honestly.
++- REQ-CAPSTONE-4085: The .377 capstone must aggregate whatever exists from exp4076 through exp4084 without upstream gates, must skip every artifact stamped `flagged_adversarial:true` before importing metrics, must cite each included upstream artifact by sha256, and must honestly answer whether verifier-certified RFT was measured as beating cold base, beating or matching gold-SFT, reproducing the Sudoku positive control, moving local induction toward Codex, and advancing ARC games.
++- SCENARIO-CAPSTONE-4085: The capstone artifact must emit top-level fields for `honest_verdict`, `pivot_result`, bare boolean `sudoku_control_reproduced`, `decentralization_distillation_outcome`, bare integer `games_solved_total`, `cited_upstream_artifacts`, and `inference_substrate`, with the pivot outcome defined from clean exp4079 RFT-vs-cold/gold metrics when present, otherwise as blocked or accumulating from the landed gate-check artifact; Sudoku trust defined only from a clean exp4080 positive-control artifact; ARC accuracy defined from clean exp4082 `total_games_solved`; and all flagged exp4077, exp4078, exp4080, or exp4083 metrics recorded only as skipped provenance, not imported headline evidence.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 023ac92ce4..2e11fd371e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 165,
+   "code_violations": 0,
+-  "experiments_checked": 3110,
++  "experiments_checked": 3111,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v377_4085.py b/python/carnot/reporting/capstone_v377_4085.py
+new file mode 100644
+index 0000000000..fc26116ae1
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v377_4085.py
+@@ -0,0 +1,735 @@
++"""Build the Exp 4085 v377 capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-4085, SCENARIO-CAPSTONE-4085.
++
++The capstone answers the verifier-as-reward pivot from landed artifacts only.
++It does not trust stamped adversarial artifacts for metrics, because those
++artifacts already failed the repository's fabrication checks. Blocked artifacts
++are still read as state: a blocked RFT eval is an honest outcome, not a reason
++for the capstone itself to skip.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_4085_capstone_v377.json")
++EXPERIMENT_ID = 4085
++RANDOM_SEED = 4085
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++PYTHON_BIN = Path(".venv/bin/python")
++
++UPSTREAM_IDS = tuple(range(4076, 4085))
++DEFAULT_UPSTREAM_PATHS: Mapping[int, Path] = {
++    4076: Path("results/experiment_4076_archive_v376_activate_v377.json"),
++    4077: Path("results/experiment_4077_verifier_reward_rft_corpus_build.json"),
++    4078: Path("results/experiment_4078_verifier_reward_rft_train_launch.json"),
++    4079: Path("results/experiment_4079_verifier_reward_rft_eval_collect.json"),
++    4080: Path("results/experiment_4080_sudoku_rft_positive_control.json"),
++    4081: Path("results/experiment_4081_sota_ingestion_verifier_as_reward_receipt.json"),
++    4082: Path("results/experiment_4082_ninth_game_explore_first.json"),
++    4083: Path("results/experiment_4083_verifier_registry_gaps_hygiene.json"),
++    4084: Path("results/experiment_4084_hardware_continuity.json"),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "pivot_result",
++    "sudoku_control_reproduced",
++    "decentralization_distillation_outcome",
++    "games_solved_total",
++    "cited_upstream_artifacts",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefix verdict that distinguishes measured wins, measured nulls, blocked "
++        "pivot state, accumulating training, and skipped flagged controls."
++    ),
++    "pivot_result": (
++        "principle: the headline -- the verifier's training-time value is now measured one "
++        "way or the other, or honestly recorded as blocked/accumulating when no clean held-out "
++        "RFT eval exists."
++    ),
++    "sudoku_control_reproduced": (
++        "BARE BOOL - true only from a clean, non-flagged Sudoku positive-control artifact."
++    ),
++    "decentralization_distillation_outcome": (
++        "States whether clean RFT moved local induction toward Codex, or that the movement is unmeasured."
++    ),
++    "games_solved_total": "BARE INT - monotonic ARC-AGI-3 solved-game count from clean exp4082 evidence.",
++    "cited_upstream_artifacts": "Included non-flagged upstream experiment ids and sha256 provenance only.",
++    "inference_substrate": "Declares this capstone as aggregation from upstream artifacts.",
++}
++
++
++def is_sha256(value: object) -> bool:
++    """Return true when a value is a lowercase SHA-256 hex digest."""
++
++    return (
++        isinstance(value, str)
++        and len(value) == 64
++        and all(ch in "0123456789abcdef" for ch in value)
++    )
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Load a JSON object artifact and reject malformed top-level values."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} did not contain a JSON object")  # pragma: no cover
++    return payload
++
++
++def sha256_file(path: Path) -> str:
++    """Hash an upstream artifact for provenance."""
++
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def relative_to_root(root: Path, path: Path) -> str:
++    """Return a stable repository-relative path for audit fields."""
++
++    try:
++        return str(path.relative_to(root))
++    except ValueError:  # pragma: no cover
++        return str(path)
++
++
++def _fallback_path(root: Path, experiment_id: int) -> Path | None:
++    matches = sorted((root / "results").glob(f"experiment_{experiment_id}_*.json"))
++    return matches[0] if matches else None
++
++
++def selected_upstream_paths(root: Path | str) -> dict[int, Path | None]:
++    """Select the intended artifact for each .377 upstream id."""
++
++    root_path = Path(root)
++    paths: dict[int, Path | None] = {}
++    for experiment_id in UPSTREAM_IDS:
++        default = root_path / DEFAULT_UPSTREAM_PATHS[experiment_id]
++        paths[experiment_id] = (
++            default if default.exists() else _fallback_path(root_path, experiment_id)
++        )
++    return paths
++
++
++def run_summarize_artifact(root: Path, path: Path) -> JsonDict:  # pragma: no cover
++    """Run the mandated disciplined reader before importing an upstream metric."""
++
++    completed = subprocess.run(
++        [str(PYTHON_BIN), "scripts/summarize_artifact.py", str(path)],
++        cwd=root,
++        text=True,
++        capture_output=True,
++        check=False,
++    )
++    return {
++        "returncode": completed.returncode,
++        "stdout": completed.stdout,
++        "stderr": completed.stderr,
++    }
++
++
++def summarize_existing_artifacts(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    supplied: Mapping[int, Mapping[str, Any]] | None,
++) -> dict[int, JsonDict]:
++    """Return summarize_artifact status for every upstream artifact that exists."""
++
++    statuses: dict[int, JsonDict] = {}
++    for experiment_id, path in paths.items():
++        if path is None:
++            continue
++        if supplied is not None and experiment_id in supplied:
++            statuses[experiment_id] = dict(supplied[experiment_id])
++        else:  # pragma: no cover
++            statuses[experiment_id] = run_summarize_artifact(root, path)
++    return statuses
++
++
++def flagged(payload: Mapping[str, Any] | None) -> bool:
++    """Return whether an upstream carries the stamped adversarial flag."""
++
++    return isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++
++
++def live_critical(summary: Mapping[str, Any] | None) -> bool:
++    """Return whether summarize_artifact.py observed a live critical concern."""
++
++    return isinstance(summary, Mapping) and summary.get("returncode") == 2
++
++
++def verdict_text(payload: Mapping[str, Any] | None) -> str:
++    """Extract the honest verdict text without treating non-strings as verdicts."""
++
++    value = payload.get("honest_verdict") if isinstance(payload, Mapping) else None
++    return value if isinstance(value, str) else ""
++
++
++def invoked(payload: Mapping[str, Any] | None) -> bool:
++    """Return false for missing or blocked upstream artifacts."""
++
++    text = verdict_text(payload)
++    status = str_metric(payload, "status")
++    return (
++        bool(text)
++        and not text.startswith(("blocked_", "blocked:"))
++        and status != "blocked"
++        and "pending_execution" not in text
++    )
++
++
++def bool_metric(payload: Mapping[str, Any] | None, field: str) -> bool:
++    """Extract a JSON boolean without truthifying numbers or strings."""
++
++    return isinstance(payload, Mapping) and payload.get(field) is True
++
++
++def int_metric(payload: Mapping[str, Any] | None, field: str) -> int:
++    """Extract an integer counter while rejecting booleans."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, int) and not isinstance(value, bool) else 0
++
++
++def float_metric(payload: Mapping[str, Any] | None, field: str) -> float:
++    """Extract a numeric metric while rejecting booleans and strings."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else 0.0
++
++
++def str_metric(payload: Mapping[str, Any] | None, field: str) -> str:
++    """Extract a string metric for audit fields."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, str) else ""
++
++
++def list_float_metric(payload: Mapping[str, Any] | None, field: str) -> list[float]:
++    """Extract numeric confidence-interval endpoints while rejecting mixed content."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    if not isinstance(value, list):
++        return []
++    return [
++        float(item)
++        for item in value
++        if isinstance(item, int | float) and not isinstance(item, bool)
++    ]
++
++
++def nested_int(payload: Mapping[str, Any] | None, path: tuple[str, ...]) -> int:
++    """Read a nested integer fallback without accepting booleans as counters."""
++
++    current: Any = payload
++    for key in path:
++        if not isinstance(current, Mapping):
++            return 0
++        current = current.get(key)
++    return current if isinstance(current, int) and not isinstance(current, bool) else 0
++
++
++def _ci_excludes_zero_positive(ci: list[float]) -> bool:
++    return len(ci) == 2 and ci[0] > 0.0 and ci[1] > 0.0
++
++
++def _ci_touches_zero(ci: list[float]) -> bool:
++    return len(ci) == 2 and ci[0] <= 0.0 <= ci[1]
++
++
++def pivot_comparison(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    """Summarize the ARC held-out RFT comparison without manufacturing missing metrics."""
++
++    if was_skipped:
++        status = "skipped_flagged"
++    elif not isinstance(payload, Mapping):
++        status = "missing"
++    elif str_metric(payload, "status") == "blocked" or verdict_text(payload).startswith(
++        ("blocked_", "blocked:")
++    ):
++        status = "blocked"
++    elif bool_metric(payload, "training_accumulating") or "accumulating" in verdict_text(payload):
++        status = "accumulating"
++    else:
++        status = "measured"
++
++    measured = status == "measured"
++    rft_rate = float_metric(payload, "rft_correct_induction_rate") if measured else 0.0
++    cold_rate = float_metric(payload, "cold_base_induction_rate") if measured else 0.0
++    gold_rate = float_metric(payload, "gold_sft_induction_rate") if measured else 0.0
++    cold_delta = (
++        float_metric(payload, "rft_vs_cold_delta") or rft_rate - cold_rate
++        if measured
++        else 0.0
++    )
++    gold_delta = (
++        float_metric(payload, "rft_vs_gold_delta") or rft_rate - gold_rate
++        if measured
++        else 0.0
++    )
++    cold_ci = list_float_metric(payload, "rft_vs_cold_ci95") if measured else []
++    gold_ci = list_float_metric(payload, "rft_vs_gold_ci95") if measured else []
++    beats_cold = measured and cold_delta > 0.0 and _ci_excludes_zero_positive(cold_ci)
++    matches_gold = measured and (
++        rft_rate >= gold_rate or (gold_delta >= -0.01 and _ci_touches_zero(gold_ci))
++    )
++
++    return {
++        "status": "measured_positive"
++        if beats_cold and matches_gold
++        else "measured_null"
++        if measured
++        else status,
++        "base_model": str_metric(payload, "base_model") if isinstance(payload, Mapping) else "",
++        "rft_correct_induction_rate": rft_rate,
++        "cold_base_induction_rate": cold_rate,
++        "gold_sft_induction_rate": gold_rate,
++        "rft_vs_cold_delta": cold_delta,
++        "rft_vs_cold_ci95": cold_ci,
++        "rft_beats_cold_ci_excludes_zero": beats_cold,
++        "rft_vs_gold_delta": gold_delta,
++        "rft_vs_gold_ci95": gold_ci,
++        "rft_beats_or_matches_gold_sft": matches_gold,
++        "training_accumulating": status == "accumulating",
++        "blocked_at_layer": str_metric(payload, "blocked_at_layer"),
++        "gate_check_summary": str_metric(payload, "gate_check_summary"),
++        "honest_verdict": verdict_text(payload),
++        "codex_induction_rate": float_metric(payload, "codex_induction_rate")
++        if measured
++        else 0.0,
++        "prior_local_induction_rate": float_metric(payload, "prior_local_induction_rate")
++        if measured
++        else 0.0,
++    }
++
++
++def pivot_result_text(pivot: Mapping[str, Any]) -> str:
++    """Write the load-bearing headline in the requested principle-prefixed form."""
++
++    status = str(pivot.get("status", ""))
++    if status == "measured_positive":
++        return (
++            "principle: verifier-certified RFT beat cold held-out with CI excluding zero "
++            "and matched gold-SFT; the verifier's training-time value is measured."
++        )
++    if status == "measured_null":
++        return (
++            "principle: verifier-certified RFT was measured on held-out ARC but did not "
++            "clear both the cold-base and gold-SFT comparisons."
++        )
++    if status == "accumulating":
++        return (
++            "principle: ARC verifier-certified RFT training is still accumulating; the first "
++            "window is not decision-grade yet."
++        )
++    if status == "blocked":
++        return (
++            "principle: ARC verifier-certified RFT training-time value was not measured; "
++            "exp4079 landed only a blocked gate-check because exp4078 never launched training."
++        )
++    return (
++        "principle: ARC verifier-certified RFT training-time value was not measured from the "
++        "landed non-flagged artifacts."
++    )
++
++
++def sudoku_control(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    """Report whether the positive control reproduced from clean evidence."""
++
++    if was_skipped:
++        clean = False
++        status = "skipped_flagged"
++    else:
++        clean = invoked(payload)
++        status = "measured" if clean else "missing_or_blocked"
++    rft_rate = float_metric(payload, "rft_rate") if clean else 0.0
++    sft_rate = float_metric(payload, "sft_rate") if clean else 0.0
++    n_seeds = int_metric(payload, "n_seeds") if clean else 0
++    reproduced = clean and bool_metric(payload, "reproduces_beachhead") and rft_rate >= sft_rate
++    return {
++        "status": "reproduced" if reproduced else status if not clean else "failed",
++        "reproduces_beachhead": reproduced,
++        "rft_rate": rft_rate,
++        "sft_rate": sft_rate,
++        "n_seeds": n_seeds,
++        "honest_verdict": verdict_text(payload) if clean else "",
++    }
++
++
++def decentralization_distillation_outcome(pivot: Mapping[str, Any]) -> str:
++    """State whether clean local induction moved toward Codex after RFT."""
++
++    if pivot.get("status") not in {"measured_positive", "measured_null"}:
++        return (
++            "unmeasured: no clean ARC RFT induction-rate delta; cannot assess "
++            "Invisible-Leash latent movement toward Codex."
++        )
++    prior = float(pivot.get("prior_local_induction_rate", 0.0))
++    local = float(pivot.get("rft_correct_induction_rate", 0.0))
++    codex = float(pivot.get("codex_induction_rate", 0.0))
++    if prior > 0.0 and local > prior and codex > local:
++        return f"moved_toward_codex: local induction {prior:.4f}->{local:.4f} toward codex {codex:.4f}"
++    return f"not_moved_toward_codex: local induction {prior:.4f}->{local:.4f} vs codex {codex:.4f}"
++
++
++def arc_accuracy(
++    activation_payload: Mapping[str, Any] | None,
++    accuracy_payload: Mapping[str, Any] | None,
++    *,
++    was_skipped: bool,
++) -> JsonDict:
++    """Build the ARC games-solved result from clean exp4082, with activation fallback."""
++
++    prior = int_metric(accuracy_payload, "prior_total_games_solved") or nested_int(
++        activation_payload,
++        ("milestone_376_closestate", "accuracy", "total_games_solved"),
++    )
++    clean = not was_skipped and invoked(accuracy_payload)
++    solved = (
++        clean
++        and bool_metric(accuracy_payload, "game_solved")
++        and bool_metric(accuracy_payload, "real_env_confirmed")
++    )
++    total = int_metric(accuracy_payload, "total_games_solved") if clean else prior
++    return {
++        "status": "new_game_solved"
++        if solved
++        else "measured_no_new_solve"
++        if clean
++        else "missing_or_blocked",
++        "prior_total_games_solved": prior,
++        "games_solved_total": total or prior,
++        "game_solved": solved,
++        "target_game": str_metric(accuracy_payload, "target_game") if clean else "",
++        "real_env_confirmed": solved,
++        "levels_completed": int_metric(accuracy_payload, "levels_completed") if clean else 0,
++        "first_solve_at_action": int_metric(accuracy_payload, "first_solve_at_action")
++        if clean
++        else 0,
++        "candidate_baseline_actions": int_metric(accuracy_payload, "candidate_baseline_actions")
++        if clean
++        else 0,
++    }
++
++
++def hardware_continuity(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Carry clean board-continuity state without making an acceleration claim."""
++
++    clean = invoked(payload)
++    reachability = payload.get("per_board_reachability") if isinstance(payload, Mapping) else None
++    return {
++        "included": clean,
++        "kv260_terminal_confirmed": clean and bool_metric(payload, "kv260_terminal_confirmed"),
++        "gatemate_step_taken": str_metric(payload, "gatemate_step_taken") if clean else "",
++        "polarfire_step_taken": str_metric(payload, "polarfire_step_taken") if clean else "",
++        "fabric_acceleration_claimed": clean
++        and bool_metric(payload, "fabric_acceleration_claimed"),
++        "per_board_reachability": dict(reachability)
++        if clean and isinstance(reachability, Mapping)
++        else {},
++    }
++
++
++def sota_ingestion(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Carry the non-metric SOTA ingestion receipt for verifier-as-reward planning."""
++
++    methods = payload.get("methods_mapped") if isinstance(payload, Mapping) else None
++    clean = invoked(payload)
++    return {
++        "included": clean,
++        "methods_mapped_count": len(methods) if clean and isinstance(methods, list) else 0,
++        "honest_verdict": verdict_text(payload) if clean else "",
++    }
++
++
++def registry_hygiene(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    """Carry registry/gaps state only when the artifact is clean."""
++
++    clean = not was_skipped and invoked(payload)
++    return {
++        "included": clean,
++        "registry_updated": clean and bool_metric(payload, "registry_updated"),
++        "gaps_updated": clean and bool_metric(payload, "gaps_updated"),
++        "pivot_outcome_recorded": clean and bool_metric(payload, "pivot_outcome_recorded"),
++    }
++
++
++def flagged_artifacts_skipped(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    skipped_ids: set[int],
++) -> list[JsonDict]:
++    """Record upstreams excluded before any metric import."""
++
++    rows: list[JsonDict] = []
++    for experiment_id in sorted(skipped_ids):
++        path = paths[experiment_id]
++        rows.append(
++            {
++                "experiment_id": experiment_id,
++                "path": relative_to_root(root, path) if path is not None else "",
++                "reason": "flagged_adversarial:true"
++                if flagged(upstreams[experiment_id])
++                else "unknown",
++                "sha256": sha256_file(path) if path is not None else "",
++            }
++        )
++    return rows
++
++
++def cited_upstream_artifacts(
++    paths: Mapping[int, Path | None], clean_ids: set[int]
++) -> list[JsonDict]:
++    """Build the required citation list of included upstream ids and sha256."""
++
++    return [
++        {"experiment_id": experiment_id, "sha256": sha256_file(path)}
++        for experiment_id in UPSTREAM_IDS
++        if experiment_id in clean_ids and (path := paths[experiment_id]) is not None
++    ]
++
++
++def missing_upstream_artifacts(paths: Mapping[int, Path | None]) -> list[JsonDict]:
++    """Record missing upstream artifacts without turning absence into a gate."""
++
++    return [
++        {"experiment_id": experiment_id}
++        for experiment_id in UPSTREAM_IDS
++        if paths[experiment_id] is None
++    ]
++
++
++def upstream_artifact_state(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    summaries: Mapping[int, Mapping[str, Any]],
++    skipped_ids: set[int],
++    clean_ids: set[int],
++) -> dict[str, JsonDict]:
++    """Expose inclusion state so skipped and missing inputs are auditable."""
++
++    state: dict[str, JsonDict] = {}
++    for experiment_id in UPSTREAM_IDS:
++        path = paths[experiment_id]
++        payload = upstreams[experiment_id]
++        state[str(experiment_id)] = {
++            "exists": path is not None,
++            "path": relative_to_root(root, path) if path is not None else "",
++            "honest_verdict": verdict_text(payload) if isinstance(payload, Mapping) else "missing",
++            "flagged_adversarial": flagged(payload),
++            "live_critical": live_critical(summaries.get(experiment_id)),
++            "included": experiment_id in clean_ids,
++            "skipped": experiment_id in skipped_ids,
++            "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++        }
++    return state
++
++
++def duration_from(started_s: float, now_s: float | None) -> float:
++    """Compute an honest aggregation duration with a small nonzero floor."""
++
++    end = time.perf_counter() if now_s is None else float(now_s)
++    return max(0.0001, end - started_s)
++
++
++def verdict(
++    *,
++    pivot: Mapping[str, Any],
++    sudoku: Mapping[str, Any],
++    games_solved_total: int,
++    skipped_count: int,
++) -> str:
++    """Build the terminal-prefix .377 headline from measured outcomes."""
++
++    pivot_status = str(pivot.get("status", ""))
++    sudoku_status = str(sudoku.get("status", ""))
++    sudoku_verdict_status = "flagged_skipped" if sudoku_status == "skipped_flagged" else sudoku_status
++    if pivot_status == "measured_positive" and sudoku_status == "reproduced":
++        return (
++            "success: capstone_v377_verifier_as_reward_rft_beats_cold_matches_gold_"
++            f"sudoku_reproduced_games{games_solved_total}_flagged_skipped{skipped_count}"
++        )
++    if pivot_status == "accumulating":
++        return (
++            "complete: capstone_v377_pivot_train_accumulating_"
++            f"sudoku_{sudoku_verdict_status}_games{games_solved_total}_flagged_skipped{skipped_count}"
++        )
++    if pivot_status == "blocked":
++        return (
++            "complete: capstone_v377_pivot_blocked_no_arc_rft_eval_"
++            f"sudoku_{sudoku_verdict_status}_games{games_solved_total}_flagged_skipped{skipped_count}"
++        )
++    return (
++        "complete: capstone_v377_verifier_as_reward_rft_measured_null_"
++        f"sudoku_{sudoku_verdict_status}_games{games_solved_total}_flagged_skipped{skipped_count}"
++    )
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return a reproducibility checksum excluding the checksum field itself."""
++
++    stable = dict(payload)
++    stable.pop("reproducibility_checksum", None)
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the .377 capstone from landed upstream artifacts."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = selected_upstream_paths(root_path)
++    summaries = summarize_existing_artifacts(root_path, paths, summary_statuses)
++    upstreams: dict[int, Mapping[str, Any] | None] = {
++        experiment_id: read_json_object(path) if path is not None else None
++        for experiment_id, path in paths.items()
++    }
++    skipped_ids = {
++        experiment_id for experiment_id, payload in upstreams.items() if flagged(payload)
++    }
++    clean_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping) and experiment_id not in skipped_ids
++    }
++    clean_upstreams = {experiment_id: upstreams[experiment_id] for experiment_id in clean_ids}
++
++    pivot = pivot_comparison(clean_upstreams.get(4079), was_skipped=4079 in skipped_ids)
++    sudoku = sudoku_control(clean_upstreams.get(4080), was_skipped=4080 in skipped_ids)
++    accuracy = arc_accuracy(
++        clean_upstreams.get(4076),
++        clean_upstreams.get(4082),
++        was_skipped=4082 in skipped_ids,
++    )
++    skipped = flagged_artifacts_skipped(root_path, paths, upstreams, skipped_ids)
++    games_solved_total = int(accuracy["games_solved_total"])
++
++    artifact: JsonDict = {
++        "schema": "carnot.capstone_v377_4085.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": verdict(
++            pivot=pivot,
++            sudoku=sudoku,
++            games_solved_total=games_solved_total,
++            skipped_count=len(skipped),
++        ),
++        "pivot_result": pivot_result_text(pivot),
++        "sudoku_control_reproduced": bool(sudoku["reproduces_beachhead"]),
++        "decentralization_distillation_outcome": decentralization_distillation_outcome(pivot),
++        "games_solved_total": games_solved_total,
++        "pivot_comparison": pivot,
++        "sudoku_control": sudoku,
++        "arc_accuracy": accuracy,
++        "sota_ingestion": sota_ingestion(clean_upstreams.get(4081)),
++        "registry_hygiene": registry_hygiene(
++            clean_upstreams.get(4083), was_skipped=4083 in skipped_ids
++        ),
++        "hardware_continuity": hardware_continuity(clean_upstreams.get(4084)),
++        "flagged_artifacts_skipped": skipped,
++        "cited_upstream_artifacts": cited_upstream_artifacts(paths, clean_ids),
++        "missing_upstream_artifacts": missing_upstream_artifacts(paths),
++        "upstream_artifact_state": upstream_artifact_state(
++            root_path, paths, upstreams, summaries, skipped_ids, clean_ids
++        ),
++        "summarize_artifact_status": {
++            str(experiment_id): {
++                "returncode": status.get("returncode"),
++                "stdout": status.get("stdout", ""),
++                "stderr": status.get("stderr", ""),
++            }
++            for experiment_id, status in summaries.items()
++        },
++        "duration_s": duration_from(start, now_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": RANDOM_SEED,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the .377 fields that protect the honest headline."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")  # pragma: no cover
++    verdict_value = str(artifact.get("honest_verdict", ""))
++    if not verdict_value.startswith(("complete:", "success:", "blocked_", "blocked:")):
++        raise ValueError("honest_verdict must use a terminal prefix")  # pragma: no cover
++    if not isinstance(artifact.get("pivot_result"), str):
++        raise ValueError("pivot_result must be a string")  # pragma: no cover
++    if not isinstance(artifact.get("sudoku_control_reproduced"), bool):
++        raise ValueError("sudoku_control_reproduced must be a bare bool")  # pragma: no cover
++    if not isinstance(artifact.get("decentralization_distillation_outcome"), str):
++        raise ValueError("decentralization_distillation_outcome must be a string")  # pragma: no cover
++    if not isinstance(artifact.get("games_solved_total"), int) or isinstance(
++        artifact.get("games_solved_total"), bool
++    ):
++        raise ValueError("games_solved_total must be a bare int")  # pragma: no cover
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    citations = artifact.get("cited_upstream_artifacts")
++    if not isinstance(citations, list):
++        raise ValueError("cited_upstream_artifacts must be a list")  # pragma: no cover
++    for citation in citations:
++        if not isinstance(citation, Mapping):
++            raise ValueError("citation entries must be objects")  # pragma: no cover
++        if set(citation) != {"experiment_id", "sha256"}:
++            raise ValueError("citation entries must contain experiment_id and sha256")  # pragma: no cover
++        if not isinstance(citation.get("experiment_id"), int):
++            raise ValueError("citation entries need integer experiment_id")  # pragma: no cover
++        if not is_sha256(citation.get("sha256")):
++            raise ValueError("citation entries need sha256")  # pragma: no cover
++    if not isinstance(artifact.get("flagged_artifacts_skipped"), list):
++        raise ValueError("flagged_artifacts_skipped must be a list")  # pragma: no cover
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")  # pragma: no cover
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and write the Exp 4085 capstone artifact."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        summary_statuses=summary_statuses,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    validate_artifact(artifact)
++    output = root_path / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index ea1b50170b..312aef587c 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T07:17:58.370948+00:00",
+-  "finished_at": "2026-06-12T07:17:58.394749+00:00",
+-  "duration_s": 0.024,
++  "started_at": "2026-06-12T07:55:26.152140+00:00",
++  "finished_at": "2026-06-12T07:55:26.174874+00:00",
++  "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 5aa0090e1b..601e426d39 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T07:17:58Z",
++  "run_date": "2026-06-12T07:55:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index c48f66a5e4..d084512b06 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T07:17:59Z",
+-  "finished_at": "2026-06-12T07:17:59Z",
++  "started_at": "2026-06-12T07:55:27Z",
++  "finished_at": "2026-06-12T07:55:27Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index cfac0bfd44..babff86731 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-12T07:40:32.442728Z",
+-  "duration_s": 0.07586550712585449,
++  "run_date": "2026-06-12T07:54:07.295538Z",
++  "duration_s": 0.08191823959350586,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "7f91d900d8dc04bb2a309380a0c8ffd134d12cac4572c7a2ae9f4e3d6f2524db",
++  "reproducibility_checksum": "a3e3418a2d61bf4fd352d9ab6dcb94f708deac643beb398b8551b972b69513f0",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "fc99860941c7c061b285cb93c1bdb6c91674efee"
++    "adversarial_verify_version": "f26fea8e130f1ff85db3d6e7713f79fac6a5d4b5"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 08adcea8d7..8e9c29fc6f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-12T07:40:32.544599Z",
+-  "duration_s": 0.06804919242858887,
++  "run_date": "2026-06-12T07:54:07.466423Z",
++  "duration_s": 0.13159632682800293,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "2621c9eaec58e21312aa13bbfa78696ab6c4da8e6a8469fd5f5b59c483c2b005",
++  "reproducibility_checksum": "808e93e960988f039dd87d77e73190c55b62b41ba766097b052496fcb5b23fec",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "fc99860941c7c061b285cb93c1bdb6c91674efee"
++    "adversarial_verify_version": "f26fea8e130f1ff85db3d6e7713f79fac6a5d4b5"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 15ab76a43f..654ed9f1d8 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.112150192260742,
++  "efficiency_gains_ms": 2.111196517944336,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index bd191a82af..75ca806a52 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.02636241912841797,
++  "duration_s": 0.01985907554626465,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 6c50ca1ff2..2672970a2c 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-12T07:17:41Z",
++  "run_date": "2026-06-12T07:55:07Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 6c53a0a42e..7e8cf4d965 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.0000903606414795,
++  "duration_s": 5.0001161098480225,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 8708a3e23c..bc6fb8ba8e 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000083684921265,
++  "duration_s": 10.000122785568237,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index f938b2aa0c..21c787461c 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2189643383026123,
++  "duration_s": 0.21828675270080566,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 28588dc003..96f2874c34 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.04927206295542419,
++  "duration_s": 0.052582271047867835,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index c4c1170fd0..1d28c1d4f5 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.7080997824668884e-05,
++  "duration_s": 4.0696002542972565e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4085_capstone_v377.json b/results/experiment_4085_capstone_v377.json
+new file mode 100644
+index 0000000000..bf7800d357
+--- /dev/null
++++ b/results/experiment_4085_capstone_v377.json
+@@ -0,0 +1,271 @@
++{
++  "arc_accuracy": {
++    "candidate_baseline_actions": 43,
++    "first_solve_at_action": 4,
++    "game_solved": true,
++    "games_solved_total": 9,
++    "levels_completed": 1,
++    "prior_total_games_solved": 8,
++    "real_env_confirmed": true,
++    "status": "new_game_solved",
++    "target_game": "ft09-0d8bbf25"
++  },
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 4076,
++      "sha256": "724201476883c2f6eb5df03a91cde06c4ac31ca77f376631ed5a84f2c2a0553d"
++    },
++    {
++      "experiment_id": 4079,
++      "sha256": "d0fca58e1f5ccec597d5e19e2bc2eabbd43bdd7b04f9fce5dc6824a6099b2567"
++    },
++    {
++      "experiment_id": 4081,
++      "sha256": "4acc0de7ccf53d1f6af88f61a7b85d006f7c0057415ad073fed11d425bdd834e"
++    },
++    {
++      "experiment_id": 4082,
++      "sha256": "34872fecc73570dbd2b3008d8db83b9a2a9296504e029e11373f650a0a52bd44"
++    },
++    {
++      "experiment_id": 4084,
++      "sha256": "db50b941fa585a749de87e453afedd1420a6a08eb0316339b29c65d90d014c42"
++    }
++  ],
++  "decentralization_distillation_outcome": "unmeasured: no clean ARC RFT induction-rate delta; cannot assess Invisible-Leash latent movement toward Codex.",
++  "duration_s": 0.36519868299365044,
++  "experiment_id": 4085,
++  "field_principles": {
++    "cited_upstream_artifacts": "Included non-flagged upstream experiment ids and sha256 provenance only.",
++    "decentralization_distillation_outcome": "States whether clean RFT moved local induction toward Codex, or that the movement is unmeasured.",
++    "games_solved_total": "BARE INT - monotonic ARC-AGI-3 solved-game count from clean exp4082 evidence.",
++    "honest_verdict": "Terminal-prefix verdict that distinguishes measured wins, measured nulls, blocked pivot state, accumulating training, and skipped flagged controls.",
++    "inference_substrate": "Declares this capstone as aggregation from upstream artifacts.",
++    "pivot_result": "principle: the headline -- the verifier's training-time value is now measured one way or the other, or honestly recorded as blocked/accumulating when no clean held-out RFT eval exists.",
++    "sudoku_control_reproduced": "BARE BOOL - true only from a clean, non-flagged Sudoku positive-control artifact."
++  },
++  "flagged_artifacts_skipped": [
++    {
++      "experiment_id": 4077,
++      "path": "results/experiment_4077_verifier_reward_rft_corpus_build.json",
++      "reason": "flagged_adversarial:true",
++      "sha256": "d21c303b782ec745841702577e239c6b6cd2a13c0534bfe2af8321581ab9d330"
++    },
++    {
++      "experiment_id": 4078,
++      "path": "results/experiment_4078_verifier_reward_rft_train_launch.json",
++      "reason": "flagged_adversarial:true",
++      "sha256": "92536ed5194005e61892d8a09af0cf886a5e95df8a9140a3500f9cfd86e9a607"
++    },
++    {
++      "experiment_id": 4080,
++      "path": "results/experiment_4080_sudoku_rft_positive_control.json",
++      "reason": "flagged_adversarial:true",
++      "sha256": "eac16d6a3addd37acde2fae79ca5b4e5030938f6eaaa1b4a23ea0b9a6856aaa8"
++    },
++    {
++      "experiment_id": 4083,
++      "path": "results/experiment_4083_verifier_registry_gaps_hygiene.json",
++      "reason": "flagged_adversarial:true",
++      "sha256": "2442f8a36eedd8670defadb99f8636e3846369d849a30623cf3c71aad1c88f8d"
++    }
++  ],
++  "games_solved_total": 9,
++  "hardware_continuity": {
++    "fabric_acceleration_claimed": false,
++    "gatemate_step_taken": "gatemate_existing_n16_bitstream_flash_blocked_returncode_1",
++    "included": true,
++    "kv260_terminal_confirmed": true,
++    "per_board_reachability": {
++      "gatemate": true,
++      "kv260": true,
++      "polarfire": true
++    },
++    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
++  },
++  "honest_verdict": "complete: capstone_v377_pivot_blocked_no_arc_rft_eval_sudoku_flagged_skipped_games9_flagged_skipped4",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "missing_upstream_artifacts": [],
++  "pivot_comparison": {
++    "base_model": "",
++    "blocked_at_layer": "conductor_pre_gate",
++    "codex_induction_rate": 0.0,
++    "cold_base_induction_rate": 0.0,
++    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.train_launched (actual=False == expected=True)",
++    "gold_sft_induction_rate": 0.0,
++    "honest_verdict": "blocked_gate_check_failed",
++    "prior_local_induction_rate": 0.0,
++    "rft_beats_cold_ci_excludes_zero": false,
++    "rft_beats_or_matches_gold_sft": false,
++    "rft_correct_induction_rate": 0.0,
++    "rft_vs_cold_ci95": [],
++    "rft_vs_cold_delta": 0.0,
++    "rft_vs_gold_ci95": [],
++    "rft_vs_gold_delta": 0.0,
++    "status": "blocked",
++    "training_accumulating": false
++  },
++  "pivot_result": "principle: ARC verifier-certified RFT training-time value was not measured; exp4079 landed only a blocked gate-check because exp4078 never launched training.",
++  "random_seed": 4085,
++  "registry_hygiene": {
++    "gaps_updated": false,
++    "included": false,
++    "pivot_outcome_recorded": false,
++    "registry_updated": false
++  },
++  "reproducibility_checksum": "af517e4ca1bf565b3dd6fc7d7b09e7126eb6ad338a16e9fa4b97a1cd1b214d5b",
++  "schema": "carnot.capstone_v377_4085.v1",
++  "sota_ingestion": {
++    "honest_verdict": "complete: sota_ingestion_verifier_as_reward_mapped",
++    "included": true,
++    "methods_mapped_count": 8
++  },
++  "sudoku_control": {
++    "honest_verdict": "",
++    "n_seeds": 0,
++    "reproduces_beachhead": false,
++    "rft_rate": 0.0,
++    "sft_rate": 0.0,
++    "status": "skipped_flagged"
++  },
++  "sudoku_control_reproduced": false,
++  "summarize_artifact_status": {
++    "4076": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4076_archive_v376_activate_v377.json\n------------------------------------------------------------------------------\n  verdict          : success: archived_v376_v377_active_mechanism_fix_worked_G1_offarc_n160_corpus_saturated_no_headroom_flagged_skipped_uninformative_G3_moe_n30_sovereign_base_absent_leash_holds_efficiency_action_pruner_66pct_equal_solverate_games9_ninth_solved_arcmemo_v9_no_transfer_kv260_terminal_pretest_green\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 14.232962   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4077": {
++      "returncode": 2,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4077_verifier_reward_rft_corpus_build.json\n------------------------------------------------------------------------------\n  verdict          : blocked_precision_gate_unmet_0.6818_1.0000\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 5.6321884479839355   substrate: offline_arc_k8_execution_verifier_reward_lora_runner\n  headline metrics :\n      certification_precision = 0.6818\n      certification_recall = 1.0\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=5.6321884479839355 but artifact references compute-bound markers (GGUF / CUDA / live \n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology \n==============================================================================\n"
++    },
++    "4078": {
++      "returncode": 2,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4078_verifier_reward_rft_train_launch.json\n------------------------------------------------------------------------------\n  verdict          : blocked_exp4077_corpora_missing\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 5.117831268929876   substrate: gpu_hf_trl_peft_lora_sfttrainer_detached\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=5.117831268929876 but artifact references compute-bound markers (GGUF / CUDA / live m\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum.\n==============================================================================\n"
++    },
++    "4079": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4079_verifier_reward_rft_eval_collect.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = '1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.train_launched (actual=False == expected=True)'\n  duration_s       : 0.0   substrate: None\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4080": {
++      "returncode": 2,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4080_sudoku_rft_positive_control.json\n------------------------------------------------------------------------------\n  verdict          : complete: sudoku_positive_control_rft_ge_sft_reproduced\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 4.437719120993279   substrate: live_gpu_sudoku_verifier_certified_rft_with_exp4078_preflight\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=4.437719120993279 but artifact references compute-bound markers (GGUF / CUDA / live m\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum.\n==============================================================================\n"
++    },
++    "4081": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4081_sota_ingestion_verifier_as_reward_receipt.json\n------------------------------------------------------------------------------\n  verdict          : complete: sota_ingestion_verifier_as_reward_mapped\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4082": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4082_ninth_game_explore_first.json\n------------------------------------------------------------------------------\n  verdict          : success: ninth_game_solved_ft09-0d8bbf25_at_action_4\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 3.381   substrate: offline_arc_agi3_explore_first_first_solve\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4083": {
++      "returncode": 2,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4083_verifier_registry_gaps_hygiene.json\n------------------------------------------------------------------------------\n  verdict          : complete: gap4_arc1_reproduced_True_safety_gate_regression_True_pivot_verifier_as_reward_rft_blocked\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.027   substrate: verifier_ensemble_against_cached_candidates\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=0.027 but artifact declares verifier-scoring substrate. Even verifier scoring of a fe\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum.\n==============================================================================\n"
++    },
++    "4084": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4084_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_gatemate_gatemate_existing_n16_bitstream_flash_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 11.410239   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
++    }
++  },
++  "upstream_artifact_state": {
++    "4076": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "success: archived_v376_v377_active_mechanism_fix_worked_G1_offarc_n160_corpus_saturated_no_headroom_flagged_skipped_uninformative_G3_moe_n30_sovereign_base_absent_leash_holds_efficiency_action_pruner_66pct_equal_solverate_games9_ninth_solved_arcmemo_v9_no_transfer_kv260_terminal_pretest_green",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4076_archive_v376_activate_v377.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4077": {
++      "exists": true,
++      "flagged_adversarial": true,
++      "honest_verdict": "blocked_precision_gate_unmet_0.6818_1.0000",
++      "included": false,
++      "live_critical": true,
++      "path": "results/experiment_4077_verifier_reward_rft_corpus_build.json",
++      "skipped": true,
++      "summarize_artifact_returncode": 2
++    },
++    "4078": {
++      "exists": true,
++      "flagged_adversarial": true,
++      "honest_verdict": "blocked_exp4077_corpora_missing",
++      "included": false,
++      "live_critical": true,
++      "path": "results/experiment_4078_verifier_reward_rft_train_launch.json",
++      "skipped": true,
++      "summarize_artifact_returncode": 2
++    },
++    "4079": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "blocked_gate_check_failed",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4079_verifier_reward_rft_eval_collect.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4080": {
++      "exists": true,
++      "flagged_adversarial": true,
++      "honest_verdict": "complete: sudoku_positive_control_rft_ge_sft_reproduced",
++      "included": false,
++      "live_critical": true,
++      "path": "results/experiment_4080_sudoku_rft_positive_control.json",
++      "skipped": true,
++      "summarize_artifact_returncode": 2
++    },
++    "4081": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: sota_ingestion_verifier_as_reward_mapped",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4081_sota_ingestion_verifier_as_reward_receipt.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4082": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "success: ninth_game_solved_ft09-0d8bbf25_at_action_4",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4082_ninth_game_explore_first.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4083": {
++      "exists": true,
++      "flagged_adversarial": true,
++      "honest_verdict": "complete: gap4_arc1_reproduced_True_safety_gate_regression_True_pivot_verifier_as_reward_rft_blocked",
++      "included": false,
++      "live_critical": true,
++      "path": "results/experiment_4083_verifier_registry_gaps_hygiene.json",
++      "skipped": true,
++      "summarize_artifact_returncode": 2
++    },
++    "4084": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: hardware_continuity_gatemate_gatemate_existing_n16_bitstream_flash_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4084_hardware_continuity.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    }
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index eef8c2196d..0738e9778c 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T07:40:07Z",
+-  "finished_at": "2026-06-12T07:40:07Z",
++  "started_at": "2026-06-12T07:53:41Z",
++  "finished_at": "2026-06-12T07:53:41Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index f3c089aef6..76eb124371 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T07:40:07Z",
+-  "finished_at": "2026-06-12T07:40:07Z",
++  "started_at": "2026-06-12T07:53:41Z",
++  "finished_at": "2026-06-12T07:53:41Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 617c2caa5e..39aa545bc3 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T07:40:07Z",
+-  "finished_at": "2026-06-12T07:40:07Z",
++  "started_at": "2026-06-12T07:53:41Z",
++  "finished_at": "2026-06-12T07:53:41Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4085_capstone_v377.py b/tests/python/test_experiment_4085_capstone_v377.py
+new file mode 100644
+index 0000000000..e155d83354
+--- /dev/null
++++ b/tests/python/test_experiment_4085_capstone_v377.py
+@@ -0,0 +1,305 @@
++"""Tests for Exp 4085 .377 capstone aggregation.
++
++Spec refs: REQ-CAPSTONE-4085, SCENARIO-CAPSTONE-4085.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.reporting import capstone_v377_4085 as mod
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _summary_statuses(
++    experiment_ids: tuple[int, ...] = mod.UPSTREAM_IDS,
++    *,
++    returncodes: dict[int, int] | None = None,
++) -> dict[int, JsonDict]:
++    overrides = returncodes or {}
++    return {
++        experiment_id: {
++            "returncode": overrides.get(experiment_id, 0),
++            "stdout": f"summarized {experiment_id}",
++            "stderr": "",
++        }
++        for experiment_id in experiment_ids
++    }
++
++
++def _clean_payloads() -> dict[int, JsonDict]:
++    return {
++        4076: {
++            "honest_verdict": "success: archived_v376_v377_active",
++            "milestone_376_closestate": {"accuracy": {"total_games_solved": 9}},
++            "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        },
++        4077: {
++            "honest_verdict": "complete: verifier_reward_corpus_ready",
++            "runner_ready": True,
++            "trainer_smoke_passed": True,
++            "n_rft_correct": 48,
++            "n_gold_sft": 48,
++        },
++        4078: {
++            "honest_verdict": "complete: verifier_reward_rft_training_finished",
++            "train_launched": True,
++            "training_accumulating": False,
++            "epochs_completed": {"qwen35_08b:rft_correct": 1, "qwen35_08b:gold_sft": 1},
++        },
++        4079: {
++            "honest_verdict": "success: verifier_reward_rft_beats_cold_matches_gold",
++            "status": "complete",
++            "base_model": "qwen35_08b",
++            "rft_correct_induction_rate": 0.42,
++            "cold_base_induction_rate": 0.25,
++            "gold_sft_induction_rate": 0.41,
++            "rft_vs_cold_delta": 0.17,
++            "rft_vs_cold_ci95": [0.04, 0.3],
++            "rft_vs_gold_delta": 0.01,
++            "rft_vs_gold_ci95": [-0.03, 0.05],
++            "codex_induction_rate": 0.57,
++            "prior_local_induction_rate": 0.26,
++            "training_accumulating": False,
++            "inference_substrate": "heldout_arc_induction_eval",
++        },
++        4080: {
++            "honest_verdict": "complete: sudoku_positive_control_rft_ge_sft_reproduced",
++            "reproduces_beachhead": True,
++            "rft_rate": 0.065833,
++            "sft_rate": 0.0505,
++            "n_seeds": 3,
++        },
++        4081: {
++            "honest_verdict": "complete: sota_ingestion_verifier_as_reward_mapped",
++            "methods_mapped": [{"arxiv_id": "2601.17223"}],
++            "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        },
++        4082: {
++            "honest_verdict": "success: tenth_game_solved",
++            "game_solved": True,
++            "real_env_confirmed": True,
++            "total_games_solved": 10,
++            "prior_total_games_solved": 9,
++            "target_game": "zz99-fixture",
++        },
++        4083: {
++            "honest_verdict": "complete: registry_clean",
++            "registry_updated": True,
++            "gaps_updated": True,
++            "pivot_outcome_recorded": True,
++        },
++        4084: {
++            "honest_verdict": "complete: hardware_continuity",
++            "kv260_terminal_confirmed": True,
++            "gatemate_step_taken": "gatemate_fixture",
++            "polarfire_step_taken": "polarfire_fixture",
++            "per_board_reachability": {"kv260": True, "gatemate": True, "polarfire": True},
++        },
++    }
++
++
++def _write_default_artifacts(root: Path, payloads: dict[int, JsonDict]) -> None:
++    for experiment_id, payload in payloads.items():
++        _write_json(root / mod.DEFAULT_UPSTREAM_PATHS[experiment_id], payload)
++
++
++def test_req_capstone_4085_spec_anchor_exists() -> None:
++    """REQ-CAPSTONE-4085: OpenSpec declares the .377 capstone contract."""
++
++    spec = Path("openspec/capabilities/capstone/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4085" in spec
++    assert "SCENARIO-CAPSTONE-4085" in spec
++    assert "sudoku_control_reproduced" in spec
++    assert "decentralization_distillation_outcome" in spec
++    assert "games_solved_total" in spec
++
++
++def test_scenario_capstone_4085_current_artifacts_skip_flagged_and_report_blocked_pivot() -> None:
++    """SCENARIO-CAPSTONE-4085: current artifacts are aggregated ungated with flagged skips."""
++
++    artifact = mod.build_artifact(
++        Path.cwd(),
++        summary_statuses=_summary_statuses(returncodes={4077: 2, 4078: 2, 4080: 2, 4083: 2}),
++        started_s=10.0,
++        now_s=12.0,
++    )
++
++    mod.validate_artifact(artifact)
++
++    assert artifact["honest_verdict"].startswith(
++        "complete: capstone_v377_pivot_blocked_no_arc_rft_eval_"
++        "sudoku_flagged_skipped_games9_flagged_skipped4"
++    )
++    assert artifact["pivot_result"] == (
++        "principle: ARC verifier-certified RFT training-time value was not measured; "
++        "exp4079 landed only a blocked gate-check because exp4078 never launched training."
++    )
++    assert artifact["pivot_comparison"]["status"] == "blocked"
++    assert artifact["pivot_comparison"]["rft_beats_cold_ci_excludes_zero"] is False
++    assert artifact["pivot_comparison"]["rft_beats_or_matches_gold_sft"] is False
++    assert artifact["sudoku_control_reproduced"] is False
++    assert artifact["sudoku_control"]["status"] == "skipped_flagged"
++    assert artifact["decentralization_distillation_outcome"].startswith(
++        "unmeasured: no clean ARC RFT induction-rate delta"
++    )
++    assert artifact["games_solved_total"] == 9
++    assert artifact["arc_accuracy"]["game_solved"] is True
++    assert artifact["hardware_continuity"]["kv260_terminal_confirmed"] is True
++    assert "gated_on" not in artifact
++
++    assert [row["experiment_id"] for row in artifact["flagged_artifacts_skipped"]] == [
++        4077,
++        4078,
++        4080,
++        4083,
++    ]
++    cited = {row["experiment_id"]: row for row in artifact["cited_upstream_artifacts"]}
++    assert set(cited) == {4076, 4079, 4081, 4082, 4084}
++    assert cited[4082] == {
++        "experiment_id": 4082,
++        "sha256": hashlib.sha256(
++            Path("results/experiment_4082_ninth_game_explore_first.json").read_bytes()
++        ).hexdigest(),
++    }
++    assert artifact["upstream_artifact_state"]["4079"]["included"] is True
++    assert artifact["upstream_artifact_state"]["4080"]["skipped"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["field_principles"]["games_solved_total"].startswith("BARE INT")
++
++
++def test_req_capstone_4085_clean_fixture_records_decision_grade_rft(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4085: clean upstreams can satisfy the RFT and control headline."""
++
++    _write_default_artifacts(tmp_path, _clean_payloads())
++
++    artifact = mod.build_artifact(
++        tmp_path, summary_statuses=_summary_statuses(), started_s=1.0, now_s=1.5
++    )
++
++    mod.validate_artifact(artifact)
++
++    assert artifact["honest_verdict"].startswith(
++        "success: capstone_v377_verifier_as_reward_rft_beats_cold_"
++        "matches_gold_sudoku_reproduced_games10"
++    )
++    assert artifact["pivot_result"] == (
++        "principle: verifier-certified RFT beat cold held-out with CI excluding zero "
++        "and matched gold-SFT; the verifier's training-time value is measured."
++    )
++    assert artifact["pivot_comparison"]["rft_beats_cold_ci_excludes_zero"] is True
++    assert artifact["pivot_comparison"]["rft_beats_or_matches_gold_sft"] is True
++    assert artifact["sudoku_control_reproduced"] is True
++    assert artifact["decentralization_distillation_outcome"] == (
++        "moved_toward_codex: local induction 0.2600->0.4200 toward codex 0.5700"
++    )
++    assert artifact["games_solved_total"] == 10
++    assert artifact["flagged_artifacts_skipped"] == []
++    assert {row["experiment_id"] for row in artifact["cited_upstream_artifacts"]} == set(
++        mod.UPSTREAM_IDS
++    )
++
++
++def test_scenario_capstone_4085_write_artifact_validates_output(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4085: write_artifact emits the required deliverable JSON."""
++
++    _write_default_artifacts(tmp_path, _clean_payloads())
++
++    output = mod.write_artifact(
++        tmp_path,
++        output_path=Path("results/experiment_4085_capstone_v377.json"),
++        summary_statuses=_summary_statuses(),
++        started_s=2.0,
++        now_s=2.25,
++    )
++
++    payload = json.loads(output.read_text(encoding="utf-8"))
++    mod.validate_artifact(payload)
++    assert payload["experiment_id"] == 4085
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++
++
++def test_req_capstone_4085_branch_states_are_explicit(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4085: missing, accumulating, and measured-null states stay explicit."""
++
++    fallback = tmp_path / "results/experiment_4076_fallback.json"
++    _write_json(fallback, {"honest_verdict": "complete: fallback"})
++    paths = mod.selected_upstream_paths(tmp_path)
++    statuses = mod.summarize_existing_artifacts(tmp_path, paths, {4076: {"returncode": 0}})
++    assert paths[4076] == fallback
++    assert paths[4077] is None
++    assert statuses == {4076: {"returncode": 0}}
++
++    assert mod.list_float_metric({"ci": "not-a-list"}, "ci") == []
++    assert mod.nested_int(None, ("missing",)) == 0
++    assert mod.nested_int({"outer": {"inner": 3}}, ("outer", "inner")) == 3
++    assert mod.pivot_comparison(None, was_skipped=True)["status"] == "skipped_flagged"
++    assert mod.pivot_comparison(None, was_skipped=False)["status"] == "missing"
++
++    accumulating = mod.pivot_comparison(
++        {"honest_verdict": "complete: train_accumulating", "training_accumulating": True},
++        was_skipped=False,
++    )
++    assert accumulating["status"] == "accumulating"
++    assert mod.pivot_result_text(accumulating).startswith(
++        "principle: ARC verifier-certified RFT training is still accumulating"
++    )
++    assert mod.verdict(
++        pivot=accumulating,
++        sudoku={"status": "missing_or_blocked"},
++        games_solved_total=9,
++        skipped_count=0,
++    ).startswith("complete: capstone_v377_pivot_train_accumulating")
++
++    measured_null = mod.pivot_comparison(
++        {
++            "honest_verdict": "complete: measured_null",
++            "rft_correct_induction_rate": 0.255,
++            "cold_base_induction_rate": 0.25,
++            "gold_sft_induction_rate": 0.26,
++            "rft_vs_cold_delta": 0.005,
++            "rft_vs_cold_ci95": [-0.02, 0.03],
++            "rft_vs_gold_delta": -0.005,
++            "rft_vs_gold_ci95": [-0.02, 0.01],
++            "prior_local_induction_rate": 0.26,
++            "codex_induction_rate": 0.57,
++        },
++        was_skipped=False,
++    )
++    assert measured_null["status"] == "measured_null"
++    assert measured_null["rft_beats_or_matches_gold_sft"] is True
++    assert mod.pivot_result_text(measured_null).startswith(
++        "principle: verifier-certified RFT was measured on held-out ARC"
++    )
++    assert mod.decentralization_distillation_outcome(measured_null).startswith(
++        "not_moved_toward_codex"
++    )
++    assert mod.verdict(
++        pivot=measured_null,
++        sudoku={"status": "failed"},
++        games_solved_total=9,
++        skipped_count=1,
++    ).startswith("complete: capstone_v377_verifier_as_reward_rft_measured_null")
++    assert mod.pivot_result_text({"status": "missing"}).startswith(
++        "principle: ARC verifier-certified RFT training-time value was not measured"
++    )
++
++    clean = mod.build_artifact(
++        tmp_path, summary_statuses={4076: {"returncode": 0}}, started_s=1.0, now_s=1.1
++    )
++    clean["inference_substrate"] = "wrong"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(clean)
+-- 
+2.55.0
+

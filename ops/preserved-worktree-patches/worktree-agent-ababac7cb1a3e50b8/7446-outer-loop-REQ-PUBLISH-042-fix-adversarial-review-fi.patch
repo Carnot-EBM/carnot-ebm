@@ -1,0 +1,181 @@
+From ce0f4b058765f77f10b5e3800fe43e2675a158f6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 17:37:09 -0400
+Subject: [PATCH 07446/11362] [outer-loop] REQ-PUBLISH-042: fix
+ adversarial-review findings in ERNIE-Image shim + generate_diagram
+
+Adversarial review of the paperbanana + ERNIE-Image local diagram-generation
+backend (REQ-PUBLISH-042) found and this fixes three real issues:
+
+- ernie_image_server.py: the request-model closure fix's first attempt
+  (a bare functools.lru_cache) reintroduced the exact FastAPI bug it was
+  meant to fix -- get_type_hints resolves string annotations via the
+  function's __globals__, so a class returned from a cached function call
+  but never assigned to an actual module global is still invisible to it.
+  Fixed by publishing the class into globals() under a lock, with
+  lru_cache layered on top purely as a cheap-path optimization for callers
+  after the first. Re-verified against all 11 tests (they failed with the
+  lru_cache-only version, confirming the regression was real).
+- generate_diagram.py: the paperbanana-installed precondition check used a
+  bare PATH lookup (shutil.which), which misfires with a misleading
+  blocked_paperbanana_not_installed verdict when this project's venv isn't
+  on PATH even though paperbanana is genuinely installed there. Now checks
+  next to the running interpreter (sys.executable's directory) first.
+- ernie_image_server.py: documented that the OpenAI Images API's `quality`
+  field is accepted but silently unused (ERNIE-Image has no equivalent
+  quality-tiering concept), rather than leaving it undocumented.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ python/carnot/imagegen/ernie_image_server.py | 64 +++++++++++++-------
+ scripts/generate_diagram.py                  | 22 ++++++-
+ 2 files changed, 61 insertions(+), 25 deletions(-)
+
+diff --git a/python/carnot/imagegen/ernie_image_server.py b/python/carnot/imagegen/ernie_image_server.py
+index f3d721ee43..8876d04eeb 100644
+--- a/python/carnot/imagegen/ernie_image_server.py
++++ b/python/carnot/imagegen/ernie_image_server.py
+@@ -39,9 +39,11 @@ from __future__ import annotations
+ 
+ import argparse
+ import base64
++import functools
+ import io
+ import logging
+ import os
++import threading
+ import time
+ from typing import Any, Optional
+ 
+@@ -131,41 +133,57 @@ class ErniePipelineSingleton:
+         cls._pipeline = None
+ 
+ 
+-def _build_request_model() -> Any:
+-    """Build the OpenAI Images API request schema at module scope.
++_request_model_lock = threading.Lock()
++
++
++@functools.lru_cache(maxsize=1)
++def _request_model() -> Any:
++    """Build the OpenAI Images API request schema, once, as a real module global.
+ 
+     FastAPI resolves a Pydantic model's fields via `get_type_hints`, which
+-    needs the class's `__module__` to be resolvable at import time. A model
+-    class nested inside `build_app()`'s closure fails that resolution
+-    silently: FastAPI falls back to treating the parameter as a query
+-    param instead of a request body (a real bug caught by
+-    tests/python/test_ernie_image_server.py -- `loc: ['query', 'req']`
+-    instead of the request body). Defining it here, once, at module scope
+-    avoids the closure entirely.
++    (for a function using `from __future__ import annotations`, as this
++    module does) resolves string annotations against the function's
++    `__globals__` -- for a nested function that is always the *module's*
++    global namespace, never a merely-local variable of an enclosing
++    function. A model class assigned only to a local inside `build_app()`
++    is therefore invisible to `get_type_hints`: FastAPI silently falls back
++    to treating the parameter as a query param instead of a request body
++    (a real bug caught by tests/python/test_ernie_image_server.py --
++    `loc: ['query', 'req']` instead of the request body; `lru_cache` alone,
++    without also writing a real module global, reproduces the exact same
++    bug -- verified by hand while writing this comment). The lock makes the
++    "build once, publish to module globals" step below race-free; the
++    `lru_cache` on top of it means every caller after the first gets the
++    cheap cached return without re-acquiring the lock.
+     """
+-    from pydantic import BaseModel
+-
+-    class ImageGenerationRequest(BaseModel):
+-        model: str = "ernie-image"
+-        prompt: str
+-        n: int = 1
+-        size: str = "1024x1024"
+-        quality: Optional[str] = None
+-        response_format: Optional[str] = "b64_json"
++    with _request_model_lock:
++        existing = globals().get("ImageGenerationRequest")
++        if existing is not None:
++            return existing
+ 
+-    return ImageGenerationRequest
++        from pydantic import BaseModel
+ 
++        class ImageGenerationRequest(BaseModel):
++            model: str = "ernie-image"
++            prompt: str
++            n: int = 1
++            size: str = "1024x1024"
++            # ERNIE-Image has no OpenAI-style quality tiering; accepted for
++            # request-shape compatibility with paperbanana's OpenAIImageGen
++            # (which always sends it when the caller passed --image-quality),
++            # but silently unused -- see generate() below.
++            quality: Optional[str] = None
++            response_format: Optional[str] = "b64_json"
+ 
+-ImageGenerationRequest = None  # populated lazily by build_app() below
++        globals()["ImageGenerationRequest"] = ImageGenerationRequest
++        return ImageGenerationRequest
+ 
+ 
+ def build_app(gpu: Optional[int] = None) -> Any:
+     """Construct the FastAPI app. Imports FastAPI lazily (optional ``imagegen`` extra)."""
+-    global ImageGenerationRequest
+     from fastapi import FastAPI, HTTPException
+ 
+-    if ImageGenerationRequest is None:
+-        ImageGenerationRequest = _build_request_model()
++    _request_model()  # ensures ImageGenerationRequest is a real module global before use
+ 
+     app = FastAPI(title="carnot-ernie-image-shim")
+ 
+diff --git a/scripts/generate_diagram.py b/scripts/generate_diagram.py
+index 243d4371f6..01abbf2ec7 100644
+--- a/scripts/generate_diagram.py
++++ b/scripts/generate_diagram.py
+@@ -60,6 +60,23 @@ SERVER_START_TIMEOUT_S = 30.0
+ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ 
+ 
++def _find_paperbanana() -> "str | None":
++    """Locate the paperbanana CLI, preferring the current interpreter's own venv.
++
++    `shutil.which("paperbanana")` alone only checks $PATH, which is wrong
++    when this script is invoked as `.venv/bin/python scripts/generate_diagram.py`
++    without that venv's bin/ directory being on PATH (e.g. from a plain
++    `python3 scripts/generate_diagram.py` shebang-driven call, or a subagent
++    shell that never `source`d activate) -- paperbanana would then be
++    genuinely installed (editable, into this exact interpreter's site-packages)
++    but reported as "not installed", a misleading blocked_* verdict.
++    """
++    venv_candidate = os.path.join(os.path.dirname(sys.executable), "paperbanana")
++    if os.path.isfile(venv_candidate) and os.access(venv_candidate, os.X_OK):
++        return venv_candidate
++    return shutil.which("paperbanana")
++
++
+ def _server_healthy(host: str, port: int, timeout: float = 2.0) -> bool:
+     """Return True if an ernie_image_server is already answering /healthz."""
+     try:
+@@ -126,7 +143,8 @@ def _ensure_ernie_local_backend(host: str, port: int, gpu: "int | None") -> dict
+             file=sys.stderr,
+         )
+         sys.exit(1)
+-    if shutil.which("paperbanana") is None:
++    paperbanana_path = _find_paperbanana()
++    if paperbanana_path is None:
+         print(
+             "blocked_paperbanana_not_installed: run "
+             "`uv pip install -e external/paperbanana[openai]` first "
+@@ -205,7 +223,7 @@ def main() -> None:
+             file=sys.stderr,
+         )
+ 
+-    cmd = ["paperbanana", "generate", *passthrough]
++    cmd = [_find_paperbanana() or "paperbanana", "generate", *passthrough]
+     result = subprocess.run(cmd, cwd=REPO_ROOT, env=env, check=False)
+     sys.exit(result.returncode)
+ 
+-- 
+2.55.0
+

@@ -1,0 +1,86 @@
+From e9567ea3921bcab48e92b887401f58f634a9a583 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 18:12:32 -0400
+Subject: [PATCH 07560/11362] [conductor] Pre-gate block: Gated on Exp5813
+ all-family qualification: prospective chronological SOTA stream
+
+2 of 2 gate(s) failed; first failure: exp5813-split-budget-sota-canary.answer_channel_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...4_channel_qualified_constraint_stream.json | 33 +++++++++++++++++++
+ 4 files changed, 36 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5814_channel_qualified_constraint_stream.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 840149147d..9d336b717c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 265, "phase": "iteration_start", "last_beat": "2026-07-22T21:39:26Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 266, "phase": "iteration_start", "last_beat": "2026-07-22T22:12:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9a77f6c571..04c1e995ed 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14135,3 +14135,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 21:11 UTC | Gated on Exp5811 clean evidence: implement split-b | OK | 87 passed, 1 warning in 26.78s |
+ | 2026-07-22 21:35 UTC | Gated on Exp5812 contract: changed-mechanism canar | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (665s silence). Last out |
+ | 2026-07-22 21:37 UTC | Gated on Exp5812 contract: changed-mechanism canar | SKIP | Pre-tests failing, self-heal failed:  |
++| 2026-07-22 22:10 UTC | Gated on Exp5812 contract: changed-mechanism canar | OK | 81 passed, 1 warning in 8.73s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f674c50ef8..580a85598c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 265, "phase": "iteration_start", "started_at": "2026-07-22T21:39:26Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 266, "phase": "iteration_start", "started_at": "2026-07-22T22:12:32Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5814_channel_qualified_constraint_stream.json b/results/experiment_5814_channel_qualified_constraint_stream.json
+new file mode 100644
+index 0000000000..69e08d5ae5
+--- /dev/null
++++ b/results/experiment_5814_channel_qualified_constraint_stream.json
+@@ -0,0 +1,33 @@
++{
++  "experiment": 5814,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-22",
++  "started_at": "2026-07-22T22:12:32.816763+00:00",
++  "finished_at": "2026-07-22T22:12:32.816763+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp5813 all-family qualification: prospective chronological SOTA stream",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp5813-split-budget-sota-canary.answer_channel_ready_score (actual=0.0 == expected=1.0)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5813-split-budget-sota-canary",
++      "artifact_field": "answer_channel_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": 0.0,
++      "passed": false,
++      "reason": "actual=0.0 == expected=1.0"
++    },
++    {
++      "upstream": "exp5813-split-budget-sota-canary",
++      "artifact_field": "qualified_real_sota_model_count",
++      "op": "==",
++      "expected": 3,
++      "actual": 0,
++      "passed": false,
++      "reason": "actual=0 == expected=3"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

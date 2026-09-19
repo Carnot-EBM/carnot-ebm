@@ -1,0 +1,43 @@
+From 5302e5c1fbf1097c81f9f9b2c13ae9bad25a47cb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 5 Jul 2026 21:12:02 -0400
+Subject: [PATCH 05822/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7244400289..362eb5db5b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 126, "phase": "iteration_start", "last_beat": "2026-07-06T01:09:58Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 127, "phase": "iteration_start", "last_beat": "2026-07-06T01:12:00Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 45ea9a82ab..c9314c2fb6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10362,3 +10362,4 @@ web search: |
+ | 2026-07-06 01:01 UTC | PHASE 1 fixture -- CheckRLM-style knowledge-though | OK | 87 passed, 1 warning in 11.28s |
+ | 2026-07-06 01:05 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
+ | 2026-07-06 01:07 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
++| 2026-07-06 01:10 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 19d3000c05..0eb3f335f8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 126, "phase": "iteration_start", "started_at": "2026-07-06T01:09:58Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 127, "phase": "iteration_start", "started_at": "2026-07-06T01:12:00Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,61 @@
+From 4f41f4d1325fb2ea409becdd49f4a36281f74dc5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 19 Jul 2026 16:13:09 -0400
+Subject: [PATCH 07281/11362] [conductor] Pre-gate block: Gated on Exp5719
+ channel readiness: build a sealed attested exact-envelope SOTA canary
+
+4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answer_channel_ready_score (actual=0.0 >= expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_5720_sota_attested_exact_envelope_canary.json  | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index aac927a326..3ec3adb9f5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2106238, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-07-19T20:11:07Z"}
+\ No newline at end of file
++{"pid": 2106238, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-07-19T20:13:09Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ddd6f25bfc..607efb7f81 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13791,3 +13791,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-19 19:42 UTC | Ingest post-V511 2025-2026 source deltas with dupl | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-07-19 20:07 UTC | Diagnose the .510 GGUF answer-channel failure acro | OK | 88 passed, 1 warning in 9.43s |
+ | 2026-07-19 20:09 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
++| 2026-07-19 20:11 UTC | Gated on Exp5719 channel readiness: build a sealed | GATE_BLOCK | 4 of 4 gate(s) failed; first failure: exp5719-sota-answer-channel-forensics.answ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b495e9efe4..7d94421b36 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2106238, "iteration": 6, "phase": "iteration_start", "started_at": "2026-07-19T20:11:07Z"}
+\ No newline at end of file
++{"pid": 2106238, "iteration": 7, "phase": "iteration_start", "started_at": "2026-07-19T20:13:09Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5720_sota_attested_exact_envelope_canary.json b/results/experiment_5720_sota_attested_exact_envelope_canary.json
+index 2003483dab..bd9bb3a2c9 100644
+--- a/results/experiment_5720_sota_attested_exact_envelope_canary.json
++++ b/results/experiment_5720_sota_attested_exact_envelope_canary.json
+@@ -2,8 +2,8 @@
+   "experiment": 5720,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-19",
+-  "started_at": "2026-07-19T20:11:07.342440+00:00",
+-  "finished_at": "2026-07-19T20:11:07.342440+00:00",
++  "started_at": "2026-07-19T20:13:09.519447+00:00",
++  "finished_at": "2026-07-19T20:13:09.519447+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp5719 channel readiness: build a sealed attested exact-envelope SOTA canary",
+-- 
+2.55.0
+

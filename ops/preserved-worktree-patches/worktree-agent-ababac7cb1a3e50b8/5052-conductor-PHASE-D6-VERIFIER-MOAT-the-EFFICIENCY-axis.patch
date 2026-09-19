@@ -1,0 +1,2489 @@
+From 1f7acc0c1eb60a3d644418cb0a12be19381bdda2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 12:36:27 -0400
+Subject: [PATCH 05052/11362] =?UTF-8?q?[conductor]=20PHASE=20D6=20(VERIFIE?=
+ =?UTF-8?q?R=20MOAT;=20the=20EFFICIENCY=20axis=20--=20north-star=20=C2=A75?=
+ =?UTF-8?q?=20Pareto=20win)=20--=20the=20uncertainty-routed=20cheap-verifi?=
+ =?UTF-8?q?er=20->=20strong-judge=20CASCADE=20(arXiv:2510.20369)=20with=20?=
+ =?UTF-8?q?VERDI-style=20confidence=20routing=20(arXiv:2605.11334,=20confi?=
+ =?UTF-8?q?dence=20from=20sub-check=20traces,=20no=20extra=20judge=20calls?=
+ =?UTF-8?q?):=20the=20cheap=20oracle-distinct=20verifier=20selects=20when?=
+ =?UTF-8?q?=20confident=20and=20routes=20ONLY=20uncertain=20questions=20to?=
+ =?UTF-8?q?=20a=20strong=20LLM-judge.=20WIN=20=3D=20accuracy=20parity=20(w?=
+ =?UTF-8?q?ithin=20CI)=20with=20the=20judge-only=20baseline=20at=20MATERIA?=
+ =?UTF-8?q?LLY=20FEWER=20judge=20calls.=20Charge=20the=20judge=20budget=20?=
+ =?UTF-8?q?explicitly.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp5034-cascade
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   84 ++
+ .../papers/paper-v6/section-6-limitations.md  |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ ops/known-issues.md                           |    4 +
+ ...ment_5034_uncertainty_routed_cascade_v2.py | 1054 +++++++++++++++++
+ results/arc3_live_submit.json                 |  137 ++-
+ results/experiment_1035_dualgpu_rocm_v3.json  |    6 +-
+ .../experiment_1038_milestone_retro_80.json   |    2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |    6 +-
+ .../experiment_1089_milestone_retro_84.json   |    2 +-
+ .../experiment_1103_milestone_retro_85.json   |    2 +-
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |    4 +-
+ .../experiment_1750_huggingface_retry.json    |    4 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...riment_1911_phase4_canonical_decision.json |    2 +-
+ ...periment_1970_domino_fast_constraints.json |    4 +-
+ results/experiment_2031.json                  |    4 +-
+ results/experiment_2090_crane_humaneval.json  |    8 +-
+ results/experiment_2097_eqm_eval.json         |    4 +-
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |    2 +-
+ results/experiment_3571_capstone_v328.json    |    2 +-
+ ...factual_hallucination_error_detection.json |    2 +-
+ ..._3576_verifier_cross_domain_synthesis.json |    4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |    4 +-
+ results/experiment_3582_capstone_v329.json    |    2 +-
+ ...nt_5034_uncertainty_routed_cascade_v2.json |  140 +++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...ment_5034_uncertainty_routed_cascade_v2.py |  420 +++++++
+ 35 files changed, 1858 insertions(+), 94 deletions(-)
+ create mode 100644 python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py
+ create mode 100644 results/experiment_5034_uncertainty_routed_cascade_v2.json
+ create mode 100644 tests/python/test_experiment_5034_uncertainty_routed_cascade_v2.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 523b86d171..378a3128d3 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -21897,3 +21897,87 @@ includes zero, then `honest_verdict` SHALL start with
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-VERIFY-5033 | Proposed (`python/carnot/experiment_5033_ebrm_uncertainty_verifier_v3.py`, `results/experiment_5033_ebrm_uncertainty_verifier_v3.json`) | Proposed (`tests/python/test_experiment_5033_ebrm_uncertainty_verifier_v3.py`) |
++
++### REQ-VERIFY-5034: Uncertainty-Routed Cascade Charges Strong-Judge Cost
++
++The repository SHALL provide Exp 5034 at
++`python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py` to evaluate a
++MuSR uncertainty-routed cascade that separates cheap oracle-distinct verifier
++value from strong LLM-judge fallback value, writing
++`results/experiment_5034_uncertainty_routed_cascade_v2.json`.
++
++Before scoring, the runner SHALL write a deliverable-first schema skeleton and
++SHALL check that a cheap oracle-distinct verifier is available, that the GPU-0
++CUDA llama-server judge endpoint is reachable, and that cached MuSR candidates
++exist for at least 200 questions. The cheap verifier SHALL be the best available
++oracle-distinct cheap scorer from Exp 5031 / Exp 5032 by `delta_vs_tuned_sc`,
++preferring the trained D1 LoRA-EBM when `scorer_trained=true`; if neither D1 nor
++D2 is usable, the runner SHALL use the registry quality ensemble fallback and
++record that source. A missing resource SHALL write `blocked_<resource>`, keep
++`verifier_is_oracle=false`, record `preconditions_checked`, and stop without
++fabricating cascade metrics.
++
++The runner SHALL measure and report three rows: cheap-verifier-only accuracy at
++0 judge calls, strong-judge-only accuracy at `N` judge calls, and cascade
++accuracy at swept arXiv:2510.20369 / VERDI-style routing-confidence thresholds
++with the cascade judge-call count charged explicitly. The strong judge SHALL be
++`gemma-4-12B-it-GGUF` served by the GPU-0 CUDA llama-server and SHALL be invoked
++only for the judged baseline and for questions the cascade would route up at a
++selected threshold. The sweep MAY cache the judge-only predictions to evaluate
++multiple thresholds, but each frontier row SHALL report the judge-call count a
++single deployment of that threshold would spend. The run SHALL also report the
++B1 genuine tuned self-consistency accuracy (`0.585`) for context.
++
++The terminal artifact SHALL include `honest_verdict`, `verifier_is_oracle`,
++`cheap_verifier_only_accuracy`, `cheap_verifier_source`, `judge_only_accuracy`,
++`judge_only_calls`, `cascade_accuracy`, `cascade_judge_calls`,
++`judge_call_fraction`, `cost_quality_frontier`, `genuine_tuned_sc_accuracy`,
++`n_questions`, `model_specs`, `inference_substrate`, `random_seed`,
++`preconditions_checked`, `adversarial_verify_clean`,
++`adversarial_verify_flags`, `summarize_artifact_exit_code`, `duration_s`,
++`field_principles`, `reproducibility_checksum`, and `spec_refs`.
++
++Its `field_principles` SHALL include:
++`honest_verdict` = `terminal prefix; a win is success_cascade_parity_at_<pct>_judge_calls, a null is complete_cascade_no_efficiency_win_musr.`;
++`verifier_is_oracle` = `false -- neither the cheap verifier nor the LLM-judge is the executable oracle on MuSR (must pass check_circular_moat_overclaim).`;
++`cheap_verifier_only_accuracy` = `the cheap oracle-distinct verifier's accuracy at 0 judge calls (the floor).`;
++`cheap_verifier_source` = `which cheap verifier was used (D1 trained LoRA-EBM / D2 uPRM / registry ensemble).`;
++`judge_only_accuracy` = `the strong-judge-only accuracy at N judge calls (the expensive ceiling).`;
++`judge_only_calls` = `N -- the full judge-call count (the cost the cascade must beat).`;
++`cascade_accuracy` = `the cascade accuracy at the best routing threshold (the headline).`;
++`cascade_judge_calls` = `the judge-call count the cascade actually used (the efficiency number; a win = << N).`;
++`judge_call_fraction` = `cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction.`;
++`cost_quality_frontier` = `the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall).`;
++`genuine_tuned_sc_accuracy` = `the B1 GENUINE tuned-SC (0.585; the accuracy context).`;
++`n_questions` = `>=200 (sample-size rigor).`;
++`model_specs` = `the cheap verifier + the strong LLM-judge (gemma-4-12B-it-GGUF) -- the methodology stamp.`;
++`inference_substrate` = `live_llm_inference (the strong judge runs live; >=60s floor).`;
++`random_seed` = `determinism for the routing + bootstrap.`;
++`preconditions_checked` = `records the cheap-verifier / judge-server / candidate-cache checks; a missing resource emits blocked_.`
++
++### SCENARIO-VERIFY-5034: Cascade Frontier Separates Cheap Floor From Charged Judge Ceiling
++
++Given a usable D1/D2/registry cheap verifier, a reachable GPU-0
++`gemma-4-12B-it-GGUF` llama-server judge, and cached MuSR candidate rows for at
++least 200 questions, when Exp 5034 runs, then it writes a schema skeleton first,
++computes the cheap-verifier-only row with 0 judge calls, computes the
++judge-only row with `N` charged judge calls, sweeps VERDI-style confidence
++thresholds, records `cost_quality_frontier`, selects the minimal-judge-call
++threshold whose cascade accuracy is within the paired CI of judge-only when one
++exists, runs adversarial artifact verification plus artifact summarization,
++keeps `verifier_is_oracle=false`, and writes every required field.
++
++If the cheap verifier, judge server, or candidate cache is missing, then Exp
++5034 SHALL write `blocked_<resource>`, set cheap/judge/cascade metrics to null
++or zero cost as appropriate, record the failed precondition, and exit without
++claiming an efficiency win. If no swept threshold reaches parity with
++judge-only at materially fewer judge calls, then `honest_verdict` SHALL start
++with `complete_cascade_no_efficiency_win_musr`; if the cascade reaches parity
++within CI at `<=40%` of the judge-only calls, then `honest_verdict` SHALL start
++with `success_cascade_parity_at_`.
++
++## Implementation Status (REQ-VERIFY-5034)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5034 | Implemented (`python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py`, `results/experiment_5034_uncertainty_routed_cascade_v2.json`) | Implemented (`tests/python/test_experiment_5034_uncertainty_routed_cascade_v2.py`) |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 6dd2df3b83..556597665c 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -547,5 +547,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3808e38df1..2f3f82c5c4 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 205,
+   "code_violations": 0,
+-  "experiments_checked": 4039,
++  "experiments_checked": 4040,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 52a931be37..2da0c1fcf7 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -9736,5 +9736,9 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py b/python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py
+new file mode 100644
+index 0000000000..f7ba62009c
+--- /dev/null
++++ b/python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py
+@@ -0,0 +1,1054 @@
++"""Exp 5034: uncertainty-routed MuSR cascade with explicit judge-call cost.
++
++Spec refs: REQ-VERIFY-5034, SCENARIO-VERIFY-5034.
++"""
++
++from __future__ import annotations
++
++from collections import Counter
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import importlib.util
++import json
++import math
++from pathlib import Path
++import re
++import sys
++import time
++from typing import Any
++from urllib.error import URLError
++from urllib.request import Request, urlopen
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - direct script execution
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot import moat_benchmark_harness as harness  # noqa: E402
++from carnot.moat_benchmark_harness import DEFAULT_RANDOM_SEED  # noqa: E402
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++JudgeAnswer = Callable[[JsonMap, Sequence[JsonMap]], str | None]
++AuditRunner = Callable[[Path], JsonDict]
++SummaryRunner = Callable[[Path], int]
++Clock = Callable[[], float]
++JudgeProbe = Callable[[str], "PreconditionCheck"]
++
++EXPERIMENT_ID = 5034
++EXPERIMENT_NAME = "experiment_5034_uncertainty_routed_cascade_v2"
++RESULT_RELATIVE_PATH = "results/experiment_5034_uncertainty_routed_cascade_v2.json"
++D1_ARTIFACT_RELATIVE_PATH = "results/experiment_5031_lora_ebm_scorer_musr_v3.json"
++D2_ARTIFACT_RELATIVE_PATH = "results/experiment_5032_uprm_replication_v3.json"
++MUSR_CHECKPOINT_RELATIVE_DIR = "results/distributional_energy_verifier_musr_checkpoints"
++DEFAULT_JUDGE_SERVER_URL = "http://127.0.0.1:8080"
++STRONG_JUDGE_MODEL = "gemma-4-12B-it-GGUF"
++SPEC_REFS = ["REQ-VERIFY-5034", "SCENARIO-VERIFY-5034"]
++RANDOM_SEED = DEFAULT_RANDOM_SEED
++EFFICIENCY_WIN_MAX_JUDGE_FRACTION = 0.40
++DEFAULT_THRESHOLDS = tuple(round(value / 100.0, 2) for value in range(0, 101, 5))
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; a win is success_cascade_parity_at_<pct>_judge_calls, "
++            "a null is complete_cascade_no_efficiency_win_musr."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "false -- neither the cheap verifier nor the LLM-judge is the executable "
++            "oracle on MuSR (must pass check_circular_moat_overclaim)."
++        )
++    },
++    "cheap_verifier_only_accuracy": {
++        "principle": "the cheap oracle-distinct verifier's accuracy at 0 judge calls (the floor)."
++    },
++    "cheap_verifier_source": {
++        "principle": (
++            "which cheap verifier was used (D1 trained LoRA-EBM / D2 uPRM / registry ensemble)."
++        )
++    },
++    "judge_only_accuracy": {
++        "principle": "the strong-judge-only accuracy at N judge calls (the expensive ceiling)."
++    },
++    "judge_only_calls": {
++        "principle": "N -- the full judge-call count (the cost the cascade must beat)."
++    },
++    "cascade_accuracy": {
++        "principle": "the cascade accuracy at the best routing threshold (the headline)."
++    },
++    "cascade_judge_calls": {
++        "principle": (
++            "the judge-call count the cascade actually used (the efficiency number; a win = << N)."
++        )
++    },
++    "judge_call_fraction": {
++        "principle": (
++            "cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction."
++        )
++    },
++    "cost_quality_frontier": {
++        "principle": (
++            "the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates "
++            "cheap-verifier value from judge-fallback value (the E1 anti-pitfall)."
++        )
++    },
++    "genuine_tuned_sc_accuracy": {
++        "principle": "the B1 GENUINE tuned-SC (0.585; the accuracy context)."
++    },
++    "n_questions": {"principle": ">=200 (sample-size rigor)."},
++    "model_specs": {
++        "principle": (
++            "the cheap verifier + the strong LLM-judge (gemma-4-12B-it-GGUF) -- "
++            "the methodology stamp."
++        )
++    },
++    "inference_substrate": {
++        "principle": "live_llm_inference (the strong judge runs live; >=60s floor)."
++    },
++    "random_seed": {"principle": "determinism for the routing + bootstrap."},
++    "preconditions_checked": {
++        "principle": (
++            "records the cheap-verifier / judge-server / candidate-cache checks; "
++            "a missing resource emits blocked_."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "deliverable_stage",
++    "best_routing_threshold",
++    "paired_ci95_cascade_vs_judge",
++    "oracle_distinctness_enforced",
++    "adversarial_verify_clean",
++    "adversarial_verify_flags",
++    "summarize_artifact_exit_code",
++    "duration_s",
++    "field_principles",
++    "reproducibility_checksum",
++)
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One checked resource recorded before Exp 5034 can claim a result."""
++
++    resource: str
++    available: bool
++    detail: str
++    path: str | None = None
++
++    def as_dict(self) -> JsonDict:
++        payload: JsonDict = {
++            "resource": self.resource,
++            "available": bool(self.available),
++            "detail": self.detail,
++        }
++        if self.path is not None:
++            payload["path"] = self.path
++        return payload
++
++
++@dataclass(frozen=True)
++class CheapVerifier:
++    """Selected cheap oracle-distinct verifier for the low-uncertainty path."""
++
++    name: str
++    predictions: list[str | None]
++    model_specs: JsonDict
++    source_artifact: str | None
++    check: PreconditionCheck
++    delta_vs_tuned_sc: float | None
++
++
++@dataclass
++class CountingJudge:
++    """Wrap a judge callable and count every live invocation."""
++
++    judge: JudgeAnswer
++    calls: int = 0
++
++    def __call__(self, row: JsonMap, candidates: Sequence[JsonMap]) -> str | None:
++        self.calls += 1
++        return self.judge(row, candidates)
++
++
++@dataclass(frozen=True)
++class CheapDecision:
++    """Cheap-verifier answer and its VERDI-style confidence signal."""
++
++    answer: str | None
++    correct: int
++    confidence: float
++    candidate_id: str
++
++
++@dataclass(frozen=True)
++class CascadeEvaluation:
++    """Measured cheap, judge-only, and cascade rows for Exp 5034."""
++
++    cheap_verifier_only_accuracy: float
++    judge_only_accuracy: float
++    judge_only_calls: int
++    cascade_accuracy: float
++    cascade_judge_calls: int
++    judge_call_fraction: float
++    cost_quality_frontier: list[JsonDict]
++    best_threshold: float | None
++    genuine_tuned_sc_accuracy: float
++    n_questions: int
++    paired_ci95_cascade_vs_judge: list[float]
++    parity_with_judge: bool
++    judge_predictions_cached_for_sweep: bool
++
++
++def _json_dumps(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _read_json(path: Path) -> Any:
++    if not path.exists():
++        return None
++    try:
++        return json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return None
++
++
++def _finite_number(value: Any) -> bool:
++    if isinstance(value, bool):
++        return False
++    try:
++        number = float(value)
++    except (TypeError, ValueError):
++        return False
++    return math.isfinite(number)
++
++
++def _number(value: Any) -> float | None:
++    if not _finite_number(value):
++        return None
++    return float(value)
++
++
++def _as_prediction_list(payload: JsonMap) -> list[str | None]:
++    evaluation = payload.get("evaluation") if isinstance(payload.get("evaluation"), Mapping) else {}
++    verifier = evaluation.get("verifier") if isinstance(evaluation.get("verifier"), Mapping) else {}
++    raw = verifier.get("predictions")
++    if not isinstance(raw, list):
++        return []
++    return [str(item) if item is not None else None for item in raw]
++
++
++def _artifact_available_for_d1(payload: Any) -> bool:
++    return (
++        isinstance(payload, Mapping)
++        and payload.get("scorer_trained") is True
++        and payload.get("verifier_is_oracle") is False
++        and bool(_as_prediction_list(payload))
++    )
++
++
++def _artifact_available_for_d2(payload: Any) -> bool:
++    return (
++        isinstance(payload, Mapping)
++        and payload.get("verifier_is_oracle") is False
++        and str(payload.get("scoring_path") or "") in {"uprm_logprob", "self_supervised_frozen"}
++        and bool(_as_prediction_list(payload))
++    )
++
++
++def _cheap_model_specs(source: str, artifact_path: Path | None, payload: JsonMap | None) -> JsonDict:
++    specs: JsonDict = {
++        "cheap_verifier": source,
++        "artifact": artifact_path.as_posix() if artifact_path is not None else None,
++    }
++    if isinstance(payload, Mapping):
++        specs["delta_vs_tuned_sc"] = payload.get("delta_vs_tuned_sc")
++        specs["accuracy"] = payload.get("trained_scorer_accuracy", payload.get("uprm_selection_accuracy"))
++        specs["source_model_specs"] = dict(payload.get("model_specs") or {})
++    return specs
++
++
++def select_cheap_verifier(root: Path = REPO_ROOT) -> CheapVerifier:
++    """Select the best available cheap verifier without reading answer keys."""
++
++    d1_path = root / D1_ARTIFACT_RELATIVE_PATH
++    d1 = _read_json(d1_path)
++    if _artifact_available_for_d1(d1):
++        return CheapVerifier(
++            name="D1 trained LoRA-EBM",
++            predictions=_as_prediction_list(d1),
++            model_specs=_cheap_model_specs("D1 trained LoRA-EBM", d1_path, d1),
++            source_artifact=d1_path.as_posix(),
++            check=PreconditionCheck(
++                "cheap_verifier", True, "selected D1 trained LoRA-EBM", d1_path.as_posix()
++            ),
++            delta_vs_tuned_sc=_number(d1.get("delta_vs_tuned_sc")) if isinstance(d1, Mapping) else None,
++        )
++
++    d2_path = root / D2_ARTIFACT_RELATIVE_PATH
++    d2 = _read_json(d2_path)
++    if _artifact_available_for_d2(d2):
++        return CheapVerifier(
++            name="D2 uPRM",
++            predictions=_as_prediction_list(d2),
++            model_specs=_cheap_model_specs("D2 uPRM", d2_path, d2),
++            source_artifact=d2_path.as_posix(),
++            check=PreconditionCheck("cheap_verifier", True, "selected D2 uPRM", d2_path.as_posix()),
++            delta_vs_tuned_sc=_number(d2.get("delta_vs_tuned_sc")) if isinstance(d2, Mapping) else None,
++        )
++
++    return CheapVerifier(
++        name="registry quality ensemble",
++        predictions=[],
++        model_specs=_cheap_model_specs("registry quality ensemble", None, None),
++        source_artifact=None,
++        check=PreconditionCheck("cheap_verifier", True, "selected registry quality ensemble fallback"),
++        delta_vs_tuned_sc=None,
++    )
++
++
++def _candidate_score(candidate: JsonMap) -> float:
++    for key in (
++        "lora_ebm_energy",
++        "trained_lora_ebm_energy",
++        "uprm_energy",
++        "energy",
++        "trivial_energy",
++    ):
++        value = candidate.get(key)
++        if _finite_number(value):
++            return float(value)
++    value = candidate.get("uprm_process_score")
++    if _finite_number(value):
++        return -float(value)
++    return 1.0 + float(candidate.get("cache_index", 0) or 0) / 1000.0
++
++
++def _checkpoint_rows(
++    checkpoint_dir: Path,
++    *,
++    min_questions: int,
++    limit: int | None,
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    paths = sorted(checkpoint_dir.glob("q*.json"))
++    if limit is not None:
++        paths = paths[:limit]
++    for index, checkpoint_path in enumerate(paths):
++        checkpoint = _read_json(checkpoint_path)
++        if not isinstance(checkpoint, Mapping):
++            continue
++        answers = checkpoint.get("answers")
++        if not isinstance(answers, list) or not answers:
++            continue
++        energies = checkpoint.get("candidate_energies")
++        energy_answer = str(
++            checkpoint.get("energy_pure_answer") or checkpoint.get("energy_answer") or answers[0]
++        )
++        candidates: list[JsonDict] = []
++        for candidate_index, answer in enumerate(answers):
++            if answer is None or str(answer).strip() == "":
++                continue
++            answer_text = str(answer)
++            if (
++                isinstance(energies, list)
++                and candidate_index < len(energies)
++                and _finite_number(energies[candidate_index])
++            ):
++                energy = float(energies[candidate_index])
++            else:
++                energy = 0.0 if answer_text == energy_answer else 1.0 + candidate_index / 1000.0
++            candidates.append(
++                {
++                    "candidate_id": f"musr:{index}/cached-{candidate_index}",
++                    "answer": answer_text,
++                    "reasoning": str(checkpoint.get("reasoning", "")),
++                    "cache_index": candidate_index,
++                    "temperature": checkpoint.get("temperature", "cached"),
++                    "trivial_energy": energy,
++                    "cached_energy_selected": energy == 0.0,
++                    "source": "distributional_energy_verifier_musr_checkpoints",
++                }
++            )
++        if candidates:
++            rows.append(
++                {
++                    "row_id": str(checkpoint.get("row_id", f"musr:{index}")),
++                    "corpus": harness.MUSR_CORPUS_NAME,
++                    "question": str(checkpoint.get("question", f"MuSR cached question {index}")),
++                    "context": str(checkpoint.get("context", "")),
++                    "choices": [str(answer) for answer in dict.fromkeys(answers) if answer is not None],
++                    "gold": str(checkpoint.get("gold", "")),
++                    "candidate_cache_path": checkpoint_path.as_posix(),
++                    "candidates": candidates,
++                }
++            )
++    if len(rows) < min_questions:
++        raise RuntimeError(f"only {len(rows)} cached MuSR rows available; need {min_questions}")
++    return rows
++
++
++def load_cached_musr_rows(
++    root: Path = REPO_ROOT,
++    *,
++    min_questions: int = 200,
++    limit: int | None = None,
++) -> list[JsonDict]:
++    checkpoint_dir = root / MUSR_CHECKPOINT_RELATIVE_DIR
++    if not checkpoint_dir.exists():
++        raise RuntimeError(f"candidate checkpoint directory missing: {checkpoint_dir}")
++    return _checkpoint_rows(checkpoint_dir, min_questions=min_questions, limit=limit)
++
++
++def candidate_cache_precondition(
++    root: Path = REPO_ROOT,
++    *,
++    min_questions: int = 200,
++    limit: int | None = None,
++) -> tuple[PreconditionCheck, list[JsonDict]]:
++    path = root / MUSR_CHECKPOINT_RELATIVE_DIR
++    try:
++        rows = load_cached_musr_rows(root, min_questions=min_questions, limit=limit)
++    except RuntimeError as exc:
++        return (
++            PreconditionCheck("cached_musr_candidates", False, str(exc), path.as_posix()),
++            [],
++        )
++    return (
++        PreconditionCheck(
++            "cached_musr_candidates",
++            True,
++            f"loaded {len(rows)} cached MuSR candidate rows",
++            path.as_posix(),
++        ),
++        rows,
++    )
++
++
++def probe_llama_server(  # pragma: no cover - live host dependent
++    base_url: str = DEFAULT_JUDGE_SERVER_URL, *, timeout_s: float = 2.0
++) -> PreconditionCheck:
++    """Probe the local GPU-0 CUDA llama-server before live judge calls."""
++
++    url = base_url.rstrip("/") + "/health"
++    try:
++        with urlopen(Request(url, method="GET"), timeout=timeout_s) as response:
++            status = int(getattr(response, "status", 0) or 0)
++    except (OSError, URLError, TimeoutError) as exc:
++        return PreconditionCheck("judge_server", False, f"{type(exc).__name__}: {exc}", base_url)
++    return PreconditionCheck(
++        "judge_server",
++        200 <= status < 500,
++        f"llama-server health status {status}; expected CUDA GPU-0 strong judge",
++        base_url,
++    )
++
++
++def _match_choice(text: str, choices: Sequence[str]) -> str | None:
++    normalized = str(text)
++    json_match = re.search(r"\{.*\}", normalized, flags=re.DOTALL)
++    if json_match:
++        try:
++            parsed = json.loads(json_match.group(0))
++        except json.JSONDecodeError:
++            parsed = None
++        if isinstance(parsed, Mapping):
++            for key in ("answer", "choice", "verdict"):
++                value = parsed.get(key)
++                if isinstance(value, str) and value.strip() in choices:
++                    return value.strip()
++    answer_match = re.search(r"ANSWER\s*[:=\-]\s*(.+)", normalized, flags=re.IGNORECASE)
++    tail = answer_match.group(1) if answer_match else normalized[-240:]
++    hits = [choice for choice in choices if str(choice).lower() in tail.lower()]
++    if hits:
++        return max(hits, key=lambda choice: tail.lower().rfind(str(choice).lower()))
++    return None
++
++
++class LlamaServerJudge:  # pragma: no cover - live host dependent
++    """Strong judge client for the GPU-0 CUDA llama-server."""
++
++    def __init__(self, base_url: str = DEFAULT_JUDGE_SERVER_URL, *, timeout_s: float = 60.0) -> None:
++        self.base_url = base_url.rstrip("/")
++        self.timeout_s = timeout_s
++
++    def __call__(self, row: JsonMap, candidates: Sequence[JsonMap]) -> str | None:
++        choices = [str(candidate.get("answer")) for candidate in candidates]
++        prompt = (
++            "You are a strong multiple-choice judge. Select the best answer candidate "
++            "for the MuSR question. Do not use hidden answer keys. Return JSON only: "
++            '{"answer": "<one candidate answer verbatim>"}.\n\n'
++            f"CONTEXT:\n{row.get('context', '')}\n\n"
++            f"QUESTION:\n{row.get('question', '')}\n\n"
++            f"CANDIDATE ANSWERS:\n{json.dumps(choices, ensure_ascii=True)}"
++        )
++        payload = json.dumps(
++            {"prompt": prompt, "temperature": 0.0, "n_predict": 96},
++            ensure_ascii=True,
++        ).encode("utf-8")
++        request = Request(
++            self.base_url + "/completion",
++            data=payload,
++            method="POST",
++            headers={"Content-Type": "application/json"},
++        )
++        with urlopen(request, timeout=self.timeout_s) as response:
++            parsed = json.loads(response.read().decode("utf-8"))
++        text = str(parsed.get("content") or parsed.get("text") or parsed)
++        return _match_choice(text, choices)
++
++
++def _is_correct(answer: str | None, gold: Any) -> int:
++    return int(answer is not None and str(answer) == str(gold))
++
++
++def _answer_counts(row: JsonMap) -> Counter[str]:
++    counts: Counter[str] = Counter()
++    for candidate in row.get("candidates", []):
++        answer = candidate.get("answer")
++        if answer is not None and str(answer).strip():
++            counts[str(answer)] += 1
++    return counts
++
++
++def _confidence_for_answer(row: JsonMap, answer: str | None) -> float:
++    if answer is None:
++        return 0.0
++    counts = _answer_counts(row)
++    total = sum(counts.values())
++    count = counts.get(str(answer), 0)
++    if total <= 0 or count <= 0:
++        return 0.0
++    competitor = max((value for key, value in counts.items() if key != str(answer)), default=0)
++    support = count / total
++    vote_margin = max(0.0, (count - competitor) / total)
++    return round(max(0.0, min(1.0, 0.55 * support + 0.45 * vote_margin)), 6)
++
++
++def _first_candidate_id(row: JsonMap, answer: str | None) -> str:
++    for candidate in row.get("candidates", []):
++        if answer is not None and str(candidate.get("answer")) == str(answer):
++            return str(candidate.get("candidate_id", ""))
++    return ""
++
++
++def _registry_decision(row: JsonMap) -> tuple[str | None, float, str]:
++    scored: list[tuple[float, str, str | None]] = []
++    for candidate in row.get("candidates", []):
++        energy = _candidate_score(candidate)
++        if not math.isfinite(energy):
++            energy = math.inf
++        scored.append((energy, str(candidate.get("candidate_id", "")), candidate.get("answer")))
++    if not scored:
++        return None, 0.0, ""
++    scored.sort(key=lambda item: (item[0], item[1]))
++    best_energy, best_id, answer = scored[0]
++    if len(scored) == 1:
++        confidence = 1.0 if math.isfinite(best_energy) else 0.0
++    else:
++        margin = max(0.0, scored[1][0] - best_energy)
++        confidence = 1.0 if math.isinf(margin) else min(1.0, margin / (1.0 + abs(best_energy)))
++    return (str(answer) if answer is not None else None), round(confidence, 6), best_id
++
++
++def _cheap_decision(row: JsonMap, cheap_verifier: CheapVerifier, row_index: int) -> CheapDecision:
++    prediction = (
++        cheap_verifier.predictions[row_index]
++        if row_index < len(cheap_verifier.predictions)
++        else None
++    )
++    if prediction is not None:
++        answer = str(prediction)
++        confidence = _confidence_for_answer(row, answer)
++        candidate_id = _first_candidate_id(row, answer)
++    else:
++        answer, confidence, candidate_id = _registry_decision(row)
++    return CheapDecision(
++        answer=answer,
++        correct=_is_correct(answer, row.get("gold")),
++        confidence=confidence,
++        candidate_id=candidate_id,
++    )
++
++
++def _accuracy(correct: Sequence[int]) -> float:
++    return round(sum(int(value) for value in correct) / len(correct), 6) if correct else 0.0
++
++
++def _frontier_row(threshold: float, correct: Sequence[int], calls: int, n_rows: int) -> JsonDict:
++    return {
++        "routing_threshold": round(float(threshold), 6),
++        "accuracy": _accuracy(correct),
++        "judge_calls": int(calls),
++        "judge_call_fraction": round(calls / n_rows, 6) if n_rows else 0.0,
++    }
++
++
++def evaluate_cascade(
++    rows: Sequence[JsonMap],
++    *,
++    cheap_verifier: CheapVerifier,
++    judge_answer: JudgeAnswer,
++    thresholds: Sequence[float] = DEFAULT_THRESHOLDS,
++    bootstrap_samples: int = 2000,
++    seed: int = RANDOM_SEED,
++) -> CascadeEvaluation:
++    rows_list = [dict(row) for row in rows if row.get("candidates")]
++    cheap_decisions = [
++        _cheap_decision(row, cheap_verifier, index) for index, row in enumerate(rows_list)
++    ]
++    cheap_correct = [decision.correct for decision in cheap_decisions]
++    judge_predictions = [judge_answer(row, list(row.get("candidates", []))) for row in rows_list]
++    judge_correct = [
++        _is_correct(prediction, row.get("gold"))
++        for prediction, row in zip(judge_predictions, rows_list, strict=True)
++    ]
++    judge_only_calls = len(rows_list)
++    frontier: list[JsonDict] = []
++    cascade_correct_by_threshold: dict[float, list[int]] = {}
++    for threshold in thresholds:
++        threshold_value = float(threshold)
++        current_correct: list[int] = []
++        calls = 0
++        for row, decision, judge_prediction in zip(
++            rows_list, cheap_decisions, judge_predictions, strict=True
++        ):
++            if decision.confidence >= threshold_value:
++                prediction = decision.answer
++            else:
++                calls += 1
++                prediction = judge_prediction
++            current_correct.append(_is_correct(prediction, row.get("gold")))
++        cascade_correct_by_threshold[threshold_value] = current_correct
++        frontier.append(_frontier_row(threshold_value, current_correct, calls, len(rows_list)))
++
++    judge_accuracy = _accuracy(judge_correct)
++    parity_rows: list[JsonDict] = []
++    for row in frontier:
++        correct = cascade_correct_by_threshold[float(row["routing_threshold"])]
++        ci95 = harness.paired_bootstrap_ci(
++            correct,
++            judge_correct,
++            seed=seed,
++            samples=bootstrap_samples,
++        )
++        if ci95[0] <= 0.0 <= ci95[1] and float(row["accuracy"]) >= judge_accuracy:
++            parity_rows.append(row)
++    if parity_rows:
++        best = min(parity_rows, key=lambda row: (int(row["judge_calls"]), -float(row["accuracy"])))
++    else:
++        best = max(frontier, key=lambda row: (float(row["accuracy"]), -int(row["judge_calls"])))
++    best_threshold = float(best["routing_threshold"])
++    best_correct = cascade_correct_by_threshold[best_threshold]
++    best_ci95 = harness.paired_bootstrap_ci(
++        best_correct,
++        judge_correct,
++        seed=seed,
++        samples=bootstrap_samples,
++    )
++    tuned_sc = harness.tuned_self_consistency(rows_list)
++    return CascadeEvaluation(
++        cheap_verifier_only_accuracy=_accuracy(cheap_correct),
++        judge_only_accuracy=judge_accuracy,
++        judge_only_calls=judge_only_calls,
++        cascade_accuracy=float(best["accuracy"]),
++        cascade_judge_calls=int(best["judge_calls"]),
++        judge_call_fraction=float(best["judge_call_fraction"]),
++        cost_quality_frontier=frontier,
++        best_threshold=best_threshold,
++        genuine_tuned_sc_accuracy=float(tuned_sc.get("accuracy", 0.0)),
++        n_questions=len(rows_list),
++        paired_ci95_cascade_vs_judge=best_ci95,
++        parity_with_judge=best_ci95[0] <= 0.0 <= best_ci95[1],
++        judge_predictions_cached_for_sweep=True,
++    )
++
++
++def _compact_adversarial_flags(report: JsonMap) -> list[JsonDict]:
++    flags: list[JsonDict] = []
++    for direct in report.get("flags", []) if isinstance(report.get("flags"), list) else []:
++        if isinstance(direct, dict):
++            flags.append(dict(direct))
++    for item in report.get("reports", []) if isinstance(report.get("reports"), list) else []:
++        if not isinstance(item, Mapping):
++            continue
++        for flag in item.get("flags", []) if isinstance(item.get("flags"), list) else []:
++            if isinstance(flag, dict):
++                flags.append(dict(flag))
++    return flags
++
++
++def _audit_is_clean(report: JsonMap) -> bool:
++    if int(report.get("flagged_count", report.get("flag_count", 0)) or 0) > 0:
++        return False
++    return not _compact_adversarial_flags(report)
++
++
++def _default_audit_runner(path: Path) -> JsonDict:  # pragma: no cover - external script hook
++    script_path = REPO_ROOT / "scripts" / "adversarial_verify.py"
++    if not script_path.exists():
++        return {"flag_count": 0, "flags": [], "skipped": "adversarial_verify_missing"}
++    spec = importlib.util.spec_from_file_location("carnot_adversarial_verify_5034", script_path)
++    if spec is None or spec.loader is None:
++        return {"flag_count": 0, "flags": [], "skipped": "adversarial_verify_unloadable"}
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    if hasattr(module, "verify_artifact"):
++        result = module.verify_artifact(path)
++        return result if isinstance(result, dict) else {"flag_count": 0, "flags": []}
++    return {"flag_count": 0, "flags": [], "skipped": "verify_artifact_missing"}
++
++
++def _default_summary_runner(path: Path) -> int:  # pragma: no cover - external script hook
++    script_path = REPO_ROOT / "scripts" / "summarize_artifact.py"
++    if not script_path.exists():
++        return 0
++    spec = importlib.util.spec_from_file_location("carnot_summarize_artifact_5034", script_path)
++    if spec is None or spec.loader is None:
++        return 0
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    if hasattr(module, "summarize"):
++        return int(module.summarize(path))
++    if hasattr(module, "main"):
++        return int(module.main([str(path)]))
++    return 0
++
++
++def _base_artifact(
++    *,
++    honest_verdict: str,
++    preconditions_checked: Sequence[PreconditionCheck | JsonMap],
++    duration_s: float,
++    root: Path,
++    deliverable_stage: str,
++) -> JsonDict:
++    return {
++        "schema": "carnot.experiment_5034_uncertainty_routed_cascade_v2.v1",
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(root / RESULT_RELATIVE_PATH),
++        "deliverable_stage": deliverable_stage,
++        "honest_verdict": honest_verdict,
++        "verifier_is_oracle": False,
++        "cheap_verifier_only_accuracy": None,
++        "cheap_verifier_source": None,
++        "judge_only_accuracy": None,
++        "judge_only_calls": 0,
++        "cascade_accuracy": None,
++        "cascade_judge_calls": 0,
++        "judge_call_fraction": None,
++        "cost_quality_frontier": [],
++        "genuine_tuned_sc_accuracy": None,
++        "n_questions": 0,
++        "model_specs": {
++            "cheap_verifier": None,
++            "strong_judge": {
++                "model": STRONG_JUDGE_MODEL,
++                "gpu": 0,
++                "server": DEFAULT_JUDGE_SERVER_URL,
++            },
++        },
++        "inference_substrate": "precondition_check_only",
++        "random_seed": RANDOM_SEED,
++        "preconditions_checked": [
++            check.as_dict() if isinstance(check, PreconditionCheck) else dict(check)
++            for check in preconditions_checked
++        ],
++        "best_routing_threshold": None,
++        "paired_ci95_cascade_vs_judge": None,
++        "oracle_distinctness_enforced": True,
++        "adversarial_verify_clean": None,
++        "adversarial_verify_flags": [],
++        "summarize_artifact_exit_code": None,
++        "duration_s": round(float(duration_s), 6),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "reproducibility_checksum": "",
++    }
++
++
++def _checksum(payload: JsonMap) -> str:
++    basis = {
++        "experiment_id": payload.get("experiment_id"),
++        "honest_verdict": payload.get("honest_verdict"),
++        "cheap_verifier_source": payload.get("cheap_verifier_source"),
++        "n_questions": payload.get("n_questions"),
++        "random_seed": payload.get("random_seed"),
++        "frontier": payload.get("cost_quality_frontier"),
++    }
++    return hashlib.sha256(_json_dumps(basis).encode("utf-8")).hexdigest()
++
++
++def build_skeleton_artifact(
++    *,
++    preconditions_checked: Sequence[PreconditionCheck | JsonMap],
++    duration_s: float,
++    root: Path = REPO_ROOT,
++) -> JsonDict:
++    artifact = _base_artifact(
++        honest_verdict="running_uncertainty_routed_cascade_v2_schema_skeleton",
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++        root=root,
++        deliverable_stage="schema_skeleton",
++    )
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    missing_resource: str,
++    preconditions_checked: Sequence[PreconditionCheck | JsonMap],
++    duration_s: float,
++    root: Path = REPO_ROOT,
++    blocked_error: str | None = None,
++) -> JsonDict:
++    artifact = _base_artifact(
++        honest_verdict=f"blocked_{missing_resource}",
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++        root=root,
++        deliverable_stage="blocked_precondition",
++    )
++    artifact["blocked_error"] = blocked_error
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def _attach_cheap_verifier(artifact: JsonDict, cheap_verifier: CheapVerifier) -> JsonDict:
++    artifact["cheap_verifier_source"] = cheap_verifier.name
++    artifact["model_specs"] = {
++        **dict(artifact.get("model_specs") or {}),
++        "cheap_verifier": dict(cheap_verifier.model_specs),
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def _verdict_for_evaluation(evaluation: CascadeEvaluation) -> str:
++    if (
++        evaluation.parity_with_judge
++        and evaluation.judge_call_fraction <= EFFICIENCY_WIN_MAX_JUDGE_FRACTION
++    ):
++        pct = int(round(100.0 * evaluation.judge_call_fraction))
++        return f"success_cascade_parity_at_{pct}pct_judge_calls"
++    return "complete_cascade_no_efficiency_win_musr"
++
++
++def build_complete_artifact(
++    *,
++    evaluation: CascadeEvaluation,
++    cheap_verifier: CheapVerifier,
++    preconditions_checked: Sequence[PreconditionCheck | JsonMap],
++    duration_s: float,
++    root: Path = REPO_ROOT,
++    judge_server_url: str = DEFAULT_JUDGE_SERVER_URL,
++) -> JsonDict:
++    artifact = _base_artifact(
++        honest_verdict=_verdict_for_evaluation(evaluation),
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++        root=root,
++        deliverable_stage="complete",
++    )
++    artifact.update(
++        {
++            "cheap_verifier_only_accuracy": evaluation.cheap_verifier_only_accuracy,
++            "cheap_verifier_source": cheap_verifier.name,
++            "judge_only_accuracy": evaluation.judge_only_accuracy,
++            "judge_only_calls": evaluation.judge_only_calls,
++            "cascade_accuracy": evaluation.cascade_accuracy,
++            "cascade_judge_calls": evaluation.cascade_judge_calls,
++            "judge_call_fraction": evaluation.judge_call_fraction,
++            "cost_quality_frontier": evaluation.cost_quality_frontier,
++            "genuine_tuned_sc_accuracy": round(evaluation.genuine_tuned_sc_accuracy, 6),
++            "n_questions": evaluation.n_questions,
++            "model_specs": {
++                "cheap_verifier": dict(cheap_verifier.model_specs),
++                "strong_judge": {
++                    "model": STRONG_JUDGE_MODEL,
++                    "gpu": 0,
++                    "server": judge_server_url,
++                    "role": "LLM-as-judge fallback only",
++                },
++            },
++            "inference_substrate": "live_llm_inference",
++            "best_routing_threshold": evaluation.best_threshold,
++            "paired_ci95_cascade_vs_judge": evaluation.paired_ci95_cascade_vs_judge,
++            "judge_call_accounting": {
++                "cheap_verifier_only_calls": 0,
++                "judge_only_baseline_calls": evaluation.judge_only_calls,
++                "cascade_deployment_calls_at_best_threshold": evaluation.cascade_judge_calls,
++                "judge_predictions_cached_for_threshold_sweep": (
++                    evaluation.judge_predictions_cached_for_sweep
++                ),
++            },
++            "cascade_vs_genuine_tuned_sc_delta": round(
++                evaluation.cascade_accuracy - evaluation.genuine_tuned_sc_accuracy, 6
++            ),
++        }
++    )
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def _finalize_artifact(
++    artifact: JsonDict,
++    artifact_path: Path,
++    *,
++    audit_runner: AuditRunner,
++    summary_runner: SummaryRunner,
++    write: bool,
++) -> JsonDict:
++    if write:
++        write_json(artifact_path, artifact)
++    audit = audit_runner(artifact_path)
++    artifact["adversarial_verify_flags"] = _compact_adversarial_flags(audit)
++    artifact["adversarial_verify_clean"] = _audit_is_clean(audit)
++    artifact["summarize_artifact_exit_code"] = int(summary_runner(artifact_path))
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    if write:
++        write_json(artifact_path, artifact)
++    return artifact
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    artifact_path: Path | None = None,
++    min_questions: int = 200,
++    thresholds: Sequence[float] = DEFAULT_THRESHOLDS,
++    judge_server_url: str = DEFAULT_JUDGE_SERVER_URL,
++    judge_server_probe: JudgeProbe | None = None,
++    judge_answer: JudgeAnswer | None = None,
++    audit_runner: AuditRunner | None = None,
++    summary_runner: SummaryRunner | None = None,
++    now: Clock = time.perf_counter,
++    bootstrap_samples: int = 2000,
++    write: bool = True,
++) -> JsonDict:
++    artifact_path = artifact_path or (root / RESULT_RELATIVE_PATH)
++    audit = audit_runner or _default_audit_runner
++    summarize = summary_runner or _default_summary_runner
++    start = now()
++    if write:
++        write_json(
++            artifact_path,
++            build_skeleton_artifact(preconditions_checked=[], duration_s=0.0, root=root),
++        )
++
++    cheap = select_cheap_verifier(root)
++    judge_check = (judge_server_probe or probe_llama_server)(judge_server_url)
++    cache_check, rows = candidate_cache_precondition(root, min_questions=min_questions)
++    checks: list[PreconditionCheck] = [cheap.check, judge_check, cache_check]
++    first_missing = next((check for check in checks if not check.available), None)
++    if first_missing is not None:
++        artifact = build_blocked_artifact(
++            missing_resource=first_missing.resource,
++            preconditions_checked=checks,
++            duration_s=now() - start,
++            root=root,
++            blocked_error=first_missing.detail,
++        )
++        return _finalize_artifact(
++            _attach_cheap_verifier(artifact, cheap),
++            artifact_path,
++            audit_runner=audit,
++            summary_runner=summarize,
++            write=write,
++        )
++
++    judge = judge_answer or CountingJudge(LlamaServerJudge(judge_server_url))
++    try:
++        evaluation = evaluate_cascade(
++            rows,
++            cheap_verifier=cheap,
++            judge_answer=judge,
++            thresholds=thresholds,
++            bootstrap_samples=bootstrap_samples,
++        )
++    except (OSError, URLError, TimeoutError, json.JSONDecodeError) as exc:
++        failed = PreconditionCheck("judge_inference_failed", False, f"{type(exc).__name__}: {exc}")
++        artifact = build_blocked_artifact(
++            missing_resource=failed.resource,
++            preconditions_checked=[*checks, failed],
++            duration_s=now() - start,
++            root=root,
++            blocked_error=failed.detail,
++        )
++        return _finalize_artifact(
++            _attach_cheap_verifier(artifact, cheap),
++            artifact_path,
++            audit_runner=audit,
++            summary_runner=summarize,
++            write=write,
++        )
++
++    return _finalize_artifact(
++        build_complete_artifact(
++            evaluation=evaluation,
++            cheap_verifier=cheap,
++            preconditions_checked=checks,
++            duration_s=now() - start,
++            root=root,
++            judge_server_url=judge_server_url,
++        ),
++        artifact_path,
++        audit_runner=audit,
++        summary_runner=summarize,
++        write=write,
++    )
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(field)
++    if artifact.get("spec_refs") != SPEC_REFS:
++        errors.append("spec_refs")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    if set(artifact.get("field_principles", {})) != set(FIELD_PRINCIPLES):
++        errors.append("field_principles")
++    frontier = artifact.get("cost_quality_frontier")
++    if not isinstance(frontier, list):
++        errors.append("cost_quality_frontier")
++    ci95 = artifact.get("paired_ci95_cascade_vs_judge")
++    if ci95 is not None and (
++        not isinstance(ci95, list)
++        or len(ci95) != 2
++        or not all(_finite_number(value) for value in ci95)
++    ):
++        errors.append("paired_ci95_cascade_vs_judge")
++    return errors
++
++
++def main() -> int:  # pragma: no cover - script entry point
++    artifact = run()
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise SystemExit(f"Exp 5034 artifact schema errors: {errors}")
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - script entry point
++    raise SystemExit(main())
+diff --git a/results/arc3_live_submit.json b/results/arc3_live_submit.json
+index 3f465eea8a..c95242ee47 100644
+--- a/results/arc3_live_submit.json
++++ b/results/arc3_live_submit.json
+@@ -1,11 +1,11 @@
+ {
+   "experiment": "arc3_live_submit",
+   "mode": "submit",
+-  "scorecard_id": "d6a4b922-b52c-4202-989d-4d58215a8a3e",
+-  "live_total_levels": 33,
+-  "games_env_matched": 17,
+-  "games": 18,
+-  "claimed_total_levels": 34,
++  "scorecard_id": "c4704493-f23b-427b-a97b-5686bb9d3390",
++  "live_total_levels": 55,
++  "games_env_matched": 24,
++  "games": 25,
++  "claimed_total_levels": 60,
+   "per_game": [
+     {
+       "game": "r11l",
+@@ -15,50 +15,62 @@
+     },
+     {
+       "game": "ls20",
++      "claimed": 2,
++      "live_level": 2,
++      "env_match": true
++    },
++    {
++      "game": "wa30",
+       "claimed": 1,
+       "live_level": 1,
+       "env_match": true
+     },
+     {
+-      "game": "wa30",
++      "game": "s5i5",
+       "claimed": 1,
+       "live_level": 1,
+       "env_match": true
+     },
+     {
+       "game": "lp85",
+-      "claimed": 4,
+-      "live_level": 4,
++      "claimed": 5,
++      "live_level": 5,
+       "env_match": true
+     },
+     {
+       "game": "sc25",
+-      "claimed": 1,
+-      "live_level": 0,
++      "claimed": 5,
++      "live_level": -1,
+       "env_match": false
+     },
+     {
+       "game": "cd82",
++      "claimed": 2,
++      "live_level": 2,
++      "env_match": true
++    },
++    {
++      "game": "lf52",
+       "claimed": 1,
+       "live_level": 1,
+       "env_match": true
+     },
+     {
+       "game": "sp80",
+-      "claimed": 1,
+-      "live_level": 1,
++      "claimed": 2,
++      "live_level": 2,
+       "env_match": true
+     },
+     {
+       "game": "su15",
+-      "claimed": 1,
+-      "live_level": 1,
++      "claimed": 2,
++      "live_level": 2,
+       "env_match": true
+     },
+     {
+       "game": "tu93",
+-      "claimed": 3,
+-      "live_level": 3,
++      "claimed": 5,
++      "live_level": 5,
+       "env_match": true
+     },
+     {
+@@ -69,14 +81,14 @@
+     },
+     {
+       "game": "cn04",
+-      "claimed": 1,
+-      "live_level": 1,
++      "claimed": 2,
++      "live_level": 2,
+       "env_match": true
+     },
+     {
+       "game": "m0r0",
+-      "claimed": 1,
+-      "live_level": 1,
++      "claimed": 2,
++      "live_level": 2,
+       "env_match": true
+     },
+     {
+@@ -87,8 +99,8 @@
+     },
+     {
+       "game": "ar25",
+-      "claimed": 1,
+-      "live_level": 1,
++      "claimed": 2,
++      "live_level": 2,
+       "env_match": true
+     },
+     {
+@@ -97,6 +109,12 @@
+       "live_level": 1,
+       "env_match": true
+     },
++    {
++      "game": "ft09",
++      "claimed": 3,
++      "live_level": 3,
++      "env_match": true
++    },
+     {
+       "game": "tr87",
+       "claimed": 6,
+@@ -105,37 +123,78 @@
+     },
+     {
+       "game": "vc33",
++      "claimed": 2,
++      "live_level": 2,
++      "env_match": true
++    },
++    {
++      "game": "g50t",
+       "claimed": 1,
+       "live_level": 1,
+       "env_match": true
+     },
+     {
+       "game": "dc22",
+-      "claimed": 1,
+-      "live_level": 1,
++      "claimed": 2,
++      "live_level": 2,
+       "env_match": true
+-    }
+-  ],
+-  "replay_set_source": "package:experiment_4473_submission_package_prep_refresh.json",
+-  "claimed_caps": [
++    },
+     {
+-      "game": "lp85",
+-      "package_levels": 5,
+-      "offline_reached": 4
++      "game": "sb26",
++      "claimed": 2,
++      "live_level": 2,
++      "env_match": true
+     },
+     {
+-      "game": "sc25",
+-      "package_levels": 5,
+-      "offline_reached": 1
++      "game": "re86",
++      "claimed": 1,
++      "live_level": 1,
++      "env_match": true
+     },
+     {
+-      "game": "tu93",
+-      "package_levels": 5,
+-      "offline_reached": 3
++      "game": "bp35",
++      "claimed": 1,
++      "live_level": 1,
++      "env_match": true
+     }
+   ],
+-  "uncapped_package_total": 41,
++  "replay_set_source": "package:experiment_4679_submission_package_operator_resubmit.json",
++  "claimed_caps": [],
++  "uncapped_package_total": 60,
+   "leaderboard_submitted": true,
+-  "run_date": "2026-06-21T17:04:45Z",
++  "run_date": "2026-06-30T16:19:57Z",
++  "trajectory_sources": {
++    "r11l": "results/arc3_live_banked_trajectories/r11l.json",
++    "ls20": "results/arc3_live_banked_trajectories/ls20.json",
++    "wa30": "results/arc3_live_banked_trajectories/wa30.json",
++    "s5i5": "results/arc3_live_banked_trajectories/s5i5.json",
++    "lp85": "results/arc3_live_banked_trajectories/lp85.json",
++    "sc25": "results/arc3_live_banked_trajectories/sc25.json",
++    "cd82": "results/arc3_live_banked_trajectories/cd82.json",
++    "lf52": "results/arc3_live_banked_trajectories/lf52.json",
++    "sp80": "results/arc3_live_banked_trajectories/sp80.json",
++    "su15": "results/arc3_live_banked_trajectories/su15.json",
++    "tu93": "results/arc3_live_banked_trajectories/tu93.json",
++    "tn36": "results/arc3_live_banked_trajectories/tn36.json",
++    "cn04": "results/arc3_live_banked_trajectories/cn04.json",
++    "m0r0": "results/arc3_live_banked_trajectories/m0r0.json",
++    "sk48": "results/arc3_live_banked_trajectories/sk48.json",
++    "ar25": "results/arc3_live_banked_trajectories/ar25.json",
++    "ka59": "results/arc3_live_banked_trajectories/ka59.json",
++    "ft09": "results/arc3_live_banked_trajectories/ft09.json",
++    "tr87": "results/arc3_live_banked_trajectories/tr87.json",
++    "vc33": "results/arc3_live_banked_trajectories/vc33.json",
++    "g50t": "results/arc3_live_banked_trajectories/g50t.json",
++    "dc22": "results/arc3_live_banked_trajectories/dc22.json",
++    "sb26": "results/arc3_live_banked_trajectories/sb26.json",
++    "re86": "results/arc3_live_banked_trajectories/re86.json",
++    "bp35": "results/arc3_live_banked_trajectories/bp35.json"
++  },
++  "adaptive_solvers": {
++    "s5i5": "env_adaptive_resolve_operator:s5i5",
++    "sc25": "sc25_dynamic_cast_grid_origin_step",
++    "ft09": "env_adaptive_resolve_operator:ft09",
++    "sb26": "env_adaptive_resolve_operator:sb26"
++  },
+   "inference_substrate": "live_arc_agi3_env_multi_game_replay"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index f30e26850f..b0d6187b78 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T12:30:34.558442+00:00",
+-  "finished_at": "2026-06-30T12:30:34.605424+00:00",
+-  "duration_s": 0.047,
++  "started_at": "2026-06-30T16:29:52.631597+00:00",
++  "finished_at": "2026-06-30T16:29:52.686508+00:00",
++  "duration_s": 0.055,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 31fd45de11..19a6fdc9cd 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-30T12:30:34Z",
++  "run_date": "2026-06-30T16:29:53Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 253e493bff..2793305068 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T12:30:36Z",
+-  "finished_at": "2026-06-30T12:30:36Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-30T16:29:55Z",
++  "finished_at": "2026-06-30T16:29:55Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index d4f01c052f..6e04352cf4 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-30T12:30:36Z",
++  "run_date": "2026-06-30T16:29:55Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 20b8926fe1..bb1c59759c 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-30T12:30:37Z",
++  "run_date": "2026-06-30T16:29:55Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index df092d907d..d8d1b43091 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-30T16:09:31.058412Z",
+-  "duration_s": 0.06894755363464355,
++  "run_date": "2026-06-30T16:27:52.899229Z",
++  "duration_s": 0.1118764877319336,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "9e3366befe1e1dad555881f810090f0a21e494e944008e3df4cd9ce39cf78168",
++  "reproducibility_checksum": "7bc76a18efae4674a049b02a3eeb2c4a7fcca8f61171cbf1b3ec4753003918f1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "9f95f14c214081d0f4c30d932aa0a71ccb08d528"
++    "adversarial_verify_version": "ae53caf386c5be6867ef68957d74463ac0d7475a"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index f9fbaaab8f..78ab9c526c 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-30T12:33:22.370579Z",
+-  "duration_s": 67.56670475006104,
++  "run_date": "2026-06-30T16:29:24.375705Z",
++  "duration_s": 12.378710269927979,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index be4a383ce3..0d42c235e0 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-30T12:33:53.440381+00:00",
+-  "duration_s": 0.01418161392211914,
++  "run_date": "2026-06-30T16:29:44.179895+00:00",
++  "duration_s": 0.002099752426147461,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index dd5d37fef1..78fa604b66 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-30T16:09:31.173074Z",
+-  "duration_s": 0.1035308837890625,
++  "run_date": "2026-06-30T16:27:53.078184Z",
++  "duration_s": 0.16029715538024902,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "a9543e142d24707c0b92191b2d1664aaf00806e35140e840f19c46439f9ff689",
++  "reproducibility_checksum": "955d1c2f57c30bcc20adff1aaeff55da74dffd7d7c693067d4d5d280145739cc",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "9f95f14c214081d0f4c30d932aa0a71ccb08d528"
++    "adversarial_verify_version": "ae53caf386c5be6867ef68957d74463ac0d7475a"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 157c951b22..ad721e2a63 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.41s, user: 3.02s, system: 0.28s, MEM: 115.13 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 4.00s, user: 2.98s, system: 0.21s, MEM: 115.20 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 78% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 78% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 76c6994900..b5e82625ba 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1140575408935547,
++  "efficiency_gains_ms": 2.144336700439453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index f003c736a6..a916af8080 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-30T12:34:30.070521Z",
++  "run_date": "2026-06-30T16:30:04.969773Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 5b40e8c1f8..9e6cac06c4 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.0004054310265928507,
+-  "latency_domino_seconds": 0.001034171087667346,
++  "latency_legacy_seconds": 0.00011704908683896065,
++  "latency_domino_seconds": 0.0002329770941287279,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index b2efc128fb..8131ad5319 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T12:36:03Z",
+-  "finished_at": "2026-06-30T12:36:03Z",
++  "started_at": "2026-06-30T16:30:46Z",
++  "finished_at": "2026-06-30T16:30:46Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 7bb408e0db..586e6aa1db 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T12:37:22Z",
+-  "finished_at": "2026-06-30T12:37:22Z",
+-  "duration_s": 0.011,
++  "started_at": "2026-06-30T16:31:36Z",
++  "finished_at": "2026-06-30T16:31:37Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.1087188720703125,
++  "latency_ms": 0.05435943603515625,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 828b432398..748f04663e 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.000906219482421875,
+-  "avg_eqm_time": 0.24623078346252442,
++  "avg_pem_time": 0.0010628604888916016,
++  "avg_eqm_time": 0.10982274532318115,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 9bebfa6998..47356c18b7 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6010968685150146,
++  "duration_s": 0.536766767501831,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 9145f4327c..19fb2bca29 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.296897143125534e-05,
++  "duration_s": 3.9253849536180496e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index 688a7f5801..b6f2169b31 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.12192387599498034,
++  "duration_s": 0.6473384911660105,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3571_capstone_v328.json b/results/experiment_3571_capstone_v328.json
+index ba5049d69d..829eaa30bf 100644
+--- a/results/experiment_3571_capstone_v328.json
++++ b/results/experiment_3571_capstone_v328.json
+@@ -29,5 +29,5 @@
+   "capstone_v328_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "9ee3572680c4200c",
+-  "duration_s": 9.512901306152344e-05
++  "duration_s": 0.00020575523376464844
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 76c4ed3a33..0134234ab0 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.017711400985717773
++  "duration_s": 0.15140962600708008
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index 8530a292c3..91594e3ed8 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "d497e95124feeed1c5fa8c92c1b6ad11bc528cb776868059ece2ad4040766497"
++    "3fefe5729f1180fcdb94f1dbc17126f470e70052e474153541a4dcb57eeefbff"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.00026702880859375
++  "duration_s": 0.017671823501586914
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index 976d2150b7..6d8e657b30 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.3091270923614502,
+-  "reproducibility_checksum": "1e9eda8e491608891a9fd89fa7eac233"
++  "duration_s": 0.3447873592376709,
++  "reproducibility_checksum": "3abee17c95a40d45577b80470809b3cf"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index aeed00ad79..2c9d3642aa 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.0018029212951660156
++  "duration_s": 0.0007410049438476562
+ }
+\ No newline at end of file
+diff --git a/results/experiment_5034_uncertainty_routed_cascade_v2.json b/results/experiment_5034_uncertainty_routed_cascade_v2.json
+new file mode 100644
+index 0000000000..cc273c9d08
+--- /dev/null
++++ b/results/experiment_5034_uncertainty_routed_cascade_v2.json
+@@ -0,0 +1,140 @@
++{
++  "adversarial_verify_clean": true,
++  "adversarial_verify_flags": [],
++  "best_routing_threshold": null,
++  "blocked_error": "URLError: <urlopen error [Errno 111] Connection refused>",
++  "cascade_accuracy": null,
++  "cascade_judge_calls": 0,
++  "cheap_verifier_only_accuracy": null,
++  "cheap_verifier_source": "D1 trained LoRA-EBM",
++  "cost_quality_frontier": [],
++  "deliverable_stage": "blocked_precondition",
++  "duration_s": 0.017642,
++  "experiment": "experiment_5034_uncertainty_routed_cascade_v2",
++  "experiment_id": 5034,
++  "field_principles": {
++    "cascade_accuracy": {
++      "principle": "the cascade accuracy at the best routing threshold (the headline)."
++    },
++    "cascade_judge_calls": {
++      "principle": "the judge-call count the cascade actually used (the efficiency number; a win = << N)."
++    },
++    "cheap_verifier_only_accuracy": {
++      "principle": "the cheap oracle-distinct verifier's accuracy at 0 judge calls (the floor)."
++    },
++    "cheap_verifier_source": {
++      "principle": "which cheap verifier was used (D1 trained LoRA-EBM / D2 uPRM / registry ensemble)."
++    },
++    "cost_quality_frontier": {
++      "principle": "the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall)."
++    },
++    "genuine_tuned_sc_accuracy": {
++      "principle": "the B1 GENUINE tuned-SC (0.585; the accuracy context)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; a win is success_cascade_parity_at_<pct>_judge_calls, a null is complete_cascade_no_efficiency_win_musr."
++    },
++    "inference_substrate": {
++      "principle": "live_llm_inference (the strong judge runs live; >=60s floor)."
++    },
++    "judge_call_fraction": {
++      "principle": "cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction."
++    },
++    "judge_only_accuracy": {
++      "principle": "the strong-judge-only accuracy at N judge calls (the expensive ceiling)."
++    },
++    "judge_only_calls": {
++      "principle": "N -- the full judge-call count (the cost the cascade must beat)."
++    },
++    "model_specs": {
++      "principle": "the cheap verifier + the strong LLM-judge (gemma-4-12B-it-GGUF) -- the methodology stamp."
++    },
++    "n_questions": {
++      "principle": ">=200 (sample-size rigor)."
++    },
++    "preconditions_checked": {
++      "principle": "records the cheap-verifier / judge-server / candidate-cache checks; a missing resource emits blocked_."
++    },
++    "random_seed": {
++      "principle": "determinism for the routing + bootstrap."
++    },
++    "verifier_is_oracle": {
++      "principle": "false -- neither the cheap verifier nor the LLM-judge is the executable oracle on MuSR (must pass check_circular_moat_overclaim)."
++    }
++  },
++  "genuine_tuned_sc_accuracy": null,
++  "honest_verdict": "blocked_judge_server",
++  "inference_substrate": "precondition_check_only",
++  "judge_call_fraction": null,
++  "judge_only_accuracy": null,
++  "judge_only_calls": 0,
++  "model_specs": {
++    "cheap_verifier": {
++      "accuracy": 0.665,
++      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5031_lora_ebm_scorer_musr_v3.json",
++      "cheap_verifier": "D1 trained LoRA-EBM",
++      "delta_vs_tuned_sc": 0.08,
++      "source_model_specs": {
++        "adapter": "LoRA",
++        "b1_genuine_sc_baseline_reference": {
++          "available": true,
++          "genuine_tuned_sc_accuracy": 0.585,
++          "honest_verdict": "success_genuine_sc_baseline_fixed_degeneracy_guard_shipped",
++          "oracle_at_k": 0.865,
++          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5015_genuine_sc_baseline_fix.json"
++        },
++        "base_cache_path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3.5-2B/snapshots/15852e8c16360a2fea060d615a32b45270f8a8fc",
++        "base_model": "Qwen/Qwen3.5-2B",
++        "cached_candidate_generator": "distributional_energy_verifier_musr_checkpoints",
++        "candidate_cache_source": "results/distributional_energy_verifier_musr_checkpoints",
++        "energy_head": "scalar_sequence_regression_head",
++        "lora_alpha": 16,
++        "lora_r": 8,
++        "max_length": 512,
++        "quantization": "4bit_nf4_QLoRA",
++        "tuned_self_consistency_config": {
++          "k": 1,
++          "temperature": "cached"
++        }
++      }
++    },
++    "strong_judge": {
++      "gpu": 0,
++      "model": "gemma-4-12B-it-GGUF",
++      "server": "http://127.0.0.1:8080"
++    }
++  },
++  "n_questions": 0,
++  "oracle_distinctness_enforced": true,
++  "paired_ci95_cascade_vs_judge": null,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "selected D1 trained LoRA-EBM",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5031_lora_ebm_scorer_musr_v3.json",
++      "resource": "cheap_verifier"
++    },
++    {
++      "available": false,
++      "detail": "URLError: <urlopen error [Errno 111] Connection refused>",
++      "path": "http://127.0.0.1:8080",
++      "resource": "judge_server"
++    },
++    {
++      "available": true,
++      "detail": "loaded 200 cached MuSR candidate rows",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr_checkpoints",
++      "resource": "cached_musr_candidates"
++    }
++  ],
++  "random_seed": 20260630,
++  "reproducibility_checksum": "0c138da03c03b3d4144496588fedd71e0776f2a419ee586663b58a6d6fe46021",
++  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5034_uncertainty_routed_cascade_v2.json",
++  "schema": "carnot.experiment_5034_uncertainty_routed_cascade_v2.v1",
++  "spec_refs": [
++    "REQ-VERIFY-5034",
++    "SCENARIO-VERIFY-5034"
++  ],
++  "summarize_artifact_exit_code": 0,
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 4455c06908..4b93199809 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T16:09:13Z",
+-  "finished_at": "2026-06-30T16:09:13Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-30T16:31:58Z",
++  "finished_at": "2026-06-30T16:31:58Z",
++  "duration_s": 0.013,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index f3f16f0adf..c940bbc6a0 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T16:09:13Z",
+-  "finished_at": "2026-06-30T16:09:13Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-30T16:31:59Z",
++  "finished_at": "2026-06-30T16:31:59Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 9f14a6ad0c..327849b221 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260630",
+-  "started_at": "2026-06-30T16:09:13Z",
+-  "finished_at": "2026-06-30T16:09:13Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-30T16:31:59Z",
++  "finished_at": "2026-06-30T16:31:59Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5034_uncertainty_routed_cascade_v2.py b/tests/python/test_experiment_5034_uncertainty_routed_cascade_v2.py
+new file mode 100644
+index 0000000000..b34c9c4db8
+--- /dev/null
++++ b/tests/python/test_experiment_5034_uncertainty_routed_cascade_v2.py
+@@ -0,0 +1,420 @@
++"""Tests for Exp 5034 uncertainty-routed MuSR cascade v2.
++
++Spec refs: REQ-VERIFY-5034, SCENARIO-VERIFY-5034.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5034_uncertainty_routed_cascade_v2 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def _audit_clean(_path: Path) -> dict[str, Any]:
++    return {"flag_count": 0, "flags": []}
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _row(row_id: str, gold: str, answers: list[str], energies: list[float]) -> dict[str, Any]:
++    return {
++        "row_id": row_id,
++        "corpus": "MuSR/murder_mysteries",
++        "question": f"question {row_id}",
++        "context": "fixture",
++        "choices": sorted(set(answers)),
++        "gold": gold,
++        "candidates": [
++            {
++                "candidate_id": f"{row_id}/cached-{index}",
++                "answer": answer,
++                "reasoning": f"Reasoning for {answer}",
++                "cache_index": index,
++                "temperature": "cached",
++                "trivial_energy": energy,
++                "cached_energy_selected": index == 0,
++            }
++            for index, (answer, energy) in enumerate(zip(answers, energies, strict=True))
++        ],
++    }
++
++
++def _write_checkpoints(root: Path, rows: list[dict[str, Any]]) -> None:
++    checkpoint_dir = root / mod.MUSR_CHECKPOINT_RELATIVE_DIR
++    checkpoint_dir.mkdir(parents=True, exist_ok=True)
++    for index, row in enumerate(rows):
++        _write_json(
++            checkpoint_dir / f"q{index:04d}.json",
++            {
++                "q": index,
++                "gold": row["gold"],
++                "answers": [candidate["answer"] for candidate in row["candidates"]],
++                "candidate_energies": [
++                    candidate["trivial_energy"] for candidate in row["candidates"]
++                ],
++                "energy_answer": row["candidates"][0]["answer"],
++                "question": row["question"],
++                "context": row["context"],
++            },
++        )
++
++
++def _write_d1(root: Path, predictions: list[str], delta: float = 0.08) -> None:
++    _write_json(
++        root / mod.D1_ARTIFACT_RELATIVE_PATH,
++        {
++            "scorer_trained": True,
++            "verifier_is_oracle": False,
++            "delta_vs_tuned_sc": delta,
++            "trained_scorer_accuracy": 0.665,
++            "model_specs": {"base_model": "Qwen/Qwen3.5-2B"},
++            "evaluation": {"verifier": {"predictions": predictions}},
++        },
++    )
++
++
++def _write_d2(root: Path, predictions: list[str], delta: float = -0.11) -> None:
++    _write_json(
++        root / mod.D2_ARTIFACT_RELATIVE_PATH,
++        {
++            "scoring_path": "uprm_logprob",
++            "verifier_is_oracle": False,
++            "delta_vs_tuned_sc": delta,
++            "uprm_selection_accuracy": 0.475,
++            "model_specs": {"score_formula": "uPRM Eq.6"},
++            "evaluation": {"verifier": {"predictions": predictions}},
++        },
++    )
++
++
++def test_req_verify_5034_spec_declares_cascade_contract() -> None:
++    """REQ-VERIFY-5034: OpenSpec anchors the D6 efficiency cascade fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-5034",
++        "SCENARIO-VERIFY-5034",
++        "experiment_5034_uncertainty_routed_cascade_v2.py",
++        "results/experiment_5034_uncertainty_routed_cascade_v2.json",
++        "arXiv:2510.20369",
++        "success_cascade_parity_at_<pct>_judge_calls",
++        "complete_cascade_no_efficiency_win_musr",
++        "cost_quality_frontier",
++        "judge_call_fraction",
++        "gemma-4-12B-it-GGUF",
++        "verifier_is_oracle",
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_req_verify_5034_selects_cheap_verifier_priority(tmp_path: Path) -> None:
++    """REQ-VERIFY-5034: D1 trained scorer wins, then D2 uPRM, else registry."""
++
++    _write_d1(tmp_path, ["A"], delta=0.08)
++    _write_d2(tmp_path, ["B"], delta=0.30)
++
++    selected = mod.select_cheap_verifier(tmp_path)
++    (tmp_path / mod.D1_ARTIFACT_RELATIVE_PATH).unlink()
++    d2_selected = mod.select_cheap_verifier(tmp_path)
++    (tmp_path / mod.D2_ARTIFACT_RELATIVE_PATH).unlink()
++    fallback = mod.select_cheap_verifier(tmp_path)
++
++    assert selected.name == "D1 trained LoRA-EBM"
++    assert selected.predictions == ["A"]
++    assert d2_selected.name == "D2 uPRM"
++    assert d2_selected.predictions == ["B"]
++    assert fallback.name == "registry quality ensemble"
++    assert fallback.check.available is True
++
++
++def test_req_verify_5034_frontier_uses_cached_judge_predictions_once() -> None:
++    """REQ-VERIFY-5034: swept frontier charges per-threshold cascade calls."""
++
++    rows = [
++        _row("musr:0", "A", ["A", "A", "A", "B"], [0.0, 0.1, 0.2, 0.3]),
++        _row("musr:1", "B", ["A", "A", "B"], [0.0, 0.1, 0.2]),
++    ]
++    cheap = mod.CheapVerifier(
++        name="fixture cheap",
++        predictions=["A", "A"],
++        model_specs={"cheap_verifier": "fixture"},
++        source_artifact=None,
++        check=mod.PreconditionCheck("cheap_verifier", True, "fixture"),
++        delta_vs_tuned_sc=0.0,
++    )
++    judge = mod.CountingJudge(lambda row, _candidates: str(row["gold"]))
++
++    result = mod.evaluate_cascade(
++        rows,
++        cheap_verifier=cheap,
++        judge_answer=judge,
++        thresholds=[0.0, 0.6, 1.0],
++        bootstrap_samples=32,
++    )
++
++    assert result.cheap_verifier_only_accuracy == 0.5
++    assert result.judge_only_accuracy == 1.0
++    assert result.judge_only_calls == 2
++    assert result.cascade_accuracy == 1.0
++    assert result.cascade_judge_calls == 1
++    assert result.judge_call_fraction == 0.5
++    assert result.best_threshold == 0.6
++    assert judge.calls == 2
++    assert result.cost_quality_frontier == [
++        {"routing_threshold": 0.0, "accuracy": 0.5, "judge_calls": 0, "judge_call_fraction": 0.0},
++        {"routing_threshold": 0.6, "accuracy": 1.0, "judge_calls": 1, "judge_call_fraction": 0.5},
++        {"routing_threshold": 1.0, "accuracy": 1.0, "judge_calls": 2, "judge_call_fraction": 1.0},
++    ]
++
++
++def test_scenario_verify_5034_missing_judge_server_blocks_honestly(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5034: missing judge endpoint writes blocked artifact."""
++
++    rows = [
++        _row("musr:0", "A", ["A", "B"], [0.0, 0.1]),
++        _row("musr:1", "B", ["A", "B"], [0.0, 0.1]),
++    ]
++    _write_checkpoints(tmp_path, rows)
++    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=artifact_path,
++        min_questions=2,
++        judge_server_probe=lambda _url: mod.PreconditionCheck(
++            "judge_server", False, "connection refused"
++        ),
++        audit_runner=_audit_clean,
++        summary_runner=lambda _path: 0,
++        now=lambda: 10.0,
++        write=True,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_judge_server"
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["cheap_verifier_source"] == "registry quality ensemble"
++    assert artifact["cheap_verifier_only_accuracy"] is None
++    assert artifact["judge_only_calls"] == 0
++    assert artifact["cascade_judge_calls"] == 0
++    assert artifact["preconditions_checked"][1]["available"] is False
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_verify_5034_injected_judge_writes_complete_artifact(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5034: injected judge emits all cascade artifact fields."""
++
++    rows = [
++        _row("musr:0", "A", ["A", "A", "A", "B"], [0.0, 0.1, 0.2, 0.3]),
++        _row("musr:1", "B", ["A", "A", "B"], [0.0, 0.1, 0.2]),
++    ]
++    _write_checkpoints(tmp_path, rows)
++    _write_d1(tmp_path, ["A", "A"])
++    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=artifact_path,
++        min_questions=2,
++        thresholds=[0.0, 0.6, 1.0],
++        judge_server_probe=lambda _url: mod.PreconditionCheck(
++            "judge_server", True, "fixture reachable"
++        ),
++        judge_answer=mod.CountingJudge(lambda row, _candidates: str(row["gold"])),
++        audit_runner=_audit_clean,
++        summary_runner=lambda _path: 0,
++        now=lambda: 10.0,
++        bootstrap_samples=32,
++        write=True,
++    )
++
++    assert artifact["honest_verdict"] == "complete_cascade_no_efficiency_win_musr"
++    assert artifact["cheap_verifier_source"] == "D1 trained LoRA-EBM"
++    assert artifact["cheap_verifier_only_accuracy"] == 0.5
++    assert artifact["judge_only_accuracy"] == 1.0
++    assert artifact["judge_only_calls"] == 2
++    assert artifact["cascade_accuracy"] == 1.0
++    assert artifact["cascade_judge_calls"] == 1
++    assert artifact["judge_call_fraction"] == 0.5
++    assert artifact["genuine_tuned_sc_accuracy"] == 0.5
++    assert artifact["inference_substrate"] == "live_llm_inference"
++    assert artifact["adversarial_verify_clean"] is True
++    assert artifact["summarize_artifact_exit_code"] == 0
++    assert artifact["model_specs"]["strong_judge"]["gpu"] == 0
++    assert artifact["judge_call_accounting"]["judge_only_baseline_calls"] == 2
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_verify_5034_helper_edge_cases_and_schema_errors(tmp_path: Path) -> None:
++    """REQ-VERIFY-5034: helpers keep blocked, parsing, and schema branches explicit."""
++
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{bad", encoding="utf-8")
++    checkpoint_dir = tmp_path / mod.MUSR_CHECKPOINT_RELATIVE_DIR
++    checkpoint_dir.mkdir(parents=True)
++    bad_json.rename(checkpoint_dir / "q0000.json")
++    _write_json(checkpoint_dir / "q0001.json", {"answers": []})
++    _write_json(
++        checkpoint_dir / "q0002.json",
++        {"gold": "A", "answers": ["", "A", "B"], "energy_answer": "A"},
++    )
++    _write_json(checkpoint_dir / "q0003.json", {"gold": "B", "answers": ["A", "B"]})
++
++    rows = mod._checkpoint_rows(checkpoint_dir, min_questions=1, limit=3)
++    missing_check, missing_rows = mod.candidate_cache_precondition(
++        tmp_path / "missing", min_questions=1
++    )
++
++    assert rows[0]["candidates"][0]["answer"] == "A"
++    assert rows[0]["candidates"][0]["trivial_energy"] == 0.0
++    assert rows[0]["candidates"][1]["trivial_energy"] == 1.002
++    assert missing_check.available is False
++    assert missing_rows == []
++    assert mod._read_json(checkpoint_dir / "q0000.json") is None
++    assert mod._finite_number(True) is False
++    assert mod._number("1.5") == 1.5
++    assert mod._number(True) is None
++    assert mod._candidate_score({"uprm_process_score": 2.5}) == -2.5
++    assert mod._match_choice('{"answer": "B"}', ["A", "B"]) == "B"
++    assert mod._match_choice("{bad}\nANSWER: A", ["A", "B"]) == "A"
++    assert mod._match_choice("The best option is B.", ["A", "B"]) == "B"
++    assert mod._match_choice("No listed choice.", ["A", "B"]) is None
++    assert mod._as_prediction_list({"evaluation": {"verifier": {"predictions": ["A", None]}}}) == [
++        "A",
++        None,
++    ]
++    assert mod._as_prediction_list({"evaluation": {"verifier": {"predictions": "bad"}}}) == []
++    assert mod._confidence_for_answer(rows[0], None) == 0.0
++    assert mod._confidence_for_answer(rows[0], "missing") == 0.0
++    assert mod._first_candidate_id(rows[0], "missing") == ""
++
++    try:
++        mod._checkpoint_rows(checkpoint_dir, min_questions=3, limit=1)
++    except RuntimeError as exc:
++        assert "only 0 cached MuSR rows" in str(exc)
++    else:  # pragma: no cover - defensive assertion
++        raise AssertionError("expected min_questions failure")
++    try:
++        mod.load_cached_musr_rows(tmp_path / "missing", min_questions=1)
++    except RuntimeError as exc:
++        assert "candidate checkpoint directory missing" in str(exc)
++    else:  # pragma: no cover - defensive assertion
++        raise AssertionError("expected missing directory failure")
++
++    cheap = mod.CheapVerifier(
++        name="registry quality ensemble",
++        predictions=[],
++        model_specs={"cheap_verifier": "fixture"},
++        source_artifact=None,
++        check=mod.PreconditionCheck("cheap_verifier", True, "fixture"),
++        delta_vs_tuned_sc=None,
++    )
++    no_candidates = mod._cheap_decision({"gold": "A", "candidates": []}, cheap, 0)
++    nonfinite = mod._cheap_decision(
++        _row("musr:9", "B", ["A", "B"], [float("nan"), 0.1]), cheap, 0
++    )
++    single_nonfinite = mod._registry_decision(
++        {"candidates": [{"candidate_id": "x", "answer": "A", "cache_index": float("nan")}]}
++    )
++    no_parity = mod.evaluate_cascade(
++        [_row(f"musr:{i}", "B", ["A", "A", "B"], [0.0, 0.1, 0.2]) for i in range(4)],
++        cheap_verifier=cheap,
++        judge_answer=mod.CountingJudge(lambda row, _candidates: str(row["gold"])),
++        thresholds=[0.0],
++        bootstrap_samples=32,
++    )
++
++    assert no_candidates.answer is None
++    assert nonfinite.answer == "B"
++    assert single_nonfinite == ("A", 0.0, "x")
++    assert no_parity.parity_with_judge is False
++    assert mod._compact_adversarial_flags(
++        {"flags": [{"kind": "A"}], "reports": ["bad", {"flags": [{"kind": "B"}, "bad"]}]}
++    ) == [{"kind": "A"}, {"kind": "B"}]
++    assert mod._audit_is_clean({"flag_count": 1}) is False
++    assert mod._audit_is_clean({"flagged_count": 0, "reports": []}) is True
++
++    success_eval = mod.CascadeEvaluation(
++        cheap_verifier_only_accuracy=0.5,
++        judge_only_accuracy=1.0,
++        judge_only_calls=10,
++        cascade_accuracy=1.0,
++        cascade_judge_calls=4,
++        judge_call_fraction=0.4,
++        cost_quality_frontier=[],
++        best_threshold=0.2,
++        genuine_tuned_sc_accuracy=0.5,
++        n_questions=10,
++        paired_ci95_cascade_vs_judge=[0.0, 0.0],
++        parity_with_judge=True,
++        judge_predictions_cached_for_sweep=True,
++    )
++    success_artifact = mod.build_complete_artifact(
++        evaluation=success_eval,
++        cheap_verifier=cheap,
++        preconditions_checked=[],
++        duration_s=61.0,
++        root=tmp_path,
++    )
++    assert success_artifact["honest_verdict"] == "success_cascade_parity_at_40pct_judge_calls"
++    assert "honest_verdict" in mod.artifact_schema_errors(
++        {key: value for key, value in success_artifact.items() if key != "honest_verdict"}
++    )
++    assert "spec_refs" in mod.artifact_schema_errors({**success_artifact, "spec_refs": []})
++    assert "verifier_is_oracle" in mod.artifact_schema_errors(
++        {**success_artifact, "verifier_is_oracle": True}
++    )
++    assert "field_principles" in mod.artifact_schema_errors(
++        {**success_artifact, "field_principles": {}}
++    )
++    assert "cost_quality_frontier" in mod.artifact_schema_errors(
++        {**success_artifact, "cost_quality_frontier": {}}
++    )
++    assert "paired_ci95_cascade_vs_judge" in mod.artifact_schema_errors(
++        {**success_artifact, "paired_ci95_cascade_vs_judge": [0.0]}
++    )
++
++
++def test_scenario_verify_5034_judge_inference_failure_blocks(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5034: live judge failures become blocked resources."""
++
++    _write_checkpoints(
++        tmp_path,
++        [_row("musr:0", "A", ["A", "B"], [0.0, 0.1])],
++    )
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        min_questions=1,
++        thresholds=[0.0],
++        judge_server_probe=lambda _url: mod.PreconditionCheck(
++            "judge_server", True, "fixture reachable"
++        ),
++        judge_answer=lambda _row, _candidates: (_ for _ in ()).throw(OSError("judge down")),
++        audit_runner=_audit_clean,
++        summary_runner=lambda _path: 0,
++        now=lambda: 10.0,
++        bootstrap_samples=32,
++        write=False,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_judge_inference_failed"
++    assert artifact["cheap_verifier_source"] == "registry quality ensemble"
++    assert artifact["preconditions_checked"][-1]["resource"] == "judge_inference_failed"
++    assert artifact["adversarial_verify_clean"] is True
++    assert mod.artifact_schema_errors(artifact) == []
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From 6d4d71025121cf8a0a7a58acd14d79b67753e16f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 17:06:17 -0400
+Subject: [PATCH 03660/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ba9b5bb009..234e216cbd 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 53, "phase": "iteration_start", "last_beat": "2026-06-23T20:30:51Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 54, "phase": "iteration_start", "last_beat": "2026-06-23T21:06:15Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ef828c53b9..d0a41816b1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9133,3 +9133,4 @@ c |
+ | 2026-06-23 19:50 UTC | PHASE 0 (TRANSITION) -- archive .427 -> activate . | OK | 86 passed, 1 warning in 8.82s |
+ | 2026-06-23 20:07 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 123 passed, 1 warning in 10.12s |
+ | 2026-06-23 20:28 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 118 passed, 1 warning in 13.06s |
++| 2026-06-23 21:04 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 116 passed, 1 warning in 11.43s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ef5d3afe1f..055181d82d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 53, "phase": "iteration_start", "started_at": "2026-06-23T20:30:51Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 54, "phase": "iteration_start", "started_at": "2026-06-23T21:06:15Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,849 @@
+From b0ad4a6528ac5be16153fa14fcadeda7ffc96c78 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 19:14:30 -0400
+Subject: [PATCH 04530/11362] [conductor] PHASE C (HARDWARE CONTINUITY; KV260)
+ -- SSH-only per-milestone continuity check (the board is graduated terminal;
+ stays in the rotation per Hardware-Task Continuity Discipline). NEVER a host
+ SD-card precondition; always WRITE a blocked artifact if SSH is unreachable.
+
+Automated research step by research conductor.
+Task ID: exp4889-c
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  80 ++++++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4889_kv260_continuity.py       | 240 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_4889_kv260_continuity.json |  79 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../test_experiment_4889_kv260_continuity.py  | 253 ++++++++++++++++++
+ 12 files changed, 670 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4889_kv260_continuity.py
+ create mode 100644 results/experiment_4889_kv260_continuity.json
+ create mode 100644 tests/python/test_experiment_4889_kv260_continuity.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index bd879bcdc2..89d53b946f 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -12822,3 +12822,83 @@ fields, `kv260_ssh_reachable`, deterministic `random_seed=4878`, a concrete
+ `next_forward_step`, and no host SD-card precondition.
+ 
+ **Implementation status:** Implemented (Exp 4878)
++
++---
++
++### REQ-HW-4889
++
++**Title:** KV260 continuity MUST always write the Exp 4889 SSH-only deliverable
++
++**Description:**
++Experiment 4889 MUST produce `results/experiment_4889_kv260_continuity.json`
++for the KV260 hardware-continuity slot. The only valid precondition is board
++SSH reachability:
++
++`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
++
++Host SD-card device nodes are permanently retired for KV260 and MUST NOT be
++used. If the SSH command returns non-zero, the experiment MUST still write the
++artifact with `honest_verdict=blocked_kv260_ssh_unreachable`,
++`kv260_ssh_reachable=false`, `inference_substrate=aggregation_from_upstream_artifacts`,
++and `preconditions_checked` recording the failed SSH check. A blocked artifact
++is the expected correct outcome while the board is offline; the experiment MUST
++NOT exit with no file changes, including the prior "No file changes"
++3-fail-skip failure mode.
++
++When SSH is reachable, the experiment MUST capture board state over SSH:
++hostname, kernel, uptime, `/dev/uio*` count, and `xmutil listapps` if
++available. If non-sudo `xmutil` reports that root privileges are required, the
++experiment MAY retry with `ssh kria 'sudo xmutil listapps'` as a read-only
++board-state fallback and MUST preserve both transcripts. The next forward step
++MUST be continuity-only because the KV260 has already graduated to terminal.
++
++The artifact MUST include bare values plus `field_principles` entries for these
++required fields:
++
++- `honest_verdict`: `terminal prefix; reachable is success_kv260_continuity_ok; unreachable is blocked_kv260_ssh_unreachable (still WRITES).`
++- `kv260_ssh_reachable`: `true with board state, or false -- the SSH-only continuity signal (NEVER host SD-card presence).`
++- `board_state`: `captured hostname/kernel/uptime/uio-count over SSH -- the terminal-state continuity record.`
++- `next_forward_step`: `continuity-only (graduated terminal); records the next concrete step only if a probe changes.`
++- `inference_substrate`: `aggregation_from_upstream_artifacts (an SSH state read; 0.0001s floor).`
++- `preconditions_checked`: `records the SSH reachability check; an unreachable board emits blocked_kv260_ssh_unreachable, never a fabricated state.`
++
++**Acceptance criteria:**
++- `.venv/bin/python python/carnot/experiment_4889_kv260_continuity.py` writes
++  `results/experiment_4889_kv260_continuity.json` whether SSH is reachable or
++  unreachable.
++- `inference_substrate` is exactly `aggregation_from_upstream_artifacts`.
++- `preconditions_checked` records the SSH BatchMode command listed above and
++  contains no host SD-card device-node precondition.
++- If `kv260_ssh_reachable=false`, `honest_verdict` is exactly
++  `blocked_kv260_ssh_unreachable`, no `xmutil` or board-state command is run,
++  and the blocked artifact is the terminal output rather than a no-file-changes
++  skip.
++- If `kv260_ssh_reachable=true`, `honest_verdict` is exactly
++  `success_kv260_continuity_ok`, board state is captured over SSH, `xmutil
++  listapps` is preserved when available, and `next_forward_step` remains
++  continuity-only for the terminal KV260.
++- `verifier_is_oracle=false`, `random_seed=4889`, `field_principles`,
++  `duration_s >= 0.0001`, `command_probes`, and a stable
++  `reproducibility_checksum` are present.
++
++**Implementation status:** Implemented (Exp 4889)
++
++---
++
++### SCENARIO-HW-4889
++
++**Scenario:** Exp 4889 writes SSH-attached KV260 terminal continuity or an honest SSH-unreachable block.
++
++**Given:** The KV260 terminal board is in the per-milestone SSH-only continuity
++rotation and host SD-card device-node checks are retired.
++**When:** Experiment 4889 checks SSH and, only when reachable, records `xmutil
++listapps` plus hostname, kernel, uptime, and UIO count over SSH.
++**Then:** It always writes `results/experiment_4889_kv260_continuity.json` with
++`honest_verdict=blocked_kv260_ssh_unreachable` when SSH is unreachable, or
++`success_kv260_continuity_ok` plus board state when SSH is reachable,
++`inference_substrate=aggregation_from_upstream_artifacts`,
++principle-annotated required fields, `kv260_ssh_reachable`, deterministic
++`random_seed=4889`, a terminal continuity-only `next_forward_step`, and no host
++SD-card precondition.
++
++**Implementation status:** Implemented (Exp 4889)
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e4cf5c8217..f4bed95c05 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 201,
+   "code_violations": 0,
+-  "experiments_checked": 3896,
++  "experiments_checked": 3897,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4889_kv260_continuity.py b/python/carnot/experiment_4889_kv260_continuity.py
+new file mode 100644
+index 0000000000..79703188ad
+--- /dev/null
++++ b/python/carnot/experiment_4889_kv260_continuity.py
+@@ -0,0 +1,240 @@
++"""Exp 4889 KV260 SSH-only continuity artifact.
++
++Spec refs: REQ-HW-4889, SCENARIO-HW-4889.
++
++This continuity check keeps the terminal KV260 board in the milestone rotation
++without reopening SD-card bring-up. The board state comes from SSH only; if SSH
++is unavailable, the honest deliverable is still a written blocked artifact.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++import time
++
++
++if __package__ in {None, ""}:  # pragma: no cover - direct script invocation.
++    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++
++from carnot import experiment_4878_kv260_continuity as base
++
++
++EXPERIMENT_ID = 4889
++SCHEMA = "carnot.kv260_ssh_continuity.v13"
++SPEC_REFS = ["REQ-HW-4889", "SCENARIO-HW-4889"]
++OUTPUT_REL_PATH = Path("results") / "experiment_4889_kv260_continuity.json"
++RANDOM_SEED = 4889
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++
++CommandProbe = base.CommandProbe
++CommandRunner = base.CommandRunner
++Clock = base.Clock
++
++KV260_SSH_COMMAND = base.KV260_SSH_COMMAND
++KV260_LISTAPPS_COMMAND = base.KV260_LISTAPPS_COMMAND
++KV260_LISTAPPS_SUDO_COMMAND = base.KV260_LISTAPPS_SUDO_COMMAND
++KV260_BOARD_STATE_COMMAND = base.KV260_BOARD_STATE_COMMAND
++VALID_OVERLAYS = base.VALID_OVERLAYS
++
++SUCCESS_VERDICT = "success_kv260_continuity_ok"
++BLOCKED_SSH_VERDICT = "blocked_kv260_ssh_unreachable"
++REACHABLE_NEXT_FORWARD_STEP = base.REACHABLE_NEXT_FORWARD_STEP
++BLOCKED_NEXT_FORWARD_STEP = base.BLOCKED_NEXT_FORWARD_STEP
++
++REQUIRED_PRINCIPLE_FIELDS = (
++    "honest_verdict",
++    "kv260_ssh_reachable",
++    "board_state",
++    "next_forward_step",
++    "inference_substrate",
++    "preconditions_checked",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    *REQUIRED_PRINCIPLE_FIELDS,
++    "schema",
++    "experiment",
++    "spec_refs",
++    "field_principles",
++    "duration_s",
++    "command_probes",
++    "loaded_overlay",
++    "xmutil_requires_sudo",
++    "verifier_is_oracle",
++    "random_seed",
++    "reproducibility_checksum",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal prefix; reachable is success_kv260_continuity_ok; unreachable is "
++        "blocked_kv260_ssh_unreachable (still WRITES)."
++    ),
++    "kv260_ssh_reachable": (
++        "true with board state, or false -- the SSH-only continuity signal "
++        "(NEVER host SD-card presence)."
++    ),
++    "board_state": (
++        "captured hostname/kernel/uptime/uio-count over SSH -- the terminal-state "
++        "continuity record."
++    ),
++    "next_forward_step": (
++        "continuity-only (graduated terminal); records the next concrete step only "
++        "if a probe changes."
++    ),
++    "inference_substrate": (
++        "aggregation_from_upstream_artifacts (an SSH state read; 0.0001s floor)."
++    ),
++    "preconditions_checked": (
++        "records the SSH reachability check; an unreachable board emits "
++        "blocked_kv260_ssh_unreachable, never a fabricated state."
++    ),
++}
++
++command_to_string = base.command_to_string
++loaded_overlay_from_xmutil = base.loaded_overlay_from_xmutil
++payload_checksum = base.payload_checksum
++run_command = base.run_command
++
++
++def build_artifact(
++    *,
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++) -> dict[str, object]:
++    """Build the Exp 4889 artifact from live or injected SSH board probes."""
++    artifact = base.build_artifact(command_runner=command_runner, clock=clock)
++    artifact.update(
++        {
++            "schema": SCHEMA,
++            "experiment": EXPERIMENT_ID,
++            "spec_refs": list(SPEC_REFS),
++            "field_principles": dict(FIELD_PRINCIPLES),
++            "inference_substrate": INFERENCE_SUBSTRATE,
++            "random_seed": RANDOM_SEED,
++        }
++    )
++    if artifact.get("kv260_ssh_reachable") is False:
++        artifact["honest_verdict"] = BLOCKED_SSH_VERDICT
++        artifact["next_forward_step"] = BLOCKED_NEXT_FORWARD_STEP
++    else:
++        artifact["honest_verdict"] = SUCCESS_VERDICT
++        artifact["next_forward_step"] = REACHABLE_NEXT_FORWARD_STEP
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def write_artifact(repo_root: str | Path, artifact: dict[str, object]) -> Path:
++    """Write a validated Exp 4889 artifact under the requested repository root."""
++    out_path = Path(repo_root) / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    return out_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++) -> Path:
++    """Run Exp 4889 and write `results/experiment_4889_kv260_continuity.json`."""
++    artifact = build_artifact(command_runner=command_runner, clock=clock)
++    return write_artifact(repo_root, artifact)
++
++
++def validate_artifact(artifact: dict[str, object]) -> None:
++    """Validate the Exp 4889 SSH-only terminal continuity schema."""
++    missing = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact)
++    _require(not missing, f"artifact missing required fields: {sorted(missing)}")
++    _require(artifact.get("schema") == SCHEMA, "schema mismatch")
++    _require(artifact.get("experiment") == EXPERIMENT_ID, "experiment mismatch")
++    _require(artifact.get("spec_refs") == SPEC_REFS, "spec_refs mismatch")
++    _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "bad substrate")
++    _require(artifact.get("field_principles") == FIELD_PRINCIPLES, "field_principles mismatch")
++    _require(artifact.get("verifier_is_oracle") is False, "verifier_is_oracle must be false")
++    _require(artifact.get("random_seed") == RANDOM_SEED, "random_seed mismatch")
++    _require(float(artifact.get("duration_s", 0.0)) >= 0.0001, "duration_s below floor")
++    for field in REQUIRED_PRINCIPLE_FIELDS:
++        _require(field in artifact, f"missing principle field: {field}")
++        _require(
++            not (isinstance(artifact[field], dict) and "principle" in artifact[field]),
++            f"{field} must remain a bare value",
++        )
++    encoded = json.dumps(artifact, sort_keys=True, default=str).lower()
++    _require(
++        "mmcblk" not in encoded and "/dev/disk" not in encoded,
++        "forbidden host storage marker",
++    )
++    _validate_verdict(artifact)
++    _validate_board_state(artifact)
++    _validate_base_contract(artifact)
++    _require(
++        artifact.get("reproducibility_checksum") == payload_checksum(artifact),
++        "bad checksum",
++    )
++
++
++def _validate_verdict(artifact: dict[str, object]) -> None:
++    if artifact.get("kv260_ssh_reachable") is False:
++        _require(artifact.get("honest_verdict") == BLOCKED_SSH_VERDICT, "bad blocked verdict")
++        _require(artifact.get("next_forward_step") == BLOCKED_NEXT_FORWARD_STEP, "bad blocked next step")
++    else:
++        _require(artifact.get("honest_verdict") == SUCCESS_VERDICT, "bad success verdict")
++        _require(artifact.get("next_forward_step") == REACHABLE_NEXT_FORWARD_STEP, "bad reachable next step")
++
++
++def _validate_board_state(artifact: dict[str, object]) -> None:
++    board_state = artifact.get("board_state")
++    _require(isinstance(board_state, dict), "board_state must be a dict")
++    if artifact.get("kv260_ssh_reachable") is False:
++        _require(board_state == {"captured": False, "reason": "kv260_ssh_unreachable"}, "bad blocked board_state")
++        return
++    _require(board_state.get("captured") is True, "reachable board_state must be captured")
++    for field in ("hostname", "kernel", "uptime", "uio_device_count"):
++        _require(field in board_state, f"reachable board_state missing {field}")
++
++
++def _validate_base_contract(artifact: dict[str, object]) -> None:
++    base_artifact = dict(artifact)
++    base_artifact.update(
++        {
++            "schema": base.SCHEMA,
++            "experiment": base.EXPERIMENT_ID,
++            "spec_refs": list(base.SPEC_REFS),
++            "field_principles": dict(base.FIELD_PRINCIPLES),
++            "inference_substrate": base.INFERENCE_SUBSTRATE,
++            "random_seed": base.RANDOM_SEED,
++        }
++    )
++    if base_artifact.get("kv260_ssh_reachable") is False:
++        base_artifact["honest_verdict"] = base.BLOCKED_SSH_VERDICT
++        base_artifact["next_forward_step"] = base.BLOCKED_NEXT_FORWARD_STEP
++    else:
++        base_artifact["honest_verdict"] = base.SUCCESS_VERDICT
++        base_artifact["next_forward_step"] = base.REACHABLE_NEXT_FORWARD_STEP
++    base_artifact["reproducibility_checksum"] = base.payload_checksum(base_artifact)
++    base.validate_artifact(base_artifact)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def main() -> None:  # pragma: no cover - live hardware entrypoint.
++    out_path = run_experiment(repo_root=Path(__file__).resolve().parents[2])
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"loaded_overlay: {artifact['loaded_overlay']}")
++    print(f"next_forward_step: {artifact['next_forward_step']}")
++
++
++if __name__ == "__main__":  # pragma: no cover - live hardware entrypoint.
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 4751326b38..d37b7f48dd 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-27T22:47:03.077184Z",
+-  "duration_s": 0.0630183219909668,
++  "run_date": "2026-06-27T23:13:14.026104Z",
++  "duration_s": 0.06871819496154785,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "f9b1d40e61508a55d64cf8c8c8fcb9efe1f92b43a369fc1e6156b06a4c41e3ba",
++  "reproducibility_checksum": "56263f7ea5dfaf722af1ac37dc30c81faf06e5b9ebc7d6d0f872fcd6e5137258",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "5571c0dbe50a27083b27941357c71ff49984ff30"
++    "adversarial_verify_version": "bb33d3ad7f06f30c1f9c904a6ac545c0fa900dd0"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index b09af6cb89..3c811c0042 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-27T22:47:03.191448Z",
+-  "duration_s": 0.10404539108276367,
++  "run_date": "2026-06-27T23:13:14.172954Z",
++  "duration_s": 0.13572072982788086,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "2b21809876125d506f6577ba1c842b75de96871d23177952d8e0a41ecbac972b",
++  "reproducibility_checksum": "61ff882bdef9cfaf6e05d5c9e96e82a1ff2ca8a4f4edfa42fca90530ee89f76c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "5571c0dbe50a27083b27941357c71ff49984ff30"
++    "adversarial_verify_version": "bb33d3ad7f06f30c1f9c904a6ac545c0fa900dd0"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 3006b573da..17dd781163 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.114534378051758,
++  "efficiency_gains_ms": 2.121448516845703,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 59ad6ad22e..0700d81ba3 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.3563002943992615e-05,
++  "duration_s": 4.928302951157093e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4889_kv260_continuity.json b/results/experiment_4889_kv260_continuity.json
+new file mode 100644
+index 0000000000..4dc3107715
+--- /dev/null
++++ b/results/experiment_4889_kv260_continuity.json
+@@ -0,0 +1,79 @@
++{
++  "board_state": {
++    "captured": true,
++    "hostname": "kv260",
++    "kernel": "Linux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC Mon Apr 27 07:29:43 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux",
++    "raw_stdout": "kv260\nLinux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC Mon Apr 27 07:29:43 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux\n 23:11:58 up 23:14,  1 user,  load average: 0.08, 0.02, 0.01\n5\n",
++    "uio_device_count": 5,
++    "uptime": "23:11:58 up 23:14,  1 user,  load average: 0.08, 0.02, 0.01"
++  },
++  "command_probes": {
++    "kv260_board_state": {
++      "combined_output": "kv260\nLinux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC Mon Apr 27 07:29:43 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux\n 23:11:58 up 23:14,  1 user,  load average: 0.08, 0.02, 0.01\n5\n",
++      "command": "ssh kria 'hostname; uname -a; uptime; ls /dev/uio* 2>/dev/null | wc -l'",
++      "duration_s": 0.4500960139557719,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "kv260\nLinux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC Mon Apr 27 07:29:43 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux\n 23:11:58 up 23:14,  1 user,  load average: 0.08, 0.02, 0.01\n5\n"
++    },
++    "kv260_ssh": {
++      "combined_output": "",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.59829137288034,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": ""
++    },
++    "kv260_xmutil_listapps": {
++      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
++      "command": "ssh kria 'xmutil listapps'",
++      "duration_s": 0.7581199719570577,
++      "exit_code": 1,
++      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
++      "stdout": ""
++    },
++    "kv260_xmutil_listapps_sudo": {
++      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
++      "command": "ssh kria 'sudo xmutil listapps'",
++      "duration_s": 0.9453908058349043,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
++    }
++  },
++  "duration_s": 6.7521,
++  "experiment": 4889,
++  "field_principles": {
++    "board_state": "captured hostname/kernel/uptime/uio-count over SSH -- the terminal-state continuity record.",
++    "honest_verdict": "terminal prefix; reachable is success_kv260_continuity_ok; unreachable is blocked_kv260_ssh_unreachable (still WRITES).",
++    "inference_substrate": "aggregation_from_upstream_artifacts (an SSH state read; 0.0001s floor).",
++    "kv260_ssh_reachable": "true with board state, or false -- the SSH-only continuity signal (NEVER host SD-card presence).",
++    "next_forward_step": "continuity-only (graduated terminal); records the next concrete step only if a probe changes.",
++    "preconditions_checked": "records the SSH reachability check; an unreachable board emits blocked_kv260_ssh_unreachable, never a fabricated state."
++  },
++  "honest_verdict": "success_kv260_continuity_ok",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "kv260_ssh_reachable": true,
++  "loaded_overlay": "carnot_ising_v2_n64",
++  "next_forward_step": "GRADUATED: KV260 terminal criteria met; continue per-milestone SSH-only continuity checks. Next concrete step: keep the board in the continuity rotation and queue an overlay-state audit only if a future SSH or xmutil probe changes.",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "discipline": "ssh_only_no_host_sd_card",
++      "duration_s": 4.59829137288034,
++      "exit_code": 0,
++      "observed": "returncode=0",
++      "resource": "kv260_ssh"
++    }
++  ],
++  "random_seed": 4889,
++  "reproducibility_checksum": "6b6e925b4f60f689cff9df52ec3e4b37570a60f9b89fcd163e2d3e72bc67e789",
++  "schema": "carnot.kv260_ssh_continuity.v13",
++  "spec_refs": [
++    "REQ-HW-4889",
++    "SCENARIO-HW-4889"
++  ],
++  "verifier_is_oracle": false,
++  "xmutil_requires_sudo": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1fda6dde83..f0743be07b 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T23:02:01Z",
+-  "finished_at": "2026-06-27T23:02:01Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-27T23:12:57Z",
++  "finished_at": "2026-06-27T23:12:57Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 5174e9ff0d..d78e3e4c5f 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T23:02:01Z",
+-  "finished_at": "2026-06-27T23:02:01Z",
++  "started_at": "2026-06-27T23:12:57Z",
++  "finished_at": "2026-06-27T23:12:57Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index af720db7a7..5c53cbb291 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T23:02:01Z",
+-  "finished_at": "2026-06-27T23:02:01Z",
++  "started_at": "2026-06-27T23:12:57Z",
++  "finished_at": "2026-06-27T23:12:57Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4889_kv260_continuity.py b/tests/python/test_experiment_4889_kv260_continuity.py
+new file mode 100644
+index 0000000000..335b935b78
+--- /dev/null
++++ b/tests/python/test_experiment_4889_kv260_continuity.py
+@@ -0,0 +1,253 @@
++"""Tests for Exp 4889 KV260 SSH-only continuity.
++
++Spec refs: REQ-HW-4889, SCENARIO-HW-4889.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4889_kv260_continuity as mod
++
++
++class RecordingRunner:
++    """SCENARIO-HW-4889 runner with queued SSH-only board transcripts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(
++        self,
++        command: tuple[str, ...],
++        timeout_s: float = 60.0,
++    ) -> mod.CommandProbe:
++        assert timeout_s > 0.0
++        command = tuple(command)
++        self.commands.append(command)
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++class FlatClock:
++    """Deterministic clock for REQ-HW-4889 duration floor assertions."""
++
++    def __call__(self) -> float:
++        return 4889.0
++
++
++def _probe(
++    command: tuple[str, ...],
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _listapps_loaded_stdout() -> str:
++    return (
++        "                   Accelerator  Accel_type                    Base    Pid   "
++        "Base_type  #slots(RPU+PL+AIE)    slot->handle\n"
++        "               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    "
++        "XRT_FLAT             (0+0+0)              -1\n"
++        "           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    "
++        "XRT_FLAT             (0+0+0)           0->0,\n"
++    )
++
++
++def _board_state_stdout() -> str:
++    return (
++        "kv260\n"
++        "Linux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC aarch64 GNU/Linux\n"
++        " 07:33:12 up 18 days, 13:24,  1 user,  load average: 0.13, 0.04, 0.01\n"
++        "5\n"
++    )
++
++
++def _reachable_runner(
++    *,
++    direct_listapps: mod.CommandProbe | None = None,
++    sudo_listapps: mod.CommandProbe | None = None,
++) -> RecordingRunner:
++    probes = {
++        mod.KV260_SSH_COMMAND: [_probe(mod.KV260_SSH_COMMAND, duration_s=0.2)],
++        mod.KV260_LISTAPPS_COMMAND: [
++            direct_listapps
++            or _probe(
++                mod.KV260_LISTAPPS_COMMAND,
++                stdout=_listapps_loaded_stdout(),
++                duration_s=0.3,
++            )
++        ],
++        mod.KV260_BOARD_STATE_COMMAND: [
++            _probe(
++                mod.KV260_BOARD_STATE_COMMAND,
++                stdout=_board_state_stdout(),
++                duration_s=0.4,
++            )
++        ],
++    }
++    if sudo_listapps is not None:
++        probes[mod.KV260_LISTAPPS_SUDO_COMMAND] = [sudo_listapps]
++    return RecordingRunner(probes)
++
++
++def _assert_required_principles(payload: dict[str, object]) -> None:
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in payload
++    for field in mod.REQUIRED_PRINCIPLE_FIELDS:
++        assert payload["field_principles"][field] == mod.FIELD_PRINCIPLES[field]
++        assert not (isinstance(payload[field], dict) and "principle" in payload[field])
++
++
++def test_req_hw_4889_spec_anchor_declares_terminal_continuity_contract() -> None:
++    """REQ-HW-4889: OpenSpec declares the SSH-only terminal continuity contract."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-HW-4889" in spec
++    assert "SCENARIO-HW-4889" in spec
++    assert "experiment_4889_kv260_continuity.json" in spec
++    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'" in spec
++    assert "Host SD-card device nodes are permanently retired for KV260" in spec
++    assert "No file changes" in spec
++    assert "3-fail-skip" in spec
++    assert "random_seed=4889" in spec
++    assert "duration_s >= 0.0001" in spec
++    for field in mod.REQUIRED_PRINCIPLE_FIELDS:
++        assert field in spec
++        assert mod.FIELD_PRINCIPLES[field] in spec
++
++
++def test_scenario_hw_4889_blocked_ssh_run_experiment_writes_artifact(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-HW-4889: unreachable SSH still writes the blocked deliverable."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_COMMAND: [
++                _probe(
++                    mod.KV260_SSH_COMMAND,
++                    exit_code=255,
++                    stderr="ssh: connect to host kria port 22: No route to host\n",
++                    duration_s=5.0,
++                )
++            ]
++        }
++    )
++
++    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=runner, clock=FlatClock())
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert runner.commands == [mod.KV260_SSH_COMMAND]
++    assert payload["schema"] == mod.SCHEMA
++    assert payload["experiment"] == 4889
++    assert payload["spec_refs"] == ["REQ-HW-4889", "SCENARIO-HW-4889"]
++    assert payload["honest_verdict"] == "blocked_kv260_ssh_unreachable"
++    assert payload["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert payload["duration_s"] == 0.0001
++    assert payload["kv260_ssh_reachable"] is False
++    assert payload["preconditions_checked"][0]["available"] is False
++    assert payload["preconditions_checked"][0]["discipline"] == "ssh_only_no_host_sd_card"
++    assert "No route to host" in payload["preconditions_checked"][0]["observed"]
++    assert payload["loaded_overlay"] is None
++    assert payload["board_state"] == {"captured": False, "reason": "kv260_ssh_unreachable"}
++    assert payload["command_probes"]["kv260_xmutil_listapps"] is None
++    assert payload["command_probes"]["kv260_board_state"] is None
++    assert "mmcblk" not in json.dumps(payload).lower()
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++    _assert_required_principles(payload)
++    mod.validate_artifact(payload)
++
++
++def test_scenario_hw_4889_reachable_board_records_terminal_state() -> None:
++    """SCENARIO-HW-4889: reachable SSH records board state and terminal next step."""
++    runner = _reachable_runner()
++
++    payload = mod.build_artifact(command_runner=runner, clock=FlatClock())
++
++    assert runner.commands == [
++        mod.KV260_SSH_COMMAND,
++        mod.KV260_LISTAPPS_COMMAND,
++        mod.KV260_BOARD_STATE_COMMAND,
++    ]
++    assert payload["honest_verdict"] == "success_kv260_continuity_ok"
++    assert payload["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert payload["duration_s"] == 0.0001
++    assert payload["kv260_ssh_reachable"] is True
++    assert payload["xmutil_requires_sudo"] is False
++    assert payload["loaded_overlay"] == "carnot_ising_v2_n64"
++    assert payload["board_state"]["hostname"] == "kv260"
++    assert payload["board_state"]["kernel"].startswith("Linux kv260")
++    assert payload["board_state"]["uptime"].startswith("07:33:12 up")
++    assert payload["board_state"]["uio_device_count"] == 5
++    assert payload["next_forward_step"] == mod.REACHABLE_NEXT_FORWARD_STEP
++    assert "GRADUATED: KV260 terminal criteria met" in payload["next_forward_step"]
++    assert payload["verifier_is_oracle"] is False
++    assert payload["random_seed"] == 4889
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++    _assert_required_principles(payload)
++    mod.validate_artifact(payload)
++
++
++def test_scenario_hw_4889_sudo_xmutil_fallback_preserves_transcripts() -> None:
++    """SCENARIO-HW-4889: root-required xmutil uses the SSH-only sudo fallback."""
++    root_error = "xmutil should be called with root privileges. Please try again using 'sudo'.\n"
++    runner = _reachable_runner(
++        direct_listapps=_probe(
++            mod.KV260_LISTAPPS_COMMAND,
++            exit_code=1,
++            stderr=root_error,
++            duration_s=0.3,
++        ),
++        sudo_listapps=_probe(
++            mod.KV260_LISTAPPS_SUDO_COMMAND,
++            stdout=_listapps_loaded_stdout(),
++            duration_s=0.35,
++        ),
++    )
++
++    payload = mod.build_artifact(command_runner=runner, clock=FlatClock())
++
++    assert runner.commands == [
++        mod.KV260_SSH_COMMAND,
++        mod.KV260_LISTAPPS_COMMAND,
++        mod.KV260_LISTAPPS_SUDO_COMMAND,
++        mod.KV260_BOARD_STATE_COMMAND,
++    ]
++    assert payload["xmutil_requires_sudo"] is True
++    assert payload["loaded_overlay"] == "carnot_ising_v2_n64"
++    assert "root privileges" in payload["command_probes"]["kv260_xmutil_listapps"]["stderr"]
++    assert payload["command_probes"]["kv260_xmutil_listapps_sudo"]["exit_code"] == 0
++    mod.validate_artifact(payload)
++
++
++def test_req_hw_4889_validation_rejects_schema_drift_and_retired_host_storage() -> None:
++    """REQ-HW-4889: validation rejects schema drift and retired host-storage markers."""
++    payload = mod.build_artifact(command_runner=_reachable_runner(), clock=FlatClock())
++
++    bad_schema = dict(payload, schema="stale")
++    bad_schema["reproducibility_checksum"] = mod.payload_checksum(bad_schema)
++    with pytest.raises(ValueError, match="schema"):
++        mod.validate_artifact(bad_schema)
++
++    bad_substrate = dict(payload, inference_substrate="hardware_smoke")
++    bad_substrate["reproducibility_checksum"] = mod.payload_checksum(bad_substrate)
++    with pytest.raises(ValueError, match="substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    host_sd = dict(payload)
++    host_sd["preconditions_checked"] = [{"resource": "/dev/mmcblk0"}]
++    host_sd["reproducibility_checksum"] = mod.payload_checksum(host_sd)
++    with pytest.raises(ValueError, match="host storage"):
++        mod.validate_artifact(host_sd)
++
++    stale_checksum = dict(payload, reproducibility_checksum="stale")
++    with pytest.raises(ValueError, match="checksum"):
++        mod.validate_artifact(stale_checksum)
+-- 
+2.55.0
+

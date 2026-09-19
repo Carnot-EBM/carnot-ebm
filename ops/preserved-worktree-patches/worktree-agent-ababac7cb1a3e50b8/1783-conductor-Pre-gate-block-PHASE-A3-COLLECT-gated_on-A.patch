@@ -1,0 +1,109 @@
+From 1c0a6b9e0a25c7f8a610531f76a84babc3ea46d9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 11:07:05 -0400
+Subject: [PATCH 01783/11362] [conductor] Pre-gate block: PHASE A3 (COLLECT,
+ gated_on A2 training_launched) -- the DECISIVE A-vs-B verdict. Poll the
+ backgrounded 3-arm run; the LOAD-BEARING GATE is A (verifier-certified) vs B
+ (same-generator random-label, the spurious control) on held-out hidden-test
+ pass@1: bootstrap CI95 excludes 0? YES -> the verifier's LABEL carries
+ training signal beyond distillation/spurious-reward -> verifier-as-reward is
+ REAL (the project's first clean positive). A~=B -> 'RFT helps' is just
+ distillation/spurious-reward; the verifier adds nothing (honest NULL, NOT a
+ partial win). Secondary: A-vs-C (label-free >= oracle?), A-vs-D (any lift?).
+ Gold-control gate (C>=base) + truncation guard (<5%) MUST pass or the result
+ is INVALID. Apply the accumulate-floor (3 no-usable-data windows ->
+ auto-retire).
+
+1 of 1 gate(s) failed; first failure: exp4198-verifier-reward-3arm-rft-launch.training_launched (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._4198_verifier_reward_3arm_rft_launch.json | 12 ++++++++--
+ ...rifier_reward_decisive_a_vs_b_collect.json | 24 +++++++++++++++++++
+ 5 files changed, 37 insertions(+), 4 deletions(-)
+ create mode 100644 results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 73f39660be..a9633c4f7f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-06-14T14:47:17Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-14T15:07:04Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7be104449d..959a3ae098 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8481,3 +8481,4 @@ c |
+ | 2026-06-14 14:08 UTC | Milestone 2026.06.389 activated | OK | 11 tasks queued |
+ | 2026-06-14 14:23 UTC | Archive .388 -> activate .389; KEEP the hardened g | OK | 91 passed, 1 warning in 7.01s |
+ | 2026-06-14 14:45 UTC | PHASE A1 (BUILD) -- Verifier-as-reward Phase-0 gat | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-14 15:05 UTC | PHASE A2 (LAUNCH, gated_on A1 phase0_precision>=0. | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8e8cc7972a..6d1fe9321b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 739524, "iteration": 10, "phase": "iteration_start", "started_at": "2026-06-14T14:47:17Z"}
+\ No newline at end of file
++{"pid": 739524, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-14T15:07:04Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4198_verifier_reward_3arm_rft_launch.json b/results/experiment_4198_verifier_reward_3arm_rft_launch.json
+index 09ebb841e2..6172919aa9 100644
+--- a/results/experiment_4198_verifier_reward_3arm_rft_launch.json
++++ b/results/experiment_4198_verifier_reward_3arm_rft_launch.json
+@@ -134,5 +134,13 @@
+     "a1_truncation_rate": 0.0,
+     "max_allowed_truncation_rate": 0.05,
+     "status": "instrumented_in_runner_artifact"
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=31.151062 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json b/results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json
+new file mode 100644
+index 0000000000..4abfe5be73
+--- /dev/null
++++ b/results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 4199,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-06-14",
++  "started_at": "2026-06-14T15:07:04.593607+00:00",
++  "finished_at": "2026-06-14T15:07:04.593607+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE A3 (COLLECT, gated_on A2 training_launched) -- the DECISIVE A-vs-B verdict. Poll the backgrounded 3-arm run; the LOAD-BEARING GATE is A (verifier-certified) vs B (same-generator random-label, the spurious control) on held-out hidden-test pass@1: bootstrap CI95 excludes 0? YES -> the verifier's LABEL carries training signal beyond distillation/spurious-reward -> verifier-as-reward is REAL (the project's first clean positive). A~=B -> 'RFT helps' is just distillation/spurious-reward; the verifier adds nothing (honest NULL, NOT a partial win). Secondary: A-vs-C (label-free >= oracle?), A-vs-D (any lift?). Gold-control gate (C>=base) + truncation guard (<5%) MUST pass or the result is INVALID. Apply the accumulate-floor (3 no-usable-data windows -> auto-retire).",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4198-verifier-reward-3arm-rft-launch.training_launched (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp4198-verifier-reward-3arm-rft-launch",
++      "artifact_field": "training_launched",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

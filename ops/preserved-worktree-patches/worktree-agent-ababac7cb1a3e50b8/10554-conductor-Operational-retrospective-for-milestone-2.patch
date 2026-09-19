@@ -1,0 +1,273 @@
+From 82022ef13c1c0233aaf54cb9cbf4d1a5ffaed104 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 16:24:13 -0400
+Subject: [PATCH 10554/11362] [conductor] Operational retrospective for
+ milestone 2026.08.596
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html                               |  2 +-
+ docs/research-log.md                          |  7 +++
+ ops/.pretest-poison-counter.json              |  4 +-
+ ops/changelog.md                              | 12 +++++
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  4 ++
+ ops/conductor-state.json                      |  2 +-
+ ops/known-issues.md                           |  8 +++
+ results/operational_retro_2026_08_596.json    | 52 +++++++++++++++++++
+ ...28_residual_pressure_verified_memory_ab.py | 22 +++++++-
+ 10 files changed, 107 insertions(+), 8 deletions(-)
+ create mode 100644 results/operational_retro_2026_08_596.json
+
+diff --git a/docs/index.html b/docs/index.html
+index 01a7bdc49e..c079afafbd 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,917</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,921</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 3b73a73017..db4624dd9d 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6493,3 +6493,10 @@ The critical path for milestone .250:
+ - theme: one compute task formed the critical path while reconstructed timing hid its phase costs
+ - key result: honest operational negative — active accelerator use avoided a compute-idle fault, but the slow phase and parallel-model runner eligibility have no data available this milestone
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.596
++
++- exp_range: no data available this milestone
++- theme: minute-rounded fallback timing obscured task phases and accelerator attribution
++- key result: honest operational negative — the sole compute-bound stream was reported at zero minutes, with no task-window evidence for a GPU efficiency fault or parallel-runner miss
++- acceptance: no data available this milestone
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index 799cfab0ee..9e26dfeeb6 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1,3 +1 @@
+-{
+-  "tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py": 1
+-}
+\ No newline at end of file
++{}
+\ No newline at end of file
+diff --git a/ops/changelog.md b/ops/changelog.md
+index bbd177306d..909487bc12 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18392,3 +18392,15 @@ Estimated time savings is 0% because the data includes no timed alternative.
+ - 2026-08-31: Sealed selective-arbiter adoption receipt (✅ Complete) — honest_verdict=complete: sealed audits support selective-arbiter deployment adoption; results/experiment_6826_selective_arbiter_sealed_adoption.json
+ - 2026-08-31: Frozen chronological causal-edge memory stream (✅ Complete) — honest_verdict=complete: frozen chronological causal-edge memory stream is ready; no learning ran; results/experiment_6827_chronological_causal_edge_memory_stream.json
+ - 2026-08-31: Chronological causal-edge verified-memory stream (✅ Complete) — honest_verdict=complete: frozen chronological causal-edge memory stream is ready; no learning ran; results/experiment_6827_chronological_causal_edge_memory_stream.json
++
++## 2026-08-31 — Milestone 2026.08.596 operational retrospective
++
++Four experiments completed in 0.0 reconstructed minutes, including one
++compute-bound task. Chronological causal-edge verified-memory stream was the
++sole compute-bound entry and was reported at 0 minutes, so the supplied timing
++cannot explain its runtime. The locked artifact records no compute-task GPU-idle
++condition; the GPU report is not tied to the task's execution interval, and no
++model-concurrency evidence establishes DualGPURunner eligibility or a missed
++dispatch. Add task-owned phase clocks, task-window accelerator samples, and
++launch receipts for runner and concurrency selection. Estimated time savings is
++0% because no positive-duration bottleneck or timed alternative is available.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0d4e1b55cd..8b5f4ef11a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 52, "phase": "iteration_start", "last_beat": "2026-08-31T19:52:05Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 53, "phase": "iteration_start", "last_beat": "2026-08-31T20:11:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b319277fed..614ac56f08 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16932,3 +16932,7 @@ The l |
+ | 2026-08-31 19:21 UTC | Chronological causal-edge verified-memory stream | OK | 107 passed, 1 warning in 10.54s |
+ | 2026-08-31 19:47 UTC | Residual-pressure verified-memory continuous-learn | FAIL | Codex CLI error: Stalled after 600s silence. Last output: xp.SCRIPT_RELATIVE_ |
+ | 2026-08-31 19:50 UTC | Residual-pressure verified-memory continuous-learn | SKIP | Pre-tests failing, self-heal failed:  |
++| 2026-08-31 20:00 UTC | STOP-AUTHORITY: ORPHAN_SERVER_REAPED | WARN | pid 3762817: ppid=1, non-service cgroup, port 8919 referenced by no live process |
++| 2026-08-31 20:09 UTC | Residual-pressure verified-memory continuous-learn | FAIL | Codex CLI error: Stalled after 600s silence. Last output: -eaa6-2292-393f930a |
++| 2026-08-31 20:11 UTC | Leave-one-model-family-out verified-memory portabi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6828-residual-pressure-verified-memory-ab |
++| 2026-08-31 20:11 UTC | Sealed exogenous verified-memory acceptance audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6828-residual-pressure-verified-memory-ab |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 052c1f0057..28bee817d3 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 52, "phase": "iteration_start", "started_at": "2026-08-31T19:52:05Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 53, "phase": "iteration_start", "started_at": "2026-08-31T20:11:17Z"}
+\ No newline at end of file
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 64d53f1200..cb2a6bdc3e 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -19312,3 +19312,11 @@ pid 3452459: ppid=1, non-service cgroup, port 8919 referenced by no live process
+ Every reap condition and its value:
+ ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 368 min.
+ Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.
++
++## OPERATOR-ATTENTION 2026-08-31: stop authority reaped an orphaned llama-server
++
++pid 3762817: ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 1424 min -> terminated
++
++Every reap condition and its value:
++ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 1424 min.
++Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.
+diff --git a/results/operational_retro_2026_08_596.json b/results/operational_retro_2026_08_596.json
+new file mode 100644
+index 0000000000..06278e99a6
+--- /dev/null
++++ b/results/operational_retro_2026_08_596.json
+@@ -0,0 +1,52 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.596",
++  "generated_at": "2026-08-31T20:15:45Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.0,
++  "experiments_completed": 4,
++  "compute_bound_experiments_count": 1,
++  "slowest_experiments": [
++    {
++      "experiment": "Selective-arbiter authority attack shard",
++      "duration_minutes": 0.02,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Selective-arbiter cold row replay shard",
++      "duration_minutes": 0.01,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Chronological causal-edge verified-memory stream",
++      "duration_minutes": 0.01,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Sealed selective-arbiter adoption receipt",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Four experiments completed within the reported 0.0-minute milestone window, including one compute-bound experiment. Chronological causal-edge verified-memory stream was the sole and therefore longest compute-bound entry, reported at 0 minutes; the data gives no cause for its duration. No compute-task GPU-idle condition is recorded, and the snapshot does not establish accelerator efficiency or a runner-selection failure during execution.",
++  "bottlenecks_identified": [
++    "Minute-rounded fallback timing reports all four entries at 0 minutes, preventing meaningful critical-path ranking or causal diagnosis.",
++    "The GPU report is not correlated with the compute task's execution window, so the snapshot cannot establish task-time accelerator efficiency.",
++    "Model-concurrency and runner-selection metadata are absent, so DualGPURunner eligibility or a missed dispatch cannot be determined."
++  ],
++  "improvements_suggested": [
++    "Persist task-owned monotonic phase timing at sub-minute precision for every experiment.",
++    "Sample accelerator utilization during each compute task and attach the samples to that task's artifact.",
++    "Record loaded-model concurrency and the selected runner in launch receipts, choosing DualGPURunner only when concurrent model loading makes it applicable."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add task-owned phase clocks to expose setup, inference, validation, and artifact-write costs.",
++    "Join task-window GPU telemetry to each compute-bound experiment artifact.",
++    "Emit model-concurrency and runner-selection evidence in every compute launch receipt."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The milestone completed too quickly at the reported precision to support a quantified speedup. Better task-correlated observability is the highest-leverage improvement because it would turn an ambiguous zero-minute reconstruction and point-in-time GPU snapshot into evidence that can guide scheduling changes."
++}
+diff --git a/tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py b/tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py
+index 8fd427f4d5..77edb48812 100644
+--- a/tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py
++++ b/tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py
+@@ -97,6 +97,7 @@ def test_scenario_cl_6828_preconditions_accept_complete_stream(source: dict) ->
+         ("rejected", "rejected_operations"),
+         ("reads", "later_reads"),
+         ("serializer", "canonical_serializer"),
++        ("source_hash", "source_artifact_hash"),
+         ("disk", "sufficient_disk"),
+         ("ram", "sufficient_ram"),
+     ],
+@@ -110,6 +111,7 @@ def test_scenario_cl_6828_preconditions_fail_closed(
+     """SCENARIO-CL-6828-PRECONDITIONS keeps exact failed-gate evidence."""
+ 
+     changed = deepcopy(source)
++    source_path = SOURCE_PATH
+     overrides = {"disk_free_bytes": 10**9, "ram_available_bytes": 10**9}
+     if fault == "ready":
+         changed["verified_memory_stream_ready"] = False
+@@ -127,12 +129,14 @@ def test_scenario_cl_6828_preconditions_fail_closed(
+         changed["later_read_opportunity_count"] = 0
+     elif fault == "serializer":
+         changed["operation_schema"]["canonical_encoding"] = "platform JSON"
++    elif fault == "source_hash":
++        source_path = tmp_path / "missing-source.json"
+     elif fault == "disk":
+         overrides["disk_free_bytes"] = 0
+     else:
+         overrides["ram_available_bytes"] = 0
+ 
+-    summary = exp.check_preconditions(changed, SOURCE_PATH, resource_overrides=overrides)
++    summary = exp.check_preconditions(changed, source_path, resource_overrides=overrides)
+     failed = next(check for check in summary["checks"] if check["check"] == failed_check)
+     assert summary["passed"] is False
+     assert failed["passed"] is False
+@@ -140,7 +144,7 @@ def test_scenario_cl_6828_preconditions_fail_closed(
+ 
+     blocked = exp.build_artifact(
+         changed,
+-        source_path=SOURCE_PATH,
++        source_path=source_path,
+         state_root=tmp_path,
+         run_date="20260831",
+         duration_s=0.25,
+@@ -207,6 +211,8 @@ def test_scenario_cl_6828_episode_commit_restart_and_rollback(tmp_path: Path) ->
+     )
+     restart = restarted.restart_receipt("boundary-1", receipt["new_state_sha256"])
+     assert restart["bytes_identity"] is True
++    assert restart["next_action_identity"] == restarted.next_action_identity()
++    assert restart["predecessor_receipt"] == receipt["receipt_sha256"]
+     assert restarted.state_bytes() == exp.decode_bytes(receipt["new_state_bytes"])
+ 
+     rollback = restarted.rollback(receipt)
+@@ -246,12 +252,19 @@ def test_scenario_cl_6828_admission_rejects_stale_capacity_and_support(tmp_path:
+             exact_receipt={"accepted": True},
+             sealed_accept=False,
+         ),
++        store.commit(
++            _proposal("p5", "a", {"pressure": 0.0}, store.state_hash()),
++            event_id="e5",
++            exact_receipt=None,
++            sealed_accept=True,
++        ),
+     ]
+     assert first["accepted"] is True
+     assert {receipt["reason"] for receipt in rejected} == {
+         "capacity_exceeded",
+         "stale_parent",
+         "sealed_support_rejected",
++        "exact_receipt_missing",
+     }
+     assert all(receipt["accepted"] is False for receipt in rejected)
+     assert all(receipt["parent_state_bytes"] == receipt["new_state_bytes"] for receipt in rejected)
+@@ -363,6 +376,11 @@ def test_validation_write_and_entry_points(
+     assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
+     assert exp.main(["--validate", "--result-path", str(result_path)]) == 0
+ 
++    generated_path = tmp_path / "generated.json"
++    monkeypatch.setattr(exp, "build_artifact", lambda *args, **kwargs: artifact)
++    assert exp.main(["--date", "20260831", "--result-path", str(generated_path)]) == 0
++    assert json.loads(generated_path.read_text(encoding="utf-8")) == artifact
++
+     script = REPO_ROOT / exp.SCRIPT_RELATIVE_PATH
+     monkeypatch.setattr(
+         "sys.argv",
+-- 
+2.55.0
+

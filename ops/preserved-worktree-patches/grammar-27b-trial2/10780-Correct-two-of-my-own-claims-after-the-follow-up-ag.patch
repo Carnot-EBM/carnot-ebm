@@ -1,0 +1,88 @@
+From 28144c84b3a5ce41ca7e952049b5de5de7ab6b15 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 12:23:05 -0400
+Subject: [PATCH 10780/11171] Correct two of my own claims after the follow-up
+ agent's independent check
+
+Both corrections are to entries I filed today, verified in source before amending.
+
+First, on the levels/receipt disagreement, I concluded "the receipt agrees with the
+per-level record; the headline is the outlier". That is backwards.
+arc_trajectory_supervisor.observe credits on `if int(snapshot.level) >
+self._last_level` and never un-credits a later drop, so a 0 to 1 to 0 excursion that
+banks nothing still sets resolved_by_levelup true on every pending redirect. cd82's
+level_up_charged [771] and per_level[0].completed true record a real momentary
+transition; levels 0 records that nothing was banked. Both are honest about
+different things, and the final-frame delta is defensible as a banked-levels
+measure. deepest_level_reached 0 is untouched by this and still hard to defend.
+
+The practical rule is now stronger than the earlier caution: never read helped or
+resolved_by_levelup as evidence of banked progress, because the credit does not even
+require a level-up that lasts. Use banked levels or actions-to-progress.
+
+Second, I briefed the follow-up agent that 28 unredirected stagnation windows were
+the written specification for a new arm under REQ-ARC-WMTE-6640 rule 4. Wrong. Per
+arc_supervisor_refinement._new_arm_cells, unredirected windows specify a new arm only
+when all four curated arms have fired. Three fired; tool_loop_reinduction fired zero
+because its flag was off. The 14 windows per game are arm exhaustion within a level,
+not an unmet need. Enable the disabled arm, re-run, and only then does the ledger
+become a new-arm spec -- which also keeps the AVO boundary intact, selection over a
+curated set rather than model-generated proposal.
+
+Recorded because a wrong premise in a task brief propagates into whatever that task
+builds, and this one would have manufactured an arm nobody needed.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 2467041158..d906c51eff 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -91,6 +91,40 @@ The side effect is that the dashboard's OK count includes blocked tasks, so appa
+ overstated. Not filed as a defect because the intent is plausibly deliberate; noted so it is not
+ re-derived.
+ 
++
++**CORRECTION 2026-09-02 16:00Z — my conclusion above was wrong, and the receipt is the looser of
++the two.** I wrote "the receipt agrees with the per-level record; the headline is the outlier."
++Verified in source, that is backwards.
++
++`arc_trajectory_supervisor.observe` credits on `if int(snapshot.level) > self._last_level`, then
++advances `_last_level`. It credits ANY increase in the LIVE level reading and never un-credits a
++later drop. So a 0 -> 1 -> 0 excursion that banks nothing still sets `resolved_by_levelup: true`
++on every pending redirect and records an `actions_to_levelup`.
++
++That explains cd82 exactly: `level_up_charged: [771]` and `per_level[0].completed: true` record a
++real momentary transition, and `levels: 0` records that nothing was BANKED. Both are honest about
++different things. The final-frame delta is defensible as a banked-levels measure, and my claim that
++it was "the outlier" does not survive.
++
++`deepest_level_reached: 0` remains hard to defend under either reading and is untouched by this
++correction.
++
++**Practical rule, from the follow-up agent's independent check:** never read `helped` /
++`resolved_by_levelup` as evidence of banked progress. Use banked levels or actions-to-progress.
++This is stronger than the earlier "one level-up credits every pending redirect" caution — the
++credit does not even require a level-up that lasts.
++
++**Related methodological correction, recorded so it is not repeated.** I briefed the follow-up
++agent that 28 `stagnations_unredirected` windows across two games were "the written specification
++for a NEW arm" per REQ-ARC-WMTE-6640 rule 4. That was wrong. Per
++`arc_supervisor_refinement._new_arm_cells`, unredirected windows specify a new arm only when
++`set(ARM_ORDER) <= arms_fired` — ALL FOUR curated arms must have fired first. Only three fired;
++`tool_loop_reinduction` fired zero times because `CARNOT_ARC_SUPERVISOR_TOOL_ARM` was OFF. The 14
++windows per game are ARM EXHAUSTION within a level, not an unmet need. The correct next step is to
++enable the disabled curated arm and re-run; only if all four fire and stagnation persists does the
++ledger become a new-arm specification. This also keeps the AVO boundary intact — selection over a
++curated set, never model-generated arm proposal.
++
+ ### NEW 2026-09-02: the operational retrospective never reports the quarantine rate
+ 
+ **The observation.** `results/operational_retro_2026_09_601.json` summarises the milestone as "9
+-- 
+2.55.0
+

@@ -1,0 +1,2493 @@
+From ac5504bc81d896ccac53068078e151b8c4d4f6e5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 14:08:13 -0400
+Subject: [PATCH 06043/11362] [conductor] Gated live grammar-budgeted SOTA
+ structured protocol
+
+Automated research step by research conductor.
+Task ID: exp5366-v489-live-grammar-budgeted-sota-protocol
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |   76 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...ive_grammar_budgeted_sota_protocol_v489.py | 1037 +++++++++++++++++
+ ...e_grammar_budgeted_sota_protocol_v489.json |  828 +++++++++++++
+ ...ive_grammar_budgeted_sota_protocol_v489.py |  486 ++++++++
+ 5 files changed, 2428 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py
+ create mode 100644 results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json
+ create mode 100644 tests/python/test_experiment_5366_live_grammar_budgeted_sota_protocol_v489.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index a88407986b..f06dc445bb 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -27877,6 +27877,82 @@ keeps `no_quality_claim=true`, and does not modify
+ |---|---|---|
+ | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
+ 
++### REQ-VERIFY-5366: Live Grammar-Budgeted SOTA Structured Protocol V489
++
++The repository SHALL provide Exp 5366 at
++`python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py`
++and write
++`results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json`
++without modifying `scripts/research_conductor.py`. The workflow SHALL read the
++Exp 5365 artifact first and SHALL attempt live local SOTA structured-output
++inference only when Exp 5365 reports
++`grammar_budget_protocol_ready=true`. If Exp 5365 is missing, malformed, or not
++ready, the runner SHALL write a terminal blocked artifact and SHALL NOT invoke
++model generation.
++
++Before headline inference, the runner SHALL verify CUDA/GPU visibility, a
++llama.cpp/GGUF-compatible runtime, local GGUF model paths, and machine-readable
++GPU/offload evidence. A headline Exp 5366 artifact SHALL fail closed when the
++runtime exposes only the retired CPU-only path: `status` SHALL be `blocked`,
++`structured_protocol_clean` SHALL be false, `selected_model_spec` SHALL be null,
++and no generation prompt SHALL run. The runner SHALL use llama.cpp/GGUF loading
++only and SHALL NOT use `AutoTokenizer.from_pretrained`, `AutoModel`, or a
++transformers tokenizer/model load directly against any `-GGUF` repository.
++
++The headline-eligible `MODEL_SPECS` SHALL contain all mandated local GGUF model
++ids considered for the run:
++`unsloth/Qwen3.6-35B-A3B-GGUF`,
++`unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models MAY be recorded only as
++CPU smoke tests and SHALL NOT populate `selected_model_spec` or headline
++metrics. When a mandated model is available through a non-retired GPU/offload
++path, the runner SHALL evaluate at least one mandated SOTA model with enough
++deterministic prompts to measure parse success, schema success, final JSON
++extraction success, semantic success after schema validity, truncation failures
++separately from schema failures, and unsafe false accepts.
++
++The artifact SHALL include bare top-level `status`,
++`grammar_budget_protocol_ready`, `structured_protocol_clean`, `MODEL_SPECS`,
++`selected_model_spec`, `inference_substrate`, `gpu_or_offload_receipt`,
++`no_autotokenizer_used`, `prompt_count`, `parse_success_rate`,
++`schema_success_rate`, `final_json_extraction_rate`,
++`semantic_success_rate`, `truncation_failure_rate`, `unsafe_false_accepts`,
++`completion_slack_min_tokens`, `methodology_duration_s`, and
++`honest_verdict`, plus field provenance explaining each required field's
++principle. `structured_protocol_clean` SHALL be true only when
++`parse_success_rate>=0.95`, `schema_success_rate>=0.90`,
++`final_json_extraction_rate>=0.95`, `unsafe_false_accepts=0`, and
++`methodology_duration_s>=60`. `status` SHALL be `complete` only if live local
++SOTA inference actually ran on a mandated model through the non-retired GGUF
++GPU/offload path; otherwise it SHALL be `blocked`.
++
++### SCENARIO-VERIFY-5366: Live GGUF Protocol Runs Or Blocks On Offload
++
++Given Exp 5365 reports `grammar_budget_protocol_ready=true`, schema grammar,
++completion slack, and a max-token budget, and given at least one mandated local
++GGUF model has a concrete `.gguf` path plus non-retired GPU/offload evidence,
++when Exp 5366 runs, then it selects that mandated model, builds protocol prompts
++from the Exp 5365/Exp 5351 grammar-budget settings, uses only the
++llama.cpp/GGUF loader family, records `no_autotokenizer_used=true`, evaluates
++the live prompt rows, separates parse, schema, semantic, and truncation
++failures, writes the required `.489` result artifact, and opens the clean
++structured protocol gate only if the configured parse/schema/final JSON/unsafe
++false-accept/duration thresholds pass.
++
++If Exp 5365 is not ready, CUDA/GPU visibility is absent, llama.cpp/GGUF support
++is unavailable, every mandated local GGUF is missing, or the runtime cannot
++provide non-retired GPU/offload evidence, then Exp 5366 writes the same result
++path with `status=blocked`, `structured_protocol_clean=false`,
++`selected_model_spec=null`, a machine-readable blocker in
++`gpu_or_offload_receipt`, `honest_verdict` starting with `blocked_`, and no
++headline model prompt execution.
++
++## Implementation Status (REQ-VERIFY-5366)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5366 | Planned (`python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py`, `results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json`) | Planned (`tests/python/test_experiment_5366_live_grammar_budgeted_sota_protocol_v489.py`) |
++
+ ### REQ-VERIFY-5365: Grammar-Budget Protocol Preflight V489
+ 
+ The repository SHALL provide Exp 5365 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3a678e01cf..4a7d08b2ff 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4333,
++  "experiments_checked": 4334,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py b/python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py
+new file mode 100644
+index 0000000000..2b03b00891
+--- /dev/null
++++ b/python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py
+@@ -0,0 +1,1037 @@
++#!/usr/bin/env python3
++"""Exp 5366 live grammar-budgeted SOTA structured-output protocol.
++
++Spec refs: REQ-VERIFY-5366, SCENARIO-VERIFY-5366.
++
++This runner is deliberately a runtime/protocol gate, not a model-quality
++benchmark. It copies the Exp 5365 grammar-budget gate, refuses headline runs
++without a non-retired GPU/offload path, uses only llama.cpp-compatible GGUF
++loading, and measures whether a mandated local SOTA model can produce final
++schema JSON without collapsing truncation, schema, and semantic failures.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import importlib.metadata
++import importlib.util
++import json
++from pathlib import Path
++import struct
++import subprocess
++import sys
++import time
++import traceback
++from typing import Any
++
++from carnot import experiment_5351_trigger_constrain_structured_protocol_v488 as exp5351
++from carnot import experiment_5365_grammar_budget_protocol_preflight_v489 as exp5365
++from carnot.inference.sota_models import resolve_cached_gguf
++
++
++JsonDict = dict[str, Any]
++ModelResolver = Callable[[str, str], str | None]
++RuntimeProbe = Callable[..., JsonDict]
++GenerationProbe = Callable[..., JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = "experiment_5366_live_grammar_budgeted_sota_protocol_v489"
++MILESTONE = "2026.07.489"
++RESULT_RELATIVE_PATH = Path("results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json")
++SCHEMA = "carnot.experiment_5366.live_grammar_budgeted_sota_protocol.v489"
++SPEC_REFS = ("REQ-VERIFY-5366", "SCENARIO-VERIFY-5366")
++RANDOM_SEED = 5366
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++DEFAULT_QUANTIZATION = "Q4_K_M"
++MIN_PARSE_SUCCESS_RATE = 0.95
++MIN_SCHEMA_SUCCESS_RATE = 0.90
++MIN_FINAL_JSON_EXTRACTION_RATE = 0.95
++MIN_CLEAN_METHODOLOGY_DURATION_S = 60.0
++
++MANDATED_MODEL_SPECS: tuple[JsonDict, ...] = (
++    {
++        "role": "flagship_moe",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++    {
++        "role": "flagship_dense",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++    {
++        "role": "middle_moe",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++)
++MANDATED_HF_IDS = tuple(str(spec["hf_id"]) for spec in MANDATED_MODEL_SPECS)
++SELECTION_ROLE_ORDER = ("flagship_dense", "middle_moe", "flagship_moe")
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "grammar_budget_protocol_ready",
++    "structured_protocol_clean",
++    "MODEL_SPECS",
++    "selected_model_spec",
++    "inference_substrate",
++    "gpu_or_offload_receipt",
++    "no_autotokenizer_used",
++    "prompt_count",
++    "parse_success_rate",
++    "schema_success_rate",
++    "final_json_extraction_rate",
++    "semantic_success_rate",
++    "truncation_failure_rate",
++    "unsafe_false_accepts",
++    "completion_slack_min_tokens",
++    "methodology_duration_s",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "complete only if live local SOTA inference ran; blocked if preconditions fail.",
++    "grammar_budget_protocol_ready": "copied from Exp5365 gate source for audit.",
++    "structured_protocol_clean": (
++        "boolean gate for downstream constraint-tax work; true only if "
++        "parse_success_rate>=0.95, schema_success_rate>=0.90, "
++        "final_json_extraction_rate>=0.95, unsafe_false_accepts=0, and "
++        "methodology_duration_s>=60."
++    ),
++    "MODEL_SPECS": "list containing the mandated local GGUF model specs considered for headline results.",
++    "selected_model_spec": "exact model spec used for headline measurements.",
++    "inference_substrate": "concrete runtime path, GPU/offload status, and GGUF loader family.",
++    "gpu_or_offload_receipt": "machine-readable evidence that this was not the retired CPU-only headline path.",
++    "no_autotokenizer_used": "must be true for GGUF repos.",
++    "prompt_count": "number of live prompts evaluated.",
++    "parse_success_rate": "fraction of responses with parseable JSON.",
++    "schema_success_rate": "fraction of responses satisfying the schema.",
++    "final_json_extraction_rate": "fraction with unambiguous final JSON extraction.",
++    "semantic_success_rate": "fraction satisfying task semantics after schema validity.",
++    "truncation_failure_rate": "fraction classified as token-budget truncation failures.",
++    "unsafe_false_accepts": "count of invalid/unsafe outputs accepted as valid.",
++    "completion_slack_min_tokens": "minimum JSON completion slack observed or inherited from Exp5365.",
++    "methodology_duration_s": "live measurement duration excluding planning prose.",
++    "honest_verdict": "one-line clean/block verdict.",
++}
++
++
++def field_provenance() -> dict[str, JsonDict]:
++    """Return principle annotations for every required Exp 5366 field."""
++
++    return {
++        field: {
++            "principle": principle,
++            "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner",
++        }
++        for field, principle in FIELD_PRINCIPLES.items()
++    }
++
++
++def default_model_specs_unresolved() -> list[JsonDict]:
++    """Return mandated model rows before any local GGUF cache is trusted."""
++
++    return [_unresolved_model_spec(spec) for spec in MANDATED_MODEL_SPECS]
++
++
++def resolve_model_specs(model_resolver: ModelResolver = resolve_cached_gguf) -> list[JsonDict]:
++    """Resolve all mandated GGUF specs without touching transformers or tokenizers."""
++
++    rows: list[JsonDict] = []
++    for spec in MANDATED_MODEL_SPECS:
++        row = _unresolved_model_spec(spec)
++        path_text = model_resolver(str(spec["hf_id"]), str(spec.get("quantization", DEFAULT_QUANTIZATION)))
++        if not path_text:
++            rows.append(row)
++            continue
++        path = Path(path_text)
++        row["model_path"] = str(path)
++        try:
++            if not path.is_file():
++                row["blocked_preconditions"] = ["model_file_missing"]
++            else:
++                row["file_receipts"] = _file_receipts(path)
++                row["metadata"] = read_gguf_header(path)
++                row["status"] = "local_gguf_resolved"
++        except Exception as exc:
++            row["status"] = "blocked_metadata_unreadable"
++            row["blocked_preconditions"] = [f"metadata_unreadable:{type(exc).__name__}: {exc}"]
++        rows.append(row)
++    return rows
++
++
++def select_headline_model(model_specs: Sequence[Mapping[str, Any]]) -> JsonDict | None:
++    """Select one locally resolved mandated model, preferring prior dense receipts."""
++
++    by_role = {str(row.get("role")): row for row in model_specs}
++    for role in SELECTION_ROLE_ORDER:
++        row = by_role.get(role)
++        if isinstance(row, Mapping) and row.get("status") == "local_gguf_resolved":
++            return dict(row)
++    return None
++
++
++def protocol_settings_from_exp5365(exp5365_artifact: Mapping[str, Any]) -> JsonDict:
++    """Inherit schema grammar, completion slack, and max-token budget from Exp 5365."""
++
++    variant = dict(exp5351.DEFAULT_PROTOCOL_VARIANTS[0])
++    cases = exp5365_artifact.get("completion_budget_cases")
++    budgets = [
++        int(case["max_tokens"])
++        for case in (cases if isinstance(cases, list) else [])
++        if isinstance(case, Mapping) and isinstance(case.get("max_tokens"), int)
++    ]
++    max_tokens = min(budgets) if budgets else int(variant.get("n_predict") or 1024)
++    grammar_summary = exp5365_artifact.get("schema_grammar_summary")
++    grammar_summary = dict(grammar_summary) if isinstance(grammar_summary, Mapping) else {}
++    variant["n_predict"] = max_tokens
++    variant["max_tokens"] = max_tokens
++    variant["completion_slack_min_tokens"] = int(
++        exp5365_artifact.get("completion_slack_min_tokens")
++        if isinstance(exp5365_artifact.get("completion_slack_min_tokens"), int)
++        else -1
++    )
++    variant["schema_grammar_summary"] = grammar_summary
++    variant["grammar_string"] = _gbnf_for_exp5351_schema()
++    variant["grammar_backend"] = "llama_cpp_gbnf_from_exp5365_schema_summary"
++    return variant
++
++
++def build_live_prompt(prompt_spec: Mapping[str, Any], variant: Mapping[str, Any]) -> str:
++    """Build the live prompt while preserving Exp 5351 final-sentinel semantics."""
++
++    return exp5351.build_protocol_prompt(prompt_spec, variant)
++
++
++def score_live_output(
++    *,
++    prompt_spec: Mapping[str, Any],
++    variant: Mapping[str, Any],
++    output_text: str,
++    completed: bool,
++    timed_out: bool = False,
++    generated_token_count: int | None = None,
++) -> JsonDict:
++    """Score one model response without merging truncation, schema, and semantics."""
++
++    base = exp5351.score_protocol_output(
++        prompt_spec=prompt_spec,
++        variant=variant,
++        output_text=output_text,
++        completed=completed,
++    )
++    payload = base.get("parsed_object")
++    expected = prompt_spec.get("expected")
++    expected = expected if isinstance(expected, Mapping) else {}
++    schema_success = bool(base.get("schema_success"))
++    semantic_success = bool(
++        schema_success
++        and isinstance(payload, Mapping)
++        and all(payload.get(key) == value for key, value in expected.items())
++    )
++    truncation_failure = _looks_like_truncation(
++        output_text=output_text,
++        variant=variant,
++        completed=completed,
++        timed_out=timed_out,
++        generated_token_count=generated_token_count,
++    )
++    if truncation_failure:
++        failure_class = "truncation"
++    elif not base.get("parse_success"):
++        failure_class = "parse"
++    elif not schema_success:
++        failure_class = "schema"
++    elif not semantic_success:
++        failure_class = "semantic"
++    else:
++        failure_class = "accepted"
++    return {
++        **base,
++        "semantic_success": semantic_success,
++        "truncation_failure": truncation_failure,
++        "failure_class": failure_class,
++    }
++
++
++def summarize_scores(scores: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Aggregate prompt-row scores into protocol rates."""
++
++    if not scores:
++        return {
++            "prompt_count": 0,
++            "parse_success_rate": 0.0,
++            "schema_success_rate": 0.0,
++            "final_json_extraction_rate": 0.0,
++            "semantic_success_rate": 0.0,
++            "truncation_failure_rate": 0.0,
++        }
++    schema_denominator = sum(1 for row in scores if row.get("schema_success") is True)
++    return {
++        "prompt_count": len(scores),
++        "parse_success_rate": _rate(scores, "parse_success"),
++        "schema_success_rate": _rate(scores, "schema_success"),
++        "final_json_extraction_rate": _rate(scores, "final_json_extraction_success"),
++        "semantic_success_rate": (
++            0.0 if schema_denominator == 0 else sum(1 for row in scores if row.get("semantic_success") is True) / schema_denominator
++        ),
++        "truncation_failure_rate": _rate(scores, "truncation_failure"),
++    }
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    artifact_path: Path | str | None = None,
++    exp5365_path: Path | str | None = None,
++    exp5365_artifact: Mapping[str, Any] | None = None,
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    runtime_probe: RuntimeProbe = None,  # type: ignore[assignment]
++    generation_probe: GenerationProbe = None,  # type: ignore[assignment]
++    tests_run: Sequence[Any] | None = None,
++    write: bool = True,
++) -> JsonDict:
++    """Run Exp 5366 or write a blocked artifact when preconditions fail."""
++
++    started = time.perf_counter()
++    root_path = Path(root)
++    destination = Path(artifact_path) if artifact_path is not None else root_path / RESULT_RELATIVE_PATH
++    if not destination.is_absolute():
++        destination = root_path / destination
++    gate_path = Path(exp5365_path) if exp5365_path is not None else root_path / exp5365.RESULT_RELATIVE_PATH
++    gate = dict(exp5365_artifact or _load_json(gate_path))
++    protocol_settings = protocol_settings_from_exp5365(gate)
++    grammar_ready = bool(gate.get("grammar_budget_protocol_ready"))
++    model_specs = default_model_specs_unresolved()
++    selected_model: JsonDict | None = None
++    runtime_receipt: JsonDict = {
++        "gpu_visible": False,
++        "gguf_runtime_available": False,
++        "gguf_loader_family": "not_checked",
++        "offload_evidence": False,
++        "non_retired_gpu_or_offload_path": False,
++        "blocked_preconditions": ["exp5365_grammar_budget_protocol_not_ready"],
++    }
++    generation_rows: list[JsonDict] = []
++    blockers: list[str] = []
++    runtime_probe = default_runtime_probe if runtime_probe is None else runtime_probe
++    generation_probe = default_generation_probe if generation_probe is None else generation_probe
++
++    if not grammar_ready:
++        blockers.append("exp5365_grammar_budget_protocol_not_ready")
++    else:
++        model_specs = resolve_model_specs(model_resolver)
++        selected_model = select_headline_model(model_specs)
++        if selected_model is None:
++            blockers.append("no_mandated_sota_gguf_resolved")
++        runtime_receipt = _normalise_runtime_receipt(
++            runtime_probe(
++                model_specs=model_specs,
++                selected_model_spec=selected_model,
++                protocol_settings=protocol_settings,
++            )
++        )
++        blockers.extend(str(item) for item in runtime_receipt.get("blocked_preconditions", ()))
++        if not runtime_receipt.get("non_retired_gpu_or_offload_path"):
++            blockers.append("non_retired_gpu_or_offload_path_unavailable")
++        blockers = list(dict.fromkeys(blockers))
++        runtime_receipt["blocked_preconditions"] = blockers
++        if not blockers and selected_model is not None:
++            generation_rows = _run_generation_rows(
++                model_spec=selected_model,
++                variant=protocol_settings,
++                generation_probe=generation_probe,
++            )
++
++    scores = [dict(row["score"]) for row in generation_rows]
++    metrics = summarize_scores(scores)
++    prompt_duration_s = sum(float(row.get("wall_clock_s") or 0.0) for row in generation_rows)
++    methodology_duration_s = round(
++        max(prompt_duration_s, time.perf_counter() - started if generation_rows else 0.0),
++        6,
++    )
++    if generation_rows and not any(row.get("completed") is True for row in generation_rows):
++        blockers = list(dict.fromkeys([*blockers, "live_generation_failed"]))
++        runtime_receipt["blocked_preconditions"] = blockers
++    unsafe_false_accepts = (
++        exp5351.unsafe_false_accept_count(protocol_settings, exp5351.DEFAULT_CALIBRATION_PROMPTS)
++        if generation_rows
++        else 0
++    )
++    structured_clean = _structured_protocol_clean(
++        metrics=metrics,
++        unsafe_false_accepts=unsafe_false_accepts,
++        methodology_duration_s=methodology_duration_s,
++    )
++    live_ran = bool(
++        generation_rows
++        and not blockers
++        and selected_model is not None
++        and any(row.get("completed") is True for row in generation_rows)
++    )
++    status = "complete" if live_ran else "blocked"
++    inference_substrate = _inference_substrate(
++        runtime_receipt=runtime_receipt,
++        selected_model=selected_model,
++        live_ran=live_ran,
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "spec_refs": list(SPEC_REFS),
++        "status": status,
++        "grammar_budget_protocol_ready": grammar_ready,
++        "structured_protocol_clean": structured_clean,
++        "MODEL_SPECS": model_specs,
++        "selected_model_spec": selected_model if live_ran else None,
++        "inference_substrate": inference_substrate,
++        "gpu_or_offload_receipt": runtime_receipt,
++        "no_autotokenizer_used": True,
++        "prompt_count": metrics["prompt_count"],
++        "parse_success_rate": metrics["parse_success_rate"],
++        "schema_success_rate": metrics["schema_success_rate"],
++        "final_json_extraction_rate": metrics["final_json_extraction_rate"],
++        "semantic_success_rate": metrics["semantic_success_rate"],
++        "truncation_failure_rate": metrics["truncation_failure_rate"],
++        "unsafe_false_accepts": unsafe_false_accepts,
++        "completion_slack_min_tokens": int(protocol_settings["completion_slack_min_tokens"]),
++        "methodology_duration_s": methodology_duration_s,
++        "honest_verdict": _honest_verdict(
++            status=status,
++            grammar_ready=grammar_ready,
++            structured_clean=structured_clean,
++            blockers=blockers,
++        ),
++        "protocol_settings": _artifact_protocol_settings(protocol_settings),
++        "prompt_results": scores,
++        "generation_receipts": generation_rows,
++        "source_artifacts": [
++            {
++                "path": exp5365.RESULT_RELATIVE_PATH.as_posix(),
++                "used": True,
++                "grammar_budget_protocol_ready": grammar_ready,
++            }
++        ],
++        "tests_run": list(tests_run or []),
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(time.perf_counter() - started, 6),
++        "field_provenance": field_provenance(),
++    }
++    artifact["reproducibility_checksum"] = _sha16(
++        _stable_json(
++            {
++                "experiment_id": EXPERIMENT_ID,
++                "grammar_ready": grammar_ready,
++                "model_specs": model_specs,
++                "selected_model": artifact["selected_model_spec"],
++                "prompt_results": scores,
++                "seed": RANDOM_SEED,
++            }
++        )
++    )
++    validate_artifact(artifact)
++    if write:
++        _write_json(destination, artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return schema and gate errors for the Exp 5366 artifact contract."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if artifact.get("status") not in {"complete", "blocked"}:
++        errors.append("status must be complete or blocked")
++    for field in ("grammar_budget_protocol_ready", "structured_protocol_clean"):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(f"{field} must be boolean")
++    if not _model_specs_cover_mandated(artifact.get("MODEL_SPECS")):
++        errors.append("MODEL_SPECS must contain all mandated SOTA GGUF specs")
++    selected = artifact.get("selected_model_spec")
++    if selected is not None and (
++        not isinstance(selected, Mapping) or selected.get("hf_id") not in MANDATED_HF_IDS
++    ):
++        errors.append("selected_model_spec must be null or one mandated model spec")
++    substrate = artifact.get("inference_substrate")
++    if not isinstance(substrate, Mapping):
++        errors.append("inference_substrate must be object")
++        substrate = {}
++    receipt = artifact.get("gpu_or_offload_receipt")
++    if not isinstance(receipt, Mapping):
++        errors.append("gpu_or_offload_receipt must be object")
++    if artifact.get("no_autotokenizer_used") is not True:
++        errors.append("no_autotokenizer_used must be true")
++    if not _non_negative_int(artifact.get("prompt_count")):
++        errors.append("prompt_count must be non-negative integer")
++    for field in (
++        "parse_success_rate",
++        "schema_success_rate",
++        "final_json_extraction_rate",
++        "semantic_success_rate",
++        "truncation_failure_rate",
++    ):
++        if not _rate_is_valid(artifact.get(field)):
++            errors.append(f"{field} must be in [0, 1]")
++    if not _non_negative_int(artifact.get("unsafe_false_accepts")):
++        errors.append("unsafe_false_accepts must be non-negative integer")
++    if not isinstance(artifact.get("completion_slack_min_tokens"), int):
++        errors.append("completion_slack_min_tokens must be integer")
++    if not isinstance(artifact.get("methodology_duration_s"), int | float):
++        errors.append("methodology_duration_s must be numeric")
++    honest = artifact.get("honest_verdict")
++    if not isinstance(honest, str) or not honest.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with complete: or blocked_")
++    provenance = artifact.get("field_provenance")
++    if not isinstance(provenance, Mapping) or any(field not in provenance for field in REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_provenance must cover required fields")
++    if artifact.get("status") == "complete" and substrate.get("live_local_sota_inference_ran") is not True:
++        errors.append("complete status requires live local SOTA inference")
++    if artifact.get("status") == "complete" and selected is None:
++        errors.append("complete status requires selected_model_spec")
++    if artifact.get("grammar_budget_protocol_ready") is False and artifact.get("status") == "complete":
++        errors.append("complete status requires Exp5365 grammar budget readiness")
++    if artifact.get("structured_protocol_clean") is True and not _structured_protocol_clean(
++        metrics={
++            "parse_success_rate": artifact.get("parse_success_rate"),
++            "schema_success_rate": artifact.get("schema_success_rate"),
++            "final_json_extraction_rate": artifact.get("final_json_extraction_rate"),
++        },
++        unsafe_false_accepts=artifact.get("unsafe_false_accepts"),
++        methodology_duration_s=artifact.get("methodology_duration_s"),
++    ):
++        errors.append("structured_protocol_clean thresholds are not satisfied")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Raise when an Exp 5366 artifact cannot support downstream gating."""
++
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise AssertionError("; ".join(errors))
++
++
++def default_runtime_probe(**kwargs: Any) -> JsonDict:  # pragma: no cover - host GPU probe
++    """Probe CUDA/GPU visibility and llama.cpp GPU-offload support."""
++
++    del kwargs
++    nvidia_smi = _run_command(
++        [
++            "nvidia-smi",
++            "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
++            "--format=csv,noheader,nounits",
++        ],
++        timeout_s=10.0,
++    )
++    raw_nvidia_smi = _run_command(["nvidia-smi"], timeout_s=10.0)
++    llama_cpp = _llama_cpp_import_receipt()
++    gpu_visible = bool(nvidia_smi.get("ok") and str(nvidia_smi.get("stdout") or "").strip())
++    runtime_available = bool(llama_cpp.get("import_ok"))
++    offload_supported = bool(llama_cpp.get("gpu_offload_supported"))
++    blockers: list[str] = []
++    if not gpu_visible:
++        blockers.append("gpu_not_visible")
++    if not runtime_available:
++        blockers.append("llama_cpp_unavailable")
++    if runtime_available and not offload_supported:
++        blockers.append("llama_cpp_cpu_only")
++    return {
++        "gpu_visible": gpu_visible,
++        "gguf_runtime_available": runtime_available,
++        "gguf_loader_family": "llama.cpp/llama-cpp-python",
++        "llama_cpp": llama_cpp,
++        "nvidia_smi": nvidia_smi,
++        "raw_nvidia_smi": raw_nvidia_smi,
++        "llama_cpp_gpu_offload_supported": offload_supported,
++        "offload_evidence": offload_supported,
++        "non_retired_gpu_or_offload_path": bool(gpu_visible and runtime_available and offload_supported),
++        "blocked_preconditions": blockers,
++    }
++
++
++def default_generation_probe(
++    *,
++    model_spec: Mapping[str, Any],
++    prompt_spec: Mapping[str, Any],
++    variant: Mapping[str, Any],
++    prompt: str,
++    max_tokens: int,
++    run_index: int,
++    timeout_s: float = 900.0,
++) -> JsonDict:  # pragma: no cover - live local GGUF inference
++    """Run one live llama.cpp Python GGUF generation with GPU memory receipts."""
++
++    del prompt_spec, timeout_s
++    from llama_cpp import Llama, LlamaGrammar  # noqa: PLC0415
++
++    model_path = str(model_spec["model_path"])
++    started = time.perf_counter()
++    before = _gpu_memory_snapshot()
++    llm = _cached_llama(model_path=model_path, seed=RANDOM_SEED + run_index)
++    after_load = _gpu_memory_snapshot()
++    grammar = LlamaGrammar.from_string(str(variant["grammar_string"]), verbose=False)
++    response = llm(
++        prompt,
++        max_tokens=max_tokens,
++        temperature=0.0,
++        grammar=grammar,
++    )
++    after_generate = _gpu_memory_snapshot()
++    output = _llama_response_text(response)
++    delta = max(_total_gpu_used(after_load), _total_gpu_used(after_generate)) - _total_gpu_used(before)
++    return {
++        "completed": True,
++        "timed_out": False,
++        "returncode": 0,
++        "stdout": output,
++        "stderr": "",
++        "wall_clock_s": round(time.perf_counter() - started, 6),
++        "generated_token_count": exp5365.estimate_tokens(output),
++        "gpu_memory_receipts": {
++            "before": before,
++            "after_load": after_load,
++            "after_generate": after_generate,
++            "max_memory_delta_mb": delta,
++            "offload_evidence": delta > 128,
++        },
++    }
++
++
++def read_gguf_header(model_path: str | Path) -> JsonDict:
++    """Read enough GGUF metadata to reject pointer files before inference."""
++
++    with Path(model_path).open("rb") as handle:
++        header = handle.read(24)
++    if len(header) < 24:
++        raise ValueError("truncated GGUF header")
++    if header[:4] != b"GGUF":
++        raise ValueError("not a GGUF file")
++    version, tensor_count, metadata_kv_count = struct.unpack("<IQQ", header[4:24])
++    if version not in (2, 3):
++        raise ValueError(f"unsupported GGUF version: {version}")
++    return {
++        "magic": "GGUF",
++        "version": int(version),
++        "tensor_count": int(tensor_count),
++        "metadata_kv_count": int(metadata_kv_count),
++    }
++
++
++def _unresolved_model_spec(spec: Mapping[str, Any]) -> JsonDict:
++    hf_id = str(spec["hf_id"])
++    return {
++        "role": str(spec["role"]),
++        "hf_id": hf_id,
++        "quantization": str(spec.get("quantization", DEFAULT_QUANTIZATION)),
++        "cache_path": str(Path.home() / ".cache" / "huggingface" / "hub" / f"models--{hf_id.replace('/', '--')}"),
++        "model_path": None,
++        "status": "missing_local_gguf",
++        "headline_eligible": True,
++        "gguf_loader_family": "llama.cpp",
++        "autotokenizer_used": False,
++        "file_receipts": None,
++        "metadata": None,
++        "blocked_preconditions": [],
++    }
++
++
++def _file_receipts(path: Path) -> JsonDict:
++    size = path.stat().st_size
++    head = path.read_bytes()[: 1024 * 1024]
++    return {
++        "path": str(path),
++        "size_bytes": size,
++        "checksum_head_1m_sha256": hashlib.sha256(head).hexdigest(),
++        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++    }
++
++
++def _run_generation_rows(
++    *,
++    model_spec: Mapping[str, Any],
++    variant: Mapping[str, Any],
++    generation_probe: GenerationProbe,
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for run_index, prompt_spec in enumerate(exp5351.DEFAULT_CALIBRATION_PROMPTS, start=1):
++        prompt = build_live_prompt(prompt_spec, variant)
++        try:
++            raw = generation_probe(
++                model_spec=model_spec,
++                prompt_spec=prompt_spec,
++                variant=variant,
++                prompt=prompt,
++                max_tokens=int(variant["max_tokens"]),
++                run_index=run_index,
++            )
++        except Exception as exc:  # pragma: no cover - defensive live runtime path
++            raw = {
++                "completed": False,
++                "timed_out": False,
++                "returncode": None,
++                "stdout": "",
++                "stderr": f"{type(exc).__name__}: {exc}\n{traceback.format_exc()}",
++                "wall_clock_s": 0.0,
++                "generated_token_count": 0,
++                "gpu_memory_receipts": {},
++            }
++        rows.append(
++            _normalise_generation_row(
++                raw,
++                model_spec=model_spec,
++                prompt_spec=prompt_spec,
++                variant=variant,
++                prompt=prompt,
++                run_index=run_index,
++            )
++        )
++    return rows
++
++
++def _normalise_generation_row(
++    raw: Mapping[str, Any],
++    *,
++    model_spec: Mapping[str, Any],
++    prompt_spec: Mapping[str, Any],
++    variant: Mapping[str, Any],
++    prompt: str,
++    run_index: int,
++) -> JsonDict:
++    stdout = str(raw.get("stdout") or "")
++    stderr = str(raw.get("stderr") or "")
++    generated_tokens = int(raw.get("generated_token_count") or exp5365.estimate_tokens(stdout))
++    completed = bool(raw.get("completed")) and raw.get("returncode", 0) == 0 and not raw.get("timed_out")
++    score = score_live_output(
++        prompt_spec=prompt_spec,
++        variant=variant,
++        output_text=stdout,
++        completed=completed,
++        timed_out=bool(raw.get("timed_out")),
++        generated_token_count=generated_tokens,
++    )
++    return {
++        "run_index": run_index,
++        "prompt_id": str(prompt_spec["prompt_id"]),
++        "hf_id": str(model_spec["hf_id"]),
++        "model_role": str(model_spec["role"]),
++        "prompt_checksum": _sha16(prompt),
++        "output_checksum": _sha16(stdout),
++        "completed": completed,
++        "timed_out": bool(raw.get("timed_out")),
++        "returncode": raw.get("returncode"),
++        "wall_clock_s": float(raw.get("wall_clock_s") or 0.0),
++        "generated_token_count": generated_tokens,
++        "stdout_tail": stdout[-2000:],
++        "stderr_tail": stderr[-1000:],
++        "gpu_memory_receipts": dict(raw.get("gpu_memory_receipts") or {}),
++        "score": score,
++    }
++
++
++def _normalise_runtime_receipt(receipt: Mapping[str, Any]) -> JsonDict:
++    out = dict(receipt)
++    out.setdefault("gpu_visible", False)
++    out.setdefault("gguf_runtime_available", False)
++    out.setdefault("gguf_loader_family", "llama.cpp")
++    out.setdefault("offload_evidence", False)
++    out.setdefault("non_retired_gpu_or_offload_path", False)
++    out.setdefault("blocked_preconditions", [])
++    out["blocked_preconditions"] = list(out.get("blocked_preconditions") or [])
++    return out
++
++
++def _inference_substrate(
++    *,
++    runtime_receipt: Mapping[str, Any],
++    selected_model: Mapping[str, Any] | None,
++    live_ran: bool,
++) -> JsonDict:
++    return {
++        "kind": "live_llm_inference" if live_ran else "blocked_preconditions",
++        "loader_family": str(runtime_receipt.get("gguf_loader_family") or "llama.cpp"),
++        "gguf_loader_family": str(runtime_receipt.get("gguf_loader_family") or "llama.cpp"),
++        "gpu_or_offload_status": (
++            "non_retired_gpu_or_offload_path"
++            if runtime_receipt.get("non_retired_gpu_or_offload_path")
++            else "blocked_or_cpu_only"
++        ),
++        "live_local_sota_inference_ran": live_ran,
++        "selected_model_hf_id": None if selected_model is None else selected_model.get("hf_id"),
++    }
++
++
++def _artifact_protocol_settings(variant: Mapping[str, Any]) -> JsonDict:
++    return {
++        "variant_id": variant.get("variant_id"),
++        "max_tokens": int(variant.get("max_tokens") or variant.get("n_predict") or 0),
++        "completion_slack_min_tokens": int(variant.get("completion_slack_min_tokens") or -1),
++        "sentinel": variant.get("sentinel"),
++        "end_sentinel": variant.get("end_sentinel"),
++        "grammar_backend": variant.get("grammar_backend"),
++        "schema_grammar_summary": variant.get("schema_grammar_summary"),
++    }
++
++
++def _structured_protocol_clean(
++    *,
++    metrics: Mapping[str, Any],
++    unsafe_false_accepts: Any,
++    methodology_duration_s: Any,
++) -> bool:
++    return bool(
++        _numeric(metrics.get("parse_success_rate")) >= MIN_PARSE_SUCCESS_RATE
++        and _numeric(metrics.get("schema_success_rate")) >= MIN_SCHEMA_SUCCESS_RATE
++        and _numeric(metrics.get("final_json_extraction_rate")) >= MIN_FINAL_JSON_EXTRACTION_RATE
++        and unsafe_false_accepts == 0
++        and _numeric(methodology_duration_s) >= MIN_CLEAN_METHODOLOGY_DURATION_S
++    )
++
++
++def _honest_verdict(
++    *,
++    status: str,
++    grammar_ready: bool,
++    structured_clean: bool,
++    blockers: Sequence[str],
++) -> str:
++    if not grammar_ready:
++        return "blocked_exp5365_grammar_budget_protocol_not_ready"
++    if status == "blocked":
++        first = str(blockers[0]) if blockers else "preconditions_failed"
++        return f"blocked_preconditions: {first}"
++    if structured_clean:
++        return "complete: structured_protocol_clean=true"
++    return "blocked_structured_protocol_clean_false: live SOTA inference ran but clean gate failed"
++
++
++def _looks_like_truncation(
++    *,
++    output_text: str,
++    variant: Mapping[str, Any],
++    completed: bool,
++    timed_out: bool,
++    generated_token_count: int | None,
++) -> bool:
++    if timed_out:
++        return True
++    if generated_token_count is not None and generated_token_count >= int(variant.get("max_tokens") or variant.get("n_predict") or 0):
++        return True
++    sentinel = str(variant.get("sentinel") or "FINAL_JSON:")
++    end_sentinel = str(variant.get("end_sentinel") or "END_FINAL_JSON")
++    marker = output_text.rfind(sentinel)
++    if marker < 0:
++        return False
++    segment = output_text[marker + len(sentinel) :]
++    return bool(not completed and "{" in segment and end_sentinel not in segment)
++
++
++def _model_specs_cover_mandated(value: Any) -> bool:
++    if not isinstance(value, list):
++        return False
++    return len(value) == len(MANDATED_HF_IDS) and {row.get("hf_id") for row in value if isinstance(row, Mapping)} == set(MANDATED_HF_IDS)
++
++
++def _gbnf_for_exp5351_schema() -> str:
++    return r'''
++root ::= "FINAL_JSON:" ws "{" ws "\"answer\"" ws ":" ws string ws "," ws "\"facts\"" ws ":" ws array ws "," ws "\"id\"" ws ":" ws string ws "}" ws ("END_FINAL_JSON")?
++array ::= "[" ws (string (ws "," ws string)*)? ws "]"
++string ::= "\"" chars "\""
++chars ::= ([^"\\] | "\\" (["\\/bfnrt] | "u" hex hex hex hex))*
++hex ::= [0-9a-fA-F]
++ws ::= [ \t\n]*
++'''.strip()
++
++
++def _rate(rows: Sequence[Mapping[str, Any]], key: str) -> float:
++    return 0.0 if not rows else sum(1 for row in rows if row.get(key) is True) / len(rows)
++
++
++def _rate_is_valid(value: Any) -> bool:
++    return isinstance(value, int | float) and not isinstance(value, bool) and 0.0 <= float(value) <= 1.0
++
++
++def _non_negative_int(value: Any) -> bool:
++    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
++
++
++def _numeric(value: Any) -> float:
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else -1.0
++
++
++def _stable_json(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def _sha16(value: str | bytes) -> str:
++    data = value if isinstance(value, bytes) else value.encode("utf-8")
++    return hashlib.sha256(data).hexdigest()[:16]
++
++
++def _load_json(path: Path) -> JsonDict:
++    try:
++        return json.loads(path.read_text(encoding="utf-8"))
++    except (FileNotFoundError, json.JSONDecodeError):
++        return {}
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=True) + "\n", encoding="utf-8")
++
++
++def _run_command(command: Sequence[str], timeout_s: float = 10.0) -> JsonDict:  # pragma: no cover
++    started = time.perf_counter()
++    try:
++        result = subprocess.run(
++            list(command),
++            capture_output=True,
++            text=True,
++            timeout=timeout_s,
++            check=False,
++        )
++        return {
++            "command": list(command),
++            "ok": result.returncode == 0,
++            "returncode": result.returncode,
++            "stdout": result.stdout,
++            "stderr": result.stderr,
++            "duration_s": round(time.perf_counter() - started, 6),
++        }
++    except Exception as exc:
++        return {
++            "command": list(command),
++            "ok": False,
++            "returncode": None,
++            "stdout": "",
++            "stderr": f"{type(exc).__name__}: {exc}",
++            "duration_s": round(time.perf_counter() - started, 6),
++        }
++
++
++def _llama_cpp_import_receipt() -> JsonDict:  # pragma: no cover
++    spec = importlib.util.find_spec("llama_cpp")
++    version: str | None
++    try:
++        version = importlib.metadata.version("llama-cpp-python")
++    except importlib.metadata.PackageNotFoundError:
++        version = None
++    support: bool | None = None
++    error: str | None = None
++    if spec is not None:
++        try:
++            from llama_cpp import llama_cpp as backend  # noqa: PLC0415
++
++            support = bool(getattr(backend, "llama_supports_gpu_offload", lambda: False)())
++        except Exception as exc:
++            error = f"{type(exc).__name__}: {exc}"
++    return {
++        "import_ok": spec is not None,
++        "origin": spec.origin if spec else None,
++        "version": version,
++        "gpu_offload_supported": support,
++        "gpu_offload_support_error": error,
++    }
++
++
++_LLAMA_CACHE: dict[str, Any] = {}
++
++
++def _cached_llama(*, model_path: str, seed: int) -> Any:  # pragma: no cover
++    if model_path not in _LLAMA_CACHE:
++        from llama_cpp import Llama  # noqa: PLC0415
++
++        _LLAMA_CACHE[model_path] = Llama(
++            model_path=model_path,
++            n_gpu_layers=-1,
++            n_ctx=2048,
++            seed=seed,
++            verbose=False,
++        )
++    return _LLAMA_CACHE[model_path]
++
++
++def _gpu_memory_snapshot() -> JsonDict:  # pragma: no cover
++    result = _run_command(
++        [
++            "nvidia-smi",
++            "--query-gpu=index,name,memory.used,memory.free,utilization.gpu",
++            "--format=csv,noheader,nounits",
++        ],
++        timeout_s=10.0,
++    )
++    gpus: list[JsonDict] = []
++    for line in str(result.get("stdout") or "").splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) < 5:
++            continue
++        try:
++            gpus.append(
++                {
++                    "index": int(parts[0]),
++                    "name": parts[1],
++                    "memory_used_mb": int(float(parts[2])),
++                    "memory_free_mb": int(float(parts[3])),
++                    "utilization_gpu_pct": int(float(parts[4])),
++                }
++            )
++        except ValueError:
++            continue
++    return {"ok": bool(result.get("ok")), "stderr": result.get("stderr"), "gpus": gpus}
++
++
++def _total_gpu_used(snapshot: Mapping[str, Any]) -> int:  # pragma: no cover
++    rows = snapshot.get("gpus")
++    if not isinstance(rows, list):
++        return 0
++    return sum(int(row.get("memory_used_mb") or 0) for row in rows if isinstance(row, Mapping))
++
++
++def _llama_response_text(response: Any) -> str:  # pragma: no cover
++    if isinstance(response, Mapping):
++        choices = response.get("choices")
++        if isinstance(choices, list) and choices and isinstance(choices[0], Mapping):
++            return str(choices[0].get("text") or "")
++    return str(response)
++
++
++def _load_tests_run_argument(value: str | None) -> list[Any]:  # pragma: no cover
++    if not value:
++        return []
++    path = Path(value)
++    text = path.read_text(encoding="utf-8") if path.exists() else value
++    parsed = json.loads(text)
++    if not isinstance(parsed, list):
++        raise ValueError("--tests-run-json must decode to a list")
++    return parsed
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--out", type=Path, default=REPO_ROOT / RESULT_RELATIVE_PATH)
++    parser.add_argument("--exp5365", type=Path, default=REPO_ROOT / exp5365.RESULT_RELATIVE_PATH)
++    parser.add_argument("--tests-run-json", default=None)
++    args = parser.parse_args(argv)
++    artifact = run(
++        artifact_path=args.out,
++        exp5365_path=args.exp5365,
++        tests_run=_load_tests_run_argument(args.tests_run_json),
++        write=True,
++    )
++    print(
++        f"[exp5366] status={artifact['status']} "
++        f"clean={artifact['structured_protocol_clean']} out={args.out}"
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    try:
++        raise SystemExit(main())
++    except Exception:
++        traceback.print_exc()
++        raise
+diff --git a/results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json b/results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json
+new file mode 100644
+index 0000000000..7da24dbacb
+--- /dev/null
++++ b/results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json
+@@ -0,0 +1,828 @@
++{
++  "MODEL_SPECS": [
++    {
++      "autotokenizer_used": false,
++      "blocked_preconditions": [],
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
++      "file_receipts": {
++        "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
++        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "size_bytes": 22134528992
++      },
++      "gguf_loader_family": "llama.cpp",
++      "headline_eligible": true,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "metadata": {
++        "magic": "GGUF",
++        "metadata_kv_count": 54,
++        "tensor_count": 733,
++        "version": 3
++      },
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "quantization": "Q4_K_M",
++      "role": "flagship_moe",
++      "status": "local_gguf_resolved"
++    },
++    {
++      "autotokenizer_used": false,
++      "blocked_preconditions": [],
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
++      "file_receipts": {
++        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
++        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "size_bytes": 18323731456
++      },
++      "gguf_loader_family": "llama.cpp",
++      "headline_eligible": true,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "metadata": {
++        "magic": "GGUF",
++        "metadata_kv_count": 57,
++        "tensor_count": 833,
++        "version": 3
++      },
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "quantization": "Q4_K_M",
++      "role": "flagship_dense",
++      "status": "local_gguf_resolved"
++    },
++    {
++      "autotokenizer_used": false,
++      "blocked_preconditions": [],
++      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
++      "file_receipts": {
++        "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
++        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "size_bytes": 16947539744
++      },
++      "gguf_loader_family": "llama.cpp",
++      "headline_eligible": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "metadata": {
++        "magic": "GGUF",
++        "metadata_kv_count": 60,
++        "tensor_count": 658,
++        "version": 3
++      },
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "quantization": "Q4_K_M",
++      "role": "middle_moe",
++      "status": "local_gguf_resolved"
++    }
++  ],
++  "completion_slack_min_tokens": 982,
++  "duration_s": 70.723275,
++  "experiment_id": "experiment_5366_live_grammar_budgeted_sota_protocol_v489",
++  "field_provenance": {
++    "MODEL_SPECS": {
++      "principle": "list containing the mandated local GGUF model specs considered for headline results.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "completion_slack_min_tokens": {
++      "principle": "minimum JSON completion slack observed or inherited from Exp5365.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "final_json_extraction_rate": {
++      "principle": "fraction with unambiguous final JSON extraction.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "gpu_or_offload_receipt": {
++      "principle": "machine-readable evidence that this was not the retired CPU-only headline path.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "grammar_budget_protocol_ready": {
++      "principle": "copied from Exp5365 gate source for audit.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "honest_verdict": {
++      "principle": "one-line clean/block verdict.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "inference_substrate": {
++      "principle": "concrete runtime path, GPU/offload status, and GGUF loader family.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "methodology_duration_s": {
++      "principle": "live measurement duration excluding planning prose.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "no_autotokenizer_used": {
++      "principle": "must be true for GGUF repos.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "parse_success_rate": {
++      "principle": "fraction of responses with parseable JSON.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "prompt_count": {
++      "principle": "number of live prompts evaluated.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "schema_success_rate": {
++      "principle": "fraction of responses satisfying the schema.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "selected_model_spec": {
++      "principle": "exact model spec used for headline measurements.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "semantic_success_rate": {
++      "principle": "fraction satisfying task semantics after schema validity.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "status": {
++      "principle": "complete only if live local SOTA inference ran; blocked if preconditions fail.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "structured_protocol_clean": {
++      "principle": "boolean gate for downstream constraint-tax work; true only if parse_success_rate>=0.95, schema_success_rate>=0.90, final_json_extraction_rate>=0.95, unsafe_false_accepts=0, and methodology_duration_s>=60.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "truncation_failure_rate": {
++      "principle": "fraction classified as token-budget truncation failures.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    },
++    "unsafe_false_accepts": {
++      "principle": "count of invalid/unsafe outputs accepted as valid.",
++      "satisfied_by": "Exp 5366 live grammar-budgeted SOTA protocol runner"
++    }
++  },
++  "final_json_extraction_rate": 1.0,
++  "generation_receipts": [
++    {
++      "completed": true,
++      "generated_token_count": 45,
++      "gpu_memory_receipts": {
++        "after_generate": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 24
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 43
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "after_load": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13883,
++              "memory_used_mb": 10242,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 0
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13381,
++              "memory_used_mb": 10744,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 100
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "before": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 24120,
++              "memory_used_mb": 4,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 0
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 24120,
++              "memory_used_mb": 4,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 0
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "max_memory_delta_mb": 21102,
++        "offload_evidence": true
++      },
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "model_role": "flagship_dense",
++      "output_checksum": "41e40558a467a023",
++      "prompt_checksum": "84cd2562990ee3b0",
++      "prompt_id": "battery_duration_probe",
++      "returncode": 0,
++      "run_index": 1,
++      "score": {
++        "accepted_for_protocol": true,
++        "completed": true,
++        "failure_class": "accepted",
++        "final_json_extraction_success": true,
++        "parse_success": true,
++        "parsed_keys": [
++          "answer",
++          "facts",
++          "id"
++        ],
++        "parsed_object": {
++          "answer": "47 minutes",
++          "facts": [
++            "The Aster-9 battery ran 47 minutes under the amber-load test."
++          ],
++          "id": "battery_probe"
++        },
++        "prompt_id": "battery_duration_probe",
++        "schema_errors": [],
++        "schema_success": true,
++        "semantic_success": true,
++        "thinking_text_outside_final": true,
++        "truncation_failure": false,
++        "unsafe_false_accept": false,
++        "variant_id": "trigger_then_final_json_sentinel_v1"
++      },
++      "stderr_tail": "",
++      "stdout_tail": "FINAL_JSON: {\"answer\":\"47 minutes\",\"facts\":[\"The Aster-9 battery ran 47 minutes under the amber-load test.\"],\"id\":\"battery_probe\"} END_FINAL_JSON",
++      "timed_out": false,
++      "wall_clock_s": 12.598177
++    },
++    {
++      "completed": true,
++      "generated_token_count": 38,
++      "gpu_memory_receipts": {
++        "after_generate": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 22
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 15
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "after_load": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 24
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 43
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "before": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 24
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 43
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "max_memory_delta_mb": 0,
++        "offload_evidence": false
++      },
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "model_role": "flagship_dense",
++      "output_checksum": "84da9d1ba9c5805a",
++      "prompt_checksum": "88840ec45ab5bae1",
++      "prompt_id": "code_word_probe",
++      "returncode": 0,
++      "run_index": 2,
++      "score": {
++        "accepted_for_protocol": true,
++        "completed": true,
++        "failure_class": "accepted",
++        "final_json_extraction_success": true,
++        "parse_success": true,
++        "parsed_keys": [
++          "answer",
++          "facts",
++          "id"
++        ],
++        "parsed_object": {
++          "answer": "orange",
++          "facts": [
++            "Fixture B-12 has code word orange."
++          ],
++          "id": "code_probe"
++        },
++        "prompt_id": "code_word_probe",
++        "schema_errors": [],
++        "schema_success": true,
++        "semantic_success": true,
++        "thinking_text_outside_final": true,
++        "truncation_failure": false,
++        "unsafe_false_accept": false,
++        "variant_id": "trigger_then_final_json_sentinel_v1"
++      },
++      "stderr_tail": "",
++      "stdout_tail": "FINAL_JSON: {\"answer\":\"orange\",\"facts\":[\"Fixture B-12 has code word orange.\"],\"id\":\"code_probe\"} END_FINAL_JSON",
++      "timed_out": false,
++      "wall_clock_s": 2.14292
++    },
++    {
++      "completed": true,
++      "generated_token_count": 42,
++      "gpu_memory_receipts": {
++        "after_generate": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 24
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 27
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "after_load": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 22
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 15
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "before": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 22
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 15
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "max_memory_delta_mb": 0,
++        "offload_evidence": false
++      },
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "model_role": "flagship_dense",
++      "output_checksum": "5eb9e67e344bca0c",
++      "prompt_checksum": "0ac8f655697d255a",
++      "prompt_id": "route_probe",
++      "returncode": 0,
++      "run_index": 3,
++      "score": {
++        "accepted_for_protocol": true,
++        "completed": true,
++        "failure_class": "accepted",
++        "final_json_extraction_success": true,
++        "parse_success": true,
++        "parsed_keys": [
++          "answer",
++          "facts",
++          "id"
++        ],
++        "parsed_object": {
++          "answer": "north",
++          "facts": [
++            "In route card R-3, the approved direction is north."
++          ],
++          "id": "route_probe"
++        },
++        "prompt_id": "route_probe",
++        "schema_errors": [],
++        "schema_success": true,
++        "semantic_success": true,
++        "thinking_text_outside_final": true,
++        "truncation_failure": false,
++        "unsafe_false_accept": false,
++        "variant_id": "trigger_then_final_json_sentinel_v1"
++      },
++      "stderr_tail": "",
++      "stdout_tail": "FINAL_JSON: {\"answer\":\"north\",\"facts\":[\"In route card R-3, the approved direction is north.\"],\"id\":\"route_probe\"} END_FINAL_JSON",
++      "timed_out": false,
++      "wall_clock_s": 2.40188
++    },
++    {
++      "completed": true,
++      "generated_token_count": 36,
++      "gpu_memory_receipts": {
++        "after_generate": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 39
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 45
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "after_load": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 24
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 27
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "before": {
++          "gpus": [
++            {
++              "index": 0,
++              "memory_free_mb": 13821,
++              "memory_used_mb": 10304,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 24
++            },
++            {
++              "index": 1,
++              "memory_free_mb": 13319,
++              "memory_used_mb": 10806,
++              "name": "NVIDIA GeForce RTX 3090",
++              "utilization_gpu_pct": 27
++            }
++          ],
++          "ok": true,
++          "stderr": ""
++        },
++        "max_memory_delta_mb": 0,
++        "offload_evidence": false
++      },
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "model_role": "flagship_dense",
++      "output_checksum": "1eb13ba4eb4bac21",
++      "prompt_checksum": "88eb6e9db5136135",
++      "prompt_id": "count_probe",
++      "returncode": 0,
++      "run_index": 4,
++      "score": {
++        "accepted_for_protocol": true,
++        "completed": true,
++        "failure_class": "accepted",
++        "final_json_extraction_success": true,
++        "parse_success": true,
++        "parsed_keys": [
++          "answer",
++          "facts",
++          "id"
++        ],
++        "parsed_object": {
++          "answer": "3",
++          "facts": [
++            "The fixture contains three validated rows."
++          ],
++          "id": "count_probe"
++        },
++        "prompt_id": "count_probe",
++        "schema_errors": [],
++        "schema_success": true,
++        "semantic_success": true,
++        "thinking_text_outside_final": true,
++        "truncation_failure": false,
++        "unsafe_false_accept": false,
++        "variant_id": "trigger_then_final_json_sentinel_v1"
++      },
++      "stderr_tail": "",
++      "stdout_tail": "FINAL_JSON: {\"answer\":\"3\",\"facts\":[\"The fixture contains three validated rows.\"],\"id\":\"count_probe\"} END_FINAL_JSON",
++      "timed_out": false,
++      "wall_clock_s": 2.302389
++    }
++  ],
++  "gpu_or_offload_receipt": {
++    "blocked_preconditions": [],
++    "gguf_loader_family": "llama.cpp/llama-cpp-python",
++    "gguf_runtime_available": true,
++    "gpu_visible": true,
++    "llama_cpp": {
++      "gpu_offload_support_error": null,
++      "gpu_offload_supported": true,
++      "import_ok": true,
++      "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
++      "version": "0.3.33"
++    },
++    "llama_cpp_gpu_offload_supported": true,
++    "non_retired_gpu_or_offload_path": true,
++    "nvidia_smi": {
++      "command": [
++        "nvidia-smi",
++        "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
++        "--format=csv,noheader,nounits"
++      ],
++      "duration_s": 0.105617,
++      "ok": true,
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n"
++    },
++    "offload_evidence": true,
++    "raw_nvidia_smi": {
++      "command": [
++        "nvidia-smi"
++      ],
++      "duration_s": 0.11277,
++      "ok": true,
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "Tue Jul  7 14:04:47 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   48C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   50C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n"
++    }
++  },
++  "grammar_budget_protocol_ready": true,
++  "honest_verdict": "blocked_structured_protocol_clean_false: live SOTA inference ran but clean gate failed",
++  "inference_substrate": {
++    "gguf_loader_family": "llama.cpp/llama-cpp-python",
++    "gpu_or_offload_status": "non_retired_gpu_or_offload_path",
++    "kind": "live_llm_inference",
++    "live_local_sota_inference_ran": true,
++    "loader_family": "llama.cpp/llama-cpp-python",
++    "selected_model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
++  },
++  "methodology_duration_s": 19.445366,
++  "milestone": "2026.07.489",
++  "no_autotokenizer_used": true,
++  "parse_success_rate": 1.0,
++  "prompt_count": 4,
++  "prompt_results": [
++    {
++      "accepted_for_protocol": true,
++      "completed": true,
++      "failure_class": "accepted",
++      "final_json_extraction_success": true,
++      "parse_success": true,
++      "parsed_keys": [
++        "answer",
++        "facts",
++        "id"
++      ],
++      "parsed_object": {
++        "answer": "47 minutes",
++        "facts": [
++          "The Aster-9 battery ran 47 minutes under the amber-load test."
++        ],
++        "id": "battery_probe"
++      },
++      "prompt_id": "battery_duration_probe",
++      "schema_errors": [],
++      "schema_success": true,
++      "semantic_success": true,
++      "thinking_text_outside_final": true,
++      "truncation_failure": false,
++      "unsafe_false_accept": false,
++      "variant_id": "trigger_then_final_json_sentinel_v1"
++    },
++    {
++      "accepted_for_protocol": true,
++      "completed": true,
++      "failure_class": "accepted",
++      "final_json_extraction_success": true,
++      "parse_success": true,
++      "parsed_keys": [
++        "answer",
++        "facts",
++        "id"
++      ],
++      "parsed_object": {
++        "answer": "orange",
++        "facts": [
++          "Fixture B-12 has code word orange."
++        ],
++        "id": "code_probe"
++      },
++      "prompt_id": "code_word_probe",
++      "schema_errors": [],
++      "schema_success": true,
++      "semantic_success": true,
++      "thinking_text_outside_final": true,
++      "truncation_failure": false,
++      "unsafe_false_accept": false,
++      "variant_id": "trigger_then_final_json_sentinel_v1"
++    },
++    {
++      "accepted_for_protocol": true,
++      "completed": true,
++      "failure_class": "accepted",
++      "final_json_extraction_success": true,
++      "parse_success": true,
++      "parsed_keys": [
++        "answer",
++        "facts",
++        "id"
++      ],
++      "parsed_object": {
++        "answer": "north",
++        "facts": [
++          "In route card R-3, the approved direction is north."
++        ],
++        "id": "route_probe"
++      },
++      "prompt_id": "route_probe",
++      "schema_errors": [],
++      "schema_success": true,
++      "semantic_success": true,
++      "thinking_text_outside_final": true,
++      "truncation_failure": false,
++      "unsafe_false_accept": false,
++      "variant_id": "trigger_then_final_json_sentinel_v1"
++    },
++    {
++      "accepted_for_protocol": true,
++      "completed": true,
++      "failure_class": "accepted",
++      "final_json_extraction_success": true,
++      "parse_success": true,
++      "parsed_keys": [
++        "answer",
++        "facts",
++        "id"
++      ],
++      "parsed_object": {
++        "answer": "3",
++        "facts": [
++          "The fixture contains three validated rows."
++        ],
++        "id": "count_probe"
++      },
++      "prompt_id": "count_probe",
++      "schema_errors": [],
++      "schema_success": true,
++      "semantic_success": true,
++      "thinking_text_outside_final": true,
++      "truncation_failure": false,
++      "unsafe_false_accept": false,
++      "variant_id": "trigger_then_final_json_sentinel_v1"
++    }
++  ],
++  "protocol_settings": {
++    "completion_slack_min_tokens": 982,
++    "end_sentinel": "END_FINAL_JSON",
++    "grammar_backend": "llama_cpp_gbnf_from_exp5365_schema_summary",
++    "max_tokens": 1024,
++    "schema_grammar_summary": {
++      "grammar_backend": "deterministic_json_schema_summary",
++      "grammar_rules": {
++        "answer": "\"answer\":<string>",
++        "facts": "\"facts\":<array>",
++        "id": "\"id\":<string>"
++      },
++      "grammar_state_count": 7,
++      "literal_tokens": [
++        "{",
++        "}",
++        ":",
++        ",",
++        "\"id\"",
++        "\"answer\"",
++        "\"facts\""
++      ],
++      "property_types": {
++        "answer": "string",
++        "facts": "array",
++        "id": "string"
++      },
++      "required_fields": [
++        "id",
++        "answer",
++        "facts"
++      ],
++      "schema_type": "object"
++    },
++    "sentinel": "FINAL_JSON:",
++    "variant_id": "trigger_then_final_json_sentinel_v1"
++  },
++  "random_seed": 5366,
++  "reproducibility_checksum": "7250ab28e540634a",
++  "schema": "carnot.experiment_5366.live_grammar_budgeted_sota_protocol.v489",
++  "schema_success_rate": 1.0,
++  "selected_model_spec": {
++    "autotokenizer_used": false,
++    "blocked_preconditions": [],
++    "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
++    "file_receipts": {
++      "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
++      "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "size_bytes": 18323731456
++    },
++    "gguf_loader_family": "llama.cpp",
++    "headline_eligible": true,
++    "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++    "metadata": {
++      "magic": "GGUF",
++      "metadata_kv_count": 57,
++      "tensor_count": 833,
++      "version": 3
++    },
++    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++    "quantization": "Q4_K_M",
++    "role": "flagship_dense",
++    "status": "local_gguf_resolved"
++  },
++  "semantic_success_rate": 1.0,
++  "source_artifacts": [
++    {
++      "grammar_budget_protocol_ready": true,
++      "path": "results/experiment_5365_grammar_budget_protocol_preflight_v489.json",
++      "used": true
++    }
++  ],
++  "spec_refs": [
++    "REQ-VERIFY-5366",
++    "SCENARIO-VERIFY-5366"
++  ],
++  "status": "complete",
++  "structured_protocol_clean": false,
++  "tests_run": [
++    ".venv/bin/pytest -o addopts= tests/python/test_experiment_5366_live_grammar_budgeted_sota_protocol_v489.py -q -> passed 6",
++    "coverage run/report scoped to python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py -> passed 100%"
++  ],
++  "truncation_failure_rate": 0.0,
++  "unsafe_false_accepts": 0
++}
+diff --git a/tests/python/test_experiment_5366_live_grammar_budgeted_sota_protocol_v489.py b/tests/python/test_experiment_5366_live_grammar_budgeted_sota_protocol_v489.py
+new file mode 100644
+index 0000000000..94d3fc7929
+--- /dev/null
++++ b/tests/python/test_experiment_5366_live_grammar_budgeted_sota_protocol_v489.py
+@@ -0,0 +1,486 @@
++"""Tests for Exp 5366 live grammar-budgeted SOTA structured protocol.
++
++Spec refs: REQ-VERIFY-5366, SCENARIO-VERIFY-5366.
++"""
++
++from __future__ import annotations
++
++import json
++import struct
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5351_trigger_constrain_structured_protocol_v488 as exp5351
++from carnot import experiment_5365_grammar_budget_protocol_preflight_v489 as exp5365
++from carnot import experiment_5366_live_grammar_budgeted_sota_protocol_v489 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5366_live_grammar_budgeted_sota_protocol_v489.py -q"
++)
++
++
++def _minimal_gguf(path: Path) -> Path:
++    path.write_bytes(b"GGUF" + struct.pack("<IQQ", 3, 17, 5))
++    return path
++
++
++def _ready_exp5365() -> dict[str, Any]:
++    return exp5365.run(
++        root=REPO,
++        artifact_path=Path("/tmp/unused-exp5365.json"),
++        exp5351_path=REPO / exp5351.RESULT_RELATIVE_PATH,
++        tests_run=["fixture exp5365"],
++        started_s=1.0,
++        now_s=2.0,
++        write=False,
++    )
++
++
++def _runtime_receipt(*, blocked: list[str] | None = None) -> dict[str, Any]:
++    return {
++        "gpu_visible": not blocked,
++        "gguf_runtime_available": not blocked,
++        "gguf_loader_family": "llama.cpp/llama-cpp-python",
++        "llama_cpp_gpu_offload_supported": not blocked,
++        "offload_evidence": not blocked,
++        "non_retired_gpu_or_offload_path": not blocked,
++        "blocked_preconditions": list(blocked or []),
++        "nvidia_smi": {"ok": not blocked, "stdout": "0, NVIDIA RTX 3090, 24576, 24000"},
++    }
++
++
++def test_req_verify_5366_spec_declares_live_grammar_budget_contract() -> None:
++    """REQ-VERIFY-5366: OpenSpec anchors the live grammar-budgeted SOTA gate."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5366") : spec.index("### REQ-VERIFY-5365")]
++
++    for marker in (
++        "REQ-VERIFY-5366",
++        "SCENARIO-VERIFY-5366",
++        str(mod.RESULT_RELATIVE_PATH),
++        "grammar_budget_protocol_ready=true",
++        "non-retired GPU/offload evidence",
++        "llama.cpp/GGUF",
++        "AutoTokenizer.from_pretrained",
++        "AutoModel",
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "parse_success_rate>=0.95",
++        "schema_success_rate>=0.90",
++        "final_json_extraction_rate>=0.95",
++        "unsafe_false_accepts=0",
++        "methodology_duration_s>=60",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++        assert mod.FIELD_PRINCIPLES[field] in mod.field_provenance()[field]["principle"]
++
++
++def test_req_verify_5366_scores_schema_semantic_and_truncation_separately() -> None:
++    """REQ-VERIFY-5366: scoring separates parse, schema, semantic, and truncation failures."""
++
++    variant = mod.protocol_settings_from_exp5365(_ready_exp5365())
++    prompt = exp5351.DEFAULT_CALIBRATION_PROMPTS[0]
++    good = (
++        f'{variant["sentinel"]} '
++        '{"answer":"47 minutes","facts":["checked"],"id":"battery_probe"} '
++        f'{variant["end_sentinel"]}'
++    )
++    wrong_type = (
++        f'{variant["sentinel"]} '
++        '{"answer":47,"facts":["checked"],"id":"battery_probe"} '
++        f'{variant["end_sentinel"]}'
++    )
++    wrong_answer = (
++        f'{variant["sentinel"]} '
++        '{"answer":"48 minutes","facts":["checked"],"id":"battery_probe"} '
++        f'{variant["end_sentinel"]}'
++    )
++    truncated = f'{variant["sentinel"]} {{"answer":"47 minutes","facts":["checked"]'
++    no_final = '{"answer":"47 minutes","facts":["checked"],"id":"battery_probe"}'
++
++    good_score = mod.score_live_output(
++        prompt_spec=prompt,
++        variant=variant,
++        output_text=good,
++        completed=True,
++    )
++    schema_score = mod.score_live_output(
++        prompt_spec=prompt,
++        variant=variant,
++        output_text=wrong_type,
++        completed=True,
++    )
++    semantic_score = mod.score_live_output(
++        prompt_spec=prompt,
++        variant=variant,
++        output_text=wrong_answer,
++        completed=True,
++    )
++    truncation_score = mod.score_live_output(
++        prompt_spec=prompt,
++        variant=variant,
++        output_text=truncated,
++        completed=False,
++    )
++    timeout_score = mod.score_live_output(
++        prompt_spec=prompt,
++        variant=variant,
++        output_text=no_final,
++        completed=False,
++        timed_out=True,
++    )
++    token_budget_score = mod.score_live_output(
++        prompt_spec=prompt,
++        variant=variant,
++        output_text=no_final,
++        completed=True,
++        generated_token_count=variant["max_tokens"],
++    )
++    parse_score = mod.score_live_output(
++        prompt_spec=prompt,
++        variant=variant,
++        output_text=no_final,
++        completed=True,
++    )
++
++    assert good_score["failure_class"] == "accepted"
++    assert good_score["semantic_success"] is True
++    assert schema_score["failure_class"] == "schema"
++    assert schema_score["parse_success"] is True
++    assert semantic_score["failure_class"] == "semantic"
++    assert semantic_score["schema_success"] is True
++    assert semantic_score["semantic_success"] is False
++    assert truncation_score["failure_class"] == "truncation"
++    assert truncation_score["truncation_failure"] is True
++    assert timeout_score["failure_class"] == "truncation"
++    assert token_budget_score["failure_class"] == "truncation"
++    assert parse_score["failure_class"] == "parse"
++    assert mod._honest_verdict(  # noqa: SLF001
++        status="complete",
++        grammar_ready=True,
++        structured_clean=False,
++        blockers=[],
++    ).startswith("blocked_structured_protocol_clean_false")
++
++
++def test_scenario_verify_5366_blocks_without_non_retired_gpu_offload_path(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5366: CPU-only headline path writes blocked artifact with no prompts."""
++
++    gguf = _minimal_gguf(tmp_path / "gemma-4-31B-it-Q4_K_M.gguf")
++    calls: list[str] = []
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        exp5365_artifact=_ready_exp5365(),
++        model_resolver=lambda hf_id, _quant: (
++            str(gguf) if hf_id == "unsloth/gemma-4-31B-it-GGUF" else None
++        ),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(blocked=["llama_cpp_cpu_only"]),
++        generation_probe=lambda **kwargs: calls.append(kwargs["prompt_spec"]["prompt_id"]) or {},
++        tests_run=[TEST_COMMAND],
++        write=True,
++    )
++
++    assert calls == []
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++    assert artifact["status"] == "blocked"
++    assert artifact["grammar_budget_protocol_ready"] is True
++    assert artifact["structured_protocol_clean"] is False
++    assert artifact["selected_model_spec"] is None
++    assert artifact["prompt_count"] == 0
++    assert artifact["gpu_or_offload_receipt"]["non_retired_gpu_or_offload_path"] is False
++    assert "llama_cpp_cpu_only" in artifact["gpu_or_offload_receipt"]["blocked_preconditions"]
++    assert artifact["honest_verdict"].startswith("blocked_")
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_verify_5366_mocked_live_run_writes_clean_artifact(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5366: live mocked SOTA prompt rows can open the structured gate."""
++
++    gguf = _minimal_gguf(tmp_path / "gemma-4-31B-it-Q4_K_M.gguf")
++    calls: list[tuple[str, str, int]] = []
++
++    def generation_probe(**kwargs: Any) -> dict[str, Any]:
++        prompt_spec = kwargs["prompt_spec"]
++        variant = kwargs["variant"]
++        assert kwargs["model_spec"]["hf_id"] == "unsloth/gemma-4-31B-it-GGUF"
++        assert kwargs["max_tokens"] == 1024
++        calls.append((prompt_spec["prompt_id"], kwargs["model_spec"]["hf_id"], kwargs["max_tokens"]))
++        payload = prompt_spec["target_final_object"]
++        return {
++            "completed": True,
++            "timed_out": False,
++            "returncode": 0,
++            "stdout": (
++                "[Start thinking]\n"
++                "free reasoning remains outside the final JSON\n"
++                f"{variant['sentinel']} "
++                f"{json.dumps(payload, sort_keys=True, separators=(',', ':'))} "
++                f"{variant['end_sentinel']}"
++            ),
++            "stderr": "",
++            "wall_clock_s": 15.25,
++            "generated_token_count": 42,
++            "gpu_memory_receipts": {
++                "before": {"used_mb": 4},
++                "after_load": {"used_mb": 8192},
++                "after_generate": {"used_mb": 8192},
++                "max_memory_delta_mb": 8188,
++                "offload_evidence": True,
++            },
++        }
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "experiment_5366.json",
++        exp5365_artifact=_ready_exp5365(),
++        model_resolver=lambda hf_id, _quant: (
++            str(gguf) if hf_id == "unsloth/gemma-4-31B-it-GGUF" else None
++        ),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        generation_probe=generation_probe,
++        tests_run=[TEST_COMMAND],
++        write=True,
++    )
++
++    mod.validate_artifact(artifact)
++    assert len(calls) == len(exp5351.DEFAULT_CALIBRATION_PROMPTS)
++    assert artifact["status"] == "complete"
++    assert artifact["structured_protocol_clean"] is True
++    assert artifact["selected_model_spec"]["hf_id"] == "unsloth/gemma-4-31B-it-GGUF"
++    assert [row["hf_id"] for row in artifact["MODEL_SPECS"]] == list(mod.MANDATED_HF_IDS)
++    assert artifact["inference_substrate"]["loader_family"] == "llama.cpp/llama-cpp-python"
++    assert artifact["inference_substrate"]["live_local_sota_inference_ran"] is True
++    assert artifact["no_autotokenizer_used"] is True
++    assert artifact["prompt_count"] == 4
++    assert artifact["parse_success_rate"] == pytest.approx(1.0)
++    assert artifact["schema_success_rate"] == pytest.approx(1.0)
++    assert artifact["final_json_extraction_rate"] == pytest.approx(1.0)
++    assert artifact["semantic_success_rate"] == pytest.approx(1.0)
++    assert artifact["truncation_failure_rate"] == pytest.approx(0.0)
++    assert artifact["unsafe_false_accepts"] == 0
++    assert artifact["completion_slack_min_tokens"] == _ready_exp5365()[
++        "completion_slack_min_tokens"
++    ]
++    assert artifact["methodology_duration_s"] == pytest.approx(61.0)
++    assert artifact["protocol_settings"]["max_tokens"] == 1024
++    assert artifact["honest_verdict"].startswith("complete:")
++
++
++def test_req_verify_5366_blocks_when_exp5365_gate_not_ready(tmp_path: Path) -> None:
++    """REQ-VERIFY-5366: Exp5365 readiness is a hard gate before generation."""
++
++    not_ready = _ready_exp5365()
++    not_ready["grammar_budget_protocol_ready"] = False
++    calls: list[str] = []
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "blocked_gate.json",
++        exp5365_artifact=not_ready,
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        generation_probe=lambda **kwargs: calls.append(kwargs["prompt_spec"]["prompt_id"]) or {},
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++
++    assert calls == []
++    assert artifact["status"] == "blocked"
++    assert artifact["grammar_budget_protocol_ready"] is False
++    assert artifact["MODEL_SPECS"] == mod.default_model_specs_unresolved()
++    assert artifact["selected_model_spec"] is None
++    assert artifact["gpu_or_offload_receipt"]["blocked_preconditions"] == [
++        "exp5365_grammar_budget_protocol_not_ready"
++    ]
++    assert artifact["honest_verdict"].startswith("blocked_exp5365")
++    mod.validate_artifact(artifact)
++
++    missing_gate = mod.run(
++        root=tmp_path,
++        artifact_path=Path("relative-blocked.json"),
++        exp5365_path=tmp_path / "missing-exp5365.json",
++        tests_run=[TEST_COMMAND],
++        write=True,
++    )
++    assert (tmp_path / "relative-blocked.json").is_file()
++    assert missing_gate["grammar_budget_protocol_ready"] is False
++
++    gguf = _minimal_gguf(tmp_path / "runtime-fails.gguf")
++
++    def raising_generation_probe(**_kwargs: Any) -> dict[str, Any]:
++        raise RuntimeError("fixture generation failure")
++
++    generation_failed = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "generation-failed.json",
++        exp5365_artifact=_ready_exp5365(),
++        model_resolver=lambda hf_id, _quant: (
++            str(gguf) if hf_id == "unsloth/gemma-4-31B-it-GGUF" else None
++        ),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        generation_probe=raising_generation_probe,
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++    assert generation_failed["status"] == "blocked"
++    assert "live_generation_failed" in generation_failed["gpu_or_offload_receipt"][
++        "blocked_preconditions"
++    ]
++    assert generation_failed["prompt_count"] == 4
++
++
++def test_req_verify_5366_artifact_validation_rejects_contract_drift(tmp_path: Path) -> None:
++    """REQ-VERIFY-5366: artifact validation rejects malformed live-gate fields."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "unused.json",
++        exp5365_artifact=_ready_exp5365(),
++        model_resolver=lambda _hf_id, _quant: None,
++        runtime_probe=lambda **_kwargs: _runtime_receipt(blocked=["no_mandated_sota_gguf"]),
++        tests_run=[TEST_COMMAND],
++        write=False,
++    )
++    missing_path = tmp_path / "missing.gguf"
++    invalid_path = tmp_path / "invalid.gguf"
++    invalid_path.write_bytes(b"NOPE" + struct.pack("<IQQ", 3, 1, 1))
++    truncated_path = tmp_path / "truncated.gguf"
++    truncated_path.write_bytes(b"GGUF")
++    bad_version_path = tmp_path / "bad-version.gguf"
++    bad_version_path.write_bytes(b"GGUF" + struct.pack("<IQQ", 9, 1, 1))
++
++    resolved = mod.resolve_model_specs(
++        lambda hf_id, _quant: (
++            str(missing_path)
++            if hf_id == "unsloth/Qwen3.6-35B-A3B-GGUF"
++            else str(invalid_path)
++            if hf_id == "unsloth/gemma-4-31B-it-GGUF"
++            else None
++        )
++    )
++    assert resolved[0]["blocked_preconditions"] == ["model_file_missing"]
++    assert resolved[1]["status"] == "blocked_metadata_unreadable"
++    with pytest.raises(ValueError, match="truncated GGUF"):
++        mod.read_gguf_header(truncated_path)
++    with pytest.raises(ValueError, match="not a GGUF"):
++        mod.read_gguf_header(invalid_path)
++    with pytest.raises(ValueError, match="unsupported GGUF version"):
++        mod.read_gguf_header(bad_version_path)
++
++    def clone() -> dict[str, Any]:
++        return json.loads(json.dumps(artifact))
++
++    malformed_cases = [
++        (lambda a: (a.pop("status"), a)[1], "missing required fields"),
++        (lambda a: (a.__setitem__("status", "running"), a)[1], "status must be complete or blocked"),
++        (
++            lambda a: (a.__setitem__("grammar_budget_protocol_ready", "yes"), a)[1],
++            "grammar_budget_protocol_ready must be boolean",
++        ),
++        (
++            lambda a: (a.__setitem__("structured_protocol_clean", "false"), a)[1],
++            "structured_protocol_clean must be boolean",
++        ),
++        (
++            lambda a: (a.__setitem__("MODEL_SPECS", []), a)[1],
++            "MODEL_SPECS must contain all mandated SOTA GGUF specs",
++        ),
++        (
++            lambda a: (a.__setitem__("MODEL_SPECS", "bad"), a)[1],
++            "MODEL_SPECS must contain all mandated SOTA GGUF specs",
++        ),
++        (
++            lambda a: (a.__setitem__("selected_model_spec", {"hf_id": "legacy/smoke"}), a)[1],
++            "selected_model_spec must be null or one mandated model spec",
++        ),
++        (
++            lambda a: (a.__setitem__("inference_substrate", "live"), a)[1],
++            "inference_substrate must be object",
++        ),
++        (
++            lambda a: (a.__setitem__("gpu_or_offload_receipt", []), a)[1],
++            "gpu_or_offload_receipt must be object",
++        ),
++        (
++            lambda a: (a.__setitem__("no_autotokenizer_used", False), a)[1],
++            "no_autotokenizer_used must be true",
++        ),
++        (
++            lambda a: (a.__setitem__("prompt_count", "0"), a)[1],
++            "prompt_count must be non-negative integer",
++        ),
++        (
++            lambda a: (a.__setitem__("parse_success_rate", 2.0), a)[1],
++            "parse_success_rate must be in [0, 1]",
++        ),
++        (
++            lambda a: (a.__setitem__("unsafe_false_accepts", -1), a)[1],
++            "unsafe_false_accepts must be non-negative integer",
++        ),
++        (
++            lambda a: (a.__setitem__("completion_slack_min_tokens", "982"), a)[1],
++            "completion_slack_min_tokens must be integer",
++        ),
++        (
++            lambda a: (a.__setitem__("methodology_duration_s", "0"), a)[1],
++            "methodology_duration_s must be numeric",
++        ),
++        (
++            lambda a: (a.__setitem__("honest_verdict", "done"), a)[1],
++            "honest_verdict must start with complete: or blocked_",
++        ),
++        (
++            lambda a: (
++                a.__setitem__("status", "complete"),
++                a.__setitem__("grammar_budget_protocol_ready", False),
++                a["inference_substrate"].__setitem__("live_local_sota_inference_ran", True),
++                a.__setitem__("selected_model_spec", {"hf_id": "unsloth/gemma-4-31B-it-GGUF"}),
++                a,
++            )[4],
++            "complete status requires Exp5365 grammar budget readiness",
++        ),
++        (
++            lambda a: (
++                a.__setitem__("status", "complete"),
++                a["inference_substrate"].__setitem__("live_local_sota_inference_ran", False),
++                a,
++            )[2],
++            "complete status requires live local SOTA inference",
++        ),
++        (
++            lambda a: (
++                a.__setitem__("structured_protocol_clean", True),
++                a.__setitem__("parse_success_rate", 0.94),
++                a,
++            )[2],
++            "structured_protocol_clean thresholds are not satisfied",
++        ),
++        (
++            lambda a: (a["field_provenance"].pop("status"), a)[1],
++            "field_provenance must cover required fields",
++        ),
++    ]
++
++    for mutate, expected in malformed_cases:
++        joined = "; ".join(mod.artifact_schema_errors(mutate(clone())))
++        assert expected in joined
++
++    with pytest.raises(AssertionError, match="no_autotokenizer_used"):
++        bad = clone()
++        bad["no_autotokenizer_used"] = False
++        mod.validate_artifact(bad)
+-- 
+2.55.0
+

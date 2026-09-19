@@ -1,0 +1,2211 @@
+From 837e442410011f76426110403931c7ec811889c5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 21:45:40 -0400
+Subject: [PATCH 10054/11362] [conductor] Bounded-treewidth exact Ising
+ reference
+
+Automated research step by research conductor.
+Task ID: exp6657-bounded-treewidth-ising-reference
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |   49 +
+ openspec/capabilities/samplers/spec.md        |   73 +
+ ops/dogfood-memory.json                       |    2 +-
+ ..._6657_bounded_treewidth_ising_reference.py | 1434 +++++++++++++++++
+ ...657_bounded_treewidth_ising_reference.json |    1 +
+ ..._6657_bounded_treewidth_ising_reference.py |  582 +++++++
+ 6 files changed, 2140 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6657_bounded_treewidth_ising_reference.py
+ create mode 100644 results/experiment_6657_bounded_treewidth_ising_reference.json
+ create mode 100644 tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 09779e7110..37c8cef822 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -58177,3 +58177,52 @@ the checksum or row recomputation.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6650 and SCENARIO-REPORT-6650-* | Implemented (`python/carnot/experiment_6650_twin_prefix_verifier_map.py`) | Implemented (`tests/python/test_experiment_6650_twin_prefix_verifier_map.py`; preconditions, recomputation, blocked gates, checksum, and atomic-write coverage) |
++
++### REQ-REPORT-6657: Exact Ising Reference Evidence SHALL Recompute From Rows
++
++Exp6657 SHALL atomically write
++`results/experiment_6657_bounded_treewidth_ising_reference.json`. The artifact
++SHALL include every field named in the V580 task contract. Its fixture manifest
++SHALL bind graph, coupling, field, decomposition, and sampling inputs by hash.
++Its decomposition, parity, normalized-mass, sample, timing, rejection, and
++per-unit rows SHALL remain visible.
++
++The aggregate SHALL rebuild readiness and maximum errors only from those rows.
++A ready result SHALL use `status=complete_bounded_treewidth_exact_reference_ready`,
++`honest_verdict` with a terminal `complete:` prefix, `verdict_class=null`, and
++`ising_reference_ready=true`. It SHALL state that setup and sample times are
++receipts, not a performance claim. A blocked result SHALL start its status and
++verdict with `blocked_`, use `verdict_class=blocked`, keep readiness false, and
++record each failed check plus its observed value in `gate_check_summary`.
++
++The prior-failure receipt SHALL bind the three Exp6639 conductor terminal
++records and explain the changed technique and scope. Field provenance SHALL
++name source, hash, reducer, and schema lineage. The final checksum SHALL bind
++all content except its own value. Protected hashes SHALL prove that the task did
++not change protected orchestration and operator records.
++
++#### SCENARIO-REPORT-6657-READY
++
++**Given** every supported and rejected fixture has a passing row
++**When** the artifact recomputes all gates
++**Then** readiness is true, the verdict class is null, and no speed claim exists.
++
++#### SCENARIO-REPORT-6657-BLOCKED
++
++**Given** any decomposition, parity, normalization, sampling, rejection, test,
++or protection check fails
++**When** the artifact finalizes
++**Then** readiness is false and the failed row and observed value remain visible.
++
++#### SCENARIO-REPORT-6657-ATOMIC-CHECKSUM
++
++**Given** a complete or blocked artifact
++**When** Exp6657 writes and validates it
++**Then** readers see one complete JSON document and any content mutation breaks
++the checksum or row recomputation.
++
++## Implementation Status (REQ-REPORT-6657)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6657 and SCENARIO-REPORT-6657-* | Implemented (`python/carnot/experiment_6657_bounded_treewidth_ising_reference.py`) | Implemented (`tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py`; row recomputation, atomic write, checksum, blocked gates, and provenance coverage) |
+diff --git a/openspec/capabilities/samplers/spec.md b/openspec/capabilities/samplers/spec.md
+index 86cd24936b..26b3771915 100644
+--- a/openspec/capabilities/samplers/spec.md
++++ b/openspec/capabilities/samplers/spec.md
+@@ -4844,3 +4844,76 @@ probabilities, setup cost, sampling wall time, and content hashes
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-SAMPLER-6639 | Planned (`python/carnot/experiment_6639_kac_ward_planar_reference.py`, `results/experiment_6639_kac_ward_planar_reference.json`) | Planned (`tests/python/test_experiment_6639_kac_ward_planar_reference.py`) |
++
++### REQ-SAMPLER-6657: Bounded-Treewidth Exact Ising Reference
++
++Carnot SHALL provide a CPU-only exact Ising reference at
++`python/carnot/experiment_6657_bounded_treewidth_ising_reference.py`.
++The reference SHALL use deterministic variable elimination on simple finite
++graphs. It SHALL support only `{-1,+1}` spins, the energy
++`E(s) = -sum_(i,j) J_ij s_i s_j - sum_i h_i s_i`, positive temperature,
++at most ten spins, and a validated tree-decomposition width of at most four.
++It SHALL make no speed or hardware claim.
++
++- REQ-SAMPLER-6657-DECOMPOSITION: The reference SHALL construct a
++  deterministic min-fill elimination order and derived bags. It SHALL validate
++  bag vertices, tree structure, vertex and edge coverage, width, and the
++  running-intersection property before inference.
++- REQ-SAMPLER-6657-ELIMINATION: The reference SHALL compute the log partition
++  with log-space factor elimination. Each undirected coupling SHALL enter the
++  energy once. Fields and couplings SHALL follow the shared Carnot Ising
++  convention.
++- REQ-SAMPLER-6657-NORMALIZATION: The reference SHALL return configuration log
++  probabilities and probabilities from the factor-elimination partition. The
++  complete supported state space SHALL sum to one within the frozen tolerance.
++- REQ-SAMPLER-6657-MARGINALS: The reference SHALL return exact node and edge
++  marginals. It SHALL compare them with an independent scalar brute-force
++  enumeration on every supported fixture.
++- REQ-SAMPLER-6657-SAMPLING: The reference SHALL draw independent ancestral
++  samples from the stored elimination conditionals. A fixed NumPy PCG64 stream
++  SHALL reproduce sample bytes. Sample likelihood and frequency checks SHALL
++  use frozen seeds, counts, and tolerances.
++- REQ-SAMPLER-6657-REJECTION: The reference SHALL reject malformed graphs,
++  malformed decompositions, nonfinite model values, unsupported sizes, and
++  graphs whose deterministic certified width exceeds four. Rejected fixtures
++  SHALL not enter exact or sampling aggregates.
++- REQ-SAMPLER-6657-PARITY: At least twelve supported fixtures SHALL cover
++  trees, bounded cycles, nonzero fields, ferromagnetic, antiferromagnetic, and
++  frustrated couplings. Partition, every configuration likelihood, node
++  marginals, and edge marginals SHALL match brute force within frozen
++  tolerances. Explicit unsupported fixtures SHALL also run.
++- REQ-SAMPLER-6657-READINESS: `ising_reference_ready` SHALL be true only when
++  decomposition, parity, normalized mass, sampling, rejection, test, and
++  protected-file checks pass. A ready artifact SHALL use `verdict_class=null`,
++  `verifier_is_oracle=true`, and
++  `inference_substrate=cpu_bounded_treewidth_junction_tree_exact_sampling_no_llm`.
++  A blocked artifact SHALL name each failed check and observed value.
++
++### SCENARIO-SAMPLER-6657-EXACT-PARITY
++
++**Given** the frozen supported Ising fixtures and deterministic decompositions
++**When** factor elimination computes partitions, probabilities, and marginals
++**Then** every value matches independent brute-force enumeration
++**And** each complete probability table has unit mass within tolerance.
++
++### SCENARIO-SAMPLER-6657-ANCESTRAL-SAMPLING
++
++**Given** one validated elimination trace and a fixed PCG64 seed
++**When** the reference draws complete states in reverse elimination order
++**Then** each draw is independent of prior chain state
++**And** replay produces the same sample hash
++**And** empirical state, node, and edge frequencies pass frozen checks.
++
++### SCENARIO-SAMPLER-6657-FAIL-CLOSED
++
++**Given** a graph above width four, a self-loop, a duplicate edge, a nonfinite
++value, an oversized graph, or a malformed supplied decomposition
++**When** validation runs
++**Then** the instance is rejected before it can enter a ready aggregate
++**And** the rejection row records the expected rule and observed error.
++
++## Implementation Status (REQ-SAMPLER-6657)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-SAMPLER-6657 and SCENARIO-SAMPLER-6657-* | Implemented (`python/carnot/experiment_6657_bounded_treewidth_ising_reference.py`) | Implemented (`tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py`; exact parity, rejection, sampling, artifact validation, and 100% scoped statement coverage) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 9c47f12685..fbee833bb8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5130,
++  "experiments_checked": 5131,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6657_bounded_treewidth_ising_reference.py b/python/carnot/experiment_6657_bounded_treewidth_ising_reference.py
+new file mode 100644
+index 0000000000..04bf92fe96
+--- /dev/null
++++ b/python/carnot/experiment_6657_bounded_treewidth_ising_reference.py
+@@ -0,0 +1,1434 @@
++"""Build a bounded exact Ising reference with variable elimination.
++
++The module accepts only tiny simple graphs with a validated tree-decomposition
++width of at most four. It computes exact probabilities in log space and draws
++independent ancestral samples from the elimination trace. Full enumeration is
++used only as an independent small-state verifier. Timings are evidence receipts,
++not a speed claim.
++
++Spec refs: REQ-SAMPLER-6657, REQ-REPORT-6657,
++SCENARIO-SAMPLER-6657-EXACT-PARITY,
++SCENARIO-SAMPLER-6657-ANCESTRAL-SAMPLING,
++SCENARIO-SAMPLER-6657-FAIL-CLOSED,
++SCENARIO-REPORT-6657-ATOMIC-CHECKSUM.
++"""
++
++from __future__ import annotations
++
++import argparse
++from dataclasses import dataclass, field
++from hashlib import sha256
++from importlib import metadata
++from itertools import product
++import json
++import math
++import os
++from pathlib import Path
++import platform
++import shutil
++import tempfile
++import time
++from typing import Any, Callable, Mapping, Sequence
++
++import numpy as np
++
++
++INFERENCE_SUBSTRATE = "cpu_bounded_treewidth_junction_tree_exact_sampling_no_llm"
++RESULT_RELATIVE_PATH = Path("results/experiment_6657_bounded_treewidth_ising_reference.json")
++TEST_RECEIPT_ENV = "CARNOT_6657_TEST_RECEIPTS"
++MAX_TREEWIDTH = 4
++MAX_SPINS = 10
++DEFAULT_SAMPLE_COUNT = 4096
++DECOMPOSITION_SEED = 6657
++EXACT_TOLERANCES: dict[str, float] = {
++    "partition": 2.0e-11,
++    "probability": 2.0e-12,
++    "log_probability": 2.0e-11,
++    "marginal": 2.0e-11,
++    "normalization": 2.0e-12,
++}
++SAMPLE_TOLERANCES: dict[str, float] = {"state": 0.06, "node": 0.05, "edge": 0.06}
++REQUIRED_TEST_SCOPES = (
++    "focused_python",
++    "scoped_coverage",
++    "full_python_suite",
++    "spec_coverage",
++    "row_artifact_checks",
++    "adversarial",
++    "sampling_e2e",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "honest_verdict",
++    "verdict_class",
++    "gate_check_summary",
++    "prior_failure_receipt",
++    "supported_domain_contract",
++    "fixture_manifest",
++    "decomposition_rows",
++    "exact_parity_rows",
++    "exact_sample_rows",
++    "normalized_mass_receipts",
++    "timing_rows",
++    "ising_reference_ready",
++    "per_unit_rows",
++    "aggregate_row_recomputation",
++    "preconditions_checked",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "random_seed",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++)
++PROTECTED_RELATIVE_PATHS = (
++    Path("AGENTS.md"),
++    Path("CODEX.md"),
++    Path("CLAUDE.md"),
++    Path("research-roadmap.yaml"),
++    Path("scripts/research_conductor.py"),
++    Path("research-references.md"),
++    Path("ops/e2e-test-plan.md"),
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    Path("_bmad/traceability.md"),
++)
++SPINS = (-1, 1)
++
++
++class UnsupportedGraphError(ValueError):
++    """Identify an input that lies outside the frozen exact-reference contract."""
++
++
++@dataclass(frozen=True)
++class IsingInstance:
++    """Store one finite Ising graph and its expected fixture outcome."""
++
++    instance_id: str
++    n_spins: int
++    edges: tuple[tuple[int, int, float], ...]
++    fields: tuple[float, ...]
++    temperature: float
++    seed: int
++    family: str = "custom"
++    expected_supported: bool = True
++    expected_rejection: str | None = None
++
++    @property
++    def fixture_sha256(self) -> str:
++        """Bind every value that can change the target distribution."""
++
++        return _sha256_json(
++            {
++                "instance_id": self.instance_id,
++                "n_spins": self.n_spins,
++                "edges": [list(edge) for edge in self.edges],
++                "fields": list(self.fields),
++                "temperature": self.temperature,
++                "seed": self.seed,
++                "family": self.family,
++                "expected_supported": self.expected_supported,
++                "expected_rejection": self.expected_rejection,
++            }
++        )
++
++
++@dataclass(frozen=True)
++class TreeDecomposition:
++    """Store deterministic bags, their tree, and the elimination certificate."""
++
++    bags: tuple[tuple[int, ...], ...]
++    tree_edges: tuple[tuple[int, int], ...]
++    elimination_order: tuple[int, ...]
++    width: int
++
++
++@dataclass(frozen=True)
++class _Factor:
++    """Store one log-space factor over a stable variable order."""
++
++    scope: tuple[int, ...]
++    values: np.ndarray = field(compare=False, repr=False)
++
++
++@dataclass(frozen=True)
++class _Conditional:
++    """Store one exact ancestral conditional for a removed variable."""
++
++    variable: int
++    context: tuple[int, ...]
++    probability_plus: Mapping[tuple[int, ...], float] = field(compare=False, repr=False)
++
++
++@dataclass(frozen=True)
++class ExactSolution:
++    """Expose the validated decomposition, partition, and sampling trace."""
++
++    decomposition: TreeDecomposition
++    log_partition: float
++    conditionals: tuple[_Conditional, ...] = field(compare=False, repr=False)
++
++
++@dataclass(frozen=True)
++class ExperimentConfig:
++    """Freeze the only sample budget and fixture matrix used for readiness."""
++
++    sample_count: int = DEFAULT_SAMPLE_COUNT
++
++
++class DeterministicEvidenceClock:
++    """Give unit tests stable nonzero timing receipts without hiding real timing in production."""
++
++    def __init__(self) -> None:
++        self._value = 0.0
++
++    def __call__(self) -> float:
++        self._value += 0.001
++        return self._value
++
++
++def _canonical_json(value: Any) -> bytes:
++    """Encode evidence deterministically and reject nonfinite JSON values."""
++
++    try:
++        return json.dumps(
++            value,
++            sort_keys=True,
++            separators=(",", ":"),
++            ensure_ascii=True,
++            allow_nan=False,
++        ).encode("utf-8")
++    except (TypeError, ValueError) as exc:
++        raise ValueError("nonfinite JSON or unsupported evidence value") from exc
++
++
++def _sha256_json(value: Any) -> str:
++    """Hash one canonical JSON value."""
++
++    return sha256(_canonical_json(value)).hexdigest()
++
++
++def sha256_file(path: Path) -> str:
++    """Hash a file without interpreting its content."""
++
++    digest = sha256()
++    with path.open("rb") as handle:
++        for block in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(block)
++    return digest.hexdigest()
++
++
++def frozen_fixtures() -> tuple[IsingInstance, ...]:
++    """Return twelve supported cases and three explicit rejection controls."""
++
++    fixtures = (
++        IsingInstance("singleton_field", 1, (), (0.31,), 1.0, 6657001, "tree"),
++        IsingInstance("edge_ferro", 2, ((0, 1, 0.73),), (0.0, 0.0), 0.9, 6657002, "ferromagnetic"),
++        IsingInstance(
++            "path4_field",
++            4,
++            ((0, 1, 0.4), (1, 2, -0.3), (2, 3, 0.6)),
++            (0.2, -0.1, 0.0, 0.3),
++            1.2,
++            6657003,
++            "field",
++        ),
++        IsingInstance(
++            "star5_antiferro",
++            5,
++            ((0, 1, -0.4), (0, 2, -0.5), (0, 3, -0.6), (0, 4, -0.3)),
++            (0.0,) * 5,
++            1.1,
++            6657004,
++            "antiferromagnetic",
++        ),
++        IsingInstance(
++            "tree6_mixed",
++            6,
++            ((0, 1, 0.5), (1, 2, -0.4), (1, 3, 0.2), (3, 4, -0.7), (3, 5, 0.35)),
++            (0.1, 0.0, -0.2, 0.0, 0.15, -0.05),
++            0.85,
++            6657005,
++            "tree",
++        ),
++        IsingInstance(
++            "triangle_ferro",
++            3,
++            ((0, 1, 0.6), (1, 2, 0.55), (0, 2, 0.45)),
++            (0.0,) * 3,
++            1.3,
++            6657006,
++            "cycle",
++        ),
++        IsingInstance(
++            "frustrated_triangle",
++            3,
++            ((0, 1, 0.7), (1, 2, 0.5), (0, 2, -0.65)),
++            (0.05, -0.08, 0.02),
++            0.95,
++            6657007,
++            "frustrated",
++        ),
++        IsingInstance(
++            "cycle4_antiferro",
++            4,
++            ((0, 1, -0.5), (1, 2, -0.4), (2, 3, -0.6), (0, 3, -0.45)),
++            (0.0,) * 4,
++            1.4,
++            6657008,
++            "antiferromagnetic",
++        ),
++        IsingInstance(
++            "cycle4_field",
++            4,
++            ((0, 1, 0.4), (1, 2, -0.5), (2, 3, 0.35), (0, 3, 0.25)),
++            (0.2, -0.15, 0.1, 0.0),
++            1.0,
++            6657009,
++            "field",
++        ),
++        IsingInstance(
++            "cycle5_frustrated",
++            5,
++            ((0, 1, 0.5), (1, 2, 0.5), (2, 3, 0.5), (3, 4, 0.5), (0, 4, -0.5)),
++            (0.0,) * 5,
++            1.15,
++            6657010,
++            "frustrated",
++        ),
++        IsingInstance(
++            "ladder6_ferro",
++            6,
++            (
++                (0, 1, 0.35),
++                (1, 2, 0.45),
++                (3, 4, 0.4),
++                (4, 5, 0.5),
++                (0, 3, 0.3),
++                (1, 4, 0.55),
++                (2, 5, 0.25),
++            ),
++            (0.0,) * 6,
++            0.9,
++            6657011,
++            "ferromagnetic",
++        ),
++        IsingInstance(
++            "complete_k5_tw4",
++            5,
++            tuple(
++                (left, right, 0.18 * (1 if (left + right) % 3 else -1))
++                for left in range(5)
++                for right in range(left + 1, 5)
++            ),
++            (0.1, -0.05, 0.0, 0.08, -0.12),
++            1.25,
++            6657012,
++            "frustrated",
++        ),
++        IsingInstance(
++            "unsupported_k6_tw5",
++            6,
++            tuple((left, right, 0.2) for left in range(6) for right in range(left + 1, 6)),
++            (0.0,) * 6,
++            1.0,
++            6657091,
++            "unsupported",
++            False,
++            "treewidth",
++        ),
++        IsingInstance(
++            "unsupported_self_loop",
++            3,
++            ((0, 0, 0.2),),
++            (0.0,) * 3,
++            1.0,
++            6657092,
++            "unsupported",
++            False,
++            "self-loop",
++        ),
++        IsingInstance(
++            "unsupported_duplicate_edge",
++            3,
++            ((0, 1, 0.2), (1, 0, -0.3)),
++            (0.0,) * 3,
++            1.0,
++            6657093,
++            "unsupported",
++            False,
++            "duplicate edge",
++        ),
++    )
++    return fixtures
++
++
++def validate_instance(instance: IsingInstance) -> dict[str, Any]:
++    """Validate graph syntax before decomposition or numerical work starts."""
++
++    if not isinstance(instance.n_spins, int) or not 1 <= instance.n_spins:
++        raise UnsupportedGraphError("spin count must be a positive integer")
++    if instance.n_spins > MAX_SPINS:
++        raise UnsupportedGraphError(f"spin count exceeds supported limit {MAX_SPINS}")
++    if len(instance.fields) != instance.n_spins:
++        raise UnsupportedGraphError("field count must match spin count")
++    if not all(math.isfinite(float(value)) for value in instance.fields):
++        raise UnsupportedGraphError("fields must be finite")
++    if not math.isfinite(float(instance.temperature)) or instance.temperature <= 0.0:
++        raise UnsupportedGraphError("temperature must be finite and positive")
++    normalized: set[tuple[int, int]] = set()
++    for left, right, coupling in instance.edges:
++        if not isinstance(left, int) or not isinstance(right, int):
++            raise UnsupportedGraphError("edge endpoint must be an integer")
++        if not 0 <= left < instance.n_spins or not 0 <= right < instance.n_spins:
++            raise UnsupportedGraphError("edge endpoint lies outside the graph")
++        if left == right:
++            raise UnsupportedGraphError("self-loop is unsupported")
++        edge = tuple(sorted((left, right)))
++        if edge in normalized:
++            raise UnsupportedGraphError("duplicate edge is unsupported")
++        normalized.add(edge)
++        if not math.isfinite(float(coupling)):
++            raise UnsupportedGraphError("couplings must be finite")
++    return {
++        "valid": True,
++        "simple_graph": True,
++        "finite_fields_and_couplings": True,
++        "n_spins": instance.n_spins,
++        "edge_count": len(instance.edges),
++    }
++
++
++def deterministic_tree_decomposition(instance: IsingInstance) -> TreeDecomposition:
++    """Build a stable min-fill order and the matching elimination bags."""
++
++    validate_instance(instance)
++    adjacency = {vertex: set() for vertex in range(instance.n_spins)}
++    for left, right, _ in instance.edges:
++        adjacency[left].add(right)
++        adjacency[right].add(left)
++    remaining = set(adjacency)
++    bags: list[tuple[int, ...]] = []
++    order: list[int] = []
++    while remaining:
++
++        def key(vertex: int) -> tuple[int, int, int]:
++            neighbors = sorted(adjacency[vertex] & remaining)
++            missing = sum(
++                second not in adjacency[first]
++                for offset, first in enumerate(neighbors)
++                for second in neighbors[offset + 1 :]
++            )
++            return missing, len(neighbors), vertex
++
++        vertex = min(remaining, key=key)
++        neighbors = sorted(adjacency[vertex] & remaining - {vertex})
++        bags.append(tuple(sorted((vertex, *neighbors))))
++        order.append(vertex)
++        for offset, first in enumerate(neighbors):
++            for second in neighbors[offset + 1 :]:
++                adjacency[first].add(second)
++                adjacency[second].add(first)
++        remaining.remove(vertex)
++
++    tree_edges: list[tuple[int, int]] = []
++    for index in range(len(bags) - 1):
++        separator = set(bags[index]) - {order[index]}
++        parent = next(
++            (later for later in range(index + 1, len(bags)) if separator <= set(bags[later])),
++            index + 1,
++        )
++        tree_edges.append((index, parent))
++    width = max(len(bag) - 1 for bag in bags)
++    return TreeDecomposition(tuple(bags), tuple(tree_edges), tuple(order), width)
++
++
++def validate_tree_decomposition(
++    instance: IsingInstance, decomposition: TreeDecomposition
++) -> dict[str, Any]:
++    """Check the certificate as a tree decomposition, not only as a bag list."""
++
++    validate_instance(instance)
++    bags = decomposition.bags
++    if not bags or any(not bag for bag in bags):
++        raise UnsupportedGraphError("vertex coverage requires nonempty decomposition bags")
++    for bag in bags:
++        if len(set(bag)) != len(bag) or any(
++            not isinstance(vertex, int) or not 0 <= vertex < instance.n_spins for vertex in bag
++        ):
++            raise UnsupportedGraphError("bag vertices must be unique graph vertices")
++    graph = {index: set() for index in range(len(bags))}
++    normalized_tree_edges: set[tuple[int, int]] = set()
++    for left, right in decomposition.tree_edges:
++        if (
++            not 0 <= left < len(bags)
++            or not 0 <= right < len(bags)
++            or left == right
++            or tuple(sorted((left, right))) in normalized_tree_edges
++        ):
++            raise UnsupportedGraphError("decomposition tree has an invalid edge")
++        edge = tuple(sorted((left, right)))
++        normalized_tree_edges.add(edge)
++        graph[left].add(right)
++        graph[right].add(left)
++    seen = {0}
++    frontier = [0]
++    while frontier:
++        current = frontier.pop()
++        for neighbor in graph[current] - seen:
++            seen.add(neighbor)
++            frontier.append(neighbor)
++    if len(normalized_tree_edges) != len(bags) - 1 or len(seen) != len(bags):
++        raise UnsupportedGraphError("decomposition tree must be connected and acyclic")
++    covered = set().union(*(set(bag) for bag in bags))
++    if covered != set(range(instance.n_spins)):
++        raise UnsupportedGraphError("vertex coverage is incomplete")
++    for left, right, _ in instance.edges:
++        if not any(left in bag and right in bag for bag in bags):
++            raise UnsupportedGraphError("edge coverage is incomplete")
++    for vertex in range(instance.n_spins):
++        holders = {index for index, bag in enumerate(bags) if vertex in bag}
++        reached = {next(iter(holders))}
++        pending = list(reached)
++        while pending:
++            current = pending.pop()
++            for neighbor in (graph[current] & holders) - reached:
++                reached.add(neighbor)
++                pending.append(neighbor)
++        if reached != holders:
++            raise UnsupportedGraphError("running intersection is invalid")
++    if tuple(sorted(decomposition.elimination_order)) != tuple(range(instance.n_spins)):
++        raise UnsupportedGraphError("elimination order must contain every vertex once")
++    observed_width = max(len(bag) - 1 for bag in bags)
++    if decomposition.width != observed_width:
++        raise UnsupportedGraphError("declared width does not match the bags")
++    if observed_width > MAX_TREEWIDTH:
++        raise UnsupportedGraphError(
++            f"certified treewidth {observed_width} exceeds supported treewidth {MAX_TREEWIDTH}"
++        )
++    return {
++        "valid": True,
++        "width": observed_width,
++        "tree": True,
++        "vertex_coverage": True,
++        "edge_coverage": True,
++        "running_intersection": True,
++    }
++
++
++def _initial_factors(instance: IsingInstance, evidence: Mapping[int, int]) -> list[_Factor]:
++    factors: list[_Factor] = []
++    inverse_temperature = 1.0 / instance.temperature
++    for vertex, field_value in enumerate(instance.fields):
++        factors.append(
++            _Factor(
++                (vertex,),
++                np.asarray([-field_value, field_value], dtype=np.float64) * inverse_temperature,
++            )
++        )
++    for left, right, coupling in instance.edges:
++        first, second = sorted((left, right))
++        values = (
++            np.asarray([[coupling, -coupling], [-coupling, coupling]], dtype=np.float64)
++            * inverse_temperature
++        )
++        factors.append(_Factor((first, second), values))
++    for vertex, spin in evidence.items():
++        if not isinstance(vertex, int) or not 0 <= vertex < instance.n_spins or spin not in SPINS:
++            raise UnsupportedGraphError("evidence must map graph vertices to -1 or +1")
++        values = np.asarray([0.0, -np.inf] if spin == -1 else [-np.inf, 0.0])
++        factors.append(_Factor((vertex,), values))
++    return factors
++
++
++def _combine(involved: Sequence[_Factor], scope: tuple[int, ...]) -> np.ndarray:
++    values = np.empty((2,) * len(scope), dtype=np.float64)
++    positions = {variable: index for index, variable in enumerate(scope)}
++    for index in np.ndindex(values.shape):
++        total = 0.0
++        for factor in involved:
++            factor_index = tuple(index[positions[variable]] for variable in factor.scope)
++            total += float(factor.values[factor_index])
++        values[index] = total
++    return values
++
++
++def _eliminate(
++    instance: IsingInstance,
++    decomposition: TreeDecomposition,
++    evidence: Mapping[int, int],
++    keep_conditionals: bool,
++) -> tuple[float, tuple[_Conditional, ...]]:
++    factors = _initial_factors(instance, evidence)
++    conditionals: list[_Conditional] = []
++    for variable in decomposition.elimination_order:
++        involved = [factor for factor in factors if variable in factor.scope]
++        factors = [factor for factor in factors if variable not in factor.scope]
++        context = tuple(sorted({item for factor in involved for item in factor.scope} - {variable}))
++        scope = (variable, *context)
++        joint = _combine(involved, scope)
++        with np.errstate(invalid="ignore"):
++            reduced = np.logaddexp(joint[0], joint[1])
++        if keep_conditionals:
++            probability_plus: dict[tuple[int, ...], float] = {}
++            context_shape = (2,) * len(context)
++            for context_index in np.ndindex(context_shape):
++                denominator = float(reduced[context_index])
++                probability_plus[tuple(SPINS[index] for index in context_index)] = float(
++                    math.exp(float(joint[(1, *context_index)]) - denominator)
++                )
++            conditionals.append(_Conditional(variable, context, probability_plus))
++        factors.append(_Factor(context, np.asarray(reduced)))
++    log_partition = sum(float(np.asarray(factor.values)) for factor in factors)
++    if not math.isfinite(log_partition):
++        raise UnsupportedGraphError("evidence has zero or nonfinite probability mass")
++    return log_partition, tuple(conditionals)
++
++
++def solve_exact(instance: IsingInstance) -> ExactSolution:
++    """Validate the decomposition and run exact log-space factor elimination."""
++
++    decomposition = deterministic_tree_decomposition(instance)
++    validate_tree_decomposition(instance, decomposition)
++    log_partition, conditionals = _eliminate(instance, decomposition, {}, True)
++    return ExactSolution(decomposition, log_partition, conditionals)
++
++
++def _validate_state(instance: IsingInstance, state: Sequence[int]) -> tuple[int, ...]:
++    normalized = tuple(int(value) for value in state)
++    if len(normalized) != instance.n_spins or any(value not in SPINS for value in normalized):
++        raise UnsupportedGraphError("spin state must match the graph and contain only -1 or +1")
++    return normalized
++
++
++def _log_weight(instance: IsingInstance, state: Sequence[int]) -> float:
++    spins = _validate_state(instance, state)
++    favorable = sum(field * spins[index] for index, field in enumerate(instance.fields))
++    favorable += sum(
++        coupling * spins[left] * spins[right] for left, right, coupling in instance.edges
++    )
++    return float(favorable / instance.temperature)
++
++
++def configuration_log_probability(
++    instance: IsingInstance, state: Sequence[int], solution: ExactSolution | None = None
++) -> float:
++    """Return one normalized log probability from the exact DP partition."""
++
++    active = solution or solve_exact(instance)
++    return _log_weight(instance, state) - active.log_partition
++
++
++def configuration_probability(
++    instance: IsingInstance, state: Sequence[int], solution: ExactSolution | None = None
++) -> float:
++    """Return one normalized probability without an unnormalized shortcut."""
++
++    return math.exp(configuration_log_probability(instance, state, solution))
++
++
++def _evidence_log_partition(
++    instance: IsingInstance, solution: ExactSolution, evidence: Mapping[int, int]
++) -> float:
++    return _eliminate(instance, solution.decomposition, evidence, False)[0]
++
++
++def _edge_id(left: int, right: int) -> str:
++    return f"{min(left, right)}-{max(left, right)}"
++
++
++def _pair_id(left_spin: int, right_spin: int) -> str:
++    return f"{left_spin},{right_spin}"
++
++
++def exact_marginals(
++    instance: IsingInstance, solution: ExactSolution | None = None
++) -> dict[str, Any]:
++    """Compute exact node and edge marginals with evidence partitions."""
++
++    active = solution or solve_exact(instance)
++    node_plus = [
++        math.exp(_evidence_log_partition(instance, active, {vertex: 1}) - active.log_partition)
++        for vertex in range(instance.n_spins)
++    ]
++    edge_joint: dict[str, dict[str, float]] = {}
++    for left, right, _ in instance.edges:
++        first, second = sorted((left, right))
++        edge_joint[_edge_id(first, second)] = {
++            _pair_id(first_spin, second_spin): math.exp(
++                _evidence_log_partition(instance, active, {first: first_spin, second: second_spin})
++                - active.log_partition
++            )
++            for first_spin in SPINS
++            for second_spin in SPINS
++        }
++    return {"node_plus": node_plus, "edge_joint": edge_joint}
++
++
++def brute_force_reference(instance: IsingInstance) -> dict[str, Any]:
++    """Enumerate scalar energies independently of the factor implementation."""
++
++    validate_instance(instance)
++    states = tuple(product(SPINS, repeat=instance.n_spins))
++    log_weights = np.asarray([_log_weight(instance, state) for state in states])
++    maximum = float(np.max(log_weights))
++    partition = math.exp(maximum) * float(np.sum(np.exp(log_weights - maximum)))
++    probabilities = np.exp(log_weights) / partition
++    node_plus = [
++        float(
++            sum(
++                probability
++                for state, probability in zip(states, probabilities, strict=True)
++                if state[vertex] == 1
++            )
++        )
++        for vertex in range(instance.n_spins)
++    ]
++    edge_joint: dict[str, dict[str, float]] = {}
++    for left, right, _ in instance.edges:
++        first, second = sorted((left, right))
++        edge_joint[_edge_id(first, second)] = {
++            _pair_id(first_spin, second_spin): float(
++                sum(
++                    probability
++                    for state, probability in zip(states, probabilities, strict=True)
++                    if state[first] == first_spin and state[second] == second_spin
++                )
++            )
++            for first_spin in SPINS
++            for second_spin in SPINS
++        }
++    return {
++        "states": states,
++        "probabilities": probabilities.tolist(),
++        "partition_function": partition,
++        "log_partition": math.log(partition),
++        "node_plus": node_plus,
++        "edge_joint": edge_joint,
++    }
++
++
++def cross_check_fixture(instance: IsingInstance) -> dict[str, Any]:
++    """Compare every exact output with independent brute-force enumeration."""
++
++    solution = solve_exact(instance)
++    brute = brute_force_reference(instance)
++    marginals = exact_marginals(instance, solution)
++    log_errors: list[float] = []
++    probability_errors: list[float] = []
++    mass = 0.0
++    for state, expected in zip(brute["states"], brute["probabilities"], strict=True):
++        observed_log = configuration_log_probability(instance, state, solution)
++        observed = math.exp(observed_log)
++        log_errors.append(abs(observed_log - math.log(expected)))
++        probability_errors.append(abs(observed - expected))
++        mass += observed
++    node_error = max(
++        (
++            abs(observed - expected)
++            for observed, expected in zip(marginals["node_plus"], brute["node_plus"], strict=True)
++        ),
++        default=0.0,
++    )
++    edge_error = max(
++        (
++            abs(value - brute["edge_joint"][edge_id][pair])
++            for edge_id, table in marginals["edge_joint"].items()
++            for pair, value in table.items()
++        ),
++        default=0.0,
++    )
++    row = {
++        "instance_id": instance.instance_id,
++        "partition_function_dp": math.exp(solution.log_partition),
++        "partition_function_brute_force": brute["partition_function"],
++        "partition_error": abs(math.exp(solution.log_partition) - brute["partition_function"]),
++        "log_probability_error_max": max(log_errors, default=0.0),
++        "probability_error_max": max(probability_errors, default=0.0),
++        "node_marginal_error_max": node_error,
++        "edge_marginal_error_max": edge_error,
++        "probability_mass": mass,
++        "normalization_error": abs(mass - 1.0),
++        "state_count": len(brute["states"]),
++        "tolerances": dict(EXACT_TOLERANCES),
++    }
++    row["passed"] = bool(
++        row["partition_error"] <= EXACT_TOLERANCES["partition"]
++        and row["log_probability_error_max"] <= EXACT_TOLERANCES["log_probability"]
++        and row["probability_error_max"] <= EXACT_TOLERANCES["probability"]
++        and row["node_marginal_error_max"] <= EXACT_TOLERANCES["marginal"]
++        and row["edge_marginal_error_max"] <= EXACT_TOLERANCES["marginal"]
++        and row["normalization_error"] <= EXACT_TOLERANCES["normalization"]
++    )
++    return row
++
++
++def independent_samples(
++    instance: IsingInstance,
++    sample_count: int,
++    seed: int,
++    solution: ExactSolution | None = None,
++) -> dict[str, Any]:
++    """Draw independent states from exact conditionals in reverse elimination order."""
++
++    if not isinstance(sample_count, int) or sample_count <= 0:
++        raise ValueError("sample_count must be a positive integer")
++    active = solution or solve_exact(instance)
++    rng = np.random.default_rng(int(seed))
++    rows: list[list[int]] = []
++    for _ in range(sample_count):
++        state: dict[int, int] = {}
++        for conditional in reversed(active.conditionals):
++            context = tuple(state[vertex] for vertex in conditional.context)
++            state[conditional.variable] = (
++                1 if rng.random() < conditional.probability_plus[context] else -1
++            )
++        rows.append([state[index] for index in range(instance.n_spins)])
++    sample_bytes = np.asarray(rows, dtype=np.int8, order="C").tobytes()
++    return {
++        "samples": rows,
++        "sample_count": sample_count,
++        "seed": int(seed),
++        "rng": "numpy.PCG64",
++        "sample_sha256": sha256(sample_bytes).hexdigest(),
++    }
++
++
++def sample_check_fixture(instance: IsingInstance, sample_count: int, seed: int) -> dict[str, Any]:
++    """Compare exact independent sample frequencies with the brute-force law."""
++
++    solution = solve_exact(instance)
++    brute = brute_force_reference(instance)
++    sample_receipt = independent_samples(instance, sample_count, seed, solution)
++    samples = [tuple(row) for row in sample_receipt["samples"]]
++    counts = {state: 0 for state in brute["states"]}
++    for state in samples:
++        counts[state] += 1
++    state_error = max(
++        abs(counts[state] / sample_count - probability)
++        for state, probability in zip(brute["states"], brute["probabilities"], strict=True)
++    )
++    node_error = max(
++        abs(
++            sum(state[vertex] == 1 for state in samples) / sample_count - brute["node_plus"][vertex]
++        )
++        for vertex in range(instance.n_spins)
++    )
++    edge_error = max(
++        (
++            abs(
++                sum(
++                    state[int(edge_id.split("-")[0])] == int(pair.split(",")[0])
++                    and state[int(edge_id.split("-")[1])] == int(pair.split(",")[1])
++                    for state in samples
++                )
++                / sample_count
++                - probability
++            )
++            for edge_id, table in brute["edge_joint"].items()
++            for pair, probability in table.items()
++        ),
++        default=0.0,
++    )
++    brute_map = {
++        state: probability
++        for state, probability in zip(brute["states"], brute["probabilities"], strict=True)
++    }
++    likelihood_error = max(
++        (
++            abs(
++                configuration_log_probability(instance, state, solution)
++                - math.log(brute_map[state])
++            )
++            for state in set(samples)
++        ),
++        default=0.0,
++    )
++    row = {
++        "instance_id": instance.instance_id,
++        "seed": int(seed),
++        "sample_count": sample_count,
++        "rng": sample_receipt["rng"],
++        "sample_sha256": sample_receipt["sample_sha256"],
++        "independent_draw_contract": "one fresh ancestral traversal per sample; no Markov-chain state",
++        "likelihood_error_max": likelihood_error,
++        "state_frequency_error_max": state_error,
++        "node_frequency_error_max": node_error,
++        "edge_frequency_error_max": edge_error,
++        "tolerances": dict(SAMPLE_TOLERANCES),
++        "sample_size_note": "4096 exact independent draws exceed the 1000-sample distributional floor for n<64.",
++    }
++    row["passed"] = bool(
++        likelihood_error <= EXACT_TOLERANCES["log_probability"]
++        and state_error <= SAMPLE_TOLERANCES["state"]
++        and node_error <= SAMPLE_TOLERANCES["node"]
++        and edge_error <= SAMPLE_TOLERANCES["edge"]
++    )
++    return row
++
++
++def protected_hashes(root: Path) -> dict[str, str]:
++    """Capture the protected repository inputs before evidence generation."""
++
++    return {
++        path.as_posix(): sha256_file(root / path) if (root / path).is_file() else "missing"
++        for path in PROTECTED_RELATIVE_PATHS
++    }
++
++
++def protected_files_unchanged(
++    before: Mapping[str, str], after: Mapping[str, str]
++) -> dict[str, Any]:
++    """Compare the complete protected path set without hiding additions or removals."""
++
++    rows = [
++        {
++            "path": path,
++            "before_sha256": before.get(path, "missing"),
++            "after_sha256": after.get(path, "missing"),
++            "unchanged": before.get(path) == after.get(path) and before.get(path) != "missing",
++        }
++        for path in sorted(set(before) | set(after))
++    ]
++    return {"all_unchanged": bool(rows) and all(row["unchanged"] for row in rows), "rows": rows}
++
++
++def _package_versions() -> dict[str, str]:
++    versions = {"python": platform.python_version()}
++    for package in ("numpy", "pytest", "coverage"):
++        try:
++            versions[package] = metadata.version(package)
++        except metadata.PackageNotFoundError:
++            versions[package] = "missing"
++    return versions
++
++
++def _resource_snapshot(root: Path) -> dict[str, Any]:
++    page_size = os.sysconf("SC_PAGE_SIZE")
++    physical_pages = os.sysconf("SC_PHYS_PAGES")
++    disk = shutil.disk_usage(root)
++    return {
++        "cpu_architecture": platform.machine(),
++        "cpu_logical_count": os.cpu_count(),
++        "ram_bytes": int(page_size * physical_pages),
++        "disk_free_bytes_at_start": int(disk.free),
++        "resource_boundary": "CPU capacity inventory only; no performance claim",
++    }
++
++
++def _test_gate(receipts: Sequence[Mapping[str, Any]]) -> tuple[bool, list[str]]:
++    passed = {
++        str(row.get("scope"))
++        for row in receipts
++        if row.get("exit_code") == 0 and row.get("command") and row.get("summary")
++    }
++    missing = [scope for scope in REQUIRED_TEST_SCOPES if scope not in passed]
++    return not missing, missing
++
++
++def _prior_failure_receipt(root: Path) -> dict[str, Any]:
++    path = root / "ops/conductor-log.md"
++    records = [
++        line.strip()
++        for line in path.read_text(encoding="utf-8").splitlines()
++        if "Kac-Ward exact planar-Ising reference" in line and "Hard wall-clock cap" in line
++    ]
++    return {
++        "experiment_id": "exp6639-kac-ward-planar-reference",
++        "terminal_verdict": "no_terminal_artifact_after_three_hard_wall_clock_caps",
++        "source_path": "ops/conductor-log.md",
++        "source_sha256": sha256_file(path),
++        "terminal_record_count": len(records),
++        "terminal_records": records,
++        "changed_technique": "Kac-Ward determinants replaced by log-space factor elimination.",
++        "changed_scope": "All planar graphs replaced by preregistered n<=10 graphs with certified treewidth<=4.",
++    }
++
++
++def _aggregate_rows(
++    decomposition_rows: Sequence[Mapping[str, Any]],
++    parity_rows: Sequence[Mapping[str, Any]],
++    sample_rows: Sequence[Mapping[str, Any]],
++    mass_rows: Sequence[Mapping[str, Any]],
++    tests_run: Sequence[Mapping[str, Any]],
++    protection: Mapping[str, Any],
++) -> dict[str, Any]:
++    supported_decompositions = [row for row in decomposition_rows if row.get("accepted")]
++    rejected = [row for row in decomposition_rows if not row.get("accepted")]
++    tests_passed, missing_tests = _test_gate(tests_run)
++    values = {
++        "supported_fixture_count": len(supported_decompositions),
++        "rejection_fixture_count": len(rejected),
++        "decomposition_all_passed": len(supported_decompositions) >= 12
++        and all(row.get("passed") for row in decomposition_rows),
++        "parity_all_passed": len(parity_rows) == len(supported_decompositions)
++        and all(row.get("passed") for row in parity_rows),
++        "normalized_mass_all_passed": len(mass_rows) == len(supported_decompositions)
++        and all(row.get("passed") for row in mass_rows),
++        "sampling_all_passed": len(sample_rows) == len(supported_decompositions)
++        and all(row.get("passed") for row in sample_rows),
++        "rejection_all_passed": len(rejected) >= 3 and all(row.get("passed") for row in rejected),
++        "tests_all_passed": tests_passed,
++        "missing_test_scopes": missing_tests,
++        "protection_all_passed": protection.get("all_unchanged") is True,
++        "maximum_errors": {
++            "partition": max((float(row["partition_error"]) for row in parity_rows), default=None),
++            "log_probability": max(
++                (float(row["log_probability_error_max"]) for row in parity_rows), default=None
++            ),
++            "marginal": max(
++                (
++                    max(
++                        float(row["node_marginal_error_max"]), float(row["edge_marginal_error_max"])
++                    )
++                    for row in parity_rows
++                ),
++                default=None,
++            ),
++            "normalization": max(
++                (float(row["normalization_error"]) for row in parity_rows), default=None
++            ),
++            "sample_state_frequency": max(
++                (float(row["state_frequency_error_max"]) for row in sample_rows), default=None
++            ),
++        },
++    }
++    values["ready"] = all(
++        values[key]
++        for key in (
++            "decomposition_all_passed",
++            "parity_all_passed",
++            "normalized_mass_all_passed",
++            "sampling_all_passed",
++            "rejection_all_passed",
++            "tests_all_passed",
++            "protection_all_passed",
++        )
++    )
++    return values
++
++
++def reproducibility_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash final content after blanking only the checksum field."""
++
++    material = dict(payload)
++    material["reproducibility_checksum"] = ""
++    return _sha256_json(material)
++
++
++def _field_provenance(root: Path) -> dict[str, dict[str, str]]:
++    source_path = Path(__file__)
++    source_hash = sha256_file(source_path)
++    return {
++        field_name: {
++            "source": str(source_path.relative_to(root)),
++            "source_sha256": source_hash,
++            "reducer": "experiment_6657 row reducer",
++            "schema_lineage": "REQ-SAMPLER-6657 and REQ-REPORT-6657",
++        }
++        for field_name in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def build_artifact(
++    *,
++    root: Path,
++    config: ExperimentConfig,
++    test_receipts: Sequence[Mapping[str, Any]],
++    run_date: str = "20260827",
++    timing_clock: Callable[[], float] | None = None,
++    output_parent: Path | None = None,
++) -> dict[str, Any]:
++    """Build one terminal artifact entirely from visible fixture rows."""
++
++    del output_parent
++    if config.sample_count != DEFAULT_SAMPLE_COUNT:
++        raise ValueError(f"sample_count must equal frozen count {DEFAULT_SAMPLE_COUNT}")
++    clock = timing_clock or time.monotonic
++    started = clock()
++    before = protected_hashes(root)
++    fixtures = frozen_fixtures()
++    fixture_manifest: list[dict[str, Any]] = []
++    decomposition_rows: list[dict[str, Any]] = []
++    parity_rows: list[dict[str, Any]] = []
++    sample_rows: list[dict[str, Any]] = []
++    mass_rows: list[dict[str, Any]] = []
++    timing_rows: list[dict[str, Any]] = []
++
++    for instance in fixtures:
++        fixture_manifest.append(
++            {
++                "instance_id": instance.instance_id,
++                "family": instance.family,
++                "n_spins": instance.n_spins,
++                "edges": [list(edge) for edge in instance.edges],
++                "fields": list(instance.fields),
++                "temperature": instance.temperature,
++                "decomposition_seed": DECOMPOSITION_SEED,
++                "sampling_seed": instance.seed,
++                "expected_supported": instance.expected_supported,
++                "expected_rejection": instance.expected_rejection,
++                "fixture_sha256": instance.fixture_sha256,
++            }
++        )
++        setup_started = clock()
++        decomposition: TreeDecomposition | None = None
++        try:
++            decomposition = deterministic_tree_decomposition(instance)
++            validation = validate_tree_decomposition(instance, decomposition)
++            if not instance.expected_supported:
++                raise UnsupportedGraphError("unsupported fixture was unexpectedly accepted")
++            decomposition_rows.append(
++                {
++                    "instance_id": instance.instance_id,
++                    "accepted": True,
++                    "passed": True,
++                    "width": decomposition.width,
++                    "bags": [list(bag) for bag in decomposition.bags],
++                    "tree_edges": [list(edge) for edge in decomposition.tree_edges],
++                    "elimination_order": list(decomposition.elimination_order),
++                    "running_intersection_checks": {"passed": validation["running_intersection"]},
++                    "rejection_status": "accepted",
++                }
++            )
++        except UnsupportedGraphError as exc:
++            expected = instance.expected_rejection or "not rejected"
++            passed = not instance.expected_supported and expected in str(exc)
++            decomposition_rows.append(
++                {
++                    "instance_id": instance.instance_id,
++                    "accepted": False,
++                    "passed": passed,
++                    "width": decomposition.width if decomposition else None,
++                    "bags": [list(bag) for bag in decomposition.bags] if decomposition else [],
++                    "tree_edges": [list(edge) for edge in decomposition.tree_edges]
++                    if decomposition
++                    else [],
++                    "elimination_order": list(decomposition.elimination_order)
++                    if decomposition
++                    else [],
++                    "running_intersection_checks": {
++                        "passed": False,
++                        "not_applicable_after_rejection": True,
++                    },
++                    "rejection_status": "rejected_as_expected"
++                    if passed
++                    else "unexpected_rejection",
++                    "expected_rejection": expected,
++                    "observed_error": str(exc),
++                }
++            )
++            continue
++
++        setup_s = max(clock() - setup_started, 0.0)
++        parity = cross_check_fixture(instance)
++        parity_rows.append(parity)
++        mass_rows.append(
++            {
++                "instance_id": instance.instance_id,
++                "probability_mass": parity["probability_mass"],
++                "normalization_error": parity["normalization_error"],
++                "tolerance": EXACT_TOLERANCES["normalization"],
++                "passed": parity["normalization_error"] <= EXACT_TOLERANCES["normalization"],
++            }
++        )
++        sample_started = clock()
++        sample_row = sample_check_fixture(instance, config.sample_count, instance.seed)
++        sampling_s = max(clock() - sample_started, 0.0)
++        sample_rows.append(sample_row)
++        timing_rows.append(
++            {
++                "instance_id": instance.instance_id,
++                "setup_wall_time_s": setup_s,
++                "sampling_wall_time_s": sampling_s,
++                "sample_count": config.sample_count,
++                "claim_boundary": "Timing is a reproducibility receipt with no performance claim.",
++            }
++        )
++
++    after = protected_hashes(root)
++    protection = protected_files_unchanged(before, after)
++    aggregate = _aggregate_rows(
++        decomposition_rows, parity_rows, sample_rows, mass_rows, test_receipts, protection
++    )
++    failed_checks: list[dict[str, Any]] = []
++    checks = (
++        ("decomposition", aggregate["decomposition_all_passed"]),
++        ("parity", aggregate["parity_all_passed"]),
++        ("normalization", aggregate["normalized_mass_all_passed"]),
++        ("sampling", aggregate["sampling_all_passed"]),
++        ("rejection", aggregate["rejection_all_passed"]),
++        ("tests", aggregate["tests_all_passed"]),
++        ("protected_files", aggregate["protection_all_passed"]),
++    )
++    for check, passed in checks:
++        if not passed:
++            observed: Any = aggregate.get("missing_test_scopes") if check == "tests" else False
++            failed_checks.append({"check": check, "observed_value": observed, "expected": True})
++    ready = bool(aggregate["ready"])
++    first_failure = failed_checks[0]["check"] if failed_checks else "none"
++    status = (
++        "complete_bounded_treewidth_exact_reference_ready"
++        if ready
++        else f"blocked_{first_failure}_check_failed"
++    )
++    per_unit_rows = (
++        [{"unit_type": "decomposition_or_rejection", **row} for row in decomposition_rows]
++        + [{"unit_type": "exact_parity", **row} for row in parity_rows]
++        + [{"unit_type": "normalized_mass", **row} for row in mass_rows]
++        + [{"unit_type": "exact_sampling", **row} for row in sample_rows]
++    )
++    artifact: dict[str, Any] = {
++        "schema_version": "experiment-6657.v1",
++        "planning_date": run_date,
++        "status": status,
++        "honest_verdict": (
++            "complete: bounded exact Ising reference is ready; setup and sampling timings support no speed claim"
++            if ready
++            else f"blocked_{first_failure}_check_failed: bounded exact-reference readiness was not established"
++        ),
++        "verdict_class": None if ready else "blocked",
++        "gate_check_summary": {
++            "passed": ready,
++            "failed_checks": failed_checks,
++            "checked_categories": [item[0] for item in checks],
++        },
++        "prior_failure_receipt": _prior_failure_receipt(root),
++        "supported_domain_contract": {
++            "spin_encoding": "{-1,+1}",
++            "energy": "E(s)=-sum_(i,j in unique undirected edges) J_ij*s_i*s_j-sum_i h_i*s_i",
++            "fields": "finite real values are supported",
++            "couplings": "finite real values on unique simple undirected edges; ferro, antiferro, and frustration supported",
++            "temperature": "finite and positive; probabilities are exp(-E/temperature)/Z",
++            "treewidth": f"deterministic min-fill certificate must validate at width <= {MAX_TREEWIDTH}",
++            "size": f"1 <= n_spins <= {MAX_SPINS}",
++            "rejection_rules": [
++                "self-loop",
++                "duplicate edge",
++                "invalid endpoint",
++                "nonfinite value",
++                "nonpositive temperature",
++                "malformed decomposition",
++                "treewidth above four",
++                "oversized graph",
++            ],
++            "claim_boundary": "bounded CPU correctness reference only; no speed, asymptotic, hardware, or planar-general claim",
++        },
++        "fixture_manifest": fixture_manifest,
++        "decomposition_rows": decomposition_rows,
++        "exact_parity_rows": parity_rows,
++        "exact_sample_rows": sample_rows,
++        "normalized_mass_receipts": mass_rows,
++        "timing_rows": timing_rows,
++        "ising_reference_ready": ready,
++        "per_unit_rows": per_unit_rows,
++        "aggregate_row_recomputation": aggregate,
++        "preconditions_checked": {
++            "inputs_frozen": True,
++            "spin_energy_convention_inventoried": True,
++            "fixture_count_supported": sum(item.expected_supported for item in fixtures),
++            "fixture_count_rejected": sum(not item.expected_supported for item in fixtures),
++            "exact_tolerances": dict(EXACT_TOLERANCES),
++            "sample_tolerances": dict(SAMPLE_TOLERANCES),
++            "sample_count": config.sample_count,
++            "decomposition_seed": DECOMPOSITION_SEED,
++            "package_versions": _package_versions(),
++            "resources": _resource_snapshot(root),
++            "source_hashes": {
++                path.as_posix(): sha256_file(root / path)
++                for path in (
++                    Path("python/carnot/experiment_6639_kac_ward_planar_reference.py"),
++                    Path("python/carnot/samplers/spectral_k_block.py"),
++                    Path("python/carnot/experiment_6597_spectral_k_block_ising_canary.py"),
++                    Path("python/carnot/models/ising/__init__.py"),
++                    Path("python/carnot/verify/ising.py"),
++                    Path("openspec/capabilities/samplers/spec.md"),
++                    Path("openspec/capabilities/research-reporting/spec.md"),
++                )
++            },
++            "protected_hashes_at_start": before,
++        },
++        "protected_files_unchanged": protection,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": True,
++        "field_provenance": _field_provenance(root),
++        "random_seed": {
++            "decomposition_seed": DECOMPOSITION_SEED,
++            "sampling_seed_schedule": {
++                item.instance_id: item.seed for item in fixtures if item.expected_supported
++            },
++            "rng": "fresh NumPy PCG64 generator per fixture",
++        },
++        "duration_s": max(clock() - started, 0.0),
++        "tests_run": [dict(row) for row in test_receipts],
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> bool:
++    """Reject incomplete, drifted, unsupported, or over-claimed evidence."""
++
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(payload))
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    if payload["verdict_class"] not in (None, "blocked"):
++        raise ValueError("verdict_class must be null or blocked")
++    if payload["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate does not match the bounded contract")
++    if payload["verifier_is_oracle"] is not True:
++        raise ValueError("verifier_is_oracle must be true")
++    if set(payload["field_provenance"]) < set(REQUIRED_ARTIFACT_FIELDS):
++        raise ValueError("field_provenance is incomplete")
++    if payload["reproducibility_checksum"] != reproducibility_checksum(payload):
++        raise ValueError("reproducibility checksum mismatch")
++    if payload["prior_failure_receipt"].get("terminal_record_count") != 3:
++        raise ValueError("prior failure receipt must contain three terminal records")
++    ready = payload["ising_reference_ready"] is True
++    tests_passed, missing_tests = _test_gate(payload["tests_run"])
++    if ready:
++        if payload["status"] != "complete_bounded_treewidth_exact_reference_ready":
++            raise ValueError("ready status is inconsistent")
++        if payload["verdict_class"] is not None:
++            raise ValueError("ready verdict_class must be null")
++        if not payload["protected_files_unchanged"].get("all_unchanged"):
++            raise ValueError("ready artifact contains a protected-file failure")
++        if any(not row.get("passed") for row in payload["exact_sample_rows"]):
++            raise ValueError("ready artifact contains a sample failure")
++        if any(not row.get("passed") for row in payload["exact_parity_rows"]):
++            raise ValueError("ready artifact contains a parity failure")
++        if any(not row.get("passed") for row in payload["normalized_mass_receipts"]):
++            raise ValueError("ready artifact contains a normalization failure")
++        if any(not row.get("passed") for row in payload["decomposition_rows"]):
++            raise ValueError("ready artifact contains a decomposition or rejection failure")
++        if not tests_passed:
++            raise ValueError(f"ready artifact lacks test receipts: {missing_tests}")
++        if not payload["gate_check_summary"].get("passed"):
++            raise ValueError("ready gate summary is blocked")
++    else:
++        if not str(payload["status"]).startswith("blocked_"):
++            raise ValueError("blocked readiness requires blocked status")
++        if payload["verdict_class"] != "blocked":
++            raise ValueError("blocked readiness requires blocked verdict_class")
++        if payload["gate_check_summary"].get("passed") or not payload["gate_check_summary"].get(
++            "failed_checks"
++        ):
++            raise ValueError("blocked gate summary must name failures")
++    recomputed = _aggregate_rows(
++        payload["decomposition_rows"],
++        payload["exact_parity_rows"],
++        payload["exact_sample_rows"],
++        payload["normalized_mass_receipts"],
++        payload["tests_run"],
++        payload["protected_files_unchanged"],
++    )
++    if recomputed != payload["aggregate_row_recomputation"] or recomputed["ready"] != ready:
++        raise ValueError("aggregate row recomputation does not match the rows")
++    supported_count = sum(
++        bool(row.get("expected_supported")) for row in payload["fixture_manifest"]
++    )
++    if supported_count < 12 or len(payload["fixture_manifest"]) < 15:
++        raise ValueError("fixture manifest is incomplete")
++    expected_units = (
++        len(payload["decomposition_rows"])
++        + len(payload["exact_parity_rows"])
++        + len(payload["exact_sample_rows"])
++        + len(payload["normalized_mass_receipts"])
++    )
++    if len(payload["per_unit_rows"]) != expected_units:
++        raise ValueError("per-unit rows are incomplete")
++    if any(
++        "no performance claim" not in row.get("claim_boundary", "")
++        for row in payload["timing_rows"]
++    ):
++        raise ValueError("timing rows must preserve the no-performance-claim boundary")
++    return True
++
++
++def write_json_atomic(path: Path, payload: Mapping[str, Any]) -> dict[str, Any]:
++    """Write one complete JSON document through same-directory replacement."""
++
++    encoded = _canonical_json(payload) + b"\n"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    descriptor, temporary_name = tempfile.mkstemp(
++        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
++    )
++    temporary = Path(temporary_name)
++    try:
++        with os.fdopen(descriptor, "wb") as handle:
++            handle.write(encoded)
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, path)
++        directory_descriptor = os.open(path.parent, os.O_RDONLY)
++        try:
++            os.fsync(directory_descriptor)
++        finally:
++            os.close(directory_descriptor)
++    finally:
++        if temporary.exists():
++            temporary.unlink()
++    return {
++        "path": str(path),
++        "sha256": sha256_file(path),
++        "atomic_replace": True,
++        "file_fsync": True,
++        "directory_fsync": True,
++    }
++
++
++def load_test_receipts() -> list[dict[str, Any]]:
++    """Load outer verification commands without writing repository state."""
++
++    configured = os.environ.get(TEST_RECEIPT_ENV)
++    if not configured:
++        return []
++    value = json.loads(Path(configured).read_text(encoding="utf-8"))
++    if not isinstance(value, list):
++        raise ValueError("test receipt file must contain a JSON list")
++    return [dict(row) for row in value]
++
++
++def run_experiment(*, root: Path, output_path: Path, run_date: str) -> dict[str, Any]:
++    """Build, validate, and atomically publish the terminal artifact."""
++
++    artifact = build_artifact(
++        root=root,
++        run_date=run_date,
++        config=ExperimentConfig(),
++        test_receipts=load_test_receipts(),
++    )
++    validate_artifact(artifact)
++    write_json_atomic(output_path, artifact)
++    return artifact
++
++
++def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default="20260827")
++    parser.add_argument("--output", type=Path)
++    parser.add_argument("--validate", type=Path)
++    return parser.parse_args(argv)
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run Exp6657 or validate a redirected artifact."""
++
++    args = _parse_args(argv)
++    root = Path(__file__).resolve().parents[2]
++    if args.validate is not None:
++        payload = json.loads(args.validate.read_text(encoding="utf-8"))
++        validate_artifact(payload)
++        print(f"validated {args.validate}")
++        return 0
++    output = args.output or root / RESULT_RELATIVE_PATH
++    artifact = run_experiment(root=root, output_path=output, run_date=args.date)
++    print(f"{artifact['status']}: {output}")
++    return 0 if artifact["ising_reference_ready"] else 2
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised by the required CLI command.
++    raise SystemExit(main())
+diff --git a/results/experiment_6657_bounded_treewidth_ising_reference.json b/results/experiment_6657_bounded_treewidth_ising_reference.json
+new file mode 100644
+index 0000000000..c109a49c86
+--- /dev/null
++++ b/results/experiment_6657_bounded_treewidth_ising_reference.json
+@@ -0,0 +1 @@
++{"aggregate_row_recomputation":{"decomposition_all_passed":true,"maximum_errors":{"log_probability":8.881784197001252e-16,"marginal":4.996003610813204e-16,"normalization":4.440892098500626e-16,"partition":2.842170943040401e-14,"sample_state_frequency":0.013656719774706394},"missing_test_scopes":["full_python_suite","spec_coverage"],"normalized_mass_all_passed":true,"parity_all_passed":true,"protection_all_passed":true,"ready":false,"rejection_all_passed":true,"rejection_fixture_count":3,"sampling_all_passed":true,"supported_fixture_count":12,"tests_all_passed":false},"decomposition_rows":[{"accepted":true,"bags":[[0]],"elimination_order":[0],"instance_id":"singleton_field","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[],"width":0},{"accepted":true,"bags":[[0,1],[1]],"elimination_order":[0,1],"instance_id":"edge_ferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1]],"width":1},{"accepted":true,"bags":[[0,1],[1,2],[2,3],[3]],"elimination_order":[0,1,2,3],"instance_id":"path4_field","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3]],"width":1},{"accepted":true,"bags":[[0,1],[0,2],[0,3],[0,4],[4]],"elimination_order":[1,2,3,0,4],"instance_id":"star5_antiferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4]],"width":1},{"accepted":true,"bags":[[0,1],[1,2],[1,3],[3,4],[3,5],[5]],"elimination_order":[0,2,1,4,3,5],"instance_id":"tree6_mixed","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4],[4,5]],"width":1},{"accepted":true,"bags":[[0,1,2],[1,2],[2]],"elimination_order":[0,1,2],"instance_id":"triangle_ferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2]],"width":2},{"accepted":true,"bags":[[0,1,2],[1,2],[2]],"elimination_order":[0,1,2],"instance_id":"frustrated_triangle","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2]],"width":2},{"accepted":true,"bags":[[0,1,3],[1,2,3],[2,3],[3]],"elimination_order":[0,1,2,3],"instance_id":"cycle4_antiferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3]],"width":2},{"accepted":true,"bags":[[0,1,3],[1,2,3],[2,3],[3]],"elimination_order":[0,1,2,3],"instance_id":"cycle4_field","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3]],"width":2},{"accepted":true,"bags":[[0,1,4],[1,2,4],[2,3,4],[3,4],[4]],"elimination_order":[0,1,2,3,4],"instance_id":"cycle5_frustrated","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4]],"width":2},{"accepted":true,"bags":[[0,1,3],[1,3,4],[1,2,4],[2,4,5],[4,5],[5]],"elimination_order":[0,3,1,2,4,5],"instance_id":"ladder6_ferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4],[4,5]],"width":2},{"accepted":true,"bags":[[0,1,2,3,4],[1,2,3,4],[2,3,4],[3,4],[4]],"elimination_order":[0,1,2,3,4],"instance_id":"complete_k5_tw4","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4]],"width":4},{"accepted":false,"bags":[[0,1,2,3,4,5],[1,2,3,4,5],[2,3,4,5],[3,4,5],[4,5],[5]],"elimination_order":[0,1,2,3,4,5],"expected_rejection":"treewidth","instance_id":"unsupported_k6_tw5","observed_error":"certified treewidth 5 exceeds supported treewidth 4","passed":true,"rejection_status":"rejected_as_expected","running_intersection_checks":{"not_applicable_after_rejection":true,"passed":false},"tree_edges":[[0,1],[1,2],[2,3],[3,4],[4,5]],"width":5},{"accepted":false,"bags":[],"elimination_order":[],"expected_rejection":"self-loop","instance_id":"unsupported_self_loop","observed_error":"self-loop is unsupported","passed":true,"rejection_status":"rejected_as_expected","running_intersection_checks":{"not_applicable_after_rejection":true,"passed":false},"tree_edges":[],"width":null},{"accepted":false,"bags":[],"elimination_order":[],"expected_rejection":"duplicate edge","instance_id":"unsupported_duplicate_edge","observed_error":"duplicate edge is unsupported","passed":true,"rejection_status":"rejected_as_expected","running_intersection_checks":{"not_applicable_after_rejection":true,"passed":false},"tree_edges":[],"width":null}],"duration_s":0.43283627400523983,"exact_parity_rows":[{"edge_marginal_error_max":0.0,"instance_id":"singleton_field","log_probability_error_max":2.220446049250313e-16,"node_marginal_error_max":1.1102230246251565e-16,"normalization_error":0.0,"partition_error":0.0,"partition_function_brute_force":2.096872070356467,"partition_function_dp":2.096872070356467,"passed":true,"probability_error_max":1.1102230246251565e-16,"probability_mass":1.0,"state_count":2,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"edge_ferro","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":1.6653345369377348e-16,"normalization_error":1.1102230246251565e-16,"partition_error":8.881784197001252e-16,"partition_function_brute_force":5.389542208627149,"partition_function_dp":5.38954220862715,"passed":true,"probability_error_max":1.1102230246251565e-16,"probability_mass":0.9999999999999999,"state_count":4,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"path4_field","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":2.220446049250313e-16,"normalization_error":0.0,"partition_error":3.552713678800501e-15,"partition_function_brute_force":20.549250262215057,"partition_function_dp":20.54925026221506,"passed":true,"probability_error_max":5.551115123125783e-17,"probability_mass":1.0,"state_count":16,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"star5_antiferro","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":1.6653345369377348e-16,"normalization_error":0.0,"partition_error":1.4210854715202004e-14,"partition_function_brute_force":45.10691713134676,"partition_function_dp":45.106917131346776,"passed":true,"probability_error_max":2.7755575615628914e-17,"probability_mass":1.0,"state_count":32,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":2.7755575615628914e-16,"instance_id":"tree6_mixed","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":2.220446049250313e-16,"normalization_error":2.220446049250313e-16,"partition_error":2.842170943040401e-14,"partition_function_brute_force":134.46218710548308,"partition_function_dp":134.46218710548305,"passed":true,"probability_error_max":2.0816681711721685e-17,"probability_mass":1.0000000000000002,"state_count":64,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":5.551115123125783e-17,"instance_id":"triangle_ferro","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":5.551115123125783e-17,"normalization_error":0.0,"partition_error":1.7763568394002505e-15,"partition_function_brute_force":10.846723241667817,"partition_function_dp":10.846723241667815,"passed":true,"probability_error_max":5.551115123125783e-17,"probability_mass":1.0,"state_count":8,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"frustrated_triangle","log_probability_error_max":2.220446049250313e-16,"node_marginal_error_max":1.1102230246251565e-16,"normalization_error":0.0,"partition_error":1.7763568394002505e-15,"partition_function_brute_force":11.990895163930293,"partition_function_dp":11.990895163930295,"passed":true,"probability_error_max":5.551115123125783e-17,"probability_mass":1.0,"state_count":8,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"cycle4_antiferro","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":1.6653345369377348e-16,"normalization_error":2.220446049250313e-16,"partition_error":3.552713678800501e-15,"partition_function_brute_force":20.638881874042546,"partition_function_dp":20.63888187404255,"passed":true,"probability_error_max":2.0816681711721685e-17,"probability_mass":1.0000000000000002,"state_count":16,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"cycle4_field","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":1.1102230246251565e-16,"normalization_error":0.0,"partition_error":0.0,"partition_function_brute_force":21.704928449279613,"partition_function_dp":21.704928449279613,"passed":true,"probability_error_max":2.7755575615628914e-17,"probability_mass":1.0,"state_count":16,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":1.6653345369377348e-16,"instance_id":"cycle5_frustrated","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":2.7755575615628914e-16,"normalization_error":4.440892098500626e-16,"partition_error":1.4210854715202004e-14,"partition_function_brute_force":50.028419889061894,"partition_function_dp":50.02841988906191,"passed":true,"probability_error_max":2.7755575615628914e-17,"probability_mass":0.9999999999999996,"state_count":32,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":4.440892098500626e-16,"instance_id":"ladder6_ferro","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":4.996003610813204e-16,"normalization_error":2.220446049250313e-16,"partition_error":2.842170943040401e-14,"partition_function_brute_force":137.9473084944998,"partition_function_dp":137.94730849449977,"passed":true,"probability_error_max":5.551115123125783e-17,"probability_mass":0.9999999999999998,"state_count":64,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}},{"edge_marginal_error_max":2.220446049250313e-16,"instance_id":"complete_k5_tw4","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":3.3306690738754696e-16,"normalization_error":4.440892098500626e-16,"partition_error":2.1316282072803006e-14,"partition_function_brute_force":35.40868881824628,"partition_function_dp":35.408688818246304,"passed":true,"probability_error_max":4.85722573273506e-17,"probability_mass":0.9999999999999996,"state_count":32,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12}}],"exact_sample_rows":[{"edge_frequency_error_max":0.0,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"singleton_field","likelihood_error_max":2.220446049250313e-16,"node_frequency_error_max":0.010081829823826993,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"78cdd80f7330d13b3ed1810bce410d6b5c25b286b2f49b9cffe7010842482035","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657001,"state_frequency_error_max":0.010081829823827104,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.011160250778121883,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"edge_ferro","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.014404296875000111,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"575761de875c97ce69e6a9aa3ee3173599d484339e9001d126e8b9699589bb9e","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657002,"state_frequency_error_max":0.011160250778121883,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.006718978394335329,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"path4_field","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.007581623022272388,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"2409a6956fd343b0dd8062c594ed22d70337f92eaa25096609323914cdf3b559","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657003,"state_frequency_error_max":0.008179293572687402,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.007946434627416288,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"star5_antiferro","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.008056640625000111,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"2ef383d7ebe1e2b3eeeaa3d377b79ff4ca1bb8eb8a1a0510579002b84d67f9bd","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657004,"state_frequency_error_max":0.008952886538267507,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.009166260079783606,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"tree6_mixed","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.00809191513786528,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"d1fd7ab42a448a23397429f7644ec43c90fd6d93b83aff4c34f5629a6922dfb6","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657005,"state_frequency_error_max":0.0061590991740568465,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.01942044474282667,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"triangle_ferro","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.023193359375,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"90c7a2eb83174df4bfdb973d9b051bfbe2e873972ea1fa43204d059edbf886f7","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657006,"state_frequency_error_max":0.013656719774706394,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.013788413219014917,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"frustrated_triangle","likelihood_error_max":2.220446049250313e-16,"node_frequency_error_max":0.013174324578905994,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"bbe423f1d3b6bf7c8ded859c1001dbc0795abb0d8a149c34f6fb8308057ffc8e","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657007,"state_frequency_error_max":0.009378683615538452,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.004871584980824295,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"cycle4_antiferro","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.002197265625000111,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"b64f351a0a66652724cebe863bc9d799c9d4320339a536740d479e543be49c78","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657008,"state_frequency_error_max":0.0058426769344341045,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.011533895677126815,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"cycle4_field","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.009220761234358665,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"fb9297d748b4e1229e662b449565e198d63f20e227313084ac3ac228cb4ba527","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657009,"state_frequency_error_max":0.009532038738823093,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.014665667358889078,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"cycle5_frustrated","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.010742187500000111,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"75af0ddded7183d0b4d7a2da605adda4aa0a8ef957f01f142c2a4c5e8c52324c","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657010,"state_frequency_error_max":0.007879141842729045,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.010009468747913253,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"ladder6_ferro","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.011718749999999889,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"3d2966a5cae4ae4580c453e9b16f54caf8e17ef1db50601bd32cf7e3161df553","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657011,"state_frequency_error_max":0.00841721317284716,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}},{"edge_frequency_error_max":0.011783227904868881,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"complete_k5_tw4","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.012592656987972406,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"5cfcca706dfd2344c72988a48ff68d3d88eb436f5bb8c323259f0c12da4994ef","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657012,"state_frequency_error_max":0.0051848542606224915,"tolerances":{"edge":0.06,"node":0.05,"state":0.06}}],"field_provenance":{"aggregate_row_recomputation":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"decomposition_rows":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"duration_s":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"exact_parity_rows":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"exact_sample_rows":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"field_provenance":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"fixture_manifest":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"gate_check_summary":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"honest_verdict":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"inference_substrate":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"ising_reference_ready":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"normalized_mass_receipts":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"per_unit_rows":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"preconditions_checked":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"prior_failure_receipt":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"protected_files_unchanged":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"random_seed":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"reproducibility_checksum":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"status":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"supported_domain_contract":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"tests_run":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"timing_rows":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"verdict_class":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"},"verifier_is_oracle":{"reducer":"experiment_6657 row reducer","schema_lineage":"REQ-SAMPLER-6657 and REQ-REPORT-6657","source":"python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","source_sha256":"5e6ced5cbcff1c44d7ad32ebf032d77cd71c08716ce4498849b5c65842a27601"}},"fixture_manifest":[{"decomposition_seed":6657,"edges":[],"expected_rejection":null,"expected_supported":true,"family":"tree","fields":[0.31],"fixture_sha256":"e3558944e4b5436584fe6b49d3aa411cd774eafb9113b95f5326fc12a1b1da88","instance_id":"singleton_field","n_spins":1,"sampling_seed":6657001,"temperature":1.0},{"decomposition_seed":6657,"edges":[[0,1,0.73]],"expected_rejection":null,"expected_supported":true,"family":"ferromagnetic","fields":[0.0,0.0],"fixture_sha256":"f655cb0f534747a5b3f34ec40d72a84b32e0f8ad67c890dd9012dc59c0ddef0c","instance_id":"edge_ferro","n_spins":2,"sampling_seed":6657002,"temperature":0.9},{"decomposition_seed":6657,"edges":[[0,1,0.4],[1,2,-0.3],[2,3,0.6]],"expected_rejection":null,"expected_supported":true,"family":"field","fields":[0.2,-0.1,0.0,0.3],"fixture_sha256":"1a3869315fe97983c397260969ab8f87af6b5f948938a3245f6d294d2cbce85c","instance_id":"path4_field","n_spins":4,"sampling_seed":6657003,"temperature":1.2},{"decomposition_seed":6657,"edges":[[0,1,-0.4],[0,2,-0.5],[0,3,-0.6],[0,4,-0.3]],"expected_rejection":null,"expected_supported":true,"family":"antiferromagnetic","fields":[0.0,0.0,0.0,0.0,0.0],"fixture_sha256":"9a2ef4ca3b5edd82978385dba9d14dd3401b4d260227710fce0acbd244d64237","instance_id":"star5_antiferro","n_spins":5,"sampling_seed":6657004,"temperature":1.1},{"decomposition_seed":6657,"edges":[[0,1,0.5],[1,2,-0.4],[1,3,0.2],[3,4,-0.7],[3,5,0.35]],"expected_rejection":null,"expected_supported":true,"family":"tree","fields":[0.1,0.0,-0.2,0.0,0.15,-0.05],"fixture_sha256":"d5842b89a32c0f528b7022846e31dfbc5fd8e8e4237cc973ab953c98ec67b999","instance_id":"tree6_mixed","n_spins":6,"sampling_seed":6657005,"temperature":0.85},{"decomposition_seed":6657,"edges":[[0,1,0.6],[1,2,0.55],[0,2,0.45]],"expected_rejection":null,"expected_supported":true,"family":"cycle","fields":[0.0,0.0,0.0],"fixture_sha256":"b2ab47ab881d22ec5cd106ecda3b1b0e4260eec16aeed5bc40103e33aa89cfe7","instance_id":"triangle_ferro","n_spins":3,"sampling_seed":6657006,"temperature":1.3},{"decomposition_seed":6657,"edges":[[0,1,0.7],[1,2,0.5],[0,2,-0.65]],"expected_rejection":null,"expected_supported":true,"family":"frustrated","fields":[0.05,-0.08,0.02],"fixture_sha256":"2941c1fa6cd534683c73dbca0244b7d5d099abaa27c62a877dcb16867a753691","instance_id":"frustrated_triangle","n_spins":3,"sampling_seed":6657007,"temperature":0.95},{"decomposition_seed":6657,"edges":[[0,1,-0.5],[1,2,-0.4],[2,3,-0.6],[0,3,-0.45]],"expected_rejection":null,"expected_supported":true,"family":"antiferromagnetic","fields":[0.0,0.0,0.0,0.0],"fixture_sha256":"86d70ca94c932702c7d658711c14c4901cfd02ff896b986de0cb7b3c298b3c29","instance_id":"cycle4_antiferro","n_spins":4,"sampling_seed":6657008,"temperature":1.4},{"decomposition_seed":6657,"edges":[[0,1,0.4],[1,2,-0.5],[2,3,0.35],[0,3,0.25]],"expected_rejection":null,"expected_supported":true,"family":"field","fields":[0.2,-0.15,0.1,0.0],"fixture_sha256":"f7b04bd04db573e77ca6482cc4c4d9f3fab0ec669c79fae9b37bd7213a32b6f1","instance_id":"cycle4_field","n_spins":4,"sampling_seed":6657009,"temperature":1.0},{"decomposition_seed":6657,"edges":[[0,1,0.5],[1,2,0.5],[2,3,0.5],[3,4,0.5],[0,4,-0.5]],"expected_rejection":null,"expected_supported":true,"family":"frustrated","fields":[0.0,0.0,0.0,0.0,0.0],"fixture_sha256":"8545744727c70c1603182abf965dd1473892a04c006c7630882c6d8fd93793eb","instance_id":"cycle5_frustrated","n_spins":5,"sampling_seed":6657010,"temperature":1.15},{"decomposition_seed":6657,"edges":[[0,1,0.35],[1,2,0.45],[3,4,0.4],[4,5,0.5],[0,3,0.3],[1,4,0.55],[2,5,0.25]],"expected_rejection":null,"expected_supported":true,"family":"ferromagnetic","fields":[0.0,0.0,0.0,0.0,0.0,0.0],"fixture_sha256":"8424574cb628afda8e9f4e5a79611a2b25f86fd2d8cce1043f31474b981e744c","instance_id":"ladder6_ferro","n_spins":6,"sampling_seed":6657011,"temperature":0.9},{"decomposition_seed":6657,"edges":[[0,1,0.18],[0,2,0.18],[0,3,-0.18],[0,4,0.18],[1,2,-0.18],[1,3,0.18],[1,4,0.18],[2,3,0.18],[2,4,-0.18],[3,4,0.18]],"expected_rejection":null,"expected_supported":true,"family":"frustrated","fields":[0.1,-0.05,0.0,0.08,-0.12],"fixture_sha256":"de457cf6a17c7b10312c72756a6830b30f444bfbd0d69f94c80f3a5e907b2630","instance_id":"complete_k5_tw4","n_spins":5,"sampling_seed":6657012,"temperature":1.25},{"decomposition_seed":6657,"edges":[[0,1,0.2],[0,2,0.2],[0,3,0.2],[0,4,0.2],[0,5,0.2],[1,2,0.2],[1,3,0.2],[1,4,0.2],[1,5,0.2],[2,3,0.2],[2,4,0.2],[2,5,0.2],[3,4,0.2],[3,5,0.2],[4,5,0.2]],"expected_rejection":"treewidth","expected_supported":false,"family":"unsupported","fields":[0.0,0.0,0.0,0.0,0.0,0.0],"fixture_sha256":"2d8c06fd92fe1abbcda2d243373a223cf8d5a51da65ec23ed028aad94bb0631f","instance_id":"unsupported_k6_tw5","n_spins":6,"sampling_seed":6657091,"temperature":1.0},{"decomposition_seed":6657,"edges":[[0,0,0.2]],"expected_rejection":"self-loop","expected_supported":false,"family":"unsupported","fields":[0.0,0.0,0.0],"fixture_sha256":"66756eef049c21bb1a48a4892c15660da0e7c40d6afcfc98724cdd1f263d4a5e","instance_id":"unsupported_self_loop","n_spins":3,"sampling_seed":6657092,"temperature":1.0},{"decomposition_seed":6657,"edges":[[0,1,0.2],[1,0,-0.3]],"expected_rejection":"duplicate edge","expected_supported":false,"family":"unsupported","fields":[0.0,0.0,0.0],"fixture_sha256":"3b2bd95e3b998d25ce68a7102ac6f5b9759f5a2c3af27cf8882824383d7afa00","instance_id":"unsupported_duplicate_edge","n_spins":3,"sampling_seed":6657093,"temperature":1.0}],"gate_check_summary":{"checked_categories":["decomposition","parity","normalization","sampling","rejection","tests","protected_files"],"failed_checks":[{"check":"tests","expected":true,"observed_value":["full_python_suite","spec_coverage"]}],"passed":false},"honest_verdict":"blocked_tests_check_failed: bounded exact-reference readiness was not established","inference_substrate":"cpu_bounded_treewidth_junction_tree_exact_sampling_no_llm","ising_reference_ready":false,"normalized_mass_receipts":[{"instance_id":"singleton_field","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12},{"instance_id":"edge_ferro","normalization_error":1.1102230246251565e-16,"passed":true,"probability_mass":0.9999999999999999,"tolerance":2e-12},{"instance_id":"path4_field","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12},{"instance_id":"star5_antiferro","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12},{"instance_id":"tree6_mixed","normalization_error":2.220446049250313e-16,"passed":true,"probability_mass":1.0000000000000002,"tolerance":2e-12},{"instance_id":"triangle_ferro","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12},{"instance_id":"frustrated_triangle","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12},{"instance_id":"cycle4_antiferro","normalization_error":2.220446049250313e-16,"passed":true,"probability_mass":1.0000000000000002,"tolerance":2e-12},{"instance_id":"cycle4_field","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12},{"instance_id":"cycle5_frustrated","normalization_error":4.440892098500626e-16,"passed":true,"probability_mass":0.9999999999999996,"tolerance":2e-12},{"instance_id":"ladder6_ferro","normalization_error":2.220446049250313e-16,"passed":true,"probability_mass":0.9999999999999998,"tolerance":2e-12},{"instance_id":"complete_k5_tw4","normalization_error":4.440892098500626e-16,"passed":true,"probability_mass":0.9999999999999996,"tolerance":2e-12}],"per_unit_rows":[{"accepted":true,"bags":[[0]],"elimination_order":[0],"instance_id":"singleton_field","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[],"unit_type":"decomposition_or_rejection","width":0},{"accepted":true,"bags":[[0,1],[1]],"elimination_order":[0,1],"instance_id":"edge_ferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1]],"unit_type":"decomposition_or_rejection","width":1},{"accepted":true,"bags":[[0,1],[1,2],[2,3],[3]],"elimination_order":[0,1,2,3],"instance_id":"path4_field","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3]],"unit_type":"decomposition_or_rejection","width":1},{"accepted":true,"bags":[[0,1],[0,2],[0,3],[0,4],[4]],"elimination_order":[1,2,3,0,4],"instance_id":"star5_antiferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4]],"unit_type":"decomposition_or_rejection","width":1},{"accepted":true,"bags":[[0,1],[1,2],[1,3],[3,4],[3,5],[5]],"elimination_order":[0,2,1,4,3,5],"instance_id":"tree6_mixed","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4],[4,5]],"unit_type":"decomposition_or_rejection","width":1},{"accepted":true,"bags":[[0,1,2],[1,2],[2]],"elimination_order":[0,1,2],"instance_id":"triangle_ferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2]],"unit_type":"decomposition_or_rejection","width":2},{"accepted":true,"bags":[[0,1,2],[1,2],[2]],"elimination_order":[0,1,2],"instance_id":"frustrated_triangle","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2]],"unit_type":"decomposition_or_rejection","width":2},{"accepted":true,"bags":[[0,1,3],[1,2,3],[2,3],[3]],"elimination_order":[0,1,2,3],"instance_id":"cycle4_antiferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3]],"unit_type":"decomposition_or_rejection","width":2},{"accepted":true,"bags":[[0,1,3],[1,2,3],[2,3],[3]],"elimination_order":[0,1,2,3],"instance_id":"cycle4_field","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3]],"unit_type":"decomposition_or_rejection","width":2},{"accepted":true,"bags":[[0,1,4],[1,2,4],[2,3,4],[3,4],[4]],"elimination_order":[0,1,2,3,4],"instance_id":"cycle5_frustrated","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4]],"unit_type":"decomposition_or_rejection","width":2},{"accepted":true,"bags":[[0,1,3],[1,3,4],[1,2,4],[2,4,5],[4,5],[5]],"elimination_order":[0,3,1,2,4,5],"instance_id":"ladder6_ferro","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4],[4,5]],"unit_type":"decomposition_or_rejection","width":2},{"accepted":true,"bags":[[0,1,2,3,4],[1,2,3,4],[2,3,4],[3,4],[4]],"elimination_order":[0,1,2,3,4],"instance_id":"complete_k5_tw4","passed":true,"rejection_status":"accepted","running_intersection_checks":{"passed":true},"tree_edges":[[0,1],[1,2],[2,3],[3,4]],"unit_type":"decomposition_or_rejection","width":4},{"accepted":false,"bags":[[0,1,2,3,4,5],[1,2,3,4,5],[2,3,4,5],[3,4,5],[4,5],[5]],"elimination_order":[0,1,2,3,4,5],"expected_rejection":"treewidth","instance_id":"unsupported_k6_tw5","observed_error":"certified treewidth 5 exceeds supported treewidth 4","passed":true,"rejection_status":"rejected_as_expected","running_intersection_checks":{"not_applicable_after_rejection":true,"passed":false},"tree_edges":[[0,1],[1,2],[2,3],[3,4],[4,5]],"unit_type":"decomposition_or_rejection","width":5},{"accepted":false,"bags":[],"elimination_order":[],"expected_rejection":"self-loop","instance_id":"unsupported_self_loop","observed_error":"self-loop is unsupported","passed":true,"rejection_status":"rejected_as_expected","running_intersection_checks":{"not_applicable_after_rejection":true,"passed":false},"tree_edges":[],"unit_type":"decomposition_or_rejection","width":null},{"accepted":false,"bags":[],"elimination_order":[],"expected_rejection":"duplicate edge","instance_id":"unsupported_duplicate_edge","observed_error":"duplicate edge is unsupported","passed":true,"rejection_status":"rejected_as_expected","running_intersection_checks":{"not_applicable_after_rejection":true,"passed":false},"tree_edges":[],"unit_type":"decomposition_or_rejection","width":null},{"edge_marginal_error_max":0.0,"instance_id":"singleton_field","log_probability_error_max":2.220446049250313e-16,"node_marginal_error_max":1.1102230246251565e-16,"normalization_error":0.0,"partition_error":0.0,"partition_function_brute_force":2.096872070356467,"partition_function_dp":2.096872070356467,"passed":true,"probability_error_max":1.1102230246251565e-16,"probability_mass":1.0,"state_count":2,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"edge_ferro","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":1.6653345369377348e-16,"normalization_error":1.1102230246251565e-16,"partition_error":8.881784197001252e-16,"partition_function_brute_force":5.389542208627149,"partition_function_dp":5.38954220862715,"passed":true,"probability_error_max":1.1102230246251565e-16,"probability_mass":0.9999999999999999,"state_count":4,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"path4_field","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":2.220446049250313e-16,"normalization_error":0.0,"partition_error":3.552713678800501e-15,"partition_function_brute_force":20.549250262215057,"partition_function_dp":20.54925026221506,"passed":true,"probability_error_max":5.551115123125783e-17,"probability_mass":1.0,"state_count":16,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"star5_antiferro","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":1.6653345369377348e-16,"normalization_error":0.0,"partition_error":1.4210854715202004e-14,"partition_function_brute_force":45.10691713134676,"partition_function_dp":45.106917131346776,"passed":true,"probability_error_max":2.7755575615628914e-17,"probability_mass":1.0,"state_count":32,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":2.7755575615628914e-16,"instance_id":"tree6_mixed","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":2.220446049250313e-16,"normalization_error":2.220446049250313e-16,"partition_error":2.842170943040401e-14,"partition_function_brute_force":134.46218710548308,"partition_function_dp":134.46218710548305,"passed":true,"probability_error_max":2.0816681711721685e-17,"probability_mass":1.0000000000000002,"state_count":64,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":5.551115123125783e-17,"instance_id":"triangle_ferro","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":5.551115123125783e-17,"normalization_error":0.0,"partition_error":1.7763568394002505e-15,"partition_function_brute_force":10.846723241667817,"partition_function_dp":10.846723241667815,"passed":true,"probability_error_max":5.551115123125783e-17,"probability_mass":1.0,"state_count":8,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"frustrated_triangle","log_probability_error_max":2.220446049250313e-16,"node_marginal_error_max":1.1102230246251565e-16,"normalization_error":0.0,"partition_error":1.7763568394002505e-15,"partition_function_brute_force":11.990895163930293,"partition_function_dp":11.990895163930295,"passed":true,"probability_error_max":5.551115123125783e-17,"probability_mass":1.0,"state_count":8,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"cycle4_antiferro","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":1.6653345369377348e-16,"normalization_error":2.220446049250313e-16,"partition_error":3.552713678800501e-15,"partition_function_brute_force":20.638881874042546,"partition_function_dp":20.63888187404255,"passed":true,"probability_error_max":2.0816681711721685e-17,"probability_mass":1.0000000000000002,"state_count":16,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":1.1102230246251565e-16,"instance_id":"cycle4_field","log_probability_error_max":4.440892098500626e-16,"node_marginal_error_max":1.1102230246251565e-16,"normalization_error":0.0,"partition_error":0.0,"partition_function_brute_force":21.704928449279613,"partition_function_dp":21.704928449279613,"passed":true,"probability_error_max":2.7755575615628914e-17,"probability_mass":1.0,"state_count":16,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":1.6653345369377348e-16,"instance_id":"cycle5_frustrated","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":2.7755575615628914e-16,"normalization_error":4.440892098500626e-16,"partition_error":1.4210854715202004e-14,"partition_function_brute_force":50.028419889061894,"partition_function_dp":50.02841988906191,"passed":true,"probability_error_max":2.7755575615628914e-17,"probability_mass":0.9999999999999996,"state_count":32,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":4.440892098500626e-16,"instance_id":"ladder6_ferro","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":4.996003610813204e-16,"normalization_error":2.220446049250313e-16,"partition_error":2.842170943040401e-14,"partition_function_brute_force":137.9473084944998,"partition_function_dp":137.94730849449977,"passed":true,"probability_error_max":5.551115123125783e-17,"probability_mass":0.9999999999999998,"state_count":64,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"edge_marginal_error_max":2.220446049250313e-16,"instance_id":"complete_k5_tw4","log_probability_error_max":8.881784197001252e-16,"node_marginal_error_max":3.3306690738754696e-16,"normalization_error":4.440892098500626e-16,"partition_error":2.1316282072803006e-14,"partition_function_brute_force":35.40868881824628,"partition_function_dp":35.408688818246304,"passed":true,"probability_error_max":4.85722573273506e-17,"probability_mass":0.9999999999999996,"state_count":32,"tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"unit_type":"exact_parity"},{"instance_id":"singleton_field","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"edge_ferro","normalization_error":1.1102230246251565e-16,"passed":true,"probability_mass":0.9999999999999999,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"path4_field","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"star5_antiferro","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"tree6_mixed","normalization_error":2.220446049250313e-16,"passed":true,"probability_mass":1.0000000000000002,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"triangle_ferro","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"frustrated_triangle","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"cycle4_antiferro","normalization_error":2.220446049250313e-16,"passed":true,"probability_mass":1.0000000000000002,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"cycle4_field","normalization_error":0.0,"passed":true,"probability_mass":1.0,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"cycle5_frustrated","normalization_error":4.440892098500626e-16,"passed":true,"probability_mass":0.9999999999999996,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"ladder6_ferro","normalization_error":2.220446049250313e-16,"passed":true,"probability_mass":0.9999999999999998,"tolerance":2e-12,"unit_type":"normalized_mass"},{"instance_id":"complete_k5_tw4","normalization_error":4.440892098500626e-16,"passed":true,"probability_mass":0.9999999999999996,"tolerance":2e-12,"unit_type":"normalized_mass"},{"edge_frequency_error_max":0.0,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"singleton_field","likelihood_error_max":2.220446049250313e-16,"node_frequency_error_max":0.010081829823826993,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"78cdd80f7330d13b3ed1810bce410d6b5c25b286b2f49b9cffe7010842482035","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657001,"state_frequency_error_max":0.010081829823827104,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.011160250778121883,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"edge_ferro","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.014404296875000111,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"575761de875c97ce69e6a9aa3ee3173599d484339e9001d126e8b9699589bb9e","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657002,"state_frequency_error_max":0.011160250778121883,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.006718978394335329,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"path4_field","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.007581623022272388,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"2409a6956fd343b0dd8062c594ed22d70337f92eaa25096609323914cdf3b559","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657003,"state_frequency_error_max":0.008179293572687402,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.007946434627416288,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"star5_antiferro","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.008056640625000111,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"2ef383d7ebe1e2b3eeeaa3d377b79ff4ca1bb8eb8a1a0510579002b84d67f9bd","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657004,"state_frequency_error_max":0.008952886538267507,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.009166260079783606,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"tree6_mixed","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.00809191513786528,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"d1fd7ab42a448a23397429f7644ec43c90fd6d93b83aff4c34f5629a6922dfb6","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657005,"state_frequency_error_max":0.0061590991740568465,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.01942044474282667,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"triangle_ferro","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.023193359375,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"90c7a2eb83174df4bfdb973d9b051bfbe2e873972ea1fa43204d059edbf886f7","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657006,"state_frequency_error_max":0.013656719774706394,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.013788413219014917,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"frustrated_triangle","likelihood_error_max":2.220446049250313e-16,"node_frequency_error_max":0.013174324578905994,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"bbe423f1d3b6bf7c8ded859c1001dbc0795abb0d8a149c34f6fb8308057ffc8e","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657007,"state_frequency_error_max":0.009378683615538452,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.004871584980824295,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"cycle4_antiferro","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.002197265625000111,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"b64f351a0a66652724cebe863bc9d799c9d4320339a536740d479e543be49c78","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657008,"state_frequency_error_max":0.0058426769344341045,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.011533895677126815,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"cycle4_field","likelihood_error_max":4.440892098500626e-16,"node_frequency_error_max":0.009220761234358665,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"fb9297d748b4e1229e662b449565e198d63f20e227313084ac3ac228cb4ba527","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657009,"state_frequency_error_max":0.009532038738823093,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.014665667358889078,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"cycle5_frustrated","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.010742187500000111,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"75af0ddded7183d0b4d7a2da605adda4aa0a8ef957f01f142c2a4c5e8c52324c","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657010,"state_frequency_error_max":0.007879141842729045,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.010009468747913253,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"ladder6_ferro","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.011718749999999889,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"3d2966a5cae4ae4580c453e9b16f54caf8e17ef1db50601bd32cf7e3161df553","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657011,"state_frequency_error_max":0.00841721317284716,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"},{"edge_frequency_error_max":0.011783227904868881,"independent_draw_contract":"one fresh ancestral traversal per sample; no Markov-chain state","instance_id":"complete_k5_tw4","likelihood_error_max":8.881784197001252e-16,"node_frequency_error_max":0.012592656987972406,"passed":true,"rng":"numpy.PCG64","sample_count":4096,"sample_sha256":"5cfcca706dfd2344c72988a48ff68d3d88eb436f5bb8c323259f0c12da4994ef","sample_size_note":"4096 exact independent draws exceed the 1000-sample distributional floor for n<64.","seed":6657012,"state_frequency_error_max":0.0051848542606224915,"tolerances":{"edge":0.06,"node":0.05,"state":0.06},"unit_type":"exact_sampling"}],"planning_date":"20260827","preconditions_checked":{"decomposition_seed":6657,"exact_tolerances":{"log_probability":2e-11,"marginal":2e-11,"normalization":2e-12,"partition":2e-11,"probability":2e-12},"fixture_count_rejected":3,"fixture_count_supported":12,"inputs_frozen":true,"package_versions":{"coverage":"7.14.1","numpy":"2.5.1","pytest":"9.0.3","python":"3.12.13"},"protected_hashes_at_start":{"AGENTS.md":"6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a","CLAUDE.md":"474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad","CODEX.md":"1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe","_bmad/traceability.md":"8d375f880992a54840bfef471f7b7a6508162b615aa81f340fd6a4511f24992b","ops/changelog.md":"cd488adb1e30421b60c6a4ac720ab43dbb91ec0e8aa7aea4b71b55b3942ddebf","ops/e2e-test-plan.md":"580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b","ops/status.md":"f83b384d892c103453f0269cbfe174cc5f29b2ffe432516d5e3936a14925d5bc","research-references.md":"526246eabec9b2954cc896e8a15eac120edad8b9aeb3467a16209ed71b0c4e23","research-roadmap.yaml":"ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a","scripts/research_conductor.py":"fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"},"resources":{"cpu_architecture":"x86_64","cpu_logical_count":24,"disk_free_bytes_at_start":1075377885184,"ram_bytes":134304591872,"resource_boundary":"CPU capacity inventory only; no performance claim"},"sample_count":4096,"sample_tolerances":{"edge":0.06,"node":0.05,"state":0.06},"source_hashes":{"openspec/capabilities/research-reporting/spec.md":"2bde2bba2a9d74df3ac7d983d81c9b7542bbf3b7352cc524e2f0348ff0b62f0e","openspec/capabilities/samplers/spec.md":"8e5cb29b3155cd3a0aec63e4b41e5f6e00b4827e96a65e90fdca4e3140d9f625","python/carnot/experiment_6597_spectral_k_block_ising_canary.py":"cc469cae0df3afc0691cdd7a1f3d4fef093c82119aaa3358858bd9663a20445a","python/carnot/experiment_6639_kac_ward_planar_reference.py":"2cf2c87c649fa75aa57448203ff4a57efcefb1a07f740881138e950a5e35cb47","python/carnot/models/ising/__init__.py":"6acefaa5f40c6a95d74a2f25ead9167e3abac7f4bd9635722479ebfcf09677b8","python/carnot/samplers/spectral_k_block.py":"a0f169f49a46af373a14a2f6aaf6c7a470d9423366cf0618a37453b2e83649ba","python/carnot/verify/ising.py":"d029ec9c77e60bbad0f014b326364b7c08a7600021f1d2519b1f62e25fc4951d"},"spin_energy_convention_inventoried":true},"prior_failure_receipt":{"changed_scope":"All planar graphs replaced by preregistered n<=10 graphs with certified treewidth<=4.","changed_technique":"Kac-Ward determinants replaced by log-space factor elimination.","experiment_id":"exp6639-kac-ward-planar-reference","source_path":"ops/conductor-log.md","source_sha256":"3df4fffbe8bf154e5bb50343c2a6ba75572dbadc4903f43409f7944a2b89a593","terminal_record_count":3,"terminal_records":["| 2026-08-26 12:40 UTC | Kac-Ward exact planar-Ising reference | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: vel_validation |","| 2026-08-26 14:03 UTC | Kac-Ward exact planar-Ising reference | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: eriment family |","| 2026-08-26 15:27 UTC | Kac-Ward exact planar-Ising reference | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: repository wri |"],"terminal_verdict":"no_terminal_artifact_after_three_hard_wall_clock_caps"},"protected_files_unchanged":{"all_unchanged":true,"rows":[{"after_sha256":"6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a","before_sha256":"6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a","path":"AGENTS.md","unchanged":true},{"after_sha256":"474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad","before_sha256":"474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad","path":"CLAUDE.md","unchanged":true},{"after_sha256":"1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe","before_sha256":"1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe","path":"CODEX.md","unchanged":true},{"after_sha256":"8d375f880992a54840bfef471f7b7a6508162b615aa81f340fd6a4511f24992b","before_sha256":"8d375f880992a54840bfef471f7b7a6508162b615aa81f340fd6a4511f24992b","path":"_bmad/traceability.md","unchanged":true},{"after_sha256":"cd488adb1e30421b60c6a4ac720ab43dbb91ec0e8aa7aea4b71b55b3942ddebf","before_sha256":"cd488adb1e30421b60c6a4ac720ab43dbb91ec0e8aa7aea4b71b55b3942ddebf","path":"ops/changelog.md","unchanged":true},{"after_sha256":"580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b","before_sha256":"580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b","path":"ops/e2e-test-plan.md","unchanged":true},{"after_sha256":"f83b384d892c103453f0269cbfe174cc5f29b2ffe432516d5e3936a14925d5bc","before_sha256":"f83b384d892c103453f0269cbfe174cc5f29b2ffe432516d5e3936a14925d5bc","path":"ops/status.md","unchanged":true},{"after_sha256":"526246eabec9b2954cc896e8a15eac120edad8b9aeb3467a16209ed71b0c4e23","before_sha256":"526246eabec9b2954cc896e8a15eac120edad8b9aeb3467a16209ed71b0c4e23","path":"research-references.md","unchanged":true},{"after_sha256":"ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a","before_sha256":"ff53e2fc388ee853f6db403c97c4bfae1fdbb8b58a6a377d294d2d093768432a","path":"research-roadmap.yaml","unchanged":true},{"after_sha256":"fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd","before_sha256":"fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd","path":"scripts/research_conductor.py","unchanged":true}]},"random_seed":{"decomposition_seed":6657,"rng":"fresh NumPy PCG64 generator per fixture","sampling_seed_schedule":{"complete_k5_tw4":6657012,"cycle4_antiferro":6657008,"cycle4_field":6657009,"cycle5_frustrated":6657010,"edge_ferro":6657002,"frustrated_triangle":6657007,"ladder6_ferro":6657011,"path4_field":6657003,"singleton_field":6657001,"star5_antiferro":6657004,"tree6_mixed":6657005,"triangle_ferro":6657006}},"reproducibility_checksum":"f0d1ca59de67c154b72df1ae2b481b1f660aec8d1dd607f07a2ed8d8e915ea7a","schema_version":"experiment-6657.v1","status":"blocked_tests_check_failed","supported_domain_contract":{"claim_boundary":"bounded CPU correctness reference only; no speed, asymptotic, hardware, or planar-general claim","couplings":"finite real values on unique simple undirected edges; ferro, antiferro, and frustration supported","energy":"E(s)=-sum_(i,j in unique undirected edges) J_ij*s_i*s_j-sum_i h_i*s_i","fields":"finite real values are supported","rejection_rules":["self-loop","duplicate edge","invalid endpoint","nonfinite value","nonpositive temperature","malformed decomposition","treewidth above four","oversized graph"],"size":"1 <= n_spins <= 10","spin_encoding":"{-1,+1}","temperature":"finite and positive; probabilities are exp(-E/temperature)/Z","treewidth":"deterministic min-fill certificate must validate at width <= 4"},"tests_run":[{"command":".venv/bin/pytest -n 0 --no-cov tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py -q","exit_code":0,"scope":"focused_python","summary":"54 passed in 2.13s"},{"command":"coverage run --include=*/experiment_6657_bounded_treewidth_ising_reference.py -m pytest ... && coverage report --fail-under=100","exit_code":0,"scope":"scoped_coverage","summary":"538 statements, 0 missed, 100% scoped coverage; 54 tests passed"},{"command":".venv/bin/pytest tests/python -q","exit_code":2,"scope":"full_python_suite","summary":"interrupted after baseline failure was established: 710 failed, 20674 passed, 65 skipped, 118 warnings in 1041.10s"},{"command":".venv/bin/python scripts/check_spec_coverage.py","exit_code":1,"scope":"spec_coverage","summary":"repository baseline has 1182 tests without spec traceability; the new test file passes the staged-only audit"},{"command":".venv/bin/pytest -n 0 --no-cov tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py -q","exit_code":0,"scope":"row_artifact_checks","summary":"54 passed, including row recomputation, mutation, checksum, and atomic-write cases"},{"command":".venv/bin/python scripts/adversarial_verify.py results/experiment_6657_bounded_treewidth_ising_reference.json","exit_code":0,"scope":"adversarial","summary":"Scanned 1 artifact; 0 flagged"},{"command":".venv/bin/pytest -o addopts='' -n 0 tests/python/test_e2e_training_sampling.py tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py -q","exit_code":0,"scope":"sampling_e2e","summary":"59 passed in 8.16s"},{"command":".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py","exit_code":0,"scope":"new_test_spec_coverage","summary":"all new tests reference REQ-* or SCENARIO-* anchors"},{"command":".venv/bin/ruff check ... && .venv/bin/ruff format --check ... && .venv/bin/mypy python/carnot/experiment_6657_bounded_treewidth_ising_reference.py","exit_code":0,"scope":"lint_type","summary":"ruff clean, format clean, and mypy reports no issues"},{"command":".venv/bin/python -m carnot.experiment_6657_bounded_treewidth_ising_reference --validate results/experiment_6657_bounded_treewidth_ising_reference.json","exit_code":0,"scope":"artifact_validation","summary":"terminal blocked artifact schema, checksum, rows, and gates validated"}],"timing_rows":[{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"singleton_field","sample_count":4096,"sampling_wall_time_s":0.00420276599470526,"setup_wall_time_s":3.307200677227229e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"edge_ferro","sample_count":4096,"sampling_wall_time_s":0.03840109500742983,"setup_wall_time_s":4.0726998122408986e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"path4_field","sample_count":4096,"sampling_wall_time_s":0.02367131700157188,"setup_wall_time_s":6.720599776599556e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"star5_antiferro","sample_count":4096,"sampling_wall_time_s":0.03137615500600077,"setup_wall_time_s":6.811799539718777e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"tree6_mixed","sample_count":4096,"sampling_wall_time_s":0.038561877998290583,"setup_wall_time_s":7.432900019921362e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"triangle_ferro","sample_count":4096,"sampling_wall_time_s":0.022331301996018738,"setup_wall_time_s":4.698899283539504e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"frustrated_triangle","sample_count":4096,"sampling_wall_time_s":0.021907957998337224,"setup_wall_time_s":4.104699473828077e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"cycle4_antiferro","sample_count":4096,"sampling_wall_time_s":0.02894758799811825,"setup_wall_time_s":4.994300252292305e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"cycle4_field","sample_count":4096,"sampling_wall_time_s":0.029218595998827368,"setup_wall_time_s":4.9412992666475475e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"cycle5_frustrated","sample_count":4096,"sampling_wall_time_s":0.0370751879963791,"setup_wall_time_s":6.22060033492744e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"ladder6_ferro","sample_count":4096,"sampling_wall_time_s":0.04811356999562122,"setup_wall_time_s":7.869800901971757e-05},{"claim_boundary":"Timing is a reproducibility receipt with no performance claim.","instance_id":"complete_k5_tw4","sample_count":4096,"sampling_wall_time_s":0.06006746100320015,"setup_wall_time_s":0.0001131020108005032}],"verdict_class":"blocked","verifier_is_oracle":true}
+diff --git a/tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py b/tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py
+new file mode 100644
+index 0000000000..bda5ffc93a
+--- /dev/null
++++ b/tests/python/test_experiment_6657_bounded_treewidth_ising_reference.py
+@@ -0,0 +1,582 @@
++"""Tests for the bounded-treewidth exact Ising reference.
++
++Spec refs: REQ-SAMPLER-6657, REQ-REPORT-6657,
++SCENARIO-SAMPLER-6657-EXACT-PARITY,
++SCENARIO-SAMPLER-6657-ANCESTRAL-SAMPLING,
++SCENARIO-SAMPLER-6657-FAIL-CLOSED,
++SCENARIO-REPORT-6657-ATOMIC-CHECKSUM.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++from dataclasses import replace
++import json
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot import experiment_6657_bounded_treewidth_ising_reference as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SAMPLER_SPEC = REPO / "openspec/capabilities/samplers/spec.md"
++REPORT_SPEC = REPO / "openspec/capabilities/research-reporting/spec.md"
++
++
++def _passing_receipts() -> list[dict[str, object]]:
++    return [
++        {"scope": scope, "command": f"verified {scope}", "exit_code": 0, "summary": "passed"}
++        for scope in mod.REQUIRED_TEST_SCOPES
++    ]
++
++
++def _rehash(payload: dict[str, object]) -> dict[str, object]:
++    payload["reproducibility_checksum"] = mod.reproducibility_checksum(payload)
++    return payload
++
++
++def _path_instance(n_spins: int = 4) -> mod.IsingInstance:
++    return mod.IsingInstance(
++        instance_id=f"path_{n_spins}",
++        n_spins=n_spins,
++        edges=tuple((index, index + 1, 0.3) for index in range(n_spins - 1)),
++        fields=tuple(0.1 * ((-1) ** index) for index in range(n_spins)),
++        temperature=1.2,
++        seed=6657001,
++    )
++
++
++def test_req_sampler_6657_specs_precede_implementation() -> None:
++    """REQ-SAMPLER-6657 and REQ-REPORT-6657 freeze the full contract."""
++
++    sampler = SAMPLER_SPEC.read_text(encoding="utf-8").split("### REQ-SAMPLER-6657", 1)[1]
++    report = REPORT_SPEC.read_text(encoding="utf-8").split("### REQ-REPORT-6657", 1)[1]
++    for anchor in (
++        "REQ-SAMPLER-6657-DECOMPOSITION",
++        "REQ-SAMPLER-6657-ELIMINATION",
++        "REQ-SAMPLER-6657-NORMALIZATION",
++        "REQ-SAMPLER-6657-MARGINALS",
++        "REQ-SAMPLER-6657-SAMPLING",
++        "REQ-SAMPLER-6657-REJECTION",
++        "REQ-SAMPLER-6657-PARITY",
++        "SCENARIO-SAMPLER-6657-FAIL-CLOSED",
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert anchor in sampler
++    assert mod.RESULT_RELATIVE_PATH.as_posix() in report
++    assert "verdict_class=null" in report
++
++
++def test_req_sampler_6657_fixture_manifest_is_frozen_and_broad() -> None:
++    """REQ-SAMPLER-6657-PARITY freezes twelve supported and explicit rejected cases."""
++
++    fixtures = mod.frozen_fixtures()
++    supported = [item for item in fixtures if item.expected_supported]
++    rejected = [item for item in fixtures if not item.expected_supported]
++    assert len(supported) >= 12
++    assert len(rejected) >= 3
++    assert {item.family for item in supported} >= {
++        "tree",
++        "cycle",
++        "ferromagnetic",
++        "antiferromagnetic",
++        "frustrated",
++        "field",
++    }
++    assert {item.expected_rejection for item in rejected} >= {
++        "treewidth",
++        "self-loop",
++        "duplicate edge",
++    }
++    assert len({item.fixture_sha256 for item in fixtures}) == len(fixtures)
++    assert mod.frozen_fixtures()[0].fixture_sha256 == fixtures[0].fixture_sha256
++
++
++def test_req_sampler_6657_deterministic_decomposition_validates_width_and_running_intersection() -> (
++    None
++):
++    """REQ-SAMPLER-6657-DECOMPOSITION checks the certified tree decomposition."""
++
++    path = _path_instance()
++    first = mod.deterministic_tree_decomposition(path)
++    second = mod.deterministic_tree_decomposition(path)
++    assert first == second
++    receipt = mod.validate_tree_decomposition(path, first)
++    assert receipt["valid"] is True
++    assert receipt["width"] == 1
++    assert receipt["running_intersection"] is True
++
++    k5 = next(item for item in mod.frozen_fixtures() if item.instance_id == "complete_k5_tw4")
++    decomposition = mod.deterministic_tree_decomposition(k5)
++    assert decomposition.width == mod.MAX_TREEWIDTH
++    assert mod.validate_tree_decomposition(k5, decomposition)["edge_coverage"] is True
++
++
++@pytest.mark.parametrize(
++    ("decomposition", "message"),
++    [
++        (mod.TreeDecomposition(((0, 1),), (), (0, 1, 2, 3), 1), "vertex coverage"),
++        (
++            mod.TreeDecomposition(((0, 1), (1, 2), (2, 3)), ((0, 1),), (0, 1, 2, 3), 1),
++            "tree",
++        ),
++        (
++            mod.TreeDecomposition(((0, 1), (1, 2), (0, 3)), ((0, 1), (1, 2)), (0, 1, 2, 3), 1),
++            "edge coverage",
++        ),
++        (
++            mod.TreeDecomposition(
++                ((0, 1), (1, 2, 3), (0, 1, 3)),
++                ((0, 1), (1, 2)),
++                (0, 1, 2, 3),
++                2,
++            ),
++            "running intersection",
++        ),
++        (
++            mod.TreeDecomposition(((0, 1), (1, 2), (2, 3)), ((0, 1), (1, 2)), (0, 1, 2, 3), 9),
++            "declared width",
++        ),
++    ],
++)
++def test_scenario_sampler_6657_malformed_decompositions_fail_closed(
++    decomposition: mod.TreeDecomposition, message: str
++) -> None:
++    """SCENARIO-SAMPLER-6657-FAIL-CLOSED rejects invalid bag certificates."""
++
++    with pytest.raises(mod.UnsupportedGraphError, match=message):
++        mod.validate_tree_decomposition(_path_instance(), decomposition)
++
++
++@pytest.mark.parametrize(
++    ("instance", "message"),
++    [
++        (replace(_path_instance(), n_spins=0, fields=()), "spin count"),
++        (replace(_path_instance(), fields=(0.0,)), "field count"),
++        (replace(_path_instance(), temperature=0.0), "temperature"),
++        (replace(_path_instance(), edges=((0, 0, 1.0),)), "self-loop"),
++        (
++            replace(_path_instance(), edges=((0, 1, 1.0), (1, 0, -1.0))),
++            "duplicate edge",
++        ),
++        (replace(_path_instance(), edges=((0, 8, 1.0),)), "endpoint"),
++        (replace(_path_instance(), edges=(("0", 1, 1.0),)), "integer"),
++        (replace(_path_instance(), fields=(0.0, 0.0, float("nan"), 0.0)), "finite"),
++        (
++            replace(_path_instance(), edges=((0, 1, float("inf")),)),
++            "finite",
++        ),
++        (_path_instance(mod.MAX_SPINS + 1), "supported limit"),
++    ],
++)
++def test_scenario_sampler_6657_malformed_models_fail_closed(
++    instance: mod.IsingInstance, message: str
++) -> None:
++    """REQ-SAMPLER-6657-REJECTION rejects malformed model inputs."""
++
++    with pytest.raises(mod.UnsupportedGraphError, match=message):
++        mod.validate_instance(instance)
++
++
++def test_scenario_sampler_6657_width_above_four_is_rejected() -> None:
++    """REQ-SAMPLER-6657-REJECTION rejects a valid simple K6 above width four."""
++
++    k6 = next(item for item in mod.frozen_fixtures() if item.instance_id == "unsupported_k6_tw5")
++    mod.validate_instance(k6)
++    decomposition = mod.deterministic_tree_decomposition(k6)
++    assert decomposition.width == 5
++    with pytest.raises(mod.UnsupportedGraphError, match="treewidth"):
++        mod.solve_exact(k6)
++
++
++def test_req_sampler_6657_low_level_certificate_and_evidence_rejections(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-SAMPLER-6657-DECOMPOSITION names low-level certificate failures."""
++
++    instance = _path_instance()
++    valid = mod.deterministic_tree_decomposition(instance)
++    cases = (
++        (mod.TreeDecomposition((), (), valid.elimination_order, 0), "vertex coverage"),
++        (
++            replace(valid, bags=((0, 0, 1), *valid.bags[1:])),
++            "bag vertices",
++        ),
++        (
++            replace(valid, tree_edges=((0, 0), *valid.tree_edges[1:])),
++            "invalid edge",
++        ),
++        (replace(valid, elimination_order=(0, 0, 2, 3)), "elimination order"),
++    )
++    for decomposition, message in cases:
++        with pytest.raises(mod.UnsupportedGraphError, match=message):
++            mod.validate_tree_decomposition(instance, decomposition)
++    with pytest.raises(mod.UnsupportedGraphError, match="evidence"):
++        mod._initial_factors(instance, {8: 1})
++
++    singleton = _path_instance(1)
++    decomposition = mod.deterministic_tree_decomposition(singleton)
++    monkeypatch.setattr(
++        mod,
++        "_initial_factors",
++        lambda *_: [mod._Factor((0,), np.asarray([float("nan"), float("nan")]))],
++    )
++    with pytest.raises(mod.UnsupportedGraphError, match="nonfinite probability"):
++        mod._eliminate(singleton, decomposition, {}, False)
++
++
++def test_scenario_sampler_6657_factor_elimination_matches_brute_force() -> None:
++    """SCENARIO-SAMPLER-6657-EXACT-PARITY checks all supported fixtures."""
++
++    for instance in (item for item in mod.frozen_fixtures() if item.expected_supported):
++        row = mod.cross_check_fixture(instance)
++        assert row["passed"] is True
++        assert row["partition_error"] <= mod.EXACT_TOLERANCES["partition"]
++        assert row["log_probability_error_max"] <= mod.EXACT_TOLERANCES["log_probability"]
++        assert row["node_marginal_error_max"] <= mod.EXACT_TOLERANCES["marginal"]
++        assert row["edge_marginal_error_max"] <= mod.EXACT_TOLERANCES["marginal"]
++
++
++def test_req_sampler_6657_probabilities_normalize_and_validate_states() -> None:
++    """REQ-SAMPLER-6657-NORMALIZATION derives probabilities from the DP partition."""
++
++    instance = _path_instance(3)
++    solution = mod.solve_exact(instance)
++    brute = mod.brute_force_reference(instance)
++    mass = 0.0
++    for state, expected in zip(brute["states"], brute["probabilities"], strict=True):
++        log_probability = mod.configuration_log_probability(instance, state, solution)
++        probability = mod.configuration_probability(instance, state, solution)
++        assert np.exp(log_probability) == pytest.approx(probability, abs=1.0e-15)
++        assert probability == pytest.approx(expected, abs=mod.EXACT_TOLERANCES["probability"])
++        mass += probability
++    assert mass == pytest.approx(1.0, abs=mod.EXACT_TOLERANCES["normalization"])
++    with pytest.raises(mod.UnsupportedGraphError, match="spin state"):
++        mod.configuration_probability(instance, (1, 0, -1), solution)
++    with pytest.raises(mod.UnsupportedGraphError, match="spin state"):
++        mod.configuration_probability(instance, (1, -1), solution)
++
++
++def test_req_sampler_6657_exact_node_and_edge_marginals_match_enumeration() -> None:
++    """REQ-SAMPLER-6657-MARGINALS returns complete normalized marginal tables."""
++
++    instance = next(
++        item for item in mod.frozen_fixtures() if item.instance_id == "frustrated_triangle"
++    )
++    solution = mod.solve_exact(instance)
++    marginals = mod.exact_marginals(instance, solution)
++    brute = mod.brute_force_reference(instance)
++    assert marginals["node_plus"] == pytest.approx(brute["node_plus"], abs=1.0e-12)
++    for edge_id, table in marginals["edge_joint"].items():
++        assert sum(table.values()) == pytest.approx(1.0, abs=1.0e-12)
++        assert table == pytest.approx(brute["edge_joint"][edge_id], abs=1.0e-12)
++
++
++def test_scenario_sampler_6657_ancestral_samples_replay_and_match_frequencies() -> None:
++    """SCENARIO-SAMPLER-6657-ANCESTRAL-SAMPLING checks exact independent draws."""
++
++    instance = next(item for item in mod.frozen_fixtures() if item.instance_id == "cycle4_field")
++    solution = mod.solve_exact(instance)
++    first = mod.independent_samples(instance, 4096, 6657123, solution)
++    replay = mod.independent_samples(instance, 4096, 6657123, solution)
++    other = mod.independent_samples(instance, 4096, 6657124, solution)
++    assert first["sample_sha256"] == replay["sample_sha256"]
++    assert first["samples"] == replay["samples"]
++    assert first["sample_sha256"] != other["sample_sha256"]
++    row = mod.sample_check_fixture(instance, sample_count=4096, seed=6657123)
++    assert row["passed"] is True
++    assert row["likelihood_error_max"] <= mod.EXACT_TOLERANCES["log_probability"]
++    assert row["state_frequency_error_max"] <= mod.SAMPLE_TOLERANCES["state"]
++    assert row["node_frequency_error_max"] <= mod.SAMPLE_TOLERANCES["node"]
++    assert row["edge_frequency_error_max"] <= mod.SAMPLE_TOLERANCES["edge"]
++    with pytest.raises(ValueError, match="sample_count"):
++        mod.independent_samples(instance, 0, 1, solution)
++
++
++@pytest.fixture(scope="module")
++def complete_artifact(tmp_path_factory: pytest.TempPathFactory) -> dict[str, object]:
++    """Build one complete artifact without writing tracked state."""
++
++    temporary = tmp_path_factory.mktemp("exp6657")
++    return mod.build_artifact(
++        root=REPO,
++        run_date="20260827",
++        config=mod.ExperimentConfig(sample_count=mod.DEFAULT_SAMPLE_COUNT),
++        test_receipts=_passing_receipts(),
++        timing_clock=mod.DeterministicEvidenceClock(),
++        output_parent=temporary,
++    )
++
++
++def test_req_report_6657_artifact_contains_all_rows_and_recomputes(
++    complete_artifact: dict[str, object],
++) -> None:
++    """SCENARIO-REPORT-6657-READY checks complete row-backed evidence."""
++
++    assert mod.validate_artifact(complete_artifact) is True
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(complete_artifact)
++    assert complete_artifact["status"] == "complete_bounded_treewidth_exact_reference_ready"
++    assert str(complete_artifact["honest_verdict"]).startswith("complete:")
++    assert complete_artifact["verdict_class"] is None
++    assert complete_artifact["ising_reference_ready"] is True
++    assert complete_artifact["verifier_is_oracle"] is True
++    assert complete_artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert len(complete_artifact["fixture_manifest"]) >= 15
++    assert len(complete_artifact["exact_parity_rows"]) >= 12
++    assert len(complete_artifact["exact_sample_rows"]) >= 12
++    assert len(complete_artifact["decomposition_rows"]) >= 15
++    assert len(complete_artifact["per_unit_rows"]) >= 51
++    assert complete_artifact["aggregate_row_recomputation"]["ready"] is True
++    assert complete_artifact["protected_files_unchanged"]["all_unchanged"] is True
++    assert set(complete_artifact["field_provenance"]) >= set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert complete_artifact["prior_failure_receipt"]["terminal_record_count"] == 3
++    assert all(
++        "no performance claim" in row["claim_boundary"] for row in complete_artifact["timing_rows"]
++    )
++
++
++def test_req_report_6657_atomic_write_and_checksum(
++    complete_artifact: dict[str, object], tmp_path: Path
++) -> None:
++    """SCENARIO-REPORT-6657-ATOMIC-CHECKSUM protects the final JSON."""
++
++    output = tmp_path / mod.RESULT_RELATIVE_PATH.name
++    receipt = mod.write_json_atomic(output, complete_artifact)
++    assert json.loads(output.read_text(encoding="utf-8")) == complete_artifact
++    assert receipt["atomic_replace"] is True
++    assert receipt["file_fsync"] is True
++    assert receipt["directory_fsync"] is True
++    assert not list(tmp_path.glob("*.tmp"))
++    with pytest.raises(ValueError, match="nonfinite JSON"):
++        mod.write_json_atomic(tmp_path / "bad.json", {"bad": float("nan")})
++
++
++@pytest.mark.parametrize(
++    ("mutator", "message"),
++    [
++        (lambda item: item.pop("supported_domain_contract"), "missing required fields"),
++        (lambda item: item.__setitem__("verdict_class", "positive"), "verdict_class"),
++        (lambda item: item.__setitem__("verifier_is_oracle", False), "verifier_is_oracle"),
++        (lambda item: item.__setitem__("inference_substrate", "hardware"), "inference_substrate"),
++        (
++            lambda item: item["aggregate_row_recomputation"].__setitem__("ready", False),
++            "aggregate",
++        ),
++        (
++            lambda item: item["protected_files_unchanged"].__setitem__("all_unchanged", False),
++            "protected",
++        ),
++        (lambda item: item["exact_sample_rows"][0].__setitem__("passed", False), "sample"),
++        (lambda item: item["field_provenance"].pop("status"), "field_provenance"),
++        (lambda item: item["tests_run"].clear(), "test receipts"),
++        (
++            lambda item: item["prior_failure_receipt"].__setitem__("terminal_record_count", 2),
++            "prior failure",
++        ),
++    ],
++)
++def test_scenario_report_6657_artifact_mutations_fail_closed(
++    complete_artifact: dict[str, object], mutator: object, message: str
++) -> None:
++    """SCENARIO-REPORT-6657-BLOCKED rejects row and schema drift."""
++
++    changed = deepcopy(complete_artifact)
++    mutator(changed)  # type: ignore[operator]
++    if "reproducibility_checksum" in changed:
++        _rehash(changed)
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(changed)
++
++
++def test_req_report_6657_raw_checksum_mutation_fails(
++    complete_artifact: dict[str, object],
++) -> None:
++    """REQ-REPORT-6657 detects content edits that do not update the checksum."""
++
++    changed = deepcopy(complete_artifact)
++    changed["duration_s"] = float(changed["duration_s"]) + 1.0
++    with pytest.raises(ValueError, match="checksum"):
++        mod.validate_artifact(changed)
++
++
++def test_req_sampler_6657_failed_receipt_blocks_readiness(tmp_path: Path) -> None:
++    """REQ-SAMPLER-6657-READINESS makes tests part of the ready conjunction."""
++
++    receipts = _passing_receipts()
++    receipts[0]["exit_code"] = 1
++    artifact = mod.build_artifact(
++        root=REPO,
++        config=mod.ExperimentConfig(sample_count=mod.DEFAULT_SAMPLE_COUNT),
++        test_receipts=receipts,
++        timing_clock=mod.DeterministicEvidenceClock(),
++        output_parent=tmp_path,
++    )
++    assert artifact["ising_reference_ready"] is False
++    assert str(artifact["status"]).startswith("blocked_")
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["gate_check_summary"]["failed_checks"][0]["check"] == "tests"
++    assert mod.validate_artifact(artifact) is True
++
++
++def test_req_report_6657_precondition_and_unexpected_acceptance_paths(
++    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
++) -> None:
++    """REQ-REPORT-6657 preserves frozen sample and expected-rejection gates."""
++
++    with pytest.raises(ValueError, match="frozen count"):
++        mod.build_artifact(
++            root=REPO,
++            config=mod.ExperimentConfig(sample_count=1),
++            test_receipts=_passing_receipts(),
++        )
++    monkeypatch.setattr(
++        mod.metadata,
++        "version",
++        lambda package: (_ for _ in ()).throw(mod.metadata.PackageNotFoundError(package)),
++    )
++    assert set(mod._package_versions().values()) == {mod.platform.python_version(), "missing"}
++
++    unexpectedly_valid = replace(
++        _path_instance(2),
++        instance_id="unexpectedly_valid",
++        expected_supported=False,
++        expected_rejection="unexpectedly accepted",
++    )
++    monkeypatch.setattr(mod, "frozen_fixtures", lambda: (unexpectedly_valid,))
++    artifact = mod.build_artifact(
++        root=REPO,
++        config=mod.ExperimentConfig(),
++        test_receipts=_passing_receipts(),
++        timing_clock=mod.DeterministicEvidenceClock(),
++        output_parent=tmp_path,
++    )
++    assert artifact["decomposition_rows"][0]["observed_error"] == (
++        "unsupported fixture was unexpectedly accepted"
++    )
++
++
++@pytest.mark.parametrize(
++    ("mutation", "message"),
++    [
++        (lambda item: item.__setitem__("status", "complete_wrong"), "ready status"),
++        (lambda item: item.__setitem__("verdict_class", "blocked"), "ready verdict_class"),
++        (lambda item: item["exact_parity_rows"][0].__setitem__("passed", False), "parity"),
++        (
++            lambda item: item["normalized_mass_receipts"][0].__setitem__("passed", False),
++            "normalization",
++        ),
++        (
++            lambda item: item["decomposition_rows"][0].__setitem__("passed", False),
++            "decomposition",
++        ),
++        (lambda item: item["gate_check_summary"].__setitem__("passed", False), "gate summary"),
++        (
++            lambda item: (
++                item.__setitem__("ising_reference_ready", False),
++                item.__setitem__("verdict_class", "blocked"),
++                item["gate_check_summary"].__setitem__("passed", False),
++                item["gate_check_summary"].__setitem__(
++                    "failed_checks", [{"check": "test", "observed_value": False}]
++                ),
++            ),
++            "blocked status",
++        ),
++        (
++            lambda item: (
++                item.__setitem__("ising_reference_ready", False),
++                item.__setitem__("status", "blocked_test_check_failed"),
++                item["gate_check_summary"].__setitem__("passed", False),
++                item["gate_check_summary"].__setitem__(
++                    "failed_checks", [{"check": "test", "observed_value": False}]
++                ),
++            ),
++            "blocked verdict_class",
++        ),
++        (
++            lambda item: (
++                item.__setitem__("ising_reference_ready", False),
++                item.__setitem__("status", "blocked_test_check_failed"),
++                item.__setitem__("verdict_class", "blocked"),
++                item["gate_check_summary"].__setitem__("failed_checks", []),
++            ),
++            "blocked gate summary",
++        ),
++        (lambda item: item["fixture_manifest"].clear(), "fixture manifest"),
++        (lambda item: item["per_unit_rows"].pop(), "per-unit"),
++        (
++            lambda item: item["timing_rows"][0].__setitem__("claim_boundary", "speed claim"),
++            "timing rows",
++        ),
++    ],
++)
++def test_req_report_6657_validator_rejects_each_terminal_inconsistency(
++    complete_artifact: dict[str, object], mutation: object, message: str
++) -> None:
++    """REQ-REPORT-6657 validates each terminal state and row family."""
++
++    changed = deepcopy(complete_artifact)
++    mutation(changed)  # type: ignore[operator]
++    _rehash(changed)
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(changed)
++
++
++def test_req_report_6657_atomic_cleanup_on_replace_failure(
++    complete_artifact: dict[str, object], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
++) -> None:
++    """SCENARIO-REPORT-6657-ATOMIC-CHECKSUM removes an uncommitted temporary file."""
++
++    monkeypatch.setattr(mod.os, "replace", lambda *_: (_ for _ in ()).throw(OSError("replace")))
++    with pytest.raises(OSError, match="replace"):
++        mod.write_json_atomic(tmp_path / "failed.json", complete_artifact)
++    assert not list(tmp_path.iterdir())
++
++
++def test_req_report_6657_receipt_loader_and_redirectable_cli(
++    complete_artifact: dict[str, object], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
++) -> None:
++    """REQ-REPORT-6657 keeps test receipts and writes redirectable for unit tests."""
++
++    monkeypatch.delenv(mod.TEST_RECEIPT_ENV, raising=False)
++    assert mod.load_test_receipts() == []
++    receipt_path = tmp_path / "receipts.json"
++    receipt_path.write_text(json.dumps(_passing_receipts()), encoding="utf-8")
++    monkeypatch.setenv(mod.TEST_RECEIPT_ENV, str(receipt_path))
++    assert mod.load_test_receipts() == _passing_receipts()
++    receipt_path.write_text("{}", encoding="utf-8")
++    with pytest.raises(ValueError, match="list"):
++        mod.load_test_receipts()
++
++    artifact_path = tmp_path / "artifact.json"
++    mod.write_json_atomic(artifact_path, complete_artifact)
++    assert mod.main(["--validate", str(artifact_path)]) == 0
++
++    calls: list[dict[str, object]] = []
++    monkeypatch.setattr(
++        mod, "run_experiment", lambda **kwargs: calls.append(kwargs) or complete_artifact
++    )
++    output = tmp_path / "run.json"
++    assert mod.main(["--date", "20260827", "--output", str(output)]) == 0
++    assert calls[0]["output_path"] == output
++    blocked = deepcopy(complete_artifact)
++    blocked["ising_reference_ready"] = False
++    monkeypatch.setattr(mod, "run_experiment", lambda **kwargs: blocked)
++    assert mod.main(["--output", str(output)]) == 2
++
++
++def test_req_report_6657_run_wrapper_validates_and_writes(
++    complete_artifact: dict[str, object], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
++) -> None:
++    """REQ-REPORT-6657 runs the builder and atomic writer once."""
++
++    monkeypatch.setattr(mod, "build_artifact", lambda **kwargs: deepcopy(complete_artifact))
++    writes: list[Path] = []
++    monkeypatch.setattr(
++        mod, "write_json_atomic", lambda path, payload: writes.append(path) or {"path": str(path)}
++    )
++    output = tmp_path / "result.json"
++    result = mod.run_experiment(root=REPO, output_path=output, run_date="20260827")
++    assert result == complete_artifact
++    assert writes == [output]
+-- 
+2.55.0
+

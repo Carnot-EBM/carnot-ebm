@@ -1,0 +1,90 @@
+From 980142e1da2ccdc82cbfac89d522ea2efd48bc57 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 19:43:29 -0400
+Subject: [PATCH 08546/11362] test: fix the test_arc_submitted_agent_parity.py
+ qat-stale pair (finding 3)
+
+Same root cause as the already-fixed test_experiment_5727 test (commit
+fc3b7a0dd1): ARC_LIVE_GENERATOR_MODEL_ID/REPO_SUBSTR/MODEL_FILENAME were
+repinned to the qat variant by commit 6526b472a8 (2026-07-31, VRAM-driven,
+backed by a 20-game head-to-head showing qat/Q4_K_M are statistically
+indistinguishable on quality), and these two tests were never updated.
+
+test_req_capstone_4744_submitted_config_declares_frozen_qwen_generator now
+asserts frozen["model_id"] == "unsloth/gemma-4-31B-it-qat-GGUF" and
+frozen["repo_substr"] == "gemma-4-31B-it-qat" (both fields were stale).
+
+test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_config
+now asserts completer.repo_substr == "gemma-4-31B-it-qat".
+
+Test-only change; no production code touched. Full-file regression (23
+tests) green, ruff/ruff-format/mypy clean, freshness-lint clean, no pending
+test-suite-mutation markers.
+
+ops/known-issues.md's REQ-ARC-WMTE-6230 addendum updated to mark this pair
+resolved (was left explicitly open when finding 4/5/6 were fixed earlier
+today).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                             | 11 ++++++++---
+ tests/python/test_arc_submitted_agent_parity.py | 13 ++++++++++---
+ 2 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 6858b84527..13c2a68c78 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -151,9 +151,14 @@ investigation workflow root-caused all three, all `stale_test` (no production re
+   corrected to match the already-fixed language in `test_arc_submitted_agent_parity.py`. The
+   repo-wide sweep this addendum called for (scope item (c)) found no further undiscovered stale
+   sites beyond the finding-3 pair (2 more `== "gemma-4-31B-it"` hits exist but are self-contained
+-  fixtures unaffected by the live constant, verified by direct read). **Finding 3's own pair in
+-  `test_arc_submitted_agent_parity.py` is the identical root cause and is still open** — not fixed
+-  in this pass, same one-line-swap-plus-comment-correction applies.
++  fixtures unaffected by the live constant, verified by direct read). ~~Finding 3's own pair in
++  `test_arc_submitted_agent_parity.py` is the identical root cause and is still open~~ — **FIXED
++  2026-08-08 (same day, follow-up commit)**: `test_req_capstone_4744_submitted_config_declares_
++  frozen_qwen_generator` now asserts `frozen["model_id"] == "unsloth/gemma-4-31B-it-qat-GGUF"` and
++  `frozen["repo_substr"] == "gemma-4-31B-it-qat"` (both were stale, matching the original finding-3
++  filing above, which named both fields); `test_req_arc_fcp_5699_11_load_sge_candidate_router_
++  reuses_frozen_generator_config` now asserts `completer.repo_substr == "gemma-4-31B-it-qat"`.
++  Full-file regression (23 tests) green.
+ - **Finding 5**: real root cause identified — commit `ca8e078ccb` (2026-07-25, Exp5904/5927) wrapped
+   `load_cross_game_discriminative_router`'s return value inside an `OnlineClickTargetRouter`, so a
+   stub swapped in at the inner loader only ever reaches `.base` of the wrapper. `_load_submitted_
+diff --git a/tests/python/test_arc_submitted_agent_parity.py b/tests/python/test_arc_submitted_agent_parity.py
+index 8b560d8cad..44d39e71ee 100644
+--- a/tests/python/test_arc_submitted_agent_parity.py
++++ b/tests/python/test_arc_submitted_agent_parity.py
+@@ -214,8 +214,13 @@ def test_req_capstone_4744_submitted_config_declares_frozen_qwen_generator():
+ 
+     frozen = SUBMITTED_AGENT_CONFIG["frozen_generator"]
+ 
+-    assert frozen["model_id"] == "unsloth/gemma-4-31B-it-GGUF"
+-    assert frozen["repo_substr"] == "gemma-4-31B-it"
++    # RE-PINNED AGAIN 2026-07-31 (separate, later, quant-only repin -- the 2026-07-28 repin above
++    # was a MODEL-FAMILY change, Qwen -> gemma-4-31B-it; this one is a QUANTIZATION-VARIANT change
++    # on top of that, Q4_K_M -> qat). A 20-game head-to-head found qat and Q4_K_M statistically
++    # indistinguishable on quality (sign test p=1.0); qat saves ~1GB VRAM and matches the required
++    # qat MTP drafter. See tests/python/test_arc_live_generator_pin.py for the full pin contract.
++    assert frozen["model_id"] == "unsloth/gemma-4-31B-it-qat-GGUF"
++    assert frozen["repo_substr"] == "gemma-4-31B-it-qat"
+     # ASSERT THE LITERAL SCORED CONTRACT, NEVER `frozen["mtp"] is <the same expression>`.
+     #
+     # An intermediate 2026-07-28 version of this test read
+@@ -350,7 +355,9 @@ def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_c
+     assert router.k == 3
+     completer = router.proposer.completer
+     assert isinstance(completer, LocalGGUFProposer)
+-    assert completer.repo_substr == "gemma-4-31B-it"
++    # RE-PINNED 2026-07-31 (quant-only repin, see test_req_capstone_4744_... above for the full
++    # rationale): ARC_LIVE_GENERATOR_REPO_SUBSTR moved Q4_K_M -> qat.
++    assert completer.repo_substr == "gemma-4-31B-it-qat"
+     # False because that is the LOCAL default (`ARC_LIVE_GENERATOR_MTP_DEFAULT`), NOT because the
+     # model lacks MTP -- the old comment here said "gemma-4-31B has no MTP heads", which was
+     # falsified the same day: the head is a SEPARATE 491 MiB GGUF (`mtp-gemma-4-31B-it-Q8_0.gguf`,
+-- 
+2.55.0
+

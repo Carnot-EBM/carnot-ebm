@@ -1,0 +1,1336 @@
+From ac68d5af2ca82cfbcc170630259ffe3204690680 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 16:56:53 -0400
+Subject: [PATCH 02886/11362] [conductor] PHASE D (SOTA-INGESTION; .412
+ bleeding-edge track) -- ingest SOTA for counterexample-guided generic rule /
+ world-model induction for interactive games; map the strongest 3-5 methods
+ onto the .413 roadmap.
+
+Automated research step by research conductor.
+Task ID: exp4464-sota-ingestion-412
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../sota-ingestion-412-2026-06-19.md          |  45 ++
+ .../capabilities/research-reporting/spec.md   |  59 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4464_sota_ingestion_412.py     | 603 ++++++++++++++++++
+ research-studying.md                          |  32 +
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_4464_sota_ingestion_412.json   | 132 ++++
+ results/experiment_4464_sota_ingestion_412.py |   8 +
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...test_experiment_4464_sota_ingestion_412.py | 231 +++++++
+ 15 files changed, 1127 insertions(+), 17 deletions(-)
+ create mode 100644 docs/research-notes/sota-ingestion-412-2026-06-19.md
+ create mode 100644 python/carnot/experiment_4464_sota_ingestion_412.py
+ create mode 100644 results/experiment_4464_sota_ingestion_412.json
+ create mode 100644 results/experiment_4464_sota_ingestion_412.py
+ create mode 100644 tests/python/test_experiment_4464_sota_ingestion_412.py
+
+diff --git a/docs/research-notes/sota-ingestion-412-2026-06-19.md b/docs/research-notes/sota-ingestion-412-2026-06-19.md
+new file mode 100644
+index 0000000000..c8d9e9cd25
+--- /dev/null
++++ b/docs/research-notes/sota-ingestion-412-2026-06-19.md
+@@ -0,0 +1,45 @@
++# SOTA ingestion 2026-06-19: .412 counterexample-guided map for .413
++
++Reliable channel only: `scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
++arXiv abs-page HTTP-200 checks, and low-concurrency WebSearch/WebFetch of the
++top abstracts. `scripts/sweep_clusters.py --help` succeeded and arXiv was
++reachable. `scripts/sweep_clusters.py` emitted focused verifier and world-model
++cluster URLs. `scripts/sweep_semscholar.py` ran five focused queries; Semantic
++Scholar returned HTTP 429 on all five, so no S2-only source was promoted.
++`/deep-research` was not invoked. No leaderboard submission was made. No live
++solve or training run was launched.
++
++## Focused sweep result
++
++- Counterexample-Guided Learning in the Large, arXiv:2606.11521, is the
++  freshest and strongest fit for `.413`: use verifier feedback as a structured
++  counterexample, then re-induce from the rejecting execution state.
++- Neuro-Symbolic Reasoning for Planning, arXiv:2309.16436, supplies the formal
++  CEGIS loop: LLM learner, exact verifier, counterexample, revised candidate.
++- SOAR self-improving evolutionary synthesis, arXiv:2507.14172, maps to
++  evolutionary repair and hindsight banking after a generic operator fails.
++- Towards Efficient Neurally-Guided Program Induction for ARC-AGI,
++  arXiv:2411.17708, maps to ordered search over a compact glyph/grid DSL.
++- Combining Induction and Transduction for Abstract Reasoning,
++  arXiv:2411.02272, maps to routing between exact induced programs and direct
++  state predictions.
++- Executable World Models for ARC-AGI-3, arXiv:2605.05138, remains the
++  interactive phase-FSM verification harness.
++- Loop-OWM, arXiv:2606.12316, supplies object-centric slot and transition-loop
++  structure for cast-grid and toggle mechanics.
++- The ARC of Progress living survey, arXiv:2603.13372, anchors the meta-solver
++  context and warns that refinement loops remain load-bearing across ARC
++  versions.
++
++## SOTA->experiment mapping
++
++The `.413` planner should implement counterexample-guided re-induction as the
++front door for the remaining generic-solver failures. When dc22, tr87, or sc25
++rejects a proposed generic rule, record the exact execution state and failed
++predicate, cluster related failures, re-prompt the inducer with that
++counterexample, and accept only reproduction-gated fixes. SOAR and
++neurally-guided induction provide search pressure; induction+transduction
++provides routing; Executable World Models and Loop-OWM provide phase-FSM and
++object-state verification targets.
++
++flagged_for_v413: Counterexample-guided re-induction from rejecting execution states (arXiv:2606.11521; SMT-checked CEGIS predecessor arXiv:2309.16436)
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index e211939256..77975acdcd 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -22589,6 +22589,65 @@ training run.
+ |---|---|---|
+ | REQ-REPORT-4452 | Planned (`python/carnot/experiment_4452_sota_ingestion_411.py`) | Planned (`tests/python/test_experiment_4452_sota_ingestion_411.py`) |
+ 
++### REQ-REPORT-4464: Ingest Fresh .412 Counterexample-Guided SOTA Into The .413 Plan
++
++The Exp 4464 workflow SHALL ingest a focused fresh state-of-the-art pass for
++the `.412` headline: closing the generic-solver gap by counterexample-guided
++induction from rejecting execution states. It SHALL use only the reliable
++channel: `scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, arXiv
++abs-page HTTP-200 checks, and low-concurrency WebSearch/WebFetch of the top
++five to eight abstracts on counterexample-guided or SMT-checked program/rule
++induction with LLMs, self-improving program synthesis for grid or interactive
++puzzles, phase-FSM or object-centric world-model induction for interactive
++games, and ARC-AGI-3-style meta-solvers. It SHALL NOT invoke
++`/deep-research`, SHALL NOT submit to a leaderboard, SHALL NOT launch a live
++solve or training run, and SHALL NOT modify `scripts/research_conductor.py`,
++`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`.
++
++The workflow SHALL write `results/experiment_4464_sota_ingestion_412.json`, and
++the required runner SHALL be `results/experiment_4464_sota_ingestion_412.py`
++delegating to `python/carnot/experiment_4464_sota_ingestion_412.py`. It SHALL
++also write `docs/research-notes/sota-ingestion-412-2026-06-19.md` and update
++`research-studying.md` idempotently to mark Exp 4464 ingested.
++
++The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
++`inference_substrate`, `methods`, `flagged_for_v413`,
++`sota_to_experiment_mapping_note`, `preconditions_checked`, `random_seed`,
++`research_note_path`, and `field_principles`. `honest_verdict` SHALL start with
++one of `complete:`, `success:`, `passed:`, or `shipped:` and, on the complete
++path, equal `complete: sota_ingestion_412_mapped_for_v413`.
++`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
++`methods` SHALL contain five to eight dicts with exactly `name`, `arxiv_id`,
++`what_it_takes_over_our_stack`, and `pitfalls`; every `arxiv_id` SHALL map to a
++verified arXiv HTTP-200 URL. `flagged_for_v413` SHALL be a bare, non-empty
++string naming the single strongest method fed forward to `.413`.
++`field_principles` SHALL include the required principle strings for
++`honest_verdict`, `methods`, `flagged_for_v413`, and `inference_substrate`,
++including `aggregation_from_upstream_artifacts -- CPU-only reliable-channel
++ingestion; no live solve claim` for the inference substrate principle.
++
++#### SCENARIO-REPORT-4464: The .412 Fresh Pass Feeds A Single .413 Method
++
++**Given** `scripts/sweep_clusters.py --help` succeeds
++**And** arXiv is reachable
++**And** the focused reliable-channel sweep has checked counterexample-guided
++program/rule induction, self-improving ARC synthesis, phase-FSM or
++object-centric world models, and ARC-AGI-3 meta-solver papers
++**When** the Exp 4464 SOTA-ingestion workflow runs
++**Then** it writes the required JSON artifact, maps five to eight verified
++arXiv sources to concrete `.413` experiment targets, flags
++counterexample-guided re-induction from rejecting execution states
++(`arXiv:2606.11521` with the SMT-checked CEGIS predecessor
++`arXiv:2309.16436`) as the strongest `.413` hand-off, emits the research note,
++marks `research-studying.md` ingested, and records no `/deep-research`, no
++leaderboard submission, no live solve, and no training run.
++
++## Implementation Status (REQ-REPORT-4464)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4464 | Planned (`python/carnot/experiment_4464_sota_ingestion_412.py`) | Planned (`tests/python/test_experiment_4464_sota_ingestion_412.py`) |
++
+ ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
+ 
+ The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3bae18ac68..370bfc4f0f 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3482,
++  "experiments_checked": 3483,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4464_sota_ingestion_412.py b/python/carnot/experiment_4464_sota_ingestion_412.py
+new file mode 100644
+index 0000000000..08a9d14a2e
+--- /dev/null
++++ b/python/carnot/experiment_4464_sota_ingestion_412.py
+@@ -0,0 +1,603 @@
++"""Exp 4464 SOTA ingestion for the `.412` counterexample-guided hand-off.
++
++Spec refs: REQ-REPORT-4464, SCENARIO-REPORT-4464.
++
++This module records a planning artifact, not a live solve. It preserves the
++reliable-channel literature pass and hands one method to `.413` without
++implying that Carnot ran a leaderboard submission or trained a model.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "inference_substrate",
++        "methods",
++        "flagged_for_v413",
++        "sota_to_experiment_mapping_note",
++        "preconditions_checked",
++        "random_seed",
++        "research_note_path",
++        "field_principles",
++    }
++)
++REQUIRED_METHOD_FIELDS = frozenset({"name", "arxiv_id", "what_it_takes_over_our_stack", "pitfalls"})
++REQUIRED_PRECONDITION_FIELDS = frozenset(
++    {
++        "sweep_clusters_help_succeeded",
++        "arxiv_reachable",
++        "sweep_clusters_ran",
++        "sweep_clusters_urls",
++        "sweep_semscholar_ran",
++        "sweep_semscholar_status",
++        "top_abstracts_webfetched",
++        "arxiv_http_200_verified_ids",
++        "arxiv_http_200_verified_urls",
++        "websearch_webfetch_reachable",
++        "deep_research_invoked",
++        "leaderboard_submission",
++        "training_launched",
++        "live_solve_claim",
++        "research_conductor_modified",
++        "cpu_only",
++    }
++)
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
++DEFAULT_HONEST_VERDICT = "complete: sota_ingestion_412_mapped_for_v413"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++DEFAULT_RANDOM_SEED = 4464
++RESEARCH_NOTE_RELATIVE_PATH = "docs/research-notes/sota-ingestion-412-2026-06-19.md"
++DEFAULT_FLAGGED_FOR_V413 = (
++    "Counterexample-guided re-induction from rejecting execution states "
++    "(arXiv:2606.11521; SMT-checked CEGIS predecessor arXiv:2309.16436)"
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {"principle": "terminal-prefixed"},
++    "methods": {
++        "principle": (
++            "list of {name, arxiv_id, what_it_takes_over_our_stack, pitfalls} -- "
++            "each with a VERIFIED citation (no citation = fabrication)"
++        )
++    },
++    "flagged_for_v413": {
++        "principle": (
++            "the single strongest method fed forward so SOTA flows into the next "
++            "milestone (discover->ingest->plan->experiment)"
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts -- CPU-only reliable-channel "
++            "ingestion; no live solve claim"
++        )
++    },
++    "sota_to_experiment_mapping_note": {
++        "principle": "Concrete SOTA->experiment mapping for the `.413` planner."
++    },
++    "preconditions_checked": {
++        "principle": "Reliable-channel, no-deep-research, no-leaderboard provenance."
++    },
++    "random_seed": {"principle": "Deterministic focused sweep seed."},
++    "research_note_path": {"principle": "Repo-relative SOTA mapping note emitted with artifact."},
++}
++
++VERIFIED_SOURCE_URLS = {
++    "2309.16436": "https://arxiv.org/abs/2309.16436",
++    "2606.11521": "https://arxiv.org/abs/2606.11521",
++    "2507.14172": "https://arxiv.org/abs/2507.14172",
++    "2411.17708": "https://arxiv.org/abs/2411.17708",
++    "2411.02272": "https://arxiv.org/abs/2411.02272",
++    "2605.05138": "https://arxiv.org/abs/2605.05138",
++    "2606.12316": "https://arxiv.org/abs/2606.12316",
++    "2603.13372": "https://arxiv.org/abs/2603.13372",
++}
++NOTE_REQUIRED_SOURCE_CITATIONS = frozenset(f"arXiv:{source}" for source in VERIFIED_SOURCE_URLS)
++
++DEFAULT_PRECONDITIONS_CHECKED = {
++    "sweep_clusters_help_succeeded": True,
++    "arxiv_reachable": True,
++    "sweep_clusters_ran": True,
++    "sweep_clusters_urls": [
++        "scripts/sweep_clusters.py 0 --max-results 8",
++        "scripts/sweep_clusters.py 3 --max-results 8",
++    ],
++    "sweep_semscholar_ran": True,
++    "sweep_semscholar_status": (
++        "five focused queries ran; Semantic Scholar returned HTTP 429 on all "
++        "five queries, so no S2-only source was promoted"
++    ),
++    "top_abstracts_webfetched": sorted(VERIFIED_SOURCE_URLS.values()),
++    "arxiv_http_200_verified_ids": sorted(VERIFIED_SOURCE_URLS),
++    "arxiv_http_200_verified_urls": sorted(VERIFIED_SOURCE_URLS.values()),
++    "websearch_webfetch_reachable": True,
++    "deep_research_invoked": False,
++    "leaderboard_submission": False,
++    "training_launched": False,
++    "live_solve_claim": False,
++    "research_conductor_modified": False,
++    "cpu_only": True,
++}
++
++SOTA_TO_EXPERIMENT_MAPPING_NOTE = (
++    "SOTA->experiment map for .413: promote counterexample-guided re-induction "
++    "from rejecting execution states (arXiv:2606.11521) as the strongest "
++    "handoff, with SMT-checked CEGIS (arXiv:2309.16436) as the formal loop "
++    "template. Feed verifier-rejected dc22, tr87, and sc25 execution states "
++    "back into the generic operator prompt, cluster the failures, re-induce "
++    "the rule, and accept only reproduction-gated fixes. Use SOAR "
++    "(arXiv:2507.14172) and neurally-guided induction (arXiv:2411.17708) for "
++    "search pressure, induction+transduction (arXiv:2411.02272) for routing, "
++    "Executable World Models (arXiv:2605.05138) plus Loop-OWM "
++    "(arXiv:2606.12316) for phase-FSM and object-state tests, and the ARC "
++    "survey (arXiv:2603.13372) as the meta-solver context."
++)
++
++DEFAULT_METHODS = [
++    {
++        "name": "Counterexample-Guided Learning in the Large",
++        "arxiv_id": "2606.11521",
++        "what_it_takes_over_our_stack": (
++            "Turn every verifier-rejected generic operator run into structured "
++            "feedback: rejected state, expected predicate, observed predicate, "
++            "and counterexample cluster. Re-prompt the inducer with that state "
++            "until dc22, tr87, or sc25 reproduces under the offline env."
++        ),
++        "pitfalls": (
++            "The paper studies regex induction, not ARC games; Carnot must "
++            "translate execution failures into compact, replayable grid/game "
++            "counterexamples and avoid treating feedback as a live solve claim."
++        ),
++    },
++    {
++        "name": "LLM plus SMT counterexample-guided inductive synthesis",
++        "arxiv_id": "2309.16436",
++        "what_it_takes_over_our_stack": (
++            "Use exact execution checks or small SMT encodings as the verifier "
++            "that returns counterexamples to the LLM learner before any generic "
++            "rule is accepted."
++        ),
++        "pitfalls": (
++            "Blocks-world planning is simpler than ARC-AGI-3; incomplete SMT "
++            "encodings or hand-written constraints can launder game-specific "
++            "knowledge into the induction loop."
++        ),
++    },
++    {
++        "name": "SOAR self-improving evolutionary ARC synthesis",
++        "arxiv_id": "2507.14172",
++        "what_it_takes_over_our_stack": (
++            "Wrap the re-induction loop in evolutionary search and bank verified "
++            "repair attempts as hindsight examples for future generic operators."
++        ),
++        "pitfalls": (
++            "Fine-tuning and self-improvement are outside this CPU-only "
++            "ingestion; any future training must separate held-out games and "
++            "avoid replay leakage."
++        ),
++    },
++    {
++        "name": "Neurally-guided ARC program induction",
++        "arxiv_id": "2411.17708",
++        "what_it_takes_over_our_stack": (
++            "Constrain tr87-style glyph rewrite synthesis to a small grid DSL "
++            "and use a learned prior only to order executable candidates."
++        ),
++        "pitfalls": (
++            "A narrow DSL can miss mechanics, while an unconstrained DSL can "
++            "explode search; the verifier must remain the authority."
++        ),
++    },
++    {
++        "name": "Induction plus transduction routing for ARC",
++        "arxiv_id": "2411.02272",
++        "what_it_takes_over_our_stack": (
++            "Route each open gap between precise induced programs and direct "
++            "state/output prediction, then require the chosen path to reproduce "
++            "through the same offline gate."
++        ),
++        "pitfalls": (
++            "Static ARC input-output success does not prove interactive control; "
++            "transductive shortcuts need separate action and state validation."
++        ),
++    },
++    {
++        "name": "Executable ARC-AGI-3 world models",
++        "arxiv_id": "2605.05138",
++        "what_it_takes_over_our_stack": (
++            "Use the induce-verify-refactor-plan harness as the phase-FSM test "
++            "bed for sc25 and other interactive games after a rule re-induces."
++        ),
++        "pitfalls": (
++            "Fresh workspaces and leakage audits are load-bearing; closed-agent "
++            "headline numbers are not evidence that Carnot solved anything."
++        ),
++    },
++    {
++        "name": "Loop-OWM object-centric transition loops",
++        "arxiv_id": "2606.12316",
++        "what_it_takes_over_our_stack": (
++            "Represent cast-grid, toggle, and glyph mechanics as slots plus "
++            "looped object-state transitions before translating them into "
++            "generic world-model operators."
++        ),
++        "pitfalls": (
++            "ARC-1/2 visual-symbolic transition prediction is not the same as "
++            "interactive game planning; add goal, action-cost, and reproduction "
++            "checks."
++        ),
++    },
++    {
++        "name": "ARC living survey meta-solver context",
++        "arxiv_id": "2603.13372",
++        "what_it_takes_over_our_stack": (
++            "Use the survey's cross-paradigm map to keep .413 focused on "
++            "refinement loops, program synthesis, and interactive transfer "
++            "instead of another single-model prompt sweep."
++        ),
++        "pitfalls": (
++            "A survey is context, not a runnable method; it must not be counted "
++            "as experimental evidence or a leaderboard result."
++        ),
++    },
++]
++
++RESEARCH_NOTE = """# SOTA ingestion 2026-06-19: .412 counterexample-guided map for .413
++
++Reliable channel only: `scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`,
++arXiv abs-page HTTP-200 checks, and low-concurrency WebSearch/WebFetch of the
++top abstracts. `scripts/sweep_clusters.py --help` succeeded and arXiv was
++reachable. `scripts/sweep_clusters.py` emitted focused verifier and world-model
++cluster URLs. `scripts/sweep_semscholar.py` ran five focused queries; Semantic
++Scholar returned HTTP 429 on all five, so no S2-only source was promoted.
++`/deep-research` was not invoked. No leaderboard submission was made. No live
++solve or training run was launched.
++
++## Focused sweep result
++
++- Counterexample-Guided Learning in the Large, arXiv:2606.11521, is the
++  freshest and strongest fit for `.413`: use verifier feedback as a structured
++  counterexample, then re-induce from the rejecting execution state.
++- Neuro-Symbolic Reasoning for Planning, arXiv:2309.16436, supplies the formal
++  CEGIS loop: LLM learner, exact verifier, counterexample, revised candidate.
++- SOAR self-improving evolutionary synthesis, arXiv:2507.14172, maps to
++  evolutionary repair and hindsight banking after a generic operator fails.
++- Towards Efficient Neurally-Guided Program Induction for ARC-AGI,
++  arXiv:2411.17708, maps to ordered search over a compact glyph/grid DSL.
++- Combining Induction and Transduction for Abstract Reasoning,
++  arXiv:2411.02272, maps to routing between exact induced programs and direct
++  state predictions.
++- Executable World Models for ARC-AGI-3, arXiv:2605.05138, remains the
++  interactive phase-FSM verification harness.
++- Loop-OWM, arXiv:2606.12316, supplies object-centric slot and transition-loop
++  structure for cast-grid and toggle mechanics.
++- The ARC of Progress living survey, arXiv:2603.13372, anchors the meta-solver
++  context and warns that refinement loops remain load-bearing across ARC
++  versions.
++
++## SOTA->experiment mapping
++
++The `.413` planner should implement counterexample-guided re-induction as the
++front door for the remaining generic-solver failures. When dc22, tr87, or sc25
++rejects a proposed generic rule, record the exact execution state and failed
++predicate, cluster related failures, re-prompt the inducer with that
++counterexample, and accept only reproduction-gated fixes. SOAR and
++neurally-guided induction provide search pressure; induction+transduction
++provides routing; Executable World Models and Loop-OWM provide phase-FSM and
++object-state verification targets.
++
++flagged_for_v413: Counterexample-guided re-induction from rejecting execution states (arXiv:2606.11521; SMT-checked CEGIS predecessor arXiv:2309.16436)
++"""
++
++STUDYING_SECTION = """## 2026-06-19 Exp 4464 - .412 SOTA ingestion ingested
++
++**Status:** INGESTED into `results/experiment_4464_sota_ingestion_412.json` and
++`docs/research-notes/sota-ingestion-412-2026-06-19.md`.
++
++**Preconditions:** reliable channel reachable on CPU. The command
++`scripts/sweep_clusters.py --help` succeeded; the arXiv reachability check
++succeeded. `scripts/sweep_clusters.py` emitted focused verifier and world-model
++cluster URLs. `scripts/sweep_semscholar.py` ran five focused queries; Semantic
++Scholar returned HTTP 429 on all five queries, so no S2-only source was
++promoted. Low-concurrency WebSearch/WebFetch plus arXiv abs-page HTTP 200 checks
++verified arXiv:2309.16436, arXiv:2606.11521, arXiv:2507.14172,
++arXiv:2411.17708, arXiv:2411.02272, arXiv:2605.05138, arXiv:2606.12316, and
++arXiv:2603.13372. The banned `/deep-research` channel was not invoked.
++No leaderboard submission, live solve, or training run was launched.
++
++**Fresh-pass candidates marked ingested:** Counterexample-Guided Learning
++(arXiv:2606.11521), SMT-checked CEGIS (arXiv:2309.16436), SOAR
++(arXiv:2507.14172), neurally-guided program induction (arXiv:2411.17708),
++induction+transduction routing (arXiv:2411.02272), Executable World Models
++(arXiv:2605.05138), Loop-OWM (arXiv:2606.12316), and ARC living survey context
++(arXiv:2603.13372).
++
++flagged_for_v413: Counterexample-guided re-induction from rejecting execution states (arXiv:2606.11521; SMT-checked CEGIS predecessor arXiv:2309.16436)
++
++random_seed=4464
++
++**SOTA->experiment mapping note:** Add a counterexample-guided re-induction
++loop to the generic solver: feed verifier-rejected execution states back into
++dc22 config/toggle induction, tr87 glyph-rewrite induction, and sc25 phase-FSM
++world-model induction, then count only reproduction-gated fixes.
++"""
++
++
++def _fail(message: str) -> None:
++    raise ValueError(message)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        _fail(message)
++
++
++def _nonempty_list(value: object) -> bool:
++    return isinstance(value, list) and bool(value)
++
++
++def build_artifact(
++    *,
++    methods: Sequence[Mapping[str, str]] | None = None,
++    preconditions_checked: Mapping[str, object] | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    honest_verdict: str = DEFAULT_HONEST_VERDICT,
++    flagged_for_v413: str = DEFAULT_FLAGGED_FOR_V413,
++) -> dict[str, object]:
++    """Build the deterministic Exp 4464 planning artifact."""
++
++    source_methods = DEFAULT_METHODS if methods is None else methods
++    source_preconditions = (
++        DEFAULT_PRECONDITIONS_CHECKED if preconditions_checked is None else preconditions_checked
++    )
++    return {
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "methods": [dict(method) for method in source_methods],
++        "flagged_for_v413": flagged_for_v413,
++        "sota_to_experiment_mapping_note": SOTA_TO_EXPERIMENT_MAPPING_NOTE,
++        "preconditions_checked": dict(source_preconditions),
++        "random_seed": random_seed,
++        "research_note_path": RESEARCH_NOTE_RELATIVE_PATH,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++
++
++def _validate_preconditions(row: object) -> None:
++    _require(
++        isinstance(row, Mapping) and set(row) == REQUIRED_PRECONDITION_FIELDS,
++        "preconditions_checked must have exactly the required fields",
++    )
++    expected_true = {
++        "sweep_clusters_help_succeeded": "sweep_clusters help",
++        "arxiv_reachable": "arXiv reachability",
++        "sweep_clusters_ran": "sweep_clusters",
++        "sweep_semscholar_ran": "sweep_semscholar",
++        "websearch_webfetch_reachable": "WebSearch/WebFetch",
++        "cpu_only": "CPU",
++    }
++    for key, label in expected_true.items():
++        _require(row.get(key) is True, f"preconditions_checked must record {label} success")
++    expected_false = {
++        "deep_research_invoked": "deep-research",
++        "leaderboard_submission": "leaderboard",
++        "training_launched": "training",
++        "live_solve_claim": "live solve",
++        "research_conductor_modified": "research_conductor",
++    }
++    for key, label in expected_false.items():
++        _require(row.get(key) is False, f"preconditions_checked must record no {label}")
++    _require(
++        _nonempty_list(row.get("sweep_clusters_urls")),
++        "preconditions_checked must record cluster URLs",
++    )
++    _require(
++        isinstance(row.get("sweep_semscholar_status"), str)
++        and bool(str(row["sweep_semscholar_status"]).strip()),
++        "preconditions_checked must record Semantic Scholar status",
++    )
++    _require(
++        _nonempty_list(row.get("top_abstracts_webfetched")),
++        "preconditions_checked must record top abstracts fetched",
++    )
++    _require(
++        _nonempty_list(row.get("arxiv_http_200_verified_ids"))
++        and not (set(VERIFIED_SOURCE_URLS) - set(row["arxiv_http_200_verified_ids"])),
++        "preconditions_checked must include all verified arXiv ids",
++    )
++    _require(
++        _nonempty_list(row.get("arxiv_http_200_verified_urls"))
++        and not (set(VERIFIED_SOURCE_URLS.values()) - set(row["arxiv_http_200_verified_urls"])),
++        "preconditions_checked must include all HTTP 200 source URLs",
++    )
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 4464 artifact before writing it to disk."""
++
++    fields = set(artifact)
++    missing = REQUIRED_ARTIFACT_FIELDS - fields
++    extra = fields - REQUIRED_ARTIFACT_FIELDS
++    _require(not missing, f"artifact missing required fields: {sorted(missing)}")
++    _require(not extra, f"artifact has unexpected fields: {sorted(extra)}")
++
++    verdict = artifact["honest_verdict"]
++    _require(
++        isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES),
++        "honest_verdict must use a terminal prefix",
++    )
++    _require(
++        artifact["inference_substrate"] == INFERENCE_SUBSTRATE,
++        "inference_substrate must declare aggregation from upstream artifacts",
++    )
++    _require(
++        artifact["field_principles"] == FIELD_PRINCIPLES,
++        "field_principles must match REQ-REPORT-4464",
++    )
++    _require(
++        isinstance(artifact["random_seed"], int) and not isinstance(artifact["random_seed"], bool),
++        "random_seed must be an integer",
++    )
++    _require(
++        artifact["research_note_path"] == RESEARCH_NOTE_RELATIVE_PATH,
++        "research_note_path must be the repo-relative note path",
++    )
++    note = artifact["sota_to_experiment_mapping_note"]
++    _require(
++        isinstance(note, str) and "SOTA->experiment" in note,
++        "sota_to_experiment_mapping_note must contain the mapping note",
++    )
++
++    _validate_preconditions(artifact["preconditions_checked"])
++
++    methods = artifact["methods"]
++    _require(
++        isinstance(methods, list) and 5 <= len(methods) <= 8,
++        "methods must contain five to eight verified methods",
++    )
++
++    seen_sources: set[str] = set()
++    for method in methods:
++        _require(
++            isinstance(method, Mapping) and set(method) == REQUIRED_METHOD_FIELDS,
++            "each method must be a dict with exactly the required fields",
++        )
++        for key, value in method.items():
++            _require(
++                isinstance(value, str) and bool(value.strip()),
++                f"method field {key!r} must be a non-empty string",
++            )
++        source = method["arxiv_id"]
++        _require(
++            source in VERIFIED_SOURCE_URLS, f"method source {source!r} is not a verified arXiv id"
++        )
++        _require(source not in seen_sources, f"duplicate source in methods: {source}")
++        seen_sources.add(source)
++
++    flagged = artifact["flagged_for_v413"]
++    _require(
++        isinstance(flagged, str) and flagged == DEFAULT_FLAGGED_FOR_V413,
++        "flagged_for_v413 must name the single strongest verified method",
++    )
++
++
++def validate_research_note(section: str) -> None:
++    """Check that the research note preserves citations and the `.413` hand-off."""
++
++    missing_sources = sorted(
++        source for source in NOTE_REQUIRED_SOURCE_CITATIONS if source not in section
++    )
++    _require(
++        not missing_sources, f"research note missing verified source citations: {missing_sources}"
++    )
++    required_phrases = [
++        "SOTA->experiment",
++        "Reliable channel",
++        "HTTP 429",
++        "/deep-research",
++        "No leaderboard submission",
++        "flagged_for_v413",
++        DEFAULT_FLAGGED_FOR_V413,
++    ]
++    for phrase in required_phrases:
++        _require(phrase in section, f"research note missing required phrase: {phrase}")
++
++
++def validate_studying_section(section: str) -> None:
++    """Check that the studying entry marks Exp 4464 ingested with citations."""
++
++    required_phrases = [
++        "2026-06-19 Exp 4464",
++        "INGESTED",
++        "sweep_clusters.py",
++        "sweep_semscholar.py",
++        "HTTP 429",
++        "/deep-research",
++        "No leaderboard submission",
++        "flagged_for_v413",
++        f"random_seed={DEFAULT_RANDOM_SEED}",
++        DEFAULT_FLAGGED_FOR_V413,
++        "SOTA->experiment",
++    ]
++    for phrase in required_phrases:
++        _require(phrase in section, f"studying section missing required phrase: {phrase}")
++    missing_sources = sorted(
++        source for source in NOTE_REQUIRED_SOURCE_CITATIONS if source not in section
++    )
++    _require(
++        not missing_sources,
++        f"studying section missing verified source citations: {missing_sources}",
++    )
++
++
++def _with_studying_section(existing: str) -> str:
++    marker = "## 2026-06-19 Exp 4464"
++    next_marker = "\n## "
++    section = STUDYING_SECTION.rstrip() + "\n"
++
++    if marker in existing:
++        start = existing.index(marker)
++        next_start = existing.find(next_marker, start + 1)
++        if next_start == -1:
++            return existing[:start] + section
++        return existing[:start] + section + existing[next_start:]
++
++    if existing.startswith("## "):
++        return section + "\n" + existing
++
++    first_section = existing.find(next_marker)
++    if first_section == -1:
++        return existing.rstrip() + "\n\n" + section
++    return existing[: first_section + 1] + section + "\n" + existing[first_section + 1 :]
++
++
++def write_outputs(
++    *,
++    artifact_path: Path,
++    note_path: Path,
++    studying_path: Path,
++) -> dict[str, object]:
++    """Write the JSON artifact, research note, and idempotent studying entry."""
++
++    artifact = build_artifact()
++    validate_artifact(artifact)
++    validate_research_note(RESEARCH_NOTE)
++    validate_studying_section(STUDYING_SECTION)
++
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++    note_path.parent.mkdir(parents=True, exist_ok=True)
++    note_path.write_text(RESEARCH_NOTE.rstrip() + "\n", encoding="utf-8")
++
++    existing_studying = studying_path.read_text(encoding="utf-8") if studying_path.exists() else ""
++    studying_path.write_text(_with_studying_section(existing_studying), encoding="utf-8")
++
++    return artifact
++
++
++def main() -> int:
++    root_override = os.environ.get("CARNOT_EXP4464_ROOT")
++    repo_root = Path(root_override) if root_override else Path(__file__).resolve().parents[2]
++    artifact = write_outputs(
++        artifact_path=repo_root / "results/experiment_4464_sota_ingestion_412.json",
++        note_path=repo_root / RESEARCH_NOTE_RELATIVE_PATH,
++        studying_path=repo_root / "research-studying.md",
++    )
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/research-studying.md b/research-studying.md
+index 8be4aae7d7..9bc64d55b4 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -8,6 +8,38 @@ loop) executes the current experiments.
+ **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
+ **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+ 
++## 2026-06-19 Exp 4464 - .412 SOTA ingestion ingested
++
++**Status:** INGESTED into `results/experiment_4464_sota_ingestion_412.json` and
++`docs/research-notes/sota-ingestion-412-2026-06-19.md`.
++
++**Preconditions:** reliable channel reachable on CPU. The command
++`scripts/sweep_clusters.py --help` succeeded; the arXiv reachability check
++succeeded. `scripts/sweep_clusters.py` emitted focused verifier and world-model
++cluster URLs. `scripts/sweep_semscholar.py` ran five focused queries; Semantic
++Scholar returned HTTP 429 on all five queries, so no S2-only source was
++promoted. Low-concurrency WebSearch/WebFetch plus arXiv abs-page HTTP 200 checks
++verified arXiv:2309.16436, arXiv:2606.11521, arXiv:2507.14172,
++arXiv:2411.17708, arXiv:2411.02272, arXiv:2605.05138, arXiv:2606.12316, and
++arXiv:2603.13372. The banned `/deep-research` channel was not invoked.
++No leaderboard submission, live solve, or training run was launched.
++
++**Fresh-pass candidates marked ingested:** Counterexample-Guided Learning
++(arXiv:2606.11521), SMT-checked CEGIS (arXiv:2309.16436), SOAR
++(arXiv:2507.14172), neurally-guided program induction (arXiv:2411.17708),
++induction+transduction routing (arXiv:2411.02272), Executable World Models
++(arXiv:2605.05138), Loop-OWM (arXiv:2606.12316), and ARC living survey context
++(arXiv:2603.13372).
++
++flagged_for_v413: Counterexample-guided re-induction from rejecting execution states (arXiv:2606.11521; SMT-checked CEGIS predecessor arXiv:2309.16436)
++
++random_seed=4464
++
++**SOTA->experiment mapping note:** Add a counterexample-guided re-induction
++loop to the generic solver: feed verifier-rejected execution states back into
++dc22 config/toggle induction, tr87 glyph-rewrite induction, and sc25 phase-FSM
++world-model induction, then count only reproduction-gated fixes.
++
+ ## 2026-06-19 MANUFACTURED game variants — flagged for .413 (bigger generic-transfer benchmark)
+ 
+ **Status:** SHIPPED (outer-loop) + flagged for the .413 planner. `python/carnot/agentic/arc_variant_generator.py`
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 2197055cd7..22b5688e6d 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-19T20:28:20.576612Z",
+-  "duration_s": 0.019559144973754883,
++  "run_date": "2026-06-19T20:54:45.673971Z",
++  "duration_s": 0.021665096282958984,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ec1d6813d03e061a1e7ac8ef93efe8209c5a935442801ed8ae33076856b1055d",
++  "reproducibility_checksum": "ffd7dd5eefa880542cb241d7296d916285c1d40151fd428ac1c9aae5480abe4c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "0d26f56018344e5b8dcdfabccff0903ad17b73b1"
++    "adversarial_verify_version": "2e087a993cd3e069956a9cfe9cb8ac6731d3800a"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 6ab057452a..7511d81655 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-19T20:28:20.601816Z",
+-  "duration_s": 0.020252227783203125,
++  "run_date": "2026-06-19T20:54:45.702378Z",
++  "duration_s": 0.023395299911499023,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "9c9125bb0a68f07a56ed8714144f33978407fe05fb85bd234042a4401e0c698a",
++  "reproducibility_checksum": "83cf667ed8deab175c847b2af7e7f17265968efec9e581a0a27092191ea2b95f",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "0d26f56018344e5b8dcdfabccff0903ad17b73b1"
++    "adversarial_verify_version": "2e087a993cd3e069956a9cfe9cb8ac6731d3800a"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index a4d4b74b14..3be00231ec 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1080970764160156,
++  "efficiency_gains_ms": 2.118349075317383,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index aa02638d4a..8dacad6be6 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.177998587489128e-05,
++  "duration_s": 3.543589264154434e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4464_sota_ingestion_412.json b/results/experiment_4464_sota_ingestion_412.json
+new file mode 100644
+index 0000000000..8e4c5ed3f2
+--- /dev/null
++++ b/results/experiment_4464_sota_ingestion_412.json
+@@ -0,0 +1,132 @@
++{
++  "field_principles": {
++    "flagged_for_v413": {
++      "principle": "the single strongest method fed forward so SOTA flows into the next milestone (discover->ingest->plan->experiment)"
++    },
++    "honest_verdict": {
++      "principle": "terminal-prefixed"
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- CPU-only reliable-channel ingestion; no live solve claim"
++    },
++    "methods": {
++      "principle": "list of {name, arxiv_id, what_it_takes_over_our_stack, pitfalls} -- each with a VERIFIED citation (no citation = fabrication)"
++    },
++    "preconditions_checked": {
++      "principle": "Reliable-channel, no-deep-research, no-leaderboard provenance."
++    },
++    "random_seed": {
++      "principle": "Deterministic focused sweep seed."
++    },
++    "research_note_path": {
++      "principle": "Repo-relative SOTA mapping note emitted with artifact."
++    },
++    "sota_to_experiment_mapping_note": {
++      "principle": "Concrete SOTA->experiment mapping for the `.413` planner."
++    }
++  },
++  "flagged_for_v413": "Counterexample-guided re-induction from rejecting execution states (arXiv:2606.11521; SMT-checked CEGIS predecessor arXiv:2309.16436)",
++  "honest_verdict": "complete: sota_ingestion_412_mapped_for_v413",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "methods": [
++    {
++      "arxiv_id": "2606.11521",
++      "name": "Counterexample-Guided Learning in the Large",
++      "pitfalls": "The paper studies regex induction, not ARC games; Carnot must translate execution failures into compact, replayable grid/game counterexamples and avoid treating feedback as a live solve claim.",
++      "what_it_takes_over_our_stack": "Turn every verifier-rejected generic operator run into structured feedback: rejected state, expected predicate, observed predicate, and counterexample cluster. Re-prompt the inducer with that state until dc22, tr87, or sc25 reproduces under the offline env."
++    },
++    {
++      "arxiv_id": "2309.16436",
++      "name": "LLM plus SMT counterexample-guided inductive synthesis",
++      "pitfalls": "Blocks-world planning is simpler than ARC-AGI-3; incomplete SMT encodings or hand-written constraints can launder game-specific knowledge into the induction loop.",
++      "what_it_takes_over_our_stack": "Use exact execution checks or small SMT encodings as the verifier that returns counterexamples to the LLM learner before any generic rule is accepted."
++    },
++    {
++      "arxiv_id": "2507.14172",
++      "name": "SOAR self-improving evolutionary ARC synthesis",
++      "pitfalls": "Fine-tuning and self-improvement are outside this CPU-only ingestion; any future training must separate held-out games and avoid replay leakage.",
++      "what_it_takes_over_our_stack": "Wrap the re-induction loop in evolutionary search and bank verified repair attempts as hindsight examples for future generic operators."
++    },
++    {
++      "arxiv_id": "2411.17708",
++      "name": "Neurally-guided ARC program induction",
++      "pitfalls": "A narrow DSL can miss mechanics, while an unconstrained DSL can explode search; the verifier must remain the authority.",
++      "what_it_takes_over_our_stack": "Constrain tr87-style glyph rewrite synthesis to a small grid DSL and use a learned prior only to order executable candidates."
++    },
++    {
++      "arxiv_id": "2411.02272",
++      "name": "Induction plus transduction routing for ARC",
++      "pitfalls": "Static ARC input-output success does not prove interactive control; transductive shortcuts need separate action and state validation.",
++      "what_it_takes_over_our_stack": "Route each open gap between precise induced programs and direct state/output prediction, then require the chosen path to reproduce through the same offline gate."
++    },
++    {
++      "arxiv_id": "2605.05138",
++      "name": "Executable ARC-AGI-3 world models",
++      "pitfalls": "Fresh workspaces and leakage audits are load-bearing; closed-agent headline numbers are not evidence that Carnot solved anything.",
++      "what_it_takes_over_our_stack": "Use the induce-verify-refactor-plan harness as the phase-FSM test bed for sc25 and other interactive games after a rule re-induces."
++    },
++    {
++      "arxiv_id": "2606.12316",
++      "name": "Loop-OWM object-centric transition loops",
++      "pitfalls": "ARC-1/2 visual-symbolic transition prediction is not the same as interactive game planning; add goal, action-cost, and reproduction checks.",
++      "what_it_takes_over_our_stack": "Represent cast-grid, toggle, and glyph mechanics as slots plus looped object-state transitions before translating them into generic world-model operators."
++    },
++    {
++      "arxiv_id": "2603.13372",
++      "name": "ARC living survey meta-solver context",
++      "pitfalls": "A survey is context, not a runnable method; it must not be counted as experimental evidence or a leaderboard result.",
++      "what_it_takes_over_our_stack": "Use the survey's cross-paradigm map to keep .413 focused on refinement loops, program synthesis, and interactive transfer instead of another single-model prompt sweep."
++    }
++  ],
++  "preconditions_checked": {
++    "arxiv_http_200_verified_ids": [
++      "2309.16436",
++      "2411.02272",
++      "2411.17708",
++      "2507.14172",
++      "2603.13372",
++      "2605.05138",
++      "2606.11521",
++      "2606.12316"
++    ],
++    "arxiv_http_200_verified_urls": [
++      "https://arxiv.org/abs/2309.16436",
++      "https://arxiv.org/abs/2411.02272",
++      "https://arxiv.org/abs/2411.17708",
++      "https://arxiv.org/abs/2507.14172",
++      "https://arxiv.org/abs/2603.13372",
++      "https://arxiv.org/abs/2605.05138",
++      "https://arxiv.org/abs/2606.11521",
++      "https://arxiv.org/abs/2606.12316"
++    ],
++    "arxiv_reachable": true,
++    "cpu_only": true,
++    "deep_research_invoked": false,
++    "leaderboard_submission": false,
++    "live_solve_claim": false,
++    "research_conductor_modified": false,
++    "sweep_clusters_help_succeeded": true,
++    "sweep_clusters_ran": true,
++    "sweep_clusters_urls": [
++      "scripts/sweep_clusters.py 0 --max-results 8",
++      "scripts/sweep_clusters.py 3 --max-results 8"
++    ],
++    "sweep_semscholar_ran": true,
++    "sweep_semscholar_status": "five focused queries ran; Semantic Scholar returned HTTP 429 on all five queries, so no S2-only source was promoted",
++    "top_abstracts_webfetched": [
++      "https://arxiv.org/abs/2309.16436",
++      "https://arxiv.org/abs/2411.02272",
++      "https://arxiv.org/abs/2411.17708",
++      "https://arxiv.org/abs/2507.14172",
++      "https://arxiv.org/abs/2603.13372",
++      "https://arxiv.org/abs/2605.05138",
++      "https://arxiv.org/abs/2606.11521",
++      "https://arxiv.org/abs/2606.12316"
++    ],
++    "training_launched": false,
++    "websearch_webfetch_reachable": true
++  },
++  "random_seed": 4464,
++  "research_note_path": "docs/research-notes/sota-ingestion-412-2026-06-19.md",
++  "sota_to_experiment_mapping_note": "SOTA->experiment map for .413: promote counterexample-guided re-induction from rejecting execution states (arXiv:2606.11521) as the strongest handoff, with SMT-checked CEGIS (arXiv:2309.16436) as the formal loop template. Feed verifier-rejected dc22, tr87, and sc25 execution states back into the generic operator prompt, cluster the failures, re-induce the rule, and accept only reproduction-gated fixes. Use SOAR (arXiv:2507.14172) and neurally-guided induction (arXiv:2411.17708) for search pressure, induction+transduction (arXiv:2411.02272) for routing, Executable World Models (arXiv:2605.05138) plus Loop-OWM (arXiv:2606.12316) for phase-FSM and object-state tests, and the ARC survey (arXiv:2603.13372) as the meta-solver context."
++}
+diff --git a/results/experiment_4464_sota_ingestion_412.py b/results/experiment_4464_sota_ingestion_412.py
+new file mode 100644
+index 0000000000..8e463d29d2
+--- /dev/null
++++ b/results/experiment_4464_sota_ingestion_412.py
+@@ -0,0 +1,8 @@
++"""Required runner for REQ-REPORT-4464."""
++
++from __future__ import annotations
++
++from carnot.experiment_4464_sota_ingestion_412 import main
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index f1ec324983..6c2ac175c5 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T20:41:26Z",
+-  "finished_at": "2026-06-19T20:41:26Z",
++  "started_at": "2026-06-19T20:54:35Z",
++  "finished_at": "2026-06-19T20:54:35Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 1c9b40ae19..ea4e919dcb 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T20:41:26Z",
+-  "finished_at": "2026-06-19T20:41:26Z",
++  "started_at": "2026-06-19T20:54:35Z",
++  "finished_at": "2026-06-19T20:54:35Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 65273e88ed..a8ab18cb66 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T20:41:26Z",
+-  "finished_at": "2026-06-19T20:41:26Z",
++  "started_at": "2026-06-19T20:54:35Z",
++  "finished_at": "2026-06-19T20:54:35Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4464_sota_ingestion_412.py b/tests/python/test_experiment_4464_sota_ingestion_412.py
+new file mode 100644
+index 0000000000..570c9c6048
+--- /dev/null
++++ b/tests/python/test_experiment_4464_sota_ingestion_412.py
+@@ -0,0 +1,231 @@
++"""Tests for REQ-REPORT-4464 / SCENARIO-REPORT-4464."""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4464_sota_ingestion_412 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++ARTIFACT_PATH = Path("results/experiment_4464_sota_ingestion_412.json")
++WRAPPER_PATH = Path("results/experiment_4464_sota_ingestion_412.py")
++NOTE_PATH = Path("docs/research-notes/sota-ingestion-412-2026-06-19.md")
++
++
++def _valid_artifact() -> dict[str, object]:
++    return mod.build_artifact()
++
++
++def test_req_report_4464_spec_anchor_exists() -> None:
++    """REQ-REPORT-4464: OpenSpec declares the .412 SOTA ingestion."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4464" in spec
++    assert "SCENARIO-REPORT-4464" in spec
++    assert ARTIFACT_PATH.as_posix() in spec
++    assert WRAPPER_PATH.as_posix() in spec
++    assert NOTE_PATH.as_posix() in spec
++    assert "flagged_for_v413" in spec
++    assert "complete: sota_ingestion_412_mapped_for_v413" in spec
++    assert "arXiv:2606.11521" in spec
++    assert "arXiv:2309.16436" in spec
++    assert "aggregation_from_upstream_artifacts" in spec
++
++
++def test_build_artifact_has_required_fields_for_req_report_4464() -> None:
++    """REQ-REPORT-4464: artifact exposes the required principle fields."""
++
++    artifact = _valid_artifact()
++
++    assert set(artifact) == mod.REQUIRED_ARTIFACT_FIELDS
++    assert artifact["honest_verdict"] == mod.DEFAULT_HONEST_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["methods"] == mod.DEFAULT_METHODS
++    assert artifact["flagged_for_v413"] == mod.DEFAULT_FLAGGED_FOR_V413
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++    assert artifact["research_note_path"] == NOTE_PATH.as_posix()
++    assert "SOTA->experiment" in str(artifact["sota_to_experiment_mapping_note"])
++
++
++@pytest.mark.parametrize(
++    ("bad_artifact", "message"),
++    [
++        (_valid_artifact() | {"honest_verdict": "blocked_network"}, "terminal prefix"),
++        (_valid_artifact() | {"inference_substrate": "cpu_solve"}, "aggregation"),
++        (_valid_artifact() | {"field_principles": {"honest_verdict": "loose"}}, "field_principles"),
++        (_valid_artifact() | {"methods": mod.DEFAULT_METHODS[:4]}, "five to eight"),
++        (
++            _valid_artifact()
++            | {
++                "methods": [
++                    mod.DEFAULT_METHODS[0] | {"arxiv_id": "9999.99999"},
++                    *mod.DEFAULT_METHODS[1:],
++                ]
++            },
++            "verified arXiv",
++        ),
++        (
++            _valid_artifact() | {"methods": [mod.DEFAULT_METHODS[0], *mod.DEFAULT_METHODS[:-1]]},
++            "duplicate",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods": [
++                    mod.DEFAULT_METHODS[0] | {"what_it_takes_over_our_stack": ""},
++                    *mod.DEFAULT_METHODS[1:],
++                ]
++            },
++            "non-empty string",
++        ),
++        (_valid_artifact() | {"methods": ["not-a-dict", *mod.DEFAULT_METHODS[1:]]}, "method"),
++        (_valid_artifact() | {"flagged_for_v413": "unverified"}, "flagged_for_v413"),
++        (_valid_artifact() | {"random_seed": "4464"}, "random_seed"),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"deep_research_invoked": True}
++            },
++            "deep-research",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"leaderboard_submission": True}
++            },
++            "leaderboard",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"live_solve_claim": True}
++            },
++            "live solve",
++        ),
++        (
++            _valid_artifact()
++            | {"preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED) | {"cpu_only": False}},
++            "CPU",
++        ),
++        (_valid_artifact() | {"preconditions_checked": []}, "preconditions_checked"),
++        (_valid_artifact() | {"sota_to_experiment_mapping_note": "short"}, "mapping note"),
++        (
++            _valid_artifact() | {"research_note_path": "docs/research-notes/wrong.md"},
++            "research_note_path",
++        ),
++    ],
++)
++def test_validate_artifact_rejects_schema_violations_for_req_report_4464(
++    bad_artifact: dict[str, object], message: str
++) -> None:
++    """REQ-REPORT-4464: invalid SOTA artifacts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_validate_artifact_rejects_missing_and_extra_fields() -> None:
++    """REQ-REPORT-4464: top-level artifact fields are exact."""
++
++    missing = _valid_artifact()
++    missing.pop("methods")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing)
++
++    extra = _valid_artifact() | {"url": "https://example.com"}
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_artifact(extra)
++
++
++def test_validate_notes_check_citations_and_v413_handoff() -> None:
++    """SCENARIO-REPORT-4464: notes keep verified citations and the .413 flag."""
++
++    mod.validate_research_note(mod.RESEARCH_NOTE)
++    mod.validate_studying_section(mod.STUDYING_SECTION)
++
++    with pytest.raises(ValueError, match="verified source citations"):
++        mod.validate_research_note(mod.RESEARCH_NOTE.replace("arXiv:2606.11521", "CGL"))
++    with pytest.raises(ValueError, match="required phrase"):
++        mod.validate_research_note(mod.RESEARCH_NOTE.replace("No leaderboard submission", "No LB"))
++    with pytest.raises(ValueError, match="flagged_for_v413"):
++        mod.validate_studying_section(mod.STUDYING_SECTION.replace("flagged_for_v413", "next flag"))
++    with pytest.raises(ValueError, match="verified source citations"):
++        mod.validate_studying_section(mod.STUDYING_SECTION.replace("arXiv:2606.12316", "Loop-OWM"))
++
++
++def test_write_outputs_updates_files_idempotently_for_req_report_4464(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4464: writer emits artifact, research note, and studying entry."""
++
++    artifact_path = tmp_path / ARTIFACT_PATH
++    note_path = tmp_path / NOTE_PATH
++    studying_path = tmp_path / "research-studying.md"
++    studying_path.write_text("# Research Studying\n\n## Existing\nBody.\n", encoding="utf-8")
++
++    artifact = mod.write_outputs(
++        artifact_path=artifact_path,
++        note_path=note_path,
++        studying_path=studying_path,
++    )
++    second_artifact = mod.write_outputs(
++        artifact_path=artifact_path,
++        note_path=note_path,
++        studying_path=studying_path,
++    )
++
++    mod.validate_artifact(artifact)
++    assert second_artifact == artifact
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++    assert "SOTA->experiment" in note_path.read_text(encoding="utf-8")
++    studying = studying_path.read_text(encoding="utf-8")
++    assert studying.count("2026-06-19 Exp 4464") == 1
++    assert "flagged_for_v413" in studying
++
++
++def test_section_updates_handle_heading_layouts_for_req_report_4464() -> None:
++    """REQ-REPORT-4464: studying updates work before or between sections."""
++
++    without_marker = "# Doc\n\n## Existing\nBody.\n"
++    studying_once = mod._with_studying_section(without_marker)
++    starts_with_heading = mod._with_studying_section("## Existing\nBody.\n")
++    studying_refreshed = mod._with_studying_section(studying_once)
++    marker_at_end = mod._with_studying_section(studying_once.split("\n## Existing")[0])
++    no_heading = mod._with_studying_section("# Doc\nOnly body.\n")
++
++    assert studying_once.index("2026-06-19 Exp 4464") < studying_once.index("## Existing")
++    assert starts_with_heading.startswith("## 2026-06-19 Exp 4464")
++    assert studying_refreshed.count("2026-06-19 Exp 4464") == 1
++    assert marker_at_end.count("2026-06-19 Exp 4464") == 1
++    assert "## Existing\nBody." in studying_refreshed
++    assert "Counterexample-Guided Learning" in no_heading
++
++
++def test_main_and_wrapper_emit_terminal_verdict_for_req_report_4464(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-4464: module and wrapper write default outputs."""
++
++    monkeypatch.setenv("CARNOT_EXP4464_ROOT", str(tmp_path))
++
++    with pytest.raises(SystemExit) as module_exit:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++    assert module_exit.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert (tmp_path / ARTIFACT_PATH).exists()
++    assert (tmp_path / NOTE_PATH).exists()
++
++    with pytest.raises(SystemExit) as wrapper_exit:
++        runpy.run_path(str(WRAPPER_PATH), run_name="__main__")
++    assert wrapper_exit.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert (tmp_path / ARTIFACT_PATH).exists()
+-- 
+2.55.0
+

@@ -1,0 +1,3665 @@
+From 66ccf64ecd4129f9036d17056b8783d195efc754 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 11:09:44 -0400
+Subject: [PATCH 11269/11362] [conductor] Fresh-process belief isolation,
+ retention, and poison audit
+
+Automated research step by research conductor.
+Task ID: exp7022-belief-ledger-cold-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/continuous-learning/spec.md  |  149 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../agentic/arc_belief_ledger_cold_audit.py   | 1669 +++++++++++++++++
+ ...eriment_7022_belief_ledger_cold_audit.json | 1102 +++++++++++
+ ...xperiment_7022_belief_ledger_cold_audit.py |   19 +
+ ...xperiment_7022_belief_ledger_cold_audit.py |  655 +++++++
+ 6 files changed, 3595 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/agentic/arc_belief_ledger_cold_audit.py
+ create mode 100644 results/experiment_7022_belief_ledger_cold_audit.json
+ create mode 100644 scripts/experiments/experiment_7022_belief_ledger_cold_audit.py
+ create mode 100644 tests/python/test_experiment_7022_belief_ledger_cold_audit.py
+
+diff --git a/openspec/capabilities/continuous-learning/spec.md b/openspec/capabilities/continuous-learning/spec.md
+index 28aeb76084..2569ef1ce5 100644
+--- a/openspec/capabilities/continuous-learning/spec.md
++++ b/openspec/capabilities/continuous-learning/spec.md
+@@ -11580,3 +11580,152 @@ not satisfy the value gate.
+ | Requirement | Implementation | Verification |
+ |---|---|---|
+ | REQ-CSL-7021 and SCENARIO-CSL-7021-* | Implemented 2026-09-05 in `arc_prospective_belief_utility.py` and the Exp7021 runner. | RED-first tests cover chronology, equal capacity, support classes, ties, decision-cluster bootstrap, leakage, recomputation, terminal gates, and 100% of the new module. |
++
++## REQ-CSL-7022: Independent Belief Ledger Cold Audit
++
++Carnot SHALL audit the frozen Exp7020 belief ledger in a fresh process. The
++process SHALL hide CUDA devices and use a separate network namespace with no
++external route. The source tree SHALL be read-only during the child run. The
++audit SHALL not call an LLM, an ARC service, a game adapter, game source, or an
++online lookup. Its `inference_substrate` SHALL equal
++`fresh_process_arc_belief_audit_no_llm`.
++
++The audit SHALL require the bare integer Exp7020 ledger-ready gate and the bare
++integer Exp7021 comparison-complete gate. It SHALL also require exact pinned
++hashes for Exp7019, Exp7020, Exp7021, the construction fixture, the sealed
++sidecar, both producer modules, both command wrappers, and the solve registry.
++The producer code SHALL be importable. Bubblewrap SHALL provide the fresh
++process launcher. The requested artifact path SHALL be writable. The audit
++SHALL hash all sources before it parses an upstream headline. A failed
++precondition SHALL write `blocked_belief_ledger_cold_audit` and preserve the
++first failed check, expected value, and observed value in
++`gate_check_summary`.
++
++The child SHALL replay the 27 construction rows twice into new ledger roots.
++It SHALL independently reduce state, fact, cluster, query, and transaction
++evidence into a path-independent digest. The two digests SHALL match each
++other and the digest recorded by Exp7020. The audit SHALL reject changed event
++order, changed event bytes without a new row hash, authority conflicts, and
++forbidden construction fields. A semantically identical JSON serialization
++SHALL keep the replay result unchanged.
++
++The mutation matrix SHALL cover every future or identity field denied by the
++updater. It SHALL include future labels, held-future data, later outcomes,
++sealed-future data, game identity, source paths, hidden rules, adapters, and
++solve-registry labels. Each mutation SHALL be rejected before publication and
++before query. The state bytes SHALL remain unchanged. The RED tests SHALL also
++bypass the field auditor. Each bypass SHALL make the mutation row fail, so a
++disabled check cannot leave the test green.
++
++The audit SHALL independently exercise direct contradiction, supersession,
++retrieval-key collision, deterministic eviction, repeated poison admission,
++protected-fact retention, restart, interruption before publish, interruption
++after publish, changed snapshot bytes, exact rollback, tampered journal tails,
++and truncated commit tails. A clean restart SHALL recover the correct durable
++boundary. A valid rollback SHALL reproduce the caller-held parent bytes
++exactly. Capacity SHALL remain within both the item and byte limits. Poison
++traffic SHALL not change a protected case.
++
++The audit SHALL recompute every Exp7021 arm aggregate and every paired delta
++from per-decision rows. It SHALL independently recompute the positive gate,
++including strict control improvement, paired interval lower bounds, mechanic
++group breadth, and protected retention. A headline or paired-row mismatch
++SHALL set promotion readiness to zero and SHALL produce a disqualified
++verdict. The audit SHALL not import the Exp7021 aggregation or gate helpers.
++
++`belief_shadow_safe_score` SHALL be the bare integer one only when leakage is
++zero, fresh replay is deterministic, rollback is byte-exact, capacity is
++bounded, protected cases are unharmed, and every required control terminates.
++`belief_promotion_ready_score` SHALL be the bare integer one only when shadow
++safety is one, row recomputation agrees with every headline, and the
++row-recomputed Exp7021 positive gate passes. A safe ledger without demonstrated
++value SHALL use `verdict_class=null`. A leaky or non-recomputable audit SHALL
++use `verdict_class=disqualified`. The verifier SHALL declare
++`verifier_is_oracle=false`.
++
++The artifact SHALL contain `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `cited_upstream_artifacts`,
++`source_artifact_hashes`, `rows`, `fresh_process_rows`,
++`network_isolation_rows`, `gpu_isolation_rows`,
++`future_leakage_mutation_rows`, `game_identity_mutation_rows`,
++`serialization_mutation_rows`, `order_mutation_rows`,
++`authority_conflict_rows`, `supersession_rows`,
++`retrieval_collision_rows`, `poison_rows`, `capacity_rows`, `retention_rows`,
++`restart_rows`, `interruption_rows`, `rollback_rows`,
++`aggregate_recomputation_rows`, `shadow_safety_gate_rows`,
++`promotion_gate_rows`, `belief_shadow_safe_score`,
++`belief_promotion_ready_score`, `random_seed`, `reproducibility_checksum`,
++`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
++`honest_verdict`. `field_principles` SHALL give one scientific principle for
++every listed field.
++
++### SCENARIO-CSL-7022-PRECONDITIONS
++
++- GIVEN changed upstream bytes, a false or wrapped upstream gate, missing code,
++  no fresh-process launcher, or an unwritable result path
++- WHEN Exp7022 checks inputs before parsing headlines or running mutations
++- THEN it writes one blocked artifact
++- AND the first failed check retains its exact expected and observed values
++
++### SCENARIO-CSL-7022-ISOLATED-REPLAY
++
++- GIVEN the pinned construction fixture and a clean temporary ledger root
++- WHEN a network-disabled and GPU-hidden child replays it twice
++- THEN both path-independent digests equal the Exp7020 construction digest
++- AND game source, adapters, registry labels, online lookups, and future fields
++  remain outside construction and query state
++
++### SCENARIO-CSL-7022-MUTATION-SENSITIVITY
++
++- GIVEN each denied future, game, source, adapter, hidden-rule, or registry field
++- WHEN the field is inserted into an otherwise valid event
++- THEN the write and query are rejected without changing state bytes
++- AND bypassing the field auditor makes that RED mutation test fail
++
++### SCENARIO-CSL-7022-ORDER-AUTHORITY-AND-RETRIEVAL
++
++- GIVEN reordered rows, changed serialization bytes, a reused event authority,
++  and keys that differ in one typed mechanic field
++- WHEN the audit replays writes and queries
++- THEN order and authority violations fail closed
++- AND semantic serialization is invariant
++- AND one mechanic cannot retrieve another mechanic's fact
++
++### SCENARIO-CSL-7022-CONFLICT-CAPACITY-AND-POISON
++
++- GIVEN a known fact, a contradictory outcome, renewed support, a full store,
++  and an unrelated poison cluster
++- WHEN the audit commits the clean sequence
++- THEN contradiction and supersession remain visible
++- AND deterministic capacity stays bounded
++- AND poison cannot evict or harm protected facts
++
++### SCENARIO-CSL-7022-RESTART-INTERRUPTION-ROLLBACK
++
++- GIVEN committed state, prepare and publish interruptions, saved snapshots,
++  and changed or truncated journal tails
++- WHEN a clean process restarts and rolls back
++- THEN each durable boundary recovers deterministically
++- AND invalid snapshot or journal bytes are rejected
++- AND valid rollback bytes equal the saved parent bytes
++
++### SCENARIO-CSL-7022-ROW-RECOMPUTATION
++
++- GIVEN Exp7021 per-decision, action, retention, query-cost, and paired rows
++- WHEN the audit independently reduces arm metrics and clustered paired deltas
++- THEN every published headline has an exact row-derived witness
++- AND any headline or paired-row drift disqualifies value promotion
++
++### SCENARIO-CSL-7022-SEPARATE-DECISIONS
++
++- GIVEN a safe replay whose row-recomputed value gate is not positive
++- WHEN Exp7022 reduces the two decisions
++- THEN `belief_shadow_safe_score` equals one
++- AND `belief_promotion_ready_score` equals zero
++- AND `verdict_class` is `null`, not `positive`
++
++## Implementation Status (REQ-CSL-7022)
++
++| Requirement | Implementation | Verification |
++|---|---|---|
++| REQ-CSL-7022 and SCENARIO-CSL-7022-* | Implemented 2026-09-05 in `arc_belief_ledger_cold_audit.py` and the Exp7022 runner. | RED-first tests cover every denied field, restricted replay, ledger controls, independent row reduction, terminal decisions, and 100% of the new module. |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 43357f1fed..f3432237be 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5339,
++  "experiments_checked": 5340,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_belief_ledger_cold_audit.py b/python/carnot/agentic/arc_belief_ledger_cold_audit.py
+new file mode 100644
+index 0000000000..ad70c12e4f
+--- /dev/null
++++ b/python/carnot/agentic/arc_belief_ledger_cold_audit.py
+@@ -0,0 +1,1669 @@
++"""Audit the frozen ARC belief ledger in a restricted fresh process.
++
++The audit exercises the shipped ledger through its public write, query,
++restart, and rollback surfaces. It independently reduces the prospective
++utility rows so producer headlines cannot approve their own promotion.
++
++Spec refs: REQ-CSL-7022 and SCENARIO-CSL-7022-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import defaultdict
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++import hashlib
++import json
++import os
++from pathlib import Path
++import random
++import shutil
++import socket
++import subprocess
++import sys
++import tempfile
++import time
++from typing import Any
++
++from carnot.agentic import arc_belief_ledger as ledger_mod
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = 7022
++SCHEMA = "carnot.exp7022.belief_ledger_cold_audit.v1"
++RUN_DATE = "20260905"
++RANDOM_SEED = 70_222_026_090_5
++INFERENCE_SUBSTRATE = "fresh_process_arc_belief_audit_no_llm"
++REPO_ROOT = Path(__file__).resolve().parents[3]
++
++SPEC_PATH = Path("openspec/capabilities/continuous-learning/spec.md")
++MODULE_PATH = Path("python/carnot/agentic/arc_belief_ledger_cold_audit.py")
++WRAPPER_PATH = Path("scripts/experiments/experiment_7022_belief_ledger_cold_audit.py")
++RESULT_PATH = Path("results/experiment_7022_belief_ledger_cold_audit.json")
++
++SOURCE_PATHS = {
++    "exp7019": Path("results/experiment_7019_arc_belief_stream_fixture.json"),
++    "exp7020": Path("results/experiment_7020_counterexample_belief_ledger.json"),
++    "exp7021": Path("results/experiment_7021_prospective_belief_utility.json"),
++    "construction_fixture": Path(
++        "results/raw/experiment_7019_arc_belief_stream_fixture/transition_events.jsonl"
++    ),
++    "sealed_sidecar": Path(
++        "results/raw/experiment_7019_arc_belief_stream_fixture/sealed_held_future.jsonl"
++    ),
++    "ledger_module": Path("python/carnot/agentic/arc_belief_ledger.py"),
++    "value_module": Path("python/carnot/agentic/arc_prospective_belief_utility.py"),
++    "ledger_wrapper": Path("scripts/experiments/experiment_7020_counterexample_belief_ledger.py"),
++    "value_wrapper": Path("scripts/experiments/experiment_7021_prospective_belief_utility.py"),
++    "solve_registry": Path("ops/arc_solve_registry.yaml"),
++}
++EXPECTED_SOURCE_HASHES = {
++    "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++    "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++    "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++    "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++    "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++    "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++    "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++    "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++    "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
++    "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++}
++
++ARMS = ("frozen", "recency_only", "counterexample_belief")
++CONTROLS = ("frozen", "recency_only")
++FUTURE_FIELDS = frozenset({"future_label", "held_future", "later_outcome", "sealed_future"})
++GAME_IDENTITY_FIELDS = ledger_mod.FORBIDDEN_UPDATER_KEYS - FUTURE_FIELDS
++VERDICT_CLASSES = frozenset(
++    {"positive", "circular_positive", "null", "blocked", "disqualified", "partial"}
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "cited_upstream_artifacts",
++    "source_artifact_hashes",
++    "rows",
++    "fresh_process_rows",
++    "network_isolation_rows",
++    "gpu_isolation_rows",
++    "future_leakage_mutation_rows",
++    "game_identity_mutation_rows",
++    "serialization_mutation_rows",
++    "order_mutation_rows",
++    "authority_conflict_rows",
++    "supersession_rows",
++    "retrieval_collision_rows",
++    "poison_rows",
++    "capacity_rows",
++    "retention_rows",
++    "restart_rows",
++    "interruption_rows",
++    "rollback_rows",
++    "aggregate_recomputation_rows",
++    "shadow_safety_gate_rows",
++    "promotion_gate_rows",
++    "belief_shadow_safe_score",
++    "belief_promotion_ready_score",
++    "random_seed",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++ROW_TABLES = (
++    "rows",
++    "fresh_process_rows",
++    "network_isolation_rows",
++    "gpu_isolation_rows",
++    "future_leakage_mutation_rows",
++    "game_identity_mutation_rows",
++    "serialization_mutation_rows",
++    "order_mutation_rows",
++    "authority_conflict_rows",
++    "supersession_rows",
++    "retrieval_collision_rows",
++    "poison_rows",
++    "capacity_rows",
++    "retention_rows",
++    "restart_rows",
++    "interruption_rows",
++    "rollback_rows",
++    "aggregate_recomputation_rows",
++    "shadow_safety_gate_rows",
++    "promotion_gate_rows",
++)
++SAFETY_ROW_TABLES = (
++    "fresh_process_rows",
++    "network_isolation_rows",
++    "gpu_isolation_rows",
++    "future_leakage_mutation_rows",
++    "game_identity_mutation_rows",
++    "serialization_mutation_rows",
++    "order_mutation_rows",
++    "authority_conflict_rows",
++    "supersession_rows",
++    "retrieval_collision_rows",
++    "poison_rows",
++    "capacity_rows",
++    "retention_rows",
++    "restart_rows",
++    "interruption_rows",
++    "rollback_rows",
++)
++
++FIELD_PRINCIPLES: JsonDict = {
++    "field_principles": "A reason for each field makes the audit contract reviewable.",
++    "preconditions_checked": "Exact gates stop changed evidence before claims are parsed.",
++    "inference_substrate": "The substrate separates deterministic replay from model inference.",
++    "duration_s": "Wall time proves that the restricted audit process executed.",
++    "cited_upstream_artifacts": "Field citations state which upstream claims enter the audit.",
++    "source_artifact_hashes": "Pinned hashes bind every conclusion to exact source bytes.",
++    "rows": "Decision summaries keep shadow safety separate from value promotion.",
++    "fresh_process_rows": "Fresh replay rows expose process and digest independence.",
++    "network_isolation_rows": "Network rows prove that online evidence cannot enter the audit.",
++    "gpu_isolation_rows": "GPU rows prove that hidden accelerator state cannot affect replay.",
++    "future_leakage_mutation_rows": "Future mutations must fail before they can influence state.",
++    "game_identity_mutation_rows": "Identity mutations test transfer without game-specific clues.",
++    "serialization_mutation_rows": "Serialization controls separate meaning from byte tampering.",
++    "order_mutation_rows": "Order attacks prove chronology is part of the evidence contract.",
++    "authority_conflict_rows": "Authority rows prevent one event ID from owning two observations.",
++    "supersession_rows": "Supersession rows preserve refuted generations instead of rewriting them.",
++    "retrieval_collision_rows": "Collision rows prove that typed mechanics do not retrieve each other.",
++    "poison_rows": "Poison rows measure whether weak traffic can enter a protected full store.",
++    "capacity_rows": "Capacity rows enforce deterministic item and byte limits.",
++    "retention_rows": "Retention rows measure harm to protected construction facts.",
++    "restart_rows": "Restart rows prove that committed bytes remain durable.",
++    "interruption_rows": "Interruption rows test both sides of the atomic publish boundary.",
++    "rollback_rows": "Rollback rows prove rejection of bad bytes and exact parent restoration.",
++    "aggregate_recomputation_rows": "Independent reductions prevent producer headlines from self-validating.",
++    "shadow_safety_gate_rows": "Safety gates combine leakage, replay, capacity, rollback, and harm controls.",
++    "promotion_gate_rows": "Promotion gates require prospective value after safety passes.",
++    "belief_shadow_safe_score": "One permits bounded shadow use only after every safety condition passes.",
++    "belief_promotion_ready_score": "One permits promotion only after safety and row-derived value pass.",
++    "random_seed": "A fixed seed makes clustered interval replay deterministic.",
++    "reproducibility_checksum": "A timing-free digest detects later evidence drift.",
++    "gate_check_summary": "The first exact failure makes a block or null actionable.",
++    "verifier_is_oracle": "False states that the audit does not define game correctness.",
++    "verdict_class": "A closed class distinguishes safe nulls from disqualification.",
++    "honest_verdict": "A class-consistent prefix gives downstream tools one terminal meaning.",
++}
++
++
++def canonical_bytes(value: Any) -> bytes:
++    """Return one stable JSON encoding for independent audit hashes."""
++
++    return (
++        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n"
++    ).encode("utf-8")
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return a labeled SHA-256 digest for exact bytes."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_path(path: Path) -> str | None:
++    """Hash one source file, or preserve its absence as no digest."""
++
++    try:
++        return sha256_bytes(path.read_bytes())
++    except OSError:
++        return None
++
++
++def gate_check(check: str, expected: Any, observed: Any, *, passed: bool | None = None) -> JsonDict:
++    """Record exact values so a failed gate remains diagnosable."""
++
++    return {
++        "check": check,
++        "expected_value": deepcopy(expected),
++        "observed_value": deepcopy(observed),
++        "passed": bool(expected == observed if passed is None else passed),
++        "terminal": True,
++    }
++
++
++def gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Keep every gate and promote the first failed comparison."""
++
++    rows = [deepcopy(dict(row)) for row in checks]
++    failed = next((row for row in rows if row.get("passed") is not True), None)
++    return {
++        "checks": rows,
++        "failed_check": failed.get("check") if failed else None,
++        "expected_value": failed.get("expected_value") if failed else "all checks pass",
++        "observed_value": failed.get("observed_value") if failed else "all checks pass",
++        "passed": failed is None,
++    }
++
++
++def _hash_checks(
++    repo_root: Path,
++    source_paths: Mapping[str, Path],
++    expected_hashes: Mapping[str, str],
++) -> tuple[list[JsonDict], JsonDict]:
++    hashes = {name: sha256_path(repo_root / relative) for name, relative in source_paths.items()}
++    checks = [
++        gate_check(f"source_hash:{name}", expected_hashes.get(name), hashes.get(name))
++        for name in source_paths
++    ]
++    return checks, hashes
++
++
++def load_hashed_sources(
++    repo_root: Path,
++    *,
++    source_paths: Mapping[str, Path] = SOURCE_PATHS,
++    expected_hashes: Mapping[str, str] = EXPECTED_SOURCE_HASHES,
++) -> JsonDict:
++    """Hash every source before parsing any upstream headline."""
++
++    checks, hashes = _hash_checks(repo_root, source_paths, expected_hashes)
++    if any(row["passed"] is not True for row in checks):
++        return {"passed": False, "checks": checks, "hashes": hashes, "values": {}}
++
++    values: JsonDict = {}
++    for name in ("exp7019", "exp7020", "exp7021"):
++        if name in source_paths:
++            value = json.loads((repo_root / source_paths[name]).read_text(encoding="utf-8"))
++            values[name] = value if isinstance(value, dict) else None
++    if "construction_fixture" in source_paths:
++        try:
++            values["events"] = ledger_mod.load_updater_events(
++                repo_root / source_paths["construction_fixture"]
++            )
++            fixture_error = None
++        except ValueError as exc:
++            values["events"] = None
++            fixture_error = str(exc)
++    else:
++        fixture_error = None
++
++    exp7020 = values.get("exp7020")
++    exp7021 = values.get("exp7021")
++    ledger_gate = exp7020.get("belief_ledger_ready_score") if isinstance(exp7020, dict) else None
++    comparison_gate = (
++        exp7021.get("belief_utility_comparison_complete_score")
++        if isinstance(exp7021, dict)
++        else None
++    )
++    checks.extend(
++        [
++            gate_check(
++                "exp7020_belief_ledger_ready_score",
++                1,
++                ledger_gate,
++                passed=type(ledger_gate) is int and ledger_gate == 1,
++            ),
++            gate_check(
++                "exp7021_comparison_complete_score",
++                1,
++                comparison_gate,
++                passed=type(comparison_gate) is int and comparison_gate == 1,
++            ),
++            gate_check("construction_fixture_loadable", None, fixture_error),
++            gate_check(
++                "construction_event_count",
++                27,
++                len(values.get("events") or []),
++            ),
++            gate_check(
++                "producer_code_importable",
++                True,
++                bool(
++                    hasattr(ledger_mod, "BeliefLedger")
++                    and hasattr(ledger_mod, "mechanic_key_from_event")
++                ),
++            ),
++        ]
++    )
++    return {
++        "passed": all(row["passed"] is True for row in checks),
++        "checks": checks,
++        "hashes": hashes,
++        "values": values,
++    }
++
++
++def _mean(values: Sequence[float]) -> float | None:
++    if not values:
++        return None
++    return round(sum(values) / len(values), 12)
++
++
++def _cluster_interval(values_by_unit: Mapping[str, float], seed: int, resamples: int) -> JsonDict:
++    ordered = [float(values_by_unit[key]) for key in sorted(values_by_unit)]
++    if not ordered:
++        return {
++            "point_estimate": None,
++            "lower": None,
++            "upper": None,
++            "cluster_count": 0,
++            "resamples": resamples,
++            "seed": seed,
++        }
++    generator = random.Random(seed)
++    means = sorted(
++        sum(generator.choice(ordered) for _ in ordered) / len(ordered) for _ in range(resamples)
++    )
++    return {
++        "point_estimate": _mean(ordered),
++        "lower": round(means[int(0.025 * (resamples - 1))], 12),
++        "upper": round(means[int(0.975 * (resamples - 1))], 12),
++        "cluster_count": len(ordered),
++        "resamples": resamples,
++        "seed": seed,
++    }
++
++
++def _recompute_arm_rows(source: Mapping[str, Any]) -> list[JsonDict]:
++    decision_rows = list(source.get("per_decision_results", []))
++    action_rows = list(source.get("action_ranking_rows", []))
++    contradiction_rows = list(source.get("contradiction_avoidance_rows", []))
++    retention_rows = list(source.get("retention_rows", []))
++    query_rows = list(source.get("query_cost_rows", []))
++    rows = []
++    for arm in ARMS:
++        decisions = [row for row in decision_rows if row.get("arm") == arm]
++        actions = [row for row in action_rows if row.get("arm") == arm]
++        contradictions = [row for row in contradiction_rows if row.get("arm") == arm]
++        retention = [row for row in retention_rows if row.get("arm") == arm]
++        queries = [row for row in query_rows if row.get("arm") == arm]
++        final_retention = max(retention, key=lambda row: row["stream_index"], default=None)
++        rows.append(
++            {
++                "arm": arm,
++                "planned_decision_count": len(decisions),
++                "supported_decision_count": len(actions),
++                "action_ranking_accuracy": _mean([float(row["accuracy"]) for row in actions]),
++                "contradicted_action_rate": _mean(
++                    [float(bool(row["selected_contradicted"])) for row in contradictions]
++                ),
++                "useful_query_coverage": _mean(
++                    [float(bool(row["useful_query"])) for row in decisions]
++                ),
++                "final_protected_retention_rate": (
++                    final_retention["protected_retention_rate"]
++                    if final_retention is not None
++                    else None
++                ),
++                "mean_memory_bytes": _mean([float(row["memory_bytes"]) for row in queries]),
++                "mean_query_time_us": _mean([float(row["query_time_us"]) for row in queries]),
++                "terminal": True,
++            }
++        )
++    return rows
++
++
++def _recompute_paired_rows(source: Mapping[str, Any]) -> list[JsonDict]:
++    action_rows = list(source.get("action_ranking_rows", []))
++    values = {
++        arm: {
++            str(row["unit_id"]): float(row["accuracy"])
++            for row in action_rows
++            if row.get("arm") == arm
++        }
++        for arm in ARMS
++    }
++    source_rows = {str(row["comparison"]): row for row in source.get("paired_delta_rows", [])}
++    rows = []
++    for control in CONTROLS:
++        name = f"counterexample_belief_minus_{control}"
++        published = source_rows.get(name, {})
++        common = sorted(set(values["counterexample_belief"]) & set(values[control]))
++        deltas = {
++            unit_id: values["counterexample_belief"][unit_id] - values[control][unit_id]
++            for unit_id in common
++        }
++        interval = _cluster_interval(
++            deltas,
++            int(published.get("seed", 0)),
++            int(published.get("resamples", 0)),
++        )
++        rows.append(
++            {
++                "metric": "action_ranking_accuracy",
++                "comparison": name,
++                **interval,
++                "terminal": True,
++            }
++        )
++    return rows
++
++
++def _row_positive_gate(
++    arm_rows: Sequence[Mapping[str, Any]],
++    paired_rows: Sequence[Mapping[str, Any]],
++    source: Mapping[str, Any],
++) -> tuple[bool, list[JsonDict]]:
++    by_arm = {str(row["arm"]): row for row in arm_rows}
++    belief_value = by_arm["counterexample_belief"]["action_ranking_accuracy"]
++    strict = bool(
++        belief_value is not None
++        and all(
++            by_arm[control]["action_ranking_accuracy"] is not None
++            and belief_value > by_arm[control]["action_ranking_accuracy"]
++            for control in CONTROLS
++        )
++    )
++    lower_nonnegative = bool(paired_rows) and all(
++        row["lower"] is not None and float(row["lower"]) >= 0.0 for row in paired_rows
++    )
++    mechanics: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
++    for row in source.get("action_ranking_rows", []):
++        mechanics[str(row["mechanic_group"])][str(row["arm"])].append(float(row["accuracy"]))
++    nonnegative_groups = sum(
++        1
++        for values in mechanics.values()
++        if values.get("counterexample_belief")
++        and values.get("recency_only")
++        and _mean(values["counterexample_belief"]) >= _mean(values["recency_only"])
++    )
++    belief_retention = by_arm["counterexample_belief"]["final_protected_retention_rate"]
++    recency_retention = by_arm["recency_only"]["final_protected_retention_rate"]
++    retention_ok = bool(
++        belief_retention is not None
++        and recency_retention is not None
++        and belief_retention >= recency_retention
++    )
++    rows = [
++        gate_check("strictly_beats_both_controls", True, strict),
++        gate_check("paired_interval_lower_bounds_nonnegative", True, lower_nonnegative),
++        gate_check(
++            "nonnegative_belief_minus_recency_mechanic_groups",
++            ">=2",
++            nonnegative_groups,
++            passed=nonnegative_groups >= 2,
++        ),
++        gate_check("protected_retention_does_not_regress", True, retention_ok),
++    ]
++    return all(row["passed"] for row in rows), rows
++
++
++def _comparison_complete(source: Mapping[str, Any], arm_rows_match: bool) -> bool:
++    held = list(source.get("frozen_split", {}).get("held_stream_indices", []))
++    unit_count = len(held)
++    action_units = {row.get("unit_id") for row in source.get("action_ranking_rows", [])}
++    classified = (
++        len(source.get("unsupported_rows", []))
++        + len(source.get("no_headroom_rows", []))
++        + len(action_units)
++    )
++    return bool(
++        len(source.get("per_decision_results", [])) == unit_count * len(ARMS)
++        and len(source.get("query_cost_rows", [])) == unit_count * len(ARMS)
++        and len(source.get("retention_rows", [])) == unit_count * len(ARMS)
++        and classified == unit_count
++        and all(
++            row.get("same_capacity") is True and row.get("within_capacity") is True
++            for row in source.get("capacity_match_rows", [])
++        )
++        and all(
++            row.get("strict_chronology") is True
++            and row.get("current_outcome_used_by_policy") is False
++            for row in source.get("per_decision_results", [])
++        )
++        and all(row.get("passed") is True for row in source.get("leakage_check_rows", []))
++        and arm_rows_match
++    )
++
++
++def audit_exp7021_rows(source: Mapping[str, Any]) -> JsonDict:
++    """Independently recompute every arm headline, paired delta, and value gate."""
++
++    observed_arms = _recompute_arm_rows(source)
++    expected_arms = {str(row.get("arm")): row for row in source.get("rows", [])}
++    aggregate_rows = []
++    for observed in observed_arms:
++        expected = expected_arms.get(str(observed["arm"]))
++        aggregate_rows.append(
++            {
++                "record_type": "arm_aggregate",
++                "key": observed["arm"],
++                "expected_value": deepcopy(expected),
++                "observed_value": deepcopy(observed),
++                "passed": expected == observed,
++                "terminal": True,
++            }
++        )
++    arm_rows_match = all(row["passed"] for row in aggregate_rows)
++
++    observed_pairs = _recompute_paired_rows(source)
++    expected_pairs = {
++        str(row.get("comparison")): row for row in source.get("paired_delta_rows", [])
++    }
++    for observed in observed_pairs:
++        expected = expected_pairs.get(str(observed["comparison"]))
++        aggregate_rows.append(
++            {
++                "record_type": "paired_delta",
++                "key": observed["comparison"],
++                "expected_value": deepcopy(expected),
++                "observed_value": deepcopy(observed),
++                "passed": expected == observed,
++                "terminal": True,
++            }
++        )
++
++    producer_recompute_claim = source.get("aggregate_row_recomputation", {}).get("matches")
++    aggregate_rows.append(
++        {
++            "record_type": "producer_recomputation_claim",
++            "key": "aggregate_row_recomputation.matches",
++            "expected_value": producer_recompute_claim,
++            "observed_value": arm_rows_match,
++            "passed": producer_recompute_claim is arm_rows_match,
++            "terminal": True,
++        }
++    )
++    complete = _comparison_complete(source, arm_rows_match)
++    aggregate_rows.append(
++        {
++            "record_type": "comparison_complete_score",
++            "key": "belief_utility_comparison_complete_score",
++            "expected_value": source.get("belief_utility_comparison_complete_score"),
++            "observed_value": int(complete),
++            "passed": source.get("belief_utility_comparison_complete_score") == int(complete),
++            "terminal": True,
++        }
++    )
++    positive, promotion_rows = _row_positive_gate(observed_arms, observed_pairs, source)
++    aggregate_rows.append(
++        {
++            "record_type": "positive_score",
++            "key": "belief_future_utility_positive_score",
++            "expected_value": source.get("belief_future_utility_positive_score"),
++            "observed_value": int(complete and positive),
++            "passed": source.get("belief_future_utility_positive_score")
++            == int(complete and positive),
++            "terminal": True,
++        }
++    )
++    recomputation_passed = all(row["passed"] for row in aggregate_rows)
++    promotion_rows.insert(
++        0,
++        gate_check("headline_and_row_recomputation", True, recomputation_passed),
++    )
++    return {
++        "aggregate_recomputation_rows": aggregate_rows,
++        "promotion_gate_rows": promotion_rows,
++        "recomputation_passed": recomputation_passed,
++        "row_positive_gate_passed": bool(complete and positive),
++    }
++
++
++def _replay_digest(replay: Mapping[str, Any]) -> str:
++    projection = {
++        "state_hash": replay["ledger"].state_hash,
++        "facts": replay["facts"],
++        "clusters": replay["clusters"],
++        "events": [
++            {
++                "event_id": row["event_id"],
++                "stream_index": row["stream_index"],
++                "accepted": row["write"]["accepted"],
++                "belief_state": row["query_after"]["state"],
++                "support": row["query_after"]["support"],
++            }
++            for row in replay["per_event_results"]
++        ],
++    }
++    return sha256_bytes(canonical_bytes(projection))
++
++
++def audit_one_forbidden_mutation(
++    event: Mapping[str, Any], field_name: str, ledger_root: Path
++) -> JsonDict:
++    """Insert one denied field and prove write and query fail before publication."""
++
++    mutated = deepcopy(dict(event))
++    mutated[field_name] = {"audit_probe": field_name}
++    mutated["row_hash"] = ledger_mod.event_row_hash(mutated)
++    ledger = ledger_mod.BeliefLedger(ledger_root, capacity=4)
++    parent = ledger.snapshot()
++    receipt = ledger.observe(mutated)
++    try:
++        ledger.query(mutated)  # type: ignore[arg-type]
++    except (TypeError, ValueError):
++        query_rejected = True
++    else:
++        query_rejected = False
++    write_rejected = (
++        receipt.get("accepted") is False and receipt.get("reason") == "forbidden_updater_fields"
++    )
++    state_unchanged = ledger.snapshot() == parent
++    return {
++        "field_name": field_name,
++        "mutation": (
++            "future_label_swap" if field_name in FUTURE_FIELDS else "game_identity_or_source_swap"
++        ),
++        "category": "future" if field_name in FUTURE_FIELDS else "game_identity_or_source",
++        "write_rejected": write_rejected,
++        "query_rejected": query_rejected,
++        "state_unchanged": state_unchanged,
++        "reason": receipt.get("reason"),
++        "passed": write_rejected and query_rejected and state_unchanged,
++        "terminal": True,
++    }
++
++
++def _serialization_rows(event: Mapping[str, Any], root: Path) -> list[JsonDict]:
++    reversed_event = dict(reversed(list(deepcopy(dict(event)).items())))
++    semantic = json.loads(json.dumps(reversed_event, indent=3, ensure_ascii=False))
++    first = ledger_mod.BeliefLedger(root / "semantic-first", capacity=4)
++    second = ledger_mod.BeliefLedger(root / "semantic-second", capacity=4)
++    first_receipt = first.observe(event)
++    second_receipt = second.observe(semantic)
++    semantic_pass = bool(
++        first_receipt["accepted"]
++        and second_receipt["accepted"]
++        and first.state_hash == second.state_hash
++    )
++
++    changed = deepcopy(dict(event))
++    changed["action"]["data"]["x"] = int(changed["action"]["data"]["x"]) + 1
++    changed_ledger = ledger_mod.BeliefLedger(root / "changed-bytes", capacity=4)
++    parent = changed_ledger.snapshot()
++    changed_receipt = changed_ledger.observe(changed)
++    changed_pass = bool(
++        changed_receipt.get("reason") == "event_row_hash_invalid"
++        and changed_ledger.snapshot() == parent
++    )
++    return [
++        {
++            "mutation": "semantic_key_and_whitespace_change",
++            "state_hash_equal": first.state_hash == second.state_hash,
++            "passed": semantic_pass,
++            "terminal": True,
++        },
++        {
++            "mutation": "changed_event_bytes_without_row_hash",
++            "reason": changed_receipt.get("reason"),
++            "state_unchanged": changed_ledger.snapshot() == parent,
++            "passed": changed_pass,
++            "terminal": True,
++        },
++    ]
++
++
++def _order_rows(events: Sequence[Mapping[str, Any]], root: Path) -> list[JsonDict]:
++    root.mkdir(parents=True, exist_ok=True)
++    variants = {
++        "adjacent_event_swap": [events[1], events[0], *events[2:]],
++        "reverse_event_order": list(reversed(events)),
++    }
++    rows = []
++    for name, variant in variants.items():
++        path = root / f"{name}.jsonl"
++        path.write_text(
++            "".join(json.dumps(row, sort_keys=True) + "\n" for row in variant),
++            encoding="utf-8",
++        )
++        try:
++            ledger_mod.load_updater_events(path)
++        except ValueError as exc:
++            rejected = True
++            reason = str(exc)
++        else:
++            rejected = False
++            reason = None
++        rows.append(
++            {
++                "mutation": name,
++                "rejected": rejected,
++                "reason": reason,
++                "passed": rejected,
++                "terminal": True,
++            }
++        )
++    return rows
++
++
++def _authority_row(root: Path) -> JsonDict:
++    ledger = ledger_mod.BeliefLedger(root, capacity=4)
++    original = ledger_mod._fixture_event(
++        0, mechanic="authority", outcome="first", event_id="authority-event"
++    )
++    ledger.observe(original)
++    parent = ledger.snapshot()
++    changed = ledger_mod._fixture_event(
++        1, mechanic="authority", outcome="changed", event_id="authority-event"
++    )
++    receipt = ledger.observe(changed)
++    passed = bool(receipt.get("reason") == "authority_conflict" and ledger.snapshot() == parent)
++    return {
++        "reason": receipt.get("reason"),
++        "state_unchanged": ledger.snapshot() == parent,
++        "passed": passed,
++        "terminal": True,
++    }
++
++
++def _supersession_row(root: Path) -> JsonDict:
++    ledger = ledger_mod.BeliefLedger(root, capacity=8, min_support=2)
++    receipts = [
++        ledger.observe(ledger_mod._fixture_event(0, mechanic="supersession", outcome="a")),
++        ledger.observe(ledger_mod._fixture_event(1, mechanic="supersession", outcome="a")),
++        ledger.observe(ledger_mod._fixture_event(2, mechanic="supersession", outcome="b")),
++        ledger.observe(ledger_mod._fixture_event(3, mechanic="supersession", outcome="a")),
++        ledger.observe(ledger_mod._fixture_event(4, mechanic="supersession", outcome="a")),
++    ]
++    supersessions = [row for receipt in receipts for row in receipt.get("supersessions", [])]
++    contradicted = [row for row in ledger.facts() if row["state"] == "contradicted"]
++    generation_increased = bool(
++        supersessions and supersessions[0]["new_generation"] > supersessions[0]["prior_generation"]
++    )
++    passed = bool(contradicted and generation_increased and ledger.audit_state()["passed"])
++    return {
++        "contradicted_fact_count": len(contradicted),
++        "supersession_count": len(supersessions),
++        "generation_increased": generation_increased,
++        "passed": passed,
++        "terminal": True,
++    }
++
++
++def _retrieval_collision_row(root: Path) -> JsonDict:
++    ledger = ledger_mod.BeliefLedger(root, capacity=4)
++    first_event = ledger_mod._fixture_event(0, mechanic="retrieval-a", outcome="same")
++    other_event = ledger_mod._fixture_event(1, mechanic="retrieval-b", outcome="same")
++    ledger.observe(first_event)
++    first_key = ledger_mod.mechanic_key_from_event(first_event)
++    other_key = ledger_mod.mechanic_key_from_event(other_event)
++    first_query = ledger.query(first_key)
++    other_query = ledger.query(other_key)
++    collision = other_query["fact_id"] == first_query["fact_id"]
++    return {
++        "keys_distinct": first_key != other_key,
++        "first_fact_present": first_query["fact_id"] is not None,
++        "cross_key_fact_retrieved": collision,
++        "passed": first_key != other_key and first_query["fact_id"] is not None and not collision,
++        "terminal": True,
++    }
++
++
++def _capacity_poison_retention_rows(root: Path) -> JsonDict:
++    capacity = ledger_mod.BeliefLedger(root / "capacity", capacity=2, min_support=2)
++    capacity.observe(ledger_mod._fixture_event(0, mechanic="old", outcome="old"))
++    capacity.observe(ledger_mod._fixture_event(1, mechanic="middle", outcome="middle"))
++    receipt = capacity.observe(ledger_mod._fixture_event(2, mechanic="new", outcome="new"))
++    capacity_row = {
++        "evicted_first_stream_indices": [
++            row["last_stream_index"] for row in receipt.get("evictions", [])
++        ],
++        "fact_count": len(capacity.facts()),
++        "item_capacity": capacity.capacity,
++        "state_bytes": len(capacity.state_bytes),
++        "byte_capacity": capacity.max_state_bytes,
++        "within_item_capacity": len(capacity.facts()) <= capacity.capacity,
++        "within_byte_capacity": len(capacity.state_bytes) <= capacity.max_state_bytes,
++        "passed": bool(
++            [row["last_stream_index"] for row in receipt.get("evictions", [])] == [0]
++            and len(capacity.facts()) <= capacity.capacity
++            and len(capacity.state_bytes) <= capacity.max_state_bytes
++        ),
++        "terminal": True,
++    }
++
++    poison = ledger_mod.BeliefLedger(root / "poison", capacity=2, min_support=2)
++    poison.observe(ledger_mod._fixture_event(0, mechanic="anchor-a", outcome="a"))
++    poison.observe(ledger_mod._fixture_event(1, mechanic="anchor-a", outcome="a"))
++    poison.observe(ledger_mod._fixture_event(2, mechanic="anchor-b", outcome="b"))
++    poison.observe(ledger_mod._fixture_event(3, mechanic="anchor-b", outcome="b"))
++    parent = poison.snapshot()
++    before = {row["fact_id"]: row["support"] for row in poison.facts()}
++    receipts = [
++        poison.observe(ledger_mod._fixture_event(index, mechanic=f"poison-{index}", outcome="weak"))
++        for index in (4, 5, 6)
++    ]
++    after = {row["fact_id"]: row["support"] for row in poison.facts()}
++    admitted = sum(receipt.get("accepted") is True for receipt in receipts)
++    unchanged = poison.snapshot() == parent and before == after
++    poison_row = {
++        "attack_count": len(receipts),
++        "admitted_poison_count": admitted,
++        "all_reasons": [receipt.get("reason") for receipt in receipts],
++        "protected_state_unchanged": unchanged,
++        "passed": admitted == 0 and unchanged,
++        "terminal": True,
++    }
++    retention_row = {
++        "protected_fact_ids_before": sorted(before),
++        "protected_fact_ids_after": sorted(after),
++        "protected_case_harm_count": sum(
++            before.get(fact_id) != after.get(fact_id) for fact_id in set(before) | set(after)
++        ),
++        "passed": before == after and poison.snapshot() == parent,
++        "terminal": True,
++    }
++    return {
++        "capacity_rows": [capacity_row],
++        "poison_rows": [poison_row],
++        "retention_rows": [retention_row],
++    }
++
++
++def _durability_rows(root: Path) -> JsonDict:
++    restart = ledger_mod.BeliefLedger(root / "restart", capacity=4)
++    restart.observe(ledger_mod._fixture_event(0, mechanic="restart", outcome="stable"))
++    committed = restart.snapshot()
++    restarted = restart.restart()
++    restart_row = {
++        "committed_bytes_survived": restarted.snapshot() == committed,
++        "journal_audit_passed": restarted.audit_state()["passed"],
++        "passed": restarted.snapshot() == committed and restarted.audit_state()["passed"],
++        "terminal": True,
++    }
++
++    prepare = ledger_mod.BeliefLedger(root / "interrupt-prepare", capacity=4)
++    prepare_parent = prepare.snapshot()
++    try:
++        prepare.observe(
++            ledger_mod._fixture_event(0, mechanic="prepare", outcome="candidate"),
++            interrupt_after_prepare=True,
++        )
++    except ledger_mod.ForcedInterruption:
++        pass
++    prepare_recovered = prepare.restart()
++    prepare_phase = prepare_recovered.recovery_rows[-1]["phase"]
++    prepare_row = {
++        "boundary": "after_prepare",
++        "recovery_phase": prepare_phase,
++        "parent_bytes_preserved": prepare_recovered.snapshot() == prepare_parent,
++        "passed": prepare_phase == "abort_recovered"
++        and prepare_recovered.snapshot() == prepare_parent,
++        "terminal": True,
++    }
++
++    publish = ledger_mod.BeliefLedger(root / "interrupt-publish", capacity=4)
++    publish_parent = publish.snapshot()
++    try:
++        publish.observe(
++            ledger_mod._fixture_event(0, mechanic="publish", outcome="candidate"),
++            interrupt_after_publish=True,
++        )
++    except ledger_mod.ForcedInterruption:
++        pass
++    published_bytes = publish.snapshot()
++    publish_recovered = publish.restart()
++    publish_phase = publish_recovered.recovery_rows[-1]["phase"]
++    publish_row = {
++        "boundary": "after_publish",
++        "recovery_phase": publish_phase,
++        "candidate_bytes_preserved": publish_recovered.snapshot() == published_bytes,
++        "parent_changed": published_bytes != publish_parent,
++        "passed": publish_phase == "commit_recovered"
++        and publish_recovered.snapshot() == published_bytes
++        and published_bytes != publish_parent,
++        "terminal": True,
++    }
++
++    invalid = ledger_mod.BeliefLedger(root / "invalid-snapshot", capacity=4)
++    invalid_parent = invalid.snapshot()
++    try:
++        invalid.rollback(b"{invalid", transaction_id="invalid", reason="audit mutation")
++    except ValueError:
++        invalid_rejected = True
++    else:
++        invalid_rejected = False
++    invalid_row = {
++        "case": "invalid_snapshot",
++        "rejected": invalid_rejected,
++        "state_unchanged": invalid.snapshot() == invalid_parent,
++        "passed": invalid_rejected and invalid.snapshot() == invalid_parent,
++        "terminal": True,
++    }
++
++    rollback = ledger_mod.BeliefLedger(root / "exact-rollback", capacity=4)
++    rollback_parent = rollback.snapshot()
++    write = rollback.observe(ledger_mod._fixture_event(0, mechanic="rollback", outcome="candidate"))
++    receipt = rollback.rollback(
++        rollback_parent,
++        transaction_id=str(write["transaction_id"]),
++        reason="cold audit exact parent",
++    )
++    exact_row = {
++        "case": "exact_parent",
++        "byte_exact": rollback.snapshot() == rollback_parent,
++        "receipt_rolled_back": receipt["rolled_back"],
++        "passed": rollback.snapshot() == rollback_parent and receipt["rolled_back"],
++        "terminal": True,
++    }
++
++    tampered = ledger_mod.BeliefLedger(root / "tampered-tail", capacity=4)
++    tampered.observe(ledger_mod._fixture_event(0, mechanic="tail", outcome="clean"))
++    with tampered.journal_path.open("ab") as handle:
++        handle.write(b'{"broken":true}\n')
++    try:
++        tampered.restart()
++    except ledger_mod.JournalIntegrityError:
++        tail_rejected = True
++    else:
++        tail_rejected = False
++    tail_row = {
++        "case": "tampered_journal_tail",
++        "rejected": tail_rejected,
++        "passed": tail_rejected,
++        "terminal": True,
++    }
++
++    truncated = ledger_mod.BeliefLedger(root / "truncated-commit", capacity=4)
++    truncated.observe(ledger_mod._fixture_event(0, mechanic="tail", outcome="clean"))
++    lines = truncated.journal_path.read_text(encoding="utf-8").splitlines()
++    truncated.journal_path.write_text("\n".join(lines[:-1]) + "\n", encoding="utf-8")
++    truncated_recovered = truncated.restart()
++    truncated_phase = truncated_recovered.recovery_rows[-1]["phase"]
++    truncated_row = {
++        "case": "truncated_commit_tail",
++        "recovery_phase": truncated_phase,
++        "state_preserved": truncated_recovered.audit_state()["passed"],
++        "passed": truncated_phase == "commit_recovered"
++        and truncated_recovered.audit_state()["passed"],
++        "terminal": True,
++    }
++    return {
++        "restart_rows": [restart_row],
++        "interruption_rows": [prepare_row, publish_row],
++        "rollback_rows": [invalid_row, exact_row, tail_row, truncated_row],
++    }
++
++
++def run_audit_matrix(
++    events: Sequence[Mapping[str, Any]],
++    exp7020: Mapping[str, Any],
++    work_root: Path,
++    runtime_receipt: Mapping[str, Any],
++) -> JsonDict:
++    """Run clean replay, all mutations, and all durable safety controls."""
++
++    work_root.mkdir(parents=True, exist_ok=True)
++    with tempfile.TemporaryDirectory(prefix="matrix-", dir=work_root) as directory:
++        root = Path(directory)
++        first = ledger_mod.replay_events(events, root / "replay-first")
++        second = ledger_mod.replay_events(events, root / "replay-second")
++        first_digest = _replay_digest(first)
++        second_digest = _replay_digest(second)
++        source_digest_row = next(
++            (
++                row
++                for row in exp7020.get("snapshot_hashes", [])
++                if row.get("snapshot_index") == "fresh_process_replay"
++            ),
++            {},
++        )
++        source_digest = source_digest_row.get("current_digest")
++        fresh_pass = bool(
++            runtime_receipt.get("fresh_process") is True
++            and runtime_receipt.get("game_source_access_rejected") is True
++            and runtime_receipt.get("registry_access_rejected") is True
++            and runtime_receipt.get("source_tree_read_only") is True
++            and first_digest == second_digest == source_digest
++            and first["audit_state"]["passed"]
++            and second["audit_state"]["passed"]
++        )
++        evidence: JsonDict = {
++            "fresh_process_rows": [
++                {
++                    "fresh_process": runtime_receipt.get("fresh_process"),
++                    "game_source_access_rejected": runtime_receipt.get(
++                        "game_source_access_rejected"
++                    ),
++                    "registry_access_rejected": runtime_receipt.get("registry_access_rejected"),
++                    "source_tree_read_only": runtime_receipt.get("source_tree_read_only"),
++                    "first_replay_digest": first_digest,
++                    "second_replay_digest": second_digest,
++                    "exp7020_replay_digest": source_digest,
++                    "replay_digest_matches_exp7020": first_digest == source_digest,
++                    "deterministic_replay": first_digest == second_digest,
++                    "event_count": len(first["per_event_results"]),
++                    "passed": fresh_pass,
++                    "terminal": True,
++                }
++            ],
++            "network_isolation_rows": [
++                {
++                    "network_namespace_isolated": runtime_receipt.get("network_namespace_isolated"),
++                    "network_disabled": runtime_receipt.get("network_disabled"),
++                    "external_lookup_rejected": runtime_receipt.get("external_lookup_rejected"),
++                    "passed": bool(
++                        runtime_receipt.get("network_namespace_isolated") is True
++                        and runtime_receipt.get("network_disabled") is True
++                        and runtime_receipt.get("external_lookup_rejected") is True
++                    ),
++                    "terminal": True,
++                }
++            ],
++            "gpu_isolation_rows": [
++                {
++                    "gpu_devices_visible": deepcopy(runtime_receipt.get("gpu_devices_visible")),
++                    "cuda_visible_devices": runtime_receipt.get("cuda_visible_devices"),
++                    "passed": bool(
++                        runtime_receipt.get("gpu_devices_visible") == []
++                        and runtime_receipt.get("cuda_visible_devices") == ""
++                    ),
++                    "terminal": True,
++                }
++            ],
++        }
++        mutation_rows = [
++            audit_one_forbidden_mutation(events[0], field_name, root / "mutations" / field_name)
++            for field_name in sorted(ledger_mod.FORBIDDEN_UPDATER_KEYS)
++        ]
++        evidence["future_leakage_mutation_rows"] = [
++            row for row in mutation_rows if row["field_name"] in FUTURE_FIELDS
++        ]
++        evidence["game_identity_mutation_rows"] = [
++            row for row in mutation_rows if row["field_name"] in GAME_IDENTITY_FIELDS
++        ]
++        evidence["serialization_mutation_rows"] = _serialization_rows(
++            events[0], root / "serialization"
++        )
++        evidence["order_mutation_rows"] = _order_rows(events, root / "order")
++        evidence["authority_conflict_rows"] = [_authority_row(root / "authority")]
++        evidence["supersession_rows"] = [_supersession_row(root / "supersession")]
++        evidence["retrieval_collision_rows"] = [_retrieval_collision_row(root / "retrieval")]
++        evidence.update(_capacity_poison_retention_rows(root / "pressure"))
++        evidence.update(_durability_rows(root / "durability"))
++    return evidence
++
++
++def _all_rows_pass(artifact: Mapping[str, Any], fields: Sequence[str]) -> bool:
++    return all(
++        isinstance(artifact.get(field), list)
++        and bool(artifact[field])
++        and all(
++            isinstance(row, Mapping) and row.get("terminal") is True and row.get("passed") is True
++            for row in artifact[field]
++        )
++        for field in fields
++    )
++
++
++def reduce_terminal_decision(artifact: Mapping[str, Any]) -> JsonDict:
++    """Derive shadow safety and promotion without trusting existing score fields."""
++
++    reduced = deepcopy(dict(artifact))
++    leakage_fields = (
++        "future_leakage_mutation_rows",
++        "game_identity_mutation_rows",
++        "network_isolation_rows",
++        "gpu_isolation_rows",
++    )
++    deterministic_fields = (
++        "fresh_process_rows",
++        "serialization_mutation_rows",
++        "order_mutation_rows",
++    )
++    rollback_fields = ("restart_rows", "interruption_rows", "rollback_rows")
++    protected_fields = ("poison_rows", "retention_rows")
++    other_fields = (
++        "authority_conflict_rows",
++        "supersession_rows",
++        "retrieval_collision_rows",
++    )
++    shadow_rows = [
++        gate_check(
++            "zero_future_or_identity_leakage", True, _all_rows_pass(reduced, leakage_fields)
++        ),
++        gate_check(
++            "deterministic_clean_replay", True, _all_rows_pass(reduced, deterministic_fields)
++        ),
++        gate_check(
++            "exact_restart_interruption_and_rollback",
++            True,
++            _all_rows_pass(reduced, rollback_fields),
++        ),
++        gate_check("bounded_capacity", True, _all_rows_pass(reduced, ("capacity_rows",))),
++        gate_check("no_protected_case_harm", True, _all_rows_pass(reduced, protected_fields)),
++        gate_check("conflict_and_retrieval_controls", True, _all_rows_pass(reduced, other_fields)),
++    ]
++    shadow_safe = all(row["passed"] for row in shadow_rows)
++    recomputation_passed = _all_rows_pass(reduced, ("aggregate_recomputation_rows",))
++    promotion_rows = [deepcopy(dict(row)) for row in reduced.get("promotion_gate_rows", [])]
++    row_positive = bool(promotion_rows) and all(row.get("passed") is True for row in promotion_rows)
++    promotion_ready = shadow_safe and recomputation_passed and row_positive
++    if not shadow_safe or not recomputation_passed:
++        verdict_class = "disqualified"
++        honest_verdict = "disqualified_belief_ledger_cold_audit_leakage_or_row_drift"
++    elif promotion_ready:
++        verdict_class = "positive"
++        honest_verdict = "complete_positive_belief_ledger_safe_and_promotion_ready"
++    else:
++        verdict_class = "null"
++        honest_verdict = "complete_null_belief_ledger_shadow_safe_value_not_promotable"
++    reduced["shadow_safety_gate_rows"] = shadow_rows
++    reduced["belief_shadow_safe_score"] = int(shadow_safe)
++    reduced["belief_promotion_ready_score"] = int(promotion_ready)
++    reduced["verdict_class"] = verdict_class
++    reduced["honest_verdict"] = honest_verdict
++    reduced["rows"] = [
++        {
++            "decision": "shadow_safety",
++            "score": int(shadow_safe),
++            "passed": shadow_safe,
++            "terminal": True,
++        },
++        {
++            "decision": "value_promotion",
++            "score": int(promotion_ready),
++            "passed": promotion_ready,
++            "terminal": True,
++        },
++    ]
++    reduced["gate_check_summary"] = gate_summary(
++        [
++            *reduced.get("preconditions_checked", []),
++            *shadow_rows,
++            *promotion_rows,
++        ]
++    )
++    return reduced
++
++
++def _citations(source_hashes: Mapping[str, Any]) -> list[JsonDict]:
++    return [
++        {
++            "experiment_id": 7019,
++            "fields_imported": [
++                "arc_belief_stream_ready_score",
++                "fixture_hash",
++                "held_future_sidecar_hash",
++            ],
++            "sha256": source_hashes.get("exp7019"),
++        },
++        {
++            "experiment_id": 7020,
++            "fields_imported": [
++                "belief_ledger_ready_score",
++                "snapshot_hashes",
++                "transaction_rows",
++            ],
++            "sha256": source_hashes.get("exp7020"),
++        },
++        {
++            "experiment_id": 7021,
++            "fields_imported": [
++                "per_decision_results",
++                "action_ranking_rows",
++                "paired_delta_rows",
++                "belief_future_utility_positive_score",
++            ],
++            "sha256": source_hashes.get("exp7021"),
++        },
++    ]
++
++
++def _base_artifact(run_date: str, duration_s: float, source_hashes: Mapping[str, Any]) -> JsonDict:
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "execution_date": run_date,
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "preconditions_checked": [],
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": float(duration_s),
++        "cited_upstream_artifacts": _citations(source_hashes),
++        "source_artifact_hashes": deepcopy(dict(source_hashes)),
++        "belief_shadow_safe_score": 0,
++        "belief_promotion_ready_score": 0,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "gate_check_summary": {},
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "blocked_belief_ledger_cold_audit",
++    }
++    for field in ROW_TABLES:
++        artifact[field] = []
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    run_date: str,
++    duration_s: float,
++    checks: Sequence[Mapping[str, Any]],
++    source_hashes: Mapping[str, Any],
++) -> JsonDict:
++    """Build one complete blocked result with its first exact failure."""
++
++    artifact = _base_artifact(run_date, duration_s, source_hashes)
++    artifact["preconditions_checked"] = [deepcopy(dict(row)) for row in checks]
++    artifact["gate_check_summary"] = gate_summary(checks)
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    return artifact
++
++
++def build_from_repo(
++    repo_root: Path,
++    *,
++    run_date: str = RUN_DATE,
++    output_path: Path | None = None,
++    work_root: Path | None = None,
++    runtime_receipt: Mapping[str, Any] | None = None,
++    write_output: bool = True,
++) -> JsonDict:
++    """Build the audit after hashes and restricted-runtime gates pass."""
++
++    started = time.perf_counter()
++    output = output_path or repo_root / RESULT_PATH
++    workspace = work_root or output.parent
++    loaded = load_hashed_sources(repo_root)
++    runtime = dict(runtime_receipt or sandbox_runtime_receipt(repo_root))
++    checks = [*loaded["checks"]]
++    checks.extend(
++        [
++            gate_check("fresh_process_runtime", True, runtime.get("passed")),
++            gate_check(
++                "artifact_path_writable",
++                True,
++                output.parent.is_dir() and os.access(output.parent, os.W_OK),
++            ),
++        ]
++    )
++    if not loaded["passed"] or any(row["passed"] is not True for row in checks):
++        artifact = build_blocked_artifact(
++            run_date=run_date,
++            duration_s=time.perf_counter() - started,
++            checks=checks,
++            source_hashes=loaded["hashes"],
++        )
++        if write_output:
++            write_validated_artifact(output, artifact)
++        return artifact
++
++    values = loaded["values"]
++    evidence = run_audit_matrix(values["events"], values["exp7020"], workspace, runtime)
++    value_evidence = audit_exp7021_rows(values["exp7021"])
++    artifact = _base_artifact(run_date, 0.0, loaded["hashes"])
++    artifact["preconditions_checked"] = checks
++    artifact.update(evidence)
++    artifact["aggregate_recomputation_rows"] = value_evidence["aggregate_recomputation_rows"]
++    artifact["promotion_gate_rows"] = value_evidence["promotion_gate_rows"]
++    artifact = reduce_terminal_decision(artifact)
++    artifact["duration_s"] = time.perf_counter() - started
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise RuntimeError(f"artifact_validation_failed:{errors}")
++    if write_output:
++        write_validated_artifact(output, artifact)
++    return artifact
++
++
++def _checksum_projection(artifact: Mapping[str, Any]) -> JsonDict:
++    projected = deepcopy(dict(artifact))
++    projected.pop("duration_s", None)
++    projected.pop("reproducibility_checksum", None)
++    return projected
++
++
++def artifact_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash stable scientific fields while excluding wall time and self-hash."""
++
++    return sha256_bytes(canonical_bytes(_checksum_projection(artifact)))
++
++
++def validate_artifact(artifact: Any) -> list[str]:
++    """Return structural and scientific decision errors without repairing them."""
++
++    if not isinstance(artifact, Mapping):
++        return ["artifact_object_required"]
++    errors: list[str] = []
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        errors.append("required_fields_missing")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or set(principles) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_principles_mismatch")
++    preconditions = artifact.get("preconditions_checked")
++    if not isinstance(preconditions, list) or any(
++        not isinstance(row, Mapping) or row.get("terminal") is not True for row in preconditions
++    ):
++        errors.append("preconditions_invalid")
++    for field in ROW_TABLES:
++        rows = artifact.get(field)
++        if not isinstance(rows, list):
++            errors.append(f"{field}_not_list")
++        elif any(not isinstance(row, Mapping) or row.get("terminal") is not True for row in rows):
++            errors.append(f"nonterminal_row:{field}")
++    for field, marker in (
++        ("belief_shadow_safe_score", "shadow_score"),
++        ("belief_promotion_ready_score", "promotion_score"),
++    ):
++        value = artifact.get(field)
++        if type(value) is not int or value not in {0, 1}:
++            errors.append(f"{marker}_must_be_bare_integer")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_mismatch")
++    verdict_class = artifact.get("verdict_class")
++    prefixes = {
++        "positive": "complete_positive_",
++        "circular_positive": "complete_circular_positive_",
++        "null": "complete_null_",
++        "blocked": "blocked_",
++        "disqualified": "disqualified_",
++        "partial": "partial_",
++    }
++    if verdict_class not in VERDICT_CLASSES:
++        errors.append("verdict_class_invalid")
++    elif not str(artifact.get("honest_verdict", "")).startswith(prefixes[verdict_class]):
++        errors.append("verdict_prefix_mismatch")
++    gate = artifact.get("gate_check_summary")
++    if not isinstance(gate, Mapping) or "failed_check" not in gate:
++        errors.append("gate_check_summary_invalid")
++    if verdict_class == "blocked":
++        if artifact.get("honest_verdict") != "blocked_belief_ledger_cold_audit":
++            errors.append("blocked_verdict_mismatch")
++        if (
++            artifact.get("belief_shadow_safe_score") != 0
++            or artifact.get("belief_promotion_ready_score") != 0
++        ):
++            errors.append("blocked_score_mismatch")
++        if not isinstance(gate, Mapping) or gate.get("failed_check") is None:
++            errors.append("blocked_without_failed_gate")
++    elif verdict_class == "null":
++        if (
++            artifact.get("belief_shadow_safe_score") != 1
++            or artifact.get("belief_promotion_ready_score") != 0
++        ):
++            errors.append("null_score_mismatch")
++    elif verdict_class == "positive":
++        if (
++            artifact.get("belief_shadow_safe_score") != 1
++            or artifact.get("belief_promotion_ready_score") != 1
++        ):
++            errors.append("positive_score_mismatch")
++    elif verdict_class == "disqualified" and artifact.get("belief_promotion_ready_score") != 0:
++        errors.append("disqualified_promotion_mismatch")
++    if artifact.get("reproducibility_checksum") != artifact_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_validated_artifact(path: Path, artifact: Mapping[str, Any]) -> None:
++    """Publish one complete JSON document only after validation passes."""
++
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError(f"Exp7022 artifact validation failed:{errors}")
++    path.parent.mkdir(parents=True, exist_ok=True)
++    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
++    temporary = Path(temporary_name)
++    try:
++        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
++            json.dump(artifact, handle, indent=2, sort_keys=True)
++            handle.write("\n")
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, path)
++    finally:
++        if temporary.exists():
++            temporary.unlink()
++
++
++def sandbox_runtime_receipt(repo_root: Path) -> JsonDict:
++    """Measure process, network, GPU, game-source, and write isolation."""
++
++    parent_pid = int(os.environ.get("CARNOT_EXP7022_PARENT_PID", str(os.getpid())))
++    parent_netns = os.environ.get("CARNOT_EXP7022_PARENT_NETNS", "")
++    child_netns = os.readlink("/proc/self/ns/net")
++    network_lines = Path("/proc/net/dev").read_text(encoding="utf-8").splitlines()[2:]
++    interfaces = sorted(line.split(":", 1)[0].strip() for line in network_lines if ":" in line)
++    route_lines = Path("/proc/net/route").read_text(encoding="utf-8").splitlines()[1:]
++    try:
++        socket.create_connection(("198.51.100.1", 9), timeout=0.05).close()
++    except OSError:
++        external_lookup_rejected = True
++    else:  # pragma: no cover - the documentation-only address cannot accept traffic.
++        external_lookup_rejected = False
++    gpu_devices = sorted(str(path) for path in Path("/dev").glob("nvidia*"))
++    probe_path = repo_root / ".exp7022-write-probe"
++    try:
++        probe_path.write_text("probe", encoding="utf-8")
++        probe_path.unlink(missing_ok=True)
++    except OSError:
++        source_tree_read_only = True
++    else:
++        source_tree_read_only = False
++    game_source = repo_root / "environment_files"
++    game_source_disabled = bool(
++        os.environ.get("CARNOT_DISABLE_GAME_SOURCE") == "1"
++        and game_source.is_dir()
++        and not any(game_source.iterdir())
++    )
++    receipt = {
++        "fresh_process": os.getpid() != parent_pid,
++        "network_namespace_isolated": bool(parent_netns and child_netns != parent_netns),
++        "network_disabled": set(interfaces) <= {"lo"} and not route_lines,
++        "external_lookup_rejected": external_lookup_rejected,
++        "gpu_devices_visible": gpu_devices,
++        "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
++        "game_source_access_rejected": game_source_disabled,
++        "registry_access_rejected": os.environ.get("CARNOT_DISABLE_REGISTRY") == "1",
++        "source_tree_read_only": source_tree_read_only,
++    }
++    receipt["passed"] = bool(
++        receipt["fresh_process"]
++        and receipt["network_namespace_isolated"]
++        and receipt["network_disabled"]
++        and receipt["external_lookup_rejected"]
++        and not gpu_devices
++        and receipt["cuda_visible_devices"] == ""
++        and receipt["game_source_access_rejected"]
++        and receipt["registry_access_rejected"]
++        and receipt["source_tree_read_only"]
++    )
++    return receipt
++
++
++def fresh_process_command(
++    *,
++    executable: Path,
++    wrapper: Path,
++    repo_root: Path,
++    writable_root: Path,
++    output_path: Path,
++    run_date: str,
++) -> list[str]:
++    """Build a bubblewrap command with one writable audit directory."""
++
++    game_source_mask = writable_root / "game-source-disabled"
++    return [
++        "bwrap",
++        "--die-with-parent",
++        "--new-session",
++        "--unshare-net",
++        "--unshare-pid",
++        "--ro-bind",
++        "/",
++        "/",
++        "--dev",
++        "/dev",
++        "--proc",
++        "/proc",
++        "--ro-bind",
++        str(game_source_mask),
++        str(repo_root / "environment_files"),
++        "--bind",
++        str(writable_root),
++        str(writable_root),
++        "--chdir",
++        str(repo_root),
++        "--setenv",
++        "CUDA_VISIBLE_DEVICES",
++        "",
++        "--setenv",
++        "JAX_PLATFORMS",
++        "cpu",
++        "--setenv",
++        "HF_HUB_OFFLINE",
++        "1",
++        "--setenv",
++        "TRANSFORMERS_OFFLINE",
++        "1",
++        "--setenv",
++        "PYTHONDONTWRITEBYTECODE",
++        "1",
++        "--setenv",
++        "TMPDIR",
++        str(writable_root),
++        "--setenv",
++        "CARNOT_DISABLE_GAME_SOURCE",
++        "1",
++        "--setenv",
++        "CARNOT_DISABLE_REGISTRY",
++        "1",
++        "--setenv",
++        "CARNOT_EXP7022_PARENT_PID",
++        str(os.getpid()),
++        "--setenv",
++        "CARNOT_EXP7022_PARENT_NETNS",
++        os.readlink("/proc/self/ns/net"),
++        "--",
++        str(executable),
++        str(wrapper),
++        "--fresh-child",
++        "--date",
++        run_date,
++        "--output",
++        str(output_path),
++        "--work-root",
++        str(writable_root),
++    ]
++
++
++def run_controller(
++    *,
++    repo_root: Path = REPO_ROOT,
++    result_path: Path | None = None,
++    run_date: str = RUN_DATE,
++) -> JsonDict:
++    """Run the audit in a network-disabled, GPU-hidden fresh process."""
++
++    started = time.perf_counter()
++    output = result_path or repo_root / RESULT_PATH
++    launcher = shutil.which("bwrap")
++    source_checks, before = _hash_checks(repo_root, SOURCE_PATHS, EXPECTED_SOURCE_HASHES)
++    preflight = [
++        gate_check("bubblewrap_available", True, launcher is not None),
++        gate_check(
++            "artifact_path_writable",
++            True,
++            output.parent.is_dir() and os.access(output.parent, os.W_OK),
++        ),
++        *source_checks,
++    ]
++    if any(row["passed"] is not True for row in preflight):
++        artifact = build_blocked_artifact(
++            run_date=run_date,
++            duration_s=time.perf_counter() - started,
++            checks=preflight,
++            source_hashes=before,
++        )
++        write_validated_artifact(output, artifact)
++        return artifact
++
++    with tempfile.TemporaryDirectory(prefix="carnot-exp7022-") as directory:
++        writable_root = Path(directory)
++        (writable_root / "game-source-disabled").mkdir()
++        child_output = writable_root / "child-result.json"
++        command = fresh_process_command(
++            executable=Path(sys.executable),
++            wrapper=repo_root / WRAPPER_PATH,
++            repo_root=repo_root,
++            writable_root=writable_root,
++            output_path=child_output,
++            run_date=run_date,
++        )
++        completed = subprocess.run(
++            command,
++            cwd=repo_root,
++            stdin=subprocess.DEVNULL,
++            capture_output=True,
++            text=True,
++            check=False,
++        )
++        if completed.returncode == 0 and child_output.is_file():
++            artifact = json.loads(child_output.read_text(encoding="utf-8"))
++        else:
++            checks = [
++                *preflight,
++                gate_check("fresh_process_exit_code", 0, completed.returncode),
++                gate_check("fresh_process_output", True, child_output.is_file()),
++            ]
++            artifact = build_blocked_artifact(
++                run_date=run_date,
++                duration_s=time.perf_counter() - started,
++                checks=checks,
++                source_hashes=before,
++            )
++    after = {name: sha256_path(repo_root / path) for name, path in SOURCE_PATHS.items()}
++    controller_checks = [
++        gate_check("controller_source_hashes_unchanged", before, after),
++        gate_check("fresh_process_exit_code", 0, completed.returncode),
++    ]
++    artifact["preconditions_checked"] = [
++        *artifact.get("preconditions_checked", []),
++        *controller_checks,
++    ]
++    if artifact.get("verdict_class") != "blocked":
++        artifact = reduce_terminal_decision(artifact)
++    else:
++        artifact["gate_check_summary"] = gate_summary(artifact["preconditions_checked"])
++    artifact["duration_s"] = time.perf_counter() - started
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise RuntimeError(f"controller_artifact_validation_failed:{errors}")
++    write_validated_artifact(output, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - command boundary.
++    """Run the controller or its private restricted-child mode."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--output", type=Path)
++    parser.add_argument("--work-root", type=Path)
++    parser.add_argument("--fresh-child", action="store_true")
++    args = parser.parse_args(argv)
++    if args.fresh_child:
++        if args.output is None:
++            parser.error("--output is required with --fresh-child")
++        build_from_repo(
++            args.repo_root.resolve(),
++            run_date=args.date,
++            output_path=args.output,
++            work_root=args.work_root or args.output.parent,
++            runtime_receipt=sandbox_runtime_receipt(args.repo_root.resolve()),
++            write_output=True,
++        )
++        return 0
++    artifact = run_controller(
++        repo_root=args.repo_root.resolve(),
++        result_path=args.output,
++        run_date=args.date,
++    )
++    print(
++        f"wrote {args.output or args.repo_root.resolve() / RESULT_PATH} "
++        f"belief_shadow_safe_score={artifact['belief_shadow_safe_score']} "
++        f"belief_promotion_ready_score={artifact['belief_promotion_ready_score']}"
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - command boundary.
++    raise SystemExit(main())
+diff --git a/results/experiment_7022_belief_ledger_cold_audit.json b/results/experiment_7022_belief_ledger_cold_audit.json
+new file mode 100644
+index 0000000000..f58ffde9a7
+--- /dev/null
++++ b/results/experiment_7022_belief_ledger_cold_audit.json
+@@ -0,0 +1,1102 @@
++{
++  "aggregate_recomputation_rows": [
++    {
++      "expected_value": {
++        "action_ranking_accuracy": 0.5,
++        "arm": "frozen",
++        "contradicted_action_rate": 0.0,
++        "final_protected_retention_rate": 0.0,
++        "mean_memory_bytes": 3.0,
++        "mean_query_time_us": 2.074,
++        "planned_decision_count": 10,
++        "supported_decision_count": 3,
++        "terminal": true,
++        "useful_query_coverage": 0.0
++      },
++      "key": "frozen",
++      "observed_value": {
++        "action_ranking_accuracy": 0.5,
++        "arm": "frozen",
++        "contradicted_action_rate": 0.0,
++        "final_protected_retention_rate": 0.0,
++        "mean_memory_bytes": 3.0,
++        "mean_query_time_us": 2.074,
++        "planned_decision_count": 10,
++        "supported_decision_count": 3,
++        "terminal": true,
++        "useful_query_coverage": 0.0
++      },
++      "passed": true,
++      "record_type": "arm_aggregate",
++      "terminal": true
++    },
++    {
++      "expected_value": {
++        "action_ranking_accuracy": 0.833333333333,
++        "arm": "recency_only",
++        "contradicted_action_rate": 0.0,
++        "final_protected_retention_rate": 0.0,
++        "mean_memory_bytes": 2932.4,
++        "mean_query_time_us": 14.6335,
++        "planned_decision_count": 10,
++        "supported_decision_count": 3,
++        "terminal": true,
++        "useful_query_coverage": 0.4
++      },
++      "key": "recency_only",
++      "observed_value": {
++        "action_ranking_accuracy": 0.833333333333,
++        "arm": "recency_only",
++        "contradicted_action_rate": 0.0,
++        "final_protected_retention_rate": 0.0,
++        "mean_memory_bytes": 2932.4,
++        "mean_query_time_us": 14.6335,
++        "planned_decision_count": 10,
++        "supported_decision_count": 3,
++        "terminal": true,
++        "useful_query_coverage": 0.4
++      },
++      "passed": true,
++      "record_type": "arm_aggregate",
++      "terminal": true
++    },
++    {
++      "expected_value": {
++        "action_ranking_accuracy": 0.944444444444,
++        "arm": "counterexample_belief",
++        "contradicted_action_rate": 0.0,
++        "final_protected_retention_rate": 1.0,
++        "mean_memory_bytes": 18827.6,
++        "mean_query_time_us": 91.7884,
++        "planned_decision_count": 10,
++        "supported_decision_count": 3,
++        "terminal": true,
++        "useful_query_coverage": 0.5
++      },
++      "key": "counterexample_belief",
++      "observed_value": {
++        "action_ranking_accuracy": 0.944444444444,
++        "arm": "counterexample_belief",
++        "contradicted_action_rate": 0.0,
++        "final_protected_retention_rate": 1.0,
++        "mean_memory_bytes": 18827.6,
++        "mean_query_time_us": 91.7884,
++        "planned_decision_count": 10,
++        "supported_decision_count": 3,
++        "terminal": true,
++        "useful_query_coverage": 0.5
++      },
++      "passed": true,
++      "record_type": "arm_aggregate",
++      "terminal": true
++    },
++    {
++      "expected_value": {
++        "cluster_count": 3,
++        "comparison": "counterexample_belief_minus_frozen",
++        "lower": 0.333333333333,
++        "metric": "action_ranking_accuracy",
++        "point_estimate": 0.444444444444,
++        "resamples": 10000,
++        "seed": 702120260908,
++        "terminal": true,
++        "upper": 0.5
++      },
++      "key": "counterexample_belief_minus_frozen",
++      "observed_value": {
++        "cluster_count": 3,
++        "comparison": "counterexample_belief_minus_frozen",
++        "lower": 0.333333333333,
++        "metric": "action_ranking_accuracy",
++        "point_estimate": 0.444444444444,
++        "resamples": 10000,
++        "seed": 702120260908,
++        "terminal": true,
++        "upper": 0.5
++      },
++      "passed": true,
++      "record_type": "paired_delta",
++      "terminal": true
++    },
++    {
++      "expected_value": {
++        "cluster_count": 3,
++        "comparison": "counterexample_belief_minus_recency_only",
++        "lower": -0.166666666667,
++        "metric": "action_ranking_accuracy",
++        "point_estimate": 0.111111111111,
++        "resamples": 10000,
++        "seed": 702120260909,
++        "terminal": true,
++        "upper": 0.5
++      },
++      "key": "counterexample_belief_minus_recency_only",
++      "observed_value": {
++        "cluster_count": 3,
++        "comparison": "counterexample_belief_minus_recency_only",
++        "lower": -0.166666666667,
++        "metric": "action_ranking_accuracy",
++        "point_estimate": 0.111111111111,
++        "resamples": 10000,
++        "seed": 702120260909,
++        "terminal": true,
++        "upper": 0.5
++      },
++      "passed": true,
++      "record_type": "paired_delta",
++      "terminal": true
++    },
++    {
++      "expected_value": true,
++      "key": "aggregate_row_recomputation.matches",
++      "observed_value": true,
++      "passed": true,
++      "record_type": "producer_recomputation_claim",
++      "terminal": true
++    },
++    {
++      "expected_value": 1,
++      "key": "belief_utility_comparison_complete_score",
++      "observed_value": 1,
++      "passed": true,
++      "record_type": "comparison_complete_score",
++      "terminal": true
++    },
++    {
++      "expected_value": 0,
++      "key": "belief_future_utility_positive_score",
++      "observed_value": 0,
++      "passed": true,
++      "record_type": "positive_score",
++      "terminal": true
++    }
++  ],
++  "authority_conflict_rows": [
++    {
++      "passed": true,
++      "reason": "authority_conflict",
++      "state_unchanged": true,
++      "terminal": true
++    }
++  ],
++  "belief_promotion_ready_score": 0,
++  "belief_shadow_safe_score": 1,
++  "capacity_rows": [
++    {
++      "byte_capacity": 131072,
++      "evicted_first_stream_indices": [
++        0
++      ],
++      "fact_count": 2,
++      "item_capacity": 2,
++      "passed": true,
++      "state_bytes": 2913,
++      "terminal": true,
++      "within_byte_capacity": true,
++      "within_item_capacity": true
++    }
++  ],
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 7019,
++      "fields_imported": [
++        "arc_belief_stream_ready_score",
++        "fixture_hash",
++        "held_future_sidecar_hash"
++      ],
++      "sha256": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44"
++    },
++    {
++      "experiment_id": 7020,
++      "fields_imported": [
++        "belief_ledger_ready_score",
++        "snapshot_hashes",
++        "transaction_rows"
++      ],
++      "sha256": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25"
++    },
++    {
++      "experiment_id": 7021,
++      "fields_imported": [
++        "per_decision_results",
++        "action_ranking_rows",
++        "paired_delta_rows",
++        "belief_future_utility_positive_score"
++      ],
++      "sha256": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc"
++    }
++  ],
++  "duration_s": 1.1318921640049666,
++  "execution_date": "20260905",
++  "experiment_id": 7022,
++  "field_principles": {
++    "aggregate_recomputation_rows": "Independent reductions prevent producer headlines from self-validating.",
++    "authority_conflict_rows": "Authority rows prevent one event ID from owning two observations.",
++    "belief_promotion_ready_score": "One permits promotion only after safety and row-derived value pass.",
++    "belief_shadow_safe_score": "One permits bounded shadow use only after every safety condition passes.",
++    "capacity_rows": "Capacity rows enforce deterministic item and byte limits.",
++    "cited_upstream_artifacts": "Field citations state which upstream claims enter the audit.",
++    "duration_s": "Wall time proves that the restricted audit process executed.",
++    "field_principles": "A reason for each field makes the audit contract reviewable.",
++    "fresh_process_rows": "Fresh replay rows expose process and digest independence.",
++    "future_leakage_mutation_rows": "Future mutations must fail before they can influence state.",
++    "game_identity_mutation_rows": "Identity mutations test transfer without game-specific clues.",
++    "gate_check_summary": "The first exact failure makes a block or null actionable.",
++    "gpu_isolation_rows": "GPU rows prove that hidden accelerator state cannot affect replay.",
++    "honest_verdict": "A class-consistent prefix gives downstream tools one terminal meaning.",
++    "inference_substrate": "The substrate separates deterministic replay from model inference.",
++    "interruption_rows": "Interruption rows test both sides of the atomic publish boundary.",
++    "network_isolation_rows": "Network rows prove that online evidence cannot enter the audit.",
++    "order_mutation_rows": "Order attacks prove chronology is part of the evidence contract.",
++    "poison_rows": "Poison rows measure whether weak traffic can enter a protected full store.",
++    "preconditions_checked": "Exact gates stop changed evidence before claims are parsed.",
++    "promotion_gate_rows": "Promotion gates require prospective value after safety passes.",
++    "random_seed": "A fixed seed makes clustered interval replay deterministic.",
++    "reproducibility_checksum": "A timing-free digest detects later evidence drift.",
++    "restart_rows": "Restart rows prove that committed bytes remain durable.",
++    "retention_rows": "Retention rows measure harm to protected construction facts.",
++    "retrieval_collision_rows": "Collision rows prove that typed mechanics do not retrieve each other.",
++    "rollback_rows": "Rollback rows prove rejection of bad bytes and exact parent restoration.",
++    "rows": "Decision summaries keep shadow safety separate from value promotion.",
++    "serialization_mutation_rows": "Serialization controls separate meaning from byte tampering.",
++    "shadow_safety_gate_rows": "Safety gates combine leakage, replay, capacity, rollback, and harm controls.",
++    "source_artifact_hashes": "Pinned hashes bind every conclusion to exact source bytes.",
++    "supersession_rows": "Supersession rows preserve refuted generations instead of rewriting them.",
++    "verdict_class": "A closed class distinguishes safe nulls from disqualification.",
++    "verifier_is_oracle": "False states that the audit does not define game correctness."
++  },
++  "fresh_process_rows": [
++    {
++      "deterministic_replay": true,
++      "event_count": 27,
++      "exp7020_replay_digest": "sha256:23812e6592ea9e6f393a3fad9bd4a089edeff65274bd201eb73956a3f3841019",
++      "first_replay_digest": "sha256:23812e6592ea9e6f393a3fad9bd4a089edeff65274bd201eb73956a3f3841019",
++      "fresh_process": true,
++      "game_source_access_rejected": true,
++      "passed": true,
++      "registry_access_rejected": true,
++      "replay_digest_matches_exp7020": true,
++      "second_replay_digest": "sha256:23812e6592ea9e6f393a3fad9bd4a089edeff65274bd201eb73956a3f3841019",
++      "source_tree_read_only": true,
++      "terminal": true
++    }
++  ],
++  "future_leakage_mutation_rows": [
++    {
++      "category": "future",
++      "field_name": "future_label",
++      "mutation": "future_label_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "future",
++      "field_name": "held_future",
++      "mutation": "future_label_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "future",
++      "field_name": "later_outcome",
++      "mutation": "future_label_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "future",
++      "field_name": "sealed_future",
++      "mutation": "future_label_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    }
++  ],
++  "game_identity_mutation_rows": [
++    {
++      "category": "game_identity_or_source",
++      "field_name": "adapter",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "adapter_name",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "game",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "game_id",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "hidden_rule",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "registry_result",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "solve_registry",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "solve_registry_label",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "source_game",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    },
++    {
++      "category": "game_identity_or_source",
++      "field_name": "source_path",
++      "mutation": "game_identity_or_source_swap",
++      "passed": true,
++      "query_rejected": true,
++      "reason": "forbidden_updater_fields",
++      "state_unchanged": true,
++      "terminal": true,
++      "write_rejected": true
++    }
++  ],
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "source_hash:exp7019",
++        "expected_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++        "observed_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:exp7020",
++        "expected_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++        "observed_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:exp7021",
++        "expected_value": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++        "observed_value": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:construction_fixture",
++        "expected_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++        "observed_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:sealed_sidecar",
++        "expected_value": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++        "observed_value": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:ledger_module",
++        "expected_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++        "observed_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:value_module",
++        "expected_value": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++        "observed_value": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:ledger_wrapper",
++        "expected_value": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++        "observed_value": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:value_wrapper",
++        "expected_value": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
++        "observed_value": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "source_hash:solve_registry",
++        "expected_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "observed_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "exp7020_belief_ledger_ready_score",
++        "expected_value": 1,
++        "observed_value": 1,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "exp7021_comparison_complete_score",
++        "expected_value": 1,
++        "observed_value": 1,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "construction_fixture_loadable",
++        "expected_value": null,
++        "observed_value": null,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "construction_event_count",
++        "expected_value": 27,
++        "observed_value": 27,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "producer_code_importable",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "fresh_process_runtime",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "artifact_path_writable",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "controller_source_hashes_unchanged",
++        "expected_value": {
++          "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++          "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++          "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++          "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++          "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++          "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++          "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++          "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++          "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++          "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
++        },
++        "observed_value": {
++          "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++          "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++          "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++          "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++          "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++          "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++          "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++          "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++          "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++          "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
++        },
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "fresh_process_exit_code",
++        "expected_value": 0,
++        "observed_value": 0,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "zero_future_or_identity_leakage",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "deterministic_clean_replay",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "exact_restart_interruption_and_rollback",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "bounded_capacity",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "no_protected_case_harm",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "conflict_and_retrieval_controls",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "headline_and_row_recomputation",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "strictly_beats_both_controls",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "paired_interval_lower_bounds_nonnegative",
++        "expected_value": true,
++        "observed_value": false,
++        "passed": false,
++        "terminal": true
++      },
++      {
++        "check": "nonnegative_belief_minus_recency_mechanic_groups",
++        "expected_value": ">=2",
++        "observed_value": 2,
++        "passed": true,
++        "terminal": true
++      },
++      {
++        "check": "protected_retention_does_not_regress",
++        "expected_value": true,
++        "observed_value": true,
++        "passed": true,
++        "terminal": true
++      }
++    ],
++    "expected_value": true,
++    "failed_check": "paired_interval_lower_bounds_nonnegative",
++    "observed_value": false,
++    "passed": false
++  },
++  "gpu_isolation_rows": [
++    {
++      "cuda_visible_devices": "",
++      "gpu_devices_visible": [],
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "honest_verdict": "complete_null_belief_ledger_shadow_safe_value_not_promotable",
++  "inference_substrate": "fresh_process_arc_belief_audit_no_llm",
++  "interruption_rows": [
++    {
++      "boundary": "after_prepare",
++      "parent_bytes_preserved": true,
++      "passed": true,
++      "recovery_phase": "abort_recovered",
++      "terminal": true
++    },
++    {
++      "boundary": "after_publish",
++      "candidate_bytes_preserved": true,
++      "parent_changed": true,
++      "passed": true,
++      "recovery_phase": "commit_recovered",
++      "terminal": true
++    }
++  ],
++  "network_isolation_rows": [
++    {
++      "external_lookup_rejected": true,
++      "network_disabled": true,
++      "network_namespace_isolated": true,
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "order_mutation_rows": [
++    {
++      "mutation": "adjacent_event_swap",
++      "passed": true,
++      "reason": "updater fixture is not a complete chronological stream",
++      "rejected": true,
++      "terminal": true
++    },
++    {
++      "mutation": "reverse_event_order",
++      "passed": true,
++      "reason": "updater fixture is not a complete chronological stream",
++      "rejected": true,
++      "terminal": true
++    }
++  ],
++  "poison_rows": [
++    {
++      "admitted_poison_count": 0,
++      "all_reasons": [
++        "capacity_protected",
++        "capacity_protected",
++        "capacity_protected"
++      ],
++      "attack_count": 3,
++      "passed": true,
++      "protected_state_unchanged": true,
++      "terminal": true
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "check": "source_hash:exp7019",
++      "expected_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++      "observed_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:exp7020",
++      "expected_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++      "observed_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:exp7021",
++      "expected_value": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++      "observed_value": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:construction_fixture",
++      "expected_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++      "observed_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:sealed_sidecar",
++      "expected_value": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++      "observed_value": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:ledger_module",
++      "expected_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++      "observed_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:value_module",
++      "expected_value": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++      "observed_value": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:ledger_wrapper",
++      "expected_value": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++      "observed_value": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:value_wrapper",
++      "expected_value": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
++      "observed_value": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "source_hash:solve_registry",
++      "expected_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++      "observed_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "exp7020_belief_ledger_ready_score",
++      "expected_value": 1,
++      "observed_value": 1,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "exp7021_comparison_complete_score",
++      "expected_value": 1,
++      "observed_value": 1,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "construction_fixture_loadable",
++      "expected_value": null,
++      "observed_value": null,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "construction_event_count",
++      "expected_value": 27,
++      "observed_value": 27,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "producer_code_importable",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "fresh_process_runtime",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "artifact_path_writable",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "controller_source_hashes_unchanged",
++      "expected_value": {
++        "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++        "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++        "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++        "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++        "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++        "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++        "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++        "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++        "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
++      },
++      "observed_value": {
++        "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++        "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++        "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++        "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++        "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++        "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++        "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++        "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++        "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++        "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
++      },
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "fresh_process_exit_code",
++      "expected_value": 0,
++      "observed_value": 0,
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "promotion_gate_rows": [
++    {
++      "check": "headline_and_row_recomputation",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "strictly_beats_both_controls",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "paired_interval_lower_bounds_nonnegative",
++      "expected_value": true,
++      "observed_value": false,
++      "passed": false,
++      "terminal": true
++    },
++    {
++      "check": "nonnegative_belief_minus_recency_mechanic_groups",
++      "expected_value": ">=2",
++      "observed_value": 2,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "protected_retention_does_not_regress",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "random_seed": 702220260905,
++  "reproducibility_checksum": "sha256:3cf19df7e5b30c015283da098c3759e79a838b1b5ceb5a830bf342663e2c134c",
++  "restart_rows": [
++    {
++      "committed_bytes_survived": true,
++      "journal_audit_passed": true,
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "retention_rows": [
++    {
++      "passed": true,
++      "protected_case_harm_count": 0,
++      "protected_fact_ids_after": [
++        "sha256:2f3c05c612859770d454ee61cd4a75a93d93b7eef7a8348cca9e17234372a2c6",
++        "sha256:92842b048e39e1791884f8619e46405644d5a0c960517917afac2ccc47f84dd8"
++      ],
++      "protected_fact_ids_before": [
++        "sha256:2f3c05c612859770d454ee61cd4a75a93d93b7eef7a8348cca9e17234372a2c6",
++        "sha256:92842b048e39e1791884f8619e46405644d5a0c960517917afac2ccc47f84dd8"
++      ],
++      "terminal": true
++    }
++  ],
++  "retrieval_collision_rows": [
++    {
++      "cross_key_fact_retrieved": false,
++      "first_fact_present": true,
++      "keys_distinct": true,
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "rollback_rows": [
++    {
++      "case": "invalid_snapshot",
++      "passed": true,
++      "rejected": true,
++      "state_unchanged": true,
++      "terminal": true
++    },
++    {
++      "byte_exact": true,
++      "case": "exact_parent",
++      "passed": true,
++      "receipt_rolled_back": true,
++      "terminal": true
++    },
++    {
++      "case": "tampered_journal_tail",
++      "passed": true,
++      "rejected": true,
++      "terminal": true
++    },
++    {
++      "case": "truncated_commit_tail",
++      "passed": true,
++      "recovery_phase": "commit_recovered",
++      "state_preserved": true,
++      "terminal": true
++    }
++  ],
++  "rows": [
++    {
++      "decision": "shadow_safety",
++      "passed": true,
++      "score": 1,
++      "terminal": true
++    },
++    {
++      "decision": "value_promotion",
++      "passed": false,
++      "score": 0,
++      "terminal": true
++    }
++  ],
++  "schema": "carnot.exp7022.belief_ledger_cold_audit.v1",
++  "serialization_mutation_rows": [
++    {
++      "mutation": "semantic_key_and_whitespace_change",
++      "passed": true,
++      "state_hash_equal": true,
++      "terminal": true
++    },
++    {
++      "mutation": "changed_event_bytes_without_row_hash",
++      "passed": true,
++      "reason": "event_row_hash_invalid",
++      "state_unchanged": true,
++      "terminal": true
++    }
++  ],
++  "shadow_safety_gate_rows": [
++    {
++      "check": "zero_future_or_identity_leakage",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "deterministic_clean_replay",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "exact_restart_interruption_and_rollback",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "bounded_capacity",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "no_protected_case_harm",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    },
++    {
++      "check": "conflict_and_retrieval_controls",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true,
++      "terminal": true
++    }
++  ],
++  "source_artifact_hashes": {
++    "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
++    "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
++    "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
++    "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
++    "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
++    "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
++    "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
++    "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
++    "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
++    "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
++  },
++  "supersession_rows": [
++    {
++      "contradicted_fact_count": 2,
++      "generation_increased": true,
++      "passed": true,
++      "supersession_count": 1,
++      "terminal": true
++    }
++  ],
++  "verdict_class": "null",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_7022_belief_ledger_cold_audit.py b/scripts/experiments/experiment_7022_belief_ledger_cold_audit.py
+new file mode 100644
+index 0000000000..81e2cc66d0
+--- /dev/null
++++ b/scripts/experiments/experiment_7022_belief_ledger_cold_audit.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run the independent belief-ledger cold audit (REQ-CSL-7022)."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.agentic.arc_belief_ledger_cold_audit import main
++
++
++if __name__ == "__main__":  # pragma: no cover - required command surface.
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_7022_belief_ledger_cold_audit.py b/tests/python/test_experiment_7022_belief_ledger_cold_audit.py
+new file mode 100644
+index 0000000000..bcf96e161e
+--- /dev/null
++++ b/tests/python/test_experiment_7022_belief_ledger_cold_audit.py
+@@ -0,0 +1,655 @@
++"""Independent belief-ledger cold-audit tests.
++
++Spec refs: REQ-CSL-7022, SCENARIO-CSL-7022-PRECONDITIONS,
++SCENARIO-CSL-7022-ISOLATED-REPLAY, SCENARIO-CSL-7022-MUTATION-SENSITIVITY,
++SCENARIO-CSL-7022-ORDER-AUTHORITY-AND-RETRIEVAL,
++SCENARIO-CSL-7022-CONFLICT-CAPACITY-AND-POISON,
++SCENARIO-CSL-7022-RESTART-INTERRUPTION-ROLLBACK,
++SCENARIO-CSL-7022-ROW-RECOMPUTATION, and
++SCENARIO-CSL-7022-SEPARATE-DECISIONS.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++import pytest
++
++from carnot.agentic import arc_belief_ledger as ledger_mod
++from carnot.agentic import arc_belief_ledger_cold_audit as exp
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++
++def _passing_runtime() -> dict:
++    return {
++        "fresh_process": True,
++        "network_namespace_isolated": True,
++        "network_disabled": True,
++        "external_lookup_rejected": True,
++        "gpu_devices_visible": [],
++        "cuda_visible_devices": "",
++        "game_source_access_rejected": True,
++        "registry_access_rejected": True,
++        "source_tree_read_only": True,
++        "passed": True,
++    }
++
++
++@pytest.fixture(scope="module")
++def source_bundle() -> dict:
++    loaded = exp.load_hashed_sources(REPO_ROOT)
++    assert loaded["passed"] is True
++    return loaded
++
++
++@pytest.fixture(scope="module")
++def frozen_artifact(tmp_path_factory: pytest.TempPathFactory) -> dict:
++    work_root = tmp_path_factory.mktemp("exp7022-audit")
++    return exp.build_from_repo(
++        REPO_ROOT,
++        run_date=exp.RUN_DATE,
++        output_path=work_root / "result.json",
++        work_root=work_root,
++        runtime_receipt=_passing_runtime(),
++        write_output=False,
++    )
++
++
++def test_req_csl_7022_spec_precedes_implementation() -> None:
++    """REQ-CSL-7022 owns all audit surfaces before implementation."""
++
++    text = (REPO_ROOT / exp.SPEC_PATH).read_text(encoding="utf-8")
++    section = text.split("## REQ-CSL-7022", 1)[1]
++    for marker in (
++        "SCENARIO-CSL-7022-PRECONDITIONS",
++        "SCENARIO-CSL-7022-ISOLATED-REPLAY",
++        "SCENARIO-CSL-7022-MUTATION-SENSITIVITY",
++        "SCENARIO-CSL-7022-ORDER-AUTHORITY-AND-RETRIEVAL",
++        "SCENARIO-CSL-7022-CONFLICT-CAPACITY-AND-POISON",
++        "SCENARIO-CSL-7022-RESTART-INTERRUPTION-ROLLBACK",
++        "SCENARIO-CSL-7022-ROW-RECOMPUTATION",
++        "SCENARIO-CSL-7022-SEPARATE-DECISIONS",
++        exp.INFERENCE_SUBSTRATE,
++        "blocked_belief_ledger_cold_audit",
++    ):
++        assert marker in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_7022_preconditions_hash_before_parse(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-CSL-7022-PRECONDITIONS rejects changed bytes before JSON parsing."""
++
++    source = tmp_path / "exp7020.json"
++    source.write_text('{"belief_ledger_ready_score":1}\n', encoding="utf-8")
++
++    def forbidden_parse(*_args: object, **_kwargs: object) -> object:
++        raise AssertionError("source headline parsed before its hash passed")
++
++    monkeypatch.setattr(exp.json, "loads", forbidden_parse)
++    loaded = exp.load_hashed_sources(
++        tmp_path,
++        source_paths={"exp7020": Path("exp7020.json")},
++        expected_hashes={"exp7020": "sha256:wrong"},
++    )
++
++    assert loaded["passed"] is False
++    assert loaded["values"] == {}
++    assert loaded["checks"][0]["check"] == "source_hash:exp7020"
++    assert loaded["checks"][0]["observed_value"] == exp.sha256_path(source)
++
++
++def test_scenario_7022_exact_sources_and_upstream_gates(source_bundle: dict) -> None:
++    """SCENARIO-CSL-7022-PRECONDITIONS freezes both gates and every source hash."""
++
++    assert source_bundle["hashes"] == exp.EXPECTED_SOURCE_HASHES
++    checks = {row["check"]: row for row in source_bundle["checks"]}
++    assert all(row["passed"] for row in checks.values())
++    assert checks["exp7020_belief_ledger_ready_score"]["observed_value"] == 1
++    assert checks["exp7021_comparison_complete_score"]["observed_value"] == 1
++    assert checks["producer_code_importable"]["observed_value"] is True
++
++
++def test_req_7022_source_loader_preserves_missing_and_invalid_inputs(tmp_path: Path) -> None:
++    """REQ-CSL-7022 keeps absent bytes and invalid fixture rows explicit."""
++
++    assert exp.sha256_path(tmp_path / "missing") is None
++    source = tmp_path / "exp7020.json"
++    source.write_text('{"belief_ledger_ready_score":1}\n', encoding="utf-8")
++    without_fixture = exp.load_hashed_sources(
++        tmp_path,
++        source_paths={"exp7020": Path("exp7020.json")},
++        expected_hashes={"exp7020": exp.sha256_path(source)},
++    )
++    assert without_fixture["passed"] is False
++    assert without_fixture["values"]["exp7020"]["belief_ledger_ready_score"] == 1
++
++    fixture = tmp_path / "fixture.jsonl"
++    fixture.write_text('{"schema":"wrong"}\n', encoding="utf-8")
++    invalid_fixture = exp.load_hashed_sources(
++        tmp_path,
++        source_paths={"construction_fixture": Path("fixture.jsonl")},
++        expected_hashes={"construction_fixture": exp.sha256_path(fixture)},
++    )
++    checks = {row["check"]: row for row in invalid_fixture["checks"]}
++    assert checks["construction_fixture_loadable"]["passed"] is False
++    assert invalid_fixture["values"]["events"] is None
++
++
++def test_req_7022_empty_reducers_preserve_unsupported_metrics() -> None:
++    """REQ-CSL-7022 does not invent a metric or interval for empty rows."""
++
++    assert exp._mean([]) is None
++    assert exp._cluster_interval({}, seed=7, resamples=11) == {
++        "point_estimate": None,
++        "lower": None,
++        "upper": None,
++        "cluster_count": 0,
++        "resamples": 11,
++        "seed": 7,
++    }
++
++
++@pytest.mark.parametrize("field_name", sorted(ledger_mod.FORBIDDEN_UPDATER_KEYS))
++def test_scenario_7022_each_prohibited_mutation_rejects_without_state_change(
++    field_name: str, tmp_path: Path
++) -> None:
++    """SCENARIO-CSL-7022-MUTATION-SENSITIVITY rejects every denied field."""
++
++    event = ledger_mod._fixture_event(0, mechanic="mutation", outcome="clean")
++    row = exp.audit_one_forbidden_mutation(event, field_name, tmp_path / field_name)
++
++    assert row["field_name"] == field_name
++    assert row["write_rejected"] is True
++    assert row["query_rejected"] is True
++    assert row["state_unchanged"] is True
++    assert row["passed"] is True
++    assert row["terminal"] is True
++
++
++@pytest.mark.parametrize("field_name", sorted(ledger_mod.FORBIDDEN_UPDATER_KEYS))
++def test_scenario_7022_red_mutation_fails_if_field_auditor_is_bypassed(
++    field_name: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-CSL-7022-MUTATION-SENSITIVITY keeps every RED mutation sensitive."""
++
++    monkeypatch.setattr(ledger_mod, "find_forbidden_paths", lambda _value: [])
++    event = ledger_mod._fixture_event(0, mechanic="bypass", outcome="unsafe")
++    row = exp.audit_one_forbidden_mutation(event, field_name, tmp_path / field_name)
++
++    assert row["write_rejected"] is False
++    assert row["state_unchanged"] is False
++    assert row["passed"] is False
++
++
++def test_req_7022_query_and_order_bypass_rows_turn_red(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CSL-7022 records a failed row if query or order rejection is bypassed."""
++
++    event = ledger_mod._fixture_event(0, mechanic="bypass", outcome="unsafe")
++    monkeypatch.setattr(ledger_mod.BeliefLedger, "query", lambda *_args, **_kwargs: {})
++    mutation = exp.audit_one_forbidden_mutation(event, "game_id", tmp_path / "query")
++    assert mutation["query_rejected"] is False
++    assert mutation["passed"] is False
++
++    monkeypatch.setattr(ledger_mod, "load_updater_events", lambda _path: [])
++    order = exp._order_rows(
++        [event, ledger_mod._fixture_event(1, mechanic="b", outcome="b")], tmp_path / "order"
++    )
++    assert all(row["rejected"] is False and row["passed"] is False for row in order)
++
++
++def test_scenario_7022_isolated_replay_and_full_control_matrix(
++    source_bundle: dict, tmp_path: Path
++) -> None:
++    """SCENARIO-CSL-7022-ISOLATED-REPLAY runs every clean replay control."""
++
++    evidence = exp.run_audit_matrix(
++        source_bundle["values"]["events"],
++        source_bundle["values"]["exp7020"],
++        tmp_path,
++        _passing_runtime(),
++    )
++
++    for field in exp.SAFETY_ROW_TABLES:
++        assert evidence[field]
++        assert all(row["terminal"] for row in evidence[field])
++    assert all(row["passed"] for field in exp.SAFETY_ROW_TABLES for row in evidence[field])
++    assert len(evidence["future_leakage_mutation_rows"]) == 4
++    assert len(evidence["game_identity_mutation_rows"]) == 10
++    assert evidence["fresh_process_rows"][0]["replay_digest_matches_exp7020"] is True
++    assert evidence["capacity_rows"][0]["within_item_capacity"] is True
++    assert evidence["capacity_rows"][0]["within_byte_capacity"] is True
++    assert evidence["poison_rows"][0]["admitted_poison_count"] == 0
++    assert evidence["retention_rows"][0]["protected_case_harm_count"] == 0
++
++
++def test_scenario_7022_order_serialization_authority_and_retrieval_details(
++    source_bundle: dict, tmp_path: Path
++) -> None:
++    """SCENARIO-CSL-7022-ORDER-AUTHORITY-AND-RETRIEVAL checks exact failure modes."""
++
++    evidence = exp.run_audit_matrix(
++        source_bundle["values"]["events"],
++        source_bundle["values"]["exp7020"],
++        tmp_path,
++        _passing_runtime(),
++    )
++
++    assert {row["mutation"] for row in evidence["serialization_mutation_rows"]} == {
++        "semantic_key_and_whitespace_change",
++        "changed_event_bytes_without_row_hash",
++    }
++    assert {row["mutation"] for row in evidence["order_mutation_rows"]} == {
++        "adjacent_event_swap",
++        "reverse_event_order",
++    }
++    assert evidence["authority_conflict_rows"][0]["reason"] == "authority_conflict"
++    assert evidence["retrieval_collision_rows"][0]["cross_key_fact_retrieved"] is False
++
++
++def test_scenario_7022_conflict_capacity_poison_and_durable_controls(
++    source_bundle: dict, tmp_path: Path
++) -> None:
++    """SCENARIO-CSL-7022-CONFLICT-CAPACITY-AND-POISON keeps safety controls exact."""
++
++    evidence = exp.run_audit_matrix(
++        source_bundle["values"]["events"],
++        source_bundle["values"]["exp7020"],
++        tmp_path,
++        _passing_runtime(),
++    )
++
++    assert evidence["supersession_rows"][0]["generation_increased"] is True
++    assert evidence["restart_rows"][0]["committed_bytes_survived"] is True
++    interruption = {row["boundary"]: row for row in evidence["interruption_rows"]}
++    assert interruption["after_prepare"]["recovery_phase"] == "abort_recovered"
++    assert interruption["after_publish"]["recovery_phase"] == "commit_recovered"
++    rollback = {row["case"]: row for row in evidence["rollback_rows"]}
++    assert rollback["invalid_snapshot"]["rejected"] is True
++    assert rollback["exact_parent"]["byte_exact"] is True
++    assert rollback["tampered_journal_tail"]["rejected"] is True
++    assert rollback["truncated_commit_tail"]["recovery_phase"] == "commit_recovered"
++
++
++def test_req_7022_durable_bypass_rows_turn_red(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CSL-7022 records failed rows if snapshot or journal rejection is bypassed."""
++
++    original_rollback = ledger_mod.BeliefLedger.rollback
++    original_restart = ledger_mod.BeliefLedger.restart
++
++    def bypass_invalid_snapshot(
++        self: ledger_mod.BeliefLedger,
++        parent_bytes: bytes,
++        *,
++        transaction_id: str,
++        reason: str,
++    ) -> dict:
++        if parent_bytes == b"{invalid":
++            return {"rolled_back": False}
++        return original_rollback(
++            self,
++            parent_bytes,
++            transaction_id=transaction_id,
++            reason=reason,
++        )
++
++    def bypass_tampered_tail(self: ledger_mod.BeliefLedger) -> ledger_mod.BeliefLedger:
++        if self.root.name == "tampered-tail":
++            return self
++        return original_restart(self)
++
++    monkeypatch.setattr(ledger_mod.BeliefLedger, "rollback", bypass_invalid_snapshot)
++    monkeypatch.setattr(ledger_mod.BeliefLedger, "restart", bypass_tampered_tail)
++    rows = exp._durability_rows(tmp_path)
++    rollback = {row["case"]: row for row in rows["rollback_rows"]}
++    assert rollback["invalid_snapshot"]["passed"] is False
++    assert rollback["tampered_journal_tail"]["passed"] is False
++
++
++def test_scenario_7022_recomputes_every_exp7021_headline_and_pair(
++    source_bundle: dict,
++) -> None:
++    """SCENARIO-CSL-7022-ROW-RECOMPUTATION derives metrics without producer helpers."""
++
++    value = exp.audit_exp7021_rows(source_bundle["values"]["exp7021"])
++
++    assert value["recomputation_passed"] is True
++    assert value["row_positive_gate_passed"] is False
++    assert len(value["aggregate_recomputation_rows"]) == 8
++    assert all(row["passed"] for row in value["aggregate_recomputation_rows"])
++    gates = {row["check"]: row for row in value["promotion_gate_rows"]}
++    assert gates["strictly_beats_both_controls"]["passed"] is True
++    assert gates["paired_interval_lower_bounds_nonnegative"]["passed"] is False
++    assert gates["protected_retention_does_not_regress"]["passed"] is True
++
++
++def test_scenario_7022_headline_or_paired_drift_disqualifies_value(
++    source_bundle: dict,
++) -> None:
++    """SCENARIO-CSL-7022-ROW-RECOMPUTATION detects both aggregate drift classes."""
++
++    headline = deepcopy(source_bundle["values"]["exp7021"])
++    headline["rows"][0]["action_ranking_accuracy"] = 0.75
++    headline_audit = exp.audit_exp7021_rows(headline)
++    assert headline_audit["recomputation_passed"] is False
++    assert any(not row["passed"] for row in headline_audit["aggregate_recomputation_rows"])
++
++    paired = deepcopy(source_bundle["values"]["exp7021"])
++    paired["paired_delta_rows"][0]["lower"] = 0.0
++    paired_audit = exp.audit_exp7021_rows(paired)
++    assert paired_audit["recomputation_passed"] is False
++    assert any(
++        row["record_type"] == "paired_delta" and not row["passed"]
++        for row in paired_audit["aggregate_recomputation_rows"]
++    )
++
++
++def test_scenario_7022_safe_but_nonuseful_is_null(frozen_artifact: dict) -> None:
++    """SCENARIO-CSL-7022-SEPARATE-DECISIONS keeps shadow safety separate from value."""
++
++    artifact = frozen_artifact
++    assert exp.validate_artifact(artifact) == []
++    assert artifact["belief_shadow_safe_score"] == 1
++    assert artifact["belief_promotion_ready_score"] == 0
++    assert artifact["verdict_class"] == "null"
++    assert artifact["honest_verdict"].startswith("complete_null_")
++    assert artifact["verifier_is_oracle"] is False
++    assert set(artifact["field_principles"]) == set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["source_artifact_hashes"] == exp.EXPECTED_SOURCE_HASHES
++
++
++def test_req_7022_leakage_or_nonrecomputation_is_disqualified(
++    frozen_artifact: dict,
++) -> None:
++    """REQ-CSL-7022 assigns disqualified to leakage and non-recomputable evidence."""
++
++    leaky = deepcopy(frozen_artifact)
++    leaky["future_leakage_mutation_rows"][0]["passed"] = False
++    reduced = exp.reduce_terminal_decision(leaky)
++    assert reduced["belief_shadow_safe_score"] == 0
++    assert reduced["belief_promotion_ready_score"] == 0
++    assert reduced["verdict_class"] == "disqualified"
++
++    drift = deepcopy(frozen_artifact)
++    drift["aggregate_recomputation_rows"][0]["passed"] = False
++    reduced = exp.reduce_terminal_decision(drift)
++    assert reduced["belief_shadow_safe_score"] == 1
++    assert reduced["belief_promotion_ready_score"] == 0
++    assert reduced["verdict_class"] == "disqualified"
++
++
++def test_req_7022_all_positive_rows_are_required_for_positive() -> None:
++    """REQ-CSL-7022 reaches positive only when safety, recomputation, and value pass."""
++
++    artifact = exp._base_artifact(exp.RUN_DATE, 0.1, exp.EXPECTED_SOURCE_HASHES)
++    artifact["preconditions_checked"] = [exp.gate_check("preconditions", True, True)]
++    for field in exp.SAFETY_ROW_TABLES:
++        artifact[field] = [{"passed": True, "terminal": True}]
++    artifact["aggregate_recomputation_rows"] = [{"passed": True, "terminal": True}]
++    artifact["promotion_gate_rows"] = [{"passed": True, "terminal": True}]
++    reduced = exp.reduce_terminal_decision(artifact)
++    assert reduced["belief_shadow_safe_score"] == 1
++    assert reduced["belief_promotion_ready_score"] == 1
++    assert reduced["verdict_class"] == "positive"
++    assert reduced["honest_verdict"].startswith("complete_positive_")
++
++
++def test_scenario_7022_blocked_artifact_names_exact_first_failure() -> None:
++    """SCENARIO-CSL-7022-PRECONDITIONS emits the required blocked verdict."""
++
++    checks = [exp.gate_check("exp7020_hash", "sha256:expected", "sha256:observed")]
++    artifact = exp.build_blocked_artifact(
++        run_date=exp.RUN_DATE,
++        duration_s=0.25,
++        checks=checks,
++        source_hashes={"exp7020": "sha256:observed"},
++    )
++
++    assert exp.validate_artifact(artifact) == []
++    assert artifact["belief_shadow_safe_score"] == 0
++    assert artifact["belief_promotion_ready_score"] == 0
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == "blocked_belief_ledger_cold_audit"
++    assert artifact["gate_check_summary"]["failed_check"] == "exp7020_hash"
++    assert artifact["gate_check_summary"]["expected_value"] == "sha256:expected"
++    assert artifact["gate_check_summary"]["observed_value"] == "sha256:observed"
++
++
++def test_req_7022_validator_and_atomic_writer_fail_closed(
++    frozen_artifact: dict, tmp_path: Path
++) -> None:
++    """REQ-CSL-7022 validates structure, decisions, and checksums before publication."""
++
++    target = tmp_path / "artifact.json"
++    exp.write_validated_artifact(target, frozen_artifact)
++    assert json.loads(target.read_text(encoding="utf-8")) == frozen_artifact
++
++    cases = []
++    missing = deepcopy(frozen_artifact)
++    missing.pop("rows")
++    cases.append((missing, "required_fields_missing"))
++    principles = deepcopy(frozen_artifact)
++    principles["field_principles"] = {}
++    cases.append((principles, "field_principles_mismatch"))
++    score = deepcopy(frozen_artifact)
++    score["belief_shadow_safe_score"] = True
++    cases.append((score, "shadow_score_must_be_bare_integer"))
++    terminal = deepcopy(frozen_artifact)
++    terminal["capacity_rows"][0]["terminal"] = False
++    cases.append((terminal, "nonterminal_row:capacity_rows"))
++    prefix = deepcopy(frozen_artifact)
++    prefix["honest_verdict"] = "wrong"
++    cases.append((prefix, "verdict_prefix_mismatch"))
++    oracle = deepcopy(frozen_artifact)
++    oracle["verifier_is_oracle"] = True
++    cases.append((oracle, "verifier_is_oracle_mismatch"))
++    preconditions = deepcopy(frozen_artifact)
++    preconditions["preconditions_checked"] = "wrong"
++    cases.append((preconditions, "preconditions_invalid"))
++    substrate = deepcopy(frozen_artifact)
++    substrate["inference_substrate"] = "wrong"
++    cases.append((substrate, "inference_substrate_mismatch"))
++    verdict = deepcopy(frozen_artifact)
++    verdict["verdict_class"] = "wrong"
++    cases.append((verdict, "verdict_class_invalid"))
++    gate = deepcopy(frozen_artifact)
++    gate["gate_check_summary"] = {}
++    cases.append((gate, "gate_check_summary_invalid"))
++    null_score = deepcopy(frozen_artifact)
++    null_score["belief_shadow_safe_score"] = 0
++    cases.append((null_score, "null_score_mismatch"))
++    positive_score = deepcopy(frozen_artifact)
++    positive_score["verdict_class"] = "positive"
++    positive_score["honest_verdict"] = "complete_positive_test"
++    cases.append((positive_score, "positive_score_mismatch"))
++    disqualified_score = deepcopy(frozen_artifact)
++    disqualified_score["verdict_class"] = "disqualified"
++    disqualified_score["honest_verdict"] = "disqualified_test"
++    disqualified_score["belief_promotion_ready_score"] = 1
++    cases.append((disqualified_score, "disqualified_promotion_mismatch"))
++
++    assert exp.validate_artifact([]) == ["artifact_object_required"]
++
++    for artifact, expected in cases:
++        assert expected in exp.validate_artifact(artifact)
++    with pytest.raises(ValueError, match="required_fields_missing"):
++        exp.write_validated_artifact(tmp_path / "invalid.json", missing)
++
++    blocked = exp.build_blocked_artifact(
++        run_date=exp.RUN_DATE,
++        duration_s=0.1,
++        checks=[exp.gate_check("blocked", True, False)],
++        source_hashes={},
++    )
++    blocked["honest_verdict"] = "blocked_wrong"
++    blocked["belief_shadow_safe_score"] = 1
++    blocked["gate_check_summary"] = exp.gate_summary([])
++    blocked_errors = exp.validate_artifact(blocked)
++    assert "blocked_verdict_mismatch" in blocked_errors
++    assert "blocked_score_mismatch" in blocked_errors
++    assert "blocked_without_failed_gate" in blocked_errors
++
++
++def test_req_7022_atomic_writer_cleans_failed_temporary(
++    frozen_artifact: dict, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CSL-7022 removes a temporary document when publication fails."""
++
++    monkeypatch.setattr(exp.os, "replace", lambda *_args: (_ for _ in ()).throw(OSError()))
++    with pytest.raises(OSError):
++        exp.write_validated_artifact(tmp_path / "failed.json", frozen_artifact)
++    assert not list(tmp_path.glob(".failed.json.*"))
++
++
++def test_req_7022_build_from_repo_blocked_write_and_success_write(
++    tmp_path: Path,
++) -> None:
++    """REQ-CSL-7022 publishes both blocked and complete child outcomes."""
++
++    blocked_path = tmp_path / "blocked.json"
++    blocked = exp.build_from_repo(
++        REPO_ROOT,
++        output_path=blocked_path,
++        work_root=tmp_path,
++        runtime_receipt={"passed": False},
++        write_output=True,
++    )
++    assert blocked["verdict_class"] == "blocked"
++    assert blocked_path.is_file()
++
++    success_path = tmp_path / "success.json"
++    success = exp.build_from_repo(
++        REPO_ROOT,
++        output_path=success_path,
++        work_root=tmp_path,
++        runtime_receipt=_passing_runtime(),
++        write_output=True,
++    )
++    assert success["verdict_class"] == "null"
++    assert success_path.is_file()
++
++
++def test_req_7022_build_rejects_internal_validation_error(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CSL-7022 refuses to publish an internally invalid complete result."""
++
++    monkeypatch.setattr(exp, "validate_artifact", lambda _artifact: ["forced invalid"])
++    with pytest.raises(RuntimeError, match="forced invalid"):
++        exp.build_from_repo(
++            REPO_ROOT,
++            output_path=tmp_path / "invalid.json",
++            work_root=tmp_path,
++            runtime_receipt=_passing_runtime(),
++            write_output=False,
++        )
++
++
++def test_req_7022_sandbox_command_and_controller_block(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CSL-7022 requires bubblewrap, hidden CUDA, and one writable child path."""
++
++    command = exp.fresh_process_command(
++        executable=Path("/python"),
++        wrapper=Path("/wrapper"),
++        repo_root=REPO_ROOT,
++        writable_root=tmp_path,
++        output_path=tmp_path / "child.json",
++        run_date=exp.RUN_DATE,
++    )
++    assert command[0] == "bwrap"
++    assert "--unshare-net" in command
++    assert command[command.index("CUDA_VISIBLE_DEVICES") + 1] == ""
++    assert command[command.index("HF_HUB_OFFLINE") + 1] == "1"
++
++    monkeypatch.setattr(exp.shutil, "which", lambda _name: None)
++    output = tmp_path / "blocked.json"
++    artifact = exp.run_controller(repo_root=REPO_ROOT, result_path=output)
++    assert artifact["honest_verdict"] == "blocked_belief_ledger_cold_audit"
++    assert artifact["gate_check_summary"]["failed_check"] == "bubblewrap_available"
++    assert json.loads(output.read_text(encoding="utf-8")) == artifact
++
++
++def test_req_7022_controller_accepts_valid_child(
++    frozen_artifact: dict, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CSL-7022 copies one validated child result after source hashes stay fixed."""
++
++    monkeypatch.setattr(exp.shutil, "which", lambda _name: "/usr/bin/bwrap")
++
++    def completed(command: list[str], **_kwargs: object) -> SimpleNamespace:
++        child_path = Path(command[command.index("--output") + 1])
++        child_path.write_text(json.dumps(frozen_artifact), encoding="utf-8")
++        return SimpleNamespace(returncode=0, stdout="", stderr="")
++
++    monkeypatch.setattr(exp.subprocess, "run", completed)
++    output = tmp_path / "controller.json"
++    artifact = exp.run_controller(repo_root=REPO_ROOT, result_path=output)
++    assert artifact["belief_shadow_safe_score"] == 1
++    assert artifact["verdict_class"] == "null"
++    assert exp.validate_artifact(artifact) == []
++    assert json.loads(output.read_text(encoding="utf-8")) == artifact
++
++
++def test_req_7022_runtime_receipt_fails_in_parent(tmp_path: Path) -> None:
++    """REQ-CSL-7022 measures isolation instead of trusting environment labels."""
++
++    receipt = exp.sandbox_runtime_receipt(tmp_path)
++    assert receipt["fresh_process"] is False
++    assert receipt["source_tree_read_only"] is False
++    assert receipt["passed"] is False
++
++
++def test_req_7022_runtime_receipt_records_read_only_probe(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CSL-7022 records a denied source-tree write as measured evidence."""
++
++    original_write_text = Path.write_text
++
++    def deny_probe(self: Path, *args: object, **kwargs: object) -> int:
++        if self.name == ".exp7022-write-probe":
++            raise OSError("read only")
++        return original_write_text(self, *args, **kwargs)
++
++    monkeypatch.setattr(Path, "write_text", deny_probe)
++    receipt = exp.sandbox_runtime_receipt(tmp_path)
++    assert receipt["source_tree_read_only"] is True
++
++
++def test_req_7022_controller_child_failure_and_validation_failure(
++    frozen_artifact: dict, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-CSL-7022 blocks a missing child result and rejects an invalid copied result."""
++
++    monkeypatch.setattr(exp.shutil, "which", lambda _name: "/usr/bin/bwrap")
++    monkeypatch.setattr(
++        exp.subprocess,
++        "run",
++        lambda *_args, **_kwargs: SimpleNamespace(returncode=7, stdout="", stderr="failed"),
++    )
++    blocked = exp.run_controller(repo_root=REPO_ROOT, result_path=tmp_path / "blocked-child.json")
++    assert blocked["verdict_class"] == "blocked"
++    assert blocked["gate_check_summary"]["failed_check"] == "fresh_process_exit_code"
++
++    def completed(command: list[str], **_kwargs: object) -> SimpleNamespace:
++        child_path = Path(command[command.index("--output") + 1])
++        child_path.write_text(json.dumps(frozen_artifact), encoding="utf-8")
++        return SimpleNamespace(returncode=0, stdout="", stderr="")
++
++    monkeypatch.setattr(exp.subprocess, "run", completed)
++    monkeypatch.setattr(exp, "validate_artifact", lambda _artifact: ["forced invalid"])
++    with pytest.raises(RuntimeError, match="forced invalid"):
++        exp.run_controller(repo_root=REPO_ROOT, result_path=tmp_path / "invalid-child.json")
+-- 
+2.55.0
+

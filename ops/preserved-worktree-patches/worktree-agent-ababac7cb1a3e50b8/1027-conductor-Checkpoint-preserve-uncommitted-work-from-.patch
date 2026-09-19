@@ -1,0 +1,122 @@
+From 717356599f4160ac6045e29d03bb5196cbfa647d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 16:12:08 -0400
+Subject: [PATCH 01027/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .claude/scheduled_tasks.lock                |  1 -
+ ops/conductor-heartbeat.json                |  2 +-
+ ops/conductor-log.md                        |  1 +
+ ops/conductor-state.json                    |  2 +-
+ results/arc3_gap3_stage1_latent_energy.json | 61 +++++++++++++++++++++
+ 5 files changed, 64 insertions(+), 3 deletions(-)
+ delete mode 100644 .claude/scheduled_tasks.lock
+ create mode 100644 results/arc3_gap3_stage1_latent_energy.json
+
+diff --git a/.claude/scheduled_tasks.lock b/.claude/scheduled_tasks.lock
+deleted file mode 100644
+index b2bba2eb09..0000000000
+--- a/.claude/scheduled_tasks.lock
++++ /dev/null
+@@ -1 +0,0 @@
+-{"sessionId":"1817d5ec-9e1e-42d5-b8f8-8ec2da39c23f","pid":14103,"procStart":"658929","acquiredAt":1780617410309}
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 265bc2e1eb..a9bd914c9d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1768841, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-09T19:19:41Z"}
+\ No newline at end of file
++{"pid": 1780332, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-09T20:12:06Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index fdebcfdf47..26bff56eca 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8111,3 +8111,4 @@ c |
+ | 2026-06-09 17:57 UTC | OWED (twice) from .365/.366: generalize the active | OK | 81 passed in 3.87s |
+ | 2026-06-09 19:11 UTC | HIDDEN-STATE v2 — Pinductor belief-likelihood (ret | SKIP | Pre-tests failing, self-heal failed: 2 failed, 106 passed in 5.03s |
+ | 2026-06-09 19:19 UTC | HIDDEN-STATE v2 — Pinductor belief-likelihood (ret | OK | Deliverable already exists in repo |
++| 2026-06-09 19:30 UTC | CROSS-GAME TRANSFER v2 — ArcMemo NL concept-memory | OK | 91 passed in 4.39s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ad97fcc97a..10d2ded60b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1768841, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-09T19:19:41Z"}
+\ No newline at end of file
++{"pid": 1780332, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-09T20:12:06Z"}
+\ No newline at end of file
+diff --git a/results/arc3_gap3_stage1_latent_energy.json b/results/arc3_gap3_stage1_latent_energy.json
+new file mode 100644
+index 0000000000..73a16c8150
+--- /dev/null
++++ b/results/arc3_gap3_stage1_latent_energy.json
+@@ -0,0 +1,61 @@
++{
++  "a0_vote_mimicry_control": {
++    "note": "LATENT_PROBE is an OUT-OF-FOLD leave-one-task-out PCA-basis + balanced logistic probe; the held-out task's gold labels and latents never train its own probe/basis. residual regresses the probe on vote-count globally and ranks by the residual -- if it does not beat vote, the latent's lift is vote-collinear, not orthogonal model-native signal.",
++    "probe_within_task_auroc": 0.8689,
++    "residual_beats_vote": false,
++    "residual_ranker_pass2": 0.0645
++  },
++  "bootstrap_pass2_delta_vs_vote": {
++    "B": 1000,
++    "ci95_over_tasks": [
++      -0.129,
++      0.0645
++    ],
++    "point": -0.0322
++  },
++  "duration_s": 17.3,
++  "experiment": "arc3_gap3_stage1_latent_energy",
++  "gates": {
++    "coverage_ge_0p80": true,
++    "discrimination_within_task_auroc_gt_0p70": true,
++    "headroom_capture_fraction": -0.1996,
++    "headroom_capture_ge_0p30": false,
++    "selection_beats_vote": false
++  },
++  "honest_note": "GAP-3 Stage 1. A POSITIVE that survives the residual control = the model-native energy works -> register it + re-confirm at 400 scale. A NEGATIVE = even the full latent can't beat vote on this corpus (deeper: the headroom may need a generator-INDEPENDENT trained ARC energy, Stage 2). Reported as-is per FALSE_NEGATIVE_RISK; positive control = oracle > vote (real headroom). CAVEAT n~31 + 512-d latent over ~31 LOTO folds overfits easily; PCA-K + L2 + balanced classes + OOF are the guards. Re-confirm at 400 before any irreversible claim.",
++  "honest_verdict": "complete: gap3_stage1_latent_full_latent_does_not_beat_vote_n31_vote_0.4516_probe_0.4194_withinauroc_0.8689_residbeatsvote_False_pcak24",
++  "inference_substrate": "offline_trm_candidate_rerank_no_oracle",
++  "latent_hidden_dim": 512,
++  "model_native_signal_real": false,
++  "n_oracle_hit": 19,
++  "n_tasks": 31,
++  "no_gpu_used_for_this_step": true,
++  "no_oracle_audit": "Gold output read ONLY to LABEL correctness; the probe is trained OUT-OF-FOLD (LOTO) so a held-out task's gold never trains its own ranker; PCA basis fit on train folds only.",
++  "oracle_pass2_ceiling": 0.6129,
++  "pca_k": 24,
++  "random_seed": 12345,
++  "rankers": {
++    "HYBRID_vote_then_probe": {
++      "pass@1": 0.4194,
++      "pass@2": 0.4516
++    },
++    "LATENT_PROBE": {
++      "pass@1": 0.2903,
++      "pass@2": 0.4194
++    },
++    "LATENT_PROBE_residual_over_vote": {
++      "pass@1": 0.0323,
++      "pass@2": 0.0645
++    },
++    "Q_MEAN": {
++      "pass@1": 0.2903,
++      "pass@2": 0.2903
++    },
++    "TRM_VOTE": {
++      "pass@1": 0.4194,
++      "pass@2": 0.4516
++    }
++  },
++  "title": "GAP-3 Stage 1: TRM penultimate-latent model-native selection energy vs frequency vote",
++  "vs_stage0": "Stage 0 (scalar q_halt) did NOT beat vote (Q_MEAN pass@2 0.290; residual 0.097). Stage 1 tests whether the FULL un-collapsed latent (hidden-dim) recovers the signal the scalar lost."
++}
+-- 
+2.55.0
+

@@ -1,0 +1,2457 @@
+From 2e3112becaf3429c59065b6d1373bd57221797cd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 15:27:13 -0400
+Subject: [PATCH 03103/11362] [conductor] PHASE A4 (ARC NORTH STAR;
+ SCORE-LEVER) -- best-first with the LAZY value head (.416 B2, 232x):
+ re-measure value_weight in {0,0.5,1,2,5} with the CHEAP eval; the .416 null
+ was at FULL per-node cost.
+
+Automated research step by research conductor.
+Task ID: exp4514-a4
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |   52 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/agentic/arc_competition_agent.py   |   81 +-
+ ...iment_4514_lazy_best_first_value_weight.py |  643 +++++++++
+ ...ent_4514_lazy_best_first_value_weight.json | 1219 +++++++++++++++++
+ ...iment_4514_lazy_best_first_value_weight.py |  268 ++++
+ 6 files changed, 2254 insertions(+), 11 deletions(-)
+ create mode 100644 python/carnot/experiment_4514_lazy_best_first_value_weight.py
+ create mode 100644 results/experiment_4514_lazy_best_first_value_weight.json
+ create mode 100644 tests/python/test_experiment_4514_lazy_best_first_value_weight.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index f4fd5abeb0..9337c5ab77 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -328,6 +328,46 @@ Required field principles:
+ - `reproducibility_checksum`: principle "catches silent drift on replay."
+ - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+ 
++### REQ-ARC-FCP-4514: Lazy Best-First Value-Weight Remeasure
++
++Experiment 4514 SHALL write
++`results/experiment_4514_lazy_best_first_value_weight.json` by sweeping the
++submitted-default E3 explorer with `search_mode="best_first"` and lazy
++frame-hash-cached value-head scoring at `value_weight` in `{0.0, 0.5, 1.0,
++2.0}`. The sweep SHALL keep `value_weight=0.0` as the explicit control and
++SHALL NOT rerun the known-regressed `value_weight=5.0` arm.
++
++The live `StepwiseExplorer` SHALL preserve the full frontier: lazy top-K
++selection MAY decide which candidate nodes pay the expensive value-head cost,
++but SHALL NOT drop unscored tail nodes. Frontier ordering SHALL remain
++depth-primary using the existing `depth + value_weight * value, depth,
++-on_path` blend for nodes with value scores, while unscored tail nodes retain
++their cheap priority and remain expandable. Value scores SHALL be cached by
++frame hash.
++
++The experiment SHALL measure the local submission-gate game set, report
++held-out solve-rate, median actions-to-first-level-up on the fixed core
++`{lp85,m0r0,sp80,vc33}`, and median per-game wall seconds for every swept
++weight. A positive weight SHALL be selected only when it preserves every core
++solve, reduces median core actions versus the `0.0` control, and keeps median
++per-game wall time within the approximately 390-second budget. Otherwise the
++artifact SHALL report an honest null and keep `SUBMITTED_VALUE_WEIGHT=0.0`.
++Solved first-level-up segments SHALL be checked through
++`arc_solver_kit.reproduce()`.
++
++Required field principles:
++
++- `honest_verdict`: principle "terminal prefix; e.g. success: lazy_value_weight_<w>_beats_0 OR complete: lazy_value_weight_null_keep_0."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade + value-head scoring, no GGUF load (1s floor)."
++- `per_weight_results`: principle "the full {weight -> (solve_rate, median_actions, median_wall_s) table so the decision is auditable, not asserted."
++- `control_value_weight_0`: principle "the explicit baseline -- a weight only wins if it BEATS 0 (guards the FALSE_NEGATIVE_RISK null)."
++- `chosen_submitted_value_weight`: principle "the new SUBMITTED_VALUE_WEIGHT (0 if null); must keep test_arc_submitted_agent_parity.py consistent."
++- `lazy_eval_speedup_confirmed`: principle "confirms the cheap-eval cost regime that distinguishes this from the .416 full-cost null."
++- `false_negative_risk_checked`: principle "a null is valid only with the value_weight=0 control present."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "catches silent drift on replay."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
+ ## Scenarios
+ 
+ ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
+@@ -446,3 +486,15 @@ diagnostic, and the experiment 4513 artifact records the 7760 baseline,
+ adaptive median action measurement, threshold sweep, per-game solve-rate guard,
+ ambiguity signal components, positive control status, false negative risk check,
+ random seed, and reproducibility checksum.
++
++### SCENARIO-ARC-FCP-4514: Lazy Value Scores Reorder Without Filtering
++
++Given a live `StepwiseExplorer` frontier with more expandable nodes than the
++lazy top-K value-scoring budget
++When the explorer chooses a best-first frontier node with `value_weight>0`
++Then only the top-K cheap-priority nodes pay the value-head cost, repeated frame
++hashes reuse cached scores, unscored tail nodes remain in the frontier, and the
++experiment 4514 artifact reports every swept weight, the explicit
++`value_weight=0.0` control, the chosen submitted value weight, lazy-eval speedup
++confirmation, false-negative-risk check, random seed, and reproducibility
++checksum.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index cf5ca4c5df..e976b619de 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3530,
++  "experiments_checked": 3531,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 079fe66e23..67b4503ba4 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -64,6 +64,7 @@ SUBMITTED_TARGET_LEVELS = 5
+ SUBMITTED_SEARCH_MODE = "depth_first_ride"
+ SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
+ SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
++SUBMITTED_LAZY_VALUE_TOP_K = 4
+ _DEFAULT_VALUE_HEAD = object()
+ 
+ 
+@@ -180,6 +181,7 @@ class StepwiseExplorer:
+         adaptive_budget_threshold: float | None = None,
+         adaptive_budget_value_head: Any | None = None,
+         adaptive_budget_noop_threshold: float = 0.5,
++        lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
+     ) -> None:
+         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
+         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
+@@ -189,6 +191,10 @@ class StepwiseExplorer:
+         # toward predicted-closer states (the A* routing that unlocked cn04 in graph_explore_solve_v2).
+         self.value_head = value_head
+         self.value_weight = float(value_weight)
++        self.lazy_value_top_k = max(1, int(lazy_value_top_k))
++        self._value_cache: dict[str, float] = {}
++        self._value_head_evals = 0
++        self._value_cache_hits = 0
+         self.frame_change_scorer = frame_change_scorer
+         self.frame_change_prune_threshold = frame_change_prune_threshold
+         self.action_prior = action_prior
+@@ -353,6 +359,16 @@ class StepwiseExplorer:
+             "history": list(self._adaptive_budget_history[-64:]),
+         }
+ 
++    def lazy_value_diagnostics(self) -> dict[str, Any]:
++        return {
++            "enabled": self.value_head is not None and self.value_weight != 0.0,
++            "lazy_top_k": int(self.lazy_value_top_k),
++            "cache_by_frame_hash": True,
++            "value_head_evals": int(self._value_head_evals),
++            "cache_hits": int(self._value_cache_hits),
++            "cached_frame_hashes": int(len(self._value_cache)),
++        }
++
+     def _hash(self, frame) -> str:
+         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
+ 
+@@ -413,20 +429,36 @@ class StepwiseExplorer:
+         except Exception:
+             return False
+ 
+-    def _value(self, frame) -> float:
++    def _value(self, frame, node_hash: str | None = None) -> float:
+         """Frame-only learned progress score (predicted steps-to-next-level-up; LOWER == closer).
+         0.0 when no value head -> the frontier falls back to shallowest-first. Never crashes the loop.
+         Also 0.0 when value_weight==0: at weight 0 the value term is multiplied by 0 in the frontier
+         priority (ordering is depth-primary + on-path tiebreak, identical with or without the value), so
+         computing the expensive v3 featurizer per node would be pure dead cost (the 2026-06-20 regression:
+         it made the weight-0 submitted default slower than bare BFS for ZERO routing benefit). The v3 head
+-        stays fully wired and fires unchanged whenever value_weight>0."""
++        stays fully wired and fires unchanged whenever value_weight>0.
++
++        Positive weights use a frame-hash cache so repeated frontier visits do
++        not re-run the expensive v3 featurizer.
++        """
+         if self.value_head is None or self.value_weight == 0.0:
+             return 0.0
++        if node_hash is not None and node_hash in self._value_cache:
++            self._value_cache_hits += 1
++            return self._value_cache[node_hash]
+         try:
+-            return float(self.value_head(frame))
++            value = float(self.value_head(frame))
+         except Exception:
+-            return 0.0
++            value = 0.0
++        self._value_head_evals += 1
++        if node_hash is not None:
++            self._value_cache[node_hash] = value
++        return value
++
++    def _initial_value(self, frame) -> tuple[float | None, Any | None]:
++        if self.value_head is None or self.value_weight == 0.0:
++            return 0.0, None
++        return None, frame
+ 
+     def _ingest(self, latest) -> None:
+         if latest is None:
+@@ -466,7 +498,8 @@ class StepwiseExplorer:
+                     self.graph[h] = {
+                         "path": new_path,
+                         "untested": self._candidates(latest, path=new_path),
+-                        "value": self._value(latest),
++                        "value": self._initial_value(latest)[0],
++                        "frame": self._initial_value(latest)[1],
+                         "discriminative_features": features,
+                     }
+         self.cur = h
+@@ -483,7 +516,8 @@ class StepwiseExplorer:
+                 {
+                     "path": [],
+                     "untested": self._candidates(latest, path=[]),
+-                    "value": self._value(latest),
++                    "value": self._initial_value(latest)[0],
++                    "frame": self._initial_value(latest)[1],
+                     "discriminative_features": features,
+                 },
+             )
+@@ -494,10 +528,9 @@ class StepwiseExplorer:
+         # lets the value head NUDGE toward predicted-closer states (the routing that unlocked cn04 in
+         # graph_explore at weight 5). A full value-OVERRIDE (ignoring depth) measurably REGRESSED the
+         # baseline (the weak head misroutes from shallow wins), so the blend keeps depth load-bearing.
+-        use_value = self.value_head is not None
++        use_value = self.value_head is not None and self.value_weight != 0.0
+         w = self.value_weight
+-        best = None
+-        best_key = None
++        eligible: list[tuple[str, dict, int, float]] = []
+         for h, node in self.graph.items():
+             if not node["untested"]:
+                 self._record_discriminative_features(
+@@ -519,8 +552,30 @@ class StepwiseExplorer:
+                 continue
+             node["discriminative_pruned"] = False
+             depth = len(node["path"])
++            eligible.append((h, node, depth, on_path))
++
++        if use_value and eligible:
++            cheap_ranked = sorted(
++                eligible,
++                key=lambda item: (
++                    item[2],
++                    -item[3],
++                    item[0],
++                ),
++            )[: self.lazy_value_top_k]
++            for h, node, _depth, _on_path in cheap_ranked:
++                if node.get("value") is None:
++                    node["value"] = self._value(node.get("frame"), node_hash=h)
++                    node["frame"] = None
++
++        best = None
++        best_key = None
++        for h, node, depth, on_path in eligible:
+             if use_value:
+-                key = (depth + w * node.get("value", 0.0), depth, -on_path)
++                value = node.get("value", 0.0)
++                if value is None:
++                    value = 0.0
++                key = (depth + w * float(value), depth, -on_path)
+             else:
+                 key = (depth, -on_path)
+             if best is None or key < best_key:
+@@ -675,6 +730,7 @@ class CarnotAgentPolicy:
+         adaptive_budget_threshold: float | None = None,
+         adaptive_budget_value_head: Any | None = None,
+         adaptive_budget_noop_threshold: float = 0.5,
++        lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
+     ) -> None:
+         self.short = str(game_id).split("-", 1)[0]
+         sols = solutions if solutions is not None else load_solutions()
+@@ -700,6 +756,7 @@ class CarnotAgentPolicy:
+                 adaptive_budget_threshold=adaptive_budget_threshold,
+                 adaptive_budget_value_head=adaptive_budget_value_head,
+                 adaptive_budget_noop_threshold=adaptive_budget_noop_threshold,
++                lazy_value_top_k=lazy_value_top_k,
+             )
+         )
+ 
+@@ -754,6 +811,7 @@ class E3AgentPolicy:
+         adaptive_budget_threshold: float | None = None,
+         adaptive_budget_value_head: Any | None = None,
+         adaptive_budget_noop_threshold: float = 0.5,
++        lazy_value_top_k: int = SUBMITTED_LAZY_VALUE_TOP_K,
+     ) -> None:
+         self.short = str(game_id).split("-", 1)[0]
+         if value_head is _DEFAULT_VALUE_HEAD:
+@@ -776,6 +834,7 @@ class E3AgentPolicy:
+             adaptive_budget_threshold=adaptive_budget_threshold,
+             adaptive_budget_value_head=adaptive_budget_value_head,
+             adaptive_budget_noop_threshold=adaptive_budget_noop_threshold,
++            lazy_value_top_k=lazy_value_top_k,
+         )
+         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
+         self.explore_budget = (
+@@ -979,6 +1038,7 @@ SUBMITTED_AGENT_CONFIG = {
+     "search_mode": SUBMITTED_SEARCH_MODE,
+     "graph_explore_budget": SUBMITTED_GRAPH_EXPLORE_BUDGET,
+     "routed_explore_budget": SUBMITTED_ROUTED_EXPLORE_BUDGET,
++    "lazy_value_top_k": SUBMITTED_LAZY_VALUE_TOP_K,
+     "router_wired": True,
+     "world_model_dsl_wired": True,
+     "online_discriminative": True,
+@@ -1020,6 +1080,7 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
+                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
+                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
+                     search_mode=str(SUBMITTED_AGENT_CONFIG["search_mode"]),
++                    lazy_value_top_k=int(SUBMITTED_AGENT_CONFIG["lazy_value_top_k"]),
+                 )
+                 if cascade
+                 else CarnotAgentPolicy(gid, load_solutions())
+diff --git a/python/carnot/experiment_4514_lazy_best_first_value_weight.py b/python/carnot/experiment_4514_lazy_best_first_value_weight.py
+new file mode 100644
+index 0000000000..b1ec8eaba9
+--- /dev/null
++++ b/python/carnot/experiment_4514_lazy_best_first_value_weight.py
+@@ -0,0 +1,643 @@
++"""Experiment 4514: lazy best-first value-weight remeasurement.
++
++Spec refs: REQ-ARC-FCP-4514, SCENARIO-ARC-FCP-4514.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import time
++from collections.abc import Callable, Mapping, Sequence
++from concurrent.futures import ThreadPoolExecutor
++from pathlib import Path
++from statistics import median
++from typing import Any
++
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_competition_agent import (
++    SUBMITTED_AGENT_CONFIG,
++    SUBMITTED_LAZY_VALUE_TOP_K,
++)
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4514_lazy_best_first_value_weight.json"
++LAZY_VALUE_EVAL_SOURCE = "results/experiment_4506_lazy_value_eval_prototype.json"
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates -- offline arcade + value-head scoring, "
++    "no GGUF load (1s floor)."
++)
++VALUE_WEIGHTS = (0.0, 0.5, 1.0, 2.0)
++GATE_GAMES = ("lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20")
++CORE_GAMES = ("lp85", "m0r0", "sp80", "vc33")
++DEFAULT_GATE_BUDGET = 8000
++DEFAULT_MAX_WORKERS = 8
++DEFAULT_LAZY_VALUE_TOP_K = SUBMITTED_LAZY_VALUE_TOP_K
++WALL_BUDGET_S = 390.0
++RANDOM_SEED = 4514
++BIG_ACTIONS = 1_000_000_000.0
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++REQUIREMENTS = ("REQ-ARC-FCP-4514",)
++SCENARIOS = ("SCENARIO-ARC-FCP-4514",)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        'principle "terminal prefix; e.g. success: '
++        "lazy_value_weight_<w>_beats_0 OR complete: "
++        'lazy_value_weight_null_keep_0."'
++    ),
++    "inference_substrate": (
++        'principle "verifier_ensemble_against_cached_candidates -- offline arcade + '
++        'value-head scoring, no GGUF load (1s floor)."'
++    ),
++    "per_weight_results": (
++        'principle "the full {weight -> (solve_rate, median_actions, median_wall_s) '
++        'table so the decision is auditable, not asserted."'
++    ),
++    "control_value_weight_0": (
++        'principle "the explicit baseline -- a weight only wins if it BEATS 0 '
++        '(guards the FALSE_NEGATIVE_RISK null)."'
++    ),
++    "chosen_submitted_value_weight": (
++        'principle "the new SUBMITTED_VALUE_WEIGHT (0 if null); must keep '
++        'test_arc_submitted_agent_parity.py consistent."'
++    ),
++    "lazy_eval_speedup_confirmed": (
++        'principle "confirms the cheap-eval cost regime that distinguishes this '
++        'from the .416 full-cost null."'
++    ),
++    "false_negative_risk_checked": (
++        'principle "a null is valid only with the value_weight=0 control present."'
++    ),
++    "random_seed": 'principle "determinism precondition for reproducibility."',
++    "reproducibility_checksum": 'principle "catches silent drift on replay."',
++    "preconditions_checked": (
++        'principle "records resources verified; pre-empts missing-resource fabrication."'
++    ),
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "field_principles",
++    "requirements",
++    "scenarios",
++    "value_weights_tested",
++    "gate_games",
++    "core_games",
++    "local_gate_budget",
++    "wall_budget_s",
++    "lazy_value_top_k",
++    "search_mode",
++    "decision",
++    "submitted_agent_config_before",
++    "leaderboard_submission",
++    "result_path",
++    "duration_s",
++)
++
++
++def _weight_key(weight: float) -> str:
++    return f"{float(weight):.1f}"
++
++
++def _stable_checksum(payload: Mapping[str, Any]) -> str:
++    digest = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    ).hexdigest()
++    return f"sha256:{digest}"
++
++
++def _import_torch_version() -> str:  # pragma: no cover - external precondition boundary
++    import torch
++
++    return str(torch.__version__)
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> dict[str, Any]:
++    """REQ-ARC-FCP-4514: record the resources required before measuring."""
++
++    root_path = Path(root)
++    checks: dict[str, Any] = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "offline_arcade_import_smoke": False,
++        "torch_import": False,
++        "torch_version": "",
++        "control_value_weight_0_present": 0.0 in VALUE_WEIGHTS,
++    }
++    try:
++        kit.offline_arcade()
++        checks["offline_arcade_import_smoke"] = True
++    except Exception as exc:  # pragma: no cover - only local missing-resource path.
++        checks["offline_arcade_error"] = repr(exc)
++    try:
++        checks["torch_version"] = _import_torch_version()
++        checks["torch_import"] = True
++    except Exception as exc:  # pragma: no cover - only local missing-resource path.
++        checks["torch_error"] = repr(exc)
++    return checks
++
++
++def load_lazy_eval_speedup_confirmation(root: Path | str = REPO_ROOT) -> dict[str, Any]:
++    """REQ-ARC-FCP-4514: confirm this is the cheap lazy-eval regime, not full-cost A1."""
++
++    path = Path(root) / LAZY_VALUE_EVAL_SOURCE
++    if not path.exists():
++        return {
++            "confirmed": False,
++            "source": LAZY_VALUE_EVAL_SOURCE,
++            "missing": True,
++        }
++    data = json.loads(path.read_text(encoding="utf-8"))
++    speedup = float(data.get("speedup_factor") or 0.0)
++    routing_ok = data.get("routing_quality_preserved") is True
++    cached = data.get("cache_by_frame_hash") is True
++    return {
++        "confirmed": bool(speedup > 1.0 and routing_ok and cached),
++        "source": LAZY_VALUE_EVAL_SOURCE,
++        "honest_verdict": data.get("honest_verdict"),
++        "speedup_factor": speedup,
++        "routing_quality_preserved": routing_ok,
++        "lazy_top_k": int(data.get("lazy_top_k") or DEFAULT_LAZY_VALUE_TOP_K),
++        "cache_by_frame_hash": cached,
++    }
++
++
++def _json_action_label(action_id: int, data: Any) -> str:
++    return json.dumps({"action": int(action_id), "data": data}, sort_keys=True)
++
++
++def _apply_json_action_label(env: Any, label: str, _frame: Any) -> Any:  # pragma: no cover - SDK boundary
++    from arcengine import GameAction
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++
++    payload = json.loads(label)
++    return env.step(
++        _game_action(GameAction, int(payload["action"])),
++        data=payload.get("data"),
++    )
++
++
++def _run_policy_game(
++    game: str,
++    *,
++    value_weight: float,
++    budget: int,
++    value_head: Any | None,
++    lazy_value_top_k: int,
++) -> dict[str, Any]:  # pragma: no cover - SDK boundary
++    from arcengine import GameAction
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++    from carnot.agentic.arc_competition_agent import E3AgentPolicy
++
++    started = time.perf_counter()
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    policy = E3AgentPolicy(
++        game,
++        proposer=None,
++        target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
++        value_head=value_head,
++        value_weight=float(value_weight),
++        search_mode="best_first",
++        lazy_value_top_k=int(lazy_value_top_k),
++    )
++    frames: list[Any] = []
++    latest = None
++    actions = 0
++    start_level: int | None = None
++    first_levelup_actions: int | None = None
++    current_segment: list[str] = []
++    first_levelup_segment: list[str] = []
++
++    for _ in range(int(budget)):
++        if policy.is_done(frames, latest):
++            break
++        kind, data = policy.next_move(frames, latest)
++        if kind == "RESET":
++            latest = env.reset()
++            current_segment = []
++        elif kind is None:
++            break
++        else:
++            latest = env.step(
++                _game_action(GameAction, int(kind)),
++                data=data,
++            )
++            actions += 1
++            current_segment.append(_json_action_label(int(kind), data))
++        if start_level is None:
++            start_level = kit.frame_level(latest)
++        frames.append(latest)
++        if latest is None:
++            break
++        reached_now = kit.frame_level(latest)
++        if (
++            start_level is not None
++            and reached_now > start_level
++            and first_levelup_actions is None
++        ):
++            first_levelup_actions = int(actions)
++            first_levelup_segment = list(current_segment)
++
++    reached = kit.frame_level(latest)
++    levels = max(0, int(reached) - int(start_level or 0))
++    reproduction = None
++    if levels >= 1 and first_levelup_segment:
++        reproduction = kit.reproduce(
++            game,
++            first_levelup_segment,
++            _apply_json_action_label,
++            claimed_level=int((start_level or 0) + 1),
++        )
++    reproduced = None if reproduction is None else bool(reproduction.get("reproduced"))
++    solved = bool(levels >= 1 and reproduced is True)
++    return {
++        "game": game,
++        "value_weight": float(value_weight),
++        "timed_out": False,
++        "solved": solved,
++        "levels": int(levels if solved else 0),
++        "reached": int(reached),
++        "actions": int(actions),
++        "actions_to_first_levelup": first_levelup_actions if solved else None,
++        "reproduced": reproduced,
++        "reproduction": reproduction,
++        "lazy_value_diagnostics": policy.explorer.lazy_value_diagnostics(),
++        "wall_seconds": round(max(0.0, time.perf_counter() - started), 6),
++    }
++
++
++def _summarize_weight(
++    *,
++    value_weight: float,
++    rows: Sequence[Mapping[str, Any]],
++    games: Sequence[str],
++    core_games: Sequence[str] = CORE_GAMES,
++) -> dict[str, Any]:
++    solved_rows = [row for row in rows if row.get("solved") is True]
++    solved_games = sorted(str(row["game"]) for row in solved_rows)
++    actions_by_game = {
++        str(row["game"]): int(row.get("actions_to_first_levelup") or row.get("actions") or 0)
++        for row in solved_rows
++    }
++    all_solved_actions = [
++        int(row.get("actions_to_first_levelup") or row.get("actions") or 0)
++        for row in solved_rows
++    ]
++    core_actions = [
++        float(actions_by_game.get(str(game), BIG_ACTIONS))
++        for game in core_games
++    ]
++    wall = [float(row.get("wall_seconds") or 0.0) for row in rows]
++    return {
++        "value_weight": float(value_weight),
++        "attempted_games": int(len(rows)),
++        "heldout_solve_rate": (
++            round(float(len(solved_rows)) / float(len(games)), 10) if games else 0.0
++        ),
++        "solved_games": solved_games,
++        "solved_count": int(len(solved_rows)),
++        "core_games": [str(game) for game in core_games],
++        "core_solves_preserved": all(str(game) in solved_games for game in core_games),
++        "actions_by_game": actions_by_game,
++        "median_actions_to_first_levelup": (
++            float(median(all_solved_actions)) if all_solved_actions else None
++        ),
++        "median_actions_on_core": float(median(core_actions)),
++        "median_per_game_wall_s": float(median(wall)) if wall else 0.0,
++        "timed_out_games": int(sum(1 for row in rows if row.get("timed_out") is True)),
++        "per_game": [dict(row) for row in rows],
++    }
++
++
++def measure_value_weight_sweep(
++    *,
++    root: Path | str = REPO_ROOT,
++    value_weights: Sequence[float] = VALUE_WEIGHTS,
++    games: Sequence[str] = GATE_GAMES,
++    budget: int = DEFAULT_GATE_BUDGET,
++    max_workers: int = DEFAULT_MAX_WORKERS,
++    lazy_value_top_k: int = DEFAULT_LAZY_VALUE_TOP_K,
++    value_head_factory: Callable[[], Any | None] | None = None,
++) -> dict[str, dict[str, Any]]:  # pragma: no cover - SDK boundary
++    from carnot.agentic.arc_competition_agent import load_cross_game_value_head
++
++    _ = Path(root)
++    value_head = value_head_factory() if value_head_factory else load_cross_game_value_head()
++    old_disable = os.environ.get("CARNOT_ARC_DISABLE_INDUCTION")
++    os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
++    try:
++        per_weight: dict[str, dict[str, Any]] = {}
++        for weight in [float(value) for value in value_weights]:
++            with ThreadPoolExecutor(max_workers=max(1, int(max_workers))) as executor:
++                rows = list(
++                    executor.map(
++                        lambda game: _run_policy_game(
++                            str(game),
++                            value_weight=weight,
++                            budget=int(budget),
++                            value_head=value_head,
++                            lazy_value_top_k=int(lazy_value_top_k),
++                        ),
++                        games,
++                    )
++                )
++            per_weight[_weight_key(weight)] = _summarize_weight(
++                value_weight=weight,
++                rows=rows,
++                games=games,
++            )
++        return per_weight
++    finally:
++        if old_disable is None:
++            os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
++        else:
++            os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = old_disable
++
++
++def choose_submitted_value_weight(
++    per_weight_results: Mapping[str, Mapping[str, Any]],
++    *,
++    wall_budget_s: float = WALL_BUDGET_S,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-4514: select a positive weight only if it beats the 0.0 control."""
++
++    control = per_weight_results.get("0.0")
++    if control is None:
++        raise ValueError("value_weight=0.0 control is required")
++    control_actions = float(control.get("median_actions_on_core") or BIG_ACTIONS)
++    control_solve_rate = float(control.get("heldout_solve_rate") or 0.0)
++    candidates: list[dict[str, Any]] = []
++    for key, row in per_weight_results.items():
++        weight = float(row.get("value_weight", key))
++        if weight == 0.0:
++            continue
++        median_actions = float(row.get("median_actions_on_core") or BIG_ACTIONS)
++        median_wall = float(row.get("median_per_game_wall_s") or 0.0)
++        solve_rate = float(row.get("heldout_solve_rate") or 0.0)
++        wins = (
++            row.get("core_solves_preserved") is True
++            and median_actions < control_actions
++            and median_wall <= float(wall_budget_s)
++            and solve_rate >= control_solve_rate
++        )
++        candidates.append(
++            {
++                "value_weight": weight,
++                "wins": bool(wins),
++                "heldout_solve_rate": solve_rate,
++                "median_actions_on_core": median_actions,
++                "median_per_game_wall_s": median_wall,
++                "core_solves_preserved": row.get("core_solves_preserved") is True,
++            }
++        )
++    winners = [candidate for candidate in candidates if candidate["wins"]]
++    if not winners:
++        return {
++            "selected_value_weight": 0.0,
++            "should_raise_submitted_value_weight": False,
++            "selection_reason": "no_positive_weight_beat_control",
++            "candidates_considered": candidates,
++        }
++    winner = sorted(
++        winners,
++        key=lambda row: (
++            float(row["median_actions_on_core"]),
++            -float(row["heldout_solve_rate"]),
++            float(row["median_per_game_wall_s"]),
++            float(row["value_weight"]),
++        ),
++    )[0]
++    return {
++        "selected_value_weight": float(winner["value_weight"]),
++        "should_raise_submitted_value_weight": True,
++        "selection_reason": "positive_weight_beats_control_on_core_actions",
++        "candidates_considered": candidates,
++    }
++
++
++def _honest_verdict(decision: Mapping[str, Any]) -> str:
++    chosen = float(decision.get("selected_value_weight") or 0.0)
++    if chosen > 0.0:
++        return f"success: lazy_value_weight_{chosen:g}_beats_0"
++    return "complete: lazy_value_weight_null_keep_0"
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    per_weight_results: Mapping[str, Mapping[str, Any]],
++    lazy_eval_speedup_confirmed: Mapping[str, Any],
++    decision: Mapping[str, Any],
++    random_seed: int,
++    duration_s: float | None,
++) -> dict[str, Any]:
++    """SCENARIO-ARC-FCP-4514: assemble the terminal sweep artifact."""
++
++    control = dict(per_weight_results.get("0.0", {}))
++    checksum_payload = {
++        "per_weight_results": per_weight_results,
++        "decision": decision,
++        "lazy_eval_speedup_confirmed": lazy_eval_speedup_confirmed,
++        "random_seed": int(random_seed),
++        "submitted_agent_config_before": dict(SUBMITTED_AGENT_CONFIG),
++    }
++    return {
++        "experiment": "experiment_4514_lazy_best_first_value_weight",
++        "schema": "carnot.arc_lazy_best_first_value_weight_4514.v1",
++        "honest_verdict": _honest_verdict(decision),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "requirements": list(REQUIREMENTS),
++        "scenarios": list(SCENARIOS),
++        "preconditions_checked": dict(preconditions_checked),
++        "value_weights_tested": [float(weight) for weight in VALUE_WEIGHTS],
++        "gate_games": list(GATE_GAMES),
++        "core_games": list(CORE_GAMES),
++        "local_gate_budget": int(DEFAULT_GATE_BUDGET),
++        "wall_budget_s": float(WALL_BUDGET_S),
++        "lazy_value_top_k": int(DEFAULT_LAZY_VALUE_TOP_K),
++        "search_mode": "best_first",
++        "per_weight_results": {str(key): dict(value) for key, value in per_weight_results.items()},
++        "control_value_weight_0": control,
++        "chosen_submitted_value_weight": float(decision.get("selected_value_weight") or 0.0),
++        "decision": dict(decision),
++        "lazy_eval_speedup_confirmed": dict(lazy_eval_speedup_confirmed),
++        "false_negative_risk_checked": bool("0.0" in per_weight_results),
++        "random_seed": int(random_seed),
++        "submitted_agent_config_before": dict(SUBMITTED_AGENT_CONFIG),
++        "leaderboard_submission": False,
++        "result_path": RESULT_RELATIVE_PATH,
++        "duration_s": None if duration_s is None else float(duration_s),
++        "reproducibility_checksum": _stable_checksum(checksum_payload),
++    }
++
++
++def _blocked_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    lazy_eval_speedup_confirmed: Mapping[str, Any],
++    random_seed: int,
++    duration_s: float | None,
++) -> dict[str, Any]:  # pragma: no cover - missing-resource boundary
++    missing = [
++        name
++        for name in ("offline_arcade_import_smoke", "torch_import")
++        if preconditions_checked.get(name) is not True
++    ]
++    reason = "_".join(missing) if missing else "unknown_resource"
++    decision = {
++        "selected_value_weight": 0.0,
++        "should_raise_submitted_value_weight": False,
++        "selection_reason": f"blocked_{reason}",
++        "candidates_considered": [],
++    }
++    artifact = build_artifact(
++        preconditions_checked=preconditions_checked,
++        per_weight_results={"0.0": {"value_weight": 0.0}},
++        lazy_eval_speedup_confirmed=lazy_eval_speedup_confirmed,
++        decision=decision,
++        random_seed=random_seed,
++        duration_s=duration_s,
++    )
++    artifact["honest_verdict"] = f"blocked_{reason}"
++    artifact["false_negative_risk_checked"] = False
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with a terminal prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must match the required substrate")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles must match required field principles")
++    preconditions = artifact.get("preconditions_checked")
++    if not isinstance(preconditions, Mapping):
++        errors.append("preconditions_checked must be a mapping")
++    else:
++        if preconditions.get("offline_arcade_import_smoke") is not True:
++            errors.append("preconditions_checked must record offline_arcade_import_smoke=true")
++        if preconditions.get("torch_import") is not True:
++            errors.append("preconditions_checked must record torch_import=true")
++    per_weight = artifact.get("per_weight_results")
++    if not isinstance(per_weight, Mapping) or "0.0" not in per_weight:
++        errors.append("per_weight_results must include the 0.0 control")
++    if "5.0" in (per_weight or {}):
++        errors.append("per_weight_results must not include the known-regressed 5.0 arm")
++    control = artifact.get("control_value_weight_0")
++    if not isinstance(control, Mapping) or float(control.get("value_weight", -1.0)) != 0.0:
++        errors.append("control_value_weight_0 must contain the 0.0 control summary")
++    lazy = artifact.get("lazy_eval_speedup_confirmed")
++    if not isinstance(lazy, Mapping) or lazy.get("confirmed") is not True:
++        errors.append("lazy_eval_speedup_confirmed.confirmed must be true")
++    if artifact.get("false_negative_risk_checked") is not True:
++        errors.append("false_negative_risk_checked must be true when control is present")
++    decision = artifact.get("decision")
++    if not isinstance(decision, Mapping):
++        errors.append("decision must be a mapping")
++    else:
++        chosen = artifact.get("chosen_submitted_value_weight")
++        selected = decision.get("selected_value_weight")
++        if chosen is None or selected is None or float(chosen) != float(selected):
++            errors.append("chosen_submitted_value_weight must match the decision")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    if artifact.get("search_mode") != "best_first":
++        errors.append("search_mode must be best_first")
++    if int(artifact.get("lazy_value_top_k") or 0) <= 0:
++        errors.append("lazy_value_top_k must be positive")
++    return errors
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    measure_sweep: Callable[..., dict[str, dict[str, Any]]] = measure_value_weight_sweep,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    lazy_eval_speedup_confirmed: Mapping[str, Any] | None = None,
++    random_seed: int = RANDOM_SEED,
++    now: Callable[[], float] = time.monotonic,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-4514: run the lazy best-first sweep and write its artifact."""
++
++    root_path = Path(root)
++    started = float(now())
++    preconditions = (
++        dict(preconditions_checked)
++        if preconditions_checked is not None
++        else check_preconditions(root_path)
++    )
++    lazy_confirmation = (
++        dict(lazy_eval_speedup_confirmed)
++        if lazy_eval_speedup_confirmed is not None
++        else load_lazy_eval_speedup_confirmation(root_path)
++    )
++    if (
++        preconditions.get("offline_arcade_import_smoke") is not True
++        or preconditions.get("torch_import") is not True
++    ):
++        artifact = _blocked_artifact(
++            preconditions_checked=preconditions,
++            lazy_eval_speedup_confirmed=lazy_confirmation,
++            random_seed=random_seed,
++            duration_s=max(0.0, float(now()) - started),
++        )
++    else:
++        per_weight = measure_sweep(
++            root=root_path,
++            value_weights=VALUE_WEIGHTS,
++            games=GATE_GAMES,
++            budget=DEFAULT_GATE_BUDGET,
++            max_workers=DEFAULT_MAX_WORKERS,
++            lazy_value_top_k=DEFAULT_LAZY_VALUE_TOP_K,
++        )
++        decision = choose_submitted_value_weight(per_weight)
++        artifact = build_artifact(
++            preconditions_checked=preconditions,
++            per_weight_results=per_weight,
++            lazy_eval_speedup_confirmed=lazy_confirmation,
++            decision=decision,
++            random_seed=random_seed,
++            duration_s=max(0.0, float(now()) - started),
++        )
++        errors = artifact_schema_errors(artifact)
++        if errors:
++            raise ValueError("; ".join(errors))
++    if write:
++        out = root_path / RESULT_RELATIVE_PATH
++        out.parent.mkdir(parents=True, exist_ok=True)
++        out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper
++    artifact = run()
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    main()
+diff --git a/results/experiment_4514_lazy_best_first_value_weight.json b/results/experiment_4514_lazy_best_first_value_weight.json
+new file mode 100644
+index 0000000000..9797bc854d
+--- /dev/null
++++ b/results/experiment_4514_lazy_best_first_value_weight.json
+@@ -0,0 +1,1219 @@
++{
++  "chosen_submitted_value_weight": 0.0,
++  "control_value_weight_0": {
++    "actions_by_game": {
++      "lp85": 447,
++      "sp80": 1618,
++      "vc33": 99
++    },
++    "attempted_games": 8,
++    "core_games": [
++      "lp85",
++      "m0r0",
++      "sp80",
++      "vc33"
++    ],
++    "core_solves_preserved": false,
++    "heldout_solve_rate": 0.375,
++    "median_actions_on_core": 1032.5,
++    "median_actions_to_first_levelup": 447.0,
++    "median_per_game_wall_s": 73.0567435,
++    "per_game": [
++      {
++        "actions": 7373,
++        "actions_to_first_levelup": 447,
++        "game": "lp85",
++        "lazy_value_diagnostics": {
++          "cache_by_frame_hash": true,
++          "cache_hits": 0,
++          "cached_frame_hashes": 0,
++          "enabled": false,
++          "lazy_top_k": 4,
++          "value_head_evals": 0
++        },
++        "levels": 1,
++        "reached": 1,
++        "reproduced": true,
++        "reproduction": {
++          "claimed_level": 1,
++          "game": "lp85",
++          "mode": "offline_reproduction_gate_no_quota",
++          "reached_level": 1,
++          "reproduced": true
++        },
++        "solved": true,
++        "timed_out": false,
++        "value_weight": 0.0,
++        "wall_seconds": 61.137998
++      },
++      {
++        "actions": 7019,
++        "actions_to_first_levelup": null,
++        "game": "m0r0",
++        "lazy_value_diagnostics": {
++          "cache_by_frame_hash": true,
++          "cache_hits": 0,
++          "cached_frame_hashes": 0,
++          "enabled": false,
++          "lazy_top_k": 4,
++          "value_head_evals": 0
++        },
++        "levels": 0,
++        "reached": 0,
++        "reproduced": null,
++        "reproduction": null,
++        "solved": false,
++        "timed_out": false,
++        "value_weight": 0.0,
++        "wall_seconds": 74.142254
++      },
++      {
++        "actions": 6606,
++        "actions_to_first_levelup": 1618,
++        "game": "sp80",
++        "lazy_value_diagnostics": {
++          "cache_by_frame_hash": true,
++          "cache_hits": 0,
++          "cached_frame_hashes": 0,
++          "enabled": false,
++          "lazy_top_k": 4,
++          "value_head_evals": 0
++        },
++        "levels": 1,
++        "reached": 1,
++        "reproduced": true,
++        "reproduction": {
++          "claimed_level": 1,
++          "game": "sp80",
++          "mode": "offline_reproduction_gate_no_quota",
++          "reached_level": 1,
++          "reproduced": true
++        },
++        "solved": true,
++        "timed_out": false,
++        "value_weight": 0.0,
++        "wall_seconds": 70.789259
++      },
++      {
++        "actions": 6908,
++        "actions_to_first_levelup": 99,
++        "game": "vc33",
++        "lazy_value_diagnostics": {
++          "cache_by_frame_hash": true,
++          "cache_hits": 0,
++          "cached_frame_hashes": 0,
++          "enabled": false,
++          "lazy_top_k": 4,
++          "value_head_evals": 0
++        },
++        "levels": 1,
++        "reached": 1,
++        "reproduced": true,
++        "reproduction": {
++          "claimed_level": 1,
++          "game": "vc33",
++          "mode": "offline_reproduction_gate_no_quota",
++          "reached_level": 1,
++          "reproduced": true
++        },
++        "solved": true,
++        "timed_out": false,
++        "value_weight": 0.0,
++        "wall_seconds": 59.867276
++      },
++      {
++        "actions": 6613,
++        "actions_to_first_levelup": null,
++        "game": "cd82",
++        "lazy_value_diagnostics": {
++          "cache_by_frame_hash": true,
++          "cache_hits": 0,
++          "cached_frame_hashes": 0,
++          "enabled": false,
++          "lazy_top_k": 4,
++          "value_head_evals": 0
++        },
++        "levels": 0,
++        "reached": 0,
++        "reproduced": null,
++        "reproduction": null,
++        "solved": false,
++        "timed_out": false,
++        "value_weight": 0.0,
++        "wall_seconds": 79.222212
++      },
++      {
++        "actions": 7098,
++        "actions_to_first_levelup": null,
++        "game": "ft09",
++        "lazy_value_diagnostics": {
++          "cache_by_frame_hash": true,
++          "cache_hits": 0,
++          "cached_frame_hashes": 0,
++          "enabled": false,
++          "lazy_top_k": 4,
++          "value_head_evals": 0
++        },
++        "levels": 0,
++        "reached": 0,
++        "reproduced": null,
++        "reproduction": null,
++        "solved": false,
++        "timed_out": false,
++        "value_weight": 0.0,
++        "wall_seconds": 77.713962
++      },
++      {
++        "actions": 6616,
++        "actions_to_first_levelup": null,
++        "game": "su15",
++        "lazy_value_diagnostics": {
++          "cache_by_frame_hash": true,
++          "cache_hits": 0,
++          "cached_frame_hashes": 0,
++          "enabled": false,
++          "lazy_top_k": 4,
++          "value_head_evals": 0
++        },
++        "levels": 0,
++        "reached": 0,
++        "reproduced": null,
++        "reproduction": null,
++        "solved": false,
++        "timed_out": false,
++        "value_weight": 0.0,
++        "wall_seconds": 82.83682
++      },
++      {
++        "actions": 7063,
++        "actions_to_first_levelup": null,
++        "game": "ls20",
++        "lazy_value_diagnostics": {
++          "cache_by_frame_hash": true,
++          "cache_hits": 0,
++          "cached_frame_hashes": 0,
++          "enabled": false,
++          "lazy_top_k": 4,
++          "value_head_evals": 0
++        },
++        "levels": 0,
++        "reached": 0,
++        "reproduced": null,
++        "reproduction": null,
++        "solved": false,
++        "timed_out": false,
++        "value_weight": 0.0,
++        "wall_seconds": 71.971233
++      }
++    ],
++    "solved_count": 3,
++    "solved_games": [
++      "lp85",
++      "sp80",
++      "vc33"
++    ],
++    "timed_out_games": 0,
++    "value_weight": 0.0
++  },
++  "core_games": [
++    "lp85",
++    "m0r0",
++    "sp80",
++    "vc33"
++  ],
++  "decision": {
++    "candidates_considered": [
++      {
++        "core_solves_preserved": false,
++        "heldout_solve_rate": 0.5,
++        "median_actions_on_core": 1442.0,
++        "median_per_game_wall_s": 67.9082525,
++        "value_weight": 0.5,
++        "wins": false
++      },
++      {
++        "core_solves_preserved": false,
++        "heldout_solve_rate": 0.5,
++        "median_actions_on_core": 1442.0,
++        "median_per_game_wall_s": 69.039669,
++        "value_weight": 1.0,
++        "wins": false
++      },
++      {
++        "core_solves_preserved": false,
++        "heldout_solve_rate": 0.5,
++        "median_actions_on_core": 1440.0,
++        "median_per_game_wall_s": 68.7756905,
++        "value_weight": 2.0,
++        "wins": false
++      }
++    ],
++    "selected_value_weight": 0.0,
++    "selection_reason": "no_positive_weight_beat_control",
++    "should_raise_submitted_value_weight": false
++  },
++  "duration_s": 315.64690262801014,
++  "experiment": "experiment_4514_lazy_best_first_value_weight",
++  "false_negative_risk_checked": true,
++  "field_principles": {
++    "chosen_submitted_value_weight": "principle \"the new SUBMITTED_VALUE_WEIGHT (0 if null); must keep test_arc_submitted_agent_parity.py consistent.\"",
++    "control_value_weight_0": "principle \"the explicit baseline -- a weight only wins if it BEATS 0 (guards the FALSE_NEGATIVE_RISK null).\"",
++    "false_negative_risk_checked": "principle \"a null is valid only with the value_weight=0 control present.\"",
++    "honest_verdict": "principle \"terminal prefix; e.g. success: lazy_value_weight_<w>_beats_0 OR complete: lazy_value_weight_null_keep_0.\"",
++    "inference_substrate": "principle \"verifier_ensemble_against_cached_candidates -- offline arcade + value-head scoring, no GGUF load (1s floor).\"",
++    "lazy_eval_speedup_confirmed": "principle \"confirms the cheap-eval cost regime that distinguishes this from the .416 full-cost null.\"",
++    "per_weight_results": "principle \"the full {weight -> (solve_rate, median_actions, median_wall_s) table so the decision is auditable, not asserted.\"",
++    "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\"",
++    "random_seed": "principle \"determinism precondition for reproducibility.\"",
++    "reproducibility_checksum": "principle \"catches silent drift on replay.\""
++  },
++  "gate_games": [
++    "lp85",
++    "m0r0",
++    "sp80",
++    "vc33",
++    "cd82",
++    "ft09",
++    "su15",
++    "ls20"
++  ],
++  "honest_verdict": "complete: lazy_value_weight_null_keep_0",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade + value-head scoring, no GGUF load (1s floor).",
++  "lazy_eval_speedup_confirmed": {
++    "cache_by_frame_hash": true,
++    "confirmed": true,
++    "honest_verdict": "complete: lazy_value_eval_speedup_232.69x_quality_preserved_80_of_80",
++    "lazy_top_k": 4,
++    "routing_quality_preserved": true,
++    "source": "results/experiment_4506_lazy_value_eval_prototype.json",
++    "speedup_factor": 232.6933168708
++  },
++  "lazy_value_top_k": 4,
++  "leaderboard_submission": false,
++  "local_gate_budget": 8000,
++  "per_weight_results": {
++    "0.0": {
++      "actions_by_game": {
++        "lp85": 447,
++        "sp80": 1618,
++        "vc33": 99
++      },
++      "attempted_games": 8,
++      "core_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "core_solves_preserved": false,
++      "heldout_solve_rate": 0.375,
++      "median_actions_on_core": 1032.5,
++      "median_actions_to_first_levelup": 447.0,
++      "median_per_game_wall_s": 73.0567435,
++      "per_game": [
++        {
++          "actions": 7373,
++          "actions_to_first_levelup": 447,
++          "game": "lp85",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 0,
++            "enabled": false,
++            "lazy_top_k": 4,
++            "value_head_evals": 0
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "lp85",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 0.0,
++          "wall_seconds": 61.137998
++        },
++        {
++          "actions": 7019,
++          "actions_to_first_levelup": null,
++          "game": "m0r0",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 0,
++            "enabled": false,
++            "lazy_top_k": 4,
++            "value_head_evals": 0
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.0,
++          "wall_seconds": 74.142254
++        },
++        {
++          "actions": 6606,
++          "actions_to_first_levelup": 1618,
++          "game": "sp80",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 0,
++            "enabled": false,
++            "lazy_top_k": 4,
++            "value_head_evals": 0
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "sp80",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 0.0,
++          "wall_seconds": 70.789259
++        },
++        {
++          "actions": 6908,
++          "actions_to_first_levelup": 99,
++          "game": "vc33",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 0,
++            "enabled": false,
++            "lazy_top_k": 4,
++            "value_head_evals": 0
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "vc33",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 0.0,
++          "wall_seconds": 59.867276
++        },
++        {
++          "actions": 6613,
++          "actions_to_first_levelup": null,
++          "game": "cd82",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 0,
++            "enabled": false,
++            "lazy_top_k": 4,
++            "value_head_evals": 0
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.0,
++          "wall_seconds": 79.222212
++        },
++        {
++          "actions": 7098,
++          "actions_to_first_levelup": null,
++          "game": "ft09",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 0,
++            "enabled": false,
++            "lazy_top_k": 4,
++            "value_head_evals": 0
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.0,
++          "wall_seconds": 77.713962
++        },
++        {
++          "actions": 6616,
++          "actions_to_first_levelup": null,
++          "game": "su15",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 0,
++            "enabled": false,
++            "lazy_top_k": 4,
++            "value_head_evals": 0
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.0,
++          "wall_seconds": 82.83682
++        },
++        {
++          "actions": 7063,
++          "actions_to_first_levelup": null,
++          "game": "ls20",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 0,
++            "enabled": false,
++            "lazy_top_k": 4,
++            "value_head_evals": 0
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.0,
++          "wall_seconds": 71.971233
++        }
++      ],
++      "solved_count": 3,
++      "solved_games": [
++        "lp85",
++        "sp80",
++        "vc33"
++      ],
++      "timed_out_games": 0,
++      "value_weight": 0.0
++    },
++    "0.5": {
++      "actions_by_game": {
++        "ft09": 1412,
++        "lp85": 437,
++        "sp80": 2109,
++        "vc33": 775
++      },
++      "attempted_games": 8,
++      "core_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "core_solves_preserved": false,
++      "heldout_solve_rate": 0.5,
++      "median_actions_on_core": 1442.0,
++      "median_actions_to_first_levelup": 1093.5,
++      "median_per_game_wall_s": 67.9082525,
++      "per_game": [
++        {
++          "actions": 7461,
++          "actions_to_first_levelup": 437,
++          "game": "lp85",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 7,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 7
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "lp85",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 0.5,
++          "wall_seconds": 56.631464
++        },
++        {
++          "actions": 7131,
++          "actions_to_first_levelup": null,
++          "game": "m0r0",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.5,
++          "wall_seconds": 68.962609
++        },
++        {
++          "actions": 6777,
++          "actions_to_first_levelup": 2109,
++          "game": "sp80",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "sp80",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 0.5,
++          "wall_seconds": 72.772381
++        },
++        {
++          "actions": 7178,
++          "actions_to_first_levelup": 775,
++          "game": "vc33",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "vc33",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 0.5,
++          "wall_seconds": 56.813915
++        },
++        {
++          "actions": 7006,
++          "actions_to_first_levelup": null,
++          "game": "cd82",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 6,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 6
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.5,
++          "wall_seconds": 71.981603
++        },
++        {
++          "actions": 6843,
++          "actions_to_first_levelup": 1412,
++          "game": "ft09",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "ft09",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 0.5,
++          "wall_seconds": 66.853896
++        },
++        {
++          "actions": 6894,
++          "actions_to_first_levelup": null,
++          "game": "su15",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.5,
++          "wall_seconds": 77.119656
++        },
++        {
++          "actions": 7178,
++          "actions_to_first_levelup": null,
++          "game": "ls20",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 0.5,
++          "wall_seconds": 66.338094
++        }
++      ],
++      "solved_count": 4,
++      "solved_games": [
++        "ft09",
++        "lp85",
++        "sp80",
++        "vc33"
++      ],
++      "timed_out_games": 0,
++      "value_weight": 0.5
++    },
++    "1.0": {
++      "actions_by_game": {
++        "ft09": 1412,
++        "lp85": 437,
++        "sp80": 2109,
++        "vc33": 775
++      },
++      "attempted_games": 8,
++      "core_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "core_solves_preserved": false,
++      "heldout_solve_rate": 0.5,
++      "median_actions_on_core": 1442.0,
++      "median_actions_to_first_levelup": 1093.5,
++      "median_per_game_wall_s": 69.039669,
++      "per_game": [
++        {
++          "actions": 7461,
++          "actions_to_first_levelup": 437,
++          "game": "lp85",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 7,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 7
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "lp85",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 1.0,
++          "wall_seconds": 57.540468
++        },
++        {
++          "actions": 7131,
++          "actions_to_first_levelup": null,
++          "game": "m0r0",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 1.0,
++          "wall_seconds": 69.993544
++        },
++        {
++          "actions": 6777,
++          "actions_to_first_levelup": 2109,
++          "game": "sp80",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "sp80",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 1.0,
++          "wall_seconds": 73.389523
++        },
++        {
++          "actions": 7178,
++          "actions_to_first_levelup": 775,
++          "game": "vc33",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "vc33",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 1.0,
++          "wall_seconds": 57.36077
++        },
++        {
++          "actions": 7006,
++          "actions_to_first_levelup": null,
++          "game": "cd82",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 6,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 6
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 1.0,
++          "wall_seconds": 73.067591
++        },
++        {
++          "actions": 6843,
++          "actions_to_first_levelup": 1412,
++          "game": "ft09",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "ft09",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 1.0,
++          "wall_seconds": 68.085794
++        },
++        {
++          "actions": 6894,
++          "actions_to_first_levelup": null,
++          "game": "su15",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 1.0,
++          "wall_seconds": 76.948559
++        },
++        {
++          "actions": 7178,
++          "actions_to_first_levelup": null,
++          "game": "ls20",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 1.0,
++          "wall_seconds": 67.523253
++        }
++      ],
++      "solved_count": 4,
++      "solved_games": [
++        "ft09",
++        "lp85",
++        "sp80",
++        "vc33"
++      ],
++      "timed_out_games": 0,
++      "value_weight": 1.0
++    },
++    "2.0": {
++      "actions_by_game": {
++        "ft09": 1412,
++        "lp85": 437,
++        "sp80": 2109,
++        "vc33": 771
++      },
++      "attempted_games": 8,
++      "core_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "core_solves_preserved": false,
++      "heldout_solve_rate": 0.5,
++      "median_actions_on_core": 1440.0,
++      "median_actions_to_first_levelup": 1091.5,
++      "median_per_game_wall_s": 68.7756905,
++      "per_game": [
++        {
++          "actions": 7461,
++          "actions_to_first_levelup": 437,
++          "game": "lp85",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 7,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 7
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "lp85",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 2.0,
++          "wall_seconds": 57.950184
++        },
++        {
++          "actions": 7131,
++          "actions_to_first_levelup": null,
++          "game": "m0r0",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 2.0,
++          "wall_seconds": 69.844568
++        },
++        {
++          "actions": 6777,
++          "actions_to_first_levelup": 2109,
++          "game": "sp80",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "sp80",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 2.0,
++          "wall_seconds": 73.240802
++        },
++        {
++          "actions": 7181,
++          "actions_to_first_levelup": 771,
++          "game": "vc33",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 4,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 4
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "vc33",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 2.0,
++          "wall_seconds": 56.996473
++        },
++        {
++          "actions": 7020,
++          "actions_to_first_levelup": null,
++          "game": "cd82",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 6,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 6
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 2.0,
++          "wall_seconds": 73.201955
++        },
++        {
++          "actions": 6843,
++          "actions_to_first_levelup": 1412,
++          "game": "ft09",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 1,
++          "reached": 1,
++          "reproduced": true,
++          "reproduction": {
++            "claimed_level": 1,
++            "game": "ft09",
++            "mode": "offline_reproduction_gate_no_quota",
++            "reached_level": 1,
++            "reproduced": true
++          },
++          "solved": true,
++          "timed_out": false,
++          "value_weight": 2.0,
++          "wall_seconds": 67.706813
++        },
++        {
++          "actions": 6894,
++          "actions_to_first_levelup": null,
++          "game": "su15",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 2.0,
++          "wall_seconds": 76.996704
++        },
++        {
++          "actions": 7178,
++          "actions_to_first_levelup": null,
++          "game": "ls20",
++          "lazy_value_diagnostics": {
++            "cache_by_frame_hash": true,
++            "cache_hits": 0,
++            "cached_frame_hashes": 5,
++            "enabled": true,
++            "lazy_top_k": 4,
++            "value_head_evals": 5
++          },
++          "levels": 0,
++          "reached": 0,
++          "reproduced": null,
++          "reproduction": null,
++          "solved": false,
++          "timed_out": false,
++          "value_weight": 2.0,
++          "wall_seconds": 67.378452
++        }
++      ],
++      "solved_count": 4,
++      "solved_games": [
++        "ft09",
++        "lp85",
++        "sp80",
++        "vc33"
++      ],
++      "timed_out_games": 0,
++      "value_weight": 2.0
++    }
++  },
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_md_read": true,
++    "control_value_weight_0_present": true,
++    "offline_arcade_import_smoke": true,
++    "torch_import": true,
++    "torch_version": "2.11.0+cu128"
++  },
++  "random_seed": 4514,
++  "reproducibility_checksum": "sha256:186ee1efb889533c974364c4cb16b85ce89be0a2dba3ab75a2305930413890d4",
++  "requirements": [
++    "REQ-ARC-FCP-4514"
++  ],
++  "result_path": "results/experiment_4514_lazy_best_first_value_weight.json",
++  "scenarios": [
++    "SCENARIO-ARC-FCP-4514"
++  ],
++  "schema": "carnot.arc_lazy_best_first_value_weight_4514.v1",
++  "search_mode": "best_first",
++  "submitted_agent_config_before": {
++    "cascade": true,
++    "graph_explore_budget": 80,
++    "lazy_value_top_k": 4,
++    "online_discriminative": true,
++    "policy": "E3AgentPolicy",
++    "routed_explore_budget": 24,
++    "router_wired": true,
++    "search_mode": "depth_first_ride",
++    "target_levels": 5,
++    "value_weight": 0.0,
++    "world_model_dsl_wired": true
++  },
++  "value_weights_tested": [
++    0.0,
++    0.5,
++    1.0,
++    2.0
++  ],
++  "wall_budget_s": 390.0
++}
+diff --git a/tests/python/test_experiment_4514_lazy_best_first_value_weight.py b/tests/python/test_experiment_4514_lazy_best_first_value_weight.py
+new file mode 100644
+index 0000000000..d3d09ff47b
+--- /dev/null
++++ b/tests/python/test_experiment_4514_lazy_best_first_value_weight.py
+@@ -0,0 +1,268 @@
++"""Tests for Exp 4514 lazy best-first value-weight remeasurement.
++
++Spec refs: REQ-ARC-FCP-4514, SCENARIO-ARC-FCP-4514.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4514_lazy_best_first_value_weight as exp4514
++from carnot.agentic.arc_competition_agent import StepwiseExplorer
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++class CountingValueHead:
++    def __init__(self, values: dict[object, float]) -> None:
++        self.values = values
++        self.calls: list[object] = []
++
++    def __call__(self, frame: object) -> float:
++        self.calls.append(frame)
++        return float(self.values[frame])
++
++
++def _node(depth: int, frame: object) -> dict[str, object]:
++    return {
++        "path": [{"action": 1, "data": None}] * depth,
++        "untested": [{"action": 2, "data": None}],
++        "value": None,
++        "frame": frame,
++    }
++
++
++def _preconditions() -> dict[str, object]:
++    return {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "offline_arcade_import_smoke": True,
++        "torch_import": True,
++        "torch_version": "fixture-torch",
++        "control_value_weight_0_present": True,
++    }
++
++
++def _lazy_speedup() -> dict[str, object]:
++    return {
++        "confirmed": True,
++        "source": exp4514.LAZY_VALUE_EVAL_SOURCE,
++        "speedup_factor": 232.69,
++        "routing_quality_preserved": True,
++        "lazy_top_k": exp4514.DEFAULT_LAZY_VALUE_TOP_K,
++        "cache_by_frame_hash": True,
++    }
++
++
++def _summary(
++    weight: float,
++    *,
++    solve_rate: float,
++    core_actions: float,
++    wall_s: float = 2.0,
++    solved_games: list[str] | None = None,
++) -> dict[str, object]:
++    solved = solved_games or list(exp4514.CORE_GAMES)
++    actions = {game: int(core_actions) for game in solved}
++    return {
++        "value_weight": float(weight),
++        "heldout_solve_rate": float(solve_rate),
++        "median_actions_on_core": float(core_actions),
++        "median_per_game_wall_s": float(wall_s),
++        "core_solves_preserved": all(game in solved for game in exp4514.CORE_GAMES),
++        "solved_games": solved,
++        "actions_by_game": actions,
++        "per_game": [],
++    }
++
++
++def test_req_arc_fcp_4514_spec_declares_lazy_best_first_contract() -> None:
++    """REQ-ARC-FCP-4514: OpenSpec anchors the lazy best-first sweep."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-4514" in spec
++    assert "SCENARIO-ARC-FCP-4514" in spec
++    assert exp4514.RESULT_RELATIVE_PATH in spec
++    assert "value_weight=5.0" in spec
++    assert "arc_solver_kit.reproduce()" in spec
++    for field, principle in exp4514.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_scenario_arc_fcp_4514_frontier_lazy_scores_topk_without_filtering() -> None:
++    """SCENARIO-ARC-FCP-4514: lazy value scoring never drops tail frontier nodes."""
++
++    value_head = CountingValueHead({"root": 0.1, "near": 0.2, "tail": 0.0})
++    explorer = StepwiseExplorer(
++        value_head=value_head,
++        value_weight=1.0,
++        search_mode="best_first",
++        lazy_value_top_k=2,
++        online_discriminative=False,
++    )
++    explorer.graph = {
++        "h-root": _node(0, "root"),
++        "h-near": _node(1, "near"),
++        "h-tail": _node(2, "tail"),
++    }
++
++    assert explorer._frontier() == "h-root"
++    assert value_head.calls == ["root", "near"]
++    assert explorer.graph["h-tail"]["untested"] == [{"action": 2, "data": None}]
++    assert explorer.graph["h-tail"]["value"] is None
++
++    explorer.graph["h-root"]["untested"] = []
++    explorer.graph["h-near"]["untested"] = []
++    assert explorer._frontier() == "h-tail"
++    assert value_head.calls == ["root", "near", "tail"]
++
++    assert explorer._value("tail", node_hash="h-tail") == pytest.approx(0.0)
++    assert explorer._value("tail", node_hash="h-tail") == pytest.approx(0.0)
++    diagnostics = explorer.lazy_value_diagnostics()
++    assert diagnostics["lazy_top_k"] == 2
++    assert diagnostics["value_head_evals"] == 3
++    assert diagnostics["cache_hits"] == 2
++
++
++def test_req_arc_fcp_4514_selects_positive_weight_only_when_core_actions_improve() -> None:
++    """REQ-ARC-FCP-4514: a positive winner must beat the 0.0 control on the core gate."""
++
++    per_weight = {
++        "0.0": _summary(0.0, solve_rate=0.5, core_actions=100.0),
++        "0.5": _summary(0.5, solve_rate=0.5, core_actions=90.0),
++        "1.0": _summary(1.0, solve_rate=0.5, core_actions=130.0),
++    }
++
++    decision = exp4514.choose_submitted_value_weight(per_weight)
++
++    assert decision["selected_value_weight"] == 0.5
++    assert decision["should_raise_submitted_value_weight"] is True
++    assert decision["selection_reason"] == "positive_weight_beats_control_on_core_actions"
++
++
++def test_req_arc_fcp_4514_null_keeps_zero_without_control_beating_weight() -> None:
++    """REQ-ARC-FCP-4514: nulls are valid only with an explicit 0.0 control."""
++
++    per_weight = {
++        "0.0": _summary(0.0, solve_rate=0.5, core_actions=100.0),
++        "0.5": _summary(0.5, solve_rate=0.5, core_actions=100.0),
++        "1.0": _summary(
++            1.0,
++            solve_rate=0.5,
++            core_actions=80.0,
++            solved_games=["lp85", "m0r0", "sp80"],
++        ),
++    }
++
++    decision = exp4514.choose_submitted_value_weight(per_weight)
++
++    assert decision["selected_value_weight"] == 0.0
++    assert decision["should_raise_submitted_value_weight"] is False
++    assert decision["selection_reason"] == "no_positive_weight_beat_control"
++
++    with pytest.raises(ValueError, match="control"):
++        exp4514.choose_submitted_value_weight({"0.5": per_weight["0.5"]})
++
++
++def test_scenario_arc_fcp_4514_artifact_schema_and_write(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-4514: run writes the principle-annotated sweep artifact."""
++
++    def measure_sweep(**_kwargs):
++        return {
++            "0.0": _summary(0.0, solve_rate=0.5, core_actions=100.0),
++            "0.5": _summary(0.5, solve_rate=0.5, core_actions=90.0),
++        }
++
++    artifact = exp4514.run(
++        root=tmp_path,
++        write=True,
++        measure_sweep=measure_sweep,
++        preconditions_checked=_preconditions(),
++        lazy_eval_speedup_confirmed=_lazy_speedup(),
++        random_seed=4514,
++        now=lambda: 10.0,
++    )
++
++    assert artifact["honest_verdict"] == "success: lazy_value_weight_0.5_beats_0"
++    assert artifact["inference_substrate"] == exp4514.INFERENCE_SUBSTRATE
++    assert artifact["chosen_submitted_value_weight"] == 0.5
++    assert artifact["control_value_weight_0"]["value_weight"] == 0.0
++    assert artifact["false_negative_risk_checked"] is True
++    assert artifact["random_seed"] == 4514
++    assert artifact["lazy_eval_speedup_confirmed"]["confirmed"] is True
++    assert artifact["reproducibility_checksum"].startswith("sha256:")
++    assert exp4514.artifact_schema_errors(artifact) == []
++
++    written = json.loads((tmp_path / exp4514.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["chosen_submitted_value_weight"] == 0.5
++
++
++def test_req_arc_fcp_4514_null_artifact_schema_accepts_chosen_zero() -> None:
++    """REQ-ARC-FCP-4514: an honest null with chosen 0.0 is schema-valid."""
++
++    per_weight = {
++        "0.0": _summary(0.0, solve_rate=0.5, core_actions=100.0),
++        "0.5": _summary(0.5, solve_rate=0.5, core_actions=100.0),
++    }
++    decision = exp4514.choose_submitted_value_weight(per_weight)
++    artifact = exp4514.build_artifact(
++        preconditions_checked=_preconditions(),
++        per_weight_results=per_weight,
++        lazy_eval_speedup_confirmed=_lazy_speedup(),
++        decision=decision,
++        random_seed=4514,
++        duration_s=1.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete: lazy_value_weight_null_keep_0"
++    assert artifact["chosen_submitted_value_weight"] == 0.0
++    assert exp4514.artifact_schema_errors(artifact) == []
++
++
++def test_req_arc_fcp_4514_artifact_schema_rejects_bad_fields() -> None:
++    """REQ-ARC-FCP-4514: schema rejects unprincipled or unsafe artifacts."""
++
++    per_weight = {
++        "0.0": _summary(0.0, solve_rate=0.5, core_actions=100.0),
++        "0.5": _summary(0.5, solve_rate=0.5, core_actions=90.0),
++    }
++    decision = exp4514.choose_submitted_value_weight(per_weight)
++    artifact = exp4514.build_artifact(
++        preconditions_checked=_preconditions(),
++        per_weight_results=per_weight,
++        lazy_eval_speedup_confirmed=_lazy_speedup(),
++        decision=decision,
++        random_seed=4514,
++        duration_s=1.0,
++    )
++    assert exp4514.artifact_schema_errors(artifact) == []
++
++    bad = {
++        **artifact,
++        "honest_verdict": "done",
++        "inference_substrate": "live_llm_inference",
++        "field_principles": {},
++        "false_negative_risk_checked": False,
++        "lazy_eval_speedup_confirmed": {"confirmed": False},
++        "chosen_submitted_value_weight": 2.0,
++        "control_value_weight_0": {},
++        "reproducibility_checksum": "bad",
++    }
++
++    errors = exp4514.artifact_schema_errors(bad)
++
++    assert "honest_verdict must start with a terminal prefix" in errors
++    assert "inference_substrate must match the required substrate" in errors
++    assert "field_principles must match required field principles" in errors
++    assert "false_negative_risk_checked must be true when control is present" in errors
++    assert "lazy_eval_speedup_confirmed.confirmed must be true" in errors
++    assert "chosen_submitted_value_weight must match the decision" in errors
++    assert "control_value_weight_0 must contain the 0.0 control summary" in errors
++    assert "reproducibility_checksum must be sha256-prefixed" in errors
+-- 
+2.55.0
+

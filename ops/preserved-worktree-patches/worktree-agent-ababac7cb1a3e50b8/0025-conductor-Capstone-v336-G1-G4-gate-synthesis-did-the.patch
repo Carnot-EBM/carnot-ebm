@@ -1,0 +1,1872 @@
+From e5413e9fe2ec95000c7116563edcb55896f5b00a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 18:05:22 -0400
+Subject: [PATCH 00025/11362] =?UTF-8?q?[conductor]=20Capstone=20v336=20+?=
+ =?UTF-8?q?=20G1-G4=20gate=20synthesis=20=E2=80=94=20did=20the=20dependenc?=
+ =?UTF-8?q?y-aware=20weighting=20clean=20up=20into=20a=20held-out=20headli?=
+ =?UTF-8?q?ne-advancement=20candidate=3F=20did=20FACTS=20hold=20up=20on=20?=
+ =?UTF-8?q?a=20REAL=20benchmark=3F=20is=20the=20second-pair-of-eyes=20dete?=
+ =?UTF-8?q?ctor=20SHIPPED=3F=20did=20the=20new=20SC-weak=20selection=20dir?=
+ =?UTF-8?q?ection=20find=20ensemble=20value=3F=20paper=5Fready=20must=20st?=
+ =?UTF-8?q?ay=20TRUE.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3677-capstone-and-g-gate-v336
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/publication/spec.md     |  44 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../capstone_and_g_gate_v336_3677.py          | 730 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   6 +-
+ ...eriment_3677_capstone_and_g_gate_v336.json | 212 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...xperiment_3677_capstone_and_g_gate_v336.py |  27 +
+ ...xperiment_3677_capstone_and_g_gate_v336.py | 448 +++++++++++
+ 26 files changed, 1497 insertions(+), 36 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_and_g_gate_v336_3677.py
+ create mode 100644 results/experiment_3677_capstone_and_g_gate_v336.json
+ create mode 100644 scripts/experiment_3677_capstone_and_g_gate_v336.py
+ create mode 100644 tests/python/test_experiment_3677_capstone_and_g_gate_v336.py
+
+diff --git a/openspec/capabilities/publication/spec.md b/openspec/capabilities/publication/spec.md
+index a1eb970269..8f633c7d99 100644
+--- a/openspec/capabilities/publication/spec.md
++++ b/openspec/capabilities/publication/spec.md
+@@ -119,6 +119,38 @@ claims, preserve P0.1 as `honest-negative`, and emit a terminal verdict with
+ the `complete: capstone_v335_facts_{generalize_or_domain_bound}_with_real_nli_verifier_value_{scope}_paper_ready_true`
+ prefix.
+ 
++### REQ-PUBLISH-3677: v336 Dependency-Aware/Facts-Real Capstone
++
++The Exp 3677 v336 capstone script MUST aggregate `publication_gate.py --json`
++with Exp 3667 through Exp 3673 artifacts and write
++`results/experiment_3677_capstone_and_g_gate_v336.json`. The workflow MUST be
++aggregation-only: it SHALL read upstream artifacts, run the artifact summarizer,
++and SHALL NOT perform live inference or modify `scripts/research_conductor.py`.
++
++The artifact MUST record whether Exp 3667/3668 form a
++`dependency_aware_headline_candidate_status` of
++`clean_and_heldout_validated`, `clean_but_overfit`, `no_significant_gain`, or
++`flagged_still`. Exp 3667 may be cited only when
++`adversarial_verify_clean == true` and the artifact is not
++`flagged_adversarial`; Exp 3668 skipped/missing fields MUST be reported as
++`not_measured` logic rather than inferred from `None`. The frozen FoVer headline
++MUST remain `0.9131`; any dependency-aware win MUST be described only as a
++headline-advancement candidate pending re-freeze and re-reproduction.
++
++The artifact MUST record the Exp 3670 facts real-benchmark verdict as one of
++`generalizes_real`, `auroc_parity_with_catch_value`,
++`domain_bound_real_earned`, or `not_measured`; any grounding AUROC greater than
++or equal to `0.99` MUST be treated as a leak unless `grounding_leak_free == true`
++is proven. It MUST record the Exp 3671 shipped-detector boolean, Exp 3672
++SC-weak selection direction, Exp 3673 FR-11 v10 result, `p01_status` as
++`honest-negative`, and `trained_judge_ood_retired == true`.
++
++The workflow MUST exclude `flagged_adversarial` upstream artifacts from
++`cited_upstream_artifacts`, record G1-G4 and `paper_ready` directly from the
++publication gate, include narrowing-clean `paper_v6_safe_claims` and
++`paper_v6_forbidden_claims`, and emit the terminal verdict prefix
++`complete: capstone_v336_dependency_aware_<status>_facts_real_<verdict>_detector_shipped_<bool>_paper_ready_true`.
++
+ ## Scenarios
+ 
+ ### SCENARIO-PUBLISH-001: All Headline Numbers Have Live-GPU Provenance
+@@ -188,6 +220,18 @@ AND `honest_verdict == "paper_v4_phase4_complete_arxiv_ready"`
+ excludes flagged adversarial upstream artifacts, preserves P0.1 as
+ honest-negative, and emits a paper-ready artifact with all required fields.
+ 
++### SCENARIO-PUBLISH-3677: v336 Capstone Complete
++
++**Given** publication gate is ready and clean Exp 3667 through Exp 3673
++artifacts are available
++**When** the Exp 3677 v336 capstone script runs
++**Then** it emits the required paper-ready artifact, excludes
++`flagged_adversarial` citations, classifies skipped upstream work as
++`not_measured`, preserves the frozen FoVer headline and P0.1 honest negative,
++retires the trained-judge-OOD hypothesis, and records the dependency-aware win
++only as a future headline-advancement candidate pending re-freeze and
++re-reproduction.
++
+ ### REQ-PUBLISH-007: High-Severity Integrity Fixes (ISSUE-6 through ISSUE-10)
+ 
+ The paper-v5 high-severity remediation script MUST verify that
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 63d114e98c..c70e575b6d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2802,
++  "experiments_checked": 2803,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_and_g_gate_v336_3677.py b/python/carnot/reporting/capstone_and_g_gate_v336_3677.py
+new file mode 100644
+index 0000000000..f62e8197b7
+--- /dev/null
++++ b/python/carnot/reporting/capstone_and_g_gate_v336_3677.py
+@@ -0,0 +1,730 @@
++"""Exp 3677 v336 capstone and G-gate synthesis.
++
++Spec: REQ-PUBLISH-3677, SCENARIO-PUBLISH-3677.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_3677_capstone_and_g_gate_v336.json")
++RANDOM_SEED = 3677
++FROZEN_FOVER_HEADLINE_AUROC = 0.9131
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts "
++    "(principle: reads the gate script + artifacts; no live inference)."
++)
++
++UPSTREAM_ARTIFACTS: Mapping[str, Path] = {
++    "exp3667": Path("results/experiment_3667_dependency_aware_weighting_clean.json"),
++    "exp3668": Path("results/experiment_3668_dependency_aware_weighting_heldout.json"),
++    "exp3669": Path("results/experiment_3669_build_real_factual_corpus.json"),
++    "exp3670": Path("results/experiment_3670_facts_row_real_benchmark.json"),
++    "exp3671": Path("results/experiment_3671_ship_second_pair_of_eyes_detector.json"),
++    "exp3672": Path("results/experiment_3672_ensemble_selection_where_sc_weak.json"),
++    "exp3673": Path("results/experiment_3673_fr11_continuous_self_learning_v10.json"),
++}
++
++DEPENDENCY_STATUSES = {
++    "clean_and_heldout_validated",
++    "clean_but_overfit",
++    "no_significant_gain",
++    "flagged_still",
++}
++FACTS_VERDICTS = {
++    "generalizes_real",
++    "auroc_parity_with_catch_value",
++    "domain_bound_real_earned",
++    "not_measured",
++}
++SC_WEAK_RESULTS = {
++    "ensemble_adds_value",
++    "no_value_with_headroom",
++    "no_headroom",
++    "not_measured",
++}
++FR11_RESULTS = {
++    "held_no_collapse_quality_maintained",
++    "collapse_or_quality_regression",
++    "not_measured",
++}
++BASE_SCOPES = {"math_plus_code", "math_plus_code_plus_facts", "math_only_earned"}
++ALLOWED_SCOPES = {
++    f"{base}_sc_weak_{sc_result}"
++    for base in BASE_SCOPES
++    for sc_result in SC_WEAK_RESULTS
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "dependency_aware_headline_candidate_status",
++    "facts_real_benchmark_verdict",
++    "facts_real_vs_synthetic",
++    "second_pair_of_eyes_shipped",
++    "sc_weak_selection_direction_result",
++    "fr11_v10_result",
++    "verifier_value_scope",
++    "g1",
++    "g2",
++    "g3",
++    "g4",
++    "paper_ready",
++    "unmet_gates",
++    "p01_status",
++    "trained_judge_ood_retired",
++    "paper_v6_safe_claims",
++    "paper_v6_forbidden_claims",
++    "cited_upstream_artifacts",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": (
++        "aggregation_from_upstream_artifacts (principle: reads the gate script + "
++        "artifacts; no live inference)."
++    ),
++    "dependency_aware_headline_candidate_status": (
++        "clean_and_heldout_validated / clean_but_overfit / no_significant_gain / "
++        "flagged_still -- the status of the .336 headline-advancement lead "
++        "(exp3667/3668)."
++    ),
++    "facts_real_benchmark_verdict": (
++        "generalizes_real / auroc_parity_with_catch_value / "
++        "domain_bound_real_earned / not_measured -- the corrected core-mission "
++        "answer (exp3670)."
++    ),
++    "facts_real_vs_synthetic": (
++        "States how the REAL-corpus facts result corrects or confirms the .335 "
++        "synthetic negative."
++    ),
++    "second_pair_of_eyes_shipped": (
++        "Whether the calibrated fused detector is wired to a real surface with a "
++        "passing E2E test (exp3671) -- Phase-1 product advancement."
++    ),
++    "sc_weak_selection_direction_result": (
++        "ensemble_adds_value / no_value_with_headroom / no_headroom / "
++        "not_measured -- the NEW-direction result (exp3672)."
++    ),
++    "fr11_v10_result": "Whether online dependency-aware weighting held without collapse (exp3673).",
++    "verifier_value_scope": (
++        "math_plus_code / math_plus_code_plus_facts / math_only_earned + the "
++        "SC-weak selection finding -- the scoped product claim after the fair "
++        "re-measurements."
++    ),
++    "g1": "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean).",
++    "g2": "Independently reproduced (CI runner 26725185125).",
++    "g3": "Prose narrowing-clean.",
++    "g4": "Numbers trace to primary artifacts.",
++    "paper_ready": "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate.",
++    "unmet_gates": "Report which gates are unmet, not a count (publication_blocker_count is retired).",
++    "p01_status": "P0.1 stays honest-negative; do not re-assert a positive.",
++    "trained_judge_ood_retired": "Records the trained-judge-OOD hypothesis as retired (exp3659 same-verdict).",
++    "paper_v6_safe_claims": "Narrowing-clean claims.",
++    "paper_v6_forbidden_claims": (
++        "Overclaims to avoid (including: do NOT cite the dependency-aware win as "
++        "the headline until re-frozen + re-reproduced)."
++    ),
++    "cited_upstream_artifacts": "sha256 provenance (G4).",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    gate_data: Mapping[str, Any] | None = None,
++    summary_records: Sequence[Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the Exp 3677 terminal artifact from upstream result files."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    gate = dict(gate_data) if gate_data is not None else load_publication_gate(root_path)
++    summaries = (
++        [dict(record) for record in summary_records]
++        if summary_records is not None
++        else run_summarize_artifacts(root_path)
++    )
++    upstreams = {
++        name: _read_optional_json_object(root_path / rel_path)
++        for name, rel_path in UPSTREAM_ARTIFACTS.items()
++    }
++    stamped_flagged = {
++        name: _is_flagged_adversarial(payload) for name, payload in upstreams.items()
++    }
++
++    dependency = _dependency_candidate(
++        upstreams["exp3667"],
++        upstreams["exp3668"],
++        exp3667_flagged=stamped_flagged["exp3667"],
++        exp3668_flagged=stamped_flagged["exp3668"],
++    )
++    facts = _facts_verdict(upstreams["exp3670"], flagged=stamped_flagged["exp3670"])
++    second_pair_shipped = _second_pair_shipped(
++        upstreams["exp3671"], flagged=stamped_flagged["exp3671"]
++    )
++    sc_weak = _sc_weak_result(upstreams["exp3672"], flagged=stamped_flagged["exp3672"])
++    fr11 = _fr11_result(upstreams["exp3673"], flagged=stamped_flagged["exp3673"])
++    scope = _verifier_scope(
++        facts_verdict=facts["verdict"],
++        second_pair_shipped=second_pair_shipped,
++        sc_weak_result=sc_weak,
++    )
++
++    g1 = _gate_pass(gate, "G1")
++    g2 = _gate_pass(gate, "G2")
++    g3 = _gate_pass(gate, "G3")
++    g4 = _gate_pass(gate, "G4")
++    paper_ready = bool(gate.get("paper_ready") is True and g1 and g2 and g3 and g4)
++    finished = time.perf_counter() if now_s is None else float(now_s)
++    duration_s = round(max(0.0, finished - start), 6)
++
++    artifact: JsonDict = {
++        "honest_verdict": (
++            "complete: capstone_v336_dependency_aware_"
++            f"{dependency['status']}_facts_real_{facts['verdict']}_"
++            f"detector_shipped_{str(second_pair_shipped).lower()}_"
++            f"paper_ready_{str(paper_ready).lower()}"
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "dependency_aware_headline_candidate_status": dependency["status"],
++        "facts_real_benchmark_verdict": facts["verdict"],
++        "facts_real_vs_synthetic": _facts_real_vs_synthetic(facts),
++        "second_pair_of_eyes_shipped": second_pair_shipped,
++        "sc_weak_selection_direction_result": sc_weak,
++        "fr11_v10_result": fr11,
++        "verifier_value_scope": scope,
++        "g1": g1,
++        "g2": g2,
++        "g3": g3,
++        "g4": g4,
++        "paper_ready": paper_ready,
++        "unmet_gates": list(gate.get("unmet_gates") or []),
++        "p01_status": "honest-negative",
++        "trained_judge_ood_retired": True,
++        "paper_v6_safe_claims": _safe_claims(
++            dependency_status=dependency["status"],
++            facts_verdict=facts["verdict"],
++            second_pair_shipped=second_pair_shipped,
++            sc_weak_result=sc_weak,
++            fr11_result=fr11,
++        ),
++        "paper_v6_forbidden_claims": _forbidden_claims(
++            stamped_flagged=stamped_flagged,
++            exp3667_clean=dependency["exp3667_adversarial_verify_clean"],
++            facts=facts,
++        ),
++        "cited_upstream_artifacts": _cited_upstreams(root_path, upstreams, stamped_flagged),
++        "random_seed": RANDOM_SEED,
++        "duration_s": duration_s,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "frozen_fover_headline_auroc": FROZEN_FOVER_HEADLINE_AUROC,
++        "dependency_aware_candidate": dependency,
++        "facts_real_benchmark": facts,
++        "publication_gate": _gate_details(gate),
++        "summarized_upstream_artifacts": summaries,
++        "flagged_upstream_artifacts_excluded": [
++            str(UPSTREAM_ARTIFACTS[name])
++            for name, is_flagged in stamped_flagged.items()
++            if is_flagged
++        ],
++        "source_artifacts": [
++            str(path)
++            for name, path in UPSTREAM_ARTIFACTS.items()
++            if upstreams.get(name)
++        ],
++        "scripts_research_conductor_modified": False,
++        "ops_docs_reconciliation_left_to_conductor": True,
++    }
++    artifact["reproducibility_checksum"] = _payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    gate_data: Mapping[str, Any] | None = None,
++    summary_records: Sequence[Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build and persist the Exp 3677 artifact."""
++
++    root_path = Path(root)
++    out_path = _repo_path(root_path, Path(output_path))
++    artifact = build_artifact(
++        root_path,
++        gate_data=gate_data,
++        summary_records=summary_records,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the required Exp 3677 schema and publication-gate invariants."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    if not str(artifact.get("honest_verdict") or "").startswith("complete:"):
++        raise ValueError("honest_verdict must start with complete:")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate is not the Exp 3677 aggregation substrate")
++    if artifact.get("dependency_aware_headline_candidate_status") not in DEPENDENCY_STATUSES:
++        raise ValueError("dependency_aware_headline_candidate_status is unsupported")
++    if artifact.get("facts_real_benchmark_verdict") not in FACTS_VERDICTS:
++        raise ValueError("facts_real_benchmark_verdict is unsupported")
++    if artifact.get("sc_weak_selection_direction_result") not in SC_WEAK_RESULTS:
++        raise ValueError("sc_weak_selection_direction_result is unsupported")
++    if artifact.get("fr11_v10_result") not in FR11_RESULTS:
++        raise ValueError("fr11_v10_result is unsupported")
++    if artifact.get("verifier_value_scope") not in ALLOWED_SCOPES:
++        raise ValueError("verifier_value_scope is outside the allowed scoped claim set")
++    if artifact.get("second_pair_of_eyes_shipped") not in {True, False}:
++        raise ValueError("second_pair_of_eyes_shipped must be a bare boolean")
++    if artifact.get("paper_ready") is not True:
++        raise ValueError("paper_ready must remain true for this capstone")
++    for gate in ("g1", "g2", "g3", "g4"):
++        if artifact.get(gate) is not True:
++            raise ValueError(f"{gate} must be true")
++    if not isinstance(artifact.get("unmet_gates"), list):
++        raise ValueError("unmet_gates must be a list")
++    if artifact.get("p01_status") != "honest-negative":
++        raise ValueError("p01_status must remain honest-negative")
++    if artifact.get("trained_judge_ood_retired") is not True:
++        raise ValueError("trained_judge_ood_retired must remain true")
++    if not isinstance(artifact.get("paper_v6_safe_claims"), list):
++        raise ValueError("paper_v6_safe_claims must be a list")
++    if not isinstance(artifact.get("paper_v6_forbidden_claims"), list):
++        raise ValueError("paper_v6_forbidden_claims must be a list")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, int | float) or isinstance(duration, bool) or float(duration) < 0.0:
++        raise ValueError("duration_s must be nonnegative numeric")
++    cited = artifact.get("cited_upstream_artifacts")
++    if not isinstance(cited, list):
++        raise ValueError("cited_upstream_artifacts must be a list")
++    for item in cited:
++        if not isinstance(item, Mapping) or len(str(item.get("sha256") or "")) != 64:
++            raise ValueError("cited_upstream_artifacts must include sha256 provenance")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or len(checksum) != 64:
++        raise ValueError("reproducibility_checksum must be a sha256 hex string")
++
++
++def load_publication_gate(root: Path) -> JsonDict:  # pragma: no cover - subprocess boundary
++    """Run publication_gate.py and return its parsed JSON result."""
++
++    completed = subprocess.run(
++        [sys.executable, "scripts/publication_gate.py", "--json"],
++        cwd=root,
++        check=True,
++        capture_output=True,
++        text=True,
++    )
++    return json.loads(completed.stdout)
++
++
++def run_summarize_artifacts(root: Path) -> list[JsonDict]:  # pragma: no cover - subprocess boundary
++    """Run summarize_artifact.py for Exp 3667 through Exp 3673."""
++
++    records: list[JsonDict] = []
++    for exp_id in range(3667, 3674):
++        completed = subprocess.run(
++            [sys.executable, "scripts/summarize_artifact.py", str(exp_id)],
++            cwd=root,
++            capture_output=True,
++            text=True,
++        )
++        records.append(
++            {
++                "exp": exp_id,
++                "returncode": completed.returncode,
++                "stdout_tail": completed.stdout[-2000:],
++                "stderr_tail": completed.stderr[-1000:],
++            }
++        )
++    return records
++
++
++def _dependency_candidate(
++    exp3667: Mapping[str, Any],
++    exp3668: Mapping[str, Any],
++    *,
++    exp3667_flagged: bool,
++    exp3668_flagged: bool,
++) -> JsonDict:
++    exp3667_clean = exp3667.get("adversarial_verify_clean") is True
++    exp3667_significant = bool(
++        not exp3667_flagged
++        and exp3667_clean
++        and _acceptance_pass(exp3667)
++        and exp3667.get("dependency_aware_beats_carnot") is True
++        and _significant_positive(
++            exp3667.get("dependency_aware_vs_carnot_delta_ci"),
++            exp3667.get("delong_p_dependency_vs_carnot"),
++        )
++    )
++    if exp3667_flagged or not exp3667_clean:
++        status = "flagged_still"
++    elif not exp3667_significant:
++        status = "no_significant_gain"
++    elif exp3668_flagged:
++        status = "flagged_still"
++    else:
++        heldout_validated = bool(
++            exp3668
++            and _acceptance_pass(exp3668)
++            and exp3668.get("dependency_aware_generalizes_heldout") is True
++            and _significant_positive(
++                exp3668.get("heldout_delta_ci"),
++                exp3668.get("heldout_delong_p"),
++            )
++        )
++        status = "clean_and_heldout_validated" if heldout_validated else "clean_but_overfit"
++
++    if not exp3667_significant and not exp3668:
++        heldout_status = "not_measured"
++        missing_reason = "exp3668 skipped_or_missing_after_exp3667_no_significant_gain"
++    elif exp3668_flagged:
++        heldout_status = "excluded_flagged_adversarial"
++        missing_reason = None
++    elif not exp3668:
++        heldout_status = "not_measured"
++        missing_reason = "exp3668 skipped_or_missing"
++    elif status == "clean_and_heldout_validated":
++        heldout_status = "validated"
++        missing_reason = None
++    else:
++        heldout_status = "overfit_or_not_validated"
++        missing_reason = None
++
++    return {
++        "status": status,
++        "exp3667_adversarial_verify_clean": exp3667_clean,
++        "exp3667_flagged_adversarial": exp3667_flagged,
++        "exp3667_dependency_aware_beats_carnot": exp3667.get("dependency_aware_beats_carnot") is True,
++        "exp3667_significant": exp3667_significant,
++        "exp3667_auroc_dependency_aware_proper": _point(
++            exp3667.get("auroc_dependency_aware_proper")
++        ),
++        "exp3667_auroc_carnot_current": _point(exp3667.get("auroc_carnot_current")),
++        "exp3667_delong_p_dependency_vs_carnot": _point(
++            exp3667.get("delong_p_dependency_vs_carnot")
++        ),
++        "heldout_status": heldout_status,
++        "heldout_missing_reason": missing_reason,
++        "heldout_auroc_dependency_aware": _point(
++            exp3668.get("heldout_auroc_dependency_aware")
++        ),
++        "heldout_auroc_carnot": _point(exp3668.get("heldout_auroc_carnot")),
++        "heldout_delong_p": _point(exp3668.get("heldout_delong_p")),
++        "claim_boundary": (
++            "headline-advancement candidate pending re-freeze + re-reproduction "
++            "in a future milestone"
++        ),
++    }
++
++
++def _facts_verdict(exp3670: Mapping[str, Any], *, flagged: bool) -> JsonDict:
++    auroc = _point(exp3670.get("grounding_auroc_real_corpus"))
++    confidence = _point(exp3670.get("confidence_baseline_auroc"))
++    leak_free = exp3670.get("grounding_leak_free") is True
++    leak_risk = bool(auroc is not None and auroc >= 0.99 and not leak_free)
++    measured = bool(
++        not flagged
++        and exp3670
++        and _acceptance_pass(exp3670)
++        and exp3670.get("positive_control_valid") is True
++        and leak_free
++        and auroc is not None
++        and confidence is not None
++        and not leak_risk
++    )
++    outcome = str(exp3670.get("honest_outcome") or "")
++    if not measured:
++        verdict = "not_measured"
++    elif outcome == "generalizes_real":
++        verdict = "generalizes_real"
++    elif outcome == "catch_value_at_parity" or exp3670.get("catch_value_at_parity") is True:
++        verdict = "auroc_parity_with_catch_value"
++    elif outcome == "domain_bound_real":
++        verdict = "domain_bound_real_earned"
++    else:
++        verdict = "not_measured"
++    return {
++        "verdict": verdict,
++        "honest_outcome": exp3670.get("honest_outcome"),
++        "grounding_auroc_real_corpus": auroc,
++        "confidence_baseline_auroc": confidence,
++        "grounding_minus_confidence_delta": _point(
++            exp3670.get("grounding_minus_confidence_delta")
++        ),
++        "grounding_leak_free": leak_free,
++        "grounding_leak_risk": leak_risk,
++        "positive_control_valid": exp3670.get("positive_control_valid") is True,
++        "real_vs_synthetic_grounding_delta": exp3670.get("real_vs_synthetic_grounding_delta"),
++    }
++
++
++def _second_pair_shipped(exp3671: Mapping[str, Any], *, flagged: bool) -> bool:
++    return bool(
++        not flagged
++        and exp3671.get("detector_shipped") is True
++        and exp3671.get("e2e_test_passed") is True
++        and _acceptance_pass(exp3671)
++    )
++
++
++def _sc_weak_result(exp3672: Mapping[str, Any], *, flagged: bool) -> str:
++    if flagged or not exp3672:
++        return "not_measured"
++    if exp3672.get("positive_control_valid") is not True:
++        return "no_headroom"
++    if exp3672.get("ensemble_adds_selection_value_sc_weak") is True:
++        return "ensemble_adds_value"
++    if _acceptance_pass(exp3672):
++        return "no_value_with_headroom"
++    return "not_measured"
++
++
++def _fr11_result(exp3673: Mapping[str, Any], *, flagged: bool) -> str:
++    if flagged or not exp3673:
++        return "not_measured"
++    if (
++        exp3673.get("collapse_detected_deploy_arm") is False
++        and exp3673.get("quality_maintained") is True
++        and exp3673.get("pass_rate_vs_true_accuracy_distinct_assert") is True
++        and _acceptance_pass(exp3673)
++    ):
++        return "held_no_collapse_quality_maintained"
++    return "collapse_or_quality_regression"
++
++
++def _verifier_scope(
++    *,
++    facts_verdict: str,
++    second_pair_shipped: bool,
++    sc_weak_result: str,
++) -> str:
++    facts_add_value = facts_verdict in {"generalizes_real", "auroc_parity_with_catch_value"}
++    if second_pair_shipped and facts_add_value:
++        base = "math_plus_code_plus_facts"
++    elif second_pair_shipped:
++        base = "math_plus_code"
++    elif facts_add_value:
++        base = "math_plus_code_plus_facts"
++    else:
++        base = "math_only_earned"
++    return f"{base}_sc_weak_{sc_weak_result}"
++
++
++def _facts_real_vs_synthetic(facts: Mapping[str, Any]) -> str:
++    verdict = facts.get("verdict")
++    if verdict == "generalizes_real":
++        return "REAL-corpus facts correct the .335 synthetic negative: factual verifier value generalizes on the real benchmark."
++    if verdict == "auroc_parity_with_catch_value":
++        return "REAL-corpus facts partially correct the .335 synthetic negative: AUROC is at parity, but conditional catch value is measured."
++    if verdict == "domain_bound_real_earned":
++        return "REAL-corpus facts confirm the .335 synthetic negative as earned: factual verifier value remains domain-bound on the real benchmark."
++    return "REAL-corpus facts are not measured; the .335 synthetic negative is not overwritten."
++
++
++def _safe_claims(
++    *,
++    dependency_status: str,
++    facts_verdict: str,
++    second_pair_shipped: bool,
++    sc_weak_result: str,
++    fr11_result: str,
++) -> list[str]:
++    claims = [
++        "FoVer headline remains frozen at 0.9131 AUROC with G1-G4 satisfied.",
++        "P0.1 remains honest-negative; no energy-vs-self-consistency positive is re-asserted.",
++        "The trained-judge-OOD hypothesis is retired and is not re-asserted.",
++    ]
++    if dependency_status == "clean_and_heldout_validated":
++        claims.append(
++            "Dependency-aware weighting is a headline-advancement candidate pending re-freeze and re-reproduction in a future milestone."
++        )
++    elif dependency_status == "clean_but_overfit":
++        claims.append("Dependency-aware weighting is clean but not held-out validated.")
++    elif dependency_status == "no_significant_gain":
++        claims.append("Dependency-aware weighting does not provide a significant headline advancement.")
++    else:
++        claims.append("Dependency-aware weighting remains flagged or unclean and is not claimable.")
++    if facts_verdict == "domain_bound_real_earned":
++        claims.append("The real facts benchmark records an earned domain-bound negative.")
++    elif facts_verdict == "generalizes_real":
++        claims.append("The real facts benchmark supports factual verifier generalization.")
++    elif facts_verdict == "auroc_parity_with_catch_value":
++        claims.append("The real facts benchmark supports scoped catch value at AUROC parity.")
++    else:
++        claims.append("Facts-real value is not measured; no factual generalization claim is made.")
++    if second_pair_shipped:
++        claims.append("The calibrated second-pair-of-eyes detector is shipped with a passing E2E surface.")
++    claims.append(f"SC-weak ensemble-selection result: {sc_weak_result}.")
++    claims.append(f"FR-11 v10 result: {fr11_result}.")
++    return claims
++
++
++def _forbidden_claims(
++    *,
++    stamped_flagged: Mapping[str, bool],
++    exp3667_clean: bool,
++    facts: Mapping[str, Any],
++) -> list[str]:
++    claims = [
++        "Do not cite the dependency-aware win as the headline until it is re-frozen and independently re-reproduced.",
++        "Do not overwrite the frozen FoVer 0.9131 headline with the dependency-aware candidate.",
++        "Do not re-assert a P0.1 positive; the status remains honest-negative.",
++        "Do not re-assert the trained-judge-OOD hypothesis; it is retired.",
++        "Do not read missing gated-task fields as None and synthesize a result around them.",
++        "Do not treat grounding AUROC >= 0.99 as valid unless leak-free evidence is explicit.",
++    ]
++    if facts.get("verdict") != "generalizes_real":
++        claims.append("Do not claim broad factual generalization from the real facts benchmark.")
++    if not exp3667_clean:
++        claims.append("Do not cite Exp 3667's number unless adversarial_verify_clean is true.")
++    flagged_paths = [
++        str(UPSTREAM_ARTIFACTS[name])
++        for name, is_flagged in stamped_flagged.items()
++        if is_flagged
++    ]
++    if flagged_paths:
++        claims.append(
++            "Do not cite flagged_adversarial artifacts in paper-v6 claims: "
++            + ", ".join(flagged_paths)
++        )
++    return claims
++
++
++def _cited_upstreams(
++    root: Path,
++    upstreams: Mapping[str, Mapping[str, Any]],
++    stamped_flagged: Mapping[str, bool],
++) -> list[JsonDict]:
++    cited: list[JsonDict] = []
++    for name, rel_path in UPSTREAM_ARTIFACTS.items():
++        payload = upstreams.get(name) or {}
++        if not payload or stamped_flagged.get(name) is True:
++            continue
++        if name == "exp3667" and payload.get("adversarial_verify_clean") is not True:
++            continue
++        cited.append(
++            {
++                "path": str(rel_path),
++                "sha256": _sha256_file(root / rel_path),
++                "honest_verdict": payload.get("honest_verdict"),
++            }
++        )
++    return cited
++
++
++def _acceptance_pass(payload: Mapping[str, Any]) -> bool:
++    gate = payload.get("acceptance_gate")
++    if not isinstance(gate, Mapping):
++        return False
++    if gate.get("passed") is True:
++        return True
++    return gate.get("required_fields_present") is True
++
++
++def _significant_positive(delta_ci: Any, p_value: Any) -> bool:
++    if not isinstance(delta_ci, Mapping):
++        return False
++    point = _point(delta_ci)
++    ci95 = delta_ci.get("ci95")
++    lower = ci95[0] if isinstance(ci95, list | tuple) and ci95 else None
++    return bool(
++        point is not None
++        and point > 0.0
++        and isinstance(lower, int | float)
++        and not isinstance(lower, bool)
++        and float(lower) > 0.0
++        and isinstance(p_value, int | float)
++        and not isinstance(p_value, bool)
++        and float(p_value) < 0.05
++    )
++
++
++def _gate_pass(gate_data: Mapping[str, Any], gate_name: str) -> bool:
++    gates = gate_data.get("gates")
++    if not isinstance(gates, Mapping):
++        return False
++    gate = gates.get(gate_name)
++    return isinstance(gate, Mapping) and gate.get("pass") is True
++
++
++def _gate_details(gate_data: Mapping[str, Any]) -> JsonDict:
++    gates = gate_data.get("gates")
++    return dict(gates) if isinstance(gates, Mapping) else {}
++
++
++def _point(metric: Any) -> float | None:
++    if isinstance(metric, Mapping):
++        return _round_or_none(metric.get("point"))
++    return _round_or_none(metric)
++
++
++def _round_or_none(value: Any) -> float | None:
++    if isinstance(value, int | float) and not isinstance(value, bool):
++        return round(float(value), 6)
++    return None
++
++
++def _is_flagged_adversarial(payload: Mapping[str, Any]) -> bool:
++    return payload.get("flagged_adversarial") is True
++
++
++def _read_optional_json_object(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    data = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(data, dict):
++        raise ValueError(f"expected JSON object in {path}")
++    return data
++
++
++def _repo_path(root: Path, path: Path) -> Path:
++    return path if path.is_absolute() else root / path
++
++
++def _sha256_file(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _payload_checksum(payload: Mapping[str, Any]) -> str:
++    filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 709337b817..6e62c38d74 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:47:37.478060+00:00",
+-  "finished_at": "2026-06-01T21:47:37.502105+00:00",
++  "started_at": "2026-06-01T22:04:43.917898+00:00",
++  "finished_at": "2026-06-01T22:04:43.942362+00:00",
+   "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index bd3247b60d..e717108163 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-01T21:47:37Z",
++  "run_date": "2026-06-01T22:04:44Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index facb7df8d4..d2da3ab8f8 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:47:38Z",
+-  "finished_at": "2026-06-01T21:47:38Z",
++  "started_at": "2026-06-01T22:04:45Z",
++  "finished_at": "2026-06-01T22:04:45Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index a367e6d508..fc3b665e94 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-01T21:47:38Z",
++  "run_date": "2026-06-01T22:04:45Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 80fdb4fd5e..3ff5f237b1 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-01T21:47:38Z",
++  "run_date": "2026-06-01T22:04:45Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 610393e543..31fa0fc42e 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-01T21:45:58.015557Z",
+-  "duration_s": 0.007889032363891602,
++  "run_date": "2026-06-01T22:03:04.519637Z",
++  "duration_s": 0.007547616958618164,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "308205d0ba2abbb4bddd69df89d531debe3d7e60b7c7efa89303066a77a3068c",
++  "reproducibility_checksum": "2708eec48bc2ab6c5e2befe01efeef9738a937a88eb09135b6c05cae1db75e5e",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "d316b430b2e17aa40732642802a8017d158276ee"
++    "adversarial_verify_version": "0441714419a3459072b40b1eab790ef60f5f24e2"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index fede8c398e..631325784e 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-01T21:48:01.599602Z",
+-  "duration_s": 20.89806866645813,
++  "run_date": "2026-06-01T22:05:07.540493Z",
++  "duration_s": 20.79597759246826,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 5444167d0f..27717469c1 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-01T21:45:58.025469Z",
+-  "duration_s": 0.007341623306274414,
++  "run_date": "2026-06-01T22:03:04.528561Z",
++  "duration_s": 0.006779193878173828,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "432fdf476031724cd00d8f8c6051e909aedc12333563a27a66897da777a3167f",
++  "reproducibility_checksum": "fd97e47de9b3f707ddf5e06bc48b2576bf8893db79ab34f6dc86f904616feeff",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "d316b430b2e17aa40732642802a8017d158276ee"
++    "adversarial_verify_version": "0441714419a3459072b40b1eab790ef60f5f24e2"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 0c1696fd26..a1779fdf67 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1104812622070312,
++  "efficiency_gains_ms": 2.1402835845947266,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 50e59ba4e7..a6f04e6c21 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2535970211029053,
++  "duration_s": 0.2593815326690674,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 36e3564eef..36f8ef6f20 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0009624958038330078,
++  "duration_s": 0.0009293556213378906,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 70ad6d5270..320df0ce0a 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.8203008696436882e-05,
++  "duration_s": 2.5487970560789108e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index cf257f6f1b..ea6005c3c5 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 3.6100391298532486e-07,
++  "duration_s": 3.7101563066244125e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 2e98739533..f36ebc095d 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 3.9577484130859375e-05,
++  "duration_s": 4.9114227294921875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index cecccdfcbe..8f4ea467db 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 15.887922048568726, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 17.505184412002563, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index e44ccdb248..2eac9aeb62 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.010501617178320885,
++  "nonforgetting_metric_random": 0.010115969512611627,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index d117a072da..e21cbcbb6b 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -2,9 +2,9 @@
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:47:44Z",
+-  "finished_at": "2026-06-01T21:47:44Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-01T22:04:52Z",
++  "finished_at": "2026-06-01T22:04:52Z",
++  "duration_s": 0.001,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_3677_capstone_and_g_gate_v336.json b/results/experiment_3677_capstone_and_g_gate_v336.json
+new file mode 100644
+index 0000000000..e05759e3f4
+--- /dev/null
++++ b/results/experiment_3677_capstone_and_g_gate_v336.json
+@@ -0,0 +1,212 @@
++{
++  "cited_upstream_artifacts": [
++    {
++      "honest_verdict": "complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate",
++      "path": "results/experiment_3667_dependency_aware_weighting_clean.json",
++      "sha256": "96cb5ade4491ae70a12dffa59f058f8edd2bfc5da9bbad7e0176b44a53d41c7b"
++    },
++    {
++      "honest_verdict": "complete: dependency_aware_weighting_generalizes_heldout_headline_re_freeze_candidate_for_v337",
++      "path": "results/experiment_3668_dependency_aware_weighting_heldout.json",
++      "sha256": "76303878ef3dc870ac1b2d291330af5bb6b1f285571db049dd73accc03b00718"
++    },
++    {
++      "honest_verdict": "complete: real_factual_corpus_built_ragtruth_non_degenerate",
++      "path": "results/experiment_3669_build_real_factual_corpus.json",
++      "sha256": "8162b51b099803798e80ba2938c671ae67b3ec10bc2f4fda311c1d6f24f753cf"
++    },
++    {
++      "honest_verdict": "complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned",
++      "path": "results/experiment_3670_facts_row_real_benchmark.json",
++      "sha256": "8a31ae10f56a2f3f95a4483a1d5f67a04a138acf500cf978b2304062c4d2c872"
++    },
++    {
++      "honest_verdict": "complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green",
++      "path": "results/experiment_3671_ship_second_pair_of_eyes_detector.json",
++      "sha256": "00151330d67170794455feceeaa9da5099b75feddf77374b91af7b848e4db113"
++    },
++    {
++      "honest_verdict": "complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative",
++      "path": "results/experiment_3672_ensemble_selection_where_sc_weak.json",
++      "sha256": "009458b53e9a1e849e9eabfe8aca6f42fdfd3fcf8c357c6e4ec1c42f54d3b1bb"
++    },
++    {
++      "honest_verdict": "complete: fr11_v10_online_dependency_aware_weighting_holds_no_collapse_quality_maintained",
++      "path": "results/experiment_3673_fr11_continuous_self_learning_v10.json",
++      "sha256": "b5536e35e769251078bfee4076cb1009ed4c3a1e5e7cafd3eb0436d4ac05376b"
++    }
++  ],
++  "dependency_aware_candidate": {
++    "claim_boundary": "headline-advancement candidate pending re-freeze + re-reproduction in a future milestone",
++    "exp3667_adversarial_verify_clean": true,
++    "exp3667_auroc_carnot_current": 0.919446,
++    "exp3667_auroc_dependency_aware_proper": 0.933238,
++    "exp3667_delong_p_dependency_vs_carnot": 8.7e-05,
++    "exp3667_dependency_aware_beats_carnot": true,
++    "exp3667_flagged_adversarial": false,
++    "exp3667_significant": true,
++    "heldout_auroc_carnot": 0.919964,
++    "heldout_auroc_dependency_aware": 0.933224,
++    "heldout_delong_p": 7.2e-05,
++    "heldout_missing_reason": null,
++    "heldout_status": "validated",
++    "status": "clean_and_heldout_validated"
++  },
++  "dependency_aware_headline_candidate_status": "clean_and_heldout_validated",
++  "duration_s": 0.362692,
++  "facts_real_benchmark": {
++    "confidence_baseline_auroc": 0.708003,
++    "grounding_auroc_real_corpus": 0.642844,
++    "grounding_leak_free": true,
++    "grounding_leak_risk": false,
++    "grounding_minus_confidence_delta": -0.065158,
++    "honest_outcome": "domain_bound_real",
++    "positive_control_valid": true,
++    "real_vs_synthetic_grounding_delta": {
++      "delta": -0.100812,
++      "real_grounding_auroc": 0.642844,
++      "synthetic_grounding_auroc": 0.743656
++    },
++    "verdict": "domain_bound_real_earned"
++  },
++  "facts_real_benchmark_verdict": "domain_bound_real_earned",
++  "facts_real_vs_synthetic": "REAL-corpus facts confirm the .335 synthetic negative as earned: factual verifier value remains domain-bound on the real benchmark.",
++  "field_principles": {
++    "cited_upstream_artifacts": "sha256 provenance (G4).",
++    "dependency_aware_headline_candidate_status": "clean_and_heldout_validated / clean_but_overfit / no_significant_gain / flagged_still -- the status of the .336 headline-advancement lead (exp3667/3668).",
++    "duration_s": "Plausibility floor.",
++    "facts_real_benchmark_verdict": "generalizes_real / auroc_parity_with_catch_value / domain_bound_real_earned / not_measured -- the corrected core-mission answer (exp3670).",
++    "facts_real_vs_synthetic": "States how the REAL-corpus facts result corrects or confirms the .335 synthetic negative.",
++    "fr11_v10_result": "Whether online dependency-aware weighting held without collapse (exp3673).",
++    "g1": "Headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean).",
++    "g2": "Independently reproduced (CI runner 26725185125).",
++    "g3": "Prose narrowing-clean.",
++    "g4": "Numbers trace to primary artifacts.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference).",
++    "p01_status": "P0.1 stays honest-negative; do not re-assert a positive.",
++    "paper_ready": "G1 and G2 and G3 and G4 -- must remain true; the milestone does not regress the gate.",
++    "paper_v6_forbidden_claims": "Overclaims to avoid (including: do NOT cite the dependency-aware win as the headline until re-frozen + re-reproduced).",
++    "paper_v6_safe_claims": "Narrowing-clean claims.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "sc_weak_selection_direction_result": "ensemble_adds_value / no_value_with_headroom / no_headroom / not_measured -- the NEW-direction result (exp3672).",
++    "second_pair_of_eyes_shipped": "Whether the calibrated fused detector is wired to a real surface with a passing E2E test (exp3671) -- Phase-1 product advancement.",
++    "trained_judge_ood_retired": "Records the trained-judge-OOD hypothesis as retired (exp3659 same-verdict).",
++    "unmet_gates": "Report which gates are unmet, not a count (publication_blocker_count is retired).",
++    "verifier_value_scope": "math_plus_code / math_plus_code_plus_facts / math_only_earned + the SC-weak selection finding -- the scoped product claim after the fair re-measurements."
++  },
++  "flagged_upstream_artifacts_excluded": [],
++  "fr11_v10_result": "held_no_collapse_quality_maintained",
++  "frozen_fover_headline_auroc": 0.9131,
++  "g1": true,
++  "g2": true,
++  "g3": true,
++  "g4": true,
++  "honest_verdict": "complete: capstone_v336_dependency_aware_clean_and_heldout_validated_facts_real_domain_bound_real_earned_detector_shipped_true_paper_ready_true",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads the gate script + artifacts; no live inference).",
++  "ops_docs_reconciliation_left_to_conductor": true,
++  "p01_status": "honest-negative",
++  "paper_ready": true,
++  "paper_v6_forbidden_claims": [
++    "Do not cite the dependency-aware win as the headline until it is re-frozen and independently re-reproduced.",
++    "Do not overwrite the frozen FoVer 0.9131 headline with the dependency-aware candidate.",
++    "Do not re-assert a P0.1 positive; the status remains honest-negative.",
++    "Do not re-assert the trained-judge-OOD hypothesis; it is retired.",
++    "Do not read missing gated-task fields as None and synthesize a result around them.",
++    "Do not treat grounding AUROC >= 0.99 as valid unless leak-free evidence is explicit.",
++    "Do not claim broad factual generalization from the real facts benchmark."
++  ],
++  "paper_v6_safe_claims": [
++    "FoVer headline remains frozen at 0.9131 AUROC with G1-G4 satisfied.",
++    "P0.1 remains honest-negative; no energy-vs-self-consistency positive is re-asserted.",
++    "The trained-judge-OOD hypothesis is retired and is not re-asserted.",
++    "Dependency-aware weighting is a headline-advancement candidate pending re-freeze and re-reproduction in a future milestone.",
++    "The real facts benchmark records an earned domain-bound negative.",
++    "The calibrated second-pair-of-eyes detector is shipped with a passing E2E surface.",
++    "SC-weak ensemble-selection result: no_value_with_headroom.",
++    "FR-11 v10 result: held_no_collapse_quality_maintained."
++  ],
++  "publication_gate": {
++    "G1": {
++      "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++      "pass": true,
++      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++    },
++    "G2": {
++      "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++      "pass": true
++    },
++    "G3": {
++      "detail": "no retracted phrasings asserted as live claims",
++      "hits": [],
++      "pass": true
++    },
++    "G4": {
++      "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++      "pass": true,
++      "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++    }
++  },
++  "random_seed": 3677,
++  "reproducibility_checksum": "c357dfc3f03c21b1f513e4817f89a0c51ca48ecd1c47b700a5075d66b267a016",
++  "sc_weak_selection_direction_result": "no_value_with_headroom",
++  "scripts_research_conductor_modified": false,
++  "second_pair_of_eyes_shipped": true,
++  "source_artifacts": [
++    "results/experiment_3667_dependency_aware_weighting_clean.json",
++    "results/experiment_3668_dependency_aware_weighting_heldout.json",
++    "results/experiment_3669_build_real_factual_corpus.json",
++    "results/experiment_3670_facts_row_real_benchmark.json",
++    "results/experiment_3671_ship_second_pair_of_eyes_detector.json",
++    "results/experiment_3672_ensemble_selection_where_sc_weak.json",
++    "results/experiment_3673_fr11_continuous_self_learning_v10.json"
++  ],
++  "summarized_upstream_artifacts": [
++    {
++      "exp": 3667,
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3667_dependency_aware_weighting_clean.json\n------------------------------------------------------------------------------\n  verdict          : complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'adversarial_verify_clean == true AND auroc_dependency_aware_proper present AND delong_p_dependency_vs_carnot present', 'passed': True, 'principle': 'A headline-advancement candidate requires a de-flagged artifact with measured AUROC and significance evidence.'}\n  duration_s       : 1.559763   substrate: verifier_ensemble_against_cached_candidates (principle: scores the cached FoVer corpus; no LLM load).\n  headline metrics :\n      auroc_carnot_current = 0.919446\n      auroc_dependency_aware_proper = 0.933238\n      auroc_unweighted = 0.736244\n      auroc_weaver_style = 0.87158\n  adversarial flags: none\n==============================================================================\n"
++    },
++    {
++      "exp": 3668,
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3668_dependency_aware_weighting_heldout.json\n------------------------------------------------------------------------------\n  verdict          : complete: dependency_aware_weighting_generalizes_heldout_headline_re_freeze_candidate_for_v337\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'heldout_auroc_dependency_aware present AND heldout_auroc_carnot present AND n_splits >= 5', 'passed': True, 'principle': 'A generalization verdict requires both weightings evaluated on the same disjoint held-out splits, replicated -- a single-split or train-only number cannot de-risk a headline change.'}\n  duration_s       : 0.94725   substrate: verifier_ensemble_against_cached_candidates (principle: scores held-out FoVer splits; no LLM load).\n  headline metrics :\n      heldout_auroc_carnot = 0.919964\n      heldout_auroc_dependency_aware = 0.933224\n  adversarial flags: none\n==============================================================================\n"
++    },
++    {
++      "exp": 3669,
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3669_build_real_factual_corpus.json\n------------------------------------------------------------------------------\n  verdict          : complete: real_factual_corpus_built_ragtruth_non_degenerate\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'real_factual_corpus_built == true AND corpus_non_degenerate == true AND n_examples >= 200', 'passed': True, 'principle': 'A facts re-measurement is only meaningful on a real, non-degenerate, adequately-sized corpus -- a degenerate or tiny corpus repeats the .335/.330 limitation.'}\n  duration_s       : 1.673251   substrate: verifier_ensemble_against_cached_candidates (principle: builds + baselines a cached corpus; no FoVer LLM load).\n  headline metrics :\n      confidence_baseline_auroc = 0.707994\n  adversarial flags: none\n==============================================================================\n"
++    },
++    {
++      "exp": 3670,
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3670_facts_row_real_benchmark.json\n------------------------------------------------------------------------------\n  verdict          : complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'grounding_auroc_real_corpus present AND confidence_baseline_auroc present AND positive_control_valid == true AND grounding_leak_free == true', 'passed': True, 'principle': 'A corrected facts verdict requires the real verifier fired leak-free on a headroom-bearing real corpus vs a measured confidence baseline -- otherwise it repeats the synthetic-corpus limitation.'}\n  duration_s       : 1334.829451   substrate: verifier_ensemble_against_cached_candidates (principle: scores the cached real corpus; no LLM load).\n  headline metrics :\n      fixed_confidence_fpr = 0.1\n  adversarial flags: none\n==============================================================================\n"
++    },
++    {
++      "exp": 3671,
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3671_ship_second_pair_of_eyes_detector.json\n------------------------------------------------------------------------------\n  verdict          : complete: second_pair_of_eyes_detector_shipped_math_only_code_weak_documented_e2e_green\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'detector_module_path present AND e2e_test_passed == true AND fused_detector_auroc_per_domain present AND calibration_brier_ece_per_domain present', 'passed': True, 'principle': 'A shipped product surface requires a real module, a passing E2E test, measured per-domain discrimination AND calibration -- an experiment artifact alone is not a shipped product.'}\n  duration_s       : 2.512606   substrate: verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load).\n  adversarial flags: none\n==============================================================================\n"
++    },
++    {
++      "exp": 3672,
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3672_ensemble_selection_where_sc_weak.json\n------------------------------------------------------------------------------\n  verdict          : complete: ensemble_no_selection_value_even_with_headroom_sc_weak_earned_negative\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'sc_accuracy present AND oracle_bestofn_accuracy present AND positive_control_valid == true', 'positive_control_valid': True, 'principle': 'A selection-value verdict in the SC-weak regime requires a valid positive control (real headroom + nonzero flips) -- otherwise the result repeats the P0.1 degenerate-test trap.', 'required_fields_present': True}\n  duration_s       : 0.7092676162719727   substrate: verifier_ensemble_against_cached_candidates (principle: best-of-N selection over cached candidates; no LLM generation).\n  headline metrics :\n      confidence_selection_accuracy = 0.3442622950819672\n      ensemble_selection_accuracy = 0.3442622950819672\n      flip_count = 28\n      fusion_selection_accuracy = 0.2786885245901639\n      oracle_bestofn_accuracy = 0.6065573770491803\n      sc_accuracy = 0.45901639344262296\n  adversarial flags: none\n==============================================================================\n"
++    },
++    {
++      "exp": 3673,
++      "returncode": 0,
++      "stderr_tail": "",
++      "stdout_tail": "==============================================================================\nARTIFACT  experiment_3673_fr11_continuous_self_learning_v10.json\n------------------------------------------------------------------------------\n  verdict          : complete: fr11_v10_online_dependency_aware_weighting_holds_no_collapse_quality_maintained\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] acceptance_gate = {'condition': 'collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true', 'passed': True, 'principle': 'Self-learning is validated only when the guarded arm holds, the control collapses, and the two metrics are genuinely distinct (not a tautology).'}\n  duration_s       : 0.676938   substrate: verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).\n  headline metrics :\n      online_dependency_aware_auroc_gain = 0.0018\n  adversarial flags: none\n==============================================================================\n"
++    }
++  ],
++  "trained_judge_ood_retired": true,
++  "unmet_gates": [],
++  "verifier_value_scope": "math_plus_code_sc_weak_no_value_with_headroom"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 97ed60b1e8..9d9828c21f 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:47:50Z",
+-  "finished_at": "2026-06-01T21:47:50Z",
++  "started_at": "2026-06-01T22:04:56Z",
++  "finished_at": "2026-06-01T22:04:56Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 27ec034b08..b3596300f8 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:47:50Z",
+-  "finished_at": "2026-06-01T21:47:50Z",
++  "started_at": "2026-06-01T22:04:56Z",
++  "finished_at": "2026-06-01T22:04:56Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 9ba4dce3f2..2649e0e838 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T21:47:50Z",
+-  "finished_at": "2026-06-01T21:47:50Z",
+-  "duration_s": 0.006,
++  "started_at": "2026-06-01T22:04:56Z",
++  "finished_at": "2026-06-01T22:04:56Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3677_capstone_and_g_gate_v336.py b/scripts/experiment_3677_capstone_and_g_gate_v336.py
+new file mode 100644
+index 0000000000..031a76aa2f
+--- /dev/null
++++ b/scripts/experiment_3677_capstone_and_g_gate_v336.py
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++"""Run Exp 3677 v336 capstone and G-gate synthesis."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting.capstone_and_g_gate_v336_3677 import write_artifact  # noqa: E402
++
++
++def main() -> int:
++    output_path = write_artifact(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3677_capstone_and_g_gate_v336.py b/tests/python/test_experiment_3677_capstone_and_g_gate_v336.py
+new file mode 100644
+index 0000000000..32e6580ba9
+--- /dev/null
++++ b/tests/python/test_experiment_3677_capstone_and_g_gate_v336.py
+@@ -0,0 +1,448 @@
++"""Tests for Exp 3677 v336 capstone and G-gate synthesis.
++
++Spec: REQ-PUBLISH-3677, SCENARIO-PUBLISH-3677.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import capstone_and_g_gate_v336_3677 as exp3677
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
++
++
++def _metric(point: float) -> dict[str, object]:
++    return {
++        "bootstrap_seeds": [3670, 3671, 3672],
++        "ci95": [round(point - 0.01, 6), round(point + 0.01, 6)],
++        "point": point,
++    }
++
++
++def _gate_data(*, paper_ready: bool = True) -> dict[str, object]:
++    return {
++        "paper_ready": paper_ready,
++        "gates": {
++            "G1": {
++                "pass": paper_ready,
++                "detail": "FoVer 0.9131, 5-seed, CI, adversarial-clean",
++                "source": "experiment_2850_fover_dual_condition_integrity_v4.json",
++            },
++            "G2": {"pass": paper_ready, "detail": "CI runner 26725185125"},
++            "G3": {"pass": paper_ready, "detail": "narrowing-clean"},
++            "G4": {"pass": paper_ready, "detail": "numbers trace to artifacts"},
++        },
++        "unmet_gates": [] if paper_ready else ["G2"],
++    }
++
++
++def _seed_upstreams(
++    root: Path,
++    *,
++    exp3667_flagged: bool = False,
++    exp3667_clean: bool = True,
++    exp3667_beats: bool = True,
++    write_exp3668: bool = True,
++    heldout_generalizes: bool = True,
++    facts_outcome: str = "domain_bound_real",
++    facts_auroc: float = 0.650112,
++    facts_leak_free: bool = True,
++    detector_shipped: bool = True,
++    sc_result: str = "no_value_with_headroom",
++    fr11_holds: bool = True,
++) -> None:
++    results = root / "results"
++    _write_json(
++        results / "experiment_3667_dependency_aware_weighting_clean.json",
++        {
++            "honest_verdict": (
++                "complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate"
++            ),
++            "flagged_adversarial": exp3667_flagged,
++            "adversarial_verify_clean": exp3667_clean,
++            "dependency_aware_beats_carnot": exp3667_beats,
++            "auroc_dependency_aware_proper": 0.933238,
++            "auroc_carnot_current": 0.919446,
++            "delong_p_dependency_vs_carnot": 0.000087 if exp3667_beats else 0.31,
++            "dependency_aware_vs_carnot_delta_ci": (
++                {"point": 0.013792, "ci95": [0.008, 0.019]}
++                if exp3667_beats
++                else {"point": 0.001, "ci95": [-0.006, 0.008]}
++            ),
++            "acceptance_gate": {"passed": exp3667_clean and not exp3667_flagged},
++            "random_seed": 3667,
++            "reproducibility_checksum": "a" * 64,
++        },
++    )
++    if write_exp3668:
++        _write_json(
++            results / "experiment_3668_dependency_aware_weighting_heldout.json",
++            {
++                "honest_verdict": (
++                    "complete: dependency_aware_weighting_generalizes_heldout_headline_re_freeze_candidate_for_v337"
++                ),
++                "dependency_aware_generalizes_heldout": heldout_generalizes,
++                "heldout_auroc_dependency_aware": 0.933224,
++                "heldout_auroc_carnot": 0.919964,
++                "heldout_delong_p": 0.000072 if heldout_generalizes else 0.42,
++                "heldout_delta_ci": (
++                    {"point": 0.01326, "ci95": [0.007, 0.019]}
++                    if heldout_generalizes
++                    else {"point": 0.001, "ci95": [-0.006, 0.008]}
++                ),
++                "acceptance_gate": {"passed": True},
++                "random_seed": 3668,
++                "reproducibility_checksum": "b" * 64,
++            },
++        )
++    _write_json(
++        results / "experiment_3669_build_real_factual_corpus.json",
++        {
++            "honest_verdict": "complete: real_factual_corpus_built_ragtruth_non_degenerate",
++            "real_factual_corpus_built": True,
++            "corpus_non_degenerate": True,
++            "n_examples": 17617,
++            "confidence_baseline_auroc": 0.707994,
++            "acceptance_gate": {"passed": True},
++        },
++    )
++    _write_json(
++        results / "experiment_3670_facts_row_real_benchmark.json",
++        {
++            "honest_verdict": "complete: facts_real_benchmark_fixture",
++            "honest_outcome": facts_outcome,
++            "grounding_auroc_real_corpus": _metric(facts_auroc),
++            "confidence_baseline_auroc": _metric(0.707994),
++            "grounding_minus_confidence_delta": _metric(facts_auroc - 0.707994),
++            "facts_generalize_or_adds_value_real": facts_outcome != "domain_bound_real",
++            "catch_value_at_parity": facts_outcome == "catch_value_at_parity",
++            "grounding_leak_free": facts_leak_free,
++            "positive_control_valid": True,
++            "real_vs_synthetic_grounding_delta": {
++                "synthetic_grounding_auroc": 0.743656,
++                "real_grounding_auroc": facts_auroc,
++                "delta": round(facts_auroc - 0.743656, 6),
++            },
++            "acceptance_gate": {"passed": True},
++        },
++    )
++    _write_json(
++        results / "experiment_3671_ship_second_pair_of_eyes_detector.json",
++        {
++            "honest_verdict": "complete: second_pair_of_eyes_detector_fixture",
++            "detector_shipped": detector_shipped,
++            "e2e_test_passed": detector_shipped,
++            "detector_module_path": "python/carnot/pipeline/second_pair_detector.py",
++            "wired_surface": "score_candidates MCP tool and carnot score-candidates CLI",
++            "acceptance_gate": {"passed": detector_shipped},
++        },
++    )
++    _write_json(
++        results / "experiment_3672_ensemble_selection_where_sc_weak.json",
++        {
++            "honest_verdict": f"complete: sc_weak_fixture_{sc_result}",
++            "honest_outcome": (
++                "ensemble_adds_selection_value"
++                if sc_result == "ensemble_adds_value"
++                else ("no_selectable_headroom" if sc_result == "no_headroom" else "no_value_even_with_headroom")
++            ),
++            "ensemble_adds_selection_value_sc_weak": sc_result == "ensemble_adds_value",
++            "positive_control_valid": sc_result != "no_headroom",
++            "oracle_minus_sc_headroom": 0.147541 if sc_result != "no_headroom" else 0.0,
++            "sc_accuracy": 0.459016,
++            "oracle_bestofn_accuracy": 0.606557 if sc_result != "no_headroom" else 0.459016,
++            "flip_count": 28 if sc_result != "no_headroom" else 0,
++            "acceptance_gate": {
++                "required_fields_present": True,
++                "positive_control_valid": sc_result != "no_headroom",
++            },
++        },
++    )
++    _write_json(
++        results / "experiment_3673_fr11_continuous_self_learning_v10.json",
++        {
++            "honest_verdict": "complete: fr11_v10_fixture",
++            "collapse_detected_deploy_arm": not fr11_holds,
++            "collapse_detected_control": True,
++            "quality_maintained": fr11_holds,
++            "pass_rate_vs_true_accuracy_distinct_assert": True,
++            "online_dependency_aware_auroc_gain": 0.0018,
++            "acceptance_gate": {"passed": fr11_holds},
++        },
++    )
++
++
++def test_scenario_publish_3677_builds_clean_capstone(tmp_path: Path) -> None:
++    """SCENARIO-PUBLISH-3677: clean v336 upstreams yield the complete capstone."""
++
++    _seed_upstreams(tmp_path)
++    artifact = exp3677.build_artifact(
++        tmp_path,
++        gate_data=_gate_data(),
++        summary_records=[{"exp": exp_id, "returncode": 0} for exp_id in range(3667, 3674)],
++        started_s=10.0,
++        now_s=12.0,
++    )
++
++    exp3677.validate_artifact(artifact)
++    assert set(exp3677.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp3677.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v336_dependency_aware_clean_and_heldout_validated_"
++        "facts_real_domain_bound_real_earned_detector_shipped_true_paper_ready_true"
++    )
++    assert artifact["inference_substrate"] == exp3677.INFERENCE_SUBSTRATE
++    assert artifact["dependency_aware_headline_candidate_status"] == "clean_and_heldout_validated"
++    assert artifact["dependency_aware_candidate"]["exp3667_adversarial_verify_clean"] is True
++    assert artifact["dependency_aware_candidate"]["heldout_status"] == "validated"
++    assert artifact["facts_real_benchmark_verdict"] == "domain_bound_real_earned"
++    assert artifact["facts_real_benchmark"]["grounding_leak_free"] is True
++    assert artifact["second_pair_of_eyes_shipped"] is True
++    assert artifact["sc_weak_selection_direction_result"] == "no_value_with_headroom"
++    assert artifact["fr11_v10_result"] == "held_no_collapse_quality_maintained"
++    assert artifact["verifier_value_scope"] == "math_plus_code_sc_weak_no_value_with_headroom"
++    assert artifact["frozen_fover_headline_auroc"] == 0.9131
++    assert artifact["p01_status"] == "honest-negative"
++    assert artifact["trained_judge_ood_retired"] is True
++    assert artifact["paper_ready"] is True
++    assert artifact["unmet_gates"] == []
++    assert artifact["duration_s"] == pytest.approx(2.0)
++    assert all("sha256" in item for item in artifact["cited_upstream_artifacts"])
++    assert len(artifact["cited_upstream_artifacts"]) == 7
++    assert any("headline-advancement candidate pending re-freeze" in claim for claim in artifact["paper_v6_safe_claims"])
++    assert any("Do not cite the dependency-aware win as the headline" in claim for claim in artifact["paper_v6_forbidden_claims"])
++
++
++def test_req_publish_3677_flagged_and_leaky_inputs_fail_closed(tmp_path: Path) -> None:
++    """REQ-PUBLISH-3677: flagged and leaky inputs are excluded or not measured."""
++
++    _seed_upstreams(
++        tmp_path,
++        exp3667_flagged=True,
++        exp3667_clean=False,
++        facts_auroc=0.999,
++        facts_leak_free=False,
++        detector_shipped=False,
++        sc_result="no_headroom",
++        fr11_holds=False,
++    )
++    artifact = exp3677.build_artifact(
++        tmp_path,
++        gate_data=_gate_data(),
++        summary_records=[],
++        started_s=0.0,
++        now_s=1.0,
++    )
++
++    exp3677.validate_artifact(artifact)
++    assert artifact["dependency_aware_headline_candidate_status"] == "flagged_still"
++    assert artifact["facts_real_benchmark_verdict"] == "not_measured"
++    assert artifact["facts_real_benchmark"]["grounding_leak_risk"] is True
++    assert artifact["second_pair_of_eyes_shipped"] is False
++    assert artifact["sc_weak_selection_direction_result"] == "no_headroom"
++    assert artifact["fr11_v10_result"] == "collapse_or_quality_regression"
++    assert artifact["verifier_value_scope"] == "math_only_earned_sc_weak_no_headroom"
++    cited_paths = {item["path"] for item in artifact["cited_upstream_artifacts"]}
++    assert "results/experiment_3667_dependency_aware_weighting_clean.json" not in cited_paths
++    assert any("flagged_adversarial" in claim for claim in artifact["paper_v6_forbidden_claims"])
++
++
++def test_req_publish_3677_skipped_heldout_is_not_measured(tmp_path: Path) -> None:
++    """REQ-PUBLISH-3677: skipped Exp 3668 is recorded as not_measured."""
++
++    _seed_upstreams(tmp_path, exp3667_beats=False, write_exp3668=False)
++    artifact = exp3677.build_artifact(
++        tmp_path,
++        gate_data=_gate_data(),
++        summary_records=[],
++        started_s=0.0,
++        now_s=0.5,
++    )
++
++    exp3677.validate_artifact(artifact)
++    assert artifact["dependency_aware_headline_candidate_status"] == "no_significant_gain"
++    assert artifact["dependency_aware_candidate"]["heldout_status"] == "not_measured"
++    assert artifact["dependency_aware_candidate"]["heldout_missing_reason"] == (
++        "exp3668 skipped_or_missing_after_exp3667_no_significant_gain"
++    )
++    assert artifact["honest_verdict"].startswith(
++        "complete: capstone_v336_dependency_aware_no_significant_gain_"
++    )
++
++
++def test_req_publish_3677_write_artifact_and_validation_guards(tmp_path: Path) -> None:
++    """REQ-PUBLISH-3677: writing persists JSON and validation rejects regressions."""
++
++    _seed_upstreams(tmp_path)
++    output_path = exp3677.write_artifact(
++        tmp_path,
++        output_path="results/custom_exp3677.json",
++        gate_data=_gate_data(),
++        summary_records=[],
++        started_s=1.0,
++        now_s=3.0,
++    )
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    exp3677.validate_artifact(payload)
++    assert payload["paper_ready"] is True
++
++    validation_cases: list[tuple[dict[str, object], str]] = []
++    missing = dict(payload)
++    missing.pop("honest_verdict")
++    validation_cases.append((missing, "missing required"))
++    validation_cases.append((dict(payload, honest_verdict="completeish"), "complete:"))
++    validation_cases.append((dict(payload, field_principles=[]), "field_principles"))
++    missing_principle = dict(payload)
++    missing_principle["field_principles"] = dict(payload["field_principles"])
++    missing_principle["field_principles"].pop("facts_real_benchmark_verdict")
++    validation_cases.append((missing_principle, "missing field principles"))
++    validation_cases.append((dict(payload, inference_substrate="live_gpu"), "inference_substrate"))
++    validation_cases.append((dict(payload, dependency_aware_headline_candidate_status="win"), "dependency_aware"))
++    validation_cases.append((dict(payload, facts_real_benchmark_verdict="none"), "facts_real"))
++    validation_cases.append((dict(payload, sc_weak_selection_direction_result="maybe"), "sc_weak"))
++    validation_cases.append((dict(payload, fr11_v10_result="unknown"), "fr11_v10_result"))
++    validation_cases.append((dict(payload, verifier_value_scope="facts_only"), "verifier_value_scope"))
++    validation_cases.append((dict(payload, g4=False), "g4"))
++    validation_cases.append((dict(payload, paper_ready=False), "paper_ready"))
++    validation_cases.append((dict(payload, unmet_gates="G2"), "unmet_gates"))
++    validation_cases.append((dict(payload, p01_status="positive"), "p01_status"))
++    validation_cases.append((dict(payload, trained_judge_ood_retired=False), "trained_judge_ood_retired"))
++    validation_cases.append((dict(payload, second_pair_of_eyes_shipped="true"), "second_pair_of_eyes_shipped"))
++    validation_cases.append((dict(payload, paper_v6_safe_claims={}), "paper_v6_safe_claims"))
++    validation_cases.append((dict(payload, paper_v6_forbidden_claims={}), "paper_v6_forbidden_claims"))
++    validation_cases.append((dict(payload, duration_s=-1.0), "duration_s"))
++    validation_cases.append((dict(payload, cited_upstream_artifacts={}), "cited_upstream_artifacts"))
++    validation_cases.append((dict(payload, cited_upstream_artifacts=[{"path": "x"}]), "sha256"))
++    validation_cases.append((dict(payload, reproducibility_checksum="short"), "reproducibility_checksum"))
++    for broken, pattern in validation_cases:
++        with pytest.raises(ValueError, match=pattern):
++            exp3677.validate_artifact(broken)
++
++
++def test_req_publish_3677_helper_edge_cases(tmp_path: Path) -> None:
++    """REQ-PUBLISH-3677: helper edge cases are explicit and deterministic."""
++
++    assert exp3677._point({"point": 0.1234567}) == 0.123457
++    assert exp3677._point(0.5) == 0.5
++    assert exp3677._point("0.5") is None
++    assert exp3677._acceptance_pass({"acceptance_gate": {"passed": True}}) is True
++    assert exp3677._acceptance_pass({"acceptance_gate": {"required_fields_present": True}}) is True
++    assert exp3677._acceptance_pass({}) is False
++    assert exp3677._significant_positive({"point": 0.1, "ci95": [0.01, 0.2]}, 0.04) is True
++    assert exp3677._significant_positive({"point": 0.1, "ci95": [-0.01, 0.2]}, 0.04) is False
++    assert exp3677._significant_positive(None, 0.04) is False
++    measured_facts = {
++        "grounding_auroc_real_corpus": 0.7,
++        "confidence_baseline_auroc": 0.65,
++        "grounding_leak_free": True,
++        "positive_control_valid": True,
++        "acceptance_gate": {"passed": True},
++    }
++    assert exp3677._facts_verdict(
++        dict(measured_facts, honest_outcome="generalizes_real"), flagged=False
++    )["verdict"] == "generalizes_real"
++    assert exp3677._facts_verdict(
++        dict(measured_facts, honest_outcome="catch_value_at_parity"), flagged=False
++    )["verdict"] == "auroc_parity_with_catch_value"
++    assert exp3677._sc_weak_result({"ensemble_adds_selection_value_sc_weak": True, "positive_control_valid": True}, flagged=False) == "ensemble_adds_value"
++    assert exp3677._sc_weak_result({"positive_control_valid": True}, flagged=False) == "not_measured"
++    assert exp3677._sc_weak_result({}, flagged=True) == "not_measured"
++    assert exp3677._fr11_result({}, flagged=True) == "not_measured"
++    assert exp3677._gate_pass({"gates": []}, "G1") is False
++    assert exp3677._facts_verdict(
++        dict(measured_facts, honest_outcome="unexpected"), flagged=False
++    )["verdict"] == "not_measured"
++    assert exp3677._verifier_scope(
++        facts_verdict="generalizes_real",
++        second_pair_shipped=True,
++        sc_weak_result="ensemble_adds_value",
++    ) == "math_plus_code_plus_facts_sc_weak_ensemble_adds_value"
++    assert exp3677._verifier_scope(
++        facts_verdict="auroc_parity_with_catch_value",
++        second_pair_shipped=False,
++        sc_weak_result="not_measured",
++    ) == "math_plus_code_plus_facts_sc_weak_not_measured"
++    assert "correct the .335" in exp3677._facts_real_vs_synthetic(
++        {"verdict": "generalizes_real"}
++    )
++    assert "partially correct" in exp3677._facts_real_vs_synthetic(
++        {"verdict": "auroc_parity_with_catch_value"}
++    )
++    assert "not measured" in exp3677._facts_real_vs_synthetic({"verdict": "not_measured"})
++    assert any(
++        "clean but not held-out" in claim
++        for claim in exp3677._safe_claims(
++            dependency_status="clean_but_overfit",
++            facts_verdict="generalizes_real",
++            second_pair_shipped=False,
++            sc_weak_result="not_measured",
++            fr11_result="not_measured",
++        )
++    )
++    assert any(
++        "does not provide" in claim
++        for claim in exp3677._safe_claims(
++            dependency_status="no_significant_gain",
++            facts_verdict="auroc_parity_with_catch_value",
++            second_pair_shipped=False,
++            sc_weak_result="not_measured",
++            fr11_result="not_measured",
++        )
++    )
++    assert any(
++        "flagged or unclean" in claim
++        for claim in exp3677._safe_claims(
++            dependency_status="flagged_still",
++            facts_verdict="not_measured",
++            second_pair_shipped=False,
++            sc_weak_result="not_measured",
++            fr11_result="not_measured",
++        )
++    )
++    significant_exp3667 = {
++        "adversarial_verify_clean": True,
++        "dependency_aware_beats_carnot": True,
++        "dependency_aware_vs_carnot_delta_ci": {"point": 0.02, "ci95": [0.01, 0.03]},
++        "delong_p_dependency_vs_carnot": 0.01,
++        "acceptance_gate": {"passed": True},
++    }
++    assert exp3677._dependency_candidate(
++        significant_exp3667,
++        {"acceptance_gate": {"passed": True}},
++        exp3667_flagged=False,
++        exp3668_flagged=True,
++    )["heldout_status"] == "excluded_flagged_adversarial"
++    assert exp3677._dependency_candidate(
++        significant_exp3667,
++        {},
++        exp3667_flagged=False,
++        exp3668_flagged=False,
++    )["heldout_missing_reason"] == "exp3668 skipped_or_missing"
++    assert exp3677._dependency_candidate(
++        significant_exp3667,
++        {
++            "dependency_aware_generalizes_heldout": False,
++            "heldout_delta_ci": {"point": 0.001, "ci95": [-0.01, 0.01]},
++            "heldout_delong_p": 0.5,
++            "acceptance_gate": {"passed": True},
++        },
++        exp3667_flagged=False,
++        exp3668_flagged=False,
++    )["status"] == "clean_but_overfit"
++    assert exp3677._cited_upstreams(
++        tmp_path,
++        {"exp3667": {"honest_verdict": "complete: x", "adversarial_verify_clean": False}},
++        {"exp3667": False},
++    ) == []
++    assert exp3677._read_optional_json_object(tmp_path / "missing.json") == {}
++    list_path = tmp_path / "not_object.json"
++    list_path.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="expected JSON object"):
++        exp3677._read_optional_json_object(list_path)
+-- 
+2.55.0
+

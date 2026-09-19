@@ -1,0 +1,62 @@
+From 7579d1b1feb66ba93fb12590cd306d75cd8bdc49 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 22:38:33 -0400
+Subject: [PATCH 05606/11362] [conductor] Pre-gate block: PHASE A2 gated on
+ exp5209 gap1_hardened_positive == true -- promote GAP-1 set verifier to
+ registry-grade implementation
+
+1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening-v477.gap1_hardened_positive (actual={'principle': 'BARE top-level boolean used by exp5210 gate. True only if held-out mean pass@2 beats both baselines and the paired delta CI excludes harmful regression.', 'value': True} == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_5210_gap1_registry_promotion_gated_v477.json   | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f2e9cb176d..156d8f7cf6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 22, "phase": "iteration_start", "last_beat": "2026-07-04T02:36:31Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-07-04T02:38:33Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7ca9243092..fb37a7268d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10257,3 +10257,4 @@ web search: |
+ | 2026-07-04 02:09 UTC | PHASE 0 SOTA ingestion -- refresh 2025-2026 verifi | OK | 120 passed, 1 warning in 11.92s |
+ | 2026-07-04 02:30 UTC | PHASE A1 GAP-1 set-search holdout hardening -- con | OK | 94 passed, 1 warning in 14.04s |
+ | 2026-07-04 02:34 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
++| 2026-07-04 02:36 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 83310c43b8..2e5520f20d 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 22, "phase": "iteration_start", "started_at": "2026-07-04T02:36:31Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 23, "phase": "iteration_start", "started_at": "2026-07-04T02:38:33Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5210_gap1_registry_promotion_gated_v477.json b/results/experiment_5210_gap1_registry_promotion_gated_v477.json
+index 394b4da9f3..c1248b7e49 100644
+--- a/results/experiment_5210_gap1_registry_promotion_gated_v477.json
++++ b/results/experiment_5210_gap1_registry_promotion_gated_v477.json
+@@ -2,8 +2,8 @@
+   "experiment": 5210,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-04",
+-  "started_at": "2026-07-04T02:36:31.848623+00:00",
+-  "finished_at": "2026-07-04T02:36:31.848623+00:00",
++  "started_at": "2026-07-04T02:38:33.888902+00:00",
++  "finished_at": "2026-07-04T02:38:33.888902+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "PHASE A2 gated on exp5209 gap1_hardened_positive == true -- promote GAP-1 set verifier to registry-grade implementation",
+-- 
+2.55.0
+

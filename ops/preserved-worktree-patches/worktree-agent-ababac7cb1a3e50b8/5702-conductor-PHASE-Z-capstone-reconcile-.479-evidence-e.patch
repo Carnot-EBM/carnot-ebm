@@ -1,0 +1,2165 @@
+From 7526c9d54053f95f5dcbe62edc21d2a2a44e22e7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 18:39:18 -0400
+Subject: [PATCH 05702/11362] [conductor] PHASE Z capstone -- reconcile .479
+ evidence, exclusions, specs, memory, ARC, KAN, and hardware
+
+Automated research step by research conductor.
+Task ID: exp5244-capstone-v479
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |  10 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5244_capstone_v479.py   | 859 ++++++++++++++++++
+ results/experiment_5244_capstone_v479.json    | 656 +++++++++++++
+ .../test_experiment_5244_capstone_v479.py     | 577 ++++++++++++
+ 5 files changed, 2103 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5244_capstone_v479.py
+ create mode 100644 results/experiment_5244_capstone_v479.json
+ create mode 100644 tests/python/test_experiment_5244_capstone_v479.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 3f9583944a..80b7268537 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -876,3 +876,13 @@
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-CAPSTONE-5232 | Planned (`python/carnot/experiment_5232_capstone_v478.py`, `results/experiment_5232_capstone_v478.json`) | Planned (`tests/python/test_experiment_5232_capstone_v478.py`) |
++
++- REQ-CAPSTONE-5244: The `.479` milestone-close capstone aggregator `exp5244-capstone-v479` in `python/carnot/experiment_5244_capstone_v479.py` SHALL write `results/experiment_5244_capstone_v479.json` without modifying `scripts/research_conductor.py`, without modifying `ops/status.md`, without modifying `ops/changelog.md`, and without modifying `_bmad/traceability.md`. It SHALL read every `.479` result artifact from Exp5233 through Exp5243, record any missing artifact explicitly, classify gated, blocked, adversarially flagged, methodology-incomplete, and failed-gate-dependent artifacts as headline-ineligible, and synthesize the milestone rather than rerunning the upstream experiments. It SHALL reconcile GAP-4 as `blocked` unless a clean non-flagged Exp5236 artifact survives required receipts, reconcile GAP-1 as `blocked` unless Exp5237 promotes a frozen stable subset, reconcile VerIbmc as `retired` when Exp5238 records a methodology-clean null plus retirement, treat continuous self-learning as `controlled_positive` only when Exp5239 shows aligned-memory lift with retention and rollback while preserving degradation controls, compute ARC level delta only from clean reproduction-gated evidence, record KAN as `extended` only from clean Exp5242 bounded certificate evidence, preserve hardware as continuity evidence with `hardware_speedup_claimed=false`, set `ops_docs_updated=false` when the conductor stop rule defers ops/status/changelog/traceability reconciliation, and confirm `scripts/research_conductor.py` stayed untouched.
++- SCENARIO-CAPSTONE-5244: The artifact `results/experiment_5244_capstone_v479.json` must emit principle-wrapped top-level fields `milestone`, `tasks_seen`, `missing_artifacts`, `gated_or_blocked_artifacts`, `headline_eligible_artifacts`, `gap4_final_status`, `gap1_final_status`, `veribmc_final_status`, `continuous_self_learning_status`, `arc_level_delta`, `kan_certificate_status`, `hardware_speedup_claimed`, `ops_docs_updated`, `validation_commands_run`, `research_conductor_py_untouched_confirmed`, `inference_substrate`, and `honest_verdict`; it must also include `schema`, `experiment`, `experiment_id`, `run_date`, `spec_refs`, `result_path`, `field_principles`, `duration_s`, `source_artifacts`, `source_context`, `excluded_from_headline_artifacts`, `per_task_summary`, `status_decisions`, `preconditions_checked`, `next_top_blockers`, `random_seed`, `reproducibility_checksum`, and `flagged_adversarial`. The default `.479` read must summarize Exp5233 and Exp5234 as clean handoff/source refresh evidence, Exp5235 as flagged QA-calibration evidence excluded from headlines, Exp5236 as flagged GAP-4 blocked-missing-receipts evidence excluded from headlines, Exp5237 as clean GAP-1 blocked-instability evidence, Exp5238 as clean VerIbmc retirement after null solver feedback, Exp5239 as controlled positive typed-memory evidence with degradation controls, Exp5240 as a clean ARC patch-ready no-solve artifact, Exp5241 as flagged no-bank live patch evidence excluded from headline ARC deltas, Exp5242 as a bounded extended KAN certificate, and Exp5243 as board reachability/hash continuity with no speedup claim. The terminal verdict must start with `complete:` or `complete_` and must state the honest `.479` close state without turning flagged, blocked, gated, or bounded artifacts into stronger claims.
++- SCENARIO-CAPSTONE-5244-FIELD-PRINCIPLES: The required field principles are: `milestone` = "the milestone being closed, 2026.07.479", `tasks_seen` = "count of loadable expected .479 artifacts read directly", `missing_artifacts` = "expected .479 artifacts absent or unreadable, empty only when every Exp5233-Exp5243 deliverable is loadable", `gated_or_blocked_artifacts` = "artifacts or task decisions that are blocked, gate-blocked, or no-bank and must not be rounded up", `headline_eligible_artifacts` = "clean non-flagged artifacts whose methodology and gates permit bounded headline use", `gap4_final_status` = "one of clean_null | clean_positive | blocked | unknown, with blocked required when Exp5236 is flagged or missing receipts", `gap1_final_status` = "one of promoted | blocked | retired | unknown, with promoted only after a clean frozen-subset registry promotion", `veribmc_final_status` = "one of positive | clean_null | retired | blocked | unknown, with retired allowed only after methodology-clean null evidence", `continuous_self_learning_status` = "one of controlled_positive | controlled_null | degraded | blocked | unknown, with controlled_positive requiring aligned lift, retention, rollback, and no model distillation", `arc_level_delta` = "integer delta from clean reproduction-gated ARC evidence only", `kan_certificate_status` = "one of extended | tiny_only | blocked | unknown, with extended only for bounded deterministic certificate scale-up", `hardware_speedup_claimed` = "must be false unless authenticated timing evidence exists", `ops_docs_updated` = "false when the stop rule delegates ops/status/changelog/traceability updates", `validation_commands_run` = "list of validation commands and pass/fail outcomes used for the capstone", `research_conductor_py_untouched_confirmed` = "hard constraint that scripts/research_conductor.py stayed untouched", `inference_substrate` = "milestone_artifact_synthesis", and `honest_verdict` = "Must start with complete:/complete_/success:/success_ and state the honest .479 close state."
++
++## Implementation Status (REQ-CAPSTONE-5244)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-CAPSTONE-5244 | Implemented (`python/carnot/experiment_5244_capstone_v479.py`, `results/experiment_5244_capstone_v479.json`) | Implemented (`tests/python/test_experiment_5244_capstone_v479.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0a48682f2c..6117820c62 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4218,
++  "experiments_checked": 4219,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5244_capstone_v479.py b/python/carnot/experiment_5244_capstone_v479.py
+new file mode 100644
+index 0000000000..70103560b3
+--- /dev/null
++++ b/python/carnot/experiment_5244_capstone_v479.py
+@@ -0,0 +1,859 @@
++"""Exp 5244: V479 milestone-close capstone reconciliation.
++
++Spec refs: REQ-CAPSTONE-5244, SCENARIO-CAPSTONE-5244,
++SCENARIO-CAPSTONE-5244-FIELD-PRINCIPLES.
++
++This module reads the completed V479 artifacts and turns them into one closeout
++record. The main rule is conservative: blocked, flagged, methodology-incomplete,
++or no-bank evidence is still recorded, but it cannot become a headline claim.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results") / "experiment_5244_capstone_v479.json"
++EXPERIMENT = "experiment_5244_capstone_v479"
++EXPERIMENT_ID = "exp5244-capstone-v479"
++MILESTONE = "2026.07.479"
++SCHEMA = "carnot.experiment_5244_capstone_v479.v1"
++RANDOM_SEED = 5244
++INFERENCE_SUBSTRATE = "milestone_artifact_synthesis"
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_")
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-5244",
++    "SCENARIO-CAPSTONE-5244",
++    "SCENARIO-CAPSTONE-5244-FIELD-PRINCIPLES",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "milestone": "the milestone being closed, 2026.07.479",
++    "tasks_seen": "count of loadable expected .479 artifacts read directly",
++    "missing_artifacts": (
++        "expected .479 artifacts absent or unreadable, empty only when every "
++        "Exp5233-Exp5243 deliverable is loadable"
++    ),
++    "gated_or_blocked_artifacts": (
++        "artifacts or task decisions that are blocked, gate-blocked, or no-bank "
++        "and must not be rounded up"
++    ),
++    "headline_eligible_artifacts": (
++        "clean non-flagged artifacts whose methodology and gates permit bounded headline use"
++    ),
++    "gap4_final_status": (
++        "one of clean_null | clean_positive | blocked | unknown, with blocked "
++        "required when Exp5236 is flagged or missing receipts"
++    ),
++    "gap1_final_status": (
++        "one of promoted | blocked | retired | unknown, with promoted only after "
++        "a clean frozen-subset registry promotion"
++    ),
++    "veribmc_final_status": (
++        "one of positive | clean_null | retired | blocked | unknown, with retired "
++        "allowed only after methodology-clean null evidence"
++    ),
++    "continuous_self_learning_status": (
++        "one of controlled_positive | controlled_null | degraded | blocked | unknown, "
++        "with controlled_positive requiring aligned lift, retention, rollback, and no model distillation"
++    ),
++    "arc_level_delta": "integer delta from clean reproduction-gated ARC evidence only",
++    "kan_certificate_status": (
++        "one of extended | tiny_only | blocked | unknown, with extended only for "
++        "bounded deterministic certificate scale-up"
++    ),
++    "hardware_speedup_claimed": "must be false unless authenticated timing evidence exists",
++    "ops_docs_updated": (
++        "false when the stop rule delegates ops/status/changelog/traceability updates"
++    ),
++    "validation_commands_run": (
++        "list of validation commands and pass/fail outcomes used for the capstone"
++    ),
++    "research_conductor_py_untouched_confirmed": (
++        "hard constraint that scripts/research_conductor.py stayed untouched"
++    ),
++    "inference_substrate": "milestone_artifact_synthesis",
++    "honest_verdict": (
++        "Must start with complete:/complete_/success:/success_ and state the honest .479 close state."
++    ),
++}
++
++PRINCIPLE_WRAPPED_FIELDS = tuple(FIELD_PRINCIPLES)
++
++REQUIRED_SCHEMA_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "run_date",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "duration_s",
++    "source_artifacts",
++    "source_context",
++    "excluded_from_headline_artifacts",
++    "per_task_summary",
++    "status_decisions",
++    "preconditions_checked",
++    "next_top_blockers",
++    "random_seed",
++    "reproducibility_checksum",
++    "flagged_adversarial",
++    *PRINCIPLE_WRAPPED_FIELDS,
++)
++
++DEFAULT_VALIDATION_COMMANDS = [
++    {
++        "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5244_capstone_v479.py -q",
++        "status": "PENDING",
++        "notes": "filled after the focused verification run",
++    }
++]
++
++
++@dataclass(frozen=True)
++class UpstreamSource:
++    """One expected V479 task deliverable."""
++
++    experiment_number: int
++    task_id: str
++    relative_path: Path
++
++
++UPSTREAM_SOURCES: tuple[UpstreamSource, ...] = (
++    UpstreamSource(
++        5233,
++        "exp5233-archive-478-activate-479",
++        Path("results/experiment_5233_archive_478_activate_479.json"),
++    ),
++    UpstreamSource(
++        5234,
++        "exp5234-sota-ingestion-v479",
++        Path("results/experiment_5234_sota_ingestion_v479.json"),
++    ),
++    UpstreamSource(
++        5235,
++        "exp5235-adversarial-qa-null-tautology-calibration-v479",
++        Path("results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json"),
++    ),
++    UpstreamSource(
++        5236,
++        "exp5236-gap4-clean-status-after-qa-calibration-v479",
++        Path("results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json"),
++    ),
++    UpstreamSource(
++        5237,
++        "exp5237-gap1-stability-freeze-or-retire-v479",
++        Path("results/experiment_5237_gap1_stability_freeze_or_retire_v479.json"),
++    ),
++    UpstreamSource(
++        5238,
++        "exp5238-veribmc-methodology-correct-rerun-or-retire-v479",
++        Path("results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json"),
++    ),
++    UpstreamSource(
++        5239,
++        "exp5239-continuous-self-learning-controlled-memory-ablation-v479",
++        Path(
++            "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json"
++        ),
++    ),
++    UpstreamSource(
++        5240,
++        "exp5240-arc-rubric-to-patch-synthesis-v479",
++        Path("results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json"),
++    ),
++    UpstreamSource(
++        5241,
++        "exp5241-arc-gated-live-patch-attempt-v479",
++        Path("results/experiment_5241_arc_gated_live_patch_attempt_v479.json"),
++    ),
++    UpstreamSource(
++        5242,
++        "exp5242-kan-certificate-abstraction-scale-v479",
++        Path("results/experiment_5242_kan_certificate_abstraction_scale_v479.json"),
++    ),
++    UpstreamSource(
++        5243,
++        "exp5243-hardware-continuity-kan-pbit-boundary-v479",
++        Path("results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json"),
++    ),
++)
++
++SOURCE_CONTEXT_PATHS = (
++    Path("research-roadmap.yaml"),
++    Path("openspec/change-proposals/research-roadmap-vNEXT.md"),
++    Path("research-complete.yaml"),
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    Path("ops/conductor-log.md"),
++    Path("_bmad/traceability.md"),
++    Path("research-references.md"),
++    Path("ops/exclusion_manifest.yaml"),
++    Path("ops/arc_solve_registry.yaml"),
++)
++
++GAP4_STATUSES = {"clean_null", "clean_positive", "blocked", "unknown"}
++GAP1_STATUSES = {"promoted", "blocked", "retired", "unknown"}
++VERIBMC_STATUSES = {"positive", "clean_null", "retired", "blocked", "unknown"}
++SELF_LEARNING_STATUSES = {
++    "controlled_positive",
++    "controlled_null",
++    "degraded",
++    "blocked",
++    "unknown",
++}
++KAN_STATUSES = {"extended", "tiny_only", "blocked", "unknown"}
++
++
++def source_by_number(experiment_number: int) -> UpstreamSource:
++    for source in UPSTREAM_SOURCES:
++        if source.experiment_number == experiment_number:
++            return source
++    raise KeyError(experiment_number)
++
++
++def value_of(value: Any) -> Any:
++    if isinstance(value, Mapping) and "value" in value:
++        return value["value"]
++    return value
++
++
++def honest_verdict_text(value: Any) -> str:
++    raw = value_of(value)
++    return raw if isinstance(raw, str) else ""
++
++
++def as_bool(value: Any) -> bool:
++    return value_of(value) is True
++
++
++def as_number(value: Any) -> float | None:
++    raw = value_of(value)
++    if isinstance(raw, bool) or raw is None:
++        return None
++    try:
++        return float(raw)
++    except (TypeError, ValueError):
++        return None
++
++
++def _principled(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def file_sha256(path: Path) -> str | None:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
++
++
++def payload_checksum(payload: JsonMap) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def write_json(path: Path, payload: JsonMap) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def read_json_mapping(path: Path) -> tuple[JsonDict, JsonDict]:
++    if not path.exists():
++        return {}, {"exists": False, "loadable": False, "error": "missing"}
++    try:
++        parsed = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return {}, {"exists": True, "loadable": False, "error": "malformed_json"}
++    if not isinstance(parsed, dict):
++        return {}, {"exists": True, "loadable": False, "error": "not_json_object"}
++    return parsed, {
++        "exists": True,
++        "loadable": True,
++        "error": None,
++        "sha256": file_sha256(path),
++    }
++
++
++def research_conductor_untouched(root: Path) -> bool:  # pragma: no cover - git integration.
++    diff = subprocess.run(
++        ["git", "diff", "--quiet", "--", "scripts/research_conductor.py"],
++        cwd=root,
++        check=False,
++        stdout=subprocess.DEVNULL,
++        stderr=subprocess.DEVNULL,
++    )
++    status = subprocess.run(
++        ["git", "status", "--short", "--", "scripts/research_conductor.py"],
++        cwd=root,
++        check=False,
++        capture_output=True,
++        text=True,
++    )
++    return diff.returncode == 0 and status.stdout.strip() == ""
++
++
++def has_critical_corrigendum(data: JsonMap) -> bool:
++    pending = value_of(data.get("corrigendum_pending"))
++    if not isinstance(pending, list):
++        return False
++    for finding in pending:
++        if not isinstance(finding, Mapping):
++            continue
++        severity = finding.get("severity")
++        if severity == 2 or (isinstance(severity, str) and severity.lower() == "critical"):
++            return True
++    return False
++
++
++def has_methodology_gap(data: JsonMap) -> bool:
++    pending = value_of(data.get("corrigendum_pending"))
++    if not isinstance(pending, list):
++        return False
++    for finding in pending:
++        if isinstance(finding, Mapping) and finding.get("kind") == "METHODOLOGY_MISSING":
++            return True
++    return False
++
++
++def failed_validation_command(data: JsonMap) -> bool:
++    commands = value_of(data.get("arc_validation_commands"))
++    if not isinstance(commands, list):
++        commands = value_of(data.get("validation_commands_run"))
++    if not isinstance(commands, list):
++        return False
++    for command in commands:
++        if not isinstance(command, Mapping):
++            continue
++        if command.get("passed") is False:
++            return True
++        status = command.get("status")
++        if isinstance(status, str) and status.upper().startswith("FAIL"):
++            return True
++    return False
++
++
++def is_gate_blocked(data: JsonMap) -> bool:
++    verdict = honest_verdict_text(data.get("honest_verdict"))
++    return bool(
++        data.get("status") == "blocked"
++        or data.get("blocked_at_layer") == "conductor_pre_gate"
++        or verdict.startswith("blocked")
++    )
++
++
++def blocked_decision(data: JsonMap) -> str | None:
++    gap4 = value_of(data.get("gap4_status_decision"))
++    if isinstance(gap4, str) and gap4.startswith("blocked"):
++        return gap4
++    gap1 = value_of(data.get("gap1_stability_decision"))
++    if isinstance(gap1, str) and gap1.startswith("blocked"):
++        return gap1
++    claim = data.get("solve_claim")
++    if isinstance(claim, Mapping) and claim.get("residual") == "no_level_banked":
++        return "no_level_banked"
++    return None
++
++
++def exclusion_reasons(data: JsonMap) -> list[str]:
++    reasons: list[str] = []
++    if data.get("flagged_adversarial") is True:
++        reasons.append("flagged_adversarial")
++    if has_critical_corrigendum(data):
++        reasons.append("critical_corrigendum_pending")
++    if value_of(data.get("adversarial_verify_passed")) is False:
++        reasons.append("adversarial_verify_failed")
++    if has_methodology_gap(data):
++        reasons.append("methodology_incomplete")
++    if is_gate_blocked(data):
++        reasons.append("gate_blocked")
++    if failed_validation_command(data):
++        reasons.append("failed_validation_command")
++    return reasons
++
++
++def load_upstreams(root: Path) -> tuple[dict[int, JsonDict], list[JsonDict], list[str]]:
++    artifacts: dict[int, JsonDict] = {}
++    source_rows: list[JsonDict] = []
++    missing: list[str] = []
++    for source in UPSTREAM_SOURCES:
++        path = root / source.relative_path
++        data, meta = read_json_mapping(path)
++        row = {
++            "experiment_number": source.experiment_number,
++            "task_id": source.task_id,
++            "relative_path": str(source.relative_path),
++            "exists": meta.get("exists") is True,
++            "loadable": meta.get("loadable") is True,
++            "sha256": meta.get("sha256"),
++            "error": meta.get("error"),
++        }
++        if not meta.get("loadable"):
++            missing.append(source.task_id)
++            source_rows.append(row)
++            continue
++        artifacts[source.experiment_number] = data
++        reasons = exclusion_reasons(data)
++        source_rows.append(
++            row
++            | {
++                "honest_verdict": honest_verdict_text(data.get("honest_verdict")),
++                "flagged_adversarial": data.get("flagged_adversarial") is True,
++                "critical_corrigendum": has_critical_corrigendum(data),
++                "methodology_incomplete": has_methodology_gap(data),
++                "gate_blocked": is_gate_blocked(data),
++                "blocked_decision": blocked_decision(data),
++                "failed_validation_command": failed_validation_command(data),
++                "excluded_from_headline": bool(reasons or blocked_decision(data)),
++                "exclusion_reasons": reasons,
++            }
++        )
++    return artifacts, source_rows, missing
++
++
++def load_source_context(root: Path) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for relative_path in SOURCE_CONTEXT_PATHS:
++        path = root / relative_path
++        rows.append(
++            {
++                "relative_path": str(relative_path),
++                "exists": path.exists(),
++                "sha256": file_sha256(path),
++                "read_only": True,
++            }
++        )
++    return rows
++
++
++def _status_for(data: JsonMap) -> str:
++    if not data:
++        return "missing"
++    if is_gate_blocked(data):
++        return "gate_blocked"
++    if blocked_decision(data):
++        return "blocked"
++    if exclusion_reasons(data):
++        return "excluded"
++    return "complete"
++
++
++def per_task_summary(artifacts: Mapping[int, JsonMap]) -> JsonDict:
++    summary: JsonDict = {}
++    for source in UPSTREAM_SOURCES:
++        data = artifacts.get(source.experiment_number, {})
++        reasons = exclusion_reasons(data) if data else []
++        block = blocked_decision(data) if data else None
++        summary[source.task_id] = {
++            "artifact_path": str(source.relative_path),
++            "status": _status_for(data),
++            "verdict": honest_verdict_text(data.get("honest_verdict"))
++            if data
++            else "missing_artifact",
++            "headline_eligible": bool(data and not reasons and block is None),
++            "exclusion_reasons": reasons,
++            "blocked_decision": block,
++            "flagged_adversarial": data.get("flagged_adversarial") is True if data else False,
++            "critical_corrigendum": has_critical_corrigendum(data) if data else False,
++            "methodology_incomplete": has_methodology_gap(data) if data else False,
++            "gate_blocked": is_gate_blocked(data) if data else False,
++            "failed_validation_command": failed_validation_command(data) if data else False,
++        }
++    return summary
++
++
++def headline_eligible_task_ids(summary: JsonMap) -> list[str]:
++    return [task_id for task_id, row in summary.items() if row.get("headline_eligible") is True]
++
++
++def excluded_from_headline(summary: JsonMap) -> JsonDict:
++    return {
++        task_id: row
++        for task_id, row in summary.items()
++        if row.get("status") in {"excluded", "gate_blocked", "blocked"}
++        or row.get("exclusion_reasons")
++    }
++
++
++def gated_or_blocked_rows(summary: JsonMap) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for task_id, row in summary.items():
++        if row.get("status") not in {"blocked", "gate_blocked"} and not row.get("blocked_decision"):
++            continue
++        rows.append(
++            {
++                "task_id": task_id,
++                "status": row.get("status"),
++                "reason": row.get("blocked_decision") or "gate_blocked",
++                "artifact_path": row.get("artifact_path"),
++            }
++        )
++    return rows
++
++
++def eligible_numbers(artifacts: Mapping[int, JsonMap]) -> set[int]:
++    return {
++        number
++        for number, data in artifacts.items()
++        if not exclusion_reasons(data) and blocked_decision(data) is None
++    }
++
++
++def gap4_final_status(artifacts: Mapping[int, JsonMap], eligible: set[int]) -> tuple[str, str]:
++    data = artifacts.get(5236, {})
++    if not data:
++        return "unknown", "Exp5236 GAP-4 status artifact is missing"
++    if 5236 not in eligible:
++        return "blocked", "Exp5236 is flagged, receipt-blocked, or otherwise headline-ineligible"
++    decision = value_of(data.get("gap4_status_decision"))
++    if decision in {"clean_positive", "positive"}:
++        return "clean_positive", "Exp5236 reported a clean positive GAP-4 decision"
++    if decision in {"clean_null", "null"}:
++        return "clean_null", "Exp5236 reported a clean null GAP-4 decision"
++    if isinstance(decision, str) and decision.startswith("blocked"):
++        return "blocked", f"Exp5236 reports {decision}"
++    return "unknown", f"Exp5236 did not provide an allowed GAP-4 status: {decision}"
++
++
++def gap1_final_status(artifacts: Mapping[int, JsonMap], eligible: set[int]) -> tuple[str, str]:
++    data = artifacts.get(5237, {})
++    if not data:
++        return "unknown", "Exp5237 GAP-1 stability artifact is missing"
++    if 5237 not in eligible and not blocked_decision(data):
++        return "blocked", "Exp5237 is flagged or gate-blocked"
++    if as_bool(data.get("gap1_registry_promoted")):
++        return "promoted", "Exp5237 promoted a frozen stable GAP-1 registry verifier"
++    decision = value_of(data.get("gap1_stability_decision"))
++    if isinstance(decision, str) and decision.startswith("blocked"):
++        return "blocked", f"Exp5237 reports {decision}"
++    if decision == "retired" or decision == "retired_current_path":
++        return "retired", "Exp5237 retired the current GAP-1 path"
++    return "unknown", f"Exp5237 did not promote, block, or retire GAP-1: {decision}"
++
++
++def veribmc_final_status(artifacts: Mapping[int, JsonMap], eligible: set[int]) -> tuple[str, str]:
++    data = artifacts.get(5238, {})
++    if not data:
++        return "unknown", "Exp5238 VerIbmc artifact is missing"
++    if 5238 not in eligible:
++        return "blocked", "Exp5238 is flagged or gate-blocked"
++    uplift = as_number(data.get("solver_feedback_uplift")) or 0.0
++    if uplift > 0.0:
++        return "positive", f"Exp5238 solver feedback uplift is positive: {uplift}"
++    if as_bool(data.get("retire_current_veribmc_path")):
++        return "retired", "Exp5238 records methodology-clean null and retires current path"
++    return "clean_null", "Exp5238 records methodology-clean null solver-feedback evidence"
++
++
++def continuous_self_learning_status(
++    artifacts: Mapping[int, JsonMap], eligible: set[int]
++) -> tuple[str, str]:
++    data = artifacts.get(5239, {})
++    if not data:
++        return "unknown", "Exp5239 controlled memory artifact is missing"
++    if 5239 not in eligible:
++        return "blocked", "Exp5239 is flagged or gate-blocked"
++    aligned_vs_shuffled = as_number(data.get("aligned_vs_shuffled_delta")) or 0.0
++    aligned_vs_no_memory = as_number(data.get("aligned_vs_no_memory_delta")) or 0.0
++    if as_bool(data.get("broad_self_distillation_used")):
++        return (
++            "degraded",
++            "Exp5239 used broad self-distillation or failed the controlled-memory boundary",
++        )
++    if (
++        as_bool(data.get("continuous_self_learning_task"))
++        and aligned_vs_shuffled > 0.0
++        and aligned_vs_no_memory > 0.0
++        and as_bool(data.get("retention_check_passed"))
++        and as_bool(data.get("rollback_policy_exercised"))
++    ):
++        return (
++            "controlled_positive",
++            "Exp5239 aligned typed memory beat controls with retention and rollback exercised",
++        )
++    if aligned_vs_shuffled == 0.0 and aligned_vs_no_memory == 0.0:
++        return "controlled_null", "Exp5239 controlled memory had no lift over controls"
++    return "degraded", "Exp5239 failed one or more controlled-memory guardrails"
++
++
++def arc_level_delta(
++    artifacts: Mapping[int, JsonMap], eligible: set[int] | None = None
++) -> tuple[int, str]:
++    data = artifacts.get(5241, {})
++    if not data:
++        return 0, "no ARC live-patch artifact was present"
++    if eligible is not None and 5241 not in eligible:
++        return 0, "Exp5241 is flagged or validation-failed, so ARC delta is forced to zero"
++    delta = as_number(data.get("reproducible_total_levels_delta")) or 0.0
++    return int(delta), "Exp5241 clean reproduction-gated ARC delta imported"
++
++
++def kan_certificate_status(artifacts: Mapping[int, JsonMap], eligible: set[int]) -> tuple[str, str]:
++    data = artifacts.get(5242, {})
++    if not data:
++        return "unknown", "Exp5242 KAN certificate artifact is missing"
++    if 5242 not in eligible:
++        return "blocked", "Exp5242 is flagged or gate-blocked"
++    if as_bool(data.get("kan_certificate_extended")):
++        return "extended", "Exp5242 extended the bounded deterministic KAEM certificate"
++    if as_bool(data.get("kan_certificate_baseline_reproduced")):
++        return "tiny_only", "Exp5242 reproduced only the bounded tiny certificate baseline"
++    if value_of(data.get("blocked_reason")):
++        return "blocked", f"Exp5242 blocked: {value_of(data.get('blocked_reason'))}"
++    return "unknown", "Exp5242 did not record certificate extension or baseline reproduction"
++
++
++def hardware_speedup_claimed(artifacts: Mapping[int, JsonMap]) -> tuple[bool, str]:
++    data = artifacts.get(5243, {})
++    if not data:
++        return False, "hardware continuity evidence missing"
++    speedup = as_bool(data.get("speedup_claimed"))
++    kv260 = value_of(data.get("kv260_status"))
++    polarfire = value_of(data.get("polarfire_status"))
++    gatemate = value_of(data.get("gatemate_status"))
++    return (
++        speedup,
++        f"KV260={kv260}; PolarFire={polarfire}; GateMate={gatemate}; speedup_claimed={speedup}",
++    )
++
++
++def build_honest_verdict(
++    *,
++    gap4: str,
++    gap1: str,
++    veribmc: str,
++    self_learning: str,
++    arc_delta: int,
++    kan: str,
++) -> str:
++    return (
++        "complete: .479 closed with "
++        f"GAP-4 {gap4}, GAP-1 {gap1}, VerIbmc {veribmc} after clean-null evidence, "
++        f"continuous self-learning {self_learning}, ARC delta {arc_delta}, "
++        f"KAN certificate {kan}, hardware no-speedup, and flagged/gated artifacts excluded."
++    )
++
++
++def build_next_top_blockers(status_decisions: JsonMap) -> list[str]:
++    return [
++        f"GAP-4 remains blocked: {status_decisions['gap4']}",
++        f"GAP-1 remains blocked unless subset stability improves: {status_decisions['gap1']}",
++        f"ARC live patch did not bank a clean level: {status_decisions['arc']}",
++        "Hardware speedup remains unclaimed until authenticated timing and GateMate physical/JTAG setup change.",
++    ]
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = "20260704",
++    duration_s: float | None = None,
++    validation_commands_run: Sequence[Mapping[str, Any]] | None = None,
++    conductor_untouched: bool | None = None,
++    ops_docs_updated: bool = False,
++) -> JsonDict:
++    start = time.perf_counter()
++    artifacts, sources, missing = load_upstreams(root)
++    context = load_source_context(root)
++    summary = per_task_summary(artifacts)
++    eligible = eligible_numbers(artifacts)
++    headline_ids = headline_eligible_task_ids(summary)
++    excluded = excluded_from_headline(summary)
++    blocked_rows = gated_or_blocked_rows(summary)
++    gap4_value, gap4_reason = gap4_final_status(artifacts, eligible)
++    gap1_value, gap1_reason = gap1_final_status(artifacts, eligible)
++    veribmc_value, veribmc_reason = veribmc_final_status(artifacts, eligible)
++    self_value, self_reason = continuous_self_learning_status(artifacts, eligible)
++    arc_delta, arc_reason = arc_level_delta(artifacts, eligible)
++    kan_value, kan_reason = kan_certificate_status(artifacts, eligible)
++    speedup, hardware_reason = hardware_speedup_claimed(artifacts)
++    conductor_clean = (
++        research_conductor_untouched(root) if conductor_untouched is None else conductor_untouched
++    )
++    status_decisions = {
++        "gap4": gap4_reason,
++        "gap1": gap1_reason,
++        "veribmc": veribmc_reason,
++        "continuous_self_learning": self_reason,
++        "arc": arc_reason,
++        "kan": kan_reason,
++        "hardware": hardware_reason,
++        "ops_docs": (
++            "ops/status, ops/changelog, _bmad/traceability, and research-complete deferred by stop rule"
++            if not ops_docs_updated
++            else "ops docs updated by this capstone"
++        ),
++    }
++
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": run_date,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "duration_s": round(
++            float(duration_s if duration_s is not None else time.perf_counter() - start), 6
++        ),
++        "source_artifacts": sources,
++        "source_context": context,
++        "excluded_from_headline_artifacts": excluded,
++        "per_task_summary": summary,
++        "status_decisions": status_decisions,
++        "preconditions_checked": {
++            "expected_deliverable_artifacts": len(UPSTREAM_SOURCES),
++            "loadable_deliverable_artifacts": len(artifacts),
++            "source_context_files_checked": len(context),
++            "ops_docs_deferred_by_stop_rule": not ops_docs_updated,
++            "research_conductor_py_untouched": conductor_clean,
++        },
++        "next_top_blockers": build_next_top_blockers(status_decisions),
++        "milestone": _principled("milestone", MILESTONE),
++        "tasks_seen": _principled("tasks_seen", len(artifacts)),
++        "missing_artifacts": _principled("missing_artifacts", missing),
++        "gated_or_blocked_artifacts": _principled("gated_or_blocked_artifacts", blocked_rows),
++        "headline_eligible_artifacts": _principled("headline_eligible_artifacts", headline_ids),
++        "gap4_final_status": _principled("gap4_final_status", gap4_value),
++        "gap1_final_status": _principled("gap1_final_status", gap1_value),
++        "veribmc_final_status": _principled("veribmc_final_status", veribmc_value),
++        "continuous_self_learning_status": _principled(
++            "continuous_self_learning_status", self_value
++        ),
++        "arc_level_delta": _principled("arc_level_delta", arc_delta),
++        "kan_certificate_status": _principled("kan_certificate_status", kan_value),
++        "hardware_speedup_claimed": _principled("hardware_speedup_claimed", speedup),
++        "ops_docs_updated": _principled("ops_docs_updated", ops_docs_updated),
++        "validation_commands_run": _principled(
++            "validation_commands_run", list(validation_commands_run or DEFAULT_VALIDATION_COMMANDS)
++        ),
++        "research_conductor_py_untouched_confirmed": _principled(
++            "research_conductor_py_untouched_confirmed", conductor_clean
++        ),
++        "inference_substrate": _principled("inference_substrate", INFERENCE_SUBSTRATE),
++        "honest_verdict": _principled(
++            "honest_verdict",
++            build_honest_verdict(
++                gap4=gap4_value,
++                gap1=gap1_value,
++                veribmc=veribmc_value,
++                self_learning=self_value,
++                arc_delta=arc_delta,
++                kan=kan_value,
++            ),
++        ),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "flagged_adversarial": False,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(payload: JsonMap) -> None:
++    missing = [field for field in REQUIRED_SCHEMA_FIELDS if field not in payload]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field principle mismatch")
++    if payload.get("flagged_adversarial") is not False:
++        raise ValueError("flagged_adversarial must be false for the capstone itself")
++    for field in PRINCIPLE_WRAPPED_FIELDS:
++        wrapped = payload[field]
++        if not isinstance(wrapped, Mapping) or wrapped.get("principle") != FIELD_PRINCIPLES[field]:
++            raise ValueError(f"{field} field principle mismatch")
++    verdict = honest_verdict_text(payload.get("honest_verdict"))
++    if not verdict.startswith(TERMINAL_PREFIXES) or "\n" in verdict:
++        raise ValueError("honest_verdict must be a single terminal-prefix sentence")
++    if value_of(payload["inference_substrate"]) != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must declare milestone_artifact_synthesis")
++    if value_of(payload["milestone"]) != MILESTONE:
++        raise ValueError("milestone mismatch")
++    if not isinstance(value_of(payload["tasks_seen"]), int):
++        raise ValueError("tasks_seen must be an int")
++    if not isinstance(value_of(payload["missing_artifacts"]), list):
++        raise ValueError("missing_artifacts must be a list")
++    if not isinstance(value_of(payload["gated_or_blocked_artifacts"]), list):
++        raise ValueError("gated_or_blocked_artifacts must be a list")
++    headline = value_of(payload["headline_eligible_artifacts"])
++    if not isinstance(headline, list):
++        raise ValueError("headline_eligible_artifacts must be a list")
++    if value_of(payload["gap4_final_status"]) not in GAP4_STATUSES:
++        raise ValueError("gap4_final_status has invalid value")
++    if value_of(payload["gap1_final_status"]) not in GAP1_STATUSES:
++        raise ValueError("gap1_final_status has invalid value")
++    if value_of(payload["veribmc_final_status"]) not in VERIBMC_STATUSES:
++        raise ValueError("veribmc_final_status has invalid value")
++    if value_of(payload["continuous_self_learning_status"]) not in SELF_LEARNING_STATUSES:
++        raise ValueError("continuous_self_learning_status has invalid value")
++    if value_of(payload["kan_certificate_status"]) not in KAN_STATUSES:
++        raise ValueError("kan_certificate_status has invalid value")
++    if not isinstance(value_of(payload["arc_level_delta"]), int):
++        raise ValueError("arc_level_delta must be an int")
++    if value_of(payload["hardware_speedup_claimed"]) is not False:
++        raise ValueError("hardware_speedup_claimed must remain false")
++    if value_of(payload["ops_docs_updated"]) is not False:
++        raise ValueError("ops_docs_updated must be false under the stop rule")
++    if value_of(payload["research_conductor_py_untouched_confirmed"]) is not True:
++        raise ValueError("research_conductor_py_untouched_confirmed must be true")
++    validation = value_of(payload["validation_commands_run"])
++    if not isinstance(validation, list) or not validation:
++        raise ValueError("validation_commands_run must be a non-empty list")
++    excluded = payload.get("excluded_from_headline_artifacts")
++    if not isinstance(excluded, Mapping):
++        raise ValueError("excluded_from_headline_artifacts must be a mapping")
++    if set(headline) & set(excluded):
++        raise ValueError("headline eligible artifacts overlap excluded artifacts")
++    checksum = payload_checksum(payload)
++    if payload.get("reproducibility_checksum") != checksum:
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    run_date: str = "20260704",
++    duration_s: float | None = None,
++    validation_commands_run: Sequence[Mapping[str, Any]] | None = None,
++    conductor_untouched: bool | None = None,
++    ops_docs_updated: bool = False,
++) -> Path:
++    artifact = build_artifact(
++        root=root,
++        run_date=run_date,
++        duration_s=duration_s,
++        validation_commands_run=validation_commands_run,
++        conductor_untouched=conductor_untouched,
++        ops_docs_updated=ops_docs_updated,
++    )
++    out_path = root / RESULT_RELATIVE_PATH
++    write_json(out_path, artifact)
++    return out_path
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - thin CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--run-date", default="20260704")
++    args = parser.parse_args(argv)
++    out_path = run(root=args.root, run_date=args.run_date)
++    print(out_path)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_5244_capstone_v479.json b/results/experiment_5244_capstone_v479.json
+new file mode 100644
+index 0000000000..6d863021f5
+--- /dev/null
++++ b/results/experiment_5244_capstone_v479.json
+@@ -0,0 +1,656 @@
++{
++  "arc_level_delta": {
++    "principle": "integer delta from clean reproduction-gated ARC evidence only",
++    "value": 0
++  },
++  "continuous_self_learning_status": {
++    "principle": "one of controlled_positive | controlled_null | degraded | blocked | unknown, with controlled_positive requiring aligned lift, retention, rollback, and no model distillation",
++    "value": "controlled_positive"
++  },
++  "duration_s": 0.026273,
++  "excluded_from_headline_artifacts": {
++    "exp5235-adversarial-qa-null-tautology-calibration-v479": {
++      "artifact_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending",
++        "methodology_incomplete"
++      ],
++      "failed_validation_command": false,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "headline_eligible": false,
++      "methodology_incomplete": true,
++      "status": "excluded",
++      "verdict": "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks."
++    },
++    "exp5236-gap4-clean-status-after-qa-calibration-v479": {
++      "artifact_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
++      "blocked_decision": "blocked_missing_receipts",
++      "critical_corrigendum": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending"
++      ],
++      "failed_validation_command": false,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "headline_eligible": false,
++      "methodology_incomplete": false,
++      "status": "blocked",
++      "verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120."
++    },
++    "exp5237-gap1-stability-freeze-or-retire-v479": {
++      "artifact_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
++      "blocked_decision": "blocked_instability",
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": false,
++      "methodology_incomplete": false,
++      "status": "blocked",
++      "verdict": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."
++    },
++    "exp5241-arc-gated-live-patch-attempt-v479": {
++      "artifact_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
++      "blocked_decision": "no_level_banked",
++      "critical_corrigendum": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending",
++        "methodology_incomplete",
++        "failed_validation_command"
++      ],
++      "failed_validation_command": true,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "headline_eligible": false,
++      "methodology_incomplete": true,
++      "status": "blocked",
++      "verdict": "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked)."
++    }
++  },
++  "experiment": "experiment_5244_capstone_v479",
++  "experiment_id": "exp5244-capstone-v479",
++  "field_principles": {
++    "arc_level_delta": "integer delta from clean reproduction-gated ARC evidence only",
++    "continuous_self_learning_status": "one of controlled_positive | controlled_null | degraded | blocked | unknown, with controlled_positive requiring aligned lift, retention, rollback, and no model distillation",
++    "gap1_final_status": "one of promoted | blocked | retired | unknown, with promoted only after a clean frozen-subset registry promotion",
++    "gap4_final_status": "one of clean_null | clean_positive | blocked | unknown, with blocked required when Exp5236 is flagged or missing receipts",
++    "gated_or_blocked_artifacts": "artifacts or task decisions that are blocked, gate-blocked, or no-bank and must not be rounded up",
++    "hardware_speedup_claimed": "must be false unless authenticated timing evidence exists",
++    "headline_eligible_artifacts": "clean non-flagged artifacts whose methodology and gates permit bounded headline use",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state the honest .479 close state.",
++    "inference_substrate": "milestone_artifact_synthesis",
++    "kan_certificate_status": "one of extended | tiny_only | blocked | unknown, with extended only for bounded deterministic certificate scale-up",
++    "milestone": "the milestone being closed, 2026.07.479",
++    "missing_artifacts": "expected .479 artifacts absent or unreadable, empty only when every Exp5233-Exp5243 deliverable is loadable",
++    "ops_docs_updated": "false when the stop rule delegates ops/status/changelog/traceability updates",
++    "research_conductor_py_untouched_confirmed": "hard constraint that scripts/research_conductor.py stayed untouched",
++    "tasks_seen": "count of loadable expected .479 artifacts read directly",
++    "validation_commands_run": "list of validation commands and pass/fail outcomes used for the capstone",
++    "veribmc_final_status": "one of positive | clean_null | retired | blocked | unknown, with retired allowed only after methodology-clean null evidence"
++  },
++  "flagged_adversarial": false,
++  "gap1_final_status": {
++    "principle": "one of promoted | blocked | retired | unknown, with promoted only after a clean frozen-subset registry promotion",
++    "value": "blocked"
++  },
++  "gap4_final_status": {
++    "principle": "one of clean_null | clean_positive | blocked | unknown, with blocked required when Exp5236 is flagged or missing receipts",
++    "value": "blocked"
++  },
++  "gated_or_blocked_artifacts": {
++    "principle": "artifacts or task decisions that are blocked, gate-blocked, or no-bank and must not be rounded up",
++    "value": [
++      {
++        "artifact_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
++        "reason": "blocked_missing_receipts",
++        "status": "blocked",
++        "task_id": "exp5236-gap4-clean-status-after-qa-calibration-v479"
++      },
++      {
++        "artifact_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
++        "reason": "blocked_instability",
++        "status": "blocked",
++        "task_id": "exp5237-gap1-stability-freeze-or-retire-v479"
++      },
++      {
++        "artifact_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
++        "reason": "no_level_banked",
++        "status": "blocked",
++        "task_id": "exp5241-arc-gated-live-patch-attempt-v479"
++      }
++    ]
++  },
++  "hardware_speedup_claimed": {
++    "principle": "must be false unless authenticated timing evidence exists",
++    "value": false
++  },
++  "headline_eligible_artifacts": {
++    "principle": "clean non-flagged artifacts whose methodology and gates permit bounded headline use",
++    "value": [
++      "exp5233-archive-478-activate-479",
++      "exp5234-sota-ingestion-v479",
++      "exp5238-veribmc-methodology-correct-rerun-or-retire-v479",
++      "exp5239-continuous-self-learning-controlled-memory-ablation-v479",
++      "exp5240-arc-rubric-to-patch-synthesis-v479",
++      "exp5242-kan-certificate-abstraction-scale-v479",
++      "exp5243-hardware-continuity-kan-pbit-boundary-v479"
++    ]
++  },
++  "honest_verdict": {
++    "principle": "Must start with complete:/complete_/success:/success_ and state the honest .479 close state.",
++    "value": "complete: .479 closed with GAP-4 blocked, GAP-1 blocked, VerIbmc retired after clean-null evidence, continuous self-learning controlled_positive, ARC delta 0, KAN certificate extended, hardware no-speedup, and flagged/gated artifacts excluded."
++  },
++  "inference_substrate": {
++    "principle": "milestone_artifact_synthesis",
++    "value": "milestone_artifact_synthesis"
++  },
++  "kan_certificate_status": {
++    "principle": "one of extended | tiny_only | blocked | unknown, with extended only for bounded deterministic certificate scale-up",
++    "value": "extended"
++  },
++  "milestone": {
++    "principle": "the milestone being closed, 2026.07.479",
++    "value": "2026.07.479"
++  },
++  "missing_artifacts": {
++    "principle": "expected .479 artifacts absent or unreadable, empty only when every Exp5233-Exp5243 deliverable is loadable",
++    "value": []
++  },
++  "next_top_blockers": [
++    "GAP-4 remains blocked: Exp5236 is flagged, receipt-blocked, or otherwise headline-ineligible",
++    "GAP-1 remains blocked unless subset stability improves: Exp5237 reports blocked_instability",
++    "ARC live patch did not bank a clean level: Exp5241 is flagged or validation-failed, so ARC delta is forced to zero",
++    "Hardware speedup remains unclaimed until authenticated timing and GateMate physical/JTAG setup change."
++  ],
++  "ops_docs_updated": {
++    "principle": "false when the stop rule delegates ops/status/changelog/traceability updates",
++    "value": false
++  },
++  "per_task_summary": {
++    "exp5233-archive-478-activate-479": {
++      "artifact_path": "results/experiment_5233_archive_478_activate_479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": true,
++      "methodology_incomplete": false,
++      "status": "complete",
++      "verdict": "complete: .478 archived and .479 activated; handoff preserves GAP-1 blocked, GAP-4 flagged/blocked, VerIbmc flagged/blocked, typed memory consumer-ready, ARC rubric usable without patch, tiny KAN certificate produced, and hardware reachability with no speedup claim."
++    },
++    "exp5234-sota-ingestion-v479": {
++      "artifact_path": "results/experiment_5234_sota_ingestion_v479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": true,
++      "methodology_incomplete": false,
++      "status": "complete",
++      "verdict": "complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM."
++    },
++    "exp5235-adversarial-qa-null-tautology-calibration-v479": {
++      "artifact_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending",
++        "methodology_incomplete"
++      ],
++      "failed_validation_command": false,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "headline_eligible": false,
++      "methodology_incomplete": true,
++      "status": "excluded",
++      "verdict": "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks."
++    },
++    "exp5236-gap4-clean-status-after-qa-calibration-v479": {
++      "artifact_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
++      "blocked_decision": "blocked_missing_receipts",
++      "critical_corrigendum": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending"
++      ],
++      "failed_validation_command": false,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "headline_eligible": false,
++      "methodology_incomplete": false,
++      "status": "blocked",
++      "verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120."
++    },
++    "exp5237-gap1-stability-freeze-or-retire-v479": {
++      "artifact_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
++      "blocked_decision": "blocked_instability",
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": false,
++      "methodology_incomplete": false,
++      "status": "blocked",
++      "verdict": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."
++    },
++    "exp5238-veribmc-methodology-correct-rerun-or-retire-v479": {
++      "artifact_path": "results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": true,
++      "methodology_incomplete": false,
++      "status": "complete",
++      "verdict": "complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path"
++    },
++    "exp5239-continuous-self-learning-controlled-memory-ablation-v479": {
++      "artifact_path": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": true,
++      "methodology_incomplete": false,
++      "status": "complete",
++      "verdict": "complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training"
++    },
++    "exp5240-arc-rubric-to-patch-synthesis-v479": {
++      "artifact_path": "results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": true,
++      "methodology_incomplete": false,
++      "status": "complete",
++      "verdict": "success: provenance-routing live patch is gated for exp5241 without a solve claim."
++    },
++    "exp5241-arc-gated-live-patch-attempt-v479": {
++      "artifact_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
++      "blocked_decision": "no_level_banked",
++      "critical_corrigendum": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending",
++        "methodology_incomplete",
++        "failed_validation_command"
++      ],
++      "failed_validation_command": true,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "headline_eligible": false,
++      "methodology_incomplete": true,
++      "status": "blocked",
++      "verdict": "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked)."
++    },
++    "exp5242-kan-certificate-abstraction-scale-v479": {
++      "artifact_path": "results/experiment_5242_kan_certificate_abstraction_scale_v479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": true,
++      "methodology_incomplete": false,
++      "status": "complete",
++      "verdict": "success: bounded KAEM certificate extended to 10 total PWA segments over two variables, a wider [-0.5, 0.75] input box, and a rejected false property; no hardware or broad KAN verification claim"
++    },
++    "exp5243-hardware-continuity-kan-pbit-boundary-v479": {
++      "artifact_path": "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "exclusion_reasons": [],
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "headline_eligible": true,
++      "methodology_incomplete": false,
++      "status": "complete",
++      "verdict": "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim"
++    }
++  },
++  "preconditions_checked": {
++    "expected_deliverable_artifacts": 11,
++    "loadable_deliverable_artifacts": 11,
++    "ops_docs_deferred_by_stop_rule": true,
++    "research_conductor_py_untouched": true,
++    "source_context_files_checked": 10
++  },
++  "random_seed": 5244,
++  "reproducibility_checksum": "sha256:076dee392ecec9adeef7b9e03196afaea1f939b35913ab077334e387f38da598",
++  "research_conductor_py_untouched_confirmed": {
++    "principle": "hard constraint that scripts/research_conductor.py stayed untouched",
++    "value": true
++  },
++  "result_path": "results/experiment_5244_capstone_v479.json",
++  "run_date": "20260704",
++  "schema": "carnot.experiment_5244_capstone_v479.v1",
++  "source_artifacts": [
++    {
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5233,
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: .478 archived and .479 activated; handoff preserves GAP-1 blocked, GAP-4 flagged/blocked, VerIbmc flagged/blocked, typed memory consumer-ready, ARC rubric usable without patch, tiny KAN certificate produced, and hardware reachability with no speedup claim.",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5233_archive_478_activate_479.json",
++      "sha256": "sha256:c512628ba1534026b593d0dd1f65eccb4d2ab56bdf30b656ece12b50b6cfa831",
++      "task_id": "exp5233-archive-478-activate-479"
++    },
++    {
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5234,
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM.",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5234_sota_ingestion_v479.json",
++      "sha256": "sha256:94027d17a30191695b840e7d629f6ad82af1115f8c661d7929837f5bfcee34e3",
++      "task_id": "exp5234-sota-ingestion-v479"
++    },
++    {
++      "blocked_decision": null,
++      "critical_corrigendum": true,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending",
++        "methodology_incomplete"
++      ],
++      "exists": true,
++      "experiment_number": 5235,
++      "failed_validation_command": false,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "honest_verdict": "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks.",
++      "loadable": true,
++      "methodology_incomplete": true,
++      "relative_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
++      "sha256": "sha256:8f5d4d72e57e7285519ae5563c5c61bd0a39a164963d5d22533074bf95aaf671",
++      "task_id": "exp5235-adversarial-qa-null-tautology-calibration-v479"
++    },
++    {
++      "blocked_decision": "blocked_missing_receipts",
++      "critical_corrigendum": true,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending"
++      ],
++      "exists": true,
++      "experiment_number": 5236,
++      "failed_validation_command": false,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "honest_verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120.",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
++      "sha256": "sha256:7745e7a983f2c2944262d44dfb15a88c7359f9347f1797df931c79a16eb5e48f",
++      "task_id": "exp5236-gap4-clean-status-after-qa-calibration-v479"
++    },
++    {
++      "blocked_decision": "blocked_instability",
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5237,
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze.",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
++      "sha256": "sha256:cd9060e9b4d2dcfc96487b06b07af97db2e5a1bb215e3114ae73c13e5ae81bd2",
++      "task_id": "exp5237-gap1-stability-freeze-or-retire-v479"
++    },
++    {
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5238,
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json",
++      "sha256": "sha256:100ae31c49ee770c834a2abd0a234027d110d152589e596ed7b5950ac69e1c33",
++      "task_id": "exp5238-veribmc-methodology-correct-rerun-or-retire-v479"
++    },
++    {
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5239,
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
++      "sha256": "sha256:a5cca69be41f5507e8153da2814b4884cb88d13a4e938dc8d2a7fe0dd14010ed",
++      "task_id": "exp5239-continuous-self-learning-controlled-memory-ablation-v479"
++    },
++    {
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5240,
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "success: provenance-routing live patch is gated for exp5241 without a solve claim.",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json",
++      "sha256": "sha256:a0ec08ad057303559217373931b547e2bdb5308d17fb2acc612b43f79d8132b6",
++      "task_id": "exp5240-arc-rubric-to-patch-synthesis-v479"
++    },
++    {
++      "blocked_decision": "no_level_banked",
++      "critical_corrigendum": true,
++      "error": null,
++      "excluded_from_headline": true,
++      "exclusion_reasons": [
++        "flagged_adversarial",
++        "critical_corrigendum_pending",
++        "methodology_incomplete",
++        "failed_validation_command"
++      ],
++      "exists": true,
++      "experiment_number": 5241,
++      "failed_validation_command": true,
++      "flagged_adversarial": true,
++      "gate_blocked": false,
++      "honest_verdict": "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked).",
++      "loadable": true,
++      "methodology_incomplete": true,
++      "relative_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
++      "sha256": "sha256:2567afe87417435db13486dccbc0b02b7536912491a5c633e5285bd50e5c5498",
++      "task_id": "exp5241-arc-gated-live-patch-attempt-v479"
++    },
++    {
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5242,
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "success: bounded KAEM certificate extended to 10 total PWA segments over two variables, a wider [-0.5, 0.75] input box, and a rejected false property; no hardware or broad KAN verification claim",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5242_kan_certificate_abstraction_scale_v479.json",
++      "sha256": "sha256:d47e2ae127fb1d9862854159cc007b967546761d359101784311660968e2237f",
++      "task_id": "exp5242-kan-certificate-abstraction-scale-v479"
++    },
++    {
++      "blocked_decision": null,
++      "critical_corrigendum": false,
++      "error": null,
++      "excluded_from_headline": false,
++      "exclusion_reasons": [],
++      "exists": true,
++      "experiment_number": 5243,
++      "failed_validation_command": false,
++      "flagged_adversarial": false,
++      "gate_blocked": false,
++      "honest_verdict": "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim",
++      "loadable": true,
++      "methodology_incomplete": false,
++      "relative_path": "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
++      "sha256": "sha256:6cec8439cf9b251ebf68b3693fc95fc0e0da80db08d8d94b784ac50a4a1ccbf7",
++      "task_id": "exp5243-hardware-continuity-kan-pbit-boundary-v479"
++    }
++  ],
++  "source_context": [
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "research-roadmap.yaml",
++      "sha256": "sha256:a938ce3e41779e9cb42f6fdf42916ad83d97474088f955ac09d225bacf33e963"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "sha256:aef4c5f4a8ebf94526666b30bb082f00fab772dc12cb87ea3cd0a971158d72f1"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "research-complete.yaml",
++      "sha256": "sha256:b522a39e02c8f9ab7fa63a26edc11400a138b6ca034eb3bc830d47b0af3143ca"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/status.md",
++      "sha256": "sha256:660291513832fbf6b50c259f9c10c6a0b94d753d7a500c5bdf9e3c67c896b636"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/changelog.md",
++      "sha256": "sha256:f5eeff7c58d67fa98665a521998726b135a941fad53f0a0053153c2da0c904b3"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/conductor-log.md",
++      "sha256": "sha256:865c4064d6f1d85a61896040100b07b3dce4309457e415abb11176558a66d95f"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "_bmad/traceability.md",
++      "sha256": "sha256:ff2e74a2b17f772658eb478d0892d2783c2d3d78ded5fff638711d29f8a1dc1d"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "research-references.md",
++      "sha256": "sha256:cc4b5be99e96c131af863271a958ebfeefe7b99fdd9f33bcf8b872868109d1f3"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:d7e93103ac35588aa6c1277d2d7f1f95b0a556f1c43383950ef59930517f4acc"
++    },
++    {
++      "exists": true,
++      "read_only": true,
++      "relative_path": "ops/arc_solve_registry.yaml",
++      "sha256": "sha256:57c139f8257dac085d4e5e660ebd1c31ff14565c3270e376279b2ea43639a877"
++    }
++  ],
++  "spec_refs": [
++    "REQ-CAPSTONE-5244",
++    "SCENARIO-CAPSTONE-5244",
++    "SCENARIO-CAPSTONE-5244-FIELD-PRINCIPLES"
++  ],
++  "status_decisions": {
++    "arc": "Exp5241 is flagged or validation-failed, so ARC delta is forced to zero",
++    "continuous_self_learning": "Exp5239 aligned typed memory beat controls with retention and rollback exercised",
++    "gap1": "Exp5237 reports blocked_instability",
++    "gap4": "Exp5236 is flagged, receipt-blocked, or otherwise headline-ineligible",
++    "hardware": "KV260=reachable; PolarFire=reachable; GateMate=blocked_physical_jtag; speedup_claimed=False",
++    "kan": "Exp5242 extended the bounded deterministic KAEM certificate",
++    "ops_docs": "ops/status, ops/changelog, _bmad/traceability, and research-complete deferred by stop rule",
++    "veribmc": "Exp5238 records methodology-clean null and retires current path"
++  },
++  "tasks_seen": {
++    "principle": "count of loadable expected .479 artifacts read directly",
++    "value": 11
++  },
++  "validation_commands_run": {
++    "principle": "list of validation commands and pass/fail outcomes used for the capstone",
++    "value": [
++      {
++        "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5244_capstone_v479.py -q",
++        "notes": "filled after the focused verification run",
++        "status": "PENDING"
++      }
++    ]
++  },
++  "veribmc_final_status": {
++    "principle": "one of positive | clean_null | retired | blocked | unknown, with retired allowed only after methodology-clean null evidence",
++    "value": "retired"
++  }
++}
+diff --git a/tests/python/test_experiment_5244_capstone_v479.py b/tests/python/test_experiment_5244_capstone_v479.py
+new file mode 100644
+index 0000000000..e1c9998a1d
+--- /dev/null
++++ b/tests/python/test_experiment_5244_capstone_v479.py
+@@ -0,0 +1,577 @@
++"""Tests for Exp 5244 V479 capstone reconciliation.
++
++Spec refs: REQ-CAPSTONE-5244, SCENARIO-CAPSTONE-5244,
++SCENARIO-CAPSTONE-5244-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++import carnot.experiment_5244_capstone_v479 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def _write_json(path: Path, payload: object) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _wrap(value: Any, principle: str = "fixture principle") -> dict[str, Any]:
++    return {"principle": principle, "value": value}
++
++
++def _base(experiment: str | int, verdict: str, *, flagged: bool | None = None) -> dict[str, Any]:
++    payload: dict[str, Any] = {
++        "experiment": experiment,
++        "honest_verdict": verdict,
++        "duration_s": 1.0,
++        "inference_substrate": "fixture",
++    }
++    if flagged is not None:
++        payload["flagged_adversarial"] = flagged
++    return payload
++
++
++def _payloads() -> dict[int, dict[str, Any]]:
++    return {
++        5233: {
++            **_base(
++                "experiment_5233_archive_478_activate_479",
++                "complete: .478 archived and .479 activated.",
++            ),
++            "research_roadmap_yaml_activated": _wrap(True),
++        },
++        5234: _base(
++            "experiment_5234_sota_ingestion_v479",
++            "complete: V479 SOTA execution refresh found no new actionable findings.",
++        ),
++        5235: {
++            **_base(
++                "experiment_5235_adversarial_qa_null_tautology_calibration_v479",
++                "complete: QA calibration passed for structured nulls.",
++                flagged=True,
++            ),
++            "qa_calibration_passed": True,
++            "gap4_reclassification_ready": True,
++            "duration_methodology_checks_preserved": True,
++            "corrigendum_pending": [{"severity": "critical", "kind": "DURATION_TOO_SHORT"}],
++        },
++        5236: {
++            **_base(
++                "experiment_5236_gap4_clean_status_after_qa_calibration_v479",
++                "complete: GAP-4 is still blocked after QA calibration.",
++                flagged=True,
++            ),
++            "gap4_status_decision": "blocked_missing_receipts",
++            "gap4_headline_eligible": False,
++            "remaining_blocker": "artifact_schema_errors: reproducibility_checksum",
++            "qa_calibration_passed": True,
++            "wins": 0,
++            "losses": 0,
++            "ties": 120,
++            "corrigendum_pending": [{"severity": "critical", "kind": "TAUTOLOGY"}],
++        },
++        5237: {
++            **_base(
++                "experiment_5237_gap1_stability_freeze_or_retire_v479",
++                "complete: GAP-1 blocked_instability.",
++            ),
++            "gap1_registry_promoted": _wrap(False),
++            "gap1_stability_decision": _wrap("blocked_instability"),
++            "stability_audit": {"exact_subset_stability_passed": False},
++        },
++        5238: {
++            **_base(
++                "experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479",
++                "complete: solver feedback stayed null; retired current VerIbmc path.",
++            ),
++            "methodology_receipts_complete": _wrap(True),
++            "retire_current_veribmc_path": _wrap(True),
++            "solver_feedback_uplift": _wrap(0.0),
++            "solver_only_solved": _wrap(1),
++            "llm_only_solved": _wrap(2),
++            "llm_solver_feedback_solved": _wrap(2),
++        },
++        5239: {
++            **_base(
++                "experiment_5239_continuous_self_learning_controlled_memory_ablation_v479",
++                "complete: typed memory shows controlled useful reuse.",
++            ),
++            "continuous_self_learning_task": _wrap(True),
++            "aligned_vs_shuffled_delta": _wrap(1.0),
++            "aligned_vs_no_memory_delta": _wrap(0.666667),
++            "degradation_detected": _wrap(True),
++            "retention_check_passed": _wrap(True),
++            "rollback_policy_exercised": _wrap(True),
++            "broad_self_distillation_used": _wrap(False),
++        },
++        5240: {
++            **_base(
++                "experiment_5240_arc_rubric_to_patch_synthesis_v479",
++                "success: provenance-routing live patch is gated for exp5241 without a solve claim.",
++            ),
++            "recommended_live_patch_available": True,
++            "patch_test_ready": True,
++            "arc_level_solve_claimed": False,
++            "registry_precheck_done": True,
++        },
++        5241: {
++            **_base(
++                "experiment_5241_arc_gated_live_patch_attempt_v479",
++                "complete: level_delta=0 provenance=live_agent_self_discovery.",
++                flagged=True,
++            ),
++            "preconditions_checked": True,
++            "solve_provenance": "live_agent_self_discovery",
++            "reproducible_total_levels_delta": 0,
++            "solve_claim": {"claimed": False, "residual": "no_level_banked"},
++            "arc_validation_commands": [{"command": "arc_artifact_lint", "passed": False}],
++            "corrigendum_pending": [{"severity": "critical", "kind": "DURATION_TOO_SHORT"}],
++        },
++        5242: {
++            **_base(
++                "experiment_5242_kan_certificate_abstraction_scale_v479",
++                "success: bounded KAEM certificate extended.",
++            ),
++            "kan_certificate_extended": _wrap(True),
++            "kan_certificate_baseline_reproduced": _wrap(True),
++            "max_pwa_segments_verified": _wrap(10),
++            "false_property_rejected": _wrap(True),
++            "blocked_reason": None,
++        },
++        5243: {
++            **_base(
++                "experiment_5243_hardware_continuity_kan_pbit_boundary",
++                "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim",
++            ),
++            "kv260_status": _wrap("reachable"),
++            "kv260_ssh_only_confirmed": _wrap(True),
++            "polarfire_status": _wrap("reachable"),
++            "gatemate_status": _wrap("blocked_physical_jtag"),
++            "speedup_claimed": _wrap(False),
++        },
++    }
++
++
++def _make_repo(root: Path, *, omit: set[int] | None = None) -> None:
++    omit = omit or set()
++    payloads = _payloads()
++    for source in mod.UPSTREAM_SOURCES:
++        if source.experiment_number not in omit:
++            _write_json(root / source.relative_path, payloads[source.experiment_number])
++    for context_path in mod.SOURCE_CONTEXT_PATHS:
++        path = root / context_path
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(f"context for {context_path}\n", encoding="utf-8")
++
++
++def _validation() -> list[dict[str, str]]:
++    return [{"command": "focused pytest", "status": "PASS", "notes": "fixture"}]
++
++
++def _field(field: str, value: Any) -> dict[str, Any]:
++    return _wrap(value, mod.FIELD_PRINCIPLES[field])
++
++
++def test_req_capstone_5244_spec_declares_v479_contract() -> None:
++    """REQ-CAPSTONE-5244: OpenSpec declares the V479 capstone contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-CAPSTONE-5244") :]
++
++    for marker in (
++        "REQ-CAPSTONE-5244",
++        "SCENARIO-CAPSTONE-5244",
++        "SCENARIO-CAPSTONE-5244-FIELD-PRINCIPLES",
++        mod.EXPERIMENT_ID,
++        str(mod.RESULT_RELATIVE_PATH),
++        "gap4_final_status",
++        "ops_docs_updated=false",
++        "hardware_speedup_claimed=false",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_capstone_5244_excludes_flagged_and_preserves_bounded_claims(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-5244: flagged rows stay out of headline decisions."""
++
++    _make_repo(tmp_path)
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=1.25,
++        validation_commands_run=_validation(),
++        conductor_untouched=True,
++        ops_docs_updated=False,
++    )
++
++    mod.validate_artifact(artifact)
++    assert mod.value_of(artifact["milestone"]) == mod.MILESTONE
++    assert mod.value_of(artifact["tasks_seen"]) == 11
++    assert mod.value_of(artifact["missing_artifacts"]) == []
++    assert mod.value_of(artifact["gap4_final_status"]) == "blocked"
++    assert mod.value_of(artifact["gap1_final_status"]) == "blocked"
++    assert mod.value_of(artifact["veribmc_final_status"]) == "retired"
++    assert mod.value_of(artifact["continuous_self_learning_status"]) == "controlled_positive"
++    assert mod.value_of(artifact["arc_level_delta"]) == 0
++    assert mod.value_of(artifact["kan_certificate_status"]) == "extended"
++    assert mod.value_of(artifact["hardware_speedup_claimed"]) is False
++    assert mod.value_of(artifact["ops_docs_updated"]) is False
++    assert mod.value_of(artifact["research_conductor_py_untouched_confirmed"]) is True
++    assert mod.value_of(artifact["inference_substrate"]) == mod.INFERENCE_SUBSTRATE
++    assert artifact["flagged_adversarial"] is False
++
++    headline = mod.value_of(artifact["headline_eligible_artifacts"])
++    blocked = mod.value_of(artifact["gated_or_blocked_artifacts"])
++    excluded = artifact["excluded_from_headline_artifacts"]
++    summary = artifact["per_task_summary"]
++
++    assert "exp5235-adversarial-qa-null-tautology-calibration-v479" not in headline
++    assert "exp5236-gap4-clean-status-after-qa-calibration-v479" not in headline
++    assert "exp5241-arc-gated-live-patch-attempt-v479" not in headline
++    assert "exp5242-kan-certificate-abstraction-scale-v479" in headline
++    assert any(
++        row["task_id"] == "exp5236-gap4-clean-status-after-qa-calibration-v479" for row in blocked
++    )
++    assert any(row["task_id"] == "exp5237-gap1-stability-freeze-or-retire-v479" for row in blocked)
++    assert excluded["exp5241-arc-gated-live-patch-attempt-v479"]["exclusion_reasons"] == [
++        "flagged_adversarial",
++        "critical_corrigendum_pending",
++        "failed_validation_command",
++    ]
++    assert summary["exp5242-kan-certificate-abstraction-scale-v479"]["headline_eligible"] is True
++    assert summary["exp5236-gap4-clean-status-after-qa-calibration-v479"]["status"] == "blocked"
++    assert "GAP-4 blocked" in mod.value_of(artifact["honest_verdict"])
++    assert "VerIbmc retired" in mod.value_of(artifact["honest_verdict"])
++    assert "hardware no-speedup" in mod.value_of(artifact["honest_verdict"])
++
++
++def test_req_capstone_5244_validation_and_helper_edges(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-5244: schema validation rejects capstone overclaims."""
++
++    _make_repo(tmp_path, omit={5243})
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=2.0,
++        validation_commands_run=_validation(),
++        conductor_untouched=True,
++        ops_docs_updated=False,
++    )
++
++    assert mod.value_of(artifact["missing_artifacts"]) == [
++        "exp5243-hardware-continuity-kan-pbit-boundary-v479"
++    ]
++    assert artifact["status_decisions"]["hardware"] == "hardware continuity evidence missing"
++    mod.validate_artifact(artifact)
++
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        mod.validate_artifact(
++            {key: value for key, value in artifact.items() if key != "duration_s"}
++        )
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(artifact | {"honest_verdict": _field("honest_verdict", "done")})
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(
++            artifact | {"inference_substrate": _field("inference_substrate", "live_llm")}
++        )
++    with pytest.raises(ValueError, match="milestone"):
++        mod.validate_artifact(artifact | {"milestone": _field("milestone", "2026.07.480")})
++    with pytest.raises(ValueError, match="field principle mismatch"):
++        mod.validate_artifact(artifact | {"field_principles": {"milestone": "wrong"}})
++    with pytest.raises(ValueError, match="gap4_final_status field principle mismatch"):
++        mod.validate_artifact(artifact | {"gap4_final_status": _wrap("blocked")})
++    with pytest.raises(ValueError, match="flagged_adversarial"):
++        mod.validate_artifact(artifact | {"flagged_adversarial": True})
++    with pytest.raises(ValueError, match="research_conductor"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "research_conductor_py_untouched_confirmed": _field(
++                    "research_conductor_py_untouched_confirmed", False
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="gap4_final_status"):
++        mod.validate_artifact(artifact | {"gap4_final_status": _field("gap4_final_status", "open")})
++    with pytest.raises(ValueError, match="gap1_final_status"):
++        mod.validate_artifact(artifact | {"gap1_final_status": _field("gap1_final_status", "open")})
++    with pytest.raises(ValueError, match="veribmc_final_status"):
++        mod.validate_artifact(
++            artifact | {"veribmc_final_status": _field("veribmc_final_status", "null")}
++        )
++    with pytest.raises(ValueError, match="continuous_self_learning_status"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "continuous_self_learning_status": _field(
++                    "continuous_self_learning_status", "positive"
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="kan_certificate_status"):
++        mod.validate_artifact(
++            artifact | {"kan_certificate_status": _field("kan_certificate_status", "produced")}
++        )
++    with pytest.raises(ValueError, match="hardware_speedup_claimed"):
++        mod.validate_artifact(
++            artifact | {"hardware_speedup_claimed": _field("hardware_speedup_claimed", True)}
++        )
++    with pytest.raises(ValueError, match="ops_docs_updated"):
++        mod.validate_artifact(artifact | {"ops_docs_updated": _field("ops_docs_updated", True)})
++    with pytest.raises(ValueError, match="headline eligible"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "headline_eligible_artifacts": _field(
++                    "headline_eligible_artifacts",
++                    [
++                        *mod.value_of(artifact["headline_eligible_artifacts"]),
++                        "exp5241-arc-gated-live-patch-attempt-v479",
++                    ],
++                )
++            }
++        )
++    with pytest.raises(ValueError, match="arc_level_delta"):
++        mod.validate_artifact(artifact | {"arc_level_delta": _field("arc_level_delta", "0")})
++    with pytest.raises(ValueError, match="tasks_seen"):
++        mod.validate_artifact(artifact | {"tasks_seen": _field("tasks_seen", "11")})
++    with pytest.raises(ValueError, match="missing_artifacts"):
++        mod.validate_artifact(artifact | {"missing_artifacts": _field("missing_artifacts", {})})
++    with pytest.raises(ValueError, match="gated_or_blocked_artifacts"):
++        mod.validate_artifact(
++            artifact | {"gated_or_blocked_artifacts": _field("gated_or_blocked_artifacts", {})}
++        )
++    with pytest.raises(ValueError, match="headline_eligible_artifacts"):
++        mod.validate_artifact(
++            artifact | {"headline_eligible_artifacts": _field("headline_eligible_artifacts", {})}
++        )
++    with pytest.raises(ValueError, match="validation_commands_run"):
++        mod.validate_artifact(
++            artifact | {"validation_commands_run": _field("validation_commands_run", [])}
++        )
++    with pytest.raises(ValueError, match="excluded_from_headline_artifacts"):
++        mod.validate_artifact(artifact | {"excluded_from_headline_artifacts": []})
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(artifact | {"reproducibility_checksum": "stale"})
++
++    assert mod.source_by_number(5233).task_id == "exp5233-archive-478-activate-479"
++    with pytest.raises(KeyError):
++        mod.source_by_number(9999)
++    assert mod.value_of(_wrap("x")) == "x"
++    assert mod.value_of("x") == "x"
++    assert mod.honest_verdict_text({"value": "complete_wrapped"}) == "complete_wrapped"
++    assert mod.honest_verdict_text(None) == ""
++    assert mod.as_bool(_wrap(True)) is True
++    assert mod.as_bool(False) is False
++    assert mod.as_number("3.5") == 3.5
++    assert mod.as_number("bad") is None
++    assert mod.as_number(True) is None
++    assert mod.has_critical_corrigendum({"corrigendum_pending": [{"severity": "critical"}]})
++    assert not mod.has_critical_corrigendum({"corrigendum_pending": [3, {"severity": "warn"}]})
++    assert mod.has_methodology_gap({"corrigendum_pending": [{"kind": "METHODOLOGY_MISSING"}]})
++    assert mod.failed_validation_command({"arc_validation_commands": [{"passed": False}]})
++    assert mod.failed_validation_command({"validation_commands_run": [{"status": "FAIL"}]})
++    assert not mod.failed_validation_command({"arc_validation_commands": [3, {"passed": True}]})
++    assert not mod.failed_validation_command({"arc_validation_commands": [{"passed": True}]})
++    assert mod.exclusion_reasons(
++        {
++            "flagged_adversarial": True,
++            "adversarial_verify_passed": False,
++            "corrigendum_pending": [{"kind": "METHODOLOGY_MISSING"}],
++            "status": "blocked",
++        }
++    ) == [
++        "flagged_adversarial",
++        "adversarial_verify_failed",
++        "methodology_incomplete",
++        "gate_blocked",
++    ]
++    assert mod.is_gate_blocked({"status": "blocked"})
++    assert mod.is_gate_blocked({"honest_verdict": "blocked_gate_check_failed"})
++    assert not mod.is_gate_blocked({"honest_verdict": "complete: ok"})
++    assert mod._status_for({"blocked_at_layer": "conductor_pre_gate"}) == "gate_blocked"
++
++    assert mod.gap4_final_status({}, set())[0] == "unknown"
++    assert mod.gap4_final_status({5236: {"gap4_status_decision": "clean_positive"}}, {5236})[0] == (
++        "clean_positive"
++    )
++    assert mod.gap4_final_status({5236: {"gap4_status_decision": "clean_null"}}, {5236})[0] == (
++        "clean_null"
++    )
++    assert mod.gap4_final_status({5236: {"gap4_status_decision": "blocked_missing"}}, {5236})[
++        0
++    ] == ("blocked")
++    assert mod.gap4_final_status({5236: {"gap4_status_decision": "strange"}}, {5236})[0] == (
++        "unknown"
++    )
++    assert mod.gap4_final_status({5236: {"gap4_status_decision": "clean_null"}}, set())[0] == (
++        "blocked"
++    )
++    assert mod.gap1_final_status({}, set())[0] == "unknown"
++    assert (
++        mod.gap1_final_status({5237: {"gap1_registry_promoted": _wrap(True)}}, {5237})[0]
++        == "promoted"
++    )
++    assert mod.gap1_final_status({5237: {"gap1_stability_decision": "retired"}}, {5237})[0] == (
++        "retired"
++    )
++    assert (
++        mod.gap1_final_status({5237: {"gap1_stability_decision": "blocked_instability"}}, {5237})[0]
++        == "blocked"
++    )
++    assert mod.gap1_final_status({5237: {"gap1_stability_decision": "other"}}, {5237})[0] == (
++        "unknown"
++    )
++    assert mod.gap1_final_status({5237: {"gap1_stability_decision": "other"}}, set())[0] == (
++        "blocked"
++    )
++    assert mod.veribmc_final_status({}, set())[0] == "unknown"
++    assert mod.veribmc_final_status({5238: {"solver_feedback_uplift": 0.25}}, {5238})[0] == (
++        "positive"
++    )
++    assert (
++        mod.veribmc_final_status(
++            {5238: {"solver_feedback_uplift": 0.0, "retire_current_veribmc_path": True}},
++            {5238},
++        )[0]
++        == "retired"
++    )
++    assert mod.veribmc_final_status({5238: {"solver_feedback_uplift": 0.0}}, {5238})[0] == (
++        "clean_null"
++    )
++    assert mod.veribmc_final_status({5238: {"solver_feedback_uplift": 0.0}}, set())[0] == (
++        "blocked"
++    )
++    assert mod.continuous_self_learning_status({}, set())[0] == "unknown"
++    assert (
++        mod.continuous_self_learning_status({5239: {"continuous_self_learning_task": True}}, set())[
++            0
++        ]
++        == "blocked"
++    )
++    assert (
++        mod.continuous_self_learning_status(
++            {
++                5239: {
++                    "continuous_self_learning_task": True,
++                    "aligned_vs_shuffled_delta": 0.1,
++                    "aligned_vs_no_memory_delta": 0.1,
++                    "retention_check_passed": True,
++                    "rollback_policy_exercised": True,
++                    "broad_self_distillation_used": False,
++                }
++            },
++            {5239},
++        )[0]
++        == "controlled_positive"
++    )
++    assert (
++        mod.continuous_self_learning_status(
++            {5239: {"continuous_self_learning_task": True, "broad_self_distillation_used": True}},
++            {5239},
++        )[0]
++        == "degraded"
++    )
++    assert (
++        mod.continuous_self_learning_status(
++            {
++                5239: {
++                    "continuous_self_learning_task": True,
++                    "aligned_vs_shuffled_delta": 0.0,
++                    "aligned_vs_no_memory_delta": 0.0,
++                    "broad_self_distillation_used": False,
++                }
++            },
++            {5239},
++        )[0]
++        == "controlled_null"
++    )
++    assert (
++        mod.continuous_self_learning_status(
++            {
++                5239: {
++                    "continuous_self_learning_task": True,
++                    "aligned_vs_shuffled_delta": 0.2,
++                    "aligned_vs_no_memory_delta": 0.0,
++                    "broad_self_distillation_used": False,
++                }
++            },
++            {5239},
++        )[0]
++        == "degraded"
++    )
++    assert mod.arc_level_delta({}) == (0, "no ARC live-patch artifact was present")
++    assert mod.arc_level_delta({5241: {"reproducible_total_levels_delta": 2}}, {5241})[0] == 2
++    assert mod.kan_certificate_status({}, set())[0] == "unknown"
++    assert mod.kan_certificate_status({5242: {"kan_certificate_extended": True}}, set())[0] == (
++        "blocked"
++    )
++    assert (
++        mod.kan_certificate_status({5242: {"kan_certificate_extended": True}}, {5242})[0]
++        == "extended"
++    )
++    assert (
++        mod.kan_certificate_status({5242: {"kan_certificate_baseline_reproduced": True}}, {5242})[0]
++        == "tiny_only"
++    )
++    assert mod.kan_certificate_status({5242: {"blocked_reason": "solver_missing"}}, {5242})[0] == (
++        "blocked"
++    )
++    assert mod.kan_certificate_status({5242: {"blocked_reason": None}}, {5242})[0] == "unknown"
++    assert mod.hardware_speedup_claimed({}) == (False, "hardware continuity evidence missing")
++    assert mod.hardware_speedup_claimed({5243: {"speedup_claimed": True}})[0] is True
++
++    malformed = tmp_path / "bad.json"
++    malformed.write_text("{bad", encoding="utf-8")
++    assert mod.read_json_mapping(malformed)[1]["error"] == "malformed_json"
++    not_mapping = tmp_path / "array.json"
++    not_mapping.write_text("[]", encoding="utf-8")
++    assert mod.read_json_mapping(not_mapping)[1]["error"] == "not_json_object"
++
++    out_path = mod.run(
++        root=tmp_path,
++        run_date="20260704",
++        duration_s=2.5,
++        validation_commands_run=_validation(),
++        conductor_untouched=True,
++        ops_docs_updated=False,
++    )
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++    assert saved["duration_s"] == 2.5
++    assert mod.value_of(saved["validation_commands_run"]) == _validation()
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++
++
++def test_req_capstone_5244_repository_artifact_matches_schema() -> None:
++    """REQ-CAPSTONE-5244: checked-in artifact is the stable deliverable."""
++
++    artifact = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert mod.value_of(artifact["gap4_final_status"]) == "blocked"
++    assert mod.value_of(artifact["gap1_final_status"]) == "blocked"
++    assert mod.value_of(artifact["veribmc_final_status"]) == "retired"
++    assert mod.value_of(artifact["continuous_self_learning_status"]) == "controlled_positive"
++    assert mod.value_of(artifact["arc_level_delta"]) == 0
++    assert mod.value_of(artifact["kan_certificate_status"]) == "extended"
++    assert mod.value_of(artifact["hardware_speedup_claimed"]) is False
++    assert mod.value_of(artifact["ops_docs_updated"]) is False
++    assert mod.value_of(artifact["research_conductor_py_untouched_confirmed"]) is True
++    assert mod.value_of(artifact["inference_substrate"]) == mod.INFERENCE_SUBSTRATE
++    assert mod.value_of(artifact["honest_verdict"]).startswith("complete:")
+-- 
+2.55.0
+

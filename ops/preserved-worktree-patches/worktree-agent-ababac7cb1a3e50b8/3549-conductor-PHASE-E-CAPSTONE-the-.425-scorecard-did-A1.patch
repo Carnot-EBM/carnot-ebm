@@ -1,0 +1,2237 @@
+From 370e8afb11ade6254eaa3cb240cf32e5a472debe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 04:57:09 -0400
+Subject: [PATCH 03549/11362] [conductor] PHASE E (CAPSTONE) -- the .425
+ scorecard: did A1 (trust energy) make a world-model path PASS the new gate +
+ get USED where the binary gate 0/6 fails (cracking the 0.08-wall root cause)?
+ Did A2 (live integration) raise first-win-rate/efficiency on the SCORED
+ agent? Did A3 bank +1 (55->56+)? Is the package operator-resubmit-ready above
+ 33 (A4)? Report ALL co-headline metrics (world_model_trust_pass_rate,
+ reproducible_total_levels, live-submittable, first-win-rate,
+ generic_transfer, action efficiency). Skip flagged_adversarial; honor the
+ offline-arc-METHODOLOGY + learned-CNN-DURATION + positive-control-failed +
+ .425-B2-TAUTOLOGY-carveout guards. verifier_is_oracle: false on every
+ included value claim.
+
+Automated research step by research conductor.
+Task ID: exp4614-e
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../carnot/experiment_4614_capstone_v425.py   | 1011 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ results/experiment_4614_capstone_v425.json    |  452 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ .../test_experiment_4614_capstone_v425.py     |  567 +++++++++
+ 12 files changed, 2051 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4614_capstone_v425.py
+ create mode 100644 results/experiment_4614_capstone_v425.json
+ create mode 100644 tests/python/test_experiment_4614_capstone_v425.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 09414f56aa..bb9495dc60 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -267,3 +267,6 @@
+ - REQ-CAPSTONE-4607: The operator-resubmit package refresh workflow SHALL rebuild the ARC-AGI-3 live-submit package from the current `ops/arc_solve_registry.yaml`, using `results/experiment_4595_refresh_submission_package.json` and `results/experiment_4595_submission_package_operator_resubmit.json` as the .424 A4 baseline, and SHALL fold in this sprint's newly offline-reproduced banks from Exp4606 plus any Exp4604/Exp4605 newly reproduced level or variant solve only when the claimed game depth is present in the registry and has a replayable trajectory or env-adaptive resolver. The workflow SHALL verify offline arcade and registry-load preconditions before packaging, SHALL record claimed-vs-offline caps for every game, SHALL extend env-adaptive recovery through the persisted `primitive_env_adaptive_resolve_operator` pattern for any newly version-drifted game, SHALL keep submission operator-only with no online submit, SHALL not modify `scripts/research_conductor.py`, and SHALL write `results/experiment_4607_refresh_submission_package.json`.
+ - SCENARIO-CAPSTONE-4607: The artifact `results/experiment_4607_refresh_submission_package.json` must emit top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `live_submittable_level_count`, `live_submittable_count_prev`, `count_delta`, `levels_folded_in`, `refreshed_package_path`, `per_game_submittable`, `ready_for_operator_submit`, `offline_reproduced`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit `null_delta_methodology_note` when `count_delta==0`, `submitted_to_leaderboard:false`, `package_manifest`, `claimed_caps`, `trajectory_refreshes`, `env_adaptive_recovery`, `upstream_fold_audit`, and spec references. The default run must read the current registry, the .424 A4 refreshed package, Exp4606, Exp4604, and Exp4605; count a level as live-submittable only when it offline-reproduces and has a replayable trajectory or env-adaptive resolver on a fresh env; compare against previous count `55`; and set `ready_for_operator_submit` true only when the refreshed count is strictly above `33` and every counted row is offline-reproduction-gated.
+ - SCENARIO-CAPSTONE-4607-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: package_refreshed_live_submittable_<n>_above_33 OR complete: package_refreshed_unchanged_depth."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor)."; `verifier_is_oracle` = "MUST be false -- packaging + env-adaptive replay bank already-earned solves (no circular moat claim)."; `live_submittable_level_count` = "the offline-reproduction-gated count of levels with a replayable trajectory or env-adaptive re-solver (the honest leaderboard score, must stay > 33)."; `live_submittable_count_prev` = "55 -- the .424 A4 count, the apples-to-apples comparison."; `count_delta` = "live_submittable_level_count - 55 (>=0; positive = more submittable levels folded in), emitted explicitly so a null is annotated."; `levels_folded_in` = "names the games whose new banks (A3 + A1/A2 level solves) were folded into the refreshed package this milestone."; `refreshed_package_path` = "the path to the refreshed validated package the operator's live-submit driver will load -- the deliverable the operator resubmits."; `per_game_submittable` = "per-game offline-reproduced level + has-trajectory + drift-robust flags -- the audit trail that no level is over-claimed above its offline depth."; `ready_for_operator_submit` = "True if the refreshed package's live-submittable count beats 33 and every claim is offline-reproduction-gated; the task NEVER submits (operator-only)."; `offline_reproduced` = "every claimed-submittable level must offline-reproduce to count (no frozen-trajectory over-claim)."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash catches silent registry/trajectory drift on replay."; `preconditions_checked` = "records resources verified (offline arcade, registry loadable); pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4614: The .425 capstone scorecard must aggregate Exp4604 through Exp4611 plus `ops/arc_solve_registry.yaml` through the Reading-Results discipline by running or using `scripts/summarize_artifact.py` before citing any upstream number. It SHALL exclude stamped `flagged_adversarial:true`, live-critical, failed-acceptance-gate, positive-control-failed, or false-negative-risk-open artifacts from clean headline value claims; it SHALL retain excluded artifacts only as quarantined audit context with sha256 and reason; it SHALL honor the .425 B2 small-sample shared-denominator TAUTOLOGY carve-out so real k/n generation or first-win wins are not re-quarantined solely for shared denominators; it SHALL require `verifier_is_oracle:false` on every included value claim; it SHALL answer whether the VERIFIER/WORLD-MODEL pivot cracked the 0.08 wall through an admissible world-model trust pass and/or raised the SCORED first-win-rate; it SHALL report registry-authoritative reproducible total levels and delta versus 55, the A4 live-submittable count, generic-transfer and action-efficiency context, primitive transfer context, A6 integration status, and operator-only submission readiness without submitting or modifying `scripts/research_conductor.py`. It SHALL write `results/experiment_4614_capstone_v425.json`.
++- SCENARIO-CAPSTONE-4614: The artifact `results/experiment_4614_capstone_v425.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `world_model_trust_pass_rate`, `reproducible_total_levels`, `reproducible_total_levels_delta`, `live_submittable_level_count`, `first_win_rate_scored`, `flagged_artifacts_handled`, `cited_upstream_artifacts`, `ready_for_operator_submit`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit a `scorecard` covering A1/B1 trust rate, A2 first-win, A3 registry bank, A4 package readiness, A5 primitive transfer/generic transfer, A6 integration, B2 guard status, action efficiency, no leaderboard submission, duration, result path, schema, and spec refs. The default .425 read must mark Exp4604, Exp4605, and any live-critical trust helper as excluded from clean headline claims when the reader reports them flagged or non-oracle-distinct; must report Exp4606's no-bank result as zero delta; must import Exp4607's clean 55 live-submittable operator package when offline-reproduced; must import Exp4608's primitive transfer only as oracle-distinct transfer context when no new level is banked; must report Exp4609's integration null as a guarded null only when controls passed; and must report Exp4611's TAUTOLOGY carve-out and world-model-trust guard as active.
++- SCENARIO-CAPSTONE-4614-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: pivot_cracked_0.08_wall_trust_pass_<n>_first_win_up OR complete: pivot_characterized_capability_grew_55_to_<n>."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `verifier_is_oracle` = "MUST be false on every included value claim (A1/A2/A5/A6 oracle-distinct) -- a circular win would not count."; `world_model_trust_pass_rate` = "the HEADLINE co-metric (A1/B1) -- did a world-model path pass the new gate + get used where the binary gate 0/6 fails (the 0.08-wall crack)."; `reproducible_total_levels` = "authoritative from the registry (A3 bank, 55->56+) -- did solve CAPABILITY grow."; `reproducible_total_levels_delta` = "registry after - 55, emitted explicitly so a null is annotated."; `live_submittable_level_count` = "the A4 operator-resubmit count (must stay > 33)."; `first_win_rate_scored` = "the A2 SCORED-agent first-win-rate (did the live-integration earn its place on the leaderboard path)."; `flagged_artifacts_handled` = "names any flagged_adversarial / positive-control-failed artifact EXCLUDED + the .425-B2 TAUTOLOGY carve-out applied (so a real k/n win is not re-quarantined) -- fabrication-gate + false-negative-risk compliance."; `cited_upstream_artifacts` = "every headline number traces to a real upstream artifact with sha256 (the audit trail)."; `ready_for_operator_submit` = "True only if the refreshed package beats 33 on a real metric worth a 1/day slot; never submits (operator-only)."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash catches silent drift on replay."; `preconditions_checked` = "records resources verified (upstream artifacts present, offline arcade); pre-empts missing-resource fabrication."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 6a553e1da6..7d70406723 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3630,
++  "experiments_checked": 3631,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4614_capstone_v425.py b/python/carnot/experiment_4614_capstone_v425.py
+new file mode 100644
+index 0000000000..5eb909d1f0
+--- /dev/null
++++ b/python/carnot/experiment_4614_capstone_v425.py
+@@ -0,0 +1,1011 @@
++"""Experiment 4614: .425 capstone scorecard.
++
++Spec refs: REQ-CAPSTONE-4614, SCENARIO-CAPSTONE-4614,
++SCENARIO-CAPSTONE-4614-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++SCRIPTS_ROOT = REPO_ROOT / "scripts"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(SCRIPTS_ROOT) not in sys.path:  # pragma: no cover - script helper guard
++    sys.path.insert(0, str(SCRIPTS_ROOT))
++
++try:  # pragma: no cover - injectable in tests
++    import summarize_artifact as artifact_reader
++except Exception:  # pragma: no cover - defensive helper boundary
++    artifact_reader = None  # type: ignore[assignment]
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT = "experiment_4614_capstone_v425"
++SCHEMA = "carnot.exp4614.capstone_v425.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4614_capstone_v425.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++RANDOM_SEED = 4614
++BASELINE_REPRODUCIBLE_TOTAL_LEVELS = 55
++LIVE_SUBMITTABLE_SCORECARD_BASELINE = 33
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++TERMINAL_PREFIXES = ("success:", "complete:", "blocked_", "passed:", "shipped:")
++
++
++@dataclass(frozen=True)
++class SourceSpec:
++    name: str
++    relative_path: str
++    role: str
++
++
++UPSTREAM_SOURCES: dict[str, SourceSpec] = {
++    "A1": SourceSpec(
++        "A1",
++        "results/experiment_4604_world_model_trust_energy.json",
++        "world_model_trust_energy",
++    ),
++    "A2": SourceSpec(
++        "A2",
++        "results/experiment_4605_live_integration_scored_agent.json",
++        "live_integration_scored_agent",
++    ),
++    "A3": SourceSpec(
++        "A3",
++        "results/experiment_4606_levelup_selfplay.json",
++        "levelup_selfplay_bank",
++    ),
++    "A4": SourceSpec(
++        "A4",
++        "results/experiment_4607_refresh_submission_package.json",
++        "refresh_submission_package",
++    ),
++    "A5": SourceSpec(
++        "A5",
++        "results/experiment_4608_primitive_persist_transfer.json",
++        "primitive_persist_transfer",
++    ),
++    "A6": SourceSpec(
++        "A6",
++        "results/experiment_4609_integration_gate.json",
++        "integration_gate",
++    ),
++    "B1": SourceSpec(
++        "B1",
++        "results/experiment_4610_world_model_trust_pass_rate_metric.json",
++        "world_model_trust_pass_rate_metric",
++    ),
++    "B2": SourceSpec(
++        "B2",
++        "results/experiment_4611_adversarial_verify_hardening.json",
++        "adversarial_verify_hardening",
++    ),
++}
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: pivot_cracked_0.08_wall_trust_pass_<n>_first_win_up "
++            "OR complete: pivot_characterized_capability_grew_55_to_<n>."
++        )
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "MUST be false on every included value claim (A1/A2/A5/A6 oracle-distinct) "
++            "-- a circular win would not count."
++        )
++    },
++    "world_model_trust_pass_rate": {
++        "principle": (
++            "the HEADLINE co-metric (A1/B1) -- did a world-model path pass the new gate + "
++            "get used where the binary gate 0/6 fails (the 0.08-wall crack)."
++        )
++    },
++    "reproducible_total_levels": {
++        "principle": (
++            "authoritative from the registry (A3 bank, 55->56+) -- did solve CAPABILITY grow."
++        )
++    },
++    "reproducible_total_levels_delta": {
++        "principle": "registry after - 55, emitted explicitly so a null is annotated."
++    },
++    "live_submittable_level_count": {
++        "principle": "the A4 operator-resubmit count (must stay > 33)."
++    },
++    "first_win_rate_scored": {
++        "principle": (
++            "the A2 SCORED-agent first-win-rate (did the live-integration earn its place "
++            "on the leaderboard path)."
++        )
++    },
++    "flagged_artifacts_handled": {
++        "principle": (
++            "names any flagged_adversarial / positive-control-failed artifact EXCLUDED + "
++            "the .425-B2 TAUTOLOGY carve-out applied (so a real k/n win is not re-quarantined) "
++            "-- fabrication-gate + false-negative-risk compliance."
++        )
++    },
++    "cited_upstream_artifacts": {
++        "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
++    },
++    "ready_for_operator_submit": {
++        "principle": (
++            "True only if the refreshed package beats 33 on a real metric worth a 1/day slot; "
++            "never submits (operator-only)."
++        )
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {
++        "principle": "content-addressed hash catches silent drift on replay."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records resources verified (upstream artifacts present, offline arcade); "
++            "pre-empts missing-resource fabrication."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "scorecard",
++    "leaderboard_submission",
++    "duration_s",
++)
++SPEC_REFS = [
++    "REQ-CAPSTONE-4614",
++    "SCENARIO-CAPSTONE-4614",
++    "SCENARIO-CAPSTONE-4614-FIELD-PRINCIPLES",
++]
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _checksum(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _checksum(payload)
++
++
++def _read_json(path: Path) -> JsonDict:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _read_yaml(path: Path) -> JsonDict:
++    try:
++        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except (OSError, yaml.YAMLError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _file_sha256(path: Path) -> str | None:
++    try:
++        return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return None
++
++
++def _as_float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool):
++        return default
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _live_flags(path: Path) -> list[dict[str, Any]]:
++    if artifact_reader is None:
++        return []
++    try:
++        flags = artifact_reader._live_flags(path)  # type: ignore[attr-defined]
++    except Exception:
++        return []
++    return [dict(flag) for flag in flags if isinstance(flag, Mapping)]
++
++
++def _severity(flag: Mapping[str, Any]) -> str:
++    return str(flag.get("severity") or "").lower()
++
++
++def _small_sample_tautology_flag(flag: Mapping[str, Any]) -> bool:
++    detail = str(flag.get("detail") or "").lower()
++    return (
++        flag.get("kind") == "TAUTOLOGY"
++        and _severity(flag) == "critical"
++        and ("shared-denominator" in detail or "k/n" in detail or "denominator" in detail)
++    )
++
++
++def _b2_carveout_active(b2: Mapping[str, Any]) -> bool:
++    return bool(
++        b2.get("tautology_carveout_added") is True
++        and b2.get("wm_trust_guard_added") is True
++        and (
++            b2.get("tests_added", {}).get("passed") is True
++            if isinstance(b2.get("tests_added"), Mapping)
++            else True
++        )
++    )
++
++
++def _critical_flags(
++    flags: Sequence[Mapping[str, Any]],
++    *,
++    b2_active: bool,
++) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
++    critical: list[dict[str, Any]] = []
++    carveouts: list[dict[str, Any]] = []
++    for flag in flags:
++        if _severity(flag) != "critical":
++            continue
++        if b2_active and _small_sample_tautology_flag(flag):
++            carveouts.append(dict(flag))
++        else:
++            critical.append(dict(flag))
++    return critical, carveouts
++
++
++def _false_negative_risk_open(flags: Sequence[Mapping[str, Any]]) -> bool:
++    return any(
++        flag.get("kind") == "FALSE_NEGATIVE_RISK"
++        and "false_negative_risk_open" in str(flag.get("detail") or "")
++        for flag in flags
++    )
++
++
++def _acceptance_gate_failures(artifact: Mapping[str, Any]) -> list[str]:
++    failures: list[str] = []
++    for key, value in artifact.items():
++        lowered = key.lower()
++        is_gate = (
++            "acceptance_gate" in lowered
++            or lowered.startswith("gate_")
++            or lowered.endswith("_gate")
++        )
++        if is_gate and value is False:
++            failures.append(key)
++    return failures
++
++
++def _positive_control_failed(artifact: Mapping[str, Any]) -> bool:
++    return (
++        ("positive_control_passed" in artifact and artifact.get("positive_control_passed") is not True)
++        or (
++            "false_negative_risk_checked" in artifact
++            and artifact.get("false_negative_risk_checked") is not True
++        )
++    )
++
++
++def _source_status(
++    *,
++    name: str,
++    source: SourceSpec,
++    root: Path,
++    artifact: Mapping[str, Any],
++    exists: bool,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None,
++    b2_active: bool,
++) -> JsonDict:
++    path = root / source.relative_path
++    flags = (
++        [dict(flag) for flag in live_flags_by_name[name]]
++        if live_flags_by_name is not None and name in live_flags_by_name
++        else (_live_flags(path) if exists else [])
++    )
++    critical, tautology_carveouts = _critical_flags(flags, b2_active=b2_active)
++    stamped = artifact.get("flagged_adversarial") is True
++    gate_failures = _acceptance_gate_failures(artifact)
++    positive_control_failed = _positive_control_failed(artifact)
++    false_negative = _false_negative_risk_open(flags)
++    flagged = bool(stamped or critical)
++    included = bool(
++        exists
++        and artifact
++        and not flagged
++        and not gate_failures
++        and not positive_control_failed
++        and not false_negative
++    )
++    reason = "included_clean"
++    if not exists:
++        reason = "missing"
++    elif gate_failures:
++        reason = "failed_acceptance_gate"
++    elif positive_control_failed:
++        reason = "positive_control_failed"
++    elif false_negative:
++        reason = "false_negative_risk_open"
++    elif flagged:
++        reason = "flagged_adversarial_or_live_critical_excluded"
++    elif tautology_carveouts:
++        reason = "included_clean_with_b2_tautology_carveout"
++    return {
++        "name": name,
++        "artifact": source.relative_path,
++        "role": source.role,
++        "exists": exists,
++        "stamped_flagged_adversarial": stamped,
++        "live_critical": bool(critical),
++        "live_flags": flags,
++        "critical_flags": critical,
++        "tautology_carveout_flags": tautology_carveouts,
++        "positive_control_failed": positive_control_failed,
++        "false_negative_risk_open": false_negative,
++        "acceptance_gate_failures": gate_failures,
++        "included_in_headline": included,
++        "reason": reason,
++        "sha256": _file_sha256(path) if path.exists() else _checksum(artifact),
++    }
++
++
++def _load_artifacts(
++    root: Path,
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]] | None,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None,
++) -> tuple[dict[str, JsonDict], dict[str, JsonDict]]:
++    loaded: dict[str, JsonDict] = {}
++    for name, source in UPSTREAM_SOURCES.items():
++        path = root / source.relative_path
++        if artifacts is not None and name in artifacts:
++            artifact = dict(artifacts[name])
++        else:
++            artifact = _read_json(path)
++        loaded[name] = artifact
++    b2_active = _b2_carveout_active(loaded.get("B2", {}))
++    statuses: dict[str, JsonDict] = {}
++    for name, source in UPSTREAM_SOURCES.items():
++        path = root / source.relative_path
++        exists = bool(name in artifacts) if artifacts is not None else path.exists()
++        statuses[name] = _source_status(
++            name=name,
++            source=source,
++            root=root,
++            artifact=loaded[name],
++            exists=exists,
++            live_flags_by_name=live_flags_by_name,
++            b2_active=b2_active,
++        )
++    return loaded, statuses
++
++
++def check_preconditions(
++    root: Path | str = REPO_ROOT,
++    *,
++    statuses: Mapping[str, Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    registry = _read_yaml(root_path / REGISTRY_RELATIVE_PATH)
++    source_exists = {
++        name: (
++            bool(statuses.get(name, {}).get("exists"))
++            if statuses is not None
++            else (root_path / source.relative_path).exists()
++        )
++        for name, source in UPSTREAM_SOURCES.items()
++    }
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "spec_has_req_4614": "REQ-CAPSTONE-4614" in spec_text,
++        "registry_yaml_loadable": bool(registry),
++        "registry_path": REGISTRY_RELATIVE_PATH,
++        "registry_reproducible_total_levels": _as_int(
++            registry.get("reproducible_total_levels")
++        ),
++        "upstream_artifacts_present": source_exists,
++        "missing_upstream_artifacts": [
++            UPSTREAM_SOURCES[name].relative_path
++            for name, exists in source_exists.items()
++            if not exists
++        ],
++        "summarize_artifact_py_used_for_live_flags": artifact_reader is not None,
++        "offline_arcade": False,
++        "leaderboard_submission": False,
++        "operator_only": True,
++        "network_required": False,
++        "research_conductor_modified": False,
++    }
++    try:
++        from carnot.agentic import arc_solver_kit as kit
++
++        kit.offline_arcade()
++        checks["offline_arcade"] = True
++    except Exception as exc:
++        checks["offline_arcade_error"] = f"{type(exc).__name__}: {exc}"
++    required = (
++        "agents_md_read",
++        "codex_or_opencode_md_read",
++        "spec_has_req_4614",
++        "registry_yaml_loadable",
++        "offline_arcade",
++    )
++    checks["ok"] = all(bool(checks[key]) for key in required)
++    if not checks["ok"]:
++        checks["blocked_resource"] = next(key for key in required if not checks[key])
++    return checks
++
++
++def _clean(statuses: Mapping[str, Mapping[str, Any]], name: str) -> bool:
++    return bool(statuses.get(name, {}).get("included_in_headline"))
++
++
++def _trust_counts(a1: Mapping[str, Any], b1: Mapping[str, Any]) -> tuple[int, int]:
++    denominator = _as_int(b1.get("trust_pass_denominator")) or _as_int(
++        a1.get("trust_pass_denominator")
++    )
++    numerator = _as_int(b1.get("trust_pass_numerator")) or _as_int(
++        a1.get("trust_pass_numerator")
++    )
++    rows = a1.get("measurements")
++    if isinstance(rows, list) and (not denominator or not numerator):
++        denominator = len([row for row in rows if isinstance(row, Mapping)])
++        numerator = len(
++            [
++                row
++                for row in rows
++                if isinstance(row, Mapping)
++                and row.get("new_trust_pass") is True
++                and row.get("new_planner_used") is True
++                and _as_int(row.get("new_correct_changed_cells")) > 0
++            ]
++        )
++    return numerator, denominator
++
++
++def _trust_metric(
++    a1: Mapping[str, Any],
++    b1: Mapping[str, Any],
++    statuses: Mapping[str, Mapping[str, Any]],
++) -> JsonDict:
++    a1_clean = _clean(statuses, "A1")
++    b1_clean = _clean(statuses, "B1")
++    clean_source = "A1" if a1_clean else ("B1" if b1_clean else "")
++    numerator, denominator = _trust_counts(a1, b1)
++    value = _as_float(
++        a1.get("world_model_trust_pass_rate_new"),
++        _as_float(b1.get("world_model_trust_pass_rate")),
++    )
++    baseline = _as_float(
++        a1.get("world_model_trust_pass_rate_binary"),
++        _as_float(b1.get("world_model_trust_pass_rate_baseline")),
++    )
++    return {
++        "clean_value": value if clean_source else None,
++        "quarantined_value": None if clean_source else value,
++        "baseline": baseline,
++        "delta": round(value - baseline, 6),
++        "trust_pass_numerator": numerator,
++        "trust_pass_denominator": denominator,
++        "binary_gate_failures": f"{_as_int(baseline * denominator)}/{denominator}" if denominator else "0/0",
++        "planner_used_required": True,
++        "headline_numbers_aggregated": bool(clean_source),
++        "source": UPSTREAM_SOURCES[clean_source].relative_path if clean_source else None,
++        "quarantined_sources": [
++            UPSTREAM_SOURCES[name].relative_path
++            for name in ("A1", "B1")
++            if not _clean(statuses, name)
++        ],
++        "reason": (
++            "clean_world_model_path_passed_and_used"
++            if clean_source
++            else "world_model_trust_sources_excluded_or_not_oracle_distinct"
++        ),
++    }
++
++
++def _first_win_metric(a2: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    clean = status.get("included_in_headline") is True
++    rate = _as_float(a2.get("first_win_rate_integrated"))
++    bare = _as_float(a2.get("first_win_rate_bare"))
++    delta = _as_float(a2.get("first_win_delta"), rate - bare)
++    return {
++        "clean_value": rate if clean else None,
++        "quarantined_value": None if clean else rate,
++        "bare_rate": bare,
++        "delta": delta,
++        "ci": a2.get("first_win_ci"),
++        "headline_numbers_aggregated": clean,
++        "source": UPSTREAM_SOURCES["A2"].relative_path,
++        "reason": status.get("reason"),
++    }
++
++
++def _metric_from_coheadline(
++    b1: Mapping[str, Any],
++    *,
++    value_key: str,
++    ci_key: str,
++) -> JsonDict:
++    block = b1.get("coheadline_block")
++    source = block if isinstance(block, Mapping) else b1
++    value = _as_float(source.get(value_key))
++    return {
++        "clean_value": value,
++        "ci": source.get(ci_key),
++        "source": UPSTREAM_SOURCES["B1"].relative_path,
++        "context_only": True,
++    }
++
++
++def _a5_summary(a5: Mapping[str, Any], included: bool) -> JsonDict:
++    values = a5.get("transfer_value_per_game")
++    games = [
++        str(game)
++        for game, row in (values.items() if isinstance(values, Mapping) else [])
++        if isinstance(row, Mapping) and row.get("value_added") is True
++    ]
++    new_levels = _as_int(a5.get("new_levels_banked"))
++    if not new_levels and isinstance(a5.get("offline_reproduced"), Mapping):
++        new_levels = _as_int(a5.get("offline_reproduced", {}).get("new_levels_banked"))
++    return {
++        "included_in_headline": included,
++        "transfer_games": list(a5.get("transfer_games") or []),
++        "value_added_games": games,
++        "new_levels_banked": new_levels,
++        "verifier_is_oracle": a5.get("verifier_is_oracle"),
++    }
++
++
++def _a6_summary(a6: Mapping[str, Any], included: bool, status: Mapping[str, Any]) -> JsonDict:
++    return {
++        "included_in_headline": included,
++        "submitted_config_raised_metric_clean": bool(
++            included and a6.get("submitted_config_raised_metric_clean") is True
++        ),
++        "world_model_trust_pass_rate_integrated": _as_float(
++            a6.get("world_model_trust_pass_rate_integrated")
++        ),
++        "first_win_rate_integrated": _as_float(a6.get("first_win_rate_integrated")),
++        "actions_delta_vs_bare": _as_float(a6.get("actions_delta_vs_bare")),
++        "parity_test_green": a6.get("parity_test_green") is True,
++        "reason": status.get("reason"),
++    }
++
++
++def _claim_audit(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    statuses: Mapping[str, Mapping[str, Any]],
++) -> JsonDict:
++    rows: JsonDict = {}
++    for name in ("A1", "A2", "A4", "A5", "A6"):
++        rows[name] = {
++            "artifact": UPSTREAM_SOURCES[name].relative_path,
++            "included_in_headline": _clean(statuses, name),
++            "verifier_is_oracle": artifacts.get(name, {}).get("verifier_is_oracle"),
++            "oracle_distinct": artifacts.get(name, {}).get("verifier_is_oracle") is False,
++        }
++    rows["all_included_value_claims_false"] = all(
++        row["oracle_distinct"]
++        for row in rows.values()
++        if isinstance(row, Mapping) and row.get("included_in_headline") is True
++    )
++    return rows
++
++
++def _flagged_artifacts_handled(statuses: Mapping[str, Mapping[str, Any]], b2: Mapping[str, Any]) -> JsonDict:
++    excluded_details: list[JsonDict] = []
++    tautology_carveouts: list[JsonDict] = []
++    positive_control_failed: list[JsonDict] = []
++    false_negative_open: list[JsonDict] = []
++    gate_failures: list[JsonDict] = []
++    for name, status in statuses.items():
++        if status.get("included_in_headline") is False and (
++            status.get("stamped_flagged_adversarial")
++            or status.get("live_critical")
++            or status.get("positive_control_failed")
++            or status.get("false_negative_risk_open")
++        ):
++            excluded_details.append(
++                {
++                    "name": name,
++                    "artifact": status.get("artifact"),
++                    "reason": status.get("reason"),
++                    "critical_flags": [
++                        {"kind": flag.get("kind"), "detail": flag.get("detail")}
++                        for flag in status.get("critical_flags", [])
++                    ],
++                }
++            )
++        if status.get("tautology_carveout_flags"):
++            tautology_carveouts.append(
++                {
++                    "name": name,
++                    "artifact": status.get("artifact"),
++                    "flags": status.get("tautology_carveout_flags"),
++                }
++            )
++        if status.get("positive_control_failed"):
++            positive_control_failed.append({"name": name, "artifact": status.get("artifact")})
++        if status.get("false_negative_risk_open"):
++            false_negative_open.append({"name": name, "artifact": status.get("artifact")})
++        if status.get("acceptance_gate_failures"):
++            gate_failures.append(
++                {
++                    "name": name,
++                    "artifact": status.get("artifact"),
++                    "failed_gates": status.get("acceptance_gate_failures"),
++                }
++            )
++    return {
++        "excluded_artifacts": [str(row["artifact"]) for row in excluded_details],
++        "excluded_details": excluded_details,
++        "positive_control_failed_artifacts": positive_control_failed,
++        "false_negative_risk_open_artifacts": false_negative_open,
++        "failed_acceptance_gate_overrides": gate_failures,
++        "tautology_carveouts": tautology_carveouts,
++        "tautology_small_sample_carveout_applied": _b2_carveout_active(b2),
++        "world_model_trust_guard_active": b2.get("wm_trust_guard_added") is True,
++        "guard_note": (
++            "Stamped flagged, live-critical, positive-control-failed, and false-negative-risk-open "
++            "artifacts are excluded from clean headline claims; B2 only exempts real small-sample k/n TAUTOLOGY flags."
++        ),
++    }
++
++
++def _cited_upstream_artifacts(statuses: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    cited: JsonDict = {}
++    clean_fields = {
++        "A1": [
++            "world_model_trust_pass_rate_new",
++            "trust_pass_numerator",
++            "trust_pass_denominator",
++            "first_win_rate_new",
++        ],
++        "A2": ["first_win_rate_integrated", "first_win_rate_bare", "first_win_delta"],
++        "A3": ["reproduced_levels", "offline_reproduced"],
++        "A4": ["live_submittable_level_count", "ready_for_operator_submit", "offline_reproduced"],
++        "A5": ["transfer_games", "transfer_value_per_game", "new_levels_banked"],
++        "A6": ["submitted_config_raised_metric_clean", "parity_test_green"],
++        "B1": ["world_model_trust_pass_rate", "trust_pass_numerator", "trust_pass_denominator"],
++        "B2": ["tautology_carveout_added", "wm_trust_guard_added", "tests_added"],
++    }
++    for name, status in statuses.items():
++        included = status.get("included_in_headline") is True
++        cited[name] = {
++            "artifact": status.get("artifact"),
++            "role": status.get("role"),
++            "exists": status.get("exists"),
++            "sha256": status.get("sha256"),
++            "included_in_headline": included,
++            "reason": status.get("reason"),
++            "imported_fields": clean_fields.get(name, []) if included else [],
++            "quarantined_fields_reported": clean_fields.get(name, []) if not included else [],
++        }
++    cited["REGISTRY"] = {
++        "artifact": REGISTRY_RELATIVE_PATH,
++        "role": "authoritative_reproducible_total_levels",
++        "exists": True,
++        "sha256": _file_sha256(REPO_ROOT / REGISTRY_RELATIVE_PATH),
++        "included_in_headline": True,
++        "reason": "authoritative_registry",
++        "imported_fields": ["reproducible_total_levels"],
++        "quarantined_fields_reported": [],
++    }
++    return cited
++
++
++def _scorecard(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    statuses: Mapping[str, Mapping[str, Any]],
++    *,
++    trust: Mapping[str, Any],
++    first_win: Mapping[str, Any],
++    registry_total: int,
++    registry_delta: int,
++    live_count: int,
++    ready: bool,
++) -> JsonDict:
++    generic_transfer = _metric_from_coheadline(
++        artifacts["B1"],
++        value_key="generic_transfer_rate_over_variants",
++        ci_key="generic_transfer_ci",
++    )
++    action_efficiency = _metric_from_coheadline(
++        artifacts["B1"],
++        value_key="action_efficiency_score",
++        ci_key="action_efficiency_ci",
++    )
++    return {
++        "headline": {
++            "pivot_cracked_0_08_wall_clean": bool(trust.get("clean_value") and trust.get("delta", 0) > 0),
++            "scored_first_win_rate_raised_clean": bool(
++                first_win.get("clean_value") is not None and first_win.get("delta", 0) > 0
++            ),
++            "a3_bank_plus_one": registry_delta > 0,
++            "a4_operator_resubmit_ready_above_33": ready,
++        },
++        "A1": {
++            "artifact": UPSTREAM_SOURCES["A1"].relative_path,
++            "included_in_headline": _clean(statuses, "A1"),
++            "reason": statuses["A1"]["reason"],
++            "trust_metric": dict(trust),
++        },
++        "A2": {
++            "artifact": UPSTREAM_SOURCES["A2"].relative_path,
++            "included_in_headline": _clean(statuses, "A2"),
++            "reason": statuses["A2"]["reason"],
++            "first_win_rate_scored": dict(first_win),
++        },
++        "A3": {
++            "artifact": UPSTREAM_SOURCES["A3"].relative_path,
++            "included_in_headline": _clean(statuses, "A3"),
++            "reproduced_levels": _as_int(artifacts["A3"].get("reproduced_levels")),
++            "offline_reproduced": artifacts["A3"].get("offline_reproduced") is True,
++            "registry_reproducible_total_levels": registry_total,
++            "registry_delta_vs_55": registry_delta,
++        },
++        "A4": {
++            "artifact": UPSTREAM_SOURCES["A4"].relative_path,
++            "included_in_headline": _clean(statuses, "A4"),
++            "live_submittable_level_count": live_count,
++            "ready_for_operator_submit": ready,
++            "count_delta": _as_int(artifacts["A4"].get("count_delta")),
++        },
++        "A5": _a5_summary(artifacts["A5"], _clean(statuses, "A5")),
++        "A6": _a6_summary(artifacts["A6"], _clean(statuses, "A6"), statuses["A6"]),
++        "B1": {
++            "artifact": UPSTREAM_SOURCES["B1"].relative_path,
++            "included_in_headline": _clean(statuses, "B1"),
++            "reason": statuses["B1"]["reason"],
++        },
++        "B2": {
++            "artifact": UPSTREAM_SOURCES["B2"].relative_path,
++            "included_in_headline": _clean(statuses, "B2"),
++            "tautology_small_sample_carveout_applied": _b2_carveout_active(artifacts["B2"]),
++            "world_model_trust_guard_active": artifacts["B2"].get("wm_trust_guard_added") is True,
++        },
++        "generic_transfer": generic_transfer,
++        "action_efficiency": action_efficiency,
++        "verifier_is_oracle_claim_audit": _claim_audit(artifacts, statuses),
++    }
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]] | None = None,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++    registry: Mapping[str, Any] | None = None,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    upstream, statuses = _load_artifacts(
++        root_path,
++        artifacts=artifacts,
++        live_flags_by_name=live_flags_by_name,
++    )
++    registry_payload = dict(registry) if registry is not None else _read_yaml(root_path / REGISTRY_RELATIVE_PATH)
++    checks = dict(preconditions_checked or check_preconditions(root_path, statuses=statuses))
++    registry_total = _as_int(
++        registry_payload.get("reproducible_total_levels"),
++        _as_int(checks.get("registry_reproducible_total_levels")),
++    )
++    registry_delta = registry_total - BASELINE_REPRODUCIBLE_TOTAL_LEVELS
++    trust = _trust_metric(upstream["A1"], upstream["B1"], statuses)
++    first_win = _first_win_metric(upstream["A2"], statuses["A2"])
++    live_count = _as_int(upstream["A4"].get("live_submittable_level_count")) if _clean(statuses, "A4") else 0
++    ready = bool(
++        checks.get("ok", True)
++        and _clean(statuses, "A4")
++        and live_count > LIVE_SUBMITTABLE_SCORECARD_BASELINE
++        and upstream["A4"].get("ready_for_operator_submit") is True
++        and upstream["A4"].get("offline_reproduced") is True
++    )
++    if checks.get("ok") is False:
++        verdict = f"blocked_{checks.get('blocked_resource') or 'precondition'}"
++    elif trust.get("clean_value") is not None and trust.get("delta", 0) > 0 and first_win.get("delta", 0) > 0:
++        verdict = (
++            "success: pivot_cracked_0.08_wall_trust_pass_"
++            f"{trust.get('trust_pass_numerator')}_first_win_up"
++        )
++    else:
++        verdict = f"complete: pivot_characterized_capability_grew_55_to_{registry_total}"
++    flagged = _flagged_artifacts_handled(statuses, upstream["B2"])
++    scorecard = _scorecard(
++        upstream,
++        statuses,
++        trust=trust,
++        first_win=first_win,
++        registry_total=registry_total,
++        registry_delta=registry_delta,
++        live_count=live_count,
++        ready=ready,
++    )
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_principles": FIELD_PRINCIPLES,
++        "world_model_trust_pass_rate": trust,
++        "reproducible_total_levels": registry_total,
++        "reproducible_total_levels_delta": registry_delta,
++        "live_submittable_level_count": live_count,
++        "first_win_rate_scored": first_win,
++        "flagged_artifacts_handled": flagged,
++        "cited_upstream_artifacts": _cited_upstream_artifacts(statuses),
++        "scorecard": scorecard,
++        "ready_for_operator_submit": ready,
++        "leaderboard_submission": False,
++        "submitted_to_leaderboard": False,
++        "preconditions_checked": checks,
++        "random_seed": RANDOM_SEED,
++        "duration_s": float(duration_s if duration_s is not None else 0.0),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def _is_bare_int(value: Any) -> bool:
++    return type(value) is int
++
++
++def _is_bare_bool(value: Any) -> bool:
++    return type(value) is bool
++
++
++def _metric_errors(artifact: Mapping[str, Any], field: str) -> list[str]:
++    errors: list[str] = []
++    metric = artifact.get(field)
++    if not isinstance(metric, Mapping):
++        return [f"{field} must be object"]
++    for value_key in ("clean_value", "quarantined_value"):
++        if value_key in metric and metric.get(value_key) is not None:
++            if not isinstance(metric.get(value_key), float):
++                errors.append(f"{field}.{value_key} must be float or null")
++    if "clean_value" not in metric:
++        errors.append(f"{field}.clean_value missing")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [
++        f"missing required field {field}"
++        for field in REQUIRED_ARTIFACT_FIELDS
++        if field not in artifact
++    ]
++    if not str(artifact.get("honest_verdict") or "").startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    for field in ("world_model_trust_pass_rate", "first_win_rate_scored"):
++        errors.extend(_metric_errors(artifact, field))
++    if not _is_bare_int(artifact.get("reproducible_total_levels")):
++        errors.append("reproducible_total_levels must be bare int")
++    if not _is_bare_int(artifact.get("reproducible_total_levels_delta")):
++        errors.append("reproducible_total_levels_delta must be bare int")
++    if not _is_bare_int(artifact.get("live_submittable_level_count")):
++        errors.append("live_submittable_level_count must be bare int")
++    if not _is_bare_bool(artifact.get("ready_for_operator_submit")):
++        errors.append("ready_for_operator_submit must be bare bool")
++    if artifact.get("ready_for_operator_submit") is True and _as_int(
++        artifact.get("live_submittable_level_count")
++    ) <= LIVE_SUBMITTABLE_SCORECARD_BASELINE:
++        errors.append("ready_for_operator_submit requires count above 33")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    if not isinstance(artifact.get("field_principles"), Mapping):
++        errors.append("field_principles missing")
++    else:
++        for field in FIELD_PRINCIPLES:
++            if field not in artifact.get("field_principles", {}):
++                errors.append(f"missing field principle for {field}")
++    if not isinstance(artifact.get("cited_upstream_artifacts"), Mapping):
++        errors.append("cited_upstream_artifacts must be object")
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        errors.append("preconditions_checked must be object")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    elif checksum != payload_checksum(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_artifact(
++    *,
++    path: Path = REPO_ROOT / RESULT_RELATIVE_PATH,
++    artifact: Mapping[str, Any],
++) -> Path:
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++    write: bool = True,
++    duration_s: float | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    start = time.perf_counter()
++    upstream, statuses = _load_artifacts(
++        root_path,
++        artifacts=None,
++        live_flags_by_name=live_flags_by_name,
++    )
++    checks = check_preconditions(root_path, statuses=statuses)
++    registry = _read_yaml(root_path / REGISTRY_RELATIVE_PATH)
++    artifact = build_artifact(
++        root_path,
++        artifacts=upstream,
++        live_flags_by_name=live_flags_by_name,
++        registry=registry,
++        preconditions_checked=checks,
++        duration_s=duration_s if duration_s is not None else time.perf_counter() - start,
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(path=root_path / RESULT_RELATIVE_PATH, artifact=artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - requested command boundary
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - requested command boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 372f0931e0..607f45c0ab 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-23T08:24:16.697002Z",
+-  "duration_s": 0.03412508964538574,
++  "run_date": "2026-06-23T08:55:06.935793Z",
++  "duration_s": 0.025763750076293945,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "021afa10394ff3c6ac45704169ed0479728e25f275eeec092862190a65d492b7",
++  "reproducibility_checksum": "ea9de27065b31b1963eabce6d5cf909d49f933d6967bcf504d12c8a9ccfe39e6",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "7dea3076a7425783e9fe3d6f149adca65264c5ea"
++    "adversarial_verify_version": "ee88364e6eb2be5bcaa52b8a19f3c8f8409a92a5"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 686003af03..159db73c0f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-23T08:24:16.733295Z",
+-  "duration_s": 0.028403043746948242,
++  "run_date": "2026-06-23T08:55:06.965673Z",
++  "duration_s": 0.025147676467895508,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "ba4d827d6fc3c067ddf24bcfe94a44211442d9b1d16977e975e56efc7534c48c",
++  "reproducibility_checksum": "20e404a427448a69eca9bfac9d8e8745e921dc685f344a65fd79d9409f1d4453",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "7dea3076a7425783e9fe3d6f149adca65264c5ea"
++    "adversarial_verify_version": "ee88364e6eb2be5bcaa52b8a19f3c8f8409a92a5"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 70589e499c..81c50c06e6 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.11334228515625,
++  "efficiency_gains_ms": 2.0873546600341797,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 249580e384..a8840e299a 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.3131917007267475e-05,
++  "duration_s": 2.9465067200362682e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4614_capstone_v425.json b/results/experiment_4614_capstone_v425.json
+new file mode 100644
+index 0000000000..5af553ae9e
+--- /dev/null
++++ b/results/experiment_4614_capstone_v425.json
+@@ -0,0 +1,452 @@
++{
++  "cited_upstream_artifacts": {
++    "A1": {
++      "artifact": "results/experiment_4604_world_model_trust_energy.json",
++      "exists": true,
++      "imported_fields": [],
++      "included_in_headline": false,
++      "quarantined_fields_reported": [
++        "world_model_trust_pass_rate_new",
++        "trust_pass_numerator",
++        "trust_pass_denominator",
++        "first_win_rate_new"
++      ],
++      "reason": "flagged_adversarial_or_live_critical_excluded",
++      "role": "world_model_trust_energy",
++      "sha256": "sha256:f49092c38643e383e3d053a8d50482e1804c13258e3bfd92095ef18173df94c8"
++    },
++    "A2": {
++      "artifact": "results/experiment_4605_live_integration_scored_agent.json",
++      "exists": true,
++      "imported_fields": [],
++      "included_in_headline": false,
++      "quarantined_fields_reported": [
++        "first_win_rate_integrated",
++        "first_win_rate_bare",
++        "first_win_delta"
++      ],
++      "reason": "flagged_adversarial_or_live_critical_excluded",
++      "role": "live_integration_scored_agent",
++      "sha256": "sha256:184e4cf46e6b560c781d82da7ce1187dc83b851b0e30588d026d8e3a9d3be517"
++    },
++    "A3": {
++      "artifact": "results/experiment_4606_levelup_selfplay.json",
++      "exists": true,
++      "imported_fields": [
++        "reproduced_levels",
++        "offline_reproduced"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "levelup_selfplay_bank",
++      "sha256": "sha256:a9ac4b8ff278a0686884c03b0ac0f4e04317d49067fbcfcfffa2680ede5885c5"
++    },
++    "A4": {
++      "artifact": "results/experiment_4607_refresh_submission_package.json",
++      "exists": true,
++      "imported_fields": [
++        "live_submittable_level_count",
++        "ready_for_operator_submit",
++        "offline_reproduced"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "refresh_submission_package",
++      "sha256": "sha256:17d7aad9e478b0bc1eac123db14778c4d69cba473dcaf3750a2c2e7a4e892dde"
++    },
++    "A5": {
++      "artifact": "results/experiment_4608_primitive_persist_transfer.json",
++      "exists": true,
++      "imported_fields": [
++        "transfer_games",
++        "transfer_value_per_game",
++        "new_levels_banked"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "primitive_persist_transfer",
++      "sha256": "sha256:d4c4dc1faa0b3050325e5eee1514d12a6a384966d61aa40b107d60a1d3d928d4"
++    },
++    "A6": {
++      "artifact": "results/experiment_4609_integration_gate.json",
++      "exists": true,
++      "imported_fields": [
++        "submitted_config_raised_metric_clean",
++        "parity_test_green"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "integration_gate",
++      "sha256": "sha256:382dbc0c2d531c91720cd8811e1a670360afefa89d2cab5a538503ba5a5b0c87"
++    },
++    "B1": {
++      "artifact": "results/experiment_4610_world_model_trust_pass_rate_metric.json",
++      "exists": true,
++      "imported_fields": [],
++      "included_in_headline": false,
++      "quarantined_fields_reported": [
++        "world_model_trust_pass_rate",
++        "trust_pass_numerator",
++        "trust_pass_denominator"
++      ],
++      "reason": "flagged_adversarial_or_live_critical_excluded",
++      "role": "world_model_trust_pass_rate_metric",
++      "sha256": "sha256:729051199af30af6ec33567086f3430d027cb50b73fabd3ce6ef66605f9f4595"
++    },
++    "B2": {
++      "artifact": "results/experiment_4611_adversarial_verify_hardening.json",
++      "exists": true,
++      "imported_fields": [
++        "tautology_carveout_added",
++        "wm_trust_guard_added",
++        "tests_added"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "included_clean",
++      "role": "adversarial_verify_hardening",
++      "sha256": "sha256:6d4dc2733a869043d7b34aec0b436e3ad57f27629aa211e2dc92011246e79585"
++    },
++    "REGISTRY": {
++      "artifact": "ops/arc_solve_registry.yaml",
++      "exists": true,
++      "imported_fields": [
++        "reproducible_total_levels"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "reason": "authoritative_registry",
++      "role": "authoritative_reproducible_total_levels",
++      "sha256": "sha256:f51795f11e7c9fecf67b4087fd2bf56488c13d326a4383938905427cdb469fad"
++    }
++  },
++  "duration_s": 1.1199330079834908,
++  "experiment": "experiment_4614_capstone_v425",
++  "field_principles": {
++    "cited_upstream_artifacts": {
++      "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
++    },
++    "first_win_rate_scored": {
++      "principle": "the A2 SCORED-agent first-win-rate (did the live-integration earn its place on the leaderboard path)."
++    },
++    "flagged_artifacts_handled": {
++      "principle": "names any flagged_adversarial / positive-control-failed artifact EXCLUDED + the .425-B2 TAUTOLOGY carve-out applied (so a real k/n win is not re-quarantined) -- fabrication-gate + false-negative-risk compliance."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: pivot_cracked_0.08_wall_trust_pass_<n>_first_win_up OR complete: pivot_characterized_capability_grew_55_to_<n>."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++    },
++    "live_submittable_level_count": {
++      "principle": "the A4 operator-resubmit count (must stay > 33)."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified (upstream artifacts present, offline arcade); pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "ready_for_operator_submit": {
++      "principle": "True only if the refreshed package beats 33 on a real metric worth a 1/day slot; never submits (operator-only)."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash catches silent drift on replay."
++    },
++    "reproducible_total_levels": {
++      "principle": "authoritative from the registry (A3 bank, 55->56+) -- did solve CAPABILITY grow."
++    },
++    "reproducible_total_levels_delta": {
++      "principle": "registry after - 55, emitted explicitly so a null is annotated."
++    },
++    "verifier_is_oracle": {
++      "principle": "MUST be false on every included value claim (A1/A2/A5/A6 oracle-distinct) -- a circular win would not count."
++    },
++    "world_model_trust_pass_rate": {
++      "principle": "the HEADLINE co-metric (A1/B1) -- did a world-model path pass the new gate + get used where the binary gate 0/6 fails (the 0.08-wall crack)."
++    }
++  },
++  "first_win_rate_scored": {
++    "bare_rate": 0.04,
++    "ci": {
++      "bootstrap_resamples": 1000,
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "method": "paired_percentile_bootstrap",
++      "point": 0.0,
++      "random_seed": 4605
++    },
++    "clean_value": null,
++    "delta": 0.0,
++    "headline_numbers_aggregated": false,
++    "quarantined_value": 0.04,
++    "reason": "flagged_adversarial_or_live_critical_excluded",
++    "source": "results/experiment_4605_live_integration_scored_agent.json"
++  },
++  "flagged_artifacts_handled": {
++    "excluded_artifacts": [
++      "results/experiment_4604_world_model_trust_energy.json",
++      "results/experiment_4605_live_integration_scored_agent.json",
++      "results/experiment_4610_world_model_trust_pass_rate_metric.json"
++    ],
++    "excluded_details": [
++      {
++        "artifact": "results/experiment_4604_world_model_trust_energy.json",
++        "critical_flags": [
++          {
++            "detail": "duration_s=0.44 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything.",
++            "kind": "DURATION_TOO_SHORT"
++          }
++        ],
++        "name": "A1",
++        "reason": "flagged_adversarial_or_live_critical_excluded"
++      },
++      {
++        "artifact": "results/experiment_4605_live_integration_scored_agent.json",
++        "critical_flags": [],
++        "name": "A2",
++        "reason": "flagged_adversarial_or_live_critical_excluded"
++      },
++      {
++        "artifact": "results/experiment_4610_world_model_trust_pass_rate_metric.json",
++        "critical_flags": [
++          {
++            "detail": "World-model trust pass is degenerate or circular: verifier_is_oracle=None, not False; no positive correctly-predicted grid-changing transition evidence. A trust pass must declare verifier_is_oracle=false and show >=1 correctly predicted grid-changing transition so identity/no-op models cannot clear the gate.",
++            "kind": "WORLD_MODEL_TRUST_DEGENERACY"
++          }
++        ],
++        "name": "B1",
++        "reason": "flagged_adversarial_or_live_critical_excluded"
++      }
++    ],
++    "failed_acceptance_gate_overrides": [],
++    "false_negative_risk_open_artifacts": [],
++    "guard_note": "Stamped flagged, live-critical, positive-control-failed, and false-negative-risk-open artifacts are excluded from clean headline claims; B2 only exempts real small-sample k/n TAUTOLOGY flags.",
++    "positive_control_failed_artifacts": [],
++    "tautology_carveouts": [],
++    "tautology_small_sample_carveout_applied": true,
++    "world_model_trust_guard_active": true
++  },
++  "honest_verdict": "complete: pivot_characterized_capability_grew_55_to_55",
++  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
++  "leaderboard_submission": false,
++  "live_submittable_level_count": 55,
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_or_opencode_md_read": true,
++    "leaderboard_submission": false,
++    "missing_upstream_artifacts": [],
++    "network_required": false,
++    "offline_arcade": true,
++    "ok": true,
++    "operator_only": true,
++    "registry_path": "ops/arc_solve_registry.yaml",
++    "registry_reproducible_total_levels": 55,
++    "registry_yaml_loadable": true,
++    "research_conductor_modified": false,
++    "spec_has_req_4614": true,
++    "summarize_artifact_py_used_for_live_flags": true,
++    "upstream_artifacts_present": {
++      "A1": true,
++      "A2": true,
++      "A3": true,
++      "A4": true,
++      "A5": true,
++      "A6": true,
++      "B1": true,
++      "B2": true
++    }
++  },
++  "random_seed": 4614,
++  "ready_for_operator_submit": true,
++  "reproducibility_checksum": "sha256:7d6c8ddd308dc76cb2cee756dcc9afe40756b38f4761f9db2e7155e0ea674a1c",
++  "reproducible_total_levels": 55,
++  "reproducible_total_levels_delta": 0,
++  "result_path": "results/experiment_4614_capstone_v425.json",
++  "schema": "carnot.exp4614.capstone_v425.v1",
++  "scorecard": {
++    "A1": {
++      "artifact": "results/experiment_4604_world_model_trust_energy.json",
++      "included_in_headline": false,
++      "reason": "flagged_adversarial_or_live_critical_excluded",
++      "trust_metric": {
++        "baseline": 0.0,
++        "binary_gate_failures": "0/6",
++        "clean_value": null,
++        "delta": 1.0,
++        "headline_numbers_aggregated": false,
++        "planner_used_required": true,
++        "quarantined_sources": [
++          "results/experiment_4604_world_model_trust_energy.json",
++          "results/experiment_4610_world_model_trust_pass_rate_metric.json"
++        ],
++        "quarantined_value": 1.0,
++        "reason": "world_model_trust_sources_excluded_or_not_oracle_distinct",
++        "source": null,
++        "trust_pass_denominator": 6,
++        "trust_pass_numerator": 6
++      }
++    },
++    "A2": {
++      "artifact": "results/experiment_4605_live_integration_scored_agent.json",
++      "first_win_rate_scored": {
++        "bare_rate": 0.04,
++        "ci": {
++          "bootstrap_resamples": 1000,
++          "ci95": [
++            0.0,
++            0.0
++          ],
++          "method": "paired_percentile_bootstrap",
++          "point": 0.0,
++          "random_seed": 4605
++        },
++        "clean_value": null,
++        "delta": 0.0,
++        "headline_numbers_aggregated": false,
++        "quarantined_value": 0.04,
++        "reason": "flagged_adversarial_or_live_critical_excluded",
++        "source": "results/experiment_4605_live_integration_scored_agent.json"
++      },
++      "included_in_headline": false,
++      "reason": "flagged_adversarial_or_live_critical_excluded"
++    },
++    "A3": {
++      "artifact": "results/experiment_4606_levelup_selfplay.json",
++      "included_in_headline": true,
++      "offline_reproduced": false,
++      "registry_delta_vs_55": 0,
++      "registry_reproducible_total_levels": 55,
++      "reproduced_levels": 0
++    },
++    "A4": {
++      "artifact": "results/experiment_4607_refresh_submission_package.json",
++      "count_delta": 0,
++      "included_in_headline": true,
++      "live_submittable_level_count": 55,
++      "ready_for_operator_submit": true
++    },
++    "A5": {
++      "included_in_headline": true,
++      "new_levels_banked": 0,
++      "transfer_games": [
++        "bp35",
++        "dc22",
++        "g50t"
++      ],
++      "value_added_games": [
++        "bp35",
++        "dc22",
++        "g50t"
++      ],
++      "verifier_is_oracle": false
++    },
++    "A6": {
++      "actions_delta_vs_bare": 0.0,
++      "first_win_rate_integrated": 0.0,
++      "included_in_headline": true,
++      "parity_test_green": true,
++      "reason": "included_clean",
++      "submitted_config_raised_metric_clean": false,
++      "world_model_trust_pass_rate_integrated": 0.0
++    },
++    "B1": {
++      "artifact": "results/experiment_4610_world_model_trust_pass_rate_metric.json",
++      "included_in_headline": false,
++      "reason": "flagged_adversarial_or_live_critical_excluded"
++    },
++    "B2": {
++      "artifact": "results/experiment_4611_adversarial_verify_hardening.json",
++      "included_in_headline": true,
++      "tautology_small_sample_carveout_applied": true,
++      "world_model_trust_guard_active": true
++    },
++    "action_efficiency": {
++      "ci": [
++        1.0,
++        1.0
++      ],
++      "clean_value": 1.0,
++      "context_only": true,
++      "source": "results/experiment_4610_world_model_trust_pass_rate_metric.json"
++    },
++    "generic_transfer": {
++      "ci": [
++        0.0,
++        0.1
++      ],
++      "clean_value": 0.04,
++      "context_only": true,
++      "source": "results/experiment_4610_world_model_trust_pass_rate_metric.json"
++    },
++    "headline": {
++      "a3_bank_plus_one": false,
++      "a4_operator_resubmit_ready_above_33": true,
++      "pivot_cracked_0_08_wall_clean": false,
++      "scored_first_win_rate_raised_clean": false
++    },
++    "verifier_is_oracle_claim_audit": {
++      "A1": {
++        "artifact": "results/experiment_4604_world_model_trust_energy.json",
++        "included_in_headline": false,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A2": {
++        "artifact": "results/experiment_4605_live_integration_scored_agent.json",
++        "included_in_headline": false,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A4": {
++        "artifact": "results/experiment_4607_refresh_submission_package.json",
++        "included_in_headline": true,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A5": {
++        "artifact": "results/experiment_4608_primitive_persist_transfer.json",
++        "included_in_headline": true,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A6": {
++        "artifact": "results/experiment_4609_integration_gate.json",
++        "included_in_headline": true,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "all_included_value_claims_false": true
++    }
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-4614",
++    "SCENARIO-CAPSTONE-4614",
++    "SCENARIO-CAPSTONE-4614-FIELD-PRINCIPLES"
++  ],
++  "submitted_to_leaderboard": false,
++  "verifier_is_oracle": false,
++  "world_model_trust_pass_rate": {
++    "baseline": 0.0,
++    "binary_gate_failures": "0/6",
++    "clean_value": null,
++    "delta": 1.0,
++    "headline_numbers_aggregated": false,
++    "planner_used_required": true,
++    "quarantined_sources": [
++      "results/experiment_4604_world_model_trust_energy.json",
++      "results/experiment_4610_world_model_trust_pass_rate_metric.json"
++    ],
++    "quarantined_value": 1.0,
++    "reason": "world_model_trust_sources_excluded_or_not_oracle_distinct",
++    "source": null,
++    "trust_pass_denominator": 6,
++    "trust_pass_numerator": 6
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 391ab95b79..271600a8ae 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T08:24:06Z",
+-  "finished_at": "2026-06-23T08:24:06Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-23T08:54:56Z",
++  "finished_at": "2026-06-23T08:54:56Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 406802b339..467e6e8a85 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T08:24:06Z",
+-  "finished_at": "2026-06-23T08:24:06Z",
++  "started_at": "2026-06-23T08:54:56Z",
++  "finished_at": "2026-06-23T08:54:56Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 18864f2761..0c43307e14 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T08:24:06Z",
+-  "finished_at": "2026-06-23T08:24:06Z",
++  "started_at": "2026-06-23T08:54:56Z",
++  "finished_at": "2026-06-23T08:54:56Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4614_capstone_v425.py b/tests/python/test_experiment_4614_capstone_v425.py
+new file mode 100644
+index 0000000000..06298dca89
+--- /dev/null
++++ b/tests/python/test_experiment_4614_capstone_v425.py
+@@ -0,0 +1,567 @@
++"""Tests for Exp 4614 .425 capstone scorecard.
++
++Spec refs: REQ-CAPSTONE-4614, SCENARIO-CAPSTONE-4614,
++SCENARIO-CAPSTONE-4614-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import pytest
++
++from carnot import experiment_4614_capstone_v425 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _a1_world_model(*, flagged: bool = True) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4604_world_model_trust_energy",
++        "honest_verdict": "success: world_model_trust_energy_pass_rate_up_6_first_win_up",
++        "flagged_adversarial": flagged,
++        "verifier_is_oracle": False,
++        "world_model_trust_pass_rate_new": 1.0,
++        "world_model_trust_pass_rate_binary": 0.0,
++        "trust_pass_rate_delta": 1.0,
++        "trust_pass_numerator": 6,
++        "trust_pass_denominator": 6,
++        "first_win_rate_new": 1.0,
++        "first_win_rate_binary": 0.0,
++        "first_win_delta": 1.0,
++        "positive_control_passed": True,
++        "false_negative_risk_checked": True,
++        "offline_reproduced": True,
++        "measurements": [
++            {
++                "game": "ar25",
++                "new_trust_pass": True,
++                "new_planner_used": True,
++                "new_correct_changed_cells": 2,
++            }
++        ],
++    }
++
++
++def _a2_scored(*, flagged: bool = True) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4605_live_integration_scored_agent",
++        "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++        "flagged_adversarial": flagged,
++        "verifier_is_oracle": False,
++        "first_win_rate_integrated": 0.04,
++        "first_win_rate_bare": 0.04,
++        "first_win_delta": 0.0,
++        "first_win_ci": [0.0, 0.0],
++        "median_actions_to_first_levelup_integrated": None,
++        "actions_delta": 0.0,
++        "positive_control_passed": True,
++        "bare_control_passed": True,
++        "false_negative_risk_checked": True,
++        "solve_rate_preserved": True,
++        "offline_reproduced": True,
++    }
++
++
++def _a3_bank() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4606_levelup_selfplay",
++        "honest_verdict": "complete: dc22_delta_identified_no_bank",
++        "offline_reproduced": False,
++        "reproduced_levels": 0,
++        "target_game": "dc22",
++        "registry_updated": True,
++        "reproduction_gate": {"reproduced": False, "claimed_level": 2, "reached_level": 1},
++    }
++
++
++def _a4_package() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4607_refresh_submission_package",
++        "honest_verdict": "complete: package_refreshed_unchanged_depth.",
++        "verifier_is_oracle": False,
++        "live_submittable_level_count": 55,
++        "live_submittable_count_prev": 55,
++        "count_delta": 0,
++        "ready_for_operator_submit": True,
++        "offline_reproduced": True,
++        "refreshed_package_path": "results/experiment_4607_submission_package_operator_resubmit.json",
++    }
++
++
++def _a5_transfer() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4608_primitive_persist_transfer",
++        "honest_verdict": "success: primitive_persisted_transfer_bp35_value_added",
++        "verifier_is_oracle": False,
++        "transfer_games": ["bp35", "dc22", "g50t"],
++        "transfer_value_per_game": {
++            "bp35": {"value_added": True, "trust_pass_added": True},
++            "dc22": {"value_added": True, "trust_pass_added": True},
++            "g50t": {"value_added": True, "trust_pass_added": True},
++        },
++        "new_levels_banked": 0,
++        "offline_reproduced": {"new_levels_banked": 0},
++    }
++
++
++def _a6_integration() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4609_integration_gate",
++        "honest_verdict": "complete: integration_no_clean_metric_bare_config_kept_honest_null",
++        "verifier_is_oracle": False,
++        "world_model_trust_pass_rate_integrated": 0.0,
++        "world_model_trust_pass_rate_baseline": 0.0,
++        "world_model_trust_pass_rate_delta_vs_baseline": 0.0,
++        "first_win_rate_integrated": 0.0,
++        "first_win_rate_bare": 0.0,
++        "first_win_rate_delta_vs_bare": 0.0,
++        "actions_delta_vs_bare": 0.0,
++        "live_submittable_level_count_integrated": 55,
++        "live_submittable_level_count_baseline": 55,
++        "parity_test_green": True,
++        "submitted_config_raised_metric_clean": False,
++        "submitted_to_leaderboard": False,
++    }
++
++
++def _b1_metric() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4610_world_model_trust_pass_rate_metric",
++        "honest_verdict": "success: world_model_trust_pass_rate_metric_helper_shipped_tests_green",
++        "world_model_trust_pass_rate": 1.0,
++        "trust_pass_numerator": 6,
++        "trust_pass_denominator": 6,
++        "world_model_trust_pass_rate_baseline": 0.0,
++        "world_model_trust_pass_rate_delta": 1.0,
++        "coheadline_block": {
++            "generic_transfer_rate_over_variants": 0.04,
++            "generic_transfer_ci": [0.0, 0.1],
++            "action_efficiency_score": 1.0,
++            "action_efficiency_ci": [1.0, 1.0],
++            "median_actions_to_first_levelup": 12.0,
++        },
++    }
++
++
++def _b2_guard() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4611_adversarial_verify_hardening",
++        "honest_verdict": "success: adversarial_verify_hardened_tautology_carveout_plus_wm_trust_guard_tests_green.",
++        "tautology_carveout_added": True,
++        "wm_trust_guard_added": True,
++        "regression_424_artifacts_unflagged": True,
++        "tests_added": {"passed": True},
++    }
++
++
++def _artifacts() -> dict[str, dict[str, Any]]:
++    return {
++        "A1": _a1_world_model(),
++        "A2": _a2_scored(),
++        "A3": _a3_bank(),
++        "A4": _a4_package(),
++        "A5": _a5_transfer(),
++        "A6": _a6_integration(),
++        "B1": _b1_metric(),
++        "B2": _b2_guard(),
++    }
++
++
++def _live_flags() -> dict[str, list[dict[str, Any]]]:
++    return {
++        "A1": [{"kind": "DURATION_TOO_SHORT", "severity": "critical", "detail": "too fast"}],
++        "B1": [
++            {
++                "kind": "WORLD_MODEL_TRUST_DEGENERACY",
++                "severity": "critical",
++                "detail": "verifier_is_oracle=None",
++            }
++        ],
++    }
++
++
++def _preconditions() -> dict[str, Any]:
++    return {
++        "ok": True,
++        "agents_md_read": True,
++        "codex_or_opencode_md_read": True,
++        "spec_has_req_4614": True,
++        "registry_yaml_loadable": True,
++        "registry_reproducible_total_levels": 55,
++        "offline_arcade": True,
++        "upstream_artifacts_present": {name: True for name in mod.UPSTREAM_SOURCES},
++        "missing_upstream_artifacts": [],
++        "summarize_artifact_py_used_for_live_flags": True,
++        "leaderboard_submission": False,
++        "operator_only": True,
++        "research_conductor_modified": False,
++    }
++
++
++def test_req_capstone_4614_spec_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4614: OpenSpec declares the capstone scorecard fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4614" in spec
++    assert "SCENARIO-CAPSTONE-4614" in spec
++    assert "SCENARIO-CAPSTONE-4614-FIELD-PRINCIPLES" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_req_capstone_4614_excludes_flagged_and_live_critical_headlines() -> None:
++    """REQ-CAPSTONE-4614: flagged/live-critical A1/B1 values are audit-only."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name=_live_flags(),
++        registry={"reproducible_total_levels": 55},
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "complete: pivot_characterized_capability_grew_55_to_55"
++    assert artifact["world_model_trust_pass_rate"]["clean_value"] is None
++    assert artifact["world_model_trust_pass_rate"]["quarantined_value"] == pytest.approx(1.0)
++    assert artifact["world_model_trust_pass_rate"]["trust_pass_numerator"] == 6
++    assert artifact["world_model_trust_pass_rate"]["trust_pass_denominator"] == 6
++    assert artifact["world_model_trust_pass_rate"]["binary_gate_failures"] == "0/6"
++    assert artifact["first_win_rate_scored"]["clean_value"] is None
++    assert artifact["first_win_rate_scored"]["quarantined_value"] == pytest.approx(0.04)
++    assert artifact["scorecard"]["headline"]["pivot_cracked_0_08_wall_clean"] is False
++    assert artifact["scorecard"]["headline"]["scored_first_win_rate_raised_clean"] is False
++    assert artifact["flagged_artifacts_handled"]["excluded_artifacts"] == [
++        "results/experiment_4604_world_model_trust_energy.json",
++        "results/experiment_4605_live_integration_scored_agent.json",
++        "results/experiment_4610_world_model_trust_pass_rate_metric.json",
++    ]
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_capstone_4614_reports_bank_package_transfer_and_submit_status() -> None:
++    """SCENARIO-CAPSTONE-4614: clean support metrics remain in the scorecard."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name=_live_flags(),
++        registry={"reproducible_total_levels": 55},
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["reproducible_total_levels"] == 55
++    assert artifact["reproducible_total_levels_delta"] == 0
++    assert artifact["scorecard"]["A3"]["reproduced_levels"] == 0
++    assert artifact["live_submittable_level_count"] == 55
++    assert artifact["ready_for_operator_submit"] is True
++    assert artifact["scorecard"]["A4"]["ready_for_operator_submit"] is True
++    assert artifact["scorecard"]["A5"]["value_added_games"] == ["bp35", "dc22", "g50t"]
++    assert artifact["scorecard"]["generic_transfer"]["clean_value"] == pytest.approx(0.04)
++    assert artifact["scorecard"]["action_efficiency"]["clean_value"] == pytest.approx(1.0)
++    assert artifact["scorecard"]["A6"]["submitted_config_raised_metric_clean"] is False
++    assert artifact["scorecard"]["B2"]["tautology_small_sample_carveout_applied"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["scorecard"]["verifier_is_oracle_claim_audit"]["all_included_value_claims_false"] is True
++
++
++def test_req_capstone_4614_tautology_carveout_allows_real_kn_win() -> None:
++    """REQ-CAPSTONE-4614: B2 shared-denominator carve-out prevents re-quarantine."""
++
++    artifacts = _artifacts()
++    artifacts["A1"] = _a1_world_model(flagged=False)
++    artifacts["A2"] = {**_a2_scored(flagged=False), "first_win_rate_integrated": 0.08, "first_win_delta": 0.04}
++    flags = {
++        "A1": [
++            {
++                "kind": "TAUTOLOGY",
++                "severity": "critical",
++                "detail": "small shared-denominator k/N rates over denominator 6",
++            }
++        ],
++        "A2": [
++            {
++                "kind": "TAUTOLOGY",
++                "severity": "critical",
++                "detail": "small shared-denominator first-win k/N rates over denominator 25",
++            }
++        ],
++    }
++
++    artifact = mod.build_artifact(
++        artifacts=artifacts,
++        live_flags_by_name=flags,
++        registry={"reproducible_total_levels": 56},
++        preconditions_checked={**_preconditions(), "registry_reproducible_total_levels": 56},
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "success: pivot_cracked_0.08_wall_trust_pass_6_first_win_up"
++    assert artifact["world_model_trust_pass_rate"]["clean_value"] == pytest.approx(1.0)
++    assert artifact["world_model_trust_pass_rate"]["headline_numbers_aggregated"] is True
++    assert artifact["first_win_rate_scored"]["clean_value"] == pytest.approx(0.08)
++    assert artifact["reproducible_total_levels"] == 56
++    assert artifact["reproducible_total_levels_delta"] == 1
++    assert artifact["flagged_artifacts_handled"]["tautology_carveouts"][0]["name"] == "A1"
++    assert artifact["flagged_artifacts_handled"]["tautology_carveouts"][1]["name"] == "A2"
++
++
++def test_scenario_capstone_4614_run_writes_deliverable(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4614: run validates and writes the requested JSON."""
++
++    (tmp_path / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    spec_path = tmp_path / "openspec" / "capabilities" / "capstone" / "spec.md"
++    spec_path.parent.mkdir(parents=True)
++    spec_path.write_text(SPEC_PATH.read_text(encoding="utf-8"), encoding="utf-8")
++    registry_path = tmp_path / "ops" / "arc_solve_registry.yaml"
++    registry_path.parent.mkdir(parents=True)
++    registry_path.write_text("schema_version: 1\nreproducible_total_levels: 55\n", encoding="utf-8")
++
++    for name, source in mod.UPSTREAM_SOURCES.items():
++        _write_json(tmp_path / source.relative_path, _artifacts()[name])
++
++    artifact = mod.run(
++        tmp_path,
++        live_flags_by_name=_live_flags(),
++        write=True,
++        duration_s=0.001,
++    )
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++    assert written["leaderboard_submission"] is False
++    assert written["ready_for_operator_submit"] is True
++    assert mod.validate_artifact(written) == []
++
++
++def test_req_capstone_4614_validation_fails_closed() -> None:
++    """REQ-CAPSTONE-4614: malformed scorecards cannot pass validation."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name=_live_flags(),
++        registry={"reproducible_total_levels": 55},
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++    broken = dict(artifact)
++    broken.update(
++        {
++            "honest_verdict": "maybe",
++            "inference_substrate": "wrong",
++            "verifier_is_oracle": True,
++            "world_model_trust_pass_rate": 1.0,
++            "first_win_rate_scored": {"clean_value": "0.04"},
++            "reproducible_total_levels": "55",
++            "reproducible_total_levels_delta": "0",
++            "live_submittable_level_count": "55",
++            "ready_for_operator_submit": "true",
++            "field_principles": {},
++            "cited_upstream_artifacts": [],
++            "preconditions_checked": [],
++            "leaderboard_submission": True,
++            "reproducibility_checksum": "bad",
++        }
++    )
++
++    errors = mod.validate_artifact(broken)
++
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "inference_substrate mismatch" in errors
++    assert "verifier_is_oracle must be false" in errors
++    assert "world_model_trust_pass_rate must be object" in errors
++    assert "first_win_rate_scored.clean_value must be float or null" in errors
++    assert "reproducible_total_levels must be bare int" in errors
++    assert "reproducible_total_levels_delta must be bare int" in errors
++    assert "live_submittable_level_count must be bare int" in errors
++    assert "ready_for_operator_submit must be bare bool" in errors
++    assert "missing field principle for honest_verdict" in errors
++    assert "cited_upstream_artifacts must be object" in errors
++    assert "preconditions_checked must be object" in errors
++    assert "leaderboard_submission must be false" in errors
++    assert "reproducibility_checksum must be sha256-prefixed" in errors
++
++    missing_clean = dict(artifact)
++    missing_clean["world_model_trust_pass_rate"] = {"quarantined_value": 1.0}
++    missing_clean["reproducibility_checksum"] = mod.payload_checksum(missing_clean)
++    assert "world_model_trust_pass_rate.clean_value missing" in mod.validate_artifact(missing_clean)
++
++    missing_principles = dict(artifact)
++    missing_principles["field_principles"] = None
++    missing_principles["reproducibility_checksum"] = mod.payload_checksum(missing_principles)
++    assert "field_principles missing" in mod.validate_artifact(missing_principles)
++
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.write_artifact(path=Path("/tmp/not-written.json"), artifact=broken)
++
++
++def test_req_capstone_4614_defensive_helpers_and_blocked_run(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-4614: helper branches stay deterministic and explicit."""
++
++    assert mod._read_json(tmp_path / "missing.json") == {}
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{", encoding="utf-8")
++    assert mod._read_json(bad_json) == {}
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    assert mod._read_json(list_json) == {}
++    assert mod._read_yaml(tmp_path / "missing.yaml") == {}
++    scalar_yaml = tmp_path / "scalar.yaml"
++    scalar_yaml.write_text("1\n", encoding="utf-8")
++    assert mod._read_yaml(scalar_yaml) == {}
++    assert mod._file_sha256(tmp_path / "missing.bin") is None
++    assert mod._as_float(True, 3.0) == pytest.approx(3.0)
++    assert mod._as_float("x", 3.0) == pytest.approx(3.0)
++    assert mod._as_int(False, 4) == 4
++    assert mod._as_int("x", 4) == 4
++
++    class BadReader:
++        @staticmethod
++        def _live_flags(path: Path) -> list[dict[str, Any]]:
++            raise RuntimeError(path)
++
++    monkeypatch.setattr(mod, "artifact_reader", None)
++    assert mod._live_flags(tmp_path / "x.json") == []
++    monkeypatch.setattr(mod, "artifact_reader", BadReader)
++    assert mod._live_flags(tmp_path / "x.json") == []
++
++    source = mod.SourceSpec("X", "results/x.json", "fixture")
++    missing = mod._source_status(
++        name="X",
++        source=source,
++        root=tmp_path,
++        artifact={},
++        exists=False,
++        live_flags_by_name={},
++        b2_active=False,
++    )
++    assert missing["reason"] == "missing"
++    gate_failed = mod._source_status(
++        name="X",
++        source=source,
++        root=tmp_path,
++        artifact={"acceptance_gate_main": False},
++        exists=True,
++        live_flags_by_name={},
++        b2_active=False,
++    )
++    assert gate_failed["reason"] == "failed_acceptance_gate"
++    fnr = mod._source_status(
++        name="X",
++        source=source,
++        root=tmp_path,
++        artifact={"positive_control_passed": False, "false_negative_risk_checked": True},
++        exists=True,
++        live_flags_by_name={},
++        b2_active=False,
++    )
++    assert fnr["reason"] == "positive_control_failed"
++    false_negative = mod._source_status(
++        name="X",
++        source=source,
++        root=tmp_path,
++        artifact={"honest_verdict": "complete: null"},
++        exists=True,
++        live_flags_by_name={
++            "X": [
++                {
++                    "kind": "FALSE_NEGATIVE_RISK",
++                    "severity": "warn",
++                    "detail": "false_negative_risk_open: positive control missing",
++                }
++            ]
++        },
++        b2_active=False,
++    )
++    assert false_negative["reason"] == "false_negative_risk_open"
++    handled = mod._flagged_artifacts_handled(
++        {"P": fnr, "F": false_negative, "G": gate_failed},
++        {"tautology_carveout_added": True, "wm_trust_guard_added": True},
++    )
++    assert handled["positive_control_failed_artifacts"] == [
++        {"name": "P", "artifact": "results/x.json"}
++    ]
++    assert handled["false_negative_risk_open_artifacts"] == [
++        {"name": "F", "artifact": "results/x.json"}
++    ]
++    assert handled["failed_acceptance_gate_overrides"] == [
++        {"name": "G", "artifact": "results/x.json", "failed_gates": ["acceptance_gate_main"]}
++    ]
++    assert mod._trust_counts(
++        {
++            "measurements": [
++                {"new_trust_pass": True, "new_planner_used": True, "new_correct_changed_cells": 2},
++                {"new_trust_pass": True, "new_planner_used": False, "new_correct_changed_cells": 2},
++            ]
++        },
++        {},
++    ) == (1, 2)
++
++    from carnot.agentic import arc_solver_kit
++
++    monkeypatch.setattr(
++        arc_solver_kit,
++        "offline_arcade",
++        lambda: (_ for _ in ()).throw(RuntimeError("offline unavailable")),
++    )
++    (tmp_path / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    spec_path = tmp_path / "openspec" / "capabilities" / "capstone" / "spec.md"
++    spec_path.parent.mkdir(parents=True, exist_ok=True)
++    spec_path.write_text("REQ-CAPSTONE-4614\n", encoding="utf-8")
++    registry_path = tmp_path / "ops" / "arc_solve_registry.yaml"
++    registry_path.parent.mkdir(parents=True, exist_ok=True)
++    registry_path.write_text("reproducible_total_levels: 55\n", encoding="utf-8")
++    failed_checks = mod.check_preconditions(tmp_path, statuses={})
++    assert failed_checks["offline_arcade"] is False
++    assert "offline_arcade_error" in failed_checks
++
++    blocked = mod.build_artifact(
++        artifacts={},
++        live_flags_by_name={},
++        registry={},
++        preconditions_checked={"ok": False, "blocked_resource": "offline_arcade"},
++        duration_s=0.001,
++    )
++    assert blocked["honest_verdict"] == "blocked_offline_arcade"
++
++    good = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name=_live_flags(),
++        registry={"reproducible_total_levels": 55},
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++    bad = dict(good)
++    bad["ready_for_operator_submit"] = True
++    bad["live_submittable_level_count"] = 33
++    assert "ready_for_operator_submit requires count above 33" in mod.validate_artifact(bad)
++
++    monkeypatch.setattr(mod, "build_artifact", lambda *args, **kwargs: broken_artifact(good))
++    with pytest.raises(ValueError, match="verifier_is_oracle"):
++        mod.run(tmp_path, write=False)
++
++
++def broken_artifact(good: Mapping[str, Any]) -> dict[str, Any]:
++    """Return one invalid artifact for the run validation branch."""
++
++    bad = dict(good)
++    bad["verifier_is_oracle"] = True
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    return bad
+-- 
+2.55.0
+

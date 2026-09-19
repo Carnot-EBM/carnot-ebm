@@ -1,0 +1,2476 @@
+From d4219efc6c91f4e2e654f833d5dd9138bcbfab57 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 10:40:35 -0400
+Subject: [PATCH 11049/11362] [conductor] ARC live-engine reachability and
+ generalization audit
+
+Automated research step by research conductor.
+Task ID: exp6981-arc-live-engine-generalization-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  120 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...ent_6968_arc_post_refit_induction_audit.py |   15 +-
+ ...81_arc_live_engine_generalization_audit.py | 1074 +++++++++++++++++
+ ..._arc_live_engine_generalization_audit.json |  643 ++++++++++
+ ...81_arc_live_engine_generalization_audit.py |   22 +
+ ...81_arc_live_engine_generalization_audit.py |  473 ++++++++
+ 7 files changed, 2347 insertions(+), 2 deletions(-)
+ create mode 100644 python/carnot/experiment_6981_arc_live_engine_generalization_audit.py
+ create mode 100644 results/experiment_6981_arc_live_engine_generalization_audit.json
+ create mode 100644 scripts/experiments/experiment_6981_arc_live_engine_generalization_audit.py
+ create mode 100644 tests/python/test_experiment_6981_arc_live_engine_generalization_audit.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 775cefe01d..87916b60dd 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -29209,3 +29209,123 @@ value, and observed value.
+ 
+ Implementation status: implemented 2026-09-04. The conductor owns later documentation and
+ traceability reconciliation.
++
++### REQ-ARC-WMTE-6981: Frozen Live-Engine Generalization and First-Step Audit
++
++Experiment 6981 SHALL inspect manifest rows after the engine timestamp recorded by Experiment
++6968. It SHALL select the earliest eligible row by timestamp and stable manifest order. It SHALL
++not use an accuracy, score, or outcome to select a row. An eligible row SHALL bind one completed
++live E3 run to immutable engine, prompt, transition, environment, scorer, and live-policy bytes.
++Each recorded SHA-256 digest SHALL match the current bytes before any engine executes.
++
++The transition source SHALL preserve the ordered grids, actions, data, level counters, prompt
++membership, repair-feedback membership, and first-step candidate groups recorded before engine
++generation. The shown rows SHALL form the recorded prefix. The held-out rows SHALL be disjoint.
++The audit SHALL fail closed if any held-out row, game source, hand-derived rule, or later repair
++feedback entered the prompt. The audit SHALL not collect or synthesize a replacement transition.
++
++The frozen engine SHALL execute on every shown and held-out row in a fresh restricted process.
++Each terminal engine row SHALL report exact-cell accuracy, changed-cell recall, changed-cell
++precision, changing-transition accuracy, no-op accuracy, exceptions, and latency. Identity,
++constant-delta, nearest-shown-delta, and row-table memorization controls SHALL execute on the same
++held-out rows. Their definitions and tie breaks SHALL be frozen before results are compared. The
++audit SHALL report prefix-to-held-out gaps and paired transition-cluster intervals.
++
++The audit SHALL trace `make_carnot_agent` through `E3AgentPolicy`, `load_engine`, candidate
++routing, model planning, and the emitted action. A fixture-level live call SHALL load the exact
++audited engine bytes and compare its first emitted action with a no-engine control. Source text
++alone SHALL not satisfy reachability. `live_path_reachable_score` SHALL equal 1 only when the
++audited engine is selected by the production route and changes that first action.
++
++The audit SHALL compare engine counterfactual ranking with the recorded shipped baseline for each
++first-step candidate group. Ranking SHALL use only the current grid, action data, and engine
++prediction. A later frame may score the frozen ranking but SHALL not rank the current action. A
++level-counter excursion SHALL not become solve credit unless it is banked, and this audit makes no
++solve claim in either case.
++
++`arc_engine_audit_complete_score` SHALL equal 1 only when every required source, engine, control,
++reachability, and first-step row is terminal. `arc_generalization_positive_score` SHALL equal 1
++only when the held-out changing accuracy beats the strongest frozen control, its paired 95 percent
++interval is above zero, all purity checks pass, and `live_path_reachable_score` equals 1. A missing
++precondition SHALL produce `blocked_arc_live_engine_generalization_audit` with the failed check,
++expected value, and observed value. A completed audit that does not pass the positive gate SHALL
++use the `null` verdict class.
++
++The required artifact fields are `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `source_artifact_hashes`, `selected_run_provenance`,
++`engine_hash`, `prompt_hash`, `transition_hash`, `environment_hash`, `scorer_hash`,
++`live_policy_hash`, `rows`, `per_transition_rows`, `split_rows`, `purity_rows`,
++`engine_execution_rows`, `control_rows`, `paired_control_delta_rows`,
++`memorization_signature_rows`, `live_path_trace_rows`, `live_influence_fixture_rows`,
++`first_step_candidate_rows`, `first_step_ranking_rows`, `prefix_exact_accuracy`,
++`heldout_exact_accuracy`, `heldout_changing_accuracy`, `heldout_noop_accuracy`,
++`generalization_gap`, `live_path_reachable_score`, `arc_engine_audit_complete_score`,
++`arc_generalization_positive_score`, `solve_claimed`, `level_claimed`, `registry_updated`,
++`submitted_to_leaderboard`, `random_seed`, `reproducibility_checksum`, `gate_check_summary`,
++`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
++scientific principle for every required field. `inference_substrate` SHALL equal
++`fresh_process_replay_of_frozen_live_agent_engine_and_live_path_fixture`. `solve_claimed`,
++`level_claimed`, `registry_updated`, `submitted_to_leaderboard`, and `verifier_is_oracle` SHALL be
++false. The audit SHALL not modify `ops/arc_solve_registry.yaml`.
++
++#### SCENARIO-ARC-WMTE-6981-CHRONOLOGICAL-SELECTION
++
++- GIVEN several post-6968 manifest rows with different scores
++- WHEN the audit selects a row
++- THEN it selects the earliest eligible timestamp
++- AND a partial or unbound row remains visible but cannot be selected.
++
++#### SCENARIO-ARC-WMTE-6981-HASH-VERIFICATION
++
++- GIVEN a recorded source digest and changed source bytes
++- WHEN preconditions run
++- THEN the mismatch blocks execution
++- AND the gate summary names the expected and observed digests.
++
++#### SCENARIO-ARC-WMTE-6981-SPLIT-PURITY
++
++- GIVEN a recorded shown prefix and held-out tail
++- THEN the sets are ordered and disjoint
++- AND game source, hand rules, held-out prompt rows, or repair feedback block the audit.
++
++#### SCENARIO-ARC-WMTE-6981-RESTRICTED-SCORING
++
++- GIVEN an eligible frozen engine
++- THEN a fresh restricted child scores every transition
++- AND each row records latency and all required prediction metrics.
++
++#### SCENARIO-ARC-WMTE-6981-FROZEN-CONTROLS
++
++- GIVEN the held-out rows
++- THEN all four preregistered controls score the same rows
++- AND the strongest control is selected only by the fixed changing-accuracy rule.
++
++#### SCENARIO-ARC-WMTE-6981-LIVE-REACHABILITY
++
++- GIVEN the audited engine and a fixture live call
++- WHEN the production factory constructs E3 policy and routes the engine
++- THEN the fixture records whether the exact engine changes the first action
++- AND source references without action influence score zero.
++
++#### SCENARIO-ARC-WMTE-6981-FIRST-STEP-RANKING
++
++- GIVEN recorded current-state candidate groups
++- WHEN the engine ranks counterfactual next states
++- THEN it cannot read a future frame before fixing the rank
++- AND the artifact compares the frozen order with the shipped baseline order.
++
++#### SCENARIO-ARC-WMTE-6981-BLOCKED
++
++- GIVEN no post-6968 row with all immutable sources
++- THEN every required artifact field is present
++- AND `honest_verdict` is `blocked_arc_live_engine_generalization_audit`
++- AND no partial score or substitute transition is emitted.
++
++#### SCENARIO-ARC-WMTE-6981-NO-SOLVE
++
++- GIVEN any positive, null, or blocked audit
++- THEN all solve, level, registry, and submission fields are false
++- AND the solve registry bytes do not change.
++
++Implementation status: specified 2026-09-04. The conductor owns later documentation and
++traceability reconciliation.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5e1373f89c..a3f95ed0a2 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5312,
++  "experiments_checked": 5313,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6968_arc_post_refit_induction_audit.py b/python/carnot/experiment_6968_arc_post_refit_induction_audit.py
+index 47fe96cca5..0ff8e2e73c 100644
+--- a/python/carnot/experiment_6968_arc_post_refit_induction_audit.py
++++ b/python/carnot/experiment_6968_arc_post_refit_induction_audit.py
+@@ -401,6 +401,7 @@ def score_prediction(
+             "changed_cell_precision": 0.0 if changing else None,
+             "changing_transition_correct": False if changing and not level_up else None,
+             "noop_correct": False if not changing and not level_up else None,
++            "predicted_changed_cell_count": None,
+         }
+     try:
+         predicted = _array(prediction)
+@@ -416,6 +417,7 @@ def score_prediction(
+         cell_accuracy = 0.0
+         recall = 0.0 if changing else None
+         precision = 0.0 if changing else None
++        predicted_changed_cell_count = None
+     else:
+         cell_accuracy = float(np.mean(predicted == target))
+         true_change = source != target
+@@ -427,6 +429,7 @@ def score_prediction(
+             if changing and predicted_change.any()
+             else (0.0 if changing else None)
+         )
++        predicted_changed_cell_count = int(predicted_change.sum())
+     return {
+         **base,
+         "exact_transition_correct": exact,
+@@ -435,6 +438,7 @@ def score_prediction(
+         "changed_cell_precision": precision,
+         "changing_transition_correct": exact if changing and not level_up else None,
+         "noop_correct": exact if not changing and not level_up else None,
++        "predicted_changed_cell_count": predicted_changed_cell_count,
+     }
+ 
+ 
+@@ -467,18 +471,26 @@ def _worker_replay(
+     engine = getattr(module, "engine")
+     outputs = []
+     for row in rows:
++        started = time.perf_counter()
+         try:
+             prediction = engine(
+                 _array(row.get("grid")).copy(),
+                 int(row.get("action", 0)),
+                 row.get("data"),
+             )
+-            outputs.append({"prediction": _array(prediction).tolist(), "exception": None})
++            outputs.append(
++                {
++                    "prediction": _array(prediction).tolist(),
++                    "exception": None,
++                    "latency_s": time.perf_counter() - started,
++                }
++            )
+         except Exception as error:  # noqa: BLE001 - generated code failures are measurements.
+             outputs.append(
+                 {
+                     "prediction": None,
+                     "exception": f"{type(error).__name__}: {str(error)[:240]}",
++                    "latency_s": time.perf_counter() - started,
+                 }
+             )
+     return {"worker_pid": os.getpid(), "outputs": outputs}
+@@ -562,6 +574,7 @@ def execute_engine_fresh(
+             exception=str(exception) if exception else None,
+         )
+         score["source_index"] = int(row.get("index", index))
++        score["latency_s"] = max(0.0, float(output.get("latency_s") or 0.0))
+         scored.append(score)
+     execution = [
+         {
+diff --git a/python/carnot/experiment_6981_arc_live_engine_generalization_audit.py b/python/carnot/experiment_6981_arc_live_engine_generalization_audit.py
+new file mode 100644
+index 0000000000..ff6ff50011
+--- /dev/null
++++ b/python/carnot/experiment_6981_arc_live_engine_generalization_audit.py
+@@ -0,0 +1,1074 @@
++"""Audit the first fully frozen live ARC engine after Experiment 6968.
++
++Spec refs: REQ-ARC-WMTE-6981 and SCENARIO-ARC-WMTE-6981-*.
++
++The audit reads only archived run evidence. Missing prompt or transition bytes
++produce a blocked result because a later reconstruction could hide leakage.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++import inspect
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++from typing import Any
++
++import numpy as np
++
++from carnot import experiment_6968_arc_post_refit_induction_audit as prior
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = 6981
++RANDOM_SEED = 6_981_202_609_04
++BOOTSTRAP_RESAMPLES = 10_000
++INFERENCE_SUBSTRATE = "fresh_process_replay_of_frozen_live_agent_engine_and_live_path_fixture"
++SOURCE_REPO_ROOT = Path(__file__).resolve().parents[2]
++REPO_ROOT = SOURCE_REPO_ROOT
++SPEC_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
++PRIOR_ARTIFACT_PATH = Path("results/experiment_6968_arc_post_refit_induction_audit.json")
++MANIFEST_PATH = Path("results/arc_e3/r11l/attempts/manifest.jsonl")
++SCORER_PATH = Path("scripts/arc_e3_induced_model_quality.py")
++LIVE_POLICY_PATH = Path("python/carnot/agentic/arc_competition_agent.py")
++WORLD_MODEL_PATH = Path("python/carnot/agentic/arc_executable_world_model.py")
++REGISTRY_PATH = Path("ops/arc_solve_registry.yaml")
++OUTPUT_PATH = Path("results/experiment_6981_arc_live_engine_generalization_audit.json")
++SOURCE_NAMES = ("run", "engine", "prompt", "transitions", "environment", "scorer", "live_policy")
++CONTROL_NAMES = (
++    "identity",
++    "constant_delta",
++    "nearest_shown_delta",
++    "row_table_memorization",
++)
++
++canonical_json = prior.canonical_json
++sha256_bytes = prior.sha256_bytes
++sha256_path = prior.sha256_path
++execute_engine_fresh = prior.execute_engine_fresh
++score_controls = prior.score_controls
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "selected_run_provenance",
++    "engine_hash",
++    "prompt_hash",
++    "transition_hash",
++    "environment_hash",
++    "scorer_hash",
++    "live_policy_hash",
++    "rows",
++    "per_transition_rows",
++    "split_rows",
++    "purity_rows",
++    "engine_execution_rows",
++    "control_rows",
++    "paired_control_delta_rows",
++    "memorization_signature_rows",
++    "live_path_trace_rows",
++    "live_influence_fixture_rows",
++    "first_step_candidate_rows",
++    "first_step_ranking_rows",
++    "prefix_exact_accuracy",
++    "heldout_exact_accuracy",
++    "heldout_changing_accuracy",
++    "heldout_noop_accuracy",
++    "generalization_gap",
++    "live_path_reachable_score",
++    "arc_engine_audit_complete_score",
++    "arc_generalization_positive_score",
++    "solve_claimed",
++    "level_claimed",
++    "registry_updated",
++    "submitted_to_leaderboard",
++    "random_seed",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "field_principles": "A stated reason makes each evidence field reviewable.",
++    "preconditions_checked": "Preflight results stop missing evidence from becoming measured data.",
++    "inference_substrate": "The substrate separates frozen replay from model generation.",
++    "duration_s": "Measured wall time exposes whether the audit executed.",
++    "source_artifact_hashes": "Content hashes bind every input to exact bytes.",
++    "selected_run_provenance": "Chronological provenance prevents outcome-based run selection.",
++    "engine_hash": "The engine digest identifies the exact executed program.",
++    "prompt_hash": "The prompt digest fixes what the generator could observe.",
++    "transition_hash": "The transition digest fixes row values and order.",
++    "environment_hash": "The environment digest fixes the recorded runtime context.",
++    "scorer_hash": "The scorer digest fixes metric definitions.",
++    "live_policy_hash": "The policy digest fixes the production route under test.",
++    "rows": "All manifest rows expose selection and rejection decisions.",
++    "per_transition_rows": "Per-row evidence permits independent metric recomputation.",
++    "split_rows": "Explicit memberships make the holdout boundary reproducible.",
++    "purity_rows": "Purity checks expose prompt and feedback leakage.",
++    "engine_execution_rows": "Restricted child receipts prove actual frozen-code execution.",
++    "control_rows": "Matched controls bound gains from no-op or copied deltas.",
++    "paired_control_delta_rows": "Paired intervals retain the transition as the uncertainty unit.",
++    "memorization_signature_rows": "Memorization signals separate lookup from transfer.",
++    "live_path_trace_rows": "Trace rows bind the factory, policy, loader, router, planner, and action.",
++    "live_influence_fixture_rows": "An action difference proves behavioral reachability.",
++    "first_step_candidate_rows": "Candidate rows expose every prediction used for ranking.",
++    "first_step_ranking_rows": "Frozen orders compare engine foresight with the shipped baseline.",
++    "prefix_exact_accuracy": "Prefix fit is a transcription check, not generalization evidence.",
++    "heldout_exact_accuracy": "Held-out exact accuracy measures whole-state transfer.",
++    "heldout_changing_accuracy": "Changing accuracy prevents no-op prevalence from inflating credit.",
++    "heldout_noop_accuracy": "No-op accuracy measures hallucinated state changes.",
++    "generalization_gap": "The prefix-minus-tail gap exposes fit collapse.",
++    "live_path_reachable_score": "Credit requires the exact engine to change a production-path action.",
++    "arc_engine_audit_complete_score": "Completion requires every source and output row to terminate.",
++    "arc_generalization_positive_score": "Positive credit requires pure superiority and live influence.",
++    "solve_claimed": "Transition prediction does not prove a solve.",
++    "level_claimed": "First-step foresight does not prove level completion.",
++    "registry_updated": "A read-only audit must leave the solve registry unchanged.",
++    "submitted_to_leaderboard": "Local replay does not imply external submission.",
++    "random_seed": "A fixed seed makes paired resampling reproducible.",
++    "reproducibility_checksum": "A timing-free checksum detects scientific-content drift.",
++    "gate_check_summary": "Blocked checks state expected and observed values for repair.",
++    "verifier_is_oracle": "False distinguishes prediction scoring from environment control.",
++    "verdict_class": "A closed class prevents a blocked result from reading as positive.",
++    "honest_verdict": "A terminal prefix makes the result machine-classifiable.",
++}
++
++
++def _read_json_object(path: Path | None) -> JsonDict | None:
++    """Read an immutable JSON object and treat malformed bytes as unavailable."""
++
++    if path is None:
++        return None
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, UnicodeError, json.JSONDecodeError):
++        return None
++    return value if isinstance(value, dict) else None
++
++
++def _gate(check: str, expected: Any, observed: Any, *, passed: bool | None = None) -> JsonDict:
++    """Record both sides of one precondition so a failure is actionable."""
++
++    return {
++        "check": check,
++        "expected_value": expected,
++        "observed_value": observed,
++        "passed": expected == observed if passed is None else bool(passed),
++    }
++
++
++def _failed_gates(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Project failed checks into the required blocked-result schema."""
++
++    return [
++        {
++            "failed_check": row.get("check"),
++            "expected_value": row.get("expected_value"),
++            "observed_value": row.get("observed_value"),
++        }
++        for row in rows
++        if row.get("passed") is not True
++    ]
++
++
++def _safe_source(repo_root: Path, raw_path: Any) -> Path | None:
++    """Resolve a recorded source only when it stays below the selected checkout."""
++
++    if not isinstance(raw_path, str) or not raw_path or Path(raw_path).is_absolute():
++        return None
++    candidate = (repo_root / raw_path).resolve()
++    try:
++        candidate.relative_to(repo_root.resolve())
++    except ValueError:
++        return None
++    return candidate
++
++
++def _prior_cutoff(repo_root: Path) -> tuple[str | None, JsonDict | None]:
++    """Read the immutable engine timestamp chosen by the prior audit."""
++
++    document = _read_json_object(repo_root / PRIOR_ARTIFACT_PATH)
++    provenance = document.get("selected_run_provenance", {}) if document else {}
++    selected = provenance.get("selected", {}) if isinstance(provenance, Mapping) else {}
++    cutoff = selected.get("engine_emitted_at") if isinstance(selected, Mapping) else None
++    return (str(cutoff) if cutoff else None), document
++
++
++def _source_record(row: Mapping[str, Any], name: str) -> JsonDict:
++    """Return one manifest source record, including legacy engine-file rows."""
++
++    value = row.get(name)
++    if isinstance(value, Mapping):
++        return {"path": value.get("path"), "sha256": value.get("sha256")}
++    if name == "engine" and isinstance(row.get("file"), str):
++        return {
++            "path": str(MANIFEST_PATH.parent / str(row["file"])),
++            "sha256": None,
++        }
++    return {"path": None, "sha256": None}
++
++
++def _verify_source(
++    repo_root: Path, name: str, record: Mapping[str, Any]
++) -> tuple[JsonDict, Path | None]:
++    """Verify one recorded source path and full SHA-256 digest."""
++
++    path = _safe_source(repo_root, record.get("path"))
++    expected = record.get("sha256")
++    observed = sha256_path(path) if path is not None else None
++    valid_expected = (
++        isinstance(expected, str) and expected.startswith("sha256:") and len(expected) == 71
++    )
++    stated_expectation = expected if valid_expected else "recorded_sha256"
++    check = _gate(
++        f"{name}_hash",
++        stated_expectation,
++        observed,
++        passed=bool(valid_expected and observed == expected),
++    )
++    return check, path
++
++
++def _run_matches_engine(document: JsonDict | None, engine_hash: str | None) -> bool:
++    """Require one completed E3 r11l row to name the selected engine digest."""
++
++    if document is None or document.get("complete") is not True or document.get("policy") != "e3":
++        return False
++    games = document.get("per_game", [])
++    return any(
++        isinstance(row, Mapping)
++        and row.get("game") == "r11l"
++        and row.get("engine_sha256") == engine_hash
++        for row in games
++        if isinstance(games, list)
++    )
++
++
++def discover_post_6968_rows(repo_root: Path) -> tuple[list[JsonDict], str | None]:
++    """List all later manifest rows and verify eligibility without using scores."""
++
++    cutoff, _ = _prior_cutoff(repo_root)
++    manifest = repo_root / MANIFEST_PATH
++    try:
++        lines = manifest.read_text(encoding="utf-8").splitlines()
++    except OSError:
++        return [], cutoff
++    candidates: list[JsonDict] = []
++    for manifest_index, line in enumerate(lines):
++        try:
++            raw = json.loads(line)
++        except json.JSONDecodeError:
++            continue
++        if not isinstance(raw, Mapping):
++            continue
++        ts = str(raw.get("ts") or "")
++        if not cutoff or not ts or ts <= cutoff:
++            continue
++        records = {name: _source_record(raw, name) for name in SOURCE_NAMES}
++        checks: list[JsonDict] = []
++        paths: dict[str, Path | None] = {}
++        for name, record in records.items():
++            check, path = _verify_source(repo_root, name, record)
++            checks.append(check)
++            paths[name] = path
++        engine_hash = checks[SOURCE_NAMES.index("engine")]["observed_value"]
++        engine_prefix = str(engine_hash or "").removeprefix("sha256:")[:16]
++        checks.append(_gate("engine_name_hash_prefix", raw.get("sha256_16"), engine_prefix))
++        run_document = _read_json_object(paths["run"])
++        checks.append(
++            _gate(
++                "completed_live_run_engine_binding",
++                True,
++                _run_matches_engine(run_document, engine_hash),
++            )
++        )
++        failed = _failed_gates(checks)
++        candidates.append(
++            {
++                "manifest_index": manifest_index,
++                "ts": ts,
++                "sha256_16": raw.get("sha256_16"),
++                "score_ignored_for_selection": raw.get("score"),
++                "sources": records,
++                "source_checks": checks,
++                "eligible": not failed,
++                "rejection_reasons": failed,
++            }
++        )
++    return candidates, cutoff
++
++
++def select_earliest_eligible(rows: Sequence[Mapping[str, Any]]) -> tuple[JsonDict | None, str]:
++    """Select the first eligible row by timestamp and manifest order only."""
++
++    eligible = [dict(row) for row in rows if row.get("eligible") is True]
++    if not eligible:
++        return None, "no_eligible_post_exp6968_manifest_row"
++    eligible.sort(key=lambda row: (str(row.get("ts")), int(row.get("manifest_index", -1))))
++    return eligible[0], "earliest_eligible_post_exp6968_manifest_timestamp"
++
++
++def _mean_boolean(rows: Sequence[Mapping[str, Any]], field: str) -> float | None:
++    """Average measured boolean rows and keep an empty channel explicit."""
++
++    values = [float(bool(row[field])) for row in rows if row.get(field) is not None]
++    return float(np.mean(values)) if values else None
++
++
++def _paired_control_deltas_all(
++    engine_rows: Sequence[Mapping[str, Any]],
++    control_rows: Sequence[Mapping[str, Any]],
++    *,
++    seed: int = RANDOM_SEED,
++    resamples: int = BOOTSTRAP_RESAMPLES,
++) -> list[JsonDict]:
++    """Compute paired intervals for every preregistered control, not a chosen winner."""
++
++    engine = {
++        str(row.get("transition_id")): bool(row.get("changing_transition_correct"))
++        for row in engine_rows
++        if row.get("changing_transition_correct") is not None
++    }
++    if not engine:
++        return []
++    output: list[JsonDict] = []
++    ids = sorted(engine)
++    for control_index, control in enumerate(CONTROL_NAMES):
++        controls = {
++            str(row.get("transition_id")): bool(row.get("changing_transition_correct"))
++            for row in control_rows
++            if row.get("control") == control and row.get("changing_transition_correct") is not None
++        }
++        if any(row_id not in controls for row_id in ids):
++            continue
++        deltas = np.asarray(
++            [float(engine[row_id]) - float(controls[row_id]) for row_id in ids], dtype=float
++        )
++        rng = np.random.default_rng(seed + control_index)
++        samples = rng.choice(deltas, size=(resamples, len(deltas)), replace=True).mean(axis=1)
++        low, high = np.percentile(samples, [2.5, 97.5]).tolist()
++        control_accuracy = float(np.mean([controls[row_id] for row_id in ids]))
++        for index, row_id in enumerate(ids):
++            output.append(
++                {
++                    "transition_id": row_id,
++                    "control": control,
++                    "engine_correct": engine[row_id],
++                    "control_correct": controls[row_id],
++                    "paired_delta": float(deltas[index]),
++                    "mean_paired_delta": float(deltas.mean()),
++                    "control_changing_accuracy": control_accuracy,
++                    "interval_low": float(low),
++                    "interval_high": float(high),
++                    "interval_level": 0.95,
++                    "cluster_unit": "transition",
++                    "bootstrap_resamples": resamples,
++                    "random_seed": seed + control_index,
++                    "terminal": True,
++                }
++            )
++    return output
++
++
++def rank_first_step_groups(
++    engine_path: Path, groups: Sequence[Mapping[str, Any]]
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Rank current-state candidates only by predicted changed-cell count."""
++
++    candidate_rows: list[JsonDict] = []
++    ranking_rows: list[JsonDict] = []
++    for group in groups:
++        group_id = str(group.get("group_id"))
++        grid = group.get("current_grid")
++        candidates = group.get("candidates", [])
++        replay_rows = [
++            {
++                "transition_id": f"{group_id}::{candidate.get('candidate_id')}",
++                "index": index,
++                "grid": grid,
++                "next_grid": grid,
++                "action": candidate.get("action"),
++                "data": candidate.get("data"),
++                "level_before": 0,
++                "level_after": 0,
++            }
++            for index, candidate in enumerate(candidates if isinstance(candidates, list) else [])
++            if isinstance(candidate, Mapping)
++        ]
++        scored, _ = execute_engine_fresh(engine_path, replay_rows)
++        sortable: list[tuple[bool, int, str]] = []
++        for candidate, score in zip(candidates, scored, strict=True):
++            candidate_id = str(candidate.get("candidate_id"))
++            changed = score.get("predicted_changed_cell_count")
++            exception = score.get("exception")
++            candidate_rows.append(
++                {
++                    "group_id": group_id,
++                    "candidate_id": candidate_id,
++                    "action": candidate.get("action"),
++                    "data": candidate.get("data"),
++                    "predicted_changed_cell_count": changed,
++                    "exception": exception,
++                    "latency_s": score.get("latency_s"),
++                    "realized_first_step_value": candidate.get("realized_first_step_value"),
++                    "terminal": score.get("terminal") is True,
++                }
++            )
++            sortable.append((exception is not None, -int(changed or 0), candidate_id))
++        engine_order = [candidate_id for _, _, candidate_id in sorted(sortable)]
++        baseline = [str(value) for value in group.get("shipped_baseline_order", [])]
++        ranking_rows.append(
++            {
++                "group_id": group_id,
++                "engine_order": engine_order,
++                "shipped_baseline_order": baseline,
++                "engine_top_candidate": engine_order[0] if engine_order else None,
++                "shipped_baseline_top_candidate": baseline[0] if baseline else None,
++                "ranking_changed": bool(
++                    engine_order and baseline and engine_order[0] != baseline[0]
++                ),
++                "ranking_inputs": [
++                    "current_grid",
++                    "action",
++                    "data",
++                    "frozen_engine_prediction",
++                ],
++                "future_frames_used_for_ranking": False,
++                "terminal": bool(engine_order)
++                and len(engine_order) == len(baseline)
++                and all(row["terminal"] for row in candidate_rows if row["group_id"] == group_id),
++            }
++        )
++    return candidate_rows, ranking_rows
++
++
++def _source_trace(symbol: str, value: Any, called: bool) -> JsonDict:
++    """Describe one production symbol and whether the fixture reached it."""
++
++    path = inspect.getsourcefile(value)
++    try:
++        line = inspect.getsourcelines(value)[1]
++    except (OSError, TypeError):
++        line = None
++    return {
++        "symbol": symbol,
++        "path": str(Path(path).resolve().relative_to(SOURCE_REPO_ROOT)) if path else None,
++        "line": line,
++        "called_by_fixture": called,
++        "terminal": True,
++    }
++
++
++def _trace_and_run_live_influence_fixture_in_process(
++    engine_path: Path, expected_engine_hash: str | None, *, restrict_engine: bool = False
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Use the production factory, loader, router, planner, and action method once."""
++
++    from carnot.agentic import arc_competition_agent as live
++    from carnot.agentic import arc_executable_world_model as world
++
++    called = {
++        name: False
++        for name in (
++            "make_carnot_agent",
++            "E3AgentPolicy",
++            "load_engine",
++            "_world_model_candidates",
++            "plan_in_model",
++            "next_move",
++        )
++    }
++
++    class FixtureBase:
++        """Supply only the game identifier required by the production factory."""
++
++        def __init__(self) -> None:
++            self.game_id = "r11l"
++
++    fixture: JsonDict = {
++        "factory_constructed_e3_policy": False,
++        "loaded_engine_hash": None,
++        "selected_candidate_name": None,
++        "engine_first_action": None,
++        "no_engine_first_action": None,
++        "reachable": False,
++        "exception": None,
++        "terminal": True,
++    }
++    try:
++        agent_class = live.make_carnot_agent(FixtureBase, cascade=True, proposer=object())
++        called["make_carnot_agent"] = True
++        agent = agent_class()
++        policy = agent._policy
++        control_agent = agent_class()
++        called["E3AgentPolicy"] = isinstance(policy, live.E3AgentPolicy)
++        fixture["factory_constructed_e3_policy"] = called["E3AgentPolicy"]
++        with tempfile.TemporaryDirectory(prefix="carnot-exp6981-live-") as temporary:
++            root = Path(temporary)
++            target = root / "r11l" / "world_model.py"
++            target.parent.mkdir(parents=True)
++            shutil.copyfile(engine_path, target)
++            if restrict_engine:
++                sys.addaudithook(prior._deny_generated_side_effects)
++            old_root = world.E3_DIR
++            world.E3_DIR = root
++            try:
++                engine, is_done = world.load_engine("r11l")
++                called["load_engine"] = True
++            finally:
++                world.E3_DIR = old_root
++        fixture["loaded_engine_hash"] = sha256_path(engine_path)
++        candidates = policy._world_model_candidates(engine, is_done)
++        called["_world_model_candidates"] = True
++        selected = candidates[0] if candidates else None
++        fixture["selected_candidate_name"] = selected.name if selected else None
++        start = np.zeros((2, 2), dtype=np.int64)
++        plan = (
++            world.plan_in_model(selected.engine, selected.is_level_complete, start)
++            if selected is not None
++            else None
++        )
++        called["plan_in_model"] = True
++        policy.phase = "execute"
++        policy.plan = list(plan or [])
++        policy.pi = 0
++        engine_action = policy.next_move([], None)
++        called["next_move"] = True
++        control_policy = control_agent._policy
++        control_policy.phase = "execute"
++        control_policy.plan = []
++        control_policy.pi = 0
++        control_action = control_policy.next_move([], None)
++        fixture["engine_first_action"] = list(engine_action)
++        fixture["no_engine_first_action"] = list(control_action)
++        fixture["reachable"] = bool(
++            expected_engine_hash
++            and fixture["loaded_engine_hash"] == expected_engine_hash
++            and selected is not None
++            and plan
++            and engine_action != control_action
++        )
++    except Exception as error:  # noqa: BLE001 - a failed fixture is measured reachability.
++        fixture["exception"] = f"{type(error).__name__}: {str(error)[:240]}"
++    symbols = (
++        ("make_carnot_agent", live.make_carnot_agent),
++        ("E3AgentPolicy", live.E3AgentPolicy),
++        ("load_engine", world.load_engine),
++        ("_world_model_candidates", live.E3AgentPolicy._world_model_candidates),
++        ("plan_in_model", world.plan_in_model),
++        ("next_move", live.E3AgentPolicy.next_move),
++    )
++    trace = [_source_trace(name, value, called[name]) for name, value in symbols]
++    return trace, [fixture]
++
++
++def trace_and_run_live_influence_fixture(
++    engine_path: Path, expected_engine_hash: str | None, *, timeout_s: float = 30.0
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Run the production live-path fixture in a bounded disposable process."""
++
++    command = [
++        sys.executable,
++        "-m",
++        "carnot.experiment_6981_arc_live_engine_generalization_audit",
++        "--live-fixture-worker",
++        str(engine_path.resolve()),
++        str(expected_engine_hash or ""),
++    ]
++    environment = dict(os.environ)
++    environment.update(
++        {
++            "PYTHONDONTWRITEBYTECODE": "1",
++            "PYTHONHASHSEED": "0",
++            "PYTHONPATH": str(SOURCE_REPO_ROOT / "python"),
++        }
++    )
++    symbols = (
++        "make_carnot_agent",
++        "E3AgentPolicy",
++        "load_engine",
++        "_world_model_candidates",
++        "plan_in_model",
++        "next_move",
++    )
++    with tempfile.TemporaryDirectory(prefix="carnot-exp6981-parent-") as temporary:
++        try:
++            result = subprocess.run(
++                command,
++                capture_output=True,
++                text=True,
++                cwd=temporary,
++                env=environment,
++                timeout=timeout_s,
++                check=False,
++            )
++            payload = json.loads(result.stdout.splitlines()[-1]) if result.stdout else {}
++            if result.returncode == 0 and isinstance(payload, Mapping):
++                return list(payload.get("trace", [])), list(payload.get("fixture", []))
++            error = f"worker_exit_{result.returncode}: {result.stderr[-240:]}"
++        except (subprocess.TimeoutExpired, json.JSONDecodeError) as caught:
++            error = f"{type(caught).__name__}: {str(caught)[:240]}"
++    trace = [
++        {
++            "symbol": symbol,
++            "path": None,
++            "line": None,
++            "called_by_fixture": False,
++            "terminal": True,
++        }
++        for symbol in symbols
++    ]
++    fixture = {
++        "factory_constructed_e3_policy": False,
++        "loaded_engine_hash": None,
++        "selected_candidate_name": None,
++        "engine_first_action": None,
++        "no_engine_first_action": None,
++        "reachable": False,
++        "exception": error,
++        "terminal": True,
++    }
++    return trace, [fixture]
++
++
++def _empty_artifact(repo_root: Path) -> JsonDict:
++    """Create the complete schema before any external check can fail."""
++
++    return {
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": [],
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": 0.0,
++        "source_artifact_hashes": {
++            "prior_audit": {
++                "path": str(PRIOR_ARTIFACT_PATH),
++                "sha256": sha256_path(repo_root / PRIOR_ARTIFACT_PATH),
++            },
++            "attempt_manifest": {
++                "path": str(MANIFEST_PATH),
++                "sha256": sha256_path(repo_root / MANIFEST_PATH),
++            },
++            "solve_registry": {
++                "path": str(REGISTRY_PATH),
++                "sha256": sha256_path(repo_root / REGISTRY_PATH),
++            },
++        },
++        "selected_run_provenance": {},
++        "engine_hash": None,
++        "prompt_hash": None,
++        "transition_hash": None,
++        "environment_hash": None,
++        "scorer_hash": None,
++        "live_policy_hash": None,
++        "rows": [],
++        "per_transition_rows": [],
++        "split_rows": [],
++        "purity_rows": [],
++        "engine_execution_rows": [],
++        "control_rows": [],
++        "paired_control_delta_rows": [],
++        "memorization_signature_rows": [],
++        "live_path_trace_rows": [],
++        "live_influence_fixture_rows": [],
++        "first_step_candidate_rows": [],
++        "first_step_ranking_rows": [],
++        "prefix_exact_accuracy": None,
++        "heldout_exact_accuracy": None,
++        "heldout_changing_accuracy": None,
++        "heldout_noop_accuracy": None,
++        "generalization_gap": None,
++        "live_path_reachable_score": 0,
++        "arc_engine_audit_complete_score": 0,
++        "arc_generalization_positive_score": 0,
++        "solve_claimed": False,
++        "level_claimed": False,
++        "registry_updated": False,
++        "submitted_to_leaderboard": False,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": None,
++        "gate_check_summary": [],
++        "verifier_is_oracle": False,
++        "verdict_class": "blocked",
++        "honest_verdict": "blocked_arc_live_engine_generalization_audit",
++    }
++
++
++def _stable_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash scientific content without wall time, process IDs, or row latency."""
++
++    value = deepcopy(dict(artifact))
++    value.pop("duration_s", None)
++    value.pop("reproducibility_checksum", None)
++    for rows_name in ("engine_execution_rows", "first_step_candidate_rows"):
++        for row in value.get(rows_name, []):
++            if isinstance(row, dict):
++                row.pop("latency_s", None)
++                row.pop("parent_pid", None)
++                row.pop("worker_pid", None)
++    return sha256_bytes(canonical_json(value))
++
++
++def _finish_blocked(artifact: JsonDict, checks: list[JsonDict], started: float) -> JsonDict:
++    """Finish a blocked result with no partial measurements."""
++
++    artifact["preconditions_checked"] = checks
++    artifact["gate_check_summary"] = _failed_gates(checks)
++    artifact["duration_s"] = round(time.monotonic() - started, 6)
++    artifact["reproducibility_checksum"] = _stable_checksum(artifact)
++    return artifact
++
++
++def _selected_paths(repo_root: Path, selected: Mapping[str, Any]) -> dict[str, Path]:
++    """Resolve already-verified selected source paths for later reads."""
++
++    paths: dict[str, Path] = {}
++    sources = selected.get("sources", {})
++    for name in SOURCE_NAMES:
++        record = sources.get(name, {}) if isinstance(sources, Mapping) else {}
++        path = _safe_source(repo_root, record.get("path") if isinstance(record, Mapping) else None)
++        if path is not None:
++            paths[name] = path
++    return paths
++
++
++def _purity_checks(
++    transition: Mapping[str, Any], prompt: Mapping[str, Any]
++) -> tuple[JsonDict, list[JsonDict], list[JsonDict]]:
++    """Rebuild the prefix and reject every forbidden information channel."""
++
++    rows = transition.get("rows", [])
++    prompt_ids = transition.get("prompt_row_ids", [])
++    repair_ids = transition.get("repair_feedback_row_ids", [])
++    split, per_row, split_failures = prior.rebuild_split(
++        rows if isinstance(rows, list) else [],
++        prompt_row_ids=prompt_ids if isinstance(prompt_ids, list) else [],
++        repair_feedback_row_ids=repair_ids if isinstance(repair_ids, list) else [],
++    )
++    checks = [
++        _gate(
++            "prompt_membership_matches_transition_source",
++            prompt_ids,
++            prompt.get("included_transition_ids"),
++        ),
++        _gate(
++            "repair_feedback_membership_matches_transition_source",
++            repair_ids,
++            prompt.get("repair_feedback_transition_ids"),
++        ),
++        _gate("prompt_used_game_source", False, prompt.get("used_game_source")),
++        _gate("prompt_used_hand_derived_rules", False, prompt.get("used_hand_derived_rules")),
++        _gate(
++            "heldout_revealed_before_generation",
++            False,
++            prompt.get("heldout_revealed_before_generation"),
++        ),
++        _gate("split_reconstruction_failures", [], split_failures),
++    ]
++    heldout = set(split["heldout_row_ids"])
++    prompt_visible = set(str(value) for value in prompt.get("included_transition_ids", []))
++    feedback_visible = set(str(value) for value in prompt.get("repair_feedback_transition_ids", []))
++    checks.extend(
++        [
++            _gate("heldout_rows_in_prompt", [], sorted(heldout & prompt_visible)),
++            _gate("heldout_rows_in_repair_feedback", [], sorted(heldout & feedback_visible)),
++        ]
++    )
++    purity = [
++        {
++            **row,
++            "game_source_visible": bool(prompt.get("used_game_source")),
++            "hand_derived_rules_visible": bool(prompt.get("used_hand_derived_rules")),
++            "terminal": True,
++        }
++        for row in per_row
++    ]
++    return split, purity, checks
++
++
++def build_artifact(*, date: str, repo_root: Path = REPO_ROOT) -> JsonDict:
++    """Build a positive, null, or blocked result from immutable local evidence."""
++
++    del date
++    started = time.monotonic()
++    artifact = _empty_artifact(repo_root)
++    registry_hash_before = sha256_path(repo_root / REGISTRY_PATH)
++    rows, cutoff = discover_post_6968_rows(repo_root)
++    selected, reason = select_earliest_eligible(rows)
++    artifact["rows"] = rows
++    artifact["selected_run_provenance"] = {
++        "selection_reason": reason,
++        "post_exp6968_cutoff": cutoff,
++        "candidate_count": len(rows),
++        "eligible_count": sum(row.get("eligible") is True for row in rows),
++        "selected": selected,
++    }
++    checks = [
++        _gate("prior_exp6968_artifact", True, (repo_root / PRIOR_ARTIFACT_PATH).is_file()),
++        _gate("post_exp6968_cutoff_recorded", True, cutoff is not None),
++        _gate("attempt_manifest", True, (repo_root / MANIFEST_PATH).is_file()),
++        _gate("post_exp6968_manifest_rows", ">=1", len(rows), passed=len(rows) >= 1),
++        _gate(
++            "eligible_post_exp6968_live_engine",
++            ">=1",
++            sum(row.get("eligible") is True for row in rows),
++            passed=selected is not None,
++        ),
++    ]
++    if selected is None:
++        if rows:
++            checks.extend(dict(row) for row in rows[0].get("source_checks", []))
++        return _finish_blocked(artifact, checks, started)
++    checks.extend(dict(row) for row in selected.get("source_checks", []))
++    paths = _selected_paths(repo_root, selected)
++    prompt = _read_json_object(paths.get("prompt"))
++    transitions = _read_json_object(paths.get("transitions"))
++    checks.extend(
++        [
++            _gate("immutable_prompt_source", True, prompt is not None),
++            _gate("immutable_transition_source", True, transitions is not None),
++        ]
++    )
++    if prompt is None or transitions is None:
++        return _finish_blocked(artifact, checks, started)
++    source_hashes = {
++        name: {
++            "path": str(selected["sources"][name]["path"]),
++            "sha256": sha256_path(paths[name]),
++        }
++        for name in SOURCE_NAMES
++    }
++    artifact["source_artifact_hashes"].update(source_hashes)
++    artifact["engine_hash"] = source_hashes["engine"]["sha256"]
++    artifact["prompt_hash"] = source_hashes["prompt"]["sha256"]
++    artifact["transition_hash"] = source_hashes["transitions"]["sha256"]
++    artifact["environment_hash"] = source_hashes["environment"]["sha256"]
++    artifact["scorer_hash"] = source_hashes["scorer"]["sha256"]
++    artifact["live_policy_hash"] = source_hashes["live_policy"]["sha256"]
++    checks.extend(
++        [
++            _gate(
++                "transition_engine_hash", artifact["engine_hash"], transitions.get("engine_sha256")
++            ),
++            _gate(
++                "transition_prompt_hash", artifact["prompt_hash"], transitions.get("prompt_sha256")
++            ),
++            _gate(
++                "transition_environment_hash",
++                artifact["environment_hash"],
++                transitions.get("environment_sha256"),
++            ),
++            _gate(
++                "transition_scorer_hash", artifact["scorer_hash"], transitions.get("scorer_sha256")
++            ),
++            _gate(
++                "transition_live_policy_hash",
++                artifact["live_policy_hash"],
++                transitions.get("live_policy_sha256"),
++            ),
++            _gate(
++                "transition_source_schema",
++                "carnot.arc_live_engine_audit_source.v1",
++                transitions.get("schema"),
++            ),
++        ]
++    )
++    source_rows = transitions.get("rows", [])
++    groups = transitions.get("first_step_candidate_groups", [])
++    checks.extend(
++        [
++            _gate(
++                "source_transition_rows",
++                ">=1",
++                len(source_rows) if isinstance(source_rows, list) else 0,
++                passed=bool(source_rows) if isinstance(source_rows, list) else False,
++            ),
++            _gate(
++                "recorded_first_step_candidate_groups",
++                ">=1",
++                len(groups) if isinstance(groups, list) else 0,
++                passed=bool(groups) if isinstance(groups, list) else False,
++            ),
++        ]
++    )
++    try:
++        for row in source_rows if isinstance(source_rows, list) else []:
++            prior._array(row.get("grid"))
++            prior._array(row.get("next_grid"))
++    except (AttributeError, TypeError, ValueError) as error:
++        checks.append(
++            _gate("source_transition_schema", "valid_2d_grids", f"{type(error).__name__}: {error}")
++        )
++    if _failed_gates(checks):
++        return _finish_blocked(artifact, checks, started)
++    split, purity, purity_checks = _purity_checks(transitions, prompt)
++    artifact["split_rows"] = [split]
++    artifact["purity_rows"] = purity
++    checks.extend(purity_checks)
++    if _failed_gates(purity_checks):
++        checks.append(_gate("split_purity", True, False))
++        return _finish_blocked(artifact, checks, started)
++    checks.append(_gate("split_purity", True, True))
++    shown_ids = set(split["shown_row_ids"])
++    normalized = []
++    for source_row in sorted(source_rows, key=lambda row: int(row.get("index", -1))):
++        row = dict(source_row)
++        row["split"] = "shown_prefix" if str(row.get("transition_id")) in shown_ids else "heldout"
++        row["row_sha256"] = sha256_bytes(canonical_json(source_row))
++        normalized.append(row)
++    artifact["per_transition_rows"] = normalized
++    engine_rows, execution_receipts = execute_engine_fresh(paths["engine"], normalized)
++    for score, source_row in zip(engine_rows, normalized, strict=True):
++        score["split"] = source_row["split"]
++    receipt = execution_receipts[0]
++    artifact["engine_execution_rows"] = [
++        {
++            **row,
++            "fresh_process": receipt["fresh_process"],
++            "restricted_process": receipt["restricted_process"],
++            "write_guard_enabled": receipt["write_guard_enabled"],
++            "network_guard_enabled": receipt["network_guard_enabled"],
++            "parent_pid": receipt["parent_pid"],
++            "worker_pid": receipt["worker_pid"],
++        }
++        for row in engine_rows
++    ]
++    shown = [row for row in normalized if row["split"] == "shown_prefix"]
++    heldout = [row for row in normalized if row["split"] == "heldout"]
++    heldout_ids = {str(row["transition_id"]) for row in heldout}
++    artifact["control_rows"] = score_controls(shown, heldout)
++    shown_scores = [row for row in engine_rows if row["split"] == "shown_prefix"]
++    heldout_scores = [row for row in engine_rows if str(row["transition_id"]) in heldout_ids]
++    artifact["prefix_exact_accuracy"] = _mean_boolean(shown_scores, "exact_transition_correct")
++    artifact["heldout_exact_accuracy"] = _mean_boolean(heldout_scores, "exact_transition_correct")
++    artifact["heldout_changing_accuracy"] = _mean_boolean(
++        heldout_scores, "changing_transition_correct"
++    )
++    artifact["heldout_noop_accuracy"] = _mean_boolean(heldout_scores, "noop_correct")
++    if (
++        artifact["prefix_exact_accuracy"] is not None
++        and artifact["heldout_exact_accuracy"] is not None
++    ):
++        artifact["generalization_gap"] = (
++            artifact["prefix_exact_accuracy"] - artifact["heldout_exact_accuracy"]
++        )
++    artifact["paired_control_delta_rows"] = _paired_control_deltas_all(
++        heldout_scores, artifact["control_rows"]
++    )
++    artifact["memorization_signature_rows"] = prior.detect_memorization(
++        paths["engine"].read_text(encoding="utf-8"), engine_rows, artifact["control_rows"]
++    )
++    trace, influence = trace_and_run_live_influence_fixture(
++        paths["engine"], artifact["engine_hash"]
++    )
++    artifact["live_path_trace_rows"] = trace
++    artifact["live_influence_fixture_rows"] = influence
++    artifact["live_path_reachable_score"] = int(influence[0].get("reachable") is True)
++    candidate_rows, ranking_rows = rank_first_step_groups(paths["engine"], groups)
++    artifact["first_step_candidate_rows"] = candidate_rows
++    artifact["first_step_ranking_rows"] = ranking_rows
++    terminal = bool(
++        len(engine_rows) == len(normalized)
++        and all(row.get("terminal") is True for row in engine_rows)
++        and execution_receipts[0].get("terminal") is True
++        and len(artifact["control_rows"]) == len(CONTROL_NAMES) * len(heldout)
++        and all(row.get("terminal") is True for row in artifact["control_rows"])
++        and artifact["paired_control_delta_rows"]
++        and all(row.get("terminal") is True for row in artifact["paired_control_delta_rows"])
++        and all(row.get("terminal") is True for row in trace)
++        and all(row.get("terminal") is True for row in influence)
++        and candidate_rows
++        and all(row.get("terminal") is True for row in candidate_rows)
++        and ranking_rows
++        and all(row.get("terminal") is True for row in ranking_rows)
++    )
++    artifact["arc_engine_audit_complete_score"] = int(terminal)
++    interval_summaries = {
++        row["control"]: row
++        for row in artifact["paired_control_delta_rows"]
++        if row["transition_id"] == sorted(heldout_ids)[0]
++    }
++    strongest_control_accuracy = max(
++        (row["control_changing_accuracy"] for row in interval_summaries.values()), default=1.0
++    )
++    positive = bool(
++        terminal
++        and artifact["live_path_reachable_score"] == 1
++        and artifact["heldout_changing_accuracy"] is not None
++        and artifact["heldout_changing_accuracy"] > strongest_control_accuracy
++        and len(interval_summaries) == len(CONTROL_NAMES)
++        and all(row["interval_low"] > 0 for row in interval_summaries.values())
++        and all(row.get("pure") is True for row in purity)
++    )
++    artifact["arc_generalization_positive_score"] = int(positive)
++    artifact["verdict_class"] = "positive" if positive else "null"
++    artifact["honest_verdict"] = (
++        "positive_arc_live_engine_generalizes_and_influences_first_action"
++        if positive
++        else "null_arc_live_engine_does_not_clear_generalization_and_reachability_gate"
++    )
++    checks.append(
++        _gate(
++            "solve_registry_unchanged", registry_hash_before, sha256_path(repo_root / REGISTRY_PATH)
++        )
++    )
++    artifact["preconditions_checked"] = checks
++    artifact["gate_check_summary"] = []
++    artifact["duration_s"] = round(time.monotonic() - started, 6)
++    artifact["reproducibility_checksum"] = _stable_checksum(artifact)
++    return artifact
++
++
++def write_json_atomic(path: Path, artifact: Mapping[str, Any]) -> None:
++    """Replace the artifact atomically so readers never observe partial JSON."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    temporary = path.with_suffix(path.suffix + ".tmp")
++    temporary.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    temporary.replace(path)
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run the read-only audit and write one terminal artifact."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default="20260904")
++    parser.add_argument("--output", default=str(OUTPUT_PATH))
++    args = parser.parse_args(argv)
++    output = Path(args.output)
++    if not output.is_absolute():
++        output = REPO_ROOT / output
++    artifact = build_artifact(date=args.date, repo_root=REPO_ROOT)
++    write_json_atomic(output, artifact)
++    print(f"wrote {output}")
++    print(artifact["honest_verdict"])
++    return 1 if artifact["verdict_class"] == "blocked" else 0
++
++
++def _live_fixture_worker(argv: Sequence[str]) -> int:  # pragma: no cover - child protocol.
++    """Execute the live fixture after installing the generated-code effect guard."""
++
++    trace, fixture = _trace_and_run_live_influence_fixture_in_process(
++        Path(argv[1]), argv[2] or None, restrict_engine=True
++    )
++    print(json.dumps({"trace": trace, "fixture": fixture}, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised through subprocess protocol.
++    if len(sys.argv) >= 2 and sys.argv[1] == "--live-fixture-worker":
++        raise SystemExit(_live_fixture_worker(sys.argv[1:]))
++    raise SystemExit(main())
+diff --git a/results/experiment_6981_arc_live_engine_generalization_audit.json b/results/experiment_6981_arc_live_engine_generalization_audit.json
+new file mode 100644
+index 0000000000..423baa1a00
+--- /dev/null
++++ b/results/experiment_6981_arc_live_engine_generalization_audit.json
+@@ -0,0 +1,643 @@
++{
++  "arc_engine_audit_complete_score": 0,
++  "arc_generalization_positive_score": 0,
++  "control_rows": [],
++  "duration_s": 0.00135,
++  "engine_execution_rows": [],
++  "engine_hash": null,
++  "environment_hash": null,
++  "field_principles": {
++    "arc_engine_audit_complete_score": "Completion requires every source and output row to terminate.",
++    "arc_generalization_positive_score": "Positive credit requires pure superiority and live influence.",
++    "control_rows": "Matched controls bound gains from no-op or copied deltas.",
++    "duration_s": "Measured wall time exposes whether the audit executed.",
++    "engine_execution_rows": "Restricted child receipts prove actual frozen-code execution.",
++    "engine_hash": "The engine digest identifies the exact executed program.",
++    "environment_hash": "The environment digest fixes the recorded runtime context.",
++    "field_principles": "A stated reason makes each evidence field reviewable.",
++    "first_step_candidate_rows": "Candidate rows expose every prediction used for ranking.",
++    "first_step_ranking_rows": "Frozen orders compare engine foresight with the shipped baseline.",
++    "gate_check_summary": "Blocked checks state expected and observed values for repair.",
++    "generalization_gap": "The prefix-minus-tail gap exposes fit collapse.",
++    "heldout_changing_accuracy": "Changing accuracy prevents no-op prevalence from inflating credit.",
++    "heldout_exact_accuracy": "Held-out exact accuracy measures whole-state transfer.",
++    "heldout_noop_accuracy": "No-op accuracy measures hallucinated state changes.",
++    "honest_verdict": "A terminal prefix makes the result machine-classifiable.",
++    "inference_substrate": "The substrate separates frozen replay from model generation.",
++    "level_claimed": "First-step foresight does not prove level completion.",
++    "live_influence_fixture_rows": "An action difference proves behavioral reachability.",
++    "live_path_reachable_score": "Credit requires the exact engine to change a production-path action.",
++    "live_path_trace_rows": "Trace rows bind the factory, policy, loader, router, planner, and action.",
++    "live_policy_hash": "The policy digest fixes the production route under test.",
++    "memorization_signature_rows": "Memorization signals separate lookup from transfer.",
++    "paired_control_delta_rows": "Paired intervals retain the transition as the uncertainty unit.",
++    "per_transition_rows": "Per-row evidence permits independent metric recomputation.",
++    "preconditions_checked": "Preflight results stop missing evidence from becoming measured data.",
++    "prefix_exact_accuracy": "Prefix fit is a transcription check, not generalization evidence.",
++    "prompt_hash": "The prompt digest fixes what the generator could observe.",
++    "purity_rows": "Purity checks expose prompt and feedback leakage.",
++    "random_seed": "A fixed seed makes paired resampling reproducible.",
++    "registry_updated": "A read-only audit must leave the solve registry unchanged.",
++    "reproducibility_checksum": "A timing-free checksum detects scientific-content drift.",
++    "rows": "All manifest rows expose selection and rejection decisions.",
++    "scorer_hash": "The scorer digest fixes metric definitions.",
++    "selected_run_provenance": "Chronological provenance prevents outcome-based run selection.",
++    "solve_claimed": "Transition prediction does not prove a solve.",
++    "source_artifact_hashes": "Content hashes bind every input to exact bytes.",
++    "split_rows": "Explicit memberships make the holdout boundary reproducible.",
++    "submitted_to_leaderboard": "Local replay does not imply external submission.",
++    "transition_hash": "The transition digest fixes row values and order.",
++    "verdict_class": "A closed class prevents a blocked result from reading as positive.",
++    "verifier_is_oracle": "False distinguishes prediction scoring from environment control."
++  },
++  "first_step_candidate_rows": [],
++  "first_step_ranking_rows": [],
++  "gate_check_summary": [
++    {
++      "expected_value": ">=1",
++      "failed_check": "eligible_post_exp6968_live_engine",
++      "observed_value": 0
++    },
++    {
++      "expected_value": null,
++      "failed_check": "run_hash",
++      "observed_value": null
++    },
++    {
++      "expected_value": null,
++      "failed_check": "engine_hash",
++      "observed_value": "sha256:c154412f1c61d981698436728f8a76f4c9c84c85f4b7f08024d7112a6d29599a"
++    },
++    {
++      "expected_value": null,
++      "failed_check": "prompt_hash",
++      "observed_value": null
++    },
++    {
++      "expected_value": null,
++      "failed_check": "transitions_hash",
++      "observed_value": null
++    },
++    {
++      "expected_value": null,
++      "failed_check": "environment_hash",
++      "observed_value": null
++    },
++    {
++      "expected_value": null,
++      "failed_check": "scorer_hash",
++      "observed_value": null
++    },
++    {
++      "expected_value": null,
++      "failed_check": "live_policy_hash",
++      "observed_value": null
++    },
++    {
++      "expected_value": true,
++      "failed_check": "completed_live_run_engine_binding",
++      "observed_value": false
++    }
++  ],
++  "generalization_gap": null,
++  "heldout_changing_accuracy": null,
++  "heldout_exact_accuracy": null,
++  "heldout_noop_accuracy": null,
++  "honest_verdict": "blocked_arc_live_engine_generalization_audit",
++  "inference_substrate": "fresh_process_replay_of_frozen_live_agent_engine_and_live_path_fixture",
++  "level_claimed": false,
++  "live_influence_fixture_rows": [],
++  "live_path_reachable_score": 0,
++  "live_path_trace_rows": [],
++  "live_policy_hash": null,
++  "memorization_signature_rows": [],
++  "paired_control_delta_rows": [],
++  "per_transition_rows": [],
++  "preconditions_checked": [
++    {
++      "check": "prior_exp6968_artifact",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true
++    },
++    {
++      "check": "post_exp6968_cutoff_recorded",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true
++    },
++    {
++      "check": "attempt_manifest",
++      "expected_value": true,
++      "observed_value": true,
++      "passed": true
++    },
++    {
++      "check": "post_exp6968_manifest_rows",
++      "expected_value": ">=1",
++      "observed_value": 3,
++      "passed": true
++    },
++    {
++      "check": "eligible_post_exp6968_live_engine",
++      "expected_value": ">=1",
++      "observed_value": 0,
++      "passed": false
++    },
++    {
++      "check": "run_hash",
++      "expected_value": null,
++      "observed_value": null,
++      "passed": false
++    },
++    {
++      "check": "engine_hash",
++      "expected_value": null,
++      "observed_value": "sha256:c154412f1c61d981698436728f8a76f4c9c84c85f4b7f08024d7112a6d29599a",
++      "passed": false
++    },
++    {
++      "check": "prompt_hash",
++      "expected_value": null,
++      "observed_value": null,
++      "passed": false
++    },
++    {
++      "check": "transitions_hash",
++      "expected_value": null,
++      "observed_value": null,
++      "passed": false
++    },
++    {
++      "check": "environment_hash",
++      "expected_value": null,
++      "observed_value": null,
++      "passed": false
++    },
++    {
++      "check": "scorer_hash",
++      "expected_value": null,
++      "observed_value": null,
++      "passed": false
++    },
++    {
++      "check": "live_policy_hash",
++      "expected_value": null,
++      "observed_value": null,
++      "passed": false
++    },
++    {
++      "check": "engine_name_hash_prefix",
++      "expected_value": "c154412f1c61d981",
++      "observed_value": "c154412f1c61d981",
++      "passed": true
++    },
++    {
++      "check": "completed_live_run_engine_binding",
++      "expected_value": true,
++      "observed_value": false,
++      "passed": false
++    }
++  ],
++  "prefix_exact_accuracy": null,
++  "prompt_hash": null,
++  "purity_rows": [],
++  "random_seed": 698120260904,
++  "registry_updated": false,
++  "reproducibility_checksum": "sha256:4cd0fd9d5131d2943a2045fbf1359c58cc49ab7417e3e1c206ca25276497ef0a",
++  "rows": [
++    {
++      "eligible": false,
++      "manifest_index": 12,
++      "rejection_reasons": [
++        {
++          "expected_value": null,
++          "failed_check": "run_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "engine_hash",
++          "observed_value": "sha256:c154412f1c61d981698436728f8a76f4c9c84c85f4b7f08024d7112a6d29599a"
++        },
++        {
++          "expected_value": null,
++          "failed_check": "prompt_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "transitions_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "environment_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "scorer_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "live_policy_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": true,
++          "failed_check": "completed_live_run_engine_binding",
++          "observed_value": false
++        }
++      ],
++      "score_ignored_for_selection": null,
++      "sha256_16": "c154412f1c61d981",
++      "source_checks": [
++        {
++          "check": "run_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "engine_hash",
++          "expected_value": null,
++          "observed_value": "sha256:c154412f1c61d981698436728f8a76f4c9c84c85f4b7f08024d7112a6d29599a",
++          "passed": false
++        },
++        {
++          "check": "prompt_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "transitions_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "environment_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "scorer_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "live_policy_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "engine_name_hash_prefix",
++          "expected_value": "c154412f1c61d981",
++          "observed_value": "c154412f1c61d981",
++          "passed": true
++        },
++        {
++          "check": "completed_live_run_engine_binding",
++          "expected_value": true,
++          "observed_value": false,
++          "passed": false
++        }
++      ],
++      "sources": {
++        "engine": {
++          "path": "results/arc_e3/r11l/attempts/wm_20260904T062427_837480__c154412f1c61d981.py",
++          "sha256": null
++        },
++        "environment": {
++          "path": null,
++          "sha256": null
++        },
++        "live_policy": {
++          "path": null,
++          "sha256": null
++        },
++        "prompt": {
++          "path": null,
++          "sha256": null
++        },
++        "run": {
++          "path": null,
++          "sha256": null
++        },
++        "scorer": {
++          "path": null,
++          "sha256": null
++        },
++        "transitions": {
++          "path": null,
++          "sha256": null
++        }
++      },
++      "ts": "20260904T062427_837480"
++    },
++    {
++      "eligible": false,
++      "manifest_index": 13,
++      "rejection_reasons": [
++        {
++          "expected_value": null,
++          "failed_check": "run_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "engine_hash",
++          "observed_value": "sha256:0500fd55b777d4eb5c6133723bad72a54042a85a2555cabf1e51ad1ea4e7a87b"
++        },
++        {
++          "expected_value": null,
++          "failed_check": "prompt_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "transitions_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "environment_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "scorer_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "live_policy_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": true,
++          "failed_check": "completed_live_run_engine_binding",
++          "observed_value": false
++        }
++      ],
++      "score_ignored_for_selection": null,
++      "sha256_16": "0500fd55b777d4eb",
++      "source_checks": [
++        {
++          "check": "run_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "engine_hash",
++          "expected_value": null,
++          "observed_value": "sha256:0500fd55b777d4eb5c6133723bad72a54042a85a2555cabf1e51ad1ea4e7a87b",
++          "passed": false
++        },
++        {
++          "check": "prompt_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "transitions_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "environment_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "scorer_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "live_policy_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "engine_name_hash_prefix",
++          "expected_value": "0500fd55b777d4eb",
++          "observed_value": "0500fd55b777d4eb",
++          "passed": true
++        },
++        {
++          "check": "completed_live_run_engine_binding",
++          "expected_value": true,
++          "observed_value": false,
++          "passed": false
++        }
++      ],
++      "sources": {
++        "engine": {
++          "path": "results/arc_e3/r11l/attempts/wm_20260904T071247_425643__0500fd55b777d4eb.py",
++          "sha256": null
++        },
++        "environment": {
++          "path": null,
++          "sha256": null
++        },
++        "live_policy": {
++          "path": null,
++          "sha256": null
++        },
++        "prompt": {
++          "path": null,
++          "sha256": null
++        },
++        "run": {
++          "path": null,
++          "sha256": null
++        },
++        "scorer": {
++          "path": null,
++          "sha256": null
++        },
++        "transitions": {
++          "path": null,
++          "sha256": null
++        }
++      },
++      "ts": "20260904T071247_425643"
++    },
++    {
++      "eligible": false,
++      "manifest_index": 14,
++      "rejection_reasons": [
++        {
++          "expected_value": null,
++          "failed_check": "run_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "engine_hash",
++          "observed_value": "sha256:dbfbaae7573c5df45b85e419cd8f64496f1a3a2b4f72e85b431fdbc4040a87d1"
++        },
++        {
++          "expected_value": null,
++          "failed_check": "prompt_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "transitions_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "environment_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "scorer_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": null,
++          "failed_check": "live_policy_hash",
++          "observed_value": null
++        },
++        {
++          "expected_value": true,
++          "failed_check": "completed_live_run_engine_binding",
++          "observed_value": false
++        }
++      ],
++      "score_ignored_for_selection": null,
++      "sha256_16": "dbfbaae7573c5df4",
++      "source_checks": [
++        {
++          "check": "run_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "engine_hash",
++          "expected_value": null,
++          "observed_value": "sha256:dbfbaae7573c5df45b85e419cd8f64496f1a3a2b4f72e85b431fdbc4040a87d1",
++          "passed": false
++        },
++        {
++          "check": "prompt_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "transitions_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "environment_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "scorer_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "live_policy_hash",
++          "expected_value": null,
++          "observed_value": null,
++          "passed": false
++        },
++        {
++          "check": "engine_name_hash_prefix",
++          "expected_value": "dbfbaae7573c5df4",
++          "observed_value": "dbfbaae7573c5df4",
++          "passed": true
++        },
++        {
++          "check": "completed_live_run_engine_binding",
++          "expected_value": true,
++          "observed_value": false,
++          "passed": false
++        }
++      ],
++      "sources": {
++        "engine": {
++          "path": "results/arc_e3/r11l/attempts/wm_20260904T074908_522264__dbfbaae7573c5df4.py",
++          "sha256": null
++        },
++        "environment": {
++          "path": null,
++          "sha256": null
++        },
++        "live_policy": {
++          "path": null,
++          "sha256": null
++        },
++        "prompt": {
++          "path": null,
++          "sha256": null
++        },
++        "run": {
++          "path": null,
++          "sha256": null
++        },
++        "scorer": {
++          "path": null,
++          "sha256": null
++        },
++        "transitions": {
++          "path": null,
++          "sha256": null
++        }
++      },
++      "ts": "20260904T074908_522264"
++    }
++  ],
++  "scorer_hash": null,
++  "selected_run_provenance": {
++    "candidate_count": 3,
++    "eligible_count": 0,
++    "post_exp6968_cutoff": "20260904T020536_575501",
++    "selected": null,
++    "selection_reason": "no_eligible_post_exp6968_manifest_row"
++  },
++  "solve_claimed": false,
++  "source_artifact_hashes": {
++    "attempt_manifest": {
++      "path": "results/arc_e3/r11l/attempts/manifest.jsonl",
++      "sha256": "sha256:31e1a2c321a0b231429efbf5cb83903bfda7a7676247ca252e5c20f71e11d892"
++    },
++    "prior_audit": {
++      "path": "results/experiment_6968_arc_post_refit_induction_audit.json",
++      "sha256": "sha256:47af1297d963f346363db87b542543c260fae0b6919eb8ff315be274c7b6f4b6"
++    },
++    "solve_registry": {
++      "path": "ops/arc_solve_registry.yaml",
++      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
++    }
++  },
++  "split_rows": [],
++  "submitted_to_leaderboard": false,
++  "transition_hash": null,
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6981_arc_live_engine_generalization_audit.py b/scripts/experiments/experiment_6981_arc_live_engine_generalization_audit.py
+new file mode 100644
+index 0000000000..48d3f0789b
+--- /dev/null
++++ b/scripts/experiments/experiment_6981_arc_live_engine_generalization_audit.py
+@@ -0,0 +1,22 @@
++#!/usr/bin/env python3
++"""Audit the first eligible frozen live engine after Experiment 6968.
++
++Spec ref: REQ-ARC-WMTE-6981.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.experiment_6981_arc_live_engine_generalization_audit import main
++
++
++if __name__ == "__main__":  # pragma: no cover - this file is the required command surface.
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6981_arc_live_engine_generalization_audit.py b/tests/python/test_experiment_6981_arc_live_engine_generalization_audit.py
+new file mode 100644
+index 0000000000..096f556263
+--- /dev/null
++++ b/tests/python/test_experiment_6981_arc_live_engine_generalization_audit.py
+@@ -0,0 +1,473 @@
++"""Tests for the frozen live-engine generalization audit.
++
++Spec refs: REQ-ARC-WMTE-6981 and SCENARIO-ARC-WMTE-6981-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import shutil
++
++import pytest
++
++from carnot import experiment_6981_arc_live_engine_generalization_audit as exp
++
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def _rows() -> list[dict[str, object]]:
++    """Return an ordered prefix and tail with one change and one no-op in each."""
++
++    return [
++        {
++            "transition_id": "s0",
++            "index": 0,
++            "grid": [[0, 0], [0, 0]],
++            "next_grid": [[1, 0], [0, 0]],
++            "action": 1,
++            "data": {"x": 0},
++            "level_before": 0,
++            "level_after": 0,
++        },
++        {
++            "transition_id": "s1",
++            "index": 1,
++            "grid": [[1, 0], [0, 0]],
++            "next_grid": [[1, 0], [0, 0]],
++            "action": 2,
++            "data": None,
++            "level_before": 0,
++            "level_after": 0,
++        },
++        {
++            "transition_id": "h0",
++            "index": 2,
++            "grid": [[0, 0], [1, 0]],
++            "next_grid": [[0, 1], [1, 0]],
++            "action": 1,
++            "data": {"x": 1},
++            "level_before": 0,
++            "level_after": 0,
++        },
++        {
++            "transition_id": "h1",
++            "index": 3,
++            "grid": [[0, 1], [1, 0]],
++            "next_grid": [[0, 1], [1, 0]],
++            "action": 2,
++            "data": None,
++            "level_before": 0,
++            "level_after": 0,
++        },
++    ]
++
++
++def _engine_source() -> str:
++    """Return one general action rule with a reachable fixture goal."""
++
++    return """import numpy as np
++def engine(grid, action, data):
++    g = np.asarray(grid).copy()
++    if int(action) == 1:
++        g[0, int((data or {}).get('x', 1))] = 1
++    return g
++def is_level_complete(grid):
++    g = np.asarray(grid)
++    return bool(g.ndim == 2 and g.shape[1] > 1 and g[0, 1] == 1)
++"""
++
++
++def _write_source(repo: Path, relative: str, value: str | dict[str, object]) -> dict[str, str]:
++    """Write one fixture source and return its immutable path and digest."""
++
++    path = repo / relative
++    path.parent.mkdir(parents=True, exist_ok=True)
++    text = value if isinstance(value, str) else json.dumps(value, sort_keys=True)
++    path.write_text(text, encoding="utf-8")
++    return {"path": relative, "sha256": exp.sha256_path(path)}
++
++
++def _write_fixture(repo: Path, *, ts: str = "20260904T030000_000000") -> Path:
++    """Write one complete post-6968 manifest row and all content-addressed sources."""
++
++    prior = repo / exp.PRIOR_ARTIFACT_PATH
++    prior.parent.mkdir(parents=True, exist_ok=True)
++    prior.write_text(
++        json.dumps(
++            {
++                "selected_run_provenance": {
++                    "selected": {"engine_emitted_at": "20260904T020536_575501"}
++                }
++            }
++        ),
++        encoding="utf-8",
++    )
++    engine_text = _engine_source()
++    engine_hash = exp.sha256_bytes(engine_text.encode())
++    engine_sha16 = engine_hash.removeprefix("sha256:")[:16]
++    engine = _write_source(
++        repo,
++        f"results/arc_e3/r11l/attempts/wm_{ts}__{engine_sha16}.py",
++        engine_text,
++    )
++    prompt = _write_source(
++        repo,
++        f"results/arc_e3/r11l/attempts/prompt_{ts}.json",
++        {
++            "included_transition_ids": ["s0", "s1"],
++            "repair_feedback_transition_ids": [],
++            "used_game_source": False,
++            "used_hand_derived_rules": False,
++            "heldout_revealed_before_generation": False,
++        },
++    )
++    environment = _write_source(
++        repo,
++        f"results/arc_e3/r11l/attempts/environment_{ts}.json",
++        {"game": "r11l", "policy": "e3", "n_ctx": 98304},
++    )
++    scorer = _write_source(
++        repo,
++        "scripts/arc_e3_induced_model_quality.py",
++        (ROOT / exp.SCORER_PATH).read_text(encoding="utf-8"),
++    )
++    live_policy = _write_source(
++        repo,
++        "python/carnot/agentic/arc_competition_agent.py",
++        (ROOT / exp.LIVE_POLICY_PATH).read_text(encoding="utf-8"),
++    )
++    transition_document: dict[str, object] = {
++        "schema": "carnot.arc_live_engine_audit_source.v1",
++        "engine_sha256": engine_hash,
++        "prompt_sha256": prompt["sha256"],
++        "environment_sha256": environment["sha256"],
++        "scorer_sha256": scorer["sha256"],
++        "live_policy_sha256": live_policy["sha256"],
++        "prompt_row_ids": ["s0", "s1"],
++        "repair_feedback_row_ids": [],
++        "rows": _rows(),
++        "first_step_candidate_groups": [
++            {
++                "group_id": "first-0",
++                "current_grid": [[0, 0], [0, 0]],
++                "shipped_baseline_order": ["noop", "change"],
++                "candidates": [
++                    {
++                        "candidate_id": "noop",
++                        "action": 2,
++                        "data": None,
++                        "realized_first_step_value": 0.0,
++                    },
++                    {
++                        "candidate_id": "change",
++                        "action": 1,
++                        "data": {"x": 1},
++                        "realized_first_step_value": 1.0,
++                    },
++                ],
++            }
++        ],
++    }
++    transitions = _write_source(
++        repo,
++        f"results/arc_e3/r11l/attempts/transitions_{ts}.json",
++        transition_document,
++    )
++    run_document = {
++        "complete": True,
++        "policy": "e3",
++        "run_started_at": "2026-09-04T02:50:00Z",
++        "run_completed_at": "2026-09-04T03:10:00Z",
++        "per_game": [{"game": "r11l", "engine_sha256": engine_hash}],
++    }
++    run = _write_source(repo, f"results/arc_leaderboard_eval_runs/r11l-{ts}.json", run_document)
++    registry = repo / exp.REGISTRY_PATH
++    registry.parent.mkdir(parents=True, exist_ok=True)
++    registry.write_text("games: {}\n", encoding="utf-8")
++    manifest = repo / exp.MANIFEST_PATH
++    manifest.parent.mkdir(parents=True, exist_ok=True)
++    manifest.write_text(
++        json.dumps(
++            {
++                "ts": ts,
++                "file": Path(engine["path"]).name,
++                "sha256_16": engine_sha16,
++                "score": -1000,
++                "run": run,
++                "engine": engine,
++                "prompt": prompt,
++                "transitions": transitions,
++                "environment": environment,
++                "scorer": scorer,
++                "live_policy": live_policy,
++            },
++            sort_keys=True,
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    return manifest
++
++
++def test_req_arc_wmte_6981_spec_precedes_code_and_names_contract() -> None:
++    """REQ-ARC-WMTE-6981 declares every field and required scenario."""
++
++    text = (ROOT / exp.SPEC_PATH).read_text(encoding="utf-8")
++    section = text[text.index("### REQ-ARC-WMTE-6981") :]
++
++    assert all(f"`{field}`" in section for field in exp.REQUIRED_ARTIFACT_FIELDS)
++    assert all(
++        f"SCENARIO-ARC-WMTE-6981-{name}" in section
++        for name in (
++            "CHRONOLOGICAL-SELECTION",
++            "HASH-VERIFICATION",
++            "SPLIT-PURITY",
++            "RESTRICTED-SCORING",
++            "FROZEN-CONTROLS",
++            "LIVE-REACHABILITY",
++            "FIRST-STEP-RANKING",
++            "BLOCKED",
++            "NO-SOLVE",
++        )
++    )
++
++
++def test_scenario_arc_wmte_6981_chronological_selection_ignores_score(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6981-CHRONOLOGICAL-SELECTION uses time, not quality."""
++
++    manifest = _write_fixture(tmp_path)
++    first = json.loads(manifest.read_text(encoding="utf-8"))
++    later = deepcopy(first)
++    later["ts"] = "20260904T040000_000000"
++    later["score"] = 1_000_000
++    manifest.write_text(
++        manifest.read_text(encoding="utf-8") + json.dumps(later, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++    rows, cutoff = exp.discover_post_6968_rows(tmp_path)
++    selected, reason = exp.select_earliest_eligible(rows)
++
++    assert cutoff == "20260904T020536_575501"
++    assert selected is not None
++    assert selected["ts"] == "20260904T030000_000000"
++    assert reason == "earliest_eligible_post_exp6968_manifest_timestamp"
++    assert len(rows) == 2
++
++
++def test_scenario_arc_wmte_6981_hash_verification_blocks_changed_bytes(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6981-HASH-VERIFICATION reports both digests."""
++
++    manifest = _write_fixture(tmp_path)
++    row = json.loads(manifest.read_text(encoding="utf-8"))
++    prompt = tmp_path / row["prompt"]["path"]
++    prompt.write_text(prompt.read_text(encoding="utf-8") + "\n", encoding="utf-8")
++
++    artifact = exp.build_artifact(date="20260904", repo_root=tmp_path)
++
++    assert artifact["verdict_class"] == "blocked"
++    failure = next(
++        item for item in artifact["gate_check_summary"] if item["failed_check"] == "prompt_hash"
++    )
++    assert failure["expected_value"] == row["prompt"]["sha256"]
++    assert failure["observed_value"] == exp.sha256_path(prompt)
++    assert artifact["engine_execution_rows"] == []
++
++
++@pytest.mark.parametrize(
++    ("field", "value"),
++    [
++        ("included_transition_ids", ["s0", "s1", "h0"]),
++        ("repair_feedback_transition_ids", ["h0"]),
++        ("used_game_source", True),
++        ("used_hand_derived_rules", True),
++        ("heldout_revealed_before_generation", True),
++    ],
++)
++def test_scenario_arc_wmte_6981_split_purity_fails_closed(
++    tmp_path: Path, field: str, value: object
++) -> None:
++    """SCENARIO-ARC-WMTE-6981-SPLIT-PURITY rejects every forbidden input class."""
++
++    manifest = _write_fixture(tmp_path)
++    row = json.loads(manifest.read_text(encoding="utf-8"))
++    prompt_path = tmp_path / row["prompt"]["path"]
++    prompt = json.loads(prompt_path.read_text(encoding="utf-8"))
++    prompt[field] = value
++    prompt_path.write_text(json.dumps(prompt, sort_keys=True), encoding="utf-8")
++    row["prompt"]["sha256"] = exp.sha256_path(prompt_path)
++    transition_path = tmp_path / row["transitions"]["path"]
++    transition = json.loads(transition_path.read_text(encoding="utf-8"))
++    transition["prompt_sha256"] = row["prompt"]["sha256"]
++    transition_path.write_text(json.dumps(transition, sort_keys=True), encoding="utf-8")
++    row["transitions"]["sha256"] = exp.sha256_path(transition_path)
++    manifest.write_text(json.dumps(row, sort_keys=True) + "\n", encoding="utf-8")
++
++    artifact = exp.build_artifact(date="20260904", repo_root=tmp_path)
++
++    assert artifact["verdict_class"] == "blocked"
++    assert any(item["failed_check"] == "split_purity" for item in artifact["gate_check_summary"])
++    assert artifact["engine_execution_rows"] == []
++
++
++def test_scenarios_arc_wmte_6981_restricted_scoring_and_controls(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6981-RESTRICTED-SCORING and FROZEN-CONTROLS are complete."""
++
++    engine = tmp_path / "engine.py"
++    engine.write_text(_engine_source(), encoding="utf-8")
++    rows = _rows()
++
++    scored, receipt = exp.execute_engine_fresh(engine, rows, timeout_s=5)
++    controls = exp.score_controls(rows[:2], rows[2:])
++
++    assert len(scored) == len(rows)
++    assert all(row["terminal"] is True and row["latency_s"] >= 0 for row in scored)
++    assert receipt[0]["worker_pid"] != receipt[0]["parent_pid"]
++    assert receipt[0]["restricted_process"] is True
++    assert {row["control"] for row in controls} == {
++        "identity",
++        "constant_delta",
++        "nearest_shown_delta",
++        "row_table_memorization",
++    }
++    assert all(row["terminal"] is True for row in controls)
++
++
++def test_scenario_arc_wmte_6981_live_fixture_proves_action_influence(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-6981-LIVE-REACHABILITY needs a production policy call."""
++
++    engine = tmp_path / "engine.py"
++    engine.write_text(_engine_source(), encoding="utf-8")
++    engine_hash = exp.sha256_path(engine)
++
++    trace, fixture = exp.trace_and_run_live_influence_fixture(engine, engine_hash)
++
++    assert all(row["terminal"] is True for row in trace)
++    assert [row["symbol"] for row in trace] == [
++        "make_carnot_agent",
++        "E3AgentPolicy",
++        "load_engine",
++        "_world_model_candidates",
++        "plan_in_model",
++        "next_move",
++    ]
++    assert fixture[0]["factory_constructed_e3_policy"] is True
++    assert fixture[0]["loaded_engine_hash"] == engine_hash
++    assert fixture[0]["selected_candidate_name"] == "loaded_world_model.py"
++    assert fixture[0]["engine_first_action"] != fixture[0]["no_engine_first_action"]
++    assert fixture[0]["reachable"] is True
++
++
++def test_scenario_arc_wmte_6981_first_step_ranking_cannot_use_future_values(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-ARC-WMTE-6981-FIRST-STEP-RANKING freezes ranks before outcomes."""
++
++    engine = tmp_path / "engine.py"
++    engine.write_text(_engine_source(), encoding="utf-8")
++    groups = [
++        {
++            "group_id": "g0",
++            "current_grid": [[0, 0], [0, 0]],
++            "shipped_baseline_order": ["noop", "change"],
++            "candidates": [
++                {"candidate_id": "noop", "action": 2, "data": None, "future_value": 99},
++                {
++                    "candidate_id": "change",
++                    "action": 1,
++                    "data": {"x": 1},
++                    "future_value": -99,
++                },
++            ],
++        }
++    ]
++
++    candidates_a, rankings_a = exp.rank_first_step_groups(engine, groups)
++    changed_future = deepcopy(groups)
++    changed_future[0]["candidates"][0]["future_value"] = -1000
++    changed_future[0]["candidates"][1]["future_value"] = 1000
++    candidates_b, rankings_b = exp.rank_first_step_groups(engine, changed_future)
++
++    assert [row["candidate_id"] for row in candidates_a] == ["noop", "change"]
++    assert rankings_a[0]["engine_order"] == ["change", "noop"]
++    assert rankings_a[0]["shipped_baseline_order"] == ["noop", "change"]
++    assert rankings_a[0]["ranking_inputs"] == [
++        "current_grid",
++        "action",
++        "data",
++        "frozen_engine_prediction",
++    ]
++    assert rankings_a[0]["engine_order"] == rankings_b[0]["engine_order"]
++    assert rankings_a[0]["terminal"] is True
++    assert len(candidates_b) == 2
++
++
++def test_req_arc_wmte_6981_complete_artifact_has_all_terminal_fields(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-6981 emits the full positive fixture contract without solve credit."""
++
++    _write_fixture(tmp_path)
++
++    artifact = exp.build_artifact(date="20260904", repo_root=tmp_path)
++
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(artifact["field_principles"]) == set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["arc_engine_audit_complete_score"] == 1
++    assert artifact["live_path_reachable_score"] == 1
++    assert artifact["arc_generalization_positive_score"] == 1
++    assert artifact["verdict_class"] == "positive"
++    assert artifact["honest_verdict"].startswith("positive_")
++    assert artifact["heldout_changing_accuracy"] == 1.0
++    assert artifact["heldout_noop_accuracy"] == 1.0
++    assert artifact["paired_control_delta_rows"][0]["interval_low"] > 0
++    assert artifact["gate_check_summary"] == []
++    assert all(
++        artifact[field] is False
++        for field in (
++            "solve_claimed",
++            "level_claimed",
++            "registry_updated",
++            "submitted_to_leaderboard",
++            "verifier_is_oracle",
++        )
++    )
++
++
++def test_scenario_arc_wmte_6981_blocked_real_checkout_is_not_partial() -> None:
++    """SCENARIO-ARC-WMTE-6981-BLOCKED does not invent missing archived sources."""
++
++    artifact = exp.build_artifact(date="20260904", repo_root=ROOT)
++
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert artifact["honest_verdict"] == "blocked_arc_live_engine_generalization_audit"
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["arc_engine_audit_complete_score"] == 0
++    assert artifact["arc_generalization_positive_score"] == 0
++    assert artifact["gate_check_summary"]
++    assert artifact["engine_execution_rows"] == []
++    assert any(
++        row["failed_check"] == "eligible_post_exp6968_live_engine"
++        for row in artifact["gate_check_summary"]
++    )
++
++
++def test_scenario_arc_wmte_6981_no_solve_and_relative_main_output(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-ARC-WMTE-6981-NO-SOLVE keeps the registry and output boundary explicit."""
++
++    _write_fixture(tmp_path)
++    registry = tmp_path / exp.REGISTRY_PATH
++    before = registry.read_bytes()
++    monkeypatch.setattr(exp, "REPO_ROOT", tmp_path)
++
++    assert exp.main(["--date", "20260904", "--output", "result.json"]) == 0
++    artifact = json.loads((tmp_path / "result.json").read_text(encoding="utf-8"))
++
++    assert registry.read_bytes() == before
++    assert artifact["solve_claimed"] is False
++    assert artifact["level_claimed"] is False
++    assert artifact["registry_updated"] is False
++    assert artifact["submitted_to_leaderboard"] is False
+-- 
+2.55.0
+

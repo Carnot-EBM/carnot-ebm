@@ -1,0 +1,1914 @@
+From b7ef728fbf2cabe53f14424e618a8fef59befd3b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 29 Jul 2026 08:24:53 -0400
+Subject: [PATCH 08013/11362] =?UTF-8?q?[outer-loop]=20The=20guards=20were?=
+ =?UTF-8?q?=20refusing=20honest=20work=20and=20the=20interlock=20was=20dis?=
+ =?UTF-8?q?armed=20=E2=80=94=20ten=20review=20defects=20fixed?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+An adversarial review of yesterday's two guards found TEN defects, two of which
+inverted a guard's purpose. All ten are fixed and pinned by regression tests named
+for their incidents. NO TEST WAS REPAIRED — that remains the operator's call.
+
+=== SERIOUS 1: rule 4 refused the project's own documented substrate convention ===
+
+adversarial_verify.py documents `<canonical value><separator><human note>` and
+strips the note before matching. _strength_rank did not — it scanned the WHOLE
+string including the prose and took the minimum band. 233+ live declarations use
+that form.
+
+exp5178 declares `live_llm_embedding_extraction; Substrate corrected 2026-07-03:
+... verifier_ensemble_against_cached_candidates also does not fit (its definition
+explicitly requires the LLM NOT be loaded, and this task did load it ...)`. The
+leading token is a real GGUF load (band 3), but the word `cached` in the note
+explaining why cached-candidate scoring does NOT apply dragged it to band 2 — so
+the lint refused the commit while asserting the opposite of what the artifact
+says. exp5161 is the same shape. Both are CLAUDE.md's own named exemplars for
+their substrates.
+
+This is the negation-blindness class CLAUDE.md's QA-Layer Authenticity Discipline
+names: a checker confusing "did X" with "explicitly did NOT do X".
+
+Fixed by delegating the match to adversarial_verify._match_declared_substrate
+rather than re-deriving separator handling — a drifted copy of a matcher is
+exactly how the bug arose — and by accepting a rationale carried INLINE in the
+value, which is where the most carefully documented corrections put it.
+Verified corpus-wide, not just on the exemplars: of all 2,673 inference_substrate
+declarations in the tree, ZERO now rank differently from their bare leading token.
+
+=== SERIOUS 2: the pre-commit interlock was disarmed by the exact invocation that caused both incidents ===
+
+--gate refuses while ops/.test_suite_mutation_pending.json exists, and ONLY --run
+ever wrote that marker. So the interlock protected the wrapper nobody uses and was
+silent for `pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py`.
+
+Demonstrated on the real tree: after simulating that rewrite class, README.md
+(operator-curated, one of the original 39) and openspec/papers/paper-v6/
+section-6-limitations.md were both modified while --gate exited 0 AND the
+determination lint printed OK.
+
+Fixed at the source rather than the wrapper: tests/python/conftest.py takes a git
+baseline in pytest_configure and calls arm_from_pytest() in pytest_sessionfinish,
+so the marker arms HOWEVER pytest was invoked. Proven end-to-end — a green
+single-test run that rewrites README.md now warns, arms the marker, and --gate
+exits 1; tree restored and verified byte-identical. Three properties pinned because
+each could quietly undo it: skips xdist WORKERS (only the controller may arm),
+DISARMS on a clean run, and NEVER restores (auto-reverting has destroyed in-flight
+work twice). Wiring --check into pre-commit was rejected: with no baseline it
+cannot tell a test's rewrite from a human's edit and would refuse every commit on
+a dirty tree.
+
+KNOWN GAP, stated not hidden: a SIGKILL'd or timed-out run never arms, because
+pytest_sessionfinish does not run. Observed directly while validating. Use --run
+for long jobs.
+
+=== THE OTHER EIGHT ===
+
+* Phantom LIVE band from a non-substrate name. exp5240 declared
+  `arc_live_path_patch_synthesis` — the ARC live CODE path, never a legal enum
+  value — so a token scan read its `live` token as LIVE/HARDWARE and refused the
+  honest later correction to `aggregation_from_upstream_artifacts` as a downgrade.
+  Fixed structurally: for the enum-governed field an unrecognised name may rank
+  WEAK but never STRONG. A claim of strength is cheap to make by accident; an
+  admission of weakness (`mock`, `blocked`) is not. A first attempt returned None
+  for ALL non-enum values and silently un-protected `sota_gguf_mock` — CLAUDE.md's
+  own fabrication exemplar — and two PRE-EXISTING tests caught it.
+* Calibration restated with its window defined. "1,200 commits" was ambiguous
+  between 1,200 overall (3,232 pairs) and 1,200 touching results/ (7,024 pairs).
+  Re-run over the latter after the repair: R3 10x, R4 12x. The blanket "every R4
+  hit is a real incident" is replaced by per-hit adjudication. A pre-repair sweep
+  counted 15 R4 hits; the three that vanished are the honest-correction class
+  above, and the count going DOWN is the guard getting more correct.
+* Four uncovered review-output markers added: n_samples_justification (56 — the
+  sample-size disclosure CLAUDE.md REQUIRES for a distributional claim),
+  false_negative_risk_checked (63), paper_v6_forbidden_claims (22),
+  adversarial_verify_flags (22). honest_verdict (5,245) stays excluded and is now
+  pinned by a test, since a re-run legitimately produces a new one.
+* A census figure did not reproduce: the `correct`-exclusion rationale cited 601
+  artifacts; the stated predicate yields 465. Design unaffected, number corrected.
+* Three documentation claims overstated their evidence, corrected in place: only
+  2 of 13 "unattributed — subprocess writer" rows actually contain a subprocess
+  (9 have none and are re-runnable with the existing plugin); "All 20 runpy files"
+  is what a LITERAL-PATH grep can see and misses at least 3 variable-target sites;
+  the per-batch table stopped at batch 02 of 13 and is marked superseded by the
+  whole-suite union run that actually backs the coverage claim.
+* Option (E) proposed CARNOT_RESULTS_DIR, which occurs ZERO times in the tree. The
+  convention it describes already exists and works: CARNOT_REPO_ROOT, in 52 scripts
+  and 56 test files, and it is precisely why the 3 variable-target runpy sites
+  rewrite nothing. The operator was being asked to approve a design call without
+  being told a 52-script precedent for it was already in the tree.
+
+Mutation testing, again: 10 mutations, 9 killed, 1 survivor — reverting token
+anchoring to a bare substring left the suite green, so the anchoring this work
+claims was entirely untested. It matters because the rank is a MINIMUM:
+`uncached_live_gguf_inference` unanchored matches `cached` (band 2) and
+`unblocked_live_gpu_run` matches `blocked` (band 0) — the same negation blindness
+as SERIOUS 1. Pinned; final 10/10 killed, 56 tests green across both guard suites.
+
+=== WHAT IS NOW GUARDED ===
+
+* A commit that DROPS a correction / provenance / disclosure / review-note field
+  from results/*.json is refused (rule 3, 4 new marker patterns).
+* A commit that WEAKENS a substrate/mode declaration in place without a note is
+  refused (rule 4) — and no longer refuses the honest-correction convention.
+* A test run that rewrites tracked files arms a pre-commit interlock HOWEVER
+  pytest was invoked, not only under the --run wrapper.
+
+=== WHAT REMAINS UNFIXED ===
+
+THE 11 TESTS. They still re-execute real experiment scripts, which still overwrite
+their own committed artifacts on every suite run. The guards make that
+un-committable; they do not stop it happening. Repairing the tests is an operator
+design call with a visible tradeoff, and the operator is asleep.
+
+=== THE OPERATOR'S OPTIONS (six, costed in the survey §6 — I am not choosing) ===
+
+  (A) per-script output-dir opt-in   — REJECTED by evidence: runpy is 1 of 41; the
+                                       real class is 704 files calling main().
+  (B) snapshot-and-restore per call  — REJECT: the suite runs -n 4, so it is racy
+                                       by construction.
+  (C) assert against the committed artifact — stops exercising the script at all.
+  (D) rely on the guards             — no coverage lost; detection, not prevention.
+  (E) resolve output paths centrally — extend the EXISTING CARNOT_REPO_ROOT
+                                       convention (52 scripts / 56 tests), do not
+                                       invent a second variable.
+  (F) fix the 139 hardcoded absolute paths — also a standalone G2 reproducibility
+                                       defect: those scripts run on one machine.
+
+  MY RECOMMENDATION, revised twice as evidence came in: (D) now → (F) → (E).
+  Explicitly NOT (A). Reject (B). The call is yours.
+
+Two things worth your eyes regardless: README.md is rewritten by
+test_experiment_209_cleanup.py (operator-curated per Public Documentation
+Discipline, and NOT among the hazard commit's 39), and
+results/experiment_410_precision_live.json is written by test_experiment_431_… —
+any repair that pairs test_experiment_N with experiment_N by name will miss it.
+
+Record integrity: verified. Every file this session perturbed was restored and
+checked byte-identical against HEAD (README.md sha256 confirmed matching).
+---
+ .gitignore                                    |   5 +
+ ...e-rewrites-the-record-survey-2026-07-29.md | 325 +++++++++++++--
+ .../arc-world-model-trust-energy/spec.md      |   2 +-
+ ops/changelog.md                              | 127 +++++-
+ ops/known-issues.md                           |  30 +-
+ scripts/determination_preservation_lint.py    | 191 ++++++++-
+ scripts/test_suite_mutation_check.py          | 156 ++++++-
+ tests/python/conftest.py                      |  76 ++++
+ .../test_determination_preservation_lint.py   | 394 ++++++++++++++++++
+ .../python/test_test_suite_mutation_check.py  | 121 ++++++
+ 10 files changed, 1352 insertions(+), 75 deletions(-)
+
+diff --git a/.gitignore b/.gitignore
+index 2771dba09c..7e0fdf2a40 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -192,8 +192,13 @@ ops/.qa_layer_audit_rotation.json
+ #                                       `test-suite-mutation-gate` refuses while it is there.
+ # Both describe THIS checkout's transient state, so committing either would export one
+ # machine's in-flight condition to everyone else. See scripts/test_suite_mutation_check.py.
++#   .test_suite_mutation_backup/        pre-revert copies of every file --restore reverted, so a
++#                                       wrong revert costs a `cp` instead of the work. `git
++#                                       checkout --` is unrecoverable, and the detector cannot
++#                                       tell a test's write from a human's concurrent edit.
+ ops/.test_suite_mutation_snapshot.json
+ ops/.test_suite_mutation_pending.json
++ops/.test_suite_mutation_backup/
+ 
+ # Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
+ # an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
+diff --git a/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md b/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
+index d1da9b9a3f..5dc0abcecc 100644
+--- a/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
++++ b/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
+@@ -5,6 +5,10 @@
+ **Status:** SURVEY COMPLETE for the stated scope — the whole-suite union is 41 tracked files, 28 of
+ them attributed to an exact test file (§3.3b). **NO TEST WAS CHANGED.** The repair is a design call
+ left to the operator — six options, costed, with a recommendation in §6.
++**Revision 2 (2026-07-29):** an adversarial review found ten defects in the guards and this
++document, two serious — rule 4 was refusing the project's own documented substrate convention, and
++the pre-commit interlock was disarmed by the exact `pytest` invocation that caused both incidents.
++All ten fixed; see **§7c**. Numbers, coverage claims and attribution labels corrected in place.
+ **Record integrity:** verified byte-identical, §5.
+ **Origin:** commit `b3e31d341`, "[outer-loop] HAZARD: running the test suite silently rewrites the
+ research record" (diagnosed, not fixed).
+@@ -114,10 +118,21 @@ The hazard commit's hypothesis was that the damage comes from tests that `runpy.
+ experiment script. That class was enumerated exactly and **run one file at a time**, each in a clean
+ worktree:
+ 
+-* **20 candidate test files** call `runpy.run_path` on a path naming an experiment script.
++* **20 candidate test files** call `runpy.run_path` on a *literal* path naming an experiment script.
+   (Only **2** name a path literally under `scripts/experiments/`:
+   `test_experiment_3946_r11l_first_solve.py` and `test_experiment_3967_m3_honest_efficiency.py`.
+   The hazard commit's "11 target `scripts/experiments/`" was a looser grep.)
++
++  **"20" is what a literal-path grep can see, not the true total.** The enumeration matches a path
++  string, so it is blind to a target built at runtime. At least three such sites exist:
++  `tests/python/test_live_trace_memory.py:498`, `test_self_learning_replay.py:649` and
++  `test_self_learning_replay_v2.py:688` all call
++  `runpy.run_path(str(Path(<module>.__file__)), run_name="__main__")` on the real
++  `scripts/experiment_222/223/241`, each of which writes tracked `results/*.json`. They are
++  **empirically safe** — every one monkeypatches `CARNOT_REPO_ROOT` to a `tmp_path` repo first, and
++  the scripts honour it (§6, option E) — so no finding in this document changes. What is wrong is
++  the *exhaustiveness* claim: closing this class properly needs an AST or audit-hook enumeration,
++  not a grep. The "~986 not surveyed" bullet in §4 covers these only at class level.
+ * Of those 20, **exactly one moved a tracked file**:
+ 
+   | test file | tracked file it rewrote |
+@@ -179,15 +194,19 @@ Not all 704 write — the test name is the tell (`test_main_writes_artifact`,
+ `test_run_experiment_writes_artifact_with_required_fields`), and many only exercise helpers. The
+ batch survey is what separates the two.
+ 
+-**Per-batch results (250 files each, alphabetical; the run was still in progress when this document
+-was written — stated rather than rounded up):**
++**Per-batch results — SUPERSEDED BY §3.3b, DO NOT READ AS COVERAGE.** The batch sweep was a
++progressive attribution run that reached batch 02 of 13 and was then **abandoned in favour of the
++whole-suite union run** in §3.3b, which covers all 3,366 files at once and is the evidence behind
++§4's "Covered: all 3,366" line. Batches 03–13 were never run. The table is kept for the per-test
++attribution it produced (below), not as a count of anything.
+ 
+ | batch | test files | tracked files moved |
+ |---|---:|---:|
+ | `expbatch_00` | 250 | 6 |
+ | `expbatch_01` | 250 | 16 |
+ | `expbatch_02` | 250 | 3 |
+-| **so far** | **750** | **25** |
++| **batches 00–02 only** | **750** | **25** |
++| *batches 03–13* | *never run — superseded by §3.3b* | — |
+ 
+ **Batch 01, attributed per test** (the audit-hook plugin, merged across xdist workers):
+ 
+@@ -236,7 +255,7 @@ files modified** — the hazard commit counted 39, and the composition matches.
+ | tracked file rewritten | responsible test file(s) |
+ |---|---|
+ | `openspec/papers/paper-v6/section-6-limitations.md` | `tests/python/test_experiment_1911.py` |
+-| `output/kanele_synth/post_synth.dcp` | *unattributed — subprocess writer, see §3.3* |
++| `output/kanele_synth/post_synth.dcp` | *unattributed — build-tool output, no experiment script in-tree* |
+ | `results/experiment_1035_dualgpu_rocm_v3.json` | `tests/python/test_experiment_1035_dualgpu_rocm_v3.py` |
+ | `results/experiment_1038_milestone_retro_80.json` | `tests/python/test_experiment_1038_milestone_retro_80.py` |
+ | `results/experiment_1081_fpga_scale_benchmark.json` | `tests/python/test_experiment_1081_fpga_scale_benchmark.py` |
+@@ -245,29 +264,29 @@ files modified** — the hazard commit counted 39, and the composition matches.
+ | `results/experiment_1593_cdg_repair.json` | `tests/python/test_experiment_1593_cdg_repair.py` |
+ | `results/experiment_1747_ebt_mode_collapse_check.json` | `tests/python/test_experiment_1747_diagnostic.py` |
+ | `results/experiment_1750_huggingface_retry.json` | `tests/python/test_experiment_1750.py` |
+-| `results/experiment_1822_rtl_synth.log` | *unattributed — subprocess writer, see §3.3* |
++| `results/experiment_1822_rtl_synth.log` | *unattributed — build-tool output, no experiment script in-tree* |
+ | `results/experiment_1911_phase4_canonical_decision.json` | `tests/python/test_experiment_1911.py` |
+ | `results/experiment_1938_nrgpt_loss_probe.json` | `tests/python/test_experiment_1938_nrgpt_loss_probe.py` |
+ | `results/experiment_1970_domino_fast_constraints.json` | `tests/python/test_experiment_1970_domino_fast_constraints.py` |
+ | `results/experiment_2085_pem_sudoku_eval.json` | `tests/python/test_experiment_2085_pem_sudoku_eval.py` |
+ | `results/experiment_2090_crane_humaneval.json` | `tests/python/test_experiment_2090_crane_humaneval.py` |
+ | `results/experiment_2097_eqm_eval.json` | `tests/python/test_experiment_2097.py` |
+-| `results/experiment_2510_ensemble_v7.json` | *unattributed — subprocess writer, see §3.3* |
++| `results/experiment_2510_ensemble_v7.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
+ | `results/experiment_2521_ensemble_v7.json` | `tests/python/test_experiment_2521_ensemble_v7.py` |
+ | `results/experiment_2538_kv260_sd_flash.json` | `tests/python/test_experiment_2538_kv260_sd_flash.py` |
+ | `results/experiment_2721_paper_v6_theory_update_v2.json` | `tests/python/test_experiment_2721.py` |
+ | `results/experiment_2758_weak_strong_policy_fix_v2.json` | `tests/python/test_experiment_2758.py` |
+-| `results/experiment_2824_cross_corpus_verifier_matrix.json` | *unattributed — subprocess writer, see §3.3* |
++| `results/experiment_2824_cross_corpus_verifier_matrix.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
+ | `results/experiment_307_jepa_real_training.json` | `tests/python/test_experiment_307_jepa_real_training.py` |
+-| `results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json` | *unattributed — subprocess writer, see §3.3* |
++| `results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
+ | `results/experiment_3351_gatemate_latency_benchmark.json` | `tests/python/test_experiment_3351_gatemate_latency_benchmark.py` |
+-| `results/experiment_3386_fr11_nonforgetting.json` | *unattributed — subprocess writer, see §3.3* |
+-| `results/experiment_3394_kona_global_opt.json` | *unattributed — subprocess writer, see §3.3* |
+-| `results/experiment_3395_energy_based_replay.json` | *unattributed — subprocess writer, see §3.3* |
+-| `results/experiment_339_session_startup.json` | *unattributed — subprocess writer, see §3.3* |
+-| `results/experiment_3408_kona_global_opt.json` | *unattributed — subprocess writer, see §3.3* |
+-| `results/experiment_3420_kv260_terminal_latency_transcript_v1.json` | *unattributed — subprocess writer, see §3.3* |
+-| `results/experiment_3420_kv260_terminal_transcript.log` | *unattributed — subprocess writer, see §3.3* |
++| `results/experiment_3386_fr11_nonforgetting.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
++| `results/experiment_3394_kona_global_opt.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
++| `results/experiment_3395_energy_based_replay.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
++| `results/experiment_339_session_startup.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
++| `results/experiment_3408_kona_global_opt.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
++| `results/experiment_3420_kv260_terminal_latency_transcript_v1.json` | *unattributed — script shells out (`subprocess` x5), audit hook cannot see a child* |
++| `results/experiment_3420_kv260_terminal_transcript.log` | *unattributed — script shells out (`subprocess` x5), audit hook cannot see a child* |
+ | `results/experiment_3843.json` | `tests/python/test_experiment_3843.py` |
+ | `results/experiment_3946_r11l_first_solve.json` | `tests/python/test_experiment_3946_r11l_first_solve.py` |
+ | `results/experiment_410_precision_live.json` | `tests/python/test_experiment_431_eorm_jepa_retrain.py` |
+@@ -275,7 +294,7 @@ files modified** — the hazard commit counted 39, and the composition matches.
+ | `results/experiment_4170_sota_ingestion_verifier_moat_guidance.json` | `tests/python/test_experiment_4170_sota_ingestion_verifier_moat_guidance.py` |
+ | `results/experiment_5794_hardware_terminal_action_receipt.json` | `tests/python/test_experiment_5794_hardware_terminal_action_receipt.py` |
+ | `results/experiment_5861_attached_board_state_receipts.json` | `tests/python/test_experiment_5861_attached_board_state_receipts.py` |
+-| `results/experiment_833_constraint_delta_root_cause.json` | *unattributed — subprocess writer, see §3.3* |
++| `results/experiment_833_constraint_delta_root_cause.json` | *unattributed — worker shard not flushed; **no subprocess in its script**, re-runnable with the existing plugin* |
+ 
+ **28 of 41 carry an exact test file.** The 13 unattributed are the subprocess class (a CPython audit
+ hook cannot see a child process) plus a tail the last xdist worker had not yet flushed when the
+@@ -408,9 +427,13 @@ minutes earlier while edits are still landing.
+ 
+ **Covered.**
+ 
+-* All 20 test files that `runpy.run_path` an experiment script — individually, exact attribution.
++* All 20 test files that `runpy.run_path` an experiment script **via a literal path string** —
++  individually, exact attribution. Sites that build the target at runtime are NOT in that 20; at
++  least three exist and are enumerated in §3.1.
+ * All 125 `tests/python/test_arc_*.py` — individually, exact attribution.
+-* All 3,366 `tests/python/test_experiment_*.py` — see §3.3 for the granularity achieved.
++* All 3,366 `tests/python/test_experiment_*.py` — via the **whole-suite union run of §3.3b**, which
++  is the evidence behind this line. (§3.3's per-batch table covers only batches 00–02 and is
++  superseded; see the note there.)
+ 
+ **Not covered, stated plainly.**
+ 
+@@ -499,10 +522,21 @@ on every suite run, and the guards' job is to stop the rewrite from being *commi
+ 
+ **(E) Make the artifact PATH the thing under test, once, centrally.** Every writing script resolves
+ its output through one shared helper (`scripts/experiment_template.py` already exists and most
+-scripts already import it) that consults a `CARNOT_RESULTS_DIR` env var; a repo-level autouse
+-fixture points that var at `tmp_path` for the whole suite. One helper change plus one fixture, and
+-scripts that bypass the helper are findable mechanically (grep for a literal `results/` open) rather
+-than one at a time.
++scripts already import it); a repo-level autouse fixture redirects it for the whole suite. One
++helper change plus one fixture, and scripts that bypass the helper are findable mechanically (grep
++for a literal `results/` open) rather than one at a time.
++
++**Use the convention that already exists — do NOT invent a second one.** An earlier draft of this
++option proposed a new `CARNOT_RESULTS_DIR` env var. That name occurs **0 times** in `scripts/`,
++`tests/` or `python/`. The convention it describes is already in the tree and already works:
++**`CARNOT_REPO_ROOT`**, read by a `get_repo_root()` helper, appears in **52 scripts and 56 test
++files**. It is exactly why the three variable-target `runpy` sites in §3.1 rewrite nothing —
++`tests/python/test_live_trace_memory.py:464` does `monkeypatch.setenv("CARNOT_REPO_ROOT",
++str(repo))` and the script it runs honours it, so a full `runpy.run_path` of a real experiment
++script writes into `tmp_path` instead of the record. That is a working, in-tree precedent for (E)
++covering ~108 files, and proposing a competing variable name would fragment it. Read (E) as
++*"extend `CARNOT_REPO_ROOT` to the scripts that do not yet honour it, and make the fixture
++repo-wide rather than per-test."*
+ 
+ **(F) Replace the 139 hardcoded absolute paths with repo-relative resolution.** Independent of, and
+ prerequisite to, (A)/(E) for that class — see §3.4. Also fixes a reproducibility defect that has
+@@ -559,14 +593,34 @@ substance but not in name. That is the failure mode a trusted guard must never h
+   principle-unwrapped first (`{"principle":…, "value":…}`, 162 artifacts), and an unrecognised
+   substrate string ranks as *unknown*, never as *weak*.
+ 
+-**Calibrated against 1,200 commits of real history** (3,232 modified artifact pairs):
+-
+-| rule | violations | commits refused |
+-|---|---:|---:|
+-| R1 stamp dropped (original) | 83 | 38 |
+-| R2 corrigendum dropped (original) | 93 | 41 |
+-| R3 marker dropped (new) | 10 | 9 |
+-| R4 substrate weakened (new) | 8 | 8 |
++**Calibrated against real history. The window is stated explicitly because the first draft's was
++not, which made its numbers unreproducible** — "1,200 commits" is ambiguous between *the last 1,200
++commits* (3,232 modified artifact pairs) and *the last 1,200 commits that touch `results/`* (7,024
++pairs). The R1/R2 rows below are from the first window; the R3/R4 rows were re-run over the second
++(larger, more informative) window **after** the 2026-07-29 rule-4 repair described in §7c:
++
++| rule | violations | commits refused | window |
++|---|---:|---:|---|
++| R1 stamp dropped (original) | 83 | 38 | 1,200 commits overall / 3,232 pairs |
++| R2 corrigendum dropped (original) | 93 | 41 | 1,200 commits overall / 3,232 pairs |
++| R3 marker dropped (new) | 10 | 9 | 1,200 touching `results/` / 7,024 pairs |
++| R4 substrate weakened (new) | 12 | 12 | 1,200 touching `results/` / 7,024 pairs |
++
++The same sweep run **before** the §7c repair reported **15** R4 hits. The three that no longer fire
++are exactly the honest-substrate-correction class §7c fixed (exp5178, exp5161, exp5240) —
++so the count going *down* is the guard getting more correct, not less protective.
++
++**Per-hit adjudication** (replacing the first draft's blanket "every R4 hit is a real incident",
++which was true only inside the narrower window):
++
++* R4, 12/12 genuine — `experiment_911_drift_probe_tier0i.json` `real_model` → `synthetic_runner`
++  (10×, previously unknown, nothing was watching), `experiment_307_jepa_real_training.json`
++  `live_gpu` → `cpu_training` (2×).
++* R3, 10/10 genuine — one dropped `flagged_adversarial: false` (rule 1 owns only the `true` case),
++  and nine review notes (`duration_note`, `random_seed_note`, `action_sequence_note`,
++  `step_accounting_note`, `registry_note`, `l6_partial_progress_note`) lost when fixed-path ARC
++  round-probes (`results/outer_loop_fable5_*`) overwrote the previous round's record. That is the
++  origin incident's own mechanism — a fixed output path plus a re-run — not a false positive.
+ 
+ Every R4 hit is a genuine instance of the hazard class, and one of them was previously unknown:
+ `results/experiment_911_drift_probe_tier0i.json` took `real_model` → `synthetic_runner` **five
+@@ -587,6 +641,215 @@ what keeps the lint from refusing ordinary fail-forward re-runs, which is how a
+ 
+ ---
+ 
++## 7b. Validating the guards — the false-fire proof, and four checks that were not being tested
++
++Section 7 describes what shipped. This section is the evidence that it works, and it is separate
++because **three of the validations below failed on their first attempt in a way that looked like
++success** — the same failure mode as the guard that did not fire.
++
++### 7b.1 The must-not-fire proof, against the real analyser rebuild
++
++The rule that matters most for adoption is not "does it catch the incident" but "does it stay quiet
++during honest work". Re-running an analyser is the most common write to `results/` in this project;
++a lint that refuses it gets switched off within a day.
++
++Tested against the real thing rather than a fixture: commit `8441055c0` rebuilt **12 analyser
++artifacts** (9 `outer_loop_*`, plus the card-ground-truth and reset-attribution passes). Their diff
++moves exactly four things — `build_timestamp_utc`, `duration_s`, `provenance.git_head`, and the
++`provenance.code[].sha256` / `.bytes` dependency hashes — and nothing else. The widened lint,
++pointed at that historical pair:
++
++```
++files examined: 28  | analysers: 12  (both sides parsed on all 12)
++WIDENED lint vs the real 12-artifact analyser rebuild -> OK -- NO false fire
++```
++
++**The first run of this check was worthless and looked fine.** It was executed from a worktree
++checked out *at* `8441055c0` — which predates the widening — so it exercised the OLD two-rule lint
++and reported a clean pass that proved nothing about the new rules. The tell was an `AttributeError`
++on `_unwrap_principle` in a follow-up probe; without that accident the invalid result would have
++been recorded as the proof. The rerun above imports the lint from the working tree and repoints
++`REPO` at the historical worktree, which is what the module's own tests do.
++
++Because a clean pass is also what blindness looks like, the same run injects violations into the
++same real artifact and requires each to be refused:
++
++| injected into `outer_loop_arc_max_actions_answer_20260726.json` | result |
++|---|---|
++| drop top-level `provenance` | **FIRES** — lost provenance declaration |
++| drop `inference_substrate_principle` | **FIRES** — lost inference-substrate declaration |
++| drop `verifier_is_oracle` | **FIRES** — lost circularity declaration |
++| weaken `inference_substrate` → `sota_gguf_mock` | **FIRES** — WEAKENED, `aggregation…` → mock |
++| *control:* change `duration_s` | silent (correct — fail-forward) |
++| *control:* bump `git_head` + `build_timestamp_utc` | silent (correct — that IS the rebuild) |
++
++Both halves are pinned (`test_a_legitimate_analyser_rebuild_is_not_refused` and its companion
++`test_the_analyser_rebuild_fixture_is_not_silently_unprotected`) — the second exists precisely
++because the first would keep passing if the lint stopped seeing the artifact at all.
++
++### 7b.2 Mutation testing found two lint checks that no test was exercising
++
++Nineteen mutations, each disabling exactly one behaviour of one new check, each requiring some test
++to go red. First pass: **17 of 19 killed, 2 survivors** — both genuine gaps, not harness artifacts:
++
++* **Deleting the `correction` marker pattern left the suite green.** The incident-1 test names
++  `inference_substrate_correction_note` and `inference_substrate_original_invalid_value`, but both
++  are *also* matched by `^inference_substrate`, and its `solve_provenance*` fields by `provenance`.
++  Every field in the test that the `correction` pattern is named for was double-covered, so the
++  pattern itself was never under test. A bare `correction_note` / `data_correction` was unprotected.
++* **Blanking half the rule-1/rule-2 dedup left the suite green.** The existing
++  `test_one_deletion_produces_one_refusal_line` pins the dedup for `flagged_adversarial` only, so
++  the half that stops rule 3 re-reporting the *corrigendum* family was unpinned; a corrigendum
++  deletion would have produced two refusal lines naming the same fields.
++
++Both were confirmed by hand, then closed with a test each. Both gaps are the *same shape* as the
++original bug — coverage that exists on paper and does not bite. Neither would have been found by
++reading the tests: both tests genuinely pass and genuinely assert something, they just were not
++asserting the thing their names implied.
++
++### 7b.3 The detector ate this document, twice — and the fix is recoverability, not attribution
++
++While validating the above, a wrapped full-suite run (`--restore --run`) reported 6 tracked files
++modified and restored all 6. One of them was **this file**. The §7b section had been written
++*after* the snapshot was taken, so `mutations()` correctly classified it as "changed since the
++baseline", attributed it to the run, and `git checkout --`'d it away. The section had to be
++rewritten from scratch.
++
++That is the **second** occurrence — §3.6 records the first, also this document, also mid-edit. Twice
++is a design defect, not user error. The root cause is not fixable by better attribution: *the
++detector cannot tell a test's write from a human's concurrent edit*, because at the file level they
++are identical events. Anything cleverer would be a heuristic guessing at authorship.
++
++So the fix makes the mistake **survivable** instead of trying to prevent it. `restore()` now copies
++every file's pre-revert content to `ops/.test_suite_mutation_backup/<path>` (gitignored) before
++reverting, prints where they went, and warns if any could not be saved. `git checkout --` is
++unrecoverable for uncommitted content; a `cp` first turns a destroyed afternoon into a restored
++file. Pinned by `test_restore_backs_a_file_up_before_reverting_it`, which asserts the backup holds
++the **pre-revert** content — the committed version was never at risk, it is already in git.
++
++The operational rule, now stated in the module docstring: **do not edit tracked files while a
++`--restore` run is in flight.**
++
++That run is also the detector's first real proof in anger: it caught 6 rewrites mid-suite —
++including `output/kanele_synth/post_synth.dcp`, one of the original 39 — restored all 6, and the
++four in-flight files in the snapshot baseline were verified byte-identical afterwards.
++
++### 7b.4 Final state
++
++**22 of 22 mutations killed** across both guards (13 lint, 9 detector), including three for the new
++backup behaviour. Guard test suites: **41 passed**, and the run leaves no `ops/.test_suite_mutation_backup/`
++behind in the real tree — the fixture repoints `BACKUP` at the throwaway repo, because a test suite
++that litters the tree it is checking is the exact hazard this module exists to detect.
++
++---
++
++## 7c. Review repairs — the guards were refusing honest work, and the interlock was disarmed
++
++An adversarial review of §7's guards found ten defects. Two were serious enough to invert a guard's
++purpose. All are fixed; each is pinned by a regression test named for its incident.
++
++### 7c.1 SERIOUS — rule 4 refused the project's own documented substrate convention
++
++`adversarial_verify.py` documents `<canonical value><separator><human note>` and strips the note
++before matching. `_strength_rank` did not: it scanned the **whole** string, including the prose, and
++took the minimum band across everything it found. **233+ live declarations use that form.**
++
++The failure is the negation-blindness class CLAUDE.md's QA-Layer Authenticity Discipline names — a
++checker confusing "did X" with "explicitly did NOT do X". exp5178 declares:
++
++> `live_llm_embedding_extraction; Substrate corrected 2026-07-03: … no iterative token-by-token
++> generation. The original declaration ('live_llm_inference') implied full generative inference
++> (60s floor) … verifier_ensemble_against_cached_candidates also does not fit (its definition
++> explicitly requires the LLM NOT be loaded, and this task did load it, for embeddings).`
++
++The leading token is band 3 — a real GGUF load. But the note contains `cached`, so the whole-string
++scan ranked it band 2 and the lint refused the commit **while asserting the opposite of what the
++artifact says**. exp5161 is the same shape. Both are CLAUDE.md's own named exemplars for their
++substrates, so the rule was refusing the convention the project documents.
++
++Fixed by delegating the match to `adversarial_verify._match_declared_substrate` rather than
++re-deriving separator handling — a drifted copy of a matcher is exactly how this bug arose.
++`_has_change_note` now also accepts a rationale carried **inline** in the value, which is where the
++most carefully documented corrections in the corpus put it.
++
++**Verified corpus-wide, not just on the two exemplars:** of all 2,673 `inference_substrate`
++declarations in the tree, **0** now rank differently from their bare leading token.
++
++### 7c.2 SERIOUS — the pre-commit interlock was disarmed by the exact invocation that caused both incidents
++
++`--gate` refuses a commit while `ops/.test_suite_mutation_pending.json` exists — and **only `--run`
++ever wrote that marker**. So the interlock protected the wrapper nobody uses and was silent for:
++
++```
++pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py
++```
++
++Demonstrated on the real tree: after simulating that rewrite class, `README.md` (operator-curated,
++one of the original 39) and `openspec/papers/paper-v6/section-6-limitations.md` were both modified
++while `--gate` exited 0 **and** the determination lint printed OK.
++
++Fixed at the source rather than at the wrapper: `tests/python/conftest.py` takes a `git status`
++baseline in `pytest_configure` and calls `test_suite_mutation_check.arm_from_pytest()` in
++`pytest_sessionfinish`, so the marker is armed **however pytest was invoked**. Proven end-to-end: a
++green single-test run that rewrites `README.md` now emits a `PytestWarning`, writes the marker, and
++`--gate` exits 1. The tree was restored and verified byte-identical.
++
++**Stated limitation, observed while validating it:** a run that is *killed* never arms.
++`pytest_sessionfinish` does not run under SIGTERM/SIGKILL, so a suite that times out or is
++interrupted can leave rewrites on disk with no marker — a 2-minute timeout killing a full
++`test_arc_*.py` run produced exactly that (it had moved nothing, but the gap is real). `--run` does
++not share the gap, since it checks after the child exits however it exited. This is a reason to keep
++`--run` for long jobs, not a reason to distrust the hook: the hook covers the *bare pytest* case
++that previously had no coverage at all.
++
++Three properties are pinned because each could quietly undo it: it skips xdist **workers** (only the
++controller may arm, or four partial views race); it **disarms** on a clean run (or one bad run blocks
++commits forever); and it **never restores** (auto-reverting has already destroyed in-flight work
++twice — see §7b.3). Wiring `--check` into pre-commit instead was rejected: with no baseline it cannot
++distinguish a test's rewrite from a human's edit, and would refuse every commit on a dirty tree.
++
++### 7c.3 The other eight
++
++* **Rule 4 invented a phantom LIVE band from a non-substrate name.** exp5240 declared
++  `arc_live_path_patch_synthesis` — the ARC live *code* path, never a legal enum value. A token scan
++  reads its `live` token as LIVE/HARDWARE, so an honest later correction to
++  `aggregation_from_upstream_artifacts` was refused as a downgrade. Fixed structurally: for the
++  enum-governed field, an unrecognised name may rank **weak** but never **strong**. A claim of
++  strength is cheap to make by accident; an admission of weakness (`mock`, `blocked`) is not, so
++  admissions are trusted from any string and claims only from the documented vocabulary. That
++  asymmetry matters — a first attempt returned `None` for *all* non-enum values and silently
++  un-protected `sota_gguf_mock`, CLAUDE.md's own fabrication exemplar. Two pre-existing tests caught
++  the regression, which is what they are for.
++* **The calibration did not reproduce, and its strongest claim did not generalise.** "1,200 commits"
++  was ambiguous between two populations. Both are now named, the sweep re-run, and the blanket
++  "every R4 hit is a real incident" replaced with per-hit adjudication — see §7's table.
++* **Four review-output markers were uncovered:** `n_samples_justification` (56 artifacts — the
++  sample-size disclosure CLAUDE.md *requires* for a distributional claim), `false_negative_risk_checked`
++  (63), `paper_v6_forbidden_claims` (22), `adversarial_verify_flags` (22). Added. `honest_verdict`
++  (5,245) remains deliberately excluded and is now pinned by a test, because a re-run legitimately
++  produces a new one.
++* **A supporting census figure was wrong:** the `correct`-exclusion rationale cited 601 artifacts;
++  the stated predicate yields **465**. The design decision is unaffected — those are measurements
++  either way — but an unreproducible number is not evidence.
++* **Three doc claims overstated their evidence** and are corrected in place: the 13 unattributed rows
++  in §3.3b were all labelled "subprocess writer" when only **2 of 13** contain a subprocess (§3.3b);
++  §4's "All 20 `runpy` files" is what a *literal-path grep* can see, and misses at least 3
++  variable-target sites (§3.1); §3.3's batch table stopped at batch 02 of 13 and is marked superseded.
++* **Option (E) proposed a variable that does not exist.** `CARNOT_RESULTS_DIR` occurs **0** times in
++  the tree; the convention it describes already exists as `CARNOT_REPO_ROOT` (52 scripts, 56 test
++  files) and already works. §6 now cites the working precedent instead of inventing a competitor.
++
++### 7c.4 Mutation testing, again — and again it found an unprotected check
++
++10 mutations of the new logic: **9 killed, 1 survivor.** Reverting token anchoring to a bare
++substring test left the suite green — the anchoring this document claims was entirely untested. It
++matters because the rank is a *minimum*: `uncached_live_gguf_inference` unanchored matches `cached`
++and ranks band 2; `unblocked_live_gpu_run` matches `blocked` and ranks band 0. Both are the same
++negation-blindness class as §7c.1, now pinned. Final: **10/10 killed, 56 tests passing** across the
++two guard suites.
++
++---
++
+ ## 8. Cross-references
+ 
+ * commit `b3e31d341` — the hazard as first diagnosed
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 16ffe335fa..eec2fa44f2 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -19801,4 +19801,4 @@ labour is deliberate: the lint is narrow and deep, the detector is broad and sha
+ 
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+-| REQ-ARC-WMTE-6041 | Implemented. (1) `scripts/determination_preservation_lint.py` WIDENED from 2 rules to 4 — `MARKER_PATTERNS` (rule 3, dropped review records), `SUBSTRATE_FIELD` + `STRENGTH_BANDS` + `_strength_rank` + `_has_change_note` (rule 4, in-place weakening), `_unwrap_principle` for principle-annotated fields, and `already_reported` de-duplication so one deletion produces one refusal line. Calibrated over 1,200 commits / 3,232 modified artifact pairs: rule 3 fires 10x, rule 4 fires 8x, and every rule-4 hit is a genuine instance of the hazard — including the previously unknown `experiment_911_drift_probe_tier0i.json` taking `real_model` -> `synthetic_runner` FIVE times in `main`. (2) `scripts/test_suite_mutation_check.py` NEW — `--snapshot`/`--check`/`--restore`/`--run`/`--gate`, wired as `.pre-commit-config.yaml:test-suite-mutation-gate` with `always_run`. (3) `scripts/pytest_write_audit_plugin.py` NEW — the CPython-audit-hook instrument that produced the per-test attribution, so the survey is reproducible after any repair. NOT implemented, deliberately: the test-side repair, which is an operator design call (four options costed in `docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md` §6). | `tests/python/test_determination_preservation_lint.py` (20 tests, +11 for the widening, replaying all three confirmed incidents as fixtures — including `test_incident_3_timestamp_rewrites_are_deliberately_NOT_this_lint_s_job`, which pins the boundary so a later "fix" cannot start refusing ordinary re-runs, and `test_an_unrelated_change_note_does_not_excuse_a_substrate_downgrade`, which pins a loose escape hatch found and removed during review); `tests/python/test_test_suite_mutation_check.py` (13 tests driving REAL git in a throwaway repo — the bug class is "which git question did we ask", so a mocked git would reproduce the wrong question); `tests/python/test_pytest_write_audit_plugin.py` (17 tests, loading the plugin with `sys.addaudithook` and `atexit.register` stubbed so the instrument's own tests do not contaminate the suite they run in). |
++| REQ-ARC-WMTE-6041 | Implemented. (1) `scripts/determination_preservation_lint.py` WIDENED from 2 rules to 4 — `MARKER_PATTERNS` (rule 3, dropped review records), `SUBSTRATE_FIELD` + `STRENGTH_BANDS` + `_strength_rank` + `_has_change_note` (rule 4, in-place weakening), `_unwrap_principle` for principle-annotated fields, and `already_reported` de-duplication so one deletion produces one refusal line. Calibration RESTATED 2026-07-29 (rev 2) with its window defined and re-run after the review repairs: the original "1,200 commits" was ambiguous between *1,200 commits overall* (3,232 modified artifact pairs) and *1,200 commits touching `results/`* (7,024 pairs). Over the latter: rule 3 fires 10x, rule 4 fires 12x, each hit adjudicated individually — `experiment_911_drift_probe_tier0i.json` takes `real_model` -> `synthetic_runner` TEN times in `main` (previously unknown) and `experiment_307` takes `live_gpu` -> `cpu_training` twice. A pre-repair sweep counted 15 rule-4 hits; the three that no longer fire are the honest-substrate-correction class the rev-2 repair fixed. (4) REV 2 — an adversarial review found TEN defects, two serious: rule 4 was ranking the human note in the project's documented `<canonical value><separator><note>` substrate form (233+ live declarations), inverting its verdict on CLAUDE.md's own exp5178/exp5161 exemplars; and the pre-commit interlock was disarmed by a bare `pytest`, because only `--run` ever wrote the pending marker. Fixed by delegating to `adversarial_verify._match_declared_substrate`, accepting an inline rationale, ranking the enum-governed field from the canonical enum only (unknown may rank weak, never strong), and arming the marker from `tests/python/conftest.py` so it arms however pytest was invoked. Corpus-wide verification: 0 of 2,673 declarations rank differently from their leading token. (2) `scripts/test_suite_mutation_check.py` NEW — `--snapshot`/`--check`/`--restore`/`--run`/`--gate`, wired as `.pre-commit-config.yaml:test-suite-mutation-gate` with `always_run`. (3) `scripts/pytest_write_audit_plugin.py` NEW — the CPython-audit-hook instrument that produced the per-test attribution, so the survey is reproducible after any repair. NOT implemented, deliberately: the test-side repair, which is an operator design call (four options costed in `docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md` §6). | `tests/python/test_determination_preservation_lint.py` (20 tests, +11 for the widening, replaying all three confirmed incidents as fixtures — including `test_incident_3_timestamp_rewrites_are_deliberately_NOT_this_lint_s_job`, which pins the boundary so a later "fix" cannot start refusing ordinary re-runs, and `test_an_unrelated_change_note_does_not_excuse_a_substrate_downgrade`, which pins a loose escape hatch found and removed during review); `tests/python/test_test_suite_mutation_check.py` (13 tests driving REAL git in a throwaway repo — the bug class is "which git question did we ask", so a mocked git would reproduce the wrong question); `tests/python/test_pytest_write_audit_plugin.py` (17 tests, loading the plugin with `sys.addaudithook` and `atexit.register` stubbed so the instrument's own tests do not contaminate the suite they run in). |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 929d6022eb..9e62d3bde0 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,64 @@
+ # Carnot — Changelog
+ 
++## 2026-07-29 (outer-loop: validating the guards — a false-fire proof, four untested checks, and the detector eating this session's own report)
++
++TRIGGER: PHASE 2 of the survey below — prove the widened `determination_preservation_lint.py` fires
++on the three confirmed incidents, prove it does NOT fire on a legitimate analyser rebuild, and
++mutation-prove every new check. NO TEST WAS REPAIRED; the repair remains the operator's design call
++(six options costed in the survey §6, recommendation (D)→(F)→(E), explicitly not (A), reject (B)).
++
++### The must-not-fire proof — and the first attempt at it was worthless
++
++Tested against real history rather than a fixture: commit `8441055c0` rebuilt **12 analyser
++artifacts**, moving only `build_timestamp_utc`, `duration_s`, `provenance.git_head` and the
++dependency `sha256`/`bytes`. The widened lint examined all 28 modified artifacts in that commit (12
++analysers, both sides parsed) and reported **no false fire** — while refusing four violations
++injected into that same real file, with two legitimate-rebuild controls staying silent.
++
++The FIRST run of that check reported a clean pass that proved nothing: it executed from a worktree
++checked out AT `8441055c0`, which predates the widening, so it measured the OLD two-rule lint. The
++only tell was an incidental `AttributeError` on `_unwrap_principle`. Both halves are now pinned as
++tests — the must-not-fire case and a companion that fails if the lint ever stops SEEING that
++artifact shape, because a clean pass and blindness are indistinguishable from the outside.
++
++### Mutation testing found four checks that no test was exercising
++
++19 mutations, 17 killed, **2 survivors, both genuine gaps**: deleting the `correction` marker
++pattern left the suite green (every field the incident-1 test names is double-covered by
++`^inference_substrate` / `provenance`, so the pattern it is named for was never under test), and
++blanking half the rule-1/rule-2 dedup left it green (the existing test pins the dedup for
++`flagged_adversarial` only). Both closed with a test each; second pass 19/19. Two further checks
++were added and proven with the fix below, giving **22/22 killed** across both guards.
++
++### The detector reverted this session's own report — twice is a design defect
++
++A wrapped full-suite run detected 6 rewrites and restored all 6. One was the survey document itself:
++its new section had been written AFTER the snapshot, so `mutations()` correctly called it "changed
++since baseline" and `git checkout --`'d it away. This is the SECOND occurrence (survey §3.6 records
++the first, same file, also mid-edit). The root cause is not fixable by better attribution — **the
++detector cannot distinguish a test's write from a human's concurrent edit**, because at the file
++level they are the same event.
++
++FIX: `restore()` now copies every file's pre-revert content to `ops/.test_suite_mutation_backup/`
++(gitignored) before reverting, and warns on any it could not save. `git checkout --` is
++unrecoverable for uncommitted content; a `cp` first turns a destroyed afternoon into a restored
++file. The module docstring now states the operational rule: do not edit tracked files while a
++`--restore` run is in flight.
++
++That run was also the detector's first proof in anger — it caught 6 mid-suite rewrites including
++`output/kanele_synth/post_synth.dcp`, one of the original 39, and restored all 6 with the four
++in-flight files in its baseline verified byte-identical afterwards.
++
++### Verification
++
++Failure-SET comparison (not counts), same tree, `-n 4`, 1,463-test set spanning all 125
++`test_arc_*.py` plus both guard suites and the known xdist canary: working tree **2 failed / 1461
++passed**, HEAD **2 failed / 1455 passed** — **identical failure sets**, the +6 being exactly the six
++new tests. Both failures pre-exist at HEAD. The documented `test_arc_generator_vram_guard.py`
++re-sharding defect did not trigger (tests were added to existing files, not as a new file). Guard
++suites 41 passed; both guards report OK on the live tree; the three confirmed incident artifacts
++verified intact (exp3946 retains all four records, exp307 is `live_gpu`, exp1035 is `20260727`).
++
+ ## 2026-07-29 (outer-loop: the "conductor re-run" was a TEST RUN, and 139 scripts write to a hardcoded absolute path)
+ 
+ TRIGGER: continuation of the survey below. Three findings, each larger than the one before it, and
+@@ -119,15 +178,22 @@ substrate string ranks as *unknown*, never as *weak*.
+ 
+ The marker list is **derived, not wished for**: a census of all 31,510 distinct top-level keys across
+ the 15,331 `results/**/*.json` files, keeping the name-shapes that mark a REVIEW OUTPUT and rejecting
+-those that mark a MEASUREMENT. `correct` is deliberately not a pattern — 601 artifacts carry
++those that mark a MEASUREMENT. `correct` is deliberately not a pattern — 465 artifacts carry
+ `energy_correct` / `n_correct` / `judge_correct`, and refusing those would obstruct exactly the
+ fail-forward behaviour the operator's standing directive protects.
+ 
+-**Calibrated over 1,200 commits (3,232 modified artifact pairs):** R3 fires 10 times, R4 fires 8.
+-Every R4 hit is a genuine instance of the hazard class, and one was previously unknown —
+-`results/experiment_911_drift_probe_tier0i.json` took `real_model` -> `synthetic_runner` **five
+-times** in `main`, and `experiment_307` took `live_gpu` -> `cpu_training` **twice**, with nothing in
+-the repo watching. Zero violations from either new rule across the 8 commits since the lint shipped.
++**Calibration (restated 2026-07-29 — window defined, re-run after the rule-4 repair).** The first
++draft said "1,200 commits (3,232 modified artifact pairs)" without stating which population the
++1,200 came from, so the numbers did not reproduce. Both windows, named: *1,200 commits overall* →
++3,232 pairs; *1,200 commits touching `results/`* → 7,024 pairs. Over the latter: **R3 fires 10,
++R4 fires 12.** Each R4 hit was adjudicated individually rather than asserted en masse —
++`experiment_911_drift_probe_tier0i.json` took `real_model` -> `synthetic_runner` **ten times** in
++`main` (previously unknown), `experiment_307` took `live_gpu` -> `cpu_training` **twice**, with
++nothing in the repo watching; all 12 are genuine. R3's 10 are one dropped `flagged_adversarial:
++false` plus nine review notes lost when fixed-path ARC round-probes (`outer_loop_fable5_*`)
++overwrote the prior round's record — the origin incident's own class. A pre-repair sweep counted
++**15** R4 hits; the three that disappeared are the honest-correction class described below, and
++their silence is the repair working.
+ 
+ ### NEW: scripts/test_suite_mutation_check.py
+ 
+@@ -14107,3 +14173,52 @@ replaced by assertions against the committed artifact without re-running anythin
+ with 11+ call sites and an operator-visible tradeoff (option (c) stops exercising the script at all).
+ Interim guidance for anyone running the suite: check `git status` afterwards and revert unintended
+ `results/` changes before committing.
++
++### 2026-07-29 (rev 2) — adversarial review of the two guards: ten defects, two serious
++
++An adversarial review of the guards shipped earlier today found **ten defects**, two of which
++inverted a guard's purpose. All fixed, each pinned by a regression test named for its incident.
++Full detail in `docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md` §7c.
++
++**SERIOUS 1 — rule 4 refused the project's own documented substrate convention.**
++`adversarial_verify.py` documents `<canonical value><separator><human note>` and strips the note
++before matching; `_strength_rank` scanned the whole string including the prose and took the minimum
++band. 233+ live declarations use that form. exp5178's note explains that
++`verifier_ensemble_against_cached_candidates` does **not** apply — so the word `cached` in the
++explanation dragged a real GGUF load from band 3 to band 2 and the lint refused the commit while
++asserting the opposite of what the artifact says. exp5161 is the same shape; both are CLAUDE.md's own
++named exemplars. This is the negation-blindness class the QA-Layer Authenticity Discipline names.
++Fixed by delegating to `adversarial_verify._match_declared_substrate` rather than re-deriving
++separator handling, and by accepting a rationale carried inline in the value.
++**Verified corpus-wide: 0 of 2,673 declarations now rank differently from their leading token.**
++
++**SERIOUS 2 — the pre-commit interlock was disarmed by the invocation that caused both incidents.**
++`--gate` refuses while a pending marker exists, and only `--run` ever wrote that marker — so a bare
++`pytest tests/python/test_arc_*.py …` left it silent. Demonstrated: after simulating that rewrite
++class, `README.md` (operator-curated) and a paper-v6 section were modified while `--gate` exited 0
++and the determination lint printed OK. Fixed at the source: `tests/python/conftest.py` takes a
++baseline in `pytest_configure` and arms the marker in `pytest_sessionfinish`, so it arms **however
++pytest was invoked**. Proven end-to-end, then the tree restored byte-identical. It skips xdist
++workers, disarms on a clean run, and never restores (auto-reverting has destroyed in-flight work
++twice). Wiring `--check` into pre-commit was rejected — with no baseline it cannot tell a test's
++rewrite from a human's edit.
++
++**The other eight:** a phantom LIVE band from `arc_live_path_patch_synthesis` refusing exp5240's
++honest taxonomy repair (fixed by an asymmetry — an unknown name may rank weak but never strong,
++because a claim of strength is cheap to make by accident and an admission of weakness is not; a
++first attempt that returned None for all unknowns silently un-protected `sota_gguf_mock` and was
++caught by two pre-existing tests); the unreproducible calibration window (both populations now
++named, sweep re-run, blanket claim replaced with per-hit adjudication); four uncovered review-output
++markers (`n_samples_justification`, `false_negative_risk_checked`, `paper_v6_forbidden_claims`,
++`adversarial_verify_flags`); a wrong census figure (601 → 465); three overstated documentation
++claims (only 2 of 13 unattributed rows have a subprocess; "all 20 runpy files" is what a literal
++grep sees and misses 3 variable-target sites; the batch table stopped at 02 of 13); and option (E)
++proposing `CARNOT_RESULTS_DIR`, which occurs 0 times in the tree, when `CARNOT_REPO_ROOT` (52
++scripts, 56 test files) already is that convention and already works.
++
++**Mutation testing found one more unprotected check.** 10 mutations, 9 killed, 1 survivor: reverting
++token anchoring to a bare substring test left the suite green. `uncached_…` matches `cached` and
++`unblocked_…` matches `blocked` — the same negation blindness as SERIOUS 1. Pinned. Final 10/10.
++
++**Still UNFIXED, deliberately:** the 11 tests themselves. That repair is an operator design call
++(six options costed in §6; recommendation (D) → (F) → (E), not (A), reject (B)).
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index b68289906b..e50594046d 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -141,12 +141,30 @@ record is worse than an honest gap.
+    acknowledgment / retraction / review note); new rule 4 refuses **weakening a substrate or mode
+    declaration in place** without a note. Marker patterns were derived by censusing all 31,510
+    distinct top-level keys across the 15,331 `results/**/*.json` files — `correct` is deliberately
+-   NOT a pattern (601 artifacts carry `energy_correct`/`n_correct`, which fail-forward re-runs must
+-   be free to change). Calibrated over 1,200 commits / 3,232 modified artifact pairs: R3 fires 10x,
+-   R4 fires 8x, and **every R4 hit is a genuine instance of the hazard** — including a previously
+-   unknown one, `results/experiment_911_drift_probe_tier0i.json` taking `real_model` ->
+-   `synthetic_runner` FIVE times in `main`, plus `experiment_307` taking `live_gpu` -> `cpu_training`
+-   TWICE. Zero violations across the 8 commits since the lint first shipped.
++   NOT a pattern (465 artifacts carry `energy_correct`/`n_correct`, which fail-forward re-runs must
++   be free to change).
++   **Calibration, restated 2026-07-29 with its window defined and re-run after the rule-4 repair
++   below.** The first draft reported "1,200 commits / 3,232 pairs, R3 10x, R4 8x" without saying
++   which population "1,200 commits" meant, so it did not reproduce. The two windows are:
++   *1,200 commits overall* → 3,232 modified artifact pairs (the original, undeclared window), and
++   *1,200 commits that touch `results/`* → 7,024 pairs (the larger, more informative window).
++   Re-run over the second: **R3 fires 10x, R4 fires 12x.** Every R4 hit is adjudicated a genuine
++   instance of the hazard — `results/experiment_911_drift_probe_tier0i.json` taking `real_model` ->
++   `synthetic_runner` TEN times in `main` (previously unknown, nothing was watching), plus
++   `experiment_307` taking `live_gpu` -> `cpu_training` TWICE. R3's 10 are one dropped
++   `flagged_adversarial: false` plus nine review notes lost by fixed-path ARC round-probes
++   (`outer_loop_fable5_*`) overwriting the previous round's record — the same class as the origin
++   incident, not false positives.
++   **A pre-repair sweep counted 15 R4 hits; three were the honest-correction class fixed below and
++   are correctly silent now.** Zero violations across the commits since the lint first shipped.
++1b. **REV 2 (2026-07-29): the interlock was disarmed by the invocation that caused both incidents.**
++   `--gate` refuses while `ops/.test_suite_mutation_pending.json` exists, and only `--run` ever wrote
++   it — so a bare `pytest tests/python/test_arc_*.py …` left the gate green on a tree the suite had
++   just rewritten (demonstrated: README.md and a paper-v6 section modified, `--gate` exit 0,
++   determination lint OK). Now armed from `tests/python/conftest.py` — baseline in
++   `pytest_configure`, `arm_from_pytest()` in `pytest_sessionfinish` — so it arms HOWEVER pytest was
++   invoked. Skips xdist workers, disarms on a clean run, never restores. **Known gap: a SIGKILL'd /
++   timed-out run never arms** (`pytest_sessionfinish` does not run); use `--run` for long jobs.
+ 2. `scripts/test_suite_mutation_check.py` **NEW** — the broad, shallow half: "did this run modify
+    tracked files, and which?", no opinion about content, so it also covers `openspec/` and `output/`
+    which the lint does not. `--run` wraps a command, `--restore` puts everything back, `--gate` is a
+diff --git a/scripts/determination_preservation_lint.py b/scripts/determination_preservation_lint.py
+index 396f1b7fae..d5d670d0c5 100644
+--- a/scripts/determination_preservation_lint.py
++++ b/scripts/determination_preservation_lint.py
+@@ -138,10 +138,18 @@ The patterns below were derived by censusing every top-level key in all 15,331
+ name-shapes that mark a REVIEW OUTPUT and rejecting the ones that mark a MEASUREMENT. That
+ distinction is the whole design, and it is why some obvious-looking patterns are absent:
+ 
+-  * ``correct`` is NOT a pattern. 601 artifacts carry ``energy_correct`` / ``sc_correct`` /
+-    ``judge_correct`` / ``n_correct`` -- these are accuracy MEASUREMENTS, and a re-run that
+-    changes them is exactly the fail-forward behaviour this lint must never obstruct. Only
+-    the longer, prose-shaped ``correction`` is matched.
++  * ``correct`` is NOT a pattern. 465 artifacts carry a top-level ``*correct*`` key that is
++    not ``*correction*`` -- ``energy_correct`` (201), ``sc_correct`` (200),
++    ``energy_pure_correct`` (200), ``judge_correct`` (200), ``n_correct`` (37) and others --
++    and these are accuracy MEASUREMENTS. A re-run that changes them is exactly the
++    fail-forward behaviour this lint must never obstruct. Only the longer, prose-shaped
++    ``correction`` is matched.
++
++    (The figure in the first draft of this docstring was 601, which does not reproduce. The
++    predicate that yields 465 is: top-level keys only, case-insensitive ``correct`` in the
++    name, excluding names containing ``correction``, counted once per artifact. The design
++    decision is unaffected -- those are measurements either way -- but an unreproducible
++    number is not evidence, so it is corrected rather than left standing.)
+   * ``corrected_`` is NOT a pattern, for the same reason: ``corrected_cdls_projection_mh``
+     and ``corrected_cdls_acceptance_rate`` are numbers.
+   * ``_note`` IS a pattern, but only fires when the OLD value was substantive (a non-empty
+@@ -206,6 +214,21 @@ MARKER_PATTERNS: list[tuple[re.Pattern[str], str]] = [
+     (re.compile(r"disclos", re.I), "disclosure record"),
+     (re.compile(r"caveat", re.I), "caveat record"),
+     (re.compile(r"^(notes?|.+_notes?)$", re.I), "review note"),
++    # Added 2026-07-29 after a review found these review-output names uncovered. Each is a
++    # judgement a REVIEW produced, which a re-run's fresh numbers do not supersede:
++    #   justif...        -> `n_samples_justification` (56), the sample-size disclosure that
++    #                       CLAUDE.md's Adversarial Artifact Verification rule REQUIRES for
++    #                       any distributional claim.
++    #   false_negative.. -> `false_negative_risk_checked` (63), the FALSE_NEGATIVE_RISK
++    #                       positive-control check.
++    #   forbidden_claims -> `paper_v6_forbidden_claims` (22), the Paper-v6 Narrowing
++    #                       Discipline's retraction list.
++    # `honest_verdict` (5,245) is deliberately NOT here: a re-run legitimately produces a new
++    # verdict, so protecting it would refuse the fail-forward behaviour this lint must allow.
++    (re.compile(r"justif", re.I), "sample-size justification"),
++    (re.compile(r"false_negative_risk", re.I), "false-negative-risk check"),
++    (re.compile(r"forbidden_claims", re.I), "forbidden-claims record"),
++    (re.compile(r"^adversarial_verify_flags$", re.I), "adversarial-verify flag record"),
+     (re.compile(r"^verifier_is_oracle$", re.I), "circularity declaration"),
+     (re.compile(r"^flagged_adversarial", re.I), "fabrication-gate stamp"),
+     (re.compile(r"^preconditions_checked$", re.I), "precondition record"),
+@@ -223,10 +246,28 @@ SUBSTRATE_FIELD = re.compile(
+     re.I,
+ )
+ 
++# `inference_substrate` is the ONE field in this family governed by a documented fixed
++# vocabulary (CLAUDE.md "Inference-Substrate Declaration Discipline"), enumerated in
++# `adversarial_verify.py`'s three alias tuples. It is therefore ranked from that enum and
++# NEVER by scanning prose -- see `_strength_rank` for why that distinction is load-bearing.
++ENUM_GOVERNED_SUBSTRATE_FIELD = "inference_substrate"
++
+ # Strength bands, weakest first. A declared value's rank is the MINIMUM band of every token
+ # it matches, so `cpu_synthetic` ranks as SYNTHETIC (1) rather than as CPU (2), and
+ # `blocked_no_live_gpu` ranks as NOT-RUN (0) rather than as LIVE (3). Taking the minimum is
+ # the conservative reading: a string that admits any weak token is at most that strong.
++#
++# TOKENS ARE ANCHORED AT A TOKEN START, NOT MATCHED AS BARE SUBSTRINGS (2026-07-29). The
++# first draft used `token in value`, so `real` matched inside `unreal`, `cpu` inside
++# `cpu`-free prose, and so on. Values are normalised (non-alphanumeric runs -> `_`) and each
++# band token must begin at a token boundary. Tokens stay PREFIXES rather than whole words on
++# purpose -- `simulat` has to catch `simulated` and `simulation`, and `analys` has to catch
++# `analysis` and `analyser`.
++#
++# Token anchoring does NOT resolve the `arc_live_path_patch_synthesis` collision, because
++# that value genuinely contains `live` as a whole token. That case is handled structurally
++# instead, by ranking `inference_substrate` from the canonical enum only -- see
++# `_strength_rank`.
+ STRENGTH_BANDS: list[tuple[int, tuple[str, ...]]] = [
+     (0, ("blocked", "deferred", "not_run", "precondition_check_only", "no_run", "skipped")),
+     (1, ("mock", "fake", "synthetic", "simulat", "stub", "dry_run", "placeholder")),
+@@ -247,6 +288,19 @@ STRENGTH_BANDS: list[tuple[int, tuple[str, ...]]] = [
+ ]
+ _BAND_NAME = {0: "NOT-RUN", 1: "NOT-REAL-COMPUTE", 2: "REAL-BUT-CHEAP", 3: "LIVE/HARDWARE"}
+ 
++# Bands for the CANONICAL substrate enum, keyed by `adversarial_verify`'s own three kinds.
++# Aggregation and no-LLM work is real but cheap (band 2); anything that loads a model is
++# band 3. `hardware_smoke` is documented in CLAUDE.md's substrate table but is absent from
++# `adversarial_verify`'s alias tuples, so it is supplemented here rather than silently
++# becoming unrankable.
++_ENUM_KIND_BAND = {"aggregation": 2, "no_llm": 2, "live_model": 3}
++_SUPPLEMENTARY_ENUM_BANDS = {"hardware_smoke": 3}
++
++# Separators after which a human note may follow the canonical value, per
++# `adversarial_verify._inference_substrate_value_matches`. Kept only as the fallback for
++# free-form (non-enum) fields; the enum path defers to that function so the two cannot drift.
++_NOTE_SEPARATORS = " -;,:.("
++
+ 
+ def _unwrap_principle(value):
+     """Return the real value of a possibly principle-annotated field.
+@@ -285,20 +339,112 @@ def _marker_kind(key: str) -> str | None:
+     return None
+ 
+ 
+-def _strength_rank(value) -> int | None:
++def _canonical_substrate_band(raw: str) -> int | None:
++    """Band of a value that declares a CANONICAL substrate, else None.
++
++    Delegates the match to ``adversarial_verify._match_declared_substrate`` rather than
++    re-deriving it. That function already implements the project's documented
++    ``<canonical value><separator><human note>`` convention -- it strips the note and matches
++    only the leading canonical token. Re-implementing that here is exactly how the two would
++    drift, and a drifted copy of a matcher is how this rule got its worst bug (below).
++    """
++    try:
++        sys.path.insert(0, str(REPO / "scripts"))
++        import adversarial_verify as _av
++    except Exception:  # pragma: no cover - defensive: a guard must never die on an import
++        return None
++    for kind, aliases in (
++        ("aggregation", _av.AGGREGATION_SUBSTRATE_ALIASES),
++        ("no_llm", _av.NO_LLM_SUBSTRATE_ALIASES),
++        ("live_model", _av.LIVE_MODEL_SUBSTRATE_ALIASES),
++    ):
++        if _av._match_declared_substrate(raw, tuple(aliases)) is not None:
++            return _ENUM_KIND_BAND[kind]
++    head = raw.split("--", 1)[0].strip()
++    for sep in _NOTE_SEPARATORS:
++        head = head.split(sep, 1)[0].strip()
++    return _SUPPLEMENTARY_ENUM_BANDS.get(head.lower())
++
++
++def _token_scan_band(raw: str) -> int | None:
++    """Band of a FREE-FORM (non-enum) declaration, by anchored token scan, else None."""
++    head = raw.split("--", 1)[0].strip()
++    for sep in _NOTE_SEPARATORS:
++        head = head.split(sep, 1)[0].strip()
++    norm = "_" + re.sub(r"[^a-z0-9]+", "_", head.lower()).strip("_") + "_"
++    matched = [band for band, tokens in STRENGTH_BANDS if any(("_" + t) in norm for t in tokens)]
++    return min(matched) if matched else None
++
++
++def _strength_rank(value, field: str | None = None) -> int | None:
+     """Rank a declared substrate/mode value, or None when it matches no known vocabulary.
+ 
+     None means "unrankable", NOT "weak". An unknown string must never be treated as a
+-    downgrade -- the project invents new substrate strings constantly (2,842 declarations
++    downgrade -- the project invents new substrate strings constantly (2,673 declarations
+     across ~40 distinct vocabularies), and ranking an unrecognised one as 0 would refuse a
+     large fraction of honest commits.
++
++    TWO BUGS THIS SIGNATURE EXISTS TO FIX (2026-07-29 review, both found against real
++    artifacts rather than fixtures):
++
++    1. RANKING PROSE. The first draft scanned the WHOLE declaration string for band tokens.
++       The project's documented convention is ``<canonical value><separator><human note>``
++       (233+ live declarations use it), and the note is frequently a substrate CORRECTION
++       that names the substrates it is correcting away from. exp5178 declares
++       ``"live_llm_embedding_extraction; Substrate corrected 2026-07-03: ... "``, whose note
++       contains the word ``cached``; the whole-string scan therefore took the MINIMUM band
++       across the prose and ranked a real GGUF load (band 3) as REAL-BUT-CHEAP (band 2),
++       refusing the commit and asserting the exact opposite of what the artifact says.
++       exp5161 is the same shape. Both are CLAUDE.md's own named exemplars for their
++       substrates, so the rule was refusing the convention the project documents.
++
++    2. PHANTOM BAND-3 FROM A NON-SUBSTRATE NAME. exp5240 declared
++       ``arc_live_path_patch_synthesis`` -- the ARC live CODE path, not a compute substrate,
++       and never a legal value under the Inference-Substrate Declaration Discipline's fixed
++       enum. A token scan reads its ``live`` token as LIVE/HARDWARE, so when a later commit
++       honestly corrected it to the legal ``aggregation_from_upstream_artifacts``, the rule
++       saw band 3 -> band 2 and refused a taxonomy REPAIR as a downgrade.
++
++    The fix for (2) is structural, not another token-list patch: for the one field governed
++    by a documented fixed vocabulary, rank ONLY from that vocabulary. An unrecognised
++    ``inference_substrate`` is UNKNOWN, exactly as ``adversarial_verify`` itself classifies
++    it (``unknown_top_level_inference_substrate``), and unknown is unrankable on BOTH sides.
++    That symmetry is the point: the rule already refused to treat an unknown NEW value as
++    weak, and it now likewise refuses to treat an unknown OLD value as strong. No protection
++    is lost -- a genuine enum-to-enum downgrade is still caught -- and the collision cannot
++    recur for any future ``arc_live_*`` name.
++
++    Free-form mode fields (``inference_mode``, ``execution_mode``, ...) have no enum, so they
++    keep the token scan. That is where the origin incident lives: exp307's
++    ``inference_mode: live_gpu -> cpu_training``.
+     """
+     v = _unwrap_principle(value)
+     if not isinstance(v, str):
+         return None
+-    low = v.lower()
+-    matched = [band for band, tokens in STRENGTH_BANDS if any(t in low for t in tokens)]
+-    return min(matched) if matched else None
++    raw = v.strip()
++    if not raw:
++        return None
++    enum_band = _canonical_substrate_band(raw)
++    if enum_band is not None:
++        return enum_band
++    scan = _token_scan_band(raw)
++    if field is not None and str(field).lower() == ENUM_GOVERNED_SUBSTRATE_FIELD:
++        # ASYMMETRY, AND IT IS THE WHOLE POINT. For the enum-governed field, an unrecognised
++        # name may rank WEAK but never STRONG.
++        #
++        # A first attempt at fix (2) above returned None for every non-enum value. That fixed
++        # exp5240 but silently disarmed the rule against `sota_gguf_mock` -- CLAUDE.md's own
++        # fabrication exemplar (exp3397: `duration_s=2.06` declaring a live 35B GGUF) -- which
++        # is not in the enum either. Two existing tests caught it, which is what they are for.
++        #
++        # The distinction that survives both cases: a name asserting STRENGTH (`live`, `gpu`)
++        # is a claim, and claims are cheap to make by accident -- `arc_live_path_patch_synthesis`
++        # asserts nothing about compute, it just happens to contain the token. A name asserting
++        # WEAKNESS (`mock`, `fake`, `blocked`) is an ADMISSION, and nobody accidentally admits
++        # their run was mocked. So admissions are trusted from any string; claims are trusted
++        # only from the documented vocabulary.
++        return None if scan == 3 else scan
++    return scan
+ 
+ 
+ def _has_change_note(new: dict, field: str) -> bool:
+@@ -313,8 +459,31 @@ def _has_change_note(new: dict, field: str) -> bool:
+     ``corpus_change_note`` elsewhere in the artifact would silently excuse a substrate downgrade.
+     That is the "guard that does not fire" failure mode in miniature, so the field-agnostic
+     branch was removed rather than kept for convenience.
++
++    THE NOTE MAY BE CARRIED INLINE IN THE VALUE ITSELF (2026-07-29). An earlier draft only
++    inspected SIBLING keys, which missed the project's own documented convention: the
++    substrate field may be written ``<canonical value><separator><human note>``, and that
++    trailing note is very often precisely the downgrade rationale this function is looking
++    for. exp5161 corrects ``inference_substrate`` down to
++    ``verifier_ensemble_against_cached_candidates`` and explains why in the same string --
++    an explicit, auditable, dated justification sitting exactly where the next reader will
++    find it, which is all this escape hatch ever asked for. Requiring it in a SEPARATE key
++    would have refused the most carefully-documented corrections in the corpus while waving
++    through terse ones that happened to have a sibling.
+     """
+     stem = str(field).lower()
++    inline = _unwrap_principle(new.get(field))
++    if isinstance(inline, str):
++        body = inline.strip()
++        head = body.split("--", 1)[0].strip()
++        for sep in _NOTE_SEPARATORS:
++            head = head.split(sep, 1)[0].strip()
++        # A note is present when the declaration carries prose BEYOND the canonical token.
++        # The 12-character floor keeps a bare `value.` or a one-word suffix from counting as
++        # a rationale; the origin incidents' values (`cpu_training`) have no trailing prose
++        # at all, so they remain refused.
++        if len(body) - len(head) >= 12:
++            return True
+     for k, v in new.items():
+         kl = str(k).lower()
+         if not v or kl == stem:
+@@ -469,8 +638,8 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
+         for key, old_value in old.items():
+             if not SUBSTRATE_FIELD.match(str(key)) or key not in new:
+                 continue
+-            old_rank = _strength_rank(old_value)
+-            new_rank = _strength_rank(new[key])
++            old_rank = _strength_rank(old_value, key)
++            new_rank = _strength_rank(new[key], key)
+             if old_rank is None or new_rank is None or new_rank >= old_rank:
+                 continue
+             if _has_change_note(new, key):
+diff --git a/scripts/test_suite_mutation_check.py b/scripts/test_suite_mutation_check.py
+index b2ad9b7d19..fadbd25ccb 100644
+--- a/scripts/test_suite_mutation_check.py
++++ b/scripts/test_suite_mutation_check.py
+@@ -44,9 +44,20 @@ USAGE
+     # Wrap a test run: snapshot, run, report, and refuse (exit 1) if the record moved.
+     python3 scripts/test_suite_mutation_check.py --run -- pytest tests/python/test_arc_frame_induction.py
+ 
+-    # ...and put everything the run touched back the way it was.
++    # ...and put everything the run touched back the way it was. Every reverted file's previous
++    # content is copied to ops/.test_suite_mutation_backup/ first -- see the warning below.
+     python3 scripts/test_suite_mutation_check.py --restore --run -- pytest tests/python
+ 
++DO NOT EDIT TRACKED FILES WHILE A ``--restore`` RUN IS IN FLIGHT
++---------------------------------------------------------------
++``--restore`` reverts everything that changed since the snapshot, and it CANNOT tell a test's
++write from your concurrent edit -- both are "modified since the snapshot". Editing a tracked file
++during a wrapped run therefore gets that edit reverted. This has happened twice, both times to
++``docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md`` while it was being
++written. Since authorship is not recoverable in principle, the revert is made SURVIVABLE instead:
++every file is copied to ``ops/.test_suite_mutation_backup/<path>`` before it is reverted. If a
++restore takes something it should not have, copy it back from there.
++
+     # Or do it by hand, around anything at all:
+     python3 scripts/test_suite_mutation_check.py --snapshot
+     <do the thing>
+@@ -91,6 +102,10 @@ from pathlib import Path
+ REPO = Path(__file__).resolve().parents[1]
+ SNAPSHOT = REPO / "ops" / ".test_suite_mutation_snapshot.json"
+ PENDING = REPO / "ops" / ".test_suite_mutation_pending.json"
++# Where `restore()` parks a file's pre-revert content. `git checkout --` cannot be undone, and the
++# detector cannot tell a test's write from a human's concurrent edit, so every revert is made
++# recoverable rather than trusted to be correct. See `backup()`.
++BACKUP = REPO / "ops" / ".test_suite_mutation_backup"
+ 
+ 
+ def _git(*args: str) -> str:
+@@ -169,10 +184,53 @@ def mutations(baseline: dict[str, str]) -> list[str]:
+     return sorted(p for p in now if p not in baseline)
+ 
+ 
++def backup(paths: list[str]) -> list[str]:
++    """Copy each path's CURRENT content aside before anything reverts it.
++
++    WHY THIS EXISTS -- it has now bitten twice, both times on the same file.
++
++    ``restore()`` is ``git checkout --``, which is UNRECOVERABLE for uncommitted content. The
++    detector attributes "modified since the snapshot" to the test run, but it cannot actually tell
++    WHO wrote a file: a human editing a tracked file WHILE a wrapped run is in flight looks exactly
++    like a test rewriting it. Both incidents were the same shape -- an in-progress edit to
++    ``docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md`` was written after
++    the snapshot was taken, so the restore dutifully reverted it and the work was gone with no
++    diff, no warning, and nothing on disk to recover from. (The first is recorded in that
++    document's own section 3.6; the second happened while validating this script.)
++
++    Authorship is not recoverable in principle, so the fix is not smarter attribution -- it is
++    making the mistake survivable. Every file is copied to ``ops/.test_suite_mutation_backup/``
++    (gitignored) before it is reverted, and the destination is printed. A wrong revert then costs a
++    ``cp`` instead of the work.
++    """
++    saved: list[str] = []
++    for p in paths:
++        src = REPO / p
++        if not src.exists():
++            continue
++        dst = BACKUP / p
++        dst.parent.mkdir(parents=True, exist_ok=True)
++        try:
++            dst.write_bytes(src.read_bytes())
++            saved.append(p)
++        except OSError:
++            # A backup failure must never be the reason a restore does not happen; the caller
++            # reports how many were saved, so a shortfall is visible rather than silent.
++            continue
++    return saved
++
++
+ def restore(paths: list[str]) -> list[str]:
+-    """Put the named paths back to their committed content. Returns the ones that came back."""
++    """Put the named paths back to their committed content. Returns the ones that came back.
++
++    Backs every path up first -- see ``backup()`` for why that is not optional.
++    """
+     if not paths:
+         return []
++    saved = backup(paths)
++    print(f"  backed up {len(saved)}/{len(paths)} file(s) to {BACKUP.relative_to(REPO)}/")
++    if len(saved) < len(paths):
++        print(f"  WARNING: {len(paths) - len(saved)} file(s) could NOT be backed up before revert")
+     _git("checkout", "--", *paths)
+     still = dirty_tracked()
+     return [p for p in paths if p not in still]
+@@ -199,6 +257,81 @@ def _report(muts: list[str]) -> None:
+     )
+ 
+ 
++def write_pending(muts: list[str], command: list[str]) -> None:
++    """Arm the pre-commit interlock: record which tracked files a run rewrote.
++
++    Factored out of ``cmd_run`` so the pytest auto-arm hook (``arm_from_pytest``) writes the
++    SAME marker in the SAME shape. Two code paths writing two slightly different markers is how
++    a gate ends up passing on one of them.
++    """
++    PENDING.parent.mkdir(parents=True, exist_ok=True)
++    PENDING.write_text(
++        json.dumps(
++            {
++                "detected_at": datetime.now(UTC).isoformat(),
++                "command": command,
++                "modified_tracked_files": muts,
++                "why_this_blocks_commits": (
++                    "These tracked files were rewritten by a test run, not by an edit. "
++                    "Committing them publishes a silent rewrite of the research record. "
++                    "Restore them, or delete this marker deliberately if the rewrite is "
++                    "intended and explained in the commit message."
++                ),
++            },
++            indent=1,
++        )
++        + "\n"
++    )
++
++
++def arm_from_pytest(baseline: dict[str, str], command: list[str]) -> list[str]:
++    """Called by ``tests/python/conftest.py`` at session end. Returns the mutations found.
++
++    WHY THIS ENTRY POINT EXISTS (2026-07-29 review finding, the interlock's worst gap).
++    ------------------------------------------------------------------------------------
++    ``--gate`` refuses a commit while ``ops/.test_suite_mutation_pending.json`` exists, and until
++    now only ``--run`` ever wrote that marker. So the interlock protected exactly the invocation
++    nobody uses, and was silent for the one that caused BOTH recorded incidents:
++
++        pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py
++
++    A bare ``pytest`` leaves no marker, so ``--gate`` exits 0 on a tree the suite has just
++    rewritten. Demonstrated against the real tree: after simulating that rewrite class,
++    ``README.md`` (operator-curated, and one of the original 39) and
++    ``openspec/papers/paper-v6/section-6-limitations.md`` were both modified while ``--gate``
++    exited 0 and the determination lint printed OK.
++
++    The fix has to live where pytest is, not where the wrapper is -- an interlock that depends on
++    the user choosing the safe wrapper is not an interlock. So ``conftest.py`` takes the baseline
++    at session start and calls this at session end, and the marker gets armed HOWEVER pytest was
++    invoked.
++
++    Deliberately NOT the alternative fix of wiring ``--check`` into pre-commit: ``--check`` reads
++    a snapshot file that a bare pytest run never wrote, so with no baseline it cannot distinguish
++    a test's rewrite from a human's in-flight edit, and would refuse every commit made on a dirty
++    tree. The baseline is the whole mechanism; the hook is just where it is read.
++
++    This NEVER restores anything. Auto-reverting a file out from under a concurrent human edit is
++    the failure this tool has already had twice (see ``backup()``); arming a marker is safe,
++    reverting is not.
++
++    STATED LIMITATION: a run that is KILLED never arms. ``pytest_sessionfinish`` does not run if
++    the process is SIGTERM'd or SIGKILL'd, so a suite that times out (or that the operator
++    interrupts) can leave rewrites on disk with no marker. Observed directly while validating
++    this: a 2-minute timeout killed a full ``test_arc_*.py`` run mid-flight and no marker was
++    written. That run happened to have moved nothing, but the gap is real. ``--run`` does not
++    share it (the wrapper checks after the child exits however it exited), so wrap anything
++    long-running. This is a reason to keep ``--run`` alive, not a reason to distrust the hook:
++    the hook's job is to cover the *bare pytest* case that had no coverage at all.
++    """
++    muts = mutations(baseline)
++    if not muts:
++        PENDING.unlink(missing_ok=True)
++        return []
++    write_pending(muts, command)
++    return muts
++
++
+ def cmd_run(argv: list[str], do_restore: bool) -> int:
+     baseline = snapshot()
+     print(f"test-suite-mutation-check: baseline taken ({len(baseline)} file(s) already dirty)")
+@@ -218,24 +351,7 @@ def cmd_run(argv: list[str], do_restore: bool) -> int:
+             return proc.returncode or 0
+         muts = left
+         print(f"  COULD NOT RESTORE: {left}")
+-    PENDING.parent.mkdir(parents=True, exist_ok=True)
+-    PENDING.write_text(
+-        json.dumps(
+-            {
+-                "detected_at": datetime.now(UTC).isoformat(),
+-                "command": argv,
+-                "modified_tracked_files": muts,
+-                "why_this_blocks_commits": (
+-                    "These tracked files were rewritten by a test run, not by an edit. "
+-                    "Committing them publishes a silent rewrite of the research record. "
+-                    "Restore them, or delete this marker deliberately if the rewrite is "
+-                    "intended and explained in the commit message."
+-                ),
+-            },
+-            indent=1,
+-        )
+-        + "\n"
+-    )
++    write_pending(muts, argv)
+     return 1
+ 
+ 
+diff --git a/tests/python/conftest.py b/tests/python/conftest.py
+index 8e6a99546d..ea1dd677d9 100644
+--- a/tests/python/conftest.py
++++ b/tests/python/conftest.py
+@@ -113,11 +113,59 @@ def _set_process_address_space_limit(limit_bytes: int = 32 * 1024**3) -> bool:
+     return True
+ 
+ 
++def _mutation_check_module():
++    """Import the mutation detector, or None if it is unavailable for any reason.
++
++    Never raises. A guard that can break the test suite it guards will be deleted by the first
++    person it inconveniences, which leaves the record unprotected -- the exact outcome it exists
++    to prevent.
++    """
++    try:
++        sys.path.insert(0, str(repo_root / "scripts"))
++        import test_suite_mutation_check as _m
++
++        return _m
++    except Exception:  # noqa: BLE001 - deliberately total
++        return None
++
++
++def _is_xdist_worker(config) -> bool:
++    """True inside an xdist worker process, where this must NOT run.
++
++    `-n 4` is in `addopts`, so conftest is imported in the controller AND in every worker.
++    Without this check, four workers would each take a baseline and each write the marker, and a
++    worker's "session end" is not the run's end -- the marker would be armed from a partial view
++    while other workers were still writing.
++    """
++    return hasattr(config, "workerinput")
++
++
+ def pytest_configure(config) -> None:
+     """Set hard address-space limit and keep the RSS watchdog installed."""
+     config._carnot_rlimit_as_set = _set_process_address_space_limit()
+     config._carnot_memory_watchdog = PytestMemoryWatchdog()
+ 
++    # ARM THE RECORD-REWRITE INTERLOCK, HOWEVER PYTEST WAS INVOKED (2026-07-29).
++    #
++    # Running this suite REWRITES TRACKED FILES: tests that re-execute a real experiment script
++    # cause it to overwrite its own committed artifact (see
++    # docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md -- 41 tracked files,
++    # including README.md and a paper-v6 section). The pre-commit interlock
++    # (`test_suite_mutation_check.py --gate`) refuses a commit while a pending marker exists, but
++    # ONLY `--run` ever wrote that marker -- so a bare `pytest tests/python/test_arc_*.py ...`,
++    # the invocation behind both recorded incidents, left the interlock disarmed.
++    #
++    # Taking the baseline HERE closes that: the marker is armed from inside pytest, so opting out
++    # requires opting out of pytest. Cost is one `git status --porcelain` per session.
++    config._carnot_mutation_baseline = None
++    if not _is_xdist_worker(config):
++        mod = _mutation_check_module()
++        if mod is not None:
++            try:
++                config._carnot_mutation_baseline = mod.dirty_tracked()
++            except Exception:  # noqa: BLE001 - a diagnostic must never break the suite
++                config._carnot_mutation_baseline = None
++
+ 
+ @pytest.hookimpl(tryfirst=True)
+ def pytest_runtest_setup(item) -> None:
+@@ -139,3 +187,31 @@ def pytest_sessionfinish(session, exitstatus) -> None:
+     report = _get_memory_watchdog(session.config).finish_session(Path(session.config.rootpath))
+     if report is not None:
+         warnings.warn(pytest.PytestWarning(report.warning), stacklevel=2)
++
++    # Close the interlock armed in pytest_configure. Any tracked file that is dirty NOW but was
++    # clean at session start was rewritten by this run; record it so the pre-commit gate refuses
++    # to publish it. This only ARMS a marker -- it never reverts a file, because the detector
++    # cannot distinguish a test's write from a human's concurrent edit and auto-reverting has
++    # already destroyed in-flight work twice (see test_suite_mutation_check.backup()).
++    config = session.config
++    baseline = getattr(config, "_carnot_mutation_baseline", None)
++    if baseline is None or _is_xdist_worker(config):
++        return
++    mod = _mutation_check_module()
++    if mod is None:
++        return
++    try:
++        muts = mod.arm_from_pytest(baseline, ["pytest", *sys.argv[1:]])
++    except Exception:  # noqa: BLE001 - a diagnostic must never break the suite
++        return
++    if muts:
++        warnings.warn(
++            pytest.PytestWarning(
++                f"This test run REWROTE {len(muts)} tracked file(s) that were clean before it: "
++                f"{muts[:5]}{' ...' if len(muts) > 5 else ''}. These are the committed research "
++                f"record, not test output. Commits are now blocked until this is resolved -- see "
++                f"`python3 scripts/test_suite_mutation_check.py --check` and "
++                f"`--restore`, or `git checkout -- <paths>`."
++            ),
++            stacklevel=2,
++        )
+diff --git a/tests/python/test_determination_preservation_lint.py b/tests/python/test_determination_preservation_lint.py
+index cf881024bc..b8afe76890 100644
+--- a/tests/python/test_determination_preservation_lint.py
++++ b/tests/python/test_determination_preservation_lint.py
+@@ -482,6 +482,178 @@ def test_one_deletion_produces_one_refusal_line(repo):
+     assert len(stamp_lines) == 1, f"the stamp was reported {len(stamp_lines)} times: {stamp_lines}"
+ 
+ 
++def test_a_legitimate_analyser_rebuild_is_not_refused(repo):
++    """MUST-NOT-FIRE, and the most load-bearing one in this file.
++
++    Re-running an analyser is the single most COMMON write to ``results/`` in this project, so if
++    the widening false-fires here it refuses the loop's own routine work every night -- and a lint
++    that refuses honest work gets disabled, which is the same outcome as having no lint at all.
++
++    This fixture is not invented. It is the exact field shape of the 12 analyser artifacts rebuilt
++    on 2026-07-28 in commit ``8441055c0`` (9 ``outer_loop_*`` plus the card-ground-truth and
++    reset-attribution passes). A rebuild moves FOUR things and nothing else:
++
++      * ``build_timestamp_utc`` -- when the analyser ran
++      * ``duration_s``          -- how long it took (0.594 -> 0.604 in the real diff)
++      * ``provenance.git_head`` -- which commit it was built from
++      * ``provenance.code[].sha256`` / ``.bytes`` -- the hashes of the scripts it read
++
++    Every one of those is a MEASUREMENT of the rebuild, not a review output. Critically, the
++    top-level ``provenance`` key SURVIVES -- it is rewritten in place, not dropped -- which is why
++    rule 3 must key on a marker field DISAPPEARING rather than on it changing. And
++    ``inference_substrate`` stays ``aggregation_from_upstream_artifacts`` throughout, so rule 4
++    has nothing to compare downward.
++
++    Verified against the real commit as well as this fixture: the widened lint examined all 28
++    modified artifacts in ``8441055c0`` (12 of them analysers, both sides parsed) and reported no
++    violation, while the same run refused four injected violations on that same real file.
++    """
++    r, _ = repo
++    art = r / "results" / "outer_loop_arc_max_actions_answer_20260726.json"
++    before = {
++        "title": "The MAX_ACTIONS answer",
++        "run_date": "2026-07-26",
++        "build_timestamp_utc": "2026-07-27T05:05:38Z",
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++        "inference_substrate_principle": "An analyser pass inherits its methodology from the "
++        "artifacts it cites.",
++        "duration_s": 0.594,
++        "random_seed": 20260724,
++        "verifier_is_oracle": False,
++        "provenance": {
++            "git_head": "692bedfa8c8b9bfc95dd26b95631f01cfad9b996",
++            "code": [
++                {
++                    "path": "scripts/arc_scored_path_lever_harness.py",
++                    "sha256": "11098ad3",
++                    "bytes": 57542,
++                }
++            ],
++        },
++    }
++    art.write_text(json.dumps(before, indent=2) + "\n")
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "seed analyser")
++
++    after = json.loads(json.dumps(before))
++    after["build_timestamp_utc"] = "2026-07-28T20:26:43Z"
++    after["duration_s"] = 0.604
++    after["provenance"]["git_head"] = "a2222320c629ae14699ca795a4de27abf4c4e296"
++    after["provenance"]["code"][0].update(sha256="fe0dcc1e", bytes=59647)
++    art.write_text(json.dumps(after, indent=2) + "\n")
++
++    assert dpl.check() == [], (
++        "a routine analyser rebuild moves only clocks, git_head and dependency hashes; refusing "
++        "it would block the loop's own nightly work and get this lint switched off"
++    )
++
++
++def test_the_analyser_rebuild_fixture_is_not_silently_unprotected(repo):
++    """The companion to the test above: prove that PASS is a real pass, not blindness.
++
++    A must-not-fire test is worthless on its own -- it also passes when the lint cannot see the
++    artifact at all (wrong path glob, unparseable side, empty file list). That is not a
++    hypothetical: while validating the widening, a positive control was accidentally run against a
++    worktree checked out BEFORE the widening landed, and all four injected violations came back
++    silent. The result looked like a clean bill of health and was in fact a measurement of the old
++    two-rule lint.
++
++    So this test injects violations into the SAME fixture the rebuild test uses and requires each
++    to be refused. If a future change makes the lint stop seeing this artifact shape, the test
++    above keeps passing and THIS one fails.
++    """
++    r, _ = repo
++    art = r / "results" / "outer_loop_arc_max_actions_answer_20260726.json"
++    before = {
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++        "inference_substrate_principle": "inherits methodology from cited artifacts",
++        "verifier_is_oracle": False,
++        "duration_s": 0.594,
++        "provenance": {"git_head": "692bedfa", "code": []},
++    }
++    art.write_text(json.dumps(before, indent=2) + "\n")
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "seed analyser 2")
++
++    for drop, expect in (
++        ("provenance", "provenance declaration"),
++        ("inference_substrate_principle", "inference-substrate declaration"),
++        ("verifier_is_oracle", "circularity declaration"),
++    ):
++        d = {k: v for k, v in before.items() if k != drop}
++        art.write_text(json.dumps(d, indent=2) + "\n")
++        assert any(expect in v for v in dpl.check()), f"dropping {drop} must be refused"
++
++    # And the in-place weakening, which no dropped-field rule can see.
++    d = json.loads(json.dumps(before))
++    d["inference_substrate"] = "sota_gguf_mock"
++    art.write_text(json.dumps(d, indent=2) + "\n")
++    assert [v for v in dpl.check() if "WEAKENED" in v], "an in-place substrate downgrade must fire"
++
++
++def test_a_correction_field_matched_by_no_other_pattern_is_still_protected(repo):
++    """The ``correction`` marker pattern, exercised in isolation. Found by mutation testing.
++
++    Deleting the ``correction`` pattern from ``MARKER_PATTERNS`` left the whole suite GREEN. The
++    reason is that the incident-1 test's fields -- ``inference_substrate_correction_note`` and
++    ``inference_substrate_original_invalid_value`` -- are ALSO matched by the
++    ``^inference_substrate`` pattern, and its ``solve_provenance*`` fields by ``provenance``. So
++    every field that test names was double-covered, and the pattern that the incident is actually
++    NAMED for was never the thing being tested.
++
++    That is the same shape as the bug this whole file exists for: coverage that looks real and is
++    not. These two field names are matched by the ``correction`` pattern and nothing else, so this
++    test fails the moment that pattern is weakened or removed.
++    """
++    r, _ = repo
++    art = r / "results" / "experiment_507_thing.json"
++    art.write_text(
++        json.dumps(
++            {
++                "correction_note": "2026-07-27: retracted the AUROC; the corpus was contaminated.",
++                "data_correction": "row 14 was double-counted in the original tally",
++            },
++            indent=2,
++        )
++        + "\n"
++    )
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "seed 507")
++
++    # Precondition: these must be matched by the `correction` pattern ALONE, or this test would
++    # pass for the wrong reason -- exactly the trap it was written to close.
++    for key in ("correction_note", "data_correction"):
++        assert dpl._marker_kind(key) == "correction record", f"{key} is covered by another pattern"
++
++    art.write_text(json.dumps({"experiment": 507}, indent=2) + "\n")
++    violations = dpl.check()
++    assert any("correction record" in v for v in violations), (
++        "a hand-written correction record must not be droppable"
++    )
++
++
++def test_a_dropped_corrigendum_is_reported_once_not_twice(repo):
++    """Rule 3 must not re-report the corrigendum family that rule 2 already owns.
++
++    Found by mutation testing. ``test_one_deletion_produces_one_refusal_line`` pins the dedup for
++    ``flagged_adversarial`` only, so blanking the OTHER half of ``already_reported`` -- the part
++    that suppresses rule 3 on fields rule 2 already reported -- left the suite green. A corrigendum
++    deletion would then produce two refusal lines naming the same fields.
++
++    Duplicate refusal text is not cosmetic here. The whole value of this guard is that a human
++    reads the line and understands what was lost; a message that says the same thing twice in
++    different words trains the reader to skim, and skimming is how the origin incident survived
++    seven artifacts.
++    """
++    _, art = repo  # fixture holds flagged_adversarial + corrigendum_pending + corrigendum_note
++    _write(art, corrigendum_pending=dpl, corrigendum_note=dpl)
++    violations = dpl.check()
++    corrigendum_lines = [v for v in violations if "corrigendum" in v.lower()]
++    assert len(corrigendum_lines) == 1, (
++        f"the corrigendum deletion was reported {len(corrigendum_lines)} times: {corrigendum_lines}"
++    )
++
++
+ def test_a_dropped_substrate_declaration_is_refused_too(repo):
+     """The loophole rule 4 cannot see: DELETING the declaration instead of weakening it.
+ 
+@@ -503,3 +675,225 @@ def test_a_dropped_substrate_declaration_is_refused_too(repo):
+     assert any("inference_mode" in v for v in violations), (
+         "deleting a substrate declaration must be at least as refused as weakening it"
+     )
++
++
++# =========================================================================================
++# 2026-07-29 REVIEW FIXES. Each test below pins a defect found by reviewing the widening
++# against REAL artifacts rather than fixtures. Every one of them was a case where the guard
++# fired on honest work -- the mirror image of the original bug, and just as corrosive: a
++# guard that refuses correct commits gets switched off, which leaves the record unprotected.
++# =========================================================================================
++
++_EXP5178_REAL = (
++    "live_llm_embedding_extraction; Substrate corrected 2026-07-03: this task's dominant work "
++    "is a single forward pass per candidate (llama_cpp.Llama(embedding=True, "
++    "pooling_type=LAST).embed against the real local gemma-4-26B-A4B-it GGUF) to extract "
++    "final-token hidden-state vectors for 48 candidates, then centroid-probe training on those "
++    "vectors -- no iterative token-by-token generation. The original declaration "
++    "('live_llm_inference') implied full generative inference (60s floor), which this workload "
++    "genuinely is not; verifier_ensemble_against_cached_candidates also does not fit (its "
++    "definition explicitly requires the LLM NOT be loaded, and this task did load it, for "
++    "embeddings)."
++)
++
++_EXP5161_REAL = (
++    "verifier_ensemble_against_cached_candidates; Substrate honesty, corrected 2026-07-02: this "
++    "artifact's DOMINANT content (n=60 pilot statistics, cluster bootstrap, exact test) rescores "
++    "GAP-4's EXISTING cached candidate pool -- it does not invoke a generative LLM."
++)
++
++
++def test_the_inline_note_convention_does_not_make_a_real_gguf_load_look_cheap():
++    """exp5178: ranking the PROSE instead of the declared value inverted the rule's verdict.
++
++    The project documents `<canonical value><separator><human note>` as the way to declare a
++    substrate with an explanation, and `adversarial_verify.py` strips the note before matching.
++    The first draft of `_strength_rank` scanned the WHOLE string and took the minimum band, so
++    exp5178 -- whose note mentions `cached` and `verifier_ensemble_against_cached_candidates`
++    only to explain why those do NOT apply -- was ranked REAL-BUT-CHEAP. The lint then refused
++    the commit while asserting the exact opposite of what the artifact says: it declares, and
++    performed, a real GGUF load.
++
++    This is the negation-blindness failure class named in CLAUDE.md's QA-Layer Authenticity
++    Discipline: a checker confusing "did X" with "explicitly did NOT do X".
++    """
++    f = "inference_substrate"
++    assert dpl._strength_rank("live_llm_inference", f) == 3
++    assert dpl._strength_rank(_EXP5178_REAL, f) == 3, (
++        "the leading canonical token is live_llm_embedding_extraction (a real model load); "
++        "words appearing in the trailing human note must not change the rank"
++    )
++
++
++def test_a_substrate_correction_explained_inline_is_an_accepted_downgrade():
++    """exp5161: the downgrade note was INSIDE the value, and only siblings were inspected.
++
++    `_has_change_note` originally looked at sibling keys only, so the most carefully documented
++    corrections in the corpus -- which put a dated rationale directly in the declaration, per the
++    project's own convention -- were refused, while a terse downgrade that happened to have some
++    sibling note was waved through.
++    """
++    f = "inference_substrate"
++    assert dpl._strength_rank(_EXP5161_REAL, f) == 2
++    assert dpl._has_change_note({f: _EXP5161_REAL}, f) is True
++
++
++def test_a_bare_downgrade_with_no_prose_is_still_refused():
++    """The escape hatch must not be so wide that the origin incidents walk through it.
++
++    exp307's `cpu_training` carries no trailing prose, so it must NOT count as self-explaining.
++    Without this the inline-note fix would silently disable rule 4.
++    """
++    assert dpl._has_change_note({"inference_mode": "cpu_training"}, "inference_mode") is False
++    assert dpl._has_change_note({"inference_mode": "cpu_training."}, "inference_mode") is False
++
++
++def test_a_non_enum_substrate_name_is_unrankable_not_phantom_live():
++    """exp5240: `arc_live_path_patch_synthesis` is the ARC live CODE path, not a substrate.
++
++    A bare token scan reads its `live` token as LIVE/HARDWARE. That value was never legal under
++    the Inference-Substrate Declaration Discipline's fixed enum, so when a later commit honestly
++    corrected it to `aggregation_from_upstream_artifacts`, rule 4 saw band 3 -> band 2 and
++    refused a taxonomy REPAIR as a downgrade.
++
++    The fix is structural rather than another token-list patch: for the one field governed by a
++    documented vocabulary, rank ONLY from that vocabulary. Unknown is unrankable on BOTH sides --
++    the rule already refused to treat an unknown NEW value as weak, and now likewise refuses to
++    treat an unknown OLD value as strong. The collision cannot recur for any future `arc_live_*`
++    name, which a token-boundary tweak alone could not promise (that string genuinely contains
++    `live` as a whole token).
++    """
++    f = "inference_substrate"
++    assert dpl._strength_rank("arc_live_path_patch_synthesis", f) is None
++    assert dpl._strength_rank("aggregation_from_upstream_artifacts", f) == 2
++
++
++def test_the_exp5240_taxonomy_repair_is_not_refused(repo):
++    """End-to-end form of the above, through `check()` rather than the ranking helper."""
++    r, _ = repo
++    art = r / "results" / "experiment_5240_arc_rubric.json"
++    art.write_text(
++        json.dumps({"experiment": 5240, "inference_substrate": "arc_live_path_patch_synthesis"})
++        + "\n"
++    )
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "seed 5240")
++
++    art.write_text(
++        json.dumps(
++            {"experiment": 5240, "inference_substrate": "aggregation_from_upstream_artifacts"}
++        )
++        + "\n"
++    )
++    assert not [v for v in dpl.check() if "5240" in v], (
++        "correcting an ILLEGAL substrate value to a legal enum value is a repair, not a downgrade"
++    )
++
++
++def test_the_two_origin_incidents_are_still_refused_after_all_of_the_above():
++    """The whole point of the review fixes is to narrow the rule WITHOUT disarming it.
++
++    Both real incidents live on free-form mode fields with no governing enum, which is exactly
++    why the token scan is retained there.
++    """
++    assert dpl._strength_rank("live_gpu", "inference_mode") == 3
++    assert dpl._strength_rank("cpu_training", "inference_mode") == 2
++    assert dpl._strength_rank("real_model", "inference_mode") == 3
++    assert dpl._strength_rank("synthetic_runner", "inference_mode") == 1
++
++
++def test_band_tokens_match_at_token_boundaries_not_as_bare_substrings():
++    """`dry_run` must not be dragged to NOT-RUN, and `not_run` must not be diluted.
++
++    A draft of the token-anchoring fix split multi-word tokens (`not_run` -> `not`, `run`), which
++    would have made the bare token `run` a NOT-RUN marker -- so `dry_run` (NOT-REAL-COMPUTE) and
++    even `live_run` would have ranked 0. Caught before landing; pinned here so it cannot return.
++    """
++    assert dpl._strength_rank("dry_run", "inference_mode") == 1
++    assert dpl._strength_rank("not_run", "inference_mode") == 0
++    assert dpl._strength_rank("blocked_no_live_gpu", "inference_mode") == 0
++
++
++def test_the_added_review_output_markers_are_protected(repo):
++    """Review outputs a re-run does not supersede: sample-size, false-negative, forbidden-claims.
++
++    `n_samples_justification` (56 artifacts) is the disclosure CLAUDE.md's Adversarial Artifact
++    Verification rule REQUIRES for a distributional claim; losing it silently un-discloses the
++    claim's statistical basis.
++    """
++    r, _ = repo
++    art = r / "results" / "experiment_777_thing.json"
++    seed = {
++        "experiment": 777,
++        "n_samples_justification": "n=10000 so std(empirical_KL) < 0.005",
++        "false_negative_risk_checked": True,
++        "paper_v6_forbidden_claims": ["KV260 speedup at d=128"],
++    }
++    art.write_text(json.dumps(seed, indent=2) + "\n")
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "seed 777")
++
++    art.write_text(json.dumps({"experiment": 777}, indent=2) + "\n")
++    violations = " ".join(dpl.check())
++    for field in seed:
++        if field == "experiment":
++            continue
++        assert field in violations, f"{field} must be protected as a review output"
++
++
++def test_honest_verdict_is_deliberately_not_protected(repo):
++    """The boundary of the marker list: a re-run legitimately produces a NEW verdict.
++
++    Protecting `honest_verdict` (5,245 artifacts) would refuse the fail-forward behaviour the
++    operator's standing directive requires. Pinned so a later widening cannot quietly cross it.
++    """
++    r, _ = repo
++    art = r / "results" / "experiment_888_thing.json"
++    art.write_text(json.dumps({"experiment": 888, "honest_verdict": "complete: a"}) + "\n")
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "seed 888")
++
++    art.write_text(json.dumps({"experiment": 888, "honest_verdict": "complete: b"}) + "\n")
++    assert not [v for v in dpl.check() if "888" in v]
++
++
++def test_an_unknown_substrate_may_rank_weak_but_never_strong():
++    """The asymmetry that resolves exp5240 WITHOUT disarming the fabrication case.
++
++    A first attempt returned None for every non-enum `inference_substrate`. It fixed exp5240 and
++    silently un-protected `sota_gguf_mock` -- CLAUDE.md's own fabrication exemplar, also not in
++    the enum. Two pre-existing tests caught the regression, and the fix is to distinguish a CLAIM
++    of strength (cheap to make by accident) from an ADMISSION of weakness (nobody accidentally
++    says their run was mocked).
++    """
++    f = "inference_substrate"
++    assert dpl._strength_rank("arc_live_path_patch_synthesis", f) is None, "claim: not trusted"
++    assert dpl._strength_rank("sota_gguf_mock", f) == 1, "admission: always trusted"
++    assert dpl._strength_rank("blocked_model_not_cached", f) == 0, "admission: always trusted"
++    # ... and the asymmetry is scoped to the enum-governed field only. Free-form mode fields have
++    # no vocabulary to fall back on, so they must keep ranking `live_gpu` strong -- otherwise the
++    # exp307 origin incident stops being refused.
++    assert dpl._strength_rank("live_gpu", "inference_mode") == 3
++
++
++def test_a_negated_weakness_word_does_not_drag_the_rank_down():
++    """Token anchoring, pinned. Found by mutation testing -- nothing exercised it.
++
++    Reverting `_token_scan_band` to a bare `token in value` substring test left the whole suite
++    GREEN, so the anchoring the docstring claims was entirely untested. It matters because the
++    rank is the MINIMUM matching band: a spurious match on a WEAK token inside a longer word
++    silently downgrades an honest declaration.
++
++    Both cases below are the negation-blindness class CLAUDE.md's QA-Layer Authenticity
++    Discipline names -- a checker confusing "did X" with "explicitly did NOT do X":
++      * `uncached_...` contains `cached` (band 2) but asserts the opposite.
++      * `unblocked_...` contains `blocked` (band 0) but asserts the opposite.
++    Unanchored, both would rank a live GPU run as cheap or as never-run, and a subsequent honest
++    edit would be refused as a "downgrade" from a rank the value never deserved.
++    """
++    assert dpl._token_scan_band("uncached_live_gguf_inference") == 3
++    assert dpl._token_scan_band("unblocked_live_gpu_run") == 3
++    # The anchoring must not break PREFIX matching, which the vocabulary depends on:
++    # `simulat` has to catch both `simulated` and `simulation`, `analys` both spellings.
++    assert dpl._token_scan_band("cpu_simulated_annealing") == 1
++    assert dpl._token_scan_band("offline_analysis_only") == 2
+diff --git a/tests/python/test_test_suite_mutation_check.py b/tests/python/test_test_suite_mutation_check.py
+index 27413719e8..fe67f66c17 100644
+--- a/tests/python/test_test_suite_mutation_check.py
++++ b/tests/python/test_test_suite_mutation_check.py
+@@ -67,6 +67,10 @@ def repo(tmp_path, monkeypatch):
+     monkeypatch.setattr(tsm, "REPO", r)
+     monkeypatch.setattr(tsm, "SNAPSHOT", r / "ops" / ".test_suite_mutation_snapshot.json")
+     monkeypatch.setattr(tsm, "PENDING", r / "ops" / ".test_suite_mutation_pending.json")
++    # Without this the tests would write pre-revert backups into the REAL repo's
++    # ops/.test_suite_mutation_backup/ -- a test suite that litters the tree it is checking is
++    # exactly the hazard this module exists to detect.
++    monkeypatch.setattr(tsm, "BACKUP", r / "ops" / ".test_suite_mutation_backup")
+     return r, art
+ 
+ 
+@@ -129,6 +133,52 @@ def test_restore_returns_the_artifact_byte_for_byte(repo):
+     assert tsm.mutations(baseline) == []
+ 
+ 
++def test_restore_backs_a_file_up_before_reverting_it(repo):
++    """A wrong revert must cost a ``cp``, not the work. Origin: it has happened twice.
++
++    ``restore()`` is ``git checkout --``, which is unrecoverable for uncommitted content, and the
++    detector CANNOT tell a test's write from a human's concurrent edit -- both are simply "modified
++    since the snapshot". So editing a tracked file while a wrapped run is in flight gets that edit
++    reverted, silently. Both real occurrences were the same file:
++    ``docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md``, while it was being
++    written (see its own section 3.6 for the first, and section 7b for the second, which happened
++    while validating this very script).
++
++    Authorship is not recoverable in principle, so the fix is not smarter attribution -- it is
++    making the revert survivable. This pins that the PRE-REVERT content is what lands in the
++    backup, which is the only version that is otherwise unrecoverable.
++    """
++    r, art = repo
++    baseline = tsm.snapshot()
++    edited = json.dumps({"experiment": 3946, "hand_written": "do not lose me"}, indent=2) + "\n"
++    art.write_text(edited)
++
++    tsm.restore(tsm.mutations(baseline))
++
++    backed_up = r / "ops" / ".test_suite_mutation_backup" / "results" / art.name
++    assert backed_up.exists(), "the pre-revert content must be recoverable somewhere"
++    assert backed_up.read_text() == edited, (
++        "the backup must hold what was REVERTED, not what was restored -- the committed version "
++        "is already in git and was never at risk"
++    )
++
++
++def test_backup_reports_what_it_could_not_save(repo):
++    """A partial backup must be visible, never silent.
++
++    If a file cannot be copied aside, the revert still has to happen -- leaving the record dirty
++    would be worse. But a shortfall that nobody sees turns a recoverable mistake back into an
++    unrecoverable one, so ``backup()`` returns only the paths it actually saved and the caller
++    reports the difference.
++    """
++    r, _ = repo
++    baseline = tsm.snapshot()
++    # A path git reports but that is not readable as a file: backup must skip it, not raise.
++    assert tsm.backup(["results/does_not_exist.json"]) == []
++    assert tsm.backup([]) == []
++    del baseline, r
++
++
+ def test_the_wrapper_writes_a_pending_marker_when_it_does_not_restore(repo):
+     """``--run`` without ``--restore`` must leave evidence that the record moved.
+ 
+@@ -242,3 +292,74 @@ def test_a_renamed_tracked_file_is_parsed_as_one_entry_not_two(repo):
+     assert not any(p.startswith("ults/") or p.startswith("sults/") for p in muts), (
+         "a mangled source path leaked out of the -z parse"
+     )
++
++
++# =========================================================================================
++# 2026-07-29: the interlock's worst gap -- it was disarmed by the very invocation that caused
++# both recorded incidents. `--gate` refuses while a pending marker exists, but only `--run`
++# ever wrote that marker, so a bare `pytest tests/python/test_arc_*.py ...` left the gate
++# green on a tree the suite had just rewritten. `arm_from_pytest` is called from
++# tests/python/conftest.py so the marker is armed HOWEVER pytest was invoked.
++# =========================================================================================
++
++
++def test_arm_from_pytest_arms_the_gate_without_the_run_wrapper(repo):
++    """The gap, closed: a rewrite detected outside `--run` must still block the commit."""
++    r, art = repo
++    baseline = tsm.dirty_tracked()
++    assert baseline == {}, "fixture starts clean"
++
++    art.write_text(json.dumps({"experiment": 3946, "duration_s": 9.99}, indent=2) + "\n")
++    muts = tsm.arm_from_pytest(baseline, ["pytest", "tests/python/test_experiment_3946.py"])
++
++    assert muts == ["results/experiment_3946_r11l_first_solve.json"]
++    assert tsm.PENDING.exists(), "the marker is what the pre-commit gate keys off"
++    assert tsm.cmd_gate() == 1, "and the gate must now refuse"
++
++    recorded = json.loads(tsm.PENDING.read_text())
++    assert recorded["modified_tracked_files"] == muts
++    assert "pytest" in recorded["command"], "the marker names the run that caused it"
++
++
++def test_arm_from_pytest_clears_a_stale_marker_on_a_clean_run(repo):
++    """A clean run must DISARM, or one bad run would block commits forever."""
++    r, _ = repo
++    tsm.write_pending(["results/x.json"], ["pytest", "old"])
++    assert tsm.cmd_gate() == 1
++
++    assert tsm.arm_from_pytest(tsm.dirty_tracked(), ["pytest", "new"]) == []
++    assert not tsm.PENDING.exists()
++    assert tsm.cmd_gate() == 0
++
++
++def test_arm_from_pytest_never_reverts_a_file(repo):
++    """Arming is safe; auto-reverting is not, and has destroyed in-flight work twice.
++
++    The detector cannot tell a test's write from a human's concurrent edit, so the hook that
++    runs on EVERY pytest invocation must only record, never restore. If this ever starts
++    reverting, a developer running the suite mid-edit loses their work.
++    """
++    r, art = repo
++    baseline = tsm.dirty_tracked()
++    rewritten = json.dumps({"experiment": 3946, "duration_s": 9.99}, indent=2) + "\n"
++    art.write_text(rewritten)
++
++    tsm.arm_from_pytest(baseline, ["pytest"])
++
++    assert art.read_text() == rewritten, "arm_from_pytest must leave the working tree untouched"
++    assert not tsm.BACKUP.exists(), "and must not have needed the backup path at all"
++
++
++def test_a_file_already_dirty_before_the_run_is_not_blamed_on_it(repo):
++    """In-flight human work must not arm the gate, or the interlock becomes unusable.
++
++    This is the property that makes auto-arming safe to run on every invocation: the baseline
++    is taken at session START, so a file the developer was already editing is excluded.
++    """
++    r, art = repo
++    art.write_text(json.dumps({"experiment": 3946, "duration_s": 1.0}, indent=2) + "\n")
++    baseline = tsm.dirty_tracked()
++    assert "results/experiment_3946_r11l_first_solve.json" in baseline
++
++    assert tsm.arm_from_pytest(baseline, ["pytest"]) == []
++    assert not tsm.PENDING.exists()
+-- 
+2.55.0
+

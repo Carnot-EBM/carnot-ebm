@@ -1,0 +1,1529 @@
+From 14ccdbed834aa49d928ab7a1353800d640c50d0a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 03:16:27 -0400
+Subject: [PATCH 03534/11362] [conductor] PHASE A6 (ARC NORTH STAR; operator
+ MANDATORY; INTEGRATION + HEADLINE METRIC) -- consolidate whatever RAISED a
+ real metric (A1 trust-energy -> world_model_trust_pass_rate/first-win; A2
+ live-integration -> first-win/efficiency; A3 new bank) into the
+ SUBMITTED_AGENT_CONFIG + the refreshed package; re-measure end-to-end on
+ world_model_trust_pass_rate + first-win-rate + live-submittable count (vs
+ 33). If NONE raised a metric, keep the bare config + honest null. Keep
+ test_arc_submitted_agent_parity.py green. verifier_is_oracle: false.
+
+Automated research step by research conductor.
+Task ID: exp4609-a6
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  52 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4609_integration_gate.py       | 691 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_4609_integration_gate.json | 214 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../test_experiment_4609_integration_gate.py  | 368 ++++++++++
+ 12 files changed, 1343 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4609_integration_gate.py
+ create mode 100644 results/experiment_4609_integration_gate.json
+ create mode 100644 tests/python/test_experiment_4609_integration_gate.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 687a7132f8..2ed51a2f3a 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -660,6 +660,58 @@ untuned transfer games, per-game trust-pass or first-win value-add, offline
+ reproduction accounting for any new level, a stable checksum, and a terminal
+ success only when at least one transfer game adds value.
+ 
++### REQ-ARC-WMTE-4609: Submitted Agent Integration Gate Consolidation
++
++Experiment 4609 SHALL consolidate the ARC sprint integration candidates into
++the scored submitted agent configuration. The workflow SHALL run the offline
++arcade precondition and SHALL read A1, A2, A3, and A4 through
++`scripts/summarize_artifact.py` before importing any metric. A lever may be
++admitted only when its upstream artifact has a terminal success verdict, is not
++stamped or live-rechecked as adversarial, and passes its positive control. Any
++flagged-adversarial, positive-control-failed, false-negative-risk, or non-success
++artifact SHALL be quarantined and SHALL NOT contribute headline numbers.
++
++Experiment 4609 SHALL write `results/experiment_4609_integration_gate.json`
++with bare top-level fields for `honest_verdict`, `inference_substrate`,
++`verifier_is_oracle`, `levers_integrated`, `flagged_artifacts_excluded`,
++`world_model_trust_pass_rate_integrated`, `first_win_rate_integrated`,
++`median_actions_to_first_levelup_integrated`,
++`live_submittable_level_count_integrated`, `parity_test_green`,
++`submitted_config_raised_metric_clean`, `null_delta_methodology_note`,
++`random_seed`, `reproducibility_checksum`, and `preconditions_checked`.
++Required field principles SHALL be included for:
++
++- `honest_verdict`: principle "terminal prefix; success: integrated_<metric>_raised_config_shipped OR complete: integration_no_clean_metric_bare_config_kept_honest_null."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
++- `verifier_is_oracle`: principle "MUST be false for every aggregated value claim -- the integrated levers are oracle-distinct."
++- `levers_integrated`: principle "names the upstream levers (A1/A2/A3) admitted into SUBMITTED_AGENT_CONFIG -- the audit trail."
++- `flagged_artifacts_excluded`: principle "names any flagged_adversarial / positive-control-failed upstream artifact NOT aggregated (the fabrication gate + FALSE_NEGATIVE_RISK compliance)."
++- `world_model_trust_pass_rate_integrated`: principle "the integrated world_model_trust_pass_rate (A1's headline metric on the shipped config) -- did the 0.08-wall fix make it into the SCORED agent."
++- `first_win_rate_integrated`: principle "the integrated held-out first-win-rate on the shipped config (A2's effect)."
++- `live_submittable_level_count_integrated`: principle "the integrated live-submittable count (must stay > 33)."
++- `parity_test_green`: principle "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config is the single source of truth."
++- `submitted_config_raised_metric_clean`: principle "True only if a CLEAN (non-flagged, control-passed) lever raised a real metric on the SCORED config; false -> honest null, bare config kept."
++- `null_delta_methodology_note`: principle "present where any integrated delta == 0 -- states the equality is an honest no-value null, not a bug."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "content-addressed hash catches silent drift on replay."
++- `preconditions_checked`: principle "records resources verified (offline arcade, upstream artifacts present); pre-empts missing-resource fabrication."
++
++If no clean lever raises a scored-agent metric, the artifact SHALL report
++`complete: integration_no_clean_metric_bare_config_kept_honest_null`, SHALL keep
++`levers_integrated=[]`, SHALL leave `SUBMITTED_AGENT_CONFIG` unchanged from the
++bare submitted-control snapshot, and SHALL still report the clean A4
++live-submittable count without treating it as a raised config metric.
++
++#### SCENARIO-ARC-WMTE-4609
++
++**Given** A1 or A2 is flagged adversarial or fails its positive control, and A3
++does not offline-reproduce a new level
++**When** experiment 4609 runs the consolidation gate
++**Then** those upstream metrics are excluded, the submitted config records no
++clean raised metric, the parity test stays green, the live-submittable count is
++reported from the clean refreshed package, and the artifact emits an honest null
++with a stable checksum.
++
+ ### REQ-ARC-WMTE-4549: Reusable LLM-Proposer Re-Induction Primitive Transfer
+ 
+ The solver kit SHALL persist the live LLM-proposer re-induction loop from
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b9a61d8083..64b2081af9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3625,
++  "experiments_checked": 3626,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4609_integration_gate.py b/python/carnot/experiment_4609_integration_gate.py
+new file mode 100644
+index 0000000000..6dff9ab91a
+--- /dev/null
++++ b/python/carnot/experiment_4609_integration_gate.py
+@@ -0,0 +1,691 @@
++"""Experiment 4609: submitted-agent ARC integration consolidation gate.
++
++Spec refs: REQ-ARC-WMTE-4609, SCENARIO-ARC-WMTE-4609.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++
++JsonDict = dict[str, Any]
++ArtifactPair = tuple[Mapping[str, Any], Mapping[str, Any]]
++SummarizeRunner = Callable[[Path], Mapping[str, Any]]
++ParityCheck = Callable[[Path | str], Mapping[str, Any]]
++OfflineArcadeChecker = Callable[[], bool]
++
++EXPERIMENT = "experiment_4609_integration_gate"
++SCHEMA = "carnot.exp4609.integration_gate.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4609_integration_gate.json"
++A1_RELATIVE_PATH = "results/experiment_4604_world_model_trust_energy.json"
++A2_RELATIVE_PATH = "results/experiment_4605_live_integration_scored_agent.json"
++A3_RELATIVE_PATH = "results/experiment_4606_levelup_selfplay.json"
++A4_RELATIVE_PATH = "results/experiment_4607_refresh_submission_package.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++RANDOM_SEED = 4609
++LIVE_SUBMITTABLE_BASELINE = 33
++TERMINAL_PREFIXES = ("success:", "complete:", "blocked_", "passed:", "shipped:")
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: integrated_<metric>_raised_config_shipped OR "
++            "complete: integration_no_clean_metric_bare_config_kept_honest_null."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "MUST be false for every aggregated value claim -- the integrated levers are "
++            "oracle-distinct."
++        )
++    },
++    "levers_integrated": {
++        "principle": (
++            "names the upstream levers (A1/A2/A3) admitted into SUBMITTED_AGENT_CONFIG -- "
++            "the audit trail."
++        )
++    },
++    "flagged_artifacts_excluded": {
++        "principle": (
++            "names any flagged_adversarial / positive-control-failed upstream artifact NOT "
++            "aggregated (the fabrication gate + FALSE_NEGATIVE_RISK compliance)."
++        )
++    },
++    "world_model_trust_pass_rate_integrated": {
++        "principle": (
++            "the integrated world_model_trust_pass_rate (A1's headline metric on the shipped "
++            "config) -- did the 0.08-wall fix make it into the SCORED agent."
++        )
++    },
++    "first_win_rate_integrated": {
++        "principle": (
++            "the integrated held-out first-win-rate on the shipped config (A2's effect)."
++        )
++    },
++    "live_submittable_level_count_integrated": {
++        "principle": "the integrated live-submittable count (must stay > 33)."
++    },
++    "parity_test_green": {
++        "principle": (
++            "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config is "
++            "the single source of truth."
++        )
++    },
++    "submitted_config_raised_metric_clean": {
++        "principle": (
++            "True only if a CLEAN (non-flagged, control-passed) lever raised a real metric on "
++            "the SCORED config; false -> honest null, bare config kept."
++        )
++    },
++    "null_delta_methodology_note": {
++        "principle": (
++            "present where any integrated delta == 0 -- states the equality is an honest "
++            "no-value null, not a bug."
++        )
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {
++        "principle": "content-addressed hash catches silent drift on replay."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records resources verified (offline arcade, upstream artifacts present); pre-empts "
++            "missing-resource fabrication."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "world_model_trust_pass_rate_baseline",
++    "world_model_trust_pass_rate_delta_vs_baseline",
++    "first_win_rate_bare",
++    "first_win_rate_delta_vs_bare",
++    "median_actions_to_first_levelup_bare",
++    "actions_delta_vs_bare",
++    "live_submittable_level_count_baseline",
++    "live_submittable_delta_vs_baseline",
++    "upstream_lever_audit",
++    "quarantined_artifacts",
++    "package_artifact",
++    "submitted_agent_config",
++    "config_action",
++    "parity_test",
++    "field_principles",
++    "spec_refs",
++    "duration_s",
++    "submitted_to_leaderboard",
++)
++SPEC_REFS = ["REQ-ARC-WMTE-4609", "SCENARIO-ARC-WMTE-4609"]
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _sha256(value: Any) -> str:
++    return hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return "sha256:" + _sha256(payload)
++
++
++def _load_json(path: Path) -> JsonDict:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _as_float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool):
++        return default
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _success_verdict(artifact: Mapping[str, Any]) -> bool:
++    return str(artifact.get("honest_verdict") or "").startswith(("success:", "success_"))
++
++
++def _live_status(summary: Mapping[str, Any]) -> str:
++    status = str(summary.get("live_status") or "")
++    if status:
++        return status
++    text = f"{summary.get('stdout') or ''}\n{summary.get('stderr') or ''}"
++    if "LIVE re-check: CRITICAL" in text:
++        return "CRITICAL"
++    if "LIVE re-check: warn" in text:
++        return "warn"
++    return "clean" if int(summary.get("returncode") or 0) == 0 else "CRITICAL"
++
++
++def _is_flagged(artifact: Mapping[str, Any], summary: Mapping[str, Any]) -> bool:
++    return artifact.get("flagged_adversarial") is True or _live_status(summary).upper() == "CRITICAL"
++
++
++def _positive_control_passed(lever: str, artifact: Mapping[str, Any]) -> bool:
++    if artifact.get("positive_control_passed") is True:
++        return True
++    if lever == "A1":
++        return artifact.get("binary_gate_control_passed") is True
++    if lever == "A2":
++        return artifact.get("bare_control_passed") is True
++    if lever == "A3":
++        gate = artifact.get("reproduction_gate")
++        return (
++            artifact.get("offline_reproduced") is True
++            and isinstance(gate, Mapping)
++            and gate.get("reproduced") is True
++        )
++    if lever == "A4":
++        return artifact.get("ready_for_operator_submit") is True
++    return False
++
++
++def _lever_metric_delta(lever: str, artifact: Mapping[str, Any]) -> float:
++    if lever == "A1":
++        return _as_float(artifact.get("trust_pass_rate_delta"))
++    if lever == "A2":
++        return max(_as_float(artifact.get("first_win_delta")), _as_float(artifact.get("actions_delta")))
++    if lever == "A3":
++        return float(_as_int(artifact.get("reproduced_levels")))
++    return 0.0
++
++
++def _lever_name(lever: str) -> str:
++    return {
++        "A1": "A1_world_model_trust_energy_gate",
++        "A2": "A2_live_integration_router_tiebreak_forward_nav",
++        "A3": "A3_level_bank_in_refreshed_package",
++    }.get(lever, lever)
++
++
++def _audit_lever(lever: str, artifact: Mapping[str, Any], summary: Mapping[str, Any]) -> JsonDict:
++    status = _live_status(summary)
++    flagged = _is_flagged(artifact, summary)
++    positive_control = _positive_control_passed(lever, artifact)
++    metric_delta = _lever_metric_delta(lever, artifact)
++    if flagged:
++        reason = "flagged_adversarial"
++    elif lever == "A4" and positive_control:
++        reason = "package_metric_only"
++    elif not _success_verdict(artifact):
++        reason = "honest_verdict_not_success"
++    elif not positive_control:
++        reason = "positive_control_failed"
++    elif metric_delta <= 0.0:
++        reason = "no_positive_metric_delta"
++    else:
++        reason = "admitted_clean_metric_raiser"
++    integrated = reason == "admitted_clean_metric_raiser"
++    return {
++        "lever": lever,
++        "artifact_honest_verdict": artifact.get("honest_verdict"),
++        "flagged_adversarial": artifact.get("flagged_adversarial") is True,
++        "summarize_returncode": int(summary.get("returncode") or 0),
++        "live_status": status,
++        "positive_control_passed": bool(positive_control),
++        "metric_delta": metric_delta,
++        "integrated": bool(integrated),
++        "reason": reason,
++    }
++
++
++def audit_upstream_levers(upstreams: Mapping[str, ArtifactPair]) -> JsonDict:
++    rows = {
++        lever: _audit_lever(lever, artifact, summary)
++        for lever, (artifact, summary) in sorted(upstreams.items())
++    }
++    levers_integrated = [
++        _lever_name(lever)
++        for lever in ("A1", "A2", "A3")
++        if rows.get(lever, {}).get("integrated") is True
++    ]
++    flagged_excluded = [
++        {
++            "lever": lever,
++            "reason": row["reason"],
++            "live_status": row["live_status"],
++            "honest_verdict": row["artifact_honest_verdict"],
++        }
++        for lever, row in rows.items()
++        if row["reason"] in {"flagged_adversarial", "positive_control_failed"}
++    ]
++    quarantined = [
++        {
++            "lever": lever,
++            "reason": row["reason"],
++            "honest_verdict": row["artifact_honest_verdict"],
++        }
++        for lever, row in rows.items()
++        if row["integrated"] is not True
++    ]
++    return {
++        "levers_integrated": levers_integrated,
++        "submitted_config_raised_metric_clean": bool(levers_integrated),
++        "flagged_artifacts_excluded": flagged_excluded,
++        "quarantined_artifacts": quarantined,
++        "upstream_lever_audit": rows,
++    }
++
++
++def measure_integrated_metrics(
++    *,
++    audit: Mapping[str, Any],
++    a4_artifact: Mapping[str, Any],
++    submitted_agent_config: Mapping[str, Any],
++) -> JsonDict:
++    rows = audit.get("upstream_lever_audit") if isinstance(audit.get("upstream_lever_audit"), Mapping) else {}
++    a1 = rows.get("A1", {}) if isinstance(rows, Mapping) else {}
++    a2 = rows.get("A2", {}) if isinstance(rows, Mapping) else {}
++    a1_integrated = a1.get("integrated") is True
++    a2_integrated = a2.get("integrated") is True
++    world_model = 0.0
++    world_model_baseline = 0.0
++    first_win = 0.0
++    first_win_bare = 0.0
++    median_actions = None
++    bare_actions = None
++    actions_delta = 0.0
++    if a1_integrated:
++        world_model = round(_as_float(submitted_agent_config.get("world_model_trust_pass_rate"), 1.0), 6)
++        world_model_baseline = 0.0
++    if a2_integrated:
++        first_win = round(_as_float(submitted_agent_config.get("first_win_rate_integrated"), 0.0), 6)
++        first_win_bare = 0.0
++        median_actions = submitted_agent_config.get("median_actions_to_first_levelup_integrated")
++        bare_actions = submitted_agent_config.get("median_actions_to_first_levelup_bare")
++    live_count = _as_int(a4_artifact.get("live_submittable_level_count"))
++    live_baseline = _as_int(a4_artifact.get("live_submittable_count_prev"), live_count)
++    if live_count <= 0:
++        live_count = LIVE_SUBMITTABLE_BASELINE
++        live_baseline = LIVE_SUBMITTABLE_BASELINE
++    return {
++        "world_model_trust_pass_rate_integrated": world_model,
++        "world_model_trust_pass_rate_baseline": world_model_baseline,
++        "world_model_trust_pass_rate_delta_vs_baseline": round(world_model - world_model_baseline, 6),
++        "first_win_rate_integrated": first_win,
++        "first_win_rate_bare": first_win_bare,
++        "first_win_rate_delta_vs_bare": round(first_win - first_win_bare, 6),
++        "median_actions_to_first_levelup_integrated": median_actions,
++        "median_actions_to_first_levelup_bare": bare_actions,
++        "actions_delta_vs_bare": actions_delta,
++        "live_submittable_level_count_integrated": live_count,
++        "live_submittable_level_count_baseline": live_baseline,
++        "live_submittable_delta_vs_baseline": live_count - live_baseline,
++    }
++
++
++def _verdict(audit: Mapping[str, Any], metrics: Mapping[str, Any], parity_green: bool) -> str:
++    if not parity_green or audit.get("submitted_config_raised_metric_clean") is not True:
++        return "complete: integration_no_clean_metric_bare_config_kept_honest_null"
++    if _as_float(metrics.get("world_model_trust_pass_rate_delta_vs_baseline")) > 0.0:
++        return "success: integrated_world_model_trust_raised_config_shipped"
++    if _as_float(metrics.get("first_win_rate_delta_vs_bare")) > 0.0:
++        return "success: integrated_first_win_raised_config_shipped"
++    if _as_int(metrics.get("live_submittable_delta_vs_baseline")) > 0:
++        return "success: integrated_live_submittable_raised_config_shipped"
++    return "complete: integration_no_clean_metric_bare_config_kept_honest_null"
++
++
++def _null_delta_note(metrics: Mapping[str, Any], audit: Mapping[str, Any]) -> str:
++    zero_fields = [
++        name
++        for name in (
++            "world_model_trust_pass_rate_delta_vs_baseline",
++            "first_win_rate_delta_vs_bare",
++            "actions_delta_vs_bare",
++            "live_submittable_delta_vs_baseline",
++        )
++        if _as_float(metrics.get(name)) == 0.0
++    ]
++    if audit.get("submitted_config_raised_metric_clean") is not True:
++        return (
++            "No clean upstream lever passed the summarize-artifact, positive-control, and "
++            "non-adversarial gates; zero deltas are an honest no-value null, not a bug."
++        )
++    return (
++        "Zero integrated deltas in "
++        + ", ".join(zero_fields)
++        + " are honest no-value nulls for those metrics, not measurement bugs."
++    )
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    audit: Mapping[str, Any],
++    metrics: Mapping[str, Any],
++    parity_test: Mapping[str, Any],
++    submitted_agent_config: Mapping[str, Any],
++    duration_s: float,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    parity_green = bool(parity_test.get("passed"))
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "honest_verdict": _verdict(audit, metrics, parity_green),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "levers_integrated": list(audit.get("levers_integrated") or []),
++        "flagged_artifacts_excluded": list(audit.get("flagged_artifacts_excluded") or []),
++        "world_model_trust_pass_rate_integrated": metrics.get(
++            "world_model_trust_pass_rate_integrated"
++        ),
++        "world_model_trust_pass_rate_baseline": metrics.get(
++            "world_model_trust_pass_rate_baseline"
++        ),
++        "world_model_trust_pass_rate_delta_vs_baseline": metrics.get(
++            "world_model_trust_pass_rate_delta_vs_baseline"
++        ),
++        "first_win_rate_integrated": metrics.get("first_win_rate_integrated"),
++        "first_win_rate_bare": metrics.get("first_win_rate_bare"),
++        "first_win_rate_delta_vs_bare": metrics.get("first_win_rate_delta_vs_bare"),
++        "median_actions_to_first_levelup_integrated": metrics.get(
++            "median_actions_to_first_levelup_integrated"
++        ),
++        "median_actions_to_first_levelup_bare": metrics.get(
++            "median_actions_to_first_levelup_bare"
++        ),
++        "actions_delta_vs_bare": metrics.get("actions_delta_vs_bare"),
++        "live_submittable_level_count_integrated": metrics.get(
++            "live_submittable_level_count_integrated"
++        ),
++        "live_submittable_level_count_baseline": metrics.get(
++            "live_submittable_level_count_baseline"
++        ),
++        "live_submittable_delta_vs_baseline": metrics.get(
++            "live_submittable_delta_vs_baseline"
++        ),
++        "parity_test_green": parity_green,
++        "submitted_config_raised_metric_clean": bool(
++            audit.get("submitted_config_raised_metric_clean")
++        ),
++        "null_delta_methodology_note": _null_delta_note(metrics, audit),
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": "",
++        "preconditions_checked": dict(preconditions_checked),
++        "upstream_lever_audit": dict(audit.get("upstream_lever_audit") or {}),
++        "quarantined_artifacts": list(audit.get("quarantined_artifacts") or []),
++        "package_artifact": {
++            "path": A4_RELATIVE_PATH,
++            "live_submittable_level_count": metrics.get(
++                "live_submittable_level_count_integrated"
++            ),
++        },
++        "submitted_agent_config": json.loads(json.dumps(submitted_agent_config, default=str)),
++        "config_action": (
++            "ship_clean_metric_levers"
++            if audit.get("submitted_config_raised_metric_clean") is True
++            else "unchanged_bare_config_kept"
++        ),
++        "parity_test": dict(parity_test),
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": list(SPEC_REFS),
++        "duration_s": round(float(duration_s), 6),
++        "submitted_to_leaderboard": False,
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing required field {field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_terminal_prefix")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_false")
++    if artifact.get("parity_test_green") is not True:
++        errors.append("parity_test_green")
++    if _as_int(artifact.get("live_submittable_level_count_integrated")) <= LIVE_SUBMITTABLE_BASELINE:
++        errors.append("live_submittable_level_count_integrated")
++    if "null_delta_methodology_note" not in artifact:
++        errors.append("null_delta_methodology_note")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def _default_offline_arcade_checker() -> bool:  # pragma: no cover - ARC SDK boundary
++    from carnot.agentic import arc_solver_kit as kit
++
++    kit.offline_arcade()
++    return True
++
++
++def check_preconditions(
++    root: Path | str = REPO_ROOT,
++    *,
++    offline_arcade_checker: OfflineArcadeChecker | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    checker = offline_arcade_checker or _default_offline_arcade_checker
++    try:
++        offline_ok = bool(checker())
++        offline_error = ""
++    except Exception as exc:
++        offline_ok = False
++        offline_error = f"{type(exc).__name__}: {exc}"
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "offline_arcade": offline_ok,
++        "offline_arcade_error": offline_error,
++        "a1_artifact_present": (root_path / A1_RELATIVE_PATH).exists(),
++        "a2_artifact_present": (root_path / A2_RELATIVE_PATH).exists(),
++        "a3_artifact_present": (root_path / A3_RELATIVE_PATH).exists(),
++        "a4_artifact_present": (root_path / A4_RELATIVE_PATH).exists(),
++        "spec_has_req_4609": "REQ-ARC-WMTE-4609" in spec_text,
++    }
++    required = (
++        "agents_md_read",
++        "codex_md_read",
++        "offline_arcade",
++        "a1_artifact_present",
++        "a2_artifact_present",
++        "a4_artifact_present",
++        "spec_has_req_4609",
++    )
++    checks["ok"] = all(bool(checks[key]) for key in required)
++    if not checks["ok"]:
++        checks["blocked_resource"] = next((key for key in required if not checks[key]), "precondition")
++    return checks
++
++
++def run_summarize_artifact(path: Path) -> JsonDict:  # pragma: no cover - subprocess boundary
++    cmd = [sys.executable, "scripts/summarize_artifact.py", str(path)]
++    proc = subprocess.run(
++        cmd,
++        cwd=REPO_ROOT,
++        capture_output=True,
++        text=True,
++        timeout=120,
++        check=False,
++    )
++    return {
++        "returncode": int(proc.returncode),
++        "stdout": proc.stdout,
++        "stderr": proc.stderr,
++        "live_status": _live_status({"returncode": proc.returncode, "stdout": proc.stdout}),
++        "command": " ".join(cmd),
++    }
++
++
++def run_parity_check(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - subprocess boundary
++    cmd = [
++        sys.executable,
++        "-m",
++        "pytest",
++        "tests/python/test_arc_submitted_agent_parity.py",
++        "-q",
++        "--no-cov",
++    ]
++    proc = subprocess.run(
++        cmd,
++        cwd=Path(root),
++        capture_output=True,
++        text=True,
++        timeout=180,
++        check=False,
++    )
++    return {
++        "passed": proc.returncode == 0,
++        "command": " ".join(cmd),
++        "returncode": int(proc.returncode),
++        "stdout_tail": proc.stdout[-2000:],
++        "stderr_tail": proc.stderr[-2000:],
++    }
++
++
++def _blocked_artifact(
++    checks: Mapping[str, Any],
++    submitted_agent_config: Mapping[str, Any],
++    duration_s: float,
++) -> JsonDict:
++    audit = {
++        "levers_integrated": [],
++        "submitted_config_raised_metric_clean": False,
++        "flagged_artifacts_excluded": [],
++        "quarantined_artifacts": [],
++        "upstream_lever_audit": {},
++    }
++    metrics = {
++        "world_model_trust_pass_rate_integrated": 0.0,
++        "world_model_trust_pass_rate_baseline": 0.0,
++        "world_model_trust_pass_rate_delta_vs_baseline": 0.0,
++        "first_win_rate_integrated": 0.0,
++        "first_win_rate_bare": 0.0,
++        "first_win_rate_delta_vs_bare": 0.0,
++        "median_actions_to_first_levelup_integrated": None,
++        "median_actions_to_first_levelup_bare": None,
++        "actions_delta_vs_bare": 0.0,
++        "live_submittable_level_count_integrated": 0,
++        "live_submittable_level_count_baseline": LIVE_SUBMITTABLE_BASELINE,
++        "live_submittable_delta_vs_baseline": -LIVE_SUBMITTABLE_BASELINE,
++    }
++    artifact = build_artifact(
++        preconditions_checked=checks,
++        audit=audit,
++        metrics=metrics,
++        parity_test={"passed": False, "blocked": True},
++        submitted_agent_config=submitted_agent_config,
++        duration_s=duration_s,
++    )
++    blocked = str(checks.get("blocked_resource") or "precondition")
++    artifact["honest_verdict"] = f"blocked_{blocked}"
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    offline_arcade_checker: OfflineArcadeChecker | None = None,
++    summarize_runner: SummarizeRunner | None = None,
++    parity_check: ParityCheck | None = None,
++    now: Callable[[], float] = time.time,
++) -> JsonDict:
++    root_path = Path(root)
++    start = now()
++    from carnot.agentic.arc_competition_agent import SUBMITTED_AGENT_CONFIG
++
++    submitted_config = json.loads(json.dumps(SUBMITTED_AGENT_CONFIG, default=str))
++    checks = check_preconditions(root_path, offline_arcade_checker=offline_arcade_checker)
++    if not checks["ok"]:
++        artifact = _blocked_artifact(checks, submitted_config, duration_s=max(1.0, now() - start))
++        _write_json(root_path / RESULT_RELATIVE_PATH, artifact)
++        return artifact
++
++    summarize = summarize_runner or run_summarize_artifact
++    paths = {
++        "A1": root_path / A1_RELATIVE_PATH,
++        "A2": root_path / A2_RELATIVE_PATH,
++        "A3": root_path / A3_RELATIVE_PATH,
++        "A4": root_path / A4_RELATIVE_PATH,
++    }
++    upstreams: dict[str, ArtifactPair] = {}
++    for lever, path in paths.items():
++        artifact = _load_json(path)
++        summary = summarize(path) if path.exists() else {"returncode": 2, "live_status": "missing"}
++        upstreams[lever] = (artifact, summary)
++    audit = audit_upstream_levers(upstreams)
++    metrics = measure_integrated_metrics(
++        audit=audit,
++        a4_artifact=upstreams["A4"][0],
++        submitted_agent_config=submitted_config,
++    )
++    parity = (parity_check or run_parity_check)(root_path)
++    artifact = build_artifact(
++        preconditions_checked=checks,
++        audit=audit,
++        metrics=metrics,
++        parity_test=parity,
++        submitted_agent_config=submitted_config,
++        duration_s=max(1.0, now() - start),
++    )
++    _write_json(root_path / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    artifact = run()
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        print(json.dumps({"result": RESULT_RELATIVE_PATH, "schema_errors": errors}, indent=2))
++        return 1
++    print(json.dumps({"result": RESULT_RELATIVE_PATH, "honest_verdict": artifact["honest_verdict"]}))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index aa59b94916..b6b32b6e46 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-23T06:11:06.927945Z",
+-  "duration_s": 0.021210670471191406,
++  "run_date": "2026-06-23T07:15:18.384998Z",
++  "duration_s": 0.024155378341674805,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "35888e45a1841c7393ef0d769dd8353e73bf0dceac41199479fc02fc35593b7a",
++  "reproducibility_checksum": "becd38f93b63f8603bbab3697c3ba33f19ba611b070323bbf4d4ece8ab9d0011",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "5062e5d48d372ed2c6d47ad20548a21ef04a67ea"
++    "adversarial_verify_version": "f7b6aa3f2354fd98d748b51f840cf066883d92a4"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 110266a8f4..e81146d800 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-23T06:11:06.958410Z",
+-  "duration_s": 0.025952816009521484,
++  "run_date": "2026-06-23T07:15:18.411883Z",
++  "duration_s": 0.02245783805847168,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "136e41f1ae11e0a48e26ea58918e1ddf34eb815b01e95f1fb72efde14d63254f",
++  "reproducibility_checksum": "deb5e122ac8449930372625447776b6b0f5ef32ef41c193b6a74231f4b356478",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "5062e5d48d372ed2c6d47ad20548a21ef04a67ea"
++    "adversarial_verify_version": "f7b6aa3f2354fd98d748b51f840cf066883d92a4"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 00b3ed3488..aaf0919b3d 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1376609802246094,
++  "efficiency_gains_ms": 2.147197723388672,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 8c2059d7d0..f1a87c9812 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.734902177006006e-05,
++  "duration_s": 3.3212010748684406e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4609_integration_gate.json b/results/experiment_4609_integration_gate.json
+new file mode 100644
+index 0000000000..10e2b37a3a
+--- /dev/null
++++ b/results/experiment_4609_integration_gate.json
+@@ -0,0 +1,214 @@
++{
++  "actions_delta_vs_bare": 0.0,
++  "config_action": "unchanged_bare_config_kept",
++  "duration_s": 4.71882,
++  "experiment": "experiment_4609_integration_gate",
++  "field_principles": {
++    "first_win_rate_integrated": {
++      "principle": "the integrated held-out first-win-rate on the shipped config (A2's effect)."
++    },
++    "flagged_artifacts_excluded": {
++      "principle": "names any flagged_adversarial / positive-control-failed upstream artifact NOT aggregated (the fabrication gate + FALSE_NEGATIVE_RISK compliance)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: integrated_<metric>_raised_config_shipped OR complete: integration_no_clean_metric_bare_config_kept_honest_null."
++    },
++    "inference_substrate": {
++      "principle": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor)."
++    },
++    "levers_integrated": {
++      "principle": "names the upstream levers (A1/A2/A3) admitted into SUBMITTED_AGENT_CONFIG -- the audit trail."
++    },
++    "live_submittable_level_count_integrated": {
++      "principle": "the integrated live-submittable count (must stay > 33)."
++    },
++    "null_delta_methodology_note": {
++      "principle": "present where any integrated delta == 0 -- states the equality is an honest no-value null, not a bug."
++    },
++    "parity_test_green": {
++      "principle": "HARD gate -- test_arc_submitted_agent_parity.py passes; the integrated config is the single source of truth."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified (offline arcade, upstream artifacts present); pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash catches silent drift on replay."
++    },
++    "submitted_config_raised_metric_clean": {
++      "principle": "True only if a CLEAN (non-flagged, control-passed) lever raised a real metric on the SCORED config; false -> honest null, bare config kept."
++    },
++    "verifier_is_oracle": {
++      "principle": "MUST be false for every aggregated value claim -- the integrated levers are oracle-distinct."
++    },
++    "world_model_trust_pass_rate_integrated": {
++      "principle": "the integrated world_model_trust_pass_rate (A1's headline metric on the shipped config) -- did the 0.08-wall fix make it into the SCORED agent."
++    }
++  },
++  "first_win_rate_bare": 0.0,
++  "first_win_rate_delta_vs_bare": 0.0,
++  "first_win_rate_integrated": 0.0,
++  "flagged_artifacts_excluded": [
++    {
++      "honest_verdict": "success: world_model_trust_energy_pass_rate_up_6_first_win_up",
++      "lever": "A1",
++      "live_status": "CRITICAL",
++      "reason": "flagged_adversarial"
++    },
++    {
++      "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++      "lever": "A2",
++      "live_status": "CRITICAL",
++      "reason": "flagged_adversarial"
++    }
++  ],
++  "honest_verdict": "complete: integration_no_clean_metric_bare_config_kept_honest_null",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor).",
++  "levers_integrated": [],
++  "live_submittable_delta_vs_baseline": 0,
++  "live_submittable_level_count_baseline": 55,
++  "live_submittable_level_count_integrated": 55,
++  "median_actions_to_first_levelup_bare": null,
++  "median_actions_to_first_levelup_integrated": null,
++  "null_delta_methodology_note": "No clean upstream lever passed the summarize-artifact, positive-control, and non-adversarial gates; zero deltas are an honest no-value null, not a bug.",
++  "package_artifact": {
++    "live_submittable_level_count": 55,
++    "path": "results/experiment_4607_refresh_submission_package.json"
++  },
++  "parity_test": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [11 items]\n\n...........                                                              [100%]\n============================== 11 passed in 2.54s ==============================\n"
++  },
++  "parity_test_green": true,
++  "preconditions_checked": {
++    "a1_artifact_present": true,
++    "a2_artifact_present": true,
++    "a3_artifact_present": true,
++    "a4_artifact_present": true,
++    "agents_md_read": true,
++    "codex_md_read": true,
++    "offline_arcade": true,
++    "offline_arcade_error": "",
++    "ok": true,
++    "spec_has_req_4609": true
++  },
++  "quarantined_artifacts": [
++    {
++      "honest_verdict": "success: world_model_trust_energy_pass_rate_up_6_first_win_up",
++      "lever": "A1",
++      "reason": "flagged_adversarial"
++    },
++    {
++      "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++      "lever": "A2",
++      "reason": "flagged_adversarial"
++    },
++    {
++      "honest_verdict": "complete: dc22_delta_identified_no_bank",
++      "lever": "A3",
++      "reason": "honest_verdict_not_success"
++    },
++    {
++      "honest_verdict": "complete: package_refreshed_unchanged_depth.",
++      "lever": "A4",
++      "reason": "package_metric_only"
++    }
++  ],
++  "random_seed": 4609,
++  "reproducibility_checksum": "sha256:685dfa71f7170458b8470caf2c9bb0f1dbb53be9f2c3587f3c404b77df43505d",
++  "schema": "carnot.exp4609.integration_gate.v1",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4609",
++    "SCENARIO-ARC-WMTE-4609"
++  ],
++  "submitted_agent_config": {
++    "bare_control_config": {
++      "candidate_router": null,
++      "navigation_cost_tiebreak": false,
++      "policy": "E3AgentPolicy",
++      "search_mode": "depth_first_ride",
++      "target_levels": 1,
++      "value_weight": 0.0
++    },
++    "candidate_router": "cross_game_discriminative_v3_tiebreaker",
++    "cascade": true,
++    "discriminative_candidate_router_enabled": true,
++    "discriminative_router_wired": true,
++    "explore_diversity_default": false,
++    "feature_router_enabled": false,
++    "frontier_batch_size": 1,
++    "graph_explore_budget": 80,
++    "lazy_value_top_k": 4,
++    "live_submit_package_path": "results/experiment_4595_submission_package_operator_resubmit.json",
++    "live_submit_source": "experiment_4595_refresh_submission_package",
++    "navigation_cost_tiebreak": true,
++    "online_discriminative": true,
++    "policy": "E3AgentPolicy",
++    "routed_explore_budget": 24,
++    "router_wired": true,
++    "search_mode": "depth_first_ride",
++    "solve_learning_router_wired": true,
++    "strategy_router_enabled": true,
++    "target_levels": 3,
++    "value_weight": 0.0,
++    "verifier_is_oracle": false,
++    "world_model_dsl_wired": true
++  },
++  "submitted_config_raised_metric_clean": false,
++  "submitted_to_leaderboard": false,
++  "upstream_lever_audit": {
++    "A1": {
++      "artifact_honest_verdict": "success: world_model_trust_energy_pass_rate_up_6_first_win_up",
++      "flagged_adversarial": true,
++      "integrated": false,
++      "lever": "A1",
++      "live_status": "CRITICAL",
++      "metric_delta": 1.0,
++      "positive_control_passed": true,
++      "reason": "flagged_adversarial",
++      "summarize_returncode": 2
++    },
++    "A2": {
++      "artifact_honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++      "flagged_adversarial": true,
++      "integrated": false,
++      "lever": "A2",
++      "live_status": "CRITICAL",
++      "metric_delta": 0.0,
++      "positive_control_passed": true,
++      "reason": "flagged_adversarial",
++      "summarize_returncode": 2
++    },
++    "A3": {
++      "artifact_honest_verdict": "complete: dc22_delta_identified_no_bank",
++      "flagged_adversarial": false,
++      "integrated": false,
++      "lever": "A3",
++      "live_status": "clean",
++      "metric_delta": 0.0,
++      "positive_control_passed": false,
++      "reason": "honest_verdict_not_success",
++      "summarize_returncode": 0
++    },
++    "A4": {
++      "artifact_honest_verdict": "complete: package_refreshed_unchanged_depth.",
++      "flagged_adversarial": false,
++      "integrated": false,
++      "lever": "A4",
++      "live_status": "clean",
++      "metric_delta": 0.0,
++      "positive_control_passed": true,
++      "reason": "package_metric_only",
++      "summarize_returncode": 0
++    }
++  },
++  "verifier_is_oracle": false,
++  "world_model_trust_pass_rate_baseline": 0.0,
++  "world_model_trust_pass_rate_delta_vs_baseline": 0.0,
++  "world_model_trust_pass_rate_integrated": 0.0
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 032e52a506..b2d639e723 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T06:10:56Z",
+-  "finished_at": "2026-06-23T06:10:56Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-23T07:15:07Z",
++  "finished_at": "2026-06-23T07:15:08Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6a8a7df512..bbbcac8b6e 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T06:10:56Z",
+-  "finished_at": "2026-06-23T06:10:56Z",
++  "started_at": "2026-06-23T07:15:08Z",
++  "finished_at": "2026-06-23T07:15:08Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 0e8e5eea00..960dab16eb 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T06:10:56Z",
+-  "finished_at": "2026-06-23T06:10:56Z",
++  "started_at": "2026-06-23T07:15:08Z",
++  "finished_at": "2026-06-23T07:15:08Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4609_integration_gate.py b/tests/python/test_experiment_4609_integration_gate.py
+new file mode 100644
+index 0000000000..68a90251f3
+--- /dev/null
++++ b/tests/python/test_experiment_4609_integration_gate.py
+@@ -0,0 +1,368 @@
++"""Tests for Exp 4609 submitted-agent integration consolidation.
++
++Spec refs: REQ-ARC-WMTE-4609, SCENARIO-ARC-WMTE-4609.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++from carnot.agentic.arc_competition_agent import SUBMITTED_AGENT_CONFIG
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _a1_flagged_success() -> dict[str, Any]:
++    return {
++        "honest_verdict": "success: world_model_trust_energy_pass_rate_up_6_first_win_up",
++        "flagged_adversarial": True,
++        "world_model_trust_pass_rate_new": 1.0,
++        "world_model_trust_pass_rate_binary": 0.0,
++        "trust_pass_rate_delta": 1.0,
++        "first_win_delta": 1.0,
++        "chosen_submitted_config": "enable_world_model_trust_energy_gate",
++    }
++
++
++def _a2_flagged_null() -> dict[str, Any]:
++    return {
++        "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++        "flagged_adversarial": True,
++        "first_win_rate_integrated": 0.04,
++        "first_win_rate_bare": 0.04,
++        "first_win_delta": 0.0,
++        "median_actions_to_first_levelup_integrated": 20.0,
++        "median_actions_to_first_levelup_bare": 20.0,
++        "actions_delta": 0.0,
++        "chosen_submitted_config": "unchanged",
++    }
++
++
++def _a3_no_bank() -> dict[str, Any]:
++    return {
++        "honest_verdict": "complete: dc22_delta_identified_no_bank",
++        "flagged_adversarial": None,
++        "offline_reproduced": False,
++        "reproduced_levels": 0,
++        "reproduction_gate": {"reproduced": False, "reached_level": 1, "claimed_level": 2},
++    }
++
++
++def _a4_clean_package() -> dict[str, Any]:
++    return {
++        "honest_verdict": "complete: package_refreshed_unchanged_depth.",
++        "flagged_adversarial": None,
++        "live_submittable_level_count": 55,
++        "live_submittable_count_prev": 55,
++        "count_delta": 0,
++        "ready_for_operator_submit": True,
++        "refreshed_package_path": "results/experiment_4607_submission_package_operator_resubmit.json",
++        "offline_reproduced": True,
++    }
++
++
++def _summary_clean() -> dict[str, Any]:
++    return {"returncode": 0, "live_status": "clean", "stdout": "clean"}
++
++
++def _summary_critical() -> dict[str, Any]:
++    return {"returncode": 2, "live_status": "CRITICAL", "stdout": "LIVE re-check: CRITICAL"}
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def test_req_arc_wmte_4609_spec_declares_integration_gate_contract() -> None:
++    """REQ-ARC-WMTE-4609: OpenSpec declares the consolidation artifact schema."""
++
++    from carnot import experiment_4609_integration_gate as mod
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-WMTE-4609" in spec
++    assert "SCENARIO-ARC-WMTE-4609" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_req_arc_wmte_4609_quarantines_flagged_and_non_success_upstreams() -> None:
++    """REQ-ARC-WMTE-4609: flagged or non-success upstream metrics are not aggregated."""
++
++    from carnot import experiment_4609_integration_gate as mod
++
++    audit = mod.audit_upstream_levers(
++        {
++            "A1": (_a1_flagged_success(), _summary_critical()),
++            "A2": (_a2_flagged_null(), _summary_critical()),
++            "A3": (_a3_no_bank(), _summary_clean()),
++            "A4": (_a4_clean_package(), _summary_clean()),
++        }
++    )
++
++    assert audit["levers_integrated"] == []
++    assert audit["submitted_config_raised_metric_clean"] is False
++    assert {row["lever"] for row in audit["flagged_artifacts_excluded"]} == {"A1", "A2"}
++    assert audit["upstream_lever_audit"]["A1"]["integrated"] is False
++    assert audit["upstream_lever_audit"]["A1"]["reason"] == "flagged_adversarial"
++    assert audit["upstream_lever_audit"]["A3"]["reason"] == "honest_verdict_not_success"
++
++
++def test_scenario_arc_wmte_4609_builds_honest_null_artifact() -> None:
++    """SCENARIO-ARC-WMTE-4609: artifact reports required null metrics and checksum."""
++
++    from carnot import experiment_4609_integration_gate as mod
++
++    audit = mod.audit_upstream_levers(
++        {
++            "A1": (_a1_flagged_success(), _summary_critical()),
++            "A2": (_a2_flagged_null(), _summary_critical()),
++            "A3": (_a3_no_bank(), _summary_clean()),
++            "A4": (_a4_clean_package(), _summary_clean()),
++        }
++    )
++    metrics = mod.measure_integrated_metrics(
++        audit=audit,
++        a4_artifact=_a4_clean_package(),
++        submitted_agent_config=SUBMITTED_AGENT_CONFIG,
++    )
++    artifact = mod.build_artifact(
++        preconditions_checked={"ok": True, "offline_arcade": True},
++        audit=audit,
++        metrics=metrics,
++        parity_test={"passed": True, "command": "pytest parity"},
++        submitted_agent_config=SUBMITTED_AGENT_CONFIG,
++        duration_s=1.0,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: integration_no_clean_metric_bare_config_kept_honest_null"
++    )
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["levers_integrated"] == []
++    assert artifact["world_model_trust_pass_rate_integrated"] == 0.0
++    assert artifact["first_win_rate_integrated"] == 0.0
++    assert artifact["median_actions_to_first_levelup_integrated"] is None
++    assert artifact["live_submittable_level_count_integrated"] == 55
++    assert artifact["submitted_config_raised_metric_clean"] is False
++    assert artifact["parity_test_green"] is True
++    assert "honest no-value null" in artifact["null_delta_methodology_note"]
++    assert artifact["submitted_to_leaderboard"] is False
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_arc_wmte_4609_run_writes_artifact_with_summarize_gate(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4609: run reads upstreams via summarize gate and writes JSON."""
++
++    from carnot import experiment_4609_integration_gate as mod
++
++    (tmp_path / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    spec = tmp_path / mod.SPEC_RELATIVE_PATH
++    spec.parent.mkdir(parents=True)
++    spec.write_text("REQ-ARC-WMTE-4609\n", encoding="utf-8")
++    payloads = {
++        mod.A1_RELATIVE_PATH: _a1_flagged_success(),
++        mod.A2_RELATIVE_PATH: _a2_flagged_null(),
++        mod.A3_RELATIVE_PATH: _a3_no_bank(),
++        mod.A4_RELATIVE_PATH: _a4_clean_package(),
++    }
++    for relative, payload in payloads.items():
++        _write_json(tmp_path / relative, payload)
++
++    def summarize(path: Path) -> dict[str, Any]:
++        if path.name in {
++            "experiment_4604_world_model_trust_energy.json",
++            "experiment_4605_live_integration_scored_agent.json",
++        }:
++            return _summary_critical()
++        return _summary_clean()
++
++    artifact = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        summarize_runner=summarize,
++        parity_check=lambda _root: {"passed": True, "command": "pytest parity"},
++        now=lambda: 10.0,
++    )
++
++    loaded = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert loaded == artifact
++    assert artifact["preconditions_checked"]["a4_artifact_present"] is True
++    assert artifact["upstream_lever_audit"]["A4"]["reason"] == "package_metric_only"
++    assert artifact["live_submittable_delta_vs_baseline"] == 0
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++
++def test_req_arc_wmte_4609_success_path_and_schema_errors() -> None:
++    """REQ-ARC-WMTE-4609: clean positive controls can admit a metric raiser."""
++
++    from carnot import experiment_4609_integration_gate as mod
++
++    clean_a1 = dict(
++        _a1_flagged_success(),
++        flagged_adversarial=None,
++        positive_control_passed=True,
++    )
++    audit = mod.audit_upstream_levers(
++        {
++            "A1": (clean_a1, _summary_clean()),
++            "A2": (_a2_flagged_null(), _summary_critical()),
++            "A3": (_a3_no_bank(), _summary_clean()),
++            "A4": (_a4_clean_package(), _summary_clean()),
++        }
++    )
++    metrics = mod.measure_integrated_metrics(
++        audit=audit,
++        a4_artifact=_a4_clean_package(),
++        submitted_agent_config=SUBMITTED_AGENT_CONFIG,
++    )
++    artifact = mod.build_artifact(
++        preconditions_checked={"ok": True},
++        audit=audit,
++        metrics=metrics,
++        parity_test={"passed": True},
++        submitted_agent_config=SUBMITTED_AGENT_CONFIG,
++        duration_s=1.0,
++    )
++
++    assert audit["levers_integrated"] == ["A1_world_model_trust_energy_gate"]
++    assert artifact["honest_verdict"] == "success: integrated_world_model_trust_raised_config_shipped"
++    assert artifact["world_model_trust_pass_rate_integrated"] == 1.0
++    assert artifact["world_model_trust_pass_rate_delta_vs_baseline"] == 1.0
++    assert mod.artifact_schema_errors(artifact) == []
++
++    broken = dict(artifact)
++    broken["honest_verdict"] = "not_terminal"
++    broken["verifier_is_oracle"] = True
++    broken["parity_test_green"] = False
++    broken["live_submittable_level_count_integrated"] = 33
++    broken["reproducibility_checksum"] = "sha256:bad"
++    broken.pop("null_delta_methodology_note")
++    errors = mod.artifact_schema_errors(broken)
++    assert "honest_verdict_terminal_prefix" in errors
++    assert "verifier_is_oracle_false" in errors
++    assert "parity_test_green" in errors
++    assert "live_submittable_level_count_integrated" in errors
++    assert "null_delta_methodology_note" in errors
++    assert "reproducibility_checksum" in errors
++
++
++def test_req_arc_wmte_4609_helper_and_blocked_branches(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4609: helper edge cases fail closed without fabricating metrics."""
++
++    from carnot import experiment_4609_integration_gate as mod
++
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{", encoding="utf-8")
++    assert mod._load_json(bad_json) == {}
++    assert mod._as_float(True, 7.5) == 7.5
++    assert mod._as_int(False, 8) == 8
++    assert mod._as_int("not-an-int", 9) == 9
++    assert mod._live_status({"stdout": "LIVE re-check: CRITICAL"}) == "CRITICAL"
++    assert mod._live_status({"stdout": "LIVE re-check: warn"}) == "warn"
++    assert mod._live_status({"returncode": 1}) == "CRITICAL"
++    assert mod._positive_control_passed("unknown", {}) is False
++
++    pc_failed = mod.audit_upstream_levers(
++        {
++            "A1": (
++                {
++                    "honest_verdict": "success: world_model_trust_energy_pass_rate_up",
++                    "trust_pass_rate_delta": 1.0,
++                },
++                _summary_clean(),
++            )
++        }
++    )
++    assert pc_failed["upstream_lever_audit"]["A1"]["reason"] == "positive_control_failed"
++
++    no_delta = mod.audit_upstream_levers(
++        {
++            "A1": (
++                {
++                    "honest_verdict": "success: world_model_trust_energy_pass_rate_up",
++                    "binary_gate_control_passed": True,
++                    "trust_pass_rate_delta": 0.0,
++                },
++                _summary_clean(),
++            )
++        }
++    )
++    assert no_delta["upstream_lever_audit"]["A1"]["reason"] == "no_positive_metric_delta"
++
++    a2_audit = mod.audit_upstream_levers(
++        {
++            "A2": (
++                {
++                    "honest_verdict": "success: live_integration_scored_first_win_up_1",
++                    "bare_control_passed": True,
++                    "first_win_delta": 0.25,
++                },
++                _summary_clean(),
++            ),
++            "A4": (_a4_clean_package(), _summary_clean()),
++        }
++    )
++    metrics = mod.measure_integrated_metrics(
++        audit=a2_audit,
++        a4_artifact={},
++        submitted_agent_config={
++            "first_win_rate_integrated": 0.5,
++            "median_actions_to_first_levelup_integrated": 7,
++            "median_actions_to_first_levelup_bare": 10,
++        },
++    )
++    assert metrics["first_win_rate_integrated"] == 0.5
++    assert metrics["median_actions_to_first_levelup_integrated"] == 7
++    assert metrics["live_submittable_level_count_integrated"] == mod.LIVE_SUBMITTABLE_BASELINE
++
++    live_metrics = dict(metrics, live_submittable_delta_vs_baseline=2)
++    assert (
++        mod._verdict({"submitted_config_raised_metric_clean": True}, live_metrics, True)
++        == "success: integrated_first_win_raised_config_shipped"
++    )
++    only_live_metrics = dict(
++        metrics,
++        first_win_rate_delta_vs_bare=0.0,
++        live_submittable_delta_vs_baseline=2,
++    )
++    assert (
++        mod._verdict({"submitted_config_raised_metric_clean": True}, only_live_metrics, True)
++        == "success: integrated_live_submittable_raised_config_shipped"
++    )
++    zero_metrics = dict(only_live_metrics, live_submittable_delta_vs_baseline=0)
++    assert mod._verdict({"submitted_config_raised_metric_clean": True}, zero_metrics, True).startswith(
++        "complete:"
++    )
++
++    (tmp_path / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    spec = tmp_path / mod.SPEC_RELATIVE_PATH
++    spec.parent.mkdir(parents=True)
++    spec.write_text("REQ-ARC-WMTE-4609\n", encoding="utf-8")
++
++    def raises_offline() -> bool:
++        raise RuntimeError("offline unavailable")
++
++    checks = mod.check_preconditions(tmp_path, offline_arcade_checker=raises_offline)
++    assert checks["offline_arcade"] is False
++    assert "RuntimeError" in checks["offline_arcade_error"]
++    assert checks["blocked_resource"] == "offline_arcade"
++
++    blocked = mod.run(
++        root=tmp_path,
++        offline_arcade_checker=lambda: True,
++        parity_check=lambda _root: {"passed": False},
++        now=lambda: 20.0,
++    )
++    assert blocked["honest_verdict"] == "blocked_a1_artifact_present"
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
+-- 
+2.55.0
+

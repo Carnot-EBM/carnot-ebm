@@ -1,0 +1,62 @@
+From 48e330839ffa3e0156784fd75e94268888691588 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 10:05:29 -0400
+Subject: [PATCH 10526/11362] [conductor] V595 evidence synthesis and branch
+ disposition
+
+Automated research step by research conductor.
+Task ID: exp6823-v595-branch-disposition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                              | 2 +-
+ results/experiment_6823_v595_branch_disposition.json | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 41eecff68e..747e367813 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5205,
++  "experiments_checked": 5206,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_6823_v595_branch_disposition.json b/results/experiment_6823_v595_branch_disposition.json
+index 836e3f7c07..44259b1136 100644
+--- a/results/experiment_6823_v595_branch_disposition.json
++++ b/results/experiment_6823_v595_branch_disposition.json
+@@ -66,7 +66,7 @@
+     "retire",
+     "blocked"
+   ],
+-  "duration_s": 0.947960504970979,
++  "duration_s": 0.9588388910051435,
+   "field_principles": {
+     "adversarial_findings": "Validator findings remain visible and cannot be laundered away.",
+     "contract_owner_map": "Existing specifications keep authority with the contract that owns it.",
+@@ -741,7 +741,7 @@
+     }
+   },
+   "random_seed": 6823,
+-  "reproducibility_checksum": "sha256:f00095ee5c6d8b5aef5890fea9c5bd2aa9c7419b5a23d528a68817e4ee71d832",
++  "reproducibility_checksum": "sha256:a4850dbe12ff28f8da653177b69b3a7a539e039ce4541dd417252c42be07a748",
+   "roadmap_identity": {
+     "design_sha256": "sha256:4cf6f23dc1b36689122515835d8af69be80653430b6f2144db1071f6cb2c4f62",
+     "executed_roadmap_sha256": "sha256:cc0f206d5f367e49d1cca2b2282c3d8194968e03cb6341c35cb62e44a72b9ba8",
+@@ -1330,7 +1330,7 @@
+     "openspec/capabilities/agentic-harness/spec.md": "sha256:e4106b44b0f2303395178f14df7a5fc50b4161415e283d21b9ef2413fbb33953",
+     "openspec/capabilities/constraint-verification/spec.md": "sha256:f0e234aeef0b11f3aed7b80163aa3788500b09b393fb6793de62f9ab63421dff",
+     "openspec/capabilities/continuous-learning/spec.md": "sha256:558b466726118d520da97cedbb22051e3e695421df301cf99eb235d813074b42",
+-    "openspec/capabilities/research-reporting/spec.md": "sha256:c2d18102e2e95130c35e391ef297983eaaf3d7442d73957d2eef7d95efa98266",
++    "openspec/capabilities/research-reporting/spec.md": "sha256:b60397c9e3af9f4d934ef5fdd23c1cb1f00621ebbd89a3ed051af684584281e1",
+     "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4cf6f23dc1b36689122515835d8af69be80653430b6f2144db1071f6cb2c4f62",
+     "research-roadmap.yaml": "sha256:cc0f206d5f367e49d1cca2b2282c3d8194968e03cb6341c35cb62e44a72b9ba8",
+     "results/experiment_6810_v595_contract_manifest_preflight.json": "sha256:f3a6b52a526123ad59d69eb9398fbe11278fd7e6798bed06f71e33887ea19687",
+-- 
+2.55.0
+

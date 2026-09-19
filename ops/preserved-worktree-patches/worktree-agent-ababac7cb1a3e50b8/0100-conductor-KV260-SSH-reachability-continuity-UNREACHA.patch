@@ -1,0 +1,867 @@
+From c9145c45ebd8bedd656e8c436e722f1547afb1b0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 01:44:14 -0400
+Subject: [PATCH 00100/11362] =?UTF-8?q?[conductor]=20KV260=20SSH-reachabil?=
+ =?UTF-8?q?ity=20continuity=20(UNREACHABLE=20.331-.337=20=E2=80=94=20re-ch?=
+ =?UTF-8?q?eck=20+=20record=20honest=20state;=20flag=20the=208-milestone?=
+ =?UTF-8?q?=20outage=20as=20an=20operator-action=20item)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3698-kv260-continuity-v25
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/fpga/spec.md            |  58 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_3698_kv260_continuity_v25.py   | 248 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ .../experiment_3698_kv260_continuity_v25.json |  65 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../experiment_3698_kv260_continuity_v25.py   |  15 ++
+ ...st_experiment_3698_kv260_continuity_v25.py | 226 ++++++++++++++++
+ 16 files changed, 634 insertions(+), 22 deletions(-)
+ create mode 100644 python/carnot/experiment_3698_kv260_continuity_v25.py
+ create mode 100644 results/experiment_3698_kv260_continuity_v25.json
+ create mode 100644 scripts/experiment_3698_kv260_continuity_v25.py
+ create mode 100644 tests/python/test_experiment_3698_kv260_continuity_v25.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index 29f91332ad..45c657813d 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -4246,6 +4246,64 @@ count, field principles, deterministic seed, checksum, and duration.
+ **Implementation status:** Pending (Exp 3686)
+ 
+ 
++---
++
++### REQ-HW-3698
++
++**Title:** KV260 Continuity Check v25 uses SSH reachability only and records the .331-.338 unreachable streak
++
++**Description:**
++Experiment 3698 MUST perform the milestone KV260 hardware-task continuity check.
++KV260 lives on SSH, so the ONLY permitted precondition is:
++
++`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
++
++The host SD-card device-node precondition is permanently retired and MUST NOT be
++used. If SSH is reachable, the experiment MUST run `ssh kria 'xmutil listapps'`
++and record the overlay continuity state using distinct KV260 field names. If SSH
++is unreachable, the experiment MUST write a terminal blocked artifact rather
++than fabricating a pass, and MUST record that .331, .332, .333, .334, .335,
++.336, .337, and the current milestone now form eight consecutive unreachable
++milestones requiring operator action.
++
++**Acceptance criteria:**
++- `results/experiment_3698_kv260_continuity_v25.json` is generated.
++- The artifact includes `honest_verdict`, `inference_substrate`,
++  `preconditions_checked`, `kv260_ssh_reachable`, `kv260_overlay_loaded`,
++  `consecutive_unreachable_milestones`, `random_seed`,
++  `reproducibility_checksum`, and `duration_s`.
++- The artifact includes field-principle annotations for the required fields,
++  while the required fields store bare values.
++- `inference_substrate` MUST be exactly `"hardware_smoke"` and MUST NOT include
++  GGUF or CUDA markers.
++- If `ssh` succeeds, the verdict MUST be
++  `"complete: kv260_continuity_confirmed_reachable"`.
++- If `ssh` fails, the verdict MUST be
++  `"complete: blocked_kv260_ssh_unreachable"` and
++  `consecutive_unreachable_milestones` MUST be `8`.
++- No implementation or test path may invoke `/dev/mmcblk*`, `/dev/disk*`, or any
++  host SD-card device-node check as a KV260 precondition.
++
++**Implementation status:** Pending (Exp 3698)
++
++---
++
++### SCENARIO-HW-3698
++
++**Scenario:** KV260 continuity v25 records reachable or blocked state from SSH only.
++
++**Given:** A KV260 continuity check is required after milestones .331 through
++.337 were SSH-unreachable.
++**When:** Experiment 3698 runs the SSH reachability precondition and, only when
++reachable, runs `ssh kria 'xmutil listapps'`.
++**Then:** It writes `results/experiment_3698_kv260_continuity_v25.json` with the
++terminal verdict, SSH state, overlay state, eight-milestone unreachable streak
++count if still blocked, field principles, deterministic seed, checksum, and
++duration.
++
++**Implementation status:** Pending (Exp 3698)
++
++
+ ---
+ 
+ ### REQ-HW-3687
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 09caa973e7..846815eb73 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2823,
++  "experiments_checked": 2824,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_3698_kv260_continuity_v25.py b/python/carnot/experiment_3698_kv260_continuity_v25.py
+new file mode 100644
+index 0000000000..096c30890c
+--- /dev/null
++++ b/python/carnot/experiment_3698_kv260_continuity_v25.py
+@@ -0,0 +1,248 @@
++"""Build the Exp 3698 KV260 continuity v25 artifact.
++
++Spec refs: REQ-HW-3698, SCENARIO-HW-3698.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import shlex
++import subprocess
++import time
++
++EXPERIMENT_ID = "exp3698"
++TASK_ID = "exp3698-kv260-continuity-v25"
++SCHEMA = "carnot.kv260_continuity.v25"
++OUTPUT_REL_PATH = Path("results/experiment_3698_kv260_continuity_v25.json")
++RANDOM_SEED = 3698
++
++KV260_SSH_COMMAND = (
++    "ssh",
++    "-o",
++    "ConnectTimeout=5",
++    "-o",
++    "BatchMode=yes",
++    "kria",
++    "true",
++)
++KV260_OVERLAY_COMMAND = ("ssh", "kria", "xmutil listapps")
++
++PREVIOUS_UNREACHABLE_MILESTONES = (
++    ".331",
++    ".332",
++    ".333",
++    ".334",
++    ".335",
++    ".336",
++    ".337",
++)
++CURRENT_MILESTONE = ".338"
++BLOCKED_STREAK_COUNT = 8
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "preconditions_checked",
++    "kv260_ssh_reachable",
++    "kv260_overlay_loaded",
++    "consecutive_unreachable_milestones",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "SSH-attached board test; per-board duration floor.",
++    "preconditions_checked": (
++        "Records the SSH-reachability check -- the correct KV260 precondition, "
++        "not host SD card."
++    ),
++    "kv260_ssh_reachable": (
++        "The honest board state; an unreachable board is a blocked_*, "
++        "not a fabricated pass."
++    ),
++    "kv260_overlay_loaded": "Continuity state if reachable.",
++    "consecutive_unreachable_milestones": (
++        "Tracks the .331->.337 unreachable streak so a persistent outage "
++        "surfaces as an operator-action item."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++REACHABLE_VERDICT = "complete: kv260_continuity_confirmed_reachable"
++BLOCKED_VERDICT = "complete: blocked_kv260_ssh_unreachable"
++
++
++@dataclass(frozen=True)
++class CommandProbe:
++    command: tuple[str, ...]
++    exit_code: int
++    stdout: str = ""
++    stderr: str = ""
++
++    @property
++    def combined_output(self) -> str:
++        return f"{self.stdout}{self.stderr}"
++
++    def as_dict(self) -> dict[str, object]:
++        return {
++            "command": command_to_string(self.command),
++            "exit_code": self.exit_code,
++            "stdout": self.stdout,
++            "stderr": self.stderr,
++            "combined_output": self.combined_output,
++        }
++
++
++CommandRunner = Callable[[tuple[str, ...]], CommandProbe]
++
++
++def command_to_string(command: tuple[str, ...]) -> str:
++    return shlex.join(command)
++
++
++def run_command(command: tuple[str, ...]) -> CommandProbe:
++    """Run one command and preserve its transcript for later audit."""
++    try:
++        completed = subprocess.run(
++            list(command),
++            check=False,
++            capture_output=True,
++            text=True,
++        )
++    except OSError as exc:
++        return CommandProbe(command=command, exit_code=127, stderr=str(exc))
++    return CommandProbe(
++        command=command,
++        exit_code=completed.returncode,
++        stdout=completed.stdout,
++        stderr=completed.stderr,
++    )
++
++
++def sha256_payload(payload: dict[str, object]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _overlay_value(probe: CommandProbe | None) -> str | None:
++    if probe is None or probe.exit_code != 0:
++        return None
++    stripped = probe.stdout.strip()
++    return stripped or None
++
++
++def _precondition_entry(ssh_probe: CommandProbe) -> dict[str, object]:
++    return {
++        "resource": "kv260_ssh",
++        "command": command_to_string(KV260_SSH_COMMAND),
++        "available": ssh_probe.exit_code == 0,
++        "exit_code": ssh_probe.exit_code,
++    }
++
++
++def _operator_action_item(ssh_reachable: bool) -> str:
++    if ssh_reachable:
++        return "none"
++    unreachable_milestones = ", ".join(
++        (*PREVIOUS_UNREACHABLE_MILESTONES, CURRENT_MILESTONE)
++    )
++    return (
++        f"KV260 SSH is unreachable for milestones {unreachable_milestones}; "
++        "operator action required after 8 consecutive milestones to restore "
++        "kria/kv260.local DNS, network, or SSH access before the next hardware "
++        "continuity task."
++    )
++
++
++def _continuity_state(ssh_reachable: bool, overlay_probe: CommandProbe | None) -> str:
++    if not ssh_reachable:
++        return "blocked_ssh_unreachable"
++    if overlay_probe is None:
++        return "reachable_overlay_not_checked"
++    if overlay_probe.exit_code == 0:
++        return "reachable_overlay_state_recorded"
++    return "reachable_overlay_query_failed"
++
++
++def build_artifact(
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> dict[str, object]:
++    """Build the continuity artifact from SSH state, not local removable media."""
++    started = time.perf_counter()
++    ssh_probe = command_runner(KV260_SSH_COMMAND)
++    ssh_reachable = ssh_probe.exit_code == 0
++
++    overlay_probe = command_runner(KV260_OVERLAY_COMMAND) if ssh_reachable else None
++    raw_elapsed = duration_s if duration_s is not None else time.perf_counter() - started
++    elapsed = max(float(raw_elapsed), 0.0001)
++    consecutive_unreachable = 0 if ssh_reachable else BLOCKED_STREAK_COUNT
++
++    payload: dict[str, object] = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "honest_verdict": REACHABLE_VERDICT if ssh_reachable else BLOCKED_VERDICT,
++        "inference_substrate": "hardware_smoke",
++        "preconditions_checked": [_precondition_entry(ssh_probe)],
++        "kv260_ssh_reachable": ssh_reachable,
++        "kv260_overlay_loaded": _overlay_value(overlay_probe),
++        "kv260_continuity_state": _continuity_state(ssh_reachable, overlay_probe),
++        "consecutive_unreachable_milestones": consecutive_unreachable,
++        "operator_action_required": not ssh_reachable,
++        "operator_action_item": _operator_action_item(ssh_reachable),
++        "continuity_history": {
++            "previous_unreachable_milestones": list(PREVIOUS_UNREACHABLE_MILESTONES),
++            "current_milestone": CURRENT_MILESTONE,
++            "current_unreachable_streak_if_blocked": BLOCKED_STREAK_COUNT,
++        },
++        "retired_precondition_policy": (
++            "Host SD-card device-node checks were not used; KV260 precondition is SSH only."
++        ),
++        "command_probes": {
++            "kv260_ssh": ssh_probe.as_dict(),
++            "kv260_xmutil_listapps": (
++                overlay_probe.as_dict() if overlay_probe is not None else None
++            ),
++        },
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(elapsed, 4),
++    }
++    payload["reproducibility_checksum"] = sha256_payload(payload)
++    return payload
++
++
++def write_artifact(repo_root: str | Path, payload: dict[str, object]) -> Path:
++    out_path = Path(repo_root) / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    return out_path
++
++
++def run_experiment(
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> Path:
++    payload = build_artifact(command_runner=command_runner, duration_s=duration_s)
++    return write_artifact(repo_root, payload)
++
++
++def main() -> None:  # pragma: no cover
++    run_experiment(Path("."))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 6016272912..6b3f9ba30d 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T05:31:00.358397Z",
+-  "duration_s": 0.010586261749267578,
++  "run_date": "2026-06-02T05:42:47.957296Z",
++  "duration_s": 0.010057926177978516,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "76f15d83b7160ab567b145307ffc73f8c00610fbb4b7227f492a3ce9cdb42a0a",
++  "reproducibility_checksum": "17c5c7032e6832b26374f513b4cceca73d443325ca56e94011f17589cb48b349",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ee08592ae8225b03816d208d248a8e194ed560c6"
++    "adversarial_verify_version": "051fa2d4c1ca0e8dd095009924adbacc6a349c61"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 9e4c552eda..ad7913fa98 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T05:31:00.370318Z",
+-  "duration_s": 0.009075641632080078,
++  "run_date": "2026-06-02T05:42:47.969393Z",
++  "duration_s": 0.008759498596191406,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "63a06239bde88bcf5fabf401c931cd1e54aca2ca8d5ba76c123797102fe4c4ce",
++  "reproducibility_checksum": "5db50735ca0326eaf033d7a08b3f52feaaad3d8dfdd8e1a3701b974c83173704",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ee08592ae8225b03816d208d248a8e194ed560c6"
++    "adversarial_verify_version": "051fa2d4c1ca0e8dd095009924adbacc6a349c61"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index bbe80996a6..d9b414047c 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.111673355102539,
++  "efficiency_gains_ms": 2.1445751190185547,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index b61e4f1ab9..93d057b8d1 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0007741451263427734,
++  "duration_s": 0.0007801055908203125,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 98abe1b395..c358831dc1 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.777203917503357e-05,
++  "duration_s": 3.36230150423944e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 4f7a6dd209..a361c0e512 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.00993337482214e-07,
++  "duration_s": 3.9103906601667404e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 69583b7ebc..940fdad7d4 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 3.719329833984375e-05,
++  "duration_s": 4.863739013671875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3698_kv260_continuity_v25.json b/results/experiment_3698_kv260_continuity_v25.json
+new file mode 100644
+index 0000000000..e6d7fef00e
+--- /dev/null
++++ b/results/experiment_3698_kv260_continuity_v25.json
+@@ -0,0 +1,65 @@
++{
++  "command_probes": {
++    "kv260_ssh": {
++      "combined_output": "",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": ""
++    },
++    "kv260_xmutil_listapps": {
++      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
++      "command": "ssh kria 'xmutil listapps'",
++      "exit_code": 1,
++      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
++      "stdout": ""
++    }
++  },
++  "consecutive_unreachable_milestones": 0,
++  "continuity_history": {
++    "current_milestone": ".338",
++    "current_unreachable_streak_if_blocked": 8,
++    "previous_unreachable_milestones": [
++      ".331",
++      ".332",
++      ".333",
++      ".334",
++      ".335",
++      ".336",
++      ".337"
++    ]
++  },
++  "duration_s": 5.3467,
++  "experiment_id": "exp3698",
++  "field_principles": {
++    "consecutive_unreachable_milestones": "Tracks the .331->.337 unreachable streak so a persistent outage surfaces as an operator-action item.",
++    "duration_s": "Plausibility floor.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "SSH-attached board test; per-board duration floor.",
++    "kv260_overlay_loaded": "Continuity state if reachable.",
++    "kv260_ssh_reachable": "The honest board state; an unreachable board is a blocked_*, not a fabricated pass.",
++    "preconditions_checked": "Records the SSH-reachability check -- the correct KV260 precondition, not host SD card.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection."
++  },
++  "honest_verdict": "complete: kv260_continuity_confirmed_reachable",
++  "inference_substrate": "hardware_smoke",
++  "kv260_continuity_state": "reachable_overlay_query_failed",
++  "kv260_overlay_loaded": null,
++  "kv260_ssh_reachable": true,
++  "operator_action_item": "none",
++  "operator_action_required": false,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "exit_code": 0,
++      "resource": "kv260_ssh"
++    }
++  ],
++  "random_seed": 3698,
++  "reproducibility_checksum": "da791ad54d5927e1a5c3bdbbc3a595cf87ea975d1694422be0dd3107d6998c90",
++  "retired_precondition_policy": "Host SD-card device-node checks were not used; KV260 precondition is SSH only.",
++  "schema": "carnot.kv260_continuity.v25",
++  "task_id": "exp3698-kv260-continuity-v25"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index f53ccd9f24..43624d1cde 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T05:30:51Z",
+-  "finished_at": "2026-06-02T05:30:52Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-02T05:42:39Z",
++  "finished_at": "2026-06-02T05:42:39Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index a1b21a9545..722b5fc6c1 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T05:30:52Z",
+-  "finished_at": "2026-06-02T05:30:52Z",
++  "started_at": "2026-06-02T05:42:39Z",
++  "finished_at": "2026-06-02T05:42:39Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 862ec2e7cb..7525f2e060 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T05:30:52Z",
+-  "finished_at": "2026-06-02T05:30:52Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-02T05:42:39Z",
++  "finished_at": "2026-06-02T05:42:39Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3698_kv260_continuity_v25.py b/scripts/experiment_3698_kv260_continuity_v25.py
+new file mode 100644
+index 0000000000..9fe282d4fd
+--- /dev/null
++++ b/scripts/experiment_3698_kv260_continuity_v25.py
+@@ -0,0 +1,15 @@
++#!/usr/bin/env python3
++"""Entrypoint for Exp 3698 KV260 continuity v25."""
++
++from __future__ import annotations
++
++import os
++import sys
++
++sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../python")))
++
++from carnot.experiment_3698_kv260_continuity_v25 import main
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_3698_kv260_continuity_v25.py b/tests/python/test_experiment_3698_kv260_continuity_v25.py
+new file mode 100644
+index 0000000000..5c8db06841
+--- /dev/null
++++ b/tests/python/test_experiment_3698_kv260_continuity_v25.py
+@@ -0,0 +1,226 @@
++"""Tests for Exp 3698 KV260 continuity v25.
++
++Spec refs: REQ-HW-3698, SCENARIO-HW-3698.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++from carnot import experiment_3698_kv260_continuity_v25 as mod
++
++
++class RecordingRunner:
++    """Deterministic command runner that fails on any non-contract command."""
++
++    def __init__(self, probes: dict[tuple[str, ...], mod.CommandProbe]) -> None:
++        self.probes = probes
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...]) -> mod.CommandProbe:
++        self.commands.append(command)
++        if command not in self.probes:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command]
++
++
++def _probe(
++    command: tuple[str, ...],
++    exit_code: int,
++    stdout: str = "",
++    stderr: str = "",
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command=command, exit_code=exit_code, stdout=stdout, stderr=stderr)
++
++
++def _assert_required_fields_and_principles(payload: dict[str, object]) -> None:
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in payload
++        assert field in payload["field_principles"]
++        assert "principle" not in str(payload[field]).lower()
++
++
++def test_req_hw_3698_spec_anchor_declares_ssh_only_eight_streak_contract() -> None:
++    """REQ-HW-3698: OpenSpec declares v25 SSH-only continuity before code."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++    assert "REQ-HW-3698" in spec
++    assert "SCENARIO-HW-3698" in spec
++    assert "experiment_3698_kv260_continuity_v25.json" in spec
++    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'" in spec
++    assert "host SD-card device-node precondition is permanently retired" in spec
++    assert "eight consecutive unreachable" in spec
++
++
++def test_scenario_hw_3698_unreachable_records_blocked_and_eight_milestone_streak() -> None:
++    """SCENARIO-HW-3698: unreachable SSH writes a blocked artifact, not a pass."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_COMMAND: _probe(
++                mod.KV260_SSH_COMMAND,
++                255,
++                stderr="ssh: Could not resolve hostname kv260.local\n",
++            )
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=0.75)
++
++    assert runner.commands == [mod.KV260_SSH_COMMAND]
++    assert payload["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert payload["inference_substrate"] == "hardware_smoke"
++    assert "gguf" not in json.dumps(payload).lower()
++    assert "cuda" not in json.dumps(payload).lower()
++    assert payload["kv260_ssh_reachable"] is False
++    assert payload["kv260_overlay_loaded"] is None
++    assert payload["kv260_continuity_state"] == "blocked_ssh_unreachable"
++    assert payload["consecutive_unreachable_milestones"] == 8
++    assert payload["operator_action_required"] is True
++    assert ".331" in payload["operator_action_item"]
++    assert ".337" in payload["operator_action_item"]
++    assert ".338" in payload["operator_action_item"]
++    assert "8 consecutive milestones" in payload["operator_action_item"]
++    assert payload["preconditions_checked"] == [
++        {
++            "resource": "kv260_ssh",
++            "command": mod.command_to_string(mod.KV260_SSH_COMMAND),
++            "available": False,
++            "exit_code": 255,
++        }
++    ]
++    assert payload["command_probes"]["kv260_xmutil_listapps"] is None
++    assert "/dev/mmcblk" not in json.dumps(payload)
++    assert "/dev/disk" not in json.dumps(payload)
++    _assert_required_fields_and_principles(payload)
++
++
++def test_scenario_hw_3698_reachable_queries_xmutil_and_resets_current_streak() -> None:
++    """SCENARIO-HW-3698: reachable SSH records xmutil overlay continuity state."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_COMMAND: _probe(mod.KV260_SSH_COMMAND, 0),
++            mod.KV260_OVERLAY_COMMAND: _probe(
++                mod.KV260_OVERLAY_COMMAND,
++                0,
++                stdout="kv260-dpu\n",
++            ),
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=1.5)
++
++    assert runner.commands == [mod.KV260_SSH_COMMAND, mod.KV260_OVERLAY_COMMAND]
++    assert payload["honest_verdict"] == mod.REACHABLE_VERDICT
++    assert payload["kv260_ssh_reachable"] is True
++    assert payload["kv260_overlay_loaded"] == "kv260-dpu"
++    assert payload["kv260_continuity_state"] == "reachable_overlay_state_recorded"
++    assert payload["consecutive_unreachable_milestones"] == 0
++    assert payload["operator_action_required"] is False
++    assert payload["operator_action_item"] == "none"
++    overlay_probe = payload["command_probes"]["kv260_xmutil_listapps"]
++    assert overlay_probe["command"] == mod.command_to_string(mod.KV260_OVERLAY_COMMAND)
++    assert overlay_probe["stdout"] == "kv260-dpu\n"
++    _assert_required_fields_and_principles(payload)
++
++
++def test_scenario_hw_3698_reachable_overlay_failure_still_records_reachable_board() -> None:
++    """REQ-HW-3698: SSH reachability is the board precondition; xmutil is state."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_COMMAND: _probe(mod.KV260_SSH_COMMAND, 0),
++            mod.KV260_OVERLAY_COMMAND: _probe(
++                mod.KV260_OVERLAY_COMMAND,
++                1,
++                stderr="xmutil: listapps failed\n",
++            ),
++        }
++    )
++
++    payload = mod.build_artifact(command_runner=runner, duration_s=2.0)
++
++    assert payload["honest_verdict"] == mod.REACHABLE_VERDICT
++    assert payload["kv260_ssh_reachable"] is True
++    assert payload["kv260_overlay_loaded"] is None
++    assert payload["kv260_continuity_state"] == "reachable_overlay_query_failed"
++    assert payload["command_probes"]["kv260_xmutil_listapps"]["exit_code"] == 1
++
++
++def test_req_hw_3698_field_principles_match_required_why_annotations() -> None:
++    """REQ-HW-3698: required fields store values and principles store the why."""
++    assert mod.FIELD_PRINCIPLES == {
++        "honest_verdict": "Terminal prefix for reconciler classification.",
++        "inference_substrate": "SSH-attached board test; per-board duration floor.",
++        "preconditions_checked": (
++            "Records the SSH-reachability check -- the correct KV260 precondition, "
++            "not host SD card."
++        ),
++        "kv260_ssh_reachable": (
++            "The honest board state; an unreachable board is a blocked_*, "
++            "not a fabricated pass."
++        ),
++        "kv260_overlay_loaded": "Continuity state if reachable.",
++        "consecutive_unreachable_milestones": (
++            "Tracks the .331->.337 unreachable streak so a persistent outage "
++            "surfaces as an operator-action item."
++        ),
++        "random_seed": "Determinism precondition.",
++        "reproducibility_checksum": "Drift detection.",
++        "duration_s": "Plausibility floor.",
++    }
++
++
++def test_req_hw_3698_continuity_state_names_reachable_missing_overlay_probe() -> None:
++    """REQ-HW-3698: continuity state names stay distinct from overlay values."""
++    assert mod._continuity_state(True, None) == "reachable_overlay_not_checked"
++
++
++def test_req_hw_3698_write_artifact_preserves_checksum_and_schema(tmp_path: Path) -> None:
++    """REQ-HW-3698: result JSON has required fields, principles, and checksum."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_COMMAND: _probe(
++                mod.KV260_SSH_COMMAND,
++                255,
++                stderr="ssh: connect to host kria port 22: timed out\n",
++            )
++        }
++    )
++
++    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=runner, duration_s=3.0)
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++    assert payload["schema"] == mod.SCHEMA
++    assert payload["experiment_id"] == "exp3698"
++    assert payload["random_seed"] == mod.RANDOM_SEED
++    assert payload["duration_s"] == 3.0
++    assert payload["field_principles"] == mod.FIELD_PRINCIPLES
++    checksum_payload = dict(payload)
++    checksum_payload.pop("reproducibility_checksum")
++    assert payload["reproducibility_checksum"] == mod.sha256_payload(checksum_payload)
++    _assert_required_fields_and_principles(payload)
++
++
++def test_req_hw_3698_run_command_captures_output_and_os_errors() -> None:
++    """REQ-HW-3698: command probes preserve command, output, and failed execs."""
++    ok_probe = mod.run_command(
++        (sys.executable, "-c", "import sys; print('OK'); sys.stderr.write('ERR\\n')")
++    )
++    assert ok_probe.exit_code == 0
++    assert ok_probe.stdout == "OK\n"
++    assert ok_probe.stderr == "ERR\n"
++    assert ok_probe.combined_output == "OK\nERR\n"
++    assert sys.executable in ok_probe.as_dict()["command"]
++
++    missing_probe = mod.run_command(("/definitely/missing/ssh-for-req-hw-3698",))
++    assert missing_probe.exit_code == 127
++    assert missing_probe.command == ("/definitely/missing/ssh-for-req-hw-3698",)
++
++
++def test_scenario_hw_3698_script_wrapper_exists() -> None:
++    """SCENARIO-HW-3698: conductor entrypoint delegates to the module main."""
++    script = Path("scripts/experiment_3698_kv260_continuity_v25.py")
++    text = script.read_text(encoding="utf-8")
++    assert "experiment_3698_kv260_continuity_v25" in text
++    assert "main" in text
+-- 
+2.55.0
+

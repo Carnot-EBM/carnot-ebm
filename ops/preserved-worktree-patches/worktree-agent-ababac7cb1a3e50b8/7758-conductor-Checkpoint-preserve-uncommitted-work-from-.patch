@@ -1,0 +1,43 @@
+From 982e88140f4a836c2c4a624587e2da2e8fdb7d33 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 01:40:31 -0400
+Subject: [PATCH 07758/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ff77d706b5..9eed7fe39b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3842009, "iteration": 20, "phase": "iteration_start", "last_beat": "2026-07-24T05:13:45Z"}
+\ No newline at end of file
++{"pid": 3842009, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-07-24T05:40:28Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1a12988511..7921a6aa09 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14212,3 +14212,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-24 05:09 UTC | Prospective non-forgetting continuous learning thr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5866-adaptive-state-pipeline-shadow-ada |
+ | 2026-07-24 05:11 UTC | Default-off adaptive-state adapter at the verify-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5865-adaptive-state-kernel-requalificatio |
+ | 2026-07-24 05:11 UTC | Prospective non-forgetting continuous learning thr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5866-adaptive-state-pipeline-shadow-ada |
++| 2026-07-24 05:38 UTC | Proof-hardness-controlled exact constraint fixture | OK | 88 passed, 1 warning in 15.50s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 286f6ae394..884cdb108c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3842009, "iteration": 20, "phase": "iteration_start", "started_at": "2026-07-24T05:13:45Z"}
+\ No newline at end of file
++{"pid": 3842009, "iteration": 21, "phase": "iteration_start", "started_at": "2026-07-24T05:40:28Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

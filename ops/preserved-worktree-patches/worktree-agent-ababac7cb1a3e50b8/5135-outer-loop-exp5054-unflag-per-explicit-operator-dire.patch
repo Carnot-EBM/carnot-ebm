@@ -1,0 +1,70 @@
+From 919e01b809399ad7e43d22c2c1939b365b67746f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 20:55:24 -0400
+Subject: [PATCH 05135/11362] =?UTF-8?q?[outer-loop]=20exp5054:=20unflag=20?=
+ =?UTF-8?q?per=20explicit=20operator=20directive=20=E2=80=94=20corrigendum?=
+ =?UTF-8?q?=20documents=20the=20correction?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Operator 'unflag exp5054' after reviewing the linter-fix investigation (commit
+01d9e07e3). Full history preserved (original 3 corrigendum_pending entries kept,
+never deleted); added linter_flag_corrigendum documenting root cause, fix, and
+the fresh re-check result. flagged_adversarial: true -> false.
+
+Live re-check on the actual on-disk file now matches the pre-write simulation:
+0 critical, 1 warn (LEVER_EXERCISE_EVIDENCE_DEGENERATE — the real go-explore
+cold-start finding, correctly left as an honest WARN, not silenced). The
+artifact is no longer quarantined from headline/capstone aggregation; its
+substantive finding (tu93 no new level, honest negative) can now feed
+aggregation normally.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+---
+ ...ent_5054_arc_live_path_self_discovery.json | 23 +++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/results/experiment_5054_arc_live_path_self_discovery.json b/results/experiment_5054_arc_live_path_self_discovery.json
+index c94a27f8d3..cce6154d8a 100644
+--- a/results/experiment_5054_arc_live_path_self_discovery.json
++++ b/results/experiment_5054_arc_live_path_self_discovery.json
+@@ -289,7 +289,7 @@
+   ],
+   "target_game": "tu93",
+   "target_level": 6,
+-  "flagged_adversarial": true,
++  "flagged_adversarial": false,
+   "corrigendum_pending": [
+     {
+       "kind": "DURATION_TOO_SHORT",
+@@ -306,5 +306,24 @@
+       "severity": "warn",
+       "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: live_agent_attempts.[0].go_explore_archive.actions_injected=0; live_agent_attempts.[0].go_explore_archive.prefixes_injected=0"
+     }
+-  ]
++  ],
++  "linter_flag_corrigendum": {
++    "filed_at": "2026-06-30T",
++    "filed_by": "outer-loop (Claude Sonnet 5) per explicit operator directive 'unflag exp5054'",
++    "original_flags": [
++      "DURATION_TOO_SHORT",
++      "METHODOLOGY_MISSING",
++      "LEVER_EXERCISE_EVIDENCE_DEGENERATE"
++    ],
++    "root_cause": "adversarial_verify.py had no recognized substrate for live ARC-agent environment-stepping without LLM invocation (this artifact's declared inference_substrate='offline_arcade_live_agent_runtime_self_discovery_no_llm' was not a recognized canonical value), so it fell through to a raw GGUF-marker substring scan that matched a NESTED, UNUSED model_specs field (live_agent_attempts[0].model_specs.fallback_reasoning_model, invoked=false) and applied the 60s live-model floor to a genuine 2.9s / 35-action offline run (~83ms/action, plausible for pure Python env-stepping, no GGUF/CUDA loaded).",
++    "fix": "Added a 5th canonical inference_substrate class to adversarial_verify.py (ARC_LIVE_AGENT_NO_LLM_SUBSTRATE), wired into duration_floor_for_artifact (10ms floor) and check_methodology_present (exempts model_specs/target_model, still requires random_seed + reproducibility_checksum, both already present on this artifact). CLAUDE.md 'Inference-Substrate Declaration Discipline' table updated with the new row. Committed 01d9e07e3.",
++    "fresh_recheck_result": {
++      "critical_flags": [],
++      "warn_flags": [
++        "LEVER_EXERCISE_EVIDENCE_DEGENERATE"
++      ],
++      "note": "DURATION_TOO_SHORT and METHODOLOGY_MISSING were false positives; both clear. LEVER_EXERCISE_EVIDENCE_DEGENERATE is a REAL, CORRECT finding (NOT corrected -- left as an honest WARN, not quarantined): the go_explore_archive lever had only 1 stored_cell (cold-start; a single 36-action attempt cannot build meaningful archive coverage), so actions_injected=0/prefixes_injected=0 genuinely means the lever never contributed this run. See ops/known-issues.md 'go-explore archive cold-start' finding for the methodology implication."
++    },
++    "corrected_flagged_adversarial": false
++  }
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

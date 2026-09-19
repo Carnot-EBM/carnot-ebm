@@ -1,0 +1,151 @@
+From dffc7f050bca8b61de88d97db74286046da571e6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 02:47:03 -0400
+Subject: [PATCH 10154/11362] [conductor] Pre-gate block: Prospective
+ prequential online-energy A/B
+
+1 of 1 gate(s) failed; first failure: exp6695-online-energy-update-fixture.online_energy_fixture_ready (upstream artifact not found for task id 'exp6695-online-energy-update-fixture')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.audit_findings_ledger_state.json         |  2 +-
+ ops/.run_sentinel_state.json                  |  2 +-
+ ops/.stop_authority_state.json                |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 +
+ ops/conductor-state.json                      |  2 +-
+ ...ent_6696_prequential_online_energy_ab.json | 57 +++++++++++++++++++
+ 7 files changed, 64 insertions(+), 5 deletions(-)
+ create mode 100644 results/experiment_6696_prequential_online_energy_ab.json
+
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index f144e289a9..3083a58b59 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -38,5 +38,5 @@
+   "AUDIT_FINDING_UNTRIAGED|verifier_authenticity_lint.py age-week 0|": "2026-08-27T00:08:48Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T06:15:49Z"
++ "last_scan_utc": "2026-08-28T06:46:48Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 85e711fb93..0aaaef45d4 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T06:44:59Z"
++ "last_scan_utc": "2026-08-28T06:47:03Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index d53e1b684e..6ccdc61251 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T06:15:49Z",
++ "last_scan_utc": "2026-08-28T06:46:48Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3f44953ff2..922cc824ba 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 24, "phase": "iteration_start", "last_beat": "2026-08-28T06:44:59Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-08-28T06:47:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 62c7091573..cc83de0d58 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16686,3 +16686,5 @@ code |
+ | 2026-08-28 06:42 UTC | Energy-guided action backtracking A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
+ | 2026-08-28 06:42 UTC | Cold search, budget, and leakage audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6693-energy-backtracking-ab.backtrackin |
+ | 2026-08-28 06:45 UTC | Energy-guided action backtracking A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
++| 2026-08-28 06:45 UTC | Cold search, budget, and leakage audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6693-energy-backtracking-ab.backtrackin |
++| 2026-08-28 06:47 UTC | Immutable online-energy update and rollback fixtur | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6692-structural-plan-energy) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 25326ce10d..0ba1ec56de 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 24, "phase": "iteration_start", "started_at": "2026-08-28T06:44:59Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 25, "phase": "iteration_start", "started_at": "2026-08-28T06:47:02Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6696_prequential_online_energy_ab.json b/results/experiment_6696_prequential_online_energy_ab.json
+new file mode 100644
+index 0000000000..6ed67ce9e6
+--- /dev/null
++++ b/results/experiment_6696_prequential_online_energy_ab.json
+@@ -0,0 +1,57 @@
++{
++  "experiment": 6696,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-28",
++  "started_at": "2026-08-28T06:47:03.316712+00:00",
++  "finished_at": "2026-08-28T06:47:03.316712+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Prospective prequential online-energy A/B",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "upstream artifact not found for task id 'exp6695-online-energy-update-fixture'",
++  "failed_upstream": "exp6695-online-energy-update-fixture",
++  "failed_field": "online_energy_fixture_ready",
++  "failed_operator": "in",
++  "failed_expected": [
++    true
++  ],
++  "failed_expected_type": "list",
++  "failed_observed": null,
++  "failed_observed_type": "null",
++  "failed_evidence_path": null,
++  "failed_evidence_sha256": null,
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "upstream artifact not found for task id 'exp6695-online-energy-update-fixture'",
++    "failed_upstream": "exp6695-online-energy-update-fixture",
++    "failed_field": "online_energy_fixture_ready",
++    "failed_operator": "in",
++    "failed_expected": [
++      true
++    ],
++    "failed_expected_type": "list",
++    "failed_observed": null,
++    "failed_observed_type": "null",
++    "failed_evidence_path": null,
++    "failed_evidence_sha256": null
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6695-online-energy-update-fixture.online_energy_fixture_ready (upstream artifact not found for task id 'exp6695-online-energy-update-fixture')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6695-online-energy-update-fixture",
++      "artifact_field": "online_energy_fixture_ready",
++      "op": "in",
++      "expected": [
++        true
++      ],
++      "expected_type": "list",
++      "actual": null,
++      "actual_type": "null",
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6695-online-energy-update-fixture'",
++      "artifact_path": null,
++      "artifact_sha256": null
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

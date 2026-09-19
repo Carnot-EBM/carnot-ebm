@@ -1,0 +1,94 @@
+From ae348a0a0c7a4d13222f8ff0fb96ca84983df5db Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 06:19:58 -0400
+Subject: [PATCH 11019/11171] Record an unstamped CRITICAL, and the boundary of
+ what I checked
+
+experiment_6973 reads as live-CRITICAL with no flagged_adversarial stamp, caught
+by summarize_artifact's own gap warning. Its verdict_class is partial and it has
+no status.
+
+Established: _log_experiment_completion returns on a verdict rejection about two
+lines before it calls _check_auroc_anomaly, so a verdict-rejected task does not
+reach the post-completion detectors.
+
+Not established, and recorded as not established: where flagged_adversarial is
+actually stamped. Line 3502 only reads it. Whether stamping shares that early
+return is unverified.
+
+Also recorded because it nearly became a false negative: my first corpus scan
+for other instances was guarded on hasattr(av, "verify_artifact_file"), which is
+false, so it silently produced an empty result that would have read as "no other
+cases". Same guarded-call mistake as earlier in this session. Caught before
+reporting, and it is why the corpus question stays open rather than answered.
+
+It matters if systematic: an artifact that earns a CRITICAL and never gets
+stamped is invisible to every consumer filtering on flagged_adversarial,
+including capstones and evidence tables, which is the one thing the fabrication
+gate exists to prevent.
+
+Closes with the positive half. REQ-CONDUCTOR-VERDICT-3 fired correctly in
+production for the first time: the 10:15Z FAIL reads artifact_verdict_not_terminal
+where it would previously have claimed the artifact was never written.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 9e60b38501..018b46cb7f 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -21383,3 +21383,47 @@ isolation improves the diagnosis of a failure that should stop happening. Do bot
+ 
+ **Cross-reference:** the parent finding — that the live eval keeps not recording what its consumers
+ need, three times in three days — is the 2026-09-04 entry above.
++
++## 2026-09-04 — a verdict-rejected artifact can carry a live CRITICAL with no fabrication stamp
++
++`results/experiment_6973_lease_aware_gguf_runtime.json` reads, through
++`scripts/summarize_artifact.py`:
++
++```
++flagged_adversarial (stamped): None   |   LIVE re-check: CRITICAL
++*** GAP: live verifier flags CRITICAL but artifact is NOT stamped flagged_adversarial.
++    Do not cite as clean. ***
++```
++
++That gap warning is the summarizer doing exactly the job it was built for. The artifact has
++`verdict_class: partial`, `honest_verdict: partial_lease_aware_gguf_runtime`, and no `status`.
++
++**What is established.** `_log_experiment_completion` returns on a verdict rejection BEFORE it runs
++its post-completion detectors — the early return sits about two lines above the
++`_check_auroc_anomaly(task)` call. So a task rejected on its verdict does not reach those detectors.
++
++**What is NOT established, and I am saying so rather than inferring it.** I have not found where
++`flagged_adversarial` is actually stamped. `research_conductor.py:3502` only READS it
++(`_artifact_flagged_adversarial`). Whether the stamping path shares the early return, or lives
++somewhere the FAIL never reaches for a different reason, is unverified. A first attempt to scan
++today's artifacts for the same shape silently did nothing — the check was guarded on
++`hasattr(av, "verify_artifact_file")`, which is false, so it produced an empty result that would
++have read as "no other instances". Caught before reporting; it is the same guarded-call mistake made
++earlier in this session and is why the corpus question stays open.
++
++**Why it matters if it is systematic.** The fabrication gate's whole purpose is that a quarantined
++result cannot be cited. An artifact that earns a CRITICAL but never gets stamped is invisible to
++every consumer that filters on `flagged_adversarial`, including capstones and evidence tables. The
++summarizer catches it only for whoever happens to read that one artifact.
++
++**Next step, cheap:** find the stamping site, then re-run the corpus scan properly — comparing
++`flagged_adversarial` against a live `adversarial_verify` pass over recent artifacts, with the call
++actually executing rather than guarded past.
++
++---
++
++**Separately, and positively: REQ-CONDUCTOR-VERDICT-3 fired correctly in production for the first
++time.** The 10:15Z FAIL on exp6973 reads `artifact_verdict_not_terminal (deliverable=...)`. Before
++yesterday's fix that same rejection would have logged `artifact_not_updated_past_bootstrap`, which
++asserts the artifact was never written — false here, as it was written and is complete. The token
++now names the path actually taken.
+-- 
+2.55.0
+

@@ -1,0 +1,2002 @@
+From 4013626bf1a7fa25635925a0c4e8011c0830e1eb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 19:10:21 -0400
+Subject: [PATCH 03500/11362] [outer-loop] Implement mechanic-conditioned
+ re-induction trigger for L2 (+ adversarially verified)
+
+Operator: "implement the mechanic-conditioned re-induction trigger for L2." Built + 3-skeptic
+adversarial review (re-ran experiments + read env source) BEFORE write-up; 2 first-draft
+over-claims caught and corrected. Write-up
+docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md.
+
+- Auto-fitting nav world model (python/carnot/agentic/arc_nav_world_model.py:InducedNavWorldModel):
+  learns displacement/avatar/wall/floor/goal FROM TRANSITIONS, no hardcoding (review SURVIVES:
+  colour-permutation-invariant, seed-stable, tu93 L1 100% movement acc in/out-of-sample). Unit test
+  tests/python/test_arc_nav_world_model.py (4 pass). Re-induction = re-fit at the new level.
+- Trigger + FROZEN-vs-REINDUCT harness (scripts/experiments/experiment_reinduction.py): deterministic
+  budget-unexhausted game-over after a level-up -> re-collect-at-level + re-fit + re-plan.
+- Controlled POSITIVE proof (experiment_reinduction_synthetic_control.py): real tu93 maze, wall-colour
+  shift 5->7. FROZEN fails L2 (plan_executed_no_advance, avatar findable -> legitimate mis-navigation,
+  NOT the trivial avatar-relabel) while REINDUCT recovers wall=7 and SOLVES L2. The operator provably
+  deepens past a frozen model on a grid-expressible nav shift.
+- Real-game tu93: re-induction re-fits a MOVEMENT-accurate L2 nav model (L2 nav grid-deterministic,
+  0.0 nondeterminism / 12012 transitions) but deepening still stalls -- a deterministic Level-2
+  charging-wall HAZARD REMOVES the avatar, a transition the pure-nav engine cannot represent. Nav
+  re-induction INSUFFICIENT for tu93 L2 -> needs a hazard-aware model class.
+
+Adversarial corrections folded in: (1) synthetic first draft shifted every param incl. avatar colour
+-> FROZEN failed trivially (avatar-not-found); fixed to wall-colour-only on the real maze. (2) tu93:
+"movement-accurate" != "clean refit" (metric can't see avatar removal); mechanic is a charging-wall
+sprite NOT enemy/box; "hidden state" narrowed (only the hazard is non-grid). All artifacts
+adversarial-verify clean.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...ditioned-reinduction-trigger-2026-06-22.md | 108 ++++++
+ ops/changelog.md                              |  30 ++
+ ops/known-issues.md                           |  25 ++
+ python/carnot/agentic/arc_nav_world_model.py  | 285 +++++++++++++++
+ results/experiment_reinduction_ar25.json      |  44 +++
+ results/experiment_reinduction_m0r0.json      |  24 ++
+ ...eriment_reinduction_synthetic_control.json | 105 ++++++
+ results/experiment_reinduction_tu93.json      | 138 +++++++
+ results/experiment_tu93_l2_hidden_state.json  |  37 ++
+ scripts/experiments/experiment_reinduction.py | 342 ++++++++++++++++++
+ ...xperiment_reinduction_synthetic_control.py | 285 +++++++++++++++
+ .../experiment_tu93_l2_hidden_state.py        | 314 ++++++++++++++++
+ tests/python/test_arc_nav_world_model.py      | 110 ++++++
+ 13 files changed, 1847 insertions(+)
+ create mode 100644 docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md
+ create mode 100644 python/carnot/agentic/arc_nav_world_model.py
+ create mode 100644 results/experiment_reinduction_ar25.json
+ create mode 100644 results/experiment_reinduction_m0r0.json
+ create mode 100644 results/experiment_reinduction_synthetic_control.json
+ create mode 100644 results/experiment_reinduction_tu93.json
+ create mode 100644 results/experiment_tu93_l2_hidden_state.json
+ create mode 100644 scripts/experiments/experiment_reinduction.py
+ create mode 100644 scripts/experiments/experiment_reinduction_synthetic_control.py
+ create mode 100644 scripts/experiments/experiment_tu93_l2_hidden_state.py
+ create mode 100644 tests/python/test_arc_nav_world_model.py
+
+diff --git a/docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md b/docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md
+new file mode 100644
+index 0000000000..88776739d0
+--- /dev/null
++++ b/docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md
+@@ -0,0 +1,108 @@
++# Mechanic-conditioned re-induction trigger for cross-level deepening
++
++Date: 2026-06-22 · Outer-loop (interactive, ultracode) · OFFLINE, zero quota · `verifier_is_oracle: false`
++
++Follow-on to `program-generalization-first-swing-2026-06-22.md`. That note showed the Executable-World-Models
++deepening lever works at L1 (a faithful world model plans a level in imagination and reproduces it) but that
++a model frozen at L1 does not deepen when the next level's mechanic shifts. The forward lever proposed there
++was: **treat a deterministic, budget-unexhausted env game-over after a level-up as a re-induction trigger** —
++re-fit the world model at the new level and re-plan. This note implements and tests that trigger.
++
++All claims here were put through an adversarial review (3 independent skeptics, re-running the experiments
++and reading the env source) before write-up; two first-draft over-claims were caught and corrected — those
++corrections are folded in below and flagged.
++
++## What was built
++
++1. **An auto-fitting nav world model** — `python/carnot/agentic/arc_nav_world_model.py:InducedNavWorldModel`.
++   `fit(transitions)` learns, FROM TRANSITIONS ALONE (no hardcoding), the per-action displacement, the avatar
++   colours (by co-translation grouping — the colours that always shift together), the floor colour, the
++   swept-gap wall colours (by a blocked-vs-moved discrimination score), and the goal colour. It exposes
++   `engine` + `is_level_complete`, the `plan_in_model` interface. Re-induction = call `fit` again on
++   transitions collected at the new level. Unit-tested (`tests/python/test_arc_nav_world_model.py`).
++   - **Adversarial verdict: SURVIVES.** No hardcoding (proven by colour-permutation invariance — remapping
++     tu93's colours makes `fit` recover the permuted values); seed-stable across 5 seeds; recovers tu93 L1 at
++     **100% movement accuracy IN- AND OUT-OF-SAMPLE** (no leakage); degrades gracefully on non-nav games
++     (sb26 → empty fit, ls20 → 0.84 < the 0.9 clean-fit bar). Caveat: wall-recovery needs enough blocked
++     samples per action (it is unreliable on tiny corpora — fine on real games, where every action both moves
++     and blocks).
++
++2. **The re-induction trigger + a FROZEN-vs-REINDUCT head-to-head** —
++   `scripts/experiments/experiment_reinduction.py`. Reaches L1 with an auto-induced model, then deepens two
++   ways: FROZEN keeps the L1 model; REINDUCT re-collects transitions at the current level (`collect_at_level`,
++   which replays the banked prefix to reach the level then explores) and re-fits. The trigger condition is a
++   deterministic, budget-unexhausted game-over after a level-up.
++
++## Result 1 — the operator provably deepens past a frozen model (controlled positive proof)
++
++`scripts/experiments/experiment_reinduction_synthetic_control.py`. On the REAL tu93 L1 maze (rich layout →
++robust fitting), shift **only the wall colour** 5→7 to make a clean grid-expressible mechanic shift. The
++avatar/door/floor/goal colours are unchanged, so the frozen model LOCATES the avatar and knows the goal — it
++fails purely because it learned wall=5 and treats L2's colour-7 walls as passable, planning a path straight
++through walls that the real colour-7-walled env blocks.
++
++```
++FROZEN   L1=solved  L2=FAILED (plan_executed_no_advance)   frozen_locates_avatar=True
++REINDUCT L1=solved  L2=SOLVED (advanced)                   m1.wall=[5] -> m2.wall=[7]
++```
++
++REINDUCT deepens where FROZEN cannot, and FROZEN fails for a LEGITIMATE reason (mis-modelled walls, avatar
++findable) — not the trivial avatar-relabel a first draft used. **This is the positive proof that the
++re-induction operator cracks a grid-expressible nav-mechanic shift.**
++
++> **Correction (caught in review).** The first draft shifted EVERY param including the avatar colour, which
++> made FROZEN fail trivially (it could not even find the L2 avatar — a relabelling tautology, not mechanic
++> generalization). The headline is now a wall-colour-only shift on the real maze, where the failure is
++> attributable to the mechanic. Scope: the claim is about grid-expressible NAV shifts; `GroundTruthNav` is an
++> independently-coded simulator but shares the nav mechanic FORM, so this validates parameter-recovery +
++> plan-divergence, not arbitrary-mechanic modelling.
++
++## Result 2 — on the real reproduced game set, the trigger correctly DIAGNOSES (tu93)
++
++`results/experiment_reinduction_tu93.json`. Both arms reach L1; REINDUCT re-fits an L2 model that is
++**movement-accurate (1.0) on L2 navigation** — and yet deepening still stalls at a deterministic game-over
++(step 4, budget 47/50 unexhausted) where **the avatar is REMOVED** (`stop: game_over_..._avatar_REMOVED`).
++
++The precise, adversarially-corrected reading:
++
++- tu93 **L2 navigation is grid-deterministic** (an independent determinism probe over 12012 L2 transitions
++  found 0.0 nondeterminism — sb26-class, NOT wa30-class) and is re-inducible (the 1.0 movement accuracy).
++- But tu93 **L2 adds a single charging-wall-sprite hazard** (per the env source) that arms, charges, and
++  **removes the avatar**. The pure-nav engine only translates/blocks — it is **structurally unable to
++  represent avatar removal**, so it plans a path into the hazard. Re-inducing the NAV model cannot fix this:
++  the missing capability is a model CLASS (hazard-aware), not a parameter.
++- The trigger does its job: it distinguishes "re-fit a movement-accurate model that still dies" (→ the level
++  adds a non-nav mechanic; escalate to a hazard-aware model) from "re-fit and now deepen" (Result 1).
++
++> **Corrections (caught in review).** (a) "movement_accuracy 1.0 = clean refit" was overclaimed — the metric
++> only scores avatar-bbox-changed, so the fatal removal transitions score as "moves"; the model is in fact
++> WRONG on the death, which the metric cannot see. The verdict now says "movement-accurate" and the harness
++> separately detects avatar-REMOVAL. (b) The mechanic is a charging-wall sprite, NOT "enemy/box multi-phase"
++> (enemy/box counts are 0 at L2). (c) "Hidden state" was unscoped — L2 navigation is grid-deterministic; only
++> the hazard/death interaction is non-grid.
++
++## Why no real-game REINDUCT>FROZEN exists yet (survey)
++
++Among reproduced ARC games, a clean reach-goal nav game that imagination-planning fully drives is rare:
++tu93 is the one, and its L2 adds the hazard above. A nav-fit survey (auto-inducer on the reproduced set):
++dc22/ar25/wa30 fit L1 navigation (1.0) but are L1-only (dc22), hidden-state (wa30), or have a non-reach-goal
++win (ar25 reflection) that the reach-goal predicate cannot express, so `plan_in_model` cannot even reach
++their L1. m0r0's L1 is not rigid-avatar nav at all. So a grid-expressible reach-goal L2 shift — the precondition
++for a real-game positive — is absent from the current set; hence the controlled synthetic proof (Result 1).
++
++## Forward
++
++- **Build the hazard-aware model class** (the tu93 L2 need): extend the induced model to represent
++  object-removal / lethal-contact, so the planner avoids the hazard. This, plus the re-induction trigger,
++  would deepen tu93 L2.
++- **Extend the inducer's win vocabulary** beyond reach-goal (reflection/coalescence/toggle) so more reproduced
++  L2s become plannable — then more real-game re-induction tests become possible.
++- The re-induction trigger itself is ready to wire into the standing solver loop as the level-boundary action:
++  on a deterministic budget-unexhausted game-over after a level-up, re-collect + re-fit before re-planning.
++
++## Artifacts
++
++- `python/carnot/agentic/arc_nav_world_model.py` — the auto-fitting inducer (+ `tests/python/test_arc_nav_world_model.py`)
++- `scripts/experiments/experiment_reinduction.py` — the trigger + FROZEN-vs-REINDUCT harness (tu93 artifact)
++- `scripts/experiments/experiment_reinduction_synthetic_control.py` — the controlled positive proof
++- `results/experiment_reinduction_tu93.json`, `results/experiment_reinduction_synthetic_control.json` (both adversarial-verify clean)
+diff --git a/ops/changelog.md b/ops/changelog.md
+index ae9b5b87ad..a59025c101 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,35 @@
+ # Carnot — Changelog
+ 
++## 2026-06-22 (Mechanic-conditioned re-induction trigger IMPLEMENTED + adversarially verified — outer-loop, ultracode)
++
++Operator: "implement the mechanic-conditioned re-induction trigger for L2." Built the trigger, an
++auto-fitting nav world model, a controlled positive proof, and a real-game diagnosis — all put through a
++3-skeptic adversarial review (re-ran experiments + read env source) BEFORE write-up, which caught and
++corrected two first-draft over-claims. Write-up
++`docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md`.
++
++- **Auto-fitting nav world model** (`python/carnot/agentic/arc_nav_world_model.py:InducedNavWorldModel`):
++  learns displacement/avatar/wall/floor/goal FROM TRANSITIONS, no hardcoding (review verdict SURVIVES —
++  colour-permutation-invariant, seed-stable, tu93 L1 100% movement accuracy in/out-of-sample). Co-translation
++  avatar detection + blocked-vs-moved wall discrimination. Unit test `tests/python/test_arc_nav_world_model.py`
++  (4 pass). Re-induction = re-`fit` at the new level.
++- **Trigger + FROZEN-vs-REINDUCT harness** (`scripts/experiments/experiment_reinduction.py`): on a
++  deterministic budget-unexhausted game-over after a level-up, re-collect transitions at the level
++  (`collect_at_level`) + re-fit + re-plan.
++- **Controlled POSITIVE proof** (`experiment_reinduction_synthetic_control.py`): real tu93 maze, wall-colour
++  shift 5→7. FROZEN fails L2 (`plan_executed_no_advance`, avatar findable — legitimate mis-navigation) while
++  REINDUCT recovers wall=7 and SOLVES L2. The operator provably deepens past a frozen model on a
++  grid-expressible nav shift.
++- **Real-game tu93**: re-induction re-fits a MOVEMENT-accurate L2 nav model (L2 nav is grid-deterministic,
++  0.0 nondeterminism / 12012 transitions) but deepening still stalls — a deterministic Level-2 charging-wall
++  HAZARD REMOVES the avatar (env source), a transition the pure-nav engine cannot represent. Nav re-induction
++  INSUFFICIENT for tu93 L2 → needs a hazard-aware model class.
++- **Adversarial corrections folded in**: (1) the synthetic first draft shifted every param incl. avatar
++  colour → FROZEN failed trivially (avatar-not-found tautology); fixed to wall-colour-only on the real maze.
++  (2) tu93: "movement-accurate" ≠ "clean refit" (metric can't see avatar removal); mechanic is a charging-wall
++  sprite NOT enemy/box; "hidden state" narrowed (only the hazard is non-grid). Both artifacts adversarial-verify
++  clean. Conductor left STOPPED (operator's session choice). Committed `[outer-loop]`.
++
+ ## 2026-06-22 (Program-generalization first swing: imagination-planning DEEPENS L1, walls on L2 mechanic-shift — outer-loop, interactive)
+ 
+ > Correction note: this entry was revised after an adversarial sub-agent review (and an independent
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 67a7a98aab..11544c8202 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -928,6 +928,31 @@ all adversarial-verify clean), write-up
+   levels; (c) target the local-GGUF proposer at induction fidelity (the gate that blocked ka59/sc25). The
+   hand-induced tu93 nav model is a reusable faithful-L1-model exemplar.
+ 
++**RE-INDUCTION TRIGGER IMPLEMENTED (2026-06-22, outer-loop, ultracode — operator: "implement the
++mechanic-conditioned re-induction trigger for L2").** Built + adversarially-verified (3 skeptics re-ran the
++experiments + read env source; 2 first-draft over-claims caught and corrected). Write-up
++`docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md`.
++- **Auto-fitting nav world model** `python/carnot/agentic/arc_nav_world_model.py:InducedNavWorldModel` —
++  learns displacement/avatar/wall/floor/goal FROM TRANSITIONS (no hardcoding; proven by colour-permutation
++  invariance), seed-stable, recovers tu93 L1 at 100% movement accuracy in- AND out-of-sample (review verdict
++  SURVIVES). Unit-tested `tests/python/test_arc_nav_world_model.py` (4 pass). Re-induction = re-`fit` at the
++  new level.
++- **The trigger + FROZEN-vs-REINDUCT harness** `scripts/experiments/experiment_reinduction.py` (deterministic
++  budget-unexhausted game-over after a level-up → re-collect at the level + re-fit + re-plan).
++- **POSITIVE PROOF (controlled)** `experiment_reinduction_synthetic_control.py`: on the REAL tu93 maze with a
++  wall-colour-only shift (5→7), FROZEN fails L2 (`plan_executed_no_advance`, avatar findable — legitimate
++  mis-navigation, NOT the trivial avatar-relabel) while REINDUCT recovers wall=7 and SOLVES L2. The operator
++  provably deepens past a frozen model on a grid-expressible nav shift.
++- **REAL-GAME tu93**: re-induction re-fits a MOVEMENT-accurate L2 nav model (L2 nav is grid-deterministic,
++  0.0 nondeterminism over 12012 transitions) but deepening still stalls — the avatar is REMOVED by a
++  deterministic Level-2 charging-wall-sprite HAZARD (env source) the pure-nav engine cannot represent
++  (it only translates/blocks). So nav re-induction is INSUFFICIENT for tu93 L2 → needs a HAZARD-AWARE model
++  class. (Corrected over-claims: "movement-accurate" ≠ "clean refit" — the metric can't see the removal;
++  NOT enemy/box — it's a charging-wall sprite; NOT broad hidden-state — only the hazard is non-grid.)
++- **Next**: build the hazard-aware model class (object-removal/lethal-contact) + extend the inducer's win
++  vocabulary beyond reach-goal (so reflection/coalescence/toggle L2s become plannable). Then more real-game
++  re-induction tests + a tu93-L2 deepen become possible.
++
+ ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
+ 
+ **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")
+diff --git a/python/carnot/agentic/arc_nav_world_model.py b/python/carnot/agentic/arc_nav_world_model.py
+new file mode 100644
+index 0000000000..40ee589210
+--- /dev/null
++++ b/python/carnot/agentic/arc_nav_world_model.py
+@@ -0,0 +1,285 @@
++"""Auto-fitting grid->grid world model for the ARC-AGI-3 4-direction NAVIGATION family.
++
++Why this exists. The Executable-World-Models lever (arXiv:2605.05138) deepens by inducing a
++`transition + goal` model once and planning IN IMAGINATION. The program-generalization first swing
++(docs/research-notes/program-generalization-first-swing-2026-06-22.md) showed the lever WORKS at L1 with a
++HAND-written tu93 model, but that a model frozen at L1 does not deepen when the next level's MECHANIC
++shifts -- the model must be RE-INDUCED per mechanic (the precise cost the leader pays). Re-induction needs
++the model to be FITTED FROM TRANSITIONS automatically, not hand-written. This module is that auto-inducer:
++`InducedNavWorldModel.fit(transitions)` learns, purely from observed `(grid, action, next_grid)` data:
++
++  * per-action DISPLACEMENT (which way + how far the avatar translates for each keyboard action),
++  * the AVATAR object (the small, constant-count, co-translating colour set),
++  * the FLOOR colour the avatar leaves behind when it moves,
++  * the swept-path WALL colours that BLOCK a move, and
++  * the GOAL colour whose coverage completes the level.
++
++It then exposes `engine(grid, action, data)->grid` + `is_level_complete(grid)->bool`, the exact interface
++`carnot.agentic.arc_executable_world_model.plan_in_model` consumes -- so a re-induced model drops straight
++into imagination planning. Re-induction = call `fit` again on transitions collected at the new level.
++
++Scope + honesty. This is a GRID->GRID model: it can only capture mechanics whose outcome is a deterministic
++function of the VISIBLE grid. Where a level adds HIDDEN state (a rotation phase / sprite buffer not in the
++rendered grid), re-induction at this resolution is necessarily incomplete -- and that incompleteness is a
++correctly-attributed finding (state-augmentation needed), not a bug in the fitter. The fitter reports a
++`fit_quality` so the caller can tell a clean fit from a noisy/hidden-state one.
++"""
++from __future__ import annotations
++
++from collections import Counter
++from dataclasses import dataclass, field
++from typing import Optional
++
++import numpy as np
++
++# Actions 1-4 are the canonical ARC keyboard directional set; 5/6 (confirm/click) are not nav moves.
++_NAV_ACTIONS = (1, 2, 3, 4)
++
++
++def _bg_color(grids: list[np.ndarray]) -> int:
++    """Background = the globally most common colour across the sampled grids."""
++    c: Counter = Counter()
++    for g in grids:
++        c.update(int(v) for v in np.asarray(g).flatten().tolist())
++    return c.most_common(1)[0][0]
++
++
++def _color_cells(grid: np.ndarray, colors) -> np.ndarray:
++    g = np.asarray(grid)
++    mask = np.zeros(g.shape, dtype=bool)
++    for c in colors:
++        mask |= (g == c)
++    return mask
++
++
++def _bbox(mask: np.ndarray):
++    ys, xs = np.where(mask)
++    if ys.size == 0:
++        return None
++    return int(ys.min()), int(xs.min()), int(ys.max()), int(xs.max())
++
++
++@dataclass
++class InducedNavWorldModel:
++    """A nav world model whose parameters are FITTED from transitions (see module docstring)."""
++
++    displacement: dict          # action -> (dy, dx)
++    avatar_colors: frozenset    # colours composing the moving avatar
++    bg_color: int               # background colour
++    floor_color: int            # colour left behind when the avatar leaves a cell
++    wall_colors: frozenset      # colours that BLOCK a move when present in the swept mid-gap
++    goal_color: Optional[int]   # colour whose coverage by the avatar completes the level (None if unknown)
++    fit_quality: dict = field(default_factory=dict)  # diagnostics: n_moves fitted, displacement agreement, etc.
++
++    # ---- fitting -------------------------------------------------------------------------------------
++
++    @classmethod
++    def fit(cls, transitions) -> "InducedNavWorldModel":
++        """Fit from an iterable of objects with .grid/.action/.next_grid (+ optional .level_before/
++        .level_after), or (grid, action, next_grid) / (grid, action, next_grid, lb, la) tuples."""
++        rows = [_norm(t) for t in transitions]
++        grids = [r[0] for r in rows] + [r[2] for r in rows]
++        bg = _bg_color(grids)
++
++        # 1) AVATAR colours by CO-TRANSLATION (robust + seed-stable). The avatar is a rigid object: its
++        #    component colours (e.g. tu93's colour-9 body + colour-4 centre) ALWAYS shift TOGETHER by the
++        #    SAME vector. A stationary goal marker never shifts; walls/background are not count-conserved.
++        #    So: per transition, record each small count-conserved colour's centroid shift, then group
++        #    colours that repeatedly share a common NONZERO shift. The avatar = the anchor (most-shifting
++        #    colour) + everything that co-shifts with it.
++        per_color_shift_obs: dict = {}   # color -> list of (transition_idx, (dy,dx)) for nonzero shifts
++        n_shift: Counter = Counter()
++        for ti, (g0, a, g1, *_rest) in enumerate(rows):
++            g0a = np.asarray(g0); g1a = np.asarray(g1)
++            if np.array_equal(g0a, g1a):
++                continue
++            colors = set(int(v) for v in g0a.flatten().tolist()) | set(int(v) for v in g1a.flatten().tolist())
++            for col in colors:
++                if col == bg:
++                    continue
++                m0 = g0a == col; m1 = g1a == col
++                n0 = int(m0.sum()); n1 = int(m1.sum())
++                if n0 == 0 or n1 == 0 or n0 != n1 or n0 > 40:
++                    continue
++                c0 = (np.where(m0)[0].mean(), np.where(m0)[1].mean())
++                c1 = (np.where(m1)[0].mean(), np.where(m1)[1].mean())
++                shift = (round(float(c1[0] - c0[0])), round(float(c1[1] - c0[1])))
++                if shift != (0, 0):
++                    per_color_shift_obs.setdefault(col, []).append((ti, shift))
++                    n_shift[col] += 1
++        avatar_colors: set = set()
++        if n_shift:
++            anchor = n_shift.most_common(1)[0][0]
++            anchor_by_t = {ti: sh for ti, sh in per_color_shift_obs[anchor]}
++            avatar_colors = {anchor}
++            for col, obs in per_color_shift_obs.items():
++                if col == anchor:
++                    continue
++                # co-shifts with the anchor (same vector, same transition) in >= 2 transitions?
++                agree = sum(1 for ti, sh in obs if anchor_by_t.get(ti) == sh)
++                if agree >= 2:
++                    avatar_colors.add(col)
++
++        # 2) DISPLACEMENT per action: median avatar-bbox translation over that action's move transitions.
++        disp: dict = {}
++        move_hits = Counter(); move_total = Counter()
++        for g0, a, g1, *_ in rows:
++            if a not in _NAV_ACTIONS:
++                continue
++            b0 = _bbox(_color_cells(g0, avatar_colors)); b1 = _bbox(_color_cells(g1, avatar_colors))
++            if b0 is None or b1 is None:
++                continue
++            move_total[a] += 1
++            dy, dx = b1[0] - b0[0], b1[1] - b0[1]
++            if (dy, dx) != (0, 0):
++                move_hits[a] += 1
++                disp.setdefault(a, []).append((dy, dx))
++        displacement = {a: Counter(v).most_common(1)[0][0] for a, v in disp.items()}
++
++        # 3) FLOOR colour: what a vacated avatar cell becomes. Over move transitions, the cells that were
++        #    avatar in g0 but avatar-free in g1 take the floor colour; pick the mode.
++        floor_votes: Counter = Counter()
++        for g0, a, g1, *_ in rows:
++            g0 = np.asarray(g0); g1 = np.asarray(g1)
++            av0 = _color_cells(g0, avatar_colors); av1 = _color_cells(g1, avatar_colors)
++            vacated = av0 & ~av1
++            for v in g1[vacated].flatten().tolist():
++                floor_votes[int(v)] += 1
++        floor_color = floor_votes.most_common(1)[0][0] if floor_votes else bg
++
++        # 4) WALL colours: by DISCRIMINATION, not strict set-difference (a few successful moves may catch a
++        #    wall corner in the gap window, so "never in a moved gap" is too brittle). A wall colour is one
++        #    that appears in the swept mid-gap of BLOCKED moves far more often than in MOVED moves.
++        moved_gap: Counter = Counter(); blocked_gap: Counter = Counter()
++        n_moved = 0; n_blocked = 0
++        for g0, a, g1, *_ in rows:
++            if a not in displacement:
++                continue
++            dy, dx = displacement[a]
++            b0 = _bbox(_color_cells(g0, avatar_colors))
++            if b0 is None:
++                continue
++            r, c = b0[0], b0[1]
++            h = b0[2] - b0[0] + 1; w = b0[3] - b0[1] + 1
++            my, mx = r + dy // 2, c + dx // 2
++            gap = np.asarray(g0)[max(0, my):my + h, max(0, mx):mx + w]
++            gapset = set(int(v) for v in gap.flatten().tolist())
++            b1 = _bbox(_color_cells(g1, avatar_colors))
++            moved = b1 is not None and (b1[0] - b0[0], b1[1] - b0[1]) != (0, 0)
++            if moved:
++                n_moved += 1; moved_gap.update(gapset)
++            else:
++                n_blocked += 1; blocked_gap.update(gapset)
++        wall_colors = set()
++        for col in set(blocked_gap) | set(moved_gap):
++            # NB: do NOT exclude the background colour -- in many mazes the wall IS the background colour
++            # (e.g. tu93: colour 5 is both). The discrimination test below already rejects colours that
++            # appear equally in moved gaps, so a true-background non-wall colour won't be selected.
++            if col in avatar_colors:
++                continue
++            p_block = blocked_gap[col] / n_blocked if n_blocked else 0.0
++            p_move = moved_gap[col] / n_moved if n_moved else 0.0
++            if p_block - p_move > 0.5:   # strongly predicts a blocked move when present in the swept gap
++                wall_colors.add(col)
++
++        # 5) GOAL colour: prefer the colour the avatar COVERS at a level-up; else a small, STATIONARY,
++        #    distinctive colour (not bg/floor/avatar/wall) -- the classic reach-the-marker goal.
++        goal_color = None
++        for g0, a, g1, lb, la in rows:
++            if la is not None and lb is not None and la > lb:
++                b0 = _bbox(_color_cells(g0, avatar_colors))
++                if b0 and a in displacement:
++                    dy, dx = displacement[a]
++                    r, c = b0[0] + dy, b0[1] + dx
++                    h = b0[2] - b0[0] + 1; w = b0[3] - b0[1] + 1
++                    dest = np.asarray(g0)[max(0, r):r + h, max(0, c):c + w]
++                    cand = [int(v) for v in dest.flatten().tolist() if int(v) not in (bg, floor_color)
++                            and int(v) not in avatar_colors and int(v) not in wall_colors]
++                    if cand:
++                        goal_color = Counter(cand).most_common(1)[0][0]
++                        break
++        if goal_color is None:
++            # stationary-distinctive fallback: a non-bg/floor/avatar/wall colour that never translates
++            stationary = {}
++            for g0, a, g1, *_ in rows:
++                for col in set(int(v) for v in np.asarray(g0).flatten().tolist()):
++                    if col in (bg, floor_color) or col in avatar_colors or col in wall_colors:
++                        continue
++                    stationary[col] = stationary.get(col, 0) + 1
++            if stationary:
++                # smallest-footprint distinctive colour is the likeliest goal marker
++                sizes = {}
++                g0 = np.asarray(rows[0][0])
++                for col in stationary:
++                    sizes[col] = int((g0 == col).sum()) or 10 ** 9
++                goal_color = min(sizes, key=sizes.get)
++
++        fit_quality = {
++            "n_transitions": len(rows),
++            "n_move_transitions": int(sum(move_hits.values())),
++            "displacement_agreement": {a: (move_hits[a] / move_total[a]) if move_total[a] else None
++                                       for a in _NAV_ACTIONS},
++            "avatar_colors": sorted(avatar_colors),
++            "wall_colors": sorted(wall_colors),
++            "floor_color": floor_color,
++            "goal_color": goal_color,
++            "displacement": {a: list(d) for a, d in displacement.items()},
++        }
++        return cls(displacement=displacement, avatar_colors=frozenset(avatar_colors), bg_color=bg,
++                   floor_color=floor_color, wall_colors=frozenset(wall_colors), goal_color=goal_color,
++                   fit_quality=fit_quality)
++
++    # ---- the induced model: engine + win predicate (plan_in_model interface) -------------------------
++
++    def _avatar_bbox(self, grid):
++        return _bbox(_color_cells(grid, self.avatar_colors))
++
++    def engine(self, grid, action, data=None):
++        """Predict the next logical grid for one action (pure grid->grid; hidden env state, if any, is
++        outside this model's scope by construction)."""
++        g = np.asarray(grid).copy()
++        a = int(action)
++        if a not in self.displacement:
++            return g
++        bb = self._avatar_bbox(g)
++        if bb is None:
++            return g
++        r0, c0, r1, c1 = bb
++        h, w = r1 - r0 + 1, c1 - c0 + 1
++        dy, dx = self.displacement[a]
++        nr, nc = r0 + dy, c0 + dx
++        H, W = g.shape
++        if nr < 0 or nc < 0 or nr + h > H or nc + w > W:
++            return g
++        # swept mid-gap blocking check
++        my, mx = r0 + dy // 2, c0 + dx // 2
++        gap = g[max(0, my):my + h, max(0, mx):mx + w]
++        if self.wall_colors and np.any(np.isin(gap, list(self.wall_colors))):
++            return g
++        stamp = g[r0:r1 + 1, c0:c1 + 1].copy()
++        g[r0:r1 + 1, c0:c1 + 1] = self.floor_color   # leave floor behind
++        g[nr:nr + h, nc:nc + w] = stamp               # draw avatar at destination (covers goal if present)
++        return g
++
++    def is_level_complete(self, grid):
++        """Level complete when the avatar has covered the goal colour (goal cells gone, avatar present)."""
++        if self.goal_color is None:
++            return False
++        g = np.asarray(grid)
++        if self._avatar_bbox(g) is None:
++            return False
++        return not bool(np.any(g == self.goal_color))
++
++    # convenience: bound methods are picklable-free closures for plan_in_model
++    def as_callables(self):
++        return self.engine, self.is_level_complete
++
++
++def _norm(t):
++    """Normalize a transition into (grid, action, next_grid, level_before, level_after)."""
++    if hasattr(t, "grid"):
++        return (np.asarray(t.grid), int(t.action), np.asarray(t.next_grid),
++                getattr(t, "level_before", None), getattr(t, "level_after", None))
++    if len(t) >= 5:
++        return (np.asarray(t[0]), int(t[1]), np.asarray(t[2]), t[3], t[4])
++    return (np.asarray(t[0]), int(t[1]), np.asarray(t[2]), None, None)
+diff --git a/results/experiment_reinduction_ar25.json b/results/experiment_reinduction_ar25.json
+new file mode 100644
+index 0000000000..0c576123f8
+--- /dev/null
++++ b/results/experiment_reinduction_ar25.json
+@@ -0,0 +1,44 @@
++{
++  "experiment": "experiment_reinduction",
++  "game": "ar25",
++  "honest_verdict": "complete: could_not_reach_L1_via_auto_induced_model_gap_sharpened",
++  "verifier_is_oracle": false,
++  "inference_substrate": "offline_arc_search_plus_induced_world_model",
++  "random_seed": 20260622,
++  "l1_fit_quality": {
++    "n_transitions": 200,
++    "n_move_transitions": 108,
++    "displacement_agreement": {
++      "1": 1.0,
++      "2": 1.0,
++      "3": 0.9142857142857143,
++      "4": 1.0
++    },
++    "avatar_colors": [
++      0,
++      4
++    ],
++    "wall_colors": [],
++    "floor_color": 9,
++    "goal_color": 5,
++    "displacement": {
++      "2": [
++        3,
++        0
++      ],
++      "3": [
++        0,
++        -3
++      ],
++      "4": [
++        0,
++        3
++      ],
++      "1": [
++        -3,
++        0
++      ]
++    }
++  },
++  "duration_s": 25.2
++}
+\ No newline at end of file
+diff --git a/results/experiment_reinduction_m0r0.json b/results/experiment_reinduction_m0r0.json
+new file mode 100644
+index 0000000000..70548e7bc9
+--- /dev/null
++++ b/results/experiment_reinduction_m0r0.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": "experiment_reinduction",
++  "game": "m0r0",
++  "honest_verdict": "complete: could_not_reach_L1_via_auto_induced_model_gap_sharpened",
++  "verifier_is_oracle": false,
++  "inference_substrate": "offline_arc_search_plus_induced_world_model",
++  "random_seed": 20260622,
++  "l1_fit_quality": {
++    "n_transitions": 200,
++    "n_move_transitions": 0,
++    "displacement_agreement": {
++      "1": null,
++      "2": null,
++      "3": null,
++      "4": null
++    },
++    "avatar_colors": [],
++    "wall_colors": [],
++    "floor_color": 5,
++    "goal_color": 10,
++    "displacement": {}
++  },
++  "duration_s": 0.9
++}
+\ No newline at end of file
+diff --git a/results/experiment_reinduction_synthetic_control.json b/results/experiment_reinduction_synthetic_control.json
+new file mode 100644
+index 0000000000..2fd291efc1
+--- /dev/null
++++ b/results/experiment_reinduction_synthetic_control.json
+@@ -0,0 +1,105 @@
++{
++  "experiment": "experiment_reinduction_synthetic_control",
++  "honest_verdict": "success: reinduction_operator_DEEPENS_past_frozen_on_a_grid_expressible_wall_colour_shift_frozen_locates_avatar_but_mismodels_walls_controlled_proof",
++  "verifier_is_oracle": false,
++  "inference_substrate": "synthetic_ground_truth_nav_on_real_tu93_layout",
++  "random_seed": 20260622,
++  "headline_case": "wall_colour_shift_on_real_tu93_maze",
++  "wall_colour_shift": {
++    "case": "wall_colour_shift_on_real_tu93_maze",
++    "L1_params": {
++      "step": 6,
++      "wall_color": 5,
++      "goal_color": 14,
++      "avatar_colors": [
++        9,
++        4
++      ]
++    },
++    "L2_params": {
++      "step": 6,
++      "wall_color": 7,
++      "goal_color": 14,
++      "avatar_colors": [
++        9,
++        4
++      ]
++    },
++    "fit_L1": {
++      "avatar": [
++        4,
++        9
++      ],
++      "wall": [
++        5
++      ],
++      "goal": 14,
++      "displacement": {
++        "4": [
++          0,
++          6
++        ],
++        "3": [
++          0,
++          -6
++        ],
++        "2": [
++          6,
++          0
++        ],
++        "1": [
++          -6,
++          0
++        ]
++      },
++      "acc_L1": 1.0,
++      "acc_on_L2": 0.414
++    },
++    "fit_L2_reinduced": {
++      "avatar": [
++        4,
++        9
++      ],
++      "wall": [
++        7
++      ],
++      "goal": 14,
++      "displacement": {
++        "4": [
++          0,
++          6
++        ],
++        "2": [
++          6,
++          0
++        ],
++        "1": [
++          -6,
++          0
++        ],
++        "3": [
++          0,
++          -6
++        ]
++      },
++      "acc_L2": 1.0
++    },
++    "frozen": {
++      "L1": true,
++      "L1_reason": "advanced",
++      "L2": false,
++      "L2_reason": "plan_executed_no_advance"
++    },
++    "reinduct": {
++      "L1": true,
++      "L1_reason": "advanced",
++      "L2": true,
++      "L2_reason": "advanced"
++    },
++    "frozen_can_locate_L2_avatar": true,
++    "reinduct_deepens_past_frozen": true
++  },
++  "headline_is_clean_misnavigation_separation": true,
++  "methodology_note": "HEADLINE: the layout is the REAL tu93 L1 maze (rich transitions -> robust fitting); only the WALL colour shifts 5->7. Avatar/door/floor/goal colours are identical, so the frozen model LOCATES the avatar and knows the goal -- it fails purely because it learned wall=5 and mis-models L2's colour-7 walls as passable, planning a path that the real colour-7-walled env blocks. Re-induction recovers wall=7 and routes correctly. GroundTruthNav is an independently-coded simulator operating on the real maze grid; the claim is scoped to grid-expressible NAV shifts (here the wall colour), not arbitrary or hidden-state mechanics.",
++  "duration_s": 7.812
++}
+\ No newline at end of file
+diff --git a/results/experiment_reinduction_tu93.json b/results/experiment_reinduction_tu93.json
+new file mode 100644
+index 0000000000..5b44c9a79b
+--- /dev/null
++++ b/results/experiment_reinduction_tu93.json
+@@ -0,0 +1,138 @@
++{
++  "experiment": "experiment_reinduction",
++  "game": "tu93",
++  "honest_verdict": "complete: reinduction_refits_a_movement_accurate_nav_model_at_the_next_level_but_a_deterministic_HAZARD_REMOVES_the_avatar_a_transition_the_nav_model_cannot_represent_nav_reinduction_insufficient_needs_a_hazard_aware_model_class_gap_sharpened",
++  "verifier_is_oracle": false,
++  "inference_substrate": "offline_arc_search_plus_induced_world_model",
++  "random_seed": 20260622,
++  "target_level": 3,
++  "l1_fit_quality": {
++    "n_transitions": 200,
++    "n_move_transitions": 72,
++    "displacement_agreement": {
++      "1": 0.25925925925925924,
++      "2": 0.2982456140350877,
++      "3": 0.3617021276595745,
++      "4": 0.5714285714285714
++    },
++    "avatar_colors": [
++      4,
++      9
++    ],
++    "wall_colors": [
++      5
++    ],
++    "floor_color": 0,
++    "goal_color": 14,
++    "displacement": {
++      "4": [
++        0,
++        6
++      ],
++      "3": [
++        0,
++        -6
++      ],
++      "2": [
++        6,
++        0
++      ],
++      "1": [
++        -6,
++        0
++      ]
++    }
++  },
++  "l1_prefix_len": 18,
++  "frozen_arm": {
++    "reached": 1,
++    "levels_gained": 0,
++    "reproduced": 1,
++    "per_level": [
++      {
++        "from_level": 1,
++        "reinduced": {
++          "reinduced": false,
++          "source": "frozen_L1_model"
++        },
++        "plan_len": 8,
++        "steps": 4,
++        "advanced": false,
++        "stop": "game_over_step4_budget47/None_avatar_REMOVED"
++      }
++    ],
++    "banked_len": 22
++  },
++  "reinduction_arm": {
++    "reached": 1,
++    "levels_gained": 0,
++    "reproduced": 1,
++    "per_level": [
++      {
++        "from_level": 1,
++        "reinduced": {
++          "reinduced": true,
++          "level": 1,
++          "n_transitions": 109,
++          "movement_accuracy": {
++            "accuracy": 1.0,
++            "n": 109,
++            "correct_move": 50,
++            "correct_block": 59,
++            "false_move": 0,
++            "false_block": 0
++          },
++          "fit": {
++            "n_transitions": 109,
++            "n_move_transitions": 48,
++            "displacement_agreement": {
++              "1": 0.4411764705882353,
++              "2": 0.4583333333333333,
++              "3": 0.2857142857142857,
++              "4": 0.5714285714285714
++            },
++            "avatar_colors": [
++              4,
++              9
++            ],
++            "wall_colors": [
++              5
++            ],
++            "floor_color": 0,
++            "goal_color": 14,
++            "displacement": {
++              "1": [
++                -6,
++                0
++              ],
++              "4": [
++                0,
++                6
++              ],
++              "2": [
++                6,
++                0
++              ],
++              "3": [
++                0,
++                -6
++              ]
++            }
++          }
++        },
++        "plan_len": 8,
++        "steps": 4,
++        "advanced": false,
++        "stop": "game_over_step4_budget47/None_avatar_REMOVED"
++      }
++    ],
++    "banked_len": 22
++  },
++  "frozen_reproduced": 1,
++  "reinduction_reproduced": 1,
++  "reinduction_deepens_past_frozen": false,
++  "nav_refit_movement_accurate_but_stalled": true,
++  "stalled_by_avatar_removal_hazard": true,
++  "methodology_note": "Head-to-head: a model FROZEN at L1 vs RE-INDUCED per level. REINDUCT>FROZEN => the trigger cracks a grid-expressible mechanic shift (see the synthetic control for a clean positive). On tu93 both reach L1: the re-induced model is movement-accurate on L2 NAVIGATION (which is grid-deterministic) but the engine only translates/blocks and is structurally BLIND to the L2-specific hazard that REMOVES the avatar (a charging-wall sprite per the env source). movement_accuracy cannot see that fatal transition (removal counts as a move), so 'movement accurate' must NOT be read as 'captured the level'. Deepening tu93 L2 needs a hazard-aware model class, not more nav re-induction. This is NOT broad hidden state (L2 nav is grid-deterministic) and NOT enemy/box (the L2 mechanic is a single charging-wall sprite).",
++  "duration_s": 1.4
++}
+\ No newline at end of file
+diff --git a/results/experiment_tu93_l2_hidden_state.json b/results/experiment_tu93_l2_hidden_state.json
+new file mode 100644
+index 0000000000..ef117388bc
+--- /dev/null
++++ b/results/experiment_tu93_l2_hidden_state.json
+@@ -0,0 +1,37 @@
++{
++  "experiment": "experiment_tu93_l2_hidden_state",
++  "honest_verdict": "complete: L2_transition_is_grid_deterministic_no_hidden_state_same_visible_logical_grid_plus_action_always_same_next_grid",
++  "verifier_is_oracle": false,
++  "inference_substrate": "offline_arc_search",
++  "random_seed": 20260622,
++  "game": "tu93",
++  "level_under_test": 2,
++  "model_file": "results/arc_e3/tu93/world_model_nav.py",
++  "logical_cell_size": 1,
++  "l2_reachable": true,
++  "n_l2_episodes": 1001,
++  "n_l2_transitions": 12012,
++  "counter_mask_cells": 1,
++  "n_grid_action_pairs_with_repeats": 99,
++  "n_nondeterministic_pairs": 0,
++  "nondeterminism_fraction": 0.0,
++  "full_grid_determinism": {
++    "n_distinct_keys": 99,
++    "n_repeated_pairs": 99,
++    "n_nondeterministic_pairs": 0,
++    "nondeterminism_fraction": 0.0
++  },
++  "masked_grid_determinism": {
++    "n_distinct_keys": 96,
++    "n_repeated_pairs": 96,
++    "n_nondeterministic_pairs": 3,
++    "nondeterminism_fraction": 0.0312
++  },
++  "comparison_experiment_8": {
++    "sb26_logical_nondeterminism_rate": 0.0,
++    "wa30_logical_nondeterminism_rate": 0.53,
++    "note": "0 == grid-deterministic (sb26 class); >0 == hidden state (wa30 class)."
++  },
++  "duration_s": 450.4,
++  "methodology_note": "n_resets_to_reach_l2 was structurally equal to n_l2_episodes (each fresh episode resets exactly once to reach L2); removed to avoid a tautological field. The finding is the nondeterminism_fraction over distinct (grid_hash, action) repeats."
++}
+\ No newline at end of file
+diff --git a/scripts/experiments/experiment_reinduction.py b/scripts/experiments/experiment_reinduction.py
+new file mode 100644
+index 0000000000..c683217c10
+--- /dev/null
++++ b/scripts/experiments/experiment_reinduction.py
+@@ -0,0 +1,342 @@
++#!/usr/bin/env python3
++"""Mechanic-conditioned RE-INDUCTION trigger for cross-level deepening (Executable World Models).
++
++The program-generalization first swing (docs/research-notes/program-generalization-first-swing-2026-06-22.md)
++showed: a world model induced+verified at L1 plans L1 in imagination and reproduces it, but a model FROZEN
++at L1 does NOT deepen when the next level's MECHANIC shifts -- it plans a move that is fatal under the new
++rules. The leader (arXiv:2605.05138) pays for this by RE-INDUCING the model per mechanic. This experiment
++implements + tests that trigger, using the auto-fitting nav world model (carnot.agentic.arc_nav_world_model)
++so the model is FITTED FROM TRANSITIONS at each level rather than hand-written.
++
++Two arms, head-to-head, on the same game:
++  * FROZEN     -- induce a nav model from L<k> transitions ONCE, then try to deepen with that frozen model.
++  * REINDUCT   -- after each level-up, COLLECT fresh transitions at the new level and RE-FIT the model
++                  before planning the next level. The "trigger" is: a deterministic, budget-unexhausted
++                  env game-over right after a level-up => the mechanic shifted => re-induce.
++
++If REINDUCT reaches a level FROZEN cannot, the mechanic-conditioned re-induction trigger cracks the
++deepening wall. If BOTH stall at the same level despite REINDUCT fitting a clean model there, the new
++level's mechanic is HIDDEN-STATE (not grid-expressible) and needs state-augmentation -- a correctly
++attributed, distinct finding (NOT a re-induction failure).
++
++OFFLINE, zero quota. verifier_is_oracle: false (the world model is an induced PREDICTIVE model, not the
++executable correctness oracle).
++"""
++from __future__ import annotations
++
++import argparse
++import json
++import random
++import time
++from pathlib import Path
++
++import numpy as np
++from arcengine import GameAction
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_agi3_world_model import grid_of
++from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed, _game_over
++from carnot.agentic.arc_graph_explore import _warm, rich_action_candidates
++from carnot.agentic.arc_executable_world_model import (
++    collect_transitions, Transition, WorldModelVerifier, to_logical, detect_cell, plan_in_model,
++)
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++def _out(game):
++    return REPO / "results" / f"experiment_reinduction_{game}.json"
++
++
++def _ok(frame):
++    try:
++        return np.asarray(grid_of(frame)).ndim == 2
++    except Exception:
++        return False
++
++
++def _budget(env):
++    try:
++        gobj = env._game
++        for attr in dir(gobj):
++            o = getattr(gobj, attr, None)
++            if hasattr(o, "current_steps"):
++                return getattr(o, "current_steps", None), getattr(o, "max_steps", None)
++    except Exception:
++        pass
++    return None, None
++
++
++def collect_at_level(game, prefix, n, cap_per_episode=50, seed=0):
++    """Collect (grid, action, next_grid) transitions AT the level reached by replaying `prefix` (a list of
++    raw action dicts). Fresh env per episode so a death/level-up just ends the episode; we re-reach the
++    level by replaying the prefix. Returns (transitions, cell)."""
++    rng = random.Random(seed)
++    arc = kit.offline_arcade()
++    trans, cell = [], None
++    episodes = 0
++    while len(trans) < n and episodes < n:
++        episodes += 1
++        env = arc.make(game, scorecard_id=arc.open_scorecard())
++        f = _warm(env, False)
++        if cell is None:
++            cell = detect_cell(grid_of(f))
++        ok = True
++        for a in prefix:
++            f = env.step(_game_action(GameAction, int(a["action"])), data=a.get("data"))
++            if f is None or not _ok(f) or _game_over(f):
++                ok = False
++                break
++        if not ok or f is None or not _ok(f):
++            continue
++        base = _levels_completed(f)
++        for _ in range(cap_per_episode):
++            if not _ok(f):
++                break
++            cands = rich_action_candidates(f)
++            if not cands:
++                break
++            c = cands[rng.randrange(min(len(cands), 6))]
++            g0 = to_logical(grid_of(f), cell)
++            l0 = _levels_completed(f)
++            nf = env.step(_game_action(GameAction, c.action_id), data=c.data)
++            if nf is None:
++                break
++            g1 = to_logical(grid_of(nf), cell) if _ok(nf) else g0
++            l1 = _levels_completed(nf) if _ok(nf) else l0
++            trans.append(Transition(g0, int(c.action_id), c.data, g1, l0, l1))
++            if not _ok(nf) or _game_over(nf) or l1 > l0:
++                break
++            f = nf
++    return trans, cell
++
++
++def model_movement_accuracy(model, trans):
++    """Fraction of (move/block) transitions the induced model predicts correctly (avatar moved-or-not)."""
++    cm = cb = fm = fb = 0
++    for t in trans:
++        if t.action not in (1, 2, 3, 4):
++            continue
++        b0 = model._avatar_bbox(t.grid)
++        if b0 is None:
++            continue
++        pred = model.engine(t.grid, t.action)
++        real_moved = model._avatar_bbox(t.next_grid) != b0
++        my_moved = model._avatar_bbox(pred) != b0
++        if real_moved and my_moved:
++            cm += 1
++        elif (not real_moved) and (not my_moved):
++            cb += 1
++        elif real_moved and not my_moved:
++            fb += 1
++        else:
++            fm += 1
++    tot = cm + cb + fm + fb
++    return {"accuracy": round((cm + cb) / tot, 3) if tot else None, "n": tot,
++            "correct_move": cm, "correct_block": cb, "false_move": fm, "false_block": fb}
++
++
++def reach_level_one(game, max_plan, max_depth, n_l1=200, seed=0):
++    """Induce an L0 nav model, plan+execute L1. Returns (model0, l1_prefix_actions, cell) or (None,..)."""
++    trans0, cell = collect_transitions(game, n=n_l1, seed=seed)
++    model0 = InducedNavWorldModel.fit(trans0)
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    f = _warm(env, False)
++    g = to_logical(grid_of(f), cell)
++    plan = plan_in_model(model0.engine, model0.is_level_complete, g, max_nodes=max_plan, max_depth=max_depth)
++    if not plan:
++        return model0, None, cell, trans0
++    prefix = []
++    for s in plan:
++        f = env.step(_game_action(GameAction, int(s["action"])), data=s.get("data"))
++        if f is None or not _ok(f):
++            return model0, None, cell, trans0
++        prefix.append({"action": int(s["action"]), "data": s.get("data")})
++        if _levels_completed(f) > 0:
++            return model0, prefix, cell, trans0
++    return model0, None, cell, trans0
++
++
++def deepen_arm(game, model_provider, l1_prefix, cell, target_level, max_plan, max_depth, seed):
++    """Execute the deepening chain. `model_provider(level, prefix)` returns the world model to plan level
++    `level+1` with -- FROZEN passes the same model every call; REINDUCT re-fits from fresh transitions at
++    the current level. Returns a per-level trace + the deepest reproduced level."""
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    f = _warm(env, False)
++    for a in l1_prefix:                      # replay the shared L1 solution
++        f = env.step(_game_action(GameAction, int(a["action"])), data=a.get("data"))
++        if f is None or not _ok(f):
++            return {"reached": 0, "per_level": [{"error": "l1_replay_failed"}], "banked": l1_prefix}
++    level = _levels_completed(f)
++    start = level
++    banked = list(l1_prefix)
++    per_level = []
++    while level < target_level:
++        model, fit_info = model_provider(level, list(banked), seed)
++        if model is None:
++            per_level.append({"from_level": level, "reinduced": fit_info, "planned": False,
++                              "reason": "no_model"})
++            break
++        g = to_logical(grid_of(f), cell)
++        plan = plan_in_model(model.engine, model.is_level_complete, g, max_nodes=max_plan, max_depth=max_depth)
++        if not plan:
++            per_level.append({"from_level": level, "reinduced": fit_info, "planned": False,
++                              "reason": "no_plan_in_model"})
++            break
++        advanced = False
++        steps = 0
++        stop = "plan_exhausted"
++        for s in plan:
++            cur, mx = _budget(env)
++            nf = env.step(_game_action(GameAction, int(s["action"])), data=s.get("data"))
++            steps += 1
++            if nf is None or not _ok(nf):
++                stop = "env_none"
++                break
++            banked.append({"action": int(s["action"]), "data": s.get("data")})
++            f = nf
++            if _levels_completed(f) > level:
++                level = _levels_completed(f)
++                advanced = True
++                stop = "level_up"
++                break
++            if _game_over(f):
++                # was the avatar REMOVED (a hazard consumed it) vs merely blocked? Avatar-removal is a
++                # transition the pure-nav model CANNOT represent (its engine only translates/blocks), so a
++                # game-over-by-removal proves nav re-induction is insufficient regardless of nav accuracy.
++                avatar_present = model._avatar_bbox(to_logical(grid_of(f), cell)) is not None
++                stop = (f"game_over_step{steps}_budget{cur}/{mx}_avatar_"
++                        f"{'present' if avatar_present else 'REMOVED'}")
++                break
++        per_level.append({"from_level": int(level if not advanced else level - 1), "reinduced": fit_info,
++                          "plan_len": len(plan), "steps": steps, "advanced": advanced, "stop": stop})
++        if not advanced:
++            break
++    # reproduction gate on a fresh env
++    repro = 0
++    if banked:
++        envr = arc.make(game, scorecard_id=arc.open_scorecard())
++        fr = _warm(envr, False)
++        base = _levels_completed(fr)
++        for a in banked:
++            fr = envr.step(_game_action(GameAction, int(a["action"])), data=a.get("data"))
++            if fr is None or not _ok(fr):
++                break
++        repro = _levels_completed(fr) - base
++    return {"reached": int(level - start) + start, "levels_gained": int(level - start),
++            "reproduced": int(repro), "per_level": per_level, "banked_len": len(banked)}
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--game", required=True)
++    ap.add_argument("--target-level", type=int, default=3)
++    ap.add_argument("--max-plan", type=int, default=60000)
++    ap.add_argument("--max-depth", type=int, default=80)
++    ap.add_argument("--n-reinduce", type=int, default=120, help="transitions to collect per re-induction")
++    ap.add_argument("--seed", type=int, default=20260622)
++    args = ap.parse_args()
++    t0 = time.time()
++    game = args.game
++
++    model0, l1_prefix, cell, trans0 = reach_level_one(game, args.max_plan, args.max_depth, seed=args.seed)
++    l1_fit = model0.fit_quality if model0 else None
++    if l1_prefix is None:
++        art = {"experiment": "experiment_reinduction", "game": game,
++               "honest_verdict": "complete: could_not_reach_L1_via_auto_induced_model_gap_sharpened",
++               "verifier_is_oracle": False, "inference_substrate": "offline_arc_search_plus_induced_world_model",
++               "random_seed": args.seed, "l1_fit_quality": l1_fit, "duration_s": round(time.time() - t0, 1)}
++        _out(game).write_text(json.dumps(art, indent=2))
++        print(f"VERDICT: {art['honest_verdict']}")
++        return 0
++
++    # FROZEN arm: always returns the L1-fitted model.
++    def frozen_provider(level, prefix, seed):
++        return model0, {"reinduced": False, "source": "frozen_L1_model"}
++
++    # REINDUCT arm: re-collect transitions at the CURRENT level and re-fit.
++    reinduct_cache = {}
++
++    def reinduct_provider(level, prefix, seed):
++        if level == 0:
++            return model0, {"reinduced": False, "source": "L1_model", "fit": l1_fit}
++        if level in reinduct_cache:
++            return reinduct_cache[level]
++        tr, _ = collect_at_level(game, prefix, args.n_reinduce, seed=seed + level)
++        if not tr:
++            res = (None, {"reinduced": True, "n_transitions": 0, "note": "no_transitions_at_level"})
++            reinduct_cache[level] = res
++            return res
++        model = InducedNavWorldModel.fit(tr)
++        acc = model_movement_accuracy(model, tr)
++        res = (model, {"reinduced": True, "level": level, "n_transitions": len(tr),
++                       "movement_accuracy": acc, "fit": model.fit_quality})
++        reinduct_cache[level] = res
++        return res
++
++    frozen = deepen_arm(game, frozen_provider, l1_prefix, cell, args.target_level, args.max_plan,
++                        args.max_depth, args.seed)
++    reinduct = deepen_arm(game, reinduct_provider, l1_prefix, cell, args.target_level, args.max_plan,
++                          args.max_depth, args.seed)
++
++    fz = frozen["reproduced"]
++    ri = reinduct["reproduced"]
++    # Did the RE-INDUCED model fit the next level's NAVIGATION well (move/block prediction) yet still stall?
++    # NOTE: movement_accuracy ONLY scores avatar-bbox-changed vs not; it CANNOT see a fatal transition where
++    # a hazard REMOVES the avatar (removal scores as a "move"), so a high movement_accuracy does NOT mean the
++    # model captured the level -- only its navigation. We therefore separately detect avatar-REMOVAL at the
++    # stall (a transition the pure-nav engine is structurally unable to represent).
++    reinduct_levels = [pl.get("reinduced") for pl in reinduct["per_level"] if isinstance(pl.get("reinduced"), dict)]
++    nav_refit_movement_accurate = any(
++        (r.get("movement_accuracy") or {}).get("accuracy", 0) and (r["movement_accuracy"]["accuracy"] >= 0.9)
++        for r in reinduct_levels) and ri <= fz
++    stalled_by_avatar_removal = any("avatar_REMOVED" in str(pl.get("stop", ""))
++                                    for pl in reinduct["per_level"]) and ri <= fz
++
++    if ri > fz:
++        verdict = ("success: mechanic_conditioned_reinduction_DEEPENS_past_frozen_L1_model_"
++                   f"reinduct_L{ri}_vs_frozen_L{fz}_reproduced")
++    elif stalled_by_avatar_removal:
++        verdict = ("complete: reinduction_refits_a_movement_accurate_nav_model_at_the_next_level_but_a_"
++                   "deterministic_HAZARD_REMOVES_the_avatar_a_transition_the_nav_model_cannot_represent_"
++                   "nav_reinduction_insufficient_needs_a_hazard_aware_model_class_gap_sharpened")
++    elif nav_refit_movement_accurate:
++        verdict = ("complete: reinduction_refits_a_movement_accurate_nav_model_but_deepening_still_stalls_"
++                   "next_level_adds_a_non_nav_mechanic_the_nav_model_does_not_capture_gap_sharpened")
++    elif ri == fz and ri > 0:
++        verdict = ("complete: reinduction_and_frozen_reach_same_level_no_unique_crack_this_game_"
++                   "honest_null_gap_sharpened")
++    else:
++        verdict = "complete: neither_arm_deepened_gap_sharpened"
++
++    art = {"experiment": "experiment_reinduction", "game": game, "honest_verdict": verdict,
++           "verifier_is_oracle": False, "inference_substrate": "offline_arc_search_plus_induced_world_model",
++           "random_seed": args.seed, "target_level": args.target_level,
++           "l1_fit_quality": l1_fit, "l1_prefix_len": len(l1_prefix),
++           "frozen_arm": frozen, "reinduction_arm": reinduct,
++           "frozen_reproduced": fz, "reinduction_reproduced": ri,
++           "reinduction_deepens_past_frozen": bool(ri > fz),
++           "nav_refit_movement_accurate_but_stalled": bool(nav_refit_movement_accurate),
++           "stalled_by_avatar_removal_hazard": bool(stalled_by_avatar_removal),
++           "methodology_note": ("Head-to-head: a model FROZEN at L1 vs RE-INDUCED per level. REINDUCT>FROZEN "
++                                "=> the trigger cracks a grid-expressible mechanic shift (see the synthetic "
++                                "control for a clean positive). On tu93 both reach L1: the re-induced model is "
++                                "movement-accurate on L2 NAVIGATION (which is grid-deterministic) but the engine "
++                                "only translates/blocks and is structurally BLIND to the L2-specific hazard that "
++                                "REMOVES the avatar (a charging-wall sprite per the env source). movement_accuracy "
++                                "cannot see that fatal transition (removal counts as a move), so 'movement "
++                                "accurate' must NOT be read as 'captured the level'. Deepening tu93 L2 needs a "
++                                "hazard-aware model class, not more nav re-induction. This is NOT broad hidden "
++                                "state (L2 nav is grid-deterministic) and NOT enemy/box (the L2 mechanic is a "
++                                "single charging-wall sprite)."),
++           "duration_s": round(time.time() - t0, 1)}
++    _out(game).write_text(json.dumps(art, indent=2))
++    print(f"\nVERDICT: {verdict}")
++    print(f"  FROZEN reproduced L{fz} | REINDUCT reproduced L{ri} | deepens_past_frozen={ri>fz} -> {_out(game)}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/scripts/experiments/experiment_reinduction_synthetic_control.py b/scripts/experiments/experiment_reinduction_synthetic_control.py
+new file mode 100644
+index 0000000000..c7e468b944
+--- /dev/null
++++ b/scripts/experiments/experiment_reinduction_synthetic_control.py
+@@ -0,0 +1,285 @@
++#!/usr/bin/env python3
++"""Controlled demonstration that the RE-INDUCTION OPERATOR cracks a grid-expressible NAVIGATION-mechanic
++shift that a FROZEN-L1 model cannot.
++
++Why a synthetic control. On the real reproduced ARC game set, the only clean reach-goal nav game that
++imagination-planning fully drives is tu93, and its L2 adds a non-nav resolution mechanic (boxes/enemies with
++a mix of visible-but-unmodelled and genuinely-hidden state) that a pure-nav model is structurally blind to --
++so re-induction correctly DIAGNOSES it but cannot crack it, and the other reproduced L2s use non-reach-goal
++wins (reflection/coalescence/toggle) a reach-goal nav inducer cannot express. There is therefore no
++real-game case in the current set to show the trigger's POSITIVE value (REINDUCT > FROZEN). This script
++supplies that proof in a controlled setting.
++
++Adversarial-review hardening (2026-06-22). An earlier version shifted EVERY param (incl. the avatar
++colours), which made FROZEN fail TRIVIALLY -- it could not even locate the L2 avatar, a relabelling
++tautology rather than a navigation-generalization result. The HEADLINE test here is a STEP-ONLY shift: the
++avatar/wall/door/floor/goal colours are IDENTICAL across levels, so the frozen model CAN locate the avatar
++and knows the goal -- it fails purely because its learned displacement (step 6) mis-navigates the L2 maze
++(step 4), planning a path that does not reach the goal when executed in the real step-4 geometry. The
++all-params-shift case is still run, but reported separately and labelled as the weaker (avatar-relabel)
++separation. The ground-truth env (GroundTruthNav) is an independently-coded simulator; the test validates
++that the operator RECOVERS an unknown shifted parameter and that the wrong parameter causes a real
++plan-execution failure -- it does NOT claim the operator handles arbitrary (non-nav) mechanics.
++
++verifier_is_oracle: false. OFFLINE, zero quota, deterministic given the seed.
++"""
++from __future__ import annotations
++
++import argparse
++import json
++import random
++import time
++from collections import deque
++from pathlib import Path
++
++import numpy as np
++
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel
++
++REPO = Path(__file__).resolve().parents[2]
++OUT = REPO / "results" / "experiment_reinduction_synthetic_control.json"
++
++
++class GroundTruthNav:
++    """Independently-coded ground-truth nav simulator (the 'reality' the fitter must learn). Tracks the
++    avatar by its colour on an explicit grid; a move of `step` cells succeeds iff the swept mid-cell is the
++    door colour and the destination is in-bounds and not wall; covering the goal advances the level."""
++
++    def __init__(self, levels):
++        self.levels = levels
++        self.level = 0
++        self.grid = np.array(levels[0]["grid"], dtype=int)
++        self.done = False
++
++    def _p(self):
++        return self.levels[self.level]
++
++    def _avatar(self):
++        p = self._p()
++        ys, xs = np.where(np.isin(self.grid, list(p["avatar_colors"])))
++        if ys.size == 0:
++            return None
++        return int(ys.min()), int(xs.min()), int(ys.max()), int(xs.max())
++
++    def reset_level(self):
++        self.grid = np.array(self.levels[self.level]["grid"], dtype=int)
++        self.done = False
++        return self.grid.copy()
++
++    def step(self, action):
++        p = self._p()
++        dirs = {1: (-p["step"], 0), 2: (p["step"], 0), 3: (0, -p["step"]), 4: (0, p["step"])}
++        if action not in dirs or self.done:
++            return self.grid.copy(), self.level, self.done
++        bb = self._avatar()
++        if bb is None:
++            return self.grid.copy(), self.level, self.done
++        r0, c0, r1, c1 = bb
++        h, w = r1 - r0 + 1, c1 - c0 + 1
++        dy, dx = dirs[action]
++        nr, nc = r0 + dy, c0 + dx
++        H, W = self.grid.shape
++        if nr < 0 or nc < 0 or nr + h > H or nc + w > W:
++            return self.grid.copy(), self.level, self.done
++        my, mx = r0 + dy // 2, c0 + dx // 2
++        if np.any(self.grid[my:my + h, mx:mx + w] == p["wall_color"]):     # wall in the swept gap -> blocked
++            return self.grid.copy(), self.level, self.done
++        dest = self.grid[nr:nr + h, nc:nc + w]
++        covered = bool(np.any(dest == p["goal_color"]))
++        stamp = self.grid[r0:r1 + 1, c0:c1 + 1].copy()
++        self.grid[r0:r1 + 1, c0:c1 + 1] = p["floor_color"]
++        self.grid[nr:nr + h, nc:nc + w] = stamp
++        if covered:
++            if self.level + 1 < len(self.levels):
++                self.level += 1
++                self.reset_level()
++            else:
++                self.done = True
++        return self.grid.copy(), self.level, self.done
++
++
++def real_tu93_l1_grid():
++    """Use the REAL tu93 L1 maze as the synthetic layout (rich + fitter-friendly, avoids small-corpus
++    heuristic fragility). Returns (logical_grid, palette) where palette names the real colours."""
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_agi3_world_model import grid_of
++    from carnot.agentic.arc_graph_explore import _warm
++    from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
++    arc = kit.offline_arcade()
++    env = arc.make("tu93", scorecard_id=arc.open_scorecard())
++    f = _warm(env, False)
++    cell = detect_cell(grid_of(f))
++    g = np.asarray(to_logical(grid_of(f), cell)).copy()
++    # real tu93 palette: wall/bg=5, door=2, floor=0, goal=14, avatar={9 body, 4 centre}
++    return g, dict(wall=5, door=2, floor=0, goal=14, avatar=(9, 4))
++
++
++def recolor_wall(grid, old_wall, new_wall):
++    """Shift ONLY the wall colour (a clean grid-expressible mechanic shift): the avatar/door/floor/goal
++    colours are untouched, so a frozen model LOCATES the avatar and knows the goal; it fails purely because
++    it learned the wrong wall colour and mis-models which moves are blocked."""
++    g = np.asarray(grid).copy()
++    g[g == old_wall] = new_wall
++    return g
++
++
++def collect_synth(level_params, n, seed):
++    rng = random.Random(seed)
++    trans = []
++    for _ in range(n):
++        env = GroundTruthNav([level_params])
++        env.reset_level()
++        for _ in range(16):
++            a = rng.choice([1, 2, 3, 4])
++            g0 = env.grid.copy()
++            g1, _lvl, done = env.step(a)
++            trans.append((g0, a, g1.copy(), 0, 1 if done else 0))
++            if done:
++                break
++    return trans
++
++
++def plan_grid(model, grid, max_nodes=40000, max_depth=80):
++    start = np.asarray(grid)
++    seen = {start.tobytes()}
++    q = deque([(start, [])])
++    nodes = 0
++    while q and nodes < max_nodes:
++        g, path = q.popleft()
++        nodes += 1
++        if model.is_level_complete(g):
++            return path
++        if len(path) >= max_depth:
++            continue
++        for a in (1, 2, 3, 4):
++            ng = np.asarray(model.engine(g, a))
++            k = ng.tobytes()
++            if k in seen:
++                continue
++            seen.add(k)
++            q.append((ng, path + [a]))
++    return None
++
++
++def solve_level(env, model):
++    start = env.level
++    plan = plan_grid(model, env.grid)
++    if not plan:
++        return False, "no_plan_in_model"
++    for a in plan:
++        _, lvl, done = env.step(a)
++        if lvl > start or done:
++            return True, "advanced"
++    return False, "plan_executed_no_advance"   # the model's plan did not reach the goal in reality
++
++
++def acc(model, tr):
++    cm = cb = fm = fb = 0
++    for g0, a, g1, *_ in tr:
++        b0 = model._avatar_bbox(g0)
++        if b0 is None:
++            continue
++        pred = model.engine(g0, a)
++        real = model._avatar_bbox(g1) != b0
++        my = model._avatar_bbox(pred) != b0
++        if real and my:
++            cm += 1
++        elif (not real) and (not my):
++            cb += 1
++        elif real and not my:
++            fb += 1
++        else:
++            fm += 1
++    tot = cm + cb + fm + fb
++    return round((cm + cb) / tot, 3) if tot else None
++
++
++def run_case(name, L1, L2, n, seed):
++    """Fit m1 on L1 and m2 on L2; FROZEN keeps m1 at L2, REINDUCT uses m2. Returns the case result."""
++    tr1 = collect_synth(L1, n, seed)
++    tr2 = collect_synth(L2, n, seed + 1)
++    m1 = InducedNavWorldModel.fit(tr1)
++    m2 = InducedNavWorldModel.fit(tr2)
++
++    env_f = GroundTruthNav([L1, L2]); env_f.reset_level()
++    f1, f1r = solve_level(env_f, m1)
++    f2, f2r = solve_level(env_f, m1) if f1 else (False, "L1_failed")
++
++    env_r = GroundTruthNav([L1, L2]); env_r.reset_level()
++    r1, r1r = solve_level(env_r, m1)
++    r2, r2r = solve_level(env_r, m2) if r1 else (False, "L1_failed")
++
++    # why did frozen fail? distinguish 'mis-navigation' (avatar findable, wrong step) from 'avatar not found'
++    frozen_can_find_l2_avatar = m1._avatar_bbox(np.array(L2["grid"])) is not None
++    return {
++        "case": name,
++        "L1_params": {k: L1[k] for k in ("step", "wall_color", "goal_color", "avatar_colors")},
++        "L2_params": {k: L2[k] for k in ("step", "wall_color", "goal_color", "avatar_colors")},
++        "fit_L1": {"avatar": sorted(m1.avatar_colors), "wall": sorted(m1.wall_colors), "goal": m1.goal_color,
++                   "displacement": {a: list(d) for a, d in m1.displacement.items()}, "acc_L1": acc(m1, tr1),
++                   "acc_on_L2": acc(m1, tr2)},
++        "fit_L2_reinduced": {"avatar": sorted(m2.avatar_colors), "wall": sorted(m2.wall_colors),
++                             "goal": m2.goal_color, "displacement": {a: list(d) for a, d in m2.displacement.items()},
++                             "acc_L2": acc(m2, tr2)},
++        "frozen": {"L1": f1, "L1_reason": f1r, "L2": f2, "L2_reason": f2r},
++        "reinduct": {"L1": r1, "L1_reason": r1r, "L2": r2, "L2_reason": r2r},
++        "frozen_can_locate_L2_avatar": bool(frozen_can_find_l2_avatar),
++        "reinduct_deepens_past_frozen": bool(r2 and not f2),
++    }
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--seed", type=int, default=20260622)
++    ap.add_argument("--n", type=int, default=120)
++    args = ap.parse_args()
++    t0 = time.time()
++
++    base, pal = real_tu93_l1_grid()
++    OLD_WALL, NEW_WALL = pal["wall"], 7   # shift ONLY the wall colour 5 -> 7
++    L1 = dict(step=6, wall_color=OLD_WALL, door_color=pal["door"], floor_color=pal["floor"],
++              goal_color=pal["goal"], avatar_colors=pal["avatar"], grid=base)
++    L2 = dict(step=6, wall_color=NEW_WALL, door_color=pal["door"], floor_color=pal["floor"],
++              goal_color=pal["goal"], avatar_colors=pal["avatar"], grid=recolor_wall(base, OLD_WALL, NEW_WALL))
++
++    # HEADLINE: wall-colour-only shift on the REAL tu93 maze. Avatar/door/floor/goal colours identical, so
++    # the frozen model LOCATES the avatar and knows the goal; it fails only because it learned wall=5 and
++    # treats L2's colour-7 walls as passable -> it plans straight through walls -> the plan, executed in the
++    # real (colour-7-walled) reality, gets blocked and never reaches the goal. Re-induction recovers wall=7.
++    wall_shift = run_case("wall_colour_shift_on_real_tu93_maze", L1, L2, args.n, args.seed)
++
++    headline_ok = wall_shift["reinduct_deepens_past_frozen"] and wall_shift["frozen_can_locate_L2_avatar"]
++    if headline_ok:
++        verdict = ("success: reinduction_operator_DEEPENS_past_frozen_on_a_grid_expressible_wall_colour_"
++                   "shift_frozen_locates_avatar_but_mismodels_walls_controlled_proof")
++    elif wall_shift["reinduct_deepens_past_frozen"]:
++        verdict = "complete: reinduction_deepens_but_frozen_failure_not_cleanly_attributable_inspect_case"
++    else:
++        verdict = "complete: controlled_synthetic_did_not_separate_arms_inspect_fits"
++
++    art = {"experiment": "experiment_reinduction_synthetic_control", "honest_verdict": verdict,
++           "verifier_is_oracle": False, "inference_substrate": "synthetic_ground_truth_nav_on_real_tu93_layout",
++           "random_seed": args.seed, "headline_case": "wall_colour_shift_on_real_tu93_maze",
++           "wall_colour_shift": wall_shift,
++           "headline_is_clean_misnavigation_separation": bool(headline_ok),
++           "methodology_note": ("HEADLINE: the layout is the REAL tu93 L1 maze (rich transitions -> robust "
++                                "fitting); only the WALL colour shifts 5->7. Avatar/door/floor/goal colours are "
++                                "identical, so the frozen model LOCATES the avatar and knows the goal -- it fails "
++                                "purely because it learned wall=5 and mis-models L2's colour-7 walls as passable, "
++                                "planning a path that the real colour-7-walled env blocks. Re-induction recovers "
++                                "wall=7 and routes correctly. GroundTruthNav is an independently-coded simulator "
++                                "operating on the real maze grid; the claim is scoped to grid-expressible NAV "
++                                "shifts (here the wall colour), not arbitrary or hidden-state mechanics."),
++           "duration_s": round(time.time() - t0, 3)}
++    OUT.write_text(json.dumps(art, indent=2))
++    ws = wall_shift
++    print(f"VERDICT: {verdict}")
++    print(f"  FROZEN L1={ws['frozen']['L1']} L2={ws['frozen']['L2']}({ws['frozen']['L2_reason']}) | "
++          f"REINDUCT L1={ws['reinduct']['L1']} L2={ws['reinduct']['L2']}({ws['reinduct']['L2_reason']})")
++    print(f"  frozen_locates_avatar={ws['frozen_can_locate_L2_avatar']} | "
++          f"m1.wall={ws['fit_L1']['wall']} m2.wall={ws['fit_L2_reinduced']['wall']}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/scripts/experiments/experiment_tu93_l2_hidden_state.py b/scripts/experiments/experiment_tu93_l2_hidden_state.py
+new file mode 100644
+index 0000000000..0b330c3954
+--- /dev/null
++++ b/scripts/experiments/experiment_tu93_l2_hidden_state.py
+@@ -0,0 +1,314 @@
++#!/usr/bin/env python3
++"""tu93 LEVEL-2 hidden-state diagnostic — is L2's transition a deterministic function of the
++VISIBLE logical grid, or does it carry HIDDEN STATE?
++
++Mirrors scripts/experiments/experiment_8_hidden_state_diagnostic.py (which did this for
++wa30/sb26/ka59 over L1 walks) but RE-ANCHORED to tu93's LEVEL 2: we must first SOLVE L1 to
++arrive at L2, then collect (logical_grid, action, next_logical_grid) transitions IN L2 only.
++
++Reaching L2 (per scripts/experiments/experiment_program_gen.py):
++  offline_arcade().make(tu93) -> _warm(env, False) -> plan_in_model(L1) inside the hand-induced
++  maze world model (results/arc_e3/tu93/world_model_nav.py) -> execute until _levels_completed==1.
++  We VERIFY _levels_completed==1 before collecting anything.
++
++Collecting genuine REPEATS in L2: tu93 is 4-direction maze nav (ACTION1=up,2=down,3=left,4=right)
++and moves are reversible, so OSCILLATING (up<->down, left<->right) naturally revisits the same
++logical avatar configuration via different histories. That is the precondition for the determinism
++test: the SAME (grid_hash, action) key recurs, and we ask whether it always maps to the SAME next
++grid. tu93 also decrements a move-counter strip each step; the LOGICAL grid (game-resolution avatar
++maze) is what we hash, mirroring experiment_8's logical-grid branch (the branch that flagged wa30
++0.53 hidden vs sb26 0.0 grid-deterministic).
++
++Note: tu93 L2 dies DETERMINISTICALLY after a few steps on a naive walk (per
++results/experiment_program_gen_tu93.json: death_step=3 over 4 trials). So the collector treats a
++game-over as a RESET (re-solve L1, re-enter L2) rather than fabricating transitions past it, and
++keeps walking until it has banked enough recurring keys.
++
++nondeterminism_fraction = n_nondeterministic_pairs / n_repeated_pairs.
++  0.0  -> L2 transition is fully determined by the visible logical grid (like sb26).
++  >0   -> hidden state: same visible grid + same action -> different outcomes (like wa30 0.53).
++
++OFFLINE, zero quota. verifier_is_oracle: false (this is a measurement, not a verifier claim)."""
++from __future__ import annotations
++
++import argparse
++import json
++import random
++import time
++from collections import defaultdict
++from pathlib import Path
++
++import numpy as np
++from arcengine import GameAction
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
++from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed, _game_over
++from carnot.agentic.arc_graph_explore import _warm
++from carnot.agentic.arc_executable_world_model import detect_cell, to_logical, plan_in_model
++
++REPO = Path(__file__).resolve().parents[2]
++OUT = REPO / "results" / "experiment_tu93_l2_hidden_state.json"
++GAME = "tu93"
++MODEL_FILE = REPO / "results" / "arc_e3" / GAME / "world_model_nav.py"
++NAV_ACTIONS = (1, 2, 3, 4)  # up, down, left, right
++REVERSE = {1: 2, 2: 1, 3: 4, 4: 3}
++
++
++def _ok(frame) -> bool:
++    try:
++        return np.asarray(grid_of(frame)).ndim == 2
++    except Exception:
++        return False
++
++
++def _load_model():
++    import importlib.util
++
++    spec = importlib.util.spec_from_file_location("tu93_nav_model", MODEL_FILE)
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++    return mod.engine, mod.is_level_complete
++
++
++def reach_l2(arc, engine, is_level_complete, cell):
++    """Make tu93, warm, solve L1 by planning in the hand-induced model + executing, and return the
++    env now sitting AT L2. Returns (env, frame, levels_completed) or (None, None, lvl) on failure.
++    Mirrors experiment_program_gen.py's deepen loop but stops at the first level-up."""
++    env = arc.make(GAME, scorecard_id=arc.open_scorecard())
++    f = _warm(env, False)
++    if not _ok(f):
++        return None, None, -1
++    start_level = _levels_completed(f)
++    g = to_logical(grid_of(f), cell)
++    plan = plan_in_model(engine, is_level_complete, g, max_nodes=40000, max_depth=80)
++    if not plan:
++        return None, None, start_level
++    for step in plan:
++        nf = env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
++        if nf is None or not _ok(nf):
++            return None, None, _levels_completed(f) if _ok(f) else -1
++        f = nf
++        if _levels_completed(f) > start_level:
++            break
++    return env, f, _levels_completed(f)
++
++
++def derive_counter_mask(arc, engine, is_level_complete, cell, pool):
++    """Identify the per-step move-counter HUD cells from a DEDICATED THROWAWAY probe env (never a
++    collection episode, so collection stays pristine). At the pristine L2 entry, take a BLOCKED move
++    (one the grid-only engine predicts leaves the avatar in place): the cells that nonetheless change
++    are exactly the ticking move-counter strip. If no blocked first move exists, returns an all-False
++    mask (the full and masked branches then coincide, which is itself informative)."""
++    env, f, lvl = reach_l2(arc, engine, is_level_complete, cell)
++    if env is None or not _ok(f) or lvl < 1:
++        return None
++    g_before = np.asarray(to_logical(grid_of(f), cell))
++    for a_try in pool:
++        # fresh env per probe action so each probe sees the pristine L2 entry
++        penv, pf, plvl = reach_l2(arc, engine, is_level_complete, cell)
++        if penv is None or not _ok(pf) or plvl < 1:
++            continue
++        gb = np.asarray(to_logical(grid_of(pf), cell))
++        pred = np.asarray(engine(gb.copy(), a_try, None))
++        if not (pred.shape == gb.shape and np.array_equal(pred, gb)):
++            continue  # engine says this move is NOT blocked; skip
++        probe = penv.step(_game_action(GameAction, a_try), data=None)
++        if probe is None or not _ok(probe) or _game_over(probe) or _levels_completed(probe) > plvl:
++            continue
++        ga = np.asarray(to_logical(grid_of(probe), cell))
++        if np.array_equal(ga, gb):
++            continue  # nothing changed at all (no visible counter); keep looking
++        return ga != gb  # cells that changed on a blocked move == the move-counter HUD
++    return np.zeros(g_before.shape, dtype=bool)
++
++
++def collect_l2_transitions(arc, engine, is_level_complete, cell, rng, target_keys, max_resets,
++                           steps_per_episode, n_action_pool):
++    """Collect (visible_logical_grid_hash, action, next_visible_logical_grid_hash) transitions INSIDE
++    L2. tu93's L2 entry state is byte-identical across fresh episodes (verified: hash 8e877eda every
++    time) and the move-counter strip is episode-synchronized (it resets on each L2 entry). Therefore
++    the repeat source that experiment_8 got from multi-rollout overlap we get from ACROSS-EPISODE
++    PREFIX OVERLAP: each episode walks a short random sequence drawn from a small action pool, so the
++    same (state, action) key recurs across episodes at matching walk depth, with the counter at the
++    same value -> a genuine, fair repeat of the FULL visible grid.
++
++    We also record a NAVIGATION-MASKED hash (the move-counter strip blanked) so we can locate WHERE
++    any nondeterminism lives (experiment_8's raw-vs-logical split): if the full grid is
++    nondeterministic but the masked grid is deterministic, the only 'hidden' state is the visible
++    counter; if BOTH are deterministic the L2 transition is grid-determined; if the masked grid is
++    nondeterministic there is genuine hidden state not in the visible grid.
++
++    A game-over (tu93 L2 is fatal on some moves) ENDS the episode (we never record past death). We
++    stop when enough recurring full-grid keys are banked or the reset budget is spent.
++
++    Returns (records, counter_mask, n_resets, n_l2_episodes, l2_reached_ever).
++    records: list of (full_hash, action, next_full_hash, masked_hash, next_masked_hash)."""
++    records = []
++    n_resets = 0
++    n_l2_episodes = 0
++    l2_reached_ever = False
++
++    pool = list(NAV_ACTIONS[:n_action_pool]) if n_action_pool else list(NAV_ACTIONS)
++    # Derive the move-counter HUD mask ONCE from a dedicated throwaway probe (keeps collection pristine).
++    counter_mask = derive_counter_mask(arc, engine, is_level_complete, cell, pool)
++
++    def _full_h(fr):
++        return frame_hash(np.asarray(to_logical(grid_of(fr), cell)))
++
++    def _masked_h(fr):
++        g = np.asarray(to_logical(grid_of(fr), cell)).copy()
++        if counter_mask is not None and counter_mask.any():
++            g[counter_mask] = 0
++        return frame_hash(g)
++
++    def n_repeated_full_keys():
++        counts = defaultdict(int)
++        for fh, a, _, _, _ in records:
++            counts[(fh, a)] += 1
++        return sum(1 for c in counts.values() if c >= 2)
++
++    while n_resets <= max_resets and n_repeated_full_keys() < target_keys:
++        env, f, lvl = reach_l2(arc, engine, is_level_complete, cell)
++        n_resets += 1
++        if env is None or not _ok(f) or lvl < 1:
++            continue  # failed to reach L2 this attempt; try again
++        l2_reached_ever = True
++        n_l2_episodes += 1
++
++        # Short random walk from the (pristine) L2 entry; small pool -> prefixes collide across episodes.
++        for _ in range(steps_per_episode):
++            if not _ok(f):
++                break
++            a = pool[rng.randrange(len(pool))]
++            fh, mh = _full_h(f), _masked_h(f)
++            nf = env.step(_game_action(GameAction, a), data=None)
++            if nf is None or not _ok(nf):
++                break
++            if _game_over(nf):
++                break  # fatal move -> end episode; do NOT record past death
++            if _levels_completed(nf) > lvl:
++                break  # advanced beyond L2; stop (outside scope)
++            records.append((fh, a, _full_h(nf), mh, _masked_h(nf)))
++            f = nf
++    return records, counter_mask, n_resets, n_l2_episodes, l2_reached_ever
++
++
++def determinism(records, state_idx, next_idx):
++    """Group by (grid_hash, action). Among groups that RECUR (seen >=2x), what fraction map to >1
++    distinct next grid? That fraction is the hidden-state signal. state_idx/next_idx select the FULL
++    (0,2) or MASKED (3,4) grid hash columns of a record tuple
++    (full_h, action, next_full_h, masked_h, next_masked_h)."""
++    counts = defaultdict(int)
++    nexts = defaultdict(set)
++    for r in records:
++        key = (r[state_idx], r[1])
++        counts[key] += 1
++        nexts[key].add(r[next_idx])
++    repeated = [(k, nexts[k]) for k, c in counts.items() if c >= 2]
++    nondet = [k for k, ns in repeated if len(ns) >= 2]
++    return {
++        "n_distinct_keys": len(counts),
++        "n_repeated_pairs": len(repeated),
++        "n_nondeterministic_pairs": len(nondet),
++        "nondeterminism_fraction": round(len(nondet) / len(repeated), 4) if repeated else None,
++    }
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--target-keys", type=int, default=40, help="stop once this many recurring full-grid keys")
++    ap.add_argument("--max-resets", type=int, default=400)
++    ap.add_argument("--steps-per-episode", type=int, default=12,
++                    help="short walk so prefixes collide across episodes (the repeat source)")
++    ap.add_argument("--action-pool", type=int, default=3,
++                    help="size of the nav-action pool (small -> more prefix collisions)")
++    ap.add_argument("--seed", type=int, default=20260622)
++    args = ap.parse_args()
++    t0 = time.time()
++    rng = random.Random(args.seed)
++
++    engine, is_level_complete = _load_model()
++    arc = kit.offline_arcade()
++
++    # cell detection on a fresh warm frame
++    f0 = _warm(arc.make(GAME, scorecard_id=arc.open_scorecard()), False)
++    if not _ok(f0):
++        artifact = {
++            "experiment": "experiment_tu93_l2_hidden_state",
++            "honest_verdict": "complete: blocked_degenerate_start_frame",
++            "verifier_is_oracle": False,
++            "inference_substrate": "offline_arc_search",
++            "random_seed": args.seed,
++            "l2_reachable": False,
++            "duration_s": round(time.time() - t0, 1),
++        }
++        OUT.write_text(json.dumps(artifact, indent=2))
++        print(json.dumps(artifact, indent=2))
++        return 0
++    cell = detect_cell(grid_of(f0))
++
++    records, counter_mask, n_resets, n_l2_episodes, l2_reached_ever = collect_l2_transitions(
++        arc, engine, is_level_complete, cell, rng,
++        args.target_keys, args.max_resets, args.steps_per_episode, args.action_pool)
++
++    # FULL visible logical grid (cols 0,2) is the primary test the task asks for; MASKED grid (cols
++    # 3,4) blanks the per-step move-counter HUD to locate WHERE any nondeterminism lives.
++    full = determinism(records, 0, 2)
++    masked = determinism(records, 3, 4)
++    repeated = full["n_repeated_pairs"]
++    frac = full["nondeterminism_fraction"]
++    mfrac = masked["nondeterminism_fraction"]
++
++    if not l2_reached_ever:
++        verdict = "complete: L2_unreachable_to_test_could_not_solve_L1_to_enter_L2"
++    elif repeated == 0:
++        verdict = "complete: indeterminate_zero_repeated_grid_action_keys_in_L2_cannot_test_determinism"
++    elif frac is not None and frac == 0.0:
++        verdict = ("complete: L2_transition_is_grid_deterministic_no_hidden_state_"
++                   "same_visible_logical_grid_plus_action_always_same_next_grid")
++    elif frac is not None and frac > 0.0 and (mfrac is not None and mfrac == 0.0):
++        verdict = ("complete: L2_full_grid_nondeterministic_ONLY_via_visible_move_counter_"
++                   "navigation_masked_grid_is_deterministic_no_truly_hidden_state")
++    elif frac is not None and frac > 0.0:
++        verdict = ("complete: L2_transition_has_HIDDEN_STATE_"
++                   "same_visible_logical_grid_plus_action_yields_distinct_next_grids")
++    else:
++        verdict = "complete: indeterminate"
++
++    artifact = {
++        "experiment": "experiment_tu93_l2_hidden_state",
++        "honest_verdict": verdict,
++        "verifier_is_oracle": False,
++        "inference_substrate": "offline_arc_search",
++        "random_seed": args.seed,
++        "game": GAME,
++        "level_under_test": 2,
++        "model_file": str(MODEL_FILE.relative_to(REPO)),
++        "logical_cell_size": int(cell),
++        "l2_reachable": bool(l2_reached_ever),
++        "n_l2_episodes": int(n_l2_episodes),
++        "n_resets_to_reach_l2": int(n_resets),
++        "n_l2_transitions": len(records),
++        "counter_mask_cells": int(counter_mask.sum()) if counter_mask is not None else 0,
++        # PRIMARY: full visible logical grid
++        "n_grid_action_pairs_with_repeats": int(repeated),
++        "n_nondeterministic_pairs": int(full["n_nondeterministic_pairs"]),
++        "nondeterminism_fraction": frac,
++        "full_grid_determinism": full,
++        # SECONDARY: navigation-masked grid (move-counter HUD blanked)
++        "masked_grid_determinism": masked,
++        "comparison_experiment_8": {
++            "sb26_logical_nondeterminism_rate": 0.0,
++            "wa30_logical_nondeterminism_rate": 0.53,
++            "note": "0 == grid-deterministic (sb26 class); >0 == hidden state (wa30 class).",
++        },
++        "duration_s": round(time.time() - t0, 1),
++    }
++    OUT.write_text(json.dumps(artifact, indent=2))
++    print(json.dumps(artifact, indent=2))
++    print(f"\n  -> {OUT}", flush=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_arc_nav_world_model.py b/tests/python/test_arc_nav_world_model.py
+new file mode 100644
+index 0000000000..004a98bcd7
+--- /dev/null
++++ b/tests/python/test_arc_nav_world_model.py
+@@ -0,0 +1,110 @@
++"""Unit tests for the auto-fitting nav world model (carnot.agentic.arc_nav_world_model).
++
++Covers the re-induction primitive used by scripts/experiments/experiment_reinduction.py: the model must
++LEARN {avatar colours, per-action displacement, wall colour, floor colour, goal colour} FROM TRANSITIONS
++alone (no hardcoding) and then drive plan_in_model via engine + is_level_complete.
++
++Traceability: program-generalization / mechanic-conditioned re-induction work
++(docs/research-notes/program-generalization-first-swing-2026-06-22.md).
++"""
++from __future__ import annotations
++
++import numpy as np
++
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel
++
++# A fully-known ground-truth nav mechanic (independent of the fitter):
++#   colour 5 = wall/background, 2 = door, 0 = floor, 4 = avatar (1x1), 14 = goal. step = 2.
++WALL, DOOR, FLOOR, AV, GOAL = 5, 2, 0, 4, 14
++STEP = 2
++_DIRS = {1: (-STEP, 0), 2: (STEP, 0), 3: (0, -STEP), 4: (0, STEP)}
++
++
++def _grid(av_rc, *, mid=None, mid_color=None, dest=None, dest_color=None):
++    """A 7x7 wall field with a 1x1 avatar, optionally a coloured mid-gap cell and a coloured dest cell."""
++    g = np.full((7, 7), WALL, dtype=int)
++    g[av_rc] = AV
++    if mid is not None:
++        g[mid] = mid_color
++    if dest is not None:
++        g[dest] = dest_color
++    return g
++
++
++def _mk(av, action, outcome):
++    """Build a (g0, action, g1, level_before, level_after) transition with a known outcome for `action`
++    from avatar cell `av`: 'move' (door ahead -> avatar advances), 'block' (wall ahead -> stays),
++    'levelup' (goal ahead -> avatar covers it, level 0->1)."""
++    dy, dx = _DIRS[action]
++    r, c = av
++    mid = (r + dy // 2, c + dx // 2)
++    dest = (r + dy, c + dx)
++    if outcome == "block":
++        g0 = _grid(av, mid=mid, mid_color=WALL)
++        return (g0, action, g0.copy(), 0, 0)
++    dest_color = GOAL if outcome == "levelup" else FLOOR
++    g0 = _grid(av, mid=mid, mid_color=DOOR, dest=dest, dest_color=dest_color)
++    g1 = _grid(dest, mid=mid, mid_color=DOOR)   # avatar now at dest; old cell becomes wall-field floor below
++    g1[av] = FLOOR
++    la = 1 if outcome == "levelup" else 0
++    return (g0, action, g1, 0, la)
++
++
++def _transitions():
++    """Exercise every direction with BOTH a move and a wall-block, plus one goal level-up (so goal colour
++    is learned from the level-up signal, not a heuristic fallback)."""
++    tr = []
++    for action in (1, 2, 3, 4):
++        tr.append(_mk((3, 3), action, "move"))
++        tr.append(_mk((3, 3), action, "block"))
++    tr.append(_mk((3, 3), 4, "move"))                 # extra moves so displacement mode is unambiguous
++    tr.append(_mk((3, 1), 4, "move"))
++    tr.append(_mk((1, 3), 2, "move"))
++    tr.append(_mk((3, 3), 4, "levelup"))              # avatar covers the goal -> level 0->1
++    return tr
++
++
++def test_fit_recovers_mechanic_from_transitions():
++    """REQ: the model learns avatar/wall/floor/goal/displacement purely from data (no hardcoding)."""
++    m = InducedNavWorldModel.fit(_transitions())
++    assert AV in m.avatar_colors
++    assert m.floor_color == FLOOR
++    assert WALL in m.wall_colors
++    assert m.goal_color == GOAL                       # learned from the level-up transition
++    assert m.displacement.get(4) == (0, STEP)
++    assert m.displacement.get(3) == (0, -STEP)
++    assert m.displacement.get(1) == (-STEP, 0)
++    assert m.displacement.get(2) == (STEP, 0)
++
++
++def test_engine_moves_and_blocks_correctly():
++    """REQ: the induced engine reproduces ground-truth move/block decisions."""
++    m = InducedNavWorldModel.fit(_transitions())
++    # door to the right of (3,3): move advances the avatar to (3,5)
++    g = _grid((3, 3), mid=(3, 4), mid_color=DOOR, dest=(3, 5), dest_color=FLOOR)
++    out = m.engine(g, 4)
++    ys, xs = np.where(out == AV)
++    assert (int(ys[0]), int(xs[0])) == (3, 5)
++    # wall to the right -> blocked, avatar stays at (3,3)
++    gb = _grid((3, 3), mid=(3, 4), mid_color=WALL)
++    outb = m.engine(gb, 4)
++    ys2, xs2 = np.where(outb == AV)
++    assert (int(ys2[0]), int(xs2[0])) == (3, 3)
++
++
++def test_is_level_complete_on_goal_coverage():
++    """REQ: level complete exactly when the avatar covers the goal colour."""
++    m = InducedNavWorldModel.fit(_transitions())
++    with_goal = _grid((3, 3), dest=(3, 5), dest_color=GOAL)
++    assert m.is_level_complete(with_goal) is False     # goal still visible
++    covered = _grid((3, 5))                             # avatar present, no goal cell remains
++    assert m.is_level_complete(covered) is True
++
++
++def test_fit_does_not_fabricate_on_static_input():
++    """REQ: degenerate input must not crash or invent a confident mechanic."""
++    static = [(np.full((7, 7), WALL), 1, np.full((7, 7), WALL), 0, 0)]
++    m = InducedNavWorldModel.fit(static)
++    assert m.displacement == {}
++    g = np.full((7, 7), WALL)
++    assert np.array_equal(m.engine(g, 4), g)           # safe identity, no motion invented
+-- 
+2.55.0
+

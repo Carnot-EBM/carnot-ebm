@@ -1,0 +1,103 @@
+From 162b6f58d658e1715b5ae29279844b55479a04c7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 09:36:26 -0400
+Subject: [PATCH 10388/11362] Root-cause exp6753: it checkpoints into a
+ TemporaryDirectory
+
+Three attempts have burned hours on the object-table A/B for nothing. Measured on
+the 11h29m run before killing it: 39,732 CPU-seconds, 490 completed generations,
+14,911 timing lines, ZERO errors -- and no artifact. It was never stuck; it ground
+steadily for eleven hours and left nothing.
+
+The cause is one line (experiment_6753...py:1207):
+
+    with tempfile.TemporaryDirectory(prefix="carnot-exp6753-") as temp_dir:
+
+The worker DOES checkpoint after every row into a path under that tree, and the
+context manager deletes the tree on exit. So it checkpoints diligently and then
+guarantees the checkpoints are destroyed unless the parent reaches aggregation.
+Any kill, cap or crash vaporises every completed row.
+
+That also explains the conductor's v2 hitting the 4,803s codex cap twice: the
+plan is 20 games x 3 seeds x 2 arms x 2 models, all-or-nothing, at ~85s per
+generation. The cap is a symptom of the structure, not an independent failure.
+
+Recorded with it: while running it held 17,884 MiB on GPU 0 and the V590
+capstone's exclusive_gpu_without_unrelated_compute gate named pid 3306606
+explicitly, memory_free_mb 5969 against 22,610 required. That is a gate quoting my
+process id -- evidence, not the correlation I got wrong yesterday. GPU 0 returned
+to 24,120 MiB free on kill.
+
+The fix is small: a durable checkpoint path keyed by model + plan hash, with the
+worker resuming from it. Today's 490 generations would have counted. The entry
+says explicitly not to re-run as-is, because a fourth attempt with the same
+structure produces the same nothing.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 48 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index ca3eaa4474..deff5f5fe3 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7221,6 +7221,54 @@ tasks are not.
+ 
+ ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
+ 
++### NEW 2026-08-30 (outer-loop, ROOT-CAUSED) — exp6753 CHECKPOINTS INTO A TemporaryDirectory, SO EVERY INTERRUPTED RUN LOSES ALL WORK
++
++Three independent attempts have now spent hours on the object-table A/B and produced nothing.
++This is structural, not bad luck.
++
++**Measured on the 11h29m hand-launched run before killing it (2026-08-30 13:11Z):**
++
++| | |
++|---|---|
++| llama-server CPU | 39,732 s |
++| distinct generations completed | **490** |
++| timing lines | 14,911 |
++| errors / timeouts in the server log | **0** |
++| new artifact produced | **none** — the only exp6753 file is still dated 08-29 11:42 |
++
++It was never stuck. It ground steadily for eleven hours and left nothing.
++
++**The cause, at `python/carnot/experiment_6753_object_table_fetch_on_demand_ab.py:1207`:**
++
++```python
++with tempfile.TemporaryDirectory(prefix="carnot-exp6753-") as temp_dir:
++```
++
++The parent runs each model in a worker subprocess, and that worker DOES checkpoint after every
++row (`_atomic_write(checkpoint_path, rows)`, line 1195-1196) — into a path under this temp tree.
++The context manager deletes the tree on exit. So the design checkpoints diligently and then
++guarantees the checkpoints are destroyed unless the parent survives to its aggregation step.
++Kill the parent, hit a cap, crash: every completed row vaporises.
++
++**Why it cannot finish in one window.** The plan is 20 games x 3 SEEDS x 2 ARMS x 2 models, and
++it is all-or-nothing. At the observed ~85 s per generation that exceeds any available window,
++which is also why the conductor's `Live object-table fetch-on-demand A/B v2` hit the 4,803 s
++codex wall-clock cap twice. The cap is a symptom of the same structure.
++
++**The interaction that made it worse.** While running it held 17,884 MiB on GPU 0, and the V590
++capstone's `exclusive_gpu_without_unrelated_compute` gate named pid 3306606 explicitly with
++`memory_free_mb: 5969` against a required 22,610 — so it was blocking conductor tasks by name,
++not by correlation. GPU 0 returned to 24,120 MiB free the moment it was killed.
++
++**Task: move the checkpoint out of the temp tree.** A durable path (e.g. under `output/`) keyed by
++model + plan hash, with the worker resuming from it, converts an all-or-nothing multi-hour job
++into a resumable one. Today's 490 generations would have counted. This is the whole fix; the
++experiment's logic is otherwise sound and error-free.
++
++**Do NOT simply re-run it as-is.** A fourth attempt without the checkpoint fix has the same
++structure and will produce the same nothing.
++
++
+ ### NEW 2026-08-30 (outer-loop, MEASURED) — THE OBJECT-TABLE A/B STALLS IN `poll` WITH ITS SERVER RESIDENT, AND LONG GPU JOBS GO LOG-SILENT WHILE ALIVE
+ 
+ Two observations, recorded because each has now recurred and each was described in chat twice
+-- 
+2.55.0
+

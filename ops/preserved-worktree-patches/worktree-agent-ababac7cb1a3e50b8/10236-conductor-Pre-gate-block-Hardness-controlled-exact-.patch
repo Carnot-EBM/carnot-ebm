@@ -1,0 +1,104 @@
+From 1c2f34e6eb2d833940b2138d957d36dcd7929c1b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 02:20:12 -0400
+Subject: [PATCH 10236/11362] [conductor] Pre-gate block: Hardness-controlled
+ exact certificate stream with proof-preserving relabeling
+
+1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract.v587_contract_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...ardness_controlled_certificate_stream.json | 51 +++++++++++++++++++
+ 4 files changed, 54 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6733_hardness_controlled_certificate_stream.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d594c1d99d..99de805684 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-29T06:18:08Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-08-29T06:20:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e4bdfafaab..0bb3643556 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16741,3 +16741,4 @@ The l |
+ | 2026-08-29 06:16 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
+ | 2026-08-29 06:16 UTC | Cold object-table row, statistic, and live-provena | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.ob |
+ | 2026-08-29 06:18 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
++| 2026-08-29 06:18 UTC | Cold object-table row, statistic, and live-provena | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.ob |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8d42649276..426657c447 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-29T06:18:08Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 12, "phase": "iteration_start", "started_at": "2026-08-29T06:20:11Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6733_hardness_controlled_certificate_stream.json b/results/experiment_6733_hardness_controlled_certificate_stream.json
+new file mode 100644
+index 0000000000..01940573f2
+--- /dev/null
++++ b/results/experiment_6733_hardness_controlled_certificate_stream.json
+@@ -0,0 +1,51 @@
++{
++  "experiment": 6733,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-29",
++  "started_at": "2026-08-29T06:20:12.334599+00:00",
++  "finished_at": "2026-08-29T06:20:12.334599+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Hardness-controlled exact certificate stream with proof-preserving relabeling",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "actual=False == expected=True",
++  "failed_upstream": "exp6729-v587-activation-evidence-contract",
++  "failed_field": "v587_contract_ready",
++  "failed_operator": "==",
++  "failed_expected": true,
++  "failed_expected_type": "bool",
++  "failed_observed": false,
++  "failed_observed_type": "bool",
++  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6729_v587_activation_evidence_contract.json",
++  "failed_evidence_sha256": "sha256:1c07250420210ec050d6c8e70a22bcbaa703b97c69964aa88956b6866f67aaaa",
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "actual=False == expected=True",
++    "failed_upstream": "exp6729-v587-activation-evidence-contract",
++    "failed_field": "v587_contract_ready",
++    "failed_operator": "==",
++    "failed_expected": true,
++    "failed_expected_type": "bool",
++    "failed_observed": false,
++    "failed_observed_type": "bool",
++    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6729_v587_activation_evidence_contract.json",
++    "failed_evidence_sha256": "sha256:1c07250420210ec050d6c8e70a22bcbaa703b97c69964aa88956b6866f67aaaa"
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract.v587_contract_ready (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6729-v587-activation-evidence-contract",
++      "artifact_field": "v587_contract_ready",
++      "op": "==",
++      "expected": true,
++      "expected_type": "bool",
++      "actual": false,
++      "actual_type": "bool",
++      "passed": false,
++      "reason": "actual=False == expected=True",
++      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6729_v587_activation_evidence_contract.json",
++      "artifact_sha256": "sha256:1c07250420210ec050d6c8e70a22bcbaa703b97c69964aa88956b6866f67aaaa"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

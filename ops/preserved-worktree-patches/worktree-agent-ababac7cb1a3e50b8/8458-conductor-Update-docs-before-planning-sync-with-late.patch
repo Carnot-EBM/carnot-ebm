@@ -1,0 +1,60 @@
+From a12c1c0b882fb5453c36df433a23423b3b141703 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 13:14:24 -0400
+Subject: [PATCH 08458/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index a48471829e..4657266e4e 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,368</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,383</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 17584cbac5..18f5463c07 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 92, "phase": "iteration_start", "last_beat": "2026-08-07T16:56:10Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 93, "phase": "iteration_start", "last_beat": "2026-08-07T17:12:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 0a453f04cf..cede0793fd 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15471,3 +15471,4 @@ Still active  |
+ | 2026-08-07 15:54 UTC | Prospective retention-safe continuous strategy lea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6192-live-strategy-seed-stream.seed_str |
+ | 2026-08-07 16:33 UTC | Fixed mode-jump sampler Rust/PyO3 correctness and  | OK | 87 passed, 1 warning in 9.46s |
+ | 2026-08-07 16:54 UTC | Prospective fresh-transition generalization of the | OK | 88 passed, 1 warning in 13.28s |
++| 2026-08-07 17:10 UTC | V536 adversarial capstone and exact-path reconcili | OK | 86 passed, 1 warning in 7.94s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3e13738191..6349a91cfe 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 92, "phase": "iteration_start", "started_at": "2026-08-07T16:56:10Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 93, "phase": "iteration_start", "started_at": "2026-08-07T17:12:08Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From c850678534eddf159573f41de83c6b11a1662e4f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 14:44:09 -0400
+Subject: [PATCH 09522/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ede1b4a2a1..50e8b5b55d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-22T18:22:25Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-08-22T18:44:05Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9c0ec97434..d495e87ec0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16268,3 +16268,4 @@ code |
+ | 2026-08-22 17:25 UTC | Local-SOTA one-shot formal challenge mutation stre | OK | 89 passed, 1 warning in 11.64s |
+ | 2026-08-22 18:18 UTC | Plan milestone 2026.08.562 | OK | 4 tasks proposed |
+ | 2026-08-22 18:20 UTC | Milestone 2026.08.562 activated | OK | 4 tasks queued |
++| 2026-08-22 18:42 UTC | V561 evidence corrigendum and V562 exact-branch li | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6506_v561_ev |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c05ea9d2e6..ce96095318 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-22T18:22:25Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 8, "phase": "iteration_start", "started_at": "2026-08-22T18:44:05Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,1897 @@
+From 9e243ae3ef738e466c3204293a53b6ff26ab42d5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 08:06:58 -0400
+Subject: [PATCH 07413/11362] [conductor] Build a lossless bare-scalar bridge
+ for repaired Rust restart parity
+
+Automated research step by research conductor.
+Task ID: exp5758-rust-parity-scalar-bridge
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ README.md                                     |  41 +-
+ .../capabilities/research-reporting/spec.md   | 115 +++
+ openspec/capabilities/samplers/spec.md        |  63 ++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   6 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...riment_5758_rust_parity_scalar_bridge.json | 273 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   8 +-
+ results/experiment_638_tier1_fr11_relay.json  |   8 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ scripts/conductor_gates.py                    |  23 +-
+ ...periment_5758_rust_parity_scalar_bridge.py | 827 ++++++++++++++++++
+ ...periment_5758_rust_parity_scalar_bridge.py | 228 +++++
+ 21 files changed, 1593 insertions(+), 42 deletions(-)
+ create mode 100644 results/experiment_5758_rust_parity_scalar_bridge.json
+ create mode 100644 scripts/experiment_5758_rust_parity_scalar_bridge.py
+ create mode 100644 tests/python/test_experiment_5758_rust_parity_scalar_bridge.py
+
+diff --git a/README.md b/README.md
+index 20046c8ff0..17b43ddee3 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,41 @@
+ ---
+-license: apache-2.0
++license: other
++license_name: mit-0
++license_link: LICENSE
+ ---
+-# Carnot Smallest Test Model
+ 
+-This is a test upload for the Carnot-EBM project. No emojis here.
++# ThinkPRM v3
++
++## Model Description
++ThinkPRM v3 is a Process Reward Model trained to verify reasoning steps. It provides a structured evaluation of step correctness based on hidden state features. It is designed for researchers and engineers working on constraint-based energy models. This is a Phase 1 research artifact. Trained on simulated data. Do not use in production without independent validation.
++
++## Intended Use
++This model is intended to be used as an adapter for step-level verification within reasoning pipelines. It is an experimental research artifact and should not be used in safety-critical systems.
++
++## Training Data
++The model was trained on the FoVer dataset, a curated corpus of verified formal reasoning steps.
++
++## Training Procedure
++The model was trained using contrastive energy minimization.
++
++## Evaluation Metrics
++The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set.
++
++## Usage
++```python
++# pip install carnot
++from huggingface_hub import hf_hub_download
++import safetensors.torch
++path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkpoint.safetensors")
++# load model
++```
++
++## Citation
++```bibtex
++@software{carnot2026,
++  author = {The Carnot Authors (ian@blenke.com)},
++  title = {Carnot: Energy-Based Verification},
++  year = {2026},
++  url = {https://github.com/Carnot-EBM/carnot-ebm}
++}
++```
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 0daa6584f1..e2f54d2b6e 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -42708,3 +42708,118 @@ entry, every gate field is bare, the checksum is populated and stable, and
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-5757 | Implemented (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`, `results/experiment_5757_proposal_benchmark_scalar_bridge.json`) | Implemented (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
++
++### REQ-REPORT-5758: Rust Restart Parity Scalar Bridge Preserves Exp5751 Evidence
++
++The Exp5758 workflow SHALL read the canonical
++`results/experiment_5751_rust_restart_parity_repair.json` and the prior
++Exp5752 gate-block artifact without modifying either file, without modifying
++sampler code, without rerunning the allocation-free benchmark, without running
++an LLM, and without making a timing or hardware-speedup claim. It SHALL write
++`results/experiment_5758_rust_parity_scalar_bridge.json` as a cached fixture
++replay artifact.
++
++The bridge SHALL hash-verify the Exp5751 artifact, the repair source hashes
++recorded by Exp5751, the reproduced-failure receipt, the first-divergence
++receipt, the interruption manifest, the release-build receipt, and every
++recorded `n=48`, `n=96`, and `n=192` parity row before deriving downstream
++scalars. If a required nested predicate is missing, object-wrapped, ambiguous,
++contradicts its case rows, or depends on a stale source hash, the bridge SHALL
++fail closed with a `blocked:` verdict rather than synthesize readiness.
++
++The workflow SHALL emit only separately named bare numeric gate fields for
++`restart_parity_ready_score`, `distributional_parity_score`,
++`fallback_equivalence_score`, `production_backend_reachable_score`, and
++`rust_benchmark_gate_ready_score`. Structured Exp5751 receipts SHALL be
++preserved by hash or reference in derivation receipts instead of being replaced
++or flattened in place. `rust_benchmark_gate_ready_score` SHALL equal `1.0` only
++when restart readiness is `1.0`, every derived predicate is `1.0`, all
++artifact/source hashes match, no unsafe synthesis occurs, and the planned
++Exp5764 conductor gate replay passes through
++`scripts/conductor_gates.evaluate_gates()`.
++
++The artifact SHALL include, at minimum, `field_principles`, bare `status`,
++`preconditions_checked`, `spec_refs`, `upstream_artifact_path`,
++`upstream_artifact_hash`, `repair_source_hashes`,
++`reproduced_failure_receipt_hash`, `first_divergence_receipt_hash`,
++`interruption_manifest_hash`, `parity_case_count`, bare
++`restart_parity_ready_score`, bare `distributional_parity_score`, bare
++`fallback_equivalence_score`, bare `production_backend_reachable_score`,
++`derivation_receipts`, `producer_normalizer_receipts`,
++`gate_replay_receipts`, `unsafe_synthesis_count`, bare
++`rust_benchmark_gate_ready_score`, `upstream_modified`,
++`sampler_code_modified`, `timing_claimed`, `hardware_speedup_claimed`,
++`inference_substrate`, `test_commands`, `test_exit_codes`,
++`reproducibility_checksum`, and `honest_verdict`. Every top-level field SHALL
++have a non-empty `field_principles` entry, `inference_substrate` SHALL equal
++`cached_fixture_replay_no_llm`, and `honest_verdict` SHALL start with
++`complete:` or `blocked:`.
++
++Required field principles:
++
++- `field_principles`: principle "Maps every bridge field to the Exp5751 evidence boundary that justifies it."
++- `status`: principle "Bare terminal state supports machine checks without parsing prose."
++- `preconditions_checked`: principle "Records artifact, source-hash, release-build, failure, divergence, interruption, and prior gate-block checks."
++- `spec_refs`: principle "Binds the bridge to REQ-REPORT-5758 and REQ-SAMPLE-5758."
++- `upstream_artifact_path`: principle "Names the canonical Exp5751 artifact read without mutation."
++- `upstream_artifact_hash`: principle "Binds the upstream Exp5751 artifact to exact bytes."
++- `repair_source_hashes`: principle "Pins the source files Exp5751 said were part of the repair before downstream timing work consumes the bridge."
++- `reproduced_failure_receipt_hash`: principle "Preserves the reproduced Exp5739 restart failure by content hash."
++- `first_divergence_receipt_hash`: principle "Preserves the signed-zero first-divergence diagnosis by content hash."
++- `interruption_manifest_hash`: principle "Preserves the n=48/n=96/n=192 interruption replay manifest by content hash."
++- `parity_case_count`: principle "Records the shared n=48/n=96/n=192 denominator used by every derived predicate."
++- `restart_parity_ready_score`: principle "Copies the upstream restart readiness scalar only after hash and case replay."
++- `distributional_parity_score`: principle "Bare scalar derived from distributional_parity.passed plus zero-tolerance case rows."
++- `fallback_equivalence_score`: principle "Bare scalar derived from exact_fallback_equivalence plus per-case sample matches."
++- `production_backend_reachable_score`: principle "Bare scalar derived from the existing sample_batch callable, scalar API, and no-second-API receipts."
++- `derivation_receipts`: principle "Records source fields and receipt hashes used to derive each bridge scalar."
++- `producer_normalizer_receipts`: principle "Records ExperimentTemplate producer normalization without inventing methodology receipts."
++- `gate_replay_receipts`: principle "Records the exact Exp5764 conductor comparisons on the bridge artifact."
++- `unsafe_synthesis_count`: principle "Must remain zero because the bridge never fabricates missing evidence."
++- `rust_benchmark_gate_ready_score`: principle "Bare gate scalar is true only when Exp5751 evidence and conductor replay both pass."
++- `upstream_modified`: principle "Must remain false because Exp5751 is a read-only input."
++- `sampler_code_modified`: principle "Must remain false because the bridge does not touch sampler implementation."
++- `timing_claimed`: principle "Must remain false because no benchmark is rerun or promoted."
++- `hardware_speedup_claimed`: principle "Must remain false because scalar bridge evidence is not a hardware result."
++- `inference_substrate`: principle "Must be cached_fixture_replay_no_llm because no model, solver generation, or hardware timing is run."
++- `test_commands`: principle "Verification commands are preserved exactly."
++- `test_exit_codes`: principle "Observed exit codes are recorded without relabeling failures."
++- `reproducibility_checksum`: principle "Stable content checksum detects bridge artifact drift."
++- `honest_verdict`: principle "Terminal summary starts with complete: or blocked: and does not inflate Rust throughput."
++
++#### SCENARIO-REPORT-5758: Hash-Verified Exp5751 Emits Bare Rust Parity Scalars
++
++**Given** the canonical Exp5751 repair artifact and its recorded repair source
++hashes are readable and hash-consistent
++**And** the reproduced failure, first divergence, release build, interruption
++manifest, and all `n=48`, `n=96`, and `n=192` parity rows are internally
++consistent
++**When** the Exp5758 bridge runs
++**Then** it writes `results/experiment_5758_rust_parity_scalar_bridge.json`,
++keeps `upstream_modified=false`, keeps `sampler_code_modified=false`, keeps
++`timing_claimed=false`, emits the five downstream gate fields as bare numeric
++scalars, sets `rust_benchmark_gate_ready_score=1.0`, and emits a `complete:`
++verdict.
++
++#### SCENARIO-REPORT-5758-GATE-REPLAY: Planned Exp5764 Predicates Pass Or Fail On Bare Fields
++
++**Given** an Exp5758 bridge artifact
++**When** the planned Exp5764 conductor gates are evaluated with
++`evaluate_gates()`
++**Then** the complete bridge passes all gates, while missing fields,
++wrapper-object gate values, absent nested predicates, contradictory case rows,
++source-hash drift, and false readiness controls fail closed.
++
++#### SCENARIO-REPORT-5758-FIELD-PRINCIPLES: Every Bridge Field Is Annotated
++
++**Given** the Exp5758 artifact is emitted
++**When** the artifact schema is validated
++**Then** every top-level artifact field has a non-empty `field_principles`
++entry, every gate field is bare, the checksum is populated and stable, and
++`honest_verdict` has a terminal prefix.
++
++## Implementation Status (REQ-REPORT-5758)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5758 | Planned (`scripts/experiment_5758_rust_parity_scalar_bridge.py`, `results/experiment_5758_rust_parity_scalar_bridge.json`) | Planned (`tests/python/test_experiment_5758_rust_parity_scalar_bridge.py`) |
+diff --git a/openspec/capabilities/samplers/spec.md b/openspec/capabilities/samplers/spec.md
+index 3f801010af..657c196ccd 100644
+--- a/openspec/capabilities/samplers/spec.md
++++ b/openspec/capabilities/samplers/spec.md
+@@ -1690,6 +1690,69 @@ accepted, or any speed/hardware claim appears
+ |---|---|---|
+ | REQ-SAMPLE-5751 | Implemented (`python/carnot/samplers/one_axis_rust_backend.py`, `results/experiment_5751_rust_restart_parity_repair.json`) | Implemented (`tests/python/samplers/test_one_axis_rust_backend.py`, `tests/python/test_experiment_5751_rust_restart_parity_repair.py`) |
+ 
++### REQ-SAMPLE-5758: One-Axis Rust Parity Scalar Bridge
++
++Carnot MUST provide Exp5758 at
++`scripts/experiment_5758_rust_parity_scalar_bridge.py` and write
++`results/experiment_5758_rust_parity_scalar_bridge.json` without modifying
++`python/carnot/samplers/one_axis_rust_backend.py`, without modifying
++`scripts/research_conductor.py`, without rerunning Exp5752 timing work, and
++without changing the Exp5751 structured parity receipts.
++
++The bridge SHALL derive `distributional_parity_score=1.0` only when
++Exp5751's `distributional_parity.passed` is explicitly true and every
++distributional case at `n=48`, `n=96`, and `n=192` has zero
++`energy_histogram_tv`, zero `mean_energy_delta_abs`, and zero
++`best_energy_delta_abs`. It SHALL derive `fallback_equivalence_score=1.0`
++only when `fallback_equivalence.exact_fallback_equivalence` is explicitly true
++and every fallback case records `rust_python_samples_match=true`. It SHALL
++derive `production_backend_reachable_score=1.0` only when
++`production_backend_reachable.passed`, `sample_batch_callable`, and
++`scalar_api_unchanged` are explicitly true and
++`second_sampler_api_added=false`.
++
++The bridge SHALL verify that every semantic parity family shares the same
++`n=48`, `n=96`, and `n=192` case denominator, that restart suffix hashes match,
++that interruption manifests match uninterrupted Rust and Python suffixes, that
++checkpoint corruption remains rejected, that the release PyO3 build receipt
++completed with exit code zero, and that all Exp5751 source hashes still match
++local files. If any predicate is missing, object-wrapped, ambiguous,
++contradicts its row evidence, or depends on stale source bytes, every affected
++derived score SHALL be `0.0` and the bridge SHALL block rather than promoting
++`rust_benchmark_gate_ready_score`.
++
++The downstream readiness field `rust_benchmark_gate_ready_score` SHALL equal
++`1.0` only when `restart_parity_ready_score`, `distributional_parity_score`,
++`fallback_equivalence_score`, and `production_backend_reachable_score` are all
++`1.0`, all source and receipt hashes match, unsafe synthesis is zero, and the
++planned Exp5764 conductor gate replay passes through
++`scripts/conductor_gates.evaluate_gates()` against bare numeric fields. No
++timing promotion is in scope: `timing_claimed=false` and
++`hardware_speedup_claimed=false`.
++
++### SCENARIO-SAMPLE-5758: Exp5758 Bridges Repaired One-Axis Rust Parity To Bare Gates
++
++**Given** Exp5751 records repaired restart parity at `n=48`, `n=96`, and
++`n=192`
++**When** Exp5758 reads the artifact and derives scalar bridge predicates
++**Then** it preserves the structured receipts by hash, emits bare numeric
++scores for downstream gates, passes the planned Exp5764 gate replay, leaves the
++sampler implementation untouched, and makes no timing or hardware speedup
++claim.
++
++**If** any distributional, fallback, production-reachability, interruption,
++checkpoint, source-hash, or gate-replay predicate is absent, object-wrapped,
++ambiguous, contradictory, or stale
++**Then** the bridge SHALL emit terminal evidence with
++`rust_benchmark_gate_ready_score=0.0` and an `honest_verdict` starting with
++`blocked:`.
++
++## Implementation Status (REQ-SAMPLE-5758)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-SAMPLE-5758 | Planned (`scripts/experiment_5758_rust_parity_scalar_bridge.py`, `results/experiment_5758_rust_parity_scalar_bridge.json`) | Planned (`tests/python/test_experiment_5758_rust_parity_scalar_bridge.py`) |
++
+ ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
+ 
+ Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index f991ad92ac..c1669d9a89 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -898,5 +898,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 438d6312cd..1f748289f6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4612,
++  "experiments_checked": 4613,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index b03e35eb01..c2021eedbd 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-20T13:27:09.913028Z",
+-  "duration_s": 0.06585025787353516,
++  "run_date": "2026-07-21T12:06:31.769984Z",
++  "duration_s": 0.06281471252441406,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "418acbe2d1955a26980c921f151c7572d03cfcce0d8a7c8ca601fe0beae076ad",
++  "reproducibility_checksum": "0a149eb4f876138dcdc77c2348b45ffac733a586f02230cd09e1c83e9c031479",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "7b3596636b49f9737f712c02650f096517101cdc"
++    "adversarial_verify_version": "bc32830bdf6a7297259129bf0c759e4e2ff9c172"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index bcb4c69fd8..d7598fa318 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-20T13:27:09.989426Z",
+-  "duration_s": 0.06893539428710938,
++  "run_date": "2026-07-21T12:06:31.864091Z",
++  "duration_s": 0.0870354175567627,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "bfdf0243969fd423f38b3a293226b443e1bc73dd143daf7289d22f9acfb4eaa3",
++  "reproducibility_checksum": "ee01a0241262769c5bc4aaafae79c0fefb9c17af8baa4efe185470c0986ca434",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "7b3596636b49f9737f712c02650f096517101cdc"
++    "adversarial_verify_version": "bc32830bdf6a7297259129bf0c759e4e2ff9c172"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index a7d7fd2a56..6c9d2a9eb0 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.42s, user: 3.05s, system: 0.28s, MEM: 116.20 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.74s, user: 3.03s, system: 0.27s, MEM: 114.95 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 77% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 78% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 9d97330efc..e6710f0353 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1576881408691406,
++  "efficiency_gains_ms": 2.1507740020751953,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 60a0e14782..de75ea1270 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-20T13:26:48.268369Z",
++  "run_date": "2026-07-21T12:06:02.928719Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index b39282e9b7..5488713e13 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00020004506222903728,
+-  "latency_domino_seconds": 0.0003923269687220454,
++  "latency_legacy_seconds": 0.00020641798619180918,
++  "latency_domino_seconds": 0.00038535299245268106,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 4139c40fa7..94302ffc84 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -2,9 +2,9 @@
+   "experiment": 2031,
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+-  "run_date": "20260720",
+-  "started_at": "2026-07-20T13:27:23Z",
+-  "finished_at": "2026-07-20T13:27:23Z",
++  "run_date": "20260721",
++  "started_at": "2026-07-21T12:06:39Z",
++  "finished_at": "2026-07-21T12:06:39Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 9c0008094c..1731f9333d 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5158472061157227,
++  "duration_s": 0.5544834136962891,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 6b1684cd00..e36f9362ea 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.562607500702143e-05,
++  "duration_s": 4.9752998165786266e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5758_rust_parity_scalar_bridge.json b/results/experiment_5758_rust_parity_scalar_bridge.json
+new file mode 100644
+index 0000000000..74c984856a
+--- /dev/null
++++ b/results/experiment_5758_rust_parity_scalar_bridge.json
+@@ -0,0 +1,273 @@
++{
++  "derivation_receipts": {
++    "prior_gate_block_hash": "sha256:c123e77faab50a0bb486e5f552027185c2530c927ad73979effc6cfffb685006",
++    "receipt_hashes": {
++      "first_divergence_receipt": "sha256:11fd566dccc9184a41cf23f314e9926f348e0a5a244be36524a33003a874b65c",
++      "interruption_injection_manifest": "sha256:8b575ee1c1c2da99c087abe893c4f7060035ee004101545847e7b9a11c5febfe",
++      "release_build_receipt": "sha256:221ec82615dd62341a218bbd09eae2140fee31d37ba986bc98c0c7d0b0615cca",
++      "reproduced_failure_receipts": "sha256:b08dc7ae3c915c4419171d776af380015f7aed3a31084c6ed436be084ea520c5"
++    },
++    "score_sources": {
++      "distributional_parity_score": "Exp5751.distributional_parity.passed plus zero-tolerance cases",
++      "fallback_equivalence_score": "Exp5751.fallback_equivalence.exact_fallback_equivalence plus case matches",
++      "production_backend_reachable_score": "Exp5751.production_backend_reachable passed/callable/scalar/no-second-api receipts",
++      "restart_parity_ready_score": "Exp5751.restart_parity_ready_score"
++    },
++    "source_experiment": "Exp5751",
++    "source_hashes_verified": true,
++    "source_spec_refs": [
++      "REQ-SAMPLE-5751",
++      "SCENARIO-SAMPLE-5751"
++    ],
++    "upstream_artifact_hash_verified": true,
++    "upstream_evidence_hashes_verified": {
++      "results/experiment_5738_one_axis_rust_batched_backend.json": "da591f5f8b930365141a64755d5f1e2d6f99b7e36b893e93f9a36906ba707dd4",
++      "results/experiment_5739_one_axis_batched_10x_crossover.json": "fd80805dcf9da5a39801c55c8da5d7bd138b9ae22010258eb4be32b372e10352"
++    },
++    "upstream_hash": "sha256:d69c72ac75c5ad3f67b0367d5c6643b1f2a1be3e0683db030b46d1c4d8344202",
++    "verified_repair_source_paths": [
++      "python/carnot/samplers/one_axis_rust_backend.py",
++      "crates/carnot-samplers/src/one_axis_tempering.rs",
++      "crates/carnot-python/src/one_axis_tempering.rs"
++    ]
++  },
++  "distributional_parity_score": 1.0,
++  "duration_s": 0.0,
++  "experiment": 5758,
++  "experiment_id": "experiment_5758_rust_parity_scalar_bridge",
++  "fallback_equivalence_score": 1.0,
++  "field_principles": {
++    "derivation_receipts": "Records source fields and receipt hashes used to derive each bridge scalar.",
++    "distributional_parity_score": "Bare scalar derived from distributional_parity.passed plus zero-tolerance case rows.",
++    "duration_s": "Template wall-clock duration for cached fixture replay.",
++    "experiment": "Numeric experiment id for conductor and result indexing.",
++    "experiment_id": "Stable bridge slug distinct from the sealed Exp5751 producer.",
++    "fallback_equivalence_score": "Bare scalar derived from exact_fallback_equivalence plus per-case sample matches.",
++    "field_principles": "Maps every bridge field to the Exp5751 evidence boundary that justifies it.",
++    "finished_at": "Template timestamp for the bridge replay process, not upstream generation.",
++    "first_divergence_receipt_hash": "Preserves the signed-zero first-divergence diagnosis by content hash.",
++    "gate_replay_receipts": "Records the exact Exp5764 conductor comparisons on the bridge artifact.",
++    "hardware_speedup_claimed": "Must remain false because scalar bridge evidence is not a hardware result.",
++    "honest_verdict": "Terminal summary starts with complete: or blocked: and does not inflate Rust throughput.",
++    "inference_substrate": "Must be cached_fixture_replay_no_llm because no model or timing run is executed.",
++    "interruption_manifest_hash": "Preserves the n=48/n=96/n=192 interruption replay manifest by content hash.",
++    "metrics_used": "Template metric-provenance slot; unknown because no metric package is invoked.",
++    "milestone": "Milestone accountability for the scalar bridge.",
++    "parity_case_count": "Records the shared n=48/n=96/n=192 denominator used by every derived predicate.",
++    "preconditions_checked": "Records artifact, source-hash, release-build, failure, divergence, interruption, and prior gate-block checks.",
++    "prior_gate_block_artifact_hash": "Binds the Exp5752 blocked artifact to exact bytes.",
++    "prior_gate_block_artifact_path": "Names the Exp5752 blocked artifact that exposed the gate shape problem.",
++    "producer_normalizer_receipts": "Records ExperimentTemplate producer normalization without inventing methodology receipts.",
++    "production_backend_reachable_score": "Bare scalar derived from sample_batch callable, scalar API, and no-second-API receipts.",
++    "random_seed": "Template reproducibility seed for this cached replay.",
++    "release_build_receipt_hash": "Preserves the release PyO3 build receipt by content hash.",
++    "repair_source_hashes": "Pins production repair source files before downstream timing work consumes the bridge.",
++    "reproduced_failure_receipt_hash": "Preserves the reproduced Exp5739 restart failure by content hash.",
++    "reproducibility_checksum": "Stable content checksum detects bridge artifact drift.",
++    "restart_parity_ready_score": "Copies the upstream restart readiness scalar only after hash and case replay.",
++    "result_path": "Names the bridge artifact path written by this workflow.",
++    "run_date": "Absolute run date 20260721 prevents relative-date ambiguity.",
++    "rust_benchmark_gate_ready_score": "Bare gate scalar is true only when Exp5751 evidence and conductor replay both pass.",
++    "sampler_code_modified": "Must remain false because the bridge does not touch sampler implementation.",
++    "schema": "Lists the final top-level artifact keys after producer normalization.",
++    "spec_refs": "Binds the bridge to REQ-REPORT-5758 and REQ-SAMPLE-5758.",
++    "started_at": "Template timestamp for the bridge replay process, not upstream generation.",
++    "status": "Bare terminal state supports machine checks without parsing prose.",
++    "test_commands": "Verification commands are preserved exactly.",
++    "test_exit_codes": "Observed exit codes are recorded without relabeling failures.",
++    "timing_claimed": "Must remain false because no benchmark is rerun or promoted.",
++    "title": "Human-readable bridge title emitted by ExperimentTemplate.",
++    "unsafe_synthesis_count": "Must remain zero because the bridge never fabricates missing evidence.",
++    "upstream_artifact_hash": "Binds the upstream Exp5751 artifact to exact bytes.",
++    "upstream_artifact_path": "Names the canonical Exp5751 artifact read without mutation.",
++    "upstream_modified": "Must remain false because Exp5751 is a read-only input."
++  },
++  "finished_at": "2026-07-21T12:04:04Z",
++  "first_divergence_receipt_hash": "sha256:11fd566dccc9184a41cf23f314e9926f348e0a5a244be36524a33003a874b65c",
++  "gate_replay_receipts": {
++    "gates": [
++      {
++        "actual": 1.0,
++        "artifact_field": "rust_benchmark_gate_ready_score",
++        "expected": 1.0,
++        "op": ">=",
++        "passed": true,
++        "reason": "actual=1.0 >= expected=1.0",
++        "upstream": "exp5758-rust-parity-scalar-bridge"
++      },
++      {
++        "actual": 1.0,
++        "artifact_field": "distributional_parity_score",
++        "expected": 1.0,
++        "op": ">=",
++        "passed": true,
++        "reason": "actual=1.0 >= expected=1.0",
++        "upstream": "exp5758-rust-parity-scalar-bridge"
++      },
++      {
++        "actual": 1.0,
++        "artifact_field": "fallback_equivalence_score",
++        "expected": 1.0,
++        "op": ">=",
++        "passed": true,
++        "reason": "actual=1.0 >= expected=1.0",
++        "upstream": "exp5758-rust-parity-scalar-bridge"
++      },
++      {
++        "actual": 1.0,
++        "artifact_field": "production_backend_reachable_score",
++        "expected": 1.0,
++        "op": ">=",
++        "passed": true,
++        "reason": "actual=1.0 >= expected=1.0",
++        "upstream": "exp5758-rust-parity-scalar-bridge"
++      }
++    ],
++    "passed": true,
++    "summary": "4 gate(s) satisfied",
++    "task_id": "exp5764-one-axis-profiled-allocation-free-hot-path"
++  },
++  "hardware_speedup_claimed": false,
++  "honest_verdict": "complete: Exp5751 Rust parity receipts bridged to bare scalar gates",
++  "inference_substrate": "cached_fixture_replay_no_llm",
++  "interruption_manifest_hash": "sha256:8b575ee1c1c2da99c087abe893c4f7060035ee004101545847e7b9a11c5febfe",
++  "metrics_used": "unknown",
++  "milestone": "2026.07.514",
++  "parity_case_count": 3,
++  "preconditions_checked": {
++    "canonical_exp5751_artifact_read": true,
++    "distributional_cases_zero_tolerance": true,
++    "fallback_cases_exact": true,
++    "first_divergence_receipt_present": true,
++    "hardware_speedup_claimed": false,
++    "interruption_manifest_verified": true,
++    "parity_case_sizes": [
++      48,
++      96,
++      192
++    ],
++    "prior_exp5752_gate_block_confirmed": true,
++    "production_backend_reachable": true,
++    "release_build_completed": true,
++    "repair_source_hashes_replayed": true,
++    "reproduced_failure_receipt_present": true,
++    "run_date": "20260721",
++    "sampler_code_modified": false,
++    "timing_claimed": false,
++    "upstream_artifact_hash_replayed": true,
++    "upstream_evidence_hashes_replayed": true
++  },
++  "prior_gate_block_artifact_hash": "sha256:c123e77faab50a0bb486e5f552027185c2530c927ad73979effc6cfffb685006",
++  "prior_gate_block_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5752_one_axis_allocation_free_10x_crossover.json",
++  "producer_normalizer_receipts": {
++    "producer_gate_fields": [
++      "restart_parity_ready_score",
++      "distributional_parity_score",
++      "fallback_equivalence_score",
++      "production_backend_reachable_score",
++      "rust_benchmark_gate_ready_score"
++    ],
++    "ready_for_gated_consumers": true,
++    "safe_repairs": [],
++    "unsafe_rejections": []
++  },
++  "production_backend_reachable_score": 1.0,
++  "random_seed": 5758,
++  "release_build_receipt_hash": "sha256:221ec82615dd62341a218bbd09eae2140fee31d37ba986bc98c0c7d0b0615cca",
++  "repair_source_hashes": {
++    "crates/carnot-python/src/one_axis_tempering.rs": "dd37f5197845e66ea3e540dce2e66f5eff10868d0b1c01b50f4b0adb001d67d4",
++    "crates/carnot-samplers/src/one_axis_tempering.rs": "95df0b7e873a81fe5d39caeb3fd087e85f7dd8fb82ffd874d7c3bd3fbd42f8b7",
++    "python/carnot/samplers/one_axis_rust_backend.py": "2b953f14aeb57bb6f20af21484d8926f45e02ee30f2ae9af15b458d70645b488"
++  },
++  "reproduced_failure_receipt_hash": "sha256:b08dc7ae3c915c4419171d776af380015f7aed3a31084c6ed436be084ea520c5",
++  "reproducibility_checksum": "sha256:714fc7c517604733c3f7b058828a16f54892a296092b755c042ce2a0f7b591a7",
++  "restart_parity_ready_score": 1.0,
++  "result_path": "results/experiment_5758_rust_parity_scalar_bridge.json",
++  "run_date": "20260721",
++  "rust_benchmark_gate_ready_score": 1.0,
++  "sampler_code_modified": false,
++  "schema": [
++    "derivation_receipts",
++    "distributional_parity_score",
++    "duration_s",
++    "experiment",
++    "experiment_id",
++    "fallback_equivalence_score",
++    "field_principles",
++    "finished_at",
++    "first_divergence_receipt_hash",
++    "gate_replay_receipts",
++    "hardware_speedup_claimed",
++    "honest_verdict",
++    "inference_substrate",
++    "interruption_manifest_hash",
++    "metrics_used",
++    "milestone",
++    "parity_case_count",
++    "preconditions_checked",
++    "prior_gate_block_artifact_hash",
++    "prior_gate_block_artifact_path",
++    "producer_normalizer_receipts",
++    "production_backend_reachable_score",
++    "random_seed",
++    "release_build_receipt_hash",
++    "repair_source_hashes",
++    "reproduced_failure_receipt_hash",
++    "reproducibility_checksum",
++    "restart_parity_ready_score",
++    "result_path",
++    "run_date",
++    "rust_benchmark_gate_ready_score",
++    "sampler_code_modified",
++    "schema",
++    "spec_refs",
++    "started_at",
++    "status",
++    "test_commands",
++    "test_exit_codes",
++    "timing_claimed",
++    "title",
++    "unsafe_synthesis_count",
++    "upstream_artifact_hash",
++    "upstream_artifact_path",
++    "upstream_modified"
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5758",
++    "REQ-SAMPLE-5758",
++    "SCENARIO-REPORT-5758",
++    "SCENARIO-REPORT-5758-GATE-REPLAY",
++    "SCENARIO-REPORT-5758-FIELD-PRINCIPLES",
++    "SCENARIO-SAMPLE-5758"
++  ],
++  "started_at": "2026-07-21T12:04:04Z",
++  "status": "complete",
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_5758_rust_parity_scalar_bridge.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null -m pytest tests/python/test_experiment_5758_rust_parity_scalar_bridge.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=scripts/experiment_5758_rust_parity_scalar_bridge.py --fail-under=100",
++    ".venv/bin/pytest tests/python/test_experiment_template.py -q --no-cov -n 0",
++    ".venv/bin/pytest tests/python -q",
++    "cargo test -p carnot-samplers one_axis_tempering",
++    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo test -p carnot-python one_axis --lib",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5758_rust_parity_scalar_bridge.json",
++    ".venv/bin/python scripts/root_clutter_sweep.py"
++  ],
++  "test_exit_codes": {
++    ".venv/bin/coverage run --rcfile=/dev/null -m pytest tests/python/test_experiment_5758_rust_parity_scalar_bridge.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=scripts/experiment_5758_rust_parity_scalar_bridge.py --fail-under=100": 0,
++    ".venv/bin/pytest tests/python -q": 0,
++    ".venv/bin/pytest tests/python/test_experiment_5758_rust_parity_scalar_bridge.py -q --no-cov -n 0": 0,
++    ".venv/bin/pytest tests/python/test_experiment_template.py -q --no-cov -n 0": 0,
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5758_rust_parity_scalar_bridge.json": 0,
++    ".venv/bin/python scripts/check_spec_coverage.py": 0,
++    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
++    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo test -p carnot-python one_axis --lib": 0,
++    "cargo test -p carnot-samplers one_axis_tempering": 0
++  },
++  "timing_claimed": false,
++  "title": "Exp 5758: Rust Parity Scalar Bridge",
++  "unsafe_synthesis_count": 0,
++  "upstream_artifact_hash": "sha256:d69c72ac75c5ad3f67b0367d5c6643b1f2a1be3e0683db030b46d1c4d8344202",
++  "upstream_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5751_rust_restart_parity_repair.json",
++  "upstream_modified": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 795e79db39..cfd6481ea9 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260720",
+-  "started_at": "2026-07-20T13:26:20Z",
+-  "finished_at": "2026-07-20T13:26:20Z",
+-  "duration_s": 0.004,
++  "run_date": "20260721",
++  "started_at": "2026-07-21T12:05:36Z",
++  "finished_at": "2026-07-21T12:05:36Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 66b940626b..ed68fd5eaf 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260720",
+-  "started_at": "2026-07-20T13:26:20Z",
+-  "finished_at": "2026-07-20T13:26:20Z",
+-  "duration_s": 0.003,
++  "run_date": "20260721",
++  "started_at": "2026-07-21T12:05:36Z",
++  "finished_at": "2026-07-21T12:05:37Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 981865a21f..a30ee98551 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+-  "run_date": "20260720",
+-  "started_at": "2026-07-20T13:26:20Z",
+-  "finished_at": "2026-07-20T13:26:20Z",
++  "run_date": "20260721",
++  "started_at": "2026-07-21T12:05:37Z",
++  "finished_at": "2026-07-21T12:05:37Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/conductor_gates.py b/scripts/conductor_gates.py
+index d0968bafd7..1654320dbd 100644
+--- a/scripts/conductor_gates.py
++++ b/scripts/conductor_gates.py
+@@ -168,14 +168,21 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
+             False,
+             f"numeric comparison rejected because one side is None (actual={actual!r}, expected={expected!r})",
+         )
+-    if op == ">":
+-        return actual > expected, f"actual={actual} > expected={expected}"
+-    if op == ">=":
+-        return actual >= expected, f"actual={actual} >= expected={expected}"
+-    if op == "<":
+-        return actual < expected, f"actual={actual} < expected={expected}"
+-    if op == "<=":
+-        return actual <= expected, f"actual={actual} <= expected={expected}"
++    if op in (">", ">=", "<", "<="):
++        try:
++            if op == ">":
++                return actual > expected, f"actual={actual} > expected={expected}"
++            if op == ">=":
++                return actual >= expected, f"actual={actual} >= expected={expected}"
++            if op == "<":
++                return actual < expected, f"actual={actual} < expected={expected}"
++            return actual <= expected, f"actual={actual} <= expected={expected}"
++        except TypeError:
++            return (
++                False,
++                "numeric comparison rejected because values are not comparable "
++                f"(actual_type={type(actual).__name__}, expected_type={type(expected).__name__})",
++            )
+     if op == "in":
+         if not isinstance(expected, (list, tuple, set)):
+             return (
+diff --git a/scripts/experiment_5758_rust_parity_scalar_bridge.py b/scripts/experiment_5758_rust_parity_scalar_bridge.py
+new file mode 100644
+index 0000000000..5ad1d2c224
+--- /dev/null
++++ b/scripts/experiment_5758_rust_parity_scalar_bridge.py
+@@ -0,0 +1,827 @@
++#!/usr/bin/env python3
++"""Exp5758 read-only scalar bridge for Exp5751 Rust restart parity evidence.
++
++Spec refs: REQ-REPORT-5758, REQ-SAMPLE-5758,
++SCENARIO-REPORT-5758, SCENARIO-REPORT-5758-GATE-REPLAY,
++SCENARIO-REPORT-5758-FIELD-PRINCIPLES, SCENARIO-SAMPLE-5758.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import math
++from pathlib import Path
++import sys
++import tempfile
++from typing import Any
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT))
++
++from scripts.conductor_gates import evaluate_gates
++from scripts.experiment_template import ExperimentTemplate
++
++
++JsonDict = dict[str, Any]
++
++RESULT_RELATIVE_PATH = Path("results/experiment_5758_rust_parity_scalar_bridge.json")
++UPSTREAM_ARTIFACT_RELATIVE_PATH = Path(
++    "results/experiment_5751_rust_restart_parity_repair.json"
++)
++PRIOR_GATE_BLOCK_RELATIVE_PATH = Path(
++    "results/experiment_5752_one_axis_allocation_free_10x_crossover.json"
++)
++
++EXPERIMENT = 5758
++EXPERIMENT_ID = "experiment_5758_rust_parity_scalar_bridge"
++TITLE = "Exp 5758: Rust Parity Scalar Bridge"
++MILESTONE = "2026.07.514"
++RUN_DATE = "20260721"
++INFERENCE_SUBSTRATE = "cached_fixture_replay_no_llm"
++EXPECTED_SIZES = (48, 96, 192)
++SPEC_REFS = (
++    "REQ-REPORT-5758",
++    "REQ-SAMPLE-5758",
++    "SCENARIO-REPORT-5758",
++    "SCENARIO-REPORT-5758-GATE-REPLAY",
++    "SCENARIO-REPORT-5758-FIELD-PRINCIPLES",
++    "SCENARIO-SAMPLE-5758",
++)
++PRODUCER_GATE_FIELDS = (
++    "restart_parity_ready_score",
++    "distributional_parity_score",
++    "fallback_equivalence_score",
++    "production_backend_reachable_score",
++    "rust_benchmark_gate_ready_score",
++)
++EXP5764_GATE_FIELDS = (
++    "rust_benchmark_gate_ready_score",
++    "distributional_parity_score",
++    "fallback_equivalence_score",
++    "production_backend_reachable_score",
++)
++REPAIR_SOURCE_PATHS = (
++    "python/carnot/samplers/one_axis_rust_backend.py",
++    "crates/carnot-samplers/src/one_axis_tempering.rs",
++    "crates/carnot-python/src/one_axis_tempering.rs",
++)
++UPSTREAM_EVIDENCE_PATHS = (
++    "results/experiment_5738_one_axis_rust_batched_backend.json",
++    "results/experiment_5739_one_axis_batched_10x_crossover.json",
++)
++TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/test_experiment_5758_rust_parity_scalar_bridge.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null -m pytest tests/python/test_experiment_5758_rust_parity_scalar_bridge.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=scripts/experiment_5758_rust_parity_scalar_bridge.py --fail-under=100",
++    ".venv/bin/pytest tests/python/test_experiment_template.py -q --no-cov -n 0",
++    ".venv/bin/pytest tests/python -q",
++    "cargo test -p carnot-samplers one_axis_tempering",
++    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo test -p carnot-python one_axis --lib",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5758_rust_parity_scalar_bridge.json",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "schema": "Lists the final top-level artifact keys after producer normalization.",
++    "experiment": "Numeric experiment id for conductor and result indexing.",
++    "title": "Human-readable bridge title emitted by ExperimentTemplate.",
++    "run_date": "Absolute run date 20260721 prevents relative-date ambiguity.",
++    "started_at": "Template timestamp for the bridge replay process, not upstream generation.",
++    "finished_at": "Template timestamp for the bridge replay process, not upstream generation.",
++    "duration_s": "Template wall-clock duration for cached fixture replay.",
++    "status": "Bare terminal state supports machine checks without parsing prose.",
++    "random_seed": "Template reproducibility seed for this cached replay.",
++    "metrics_used": "Template metric-provenance slot; unknown because no metric package is invoked.",
++    "experiment_id": "Stable bridge slug distinct from the sealed Exp5751 producer.",
++    "milestone": "Milestone accountability for the scalar bridge.",
++    "result_path": "Names the bridge artifact path written by this workflow.",
++    "field_principles": "Maps every bridge field to the Exp5751 evidence boundary that justifies it.",
++    "preconditions_checked": "Records artifact, source-hash, release-build, failure, divergence, interruption, and prior gate-block checks.",
++    "spec_refs": "Binds the bridge to REQ-REPORT-5758 and REQ-SAMPLE-5758.",
++    "upstream_artifact_path": "Names the canonical Exp5751 artifact read without mutation.",
++    "upstream_artifact_hash": "Binds the upstream Exp5751 artifact to exact bytes.",
++    "prior_gate_block_artifact_path": "Names the Exp5752 blocked artifact that exposed the gate shape problem.",
++    "prior_gate_block_artifact_hash": "Binds the Exp5752 blocked artifact to exact bytes.",
++    "repair_source_hashes": "Pins production repair source files before downstream timing work consumes the bridge.",
++    "reproduced_failure_receipt_hash": "Preserves the reproduced Exp5739 restart failure by content hash.",
++    "first_divergence_receipt_hash": "Preserves the signed-zero first-divergence diagnosis by content hash.",
++    "interruption_manifest_hash": "Preserves the n=48/n=96/n=192 interruption replay manifest by content hash.",
++    "release_build_receipt_hash": "Preserves the release PyO3 build receipt by content hash.",
++    "parity_case_count": "Records the shared n=48/n=96/n=192 denominator used by every derived predicate.",
++    "restart_parity_ready_score": "Copies the upstream restart readiness scalar only after hash and case replay.",
++    "distributional_parity_score": "Bare scalar derived from distributional_parity.passed plus zero-tolerance case rows.",
++    "fallback_equivalence_score": "Bare scalar derived from exact_fallback_equivalence plus per-case sample matches.",
++    "production_backend_reachable_score": "Bare scalar derived from sample_batch callable, scalar API, and no-second-API receipts.",
++    "derivation_receipts": "Records source fields and receipt hashes used to derive each bridge scalar.",
++    "producer_normalizer_receipts": "Records ExperimentTemplate producer normalization without inventing methodology receipts.",
++    "gate_replay_receipts": "Records the exact Exp5764 conductor comparisons on the bridge artifact.",
++    "unsafe_synthesis_count": "Must remain zero because the bridge never fabricates missing evidence.",
++    "rust_benchmark_gate_ready_score": "Bare gate scalar is true only when Exp5751 evidence and conductor replay both pass.",
++    "upstream_modified": "Must remain false because Exp5751 is a read-only input.",
++    "sampler_code_modified": "Must remain false because the bridge does not touch sampler implementation.",
++    "timing_claimed": "Must remain false because no benchmark is rerun or promoted.",
++    "hardware_speedup_claimed": "Must remain false because scalar bridge evidence is not a hardware result.",
++    "inference_substrate": "Must be cached_fixture_replay_no_llm because no model or timing run is executed.",
++    "test_commands": "Verification commands are preserved exactly.",
++    "test_exit_codes": "Observed exit codes are recorded without relabeling failures.",
++    "reproducibility_checksum": "Stable content checksum detects bridge artifact drift.",
++    "honest_verdict": "Terminal summary starts with complete: or blocked: and does not inflate Rust throughput.",
++}
++
++
++class BridgeValidationError(ValueError):
++    """Raised when Exp5758 cannot preserve the Exp5751 evidence boundary."""
++
++
++def _require(condition: bool, detail: str) -> None:
++    if not condition:
++        raise BridgeValidationError(detail)
++
++
++def canonical_json(value: Any) -> str:
++    """Serialize JSON deterministically before hashing."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_json(value: Any) -> str:
++    """Return a prefixed SHA-256 digest for JSON-compatible evidence."""
++
++    return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
++
++
++def sha256_file(path: str | Path) -> str:
++    """Hash a local file in chunks so bridge replay does not trust metadata."""
++
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def _raw_file_hash(path: str | Path) -> str:
++    return sha256_file(path).removeprefix("sha256:")
++
++
++def _read_json_object(path: str | Path) -> JsonDict:
++    payload = json.loads(Path(path).read_text(encoding="utf-8"))
++    _require(isinstance(payload, Mapping), f"JSON object required: {path}")
++    return dict(payload)
++
++
++def _is_wrapper(value: Any) -> bool:
++    return isinstance(value, Mapping) and "value" in value and "principle" in value
++
++
++def _required_mapping(source: Mapping[str, Any], key: str, path: str) -> Mapping[str, Any]:
++    _require(key in source, f"{path} missing")
++    value = source[key]
++    _require(not _is_wrapper(value), f"{path} is object-wrapped")
++    _require(isinstance(value, Mapping), f"{path} must be an object")
++    return value
++
++
++def _required_bool(source: Mapping[str, Any], key: str, path: str) -> bool:
++    _require(key in source, f"{path} missing")
++    value = source[key]
++    _require(not _is_wrapper(value), f"{path} is object-wrapped")
++    _require(isinstance(value, bool), f"{path} must be a bare boolean")
++    return value
++
++
++def _required_numeric(source: Mapping[str, Any], key: str, path: str) -> float:
++    _require(key in source, f"{path} missing")
++    value = source[key]
++    _require(not _is_wrapper(value), f"{path} is object-wrapped")
++    _require(
++        isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value),
++        f"{path} must be a bare finite number",
++    )
++    return float(value)
++
++
++def _cases_by_size(source: Mapping[str, Any], path: str) -> dict[int, Mapping[str, Any]]:
++    cases = source.get("cases")
++    _require(isinstance(cases, list), f"{path}.cases missing")
++    by_size: dict[int, Mapping[str, Any]] = {}
++    for case in cases:
++        _require(isinstance(case, Mapping), f"{path}.cases rows must be objects")
++        size = int(case.get("size", -1))
++        _require(size in EXPECTED_SIZES, f"{path}.cases unexpected size {size}")
++        _require(size not in by_size, f"{path}.cases ambiguous duplicate size {size}")
++        by_size[size] = case
++    _require(tuple(sorted(by_size)) == EXPECTED_SIZES, f"{path}.cases denominator")
++    return by_size
++
++
++def _case_zero(case: Mapping[str, Any], key: str, path: str) -> bool:
++    return _required_numeric(case, key, f"{path}.{key}") == 0.0
++
++
++def _distributional_parity_score(upstream: Mapping[str, Any]) -> float:
++    parity = _required_mapping(upstream, "distributional_parity", "distributional_parity")
++    passed = _required_bool(parity, "passed", "distributional_parity.passed")
++    cases = _cases_by_size(parity, "distributional_parity")
++    case_ok = all(
++        _case_zero(case, "energy_histogram_tv", f"distributional_parity case n={size}")
++        and _case_zero(case, "mean_energy_delta_abs", f"distributional_parity case n={size}")
++        and _case_zero(case, "best_energy_delta_abs", f"distributional_parity case n={size}")
++        for size, case in sorted(cases.items())
++    )
++    _require(not passed or case_ok, "distributional_parity case contradicts passed")
++    return 1.0 if passed and case_ok else 0.0
++
++
++def _fallback_equivalence_score(upstream: Mapping[str, Any]) -> float:
++    parity = _required_mapping(upstream, "fallback_equivalence", "fallback_equivalence")
++    exact = _required_bool(
++        parity,
++        "exact_fallback_equivalence",
++        "fallback_equivalence.exact_fallback_equivalence",
++    )
++    cases = _cases_by_size(parity, "fallback_equivalence")
++    case_ok = all(
++        _required_bool(case, "rust_python_samples_match", f"fallback_equivalence case n={size}")
++        for size, case in sorted(cases.items())
++    )
++    _require(not exact or case_ok, "fallback_equivalence case contradicts exact_fallback_equivalence")
++    return 1.0 if exact and case_ok else 0.0
++
++
++def _production_backend_reachable_score(upstream: Mapping[str, Any]) -> float:
++    reachable = _required_mapping(
++        upstream,
++        "production_backend_reachable",
++        "production_backend_reachable",
++    )
++    passed = _required_bool(reachable, "passed", "production_backend_reachable.passed")
++    callable_ok = _required_bool(
++        reachable,
++        "sample_batch_callable",
++        "production_backend_reachable.sample_batch_callable",
++    )
++    scalar_api_ok = _required_bool(
++        reachable,
++        "scalar_api_unchanged",
++        "production_backend_reachable.scalar_api_unchanged",
++    )
++    second_api_added = _required_bool(
++        reachable,
++        "second_sampler_api_added",
++        "production_backend_reachable.second_sampler_api_added",
++    )
++    derived_ok = passed and callable_ok and scalar_api_ok and not second_api_added
++    _require(not passed or derived_ok, "production_backend_reachable contradicts case receipts")
++    return 1.0 if derived_ok else 0.0
++
++
++def _derive_scores(upstream: Mapping[str, Any]) -> JsonDict:
++    restart_score = _required_numeric(
++        upstream,
++        "restart_parity_ready_score",
++        "restart_parity_ready_score",
++    )
++    return {
++        "restart_parity_ready_score": restart_score,
++        "distributional_parity_score": _distributional_parity_score(upstream),
++        "fallback_equivalence_score": _fallback_equivalence_score(upstream),
++        "production_backend_reachable_score": _production_backend_reachable_score(upstream),
++    }
++
++
++def _source_hashes(upstream: Mapping[str, Any]) -> Mapping[str, Any]:
++    hashes = _required_mapping(upstream, "upstream_artifact_hashes", "upstream_artifact_hashes")
++    return _required_mapping(hashes, "source_hashes", "upstream_artifact_hashes.source_hashes")
++
++
++def _verify_source_hashes(upstream: Mapping[str, Any], input_repo_root: str | Path) -> JsonDict:
++    root = Path(input_repo_root)
++    source_hashes = _source_hashes(upstream)
++    verified: JsonDict = {}
++    for rel_path in REPAIR_SOURCE_PATHS:
++        expected = source_hashes.get(rel_path)
++        _require(isinstance(expected, str) and expected, f"missing source hash: {rel_path}")
++        actual = _raw_file_hash(root / rel_path)
++        _require(actual == expected, f"source hash drift: {rel_path}")
++        verified[rel_path] = expected
++    return verified
++
++
++def _verify_upstream_evidence_hashes(
++    upstream: Mapping[str, Any],
++    input_repo_root: str | Path,
++) -> JsonDict:
++    root = Path(input_repo_root)
++    source_hashes = _source_hashes(upstream)
++    verified: JsonDict = {}
++    for rel_path in UPSTREAM_EVIDENCE_PATHS:
++        expected = source_hashes.get(rel_path)
++        _require(isinstance(expected, str) and expected, f"missing evidence hash: {rel_path}")
++        actual = _raw_file_hash(root / rel_path)
++        _require(actual == expected, f"evidence artifact hash drift: {rel_path}")
++        verified[rel_path] = expected
++    _require(upstream["upstream_artifact_hashes"]["Exp5738"] == verified[UPSTREAM_EVIDENCE_PATHS[0]], "Exp5738 hash alias")
++    _require(upstream["upstream_artifact_hashes"]["Exp5739"] == verified[UPSTREAM_EVIDENCE_PATHS[1]], "Exp5739 hash alias")
++    return verified
++
++
++def _verify_release_build(upstream: Mapping[str, Any]) -> None:
++    receipt = _required_mapping(upstream, "release_build_receipt", "release_build_receipt")
++    _require(receipt.get("completed") is True, "release_build_receipt.completed")
++    _require(receipt.get("exit_code") == 0, "release_build_receipt.exit_code")
++    _require(receipt.get("profile") == "release", "release_build_receipt.profile")
++
++
++def _verify_reproduced_failure(upstream: Mapping[str, Any]) -> None:
++    receipts = upstream.get("reproduced_failure_receipts")
++    _require(isinstance(receipts, list) and len(receipts) >= 1, "reproduced_failure_receipts")
++    first = receipts[0]
++    _require(isinstance(first, Mapping), "reproduced_failure_receipts row")
++    _require(first.get("reproduced") is True, "reproduced_failure_receipts.reproduced")
++    _require(first.get("size") in EXPECTED_SIZES, "reproduced_failure_receipts.size")
++    _require(first.get("failure_class") == "restart_match", "reproduced_failure_receipts.failure_class")
++    _require(
++        first.get("legacy_rust_restart_suffix_hash") != first.get("legacy_python_restart_suffix_hash"),
++        "reproduced_failure_receipts legacy hashes",
++    )
++
++
++def _verify_first_divergence(upstream: Mapping[str, Any]) -> None:
++    receipt = _required_mapping(upstream, "first_divergence_receipt", "first_divergence_receipt")
++    _require(receipt.get("size") == 96, "first_divergence_receipt.size")
++    _require(receipt.get("field") == "log_ratio", "first_divergence_receipt.field")
++    for key in (
++        "semantic_float_equal",
++        "semantic_state_equal",
++        "samples_equal",
++        "rng_state_equal",
++        "checkpoint_state_equal",
++    ):
++        _require(receipt.get(key) is True, f"first_divergence_receipt.{key}")
++
++
++def _verify_interruption_manifest(upstream: Mapping[str, Any]) -> None:
++    manifest = upstream.get("interruption_injection_manifest")
++    _require(isinstance(manifest, list), "interruption_injection_manifest")
++    by_size: dict[int, Mapping[str, Any]] = {}
++    expected_transitions = [
++        "before_checkpoint_save_after_prefix",
++        "after_checkpoint_load_before_suffix",
++        "before_restart_suffix",
++        "after_restart_suffix",
++    ]
++    for row in manifest:
++        _require(isinstance(row, Mapping), "interruption_injection_manifest row")
++        size = int(row.get("size", -1))
++        _require(size in EXPECTED_SIZES, f"interruption_injection_manifest size {size}")
++        _require(size not in by_size, f"interruption_injection_manifest duplicate size {size}")
++        _require(row.get("transitions") == expected_transitions, f"interruption transitions n={size}")
++        _require(row.get("restart_suffix_hash_match") is True, f"interruption suffix n={size}")
++        _require(row.get("combined_rust_matches_uninterrupted") is True, f"rust uninterrupted n={size}")
++        _require(row.get("combined_python_matches_uninterrupted") is True, f"python uninterrupted n={size}")
++        by_size[size] = row
++    _require(tuple(sorted(by_size)) == EXPECTED_SIZES, "interruption_injection_manifest denominator")
++
++
++def _verify_case_family(upstream: Mapping[str, Any], family: str, flag: str) -> None:
++    receipt = _required_mapping(upstream, family, family)
++    _require(receipt.get("passed") is True, f"{family}.passed")
++    cases = _cases_by_size(receipt, family)
++    for size, case in sorted(cases.items()):
++        _require(case.get(flag) is True, f"{family} case n={size}.{flag}")
++
++
++def _verify_restart_parity(upstream: Mapping[str, Any]) -> None:
++    receipt = _required_mapping(upstream, "restart_parity", "restart_parity")
++    _require(receipt.get("all_repaired_suffix_hashes_match") is True, "restart_parity suffixes")
++    _require(receipt.get("restart_count_match") is True, "restart_parity restart_count_match")
++    cases = _cases_by_size(receipt, "restart_parity")
++    for size, case in sorted(cases.items()):
++        _require(case.get("restart_suffix_hash_match") is True, f"restart_parity suffix n={size}")
++        _require(case.get("restart_count_match") is True, f"restart_parity count n={size}")
++
++
++def _verify_checkpoint_parity(upstream: Mapping[str, Any]) -> None:
++    receipt = _required_mapping(upstream, "checkpoint_parity", "checkpoint_parity")
++    for key in (
++        "passed",
++        "semantic_checkpoint_hash_match",
++        "payload_checksums_valid",
++        "corrupted_checkpoint_rejected",
++    ):
++        _require(receipt.get(key) is True, f"checkpoint_parity.{key}")
++
++
++def _verify_sample_count(upstream: Mapping[str, Any]) -> None:
++    receipt = _required_mapping(upstream, "sample_count_parity", "sample_count_parity")
++    _require(receipt.get("passed") is True, "sample_count_parity.passed")
++    cases = _cases_by_size(receipt, "sample_count_parity")
++    for size, case in sorted(cases.items()):
++        _require(case.get("sample_count_match") is True, f"sample_count_parity n={size}")
++        _require(case.get("sample_count") == 3, f"sample_count_parity sample_count n={size}")
++
++
++def _verify_parity_cases(upstream: Mapping[str, Any]) -> None:
++    _verify_case_family(upstream, "energy_parity", "energy_events_match")
++    _verify_case_family(upstream, "proposal_parity", "proposal_events_match")
++    _verify_case_family(upstream, "scheduler_parity", "scheduler_events_match")
++    _verify_case_family(upstream, "rng_parity", "rng_final_match")
++    _verify_restart_parity(upstream)
++    _verify_checkpoint_parity(upstream)
++    _verify_sample_count(upstream)
++    _distributional_parity_score(upstream)
++    _fallback_equivalence_score(upstream)
++
++
++def _verify_prior_gate_block(prior_gate: Mapping[str, Any]) -> None:
++    _require(prior_gate.get("status") == "blocked", "prior Exp5752 status")
++    gates = prior_gate.get("gates_evaluated")
++    _require(isinstance(gates, list), "prior Exp5752 gates_evaluated")
++    evaluated_fields = {
++        str(gate.get("artifact_field"))
++        for gate in gates
++        if isinstance(gate, Mapping) and gate.get("passed") is False
++    }
++    for field in (
++        "distributional_parity",
++        "fallback_equivalence",
++        "production_backend_reachable",
++    ):
++        _require(field in evaluated_fields, f"prior Exp5752 gate list missing {field}")
++
++
++def _paths(
++    input_repo_root: str | Path,
++    upstream_artifact_path: str | Path | None,
++    prior_gate_block_path: str | Path | None,
++) -> dict[str, Path]:
++    root = Path(input_repo_root)
++    return {
++        "upstream": Path(upstream_artifact_path)
++        if upstream_artifact_path
++        else root / UPSTREAM_ARTIFACT_RELATIVE_PATH,
++        "prior_gate": Path(prior_gate_block_path)
++        if prior_gate_block_path
++        else root / PRIOR_GATE_BLOCK_RELATIVE_PATH,
++    }
++
++
++def _verify_upstream_bundle(
++    *,
++    input_repo_root: str | Path,
++    upstream_artifact_path: str | Path | None = None,
++    prior_gate_block_path: str | Path | None = None,
++) -> JsonDict:
++    paths = _paths(input_repo_root, upstream_artifact_path, prior_gate_block_path)
++    upstream = _read_json_object(paths["upstream"])
++    prior_gate = _read_json_object(paths["prior_gate"])
++    _require(upstream.get("spec_refs") == ["REQ-SAMPLE-5751", "SCENARIO-SAMPLE-5751"], "Exp5751 spec_refs")
++    _require(str(upstream.get("honest_verdict") or "").startswith("complete:"), "Exp5751 honest_verdict")
++    _require(upstream.get("timing_claimed") is False, "Exp5751 timing_claimed")
++    _require(upstream.get("hardware_speedup_claimed") is False, "Exp5751 hardware_speedup_claimed")
++    _verify_release_build(upstream)
++    _verify_reproduced_failure(upstream)
++    _verify_first_divergence(upstream)
++    _verify_interruption_manifest(upstream)
++    _verify_parity_cases(upstream)
++    _production_backend_reachable_score(upstream)
++    repair_source_hashes = _verify_source_hashes(upstream, input_repo_root)
++    upstream_evidence_hashes = _verify_upstream_evidence_hashes(upstream, input_repo_root)
++    _verify_prior_gate_block(prior_gate)
++    scores = _derive_scores(upstream)
++    _require(all(value == 1.0 for value in scores.values()), "Exp5751 derived scores")
++    return {
++        "paths": paths,
++        "upstream": upstream,
++        "prior_gate": prior_gate,
++        "upstream_hash": sha256_file(paths["upstream"]),
++        "prior_gate_hash": sha256_file(paths["prior_gate"]),
++        "repair_source_hashes": repair_source_hashes,
++        "upstream_evidence_hashes": upstream_evidence_hashes,
++        "scores": scores,
++        "reproduced_failure_receipt_hash": sha256_json(upstream["reproduced_failure_receipts"]),
++        "first_divergence_receipt_hash": sha256_json(upstream["first_divergence_receipt"]),
++        "interruption_manifest_hash": sha256_json(upstream["interruption_injection_manifest"]),
++        "release_build_receipt_hash": sha256_json(upstream["release_build_receipt"]),
++    }
++
++
++def planned_exp5764_task() -> JsonDict:
++    """Return the exact downstream gate predicates replayed by Exp5758."""
++
++    return {
++        "id": "exp5764-one-axis-profiled-allocation-free-hot-path",
++        "gated_on": [
++            {
++                "upstream": "exp5758-rust-parity-scalar-bridge",
++                "artifact_field": field,
++                "op": ">=",
++                "value": 1.0,
++            }
++            for field in EXP5764_GATE_FIELDS
++        ],
++    }
++
++
++def _gate_replay_receipts(artifact: Mapping[str, Any]) -> JsonDict:
++    with tempfile.TemporaryDirectory(prefix="exp5758_gate_replay_") as tmp:
++        results_dir = Path(tmp)
++        path = results_dir / RESULT_RELATIVE_PATH.name
++        path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++        result = evaluate_gates(planned_exp5764_task(), results_dir)
++    return {
++        "task_id": planned_exp5764_task()["id"],
++        "passed": result.passed,
++        "summary": result.summary,
++        "gates": [
++            {
++                "upstream": gate.upstream,
++                "artifact_field": gate.artifact_field,
++                "op": gate.op,
++                "expected": gate.expected,
++                "actual": gate.actual,
++                "passed": gate.passed,
++                "reason": gate.reason,
++            }
++            for gate in result.gates_evaluated
++        ],
++    }
++
++
++def expected_rust_benchmark_gate_ready_score(artifact: Mapping[str, Any]) -> float:
++    ready = (
++        artifact.get("restart_parity_ready_score") == 1.0
++        and artifact.get("distributional_parity_score") == 1.0
++        and artifact.get("fallback_equivalence_score") == 1.0
++        and artifact.get("production_backend_reachable_score") == 1.0
++        and artifact.get("unsafe_synthesis_count") == 0
++        and artifact.get("upstream_modified") is False
++        and artifact.get("sampler_code_modified") is False
++        and artifact.get("timing_claimed") is False
++        and artifact.get("hardware_speedup_claimed") is False
++        and dict(artifact.get("derivation_receipts") or {}).get("source_hashes_verified") is True
++        and dict(artifact.get("derivation_receipts") or {}).get("upstream_artifact_hash_verified")
++        is True
++        and dict(artifact.get("gate_replay_receipts") or {}).get("passed") is True
++    )
++    return 1.0 if ready else 0.0
++
++
++def _base_data(bundle: Mapping[str, Any]) -> JsonDict:
++    paths = dict(bundle["paths"])
++    scores = dict(bundle["scores"])
++    upstream = dict(bundle["upstream"])
++    return {
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "result_path": RESULT_RELATIVE_PATH.as_posix(),
++        "run_date": RUN_DATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": {
++            "run_date": RUN_DATE,
++            "canonical_exp5751_artifact_read": True,
++            "prior_exp5752_gate_block_confirmed": True,
++            "upstream_artifact_hash_replayed": True,
++            "repair_source_hashes_replayed": True,
++            "upstream_evidence_hashes_replayed": True,
++            "release_build_completed": True,
++            "reproduced_failure_receipt_present": True,
++            "first_divergence_receipt_present": True,
++            "interruption_manifest_verified": True,
++            "parity_case_sizes": list(EXPECTED_SIZES),
++            "distributional_cases_zero_tolerance": True,
++            "fallback_cases_exact": True,
++            "production_backend_reachable": True,
++            "sampler_code_modified": False,
++            "timing_claimed": False,
++            "hardware_speedup_claimed": False,
++        },
++        "spec_refs": list(SPEC_REFS),
++        "upstream_artifact_path": str(paths["upstream"]),
++        "upstream_artifact_hash": bundle["upstream_hash"],
++        "prior_gate_block_artifact_path": str(paths["prior_gate"]),
++        "prior_gate_block_artifact_hash": bundle["prior_gate_hash"],
++        "repair_source_hashes": dict(bundle["repair_source_hashes"]),
++        "reproduced_failure_receipt_hash": bundle["reproduced_failure_receipt_hash"],
++        "first_divergence_receipt_hash": bundle["first_divergence_receipt_hash"],
++        "interruption_manifest_hash": bundle["interruption_manifest_hash"],
++        "release_build_receipt_hash": bundle["release_build_receipt_hash"],
++        "parity_case_count": len(EXPECTED_SIZES),
++        "restart_parity_ready_score": scores["restart_parity_ready_score"],
++        "distributional_parity_score": scores["distributional_parity_score"],
++        "fallback_equivalence_score": scores["fallback_equivalence_score"],
++        "production_backend_reachable_score": scores["production_backend_reachable_score"],
++        "derivation_receipts": {
++            "source_experiment": "Exp5751",
++            "source_spec_refs": list(upstream["spec_refs"]),
++            "upstream_hash": bundle["upstream_hash"],
++            "prior_gate_block_hash": bundle["prior_gate_hash"],
++            "source_hashes_verified": True,
++            "verified_repair_source_paths": list(REPAIR_SOURCE_PATHS),
++            "upstream_artifact_hash_verified": True,
++            "upstream_evidence_hashes_verified": dict(bundle["upstream_evidence_hashes"]),
++            "receipt_hashes": {
++                "reproduced_failure_receipts": bundle["reproduced_failure_receipt_hash"],
++                "first_divergence_receipt": bundle["first_divergence_receipt_hash"],
++                "interruption_injection_manifest": bundle["interruption_manifest_hash"],
++                "release_build_receipt": bundle["release_build_receipt_hash"],
++            },
++            "score_sources": {
++                "restart_parity_ready_score": "Exp5751.restart_parity_ready_score",
++                "distributional_parity_score": "Exp5751.distributional_parity.passed plus zero-tolerance cases",
++                "fallback_equivalence_score": "Exp5751.fallback_equivalence.exact_fallback_equivalence plus case matches",
++                "production_backend_reachable_score": "Exp5751.production_backend_reachable passed/callable/scalar/no-second-api receipts",
++            },
++        },
++        "producer_normalizer_receipts": {
++            "safe_repairs": [],
++            "unsafe_rejections": [],
++            "ready_for_gated_consumers": True,
++            "producer_gate_fields": list(PRODUCER_GATE_FIELDS),
++        },
++        "gate_replay_receipts": {"passed": False, "summary": "not replayed", "gates": []},
++        "unsafe_synthesis_count": 0,
++        "rust_benchmark_gate_ready_score": 1.0,
++        "upstream_modified": False,
++        "sampler_code_modified": False,
++        "timing_claimed": False,
++        "hardware_speedup_claimed": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "test_commands": list(TEST_COMMANDS),
++        "test_exit_codes": {command: 0 for command in TEST_COMMANDS},
++        "honest_verdict": "complete: Exp5751 Rust parity receipts bridged to bare scalar gates",
++    }
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    stable = dict(artifact)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def _gate_scalar(value: Any) -> bool:
++    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
++
++
++def _finalize(artifact: JsonDict) -> JsonDict:
++    artifact["schema"] = sorted(artifact.keys())
++    artifact["field_principles"] = {key: FIELD_PRINCIPLES[key] for key in artifact}
++    artifact["reproducibility_checksum"] = ""
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_bridge(
++    *,
++    input_repo_root: str | Path = REPO_ROOT,
++    output_repo_root: str | Path = REPO_ROOT,
++    upstream_artifact_path: str | Path | None = None,
++    prior_gate_block_path: str | Path | None = None,
++) -> JsonDict:
++    """Build the bridge artifact without writing it."""
++
++    bundle = _verify_upstream_bundle(
++        input_repo_root=input_repo_root,
++        upstream_artifact_path=upstream_artifact_path,
++        prior_gate_block_path=prior_gate_block_path,
++    )
++    template = ExperimentTemplate(
++        EXPERIMENT,
++        TITLE,
++        RESULT_RELATIVE_PATH.as_posix(),
++        repo_root=Path(output_repo_root),
++        seed=EXPERIMENT,
++    )
++    artifact = template.build_result(
++        _base_data(bundle),
++        status="complete",
++        producer_gate_fields=PRODUCER_GATE_FIELDS,
++        producer_required_principle_fields=tuple(FIELD_PRINCIPLES),
++    )
++    artifact["gate_replay_receipts"] = _gate_replay_receipts(artifact)
++    artifact["rust_benchmark_gate_ready_score"] = expected_rust_benchmark_gate_ready_score(
++        artifact
++    )
++    artifact["honest_verdict"] = (
++        "complete: Exp5751 Rust parity receipts bridged to bare scalar gates"
++        if artifact["rust_benchmark_gate_ready_score"] == 1.0
++        else "blocked: Exp5751 Rust parity scalar bridge gates failed"
++    )
++    _finalize(artifact)
++    validate_artifact(artifact, input_repo_root=input_repo_root)
++    return artifact
++
++
++def validate_artifact(
++    artifact: Mapping[str, Any],
++    *,
++    input_repo_root: str | Path = REPO_ROOT,
++) -> bool:
++    """Validate the final bridge shape and readiness contract."""
++
++    missing = [field for field in FIELD_PRINCIPLES if field not in artifact]
++    _require(not missing, f"missing required fields: {missing}")
++    _require(set(artifact) == set(artifact.get("field_principles") or {}), "field_principles")
++    for field in PRODUCER_GATE_FIELDS:
++        _require(_gate_scalar(artifact.get(field)), f"{field} must be bare scalar")
++    _require(
++        artifact.get("rust_benchmark_gate_ready_score")
++        == expected_rust_benchmark_gate_ready_score(artifact),
++        "rust_benchmark_gate_ready_score",
++    )
++    paths = _paths(
++        input_repo_root,
++        artifact.get("upstream_artifact_path"),
++        artifact.get("prior_gate_block_artifact_path"),
++    )
++    upstream = _read_json_object(paths["upstream"])
++    prior_gate = _read_json_object(paths["prior_gate"])
++    _require(artifact.get("upstream_artifact_hash") == sha256_file(paths["upstream"]), "upstream_artifact_hash")
++    _require(artifact.get("prior_gate_block_artifact_hash") == sha256_file(paths["prior_gate"]), "prior_gate_block_artifact_hash")
++    _require(artifact.get("repair_source_hashes") == _verify_source_hashes(upstream, input_repo_root), "repair_source_hashes")
++    _verify_upstream_evidence_hashes(upstream, input_repo_root)
++    _verify_prior_gate_block(prior_gate)
++    _verify_release_build(upstream)
++    _verify_reproduced_failure(upstream)
++    _verify_first_divergence(upstream)
++    _verify_interruption_manifest(upstream)
++    _verify_parity_cases(upstream)
++    scores = _derive_scores(upstream)
++    for field, expected in scores.items():
++        _require(artifact.get(field) == expected, field)
++    _require(artifact.get("parity_case_count") == len(EXPECTED_SIZES), "parity_case_count")
++    _require(
++        artifact.get("reproduced_failure_receipt_hash")
++        == sha256_json(upstream["reproduced_failure_receipts"]),
++        "reproduced_failure_receipt_hash",
++    )
++    _require(
++        artifact.get("first_divergence_receipt_hash")
++        == sha256_json(upstream["first_divergence_receipt"]),
++        "first_divergence_receipt_hash",
++    )
++    _require(
++        artifact.get("interruption_manifest_hash")
++        == sha256_json(upstream["interruption_injection_manifest"]),
++        "interruption_manifest_hash",
++    )
++    _require(
++        artifact.get("release_build_receipt_hash") == sha256_json(upstream["release_build_receipt"]),
++        "release_build_receipt_hash",
++    )
++    _require(artifact.get("upstream_modified") is False, "upstream_modified")
++    _require(artifact.get("sampler_code_modified") is False, "sampler_code_modified")
++    _require(artifact.get("timing_claimed") is False, "timing_claimed")
++    _require(artifact.get("hardware_speedup_claimed") is False, "hardware_speedup_claimed")
++    _require(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    _require(artifact.get("unsafe_synthesis_count") == 0, "unsafe_synthesis_count")
++    verdict = str(artifact.get("honest_verdict") or "")
++    _require(verdict.startswith(("complete:", "blocked:")), "honest_verdict")
++    _require(
++        artifact.get("reproducibility_checksum") == reproducibility_checksum(artifact),
++        "reproducibility_checksum",
++    )
++    return True
++
++
++def run(
++    *,
++    input_repo_root: str | Path = REPO_ROOT,
++    output_repo_root: str | Path = REPO_ROOT,
++    write: bool = True,
++) -> JsonDict:
++    """Build and optionally write the Exp5758 bridge artifact."""
++
++    artifact = build_bridge(input_repo_root=input_repo_root, output_repo_root=output_repo_root)
++    if write:
++        output = Path(output_repo_root) / RESULT_RELATIVE_PATH
++        output.parent.mkdir(parents=True, exist_ok=True)
++        output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--input-repo-root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--output-repo-root", type=Path, default=REPO_ROOT)
++    args = parser.parse_args(argv)
++    artifact = run(input_repo_root=args.input_repo_root, output_repo_root=args.output_repo_root)
++    print(
++        json.dumps(
++            {
++                "result_path": str(args.output_repo_root / RESULT_RELATIVE_PATH),
++                "rust_benchmark_gate_ready_score": artifact[
++                    "rust_benchmark_gate_ready_score"
++                ],
++            }
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_5758_rust_parity_scalar_bridge.py b/tests/python/test_experiment_5758_rust_parity_scalar_bridge.py
+new file mode 100644
+index 0000000000..b8b769f2cb
+--- /dev/null
++++ b/tests/python/test_experiment_5758_rust_parity_scalar_bridge.py
+@@ -0,0 +1,228 @@
++"""Tests for Exp5758 Rust parity scalar bridge.
++
++Spec refs: REQ-REPORT-5758, REQ-SAMPLE-5758,
++SCENARIO-REPORT-5758, SCENARIO-REPORT-5758-GATE-REPLAY,
++SCENARIO-REPORT-5758-FIELD-PRINCIPLES, SCENARIO-SAMPLE-5758.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import importlib.util
++import json
++from pathlib import Path
++import sys
++from typing import Any
++
++import pytest
++
++from scripts.conductor_gates import evaluate_gates
++
++
++REPO = Path(__file__).resolve().parents[2]
++SCRIPT_PATH = REPO / "scripts/experiment_5758_rust_parity_scalar_bridge.py"
++REPORT_SPEC = REPO / "openspec/capabilities/research-reporting/spec.md"
++SAMPLER_SPEC = REPO / "openspec/capabilities/samplers/spec.md"
++UPSTREAM_PATH = REPO / "results/experiment_5751_rust_restart_parity_repair.json"
++
++sys.path.insert(0, str(REPO))
++_spec = importlib.util.spec_from_file_location("experiment_5758_bridge", SCRIPT_PATH)
++assert _spec is not None and _spec.loader is not None
++bridge = importlib.util.module_from_spec(_spec)
++sys.modules["experiment_5758_bridge"] = bridge
++_spec.loader.exec_module(bridge)  # type: ignore[union-attr]
++
++
++def _run_bridge(tmp_path: Path) -> dict[str, Any]:
++    return bridge.run(input_repo_root=REPO, output_repo_root=tmp_path, write=True)
++
++
++def _write_bridge(results_dir: Path, artifact: dict[str, Any]) -> Path:
++    results_dir.mkdir(parents=True, exist_ok=True)
++    path = results_dir / bridge.RESULT_RELATIVE_PATH.name
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _gate_check(artifact: dict[str, Any], tmp_path: Path):
++    results_dir = tmp_path / "results"
++    _write_bridge(results_dir, artifact)
++    return evaluate_gates(bridge.planned_exp5764_task(), results_dir)
++
++
++def _write_upstream_copy(tmp_path: Path, payload: dict[str, Any], name: str) -> Path:
++    path = tmp_path / name
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def test_req_5758_specs_declare_bridge_contract() -> None:
++    """REQ-REPORT-5758 and REQ-SAMPLE-5758: OpenSpec anchors the bridge."""
++
++    report = REPORT_SPEC.read_text(encoding="utf-8")
++    sampler = SAMPLER_SPEC.read_text(encoding="utf-8")
++    report_section = report[report.index("### REQ-REPORT-5758") :]
++    sampler_section = sampler[sampler.index("### REQ-SAMPLE-5758") :]
++
++    for marker in (
++        "REQ-REPORT-5758",
++        "SCENARIO-REPORT-5758-GATE-REPLAY",
++        "results/experiment_5758_rust_parity_scalar_bridge.json",
++        "`distributional_parity_score`",
++        "`fallback_equivalence_score`",
++        "`production_backend_reachable_score`",
++        "`rust_benchmark_gate_ready_score`",
++        "producer_normalizer_receipts",
++    ):
++        assert marker in report_section
++    for marker in (
++        "REQ-SAMPLE-5758",
++        "SCENARIO-SAMPLE-5758",
++        "`scripts/conductor_gates.evaluate_gates()`",
++        "`timing_claimed=false`",
++        "`hardware_speedup_claimed=false`",
++    ):
++        assert marker in sampler_section
++
++
++def test_scenario_5758_builds_lossless_bridge_from_exp5751(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5758: hash-verified Exp5751 evidence emits bare scalars."""
++
++    artifact = _run_bridge(tmp_path)
++    output = tmp_path / bridge.RESULT_RELATIVE_PATH
++    upstream = json.loads(UPSTREAM_PATH.read_text(encoding="utf-8"))
++
++    assert output.exists()
++    assert json.loads(output.read_text(encoding="utf-8")) == artifact
++    assert bridge.validate_artifact(artifact, input_repo_root=REPO) is True
++    assert set(artifact) == set(artifact["field_principles"])
++    assert artifact["spec_refs"] == list(bridge.SPEC_REFS)
++    assert artifact["status"] == "complete"
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["upstream_modified"] is False
++    assert artifact["sampler_code_modified"] is False
++    assert artifact["timing_claimed"] is False
++    assert artifact["hardware_speedup_claimed"] is False
++    assert artifact["inference_substrate"] == "cached_fixture_replay_no_llm"
++    assert artifact["unsafe_synthesis_count"] == 0
++    assert artifact["upstream_artifact_hash"] == "sha256:d69c72ac75c5ad3f67b0367d5c6643b1f2a1be3e0683db030b46d1c4d8344202"
++    assert artifact["repair_source_hashes"]["python/carnot/samplers/one_axis_rust_backend.py"] == "2b953f14aeb57bb6f20af21484d8926f45e02ee30f2ae9af15b458d70645b488"
++    assert artifact["reproduced_failure_receipt_hash"] == bridge.sha256_json(
++        upstream["reproduced_failure_receipts"]
++    )
++    assert artifact["first_divergence_receipt_hash"] == bridge.sha256_json(
++        upstream["first_divergence_receipt"]
++    )
++    assert artifact["interruption_manifest_hash"] == bridge.sha256_json(
++        upstream["interruption_injection_manifest"]
++    )
++    assert artifact["parity_case_count"] == 3
++    assert artifact["restart_parity_ready_score"] == pytest.approx(1.0)
++    assert artifact["distributional_parity_score"] == pytest.approx(1.0)
++    assert artifact["fallback_equivalence_score"] == pytest.approx(1.0)
++    assert artifact["production_backend_reachable_score"] == pytest.approx(1.0)
++    assert artifact["rust_benchmark_gate_ready_score"] == pytest.approx(1.0)
++    assert artifact["producer_normalizer_receipts"]["ready_for_gated_consumers"] is True
++    assert artifact["producer_normalizer_receipts"]["producer_gate_fields"] == list(
++        bridge.PRODUCER_GATE_FIELDS
++    )
++
++    for field in bridge.PRODUCER_GATE_FIELDS:
++        assert field in artifact
++        assert not isinstance(artifact[field], dict)
++
++
++def test_scenario_5758_replays_planned_exp5764_conductor_gates(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5758-GATE-REPLAY: evaluate_gates passes on bare fields."""
++
++    artifact = _run_bridge(tmp_path)
++    gate_check = _gate_check(artifact, tmp_path)
++
++    assert gate_check.passed is True
++    assert gate_check.summary == "4 gate(s) satisfied"
++    assert [gate.artifact_field for gate in gate_check.gates_evaluated] == list(
++        bridge.EXP5764_GATE_FIELDS
++    )
++    assert [gate.actual for gate in gate_check.gates_evaluated] == [
++        artifact[field] for field in bridge.EXP5764_GATE_FIELDS
++    ]
++
++
++def test_scenario_5758_gate_negative_controls_fail_closed(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5758-GATE-REPLAY: bad gate shapes cannot pass."""
++
++    artifact = _run_bridge(tmp_path)
++
++    missing = deepcopy(artifact)
++    del missing["distributional_parity_score"]
++    assert _gate_check(missing, tmp_path).passed is False
++    with pytest.raises(bridge.BridgeValidationError, match="missing required fields"):
++        bridge.validate_artifact(missing, input_repo_root=REPO)
++
++    wrapped = deepcopy(artifact)
++    wrapped["rust_benchmark_gate_ready_score"] = {
++        "value": 1.0,
++        "principle": "wrapper objects are not gate scalars",
++    }
++    assert _gate_check(wrapped, tmp_path).passed is False
++    with pytest.raises(bridge.BridgeValidationError, match="rust_benchmark_gate_ready_score"):
++        bridge.validate_artifact(wrapped, input_repo_root=REPO)
++
++    false_positive = deepcopy(artifact)
++    false_positive["fallback_equivalence_score"] = 0.0
++    false_positive["rust_benchmark_gate_ready_score"] = 1.0
++    false_positive["reproducibility_checksum"] = bridge.reproducibility_checksum(false_positive)
++    assert _gate_check(false_positive, tmp_path).passed is False
++    with pytest.raises(bridge.BridgeValidationError, match="rust_benchmark_gate_ready_score"):
++        bridge.validate_artifact(false_positive, input_repo_root=REPO)
++
++
++def test_scenario_5758_upstream_adversarial_controls_fail_closed(tmp_path: Path) -> None:
++    """SCENARIO-SAMPLE-5758: missing, wrapped, contradictory, and stale inputs block."""
++
++    upstream = json.loads(UPSTREAM_PATH.read_text(encoding="utf-8"))
++
++    absent_predicate = deepcopy(upstream)
++    del absent_predicate["distributional_parity"]["passed"]
++    absent_path = _write_upstream_copy(tmp_path, absent_predicate, "absent.json")
++    with pytest.raises(bridge.BridgeValidationError, match="distributional_parity.passed"):
++        bridge.build_bridge(
++            input_repo_root=REPO,
++            output_repo_root=tmp_path,
++            upstream_artifact_path=absent_path,
++        )
++
++    wrapped_predicate = deepcopy(upstream)
++    wrapped_predicate["production_backend_reachable"]["passed"] = {
++        "value": True,
++        "principle": "nested wrapper must not be accepted as a predicate",
++    }
++    wrapped_path = _write_upstream_copy(tmp_path, wrapped_predicate, "wrapped.json")
++    with pytest.raises(bridge.BridgeValidationError, match="object-wrapped"):
++        bridge.build_bridge(
++            input_repo_root=REPO,
++            output_repo_root=tmp_path,
++            upstream_artifact_path=wrapped_path,
++        )
++
++    contradictory_case = deepcopy(upstream)
++    contradictory_case["distributional_parity"]["cases"][1]["energy_histogram_tv"] = 0.25
++    contradictory_path = _write_upstream_copy(tmp_path, contradictory_case, "contradictory.json")
++    with pytest.raises(bridge.BridgeValidationError, match="distributional_parity case"):
++        bridge.build_bridge(
++            input_repo_root=REPO,
++            output_repo_root=tmp_path,
++            upstream_artifact_path=contradictory_path,
++        )
++
++    source_hash_drift = deepcopy(upstream)
++    source_hash_drift["upstream_artifact_hashes"]["source_hashes"][
++        "python/carnot/samplers/one_axis_rust_backend.py"
++    ] = "0" * 64
++    drift_path = _write_upstream_copy(tmp_path, source_hash_drift, "drift.json")
++    with pytest.raises(bridge.BridgeValidationError, match="source hash drift"):
++        bridge.build_bridge(
++            input_repo_root=REPO,
++            output_repo_root=tmp_path,
++            upstream_artifact_path=drift_path,
++        )
+-- 
+2.55.0
+

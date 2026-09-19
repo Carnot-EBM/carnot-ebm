@@ -1,0 +1,78 @@
+From 29c3f00f38459f5fe0b96891d43fd8a84a36e77f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 15 Aug 2026 00:40:48 -0400
+Subject: [PATCH 09212/11362] [conductor] Pre-gate block: Gated on Exp6441 CSL
+ readiness: malicious-success quarantine and rollback A/B
+
+1 of 1 gate(s) failed; first failure: exp6441-prospective-query-conditioned-factor-reuse.prospective_csl_ready_score (upstream artifact not found for task id 'exp6441-prospective-query-conditioned-factor-reuse')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...l_misevolution_quarantine_rollback_ab.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 63a110a597..1fa6b47cf8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 183, "phase": "iteration_start", "last_beat": "2026-08-15T04:38:45Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 184, "phase": "iteration_start", "last_beat": "2026-08-15T04:40:48Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 859752bd93..d474af388e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16011,3 +16011,5 @@ code |
+ | 2026-08-15 04:36 UTC | Gated on Exp6439 influence: held factor revocation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6439-factor-clause-influence-ab.factor_ |
+ | 2026-08-15 04:38 UTC | Gated on Exp6437 readiness: powered verification-c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6437-generation-to-verdict-receipt-replay |
+ | 2026-08-15 04:38 UTC | Gated on Exp6437 readiness: active, ablated, tombs | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6437-generation-to-verdict-receipt-replay |
++| 2026-08-15 04:38 UTC | Gated on Exp6439 influence: held factor revocation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6439-factor-clause-influence-ab.factor_ |
++| 2026-08-15 04:40 UTC | Gated on Exp6440 held influence: prospective query | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6440-held-factor-revocation-binding-shift |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b3822f5c4b..aacde4f91f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 183, "phase": "iteration_start", "started_at": "2026-08-15T04:38:45Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 184, "phase": "iteration_start", "started_at": "2026-08-15T04:40:48Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json b/results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json
+new file mode 100644
+index 0000000000..a8ad1a35b0
+--- /dev/null
++++ b/results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6442,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-15",
++  "started_at": "2026-08-15T04:40:48.237695+00:00",
++  "finished_at": "2026-08-15T04:40:48.237695+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp6441 CSL readiness: malicious-success quarantine and rollback A/B",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6441-prospective-query-conditioned-factor-reuse.prospective_csl_ready_score (upstream artifact not found for task id 'exp6441-prospective-query-conditioned-factor-reuse')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6441-prospective-query-conditioned-factor-reuse",
++      "artifact_field": "prospective_csl_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6441-prospective-query-conditioned-factor-reuse'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

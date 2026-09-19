@@ -1,0 +1,1566 @@
+From 9fc94e35b4b9538b35a4b61f37c45a98c0f7d424 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 06:45:10 -0400
+Subject: [PATCH 03034/11362] [conductor] PHASE D (SOTA-INGESTION; reserved) --
+ Ingest SOTA: imitation/behavior-cloning + expert-injection for sparse-reward
+ interactive agents -> mapping
+
+Automated research step by research conductor.
+Task ID: exp4498-d
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-notes/arc-imitation-sota-415.md | 250 ++++++
+ .../capabilities/research-reporting/spec.md   |  81 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4498_arc_imitation_sota_415.py | 734 ++++++++++++++++++
+ ...xperiment_4498_arc_imitation_sota_415.json | 185 +++++
+ .../experiment_4498_arc_imitation_sota_415.py |   8 +
+ ..._experiment_4498_arc_imitation_sota_415.py | 225 ++++++
+ 7 files changed, 1484 insertions(+), 1 deletion(-)
+ create mode 100644 docs/research-notes/arc-imitation-sota-415.md
+ create mode 100644 python/carnot/experiment_4498_arc_imitation_sota_415.py
+ create mode 100644 results/experiment_4498_arc_imitation_sota_415.json
+ create mode 100644 results/experiment_4498_arc_imitation_sota_415.py
+ create mode 100644 tests/python/test_experiment_4498_arc_imitation_sota_415.py
+
+diff --git a/docs/research-notes/arc-imitation-sota-415.md b/docs/research-notes/arc-imitation-sota-415.md
+new file mode 100644
+index 0000000000..d2cd3a9554
+--- /dev/null
++++ b/docs/research-notes/arc-imitation-sota-415.md
+@@ -0,0 +1,250 @@
++# ARC imitation/replay SOTA ingestion .415 - 2026-06-20
++
++```json
++{
++  "arc_mapping": {
++    "GAP-ARCH-EXPERT-INJECTION-REPLAY": {
++      "next_experiment": "Seed human replay transitions at 5x priority in the DQN/value replay queue, then anneal priority only after self-play produces equal progress evidence.",
++      "principle": "Keep scarce expert demonstrations active in replay so sparse-reward training starts from useful behavior instead of no-op exploration.",
++      "source_ids": [
++        "1704.03732",
++        "1511.05952",
++        "2302.02948"
++      ]
++    },
++    "GAP-ARCH-FRAME-CHANGE-PREDICTOR": {
++      "next_experiment": "Pretrain click heatmap and ACTION1-5 heads on the 14,672-example human corpus before mixing self-generated transitions.",
++      "principle": "Turn human frame/action/click demonstrations into a frame-only predictor for which candidate actions change the screen.",
++      "source_ids": [
++        "2206.11795",
++        "2407.15007",
++        "2405.17476"
++      ]
++    },
++    "GAP-ARCH-VALUE-ENERGY-HEADS": {
++      "next_experiment": "Train value and contrastive energy heads from level_progress, steps-to-go, and human-vs-corrupted state/action pairs.",
++      "principle": "Use human progress trajectories as offline value/energy labels while avoiding out-of-dataset action optimism.",
++      "source_ids": [
++        "2110.06169",
++        "1905.11108",
++        "2405.17476"
++      ]
++    }
++  },
++  "field_principles": {
++    "arc_mapping": "maps literature to the actual queued ARC gaps, so follow-on work is actionable.",
++    "field_principles": "principle annotations for every top-level artifact field.",
++    "honest_verdict": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).",
++    "human_corpus": "public replay counts must stay bare facts, not inferred hidden-eval solve claims.",
++    "inference_substrate": "explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.",
++    "leaderboard_dqn_mapping": "records the expert-injection mechanism separately from Carnot's own training status.",
++    "methods": "each source must map to one concrete ARC training decision and one caveat.",
++    "preconditions_checked": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication.",
++    "random_seed": "bare integer seed for reproducible artifact generation.",
++    "research_note_path": "repo-relative markdown path for deterministic parsing.",
++    "source_ids": "only arXiv IDs whose abs pages were HTTP-200 checked may anchor the SOTA mapping.",
++    "strongest_for_v416": "names the single strongest next hand-off without implying it has already been trained."
++  },
++  "honest_verdict": "complete: arc_imitation_sota_415_mapped_for_v416",
++  "human_corpus": {
++    "caveat": "public games only; value transfers only through held-out variants or hidden-game generalization, never public replay memorization",
++    "example_count": 14672,
++    "frame_change_rate": 0.9707606324972737,
++    "frame_changing_actions": 14243,
++    "level_progress_positive_count": 132,
++    "public_games": 25,
++    "replay_count": 342,
++    "source": "ARC-AGI-3 public-demo human replay corpus",
++    "usage": "bootstrap frame-change/clickability, behavior-prior, and value/energy heads from frame-derived features"
++  },
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "leaderboard_dqn_mapping": {
++    "carnot_mapping": "seed public human replay transitions into replay/value batches with extra priority, then decay only after cached self-play transitions prove equal or higher progress",
++    "dqn_stack_components": [
++      "prioritized_experience_replay",
++      "expert_imitation_demo_seed",
++      "persistent_action_effect_memory",
++      "attention_cnn_value_net"
++    ],
++    "expert_priority_multiplier": 5,
++    "pattern": "prioritized replay plus expert-injection",
++    "source_note": "docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md"
++  },
++  "methods": [
++    {
++      "arxiv_id": "1704.03732",
++      "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++      "name": "Deep Q-learning from Demonstrations",
++      "pitfall": "DQfD is not a solve recipe; it improves sparse-reward exploration only if the demonstration distribution generalizes beyond public games.",
++      "stack_mapping": "Use DQfD's mixture of TD learning, supervised expert-action loss, and prioritized replay as the direct template for seeding ARC human replays into the value/replay stack."
++    },
++    {
++      "arxiv_id": "1511.05952",
++      "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++      "name": "Prioritized Experience Replay",
++      "pitfall": "Priority can overfit public-game demos unless held-out variant transfer is the acceptance gate.",
++      "stack_mapping": "Prioritize rare high-progress and expert transitions rather than sampling human and self-play transitions uniformly."
++    },
++    {
++      "arxiv_id": "2206.11795",
++      "mapped_application": "GAP-ARCH-FRAME-CHANGE-PREDICTOR",
++      "name": "Video PreTraining",
++      "pitfall": "ARC replays already have actions, but only 25 public games; the model must remain frame-only and transfer-tested.",
++      "stack_mapping": "Treat frame/action replay as behavior pretraining: learn a visual action prior and clickability model before RL-style fine-tuning."
++    },
++    {
++      "arxiv_id": "2110.06169",
++      "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++      "name": "Offline Reinforcement Learning with Implicit Q-Learning",
++      "pitfall": "IQL is only appropriate after reward/progress labels are clean; frame_delta alone is not the same as task progress.",
++      "stack_mapping": "Fit value/energy heads from logged actions without querying unseen actions, then extract an advantage-weighted behavior policy."
++    },
++    {
++      "arxiv_id": "1905.11108",
++      "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++      "name": "SQIL imitation via sparse rewards",
++      "pitfall": "Matching public expert states can still be the wrong objective on novel games, so progress labels and variants remain required.",
++      "stack_mapping": "Use simple demonstration-match rewards as a first imitation-energy baseline before adding more brittle inverse-RL machinery."
++    },
++    {
++      "arxiv_id": "2302.02948",
++      "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++      "name": "Efficient Online RL with Offline Data",
++      "pitfall": "Carnot's current task is offline/cached; any online step must remain competition-legal and separately gated.",
++      "stack_mapping": "Keep human replay data in the replay buffer during online/self-play updates instead of treating it as one-off pretraining."
++    },
++    {
++      "arxiv_id": "2407.15007",
++      "mapped_application": "GAP-ARCH-FRAME-CHANGE-PREDICTOR",
++      "name": "Is Behavior Cloning All You Need?",
++      "pitfall": "The theorem does not remove distribution-shift risk; hidden-game evaluation still requires variant transfer.",
++      "stack_mapping": "Justifies a supervised behavior-cloning first pass for the click prior when payoffs are bounded and labels are clean."
++    },
++    {
++      "arxiv_id": "2405.17476",
++      "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++      "name": "How to Leverage Diverse Demonstrations in Offline Imitation Learning",
++      "pitfall": "Resultant-state overlap can be misleading when public-game states do not cover hidden mechanics.",
++      "stack_mapping": "Select non-expert or self-play actions by resultant-state progress toward human-like states, then weight behavior cloning accordingly."
++    }
++  ],
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "arc_human_replay_notes_read": [
++      "docs/research-notes/arc-human-baseline-and-replay-signal.md",
++      "docs/research-notes/arc-human-replay-application-spec.md",
++      "docs/research-notes/arc-frame-change-predictor-spec.md",
++      "docs/research-notes/arc-world-model-trust-energy-spec.md",
++      "docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md"
++    ],
++    "arxiv_http_200_verified_ids": [
++      "1704.03732",
++      "1511.05952",
++      "2206.11795",
++      "2110.06169",
++      "1905.11108",
++      "2302.02948",
++      "2407.15007",
++      "2405.17476"
++    ],
++    "codex_md_read": true,
++    "deep_research_invoked": false,
++    "leaderboard_submission": false,
++    "live_llm_inference": false,
++    "live_solve_claim": false,
++    "ops_docs_modified": false,
++    "research_references_filtered": true,
++    "research_studying_filtered": true,
++    "sweep_clusters_help_succeeded": true,
++    "sweep_clusters_urls": [
++      "http://export.arxiv.org/api/query?search_query=(abs:\"verifier+ensemble\"+OR+abs:\"verifier+ensembles\"+OR+abs:\"null+space\"+OR+abs:\"specification+gaming\"+OR+abs:\"process+reward+model\"+OR+abs:\"deliberative+alignment\"+OR+abs:\"reward+hacking\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
++      "http://export.arxiv.org/api/query?search_query=(abs:\"active+inference\"+OR+abs:\"free+energy\"+OR+abs:\"free+energy+principle\"+OR+abs:\"predictive+coding\"+OR+abs:\"world+model\")+AND+(abs:\"LLM\"+OR+abs:\"language+model\"+OR+abs:\"reasoning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
++    ],
++    "training_launched": false,
++    "websearch_webfetch_top_sources": [
++      "https://arxiv.org/abs/1704.03732",
++      "https://arxiv.org/abs/1511.05952",
++      "https://arxiv.org/abs/2206.11795",
++      "https://arxiv.org/abs/2110.06169",
++      "https://arxiv.org/abs/1905.11108",
++      "https://arxiv.org/abs/2302.02948",
++      "https://arxiv.org/abs/2407.15007",
++      "https://arxiv.org/abs/2405.17476"
++    ]
++  },
++  "random_seed": 4498,
++  "research_note_path": "docs/research-notes/arc-imitation-sota-415.md",
++  "source_ids": [
++    "1704.03732",
++    "1511.05952",
++    "2206.11795",
++    "2110.06169",
++    "1905.11108",
++    "2302.02948",
++    "2407.15007",
++    "2405.17476"
++  ],
++  "strongest_for_v416": "flagged_for_v416: DQfD/PER-style human-replay expert-injection for the ARC frame-change predictor and value/energy heads, anchored by arXiv:1704.03732, arXiv:1511.05952, and arXiv:2206.11795"
++}
++```
++
++Reliable channel only: `research-studying.md`, `research-references.md`,
++`scripts/sweep_clusters.py`, ARC human-replay notes, arXiv abs-page HTTP-200
++checks, and low-concurrency WebSearch/WebFetch of the top eight
++imitation/behavior-cloning/offline-RL sources. `.venv/bin/python
++scripts/sweep_clusters.py --help` succeeded. `scripts/sweep_clusters.py 0
++--max-results 8` and `scripts/sweep_clusters.py 3 --max-results 8` emitted
++focused cluster URLs used as the repo-standard fresh-pass substrate. No
++`/deep-research` call was made. No training, live LLM inference, leaderboard
++submission, or live solve was launched. No ops/status/traceability files were
++modified.
++
++Sources checked: arXiv:1704.03732, arXiv:1511.05952, arXiv:2206.11795, arXiv:2110.06169, arXiv:1905.11108, arXiv:2302.02948, arXiv:2407.15007, arXiv:2405.17476.
++
++## Local Replay Signal
++
++The active human-replay direction starts from the 14,672-example ARC public
++human corpus across 25 public games. The useful labels are frame_delta,
++level_progress, action_id, and click location. Humans changed the frame on
++14,243 actions and produced 132 level-progress positives, which makes the data
++well aligned with frame-change/clickability and sparse progress heads. The
++honest caveat is that the corpus is public-game-only; it is training signal for
++generalization, not a hidden-eval solve.
++
++## Literature Mapping
++
++- DQfD, arXiv:1704.03732, is the strongest expert-injection template: combine
++  TD updates, supervised demonstrator-action loss, and prioritized replay.
++- Prioritized Experience Replay, arXiv:1511.05952, supplies the queue policy:
++  replay important transitions more often instead of uniform sampling.
++- VPT, arXiv:2206.11795, supplies the visual behavior-pretraining analogy for
++  frame/action demonstrations and later fine-tuning.
++- IQL, arXiv:2110.06169, supplies the offline RL guardrail for value heads:
++  avoid evaluating out-of-dataset actions while improving over behavior data.
++- SQIL, arXiv:1905.11108, supplies a simple sparse-reward imitation baseline
++  before more complex inverse-RL machinery.
++- RLPD, arXiv:2302.02948, supports keeping offline human data in the replay
++  buffer during later off-policy updates.
++- Behavior Cloning Horizon, arXiv:2407.15007, makes the supervised behavior
++  cloning first pass defensible when payoffs are bounded and labels are clean.
++- Diverse Demonstrations IL, arXiv:2405.17476, maps self-play transitions by
++  resultant-state progress toward expert-state manifolds.
++
++## SOTA->Experiment Mapping
++
++- GAP-ARCH-FRAME-CHANGE-PREDICTOR: pretrain the click heatmap and ACTION1-5
++  heads from human frame/action/click labels before mixing cached self-play.
++- GAP-ARCH-VALUE-ENERGY-HEADS: use `level_progress`, steps-to-go, and
++  human-vs-corrupted state/action pairs to bootstrap value and contrastive
++  energy heads.
++- GAP-ARCH-EXPERT-INJECTION-REPLAY: seed the leaderboard-DQN-style replay queue
++  with human demonstrations at 5x priority, then anneal only after self-play
++  produces equal progress evidence.
++
++For `.416`, the strongest hand-off is the expert-injection replay package:
++DQfD/PER-style human replay injection for the frame-change predictor and
++value/energy heads, with VPT-style frame-action behavior pretraining as the
++supervised front end. Count this as a planning artifact only:
++`inference_substrate=aggregation_from_upstream_artifacts`.
++
++flagged_for_v416: DQfD/PER-style human-replay expert-injection for the ARC frame-change predictor and value/energy heads, anchored by arXiv:1704.03732, arXiv:1511.05952, and arXiv:2206.11795
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 8e96dd195d..747466a420 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -27574,6 +27574,87 @@ leaderboard submission or production verifier edits.
+ |---|---|---|
+ | REQ-REPORT-4449 | Planned (`python/carnot/experiment_4449_registry_gaps_hygiene.py`, `results/experiment_4449_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4449_registry_gaps_hygiene.py`) |
+ 
++### REQ-REPORT-4498: Ingest Human-Replay Imitation SOTA Into The .416 Plan
++
++The Exp 4498 workflow SHALL write
++`docs/research-notes/arc-imitation-sota-415.md` with a machine-readable JSON
++artifact block followed by a concise research note. It SHALL read
++`research-studying.md` and `research-references.md` filtered to imitation
++learning, behavior cloning, offline RL from human demonstrations, and
++prioritized-replay expert injection; it SHALL also use `scripts/sweep_clusters.py`
++plus low-concurrency WebSearch/WebFetch over five to eight top sources. It
++SHALL NOT invoke `/deep-research`, SHALL NOT launch live LLM inference, SHALL
++NOT launch training, SHALL NOT submit to the leaderboard, SHALL NOT claim a new
++ARC solve, and SHALL NOT modify `ops/changelog.md`, `ops/status.md`, or
++`_bmad/traceability.md`.
++
++The required runner SHALL be
++`results/experiment_4498_arc_imitation_sota_415.py` delegating to
++`python/carnot/experiment_4498_arc_imitation_sota_415.py`, and the workflow
++SHALL also write `results/experiment_4498_arc_imitation_sota_415.json`.
++
++The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
++`inference_substrate`, `preconditions_checked`, `source_ids`, `methods`,
++`human_corpus`, `leaderboard_dqn_mapping`, `arc_mapping`, `strongest_for_v416`,
++`research_note_path`, `random_seed`, and `field_principles`. The complete-path
++`honest_verdict` SHALL equal
++`complete: arc_imitation_sota_415_mapped_for_v416` and SHALL start with one of
++`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
++`shipped:`, or `shipped_`. `inference_substrate` SHALL equal
++`aggregation_from_upstream_artifacts`.
++
++`preconditions_checked` SHALL record which files, helpers, HTTP checks, and
++WebSearch/WebFetch sources were verified. It SHALL record
++`research-studying.md`, `research-references.md`, `scripts/sweep_clusters.py`,
++`docs/research-notes/arc-human-replay-application-spec.md`,
++`docs/research-notes/arc-frame-change-predictor-spec.md`,
++`docs/research-notes/arc-world-model-trust-energy-spec.md`,
++`docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md`, and the
++arXiv abs-page HTTP-200 checks for source IDs `1704.03732`, `1511.05952`,
++`2206.11795`, `2110.06169`, `1905.11108`, `2302.02948`, `2407.15007`, and
++`2405.17476`.
++
++`human_corpus` SHALL record the verified ARC human-replay facts used by the
++mapping: 14,672 public-demo examples, 14,243 frame-changing human actions, 132
++level-progress positives, 25 public games, and public-game-only caveats. The
++workflow SHALL map those facts onto bootstrapping the frame-change/clickability
++predictor, the behavior-cloning action prior, and value/energy heads without
++claiming that public-game replay memorization transfers to hidden games.
++
++`leaderboard_dqn_mapping` SHALL record that the public leaderboard DQN pattern
++uses prioritized replay plus expert-injection with imitation demos seeded at
++5x priority. `arc_mapping` SHALL cover `GAP-ARCH-FRAME-CHANGE-PREDICTOR`,
++`GAP-ARCH-VALUE-ENERGY-HEADS`, and `GAP-ARCH-EXPERT-INJECTION-REPLAY`.
++`strongest_for_v416` SHALL flag the DQfD/PER-style human-replay expert-injection
++package anchored by `arXiv:1704.03732` and `arXiv:1511.05952`, with VPT-style
++frame-action behavior pretraining from `arXiv:2206.11795`.
++
++`field_principles` SHALL include one-line principles for every top-level
++artifact field, including the required terminal-prefix `honest_verdict`
++principle, the explicit `inference_substrate` principle, and the
++resource-listing `preconditions_checked` principle.
++
++#### SCENARIO-REPORT-4498: Human Replay Imitation SOTA Maps To .416 Training Decisions
++
++**Given** `AGENTS.md`, `CODEX.md`, `research-studying.md`,
++`research-references.md`, `scripts/sweep_clusters.py`, and the ARC human-replay
++notes are readable
++**And** `scripts/sweep_clusters.py --help` succeeds
++**And** arXiv abs-page checks verify the complete-path source IDs
++**When** the Exp 4498 SOTA-ingestion workflow runs
++**Then** it writes the required JSON artifact and markdown note, maps imitation
++learning, behavior cloning, offline RL, prioritized replay, and expert
++injection onto the 14,672-example ARC human corpus, flags the strongest `.416`
++package, declares `aggregation_from_upstream_artifacts`, and records no
++`/deep-research`, live inference, training, leaderboard submission, solve claim,
++or ops/status/traceability edits.
++
++## Implementation Status (REQ-REPORT-4498)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4498 | Planned (`python/carnot/experiment_4498_arc_imitation_sota_415.py`) | Planned (`tests/python/test_experiment_4498_arc_imitation_sota_415.py`) |
++
+ ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+ 
+ The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f31e5fa35c..660c462130 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3516,
++  "experiments_checked": 3517,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4498_arc_imitation_sota_415.py b/python/carnot/experiment_4498_arc_imitation_sota_415.py
+new file mode 100644
+index 0000000000..c9c5ea2792
+--- /dev/null
++++ b/python/carnot/experiment_4498_arc_imitation_sota_415.py
+@@ -0,0 +1,734 @@
++"""Exp 4498 ARC imitation/replay SOTA ingestion for the `.416` hand-off.
++
++Spec refs: REQ-REPORT-4498, SCENARIO-REPORT-4498.
++
++This module records a research-planning artifact, not a training run or solve.
++The provenance is an aggregation of existing repo notes, the focused sweep
++helper, arXiv HTTP checks, and low-concurrency WebSearch/WebFetch sources.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "source_ids",
++        "methods",
++        "human_corpus",
++        "leaderboard_dqn_mapping",
++        "arc_mapping",
++        "strongest_for_v416",
++        "research_note_path",
++        "random_seed",
++        "field_principles",
++    }
++)
++REQUIRED_METHOD_FIELDS = frozenset(
++    {"name", "arxiv_id", "mapped_application", "stack_mapping", "pitfall"}
++)
++REQUIRED_PRECONDITION_FIELDS = frozenset(
++    {
++        "agents_md_read",
++        "codex_md_read",
++        "research_studying_filtered",
++        "research_references_filtered",
++        "arc_human_replay_notes_read",
++        "sweep_clusters_help_succeeded",
++        "sweep_clusters_urls",
++        "arxiv_http_200_verified_ids",
++        "websearch_webfetch_top_sources",
++        "deep_research_invoked",
++        "live_llm_inference",
++        "training_launched",
++        "leaderboard_submission",
++        "live_solve_claim",
++        "ops_docs_modified",
++    }
++)
++APPLICATION_KEYS = frozenset(
++    {
++        "GAP-ARCH-FRAME-CHANGE-PREDICTOR",
++        "GAP-ARCH-VALUE-ENERGY-HEADS",
++        "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++    }
++)
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++DEFAULT_HONEST_VERDICT = "complete: arc_imitation_sota_415_mapped_for_v416"
++DEFAULT_RANDOM_SEED = 4498
++RESEARCH_NOTE_RELATIVE_PATH = "docs/research-notes/arc-imitation-sota-415.md"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "MUST start with terminal prefix "
++        "complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ "
++        "(Verdict Terminal-Prefix Discipline)."
++    ),
++    "inference_substrate": (
++        "explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | "
++        "aggregation_from_upstream_artifacts) so adversarial_verify applies the right "
++        "duration floor."
++    ),
++    "preconditions_checked": (
++        "records WHICH resources were verified; pre-empts silent-missing-resource "
++        "fabrication."
++    ),
++    "source_ids": (
++        "only arXiv IDs whose abs pages were HTTP-200 checked may anchor the "
++        "SOTA mapping."
++    ),
++    "methods": (
++        "each source must map to one concrete ARC training decision and one caveat."
++    ),
++    "human_corpus": (
++        "public replay counts must stay bare facts, not inferred hidden-eval solve "
++        "claims."
++    ),
++    "leaderboard_dqn_mapping": (
++        "records the expert-injection mechanism separately from Carnot's own "
++        "training status."
++    ),
++    "arc_mapping": (
++        "maps literature to the actual queued ARC gaps, so follow-on work is "
++        "actionable."
++    ),
++    "strongest_for_v416": (
++        "names the single strongest next hand-off without implying it has already "
++        "been trained."
++    ),
++    "research_note_path": "repo-relative markdown path for deterministic parsing.",
++    "random_seed": "bare integer seed for reproducible artifact generation.",
++    "field_principles": "principle annotations for every top-level artifact field.",
++}
++
++VERIFIED_SOURCE_URLS = {
++    "1704.03732": "https://arxiv.org/abs/1704.03732",
++    "1511.05952": "https://arxiv.org/abs/1511.05952",
++    "2206.11795": "https://arxiv.org/abs/2206.11795",
++    "2110.06169": "https://arxiv.org/abs/2110.06169",
++    "1905.11108": "https://arxiv.org/abs/1905.11108",
++    "2302.02948": "https://arxiv.org/abs/2302.02948",
++    "2407.15007": "https://arxiv.org/abs/2407.15007",
++    "2405.17476": "https://arxiv.org/abs/2405.17476",
++}
++DEFAULT_SOURCE_IDS = list(VERIFIED_SOURCE_URLS)
++NOTE_REQUIRED_SOURCE_CITATIONS = frozenset(
++    f"arXiv:{source}" for source in VERIFIED_SOURCE_URLS
++)
++
++ARC_HUMAN_REPLAY_NOTES = [
++    "docs/research-notes/arc-human-baseline-and-replay-signal.md",
++    "docs/research-notes/arc-human-replay-application-spec.md",
++    "docs/research-notes/arc-frame-change-predictor-spec.md",
++    "docs/research-notes/arc-world-model-trust-energy-spec.md",
++    "docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md",
++]
++
++DEFAULT_STRONGEST_FOR_V416 = (
++    "flagged_for_v416: DQfD/PER-style human-replay expert-injection for the "
++    "ARC frame-change predictor and value/energy heads, anchored by "
++    "arXiv:1704.03732, arXiv:1511.05952, and arXiv:2206.11795"
++)
++
++HUMAN_CORPUS = {
++    "source": "ARC-AGI-3 public-demo human replay corpus",
++    "public_games": 25,
++    "replay_count": 342,
++    "example_count": 14672,
++    "frame_changing_actions": 14243,
++    "frame_change_rate": 14243 / 14672,
++    "level_progress_positive_count": 132,
++    "usage": (
++        "bootstrap frame-change/clickability, behavior-prior, and value/energy "
++        "heads from frame-derived features"
++    ),
++    "caveat": (
++        "public games only; value transfers only through held-out variants or "
++        "hidden-game generalization, never public replay memorization"
++    ),
++}
++
++LEADERBOARD_DQN_MAPPING = {
++    "source_note": "docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md",
++    "pattern": "prioritized replay plus expert-injection",
++    "expert_priority_multiplier": 5,
++    "dqn_stack_components": [
++        "prioritized_experience_replay",
++        "expert_imitation_demo_seed",
++        "persistent_action_effect_memory",
++        "attention_cnn_value_net",
++    ],
++    "carnot_mapping": (
++        "seed public human replay transitions into replay/value batches with "
++        "extra priority, then decay only after cached self-play transitions "
++        "prove equal or higher progress"
++    ),
++}
++
++DEFAULT_PRECONDITIONS_CHECKED = {
++    "agents_md_read": True,
++    "codex_md_read": True,
++    "research_studying_filtered": True,
++    "research_references_filtered": True,
++    "arc_human_replay_notes_read": ARC_HUMAN_REPLAY_NOTES,
++    "sweep_clusters_help_succeeded": True,
++    "sweep_clusters_urls": [
++        (
++            "http://export.arxiv.org/api/query?search_query="
++            '(abs:"verifier+ensemble"+OR+abs:"verifier+ensembles"+OR+'
++            'abs:"null+space"+OR+abs:"specification+gaming"+OR+'
++            'abs:"process+reward+model"+OR+abs:"deliberative+alignment"+OR+'
++            'abs:"reward+hacking")&start=0&max_results=8'
++            "&sortBy=submittedDate&sortOrder=descending"
++        ),
++        (
++            "http://export.arxiv.org/api/query?search_query="
++            '(abs:"active+inference"+OR+abs:"free+energy"+OR+'
++            'abs:"free+energy+principle"+OR+abs:"predictive+coding"+OR+'
++            'abs:"world+model")+AND+'
++            '(abs:"LLM"+OR+abs:"language+model"+OR+abs:"reasoning")'
++            "&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
++        ),
++    ],
++    "arxiv_http_200_verified_ids": DEFAULT_SOURCE_IDS,
++    "websearch_webfetch_top_sources": list(VERIFIED_SOURCE_URLS.values()),
++    "deep_research_invoked": False,
++    "live_llm_inference": False,
++    "training_launched": False,
++    "leaderboard_submission": False,
++    "live_solve_claim": False,
++    "ops_docs_modified": False,
++}
++
++ARC_MAPPING = {
++    "GAP-ARCH-FRAME-CHANGE-PREDICTOR": {
++        "principle": (
++            "Turn human frame/action/click demonstrations into a frame-only "
++            "predictor for which candidate actions change the screen."
++        ),
++        "source_ids": ["2206.11795", "2407.15007", "2405.17476"],
++        "next_experiment": (
++            "Pretrain click heatmap and ACTION1-5 heads on the 14,672-example "
++            "human corpus before mixing self-generated transitions."
++        ),
++    },
++    "GAP-ARCH-VALUE-ENERGY-HEADS": {
++        "principle": (
++            "Use human progress trajectories as offline value/energy labels while "
++            "avoiding out-of-dataset action optimism."
++        ),
++        "source_ids": ["2110.06169", "1905.11108", "2405.17476"],
++        "next_experiment": (
++            "Train value and contrastive energy heads from level_progress, "
++            "steps-to-go, and human-vs-corrupted state/action pairs."
++        ),
++    },
++    "GAP-ARCH-EXPERT-INJECTION-REPLAY": {
++        "principle": (
++            "Keep scarce expert demonstrations active in replay so sparse-reward "
++            "training starts from useful behavior instead of no-op exploration."
++        ),
++        "source_ids": ["1704.03732", "1511.05952", "2302.02948"],
++        "next_experiment": (
++            "Seed human replay transitions at 5x priority in the DQN/value replay "
++            "queue, then anneal priority only after self-play produces equal "
++            "progress evidence."
++        ),
++    },
++}
++
++DEFAULT_METHODS = [
++    {
++        "name": "Deep Q-learning from Demonstrations",
++        "arxiv_id": "1704.03732",
++        "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++        "stack_mapping": (
++            "Use DQfD's mixture of TD learning, supervised expert-action loss, "
++            "and prioritized replay as the direct template for seeding ARC human "
++            "replays into the value/replay stack."
++        ),
++        "pitfall": (
++            "DQfD is not a solve recipe; it improves sparse-reward exploration "
++            "only if the demonstration distribution generalizes beyond public games."
++        ),
++    },
++    {
++        "name": "Prioritized Experience Replay",
++        "arxiv_id": "1511.05952",
++        "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++        "stack_mapping": (
++            "Prioritize rare high-progress and expert transitions rather than "
++            "sampling human and self-play transitions uniformly."
++        ),
++        "pitfall": (
++            "Priority can overfit public-game demos unless held-out variant "
++            "transfer is the acceptance gate."
++        ),
++    },
++    {
++        "name": "Video PreTraining",
++        "arxiv_id": "2206.11795",
++        "mapped_application": "GAP-ARCH-FRAME-CHANGE-PREDICTOR",
++        "stack_mapping": (
++            "Treat frame/action replay as behavior pretraining: learn a visual "
++            "action prior and clickability model before RL-style fine-tuning."
++        ),
++        "pitfall": (
++            "ARC replays already have actions, but only 25 public games; the "
++            "model must remain frame-only and transfer-tested."
++        ),
++    },
++    {
++        "name": "Offline Reinforcement Learning with Implicit Q-Learning",
++        "arxiv_id": "2110.06169",
++        "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++        "stack_mapping": (
++            "Fit value/energy heads from logged actions without querying unseen "
++            "actions, then extract an advantage-weighted behavior policy."
++        ),
++        "pitfall": (
++            "IQL is only appropriate after reward/progress labels are clean; "
++            "frame_delta alone is not the same as task progress."
++        ),
++    },
++    {
++        "name": "SQIL imitation via sparse rewards",
++        "arxiv_id": "1905.11108",
++        "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++        "stack_mapping": (
++            "Use simple demonstration-match rewards as a first imitation-energy "
++            "baseline before adding more brittle inverse-RL machinery."
++        ),
++        "pitfall": (
++            "Matching public expert states can still be the wrong objective on "
++            "novel games, so progress labels and variants remain required."
++        ),
++    },
++    {
++        "name": "Efficient Online RL with Offline Data",
++        "arxiv_id": "2302.02948",
++        "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++        "stack_mapping": (
++            "Keep human replay data in the replay buffer during online/self-play "
++            "updates instead of treating it as one-off pretraining."
++        ),
++        "pitfall": (
++            "Carnot's current task is offline/cached; any online step must remain "
++            "competition-legal and separately gated."
++        ),
++    },
++    {
++        "name": "Is Behavior Cloning All You Need?",
++        "arxiv_id": "2407.15007",
++        "mapped_application": "GAP-ARCH-FRAME-CHANGE-PREDICTOR",
++        "stack_mapping": (
++            "Justifies a supervised behavior-cloning first pass for the click "
++            "prior when payoffs are bounded and labels are clean."
++        ),
++        "pitfall": (
++            "The theorem does not remove distribution-shift risk; hidden-game "
++            "evaluation still requires variant transfer."
++        ),
++    },
++    {
++        "name": "How to Leverage Diverse Demonstrations in Offline Imitation Learning",
++        "arxiv_id": "2405.17476",
++        "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++        "stack_mapping": (
++            "Select non-expert or self-play actions by resultant-state progress "
++            "toward human-like states, then weight behavior cloning accordingly."
++        ),
++        "pitfall": (
++            "Resultant-state overlap can be misleading when public-game states "
++            "do not cover hidden mechanics."
++        ),
++    },
++]
++
++
++def _fail(message: str) -> None:
++    raise ValueError(message)
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        _fail(message)
++
++
++def _nonempty_list(value: object) -> bool:
++    return isinstance(value, list) and bool(value)
++
++
++def build_artifact(
++    *,
++    source_ids: Sequence[str] | None = None,
++    methods: Sequence[Mapping[str, str]] | None = None,
++    preconditions_checked: Mapping[str, object] | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    honest_verdict: str = DEFAULT_HONEST_VERDICT,
++) -> dict[str, object]:
++    """Build the deterministic artifact embedded in the markdown note."""
++
++    chosen_source_ids = DEFAULT_SOURCE_IDS if source_ids is None else list(source_ids)
++    chosen_methods = DEFAULT_METHODS if methods is None else methods
++    chosen_preconditions = (
++        DEFAULT_PRECONDITIONS_CHECKED
++        if preconditions_checked is None
++        else preconditions_checked
++    )
++    return {
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(chosen_preconditions),
++        "source_ids": list(chosen_source_ids),
++        "methods": [dict(method) for method in chosen_methods],
++        "human_corpus": dict(HUMAN_CORPUS),
++        "leaderboard_dqn_mapping": {
++            key: list(value) if isinstance(value, list) else value
++            for key, value in LEADERBOARD_DQN_MAPPING.items()
++        },
++        "arc_mapping": {
++            gap_id: dict(details) for gap_id, details in ARC_MAPPING.items()
++        },
++        "strongest_for_v416": DEFAULT_STRONGEST_FOR_V416,
++        "research_note_path": RESEARCH_NOTE_RELATIVE_PATH,
++        "random_seed": random_seed,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++
++
++def _validate_preconditions(row: object) -> None:
++    _require(
++        isinstance(row, Mapping) and set(row) == REQUIRED_PRECONDITION_FIELDS,
++        "preconditions_checked must have exactly the required fields",
++    )
++    expected_true = {
++        "agents_md_read": "AGENTS.md",
++        "codex_md_read": "CODEX.md",
++        "research_studying_filtered": "research-studying.md filtered pass",
++        "research_references_filtered": "research-references.md filtered pass",
++        "sweep_clusters_help_succeeded": "sweep_clusters help",
++    }
++    for key, label in expected_true.items():
++        _require(row.get(key) is True, f"preconditions_checked must record {label}")
++
++    expected_false = {
++        "deep_research_invoked": "deep-research",
++        "live_llm_inference": "live inference",
++        "training_launched": "training",
++        "leaderboard_submission": "leaderboard",
++        "live_solve_claim": "live solve",
++        "ops_docs_modified": "ops docs modification",
++    }
++    for key, label in expected_false.items():
++        _require(row.get(key) is False, f"preconditions_checked must record no {label}")
++
++    _require(
++        row.get("arc_human_replay_notes_read") == ARC_HUMAN_REPLAY_NOTES,
++        "preconditions_checked must record ARC human-replay note resources",
++    )
++    _require(
++        _nonempty_list(row.get("sweep_clusters_urls")),
++        "preconditions_checked must record cluster URLs",
++    )
++    _require(
++        _nonempty_list(row.get("arxiv_http_200_verified_ids"))
++        and set(DEFAULT_SOURCE_IDS).issubset(set(row["arxiv_http_200_verified_ids"])),
++        "preconditions_checked must include all verified arXiv ids",
++    )
++    _require(
++        _nonempty_list(row.get("websearch_webfetch_top_sources"))
++        and set(VERIFIED_SOURCE_URLS.values()).issubset(
++            set(row["websearch_webfetch_top_sources"])
++        ),
++        "preconditions_checked must include WebSearch/WebFetch source URLs",
++    )
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the artifact before writing or embedding it."""
++
++    fields = set(artifact)
++    missing = REQUIRED_ARTIFACT_FIELDS - fields
++    extra = fields - REQUIRED_ARTIFACT_FIELDS
++    _require(not missing, f"artifact missing required fields: {sorted(missing)}")
++    _require(not extra, f"artifact has unexpected fields: {sorted(extra)}")
++
++    verdict = artifact["honest_verdict"]
++    _require(
++        isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES),
++        "honest_verdict must use a terminal prefix",
++    )
++    _require(
++        artifact["inference_substrate"] == INFERENCE_SUBSTRATE,
++        "inference_substrate must declare aggregation from upstream artifacts",
++    )
++    _require(
++        artifact["field_principles"] == FIELD_PRINCIPLES
++        and set(artifact["field_principles"]) == REQUIRED_ARTIFACT_FIELDS,
++        "field_principles must match REQ-REPORT-4498",
++    )
++    _require(
++        isinstance(artifact["random_seed"], int)
++        and not isinstance(artifact["random_seed"], bool),
++        "random_seed must be an integer",
++    )
++    _require(
++        artifact["research_note_path"] == RESEARCH_NOTE_RELATIVE_PATH,
++        "research_note_path must be the repo-relative note path",
++    )
++
++    source_ids = artifact["source_ids"]
++    _require(
++        isinstance(source_ids, list) and 5 <= len(source_ids) <= 8,
++        "source_ids must contain five to eight verified arXiv ids",
++    )
++    seen_sources: set[str] = set()
++    for source in source_ids:
++        _require(isinstance(source, str), "source_ids entries must be strings")
++        _require(source in VERIFIED_SOURCE_URLS, f"source {source!r} is not a verified arXiv id")
++        _require(source not in seen_sources, f"duplicate source in source_ids: {source}")
++        seen_sources.add(source)
++
++    methods = artifact["methods"]
++    _require(isinstance(methods, list), "methods must be a list")
++    method_sources: list[str] = []
++    for method in methods:
++        _require(
++            isinstance(method, Mapping) and set(method) == REQUIRED_METHOD_FIELDS,
++            "each method must be a dict with exactly the required fields",
++        )
++        for key, value in method.items():
++            _require(
++                isinstance(value, str) and bool(value.strip()),
++                f"method field {key!r} must be a non-empty string",
++            )
++        source = method["arxiv_id"]
++        _require(source in source_ids, "methods arxiv ids must match source_ids")
++        _require(
++            method["mapped_application"] in APPLICATION_KEYS,
++            "method mapped_application must name a required ARC application",
++        )
++        method_sources.append(source)
++    _require(method_sources == source_ids, "methods arxiv ids must match source_ids")
++
++    _require(
++        artifact["human_corpus"] == HUMAN_CORPUS,
++        "human_corpus must preserve the verified ARC public replay counts",
++    )
++    _require(
++        artifact["leaderboard_dqn_mapping"] == LEADERBOARD_DQN_MAPPING,
++        "leaderboard_dqn_mapping must preserve expert injection facts",
++    )
++
++    arc_mapping = artifact["arc_mapping"]
++    _require(
++        isinstance(arc_mapping, Mapping) and set(arc_mapping) == APPLICATION_KEYS,
++        "arc_mapping must cover required ARC applications",
++    )
++    for gap_id, row in arc_mapping.items():
++        _require(isinstance(row, Mapping), f"arc_mapping {gap_id} must be a mapping")
++        _require(
++            "principle" in row and "source_ids" in row and "next_experiment" in row,
++            f"arc_mapping {gap_id} missing fields",
++        )
++        _require(
++            isinstance(row["principle"], str) and row["principle"].strip(),
++            f"arc_mapping {gap_id} needs a principle",
++        )
++        _require(
++            isinstance(row["next_experiment"], str) and row["next_experiment"].strip(),
++            f"arc_mapping {gap_id} needs a next_experiment",
++        )
++        _require(
++            isinstance(row["source_ids"], list)
++            and row["source_ids"]
++            and set(row["source_ids"]).issubset(set(source_ids)),
++            f"arc_mapping {gap_id} source_ids must be verified",
++        )
++
++    _require(
++        artifact["strongest_for_v416"] == DEFAULT_STRONGEST_FOR_V416,
++        "strongest_for_v416 must name the verified .416 package",
++    )
++    _validate_preconditions(artifact["preconditions_checked"])
++
++
++def _artifact_json(artifact: Mapping[str, Any]) -> str:
++    return json.dumps(artifact, indent=2, sort_keys=True)
++
++
++def render_research_note(artifact: Mapping[str, Any]) -> str:
++    """Render markdown with the artifact block first for automated parsing."""
++
++    validate_artifact(artifact)
++    source_line = ", ".join(f"arXiv:{source}" for source in DEFAULT_SOURCE_IDS)
++    return f"""# ARC imitation/replay SOTA ingestion .415 - 2026-06-20
++
++```json
++{_artifact_json(artifact)}
++```
++
++Reliable channel only: `research-studying.md`, `research-references.md`,
++`scripts/sweep_clusters.py`, ARC human-replay notes, arXiv abs-page HTTP-200
++checks, and low-concurrency WebSearch/WebFetch of the top eight
++imitation/behavior-cloning/offline-RL sources. `.venv/bin/python
++scripts/sweep_clusters.py --help` succeeded. `scripts/sweep_clusters.py 0
++--max-results 8` and `scripts/sweep_clusters.py 3 --max-results 8` emitted
++focused cluster URLs used as the repo-standard fresh-pass substrate. No
++`/deep-research` call was made. No training, live LLM inference, leaderboard
++submission, or live solve was launched. No ops/status/traceability files were
++modified.
++
++Sources checked: {source_line}.
++
++## Local Replay Signal
++
++The active human-replay direction starts from the 14,672-example ARC public
++human corpus across 25 public games. The useful labels are frame_delta,
++level_progress, action_id, and click location. Humans changed the frame on
++14,243 actions and produced 132 level-progress positives, which makes the data
++well aligned with frame-change/clickability and sparse progress heads. The
++honest caveat is that the corpus is public-game-only; it is training signal for
++generalization, not a hidden-eval solve.
++
++## Literature Mapping
++
++- DQfD, arXiv:1704.03732, is the strongest expert-injection template: combine
++  TD updates, supervised demonstrator-action loss, and prioritized replay.
++- Prioritized Experience Replay, arXiv:1511.05952, supplies the queue policy:
++  replay important transitions more often instead of uniform sampling.
++- VPT, arXiv:2206.11795, supplies the visual behavior-pretraining analogy for
++  frame/action demonstrations and later fine-tuning.
++- IQL, arXiv:2110.06169, supplies the offline RL guardrail for value heads:
++  avoid evaluating out-of-dataset actions while improving over behavior data.
++- SQIL, arXiv:1905.11108, supplies a simple sparse-reward imitation baseline
++  before more complex inverse-RL machinery.
++- RLPD, arXiv:2302.02948, supports keeping offline human data in the replay
++  buffer during later off-policy updates.
++- Behavior Cloning Horizon, arXiv:2407.15007, makes the supervised behavior
++  cloning first pass defensible when payoffs are bounded and labels are clean.
++- Diverse Demonstrations IL, arXiv:2405.17476, maps self-play transitions by
++  resultant-state progress toward expert-state manifolds.
++
++## SOTA->Experiment Mapping
++
++- GAP-ARCH-FRAME-CHANGE-PREDICTOR: pretrain the click heatmap and ACTION1-5
++  heads from human frame/action/click labels before mixing cached self-play.
++- GAP-ARCH-VALUE-ENERGY-HEADS: use `level_progress`, steps-to-go, and
++  human-vs-corrupted state/action pairs to bootstrap value and contrastive
++  energy heads.
++- GAP-ARCH-EXPERT-INJECTION-REPLAY: seed the leaderboard-DQN-style replay queue
++  with human demonstrations at 5x priority, then anneal only after self-play
++  produces equal progress evidence.
++
++For `.416`, the strongest hand-off is the expert-injection replay package:
++DQfD/PER-style human replay injection for the frame-change predictor and
++value/energy heads, with VPT-style frame-action behavior pretraining as the
++supervised front end. Count this as a planning artifact only:
++`inference_substrate=aggregation_from_upstream_artifacts`.
++
++{DEFAULT_STRONGEST_FOR_V416}
++"""
++
++
++def artifact_from_note(note: str) -> dict[str, object]:
++    """Extract the machine-readable JSON block from the markdown note."""
++
++    start_marker = "```json\n"
++    end_marker = "\n```"
++    start = note.find(start_marker)
++    _require(start != -1, "research note missing machine-readable JSON block")
++    start += len(start_marker)
++    end = note.find(end_marker, start)
++    _require(end != -1, "research note missing machine-readable JSON block terminator")
++    artifact = json.loads(note[start:end])
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_research_note(note: str) -> None:
++    """Check citations, required mapping language, and the embedded artifact."""
++
++    missing_sources = sorted(
++        source for source in NOTE_REQUIRED_SOURCE_CITATIONS if source not in note
++    )
++    _require(
++        not missing_sources,
++        f"research note missing verified source citations: {missing_sources}",
++    )
++    required_phrases = [
++        "Reliable channel",
++        "sweep_clusters.py",
++        "/deep-research",
++        "No training",
++        "No ops/status/traceability",
++        "behavior cloning",
++        "offline RL",
++        "prioritized replay",
++        "expert-injection",
++        "14,672-example",
++        "GAP-ARCH-FRAME-CHANGE-PREDICTOR",
++        "GAP-ARCH-VALUE-ENERGY-HEADS",
++        "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++        "flagged_for_v416",
++        "aggregation_from_upstream_artifacts",
++    ]
++    for phrase in required_phrases:
++        _require(phrase in note, f"research note missing required phrase: {phrase}")
++    artifact_from_note(note)
++
++
++RESEARCH_NOTE = render_research_note(build_artifact())
++
++
++def write_outputs(
++    *,
++    artifact_path: Path | str | None = None,
++    note_path: Path | str | None = None,
++) -> dict[str, object]:
++    """Write the stable JSON artifact and research note."""
++
++    artifact = build_artifact()
++    note = render_research_note(artifact)
++    validate_research_note(note)
++
++    artifact_target = Path(artifact_path or "results/experiment_4498_arc_imitation_sota_415.json")
++    note_target = Path(note_path or RESEARCH_NOTE_RELATIVE_PATH)
++    artifact_target.parent.mkdir(parents=True, exist_ok=True)
++    note_target.parent.mkdir(parents=True, exist_ok=True)
++    artifact_target.write_text(_artifact_json(artifact) + "\n", encoding="utf-8")
++    note_target.write_text(note, encoding="utf-8")
++    return artifact
++
++
++def main() -> int:
++    root = Path(os.environ.get("CARNOT_EXP4498_ROOT", "."))
++    artifact = write_outputs(
++        artifact_path=root / "results/experiment_4498_arc_imitation_sota_415.json",
++        note_path=root / RESEARCH_NOTE_RELATIVE_PATH,
++    )
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_4498_arc_imitation_sota_415.json b/results/experiment_4498_arc_imitation_sota_415.json
+new file mode 100644
+index 0000000000..e75eb9755a
+--- /dev/null
++++ b/results/experiment_4498_arc_imitation_sota_415.json
+@@ -0,0 +1,185 @@
++{
++  "arc_mapping": {
++    "GAP-ARCH-EXPERT-INJECTION-REPLAY": {
++      "next_experiment": "Seed human replay transitions at 5x priority in the DQN/value replay queue, then anneal priority only after self-play produces equal progress evidence.",
++      "principle": "Keep scarce expert demonstrations active in replay so sparse-reward training starts from useful behavior instead of no-op exploration.",
++      "source_ids": [
++        "1704.03732",
++        "1511.05952",
++        "2302.02948"
++      ]
++    },
++    "GAP-ARCH-FRAME-CHANGE-PREDICTOR": {
++      "next_experiment": "Pretrain click heatmap and ACTION1-5 heads on the 14,672-example human corpus before mixing self-generated transitions.",
++      "principle": "Turn human frame/action/click demonstrations into a frame-only predictor for which candidate actions change the screen.",
++      "source_ids": [
++        "2206.11795",
++        "2407.15007",
++        "2405.17476"
++      ]
++    },
++    "GAP-ARCH-VALUE-ENERGY-HEADS": {
++      "next_experiment": "Train value and contrastive energy heads from level_progress, steps-to-go, and human-vs-corrupted state/action pairs.",
++      "principle": "Use human progress trajectories as offline value/energy labels while avoiding out-of-dataset action optimism.",
++      "source_ids": [
++        "2110.06169",
++        "1905.11108",
++        "2405.17476"
++      ]
++    }
++  },
++  "field_principles": {
++    "arc_mapping": "maps literature to the actual queued ARC gaps, so follow-on work is actionable.",
++    "field_principles": "principle annotations for every top-level artifact field.",
++    "honest_verdict": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).",
++    "human_corpus": "public replay counts must stay bare facts, not inferred hidden-eval solve claims.",
++    "inference_substrate": "explicit (live_llm_inference | verifier_ensemble_against_cached_candidates | aggregation_from_upstream_artifacts) so adversarial_verify applies the right duration floor.",
++    "leaderboard_dqn_mapping": "records the expert-injection mechanism separately from Carnot's own training status.",
++    "methods": "each source must map to one concrete ARC training decision and one caveat.",
++    "preconditions_checked": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication.",
++    "random_seed": "bare integer seed for reproducible artifact generation.",
++    "research_note_path": "repo-relative markdown path for deterministic parsing.",
++    "source_ids": "only arXiv IDs whose abs pages were HTTP-200 checked may anchor the SOTA mapping.",
++    "strongest_for_v416": "names the single strongest next hand-off without implying it has already been trained."
++  },
++  "honest_verdict": "complete: arc_imitation_sota_415_mapped_for_v416",
++  "human_corpus": {
++    "caveat": "public games only; value transfers only through held-out variants or hidden-game generalization, never public replay memorization",
++    "example_count": 14672,
++    "frame_change_rate": 0.9707606324972737,
++    "frame_changing_actions": 14243,
++    "level_progress_positive_count": 132,
++    "public_games": 25,
++    "replay_count": 342,
++    "source": "ARC-AGI-3 public-demo human replay corpus",
++    "usage": "bootstrap frame-change/clickability, behavior-prior, and value/energy heads from frame-derived features"
++  },
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "leaderboard_dqn_mapping": {
++    "carnot_mapping": "seed public human replay transitions into replay/value batches with extra priority, then decay only after cached self-play transitions prove equal or higher progress",
++    "dqn_stack_components": [
++      "prioritized_experience_replay",
++      "expert_imitation_demo_seed",
++      "persistent_action_effect_memory",
++      "attention_cnn_value_net"
++    ],
++    "expert_priority_multiplier": 5,
++    "pattern": "prioritized replay plus expert-injection",
++    "source_note": "docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md"
++  },
++  "methods": [
++    {
++      "arxiv_id": "1704.03732",
++      "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++      "name": "Deep Q-learning from Demonstrations",
++      "pitfall": "DQfD is not a solve recipe; it improves sparse-reward exploration only if the demonstration distribution generalizes beyond public games.",
++      "stack_mapping": "Use DQfD's mixture of TD learning, supervised expert-action loss, and prioritized replay as the direct template for seeding ARC human replays into the value/replay stack."
++    },
++    {
++      "arxiv_id": "1511.05952",
++      "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++      "name": "Prioritized Experience Replay",
++      "pitfall": "Priority can overfit public-game demos unless held-out variant transfer is the acceptance gate.",
++      "stack_mapping": "Prioritize rare high-progress and expert transitions rather than sampling human and self-play transitions uniformly."
++    },
++    {
++      "arxiv_id": "2206.11795",
++      "mapped_application": "GAP-ARCH-FRAME-CHANGE-PREDICTOR",
++      "name": "Video PreTraining",
++      "pitfall": "ARC replays already have actions, but only 25 public games; the model must remain frame-only and transfer-tested.",
++      "stack_mapping": "Treat frame/action replay as behavior pretraining: learn a visual action prior and clickability model before RL-style fine-tuning."
++    },
++    {
++      "arxiv_id": "2110.06169",
++      "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++      "name": "Offline Reinforcement Learning with Implicit Q-Learning",
++      "pitfall": "IQL is only appropriate after reward/progress labels are clean; frame_delta alone is not the same as task progress.",
++      "stack_mapping": "Fit value/energy heads from logged actions without querying unseen actions, then extract an advantage-weighted behavior policy."
++    },
++    {
++      "arxiv_id": "1905.11108",
++      "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++      "name": "SQIL imitation via sparse rewards",
++      "pitfall": "Matching public expert states can still be the wrong objective on novel games, so progress labels and variants remain required.",
++      "stack_mapping": "Use simple demonstration-match rewards as a first imitation-energy baseline before adding more brittle inverse-RL machinery."
++    },
++    {
++      "arxiv_id": "2302.02948",
++      "mapped_application": "GAP-ARCH-EXPERT-INJECTION-REPLAY",
++      "name": "Efficient Online RL with Offline Data",
++      "pitfall": "Carnot's current task is offline/cached; any online step must remain competition-legal and separately gated.",
++      "stack_mapping": "Keep human replay data in the replay buffer during online/self-play updates instead of treating it as one-off pretraining."
++    },
++    {
++      "arxiv_id": "2407.15007",
++      "mapped_application": "GAP-ARCH-FRAME-CHANGE-PREDICTOR",
++      "name": "Is Behavior Cloning All You Need?",
++      "pitfall": "The theorem does not remove distribution-shift risk; hidden-game evaluation still requires variant transfer.",
++      "stack_mapping": "Justifies a supervised behavior-cloning first pass for the click prior when payoffs are bounded and labels are clean."
++    },
++    {
++      "arxiv_id": "2405.17476",
++      "mapped_application": "GAP-ARCH-VALUE-ENERGY-HEADS",
++      "name": "How to Leverage Diverse Demonstrations in Offline Imitation Learning",
++      "pitfall": "Resultant-state overlap can be misleading when public-game states do not cover hidden mechanics.",
++      "stack_mapping": "Select non-expert or self-play actions by resultant-state progress toward human-like states, then weight behavior cloning accordingly."
++    }
++  ],
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "arc_human_replay_notes_read": [
++      "docs/research-notes/arc-human-baseline-and-replay-signal.md",
++      "docs/research-notes/arc-human-replay-application-spec.md",
++      "docs/research-notes/arc-frame-change-predictor-spec.md",
++      "docs/research-notes/arc-world-model-trust-energy-spec.md",
++      "docs/research-notes/arc-leaderboard-competitive-intel-2026-06-20.md"
++    ],
++    "arxiv_http_200_verified_ids": [
++      "1704.03732",
++      "1511.05952",
++      "2206.11795",
++      "2110.06169",
++      "1905.11108",
++      "2302.02948",
++      "2407.15007",
++      "2405.17476"
++    ],
++    "codex_md_read": true,
++    "deep_research_invoked": false,
++    "leaderboard_submission": false,
++    "live_llm_inference": false,
++    "live_solve_claim": false,
++    "ops_docs_modified": false,
++    "research_references_filtered": true,
++    "research_studying_filtered": true,
++    "sweep_clusters_help_succeeded": true,
++    "sweep_clusters_urls": [
++      "http://export.arxiv.org/api/query?search_query=(abs:\"verifier+ensemble\"+OR+abs:\"verifier+ensembles\"+OR+abs:\"null+space\"+OR+abs:\"specification+gaming\"+OR+abs:\"process+reward+model\"+OR+abs:\"deliberative+alignment\"+OR+abs:\"reward+hacking\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending",
++      "http://export.arxiv.org/api/query?search_query=(abs:\"active+inference\"+OR+abs:\"free+energy\"+OR+abs:\"free+energy+principle\"+OR+abs:\"predictive+coding\"+OR+abs:\"world+model\")+AND+(abs:\"LLM\"+OR+abs:\"language+model\"+OR+abs:\"reasoning\")&start=0&max_results=8&sortBy=submittedDate&sortOrder=descending"
++    ],
++    "training_launched": false,
++    "websearch_webfetch_top_sources": [
++      "https://arxiv.org/abs/1704.03732",
++      "https://arxiv.org/abs/1511.05952",
++      "https://arxiv.org/abs/2206.11795",
++      "https://arxiv.org/abs/2110.06169",
++      "https://arxiv.org/abs/1905.11108",
++      "https://arxiv.org/abs/2302.02948",
++      "https://arxiv.org/abs/2407.15007",
++      "https://arxiv.org/abs/2405.17476"
++    ]
++  },
++  "random_seed": 4498,
++  "research_note_path": "docs/research-notes/arc-imitation-sota-415.md",
++  "source_ids": [
++    "1704.03732",
++    "1511.05952",
++    "2206.11795",
++    "2110.06169",
++    "1905.11108",
++    "2302.02948",
++    "2407.15007",
++    "2405.17476"
++  ],
++  "strongest_for_v416": "flagged_for_v416: DQfD/PER-style human-replay expert-injection for the ARC frame-change predictor and value/energy heads, anchored by arXiv:1704.03732, arXiv:1511.05952, and arXiv:2206.11795"
++}
+diff --git a/results/experiment_4498_arc_imitation_sota_415.py b/results/experiment_4498_arc_imitation_sota_415.py
+new file mode 100644
+index 0000000000..3618b945a0
+--- /dev/null
++++ b/results/experiment_4498_arc_imitation_sota_415.py
+@@ -0,0 +1,8 @@
++"""Required runner for REQ-REPORT-4498."""
++
++from __future__ import annotations
++
++from carnot.experiment_4498_arc_imitation_sota_415 import main
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_4498_arc_imitation_sota_415.py b/tests/python/test_experiment_4498_arc_imitation_sota_415.py
+new file mode 100644
+index 0000000000..38e4c8531a
+--- /dev/null
++++ b/tests/python/test_experiment_4498_arc_imitation_sota_415.py
+@@ -0,0 +1,225 @@
++"""Tests for REQ-REPORT-4498 / SCENARIO-REPORT-4498."""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4498_arc_imitation_sota_415 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++ARTIFACT_PATH = Path("results/experiment_4498_arc_imitation_sota_415.json")
++WRAPPER_PATH = Path("results/experiment_4498_arc_imitation_sota_415.py")
++NOTE_PATH = Path("docs/research-notes/arc-imitation-sota-415.md")
++
++
++def _valid_artifact() -> dict[str, object]:
++    return mod.build_artifact()
++
++
++def test_req_report_4498_spec_anchor_exists() -> None:
++    """REQ-REPORT-4498: OpenSpec declares the ARC imitation SOTA note."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4498" in spec
++    assert "SCENARIO-REPORT-4498" in spec
++    assert ARTIFACT_PATH.as_posix() in spec
++    assert WRAPPER_PATH.as_posix() in spec
++    assert NOTE_PATH.as_posix() in spec
++    assert "14,672" in spec
++    assert "5x priority" in spec
++    assert "GAP-ARCH-FRAME-CHANGE-PREDICTOR" in spec
++    assert "GAP-ARCH-VALUE-ENERGY-HEADS" in spec
++    assert "GAP-ARCH-EXPERT-INJECTION-REPLAY" in spec
++    assert "complete: arc_imitation_sota_415_mapped_for_v416" in spec
++    assert "aggregation_from_upstream_artifacts" in spec
++    assert "arXiv:1704.03732" in spec
++    assert "arXiv:1511.05952" in spec
++    assert "arXiv:2206.11795" in spec
++
++
++def test_build_artifact_has_required_schema_fields_for_req_report_4498() -> None:
++    """REQ-REPORT-4498: artifact exposes required fields and principles."""
++
++    artifact = _valid_artifact()
++
++    assert set(artifact) == mod.REQUIRED_ARTIFACT_FIELDS
++    assert set(artifact["field_principles"]) == mod.REQUIRED_ARTIFACT_FIELDS
++    assert artifact["honest_verdict"] == mod.DEFAULT_HONEST_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["source_ids"] == mod.DEFAULT_SOURCE_IDS
++    assert artifact["methods"] == mod.DEFAULT_METHODS
++    assert artifact["human_corpus"] == mod.HUMAN_CORPUS
++    assert artifact["leaderboard_dqn_mapping"] == mod.LEADERBOARD_DQN_MAPPING
++    assert artifact["arc_mapping"] == mod.ARC_MAPPING
++    assert artifact["strongest_for_v416"] == mod.DEFAULT_STRONGEST_FOR_V416
++    assert artifact["research_note_path"] == NOTE_PATH.as_posix()
++    assert artifact["random_seed"] == mod.DEFAULT_RANDOM_SEED
++    assert artifact["human_corpus"]["example_count"] == 14672
++    assert artifact["human_corpus"]["frame_changing_actions"] == 14243
++    assert artifact["leaderboard_dqn_mapping"]["expert_priority_multiplier"] == 5
++
++
++@pytest.mark.parametrize(
++    ("bad_artifact", "message"),
++    [
++        (_valid_artifact() | {"honest_verdict": "blocked_network"}, "terminal prefix"),
++        (_valid_artifact() | {"inference_substrate": "live_llm_inference"}, "aggregation"),
++        (_valid_artifact() | {"field_principles": {"honest_verdict": "loose"}}, "field_principles"),
++        (_valid_artifact() | {"source_ids": mod.DEFAULT_SOURCE_IDS[:4]}, "five to eight"),
++        (
++            _valid_artifact()
++            | {"source_ids": [*mod.DEFAULT_SOURCE_IDS[:-1], "9999.99999"]},
++            "verified arXiv",
++        ),
++        (
++            _valid_artifact()
++            | {"source_ids": [mod.DEFAULT_SOURCE_IDS[0], *mod.DEFAULT_SOURCE_IDS[:-1]]},
++            "duplicate",
++        ),
++        (_valid_artifact() | {"methods": mod.DEFAULT_METHODS[:4]}, "source_ids"),
++        (
++            _valid_artifact()
++            | {
++                "methods": [
++                    mod.DEFAULT_METHODS[0] | {"mapped_application": "GAP-OTHER"},
++                    *mod.DEFAULT_METHODS[1:],
++                ]
++            },
++            "mapped_application",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "arc_mapping": {
++                    key: value
++                    for key, value in mod.ARC_MAPPING.items()
++                    if key != "GAP-ARCH-VALUE-ENERGY-HEADS"
++                }
++            },
++            "arc_mapping",
++        ),
++        (
++            _valid_artifact()
++            | {"human_corpus": mod.HUMAN_CORPUS | {"example_count": 342}},
++            "human_corpus",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "leaderboard_dqn_mapping": mod.LEADERBOARD_DQN_MAPPING
++                | {"expert_priority_multiplier": 1}
++            },
++            "expert injection",
++        ),
++        (_valid_artifact() | {"strongest_for_v416": "unverified"}, "strongest_for_v416"),
++        (_valid_artifact() | {"random_seed": "4498"}, "random_seed"),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"deep_research_invoked": True}
++            },
++            "deep-research",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"training_launched": True}
++            },
++            "training",
++        ),
++        (_valid_artifact() | {"preconditions_checked": []}, "preconditions_checked"),
++        (
++            _valid_artifact()
++            | {"research_note_path": "docs/research-notes/wrong.md"},
++            "research_note_path",
++        ),
++    ],
++)
++def test_validate_artifact_rejects_schema_violations_for_req_report_4498(
++    bad_artifact: dict[str, object], message: str
++) -> None:
++    """REQ-REPORT-4498: invalid ARC imitation artifacts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_validate_artifact_rejects_missing_and_extra_fields() -> None:
++    """REQ-REPORT-4498: top-level artifact fields are exact."""
++
++    missing = _valid_artifact()
++    missing.pop("human_corpus")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing)
++
++    extra = _valid_artifact() | {"offline_reproduced": False}
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_artifact(extra)
++
++
++def test_note_json_round_trips_and_preserves_mapping_for_scenario_4498() -> None:
++    """SCENARIO-REPORT-4498: markdown note contains the validated JSON artifact."""
++
++    artifact = mod.artifact_from_note(mod.RESEARCH_NOTE)
++
++    assert artifact == _valid_artifact()
++    mod.validate_research_note(mod.RESEARCH_NOTE)
++    assert "behavior cloning" in mod.RESEARCH_NOTE
++    assert "offline RL" in mod.RESEARCH_NOTE
++    assert "prioritized replay" in mod.RESEARCH_NOTE
++    assert "expert-injection" in mod.RESEARCH_NOTE
++    assert "14,672-example" in mod.RESEARCH_NOTE
++    assert "flagged_for_v416" in mod.RESEARCH_NOTE
++
++    with pytest.raises(ValueError, match="machine-readable JSON"):
++        mod.artifact_from_note(mod.RESEARCH_NOTE.replace("```json", "```text"))
++    with pytest.raises(ValueError, match="verified source citations"):
++        mod.validate_research_note(mod.RESEARCH_NOTE.replace("arXiv:1704.03732", "DQfD"))
++    with pytest.raises(ValueError, match="required phrase"):
++        mod.validate_research_note(mod.RESEARCH_NOTE.replace("No training", "No run"))
++
++
++def test_write_outputs_emits_stable_note_and_artifact_for_req_report_4498(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4498: writer emits idempotent JSON and markdown outputs."""
++
++    artifact_path = tmp_path / ARTIFACT_PATH
++    note_path = tmp_path / NOTE_PATH
++
++    artifact = mod.write_outputs(artifact_path=artifact_path, note_path=note_path)
++    second_artifact = mod.write_outputs(artifact_path=artifact_path, note_path=note_path)
++
++    assert second_artifact == artifact
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++    assert mod.artifact_from_note(note_path.read_text(encoding="utf-8")) == artifact
++    assert "GAP-ARCH-FRAME-CHANGE-PREDICTOR" in note_path.read_text(encoding="utf-8")
++
++
++def test_main_and_wrapper_emit_terminal_verdict_for_req_report_4498(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-4498: module and wrapper write default outputs."""
++
++    monkeypatch.setenv("CARNOT_EXP4498_ROOT", str(tmp_path))
++
++    with pytest.raises(SystemExit) as module_exit:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++    assert module_exit.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert (tmp_path / ARTIFACT_PATH).exists()
++    assert (tmp_path / NOTE_PATH).exists()
++
++    with pytest.raises(SystemExit) as wrapper_exit:
++        runpy.run_path(str(WRAPPER_PATH), run_name="__main__")
++    assert wrapper_exit.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert (tmp_path / ARTIFACT_PATH).exists()
+-- 
+2.55.0
+

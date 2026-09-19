@@ -1,0 +1,790 @@
+From 60fd159160f2eb17afbe3a6b73a64e7f4dbe6b6f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 02:28:32 -0400
+Subject: [PATCH 10145/11362] [conductor] Pre-gate block: Cold exact planning
+ fixture audit
+
+1 of 1 gate(s) failed; first failure: exp6689-exact-planning-fixture.planning_fixture_ready (upstream artifact not found for task id 'exp6689-exact-planning-fixture')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  11 +-
+ ops/.audit_findings_ledger_state.json         |   2 +-
+ ops/.run_sentinel_state.json                  |   2 +-
+ ops/.stop_authority_state.json                |   2 +-
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   3 +
+ ops/conductor-state.json                      |   2 +-
+ ...ment_6688_v583_manifest_parity_contract.py | 381 ++++++++++++------
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ ...ent_6690_exact_planning_fixture_audit.json |  57 +++
+ ...ment_6688_v583_manifest_parity_contract.py |  46 ++-
+ 11 files changed, 382 insertions(+), 130 deletions(-)
+ create mode 100644 results/experiment_6690_exact_planning_fixture_audit.json
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 8e6573a509..46130ebe4c 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -58892,6 +58892,12 @@ exact `artifact_field` spelling in `REQUIRED ARTIFACT FIELDS`. A retired task
+ SHALL NOT appear as an upstream dependency. A prior-failure entry SHALL have a
+ matching completed or conductor record, a verdict, a changed condition, and
+ `retire_if_same_verdict=true`. An exclusion-manifest match SHALL remain visible.
++`producer_consumer_rows` SHALL contain the union of design and manifest gates.
++Each row SHALL state whether each source declares the gate. A missing manifest
++consumer or producer SHALL remain visible as a failed row. `prior_failure_rows`
++SHALL contain the union of design and manifest references. Each row SHALL state
++whether each source declares the reference and SHALL retain lineage evidence
++even when the other source omits it.
+ 
+ The audit SHALL run YAML parsing, roadmap schema validation, prior-failure
+ validation, gate-contract validation, and exclusion-manifest validation in
+@@ -58918,6 +58924,9 @@ The artifact SHALL hash the design, both roadmap paths, conductor, exclusion
+ manifest, completed record, conductor log, and available Exp6674 through
+ Exp6687 artifacts. It SHALL record Python, CPU, RAM, disk, and zero LLM calls.
+ It SHALL prove before-and-after identity for both roadmaps and the conductor.
++Artifact validation SHALL require exactly these three protected path receipts.
++It SHALL also require `per_unit_rows` to equal the task, gate, prior-failure,
++route, and validator row projections.
+ The writer SHALL sync one complete temporary JSON file before atomic
+ replacement. The checksum SHALL exclude only itself.
+ 
+@@ -58954,4 +58963,4 @@ content mutation breaks validation.
+ 
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+-| REQ-REPORT-6688 and SCENARIO-REPORT-6688-* | Planned (`python/carnot/experiment_6688_v583_manifest_parity_contract.py`) | Planned (`tests/python/test_experiment_6688_v583_manifest_parity_contract.py`) |
++| REQ-REPORT-6688 and SCENARIO-REPORT-6688-* | Implemented (`python/carnot/experiment_6688_v583_manifest_parity_contract.py`) | Implemented (`tests/python/test_experiment_6688_v583_manifest_parity_contract.py`; exact parity, design/manifest union gates and priors, fail-closed reduction, dated validator mismatch, atomic provenance, CLI checks, and 100% scoped statement coverage) |
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 2f1c06ae0e..f144e289a9 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -38,5 +38,5 @@
+   "AUDIT_FINDING_UNTRIAGED|verifier_authenticity_lint.py age-week 0|": "2026-08-27T00:08:48Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T04:42:49Z"
++ "last_scan_utc": "2026-08-28T06:15:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 743d8fd126..0ecfa44aab 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T05:05:10Z"
++ "last_scan_utc": "2026-08-28T06:28:32Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 02a171a4d1..d53e1b684e 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T04:42:49Z",
++ "last_scan_utc": "2026-08-28T06:15:49Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index db5bad2d08..3074cf6eb6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-08-28T05:05:10Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-28T06:28:31Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9b3a2514a0..6819892106 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16667,3 +16667,6 @@ code |
+ | 2026-08-28 02:15 UTC | Milestone 2026.08.583 activated | OK | 10 tasks queued |
+ | 2026-08-28 03:39 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: scenario_repor |
+ | 2026-08-28 05:03 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: l a single uni |
++| 2026-08-28 06:26 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: 17,8 @@
++       |
++| 2026-08-28 06:28 UTC | Generated finite-horizon exact planning fixture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6688-v583-manifest-parity-contract) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a4243a2db1..34e767dc47 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 15, "phase": "iteration_start", "started_at": "2026-08-28T05:05:10Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-28T06:28:31Z"}
+\ No newline at end of file
+diff --git a/python/carnot/experiment_6688_v583_manifest_parity_contract.py b/python/carnot/experiment_6688_v583_manifest_parity_contract.py
+index 5ecb07417c..08e8688fb4 100644
+--- a/python/carnot/experiment_6688_v583_manifest_parity_contract.py
++++ b/python/carnot/experiment_6688_v583_manifest_parity_contract.py
+@@ -166,7 +166,7 @@ DEFAULT_TESTS_RUN = (
+         "summary": "focused Exp6688 tests passed",
+     },
+     {
+-        "command": "COVERAGE_FILE=/tmp/carnot_exp6688.coverage .venv/bin/coverage run --source=carnot.experiment_6688_v583_manifest_parity_contract -m pytest -o addopts='' tests/python/test_experiment_6688_v583_manifest_parity_contract.py -q",
++        "command": "COVERAGE_FILE=/tmp/carnot_exp6688.coverage .venv/bin/coverage run --include='*/experiment_6688_v583_manifest_parity_contract.py' -m pytest -o addopts='' tests/python/test_experiment_6688_v583_manifest_parity_contract.py -q && COVERAGE_FILE=/tmp/carnot_exp6688.coverage .venv/bin/coverage report --include='*/experiment_6688_v583_manifest_parity_contract.py' --show-missing --fail-under=100",
+         "exit": 0,
+         "summary": "new Exp6688 module reached 100% statement coverage",
+     },
+@@ -285,12 +285,31 @@ def parse_design_contract(text: str) -> list[JsonDict]:
+             re.MULTILINE,
+         )
+     }
+-    prior_by_consumer: dict[int, list[str]] = {}
++    prior_by_consumer: dict[int, list[JsonDict]] = {}
+     prior_section = text.split("## Prior-Failure Discipline", 1)[1].split("## Promotion Gates", 1)[
+         0
+     ]
+-    for prior, consumer in re.findall(r"^- Exp(\d+).*?→ Exp(\d+)", prior_section, re.MULTILINE):
+-        prior_by_consumer.setdefault(int(consumer), []).append(f"exp{prior}")
++    prior_bullets = re.findall(
++        r"^- Exp(?P<prior>\d+) (?P<body>.*?)(?=^- Exp\d+|^Every entry carries)",
++        prior_section,
++        re.MULTILINE | re.DOTALL,
++    )
++    for prior, body in prior_bullets:
++        normalized = " ".join(body.split()).rstrip(".")
++        declaration = re.fullmatch(
++            r"(?P<scope>.*?) → Exp(?P<consumer>\d+) (?P<changed>.*)", normalized
++        )
++        if declaration is None:
++            raise ValueError(f"invalid V583 prior-failure declaration for Exp{prior}")
++        consumer = int(declaration.group("consumer"))
++        prior_by_consumer.setdefault(consumer, []).append(
++            {
++                "experiment_id": f"exp{prior}",
++                "prior_scope": declaration.group("scope"),
++                "changed_condition": declaration.group("changed"),
++                "retire_if_same_verdict": True,
++            }
++        )
+ 
+     rows: list[JsonDict] = []
+     for number_text, title, body in sections:
+@@ -312,7 +331,10 @@ def parse_design_contract(text: str) -> list[JsonDict]:
+                 "route": route["route"],
+                 "task_category": route["task_category"],
+                 "estimated_wall_time_min": route["estimated_wall_time_min"],
+-                "prior_failure_ids": prior_by_consumer.get(number, []),
++                "prior_failure_ids": [
++                    item["experiment_id"] for item in prior_by_consumer.get(number, [])
++                ],
++                "prior_failure_declarations": prior_by_consumer.get(number, []),
+                 "required_artifact_fields": sorted(
+                     {
+                         field
+@@ -462,48 +484,72 @@ def build_producer_consumer_rows(
+     manifest_rows: Sequence[Mapping[str, Any]],
+     retired_numbers: set[int],
+ ) -> list[JsonDict]:
+-    """Prove each gate names a present producer and an exact owned field."""
++    """Prove every design or manifest gate has one identical peer declaration."""
++
++    design_tasks = {str(row["task_id"]): row for row in design_rows}
++    manifest_tasks = {str(row["task_id"]): row for row in manifest_rows}
++
++    def gate_key(consumer: Mapping[str, Any], gate: Mapping[str, Any]) -> tuple[str, ...]:
++        return (
++            str(consumer.get("task_id")),
++            str(gate.get("upstream")),
++            str(gate.get("artifact_field")),
++            str(gate.get("op")),
++            canonical_json(gate.get("value")).decode("utf-8"),
++        )
+ 
+-    producers = {str(row["task_id"]): row for row in manifest_rows}
+     design_gates = {
+-        (
+-            str(row["task_id"]),
+-            str(gate["upstream"]),
+-            str(gate["artifact_field"]),
+-            str(gate["op"]),
+-            canonical_json(gate["value"]),
+-        )
+-        for row in design_rows
+-        for gate in row.get("gated_on", [])
++        gate_key(task, gate): dict(gate)
++        for task in design_rows
++        for gate in task.get("gated_on", [])
+     }
++    manifest_gates = {
++        gate_key(task, gate): dict(gate)
++        for task in manifest_rows
++        for gate in task.get("gated_on", [])
++    }
++    order_by_task = {task_id: order for order, task_id in enumerate(EXPECTED_TASK_IDS, 1)}
+     rows: list[JsonDict] = []
+-    for consumer in manifest_rows:
+-        for gate in consumer.get("gated_on", []):
+-            producer_id = str(gate.get("upstream"))
+-            producer = producers.get(producer_id)
+-            fields = list(producer.get("required_artifact_fields", [])) if producer else []
+-            key = (
+-                str(consumer.get("task_id")),
+-                producer_id,
+-                str(gate.get("artifact_field")),
+-                str(gate.get("op")),
+-                canonical_json(gate.get("value")),
+-            )
+-            rows.append(
+-                {
+-                    "producer": producer_id,
+-                    "field": gate.get("artifact_field"),
+-                    "artifact_field": gate.get("artifact_field"),
+-                    "consumer": consumer.get("task_id"),
+-                    "operator": gate.get("op"),
+-                    "value": gate.get("value"),
+-                    "upstream_exists": producer is not None,
+-                    "producer_declares_exact_field": gate.get("artifact_field") in fields,
+-                    "matches_design": key in design_gates,
+-                    "upstream_retired": _number(producer_id) in retired_numbers,
+-                    "producer_required_artifact_fields_hash": value_hash(fields),
+-                }
+-            )
++    for key in sorted(
++        design_gates.keys() | manifest_gates.keys(),
++        key=lambda item: (order_by_task.get(item[0], 10**9), item),
++    ):
++        consumer_id, producer_id, artifact_field, operator, _value_text = key
++        gate = manifest_gates.get(key) or design_gates[key]
++        design_producer = design_tasks.get(producer_id)
++        manifest_producer = manifest_tasks.get(producer_id)
++        design_fields = (
++            list(design_producer.get("required_artifact_fields", [])) if design_producer else []
++        )
++        manifest_fields = (
++            list(manifest_producer.get("required_artifact_fields", [])) if manifest_producer else []
++        )
++        declared_in_design = key in design_gates
++        declared_in_manifest = key in manifest_gates
++        rows.append(
++            {
++                "producer": producer_id,
++                "field": artifact_field,
++                "artifact_field": artifact_field,
++                "consumer": consumer_id,
++                "operator": operator,
++                "value": gate.get("value"),
++                "declared_in_design": declared_in_design,
++                "declared_in_manifest": declared_in_manifest,
++                "upstream_exists_in_design": design_producer is not None,
++                "upstream_exists_in_manifest": manifest_producer is not None,
++                "upstream_exists": design_producer is not None and manifest_producer is not None,
++                "producer_declares_exact_field_in_design": artifact_field in design_fields,
++                "producer_declares_exact_field_in_manifest": artifact_field in manifest_fields,
++                "producer_declares_exact_field": artifact_field in design_fields
++                and artifact_field in manifest_fields,
++                "matches_design": declared_in_design and declared_in_manifest,
++                "upstream_retired": _number(producer_id) in retired_numbers,
++                "producer_required_artifact_fields_hash": value_hash(
++                    {"design": design_fields, "manifest": manifest_fields}
++                ),
++            }
++        )
+     return rows
+ 
+ 
+@@ -553,9 +599,11 @@ def _retirement_index(root: Path) -> dict[int, list[JsonDict]]:
+ 
+ 
+ def build_prior_failure_rows(
+-    root: Path, manifest_rows: Sequence[Mapping[str, Any]]
++    root: Path,
++    design_rows: Sequence[Mapping[str, Any]],
++    manifest_rows: Sequence[Mapping[str, Any]],
+ ) -> list[JsonDict]:
+-    """Bind each prior block to archive, artifact, conductor, and exclusion evidence."""
++    """Bind the union of design and manifest priors to durable lineage evidence."""
+ 
+     completed = _completed_by_number(root)
+     retired = _retirement_index(root)
+@@ -565,68 +613,102 @@ def build_prior_failure_rows(
+         for task in manifest_rows
+         for gate in task.get("gated_on", [])
+     }
++    design_priors = {
++        (str(task.get("task_id")), _number(str(prior.get("experiment_id")))): dict(prior)
++        for task in design_rows
++        for prior in task.get("prior_failure_declarations", [])
++    }
++    manifest_priors = {
++        (str(task.get("task_id")), _number(str(prior.get("experiment_id")))): dict(prior)
++        for task in manifest_rows
++        for prior in task.get("prior_failures", [])
++    }
++    order_by_task = {task_id: order for order, task_id in enumerate(EXPECTED_TASK_IDS, 1)}
+     rows: list[JsonDict] = []
+-    for task in manifest_rows:
+-        for prior_value in task.get("prior_failures", []):
+-            prior = dict(prior_value)
+-            prior_id = str(prior.get("experiment_id"))
+-            number = _number(prior_id)
+-            record = completed.get(number)
+-            fallback_artifacts = sorted((root / "results").glob(f"experiment_{number}_*.json"))
+-            artifact_path = (
+-                Path(str(record.get("deliverable")))
++    for key in sorted(
++        design_priors.keys() | manifest_priors.keys(),
++        key=lambda item: (order_by_task.get(item[0], 10**9), item[1]),
++    ):
++        consumer_id, number = key
++        design_prior = design_priors.get(key)
++        manifest_prior = manifest_priors.get(key)
++        prior_id = str(
++            (manifest_prior or {}).get("experiment_id") or (design_prior or {}).get("experiment_id")
++        )
++        record = completed.get(number)
++        fallback_artifacts = sorted((root / "results").glob(f"experiment_{number}_*.json"))
++        artifact_path = (
++            Path(str(record.get("deliverable")))
++            if record
++            else fallback_artifacts[0].relative_to(root)
++            if fallback_artifacts
++            else Path("")
++        )
++        artifact_hash = sha256_file(root / artifact_path) if artifact_path.name else "missing"
++        artifact_verdict: Any = None
++        if artifact_hash != "missing":
++            try:
++                artifact_payload = json.loads((root / artifact_path).read_text(encoding="utf-8"))
++                artifact_verdict = artifact_payload.get("honest_verdict")
++                if isinstance(artifact_verdict, Mapping) and "value" in artifact_verdict:
++                    artifact_verdict = artifact_verdict.get("value")
++            except (json.JSONDecodeError, OSError, AttributeError):
++                artifact_verdict = None
++        title = str(record.get("title", "")) if record else ""
++        conductor_rows = [
++            line
++            for line in conductor_lines
++            if prior_id.lower() in line.lower()
++            or f"exp{number}" in line.lower()
++            or (title and title.lower() in line.lower())
++        ]
++        exclusion_rows = retired.get(number, [])
++        row = {
++            "consumer_task_id": consumer_id,
++            "prior_experiment_id": prior_id,
++            "prior_scope": (
++                record.get("title")
+                 if record
+-                else fallback_artifacts[0].relative_to(root)
+-                if fallback_artifacts
+-                else Path("")
+-            )
+-            artifact_hash = sha256_file(root / artifact_path) if artifact_path.name else "missing"
+-            title = str(record.get("title", "")) if record else ""
+-            conductor_rows = [
+-                line
+-                for line in conductor_lines
+-                if prior_id.lower() in line.lower()
+-                or f"exp{number}" in line.lower()
+-                or (title and title.lower() in line.lower())
+-            ]
+-            exclusion_rows = retired.get(number, [])
+-            row = {
+-                "consumer_task_id": task.get("task_id"),
+-                "prior_experiment_id": prior_id,
+-                "prior_scope": (
+-                    record.get("title")
+-                    if record
+-                    else exclusion_rows[0].get("id")
+-                    if exclusion_rows
+-                    else None
+-                ),
+-                "verdict": prior.get("verdict"),
+-                "changed_condition": prior.get("addressed_by"),
+-                "retirement_signal": prior.get("retire_if_same_verdict"),
+-                "completed_record_found": record is not None,
+-                "completed_record": record,
+-                "artifact_path": artifact_path.as_posix() if artifact_path.name else None,
+-                "artifact_hash": artifact_hash,
+-                "artifact_state": "present" if artifact_hash != "missing" else "missing",
+-                "conductor_state_rows": conductor_rows,
+-                "conductor_state_hash": value_hash(conductor_rows),
+-                "exclusion_manifest_match": bool(exclusion_rows),
+-                "exclusion_manifest_entries": exclusion_rows,
+-                "reference_role": "prior_failure",
+-                "retired_upstream_reference": number in upstream_numbers and bool(exclusion_rows),
+-            }
+-            row["passed"] = bool(
+-                (
+-                    row["completed_record_found"]
+-                    or row["artifact_state"] == "present"
+-                    or conductor_rows
+-                )
+-                and str(row["verdict"] or "").strip()
+-                and str(row["changed_condition"] or "").strip()
+-                and row["retirement_signal"] is True
+-                and not row["retired_upstream_reference"]
+-            )
+-            rows.append(row)
++                else (design_prior or {}).get("prior_scope")
++                or (exclusion_rows[0].get("id") if exclusion_rows else None)
++            ),
++            "verdict": (manifest_prior or {}).get("verdict")
++            or artifact_verdict
++            or (record or {}).get("result"),
++            "changed_condition": (manifest_prior or {}).get("addressed_by")
++            or (design_prior or {}).get("changed_condition"),
++            "retirement_signal": (
++                (manifest_prior or {}).get("retire_if_same_verdict")
++                if manifest_prior
++                else (design_prior or {}).get("retire_if_same_verdict")
++            ),
++            "declared_in_design": design_prior is not None,
++            "declared_in_manifest": manifest_prior is not None,
++            "design_declaration": design_prior,
++            "manifest_declaration": manifest_prior,
++            "completed_record_found": record is not None,
++            "completed_record": record,
++            "artifact_path": artifact_path.as_posix() if artifact_path.name else None,
++            "artifact_hash": artifact_hash,
++            "artifact_state": "present" if artifact_hash != "missing" else "missing",
++            "conductor_state_rows": conductor_rows,
++            "conductor_state_hash": value_hash(conductor_rows),
++            "exclusion_manifest_match": bool(exclusion_rows),
++            "exclusion_manifest_entries": exclusion_rows,
++            "reference_role": "prior_failure",
++            "retired_upstream_reference": number in upstream_numbers and bool(exclusion_rows),
++        }
++        row["lineage_passed"] = bool(
++            (row["completed_record_found"] or row["artifact_state"] == "present" or conductor_rows)
++            and str(row["verdict"] or "").strip()
++            and str(row["changed_condition"] or "").strip()
++            and row["retirement_signal"] is True
++            and not row["retired_upstream_reference"]
++        )
++        row["passed"] = bool(
++            row["lineage_passed"] and row["declared_in_design"] and row["declared_in_manifest"]
++        )
++        rows.append(row)
+     return rows
+ 
+ 
+@@ -822,6 +904,22 @@ def reduce_readiness(
+     manifest_ids = [row.get("task_id") for row in manifest_rows]
+     manifest_deliverables = [row.get("deliverable") for row in manifest_rows]
+     expected_deliverables = [row.get("deliverable") for row in design_rows]
++    design_deliverables_valid = bool(
++        len(expected_deliverables) == 14
++        and len(set(expected_deliverables)) == 14
++        and all(
++            isinstance(path, str) and path.startswith("results/") and path.endswith(".json")
++            for path in expected_deliverables
++        )
++    )
++    manifest_deliverables_valid = bool(
++        len(manifest_deliverables) == 14
++        and len(set(manifest_deliverables)) == 14
++        and all(
++            isinstance(path, str) and path.startswith("results/") and path.endswith(".json")
++            for path in manifest_deliverables
++        )
++    )
+     checks: list[tuple[str, str, Any, Any, str]] = [
+         (
+             "design.task_order",
+@@ -844,6 +942,20 @@ def reduce_readiness(
+             manifest_deliverables,
+             "unique_json_deliverable_contract_mismatch",
+         ),
++        (
++            "design.deliverable_shape",
++            "design",
++            True,
++            design_deliverables_valid,
++            "design_requires_fourteen_unique_json_deliverables",
++        ),
++        (
++            "manifest.deliverable_shape",
++            "manifest",
++            True,
++            manifest_deliverables_valid,
++            "manifest_requires_fourteen_unique_json_deliverables",
++        ),
+     ]
+     checks.extend(
+         (
+@@ -967,6 +1079,26 @@ def _field_provenance(root: Path) -> dict[str, JsonDict]:
+     }
+ 
+ 
++def _per_unit_rows(
++    design_rows: Sequence[Mapping[str, Any]],
++    manifest_rows: Sequence[Mapping[str, Any]],
++    producer_rows: Sequence[Mapping[str, Any]],
++    prior_rows: Sequence[Mapping[str, Any]],
++    route_rows: Sequence[Mapping[str, Any]],
++    validator_rows: Sequence[Mapping[str, Any]],
++) -> list[JsonDict]:
++    """Project every contract unit once so readers can replay the reducer."""
++
++    return (
++        [{"row_kind": "design_task", **dict(row)} for row in design_rows]
++        + [{"row_kind": "manifest_task", **dict(row)} for row in manifest_rows]
++        + [{"row_kind": "gate", **dict(row)} for row in producer_rows]
++        + [{"row_kind": "prior_failure", **dict(row)} for row in prior_rows]
++        + [{"row_kind": "route", **dict(row)} for row in route_rows]
++        + [{"row_kind": "validator", **dict(row)} for row in validator_rows]
++    )
++
++
+ def build_artifact(
+     root: Path,
+     *,
+@@ -982,7 +1114,7 @@ def build_artifact(
+     manifest_rows = load_manifest_rows(root, design_rows)
+     retired = set(_retirement_index(root))
+     producer_rows = build_producer_consumer_rows(design_rows, manifest_rows, retired)
+-    prior_rows = build_prior_failure_rows(root, manifest_rows)
++    prior_rows = build_prior_failure_rows(root, design_rows, manifest_rows)
+     route_rows = build_route_rows(design_rows, manifest_rows)
+     protected_rows = _protected_rows(root, protected_before)
+     aggregate, failures = reduce_readiness(
+@@ -995,13 +1127,13 @@ def build_artifact(
+         protected_rows,
+     )
+     ready = bool(aggregate["recomputed_ready"])
+-    per_unit_rows = (
+-        [{"row_kind": "design_task", **row} for row in design_rows]
+-        + [{"row_kind": "manifest_task", **row} for row in manifest_rows]
+-        + [{"row_kind": "gate", **row} for row in producer_rows]
+-        + [{"row_kind": "prior_failure", **row} for row in prior_rows]
+-        + [{"row_kind": "route", **row} for row in route_rows]
+-        + [{"row_kind": "validator", **dict(row)} for row in validator_rows]
++    per_unit_rows = _per_unit_rows(
++        design_rows,
++        manifest_rows,
++        producer_rows,
++        prior_rows,
++        route_rows,
++        validator_rows,
+     )
+     artifact: JsonDict = {
+         "experiment": 6688,
+@@ -1048,6 +1180,15 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
+         if field not in payload
+     ]
+     protected = payload.get("protected_files_unchanged", [])
++    expected_protected_paths = [path.as_posix() for path in PROTECTED_PATHS]
++    protected_valid = bool(
++        isinstance(protected, list)
++        and [row.get("path") for row in protected] == expected_protected_paths
++        and all(
++            row.get("unchanged") is True and row.get("before") == row.get("after")
++            for row in protected
++        )
++    )
+     aggregate, failures = reduce_readiness(
+         payload.get("design_task_rows", []),
+         payload.get("manifest_task_rows", []),
+@@ -1061,6 +1202,14 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
+     expected_status = "complete_ready" if ready else "blocked_manifest_parity"
+     expected_class = "null" if ready else "blocked"
+     verdict_prefix = "complete:" if ready else "blocked_"
++    expected_per_unit_rows = _per_unit_rows(
++        payload.get("design_task_rows", []),
++        payload.get("manifest_task_rows", []),
++        payload.get("producer_consumer_rows", []),
++        payload.get("prior_failure_rows", []),
++        payload.get("route_rows", []),
++        payload.get("validator_rows", []),
++    )
+     conditions = (
+         (payload.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate_mismatch"),
+         (payload.get("verifier_is_oracle") is True, "verifier_is_oracle_mismatch"),
+@@ -1068,10 +1217,8 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
+             set(payload.get("field_provenance", {})) == set(REQUIRED_ARTIFACT_FIELDS),
+             "field_provenance_mismatch",
+         ),
+-        (
+-            isinstance(protected, list) and all(row.get("unchanged") is True for row in protected),
+-            "protected_file_changed",
+-        ),
++        (protected_valid, "protected_file_changed"),
++        (payload.get("per_unit_rows") == expected_per_unit_rows, "per_unit_rows_mismatch"),
+         (
+             payload.get("aggregate_row_recomputation") == aggregate,
+             "aggregate_row_recomputation_mismatch",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 3acb56890c..208d0a79a0 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.41s, user: 2.16s, system: 0.19s, MEM: 114.97 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.00s, user: 1.77s, system: 0.17s, MEM: 116.51 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 74% 19x read_verilog (1 sec), 10% 1x synth_xilinx (0 sec), ...
++Time spent: 76% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_6690_exact_planning_fixture_audit.json b/results/experiment_6690_exact_planning_fixture_audit.json
+new file mode 100644
+index 0000000000..614d57d6d8
+--- /dev/null
++++ b/results/experiment_6690_exact_planning_fixture_audit.json
+@@ -0,0 +1,57 @@
++{
++  "experiment": 6690,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-28",
++  "started_at": "2026-08-28T06:28:32.467727+00:00",
++  "finished_at": "2026-08-28T06:28:32.467727+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Cold exact planning fixture audit",
++  "honest_verdict": "blocked_gate_check_failed",
++  "blocked_reason": "upstream artifact not found for task id 'exp6689-exact-planning-fixture'",
++  "failed_upstream": "exp6689-exact-planning-fixture",
++  "failed_field": "planning_fixture_ready",
++  "failed_operator": "in",
++  "failed_expected": [
++    true
++  ],
++  "failed_expected_type": "list",
++  "failed_observed": null,
++  "failed_observed_type": "null",
++  "failed_evidence_path": null,
++  "failed_evidence_sha256": null,
++  "blocked_diagnostic_contract": {
++    "version": "blocked_gate_diagnostic_v1",
++    "blocked_reason": "upstream artifact not found for task id 'exp6689-exact-planning-fixture'",
++    "failed_upstream": "exp6689-exact-planning-fixture",
++    "failed_field": "planning_fixture_ready",
++    "failed_operator": "in",
++    "failed_expected": [
++      true
++    ],
++    "failed_expected_type": "list",
++    "failed_observed": null,
++    "failed_observed_type": "null",
++    "failed_evidence_path": null,
++    "failed_evidence_sha256": null
++  },
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6689-exact-planning-fixture.planning_fixture_ready (upstream artifact not found for task id 'exp6689-exact-planning-fixture')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6689-exact-planning-fixture",
++      "artifact_field": "planning_fixture_ready",
++      "op": "in",
++      "expected": [
++        true
++      ],
++      "expected_type": "list",
++      "actual": null,
++      "actual_type": "null",
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6689-exact-planning-fixture'",
++      "artifact_path": null,
++      "artifact_sha256": null
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+diff --git a/tests/python/test_experiment_6688_v583_manifest_parity_contract.py b/tests/python/test_experiment_6688_v583_manifest_parity_contract.py
+index c72eddaa2d..fd8ff91a3f 100644
+--- a/tests/python/test_experiment_6688_v583_manifest_parity_contract.py
++++ b/tests/python/test_experiment_6688_v583_manifest_parity_contract.py
+@@ -96,20 +96,29 @@ def test_scenario_report_6688_cross_references_gates_priors_and_routes(
+ 
+     design, manifest = source_rows
+     gates = exp.build_producer_consumer_rows(design, manifest, set())
+-    assert len(gates) == 9
+-    assert all(row["upstream_exists"] for row in gates)
+-    assert all(row["producer_declares_exact_field"] for row in gates)
++    assert len(gates) == 13
++    assert sum(row["declared_in_design"] for row in gates) == 12
++    assert sum(row["declared_in_manifest"] for row in gates) == 9
++    assert any(row["declared_in_design"] and not row["declared_in_manifest"] for row in gates)
++    assert any(row["declared_in_manifest"] and not row["declared_in_design"] for row in gates)
++    assert any(row["upstream_exists"] is False for row in gates)
++    assert any(row["producer_declares_exact_field"] is False for row in gates)
+     assert all(row["upstream_retired"] is False for row in gates)
+     assert any(row["matches_design"] is False for row in gates)
+ 
+-    priors = exp.build_prior_failure_rows(REPO, manifest)
++    priors = exp.build_prior_failure_rows(REPO, design, manifest)
+     assert {row["prior_experiment_id"] for row in priors} == {
+         "exp5747-sota-exact-proposal-utility-panel",
+         "exp5163",
+         "exp6678-constraint-family-stream",
+         "exp6679-prequential-cross-family-csl-ab",
+         "exp6680-csl-durability-audit",
++        "exp6684",
++        "exp6685",
++        "exp6686",
+     }
++    assert sum(row["declared_in_design"] for row in priors) == 6
++    assert sum(row["declared_in_manifest"] for row in priors) == 5
+     assert all(
+         row["completed_record_found"]
+         or row["artifact_state"] == "present"
+@@ -118,7 +127,8 @@ def test_scenario_report_6688_cross_references_gates_priors_and_routes(
+     )
+     assert all(row["retirement_signal"] is True for row in priors)
+     assert all(row["retired_upstream_reference"] is False for row in priors)
+-    assert all(row["passed"] for row in priors)
++    assert all(row["lineage_passed"] for row in priors)
++    assert any(row["passed"] is False for row in priors)
+ 
+     routes = exp.build_route_rows(design, manifest)
+     assert len(routes) == 14
+@@ -206,6 +216,8 @@ def test_scenario_report_6688_validator_rejects_tampering(
+     assert "blocked_verdict_class_mismatch" in errors_for(verdict_class="null")
+     assert "blocked_honest_verdict_mismatch" in errors_for(honest_verdict="complete: wrong")
+     assert "field_provenance_mismatch" in errors_for(field_provenance={})
++    assert "per_unit_rows_mismatch" in errors_for(per_unit_rows=[])
++    assert "protected_file_changed" in errors_for(protected_files_unchanged=[])
+     assert "protected_file_changed" in errors_for(
+         protected_files_unchanged=[
+             {"path": "research-roadmap.yaml", "before": "a", "after": "b", "unchanged": False}
+@@ -223,6 +235,13 @@ def test_scenario_report_6688_source_and_cli_edges(
+ 
+     with pytest.raises(ValueError, match="fourteen task sections"):
+         exp.parse_design_contract("# no V583 task sections")
++    malformed_prior = (
++        (REPO / exp.DESIGN_PATH)
++        .read_text(encoding="utf-8")
++        .replace("→ Exp6692", "without-arrow Exp6692", 1)
++    )
++    with pytest.raises(ValueError, match="invalid V583 prior-failure declaration"):
++        exp.parse_design_contract(malformed_prior)
+     assert exp.extract_required_fields("no fields") == []
+     assert exp.extract_run_command("no command") is None
+ 
+@@ -257,6 +276,23 @@ def test_scenario_report_6688_source_and_cli_edges(
+     assert exp.main(["--date", "20260828", "--output", str(tmp_path / "bad.json")]) == 1
+ 
+ 
++def test_scenario_report_6688_unreadable_prior_artifact_stays_a_row(
++    source_rows: tuple[list[dict[str, object]], list[dict[str, object]]],
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-REPORT-6688-FAIL-CLOSED keeps corrupt artifact evidence explicit."""
++
++    design, manifest = source_rows
++
++    def reject_json(_text: str) -> object:
++        raise json.JSONDecodeError("corrupt", "{", 0)
++
++    monkeypatch.setattr(exp.json, "loads", reject_json)
++    rows = exp.build_prior_failure_rows(REPO, design, manifest)
++    assert len(rows) == 8
++    assert any(row["artifact_state"] == "present" for row in rows)
++
++
+ def test_scenario_report_6688_validator_runner_retains_output(
+     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+ ) -> None:
+-- 
+2.55.0
+

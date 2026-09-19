@@ -1,0 +1,69 @@
+From 7567efbabbc8be04fbc616c17b57f4efe130b9fe Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 00:01:12 -0400
+Subject: [PATCH 09867/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                 | 2 +-
+ ops/conductor-heartbeat.json                 | 2 +-
+ ops/conductor-log.md                         | 1 +
+ ops/conductor-state.json                     | 2 +-
+ python/carnot/agentic/arc_llm_reinduction.py | 1 +
+ 5 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 16aec89571..a898e0d0f2 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -6,5 +6,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T03:42:27Z"
++ "last_scan_utc": "2026-08-25T04:01:07Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ba4b41de13..f876362f7d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4109305, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-08-25T03:24:03Z"}
+\ No newline at end of file
++{"pid": 4109305, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-25T04:01:07Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f92c54276e..65f4954c5f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16428,3 +16428,4 @@ code |
+ | 2026-08-25 03:19 UTC | Plan milestone 2026.08.573 | OK | 3 tasks proposed |
+ | 2026-08-25 03:21 UTC | Stop-authority receipt STALE | WARN | receipt 173 min old (janitor cadence is 30) |
+ | 2026-08-25 03:22 UTC | Milestone 2026.08.573 activated | OK | 3 tasks queued |
++| 2026-08-25 03:59 UTC | V573 terminal recovery and bounded execution contr | OK | 134 passed, 1 warning in 15.09s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5f6ffabf3c..4e08b902b3 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4109305, "iteration": 6, "phase": "iteration_start", "started_at": "2026-08-25T03:24:03Z"}
+\ No newline at end of file
++{"pid": 4109305, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-25T04:01:07Z"}
+\ No newline at end of file
+diff --git a/python/carnot/agentic/arc_llm_reinduction.py b/python/carnot/agentic/arc_llm_reinduction.py
+index e30cb153a0..6736bb10bc 100644
+--- a/python/carnot/agentic/arc_llm_reinduction.py
++++ b/python/carnot/agentic/arc_llm_reinduction.py
+@@ -1898,6 +1898,7 @@ def execute_bounded_llm_reinduction(
+                 # round that diagnosed a DYNAMICS failure and wrote it only to `row` was reported
+                 # to every caller under a PLANNING label. Mirrors the sites below that already do
+                 # this. Overwritten by a later round, cleared to "" by any planned return.
++                skipped = row["skipped"]
+                 # ---- REQ-ARC-WMTE-6042 WRITE-COLLAPSE INSTRUMENTATION (record only) ----------
+                 # WHAT DID THE EMITTED ENGINE BECOME? `prefix_accuracy` says the refactor rounds
+                 # fit almost nothing (4/160 above zero, ceiling 0.125, against 28/88 and a ceiling
+-- 
+2.55.0
+

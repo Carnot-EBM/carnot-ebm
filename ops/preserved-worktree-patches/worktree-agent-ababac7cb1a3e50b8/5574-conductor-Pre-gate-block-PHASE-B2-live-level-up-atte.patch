@@ -1,0 +1,79 @@
+From 1b62e1773840cdbc0d53ab8f4b977874e4d41988 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 15:58:10 -0400
+Subject: [PATCH 05574/11362] [conductor] Pre-gate block: PHASE B2 live
+ level-up attempt using the MAP lever if exp5198 validated one -- ARC Level-Up
+ Attempt Guarantee, targeted at the scored live-agent path where integration
+ allows
+
+1 of 1 gate(s) failed; first failure: exp5198-map-landmark-prestage-prototype-v476.lever_validated (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...t_5199_map_gated_levelup_attempt_v476.json | 24 +++++++++++++++++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5199_map_gated_levelup_attempt_v476.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 05907254d9..74f1addf8c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-07-03T19:31:12Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-07-03T19:58:10Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 419d2ab8f9..548692d4d8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10239,3 +10239,4 @@ web search: |
+ | 2026-07-03 18:45 UTC | PHASE A1 DiffusionGemma unblock attempt 3 -- vLLM  | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+ | 2026-07-03 19:01 UTC | PHASE A1 DiffusionGemma unblock attempt 3 -- vLLM  | OK | 112 passed, 1 warning in 12.87s |
+ | 2026-07-03 19:29 UTC | PHASE A2 continue GAP-4 (same-shape rule-applicati | OK | 90 passed, 1 warning in 8.06s |
++| 2026-07-03 19:56 UTC | PHASE B1 re-attempt (never ran in .475, poison-tes | OK | 106 passed, 1 warning in 10.53s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4bdb584b72..5891d16cb3 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 4, "phase": "iteration_start", "started_at": "2026-07-03T19:31:12Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 5, "phase": "iteration_start", "started_at": "2026-07-03T19:58:10Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5199_map_gated_levelup_attempt_v476.json b/results/experiment_5199_map_gated_levelup_attempt_v476.json
+new file mode 100644
+index 0000000000..00b1a0a83f
+--- /dev/null
++++ b/results/experiment_5199_map_gated_levelup_attempt_v476.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5199,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-03",
++  "started_at": "2026-07-03T19:58:10.845334+00:00",
++  "finished_at": "2026-07-03T19:58:10.845334+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE B2 live level-up attempt using the MAP lever if exp5198 validated one -- ARC Level-Up Attempt Guarantee, targeted at the scored live-agent path where integration allows",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5198-map-landmark-prestage-prototype-v476.lever_validated (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5198-map-landmark-prestage-prototype-v476",
++      "artifact_field": "lever_validated",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

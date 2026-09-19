@@ -1,0 +1,43 @@
+From 6ead5c164ed0f354782df9bab326c17ef896d14b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 08:55:01 -0400
+Subject: [PATCH 01434/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7875866883..57335dcada 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 142, "phase": "iteration_start", "last_beat": "2026-06-12T12:39:21Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 143, "phase": "iteration_start", "last_beat": "2026-06-12T12:54:59Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7bce4c06be..7a4dbbb0fc 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8334,3 +8334,4 @@ c |
+ | 2026-06-12 11:26 UTC | SUDOKU RFT PIPELINE-SANITY (gated on a real train; | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
+ | 2026-06-12 12:14 UTC | SOTA-INGESTION SLOT (reserved): ingest the certifi | OK | 99 passed in 3.64s |
+ | 2026-06-12 12:37 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-12 12:52 UTC | Hardware continuity (GateMate + PolarFire drive-to | OK | 89 passed in 4.31s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cc19a21faf..53a51d084b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 142, "phase": "iteration_start", "started_at": "2026-06-12T12:39:21Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 143, "phase": "iteration_start", "started_at": "2026-06-12T12:54:59Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

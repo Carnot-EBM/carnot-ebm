@@ -1,0 +1,1685 @@
+From 628efac9ed405aec381db2096df04725426e6b51 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 08:19:19 -0400
+Subject: [PATCH 03049/11362] [conductor] PHASE A2 (ARC NORTH STAR; operator
+ MANDATORY; SCORE-LEVER) -- RE-RUN the human-replay frame-change predictor
+ (data now staged by .415 B1)
+
+Automated research step by research conductor.
+Task ID: exp4501-a2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  47 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../agentic/arc_frame_change_predictor.py     | 385 +++++++++++++++-
+ ...iment_4501_frame_change_predictor_rerun.py | 408 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ent_4501_frame_change_predictor_rerun.json | 171 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...iment_4501_frame_change_predictor_rerun.py | 429 ++++++++++++++++++
+ 13 files changed, 1456 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_4501_frame_change_predictor_rerun.py
+ create mode 100644 results/experiment_4501_frame_change_predictor_rerun.json
+ create mode 100644 tests/python/test_experiment_4501_frame_change_predictor_rerun.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 3acd654609..ca371221cf 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -127,6 +127,40 @@ precondition smoke checks for `arc_solver_kit.offline_arcade()` and Torch, and
+ reference the submitted-agent parity test so the reported generic solve-rate
+ cannot silently drift away from what ships.
+ 
++### REQ-ARC-FCP-4501: Frame-Only Predictor Rerun From Staged Replay Shards
++
++Experiment 4501 SHALL write
++`results/experiment_4501_frame_change_predictor_rerun.json` from the locally
++staged ARC Public Demo human replay corpus. The rerun SHALL consume only
++raw-frame shard fields (`frame`, normalized `action_id`, optional click
++coordinates, `frame_delta`, and `level_progress`) and SHALL NOT consume mirror
++`feature_keys`, opaque state vectors, bundled third-party weights, or
++`env._game` internals.
++
++The rerun SHALL train or smoke-train the repository's small torch CNN action
++effect model and emit a behavior-cloning action prior that can be passed to
++`rich_action_candidates`. It SHALL record how many local examples were actually
++loaded versus the 14,672-example `action_effect_dict.npz` target. If the exact
++14,672-example NPZ corpus is absent but staged frame-only shards are available,
++the artifact SHALL keep the run complete but mark the corpus shortfall and use
++the FALSE_NEGATIVE_RISK null guard instead of fabricating a headline efficiency
++win.
++
++Required field principles:
++
++- `honest_verdict`: MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).
++- `inference_substrate`: explicit verifier_ensemble_against_cached_candidates declaration so adversarial_verify applies the cached-candidate duration floor.
++- `preconditions_checked`: records WHICH resources were verified; pre-empts silent-missing-resource fabrication.
++- `expected_action_effect_examples`: the external action-effect corpus target count, fixed at 14,672 for this rerun.
++- `corpus_examples_loaded`: the exact number of frame-only shard examples loaded locally for this run.
++- `feature_source`: proves features were recomputed from raw frames, not mirror feature vectors.
++- `behavior_prior_emitted`: bare bool showing the behavior-cloning prior was built and can rank candidates.
++- `heldout_median_actions_before`: baseline median actions-to-first-level-up on held-out frame-only evaluation.
++- `heldout_median_actions_after`: predictor/prior-ranked median actions-to-first-level-up on the same held-out frame-only evaluation.
++- `implied_efficiency_delta`: score-relevant delta in min(human/agent,1)^2 efficiency.
++- `solve_rate_dropped`: guardrail bool; efficiency wins must not come from reducing solve rate.
++- `false_negative_risk_guard`: records whether the null is interpretable because the positive control passed.
++
+ ## Scenarios
+ 
+ ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
+@@ -173,3 +207,16 @@ Then the row reports the exact submitted-default held-out generic solve-rate and
+ variant-transfer rate as headline metrics, preserves source provenance for both
+ measurements, keeps `reproducible_total_levels` in a context-only field, and
+ records that `test_arc_submitted_agent_parity.py` is the focused parity gate.
++
++### SCENARIO-ARC-FCP-4501: Staged Frame-Only Rerun Has Interpretable Null Guard
++
++Given locally staged replay shards but no bundled 14,672-example
++`action_effect_dict.npz`
++When experiment 4501 trains or smoke-trains the frame-only predictor and writes
++its terminal artifact
++Then the artifact is valid JSON with terminal-prefixed `honest_verdict`,
++records the staged corpus count and the missing NPZ target, emits a behavior
++prior, keeps `solve_rate_dropped=false`, reports before/after held-out action
++metrics from the same candidate-order harness, and marks
++`false_negative_risk_guard=positive_control_passed_null_interpretable` when the
++positive control detects a known ranking win.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3f3dfe7683..dd7b3d066c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3519,
++  "experiments_checked": 3520,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_frame_change_predictor.py b/python/carnot/agentic/arc_frame_change_predictor.py
+index c9df7f5263..3c6986c76c 100644
+--- a/python/carnot/agentic/arc_frame_change_predictor.py
++++ b/python/carnot/agentic/arc_frame_change_predictor.py
+@@ -5,8 +5,10 @@ Spec refs: REQ-ARC-FCP-4490, REQ-ARC-FCP-4491, SCENARIO-ARC-FCP-4490.
+ 
+ from __future__ import annotations
+ 
+-from collections.abc import Callable, Mapping, Sequence
++from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+ from dataclasses import dataclass, field
++from pathlib import Path
++from statistics import median
+ from typing import Any
+ 
+ import numpy as np
+@@ -14,6 +16,7 @@ import torch
+ from torch import nn
+ from torch.nn import functional
+ 
++from carnot.agentic.arc_agi3_live_adapter import ArcAction
+ from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
+ 
+ 
+@@ -158,15 +161,26 @@ class FrameChangeScorer:
+     num_colors: int = DEFAULT_NUM_COLORS
+     size: int = DEFAULT_FRAME_SIZE
+     device: str = "cpu"
++    _cache: dict[str, tuple[torch.Tensor, torch.Tensor]] = field(
++        default_factory=dict,
++        init=False,
++        repr=False,
++    )
+ 
+     def _predict(self, frame: Any) -> tuple[torch.Tensor, torch.Tensor]:
++        key = frame_state_key(frame)
++        cached = self._cache.get(key)
++        if cached is not None:
++            return cached
+         tensor = frame_to_tensor(frame, num_colors=self.num_colors, size=self.size)
+         self.model.eval()
+         with torch.no_grad():
+             click_heatmap, directional_change = self.model(
+                 tensor.unsqueeze(0).to(torch.device(self.device))
+             )
+-        return click_heatmap[0, 0].detach().cpu(), directional_change[0].detach().cpu()
++        result = click_heatmap[0, 0].detach().cpu(), directional_change[0].detach().cpu()
++        self._cache[key] = result
++        return result
+ 
+     def candidate_score(self, frame: Any, candidate: Any) -> float:
+         click_heatmap, directional_change = self._predict(frame)
+@@ -183,6 +197,373 @@ class FrameChangeScorer:
+         return 0.0
+ 
+ 
++@dataclass(frozen=True)
++class FrameActionEffectExample:
++    """REQ-ARC-FCP-4501: one replay-derived action-effect row from raw frame pixels.
++
++    The staged mirror can contain useful frame/action/delta rows without the
++    separate 14,672-row `action_effect_dict.npz`. This object is the live-legal
++    contract the predictor consumes: rendered frame pixels, normalized action
++    id, optional click coordinates, and labels derived from frame deltas.
++    """
++
++    frame: Any
++    action_id: int
++    frame_delta: float
++    level_progress: float
++    state_key: str
++    x: int | None = None
++    y: int | None = None
++    env: str = ""
++    guid: str = ""
++    step_index: int = 0
++    feature_source: str = "raw_frame_shard_recomputed"
++
++    @property
++    def changed(self) -> bool:
++        return bool(float(self.frame_delta) > 0.0)
++
++    def to_prior_row(self) -> dict[str, Any]:
++        row: dict[str, Any] = {
++            "state_key": self.state_key,
++            "action_id": int(self.action_id),
++        }
++        if self.x is not None and self.y is not None:
++            row["x"] = int(self.x)
++            row["y"] = int(self.y)
++        return row
++
++
++def normalize_action(action: Any) -> tuple[int | None, int | None, int | None]:
++    """REQ-ARC-FCP-4501: normalize replay action encodings into action id and click."""
++
++    data: Any = {}
++    raw_id: Any = None
++    if isinstance(action, Mapping):
++        raw_id = (
++            action.get("id")
++            if action.get("id") is not None
++            else action.get("action_id", action.get("action"))
++        )
++        data = action.get("data") or action
++    else:
++        raw_id = action
++
++    try:
++        action_id = int(raw_id)
++    except (TypeError, ValueError):
++        return None, None, None
++
++    x_value = None
++    y_value = None
++    if isinstance(data, Mapping):
++        x_value = data.get("x", data.get("click_x"))
++        y_value = data.get("y", data.get("click_y"))
++    try:
++        x = None if x_value is None else int(x_value)
++        y = None if y_value is None else int(y_value)
++    except (TypeError, ValueError):
++        x = None
++        y = None
++    return action_id, x, y
++
++
++def normalize_frame_action_effect_row(row: Mapping[str, Any]) -> FrameActionEffectExample | None:
++    """REQ-ARC-FCP-4501: build one frame-only training row from a staged shard row."""
++
++    if "feature_keys" in row:
++        raise ValueError("mirror feature_keys are not a frame-only input")
++    if "frame" not in row:
++        return None
++    action_id, x, y = normalize_action(row.get("action"))
++    if action_id is None:
++        return None
++    frame = row["frame"]
++    return FrameActionEffectExample(
++        frame=frame,
++        action_id=int(action_id),
++        x=x,
++        y=y,
++        frame_delta=float(row.get("frame_delta") or 0.0),
++        level_progress=float(row.get("level_progress") or 0.0),
++        state_key=frame_state_key(frame),
++        env=str(row.get("env") or ""),
++        guid=str(row.get("guid") or ""),
++        step_index=int(row.get("step_index") or 0),
++    )
++
++
++def normalize_frame_action_effect_rows(
++    rows: Iterable[Mapping[str, Any]],
++    *,
++    limit: int | None = None,
++) -> Iterator[FrameActionEffectExample]:
++    """REQ-ARC-FCP-4501: stream normalized examples without mirror state vectors."""
++
++    emitted = 0
++    for row in rows:
++        example = normalize_frame_action_effect_row(row)
++        if example is None:
++            continue
++        yield example
++        emitted += 1
++        if limit is not None and emitted >= int(limit):
++            return
++
++
++def load_frame_action_effect_examples(
++    data_dir: Path | str,
++    *,
++    limit: int | None = None,
++) -> list[FrameActionEffectExample]:
++    """REQ-ARC-FCP-4501: load staged frame/action/delta shards from the local cache."""
++
++    from carnot.agentic import arc_human_replay_corpus
++
++    rows = arc_human_replay_corpus.load_training_shards(data_dir, limit=limit)
++    return list(normalize_frame_action_effect_rows(rows, limit=limit))
++
++
++def build_behavior_prior_from_effect_examples(
++    examples: Sequence[FrameActionEffectExample],
++) -> BehaviorActionPrior:
++    """REQ-ARC-FCP-4501: emit the behavior-cloning prior from normalized examples."""
++
++    return BehaviorActionPrior.from_examples([example.to_prior_row() for example in examples])
++
++
++def _model_cell_for_example(example: FrameActionEffectExample, size: int) -> tuple[int, int] | None:
++    if example.x is None or example.y is None:
++        return None
++    grid = grid_of(example.frame)
++    h, w = grid.shape
++    y = round((int(example.y) / max(1, h - 1)) * (int(size) - 1))
++    x = round((int(example.x) / max(1, w - 1)) * (int(size) - 1))
++    return int(y), int(x)
++
++
++def _effect_loss_for_batch(
++    model: nn.Module,
++    examples: Sequence[FrameActionEffectExample],
++    *,
++    num_colors: int,
++    size: int,
++    device: torch.device,
++) -> torch.Tensor | None:
++    tensors = [
++        frame_to_tensor(example.frame, num_colors=num_colors, size=size)
++        for example in examples
++        if _example_has_trainable_head(example)
++    ]
++    trainable = [example for example in examples if _example_has_trainable_head(example)]
++    if not trainable:
++        return None
++
++    batch = torch.stack(tensors).to(device)
++    click_heatmap, directional_change = model(batch)
++    losses: list[torch.Tensor] = []
++    for index, example in enumerate(trainable):
++        target = torch.tensor(float(example.changed), dtype=torch.float32, device=device)
++        if example.action_id == 6:
++            cell = _model_cell_for_example(example, size)
++            if cell is None:
++                continue
++            y, x = cell
++            losses.append(functional.binary_cross_entropy(click_heatmap[index, 0, y, x], target))
++        elif example.action_id in TERMINAL_ACTION_IDS:
++            losses.append(
++                functional.binary_cross_entropy(
++                    directional_change[index, int(example.action_id) - 1],
++                    target,
++                )
++            )
++    if not losses:
++        return None
++    return torch.stack(losses).mean()
++
++
++def _example_has_trainable_head(example: FrameActionEffectExample) -> bool:
++    if example.action_id in TERMINAL_ACTION_IDS:
++        return True
++    return bool(example.action_id == 6 and example.x is not None and example.y is not None)
++
++
++def _mean_effect_loss(
++    model: nn.Module,
++    examples: Sequence[FrameActionEffectExample],
++    *,
++    num_colors: int,
++    size: int,
++    batch_size: int,
++    device: torch.device,
++) -> float | None:
++    losses: list[float] = []
++    model.eval()
++    with torch.no_grad():
++        for start in range(0, len(examples), int(batch_size)):
++            loss = _effect_loss_for_batch(
++                model,
++                examples[start : start + int(batch_size)],
++                num_colors=num_colors,
++                size=size,
++                device=device,
++            )
++            if loss is not None:
++                losses.append(float(loss.detach().cpu().item()))
++    if not losses:
++        return None
++    return float(sum(losses) / len(losses))
++
++
++def train_frame_change_model(
++    examples: Sequence[FrameActionEffectExample],
++    *,
++    num_colors: int = DEFAULT_NUM_COLORS,
++    size: int = DEFAULT_FRAME_SIZE,
++    hidden_channels: int = 24,
++    epochs: int = 1,
++    batch_size: int = 32,
++    learning_rate: float = 0.01,
++    seed: int = 4501,
++    device: str = "cpu",
++) -> tuple[SmallFrameChangeCNN, dict[str, Any]]:
++    """REQ-ARC-FCP-4501: train the small CNN on frame/action/frame-delta rows."""
++
++    torch.manual_seed(int(seed))
++    torch_device = torch.device(device)
++    model = SmallFrameChangeCNN(num_colors=num_colors, hidden_channels=hidden_channels).to(torch_device)
++    trainable = [example for example in examples if _example_has_trainable_head(example)]
++    initial_loss = _mean_effect_loss(
++        model,
++        trainable,
++        num_colors=num_colors,
++        size=size,
++        batch_size=batch_size,
++        device=torch_device,
++    )
++    optimizer = torch.optim.Adam(model.parameters(), lr=float(learning_rate))
++    batches_trained = 0
++
++    for _epoch in range(max(0, int(epochs))):
++        model.train()
++        for start in range(0, len(trainable), int(batch_size)):
++            batch = trainable[start : start + int(batch_size)]
++            loss = _effect_loss_for_batch(
++                model,
++                batch,
++                num_colors=num_colors,
++                size=size,
++                device=torch_device,
++            )
++            if loss is None:
++                continue
++            optimizer.zero_grad(set_to_none=True)
++            loss.backward()
++            optimizer.step()
++            batches_trained += 1
++
++    final_loss = _mean_effect_loss(
++        model,
++        trainable,
++        num_colors=num_colors,
++        size=size,
++        batch_size=batch_size,
++        device=torch_device,
++    )
++    return model.cpu(), {
++        "examples_seen": int(len(examples)),
++        "examples_used": int(len(trainable)),
++        "epochs": int(epochs),
++        "batch_size": int(batch_size),
++        "hidden_channels": int(hidden_channels),
++        "num_colors": int(num_colors),
++        "frame_size": int(size),
++        "learning_rate": float(learning_rate),
++        "batches_trained": int(batches_trained),
++        "initial_loss": initial_loss,
++        "final_loss": final_loss,
++    }
++
++
++def _candidate_from_effect_example(index: int, example: FrameActionEffectExample) -> ArcAction:
++    data = (
++        {"x": int(example.x), "y": int(example.y)}
++        if example.action_id == 6 and example.x is not None and example.y is not None
++        else None
++    )
++    label = "target" if (example.level_progress > 0.0 or example.changed) else "noop"
++    return ArcAction(int(example.action_id), data, f"heldout_{index}_{label}")
++
++
++def _actions_to_first_target(candidates: Sequence[Any]) -> int | None:
++    for index, candidate in enumerate(candidates, start=1):
++        if str(getattr(candidate, "source", "")).endswith("_target"):
++            return int(index)
++    return None
++
++
++def evaluate_replay_candidate_order(
++    examples: Sequence[FrameActionEffectExample],
++    *,
++    scorer: Any | None = None,
++    prior: BehaviorActionPrior | None = None,
++    min_candidates: int = 2,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-4501: measure before/after rank to first replay-effective action."""
++
++    by_state: dict[str, list[FrameActionEffectExample]] = {}
++    for example in examples:
++        by_state.setdefault(example.state_key, []).append(example)
++
++    before_ranks: list[int] = []
++    after_ranks: list[int] = []
++    solved_before = 0
++    solved_after = 0
++    group_count = 0
++    for state_examples in by_state.values():
++        if len(state_examples) < int(min_candidates):
++            continue
++        candidates = [
++            _candidate_from_effect_example(index, example)
++            for index, example in enumerate(state_examples)
++            if _example_has_trainable_head(example)
++        ]
++        if len(candidates) < int(min_candidates):
++            continue
++        if not any(str(candidate.source).endswith("_target") for candidate in candidates):
++            continue
++        group_count += 1
++        before = _actions_to_first_target(candidates)
++        ranked = rank_arc_actions(state_examples[0].frame, candidates, scorer=scorer, prior=prior)
++        after = _actions_to_first_target(ranked)
++        if before is not None:
++            solved_before += 1
++            before_ranks.append(before)
++        if after is not None:
++            solved_after += 1
++            after_ranks.append(after)
++
++    before_median = float(median(before_ranks)) if before_ranks else None
++    after_median = float(median(after_ranks)) if after_ranks else None
++    before_rate = float(solved_before / group_count) if group_count else 0.0
++    after_rate = float(solved_after / group_count) if group_count else 0.0
++    delta = (
++        efficiency_score(1, int(after_median)) - efficiency_score(1, int(before_median))
++        if before_median is not None and after_median is not None
++        else None
++    )
++    return {
++        "heldout_group_count": int(group_count),
++        "heldout_median_actions_before": before_median,
++        "heldout_median_actions_after": after_median,
++        "solve_rate_before": before_rate,
++        "solve_rate_after": after_rate,
++        "solve_rate_dropped": bool(after_rate < before_rate),
++        "implied_efficiency_delta": delta,
++        "measurement_kind": "frame_only_replay_candidate_order_proxy",
++    }
++
++
+ def _scorer_value(frame: Any, candidate: Any, scorer: Any) -> float:
+     if scorer is None:
+         return 0.0
+diff --git a/python/carnot/experiment_4501_frame_change_predictor_rerun.py b/python/carnot/experiment_4501_frame_change_predictor_rerun.py
+new file mode 100644
+index 0000000000..7ad9d89156
+--- /dev/null
++++ b/python/carnot/experiment_4501_frame_change_predictor_rerun.py
+@@ -0,0 +1,408 @@
++"""Experiment 4501: frame-change predictor rerun on staged replay shards.
++
++Spec refs: REQ-ARC-FCP-4501, SCENARIO-ARC-FCP-4501.
++"""
++
++from __future__ import annotations
++
++import json
++import time
++from collections.abc import Mapping, Sequence
++from pathlib import Path
++from typing import Any
++
++from carnot.agentic import arc_human_replay_corpus
++from carnot.agentic.arc_frame_change_predictor import (
++    DEFAULT_FRAME_SIZE,
++    DEFAULT_NUM_COLORS,
++    FrameActionEffectExample,
++    FrameChangeScorer,
++    build_behavior_prior_from_effect_examples,
++    evaluate_positive_control,
++    evaluate_replay_candidate_order,
++    load_frame_action_effect_examples,
++    train_frame_change_model,
++)
++
++
++RESULT_RELATIVE_PATH = "results/experiment_4501_frame_change_predictor_rerun.json"
++DATA_RELATIVE_DIR = "data/arc_public_demo_human_replay_corpus"
++REPO_ROOT = Path(__file__).resolve().parents[2]
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++EXPECTED_ACTION_EFFECT_EXAMPLES = 14672
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++REQUIREMENTS = ["REQ-ARC-FCP-4490", "REQ-ARC-FCP-4491", "REQ-ARC-FCP-4492", "REQ-ARC-FCP-4501"]
++SCENARIOS = ["SCENARIO-ARC-FCP-4490", "SCENARIO-ARC-FCP-4501"]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ "
++        "(Verdict Terminal-Prefix Discipline)."
++    ),
++    "inference_substrate": (
++        "explicit verifier_ensemble_against_cached_candidates declaration so adversarial_verify applies "
++        "the cached-candidate duration floor."
++    ),
++    "preconditions_checked": (
++        "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
++    ),
++    "expected_action_effect_examples": (
++        "the external action-effect corpus target count, fixed at 14,672 for this rerun."
++    ),
++    "corpus_examples_loaded": (
++        "the exact number of frame-only shard examples loaded locally for this run."
++    ),
++    "feature_source": (
++        "proves features were recomputed from raw frames, not mirror feature vectors."
++    ),
++    "behavior_prior_emitted": (
++        "bare bool showing the behavior-cloning prior was built and can rank candidates."
++    ),
++    "heldout_median_actions_before": (
++        "baseline median actions-to-first-level-up on held-out frame-only evaluation."
++    ),
++    "heldout_median_actions_after": (
++        "predictor/prior-ranked median actions-to-first-level-up on the same held-out frame-only evaluation."
++    ),
++    "implied_efficiency_delta": (
++        "score-relevant delta in min(human/agent,1)^2 efficiency."
++    ),
++    "solve_rate_dropped": (
++        "guardrail bool; efficiency wins must not come from reducing solve rate."
++    ),
++    "false_negative_risk_guard": (
++        "records whether the null is interpretable because the positive control passed."
++    ),
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "field_principles",
++    "requirements",
++    "scenarios",
++    "weights_bundled",
++    "training_summary",
++    "positive_control",
++    "rich_action_candidates_wired",
++    "corpus_manifest",
++)
++
++
++def load_corpus_manifest(root: Path | str) -> dict[str, Any]:
++    """REQ-ARC-FCP-4501: read the staged frame-shard manifest if it exists."""
++
++    data_dir = Path(root) / DATA_RELATIVE_DIR
++    manifest_path = data_dir / arc_human_replay_corpus.MANIFEST_NAME
++    if not manifest_path.exists():
++        return {
++            "schema": arc_human_replay_corpus.SHARD_SCHEMA,
++            "example_count": 0,
++            "shard_count": 0,
++            "shards": [],
++            "source_metadata": {},
++        }
++    return arc_human_replay_corpus.load_manifest(data_dir)
++
++
++def check_preconditions(root: Path | str) -> dict[str, Any]:
++    """REQ-ARC-FCP-4501: record resources checked before training or reporting."""
++
++    root_path = Path(root)
++    data_dir = root_path / DATA_RELATIVE_DIR
++    manifest = load_corpus_manifest(root_path)
++    preconditions: dict[str, Any] = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "offline_arcade_import": False,
++        "torch_import": False,
++        "torch_version": "",
++        "training_shards_present": int(manifest.get("example_count") or 0) > 0,
++        "training_shard_count": int(manifest.get("shard_count") or 0),
++        "training_manifest_examples": int(manifest.get("example_count") or 0),
++        "cached_raw_parquet_present": bool(list((data_dir / "raw_hf_mirror").glob("data/*.parquet"))),
++        "action_effect_npz_present": bool(list(data_dir.rglob("action_effect_dict.npz"))),
++        "expected_action_effect_examples": EXPECTED_ACTION_EFFECT_EXAMPLES,
++        "official_license_verified_for_bundled_weights": False,
++        "env_game_access_blocked": True,
++    }
++    try:
++        from carnot.agentic import arc_solver_kit as kit
++
++        kit.offline_arcade()
++        preconditions["offline_arcade_import"] = True
++    except Exception as exc:  # pragma: no cover - local SDK failure path
++        preconditions["offline_arcade_error"] = repr(exc)
++    try:
++        import torch
++
++        preconditions["torch_import"] = True
++        preconditions["torch_version"] = str(torch.__version__)
++    except Exception as exc:  # pragma: no cover - torch missing path
++        preconditions["torch_error"] = repr(exc)
++    preconditions["ok"] = bool(
++        preconditions["offline_arcade_import"]
++        and preconditions["torch_import"]
++        and preconditions["training_shards_present"]
++    )
++    return preconditions
++
++
++def _split_train_heldout(
++    examples: Sequence[FrameActionEffectExample],
++) -> tuple[list[FrameActionEffectExample], list[FrameActionEffectExample]]:
++    if len(examples) < 20:
++        return list(examples), list(examples)
++    keys = sorted({example.state_key for example in examples})
++    heldout_keys = {key for index, key in enumerate(keys) if index % 5 == 0}
++    train = [example for example in examples if example.state_key not in heldout_keys]
++    heldout = [example for example in examples if example.state_key in heldout_keys]
++    return train or list(examples), heldout or list(examples)
++
++
++def summarize_prior(prior: Any) -> dict[str, Any]:
++    """REQ-ARC-FCP-4501: serialize the behavior prior without writing weights."""
++
++    return {
++        "marginal_action_counts": {
++            str(key): float(value) for key, value in prior.marginal_action_counts.items()
++        },
++        "click_cell_count": int(len(prior.click_cell_counts)),
++        "state_action_count": int(len(prior.state_action_counts)),
++        "state_click_count": int(len(prior.state_click_counts)),
++    }
++
++
++def false_negative_risk_guard(
++    heldout_metrics: Mapping[str, Any],
++    positive_control: Mapping[str, Any],
++) -> str:
++    """SCENARIO-ARC-FCP-4501: identify whether a null rerun is interpretable."""
++
++    if positive_control.get("actions_reduced") is not True:
++        return "positive_control_failed_null_uninterpretable"
++    delta = heldout_metrics.get("implied_efficiency_delta")
++    if delta is not None and float(delta) > 0.0:
++        return "positive_control_passed_candidate_order_gain"
++    return "positive_control_passed_null_interpretable"
++
++
++def _honest_verdict(
++    preconditions: Mapping[str, Any],
++    heldout_metrics: Mapping[str, Any],
++    *,
++    corpus_examples_loaded: int,
++) -> str:
++    if not preconditions.get("offline_arcade_import"):
++        return "complete: blocked_offline_arcade_import_failed"
++    if not preconditions.get("torch_import"):
++        return "complete: blocked_torch_missing"
++    if corpus_examples_loaded <= 0:
++        return "complete: blocked_staged_frame_shards_missing"
++    if heldout_metrics.get("solve_rate_dropped") is True:
++        return "complete: frame_change_predictor_rerun_solve_rate_guard_failed"
++    delta = heldout_metrics.get("implied_efficiency_delta")
++    exact_corpus = bool(preconditions.get("action_effect_npz_present")) and (
++        corpus_examples_loaded == EXPECTED_ACTION_EFFECT_EXAMPLES
++    )
++    if delta is not None and float(delta) > 0.0:
++        return (
++            "complete: frame_change_predictor_rerun_exact_corpus_proxy_gain"
++            if exact_corpus
++            else "complete: frame_change_predictor_rerun_staged_corpus_proxy_gain"
++        )
++    return (
++        "complete: frame_change_predictor_rerun_exact_corpus_honest_null"
++        if exact_corpus
++        else "complete: frame_change_predictor_rerun_staged_corpus_shortfall_null_guard"
++    )
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    training_summary: Mapping[str, Any],
++    heldout_metrics: Mapping[str, Any],
++    positive_control: Mapping[str, Any],
++    corpus_examples_loaded: int,
++    corpus_manifest: Mapping[str, Any],
++    prior_summary: Mapping[str, Any],
++    started: float | None = None,
++    finished: float | None = None,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-4501: assemble the terminal rerun artifact."""
++
++    guard = false_negative_risk_guard(heldout_metrics, positive_control)
++    artifact = {
++        "honest_verdict": _honest_verdict(
++            preconditions_checked,
++            heldout_metrics,
++            corpus_examples_loaded=int(corpus_examples_loaded),
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "requirements": list(REQUIREMENTS),
++        "scenarios": list(SCENARIOS),
++        "preconditions_checked": dict(preconditions_checked),
++        "expected_action_effect_examples": EXPECTED_ACTION_EFFECT_EXAMPLES,
++        "corpus_examples_loaded": int(corpus_examples_loaded),
++        "corpus_manifest": dict(corpus_manifest),
++        "feature_source": "raw_frame_shard_recomputed",
++        "behavior_prior_emitted": bool(prior_summary),
++        "behavior_prior_summary": dict(prior_summary),
++        "small_cnn_trained": int(training_summary.get("batches_trained") or 0) > 0,
++        "training_summary": dict(training_summary),
++        "weights_bundled": False,
++        "weights_bundling_policy": "No replay-derived weights are bundled without official CC0/MIT-0-compatible license verification.",
++        "rich_action_candidates_wired": True,
++        "heldout_median_actions_before": heldout_metrics.get("heldout_median_actions_before"),
++        "heldout_median_actions_after": heldout_metrics.get("heldout_median_actions_after"),
++        "implied_efficiency_delta": heldout_metrics.get("implied_efficiency_delta"),
++        "solve_rate_before": heldout_metrics.get("solve_rate_before"),
++        "solve_rate_after": heldout_metrics.get("solve_rate_after"),
++        "solve_rate_dropped": bool(heldout_metrics.get("solve_rate_dropped")),
++        "heldout_group_count": int(heldout_metrics.get("heldout_group_count") or 0),
++        "heldout_measurement_kind": heldout_metrics.get("measurement_kind"),
++        "positive_control": dict(positive_control),
++        "false_negative_risk_guard": guard,
++        "duration_s": None if started is None or finished is None else max(0.0, float(finished) - float(started)),
++    }
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with a terminal prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must equal verifier_ensemble_against_cached_candidates")
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        errors.append("preconditions_checked must be a mapping")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles must match required field principles")
++    if artifact.get("expected_action_effect_examples") != EXPECTED_ACTION_EFFECT_EXAMPLES:
++        errors.append("expected_action_effect_examples must equal 14672")
++    if int(artifact.get("corpus_examples_loaded") or 0) < 0:
++        errors.append("corpus_examples_loaded must be non-negative")
++    if artifact.get("feature_source") != "raw_frame_shard_recomputed":
++        errors.append("feature_source must prove raw-frame recomputation")
++    if artifact.get("behavior_prior_emitted") is not True:
++        errors.append("behavior_prior_emitted must be true")
++    if artifact.get("weights_bundled") is True:
++        errors.append("weights_bundled must remain false without official license verification")
++    if artifact.get("solve_rate_dropped") is True:
++        errors.append("solve rate guard failed")
++    positive_control = artifact.get("positive_control")
++    if not isinstance(positive_control, Mapping) or positive_control.get("actions_reduced") is not True:
++        errors.append("positive_control must prove the ranking harness can reduce actions")
++    guard = artifact.get("false_negative_risk_guard")
++    if guard not in {
++        "positive_control_passed_candidate_order_gain",
++        "positive_control_passed_null_interpretable",
++        "positive_control_failed_null_uninterpretable",
++    }:
++        errors.append("false_negative_risk_guard has an unknown value")
++    return errors
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    write: bool = True,
++    train_limit: int | None = None,
++    epochs: int = 1,
++    batch_size: int = 32,
++    hidden_channels: int = 12,
++    frame_size: int = DEFAULT_FRAME_SIZE,
++    num_colors: int = DEFAULT_NUM_COLORS,
++    now: Any = time.monotonic,
++) -> dict[str, Any]:
++    """SCENARIO-ARC-FCP-4501: train, measure, and write the rerun artifact."""
++
++    root_path = Path(root)
++    started = float(now())
++    preconditions = (
++        dict(preconditions_checked)
++        if preconditions_checked is not None
++        else check_preconditions(root_path)
++    )
++    manifest = load_corpus_manifest(root_path)
++    data_dir = root_path / DATA_RELATIVE_DIR
++    examples = (
++        load_frame_action_effect_examples(data_dir, limit=train_limit)
++        if int(manifest.get("example_count") or 0) > 0
++        else []
++    )
++    train_examples, heldout_examples = _split_train_heldout(examples)
++    prior = build_behavior_prior_from_effect_examples(train_examples) if train_examples else None
++    if train_examples:
++        model, training_summary = train_frame_change_model(
++            train_examples,
++            num_colors=num_colors,
++            size=frame_size,
++            hidden_channels=hidden_channels,
++            epochs=epochs,
++            batch_size=batch_size,
++            seed=4501,
++        )
++        scorer = FrameChangeScorer(model, num_colors=num_colors, size=frame_size)
++    else:
++        training_summary = {
++            "examples_seen": 0,
++            "examples_used": 0,
++            "epochs": int(epochs),
++            "batch_size": int(batch_size),
++            "hidden_channels": int(hidden_channels),
++            "num_colors": int(num_colors),
++            "frame_size": int(frame_size),
++            "learning_rate": None,
++            "batches_trained": 0,
++            "initial_loss": None,
++            "final_loss": None,
++        }
++        scorer = None
++    heldout_metrics = evaluate_replay_candidate_order(
++        heldout_examples,
++        scorer=scorer,
++        prior=prior,
++    )
++    positive_control = evaluate_positive_control()
++    artifact = build_artifact(
++        preconditions_checked=preconditions,
++        training_summary=training_summary,
++        heldout_metrics=heldout_metrics,
++        positive_control=positive_control,
++        corpus_examples_loaded=len(examples),
++        corpus_manifest=manifest,
++        prior_summary=summarize_prior(prior) if prior is not None else {},
++        started=started,
++        finished=float(now()),
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        out = root_path / RESULT_RELATIVE_PATH
++        out.parent.mkdir(parents=True, exist_ok=True)
++        out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper
++    artifact = run()
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 7eee97184e..6ad7b0b2d2 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-20T11:55:03.888402Z",
+-  "duration_s": 0.025585174560546875,
++  "run_date": "2026-06-20T12:17:47.074118Z",
++  "duration_s": 0.02266669273376465,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ea9864a302916c0bcd51363bb0346c0f54dcce3b5763b946b4a265b50dc3fba8",
++  "reproducibility_checksum": "26a623d85da07b1f990ce01ff23ccaa9ab0c9ddcc054f0b6cd3b869cbfec31ef",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "22a524937c781ac1d139d2e3eda8ccc9cf7efd5a"
++    "adversarial_verify_version": "b805aff9ab4f804935d636fadaebbfc0bd95e883"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 98d3d2a69f..65a19ab3b8 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-20T11:55:03.923701Z",
+-  "duration_s": 0.028650522232055664,
++  "run_date": "2026-06-20T12:17:47.099400Z",
++  "duration_s": 0.021020889282226562,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "3c4633c92ce39ed28094acfc47969268a64419f446c281e9311c3feb1d6dcc95",
++  "reproducibility_checksum": "41f6c81797264cc5a7e58843afd31c32ecea2fa9c0301cb7a217403feb231f49",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "22a524937c781ac1d139d2e3eda8ccc9cf7efd5a"
++    "adversarial_verify_version": "b805aff9ab4f804935d636fadaebbfc0bd95e883"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 44e093a2e1..df29fd283f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1011829376220703,
++  "efficiency_gains_ms": 2.1398067474365234,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 4da4ed557b..ce44ae4094 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.4504919312894344e-05,
++  "duration_s": 4.4293003156781197e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4501_frame_change_predictor_rerun.json b/results/experiment_4501_frame_change_predictor_rerun.json
+new file mode 100644
+index 0000000000..1f7a2300f9
+--- /dev/null
++++ b/results/experiment_4501_frame_change_predictor_rerun.json
+@@ -0,0 +1,171 @@
++{
++  "behavior_prior_emitted": true,
++  "behavior_prior_summary": {
++    "click_cell_count": 193,
++    "marginal_action_counts": {
++      "0": 36.0,
++      "1": 1548.0,
++      "2": 1462.0,
++      "3": 2176.0,
++      "4": 2445.0,
++      "6": 294.0,
++      "7": 19.0
++    },
++    "state_action_count": 6597,
++    "state_click_count": 166
++  },
++  "corpus_examples_loaded": 10000,
++  "corpus_manifest": {
++    "example_count": 10000,
++    "schema": "carnot.arc_human_replay.frame_action_delta.v1",
++    "shard_count": 3,
++    "shards": [
++      {
++        "path": "shards/train-00000.jsonl",
++        "rows": 4096,
++        "sha256": "ab201b50cef5494eedc6f202cd90b228fce50c94baa579fc62ab22c6c4bf2aa5"
++      },
++      {
++        "path": "shards/train-00001.jsonl",
++        "rows": 4096,
++        "sha256": "abd0e7eb24cd393e360b60bc59931d0643a117cad1a2af97cecc8717cbb2bfd0"
++      },
++      {
++        "path": "shards/train-00002.jsonl",
++        "rows": 1808,
++        "sha256": "7633510cc37396ae0e3f7ffdcafc0d48cb888df8ab1bc9c9fe04f01004c2fef3"
++      }
++    ],
++    "source_metadata": {
++      "dataset_sha": "455b7c58eaa9d5ea05f91cd1b5b603121599e758",
++      "downloaded_files": [
++        {
++          "oid": "db22be9f20126373f3f5e654214e6c93f14e8610",
++          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00000.parquet",
++          "size_bytes": 110727680,
++          "source_path": "data/train-00000.parquet"
++        },
++        {
++          "oid": "7c3c57a81cc3f24fe963885635be403bfdd78108",
++          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00001.parquet",
++          "size_bytes": 76502640,
++          "source_path": "data/train-00001.parquet"
++        },
++        {
++          "oid": "db8fcbf71aed97dc02a19b19099db5d017b07884",
++          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00002.parquet",
++          "size_bytes": 14062017,
++          "source_path": "data/train-00002.parquet"
++        },
++        {
++          "oid": "78dfd92c1e6bbe510b884819b8a3b502662b874c",
++          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00003.parquet",
++          "size_bytes": 95153406,
++          "source_path": "data/train-00003.parquet"
++        },
++        {
++          "oid": "96741d08fe25c6fcb525f0d77fb7ef30baa4e4a8",
++          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00004.parquet",
++          "size_bytes": 64456353,
++          "source_path": "data/train-00004.parquet"
++        },
++        {
++          "oid": "4ede8d2ad2bf2787db97aa51f4f572cd7fd2effb",
++          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00005.parquet",
++          "size_bytes": 39275328,
++          "source_path": "data/train-00005.parquet"
++        },
++        {
++          "oid": "f28728e58060dbfc544f241a3f8a4b4edef749b3",
++          "path": "data/arc_public_demo_human_replay_corpus/raw_hf_mirror/data/train-00006.parquet",
++          "size_bytes": 74592860,
++          "source_path": "data/train-00006.parquet"
++        }
++      ],
++      "license_name": "not CC0/MIT-0 verified; staged with attribution and no weights",
++      "license_status": "mirror_attribution_required",
++      "mirror_url": "https://huggingface.co/datasets/magic-sword/arc_agi_3_public_demo_human_testing",
++      "official_license_verified": false,
++      "source_kind": "hf_mirror"
++    }
++  },
++  "duration_s": 16.648489519022405,
++  "expected_action_effect_examples": 14672,
++  "false_negative_risk_guard": "positive_control_passed_null_interpretable",
++  "feature_source": "raw_frame_shard_recomputed",
++  "field_principles": {
++    "behavior_prior_emitted": "bare bool showing the behavior-cloning prior was built and can rank candidates.",
++    "corpus_examples_loaded": "the exact number of frame-only shard examples loaded locally for this run.",
++    "expected_action_effect_examples": "the external action-effect corpus target count, fixed at 14,672 for this rerun.",
++    "false_negative_risk_guard": "records whether the null is interpretable because the positive control passed.",
++    "feature_source": "proves features were recomputed from raw frames, not mirror feature vectors.",
++    "heldout_median_actions_after": "predictor/prior-ranked median actions-to-first-level-up on the same held-out frame-only evaluation.",
++    "heldout_median_actions_before": "baseline median actions-to-first-level-up on held-out frame-only evaluation.",
++    "honest_verdict": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ (Verdict Terminal-Prefix Discipline).",
++    "implied_efficiency_delta": "score-relevant delta in min(human/agent,1)^2 efficiency.",
++    "inference_substrate": "explicit verifier_ensemble_against_cached_candidates declaration so adversarial_verify applies the cached-candidate duration floor.",
++    "preconditions_checked": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication.",
++    "solve_rate_dropped": "guardrail bool; efficiency wins must not come from reducing solve rate."
++  },
++  "heldout_group_count": 176,
++  "heldout_measurement_kind": "frame_only_replay_candidate_order_proxy",
++  "heldout_median_actions_after": 1.0,
++  "heldout_median_actions_before": 1.0,
++  "honest_verdict": "complete: frame_change_predictor_rerun_staged_corpus_shortfall_null_guard",
++  "implied_efficiency_delta": 0.0,
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "positive_control": {
++    "actions_reduced": true,
++    "baseline_actions_to_first_levelup": 3,
++    "baseline_efficiency": 0.1111111111111111,
++    "implied_efficiency_delta": 0.8888888888888888,
++    "ranked_actions_to_first_levelup": 1,
++    "ranked_efficiency": 1.0
++  },
++  "preconditions_checked": {
++    "action_effect_npz_present": false,
++    "agents_md_read": true,
++    "cached_raw_parquet_present": true,
++    "codex_md_read": true,
++    "env_game_access_blocked": true,
++    "expected_action_effect_examples": 14672,
++    "official_license_verified_for_bundled_weights": false,
++    "offline_arcade_import": true,
++    "ok": true,
++    "torch_import": true,
++    "torch_version": "2.11.0+cu128",
++    "training_manifest_examples": 10000,
++    "training_shard_count": 3,
++    "training_shards_present": true
++  },
++  "requirements": [
++    "REQ-ARC-FCP-4490",
++    "REQ-ARC-FCP-4491",
++    "REQ-ARC-FCP-4492",
++    "REQ-ARC-FCP-4501"
++  ],
++  "rich_action_candidates_wired": true,
++  "scenarios": [
++    "SCENARIO-ARC-FCP-4490",
++    "SCENARIO-ARC-FCP-4501"
++  ],
++  "small_cnn_trained": true,
++  "solve_rate_after": 1.0,
++  "solve_rate_before": 1.0,
++  "solve_rate_dropped": false,
++  "training_summary": {
++    "batch_size": 32,
++    "batches_trained": 248,
++    "epochs": 1,
++    "examples_seen": 7980,
++    "examples_used": 7925,
++    "final_loss": 0.27963333285879344,
++    "frame_size": 64,
++    "hidden_channels": 12,
++    "initial_loss": 0.6862733438611031,
++    "learning_rate": 0.01,
++    "num_colors": 16
++  },
++  "weights_bundled": false,
++  "weights_bundling_policy": "No replay-derived weights are bundled without official CC0/MIT-0-compatible license verification."
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 0af2d5aa94..0c176d14fb 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260620",
+-  "started_at": "2026-06-20T11:54:54Z",
+-  "finished_at": "2026-06-20T11:54:54Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-20T12:17:37Z",
++  "finished_at": "2026-06-20T12:17:37Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6b1731f662..89f96eadb6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260620",
+-  "started_at": "2026-06-20T11:54:54Z",
+-  "finished_at": "2026-06-20T11:54:54Z",
++  "started_at": "2026-06-20T12:17:37Z",
++  "finished_at": "2026-06-20T12:17:37Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d5d28dab44..205e31cdc1 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260620",
+-  "started_at": "2026-06-20T11:54:54Z",
+-  "finished_at": "2026-06-20T11:54:54Z",
++  "started_at": "2026-06-20T12:17:37Z",
++  "finished_at": "2026-06-20T12:17:37Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4501_frame_change_predictor_rerun.py b/tests/python/test_experiment_4501_frame_change_predictor_rerun.py
+new file mode 100644
+index 0000000000..ed9c9130f2
+--- /dev/null
++++ b/tests/python/test_experiment_4501_frame_change_predictor_rerun.py
+@@ -0,0 +1,429 @@
++"""Tests for Exp 4501 frame-change predictor rerun.
++
++Spec refs: REQ-ARC-FCP-4501, SCENARIO-ARC-FCP-4501.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++import numpy as np
++import pytest
++import torch
++
++from carnot import experiment_4501_frame_change_predictor_rerun as exp4501
++from carnot.agentic import arc_frame_change_predictor as fcp
++from carnot.agentic.arc_agi3_live_adapter import ArcAction
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++def _grid(value: int = 0) -> list[list[int]]:
++    grid = np.zeros((8, 8), dtype=np.int16)
++    grid[2, 2] = int(value)
++    return grid.tolist()
++
++
++def _row(
++    action_id: int,
++    *,
++    x: int | None = None,
++    y: int | None = None,
++    frame_delta: float = 0.0,
++    frame: list[list[int]] | None = None,
++    env: str = "aa00",
++) -> dict[str, object]:
++    data = {"x": int(x), "y": int(y)} if x is not None and y is not None else {}
++    return {
++        "schema": "carnot.arc_human_replay.frame_action_delta.v1",
++        "env": env,
++        "guid": "fixture",
++        "step_index": 1,
++        "frame": frame or _grid(),
++        "action": {"id": str(action_id), "data": data},
++        "frame_delta": float(frame_delta),
++        "level_progress": 1.0 if frame_delta > 0 else 0.0,
++    }
++
++
++def _write_effect_shards(root: Path, rows: list[dict[str, object]]) -> None:
++    data_dir = root / exp4501.DATA_RELATIVE_DIR
++    shard_dir = data_dir / "shards"
++    shard_dir.mkdir(parents=True)
++    shard_path = shard_dir / "train-00000.jsonl"
++    payload = "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows)
++    shard_path.write_text(payload, encoding="utf-8")
++    digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
++    manifest = {
++        "schema": "carnot.arc_human_replay.frame_action_delta.v1",
++        "example_count": len(rows),
++        "shard_count": 1,
++        "shards": [{"path": "shards/train-00000.jsonl", "rows": len(rows), "sha256": digest}],
++        "source_metadata": {
++            "source_kind": "unit_fixture",
++            "official_license_verified": False,
++        },
++    }
++    (data_dir / "manifest.json").write_text(
++        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def test_req_arc_fcp_4501_spec_declares_rerun_artifact_contract() -> None:
++    """REQ-ARC-FCP-4501: OpenSpec anchors the rerun and required artifact fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-4501" in spec
++    assert "SCENARIO-ARC-FCP-4501" in spec
++    assert exp4501.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp4501.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_req_arc_fcp_4501_normalizes_raw_frame_rows_and_prior() -> None:
++    """REQ-ARC-FCP-4501: shard rows become frame-only examples and behavior priors."""
++
++    frame = _grid(3)
++    examples = list(
++        fcp.normalize_frame_action_effect_rows(
++            [
++                _row(1, frame_delta=0.0, frame=frame),
++                _row(6, x=6, y=6, frame_delta=0.25, frame=frame),
++            ]
++        )
++    )
++
++    assert [example.action_id for example in examples] == [1, 6]
++    assert examples[1].x == 6
++    assert examples[1].y == 6
++    assert examples[1].changed is True
++    assert examples[1].feature_source == "raw_frame_shard_recomputed"
++
++    prior = fcp.build_behavior_prior_from_effect_examples(examples)
++    candidates = [
++        ArcAction(1, None, "legacy_noop"),
++        ArcAction(6, {"x": 6, "y": 6}, "human_click"),
++    ]
++    ranked = fcp.rank_arc_actions(SimpleNamespace(frame=np.asarray(frame)), candidates, prior=prior)
++
++    assert ranked[0].source == "human_click"
++
++
++def test_req_arc_fcp_4501_training_step_uses_cnn_heads() -> None:
++    """REQ-ARC-FCP-4501: small torch CNN trains on normalized action-effect labels."""
++
++    rows = [
++        _row(6, x=6, y=6, frame_delta=1.0, frame=_grid(1)),
++        _row(6, x=1, y=1, frame_delta=0.0, frame=_grid(1)),
++        _row(1, frame_delta=1.0, frame=_grid(2)),
++        _row(2, frame_delta=0.0, frame=_grid(2)),
++    ]
++    examples = list(fcp.normalize_frame_action_effect_rows(rows))
++
++    model, summary = fcp.train_frame_change_model(
++        examples,
++        num_colors=4,
++        size=8,
++        hidden_channels=4,
++        epochs=2,
++        batch_size=2,
++        learning_rate=0.02,
++        seed=4501,
++    )
++
++    assert summary["examples_used"] == 4
++    assert summary["batches_trained"] > 0
++    assert summary["initial_loss"] is not None
++    assert summary["final_loss"] is not None
++    assert torch.isfinite(torch.tensor(float(summary["final_loss"])))
++
++    scorer = fcp.FrameChangeScorer(model, num_colors=4, size=8)
++    score = scorer.candidate_score(
++        SimpleNamespace(frame=np.asarray(_grid(1))),
++        ArcAction(6, {"x": 6, "y": 6}, "click"),
++    )
++    assert 0.0 <= score <= 1.0
++
++
++def test_scenario_arc_fcp_4501_candidate_order_proxy_and_false_negative_guard() -> None:
++    """SCENARIO-ARC-FCP-4501: held-out proxy keeps solve rate and detects null risk."""
++
++    frame = _grid(4)
++    examples = list(
++        fcp.normalize_frame_action_effect_rows(
++            [
++                _row(1, frame_delta=0.0, frame=frame),
++                _row(6, x=6, y=6, frame_delta=1.0, frame=frame),
++            ]
++        )
++    )
++    prior = fcp.build_behavior_prior_from_effect_examples(examples)
++    metric = fcp.evaluate_replay_candidate_order(examples, prior=prior)
++
++    assert metric["heldout_median_actions_before"] == 2.0
++    assert metric["heldout_median_actions_after"] == 1.0
++    assert metric["solve_rate_before"] == 1.0
++    assert metric["solve_rate_after"] == 1.0
++    assert metric["solve_rate_dropped"] is False
++    assert metric["implied_efficiency_delta"] > 0.0
++
++    positive_control = fcp.evaluate_positive_control()
++    assert exp4501.false_negative_risk_guard(metric, positive_control) == (
++        "positive_control_passed_candidate_order_gain"
++    )
++    null_metric = {**metric, "implied_efficiency_delta": 0.0}
++    assert exp4501.false_negative_risk_guard(null_metric, positive_control) == (
++        "positive_control_passed_null_interpretable"
++    )
++
++
++def test_scenario_arc_fcp_4501_artifact_schema_and_write(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-4501: rerun artifact records corpus shortfall and null guard."""
++
++    frame = _grid(5)
++    _write_effect_shards(
++        tmp_path,
++        [
++            _row(1, frame_delta=0.0, frame=frame),
++            _row(6, x=6, y=6, frame_delta=1.0, frame=frame),
++            _row(1, frame_delta=0.0, frame=_grid(6)),
++            _row(6, x=5, y=5, frame_delta=1.0, frame=_grid(6)),
++        ],
++    )
++    preconditions = {
++        "agents_md_read": True,
++        "codex_md_read": True,
++        "offline_arcade_import": True,
++        "torch_import": True,
++        "torch_version": torch.__version__,
++        "training_shards_present": True,
++        "action_effect_npz_present": False,
++        "ok": True,
++    }
++
++    artifact = exp4501.run(
++        root=tmp_path,
++        preconditions_checked=preconditions,
++        write=True,
++        train_limit=4,
++        epochs=1,
++        batch_size=2,
++        hidden_channels=4,
++        frame_size=8,
++        num_colors=8,
++        now=lambda: 10.0,
++    )
++
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["expected_action_effect_examples"] == 14672
++    assert artifact["corpus_examples_loaded"] == 4
++    assert artifact["feature_source"] == "raw_frame_shard_recomputed"
++    assert artifact["behavior_prior_emitted"] is True
++    assert artifact["weights_bundled"] is False
++    assert artifact["solve_rate_dropped"] is False
++    assert artifact["false_negative_risk_guard"] in {
++        "positive_control_passed_candidate_order_gain",
++        "positive_control_passed_null_interpretable",
++    }
++    assert exp4501.artifact_schema_errors(artifact) == []
++
++    written = json.loads((tmp_path / exp4501.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["corpus_examples_loaded"] == 4
++
++
++def test_req_arc_fcp_4501_artifact_schema_rejects_bad_fields(tmp_path: Path) -> None:
++    """REQ-ARC-FCP-4501: schema rejects non-terminal verdicts and solve-rate drops."""
++
++    artifact = exp4501.build_artifact(
++        preconditions_checked={"offline_arcade_import": True, "torch_import": True},
++        training_summary={"examples_used": 2, "initial_loss": 1.0, "final_loss": 0.9},
++        heldout_metrics={
++            "heldout_median_actions_before": 2.0,
++            "heldout_median_actions_after": 1.0,
++            "implied_efficiency_delta": 0.75,
++            "solve_rate_before": 1.0,
++            "solve_rate_after": 1.0,
++            "solve_rate_dropped": False,
++            "heldout_group_count": 1,
++        },
++        positive_control={"actions_reduced": True, "implied_efficiency_delta": 0.5},
++        corpus_examples_loaded=2,
++        corpus_manifest={"example_count": 2, "shard_count": 1, "shards": []},
++        prior_summary={"marginal_action_counts": {"1": 1, "6": 1}},
++        started=1.0,
++        finished=2.0,
++    )
++    assert exp4501.artifact_schema_errors(artifact) == []
++
++    bad_verdict = {**artifact, "honest_verdict": "blocked"}
++    assert any("terminal prefix" in error for error in exp4501.artifact_schema_errors(bad_verdict))
++
++    dropped = {**artifact, "solve_rate_dropped": True}
++    assert any("solve rate" in error for error in exp4501.artifact_schema_errors(dropped))
++
++    missing = dict(artifact)
++    missing.pop("preconditions_checked")
++    assert any("missing required field" in error for error in exp4501.artifact_schema_errors(missing))
++
++    wrong_substrate = {**artifact, "inference_substrate": "live_llm_inference"}
++    assert any("inference_substrate" in error for error in exp4501.artifact_schema_errors(wrong_substrate))
++
++    wrong_principles = {**artifact, "field_principles": {}}
++    assert any("field_principles" in error for error in exp4501.artifact_schema_errors(wrong_principles))
++
++    wrong_expected = {**artifact, "expected_action_effect_examples": 10}
++    assert any("14672" in error for error in exp4501.artifact_schema_errors(wrong_expected))
++
++    wrong_count = {**artifact, "corpus_examples_loaded": -1}
++    assert any("non-negative" in error for error in exp4501.artifact_schema_errors(wrong_count))
++
++    wrong_feature = {**artifact, "feature_source": "feature_keys"}
++    assert any("raw-frame" in error for error in exp4501.artifact_schema_errors(wrong_feature))
++
++    no_prior = {**artifact, "behavior_prior_emitted": False}
++    assert any("behavior_prior_emitted" in error for error in exp4501.artifact_schema_errors(no_prior))
++
++    weights = {**artifact, "weights_bundled": True}
++    assert any("weights_bundled" in error for error in exp4501.artifact_schema_errors(weights))
++
++    bad_positive = {**artifact, "positive_control": {"actions_reduced": False}}
++    assert any("positive_control" in error for error in exp4501.artifact_schema_errors(bad_positive))
++
++    bad_guard = {**artifact, "false_negative_risk_guard": "unknown"}
++    assert any("false_negative_risk_guard" in error for error in exp4501.artifact_schema_errors(bad_guard))
++
++
++def test_req_arc_fcp_4501_preconditions_manifest_and_blocked_run(tmp_path: Path) -> None:
++    """REQ-ARC-FCP-4501: preconditions record missing shards without fabricating training."""
++
++    manifest = exp4501.load_corpus_manifest(tmp_path)
++    assert manifest["example_count"] == 0
++    assert manifest["shard_count"] == 0
++
++    preconditions = exp4501.check_preconditions(tmp_path)
++    assert preconditions["offline_arcade_import"] is True
++    assert preconditions["torch_import"] is True
++    assert preconditions["training_shards_present"] is False
++    assert preconditions["action_effect_npz_present"] is False
++    assert preconditions["ok"] is False
++
++    with pytest.raises(ValueError, match="behavior_prior_emitted"):
++        exp4501.run(
++            root=tmp_path,
++            preconditions_checked=preconditions,
++            write=False,
++            now=lambda: 1.0,
++        )
++
++
++def test_req_arc_fcp_4501_verdict_and_guard_branches() -> None:
++    """REQ-ARC-FCP-4501: verdicts cover blocked, exact-corpus, and null branches."""
++
++    positive = {"actions_reduced": True, "implied_efficiency_delta": 0.5}
++    failed_control = {"actions_reduced": False}
++    null_metric = {
++        "heldout_median_actions_before": None,
++        "heldout_median_actions_after": None,
++        "implied_efficiency_delta": None,
++        "solve_rate_before": 0.0,
++        "solve_rate_after": 0.0,
++        "solve_rate_dropped": False,
++        "heldout_group_count": 0,
++    }
++    gain_metric = {**null_metric, "implied_efficiency_delta": 0.25}
++    dropped_metric = {**gain_metric, "solve_rate_dropped": True}
++    base_preconditions = {
++        "offline_arcade_import": True,
++        "torch_import": True,
++        "action_effect_npz_present": False,
++    }
++
++    assert exp4501.false_negative_risk_guard(null_metric, failed_control) == (
++        "positive_control_failed_null_uninterpretable"
++    )
++
++    offline = exp4501.build_artifact(
++        preconditions_checked={**base_preconditions, "offline_arcade_import": False},
++        training_summary={"batches_trained": 1},
++        heldout_metrics=null_metric,
++        positive_control=positive,
++        corpus_examples_loaded=2,
++        corpus_manifest={},
++        prior_summary={"marginal_action_counts": {"1": 1}},
++    )
++    assert offline["honest_verdict"] == "complete: blocked_offline_arcade_import_failed"
++
++    no_torch = exp4501.build_artifact(
++        preconditions_checked={**base_preconditions, "torch_import": False},
++        training_summary={"batches_trained": 1},
++        heldout_metrics=null_metric,
++        positive_control=positive,
++        corpus_examples_loaded=2,
++        corpus_manifest={},
++        prior_summary={"marginal_action_counts": {"1": 1}},
++    )
++    assert no_torch["honest_verdict"] == "complete: blocked_torch_missing"
++
++    no_corpus = exp4501.build_artifact(
++        preconditions_checked=base_preconditions,
++        training_summary={"batches_trained": 0},
++        heldout_metrics=null_metric,
++        positive_control=positive,
++        corpus_examples_loaded=0,
++        corpus_manifest={},
++        prior_summary={"marginal_action_counts": {"1": 1}},
++    )
++    assert no_corpus["honest_verdict"] == "complete: blocked_staged_frame_shards_missing"
++
++    dropped = exp4501.build_artifact(
++        preconditions_checked=base_preconditions,
++        training_summary={"batches_trained": 1},
++        heldout_metrics=dropped_metric,
++        positive_control=positive,
++        corpus_examples_loaded=2,
++        corpus_manifest={},
++        prior_summary={"marginal_action_counts": {"1": 1}},
++    )
++    assert dropped["honest_verdict"] == "complete: frame_change_predictor_rerun_solve_rate_guard_failed"
++
++    exact_gain = exp4501.build_artifact(
++        preconditions_checked={**base_preconditions, "action_effect_npz_present": True},
++        training_summary={"batches_trained": 1},
++        heldout_metrics=gain_metric,
++        positive_control=positive,
++        corpus_examples_loaded=exp4501.EXPECTED_ACTION_EFFECT_EXAMPLES,
++        corpus_manifest={},
++        prior_summary={"marginal_action_counts": {"1": 1}},
++    )
++    assert exact_gain["honest_verdict"] == "complete: frame_change_predictor_rerun_exact_corpus_proxy_gain"
++
++    exact_null = exp4501.build_artifact(
++        preconditions_checked={**base_preconditions, "action_effect_npz_present": True},
++        training_summary={"batches_trained": 1},
++        heldout_metrics=null_metric,
++        positive_control=positive,
++        corpus_examples_loaded=exp4501.EXPECTED_ACTION_EFFECT_EXAMPLES,
++        corpus_manifest={},
++        prior_summary={"marginal_action_counts": {"1": 1}},
++    )
++    assert exact_null["honest_verdict"] == "complete: frame_change_predictor_rerun_exact_corpus_honest_null"
++
++
++def test_req_arc_fcp_4501_split_uses_heldout_states() -> None:
++    """REQ-ARC-FCP-4501: larger reruns split by state key for held-out measurement."""
++
++    rows = [_row(1, frame_delta=0.0, frame=_grid(index % 7)) for index in range(25)]
++    examples = list(fcp.normalize_frame_action_effect_rows(rows))
++    train, heldout = exp4501._split_train_heldout(examples)
++
++    assert train
++    assert heldout
++    assert {example.state_key for example in train} != {example.state_key for example in heldout}
+-- 
+2.55.0
+

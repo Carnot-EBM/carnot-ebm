@@ -1,0 +1,43 @@
+From 4ba3518050f73bc901f25b3b245d2b18f5f8644b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 10:23:42 -0400
+Subject: [PATCH 06224/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5dad939e72..303e507ea0 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 304, "phase": "iteration_start", "last_beat": "2026-07-08T14:10:14Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 305, "phase": "iteration_start", "last_beat": "2026-07-08T14:23:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d7a6e07431..ebe96a83ec 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10553,3 +10553,4 @@ I’m going to append a small |
+ | 2026-07-08 13:35 UTC | Active-constraint LNS scale-up with dual-residual  | OK | 90 passed, 1 warning in 7.70s |
+ | 2026-07-08 13:54 UTC | Gated p-bit hardware-transfer preflight after Exp5 | OK | 90 passed, 1 warning in 11.21s |
+ | 2026-07-08 14:08 UTC | Continuous self-learning evidence-reliance drift a | OK | 90 passed, 1 warning in 12.78s |
++| 2026-07-08 14:21 UTC | Gated CSL promotion scale-up with reliance and ris | OK | 91 passed, 1 warning in 11.21s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 73326a95d9..ad402ebdb5 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 304, "phase": "iteration_start", "started_at": "2026-07-08T14:10:14Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 305, "phase": "iteration_start", "started_at": "2026-07-08T14:23:40Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

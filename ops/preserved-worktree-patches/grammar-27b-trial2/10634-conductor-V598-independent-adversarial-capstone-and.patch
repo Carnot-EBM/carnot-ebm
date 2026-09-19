@@ -1,0 +1,137 @@
+From 42b63773080503d45da4689051b82b16755ddaa6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 09:11:18 -0400
+Subject: [PATCH 10634/11171] [conductor] V598 independent adversarial capstone
+ and next-step disposition
+
+Automated research step by research conductor.
+Task ID: exp6847-v598-independent-capstone
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |  2 +-
+ ...riment_6847_v598_independent_capstone.json | 26 ++++++++++---------
+ 2 files changed, 15 insertions(+), 13 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 25941f444f..d2e8ebd042 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5228,
++  "experiments_checked": 5229,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_6847_v598_independent_capstone.json b/results/experiment_6847_v598_independent_capstone.json
+index bbbc7429d2..d7f6286177 100644
+--- a/results/experiment_6847_v598_independent_capstone.json
++++ b/results/experiment_6847_v598_independent_capstone.json
+@@ -224,10 +224,10 @@
+       "declared_status": null,
+       "declared_verdict_class": null,
+       "error": null,
+-      "file_sha256": null,
++      "file_sha256": "sha256:0c7dde3135aca4d00ed5a98137aa505ce7cb78b75448777d3d940d614601167f",
+       "full_id": "exp6847-v598-independent-capstone",
+       "path": "results/experiment_6847_v598_independent_capstone.json",
+-      "path_exists": false,
++      "path_exists": true,
+       "prior_failure_count": 1,
+       "task_id": "exp6847",
+       "title": "V598 independent adversarial capstone and next-step disposition",
+@@ -254,7 +254,7 @@
+     "ready_score": 0,
+     "verdict_class": "null"
+   },
+-  "duration_s": 1.003439,
++  "duration_s": 1.012333,
+   "experiment_id": "exp6847-v598-independent-capstone",
+   "field_principles": {
+     "allowed_claims": "Claims are bounded to recomputed evidence and terminal branch state.",
+@@ -267,12 +267,13 @@
+     "forbidden_claims": "Unsupported solve, benefit, policy, or cross-mechanism claims stay barred.",
+     "gate_check_summary": "Failed rows and observed values remain visible for blocked dispositions.",
+     "honest_verdict": "The terminal verdict is prefixed complete_ and states evidence preservation.",
+-    "inference_substrate": "The reducer performs deterministic CPU synthesis and no LLM inference.",
++    "inference_substrate": "The reviewed aggregation/no-LLM substrate covers deterministic CPU synthesis.",
+     "learning_kernel_disposition": "The memory kernel branch is judged only from Exp6839 execution receipts.",
+     "milestone": "The artifact is scoped only to the V598 roadmap milestone.",
+     "next_milestone_recommendation": "Each branch receives exactly one evidence-bounded next action without editing the roadmap.",
+     "preconditions_checked": "Roadmap, milestone, and planned artifact checks run before reduction.",
+     "prior_failure_retirement_decisions": "Prior failures are checked without letting older evidence rescue a current branch.",
++    "random_seed": "The fixed seed records deterministic reduction even though no sampling occurs.",
+     "reproducibility_checksum": "A stable content hash protects the final capstone record.",
+     "result_path": "The output path is fixed by the V598 roadmap and spec.",
+     "rows": "Each acceptance criterion records evidence, expected value, observed value, and status.",
+@@ -529,8 +530,8 @@
+     "passed": false,
+     "producer_disagreement_count": 2
+   },
+-  "honest_verdict": "complete_partial_v598_independent_capstone_all_branch_states_preserved",
+-  "inference_substrate": "deterministic_cpu_independent_synthesis_no_llm",
++  "honest_verdict": "complete_null_v598_independent_capstone_all_branch_states_preserved",
++  "inference_substrate": "aggregation_from_upstream_artifacts_no_llm",
+   "learning_kernel_disposition": {
+     "allowed_claim": "The bounded residual-memory kernel executed with exact credit, admission, restart, and rollback receipts.",
+     "blocking_criteria": [],
+@@ -868,7 +869,8 @@
+       "verdict_recurs": false
+     }
+   ],
+-  "reproducibility_checksum": "sha256:f20477d387f5f99103aa4de6876088dbd4cc92f5163a036fb684c73b38968909",
++  "random_seed": 6847,
++  "reproducibility_checksum": "sha256:e99736f729da5ff69dda0bd9de2f7140cbd1652f202c9b23fb6b01dd7da14d26",
+   "result_path": "results/experiment_6847_v598_independent_capstone.json",
+   "rows": [
+     {
+@@ -3941,7 +3943,7 @@
+         "path": "results/experiment_6846_typed_arc_shadow_monitor.json"
+       },
+       "exp6847": {
+-        "file_sha256": null,
++        "file_sha256": "sha256:0c7dde3135aca4d00ed5a98137aa505ce7cb78b75448777d3d940d614601167f",
+         "path": "results/experiment_6847_v598_independent_capstone.json"
+       }
+     },
+@@ -3955,7 +3957,7 @@
+         "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+       },
+       "module": {
+-        "file_sha256": "sha256:73351eb450774afd846944ada5f76fc433b153beb19045486b3ce156883267c6",
++        "file_sha256": "sha256:02a02869ed5f16a39a5922576d5cce06e5a7ca60629091a471f62abd1fae081f",
+         "path": "python/carnot/experiment_6847_v598_independent_capstone.py"
+       },
+       "prompt_next_roadmap": {
+@@ -3963,7 +3965,7 @@
+         "path": "research-roadmap-next.yaml"
+       },
+       "reporting_spec": {
+-        "file_sha256": "sha256:00365f5aa5a3db19331a78bed93c8a2764016fb0a85ca686a60cbf49c7543792",
++        "file_sha256": "sha256:c3d2eb388e4365efeb39a56e14001e06656071f977df6416e34dfc042a8800d1",
+         "path": "openspec/capabilities/research-reporting/spec.md"
+       },
+       "tests": {
+@@ -3984,7 +3986,7 @@
+     "SCENARIO-RESEARCH-6847-BRANCH-INDEPENDENCE",
+     "SCENARIO-RESEARCH-6847-RETIREMENT"
+   ],
+-  "status": "complete_terminal_partial",
++  "status": "complete_terminal_null",
+   "supervisor_credit_disposition": {
+     "allowed_claim": "Supervisor rows joined exact later outcomes, but all matched cells had zero headroom and zero progress effect.",
+     "blocking_criteria": [
+@@ -4045,6 +4047,6 @@
+     "verdict_class": "blocked"
+   },
+   "v598_disposition_complete_score": 1,
+-  "verdict_class": "partial",
++  "verdict_class": "null",
+   "verifier_is_oracle": false
+ }
+-- 
+2.55.0
+

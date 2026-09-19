@@ -1,0 +1,61 @@
+From 089a8c7459d1ec851fd5c92515a63c06134c8f22 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 18:50:06 -0400
+Subject: [PATCH 06631/11362] [conductor] Pre-gate block: Gated GBNF-forced
+ SOTA row smoke
+
+1 of 1 gate(s) failed; first failure: exp5552-automaton-schema-row-completion-receipt.automaton_row_completion_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index bcf6df88b7..f2a7076b80 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 478, "phase": "iteration_start", "last_beat": "2026-07-10T22:48:04Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 479, "phase": "iteration_start", "last_beat": "2026-07-10T22:50:06Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8f7ccdbc5a..e68cdd3bbf 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10743,3 +10743,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-10 22:14 UTC | Transition .502 outcomes into .503 execution conte | OK | 87 passed, 1 warning in 10.54s |
+ | 2026-07-10 22:29 UTC | Execution-time V503 source delta and experiment ma | OK | 87 passed, 1 warning in 10.29s |
+ | 2026-07-10 22:46 UTC | Automaton schema row-completion receipt | OK | 88 passed, 1 warning in 11.14s |
++| 2026-07-10 22:48 UTC | Gated GBNF-forced SOTA row smoke | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5552-automaton-schema-row-completion-re |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c415b77bff..443198bd4f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 478, "phase": "iteration_start", "started_at": "2026-07-10T22:48:04Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 479, "phase": "iteration_start", "started_at": "2026-07-10T22:50:06Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json b/results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json
+index f37e912b3e..d35b76dad4 100644
+--- a/results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json
++++ b/results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json
+@@ -2,8 +2,8 @@
+   "experiment": 5553,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-10",
+-  "started_at": "2026-07-10T22:48:04.610996+00:00",
+-  "finished_at": "2026-07-10T22:48:04.610996+00:00",
++  "started_at": "2026-07-10T22:50:06.718807+00:00",
++  "finished_at": "2026-07-10T22:50:06.718807+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated GBNF-forced SOTA row smoke",
+-- 
+2.55.0
+

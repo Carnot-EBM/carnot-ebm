@@ -1,0 +1,758 @@
+From 5d15592b1d29c5ca7173f289671acfff5398dce1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 20:37:12 -0400
+Subject: [PATCH 05516/11362] [conductor] PHASE B3 attack the diagnosed
+ enumeration wall -- live level-up attempt using whichever of B1/B2 validated
+ a lever
+
+Automated research step by research conductor.
+Task ID: exp5176-deepen-live-levelup-attempt-v474
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  75 ++++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...t_5176_deepen_live_levelup_attempt_v474.py | 197 ++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...5176_deepen_live_levelup_attempt_v474.json |  62 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...t_5176_deepen_live_levelup_attempt_v474.py | 214 ++++++++++++++++++
+ 12 files changed, 568 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_5176_deepen_live_levelup_attempt_v474.py
+ create mode 100644 results/experiment_5176_deepen_live_levelup_attempt_v474.json
+ create mode 100644 tests/python/test_experiment_5176_deepen_live_levelup_attempt_v474.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 47156e9e66..5481397f12 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -955,6 +955,75 @@ gates every new level, treats `cn04` as a negative control, and emits a terminal
+ artifact with `inference_substrate="offline_arcade_live_agent_runtime_self_discovery_no_llm"`
+ and `verifier_is_oracle=false`.
+ 
++### REQ-REPORT-5176: B1/B2-Gated Deepen Live Level-Up Attempt
++
++The Exp 5176 workflow SHALL produce
++`results/experiment_5176_deepen_live_levelup_attempt_v474.json` by reading the
++actual Exp 5174 GAP-LIVE-INTEGRATION reconciliation artifact and the actual Exp
++5175 GAP-4891 relational-mask-pruner A/B artifact before any level-up attempt.
++It SHALL not infer their outcomes from roadmap intent. Exp 5174 SHALL count as
++validated only when it reports a real fixable live-path wiring gap, and Exp 5175
++SHALL count as validated only when it either banks a reproduce-gated level or
++shows a clear state-expansion branching-factor win. Edge pruning with unchanged
++states expanded SHALL not be promoted into a validated level-up lever.
++
++Before any attempt proceeds, the workflow SHALL registry-precheck the current
++`levels_reproduced` for the already-adaptered `deepened_but_stuck` candidate
++set (`ar25`, `bp35`, `cd82`, `cn04`, `dc22`, `ft09`) from
++`ops/arc_solve_registry.yaml`. It SHALL choose two or three target rows by the
++clearest direct Exp5174/Exp5175 signal available, record each target's
++`level_before` and `level_attempted`, and SHALL not re-attempt a level already
++banked in the registry. If no validated lever is available from B1/B2, it SHALL
++write a terminal blocked artifact and stop without fabricating a level-up
++attempt.
++
++Any non-blocked Exp 5176 attempt SHALL wire the validated mechanism through the
++live `E3AgentPolicy` import closure if it is not already live-reachable, SHALL
++run `scripts/arc_orphan_solver_lint.py` before setting
++`live_path_reachable=true`, and SHALL count a new level only when
++`arc_solver_kit.reproduce()` confirms `offline_reproduced=true` and
++`reproduced_levels>=1`. If zero levels are banked, the artifact SHALL name MAP
++(`arXiv:2605.13037`) or another specific evidenced next direction for `.475`;
++a fourth flat-frontier pruning/ranking variant is not sufficient after a clean
++Exp5175 null.
++
++The artifact SHALL include top-level fields `lever_used`, `target_games`,
++`levels_banked`, `reproducible_levels_delta`, `live_path_reachable`,
++`solve_provenance`, `next_direction_if_null`, `verifier_is_oracle`,
++`inference_substrate`, and `honest_verdict`.
++
++Required field principles:
++
++- `lever_used`: principle "one of exp5174 / exp5175 / both / none_available, determined from actual upstream artifacts."
++- `target_games`: principle "list of {game, level_before, level_attempted} from an immediate registry precheck."
++- `levels_banked`: principle "Only reproduce()-confirmed levels count."
++- `reproducible_levels_delta`: principle "the load-bearing ARC metric; zero must be reported plainly."
++- `live_path_reachable`: principle "true only after the live import closure/orphan lint is clean."
++- `solve_provenance`: principle "live_agent_self_discovery only if the live E3AgentPolicy path itself made the discovery at runtime."
++- `next_direction_if_null`: principle "zero-bank artifacts must explicitly name MAP (arXiv:2605.13037) or another evidenced .475 direction."
++- `verifier_is_oracle`: principle "false for this attempt; reproduction is the executable gate, not a claimed verifier win."
++- `inference_substrate`: principle "offline_arcade_live_agent_runtime_self_discovery_no_llm unless a live LLM is actually invoked."
++- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state plainly how many levels were banked."
++
++#### SCENARIO-REPORT-5176-BLOCKED-NO-VALIDATED-LEVER: Upstream Nulls Stop The Attempt
++
++**Given** Exp 5174 is re-scoped rather than a fixable live wiring gap and Exp
++5175 banks no level and has no state-expansion reduction
++**When** Exp 5176 builds its artifact
++**Then** it sets `lever_used="none_available"`, records registry-prechecked
++target depths, sets `reproducible_levels_delta=0`, emits an `honest_verdict`
++that starts with `complete_` and says zero levels were banked, and names MAP
++(`arXiv:2605.13037`) as the next direction.
++
++#### SCENARIO-REPORT-5176-VALIDATED-LEVER-SELECTION: Direct Banks Or State Wins Unlock Attempts
++
++**Given** Exp 5175 reports a reproduce-gated bank or a clear state-expansion
++reduction, or Exp 5174 reports a real fixable wiring gap
++**When** Exp 5176 evaluates available levers
++**Then** it selects `exp5175`, `exp5174`, or `both` accordingly and never marks
++`live_agent_self_discovery` unless the live path actually discovered the level
++at runtime.
++
+ ## Implementation Status (REQ-REPORT-5156)
+ 
+ | Requirement | Implementation | Tests |
+@@ -991,6 +1060,12 @@ and `verifier_is_oracle=false`.
+ |---|---|---|
+ | REQ-REPORT-5175 | Implemented (`python/carnot/experiment_5175_gap4891_relational_mask_pruner_ab_v474.py`, `results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json`) | Implemented (`tests/python/test_experiment_5175_gap4891_relational_mask_pruner_ab_v474.py`) |
+ 
++## Implementation Status (REQ-REPORT-5176)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5176 | Implemented (`python/carnot/experiment_5176_deepen_live_levelup_attempt_v474.py`, `results/experiment_5176_deepen_live_levelup_attempt_v474.json`) | Implemented (`tests/python/test_experiment_5176_deepen_live_levelup_attempt_v474.py`) |
++
+ ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
+ 
+ The Exp 5135 workflow SHALL inspect the `V471-PLANNER-REFERENCES` block in
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 39384c75d4..ae98e9a2a5 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 207,
+   "code_violations": 0,
+-  "experiments_checked": 4164,
++  "experiments_checked": 4165,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5176_deepen_live_levelup_attempt_v474.py b/python/carnot/experiment_5176_deepen_live_levelup_attempt_v474.py
+new file mode 100644
+index 0000000000..17af597f7e
+--- /dev/null
++++ b/python/carnot/experiment_5176_deepen_live_levelup_attempt_v474.py
+@@ -0,0 +1,197 @@
++"""Exp 5176: B1/B2-gated deepen live level-up attempt.
++
++Spec refs: REQ-REPORT-5176,
++SCENARIO-REPORT-5176-BLOCKED-NO-VALIDATED-LEVER,
++SCENARIO-REPORT-5176-VALIDATED-LEVER-SELECTION.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import yaml
++
++
++EXPERIMENT = "experiment_5176_deepen_live_levelup_attempt_v474"
++SCHEMA = "carnot.experiment_5176_deepen_live_levelup_attempt_v474.v1"
++RESULT_RELATIVE_PATH = "results/experiment_5176_deepen_live_levelup_attempt_v474.json"
++INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
++DEEPENED_BUT_STUCK = ("ar25", "bp35", "cd82", "cn04", "dc22", "ft09")
++SPEC_REFS = [
++    "REQ-REPORT-5176",
++    "SCENARIO-REPORT-5176-BLOCKED-NO-VALIDATED-LEVER",
++    "SCENARIO-REPORT-5176-VALIDATED-LEVER-SELECTION",
++]
++MAP_NEXT_DIRECTION = (
++    "MAP (arXiv:2605.13037) map-then-act / hierarchical pre-search before "
++    "flat frontier enumeration."
++)
++FIELD_PRINCIPLES = {
++    "lever_used": "one of exp5174 / exp5175 / both / none_available, determined from actual upstream artifacts.",
++    "target_games": "list of {game, level_before, level_attempted} from an immediate registry precheck.",
++    "levels_banked": "Only reproduce()-confirmed levels count.",
++    "reproducible_levels_delta": "the load-bearing ARC metric; zero must be reported plainly.",
++    "live_path_reachable": "true only after the live import closure/orphan lint is clean.",
++    "solve_provenance": "live_agent_self_discovery only if the live E3AgentPolicy path itself made the discovery at runtime.",
++    "next_direction_if_null": "zero-bank artifacts must explicitly name MAP (arXiv:2605.13037) or another evidenced .475 direction.",
++    "verifier_is_oracle": "false for this attempt; reproduction is the executable gate, not a claimed verifier win.",
++    "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm unless a live LLM is actually invoked.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state plainly how many levels were banked.",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def _json_checksum(payload: Any) -> str:
++    encoded = json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
++    return "sha256:" + hashlib.sha256(encoded).hexdigest()
++
++
++def artifact_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _json_checksum(payload)
++
++
++def load_registry_levels(registry_text: str) -> dict[str, int]:
++    loaded = yaml.safe_load(registry_text) or {}
++    rows = loaded.get("games") or []
++    return {
++        str(row["game"]): int(row.get("levels_reproduced", 0) or 0)
++        for row in rows
++        if isinstance(row, Mapping) and row.get("game") in DEEPENED_BUT_STUCK
++    }
++
++
++def _exp5174_has_fixable_gap(exp5174: Mapping[str, Any]) -> bool:
++    recommendation = exp5174.get("gap_status_recommendation") or {}
++    value = str(recommendation.get("value", "") if isinstance(recommendation, Mapping) else "")
++    scope = str(recommendation.get("new_scope", "") if isinstance(recommendation, Mapping) else "")
++    combined = f"{value} {scope}".lower()
++    return "fixable" in combined and "wiring" in combined and "re-scoped" not in combined
++
++
++def _exp5175_banked_levels(exp5175: Mapping[str, Any]) -> list[dict[str, Any]]:
++    return [
++        {
++            "game": str(row.get("game")),
++            "new_level": int(row.get("new_level", 0) or 0),
++            "offline_reproduced": True,
++            "reproducibility_checksum": str(row.get("reproducibility_checksum", "")),
++        }
++        for row in exp5175.get("levels_banked", []) or []
++        if isinstance(row, Mapping) and row.get("offline_reproduced") is True
++    ]
++
++
++def _exp5175_has_state_win(exp5175: Mapping[str, Any]) -> bool:
++    reductions = exp5175.get("states_expanded_reduction_pct") or {}
++    return any(float(value or 0.0) > 0.0 for value in reductions.values())
++
++
++def determine_lever(exp5174: Mapping[str, Any], exp5175: Mapping[str, Any]) -> str:
++    has_5174 = _exp5174_has_fixable_gap(exp5174)
++    has_5175 = bool(_exp5175_banked_levels(exp5175) or _exp5175_has_state_win(exp5175))
++    if has_5174 and has_5175:
++        return "both"
++    if has_5174:
++        return "exp5174"
++    if has_5175:
++        return "exp5175"
++    return "none_available"
++
++
++def select_target_games(
++    registry_levels: Mapping[str, int],
++    exp5175: Mapping[str, Any],
++    *,
++    limit: int = 3,
++) -> list[dict[str, int | str]]:
++    move_pruned_edges = exp5175.get("move_pruned_edges") or {}
++    exp5175_targets = set(exp5175.get("target_games") or [])
++    negative_control = str(exp5175.get("negative_control_game", ""))
++    rows = []
++    for game in DEEPENED_BUT_STUCK:
++        level = int(registry_levels.get(game, 0) or 0)
++        if level <= 0:
++            continue
++        pruned = int(move_pruned_edges.get(game, 0) or 0)
++        direct_signal = game in move_pruned_edges
++        target_priority = 1 if game in exp5175_targets else 0
++        control_penalty = 1 if game == negative_control else 0
++        rows.append((direct_signal, target_priority, pruned, -control_penalty, game, level))
++    direct_rows = [row for row in rows if row[0]]
++    selected = sorted(direct_rows or rows, reverse=True)[: int(limit)]
++    return [
++        {"game": game, "level_before": level, "level_attempted": level + 1}
++        for _direct_signal, _target_priority, _pruned, _control, game, level in selected
++    ]
++
++
++def _verdict(delta: int, lever_used: str) -> str:
++    if delta == 0:
++        return "complete_blocked_no_validated_lever_from_b1_b2_zero_levels_banked"
++    if delta == 1:
++        return f"success_one_level_banked_with_{lever_used}"
++    return f"success_{delta}_level_banked_with_{lever_used}"
++
++
++def build_artifact(
++    *,
++    exp5174: Mapping[str, Any],
++    exp5175: Mapping[str, Any],
++    registry_levels: Mapping[str, int],
++    live_path_reachable: bool,
++    arc_orphan_solver_lint: Mapping[str, Any],
++    duration_s: float,
++) -> dict[str, Any]:
++    lever_used = determine_lever(exp5174, exp5175)
++    levels_banked = _exp5175_banked_levels(exp5175) if lever_used in {"exp5175", "both"} else []
++    delta = len(levels_banked)
++    blocked = lever_used == "none_available"
++    artifact: dict[str, Any] = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "lever_used": lever_used,
++        "target_games": select_target_games(registry_levels, exp5175, limit=3),
++        "levels_banked": levels_banked,
++        "reproducible_levels_delta": delta,
++        "live_path_reachable": bool(live_path_reachable),
++        "solve_provenance": (
++            "not_applicable_blocked_no_runtime_discovery" if blocked else "development_proxy"
++        ),
++        "next_direction_if_null": MAP_NEXT_DIRECTION if delta == 0 else "",
++        "verifier_is_oracle": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _verdict(delta, lever_used),
++        "preconditions_checked": {
++            "exp5174_read_directly": True,
++            "exp5175_read_directly": True,
++            "registry_prechecked": True,
++            "stopped_before_levelup_attempt": blocked,
++        },
++        "upstream_lever_assessment": {
++            "exp5174_fixable_live_wiring_gap": _exp5174_has_fixable_gap(exp5174),
++            "exp5175_reproduce_gated_levels": len(_exp5175_banked_levels(exp5175)),
++            "exp5175_state_expansion_win": _exp5175_has_state_win(exp5175),
++            "exp5175_gap4891_status_recommendation": str(
++                exp5175.get("gap4891_status_recommendation", "")
++            ),
++        },
++        "arc_orphan_solver_lint": dict(arc_orphan_solver_lint),
++        "in_scope_candidates": list(DEEPENED_BUT_STUCK),
++        "duration_s": round(float(duration_s), 2),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    return artifact
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index a0e7e13e70..3dedff0105 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-02T22:45:43.195148Z",
+-  "duration_s": 0.06775450706481934,
++  "run_date": "2026-07-03T00:36:00.392624Z",
++  "duration_s": 0.07747292518615723,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "f761140d88e7c3e3bff360b658742871b90786d496bbbfbbe4a9b98dc18e6534",
++  "reproducibility_checksum": "ecd187611cea41b754b7ed32789f8eb1624c19cf8d3d259b9de29a63efae3b37",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ef8abd9b911aeb0241b8d3137d4e4b9a5d22219f"
++    "adversarial_verify_version": "91b1b2da9ab181e2e82ac735277adbeecc8f2bc2"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 0be073e4cb..6a61ad6c60 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-02T22:45:43.312630Z",
+-  "duration_s": 0.10711169242858887,
++  "run_date": "2026-07-03T00:36:00.502230Z",
++  "duration_s": 0.0995020866394043,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "a136ed3175ce6469c9f2bf36a42cab3f2eac59c7b9b0341d511c7eb8c2f20d11",
++  "reproducibility_checksum": "9f3850325631061252f69405aee6dd0311695d7e609c28d91b71cfc653b3f99d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ef8abd9b911aeb0241b8d3137d4e4b9a5d22219f"
++    "adversarial_verify_version": "91b1b2da9ab181e2e82ac735277adbeecc8f2bc2"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 09f6a3f8c2..37d5a6855a 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.143383026123047,
++  "efficiency_gains_ms": 2.1195411682128906,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 6693d4d975..8d059ef511 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.314095713198185e-05,
++  "duration_s": 4.0896935388445854e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5176_deepen_live_levelup_attempt_v474.json b/results/experiment_5176_deepen_live_levelup_attempt_v474.json
+new file mode 100644
+index 0000000000..6a8d05c155
+--- /dev/null
++++ b/results/experiment_5176_deepen_live_levelup_attempt_v474.json
+@@ -0,0 +1,62 @@
++{
++  "arc_orphan_solver_lint": {
++    "command": [
++      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "scripts/arc_orphan_solver_lint.py"
++    ],
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n"
++  },
++  "duration_s": 0.67,
++  "experiment": "experiment_5176_deepen_live_levelup_attempt_v474",
++  "honest_verdict": "complete_blocked_no_validated_lever_from_b1_b2_zero_levels_banked",
++  "in_scope_candidates": [
++    "ar25",
++    "bp35",
++    "cd82",
++    "cn04",
++    "dc22",
++    "ft09"
++  ],
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "levels_banked": [],
++  "lever_used": "none_available",
++  "live_path_reachable": true,
++  "next_direction_if_null": "MAP (arXiv:2605.13037) map-then-act / hierarchical pre-search before flat frontier enumeration.",
++  "preconditions_checked": {
++    "exp5174_read_directly": true,
++    "exp5175_read_directly": true,
++    "registry_prechecked": true,
++    "stopped_before_levelup_attempt": true
++  },
++  "reproducibility_checksum": "sha256:c04a051477eeb8eb48f7b9f61c38e41a59fbc28904bcc184823b45d9a6faa287",
++  "reproducible_levels_delta": 0,
++  "schema": "carnot.experiment_5176_deepen_live_levelup_attempt_v474.v1",
++  "solve_provenance": "not_applicable_blocked_no_runtime_discovery",
++  "spec_refs": [
++    "REQ-REPORT-5176",
++    "SCENARIO-REPORT-5176-BLOCKED-NO-VALIDATED-LEVER",
++    "SCENARIO-REPORT-5176-VALIDATED-LEVER-SELECTION"
++  ],
++  "target_games": [
++    {
++      "game": "cd82",
++      "level_attempted": 3,
++      "level_before": 2
++    },
++    {
++      "game": "cn04",
++      "level_attempted": 4,
++      "level_before": 3
++    }
++  ],
++  "upstream_lever_assessment": {
++    "exp5174_fixable_live_wiring_gap": false,
++    "exp5175_gap4891_status_recommendation": "building_with_new_lever_named",
++    "exp5175_reproduce_gated_levels": 0,
++    "exp5175_state_expansion_win": false
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index f50e70c64f..6c899cd150 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260703",
+-  "started_at": "2026-07-03T00:00:13Z",
+-  "finished_at": "2026-07-03T00:00:13Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-03T00:35:46Z",
++  "finished_at": "2026-07-03T00:35:46Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d8eda3dcba..4aa42a711e 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260703",
+-  "started_at": "2026-07-03T00:00:13Z",
+-  "finished_at": "2026-07-03T00:00:13Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-03T00:35:46Z",
++  "finished_at": "2026-07-03T00:35:46Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 50520efd18..898440232c 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260703",
+-  "started_at": "2026-07-03T00:00:13Z",
+-  "finished_at": "2026-07-03T00:00:13Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-03T00:35:46Z",
++  "finished_at": "2026-07-03T00:35:46Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5176_deepen_live_levelup_attempt_v474.py b/tests/python/test_experiment_5176_deepen_live_levelup_attempt_v474.py
+new file mode 100644
+index 0000000000..1234e418bf
+--- /dev/null
++++ b/tests/python/test_experiment_5176_deepen_live_levelup_attempt_v474.py
+@@ -0,0 +1,214 @@
++"""Tests for Exp 5176 B1/B2-gated ARC deepen live level-up attempt.
++
++Spec refs: REQ-REPORT-5176,
++SCENARIO-REPORT-5176-BLOCKED-NO-VALIDATED-LEVER,
++SCENARIO-REPORT-5176-VALIDATED-LEVER-SELECTION.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++from carnot import experiment_5176_deepen_live_levelup_attempt_v474 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++EXP5174_PATH = REPO / "results" / "experiment_5174_gap_live_integration_reconciliation_v474.json"
++EXP5175_PATH = REPO / "results" / "experiment_5175_gap4891_relational_mask_pruner_ab_v474.json"
++REGISTRY_PATH = REPO / "ops" / "arc_solve_registry.yaml"
++
++
++def _exp5174(value: str = "re-scoped") -> dict:
++    return {"gap_status_recommendation": {"value": value}}
++
++
++def _exp5175(
++    *,
++    levels_banked: list[dict] | None = None,
++    reduction: float = 0.0,
++    pruned_edges: int = 0,
++) -> dict:
++    return {
++        "levels_banked": levels_banked or [],
++        "gap4891_status_recommendation": "building_with_new_lever_named",
++        "states_expanded_reduction_pct": {"cd82": reduction, "cn04": 0.0},
++        "move_pruned_edges": {"cd82": pruned_edges, "cn04": 3},
++        "target_games": ["cd82", "sk48", "sp80"],
++        "negative_control_game": "cn04",
++        "per_game": [
++            {
++                "game": "cd82",
++                "pruned": {"pruner_stats": {"pruned": pruned_edges}},
++                "unpruned": {"states_expanded": 4000},
++            },
++            {
++                "game": "cn04",
++                "pruned": {"pruner_stats": {"pruned": 3}},
++                "unpruned": {"states_expanded": 4000},
++            },
++        ],
++    }
++
++
++def _registry_text() -> str:
++    return """schema_version: 1
++games:
++- game: ar25
++  levels_reproduced: 3
++- game: bp35
++  levels_reproduced: 2
++- game: cd82
++  levels_reproduced: 2
++- game: cn04
++  levels_reproduced: 3
++- game: dc22
++  levels_reproduced: 2
++- game: ft09
++  levels_reproduced: 3
++"""
++
++
++def test_req_report_5176_spec_declares_required_artifact_contract() -> None:
++    """REQ-REPORT-5176: OpenSpec declares the Exp5176 artifact fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-5176" in spec
++    assert "SCENARIO-REPORT-5176-BLOCKED-NO-VALIDATED-LEVER" in spec
++    assert "SCENARIO-REPORT-5176-VALIDATED-LEVER-SELECTION" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_scenario_report_5176_blocked_no_validated_lever_from_actual_upstreams() -> None:
++    """SCENARIO-REPORT-5176-BLOCKED-NO-VALIDATED-LEVER: actual B1/B2 nulls stop."""
++
++    exp5174 = json.loads(EXP5174_PATH.read_text(encoding="utf-8"))
++    exp5175 = json.loads(EXP5175_PATH.read_text(encoding="utf-8"))
++    registry_levels = mod.load_registry_levels(REGISTRY_PATH.read_text(encoding="utf-8"))
++
++    artifact = mod.build_artifact(
++        exp5174=exp5174,
++        exp5175=exp5175,
++        registry_levels=registry_levels,
++        live_path_reachable=True,
++        arc_orphan_solver_lint={"passed": True},
++        duration_s=1.0,
++    )
++
++    assert artifact["lever_used"] == "none_available"
++    assert artifact["target_games"] == [
++        {"game": "cd82", "level_before": 2, "level_attempted": 3},
++        {"game": "cn04", "level_before": 3, "level_attempted": 4},
++    ]
++    assert artifact["levels_banked"] == []
++    assert artifact["reproducible_levels_delta"] == 0
++    assert artifact["live_path_reachable"] is True
++    assert artifact["solve_provenance"] == "not_applicable_blocked_no_runtime_discovery"
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["preconditions_checked"]["stopped_before_levelup_attempt"] is True
++    assert "MAP (arXiv:2605.13037)" in artifact["next_direction_if_null"]
++    assert artifact["honest_verdict"].startswith("complete_")
++    assert "zero_levels_banked" in artifact["honest_verdict"]
++    assert artifact["reproducibility_checksum"] == mod.artifact_checksum(artifact)
++
++
++def test_scenario_report_5176_validated_lever_selection_cases() -> None:
++    """SCENARIO-REPORT-5176-VALIDATED-LEVER-SELECTION: banks or state wins unlock."""
++
++    assert mod.determine_lever(_exp5174(), _exp5175()) == "none_available"
++    assert mod.determine_lever(_exp5174("fixable_live_path_wiring_gap"), _exp5175()) == "exp5174"
++    assert (
++        mod.determine_lever(
++            _exp5174(),
++            _exp5175(
++                levels_banked=[
++                    {
++                        "game": "cd82",
++                        "new_level": 3,
++                        "offline_reproduced": True,
++                        "reproducibility_checksum": "sha256:banked",
++                    }
++                ]
++            ),
++        )
++        == "exp5175"
++    )
++    assert mod.determine_lever(_exp5174(), _exp5175(reduction=12.5)) == "exp5175"
++    assert (
++        mod.determine_lever(
++            _exp5174("fixable_live_path_wiring_gap"),
++            _exp5175(reduction=12.5),
++        )
++        == "both"
++    )
++    assert mod.select_target_games({"cd82": 0, "cn04": 3}, _exp5175(), limit=2) == [
++        {"game": "cn04", "level_before": 3, "level_attempted": 4}
++    ]
++
++
++def test_req_report_5176_artifact_records_banked_counterfactual_without_live_claim() -> None:
++    """REQ-REPORT-5176: reproduce-confirmed upstream banks are counted explicitly."""
++
++    registry_levels = mod.load_registry_levels(_registry_text())
++    banked = {
++        "game": "cd82",
++        "new_level": 3,
++        "offline_reproduced": True,
++        "reproducibility_checksum": "sha256:banked",
++    }
++    artifact = mod.build_artifact(
++        exp5174=_exp5174(),
++        exp5175=_exp5175(levels_banked=[copy.deepcopy(banked)], pruned_edges=9),
++        registry_levels=registry_levels,
++        live_path_reachable=True,
++        arc_orphan_solver_lint={"passed": True},
++        duration_s=2.0,
++    )
++
++    assert artifact["lever_used"] == "exp5175"
++    assert artifact["levels_banked"] == [banked]
++    assert artifact["reproducible_levels_delta"] == 1
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["next_direction_if_null"] == ""
++    assert artifact["preconditions_checked"]["stopped_before_levelup_attempt"] is False
++    assert artifact["honest_verdict"].startswith("success_")
++    assert "one_level_banked" in artifact["honest_verdict"]
++
++    two_banks = [copy.deepcopy(banked), {**copy.deepcopy(banked), "game": "cn04", "new_level": 4}]
++    plural = mod.build_artifact(
++        exp5174=_exp5174(),
++        exp5175=_exp5175(levels_banked=two_banks, pruned_edges=9),
++        registry_levels=registry_levels,
++        live_path_reachable=True,
++        arc_orphan_solver_lint={"passed": True},
++        duration_s=2.0,
++    )
++
++    assert plural["reproducible_levels_delta"] == 2
++    assert plural["honest_verdict"].startswith("success_2_level_banked")
++
++
++def test_req_report_5176_write_artifact_is_stable(tmp_path: Path) -> None:
++    """REQ-REPORT-5176: the terminal JSON artifact is reproducibly written."""
++
++    artifact = mod.build_artifact(
++        exp5174=_exp5174(),
++        exp5175=_exp5175(),
++        registry_levels=mod.load_registry_levels(_registry_text()),
++        live_path_reachable=False,
++        arc_orphan_solver_lint={"passed": False},
++        duration_s=0.5,
++    )
++
++    written = mod.write_artifact(tmp_path, artifact)
++    loaded = json.loads(written.read_text(encoding="utf-8"))
++
++    assert written == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert loaded == artifact
+-- 
+2.55.0
+

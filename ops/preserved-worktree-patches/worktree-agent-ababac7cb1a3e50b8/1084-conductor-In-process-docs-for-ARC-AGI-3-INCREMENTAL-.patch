@@ -1,0 +1,48 @@
+From 47ae93a07ca045de85ba0868d33746b4a37b6730 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 02:22:59 -0400
+Subject: [PATCH 01084/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20ARC-AGI-3=20INCREMENTAL=20LEVELS=20via=20VERIFIER-VALIDATE?=
+ =?UTF-8?q?D=20re-induction=20(the=20L2-wall=20fix;=20+1=20level=20per=20t?=
+ =?UTF-8?q?he=20MANDATORY=20Incremental-Progress=20rule):=20exp3980=20diag?=
+ =?UTF-8?q?nosed=20that=20r11l=20L2=20needs=20a=20DIFFERENT=20rule=20than?=
+ =?UTF-8?q?=20L1=20(a=20collision-forbidden=20mask)=20but=20could=20not=20?=
+ =?UTF-8?q?solve=20it=20open-loop.=20RE-INDUCE=20the=20L2=20rule=20from=20?=
+ =?UTF-8?q?L2=20observations=20AND=20use=20the=20GAP-4=20execution=20verif?=
+ =?UTF-8?q?ier=20(demo-fit=20+=20executed-consistency=20on=20held-out=20L2?=
+ =?UTF-8?q?=20transitions)=20to=20VALIDATE=20the=20candidate=20L2=20rule?=
+ =?UTF-8?q?=20BEFORE=20committing=20the=20action=20sequence=20=E2=80=94=20?=
+ =?UTF-8?q?the=20verifier's=20efficiency=20value=20applied=20to=20a=20real?=
+ =?UTF-8?q?=20solve.=20For=20ONE=20game=20that=20re-induces=20(r11l,=20or?=
+ =?UTF-8?q?=20lp85/sc25=20if=20easier),=20advance=20from=20L1=20to=20L2=20?=
+ =?UTF-8?q?(and=20L3=20if=20reached),=20re-perceiving=20+=20re-inducing=20?=
+ =?UTF-8?q?+=20verifier-validating=20per=20level.=20Report=20ACCURACY=5Fle?=
+ =?UTF-8?q?vels=5Fsolved=20+=20new=5Flevels=5Fsolved=5Fthis=5Ftask=20(the?=
+ =?UTF-8?q?=20monotonic=20counter=20the=20milestone=20must=20raise=20past?=
+ =?UTF-8?q?=20the=20banked=203xL1).=20Real-env-confirmed;=20solving=20only?=
+ =?UTF-8?q?=20L1=20again=20is=20an=20honest=20no-regression=20complete,=20?=
+ =?UTF-8?q?NOT=20a=20fabricated=20higher=20level.=20retire=5Fif=5Fsame=5Fv?=
+ =?UTF-8?q?erdict:=20a=20SECOND=20L2-wall-holds=20across=20two=20distinct?=
+ =?UTF-8?q?=20approaches=20bounds=20the=20offline=20L2=20solve=20for=20tha?=
+ =?UTF-8?q?t=20game.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 00ac70d80a..5edd21dbdc 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8867,3 +8867,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - **Headline finding — detector_gap_suspected=true, 5th consecutive false zero (.363/.365/.366/.367/.368).** The zero is a known milestone->commit detector artifact, NOT an empty milestone: ~10 .368 artifacts exist on disk and in this changelog (exp3975 GAP-4 build, exp3976 trm-rerank, exp3978 verifier-vs-judge efficiency win, exp3979 world-model-gen, exp3980 incremental-levels, exp3981 fourth-game, exp3982 ArcMemo solve-transfer, exp3983 hardware-continuity, exp3984 detector-fix, exp3985 capstone_v368; exp3977 genuinely absent = capstone "missing1").
+ - **Meta-finding:** exp3984 landed `complete: retro_commit_detector_fixed_backfill_counts_restored` THIS SAME MILESTONE, yet this retro still received a zero timing block — so the fix is NOT verified end-to-end on the live retro-timing feed. Top-3 highest-leverage actions: (1) prove the exp3984 fix reaches the LIVE retro-timing generator via an end-to-end test over .368 (must report ~10, not 0); (2) wire the detector_gap_suspected self-check into the retro generator so zero-count-with-artifacts fails loud, never silent; (3) add a glob-based experiments_completed fallback (results/experiment_*.json since the activation SHA) as a detector-independent cross-check.
+ - Appended the .368 narrative to `docs/research-log.md`. No edits to operator-curated docs (roadmap.md, index.html, README.md), research_conductor.py, or research-roadmap.yaml.
++- 2026-06-10: ARC-AGI-3 INCREMENTAL LEVELS via VERIFIER-VALIDATED re-induction (the L2-wall fix; +1 level per the MANDATORY Incremental-Progress rule): exp3980 diagnosed that r11l L2 needs a DIFFERENT rule than L1 (a collision-forbidden mask) but could not solve it open-loop. RE-INDUCE the L2 rule from L2 observations AND use the GAP-4 execution verifier (demo-fit + executed-consistency on held-out L2 transitions) to VALIDATE the candidate L2 rule BEFORE committing the action sequence — the verifier's efficiency value applied to a real solve. For ONE game that re-induces (r11l, or lp85/sc25 if easier), advance from L1 to L2 (and L3 if reached), re-perceiving + re-inducing + verifier-validating per level. Report ACCURACY_levels_solved + new_levels_solved_this_task (the monotonic counter the milestone must raise past the banked 3xL1). Real-env-confirmed; solving only L1 again is an honest no-regression complete, NOT a fabricated higher level. retire_if_same_verdict: a SECOND L2-wall-holds across two distinct approaches bounds the offline L2 solve for that game. (⚠️ Research Finding) — honest_verdict=success: verifier_validated_reinduction_advanced_r11l_to_L3; results/experiment_3992_incremental_levels_verifier_validated.json
+-- 
+2.55.0
+

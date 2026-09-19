@@ -1,0 +1,1647 @@
+From b3387fee09a15058f02cfb3daae638c147ee0a6c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 22:13:08 -0400
+Subject: [PATCH 01867/11362] [conductor] PHASE A2 (THE HEADLINE GATE, gated_on
+ A1 selector_trained) -- does the ORACLE-DISTINCT learned ARC verifier BEAT
+ majority vote OFF-ORACLE? On a HELD-OUT ARC split (disjoint from A1 folds),
+ rerank with the A1 learned verifier (verifier_is_oracle=false; does NOT
+ execute demos) vs majority-vote vs a MATCHED no-verifier control (same
+ candidates/budget) vs oracle@K (the positive-control ceiling) vs an ARBITER
+ conservative-override arm (keep vote unless the learned margin clears a fixed
+ threshold, arXiv:2605.26172 / AggLM 2509.06870). The LOAD-BEARING gate:
+ verifier@1 - vote@1, bootstrap CI95 EXCLUDES 0 AND headroom exists. YES ->
+ the first oracle-distinct verifier win (closes GAP-3-ties-vote; informs the
+ DiffusionGemma gate). TIE-with-headroom -> honest null. No-headroom ->
+ uninformative (FALSE_NEGATIVE_RISK, not a verifier failure).
+
+Automated research step by research conductor.
+Task ID: exp4221-oracle-distinct-arc-verifier-beats-vote
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  92 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../oracle_distinct_arc_verifier_4221.py      | 644 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...acle_distinct_arc_verifier_beats_vote.json | 270 ++++++++
+ ...oracle_distinct_arc_verifier_beats_vote.py |  23 +
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...oracle_distinct_arc_verifier_beats_vote.py | 402 +++++++++++
+ 13 files changed, 1449 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/reporting/oracle_distinct_arc_verifier_4221.py
+ create mode 100644 results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json
+ create mode 100644 results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.py
+ create mode 100644 tests/python/test_experiment_4221_oracle_distinct_arc_verifier_beats_vote.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 709ed2a712..108609b392 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -14314,6 +14314,98 @@ not importable, when Exp 4220 runs, then it writes
+ `wrong_majority_n=0`, `verifier_is_oracle=false`, leaves
+ `learned_verifier_path` empty, and stops before training.
+ 
++### REQ-VERIFY-4221: Oracle-Distinct ARC Verifier Beats-Vote Gate
++
++The repository SHALL provide
++`python/carnot/reporting/oracle_distinct_arc_verifier_4221.py` and
++`results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.py` to run the
++held-out ARC rerank gate for the learned verifier built by Exp 4220. The runner
++SHALL first read
++`results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json`; if
++`selector_trained` is not the bare bool `true`, if `verifier_is_oracle` is not
++the bare bool `false`, or if `learned_verifier_path` is absent or unreadable,
++it SHALL write
++`honest_verdict=complete_oracle_distinct_arc_gate_deferred_no_built_verifier`,
++`oracle_distinct_beats_vote=false`, `verifier_is_oracle=false`, and SHALL stop
++before measuring the gate.
++
++When the Exp 4220 verifier is available, the runner SHALL rebuild the held-out
++ARC candidate pool from `results/arc3_gap3_stage2_eval_pool.json.gz` and
++`results/arc3_gap4_induced_programs.json` using the Exp 4220 label path. The
++measured learned score SHALL be oracle-distinct: it MAY use Exp 4220
++out-of-fold learned scores whose `train_task_ids` exclude the scored task, or
++the persisted learned verifier coefficients, but it SHALL NOT execute demos,
++call a GAP execution verifier, or use candidate correctness as an inference
++rank key.
++
++For each ARC task the runner SHALL compute `vote@1` as the majority candidate,
++`verifier@1` as the candidate maximizing the learned score, `oracle@K` as any
++candidate exactly correct, a budget-matched no-verifier control using the same
++candidates with a deterministic first-of-K policy, and an ARBITER-style
++conservative override that keeps the vote candidate unless the learned-score
++margin between the learned top-1 candidate and the vote candidate clears a
++fixed pre-registered threshold. It SHALL report task-level pass rates and a
++task-bootstrap CI95 with at least 2000 resamples for `verifier@1 - vote@1`.
++
++The positive control SHALL be evaluated before interpreting a null. If
++`oracle@K` does not exceed `vote@1`, the terminal verdict SHALL be
++`oracle_distinct_arc_no_headroom_uninformative` and the artifact SHALL NOT claim
++that the verifier failed. Otherwise, the bare bool
++`oracle_distinct_beats_vote` SHALL be true only when headroom exists,
++`verifier@1 - vote@1` is positive, and its CI95 excludes zero. A headroom-present
++run with a non-exclusive CI SHALL report
++`oracle_distinct_verifier_ties_vote_with_headroom`. The runner SHALL run
++`scripts/adversarial_verify.py` on the written artifact and SHALL keep
++`verifier_is_oracle=false` so `CIRCULAR_MOAT_OVERCLAIM` remains clean.
++
++The terminal artifact SHALL write
++`results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json` with
++required fields `honest_verdict`, bare bool `oracle_distinct_beats_vote`, bare
++float `verifier_minus_vote_delta`, `verifier_minus_vote_ci95`, bare float
++`arbiter_override_minus_vote`, bare float `oracle_at_k`, bare float
++`matched_control_delta`, bare bool `verifier_is_oracle=false`, bare int
++`random_seed`, `reproducibility_checksum`, `field_principles`, `spec_refs`, and
++`acceptance_gate`. Its field principles SHALL include:
++`honest_verdict` = `Terminal-prefixed. A clean beats-vote win, a clean ties-vote-with-headroom null, and an honest no-headroom-uninformative are ALL COMPLETE -- the first clean read on the oracle-distinct frontier either way (this time the gate RAN).`;
++`oracle_distinct_beats_vote` = `BARE bool: verifier@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); NOT a circular execution result.`;
++`verifier_minus_vote_delta` = `verifier@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards.`;
++`verifier_minus_vote_ci95` = `Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise.`;
++`arbiter_override_minus_vote` = `Conservative-override (keep vote unless high learned margin) minus vote -- the ARBITER 2605.26172 deployment pattern; can win where a flat rerank loses by overriding only on confident cases.`;
++`oracle_at_k` = `The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure.`;
++`matched_control_delta` = `verifier@1 minus the budget-matched no-verifier control -- isolates the verifier's contribution from the candidate budget (arXiv:2511.02886).`;
++`verifier_is_oracle` = `BARE bool=false -- this measurement uses the LEARNED verifier (no demo execution); only this makes the result headline/gate-eligible (Circularity Discipline; adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean).`;
++`random_seed` = `Determinism precondition; the held-out split + bootstrap must be reproducible.`;
++`reproducibility_checksum` = `Hash of the held-out pool + the learned verifier; lets a third party re-run the decisive gate.`
++
++### SCENARIO-VERIFY-4221: Held-Out Learned Verifier Beats Vote With Headroom
++
++Given Exp 4220 reports `selector_trained=true`, `verifier_is_oracle=false`, and
++a readable `learned_verifier_path`, and the rebuilt ARC pool has
++`oracle@K > vote@1`, when Exp 4221 runs, then it reports vote, learned verifier,
++oracle, matched-control, and ARBITER override task pass rates, computes
++`verifier_minus_vote_delta` and a CI95 with at least 2000 bootstrap resamples,
++sets `oracle_distinct_beats_vote` to true only for a positive CI-exclusive
++learned lift, keeps `verifier_is_oracle=false`, records the fixed override
++threshold, writes the required field principles and checksum, and runs
++adversarial verification without a `CIRCULAR_MOAT_OVERCLAIM` flag.
++
++### SCENARIO-VERIFY-4221-NO-HEADROOM: Positive Control Blocks False Negative
++
++Given the held-out ARC pool has `oracle@K` equal to `vote@1`, when Exp 4221
++runs, then it still reports the measured deltas and controls, but writes an
++honest no-headroom-uninformative verdict, sets
++`oracle_distinct_beats_vote=false`, and does not claim that the learned verifier
++failed.
++
++### SCENARIO-VERIFY-4221-DEFERRED: Missing Built Verifier Defers Honestly
++
++Given Exp 4220 is missing, reports `selector_trained=false`, reports
++`verifier_is_oracle=true`, or points at an unreadable learned verifier, when Exp
++4221 runs, then it writes
++`honest_verdict=complete_oracle_distinct_arc_gate_deferred_no_built_verifier`,
++sets `oracle_distinct_beats_vote=false`, keeps `verifier_is_oracle=false`, and
++stops before measuring ARC candidates.
++
+ ### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
+ 
+ The repository SHALL provide
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5de4bec049..318e39e2b9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 175,
+   "code_violations": 0,
+-  "experiments_checked": 3240,
++  "experiments_checked": 3241,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/oracle_distinct_arc_verifier_4221.py b/python/carnot/reporting/oracle_distinct_arc_verifier_4221.py
+new file mode 100644
+index 0000000000..f5a31647aa
+--- /dev/null
++++ b/python/carnot/reporting/oracle_distinct_arc_verifier_4221.py
+@@ -0,0 +1,644 @@
++"""Exp 4221 held-out ARC learned-verifier rerank gate.
++
++Spec refs: REQ-VERIFY-4221, SCENARIO-VERIFY-4221,
++SCENARIO-VERIFY-4221-NO-HEADROOM, SCENARIO-VERIFY-4221-DEFERRED.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import random
++import subprocess
++import sys
++import time
++from collections import defaultdict
++from collections.abc import Callable
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any
++
++from carnot.reporting import oracle_distinct_arc_verifier_4220 as exp4220
++
++
++RANDOM_SEED = 4221
++BOOTSTRAP_RESAMPLES = 2000
++ARBITER_MARGIN_THRESHOLD = 0.10
++A1_REL = Path("results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json")
++OUTPUT_REL = Path("results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json")
++SPEC_REFS = [
++    "REQ-VERIFY-4221",
++    "SCENARIO-VERIFY-4221",
++    "SCENARIO-VERIFY-4221-NO-HEADROOM",
++    "SCENARIO-VERIFY-4221-DEFERRED",
++]
++INFERENCE_SUBSTRATE = "cached_gap_arc_pool_oof_learned_verifier_rerank"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. A clean beats-vote win, a clean ties-vote-with-headroom "
++        "null, and an honest no-headroom-uninformative are ALL COMPLETE -- the first "
++        "clean read on the oracle-distinct frontier either way (this time the gate RAN)."
++    ),
++    "oracle_distinct_beats_vote": (
++        "BARE bool: verifier@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom "
++        "exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); "
++        "NOT a circular execution result."
++    ),
++    "verifier_minus_vote_delta": (
++        "verifier@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers "
++        "the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards."
++    ),
++    "verifier_minus_vote_ci95": (
++        "Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes "
++        "a real oracle-distinct win from noise."
++    ),
++    "arbiter_override_minus_vote": (
++        "Conservative-override (keep vote unless high learned margin) minus vote -- "
++        "the ARBITER 2605.26172 deployment pattern; can win where a flat rerank loses "
++        "by overriding only on confident cases."
++    ),
++    "oracle_at_k": (
++        "The positive-control ceiling (any candidate exactly correct) -- if oracle@K "
++        "~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure."
++    ),
++    "matched_control_delta": (
++        "verifier@1 minus the budget-matched no-verifier control -- isolates the "
++        "verifier's contribution from the candidate budget (arXiv:2511.02886)."
++    ),
++    "verifier_is_oracle": (
++        "BARE bool=false -- this measurement uses the LEARNED verifier (no demo "
++        "execution); only this makes the result headline/gate-eligible (Circularity "
++        "Discipline; adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean)."
++    ),
++    "random_seed": (
++        "Determinism precondition; the held-out split + bootstrap must be reproducible."
++    ),
++    "reproducibility_checksum": (
++        "Hash of the held-out pool + the learned verifier; lets a third party re-run "
++        "the decisive gate."
++    ),
++}
++
++REQUIRED_FIELDS = (
++    "honest_verdict",
++    "oracle_distinct_beats_vote",
++    "verifier_minus_vote_delta",
++    "verifier_minus_vote_ci95",
++    "arbiter_override_minus_vote",
++    "oracle_at_k",
++    "matched_control_delta",
++    "verifier_is_oracle",
++    "random_seed",
++    "reproducibility_checksum",
++    "field_principles",
++    "spec_refs",
++    "acceptance_gate",
++)
++
++DEFERRED_VERDICT = "complete_oracle_distinct_arc_gate_deferred_no_built_verifier"
++
++
++class BlockedRun(RuntimeError):
++    """Expected gate/precondition failure that still writes a terminal artifact."""
++
++    def __init__(self, reason: str) -> None:
++        super().__init__(reason)
++        self.reason = reason
++
++
++@dataclass(frozen=True)
++class ScoredArcCandidate:
++    task_id: str
++    candidate_id: str
++    candidate_index: int
++    vote_weight: float
++    correct: bool
++    learned_score: float
++    verifier_train_task_excluded: bool
++    features: dict[str, float]
++
++
++@dataclass(frozen=True)
++class HeldoutPool:
++    candidates: list[ScoredArcCandidate]
++    pool_path: Path
++    programs_path: Path
++    learned_verifier_path: Path
++    learned_verifier_sha256: str
++    score_source: str
++
++
++def _read_json_object(path: Path) -> dict[str, Any]:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise BlockedRun("blocked_malformed_json_artifact")
++    return payload
++
++
++def _resolve_existing_path(repo_root: Path, value: Any) -> Path:
++    if not isinstance(value, str) or not value:
++        raise BlockedRun(DEFERRED_VERDICT)
++    path = Path(value)
++    resolved = path if path.is_absolute() else repo_root / path
++    if not resolved.exists():
++        raise BlockedRun(DEFERRED_VERDICT)
++    return resolved
++
++
++def _sha256_file(path: Path) -> str:
++    h = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            h.update(chunk)
++    return h.hexdigest()
++
++
++def _load_a1(repo_root: Path) -> tuple[dict[str, Any], dict[str, Any], Path]:
++    a1_path = repo_root / A1_REL
++    if not a1_path.exists():
++        raise BlockedRun(DEFERRED_VERDICT)
++    try:
++        a1_artifact = _read_json_object(a1_path)
++    except Exception as exc:
++        raise BlockedRun(DEFERRED_VERDICT) from exc
++    if a1_artifact.get("selector_trained") is not True:
++        raise BlockedRun(DEFERRED_VERDICT)
++    if a1_artifact.get("verifier_is_oracle") is not False:
++        raise BlockedRun(DEFERRED_VERDICT)
++    verifier_path = _resolve_existing_path(repo_root, a1_artifact.get("learned_verifier_path"))
++    try:
++        verifier = exp4220.load_verifier(verifier_path)
++    except Exception as exc:
++        raise BlockedRun(DEFERRED_VERDICT) from exc
++    if verifier.get("verifier_is_oracle") is not False:
++        raise BlockedRun(DEFERRED_VERDICT)
++    return a1_artifact, verifier, verifier_path
++
++
++def _oof_score_map(verifier: dict[str, Any]) -> dict[str, tuple[float, bool]]:
++    scores: dict[str, tuple[float, bool]] = {}
++    for row in verifier.get("oof_rows", []):
++        if not isinstance(row, dict):
++            continue
++        candidate_id = row.get("candidate_id")
++        task_id = row.get("task_id")
++        train_task_ids = row.get("train_task_ids", [])
++        if not isinstance(candidate_id, str) or not isinstance(task_id, str):
++            continue
++        excluded = isinstance(train_task_ids, list) and task_id not in train_task_ids
++        scores[candidate_id] = (float(row.get("score", 0.0)), excluded)
++    return scores
++
++
++def load_heldout_pool(
++    repo_root: Path | str,
++    verifier: dict[str, Any],
++    verifier_path: Path,
++) -> HeldoutPool:
++    """SCENARIO-VERIFY-4221: rebuild ARC rows and attach learned held-out scores."""
++
++    root = Path(repo_root)
++    corpus = exp4220.load_labeled_arc_pool(root)
++    oof_scores = _oof_score_map(verifier)
++    candidates: list[ScoredArcCandidate] = []
++    used_oof = 0
++    for row in corpus.rows:
++        if row.candidate_id in oof_scores:
++            learned_score, excluded = oof_scores[row.candidate_id]
++            used_oof += 1
++        else:
++            learned_score = exp4220.score_with_verifier(verifier, row.features)
++            excluded = False
++        candidates.append(
++            ScoredArcCandidate(
++                task_id=row.task_id,
++                candidate_id=row.candidate_id,
++                candidate_index=row.candidate_index,
++                vote_weight=row.vote_weight,
++                correct=row.correct,
++                learned_score=learned_score,
++                verifier_train_task_excluded=excluded,
++                features=row.features,
++            )
++        )
++    if not candidates:
++        raise BlockedRun("complete_oracle_distinct_arc_no_headroom_uninformative")
++    score_source = "exp4220_oof_scores" if used_oof == len(candidates) else "persisted_verifier_scores"
++    return HeldoutPool(
++        candidates=candidates,
++        pool_path=corpus.pool_path,
++        programs_path=corpus.programs_path,
++        learned_verifier_path=verifier_path.resolve(),
++        learned_verifier_sha256=_sha256_file(verifier_path),
++        score_source=score_source,
++    )
++
++
++def _group_by_task(candidates: list[ScoredArcCandidate]) -> list[list[ScoredArcCandidate]]:
++    grouped: dict[str, list[ScoredArcCandidate]] = defaultdict(list)
++    for candidate in candidates:
++        grouped[candidate.task_id].append(candidate)
++    return [
++        sorted(task_candidates, key=lambda candidate: candidate.candidate_index)
++        for _, task_candidates in sorted(grouped.items())
++    ]
++
++
++def _select_vote(task_candidates: list[ScoredArcCandidate]) -> ScoredArcCandidate:
++    return max(
++        task_candidates,
++        key=lambda candidate: (candidate.vote_weight, -candidate.candidate_index),
++    )
++
++
++def _select_verifier(task_candidates: list[ScoredArcCandidate]) -> ScoredArcCandidate:
++    return max(
++        task_candidates,
++        key=lambda candidate: (
++            candidate.learned_score,
++            candidate.vote_weight,
++            -candidate.candidate_index,
++        ),
++    )
++
++
++def _select_first(task_candidates: list[ScoredArcCandidate]) -> ScoredArcCandidate:
++    return min(task_candidates, key=lambda candidate: candidate.candidate_index)
++
++
++def _select_arbiter(
++    task_candidates: list[ScoredArcCandidate], margin_threshold: float
++) -> ScoredArcCandidate:
++    vote_pick = _select_vote(task_candidates)
++    learned_pick = _select_verifier(task_candidates)
++    margin = learned_pick.learned_score - vote_pick.learned_score
++    if learned_pick.candidate_id != vote_pick.candidate_id and margin >= margin_threshold:
++        return learned_pick
++    return vote_pick
++
++
++def _rate(values: list[bool]) -> float:
++    return sum(values) / float(len(values)) if values else 0.0
++
++
++def _round_metric(value: float) -> float:
++    return round(float(value), 10)
++
++
++def _bootstrap_ci95(deltas: list[float], *, random_seed: int, resamples: int) -> list[float]:
++    if not deltas:
++        return [0.0, 0.0]
++    rng = random.Random(random_seed)
++    n = len(deltas)
++    means = [
++        sum(deltas[rng.randrange(n)] for _ in range(n)) / float(n)
++        for _ in range(int(resamples))
++    ]
++    means.sort()
++    return [
++        _round_metric(means[int(0.025 * (len(means) - 1))]),
++        _round_metric(means[int(0.975 * (len(means) - 1))]),
++    ]
++
++
++def _ci_excludes_zero(ci95: list[float]) -> bool:
++    return bool(len(ci95) == 2 and (ci95[0] > 0.0 or ci95[1] < 0.0))
++
++
++def _measure_pool(
++    pool: HeldoutPool,
++    *,
++    random_seed: int,
++    bootstrap_resamples: int,
++    margin_threshold: float,
++) -> dict[str, Any]:
++    tasks = _group_by_task(pool.candidates)
++    task_rows: list[dict[str, Any]] = []
++    deltas_verifier_vote: list[float] = []
++    deltas_verifier_control: list[float] = []
++    deltas_arbiter_vote: list[float] = []
++    oracle_hits: list[bool] = []
++    vote_hits: list[bool] = []
++    verifier_hits: list[bool] = []
++    control_hits: list[bool] = []
++    arbiter_hits: list[bool] = []
++    for task_candidates in tasks:
++        vote_pick = _select_vote(task_candidates)
++        verifier_pick = _select_verifier(task_candidates)
++        control_pick = _select_first(task_candidates)
++        arbiter_pick = _select_arbiter(task_candidates, margin_threshold)
++        oracle_hit = any(candidate.correct for candidate in task_candidates)
++        vote_hit = vote_pick.correct
++        verifier_hit = verifier_pick.correct
++        control_hit = control_pick.correct
++        arbiter_hit = arbiter_pick.correct
++        oracle_hits.append(oracle_hit)
++        vote_hits.append(vote_hit)
++        verifier_hits.append(verifier_hit)
++        control_hits.append(control_hit)
++        arbiter_hits.append(arbiter_hit)
++        deltas_verifier_vote.append(float(verifier_hit) - float(vote_hit))
++        deltas_verifier_control.append(float(verifier_hit) - float(control_hit))
++        deltas_arbiter_vote.append(float(arbiter_hit) - float(vote_hit))
++        task_rows.append(
++            {
++                "task_id": vote_pick.task_id,
++                "oracle_hit": oracle_hit,
++                "vote_candidate_id": vote_pick.candidate_id,
++                "vote_correct": vote_hit,
++                "verifier_candidate_id": verifier_pick.candidate_id,
++                "verifier_correct": verifier_hit,
++                "verifier_score_margin_vs_vote": _round_metric(
++                    verifier_pick.learned_score - vote_pick.learned_score
++                ),
++                "verifier_train_task_excluded": all(
++                    candidate.verifier_train_task_excluded for candidate in task_candidates
++                ),
++                "matched_control_candidate_id": control_pick.candidate_id,
++                "matched_control_correct": control_hit,
++                "arbiter_candidate_id": arbiter_pick.candidate_id,
++                "arbiter_correct": arbiter_hit,
++            }
++        )
++    vote_at_1 = _rate(vote_hits)
++    verifier_at_1 = _rate(verifier_hits)
++    oracle_at_k = _rate(oracle_hits)
++    control_at_1 = _rate(control_hits)
++    arbiter_at_1 = _rate(arbiter_hits)
++    verifier_minus_vote = _round_metric(verifier_at_1 - vote_at_1)
++    ci95 = _bootstrap_ci95(
++        deltas_verifier_vote,
++        random_seed=random_seed,
++        resamples=bootstrap_resamples,
++    )
++    matched_control_delta = _round_metric(
++        sum(deltas_verifier_control) / float(len(deltas_verifier_control))
++        if deltas_verifier_control
++        else 0.0
++    )
++    arbiter_delta = _round_metric(
++        sum(deltas_arbiter_vote) / float(len(deltas_arbiter_vote))
++        if deltas_arbiter_vote
++        else 0.0
++    )
++    headroom_exists = oracle_at_k > vote_at_1
++    beats_vote = bool(headroom_exists and verifier_minus_vote > 0.0 and ci95[0] > 0.0)
++    if not headroom_exists:
++        headline = "oracle_distinct_arc_no_headroom_uninformative"
++    elif beats_vote:
++        headline = "oracle_distinct_verifier_beats_vote"
++    else:
++        headline = "oracle_distinct_verifier_ties_vote_with_headroom"
++    return {
++        "headline_outcome": headline,
++        "honest_verdict": f"complete: {headline}",
++        "oracle_distinct_beats_vote": beats_vote,
++        "verifier_minus_vote_delta": verifier_minus_vote,
++        "verifier_minus_vote_ci95": ci95,
++        "arbiter_override_minus_vote": arbiter_delta,
++        "oracle_at_k": _round_metric(oracle_at_k),
++        "matched_control_delta": matched_control_delta,
++        "pass_rates": {
++            "vote_at_1": _round_metric(vote_at_1),
++            "verifier_at_1": _round_metric(verifier_at_1),
++            "matched_control_at_1": _round_metric(control_at_1),
++            "arbiter_override_at_1": _round_metric(arbiter_at_1),
++        },
++        "oracle_minus_vote": _round_metric(oracle_at_k - vote_at_1),
++        "headroom_exists": headroom_exists,
++        "n_tasks": len(tasks),
++        "candidate_count": len(pool.candidates),
++        "bootstrap_resamples": int(bootstrap_resamples),
++        "arbiter_margin_threshold": float(margin_threshold),
++        "matched_control_policy": "deterministic_first_of_k_no_verifier",
++        "clt_floor_caveat": len(tasks) < 30,
++        "task_rows": task_rows,
++        "ci95_excludes_zero": _ci_excludes_zero(ci95),
++    }
++
++
++def reproducibility_checksum(pool: HeldoutPool, metrics: dict[str, Any], random_seed: int) -> str:
++    payload = {
++        "arbiter_margin_threshold": metrics["arbiter_margin_threshold"],
++        "candidate_scores": [
++            {
++                "candidate_id": candidate.candidate_id,
++                "correct": candidate.correct,
++                "learned_score": _round_metric(candidate.learned_score),
++                "task_id": candidate.task_id,
++                "vote_weight": _round_metric(candidate.vote_weight),
++            }
++            for candidate in pool.candidates
++        ],
++        "learned_verifier_sha256": pool.learned_verifier_sha256,
++        "pool_path": str(pool.pool_path),
++        "programs_path": str(pool.programs_path),
++        "random_seed": int(random_seed),
++        "score_source": pool.score_source,
++    }
++    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def _deferred_artifact(
++    reason: str,
++    *,
++    random_seed: int,
++    checksum: str,
++    duration_s: float,
++) -> dict[str, Any]:
++    headline = reason.replace("complete_", "", 1)
++    return {
++        "experiment": "experiment_4221_oracle_distinct_arc_verifier_beats_vote",
++        "schema": "carnot.oracle_distinct_arc_verifier_4221.v1",
++        "status": "complete",
++        "headline_outcome": headline,
++        "honest_verdict": reason,
++        "oracle_distinct_beats_vote": False,
++        "verifier_minus_vote_delta": 0.0,
++        "verifier_minus_vote_ci95": [0.0, 0.0],
++        "arbiter_override_minus_vote": 0.0,
++        "oracle_at_k": 0.0,
++        "matched_control_delta": 0.0,
++        "verifier_is_oracle": False,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": checksum,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "acceptance_gate": True,
++        "pass_rates": {
++            "vote_at_1": 0.0,
++            "verifier_at_1": 0.0,
++            "matched_control_at_1": 0.0,
++            "arbiter_override_at_1": 0.0,
++        },
++        "oracle_minus_vote": 0.0,
++        "headroom_exists": False,
++        "n_tasks": 0,
++        "candidate_count": 0,
++        "bootstrap_resamples": 0,
++        "arbiter_margin_threshold": ARBITER_MARGIN_THRESHOLD,
++        "matched_control_policy": "deterministic_first_of_k_no_verifier",
++        "clt_floor_caveat": True,
++        "task_rows": [],
++        "ci95_excludes_zero": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(duration_s, 6),
++        "adversarial_verify": {"status": "pending"},
++    }
++
++
++def _complete_artifact(
++    pool: HeldoutPool,
++    metrics: dict[str, Any],
++    *,
++    checksum: str,
++    random_seed: int,
++    duration_s: float,
++) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4221_oracle_distinct_arc_verifier_beats_vote",
++        "schema": "carnot.oracle_distinct_arc_verifier_4221.v1",
++        "status": "complete",
++        **metrics,
++        "verifier_is_oracle": False,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": checksum,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "acceptance_gate": True,
++        "score_source": pool.score_source,
++        "learned_verifier_path": str(pool.learned_verifier_path),
++        "candidate_pool_source": str(pool.pool_path),
++        "induced_programs_source": str(pool.programs_path),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(duration_s, 6),
++        "adversarial_verify": {"status": "pending"},
++    }
++
++
++def _run_adversarial_verify(repo_root: Path, artifact_path: Path) -> dict[str, Any]:  # pragma: no cover
++    proc = subprocess.run(
++        [sys.executable, str(repo_root / "scripts" / "adversarial_verify.py"), "--json", str(artifact_path)],
++        capture_output=True,
++        text=True,
++        timeout=30,
++        check=False,
++    )
++    try:
++        payload = json.loads(proc.stdout)
++    except json.JSONDecodeError:
++        payload = {"stdout": proc.stdout, "stderr": proc.stderr}
++    payload["returncode"] = proc.returncode
++    return payload
++
++
++def _clean_adversarial_report(report: dict[str, Any]) -> dict[str, Any]:
++    flags: list[dict[str, Any]] = []
++    for item in report.get("reports", []):
++        if isinstance(item, dict):
++            flags.extend(flag for flag in item.get("flags", []) if isinstance(flag, dict))
++    circular_clean = not any(flag.get("kind") == "CIRCULAR_MOAT_OVERCLAIM" for flag in flags)
++    return {
++        "status": "clean" if not flags else "flagged",
++        "circular_moat_overclaim_clean": circular_clean,
++        "flag_count": len(flags),
++        "flags": flags,
++        "returncode": int(report.get("returncode", 0) or 0),
++    }
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    missing = [field for field in REQUIRED_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:") or verdict.startswith("complete_")
++    ):
++        raise ValueError("honest_verdict must be terminal-prefixed")
++    if type(artifact["oracle_distinct_beats_vote"]) is not bool:
++        raise ValueError("oracle_distinct_beats_vote must be a bare bool")
++    for field in (
++        "verifier_minus_vote_delta",
++        "arbiter_override_minus_vote",
++        "oracle_at_k",
++        "matched_control_delta",
++    ):
++        if isinstance(artifact[field], bool) or not isinstance(artifact[field], (int, float)):
++            raise ValueError(f"{field} must be a bare float")
++    ci95 = artifact["verifier_minus_vote_ci95"]
++    if (
++        not isinstance(ci95, list)
++        or len(ci95) != 2
++        or any(isinstance(value, bool) or not isinstance(value, (int, float)) for value in ci95)
++    ):
++        raise ValueError("verifier_minus_vote_ci95 must be a two-number ci95")
++    if artifact["verifier_is_oracle"] is not False:
++        raise ValueError("verifier_is_oracle must be the bare bool false")
++    if type(artifact["random_seed"]) is not int:
++        raise ValueError("random_seed must be a bare int")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles do not match REQ-VERIFY-4221")
++    if artifact["spec_refs"] != SPEC_REFS:
++        raise ValueError("spec_refs do not match REQ-VERIFY-4221")
++
++
++def _blocked_checksum(reason: str, random_seed: int) -> str:
++    raw = json.dumps({"reason": reason, "random_seed": random_seed}, sort_keys=True)
++    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def run(
++    repo_root: Path | str = Path("."),
++    *,
++    random_seed: int = RANDOM_SEED,
++    bootstrap_resamples: int = BOOTSTRAP_RESAMPLES,
++    margin_threshold: float = ARBITER_MARGIN_THRESHOLD,
++    adversarial_runner: Callable[[Path], dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    start = time.perf_counter()
++    root = Path(repo_root)
++    output_path = root / OUTPUT_REL
++    try:
++        _a1_artifact, verifier, verifier_path = _load_a1(root)
++        pool = load_heldout_pool(root, verifier, verifier_path)
++        metrics = _measure_pool(
++            pool,
++            random_seed=random_seed,
++            bootstrap_resamples=bootstrap_resamples,
++            margin_threshold=margin_threshold,
++        )
++        checksum = reproducibility_checksum(pool, metrics, random_seed)
++        artifact = _complete_artifact(
++            pool,
++            metrics,
++            checksum=checksum,
++            random_seed=random_seed,
++            duration_s=time.perf_counter() - start,
++        )
++    except BlockedRun as blocked:
++        reason = (
++            "complete_oracle_distinct_arc_no_headroom_uninformative"
++            if blocked.reason == "complete_oracle_distinct_arc_no_headroom_uninformative"
++            else DEFERRED_VERDICT
++        )
++        artifact = _deferred_artifact(
++            reason,
++            random_seed=random_seed,
++            checksum=_blocked_checksum(reason, random_seed),
++            duration_s=time.perf_counter() - start,
++        )
++    validate_artifact(artifact)
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    raw_report = (
++        adversarial_runner(output_path)
++        if adversarial_runner is not None
++        else _run_adversarial_verify(root, output_path)
++    )
++    artifact["adversarial_verify"] = _clean_adversarial_report(raw_report)
++    validate_artifact(artifact)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 46064d2d89..863a90ed51 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-15T01:53:05.611663Z",
+-  "duration_s": 0.02234196662902832,
++  "run_date": "2026-06-15T02:11:06.822509Z",
++  "duration_s": 0.019593238830566406,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "2f6d551e26ffea074a27da1593aed4b24059ad41db1312ccd1dbdd57d6ba1003",
++  "reproducibility_checksum": "b9c42078c790ffe98ba12eb4f24243439bc237e8032afb948319f5b1acdf5a44",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "68b676f1fb5f5d01c1fdee2a4337d5a61080346e"
++    "adversarial_verify_version": "990d16a6a83d6293bc0982d955355a521b41086e"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 2c7285e299..76d9874ee5 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-15T01:53:05.642816Z",
+-  "duration_s": 0.02564072608947754,
++  "run_date": "2026-06-15T02:11:06.850514Z",
++  "duration_s": 0.021266698837280273,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "96d16463ccab436044ea91778b37b6158e6f42707e5e0e16b6d5b204ef5b3619",
++  "reproducibility_checksum": "c3e8324bc9893ef7d7543a39cd6424e83ac32c473e5c046fa5ca6320f38b079f",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "68b676f1fb5f5d01c1fdee2a4337d5a61080346e"
++    "adversarial_verify_version": "990d16a6a83d6293bc0982d955355a521b41086e"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index ad2c9a9dc8..eccfee8ca1 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.115488052368164,
++  "efficiency_gains_ms": 2.0744800567626953,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 25f1277397..7a8ecf8b6c 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.157899482175708e-05,
++  "duration_s": 3.0597992008551955e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json b/results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json
+new file mode 100644
+index 0000000000..208dd0ba01
+--- /dev/null
++++ b/results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json
+@@ -0,0 +1,270 @@
++{
++  "acceptance_gate": true,
++  "adversarial_verify": {
++    "circular_moat_overclaim_clean": true,
++    "flag_count": 1,
++    "flags": [
++      {
++        "detail": "matched_control_delta=0.0 (exactly zero). Confirm this is not a stub default.",
++        "kind": "IMPLAUSIBLE_PERFECT",
++        "severity": "info"
++      }
++    ],
++    "returncode": 1,
++    "status": "flagged"
++  },
++  "arbiter_margin_threshold": 0.1,
++  "arbiter_override_minus_vote": 0.0,
++  "bootstrap_resamples": 2000,
++  "candidate_count": 1796,
++  "candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
++  "ci95_excludes_zero": false,
++  "clt_floor_caveat": true,
++  "duration_s": 4.682853,
++  "experiment": "experiment_4221_oracle_distinct_arc_verifier_beats_vote",
++  "field_principles": {
++    "arbiter_override_minus_vote": "Conservative-override (keep vote unless high learned margin) minus vote -- the ARBITER 2605.26172 deployment pattern; can win where a flat rerank loses by overriding only on confident cases.",
++    "honest_verdict": "Terminal-prefixed. A clean beats-vote win, a clean ties-vote-with-headroom null, and an honest no-headroom-uninformative are ALL COMPLETE -- the first clean read on the oracle-distinct frontier either way (this time the gate RAN).",
++    "matched_control_delta": "verifier@1 minus the budget-matched no-verifier control -- isolates the verifier's contribution from the candidate budget (arXiv:2511.02886).",
++    "oracle_at_k": "The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure.",
++    "oracle_distinct_beats_vote": "BARE bool: verifier@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); NOT a circular execution result.",
++    "random_seed": "Determinism precondition; the held-out split + bootstrap must be reproducible.",
++    "reproducibility_checksum": "Hash of the held-out pool + the learned verifier; lets a third party re-run the decisive gate.",
++    "verifier_is_oracle": "BARE bool=false -- this measurement uses the LEARNED verifier (no demo execution); only this makes the result headline/gate-eligible (Circularity Discipline; adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean).",
++    "verifier_minus_vote_ci95": "Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise.",
++    "verifier_minus_vote_delta": "verifier@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards."
++  },
++  "headline_outcome": "oracle_distinct_verifier_ties_vote_with_headroom",
++  "headroom_exists": true,
++  "honest_verdict": "complete: oracle_distinct_verifier_ties_vote_with_headroom",
++  "induced_programs_source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_induced_programs.json",
++  "inference_substrate": "cached_gap_arc_pool_oof_learned_verifier_rerank",
++  "learned_verifier_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4220_oracle_distinct_arc_verifier_model.json",
++  "matched_control_delta": 0.0,
++  "matched_control_policy": "deterministic_first_of_k_no_verifier",
++  "n_tasks": 14,
++  "oracle_at_k": 1.0,
++  "oracle_distinct_beats_vote": false,
++  "oracle_minus_vote": 0.3571428571,
++  "pass_rates": {
++    "arbiter_override_at_1": 0.6428571429,
++    "matched_control_at_1": 0.5714285714,
++    "verifier_at_1": 0.5714285714,
++    "vote_at_1": 0.6428571429
++  },
++  "random_seed": 4221,
++  "reproducibility_checksum": "976922a12c7f72c879be83f4fc2e36c862d1ff9dbcdf5e0c39fcf9b56a5d1524",
++  "schema": "carnot.oracle_distinct_arc_verifier_4221.v1",
++  "score_source": "exp4220_oof_scores",
++  "spec_refs": [
++    "REQ-VERIFY-4221",
++    "SCENARIO-VERIFY-4221",
++    "SCENARIO-VERIFY-4221-NO-HEADROOM",
++    "SCENARIO-VERIFY-4221-DEFERRED"
++  ],
++  "status": "complete",
++  "task_rows": [
++    {
++      "arbiter_candidate_id": "17cae0c1::candidate3",
++      "arbiter_correct": false,
++      "matched_control_candidate_id": "17cae0c1::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "17cae0c1",
++      "verifier_candidate_id": "17cae0c1::candidate435",
++      "verifier_correct": false,
++      "verifier_score_margin_vs_vote": 0.0001666072,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "17cae0c1::candidate3",
++      "vote_correct": false
++    },
++    {
++      "arbiter_candidate_id": "1a2e2828::candidate0",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "1a2e2828::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "1a2e2828",
++      "verifier_candidate_id": "1a2e2828::candidate0",
++      "verifier_correct": true,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "1a2e2828::candidate0",
++      "vote_correct": true
++    },
++    {
++      "arbiter_candidate_id": "2072aba6::candidate0",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "2072aba6::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "2072aba6",
++      "verifier_candidate_id": "2072aba6::candidate0",
++      "verifier_correct": true,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "2072aba6::candidate0",
++      "vote_correct": true
++    },
++    {
++      "arbiter_candidate_id": "25094a63::candidate0",
++      "arbiter_correct": false,
++      "matched_control_candidate_id": "25094a63::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "25094a63",
++      "verifier_candidate_id": "25094a63::candidate0",
++      "verifier_correct": false,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "25094a63::candidate0",
++      "vote_correct": false
++    },
++    {
++      "arbiter_candidate_id": "4e469f39::candidate1",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "4e469f39::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "4e469f39",
++      "verifier_candidate_id": "4e469f39::candidate1",
++      "verifier_correct": true,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "4e469f39::candidate1",
++      "vote_correct": true
++    },
++    {
++      "arbiter_candidate_id": "50a16a69::candidate0",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "50a16a69::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "50a16a69",
++      "verifier_candidate_id": "50a16a69::candidate0",
++      "verifier_correct": true,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "50a16a69::candidate0",
++      "vote_correct": true
++    },
++    {
++      "arbiter_candidate_id": "66e6c45b::candidate0",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "66e6c45b::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "66e6c45b",
++      "verifier_candidate_id": "66e6c45b::candidate0",
++      "verifier_correct": true,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "66e6c45b::candidate0",
++      "vote_correct": true
++    },
++    {
++      "arbiter_candidate_id": "a59b95c0::candidate0",
++      "arbiter_correct": false,
++      "matched_control_candidate_id": "a59b95c0::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "a59b95c0",
++      "verifier_candidate_id": "a59b95c0::candidate0",
++      "verifier_correct": false,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "a59b95c0::candidate0",
++      "vote_correct": false
++    },
++    {
++      "arbiter_candidate_id": "ac3e2b04::candidate0",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "ac3e2b04::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "ac3e2b04",
++      "verifier_candidate_id": "ac3e2b04::candidate0",
++      "verifier_correct": true,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "ac3e2b04::candidate0",
++      "vote_correct": true
++    },
++    {
++      "arbiter_candidate_id": "b9630600::candidate0",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "b9630600::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "b9630600",
++      "verifier_candidate_id": "b9630600::candidate0",
++      "verifier_correct": true,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "b9630600::candidate0",
++      "vote_correct": true
++    },
++    {
++      "arbiter_candidate_id": "be03b35f::candidate1",
++      "arbiter_correct": false,
++      "matched_control_candidate_id": "be03b35f::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "be03b35f",
++      "verifier_candidate_id": "be03b35f::candidate1",
++      "verifier_correct": false,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "be03b35f::candidate1",
++      "vote_correct": false
++    },
++    {
++      "arbiter_candidate_id": "c3202e5a::candidate139",
++      "arbiter_correct": false,
++      "matched_control_candidate_id": "c3202e5a::candidate0",
++      "matched_control_correct": false,
++      "oracle_hit": true,
++      "task_id": "c3202e5a",
++      "verifier_candidate_id": "c3202e5a::candidate139",
++      "verifier_correct": false,
++      "verifier_score_margin_vs_vote": 0.2073893214,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "c3202e5a::candidate31",
++      "vote_correct": false
++    },
++    {
++      "arbiter_candidate_id": "c7d4e6ad::candidate0",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "c7d4e6ad::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "c7d4e6ad",
++      "verifier_candidate_id": "c7d4e6ad::candidate0",
++      "verifier_correct": true,
++      "verifier_score_margin_vs_vote": 0.0,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "c7d4e6ad::candidate0",
++      "vote_correct": true
++    },
++    {
++      "arbiter_candidate_id": "f0df5ff0::candidate0",
++      "arbiter_correct": true,
++      "matched_control_candidate_id": "f0df5ff0::candidate0",
++      "matched_control_correct": true,
++      "oracle_hit": true,
++      "task_id": "f0df5ff0",
++      "verifier_candidate_id": "f0df5ff0::candidate32",
++      "verifier_correct": false,
++      "verifier_score_margin_vs_vote": 0.0111934923,
++      "verifier_train_task_excluded": true,
++      "vote_candidate_id": "f0df5ff0::candidate0",
++      "vote_correct": true
++    }
++  ],
++  "verifier_is_oracle": false,
++  "verifier_minus_vote_ci95": [
++    -0.2142857143,
++    0.0
++  ],
++  "verifier_minus_vote_delta": -0.0714285714
++}
+diff --git a/results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.py b/results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.py
+new file mode 100644
+index 0000000000..662aed0ab0
+--- /dev/null
++++ b/results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.py
+@@ -0,0 +1,23 @@
++#!/usr/bin/env python3
++"""Run Exp 4221 held-out oracle-distinct ARC verifier beats-vote gate.
++
++Spec refs: REQ-VERIFY-4221, SCENARIO-VERIFY-4221,
++SCENARIO-VERIFY-4221-NO-HEADROOM, SCENARIO-VERIFY-4221-DEFERRED.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT))
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.oracle_distinct_arc_verifier_4221 import run  # noqa: E402
++
++
++if __name__ == "__main__":
++    print(json.dumps(run(REPO_ROOT), indent=2, sort_keys=True))
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 95a0492301..98111a92ef 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T01:52:56Z",
+-  "finished_at": "2026-06-15T01:52:56Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-15T02:10:57Z",
++  "finished_at": "2026-06-15T02:10:57Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 7104fb6921..839a5e5bb7 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T01:52:56Z",
+-  "finished_at": "2026-06-15T01:52:56Z",
++  "started_at": "2026-06-15T02:10:57Z",
++  "finished_at": "2026-06-15T02:10:57Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 0dc98d0cb6..f8e5caa9d7 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T01:52:56Z",
+-  "finished_at": "2026-06-15T01:52:57Z",
++  "started_at": "2026-06-15T02:10:57Z",
++  "finished_at": "2026-06-15T02:10:57Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4221_oracle_distinct_arc_verifier_beats_vote.py b/tests/python/test_experiment_4221_oracle_distinct_arc_verifier_beats_vote.py
+new file mode 100644
+index 0000000000..8523ef2a78
+--- /dev/null
++++ b/tests/python/test_experiment_4221_oracle_distinct_arc_verifier_beats_vote.py
+@@ -0,0 +1,402 @@
++"""Tests for Exp 4221 held-out oracle-distinct ARC verifier rerank.
++
++Spec refs: REQ-VERIFY-4221, SCENARIO-VERIFY-4221,
++SCENARIO-VERIFY-4221-NO-HEADROOM, SCENARIO-VERIFY-4221-DEFERRED.
++"""
++
++from __future__ import annotations
++
++import gzip
++import inspect
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import oracle_distinct_arc_verifier_4221 as mod
++
++
++def _write_json(path: Path, payload: dict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++@pytest.fixture(autouse=True)
++def _stub_exp4208_detector(monkeypatch: pytest.MonkeyPatch) -> None:
++    """Keep tests on the lightweight Exp 4220 loader path."""
++
++    class FakeDetector:
++        @staticmethod
++        def load_arc_rows(pool_path: Path, programs_path: Path) -> list[dict]:
++            with gzip.open(pool_path, "rt", encoding="utf-8") as handle:
++                entries = json.load(handle).get("entries", [])
++            json.loads(programs_path.read_text(encoding="utf-8"))
++            return [
++                {"domain": "arc", "output": f"{entry.get('task')}:{candidate_index}"}
++                for entry in entries
++                if isinstance(entry, dict)
++                for candidate_index, _candidate in enumerate(entry.get("candidates", []))
++            ]
++
++    monkeypatch.setattr(mod.exp4220, "_import_detector_module", lambda: FakeDetector)
++
++
++def _adversarial_clean(_path: Path) -> dict:
++    return {
++        "returncode": 0,
++        "flagged_count": 0,
++        "reports": [
++            {
++                "flags": [],
++                "flag_count": 0,
++                "max_severity": 0,
++            }
++        ],
++    }
++
++
++def _write_arc_gate_fixture(
++    root: Path,
++    *,
++    correct_indices: list[int],
++    vote_weights: list[list[int]],
++    learned_scores: list[list[float]],
++) -> Path:
++    entries = []
++    programs = []
++    task_ids = [f"arc-task-{index}" for index in range(len(correct_indices))]
++    for task_index, (task_id, correct_index) in enumerate(zip(task_ids, correct_indices, strict=True)):
++        pred_grid = [[9, 9], [9, 9]]
++        candidates = []
++        for candidate_index, votes in enumerate(vote_weights[task_index]):
++            candidates.append(
++                {
++                    "votes": votes,
++                    "q_mean": 0.8 if candidate_index == correct_index else 0.2,
++                    "correct": candidate_index != correct_index,
++                    "grid": pred_grid if candidate_index == correct_index else [[0, 0], [0, 0]],
++                }
++            )
++        entries.append({"task": task_id, "demos": [], "test_input": [[0]], "candidates": candidates})
++        programs.append(
++            {
++                "entry_i": task_index,
++                "task": task_id,
++                "demo_fit": 1.0,
++                "pred_grid": pred_grid,
++                "code": f"def transform(grid):\n    return {task_index}\n",
++            }
++        )
++
++    pool_path = root / "results" / "arc3_gap3_stage2_eval_pool.json.gz"
++    pool_path.parent.mkdir(parents=True, exist_ok=True)
++    with gzip.open(pool_path, "wt", encoding="utf-8") as handle:
++        json.dump({"entries": entries}, handle)
++    _write_json(root / "results" / "arc3_gap4_induced_programs.json", {"programs": programs})
++
++    oof_rows = []
++    for task_id, scores in zip(task_ids, learned_scores, strict=True):
++        for candidate_index, score in enumerate(scores):
++            oof_rows.append(
++                {
++                    "candidate_id": f"{task_id}::candidate{candidate_index}",
++                    "correct": candidate_index == correct_indices[task_ids.index(task_id)],
++                    "fold": 0,
++                    "score": score,
++                    "task_id": task_id,
++                    "train_task_ids": [other for other in task_ids if other != task_id],
++                }
++            )
++    verifier_path = root / "results" / "experiment_4220_oracle_distinct_arc_verifier_model.json"
++    _write_json(
++        verifier_path,
++        {
++            "model_type": "constant_score",
++            "feature_names": list(mod.exp4220.FEATURE_NAMES),
++            "constant_score": 0.5,
++            "fold_task_ids": [task_ids],
++            "oof_rows": oof_rows,
++            "random_seed": 4220,
++            "reproducibility_checksum": "fixture-a1",
++            "verifier_is_oracle": False,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
++        {
++            "honest_verdict": "complete: fixture",
++            "selector_trained": True,
++            "learned_verifier_path": str(verifier_path),
++            "verifier_is_oracle": False,
++            "wrong_majority_n": sum(
++                int(weights.index(max(weights)) != correct)
++                for correct, weights in zip(correct_indices, vote_weights, strict=True)
++            ),
++        },
++    )
++    return root
++
++
++def test_req_4221_spec_declares_heldout_gate_contract() -> None:
++    """REQ-VERIFY-4221: OpenSpec declares the held-out beats-vote contract."""
++
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-4221",
++        "SCENARIO-VERIFY-4221",
++        "SCENARIO-VERIFY-4221-NO-HEADROOM",
++        "SCENARIO-VERIFY-4221-DEFERRED",
++        "python/carnot/reporting/oracle_distinct_arc_verifier_4221.py",
++        "results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.py",
++        "oracle_distinct_beats_vote",
++        "verifier_minus_vote_delta",
++        "verifier_minus_vote_ci95",
++        "arbiter_override_minus_vote",
++        "matched_control_delta",
++        "verifier_is_oracle=false",
++    ):
++        assert marker in spec
++    for principle in mod.FIELD_PRINCIPLES.values():
++        assert principle in spec
++
++
++def test_heldout_verifier_beats_vote_with_controls(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4221: learned OOF scores beat vote with headroom."""
++
++    _write_arc_gate_fixture(
++        tmp_path,
++        correct_indices=[1, 0, 2, 1],
++        vote_weights=[[9, 1, 0], [9, 1, 0], [9, 0, 1], [9, 1, 0]],
++        learned_scores=[[0.1, 0.9, 0.2], [0.8, 0.2, 0.1], [0.1, 0.2, 0.9], [0.1, 0.9, 0.2]],
++    )
++
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++
++    mod.validate_artifact(artifact)
++    assert artifact["headline_outcome"] == "oracle_distinct_verifier_beats_vote"
++    assert artifact["honest_verdict"] == "complete: oracle_distinct_verifier_beats_vote"
++    assert artifact["oracle_distinct_beats_vote"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["n_tasks"] == 4
++    assert artifact["pass_rates"]["vote_at_1"] == pytest.approx(0.25)
++    assert artifact["pass_rates"]["verifier_at_1"] == pytest.approx(1.0)
++    assert artifact["oracle_at_k"] == pytest.approx(1.0)
++    assert artifact["pass_rates"]["matched_control_at_1"] == pytest.approx(0.25)
++    assert artifact["verifier_minus_vote_delta"] == pytest.approx(0.75)
++    assert artifact["verifier_minus_vote_ci95"][0] > 0.0
++    assert artifact["matched_control_delta"] == pytest.approx(0.75)
++    assert artifact["arbiter_override_minus_vote"] == pytest.approx(0.75)
++    assert artifact["bootstrap_resamples"] >= 2000
++    assert artifact["arbiter_margin_threshold"] == pytest.approx(mod.ARBITER_MARGIN_THRESHOLD)
++    assert artifact["headroom_exists"] is True
++    assert artifact["clt_floor_caveat"] is True
++    assert artifact["acceptance_gate"] is True
++    assert artifact["adversarial_verify"]["status"] == "clean"
++    assert artifact["task_rows"][0]["verifier_train_task_excluded"] is True
++
++
++def test_no_headroom_positive_control_is_uninformative_not_failure(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4221-NO-HEADROOM: oracle@K ~= vote blocks a false null."""
++
++    _write_arc_gate_fixture(
++        tmp_path,
++        correct_indices=[0, 0, 0],
++        vote_weights=[[9, 1], [8, 2], [7, 3]],
++        learned_scores=[[0.1, 0.9], [0.8, 0.2], [0.7, 0.1]],
++    )
++
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++
++    mod.validate_artifact(artifact)
++    assert artifact["headline_outcome"] == "oracle_distinct_arc_no_headroom_uninformative"
++    assert artifact["honest_verdict"] == "complete: oracle_distinct_arc_no_headroom_uninformative"
++    assert artifact["oracle_distinct_beats_vote"] is False
++    assert artifact["oracle_at_k"] == artifact["pass_rates"]["vote_at_1"] == pytest.approx(1.0)
++    assert artifact["headroom_exists"] is False
++    assert artifact["acceptance_gate"] is True
++    assert "verifier_fails" not in artifact["honest_verdict"]
++
++    tied_root = tmp_path / "tied"
++    _write_arc_gate_fixture(
++        tied_root,
++        correct_indices=[1, 0],
++        vote_weights=[[9, 1], [9, 1]],
++        learned_scores=[[0.9, 0.1], [0.9, 0.1]],
++    )
++    tied = mod.run(tied_root, adversarial_runner=_adversarial_clean)
++    assert tied["headline_outcome"] == "oracle_distinct_verifier_ties_vote_with_headroom"
++    assert tied["headroom_exists"] is True
++    assert tied["oracle_distinct_beats_vote"] is False
++    assert tied["verifier_minus_vote_ci95"] == [0.0, 0.0]
++
++
++def test_missing_or_unreadable_a1_verifier_defers_honestly(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4221-DEFERRED: missing built verifier stops before ARC scoring."""
++
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == (
++        "complete_oracle_distinct_arc_gate_deferred_no_built_verifier"
++    )
++    assert artifact["headline_outcome"] == "oracle_distinct_arc_gate_deferred_no_built_verifier"
++    assert artifact["oracle_distinct_beats_vote"] is False
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["n_tasks"] == 0
++    assert artifact["acceptance_gate"] is True
++
++    _write_json(
++        tmp_path / "results" / "experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
++        {
++            "selector_trained": True,
++            "verifier_is_oracle": False,
++            "learned_verifier_path": str(tmp_path / "results" / "missing.json"),
++        },
++    )
++    unreadable = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++    assert unreadable["honest_verdict"] == artifact["honest_verdict"]
++
++    bad_cases = [
++        {"selector_trained": False, "verifier_is_oracle": False, "learned_verifier_path": ""},
++        {"selector_trained": True, "verifier_is_oracle": True, "learned_verifier_path": ""},
++        {"selector_trained": True, "verifier_is_oracle": False, "learned_verifier_path": ""},
++    ]
++    for index, a1_payload in enumerate(bad_cases):
++        case_root = tmp_path / f"bad-a1-{index}"
++        _write_json(
++            case_root / "results" / "experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
++            a1_payload,
++        )
++        assert mod.run(case_root, adversarial_runner=_adversarial_clean)["honest_verdict"] == (
++            artifact["honest_verdict"]
++        )
++
++    malformed_root = tmp_path / "malformed-a1"
++    malformed_path = (
++        malformed_root / "results" / "experiment_4220_oracle_distinct_arc_verifier_build_labeled.json"
++    )
++    malformed_path.parent.mkdir(parents=True, exist_ok=True)
++    malformed_path.write_text("[]", encoding="utf-8")
++    assert mod.run(malformed_root, adversarial_runner=_adversarial_clean)["honest_verdict"] == (
++        artifact["honest_verdict"]
++    )
++
++    list_verifier_root = tmp_path / "list-verifier"
++    list_verifier = list_verifier_root / "results" / "verifier.json"
++    list_verifier.parent.mkdir(parents=True, exist_ok=True)
++    list_verifier.write_text("[]", encoding="utf-8")
++    _write_json(
++        list_verifier_root / "results" / "experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
++        {
++            "selector_trained": True,
++            "verifier_is_oracle": False,
++            "learned_verifier_path": str(list_verifier),
++        },
++    )
++    assert mod.run(list_verifier_root, adversarial_runner=_adversarial_clean)["honest_verdict"] == (
++        artifact["honest_verdict"]
++    )
++
++    oracle_verifier_root = tmp_path / "oracle-verifier"
++    oracle_verifier = oracle_verifier_root / "results" / "verifier.json"
++    _write_json(oracle_verifier, {"verifier_is_oracle": True})
++    _write_json(
++        oracle_verifier_root
++        / "results"
++        / "experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
++        {
++            "selector_trained": True,
++            "verifier_is_oracle": False,
++            "learned_verifier_path": str(oracle_verifier),
++        },
++    )
++    assert mod.run(oracle_verifier_root, adversarial_runner=_adversarial_clean)["honest_verdict"] == (
++        artifact["honest_verdict"]
++    )
++
++
++def test_validation_and_helper_edges_are_explicit(tmp_path: Path) -> None:
++    """REQ-VERIFY-4221: schema, bootstrap, and adversarial parsing are deterministic."""
++
++    base = mod._deferred_artifact(
++        "complete_oracle_distinct_arc_gate_deferred_no_built_verifier",
++        random_seed=mod.RANDOM_SEED,
++        checksum="abc",
++        duration_s=0.1,
++    )
++    invalid_cases = [
++        ({k: v for k, v in base.items() if k != "oracle_at_k"}, "missing required"),
++        ({**base, "honest_verdict": "pending"}, "terminal-prefixed"),
++        ({**base, "oracle_distinct_beats_vote": {"value": False}}, "bare bool"),
++        ({**base, "verifier_minus_vote_delta": None}, "bare float"),
++        ({**base, "verifier_minus_vote_ci95": [0.0]}, "ci95"),
++        ({**base, "verifier_is_oracle": True}, "verifier_is_oracle"),
++        ({**base, "random_seed": 4221.0}, "bare int"),
++        ({**base, "field_principles": {}}, "field_principles"),
++        ({**base, "spec_refs": []}, "spec_refs"),
++    ]
++    for payload, message in invalid_cases:
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(payload)
++
++    assert mod._rate([]) == 0.0
++    assert mod._bootstrap_ci95([], random_seed=1, resamples=10) == [0.0, 0.0]
++    assert mod._ci_excludes_zero([0.1, 0.2]) is True
++    assert mod._ci_excludes_zero([-0.2, -0.1]) is True
++    assert mod._ci_excludes_zero([-0.1, 0.1]) is False
++    assert mod._clean_adversarial_report({"reports": [{"flags": []}]})["status"] == "clean"
++    flagged = mod._clean_adversarial_report(
++        {"reports": [{"flags": [{"kind": "CIRCULAR_MOAT_OVERCLAIM", "severity": "critical"}]}]}
++    )
++    assert flagged["status"] == "flagged"
++    assert flagged["circular_moat_overclaim_clean"] is False
++    assert mod._oof_score_map({"oof_rows": [None, {"candidate_id": 7}, {"candidate_id": "c", "task_id": "t"}]}) == {
++        "c": (0.0, True)
++    }
++
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    with pytest.raises(mod.BlockedRun, match="blocked_malformed_json_artifact"):
++        mod._read_json_object(list_json)
++
++    fallback_root = _write_arc_gate_fixture(
++        tmp_path / "fallback",
++        correct_indices=[0],
++        vote_weights=[[1, 0]],
++        learned_scores=[[0.8, 0.1]],
++    )
++    verifier_path = fallback_root / "results" / "experiment_4220_oracle_distinct_arc_verifier_model.json"
++    verifier = {
++        "model_type": "constant_score",
++        "feature_names": list(mod.exp4220.FEATURE_NAMES),
++        "constant_score": 0.25,
++        "verifier_is_oracle": False,
++    }
++    pool = mod.load_heldout_pool(fallback_root, verifier, verifier_path)
++    assert pool.score_source == "persisted_verifier_scores"
++    assert [candidate.learned_score for candidate in pool.candidates] == [0.25, 0.25]
++
++    class EmptyCorpus:
++        rows: list = []
++        pool_path = verifier_path
++        programs_path = verifier_path
++
++    original_loader = mod.exp4220.load_labeled_arc_pool
++    mod.exp4220.load_labeled_arc_pool = lambda _root: EmptyCorpus()
++    try:
++        with pytest.raises(mod.BlockedRun, match="no_headroom"):
++            mod.load_heldout_pool(tmp_path, verifier, verifier_path)
++    finally:
++        mod.exp4220.load_labeled_arc_pool = original_loader
++
++
++def test_module_does_not_rank_with_execution_or_correctness() -> None:
++    """REQ-VERIFY-4221: learned inference remains oracle-distinct."""
++
++    source = inspect.getsource(mod)
++    assert "arc_gap4_execution_verifier" not in source
++    assert "Gap4ExecutionVerifier" not in source
++    assert "extract_dsl_rules" not in source
++    assert "apply_rule" not in source
++    assert "get_consistency_energy" not in source
++    assert "key=lambda row: (row.correct" not in source
+-- 
+2.55.0
+

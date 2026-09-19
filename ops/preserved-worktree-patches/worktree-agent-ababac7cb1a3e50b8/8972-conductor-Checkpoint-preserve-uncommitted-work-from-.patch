@@ -1,0 +1,43 @@
+From bb9cfd9cd6757e50b0245423c89bbaf6dd4d0977 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 22:42:16 -0400
+Subject: [PATCH 08972/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9530c0367e..50aa54d7c6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-08-13T02:21:25Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-08-13T02:42:13Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 36df822bf0..88da1774af 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15742,3 +15742,4 @@ code |
+ | 2026-08-13 00:53 UTC | Plan milestone 2026.08.548 | OK | 4 tasks proposed |
+ | 2026-08-13 00:56 UTC | Milestone 2026.08.548 activated | OK | 4 tasks queued |
+ | 2026-08-13 02:19 UTC | V547 terminal evidence handoff and V548 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd_receipts"]  |
++| 2026-08-13 02:40 UTC | V547 terminal evidence handoff and V548 queue pref | OK | cache hit: 88 passed, 1 warning in 77.16s (0:01:17) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b828a13986..b1d61a8fda 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 5, "phase": "iteration_start", "started_at": "2026-08-13T02:21:25Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 6, "phase": "iteration_start", "started_at": "2026-08-13T02:42:13Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

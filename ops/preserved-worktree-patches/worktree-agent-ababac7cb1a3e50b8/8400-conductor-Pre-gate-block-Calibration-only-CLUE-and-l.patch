@@ -1,0 +1,544 @@
+From a9fc777c57db5f2ac5fb6f8553bd55df8701bdb8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 03:44:42 -0400
+Subject: [PATCH 08400/11362] [conductor] Pre-gate block: Calibration-only CLUE
+ and latent selector freeze
+
+1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification.hidden_state_surface_ready_score (upstream artifact not found for task id 'exp6176-hidden-state-surface-qualification')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../constraint-verification/spec.md           |  86 +++++++++++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   2 +
+ ops/conductor-state.json                      |   2 +-
+ .../carnot/verify/cctu_headroom_audit_6175.py | 102 +++++++++++++++++-
+ results/experiment_1822_rtl_synth.log         |   2 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2510_ensemble_v7.json      |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  30 +++---
+ ...ment_6177_clue_latent_selector_freeze.json |  24 +++++
+ ...iment_833_constraint_delta_root_cause.json |   6 +-
+ tests/python/test_cctu_headroom_audit_6175.py |  49 +++++++++
+ 13 files changed, 287 insertions(+), 26 deletions(-)
+ create mode 100644 results/experiment_6177_clue_latent_selector_freeze.json
+
+diff --git a/openspec/capabilities/constraint-verification/spec.md b/openspec/capabilities/constraint-verification/spec.md
+index 093cee4fdd..9b12e09868 100644
+--- a/openspec/capabilities/constraint-verification/spec.md
++++ b/openspec/capabilities/constraint-verification/spec.md
+@@ -54,6 +54,92 @@ required schema fields, including
+ `inference_substrate="deterministic_exact_tool_trace_headroom_audit"` and
+ `verifier_is_oracle=true`.
+ 
++### REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY: Upstream Pool Authenticity Gate
++
++Exp6175 SHALL fail closed unless the Exp6174 structured gate passed, current
++upstream bank/split/validator/preregistration bytes match the hashes declared by
++Exp6174, current raw-trace and label-sidecar bytes match Exp6174 receipts, raw
++rows were committed before validation, K=8 rows exist for every frozen case, no
++correctness-conditioned retry/replacement occurred, calibration and held seals
++remain intact, preregistered gates and power are present, output paths are
++writable, exclusions are present, and protected files are byte-stable.
++
++### REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY: All-Sample Parseability Accounting
++
++Exp6175 SHALL compute parseability over every frozen candidate row. Headline
++denominators SHALL retain unparseable completions, truncations, refusals,
++timeouts, duplicates, and exact-validator failures. Parseability SHALL pass only
++when the preregistered minimum is met; unparseable rows SHALL retire the domain
++rather than being filtered out of the headline denominator.
++
++### REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR: Exact Floor Provenance
++
++Exp6175 SHALL copy the exact random executable-plan floor from the Exp6173
++preregistration, report its value and provenance, and affirm that no
++finite-choice or answer-position floor is used.
++
++### REQ-CONSTRAINT-VERIFY-6175-COMPETENCE: Candidate Competence Gate
++
++Exp6175 SHALL compute per-candidate all-sample exact-validator accuracy and a
++case-clustered interval. Competence SHALL pass only when the clustered lower
++bound is strictly above the exact floor.
++
++### REQ-CONSTRAINT-VERIFY-6175-UNSATURATION: Imperfect-Pool Gate
++
++Exp6175 SHALL measure whether the candidate pool is competent but imperfect by
++checking that candidate accuracy and tuned consensus are below the
++preregistered saturation limits. This gate SHALL NOT rescue a failed
++parseability, competence, headroom, minority, or family-support conjunct.
++
++### REQ-CONSTRAINT-VERIFY-6175-CONSENSUS: Oracle-Blind Consensus Freeze
++
++Exp6175 SHALL tune only the preregistered oracle-blind consensus family on
++calibration rows using normalized action and terminal-outcome clusters. The
++selection rule SHALL NOT use held labels, hidden states, arbitrary identifiers,
++answer positions, sample indexes, or exact-validator labels at selection time.
++
++### REQ-CONSTRAINT-VERIFY-6175-ORACLE-K: Oracle@K Headroom Measurement
++
++Exp6175 SHALL compute oracle@8 as the case-level accuracy achieved when any of
++the frozen K candidates passes the exact terminal validator. It SHALL compute
++oracle-minus-consensus and retire unless the delta is at least 0.10 with a
++case-clustered lower confidence bound above zero.
++
++### REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY: Error Diversity and Shortcut Audit
++
++Exp6175 SHALL report normalized-cluster diversity, dominant failure surfaces,
++consensus-wrong/oracle-right counts, duplicate clusters, raw duplicate shares,
++and shortcut audits for answer-position, arbitrary-id, sample-index, and
++hidden-state channels.
++
++### REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE: Case-Clustered Intervals
++
++Exp6175 SHALL compute intervals over case clusters for per-candidate accuracy,
++oracle@8, consensus accuracy, and oracle-minus-consensus. The artifact SHALL
++declare the deterministic resampling method or constant-cluster shortcut used
++for each interval.
++
++### REQ-CONSTRAINT-VERIFY-6175-HELD-AGGREGATE: Held Labels Stay Aggregated
++
++Exp6175 may inspect held labels internally for aggregate qualification, but the
++terminal artifact SHALL emit only held aggregate counts/rates, an aggregate
++signature, and a sealed held row-label hash. It SHALL NOT emit held sample keys,
++row hashes, label hashes, validator-result objects, or per-row held outcomes.
++
++### REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR: No Selector or Hidden-State Extraction
++
++Exp6175 SHALL be a prerequisite audit only. It SHALL NOT tune a latent selector,
++extract hidden states, expose held row labels downstream, use held rows for
++consensus tuning, or allow any downstream rows when readiness is zero.
++
++### REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT: Strict Readiness Conjunction
++
++Exp6175 SHALL set `phase_d_headroom_ready_score` to bare `1.0` only when every
++preregistered authenticity, parseability, competence, unsaturation, headroom,
++minority, and family-support conjunct passes. Otherwise it SHALL set `status`
++to `retired` or `blocked`, `future_rows_allowed_by_this_artifact` to bare
++`false`, and `honest_verdict` to a terminal prefix naming the failed conjuncts.
++
+ ### SCENARIO-CONSTRAINT-VERIFY-6175-RAW-REVALIDATION: Labels Are Replayed From Raw Text
+ 
+ Given immutable Exp6174 raw trace rows and calibration/held label sidecars,
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c6328b5270..b37ff8ccd2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 64, "phase": "iteration_start", "last_beat": "2026-08-07T06:21:36Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 65, "phase": "iteration_start", "last_beat": "2026-08-07T07:44:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 889ae26374..522f6ccea5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15431,3 +15431,5 @@ Still active  |
+ | 2026-08-07 05:37 UTC | Gated on Exp6173 bank readiness: authentic Gemma-4 | OK | 87 passed, 1 warning in 12.81s |
+ | 2026-08-07 05:53 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6175_cctu_he |
+ | 2026-08-07 06:19 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6175_cctu_he |
++| 2026-08-07 07:42 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR |
++| 2026-08-07 07:44 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7880a54043..e86601eb5c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 64, "phase": "iteration_start", "started_at": "2026-08-07T06:21:36Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 65, "phase": "iteration_start", "started_at": "2026-08-07T07:44:42Z"}
+\ No newline at end of file
+diff --git a/python/carnot/verify/cctu_headroom_audit_6175.py b/python/carnot/verify/cctu_headroom_audit_6175.py
+index 78efe36895..2996d3d3eb 100644
+--- a/python/carnot/verify/cctu_headroom_audit_6175.py
++++ b/python/carnot/verify/cctu_headroom_audit_6175.py
+@@ -146,6 +146,77 @@ FIELD_PRINCIPLES: dict[str, str] = {
+     "honest_verdict": "Terminal prefix names passed or failed conjuncts.",
+ }
+ 
++FIELD_REQUIREMENTS: dict[str, tuple[str, ...]] = {
++    "status": ("REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",),
++    "preconditions_checked": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
++    "structured_gate_receipt": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
++    "upstream_corpus_bank_split_validator_and_preregistration_hashes": (
++        "REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",
++    ),
++    "label_revalidation_receipt": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
++    "all_sample_and_parseable_denominators": (
++        "REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY",
++    ),
++    "family_constraint_count_and_violation_strata": (
++        "REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY",
++        "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
++    ),
++    "exact_floor_definition_value_and_provenance": (
++        "REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR",
++    ),
++    "per_candidate_competence_and_clustered_interval": (
++        "REQ-CONSTRAINT-VERIFY-6175-COMPETENCE",
++        "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
++    ),
++    "saturation_and_error_diversity_metrics": (
++        "REQ-CONSTRAINT-VERIFY-6175-UNSATURATION",
++        "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
++    ),
++    "tuned_oracle_blind_consensus_definition_freeze_and_accuracy": (
++        "REQ-CONSTRAINT-VERIFY-6175-CONSENSUS",
++        "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
++    ),
++    "oracle_at_8_accuracy": (
++        "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
++        "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
++    ),
++    "oracle_minus_consensus_delta_and_clustered_interval": (
++        "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
++        "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
++    ),
++    "consensus_wrong_oracle_right_group_count": (
++        "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
++        "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
++    ),
++    "duplicate_and_shortcut_audits": (
++        "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
++        "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
++    ),
++    "held_aggregate_qualification_and_row_label_seal_hash": (
++        "REQ-CONSTRAINT-VERIFY-6175-HELD-AGGREGATE",
++        "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
++    ),
++    "parseability_competence_unsaturation_headroom_and_minority_gate_matrix": (
++        "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
++    ),
++    "phase_d_headroom_ready_score": (
++        "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
++    ),
++    "future_rows_allowed_by_this_artifact": (
++        "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
++        "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
++    ),
++    "protected_files_unchanged": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
++    "duration_s": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
++    "inference_substrate": ("REQ-CONSTRAINT-VERIFY-6175",),
++    "verifier_is_oracle": ("REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR",),
++    "field_provenance": ("REQ-CONSTRAINT-VERIFY-6175",),
++    "test_commands": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
++    "test_exit_codes": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
++    "reproducibility_checksum": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
++    "honest_verdict": ("REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",),
++}
++
+ 
+ def run(
+     *,
+@@ -775,16 +846,41 @@ def preconditions_checked(
+ ) -> JsonDict:
+     raw_receipt = exp6174_artifact.get("raw_before_label_commit_receipts", {})
+     no_retry = exp6174_artifact.get("no_correctness_conditioned_retry_or_replacement_receipt", {})
++    raw_declared = exp6174_artifact.get("raw_trace_corpus_path_hash_count_and_schema", {})
++    labels_declared = exp6174_artifact.get("exact_label_sidecar_paths_hashes_and_counts", {})
++    access_logs = exp6174_artifact.get("calibration_and_held_access_logs", {})
++    output_paths = exp6174_artifact.get("preconditions_checked", {}).get("output_paths", {})
+     per_case = Counter(str(row["case_id"]) for row in raw_rows)
++    label_counts_by_split = Counter(str(row.get("split")) for row in label_rows)
++    current_raw_sha256 = sha256_file(paths["raw_trace"])
++    current_calibration_label_sha256 = sha256_file(paths["calibration_label"])
++    current_held_label_sha256 = sha256_file(paths["held_label"])
+     checks = {
+         "exp6174_status_complete_ready": exp6174_artifact.get("status") == "complete_ready",
+         "structured_gate_passed": bool(
+             exp6174_artifact.get("structured_gate_receipt", {}).get("passed")
+         ),
+         "upstream_hashes_match": bool(upstream.get("all_current_hashes_match_exp6174")),
++        "raw_trace_hash_matches_exp6174": raw_declared.get("sha256") == current_raw_sha256
++        and raw_receipt.get("raw_corpus_sha256") == current_raw_sha256
++        and raw_declared.get("count") == len(raw_rows),
++        "label_sidecar_hashes_match": (
++            labels_declared.get("calibration", {}).get("sha256")
++            == current_calibration_label_sha256
++            and labels_declared.get("held", {}).get("sha256") == current_held_label_sha256
++            and labels_declared.get("calibration", {}).get("count")
++            == label_counts_by_split["calibration"]
++            and labels_declared.get("held", {}).get("count") == label_counts_by_split["held"]
++        ),
+         "raw_before_label_receipt": raw_receipt.get("validation_started_after_raw_commit") is True
+         and raw_receipt.get("raw_rows_complete_before_validation") is True,
+         "exact_validator_version": revalidation.get("validator_version_mismatch_count") == 0,
++        "calibration_and_held_seals": (
++            labels_declared.get("labels_inaccessible_to_generation") is True
++            and access_logs.get("held_aggregate_outcomes_inspected") is False
++            and access_logs.get("calibration", {}).get("exists") is True
++            and access_logs.get("held", {}).get("exists") is True
++        ),
+         "calibration_and_held_label_counts": len(label_rows) == len(raw_rows) == 120 * K_SAMPLES,
+         "k_completeness": len(per_case) == 120 and min(per_case.values(), default=0) >= K_SAMPLES,
+         "no_retry_receipt": no_retry
+@@ -801,6 +897,10 @@ def preconditions_checked(
+             )
+         )
+         and bool(read_json(paths["preregistration"]).get("clustered_inference_and_power_plan")),
++        "output_paths_declared": all(
++            output_paths.get(name)
++            for name in ("raw_trace", "calibration_label", "held_label", "result")
++        ),
+         "output_path_parent_writable": _parent_writable(paths["result"]),
+         "exclusion_manifest_present": paths["exclusion_manifest"].is_file(),
+         "protected_files_present": all((REPO_ROOT / path).is_file() for path in PROTECTED_FILES),
+@@ -1089,7 +1189,7 @@ def protected_files_unchanged(
+ 
+ def field_provenance() -> JsonDict:
+     return {
+-        field: ["REQ-CONSTRAINT-VERIFY-6175", FIELD_PRINCIPLES[field]]
++        field: ["REQ-CONSTRAINT-VERIFY-6175", *FIELD_REQUIREMENTS[field], FIELD_PRINCIPLES[field]]
+         for field in REQUIRED_ARTIFACT_FIELDS
+     }
+ 
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 3a32e11f42..4b14f7c4f6 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.61s, user: 2.37s, system: 0.19s, MEM: 116.30 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.68s, user: 2.44s, system: 0.18s, MEM: 115.95 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+ Time spent: 79% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 72637933cc..0dfb7e0db0 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260807",
+-  "started_at": "2026-08-07T02:20:53Z",
+-  "finished_at": "2026-08-07T02:20:53Z",
++  "started_at": "2026-08-07T06:34:01Z",
++  "finished_at": "2026-08-07T06:34:01Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 3d49530503..23ecca5372 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 362.6936399936676,
++  "duration_s": 335.3400876522064,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2510_ensemble_v7.json b/results/experiment_2510_ensemble_v7.json
+index 34629bb195..702b014e29 100644
+--- a/results/experiment_2510_ensemble_v7.json
++++ b/results/experiment_2510_ensemble_v7.json
+@@ -10,6 +10,6 @@
+     "tier0r_search",
+     "tier0r_integration_not_implemented"
+   ],
+-  "duration_s": 1.7849211692810059,
++  "duration_s": 1.5316412448883057,
+   "random_seed": 42
+ }
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index a490fe5bdb..291f5982e4 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,20 +1,20 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_low": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -23,10 +23,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -35,8 +35,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,15 +45,15 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_low": {
+       "FoVer": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+diff --git a/results/experiment_6177_clue_latent_selector_freeze.json b/results/experiment_6177_clue_latent_selector_freeze.json
+new file mode 100644
+index 0000000000..741609275f
+--- /dev/null
++++ b/results/experiment_6177_clue_latent_selector_freeze.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6177,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-07",
++  "started_at": "2026-08-07T07:44:42.712148+00:00",
++  "finished_at": "2026-08-07T07:44:42.712148+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Calibration-only CLUE and latent selector freeze",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification.hidden_state_surface_ready_score (upstream artifact not found for task id 'exp6176-hidden-state-surface-qualification')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6176-hidden-state-surface-qualification",
++      "artifact_field": "hidden_state_surface_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6176-hidden-state-surface-qualification'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index b775c4cae8..343268fd9f 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -2,9 +2,9 @@
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+   "run_date": "20260807",
+-  "started_at": "2026-08-07T01:02:10Z",
+-  "finished_at": "2026-08-07T01:02:12Z",
+-  "duration_s": 1.276,
++  "started_at": "2026-08-07T06:53:21Z",
++  "finished_at": "2026-08-07T06:53:22Z",
++  "duration_s": 0.967,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_cctu_headroom_audit_6175.py b/tests/python/test_cctu_headroom_audit_6175.py
+index 6871cd57aa..f39bea5894 100644
+--- a/tests/python/test_cctu_headroom_audit_6175.py
++++ b/tests/python/test_cctu_headroom_audit_6175.py
+@@ -20,6 +20,20 @@ from carnot.verify import cctu_item_bank_6173 as exp6173
+ 
+ REPO = Path(__file__).resolve().parents[2]
+ SPEC = REPO / "openspec/capabilities/constraint-verification/spec.md"
++NAMED_GATE_REQS = (
++    "REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",
++    "REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY",
++    "REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR",
++    "REQ-CONSTRAINT-VERIFY-6175-COMPETENCE",
++    "REQ-CONSTRAINT-VERIFY-6175-UNSATURATION",
++    "REQ-CONSTRAINT-VERIFY-6175-CONSENSUS",
++    "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
++    "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
++    "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
++    "REQ-CONSTRAINT-VERIFY-6175-HELD-AGGREGATE",
++    "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
++    "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
++)
+ 
+ 
+ def _load_jsonl(path: Path) -> list[dict[str, Any]]:
+@@ -38,10 +52,45 @@ def test_req_6175_spec_declares_fail_closed_headroom_contract() -> None:
+         "SCENARIO-CONSTRAINT-VERIFY-6175-RETIRE-PARSE-FAILURE",
+         "deterministic_exact_tool_trace_headroom_audit",
+         "future_rows_allowed_by_this_artifact",
++        *NAMED_GATE_REQS,
+     ):
+         assert marker in section
+ 
+ 
++def test_req_6175_named_gates_are_reflected_in_receipts_and_provenance(
++    tmp_path: Path,
++) -> None:
++    """REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY: named gates are auditable."""
++
++    artifact = audit.run(result_path=tmp_path / audit.RESULT_RELATIVE_PATH.name, duration_s=1.0)
++    checks = artifact["preconditions_checked"]["checks"]
++    provenance = artifact["field_provenance"]
++
++    for check_name in (
++        "raw_trace_hash_matches_exp6174",
++        "label_sidecar_hashes_match",
++        "calibration_and_held_seals",
++        "output_paths_declared",
++    ):
++        assert checks[check_name] is True
++
++    expected_field_reqs = {
++        "preconditions_checked": "REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",
++        "all_sample_and_parseable_denominators": "REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY",
++        "exact_floor_definition_value_and_provenance": "REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR",
++        "per_candidate_competence_and_clustered_interval": "REQ-CONSTRAINT-VERIFY-6175-COMPETENCE",
++        "saturation_and_error_diversity_metrics": "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
++        "tuned_oracle_blind_consensus_definition_freeze_and_accuracy": "REQ-CONSTRAINT-VERIFY-6175-CONSENSUS",
++        "oracle_at_8_accuracy": "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
++        "oracle_minus_consensus_delta_and_clustered_interval": "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
++        "held_aggregate_qualification_and_row_label_seal_hash": "REQ-CONSTRAINT-VERIFY-6175-HELD-AGGREGATE",
++        "duplicate_and_shortcut_audits": "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
++        "parseability_competence_unsaturation_headroom_and_minority_gate_matrix": "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
++    }
++    for field, req_id in expected_field_reqs.items():
++        assert req_id in provenance[field]
++
++
+ def test_scenario_6175_revalidates_exp6174_labels_from_raw_text() -> None:
+     """SCENARIO-CONSTRAINT-VERIFY-6175-RAW-REVALIDATION: labels replay exactly."""
+ 
+-- 
+2.55.0
+

@@ -1,0 +1,1509 @@
+From 33c07cb5315f951ebff2188dec9a610b99dffe97 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 20:07:11 -0400
+Subject: [PATCH 11169/11171] fix(arc): grammar requires source definitions;
+ force turn is submission-only
+
+Review closures for REQ-ARC-WMTE-7046, plus the record of the bounded 27B
+trial and its harness.
+
+What the review found (confirmed against test-gbnf-validator, b9606):
+1. `list_transitions` has no required parameter, so its `{}` call stayed
+   the cheapest legal envelope. In the 27B trial every grammar cell chose
+   it first and submitted code only after the force nudge. So the nudge,
+   not the grammar, was doing the enforcement.
+2. `nonempty-string` admitted `{"code":" "}`, which passed the lifter,
+   dispatched, and counted as a parsed call.
+3. The spec cited an untracked, incomplete note.
+
+What changed:
+- `REQUIRED_SOURCE_DEFINITIONS` (arc_induction_tools.py): a source argument
+  must contain the definition dispatch looks for: `def engine(`,
+  `def is_level_complete(`, `def accept(`. The grammar rule is
+  `"\"" char* "def engine(" char* "\"" ws`. The threshold is the
+  dispatcher's own contract, not a character count. `{"code":"def engine("}`
+  is the admitted minimum and fails at dispatch as a syntax error; the
+  verifier judges programs, the grammar cannot.
+- `_lift_grammar_response` rejects a blank required string and a source
+  argument without its definition. No dispatch, not counted as parsed.
+- `_tool_grammar(schemas, allowed=...)`: at the loop's force turn the
+  request carries a grammar whose root admits only
+  `run_engine_on_transitions`. The nudge text stays. Counted in
+  `grammar_submit_only_turns`.
+- 52 of 52 verdicts re-established against the binary (26 strings x 2
+  grammars: full sha256 16578b60ac14f9f2, submission-only c83115a92f437134);
+  the Python reader agreed on all 52. Pinned in test_gbnf_match.py.
+- Mutations M5-M8 at the call sites: RED, byte-identical restore, GREEN.
+  205 focused tests pass.
+- Spec: review amendment and SCENARIO-ARC-WMTE-7046-C. Flag ledger evidence.
+- Note `docs/research-notes/grammar-27b-trial-2026-09-05.md` is complete
+  and tracked: proof tables, both fix rounds, the trial, and its limits.
+- Harness `scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py`:
+  one card via CUDA_VISIBLE_DEVICES, placement read from nvidia-smi joined
+  on UUID, non-default port, receipt armed, server killed by exact PID,
+  engine stores under the output directory, never results/**.
+
+The 27B trial (GPU 1, 18.5 min, 14 cells) ran on the round-1 grammar
+before the review landed. It shows the transport carries code on the
+pinned 27B (28/28 envelopes parsed, 13 submissions, sb26 0.919 visible /
+1.0 held-out at 422 tokens) and does not show unprompted submission. No
+GPU time was spent after the review; nothing ran on the round-2 grammar.
+
+Open decision: keep `list_transitions` in grammar mode with the force-turn
+closure, or remove it so no argument-less envelope exists at all.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../grammar-27b-trial-2026-09-05.md           | 271 ++++++++
+ .../arc-world-model-trust-energy/spec.md      |  32 +
+ ops/arc_flag_ledger.yaml                      |  10 +-
+ ops/changelog.md                              |  23 +
+ ops/metrics.md                                |   6 +
+ ops/status.md                                 |  21 +
+ ops/test-results.md                           |  37 ++
+ .../carnot/agentic/arc_induction_tool_loop.py |  55 +-
+ python/carnot/agentic/arc_induction_tools.py  |  11 +
+ ...ter_loop_arc_grammar_27b_trial_20260905.py | 582 ++++++++++++++++++
+ .../python/test_arc_tool_grammar_transport.py |  65 +-
+ tests/python/test_gbnf_match.py               |  67 +-
+ 12 files changed, 1163 insertions(+), 17 deletions(-)
+ create mode 100644 docs/research-notes/grammar-27b-trial-2026-09-05.md
+ create mode 100644 scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py
+
+diff --git a/docs/research-notes/grammar-27b-trial-2026-09-05.md b/docs/research-notes/grammar-27b-trial-2026-09-05.md
+new file mode 100644
+index 0000000000..ff8a8fe93d
+--- /dev/null
++++ b/docs/research-notes/grammar-27b-trial-2026-09-05.md
+@@ -0,0 +1,271 @@
++# Induction tool grammar: model-free proof, fix, and a bounded 27B trial (2026-09-05)
++
++REQ-ARC-WMTE-7044, 7045, 7046. Branch `outer-loop/kv-persistence-confirm`, continued
++on the worktree branch that carries this note.
++
++## 0. Summary
++
++- The grammar shipped under REQ-7044 admitted `{"name":"run_engine_on_transitions",
++  "arguments":{}}`. Proved with llama.cpp's own `test-gbnf-validator`, no model.
++- The recorded 0.8B "negative" (31 tokens, no engine) was therefore uninterpretable, and
++  it was never a 27B result.
++- Fixed in two rounds. Round 1 requires each tool's required arguments with their JSON
++  type. Round 2, after an adversarial review, requires each source argument to contain
++  the definition dispatch looks for, and makes the loop send a submission-only grammar
++  at its force turn. 52 of 52 verdicts re-established against the binary.
++- A bounded 27B trial ran on GPU 1 between the rounds (14 cells, 18.5 min of GPU, server
++  stopped by PID). Through the round-1 grammar the pinned 27B produced 28 of 28 parseable
++  envelopes and 13 real engine submissions across 7 games; one game reached accuracy
++  0.919 visible / 1.0 held-out at 422 tokens. Every submission came after the force
++  nudge, so the result shows the transport carries code on the 27B and does NOT show the
++  model submits without being made to. No further GPU time was spent after the review.
++
++## 1. What was open
++
++The grammar transport (`CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1`) had one recorded trial. It ran on
++Qwen3.5-0.8B, the 0.5 GB CPU smoke model: two parseable calls, missing `code`, zero
++scoreable engines, 31 tokens, 11.29 s. The branch scoped that honestly ("says nothing
++about the pinned 27B"). The result was relayed as if it were the 27B. The pinned 27B
++produces world models on the ordinary induce path, so the grammar arm was untested on it,
++not tested-and-failed.
++
++## 2. The grammar admitted an empty shell (proved with no model)
++
++`_tool_grammar` (commit d5d72141ca) was:
++
++```
++root ::= "{\"name\":" tool-name ",\"arguments\":" object "}"
++tool-name ::= "\"run_engine_on_transitions\"" | ...
++object ::= "{" ws (string ":" ws value ("," ws string ":" ws value)*)? "}" ws
++```
++
++`arguments` is any JSON object. Nothing requires `code`.
++
++Reference check: llama.cpp's own `test-gbnf-validator` (build b9606), fed the grammar text
++(sha256 6a09d16de9e9deec, 614 bytes) and each candidate string. MEASURED verdicts:
++
++| case | candidate | old grammar | round-1 grammar |
++|---|---|---|---|
++| A | `{"name":"run_engine_on_transitions","arguments":{}}` | VALID | INVALID |
++| B | full call, `"code"` holds real source with `\n` escapes | VALID | VALID |
++| C | unknown name | INVALID | INVALID |
++| D | no `arguments` key | INVALID | INVALID |
++| E | `{"cod":"x"}` (wrong key) | VALID | INVALID |
++| F | `diff_grids` without `t` | VALID | INVALID |
++| G | `list_transitions` with `{}` (no required params) | VALID | VALID |
++| H | `{"code":""}` | VALID | INVALID |
++| I | `{"code":5}` | VALID | INVALID |
++| J | `query_region` with only `t` | VALID | INVALID |
++| K | `query_region` with all five required ints | VALID | VALID |
++| L | `find_objects`, `which:"before"` | VALID | VALID |
++| M | `find_objects`, `which:"sideways"` (not in enum) | VALID | INVALID |
++| N | full call plus an extra key after `code` | VALID | VALID |
++| O | `query_region` all required plus optional `which` | VALID | VALID |
++| P | full call with json.dumps default spacing | INVALID | INVALID |
++| Q | `{"note":"x","code":...}` (required not first) | VALID | INVALID |
++| R | `diff_grids` with `t` as a string | VALID | INVALID |
++
++Case A is exactly the envelope the 0.8B trial returned twice. Under constrained decoding
++the cheapest legal path wins, so no model result on the old grammar was interpretable: a
++zero could mean "the model does not write code under grammar" or "the grammar let it
++skip". The fix comes before any GPU time.
++
++Instrument audit. The first run of the proof script reported B and N INVALID. The cause
++was the instrument: `json.dumps` default separators insert spaces, and the root rule is
++whitespace-rigid around the envelope. Case P keeps that spaced form so the audit is on
++record. The grammar was not wrong there; the checker was.
++
++## 3. Round 1 (commit 1c41b9c698)
++
++- `_tool_grammar(schemas)`: one `call-i`/`args-i` rule pair per session tool. Required
++  keys first, in schema order, each with its JSON type. Required strings are
++  `nonempty-string`. String enums are literals. Optional keys may follow. A tool with no
++  required keys gets `object`.
++- `_lift_grammar_response(..., required)`: an envelope that lacks a required argument, or
++  sends it as `""`, is `grammar_invalid_response`. No dispatch. Not counted as parsed.
++- The grammar text is built once per session from a deep copy of the frozen schemas. A
++  first draft rebuilt it per turn from the live dicts; the existing frozen-names test
++  (`test_candidate_names_and_json_are_preserved`) caught a mutated candidate name leaking
++  into the second request. Kept on record because it is the class-B shape.
++- The grammar prompt no longer shows `"arguments": {}` as the example.
++- `python/carnot/testing/gbnf_match.py`: a model-free GBNF reader for the subset these
++  grammars use, mirroring `llama-grammar.cpp` `parse_sequence`. Pinned to the
++  test-gbnf-validator verdicts above on both grammars: 36 of 36 agree (MEASURED, 18
++  cases x 2 grammars). An independent reviewer re-derived all 36 from the binary
++  without the reader, and ran 1400 mutated strings plus 34 construct probes: 0
++  disagreements.
++- Spec: REQ-ARC-WMTE-7046 (two scenarios); REQ-7044 carries an amendment note.
++
++Round-1 grammar sha256 947e6e69af65014b, 1761 bytes, for six session tools.
++
++## 4. Round-1 mutation proofs (call site, one pattern each; ran UNLOCKED, see limits)
++
++| id | site | test | RED | restore | GREEN |
++|---|---|---|---|---|---|
++| M1 | request grammar built from schemas stripped of parameters | `test_request_grammar_rejects_empty_shell_model_free` | 1 failed (empty shell accepted) | byte-identical | 1 passed |
++| M2 | lifter `if missing:` -> `if False:` | `test_payload_less_envelope_is_a_grammar_failure` (3) | 3 failed (dispatch reached the tool) | byte-identical | 3 passed |
++| M3 | builder `if pairs:` -> `if False:` | reader table (18) + headline + live dispatch (2) | 12 failed, 9 passed (the 9 do not depend on required pairs: B C D G K L N O P) | byte-identical | 21 passed |
++| M4 | prompt example reverted to `"arguments": {}` | `test_request_grammar_rejects_empty_shell_model_free` | 1 failed | byte-identical | 1 passed |
++
++Original file sha256 prefix db3f68d3f973 before and after every restore.
++
++## 5. The bounded 27B trial (GPU 1 only; ran on the round-1 grammar)
++
++Harness: `scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py`
++(`--role driver`, one `--role cell` subprocess per (game, arm); cells own separate
++engine stores under the output directory, never `results/**`).
++
++Server (MEASURED from the driver log and nvidia-smi):
++
++- llama-server build b9606 CUDA, `Qwen3.8-27B-Q4_K_M.gguf`
++  (`~/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23.../`),
++  `-ngl 999 -c 49152 --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0 -fit off
++  --jinja --reasoning-format deepseek`, `CUDA_VISIBLE_DEVICES=1`, port 8939.
++- Healthy in 24.0 s. Placement: pid 692290 on GPU-7971baff (index 1) only, 18030 MiB;
++  GPU 0 at 4 MiB throughout. Verified with
++  `nvidia-smi --query-compute-apps=pid,gpu_uuid,used_memory` joined to
++  `--query-gpu=index,uuid`, not from the environment variable.
++- Decode 36.9 tok/s, prefill 1253 tok/s on a 12,974-token prompt (server `print_timing`).
++- Receipt armed (`receipt.json`, REQ-INFRA-6830); none was written, the exit was clean.
++  Server stopped by exact PID at 23:55:19Z; port 8939 closed, both cards back to
++  24120 MiB free, no orphan xdist workers. GPU wall: 23:36:53Z to 23:55:19Z, 18.5 min.
++
++Inputs: seven public games (tr87, sp80, sb26, re86, g50t, r11l, lp85), each a 40-row
++window from `collect_transitions(n=40, warmup=False, seed=0)` in the offline sim,
++pickled once on CPU and loaded by both arms (same bytes; the cell records
++`window_sha256`). The level-up windows the h2h harness uses (`build_progress_window`)
++re-solve L1 by search and cost minutes per game; the first game alone did not finish in
++7.5 min, so they were not used. This differs from the prior 27B measurements.
++
++Arms, same model, same window, same `CARNOT_ARC_GENERATOR_SEED=7`:
++
++| | CONTROL | ARM (grammar, round-1 text) |
++|---|---|---|
++| path | `LocalGGUFProposer.induce` (ordinary single-shot), `use_chat_template=True`, think ON, `thinking_budget_tokens=2048` | `induce_with_tool_loop` called directly (a fallback cannot be counted), `CARNOT_ARC_INDUCE_TOOL_LOOP=1`, `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1`, thinking off by the grammar, turn cap 4, force-engine nudge at turn 2 |
++| per-call budget | `max_tokens` 6144, timeout 600 s | same |
++| scoring | the written `world_model.py` re-run through `InductionToolSession.run_engine_on_transitions` on the same window (37 visible / 3 held-out rows) | same scorer |
++
++"Emitted" = a `world_model.py` was written. "Scoreable" = it compiles, defines
++`engine`, and the verifier runs it on every visible row. Those are weak bars: an
++identity engine is scoreable. So the table also gives engine size, `cell_recall`
++(visible / held-out) and accuracy (fraction of rows predicted exactly).
++
++Per cell (MEASURED; n = 7 games per arm, 14 cells, all completed inside the budget):
++
++| game | arm | scoreable | engine chars | tokens | wall s | acc vis | recall vis | acc ho | recall ho | submissions |
++|---|---|---|---|---|---|---|---|---|---|---|
++| tr87 | control | yes | 4006 | 3446 | 104.1 | 0.000 | 0.153 | 0.000 | 0.639 | 1 |
++| tr87 | grammar | yes | 132 (identity) | 133 | 19.8 | 0.000 | 0.000 | 0.000 | 0.000 | 1 |
++| sp80 | control | yes | 3882 | 3224 | 88.7 | 0.000 | 0.393 | 0.000 | 0.643 | 1 |
++| sp80 | grammar | yes | 3913 | 1938 | 63.4 | 0.000 | 0.286 | 0.000 | 0.643 | 2 |
++| sb26 | control | yes | 1614 | 2539 | 69.8 | 0.946 | 0.500 | 1.000 | 0.000 | 1 |
++| sb26 | grammar | yes | 639 | 422 | 17.8 | 0.919 | 0.250 | 1.000 | 0.000 | 2 |
++| re86 | control | yes | 6800 | 3928 | 121.8 | 0.000 | 0.445 | 0.000 | 0.484 | 1 |
++| re86 | grammar | yes | 132 (identity) | 1313 | 55.7 | 0.000 | 0.000 | 0.000 | 0.000 | 2 |
++| g50t | control | yes | 6987 | 4320 | 121.8 | 0.000 | 0.254 | 0.000 | 0.599 | 1 |
++| g50t | grammar | yes | 454 | 731 | 31.9 | 0.162 | 0.000 | 0.333 | 0.000 | 2 |
++| r11l | control | yes | 10218 | 6144 (cap) | 172.9 | 0.000 | 0.099 | 0.000 | 0.000 | 1 |
++| r11l | grammar | yes | 375 | 369 | 22.5 | 0.000 | 0.000 | 0.000 | 0.000 | 2 |
++| lp85 | control | yes | 6517 | 4426 | 131.1 | 0.351 | 0.000 | 0.333 | 0.000 | 1 |
++| lp85 | grammar | yes | 1267 | 1074 | 47.8 | 0.000 | 0.041 | 0.000 | 0.000 | 2 |
++
++Per arm: control 7/7 emitted, 7/7 scoreable, 7/7 non-trivial, 28,027 decode tokens,
++810 s; grammar 7/7 emitted, 7/7 scoreable, 5/7 non-trivial, 5,980 decode tokens, 259 s.
++Transport: 28 envelopes sent by the model, 28 parsed, 0 invalid, 13 engine
++submissions. Mean accuracy 0.185 (control) vs 0.154 (grammar); mean visible cell recall
++0.263 vs 0.082.
++
++Turn order in EVERY grammar cell (MEASURED): `list_transitions {}` (13-14 tokens),
++`diff_grids` (14-15 tokens), then the first `run_engine_on_transitions` at turn 2, the
++turn at which the force-engine nudge fired (`force_engine_nudges: 1` in all 7). The
++"identity" engines on tr87 and re86 are the fewest-mismatch candidates the monotone
++accept kept; re86's turn-3 candidate was 1232 tokens and scored worse.
++
++What this shows and does not show:
++
++- Shows: the round-1 grammar carries well-formed calls and real code on the pinned 27B.
++  28 of 28 envelopes were parseable, including six-argument `query_region` calls and
++  code strings of 1166 tokens with escapes. On sb26 the transport produced a 0.919 /
++  1.0 engine in 18 s. The mechanism claim in the recorded 0.8B negative ("two parseable
++  calls, missing required code, zero scoreable engines") does not hold on the 27B.
++- Does not show: that the model submits an engine on its own under the grammar. All 13
++  submissions followed the nudge, and the cheapest legal envelope was chosen first in
++  7 of 7 cells. This is the attribution problem the review raised, and it is why round
++  2 makes the force turn a grammar constraint instead of a prompt.
++- The control worked (7/7 engines, two with accuracy above 0), so a zero on the arm would
++  have been interpretable as an arm result. There was no zero.
++- Quality comparison is not the question this trial was sized for. n = 7 per arm; the
++  arms differ in thinking (control on, grammar off) and turn budget (4 turns).
++
++## 6. Review findings and round 2 (same day)
++
++The adversarial review of round 1 found:
++
++1. `list_transitions` has no required parameter, so `args-5 ::= object` and
++   `{"name":"list_transitions","arguments":{}}` stayed grammatical. It is that tool's
++   complete call, not a shell. It is also the cheapest legal envelope, and the trial
++   showed the 27B takes it first. Interpretability then rested on the prompt nudge.
++2. `nonempty-string` admitted `{"code":" "}`, which passed the lifter, dispatched, and
++   counted as a parsed call.
++3. The spec cited this note while it was untracked and incomplete.
++
++Closures (all MEASURED against the binary, `gbnf_proof2.py`, 26 strings x 2 grammars,
++reader agreeing on 52 of 52):
++
++- `REQUIRED_SOURCE_DEFINITIONS` (`arc_induction_tools.py`): `code` must contain
++  `def engine(` (run_engine_on_transitions) or `def is_level_complete(`
++  (run_goal_on_states); `predicate_code` must contain `def accept(`. The grammar rule is
++  `"\"" char* "def engine(" char* "\"" ws`. The threshold is the dispatcher's own
++  contract (`_exec_candidate(code, "engine")`), not a character count. A grammar cannot
++  judge a program beyond that; the verifier does.
++- The lifter rejects a blank required string and a source argument without its
++  definition.
++- At the force turn the loop sends `_tool_grammar(schemas, allowed=("run_engine_on_transitions",))`
++  (root `call-0` only; sha256 c83115a92f437134, 724 bytes) and counts
++  `grammar_submit_only_turns`. The nudge text stays so the model knows why.
++
++Round-2 full grammar sha256 16578b60ac14f9f2, 1841 bytes. New verdicts (binary):
++
++| case | candidate | full | submit-only |
++|---|---|---|---|
++| G | `list_transitions` with `{}` | VALID | INVALID |
++| S | `{"code":" "}` | INVALID | INVALID |
++| T | `{"code":"def engine("}` (the admitted minimum) | VALID | VALID |
++| U | `{"code":"x"}` | INVALID | INVALID |
++| V | engine code that defines only `is_level_complete` | INVALID | INVALID |
++| W | `run_goal_on_states` with `def is_level_complete(` | VALID | INVALID |
++| X | `run_goal_on_states` with `def engine(` only | INVALID | INVALID |
++| Y | `find_objects` predicate `lambda obj: True` | INVALID | INVALID |
++| Z | `def engine(` after escaped quotes, backslash, tab | VALID | VALID |
++| B, N | full calls with real code | VALID | VALID |
++| K, L, O | complete calls to other tools | VALID | INVALID |
++
++Round-2 mutations (source sha 59e8f98c2e85 before and after each restore):
++
++| id | site | RED | GREEN |
++|---|---|---|---|
++| M5 | builder drops the definition marker | 6 of 28 failed | 28 passed |
++| M6 | lifter ignores the definition marker | 3 of 8 failed | 8 passed |
++| M7 | force turn keeps the full grammar | 1 failed (root was the full grammar) | 1 passed |
++| M8 | lifter accepts a blank required string | 1 of 8 failed (the blank-enum case built for it) | 8 passed |
++
++Finding 3 is closed by this note being complete and committed.
++
++## 7. Limits, what was not covered, and the open decision
++
++- The 27B trial ran on the round-1 grammar. No cell ran on the round-2 grammar. Per the
++  coordinator's instruction, GPU spend stopped at 18.5 min and stays at zero.
++- The cheapest legal envelope under the full grammar is still `list_transitions {}`
++  during inspection turns. The grammar closes the starvation route at the force turn,
++  not before it. Removing `list_transitions` from the grammar mode would close it
++  earlier at the cost of the tool. That is the operator decision this arm needs.
++- The definition marker forces a definition, not a program. `{"code":"def engine("}`
++  is grammatical and fails at dispatch with a syntax error. The verifier, not the
++  grammar, judges programs.
++- Mutation proofs ran UNLOCKED: `--mutation-begin` refuses to run in a worktree while
++  the same lock blocks repo-wide. PYTHONPATH was pinned to the worktree and the
++  imported module path was printed and checked.
++- Windows were random-walk, not level-up. The quality columns are not comparable with
++  the prior 27B measurements that used `build_progress_window`.
++- The reviewer's independent re-derivation is recorded in its own report; it is quoted
++  here from the coordinator's summary, not re-run.
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 7f320ee587..7568560fbd 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -30228,3 +30228,35 @@ and the new one.
+ Implementation status: implemented 2026-09-05 on this branch. The model-free
+ proof, its case table, and the 27B trial are recorded in
+ `docs/research-notes/grammar-27b-trial-2026-09-05.md`.
++
++Review amendment 2026-09-05 (same day, later session, append-only). An
++adversarial review of the first fix found two gaps. Both were confirmed against
++`test-gbnf-validator` and are closed below.
++
++1. `list_transitions` has no required parameter, so
++   `{"name":"list_transitions","arguments":{}}` stayed grammatical. It is that
++   tool's complete call, not a shell. It is also the cheapest legal envelope, and
++   in the bounded 27B trial every grammar cell chose it first. Closure: at the
++   loop's force turn (`CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN`, where the prompt
++   nudge fires) the request SHALL carry a grammar whose root admits only
++   `run_engine_on_transitions`. The nudge becomes a constraint, not a request.
++   The loop SHALL count these requests in `grammar_submit_only_turns`.
++2. `nonempty-string` admitted a one-character `code`. Closure: a source argument
++   SHALL contain the definition dispatch looks for (`REQUIRED_SOURCE_DEFINITIONS`
++   in `arc_induction_tools.py`: `def engine(`, `def is_level_complete(`,
++   `def accept(`). The consumer SHALL reject a blank required string and a source
++   argument without its definition. The threshold is the dispatcher's own
++   contract, not a character count. A grammar cannot judge a program beyond it.
++
++### SCENARIO-ARC-WMTE-7046-C: The force turn admits only a defining submission
++- GIVEN the model spent the inspection budget without a submission
++- WHEN the loop sends the next request
++- THEN that request's grammar root is `call-0` only
++- AND `{"name":"list_transitions","arguments":{}}` is not grammatical
++- AND a `run_engine_on_transitions` call whose code contains `def engine(` is
++
++Review closures implemented the same day. 52 of 52 verdicts re-established
++against the llama.cpp binary (26 strings x 2 grammars); the reader agreed on all.
++Mutations M5-M8 RED/GREEN at the call sites. The 27B trial ran before the review
++landed; its results are recorded in the note with the attribution caveat the
++review raised, and no further GPU time was spent.
+diff --git a/ops/arc_flag_ledger.yaml b/ops/arc_flag_ledger.yaml
+index a73c835bc2..e621e7f148 100644
+--- a/ops/arc_flag_ledger.yaml
++++ b/ops/arc_flag_ledger.yaml
+@@ -457,7 +457,8 @@ flags:
+   CARNOT_ARC_INDUCE_TOOL_GRAMMAR:
+     discovered: '2026-09-05'
+     state: unevaluated
+-    evidence: []
++    evidence:
++      - docs/research-notes/grammar-27b-trial-2026-09-05.md
+     default: '0'
+     requires: CARNOT_ARC_INDUCE_TOOL_LOOP
+     note: >-
+@@ -466,6 +467,13 @@ flags:
+       serving mechanism; no 27B ARC efficacy measurement or promotion.
+       vLLM and enabled native-message compaction are refused before a grammar
+       chat request and use the existing loop fallback.
++      Amendment 2026-09-05 (REQ-ARC-WMTE-7046): the first grammar admitted an
++      empty arguments object, so the 0.8B result was an artifact. The grammar now
++      requires each tool's required arguments with type, source arguments must
++      contain their definition, and the force turn sends a submission-only
++      grammar. A bounded 27B trial on GPU 1 (round-1 grammar, 14 cells) carried
++      28/28 envelopes and 13 engine submissions; every submission followed the
++      force nudge, so unprompted submission is unmeasured. Still default off.
+     confirmation_note: docs/research-notes/local-serving-confirmation-2026-09-05.md
+   CARNOT_ARC_INDUCE_TOOL_LOOP:
+     discovered: '2026-08-19'
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 73f18513ca..870159f722 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18918,3 +18918,26 @@ REQ-ARC-WMTE-7043–7045: exercised real CPU serving mechanisms, then added JSON
+ ### 2026-09-05 — Local serving verification closure
+ 
+ Completed REQ-ARC-WMTE-7043–7045 with real CPU mechanism controls, opt-in live JSON grammar, and fresh failure receipts before server startup/staging. Scored, bounded, repair and CLI construction paths are exercised; defaults stay off. 109 tests and 40 distinct final assertion mutations pass their scoped checks. One original GREEN mutation and two exception-only failures were corrected and preserved. Actual model trials did not induce an engine. Raw production-control stdout and the recorder's mutated event store are both retained and clearly distinguished. Global import and traceability failures remain outside this change. No GPU, hook bypass, protected-substrate edits or manual results writes.
++
++### 2026-09-05 — Induction grammar required-arguments fix, review closures, bounded 27B trial (worktree agent)
++
++Instruction: test the tool-JSON grammar before any model, then run a bounded 27B
++trial on GPU 1 if the grammar holds. Outcome:
++
++- Proved with llama.cpp's `test-gbnf-validator` that the REQ-7044 grammar admitted
++  `{"name":"run_engine_on_transitions","arguments":{}}`. The recorded 0.8B negative was
++  an empty-shell artifact, not a 27B result.
++- Round 1 (commit 1c41b9c698): per-tool arguments rules with required keys and types;
++  lifter rejects payload-less envelopes; grammar text frozen per session; prompt no
++  longer shows an empty example; `carnot.testing.gbnf_match` reader pinned to the
++  binary; REQ-ARC-WMTE-7046.
++- Bounded 27B trial (18.5 min GPU 1, 14 cells): transport carries code on the pinned
++  27B (28/28 parsed, 13 submissions, sb26 0.919/1.0). Every submission followed the
++  force nudge. Recorded with that caveat.
++- Review findings (coordinator): the argument-less `list_transitions {}` stayed the
++  cheapest legal envelope; `nonempty-string` admitted one character. Round 2 closes
++  both: source arguments must contain their definition; the force turn sends a
++  submission-only grammar. 52/52 binary verdicts; mutations M5-M8 RED/GREEN. No
++  further GPU time.
++- Record: `docs/research-notes/grammar-27b-trial-2026-09-05.md`, spec amendment with
++  SCENARIO-ARC-WMTE-7046-C, flag ledger evidence, `ops/test-results.md`.
+diff --git a/ops/metrics.md b/ops/metrics.md
+index 09db5bd608..9b61c0b49a 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3351,3 +3351,9 @@ improvements reachable from the two live entrypoints; prove every guard by mutat
+ | Turn | Start | End | Description | Tokens |
+ |---|---|---|---|---|
+ | 1 | 2026-09-05T07:17:26Z | 2026-09-05T08:23:35+00:00 | CPU local serving confirmed with negatives retained; REQ-7043–7045 grammar flag off. 109 focused tests, 40 final assertion mutations/45 executions, 61,816 collected/eight existing errors. Adversarial review clear. Evidence/code b288f4553e, d5d72141ca, 33c63162f8; final receipts committed separately. | Unavailable: scripts/session-metrics.py absent; no token count inferred |
++
++## Session: 2026-09-05 induction grammar proof and bounded 27B trial (worktree agent)
++
++| Turn | Start | End | Description | Tokens |
++|---|---|---|---|---|
++| 1 | 2026-09-05T23:01:06Z | 2026-09-06T00:19:00Z | Model-free grammar proof with test-gbnf-validator; round-1 fix (1c41b9c698) with reader + 205 tests + M1-M8 mutations; bounded 27B trial on GPU 1 (14 cells, 18.5 min GPU, server killed by PID); coordinator review closures (definition markers, submission-only force turn) verified on 52/52 binary verdicts; note, spec, ops. One reviewer subagent (opus) spawned before the no-further-agents instruction. | see session JSONL |
+diff --git a/ops/status.md b/ops/status.md
+index af2cd32503..10fcb6128a 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -10723,3 +10723,24 @@ CPU confirmation committed as b288f4553e. KV restore survives SIGKILL; cache shi
+ ### 2026-09-05 local serving closure
+ 
+ REQ-ARC-WMTE-7043–7045 completed within bounded scope. CPU save/restore and SIGKILL restart confirmed; no full agent recovery claimed. Grammar transport remains unevaluated/off. Real 0.8B loop: two parseable calls, missing required code, zero engines. Production grammar overrides BANANA; nested copy truncated. 109 focused tests pass, 40 distinct final assertion mutations/45 executions restored with cmp. Adversarial review has no remaining code findings at 33c63162f8. Global collection retains eight existing errors (61,816 collected); spec/reconciliation retain 1,178 existing traceability violations. Exact commands, outputs, negative findings and imperfect proof history are in the local-serving research note and receipts.
++
++### 2026-09-05 induction grammar: proof, fix, review closures, 27B trial
++
++What is working: `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1` now sends a grammar that requires
++each tool's required arguments with their types, requires source arguments to contain
++the definition dispatch looks for, and restricts the force turn to a submission. The
++lifter refuses payload-less, blank, or definition-less envelopes without dispatch. A
++model-free reader (`carnot.testing.gbnf_match`) is pinned to llama.cpp's validator on
++52 verdicts. The pinned 27B carried 28/28 well-formed envelopes and 13 real engine
++submissions through the round-1 grammar on GPU 1.
++
++What is not settled: whether the 27B submits an engine under the grammar WITHOUT the
++force nudge (all 13 submissions followed it); whether `list_transitions` should stay in
++the grammar mode's tool set (it is the cheapest legal envelope during inspection
++turns; the round-2 closure applies at the force turn, not before). No cell has run on
++the round-2 grammar. The flag stays default off.
++
++Operator decision needed: keep `list_transitions` in grammar mode with the force-turn
++closure, or remove it from grammar mode so no argument-less envelope exists at all.
++Then, if wanted, a second bounded trial on the round-2 grammar with the force turn at
++the loop default (3) rather than 2.
+diff --git a/ops/test-results.md b/ops/test-results.md
+index 47a6d1e99d..ebf5cffef5 100644
+--- a/ops/test-results.md
++++ b/ops/test-results.md
+@@ -628,3 +628,40 @@ with missing code, 31 tokens/11.286728s, no engine. Grammar defeats BANANA; nest
+ copy does not finish in 160 tokens. These are mechanism results, not ARC efficacy.
+ Full raw commands, responses, limitations and recorder corrections are linked from
+ `docs/research-notes/local-serving-confirmation-2026-09-05.md`.
++
++## 2026-09-05 induction grammar: model-free proof, two fix rounds, bounded 27B trial
++
++REQ-ARC-WMTE-7044/7045/7046. Full record:
++`docs/research-notes/grammar-27b-trial-2026-09-05.md`.
++
++Model-free (llama.cpp `test-gbnf-validator`, build b9606; no model):
++
++- Old grammar (sha256 6a09d16de9e9deec) accepted
++  `{"name":"run_engine_on_transitions","arguments":{}}`, the envelope the recorded
++  0.8B trial returned twice. 18 cases pinned.
++- Round-1 grammar rejects it and requires each tool's required arguments with type.
++  36 of 36 verdicts (18 cases x 2 grammars) agree between the binary and the Python
++  reader `python/carnot/testing/gbnf_match.py`.
++- Round-2 grammar (after review): source arguments must contain their definition
++  (`def engine(`, `def is_level_complete(`, `def accept(`); the force turn sends a
++  submission-only grammar. 52 of 52 verdicts (26 cases x 2 grammars) agree.
++
++Tests, all pinned to the worktree
++(`PYTHONPATH=<worktree>/python JAX_PLATFORMS=cpu .venv/bin/python -m pytest
++tests/python/test_gbnf_match.py tests/python/test_arc_tool_grammar_transport.py
++tests/python/test_arc_induction_tool_loop.py tests/python/test_arc_tool_loop_repair.py
++tests/python/test_arc_induction_state_persistence.py --no-cov -n 0 --basetemp=<scratch>`):
++205 passed in 15.58 s. Mutations M1-M8, one pattern each at the call site, RED then
++byte-identical restore then GREEN; ran UNLOCKED (the mutation lock refuses a worktree).
++
++E2E, GPU 1 only (the conductor owns GPU 0): Qwen3.8-27B-Q4_K_M, llama-server b9606
++CUDA, `CUDA_VISIBLE_DEVICES=1`, port 8939, `-c 49152 --parallel 1`. Placement read
++from nvidia-smi joined on UUID: pid 692290 on GPU index 1 only. 14 cells (7 games x
++control/grammar) in 18.5 min of GPU wall; server stopped by exact PID; both cards back
++to 24120 MiB free; no orphan xdist workers; no `results/**` writes. Control 7/7
++scoreable engines; grammar arm 7/7 scoreable (5/7 non-trivial), 28/28 envelopes
++parsed, 13 submissions, best sb26 accuracy 0.919 visible / 1.0 held-out at 422 tokens.
++Every grammar submission followed the force-engine nudge, so the trial shows the
++transport carries code on the 27B, not that the model submits unprompted. The trial
++ran on the round-1 grammar; nothing ran on round 2 (GPU spend stopped per the
++coordinator).
+diff --git a/python/carnot/agentic/arc_induction_tool_loop.py b/python/carnot/agentic/arc_induction_tool_loop.py
+index 8d933ff77c..7efabb9891 100644
+--- a/python/carnot/agentic/arc_induction_tool_loop.py
++++ b/python/carnot/agentic/arc_induction_tool_loop.py
+@@ -48,6 +48,7 @@ from carnot.agentic.arc_induction_compact_state import (
+     rebuild_messages,
+ )
+ from carnot.agentic.arc_induction_tools import (
++    REQUIRED_SOURCE_DEFINITIONS,
+     TOOL_SCHEMAS,
+     InductionToolSession,
+     active_tool_names_for,
+@@ -124,8 +125,14 @@ def _gbnf_literal(text: str) -> str:
+     return json.dumps(text)
+ 
+ 
+-def _argument_rule(spec: dict[str, Any]) -> str:
+-    """The value rule for one required parameter: its enum literals, else its JSON type."""
++def _argument_rule(spec: dict[str, Any], definition: Optional[str] = None) -> str:
++    """The value rule for one required parameter: its enum literals, else its JSON type.
++
++    A source argument with a required `definition` (see REQUIRED_SOURCE_DEFINITIONS)
++    must CONTAIN that definition. A one-character string satisfied "non-empty" and
++    delivered no program; this closes that path at the grammar."""
++    if definition:
++        return f'"\\"" char* {_gbnf_literal(definition)} char* "\\"" ws'
+     enum = spec.get("enum")
+     if isinstance(enum, list) and enum and all(isinstance(v, str) for v in enum):
+         return "(" + " | ".join(_gbnf_literal(json.dumps(v)) for v in enum) + ") ws"
+@@ -142,7 +149,7 @@ def required_arguments(schemas: list[dict[str, Any]]) -> dict[str, tuple[str, ..
+     return out
+ 
+ 
+-def _tool_grammar(schemas: list[dict[str, Any]]) -> str:
++def _tool_grammar(schemas: list[dict[str, Any]], allowed: Optional[tuple[str, ...]] = None) -> str:
+     """One envelope per turn, and each tool's REQUIRED arguments are mandatory.
+ 
+     The first version constrained only the envelope, so an empty `arguments` object was
+@@ -150,15 +157,26 @@ def _tool_grammar(schemas: list[dict[str, Any]]) -> str:
+     Under constrained decoding the cheapest legal path wins, so that grammar made every
+     model result uninterpretable. Each tool now has its own arguments rule: required
+     keys first, in schema order, with their JSON type (strings non-empty, enums as
+-    literals); optional keys may follow. Proven model-free in test_gbnf_match.py.
++    literals, source arguments containing their required definition); optional keys may
++    follow. `allowed` restricts the root to a subset of tool names: the loop uses it at
++    the force turn so a submission is the only admissible envelope. Proven model-free
++    in test_gbnf_match.py.
+     """
+-    lines = ["root ::= " + " | ".join(f"call-{i}" for i in range(len(schemas)))]
+-    for i, schema in enumerate(schemas):
++    chosen = [
++        (i, s) for i, s in enumerate(schemas) if allowed is None or s["function"]["name"] in allowed
++    ]
++    if not chosen:
++        raise ValueError("tool grammar: no session tool is allowed")
++    lines = ["root ::= " + " | ".join(f"call-{i}" for i, _ in chosen)]
++    for i, schema in chosen:
+         fn = schema["function"]
+         params = fn.get("parameters") or {}
+         props = params.get("properties") or {}
+         pairs = [
+-            f'{_gbnf_literal(json.dumps(key))} ws ":" ws {_argument_rule(props.get(key) or {})}'
++            f'{_gbnf_literal(json.dumps(key))} ws ":" ws '
++            + _argument_rule(
++                props.get(key) or {}, REQUIRED_SOURCE_DEFINITIONS.get((str(fn["name"]), key))
++            )
+             for key in (params.get("required") or [])
+         ]
+         if pairs:
+@@ -194,13 +212,19 @@ def _lift_grammar_response(
+             raise ValueError("arguments must be an object")
+         # The grammar makes each tool's required arguments mandatory. A response that
+         # still lacks one is a transport fault and must not dispatch or count as parsed.
++        # A required string that is blank, or a source argument without the definition
++        # dispatch will look for, is the same fault with a payload-shaped disguise.
++        args = envelope["arguments"]
+         missing = [
+             key
+             for key in (required or {}).get(envelope["name"], ())
+-            if key not in envelope["arguments"] or envelope["arguments"][key] == ""
++            if key not in args or (isinstance(args[key], str) and not args[key].strip())
+         ]
+         if missing:
+             raise ValueError(f"missing required argument(s) {missing} for {envelope['name']}")
++        for (tool, key), definition in REQUIRED_SOURCE_DEFINITIONS.items():
++            if tool == envelope["name"] and key in args and definition not in str(args[key]):
++                raise ValueError(f"{key} for {tool} does not define {definition!r}")
+         msg["tool_calls"] = [
+             {
+                 "id": f"grammar_{turn}",
+@@ -494,6 +518,7 @@ def induce_with_tool_loop(
+         "grammar_json": grammar_json,
+         "grammar_calls_parsed": 0,
+         "grammar_invalid_responses": 0,
++        "grammar_submit_only_turns": 0,
+         "turns": 0,
+         "decode_tokens_total": 0,
+         "terminated_by": "initialization_failed",
+@@ -584,6 +609,14 @@ def induce_with_tool_loop(
+     # Frozen for the run (REQ-ARC-WMTE-6770): built from a deep copy so a candidate
+     # schema mutated by tool code cannot rewrite the grammar a later turn sends.
+     grammar_text = _tool_grammar(copy.deepcopy(session_schemas)) if grammar_json else None
++    # At the force turn the prompt nudge alone is a request the model may ignore. Under
++    # grammar transport the loop can make it a constraint: only a submission is admissible.
++    grammar_submit_text = (
++        _tool_grammar(copy.deepcopy(session_schemas), allowed=("run_engine_on_transitions",))
++        if grammar_json and "run_engine_on_transitions" in grammar_names
++        else None
++    )
++    force_submit = False
+     active_names = set(active_tool_names_for(session))
+     schema_text = ("\n\n" + render_tool_schemas_for_prompt(session_schemas)) if selfparse else ""
+     if grammar_json:
+@@ -636,6 +669,7 @@ def induce_with_tool_loop(
+         "grammar_json": grammar_json,
+         "grammar_calls_parsed": 0,
+         "grammar_invalid_responses": 0,
++        "grammar_submit_only_turns": 0,
+         "selfparse_turns_with_tool_call_text": 0,
+         "selfparse_blocks_seen": 0,
+         "selfparse_calls_parsed": 0,
+@@ -798,6 +832,9 @@ def induce_with_tool_loop(
+             _tools_kw = {} if selfparse else {"tools_payload": session_schemas}
+             if grammar_json:
+                 _tools_kw = {"grammar": grammar_text}
++                if force_submit and grammar_submit_text is not None:
++                    _tools_kw = {"grammar": grammar_submit_text}
++                    stats["grammar_submit_only_turns"] += 1
+             raw = _post_chat(
+                 proposer,
+                 messages,
+@@ -992,6 +1029,7 @@ def induce_with_tool_loop(
+             if "run_engine_on_transitions" in turn_names:
+                 turns_since_submission = 0
+                 model_submitted = True
++                force_submit = False
+             else:
+                 turns_since_submission += 1
+             if stall_cap > 0 and turns_since_submission >= stall_cap:
+@@ -1005,6 +1043,7 @@ def induce_with_tool_loop(
+             if not model_submitted and stats["turns"] >= _force_engine_turn():
+                 messages.append({"role": "user", "content": _FORCE_ENGINE_NUDGE})
+                 stats["force_engine_nudges"] += 1
++                force_submit = True
+             continue
+ 
+         final_code = _extract_final_code(content)
+diff --git a/python/carnot/agentic/arc_induction_tools.py b/python/carnot/agentic/arc_induction_tools.py
+index 7bd5f7a5a7..89ef43bdc5 100644
+--- a/python/carnot/agentic/arc_induction_tools.py
++++ b/python/carnot/agentic/arc_induction_tools.py
+@@ -700,6 +700,17 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
+ 
+ TOOL_NAMES = tuple(s["function"]["name"] for s in TOOL_SCHEMAS)
+ 
++# For each source-code argument, the definition dispatch will look for. A grammar cannot
++# judge a program, but it can demand the one thing dispatch demands: that the named
++# function is defined. That is the smallest payload that is not an empty shell, and it
++# is the dispatcher's own contract (`_exec_candidate(code, "engine")` and siblings),
++# not an arbitrary length. Read by the grammar builder and the grammar consumer.
++REQUIRED_SOURCE_DEFINITIONS: dict[tuple[str, str], str] = {
++    ("run_engine_on_transitions", "code"): "def engine(",
++    ("run_goal_on_states", "code"): "def is_level_complete(",
++    ("find_objects", "predicate_code"): "def accept(",
++}
++
+ # ---------------------------------------------------------------------------------
+ # Tool-gap capture + curated candidate tools (REQ-ARC-WMTE-6770).
+ #
+diff --git a/scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py b/scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py
+new file mode 100644
+index 0000000000..50212cefd5
+--- /dev/null
++++ b/scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py
+@@ -0,0 +1,582 @@
++#!/usr/bin/env python
++"""Bounded 27B trial of the induction tool grammar (REQ-ARC-WMTE-7046), GPU 1 only.
++
++WHAT THIS ANSWERS. The grammar transport (`CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1`) had one
++recorded trial, on the 0.5 GB CPU smoke model, and that trial's grammar admitted an
++empty `arguments` object. With the grammar fixed, does the pinned Qwen3.8-27B produce
++scoreable engines through the grammar loop? The control is the ordinary single-shot
++induce path on the same model, same windows, same seed.
++
++TWO ROLES, ONE FILE. `--role driver` owns the llama-server (launched by this script on
++a non-default port, pinned to one card with CUDA_VISIBLE_DEVICES, killed by exact PID)
++and runs one `--role cell` subprocess per (game, arm). A cell is its own process because
++`E3_DIR` binds from `CARNOT_ARC_E3_DIR` at import time, so two arms in one process would
++share an engine store and score each other's leftovers (the contamination the h2h
++harness exp6440 documents).
++
++RULES HONOURED. GPU placement is read from nvidia-smi joined on UUID, never from the env
++var. A long-run receipt is armed (REQ-INFRA-6830). `results/**` is never written: the
++engine store is redirected to the output directory. The server is stopped by PID.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import os
++import signal
++import subprocess
++import sys
++import time
++import urllib.request
++from pathlib import Path
++from typing import Any, Optional
++
++HERE = Path(__file__).resolve()
++REPO = HERE.parents[2]
++LLAMA_SERVER = Path.home() / ".cache/llama.cpp-master/build/bin/llama-server"
++GGUF_NAME = "Qwen3.8-27B-Q4_K_M.gguf"
++DEFAULT_GAMES = "tr87,sp80,sb26,re86,g50t"
++
++
++def log(msg: str) -> None:
++    print(time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()) + " " + msg, flush=True)
++
++
++def gpu_table() -> dict[str, int]:
++    """{uuid: index} from nvidia-smi."""
++    out = subprocess.run(
++        ["nvidia-smi", "--query-gpu=index,uuid", "--format=csv,noheader"],
++        capture_output=True,
++        text=True,
++        check=True,
++    ).stdout
++    table: dict[str, int] = {}
++    for line in out.strip().splitlines():
++        idx, uuid = [p.strip() for p in line.split(",")]
++        table[uuid] = int(idx)
++    return table
++
++
++def gpu_apps() -> list[dict[str, Any]]:
++    """Every compute process with the GPU INDEX it actually holds memory on."""
++    table = gpu_table()
++    out = subprocess.run(
++        ["nvidia-smi", "--query-compute-apps=pid,gpu_uuid,used_memory", "--format=csv,noheader"],
++        capture_output=True,
++        text=True,
++        check=True,
++    ).stdout
++    rows = []
++    for line in out.strip().splitlines():
++        if not line.strip():
++            continue
++        pid, uuid, mem = [p.strip() for p in line.split(",")]
++        rows.append({"pid": int(pid), "gpu_index": table.get(uuid), "used_mib": mem})
++    return rows
++
++
++def gpu_free_mib(index: int) -> int:
++    out = subprocess.run(
++        ["nvidia-smi", f"--id={index}", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
++        capture_output=True,
++        text=True,
++        check=True,
++    ).stdout
++    return int(out.strip().splitlines()[0])
++
++
++def orphan_xdist_workers() -> list[int]:
++    """xdist workers hold GPU memory and are invisible to `pgrep -f pytest`."""
++    found = []
++    for p in Path("/proc").iterdir():
++        if not p.name.isdigit():
++            continue
++        try:
++            cmd = (p / "cmdline").read_bytes().replace(b"\0", b" ")
++        except OSError:
++            continue
++        if b"exec(eval(sys.stdin.readline()))" in cmd:
++            found.append(int(p.name))
++    return found
++
++
++def http_json(url: str, payload: Optional[dict[str, Any]] = None, timeout: float = 10.0) -> Any:
++    data = None if payload is None else json.dumps(payload).encode()
++    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
++    with urllib.request.urlopen(req, timeout=timeout) as r:
++        return json.load(r)
++
++
++def health_ok(port: int) -> bool:
++    try:
++        return bool(http_json(f"http://127.0.0.1:{port}/health", timeout=2.0))
++    except Exception:
++        return False
++
++
++def resolve_gguf() -> Optional[str]:
++    root = Path.home() / ".cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots"
++    for snap in sorted(root.glob("*")):
++        cand = snap / GGUF_NAME
++        if cand.exists():
++            return str(cand)
++    return None
++
++
++# ----------------------------------------------------------------------------------
++# cell
++# ----------------------------------------------------------------------------------
++
++
++def run_cell(args: argparse.Namespace) -> int:
++    """One (game, arm). Env is already set by the driver; E3_DIR binds on import."""
++    import hashlib
++
++    import numpy as np
++
++    from carnot.agentic import arc_executable_world_model as e3
++    from carnot.agentic.arc_actions_to_progress import build_progress_window
++    from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
++    from carnot.agentic.arc_induction_tools import InductionToolSession
++
++    rec: dict[str, Any] = {
++        "game": args.game,
++        "arm": args.arm,
++        "e3_dir": str(e3.E3_DIR),
++        "env": {
++            k: v
++            for k, v in os.environ.items()
++            if k.startswith("CARNOT_ARC_") or k in ("CUDA_VISIBLE_DEVICES", "CARNOT_LLAMA_SERVER")
++        },
++    }
++    out = Path(args.out)
++    out.parent.mkdir(parents=True, exist_ok=True)
++    t_cell = time.time()
++    # Windows come from a pickle the driver prepared on CPU. Building one solves L1
++    # by search and costs minutes; inside a GPU-timed cell that would burn the budget
++    # while the server sits idle. The fallback builds only when no pickle is given.
++    if args.window_pkl:
++        import pickle
++
++        with Path(args.window_pkl).open("rb") as fh:
++            payload = pickle.load(fh)
++        window, cell = list(payload["window"]), int(payload["cell"])
++        rec["window_source"] = str(args.window_pkl)
++    else:
++        w = build_progress_window(args.game)
++        if w is None:
++            rec["status"] = "skipped_no_offline_window"
++            out.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
++            return 0
++        window, _full, cell = w
++        window = list(window)
++        rec["window_source"] = "build_progress_window"
++    h = hashlib.sha256()
++    for t in window:
++        h.update(np.asarray(t.grid).tobytes())
++        h.update(str(t.action).encode())
++        h.update(np.asarray(t.next_grid).tobytes())
++    rec["window_sha256"] = h.hexdigest()
++    rec["window_rows"] = len(window)
++    rec["cell"] = int(cell)
++
++    p = e3.LocalGGUFProposer(
++        port=args.port,
++        mtp=False,
++        kv_quant="q8_0",
++        model_path=args.gguf,
++        use_chat_template=True,
++        tries=1,
++    )
++    rec["proposer"] = {
++        "n_ctx": p.n_ctx,
++        "max_tokens": p.max_tokens,
++        "timeout": p.timeout,
++        "repo_substr": p.repo_substr,
++    }
++    if not p._ensure_server():
++        rec["status"] = "server_unavailable"
++        out.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
++        return 2
++    rec["server_reuse"] = {
++        "model_check": getattr(p, "reuse_model_check", None),
++        "n_ctx_check": getattr(p, "reuse_n_ctx_check", ""),
++        "observed_model": getattr(p, "observed_server_model_path", None),
++        "observed_n_ctx": getattr(p, "observed_server_n_ctx", None),
++        "launched_own_server": bool(p.last_launch_argv),
++        "port_after_ensure": p.port,
++    }
++    if p.last_launch_argv or p.port != args.port:
++        # The cell must ride the driver's server. A relaunch means placement is unknown.
++        rec["status"] = "refused_relaunched_server"
++        try:
++            if p._proc is not None:
++                p._proc.terminate()
++        except Exception:
++            pass
++        out.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
++        return 3
++
++    wm = e3.E3_DIR / args.game / "world_model.py"
++    try:
++        wm.unlink()
++    except FileNotFoundError:
++        pass
++
++    events: list[dict[str, Any]] = []
++    t0 = time.time()
++    if args.arm == "grammar":
++        ok, note = induce_with_tool_loop(p, args.game, window, int(cell), tool_event_sink=events)
++        stats = dict(p.last_tool_loop_stats or {})
++        rec["tool_loop_stats"] = stats
++        rec["tool_events"] = events
++        rec["tokens_decoded"] = stats.get("decode_tokens_total")
++        rec["prompt_tokens_per_turn"] = stats.get("prompt_tokens_per_turn")
++    else:
++        ok, note = p.induce(args.game, window, int(cell))
++        rec["tokens_decoded"] = getattr(p, "last_generated_tokens", None)
++        rec["last_stop_type"] = getattr(p, "last_stop_type", "")
++        rec["channel_totals"] = dict(getattr(p, "channel_totals", {}) or {})
++        rec["raw_completion_chars"] = len(getattr(p, "last_raw_completion", "") or "")
++        rec["reasoning_chars"] = len(getattr(p, "last_reasoning_content", "") or "")
++    rec["wall_s"] = round(time.time() - t0, 2)
++    rec["induce_ok"] = bool(ok)
++    rec["induce_note"] = str(note)[:600]
++    rec["engine_emitted"] = wm.exists()
++
++    if wm.exists():
++        code = wm.read_text()
++        rec["engine_chars"] = len(code)
++        rec["engine_sha256"] = hashlib.sha256(code.encode()).hexdigest()
++        session = InductionToolSession(window, cell=int(cell))
++        report = session.run_engine_on_transitions(code)
++        rec["score"] = {
++            "ok": bool(report.get("ok")),
++            "error": report.get("error"),
++            "accuracy": report.get("accuracy"),
++            "cell_recall": report.get("cell_recall"),
++            "held_out": report.get("held_out"),
++            "n_engine_raised": report.get("n_engine_raised"),
++            "static_defects": report.get("static_defects"),
++            "is_memorizing": (report.get("memorization_scan") or {}).get("is_memorizing"),
++        }
++        try:
++            engine, goal = e3.load_engine(args.game)
++            rec["loadable"] = engine is not None and goal is not None
++        except Exception as exc:  # noqa: BLE001
++            rec["loadable"] = False
++            rec["load_error"] = f"{type(exc).__name__}: {exc}"[:200]
++    else:
++        rec["score"] = {"ok": False, "error": "no world_model.py written"}
++        rec["loadable"] = False
++    rec["cell_wall_s"] = round(time.time() - t_cell, 2)
++    rec["status"] = "done"
++    out.write_text(json.dumps(rec, indent=2, sort_keys=True, default=str) + "\n")
++    return 0
++
++
++# ----------------------------------------------------------------------------------
++# driver
++# ----------------------------------------------------------------------------------
++
++
++def run_driver(args: argparse.Namespace) -> int:
++    sys.path.insert(0, str(REPO / "python"))
++    from carnot.testing.long_run_receipt import install
++
++    out = Path(args.out)
++    out.mkdir(parents=True, exist_ok=True)
++    (out / "cells").mkdir(exist_ok=True)
++    (out / "relaunch_logs").mkdir(exist_ok=True)
++    trial: dict[str, Any] = {
++        "started_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "args": vars(args),
++        "cells": [],
++    }
++    install(out / "receipt.json", progress=lambda: {"cells_done": len(trial["cells"])})
++
++    def save() -> None:
++        (out / "trial.json").write_text(
++            json.dumps(trial, indent=2, sort_keys=True, default=str) + "\n"
++        )
++
++    # ---- preconditions (Pre-Launch Preconditions Discipline) ----
++    gguf = resolve_gguf()
++    pre = [
++        {"resource": "gguf_cached_qwen38_27b", "available": gguf is not None, "detail": gguf},
++        {
++            "resource": "llama_server_cuda_binary",
++            "available": LLAMA_SERVER.exists(),
++            "detail": str(LLAMA_SERVER),
++        },
++    ]
++    table = gpu_table()
++    idx_to_uuid = {v: k for k, v in table.items()}
++    pre.append(
++        {
++            "resource": f"gpu{args.gpu}_present",
++            "available": args.gpu in idx_to_uuid,
++            "detail": idx_to_uuid.get(args.gpu),
++        }
++    )
++    free = gpu_free_mib(args.gpu) if args.gpu in idx_to_uuid else 0
++    pre.append(
++        {"resource": f"gpu{args.gpu}_free_mib>=21000", "available": free >= 21000, "detail": free}
++    )
++    pre.append(
++        {"resource": f"port_{args.port}_free", "available": not health_ok(args.port), "detail": ""}
++    )
++    orphans = orphan_xdist_workers()
++    pre.append({"resource": "no_orphan_xdist_workers", "available": not orphans, "detail": orphans})
++    trial["preconditions_checked"] = pre
++    save()
++    for c in pre:
++        log(f"precondition {c['resource']}: {'ok' if c['available'] else 'MISSING'} {c['detail']}")
++    if not all(c["available"] for c in pre if c["resource"] != "no_orphan_xdist_workers"):
++        trial["status"] = "blocked_preconditions"
++        save()
++        return 2
++
++    # ---- launch the server on ONE card ----
++    server_args = [
++        str(LLAMA_SERVER),
++        "-m",
++        str(gguf),
++        "-ngl",
++        "999",
++        "-c",
++        str(args.n_ctx),
++        "--port",
++        str(args.port),
++        "--host",
++        "127.0.0.1",
++        "--cache-type-k",
++        "q8_0",
++        "--cache-type-v",
++        "q8_0",
++        "--parallel",
++        "1",
++        "-fit",
++        "off",
++        "--jinja",
++        "--reasoning-format",
++        "deepseek",
++    ]
++    env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(args.gpu))
++    srv_log = out / "llama_server.log"
++    log(f"launch: CUDA_VISIBLE_DEVICES={args.gpu} {' '.join(server_args)}")
++    proc = subprocess.Popen(
++        server_args, stdout=srv_log.open("ab"), stderr=subprocess.STDOUT, env=env
++    )
++    trial["server"] = {
++        "pid": proc.pid,
++        "argv": server_args,
++        "cuda_visible_devices": str(args.gpu),
++        "log": str(srv_log),
++    }
++    save()
++    t_launch = time.time()
++    rc = 0
++    try:
++        while time.time() - t_launch < 900:
++            if proc.poll() is not None:
++                raise RuntimeError(f"llama-server exited early rc={proc.returncode}; see {srv_log}")
++            if health_ok(args.port):
++                break
++            time.sleep(2)
++        else:
++            raise RuntimeError("llama-server never became healthy within 900 s")
++        t_healthy = time.time()
++        trial["server"]["health_wait_s"] = round(t_healthy - t_launch, 1)
++        placement = [r for r in gpu_apps() if r["pid"] == proc.pid]
++        trial["server"]["placement_measured"] = placement
++        props = http_json(f"http://127.0.0.1:{args.port}/props", timeout=20)
++        trial["server"]["props_model"] = str(
++            (
++                props.get("model_path")
++                or props.get("default_generation_settings", {}).get("model")
++                or props
++            )
++        )[:300]
++        trial["server"]["props_n_ctx"] = (props.get("default_generation_settings") or {}).get(
++            "n_ctx"
++        )
++        save()
++        log(f"healthy in {trial['server']['health_wait_s']}s; placement={placement}")
++        cards = sorted({r["gpu_index"] for r in placement})
++        if cards != [args.gpu]:
++            raise RuntimeError(
++                f"server pid {proc.pid} holds memory on GPUs {cards}, not only {args.gpu}; stopping"
++            )
++        if GGUF_NAME not in json.dumps(props):
++            raise RuntimeError(f"/props does not name {GGUF_NAME}")
++
++        # ---- cells ----
++        games = [g.strip() for g in args.games.split(",") if g.strip()]
++        base_env = dict(
++            os.environ,
++            PYTHONPATH=str(REPO / "python"),
++            JAX_PLATFORMS="cpu",
++            CUDA_VISIBLE_DEVICES=str(args.gpu),
++            CARNOT_LLAMA_SERVER=str(LLAMA_SERVER),
++            CARNOT_ARC_SERVER_LOG_DIR=str(out / "relaunch_logs"),
++            CARNOT_ARC_LLM_BACKEND="llamacpp",
++            CARNOT_ARC_GENERATOR_SEED=str(args.seed),
++            CARNOT_ARC_INDUCE_N_CTX=str(args.n_ctx),
++            CARNOT_ARC_INDUCE_MAX_TOKENS=str(args.max_tokens),
++            CARNOT_ARC_INDUCE_TIMEOUT=str(args.timeout),
++            CARNOT_ARC_MTP="0",
++            CARNOT_ARC_FFN_CPU_LAYERS="0",
++            CARNOT_ARC_LLAMA_SERVER_PARALLEL="1",
++        )
++        for k in (
++            "CARNOT_ARC_INDUCE_TOOL_LOOP",
++            "CARNOT_ARC_INDUCE_TOOL_GRAMMAR",
++            "CARNOT_ARC_INDUCE_TOOL_COMPACT",
++            "CARNOT_ARC_INDUCE_TOOL_SELFPARSE",
++        ):
++            base_env.pop(k, None)
++        arm_env = {
++            "grammar": {
++                "CARNOT_ARC_INDUCE_TOOL_LOOP": "1",
++                "CARNOT_ARC_INDUCE_TOOL_GRAMMAR": "1",
++                "CARNOT_ARC_INDUCE_TOOL_TURNS": str(args.turns),
++                "CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN": "2",
++            },
++            "control": {
++                "CARNOT_ARC_INDUCE_THINK": "1",
++                "CARNOT_ARC_INDUCE_THINKING_BUDGET": str(args.think_budget),
++            },
++        }
++        windows_dir = Path(args.windows_dir) if args.windows_dir else None
++        for game in games:
++            window_pkl = (windows_dir / f"{game}.pkl") if windows_dir else None
++            if window_pkl is not None and not window_pkl.exists():
++                trial["cells"].append({"game": game, "status": "skipped_no_window_pickle"})
++                save()
++                log(f"no window pickle for {game}; skipping both arms")
++                continue
++            for arm in ("control", "grammar"):
++                elapsed_min = (time.time() - t_healthy) / 60.0
++                if elapsed_min > args.budget_min:
++                    trial["cells"].append(
++                        {
++                            "game": game,
++                            "arm": arm,
++                            "status": "not_started_budget_exhausted",
++                            "elapsed_min": round(elapsed_min, 1),
++                        }
++                    )
++                    save()
++                    log(f"budget exhausted at {elapsed_min:.1f} min; skipping {game}/{arm}")
++                    continue
++                cell_out = out / "cells" / f"{game}_{arm}.json"
++                cenv = dict(base_env, **arm_env[arm], CARNOT_ARC_E3_DIR=str(out / "e3" / arm))
++                cmd = [
++                    sys.executable,
++                    str(HERE),
++                    "--role",
++                    "cell",
++                    "--game",
++                    game,
++                    "--arm",
++                    arm,
++                    "--port",
++                    str(args.port),
++                    "--gguf",
++                    str(gguf),
++                    "--out",
++                    str(cell_out),
++                ]
++                if window_pkl is not None:
++                    cmd += ["--window-pkl", str(window_pkl)]
++                log(f"cell {game}/{arm} start (elapsed {elapsed_min:.1f} min)")
++                c0 = time.time()
++                clog = (out / "cells" / f"{game}_{arm}.log").open("ab")
++                try:
++                    cp = subprocess.run(
++                        cmd,
++                        env=cenv,
++                        stdout=clog,
++                        stderr=subprocess.STDOUT,
++                        timeout=args.timeout + 240,
++                    )
++                    crc: Any = cp.returncode
++                except subprocess.TimeoutExpired:
++                    crc = "timeout"
++                row: dict[str, Any] = {
++                    "game": game,
++                    "arm": arm,
++                    "rc": crc,
++                    "driver_wall_s": round(time.time() - c0, 1),
++                }
++                if cell_out.exists():
++                    try:
++                        row["record"] = json.loads(cell_out.read_text())
++                    except json.JSONDecodeError:
++                        row["record_error"] = "unreadable"
++                trial["cells"].append(row)
++                save()
++                r = row.get("record", {})
++                log(
++                    f"cell {game}/{arm} done rc={crc} wall={row['driver_wall_s']}s "
++                    f"emitted={r.get('engine_emitted')} scoreable={(r.get('score') or {}).get('ok')} "
++                    f"acc={(r.get('score') or {}).get('accuracy')} tokens={r.get('tokens_decoded')} "
++                    f"term={(r.get('tool_loop_stats') or {}).get('terminated_by')}"
++                )
++        trial["status"] = "complete"
++    except Exception as exc:  # noqa: BLE001
++        trial["status"] = f"aborted: {type(exc).__name__}: {exc}"[:400]
++        log(trial["status"])
++        rc = 1
++    finally:
++        # ---- stop the server by EXACT pid, then verify ----
++        if proc.poll() is None:
++            os.kill(proc.pid, signal.SIGTERM)
++            try:
++                proc.wait(timeout=30)
++            except subprocess.TimeoutExpired:
++                os.kill(proc.pid, signal.SIGKILL)
++                proc.wait(timeout=10)
++        trial["server"]["exit_code"] = proc.returncode
++        time.sleep(3)
++        trial["after"] = {
++            "port_listening": health_ok(args.port),
++            "gpu_apps": gpu_apps(),
++            "gpu_free_mib": {i: gpu_free_mib(i) for i in sorted(idx_to_uuid)},
++            "orphan_xdist_workers": orphan_xdist_workers(),
++        }
++        trial["finished_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
++        save()
++        log(f"server pid {proc.pid} stopped rc={proc.returncode}; after={trial['after']}")
++    return rc
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--role", choices=["driver", "cell"], required=True)
++    ap.add_argument("--out", required=True)
++    ap.add_argument("--port", type=int, default=8939)
++    ap.add_argument("--gpu", type=int, default=1)
++    ap.add_argument("--n-ctx", type=int, default=49152)
++    ap.add_argument("--max-tokens", type=int, default=6144)
++    ap.add_argument("--timeout", type=int, default=600)
++    ap.add_argument("--turns", type=int, default=4)
++    ap.add_argument("--think-budget", type=int, default=2048)
++    ap.add_argument("--seed", type=int, default=7)
++    ap.add_argument("--budget-min", type=float, default=38.0)
++    ap.add_argument("--games", default=DEFAULT_GAMES)
++    ap.add_argument("--game")
++    ap.add_argument("--arm", choices=["control", "grammar"])
++    ap.add_argument("--gguf")
++    ap.add_argument("--windows-dir", help="driver: directory of <game>.pkl windows")
++    ap.add_argument("--window-pkl", help="cell: the window pickle for --game")
++    args = ap.parse_args()
++    if args.role == "cell":
++        return run_cell(args)
++    return run_driver(args)
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/tests/python/test_arc_tool_grammar_transport.py b/tests/python/test_arc_tool_grammar_transport.py
+index 88eb09b8dd..e96f5d292c 100644
+--- a/tests/python/test_arc_tool_grammar_transport.py
++++ b/tests/python/test_arc_tool_grammar_transport.py
+@@ -85,9 +85,12 @@ def test_live_induce_dispatches_and_delivers_feedback(monkeypatch, transport, tm
+     for payload in sent:
+         assert payload.get("grammar", "").startswith("root ::=")
+         # REQ-ARC-WMTE-7046: one call rule per tool, and run_engine_on_transitions
+-        # (schema index 0) must carry a non-empty code string.
++        # (schema index 0) must carry a code string that defines engine.
+         assert payload["grammar"].splitlines()[0].startswith("root ::= call-0 | call-1")
+-        assert 'args-0 ::= "{" ws "\\"code\\"" ws ":" ws nonempty-string' in payload["grammar"]
++        assert (
++            'args-0 ::= "{" ws "\\"code\\"" ws ":" ws "\\"" char* "def engine(" char* "\\"" ws'
++            in payload["grammar"]
++        )
+         assert payload.get("grammar_lazy") is False
+         assert payload.get("chat_template_kwargs") == {"enable_thinking": False}
+         assert payload.get("thinking_budget_tokens") == 0
+@@ -207,14 +210,24 @@ def test_valid_json_with_bad_arguments_returns_observed_error(transport):
+     [
+         '{"name":"run_engine_on_transitions","arguments":{}}',
+         '{"name":"run_engine_on_transitions","arguments":{"code":""}}',
++        '{"name":"run_engine_on_transitions","arguments":{"code":" "}}',
++        '{"name":"run_engine_on_transitions","arguments":{"code":"x"}}',
++        '{"name":"run_engine_on_transitions","arguments":{"code":"def is_level_complete(g): 0"}}',
++        '{"name":"run_goal_on_states","arguments":{"code":"def engine(g, a, d): return g"}}',
+         '{"name":"query_region","arguments":{"t":0}}',
++        (
++            '{"name":"find_objects","arguments":{"t":0,"which":" ",'
++            '"predicate_code":"def accept(obj): return True","max_objects":5}}'
++        ),
+     ],
+ )
+ def test_payload_less_envelope_is_a_grammar_failure(monkeypatch, transport, content):
+-    """SCENARIO-ARC-WMTE-7046-B: a missing or empty required argument never dispatches.
++    """SCENARIO-ARC-WMTE-7046-B: a missing, blank, or definition-less required argument
++    never dispatches.
+ 
+     The first of these is exactly what the 0.8B trial returned twice and counted as
+-    two parsed calls."""
++    two parsed calls. The one-space and one-character forms are the review's finding 2:
++    "non-empty" alone delivered no program."""
+     p, sent, answers = transport
+     answers[:] = [reply(content)]
+     dispatches = []
+@@ -227,7 +240,8 @@ def test_payload_less_envelope_is_a_grammar_failure(monkeypatch, transport, cont
+     assert dispatches == []
+     stats = p.last_tool_loop_stats
+     assert stats["terminated_by"] == "grammar_invalid_response"
+-    assert "missing required argument" in stats["grammar_error"]
++    err = stats["grammar_error"]
++    assert "missing required argument" in err or "does not define" in err
+     assert stats["grammar_calls_parsed"] == 0
+     assert stats["grammar_invalid_responses"] == 1
+     assert stats["tool_calls_total"] == 0
+@@ -247,13 +261,54 @@ def test_request_grammar_rejects_empty_shell_model_free(transport):
+     )
+     assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{}}')
+     assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{"code":""}}')
++    assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{"code":" "}}')
++    assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{"code":"x"}}')
++    assert accepts(
++        grammar, '{"name":"run_engine_on_transitions","arguments":{"code":"def engine("}}'
++    )
+     assert accepts(grammar, full)
++    # list_transitions takes no arguments: `{}` is its complete call, not an empty shell.
+     assert accepts(grammar, '{"name":"list_transitions","arguments":{}}')
+     assert not accepts(grammar, '{"name":"diff_grids","arguments":{}}')
+     assert '"arguments": {}' not in sent[0]["messages"][0]["content"]
+     assert "required parameter" in sent[0]["messages"][0]["content"]
+ 
+ 
++def test_force_turn_sends_submission_only_grammar(monkeypatch, transport):
++    """SCENARIO-ARC-WMTE-7046-C: after the inspection budget the grammar itself admits
++    only a run_engine_on_transitions submission, so the argument-less tools cannot be
++    chosen forever and the prompt nudge is no longer the only enforcement."""
++    from carnot.testing.gbnf_match import accepts
++
++    p, sent, answers = transport
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN", "1")
++    answers[:] = [
++        reply('{"name":"list_transitions","arguments":{}}'),
++        reply(json.dumps({"name": "run_engine_on_transitions", "arguments": {"code": CODE}})),
++    ]
++    ok, note = loop.induce_with_tool_loop(p, "grammar", rows(), 1)
++    assert ok, note
++    assert len(sent) == 2
++    first, second = sent[0]["grammar"], sent[1]["grammar"]
++    assert first.splitlines()[0].startswith("root ::= call-0 | call-1")
++    assert second.splitlines()[0] == "root ::= call-0"
++    assert accepts(first, '{"name":"list_transitions","arguments":{}}')
++    assert not accepts(second, '{"name":"list_transitions","arguments":{}}')
++    assert not accepts(second, '{"name":"diff_grids","arguments":{"t":0}}')
++    assert accepts(
++        second,
++        json.dumps(
++            {"name": "run_engine_on_transitions", "arguments": {"code": CODE}},
++            separators=(",", ":"),
++        ),
++    )
++    assert sent[1]["messages"][-1]["content"] == loop._FORCE_ENGINE_NUDGE
++    stats = p.last_tool_loop_stats
++    assert stats["force_engine_nudges"] == 1
++    assert stats["grammar_submit_only_turns"] == 1
++    assert stats["terminated_by"] == "zero_mismatches"
++
++
+ @pytest.mark.parametrize(
+     "choices", [None, [], [None], [{"message": None}], [{"message": []}], "invalid"]
+ )
+diff --git a/tests/python/test_gbnf_match.py b/tests/python/test_gbnf_match.py
+index c1b6beb09a..89f3ab1b72 100644
+--- a/tests/python/test_gbnf_match.py
++++ b/tests/python/test_gbnf_match.py
+@@ -58,6 +58,28 @@ CASES = {
+     ),
+     "R_diff_grids_t_string": '{"name":"diff_grids","arguments":{"t":"0"}}',
+ }
++# Review round (2026-09-05, same day): finding 2 was a one-character `code`; finding 1
++# was the argument-less tool. Cases S-Z were added and pinned against the binary too.
++GOAL = '{"name":"run_goal_on_states","arguments":{"code":"%s"}}'
++CASES_ROUND2 = {
++    "S_code_single_space": '{"name":"run_engine_on_transitions","arguments":{"code":" "}}',
++    "T_code_minimum_definition": (
++        '{"name":"run_engine_on_transitions","arguments":{"code":"def engine("}}'
++    ),
++    "U_code_one_char": '{"name":"run_engine_on_transitions","arguments":{"code":"x"}}',
++    "V_code_without_engine_def": (
++        '{"name":"run_engine_on_transitions","arguments":'
++        '{"code":"import numpy as np\\ndef is_level_complete(grid): return False"}}'
++    ),
++    "W_goal_with_its_definition": GOAL % "def is_level_complete(grid):\\n    return False",
++    "X_goal_with_wrong_definition": GOAL % "def engine(grid, action, data): return grid",
++    "Y_find_objects_predicate_no_accept": FIND % "lambda obj: True",
++    "Z_definition_after_escapes": (
++        '{"name":"run_engine_on_transitions","arguments":'
++        '{"code":"# \\"quoted\\" \\\\ tab\\t\\ndef engine(g, a, d):\\n    return g"}}'
++    ),
++}
++ALL_CASES = {**CASES, **CASES_ROUND2}
+ 
+ # The envelope-only grammar shipped in commit d5d72141ca, reproduced from its builder.
+ _OLD_TERMINALS = " | ".join(json.dumps(json.dumps(n)) for n in TOOL_NAMES)
+@@ -119,14 +141,33 @@ NEW_VERDICTS = dict(
+     P_full_run_engine_SPACED="I",
+     Q_run_engine_code_after_extra="I",
+     R_diff_grids_t_string="I",
++    S_code_single_space="I",
++    T_code_minimum_definition="V",
++    U_code_one_char="I",
++    V_code_without_engine_def="I",
++    W_goal_with_its_definition="V",
++    X_goal_with_wrong_definition="I",
++    Y_find_objects_predicate_no_accept="I",
++    Z_definition_after_escapes="V",
+ )
++# test-gbnf-validator verdicts, 2026-09-05, on the submission-only grammar
++# _tool_grammar(TOOL_SCHEMAS, allowed=("run_engine_on_transitions",)) the loop sends at
++# the force turn. Only a run_engine_on_transitions call that defines engine is valid.
++SUBMIT_ONLY_VALID = {
++    "B_full_run_engine",
++    "N_full_run_engine_plus_extra_key",
++    "T_code_minimum_definition",
++    "Z_definition_after_escapes",
++}
+ 
+ 
+ def test_old_grammar_text_is_the_recorded_one():
+     """REQ-ARC-WMTE-7046: the pinned verdicts are about these exact bytes."""
+     assert hashlib.sha256(OLD_GRAMMAR.encode()).hexdigest().startswith(OLD_GRAMMAR_SHA256_PREFIX)
+     assert len(OLD_GRAMMAR.encode()) == 614
+-    assert set(CASES) == set(OLD_VERDICTS) == set(NEW_VERDICTS)
++    assert set(CASES) == set(OLD_VERDICTS)
++    assert set(ALL_CASES) == set(NEW_VERDICTS)
++    assert SUBMIT_ONLY_VALID <= set(ALL_CASES)
+ 
+ 
+ @pytest.mark.parametrize("case", sorted(CASES))
+@@ -135,10 +176,30 @@ def test_reader_matches_validator_on_the_envelope_only_grammar(case):
+     assert accepts(OLD_GRAMMAR, CASES[case]) is (OLD_VERDICTS[case] == "V")
+ 
+ 
+-@pytest.mark.parametrize("case", sorted(CASES))
++@pytest.mark.parametrize("case", sorted(ALL_CASES))
+ def test_reader_matches_validator_on_the_required_arguments_grammar(case):
+     """REQ-ARC-WMTE-7046: the Python reader agrees with llama.cpp on the new grammar."""
+-    assert accepts(_tool_grammar(TOOL_SCHEMAS), CASES[case]) is (NEW_VERDICTS[case] == "V")
++    assert accepts(_tool_grammar(TOOL_SCHEMAS), ALL_CASES[case]) is (NEW_VERDICTS[case] == "V")
++
++
++@pytest.mark.parametrize("case", sorted(ALL_CASES))
++def test_reader_matches_validator_on_the_submission_only_grammar(case):
++    """SCENARIO-ARC-WMTE-7046-C: at the force turn only a defining submission is legal."""
++    grammar = _tool_grammar(TOOL_SCHEMAS, allowed=("run_engine_on_transitions",))
++    assert grammar.splitlines()[0] == "root ::= call-0"
++    assert accepts(grammar, ALL_CASES[case]) is (case in SUBMIT_ONLY_VALID)
++
++
++def test_one_character_code_was_grammatical_and_is_not_now():
++    """REQ-ARC-WMTE-7046 (review finding 2): a required source argument must contain the
++    definition dispatch looks for, not merely be non-empty."""
++    new = _tool_grammar(TOOL_SCHEMAS)
++    assert not accepts(new, CASES_ROUND2["S_code_single_space"])
++    assert not accepts(new, CASES_ROUND2["U_code_one_char"])
++    assert accepts(new, CASES_ROUND2["T_code_minimum_definition"])
++    assert accepts(OLD_GRAMMAR, CASES_ROUND2["S_code_single_space"])
++    with pytest.raises(ValueError):
++        _tool_grammar(TOOL_SCHEMAS, allowed=("no_such_tool",))
+ 
+ 
+ def test_empty_shell_was_grammatical_and_is_not_now():
+-- 
+2.55.0
+

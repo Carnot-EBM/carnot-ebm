@@ -1,0 +1,77 @@
+From a1200d71a5d4390d4e7416dcb04af8121cf3b7f2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 11 Jul 2026 12:10:50 -0400
+Subject: [PATCH 06814/11362] [conductor] Pre-gate block: Gated
+ delayed-regression and rollback promotion decision
+
+1 of 1 gate(s) failed; first failure: exp5571-gated-reset-free-sota-continual-harness.continual_harness_candidate (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...72_gated_delayed_regression_promotion.json | 24 +++++++++++++++++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5572_gated_delayed_regression_promotion.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c7db06a2c6..79af9f4d13 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1896672, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-07-11T15:51:34Z"}
+\ No newline at end of file
++{"pid": 1896672, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-07-11T16:10:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index df0bfd8770..2260bc11ee 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10767,3 +10767,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-11 15:16 UTC | Gated generator-stratified verifier co-evolution t | OK | 86 passed, 1 warning in 11.88s |
+ | 2026-07-11 15:31 UTC | Causal SelfMem policy tournament on multi-session  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+ | 2026-07-11 15:49 UTC | Spline-local KAN online energy adaptation with rep | OK | 88 passed, 1 warning in 11.34s |
++| 2026-07-11 16:08 UTC | Gated reset-free local SOTA continual harness | OK | 87 passed, 1 warning in 13.37s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3ee3a5918a..0254fea80c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1896672, "iteration": 10, "phase": "iteration_start", "started_at": "2026-07-11T15:51:34Z"}
+\ No newline at end of file
++{"pid": 1896672, "iteration": 11, "phase": "iteration_start", "started_at": "2026-07-11T16:10:50Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5572_gated_delayed_regression_promotion.json b/results/experiment_5572_gated_delayed_regression_promotion.json
+new file mode 100644
+index 0000000000..943538341d
+--- /dev/null
++++ b/results/experiment_5572_gated_delayed_regression_promotion.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5572,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-11",
++  "started_at": "2026-07-11T16:10:50.123597+00:00",
++  "finished_at": "2026-07-11T16:10:50.123597+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated delayed-regression and rollback promotion decision",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5571-gated-reset-free-sota-continual-harness.continual_harness_candidate (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5571-gated-reset-free-sota-continual-harness",
++      "artifact_field": "continual_harness_candidate",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

@@ -1,0 +1,61 @@
+From 0b8e138f543a187a7346e28b5774bc954ec978fa Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 02:11:59 -0400
+Subject: [PATCH 10232/11362] [conductor] Pre-gate block: Owned 32K context and
+ live code-carrying selfparse preflight
+
+1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract.v587_contract_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                            | 2 +-
+ ops/conductor-log.md                                    | 1 +
+ ops/conductor-state.json                                | 2 +-
+ results/experiment_6730_arc_context_tool_preflight.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9bc37c69e9..204a83dbac 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-29T06:09:55Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-08-29T06:11:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d921d3bb98..a0cd7a919c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16734,3 +16734,4 @@ The l |
+ | 2026-08-29 05:47 UTC | Milestone 2026.08.587 activated | OK | 7 tasks queued |
+ | 2026-08-29 06:05 UTC | V587 activation, source-receipt, and evidence-cont | OK | 87 passed, 1 warning in 9.55s |
+ | 2026-08-29 06:07 UTC | Owned 32K context and live code-carrying selfparse | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
++| 2026-08-29 06:09 UTC | Owned 32K context and live code-carrying selfparse | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6729-v587-activation-evidence-contract. |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c58db56332..c25f4858dd 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-29T06:09:55Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 8, "phase": "iteration_start", "started_at": "2026-08-29T06:11:58Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6730_arc_context_tool_preflight.json b/results/experiment_6730_arc_context_tool_preflight.json
+index 70b65721c6..cf85f6d9da 100644
+--- a/results/experiment_6730_arc_context_tool_preflight.json
++++ b/results/experiment_6730_arc_context_tool_preflight.json
+@@ -2,8 +2,8 @@
+   "experiment": 6730,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-29",
+-  "started_at": "2026-08-29T06:09:56.251991+00:00",
+-  "finished_at": "2026-08-29T06:09:56.251991+00:00",
++  "started_at": "2026-08-29T06:11:59.366260+00:00",
++  "finished_at": "2026-08-29T06:11:59.366260+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Owned 32K context and live code-carrying selfparse preflight",
+-- 
+2.55.0
+

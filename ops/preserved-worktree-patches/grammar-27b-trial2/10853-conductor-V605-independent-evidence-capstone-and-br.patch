@@ -1,0 +1,71 @@
+From 8699618cc16a62df9f285ad58e7301b6e625b58a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 02:08:30 -0400
+Subject: [PATCH 10853/11171] [conductor] V605 independent evidence capstone
+ and branch disposition
+
+Automated research step by research conductor.
+Task ID: exp6922-v605-independent-capstone
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                                | 2 +-
+ results/experiment_6922_v605_independent_capstone.json | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5b0805eb92..004ca31e48 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5275,
++  "experiments_checked": 5276,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_6922_v605_independent_capstone.json b/results/experiment_6922_v605_independent_capstone.json
+index 2b5cf63730..06369ace73 100644
+--- a/results/experiment_6922_v605_independent_capstone.json
++++ b/results/experiment_6922_v605_independent_capstone.json
+@@ -995,7 +995,7 @@
+       }
+     }
+   ],
+-  "duration_s": 14.812682,
++  "duration_s": 14.950718,
+   "exact_guidance_branch_rows": [
+     {
+       "branch": "exact_guidance",
+@@ -1351,7 +1351,7 @@
+       {
+         "check": "conductor_log",
+         "expected": "readable_file",
+-        "observed": "sha256:3e5eab60f42f1ec4551b04789721f65c679e1f37ae7143013d40697b0e8c062d",
++        "observed": "sha256:802ca5299fbd866cce50e0ccb9da6460f81ff802a480d8f2bacc2ab97e0140b7",
+         "passed": true
+       },
+       {
+@@ -1731,7 +1731,7 @@
+       "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+     }
+   ],
+-  "reproducibility_checksum": "sha256:1be192bbab437e26feda368dade391dae502d771f0943d1e97608eb98376caa3",
++  "reproducibility_checksum": "sha256:885335bce888443f00c19d4ee72948a108c276ed56d675dcaf21623f642b48fd",
+   "retirement_action_rows": [
+     {
+       "action": "retire_exact_repeated_scope",
+@@ -3376,7 +3376,7 @@
+     },
+     "conductor_log": {
+       "path": "ops/conductor-log.md",
+-      "sha256": "sha256:3e5eab60f42f1ec4551b04789721f65c679e1f37ae7143013d40697b0e8c062d"
++      "sha256": "sha256:802ca5299fbd866cce50e0ccb9da6460f81ff802a480d8f2bacc2ab97e0140b7"
+     },
+     "exclusion_manifest": {
+       "path": "ops/exclusion_manifest.yaml",
+-- 
+2.55.0
+

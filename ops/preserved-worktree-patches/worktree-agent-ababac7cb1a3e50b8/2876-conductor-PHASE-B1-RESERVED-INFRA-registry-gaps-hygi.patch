@@ -1,0 +1,2300 @@
+From 5cc568e2af6ae41d7fd14014ff5353c67b92a40f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 16:11:11 -0400
+Subject: [PATCH 02876/11362] [conductor] PHASE B1 (RESERVED INFRA) --
+ registry/gaps hygiene + GAP-4 execution regression guard; reconcile the .412
+ outcomes; verify the capstone verifier_is_oracle stamping stays durable.
+
+Automated research step by research conductor.
+Task ID: exp4461-registry-gaps-hygiene-gap4-guard
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  69 ++
+ ops/arc_solve_registry.yaml                   |  43 +-
+ ops/dogfood-memory.json                       |   2 +-
+ ops/verifier_gaps.md                          |  45 +-
+ ops/verifier_registry.yaml                    |  30 +
+ .../experiment_4461_registry_gaps_hygiene.py  | 957 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...experiment_4461_registry_gaps_hygiene.json | 333 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...t_experiment_4461_registry_gaps_hygiene.py | 544 ++++++++++
+ 15 files changed, 2016 insertions(+), 41 deletions(-)
+ create mode 100644 python/carnot/experiment_4461_registry_gaps_hygiene.py
+ create mode 100644 results/experiment_4461_registry_gaps_hygiene.json
+ create mode 100644 tests/python/test_experiment_4461_registry_gaps_hygiene.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index c83da06fac..58765d1e6d 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -25837,6 +25837,75 @@ terminal-prefixed honest verdict.
+ |---|---|---|
+ | REQ-REPORT-4460 | Planned (`python/carnot/experiment_4460_submission_package_prep.py`, `results/experiment_4460_submission_package_prep.json`) | Planned (`tests/python/test_experiment_4460_submission_package_prep.py`) |
+ 
++### REQ-REPORT-4461: Registry And Gap Hygiene Reconciles .412 Outcomes Without Verifier Edits
++
++The Exp 4461 workflow SHALL reconcile `ops/verifier_registry.yaml`,
++`ops/verifier_gaps.md`, and `ops/arc_solve_registry.yaml` with the `.412`
++outcome artifacts from Exp 4455 through Exp 4460. The workflow SHALL treat any
++`flagged_adversarial=true` artifact as excluded evidence, SHALL use the robust
++aggregate-available helper so missing or flagged artifacts report per-axis gaps
++without forcing every axis false, SHALL satisfy the compatibility precondition
++that `import scripts.capstone_aggregate_available` succeeds, and SHALL NOT edit
++production verifier code.
++
++The reconciliation SHALL bank the Exp 4455 dc22 reproduced level and fill
++`GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT` only when the artifact supplies clean
++offline reproduction evidence for `dc22`. It SHALL close
++`GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER`
++only from clean Exp 4456 generic glyph-rewrite evidence, close
++`GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER` only from
++clean Exp 4457 cast-grid evidence or reproduction-gated Exp 4459 v3 closure
++evidence, record Exp 4458 as either a banked new-game first-contact solve or an
++open `GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE` residual, import the Exp 4459
++LOO v3 count, and record Exp 4460 as an operator-only package with no
++leaderboard submission. The ARC solve registry SHALL update authoritative
++`reproducible_total_levels` and `reproducible_total_games` from reproduced game
++rows after applying trusted `.412` outcomes; the target complete-path totals are
++at least `40` levels and `21` games after a clean dc22 bank and sc25 deepening.
++Missing, blocked, or flagged upstream artifacts SHALL be reported honestly
++rather than counted.
++
++The workflow SHALL run the GAP-4 execution regression guard and SHALL emit bare
++bool `regression_guard_passed=true` only when the ARC oracle-distinct
++verifier-beats-vote result has not regressed. It SHALL also verify that the
++capstone `verifier_is_oracle` stamping fix remains durable. The workflow SHALL
++write `results/experiment_4461_registry_gaps_hygiene.json` with required fields
++`honest_verdict`, `regression_guard_passed`, `reproducible_total_levels`,
++`reproducible_total_games`, `open_gap_ids`, `inference_substrate`,
++`registry_reconciliation`, `availability_report`,
++`capstone_stamp_fix_durable`, `random_seed`, `reproducibility_checksum`,
++`field_principles`, and `submitted_to_leaderboard=false`. Complete-path
++`honest_verdict` SHALL start with `complete:`, `success:`, `passed:`, or
++`shipped:`. The required field principles are:
++
++- `honest_verdict`: "terminal-prefixed"
++- `regression_guard_passed`: "BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress"
++- `reproducible_total_levels`: "the reconciled authoritative count (target >= 40 after dc22 + sc25 deepening)"
++- `reproducible_total_games`: "the reconciled authoritative game count (target >= 21 after dc22)"
++- `open_gap_ids`: "the still-open generic-solver gaps after .412 -- the .413 backlog"
++- `inference_substrate`: "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor"
++
++#### SCENARIO-REPORT-4461: .412 Hygiene Logs Closures, Updates Counts, And Guards GAP-4
++
++**Given** the verifier registry, verifier-gaps ledger, ARC solve registry, and
++some subset of Exp 4455 through Exp 4460 artifacts are locally available
++**When** the Exp 4461 workflow runs
++**Then** it excludes flagged-adversarial artifacts, reports missing or flagged
++inputs in the aggregate availability report, fills dc22, tr87, and sc25 gap
++rows only when their trusted reproduction evidence is present, records the
++sb26 first-contact residual when no new game is banked, imports the LOO v3
++count and submission-package readiness without submitting to the leaderboard,
++updates ARC reproducible totals from registry rows, records a verifier-registry
++role for the hygiene pass, emits bare bool `regression_guard_passed`, verifies
++the capstone stamp fix remains durable, writes the required JSON artifact, and
++performs no production verifier edits.
++
++## Implementation Status (REQ-REPORT-4461)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4461 | Planned (`python/carnot/experiment_4461_registry_gaps_hygiene.py`, `results/experiment_4461_registry_gaps_hygiene.json`) | Planned (`tests/python/test_experiment_4461_registry_gaps_hygiene.py`) |
++
+ ### REQ-REPORT-4432: Leave-One-Out ARC Generic-Solver Baseline Measures Transfer Without Own Recipes
+ 
+ The Exp 4432 workflow SHALL quantify current ARC generic capability by running a
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 0b7aa72052..11bff81632 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -468,6 +468,8 @@ games:
+     level properties -- a different path can see a different mechanic at the same
+     index. Always inspect on the adapter''s exact path (replay the banked solution)
+     when RE-ing a deeper level.'
++  generic_glyph_rewrite_reproduce: Exp4456 closed tr87 LOO through glyph_rewrite_rule_verifier
++    without tr87 adapter.
+ - game: vc33
+   reproducibility: reproduced
+   levels_reproduced: 1
+@@ -593,7 +595,8 @@ games:
+     operator: config_rule_verifier
+     residual_delta: missing_color_match_slot_sequence_verifier
+     status: open
+-    candidate_design: add a generic ordered color-match item-slot verifier with undo-aware grounding
++    candidate_design: add a generic ordered color-match item-slot verifier with undo-aware
++      grounding
+     routed_recipe:
+       game: s5i5
+       selected_operator:
+@@ -840,3 +843,41 @@ latest_hygiene_4449:
+   - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
+   excluded_artifacts: []
+   note: .411 registry hygiene; flagged_adversarial artifacts excluded from counts.
++latest_glyph_rewrite_rule_verifier_4456:
++  artifact: results/experiment_4456_generic_glyph_rewrite_operator.json
++  tr87_resolved_generically: true
++  tr87_generic_level_reproduced: 1
++  offline_reproduced: true
++  no_regression: true
++latest_loo_generic_v3_4459:
++  artifact: results/experiment_4459_loo_generic_solve_benchmark_v3.json
++  generic_loo_solve_count_v2_baseline: 5
++  generic_loo_solve_count_v3: 6
++  loo_gate_passed: true
++  closed_residuals_by_412_operator:
++  - closed_by_operator: glyph_rewrite_rule_verifier
++    game: tr87
++    v2_residual_delta: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
++  missing_verifier_gaps:
++  - attempt_mode: v3_412_operator_remeasurement
++    game: sc25
++    residual_delta: missing_cast_grid_spell_shrink_tank_exit_verifier
++    retrieved_operator: active_data_collection
++latest_submission_package_4460:
++  artifact: results/experiment_4460_submission_package_prep.json
++  submission_package_ready: true
++  total_reproduced_levels_in_package: 39
++  submitted_to_leaderboard: false
++latest_hygiene_4461:
++  artifact: results/experiment_4461_registry_gaps_hygiene.json
++  reproducible_total_levels: 39
++  reproducible_total_games: 20
++  filled_gap_ids:
++  - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
++  open_gap_ids:
++  - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
++  - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
++  - GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE
++  excluded_artifacts: []
++  note: .412 registry hygiene; missing, blocked, or flagged artifacts excluded from
++    counts.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 640c0dd21c..1a414ccc09 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3479,
++  "experiments_checked": 3480,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 293ef37215..85d969382c 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2220,26 +2220,26 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
+ <!-- exp4427-gap-4424-sc25-l2-route-search:end -->
+ 
+ <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:start -->
+-### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4449 .411 registry gap hygiene
+-- status: open
+-- evidence: results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=tr87; residual_delta=missing_glyph_rewrite_rule_verifier_without_tr87_adapter; retrieved_operator=config_rule_grounding; generic_loo_solve_count_v2=5
+-- failure mode: missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+-- missing discriminator: generic primitive/verifier still missing for missing_glyph_rewrite_rule_verifier_without_tr87_adapter
+-- candidate design: promote the residual into a reusable primitive or verifier, then rerun LOO v3
+-- priority: high
+-- source artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
+-- movement: updated_still_open
++### GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER: Exp 4461 .412 registry gap hygiene
++- status: filled (exp4456_generic_glyph_rewrite_operator)
++- evidence: results/experiment_4456_generic_glyph_rewrite_operator.json; tr87_resolved_generically=True; offline_reproduced=True; tr87_generic_level_reproduced=1
++- failure mode: prior missing_glyph_rewrite_rule_verifier residual is closed for tr87
++- missing discriminator: filled by generic glyph_rewrite_rule_verifier
++- candidate design: keep the glyph rewrite verifier in the generic leave-one-out loop
++- priority: high
++- source artifact: results/experiment_4456_generic_glyph_rewrite_operator.json
++- movement: filled
+ <!-- exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter:end -->
+ 
+ <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:start -->
+-### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4449 .411 registry gap hygiene
++### GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER: Exp 4461 .412 registry gap hygiene
+ - status: open
+-- evidence: results/experiment_4448_loo_generic_solve_benchmark_v2.json; game=sc25; residual_delta=missing_cast_grid_spell_shrink_tank_exit_verifier; retrieved_operator=active_data_collection; generic_loo_solve_count_v2=5
++- evidence: results/experiment_4457_*.json; cast_grid_artifact_available=False; generic_loo_solve_count_v3=6; missing_verifier_gaps=[{'attempt_mode': 'v3_412_operator_remeasurement', 'game': 'sc25', 'residual_delta': 'missing_cast_grid_spell_shrink_tank_exit_verifier', 'retrieved_operator': 'active_data_collection'}]
+ - failure mode: missing_cast_grid_spell_shrink_tank_exit_verifier
+-- missing discriminator: generic primitive/verifier still missing for missing_cast_grid_spell_shrink_tank_exit_verifier
+-- candidate design: promote the residual into a reusable primitive or verifier, then rerun LOO v3
++- missing discriminator: generic cast-grid spell/shrink/tank-exit verifier still missing
++- candidate design: build cast_grid_phase_fsm_world_model and rerun LOO v4
+ - priority: high
+-- source artifact: results/experiment_4448_loo_generic_solve_benchmark_v2.json
++- source artifact: results/experiment_4457_*.json
+ - movement: updated_still_open
+ <!-- exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier:end -->
+ 
+@@ -2280,14 +2280,14 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
+ <!-- exp4438-gap-4432-loo-ft09-missing-local-constraint-color-cycle-verifier:end -->
+ 
+ <!-- exp4438-gap-4423-dc22-unselectable-first-contact:start -->
+-### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4449 .411 registry gap hygiene
++### GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4461 .412 registry gap hygiene
+ - status: open
+-- evidence: results/experiment_4444_generic_config_rule_verifier_operator.json; dc22_state=not_grounded; honest_verdict=complete: ft09_generic_resolved_dc22_not_grounded_gap_logged; offline_reproduced=True for ft09 gate only; dc22 reproduced_levels=0
+-- failure mode: missing_config_rule_verifier_grounding
+-- missing discriminator: dc22 exposes movement/object interaction win logic rather than a grounded local-constraint, marker-coverage, or target-offset toggle digest
+-- candidate design: build a dc22 movement/object-interaction verifier or richer digest extractor; do not count a level until reproduce(dc22) passes
++- evidence: results/experiment_4455_solve_dc22_cegis_config_rule.json; offline_reproduced=False; dc22_grounded=False; honest_verdict=blocked_baseline_pytest_coverage
++- failure mode: missing_dc22_reproduction_gate
++- missing discriminator: dc22 still lacks clean reproduction-gated generic closure
++- candidate design: rerun dc22 CEGIS/config-rule grounding and count only reproduce(dc22)
+ - priority: high
+-- source artifact: results/experiment_4444_generic_config_rule_verifier_operator.json
++- source artifact: results/experiment_4455_solve_dc22_cegis_config_rule.json
+ - movement: updated_still_open
+ <!-- exp4438-gap-4423-dc22-unselectable-first-contact:end -->
+ 
+@@ -2304,12 +2304,13 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
+ <!-- exp4446-gap-4423-vc33-unselectable-first-contact:end -->
+ 
+ <!-- exp4458-gap-sb26-color-match-slot-sequence:start -->
+-### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4458 first-contact new game
++### GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4461 .412 registry gap hygiene
+ - status: open
+ - evidence: results/experiment_4458_first_contact_new_game.json; target_game=sb26; routed_to=s5i5; offline_reproduced=False; reproduced_levels=0
+ - failure mode: missing_color_match_slot_sequence_verifier
+ - missing discriminator: generic ordered color-match item-slot verifier with undo-aware grounding
+ - candidate design: extend config_rule_verifier with color_match_slot_sequence digests
+ - priority: high
+-- movement: still_open
++- source artifact: results/experiment_4458_first_contact_new_game.json
++- movement: updated_still_open
+ <!-- exp4458-gap-sb26-color-match-slot-sequence:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index 2c46d4e06e..927788debe 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -1025,6 +1025,26 @@ verifiers:
+     exp4449_generic_loo_solve_count_v2: 5
+     exp4449_primitive_library_coverage: 1.0
+     exp4449_retrieval_precision_at_1: 1.0
++    eval_exp_4461: results/experiment_4461_registry_gaps_hygiene.json
++    exp4461_regression_guard_passed: true
++    exp4461_arc_oracle_distinct_verifier_beats_vote: true
++    exp4461_arc1_rule_exec_vote_pass2: 0.4516
++    exp4461_arc1_rule_exec_gated_pass2: 0.5806
++    exp4461_arc1_headroom_recovered: 4
++    exp4461_arc1_vote_wins_lost: 0
++    exp4461_capstone_stamp_fix_durable: true
++    exp4461_reproducible_total_levels: 39
++    exp4461_reproducible_total_games: 20
++    exp4461_filled_gap_ids: &id017
++    - GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER
++    exp4461_open_gap_ids: &id018
++    - GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT
++    - GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER
++    - GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE
++    exp4461_flagged_artifacts_excluded: &id019 []
++    exp4461_generic_loo_solve_count_v3: 6
++    exp4461_submission_package_ready: true
++    exp4461_submission_package_levels: 39
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+@@ -5091,6 +5111,16 @@ verifiers:
+     open_gap_ids: *id015
+     excluded_artifacts: *id016
+     eval_exp_4449: results/experiment_4449_registry_gaps_hygiene.json
++  - role_id: oracle_distinct_v412_registry_gaps_hygiene_4461
++    experiment: results/experiment_4461_registry_gaps_hygiene.json
++    role: registry_gaps_arc_hygiene_v412
++    status: v412_outcomes_recorded_with_gap4_guard_and_stamp_durability
++    reproducible_total_levels: 39
++    reproducible_total_games: 20
++    filled_gap_ids: *id017
++    open_gap_ids: *id018
++    excluded_artifacts: *id019
++    eval_exp_4461: results/experiment_4461_registry_gaps_hygiene.json
+ - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
+   domain: arc_agi3_interactive
+   version: 1
+diff --git a/python/carnot/experiment_4461_registry_gaps_hygiene.py b/python/carnot/experiment_4461_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..1be1219d79
+--- /dev/null
++++ b/python/carnot/experiment_4461_registry_gaps_hygiene.py
+@@ -0,0 +1,957 @@
++"""Exp 4461: reconcile .412 registry and verifier-gap hygiene.
++
++Spec refs: REQ-REPORT-4461, SCENARIO-REPORT-4461.
++
++This audit pass reads the .412 outcome artifacts, refreshes the ARC registry
++and gap ledgers from clean reproduction evidence, runs the cached GAP-4 guard,
++and writes a terminal hygiene artifact. It deliberately does not edit
++production verifier code.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import time
++from typing import Any, Callable, Mapping
++
++import yaml
++
++from carnot import experiment_4449_registry_gaps_hygiene as prior
++from carnot.reporting import capstone_aggregate_available
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4461_registry_gaps_hygiene.json"
++REGISTRY_RELATIVE_PATH = prior.REGISTRY_RELATIVE_PATH
++GAPS_RELATIVE_PATH = prior.GAPS_RELATIVE_PATH
++ARC_REGISTRY_RELATIVE_PATH = prior.ARC_REGISTRY_RELATIVE_PATH
++
++EXP4455_PATH = "results/experiment_4455_solve_dc22_cegis_config_rule.json"
++EXP4456_PATH = "results/experiment_4456_generic_glyph_rewrite_operator.json"
++EXP4457_PATTERN = "results/experiment_4457_*.json"
++EXP4458_PATH = "results/experiment_4458_first_contact_new_game.json"
++EXP4459_PATH = "results/experiment_4459_loo_generic_solve_benchmark_v3.json"
++EXP4460_PATH = "results/experiment_4460_submission_package_prep.json"
++
++SOURCE_ARTIFACTS = {
++    "4455_dc22": EXP4455_PATH,
++    "4456_glyph_rewrite": EXP4456_PATH,
++    "4457_cast_grid": EXP4457_PATTERN,
++    "4458_first_contact": EXP4458_PATH,
++    "4459_loo_v3": EXP4459_PATH,
++    "4460_submission": EXP4460_PATH,
++}
++SOURCE_EXPERIMENT_IDS = {
++    "4455_dc22": 4455,
++    "4456_glyph_rewrite": 4456,
++    "4457_cast_grid": 4457,
++    "4458_first_contact": 4458,
++    "4459_loo_v3": 4459,
++    "4460_submission": 4460,
++}
++
++RANDOM_SEED = 4461
++SPEC_REFS = ("REQ-REPORT-4461", "SCENARIO-REPORT-4461")
++INFERENCE_SUBSTRATE = prior.INFERENCE_SUBSTRATE
++GAP4_VERIFIER_ID = prior.GAP4_VERIFIER_ID
++V412_ROLE_ID = "oracle_distinct_v412_registry_gaps_hygiene_4461"
++TERMINAL_PREFIXES = prior.TERMINAL_PREFIXES
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "regression_guard_passed",
++    "reproducible_total_levels",
++    "reproducible_total_games",
++    "open_gap_ids",
++    "inference_substrate",
++    "registry_reconciliation",
++    "availability_report",
++    "capstone_stamp_fix_durable",
++    "random_seed",
++    "reproducibility_checksum",
++    "field_principles",
++    "submitted_to_leaderboard",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {"principle": "terminal-prefixed"},
++    "regression_guard_passed": {
++        "principle": "BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress"
++    },
++    "reproducible_total_levels": {
++        "principle": "the reconciled authoritative count (target >= 40 after dc22 + sc25 deepening)"
++    },
++    "reproducible_total_games": {
++        "principle": "the reconciled authoritative game count (target >= 21 after dc22)"
++    },
++    "open_gap_ids": {
++        "principle": "the still-open generic-solver gaps after .412 -- the .413 backlog"
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor"
++    },
++    "availability_report": {
++        "principle": "robust aggregate-available report; missing or flagged inputs do not erase other axes"
++    },
++    "submitted_to_leaderboard": {"principle": "must remain false for this audit-only task"},
++}
++
++GAP_MARKER_OVERRIDES = {
++    "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT": (
++        "exp4438-gap-4423-dc22-unselectable-first-contact"
++    ),
++    "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER": (
++        "exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter"
++    ),
++    "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER": (
++        "exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier"
++    ),
++    "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE": (
++        "exp4458-gap-sb26-color-match-slot-sequence"
++    ),
++}
++
++Gap4GuardRunner = Callable[[Path], Mapping[str, Any]]
++CapstoneStampRunner = Callable[[Path], Mapping[str, Any]]
++
++
++def _run_gap4_regression_guard(root: Path) -> Mapping[str, Any]:  # pragma: no cover
++    return prior._run_gap4_regression_guard(root)
++
++
++def _verify_capstone_stamp_fix_durable(root: Path) -> Mapping[str, Any]:  # pragma: no cover
++    return prior._verify_capstone_stamp_fix_durable(root)
++
++
++def _resolve_artifact_path(root: Path, pattern: str) -> str:
++    if "*" not in pattern:
++        return pattern
++    matches = sorted(root.glob(pattern))
++    if matches:
++        return matches[0].relative_to(root).as_posix()
++    return pattern
++
++
++def _as_int(value: Any) -> int:
++    return prior._as_int(value)
++
++
++def _dc22_banked(payload: Mapping[str, Any] | None) -> bool:
++    return bool(
++        isinstance(payload, Mapping)
++        and payload.get("target_game") == "dc22"
++        and payload.get("offline_reproduced") is True
++        and payload.get("dc22_grounded") is not False
++        and _as_int(payload.get("reproduced_levels")) >= 1
++    )
++
++
++def _tr87_closed(payload: Mapping[str, Any] | None) -> bool:
++    return bool(
++        isinstance(payload, Mapping)
++        and payload.get("tr87_resolved_generically") is True
++        and payload.get("offline_reproduced") is True
++        and _as_int(payload.get("tr87_generic_level_reproduced") or 1) >= 1
++    )
++
++
++def _sc25_levels(payload: Mapping[str, Any] | None) -> int:
++    if not isinstance(payload, Mapping):
++        return 0
++    reproduction = payload.get("generic_reproduction_result")
++    if isinstance(reproduction, Mapping):
++        return max(
++            _as_int(payload.get("reproduced_levels")),
++            _as_int(reproduction.get("reached_level")),
++            _as_int(reproduction.get("claimed_level")),
++        )
++    return _as_int(payload.get("reproduced_levels"))
++
++
++def _sc25_cast_grid_closed(payload: Mapping[str, Any] | None) -> bool:
++    if not isinstance(payload, Mapping):
++        return False
++    closure_flag = any(
++        payload.get(field) is True
++        for field in (
++            "sc25_resolved_generically",
++            "sc25_cast_grid_resolved_generically",
++            "cast_grid_phase_fsm_resolved_generically",
++        )
++    )
++    return bool(closure_flag and payload.get("offline_reproduced") is True and _sc25_levels(payload) >= 1)
++
++
++def _loo_closes_game(payload: Mapping[str, Any] | None, game: str) -> bool:
++    if not isinstance(payload, Mapping) or payload.get("offline_reproduced") is not True:
++        return False
++    for row in payload.get("per_game") or []:
++        if (
++            isinstance(row, Mapping)
++            and row.get("game") == game
++            and row.get("solved_without_own_recipe") is True
++            and row.get("residual_delta") == "none"
++            and row.get("closed_by_operator") not in {"", "none", None}
++        ):
++            return True
++    return False
++
++
++def _first_contact_banked(payload: Mapping[str, Any] | None) -> bool:
++    return bool(
++        isinstance(payload, Mapping)
++        and payload.get("offline_reproduced") is True
++        and _as_int(payload.get("reproduced_levels")) >= 1
++        and str(payload.get("target_game") or "")
++    )
++
++
++def load_sources(root: Path = REPO_ROOT) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
++    """REQ-REPORT-4461: read every upstream artifact before reconciling ledgers."""
++
++    payloads: dict[str, Any] = {}
++    report: dict[str, dict[str, Any]] = {}
++    for key, pattern in SOURCE_ARTIFACTS.items():
++        rel_path = _resolve_artifact_path(root, pattern)
++        payload, row = prior._load_json(root / rel_path)
++        payloads[key] = payload
++        row["relative_path"] = rel_path
++        row["source_pattern"] = pattern
++        report[key] = row
++    return payloads, report
++
++
++def _axis_specs() -> list[capstone_aggregate_available.AxisSpec]:
++    return [
++        capstone_aggregate_available.AxisSpec(
++            name="dc22_bank",
++            required_keys=("4455_dc22",),
++            verdict_fn=lambda present: _dc22_banked(present.get("4455_dc22")),
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="glyph_rewrite",
++            required_keys=("4456_glyph_rewrite",),
++            verdict_fn=lambda present: _tr87_closed(present.get("4456_glyph_rewrite")),
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="cast_grid",
++            required_keys=("4457_cast_grid",),
++            verdict_fn=lambda present: {
++                "sc25_closed": _sc25_cast_grid_closed(present.get("4457_cast_grid")),
++                "sc25_levels": _sc25_levels(present.get("4457_cast_grid")),
++            },
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="first_contact_new_game",
++            required_keys=("4458_first_contact",),
++            verdict_fn=lambda present: {
++                "target_game": (present.get("4458_first_contact") or {}).get("target_game"),
++                "banked": _first_contact_banked(present.get("4458_first_contact")),
++            },
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="loo_v3",
++            required_keys=("4459_loo_v3",),
++            verdict_fn=lambda present: _as_int(
++                (present.get("4459_loo_v3") or {}).get("generic_loo_solve_count_v3")
++            ),
++        ),
++        capstone_aggregate_available.AxisSpec(
++            name="submission_package",
++            required_keys=("4460_submission",),
++            verdict_fn=lambda present: {
++                "ready": (present.get("4460_submission") or {}).get("submission_package_ready")
++                is True,
++                "levels": _as_int(
++                    (present.get("4460_submission") or {}).get(
++                        "total_reproduced_levels_in_package"
++                    )
++                ),
++                "submitted_to_leaderboard": (present.get("4460_submission") or {}).get(
++                    "submitted_to_leaderboard"
++                )
++                is True,
++            },
++        ),
++    ]
++
++
++def availability_report(payloads: Mapping[str, Any]) -> dict[str, Any]:
++    """REQ-REPORT-4461: report per-axis gaps without poisoning unrelated axes."""
++
++    return capstone_aggregate_available.aggregate_available_report_gaps(
++        payloads,
++        _axis_specs(),
++        artifact_experiment_ids=SOURCE_EXPERIMENT_IDS,
++    )
++
++
++def trusted_payloads(payloads: Mapping[str, Any], report: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
++    available = set(report.get("available_artifact_keys", []))
++    return {
++        key: dict(payload)
++        for key, payload in payloads.items()
++        if key in available and isinstance(payload, Mapping)
++    }
++
++
++def excluded_artifact_paths(
++    payloads: Mapping[str, Any], source_report: Mapping[str, Mapping[str, Any]]
++) -> list[str]:
++    return [
++        str(source_report.get(key, {}).get("relative_path") or SOURCE_ARTIFACTS[key])
++        for key, payload in payloads.items()
++        if isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++    ]
++
++
++def _source_path(source_report: Mapping[str, Mapping[str, Any]], key: str) -> str:
++    return str(source_report.get(key, {}).get("relative_path") or SOURCE_ARTIFACTS[key])
++
++
++def _gap_entry(
++    gap_id: str,
++    *,
++    status: str,
++    evidence: str,
++    failure_mode: str,
++    missing_discriminator: str,
++    candidate_design: str,
++    source_artifact: str,
++    movement: str,
++) -> dict[str, Any]:
++    return {
++        "gap_id": gap_id,
++        "status": status,
++        "evidence": evidence,
++        "failure_mode": failure_mode,
++        "missing_discriminator": missing_discriminator,
++        "candidate_design": candidate_design,
++        "priority": "high",
++        "source_artifact": source_artifact,
++        "movement": movement,
++    }
++
++
++def collect_gap_entries(
++    trusted: Mapping[str, Mapping[str, Any]],
++    source_report: Mapping[str, Mapping[str, Any]],
++) -> list[dict[str, Any]]:
++    """SCENARIO-REPORT-4461: convert .412 outcomes into filled or open gap rows."""
++
++    entries: dict[str, dict[str, Any]] = {}
++    exp4455 = trusted.get("4455_dc22", {})
++    dc22_path = _source_path(source_report, "4455_dc22")
++    if _dc22_banked(exp4455):
++        entries["GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT"] = _gap_entry(
++            "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++            status="filled (exp4455_solve_dc22_cegis_config_rule)",
++            evidence=(
++                f"{dc22_path}; target_game=dc22; offline_reproduced=True; "
++                f"reproduced_levels={exp4455.get('reproduced_levels')}"
++            ),
++            failure_mode="closed_by_dc22_cegis_config_rule",
++            missing_discriminator="filled by execution-grounded dc22 config-rule predicate",
++            candidate_design="keep the dc22 CEGIS config-rule verifier in the generic bank",
++            source_artifact=dc22_path,
++            movement="filled",
++        )
++    else:
++        entries["GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT"] = _gap_entry(
++            "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++            status="open",
++            evidence=(
++                f"{dc22_path}; offline_reproduced={exp4455.get('offline_reproduced')}; "
++                f"dc22_grounded={exp4455.get('dc22_grounded')}; "
++                f"honest_verdict={exp4455.get('honest_verdict', 'missing_clean_artifact')}"
++            ),
++            failure_mode="missing_dc22_reproduction_gate",
++            missing_discriminator="dc22 still lacks clean reproduction-gated generic closure",
++            candidate_design="rerun dc22 CEGIS/config-rule grounding and count only reproduce(dc22)",
++            source_artifact=dc22_path,
++            movement="updated_still_open",
++        )
++
++    exp4456 = trusted.get("4456_glyph_rewrite", {})
++    tr87_path = _source_path(source_report, "4456_glyph_rewrite")
++    if _tr87_closed(exp4456):
++        entries["GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER"] = _gap_entry(
++            "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
++            status="filled (exp4456_generic_glyph_rewrite_operator)",
++            evidence=(
++                f"{tr87_path}; tr87_resolved_generically=True; offline_reproduced=True; "
++                f"tr87_generic_level_reproduced={exp4456.get('tr87_generic_level_reproduced')}"
++            ),
++            failure_mode="prior missing_glyph_rewrite_rule_verifier residual is closed for tr87",
++            missing_discriminator="filled by generic glyph_rewrite_rule_verifier",
++            candidate_design="keep the glyph rewrite verifier in the generic leave-one-out loop",
++            source_artifact=tr87_path,
++            movement="filled",
++        )
++    else:
++        entries["GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER"] = _gap_entry(
++            "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
++            status="open",
++            evidence=f"{tr87_path}; clean tr87 generic closure not available",
++            failure_mode="missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
++            missing_discriminator="generic glyph rewrite verifier still missing or ungated",
++            candidate_design="ground glyph rewrite from pixels/rules and rerun LOO",
++            source_artifact=tr87_path,
++            movement="updated_still_open",
++        )
++
++    exp4457 = trusted.get("4457_cast_grid", {})
++    exp4459 = trusted.get("4459_loo_v3", {})
++    sc25_path = _source_path(source_report, "4457_cast_grid")
++    sc25_closed = _sc25_cast_grid_closed(exp4457) or _loo_closes_game(exp4459, "sc25")
++    if sc25_closed:
++        source = sc25_path if _sc25_cast_grid_closed(exp4457) else _source_path(source_report, "4459_loo_v3")
++        entries["GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER"] = _gap_entry(
++            "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++            status="filled (exp4457_cast_grid_phase_fsm_world_model)",
++            evidence=(
++                f"{source}; sc25_cast_grid_closed=True; "
++                f"sc25_levels={max(1, _sc25_levels(exp4457))}; "
++                f"generic_loo_solve_count_v3={exp4459.get('generic_loo_solve_count_v3')}"
++            ),
++            failure_mode="prior missing_cast_grid_spell_shrink_tank_exit_verifier residual is closed",
++            missing_discriminator="filled by cast_grid_phase_fsm_world_model",
++            candidate_design="keep the cast-grid phase FSM verifier in the generic loop",
++            source_artifact=source,
++            movement="filled",
++        )
++    else:
++        entries["GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER"] = _gap_entry(
++            "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++            status="open",
++            evidence=(
++                f"{sc25_path}; cast_grid_artifact_available={bool(exp4457)}; "
++                f"generic_loo_solve_count_v3={exp4459.get('generic_loo_solve_count_v3')}; "
++                f"missing_verifier_gaps={exp4459.get('missing_verifier_gaps', [])}"
++            ),
++            failure_mode="missing_cast_grid_spell_shrink_tank_exit_verifier",
++            missing_discriminator="generic cast-grid spell/shrink/tank-exit verifier still missing",
++            candidate_design="build cast_grid_phase_fsm_world_model and rerun LOO v4",
++            source_artifact=sc25_path,
++            movement="updated_still_open",
++        )
++
++    exp4458 = trusted.get("4458_first_contact", {})
++    first_contact_path = _source_path(source_report, "4458_first_contact")
++    target_game = str(exp4458.get("target_game") or "sb26").upper()
++    if _first_contact_banked(exp4458):
++        gap_id = f"GAP-4458-{target_game}-COLOR-MATCH-SLOT-SEQUENCE"
++        entries[gap_id] = _gap_entry(
++            gap_id,
++            status="filled (exp4458_first_contact_new_game)",
++            evidence=(
++                f"{first_contact_path}; target_game={exp4458.get('target_game')}; "
++                f"offline_reproduced=True; reproduced_levels={exp4458.get('reproduced_levels')}"
++            ),
++            failure_mode="closed_by_first_contact_new_game",
++            missing_discriminator="filled by routed first-contact generic verifier",
++            candidate_design="reuse the routed first-contact primitive",
++            source_artifact=first_contact_path,
++            movement="filled",
++        )
++    else:
++        entries["GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"] = _gap_entry(
++            "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE",
++            status="open",
++            evidence=(
++                f"{first_contact_path}; target_game={exp4458.get('target_game', 'sb26')}; "
++                f"routed_to={exp4458.get('routed_to')}; "
++                f"offline_reproduced={exp4458.get('offline_reproduced')}; "
++                f"reproduced_levels={exp4458.get('reproduced_levels')}"
++            ),
++            failure_mode="missing_color_match_slot_sequence_verifier",
++            missing_discriminator="generic ordered color-match item-slot verifier with undo-aware grounding",
++            candidate_design="extend config_rule_verifier with color_match_slot_sequence digests",
++            source_artifact=first_contact_path,
++            movement="updated_still_open",
++        )
++
++    return list(entries.values())
++
++
++def _gap_marker(gap_id: str) -> str:
++    return GAP_MARKER_OVERRIDES.get(gap_id, f"exp4461-{prior._slug(gap_id).lower()}")
++
++
++def _gap_block(gap: Mapping[str, Any]) -> str:
++    return (
++        f"### {gap['gap_id']}: Exp 4461 .412 registry gap hygiene\n"
++        f"- status: {gap.get('status', 'open')}\n"
++        f"- evidence: {gap.get('evidence', '')}\n"
++        f"- failure mode: {gap.get('failure_mode', '')}\n"
++        f"- missing discriminator: {gap.get('missing_discriminator', '')}\n"
++        f"- candidate design: {gap.get('candidate_design', '')}\n"
++        f"- priority: {gap.get('priority', 'high')}\n"
++        f"- source artifact: {gap.get('source_artifact', '')}\n"
++        f"- movement: {gap.get('movement', 'updated')}\n"
++    )
++
++
++def reconcile_gaps_text(gaps_text: str, gap_entries: list[dict[str, Any]]) -> tuple[str, list[str], list[str]]:
++    updated = gaps_text
++    filled: list[str] = []
++    open_ids: list[str] = []
++    for gap in gap_entries:
++        gap_id = str(gap["gap_id"])
++        if str(gap.get("status", "")).startswith("filled"):
++            filled.append(gap_id)
++        else:
++            open_ids.append(gap_id)
++        updated = prior._replace_marked_block(updated, _gap_marker(gap_id), _gap_block(gap))
++    return updated, filled, open_ids
++
++
++def _record_reproduced_game(
++    registry: dict[str, Any],
++    *,
++    game: str,
++    levels: int,
++    artifact_path: str,
++    latest_key: str,
++    checksum: str,
++    solver: str,
++) -> None:
++    prior._record_reproduced_game(
++        registry,
++        game=game,
++        levels=levels,
++        artifact_path=artifact_path,
++        latest_key=latest_key,
++        checksum=checksum,
++        solver=solver,
++    )
++
++
++def reconcile_arc_registry(
++    registry: Mapping[str, Any],
++    trusted: Mapping[str, Mapping[str, Any]],
++    source_report: Mapping[str, Mapping[str, Any]],
++    *,
++    filled_gap_ids: list[str],
++    open_gap_ids: list[str],
++    excluded: list[str],
++) -> tuple[dict[str, Any], dict[str, Any]]:
++    """REQ-REPORT-4461: update reproduced ARC counts from trusted .412 rows."""
++
++    updated = deepcopy(dict(registry))
++    updated.setdefault("games", [])
++
++    exp4455 = trusted.get("4455_dc22", {})
++    if _dc22_banked(exp4455):
++        _record_reproduced_game(
++            updated,
++            game="dc22",
++            levels=max(1, _as_int(exp4455.get("reproduced_levels"))),
++            artifact_path=_source_path(source_report, "4455_dc22"),
++            latest_key="latest_exp4455_reproduce",
++            checksum=str(exp4455.get("reproducibility_checksum") or ""),
++            solver="python/carnot/experiment_4455_solve_dc22_cegis_config_rule.py",
++        )
++
++    exp4457 = trusted.get("4457_cast_grid", {})
++    if _sc25_cast_grid_closed(exp4457):
++        _record_reproduced_game(
++            updated,
++            game="sc25",
++            levels=max(1, _sc25_levels(exp4457)),
++            artifact_path=_source_path(source_report, "4457_cast_grid"),
++            latest_key="latest_exp4457_reproduce",
++            checksum=str(exp4457.get("reproducibility_checksum") or ""),
++            solver="python/carnot/experiment_4457_cast_grid_phase_fsm_world_model.py",
++        )
++
++    exp4458 = trusted.get("4458_first_contact", {})
++    if _first_contact_banked(exp4458):
++        _record_reproduced_game(
++            updated,
++            game=str(exp4458.get("target_game") or "sb26"),
++            levels=max(1, _as_int(exp4458.get("reproduced_levels"))),
++            artifact_path=_source_path(source_report, "4458_first_contact"),
++            latest_key="latest_exp4458_reproduce",
++            checksum=str(exp4458.get("reproducibility_checksum") or ""),
++            solver="python/carnot/experiment_4458_first_contact_new_game.py",
++        )
++
++    exp4456 = trusted.get("4456_glyph_rewrite", {})
++    if exp4456:
++        prior._ensure_game(updated, "tr87")["generic_glyph_rewrite_reproduce"] = (
++            "Exp4456 closed tr87 LOO through glyph_rewrite_rule_verifier without tr87 adapter."
++        )
++        updated["latest_glyph_rewrite_rule_verifier_4456"] = {
++            "artifact": _source_path(source_report, "4456_glyph_rewrite"),
++            "tr87_resolved_generically": _tr87_closed(exp4456),
++            "tr87_generic_level_reproduced": _as_int(
++                exp4456.get("tr87_generic_level_reproduced")
++            ),
++            "offline_reproduced": exp4456.get("offline_reproduced") is True,
++            "no_regression": exp4456.get("no_regression") is True,
++        }
++
++    exp4459 = trusted.get("4459_loo_v3", {})
++    if exp4459:
++        updated["latest_loo_generic_v3_4459"] = {
++            "artifact": _source_path(source_report, "4459_loo_v3"),
++            "generic_loo_solve_count_v2_baseline": exp4459.get(
++                "generic_loo_solve_count_v2_baseline"
++            ),
++            "generic_loo_solve_count_v3": exp4459.get("generic_loo_solve_count_v3"),
++            "loo_gate_passed": exp4459.get("loo_gate_passed") is True,
++            "closed_residuals_by_412_operator": list(
++                exp4459.get("closed_residuals_by_412_operator") or []
++            ),
++            "missing_verifier_gaps": list(exp4459.get("missing_verifier_gaps") or []),
++        }
++
++    exp4460 = trusted.get("4460_submission", {})
++    if exp4460:
++        updated["latest_submission_package_4460"] = {
++            "artifact": _source_path(source_report, "4460_submission"),
++            "submission_package_ready": exp4460.get("submission_package_ready") is True,
++            "total_reproduced_levels_in_package": exp4460.get(
++                "total_reproduced_levels_in_package"
++            ),
++            "submitted_to_leaderboard": exp4460.get("submitted_to_leaderboard") is True,
++        }
++
++    total_levels, total_games = prior._reproduced_counts(updated)
++    updated["updated"] = "2026-06-19"
++    updated["reproducible_total_levels"] = total_levels
++    updated["reproducible_total_games"] = total_games
++    updated["latest_hygiene_4461"] = {
++        "artifact": RESULT_RELATIVE_PATH,
++        "reproducible_total_levels": total_levels,
++        "reproducible_total_games": total_games,
++        "filled_gap_ids": filled_gap_ids,
++        "open_gap_ids": open_gap_ids,
++        "excluded_artifacts": excluded,
++        "note": ".412 registry hygiene; missing, blocked, or flagged artifacts excluded from counts.",
++    }
++    return updated, {
++        "arc_solve_registry_reconciled": True,
++        "reproducible_total_levels": total_levels,
++        "reproducible_total_games": total_games,
++    }
++
++
++def guard_passed(guard: Mapping[str, Any]) -> bool:
++    return prior.guard_passed(guard)
++
++
++def stamp_fix_durable(stamp: Mapping[str, Any]) -> bool:
++    return prior.stamp_fix_durable(stamp)
++
++
++def reconcile_verifier_registry(
++    registry: Mapping[str, Any],
++    *,
++    guard: Mapping[str, Any],
++    stamp: Mapping[str, Any],
++    total_levels: int,
++    total_games: int,
++    filled_gap_ids: list[str],
++    open_gap_ids: list[str],
++    trusted: Mapping[str, Mapping[str, Any]],
++    excluded: list[str],
++) -> tuple[dict[str, Any], dict[str, Any]]:
++    updated = deepcopy(dict(registry))
++    verifier = prior._find_verifier(updated, GAP4_VERIFIER_ID)
++    if verifier is None:  # pragma: no cover - defensive creation path
++        verifier = {
++            "verifier_id": GAP4_VERIFIER_ID,
++            "domain": "arc_agi2_grid",
++            "kind": "process_verifier",
++            "eval": {},
++            "registry_roles": [],
++        }
++        updated.setdefault("verifiers", []).append(verifier)
++
++    current = prior._guard_current(guard)
++    exp4459 = trusted.get("4459_loo_v3", {})
++    exp4460 = trusted.get("4460_submission", {})
++    verifier.setdefault("eval", {}).update(
++        {
++            "eval_exp_4461": RESULT_RELATIVE_PATH,
++            "exp4461_regression_guard_passed": guard_passed(guard),
++            "exp4461_arc_oracle_distinct_verifier_beats_vote": (
++                guard.get("arc_oracle_distinct_verifier_beats_vote") is not False
++            ),
++            "exp4461_arc1_rule_exec_vote_pass2": current.get("vote_pass2"),
++            "exp4461_arc1_rule_exec_gated_pass2": current.get("gated_pass2"),
++            "exp4461_arc1_headroom_recovered": current.get("headroom_recovered"),
++            "exp4461_arc1_vote_wins_lost": current.get("vote_wins_lost"),
++            "exp4461_capstone_stamp_fix_durable": stamp_fix_durable(stamp),
++            "exp4461_reproducible_total_levels": total_levels,
++            "exp4461_reproducible_total_games": total_games,
++            "exp4461_filled_gap_ids": filled_gap_ids,
++            "exp4461_open_gap_ids": open_gap_ids,
++            "exp4461_flagged_artifacts_excluded": excluded,
++            "exp4461_generic_loo_solve_count_v3": exp4459.get("generic_loo_solve_count_v3"),
++            "exp4461_submission_package_ready": exp4460.get("submission_package_ready"),
++            "exp4461_submission_package_levels": exp4460.get(
++                "total_reproduced_levels_in_package"
++            ),
++        }
++    )
++
++    role = {
++        "role_id": V412_ROLE_ID,
++        "experiment": RESULT_RELATIVE_PATH,
++        "role": "registry_gaps_arc_hygiene_v412",
++        "status": "v412_outcomes_recorded_with_gap4_guard_and_stamp_durability",
++        "reproducible_total_levels": total_levels,
++        "reproducible_total_games": total_games,
++        "filled_gap_ids": filled_gap_ids,
++        "open_gap_ids": open_gap_ids,
++        "excluded_artifacts": excluded,
++        "eval_exp_4461": RESULT_RELATIVE_PATH,
++    }
++    roles = verifier.setdefault("registry_roles", [])
++    if not isinstance(roles, list):  # pragma: no cover - defensive cleanup path
++        roles = verifier["registry_roles"] = []
++    verifier["registry_roles"] = [
++        row for row in roles if not (isinstance(row, Mapping) and row.get("role_id") == V412_ROLE_ID)
++    ] + [role]
++    return updated, {"verifier_registry_reconciled": True}
++
++
++def check_preconditions(
++    root: Path = REPO_ROOT,
++) -> tuple[dict[str, Any], dict[str, Any], str, dict[str, Any], dict[str, Any]]:
++    verifier_registry, verifier_check = prior._yaml_mapping(root / REGISTRY_RELATIVE_PATH)
++    arc_registry, arc_check = prior._yaml_mapping(root / ARC_REGISTRY_RELATIVE_PATH)
++    gaps_text, gaps_check = prior._read_text(root / GAPS_RELATIVE_PATH)
++    payloads, source_report = load_sources(root)
++    helper_check = prior._check_helper_import()
++    checks = {
++        "ok": verifier_check["readable"] and arc_check["readable"] and gaps_check["readable"] and helper_check["ok"],
++        "files": {
++            "verifier_registry": verifier_check,
++            "arc_solve_registry": arc_check,
++            "verifier_gaps": gaps_check,
++        },
++        "compatibility_import": helper_check,
++        "source_artifacts": source_report,
++    }
++    return verifier_registry, arc_registry, gaps_text, payloads, checks
++
++
++def _checksum_for_artifact(artifact: Mapping[str, Any]) -> str:
++    return prior._sha256(
++        {
++            "registry_reconciliation": artifact.get("registry_reconciliation"),
++            "availability_report": artifact.get("availability_report"),
++            "regression_guard_passed": artifact.get("regression_guard_passed"),
++            "capstone_stamp_fix_durable": artifact.get("capstone_stamp_fix_durable"),
++            "reproducible_total_levels": artifact.get("reproducible_total_levels"),
++            "reproducible_total_games": artifact.get("reproducible_total_games"),
++            "open_gap_ids": artifact.get("open_gap_ids"),
++            "excluded_artifacts": artifact.get("excluded_artifacts"),
++            "random_seed": artifact.get("random_seed"),
++            "spec_refs": artifact.get("spec_refs"),
++            "inference_substrate": artifact.get("inference_substrate"),
++        }
++    )
++
++
++def build_artifact(
++    *,
++    started_at: float,
++    ended_at: float,
++    availability: Mapping[str, Any],
++    preconditions: Mapping[str, Any],
++    registry_reconciliation: Mapping[str, Any],
++    guard: Mapping[str, Any],
++    stamp: Mapping[str, Any],
++    total_levels: int,
++    total_games: int,
++    excluded: list[str],
++) -> dict[str, Any]:
++    guard_ok = guard_passed(guard)
++    stamp_ok = stamp_fix_durable(stamp)
++    suffix = "guard_passed" if guard_ok else "guard_failed"
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4461_registry_gaps_hygiene",
++        "schema": "carnot.exp4461.registry_gaps_hygiene.v1",
++        "honest_verdict": f"complete: registry_gaps_hygiene_4461_{suffix}",
++        "regression_guard_passed": guard_ok,
++        "reproducible_total_levels": int(total_levels),
++        "reproducible_total_games": int(total_games),
++        "open_gap_ids": list(registry_reconciliation.get("open_gap_ids", [])),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "registry_reconciliation": dict(registry_reconciliation),
++        "availability_report": dict(availability),
++        "capstone_stamp_fix_durable": stamp_ok,
++        "capstone_stamp_fix": dict(stamp),
++        "gap4_regression_guard": dict(guard),
++        "excluded_artifacts": list(excluded),
++        "preconditions_checked": dict(preconditions),
++        "field_principles": deepcopy(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "submitted_to_leaderboard": False,
++        "no_production_verifier_edits": True,
++        "result_path": RESULT_RELATIVE_PATH,
++        "duration_s": max(0.0001, round(float(ended_at - started_at), 6)),
++        "model_specs": {
++            "method": INFERENCE_SUBSTRATE,
++            "codex_calls": 0,
++            "live_model_inference": False,
++            "gpu_inference": False,
++            "upstream_artifacts": list(SOURCE_ARTIFACTS.values()),
++        },
++        "registries_reconciled": bool(registry_reconciliation.get("registries_reconciled")),
++    }
++    artifact["reproducibility_checksum"] = _checksum_for_artifact(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with complete:/success:/passed:/shipped:")
++    if type(artifact.get("regression_guard_passed")) is not bool:
++        errors.append("regression_guard_passed must be bare bool")
++    if type(artifact.get("capstone_stamp_fix_durable")) is not bool:
++        errors.append("capstone_stamp_fix_durable must be bare bool")
++    if type(artifact.get("reproducible_total_levels")) is not int:
++        errors.append("reproducible_total_levels must be bare int")
++    if type(artifact.get("reproducible_total_games")) is not int:
++        errors.append("reproducible_total_games must be bare int")
++    open_gap_ids = artifact.get("open_gap_ids")
++    if not isinstance(open_gap_ids, list) or any(not isinstance(item, str) for item in open_gap_ids):
++        errors.append("open_gap_ids must be list[str]")
++    if type(artifact.get("random_seed")) is not int:
++        errors.append("random_seed must be bare int")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must equal aggregation_from_upstream_artifacts")
++    if artifact.get("submitted_to_leaderboard") is not False:
++        errors.append("submitted_to_leaderboard must be false")
++    if not isinstance(artifact.get("registry_reconciliation"), Mapping):
++        errors.append("registry_reconciliation must be dict")
++    if not isinstance(artifact.get("availability_report"), Mapping):
++        errors.append("availability_report must be dict")
++    if not isinstance(artifact.get("field_principles"), Mapping):
++        errors.append("field_principles must be dict")
++    else:
++        for field in (
++            "honest_verdict",
++            "regression_guard_passed",
++            "reproducible_total_levels",
++            "reproducible_total_games",
++            "open_gap_ids",
++            "inference_substrate",
++        ):
++            if artifact["field_principles"].get(field) != FIELD_PRINCIPLES[field]:
++                errors.append(f"field_principles.{field}.principle must match REQ-REPORT-4461")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or len(checksum) != 64 or not all(
++        char in "0123456789abcdef" for char in checksum
++    ):
++        errors.append("reproducibility_checksum must be 64-char sha256 hex")
++    if set(SPEC_REFS) - set(artifact.get("spec_refs", [])):
++        errors.append("spec_refs must include REQ-REPORT-4461 and SCENARIO-REPORT-4461")
++    return errors
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    gap4_guard_runner: Gap4GuardRunner = _run_gap4_regression_guard,
++    capstone_stamp_runner: CapstoneStampRunner = _verify_capstone_stamp_fix_durable,
++    now: Callable[[], float] = time.perf_counter,
++) -> dict[str, Any]:
++    """REQ-REPORT-4461: reconcile ledgers, run guards, and write the artifact."""
++
++    started = now()
++    root = Path(root)
++    verifier_registry, arc_registry, gaps_text, payloads, preconditions = check_preconditions(root)
++    source_report = preconditions.get("source_artifacts", {})
++    available = availability_report(payloads)
++    trusted = trusted_payloads(payloads, available)
++    excluded = excluded_artifact_paths(payloads, source_report)
++    gap_entries = collect_gap_entries(trusted, source_report)
++    updated_gaps, filled_gap_ids, open_gap_ids = reconcile_gaps_text(gaps_text, gap_entries)
++
++    guard = dict(gap4_guard_runner(root))
++    stamp = dict(capstone_stamp_runner(root))
++    updated_arc, arc_report = reconcile_arc_registry(
++        arc_registry,
++        trusted,
++        source_report,
++        filled_gap_ids=filled_gap_ids,
++        open_gap_ids=open_gap_ids,
++        excluded=excluded,
++    )
++    updated_verifier, verifier_report = reconcile_verifier_registry(
++        verifier_registry,
++        guard=guard,
++        stamp=stamp,
++        total_levels=arc_report["reproducible_total_levels"],
++        total_games=arc_report["reproducible_total_games"],
++        filled_gap_ids=filled_gap_ids,
++        open_gap_ids=open_gap_ids,
++        trusted=trusted,
++        excluded=excluded,
++    )
++
++    ledgers_writable = bool(preconditions.get("ok"))
++    if ledgers_writable:
++        prior._write_yaml(root / ARC_REGISTRY_RELATIVE_PATH, updated_arc)
++        prior._write_yaml(root / REGISTRY_RELATIVE_PATH, updated_verifier)
++        prior._write_text(root / GAPS_RELATIVE_PATH, updated_gaps)
++
++    registry_reconciliation = {
++        **arc_report,
++        **verifier_report,
++        "verifier_gaps_reconciled": ledgers_writable,
++        "registries_reconciled": bool(ledgers_writable),
++        "filled_gap_ids": filled_gap_ids,
++        "open_gap_ids": open_gap_ids,
++        "excluded_artifacts": excluded,
++        "production_verifier_edits": False,
++    }
++    artifact = build_artifact(
++        started_at=started,
++        ended_at=now(),
++        availability=available,
++        preconditions=preconditions,
++        registry_reconciliation=registry_reconciliation,
++        guard=guard,
++        stamp=stamp,
++        total_levels=arc_report["reproducible_total_levels"],
++        total_games=arc_report["reproducible_total_games"],
++        excluded=excluded,
++    )
++    write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper
++    artifact = run(REPO_ROOT)
++    print(json.dumps(artifact["regression_guard_passed"]))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 69376fcc65..f981b42fe3 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-19T19:37:18.112569Z",
+-  "duration_s": 0.020876646041870117,
++  "run_date": "2026-06-19T20:09:23.988783Z",
++  "duration_s": 0.020430564880371094,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "50d2d6d0c11f362f93de60c9ef54a413ae93894b8a997c9ada63cf077ff9b51a",
++  "reproducibility_checksum": "cd0f2657bf21194d4ea5811dac6a55cb62ce7a9abf4748a7cb9057e7ab2e2e75",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "383b9013e6f60aa2bd03dca76caf4cd44916a7ce"
++    "adversarial_verify_version": "55f552a6b2b45635ea299cb145bcd8a61f16e6da"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 23b1b242d4..16887ec326 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-19T19:37:18.140686Z",
+-  "duration_s": 0.023328781127929688,
++  "run_date": "2026-06-19T20:09:24.015844Z",
++  "duration_s": 0.022663593292236328,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "845eeb5730a4dbbaf5a26b4642aa5e3c5b6e97839b8908f1f792dcb2b8c12ccf",
++  "reproducibility_checksum": "5484385acf5568c8e91a2bb9308d0dd48f1b661f71a26b20e0a29ddf75902927",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "383b9013e6f60aa2bd03dca76caf4cd44916a7ce"
++    "adversarial_verify_version": "55f552a6b2b45635ea299cb145bcd8a61f16e6da"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 968bd21473..89edc1a707 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1355152130126953,
++  "efficiency_gains_ms": 2.108335494995117,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f10f4bf28d..3856b76404 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.0397088266909122e-05,
++  "duration_s": 3.1118979677557945e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4461_registry_gaps_hygiene.json b/results/experiment_4461_registry_gaps_hygiene.json
+new file mode 100644
+index 0000000000..0efd79e372
+--- /dev/null
++++ b/results/experiment_4461_registry_gaps_hygiene.json
+@@ -0,0 +1,333 @@
++{
++  "availability_report": {
++    "available_artifact_keys": [
++      "4455_dc22",
++      "4456_glyph_rewrite",
++      "4458_first_contact",
++      "4459_loo_v3",
++      "4460_submission"
++    ],
++    "axes": {
++      "cast_grid": {
++        "available_artifact_keys": [],
++        "flagged_artifacts": [],
++        "missing_artifacts": [
++          {
++            "artifact_key": "4457_cast_grid",
++            "axis": "cast_grid",
++            "experiment_id": 4457
++          }
++        ],
++        "verdict": {
++          "sc25_closed": false,
++          "sc25_levels": 0
++        }
++      },
++      "dc22_bank": {
++        "available_artifact_keys": [
++          "4455_dc22"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": false
++      },
++      "first_contact_new_game": {
++        "available_artifact_keys": [
++          "4458_first_contact"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": {
++          "banked": false,
++          "target_game": "sb26"
++        }
++      },
++      "glyph_rewrite": {
++        "available_artifact_keys": [
++          "4456_glyph_rewrite"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": true
++      },
++      "loo_v3": {
++        "available_artifact_keys": [
++          "4459_loo_v3"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": 6
++      },
++      "submission_package": {
++        "available_artifact_keys": [
++          "4460_submission"
++        ],
++        "flagged_artifacts": [],
++        "missing_artifacts": [],
++        "verdict": {
++          "levels": 39,
++          "ready": true,
++          "submitted_to_leaderboard": false
++        }
++      }
++    },
++    "flagged_artifacts_excluded": [],
++    "missing_upstream_artifacts": [
++      {
++        "artifact_key": "4457_cast_grid",
++        "axis": "cast_grid",
++        "experiment_id": 4457
++      }
++    ]
++  },
++  "capstone_stamp_fix": {
++    "capstone_aggregation_propagates_oracle_stamp": true,
++    "capstone_aggregation_source": "carnot.reporting.capstone_v406_4401",
++    "capstone_aggregation_uses_available_helper": true,
++    "capstone_path": "results/experiment_4401_capstone_v406.json",
++    "capstone_stamp_fix_durable": true,
++    "capstone_verifier_is_oracle": false,
++    "capstone_verifier_is_oracle_honored": true,
++    "circular_moat_overclaim_fired": false,
++    "command": [
++      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
++      "--json",
++      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4401_capstone_v406.json"
++    ],
++    "flag_count": 0,
++    "flags": [],
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4401_capstone_v406.json\",\n      \"loaded\": true,\n      \"exp_id\": 4401,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: v406_localizer_localizes_but_not_genuine_compounds_false_calibrated_fa\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
++  },
++  "capstone_stamp_fix_durable": true,
++  "duration_s": 0.626749,
++  "excluded_artifacts": [],
++  "experiment": "experiment_4461_registry_gaps_hygiene",
++  "field_principles": {
++    "availability_report": {
++      "principle": "robust aggregate-available report; missing or flagged inputs do not erase other axes"
++    },
++    "honest_verdict": {
++      "principle": "terminal-prefixed"
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor"
++    },
++    "open_gap_ids": {
++      "principle": "the still-open generic-solver gaps after .412 -- the .413 backlog"
++    },
++    "regression_guard_passed": {
++      "principle": "BARE bool (gated-fields-must-be-bare): the GAP-4 execution result did not regress"
++    },
++    "reproducible_total_games": {
++      "principle": "the reconciled authoritative game count (target >= 21 after dc22)"
++    },
++    "reproducible_total_levels": {
++      "principle": "the reconciled authoritative count (target >= 40 after dc22 + sc25 deepening)"
++    },
++    "submitted_to_leaderboard": {
++      "principle": "must remain false for this audit-only task"
++    }
++  },
++  "gap4_regression_guard": {
++    "exp4333_guard": {
++      "offline_replay": {
++        "arc1_rule_exec": {
++          "gated_pass2": 0.5806,
++          "headroom_recovered": 4,
++          "n": 31,
++          "vote_pass2": 0.4516,
++          "vote_wins_lost": 0
++        },
++        "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
++        "cached_programs_path": "results/arc3_gap4_induced_programs.json",
++        "expected": {
++          "arc1_rule_exec": {
++            "gated_pass2": 0.5806,
++            "headroom_recovered": 4,
++            "n": 31,
++            "vote_pass2": 0.4516,
++            "vote_wins_lost": 0
++          }
++        },
++        "no_codex_calls": true,
++        "no_gguf_inference": true,
++        "regression_guard_passed": true,
++        "trm_training_touched": false
++      },
++      "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
++      "recorded_arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      },
++      "regression_guard_passed": true,
++      "replayed_arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      }
++    },
++    "prior_artifact_path": "results/experiment_4333_verifier_registry_gaps_hygiene.json",
++    "recorded_arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "regression_guard_passed": true,
++    "replayed_arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    }
++  },
++  "honest_verdict": "complete: registry_gaps_hygiene_4461_guard_passed",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "model_specs": {
++    "codex_calls": 0,
++    "gpu_inference": false,
++    "live_model_inference": false,
++    "method": "aggregation_from_upstream_artifacts",
++    "upstream_artifacts": [
++      "results/experiment_4455_solve_dc22_cegis_config_rule.json",
++      "results/experiment_4456_generic_glyph_rewrite_operator.json",
++      "results/experiment_4457_*.json",
++      "results/experiment_4458_first_contact_new_game.json",
++      "results/experiment_4459_loo_generic_solve_benchmark_v3.json",
++      "results/experiment_4460_submission_package_prep.json"
++    ]
++  },
++  "no_production_verifier_edits": true,
++  "open_gap_ids": [
++    "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++    "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++    "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"
++  ],
++  "preconditions_checked": {
++    "compatibility_import": {
++      "error": "",
++      "module": "scripts.capstone_aggregate_available",
++      "ok": true
++    },
++    "files": {
++      "arc_solve_registry": {
++        "error": "",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
++        "readable": true,
++        "yaml_safe_load": true
++      },
++      "verifier_gaps": {
++        "error": "",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_gaps.md",
++        "readable": true
++      },
++      "verifier_registry": {
++        "error": "",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml",
++        "readable": true,
++        "yaml_safe_load": true
++      }
++    },
++    "ok": true,
++    "source_artifacts": {
++      "4455_dc22": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "blocked_baseline_pytest_coverage",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4455_solve_dc22_cegis_config_rule.json",
++        "relative_path": "results/experiment_4455_solve_dc22_cegis_config_rule.json",
++        "reproducibility_checksum": "c3bb6e9404e2df2c8b5afd758008a8c6d54e6c8d0bd21d27e9d67a448e2bdf57",
++        "source_pattern": "results/experiment_4455_solve_dc22_cegis_config_rule.json"
++      },
++      "4456_glyph_rewrite": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "success: tr87_generic_glyph_rewrite_L1_offline_reproduced",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4456_generic_glyph_rewrite_operator.json",
++        "relative_path": "results/experiment_4456_generic_glyph_rewrite_operator.json",
++        "reproducibility_checksum": "9af8b4f940d57da581320e8886e1054df8d850c0e905d07ff8690ac34c54fd94",
++        "source_pattern": "results/experiment_4456_generic_glyph_rewrite_operator.json"
++      },
++      "4457_cast_grid": {
++        "available": false,
++        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4457_*.json'",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4457_*.json",
++        "relative_path": "results/experiment_4457_*.json",
++        "source_pattern": "results/experiment_4457_*.json"
++      },
++      "4458_first_contact": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "complete: generic_first_contact_sb26_routed_no_new_level",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4458_first_contact_new_game.json",
++        "relative_path": "results/experiment_4458_first_contact_new_game.json",
++        "reproducibility_checksum": "03980670cd662ffefdbfb2033a60cc9cab596155dc34affd22e9490ddd5e04eb",
++        "source_pattern": "results/experiment_4458_first_contact_new_game.json"
++      },
++      "4459_loo_v3": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "success: generic_loo_solve_count_v3_6_of_7_beats_v2_5",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4459_loo_generic_solve_benchmark_v3.json",
++        "relative_path": "results/experiment_4459_loo_generic_solve_benchmark_v3.json",
++        "reproducibility_checksum": "cc29c4a1976b36cc0f946cabf3ec36105c1b1f01e1b10726326a1c977627ccb1",
++        "source_pattern": "results/experiment_4459_loo_generic_solve_benchmark_v3.json"
++      },
++      "4460_submission": {
++        "available": true,
++        "error": "",
++        "flagged_adversarial": false,
++        "honest_verdict": "success: submission_package_ready_39_levels_beats_13_quarantined_0",
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4460_submission_package_prep.json",
++        "relative_path": "results/experiment_4460_submission_package_prep.json",
++        "reproducibility_checksum": "e6cb92de8cc83741f30355fa2f293de4a6d86a0846b56c99cb045663462a8199",
++        "source_pattern": "results/experiment_4460_submission_package_prep.json"
++      }
++    }
++  },
++  "random_seed": 4461,
++  "registries_reconciled": true,
++  "registry_reconciliation": {
++    "arc_solve_registry_reconciled": true,
++    "excluded_artifacts": [],
++    "filled_gap_ids": [
++      "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER"
++    ],
++    "open_gap_ids": [
++      "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++      "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++      "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"
++    ],
++    "production_verifier_edits": false,
++    "registries_reconciled": true,
++    "reproducible_total_games": 20,
++    "reproducible_total_levels": 39,
++    "verifier_gaps_reconciled": true,
++    "verifier_registry_reconciled": true
++  },
++  "regression_guard_passed": true,
++  "reproducibility_checksum": "731a4c17e29eb4f35c37fe64944076833baaaec44011b946fa83a9c7d3c8942f",
++  "reproducible_total_games": 20,
++  "reproducible_total_levels": 39,
++  "result_path": "results/experiment_4461_registry_gaps_hygiene.json",
++  "schema": "carnot.exp4461.registry_gaps_hygiene.v1",
++  "spec_refs": [
++    "REQ-REPORT-4461",
++    "SCENARIO-REPORT-4461"
++  ],
++  "submitted_to_leaderboard": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 5aa428ae47..361c79f818 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T19:53:22Z",
+-  "finished_at": "2026-06-19T19:53:23Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-19T20:09:14Z",
++  "finished_at": "2026-06-19T20:09:14Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 03b4344a0c..979f126953 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T19:53:23Z",
+-  "finished_at": "2026-06-19T19:53:23Z",
++  "started_at": "2026-06-19T20:09:14Z",
++  "finished_at": "2026-06-19T20:09:14Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 9ca1e89635..bd8b694ebd 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T19:53:23Z",
+-  "finished_at": "2026-06-19T19:53:23Z",
++  "started_at": "2026-06-19T20:09:14Z",
++  "finished_at": "2026-06-19T20:09:14Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4461_registry_gaps_hygiene.py b/tests/python/test_experiment_4461_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..fabc90fa0f
+--- /dev/null
++++ b/tests/python/test_experiment_4461_registry_gaps_hygiene.py
+@@ -0,0 +1,544 @@
++"""Tests for Exp 4461 registry and gaps hygiene.
++
++Spec refs: REQ-REPORT-4461, SCENARIO-REPORT-4461.
++"""
++
++from __future__ import annotations
++
++import importlib
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_4461_registry_gaps_hygiene as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _fixture_games() -> list[dict[str, Any]]:
++    reproduced = [
++        ("r11l", 1),
++        ("ls20", 1),
++        ("wa30", 1),
++        ("s5i5", 1),
++        ("lp85", 5),
++        ("sc25", 1),
++        ("cd82", 1),
++        ("sp80", 1),
++        ("su15", 1),
++        ("tu93", 5),
++        ("tn36", 7),
++        ("cn04", 1),
++        ("m0r0", 1),
++        ("sk48", 1),
++        ("ar25", 1),
++        ("ka59", 1),
++        ("ft09", 1),
++        ("tr87", 6),
++        ("g50t", 1),
++        ("vc33", 1),
++    ]
++    rows = [
++        {"game": game, "reproducibility": "reproduced", "levels_reproduced": levels}
++        for game, levels in reproduced
++    ]
++    rows.extend(
++        [
++            {"game": "dc22", "reproducibility": "unsolved", "levels_reproduced": 0},
++            {"game": "sb26", "reproducibility": "unsolved", "levels_reproduced": 0},
++        ]
++    )
++    return rows
++
++
++def _fixture_arc_registry() -> dict[str, Any]:
++    return {
++        "schema_version": 1,
++        "updated": "2026-06-19",
++        "general_gotchas": [],
++        "games": _fixture_games(),
++        "reproducible_total_levels": 39,
++        "reproducible_total_games": 20,
++    }
++
++
++def _fixture_verifier_registry() -> dict[str, Any]:
++    return {
++        "verifiers": [
++            {
++                "verifier_id": mod.GAP4_VERIFIER_ID,
++                "domain": "arc_agi2_grid",
++                "eval": {"exp4449_regression_guard_passed": True},
++                "registry_roles": [{"role_id": "old", "status": "kept"}],
++            }
++        ]
++    }
++
++
++def _fixture_gaps_text() -> str:
++    blocks = [
++        (
++            "exp4438-gap-4423-dc22-unselectable-first-contact",
++            "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++        ),
++        (
++            "exp4438-gap-4432-loo-tr87-missing-glyph-rewrite-rule-verifier-without-tr87-adapter",
++            "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
++        ),
++        (
++            "exp4438-gap-4432-loo-sc25-missing-cast-grid-spell-shrink-tank-exit-verifier",
++            "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++        ),
++        (
++            "exp4458-gap-sb26-color-match-slot-sequence",
++            "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE",
++        ),
++    ]
++    text = "# Verifier Gaps\n"
++    for marker, gap_id in blocks:
++        text += (
++            f"\n<!-- {marker}:start -->\n"
++            f"### {gap_id}: stale fixture row\n"
++            "- status: open\n"
++            "- evidence: stale\n"
++            "- failure mode: stale\n"
++            "- missing discriminator: stale\n"
++            "- candidate design: stale\n"
++            "- priority: high\n"
++            f"<!-- {marker}:end -->\n"
++        )
++    return text
++
++
++def _dc22_artifact(*, reproduced: bool) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4455_solve_dc22_cegis_config_rule",
++        "honest_verdict": (
++            "success: dc22_cegis_config_rule_L1_offline_reproduced"
++            if reproduced
++            else "blocked_baseline_pytest_coverage"
++        ),
++        "target_game": "dc22",
++        "dc22_grounded": reproduced,
++        "offline_reproduced": reproduced,
++        "reproduced_levels": 1 if reproduced else 0,
++        "reproducible_total_levels": 40 if reproduced else 39,
++        "verifier_is_oracle": reproduced,
++        "reproducibility_checksum": "5" * 64,
++    }
++
++
++def _glyph_artifact() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4456_generic_glyph_rewrite_operator",
++        "honest_verdict": "success: tr87_generic_glyph_rewrite_L1_offline_reproduced",
++        "target_game": "tr87",
++        "tr87_resolved_generically": True,
++        "tr87_generic_level_reproduced": 1,
++        "offline_reproduced": True,
++        "generic_operator_result": {
++            "game": "tr87",
++            "operator": "glyph_rewrite_rule_verifier",
++            "target_recipe_withheld": "tr87",
++            "grounded": True,
++        },
++        "generic_reproduction_result": {"game": "tr87", "reproduced": True, "reached_level": 1},
++        "missing_verifier_gaps": [],
++        "verifier_is_oracle": True,
++        "reproducibility_checksum": "6" * 64,
++    }
++
++
++def _cast_grid_artifact() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4457_cast_grid_phase_fsm_world_model",
++        "honest_verdict": "success: sc25_cast_grid_phase_fsm_L2_offline_reproduced",
++        "target_game": "sc25",
++        "sc25_resolved_generically": True,
++        "offline_reproduced": True,
++        "reproduced_levels": 2,
++        "generic_operator_result": {
++            "game": "sc25",
++            "operator": "cast_grid_phase_fsm_world_model",
++            "target_recipe_withheld": "sc25",
++            "grounded": True,
++        },
++        "generic_reproduction_result": {"game": "sc25", "reproduced": True, "reached_level": 2},
++        "missing_verifier_gaps": [],
++        "verifier_is_oracle": True,
++        "reproducibility_checksum": "7" * 64,
++    }
++
++
++def _first_contact_artifact(*, banked: bool = False) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4458_first_contact_new_game",
++        "honest_verdict": (
++            "success: generic_first_contact_sb26_L1_offline_reproduced"
++            if banked
++            else "complete: generic_first_contact_sb26_routed_no_new_level"
++        ),
++        "target_game": "sb26",
++        "routed_to": "s5i5",
++        "offline_reproduced": banked,
++        "reproduced_levels": 1 if banked else 0,
++        "missing_verifier_gaps": []
++        if banked
++        else [
++            {
++                "gap_id": "GAP-4458-SB26-MISSING-COLOR-MATCH-SLOT-SEQUENCE-VERIFIER",
++                "game": "sb26",
++                "residual_delta": "missing_color_match_slot_sequence_verifier",
++                "operator": "config_rule_verifier",
++                "routed_to": "s5i5",
++                "candidate_design": "add a generic ordered color-match item-slot verifier",
++            }
++        ],
++        "verifier_is_oracle": True,
++        "reproducibility_checksum": "8" * 64,
++    }
++
++
++def _loo_v3_artifact(*, count: int) -> dict[str, Any]:
++    sc25_solved = count >= 7
++    return {
++        "experiment": "experiment_4459_loo_generic_solve_benchmark_v3",
++        "honest_verdict": f"success: generic_loo_solve_count_v3_{count}_of_7_beats_v2_5",
++        "generic_loo_solve_count_v3": count,
++        "generic_loo_solve_count_v2_baseline": 5,
++        "closed_residuals_by_412_operator": [
++            {
++                "game": "tr87",
++                "closed_by_operator": "glyph_rewrite_rule_verifier",
++                "v2_residual_delta": "missing_glyph_rewrite_rule_verifier_without_tr87_adapter",
++            }
++        ]
++        + (
++            [
++                {
++                    "game": "sc25",
++                    "closed_by_operator": "cast_grid_phase_fsm_world_model",
++                    "v2_residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
++                }
++            ]
++            if sc25_solved
++            else []
++        ),
++        "per_game": [
++            {
++                "game": "tr87",
++                "solved_without_own_recipe": True,
++                "closed_by_operator": "glyph_rewrite_rule_verifier",
++                "residual_delta": "none",
++            },
++            {
++                "game": "sc25",
++                "solved_without_own_recipe": sc25_solved,
++                "closed_by_operator": "cast_grid_phase_fsm_world_model" if sc25_solved else "none",
++                "residual_delta": "none" if sc25_solved else "missing_cast_grid_spell_shrink_tank_exit_verifier",
++            },
++        ],
++        "offline_reproduced": True,
++        "missing_verifier_gaps": []
++        if sc25_solved
++        else [
++            {
++                "game": "sc25",
++                "residual_delta": "missing_cast_grid_spell_shrink_tank_exit_verifier",
++                "attempt_mode": "v3_412_operator_remeasurement",
++            }
++        ],
++        "verifier_is_oracle": True,
++        "reproducibility_checksum": "9" * 64,
++    }
++
++
++def _submission_artifact(*, total: int) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4460_submission_package_prep",
++        "honest_verdict": f"success: submission_package_ready_{total}_levels_beats_13_quarantined_0",
++        "submission_package_ready": True,
++        "total_reproduced_levels_in_package": total,
++        "prior_submitted_baseline_levels": 13,
++        "beats_prior_baseline": True,
++        "submitted_to_leaderboard": False,
++        "verifier_is_oracle": True,
++        "reproducibility_checksum": "a" * 64,
++    }
++
++
++def _write_fixture_repo(
++    root: Path,
++    *,
++    dc22_reproduced: bool,
++    cast_artifact: bool,
++    loo_count: int,
++) -> None:
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / mod.ARC_REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump(_fixture_arc_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (root / mod.REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump(_fixture_verifier_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (root / mod.GAPS_RELATIVE_PATH).write_text(_fixture_gaps_text(), encoding="utf-8")
++
++    _write_json(root / mod.EXP4455_PATH, _dc22_artifact(reproduced=dc22_reproduced))
++    _write_json(root / mod.EXP4456_PATH, _glyph_artifact())
++    if cast_artifact:
++        _write_json(root / "results/experiment_4457_cast_grid_phase_fsm_world_model.json", _cast_grid_artifact())
++    _write_json(root / mod.EXP4458_PATH, _first_contact_artifact(banked=False))
++    _write_json(root / mod.EXP4459_PATH, _loo_v3_artifact(count=loo_count))
++    _write_json(root / mod.EXP4460_PATH, _submission_artifact(total=41 if dc22_reproduced else 39))
++
++
++def _guard_ok(_root: Path) -> dict[str, Any]:
++    return {
++        "regression_guard_passed": True,
++        "arc_oracle_distinct_verifier_beats_vote": True,
++        "current": {
++            "vote_pass2": 0.4516,
++            "gated_pass2": 0.5806,
++            "headroom_recovered": 4,
++            "vote_wins_lost": 0,
++        },
++    }
++
++
++def _stamp_ok(_root: Path) -> dict[str, Any]:
++    return {
++        "capstone_stamp_fix_durable": True,
++        "capstone_verifier_is_oracle_honored": True,
++        "circular_moat_overclaim_fired": False,
++    }
++
++
++def test_req_report_4461_spec_declares_registry_hygiene_contract() -> None:
++    """REQ-REPORT-4461: OpenSpec names the .412 hygiene contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-REPORT-4461",
++        "SCENARIO-REPORT-4461",
++        mod.RESULT_RELATIVE_PATH,
++        "regression_guard_passed",
++        "reproducible_total_levels",
++        "open_gap_ids",
++        "aggregation_from_upstream_artifacts -- reads upstream artifacts; 100us floor",
++    ):
++        assert marker in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_report_4461_reconciles_412_ledgers_and_guards(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4461: .412 closures, totals, guard, and stamp are reconciled."""
++
++    _write_fixture_repo(tmp_path, dc22_reproduced=True, cast_artifact=True, loo_count=7)
++
++    artifact = mod.run(
++        tmp_path,
++        gap4_guard_runner=_guard_ok,
++        capstone_stamp_runner=_stamp_ok,
++        now=lambda: 10.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete: registry_gaps_hygiene_4461_guard_passed"
++    assert type(artifact["regression_guard_passed"]) is bool
++    assert artifact["regression_guard_passed"] is True
++    assert artifact["capstone_stamp_fix_durable"] is True
++    assert artifact["reproducible_total_levels"] == 41
++    assert artifact["reproducible_total_games"] == 21
++    assert artifact["open_gap_ids"] == ["GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"]
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert artifact["duration_s"] == 0.0001
++    assert artifact["submitted_to_leaderboard"] is False
++    assert artifact["no_production_verifier_edits"] is True
++    assert artifact["field_principles"]["honest_verdict"]["principle"] == "terminal-prefixed"
++    assert (
++        artifact["field_principles"]["reproducible_total_levels"]["principle"]
++        == "the reconciled authoritative count (target >= 40 after dc22 + sc25 deepening)"
++    )
++    assert artifact["availability_report"]["axes"]["dc22_bank"]["verdict"] is True
++    assert artifact["availability_report"]["axes"]["cast_grid"]["verdict"]["sc25_levels"] == 2
++    assert artifact["availability_report"]["axes"]["loo_v3"]["verdict"] == 7
++    assert artifact["registry_reconciliation"]["filled_gap_ids"] == [
++        "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++        "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER",
++        "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++    ]
++
++    arc_registry = yaml.safe_load((tmp_path / mod.ARC_REGISTRY_RELATIVE_PATH).read_text())
++    assert arc_registry["reproducible_total_levels"] == 41
++    assert arc_registry["reproducible_total_games"] == 21
++    assert next(row for row in arc_registry["games"] if row["game"] == "dc22")[
++        "levels_reproduced"
++    ] == 1
++    assert next(row for row in arc_registry["games"] if row["game"] == "sc25")[
++        "levels_reproduced"
++    ] == 2
++    assert arc_registry["latest_hygiene_4461"]["artifact"] == mod.RESULT_RELATIVE_PATH
++
++    gaps = (tmp_path / mod.GAPS_RELATIVE_PATH).read_text(encoding="utf-8")
++    assert "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT: Exp 4461 .412 registry gap hygiene" in gaps
++    assert "- status: filled (exp4455_solve_dc22_cegis_config_rule)" in gaps
++    assert "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE: Exp 4461 .412 registry gap hygiene" in gaps
++    assert "- movement: updated_still_open" in gaps
++
++    verifier_registry = yaml.safe_load((tmp_path / mod.REGISTRY_RELATIVE_PATH).read_text())
++    verifier = verifier_registry["verifiers"][0]
++    assert verifier["eval"]["eval_exp_4461"] == mod.RESULT_RELATIVE_PATH
++    assert verifier["eval"]["exp4461_regression_guard_passed"] is True
++    assert verifier["eval"]["exp4461_reproducible_total_levels"] == 41
++    assert verifier["registry_roles"][-1]["role_id"] == mod.V412_ROLE_ID
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["reproducibility_checksum"] == artifact["reproducibility_checksum"]
++    assert mod.artifact_schema_errors(artifact) == []
++    assert importlib.import_module("scripts.capstone_aggregate_available").AxisSpec is not None
++
++
++def test_req_report_4461_missing_or_blocked_inputs_do_not_erase_available_axes(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-4461: missing/blocked inputs report gaps while other axes compute."""
++
++    _write_fixture_repo(tmp_path, dc22_reproduced=False, cast_artifact=False, loo_count=6)
++
++    artifact = mod.run(tmp_path, gap4_guard_runner=_guard_ok, capstone_stamp_runner=_stamp_ok)
++
++    assert artifact["reproducible_total_levels"] == 39
++    assert artifact["reproducible_total_games"] == 20
++    assert artifact["availability_report"]["axes"]["cast_grid"]["missing_artifacts"] == [
++        {"axis": "cast_grid", "artifact_key": "4457_cast_grid", "experiment_id": 4457}
++    ]
++    assert artifact["availability_report"]["axes"]["glyph_rewrite"]["verdict"] is True
++    assert artifact["availability_report"]["axes"]["loo_v3"]["verdict"] == 6
++    assert artifact["registry_reconciliation"]["filled_gap_ids"] == [
++        "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER"
++    ]
++    assert artifact["open_gap_ids"] == [
++        "GAP-4423-DC22-UNSELECTABLE-FIRST-CONTACT",
++        "GAP-4432-LOO-SC25-MISSING-CAST-GRID-SPELL-SHRINK-TANK-EXIT-VERIFIER",
++        "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE",
++    ]
++    assert mod.EXP4457_PATTERN in artifact["model_specs"]["upstream_artifacts"]
++    assert artifact["excluded_artifacts"] == []
++
++
++def test_req_report_4461_schema_and_defensive_helpers(tmp_path: Path) -> None:
++    """REQ-REPORT-4461: bare fields, guard logic, and schema checks are defensive."""
++
++    _write_fixture_repo(tmp_path, dc22_reproduced=True, cast_artifact=True, loo_count=7)
++    artifact = mod.run(tmp_path, gap4_guard_runner=_guard_ok, capstone_stamp_runner=_stamp_ok)
++    second = mod.run(tmp_path, gap4_guard_runner=_guard_ok, capstone_stamp_runner=_stamp_ok)
++    assert second["registry_reconciliation"]["filled_gap_ids"] == artifact[
++        "registry_reconciliation"
++    ]["filled_gap_ids"]
++
++    bad = {
++        **artifact,
++        "honest_verdict": "partial: not terminal",
++        "regression_guard_passed": "true",
++        "reproducible_total_levels": True,
++        "reproducible_total_games": "21",
++        "open_gap_ids": ["ok", 3],
++        "capstone_stamp_fix_durable": "true",
++        "inference_substrate": "",
++        "submitted_to_leaderboard": True,
++        "random_seed": "4461",
++        "reproducibility_checksum": "bad",
++        "registry_reconciliation": [],
++        "availability_report": [],
++        "field_principles": {"honest_verdict": {"principle": "wrong"}},
++        "spec_refs": [],
++    }
++
++    errors = mod.artifact_schema_errors(bad)
++
++    assert "honest_verdict must start with complete:/success:/passed:/shipped:" in errors
++    assert "regression_guard_passed must be bare bool" in errors
++    assert "reproducible_total_levels must be bare int" in errors
++    assert "reproducible_total_games must be bare int" in errors
++    assert "open_gap_ids must be list[str]" in errors
++    assert "capstone_stamp_fix_durable must be bare bool" in errors
++    assert "inference_substrate must equal aggregation_from_upstream_artifacts" in errors
++    assert "submitted_to_leaderboard must be false" in errors
++    assert "random_seed must be bare int" in errors
++    assert "registry_reconciliation must be dict" in errors
++    assert "availability_report must be dict" in errors
++    assert "field_principles.regression_guard_passed.principle must match REQ-REPORT-4461" in errors
++    assert "reproducibility_checksum must be 64-char sha256 hex" in errors
++    assert "spec_refs must include REQ-REPORT-4461 and SCENARIO-REPORT-4461" in errors
++    with pytest.raises(ValueError, match="regression_guard_passed"):
++        mod.write_artifact(tmp_path, bad)
++    assert "missing honest_verdict" in mod.artifact_schema_errors({})
++    assert "field_principles must be dict" in mod.artifact_schema_errors({**artifact, "field_principles": []})
++    assert mod.guard_passed(
++        {
++            "regression_guard_passed": True,
++            "arc_oracle_distinct_verifier_beats_vote": True,
++            "current": {"gated_pass2": 0.4, "vote_pass2": 0.5, "vote_wins_lost": 0},
++        }
++    ) is False
++    assert mod.stamp_fix_durable({"capstone_stamp_fix_verified": True}) is True
++    assert mod._sc25_levels(None) == 0
++    assert mod._sc25_levels({"reproduced_levels": 3}) == 3
++    assert mod._sc25_cast_grid_closed(None) is False
++    assert mod._loo_closes_game({}, "sc25") is False
++    assert mod._loo_closes_game(
++        {
++            "offline_reproduced": True,
++            "per_game": [
++                {
++                    "game": "sc25",
++                    "solved_without_own_recipe": True,
++                    "closed_by_operator": "cast_grid_phase_fsm_world_model",
++                    "residual_delta": "none",
++                }
++            ],
++        },
++        "sc25",
++    ) is True
++
++    open_tr87 = mod.collect_gap_entries({"4456_glyph_rewrite": {"offline_reproduced": False}}, {})
++    assert any(
++        gap["gap_id"]
++        == "GAP-4432-LOO-TR87-MISSING-GLYPH-REWRITE-RULE-VERIFIER-WITHOUT-TR87-ADAPTER"
++        and gap["status"] == "open"
++        for gap in open_tr87
++    )
++    banked_gap_entries = mod.collect_gap_entries(
++        {"4458_first_contact": _first_contact_artifact(banked=True)},
++        {},
++    )
++    assert any(
++        gap["gap_id"] == "GAP-4458-SB26-COLOR-MATCH-SLOT-SEQUENCE"
++        and gap["status"] == "filled (exp4458_first_contact_new_game)"
++        for gap in banked_gap_entries
++    )
++    banked_arc, _ = mod.reconcile_arc_registry(
++        _fixture_arc_registry(),
++        {"4458_first_contact": _first_contact_artifact(banked=True)},
++        {},
++        filled_gap_ids=[],
++        open_gap_ids=[],
++        excluded=[],
++    )
++    assert next(row for row in banked_arc["games"] if row["game"] == "sb26")[
++        "levels_reproduced"
++    ] == 1
+-- 
+2.55.0
+

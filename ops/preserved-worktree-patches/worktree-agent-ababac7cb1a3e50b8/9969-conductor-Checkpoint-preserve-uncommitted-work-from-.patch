@@ -1,0 +1,64 @@
+From 58bd19d7fb3d306c5dc5bc4284007142f9a4ff45 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 23:03:53 -0400
+Subject: [PATCH 09969/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 3 ++-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 210c48a9df..15ebec06b1 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -2,11 +2,12 @@
+  "escalated": {
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json|": "2026-08-22T22:39:49Z",
+   "CONSECUTIVE_INVALID_LLM_ON_ROWS|pid 849366 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab5/rows_off.json|": "2026-08-23T11:27:27Z",
++  "ORPHANED_LLAMA_SERVER|host|37365": "2026-08-26T03:03:50Z",
+   "WRONG_MODEL_LOADED|host|1645356": "2026-08-23T14:02:49Z",
+   "WRONG_MODEL_LOADED|host|2080991": "2026-08-25T07:49:49Z",
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z",
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T02:56:10Z"
++ "last_scan_utc": "2026-08-26T03:03:50Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0b223b7e40..a6bdd98170 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-26T02:56:09Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-26T03:03:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c081966a6a..ca7a6204ac 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16503,3 +16503,5 @@ code |
+ | 2026-08-26 00:17 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6596_convergeflow_feasible_token_canary.json age-week 0: OPEN 1 days: |
+ | 2026-08-26 02:25 UTC | Prospective chronological invariant continuous sel | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a  |
+ | 2026-08-26 02:54 UTC | V576 independent capstone and architecture reconci | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6615_v576_in |
++| 2026-08-26 03:01 UTC | V576 independent capstone and architecture reconci | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6615_v576_in |
++| 2026-08-26 03:03 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 37365 (port 8801) reparented to init, no live process references its p |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 580c3cf967..bca921ebb4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-26T02:56:09Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-26T03:03:49Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

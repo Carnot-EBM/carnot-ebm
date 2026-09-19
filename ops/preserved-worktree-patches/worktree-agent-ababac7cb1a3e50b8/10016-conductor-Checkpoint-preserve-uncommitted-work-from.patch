@@ -1,0 +1,58 @@
+From 7d654d3647cf92b8857dbfe0afabc3accf321942 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 07:19:22 -0400
+Subject: [PATCH 10016/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 3 +++
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 002a43f934..638ff13f87 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T11:17:16Z"
++ "last_scan_utc": "2026-08-26T11:19:19Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5d2b8fda23..9be01e65d9 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 35, "phase": "iteration_start", "last_beat": "2026-08-26T11:17:15Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 36, "phase": "iteration_start", "last_beat": "2026-08-26T11:19:19Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 18c46f9b34..bcefec3382 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16555,3 +16555,6 @@ code |
+ | 2026-08-26 11:15 UTC | Matched direct-headroom baselines | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
+ | 2026-08-26 11:15 UTC | Delayed two-level constrained decoding | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6635-matched-direct-headroom.headroom_r |
+ | 2026-08-26 11:17 UTC | Matched direct-headroom baselines | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
++| 2026-08-26 11:17 UTC | Delayed two-level constrained decoding | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6635-matched-direct-headroom.headroom_r |
++| 2026-08-26 11:19 UTC | Cold-context verifier unit calibration | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
++| 2026-08-26 11:19 UTC | Independent exact decoding authority audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6636-delayed-two-level-decoding) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d015378b55..61a35481ca 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 35, "phase": "iteration_start", "started_at": "2026-08-26T11:17:15Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 36, "phase": "iteration_start", "started_at": "2026-08-26T11:19:19Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

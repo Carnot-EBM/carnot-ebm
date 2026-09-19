@@ -1,0 +1,106 @@
+From 8ccd977def66090cea809309f8e7d821b3c65024 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 21:07:08 -0400
+Subject: [PATCH 02674/11362] [outer-loop] Qwen3.5-9B-MTP: 1.4-2x MTP speedup
+ (13 tok/s), grounding held -- operator-selected generator
+
+Operator selected Qwen3.5-9B + the MTP variant (unsloth/Qwen3.5-9B-MTP-GGUF, 5.9GB). llama.cpp native
+--spec-type draft-mtp: 67-75% draft acceptance -> ka59 8.18->11.53 tok/s (1.41x, still grounds Tier2),
+tn36 6.66->13.02 tok/s (1.95x). Fastest AR model tested (~13 tok/s, ~3x gemma) at the smallest footprint.
+Self-MTP loads the model twice (~11GB) -> ~5GB KV on 16GB (~78k tok @ q8); keep MTP a deploy flag.
+Harness now supports --mtp + model registry incl. qwen3.5-9b-mtp.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../arc-16gb-model-alternatives-2026-06-18.md | 20 ++++++++
+ ...yerb_ar_model_test_qwen3_5-9b-mtp_mtp.json | 46 +++++++++++++++++++
+ 2 files changed, 66 insertions(+)
+ create mode 100644 results/arc3_layerb_ar_model_test_qwen3_5-9b-mtp_mtp.json
+
+diff --git a/docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md b/docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md
+index 6f9c4a6db0..8e696b60bd 100644
+--- a/docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md
++++ b/docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md
+@@ -125,6 +125,26 @@ VRAM** — ARC Prize 2025/2026 runs on **L4×4 (24 GB each)** or T4×2 (16 GB ea
+ fits a single L4 with ~7 GB KV and the "27B too big" conclusion flips. The 16 GB figure is a working
+ assumption; the actual env GPU is the single most decision-changing unknown.
+ 
++## DECISION (2026-06-19, operator): Qwen3.5-9B-MTP
++
++Operator selected **Qwen3.5-9B** as the generator, paired with the **MTP variant** + llama.cpp native
++`--spec-type draft-mtp`: `unsloth/Qwen3.5-9B-MTP-GGUF` (Q4_K_M, 5.9 GB). Benchmarked with MTP on the
++grounding harness:
++
++| | ka59 | tn36 | draft acceptance | vs no-MTP |
++|---|---|---|---|---|
++| no-MTP | 8.18 tok/s (GND) | 6.66 tok/s | — | — |
++| **+MTP** | **11.53 tok/s** (GND) | **13.02 tok/s** | **67–75%** | **1.41–1.95×** |
++
++MTP gives a clean **1.4–2.0× speedup** (grounding unchanged), making Qwen3.5-9B-MTP the **fastest AR model
++tested (~13 tok/s, ~3× gemma's 4.2)** at the **smallest footprint (5.9 GB)**, Apache-2.0, with controllable
++thinking (`/no_think`).
++
++**VRAM tradeoff to tune at deploy:** self-MTP loads the model twice (target 5.9 GB + draft ~5.2 GB ≈ 11 GB),
++leaving ~5 GB KV on a 16 GB card (≈78k tokens at q8 KV — still ample). MTP OFF → 5.9 GB weights, ~9 GB KV.
++So MTP costs ~4 GB VRAM for ~1.4–2× speed; with q8 KV both modes leave plenty of context. Keep MTP a deploy
++flag: on by default (speed), off if a single call needs a very long context.
++
+ ## Recommendation
+ 
+ Download and benchmark **Qwen3.5-9B (or Qwen3-14B), Qwen2.5-Coder-14B, and Phi-4** on the exact Layer-B
+diff --git a/results/arc3_layerb_ar_model_test_qwen3_5-9b-mtp_mtp.json b/results/arc3_layerb_ar_model_test_qwen3_5-9b-mtp_mtp.json
+new file mode 100644
+index 0000000000..cf2aa2af37
+--- /dev/null
++++ b/results/arc3_layerb_ar_model_test_qwen3_5-9b-mtp_mtp.json
+@@ -0,0 +1,46 @@
++{
++  "experiment": "arc3_layerb_ar_model_test",
++  "model_key": "qwen3.5-9b-mtp",
++  "gguf": "Qwen3.5-9B-Q4_K_M.gguf",
++  "no_think": true,
++  "mtp": true,
++  "per_game": [
++    {
++      "game": "ka59",
++      "tok_per_s": 11.53,
++      "tokens": 427,
++      "dur_s": 37.0,
++      "coherent": true,
++      "raw_sample": "def is_win(grid):\n    import numpy as np\n    e = grid[63:64, 26:64]\n    # ...\n```\n\n<think>\n\n</think>\n\n```python\ndef is_win(grid):\n    import numpy as np\n    e = grid[63:64, 26:64]\n    \n    # The rule derived from the reference region and winning/non-winning examples:\n    # The reference region contains exactly 1 cell of color 0 (at r10, c10 relative to region start).\n    # The winning configuratio",
++      "verification": {
++        "fires_on_win": true,
++        "false_positive_rate": 0.0,
++        "n_nonwin": 6
++      },
++      "grounded": true,
++      "literal": false,
++      "tier": "TIER2_GROUNDED_RELATIONAL"
++    },
++    {
++      "game": "tn36",
++      "tok_per_s": 13.02,
++      "tokens": 1100,
++      "dur_s": 84.5,
++      "coherent": true,
++      "raw_sample": "def is_win(grid):\n    import numpy as np\n    e = grid[1:2, 2:62]\n    # ...\n```\n\n<think>\nThinking process:\n\n1.  **Analyze the Request:**\n    *   **Goal:** Write a Python function `is_win(grid)` that determines if a given `64x64` numpy array `grid` represents a winning configuration for an ARC puzzle.\n    *   **Input:** `grid` (64x64 numpy int array).\n    *   **Output:** Boolean (`True` if win, `Fal",
++      "verification": {
++        "fires_on_win": false,
++        "false_positive_rate": 0.0,
++        "n_nonwin": 6
++      },
++      "grounded": false,
++      "literal": false,
++      "tier": "TIER0_COHERENT_NOT_GROUNDED"
++    }
++  ],
++  "grounded_games": [
++    "ka59"
++  ],
++  "honest_verdict": "complete_layerb_qwen3_5_9b_mtp_mtp_True_grounded_1",
++  "inference_substrate": "offline_arc_agi3_qwen3.5-9b-mtp_mtp_iGPU_port8921"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

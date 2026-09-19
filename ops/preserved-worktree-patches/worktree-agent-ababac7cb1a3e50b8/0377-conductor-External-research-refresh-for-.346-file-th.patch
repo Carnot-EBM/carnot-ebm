@@ -1,0 +1,2103 @@
+From eb52551c23dab58ff4cb7b9f958128ac745bd313 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 02:28:00 -0400
+Subject: [PATCH 00377/11362] [conductor] External research refresh for .346:
+ file the genuinely-new 2026 papers surfaced during planning into
+ research-references.md '.346 additions' -- verifier-ensemble
+ behavioral-entanglement auditing (arXiv:2604.07650), correlated errors in
+ LLMs (arXiv:2506.07962), Verifiable Process Reward Models (arXiv:2601.17223),
+ LLMs Gaming Verifiers (arXiv:2604.15149), Dyve fast/slow process verification
+ (arXiv:2502.11157). Each entry as-reported, with how it relates to the closed
+ moat thread / the verifier product / the anomaly-escalation upgrade. Pure
+ documentation; runs no model.
+
+Automated research step by research conductor.
+Task ID: exp3783-external-research-refresh
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ...-report-g4-correction-proposal-20260604.md |  30 +
+ .../capabilities/research-reporting/spec.md   |  96 ++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ .../external_research_refresh_3783.py         | 440 +++++++++++++++
+ ...echnical_report_g4_correction_prep_3782.py | 525 ++++++++++++++++++
+ research-references.md                        |  12 +
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...2_technical_report_g4_correction_prep.json | 124 +++++
+ ...riment_3783_external_research_refresh.json | 114 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...782_technical_report_g4_correction_prep.py |  28 +
+ ...periment_3783_external_research_refresh.py |  28 +
+ ...782_technical_report_g4_correction_prep.py | 229 ++++++++
+ ...periment_3783_external_research_refresh.py | 174 ++++++
+ 23 files changed, 1822 insertions(+), 21 deletions(-)
+ create mode 100644 docs/research-notes/technical-report-g4-correction-proposal-20260604.md
+ create mode 100644 python/carnot/reporting/external_research_refresh_3783.py
+ create mode 100644 python/carnot/reporting/technical_report_g4_correction_prep_3782.py
+ create mode 100644 results/experiment_3782_technical_report_g4_correction_prep.json
+ create mode 100644 results/experiment_3783_external_research_refresh.json
+ create mode 100644 scripts/experiment_3782_technical_report_g4_correction_prep.py
+ create mode 100644 scripts/experiment_3783_external_research_refresh.py
+ create mode 100644 tests/python/test_experiment_3782_technical_report_g4_correction_prep.py
+ create mode 100644 tests/python/test_experiment_3783_external_research_refresh.py
+
+diff --git a/docs/research-notes/technical-report-g4-correction-proposal-20260604.md b/docs/research-notes/technical-report-g4-correction-proposal-20260604.md
+new file mode 100644
+index 0000000000..014f482a93
+--- /dev/null
++++ b/docs/research-notes/technical-report-g4-correction-proposal-20260604.md
+@@ -0,0 +1,30 @@
++# Technical Report G4 Correction Proposal - 2026-06-04
++
++## OPERATOR ACTION Proposal
++
++This note prepares the Public Documentation Discipline correction. It does not edit `docs/technical-report.md`.
++
++## Unsupported Numbers Identified
++
++- Remove the unsupported `8%->80%`, `0%->36%`, and `+3.0pp` code-repair claims from the trajectory framing.
++- Exp 227 reports 0.0pp delta and 0 repaired cases; it cannot support the demoted prose headline.
++
++## Real Numbers Confirmed
++
++- Exp 1999 reports 0.66 -> 0.84 over n=50 (+18pp), but the primary artifact lacks random_seed and reproducibility_checksum, so it does not fully pass G4 for a headline.
++- Exp 2090 reports 0.70 -> 0.85 over n=50 (+15pp), with random_seed=42 and reproducibility_checksum=bfb0acdb53773a49, but n is in the artifact verdict text rather than a structured n field; keep it scoped until a clean live-GPU full-HumanEval repair run lands.
++
++## Exact Old Text
++
++The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 9-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 8,829 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, obtained the first positive GRPO + ThinkPRM v2 self-learning result, then improved it with GRPO v4 structural warm-up, fixed cheap-tier FPR with SECL, restored KV260 sampler correctness with sequential Gibbs, seeded Phase 3 hardware/architecture paths with KANELE and NRGPT, ran the first Phase 4 active-inference pilot, proved BEAVER live-logprob certificates, retired k=6 after regularization still failed to beat k=5, retired DoT after the redesign stayed below random, added Hex, Nonogram, Futoshiki, Kakuro, and Masyu to the WOPR cartridges, downgraded the first Phase 4 result to a BFS tie, then got a stronger synthetic Phase 4 advantage on BFS-intractable puzzles, preserved SOS-KAN AUROC above 0.99 after 4-bit quantization and QuantKAN AUROC 0.9801 at 3-bit, documented .93's missing-artifact/gate-block failure mode, recovered in .94 with a 13/13 milestone, used .95 to confirm GRPO-VPS full training while uncovering a Phase-5 verifier-orthogonality blocker, measured Boltzmann-GPT CD AUROC 0.960744 while classifying NRGPT non-monotonicity as expected causal-context shift, recovered production k=5 orthogonality at max r=0.4617/k_eff=1.76, added TSS, DiffuTruth, and 3-bit QuantKAN edge measurements, closed .99-.104 with arXiv v10 packaging, PRIME verifier weights, certificate-memory replay, continuous repair, gaming-defense proxy evidence, WOPR Kakuro/Masyu, SOTA GGUF runtime recovery, DCCD/GBNF parse measurements, dynamic grammar readiness, failure-type memory, and hardware/parity boundaries, then used .105-.120 to diagnose thinking-mode budget failure, recover tag-first certificates, compile the arXiv v11 bundle, measure DVI v1/v2/v3 and SECL calibration, expand FR-11 self-learning to **1,676** fresh-verified cases, fix semantic validation, retire GRPO/BiPRM and exact pipeline reruns that failed, harden the public `VerdictRecord`, SessionMemory, and streaming verification APIs, expose repair-executor and off-decoder-support failure modes, write and lint/sim the Discrete SB RTL source, train PRM v1/v2/v3 on available labels while documenting **0.0pp** selector lift, recover repair-v2 prototype success, deploy replay-calibrated DVI v3, audit DPO provenance, fix latent repair anchoring, reduce spec-coverage metadata debt **71 -> 0**, generate 24 temporal LTLZinc cases, keep EBT/NRGPT at smoke-only scope, document and repair the live SOTA runtime blocker, classify artifact signal/noise, trim active priorities, retire noisy lineages, narrow paper/hardware/comparator scope, adopt BEAVER-style live-prefix bounds, retire Semantic Energy/logit telemetry as headline evidence, add query-time memory and CCTU executable-constraint evidence, reject V_1 pairwise promotion, graduate bounded trigger-token certificate export and safe-DSL validator compilation, add interwhen/HoVer monitor evidence, formalize FR-11 trace2skill daily evaluation and reachability hygiene, enforce deterministic-first verifier discipline, add deterministic plan-graph energy localization, keep KAN hardware accounting no-synthesis, repair THRML import enough to run simulator-only parity with no hardware claim, add safe-DSL verifier induction and trigger+grammar decoding, normalize executable monitor events, catch all injected plan-graph structural violations, rollback-test FR-11 verifier-feedback policies, package only rollback-passing skills, link a 458-case runtime-contract E2E harness, rescue the product-line parser/oracle path, promote FR-11 live policies only at query time, scale THRML/Carnot simulator parity through n=128 plus four n=32 topologies, add automata-guided contract decoding, expose and then repair SATQuest solver-oracle false accepts, add residual-drift and BEAVER prefix ledgers, scale product-line staged validation, reduce claim-isolated verifier calls, keep ARM/EBT soft values diagnostic-only, advance THRML simulator parity to n=256 and n=64 diverse topology, package Extropic access-readiness evidence, pass FR-11 positive utility, prove THRML independent paths while blocking on bounded KL, falsify THRML block-Gibbs kinetic security, validate candidate-warm-start, verify Soft-Gibbs bounds, fit the k=6 rho(C) risk curve, pass the AR-REINFORCE variance gate, settle BRAIN k=15 training dynamics, add DCCD/JSONSchemaBench structured-output smoke evidence, reverse the collapsed FR-11 v14 retention, quantify nine Phase-1 ship blockers, rescope hardware toward simulator-only Z1 drift correction plus blocked Wormhole/PolarFire preflights, normalize ROCE/HILED gates, compile ROCE validator trees, verify BEAVER-lite deterministic bounds, block .147 live-SOTA ROCE claims when mandated GGUFs were unavailable, and close .148 with SOTA runtime unresolved and speedup unproven -- all across **2,894 tracked experiment records and 243 archived completed milestone records**.
++
++## Proposed Corrected Paragraph
++
++The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, found that the prior code-repair trajectory claim fails G4: Exp 227 reports 23.3% -> 23.3% with 0.0pp delta and 0 repaired cases (n=30), while the surviving narrower positives are Exp 1999 0.66 -> 0.84 (+18pp, n=50, missing seed/checksum) and Exp 2090 0.70 -> 0.85 (+15pp, n=50, seed/checksum present but n not structured), so code repair should remain scoped until a clean live-GPU full-HumanEval repair run lands; typed constraint verification (+4.9pp) remains separately cited, calibrated semantic verification on live artifacts without overstating what it fixes, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, showed that newer self-learning improves retrieval quality before it improves held-out task success, added provenance-labeled FPGA blocker and replay artifacts, distilled the strongest code traces into reusable spec-backed checks, packaged the PBT path as a standalone API, CLI, and 9-tool MCP surface, deployed DualGPURunner achieving 1.98x throughput in production, fixed LIVE-ENV propagation, synthesized open FPGA energy-oracle paths, expanded FoVer to 8,829 pairs, repaired the SOTA-output energy inversion, deployed and then fixed the k=5 verifier ensemble, obtained the first positive GRPO + ThinkPRM v2 self-learning result, then improved it with GRPO v4 structural warm-up, fixed cheap-tier FPR with SECL, restored KV260 sampler correctness with sequential Gibbs, seeded Phase 3 hardware/architecture paths with KANELE and NRGPT, ran the first Phase 4 active-inference pilot, proved BEAVER live-logprob certificates, retired k=6 after regularization still failed to beat k=5, retired DoT after the redesign stayed below random, added Hex, Nonogram, Futoshiki, Kakuro, and Masyu to the WOPR cartridges, downgraded the first Phase 4 result to a BFS tie, then got a stronger synthetic Phase 4 advantage on BFS-intractable puzzles, preserved SOS-KAN AUROC above 0.99 after 4-bit quantization and QuantKAN AUROC 0.9801 at 3-bit, documented .93's missing-artifact/gate-block failure mode, recovered in .94 with a 13/13 milestone, used .95 to confirm GRPO-VPS full training while uncovering a Phase-5 verifier-orthogonality blocker, measured Boltzmann-GPT CD AUROC 0.960744 while classifying NRGPT non-monotonicity as expected causal-context shift, recovered production k=5 orthogonality at max r=0.4617/k_eff=1.76, added TSS, DiffuTruth, and 3-bit QuantKAN edge measurements, closed .99-.104 with arXiv v10 packaging, PRIME verifier weights, certificate-memory replay, continuous repair, gaming-defense proxy evidence, WOPR Kakuro/Masyu, SOTA GGUF runtime recovery, DCCD/GBNF parse measurements, dynamic grammar readiness, failure-type memory, and hardware/parity boundaries, then used .105-.120 to diagnose thinking-mode budget failure, recover tag-first certificates, compile the arXiv v11 bundle, measure DVI v1/v2/v3 and SECL calibration, expand FR-11 self-learning to **1,676** fresh-verified cases, fix semantic validation, retire GRPO/BiPRM and exact pipeline reruns that failed, harden the public `VerdictRecord`, SessionMemory, and streaming verification APIs, expose repair-executor and off-decoder-support failure modes, write and lint/sim the Discrete SB RTL source, train PRM v1/v2/v3 on available labels while documenting **0.0pp** selector lift, recover repair-v2 prototype success, deploy replay-calibrated DVI v3, audit DPO provenance, fix latent repair anchoring, reduce spec-coverage metadata debt **71 -> 0**, generate 24 temporal LTLZinc cases, keep EBT/NRGPT at smoke-only scope, document and repair the live SOTA runtime blocker, classify artifact signal/noise, trim active priorities, retire noisy lineages, narrow paper/hardware/comparator scope, adopt BEAVER-style live-prefix bounds, retire Semantic Energy/logit telemetry as headline evidence, add query-time memory and CCTU executable-constraint evidence, reject V_1 pairwise promotion, graduate bounded trigger-token certificate export and safe-DSL validator compilation, add interwhen/HoVer monitor evidence, formalize FR-11 trace2skill daily evaluation and reachability hygiene, enforce deterministic-first verifier discipline, add deterministic plan-graph energy localization, keep KAN hardware accounting no-synthesis, repair THRML import enough to run simulator-only parity with no hardware claim, add safe-DSL verifier induction and trigger+grammar decoding, normalize executable monitor events, catch all injected plan-graph structural violations, rollback-test FR-11 verifier-feedback policies, package only rollback-passing skills, link a 458-case runtime-contract E2E harness, rescue the product-line parser/oracle path, promote FR-11 live policies only at query time, scale THRML/Carnot simulator parity through n=128 plus four n=32 topologies, add automata-guided contract decoding, expose and then repair SATQuest solver-oracle false accepts, add residual-drift and BEAVER prefix ledgers, scale product-line staged validation, reduce claim-isolated verifier calls, keep ARM/EBT soft values diagnostic-only, advance THRML simulator parity to n=256 and n=64 diverse topology, package Extropic access-readiness evidence, pass FR-11 positive utility, prove THRML independent paths while blocking on bounded KL, falsify THRML block-Gibbs kinetic security, validate candidate-warm-start, verify Soft-Gibbs bounds, fit the k=6 rho(C) risk curve, pass the AR-REINFORCE variance gate, settle BRAIN k=15 training dynamics, add DCCD/JSONSchemaBench structured-output smoke evidence, reverse the collapsed FR-11 v14 retention, quantify nine Phase-1 ship blockers, rescope hardware toward simulator-only Z1 drift correction plus blocked Wormhole/PolarFire preflights, normalize ROCE/HILED gates, compile ROCE validator trees, verify BEAVER-lite deterministic bounds, block .147 live-SOTA ROCE claims when mandated GGUFs were unavailable, and close .148 with SOTA runtime unresolved and speedup unproven -- all across **2,894 tracked experiment records and 243 archived completed milestone records**.
++
++## Old -> New Diff
++
++```diff
++-proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference
+++found that the prior code-repair trajectory claim fails G4: Exp 227 reports 23.3% -> 23.3% with 0.0pp delta and 0 repaired cases (n=30), while the surviving narrower positives are Exp 1999 0.66 -> 0.84 (+18pp, n=50, missing seed/checksum) and Exp 2090 0.70 -> 0.85 (+15pp, n=50, seed/checksum present but n not structured), so code repair should remain scoped until a clean live-GPU full-HumanEval repair run lands; typed constraint verification (+4.9pp) remains separately cited
++```
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index e24b3a9d0d..f3c31a3afd 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -16778,3 +16778,99 @@ critical flag.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3776 | Implemented (`python/carnot/reporting/archive_v345_activate_v346_3776.py`, `scripts/experiment_3776_archive_v345_activate_v346.py`) | Implemented (`tests/python/test_experiment_3776_archive_v345_activate_v346.py`) |
++
++### REQ-REPORT-3782: Technical-Report G4 Correction Prep
++
++The Exp 3782 workflow SHALL prepare, but not apply, the G4 correction for the
++operator-curated technical-report trajectory paragraph. The workflow SHALL read
++the primary artifacts `results/experiment_227_results.json`,
++`results/experiment_1999_code_verification_humaneval.json`, and
++`results/experiment_2090_crane_humaneval.json`; confirm that Exp 227 refutes
++the unsupported code-repair headline by reporting a 0.0 improvement delta and
++zero repaired cases; confirm the surviving Exp 1999 and Exp 2090 code-positive
++numbers from artifact fields; and record whether each surviving positive fully
++passes G4 by carrying seed, checksum, and n/sample-size provenance in the
++primary artifact.
++
++The workflow SHALL write the operator-action proposal note
++`docs/research-notes/technical-report-g4-correction-proposal-20260604.md`
++containing the exact old technical-report clause or paragraph to replace, the
++proposed corrected text, and the old-to-new diff. It SHALL NOT edit
++`docs/technical-report.md` or any other operator-curated document. The workflow
++SHALL use aggregation-only provenance hygiene and SHALL NOT include GGUF, CUDA,
++or live-model markers in its terminal artifact.
++
++The terminal artifact SHALL be written to
++`results/experiment_3782_technical_report_g4_correction_prep.json` and SHALL
++include bare top-level values for `honest_verdict`, `inference_substrate`,
++`unsupported_numbers_identified`, `real_numbers_confirmed`,
++`proposed_correction_written`, `operator_curated_doc_unedited`,
++`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
++`duration_s`, plus `field_principles` documenting why each required value
++exists. `inference_substrate` SHALL equal
++`aggregation_from_upstream_artifacts (principle: provenance aggregation + drafting, no live model).`
++The terminal verdict SHALL equal
++`complete: g4_correction_prepped_unsupported_numbers_identified_real_numbers_confirmed_proposal_written_operator_curated_doc_unedited`.
++
++#### SCENARIO-REPORT-3782: G4 Correction Is Prepared Without Editing Curated Report
++
++**Given** the north-star G4 catch says the technical-report trajectory paragraph
++overstates code-repair evidence and the cited Exp 227 source is flat
++**When** the Exp 3782 workflow runs
++**Then** it writes an aggregation-only terminal artifact, cites Exp 227, Exp
++1999, and Exp 2090 with hashes, records the unsupported prose numbers as
++refuted, records Exp 1999 and Exp 2090 with honest G4 pass/fail status, writes
++the operator-action proposal note, leaves `docs/technical-report.md` unchanged,
++and passes adversarial verification without a critical flag.
++
++## Implementation Status (REQ-REPORT-3782)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3782 | Planned (`python/carnot/reporting/technical_report_g4_correction_prep_3782.py`, `scripts/experiment_3782_technical_report_g4_correction_prep.py`) | Planned (`tests/python/test_experiment_3782_technical_report_g4_correction_prep.py`) |
++
++### REQ-REPORT-3783: External Research Refresh .346
++
++The Exp 3783 workflow SHALL append, not replace, a `## .346 additions`
++section to `research-references.md` filing the five externally surfaced papers
++from the `.346` planning sweep: arXiv:2604.07650, arXiv:2506.07962,
++arXiv:2601.17223, arXiv:2604.15149, and arXiv:2502.11157. The appended section
++SHALL mirror the `.344` and `.345` section style: a dated heading, a short
++context paragraph, and one bulleted entry per paper with arXiv ID, title,
++one-line Carnot relevance, and explicit track assignment across closed moat,
++verifier product, anomaly-escalation, and self-learning.
++
++The refresh SHALL record that every peer number is as-reported by the source
++and must be independently re-derived before it enters a forward-facing Carnot
++claim. The workflow SHALL use aggregation/documentation provenance hygiene,
++SHALL NOT include GGUF, CUDA, or live-model markers in the terminal artifact,
++and SHALL NOT edit operator-curated docs or `scripts/research_conductor.py`.
++
++The terminal artifact SHALL be written to
++`results/experiment_3783_external_research_refresh.json` and SHALL include bare
++top-level values for `honest_verdict`, `inference_substrate`,
++`references_added`, `n_references_added`, `section_appended_not_replaced`,
++`numbers_are_as_reported`, `random_seed`, `reproducibility_checksum`, and
++`duration_s`, plus `field_principles` documenting why each required value
++exists. `inference_substrate` SHALL equal
++`aggregation_from_upstream_artifacts (principle: a documentation append, no live model).`
++The terminal verdict SHALL equal
++`complete: external_research_refresh_346_filed_5_references_section_appended_numbers_as_reported`.
++
++#### SCENARIO-REPORT-3783: .346 Research References Are Filed Append-Only
++
++**Given** `research-references.md` already contains `.344 additions` and
++`.345 additions`
++**When** the Exp 3783 workflow runs
++**Then** it preserves all prior content byte-for-byte as a prefix, appends a
++single `.346 additions` section, files exactly the five required arXiv IDs with
++closed-moat / verifier-product / anomaly-escalation / self-learning relevance,
++writes the required aggregation-only terminal artifact, marks peer numbers
++as-reported rather than Carnot measurements, and passes adversarial verification
++without a critical flag.
++
++## Implementation Status (REQ-REPORT-3783)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3783 | Planned (`python/carnot/reporting/external_research_refresh_3783.py`, `scripts/experiment_3783_external_research_refresh.py`) | Planned (`tests/python/test_experiment_3783_external_research_refresh.py`) |
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0b01ceed6b..2bfeeaaf2f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 253975, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-06-04T05:38:55Z"}
+\ No newline at end of file
++{"pid": 299981, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-04T06:16:27Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ade1f949f1..e8c3308cd5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7734,3 +7734,4 @@ ERROR: {
+ | 2026-06-04 05:17 UTC | BANK the verifier product: wire the .345 certified | OK | 159 passed, 1 skipped in 25.42s |
+ | 2026-06-04 05:32 UTC | BUILD the P3 Anomaly-Escalation process upgrade (t | OK | 104 passed in 4.28s |
+ | 2026-06-04 05:36 UTC | SCAFFOLD the operator's next-thesis seed (NOT a lo | OK | 83 passed in 4.37s |
++| 2026-06-04 06:16 UTC | Technical-report G4 correction PREP (the standing | OK | Deliverable already exists in repo |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ff21afb743..ea0ddd41e7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 253975, "iteration": 7, "phase": "iteration_start", "started_at": "2026-06-04T05:38:55Z"}
+\ No newline at end of file
++{"pid": 299981, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-04T06:16:27Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e6be3504b8..9eea847522 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 144,
+   "code_violations": 0,
+-  "experiments_checked": 2885,
++  "experiments_checked": 2886,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/external_research_refresh_3783.py b/python/carnot/reporting/external_research_refresh_3783.py
+new file mode 100644
+index 0000000000..2aa52c1c41
+--- /dev/null
++++ b/python/carnot/reporting/external_research_refresh_3783.py
+@@ -0,0 +1,440 @@
++"""Append the .346 external research refresh and write its audit artifact.
++
++Spec refs: REQ-REPORT-3783, SCENARIO-REPORT-3783.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from scripts import adversarial_verify
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++RANDOM_SEED = 3783
++RESEARCH_REFERENCES_REL_PATH = Path("research-references.md")
++OUTPUT_REL_PATH = Path("results/experiment_3783_external_research_refresh.json")
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: a documentation append, "
++    "no live model)."
++)
++TERMINAL_VERDICT = (
++    "complete: "
++    "external_research_refresh_346_filed_5_references_section_appended_"
++    "numbers_as_reported"
++)
++SECTION_HEADER = (
++    "## .346 additions - correlated-error verifier moat corroboration, "
++    "verifier robustness, and fast/slow escalation (2026-06-04)"
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "references_added",
++    "n_references_added",
++    "section_appended_not_replaced",
++    "numbers_are_as_reported",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the refresh outcome.",
++    "inference_substrate": (
++        "A documentation append over upstream paper records; prevents confusing "
++        "this refresh with a compute-bound experiment."
++    ),
++    "references_added": (
++        "The list of arXiv ids filed -- the deliverable; keeps the project "
++        "current per research-program.md planning requirement 4."
++    ),
++    "n_references_added": (
++        "BARE int -- sample-size hygiene on the refresh (>=5 this sweep)."
++    ),
++    "section_appended_not_replaced": (
++        "BARE bool, true -- the '.346 additions' section was APPENDED "
++        "(never-prune rule; no prior content removed)."
++    ),
++    "numbers_are_as_reported": (
++        "BARE bool, true -- peer numbers are source-reported, not Carnot "
++        "measurements (adversarial-verify discipline)."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++@dataclass(frozen=True)
++class ResearchReference:
++    """One external paper filed into the append-only research register."""
++
++    arxiv_id: str
++    title: str
++    submitted: str
++    tracks: tuple[str, ...]
++    relevance: str
++    as_reported_note: str
++    arxiv_abs_resolved: bool = True
++    workshop_context: str | None = None
++
++    @property
++    def arxiv_abs_url(self) -> str:
++        return f"https://arxiv.org/abs/{self.arxiv_id.removeprefix('arXiv:')}"
++
++    def to_artifact_row(self) -> JsonDict:
++        row: JsonDict = {
++            "arxiv_id": self.arxiv_id,
++            "title": self.title,
++            "submitted": self.submitted,
++            "tracks": list(self.tracks),
++            "arxiv_abs_url": self.arxiv_abs_url,
++            "arxiv_abs_resolved": self.arxiv_abs_resolved,
++            "numbers_are_as_reported": True,
++            "relevance": self.relevance,
++            "as_reported_note": self.as_reported_note,
++        }
++        if self.workshop_context:
++            row["workshop_context"] = self.workshop_context
++        return row
++
++
++REFERENCES = (
++    ResearchReference(
++        arxiv_id="arXiv:2604.07650",
++        title=(
++            "How Independent are Large Language Models? A Statistical Framework "
++            "for Auditing Behavioral Entanglement and Reweighting Verifier Ensembles"
++        ),
++        submitted="submitted 2026-04-08",
++        tracks=("closed moat", "verifier product"),
++        relevance=(
++            "Audits behavioral entanglement and de-entangled verifier-ensemble "
++            "reweighting; this is the error-INDEPENDENCE methodology and it "
++            "corroborates the closed moat thread because apparent agreement can "
++            "be correlated error rather than independent validation."
++        ),
++        as_reported_note=(
++            "Reports up to about 4.5% gain over majority voting; source-reported "
++            "only, not a Carnot measurement."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2506.07962",
++        title="Correlated Errors in Large Language Models",
++        submitted="submitted 2025-06-09; accepted to ICML 2025",
++        tracks=("closed moat",),
++        relevance=(
++            "Finds that stronger LLMs can share more correlated errors; this is "
++            "the operational subsumption mechanism behind the moat being narrow "
++            "in `[[reference_deep_think_post_bounded_2026_06]]`."
++        ),
++        as_reported_note=(
++            "Direction and peer statistics are source-reported; re-derive before "
++            "using as a forward-facing Carnot claim."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2601.17223",
++        title=(
++            "Beyond Outcome Verification: Verifiable Process Reward Models for "
++            "Structured Reasoning"
++        ),
++        submitted="submitted 2026-01-23",
++        tracks=("verifier product", "self-learning"),
++        relevance=(
++            "Introduces deterministic rule-based step verifiers as process "
++            "reward signals instead of opaque neural judges; this corroborates "
++            "Carnot's objective-energy positioning for the verifier product."
++        ),
++        as_reported_note=(
++            "Reported F1 and coherence gains are peer numbers, not reproduced "
++            "Carnot measurements."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2604.15149",
++        title="LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking",
++        submitted="submitted 2026-04-16",
++        tracks=("verifier product", "self-learning"),
++        relevance=(
++            "Studies verifier gaming and shortcut strategies under RLVR; this is "
++            "the verifier-robustness / null-space-mimicry frontier for Carnot's "
++            "energy verifier gaming-resistance argument."
++        ),
++        as_reported_note=(
++            "Workshop and behavioral findings are source-reported; use only as "
++            "motivation until independently reproduced."
++        ),
++        workshop_context="OpenReview: ICLR 2026 Workshop LLM Reasoning",
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2502.11157",
++        title="Dyve: Thinking Fast and Slow for Dynamic Process Verification",
++        submitted="submitted 2025-02-16",
++        tracks=("anomaly-escalation", "self-learning"),
++        relevance=(
++            "Combines fast token-level confirmation with slower comprehensive "
++            "analysis; this is the fast/slow escalation precedent for the .346 "
++            "Anomaly-Escalation prototype (exp3780)."
++        ),
++        as_reported_note=(
++            "ProcessBench and MATH improvements are source-reported; re-derive "
++            "before forward-facing use."
++        ),
++    ),
++)
++
++REFERENCE_IDS = tuple(ref.arxiv_id for ref in REFERENCES)
++
++
++def run(
++    repo_root: Path = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Append the section if needed, write the artifact, and return its path."""
++
++    started = time.time() if started_s is None else started_s
++    references_path = repo_root / RESEARCH_REFERENCES_REL_PATH
++    before_text = references_path.read_text(encoding="utf-8")
++    append_action = append_section_if_missing(references_path)
++    after_text = references_path.read_text(encoding="utf-8")
++
++    artifact = build_artifact(
++        repo_root,
++        append_action=append_action,
++        before_text=before_text,
++        after_text=after_text,
++        started_s=started,
++        now_s=now_s,
++    )
++    out_path = repo_root / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++    verify_report = adversarial_verify.verify_artifact(out_path)
++    artifact["adversarial_verify_report"] = compact_verify_report(verify_report)
++    artifact["adversarial_verify_clean"] = report_is_clean(verify_report)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def append_section_if_missing(path: Path) -> str:
++    """Append the rendered .346 section while preserving prior bytes as a prefix."""
++
++    text = path.read_text(encoding="utf-8")
++    if SECTION_HEADER in text:
++        return "already_present"
++    separator = "" if text.endswith("\n\n") else "\n" if text.endswith("\n") else "\n\n"
++    path.write_text(text + separator + render_section(), encoding="utf-8")
++    return "appended"
++
++
++def render_section() -> str:
++    """Render the markdown section that is appended to research-references.md."""
++
++    lines = [
++        SECTION_HEADER,
++        "",
++        (
++            "Added by the `.346 planning sweep. This is an append-only filing of "
++            "newly surfaced external references into the converged record: the "
++            "verifier-moat thread remains closed per "
++            "`[[reference_deep_think_post_bounded_2026_06]]`, verifier "
++            "domain-boundedness remains settled per "
++            "`[[project_verifier_domain_bound]]`, and the entries below "
++            "corroborate or scope that settled state rather than reopening it."
++        ),
++        "",
++        (
++            "Numbers are source-reported by the papers or paper pages. They are "
++            "not Carnot measurements and must be independently re-derived before "
++            "entering any forward-facing claim."
++        ),
++        "",
++    ]
++    for ref in REFERENCES:
++        track = " / ".join(ref.tracks)
++        workshop = f" {ref.workshop_context}." if ref.workshop_context else ""
++        lines.extend(
++            [
++                (
++                    f"- **{ref.arxiv_id} - \"{ref.title}\" ({ref.submitted}; "
++                    f"arXiv resolved):** Track: {track}. {ref.relevance} "
++                    f"{ref.as_reported_note}{workshop}"
++                ),
++            ]
++        )
++    return "\n".join(lines) + "\n"
++
++
++def build_artifact(
++    repo_root: Path,
++    *,
++    append_action: str,
++    before_text: str,
++    after_text: str,
++    started_s: float,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the terminal artifact from the before/after research-register state."""
++
++    section = render_section()
++    artifact: JsonDict = {
++        "honest_verdict": TERMINAL_VERDICT,
++        "schema": "carnot.external_research_refresh.v1",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "references_added": list(REFERENCE_IDS),
++        "n_references_added": len(REFERENCE_IDS),
++        "section_appended_not_replaced": section_appended_not_replaced(
++            before_text, after_text
++        ),
++        "numbers_are_as_reported": True,
++        "random_seed": RANDOM_SEED,
++        "duration_s": elapsed_seconds(started_s, now_s),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "references": [ref.to_artifact_row() for ref in REFERENCES],
++        "research_references_path": RESEARCH_REFERENCES_REL_PATH.as_posix(),
++        "section_header": SECTION_HEADER,
++        "section_sha256": sha256_text(section),
++        "append_action": append_action,
++        "arxiv_resolution_summary": {
++            "all_required_arxiv_ids_resolved": all(
++                ref.arxiv_abs_resolved for ref in REFERENCES
++            ),
++            "verification_basis": (
++                "arXiv abs pages resolved during the .346 filing; "
++                "OpenReview additionally confirmed the ICLR 2026 LLM "
++                "Reasoning Workshop context for arXiv:2604.15149."
++            ),
++        },
++        "adversarial_verify_clean": True,
++        "adversarial_verify_report": {"max_severity": -1, "flags": []},
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def section_appended_not_replaced(before_text: str, after_text: str) -> bool:
++    """Return true when old content is preserved and the .346 section exists."""
++
++    return (
++        after_text.startswith(before_text)
++        and SECTION_HEADER in after_text
++        and ".344 additions" in after_text
++        and ".345 additions" in after_text
++    )
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate required fields and anti-fabrication hygiene."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _ensure(not missing, f"missing required fields: {missing}")
++    _ensure(artifact.get("honest_verdict") == TERMINAL_VERDICT, "honest_verdict")
++    _ensure(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    _ensure(artifact.get("references_added") == list(REFERENCE_IDS), "references_added")
++    _ensure(artifact.get("n_references_added") == len(REFERENCE_IDS), "n_references_added")
++    _ensure(
++        artifact.get("section_appended_not_replaced") is True,
++        "section_appended_not_replaced",
++    )
++    _ensure(artifact.get("numbers_are_as_reported") is True, "numbers_are_as_reported")
++    _ensure(artifact.get("random_seed") == RANDOM_SEED, "random_seed")
++    _ensure(float(artifact.get("duration_s", 0.0)) > 0.0, "duration_s")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles")
++    _ensure(set(REQUIRED_ARTIFACT_FIELDS) <= set(principles), "field_principles")
++    refs = artifact.get("references")
++    _ensure(isinstance(refs, list), "references")
++    _ensure(len(refs) == len(REFERENCE_IDS), "references")
++    _ensure(
++        {row.get("arxiv_id") for row in refs if isinstance(row, Mapping)}
++        == set(REFERENCE_IDS),
++        "references",
++    )
++    _ensure(
++        all(
++            isinstance(row, Mapping)
++            and row.get("arxiv_abs_resolved") is True
++            and row.get("numbers_are_as_reported") is True
++            for row in refs
++        ),
++        "references",
++    )
++    encoded = json.dumps(artifact, sort_keys=True)
++    _ensure("GGUF" not in encoded and "CUDA" not in encoded, "inference-substrate hygiene")
++    _ensure("live-model" not in encoded, "inference-substrate hygiene")
++    _ensure(
++        artifact.get("reproducibility_checksum") == payload_checksum(artifact),
++        "checksum",
++    )
++    _ensure(artifact.get("adversarial_verify_clean") is True, "adversarial_verify_clean")
++
++
++def _ensure(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(f"invalid Exp 3783 artifact: {message}")
++
++
++def compact_verify_report(report: Mapping[str, Any]) -> JsonDict:
++    """Keep the adversarial verifier report compact but auditable."""
++
++    flags = list(report.get("flags", []))
++    return {
++        "max_severity": max((severity_rank(flag.get("severity")) for flag in flags), default=-1),
++        "flags": flags,
++    }
++
++
++def report_is_clean(report: Mapping[str, Any] | None) -> bool:
++    """Return true when no critical adversarial flag is present."""
++
++    if not isinstance(report, Mapping):
++        return True
++    return not any(
++        isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        for flag in report.get("flags", [])
++    )
++
++
++def severity_rank(severity: Any) -> int:
++    """Map verifier severity labels to sortable integers."""
++
++    return {"info": 0, "warn": 1, "critical": 2}.get(str(severity).lower(), -1)
++
++
++def elapsed_seconds(started_s: float, now_s: float | None) -> float:
++    """Return rounded wall-clock duration with a nonzero floor."""
++
++    now = time.time() if now_s is None else now_s
++    return round(max(now - started_s, 0.0001), 6)
++
++
++def sha256_text(text: str) -> str:
++    """Return a SHA-256 digest for markdown content."""
++
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return the reproducibility checksum over payload content."""
++
++    filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
+diff --git a/python/carnot/reporting/technical_report_g4_correction_prep_3782.py b/python/carnot/reporting/technical_report_g4_correction_prep_3782.py
+new file mode 100644
+index 0000000000..bdf975ad54
+--- /dev/null
++++ b/python/carnot/reporting/technical_report_g4_correction_prep_3782.py
+@@ -0,0 +1,525 @@
++"""Prepare the operator-facing G4 correction proposal for the technical report.
++
++Spec refs: REQ-REPORT-3782, SCENARIO-REPORT-3782.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import json
++from pathlib import Path
++import re
++import time
++from typing import Any
++
++from scripts import adversarial_verify
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++RANDOM_SEED = 3782
++OUTPUT_REL_PATH = Path("results/experiment_3782_technical_report_g4_correction_prep.json")
++PROPOSAL_REL_PATH = Path(
++    "docs/research-notes/technical-report-g4-correction-proposal-20260604.md"
++)
++TECHNICAL_REPORT_REL_PATH = Path("docs/technical-report.md")
++NORTH_STAR_REL_PATH = Path("ops/north-star.md")
++EXP227_REL_PATH = Path("results/experiment_227_results.json")
++EXP1999_REL_PATH = Path("results/experiment_1999_code_verification_humaneval.json")
++EXP2090_REL_PATH = Path("results/experiment_2090_crane_humaneval.json")
++OPERATOR_CURATED_DOCS = (
++    ("technical_report", TECHNICAL_REPORT_REL_PATH),
++    ("north_star", NORTH_STAR_REL_PATH),
++)
++
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: provenance aggregation + "
++    "drafting, no live model)."
++)
++TERMINAL_VERDICT = (
++    "complete: "
++    "g4_correction_prepped_unsupported_numbers_identified_real_numbers_confirmed_"
++    "proposal_written_operator_curated_doc_unedited"
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "unsupported_numbers_identified",
++    "real_numbers_confirmed",
++    "proposed_correction_written",
++    "operator_curated_doc_unedited",
++    "cited_upstream_artifacts",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the correction-prep outcome.",
++    "inference_substrate": (
++        "Provenance aggregation and drafting over upstream artifacts; no fresh "
++        "inference."
++    ),
++    "unsupported_numbers_identified": (
++        "Lists the refuted prose numbers (8%->80%, 0%->36%, +3.0pp) plus that "
++        "Exp 227 shows delta=0.0 -- the G4 catch being corrected."
++    ),
++    "real_numbers_confirmed": (
++        "The provenance-confirmed Exp 1999 (+18pp) and Exp 2090 (+15pp) numbers "
++        "plus whether each passes G4 using seed, checksum, and n."
++    ),
++    "proposed_correction_written": (
++        "BARE bool, true -- the old-to-new diff was written to a research note "
++        "for the operator."
++    ),
++    "operator_curated_doc_unedited": (
++        "BARE bool, true -- docs/technical-report.md and operator-curated inputs "
++        "were not edited."
++    ),
++    "cited_upstream_artifacts": (
++        "Provenance for the corrected numbers; anti-fabrication audit trail."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++def run(
++    repo_root: Path = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Write the proposal note and terminal artifact, returning the artifact path."""
++
++    started = time.time() if started_s is None else started_s
++    before_docs = snapshot_operator_curated_docs(repo_root)
++    artifact = build_artifact(repo_root, before_docs, started_s=started, now_s=now_s)
++    out_path = repo_root / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++    verify_report = adversarial_verify.verify_artifact(out_path)
++    artifact["adversarial_verify_report"] = compact_verify_report(verify_report)
++    artifact["adversarial_verify_clean"] = report_is_clean(verify_report)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def build_artifact(
++    repo_root: Path,
++    before_docs: Mapping[str, str],
++    *,
++    started_s: float,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the aggregation artifact from primary source files."""
++
++    exp227 = load_json(repo_root / EXP227_REL_PATH)
++    exp1999 = load_json(repo_root / EXP1999_REL_PATH)
++    exp2090 = load_json(repo_root / EXP2090_REL_PATH)
++    technical_report = (repo_root / TECHNICAL_REPORT_REL_PATH).read_text(encoding="utf-8")
++    old_paragraph = find_trajectory_paragraph(technical_report)
++    exp227_summary = summarize_exp227(exp227)
++    confirmed = [
++        summarize_positive(
++            1999,
++            EXP1999_REL_PATH,
++            exp1999,
++            baseline_key="baseline_pass_rate",
++            improved_key="repair_pass_rate",
++            method="repair",
++        ),
++        summarize_positive(
++            2090,
++            EXP2090_REL_PATH,
++            exp2090,
++            baseline_key="rigid_pass_rate",
++            improved_key="crane_pass_rate",
++            method="CRANE constrained decoding",
++        ),
++    ]
++    proposal_text = render_proposal(old_paragraph, exp227_summary, confirmed)
++    write_proposal(repo_root, proposal_text)
++
++    artifact: JsonDict = {
++        "honest_verdict": TERMINAL_VERDICT,
++        "schema": "carnot.technical_report_g4_correction_prep.v1",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "unsupported_numbers_identified": {
++            "refuted_prose_numbers": ["8%->80%", "0%->36%", "+3.0pp"],
++            "exp227": exp227_summary,
++            "g4_catch": (
++                "The cited Exp 227 source is flat, so the unsupported prose "
++                "numbers must not be used as a product headline."
++            ),
++        },
++        "real_numbers_confirmed": confirmed,
++        "proposal_path": PROPOSAL_REL_PATH.as_posix(),
++        "proposed_correction_written": (repo_root / PROPOSAL_REL_PATH).exists(),
++        "operator_curated_doc_unedited": operator_curated_docs_unchanged(
++            repo_root, before_docs
++        ),
++        "operator_curated_docs_checked": [
++            rel.as_posix() for _, rel in OPERATOR_CURATED_DOCS
++        ],
++        "cited_upstream_artifacts": cited_upstream_artifacts(repo_root),
++        "random_seed": RANDOM_SEED,
++        "duration_s": elapsed_seconds(started_s, now_s),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "headline_scope_note": (
++            "These code-positive artifacts are proposal evidence only; they are "
++            "not promoted as the product headline until the operator accepts a "
++            "clean full-HumanEval repair-run artifact."
++        ),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def summarize_exp227(payload: Mapping[str, Any]) -> JsonDict:
++    """Return the flat Exp 227 result used to refute the prose headline."""
++
++    stats = payload["statistics"]
++    improvement = stats["improvement"]
++    repair_stats = stats.get("repair_stats", {})
++    verify_repair = stats["verify_repair"]
++    metadata = payload.get("metadata", {})
++    return {
++        "experiment_id": 227,
++        "n": metadata.get("sample_size") or payload.get("cohort", {}).get("case_count"),
++        "baseline_pass_at_1": stats["baseline"]["pass_at_1"],
++        "verify_repair_pass_at_1": verify_repair["pass_at_1"],
++        "improvement_delta": improvement["delta"],
++        "delta_pp": round(float(improvement["delta"]) * 100.0, 1),
++        "n_repaired": repair_stats.get("n_repaired", verify_repair.get("n_repaired")),
++    }
++
++
++def summarize_positive(
++    experiment_id: int,
++    rel_path: Path,
++    payload: Mapping[str, Any],
++    *,
++    baseline_key: str,
++    improved_key: str,
++    method: str,
++) -> JsonDict:
++    """Return one surviving code-positive result with explicit G4 status."""
++
++    baseline = float(payload[baseline_key])
++    improved = float(payload[improved_key])
++    n, n_source, n_is_structured = extract_n(payload)
++    missing = []
++    if not has_random_seed(payload):
++        missing.append("random_seed")
++    if not payload.get("reproducibility_checksum"):
++        missing.append("reproducibility_checksum")
++    if not n_is_structured:
++        missing.append("structured_n")
++    return {
++        "experiment_id": experiment_id,
++        "path": rel_path.as_posix(),
++        "method": method,
++        "baseline": baseline,
++        "improved": improved,
++        "delta_pp": round((improved - baseline) * 100.0, 1),
++        "n": n,
++        "n_source": n_source,
++        "random_seed_present": has_random_seed(payload),
++        "reproducibility_checksum_present": bool(payload.get("reproducibility_checksum")),
++        "g4_passes": not missing,
++        "g4_missing_fields": missing,
++        "headline_ready": False,
++    }
++
++
++def extract_n(payload: Mapping[str, Any]) -> tuple[int | None, str, bool]:
++    """Extract n/sample-size and whether it is structured rather than prose."""
++
++    for key in ("n", "sample_size", "dataset_size"):
++        value = payload.get(key)
++        if isinstance(value, int):
++            return value, key, True
++    metadata = payload.get("metadata")
++    if isinstance(metadata, Mapping) and isinstance(metadata.get("sample_size"), int):
++        return metadata["sample_size"], "metadata.sample_size", True
++    cohort = payload.get("cohort")
++    if isinstance(cohort, Mapping) and isinstance(cohort.get("case_count"), int):
++        return cohort["case_count"], "cohort.case_count", True
++    verdict = str(payload.get("honest_verdict", ""))
++    match = re.search(r"\b(\d+)\s+HumanEval\b", verdict)
++    if match:
++        return int(match.group(1)), "honest_verdict_text", False
++    return None, "missing", False
++
++
++def has_random_seed(payload: Mapping[str, Any]) -> bool:
++    """Return true if the artifact carries a seed field."""
++
++    if payload.get("random_seed") is not None:
++        return True
++    metadata = payload.get("metadata")
++    return isinstance(metadata, Mapping) and metadata.get("run_seed") is not None
++
++
++def render_proposal(
++    old_paragraph: str,
++    exp227_summary: Mapping[str, Any],
++    confirmed: list[Mapping[str, Any]],
++) -> str:
++    """Render the operator-action correction proposal note."""
++
++    old_clause = find_old_clause(old_paragraph)
++    new_clause = corrected_clause(exp227_summary, confirmed)
++    corrected_paragraph = old_paragraph.replace(old_clause, new_clause)
++    return (
++        "# Technical Report G4 Correction Proposal - 2026-06-04\n\n"
++        "## OPERATOR ACTION Proposal\n\n"
++        "This note prepares the Public Documentation Discipline correction. It does "
++        "not edit `docs/technical-report.md`.\n\n"
++        "## Unsupported Numbers Identified\n\n"
++        "- Remove the unsupported `8%->80%`, `0%->36%`, and `+3.0pp` code-repair "
++        "claims from the trajectory framing.\n"
++        "- Exp 227 reports 0.0pp delta and 0 repaired cases; it cannot support the "
++        "demoted prose headline.\n\n"
++        "## Real Numbers Confirmed\n\n"
++        "- Exp 1999 reports 0.66 -> 0.84 over n=50 (+18pp), but the primary "
++        "artifact lacks random_seed and reproducibility_checksum, so it does not "
++        "fully pass G4 for a headline.\n"
++        "- Exp 2090 reports 0.70 -> 0.85 over n=50 (+15pp), with random_seed=42 "
++        "and reproducibility_checksum=bfb0acdb53773a49, but n is in the artifact "
++        "verdict text rather than a structured n field; keep it scoped until a "
++        "clean live-GPU full-HumanEval repair run lands.\n\n"
++        "## Exact Old Text\n\n"
++        f"{old_paragraph}\n\n"
++        "## Proposed Corrected Paragraph\n\n"
++        f"{corrected_paragraph}\n\n"
++        "## Old -> New Diff\n\n"
++        "```diff\n"
++        f"-{old_clause}\n"
++        f"+{new_clause}\n"
++        "```\n"
++    )
++
++
++def corrected_clause(
++    exp227_summary: Mapping[str, Any], confirmed: list[Mapping[str, Any]]
++) -> str:
++    """Build the replacement clause for the trajectory paragraph."""
++
++    by_id = {int(row["experiment_id"]): row for row in confirmed}
++    exp1999 = by_id[1999]
++    exp2090 = by_id[2090]
++    return (
++        "found that the prior code-repair trajectory claim fails G4: Exp 227 "
++        f"reports {percent(exp227_summary['baseline_pass_at_1'])} -> "
++        f"{percent(exp227_summary['verify_repair_pass_at_1'])} with "
++        f"{exp227_summary['delta_pp']:.1f}pp delta and "
++        f"{exp227_summary['n_repaired']} repaired cases (n={exp227_summary['n']}), "
++        "while the surviving narrower positives are Exp 1999 "
++        f"{exp1999['baseline']:.2f} -> {exp1999['improved']:.2f} "
++        f"(+{exp1999['delta_pp']:.0f}pp, n={exp1999['n']}, missing seed/checksum) "
++        "and Exp 2090 "
++        f"{exp2090['baseline']:.2f} -> {exp2090['improved']:.2f} "
++        f"(+{exp2090['delta_pp']:.0f}pp, n={exp2090['n']}, seed/checksum present "
++        "but n not structured), so code repair should remain scoped until a "
++        "clean live-GPU full-HumanEval repair run lands; typed constraint "
++        "verification (+4.9pp) remains separately cited"
++    )
++
++
++def find_trajectory_paragraph(text: str) -> str:
++    """Find the technical-report trajectory paragraph."""
++
++    for paragraph in re.split(r"\n\s*\n", text):
++        if paragraph.startswith("The trajectory of this project is:"):
++            return paragraph.strip()
++    raise ValueError("technical-report trajectory paragraph not found")
++
++
++def find_old_clause(paragraph: str) -> str:
++    """Find the exact old trajectory clause to replace."""
++
++    pattern = re.compile(
++        r"proved that code verification \(\+3\.0pp HumanEval\) and typed "
++        r"constraint verification \(\+4\.9pp\) work on "
++        r"(?:live GPU inference|inference artifacts)"
++    )
++    match = pattern.search(paragraph)
++    if not match:
++        raise ValueError("old code-repair trajectory clause not found")
++    return match.group(0)
++
++
++def cited_upstream_artifacts(repo_root: Path) -> list[JsonDict]:
++    """Return source-file provenance with stable hashes."""
++
++    return [
++        {
++            "experiment_id": 227,
++            "path": EXP227_REL_PATH.as_posix(),
++            "sha256": sha256_path(repo_root / EXP227_REL_PATH),
++            "fields_imported": [
++                "metadata.sample_size",
++                "statistics.baseline.pass_at_1",
++                "statistics.verify_repair.pass_at_1",
++                "statistics.improvement.delta",
++                "statistics.repair_stats.n_repaired",
++            ],
++        },
++        {
++            "experiment_id": 1999,
++            "path": EXP1999_REL_PATH.as_posix(),
++            "sha256": sha256_path(repo_root / EXP1999_REL_PATH),
++            "fields_imported": [
++                "baseline_pass_rate",
++                "repair_pass_rate",
++                "dataset_size",
++            ],
++        },
++        {
++            "experiment_id": 2090,
++            "path": EXP2090_REL_PATH.as_posix(),
++            "sha256": sha256_path(repo_root / EXP2090_REL_PATH),
++            "fields_imported": [
++                "rigid_pass_rate",
++                "crane_pass_rate",
++                "pass_rate_delta",
++                "random_seed",
++                "reproducibility_checksum",
++                "honest_verdict",
++            ],
++        },
++    ]
++
++
++def snapshot_operator_curated_docs(repo_root: Path) -> dict[str, str]:
++    """Read operator-curated inputs before writing generated outputs."""
++
++    return {
++        label: (repo_root / rel_path).read_text(encoding="utf-8")
++        for label, rel_path in OPERATOR_CURATED_DOCS
++    }
++
++
++def operator_curated_docs_unchanged(
++    repo_root: Path, before_docs: Mapping[str, str]
++) -> bool:
++    """Return true when curated documents match their pre-run content."""
++
++    for label, rel_path in OPERATOR_CURATED_DOCS:
++        before = before_docs.get(label, before_docs.get(rel_path.as_posix()))
++        if before is None:
++            return False
++        if (repo_root / rel_path).read_text(encoding="utf-8") != before:
++            return False
++    return True
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the terminal artifact shape and anti-fabrication fields."""
++
++    _ensure(artifact.get("honest_verdict") == TERMINAL_VERDICT, "honest_verdict")
++    _ensure(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    _ensure(
++        artifact.get("operator_curated_doc_unedited") is True,
++        "operator_curated_doc_unedited",
++    )
++    _ensure(artifact.get("proposed_correction_written") is True, "proposal")
++    _ensure(set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact), "required fields")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles")
++    _ensure(set(REQUIRED_ARTIFACT_FIELDS) <= set(principles), "field principles")
++    unsupported = artifact.get("unsupported_numbers_identified")
++    _ensure(isinstance(unsupported, Mapping), "unsupported numbers")
++    _ensure(unsupported.get("exp227", {}).get("improvement_delta") == 0.0, "exp227 delta")
++    _ensure(unsupported.get("exp227", {}).get("n_repaired") == 0, "exp227 repair count")
++    confirmed = artifact.get("real_numbers_confirmed")
++    _ensure(isinstance(confirmed, list) and len(confirmed) == 2, "real numbers")
++    _ensure(artifact.get("random_seed") == RANDOM_SEED, "random_seed")
++    _ensure(float(artifact.get("duration_s", 0.0)) > 0.0, "duration_s")
++    _ensure(
++        artifact.get("reproducibility_checksum") == payload_checksum(artifact),
++        "reproducibility_checksum",
++    )
++
++
++def _ensure(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(f"invalid Exp 3782 artifact: {message}")
++
++
++def write_proposal(repo_root: Path, text: str) -> None:
++    """Write the generated research-note proposal."""
++
++    path = repo_root / PROPOSAL_REL_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++
++
++def load_json(path: Path) -> JsonDict:
++    """Load one JSON object from disk."""
++
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def compact_verify_report(report: Mapping[str, Any]) -> JsonDict:
++    """Keep the adversarial verifier report compact but auditable."""
++
++    flags = list(report.get("flags", []))
++    return {
++        "max_severity": max((severity_rank(flag.get("severity")) for flag in flags), default=0),
++        "flags": flags,
++    }
++
++
++def report_is_clean(report: Mapping[str, Any] | None) -> bool:
++    """Return true when no critical adversarial flag is present."""
++
++    if not isinstance(report, Mapping):
++        return True
++    return not any(
++        isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        for flag in report.get("flags", [])
++    )
++
++
++def severity_rank(severity: Any) -> int:
++    """Map verifier severity labels to sortable integers."""
++
++    return {"info": 0, "warn": 1, "critical": 2}.get(str(severity).lower(), -1)
++
++
++def percent(value: Any) -> str:
++    """Format a rate as a one-decimal percentage."""
++
++    return f"{float(value) * 100.0:.1f}%"
++
++
++def elapsed_seconds(started_s: float, now_s: float | None) -> float:
++    """Return rounded wall-clock duration with a nonzero floor."""
++
++    now = time.time() if now_s is None else now_s
++    return round(max(now - started_s, 0.0001), 6)
++
++
++def sha256_path(path: Path) -> str:
++    """Return a file SHA-256 digest."""
++
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return the reproducibility checksum over payload content."""
++
++    filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
+diff --git a/research-references.md b/research-references.md
+index d49fd779eb..c449727d28 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -20893,3 +20893,15 @@ numbers must be independently re-derived before any forward-facing claim.
+   energy-grounded scoring + a *certified* abstention operating point — NOT raw F1
+   vs a 32B reasoning verifier. Positioning, not a generalization re-test
+   (verifier-domain-boundedness is settled — see `[[project_verifier_domain_bound]]`).
++
++## .346 additions - correlated-error verifier moat corroboration, verifier robustness, and fast/slow escalation (2026-06-04)
++
++Added by the `.346 planning sweep. This is an append-only filing of newly surfaced external references into the converged record: the verifier-moat thread remains closed per `[[reference_deep_think_post_bounded_2026_06]]`, verifier domain-boundedness remains settled per `[[project_verifier_domain_bound]]`, and the entries below corroborate or scope that settled state rather than reopening it.
++
++Numbers are source-reported by the papers or paper pages. They are not Carnot measurements and must be independently re-derived before entering any forward-facing claim.
++
++- **arXiv:2604.07650 - "How Independent are Large Language Models? A Statistical Framework for Auditing Behavioral Entanglement and Reweighting Verifier Ensembles" (submitted 2026-04-08; arXiv resolved):** Track: closed moat / verifier product. Audits behavioral entanglement and de-entangled verifier-ensemble reweighting; this is the error-INDEPENDENCE methodology and it corroborates the closed moat thread because apparent agreement can be correlated error rather than independent validation. Reports up to about 4.5% gain over majority voting; source-reported only, not a Carnot measurement.
++- **arXiv:2506.07962 - "Correlated Errors in Large Language Models" (submitted 2025-06-09; accepted to ICML 2025; arXiv resolved):** Track: closed moat. Finds that stronger LLMs can share more correlated errors; this is the operational subsumption mechanism behind the moat being narrow in `[[reference_deep_think_post_bounded_2026_06]]`. Direction and peer statistics are source-reported; re-derive before using as a forward-facing Carnot claim.
++- **arXiv:2601.17223 - "Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning" (submitted 2026-01-23; arXiv resolved):** Track: verifier product / self-learning. Introduces deterministic rule-based step verifiers as process reward signals instead of opaque neural judges; this corroborates Carnot's objective-energy positioning for the verifier product. Reported F1 and coherence gains are peer numbers, not reproduced Carnot measurements.
++- **arXiv:2604.15149 - "LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking" (submitted 2026-04-16; arXiv resolved):** Track: verifier product / self-learning. Studies verifier gaming and shortcut strategies under RLVR; this is the verifier-robustness / null-space-mimicry frontier for Carnot's energy verifier gaming-resistance argument. Workshop and behavioral findings are source-reported; use only as motivation until independently reproduced. OpenReview: ICLR 2026 Workshop LLM Reasoning.
++- **arXiv:2502.11157 - "Dyve: Thinking Fast and Slow for Dynamic Process Verification" (submitted 2025-02-16; arXiv resolved):** Track: anomaly-escalation / self-learning. Combines fast token-level confirmation with slower comprehensive analysis; this is the fast/slow escalation precedent for the .346 Anomaly-Escalation prototype (exp3780). ProcessBench and MATH improvements are source-reported; re-derive before forward-facing use.
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index b39512c58e..60afbeb731 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T05:31:02.587309Z",
+-  "duration_s": 0.007822275161743164,
++  "run_date": "2026-06-04T06:26:14.773144Z",
++  "duration_s": 0.00942683219909668,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "0e977e839c214427ca9f4e1c87eabfc1fa7dc142e46b468f21d057e372512958",
++  "reproducibility_checksum": "af329f3daf583dc57149127dc448976646fa4d97fce6484acff0b7e1243fd7ad",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "31a7db4339d1540d8ae4dd0b4547c0afba657496"
++    "adversarial_verify_version": "62b669cf494bb7880187bb78b881a90d8825940e"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 32238bac94..01781b6f5a 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T05:31:02.598928Z",
+-  "duration_s": 0.008865594863891602,
++  "run_date": "2026-06-04T06:26:14.785147Z",
++  "duration_s": 0.008532047271728516,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "29d3d5314de7a65a20bec9752e64e5abeafc2ae859a9dcacf58f5f584a864b38",
++  "reproducibility_checksum": "fb77ce131ec2fde3bc3b761166d0050de5b343b319e923998884531ea302eaa6",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "31a7db4339d1540d8ae4dd0b4547c0afba657496"
++    "adversarial_verify_version": "62b669cf494bb7880187bb78b881a90d8825940e"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index a4d4b74b14..0af32c83f4 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1080970764160156,
++  "efficiency_gains_ms": 2.1071434020996094,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 4713659d30..987fad1933 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.3166489601135254,
++  "duration_s": 0.26392197608947754,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 02b6a6a03c..f571c89307 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.8923997888341546e-05,
++  "duration_s": 2.7171001420356333e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3782_technical_report_g4_correction_prep.json b/results/experiment_3782_technical_report_g4_correction_prep.json
+new file mode 100644
+index 0000000000..a375308767
+--- /dev/null
++++ b/results/experiment_3782_technical_report_g4_correction_prep.json
+@@ -0,0 +1,124 @@
++{
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flags": [],
++    "max_severity": 0
++  },
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 227,
++      "fields_imported": [
++        "metadata.sample_size",
++        "statistics.baseline.pass_at_1",
++        "statistics.verify_repair.pass_at_1",
++        "statistics.improvement.delta",
++        "statistics.repair_stats.n_repaired"
++      ],
++      "path": "results/experiment_227_results.json",
++      "sha256": "b920d555ffe03d8ab44a00f1d9c908e62166142ad1671d380854570a580c3039"
++    },
++    {
++      "experiment_id": 1999,
++      "fields_imported": [
++        "baseline_pass_rate",
++        "repair_pass_rate",
++        "dataset_size"
++      ],
++      "path": "results/experiment_1999_code_verification_humaneval.json",
++      "sha256": "84ce1fb6013d1557ff9633a59e82493297dbb89abe7b7d9ed5867f0befdc507d"
++    },
++    {
++      "experiment_id": 2090,
++      "fields_imported": [
++        "rigid_pass_rate",
++        "crane_pass_rate",
++        "pass_rate_delta",
++        "random_seed",
++        "reproducibility_checksum",
++        "honest_verdict"
++      ],
++      "path": "results/experiment_2090_crane_humaneval.json",
++      "sha256": "97fc4227a4837a543526f64158552465fc336772de298732173bc572583a2418"
++    }
++  ],
++  "duration_s": 0.00429,
++  "field_principles": {
++    "cited_upstream_artifacts": "Provenance for the corrected numbers; anti-fabrication audit trail.",
++    "duration_s": "Wall-clock plausibility floor.",
++    "honest_verdict": "Terminal prefix; the correction-prep outcome.",
++    "inference_substrate": "Provenance aggregation and drafting over upstream artifacts; no fresh inference.",
++    "operator_curated_doc_unedited": "BARE bool, true -- docs/technical-report.md and operator-curated inputs were not edited.",
++    "proposed_correction_written": "BARE bool, true -- the old-to-new diff was written to a research note for the operator.",
++    "random_seed": "Determinism precondition.",
++    "real_numbers_confirmed": "The provenance-confirmed Exp 1999 (+18pp) and Exp 2090 (+15pp) numbers plus whether each passes G4 using seed, checksum, and n.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "unsupported_numbers_identified": "Lists the refuted prose numbers (8%->80%, 0%->36%, +3.0pp) plus that Exp 227 shows delta=0.0 -- the G4 catch being corrected."
++  },
++  "headline_scope_note": "These code-positive artifacts are proposal evidence only; they are not promoted as the product headline until the operator accepts a clean full-HumanEval repair-run artifact.",
++  "honest_verdict": "complete: g4_correction_prepped_unsupported_numbers_identified_real_numbers_confirmed_proposal_written_operator_curated_doc_unedited",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: provenance aggregation + drafting, no live model).",
++  "operator_curated_doc_unedited": true,
++  "operator_curated_docs_checked": [
++    "docs/technical-report.md",
++    "ops/north-star.md"
++  ],
++  "proposal_path": "docs/research-notes/technical-report-g4-correction-proposal-20260604.md",
++  "proposed_correction_written": true,
++  "random_seed": 3782,
++  "real_numbers_confirmed": [
++    {
++      "baseline": 0.66,
++      "delta_pp": 18.0,
++      "experiment_id": 1999,
++      "g4_missing_fields": [
++        "random_seed",
++        "reproducibility_checksum"
++      ],
++      "g4_passes": false,
++      "headline_ready": false,
++      "improved": 0.84,
++      "method": "repair",
++      "n": 50,
++      "n_source": "dataset_size",
++      "path": "results/experiment_1999_code_verification_humaneval.json",
++      "random_seed_present": false,
++      "reproducibility_checksum_present": false
++    },
++    {
++      "baseline": 0.7,
++      "delta_pp": 15.0,
++      "experiment_id": 2090,
++      "g4_missing_fields": [
++        "structured_n"
++      ],
++      "g4_passes": false,
++      "headline_ready": false,
++      "improved": 0.85,
++      "method": "CRANE constrained decoding",
++      "n": 50,
++      "n_source": "honest_verdict_text",
++      "path": "results/experiment_2090_crane_humaneval.json",
++      "random_seed_present": true,
++      "reproducibility_checksum_present": true
++    }
++  ],
++  "reproducibility_checksum": "ff2fe313709bcd1f00870cda83808febffaafd7e64218fff6b395bfce6fc4717",
++  "schema": "carnot.technical_report_g4_correction_prep.v1",
++  "unsupported_numbers_identified": {
++    "exp227": {
++      "baseline_pass_at_1": 0.23333333333333334,
++      "delta_pp": 0.0,
++      "experiment_id": 227,
++      "improvement_delta": 0.0,
++      "n": 30,
++      "n_repaired": 0,
++      "verify_repair_pass_at_1": 0.23333333333333334
++    },
++    "g4_catch": "The cited Exp 227 source is flat, so the unsupported prose numbers must not be used as a product headline.",
++    "refuted_prose_numbers": [
++      "8%->80%",
++      "0%->36%",
++      "+3.0pp"
++    ]
++  }
++}
+diff --git a/results/experiment_3783_external_research_refresh.json b/results/experiment_3783_external_research_refresh.json
+new file mode 100644
+index 0000000000..9b6e7759f5
+--- /dev/null
++++ b/results/experiment_3783_external_research_refresh.json
+@@ -0,0 +1,114 @@
++{
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flags": [],
++    "max_severity": -1
++  },
++  "append_action": "appended",
++  "arxiv_resolution_summary": {
++    "all_required_arxiv_ids_resolved": true,
++    "verification_basis": "arXiv abs pages resolved during the .346 filing; OpenReview additionally confirmed the ICLR 2026 LLM Reasoning Workshop context for arXiv:2604.15149."
++  },
++  "duration_s": 0.017884,
++  "field_principles": {
++    "duration_s": "Wall-clock plausibility floor.",
++    "honest_verdict": "Terminal prefix; the refresh outcome.",
++    "inference_substrate": "A documentation append over upstream paper records; prevents confusing this refresh with a compute-bound experiment.",
++    "n_references_added": "BARE int -- sample-size hygiene on the refresh (>=5 this sweep).",
++    "numbers_are_as_reported": "BARE bool, true -- peer numbers are source-reported, not Carnot measurements (adversarial-verify discipline).",
++    "random_seed": "Determinism precondition.",
++    "references_added": "The list of arXiv ids filed -- the deliverable; keeps the project current per research-program.md planning requirement 4.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "section_appended_not_replaced": "BARE bool, true -- the '.346 additions' section was APPENDED (never-prune rule; no prior content removed)."
++  },
++  "honest_verdict": "complete: external_research_refresh_346_filed_5_references_section_appended_numbers_as_reported",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a documentation append, no live model).",
++  "n_references_added": 5,
++  "numbers_are_as_reported": true,
++  "random_seed": 3783,
++  "references": [
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2604.07650",
++      "arxiv_id": "arXiv:2604.07650",
++      "as_reported_note": "Reports up to about 4.5% gain over majority voting; source-reported only, not a Carnot measurement.",
++      "numbers_are_as_reported": true,
++      "relevance": "Audits behavioral entanglement and de-entangled verifier-ensemble reweighting; this is the error-INDEPENDENCE methodology and it corroborates the closed moat thread because apparent agreement can be correlated error rather than independent validation.",
++      "submitted": "submitted 2026-04-08",
++      "title": "How Independent are Large Language Models? A Statistical Framework for Auditing Behavioral Entanglement and Reweighting Verifier Ensembles",
++      "tracks": [
++        "closed moat",
++        "verifier product"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2506.07962",
++      "arxiv_id": "arXiv:2506.07962",
++      "as_reported_note": "Direction and peer statistics are source-reported; re-derive before using as a forward-facing Carnot claim.",
++      "numbers_are_as_reported": true,
++      "relevance": "Finds that stronger LLMs can share more correlated errors; this is the operational subsumption mechanism behind the moat being narrow in `[[reference_deep_think_post_bounded_2026_06]]`.",
++      "submitted": "submitted 2025-06-09; accepted to ICML 2025",
++      "title": "Correlated Errors in Large Language Models",
++      "tracks": [
++        "closed moat"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2601.17223",
++      "arxiv_id": "arXiv:2601.17223",
++      "as_reported_note": "Reported F1 and coherence gains are peer numbers, not reproduced Carnot measurements.",
++      "numbers_are_as_reported": true,
++      "relevance": "Introduces deterministic rule-based step verifiers as process reward signals instead of opaque neural judges; this corroborates Carnot's objective-energy positioning for the verifier product.",
++      "submitted": "submitted 2026-01-23",
++      "title": "Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning",
++      "tracks": [
++        "verifier product",
++        "self-learning"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2604.15149",
++      "arxiv_id": "arXiv:2604.15149",
++      "as_reported_note": "Workshop and behavioral findings are source-reported; use only as motivation until independently reproduced.",
++      "numbers_are_as_reported": true,
++      "relevance": "Studies verifier gaming and shortcut strategies under RLVR; this is the verifier-robustness / null-space-mimicry frontier for Carnot's energy verifier gaming-resistance argument.",
++      "submitted": "submitted 2026-04-16",
++      "title": "LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking",
++      "tracks": [
++        "verifier product",
++        "self-learning"
++      ],
++      "workshop_context": "OpenReview: ICLR 2026 Workshop LLM Reasoning"
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2502.11157",
++      "arxiv_id": "arXiv:2502.11157",
++      "as_reported_note": "ProcessBench and MATH improvements are source-reported; re-derive before forward-facing use.",
++      "numbers_are_as_reported": true,
++      "relevance": "Combines fast token-level confirmation with slower comprehensive analysis; this is the fast/slow escalation precedent for the .346 Anomaly-Escalation prototype (exp3780).",
++      "submitted": "submitted 2025-02-16",
++      "title": "Dyve: Thinking Fast and Slow for Dynamic Process Verification",
++      "tracks": [
++        "anomaly-escalation",
++        "self-learning"
++      ]
++    }
++  ],
++  "references_added": [
++    "arXiv:2604.07650",
++    "arXiv:2506.07962",
++    "arXiv:2601.17223",
++    "arXiv:2604.15149",
++    "arXiv:2502.11157"
++  ],
++  "reproducibility_checksum": "672839b0b8350aaa819823c34a9503bde4ab795b566228cad71ec99a0e91467e",
++  "research_references_path": "research-references.md",
++  "schema": "carnot.external_research_refresh.v1",
++  "section_appended_not_replaced": true,
++  "section_header": "## .346 additions - correlated-error verifier moat corroboration, verifier robustness, and fast/slow escalation (2026-06-04)",
++  "section_sha256": "060ed819c13fa6ad7a45a74f32fd74e37c6a1a7d2fd3593a70da7031ab5f8498"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index bb4c665e88..04659bd7f3 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T05:30:54Z",
+-  "finished_at": "2026-06-04T05:30:54Z",
++  "started_at": "2026-06-04T06:26:06Z",
++  "finished_at": "2026-06-04T06:26:06Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 7396d04727..eb71555a88 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T05:30:54Z",
+-  "finished_at": "2026-06-04T05:30:54Z",
++  "started_at": "2026-06-04T06:26:07Z",
++  "finished_at": "2026-06-04T06:26:07Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 2f0b8bfefb..a538521363 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T05:30:54Z",
+-  "finished_at": "2026-06-04T05:30:54Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-04T06:26:07Z",
++  "finished_at": "2026-06-04T06:26:07Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3782_technical_report_g4_correction_prep.py b/scripts/experiment_3782_technical_report_g4_correction_prep.py
+new file mode 100644
+index 0000000000..90961b5918
+--- /dev/null
++++ b/scripts/experiment_3782_technical_report_g4_correction_prep.py
+@@ -0,0 +1,28 @@
++#!/usr/bin/env python3
++"""Run Exp 3782 technical-report G4 correction prep."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++for path in (REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.reporting.technical_report_g4_correction_prep_3782 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/scripts/experiment_3783_external_research_refresh.py b/scripts/experiment_3783_external_research_refresh.py
+new file mode 100644
+index 0000000000..6a6bbefa87
+--- /dev/null
++++ b/scripts/experiment_3783_external_research_refresh.py
+@@ -0,0 +1,28 @@
++#!/usr/bin/env python3
++"""Run Exp 3783 external research refresh."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++for path in (REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.reporting.external_research_refresh_3783 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3782_technical_report_g4_correction_prep.py b/tests/python/test_experiment_3782_technical_report_g4_correction_prep.py
+new file mode 100644
+index 0000000000..287003c509
+--- /dev/null
++++ b/tests/python/test_experiment_3782_technical_report_g4_correction_prep.py
+@@ -0,0 +1,229 @@
++"""Tests for Exp 3782 technical-report G4 correction prep.
++
++Spec refs: REQ-REPORT-3782, SCENARIO-REPORT-3782.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot.reporting import technical_report_g4_correction_prep_3782 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++OLD_TRAJECTORY = (
++    "The trajectory of this project is: we tried the obvious approach, pivoted "
++    "to encoding external knowledge as formal constraints, proved that code "
++    "verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) "
++    "work on inference artifacts, and closed the milestone."
++)
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _seed_repo(root: Path) -> dict[str, str]:
++    (root / "docs" / "research-notes").mkdir(parents=True, exist_ok=True)
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "docs" / "technical-report.md").write_text(
++        "# Technical Report\n\n### The story\n\n" + OLD_TRAJECTORY + "\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "north-star.md").write_text(
++        'OPERATOR ACTION: replace "8%->80%"/"0%->36%"/"+3.0pp"; '
++        "Exp 227 shows delta=0.0 and n_repaired=0.\n",
++        encoding="utf-8",
++    )
++    _write_json(
++        root / "results" / "experiment_227_results.json",
++        {
++            "experiment": 227,
++            "metadata": {"sample_size": 30, "run_seed": 227},
++            "statistics": {
++                "baseline": {"pass_at_1": 0.23333333333333334},
++                "verify_repair": {
++                    "pass_at_1": 0.23333333333333334,
++                    "n_repaired": 0,
++                },
++                "improvement": {"delta": 0.0},
++                "repair_stats": {"n_repaired": 0},
++            },
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_1999_code_verification_humaneval.json",
++        {
++            "experiment_id": 1999,
++            "baseline_pass_rate": 0.66,
++            "repair_pass_rate": 0.84,
++            "dataset_size": 50,
++            "honest_verdict": "ising_guided_fuzzing_implemented",
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_2090_crane_humaneval.json",
++        {
++            "experiment": 2090,
++            "rigid_pass_rate": 0.70,
++            "crane_pass_rate": 0.85,
++            "pass_rate_delta": 0.15,
++            "random_seed": 42,
++            "reproducibility_checksum": "bfb0acdb53773a49",
++            "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
++        },
++    )
++    return {
++        "technical_report": (root / "docs" / "technical-report.md").read_text(
++            encoding="utf-8"
++        ),
++        "north_star": (root / "ops" / "north-star.md").read_text(encoding="utf-8"),
++    }
++
++
++def test_req_report_3782_spec_anchor_exists() -> None:
++    """REQ-REPORT-3782: OpenSpec declares the correction-prep contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-3782" in spec
++    assert "SCENARIO-REPORT-3782" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++    assert mod.PROPOSAL_REL_PATH.as_posix() in spec
++
++
++def test_scenario_report_3782_prepares_correction_without_editing_report(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-3782: proposal and artifact are written, report is not edited."""
++
++    before_docs = _seed_repo(tmp_path)
++
++    out_path = mod.run(tmp_path, started_s=10.0, now_s=10.25)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    proposal = (tmp_path / mod.PROPOSAL_REL_PATH).read_text(encoding="utf-8")
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == mod.TERMINAL_VERDICT
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["proposed_correction_written"] is True
++    assert artifact["operator_curated_doc_unedited"] is True
++    assert artifact["duration_s"] == 0.25
++    assert artifact["random_seed"] == 3782
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++    unsupported = artifact["unsupported_numbers_identified"]
++    assert unsupported["refuted_prose_numbers"] == ["8%->80%", "0%->36%", "+3.0pp"]
++    assert unsupported["exp227"]["improvement_delta"] == 0.0
++    assert unsupported["exp227"]["n_repaired"] == 0
++
++    confirmed = {row["experiment_id"]: row for row in artifact["real_numbers_confirmed"]}
++    assert confirmed[1999]["baseline"] == 0.66
++    assert confirmed[1999]["improved"] == 0.84
++    assert confirmed[1999]["delta_pp"] == 18.0
++    assert confirmed[1999]["n"] == 50
++    assert confirmed[1999]["g4_passes"] is False
++    assert "random_seed" in confirmed[1999]["g4_missing_fields"]
++    assert "reproducibility_checksum" in confirmed[1999]["g4_missing_fields"]
++    assert confirmed[2090]["baseline"] == 0.70
++    assert confirmed[2090]["improved"] == 0.85
++    assert confirmed[2090]["delta_pp"] == 15.0
++    assert confirmed[2090]["n"] == 50
++    assert confirmed[2090]["g4_passes"] is False
++    assert confirmed[2090]["g4_missing_fields"] == ["structured_n"]
++
++    cited = {row["experiment_id"]: row for row in artifact["cited_upstream_artifacts"]}
++    assert set(cited) == {227, 1999, 2090}
++    assert cited[227]["path"] == "results/experiment_227_results.json"
++    assert "statistics.improvement.delta" in cited[227]["fields_imported"]
++    assert "baseline_pass_rate" in cited[1999]["fields_imported"]
++    assert "crane_pass_rate" in cited[2090]["fields_imported"]
++    assert all(len(row["sha256"]) == 64 for row in cited.values())
++
++    assert "OPERATOR ACTION Proposal" in proposal
++    assert OLD_TRAJECTORY in proposal
++    assert "+3.0pp HumanEval" in proposal
++    assert "Exp 227 reports 0.0pp delta and 0 repaired cases" in proposal
++    assert "Exp 1999 reports 0.66 -> 0.84 over n=50" in proposal
++    assert "Exp 2090 reports 0.70 -> 0.85 over n=50" in proposal
++    assert "```diff" in proposal
++
++    encoded = json.dumps(artifact, sort_keys=True)
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++    assert "unsloth/" not in encoded
++    assert "gemma-4-" not in encoded
++    assert "Qwen3.5-" not in encoded
++
++    assert (tmp_path / "docs" / "technical-report.md").read_text(
++        encoding="utf-8"
++    ) == before_docs["technical_report"]
++    assert (tmp_path / "ops" / "north-star.md").read_text(
++        encoding="utf-8"
++    ) == before_docs["north_star"]
++
++
++def test_req_report_3782_validation_rejects_curated_doc_edit(tmp_path: Path) -> None:
++    """REQ-REPORT-3782: validation blocks silent operator-curated doc edits."""
++
++    before_docs = _seed_repo(tmp_path)
++    artifact = mod.build_artifact(tmp_path, before_docs, started_s=1.0, now_s=1.1)
++    artifact["operator_curated_doc_unedited"] = False
++
++    try:
++        mod.validate_artifact(artifact)
++    except ValueError as exc:
++        assert "operator_curated_doc_unedited" in str(exc)
++    else:  # pragma: no cover
++        raise AssertionError("validate_artifact accepted an edited curated doc")
++
++
++def test_req_report_3782_helper_fallbacks_and_error_paths(tmp_path: Path) -> None:
++    """REQ-REPORT-3782: defensive parsing paths stay explicit."""
++
++    before_docs = _seed_repo(tmp_path)
++
++    assert mod.extract_n({"metadata": {"sample_size": 12}}) == (
++        12,
++        "metadata.sample_size",
++        True,
++    )
++    assert mod.extract_n({"cohort": {"case_count": 13}}) == (
++        13,
++        "cohort.case_count",
++        True,
++    )
++    assert mod.extract_n({}) == (None, "missing", False)
++    assert mod.report_is_clean(None) is True
++    assert mod.severity_rank("surprise") == -1
++
++    try:
++        mod.find_trajectory_paragraph("no trajectory here")
++    except ValueError as exc:
++        assert "trajectory paragraph" in str(exc)
++    else:  # pragma: no cover
++        raise AssertionError("missing trajectory paragraph was accepted")
++
++    try:
++        mod.find_old_clause("The trajectory of this project is: no old clause.")
++    except ValueError as exc:
++        assert "old code-repair" in str(exc)
++    else:  # pragma: no cover
++        raise AssertionError("missing old clause was accepted")
++
++    assert mod.operator_curated_docs_unchanged(tmp_path, {}) is False
++    (tmp_path / "docs" / "technical-report.md").write_text("edited\n", encoding="utf-8")
++    assert mod.operator_curated_docs_unchanged(tmp_path, before_docs) is False
++
++
++def test_scenario_report_3782_script_entrypoint_exists() -> None:
++    """SCENARIO-REPORT-3782: the requested script entrypoint exists."""
++
++    assert Path("scripts/experiment_3782_technical_report_g4_correction_prep.py").exists()
+diff --git a/tests/python/test_experiment_3783_external_research_refresh.py b/tests/python/test_experiment_3783_external_research_refresh.py
+new file mode 100644
+index 0000000000..3f552facb3
+--- /dev/null
++++ b/tests/python/test_experiment_3783_external_research_refresh.py
+@@ -0,0 +1,174 @@
++"""Tests for Exp 3783 external research refresh.
++
++Spec refs: REQ-REPORT-3783, SCENARIO-REPORT-3783.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import external_research_refresh_3783 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++PRIOR_REFERENCES = """# Research References
++
++## .344 additions - existing verifier product section
++
++- Existing .344 content stays untouched.
++
++## .345 additions - existing abstention section
++
++- Existing .345 content stays untouched.
++"""
++
++
++def _seed_references(root: Path, text: str = PRIOR_REFERENCES) -> str:
++    path = root / mod.RESEARCH_REFERENCES_REL_PATH
++    path.write_text(text, encoding="utf-8")
++    return text
++
++
++def test_req_report_3783_spec_anchor_exists() -> None:
++    """REQ-REPORT-3783: OpenSpec declares the refresh contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-3783" in spec
++    assert "SCENARIO-REPORT-3783" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++    assert mod.RESEARCH_REFERENCES_REL_PATH.as_posix() in spec
++    for arxiv_id in mod.REFERENCE_IDS:
++        assert arxiv_id in spec
++
++
++def test_scenario_report_3783_appends_references_and_writes_artifact(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-3783: the .346 section is append-only and auditable."""
++
++    before = _seed_references(tmp_path)
++
++    out_path = mod.run(tmp_path, started_s=100.0, now_s=100.25)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    after = (tmp_path / mod.RESEARCH_REFERENCES_REL_PATH).read_text(encoding="utf-8")
++
++    mod.validate_artifact(artifact)
++    assert after.startswith(before)
++    assert after.count("\n## .346 additions") == 1
++    assert "reference_deep_think_post_bounded_2026_06" in after
++    assert "project_verifier_domain_bound" in after
++    assert "exp3780" in after
++    assert "Numbers are source-reported" in after
++    for arxiv_id in mod.REFERENCE_IDS:
++        assert arxiv_id in after
++    for track in ("closed moat", "verifier product", "anomaly-escalation", "self-learning"):
++        assert track in after
++
++    assert artifact["honest_verdict"] == mod.TERMINAL_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["references_added"] == list(mod.REFERENCE_IDS)
++    assert artifact["n_references_added"] == 5
++    assert artifact["section_appended_not_replaced"] is True
++    assert artifact["numbers_are_as_reported"] is True
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["duration_s"] == 0.25
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["section_sha256"] == mod.sha256_text(mod.render_section())
++    assert artifact["adversarial_verify_clean"] is True
++    assert {row["arxiv_id"] for row in artifact["references"]} == set(mod.REFERENCE_IDS)
++    assert all(row["arxiv_abs_resolved"] is True for row in artifact["references"])
++    assert all(row["numbers_are_as_reported"] is True for row in artifact["references"])
++
++    encoded = json.dumps(artifact, sort_keys=True)
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++    assert "live-model" not in encoded
++
++
++def test_req_report_3783_append_is_idempotent(tmp_path: Path) -> None:
++    """REQ-REPORT-3783: a rerun does not duplicate or replace the section."""
++
++    before = _seed_references(tmp_path)
++    path = tmp_path / mod.RESEARCH_REFERENCES_REL_PATH
++
++    first = mod.append_section_if_missing(path)
++    second = mod.append_section_if_missing(path)
++    after = path.read_text(encoding="utf-8")
++
++    assert first == "appended"
++    assert second == "already_present"
++    assert after.startswith(before)
++    assert after.count(mod.SECTION_HEADER) == 1
++
++
++def test_req_report_3783_helper_fallbacks_are_explicit() -> None:
++    """REQ-REPORT-3783: verification-report helper fallbacks are deterministic."""
++
++    assert mod.report_is_clean(None) is True
++    assert mod.severity_rank("unknown") == -1
++    assert mod.compact_verify_report({"flags": [{"severity": "warn"}]}) == {
++        "max_severity": 1,
++        "flags": [{"severity": "warn"}],
++    }
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda artifact: artifact.pop("references_added"), "missing required"),
++        (lambda artifact: artifact.update(honest_verdict="complete: wrong"), "honest_verdict"),
++        (lambda artifact: artifact.update(n_references_added=4), "n_references_added"),
++        (
++            lambda artifact: artifact.update(section_appended_not_replaced=False),
++            "section_appended_not_replaced",
++        ),
++        (
++            lambda artifact: artifact.update(numbers_are_as_reported=False),
++            "numbers_are_as_reported",
++        ),
++        (
++            lambda artifact: artifact["references"].append(
++                {
++                    "arxiv_id": "arXiv:9999.99999",
++                    "arxiv_abs_resolved": True,
++                    "numbers_are_as_reported": True,
++                }
++            ),
++            "references",
++        ),
++        (lambda artifact: artifact.update(reproducibility_checksum="bad"), "checksum"),
++    ],
++)
++def test_req_report_3783_validation_rejects_schema_violations(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-REPORT-3783: validation enforces the required artifact fields."""
++
++    _seed_references(tmp_path)
++    artifact = mod.build_artifact(
++        tmp_path,
++        append_action="appended",
++        before_text=PRIOR_REFERENCES,
++        after_text=PRIOR_REFERENCES + "\n" + mod.render_section(),
++        started_s=1.0,
++        now_s=1.25,
++    )
++    mutate(artifact)
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(artifact)
++
++
++def test_scenario_report_3783_script_entrypoint_exists() -> None:
++    """SCENARIO-REPORT-3783: the requested script entrypoint exists."""
++
++    assert Path("scripts/experiment_3783_external_research_refresh.py").exists()
+-- 
+2.55.0
+

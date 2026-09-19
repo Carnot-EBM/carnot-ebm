@@ -1,0 +1,43 @@
+From 47c81de85dd04a4560c339132eb69aa7c93f4c37 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 02:25:30 -0400
+Subject: [PATCH 10348/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6998541e0e..e8949f5962 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-08-30T06:16:44Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-30T06:25:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3c92b89180..3ff315e6ff 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16813,3 +16813,4 @@ The l |
+      pla |
+ | 2026-08-30 05:48 UTC | Independent Thermalizer factor-to-trajectory audit | OK | 109 passed, 1 warning in 22.80s |
+ | 2026-08-30 06:14 UTC | V589 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6767_v589_br |
++| 2026-08-30 06:23 UTC | V589 branch disposition and PRD gap update | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6767_v589_br |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5442cee19f..95f0f41d0f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 6, "phase": "iteration_start", "started_at": "2026-08-30T06:16:44Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-30T06:25:24Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

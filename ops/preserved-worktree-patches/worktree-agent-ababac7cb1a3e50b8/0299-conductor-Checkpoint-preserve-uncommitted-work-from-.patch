@@ -1,0 +1,43 @@
+From 9a588503fc886d7e829e29f843058f60d7ab2ed6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 10:05:16 -0400
+Subject: [PATCH 00299/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 736d2e3fb3..c18b8f0de5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 27, "phase": "iteration_start", "last_beat": "2026-06-03T13:51:01Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-06-03T14:05:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d93ac2f12f..d66124ed40 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7708,3 +7708,4 @@ ERROR: {
+ | 2026-06-03 13:32 UTC | KV260 opportunistic continuity audit -- confirm te | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.73s |
+ | 2026-06-03 13:34 UTC | KV260 opportunistic continuity audit -- confirm te | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.58s |
+ | 2026-06-03 13:49 UTC | KV260 opportunistic continuity audit -- confirm te | OK | 90 passed in 4.72s |
++| 2026-06-03 14:03 UTC | Next-Phase-3-thesis DECISION MENU for the operator | OK | 84 passed in 3.74s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8efad09bfb..40bc0dbe49 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 27, "phase": "iteration_start", "started_at": "2026-06-03T13:51:01Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 28, "phase": "iteration_start", "started_at": "2026-06-03T14:05:14Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

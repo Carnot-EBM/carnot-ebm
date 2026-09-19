@@ -1,0 +1,104 @@
+From dc1d9147aa24c3cfbc9224c7df2f4db2009cdd1c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 20:12:58 -0400
+Subject: [PATCH 08966/11362] [conductor] Operational retrospective for
+ milestone 2026.08.547
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_547.json | 57 ++++++++++++++++++++++
+ 3 files changed, 65 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_547.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 282ca3495c..88edfdd268 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6150,3 +6150,10 @@ The critical path for milestone .250:
+ - theme: a multi-model parser and JIT canary concentrated the compute-bound operational tail under coarse timing reconstruction
+ - key result: the locked classification reports no compute-task GPU-idle fault, while missing task-linked telemetry and model-concurrency receipts prevent an efficiency grade or a DualGPURunner finding
+ - acceptance: 4/4 requested operational determinations addressed
++
++### Milestone 2026.08.547
++
++- exp_range: no data available this milestone
++- theme: live factor-proposal preflight led a brief compute-heavy milestone under reconstructed timing
++- key result: the compute leader took 1.64 minutes, and the locked classification reports no compute-bound GPU-idle fault; no data available this milestone establishes parallel model loading or runner selection
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index aa6f7bd0c7..3588dfa25a 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16697,3 +16697,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-12: V547 dated source window and two-lane scope freeze (✅ Complete) — honest_verdict=complete_null: no strict post-marker source changed V547 scope; results/experiment_6351_v547_post_marker_source_scope_freeze.json
+ - 2026-08-12: Three-model live factor proposal authenticity preflight (✅ Complete) — honest_verdict=complete_null: live generation ran but authenticity readiness gates did not all pass; results/experiment_6352_live_factor_proposal_authenticity_preflight.json
+ - 2026-08-13: Independent live certified learning and consumer safety audit (⚠️ Blocked) — honest_verdict=complete_null: live certified learning safety audit found missing, blocked, null, or unauthentic evidence; results/experiment_6356_live_certified_learning_safety_audit.json
++- 2026-08-13: Operational retrospective for 2026.08.547: 6 experiments completed in 1.8 minutes, including 5 compute-bound tasks. The 1.64-minute Three-model live factor proposal authenticity preflight led the timing list, but the reconstruction does not identify its internal cause. The locked classification reports no compute-bound GPU-idle fault. The data also does not show parallel model loading or runner selection. The next milestone should add live phase timing, task-linked GPU sampling, model-count receipts, and dispatcher receipts. Estimated savings are 0% because no measured alternative is available. Artifact: results/operational_retro_2026_08_547.json.
+diff --git a/results/operational_retro_2026_08_547.json b/results/operational_retro_2026_08_547.json
+new file mode 100644
+index 0000000000..f36b300a41
+--- /dev/null
++++ b/results/operational_retro_2026_08_547.json
+@@ -0,0 +1,57 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.547",
++  "generated_at": "2026-08-13T00:09:03Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 1.8,
++  "experiments_completed": 6,
++  "compute_bound_experiments_count": 5,
++  "slowest_experiments": [
++    {
++      "experiment": "Three-model live factor proposal authenticity preflight",
++      "duration_minutes": 1.64,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Bounded V546 terminal evidence handoff into V547",
++      "duration_minutes": 0.18,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V547 dated source window and two-lane scope freeze",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Gated real counterexample-directed factor proposal A/B",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Gated default-off certified factor future consumer A/B",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Six experiments completed in 1.8 minutes, and five were compute-bound. The 1.64-minute Three-model live factor proposal authenticity preflight was the longest listed task, but the reconstructed timing does not show why it took longest.",
++  "bottlenecks_identified": [
++    "Disk-mtime reconstruction ranks the tasks but provides no phase-level cause for the 1.64-minute compute leader.",
++    "The GPU snapshot is not linked to experiment boundaries or processes, so it cannot grade utilization across the compute-bound tasks; the locked classification reports no compute-bound GPU-idle fault.",
++    "No loaded-model concurrency or runner-selection record is available, so the data cannot determine whether any task with at least two models loaded in parallel missed DualGPURunner."
++  ],
++  "improvements_suggested": [
++    "Emit monotonic start and stop times for model load, inference, validation, and artifact-write phases from the conductor.",
++    "Sample GPU utilization with experiment and process identifiers while each compute-bound task is active.",
++    "Record loaded-model count and selected runner for every compute task, and select DualGPURunner only when at least two models are loaded in parallel."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Replace disk-mtime reconstruction with a live per-phase execution ledger.",
++    "Join GPU samples to active experiment and process identifiers.",
++    "Add loaded-model-count and runner-selection fields to each compute-task receipt."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The data can rank elapsed time but cannot attribute the runtime or quantify a faster path. The next retrospective needs task-linked phase, device, model-count, and dispatcher evidence."
++}
+-- 
+2.55.0
+

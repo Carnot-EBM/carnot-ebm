@@ -1,0 +1,184 @@
+From c3e2a09846ddd7e2ab402c9f4748f0dc5712b6b5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 2 Aug 2026 21:00:26 -0400
+Subject: [PATCH 08128/11362] [outer-loop] Apply adversarial corrections to the
+ two ARC trust-gate artifacts
+
+Verified every reviewer claim against the run's own cells before applying; one
+was PARTIALLY REJECTED and that rejection is recorded rather than silently dropped.
+
+SURVIVES (re-verified at the arm's OWN run-time commit 7761619, not just HEAD):
+the llm_on_fix_cellrecall arm is VOID. Line 5876 there is a bare `if _gate_value
+< 0.5` with no change-gate branch; ARM_ENV sets the metric only; arm max
+cell_recall 0.0476 against a 0.5 bar. 0 admits was arithmetically forced. The
+GENERATION-WALL leg citing that arm stays retracted.
+
+CEILING artifact -- 9 corrections. The word "ceiling" was wrong: it reported only
+the 28 LIVE margins (a floor) and omitted the generous case from the artifact it
+corrects (61/250 engines over 13 games at t=0.50, labelled there an UPPER BOUND).
+Both populations now stated side by side. proceed_recommended stays FALSE, reason
+re-derived onto live admit rate + 0-of-15 generalisation + cost. Also: 26 of 28
+labels not "all 28"; env sweep is 43 names/39 reads not "exactly one"; the
+rule-of-three fix was already published upstream and mixed estimators (1.90x, not
+2.1x); the change-gate corroboration is vacuous at run-time head; "bimodal"
+dropped (Fisher 0.2222); 6 of 14 game-pairs are identical.
+
+PARTIALLY REJECTED: the reviewer called the min-reachable-p sentence "refuted".
+Read literally it is scoped to the live pool and its arithmetic reproduces. Only
+the caption and the omission are defects. Logged so it is not re-litigated.
+
+RISK artifact -- 5 corrections, one of which STRENGTHENS it. The upside claim is
+WITHDRAWN as structurally void: the injected engine generalises not at all and
+planned toward a constructed target, so 0 levels gained was forced -- the same
+error this artifact was written to correct. min reachable p corrected 1.22e-4 ->
+3.91e-3 (10 paired rows, 9 non-tied; never ran at n=14). "36/36" was a censored
+denominator: 6 of 42 cells held only a TypeError. I re-ran all 6; every one
+consumed its full plan with zero early abandonment and crashed strictly after
+exhaustion, so the true figure is 42/42. bp35 provenance re-sourced to dead80.
+
+Append-only, matching each file's existing indent: 110 insertions, 2 deletions,
+both deletions being a comma added to a previously-final key. A first attempt
+reflowed the risk artifact's compact inline arrays (306-line diff) and was
+reverted before staging. adversarial_verify 0 flagged; summarize_artifact exit 0
+both; mutation gate OK; evidence dirs byte-identical; no orphan generators.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...arc_cellrecall_admit_ceiling_20260802.json | 58 ++++++++++++++++++-
+ ..._arc_trust_gate_blast_radius_20260802.json | 54 ++++++++++++++++-
+ 2 files changed, 110 insertions(+), 2 deletions(-)
+
+diff --git a/results/outer_loop_arc_cellrecall_admit_ceiling_20260802.json b/results/outer_loop_arc_cellrecall_admit_ceiling_20260802.json
+index 329ecd0fb2..294faafd2f 100644
+--- a/results/outer_loop_arc_cellrecall_admit_ceiling_20260802.json
++++ b/results/outer_loop_arc_cellrecall_admit_ceiling_20260802.json
+@@ -581,5 +581,61 @@
+   "what_would_change_this_answer": "A fresh generator run is the only thing that can, and it is out of scope here (CPU-only, no GGUF). The cheap version is not 'lower the threshold and re-run the A/B' -- it is to instrument how many engines per run land in [0.15, 0.35] on cell_recall, because at 3 engines per 14 games the answer is that no A/B on this axis is powered, and that is worth knowing before any GPU time is spent.",
+   "measurement_wall_s": 0.008,
+   "duration_s": 0.008,
+-  "reproducibility_checksum": "d712279c1cb6df09c5b32b392ba62f0929f1027f30b4321cd160f30e4f9b69be"
++  "reproducibility_checksum": "d712279c1cb6df09c5b32b392ba62f0929f1027f30b4321cd160f30e4f9b69be",
++  "CORRIGENDUM_2026_08_02_POST_ADVERSARIAL_REVIEW": {
++    "status": "APPEND-ONLY. No prior number in this artifact is altered or deleted (never-prune). Each entry names the defect, the corrected value, and whether the conclusion survives.",
++    "what_SURVIVED_the_review_unchanged": {
++      "the_retraction": "prior_arm_verdict_void: true STANDS, and was re-verified AT THE ARM'S OWN RUN-TIME COMMIT rather than only at HEAD. run_llm_on_fix_cellrecall.json records git_head=7761619631669ed38bcf1467b99e750a25599b8a; `git show` of arc_competition_agent.py at that commit reads, at line 5876, a bare `if _gate_value < 0.5:` with NO change-gate branch (the if/elif at HEAD did not yet exist). ARM_ENV sets CARNOT_ARC_TRUST_METRIC only. Arm max cell_recall 0.0476 vs a 0.5 bar. 0 admits was arithmetically forced. DO NOT UNDO THIS RETRACTION.",
++      "every_headline_number_recomputed_from_raw_cells": "Re-derived independently from liveness_witness.induction_attempt_gate_diagnostics across the 50 cells of the two arms: 52 gate-diagnostic entries, 30 plain / 22 hidden; 28 plain carry a margin; pooled mean 0.02629, max 0.2474, exactly six nonzero values {0.0036, 0.0181, 0.0476, 0.1985, 0.2208, 0.2474}, 22 exact zeros; admit table 0.10->3/3, 0.15->3/3, 0.20->2/2, 0.25/0.30/0.50->0/0; per-arm max cellrecall 0.0476 vs diag 0.2474; all three admitted engines from llm_on_fix_diag. ALL REPRODUCE EXACTLY.",
++      "MISSING_handled_correctly": "The two vc33 entries genuinely lack the verify_cell_recall key and were excluded, not coerced to 0. Confirmed."
++    },
++    "C1_the_word_CEILING_is_WRONG_this_artifact_reports_a_FLOOR": {
++      "defect": "This artifact is captioned a ceiling and its `ceiling` field reports ONLY the 28 LIVE in-episode margins. The artifact it corrects (outer_loop_arc_generation_vs_selection_20260802.json, written 29 minutes earlier) contains a LARGER, MORE PERMISSIVE measurement of the SAME gate that was not cited here: PRIMARY_the_gate_faithful_split.plain_cell_recall at threshold 0.50 = 61 clearing of 250 engines over 13 distinct games (24.4%), distribution median 0.0597 / q3 0.4658 / max 1.0. That artifact explicitly labels this corpus 'an UPPER BOUND on live engine quality ... used here as the generous case'. A CEILING claim is precisely the claim most damaged by omitting the generous case.",
++      "corrected_ceiling_at_t_0.20": "Between 24.4% and 50% of the 250 offline engines, over at least 13 games. Bounded not point-estimated: 24.4% clear at 0.50 so at least that many clear at 0.20 (monotonicity), and the median is 0.0597 < 0.20 so fewer than 50% clear. The exact count at 0.20 was not recomputed because the underlying engine corpus is another writer's in-flight untracked run (results/arc_inert_rejection_ab_20260801/) which this session read but must not depend on.",
++      "the_two_numbers_are_different_POPULATIONS_and_both_belong": "LIVE FLOOR (what a live A/B would actually sample): 2 engines / 2 games at t=0.20 from 28 in-episode margins over 14 games. GENEROUS CEILING (offline, saved engines scored on a curated level-up-straddling window from a WINNING trajectory): >=61 engines / >=13 games at t=0.20 from 250. The prior artifact states the mechanism for the gap in its own words: 'the live gate scores _active_transitions() -- what the agent collected while STALLED ... The offline corpus is therefore easier on BOTH sides.'",
++      "n_admitted_at_020_and_n_games_admitted_at_020_are_NOT_retracted": "2 and 2 remain correct AS LIVE-ARM FIGURES. Only the caption is corrected: they are a floor, not a ceiling."
++    },
++    "C2_PARTIALLY_REJECTED_the_min_reachable_p_sentence_was_correctly_scoped": {
++      "reviewer_claim": "The review asserted the sentence 'no effect measured on this admitted set can reach significance at any threshold' is REFUTED by the 13-game offline split (min two-sided p = 2/2**13 = 0.00024).",
++      "why_this_is_only_PARTIALLY_accepted": "Read literally the sentence is scoped -- 'on this admitted set', and 'the maximum available at ANY threshold IN THE TABLE', where the table is the live pool. Within the live pool the arithmetic is right and reproduces: 2 game clusters -> min two-sided p 0.5; 3 -> 0.25; p<0.05 needs 5 one-sided / 6 two-sided. That sentence is NOT false and is not withdrawn.",
++      "what_IS_accepted": "The DEFECT is the caption and the omission (C1), not that sentence. An artifact titled a ceiling that silently reports only the least permissive population invites exactly the reading the reviewer took. Both populations are now stated side by side.",
++      "recorded_because_a_reviewer_can_also_be_wrong": "This session verified the objection before applying it and applied only the part that survived. Logged so a future reader does not re-litigate the scoped sentence as an error."
++    },
++    "C3_proceed_recommended_STAYS_FALSE_but_the_stated_reason_is_RE_DERIVED": {
++      "original_reason_now_insufficient_on_its_own": "'the admitted set cannot support any inference' -- true of the live pool, but incomplete, because it never mentions that a more permissive population exists and admits 13 games.",
++      "corrected_reason_1_live_admit_rate": "A live A/B samples from LIVE inductions, not from saved offline engines. At t=0.20 the live rate is 2/28 engines = 2/14 games. A fresh 14-game run would expect ~2 admitted games; 6 are needed for a two-sided p<0.05. Underpowered by construction, not by bad luck.",
++      "corrected_reason_2_the_admitted_engines_do_not_generalise": "The generous 61 are not usable engines. The same artifact's PAIRED_generalisation_of_the_strongest_engines re-scores the 15 that are BOTH high-recall (>=0.5) and high-precision (>=0.9) on 120 fresh rows: 0 of 15 survive, change_accuracy 0.0000, and on 4 of their 5 games a stateless engine could provably score 1.0. So widening the gate to admit them admits engines already measured not to transfer.",
++      "corrected_reason_3_cost": "Per the sibling blast-radius artifact, each admission costs up to 80 unchecked actions (20% of the 400-action scored budget) with NO divergence check anywhere between admission and the environment, and 6 of 14 games kept firing 16-64 actions into a GAME_OVER state.",
++      "what_would_flip_it": "Not a lower threshold. A generator whose LIVE margins clear the bar -- i.e. movement in the live margin distribution, whose current max over 28 attempts is 0.2474."
++    },
++    "C4_all_28_plain_rejections_share_one_label_is_WRONG_it_is_26_of_28": {
++      "defect": "The artifact states all 28 plain-branch rejections are labelled world_model_accuracy_below_threshold.",
++      "recomputed_from_raw": "30 plain gate-diagnostic entries: 26 world_model_accuracy_below_threshold, 3 no_reachable_plan_after_refinement, 1 proposer_failed. Of the 28 that carry a margin: 26 + 2. The 2 exceptions are llm_on_fix_diag/ft09 (verify_accuracy 0.96) and llm_on_fix_diag/lp85 (0.92) -- they CLEARED the gate and failed at planning.",
++      "severity": "Internal contradiction: this artifact's own necessary-is-not-sufficient paragraph names those same two rows. The CONCLUSION (the elif wrote the label on the rejections) is unaffected; the quantifier was wrong."
++    },
++    "C5_the_env_sweep_sentence_is_FALSE_as_written_though_its_conclusion_holds": {
++      "defect": "'A regex sweep of every os.environ.get(\"CARNOT_ARC_*\") read in that file returns exactly one name, CARNOT_ARC_TRUST_METRIC.'",
++      "recomputed": "arc_competition_agent.py contains 43 distinct CARNOT_ARC_* names and 39 os.environ.get(\"CARNOT_ARC_ reads.",
++      "corrected_statement": "Exactly one CARNOT_ARC_* read participates in the TRUST GATE, and zero of the 43 names contain 'THRESH'. Independently re-verified: the threshold override does not exist. The conclusion is correct; only the evidence sentence was overstated."
++    },
++    "C6_the_rule_of_three_correction_was_ALREADY_PUBLISHED_and_its_arithmetic_mixed_estimators": {
++      "defect_1_not_novel": "Presented as a correction to the prior artifact, but that artifact already self-corrected it 29 minutes earlier at CORRIGENDUM_2026_08_02_POST_ADVERSARIAL_REVIEW/G1_rule_of_three_computed_at_the_wrong_level, publishing for the exact row {where: 'LIVE plain branch, 0 clearing', engine_level_reported: 0.1015, n_records: 28, game_clustered_correct: 0.19264, n_games: 14}.",
++      "defect_2_arithmetic": "'3/14 = 0.2143, about 2.1x looser' compares a rule-of-three numerator against an exact-binomial baseline. 0.1015 is 1-0.05**(1/28) = 0.10147. The consistent partner is 1-0.05**(1/14) = 0.19264 (1.90x), or rule-of-three throughout 3/28 -> 3/14 (2.00x). The 2.1x figure is inflated by switching estimator mid-comparison.",
++      "conclusion_survives": "Yes -- game-level clustering is the correct unit and all three clustered bounds still exclude a rate that would explain the live outcome as sampling luck."
++    },
++    "C7_the_record_based_corroboration_of_nondegeneracy_applies_false_is_VACUOUS": {
++      "defect": "'Confirmed against records ... not one is labelled world_model_change_gate_*.' At run-time head 7761619 the change-gate branch did not exist in arc_competition_agent.py at all, so that label could not have been written by the code that ran. The absence proves nothing.",
++      "conclusion_survives": "Yes, on CURRENT source alone: HEAD lines 6708-6714 are `if _change_gate[\"gate_enabled\"]: ... elif _gate_value < 0.5:` -- mutually exclusive -- and world_model_change_gate_enabled() reads CARNOT_ARC_WM_CHANGE_GATE, default-off. Stated now as a source claim, not a records claim."
++    },
++    "C8_bimodal_is_DROPPED_and_two_independent_samples_is_QUALIFIED": {
++      "bimodal_withdrawn": "Fisher exact two-sided on 3/14 vs 0/14 = 0.2222 (recomputed). The two arms are entirely consistent with a single low rate (~3/28 = 0.107). Ordinary sampling variance in a 79%-zero distribution explains the split; 'bimodal' asserted structure that is not evidenced.",
++      "replacement_claim": "n is far too small for one arm's admit count to estimate the rate. That is what the data supports.",
++      "two_independent_samples_qualified": "6 of the 14 plain game-pairs have NUMERICALLY IDENTICAL (verify_accuracy, verify_cell_recall) across the two arms: lf52, lp85, r11l, tn36, tr87, vc33 -- all (0.0, 0.0) except lp85 (0.92, 0.0). The prior artifact dropped 17 byte-identical rows from 267 for exactly this reason; no such dedup was applied here. Disclosed, not silently repaired, because dropping them would change the pooled n this artifact's other numbers are computed on."
++    },
++    "C9_arm_coverage_limit_disclosed": {
++      "defect": "All 52 live margins come from exactly 2 of the 7 arms in the 2026-07-27 run (llm_on_fix_cellrecall 26 + llm_on_fix_diag 26). The other five arms (llm_off 100 cells, llm_on_16k, llm_on_fix, and two probe arms) recorded no gate diagnostics at all.",
++      "why_it_matters": "The prior artifact flags this as systematic missingness (G4). Pooling the same two arms without repeating the caveat understates how narrow the live evidence base is."
++    },
++    "what_did_NOT_change": "The retraction of the GENERATION-WALL leg that cited llm_on_fix_cellrecall; the admit table; the pooled margin distribution; the MISSING/hidden-branch exclusions; the necessary-is-not-sufficient finding; proceed_recommended: false (reason re-derived, verdict unchanged)."
++  }
+ }
+diff --git a/results/outer_loop_arc_trust_gate_blast_radius_20260802.json b/results/outer_loop_arc_trust_gate_blast_radius_20260802.json
+index 768bcf6ab9..9db1e7e1ea 100644
+--- a/results/outer_loop_arc_trust_gate_blast_radius_20260802.json
++++ b/results/outer_loop_arc_trust_gate_blast_radius_20260802.json
+@@ -192,5 +192,57 @@
+   "acceptance_gate_frontier_effect_significant_note": "Deliberately FALSE and reported as such: achieved sign-test p=0.18 against a pre-registered min reachable p of 1.22e-4. A clearly-stated null.",
+   "verifier_is_oracle": false,
+   "verifier_is_oracle_note": "No verifier-value or moat claim is made by this artifact. It measures the COST of a gate decision, not the discriminating value of any verifier.",
+-  "flagged_adversarial": false
++  "flagged_adversarial": false,
++  "CORRIGENDUM_2026_08_02_POST_ADVERSARIAL_REVIEW": {
++    "status": "APPEND-ONLY. No prior number altered or deleted (never-prune). Two corrections WEAKEN a claim; one STRENGTHENS a claim by recovering censored cells.",
++    "what_SURVIVED_the_review_unchanged": {
++      "FINDING_0_voidness": "STANDS, re-verified at the arm's OWN run-time commit 7761619 (not merely HEAD): line 5876 there is a bare `if _gate_value < 0.5:` with no change-gate branch, which at HEAD did not yet exist. The lp85 observation is decisive and reproduces: verify_accuracy 0.92 / cell_recall 0.0 -- under the shipped default 0.92>=0.5 PASSES, under the 'fix' 0.0<0.5 FAILS. The arm was a TIGHTENING for that row, not a relaxation.",
++      "FINDING_3_no_downstream_check": "STANDS and is STRENGTHENED -- see C2.",
++      "FINDING_4_no_false_edges_no_mis_debiting": "STANDS. Both are structural facts about which call sites exist.",
++      "dead_game_execution": "STANDS. Recomputed from dead80.json: 6 of 14 games hit GAME_OVER mid-plan; dead steps = 80 - first_game_over_at_step = [16, 20, 30, 48, 50, 64] for lf52, r11l, sp80, ft09, tu93, bp35; median 39; max 64 = 20.0% of the 400-action scored budget."
++    },
++    "C1_THE_UPSIDE_CLAIM_IS_WITHDRAWN_it_was_STRUCTURALLY_PINNED_TO_ZERO": {
++      "defect": "admitting_bad_engines_costs concluded 'What it buys: nothing ... 0/10 gained a level ... relaxation is pure cost with no measured upside', and guard_needed reason (4) repeated it. But injection_method states the engine 'generalises not at all (unseen state/action -> a fixed roll)' and FINDING_1 states its win predicate 'was pinned BY CONSTRUCTION to a state it reaches in PLAN_K steps'. An engine that cannot predict any unseen state, planning toward a constructed non-win target, CANNOT gain a level.",
++      "why_this_is_the_SAME_error_this_artifact_was_written_to_correct": "levels_gained_by_admitted_arm: 0 was arithmetically forced before the run, exactly as the hardcoded 0.5 literal forced the cellrecall arm's 0 admissions. Records that could ever have gained a level: ZERO. Applying this artifact's own voidness test to itself, the upside measurement is VOID.",
++      "the_existing_caveat_did_NOT_cover_it": "FINDING_1's necessary_is_not_sufficient_note correctly flags the PLAN RATE as an upper bound. It says nothing about the level-gain outcome being pinned. The caveat that existed does not discharge the claim that was made.",
++      "corrected_statement": "COST measured; UPSIDE NOT MEASURABLE by this design. The reject arm also gained 0 levels, so the comparison is symmetric but uninformative in both arms. Nothing here shows relaxation buys nothing -- it shows this experiment could not have detected it if it did.",
++      "what_still_supports_no_ship": "Not this. The independent evidence is (a) the live admit rate at t=0.20 is 2/28 engines over 2/14 games, and (b) 0 of the 15 strongest offline engines survive on 120 fresh rows (outer_loop_arc_generation_vs_selection_20260802.json PAIRED_generalisation_of_the_strongest_engines)."
++    },
++    "C2_36_of_36_WAS_A_CENSORED_DENOMINATOR_THE_TRUE_FIGURE_IS_42_of_42": {
++      "defect": "FINDING_2.measured_structurally reports 'cells: 36' and '36 / 36' beside 'design: 14 plain games x plan lengths {5, 25, 60}' -- which is 42. structural.json holds 42 entries, 6 carrying only a TypeError and no data. The words error/excluded/42 appear nowhere in the artifact. The drop was NON-RANDOM: 0/14 at len 5, 1/14 at len 25, 5/14 at len 60 -- concentrated at the length nearest the headline 80-step configuration.",
++      "the_6_censored_cells": ["bp35@25", "bp35@60", "ft09@60", "r11l@60", "sp80@60", "tu93@60"],
++      "root_cause": "Not a policy failure. structural_probe.py's own driver loop does getattr(GameAction, f\"ACTION{int(kind)}\"); AFTER the plan is exhausted the EXPLORER returns a None-kind move and int(None) raises. The crash is in the harness, strictly downstream of the measurement.",
++      "RECOVERED_this_session": "All 6 re-run with the driver crash caught and policy state read at crash time. Every one consumed its FULL plan (pi_final == plan_len), zero early abandonment, pi_at_crash == plan_len in every case -- the crash is provably after exhaustion.",
++      "corrected_figure": "42 of 42 cells consumed every plan step; 0 of 42 showed ANY early abandonment.",
++      "also_correct_the_per_length_n": "The reported actions_spent_by_plan_length row for len 60 ('min 61 median 61 max 61') was computed over 9 games, not 14. With the 5 recovered len-60 cells the count is 14.",
++      "recovered_censored_cells": [
++      {"game": "bp35", "plan_len": 25, "plan_steps_from_execute_branch": 25, "plan_fully_consumed": true, "pi_final": 25, "phase_final": "explore", "actions_spent": 25, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 25, "kind_repr": "None", "pi_at_crash": 25, "phase_at_crash": "explore", "plan_len": 25, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
++      {"game": "bp35", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
++      {"game": "ft09", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
++      {"game": "r11l", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
++      {"game": "sp80", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
++      {"game": "tu93", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true}
++      ]
++    },
++    "C3_min_reachable_p_CORRECTED_from_1.22e-4_to_3.91e-3": {
++      "defect": "FINDING_4's VERDICT asserts 'achieved p = 0.18 against a min reachable p of 1.22e-4 ... unproven in magnitude at n=14 games'. The test never ran at n=14. Pre-registering 2*0.5**14 on 14 games was legitimate, but the pre-registered below-threshold exclusion rule then correctly dropped 4 games (lf52, r11l, tn36, vc33), leaving paired.json['admitted'] with 10 rows; the graph-node sign test drops one further tie, leaving 9 effective pairs.",
++      "prereg_value_PRESERVED_never_prune": 0.0001220703125,
++      "realized_min_reachable_p_graph_nodes": 0.00390625,
++      "realized_min_reachable_p_untested_rows": 0.001953125,
++      "overstatement": "32x (graph nodes) / 16x (untested rows).",
++      "why_this_matters_most_for_a_NULL": "For a clearly-stated null the min reachable p IS the entire claim to having been able to detect the effect. Overstating reach by 32x overstates how informative the null is. The null itself is unchanged: 7 down / 2 up / 1 tie, two-sided p = 0.1797, and explored_out 0/10 in BOTH arms so this is an ordinary exploration shortfall, not a frontier collapse.",
++      "verdict_restated": "Directionally negative, NOT significant, and the bar it failed to clear is 3.91e-3 rather than 1.22e-4. Still a null; still do not cite the frontier cost as established."
++    },
++    "C4_the_bp35_provenance_sentence_cites_a_cell_that_does_not_exist": {
++      "defect": "FINDING_3.demonstrated reads 'bp35, plan_len 25: GameState.GAME_OVER at step 15; the executor fired the remaining 10 steps'. No committed raw file contains that cell: structural.json's bp35@25 is one of the 6 errored cells and holds no data, and blast14.json's bp35 rows record actions_after_game_over: 0.",
++      "the_reproducible_cell": "dead80.json bp35: plan_len 80, plan_steps_executed 80, first_game_over_at_step 16, steps_executed_into_dead_game 64, pct_of_scored_budget_400 = 20.0.",
++      "substance_survives": "Yes. 6 of 14 games fired 16-64 further actions after GAME_OVER; the executor checks no invariant, not even liveness. Only the cited example was wrong; the claim is now sourced to dead80.json."
++    },
++    "C5_the_injected_admit_rate_is_SCOPED": {
++      "defect": "guard_needed reason (4) states 'relaxation admitted 10 of 14 games' with no injection qualifier, and admitting_bad_engines_costs repeats it.",
++      "correction": "10/14 is a property of an engine HAND-CALIBRATED to land in a chosen 0.19-0.28 band (f=0.30, tuned on tu93). It is not the rate at which real induced engines clear 0.20 -- that rate, from the live record, is 2 of 28 engines over 2 of 14 games.",
++      "does_the_guard_argument_survive": "YES, on reasons (1)-(3), which are structural and were measured on the real policy against real frames: the trust gate is the only defence, one admission costs up to 80 unchecked actions, and the executor will not stop even for GAME_OVER. Reason (4) is marked injection-derived and is no longer load-bearing."
++    },
++    "what_did_NOT_change": "FINDING_0 (voidness); FINDING_3's core answer (execution is blind, cost = len(plan)); FINDING_4's no-false-edges and no-mis-debiting results; the dead-game measurements; the sign-test p-values; guard_needed: YES."
++  }
+ }
+-- 
+2.55.0
+

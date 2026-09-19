@@ -1,0 +1,4936 @@
+From 45f0f8d1297611af469778520a4375002ac2fdb0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 05:54:35 -0400
+Subject: [PATCH 10868/11362] [conductor] V606 lifecycle-aware execution and
+ evidence contract
+
+Automated research step by research conductor.
+Task ID: exp6923-v606-lifecycle-evidence-contract
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.pretest-poison-counter.json              |    4 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...t_6923_v606_lifecycle_evidence_contract.py | 1453 ++++++++
+ ...6923_v606_lifecycle_evidence_contract.json | 3286 +++++++++++++++++
+ ...t_6923_v606_lifecycle_evidence_contract.py |   19 +
+ ...t_6923_v606_lifecycle_evidence_contract.py |   89 +-
+ 6 files changed, 4847 insertions(+), 6 deletions(-)
+ create mode 100644 python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py
+ create mode 100644 results/experiment_6923_v606_lifecycle_evidence_contract.json
+ create mode 100644 scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py
+
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index 4462ceef6c..9e26dfeeb6 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1,3 +1 @@
+-{
+-  "tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py": 1
+-}
+\ No newline at end of file
++{}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 004ca31e48..e4be8f3b97 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5276,
++  "experiments_checked": 5277,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py b/python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py
+new file mode 100644
+index 0000000000..80230b028a
+--- /dev/null
++++ b/python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py
+@@ -0,0 +1,1453 @@
++"""Build the deterministic V606 lifecycle and evidence contract receipt.
++
++The receipt audits roadmap metadata. It does not execute a research method or
++approve a science claim. See REQ-REPORT-6923.
++"""
++
++from __future__ import annotations
++
++import argparse
++from copy import deepcopy
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import sys
++import time
++from typing import Any, Mapping, Sequence
++
++from carnot import experiment_6898_v604_evidence_admissibility_contract as base
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++OUTPUT_PATH = Path("results/experiment_6923_v606_lifecycle_evidence_contract.json")
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++DESIGN_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++ACTIVE_ROADMAP_PATH = Path("research-roadmap.yaml")
++NEXT_ROADMAP_PATH = Path("research-roadmap-next.yaml")
++SCHEMA_PATH = Path("scripts/roadmap_schema.py")
++PRIOR_VALIDATOR_PATH = Path("scripts/validate_prior_failures.py")
++GATE_AUDIT_PATH = Path("scripts/audit_roadmap_gates.py")
++EXCLUSION_LINT_PATH = Path("scripts/exclusion_manifest_lint.py")
++EXCLUSION_PATH = Path("ops/exclusion_manifest.yaml")
++V606_MILESTONE = "2026.09.606"
++EXPECTED_NUMBERS = tuple(range(6923, 6937))
++INFRASTRUCTURE_NUMBERS = frozenset({6923, 6924})
++SOTA_INGESTION_NUMBERS = frozenset({6925})
++MODEL_BEARING_NUMBERS = frozenset({6927, 6933, 6934, 6935})
++INDEPENDENT_ROOT_NUMBERS = (6923, 6924, 6925, 6926, 6929, 6932, 6935, 6936)
++UNGATED_NUMBERS = frozenset(INDEPENDENT_ROOT_NUMBERS)
++UNGATED_TAIL_NUMBER = 6936
++FINAL_SENTENCE = "Do NOT push. Do NOT modify scripts/research_conductor.py."
++INFERENCE_SUBSTRATE = "deterministic_lifecycle_manifest_and_evidence_audit_no_llm"
++RANDOM_SEED = 6923
++BLOCKED_VERDICT = "complete_blocked_v606_lifecycle_evidence_contract"
++READY_VERDICT = "complete_null_v606_lifecycle_evidence_contract_advisory"
++PROMPT_SECTIONS = ("CONTEXT:", "EXISTING CODE TO READ FIRST:", "TASK:", "CONCRETE STEPS:")
++CLOSED_VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++COMMON_PROMPT_FIELDS = {
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "rows",
++    "random_seed",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++}
++REQUIRED_MODEL_IDS = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++)
++
++
++def _gate(upstream: str, artifact_field: str) -> JsonDict:
++    """Return one exact equality gate from the locked V606 design."""
++
++    return {"upstream": upstream, "artifact_field": artifact_field, "op": "==", "value": 1}
++
++
++EXPECTED_TASKS: tuple[JsonDict, ...] = (
++    {
++        "order": 1,
++        "number": 6923,
++        "task_id": "exp6923-v606-lifecycle-evidence-contract",
++        "title": "V606 lifecycle-aware execution and evidence contract",
++        "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
++        "design_gate": "None; advisory root",
++        "gates": [],
++    },
++    {
++        "order": 2,
++        "number": 6924,
++        "task_id": "exp6924-task-runtime-receipt-adoption",
++        "title": "Task-owned runtime receipt adoption",
++        "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
++        "design_gate": "None; infrastructure root",
++        "gates": [],
++    },
++    {
++        "order": 3,
++        "number": 6925,
++        "task_id": "exp6925-v606-sota-ingestion",
++        "title": "V606 SOTA ingestion and method map",
++        "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
++        "design_gate": "None; research root",
++        "gates": [],
++    },
++    {
++        "order": 4,
++        "number": 6926,
++        "task_id": "exp6926-span-first-relation-fixture",
++        "title": "Exact span-first relation fixture",
++        "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
++        "design_gate": "None; acquisition root",
++        "gates": [],
++    },
++    {
++        "order": 5,
++        "number": 6927,
++        "task_id": "exp6927-sota-span-first-relation-acquisition",
++        "title": "Three-family span-first relation acquisition",
++        "deliverable": "results/experiment_6927_sota_span_first_relation_acquisition.json",
++        "design_gate": "Exp6926 `span_relation_fixture_ready_score == 1`",
++        "gates": [
++            _gate("exp6926-span-first-relation-fixture", "span_relation_fixture_ready_score")
++        ],
++    },
++    {
++        "order": 6,
++        "number": 6928,
++        "task_id": "exp6928-independent-span-relation-qualification",
++        "title": "Independent span-relation qualification",
++        "deliverable": "results/experiment_6928_independent_span_relation_qualification.json",
++        "design_gate": "Exp6927 `span_first_acquisition_complete_score == 1`",
++        "gates": [
++            _gate(
++                "exp6927-sota-span-first-relation-acquisition",
++                "span_first_acquisition_complete_score",
++            )
++        ],
++    },
++    {
++        "order": 7,
++        "number": 6929,
++        "task_id": "exp6929-authentic-strategy-episode-fixture",
++        "title": "Authentic operational strategy-episode fixture",
++        "deliverable": "results/experiment_6929_authentic_strategy_episode_fixture.json",
++        "design_gate": "None; self-learning root",
++        "gates": [],
++    },
++    {
++        "order": 8,
++        "number": 6930,
++        "task_id": "exp6930-selective-episodic-strategy-memory",
++        "title": "Selective episodic strategy memory",
++        "deliverable": "results/experiment_6930_selective_episodic_strategy_memory.json",
++        "design_gate": "Exp6929 `strategy_episode_fixture_ready_score == 1`",
++        "gates": [
++            _gate(
++                "exp6929-authentic-strategy-episode-fixture",
++                "strategy_episode_fixture_ready_score",
++            )
++        ],
++    },
++    {
++        "order": 9,
++        "number": 6931,
++        "task_id": "exp6931-independent-strategy-memory-audit",
++        "title": "Independent cold strategy-memory audit",
++        "deliverable": "results/experiment_6931_independent_strategy_memory_audit.json",
++        "design_gate": "Exp6930 `episodic_strategy_memory_run_complete_score == 1`",
++        "gates": [
++            _gate(
++                "exp6930-selective-episodic-strategy-memory",
++                "episodic_strategy_memory_run_complete_score",
++            )
++        ],
++    },
++    {
++        "order": 10,
++        "number": 6932,
++        "task_id": "exp6932-vera-verified-headroom-fixture",
++        "title": "VeRA-style verified headroom fixture",
++        "deliverable": "results/experiment_6932_vera_verified_headroom_fixture.json",
++        "design_gate": "None; guidance root",
++        "gates": [],
++    },
++    {
++        "order": 11,
++        "number": 6933,
++        "task_id": "exp6933-sota-headroom-admission-canary",
++        "title": "Three-family direct headroom admission canary",
++        "deliverable": "results/experiment_6933_sota_headroom_admission_canary.json",
++        "design_gate": "Exp6932 `verified_variant_fixture_ready_score == 1`",
++        "gates": [
++            _gate(
++                "exp6932-vera-verified-headroom-fixture",
++                "verified_variant_fixture_ready_score",
++            )
++        ],
++    },
++    {
++        "order": 12,
++        "number": 6934,
++        "task_id": "exp6934-reward-guided-candidate-smc",
++        "title": "Reward-guided complete-candidate SMC",
++        "deliverable": "results/experiment_6934_reward_guided_candidate_smc.json",
++        "design_gate": "Exp6933 `headroom_admission_ready_score == 1`",
++        "gates": [
++            _gate(
++                "exp6933-sota-headroom-admission-canary",
++                "headroom_admission_ready_score",
++            )
++        ],
++    },
++    {
++        "order": 13,
++        "number": 6935,
++        "task_id": "exp6935-arc-postfix-induction-audit",
++        "title": "ARC post-fix induction reachability and held-out accuracy",
++        "deliverable": "results/experiment_6935_arc_postfix_induction_audit.json",
++        "design_gate": "None; ARC root",
++        "gates": [],
++    },
++    {
++        "order": 14,
++        "number": 6936,
++        "task_id": "exp6936-v606-independent-capstone",
++        "title": "V606 independent capstone",
++        "deliverable": "results/experiment_6936_v606_independent_capstone.json",
++        "design_gate": "None; ungated tail",
++        "gates": [],
++    },
++)
++
++CONTRACT_ROW_FIELDS = (
++    "document_yaml_parity_rows",
++    "gate_contract_rows",
++    "required_field_rows",
++    "prior_failure_contract_rows",
++    "model_contract_rows",
++    "prompt_ending_rows",
++    "infrastructure_slot_rows",
++    "sota_ingestion_slot_rows",
++    "independent_root_rows",
++    "ungated_tail_rows",
++    "routing_audit_update_rows",
++)
++REQUIRED_ARTIFACT_FIELDS = {
++    "schema",
++    "experiment_id",
++    "run_date",
++    "status",
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "rows",
++    "lifecycle_resolution_rows",
++    "document_task_rows",
++    "yaml_task_rows",
++    *CONTRACT_ROW_FIELDS,
++    "task_count",
++    "experiment_range",
++    "random_seed",
++    "reproducibility_checksum",
++    "v606_execution_contract_ready_score",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++    "science_claim_approved",
++}
++
++FIELD_PRINCIPLES = {
++    "schema": "A versioned shape lets later audits reject incompatible receipts.",
++    "experiment_id": "The fixed identity binds this receipt to Exp6923.",
++    "run_date": "The date separates this audit from later roadmap states.",
++    "status": "A terminal status distinguishes ready and blocked audits.",
++    "field_principles": "A reason for each field makes the receipt understandable.",
++    "preconditions_checked": "Explicit input checks prevent a silent lifecycle fallback.",
++    "inference_substrate": "The no-LLM value keeps metadata separate from science.",
++    "duration_s": "Measured wall time proves that the deterministic audit ran.",
++    "source_artifact_hashes": "Hashes bind findings to the source bytes.",
++    "rows": "One row per hard check prevents hidden omissions.",
++    "lifecycle_resolution_rows": "Lifecycle rows prove which single roadmap was selected.",
++    "document_task_rows": "Document rows preserve the design parse independently.",
++    "yaml_task_rows": "YAML rows preserve the execution parse independently.",
++    "document_yaml_parity_rows": "Parity rows expose task identity and role drift.",
++    "gate_contract_rows": "Gate rows reject aliases and undeclared producer fields.",
++    "required_field_rows": "Field rows prove that each prompt declares common evidence.",
++    "prior_failure_contract_rows": "Prior rows prove complete retirement mechanics.",
++    "model_contract_rows": "Model rows preserve current vendor and GGUF policy.",
++    "prompt_ending_rows": "Prompt rows preserve sections, command, and final sentence.",
++    "infrastructure_slot_rows": "Slot rows reserve exactly two infrastructure tasks.",
++    "sota_ingestion_slot_rows": "The SOTA row reserves exactly one ingestion task.",
++    "independent_root_rows": "Root rows prevent advisory-to-science gate coupling.",
++    "ungated_tail_rows": "The tail row keeps the capstone runnable after branch nulls.",
++    "routing_audit_update_rows": "Routing rows prove the standalone Codex rule is current.",
++    "task_count": "The observed count exposes partial activation.",
++    "experiment_range": "The observed range exposes gaps and reused task numbers.",
++    "random_seed": "The fixed seed states that this audit has no hidden randomness.",
++    "reproducibility_checksum": "A content hash detects silent receipt changes.",
++    "v606_execution_contract_ready_score": "This advisory score cannot approve science.",
++    "gate_check_summary": "Expected and observed values make each block actionable.",
++    "verifier_is_oracle": "False prevents structural checks from certifying science.",
++    "verdict_class": "The closed class keeps the evidence boundary machine-readable.",
++    "honest_verdict": "The terminal prefix lets the conductor classify completion.",
++    "science_claim_approved": "False prevents metadata readiness from promoting a claim.",
++}
++
++SOURCE_PATHS = {
++    "design_document": DESIGN_PATH,
++    "active_roadmap": ACTIVE_ROADMAP_PATH,
++    "next_roadmap": NEXT_ROADMAP_PATH,
++    "roadmap_schema": SCHEMA_PATH,
++    "prior_failure_validator": PRIOR_VALIDATOR_PATH,
++    "roadmap_gate_audit": GATE_AUDIT_PATH,
++    "exclusion_manifest_lint": EXCLUSION_LINT_PATH,
++    "exclusion_manifest": EXCLUSION_PATH,
++    "spec": SPEC_PATH,
++    "module": Path("python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py"),
++    "wrapper": Path("scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py"),
++    "focused_tests": Path("tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py"),
++}
++REQUIRED_INPUTS = {
++    "design_document",
++    "roadmap_schema",
++    "prior_failure_validator",
++    "roadmap_gate_audit",
++    "exclusion_manifest_lint",
++    "exclusion_manifest",
++}
++
++experiment_number = base.experiment_number
++write_json_atomic = base.write_json_atomic
++
++
++def _check(name: str, expected: Any, observed: Any, passed: bool) -> JsonDict:
++    """Return one diagnostic check with exact expected and observed values."""
++
++    return {"check": name, "expected": expected, "observed": observed, "passed": bool(passed)}
++
++
++def _read_text(path: Path) -> tuple[str, str | None]:
++    """Read one UTF-8 input and retain a stable failure label."""
++
++    try:
++        text = path.read_text(encoding="utf-8")
++    except (OSError, UnicodeError) as exc:
++        return "", f"unreadable:{type(exc).__name__}"
++    return (text, None) if text else ("", "empty")
++
++
++def resolve_roadmap_lifecycle(root: Path) -> JsonDict:
++    """Select one V606 roadmap while preserving missing and ambiguous states."""
++
++    candidates: list[JsonDict] = []
++    for role, relative in (
++        ("active", ACTIVE_ROADMAP_PATH),
++        ("next", NEXT_ROADMAP_PATH),
++    ):
++        path = root / relative
++        roadmap, error = base.read_yaml_mapping(path)
++        milestone = str(roadmap.get("milestone") or "") if roadmap else None
++        candidates.append(
++            {
++                "role": role,
++                "path": relative.as_posix(),
++                "exists": path.is_file(),
++                "read_error": error,
++                "milestone": milestone,
++                "claims_v606": milestone == V606_MILESTONE,
++                "selected": False,
++            }
++        )
++
++    claims = [row for row in candidates if row["claims_v606"]]
++    unreadable = [row for row in candidates if row["exists"] and row["read_error"]]
++    selected: JsonDict | None = None
++    if unreadable:
++        state = "unresolved"
++    elif len(claims) == 2:
++        state = "ambiguous"
++    elif len(claims) == 1:
++        selected = claims[0]
++        state = "pre_staged" if selected["role"] == "next" else "activated"
++        selected["selected"] = True
++    elif any(row["exists"] for row in candidates):
++        state = "mismatched"
++    else:
++        state = "missing"
++
++    selected_path = Path(selected["path"]) if selected else None
++    roadmap = base.read_yaml_mapping(root / selected_path)[0] if selected_path else None
++    for row in candidates:
++        row["lifecycle_state"] = state
++    return {
++        "state": state,
++        "selected_path": selected_path,
++        "roadmap": roadmap,
++        "rows": candidates,
++        "passed": selected is not None and roadmap is not None,
++    }
++
++
++def _parse_document_gate(text: str, task_ids: Mapping[int, str]) -> list[JsonDict]:
++    """Translate the design table's compact gate text into YAML gate form."""
++
++    if text.startswith("None;"):
++        return []
++    match = re.fullmatch(r"Exp(\d+) `([a-z][a-z0-9_]*) (==|!=|>=|<=|>|<) ([^`]+)`", text)
++    if not match:
++        return [{"unparsed_document_gate": text}]
++    upstream_number = int(match.group(1))
++    raw_value = match.group(4).strip()
++    try:
++        value: Any = json.loads(raw_value)
++    except json.JSONDecodeError:
++        value = raw_value
++    return [
++        {
++            "upstream": task_ids.get(upstream_number, f"exp{upstream_number}-missing"),
++            "artifact_field": match.group(2),
++            "op": match.group(3),
++            "value": value,
++        }
++    ]
++
++
++def parse_design(text: str) -> JsonDict:
++    """Parse the locked design table without consulting either roadmap YAML."""
++
++    milestone = re.search(r"^\*\*Milestone:\*\*\s*`([^`]+)`", text, re.MULTILINE)
++    if not milestone:
++        raise ValueError("design milestone is required")
++    row_pattern = re.compile(
++        r"^\|\s*(\d+)\s*\|\s*`(exp\d+[^`]*)`\s*\|\s*([^|]+?)\s*"
++        r"\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$",
++        re.MULTILINE,
++    )
++    raw_rows = row_pattern.findall(text)
++    task_ids = {
++        experiment_number(task_id): task_id.strip()
++        for _order, task_id, _title, _deliverable, _gate in raw_rows
++        if experiment_number(task_id) in EXPECTED_NUMBERS
++    }
++    model_section = re.search(
++        r"The live model tasks are:\s*(.*?)(?:\nThe mandatory model IDs are:)",
++        text,
++        re.DOTALL,
++    )
++    model_numbers = (
++        {int(value) for value in re.findall(r"^- Exp(\d+):", model_section.group(1), re.MULTILINE)}
++        if model_section
++        else set()
++    )
++    rows: list[JsonDict] = []
++    for order, task_id, title, deliverable, gate_text in raw_rows:
++        number = experiment_number(task_id)
++        if number not in EXPECTED_NUMBERS:
++            continue
++        clean_gate = gate_text.strip()
++        rows.append(
++            {
++                "order": int(order),
++                "number": number,
++                "task_id": task_id.strip(),
++                "title": title.strip(),
++                "deliverable": deliverable.strip(),
++                "milestone": milestone.group(1),
++                "design_gate": clean_gate,
++                "gates": _parse_document_gate(clean_gate, task_ids),
++                "model_bearing": number in model_numbers,
++                "infrastructure_slot": number in INFRASTRUCTURE_NUMBERS,
++                "sota_ingestion_slot": number in SOTA_INGESTION_NUMBERS,
++                "ungated_tail": number == UNGATED_TAIL_NUMBER
++                and clean_gate == "None; ungated tail",
++            }
++        )
++    if not rows:
++        raise ValueError("design task table is required")
++    return {"milestone": milestone.group(1), "tasks": rows}
++
++
++def parse_roadmap(document: Any) -> JsonDict:
++    """Parse executable task fields while retaining prompts and prior rows."""
++
++    if not isinstance(document, Mapping):
++        raise ValueError("roadmap mapping is required")
++    tasks = document.get("tasks")
++    if not isinstance(tasks, list):
++        raise ValueError("roadmap tasks list is required")
++    rows: list[JsonDict] = []
++    for order, task in enumerate(tasks, 1):
++        if not isinstance(task, Mapping):
++            raise ValueError(f"malformed roadmap task at order {order}")
++        gates = task.get("gated_on", []) or []
++        priors = task.get("prior_failures", []) or []
++        if not isinstance(gates, list) or not isinstance(priors, list):
++            raise ValueError(f"malformed task lists at order {order}")
++        prompt = str(task.get("prompt") or "")
++        number = experiment_number(task.get("id"))
++        rows.append(
++            {
++                "order": order,
++                "number": number,
++                "task_id": str(task.get("id") or ""),
++                "title": str(task.get("title") or ""),
++                "track": str(task.get("track") or ""),
++                "milestone": str(task.get("milestone") or ""),
++                "deliverable": str(task.get("deliverable") or ""),
++                "agent_type": str(task.get("agent_type") or ""),
++                "model": str(task.get("model") or ""),
++                "gates": [dict(gate) if isinstance(gate, Mapping) else {} for gate in gates],
++                "prior_failures": deepcopy(priors),
++                "prompt": prompt,
++                "required_fields": base._required_fields(prompt),
++                "model_bearing": "MODEL_SPECS" in prompt,
++                "infrastructure_slot": str(task.get("track") or "").lower() == "infrastructure",
++                "sota_ingestion_slot": number == 6925
++                and "SOTA ingestion" in str(task.get("title") or ""),
++                "ungated_tail": number == UNGATED_TAIL_NUMBER and not gates,
++            }
++        )
++    return {"milestone": str(document.get("milestone") or ""), "tasks": rows}
++
++
++def current_model_rule(audit_source: str) -> tuple[str, str]:
++    """Read the Codex model and blocked backend from the standalone audit."""
++
++    codex = re.search(r'agent_type\s*==\s*"codex"\s*and\s*model\s*!=\s*"([^"]+)"', audit_source)
++    forbidden_agents = re.findall(r'agent_type\s*==\s*"([^"]+)"', audit_source)
++    blocked = next((agent for agent in forbidden_agents if agent != "codex"), "")
++    if not codex or not blocked:
++        raise ValueError("current model rules are missing from gate audit")
++    return codex.group(1), blocked
++
++
++def _public_document_row(row: Mapping[str, Any]) -> JsonDict:
++    """Copy the short independent design parse into the receipt."""
++
++    return deepcopy(dict(row))
++
++
++def _public_yaml_row(row: Mapping[str, Any]) -> JsonDict:
++    """Replace long prompt text with a stable hash in public YAML rows."""
++
++    return {
++        key: deepcopy(row.get(key))
++        for key in (
++            "order",
++            "number",
++            "task_id",
++            "title",
++            "track",
++            "milestone",
++            "deliverable",
++            "agent_type",
++            "model",
++            "gates",
++            "model_bearing",
++            "infrastructure_slot",
++            "sota_ingestion_slot",
++            "ungated_tail",
++        )
++    } | {
++        "prior_failure_count": len(row.get("prior_failures", [])),
++        "prompt_sha256": base.sha256_bytes(str(row.get("prompt") or "").encode()),
++    }
++
++
++def _expected_shape(expected: Mapping[str, Any]) -> JsonDict:
++    """Return the fields shared by expected, document, and YAML task rows."""
++
++    number = int(expected["number"])
++    return {
++        "order": expected["order"],
++        "number": number,
++        "task_id": expected["task_id"],
++        "title": expected["title"],
++        "deliverable": expected["deliverable"],
++        "milestone": V606_MILESTONE,
++        "gates": deepcopy(expected["gates"]),
++        "model_bearing": number in MODEL_BEARING_NUMBERS,
++        "infrastructure_slot": number in INFRASTRUCTURE_NUMBERS,
++        "sota_ingestion_slot": number in SOTA_INGESTION_NUMBERS,
++        "ungated_tail": number == UNGATED_TAIL_NUMBER,
++    }
++
++
++def _observed_shape(row: Mapping[str, Any] | None) -> JsonDict | None:
++    """Keep only values that the document and YAML must share exactly."""
++
++    if row is None:
++        return None
++    return {
++        key: deepcopy(row.get(key))
++        for key in (
++            "order",
++            "number",
++            "task_id",
++            "title",
++            "deliverable",
++            "milestone",
++            "gates",
++            "model_bearing",
++            "infrastructure_slot",
++            "sota_ingestion_slot",
++            "ungated_tail",
++        )
++    }
++
++
++def _task_rows(
++    document_tasks: Sequence[Mapping[str, Any]], yaml_tasks: Sequence[Mapping[str, Any]]
++) -> list[JsonDict]:
++    """Emit one exact document/YAML parity row for each V606 position."""
++
++    rows: list[JsonDict] = []
++    for index, expected in enumerate(EXPECTED_TASKS):
++        document = document_tasks[index] if index < len(document_tasks) else None
++        executable = yaml_tasks[index] if index < len(yaml_tasks) else None
++        wanted = _expected_shape(expected)
++        document_shape = _observed_shape(document)
++        yaml_shape = _observed_shape(executable)
++        checks = {
++            "document_matches_expected": document_shape == wanted,
++            "yaml_matches_expected": yaml_shape == wanted,
++            "document_yaml_equal": document_shape == yaml_shape,
++            "design_gate_text_exact": bool(
++                document and document.get("design_gate") == expected["design_gate"]
++            ),
++        }
++        rows.append(
++            {
++                "order": index + 1,
++                "expected": wanted,
++                "document": document_shape,
++                "yaml": yaml_shape,
++                "checks": checks,
++                "passed": all(checks.values()),
++            }
++        )
++    return rows
++
++
++def _prompt_rows(yaml_tasks: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Require all prompt sections, one command, and the exact final sentence."""
++
++    rows: list[JsonDict] = []
++    for index, expected in enumerate(EXPECTED_TASKS):
++        task = yaml_tasks[index] if index < len(yaml_tasks) else None
++        prompt = str(task.get("prompt") or "") if task else ""
++        lines = [line.strip() for line in prompt.splitlines() if line.strip()]
++        commands = [line for line in lines if line.startswith("Run command:")]
++        expected_command = (
++            "Run command: cd {project_root} && .venv/bin/python "
++            f"scripts/experiments/{Path(expected['deliverable']).stem}.py --date {{date}}"
++        )
++        sections = {section: section in prompt for section in PROMPT_SECTIONS}
++        checks = {
++            "required_sections": all(sections.values()),
++            "one_run_command": len(commands) == 1,
++            "exact_run_command": commands == [expected_command],
++            "exact_final_sentence": bool(lines and lines[-1] == FINAL_SENTENCE),
++            "run_command_is_penultimate": bool(len(lines) >= 2 and lines[-2] == expected_command),
++        }
++        rows.append(
++            {
++                "number": expected["number"],
++                "task_id": task.get("task_id") if task else None,
++                "required_sections": sections,
++                "expected_run_command": expected_command,
++                "observed_run_commands": commands,
++                "expected_final_sentence": FINAL_SENTENCE,
++                "observed_final_sentence": lines[-1] if lines else None,
++                "checks": checks,
++                "passed": all(checks.values()),
++            }
++        )
++    return rows
++
++
++def _required_field_rows(yaml_tasks: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Require the common evidence fields and their principle instruction."""
++
++    rows: list[JsonDict] = []
++    for index, expected in enumerate(EXPECTED_TASKS):
++        task = yaml_tasks[index] if index < len(yaml_tasks) else None
++        prompt = str(task.get("prompt") or "") if task else ""
++        fields = set(task.get("required_fields", set())) if task else set()
++        missing = sorted(COMMON_PROMPT_FIELDS - fields)
++        checks = {
++            "required_block_present": "REQUIRED ARTIFACT FIELDS:" in prompt,
++            "common_fields_present": not missing,
++            "principle_rule_present": "one principle per required field" in prompt,
++        }
++        rows.append(
++            {
++                "number": expected["number"],
++                "task_id": task.get("task_id") if task else None,
++                "declared_fields": sorted(fields),
++                "missing_common_fields": missing,
++                "checks": checks,
++                "passed": all(checks.values()),
++            }
++        )
++    return rows
++
++
++def _gate_rows(
++    document_tasks: Sequence[Mapping[str, Any]],
++    yaml_tasks: Sequence[Mapping[str, Any]],
++    valid_operators: set[str],
++) -> list[JsonDict]:
++    """Resolve every gate to an exact earlier producer and declared field."""
++
++    document_by_number = {row.get("number"): row for row in document_tasks}
++    yaml_by_number = {row.get("number"): row for row in yaml_tasks}
++    yaml_by_id = {row.get("task_id"): row for row in yaml_tasks}
++    rows: list[JsonDict] = []
++    for expected in EXPECTED_TASKS:
++        number = expected["number"]
++        document = document_by_number.get(number)
++        downstream = yaml_by_number.get(number)
++        document_gates = list(document.get("gates", [])) if document else []
++        observed_gates = list(downstream.get("gates", [])) if downstream else []
++        gate_checks: list[JsonDict] = []
++        for gate_index, observed in enumerate(observed_gates):
++            upstream = yaml_by_id.get(observed.get("upstream"))
++            field = str(observed.get("artifact_field") or "")
++            wanted = expected["gates"][gate_index] if gate_index < len(expected["gates"]) else None
++            checks = {
++                "exact_gate": observed == wanted,
++                "operator_valid": observed.get("op") in valid_operators,
++                "upstream_exact_task_id": upstream is not None,
++                "upstream_earlier": bool(
++                    upstream
++                    and downstream
++                    and upstream.get("order", 0) < downstream.get("order", 0)
++                ),
++                "producer_field_declared": bool(
++                    upstream and field in upstream.get("required_fields", set())
++                ),
++            }
++            gate_checks.append(
++                {
++                    "gate_index": gate_index,
++                    "expected": deepcopy(wanted),
++                    "observed": deepcopy(observed),
++                    "checks": checks,
++                    "passed": all(checks.values()),
++                }
++            )
++        checks = {
++            "document_gate_matches_expected": document_gates == expected["gates"],
++            "yaml_gate_matches_expected": observed_gates == expected["gates"],
++            "all_gate_references_valid": all(row["passed"] for row in gate_checks),
++        }
++        rows.append(
++            {
++                "downstream_number": number,
++                "task_id": downstream.get("task_id") if downstream else None,
++                "expected": deepcopy(expected["gates"]),
++                "document": deepcopy(document_gates),
++                "observed": deepcopy(observed_gates),
++                "gate_checks": gate_checks,
++                "checks": checks,
++                "passed": all(checks.values()),
++            }
++        )
++    return rows
++
++
++def _prior_rows(
++    yaml_tasks: Sequence[Mapping[str, Any]], prior_evidence: Mapping[str, Mapping[str, Any]]
++) -> list[JsonDict]:
++    """Check prior-failure shape and its primary verdict evidence."""
++
++    required = ("experiment_id", "verdict", "addressed_by", "retire_if_same_verdict")
++    rows: list[JsonDict] = []
++    for task in yaml_tasks:
++        for prior_index, value in enumerate(task.get("prior_failures", [])):
++            prior = dict(value) if isinstance(value, Mapping) else {}
++            prior_id = prior.get("experiment_id")
++            primary = prior_evidence.get(str(prior_id), {})
++            primary_verdict = primary.get("honest_verdict")
++            failed = [field for field in required if field not in prior]
++            if not isinstance(prior_id, str) or not re.fullmatch(r"exp\d+-[^\s]+", prior_id):
++                failed.append("experiment_id")
++            if not isinstance(prior.get("verdict"), str) or not prior.get("verdict", "").strip():
++                failed.append("verdict")
++            if primary_verdict != prior.get("verdict"):
++                failed.append("verdict")
++            if (
++                not isinstance(prior.get("addressed_by"), str)
++                or not prior.get("addressed_by", "").strip()
++            ):
++                failed.append("addressed_by")
++            if prior.get("retire_if_same_verdict") is not True:
++                failed.append("retire_if_same_verdict")
++            rows.append(
++                {
++                    "task_id": task.get("task_id"),
++                    "prior_index": prior_index,
++                    "experiment_id": prior_id,
++                    "declared_verdict": prior.get("verdict"),
++                    "primary_verdict": primary_verdict,
++                    "primary_source": primary.get("source"),
++                    "addressed_by": prior.get("addressed_by"),
++                    "retire_if_same_verdict": prior.get("retire_if_same_verdict"),
++                    "failed_subfields": list(dict.fromkeys(failed)),
++                    "passed": not failed,
++                }
++            )
++    return rows
++
++
++def _routing_ok(agent: str, model: str, codex_model: str, forbidden_agent: str) -> bool:
++    """Apply the current cross-vendor routing rules to one task."""
++
++    if agent == "codex":
++        return model == codex_model
++    if agent == forbidden_agent:
++        return False
++    if agent == "claude":
++        return model in {"sonnet", "opus"}
++    if agent == "opencode":
++        return bool(model)
++    return False
++
++
++def _model_rows(
++    yaml_tasks: Sequence[Mapping[str, Any]], audit_source: str
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Check task routing and the four live-model prompt contracts."""
++
++    codex_model, forbidden_agent = current_model_rule(audit_source)
++    rows: list[JsonDict] = []
++    for index, expected in enumerate(EXPECTED_TASKS):
++        task = yaml_tasks[index] if index < len(yaml_tasks) else None
++        agent = str(task.get("agent_type") or "") if task else ""
++        model = str(task.get("model") or "") if task else ""
++        prompt = str(task.get("prompt") or "") if task else ""
++        fields = set(task.get("required_fields", set())) if task else set()
++        number = expected["number"]
++        llm_task = number in MODEL_BEARING_NUMBERS
++        required_ids = REQUIRED_MODEL_IDS[:1] if number == 6935 else REQUIRED_MODEL_IDS
++        llm_checks = {
++            "all_required_model_ids": not llm_task
++            or all(model_id in prompt for model_id in required_ids),
++            "production_model_declared": number != 6935 or "Qwen3.8-27B" in prompt,
++            "model_specs_declared": not llm_task or "model_specs" in fields,
++            "gguf_native_tokenizer": not llm_task or "llama.cpp's embedded tokenizer" in prompt,
++            "autotokenizer_gguf_forbidden": not llm_task
++            or "Never pass a GGUF repository to AutoTokenizer.from_pretrained()." in prompt,
++        }
++        checks = {
++            "current_agent_model_rule": bool(task)
++            and _routing_ok(agent, model, codex_model, forbidden_agent),
++            **llm_checks,
++        }
++        rows.append(
++            {
++                "number": number,
++                "task_id": task.get("task_id") if task else None,
++                "agent_type": agent,
++                "model": model,
++                "expected_codex_model": codex_model,
++                "forbidden_agent": forbidden_agent,
++                "llm_task": llm_task,
++                "checks": checks,
++                "passed": all(checks.values()),
++            }
++        )
++    routing_checks = {
++        "codex_model_updated": codex_model == "gpt-5.6-sol",
++        "gemini_still_forbidden": forbidden_agent == "gemini",
++        "claude_vendor_check_retained": all(
++            row["checks"]["current_agent_model_rule"]
++            for row in rows
++            if row["agent_type"] == "claude"
++        ),
++    }
++    routing_rows = [
++        {
++            "expected_codex_model": "gpt-5.6-sol",
++            "observed_codex_model": codex_model,
++            "expected_forbidden_agent": "gemini",
++            "observed_forbidden_agent": forbidden_agent,
++            "checks": routing_checks,
++            "passed": all(routing_checks.values()),
++        }
++    ]
++    return rows, routing_rows
++
++
++def _slot_rows(
++    document_tasks: Sequence[Mapping[str, Any]], yaml_tasks: Sequence[Mapping[str, Any]]
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Prove two infrastructure slots and one SOTA-ingestion slot."""
++
++    document_by_number = {row.get("number"): row for row in document_tasks}
++    yaml_by_number = {row.get("number"): row for row in yaml_tasks}
++    actual_infrastructure = {
++        row.get("number") for row in yaml_tasks if row.get("infrastructure_slot")
++    }
++    infrastructure_rows: list[JsonDict] = []
++    for number in sorted(INFRASTRUCTURE_NUMBERS):
++        document = document_by_number.get(number)
++        executable = yaml_by_number.get(number)
++        checks = {
++            "document_slot": bool(document and document.get("infrastructure_slot")),
++            "yaml_slot": bool(executable and executable.get("infrastructure_slot")),
++            "exact_slot_set": actual_infrastructure == INFRASTRUCTURE_NUMBERS,
++        }
++        infrastructure_rows.append(
++            {
++                "number": number,
++                "expected_slots": sorted(INFRASTRUCTURE_NUMBERS),
++                "observed_slots": sorted(value for value in actual_infrastructure if value),
++                "checks": checks,
++                "passed": all(checks.values()),
++            }
++        )
++
++    sota_candidates = {
++        row.get("number") for row in yaml_tasks if "SOTA ingestion" in str(row.get("title") or "")
++    }
++    number = 6925
++    document = document_by_number.get(number)
++    executable = yaml_by_number.get(number)
++    sota_checks = {
++        "document_slot": bool(document and document.get("sota_ingestion_slot")),
++        "yaml_slot": bool(executable and executable.get("sota_ingestion_slot")),
++        "exact_slot_set": sota_candidates == SOTA_INGESTION_NUMBERS,
++    }
++    sota_rows = [
++        {
++            "number": number,
++            "expected_slots": sorted(SOTA_INGESTION_NUMBERS),
++            "observed_slots": sorted(value for value in sota_candidates if value),
++            "checks": sota_checks,
++            "passed": all(sota_checks.values()),
++        }
++    ]
++    return infrastructure_rows, sota_rows
++
++
++def _root_rows(
++    document_tasks: Sequence[Mapping[str, Any]], yaml_tasks: Sequence[Mapping[str, Any]]
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Prove eight ungated tasks, no advisory consumers, and one tail."""
++
++    document_by_number = {row.get("number"): row for row in document_tasks}
++    yaml_by_number = {row.get("number"): row for row in yaml_tasks}
++    consumers = {
++        upstream: [
++            task.get("task_id")
++            for task in yaml_tasks
++            if any(
++                experiment_number(gate.get("upstream")) == upstream
++                for gate in task.get("gates", [])
++            )
++        ]
++        for upstream in (6923, 6925)
++    }
++    roots: list[JsonDict] = []
++    for number in INDEPENDENT_ROOT_NUMBERS:
++        document = document_by_number.get(number)
++        executable = yaml_by_number.get(number)
++        checks = {
++            "document_ungated": bool(document and not document.get("gates")),
++            "yaml_ungated": bool(executable and not executable.get("gates")),
++            "advisory_has_no_consumers": number not in consumers or not consumers[number],
++        }
++        roots.append(
++            {
++                "number": number,
++                "yaml_consumers": consumers.get(number, []),
++                "document_gates": deepcopy(document.get("gates", [])) if document else None,
++                "yaml_gates": deepcopy(executable.get("gates", [])) if executable else None,
++                "checks": checks,
++                "passed": all(checks.values()),
++            }
++        )
++    document_tail = document_by_number.get(UNGATED_TAIL_NUMBER)
++    yaml_tail = yaml_by_number.get(UNGATED_TAIL_NUMBER)
++    tail_checks = {
++        "document_ungated_tail": bool(
++            document_tail and document_tail.get("ungated_tail") and not document_tail.get("gates")
++        ),
++        "yaml_ungated_tail": bool(yaml_tail and yaml_tail.get("ungated_tail")),
++    }
++    tails = [
++        {
++            "number": UNGATED_TAIL_NUMBER,
++            "document_gates": deepcopy(document_tail.get("gates", [])) if document_tail else None,
++            "yaml_gates": deepcopy(yaml_tail.get("gates", [])) if yaml_tail else None,
++            "checks": tail_checks,
++            "passed": all(tail_checks.values()),
++        }
++    ]
++    return roots, tails
++
++
++def evaluate_contract(
++    design_text: str,
++    roadmap: Mapping[str, Any],
++    schema_source: str,
++    gate_audit_source: str,
++    prior_evidence: Mapping[str, Mapping[str, Any]],
++) -> JsonDict:
++    """Evaluate V606 identity, prompts, gates, priors, models, and roots."""
++
++    document = parse_design(design_text)
++    executable = parse_roadmap(roadmap)
++    document_tasks = document["tasks"]
++    yaml_tasks = executable["tasks"]
++    parity_rows = _task_rows(document_tasks, yaml_tasks)
++    prompt_rows = _prompt_rows(yaml_tasks)
++    field_rows = _required_field_rows(yaml_tasks)
++    gate_rows = _gate_rows(document_tasks, yaml_tasks, base.schema_gate_operators(schema_source))
++    prior_rows = _prior_rows(yaml_tasks, prior_evidence)
++    model_rows, routing_rows = _model_rows(yaml_tasks, gate_audit_source)
++    infrastructure_rows, sota_rows = _slot_rows(document_tasks, yaml_tasks)
++    root_rows, tail_rows = _root_rows(document_tasks, yaml_tasks)
++    document_deliverables = [row.get("deliverable") for row in document_tasks]
++    yaml_deliverables = [row.get("deliverable") for row in yaml_tasks]
++    checks = [
++        _check(
++            "document_primary_contract",
++            {"milestone": V606_MILESTONE, "task_count": 14, "numbers": list(EXPECTED_NUMBERS)},
++            {
++                "milestone": document["milestone"],
++                "task_count": len(document_tasks),
++                "numbers": [row.get("number") for row in document_tasks],
++            },
++            document["milestone"] == V606_MILESTONE
++            and len(document_tasks) == 14
++            and len(document_deliverables) == len(set(document_deliverables)) == 14,
++        ),
++        _check(
++            "yaml_executable_contract",
++            {"milestone": V606_MILESTONE, "task_count": 14, "numbers": list(EXPECTED_NUMBERS)},
++            {
++                "milestone": executable["milestone"],
++                "task_count": len(yaml_tasks),
++                "numbers": [row.get("number") for row in yaml_tasks],
++            },
++            executable["milestone"] == V606_MILESTONE
++            and len(yaml_tasks) == 14
++            and len({row.get("task_id") for row in yaml_tasks}) == 14
++            and len(yaml_deliverables) == len(set(yaml_deliverables)) == 14,
++        ),
++    ]
++    row_groups = (
++        ("document_yaml_task_contract", parity_rows),
++        ("prompt_contract", prompt_rows),
++        ("required_field_contract", field_rows),
++        ("gate_contract", gate_rows),
++        ("prior_failure_contract", prior_rows),
++        ("model_contract", model_rows),
++        ("infrastructure_slot_contract", infrastructure_rows),
++        ("sota_ingestion_slot_contract", sota_rows),
++        ("independent_root_contract", root_rows),
++        ("ungated_tail_contract", tail_rows),
++        ("routing_audit_update_contract", routing_rows),
++    )
++    for name, rows in row_groups:
++        passed = all(row["passed"] for row in rows)
++        checks.append(_check(name, True, passed, passed))
++    return {
++        "passed": all(row["passed"] for row in checks),
++        "checks": checks,
++        "document_task_rows": [_public_document_row(row) for row in document_tasks],
++        "yaml_task_rows": [_public_yaml_row(row) for row in yaml_tasks],
++        "document_yaml_parity_rows": parity_rows,
++        "gate_contract_rows": gate_rows,
++        "required_field_rows": field_rows,
++        "prior_failure_contract_rows": prior_rows,
++        "model_contract_rows": model_rows,
++        "prompt_ending_rows": prompt_rows,
++        "infrastructure_slot_rows": infrastructure_rows,
++        "sota_ingestion_slot_rows": sota_rows,
++        "independent_root_rows": root_rows,
++        "ungated_tail_rows": tail_rows,
++        "routing_audit_update_rows": routing_rows,
++    }
++
++
++def _empty_contract(error: str) -> JsonDict:
++    """Return all contract row families when source parsing cannot start."""
++
++    return {
++        "passed": False,
++        "checks": [_check("contract_evaluation", "valid primary records", error, False)],
++        "document_task_rows": [],
++        "yaml_task_rows": [],
++        **{field: [] for field in CONTRACT_ROW_FIELDS},
++    }
++
++
++def _isolated_subprocess_env() -> dict[str, str]:
++    """Keep parent coverage controls out of validation subprocesses."""
++
++    return {
++        key: value
++        for key, value in os.environ.items()
++        if not key.startswith(("COV_CORE_", "COVERAGE_"))
++    }
++
++
++def _load_prior_evidence(
++    root: Path, tasks: Sequence[Mapping[str, Any]]
++) -> tuple[dict[str, JsonDict], list[JsonDict]]:
++    """Load each declared prior verdict from its primary result artifact."""
++
++    evidence: dict[str, JsonDict] = {}
++    source_rows: list[JsonDict] = []
++    for task in tasks:
++        for prior in task.get("prior_failures", []) or []:
++            if not isinstance(prior, Mapping):
++                continue
++            prior_id = str(prior.get("experiment_id") or "")
++            number = experiment_number(prior_id)
++            matches = (
++                sorted((root / "results").glob(f"experiment_{number}_*.json")) if number else []
++            )
++            path = matches[0] if len(matches) == 1 else None
++            payload, error = base.read_json_mapping(path) if path else (None, "artifact_not_unique")
++            if payload is not None and path is not None:
++                evidence[prior_id] = {
++                    "honest_verdict": payload.get("honest_verdict"),
++                    "source": path.relative_to(root).as_posix(),
++                }
++            source_rows.append(
++                {
++                    "experiment_id": prior_id,
++                    "path": path.relative_to(root).as_posix() if path else None,
++                    "sha256": base.sha256_path(path) if path else None,
++                    "error": error,
++                }
++            )
++    return evidence, source_rows
++
++
++def _external_validation_checks(
++    root: Path, roadmap_path: Path, roadmap: Mapping[str, Any]
++) -> list[JsonDict]:
++    """Run current schema, prior, gate, and exclusion validators."""
++
++    from pydantic import ValidationError
++    from scripts.audit_roadmap_gates import audit_roadmap
++    from scripts.roadmap_schema import Roadmap
++    from scripts.validate_prior_failures import validate_roadmap
++
++    try:
++        Roadmap.model_validate(roadmap)
++        schema_errors: list[str] = []
++    except ValidationError as exc:
++        schema_errors = [error["msg"] for error in exc.errors()]
++    prior_schema, prior_failures = validate_roadmap(roadmap_path)
++    gate_result = audit_roadmap(roadmap_path)
++    exclusion = subprocess.run(
++        [sys.executable, str(root / EXCLUSION_LINT_PATH), str(roadmap_path)],
++        cwd=root,
++        capture_output=True,
++        text=True,
++        check=False,
++        env=_isolated_subprocess_env(),
++    )
++    exclusion_output = exclusion.stdout.strip() or exclusion.stderr.strip()
++    return [
++        _check("roadmap_schema_validation", [], schema_errors, not schema_errors),
++        _check(
++            "prior_failure_validation",
++            [],
++            [*prior_schema, *prior_failures],
++            not prior_schema and not prior_failures,
++        ),
++        _check(
++            "gate_audit_validation",
++            True,
++            gate_result.to_artifact(),
++            gate_result.roadmap_gate_audit_passed,
++        ),
++        _check(
++            "exclusion_manifest_validation",
++            "exit 0",
++            {"exit_code": exclusion.returncode, "output": exclusion_output},
++            exclusion.returncode == 0,
++        ),
++    ]
++
++
++def _source_hashes(root: Path, prior_rows: Sequence[Mapping[str, Any]]) -> dict[str, JsonDict]:
++    """Bind lifecycle, validator, implementation, and prior inputs to bytes."""
++
++    hashes = {
++        name: {"path": path.as_posix(), "sha256": base.sha256_path(root / path)}
++        for name, path in SOURCE_PATHS.items()
++    }
++    for index, row in enumerate(prior_rows):
++        hashes[f"prior_{index}_{row.get('experiment_id')}"] = {
++            "path": row.get("path"),
++            "sha256": row.get("sha256"),
++            "error": row.get("error"),
++        }
++    return hashes
++
++
++def _checksum_value(value: Any) -> Any:
++    """Remove elapsed time and the checksum from reproducible content."""
++
++    if isinstance(value, Mapping):
++        return {
++            key: _checksum_value(item)
++            for key, item in value.items()
++            if key not in {"duration_s", "reproducibility_checksum"}
++        }
++    if isinstance(value, list):
++        return [_checksum_value(item) for item in value]
++    return value
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash all deterministic receipt content."""
++
++    payload = json.dumps(
++        _checksum_value(dict(artifact)),
++        sort_keys=True,
++        separators=(",", ":"),
++        ensure_ascii=False,
++    ).encode()
++    return f"sha256:{hashlib.sha256(payload).hexdigest()}"
++
++
++def build_artifact(root: Path, run_date: str) -> JsonDict:
++    """Build a complete advisory or blocked V606 lifecycle receipt."""
++
++    started = time.perf_counter()
++    texts: dict[str, str] = {}
++    source_errors: list[JsonDict] = []
++    for name in REQUIRED_INPUTS:
++        relative = SOURCE_PATHS[name]
++        texts[name], error = _read_text(root / relative)
++        if error:
++            source_errors.append({"source": name, "error": error})
++
++    lifecycle = resolve_roadmap_lifecycle(root)
++    roadmap = lifecycle["roadmap"] or {}
++    selected_path = lifecycle["selected_path"]
++    raw_tasks = roadmap.get("tasks", []) if isinstance(roadmap, Mapping) else []
++    prior_evidence, prior_sources = _load_prior_evidence(
++        root, [task for task in raw_tasks if isinstance(task, Mapping)]
++    )
++    try:
++        contract = evaluate_contract(
++            texts.get("design_document", ""),
++            roadmap,
++            texts.get("roadmap_schema", ""),
++            texts.get("roadmap_gate_audit", ""),
++            prior_evidence,
++        )
++    except (ValueError, SyntaxError) as exc:
++        contract = _empty_contract(str(exc))
++
++    precondition_checks = [
++        _check("required_inputs", [], source_errors, not source_errors),
++        _check(
++            "lifecycle_resolution",
++            "exactly one V606 roadmap",
++            {
++                "state": lifecycle["state"],
++                "selected_path": selected_path.as_posix() if selected_path else None,
++            },
++            lifecycle["passed"],
++        ),
++    ]
++    preconditions = base.gate_summary(precondition_checks)
++    if selected_path and roadmap:
++        external_checks = _external_validation_checks(root, root / selected_path, roadmap)
++    else:
++        external_checks = [
++            _check(name, True, "roadmap unavailable", False)
++            for name in (
++                "roadmap_schema_validation",
++                "prior_failure_validation",
++                "gate_audit_validation",
++                "exclusion_manifest_validation",
++            )
++        ]
++    checks = [
++        _check(
++            "preconditions",
++            "all required inputs and one lifecycle roadmap",
++            preconditions,
++            preconditions["passed"],
++        ),
++        *contract["checks"],
++        *external_checks,
++    ]
++    ready = all(row["passed"] for row in checks)
++    checks.append(_check("v606_execution_contract_ready_score", int(ready), int(ready), True))
++    parsed_numbers = [
++        row.get("number") for row in contract["yaml_task_rows"] if row.get("number") is not None
++    ]
++    experiment_range = [min(parsed_numbers), max(parsed_numbers)] if parsed_numbers else []
++    artifact: JsonDict = {
++        "schema": "carnot.experiment_6923.v606_lifecycle_evidence_contract.v1",
++        "experiment_id": 6923,
++        "run_date": f"{run_date[:4]}-{run_date[4:6]}-{run_date[6:8]}",
++        "status": "complete" if ready else "complete_blocked",
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": 0.0,
++        "source_artifact_hashes": _source_hashes(root, prior_sources),
++        "rows": deepcopy(checks),
++        "lifecycle_resolution_rows": deepcopy(lifecycle["rows"]),
++        "document_task_rows": contract["document_task_rows"],
++        "yaml_task_rows": contract["yaml_task_rows"],
++        **{field: contract[field] for field in CONTRACT_ROW_FIELDS},
++        "task_count": len(contract["yaml_task_rows"]),
++        "experiment_range": experiment_range,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "v606_execution_contract_ready_score": int(ready),
++        "gate_check_summary": base.gate_summary(checks),
++        "verifier_is_oracle": False,
++        "verdict_class": "null" if ready else "blocked",
++        "honest_verdict": READY_VERDICT if ready else BLOCKED_VERDICT,
++        "science_claim_approved": False,
++    }
++    artifact["duration_s"] = round(time.perf_counter() - started, 6)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def _ready_from_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Recompute readiness without trusting the advisory score."""
++
++    summary = artifact.get("gate_check_summary", {})
++    checks = summary.get("checks", []) if isinstance(summary, Mapping) else []
++    base_checks = [
++        row
++        for row in checks
++        if isinstance(row, Mapping) and row.get("check") != "v606_execution_contract_ready_score"
++    ]
++    return bool(base_checks) and all(row.get("passed") is True for row in base_checks)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Recompute identity, readiness, terminal shape, and checksum fields."""
++
++    errors: list[str] = []
++    missing = sorted(REQUIRED_ARTIFACT_FIELDS - set(artifact))
++    if missing:
++        errors.append(f"missing_required_fields:{','.join(missing)}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or not REQUIRED_ARTIFACT_FIELDS.issubset(principles):
++        errors.append("field_principles_missing")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("invalid_inference_substrate")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_must_be_false")
++    if artifact.get("verdict_class") not in CLOSED_VERDICT_CLASSES:
++        errors.append("invalid_verdict_class")
++    if not str(artifact.get("honest_verdict") or "").startswith("complete_"):
++        errors.append("honest_verdict_not_terminal")
++    ready = int(_ready_from_artifact(artifact))
++    if artifact.get("v606_execution_contract_ready_score") != ready:
++        errors.append("readiness_recomputation_mismatch")
++    yaml_rows = artifact.get("yaml_task_rows", [])
++    yaml_rows = yaml_rows if isinstance(yaml_rows, list) else []
++    numbers = [
++        row.get("number")
++        for row in yaml_rows
++        if isinstance(row, Mapping) and isinstance(row.get("number"), int)
++    ]
++    expected_range = [min(numbers), max(numbers)] if numbers else []
++    if (
++        artifact.get("task_count") != len(yaml_rows)
++        or artifact.get("experiment_range") != expected_range
++    ):
++        errors.append("task_identity_summary_mismatch")
++    if artifact.get("science_claim_approved") is not False:
++        errors.append("advisory_contract_cannot_approve_science")
++    if ready:
++        if (
++            artifact.get("status") != "complete"
++            or artifact.get("verdict_class") != "null"
++            or artifact.get("honest_verdict") != READY_VERDICT
++        ):
++            errors.append("ready_terminal_shape_mismatch")
++    elif (
++        artifact.get("status") != "complete_blocked"
++        or artifact.get("verdict_class") != "blocked"
++        or artifact.get("honest_verdict") != BLOCKED_VERDICT
++    ):
++        errors.append("blocked_terminal_shape_mismatch")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def _date_argument(value: str) -> str:
++    """Reject ambiguous execution dates before reading evidence."""
++
++    if not re.fullmatch(r"\d{8}", value):
++        raise argparse.ArgumentTypeError("date must use YYYYMMDD")
++    return value
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Write and validate the receipt at its requested output path."""
++
++    parser = argparse.ArgumentParser(description=__doc__, exit_on_error=False)
++    parser.add_argument("--date", required=True, type=_date_argument)
++    parser.add_argument("--output", type=Path, default=REPO_ROOT / OUTPUT_PATH)
++    try:
++        args = parser.parse_args(argv)
++    except (argparse.ArgumentError, SystemExit):
++        return 2
++    artifact = build_artifact(REPO_ROOT, args.date)
++    errors = validate_artifact(artifact)
++    write_json_atomic(args.output, artifact)
++    if errors:
++        print(json.dumps({"validation_errors": errors}, sort_keys=True))
++        return 1
++    print(
++        json.dumps(
++            {
++                "output": str(args.output),
++                "ready": artifact["v606_execution_contract_ready_score"],
++                "verdict": artifact["honest_verdict"],
++            },
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - the repository wrapper owns this path
++    raise SystemExit(main())
+diff --git a/results/experiment_6923_v606_lifecycle_evidence_contract.json b/results/experiment_6923_v606_lifecycle_evidence_contract.json
+new file mode 100644
+index 0000000000..10559cd27d
+--- /dev/null
++++ b/results/experiment_6923_v606_lifecycle_evidence_contract.json
+@@ -0,0 +1,3286 @@
++{
++  "document_task_rows": [
++    {
++      "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
++      "design_gate": "None; advisory root",
++      "gates": [],
++      "infrastructure_slot": true,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6923,
++      "order": 1,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6923-v606-lifecycle-evidence-contract",
++      "title": "V606 lifecycle-aware execution and evidence contract",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
++      "design_gate": "None; infrastructure root",
++      "gates": [],
++      "infrastructure_slot": true,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6924,
++      "order": 2,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6924-task-runtime-receipt-adoption",
++      "title": "Task-owned runtime receipt adoption",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
++      "design_gate": "None; research root",
++      "gates": [],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6925,
++      "order": 3,
++      "sota_ingestion_slot": true,
++      "task_id": "exp6925-v606-sota-ingestion",
++      "title": "V606 SOTA ingestion and method map",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
++      "design_gate": "None; acquisition root",
++      "gates": [],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6926,
++      "order": 4,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6926-span-first-relation-fixture",
++      "title": "Exact span-first relation fixture",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6927_sota_span_first_relation_acquisition.json",
++      "design_gate": "Exp6926 `span_relation_fixture_ready_score == 1`",
++      "gates": [
++        {
++          "artifact_field": "span_relation_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6926-span-first-relation-fixture",
++          "value": 1
++        }
++      ],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": true,
++      "number": 6927,
++      "order": 5,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6927-sota-span-first-relation-acquisition",
++      "title": "Three-family span-first relation acquisition",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6928_independent_span_relation_qualification.json",
++      "design_gate": "Exp6927 `span_first_acquisition_complete_score == 1`",
++      "gates": [
++        {
++          "artifact_field": "span_first_acquisition_complete_score",
++          "op": "==",
++          "upstream": "exp6927-sota-span-first-relation-acquisition",
++          "value": 1
++        }
++      ],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6928,
++      "order": 6,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6928-independent-span-relation-qualification",
++      "title": "Independent span-relation qualification",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6929_authentic_strategy_episode_fixture.json",
++      "design_gate": "None; self-learning root",
++      "gates": [],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6929,
++      "order": 7,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6929-authentic-strategy-episode-fixture",
++      "title": "Authentic operational strategy-episode fixture",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6930_selective_episodic_strategy_memory.json",
++      "design_gate": "Exp6929 `strategy_episode_fixture_ready_score == 1`",
++      "gates": [
++        {
++          "artifact_field": "strategy_episode_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6929-authentic-strategy-episode-fixture",
++          "value": 1
++        }
++      ],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6930,
++      "order": 8,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6930-selective-episodic-strategy-memory",
++      "title": "Selective episodic strategy memory",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6931_independent_strategy_memory_audit.json",
++      "design_gate": "Exp6930 `episodic_strategy_memory_run_complete_score == 1`",
++      "gates": [
++        {
++          "artifact_field": "episodic_strategy_memory_run_complete_score",
++          "op": "==",
++          "upstream": "exp6930-selective-episodic-strategy-memory",
++          "value": 1
++        }
++      ],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6931,
++      "order": 9,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6931-independent-strategy-memory-audit",
++      "title": "Independent cold strategy-memory audit",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6932_vera_verified_headroom_fixture.json",
++      "design_gate": "None; guidance root",
++      "gates": [],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6932,
++      "order": 10,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6932-vera-verified-headroom-fixture",
++      "title": "VeRA-style verified headroom fixture",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6933_sota_headroom_admission_canary.json",
++      "design_gate": "Exp6932 `verified_variant_fixture_ready_score == 1`",
++      "gates": [
++        {
++          "artifact_field": "verified_variant_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6932-vera-verified-headroom-fixture",
++          "value": 1
++        }
++      ],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": true,
++      "number": 6933,
++      "order": 11,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6933-sota-headroom-admission-canary",
++      "title": "Three-family direct headroom admission canary",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6934_reward_guided_candidate_smc.json",
++      "design_gate": "Exp6933 `headroom_admission_ready_score == 1`",
++      "gates": [
++        {
++          "artifact_field": "headroom_admission_ready_score",
++          "op": "==",
++          "upstream": "exp6933-sota-headroom-admission-canary",
++          "value": 1
++        }
++      ],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": true,
++      "number": 6934,
++      "order": 12,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6934-reward-guided-candidate-smc",
++      "title": "Reward-guided complete-candidate SMC",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6935_arc_postfix_induction_audit.json",
++      "design_gate": "None; ARC root",
++      "gates": [],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": true,
++      "number": 6935,
++      "order": 13,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6935-arc-postfix-induction-audit",
++      "title": "ARC post-fix induction reachability and held-out accuracy",
++      "ungated_tail": false
++    },
++    {
++      "deliverable": "results/experiment_6936_v606_independent_capstone.json",
++      "design_gate": "None; ungated tail",
++      "gates": [],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model_bearing": false,
++      "number": 6936,
++      "order": 14,
++      "sota_ingestion_slot": false,
++      "task_id": "exp6936-v606-independent-capstone",
++      "title": "V606 independent capstone",
++      "ungated_tail": true
++    }
++  ],
++  "document_yaml_parity_rows": [
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": true,
++        "yaml_matches_expected": true
++      },
++      "document": {
++        "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
++        "gates": [],
++        "infrastructure_slot": true,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6923,
++        "order": 1,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6923-v606-lifecycle-evidence-contract",
++        "title": "V606 lifecycle-aware execution and evidence contract",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
++        "gates": [],
++        "infrastructure_slot": true,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6923,
++        "order": 1,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6923-v606-lifecycle-evidence-contract",
++        "title": "V606 lifecycle-aware execution and evidence contract",
++        "ungated_tail": false
++      },
++      "order": 1,
++      "passed": true,
++      "yaml": {
++        "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
++        "gates": [],
++        "infrastructure_slot": true,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6923,
++        "order": 1,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6923-v606-lifecycle-evidence-contract",
++        "title": "V606 lifecycle-aware execution and evidence contract",
++        "ungated_tail": false
++      }
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": true,
++        "yaml_matches_expected": true
++      },
++      "document": {
++        "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
++        "gates": [],
++        "infrastructure_slot": true,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6924,
++        "order": 2,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6924-task-runtime-receipt-adoption",
++        "title": "Task-owned runtime receipt adoption",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
++        "gates": [],
++        "infrastructure_slot": true,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6924,
++        "order": 2,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6924-task-runtime-receipt-adoption",
++        "title": "Task-owned runtime receipt adoption",
++        "ungated_tail": false
++      },
++      "order": 2,
++      "passed": true,
++      "yaml": {
++        "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
++        "gates": [],
++        "infrastructure_slot": true,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6924,
++        "order": 2,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6924-task-runtime-receipt-adoption",
++        "title": "Task-owned runtime receipt adoption",
++        "ungated_tail": false
++      }
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": true,
++        "yaml_matches_expected": true
++      },
++      "document": {
++        "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6925,
++        "order": 3,
++        "sota_ingestion_slot": true,
++        "task_id": "exp6925-v606-sota-ingestion",
++        "title": "V606 SOTA ingestion and method map",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6925,
++        "order": 3,
++        "sota_ingestion_slot": true,
++        "task_id": "exp6925-v606-sota-ingestion",
++        "title": "V606 SOTA ingestion and method map",
++        "ungated_tail": false
++      },
++      "order": 3,
++      "passed": true,
++      "yaml": {
++        "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6925,
++        "order": 3,
++        "sota_ingestion_slot": true,
++        "task_id": "exp6925-v606-sota-ingestion",
++        "title": "V606 SOTA ingestion and method map",
++        "ungated_tail": false
++      }
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": true,
++        "yaml_matches_expected": true
++      },
++      "document": {
++        "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6926,
++        "order": 4,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6926-span-first-relation-fixture",
++        "title": "Exact span-first relation fixture",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6926,
++        "order": 4,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6926-span-first-relation-fixture",
++        "title": "Exact span-first relation fixture",
++        "ungated_tail": false
++      },
++      "order": 4,
++      "passed": true,
++      "yaml": {
++        "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6926,
++        "order": 4,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6926-span-first-relation-fixture",
++        "title": "Exact span-first relation fixture",
++        "ungated_tail": false
++      }
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6927_sota_span_first_relation_acquisition.json",
++        "gates": [
++          {
++            "artifact_field": "span_relation_fixture_ready_score",
++            "op": "==",
++            "upstream": "exp6926-span-first-relation-fixture",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": true,
++        "number": 6927,
++        "order": 5,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6927-sota-span-first-relation-acquisition",
++        "title": "Three-family span-first relation acquisition",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6927_sota_span_first_relation_acquisition.json",
++        "gates": [
++          {
++            "artifact_field": "span_relation_fixture_ready_score",
++            "op": "==",
++            "upstream": "exp6926-span-first-relation-fixture",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": true,
++        "number": 6927,
++        "order": 5,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6927-sota-span-first-relation-acquisition",
++        "title": "Three-family span-first relation acquisition",
++        "ungated_tail": false
++      },
++      "order": 5,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6928_independent_span_relation_qualification.json",
++        "gates": [
++          {
++            "artifact_field": "span_first_acquisition_complete_score",
++            "op": "==",
++            "upstream": "exp6927-sota-span-first-relation-acquisition",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6928,
++        "order": 6,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6928-independent-span-relation-qualification",
++        "title": "Independent span-relation qualification",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6928_independent_span_relation_qualification.json",
++        "gates": [
++          {
++            "artifact_field": "span_first_acquisition_complete_score",
++            "op": "==",
++            "upstream": "exp6927-sota-span-first-relation-acquisition",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6928,
++        "order": 6,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6928-independent-span-relation-qualification",
++        "title": "Independent span-relation qualification",
++        "ungated_tail": false
++      },
++      "order": 6,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6929_authentic_strategy_episode_fixture.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6929,
++        "order": 7,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6929-authentic-strategy-episode-fixture",
++        "title": "Authentic operational strategy-episode fixture",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6929_authentic_strategy_episode_fixture.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6929,
++        "order": 7,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6929-authentic-strategy-episode-fixture",
++        "title": "Authentic operational strategy-episode fixture",
++        "ungated_tail": false
++      },
++      "order": 7,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6930_selective_episodic_strategy_memory.json",
++        "gates": [
++          {
++            "artifact_field": "strategy_episode_fixture_ready_score",
++            "op": "==",
++            "upstream": "exp6929-authentic-strategy-episode-fixture",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6930,
++        "order": 8,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6930-selective-episodic-strategy-memory",
++        "title": "Selective episodic strategy memory",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6930_selective_episodic_strategy_memory.json",
++        "gates": [
++          {
++            "artifact_field": "strategy_episode_fixture_ready_score",
++            "op": "==",
++            "upstream": "exp6929-authentic-strategy-episode-fixture",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6930,
++        "order": 8,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6930-selective-episodic-strategy-memory",
++        "title": "Selective episodic strategy memory",
++        "ungated_tail": false
++      },
++      "order": 8,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6931_independent_strategy_memory_audit.json",
++        "gates": [
++          {
++            "artifact_field": "episodic_strategy_memory_run_complete_score",
++            "op": "==",
++            "upstream": "exp6930-selective-episodic-strategy-memory",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6931,
++        "order": 9,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6931-independent-strategy-memory-audit",
++        "title": "Independent cold strategy-memory audit",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6931_independent_strategy_memory_audit.json",
++        "gates": [
++          {
++            "artifact_field": "episodic_strategy_memory_run_complete_score",
++            "op": "==",
++            "upstream": "exp6930-selective-episodic-strategy-memory",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6931,
++        "order": 9,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6931-independent-strategy-memory-audit",
++        "title": "Independent cold strategy-memory audit",
++        "ungated_tail": false
++      },
++      "order": 9,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6932_vera_verified_headroom_fixture.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6932,
++        "order": 10,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6932-vera-verified-headroom-fixture",
++        "title": "VeRA-style verified headroom fixture",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6932_vera_verified_headroom_fixture.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6932,
++        "order": 10,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6932-vera-verified-headroom-fixture",
++        "title": "VeRA-style verified headroom fixture",
++        "ungated_tail": false
++      },
++      "order": 10,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6933_sota_headroom_admission_canary.json",
++        "gates": [
++          {
++            "artifact_field": "verified_variant_fixture_ready_score",
++            "op": "==",
++            "upstream": "exp6932-vera-verified-headroom-fixture",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": true,
++        "number": 6933,
++        "order": 11,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6933-sota-headroom-admission-canary",
++        "title": "Three-family direct headroom admission canary",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6933_sota_headroom_admission_canary.json",
++        "gates": [
++          {
++            "artifact_field": "verified_variant_fixture_ready_score",
++            "op": "==",
++            "upstream": "exp6932-vera-verified-headroom-fixture",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": true,
++        "number": 6933,
++        "order": 11,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6933-sota-headroom-admission-canary",
++        "title": "Three-family direct headroom admission canary",
++        "ungated_tail": false
++      },
++      "order": 11,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6934_reward_guided_candidate_smc.json",
++        "gates": [
++          {
++            "artifact_field": "headroom_admission_ready_score",
++            "op": "==",
++            "upstream": "exp6933-sota-headroom-admission-canary",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": true,
++        "number": 6934,
++        "order": 12,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6934-reward-guided-candidate-smc",
++        "title": "Reward-guided complete-candidate SMC",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6934_reward_guided_candidate_smc.json",
++        "gates": [
++          {
++            "artifact_field": "headroom_admission_ready_score",
++            "op": "==",
++            "upstream": "exp6933-sota-headroom-admission-canary",
++            "value": 1
++          }
++        ],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": true,
++        "number": 6934,
++        "order": 12,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6934-reward-guided-candidate-smc",
++        "title": "Reward-guided complete-candidate SMC",
++        "ungated_tail": false
++      },
++      "order": 12,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6935_arc_postfix_induction_audit.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": true,
++        "number": 6935,
++        "order": 13,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6935-arc-postfix-induction-audit",
++        "title": "ARC post-fix induction reachability and held-out accuracy",
++        "ungated_tail": false
++      },
++      "expected": {
++        "deliverable": "results/experiment_6935_arc_postfix_induction_audit.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": true,
++        "number": 6935,
++        "order": 13,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6935-arc-postfix-induction-audit",
++        "title": "ARC post-fix induction reachability and held-out accuracy",
++        "ungated_tail": false
++      },
++      "order": 13,
++      "passed": false,
++      "yaml": null
++    },
++    {
++      "checks": {
++        "design_gate_text_exact": true,
++        "document_matches_expected": true,
++        "document_yaml_equal": false,
++        "yaml_matches_expected": false
++      },
++      "document": {
++        "deliverable": "results/experiment_6936_v606_independent_capstone.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6936,
++        "order": 14,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6936-v606-independent-capstone",
++        "title": "V606 independent capstone",
++        "ungated_tail": true
++      },
++      "expected": {
++        "deliverable": "results/experiment_6936_v606_independent_capstone.json",
++        "gates": [],
++        "infrastructure_slot": false,
++        "milestone": "2026.09.606",
++        "model_bearing": false,
++        "number": 6936,
++        "order": 14,
++        "sota_ingestion_slot": false,
++        "task_id": "exp6936-v606-independent-capstone",
++        "title": "V606 independent capstone",
++        "ungated_tail": true
++      },
++      "order": 14,
++      "passed": false,
++      "yaml": null
++    }
++  ],
++  "duration_s": 14.804851,
++  "experiment_id": 6923,
++  "experiment_range": [
++    6923,
++    6926
++  ],
++  "field_principles": {
++    "document_task_rows": "Document rows preserve the design parse independently.",
++    "document_yaml_parity_rows": "Parity rows expose task identity and role drift.",
++    "duration_s": "Measured wall time proves that the deterministic audit ran.",
++    "experiment_id": "The fixed identity binds this receipt to Exp6923.",
++    "experiment_range": "The observed range exposes gaps and reused task numbers.",
++    "field_principles": "A reason for each field makes the receipt understandable.",
++    "gate_check_summary": "Expected and observed values make each block actionable.",
++    "gate_contract_rows": "Gate rows reject aliases and undeclared producer fields.",
++    "honest_verdict": "The terminal prefix lets the conductor classify completion.",
++    "independent_root_rows": "Root rows prevent advisory-to-science gate coupling.",
++    "inference_substrate": "The no-LLM value keeps metadata separate from science.",
++    "infrastructure_slot_rows": "Slot rows reserve exactly two infrastructure tasks.",
++    "lifecycle_resolution_rows": "Lifecycle rows prove which single roadmap was selected.",
++    "model_contract_rows": "Model rows preserve current vendor and GGUF policy.",
++    "preconditions_checked": "Explicit input checks prevent a silent lifecycle fallback.",
++    "prior_failure_contract_rows": "Prior rows prove complete retirement mechanics.",
++    "prompt_ending_rows": "Prompt rows preserve sections, command, and final sentence.",
++    "random_seed": "The fixed seed states that this audit has no hidden randomness.",
++    "reproducibility_checksum": "A content hash detects silent receipt changes.",
++    "required_field_rows": "Field rows prove that each prompt declares common evidence.",
++    "routing_audit_update_rows": "Routing rows prove the standalone Codex rule is current.",
++    "rows": "One row per hard check prevents hidden omissions.",
++    "run_date": "The date separates this audit from later roadmap states.",
++    "schema": "A versioned shape lets later audits reject incompatible receipts.",
++    "science_claim_approved": "False prevents metadata readiness from promoting a claim.",
++    "sota_ingestion_slot_rows": "The SOTA row reserves exactly one ingestion task.",
++    "source_artifact_hashes": "Hashes bind findings to the source bytes.",
++    "status": "A terminal status distinguishes ready and blocked audits.",
++    "task_count": "The observed count exposes partial activation.",
++    "ungated_tail_rows": "The tail row keeps the capstone runnable after branch nulls.",
++    "v606_execution_contract_ready_score": "This advisory score cannot approve science.",
++    "verdict_class": "The closed class keeps the evidence boundary machine-readable.",
++    "verifier_is_oracle": "False prevents structural checks from certifying science.",
++    "yaml_task_rows": "YAML rows preserve the execution parse independently."
++  },
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "preconditions",
++        "expected": "all required inputs and one lifecycle roadmap",
++        "observed": {
++          "checks": [
++            {
++              "check": "required_inputs",
++              "expected": [],
++              "observed": [],
++              "passed": true
++            },
++            {
++              "check": "lifecycle_resolution",
++              "expected": "exactly one V606 roadmap",
++              "observed": {
++                "selected_path": "research-roadmap.yaml",
++                "state": "activated"
++              },
++              "passed": true
++            }
++          ],
++          "expected": "all checks pass",
++          "failed_check": null,
++          "failed_checks": [],
++          "observed": "all checks pass",
++          "passed": true
++        },
++        "passed": true
++      },
++      {
++        "check": "document_primary_contract",
++        "expected": {
++          "milestone": "2026.09.606",
++          "numbers": [
++            6923,
++            6924,
++            6925,
++            6926,
++            6927,
++            6928,
++            6929,
++            6930,
++            6931,
++            6932,
++            6933,
++            6934,
++            6935,
++            6936
++          ],
++          "task_count": 14
++        },
++        "observed": {
++          "milestone": "2026.09.606",
++          "numbers": [
++            6923,
++            6924,
++            6925,
++            6926,
++            6927,
++            6928,
++            6929,
++            6930,
++            6931,
++            6932,
++            6933,
++            6934,
++            6935,
++            6936
++          ],
++          "task_count": 14
++        },
++        "passed": true
++      },
++      {
++        "check": "yaml_executable_contract",
++        "expected": {
++          "milestone": "2026.09.606",
++          "numbers": [
++            6923,
++            6924,
++            6925,
++            6926,
++            6927,
++            6928,
++            6929,
++            6930,
++            6931,
++            6932,
++            6933,
++            6934,
++            6935,
++            6936
++          ],
++          "task_count": 14
++        },
++        "observed": {
++          "milestone": "2026.09.606",
++          "numbers": [
++            6923,
++            6924,
++            6925,
++            6926
++          ],
++          "task_count": 4
++        },
++        "passed": false
++      },
++      {
++        "check": "document_yaml_task_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "prompt_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "required_field_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "gate_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "prior_failure_contract",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "model_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "infrastructure_slot_contract",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "sota_ingestion_slot_contract",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "independent_root_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "ungated_tail_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "routing_audit_update_contract",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "roadmap_schema_validation",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "prior_failure_validation",
++        "expected": [],
++        "observed": [
++          "Task 'exp6924-task-runtime-receipt-adoption' ('Task-owned runtime receipt adoption') matches archived experiments ['exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
++        ],
++        "passed": false
++      },
++      {
++        "check": "gate_audit_validation",
++        "expected": true,
++        "observed": {
++          "audit_script_written": true,
++          "failure_details": [
++            "PRIOR_FAILURES_COVERAGE exp6924-task-runtime-receipt-adoption: title matches prior tasks ['exp5920-prospective-event-stream-admission', 'exp5920-prospective-event-stream-admission', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but prior_failures is missing or empty",
++            "PRIOR_FAILURES_COVERAGE exp6925-v606-sota-ingestion: title matches prior tasks ['exp6483-v559-latent-energy-sota-ingestion', 'exp6555-proof-preserving-constraint-saturation-fixture', 'exp6574-joint-sufficiency-method-contract', 'exp6580-v572-source-and-joint-method-protocol', 'exp6587-v573-constraint-first-method-contract'] but prior_failures is missing or empty"
++          ],
++          "honest_verdict": "prior_failures_gaps_found",
++          "n_gate_field_cross_ref_failures": 0,
++          "n_gate_upstream_checks": 0,
++          "n_gate_upstream_failures": 0,
++          "n_model_agent_coherence_failures": 0,
++          "n_prior_failures_checks": 4,
++          "n_prior_failures_missing": 2,
++          "n_tasks_audited": 4,
++          "roadmap_gate_audit_passed": false
++        },
++        "passed": false
++      },
++      {
++        "check": "exclusion_manifest_validation",
++        "expected": "exit 0",
++        "observed": {
++          "exit_code": 0,
++          "output": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
++        },
++        "passed": true
++      },
++      {
++        "check": "v606_execution_contract_ready_score",
++        "expected": 0,
++        "observed": 0,
++        "passed": true
++      }
++    ],
++    "expected": {
++      "milestone": "2026.09.606",
++      "numbers": [
++        6923,
++        6924,
++        6925,
++        6926,
++        6927,
++        6928,
++        6929,
++        6930,
++        6931,
++        6932,
++        6933,
++        6934,
++        6935,
++        6936
++      ],
++      "task_count": 14
++    },
++    "failed_check": "yaml_executable_contract",
++    "failed_checks": [
++      {
++        "check": "yaml_executable_contract",
++        "expected": {
++          "milestone": "2026.09.606",
++          "numbers": [
++            6923,
++            6924,
++            6925,
++            6926,
++            6927,
++            6928,
++            6929,
++            6930,
++            6931,
++            6932,
++            6933,
++            6934,
++            6935,
++            6936
++          ],
++          "task_count": 14
++        },
++        "observed": {
++          "milestone": "2026.09.606",
++          "numbers": [
++            6923,
++            6924,
++            6925,
++            6926
++          ],
++          "task_count": 4
++        },
++        "passed": false
++      },
++      {
++        "check": "document_yaml_task_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "prompt_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "required_field_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "gate_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "model_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "independent_root_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "ungated_tail_contract",
++        "expected": true,
++        "observed": false,
++        "passed": false
++      },
++      {
++        "check": "prior_failure_validation",
++        "expected": [],
++        "observed": [
++          "Task 'exp6924-task-runtime-receipt-adoption' ('Task-owned runtime receipt adoption') matches archived experiments ['exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
++        ],
++        "passed": false
++      },
++      {
++        "check": "gate_audit_validation",
++        "expected": true,
++        "observed": {
++          "audit_script_written": true,
++          "failure_details": [
++            "PRIOR_FAILURES_COVERAGE exp6924-task-runtime-receipt-adoption: title matches prior tasks ['exp5920-prospective-event-stream-admission', 'exp5920-prospective-event-stream-admission', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but prior_failures is missing or empty",
++            "PRIOR_FAILURES_COVERAGE exp6925-v606-sota-ingestion: title matches prior tasks ['exp6483-v559-latent-energy-sota-ingestion', 'exp6555-proof-preserving-constraint-saturation-fixture', 'exp6574-joint-sufficiency-method-contract', 'exp6580-v572-source-and-joint-method-protocol', 'exp6587-v573-constraint-first-method-contract'] but prior_failures is missing or empty"
++          ],
++          "honest_verdict": "prior_failures_gaps_found",
++          "n_gate_field_cross_ref_failures": 0,
++          "n_gate_upstream_checks": 0,
++          "n_gate_upstream_failures": 0,
++          "n_model_agent_coherence_failures": 0,
++          "n_prior_failures_checks": 4,
++          "n_prior_failures_missing": 2,
++          "n_tasks_audited": 4,
++          "roadmap_gate_audit_passed": false
++        },
++        "passed": false
++      }
++    ],
++    "observed": {
++      "milestone": "2026.09.606",
++      "numbers": [
++        6923,
++        6924,
++        6925,
++        6926
++      ],
++      "task_count": 4
++    },
++    "passed": false
++  },
++  "gate_contract_rows": [
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": true
++      },
++      "document": [],
++      "downstream_number": 6923,
++      "expected": [],
++      "gate_checks": [],
++      "observed": [],
++      "passed": true,
++      "task_id": "exp6923-v606-lifecycle-evidence-contract"
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": true
++      },
++      "document": [],
++      "downstream_number": 6924,
++      "expected": [],
++      "gate_checks": [],
++      "observed": [],
++      "passed": true,
++      "task_id": "exp6924-task-runtime-receipt-adoption"
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": true
++      },
++      "document": [],
++      "downstream_number": 6925,
++      "expected": [],
++      "gate_checks": [],
++      "observed": [],
++      "passed": true,
++      "task_id": "exp6925-v606-sota-ingestion"
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": true
++      },
++      "document": [],
++      "downstream_number": 6926,
++      "expected": [],
++      "gate_checks": [],
++      "observed": [],
++      "passed": true,
++      "task_id": "exp6926-span-first-relation-fixture"
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": false
++      },
++      "document": [
++        {
++          "artifact_field": "span_relation_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6926-span-first-relation-fixture",
++          "value": 1
++        }
++      ],
++      "downstream_number": 6927,
++      "expected": [
++        {
++          "artifact_field": "span_relation_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6926-span-first-relation-fixture",
++          "value": 1
++        }
++      ],
++      "gate_checks": [],
++      "observed": [],
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": false
++      },
++      "document": [
++        {
++          "artifact_field": "span_first_acquisition_complete_score",
++          "op": "==",
++          "upstream": "exp6927-sota-span-first-relation-acquisition",
++          "value": 1
++        }
++      ],
++      "downstream_number": 6928,
++      "expected": [
++        {
++          "artifact_field": "span_first_acquisition_complete_score",
++          "op": "==",
++          "upstream": "exp6927-sota-span-first-relation-acquisition",
++          "value": 1
++        }
++      ],
++      "gate_checks": [],
++      "observed": [],
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": true
++      },
++      "document": [],
++      "downstream_number": 6929,
++      "expected": [],
++      "gate_checks": [],
++      "observed": [],
++      "passed": true,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": false
++      },
++      "document": [
++        {
++          "artifact_field": "strategy_episode_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6929-authentic-strategy-episode-fixture",
++          "value": 1
++        }
++      ],
++      "downstream_number": 6930,
++      "expected": [
++        {
++          "artifact_field": "strategy_episode_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6929-authentic-strategy-episode-fixture",
++          "value": 1
++        }
++      ],
++      "gate_checks": [],
++      "observed": [],
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": false
++      },
++      "document": [
++        {
++          "artifact_field": "episodic_strategy_memory_run_complete_score",
++          "op": "==",
++          "upstream": "exp6930-selective-episodic-strategy-memory",
++          "value": 1
++        }
++      ],
++      "downstream_number": 6931,
++      "expected": [
++        {
++          "artifact_field": "episodic_strategy_memory_run_complete_score",
++          "op": "==",
++          "upstream": "exp6930-selective-episodic-strategy-memory",
++          "value": 1
++        }
++      ],
++      "gate_checks": [],
++      "observed": [],
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": true
++      },
++      "document": [],
++      "downstream_number": 6932,
++      "expected": [],
++      "gate_checks": [],
++      "observed": [],
++      "passed": true,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": false
++      },
++      "document": [
++        {
++          "artifact_field": "verified_variant_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6932-vera-verified-headroom-fixture",
++          "value": 1
++        }
++      ],
++      "downstream_number": 6933,
++      "expected": [
++        {
++          "artifact_field": "verified_variant_fixture_ready_score",
++          "op": "==",
++          "upstream": "exp6932-vera-verified-headroom-fixture",
++          "value": 1
++        }
++      ],
++      "gate_checks": [],
++      "observed": [],
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": false
++      },
++      "document": [
++        {
++          "artifact_field": "headroom_admission_ready_score",
++          "op": "==",
++          "upstream": "exp6933-sota-headroom-admission-canary",
++          "value": 1
++        }
++      ],
++      "downstream_number": 6934,
++      "expected": [
++        {
++          "artifact_field": "headroom_admission_ready_score",
++          "op": "==",
++          "upstream": "exp6933-sota-headroom-admission-canary",
++          "value": 1
++        }
++      ],
++      "gate_checks": [],
++      "observed": [],
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": true
++      },
++      "document": [],
++      "downstream_number": 6935,
++      "expected": [],
++      "gate_checks": [],
++      "observed": [],
++      "passed": true,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "all_gate_references_valid": true,
++        "document_gate_matches_expected": true,
++        "yaml_gate_matches_expected": true
++      },
++      "document": [],
++      "downstream_number": 6936,
++      "expected": [],
++      "gate_checks": [],
++      "observed": [],
++      "passed": true,
++      "task_id": null
++    }
++  ],
++  "honest_verdict": "complete_blocked_v606_lifecycle_evidence_contract",
++  "independent_root_rows": [
++    {
++      "checks": {
++        "advisory_has_no_consumers": true,
++        "document_ungated": true,
++        "yaml_ungated": true
++      },
++      "document_gates": [],
++      "number": 6923,
++      "passed": true,
++      "yaml_consumers": [],
++      "yaml_gates": []
++    },
++    {
++      "checks": {
++        "advisory_has_no_consumers": true,
++        "document_ungated": true,
++        "yaml_ungated": true
++      },
++      "document_gates": [],
++      "number": 6924,
++      "passed": true,
++      "yaml_consumers": [],
++      "yaml_gates": []
++    },
++    {
++      "checks": {
++        "advisory_has_no_consumers": true,
++        "document_ungated": true,
++        "yaml_ungated": true
++      },
++      "document_gates": [],
++      "number": 6925,
++      "passed": true,
++      "yaml_consumers": [],
++      "yaml_gates": []
++    },
++    {
++      "checks": {
++        "advisory_has_no_consumers": true,
++        "document_ungated": true,
++        "yaml_ungated": true
++      },
++      "document_gates": [],
++      "number": 6926,
++      "passed": true,
++      "yaml_consumers": [],
++      "yaml_gates": []
++    },
++    {
++      "checks": {
++        "advisory_has_no_consumers": true,
++        "document_ungated": true,
++        "yaml_ungated": false
++      },
++      "document_gates": [],
++      "number": 6929,
++      "passed": false,
++      "yaml_consumers": [],
++      "yaml_gates": null
++    },
++    {
++      "checks": {
++        "advisory_has_no_consumers": true,
++        "document_ungated": true,
++        "yaml_ungated": false
++      },
++      "document_gates": [],
++      "number": 6932,
++      "passed": false,
++      "yaml_consumers": [],
++      "yaml_gates": null
++    },
++    {
++      "checks": {
++        "advisory_has_no_consumers": true,
++        "document_ungated": true,
++        "yaml_ungated": false
++      },
++      "document_gates": [],
++      "number": 6935,
++      "passed": false,
++      "yaml_consumers": [],
++      "yaml_gates": null
++    },
++    {
++      "checks": {
++        "advisory_has_no_consumers": true,
++        "document_ungated": true,
++        "yaml_ungated": false
++      },
++      "document_gates": [],
++      "number": 6936,
++      "passed": false,
++      "yaml_consumers": [],
++      "yaml_gates": null
++    }
++  ],
++  "inference_substrate": "deterministic_lifecycle_manifest_and_evidence_audit_no_llm",
++  "infrastructure_slot_rows": [
++    {
++      "checks": {
++        "document_slot": true,
++        "exact_slot_set": true,
++        "yaml_slot": true
++      },
++      "expected_slots": [
++        6923,
++        6924
++      ],
++      "number": 6923,
++      "observed_slots": [
++        6923,
++        6924
++      ],
++      "passed": true
++    },
++    {
++      "checks": {
++        "document_slot": true,
++        "exact_slot_set": true,
++        "yaml_slot": true
++      },
++      "expected_slots": [
++        6923,
++        6924
++      ],
++      "number": 6924,
++      "observed_slots": [
++        6923,
++        6924
++      ],
++      "passed": true
++    }
++  ],
++  "lifecycle_resolution_rows": [
++    {
++      "claims_v606": true,
++      "exists": true,
++      "lifecycle_state": "activated",
++      "milestone": "2026.09.606",
++      "path": "research-roadmap.yaml",
++      "read_error": null,
++      "role": "active",
++      "selected": true
++    },
++    {
++      "claims_v606": false,
++      "exists": false,
++      "lifecycle_state": "activated",
++      "milestone": null,
++      "path": "research-roadmap-next.yaml",
++      "read_error": "missing",
++      "role": "next",
++      "selected": false
++    }
++  ],
++  "model_contract_rows": [
++    {
++      "agent_type": "claude",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": true,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "opus",
++      "number": 6923,
++      "passed": true,
++      "task_id": "exp6923-v606-lifecycle-evidence-contract"
++    },
++    {
++      "agent_type": "codex",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": true,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "gpt-5.6-sol",
++      "number": 6924,
++      "passed": true,
++      "task_id": "exp6924-task-runtime-receipt-adoption"
++    },
++    {
++      "agent_type": "claude",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": true,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "sonnet",
++      "number": 6925,
++      "passed": true,
++      "task_id": "exp6925-v606-sota-ingestion"
++    },
++    {
++      "agent_type": "codex",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": true,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "gpt-5.6-sol",
++      "number": 6926,
++      "passed": true,
++      "task_id": "exp6926-span-first-relation-fixture"
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": false,
++        "autotokenizer_gguf_forbidden": false,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": false,
++        "model_specs_declared": false,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": true,
++      "model": "",
++      "number": 6927,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "",
++      "number": 6928,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "",
++      "number": 6929,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "",
++      "number": 6930,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "",
++      "number": 6931,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "",
++      "number": 6932,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": false,
++        "autotokenizer_gguf_forbidden": false,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": false,
++        "model_specs_declared": false,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": true,
++      "model": "",
++      "number": 6933,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": false,
++        "autotokenizer_gguf_forbidden": false,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": false,
++        "model_specs_declared": false,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": true,
++      "model": "",
++      "number": 6934,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": false,
++        "autotokenizer_gguf_forbidden": false,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": false,
++        "model_specs_declared": false,
++        "production_model_declared": false
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": true,
++      "model": "",
++      "number": 6935,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "agent_type": "",
++      "checks": {
++        "all_required_model_ids": true,
++        "autotokenizer_gguf_forbidden": true,
++        "current_agent_model_rule": false,
++        "gguf_native_tokenizer": true,
++        "model_specs_declared": true,
++        "production_model_declared": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "forbidden_agent": "gemini",
++      "llm_task": false,
++      "model": "",
++      "number": 6936,
++      "passed": false,
++      "task_id": null
++    }
++  ],
++  "preconditions_checked": {
++    "checks": [
++      {
++        "check": "required_inputs",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "lifecycle_resolution",
++        "expected": "exactly one V606 roadmap",
++        "observed": {
++          "selected_path": "research-roadmap.yaml",
++          "state": "activated"
++        },
++        "passed": true
++      }
++    ],
++    "expected": "all checks pass",
++    "failed_check": null,
++    "failed_checks": [],
++    "observed": "all checks pass",
++    "passed": true
++  },
++  "prior_failure_contract_rows": [
++    {
++      "addressed_by": "The V606 audit resolves pre-staged versus activated lifecycle state explicitly and updates the stale standalone Codex model rule to the operator-required gpt-5.6-sol.",
++      "declared_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
++      "experiment_id": "exp6911-v605-document-yaml-evidence-contract",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_source": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
++      "primary_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6923-v606-lifecycle-evidence-contract"
++    },
++    {
++      "addressed_by": "This attempt replaces free-form relation extraction with exact verbatim span copying before direction assignment and validates byte offsets before semantics.",
++      "declared_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
++      "experiment_id": "exp6915-sota-model-relation-event-bank",
++      "failed_subfields": [],
++      "passed": true,
++      "primary_source": "results/experiment_6915_qualified_relation_event_bank.json",
++      "primary_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
++      "prior_index": 0,
++      "retire_if_same_verdict": true,
++      "task_id": "exp6926-span-first-relation-fixture"
++    }
++  ],
++  "prompt_ending_rows": [
++    {
++      "checks": {
++        "exact_final_sentence": true,
++        "exact_run_command": true,
++        "one_run_command": true,
++        "required_sections": true,
++        "run_command_is_penultimate": true
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py --date {date}",
++      "number": 6923,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_commands": [
++        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py --date {date}"
++      ],
++      "passed": true,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6923-v606-lifecycle-evidence-contract"
++    },
++    {
++      "checks": {
++        "exact_final_sentence": true,
++        "exact_run_command": true,
++        "one_run_command": true,
++        "required_sections": true,
++        "run_command_is_penultimate": true
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py --date {date}",
++      "number": 6924,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_commands": [
++        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py --date {date}"
++      ],
++      "passed": true,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6924-task-runtime-receipt-adoption"
++    },
++    {
++      "checks": {
++        "exact_final_sentence": true,
++        "exact_run_command": true,
++        "one_run_command": true,
++        "required_sections": true,
++        "run_command_is_penultimate": true
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6925_v606_sota_ingestion.py --date {date}",
++      "number": 6925,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_commands": [
++        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6925_v606_sota_ingestion.py --date {date}"
++      ],
++      "passed": true,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6925-v606-sota-ingestion"
++    },
++    {
++      "checks": {
++        "exact_final_sentence": true,
++        "exact_run_command": true,
++        "one_run_command": true,
++        "required_sections": true,
++        "run_command_is_penultimate": true
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6926_span_first_relation_fixture.py --date {date}",
++      "number": 6926,
++      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "observed_run_commands": [
++        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6926_span_first_relation_fixture.py --date {date}"
++      ],
++      "passed": true,
++      "required_sections": {
++        "CONCRETE STEPS:": true,
++        "CONTEXT:": true,
++        "EXISTING CODE TO READ FIRST:": true,
++        "TASK:": true
++      },
++      "task_id": "exp6926-span-first-relation-fixture"
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6927_sota_span_first_relation_acquisition.py --date {date}",
++      "number": 6927,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6928_independent_span_relation_qualification.py --date {date}",
++      "number": 6928,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6929_authentic_strategy_episode_fixture.py --date {date}",
++      "number": 6929,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6930_selective_episodic_strategy_memory.py --date {date}",
++      "number": 6930,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6931_independent_strategy_memory_audit.py --date {date}",
++      "number": 6931,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6932_vera_verified_headroom_fixture.py --date {date}",
++      "number": 6932,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6933_sota_headroom_admission_canary.py --date {date}",
++      "number": 6933,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6934_reward_guided_candidate_smc.py --date {date}",
++      "number": 6934,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6935_arc_postfix_induction_audit.py --date {date}",
++      "number": 6935,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    },
++    {
++      "checks": {
++        "exact_final_sentence": false,
++        "exact_run_command": false,
++        "one_run_command": false,
++        "required_sections": false,
++        "run_command_is_penultimate": false
++      },
++      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
++      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6936_v606_independent_capstone.py --date {date}",
++      "number": 6936,
++      "observed_final_sentence": null,
++      "observed_run_commands": [],
++      "passed": false,
++      "required_sections": {
++        "CONCRETE STEPS:": false,
++        "CONTEXT:": false,
++        "EXISTING CODE TO READ FIRST:": false,
++        "TASK:": false
++      },
++      "task_id": null
++    }
++  ],
++  "random_seed": 6923,
++  "reproducibility_checksum": "sha256:c741607db5941597de25427d30e2f9a25686e51cd4b10a67a2623f0fb90cd9df",
++  "required_field_rows": [
++    {
++      "checks": {
++        "common_fields_present": true,
++        "principle_rule_present": true,
++        "required_block_present": true
++      },
++      "declared_fields": [
++        "and",
++        "any",
++        "blocked",
++        "check",
++        "circular_positive",
++        "complete_",
++        "deterministic_lifecycle_manifest_and_evidence_audit_no_llm",
++        "disqualified",
++        "document_task_rows",
++        "document_yaml_parity_rows",
++        "duration_s",
++        "expected",
++        "experiment_range",
++        "failed",
++        "false",
++        "field",
++        "field_principles",
++        "for",
++        "gate_check_summary",
++        "gate_contract_rows",
++        "honest_verdict",
++        "independent_root_rows",
++        "inference_substrate",
++        "infrastructure_slot_rows",
++        "lifecycle_resolution_rows",
++        "model_contract_rows",
++        "null",
++        "observed",
++        "one",
++        "partial",
++        "per",
++        "positive",
++        "preconditions_checked",
++        "prefixed",
++        "principle",
++        "prior_failure_contract_rows",
++        "prompt_ending_rows",
++        "random_seed",
++        "reproducibility_checksum",
++        "required",
++        "required_field_rows",
++        "routing_audit_update_rows",
++        "rows",
++        "sota_ingestion_slot_rows",
++        "source_artifact_hashes",
++        "task_count",
++        "terminal",
++        "ungated_tail_rows",
++        "v606_execution_contract_ready_score",
++        "value",
++        "verdict",
++        "verdict_class",
++        "verifier_is_oracle",
++        "with",
++        "yaml_task_rows"
++      ],
++      "missing_common_fields": [],
++      "number": 6923,
++      "passed": true,
++      "task_id": "exp6923-v606-lifecycle-evidence-contract"
++    },
++    {
++      "checks": {
++        "common_fields_present": true,
++        "principle_rule_present": true,
++        "required_block_present": true
++      },
++      "declared_fields": [
++        "adoption_api_rows",
++        "and",
++        "any",
++        "blocked",
++        "check",
++        "circular_positive",
++        "complete_",
++        "cpu_fixture_rows",
++        "deterministic_runtime_receipt_fixture_no_llm",
++        "disqualified",
++        "duration_s",
++        "expected",
++        "failed",
++        "false",
++        "field",
++        "field_principles",
++        "for",
++        "forged_receipt_rejection_rows",
++        "fresh_process_recheck_rows",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "model_concurrency_rows",
++        "null",
++        "observed",
++        "one",
++        "optional_gpu_fixture_rows",
++        "partial",
++        "per",
++        "positive",
++        "preconditions_checked",
++        "prefixed",
++        "principle",
++        "process_lineage_rows",
++        "random_seed",
++        "reproducibility_checksum",
++        "required",
++        "rows",
++        "runner_selection_rows",
++        "server_lifecycle_rows",
++        "source_artifact_hashes",
++        "task_gpu_telemetry_rows",
++        "task_phase_timing_rows",
++        "task_runtime_receipt_adoption_ready_score",
++        "teardown_rows",
++        "terminal",
++        "value",
++        "verdict",
++        "verdict_class",
++        "verifier_is_oracle",
++        "with"
++      ],
++      "missing_common_fields": [],
++      "number": 6924,
++      "passed": true,
++      "task_id": "exp6924-task-runtime-receipt-adoption"
++    },
++    {
++      "checks": {
++        "common_fields_present": true,
++        "principle_rule_present": true,
++        "required_block_present": true
++      },
++      "declared_fields": [
++        "accepted_finding_rows",
++        "and",
++        "any",
++        "blocked",
++        "bounded_primary_source_web_research_no_model_inference",
++        "candidate_rows",
++        "check",
++        "circular_positive",
++        "citation_edge_rows",
++        "compatibility_rows",
++        "complete_",
++        "disqualified",
++        "duration_s",
++        "expected",
++        "failed",
++        "false",
++        "field",
++        "field_principles",
++        "for",
++        "gate_check_summary",
++        "honest_verdict",
++        "implementation_rows",
++        "inference_substrate",
++        "ledger_append_rows",
++        "null",
++        "observed",
++        "one",
++        "partial",
++        "per",
++        "positive",
++        "preconditions_checked",
++        "prefixed",
++        "principle",
++        "query_rows",
++        "random_seed",
++        "rate_limit_rows",
++        "rejected_finding_rows",
++        "reproducibility_checksum",
++        "required",
++        "rows",
++        "source_artifact_hashes",
++        "source_family_rows",
++        "terminal",
++        "v606_sota_ingestion_complete_score",
++        "v607_candidate_rows",
++        "value",
++        "verdict",
++        "verdict_class",
++        "verifier_is_oracle",
++        "with"
++      ],
++      "missing_common_fields": [],
++      "number": 6925,
++      "passed": true,
++      "task_id": "exp6925-v606-sota-ingestion"
++    },
++    {
++      "checks": {
++        "common_fields_present": true,
++        "principle_rule_present": true,
++        "required_block_present": true
++      },
++      "declared_fields": [
++        "ambiguity_rows",
++        "and",
++        "any",
++        "asp_effect_rows",
++        "blocked",
++        "check",
++        "circular_positive",
++        "complete_",
++        "deterministic_cpu_span_first_fixture_no_llm",
++        "disqualified",
++        "duration_s",
++        "expected",
++        "failed",
++        "field",
++        "field_principles",
++        "fixture_rows",
++        "for",
++        "gate_check_summary",
++        "heldout_hash_manifest",
++        "honest_verdict",
++        "inference_substrate",
++        "isomorphism_rows",
++        "label_balance_rows",
++        "mutation_rows",
++        "null",
++        "observed",
++        "one",
++        "parser_rejection_rows",
++        "partial",
++        "partition_rows",
++        "per",
++        "preconditions_checked",
++        "prefixed",
++        "principle",
++        "protocol_rows",
++        "random_seed",
++        "relation_family_rows",
++        "reproducibility_checksum",
++        "required",
++        "rows",
++        "source_artifact_hashes",
++        "span_relation_fixture_ready_score",
++        "terminal",
++        "true",
++        "utf8_offset_rows",
++        "value",
++        "verdict",
++        "verdict_class",
++        "verifier_is_oracle",
++        "with"
++      ],
++      "missing_common_fields": [],
++      "number": 6926,
++      "passed": true,
++      "task_id": "exp6926-span-first-relation-fixture"
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6927,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6928,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6929,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6930,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6931,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6932,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6933,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6934,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6935,
++      "passed": false,
++      "task_id": null
++    },
++    {
++      "checks": {
++        "common_fields_present": false,
++        "principle_rule_present": false,
++        "required_block_present": false
++      },
++      "declared_fields": [],
++      "missing_common_fields": [
++        "duration_s",
++        "field_principles",
++        "gate_check_summary",
++        "honest_verdict",
++        "inference_substrate",
++        "preconditions_checked",
++        "random_seed",
++        "reproducibility_checksum",
++        "rows",
++        "source_artifact_hashes",
++        "verdict_class",
++        "verifier_is_oracle"
++      ],
++      "number": 6936,
++      "passed": false,
++      "task_id": null
++    }
++  ],
++  "routing_audit_update_rows": [
++    {
++      "checks": {
++        "claude_vendor_check_retained": true,
++        "codex_model_updated": true,
++        "gemini_still_forbidden": true
++      },
++      "expected_codex_model": "gpt-5.6-sol",
++      "expected_forbidden_agent": "gemini",
++      "observed_codex_model": "gpt-5.6-sol",
++      "observed_forbidden_agent": "gemini",
++      "passed": true
++    }
++  ],
++  "rows": [
++    {
++      "check": "preconditions",
++      "expected": "all required inputs and one lifecycle roadmap",
++      "observed": {
++        "checks": [
++          {
++            "check": "required_inputs",
++            "expected": [],
++            "observed": [],
++            "passed": true
++          },
++          {
++            "check": "lifecycle_resolution",
++            "expected": "exactly one V606 roadmap",
++            "observed": {
++              "selected_path": "research-roadmap.yaml",
++              "state": "activated"
++            },
++            "passed": true
++          }
++        ],
++        "expected": "all checks pass",
++        "failed_check": null,
++        "failed_checks": [],
++        "observed": "all checks pass",
++        "passed": true
++      },
++      "passed": true
++    },
++    {
++      "check": "document_primary_contract",
++      "expected": {
++        "milestone": "2026.09.606",
++        "numbers": [
++          6923,
++          6924,
++          6925,
++          6926,
++          6927,
++          6928,
++          6929,
++          6930,
++          6931,
++          6932,
++          6933,
++          6934,
++          6935,
++          6936
++        ],
++        "task_count": 14
++      },
++      "observed": {
++        "milestone": "2026.09.606",
++        "numbers": [
++          6923,
++          6924,
++          6925,
++          6926,
++          6927,
++          6928,
++          6929,
++          6930,
++          6931,
++          6932,
++          6933,
++          6934,
++          6935,
++          6936
++        ],
++        "task_count": 14
++      },
++      "passed": true
++    },
++    {
++      "check": "yaml_executable_contract",
++      "expected": {
++        "milestone": "2026.09.606",
++        "numbers": [
++          6923,
++          6924,
++          6925,
++          6926,
++          6927,
++          6928,
++          6929,
++          6930,
++          6931,
++          6932,
++          6933,
++          6934,
++          6935,
++          6936
++        ],
++        "task_count": 14
++      },
++      "observed": {
++        "milestone": "2026.09.606",
++        "numbers": [
++          6923,
++          6924,
++          6925,
++          6926
++        ],
++        "task_count": 4
++      },
++      "passed": false
++    },
++    {
++      "check": "document_yaml_task_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false
++    },
++    {
++      "check": "prompt_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false
++    },
++    {
++      "check": "required_field_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false
++    },
++    {
++      "check": "gate_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false
++    },
++    {
++      "check": "prior_failure_contract",
++      "expected": true,
++      "observed": true,
++      "passed": true
++    },
++    {
++      "check": "model_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false
++    },
++    {
++      "check": "infrastructure_slot_contract",
++      "expected": true,
++      "observed": true,
++      "passed": true
++    },
++    {
++      "check": "sota_ingestion_slot_contract",
++      "expected": true,
++      "observed": true,
++      "passed": true
++    },
++    {
++      "check": "independent_root_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false
++    },
++    {
++      "check": "ungated_tail_contract",
++      "expected": true,
++      "observed": false,
++      "passed": false
++    },
++    {
++      "check": "routing_audit_update_contract",
++      "expected": true,
++      "observed": true,
++      "passed": true
++    },
++    {
++      "check": "roadmap_schema_validation",
++      "expected": [],
++      "observed": [],
++      "passed": true
++    },
++    {
++      "check": "prior_failure_validation",
++      "expected": [],
++      "observed": [
++        "Task 'exp6924-task-runtime-receipt-adoption' ('Task-owned runtime receipt adoption') matches archived experiments ['exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
++      ],
++      "passed": false
++    },
++    {
++      "check": "gate_audit_validation",
++      "expected": true,
++      "observed": {
++        "audit_script_written": true,
++        "failure_details": [
++          "PRIOR_FAILURES_COVERAGE exp6924-task-runtime-receipt-adoption: title matches prior tasks ['exp5920-prospective-event-stream-admission', 'exp5920-prospective-event-stream-admission', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but prior_failures is missing or empty",
++          "PRIOR_FAILURES_COVERAGE exp6925-v606-sota-ingestion: title matches prior tasks ['exp6483-v559-latent-energy-sota-ingestion', 'exp6555-proof-preserving-constraint-saturation-fixture', 'exp6574-joint-sufficiency-method-contract', 'exp6580-v572-source-and-joint-method-protocol', 'exp6587-v573-constraint-first-method-contract'] but prior_failures is missing or empty"
++        ],
++        "honest_verdict": "prior_failures_gaps_found",
++        "n_gate_field_cross_ref_failures": 0,
++        "n_gate_upstream_checks": 0,
++        "n_gate_upstream_failures": 0,
++        "n_model_agent_coherence_failures": 0,
++        "n_prior_failures_checks": 4,
++        "n_prior_failures_missing": 2,
++        "n_tasks_audited": 4,
++        "roadmap_gate_audit_passed": false
++      },
++      "passed": false
++    },
++    {
++      "check": "exclusion_manifest_validation",
++      "expected": "exit 0",
++      "observed": {
++        "exit_code": 0,
++        "output": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
++      },
++      "passed": true
++    },
++    {
++      "check": "v606_execution_contract_ready_score",
++      "expected": 0,
++      "observed": 0,
++      "passed": true
++    }
++  ],
++  "run_date": "2026-09-03",
++  "schema": "carnot.experiment_6923.v606_lifecycle_evidence_contract.v1",
++  "science_claim_approved": false,
++  "sota_ingestion_slot_rows": [
++    {
++      "checks": {
++        "document_slot": true,
++        "exact_slot_set": true,
++        "yaml_slot": true
++      },
++      "expected_slots": [
++        6925
++      ],
++      "number": 6925,
++      "observed_slots": [
++        6925
++      ],
++      "passed": true
++    }
++  ],
++  "source_artifact_hashes": {
++    "active_roadmap": {
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:287eacb087963d8eca9d01d9d05f0628fa779ea31c36bab03238c50ffb79de04"
++    },
++    "design_document": {
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "sha256:514f9cea2447480a3bdc843a1bf83aa06ee7b0e555cb698267e4b4da73e26222"
++    },
++    "exclusion_manifest": {
++      "path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
++    },
++    "exclusion_manifest_lint": {
++      "path": "scripts/exclusion_manifest_lint.py",
++      "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
++    },
++    "focused_tests": {
++      "path": "tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py",
++      "sha256": "sha256:c35a7debf24ba9abcdfa7191febf25e7230eb32c3c97fa995048c3572fc29f52"
++    },
++    "module": {
++      "path": "python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py",
++      "sha256": "sha256:a34e8737e652f0c2309def12937ac635177fc5d9b1b059914b3b91cf82a0c85c"
++    },
++    "next_roadmap": {
++      "path": "research-roadmap-next.yaml",
++      "sha256": null
++    },
++    "prior_0_exp6911-v605-document-yaml-evidence-contract": {
++      "error": null,
++      "path": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
++      "sha256": "sha256:bc7e190a8df568b7a5ffedc7b71140f3429319abacc889c68c811f0bc8d7327a"
++    },
++    "prior_1_exp6915-sota-model-relation-event-bank": {
++      "error": null,
++      "path": "results/experiment_6915_qualified_relation_event_bank.json",
++      "sha256": "sha256:530c884a68ba5a46e72586d5a9e844d6ff209af548a4cf204c46e52bf7302470"
++    },
++    "prior_failure_validator": {
++      "path": "scripts/validate_prior_failures.py",
++      "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
++    },
++    "roadmap_gate_audit": {
++      "path": "scripts/audit_roadmap_gates.py",
++      "sha256": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013"
++    },
++    "roadmap_schema": {
++      "path": "scripts/roadmap_schema.py",
++      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
++    },
++    "spec": {
++      "path": "openspec/capabilities/research-reporting/spec.md",
++      "sha256": "sha256:a0b37168e2a69475d0d35cbef4be898deeb9c5add67fde5fae87d2c3d6281705"
++    },
++    "wrapper": {
++      "path": "scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py",
++      "sha256": "sha256:5d8983746c95c9302fa23dca7ef3041a5130580b6c474597573328062f20aff6"
++    }
++  },
++  "status": "complete_blocked",
++  "task_count": 4,
++  "ungated_tail_rows": [
++    {
++      "checks": {
++        "document_ungated_tail": true,
++        "yaml_ungated_tail": false
++      },
++      "document_gates": [],
++      "number": 6936,
++      "passed": false,
++      "yaml_gates": null
++    }
++  ],
++  "v606_execution_contract_ready_score": 0,
++  "verdict_class": "blocked",
++  "verifier_is_oracle": false,
++  "yaml_task_rows": [
++    {
++      "agent_type": "claude",
++      "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
++      "gates": [],
++      "infrastructure_slot": true,
++      "milestone": "2026.09.606",
++      "model": "opus",
++      "model_bearing": false,
++      "number": 6923,
++      "order": 1,
++      "prior_failure_count": 1,
++      "prompt_sha256": "sha256:4294d783a233d60f2fb1da0bfd391387069f6cecd052d3d9fcca2b35e610feff",
++      "sota_ingestion_slot": false,
++      "task_id": "exp6923-v606-lifecycle-evidence-contract",
++      "title": "V606 lifecycle-aware execution and evidence contract",
++      "track": "infrastructure",
++      "ungated_tail": false
++    },
++    {
++      "agent_type": "codex",
++      "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
++      "gates": [],
++      "infrastructure_slot": true,
++      "milestone": "2026.09.606",
++      "model": "gpt-5.6-sol",
++      "model_bearing": false,
++      "number": 6924,
++      "order": 2,
++      "prior_failure_count": 0,
++      "prompt_sha256": "sha256:a8a04e33c2cbdbee704f0aad9aa5aa71f4fbcf29f436de333436e6cd94e980f1",
++      "sota_ingestion_slot": false,
++      "task_id": "exp6924-task-runtime-receipt-adoption",
++      "title": "Task-owned runtime receipt adoption",
++      "track": "infrastructure",
++      "ungated_tail": false
++    },
++    {
++      "agent_type": "claude",
++      "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
++      "gates": [],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model": "sonnet",
++      "model_bearing": false,
++      "number": 6925,
++      "order": 3,
++      "prior_failure_count": 0,
++      "prompt_sha256": "sha256:3a692513626699abd49a432dd127cbf5a39a6aca554b60149978fadc15a831c3",
++      "sota_ingestion_slot": true,
++      "task_id": "exp6925-v606-sota-ingestion",
++      "title": "V606 SOTA ingestion and method map",
++      "track": "research",
++      "ungated_tail": false
++    },
++    {
++      "agent_type": "codex",
++      "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
++      "gates": [],
++      "infrastructure_slot": false,
++      "milestone": "2026.09.606",
++      "model": "gpt-5.6-sol",
++      "model_bearing": false,
++      "number": 6926,
++      "order": 4,
++      "prior_failure_count": 1,
++      "prompt_sha256": "sha256:27c7d97624fa59a4e267e9f2c72bb0b79ff90178dbf4e298510a5f173a172ffd",
++      "sota_ingestion_slot": false,
++      "task_id": "exp6926-span-first-relation-fixture",
++      "title": "Exact span-first relation fixture",
++      "track": "acquisition",
++      "ungated_tail": false
++    }
++  ]
++}
+diff --git a/scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py b/scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py
+new file mode 100644
+index 0000000000..3b81acf937
+--- /dev/null
++++ b/scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run the REQ-REPORT-6923 V606 lifecycle evidence contract."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++ROOT = Path(__file__).resolve().parents[2]
++for import_root in (ROOT, ROOT / "python"):
++    if str(import_root) not in sys.path:
++        sys.path.insert(0, str(import_root))
++
++from carnot.experiment_6923_v606_lifecycle_evidence_contract import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py b/tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py
+index a574bc61f8..d299ddea8f 100644
+--- a/tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py
++++ b/tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py
+@@ -289,7 +289,9 @@ def test_scenario_report_6923_prior_failure_shape(field: str, value: Any) -> Non
+     assert row["passed"] is False
+ 
+ 
+-@pytest.mark.parametrize("mismatch", ["codex", "gemini", "claude", "model_id", "tokenizer", "loader"])
++@pytest.mark.parametrize(
++    "mismatch", ["codex", "gemini", "claude", "model_id", "tokenizer", "loader"]
++)
+ def test_scenario_report_6923_current_model_contract(mismatch: str) -> None:
+     """SCENARIO-REPORT-6923-ROUTING enforces model and vendor rules."""
+ 
+@@ -343,7 +345,9 @@ def test_scenario_report_6923_roots_and_tail_are_ungated(mismatch: str) -> None:
+     result = _evaluate(roadmap)
+ 
+     assert result["passed"] is False
+-    assert any(not row["passed"] for row in result["independent_root_rows"] + result["ungated_tail_rows"])
++    assert any(
++        not row["passed"] for row in result["independent_root_rows"] + result["ungated_tail_rows"]
++    )
+ 
+ 
+ def test_req_report_6923_repo_sources_emit_valid_blocked_receipt() -> None:
+@@ -436,3 +440,84 @@ def test_req_report_6923_parser_and_cli_edges(tmp_path: Path) -> None:
+     written = json.loads(output.read_text(encoding="utf-8"))
+     assert written["honest_verdict"] == mod.BLOCKED_VERDICT
+     assert mod.validate_artifact(written) == []
++
++
++def test_req_report_6923_defensive_source_edges(tmp_path: Path) -> None:
++    """REQ-REPORT-6923 keeps malformed lifecycle and source states explicit."""
++
++    (tmp_path / mod.ACTIVE_ROADMAP_PATH).write_text("tasks: [", encoding="utf-8")
++    assert mod.resolve_roadmap_lifecycle(tmp_path)["state"] == "unresolved"
++    assert mod._parse_document_gate("not a gate", {}) == [{"unparsed_document_gate": "not a gate"}]
++    assert mod._parse_document_gate("Exp6926 `field == word`", {})[0]["value"] == "word"
++    with pytest.raises(ValueError):
++        mod.parse_design(
++            "**Milestone:** `2026.09.606`\n"
++            "| 1 | `exp1-outside` | Outside | `results/outside.json` | None; root |\n"
++        )
++    with pytest.raises(ValueError):
++        mod.parse_roadmap({})
++    with pytest.raises(ValueError):
++        mod.parse_roadmap({"tasks": [{"gated_on": "bad"}]})
++    assert mod._routing_ok("opencode", "model", "gpt-5.6-sol", "gemini") is True
++    assert mod._routing_ok("unknown", "model", "gpt-5.6-sol", "gemini") is False
++    assert mod._date_argument("20260903") == "20260903"
++
++
++def test_req_report_6923_prior_and_validator_failure_edges(tmp_path: Path) -> None:
++    """REQ-REPORT-6923 records malformed prior evidence and schema failures."""
++
++    results = tmp_path / "results"
++    results.mkdir()
++    (results / "experiment_1_invalid.json").write_text("[", encoding="utf-8")
++    evidence, rows = mod._load_prior_evidence(
++        tmp_path,
++        [
++            {"prior_failures": ["bad"]},
++            {"prior_failures": [{"experiment_id": "exp1-invalid"}]},
++        ],
++    )
++    assert evidence == {}
++    assert rows[0]["error"].startswith("invalid_json:")
++
++    roadmap_path = tmp_path / "invalid-roadmap.yaml"
++    _write_yaml(roadmap_path, {"milestone": mod.V606_MILESTONE, "tasks": []})
++    checks = mod._external_validation_checks(
++        ROOT,
++        roadmap_path,
++        {"milestone": mod.V606_MILESTONE, "tasks": []},
++    )
++    assert checks[0]["passed"] is False
++
++
++def test_req_report_6923_ready_validation_and_direct_main_edges(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-6923 validates ready receipts and both direct CLI outcomes."""
++
++    artifact = mod.build_artifact(ROOT, "20260903")
++    for check in artifact["gate_check_summary"]["checks"]:
++        check["passed"] = True
++    artifact["v606_execution_contract_ready_score"] = 1
++    artifact["status"] = "complete"
++    artifact["verdict_class"] = "null"
++    artifact["honest_verdict"] = mod.READY_VERDICT
++    artifact["reproducibility_checksum"] = mod.reproducibility_checksum(artifact)
++    assert mod.validate_artifact(artifact) == []
++
++    artifact["status"] = "bad"
++    artifact["reproducibility_checksum"] = mod.reproducibility_checksum(artifact)
++    assert "ready_terminal_shape_mismatch" in mod.validate_artifact(artifact)
++
++    minimal = {
++        "v606_execution_contract_ready_score": 0,
++        "honest_verdict": mod.BLOCKED_VERDICT,
++    }
++    written: list[tuple[Path, dict[str, Any]]] = []
++    monkeypatch.setattr(mod, "build_artifact", lambda _root, _date: minimal)
++    monkeypatch.setattr(mod, "write_json_atomic", lambda path, value: written.append((path, value)))
++    monkeypatch.setattr(mod, "validate_artifact", lambda _value: [])
++    output = tmp_path / "direct.json"
++    assert mod.main(["--date", "20260903", "--output", str(output)]) == 0
++    assert written == [(output, minimal)]
++    monkeypatch.setattr(mod, "validate_artifact", lambda _value: ["invalid"])
++    assert mod.main(["--date", "20260903", "--output", str(output)]) == 1
+-- 
+2.55.0
+

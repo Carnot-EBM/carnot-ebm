@@ -1,0 +1,43 @@
+From 0faced806dcbd4b3dade1ac7cdc4717afab1a1cb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 06:40:13 -0400
+Subject: [PATCH 03416/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9df1b560b2..d2b08b0517 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1035110, "iteration": 20, "phase": "iteration_start", "last_beat": "2026-06-22T10:23:12Z"}
+\ No newline at end of file
++{"pid": 1035110, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-06-22T10:40:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e0ffe51f6d..f8f4ae889f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9060,3 +9060,4 @@ c |
+ | 2026-06-22 09:43 UTC | PHASE A4 (ARC NORTH STAR; operator item 1) -- DIVE | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+ | 2026-06-22 10:07 UTC | PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; o | OK | 110 passed, 1 warning in 6.03s |
+ | 2026-06-22 10:21 UTC | PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTE | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
++| 2026-06-22 10:38 UTC | PHASE B1 (RESERVED INFRA) -- make LIVE-SUBMITTABLE | OK | 89 passed, 1 warning in 5.89s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 87a52be8cc..cbb52cb63c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1035110, "iteration": 20, "phase": "iteration_start", "started_at": "2026-06-22T10:23:12Z"}
+\ No newline at end of file
++{"pid": 1035110, "iteration": 21, "phase": "iteration_start", "started_at": "2026-06-22T10:40:11Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

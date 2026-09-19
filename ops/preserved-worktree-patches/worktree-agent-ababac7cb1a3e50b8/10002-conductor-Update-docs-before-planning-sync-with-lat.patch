@@ -1,0 +1,101 @@
+From f98b9ef0cb925c3c2eba4e2028cc48fca83c4530 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 03:23:09 -0400
+Subject: [PATCH 10002/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html                       | 2 +-
+ ops/.audit_findings_ledger_state.json | 2 +-
+ ops/.run_sentinel_state.json          | 2 +-
+ ops/.stop_authority_state.json        | 2 +-
+ ops/conductor-heartbeat.json          | 2 +-
+ ops/conductor-log.md                  | 2 ++
+ ops/conductor-state.json              | 2 +-
+ 7 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index fa9c86eabc..0d4000e305 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,811</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,816</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 574f1c232c..0405f57c4b 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -17,5 +17,5 @@
+   "AUDIT_FINDING_UNTRIAGED|scripts/test_suite_mutation_check.py age-week 0|": "2026-08-26T00:17:17Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T06:51:48Z"
++ "last_scan_utc": "2026-08-26T07:22:48Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 6fac4eb201..120f733619 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T07:15:08Z"
++ "last_scan_utc": "2026-08-26T07:22:48Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 4a7f836b1e..ec5007bd08 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T06:51:48Z",
++ "last_scan_utc": "2026-08-26T07:22:48Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index dee4fb984a..31c42f1984 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-08-26T07:15:08Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-08-26T07:17:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a46e6a45ce..26b867c5f3 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16540,3 +16540,5 @@ code |
+ | 2026-08-26 07:13 UTC | Spectral k-block sampler integrity and reference r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
+ | 2026-08-26 07:15 UTC | Cold-context verifier criterion-shift control | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6621-mandated-model-admission, exp6621-ma |
+ | 2026-08-26 07:15 UTC | Exact constraint-authority and support-preservatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6624-delayed-two-level-decoding) |
++| 2026-08-26 07:15 UTC | Spectral k-block sampler integrity and reference r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6619-v578-activation-contract.activatio |
++| 2026-08-26 07:17 UTC | Independent spectral CPU and RTX GPU cost replay | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6627-spectral-integrity-repair) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f78bf4b140..23b8d63e83 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 25, "phase": "iteration_start", "started_at": "2026-08-26T07:15:08Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 26, "phase": "iteration_start", "started_at": "2026-08-26T07:17:11Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

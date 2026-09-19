@@ -1,0 +1,61 @@
+From b6950fed7e93831af3b2b793dbd969c7aa69c19f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 10:56:50 -0400
+Subject: [PATCH 05896/11362] [conductor] Pre-gate block: Exp 5311: Gated SOTA
+ paraphrase/coherence smoke, gated on Exp 5309 runtime and Exp 5310 fixture
+
+1 of 2 gate(s) failed; first failure: exp5309-sota-runtime-timeout-rootcause-matrix-v485.sota_runtime_unblocked (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...iment_5311_gated_sota_paraphrase_coherence_smoke_v485.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 46350fa52b..a2cddfa534 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 165, "phase": "iteration_start", "last_beat": "2026-07-06T14:54:48Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 166, "phase": "iteration_start", "last_beat": "2026-07-06T14:56:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a5b2250091..65d6f7126c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10407,3 +10407,4 @@ web search: Semantic Scholar ar |
+ | 2026-07-06 14:33 UTC | Exp 5309: SOTA GGUF runtime timeout root-cause mat | OK | 90 passed, 1 warning in 17.08s |
+ | 2026-07-06 14:46 UTC | Exp 5310: Deterministic paraphrase-consistency ver | OK | 89 passed, 1 warning in 10.55s |
+ | 2026-07-06 14:52 UTC | Exp 5311: Gated SOTA paraphrase/coherence smoke, g | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5309-sota-runtime-timeout-rootcause-mat |
++| 2026-07-06 14:54 UTC | Exp 5311: Gated SOTA paraphrase/coherence smoke, g | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5309-sota-runtime-timeout-rootcause-mat |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ac5ca08e9f..607f2d67e6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 165, "phase": "iteration_start", "started_at": "2026-07-06T14:54:48Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 166, "phase": "iteration_start", "started_at": "2026-07-06T14:56:50Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5311_gated_sota_paraphrase_coherence_smoke_v485.json b/results/experiment_5311_gated_sota_paraphrase_coherence_smoke_v485.json
+index 99c2c8a776..963dc26b62 100644
+--- a/results/experiment_5311_gated_sota_paraphrase_coherence_smoke_v485.json
++++ b/results/experiment_5311_gated_sota_paraphrase_coherence_smoke_v485.json
+@@ -2,8 +2,8 @@
+   "experiment": 5311,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-06",
+-  "started_at": "2026-07-06T14:54:48.415538+00:00",
+-  "finished_at": "2026-07-06T14:54:48.415538+00:00",
++  "started_at": "2026-07-06T14:56:50.573628+00:00",
++  "finished_at": "2026-07-06T14:56:50.573628+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Exp 5311: Gated SOTA paraphrase/coherence smoke, gated on Exp 5309 runtime and Exp 5310 fixture",
+-- 
+2.55.0
+

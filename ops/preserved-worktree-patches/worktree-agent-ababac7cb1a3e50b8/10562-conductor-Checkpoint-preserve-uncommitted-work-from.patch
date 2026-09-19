@@ -1,0 +1,417 @@
+From 1047440dbaea19c869baa42a1c482b1e9b3ed555 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 19:31:59 -0400
+Subject: [PATCH 10562/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json |   2 +-
+ ops/conductor-log.md         |   2 +
+ ops/conductor-state.json     |   2 +-
+ research-roadmap-next.yaml   | 365 -----------------------------------
+ 4 files changed, 4 insertions(+), 367 deletions(-)
+ delete mode 100644 research-roadmap-next.yaml
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c71d670603..805983679d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 55, "phase": "iteration_start", "last_beat": "2026-08-31T23:21:20Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 57, "phase": "iteration_start", "last_beat": "2026-08-31T23:31:54Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index cda3abe39e..1fffaed3f9 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16940,3 +16940,5 @@ The l |
+ | 2026-08-31 23:19 UTC | Plan milestone 2026.08.597 | OK | 4 tasks proposed |
+ | 2026-08-31 23:21 UTC | Activation REFUSED: milestone 2026.08.597 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+ | 2026-08-31 23:21 UTC | Activation replan 1/2: 2026.08.597 | OK | refused roadmap quarantined to roadmap-2026.08.597-refusal1.yaml; replanning wit |
++| 2026-08-31 23:27 UTC | Plan milestone 2026.08.597 | OK | 4 tasks proposed |
++| 2026-08-31 23:29 UTC | Milestone 2026.08.597 activated | OK | 4 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 18811c9e7b..aa3711d10b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 55, "phase": "iteration_start", "started_at": "2026-08-31T23:21:20Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 57, "phase": "iteration_start", "started_at": "2026-08-31T23:31:54Z"}
+\ No newline at end of file
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+deleted file mode 100644
+index 9c08e4bfe7..0000000000
+--- a/research-roadmap-next.yaml
++++ /dev/null
+@@ -1,365 +0,0 @@
+-milestone: 2026.08.597
+-milestone_title: Guarded constraint memory and live causal control
+-milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+-tasks:
+-- id: exp6831-v597-evidence-admissibility-contract
+-  title: V597 evidence-admissibility and execution contract
+-  track: verification
+-  priority: critical
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 60
+-  per_unit_rows: true
+-  milestone: 2026.08.597
+-  deliverable: results/experiment_6831_v597_evidence_admissibility_contract.json
+-  prompt: |
+-    CONTEXT:
+-    Milestone V596 produced clean Exp6824 and Exp6825 component audits, but Exp6826 used a
+-    compute-like substrate label for a 0.0199-second aggregation. Adversarial verification marked
+-    that receipt DURATION_TOO_SHORT. Exp6827 then produced 4,320 canonical causal-edge stream rows
+-    and correctly said that no learning ran. This task repairs the procedural contract. It does not
+-    change Exp6826, reinterpret its flagged receipt, or invoke an LLM.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md and {project_root}/_bmad/prd.md, FR11 and FR12
+-    - {project_root}/research-references.md, V597 Planner Refresh
+-    - {project_root}/results/experiment_6813_selective_priority_arbiter_ab.json
+-    - {project_root}/results/experiment_6824_selective_arbiter_cold_row_replay.json
+-    - {project_root}/results/experiment_6825_selective_arbiter_authority_attacks.json
+-    - {project_root}/results/experiment_6826_selective_arbiter_sealed_adoption.json
+-    - {project_root}/results/experiment_6827_chronological_causal_edge_memory_stream.json
+-    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+-    - {project_root}/scripts/adversarial_verify.py
+-
+-    TASK:
+-    Issue a new evidence-admissibility artifact from immutable upstream artifacts. Recompute the
+-    selective-arbiter decision table with fresh aggregation code under the explicit
+-    aggregation_from_upstream_artifacts substrate. Validate the Exp6827 stream hashes and learning
+-    preconditions separately. Do not import Exp6826 decision code. Do not claim that learning ran.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require readable terminal artifacts for Exp6813 and Exp6824-Exp6827, stable
+-       hashes, complete per-unit rows, closed verdict classes, and no source mutation. Write
+-       complete_blocked_v597_evidence_admissibility with gate_check_summary on failure and stop.
+-    1. Add REQ-CONSTRAINT-6831 and REQ-CL-6831 with testable scenarios before implementation. Write
+-       focused tests for missing inputs, hash drift, incomplete rows, disqualified authority,
+-       flagged receipts, clock capture, and conservative decision-table propagation.
+-    2. Build a fresh reducer that reads Exp6813, Exp6824, and Exp6825 as data. Recompute hard safety,
+-       safe-action preservation, certificate truth, utility, and adoption criteria. Treat Exp6826
+-       only as a quarantined comparator row.
+-    3. Use inference_substrate=aggregation_from_upstream_artifacts. Record task-owned start, read,
+-       recompute, write, and verification clocks. Record launch and accelerator samples. Do not add
+-       GGUF, CUDA, live-model, or model-load markers to this CPU aggregation artifact.
+-    4. Validate every Exp6827 row hash, order hash, split identity, canonical transaction, family
+-       rotation, sealed-field manifest, and nonzero headroom count. Confirm that weights stayed
+-       immutable and that Exp6827 says no learning ran.
+-    5. Emit one row per authority criterion and one row per stream-readiness criterion. Set
+-       selective_arbiter_receipt_admissible, csl_inputs_admissible, and v597_contract_ready from
+-       completeness and admissibility, not from a positive effect.
+-    6. Run focused tests, ruff, OpenSpec coverage, adversarial verification, artifact convention
+-       audit, verdict-row consistency lint, and root-clutter checks.
+-    7. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (one principle for every declared
+-       field); preconditions_checked (exact check, expected value, and observed value);
+-       inference_substrate (aggregation_from_upstream_artifacts only); duration_s (task-owned wall
+-       time); phase_clocks (start, read, recompute, write, and verify); launch_receipts (process and
+-       command identity); accelerator_samples (prove no hidden accelerator credit);
+-       reproducibility_checksum (bind inputs, code, rows, commands, and output);
+-       source_artifact_hashes (immutable Exp6813 and Exp6824-Exp6827 identity); rows (one criterion
+-       and source unit); flagged_receipt_disposition (Exp6826 remains quarantined);
+-       selective_arbiter_decisions (separate safety, identity, certificate, utility, and adoption);
+-       selective_arbiter_receipt_admissible (component authority is procedurally usable);
+-       csl_stream_validation (row, order, split, transaction, and sealed-field checks);
+-       csl_inputs_admissible (exact field consumed by Exp6835); v597_contract_ready (exact field
+-       consumed by Exp6832); gate_check_summary (failed check and observed value for any blocked
+-       verdict); verifier_is_oracle (false, this audits prior evidence and does not define proposal
+-       truth); verdict_class (positive | circular_positive | null | blocked | disqualified |
+-       partial); honest_verdict (terminal, row-supported, and prefixed complete_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6831_v597_evidence_admissibility_contract.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6826-selective-arbiter-sealed-adoption
+-      verdict: 'complete: sealed audits support adoption; flagged DURATION_TOO_SHORT at 0.0199 seconds'
+-      addressed_by: 'This attempt uses the explicit aggregation_from_upstream_artifacts substrate, fresh reducer code, task-owned phase clocks, launch receipts, and no live-model markers. It leaves the flagged Exp6826 artifact unchanged.'
+-      retire_if_same_verdict: true
+-
+-- id: exp6832-operational-obligation-saturation-fixture
+-  title: Exact operational-obligation saturation fixture
+-  track: verification
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 150
+-  milestone: 2026.08.597
+-  deliverable: results/experiment_6832_operational_obligation_saturation_fixture.json
+-  gated_on:
+-    - upstream: exp6831-v597-evidence-admissibility-contract
+-      artifact_field: v597_contract_ready
+-      op: '=='
+-      value: true
+-  prompt: |
+-    CONTEXT:
+-    Exp6811 and Exp6812 established an exact operational handoff with mostly one or two obligations.
+-    arXiv:2608.12426 reports a sharp all-constraint collapse as simultaneous constraint count grows.
+-    Carnot has not tested that effect on its prerequisite, authority, fallback, consequence, and
+-    priority schema. This task creates a source-free exact fixture. It invokes no LLM.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md and {project_root}/_bmad/prd.md, FR12
+-    - {project_root}/research-references.md, V597 Planner Refresh
+-    - {project_root}/results/experiment_6811_operational_obligation_automaton_v3.json
+-    - {project_root}/results/experiment_6812_sota_operational_handoff_corpus_v2.json
+-    - {project_root}/results/experiment_6831_v597_evidence_admissibility_contract.json
+-    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/python/carnot/constraint_obligation_automaton.py
+-    - {project_root}/scripts/experiment_template.py
+-
+-    TASK:
+-    Build a frozen operational-obligation saturation fixture at obligation counts 1, 2, 4, 6, and
+-    8. Cover independent and interacting obligations, prompt permutations, and exact legal action
+-    sets. Provide deterministic field and joint checkers. Include no model output, answer key, or
+-    hidden outcome in prompts.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require v597_contract_ready=true, the Exp6811 schema and hashes, and a clean
+-       source tree for owned files. Write complete_blocked_operational_obligation_saturation_fixture
+-       with gate_check_summary on failure and stop.
+-    1. Add REQ-CONSTRAINT-6832 and scenarios before implementation. Write tests first for schema
+-       validity, count balance, independent and interacting cells, permutation invariance, unique
+-       solution sets, impossible cases, safe no-op cases, and prompt leakage.
+-    2. Freeze 30 independent scenarios per obligation count. Split each count evenly across
+-       independent and interacting obligations. Assign immutable scenario, template, permutation,
+-       and legal-action identifiers.
+-    3. Compose typed prerequisite, authority, fallback, consequence, and priority obligations. Each
+-       scenario must have exact satisfiable or intentionally unsatisfiable semantics and at least
+-       one constructive legal or fail-closed action.
+-    4. Render equal-information direct typed-handoff and compressed-prose prompts. Use identical
+-       content and output schema. Only representation may differ. Remove answer keys, checker
+-       vocabulary, hidden labels, and order cues.
+-    5. Implement deterministic parsing and one checker per obligation plus a joint all-obligation
+-       checker. Validate every checker against generated legal and adversarial candidates.
+-    6. Emit every scenario and checker test. Set operational_saturation_fixture_ready from exact
+-       count balance, leakage checks, checker completeness, and stable hashes, independent of any
+-       expected model result.
+-    7. Run focused tests, ruff, OpenSpec coverage, adversarial verification, artifact convention
+-       audit, fixture mutation checks, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (one principle for every field);
+-       preconditions_checked (gate and source checks); inference_substrate (deterministic CPU fixture
+-       generation, no LLM); duration_s (measured task wall time); random_seed (frozen construction
+-       and permutation seed); reproducibility_checksum (bind schema, code, scenarios, and output);
+-       source_artifact_hashes (Exp6811 and Exp6831 identity); obligation_schema (typed operational
+-       fields); obligation_counts (exactly 1, 2, 4, 6, and 8); scenario_manifest (30 identities per
+-       count); prompt_arm_manifest (typed and compressed, equal information); scenarios (every
+-       source-free unit); checker_manifest (one field checker and one joint checker);
+-       checker_mutation_results (legal, violation, omission, conflict, and reorder cases);
+-       leakage_audit (no answer, label, or checker leakage); legal_action_headroom (nonzero where
+-       required); operational_saturation_fixture_ready (exact field consumed by Exp6833);
+-       gate_check_summary (failed check and observed value for any blocked verdict);
+-       verifier_is_oracle (false, the fixture supplies external exact truth and tests no learned
+-       verifier); verdict_class (positive | circular_positive | null | blocked | disqualified |
+-       partial); honest_verdict (terminal and prefixed complete_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6832_operational_obligation_saturation_fixture.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6802-operational-obligation-automaton-v2
+-      verdict: 'complete_blocked_operational_obligation_automaton'
+-      addressed_by: 'Exp6802 blocked because the planned agentic-verification spec did not exist. Exp6810 and Exp6811 shipped the owned agentic-harness contract and a ready v3 fixture. This attempt measures a new obligation-count saturation axis over that fixture.'
+-      retire_if_same_verdict: true
+-
+-- id: exp6833-sota-operational-obligation-saturation-corpus
+-  title: Three-family operational-obligation saturation corpus
+-  track: verification
+-  priority: critical
+-  requires_gpu: true
+-  max_turns: 50
+-  estimated_wall_time_min: 720
+-  per_unit_rows: true
+-  milestone: 2026.08.597
+-  deliverable: results/experiment_6833_sota_operational_obligation_saturation_corpus.json
+-  gated_on:
+-    - upstream: exp6832-operational-obligation-saturation-fixture
+-      artifact_field: operational_saturation_fixture_ready
+-      op: '=='
+-      value: true
+-  prompt: |
+-    CONTEXT:
+-    Exp6832 supplies 150 exact scenarios and two equal-information prompt arms. This task measures
+-    operational-obligation saturation with the mandated local SOTA GGUF families. The result must
+-    come from live local llama.cpp CUDA inference. Cached text, simulation, API output, and legacy
+-    tiny models cannot support the headline.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    MODEL_SPECS:
+-    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE)
+-    - unsloth/gemma-4-31B-it-GGUF (flagship dense)
+-    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE)
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md and {project_root}/_bmad/prd.md, FR12
+-    - {project_root}/research-references.md, V597 Planner Refresh
+-    - {project_root}/results/experiment_6812_sota_operational_handoff_corpus_v2.json
+-    - {project_root}/results/experiment_6832_operational_obligation_saturation_fixture.json
+-    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/scripts/experiment_template.py, cached_sota_pair() pattern
+-    - {project_root}/python/carnot/inference/llama_cpp_process.py
+-    - {project_root}/ops/e2e-test-plan.md
+-
+-    TASK:
+-    Run all 150 frozen scenarios, both prompt arms, and all three MODEL_SPECS with equal decode
+-    budgets and no repair. Produce 900 authentic rows. Score each obligation and the joint outcome
+-    with Exp6832 exact checkers. Do not use an LLM judge or producer aggregate as authority.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: call cached_sota_pair(); require all three exact GGUF files and hashes, the
+-       embedded llama.cpp tokenizer metadata, CUDA availability, exclusive task-owned GPU leases,
+-       free ports, sufficient disk, operational_saturation_fixture_ready=true, and a successful
+-       one-token live canary for each model. Write complete_blocked_sota_operational_saturation_corpus
+-       with gate_check_summary and exact observed values on failure. Do not silently fall back.
+-    1. Add REQ-CONSTRAINT-6833 and tests before implementation. Test model dispatch, tokenizer and
+-       chat-template capture, equal budgets, checkpoint restart, raw-byte retention, row identity,
+-       exact scoring, server teardown, and cross-model isolation.
+-    2. Start one task-owned llama.cpp CUDA process per model, one at a time unless independent GPU
+-       leases are proven. Record command, PID, process start time, port, physical GPU UUID, visible
+-       devices, first token, final token, and clean teardown. Never attach to an unrelated server.
+-    3. Run each scenario once per representation arm and model at frozen temperature, seed, stop
+-       rules, context, and output budget. Disable repair, retries that alter content, grammar that
+-       changes the arm, and answer feedback.
+-    4. Checkpoint after each model and after bounded prompt batches. On restart, verify row hashes
+-       and continue only missing identities. Never regenerate completed rows.
+-    5. Preserve prompt bytes, raw output bytes, parsed fields, parse status, each obligation result,
+-       joint result, token counts, latency, process identity, model identity, and exact checker hash.
+-    6. Compute descriptive aggregates only. The independent Exp6834 audit owns inferential claims.
+-       Set operational_saturation_corpus_ready from 900 unique complete rows, authentic process
+-       receipts, equal budgets, exact scoring, checkpoints, and teardown, independent of accuracy.
+-    7. Run focused tests, ruff, OpenSpec coverage, local CUDA E2E, adversarial verification,
+-       artifact convention audit, verdict-row consistency lint, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (one principle for every field);
+-       preconditions_checked (models, hashes, tokenizer, CUDA, leases, ports, disk, fixture, and
+-       canaries); inference_substrate (live_llm_inference); duration_s (full task wall time);
+-       phase_clocks (preflight, each model, each batch, scoring, write, verify, and teardown);
+-       random_seed (frozen generation seed); reproducibility_checksum (bind fixture, models, rows,
+-       code, commands, and output); MODEL_SPECS (exact hub IDs, revisions, filenames, SHA-256,
+-       quantization, chat templates, embedded tokenizers, context, and decode settings);
+-       process_receipts (command, PID, port, UUID, first token, final token, and teardown);
+-       accelerator_samples (task-window GPU samples); checkpoint_manifest (durable completed row
+-       identities); per_unit_rows (all 900 prompt-model-arm units); row_coverage (expected and
+-       observed identities); budget_parity (equal settings and tokens allowed); exact_scores
+-       (per-obligation and joint results); descriptive_aggregates (non-authoritative summaries);
+-       operational_saturation_corpus_ready (exact field consumed by Exp6834); gate_check_summary
+-       (failed check and observed value for any blocked verdict); verifier_is_oracle (false, exact
+-       external checkers score model output); verdict_class (positive | circular_positive | null |
+-       blocked | disqualified | partial); honest_verdict (terminal and prefixed complete_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6833_sota_operational_obligation_saturation_corpus.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6556-sota-constraint-saturation-intervention-ab
+-      verdict: 'complete_sota_constraint_saturation_intervention_positive: phase curve, bounded exact fallback benefit beyond longer flat, zero harmful intervention, charged cost, and receipts close'
+-      addressed_by: 'Exp6556 measured generic constraint saturation plus bounded intervention. This task uses the newer operational prerequisite, authority, fallback, consequence, and priority schema. It runs no intervention and measures representation preservation.'
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6802-operational-obligation-automaton-v2
+-      verdict: 'complete_blocked_operational_obligation_automaton'
+-      addressed_by: 'Exp6802 blocked on a missing spec. Exp6810 and Exp6811 shipped the owned contract and ready fixture. Exp6833 gates on a new exact saturation fixture built from that working lineage.'
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6803-sota-operational-handoff-corpus
+-      verdict: 'blocked_gate_check_failed'
+-      addressed_by: 'Exp6803 never ran because Exp6802 readiness was false. Exp6811 and Exp6812 later completed the fixture and a 576-row three-family corpus. This task extends that working path to 900 frozen count-by-arm rows with durable checkpoints.'
+-      retire_if_same_verdict: true
+-
+-- id: exp6834-operational-saturation-identifiability-audit
+-  title: Cold operational-saturation identifiability audit
+-  track: verification
+-  priority: high
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.08.597
+-  deliverable: results/experiment_6834_operational_saturation_identifiability_audit.json
+-  gated_on:
+-    - upstream: exp6833-sota-operational-obligation-saturation-corpus
+-      artifact_field: operational_saturation_corpus_ready
+-      op: '=='
+-      value: true
+-  prompt: |
+-    CONTEXT:
+-    Exp6833 supplies authentic rows but its aggregates are not authority. arXiv:2608.13326 asks
+-    whether observed support identifies the target policy before pooled effects are interpreted.
+-    This task performs a fresh zero-model-call audit of row truth, compositional decay, and support
+-    identifiability.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-references.md, V597 Planner Refresh
+-    - {project_root}/results/experiment_6832_operational_obligation_saturation_fixture.json
+-    - {project_root}/results/experiment_6833_sota_operational_obligation_saturation_corpus.json
+-    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/scripts/adversarial_verify.py
+-
+-    TASK:
+-    Reparse every raw output with fresh code. Recompute field and joint success, paired arm effects,
+-    interaction penalties, and decay by obligation count and model family. Audit whether the frozen
+-    observation support identifies preservation of operational fields. Report collision witnesses
+-    when it does not.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require operational_saturation_corpus_ready=true, 900 unique source rows,
+-       complete raw bytes, model and fixture hashes, equal budgets, process receipts, and teardown.
+-       Write complete_blocked_operational_saturation_identifiability_audit with
+-       gate_check_summary on failure and stop.
+-    1. Add REQ-CONSTRAINT-6834 and tests before implementation. Test independent parsing, checker
+-       reimplementation, matched joins, bootstrap units, count ordering, row deletion, duplicates,
+-       label permutation, model-label masking, and collision construction.
+-    2. Implement a fresh parser and reducer that do not import Exp6833 scoring or aggregate code.
+-       Recompute all per-obligation and all-obligation decisions from raw bytes and the Exp6832
+-       public contract.
+-    3. Report success by model, arm, count, obligation type, and interaction class. Use paired units
+-       and scenario-level bootstrap intervals. Do not pool model families for the headline.
+-    4. Predeclare saturation as declining joint success with increasing count, not merely parser
+-       failure. Report parse failure separately. Report interaction penalties separately from count.
+-    5. Enumerate compatible behavior policies over the finite fixture. Compute minimum identifying
+-       support for preserving all operational fields. Emit constructive policy collisions and the
+-       smallest added cells that would separate them.
+-    6. Run deletion, duplicate, order, model-label, prompt-label, and checker-mutation attacks. Set
+-       operational_saturation_audit_complete from complete cold recomputation and identifiability
+-       disposition, independent of the effect sign.
+-    7. Run focused tests, ruff, OpenSpec coverage, adversarial verification, artifact convention
+-       audit, verdict-row consistency lint, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS AND PRINCIPLES: field_principles (one principle for every field);
+-       preconditions_checked (source and coverage checks); inference_substrate (fresh-process
+-       deterministic CPU audit, no LLM); duration_s (measured wall time); random_seed (frozen
+-       bootstrap and attack seed); reproducibility_checksum (bind inputs, fresh code, rows,
+-       commands, and output); source_artifact_hashes (fixture and corpus identity);
+-       independent_parser_id (no producer import); independent_reducer_id (no producer aggregate);
+-       per_unit_rows (all source rows and attack cases); row_coverage (expected and observed);
+-       per_obligation_metrics (model-arm-count-type cells); joint_success_metrics (model-arm-count
+-       cells); parse_failure_metrics (separate transport outcome); interaction_penalties (paired);
+-       saturation_curves (unpooled model-family decay); paired_arm_effects (scenario-matched with
+-       intervals); identifiability_result (separated or not); minimum_identifying_support (finite
+-       support certificate); collision_witnesses (constructive indistinguishable policies);
+-       attack_results (deletion, duplicate, order, labels, and checker mutations);
+-       operational_saturation_audit_complete (terminal cold audit); gate_check_summary (failed check
+-       and observed value for blocked verdict); verifier_is_oracle (false, this independently audits
+-       model-output claims against a frozen external contract); verdict_class (positive |
+-       circular_positive | null | blocked | disqualified | partial); honest_verdict (terminal,
+-       row-supported, and prefixed complete_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6834_operational_saturation_identifiability_audit.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-- 
+2.55.0
+

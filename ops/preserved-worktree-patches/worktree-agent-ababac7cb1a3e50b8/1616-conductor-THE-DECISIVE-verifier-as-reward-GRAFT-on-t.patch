@@ -1,0 +1,1590 @@
+From eba6826551d2fdfc588a3c30471787acf258bfb8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 09:48:55 -0400
+Subject: [PATCH 01616/11362] [conductor] THE DECISIVE verifier-as-reward GRAFT
+ on the faithful baseline (DEFERRED if val<0.85). The result that resolves
+ BOTH the moat question AND the queued DiffusionGemma gate. DEFENSIVE read of
+ exp4149: IF val>=0.85, run the EXECUTABLE Sudoku verifier as (A) reranker
+ over TRM candidates + (B) reward for verifier-cert vs vote-cert RFT (A-vs-B
+ de-confound, CI95 excl 0); report verifier_value_added. IF val<0.85, DEFER
+ honestly (the .383 FALSE_NEGATIVE_RISK trap) and report baseline status for
+ .385.
+
+Automated research step by research conductor.
+Task ID: exp4150-decisive-verifier-graft-sudoku
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  57 ++
+ ops/anomaly-escalations.md                    |  10 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...ent_4150_decisive_verifier_graft_sudoku.py | 748 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...t_4150_decisive_verifier_graft_sudoku.json |  92 +++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...ent_4150_decisive_verifier_graft_sudoku.py | 412 ++++++++++
+ 17 files changed, 1342 insertions(+), 23 deletions(-)
+ create mode 100644 python/carnot/experiment_4150_decisive_verifier_graft_sudoku.py
+ create mode 100644 results/experiment_4150_decisive_verifier_graft_sudoku.json
+ create mode 100644 tests/python/test_experiment_4150_decisive_verifier_graft_sudoku.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 95d0e86371..90b1a3c96a 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -12966,6 +12966,63 @@ advance.
+ 
+ ---
+ 
++## REQ-LEARN-4150: Decision-Grade Sudoku Verifier Graft Gate
++
++**Given** Exp 4149 has written
++`results/experiment_4149_sudoku_accumulate_pass4_convergence.json`, Exp 4150
++SHALL read `val_exact_accuracy`, `stable_checkpoint_path`, and the recorded
++runtime preconditions before attempting any verifier-as-reward graft. It SHALL
++also verify CUDA visibility and that the stable checkpoint path is present and
++loadable, recording all checks in `preconditions_checked`.
++
++**When** Exp 4149 reports `val_exact_accuracy < 0.85`, Exp 4150 SHALL stop
++before reranking or RFT training, set `graft_deferred=true`, report the current
++baseline validation accuracy, and estimate additional `.385` passes needed to
++reach `0.85`. This honest deferral is acceptance-grade because a graft on an
++unfaithful baseline repeats the `.383` false-negative anti-pattern.
++
++**When** Exp 4149 reports `val_exact_accuracy >= 0.85` and preconditions pass,
++Exp 4150 SHALL run the real graft branch: sample K candidate Sudoku solutions
++per held-out puzzle, rerank with the executable Sudoku verifier, report
++`rerank_lift_vs_vote` against TRM-vote and oracle with bootstrap CI, and run an
++N-matched RFT label contrast where A is verifier-certified labels and B is
++vote-certified labels from the same TRM.
++
++**Then** Exp 4150 SHALL write
++`results/experiment_4150_decisive_verifier_graft_sudoku.json` with top-level
++fields `honest_verdict`, `graft_deferred`, `rerank_lift_vs_vote`,
++`rft_vs_ablation_delta`, `verifier_value_added`, and `preconditions_checked`,
++each with principle text. The acceptance gate passes when either
++`graft_deferred=true` with baseline status for `val<0.85`, or
++`graft_deferred=false` with `rerank_lift_vs_vote`,
++`rft_vs_ablation_delta`, and `verifier_value_added` reported with CI95.
++
++### SCENARIO-LEARN-4150-DEFER: Non-Faithful Baseline Stops The Graft
++
++**Given** Exp 4149 reports validation accuracy below `0.85`
++**When** Exp 4150 starts
++**Then** it writes a terminal-prefixed honest deferral, sets
++`graft_deferred=true`, records the baseline checkpoint and CUDA preconditions,
++reports current validation accuracy, estimates `.385` passes to converge, and
++does not sample candidates or launch RFT.
++
++### SCENARIO-LEARN-4150-GRAFT: Faithful Baseline Runs The Measurement
++
++**Given** Exp 4149 reports validation accuracy at least `0.85`
++**When** Exp 4150 has candidate pools from the same TRM
++**Then** it reports `rerank_lift_vs_vote` with CI95 and an oracle comparison,
++reports `rft_vs_ablation_delta` with CI95 from the N-matched label contrast,
++and sets `verifier_value_added` from the A-vs-B delta rather than from an
++uninformative non-faithful graft.
++
++## Implementation Status (REQ-LEARN-4150)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-4150 | Planned (python/carnot/experiment_4150_decisive_verifier_graft_sudoku.py, Exp 4150) | Planned (tests/python/test_experiment_4150_decisive_verifier_graft_sudoku.py) |
++
++---
++
+ ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
+ 
+ **Given** Exp 4138 has written
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 4e21bd6821..b469c610da 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -311,3 +311,13 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT', 'GATE_PASSED_WITHOUT_DATA'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_4148_sudoku_accumulate_pass3.json
++
++## experiment_4149_sudoku_accumulate_pass4_convergence.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_4149_sudoku_accumulate_pass4_convergence.json
++
++## experiment_4150_decisive_verifier_graft_sudoku.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4150_decisive_verifier_graft_sudoku.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 6052c692bb..a4f66e9a6d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 171,
+   "code_violations": 0,
+-  "experiments_checked": 3172,
++  "experiments_checked": 3173,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4150_decisive_verifier_graft_sudoku.py b/python/carnot/experiment_4150_decisive_verifier_graft_sudoku.py
+new file mode 100644
+index 0000000000..2870ff3ffa
+--- /dev/null
++++ b/python/carnot/experiment_4150_decisive_verifier_graft_sudoku.py
+@@ -0,0 +1,748 @@
++"""Exp 4150 decisive verifier-as-reward gate for Sudoku.
++
++This module is deliberately conservative: it reads the final Exp 4149 baseline
++first, and it refuses to run verifier graft measurements unless the TRM baseline
++has enough validation accuracy to make the contrast meaningful. That matters
++because a verifier cannot prove training value on a baseline that still has no
++headroom for the verifier-labelled data to improve the model; running the graft
++there would repeat the `.383` false-negative pattern.
++
++Spec refs: REQ-LEARN-4150, SCENARIO-LEARN-4150-DEFER,
++SCENARIO-LEARN-4150-GRAFT.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import math
++import time
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import asdict, dataclass
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4107_nanotrm_mechanism_smoke as exp4107
++from carnot import experiment_4109_carnot_verifier_graft_sudoku as exp4109
++from carnot import experiment_4149_sudoku_accumulate_pass4_convergence as exp4149
++
++
++CandidatePool = exp4109.CandidatePool
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_FILENAME = "experiment_4150_decisive_verifier_graft_sudoku.json"
++DEFAULT_OUTPUT = REPO_ROOT / "results" / RESULT_FILENAME
++DEFAULT_EXP4149_ARTIFACT = REPO_ROOT / "results" / exp4149.RESULT_FILENAME
++DEFAULT_DATA_DIR = REPO_ROOT / "nano-trm" / "data" / "sudoku_extreme_1k_aug_1k"
++DEFAULT_HELDOUT_SPLIT = "_valsmall"
++RANDOM_SEED = 4150
++DEFAULT_MAX_PUZZLES = 64
++DEFAULT_K_CANDIDATES = 8
++FAITHFUL_VAL_THRESHOLD = 0.85
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:", "blocked_")
++SPEC_REFS = [
++    "REQ-LEARN-4150",
++    "SCENARIO-LEARN-4150-DEFER",
++    "SCENARIO-LEARN-4150-GRAFT",
++]
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "graft_deferred",
++    "rerank_lift_vs_vote",
++    "rft_vs_ablation_delta",
++    "verifier_value_added",
++    "preconditions_checked",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE; "
++        "an uninformative graft on a non-faithful baseline is the .383 anti-pattern."
++    ),
++    "graft_deferred": (
++        "Bare bool: True if val<0.85 -> deferred. Prevents the uninformative "
++        "no-headroom false-negative .383 produced."
++    ),
++    "rerank_lift_vs_vote": (
++        "pass@1 lift from verifier-reranking (if grafted); confirms the executable "
++        "Sudoku verifier discriminates (contrast to .379 ARC-grid anti-discrimination)."
++    ),
++    "rft_vs_ablation_delta": (
++        "The de-confounded A-vs-B held-out delta with CI (if grafted): isolates the "
++        "verifier LABEL's training contribution -- THE moat measurement."
++    ),
++    "verifier_value_added": (
++        "Bare bool: did the graft beat the vote ablation? The headline answer, ONLY "
++        "meaningful when graft_deferred is False. Also resolves the DiffusionGemma gate."
++    ),
++    "preconditions_checked": "Records the baseline checkpoint + CUDA verified.",
++}
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One runtime resource check required before Exp 4150 can measure a graft."""
++
++    resource: str
++    available: bool
++    detail: str
++
++    def to_dict(self) -> dict[str, object]:
++        return asdict(self)
++
++
++@dataclass(frozen=True)
++class BaselineContext:
++    """Exp 4149 baseline evidence that decides whether Exp 4150 may graft."""
++
++    artifact_path: Path
++    stable_checkpoint_path: Path
++    val_exact_accuracy: float | None
++    raw: Mapping[str, Any]
++
++    def to_dict(self) -> dict[str, Any]:
++        return {
++            "artifact_path": str(self.artifact_path),
++            "stable_checkpoint_path": str(self.stable_checkpoint_path),
++            "val_exact_accuracy": self.val_exact_accuracy,
++        }
++
++
++def _float_or_none(value: Any) -> float | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, (int, float)):
++        number = float(value)
++        return number if math.isfinite(number) else None
++    if isinstance(value, str) and value.strip():
++        try:
++            number = float(value)
++        except ValueError:
++            return None
++        return number if math.isfinite(number) else None
++    return None
++
++
++def _jsonable(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, Mapping):
++        return {str(key): _jsonable(item) for key, item in sorted(value.items(), key=lambda item: str(item[0]))}
++    if isinstance(value, (list, tuple)):
++        return [_jsonable(item) for item in value]
++    if hasattr(value, "item"):
++        return value.item()
++    return value
++
++
++def _checks_to_dicts(checks: Sequence[PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
++    return [check.to_dict() if isinstance(check, PreconditionCheck) else dict(check) for check in checks]
++
++
++def _all_preconditions_available(checks: Sequence[PreconditionCheck | Mapping[str, Any]]) -> bool:
++    return all(bool(check.available) if isinstance(check, PreconditionCheck) else check.get("available") is True for check in checks)
++
++
++def _metric_has_ci(metric: Mapping[str, Any]) -> bool:
++    ci95 = metric.get("ci95")
++    return (
++        isinstance(ci95, Sequence)
++        and not isinstance(ci95, (str, bytes))
++        and len(ci95) == 2
++        and _float_or_none(ci95[0]) is not None
++        and _float_or_none(ci95[1]) is not None
++    )
++
++
++def _latest_trajectory_val(payload: Mapping[str, Any]) -> float | None:
++    trajectory = payload.get("val_trajectory_v384")
++    if not isinstance(trajectory, Sequence) or isinstance(trajectory, (str, bytes)):
++        return None
++    for entry in reversed(trajectory):
++        if isinstance(entry, Mapping):
++            val = _float_or_none(entry.get("effective_val_exact_accuracy"))
++            if val is None:
++                val = _float_or_none(entry.get("val_exact_accuracy"))
++            if val is not None:
++                return val
++    return None
++
++
++def load_baseline_context(path: str | Path) -> BaselineContext:
++    """REQ-LEARN-4150: load Exp 4149 without inventing a faithful baseline."""
++
++    artifact_path = Path(path)
++    payload = json.loads(artifact_path.read_text(encoding="utf-8"))
++    if not isinstance(payload, Mapping):
++        raise ValueError("Exp 4149 artifact must be a JSON object")
++    stable_value = payload.get("stable_checkpoint_path")
++    stable = Path(stable_value) if isinstance(stable_value, str) and stable_value else Path("")
++    val = _float_or_none(payload.get("val_exact_accuracy"))
++    if val is None:
++        val = _latest_trajectory_val(payload)
++    return BaselineContext(
++        artifact_path=artifact_path,
++        stable_checkpoint_path=stable,
++        val_exact_accuracy=val,
++        raw=dict(payload),
++    )
++
++
++def baseline_is_faithful(baseline: BaselineContext) -> bool:
++    """REQ-LEARN-4150: the graft branch requires validation accuracy at least 0.85."""
++
++    return baseline.val_exact_accuracy is not None and baseline.val_exact_accuracy >= FAITHFUL_VAL_THRESHOLD
++
++
++def estimate_passes_to_converge_for_385(baseline: BaselineContext | None) -> dict[str, Any]:
++    """SCENARIO-LEARN-4150-DEFER: estimate `.385` passes from observed validation movement."""
++
++    current = None if baseline is None else baseline.val_exact_accuracy
++    if current is None:
++        return {
++            "destination": ".385",
++            "target_val_exact_accuracy": FAITHFUL_VAL_THRESHOLD,
++            "current_val_exact_accuracy": None,
++            "estimated_additional_passes": None,
++            "basis": "missing_exp4149_val_exact_accuracy",
++        }
++    if current >= FAITHFUL_VAL_THRESHOLD:
++        return {
++            "destination": ".385",
++            "target_val_exact_accuracy": FAITHFUL_VAL_THRESHOLD,
++            "current_val_exact_accuracy": current,
++            "estimated_additional_passes": 0,
++            "basis": "already_faithful",
++        }
++
++    trajectory = [] if baseline is None else baseline.raw.get("val_trajectory_v384", [])
++    vals: list[float] = []
++    if isinstance(trajectory, Sequence) and not isinstance(trajectory, (str, bytes)):
++        for row in trajectory:
++            if isinstance(row, Mapping):
++                val = _float_or_none(row.get("effective_val_exact_accuracy"))
++                if val is None:
++                    val = _float_or_none(row.get("val_exact_accuracy"))
++                if val is not None:
++                    vals.append(val)
++    positive_deltas = [
++        vals[index] - vals[index - 1]
++        for index in range(1, len(vals))
++        if vals[index] > vals[index - 1]
++    ]
++    if not positive_deltas:
++        return {
++            "destination": ".385",
++            "target_val_exact_accuracy": FAITHFUL_VAL_THRESHOLD,
++            "current_val_exact_accuracy": current,
++            "estimated_additional_passes": None,
++            "basis": "no_positive_v384_convergence_rate",
++        }
++    rate = sum(positive_deltas) / len(positive_deltas)
++    needed = max(FAITHFUL_VAL_THRESHOLD - current, 0.0)
++    return {
++        "destination": ".385",
++        "target_val_exact_accuracy": FAITHFUL_VAL_THRESHOLD,
++        "current_val_exact_accuracy": current,
++        "estimated_additional_passes": int(math.ceil(needed / rate)),
++        "basis": "mean_positive_v384_delta",
++        "mean_positive_delta_per_pass": round(float(rate), 12),
++    }
++
++
++def check_preconditions(
++    baseline: BaselineContext,
++    *,
++    cuda_checker: Callable[[], tuple[bool, str]] = exp4107._default_cuda_checker,
++    checkpoint_loader: Callable[[Path], tuple[bool, str]] = exp4107._load_torch_checkpoint,
++) -> list[PreconditionCheck]:
++    """REQ-LEARN-4150: record Exp 4149, checkpoint, and CUDA checks."""
++
++    checks = [
++        PreconditionCheck("exp4149_artifact", baseline.artifact_path.is_file(), str(baseline.artifact_path)),
++        PreconditionCheck(
++            "stable_checkpoint_path",
++            bool(str(baseline.stable_checkpoint_path)),
++            str(baseline.stable_checkpoint_path),
++        ),
++    ]
++    if baseline.stable_checkpoint_path.is_file():
++        try:
++            checkpoint_ok, checkpoint_detail = checkpoint_loader(baseline.stable_checkpoint_path)
++        except Exception as exc:
++            checkpoint_ok, checkpoint_detail = False, f"{type(exc).__name__}: {exc}"
++    else:
++        checkpoint_ok = False
++        checkpoint_detail = f"missing: {baseline.stable_checkpoint_path}"
++    checks.append(PreconditionCheck("baseline_checkpoint", bool(checkpoint_ok), str(checkpoint_detail)))
++
++    try:
++        cuda_ok, cuda_detail = cuda_checker()
++    except Exception as exc:
++        cuda_ok, cuda_detail = False, f"{type(exc).__name__}: {exc}"
++    checks.append(PreconditionCheck("cuda_available", bool(cuda_ok), str(cuda_detail)))
++    return checks
++
++
++def deferred_metric(status: str) -> dict[str, Any]:
++    """SCENARIO-LEARN-4150-DEFER: keep metric fields present without fake results."""
++
++    return {
++        "metric": "pass@1_exact_accuracy",
++        "n_puzzles": 0,
++        "vote_pass_at_1": 0.0,
++        "verifier_pass_at_1": 0.0,
++        "oracle_pass_at_k": 0.0,
++        "delta": 0.0,
++        "ci95": [0.0, 0.0],
++        "status": status,
++    }
++
++
++def deferred_rft_delta(status: str, baseline: BaselineContext | None) -> dict[str, Any]:
++    """SCENARIO-LEARN-4150-DEFER: mark the label contrast as honestly deferred."""
++
++    return {
++        "metric": "heldout_exact_accuracy",
++        "n_matched": 0,
++        "a_exact_accuracy": 0.0,
++        "b_exact_accuracy": 0.0,
++        "delta": 0.0,
++        "ci95": [0.0, 0.0],
++        "status": status,
++        "current_val_exact_accuracy": None if baseline is None else baseline.val_exact_accuracy,
++    }
++
++
++def evaluate_rerank_lift(
++    pools: Sequence[CandidatePool],
++    *,
++    random_seed: int = RANDOM_SEED,
++    bootstrap_resamples: int = 2000,
++) -> dict[str, Any]:
++    """SCENARIO-LEARN-4150-GRAFT: measure executable-verifier pass@1 lift."""
++
++    metric = exp4109.evaluate_rerank(
++        pools,
++        random_seed=random_seed,
++        bootstrap_resamples=bootstrap_resamples,
++    )
++    verifier_pass = _float_or_none(metric.get("verifier_pass_at_1")) or 0.0
++    oracle_pass = _float_or_none(metric.get("oracle_ceiling_pass_at_1")) or 0.0
++    return {
++        "metric": metric.get("metric", "pass@1_exact_accuracy"),
++        "n_puzzles": int(metric.get("n_puzzles", 0)),
++        "vote_pass_at_1": metric.get("vote_pass_at_1", 0.0),
++        "verifier_pass_at_1": metric.get("verifier_pass_at_1", 0.0),
++        "oracle_pass_at_k": metric.get("oracle_ceiling_pass_at_1", 0.0),
++        "delta": metric.get("delta", 0.0),
++        "ci95": metric.get("ci95", [0.0, 0.0]),
++        "lift_vs_oracle": round(float(verifier_pass - oracle_pass), 6),
++        "status": "measured",
++        "per_puzzle": metric.get("per_puzzle", []),
++    }
++
++
++def verifier_value_added(rft_vs_ablation_delta: Mapping[str, Any], *, graft_deferred: bool) -> bool:
++    """REQ-LEARN-4150: compute the headline bool only from the RFT A-vs-B delta."""
++
++    if graft_deferred:
++        return False
++    ci95 = rft_vs_ablation_delta.get("ci95")
++    try:
++        return (
++            isinstance(ci95, Sequence)
++            and not isinstance(ci95, (str, bytes))
++            and len(ci95) == 2
++            and float(rft_vs_ablation_delta.get("delta", 0.0)) > 0.0
++            and float(ci95[0]) > 0.0
++        )
++    except (TypeError, ValueError):
++        return False
++
++
++def _artifact_verdict(*, graft_deferred: bool, value_added: bool) -> str:
++    if graft_deferred:
++        return "complete: graft_deferred_baseline_below_0.85"
++    if value_added:
++        return "success: verifier_value_added_rft_A_gt_B"
++    return "complete: A~=B null"
++
++
++def _baseline_status(baseline: BaselineContext | None) -> dict[str, Any]:
++    return {
++        "artifact_path": None if baseline is None else str(baseline.artifact_path),
++        "stable_checkpoint_path": None if baseline is None else str(baseline.stable_checkpoint_path),
++        "val_exact_accuracy": None if baseline is None else baseline.val_exact_accuracy,
++        "faithful_threshold": FAITHFUL_VAL_THRESHOLD,
++        "faithful": False if baseline is None else baseline_is_faithful(baseline),
++    }
++
++
++def compute_reproducibility_checksum(
++    *,
++    baseline: BaselineContext | None,
++    heldout_ids: Sequence[str],
++    corpora: Mapping[str, Any] | None = None,
++) -> str:
++    """REQ-LEARN-4150: hash baseline identity plus held-out labels used by the graft."""
++
++    payload = {
++        "schema": "carnot.experiment_4150.decisive_graft.v1",
++        "baseline": None if baseline is None else baseline.to_dict(),
++        "heldout_ids": list(heldout_ids),
++        "corpora": _jsonable(corpora or {}),
++    }
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
++
++
++def _acceptance_gate(artifact: Mapping[str, Any]) -> bool:
++    if str(artifact.get("honest_verdict", "")).startswith("blocked_"):
++        return False
++    if type(artifact.get("graft_deferred")) is not bool:
++        return False
++    if type(artifact.get("verifier_value_added")) is not bool:
++        return False
++    baseline_status = artifact.get("baseline_status")
++    if not isinstance(baseline_status, Mapping):
++        return False
++    if artifact.get("graft_deferred") is True:
++        val = _float_or_none(baseline_status.get("val_exact_accuracy"))
++        return val is not None and val < FAITHFUL_VAL_THRESHOLD
++    rerank = artifact.get("rerank_lift_vs_vote")
++    rft = artifact.get("rft_vs_ablation_delta")
++    return isinstance(rerank, Mapping) and isinstance(rft, Mapping) and _metric_has_ci(rerank) and _metric_has_ci(rft)
++
++
++def build_result_artifact(
++    *,
++    baseline: BaselineContext,
++    rerank_lift_vs_vote: Mapping[str, Any],
++    rft_vs_ablation_delta: Mapping[str, Any],
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++    duration_s: float,
++    candidate_source: str,
++    k_candidates: int,
++    n_candidate_pools: int,
++    corpora_summary: Mapping[str, Any] | None = None,
++    random_seed: int = RANDOM_SEED,
++    reproducibility_checksum: str | None = None,
++) -> dict[str, Any]:
++    """REQ-LEARN-4150: build either the honest deferral or real graft artifact."""
++
++    graft_deferred = not baseline_is_faithful(baseline)
++    value_added = verifier_value_added(rft_vs_ablation_delta, graft_deferred=graft_deferred)
++    heldout_ids = [
++        str(row.get("puzzle_id"))
++        for row in rerank_lift_vs_vote.get("per_puzzle", [])
++        if isinstance(row, Mapping)
++    ]
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4150_decisive_verifier_graft_sudoku",
++        "schema": "carnot.experiment_4150_decisive_verifier_graft_sudoku.v1",
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": _artifact_verdict(graft_deferred=graft_deferred, value_added=value_added),
++        "graft_deferred": graft_deferred,
++        "rerank_lift_vs_vote": _jsonable(rerank_lift_vs_vote),
++        "rft_vs_ablation_delta": _jsonable(rft_vs_ablation_delta),
++        "verifier_value_added": bool(value_added),
++        "preconditions_checked": _checks_to_dicts(preconditions_checked),
++        "baseline_status": _baseline_status(baseline),
++        "estimated_passes_to_converge_for_385": estimate_passes_to_converge_for_385(baseline),
++        "stable_checkpoint_path": str(baseline.stable_checkpoint_path),
++        "baseline_artifact_path": str(baseline.artifact_path),
++        "candidate_source": candidate_source,
++        "k_candidates_per_puzzle": int(k_candidates),
++        "n_candidate_pools": int(n_candidate_pools),
++        "corpus_summary": _jsonable(corpora_summary or {}),
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": reproducibility_checksum
++        or compute_reproducibility_checksum(baseline=baseline, heldout_ids=heldout_ids),
++        "duration_s": round(float(duration_s), 3),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "acceptance_gate_passed": False,
++    }
++    artifact["acceptance_gate_passed"] = _acceptance_gate(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def build_blocked_artifact(
++    honest_verdict: str,
++    *,
++    baseline: BaselineContext | None,
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++    duration_s: float,
++    random_seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    """REQ-LEARN-4150: fail closed when required baseline resources are missing."""
++
++    artifact = {
++        "experiment": "experiment_4150_decisive_verifier_graft_sudoku",
++        "schema": "carnot.experiment_4150_decisive_verifier_graft_sudoku.v1",
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": honest_verdict,
++        "graft_deferred": True,
++        "rerank_lift_vs_vote": deferred_metric("not_run_preconditions_failed"),
++        "rft_vs_ablation_delta": deferred_rft_delta("not_run_preconditions_failed", baseline),
++        "verifier_value_added": False,
++        "preconditions_checked": _checks_to_dicts(preconditions_checked),
++        "baseline_status": _baseline_status(baseline),
++        "estimated_passes_to_converge_for_385": estimate_passes_to_converge_for_385(baseline),
++        "stable_checkpoint_path": None if baseline is None else str(baseline.stable_checkpoint_path),
++        "baseline_artifact_path": None if baseline is None else str(baseline.artifact_path),
++        "candidate_source": "none_preconditions_failed",
++        "k_candidates_per_puzzle": 0,
++        "n_candidate_pools": 0,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": compute_reproducibility_checksum(baseline=baseline, heldout_ids=[]),
++        "duration_s": round(float(duration_s), 3),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "acceptance_gate_passed": False,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return explicit schema errors for the Exp 4150 deliverable."""
++
++    errors: list[str] = []
++    for field_name in REQUIRED_ARTIFACT_FIELDS:
++        if field_name not in artifact:
++            errors.append(f"missing required field {field_name}")
++
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str):
++        errors.append("honest_verdict must be a string")
++    elif not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed or blocked")
++
++    if type(artifact.get("graft_deferred")) is not bool:
++        errors.append("graft_deferred must be a bare bool")
++    if type(artifact.get("verifier_value_added")) is not bool:
++        errors.append("verifier_value_added must be a bare bool")
++    if artifact.get("graft_deferred") is True and artifact.get("verifier_value_added") is True:
++        errors.append("verifier_value_added is only meaningful when graft_deferred is false")
++
++    for field_name in ("rerank_lift_vs_vote", "rft_vs_ablation_delta"):
++        metric = artifact.get(field_name)
++        if not isinstance(metric, Mapping):
++            errors.append(f"{field_name} must be an object")
++            continue
++        if "delta" not in metric:
++            errors.append(f"{field_name}.delta is required")
++        if not _metric_has_ci(metric):
++            errors.append(f"{field_name}.ci95 must have two numeric bounds")
++
++    preconditions = artifact.get("preconditions_checked")
++    if not isinstance(preconditions, list):
++        errors.append("preconditions_checked must be a list")
++    elif any(
++        not isinstance(item, Mapping) or "resource" not in item or "available" not in item
++        for item in preconditions
++    ):
++        errors.append("preconditions_checked entries must include resource and available")
++
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles must be an object")
++    else:
++        for field_name, principle in FIELD_PRINCIPLES.items():
++            if principles.get(field_name) != principle:
++                errors.append(f"field_principles.{field_name} mismatch")
++
++    if not isinstance(artifact.get("baseline_status"), Mapping):
++        errors.append("baseline_status must be an object")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, (int, float)) or isinstance(duration, bool):
++        errors.append("duration_s must be numeric")
++    if "acceptance_gate_passed" in artifact and type(artifact.get("acceptance_gate_passed")) is not bool:
++        errors.append("acceptance_gate_passed must be a bare bool")
++    checksum = artifact.get("reproducibility_checksum")
++    if checksum is not None and not (
++        isinstance(checksum, str) and checksum.startswith("sha256:") and len(checksum) == 71
++    ):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def write_artifact(path: str | Path, artifact: Mapping[str, Any]) -> dict[str, Any]:
++    """Write the stable Exp 4150 JSON artifact."""
++
++    validate_artifact(artifact)
++    output_path = Path(path)
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    payload = _jsonable(artifact)
++    output_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return json.loads(output_path.read_text(encoding="utf-8"))
++
++
++def sample_checkpoint_candidate_pools(  # pragma: no cover - live GPU/checkpoint path.
++    *,
++    baseline: BaselineContext,
++    repo_root: str | Path = REPO_ROOT,
++    data_dir: str | Path = DEFAULT_DATA_DIR,
++    split: str = DEFAULT_HELDOUT_SPLIT,
++    max_puzzles: int = DEFAULT_MAX_PUZZLES,
++    k_candidates: int = DEFAULT_K_CANDIDATES,
++    random_seed: int = RANDOM_SEED,
++) -> list[CandidatePool]:
++    """REQ-LEARN-4150: sample K held-out candidate grids from the stable TRM."""
++
++    return exp4109.sample_checkpoint_candidate_pools(
++        checkpoint_path=baseline.stable_checkpoint_path,
++        repo_root=repo_root,
++        data_dir=data_dir,
++        split=split,
++        max_puzzles=max_puzzles,
++        k_candidates=k_candidates,
++        random_seed=random_seed,
++    )
++
++
++def _summarize_corpora(corpora: Mapping[str, Any]) -> dict[str, Any]:
++    rows = list(corpora.get("rows", []))
++    return {
++        "arm_a": corpora.get("arm_a"),
++        "arm_b": corpora.get("arm_b"),
++        "n_matched": int(corpora.get("n_matched", 0)),
++        "skipped_no_verifier_valid": len(corpora.get("skipped_no_verifier_valid", [])),
++        "a_exact_count": sum(bool(row.get("a_exact")) for row in rows if isinstance(row, Mapping)),
++        "b_exact_count": sum(bool(row.get("b_exact")) for row in rows if isinstance(row, Mapping)),
++    }
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    output_path: str | Path = DEFAULT_OUTPUT,
++    exp4149_artifact_path: str | Path | None = None,
++    data_dir: str | Path = DEFAULT_DATA_DIR,
++    heldout_split: str = DEFAULT_HELDOUT_SPLIT,
++    max_puzzles: int = DEFAULT_MAX_PUZZLES,
++    k_candidates: int = DEFAULT_K_CANDIDATES,
++    bootstrap_resamples: int = 2000,
++    random_seed: int = RANDOM_SEED,
++    cuda_checker: Callable[[], tuple[bool, str]] = exp4107._default_cuda_checker,
++    checkpoint_loader: Callable[[Path], tuple[bool, str]] = exp4107._load_torch_checkpoint,
++    candidate_pool_provider: Callable[[BaselineContext], Sequence[CandidatePool]] | None = None,
++    rft_runner: Callable[[BaselineContext, dict[str, Any]], Mapping[str, Any]] | None = None,
++) -> dict[str, Any]:
++    """Run Exp 4150 and write the decisive verifier-graft gate artifact."""
++
++    started = time.time()
++    root = Path(repo_root)
++    baseline_path = Path(exp4149_artifact_path) if exp4149_artifact_path is not None else root / "results" / exp4149.RESULT_FILENAME
++    try:
++        baseline = load_baseline_context(baseline_path)
++    except (FileNotFoundError, json.JSONDecodeError, ValueError):
++        artifact = build_blocked_artifact(
++            "blocked_exp4149_baseline_missing",
++            baseline=None,
++            preconditions_checked=[PreconditionCheck("exp4149_artifact", False, str(baseline_path))],
++            duration_s=time.time() - started,
++            random_seed=random_seed,
++        )
++        return write_artifact(output_path, artifact)
++
++    checks = check_preconditions(baseline, cuda_checker=cuda_checker, checkpoint_loader=checkpoint_loader)
++    if not _all_preconditions_available(checks):
++        artifact = build_blocked_artifact(
++            "blocked_exp4150_preconditions_missing",
++            baseline=baseline,
++            preconditions_checked=checks,
++            duration_s=time.time() - started,
++            random_seed=random_seed,
++        )
++        return write_artifact(output_path, artifact)
++
++    if not baseline_is_faithful(baseline):
++        artifact = build_result_artifact(
++            baseline=baseline,
++            rerank_lift_vs_vote=deferred_metric("deferred_baseline_below_0.85"),
++            rft_vs_ablation_delta=deferred_rft_delta("deferred_baseline_below_0.85", baseline),
++            preconditions_checked=checks,
++            duration_s=time.time() - started,
++            candidate_source="none_baseline_below_0.85",
++            k_candidates=0,
++            n_candidate_pools=0,
++            random_seed=random_seed,
++        )
++        return write_artifact(output_path, artifact)
++
++    try:
++        if candidate_pool_provider is not None:
++            pools = list(candidate_pool_provider(baseline))
++            candidate_source = "provided_candidate_pool"
++        else:  # pragma: no cover - live checkpoint sampling path.
++            pools = sample_checkpoint_candidate_pools(
++                baseline=baseline,
++                repo_root=root,
++                data_dir=data_dir,
++                split=heldout_split,
++                max_puzzles=max_puzzles,
++                k_candidates=k_candidates,
++                random_seed=random_seed,
++            )
++            candidate_source = "trm_checkpoint_final_logits_k_sampling"
++    except Exception as exc:  # pragma: no cover - defensive live failure path.
++        artifact = build_blocked_artifact(
++            "blocked_candidate_sampling_failed",
++            baseline=baseline,
++            preconditions_checked=[
++                *checks,
++                PreconditionCheck("candidate_sampling", False, f"{type(exc).__name__}: {exc}"),
++            ],
++            duration_s=time.time() - started,
++            random_seed=random_seed,
++        )
++        return write_artifact(output_path, artifact)
++
++    rerank = evaluate_rerank_lift(pools, random_seed=random_seed, bootstrap_resamples=bootstrap_resamples)
++    corpora = exp4109.build_matched_corpora(pools)
++    if rft_runner is not None:
++        rft_delta = dict(rft_runner(baseline, corpora))
++    else:
++        rft_delta = exp4109.evaluate_label_arms(
++            corpora,
++            random_seed=random_seed + 1,
++            bootstrap_resamples=bootstrap_resamples,
++        )
++    heldout_ids = [pool.puzzle_id for pool in pools]
++    checksum = compute_reproducibility_checksum(
++        baseline=baseline,
++        heldout_ids=heldout_ids,
++        corpora=corpora,
++    )
++    artifact = build_result_artifact(
++        baseline=baseline,
++        rerank_lift_vs_vote=rerank,
++        rft_vs_ablation_delta=rft_delta,
++        preconditions_checked=checks,
++        duration_s=time.time() - started,
++        candidate_source=candidate_source,
++        k_candidates=k_candidates,
++        n_candidate_pools=len(pools),
++        corpora_summary=_summarize_corpora(corpora),
++        random_seed=random_seed,
++        reproducibility_checksum=checksum,
++    )
++    return write_artifact(output_path, artifact)
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper.
++    artifact = run_experiment()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index d17d065644..2afc96de96 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-13T13:16:39.528482Z",
+-  "duration_s": 0.02323126792907715,
++  "run_date": "2026-06-13T13:46:46.329058Z",
++  "duration_s": 0.022397518157958984,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "bb97c9fe283173e6efd088703ce2a35a551000665dc2c511f6d191de6097b793",
++  "reproducibility_checksum": "7ca871c91a863375dd494691cf373fdf70855bb81d46560d83336f37d6602978",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "95520ec845537ac21e72a669bd639dfcf4d41a70"
++    "adversarial_verify_version": "b23d286034c230a598f0f7639d930cbdb7095b9b"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 80fe7d554e..d1abb73e5b 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-13T13:16:39.560899Z",
+-  "duration_s": 0.02646040916442871,
++  "run_date": "2026-06-13T13:46:46.359437Z",
++  "duration_s": 0.02483654022216797,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "4daf995820359f560d2cccd6a8407ab415229414794d2902bd1ce9bdeb3bbf7b",
++  "reproducibility_checksum": "d6a7ce8b2ede8f39d2908b731b0f22e2e23d10c9fb06055ec52164d71f734a57",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "95520ec845537ac21e72a669bd639dfcf4d41a70"
++    "adversarial_verify_version": "b23d286034c230a598f0f7639d930cbdb7095b9b"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index b2ea5c3b85..d1219c28ee 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1088123321533203,
++  "efficiency_gains_ms": 2.1178722381591797,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index ec62396fa4..f9f4f0d330 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.3526747226715088,
++  "duration_s": 0.37624263763427734,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 39d8c4e195..ee3a4a26ff 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0010976791381835938,
++  "duration_s": 0.0009250640869140625,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 9c943b5498..4ec61fc24f 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.473499964457005e-05,
++  "duration_s": 2.873399353120476e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 20a9c1a4f4..db732435df 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.010078893974423e-07,
++  "duration_s": 7.509952411055565e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 3bd8a4c41b..92bd249601 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 0.00014209747314453125,
++  "duration_s": 6.341934204101562e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_4150_decisive_verifier_graft_sudoku.json b/results/experiment_4150_decisive_verifier_graft_sudoku.json
+new file mode 100644
+index 0000000000..b6116117c8
+--- /dev/null
++++ b/results/experiment_4150_decisive_verifier_graft_sudoku.json
+@@ -0,0 +1,92 @@
++{
++  "acceptance_gate_passed": true,
++  "baseline_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
++  "baseline_status": {
++    "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
++    "faithful": false,
++    "faithful_threshold": 0.85,
++    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++    "val_exact_accuracy": 0.278172343969
++  },
++  "candidate_source": "none_baseline_below_0.85",
++  "corpus_summary": {},
++  "duration_s": 0.115,
++  "estimated_passes_to_converge_for_385": {
++    "basis": "no_positive_v384_convergence_rate",
++    "current_val_exact_accuracy": 0.278172343969,
++    "destination": ".385",
++    "estimated_additional_passes": null,
++    "target_val_exact_accuracy": 0.85
++  },
++  "experiment": "experiment_4150_decisive_verifier_graft_sudoku",
++  "field_principles": {
++    "graft_deferred": "Bare bool: True if val<0.85 -> deferred. Prevents the uninformative no-headroom false-negative .383 produced.",
++    "honest_verdict": "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE; an uninformative graft on a non-faithful baseline is the .383 anti-pattern.",
++    "preconditions_checked": "Records the baseline checkpoint + CUDA verified.",
++    "rerank_lift_vs_vote": "pass@1 lift from verifier-reranking (if grafted); confirms the executable Sudoku verifier discriminates (contrast to .379 ARC-grid anti-discrimination).",
++    "rft_vs_ablation_delta": "The de-confounded A-vs-B held-out delta with CI (if grafted): isolates the verifier LABEL's training contribution -- THE moat measurement.",
++    "verifier_value_added": "Bare bool: did the graft beat the vote ablation? The headline answer, ONLY meaningful when graft_deferred is False. Also resolves the DiffusionGemma gate."
++  },
++  "graft_deferred": true,
++  "honest_verdict": "complete: graft_deferred_baseline_below_0.85",
++  "k_candidates_per_puzzle": 0,
++  "n_candidate_pools": 0,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
++      "resource": "exp4149_artifact"
++    },
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++      "resource": "stable_checkpoint_path"
++    },
++    {
++      "available": true,
++      "detail": "torch.load ok",
++      "resource": "baseline_checkpoint"
++    },
++    {
++      "available": true,
++      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
++      "resource": "cuda_available"
++    }
++  ],
++  "random_seed": 4150,
++  "reproducibility_checksum": "sha256:e849f4e849a0fcdb37cac7d0a5a19cd3fa68250d9463f513c9031ee9befc91f0",
++  "rerank_lift_vs_vote": {
++    "ci95": [
++      0.0,
++      0.0
++    ],
++    "delta": 0.0,
++    "metric": "pass@1_exact_accuracy",
++    "n_puzzles": 0,
++    "oracle_pass_at_k": 0.0,
++    "status": "deferred_baseline_below_0.85",
++    "verifier_pass_at_1": 0.0,
++    "vote_pass_at_1": 0.0
++  },
++  "rft_vs_ablation_delta": {
++    "a_exact_accuracy": 0.0,
++    "b_exact_accuracy": 0.0,
++    "ci95": [
++      0.0,
++      0.0
++    ],
++    "current_val_exact_accuracy": 0.278172343969,
++    "delta": 0.0,
++    "metric": "heldout_exact_accuracy",
++    "n_matched": 0,
++    "status": "deferred_baseline_below_0.85"
++  },
++  "schema": "carnot.experiment_4150_decisive_verifier_graft_sudoku.v1",
++  "spec_refs": [
++    "REQ-LEARN-4150",
++    "SCENARIO-LEARN-4150-DEFER",
++    "SCENARIO-LEARN-4150-GRAFT"
++  ],
++  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++  "verifier_value_added": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 42f8b09edd..9154ca6013 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T13:16:30Z",
+-  "finished_at": "2026-06-13T13:16:30Z",
++  "started_at": "2026-06-13T13:46:36Z",
++  "finished_at": "2026-06-13T13:46:36Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 662688db00..ac398562b6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T13:16:30Z",
+-  "finished_at": "2026-06-13T13:16:30Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-13T13:46:36Z",
++  "finished_at": "2026-06-13T13:46:36Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index dc8d6d03cd..34ac76dd5e 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T13:16:30Z",
+-  "finished_at": "2026-06-13T13:16:31Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-13T13:46:37Z",
++  "finished_at": "2026-06-13T13:46:37Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4150_decisive_verifier_graft_sudoku.py b/tests/python/test_experiment_4150_decisive_verifier_graft_sudoku.py
+new file mode 100644
+index 0000000000..7eaad33988
+--- /dev/null
++++ b/tests/python/test_experiment_4150_decisive_verifier_graft_sudoku.py
+@@ -0,0 +1,412 @@
++"""Tests for Exp 4150 decisive Sudoku verifier graft gate.
++
++Spec refs: REQ-LEARN-4150, SCENARIO-LEARN-4150-DEFER,
++SCENARIO-LEARN-4150-GRAFT.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4109_carnot_verifier_graft_sudoku as exp4109
++from carnot import experiment_4139_decisive_verifier_graft_sudoku as exp4139
++from carnot import experiment_4150_decisive_verifier_graft_sudoku as exp4150
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++
++PUZZLE = [
++    [5, 3, 0, 0, 7, 0, 0, 0, 0],
++    [6, 0, 0, 1, 9, 5, 0, 0, 0],
++    [0, 9, 8, 0, 0, 0, 0, 6, 0],
++    [8, 0, 0, 0, 6, 0, 0, 0, 3],
++    [4, 0, 0, 8, 0, 3, 0, 0, 1],
++    [7, 0, 0, 0, 2, 0, 0, 0, 6],
++    [0, 6, 0, 0, 0, 0, 2, 8, 0],
++    [0, 0, 0, 4, 1, 9, 0, 0, 5],
++    [0, 0, 0, 0, 8, 0, 0, 7, 9],
++]
++
++SOLUTION = [
++    [5, 3, 4, 6, 7, 8, 9, 1, 2],
++    [6, 7, 2, 1, 9, 5, 3, 4, 8],
++    [1, 9, 8, 3, 4, 2, 5, 6, 7],
++    [8, 5, 9, 7, 6, 1, 4, 2, 3],
++    [4, 2, 6, 8, 5, 3, 7, 9, 1],
++    [7, 1, 3, 9, 2, 4, 8, 5, 6],
++    [9, 6, 1, 5, 3, 7, 2, 8, 4],
++    [2, 8, 7, 4, 1, 9, 6, 3, 5],
++    [3, 4, 5, 2, 8, 6, 1, 7, 9],
++]
++
++
++def _tokens(grid: list[list[int]]) -> list[int]:
++    return exp4109.encode_grid(grid)
++
++
++def _bad_solution() -> list[int]:
++    bad = [row[:] for row in SOLUTION]
++    bad[0][0] = 6
++    bad[0][2] = 5
++    return _tokens(bad)
++
++
++def _pool(puzzle_id: str) -> exp4139.CandidatePool:
++    puzzle = _tokens(PUZZLE)
++    label = _tokens(SOLUTION)
++    good = exp4139.CandidateSample(f"{puzzle_id}:good", label, trm_score=0.4)
++    bad_a = exp4139.CandidateSample(f"{puzzle_id}:bad-a", _bad_solution(), trm_score=0.9)
++    bad_b = exp4139.CandidateSample(f"{puzzle_id}:bad-b", _bad_solution(), trm_score=0.8)
++    return exp4139.CandidatePool(puzzle_id, puzzle, label, [bad_a, bad_b, good])
++
++
++def _write_exp4149(path: Path, *, stable: Path, val: float | None) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    payload = {
++        "experiment": "experiment_4149_sudoku_accumulate_pass4_convergence",
++        "honest_verdict": "complete: fixture",
++        "stable_checkpoint_path": str(stable),
++        "val_exact_accuracy": val,
++        "val_trajectory_v384": [
++            {"pass_label": "v384_start", "effective_val_exact_accuracy": 0.278},
++            {"pass_label": "pass4", "effective_val_exact_accuracy": val},
++        ],
++        "preconditions_checked": [{"resource": "cuda_available", "available": True, "detail": "fixture"}],
++    }
++    path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
++    return path
++
++
++def _checks(stable: Path) -> list[dict[str, object]]:
++    return [
++        {"resource": "exp4149_artifact", "available": True, "detail": "fixture"},
++        {"resource": "stable_checkpoint_path", "available": True, "detail": str(stable)},
++        {"resource": "baseline_checkpoint", "available": True, "detail": "loadable fixture"},
++        {"resource": "cuda_available", "available": True, "detail": "cuda fixture"},
++    ]
++
++
++def test_req_learn_4150_spec_declares_required_contract() -> None:
++    """REQ-LEARN-4150: OpenSpec declares the 4150 artifact contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-LEARN-4150" in spec
++    assert "SCENARIO-LEARN-4150-DEFER" in spec
++    assert "SCENARIO-LEARN-4150-GRAFT" in spec
++    assert exp4150.RESULT_FILENAME in spec
++    for field in exp4150.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++        assert field in exp4150.FIELD_PRINCIPLES
++
++
++def test_req_learn_4150_loads_baseline_and_checks_preconditions(tmp_path: Path) -> None:
++    """REQ-LEARN-4150: Exp 4149 val and runtime checks gate Exp 4150."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    artifact_path = _write_exp4149(tmp_path / "results" / exp4150.DEFAULT_EXP4149_ARTIFACT.name, stable=stable, val=0.278)
++    baseline = exp4150.load_baseline_context(artifact_path)
++
++    assert baseline.artifact_path == artifact_path
++    assert baseline.stable_checkpoint_path == stable
++    assert baseline.val_exact_accuracy == pytest.approx(0.278)
++    assert exp4150.baseline_is_faithful(baseline) is False
++    estimate = exp4150.estimate_passes_to_converge_for_385(baseline)
++    assert estimate["target_val_exact_accuracy"] == pytest.approx(0.85)
++    assert estimate["estimated_additional_passes"] is None
++    assert estimate["basis"] == "no_positive_v384_convergence_rate"
++
++    checks = exp4150.check_preconditions(
++        baseline,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert [check.resource for check in checks] == [
++        "exp4149_artifact",
++        "stable_checkpoint_path",
++        "baseline_checkpoint",
++        "cuda_available",
++    ]
++    assert checks[2].available is False
++
++    stable.parent.mkdir(parents=True, exist_ok=True)
++    stable.write_bytes(b"checkpoint")
++    checks = exp4150.check_preconditions(
++        baseline,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert all(check.available for check in checks)
++
++    failed = exp4150.check_preconditions(
++        baseline,
++        cuda_checker=lambda: (_ for _ in ()).throw(RuntimeError("cuda broke")),
++        checkpoint_loader=lambda _path: (_ for _ in ()).throw(RuntimeError("load broke")),
++    )
++    assert failed[2].available is False
++    assert "RuntimeError: load broke" in failed[2].detail
++    assert failed[3].available is False
++    assert "RuntimeError: cuda broke" in failed[3].detail
++
++    trajectory_only = tmp_path / "results" / "trajectory_only.json"
++    trajectory_only.write_text(
++        json.dumps(
++            {
++                "stable_checkpoint_path": str(stable),
++                "val_exact_accuracy": None,
++                "val_trajectory_v384": [{"effective_val_exact_accuracy": "0.86"}],
++            }
++        ),
++        encoding="utf-8",
++    )
++    assert exp4150.load_baseline_context(trajectory_only).val_exact_accuracy == pytest.approx(0.86)
++    fallback_trajectory = tmp_path / "results" / "fallback_trajectory.json"
++    fallback_trajectory.write_text(
++        json.dumps(
++            {
++                "stable_checkpoint_path": str(stable),
++                "val_trajectory_v384": [{"val_exact_accuracy": "0.87"}],
++            }
++        ),
++        encoding="utf-8",
++    )
++    assert exp4150.load_baseline_context(fallback_trajectory).val_exact_accuracy == pytest.approx(0.87)
++    with pytest.raises(ValueError, match="JSON object"):
++        bad_json = tmp_path / "bad.json"
++        bad_json.write_text("[]\n", encoding="utf-8")
++        exp4150.load_baseline_context(bad_json)
++
++
++def test_req_learn_4150_helper_edges_are_deterministic() -> None:
++    """REQ-LEARN-4150: helper edge cases do not fabricate gate evidence."""
++
++    assert exp4150._float_or_none("bad") is None
++    assert exp4150._float_or_none(object()) is None
++    assert exp4150._latest_trajectory_val({"val_trajectory_v384": "bad"}) is None
++    assert exp4150._latest_trajectory_val({"val_trajectory_v384": [{"val_exact_accuracy": "bad"}]}) is None
++    assert exp4150.estimate_passes_to_converge_for_385(None)["basis"] == "missing_exp4149_val_exact_accuracy"
++
++    faithful = exp4150.BaselineContext(
++        artifact_path=Path("exp4149.json"),
++        stable_checkpoint_path=Path("last.ckpt"),
++        val_exact_accuracy=0.86,
++        raw={},
++    )
++    assert exp4150.estimate_passes_to_converge_for_385(faithful)["estimated_additional_passes"] == 0
++
++    improving = exp4150.BaselineContext(
++        artifact_path=Path("exp4149.json"),
++        stable_checkpoint_path=Path("last.ckpt"),
++        val_exact_accuracy=0.6,
++        raw={"val_trajectory_v384": [{"val_exact_accuracy": 0.4}, {"val_exact_accuracy": 0.5}, {"val_exact_accuracy": 0.6}]},
++    )
++    estimate = exp4150.estimate_passes_to_converge_for_385(improving)
++    assert estimate["basis"] == "mean_positive_v384_delta"
++    assert estimate["estimated_additional_passes"] == 3
++
++    class Scalar:
++        def item(self) -> int:
++            return 7
++
++    assert exp4150._jsonable(Path("x")) == "x"
++    assert exp4150._jsonable(Scalar()) == 7
++    assert exp4150.verifier_value_added({"delta": "bad", "ci95": [1.0, 1.0]}, graft_deferred=False) is False
++    assert exp4150._artifact_verdict(graft_deferred=False, value_added=False) == "complete: A~=B null"
++    assert exp4150._acceptance_gate({"honest_verdict": "blocked_x"}) is False
++    assert exp4150._acceptance_gate({"honest_verdict": "complete: x", "graft_deferred": "yes"}) is False
++    assert exp4150._acceptance_gate(
++        {"honest_verdict": "complete: x", "graft_deferred": False, "verifier_value_added": "no"}
++    ) is False
++    assert exp4150._acceptance_gate(
++        {
++            "honest_verdict": "complete: x",
++            "graft_deferred": False,
++            "verifier_value_added": False,
++            "baseline_status": "bad",
++        }
++    ) is False
++
++
++def test_scenario_learn_4150_defer_writes_acceptance_grade_artifact(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4150-DEFER: val<0.85 stops before candidate sampling."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    stable.parent.mkdir(parents=True, exist_ok=True)
++    stable.write_bytes(b"checkpoint")
++    artifact_path = _write_exp4149(tmp_path / "results" / exp4150.DEFAULT_EXP4149_ARTIFACT.name, stable=stable, val=0.278)
++    output = tmp_path / "results" / exp4150.RESULT_FILENAME
++
++    artifact = exp4150.run_experiment(
++        repo_root=tmp_path,
++        output_path=output,
++        exp4149_artifact_path=artifact_path,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++        candidate_pool_provider=lambda _baseline: pytest.fail("must not sample candidates"),
++    )
++
++    assert artifact["honest_verdict"].startswith("complete: graft_deferred")
++    assert artifact["graft_deferred"] is True
++    assert artifact["verifier_value_added"] is False
++    assert artifact["baseline_status"]["val_exact_accuracy"] == pytest.approx(0.278)
++    assert artifact["estimated_passes_to_converge_for_385"]["estimated_additional_passes"] is None
++    assert artifact["rerank_lift_vs_vote"]["status"] == "deferred_baseline_below_0.85"
++    assert artifact["rft_vs_ablation_delta"]["status"] == "deferred_baseline_below_0.85"
++    assert artifact["acceptance_gate_passed"] is True
++    assert exp4150.artifact_schema_errors(artifact) == []
++    assert json.loads(output.read_text(encoding="utf-8")) == artifact
++
++
++def test_scenario_learn_4150_graft_reports_rerank_and_rft_delta(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4150-GRAFT: faithful fixture reports both measurement arms."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    stable.parent.mkdir(parents=True, exist_ok=True)
++    stable.write_bytes(b"checkpoint")
++    artifact_path = _write_exp4149(tmp_path / "results" / exp4150.DEFAULT_EXP4149_ARTIFACT.name, stable=stable, val=0.86)
++    pools = [_pool(f"p{i}") for i in range(6)]
++    rft_calls = []
++
++    def rft_runner(_baseline: exp4150.BaselineContext, corpora: dict[str, object]) -> dict[str, object]:
++        rft_calls.append(corpora)
++        return {
++            "metric": "heldout_exact_accuracy",
++            "n_matched": corpora["n_matched"],
++            "a_exact_accuracy": 1.0,
++            "b_exact_accuracy": 0.0,
++            "delta": 1.0,
++            "ci95": [1.0, 1.0],
++            "status": "ci95_excludes_zero",
++        }
++
++    artifact = exp4150.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "results" / "grafted.json",
++        exp4149_artifact_path=artifact_path,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++        candidate_pool_provider=lambda _baseline: pools,
++        rft_runner=rft_runner,
++        bootstrap_resamples=100,
++    )
++
++    assert artifact["graft_deferred"] is False
++    assert artifact["rerank_lift_vs_vote"]["delta"] == pytest.approx(1.0)
++    assert artifact["rerank_lift_vs_vote"]["oracle_pass_at_k"] == pytest.approx(1.0)
++    assert artifact["rft_vs_ablation_delta"]["delta"] == pytest.approx(1.0)
++    assert artifact["verifier_value_added"] is True
++    assert artifact["acceptance_gate_passed"] is True
++    assert rft_calls and rft_calls[0]["n_matched"] == len(pools)
++    assert exp4150.artifact_schema_errors(artifact) == []
++
++    proxy_rft = exp4150.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "results" / "proxy_rft.json",
++        exp4149_artifact_path=artifact_path,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++        candidate_pool_provider=lambda _baseline: pools,
++        bootstrap_resamples=100,
++    )
++    assert proxy_rft["rft_vs_ablation_delta"]["status"] == "ci95_excludes_zero"
++    assert proxy_rft["verifier_value_added"] is True
++
++
++def test_req_learn_4150_schema_and_blocked_paths(tmp_path: Path) -> None:
++    """REQ-LEARN-4150: schema rejects ambiguous or fake 4150 artifacts."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    baseline = exp4150.BaselineContext(
++        artifact_path=tmp_path / "results" / "exp4149.json",
++        stable_checkpoint_path=stable,
++        val_exact_accuracy=0.9,
++        raw={},
++    )
++    blocked = exp4150.build_blocked_artifact(
++        "blocked_baseline_checkpoint_missing",
++        baseline=baseline,
++        preconditions_checked=[{"resource": "baseline_checkpoint", "available": False, "detail": "missing"}],
++        duration_s=0.5,
++    )
++    assert blocked["acceptance_gate_passed"] is False
++    assert exp4150.artifact_schema_errors(blocked) == []
++
++    bad = dict(blocked)
++    bad.update(
++        {
++            "honest_verdict": "not terminal",
++            "graft_deferred": "yes",
++            "verifier_value_added": "no",
++            "preconditions_checked": [{"resource": "x"}],
++            "field_principles": {},
++            "duration_s": False,
++            "acceptance_gate_passed": "yes",
++            "baseline_status": "bad",
++            "rerank_lift_vs_vote": {"delta": 1.0, "ci95": "bad"},
++            "rft_vs_ablation_delta": [],
++            "reproducibility_checksum": "bad",
++        }
++    )
++    errors = exp4150.artifact_schema_errors(bad)
++    assert "honest_verdict must be terminal-prefixed or blocked" in errors
++    assert "graft_deferred must be a bare bool" in errors
++    assert "verifier_value_added must be a bare bool" in errors
++    assert "preconditions_checked entries must include resource and available" in errors
++    assert "field_principles.honest_verdict mismatch" in errors
++    assert "duration_s must be numeric" in errors
++    assert "acceptance_gate_passed must be a bare bool" in errors
++    assert "baseline_status must be an object" in errors
++    assert "rerank_lift_vs_vote.ci95 must have two numeric bounds" in errors
++    assert "rft_vs_ablation_delta must be an object" in errors
++    assert "reproducibility_checksum must be sha256-prefixed" in errors
++    assert "missing required field honest_verdict" in exp4150.artifact_schema_errors({})
++
++    bad_deferred_value = dict(blocked)
++    bad_deferred_value["verifier_value_added"] = True
++    assert "verifier_value_added is only meaningful when graft_deferred is false" in exp4150.artifact_schema_errors(
++        bad_deferred_value
++    )
++    missing_delta = dict(blocked)
++    missing_delta["rerank_lift_vs_vote"] = {"ci95": [0.0, 0.0]}
++    assert "rerank_lift_vs_vote.delta is required" in exp4150.artifact_schema_errors(missing_delta)
++
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp4150.validate_artifact(bad)
++
++    written = exp4150.write_artifact(tmp_path / "blocked.json", blocked)
++    assert written == blocked
++
++    missing_baseline = exp4150.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "missing.json",
++        exp4149_artifact_path=tmp_path / "missing_exp4149.json",
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert missing_baseline["honest_verdict"] == "blocked_exp4149_baseline_missing"
++
++    artifact_path = _write_exp4149(tmp_path / "results" / exp4150.DEFAULT_EXP4149_ARTIFACT.name, stable=stable, val=0.86)
++    precondition_blocked = exp4150.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "precondition_blocked.json",
++        exp4149_artifact_path=artifact_path,
++        cuda_checker=lambda: (False, "no cuda"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert precondition_blocked["honest_verdict"] == "blocked_exp4150_preconditions_missing"
++
++    stable.parent.mkdir(parents=True, exist_ok=True)
++    stable.write_bytes(b"checkpoint")
++    sampling_blocked = exp4150.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "sampling_blocked.json",
++        exp4149_artifact_path=artifact_path,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++        candidate_pool_provider=lambda _baseline: (_ for _ in ()).throw(RuntimeError("sampling broke")),
++    )
++    assert sampling_blocked["honest_verdict"] == "blocked_candidate_sampling_failed"
+-- 
+2.55.0
+

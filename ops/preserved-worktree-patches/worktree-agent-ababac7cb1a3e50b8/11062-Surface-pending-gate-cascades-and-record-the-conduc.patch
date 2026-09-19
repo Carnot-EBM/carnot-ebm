@@ -1,0 +1,791 @@
+From 5ab3d19290da5904dc600d9cd24fd6ae44becb3f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 12:39:48 -0400
+Subject: [PATCH 11062/11362] Surface pending gate cascades and record the
+ conductor's kernel state per minute
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Two monitors for two recurring blind spots, both from the 2026-09-03
+incidents:
+
+1. scripts/gate_cascade_check.py (REQ-CONDUCTOR-CASCADE-1): joins the
+   active roadmap's gates against the artifacts on disk and reports any
+   gate whose upstream EXISTS and already fails — the exp6942 shape that
+   took 10 of 12 tasks in milestone 608. Absent upstream is deliberately
+   silent (the hand-tested discrimination: fires on 608, silent on all
+   seven of 609's gates). Reuses conductor_gates primitives so it cannot
+   drift from activation-time evaluation. Wired into the outer-loop
+   dashboard; first live run found exp6977.certified_pwa_energy_ready_
+   score=0 with exp6982 gating on it (already blocked by detection time,
+   annotated as such).
+
+2. scripts/conductor_heartbeat_sampler.py (REQ-CONDUCTOR-WCHAN-1): the
+   non-privileged replacement for the unexecutable py-spy remedy. One
+   JSONL record per minute — wchan, State line, pgrep -P child count —
+   via the carnot-heartbeat-sampler systemd user timer (enabled;
+   production sample verified 16:38:04Z). Samples live outside the repo
+   in ~/.carnot/heartbeat_samples/ so they never churn git status.
+
+Mutation-proven: cascade firing rule disabled -> 2 RED, naive
+absent-counts-as-finding rule -> 1 RED, both restored byte-identically
+-> 6 GREEN; sampler wchan read dropped -> 2 RED, restored -> 4 GREEN.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   |  76 ++++++++
+ ops/status.md                                 |  40 ++++
+ scripts/conductor_heartbeat_sampler.py        | 147 +++++++++++++++
+ scripts/gate_cascade_check.py                 | 176 ++++++++++++++++++
+ scripts/outer_loop_dashboard.py               |  25 +++
+ .../test_conductor_heartbeat_sampler.py       |  81 ++++++++
+ tests/python/test_gate_cascade_check.py       | 135 ++++++++++++++
+ 7 files changed, 680 insertions(+)
+ create mode 100644 scripts/conductor_heartbeat_sampler.py
+ create mode 100644 scripts/gate_cascade_check.py
+ create mode 100644 tests/python/test_conductor_heartbeat_sampler.py
+ create mode 100644 tests/python/test_gate_cascade_check.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 41217817a6..aa2fd22771 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -10396,3 +10396,79 @@ change the guard on the strength of that claim.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-CONDUCTOR-VERDICT-4 | Implemented (`scripts/research_conductor.py`, planner prompt `verdict_class` section: retry semantics + the external-incompleteness rule + the incident) | Implemented (`tests/python/test_planner_verdict_class_retry_guidance.py`, 6 tests; mutation: guidance deleted -> 6 RED, restored byte-identically -> 6 GREEN) |
++
++## REQ-CONDUCTOR-CASCADE-1: A Gate Already Failing Against An Existing Upstream SHALL Be Reported Before Its Dependents Burn
++
++Origin: 2026-09-03, milestone 608. exp6942 sat on disk with
++`v608_execution_contract_ready_score = 0` while ten downstream tasks gated on
++that field. The artifact was validated by hand and called benign, because
++`summarize_artifact.py` says whether an artifact is honest, not whether
++anything depends on it. Thirteen GATE_BLOCKs later, ten of twelve tasks were
++dead from one root.
++
++### SCENARIO-CONDUCTOR-CASCADE-1-FIRES: The exp6942 shape is reported
++
++- GIVEN an active-roadmap gate whose upstream artifact EXISTS
++- AND the gate field is PRESENT and already fails the gate's op
++- WHEN `scripts/gate_cascade_check.py` runs
++- THEN it SHALL report the upstream field, the failing value, and every task
++  gating on it, and exit 2.
++
++### SCENARIO-CONDUCTOR-CASCADE-1-SILENT: Absent upstream is not a finding
++
++- GIVEN a gate whose upstream artifact does not exist, or exists without the
++  gate field while the upstream is not final
++- THEN the check SHALL stay silent for that gate, because absent-or-in-flight
++  upstream is the normal state of a milestone in progress (hand-tested
++  2026-09-03: fires on exp6942, silent on all seven of 609's gates).
++
++### SCENARIO-CONDUCTOR-CASCADE-1-FINAL-MISSING: A final upstream without the field is doomed
++
++- GIVEN a gate whose upstream artifact declares a terminal success state and
++  lacks the gate field entirely
++- THEN the check SHALL report it, because the field can never appear (the
++  exp6756 retry-burn shape).
++
++The check reuses `scripts/conductor_gates.py` primitives so it cannot drift
++from what the conductor evaluates at activation. It always prints population
++counts; a clean run is distinguishable from a scan that never executed. Wired
++into `scripts/outer_loop_dashboard.py` so the hourly outer-loop check surfaces
++a pending cascade while the dependents are still pending.
++
++## Implementation Status (REQ-CONDUCTOR-CASCADE-1)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-CONDUCTOR-CASCADE-1 | `scripts/gate_cascade_check.py`; dashboard section in `scripts/outer_loop_dashboard.py` | `tests/python/test_gate_cascade_check.py` |
++
++## REQ-CONDUCTOR-WCHAN-1: A Silent Conductor Gap SHALL Leave A Kernel-State Record No Privilege Is Needed To Read
++
++Origin: 2026-09-03. Two ~60-minute gaps with no log line and no heartbeat both
++closed with "no cause named", because state was only observed AFTER recovery
++and the recorded remedy (`py-spy dump` during the gap) needs ptrace privileges
++this environment does not have.
++
++### SCENARIO-CONDUCTOR-WCHAN-1-SAMPLE: One record per minute, four signals
++
++- GIVEN the conductor is running
++- WHEN `scripts/conductor_heartbeat_sampler.py --once` runs (the
++  `carnot-heartbeat-sampler.timer` systemd user timer fires it every minute)
++- THEN it SHALL append one JSONL record carrying the timestamp,
++  `/proc/<pid>/wchan`, the `State:` line of `/proc/<pid>/status`, and a
++  `pgrep -P` child count
++- AND samples SHALL land under `~/.carnot/heartbeat_samples/` — outside the
++  repo, because a tracked ever-growing file would churn git status and be
++  swept into checkpoint commits.
++
++### SCENARIO-CONDUCTOR-WCHAN-1-NEVER-SKIPS: Unreadable state is a marker, not a gap
++
++- GIVEN a vanished pid, an unreadable proc entry, or a stopped conductor
++- THEN the sampler SHALL still append a record with an explicit error marker
++  ("down at this minute" is data), because a gap in the sample file is the
++  ambiguity the sampler exists to remove.
++
++## Implementation Status (REQ-CONDUCTOR-WCHAN-1)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-CONDUCTOR-WCHAN-1 | `scripts/conductor_heartbeat_sampler.py`; systemd user units `carnot-heartbeat-sampler.{service,timer}` (enabled 2026-09-04) | `tests/python/test_conductor_heartbeat_sampler.py` (4 tests; mutation: wchan read dropped -> 2 RED, restored byte-identically -> GREEN) |
+diff --git a/ops/status.md b/ops/status.md
+index b74a6dc070..801a3c1bfb 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -9654,3 +9654,43 @@ run finished inside the OLD budget and therefore proved nothing about the new on
+ was written down; this one nearly was not, on the grounds that "nothing happened" is not a finding.
+ A fix whose test has not occurred is not nothing — it is an open question wearing a closed
+ requirement's clothes.
++
++## 2026-09-04 16:40Z — measurement-gap closure session: counts measured, three checks built and wired
++
++Work under the 2026-09-04 operator authorization to close the open measurement
++gaps and build the checks that stop them recurring. Six items, all landed.
++
++1. **The two open counts are measured** (commit `f6d4ff56fb`, appended to
++   known-issues). 6,015 artifacts, live `verify_artifact` on each, 0 errors:
++   1,529 live CRITICALs, **1,160 unstamped** (1,009 pre-gate, 151 post-gate,
++   25 recent); 43 stamped artifacts no longer flag under the current rule.
++   `_no_llm` suffix split: **99** deterministic-substrate artifacts
++   live-quarantined by name, 71 more in stored stamps.
++2. **Consumer/producer field join built and wired** (commit `b4a195ae17`).
++   `scripts/eval_run_consumer_field_lint.py` + pre-commit hook
++   `eval-run-consumer-field-lint` + GUARD_TARGETS registration
++   (REQ-ARC-WMTE-6642). Born firing on the three unemitted provenance fields.
++3. **Round emission provenance wired** (same commit, REQ-ARC-WMTE-6643):
++   round rows carry `engine_emitted_at` + `prompt_sha256`; induce rounds
++   persist a transition-source file. exp6968 can resolve engines without the
++   manifest fallback once the next live run lands. NOTE: existing artifacts do
++   not have these fields; the join reports them wired-but-unobserved until a
++   post-fix eval run completes.
++4. **exp6968's sentinel names the real gate** (same commit): the early-return
++   `immutable_transition_source` row now reads
++   `not_evaluated_upstream_gate_failed:<gates>`.
++5. **Gate-cascade check built** (`scripts/gate_cascade_check.py`,
++   REQ-CONDUCTOR-CASCADE-1), wired into the outer-loop dashboard. On its first
++   live run it found a real instance in milestone 611:
++   `exp6977.certified_pwa_energy_ready_score = 0` with exp6982 gating on it —
++   already resolved into a single GATE_BLOCK by detection time, reported with
++   the `(already blocked)` annotation.
++6. **Non-privileged heartbeat sampler built and running**
++   (`scripts/conductor_heartbeat_sampler.py`, REQ-CONDUCTOR-WCHAN-1). Systemd
++   user timer `carnot-heartbeat-sampler.timer` fires every minute; production
++   sample verified (16:38:04Z, wchan=do_select, 1 child). Samples in
++   `~/.carnot/heartbeat_samples/`, outside the repo on purpose.
++
++Every check is mutation-proven RED/GREEN with byte-identical restores. The
++sealed-file edit (GUARD_TARGETS) is declared under scope id
++`eval-run-field-join-20260904`; release it when this session's work is done.
+diff --git a/scripts/conductor_heartbeat_sampler.py b/scripts/conductor_heartbeat_sampler.py
+new file mode 100644
+index 0000000000..5a32537ab5
+--- /dev/null
++++ b/scripts/conductor_heartbeat_sampler.py
+@@ -0,0 +1,147 @@
++#!/usr/bin/env python3
++"""Sample the conductor's kernel state once a minute (REQ-CONDUCTOR-WCHAN-1).
++
++WHY THIS EXISTS (2026-09-03). The conductor twice went ~60 minutes with no log
++line and no heartbeat, then recovered on its own. The recorded remedy —
++`py-spy dump` during the gap — turned out to be unexecutable: py-spy needs
++ptrace privileges this environment does not have, and nothing else was
++recording, so both gaps closed with "no cause named".
++
++WHAT THIS RECORDS, all readable without any privilege:
++
++- `/proc/<pid>/wchan`   — the kernel function the process is blocked in
++- `/proc/<pid>/status`  — the `State:` line (S sleeping, D disk wait, R running)
++- a `pgrep -P` child count
++
++One line per minute is enough to tell "blocked in select() waiting on a silent
++child that existed the whole hour" from "sleeping with zero children", which is
++exactly the distinction the two gap post-mortems could not make: state was only
++ever observed AFTER recovery.
++
++WHERE SAMPLES GO. `~/.carnot/heartbeat_samples/YYYYMMDD.jsonl` — deliberately
++OUTSIDE the repo. A tracked, ever-growing sample file would churn git status
++and be swept into conductor checkpoint commits; these are rolling diagnostics,
++not the research record. Old daily files are cheap to delete.
++
++WIRED as the systemd user timer `carnot-heartbeat-sampler.timer` running
++`--once` per minute, so it keeps sampling regardless of which sessions exist.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import subprocess
++import sys
++import time
++from datetime import UTC, datetime
++from pathlib import Path
++
++SAMPLES_DIR = Path.home() / ".carnot" / "heartbeat_samples"
++
++
++def conductor_pid() -> int | None:
++    """The conductor's MainPID per systemd, or None when it is not running."""
++    try:
++        out = subprocess.run(
++            ["systemctl", "--user", "show", "carnot-conductor", "-p", "MainPID", "--value"],
++            capture_output=True,
++            text=True,
++            timeout=10,
++        ).stdout.strip()
++    except (OSError, subprocess.SubprocessError):
++        return None
++    return int(out) if out.isdigit() and out != "0" else None
++
++
++def child_count(pid: int) -> int | None:
++    """Direct children per pgrep -P. None when pgrep itself failed."""
++    try:
++        proc = subprocess.run(["pgrep", "-P", str(pid)], capture_output=True, text=True, timeout=10)
++    except (OSError, subprocess.SubprocessError):
++        return None
++    # pgrep exits 1 for "no matches", which is a real answer (zero children).
++    if proc.returncode not in (0, 1):
++        return None
++    return len([line for line in proc.stdout.split() if line.strip()])
++
++
++def take_sample(
++    pid: int,
++    *,
++    proc_root: Path = Path("/proc"),
++    count_children=child_count,
++) -> dict:
++    """One (timestamp, wchan, state, children) record. Never raises.
++
++    A vanished pid or unreadable proc entry is recorded as an error marker,
++    not skipped — a gap in the sample file would be exactly the ambiguity
++    this sampler exists to remove.
++    """
++    sample: dict = {
++        "ts": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
++        "pid": pid,
++    }
++    try:
++        sample["wchan"] = (proc_root / str(pid) / "wchan").read_text(errors="replace").strip()
++    except OSError as exc:
++        sample["wchan"] = f"unreadable:{type(exc).__name__}"
++    try:
++        status = (proc_root / str(pid) / "status").read_text(errors="replace")
++        state = next(
++            (
++                line.split(":", 1)[1].strip()
++                for line in status.splitlines()
++                if line.startswith("State:")
++            ),
++            None,
++        )
++        sample["state"] = state if state is not None else "no_state_line"
++    except OSError as exc:
++        sample["state"] = f"unreadable:{type(exc).__name__}"
++    children = count_children(pid)
++    sample["children"] = children if children is not None else "pgrep_failed"
++    return sample
++
++
++def append_sample(sample: dict, samples_dir: Path = SAMPLES_DIR) -> Path:
++    samples_dir.mkdir(parents=True, exist_ok=True)
++    path = samples_dir / f"{datetime.now(UTC):%Y%m%d}.jsonl"
++    with path.open("a", encoding="utf-8") as fh:
++        fh.write(json.dumps(sample, sort_keys=True) + "\n")
++    return path
++
++
++def run_once(samples_dir: Path = SAMPLES_DIR) -> int:
++    pid = conductor_pid()
++    if pid is None:
++        # Still a record: "the conductor was down at this minute" is data too.
++        append_sample(
++            {
++                "ts": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
++                "pid": None,
++                "note": "conductor not running per systemd",
++            },
++            samples_dir,
++        )
++        return 0
++    append_sample(take_sample(pid), samples_dir)
++    return 0
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--once", action="store_true", help="take one sample and exit")
++    parser.add_argument("--loop", action="store_true", help="sample every --interval seconds")
++    parser.add_argument("--interval", type=int, default=60)
++    parser.add_argument("--samples-dir", type=Path, default=SAMPLES_DIR)
++    args = parser.parse_args(argv)
++    if args.loop:
++        while True:  # pragma: no cover - the timer path is --once; loop is manual use
++            run_once(args.samples_dir)
++            time.sleep(max(1, args.interval))
++    return run_once(args.samples_dir)
++
++
++if __name__ == "__main__":
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/scripts/gate_cascade_check.py b/scripts/gate_cascade_check.py
+new file mode 100644
+index 0000000000..cc918be382
+--- /dev/null
++++ b/scripts/gate_cascade_check.py
+@@ -0,0 +1,176 @@
++#!/usr/bin/env python3
++"""Report gates in the ACTIVE roadmap that are already doomed (REQ-CONDUCTOR-CASCADE-1).
++
++WHY THIS EXISTS (2026-09-03). exp6942 sat on disk with
++`v608_execution_contract_ready_score = 0` while TEN downstream tasks in
++milestone 608 gated on that exact field. Nobody joined the two files, so the
++milestone burned 13 GATE_BLOCKs and retired 10 of 12 tasks. The artifact was
++even validated by hand that afternoon and called benign, because
++`summarize_artifact.py` says whether an artifact is honest, not whether
++anything depends on it.
++
++THE DISCRIMINATION, hand-tested before this was built (known-issues 2026-09-03
++21:35Z). "Report any gate whose upstream field is 0" flags the wrong thing:
++seven of 609's twelve tasks gated on upstreams that simply had not run yet —
++the NORMAL state of a milestone in progress. The rule is therefore:
++
++- upstream artifact ABSENT            -> silent (not a finding)
++- artifact present, field ABSENT,
++  upstream not final                  -> silent (bootstrap/in-flight state)
++- artifact present, field PRESENT,
++  op already fails                    -> PENDING CASCADE (the exp6942 shape)
++- artifact present, upstream FINAL,
++  field ABSENT                        -> PENDING CASCADE (the field can never
++                                         appear; the exp6756 retry-burn shape)
++
++Tested against the incident: fires on exp6942's field (ten dependents), silent
++on all seven of 609's absent-upstream gates.
++
++Uses the conductor's OWN gate machinery (`scripts/conductor_gates.py`:
++`_find_artifact_by_task_id`, `_eval_op`, `_upstream_is_final`) so this check
++cannot drift from what the conductor will actually do at activation time.
++
++Populations are always printed, so "no pending cascades" is distinguishable
++from "never looked" (the 2026-09-04 guarded-call lesson). Exit 2 on findings,
++0 clean, 1 on an unreadable roadmap (fail closed).
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import sys
++from pathlib import Path
++from typing import Any
++
++REPO_ROOT = Path(__file__).resolve().parent.parent
++sys.path.insert(0, str(REPO_ROOT / "scripts"))
++
++import conductor_gates  # noqa: E402
++
++try:
++    import yaml
++except ImportError:  # pragma: no cover - yaml ships in the project venv
++    yaml = None
++
++
++def load_tasks(roadmap_path: Path) -> list[dict[str, Any]] | None:
++    """The active roadmap's task list, or None when it cannot be read."""
++    if yaml is None or not roadmap_path.is_file():
++        return None
++    try:
++        doc = yaml.safe_load(roadmap_path.read_text(encoding="utf-8", errors="replace"))
++    except yaml.YAMLError:
++        return None
++    if not isinstance(doc, dict):
++        return None
++    tasks = doc.get("tasks")
++    return tasks if isinstance(tasks, list) else None
++
++
++def pending_cascades(
++    roadmap_path: Path | None = None,
++    results_dir: Path | None = None,
++) -> tuple[list[str] | None, list[str]]:
++    """Returns (findings, notices). findings is None when the roadmap is unreadable."""
++    roadmap_path = roadmap_path or (REPO_ROOT / "research-roadmap.yaml")
++    results_dir = results_dir or (REPO_ROOT / "results")
++    tasks = load_tasks(roadmap_path)
++    notices: list[str] = []
++    if tasks is None:
++        return None, [f"roadmap unreadable: {roadmap_path}"]
++
++    n_gates = 0
++    n_absent = 0
++    n_inflight = 0
++    # One failing upstream field dooms EVERY task gating on it; group so the
++    # report reads as a cascade ("N tasks pending"), not N separate lines.
++    doomed: dict[tuple[str, str, str], list[str]] = {}
++    for task in tasks:
++        if not isinstance(task, dict):
++            continue
++        task_id = str(task.get("id") or task.get("experiment_id") or "?")
++        for gate in task.get("gated_on") or []:
++            if not isinstance(gate, dict):
++                continue
++            n_gates += 1
++            upstream = str(gate.get("upstream", ""))
++            field = str(gate.get("artifact_field", ""))
++            op = str(gate.get("op", "=="))
++            expected = gate.get("value")
++            path = conductor_gates._find_artifact_by_task_id(upstream, results_dir)
++            if path is None:
++                n_absent += 1  # upstream has not run: the normal mid-milestone state
++                continue
++            try:
++                data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
++            except (OSError, json.JSONDecodeError):
++                n_inflight += 1  # mid-write is indistinguishable from corrupt; not a finding
++                continue
++            actual = data.get(field)
++            final = conductor_gates._upstream_is_final(data)
++            if actual is None:
++                if final:
++                    key = (upstream, field, f"field absent on a FINAL upstream ({path.name})")
++                    doomed.setdefault(key, []).append(task_id)
++                else:
++                    n_inflight += 1
++                continue
++            passed, _reason = conductor_gates._eval_op(actual, op, expected)
++            if not passed:
++                key = (
++                    upstream,
++                    field,
++                    f"already {actual!r}, gate wants {op} {expected!r} ({path.name})",
++                )
++                doomed.setdefault(key, []).append(task_id)
++
++    notices.append(
++        f"population: {len(tasks)} task(s), {n_gates} gate(s) evaluated, "
++        f"{n_absent} upstream(s) absent (normal), {n_inflight} in-flight/unreadable"
++    )
++
++    def _dependent_label(task_id: str) -> str:
++        # A dependent that already wrote a blocked artifact burned its attempts;
++        # one with no artifact is still PENDING -- the state worth the alarm.
++        path = conductor_gates._find_artifact_by_task_id(task_id, results_dir)
++        if path is None:
++            return task_id
++        try:
++            verdict = str(json.loads(path.read_text()).get("honest_verdict") or "")
++        except (OSError, json.JSONDecodeError):
++            return task_id
++        return f"{task_id}(already blocked)" if verdict.startswith("blocked") else task_id
++
++    findings = [
++        (
++            f"PENDING CASCADE: {upstream}.{field} {why} -- "
++            f"{len(dependents)} task(s) gate on it: "
++            f"{', '.join(_dependent_label(t) for t in dependents)}"
++        )
++        for (upstream, field, why), dependents in sorted(doomed.items())
++    ]
++    return findings, notices
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--roadmap", type=Path, default=None)
++    parser.add_argument("--results-dir", type=Path, default=None)
++    args = parser.parse_args(argv)
++    findings, notices = pending_cascades(args.roadmap, args.results_dir)
++    for line in notices:
++        print(f"NOTE: {line}")
++    if findings is None:
++        print("FAIL: roadmap unreadable; the join cannot run")
++        return 1
++    for line in findings:
++        print(line)
++    if findings:
++        return 2
++    print("OK: no gate in the active roadmap already fails against an existing upstream.")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/scripts/outer_loop_dashboard.py b/scripts/outer_loop_dashboard.py
+index 333c5ca3b0..8c407c3a1b 100755
+--- a/scripts/outer_loop_dashboard.py
++++ b/scripts/outer_loop_dashboard.py
+@@ -380,6 +380,25 @@ def worker_progress(worker: int) -> str:
+     return f"worker {worker} cpu {cpu}%" + (f" | {line}" if line else "")
+ 
+ 
++def gate_cascade_lines() -> list[str]:
++    """REQ-CONDUCTOR-CASCADE-1 dashboard section: pending gate cascades, if any.
++
++    Fail-open for the DASHBOARD only (an import or check error must not take the
++    whole status display down), but the error is printed rather than swallowed,
++    so a broken check reads as broken instead of as clean.
++    """
++    try:
++        sys.path.insert(0, str(REPO / "scripts"))
++        from gate_cascade_check import pending_cascades
++
++        findings, _notices = pending_cascades()
++        if findings is None:
++            return ["cascade     roadmap unreadable; gate-cascade check could not run"]
++        return [f"cascade     {line}" for line in findings]
++    except Exception as exc:  # noqa: BLE001 - display must survive a broken check
++        return [f"cascade     check errored: {type(exc).__name__}: {exc}"]
++
++
+ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
+     now = datetime.now(UTC)
+     L: list[str] = []
+@@ -396,6 +415,12 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
+     if mix:
+         L.append("  today     " + "  ".join(f"{k}={v}" for k, v in sorted(mix.items())))
+ 
++    # REQ-CONDUCTOR-CASCADE-1: surface a gate already failing against an existing
++    # upstream while its dependents are still pending -- the 608 cascade took 10 of
++    # 12 tasks because nobody joined the roadmap's gates with the artifacts on disk.
++    for line in gate_cascade_lines():
++        L.append(line)
++
+     rows = gpu_rows()
+     if rows:
+         L.append("gpu         " + " | ".join(rows))
+diff --git a/tests/python/test_conductor_heartbeat_sampler.py b/tests/python/test_conductor_heartbeat_sampler.py
+new file mode 100644
+index 0000000000..247315436f
+--- /dev/null
++++ b/tests/python/test_conductor_heartbeat_sampler.py
+@@ -0,0 +1,81 @@
++"""The non-privileged sampler records what a silent gap needs (REQ-CONDUCTOR-WCHAN-1).
++
++SCENARIO-CONDUCTOR-WCHAN-1-SAMPLE: one record carries ts, wchan, State line, children.
++SCENARIO-CONDUCTOR-WCHAN-1-NEVER-SKIPS: unreadable proc entries become error markers,
++never missing lines — a gap in the sample file is the ambiguity the sampler removes.
++
++Origin: two ~60-minute conductor gaps closed with "no cause named" because kernel
++state was only ever observed AFTER recovery, and py-spy needs ptrace this
++environment lacks (known-issues 2026-09-03).
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++import sys
++from pathlib import Path
++
++_SPEC = importlib.util.spec_from_file_location(
++    "conductor_heartbeat_sampler",
++    Path(__file__).resolve().parents[2] / "scripts" / "conductor_heartbeat_sampler.py",
++)
++sampler = importlib.util.module_from_spec(_SPEC)
++sys.modules["conductor_heartbeat_sampler"] = sampler
++_SPEC.loader.exec_module(sampler)
++
++
++def _fake_proc(tmp_path: Path, pid: int, *, wchan: str, state_line: str) -> Path:
++    proc = tmp_path / "proc"
++    (proc / str(pid)).mkdir(parents=True)
++    (proc / str(pid) / "wchan").write_text(wchan)
++    (proc / str(pid) / "status").write_text(f"Name:\tpython\n{state_line}\nPid:\t{pid}\n")
++    return proc
++
++
++def test_sample_carries_all_four_signals(tmp_path: Path) -> None:
++    """SCENARIO-CONDUCTOR-WCHAN-1-SAMPLE."""
++
++    proc = _fake_proc(tmp_path, 4242, wchan="do_select", state_line="State:\tS (sleeping)")
++    sample = sampler.take_sample(4242, proc_root=proc, count_children=lambda pid: 3)
++
++    assert sample["pid"] == 4242
++    assert sample["wchan"] == "do_select"
++    assert sample["state"] == "S (sleeping)"
++    assert sample["children"] == 3
++    assert sample["ts"].endswith("Z")
++
++
++def test_unreadable_proc_becomes_marker_not_gap(tmp_path: Path) -> None:
++    """SCENARIO-CONDUCTOR-WCHAN-1-NEVER-SKIPS: a vanished pid still yields a record."""
++
++    proc = tmp_path / "proc"  # no <pid> directory at all
++    proc.mkdir()
++    sample = sampler.take_sample(999, proc_root=proc, count_children=lambda pid: None)
++
++    assert sample["wchan"].startswith("unreadable:")
++    assert sample["state"].startswith("unreadable:")
++    assert sample["children"] == "pgrep_failed"
++
++
++def test_append_writes_one_jsonl_line_per_sample(tmp_path: Path) -> None:
++    """Samples land as daily JSONL outside the repo; each call appends exactly one line."""
++
++    out = tmp_path / "samples"
++    p1 = sampler.append_sample({"ts": "t1", "pid": 1}, out)
++    p2 = sampler.append_sample({"ts": "t2", "pid": 1}, out)
++
++    assert p1 == p2
++    lines = [json.loads(line) for line in p1.read_text().splitlines()]
++    assert [row["ts"] for row in lines] == ["t1", "t2"]
++
++
++def test_run_once_records_conductor_down_as_data(tmp_path: Path, monkeypatch) -> None:
++    """A stopped conductor is a record ('down at this minute'), not a silent no-op."""
++
++    monkeypatch.setattr(sampler, "conductor_pid", lambda: None)
++    out = tmp_path / "samples"
++    assert sampler.run_once(out) == 0
++    row = json.loads(next(out.glob("*.jsonl")).read_text().splitlines()[0])
++    assert row["pid"] is None
++    assert "not running" in row["note"]
+diff --git a/tests/python/test_gate_cascade_check.py b/tests/python/test_gate_cascade_check.py
+new file mode 100644
+index 0000000000..2c5dc4b4b6
+--- /dev/null
++++ b/tests/python/test_gate_cascade_check.py
+@@ -0,0 +1,135 @@
++"""The gate-cascade join fires on exists-and-fails, never on absent (REQ-CONDUCTOR-CASCADE-1).
++
++SCENARIO-CONDUCTOR-CASCADE-1-FIRES: the exp6942 shape (field present, failing) reports.
++SCENARIO-CONDUCTOR-CASCADE-1-SILENT: absent upstream / in-flight bootstrap stays silent.
++SCENARIO-CONDUCTOR-CASCADE-1-FINAL-MISSING: a final upstream lacking the field reports.
++
++Origin: milestone 608 lost 10 of 12 tasks to one ready_score=0 nobody joined
++against the roadmap; the discrimination below was hand-tested on that incident
++before being built (known-issues 2026-09-03 21:35Z).
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++import sys
++from pathlib import Path
++
++_SPEC = importlib.util.spec_from_file_location(
++    "gate_cascade_check",
++    Path(__file__).resolve().parents[2] / "scripts" / "gate_cascade_check.py",
++)
++gcc = importlib.util.module_from_spec(_SPEC)
++sys.modules["gate_cascade_check"] = gcc
++_SPEC.loader.exec_module(gcc)
++
++
++def _roadmap(tmp_path: Path, tasks: list[dict]) -> Path:
++    import yaml
++
++    path = tmp_path / "roadmap.yaml"
++    path.write_text(yaml.safe_dump({"milestone": "test", "tasks": tasks}))
++    return path
++
++
++def _gate(upstream: str, field: str, value=1) -> dict:
++    return {"upstream": upstream, "artifact_field": field, "op": "==", "value": value}
++
++
++def test_fires_on_present_and_failing_field(tmp_path: Path) -> None:
++    """SCENARIO-CONDUCTOR-CASCADE-1-FIRES: the exp6942 shape, three dependents."""
++
++    results = tmp_path / "results"
++    results.mkdir()
++    (results / "experiment_942_preflight.json").write_text(
++        json.dumps({"honest_verdict": "blocked_preflight", "ready_score": 0})
++    )
++    tasks = [
++        {"id": f"exp94{i}-downstream", "gated_on": [_gate("exp942-preflight", "ready_score")]}
++        for i in (3, 4, 5)
++    ]
++    findings, notices = gcc.pending_cascades(_roadmap(tmp_path, tasks), results)
++
++    assert findings is not None and len(findings) == 1
++    assert "exp942-preflight.ready_score" in findings[0]
++    assert "3 task(s)" in findings[0]
++    assert any("population:" in n for n in notices)
++
++
++def test_silent_on_absent_upstream_and_inflight_bootstrap(tmp_path: Path) -> None:
++    """SCENARIO-CONDUCTOR-CASCADE-1-SILENT: the 609 shape and the bootstrap shape."""
++
++    results = tmp_path / "results"
++    results.mkdir()
++    # In-flight upstream: artifact exists, field absent, NOT final.
++    (results / "experiment_950_running.json").write_text(
++        json.dumps({"status": "bootstrap", "note": "still running"})
++    )
++    tasks = [
++        {"id": "expA", "gated_on": [_gate("exp999-never-ran", "ready_score")]},
++        {"id": "expB", "gated_on": [_gate("exp950-running", "ready_score")]},
++    ]
++    findings, notices = gcc.pending_cascades(_roadmap(tmp_path, tasks), results)
++
++    assert findings == []
++    assert any("1 upstream(s) absent" in n for n in notices)
++
++
++def test_fires_when_final_upstream_lacks_the_field(tmp_path: Path) -> None:
++    """SCENARIO-CONDUCTOR-CASCADE-1-FINAL-MISSING: the exp6756 retry-burn shape."""
++
++    results = tmp_path / "results"
++    results.mkdir()
++    (results / "experiment_960_done.json").write_text(
++        json.dumps({"honest_verdict": "complete_done_without_the_field"})
++    )
++    tasks = [{"id": "expC", "gated_on": [_gate("exp960-done", "never_written_score")]}]
++    findings, _ = gcc.pending_cascades(_roadmap(tmp_path, tasks), results)
++
++    assert findings is not None and len(findings) == 1
++    assert "FINAL upstream" in findings[0]
++
++
++def test_passing_gate_is_silent(tmp_path: Path) -> None:
++    """A satisfied gate is not a cascade, whatever the artifact's verdict says."""
++
++    results = tmp_path / "results"
++    results.mkdir()
++    (results / "experiment_970_ok.json").write_text(
++        json.dumps({"honest_verdict": "complete_ok", "ready_score": 1})
++    )
++    tasks = [{"id": "expD", "gated_on": [_gate("exp970-ok", "ready_score")]}]
++    findings, _ = gcc.pending_cascades(_roadmap(tmp_path, tasks), results)
++
++    assert findings == []
++
++
++def test_unreadable_roadmap_fails_closed(tmp_path: Path) -> None:
++    """A missing roadmap returns None (cannot answer), never an empty clean list."""
++
++    findings, notices = gcc.pending_cascades(tmp_path / "missing.yaml", tmp_path)
++    assert findings is None
++    assert any("unreadable" in n for n in notices)
++
++
++def test_already_blocked_dependent_is_annotated(tmp_path: Path) -> None:
++    """A dependent that already burned its attempts reads differently from a pending one."""
++
++    results = tmp_path / "results"
++    results.mkdir()
++    (results / "experiment_942_preflight.json").write_text(
++        json.dumps({"honest_verdict": "blocked_preflight", "ready_score": 0})
++    )
++    (results / "experiment_943_downstream.json").write_text(
++        json.dumps({"honest_verdict": "blocked_gate_check_failed"})
++    )
++    tasks = [
++        {"id": "exp943-downstream", "gated_on": [_gate("exp942-preflight", "ready_score")]},
++        {"id": "exp944-downstream", "gated_on": [_gate("exp942-preflight", "ready_score")]},
++    ]
++    findings, _ = gcc.pending_cascades(_roadmap(tmp_path, tasks), results)
++
++    assert len(findings) == 1
++    assert "exp943-downstream(already blocked)" in findings[0]
++    assert "exp944-downstream(already blocked)" not in findings[0]
+-- 
+2.55.0
+

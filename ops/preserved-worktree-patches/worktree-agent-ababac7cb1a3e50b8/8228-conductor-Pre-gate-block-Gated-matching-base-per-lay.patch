@@ -1,0 +1,78 @@
+From d11c4bfa883018337361a9623b26e7d887f5cab7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 4 Aug 2026 17:24:51 -0400
+Subject: [PATCH 08228/11362] [conductor] Pre-gate block: Gated matching-base
+ per-layer hidden-state surface qualification
+
+1 of 1 gate(s) failed; first failure: exp6117-phase-d-headroom-audit.phase_d_headroom_ready_score (upstream artifact not found for task id 'exp6117-phase-d-headroom-audit')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...riment_6118_phase_d_per_layer_surface.json | 24 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6118_phase_d_per_layer_surface.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e1d043e900..1a763a46aa 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-08-04T21:22:48Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-08-04T21:24:51Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 63f7c44c32..cbd4b36c08 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15311,3 +15311,5 @@ No output thi |
+ | 2026-08-04 21:16 UTC | Gated calibration-only authentic Phase-D candidate | OK | 86 passed, 1 warning in 10.65s |
+ | 2026-08-04 21:18 UTC | Gated held authentic same-model Phase-D candidate  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_c |
+ | 2026-08-04 21:20 UTC | Gated held authentic same-model Phase-D candidate  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_c |
++| 2026-08-04 21:22 UTC | Gated held authentic same-model Phase-D candidate  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_c |
++| 2026-08-04 21:24 UTC | Gated question-clustered Phase-D authenticity and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6116-phase-d-held-candidate-pool) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ca3098f72b..6b4fd1271e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 25, "phase": "iteration_start", "started_at": "2026-08-04T21:22:48Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 26, "phase": "iteration_start", "started_at": "2026-08-04T21:24:51Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6118_phase_d_per_layer_surface.json b/results/experiment_6118_phase_d_per_layer_surface.json
+new file mode 100644
+index 0000000000..989fa4f6d1
+--- /dev/null
++++ b/results/experiment_6118_phase_d_per_layer_surface.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 6118,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-04",
++  "started_at": "2026-08-04T21:24:51.026122+00:00",
++  "finished_at": "2026-08-04T21:24:51.026122+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated matching-base per-layer hidden-state surface qualification",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6117-phase-d-headroom-audit.phase_d_headroom_ready_score (upstream artifact not found for task id 'exp6117-phase-d-headroom-audit')",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6117-phase-d-headroom-audit",
++      "artifact_field": "phase_d_headroom_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": null,
++      "passed": false,
++      "reason": "upstream artifact not found for task id 'exp6117-phase-d-headroom-audit'"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

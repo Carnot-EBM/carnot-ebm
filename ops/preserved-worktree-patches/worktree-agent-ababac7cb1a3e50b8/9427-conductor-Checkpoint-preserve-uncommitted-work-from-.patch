@@ -1,0 +1,43 @@
+From 7a2a1d5673f8a786299d5899637b2a7e5b01c491 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 13:10:15 -0400
+Subject: [PATCH 09427/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7ae444552f..099248b5d4 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 145, "phase": "iteration_start", "last_beat": "2026-08-21T16:51:54Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 146, "phase": "iteration_start", "last_beat": "2026-08-21T17:10:12Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 13340bab3a..c6c9ab9b86 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16236,3 +16236,4 @@ code |
+ | 2026-08-21 15:40 UTC | Independent representation integrity and shortcut  | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT, DURATION_TOO_SHORT — |
+ | 2026-08-21 16:47 UTC | Plan milestone 2026.08.560 | OK | 14 tasks proposed |
+ | 2026-08-21 16:49 UTC | Milestone 2026.08.560 activated | OK | 14 tasks queued |
++| 2026-08-21 17:08 UTC | V559 evidence decision ledger and V560 solver-traj | OK | 99 passed, 1 warning in 13.76s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 93fc630346..15f3620597 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 145, "phase": "iteration_start", "started_at": "2026-08-21T16:51:54Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 146, "phase": "iteration_start", "started_at": "2026-08-21T17:10:12Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

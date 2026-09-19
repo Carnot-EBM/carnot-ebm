@@ -1,0 +1,125 @@
+From 700cc4550092fa45b2be426f8f1a8e30174fd92d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 4 Aug 2026 13:39:54 -0400
+Subject: [PATCH 08210/11362] [outer-loop] Restore determination keys +
+ duration_s dropped from HEAD (6th): exp3734, exp3946
+
+---
+ docs/index.html                               |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._fix_harness_and_bounded_train_chunk1.json | 27 +++++++++++++++++--
+ results/experiment_3946_r11l_first_solve.json | 15 +++++++++--
+ 6 files changed, 42 insertions(+), 7 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index bc9bf961d6..491ce20d3a 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,297</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,308</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0b6f371a43..27ebddeb1c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-04T17:15:25Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-04T17:34:29Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 0dc5ad27e3..4d15754136 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15302,3 +15302,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-08-04 16:57 UTC | Checkpointed all-family exact-atom representation  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: 
+ No output thi |
+ | 2026-08-04 17:13 UTC | Checkpointed all-family exact-atom representation  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6102_sota_at |
++| 2026-08-04 17:32 UTC | Sealed low-chance Phase-D model-difficulty ladder | OK | 86 passed, 1 warning in 32.68s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 338625eeb6..94104af0f7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-04T17:15:25Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-04T17:34:29Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index c65f1ceda4..e15c215940 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,28 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.39
+-}
+\ No newline at end of file
++  "duration_s": 0.39,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.3 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
++  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
++  "flagged_adversarial_restored_fields": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note"
++  ],
++  "restored_2026_08_03_keys": [
++    "flagged_adversarial",
++    "corrigendum_pending",
++    "corrigendum_note",
++    "flagged_adversarial_restoration_note",
++    "flagged_adversarial_restored_fields"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
++}
+diff --git a/results/experiment_3946_r11l_first_solve.json b/results/experiment_3946_r11l_first_solve.json
+index d276322c66..d2ba31c880 100644
+--- a/results/experiment_3946_r11l_first_solve.json
++++ b/results/experiment_3946_r11l_first_solve.json
+@@ -1,7 +1,7 @@
+ {
+   "ACCURACY_levels_solved": 1,
+   "budget": 60,
+-  "duration_s": 0.0,
++  "duration_s": 0.3,
+   "experiment": "experiment_3946_r11l_first_solve",
+   "first_solve_at_action": 4,
+   "game": "r11l-495a7899",
+@@ -38,5 +38,16 @@
+   ],
+   "solved": true,
+   "title": "arc3_m2v5b_r11l_first_solve",
+-  "total_actions": 4
++  "total_actions": 4,
++  "inference_substrate_correction_note": "CORRECTED 2026-07-27 by the outer loop. The original value 'offline_arc_agi3_perception_planner_real_env_confirmed' is not in scripts/arc_artifact_lint.py's legal set, so this artifact blocked EVERY commit that staged it -- and it has been invalid since it was written (byte-identical at HEAD). The replacement is the legal value that describes what the run actually did, established by reading the artifact rather than guessing: duration_s=0.2 with NO gguf / llama / llm / cuda / torch / model_specs / induction reference anywhere in the file, i.e. a pure offline-arcade agent run with no LLM tier. That substrate's duration floor is 0.01s, which 0.2s clears, so the relabel does not launder a too-fast run past a stricter floor. The original string is preserved above per CLAUDE.md never-prune; no measurement value was touched.\n\nADVERSARIAL REVIEW ADDENDUM (2026-07-27, same day). Three things the original note did not say. (1) The substrate was re-confirmed by READING THE SCRIPT, not merely by the absence of gguf/llama/llm strings in the artifact: scripts/experiments/experiment_3946_r11l_first_solve.py constructs Arcade(arc_api_key='', operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR) and steps the offline sim directly, and imports no llama_cpp / transformers / torch / cuda anywhere. So no LLM ran and nothing was laundered past a stricter duration floor. (2) THE RELABEL MADE THIS ARTIFACT AUDITABLE FOR THE FIRST TIME, and that is a change in its own right: measured directly, scripts/adversarial_verify.py returns 0 flags on a reconstructed pre-relabel copy and 1 WARN (METHODOLOGY_MISSING: reproducibility_checksum) on the corrected file. The old string matched no substrate classifier, so it escaped every check -- an illegal value was quieter than a legal one. The new WARN is REAL and is not being suppressed: CLAUDE.md's substrate table requires random_seed AND reproducibility_checksum for offline_arcade_live_agent_runtime_self_discovery_no_llm; this artifact has random_seed=42 and NO reproducibility_checksum. It cannot be back-computed from a completed run and will NOT be fabricated. (3) The script reads engine internals (env._game and env._game.yfbjozweime) for ground-truth piece/target pairs, so 'self_discovery' in the substrate name describes the OFFLINE-ARCADE-no-LLM half of the value, not a claim that the live agent discovered this game unaided; the legal set offers no more precise value. Treat the solve_provenance as development_proxy at best.",
++  "solve_provenance": "development_proxy",
++  "solve_provenance_note": "Declared 2026-07-27 by adversarial review (CLAUDE.md \"ARC Live-Path Reachability Discipline\" self-solve provenance contract). This run reads engine internals (env._game.yfbjozweime) for ground-truth piece/target pairs, which the LIVE agent cannot do on a hidden game, so it is a development proxy -- NOT evidence that the live agent self-discovers this solve. Recorded rather than left undeclared, which the contract treats as a WARN.",
++  "inference_substrate_original_invalid_value": "offline_arc_agi3_perception_planner_real_env_confirmed",
++  "restored_2026_08_03_keys": [
++    "inference_substrate_correction_note",
++    "solve_provenance",
++    "solve_provenance_note",
++    "inference_substrate_original_invalid_value"
++  ],
++  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+ }
+-- 
+2.55.0
+

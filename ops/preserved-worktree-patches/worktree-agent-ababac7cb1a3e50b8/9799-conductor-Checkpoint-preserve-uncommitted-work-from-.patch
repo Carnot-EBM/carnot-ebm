@@ -1,0 +1,157 @@
+From 09e8a07b6cc4e80fe99bb0e6044776df211d53b4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 05:56:48 -0400
+Subject: [PATCH 09799/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                  |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 ++
+ ops/conductor-state.json                      |  2 +-
+ ...ean_evidence_and_flagship_qualification.py |  6 +++--
+ results/experiment_1822_rtl_synth.log         |  2 +-
+ results/experiment_2031.json                  |  4 +--
+ ...ean_evidence_and_flagship_qualification.py | 27 +++++++++++++++++++
+ 8 files changed, 39 insertions(+), 8 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 89a7a952de..67aaf7e865 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -6,5 +6,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T08:33:21Z"
++ "last_scan_utc": "2026-08-24T09:56:44Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6c45ba36d5..0cc2c298fb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-08-24T08:33:20Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-08-24T09:56:43Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dc6112b050..ccf99e5ead 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16392,3 +16392,5 @@ code |
+ | 2026-08-24 07:05 UTC | Plan milestone 2026.08.571 | OK | 4 tasks proposed |
+ | 2026-08-24 07:08 UTC | Milestone 2026.08.571 activated | OK | 4 tasks queued |
+ | 2026-08-24 08:31 UTC | V571 clean evidence and flagship qualification rep | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ssing_required |
++| 2026-08-24 09:54 UTC | V571 clean evidence and flagship qualification rep | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ,
++       "Trut |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3cdd67715a..1648eaacfa 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3237266, "iteration": 18, "phase": "iteration_start", "started_at": "2026-08-24T08:33:20Z"}
+\ No newline at end of file
++{"pid": 3237266, "iteration": 19, "phase": "iteration_start", "started_at": "2026-08-24T09:56:43Z"}
+\ No newline at end of file
+diff --git a/python/carnot/experiment_6575_v571_clean_evidence_and_flagship_qualification.py b/python/carnot/experiment_6575_v571_clean_evidence_and_flagship_qualification.py
+index f2bf3a009a..b36db7097d 100644
+--- a/python/carnot/experiment_6575_v571_clean_evidence_and_flagship_qualification.py
++++ b/python/carnot/experiment_6575_v571_clean_evidence_and_flagship_qualification.py
+@@ -284,7 +284,7 @@ def build_v570_context_rows(
+                     "ineligibility_reason": (
+                         "V570 carries a stored structural disposition; V571 rebuilds evidence"
+                     ),
+-                    "readiness_fields_imported": [],
++                    "imported_v570_score_fields": [],
+                     "passed": path.is_file() and payload.get("flagged_adversarial") is True,
+                 }
+             )
+@@ -989,7 +989,9 @@ def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
+         for row in [metadata_by_id.get(spec["repository_id"], {})]
+     ):
+         errors.append("metadata_receipt_recomputation_failed")
+-    if any(not runtime_receipt_passes(row, metadata) for row in runtimes):
++    if any(
++        (row.get("passed") is True) != runtime_receipt_passes(row, metadata) for row in runtimes
++    ):
+         errors.append("runtime_receipt_recomputation_failed")
+ 
+     aggregate = recompute_scores(
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 8ca61cf368..7ee57dc6a1 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.88s, user: 2.58s, system: 0.20s, MEM: 116.02 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.95s, user: 2.68s, system: 0.20s, MEM: 115.65 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+ Time spent: 76% 19x read_verilog (2 sec), 9% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 1c4c145326..962ebbd7c4 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260824",
+-  "started_at": "2026-08-24T08:05:50Z",
+-  "finished_at": "2026-08-24T08:05:50Z",
++  "started_at": "2026-08-24T09:52:51Z",
++  "finished_at": "2026-08-24T09:52:51Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/tests/python/test_experiment_6575_v571_clean_evidence_and_flagship_qualification.py b/tests/python/test_experiment_6575_v571_clean_evidence_and_flagship_qualification.py
+index d29015639b..0d2613a20b 100644
+--- a/tests/python/test_experiment_6575_v571_clean_evidence_and_flagship_qualification.py
++++ b/tests/python/test_experiment_6575_v571_clean_evidence_and_flagship_qualification.py
+@@ -265,6 +265,8 @@ def test_v570_context_builder_marks_all_three_artifacts_ineligible(tmp_path: Pat
+     assert all(row["eligible_for_v571_reducer"] is False for row in rows)
+     assert all("v570_evidence_contract_ready_score" not in row for row in rows)
+     assert all(row["structural_findings"] == ["DURATION_TOO_SHORT"] for row in rows)
++    assert all(not exp._forbidden_v570_readiness_field(row) for row in rows)
++    assert exp._forbidden_v570_readiness_field({"v570_evidence_contract_ready_score": 1.0})
+ 
+ 
+ # REQ-REPORT-6575-METADATA / SCENARIO-REPORT-6575-METADATA:
+@@ -554,6 +556,31 @@ def test_no_runtime_rows_with_failed_preconditions_is_blocked() -> None:
+     assert artifact["verdict_class"] == "blocked"
+ 
+ 
++# REQ-REPORT-6575-ATOMIC: honest failed placeholders must survive terminal validation.
++def test_failed_runtime_placeholders_validate_when_preconditions_block_execution() -> None:
++    runtime_receipts = [
++        exp.hash_row(
++            {
++                "row_type": "fresh_family_runtime",
++                "repository_id": spec["repository_id"],
++                "sequence_index": index,
++                "fresh": True,
++                "process": {},
++                "gpu_samples": [],
++                "unload": {},
++                "passed": False,
++            }
++        )
++        for index, spec in enumerate(exp.MODEL_SPECS)
++    ]
++    artifact = _assemble(
++        runtime_receipts=runtime_receipts,
++        preconditions=_preconditions(ready=False),
++    )
++
++    assert exp.validate_artifact(artifact) == []
++
++
+ # REQ-REPORT-6575-ATOMIC: validator diagnostics cover malformed top-level structures.
+ def test_validator_covers_schema_policy_and_reducer_mismatches(
+     monkeypatch: pytest.MonkeyPatch,
+-- 
+2.55.0
+

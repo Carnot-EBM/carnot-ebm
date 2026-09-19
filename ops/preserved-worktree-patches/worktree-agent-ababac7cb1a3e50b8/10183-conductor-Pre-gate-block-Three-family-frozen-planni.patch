@@ -1,0 +1,77 @@
+From dcc987db72d789b99f76691f783140d7d4a194ca Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 20:00:23 -0400
+Subject: [PATCH 10183/11362] [conductor] Pre-gate block: Three-family frozen
+ planning proposal bank
+
+1 of 1 gate(s) failed; first failure: exp6717-planning-audit-receipt-merge.planning_fixture_audit_passed (upstream artifact not found for task id 'exp6717-planning-audit-receipt-merge')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                             | 2 +-
+ ops/conductor-heartbeat.json                             | 2 +-
+ ops/conductor-log.md                                     | 2 ++
+ ops/conductor-state.json                                 | 2 +-
+ results/experiment_6718_sota_planning_proposal_bank.json | 6 +++---
+ 5 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index e3323f917f..763650e5c5 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T23:58:17Z"
++ "last_scan_utc": "2026-08-29T00:00:22Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 040e9736e4..930feba1c8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 46, "phase": "iteration_start", "last_beat": "2026-08-28T23:58:16Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 47, "phase": "iteration_start", "last_beat": "2026-08-29T00:00:22Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3fbd6351a3..dc63c54c3b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16721,3 +16721,5 @@ codex
+ The l |
+ | 2026-08-28 23:56 UTC | Bounded seal, leakage, and mutation audit | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ptured termina |
+ | 2026-08-28 23:58 UTC | Planning audit receipt merge | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6715-bounded-exact-replay-audit, exp6716- |
++| 2026-08-28 23:58 UTC | Three-family frozen planning proposal bank | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6717-planning-audit-receipt-merge.plann |
++| 2026-08-29 00:00 UTC | Planning audit receipt merge | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6715-bounded-exact-replay-audit, exp6716- |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ed881b1af2..ba3c3a34c9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 46, "phase": "iteration_start", "started_at": "2026-08-28T23:58:16Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 47, "phase": "iteration_start", "started_at": "2026-08-29T00:00:22Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6718_sota_planning_proposal_bank.json b/results/experiment_6718_sota_planning_proposal_bank.json
+index 8560674996..631739beb8 100644
+--- a/results/experiment_6718_sota_planning_proposal_bank.json
++++ b/results/experiment_6718_sota_planning_proposal_bank.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 6718,
+   "schema": "blocked_gate_check_v1",
+-  "run_date": "2026-08-28",
+-  "started_at": "2026-08-28T23:58:17.137908+00:00",
+-  "finished_at": "2026-08-28T23:58:17.137908+00:00",
++  "run_date": "2026-08-29",
++  "started_at": "2026-08-29T00:00:22.893147+00:00",
++  "finished_at": "2026-08-29T00:00:22.893147+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Three-family frozen planning proposal bank",
+-- 
+2.55.0
+

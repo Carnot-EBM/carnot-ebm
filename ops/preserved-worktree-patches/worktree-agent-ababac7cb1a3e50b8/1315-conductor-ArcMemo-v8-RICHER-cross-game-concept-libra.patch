@@ -1,0 +1,1826 @@
+From 58381c1d128d7b7424ef2c7b406d9501987bd131 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 17:46:41 -0400
+Subject: [PATCH 01315/11362] [conductor] ArcMemo v8: RICHER cross-game
+ concept-library transfer (self-learning MANDATE; extends the exp4050 v7 weak
+ result): v7 reused only 1 abstraction and LOST to within-game v6 on the 8th
+ game. v8 builds a RICHER abstraction library from all 8 prior solved games
+ (more fragments -> more reusable abstractions per LILO/Stitch
+ arXiv:2310.19791) and tests whether it REDUCES the cost of solving the NEW
+ 9th game (exp4060) below BOTH (a) a cold start AND (b) within-game-only
+ memory -- the bar that distinguishes self-learning (transfer) from caching
+ (replay). Measure action-count + induction-call reduction +
+ n_reused_abstractions. Honest no-transfer is a COMPLETE verdict.
+
+Automated research step by research conductor.
+Task ID: exp4062-arcmemo-cross-game-transfer-v8
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  68 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../arc_arcmemo_cross_game_transfer_v8.py     | 409 ++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...t_4062_arcmemo_cross_game_transfer_v8.json | 525 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../exp4062_arcmemo_cross_game_transfer_v8.py |  88 +++
+ ..._exp4062_arcmemo_cross_game_transfer_v8.py | 483 ++++++++++++++++
+ 16 files changed, 1594 insertions(+), 21 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_arcmemo_cross_game_transfer_v8.py
+ create mode 100644 results/experiment_4062_arcmemo_cross_game_transfer_v8.json
+ create mode 100644 scripts/experiments/exp4062_arcmemo_cross_game_transfer_v8.py
+ create mode 100644 tests/python/test_exp4062_arcmemo_cross_game_transfer_v8.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 5297233a99..9bb0b81c63 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -11479,3 +11479,71 @@ rather than claiming a solved-game transfer win.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-4050 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v7.py; scripts/experiments/exp4050_arcmemo_cross_game_transfer_v7.py, Exp 4050) | Proposed (tests/python/test_exp4050_arcmemo_cross_game_transfer_v7.py) |
++
++---
++
++## REQ-LEARN-4062: ArcMemo v8 Richer Cross-Game Concept Library Transfer
++
++**Given** the eight prior real-env-confirmed ARC-AGI-3 solved games
++`r11l`, `lp85`, `sc25`, `su15`, `tn36`, `cd82`, `dc22`, and `sb26`
++and the ninth-game artifact
++`results/experiment_4060_ninth_game_explore_first.json`
++**When** Exp 4062 builds the ArcMemo v8 library
++**Then** it SHALL compress only prior-game induced-program fragments from all
++eight solves into named, documented abstractions
++**And** it SHALL seed the ninth-game explore-first accounting from that richer
++prior-game library without importing any ninth-game induced mechanic into the
++library
++**And** it SHALL measure the ninth game against both cold start and
++within-game-only memory before claiming cross-game transfer
++**And** it SHALL write
++`results/experiment_4062_arcmemo_cross_game_transfer_v8.json`.
++
++### REQ-LEARN-4062 Sub-requirements
++
++- REQ-LEARN-4062-1: The v8 library SHALL expose named abstractions with
++  `name`, `signature`, `documentation`, `source_games`, `source_fragments`,
++  and `lambda_abstraction` fields, and SHALL include the eighth prior solve
++  when it is real-env-confirmed.
++- REQ-LEARN-4062-2: Exp 4062 SHALL report bare top-level fields
++  `honest_verdict`, `cross_game_transfer_win`, `actions_cold`,
++  `actions_within_game`, `actions_cross_game_v8`, `n_reused_abstractions`,
++  and `inference_substrate`.
++- REQ-LEARN-4062-3: `inference_substrate` SHALL equal
++  `offline_arc_agi3_arcmemo_cross_game_transfer`.
++- REQ-LEARN-4062-4: `cross_game_transfer_win` SHALL be true only when
++  `actions_cross_game_v8 < actions_cold` and
++  `actions_cross_game_v8 < actions_within_game`; otherwise the honest verdict
++  SHALL begin with `complete: arcmemo_v8_no_cross_game_transfer_`.
++- REQ-LEARN-4062-5: If Exp 4060 did not solve but exposes a usable attempt
++  trace, Exp 4062 SHALL measure transfer on that same attempt depth and SHALL
++  NOT fabricate a solved-game transfer claim.
++- REQ-LEARN-4062-6: If Exp 4060 is absent or lacks any usable trace, Exp 4062
++  SHALL emit a complete no-transfer artifact with zero action counts and
++  explicit target evidence rather than substituting another game.
++
++### SCENARIO-LEARN-4062: v8 Must Beat Cold and Within-Game Memory on a New Ninth Game
++
++**Given** an Exp 4060 ninth-game trace and a v8 library built from all eight
++prior solved-game fragments
++**When** one or more prior-game abstractions fire on the new game
++**Then** Exp 4062 records the fired abstraction count and induction-call cost
++**And** it reports `cross_game_transfer_win=true` only if the v8 action count
++is strictly below both the cold baseline and the within-game-only baseline.
++
++**Given** Exp 4060 lacks a real-env-confirmed solve but still contains a usable
++attempt trace
++**When** Exp 4062 evaluates transfer
++**Then** it measures the same attempt depth and emits a `complete:` verdict
++rather than claiming a solved-game transfer win.
++
++**Given** Exp 4060 is missing or exposes no usable trace
++**When** Exp 4062 evaluates transfer
++**Then** it writes a valid `complete:` artifact that preserves the eight-game
++library evidence and reports no ninth-game transfer measurement.
++
++## Implementation Status (REQ-LEARN-4062)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-4062 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v8.py; scripts/experiments/exp4062_arcmemo_cross_game_transfer_v8.py, Exp 4062) | Proposed (tests/python/test_exp4062_arcmemo_cross_game_transfer_v8.py) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e523166e65..bf7533783d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 163,
+   "code_violations": 0,
+-  "experiments_checked": 3088,
++  "experiments_checked": 3089,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_arcmemo_cross_game_transfer_v8.py b/python/carnot/agentic/arc_arcmemo_cross_game_transfer_v8.py
+new file mode 100644
+index 0000000000..b7f9e6d89a
+--- /dev/null
++++ b/python/carnot/agentic/arc_arcmemo_cross_game_transfer_v8.py
+@@ -0,0 +1,409 @@
++"""ArcMemo v8 richer cross-game concept-library transfer accounting.
++
++Spec refs: REQ-LEARN-4062, SCENARIO-LEARN-4062.
++
++Exp 4062 measures whether a library built from eight prior solved ARC-AGI-3
++games can reduce the cost of a ninth game. The module works at artifact level:
++it reads prior solve traces, names reusable fragments, and compares the ninth
++game against cold and within-game memory without inventing a solve when the
++ninth-game trace is missing.
++"""
++
++from __future__ import annotations
++
++from collections import defaultdict
++from collections.abc import Iterable, Mapping
++from typing import Any
++
++import carnot.agentic.arc_arcmemo_cross_game_transfer_v7 as v7
++
++
++INFERENCE_SUBSTRATE = "offline_arc_agi3_arcmemo_cross_game_transfer"
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "cross_game_transfer_win",
++    "actions_cold",
++    "actions_within_game",
++    "actions_cross_game_v8",
++    "n_reused_abstractions",
++    "inference_substrate",
++)
++
++_SB26_TEMPLATE = {
++    "name": "select_place_color_sequence",
++    "family": "click_state_transform",
++    "signature": "select_place_color_sequence(state, target_colors, slots) -> validated_slot_sequence",
++    "lambda_abstraction": "lambda state: select_items_by_color(state) then place_slots_left_to_right(state)",
++    "documentation": (
++        "Why: the eighth solved game added a concrete select/place/color-sequence fragment that can seed "
++        "slot-filling games without relearning the same item-to-slot mechanic."
++    ),
++}
++
++
++def _template_for(source_game: str) -> dict[str, str]:
++    if source_game == "sb26":
++        return _SB26_TEMPLATE
++    return v7._template_for(source_game)
++
++
++def collect_prior_fragments(prior_solved_artifacts: Iterable[Mapping[str, Any] | None]) -> list[dict[str, Any]]:
++    """Collect named induced-program fragments from all eight prior solved games."""
++
++    fragments: list[dict[str, Any]] = []
++    for row in prior_solved_artifacts:
++        payload = v7._row_payload(row)
++        if payload is None or row is None or not v7._confirmed_prior_solve(payload):
++            continue
++        source_game = v7._source_game_from_row(row, payload)
++        template = _template_for(source_game)
++        mechanic = v7._mechanic_text(payload)
++        fragments.append(
++            {
++                "name": template["name"],
++                "family": template["family"],
++                "source_game": source_game,
++                "source_artifact": v7._source_artifact_from_row(row),
++                "signature": template["signature"],
++                "documentation": template["documentation"],
++                "lambda_abstraction": template["lambda_abstraction"],
++                "induced_program_fragment": mechanic,
++                "tokens": sorted(v7._tokens(source_game, template["name"], template["family"], mechanic)),
++            }
++        )
++    return fragments
++
++
++def _click_state_abstraction(records: list[Mapping[str, Any]]) -> dict[str, Any]:
++    return {
++        "name": "click_state_transform_then_goal_commit_v8",
++        "family": "click_state_transform",
++        "signature": (
++            "click_state_transform_then_goal_commit_v8("
++            "observed_state, click_or_toggle_ops, terminal_goal_counter) -> executable_action_plan"
++        ),
++        "documentation": (
++            "Why: the richer eight-game library preserves the recurring click-driven state-change pattern "
++            "from prior games while still requiring the ninth game to provide its own trace evidence."
++        ),
++        "lambda_abstraction": (
++            "lambda observed_state: bind_v8_click_state_transform(observed_state) "
++            "then plan_target_specific_goal_commit(observed_state)"
++        ),
++        "source_fragments": sorted({str(record["name"]) for record in records}),
++        "source_games": sorted({str(record["source_game"]) for record in records}),
++        "source_artifacts": sorted({str(record["source_artifact"]) for record in records}),
++        "occurrence_count": len(records),
++        "match_tokens": [
++            "action5",
++            "click",
++            "color",
++            "colors",
++            "goal",
++            "item",
++            "place",
++            "select",
++            "slot",
++            "target",
++            "toggle",
++            "validate",
++        ],
++    }
++
++
++def _select_place_color_sequence(records: list[Mapping[str, Any]]) -> dict[str, Any]:
++    return {
++        "name": "select_place_color_sequence_v8",
++        "family": "click_state_transform",
++        "signature": "select_place_color_sequence_v8(state, target_colors, slots) -> seeded_action_plan",
++        "documentation": (
++            "Why: sb26 turned the broad click-state family into a specific reusable slot-color sequence "
++            "program fragment, which is the extra v8 library content absent from the seven-game v7 library."
++        ),
++        "lambda_abstraction": (
++            "lambda observed_state: order_items_by_target_colors(observed_state) "
++            "then emit_select_place_validate_plan(observed_state)"
++        ),
++        "source_fragments": sorted({str(record["name"]) for record in records}),
++        "source_games": sorted({str(record["source_game"]) for record in records}),
++        "source_artifacts": sorted({str(record["source_artifact"]) for record in records}),
++        "occurrence_count": len(records),
++        "match_tokens": ["color", "colors", "item", "place", "select", "sequence", "slot", "target", "validate"],
++    }
++
++
++def build_v8_library(prior_fragments: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
++    """Compress eight-game fragments into named v8 library abstractions."""
++
++    by_family: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
++    sb26_records: list[Mapping[str, Any]] = []
++    for fragment in prior_fragments:
++        by_family[str(fragment.get("family", "unknown_induced_program"))].append(fragment)
++        if fragment.get("source_game") == "sb26":
++            sb26_records.append(fragment)
++
++    library: list[dict[str, Any]] = []
++    click_records = by_family.get("click_state_transform", [])
++    source_games = {str(record.get("source_game", "")) for record in click_records if record.get("source_game")}
++    if len(source_games) >= 2:
++        library.append(_click_state_abstraction(click_records))
++    if sb26_records:
++        library.append(_select_place_color_sequence(sb26_records))
++    return library
++
++
++def _target_tokens(exp4060: Mapping[str, Any]) -> set[str]:
++    trace = exp4060.get("solve_trace") if isinstance(exp4060.get("solve_trace"), Mapping) else {}
++    return v7._tokens(
++        exp4060.get("target_game", ""),
++        exp4060.get("selected_candidate_reason", ""),
++        exp4060.get("induced_mechanic", ""),
++        exp4060.get("v8_seeded_action_plan", ""),
++        trace,
++    )
++
++
++def _matching_abstractions(library: list[Mapping[str, Any]], exp4060: Mapping[str, Any]) -> list[Mapping[str, Any]]:
++    tokens = _target_tokens(exp4060)
++    matches = [
++        abstraction
++        for abstraction in library
++        if tokens.intersection(set(abstraction.get("match_tokens", []) or []))
++    ]
++    return sorted(matches, key=lambda item: (-int(item.get("occurrence_count", 0) or 0), str(item.get("name", ""))))
++
++
++def _trace_actions(exp4060: Mapping[str, Any]) -> list[Any]:
++    trace = exp4060.get("solve_trace")
++    if isinstance(trace, Mapping) and isinstance(trace.get("actions"), list):
++        return list(trace["actions"])
++    actions = exp4060.get("action_plan")
++    return list(actions) if isinstance(actions, list) else []
++
++
++def _trace_commit_actions(exp4060: Mapping[str, Any]) -> list[Any]:
++    trace = exp4060.get("solve_trace")
++    if isinstance(trace, Mapping) and isinstance(trace.get("commit_actions"), list):
++        return list(trace["commit_actions"])
++    actions = _trace_actions(exp4060)
++    exploration = v7._as_int(exp4060, "exploration_actions_used")
++    return actions[exploration:] if exploration > 0 else actions
++
++
++def _trace_induction_calls(exp4060: Mapping[str, Any]) -> int:
++    trace = exp4060.get("solve_trace")
++    if isinstance(trace, Mapping) and isinstance(trace.get("induction_calls"), list):
++        return len(trace["induction_calls"])
++    return 1 if exp4060.get("induced_mechanic") else 0
++
++
++def _confirmed_exp4060_solve(exp4060: Mapping[str, Any]) -> bool:
++    return (
++        exp4060.get("game_solved") is True
++        and exp4060.get("real_env_confirmed") is True
++        and v7._as_int(exp4060, "first_solve_at_action") > 0
++    )
++
++
++def _target_evidence(exp4060: Mapping[str, Any]) -> str:
++    if _confirmed_exp4060_solve(exp4060):
++        return "confirmed_solve"
++    if _trace_actions(exp4060):
++        return "attempt_trace_only"
++    return "no_usable_trace"
++
++
++def _target_action_depth(exp4060: Mapping[str, Any]) -> int:
++    first_solve = v7._as_int(exp4060, "first_solve_at_action")
++    if first_solve > 0:
++        return first_solve
++    return len(_trace_actions(exp4060))
++
++
++def _within_game_actions(exp4060: Mapping[str, Any]) -> int:
++    commit_actions = _trace_commit_actions(exp4060)
++    if commit_actions:
++        return len(commit_actions)
++    depth = _target_action_depth(exp4060)
++    exploration = v7._as_int(exp4060, "exploration_actions_used")
++    return max(0, depth - exploration)
++
++
++def _seeded_actions(exp4060: Mapping[str, Any]) -> list[Any]:
++    for key in ("v8_seeded_action_plan", "cross_game_seeded_action_plan", "seeded_action_plan"):
++        actions = exp4060.get(key)
++        if isinstance(actions, list):
++            return list(actions)
++    return []
++
++
++def _cross_game_action_count(exp4060: Mapping[str, Any], reused: list[Mapping[str, Any]]) -> int:
++    seeded_actions = _seeded_actions(exp4060)
++    if reused and seeded_actions:
++        return len(seeded_actions)
++    return _target_action_depth(exp4060)
++
++
++def _empty_artifact(reason: str, *, duration_s: float, fragments: list[dict[str, Any]]) -> dict[str, Any]:
++    library = build_v8_library(fragments)
++    return {
++        "experiment": "experiment_4062_arcmemo_cross_game_transfer_v8",
++        "title": "arcmemo_cross_game_transfer_v8_ninth_game",
++        "honest_verdict": f"complete: arcmemo_v8_no_cross_game_transfer_{reason}",
++        "cross_game_transfer_win": False,
++        "actions_cold": 0,
++        "actions_within_game": 0,
++        "actions_cross_game_v8": 0,
++        "induction_calls_cold": 0,
++        "induction_calls_within_game": 0,
++        "induction_calls_cross_game_v8": 0,
++        "n_reused_abstractions": 0,
++        "n_named_abstractions": len(library),
++        "n_prior_fragments": len(fragments),
++        "prior_game_fragments": fragments,
++        "named_abstractions": library,
++        "reused_abstractions": [],
++        "target_evidence": "no_usable_trace",
++        "target_honest_verdict": "",
++        "transfer_assessment": "unmeasured_no_usable_trace",
++        "duration_s": float(duration_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": _field_principles(),
++    }
++
++
++def _assessment(
++    *,
++    target_evidence: str,
++    actions_cold: int,
++    actions_within_game: int,
++    actions_cross_game_v8: int,
++    cross_game_transfer_win: bool,
++) -> str:
++    if target_evidence == "attempt_trace_only":
++        return "attempt_only_no_solve_claim"
++    if cross_game_transfer_win:
++        return "helped_vs_cold_and_within_game"
++    if actions_cross_game_v8 < actions_cold and actions_cross_game_v8 > actions_within_game:
++        return "helped_vs_cold_but_lost_to_within_game"
++    if actions_cross_game_v8 < actions_cold and actions_cross_game_v8 == actions_within_game:
++        return "helped_vs_cold_but_tied_within_game"
++    if actions_cross_game_v8 == actions_cold:
++        return "neutral_vs_cold"
++    return "hurt_or_unmeasured"
++
++
++def _field_principles() -> dict[str, str]:
++    return {
++        "honest_verdict": "terminal prefix reports whether cross-game transfer helped, hurt, or was neutral",
++        "cross_game_transfer_win": (
++            "persistent memory must demonstrably reduce the cost of a new game below both cold and within-game memory"
++        ),
++        "actions_cold": "cold-start action cost on the ninth game or zero if no usable ninth-game trace exists",
++        "actions_within_game": "within-game-only memory cost after target-specific exploration has already happened",
++        "actions_cross_game_v8": "ninth-game action cost when seeded by the eight-game v8 abstraction library",
++        "n_reused_abstractions": "number of v8 abstractions that actually fired on the ninth game",
++        "inference_substrate": "offline artifact-level ArcMemo cross-game transfer measurement substrate",
++    }
++
++
++def build_cross_game_transfer_artifact(
++    *,
++    prior_solved_artifacts: Iterable[Mapping[str, Any] | None],
++    exp4060: Mapping[str, Any] | None,
++    duration_s: float,
++) -> dict[str, Any]:
++    """Build the Exp 4062 artifact from eight prior solves and the held-out Exp 4060 trace."""
++
++    fragments = collect_prior_fragments(prior_solved_artifacts)
++    library = build_v8_library(fragments)
++    if exp4060 is None or _target_evidence(exp4060) == "no_usable_trace":
++        return _empty_artifact("no_usable_4060_trace", duration_s=duration_s, fragments=fragments)
++
++    target_evidence = _target_evidence(exp4060)
++    matches = _matching_abstractions(library, exp4060)
++    reused = matches
++    actions_cold = v7._as_int(exp4060, "candidate_baseline_actions", "baseline_actions") or _target_action_depth(
++        exp4060
++    )
++    actions_within_game = _within_game_actions(exp4060)
++    actions_cross_game_v8 = _cross_game_action_count(exp4060, reused)
++    induction_calls_cold = _trace_induction_calls(exp4060)
++    induction_calls_within_game = 0 if actions_within_game > 0 else induction_calls_cold
++    induction_calls_cross_game_v8 = 0 if reused else induction_calls_cold
++    cross_game_transfer_win = bool(
++        target_evidence == "confirmed_solve"
++        and actions_cross_game_v8 > 0
++        and actions_cross_game_v8 < actions_cold
++        and actions_cross_game_v8 < actions_within_game
++    )
++
++    if target_evidence == "attempt_trace_only":
++        verdict = "complete: arcmemo_v8_no_cross_game_transfer_attempt_only"
++    elif not reused:
++        verdict = "complete: arcmemo_v8_no_cross_game_transfer_no_prior_abstraction_fired"
++    elif cross_game_transfer_win:
++        verdict = f"success: arcmemo_v8_cross_game_transfer_{actions_cold}to{actions_cross_game_v8}_actions"
++    elif actions_cross_game_v8 >= actions_within_game:
++        verdict = "complete: arcmemo_v8_no_cross_game_transfer_v8_not_cheaper_than_within_game"
++    else:
++        verdict = "complete: arcmemo_v8_no_cross_game_transfer_v8_not_cheaper_than_cold"
++
++    return {
++        "experiment": "experiment_4062_arcmemo_cross_game_transfer_v8",
++        "title": "arcmemo_cross_game_transfer_v8_ninth_game",
++        "honest_verdict": verdict,
++        "cross_game_transfer_win": cross_game_transfer_win,
++        "actions_cold": int(actions_cold),
++        "actions_within_game": int(actions_within_game),
++        "actions_cross_game_v8": int(actions_cross_game_v8),
++        "induction_calls_cold": int(induction_calls_cold),
++        "induction_calls_within_game": int(induction_calls_within_game),
++        "induction_calls_cross_game_v8": int(induction_calls_cross_game_v8),
++        "n_reused_abstractions": len(reused),
++        "n_named_abstractions": len(library),
++        "n_prior_fragments": len(fragments),
++        "prior_game_fragments": fragments,
++        "named_abstractions": library,
++        "reused_abstractions": [dict(item) for item in reused],
++        "target_game": str(exp4060.get("target_game", "")),
++        "target_evidence": target_evidence,
++        "target_honest_verdict": str(exp4060.get("honest_verdict", "")),
++        "transfer_assessment": _assessment(
++            target_evidence=target_evidence,
++            actions_cold=actions_cold,
++            actions_within_game=actions_within_game,
++            actions_cross_game_v8=actions_cross_game_v8,
++            cross_game_transfer_win=cross_game_transfer_win,
++        ),
++        "duration_s": float(duration_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": _field_principles(),
++    }
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    if "honest_verdict" in artifact and not v7._terminal_prefixed(artifact["honest_verdict"]):
++        errors.append("honest_verdict must start with success:, complete:, or blocked_")
++    if "cross_game_transfer_win" in artifact and type(artifact["cross_game_transfer_win"]) is not bool:
++        errors.append("cross_game_transfer_win must be a bare bool")
++    for field in ("actions_cold", "actions_within_game", "actions_cross_game_v8", "n_reused_abstractions"):
++        if field in artifact and type(artifact[field]) is not int:
++            errors.append(f"{field} must be a bare int")
++    if "inference_substrate" in artifact:
++        if type(artifact["inference_substrate"]) is not str:
++            errors.append("inference_substrate must be a bare string")
++        elif artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++            errors.append(f"inference_substrate must equal {INFERENCE_SUBSTRATE}")
++    if artifact.get("cross_game_transfer_win") is True:
++        if int(artifact.get("actions_cross_game_v8", 0) or 0) >= int(artifact.get("actions_cold", 0) or 0):
++            errors.append("cross_game_transfer_win requires v8 actions below cold")
++        if int(artifact.get("actions_cross_game_v8", 0) or 0) >= int(
++            artifact.get("actions_within_game", 0) or 0
++        ):
++            errors.append("cross_game_transfer_win requires v8 actions below within-game")
++    return errors
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 9e0a13f531..b3f1906fb9 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-11T20:47:05.740702Z",
+-  "duration_s": 0.11787152290344238,
++  "run_date": "2026-06-11T21:45:25.887672Z",
++  "duration_s": 0.1044759750366211,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "b0d5965fc229bfd5bbad2e0f568273f8d640b570b207eea41252e5a50c6368f5",
++  "reproducibility_checksum": "448d91fef5c834f5ca546f388e2c85219d136a47bd1820d2e4170ec1b6c62c9e",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "9471bb7da713e8e3cfd677a4aa1937aad91e28c0"
++    "adversarial_verify_version": "06cbad7cdd0d92add62890f307e3e389fdb676bf"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 2717639498..02199985a6 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-11T20:47:05.864261Z",
+-  "duration_s": 0.08507776260375977,
++  "run_date": "2026-06-11T21:45:26.120419Z",
++  "duration_s": 0.17544770240783691,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "39427422882e4ac8ba7475be2f1638f3faa0b8a38cde19ba7f1a495e96105003",
++  "reproducibility_checksum": "83bc3e13895c494d683a0fdbc18d98245b08bf98a50ea64a74ab6cc569ae0f85",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "9471bb7da713e8e3cfd677a4aa1937aad91e28c0"
++    "adversarial_verify_version": "06cbad7cdd0d92add62890f307e3e389fdb676bf"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 09f6a3f8c2..15ab76a43f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.143383026123047,
++  "efficiency_gains_ms": 2.112150192260742,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 06dde9ee5e..48bba3e4e6 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.01683783531188965,
++  "duration_s": 0.025991439819335938,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 4037795942..c28fff822b 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-11T20:48:09Z",
++  "run_date": "2026-06-11T21:46:29Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index b9323f6f1e..4221d81f9b 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000100135803223,
++  "duration_s": 5.000094652175903,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a9217707a0..845a682d6d 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.736000508069992e-05,
++  "duration_s": 3.0286959372460842e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4062_arcmemo_cross_game_transfer_v8.json b/results/experiment_4062_arcmemo_cross_game_transfer_v8.json
+new file mode 100644
+index 0000000000..f98b896ed8
+--- /dev/null
++++ b/results/experiment_4062_arcmemo_cross_game_transfer_v8.json
+@@ -0,0 +1,525 @@
++{
++  "actions_cold": 0,
++  "actions_cross_game_v8": 0,
++  "actions_within_game": 0,
++  "cross_game_transfer_win": false,
++  "duration_s": 0.001,
++  "experiment": "experiment_4062_arcmemo_cross_game_transfer_v8",
++  "field_principles": {
++    "actions_cold": "cold-start action cost on the ninth game or zero if no usable ninth-game trace exists",
++    "actions_cross_game_v8": "ninth-game action cost when seeded by the eight-game v8 abstraction library",
++    "actions_within_game": "within-game-only memory cost after target-specific exploration has already happened",
++    "cross_game_transfer_win": "persistent memory must demonstrably reduce the cost of a new game below both cold and within-game memory",
++    "honest_verdict": "terminal prefix reports whether cross-game transfer helped, hurt, or was neutral",
++    "inference_substrate": "offline artifact-level ArcMemo cross-game transfer measurement substrate",
++    "n_reused_abstractions": "number of v8 abstractions that actually fired on the ninth game"
++  },
++  "honest_verdict": "complete: arcmemo_v8_no_cross_game_transfer_no_usable_4060_trace",
++  "induction_calls_cold": 0,
++  "induction_calls_cross_game_v8": 0,
++  "induction_calls_within_game": 0,
++  "inference_substrate": "offline_arc_agi3_arcmemo_cross_game_transfer",
++  "n_named_abstractions": 2,
++  "n_prior_fragments": 8,
++  "n_reused_abstractions": 0,
++  "named_abstractions": [
++    {
++      "documentation": "Why: the richer eight-game library preserves the recurring click-driven state-change pattern from prior games while still requiring the ninth game to provide its own trace evidence.",
++      "family": "click_state_transform",
++      "lambda_abstraction": "lambda observed_state: bind_v8_click_state_transform(observed_state) then plan_target_specific_goal_commit(observed_state)",
++      "match_tokens": [
++        "action5",
++        "click",
++        "color",
++        "colors",
++        "goal",
++        "item",
++        "place",
++        "select",
++        "slot",
++        "target",
++        "toggle",
++        "validate"
++      ],
++      "name": "click_state_transform_then_goal_commit_v8",
++      "occurrence_count": 6,
++      "signature": "click_state_transform_then_goal_commit_v8(observed_state, click_or_toggle_ops, terminal_goal_counter) -> executable_action_plan",
++      "source_artifacts": [
++        "results/experiment_3946_r11l_first_solve.json",
++        "results/experiment_3966_third_game_first_solve.json",
++        "results/experiment_4004_fourth_game_explore_first.json",
++        "results/experiment_4015_fifth_game_explore_first.json",
++        "results/experiment_4038_seventh_game_explore_first.json",
++        "results/experiment_4049_eighth_game_explore_first.json"
++      ],
++      "source_fragments": [
++        "click_to_step_pruned_path",
++        "pattern_match_then_goal_commit",
++        "program_row_toggle_then_execute",
++        "select_place_color_sequence",
++        "select_then_place",
++        "toggle_blocker_then_goal_navigation"
++      ],
++      "source_games": [
++        "dc22",
++        "r11l",
++        "sb26",
++        "sc25",
++        "su15",
++        "tn36"
++      ]
++    },
++    {
++      "documentation": "Why: sb26 turned the broad click-state family into a specific reusable slot-color sequence program fragment, which is the extra v8 library content absent from the seven-game v7 library.",
++      "family": "click_state_transform",
++      "lambda_abstraction": "lambda observed_state: order_items_by_target_colors(observed_state) then emit_select_place_validate_plan(observed_state)",
++      "match_tokens": [
++        "color",
++        "colors",
++        "item",
++        "place",
++        "select",
++        "sequence",
++        "slot",
++        "target",
++        "validate"
++      ],
++      "name": "select_place_color_sequence_v8",
++      "occurrence_count": 1,
++      "signature": "select_place_color_sequence_v8(state, target_colors, slots) -> seeded_action_plan",
++      "source_artifacts": [
++        "results/experiment_4049_eighth_game_explore_first.json"
++      ],
++      "source_fragments": [
++        "select_place_color_sequence"
++      ],
++      "source_games": [
++        "sb26"
++      ]
++    }
++  ],
++  "prior_game_fragments": [
++    {
++      "documentation": "Why: a click creates a latent selected object and a later click applies that selection.",
++      "family": "click_state_transform",
++      "induced_program_fragment": "Click selects a piece, 2nd click places it. Pieces must be placed around the target's centroid so their average position aligns perfectly. Placing pieces exactly on top of each other selects the existing piece instead of placing.",
++      "lambda_abstraction": "lambda state: click(selectable_object) then click(target_slot_or_centroid)",
++      "name": "select_then_place",
++      "signature": "select_then_place(state, selected_piece, target) -> placed_piece_state",
++      "source_artifact": "results/experiment_3946_r11l_first_solve.json",
++      "source_game": "r11l",
++      "tokens": [
++        "2nd",
++        "a",
++        "aligns",
++        "around",
++        "average",
++        "be",
++        "centroid",
++        "click",
++        "click_state_transform",
++        "each",
++        "exactly",
++        "existing",
++        "instead",
++        "it",
++        "must",
++        "of",
++        "on",
++        "other",
++        "perfectly",
++        "piece",
++        "pieces",
++        "placed",
++        "places",
++        "placing",
++        "position",
++        "r11l",
++        "s",
++        "select_then_place",
++        "selects",
++        "so",
++        "target",
++        "the",
++        "their",
++        "top"
++      ]
++    },
++    {
++      "documentation": "Why: button actions can be cached as reusable set permutations.",
++      "family": "discrete_set_permutation",
++      "induced_program_fragment": "Clicking buttons applies a deterministic permutation to the positions of the pieces. The buttons can be discovered by active probing, and the goal is implicitly defined by the game's level_completed increment. The mechanic differs from r11l because it is a discrete group permutation rather than a direct spatial drag-and-drop.",
++      "lambda_abstraction": "lambda state: choose(button) then apply_deterministic_permutation(state)",
++      "name": "permute_set_by_button",
++      "signature": "permute_set_by_button(state, button) -> permuted_piece_state",
++      "source_artifact": "results/experiment_3954_second_game_solve.json",
++      "source_game": "lp85",
++      "tokens": [
++        "a",
++        "active",
++        "and",
++        "applies",
++        "be",
++        "because",
++        "buttons",
++        "by",
++        "can",
++        "clicking",
++        "defined",
++        "deterministic",
++        "differs",
++        "direct",
++        "discovered",
++        "discrete",
++        "discrete_set_permutation",
++        "drag",
++        "drop",
++        "from",
++        "game",
++        "goal",
++        "group",
++        "implicitly",
++        "increment",
++        "is",
++        "it",
++        "level_completed",
++        "lp85",
++        "mechanic",
++        "of",
++        "permutation",
++        "permute_set_by_button",
++        "pieces",
++        "positions",
++        "probing",
++        "r11l",
++        "rather",
++        "s",
++        "spatial",
++        "than",
++        "the",
++        "to"
++      ]
++    },
++    {
++      "documentation": "Why: click transforms first satisfy a pattern before a terminal goal action sequence.",
++      "family": "click_state_transform",
++      "induced_program_fragment": "Clicking a specific subset of the 3x3 grid cells toggles their state to match a target pattern, then navigating the player sprite to an exit sprite triggers level completion. The goal predicate is pattern_matched AND player_at_exit. This differs from r11l/lp85 as it involves both a hidden boolean pattern matching phase and a spatial navigation phase.",
++      "lambda_abstraction": "lambda state: satisfy_clicked_pattern(state) then commit_goal_suffix(state)",
++      "name": "pattern_match_then_goal_commit",
++      "signature": "pattern_match_then_goal_commit(state, clicked_cells, exit_path) -> level_counter_goal",
++      "source_artifact": "results/experiment_3966_third_game_first_solve.json",
++      "source_game": "sc25",
++      "tokens": [
++        "3x3",
++        "a",
++        "an",
++        "and",
++        "as",
++        "boolean",
++        "both",
++        "cells",
++        "click_state_transform",
++        "clicking",
++        "completion",
++        "differs",
++        "exit",
++        "from",
++        "goal",
++        "grid",
++        "hidden",
++        "involves",
++        "is",
++        "it",
++        "level",
++        "lp85",
++        "match",
++        "matching",
++        "navigating",
++        "navigation",
++        "of",
++        "pattern",
++        "pattern_match_then_goal_commit",
++        "pattern_matched",
++        "phase",
++        "player",
++        "player_at_exit",
++        "predicate",
++        "r11l",
++        "sc25",
++        "spatial",
++        "specific",
++        "sprite",
++        "state",
++        "subset",
++        "target",
++        "the",
++        "their",
++        "then",
++        "this",
++        "to",
++        "toggles",
++        "triggers"
++      ]
++    },
++    {
++      "documentation": "Why: observed click deltas can seed a grounded path without rediscovering every action.",
++      "family": "click_state_transform",
++      "induced_program_fragment": "Active exploration observed that lattice-aligned clicks move the required type-2 sprite a short step toward the clicked point; the grounded model was induced before the executed-consistency pruner retained the up/right exploit path into the visible xkstxyqbs target zone.",
++      "lambda_abstraction": "lambda state: reuse_executed_click_dynamics(state) then prune_to_goal_path(state)",
++      "name": "click_to_step_pruned_path",
++      "signature": "click_to_step_pruned_path(state, click_targets) -> target_zone_state",
++      "source_artifact": "results/experiment_4004_fourth_game_explore_first.json",
++      "source_game": "su15",
++      "tokens": [
++        "2",
++        "a",
++        "active",
++        "aligned",
++        "before",
++        "click_state_transform",
++        "click_to_step_pruned_path",
++        "clicked",
++        "clicks",
++        "consistency",
++        "executed",
++        "exploit",
++        "exploration",
++        "grounded",
++        "induced",
++        "into",
++        "lattice",
++        "model",
++        "move",
++        "observed",
++        "path",
++        "point",
++        "pruner",
++        "required",
++        "retained",
++        "right",
++        "short",
++        "sprite",
++        "step",
++        "su15",
++        "target",
++        "that",
++        "the",
++        "toward",
++        "type",
++        "up",
++        "visible",
++        "was",
++        "xkstxyqbs",
++        "zone"
++      ]
++    },
++    {
++      "documentation": "Why: visible click targets update latent program rows before a terminal execute click.",
++      "family": "click_state_transform",
++      "induced_program_fragment": "Active exploration observed that TN36 click targets toggle two-bit program rows; the induced model was built from those real transition deltas before the executed-consistency pruner retained the remaining row toggles and the visible execute button that moved the active sprite onto the matching taptxx target.",
++      "lambda_abstraction": "lambda state: toggle_program_rows(state) then click_execute_for_level_counter(state)",
++      "name": "program_row_toggle_then_execute",
++      "signature": "program_row_toggle_then_execute(state, row_toggles, execute_button) -> matched_target",
++      "source_artifact": "results/experiment_4015_fifth_game_explore_first.json",
++      "source_game": "tn36",
++      "tokens": [
++        "active",
++        "and",
++        "before",
++        "bit",
++        "built",
++        "button",
++        "click",
++        "click_state_transform",
++        "consistency",
++        "deltas",
++        "execute",
++        "executed",
++        "exploration",
++        "from",
++        "induced",
++        "matching",
++        "model",
++        "moved",
++        "observed",
++        "onto",
++        "program",
++        "program_row_toggle_then_execute",
++        "pruner",
++        "real",
++        "remaining",
++        "retained",
++        "row",
++        "rows",
++        "sprite",
++        "taptxx",
++        "target",
++        "targets",
++        "that",
++        "the",
++        "those",
++        "tn36",
++        "toggle",
++        "toggles",
++        "transition",
++        "two",
++        "visible",
++        "was"
++      ]
++    },
++    {
++      "documentation": "Why: action selection changes active state before a single validation/fill commit.",
++      "family": "region_state_commit",
++      "induced_program_fragment": "Observed cd82 basket navigation changed the active region before any commit; induced a one-region fill model where ACTION5 paints the active basket region with the selected palette color and the goal ignores both diagonals.",
++      "lambda_abstraction": "lambda state: move_active_region(state) then action5_paint_and_validate(state)",
++      "name": "active_region_fill_then_validate",
++      "signature": "active_region_fill_then_validate(state, region, color) -> painted_goal_region",
++      "source_artifact": "results/experiment_4024_fifth_game_explore_first.json",
++      "source_game": "cd82",
++      "tokens": [
++        "a",
++        "action5",
++        "active",
++        "active_region_fill_then_validate",
++        "and",
++        "any",
++        "basket",
++        "before",
++        "both",
++        "cd82",
++        "changed",
++        "color",
++        "commit",
++        "diagonals",
++        "fill",
++        "goal",
++        "ignores",
++        "induced",
++        "model",
++        "navigation",
++        "observed",
++        "one",
++        "paints",
++        "palette",
++        "region",
++        "region_state_commit",
++        "selected",
++        "the",
++        "where",
++        "with"
++      ]
++    },
++    {
++      "documentation": "Why: clicked toggles change traversability before a terminal goal path can succeed.",
++      "family": "click_state_transform",
++      "induced_program_fragment": "Observed dc22 movement and buezna toggle transitions before planning; induced a grid-navigation model where keyboard actions move jfva by two pixels, visible buezna clicks toggle same-letter blockers, and the goal predicate is confirmed only by a levels_completed increment when jfva reaches goknoi.",
++      "lambda_abstraction": "lambda state: click_toggle_blockers(state) then navigate_to_goal_counter(state)",
++      "name": "toggle_blocker_then_goal_navigation",
++      "signature": "toggle_blocker_then_goal_navigation(state, blockers, path) -> level_counter_goal",
++      "source_artifact": "results/experiment_4038_seventh_game_explore_first.json",
++      "source_game": "dc22",
++      "tokens": [
++        "a",
++        "actions",
++        "and",
++        "before",
++        "blockers",
++        "buezna",
++        "by",
++        "click_state_transform",
++        "clicks",
++        "confirmed",
++        "dc22",
++        "goal",
++        "goknoi",
++        "grid",
++        "increment",
++        "induced",
++        "is",
++        "jfva",
++        "keyboard",
++        "letter",
++        "levels_completed",
++        "model",
++        "move",
++        "movement",
++        "navigation",
++        "observed",
++        "only",
++        "pixels",
++        "planning",
++        "predicate",
++        "reaches",
++        "same",
++        "the",
++        "toggle",
++        "toggle_blocker_then_goal_navigation",
++        "transitions",
++        "two",
++        "visible",
++        "when",
++        "where"
++      ]
++    },
++    {
++      "documentation": "Why: the eighth solved game added a concrete select/place/color-sequence fragment that can seed slot-filling games without relearning the same item-to-slot mechanic.",
++      "family": "click_state_transform",
++      "induced_program_fragment": "Observed sb26 item selection and slot placement before validation; induced a non-navigation color-sequence model where clicked items move into frame slots, slot colors must match the top target colors left-to-right, and ACTION5 is retained only when replay predicts a levels_completed increment.",
++      "lambda_abstraction": "lambda state: select_items_by_color(state) then place_slots_left_to_right(state)",
++      "name": "select_place_color_sequence",
++      "signature": "select_place_color_sequence(state, target_colors, slots) -> validated_slot_sequence",
++      "source_artifact": "results/experiment_4049_eighth_game_explore_first.json",
++      "source_game": "sb26",
++      "tokens": [
++        "a",
++        "action5",
++        "and",
++        "before",
++        "click_state_transform",
++        "clicked",
++        "color",
++        "colors",
++        "frame",
++        "increment",
++        "induced",
++        "into",
++        "is",
++        "item",
++        "items",
++        "left",
++        "levels_completed",
++        "match",
++        "model",
++        "move",
++        "must",
++        "navigation",
++        "non",
++        "observed",
++        "only",
++        "placement",
++        "predicts",
++        "replay",
++        "retained",
++        "right",
++        "sb26",
++        "select_place_color_sequence",
++        "selection",
++        "sequence",
++        "slot",
++        "slots",
++        "target",
++        "the",
++        "to",
++        "top",
++        "validation",
++        "when",
++        "where"
++      ]
++    }
++  ],
++  "reused_abstractions": [],
++  "target_evidence": "no_usable_trace",
++  "target_honest_verdict": "",
++  "title": "arcmemo_cross_game_transfer_v8_ninth_game",
++  "transfer_assessment": "unmeasured_no_usable_trace"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index d3dfdbeb8f..863fdf1892 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T20:46:39Z",
+-  "finished_at": "2026-06-11T20:46:39Z",
++  "started_at": "2026-06-11T21:44:59Z",
++  "finished_at": "2026-06-11T21:44:59Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 7edf3b5057..9d1a211285 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T20:46:39Z",
+-  "finished_at": "2026-06-11T20:46:40Z",
++  "started_at": "2026-06-11T21:44:59Z",
++  "finished_at": "2026-06-11T21:44:59Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 84f018f7b7..e97d21466c 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T20:46:40Z",
+-  "finished_at": "2026-06-11T20:46:40Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-11T21:44:59Z",
++  "finished_at": "2026-06-11T21:44:59Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/exp4062_arcmemo_cross_game_transfer_v8.py b/scripts/experiments/exp4062_arcmemo_cross_game_transfer_v8.py
+new file mode 100644
+index 0000000000..b6e8e9e10b
+--- /dev/null
++++ b/scripts/experiments/exp4062_arcmemo_cross_game_transfer_v8.py
+@@ -0,0 +1,88 @@
++"""Exp 4062: ArcMemo v8 richer cross-game concept-library transfer.
++
++Spec refs: REQ-LEARN-4062, SCENARIO-LEARN-4062.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++
++REPO = Path(__file__).resolve().parents[2]
++RESULT_NAME = "experiment_4062_arcmemo_cross_game_transfer_v8.json"
++PRIOR_SOLVED_GAME_SOURCES = (
++    ("r11l", "results/experiment_3946_r11l_first_solve.json"),
++    ("lp85", "results/experiment_3954_second_game_solve.json"),
++    ("sc25", "results/experiment_3966_third_game_first_solve.json"),
++    ("su15", "results/experiment_4004_fourth_game_explore_first.json"),
++    ("tn36", "results/experiment_4015_fifth_game_explore_first.json"),
++    ("cd82", "results/experiment_4024_fifth_game_explore_first.json"),
++    ("dc22", "results/experiment_4038_seventh_game_explore_first.json"),
++    ("sb26", "results/experiment_4049_eighth_game_explore_first.json"),
++)
++
++sys.path.insert(0, str(REPO / "python"))
++
++from carnot.agentic.arc_arcmemo_cross_game_transfer_v8 import (  # noqa: E402
++    artifact_schema_errors,
++    build_cross_game_transfer_artifact,
++)
++
++
++def _read_json(path: Path) -> dict[str, Any] | None:
++    if not path.exists():
++        return None
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _prior_solved_artifacts() -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for source_game, relative_path in PRIOR_SOLVED_GAME_SOURCES:
++        rows.append(
++            {
++                "source_game": source_game,
++                "source_artifact": relative_path,
++                "payload": _read_json(REPO / relative_path),
++            }
++        )
++    return rows
++
++
++def _write_artifact(artifact: dict[str, Any]) -> Path:
++    out = REPO / "results" / RESULT_NAME
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out
++
++
++def run(*, write: bool = True) -> dict[str, Any]:
++    started = time.time()
++    exp4060 = _read_json(REPO / "results" / "experiment_4060_ninth_game_explore_first.json")
++    artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_artifacts(),
++        exp4060=exp4060,
++        duration_s=round(time.time() - started, 3),
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        _write_artifact(artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--no-write", action="store_true")
++    args = parser.parse_args()
++    artifact = run(write=not args.no_write)
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_exp4062_arcmemo_cross_game_transfer_v8.py b/tests/python/test_exp4062_arcmemo_cross_game_transfer_v8.py
+new file mode 100644
+index 0000000000..63dffae68b
+--- /dev/null
++++ b/tests/python/test_exp4062_arcmemo_cross_game_transfer_v8.py
+@@ -0,0 +1,483 @@
++"""Tests for Exp 4062 ArcMemo v8 richer cross-game transfer.
++
++Spec refs: REQ-LEARN-4062, SCENARIO-LEARN-4062.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++import pytest
++
++import carnot.agentic.arc_arcmemo_cross_game_transfer_v8 as v8
++from carnot.agentic.arc_arcmemo_cross_game_transfer_v8 import (
++    INFERENCE_SUBSTRATE,
++    REQUIRED_ARTIFACT_FIELDS,
++    artifact_schema_errors,
++    build_cross_game_transfer_artifact,
++    build_v8_library,
++    collect_prior_fragments,
++)
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++sys.path.insert(0, str(REPO / "scripts" / "experiments"))
++
++import exp4062_arcmemo_cross_game_transfer_v8 as exp  # noqa: E402
++
++
++def _prior_row(source_game: str, source_artifact: str, payload: dict[str, object]) -> dict[str, object]:
++    return {"source_game": source_game, "source_artifact": source_artifact, "payload": payload}
++
++
++def _prior_solved_rows() -> list[dict[str, object]]:
++    return [
++        _prior_row(
++            "r11l",
++            "results/experiment_3946_r11l_first_solve.json",
++            {
++                "experiment": "experiment_3946_r11l_first_solve",
++                "real_env_confirmed": True,
++                "first_solve_at_action": 4,
++                "induced_select_place_mechanic": "Click selects a piece, 2nd click places it.",
++            },
++        ),
++        _prior_row(
++            "lp85",
++            "results/experiment_3954_second_game_solve.json",
++            {
++                "experiment": "experiment_3954_second_game_solve",
++                "game_solved": "lp85-305b61c3",
++                "real_env_confirmed": True,
++                "first_solve_at_action": 5,
++                "induced_mechanic": "Clicking buttons applies a deterministic permutation.",
++            },
++        ),
++        _prior_row(
++            "sc25",
++            "results/experiment_3966_third_game_first_solve.json",
++            {
++                "experiment": "experiment_3966_third_game_first_solve",
++                "game_solved": "sc25-635fd71a",
++                "real_env_confirmed": True,
++                "first_solve_at_action": 17,
++                "induced_mechanic": "Clicked cells toggle a target pattern before navigation exits.",
++            },
++        ),
++        _prior_row(
++            "su15",
++            "results/experiment_4004_fourth_game_explore_first.json",
++            {
++                "experiment": "experiment_4004_fourth_game_explore_first",
++                "ACCURACY_levels_solved": 1,
++                "game_solved": "su15-1944f8ab",
++                "real_env_confirmed": True,
++                "first_solve_at_action": 14,
++                "exploration_actions_used": 4,
++                "induced_mechanic": "Lattice-aligned clicks move a sprite toward the target zone.",
++            },
++        ),
++        _prior_row(
++            "tn36",
++            "results/experiment_4015_fifth_game_explore_first.json",
++            {
++                "experiment": "experiment_4015_fifth_game_explore_first",
++                "ACCURACY_levels_solved": 1,
++                "game_solved": "tn36-ef4dde99",
++                "real_env_confirmed": True,
++                "first_solve_at_action": 7,
++                "exploration_actions_used": 4,
++                "induced_mechanic": "Click targets toggle two-bit program rows before execute.",
++            },
++        ),
++        _prior_row(
++            "cd82",
++            "results/experiment_4024_fifth_game_explore_first.json",
++            {
++                "experiment": "experiment_4024_fifth_game_explore_first",
++                "game_solved": True,
++                "target_game": "cd82-fb555c5d",
++                "real_env_confirmed": True,
++                "first_solve_at_action": 5,
++                "exploration_actions_used": 4,
++                "induced_mechanic": "ACTION5 paints the active basket region with a selected color.",
++            },
++        ),
++        _prior_row(
++            "dc22",
++            "results/experiment_4038_seventh_game_explore_first.json",
++            {
++                "experiment": "experiment_4038_seventh_game_explore_first",
++                "game_solved": True,
++                "target_game": "dc22-fdcac232",
++                "real_env_confirmed": True,
++                "first_solve_at_action": 20,
++                "exploration_actions_used": 2,
++                "induced_mechanic": "Visible clicks toggle blockers before goal navigation completes.",
++            },
++        ),
++        _prior_row(
++            "sb26",
++            "results/experiment_4049_eighth_game_explore_first.json",
++            _exp4049_payload(),
++        ),
++    ]
++
++
++def _exp4049_payload() -> dict[str, object]:
++    actions = [
++        {"action": 6, "role": "select_item", "color": 9, "x": 36, "y": 59},
++        {"action": 6, "role": "place_slot", "color": 9, "x": 23, "y": 30},
++        {"action": 6, "role": "select_item", "color": 14, "x": 20, "y": 59},
++        {"action": 6, "role": "place_slot", "color": 14, "x": 29, "y": 30},
++        {"action": 6, "role": "select_item", "color": 11, "x": 44, "y": 59},
++        {"action": 6, "role": "place_slot", "color": 11, "x": 35, "y": 30},
++        {"action": 6, "role": "select_item", "color": 15, "x": 28, "y": 59},
++        {"action": 6, "role": "place_slot", "color": 15, "x": 41, "y": 30},
++        {"action": 5, "role": "validate"},
++    ]
++    return {
++        "experiment": "experiment_4049_eighth_game_explore_first",
++        "honest_verdict": "success: eighth_game_solved_sb26-7fbdac44_at_action_9",
++        "game_solved": True,
++        "real_env_confirmed": True,
++        "target_game": "sb26-7fbdac44",
++        "candidate_baseline_actions": 18,
++        "first_solve_at_action": 9,
++        "exploration_actions_used": 2,
++        "induced_mechanic": (
++            "Observed sb26 item selection and slot placement before validation; "
++            "slot colors must match target colors left-to-right."
++        ),
++        "solve_trace": {
++            "actions": actions,
++            "exploration_actions": actions[:2],
++            "commit_actions": actions[2:],
++            "induction_calls": [{"call": "induce_sb26_color_sequence_slot_matching"}],
++        },
++    }
++
++
++def _exp4060_payload(*, solved: bool = True, seeded: bool = True) -> dict[str, object]:
++    actions = [
++        {"action": 6, "role": "select_item", "color": 2},
++        {"action": 6, "role": "place_slot", "color": 2},
++        {"action": 6, "role": "select_item", "color": 4},
++        {"action": 6, "role": "place_slot", "color": 4},
++        {"action": 6, "role": "select_item", "color": 8},
++        {"action": 6, "role": "place_slot", "color": 8},
++        {"action": 5, "role": "validate"},
++        {"action": 5, "role": "confirm"},
++    ]
++    payload: dict[str, object] = {
++        "experiment": "experiment_4060_ninth_game_explore_first",
++        "honest_verdict": (
++            "success: ninth_game_solved_zz99-at_action_8" if solved else "complete: ninth_game_attempt_zz99"
++        ),
++        "game_solved": solved,
++        "real_env_confirmed": solved,
++        "target_game": "zz99-1234abcd",
++        "candidate_baseline_actions": 16,
++        "first_solve_at_action": 8 if solved else -1,
++        "exploration_actions_used": 1,
++        "induced_mechanic": "Select colored items, place them into target slots, then validate the color sequence.",
++        "solve_trace": {
++            "actions": actions,
++            "exploration_actions": actions[:1],
++            "commit_actions": actions[1:],
++            "induction_calls": [{"call": "induce_zz99_slot_sequence"}],
++        },
++    }
++    if seeded:
++        payload["v8_seeded_action_plan"] = actions[:5]
++    return payload
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
++
++
++def test_req_learn_4062_spec_declares_v8_transfer_contract() -> None:
++    """REQ-LEARN-4062: OpenSpec declares v8 transfer and required fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-LEARN-4062" in spec
++    assert "SCENARIO-LEARN-4062" in spec
++    assert "experiment_4062_arcmemo_cross_game_transfer_v8.json" in spec
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_req_learn_4062_builds_richer_library_from_all_eight_prior_games() -> None:
++    """REQ-LEARN-4062-1: all eight prior solved fragments become documented abstractions."""
++
++    fragments = collect_prior_fragments(_prior_solved_rows())
++    library = build_v8_library(fragments)
++
++    assert len(fragments) == 8
++    assert {fragment["source_game"] for fragment in fragments} == {
++        "r11l",
++        "lp85",
++        "sc25",
++        "su15",
++        "tn36",
++        "cd82",
++        "dc22",
++        "sb26",
++    }
++    assert len(library) >= 2
++    names = {abstraction["name"] for abstraction in library}
++    assert "click_state_transform_then_goal_commit_v8" in names
++    assert "select_place_color_sequence_v8" in names
++    color_sequence = next(item for item in library if item["name"] == "select_place_color_sequence_v8")
++    assert color_sequence["source_games"] == ["sb26"]
++    assert {"name", "signature", "documentation", "source_games", "source_fragments"} <= set(color_sequence)
++    assert "lambda" in color_sequence["lambda_abstraction"]
++
++
++def test_req_learn_4062_fragment_collection_skips_invalid_or_unconfirmed_rows() -> None:
++    """REQ-LEARN-4062-1: only confirmed prior solves enter the v8 library."""
++
++    fragments = collect_prior_fragments(
++        [
++            None,
++            {},
++            {"payload": None},
++            {
++                "source_game": "bad",
++                "source_artifact": "results/bad.json",
++                "payload": {"real_env_confirmed": False, "game_solved": "bad-1"},
++            },
++            _prior_solved_rows()[0],
++        ]
++    )
++
++    assert [fragment["source_game"] for fragment in fragments] == ["r11l"]
++
++
++def test_scenario_learn_4062_absent_exp4060_fails_closed_without_losing_library_evidence() -> None:
++    """REQ-LEARN-4062-6: missing ninth-game trace writes a valid no-transfer artifact."""
++
++    artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=None,
++        duration_s=0.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete: arcmemo_v8_no_cross_game_transfer_no_usable_4060_trace"
++    assert artifact["cross_game_transfer_win"] is False
++    assert artifact["actions_cold"] == 0
++    assert artifact["actions_within_game"] == 0
++    assert artifact["actions_cross_game_v8"] == 0
++    assert artifact["n_reused_abstractions"] == 0
++    assert artifact["n_prior_fragments"] == 8
++    assert artifact["n_named_abstractions"] >= 2
++    assert artifact["target_evidence"] == "no_usable_trace"
++    assert artifact_schema_errors(artifact) == []
++
++
++def test_scenario_learn_4062_no_matching_abstraction_keeps_induction_cost() -> None:
++    """REQ-LEARN-4062-4: confirmed targets without a fired abstraction cannot claim transfer."""
++
++    artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=[],
++        exp4060=_exp4060_payload(solved=True, seeded=True),
++        duration_s=0.0,
++    )
++
++    assert artifact["n_reused_abstractions"] == 0
++    assert artifact["induction_calls_cross_game_v8"] == artifact["induction_calls_cold"]
++    assert artifact["honest_verdict"] == "complete: arcmemo_v8_no_cross_game_transfer_no_prior_abstraction_fired"
++
++
++def test_scenario_learn_4062_success_requires_v8_to_beat_cold_and_within_game() -> None:
++    """SCENARIO-LEARN-4062: v8 transfer wins only below both action baselines."""
++
++    artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=_exp4060_payload(solved=True, seeded=True),
++        duration_s=0.1,
++    )
++
++    assert artifact["cross_game_transfer_win"] is True
++    assert artifact["actions_cold"] == 16
++    assert artifact["actions_within_game"] == 7
++    assert artifact["actions_cross_game_v8"] == 5
++    assert artifact["induction_calls_cold"] == 1
++    assert artifact["induction_calls_within_game"] == 0
++    assert artifact["induction_calls_cross_game_v8"] == 0
++    assert artifact["n_reused_abstractions"] >= 2
++    assert artifact["honest_verdict"] == "success: arcmemo_v8_cross_game_transfer_16to5_actions"
++    assert artifact["transfer_assessment"] == "helped_vs_cold_and_within_game"
++    assert artifact["inference_substrate"] == INFERENCE_SUBSTRATE
++    assert artifact_schema_errors(artifact) == []
++
++
++def test_scenario_learn_4062_tie_neutral_and_cold_failure_assessments() -> None:
++    """REQ-LEARN-4062-4: no-win reasons distinguish ties, neutral cases, and cold failures."""
++
++    tied = _exp4060_payload(solved=True, seeded=True)
++    tied["v8_seeded_action_plan"] = tied["solve_trace"]["actions"][:7]  # type: ignore[index]
++    tied_artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=tied,
++        duration_s=0.0,
++    )
++
++    neutral = _exp4060_payload(solved=True, seeded=False)
++    neutral["candidate_baseline_actions"] = 8
++    neutral_artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=neutral,
++        duration_s=0.0,
++    )
++
++    not_cheaper_than_cold = _exp4060_payload(solved=True, seeded=True)
++    not_cheaper_than_cold["candidate_baseline_actions"] = 4
++    not_cheaper_than_cold_artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=not_cheaper_than_cold,
++        duration_s=0.0,
++    )
++
++    hurt = _exp4060_payload(solved=True, seeded=True)
++    hurt["v8_seeded_action_plan"] = hurt["solve_trace"]["actions"] + [{"action": 5}] * 3  # type: ignore[index]
++    hurt["candidate_baseline_actions"] = 6
++    hurt_artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=hurt,
++        duration_s=0.0,
++    )
++
++    assert tied_artifact["transfer_assessment"] == "helped_vs_cold_but_tied_within_game"
++    assert neutral_artifact["transfer_assessment"] == "neutral_vs_cold"
++    assert not_cheaper_than_cold_artifact["honest_verdict"] == (
++        "complete: arcmemo_v8_no_cross_game_transfer_v8_not_cheaper_than_cold"
++    )
++    assert hurt_artifact["transfer_assessment"] == "hurt_or_unmeasured"
++
++
++def test_scenario_learn_4062_reuse_without_seeded_shortcut_does_not_claim_win() -> None:
++    """REQ-LEARN-4062-4: matching abstractions are not enough unless actions drop."""
++
++    artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=_exp4060_payload(solved=True, seeded=False),
++        duration_s=0.1,
++    )
++
++    assert artifact["cross_game_transfer_win"] is False
++    assert artifact["actions_cross_game_v8"] == 8
++    assert artifact["actions_within_game"] == 7
++    assert artifact["n_reused_abstractions"] >= 2
++    assert artifact["honest_verdict"] == (
++        "complete: arcmemo_v8_no_cross_game_transfer_v8_not_cheaper_than_within_game"
++    )
++
++
++def test_scenario_learn_4062_attempt_trace_is_measured_without_solve_claim() -> None:
++    """REQ-LEARN-4062-5: unsolved Exp 4060 attempts stay complete, not success."""
++
++    artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=_exp4060_payload(solved=False, seeded=True),
++        duration_s=0.0,
++    )
++
++    assert artifact["cross_game_transfer_win"] is False
++    assert artifact["target_evidence"] == "attempt_trace_only"
++    assert artifact["actions_cross_game_v8"] == 5
++    assert artifact["honest_verdict"] == "complete: arcmemo_v8_no_cross_game_transfer_attempt_only"
++    assert artifact_schema_errors(artifact) == []
++
++
++def test_req_learn_4062_schema_rejects_non_bare_required_fields() -> None:
++    """REQ-LEARN-4062-2: required artifact fields stay bare JSON scalars."""
++
++    artifact = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=_prior_solved_rows(),
++        exp4060=_exp4060_payload(solved=True, seeded=True),
++        duration_s=0.25,
++    )
++    bad = dict(artifact)
++    bad["honest_verdict"] = "finished"
++    bad["cross_game_transfer_win"] = 1
++    bad["actions_cold"] = "16"
++    bad["actions_within_game"] = 7.0
++    bad["actions_cross_game_v8"] = "5"
++    bad["n_reused_abstractions"] = True
++    bad["inference_substrate"] = None
++    wrong_substrate = dict(artifact)
++    wrong_substrate["inference_substrate"] = "wrong"
++    impossible_win = dict(artifact)
++    impossible_win["actions_cross_game_v8"] = impossible_win["actions_within_game"]
++    impossible_cold_win = dict(artifact)
++    impossible_cold_win["actions_cold"] = impossible_cold_win["actions_cross_game_v8"]
++
++    errors = artifact_schema_errors(bad) + artifact_schema_errors(wrong_substrate)
++    win_errors = artifact_schema_errors(impossible_win) + artifact_schema_errors(impossible_cold_win)
++    missing = artifact_schema_errors({})
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert any(field in error for error in errors + missing)
++    assert any("below cold" in error for error in win_errors)
++    assert any("below within-game" in error for error in win_errors)
++
++
++def test_runner_writes_exp4062_result_json_for_missing_exp4060(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4062: runner writes the stable Exp 4062 JSON deliverable."""
++
++    rows = _prior_solved_rows()
++    for row in rows:
++        _write_json(tmp_path / str(row["source_artifact"]), row["payload"])  # type: ignore[arg-type]
++    monkeypatch.setattr(exp, "REPO", tmp_path)
++
++    artifact = exp.run(write=True)
++
++    written = tmp_path / "results" / "experiment_4062_arcmemo_cross_game_transfer_v8.json"
++    assert artifact["honest_verdict"] == "complete: arcmemo_v8_no_cross_game_transfer_no_usable_4060_trace"
++    assert written.exists()
++    assert json.loads(written.read_text(encoding="utf-8")) == artifact
++
++
++def test_runner_raises_on_schema_errors(monkeypatch, tmp_path: Path) -> None:
++    """REQ-LEARN-4062-2: runner refuses to write malformed Exp 4062 artifacts."""
++
++    rows = _prior_solved_rows()
++    for row in rows:
++        _write_json(tmp_path / str(row["source_artifact"]), row["payload"])  # type: ignore[arg-type]
++    monkeypatch.setattr(exp, "REPO", tmp_path)
++    monkeypatch.setattr(exp, "artifact_schema_errors", lambda _artifact: ["schema broke"])
++
++    with pytest.raises(ValueError, match="schema broke"):
++        exp.run(write=False)
++
++
++def test_private_helpers_cover_fallback_paths() -> None:
++    """REQ-LEARN-4062-5: fallback action logs and non-dict targets are bounded."""
++
++    no_commit = build_cross_game_transfer_artifact(
++        prior_solved_artifacts=[],
++        exp4060={
++            "honest_verdict": "complete: no_commit_attempt",
++            "game_solved": False,
++            "real_env_confirmed": False,
++            "target_game": "zz99",
++            "exploration_actions_used": 1,
++            "solve_trace": {"actions": [{"action": 6}, {"action": 5}]},
++        },
++        duration_s=0.0,
++    )
++
++    assert no_commit["actions_within_game"] == 1
++    assert v8._within_game_actions({"first_solve_at_action": 5, "exploration_actions_used": 2}) == 3
++    assert build_cross_game_transfer_artifact(
++        prior_solved_artifacts=[],
++        exp4060={"honest_verdict": "complete: no trace"},
++        duration_s=0.0,
++    )["target_evidence"] == "no_usable_trace"
+-- 
+2.55.0
+

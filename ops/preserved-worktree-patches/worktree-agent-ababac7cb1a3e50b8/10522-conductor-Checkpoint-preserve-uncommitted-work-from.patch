@@ -1,0 +1,72 @@
+From 69b8ce2e38dd7384cbd1e2663f179fe12f5fbcaa Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 09:22:04 -0400
+Subject: [PATCH 10522/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-notes/arc-agi3-news-watch.md | 4 ++++
+ ops/.pretest-poison-counter.json           | 4 +---
+ ops/conductor-heartbeat.json               | 2 +-
+ ops/conductor-log.md                       | 5 +++++
+ ops/conductor-state.json                   | 2 +-
+ 5 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/docs/research-notes/arc-agi3-news-watch.md b/docs/research-notes/arc-agi3-news-watch.md
+index 64b35eb60d..a6f222dce4 100644
+--- a/docs/research-notes/arc-agi3-news-watch.md
++++ b/docs/research-notes/arc-agi3-news-watch.md
+@@ -225,3 +225,7 @@ CHECK_TIMED_OUT
+ 
+ - On July 17, the host published an analysis of 500 failed submissions: roughly one-third had no traceable visible notebook error, nearly 20% required a GPU that had not been enabled, and remaining causes—each below 5%—included missing datasets/dependencies, logic errors, CUDA OOM, using the public API instead of competition settings, and writing to read-only `/kaggle/input`. [Official Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+ 
++## 2026-08-31 13:13 UTC -- check failed
++
++CHECK_TIMED_OUT
++
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index 9e24ec5980..9e26dfeeb6 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1,3 +1 @@
+-{
+-  "tests/python/test_experiment_6819_arc_stepwise_strategy_accrual.py": 1
+-}
+\ No newline at end of file
++{}
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 53fb25bcbb..24d42b7d41 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 38, "phase": "iteration_start", "last_beat": "2026-08-31T12:59:37Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 39, "phase": "iteration_start", "last_beat": "2026-08-31T13:21:56Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 47aef308e8..f61f0455e0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16914,3 +16914,8 @@ The l |
+ | 2026-08-31 12:29 UTC | Independent local-and-global route-memory audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6816-residual-pressure-route-learning-ab, |
+ | 2026-08-31 12:55 UTC | Stepwise read-only strategy-supervisor accrual | FAIL | Codex CLI error: Stalled after 600s silence. Last output: pter_and_process_gu |
+ | 2026-08-31 12:57 UTC | Stepwise read-only strategy-supervisor accrual | SKIP | Pre-tests failing, self-heal failed:  |
++| 2026-08-31 13:19 UTC | Stepwise read-only strategy-supervisor accrual | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ading")
++    lease.t |
++| 2026-08-31 13:21 UTC | Live selfparse tool-gap obligation transport v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6819-arc-stepwise-strategy-accrual) |
++| 2026-08-31 13:21 UTC | Obligation-routed actions-to-progress A/B v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6820-arc-tool-gap-obligation-transport-v2 |
++| 2026-08-31 13:21 UTC | Independent ARC causal adoption audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6819-arc-stepwise-strategy-accrual, exp68 |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index dffad83055..9701eabeb0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 38, "phase": "iteration_start", "started_at": "2026-08-31T12:59:37Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 39, "phase": "iteration_start", "started_at": "2026-08-31T13:21:56Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

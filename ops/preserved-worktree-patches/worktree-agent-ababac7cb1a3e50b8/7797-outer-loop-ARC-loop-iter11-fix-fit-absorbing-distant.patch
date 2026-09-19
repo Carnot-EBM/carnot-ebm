@@ -1,0 +1,251 @@
+From 4e8eb12612b6eeffb33bd11c3424b6c9fa8a26b9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 06:28:32 -0400
+Subject: [PATCH 07797/11362] [outer-loop] ARC loop iter11: fix fit absorbing
+ distant co-directional decoy via spatial-adjacency prune (REQ-ARC-WMTE-5882)
+
+The deferred GAP-ARC-NAV-FIT-ABSORBS-CODIRECTIONAL-DECOY, solved after two
+motion-based dead-ends (iter9 rate gate, iter11 per-action mode -- both fail
+because tu93's marker centroid genuinely moves differently than the body, so no
+motion test groups them). Winning insight: the discriminator is SPATIAL
+CONTIGUITY. A rigid avatar's colours adjoin each other (tu93's marker is inside
+the body); an independent decoy is elsewhere. Fix: keep existing co-shift
+detection, then prune any avatar colour not adjoining the largest (body) colour.
+tu93 stays EXACTLY {9,4} (zero regression); distant decoy dropped.
+Verified: synthetic probe keeps {9,4}+rejects decoy (incl 30% occlusion); tu93
+fit {9,4}; tu93 3/3 reproducible; L3 calibration CLEAN unchanged; 31 tests pass.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ docs/index.html                               |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  2 +
+ ops/conductor-state.json                      |  2 +-
+ ops/verifier_gaps.md                          | 23 +++++++++-
+ python/carnot/agentic/arc_nav_world_model.py  | 41 +++++++++++++++++
+ results/experiment_hazard_l3_calibration.json |  2 +-
+ ..._arc_plan_in_model_nav_solve_20260723.json |  4 +-
+ tests/python/test_arc_nav_world_model.py      | 46 +++++++++++++++++++
+ 9 files changed, 117 insertions(+), 7 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 9205bc60c7..c2e531984c 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,209</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,213</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 43c99aa5d8..f6d5532185 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3842009, "iteration": 33, "phase": "iteration_start", "last_beat": "2026-07-24T10:20:56Z"}
+\ No newline at end of file
++{"pid": 3842009, "iteration": 34, "phase": "iteration_start", "last_beat": "2026-07-24T10:23:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index fd9b05dc80..324a8ff700 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14228,3 +14228,5 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-24 10:18 UTC | Gated on Exp5879 headroom: exact constraint-satisf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5879-hardness-headroom-taxonomy-corrigend |
+ | 2026-07-24 10:18 UTC | Gated on Exp5880 fixture: one-to-one atom groundin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5880-grounding-shortcut-fixture.groundi |
+ | 2026-07-24 10:20 UTC | Gated on Exp5879 headroom: exact constraint-satisf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5879-hardness-headroom-taxonomy-corrigend |
++| 2026-07-24 10:21 UTC | Gated on Exp5880 fixture: one-to-one atom groundin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5880-grounding-shortcut-fixture.groundi |
++| 2026-07-24 10:23 UTC | Gated on Exp5881 mechanism: prospective shortcut-r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5881-one-to-one-grounding-acquisition-ab) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b5e6beae41..decd2620b4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3842009, "iteration": 33, "phase": "iteration_start", "started_at": "2026-07-24T10:20:56Z"}
+\ No newline at end of file
++{"pid": 3842009, "iteration": 34, "phase": "iteration_start", "started_at": "2026-07-24T10:23:18Z"}
+\ No newline at end of file
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 8714912e88..e42e882a12 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -3944,7 +3944,28 @@ result here actually proves out.
+   enough apart that nearest==first there); 30 nav+hazard tests pass; new regression test
+   `test_charger_facing_picks_nearest_marker_and_handles_centered`.
+ 
+-### GAP-ARC-NAV-FIT-ABSORBS-CODIRECTIONAL-DECOY: OPEN (priority: medium) — deferred from iter8 for a careful cycle
++### GAP-ARC-NAV-FIT-ABSORBS-CODIRECTIONAL-DECOY: FIXED (REQ-ARC-WMTE-5882) — status: filled (InducedNavWorldModel.fit spatial-adjacency prune)
++- **RESOLVED iter11 (2026-07-24) via SPATIAL ADJACENCY, after two MOTION-based dead-ends.** The winning
++  insight: the discriminator between a real avatar component and a coincidental co-mover is NOT motion (both
++  co-shift) but SPATIAL CONTIGUITY -- a rigid avatar's colours adjoin each other (tu93's colour-4 centre
++  marker sits INSIDE the colour-9 body), whereas an independent decoy sits elsewhere on the grid. Fix: a
++  post-process prune (`_adjoins` + the prune block in `fit`) that keeps the existing co-shift detection
++  UNCHANGED, then drops any avatar colour whose cells do not adjoin the LARGEST (body) avatar colour's bbox
++  in a majority of frames. tu93's avatar stays EXACTLY {9,4} (marker adjoins body) -> zero regression; a
++  distant decoy is dropped. Verified: synthetic 3x3-avatar+distant-decoy probe keeps {9,4} and rejects the
++  decoy (incl. 30% marker occlusion); tu93 fit recovers {9,4}; tu93 solves 3/3 (reproducible); tu93 L3
++  hazard calibration CLEAN unchanged (FN=0 FP=0 win_path_pruned=0); 31 nav+hazard tests pass; regression
++  test `test_fit_prunes_distant_codirectional_decoy_keeps_contiguous_marker`.
++- **Why the two motion-based approaches were dead-ends (do NOT retry):** (iter9) a co-shift RATE gate and
++  (iter11-first-half) a per-action DOMINANT-shift co-membership BOTH broke or couldn't recover tu93, because
++  tu93's marker centroid genuinely moves DIFFERENTLY from the body (marker ±8 vs body ±6; per-action mode
++  match 0/4) -- its centroid jitters, so NO motion-matching test groups it with the body. The old weak
++  `agree>=2` only ever caught the marker via occasional coincidental exact-6 matches. Motion cannot
++  discriminate here; spatial contiguity can. (Corollary discovered en route: tu93 also solves 3/3 with the
++  BODY {9} alone -- the marker is not load-bearing -- so even a strict membership that dropped the marker
++  would have kept tu93 solvable; the spatial prune keeps {9,4} anyway, so behaviour is identical to before.)
++
++### (historical, superseded by the FIXED entry above) GAP-ARC-NAV-FIT-ABSORBS-CODIRECTIONAL-DECOY: OPEN (priority: medium) — deferred from iter8 for a careful cycle
+ - Found same probe (iter8): `InducedNavWorldModel.fit`'s avatar-by-co-translation step absorbed an
+   INDEPENDENTLY-moving decoy object into the avatar set. A decoy that translates a fixed direction each step
+   co-shifts with the real avatar's anchor on the subset of moves where directions align (~25% for a random
+diff --git a/python/carnot/agentic/arc_nav_world_model.py b/python/carnot/agentic/arc_nav_world_model.py
+index 45ad6235cd..702e92eaf0 100644
+--- a/python/carnot/agentic/arc_nav_world_model.py
++++ b/python/carnot/agentic/arc_nav_world_model.py
+@@ -60,6 +60,31 @@ def _bbox(mask: np.ndarray):
+     return int(ys.min()), int(xs.min()), int(ys.max()), int(xs.max())
+ 
+ 
++def _adjoins(body_col: int, c_col: int, grids: list, margin: int = 1) -> bool:
++    """Do c_col's cells sit within body_col's bounding box (expanded by `margin`) in the MAJORITY of frames
++    where both appear? A rigid avatar's component colours are CONTIGUOUS (e.g. tu93's colour-4 centre marker
++    sits INSIDE the colour-9 body); an independently-moving decoy that merely co-shifted with the avatar on
++    aligned moves sits ELSEWHERE on the grid. This is the spatial test that separates a real avatar component
++    from a coincidental co-mover -- used to prune the avatar-colour set (REQ-ARC-WMTE-5882)."""
++    inside = tot = 0
++    for g in grids:
++        g = np.asarray(g)
++        bb = _bbox(g == body_col)
++        cc = np.argwhere(g == c_col)
++        if bb is None or cc.size == 0:
++            continue
++        tot += 1
++        r0, c0, r1, c1 = bb
++        if np.any(
++            (cc[:, 0] >= r0 - margin)
++            & (cc[:, 0] <= r1 + margin)
++            & (cc[:, 1] >= c0 - margin)
++            & (cc[:, 1] <= c1 + margin)
++        ):
++            inside += 1
++    return tot > 0 and inside >= 0.5 * tot
++
++
+ @dataclass
+ class InducedNavWorldModel:
+     """A nav world model whose parameters are FITTED from transitions (see module docstring)."""
+@@ -133,6 +158,22 @@ class InducedNavWorldModel:
+                 if agree >= 2:
+                     avatar_colors.add(col)
+ 
++            # SPATIAL-ADJACENCY PRUNE (REQ-ARC-WMTE-5882): the co-shift test above admits an INDEPENDENTLY-
++            # moving decoy that happens to share the anchor's shift on the aligned subset of moves (~25% for a
++            # random walk) -> a corrupted avatar bbox that spans the real avatar AND the distant decoy. A rigid
++            # avatar is CONTIGUOUS, so drop any avatar colour whose cells do not adjoin the LARGEST avatar
++            # colour's body. tu93's centre marker (inside the body) is kept -> avatar unchanged {9,4}; a distant
++            # decoy is dropped. Left untouched when there is only one avatar colour. This is a post-process on
++            # the existing detection, so a genuine single-mover game is unaffected.
++            if len(avatar_colors) > 1:
++                body = max(
++                    avatar_colors,
++                    key=lambda c: max((int((np.asarray(g) == c).sum()) for g in grids), default=0),
++                )
++                avatar_colors = {body} | {
++                    c for c in avatar_colors if c != body and _adjoins(body, c, grids)
++                }
++
+         # 2) DISPLACEMENT per action: median avatar-bbox translation over that action's move transitions.
+         disp: dict = {}
+         move_hits = Counter()
+diff --git a/results/experiment_hazard_l3_calibration.json b/results/experiment_hazard_l3_calibration.json
+index 33aca5e553..148d8c6304 100644
+--- a/results/experiment_hazard_l3_calibration.json
++++ b/results/experiment_hazard_l3_calibration.json
+@@ -20,5 +20,5 @@
+     "('col', (1, 0))": 56
+   },
+   "methodology_note": "Position-keyed real-env BFS over tu93 L3 gives the ground-truth win path + per-move died/safe labels (the chargers are static-until-triggered, so a position key is sound). The 'omni' is_lethal rule (per-charger facing read from the centre-marker offset; directional; collision-exempt; dist 1..reach) is scored against those labels. CLEAN = FN==0 (no real death missed) AND win_path_pruned==0 (the verified path is not over-pruned). SCOPE: tu93 L3 is a SINGLE static layout (seed-invariant); this validates the calibration on that one level, not a general hazard solver.",
+-  "duration_s": 12.5
++  "duration_s": 11.6
+ }
+\ No newline at end of file
+diff --git a/results/outer_loop_arc_plan_in_model_nav_solve_20260723.json b/results/outer_loop_arc_plan_in_model_nav_solve_20260723.json
+index f3a94296e6..2cc3f58821 100644
+--- a/results/outer_loop_arc_plan_in_model_nav_solve_20260723.json
++++ b/results/outer_loop_arc_plan_in_model_nav_solve_20260723.json
+@@ -108,6 +108,6 @@
+   "headline": "REGRESSION FOUND + FIXED: plan_in_model crashed on component-grids since 2f0760307 (5-tuple _components_detailed), silently disabling E3's world-model planner. After the fix, a structured InducedNavWorldModel + plan_in_model reaches a REAL tu93 level-up in 3/3 runs (e.g. 18-action plan, hv 60.125->6.125). plan_in_model plans in imagination + executes once from reset -> sidesteps the non-idempotent-reset blocker -> live-compatible navigation solve.",
+   "next_step": "InducedNavWorldModel (the structured nav inducer) is currently ORPHANED from the live E3 path (imported only by scripts/tests). The concrete unblock: route navigation games (detected via derive_navigation_pair) to InducedNavWorldModel instead of the LLM induction, and feed its engine+is_level_complete to the live plan_in_model tier -- giving E3 a CORRECT model for nav games instead of the near-universally-wrong LLM one. This is the 'mechanic-class prior' direction the 2026-07-20 diagnosis \u00a76 flagged as highest-leverage.",
+   "honest_verdict": "complete_success_regression_fixed_and_structured_nav_model_planinmodel_reaches_tu93_levelup_live",
+-  "duration_s": 6.0,
+-  "reproducibility_checksum": "sha256:17ab9469cc839cb0e23ea2e0b9335ecef9074e5b20262b26cb902213755e3ff0"
++  "duration_s": 4.7,
++  "reproducibility_checksum": "sha256:0256dcfe4fd65c029cfc0b1b579f7cc3fed81a52391314b319dc53845b9a0d5a"
+ }
+\ No newline at end of file
+diff --git a/tests/python/test_arc_nav_world_model.py b/tests/python/test_arc_nav_world_model.py
+index c0ad471ddc..8efde4b691 100644
+--- a/tests/python/test_arc_nav_world_model.py
++++ b/tests/python/test_arc_nav_world_model.py
+@@ -249,6 +249,52 @@ def test_omni_los_uses_per_charger_facing_axis_not_fitted_axis():
+     assert m.is_lethal(grid(True), 1) is False
+ 
+ 
++def test_fit_prunes_distant_codirectional_decoy_keeps_contiguous_marker():
++    """REQ-ARC-WMTE-5882: fit's avatar co-translation admits an INDEPENDENTLY-moving decoy that shares the
++    avatar's shift on the aligned subset of moves; the spatial-adjacency prune drops it (it sits elsewhere on
++    the grid) while KEEPING a genuine contiguous component (a centre marker inside the body). The discriminator
++    is spatial contiguity, not motion -- a decoy and a real marker can both co-shift, but only the marker
++    adjoins the body."""
++    AV_, CTR_, DECOY_, GOAL_, BG_ = 9, 4, 7, 14, 5
++    DIRS = {1: (-1, 0), 2: (1, 0), 3: (0, -1), 4: (0, 1)}
++    H = W = 22
++    rng = np.random.default_rng(11)
++    top = (2, 2)
++    decoy = (15, 0)
++
++    def render(top, decoy, with_decoy):
++        g = np.full((H, W), BG_, dtype=int)
++        g[18, 18] = GOAL_
++        g[top[0]:top[0]+3, top[1]:top[1]+3] = AV_   # 3x3 ring body
++        g[top[0]+1, top[1]+1] = CTR_                 # centre marker INSIDE the body (contiguous)
++        if with_decoy:
++            g[decoy[0], decoy[1]] = DECOY_           # independent mover, elsewhere on the grid
++        return g
++
++    def build(with_decoy):
++        tr = []
++        g = render(top, decoy, with_decoy)
++        t, d = top, decoy
++        for _ in range(400):
++            a = int(rng.integers(1, 5))
++            dd = DIRS[a]
++            nt = (t[0]+dd[0], t[1]+dd[1])
++            if not (0 <= nt[0] and nt[0]+3 <= H and 0 <= nt[1] and nt[1]+3 <= W):
++                nt = t
++            nd = (d[0], (d[1]+1) % W)
++            g2 = render(nt, nd, with_decoy)
++            tr.append((g, a, g2, 0, 0))
++            g, t, d = g2, nt, nd
++        return tr
++
++    m = InducedNavWorldModel.fit(build(with_decoy=True))
++    assert AV_ in m.avatar_colors and CTR_ in m.avatar_colors  # contiguous body + marker kept
++    assert DECOY_ not in m.avatar_colors                        # distant decoy pruned
++    # control: no decoy -> the contiguous {9,4} avatar is still recovered unchanged
++    m2 = InducedNavWorldModel.fit(build(with_decoy=False))
++    assert AV_ in m2.avatar_colors and CTR_ in m2.avatar_colors
++
++
+ def test_charger_facing_picks_nearest_marker_and_handles_centered():
+     """REQ-ARC-WMTE-5881: _charger_facing must read THIS charger's OWN marker (nearest to its blob centre),
+     not the row-major-first marker in the +-4 window -- otherwise, with two chargers close together, a
+-- 
+2.55.0
+

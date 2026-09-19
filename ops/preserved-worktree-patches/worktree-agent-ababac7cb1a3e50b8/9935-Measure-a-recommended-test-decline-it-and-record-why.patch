@@ -1,0 +1,71 @@
+From e26d3ea4256de99945391914fc03abf4581dd184 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 14:35:31 -0400
+Subject: [PATCH 09935/11362] Measure a recommended test, decline it, and
+ record why
+
+The team lead recommended a stronger tamper test: edit a RECORDED receipt value
+inside an artifact-shaped payload rather than compare two unrelated hashes. Built
+it and measured its unique kills before shipping it. There are none.
+
+  constant hash                  candidate RED, alongside 10 existing tests
+  revert to working-tree resolve candidate GREEN, 6 existing tests RED
+
+So it duplicates coverage the suite already has and misses coverage the suite
+already has. Shipping it would add a test no mutation kills uniquely, which is
+the exact bug class the tamper fix at d23b873abd removed. Declined on that
+evidence rather than on preference.
+
+The case it was meant to document is not uncovered. It is proved where it can
+bite: break case 4 against exp5355, editing the stored
+source_artifact_checksums.spec, which takes the real replay test red and returns
+green on restore. A helper-level version cannot be lethal, because the helper
+never sees the recorded value -- the comparison lives in the caller.
+
+Precedent, which is worth more than the fix: mutation testing caught four things
+today that review did not, twice on the finder's own work. Here it also decided
+against writing code. The standing rule -- prove each pattern is under test by
+deleting it -- already covers this; today is evidence it earns its keep in both
+directions.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/changelog.md | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index dc316be2d5..85535eacc8 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,27 @@
+ # Carnot — Changelog
+ 
++## 2026-08-25 — A stronger tamper test was measured and declined, with the numbers
++
++- The team lead recommended replacing the helper-level tamper test with one that
++  edits a RECORDED receipt value inside an artifact-shaped payload. Built it,
++  then measured whether it kills anything the suite does not. It does not.
++  Against a constant-hash mutation it goes red alongside 10 existing tests,
++  including the tamper test already fixed at `d23b873abd`. Against a
++  revert-to-working-tree mutation it stays GREEN while 6 existing tests go red.
++  Unique kills: zero.
++- Not shipped, on that evidence. A test that no mutation kills uniquely is the
++  bug class this suite just removed, and adding one to document a case would
++  re-commit it. The tampered-recorded-value case IS proved, at the level where
++  it can bite: break case 4 against exp5355, where editing the stored
++  `source_artifact_checksums.spec` takes the real replay test red and restoring
++  it returns green.
++- Precedent worth more than the fix: mutation testing caught four things today
++  that review did not, twice on the finder's own work. It also decided this one,
++  in the direction of writing less code. The existing rule ("prove each pattern
++  is under test by deleting it") already covers it; today is evidence that it
++  earns its keep in both directions.
++
++
+ ## 2026-08-25 — Receipt sources named, and two guard gaps closed or stated
+ 
+ - A `ReceiptResolutionError` is now raised when `git log` itself fails.
+-- 
+2.55.0
+

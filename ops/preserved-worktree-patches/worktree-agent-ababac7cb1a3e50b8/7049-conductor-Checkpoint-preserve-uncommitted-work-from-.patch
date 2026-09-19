@@ -1,0 +1,65 @@
+From 10e2869ca791c2469826bab5dea22ecf7398b585 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 06:56:46 -0400
+Subject: [PATCH 07049/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...nt_5621_arc_live_self_discovery_levelup_v507.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 05402c4489..95f97451cb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 147, "phase": "iteration_start", "last_beat": "2026-07-14T10:41:25Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 148, "phase": "iteration_start", "last_beat": "2026-07-14T10:56:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 0a9f531db1..f68c04b68e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -11729,3 +11729,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-14 10:35 UTC | Gated on Exp5619 transition controls: ARC cycle-gu | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5619-arc-forward-inverse-transition-cyc |
+ | 2026-07-14 10:37 UTC | Gated on Exp5619 transition controls: ARC cycle-gu | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5619-arc-forward-inverse-transition-cyc |
+ | 2026-07-14 10:39 UTC | Gated on Exp5619 transition controls: ARC cycle-gu | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5619-arc-forward-inverse-transition-cyc |
++| 2026-07-14 10:54 UTC | ARC-AGI-3 unconditional rotated live-agent plus-on | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 604b1e73e5..657d2afa37 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1256, "iteration": 147, "phase": "iteration_start", "started_at": "2026-07-14T10:41:25Z"}
+\ No newline at end of file
++{"pid": 1256, "iteration": 148, "phase": "iteration_start", "started_at": "2026-07-14T10:56:42Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5621_arc_live_self_discovery_levelup_v507.json b/results/experiment_5621_arc_live_self_discovery_levelup_v507.json
+index 8ca4089fdf..75efbded3d 100644
+--- a/results/experiment_5621_arc_live_self_discovery_levelup_v507.json
++++ b/results/experiment_5621_arc_live_self_discovery_levelup_v507.json
+@@ -827,5 +827,13 @@
+   },
+   "terminal_reason": "action_budget_exhausted",
+   "tests_run": [],
+-  "trace_replay_checksum": "sha256:3e54919f237767924b9d236fc2d6db1c591488de610a0dfbad6ed5ac0e6183bf"
+-}
++  "trace_replay_checksum": "sha256:3e54919f237767924b9d236fc2d6db1c591488de610a0dfbad6ed5ac0e6183bf",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "levels_after=177.0 and levels_before=177.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

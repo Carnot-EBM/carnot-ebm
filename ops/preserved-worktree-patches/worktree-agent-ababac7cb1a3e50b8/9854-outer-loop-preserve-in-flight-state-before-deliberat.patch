@@ -1,0 +1,2860 @@
+From a04700d21f06da6119d94ece2d1afb7980037510 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 24 Aug 2026 16:51:08 -0400
+Subject: [PATCH 09854/11362] [outer-loop] preserve in-flight state before
+ deliberate conductor stop
+
+---
+ ...-suite-runnability-diagnosis-2026-08-24.md |  340 ++++
+ .../capabilities/research-reporting/spec.md   |  127 ++
+ ops/.audit_findings_ledger_state.json         |    2 +-
+ ops/.run_sentinel_state.json                  |    2 +-
+ ops/.stop_authority_state.json                |    2 +-
+ ops/anomaly-escalations.md                    |    5 +
+ ..._6584_three_family_source_receipt_audit.py | 1542 +++++++++++++++++
+ ..._6584_three_family_source_receipt_audit.py |  752 ++++++++
+ 8 files changed, 2769 insertions(+), 3 deletions(-)
+ create mode 100644 docs/research-notes/full-suite-runnability-diagnosis-2026-08-24.md
+ create mode 100644 python/carnot/experiment_6584_three_family_source_receipt_audit.py
+ create mode 100644 tests/python/test_experiment_6584_three_family_source_receipt_audit.py
+
+diff --git a/docs/research-notes/full-suite-runnability-diagnosis-2026-08-24.md b/docs/research-notes/full-suite-runnability-diagnosis-2026-08-24.md
+new file mode 100644
+index 0000000000..b084cbb202
+--- /dev/null
++++ b/docs/research-notes/full-suite-runnability-diagnosis-2026-08-24.md
+@@ -0,0 +1,340 @@
++# Making the full test suite runnable — diagnosis and first partial baseline (2026-08-24)
++
++**Scope.** "Can run", not "is green". Fixing product failures was out of scope.
++This note answers four questions: is the conductor's `full=True` branch broken,
++is the "hangs serially" claim still true, what does a clean serial run actually
++measure, and where should the check live.
++
++**Status.** Questions 1, 2 and 4 are answered. Question 3 has a PARTIAL receipt:
++the run was killed at 24m47s having covered 20% of the suite. The cause of the
++kill is NOT determined. That partial number is still the first serial,
++no-coverage measurement in the corpus, and it refutes the estimate the work was
++scoped against.
++
++---
++
++## 1. The `full=True` branch: broken AND uncalled
++
++Both. The distinction matters, because "merely uncalled" would make this a
++one-line wiring fix, and it is not.
++
++**Uncalled — confirmed.** `run_tests(full: bool = False)` at
++`scripts/research_conductor.py:1467`. All four call sites pass the default or
++`full=False`: `:6125`, `:6181`, `:6671`, `:6798`. Two carry the comment
++"full suite hangs serially".
++
++**Broken — three independent defects, found by reading it.**
++
++### Defect A — the timeout is far shorter than the run (CONFIRMED)
++
++The full branch passes `timeout=600` (`:1537`). The independent reviewer's
++finding is **confirmed, and is worse than stated**: the reviewer compared 600s
++against an 18-minute estimate. Measured here, the run had covered only 20% at
++24m47s (see §3), which projects past two hours. So `timeout=600` is not
++marginally short, it is short by roughly an order of magnitude.
++
++`git log -S "timeout=600"` dates the value to `0118d190f9` (2026-04-04) — the
++conductor's first commit, when the suite was a fraction of today's size. It was
++never revisited, because the branch was abandoned ten days later and nobody ran
++it again.
++
++The subset branch, by contrast, was raised to `timeout=1200` (`:1623`) with a
++comment recording that the 5-minute cap had been SIGKILLing pytest mid-run. So
++the cheap gate carries twice the budget of the expensive one. That is backwards,
++and it is a direct consequence of only the cheap one being exercised.
++
++**Consequence for the recommendation:** reviving the branch as written produces a
++guard that times out permanently. Wire it up AND fix the timeout.
++
++### Defect B — `-o addopts=` is too blunt
++
++`-o addopts=` blanks the whole ini `addopts` list. It removes `--cov` and `-n 4`
++as intended, but it also removes six `--ignore` entries that `pyproject.toml`
++applies deliberately. Four of those files still exist and carry 183 test
++definitions:
++
++| ignored file | test defs |
++|---|---|
++| `tests/python/test_experiment_337_retro.py` | 58 |
++| `tests/python/test_experiment_355_adversarial_benchmark.py` | 51 |
++| `tests/python/test_experiment_368_precision_live.py` | 74 |
++| `tests/python/test_experiment_692_preflight_v5.py` | 4 |
++| `test_experiment_1033_thinkprm_v4.py` | file no longer exists |
++| `test_boltzmann_repair.py` | file no longer exists |
++
++`pyproject.toml` records why they are ignored: they "target an artifact schema
++that NEVER materialised". So the `full=True` command deliberately runs 183 tests
++the project has decided should not run, and its failure count is inflated
++relative to the project's own documented command by however many of those fail.
++
++The fix is to strip only what needs stripping (`-p no:cacheprovider`-style
++targeted overrides, or `--override-ini` of just the coverage/xdist flags), not to
++blank the list.
++
++### Defect C — a timeout reports an empty summary
++
++`_pytest_run` returns `(-1, "", "Command timed out")` on timeout (`:1518-1519`).
++The summary parser at `:1633` then scans `stdout or stderr` — the string
++"Command timed out" — for a line containing "passed" or "failed", finds none,
++and leaves `summary` empty. `run_tests` returns `(False, "")`.
++
++Every call site treats that as a test failure and launches an agent self-heal
++loop. So on timeout the conductor asks an agent to fix failing tests **and tells
++it nothing about which tests failed**. Combined with Defect A this is the whole
++mechanism: revive the branch as-is and the conductor enters a permanent,
++information-free self-heal loop.
++
++---
++
++## 2. "Hangs serially" — refuted as a deadlock claim
++
++The comment traces to commit `15fa328316`, 2026-04-14. Its message reads: "The
++full 4000+ test suite hangs when run serially (individual files pass but
++interaction effects cause deadlocks)."
++
++Two reasons to stop treating that as current:
++
++**It is four months stale and describes a much smaller suite.** It says "4000+
++tests". Collection today is far larger (§3).
++
++**The observed behaviour is not a deadlock.** Throughout the run I sampled the
++process directly:
++
++- state `SNl`, 103–106% CPU sustained, never blocked at 0% CPU;
++- `utime` accumulating continuously (363s of CPU at the 8-minute mark);
++- the open file descriptor walking through `data/arc_transition_corpus/*.npz` —
++  `ls20.npz`, then `sk48.npz`, then `ar25.npz`;
++- `rchar` at 3.36 GB read.
++
++That is a process doing work, not one waiting on a lock.
++
++**What is really there is a slow phase, not a hang.** Output stalled twice for
++~200 seconds at a time while CPU stayed pinned. Both stalls were inside tests
++reading the ARC transition corpus. The corpus is only 5.3 MB across 25 files but
++3.36 GB had been read, so those tests reload it repeatedly. Seven test files
++reference it:
++
++```
++tests/python/test_preflight_aa_floor_config_witness_2026_07_30.py
++tests/python/test_arc_live_asset_arm_confound_2026_07_30.py
++tests/python/test_experiment_4568_clickability_action_effect_predictor.py
++tests/python/test_experiment_5641_arc_counterexample_executable_model.py
++tests/python/test_arc_transition_effect_rows_hoisted_actions.py
++tests/python/test_experiment_6471_arc_generic_safety_shield_objective_ab.py
++tests/python/test_experiment_6458_arc_representation_objective_generalization_ab.py
++```
++
++**Honest limit.** A ~200s test is not a hang, but I did not run to completion, so
++I cannot claim there is no deadlock later in the suite. What I can say is that
++the 20% I covered contained no deadlock, and that the two stalls that look like
++hangs from the outside are slow ARC-corpus tests. Naming them is the actionable
++part: `--durations` on those seven files is the next cheap step.
++
++---
++
++## 3. The baseline — PARTIAL, and the run was killed
++
++### Exact command
++
++```bash
++.venv/bin/pytest tests/python -q --no-header -n 0 --no-cov -o addopts=
++```
++
++This is byte-for-byte the argument list the `full=True` branch builds at
++`:1525-1538`, and it is the invocation `ops/known-issues.md` asks for. The branch
++also strips `CARNOT_FORCE_LIVE` from the child env; that variable was unset in my
++shell, so the environments match.
++
++### What was measured
++
++| | |
++|---|---|
++| started | 2026-08-24T18:45:53Z |
++| last output | 2026-08-24T19:10:40Z |
++| wall time | **1487 s (24 m 47 s)** |
++| progress reached | **20%** |
++| tests reported | **11905** |
++| failures so far | **74 F** |
++| skips so far | **9 s** |
++| errors so far | **0 E** |
++| exit code | none — process died without writing one |
++
++### Collection — the suite is far larger than any prior record says
++
++Same command with `--collect-only`, run separately and to completion:
++
++```
++57013 tests collected in 34.02s        (exit 0, no collection errors)
++```
++
++11905 / 57013 = 20.9%, which matches the `[ 20%]` marker the run reached — so the
++partial measurement and the collection count corroborate each other.
++
++**57,013 is far above every prior figure in the corpus**: exp6582 reported 10,422
++total, and the 2026-07-27 known-issues entry reported 29,948. Both of those runs
++crashed or were stopped, which is the likely explanation — nobody had seen the
++whole collection before.
++
++Two consequences. First, collection itself is cheap (34s), so "can the suite even
++be collected" was never the problem. Second, the extrapolation below rests on a
++measured denominator rather than a guess.
++
++**Projected full serial run:** 1487s / 11905 tests = 0.125 s/test, so 57,013 tests
++≈ **7100 s ≈ 1 h 58 m**. Call it two hours, with the caveat that the ARC-corpus
++slow phase sits inside the measured 20% and the remaining 80% is unmeasured in
++both directions.
++
++### The run did not finish, and I do not know why
++
++The process stopped writing at 19:10:40Z and was gone when next sampled. There is
++no traceback, no `KeyboardInterrupt`, no pytest summary — output ends mid-line.
++That is the signature of an unhandled fatal signal, not of a test failure or a
++Python exception.
++
++Candidates I could not separate, stated as open:
++
++- the agent harness stopping its own background task;
++- `ExperimentTemplate.kill_gpu_zombies()`, which per
++  `incident_reaper_was_kill_gpu_zombies` fires inside `setup()` **at pytest
++  import time** and SIGTERMs GPU-holding processes. It was fixed 2026-08-23 to
++  exempt llama-server/vLLM and to attribute utilization per GPU — but a pytest
++  process holding GPU memory is not obviously covered by a server-cmdline
++  exemption. This is a hypothesis with a plausible mechanism and NO direct
++  evidence; I did not capture the signal.
++- memory pressure. Unlikely: RSS was 3.39 GB against 89 GB available.
++
++**How to settle it next time, cheaply:** run under `strace -e trace=signal` or arm
++`auditd` on SIGTERM (`a1=0xf`) — and note the trap recorded in that same memory,
++that a previous investigation armed on SIGINT only and therefore found nothing.
++Simply capturing the shell's `$?` would also distinguish 143 (SIGTERM) from 137
++(SIGKILL); my wrapper lost it because the whole shell was torn down with the
++process.
++
++### What the partial number is worth
++
++It refutes the estimate this work was scoped against. `ops/known-issues.md` says
++the baseline "takes 18+ minutes". At 24m47s the run was one fifth done. Linear
++extrapolation puts a complete serial run near **two hours**, and the true figure
++is likely higher because the ARC-corpus slow phase is front-loaded in the 20% I
++saw but the remaining 80% is unmeasured.
++
++That changes the cadence decision in §4 materially: a two-hour job is not
++something to attach to a per-commit or per-experiment path under any
++circumstances.
++
++**Do not quote 74 failures as the suite's failure count.** It is the count within
++the first 20%, it includes whatever share comes from the 183 deliberately-ignored
++tests Defect B re-admits, and it is not comparable to the 68/87/433/470 figures,
++which came from coverage+xdist runs.
++
++### Contention caveat
++
++Throughout, a concurrent conductor task ran `pytest tests/python -q` with four
++live xdist workers at 4.0–6.0 GB RSS. The box has 24 cores and load average was
++~5.3, so a single-threaded run had a core available and the wall-time distortion
++should be modest — but it is not zero, and memory-bandwidth contention is not
++captured by load average. Treat 1487s/20% as an upper-bounded estimate, not a
++clean-room number.
++
++### One thing that did NOT go wrong: the record survived
++
++`ops/known-issues.md` states that "Running the full suite is DESTRUCTIVE to the
++working tree", with 45 files rewritten on 2026-07-27. **That did not reproduce.**
++A mutation snapshot was taken before the run
++(`CARNOT_MUTATION_RUN_ID=fullsuite-baseline-20260824`) and checked after. Nothing
++under `results/` was modified by the run. The only `results/` path dirty at any
++point was `results/experiment_1822_rtl_synth.log`, which was **already dirty
++before the run started**.
++
++The credit belongs to `python/carnot/testing/child_results_guard.py`, added
++2026-08-24, which carries the results-write redirect across the subprocess
++boundary. On this evidence the destructive-run problem is closed for Python
++writers, though the guard's own docstring is explicit that a `/bin/sh` redirect
++still lands.
++
++---
++
++## 4. Where the check should live
++
++### It must not go on any existing `run_tests` call site
++
++All four are **launch gates**: `run_tests` is called, and on failure the
++conductor enters an agent self-heal loop before the experiment may proceed
++(`:6125` "Run tests first — ensure clean state"; `:6671`/`:6798` inside the
++fix-attempt loop). The suite is red. Wiring `full=True` into a launch gate makes
++every experiment in the loop block on unrelated repository-wide failures — which
++is precisely the defect that was removed from exp6581/exp6582 today and that
++`test_verification_scope_excludes_repository_suite` now refuses.
++
++### CI already has this job, and it has never run
++
++`.github/workflows/ci.yml:98-123` defines `python-test`, "Python Tests (100%
++coverage)", running the full suite. It declares `needs: python-lint` (`:101`).
++`python-lint` fails. So the test job is **skipped**, not failed.
++
++Sampled every 8th CI run back to 2026-08-23T20:54 — eight runs, `Python Tests`
++`skipped` in all eight. Recent runs are 12-for-12 `failure` at the workflow
++level, all from `Rust Build & Lint` and `Python Lint & Type Check`.
++
++This is the more important half of the finding. The 2026-04-14 commit that
++abandoned the conductor branch justified it with "Full suite runs via CI or
++explicit invocation." That justification was false at the time or became false
++since. **There are two dead reporters, not one**, and adding a third without
++fixing the second would repeat the mistake.
++
++Incidentally: `tests/integration` (3 files) is in `testpaths` but both the
++conductor branch and CI pass `tests/python` explicitly, so it is run by nothing.
++
++### Recommendation, in order
++
++1. **Fix `python-lint` first.** It is the cheapest action with the largest
++   effect: it un-skips a full-suite job that already exists, already runs on
++   every push, already reports, and costs this project nothing in local
++   wall-clock. Until it is fixed, any other reporter is a workaround for a
++   working mechanism that is switched off.
++2. **Then add a `carnot-full-suite.timer`, weekly, not daily.** Precedent and
++   template: `~/.config/systemd/user/carnot-arc-daily-prep.{timer,service}`,
++   `Type=oneshot` with `Persistent=true`. Cadence: **weekly**, at a low-traffic
++   hour, because the job is ~2 hours of one core and the suite's failure set does
++   not change fast enough to justify daily. Cost: ~2 core-hours/week, one core of
++   24, no GPU. It must write a receipt (counts, wall time, commit SHA) to a
++   tracked path and must **not** gate anything.
++3. **Only then consider `run_tests(full=True)`**, and if it is revived, fix all
++   three defects in §1 — timeout to 4+ hours or removed entirely, targeted ini
++   overrides instead of `-o addopts=`, and a real summary on timeout. Do not
++   attach it to a launch gate.
++
++---
++
++## 5. What I could not determine
++
++- **The complete baseline.** 20%, not 100%. §3.
++- **Why the run died.** No signal captured. §3.
++- **Whether a genuine deadlock exists in the unmeasured 80%.** The 2026-04-14
++  claim is unsupported for the part I measured and untested for the rest.
++- ~~**The true total test count.**~~ RESOLVED, see §3 "Collection". The count is
++  57,013. What remains unexplained is why earlier records report ~10,400 and
++  ~29,900 for the same tree; those runs were themselves crashed or partial, so
++  the discrepancy is most likely that no one had ever seen the whole collection.
++- **How much of the 74 failures is Defect B's fault.** Separating that needs a
++  run with the `--ignore` entries preserved, which no one has done either.
++
++## 6. Reproducing this
++
++```bash
++export CARNOT_MUTATION_RUN_ID=<something-unique-to-you>
++.venv/bin/python scripts/test_suite_mutation_check.py --snapshot
++.venv/bin/pytest tests/python -q --no-header -n 0 --no-cov -o addopts=
++.venv/bin/python scripts/test_suite_mutation_check.py --check --run-id <same>
++git status          # BEFORE any git add
++```
++
++Budget four hours, not twenty minutes. Capture the exit code separately from the
++shell that owns the process, so a fatal signal is distinguishable from a test
++failure — that is the single thing this run most needed and did not have.
++
++**Cross-references:** `ops/known-issues.md` 2026-08-24 full-suite entry ·
++`scripts/research_conductor.py:1467-1687` · `.github/workflows/ci.yml:98-123` ·
++`python/carnot/testing/child_results_guard.py` · commit `15fa328316` (origin of
++"hangs serially") · commit `0118d190f9` (origin of `timeout=600`) ·
++CLAUDE.md "Test-Run Record Integrity Discipline".
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 6fb7605657..92f2a63549 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -55253,3 +55253,130 @@ ready artifact uses a null verdict class.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6583 | Planned (`python/carnot/experiment_6583_gemma4_26b_a4b_flagship_source_shard.py`; terminal artifact `results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json`) | Planned (`tests/python/test_experiment_6583_gemma4_26b_a4b_flagship_source_shard.py`) |
++
++### REQ-REPORT-6584: Three-Family Source Receipts SHALL Replay Independently
++
++Carnot SHALL run Exp6584 even when one or more Exp6581-Exp6583 family
++artifacts are absent, blocked, or incomplete. The audit SHALL read the frozen
++Exp6580 protocol and immutable family rows. It SHALL NOT invoke an LLM. It
++SHALL NOT import a family aggregate or readiness value into its reducer.
++
++- REQ-REPORT-6584-PRECONDITIONS: The audit SHALL record every expected family
++  path, existence state, file hash, schema, status, source manifest hash,
++  prompt hash, audit-tool hash and version receipt, CPU, RAM, disk, protected
++  hashes, and every declared raw checkpoint path. A missing or blocked family
++  SHALL produce a terminal blocked diagnosis. The verdict SHALL start with
++  `blocked_`. The gate summary SHALL name the exact path or field, expected
++  value, and observed value.
++- REQ-REPORT-6584-REPLAY: For each observed immutable family row, the audit
++  SHALL recover source, request, and response bytes. It SHALL independently
++  recompute source, prompt, request, response, checkpoint, row, GGUF, command,
++  and stderr hashes. It SHALL also recompute repository and revision binding,
++  embedded-tokenizer metadata, PID evidence, CUDA device and positive layer
++  offload, GPU samples, token totals, latency, stop reason, exit status,
++  charged cost, and failure classes. Family aggregate fields SHALL not be
++  reducer inputs.
++- REQ-REPORT-6584-MERGE: The immutable merge SHALL emit only observed source
++  rows. It SHALL not synthesize a missing family response. A separate family
++  coverage row SHALL keep every expected source-family pair explicit. The
++  audit SHALL require identical frozen source units, prompt, unit order,
++  budgets, and the prescribed seed contract, except for model identity.
++  Each observed family SHALL use one distinct fresh process.
++- REQ-REPORT-6584-RAW-FIRST: Where checkpoint and monotonic receipts exist,
++  the audit SHALL verify that raw response storage precedes the derived parser
++  diagnostic. A missing ordering receipt SHALL remain visible and SHALL fail
++  readiness.
++- REQ-REPORT-6584-FAILURES: Timeout, malformed-output, refusal, empty-output,
++  no-claim, and process-failure rows SHALL remain in the merged denominator.
++  Failure counts SHALL derive from recovered raw bytes and terminal receipts.
++  A failed row SHALL not become a missing science null.
++- REQ-REPORT-6584-DUPLICATES: The audit SHALL emit one invariant row for each
++  missing or blocked family, legacy substitution, source alias, prompt drift,
++  seed drift, duplicate unit ID, copied cross-family output, selective retry,
++  hidden row drop, null-only row, stale PID, zero-layer offload, missing raw
++  path, missing unload, reused process, protected drift, and upstream readiness
++  contradiction. Each invariant SHALL fail closed from immutable rows.
++- REQ-REPORT-6584-UNLOAD: The audit SHALL independently verify each observed
++  family process exit, port closure, removal from process and GPU receipts,
++  bounded GPU memory recovery, and lack of signals to unrelated processes.
++  One family SHALL not contaminate another family's process evidence.
++- REQ-REPORT-6584-REDUCER: The exact top-level
++  `all_family_source_audit_ready_score` SHALL equal `1.0` only when all three
++  artifacts are readable and nonblocked, all twelve expected source-family
++  rows replay, every raw path resolves, failures remain visible, process and
++  unload checks pass, costs recompute, all invariants pass, and both protected
++  files remain unchanged. Coverage, failures, timing, tokens, cost, and each
++  family readiness SHALL derive only from emitted rows and audit receipts.
++  A clean audit SHALL use `verdict_class=null`, never a positive class.
++- REQ-REPORT-6584-RETIREMENT: The audit SHALL compare its missing-input chain
++  with the stored Exp6577 missing-chain verdict. It SHALL activate retirement
++  only when the same missing-chain verdict repeats. A present-but-blocked
++  Exp6581 family with absent rows is not the Exp6577 missing Exp6576 chain.
++- REQ-REPORT-6584-ATOMIC: Exp6584 SHALL preserve `research-roadmap.yaml` and
++  `scripts/research_conductor.py`. It SHALL set
++  `inference_substrate=immutable_three_family_source_replay_no_llm` and
++  `verifier_is_oracle=true`. It SHALL validate and write one terminal JSON
++  artifact by same-directory atomic replacement. The checksum SHALL exclude
++  only its self-referential checksum field.
++
++The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
++`gate_check_summary`, `upstream_artifact_receipts`, `rows`,
++`family_coverage_rows`, `failure_retention_rows`,
++`duplicate_drift_and_substitution_rows`, `unload_and_recovery_rows`,
++`all_family_source_audit_ready_score`, `aggregate_row_recomputation`,
++`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
++`verifier_is_oracle`, `field_provenance`, `duration_s`, `tests_run`, and
++`reproducibility_checksum`.
++
++#### SCENARIO-REPORT-6584-MISSING: A Missing Or Blocked Family Closes Without Inference
++
++**Given** one expected family artifact is absent, blocked, or has no raw rows
++**When** Exp6584 runs
++**Then** it emits a zero audit score, names the exact path or failed field and
++observed value, emits no synthetic response row, and closes with a `blocked_`
++verdict without an LLM call.
++
++#### SCENARIO-REPORT-6584-REPLAY: Raw Runtime Evidence Recomputes Per Family
++
++**Given** recoverable source, response, GGUF, process, GPU, checkpoint, unload,
++token, timing, and cost receipts
++**When** Exp6584 ignores every shard aggregate
++**Then** each observed source-family row carries independently recomputed
++metrics and exact replay failures.
++
++#### SCENARIO-REPORT-6584-MERGE: Immutable Coverage And Failures Stay Explicit
++
++**Given** the four frozen source units and three mandated families
++**When** the audit merges observed rows
++**Then** twelve coverage rows remain explicit, only observed response rows are
++emitted, and every raw failure stays in the merged denominator.
++
++#### SCENARIO-REPORT-6584-ATTACKS: Substitution Duplication Drift And Drops Fail Closed
++
++**Given** one mutation for each required invariant
++**When** the independent reducer evaluates the mutated receipts
++**Then** substitution, aliasing, prompt or seed drift, duplicate IDs, copied
++cross-family output, retries, row drops, null rows, stale execution, zero
++offload, raw-path loss, unload loss, process reuse, protected drift, and
++readiness contradiction prevent readiness.
++
++#### SCENARIO-REPORT-6584-UNLOAD: Family Processes Terminate In Isolation
++
++**Given** each observed family owns a fresh external process
++**When** Exp6584 replays terminal lifecycle receipts
++**Then** each worker exits and unloads, no PID is reused across families, and
++no family contaminates the next family's evidence.
++
++#### SCENARIO-REPORT-6584-ATOMIC: One Non-Positive Audit Artifact Recomputes
++
++**Given** replay, merge, failure, lifecycle, and invariant checks have ended
++**When** Exp6584 writes its terminal artifact
++**Then** protected files remain byte-identical, the checksum validates, the
++binary gate matches the independent reducer, and the artifact uses only a
++null, partial, blocked, or disqualified verdict class.
++
++## Implementation Status (REQ-REPORT-6584)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6584 | Planned (`python/carnot/experiment_6584_three_family_source_receipt_audit.py`; terminal artifact `results/experiment_6584_three_family_source_receipt_audit.json`) | Planned (`tests/python/test_experiment_6584_three_family_source_receipt_audit.py`) |
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 7b13b4fba8..47f11a7e48 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -1,5 +1,5 @@
+ {
+  "escalated": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T18:47:51Z"
++ "last_scan_utc": "2026-08-24T20:20:51Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index cdc63b617a..64747747dc 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -6,5 +6,5 @@
+   "WRONG_MODEL_LOADED|host|582006": "2026-08-24T04:57:49Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T19:35:15Z"
++ "last_scan_utc": "2026-08-24T20:20:50Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 79dbee84cb..9797b15119 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-24T18:47:51Z",
++ "last_scan_utc": "2026-08-24T20:20:51Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 67713c14ca..d13c6edfd0 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1511,3 +1511,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_6582_gemma4_31b_flagship_source_shard.json
++
++## experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json
+diff --git a/python/carnot/experiment_6584_three_family_source_receipt_audit.py b/python/carnot/experiment_6584_three_family_source_receipt_audit.py
+new file mode 100644
+index 0000000000..8af50288af
+--- /dev/null
++++ b/python/carnot/experiment_6584_three_family_source_receipt_audit.py
+@@ -0,0 +1,1542 @@
++"""Independently replay and merge the three V572 family source shards.
++
++Spec refs: REQ-REPORT-6584, SCENARIO-REPORT-6584-MISSING,
++SCENARIO-REPORT-6584-REPLAY, SCENARIO-REPORT-6584-MERGE,
++SCENARIO-REPORT-6584-ATTACKS, SCENARIO-REPORT-6584-UNLOAD, and
++SCENARIO-REPORT-6584-ATOMIC.
++
++The family artifacts contain both raw rows and convenient summaries. This
++module reads the raw checkpoints and recomputes the summaries. It keeps a
++missing family visible as coverage evidence but never invents that family's
++model response.
++"""
++
++from __future__ import annotations
++
++import argparse
++import base64
++import binascii
++from collections import Counter
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import platform
++import shutil
++import subprocess
++import tempfile
++import time
++from typing import Any
++
++from carnot.inference.gguf_metadata import GgufMetadataError, read_gguf_metadata
++
++
++JsonDict = dict[str, Any]
++GgufInspector = Callable[[Path], Mapping[str, Any]]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RUN_DATE = "20260824"
++RESULT_RELATIVE_PATH = Path("results/experiment_6584_three_family_source_receipt_audit.json")
++PROTOCOL_RELATIVE_PATH = Path("results/experiment_6580_v572_source_and_joint_method_protocol.json")
++EXP6577_RELATIVE_PATH = Path(
++    "results/experiment_6577_flagship_source_stream_independent_audit.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++PROTECTED_RELATIVE_PATHS = (
++    Path("research-roadmap.yaml"),
++    Path("scripts/research_conductor.py"),
++)
++AUDIT_TOOL_RELATIVE_PATHS = (
++    Path("scripts/verdict_row_consistency_lint.py"),
++    Path("scripts/adversarial_verify.py"),
++    Path("scripts/artifact_convention_audit.py"),
++)
++INFERENCE_SUBSTRATE = "immutable_three_family_source_replay_no_llm"
++RECOVERY_TOLERANCE_MB = 256
++GPU_LOAD_DELTA_MIN_MB = 128
++
++FAMILY_SPECS: tuple[JsonDict, ...] = (
++    {
++        "family_id": "qwen36",
++        "task_id": "exp6581-qwen36-flagship-source-shard",
++        "artifact_path": "results/experiment_6581_qwen36_flagship_source_shard.json",
++        "schema": "carnot.experiment_6581_qwen36_flagship_source_shard.v1",
++        "repository_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "architecture": "qwen35moe",
++        "tokenizer_model": "qwen2",
++        "seed": 6581,
++        "readiness_field": "qwen36_family_source_shard_ready_score",
++    },
++    {
++        "family_id": "gemma4_31b",
++        "task_id": "exp6582-gemma4-31b-flagship-source-shard",
++        "artifact_path": "results/experiment_6582_gemma4_31b_flagship_source_shard.json",
++        "schema": "carnot.experiment_6582_gemma4_31b_flagship_source_shard.v1",
++        "repository_id": "unsloth/gemma-4-31B-it-GGUF",
++        "architecture": "gemma4",
++        "tokenizer_model": "gemma4",
++        "seed": 6582,
++        "readiness_field": "gemma4_31b_family_source_shard_ready_score",
++    },
++    {
++        "family_id": "gemma4_26b_a4b",
++        "task_id": "exp6583-gemma4-26b-a4b-flagship-source-shard",
++        "artifact_path": "results/experiment_6583_gemma4_26b_a4b_flagship_source_shard.json",
++        "schema": "carnot.experiment_6583_gemma4_26b_a4b_flagship_source_shard.v1",
++        "repository_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "architecture": "gemma4",
++        "tokenizer_model": "gemma4",
++        "seed": 6583,
++        "readiness_field": "gemma4_26b_a4b_family_source_shard_ready_score",
++    },
++)
++
++FAILURE_CLASSES = (
++    "timeout",
++    "malformed_output",
++    "refusal",
++    "empty_output",
++    "no_claim",
++    "process_failure",
++)
++REQUIRED_ATTACKS = (
++    "missing_or_blocked_family",
++    "legacy_substitution",
++    "source_alias",
++    "prompt_drift",
++    "seed_drift",
++    "duplicate_unit_id",
++    "copied_output_across_families",
++    "selective_retry",
++    "hidden_row_drop",
++    "null_only_rows",
++    "stale_pid",
++    "zero_layer_offload",
++    "missing_raw_path",
++    "missing_unload",
++    "reused_process",
++    "protected_drift",
++    "readiness_contradicted_by_rows",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "honest_verdict",
++    "verdict_class",
++    "gate_check_summary",
++    "upstream_artifact_receipts",
++    "rows",
++    "family_coverage_rows",
++    "failure_retention_rows",
++    "duplicate_drift_and_substitution_rows",
++    "unload_and_recovery_rows",
++    "all_family_source_audit_ready_score",
++    "aggregate_row_recomputation",
++    "preconditions_checked",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++)
++FIELD_PRINCIPLES = {
++    "status": "The always-run audit closes even when a family is missing.",
++    "honest_verdict": "The verdict states lineage, coverage, failure retention, unload, and merge disposition.",
++    "verdict_class": "The audit uses null, partial, blocked, or disqualified.",
++    "gate_check_summary": "A block names the exact missing artifact or failed field and observed value.",
++    "upstream_artifact_receipts": "Path, hash, status, and schema bind every family object under audit.",
++    "rows": "Each expected source-family unit carries independently recomputed runtime and evidence metrics.",
++    "family_coverage_rows": "The three mandated families and every frozen source unit remain explicit.",
++    "failure_retention_rows": "Failure classes cannot vanish from a merged denominator.",
++    "duplicate_drift_and_substitution_rows": "Copied output, drift, stale execution, and legacy substitution are tested.",
++    "unload_and_recovery_rows": "One family cannot contaminate the next task's evidence.",
++    "all_family_source_audit_ready_score": "This exact binary field gates Exp6585.",
++    "aggregate_row_recomputation": "Coverage, failures, timing, tokens, and cost derive only from emitted rows.",
++    "preconditions_checked": "Input, tool, raw-path, resource, and protected-file receipts are explicit.",
++    "protected_files_unchanged": "The audit preserves both protected orchestration files.",
++    "inference_substrate": "This is immutable three-family artifact replay with no new LLM.",
++    "verifier_is_oracle": "The evidence audit is authority and cannot create positive science.",
++    "field_provenance": "Each field identifies source rows, hashes, and independent reducer code.",
++    "duration_s": "Monotonic duration exposes skipped replay or attack work.",
++    "tests_run": "Named commands, exits, and durations make the audit reproducible.",
++    "reproducibility_checksum": "A final hash detects audit mutation.",
++}
++
++
++def canonical_json(value: Any) -> str:
++    """Encode stable compact JSON so every evidence hash can be repeated."""
++
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return one tagged SHA-256 digest over exact bytes."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    """Hash a value only after stable JSON encoding."""
++
++    return sha256_bytes(canonical_json(value).encode("utf-8"))
++
++
++def sha256_file(path: str | Path) -> str:
++    """Hash one file in bounded chunks, or record that it is missing."""
++
++    candidate = Path(path)
++    if not candidate.is_file():
++        return "missing"
++    digest = hashlib.sha256()
++    with candidate.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def row_hash(row: Mapping[str, Any]) -> str:
++    """Hash a row without trusting its self-referential hash field."""
++
++    return sha256_json({key: value for key, value in row.items() if key != "row_hash"})
++
++
++def artifact_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash a terminal artifact without its self-referential checksum."""
++
++    return sha256_json(
++        {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    )
++
++
++def recover_bytes(row: Mapping[str, Any], stem: str) -> tuple[bytes | None, str]:
++    """Recover inline bytes and say why corrupt or absent content did not load."""
++
++    value = row.get(f"{stem}_bytes_b64")
++    if isinstance(value, str):
++        try:
++            return base64.b64decode(value, validate=True), "inline_base64"
++        except (binascii.Error, ValueError):
++            return None, "invalid_base64"
++    return None, "missing"
++
++
++def _claim_object(raw_text: str) -> tuple[Mapping[str, Any] | None, bool]:
++    """Parse the required JSON object and disclose a Markdown wrapper as malformed."""
++
++    try:
++        value = json.loads(raw_text)
++        return (value if isinstance(value, Mapping) else None), False
++    except json.JSONDecodeError:
++        stripped = raw_text.strip()
++        if stripped.startswith("```json") and stripped.endswith("```"):
++            body = stripped[len("```json") : -3].strip()
++            try:
++                value = json.loads(body)
++                return (value if isinstance(value, Mapping) else None), True
++            except json.JSONDecodeError:
++                pass
++    return None, bool(raw_text.strip())
++
++
++def classify_response(
++    raw: bytes, *, timed_out: bool = False, process_failure: bool = False
++) -> JsonDict:
++    """Recompute terminal failure classes from bytes and process receipts."""
++
++    malformed_utf8 = False
++    try:
++        text = raw.decode("utf-8", "strict").strip()
++    except UnicodeDecodeError:
++        text = ""
++        malformed_utf8 = True
++    lowered = text.lower()
++    refusal = any(
++        marker in lowered
++        for marker in ("i cannot", "i can't", "unable to comply", "cannot comply", "i refuse")
++    )
++    claim, malformed_envelope = _claim_object(text) if text else (None, False)
++    required = {"claim_id", "supported_spans", "unsupported_reason", "release_action"}
++    claim_bearing = isinstance(claim, Mapping) and required <= set(claim)
++    request_for_claim = "provide the claim" in lowered or "which claim" in lowered
++    empty = not raw or not text
++    # A semantic request for the missing claim is a ``no_claim`` result, not a
++    # parser attempt.  Invalid UTF-8 and other non-JSON output remain malformed,
++    # while a refusal keeps its own failure class.
++    malformed = malformed_utf8 or (malformed_envelope and not request_for_claim and not refusal)
++    no_claim = empty or refusal or request_for_claim or not claim_bearing
++    return {
++        "timeout": bool(timed_out),
++        "malformed_output": bool(malformed),
++        "refusal": bool(refusal),
++        "empty_output": bool(empty),
++        "no_claim": bool(no_claim and not claim_bearing),
++        "process_failure": bool(process_failure),
++        "claim_bearing": bool(claim_bearing),
++    }
++
++
++def cost_from_components(components: Sequence[Mapping[str, Any]]) -> float:
++    """Recompute normalized charged work from row-local quantities and rates."""
++
++    return round(
++        sum(
++            float(component.get("quantity", 0.0) or 0.0)
++            * float(component.get("unit_cost", 0.0) or 0.0)
++            for component in components
++        ),
++        9,
++    )
++
++
++def _read_json(path: Path) -> tuple[JsonDict | None, str | None]:
++    try:
++        value = json.loads(path.read_text(encoding="utf-8"))
++    except FileNotFoundError:
++        return None, "missing"
++    except (OSError, json.JSONDecodeError) as exc:
++        return None, f"unreadable:{type(exc).__name__}"
++    if not isinstance(value, Mapping):
++        return None, "schema_not_object"
++    return dict(value), None
++
++
++def protected_hashes(repo_root: Path) -> dict[str, str]:
++    """Hash the two files that this audit is forbidden to change."""
++
++    return {path.as_posix(): sha256_file(repo_root / path) for path in PROTECTED_RELATIVE_PATHS}
++
++
++def _protected_receipt(before: Mapping[str, str], after: Mapping[str, str]) -> JsonDict:
++    rows = [
++        {
++            "path": path.as_posix(),
++            "before_sha256": before.get(path.as_posix(), "missing"),
++            "after_sha256": after.get(path.as_posix(), "missing"),
++            "unchanged": before.get(path.as_posix()) == after.get(path.as_posix())
++            and before.get(path.as_posix()) != "missing",
++        }
++        for path in PROTECTED_RELATIVE_PATHS
++    ]
++    return {
++        "rows": rows,
++        "all_unchanged": all(row["unchanged"] for row in rows),
++        "changed_paths": [row["path"] for row in rows if not row["unchanged"]],
++    }
++
++
++def _tool_version(repo_root: Path, relative: Path) -> JsonDict:
++    path = repo_root / relative
++    commit = "unavailable"
++    if path.is_file() and (repo_root / ".git").exists():  # pragma: no cover - live git receipt.
++        result = subprocess.run(
++            ["git", "log", "-1", "--format=%H", "--", relative.as_posix()],
++            cwd=repo_root,
++            capture_output=True,
++            text=True,
++            timeout=10,
++            check=False,
++        )
++        if result.returncode == 0 and result.stdout.strip():
++            commit = result.stdout.strip()
++    return {
++        "path": relative.as_posix(),
++        "exists": path.is_file(),
++        "sha256": sha256_file(path),
++        "version": commit,
++    }
++
++
++def _resources(repo_root: Path) -> JsonDict:
++    disk = shutil.disk_usage(repo_root)
++    ram_total = ram_available = None
++    try:
++        values = {
++            line.split(":", 1)[0]: int(line.split()[1]) * 1024
++            for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines()
++            if line.startswith(("MemTotal:", "MemAvailable:"))
++        }
++        ram_total = values.get("MemTotal")
++        ram_available = values.get("MemAvailable")
++    except OSError:  # pragma: no cover - non-Linux fallback.
++        pass
++    return {
++        "cpu": {"logical_count": os.cpu_count(), "architecture": platform.machine()},
++        "ram": {"total_bytes": ram_total, "available_bytes": ram_available},
++        "disk": {"path": str(repo_root), "total_bytes": disk.total, "free_bytes": disk.free},
++        "platform": platform.platform(),
++        "python": platform.python_version(),
++    }
++
++
++def _protocol_checks(
++    protocol: Mapping[str, Any], family_specs: Sequence[Mapping[str, Any]]
++) -> JsonDict:
++    manifest = protocol.get("source_unit_manifest", {})
++    contract = protocol.get("prompt_seed_budget_contract", {})
++    units = manifest.get("units", []) if isinstance(manifest, Mapping) else []
++    units = [row for row in units if isinstance(row, Mapping)]
++    manifest_body = (
++        {key: value for key, value in manifest.items() if key != "manifest_hash"}
++        if isinstance(manifest, Mapping)
++        else {}
++    )
++    prompt = str(contract.get("family_neutral_prompt", "")) if isinstance(contract, Mapping) else ""
++    budget = contract.get("token_budget", {}) if isinstance(contract, Mapping) else {}
++    family_rows = contract.get("family_rows", []) if isinstance(contract, Mapping) else []
++    by_task = {row.get("task_id"): row for row in family_rows if isinstance(row, Mapping)}
++    family_contract_rows = []
++    for family in family_specs:
++        row = by_task.get(family["task_id"], {})
++        checks = {
++            "model": row.get("model_family") == family["repository_id"],
++            "seed": row.get("seed") == family["seed"],
++            "prompt": row.get("prompt_sha256") == sha256_bytes(prompt.encode()),
++            "budget": row.get("token_budget_hash") == sha256_json(budget),
++            "timeouts": row.get("per_source_unit_timeout_s") == 720
++            and row.get("task_timeout_s") == contract.get("timeout_s") == 4200,
++            "family_neutral": row.get("family_specific_prompt_allowed") is False,
++        }
++        family_contract_rows.append(
++            {
++                "family_id": family["family_id"],
++                "expected_seed": family["seed"],
++                "observed_seed": row.get("seed"),
++                "checks": checks,
++                "passed": all(checks.values()),
++            }
++        )
++    source_hashes_valid = bool(units) and all(
++        unit.get("source_bytes_sha256")
++        == sha256_bytes(str(unit.get("exact_source_bytes", "")).encode())
++        for unit in units
++    )
++    checks = {
++        "source_method_gate": protocol.get("v572_source_method_ready_score") == 1.0,
++        "manifest_count": isinstance(manifest, Mapping)
++        and manifest.get("bounded_unit_count") == len(units),
++        "manifest_hash": bool(manifest_body)
++        and manifest.get("manifest_hash") == sha256_json(manifest_body),
++        "source_hashes": source_hashes_valid,
++        "prompt_hash": bool(prompt)
++        and contract.get("prompt_sha256") == sha256_bytes(prompt.encode()),
++        "family_contracts": all(row["passed"] for row in family_contract_rows),
++        "raw_first": contract.get("raw_before_derived_write_order") is True,
++        "failure_retention": contract.get("failure_retention_required") is True,
++        "fresh_process": contract.get("fresh_process_per_family") is True,
++    }
++    return {
++        "checks": checks,
++        "passed": all(checks.values()),
++        "units": units,
++        "prompt": prompt,
++        "prompt_sha256": sha256_bytes(prompt.encode()),
++        "budget": budget,
++        "budget_sha256": sha256_json(budget),
++        "manifest_hash": manifest.get("manifest_hash") if isinstance(manifest, Mapping) else None,
++        "family_contract_rows": family_contract_rows,
++        "seed_values_identical": len({row.get("seed") for row in family_contract_rows}) == 1,
++        "seed_contract_mode": "one prescribed deterministic seed per family task",
++    }
++
++
++def _process_checks(
++    receipt: Mapping[str, Any], family: Mapping[str, Any], gguf_path: str
++) -> JsonDict:
++    command = [str(part) for part in receipt.get("command", [])]
++    os_command = [str(part) for part in receipt.get("os_command", [])]
++    pid = int(receipt.get("pid", 0) or 0)
++    selected = receipt.get("selected_gpu")
++    samples = [row for row in receipt.get("gpu_samples", []) if isinstance(row, Mapping)]
++    before = [row for row in samples if row.get("stage") == "before"]
++    during = [row for row in samples if row.get("stage") == "during"]
++    after = [row for row in samples if row.get("stage") == "after"]
++    linked = [
++        process
++        for sample in during
++        for process in sample.get("compute_processes", [])
++        if isinstance(process, Mapping) and int(process.get("pid", 0) or 0) == pid
++    ]
++    baseline = min(
++        (int(row.get("device", {}).get("memory_used_mb", 0) or 0) for row in before),
++        default=0,
++    )
++    peak = max(
++        (int(row.get("device", {}).get("memory_used_mb", 0) or 0) for row in during),
++        default=0,
++    )
++    full_offload = "--n-gpu-layers" in command and command.index("--n-gpu-layers") + 1 < len(
++        command
++    )
++    single_gpu = "--split-mode" in command and command.index("--split-mode") + 1 < len(command)
++    checks = {
++        "fresh_process": receipt.get("fresh_process") is True,
++        "pid_evidence": pid > 0
++        and int(receipt.get("parent_pid", 0) or 0) > 0
++        and receipt.get("os_pid_verified") is True
++        and receipt.get("os_parent_pid_verified") is True,
++        "command_hash": receipt.get("command_sha256") == sha256_json(command),
++        "os_command_hash": receipt.get("os_command_sha256") == sha256_json(os_command),
++        "command_matches_os": receipt.get("command_matches_os") is True and command == os_command,
++        "model_path_bound": bool(gguf_path) and gguf_path in command,
++        "cuda_device_bound": selected is not None
++        and str(receipt.get("cuda_visible_devices")) == str(selected),
++        "full_cuda_offload_requested": full_offload
++        and command[command.index("--n-gpu-layers") + 1] == "all",
++        "single_gpu_requested": not single_gpu
++        or command[command.index("--split-mode") + 1] == "none",
++        "positive_layer_offload": int(receipt.get("offloaded_layers", 0) or 0) > 0,
++        "repeated_gpu_samples": bool(before) and len(during) >= 2 and bool(after),
++        "worker_pid_linked": bool(linked),
++        "positive_gpu_residency": peak - baseline >= GPU_LOAD_DELTA_MIN_MB
++        and max((int(row.get("used_memory_mb", 0) or 0) for row in linked), default=0)
++        >= GPU_LOAD_DELTA_MIN_MB,
++        "utilization_sampled": bool(during)
++        and all("utilization_pct" in row.get("device", {}) for row in during),
++        "one_family_resident": receipt.get("resident_model_families") == [family["repository_id"]],
++        "server_healthy": receipt.get("server_healthy") is True
++        and receipt.get("http_status") == 200,
++        "monotonic_lifecycle": int(receipt.get("started_monotonic_ns", 0) or 0)
++        < int(receipt.get("ended_monotonic_ns", 0) or 0),
++        "clean_exit": receipt.get("shutdown_requested") is True
++        and receipt.get("normal_shutdown") is True
++        and receipt.get("exit_code") == 0
++        and receipt.get("worker_alive_after_exit") is False,
++        "streams_hashed": str(receipt.get("stdout_sha256", "")).startswith("sha256:")
++        and str(receipt.get("stderr_sha256", "")).startswith("sha256:"),
++        "measured": receipt.get("evidence_mode") == "measured",
++        "unrelated_processes_preserved": receipt.get("signals_sent_to_unrelated_pids") == [],
++        "embedded_tokenizer": receipt.get("embedded_tokenizer") is True,
++    }
++    return {"checks": checks, "passed": all(checks.values()), "pid": pid}
++
++
++def _unload_receipt(payload: Mapping[str, Any], family: Mapping[str, Any]) -> JsonDict:
++    rows = [row for row in payload.get("unload_and_recovery_rows", []) if isinstance(row, Mapping)]
++    row = rows[0] if len(rows) == 1 else {}
++    delta = abs(int(row.get("memory_delta_from_baseline_mb", 0) or 0))
++    checks = {
++        "one_receipt": len(rows) == 1,
++        "shutdown_requested": row.get("shutdown_requested") is True,
++        "normal_shutdown": row.get("normal_shutdown") is True,
++        "clean_exit": row.get("exit_code") == 0,
++        "pid_gone": row.get("worker_absent_from_proc") is True
++        and row.get("worker_absent_from_nvidia_smi") is True,
++        "port_closed": row.get("port_closed") is True,
++        "memory_recovered": row.get("recovery_tolerance_mb") == RECOVERY_TOLERANCE_MB
++        and delta <= RECOVERY_TOLERANCE_MB,
++        "one_family_residency": row.get("no_task_worker_remains") is True,
++        "bounded_recovery": row.get("recovery_bounded") is True,
++        "unrelated_processes_preserved": row.get("signals_sent_to_unrelated_pids") == [],
++        "recovery_complete": row.get("recovery_complete") is True,
++    }
++    result: JsonDict = {
++        "family_id": family["family_id"],
++        "task_id": family["task_id"],
++        "worker_pid": row.get("worker_pid"),
++        "checks": checks,
++        "passed": all(checks.values()),
++    }
++    result["row_hash"] = row_hash(result)
++    return result
++
++
++def _metadata_receipt(
++    payload: Mapping[str, Any],
++    family: Mapping[str, Any],
++    inspector: GgufInspector,
++) -> JsonDict:
++    stored = payload.get("model_revision_and_hash_receipt", {})
++    stored = stored if isinstance(stored, Mapping) else {}
++    provenance = stored.get("provenance", {})
++    provenance = provenance if isinstance(provenance, Mapping) else {}
++    path = Path(str(stored.get("selected_blob_path", "")))
++    file_hash = sha256_file(path)
++    try:
++        content = dict(inspector(path)) if path.is_file() else {}
++        inspect_error = None if content else "empty_metadata"
++    except (OSError, GgufMetadataError, ValueError) as exc:
++        content = {}
++        inspect_error = f"{type(exc).__name__}:{exc}"
++    tokenizer = content.get("tokenizer_metadata", {}) if isinstance(content, Mapping) else {}
++    checks = {
++        "repository": stored.get("repository_id") == family["repository_id"],
++        "revision": bool(provenance.get("revision")),
++        "blob_exists": path.is_file(),
++        "gguf_hash": file_hash != "missing" and stored.get("trusted_sha256") == file_hash,
++        "architecture": content.get("architecture") == family["architecture"],
++        "tokenizer_model": isinstance(tokenizer, Mapping)
++        and tokenizer.get("model") == family["tokenizer_model"],
++        "tokenizer_count": isinstance(tokenizer, Mapping)
++        and int(tokenizer.get("token_count", 0) or 0) > 0,
++        "chat_template": isinstance(tokenizer, Mapping)
++        and tokenizer.get("chat_template_present") is True,
++    }
++    return {
++        "path": str(path),
++        "repository_id": stored.get("repository_id"),
++        "revision": provenance.get("revision"),
++        "gguf_sha256_recomputed": file_hash,
++        "tokenizer": dict(tokenizer) if isinstance(tokenizer, Mapping) else {},
++        "inspect_error": inspect_error,
++        "checks": checks,
++        "passed": all(checks.values()),
++    }
++
++
++def _raw_checkpoint(
++    final_row: Mapping[str, Any],
++    checkpoint_receipt: Mapping[str, Any],
++) -> tuple[JsonDict, JsonDict]:
++    path = Path(str(final_row.get("raw_checkpoint_path", "")))
++    payload, error = _read_json(path)
++    raw = payload or {}
++    stored_hash = row_hash(raw) if raw else "missing"
++    expected_name = (
++        f"{int(final_row.get('order_index', 0) or 0):02d}-{stored_hash.removeprefix('sha256:')}.json"
++        if raw
++        else None
++    )
++    receipt = {
++        "path": str(path),
++        "exists": path.is_file(),
++        "read_error": error,
++        "sha256_recomputed": sha256_file(path),
++        "row_hash_recomputed": stored_hash,
++        "content_addressed_name": path.name == expected_name if expected_name else False,
++        "atomic_replace_receipted": checkpoint_receipt.get("atomic_replace") is True,
++    }
++    return raw, receipt
++
++
++def _replay_one_row(
++    *,
++    final_row: Mapping[str, Any],
++    unit: Mapping[str, Any],
++    family: Mapping[str, Any],
++    protocol: Mapping[str, Any],
++    payload: Mapping[str, Any],
++    metadata: Mapping[str, Any],
++    process_result: Mapping[str, Any],
++) -> JsonDict:
++    order = int(final_row.get("order_index", -1) or 0)
++    checkpoints = [
++        row for row in payload.get("checkpoint_receipts", []) if isinstance(row, Mapping)
++    ]
++    diagnostics = [
++        row for row in payload.get("parser_diagnostic_rows", []) if isinstance(row, Mapping)
++    ]
++    checkpoint = next((row for row in checkpoints if row.get("order_index") == order), {})
++    diagnostic = next((row for row in diagnostics if row.get("order_index") == order), {})
++    raw, raw_receipt = _raw_checkpoint(final_row, checkpoint)
++    source, source_mode = recover_bytes(raw, "source")
++    request, request_mode = recover_bytes(raw, "request")
++    response, response_mode = recover_bytes(raw, "raw_response")
++    contract = protocol.get("prompt_seed_budget_contract", {})
++    manifest = protocol.get("source_unit_manifest", {})
++    prompt = str(contract.get("family_neutral_prompt", ""))
++    expected_source = str(unit.get("exact_source_bytes", "")).encode()
++    expected_request = prompt.encode() + b"\n\nSOURCE BYTES:\n" + expected_source
++    process = payload.get("process_and_gpu_receipts", {})
++    process = process if isinstance(process, Mapping) else {}
++    timed_out = raw.get("request_exit_code") == 124 or raw.get("stop_reason") == "timeout"
++    process_failure = raw.get("request_exit_code") not in (0, None) or process.get("exit_code") != 0
++    classified = classify_response(
++        response or b"", timed_out=timed_out, process_failure=process_failure
++    )
++    recomputed_failures = [name for name in FAILURE_CLASSES if classified[name]]
++    stored_failures = raw.get("failure_flags", {})
++    stored_failure_classes = [
++        name
++        for name in FAILURE_CLASSES
++        if isinstance(stored_failures, Mapping) and stored_failures.get(name) is True
++    ]
++    raw_core_matches_final = bool(raw) and all(
++        final_row.get(key) == value for key, value in raw.items() if key != "row_hash"
++    )
++    raw_time = int(raw.get("raw_response_recorded_monotonic_ns", 0) or 0)
++    written_time = int(checkpoint.get("written_monotonic_ns", 0) or 0)
++    parser_time = int(diagnostic.get("parser_started_monotonic_ns", 0) or 0)
++    raw_before_parser = raw_time > 0 and raw_time < written_time <= parser_time
++    costs = raw.get("charged_cost_components", [])
++    cost_recomputed = cost_from_components(costs) if isinstance(costs, Sequence) else 0.0
++    total_tokens = int(raw.get("prompt_token_count", 0) or 0) + int(
++        raw.get("response_token_count", 0) or 0
++    )
++    checks = {
++        "final_row_hash": final_row.get("row_hash") == row_hash(final_row),
++        "raw_checkpoint_exists": raw_receipt["exists"] and raw_receipt["read_error"] is None,
++        "raw_checkpoint_hash": raw_receipt["sha256_recomputed"]
++        == final_row.get("raw_checkpoint_sha256")
++        == checkpoint.get("checkpoint_sha256"),
++        "raw_row_hash": raw_receipt["row_hash_recomputed"]
++        == raw.get("row_hash")
++        == final_row.get("raw_checkpoint_row_hash")
++        == checkpoint.get("raw_row_hash"),
++        "content_addressed_path": raw_receipt["content_addressed_name"],
++        "atomic_checkpoint": raw_receipt["atomic_replace_receipted"],
++        "raw_core_matches_final": raw_core_matches_final,
++        "unit_id": raw.get("unit_id") == final_row.get("unit_id") == unit.get("unit_id"),
++        "unit_order": raw.get("order_index") == final_row.get("order_index"),
++        "manifest_hash": raw.get("source_manifest_hash") == manifest.get("manifest_hash"),
++        "source_bytes": source == expected_source,
++        "source_hash": raw.get("source_bytes_sha256")
++        == unit.get("source_bytes_sha256")
++        == sha256_bytes(expected_source),
++        "source_content_hash": raw.get("source_content_hash") == unit.get("content_hash"),
++        "prompt_hash": raw.get("prompt_sha256")
++        == contract.get("prompt_sha256")
++        == sha256_bytes(prompt.encode()),
++        "request_bytes": request == expected_request,
++        "request_hash": raw.get("request_sha256") == sha256_bytes(expected_request),
++        "repository": raw.get("repository_id") == family["repository_id"],
++        "revision": raw.get("revision") == metadata.get("revision"),
++        "gguf_hash": raw.get("gguf_sha256") == metadata.get("gguf_sha256_recomputed"),
++        "command_hash": raw.get("command_sha256") == process.get("command_sha256"),
++        "pid": raw.get("pid") == final_row.get("pid") == process_result.get("pid"),
++        "cuda_device": raw.get("cuda_device") == process.get("selected_gpu"),
++        "positive_offload": int(raw.get("offloaded_layers", 0) or 0) > 0
++        and raw.get("offloaded_layers") == process.get("offloaded_layers"),
++        "seed": raw.get("seed") == family["seed"],
++        "single_attempt": raw.get("attempt_count") == 1 and raw.get("retry_count") == 0,
++        "response_bytes": response is not None
++        and raw.get("raw_response_byte_count") == len(response),
++        "response_hash": response is not None
++        and raw.get("raw_response_sha256") == sha256_bytes(response),
++        "token_total": raw.get("total_token_count") == total_tokens,
++        "latency": isinstance(raw.get("latency_s"), (int, float))
++        and not isinstance(raw.get("latency_s"), bool)
++        and math.isfinite(float(raw.get("latency_s")))
++        and float(raw.get("latency_s")) >= 0.0,
++        "stop_reason": bool(raw.get("stop_reason")),
++        "exit": isinstance(raw.get("request_exit_code"), int),
++        "stderr_hash": str(raw.get("stderr_sha256_at_terminal", "")).startswith("sha256:"),
++        "charged_cost": raw.get("charged_cost") == cost_recomputed,
++        "failure_flags": set(stored_failures) == set(FAILURE_CLASSES)
++        if isinstance(stored_failures, Mapping)
++        else False,
++        "failure_classes_match": stored_failure_classes == recomputed_failures,
++        "raw_before_parser": raw_before_parser
++        and diagnostic.get("raw_before_parser") is True
++        and diagnostic.get("parser_can_filter_rows") is False,
++        "parser_hash": diagnostic.get("row_hash") == row_hash(diagnostic)
++        and final_row.get("parser_diagnostic_row_hash") == row_hash(diagnostic),
++    }
++    audit_row: JsonDict = {
++        "row_type": "independently_replayed_source_family_unit",
++        "family_id": family["family_id"],
++        "task_id": family["task_id"],
++        "artifact_path": family["artifact_path"],
++        "unit_id": unit.get("unit_id"),
++        "fixture_id": unit.get("fixture_id"),
++        "case_kind": unit.get("case_kind"),
++        "split": unit.get("split"),
++        "order_index": final_row.get("order_index"),
++        "source_storage": source_mode,
++        "source_bytes_sha256": sha256_bytes(source) if source is not None else "missing",
++        "prompt_sha256": sha256_bytes(prompt.encode()),
++        "request_storage": request_mode,
++        "request_sha256": sha256_bytes(request) if request is not None else "missing",
++        "repository_id": raw.get("repository_id", final_row.get("repository_id")),
++        "revision": raw.get("revision", final_row.get("revision")),
++        "gguf_path": metadata.get("path"),
++        "gguf_sha256": metadata.get("gguf_sha256_recomputed"),
++        "tokenizer": metadata.get("tokenizer", {}),
++        "command_sha256": process.get("command_sha256"),
++        "pid": process_result.get("pid"),
++        "pid_evidence_passed": process_result.get("checks", {}).get("pid_evidence") is True,
++        "cuda_device": raw.get("cuda_device", final_row.get("cuda_device")),
++        "offloaded_layers": raw.get("offloaded_layers", final_row.get("offloaded_layers")),
++        "gpu_sample_count": len(process.get("gpu_samples", [])),
++        "raw_checkpoint_path": str(final_row.get("raw_checkpoint_path", "")),
++        "raw_checkpoint_sha256": raw_receipt["sha256_recomputed"],
++        "raw_path_resolves": raw_receipt["exists"],
++        "raw_before_parser": raw_before_parser,
++        "raw_response_storage": response_mode,
++        "raw_response_sha256": sha256_bytes(response) if response is not None else "missing",
++        "raw_response_byte_count": len(response) if response is not None else 0,
++        "prompt_token_count": int(raw.get("prompt_token_count", 0) or 0),
++        "response_token_count": int(raw.get("response_token_count", 0) or 0),
++        "total_token_count": total_tokens,
++        "latency_s": round(float(raw.get("latency_s", 0.0) or 0.0), 9),
++        "stop_reason": raw.get("stop_reason"),
++        "request_exit_code": raw.get("request_exit_code"),
++        "stderr_sha256": raw.get("stderr_sha256_at_terminal"),
++        "charged_cost": cost_recomputed,
++        "charged_cost_unit": raw.get("charged_cost_unit"),
++        "failure_classes": recomputed_failures,
++        "stored_failure_classes": stored_failure_classes,
++        "claim_bearing": classified["claim_bearing"],
++        "checks": checks,
++        "replay_failures": [name for name, passed in checks.items() if not passed],
++        "replay_passed": all(checks.values())
++        and metadata.get("passed") is True
++        and process_result.get("passed") is True,
++    }
++    audit_row["row_hash"] = row_hash(audit_row)
++    return audit_row
++
++
++def _upstream_receipt(
++    repo_root: Path, family: Mapping[str, Any]
++) -> tuple[JsonDict, JsonDict | None]:
++    path = repo_root / str(family["artifact_path"])
++    payload, error = _read_json(path)
++    receipt = {
++        "family_id": family["family_id"],
++        "task_id": family["task_id"],
++        "path": family["artifact_path"],
++        "absolute_path": str(path),
++        "exists": path.is_file(),
++        "sha256": sha256_file(path),
++        "read_error": error,
++        "schema": payload.get("schema") if payload else None,
++        "status": payload.get("status") if payload else None,
++        "verdict_class": payload.get("verdict_class") if payload else None,
++        "stored_readiness_field": family["readiness_field"],
++        "stored_readiness_value": payload.get(family["readiness_field"]) if payload else None,
++        "stored_readiness_used_by_reducer": False,
++        "row_count": len(payload.get("rows", [])) if payload else 0,
++    }
++    return receipt, payload
++
++
++def _coverage_rows(
++    family_specs: Sequence[Mapping[str, Any]],
++    units: Sequence[Mapping[str, Any]],
++    payloads: Mapping[str, Mapping[str, Any] | None],
++    rows: Sequence[Mapping[str, Any]],
++) -> list[JsonDict]:
++    replay_by_key = {(row.get("family_id"), row.get("unit_id")): row for row in rows}
++    output = []
++    for family in family_specs:
++        payload = payloads.get(str(family["family_id"]))
++        final_rows = payload.get("rows", []) if isinstance(payload, Mapping) else []
++        final_ids = {row.get("unit_id") for row in final_rows if isinstance(row, Mapping)}
++        for unit in units:
++            replay = replay_by_key.get((family["family_id"], unit.get("unit_id")), {})
++            row = {
++                "family_id": family["family_id"],
++                "repository_id": family["repository_id"],
++                "unit_id": unit.get("unit_id"),
++                "fixture_id": unit.get("fixture_id"),
++                "expected": True,
++                "artifact_present": isinstance(payload, Mapping),
++                "row_present": unit.get("unit_id") in final_ids,
++                "replay_emitted": bool(replay),
++                "replay_passed": replay.get("replay_passed") is True,
++                "raw_path_resolves": replay.get("raw_path_resolves") is True,
++                "failure_classes": list(replay.get("failure_classes", [])),
++            }
++            row["row_hash"] = row_hash(row)
++            output.append(row)
++    return output
++
++
++def _failure_retention(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    output = []
++    for family in FAMILY_SPECS:
++        family_rows = [row for row in rows if row.get("family_id") == family["family_id"]]
++        for failure in FAILURE_CLASSES:
++            raw_count = sum(failure in row.get("failure_classes", []) for row in family_rows)
++            emitted_count = sum(failure in row.get("failure_classes", []) for row in family_rows)
++            row = {
++                "family_id": family["family_id"],
++                "failure_class": failure,
++                "raw_count": raw_count,
++                "emitted_count": emitted_count,
++                "denominator": len(family_rows),
++                "retained": raw_count == emitted_count,
++            }
++            row["row_hash"] = row_hash(row)
++            output.append(row)
++    return output
++
++
++def _attack_row(attack_id: str, passed: bool, observed: Any, expected: Any) -> JsonDict:
++    row: JsonDict = {
++        "attack_id": attack_id,
++        "passed": bool(passed),
++        "observed": observed,
++        "expected": expected,
++        "candidate_ready_score": 1.0 if passed else 0.0,
++        "reducer": "independent Exp6584 invariant reducer",
++    }
++    row["row_hash"] = row_hash(row)
++    return row
++
++
++def _attacks(
++    *,
++    family_specs: Sequence[Mapping[str, Any]],
++    receipts: Sequence[Mapping[str, Any]],
++    payloads: Mapping[str, Mapping[str, Any] | None],
++    rows: Sequence[Mapping[str, Any]],
++    coverage: Sequence[Mapping[str, Any]],
++    unload: Sequence[Mapping[str, Any]],
++    protected: Mapping[str, Any],
++    family_readiness: Mapping[str, float],
++) -> list[JsonDict]:
++    repositories = {family["repository_id"] for family in family_specs}
++    observed_final_rows = [
++        row
++        for payload in payloads.values()
++        if isinstance(payload, Mapping)
++        for row in payload.get("rows", [])
++        if isinstance(row, Mapping)
++    ]
++    unavailable = [
++        receipt["family_id"]
++        for receipt in receipts
++        if not receipt["exists"]
++        or receipt["read_error"] is not None
++        or str(receipt.get("status", "")).startswith("blocked")
++        or receipt["row_count"] == 0
++    ]
++    bad_repositories = sorted(
++        {
++            str(row.get("repository_id"))
++            for row in observed_final_rows
++            if row.get("repository_id") not in repositories
++        }
++    )
++    replay_by_key = {(row.get("repository_id"), row.get("unit_id")): row for row in rows}
++    final_source_errors = 0
++    final_prompt_errors = 0
++    final_seed_errors = 0
++    expected_seed_by_repository = {
++        family["repository_id"]: family["seed"] for family in family_specs
++    }
++    for final_row in observed_final_rows:
++        replay = replay_by_key.get((final_row.get("repository_id"), final_row.get("unit_id")), {})
++        final_source, _ = recover_bytes(final_row, "source")
++        final_source_errors += final_source is None or sha256_bytes(final_source) != replay.get(
++            "source_bytes_sha256"
++        )
++        final_prompt_errors += final_row.get("prompt_sha256") != replay.get("prompt_sha256")
++        final_seed_errors += final_row.get("seed") != expected_seed_by_repository.get(
++            final_row.get("repository_id")
++        )
++    source_errors = final_source_errors + sum(
++        not row.get("checks", {}).get("source_bytes", False)
++        or not row.get("checks", {}).get("source_hash", False)
++        for row in rows
++    )
++    prompt_errors = final_prompt_errors + sum(
++        not row.get("checks", {}).get("prompt_hash", False) for row in rows
++    )
++    seed_errors = final_seed_errors + sum(
++        not row.get("checks", {}).get("seed", False) for row in rows
++    )
++    final_keys = [(row.get("repository_id"), row.get("unit_id")) for row in observed_final_rows]
++    duplicate_count = len(final_keys) - len(set(final_keys))
++    output_pairs: dict[tuple[Any, Any], set[Any]] = {}
++    for row in observed_final_rows:
++        key = (row.get("unit_id"), row.get("raw_response_sha256"))
++        output_pairs.setdefault(key, set()).add(row.get("repository_id"))
++    copied = sorted(
++        f"{unit}:{digest}" for (unit, digest), families in output_pairs.items() if len(families) > 1
++    )
++    retry_count = sum(
++        row.get("attempt_count") != 1 or row.get("retry_count") != 0 for row in observed_final_rows
++    )
++    dropped = sum(not row.get("row_present", False) for row in coverage)
++    null_families = sorted(
++        family["family_id"]
++        for family in family_specs
++        if isinstance(payloads.get(str(family["family_id"])), Mapping)
++        and payloads[str(family["family_id"])].get("rows")
++        and not any(
++            classify_response(
++                recover_bytes(row, "raw_response")[0] or b"",
++                timed_out=row.get("request_exit_code") == 124,
++                process_failure=row.get("request_exit_code") not in (0, None),
++            )["claim_bearing"]
++            for row in payloads[str(family["family_id"])].get("rows", [])
++            if isinstance(row, Mapping)
++        )
++    )
++    stale_pid = sum(not row.get("checks", {}).get("pid", False) for row in rows)
++    zero_offload = sum(int(row.get("offloaded_layers", 0) or 0) <= 0 for row in observed_final_rows)
++    missing_paths = sum(not row.get("raw_path_resolves", False) for row in rows)
++    missing_unload = [row["family_id"] for row in unload if not row["passed"]]
++    pids = [row.get("worker_pid") for row in unload if isinstance(row.get("worker_pid"), int)]
++    reused_pids = len(pids) - len(set(pids))
++    contradicted = sorted(
++        receipt["family_id"]
++        for receipt in receipts
++        if receipt.get("stored_readiness_value")
++        != family_readiness.get(str(receipt["family_id"]), 0.0)
++    )
++    return [
++        _attack_row("missing_or_blocked_family", not unavailable, unavailable, []),
++        _attack_row("legacy_substitution", not bad_repositories, bad_repositories, []),
++        _attack_row("source_alias", source_errors == 0, source_errors, 0),
++        _attack_row("prompt_drift", prompt_errors == 0, prompt_errors, 0),
++        _attack_row("seed_drift", seed_errors == 0, seed_errors, 0),
++        _attack_row("duplicate_unit_id", duplicate_count == 0, duplicate_count, 0),
++        _attack_row("copied_output_across_families", not copied, copied, []),
++        _attack_row("selective_retry", retry_count == 0, retry_count, 0),
++        _attack_row("hidden_row_drop", dropped == 0, dropped, 0),
++        _attack_row("null_only_rows", not null_families, null_families, []),
++        _attack_row("stale_pid", stale_pid == 0, stale_pid, 0),
++        _attack_row("zero_layer_offload", zero_offload == 0, zero_offload, 0),
++        _attack_row("missing_raw_path", missing_paths == 0, missing_paths, 0),
++        _attack_row("missing_unload", not missing_unload, missing_unload, []),
++        _attack_row("reused_process", reused_pids == 0, reused_pids, 0),
++        _attack_row(
++            "protected_drift",
++            protected.get("all_unchanged") is True,
++            protected.get("changed_paths", []),
++            [],
++        ),
++        _attack_row("readiness_contradicted_by_rows", not contradicted, contradicted, []),
++    ]
++
++
++def _field_provenance() -> JsonDict:
++    return {
++        field: {
++            "principle": FIELD_PRINCIPLES[field],
++            "raw_sources": [
++                PROTOCOL_RELATIVE_PATH.as_posix(),
++                *[str(family["artifact_path"]) for family in FAMILY_SPECS],
++                "content-addressed raw checkpoints",
++            ],
++            "reducer": "experiment_6584_three_family_source_receipt_audit independent reducer",
++        }
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _retirement(repo_root: Path, receipts: Sequence[Mapping[str, Any]]) -> JsonDict:
++    prior, _ = _read_json(repo_root / EXP6577_RELATIVE_PATH)
++    prior_first = (
++        prior.get("gate_check_summary", {}).get("first_failure")
++        if isinstance(prior, Mapping)
++        else None
++    )
++    missing = [receipt["path"] for receipt in receipts if not receipt["exists"]]
++    same_chain = (
++        bool(missing) and len(missing) == len(receipts) and isinstance(prior_first, Mapping)
++    )
++    return {
++        "prior_artifact_path": EXP6577_RELATIVE_PATH.as_posix(),
++        "prior_first_failure": prior_first,
++        "current_missing_paths": missing,
++        "same_missing_chain_as_exp6577": same_chain,
++        "activated": same_chain,
++        "reason": (
++            "same all-family upstream-missing chain repeated"
++            if same_chain
++            else "current family state does not repeat Exp6577's missing Exp6576 chain"
++        ),
++    }
++
++
++def _gate_summary(
++    receipts: Sequence[Mapping[str, Any]],
++    family_specs: Sequence[Mapping[str, Any]],
++    family_readiness: Mapping[str, float],
++    all_ready: float,
++    retirement: Mapping[str, Any],
++) -> JsonDict:
++    checks = []
++    by_family = {family["family_id"]: family for family in family_specs}
++    for receipt in receipts:
++        family = by_family[receipt["family_id"]]
++        checks.append(
++            {
++                "field": receipt["path"],
++                "expected": "file_exists",
++                "observed": "present" if receipt["exists"] else "missing",
++                "passed": receipt["exists"],
++            }
++        )
++        if receipt["exists"]:
++            checks.extend(
++                [
++                    {
++                        "field": f"{receipt['path']}.schema",
++                        "expected": family["schema"],
++                        "observed": receipt["schema"],
++                        "passed": receipt["schema"] == family["schema"],
++                    },
++                    {
++                        "field": f"{receipt['path']}.status",
++                        "expected": "complete_nonblocked",
++                        "observed": receipt["status"],
++                        "passed": not str(receipt.get("status", "")).startswith("blocked")
++                        and receipt.get("read_error") is None,
++                    },
++                    {
++                        "field": f"{receipt['path']}.rows.length",
++                        "expected": "frozen_source_unit_count",
++                        "observed": receipt["row_count"],
++                        "passed": receipt["row_count"] > 0,
++                    },
++                    {
++                        "field": f"{receipt['path']}.{family['readiness_field']}.recomputed",
++                        "expected": 1.0,
++                        "observed": family_readiness.get(str(receipt["family_id"]), 0.0),
++                        "passed": family_readiness.get(str(receipt["family_id"]), 0.0) == 1.0,
++                    },
++                ]
++            )
++    checks.append(
++        {
++            "field": "all_family_source_audit_ready_score",
++            "expected": 1.0,
++            "observed": all_ready,
++            "passed": all_ready == 1.0,
++        }
++    )
++    first = next((dict(check) for check in checks if not check["passed"]), None)
++    return {
++        "checks": checks,
++        "passed": first is None,
++        "failed_check_count": sum(not check["passed"] for check in checks),
++        "first_failure": first,
++        "retirement": dict(retirement),
++    }
++
++
++def _raw_path_preconditions(payloads: Mapping[str, Mapping[str, Any] | None]) -> list[JsonDict]:
++    rows = []
++    for family_id, payload in payloads.items():
++        if not isinstance(payload, Mapping):
++            continue
++        for row in payload.get("rows", []):
++            if not isinstance(row, Mapping):
++                continue
++            path = Path(str(row.get("raw_checkpoint_path", "")))
++            rows.append(
++                {
++                    "family_id": family_id,
++                    "unit_id": row.get("unit_id"),
++                    "path": str(path),
++                    "exists": path.is_file(),
++                    "sha256": sha256_file(path),
++                    "expected_sha256": row.get("raw_checkpoint_sha256"),
++                }
++            )
++    return rows
++
++
++def build_audit(
++    repo_root: Path,
++    *,
++    duration_s: float,
++    tests_run: Sequence[Mapping[str, Any]],
++    protected_before: Mapping[str, str] | None = None,
++    family_specs: Sequence[Mapping[str, Any]] = FAMILY_SPECS,
++    gguf_inspector: GgufInspector = read_gguf_metadata,
++) -> JsonDict:
++    """Build one terminal audit from protocol, shards, and raw checkpoints."""
++
++    protocol, protocol_error = _read_json(repo_root / PROTOCOL_RELATIVE_PATH)
++    protocol = protocol or {}
++    protocol_result = _protocol_checks(protocol, family_specs)
++    before = dict(protected_before or protected_hashes(repo_root))
++    receipts = []
++    payloads: dict[str, Mapping[str, Any] | None] = {}
++    metadata_by_family: dict[str, JsonDict] = {}
++    process_by_family: dict[str, JsonDict] = {}
++    unload_rows = []
++    merged_rows = []
++    units = protocol_result["units"]
++    for family in family_specs:
++        receipt, payload = _upstream_receipt(repo_root, family)
++        receipts.append(receipt)
++        payloads[str(family["family_id"])] = payload
++        if not isinstance(payload, Mapping):
++            unloaded = _unload_receipt({}, family)
++            unload_rows.append(unloaded)
++            metadata_by_family[str(family["family_id"])] = {"passed": False}
++            process_by_family[str(family["family_id"])] = {"passed": False, "pid": None}
++            continue
++        metadata = _metadata_receipt(payload, family, gguf_inspector)
++        process = payload.get("process_and_gpu_receipts", {})
++        process = process if isinstance(process, Mapping) else {}
++        process_result = _process_checks(process, family, str(metadata.get("path", "")))
++        metadata_by_family[str(family["family_id"])] = metadata
++        process_by_family[str(family["family_id"])] = process_result
++        unloaded = _unload_receipt(payload, family)
++        unload_rows.append(unloaded)
++        final_rows = [row for row in payload.get("rows", []) if isinstance(row, Mapping)]
++        by_order = {row.get("order_index"): row for row in final_rows}
++        for order, unit in enumerate(units):
++            final = by_order.get(order)
++            if not isinstance(final, Mapping):
++                continue
++            merged_rows.append(
++                _replay_one_row(
++                    final_row=final,
++                    unit=unit,
++                    family=family,
++                    protocol=protocol,
++                    payload=payload,
++                    metadata=metadata,
++                    process_result=process_result,
++                )
++            )
++    coverage = _coverage_rows(family_specs, units, payloads, merged_rows)
++    failure_rows = _failure_retention(merged_rows)
++    expected_per_family = len(units)
++    family_readiness = {}
++    for family in family_specs:
++        family_id = str(family["family_id"])
++        receipt = next(row for row in receipts if row["family_id"] == family_id)
++        family_rows = [row for row in merged_rows if row["family_id"] == family_id]
++        family_unload = next(row for row in unload_rows if row["family_id"] == family_id)
++        ready = bool(
++            receipt["exists"]
++            and receipt["read_error"] is None
++            and not str(receipt.get("status", "")).startswith("blocked")
++            and len(family_rows) == expected_per_family
++            and all(row["replay_passed"] for row in family_rows)
++            and metadata_by_family[family_id].get("passed") is True
++            and process_by_family[family_id].get("passed") is True
++            and family_unload["passed"]
++            and any(row["claim_bearing"] for row in family_rows)
++        )
++        family_readiness[family_id] = 1.0 if ready else 0.0
++    after = protected_hashes(repo_root)
++    protected = _protected_receipt(before, after)
++    attacks = _attacks(
++        family_specs=family_specs,
++        receipts=receipts,
++        payloads=payloads,
++        rows=merged_rows,
++        coverage=coverage,
++        unload=unload_rows,
++        protected=protected,
++        family_readiness=family_readiness,
++    )
++    failure_counts = Counter(
++        failure for row in merged_rows for failure in row.get("failure_classes", [])
++    )
++    failure_row_count = sum(bool(row.get("failure_classes")) for row in merged_rows)
++    expected_rows = len(family_specs) * expected_per_family
++    aggregate = {
++        "expected_family_count": len(family_specs),
++        "readable_family_count": sum(
++            receipt["exists"] and receipt["read_error"] is None for receipt in receipts
++        ),
++        "nonblocked_family_count": sum(
++            receipt["exists"]
++            and receipt["read_error"] is None
++            and not str(receipt.get("status", "")).startswith("blocked")
++            for receipt in receipts
++        ),
++        "expected_source_unit_count_per_family": expected_per_family,
++        "expected_row_count": expected_rows,
++        "observed_row_count": len(merged_rows),
++        "replayed_row_count": sum(row["replay_passed"] for row in merged_rows),
++        "source_unit_coverage": round(len(merged_rows) / expected_rows, 9)
++        if expected_rows
++        else 0.0,
++        "claim_bearing_row_count": sum(row["claim_bearing"] for row in merged_rows),
++        "failure_row_count": failure_row_count,
++        "failure_class_counts": {
++            failure: failure_counts.get(failure, 0) for failure in FAILURE_CLASSES
++        },
++        "prompt_token_count": sum(int(row["prompt_token_count"]) for row in merged_rows),
++        "response_token_count": sum(int(row["response_token_count"]) for row in merged_rows),
++        "total_token_count": sum(int(row["total_token_count"]) for row in merged_rows),
++        "latency_s": round(sum(float(row["latency_s"]) for row in merged_rows), 9),
++        "charged_cost": round(sum(float(row["charged_cost"]) for row in merged_rows), 9),
++        "all_costs_recomputed": all(
++            row.get("checks", {}).get("charged_cost") is True for row in merged_rows
++        ),
++        "all_raw_paths_resolve": len(merged_rows) == expected_rows
++        and all(row["raw_path_resolves"] for row in merged_rows),
++        "failures_retained": all(row["retained"] for row in failure_rows),
++        "family_readiness_recomputation": family_readiness,
++        "stored_family_readiness_values": {
++            receipt["family_id"]: receipt["stored_readiness_value"] for receipt in receipts
++        },
++        "stored_family_aggregates_imported": False,
++        "protocol_comparison": {
++            "source_units_identical": protocol_result["checks"]["source_hashes"],
++            "prompt_identical": protocol_result["checks"]["prompt_hash"],
++            "order_identical": [row.get("unit_id") for row in units]
++            == [row.get("unit_id") for row in sorted(units, key=lambda row: units.index(row))],
++            "budget_identical": protocol_result["checks"]["family_contracts"],
++            "prescribed_seeds_match": protocol_result["checks"]["family_contracts"],
++            "seed_values_identical": protocol_result["seed_values_identical"],
++            "model_identity_only_runtime_difference_required": True,
++        },
++    }
++    ready_conditions = {
++        "protocol": protocol_error is None and protocol_result["passed"],
++        "all_families": all(value == 1.0 for value in family_readiness.values()),
++        "exact_coverage": len(merged_rows) == expected_rows
++        and all(row["row_present"] for row in coverage),
++        "all_rows_replay": len(merged_rows) == expected_rows
++        and all(row["replay_passed"] for row in merged_rows),
++        "failures_retained": aggregate["failures_retained"],
++        "raw_paths": aggregate["all_raw_paths_resolve"],
++        "unload": all(row["passed"] for row in unload_rows),
++        "costs": aggregate["all_costs_recomputed"],
++        "attacks": all(row["passed"] for row in attacks),
++        "protected": protected["all_unchanged"],
++    }
++    all_ready = 1.0 if all(ready_conditions.values()) else 0.0
++    aggregate["ready_conditions"] = ready_conditions
++    aggregate["ready_score"] = all_ready
++    retirement = _retirement(repo_root, receipts)
++    gates = _gate_summary(receipts, family_specs, family_readiness, all_ready, retirement)
++    blocked_input = any(
++        not receipt["exists"]
++        or receipt["read_error"] is not None
++        or str(receipt.get("status", "")).startswith("blocked")
++        or receipt["row_count"] == 0
++        for receipt in receipts
++    )
++    if all_ready == 1.0:
++        status = "complete_three_family_source_receipt_audit"
++        verdict_class = None
++        verdict = (
++            f"complete_three_family_source_receipt_audit: lineage={len(family_specs)}/{len(family_specs)}; "
++            f"coverage={len(merged_rows)}/{expected_rows}; failure_retention={failure_row_count}/{failure_row_count}; "
++            f"unload={sum(row['passed'] for row in unload_rows)}/{len(family_specs)}; merge=immutable_ready"
++        )
++    elif protected["all_unchanged"] is not True:
++        status = "disqualified_three_family_source_receipt_audit"
++        verdict_class = "disqualified"
++        verdict = (
++            f"disqualified_three_family_source_receipt_audit: lineage={sum(value == 1.0 for value in family_readiness.values())}/{len(family_specs)}; "
++            f"coverage={len(merged_rows)}/{expected_rows}; failure_retention={failure_row_count}/{failure_row_count}; "
++            f"unload={sum(row['passed'] for row in unload_rows)}/{len(family_specs)}; merge=protected_file_drift"
++        )
++    elif blocked_input:
++        status = "blocked_three_family_source_receipt_audit"
++        verdict_class = "blocked"
++        first = gates["first_failure"] or {}
++        verdict = (
++            f"blocked_three_family_source_receipt_audit: lineage={sum(value == 1.0 for value in family_readiness.values())}/{len(family_specs)}; "
++            f"coverage={len(merged_rows)}/{expected_rows}; failure_retention={failure_row_count}/{failure_row_count}; "
++            f"unload={sum(row['passed'] for row in unload_rows)}/{len(family_specs)}; merge=not_eligible; "
++            f"field={first.get('field')} expected={first.get('expected')} observed={first.get('observed')}"
++        )
++    else:
++        status = "partial_three_family_source_receipt_audit"
++        verdict_class = "partial"
++        verdict = (
++            f"partial_three_family_source_receipt_audit: lineage={sum(value == 1.0 for value in family_readiness.values())}/{len(family_specs)}; "
++            f"coverage={len(merged_rows)}/{expected_rows}; failure_retention={failure_row_count}/{failure_row_count}; "
++            f"unload={sum(row['passed'] for row in unload_rows)}/{len(family_specs)}; merge=replay_incomplete"
++        )
++    raw_path_receipts = _raw_path_preconditions(payloads)
++    preconditions = {
++        "planning_date": RUN_DATE,
++        "expected_family_paths": [family["artifact_path"] for family in family_specs],
++        "protocol_path": PROTOCOL_RELATIVE_PATH.as_posix(),
++        "protocol_exists": (repo_root / PROTOCOL_RELATIVE_PATH).is_file(),
++        "protocol_sha256": sha256_file(repo_root / PROTOCOL_RELATIVE_PATH),
++        "protocol_read_error": protocol_error,
++        "source_manifest_hash": protocol_result["manifest_hash"],
++        "source_manifest_hash_recomputed": sha256_json(
++            {
++                key: value
++                for key, value in protocol.get("source_unit_manifest", {}).items()
++                if key != "manifest_hash"
++            }
++        )
++        if isinstance(protocol.get("source_unit_manifest"), Mapping)
++        else "missing",
++        "prompt_sha256": protocol_result["prompt_sha256"],
++        "budget_sha256": protocol_result["budget_sha256"],
++        "protocol_checks": protocol_result["checks"],
++        "family_contract_rows": protocol_result["family_contract_rows"],
++        "audit_tool_versions": [
++            _tool_version(repo_root, relative) for relative in AUDIT_TOOL_RELATIVE_PATHS
++        ],
++        "resources": _resources(repo_root),
++        "protected_file_hashes_before": before,
++        "protected_file_hashes_after": after,
++        "raw_content_addressed_path_receipts": raw_path_receipts,
++        "all_declared_raw_paths_available": all(row["exists"] for row in raw_path_receipts),
++        "model_inference_invoked": False,
++        "llm_calls_issued": 0,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++    }
++    artifact: JsonDict = {
++        "schema": "carnot.experiment_6584_three_family_source_receipt_audit.v1",
++        "task_id": "exp6584-three-family-source-receipt-audit",
++        "planning_date": RUN_DATE,
++        "status": status,
++        "honest_verdict": verdict,
++        "verdict_class": verdict_class,
++        "gate_check_summary": gates,
++        "upstream_artifact_receipts": receipts,
++        "rows": merged_rows,
++        "family_coverage_rows": coverage,
++        "failure_retention_rows": failure_rows,
++        "duplicate_drift_and_substitution_rows": attacks,
++        "unload_and_recovery_rows": unload_rows,
++        "all_family_source_audit_ready_score": all_ready,
++        "aggregate_row_recomputation": aggregate,
++        "preconditions_checked": preconditions,
++        "protected_files_unchanged": protected,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": True,
++        "field_provenance": _field_provenance(),
++        "duration_s": round(float(duration_s), 6),
++        "tests_run": [dict(row) for row in tests_run],
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> list[str]:
++    """Validate terminal shape, non-positive semantics, hashes, and reducer output."""
++
++    errors = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in payload]
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_mismatch")
++    if payload.get("verifier_is_oracle") is not True:
++        errors.append("verifier_is_oracle_mismatch")
++    if payload.get("verdict_class") not in (None, "partial", "blocked", "disqualified"):
++        errors.append("verdict_class_invalid")
++    score = payload.get("all_family_source_audit_ready_score")
++    aggregate = payload.get("aggregate_row_recomputation", {})
++    if score not in (0.0, 1.0) or not isinstance(aggregate, Mapping):
++        errors.append("ready_score_invalid")
++    elif score != aggregate.get("ready_score"):
++        errors.append("ready_score_reducer_mismatch")
++    if score == 1.0 and payload.get("verdict_class") is not None:
++        errors.append("clean_verdict_class_not_null")
++    if payload.get("verdict_class") == "blocked" and not str(
++        payload.get("honest_verdict", "")
++    ).startswith("blocked_"):
++        errors.append("blocked_verdict_prefix_missing")
++    provenance = payload.get("field_provenance", {})
++    if not isinstance(provenance, Mapping) or set(provenance) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_provenance_incomplete")
++    else:
++        for field, principle in FIELD_PRINCIPLES.items():
++            if provenance.get(field, {}).get("principle") != principle:
++                errors.append(f"field_principle_mismatch:{field}")
++    for container in (
++        "rows",
++        "family_coverage_rows",
++        "failure_retention_rows",
++        "duplicate_drift_and_substitution_rows",
++        "unload_and_recovery_rows",
++    ):
++        rows = payload.get(container, [])
++        if not isinstance(rows, list):
++            errors.append(f"{container}_not_list")
++            continue
++        for index, row in enumerate(rows):
++            if not isinstance(row, Mapping) or row.get("row_hash") != row_hash(row):
++                errors.append(f"{container}_row_hash:{index}")
++    if payload.get("reproducibility_checksum") != artifact_checksum(payload):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def atomic_write_json(path: Path, payload: Mapping[str, Any]) -> JsonDict:
++    """Validate first, then replace one same-directory terminal artifact."""
++
++    errors = validate_artifact(payload)
++    if errors:
++        raise ValueError("artifact validation failed: " + ", ".join(errors))
++    path.parent.mkdir(parents=True, exist_ok=True)
++    encoded = (json.dumps(payload, indent=2, sort_keys=True) + "\n").encode("utf-8")
++    with tempfile.NamedTemporaryFile(dir=path.parent, prefix=".exp6584-", delete=False) as handle:
++        temporary = Path(handle.name)
++        handle.write(encoded)
++        handle.flush()
++        os.fsync(handle.fileno())
++    os.replace(temporary, path)
++    return {"path": str(path), "sha256": sha256_file(path), "atomic_replace": True}
++
++
++def _run_test(command: str, repo_root: Path) -> JsonDict:  # pragma: no cover - CLI receipt.
++    started = time.monotonic()
++    result = subprocess.run(
++        command,
++        cwd=repo_root,
++        shell=True,
++        capture_output=True,
++        text=True,
++        timeout=7200,
++        check=False,
++    )
++    return {
++        "command": command,
++        "exit_code": result.returncode,
++        "duration_s": round(time.monotonic() - started, 6),
++        "stdout_sha256": sha256_bytes(result.stdout.encode()),
++        "stderr_sha256": sha256_bytes(result.stderr.encode()),
++    }
++
++
++def run_experiment(
++    repo_root: Path, run_date: str, *, run_tests: bool = True
++) -> JsonDict:  # pragma: no cover - required live entrypoint.
++    started = time.monotonic()
++    protected_before = protected_hashes(repo_root)
++    commands = (
++        ".venv/bin/pytest tests/python/test_experiment_6584_three_family_source_receipt_audit.py -q --no-cov -n 0",
++        ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_6584_three_family_source_receipt_audit.py' -m pytest -o addopts='' tests/python/test_experiment_6584_three_family_source_receipt_audit.py -q --no-cov -n 0",
++        ".venv/bin/coverage report --rcfile=/dev/null --include='*/experiment_6584_three_family_source_receipt_audit.py' --fail-under=100 --show-missing",
++        ".venv/bin/ruff check python/carnot/experiment_6584_three_family_source_receipt_audit.py tests/python/test_experiment_6584_three_family_source_receipt_audit.py",
++        ".venv/bin/ruff format --check python/carnot/experiment_6584_three_family_source_receipt_audit.py tests/python/test_experiment_6584_three_family_source_receipt_audit.py",
++        ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6584_three_family_source_receipt_audit.py",
++        ".venv/bin/pytest tests/python -q",
++    )
++    tests_run = [_run_test(command, repo_root) for command in commands] if run_tests else []
++    artifact = build_audit(
++        repo_root,
++        duration_s=time.monotonic() - started,
++        tests_run=tests_run,
++        protected_before=protected_before,
++    )
++    artifact["planning_date"] = run_date
++    artifact["preconditions_checked"]["planning_date"] = run_date
++    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - thin CLI.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--output", type=Path, default=REPO_ROOT / RESULT_RELATIVE_PATH)
++    parser.add_argument("--skip-tests", action="store_true")
++    parser.add_argument("--validate", type=Path)
++    args = parser.parse_args(argv)
++    if args.validate:
++        payload, error = _read_json(args.validate)
++        errors = [error] if error else validate_artifact(payload or {})
++        if errors:
++            print("invalid: " + ", ".join(str(item) for item in errors))
++            return 1
++        print("valid")
++        return 0
++    artifact = run_experiment(REPO_ROOT, args.date, run_tests=not args.skip_tests)
++    atomic_write_json(args.output, artifact)
++    print(
++        json.dumps(
++            {
++                "path": str(args.output),
++                "status": artifact["status"],
++                "honest_verdict": artifact["honest_verdict"],
++                "all_family_source_audit_ready_score": artifact[
++                    "all_family_source_audit_ready_score"
++                ],
++            },
++            indent=2,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6584_three_family_source_receipt_audit.py b/tests/python/test_experiment_6584_three_family_source_receipt_audit.py
+new file mode 100644
+index 0000000000..2176a5355e
+--- /dev/null
++++ b/tests/python/test_experiment_6584_three_family_source_receipt_audit.py
+@@ -0,0 +1,752 @@
++"""Tests for the independent Exp6584 three-family receipt audit."""
++
++from __future__ import annotations
++
++import base64
++from copy import deepcopy
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6584_three_family_source_receipt_audit as exp
++
++
++def _canonical(value: Any) -> str:
++    return json.dumps(value, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
++
++
++def _sha_bytes(value: bytes) -> str:
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def _sha_json(value: Any) -> str:
++    return _sha_bytes(_canonical(value).encode("utf-8"))
++
++
++def _row_hash(row: dict[str, Any]) -> str:
++    return _sha_json({key: value for key, value in row.items() if key != "row_hash"})
++
++
++def _protocol(unit_count: int = 2) -> dict[str, Any]:
++    units = []
++    for index in range(unit_count):
++        source = f"source bytes {index}"
++        units.append(
++            {
++                "unit_id": f"unit-{index}",
++                "fixture_id": f"fixture-{index}",
++                "case_kind": "single_hop" if index == 0 else "unsupported",
++                "split": "held" if index else "train",
++                "exact_source_bytes": source,
++                "source_bytes_sha256": _sha_bytes(source.encode()),
++                "content_hash": _sha_json({"source": source, "index": index}),
++            }
++        )
++    manifest: dict[str, Any] = {
++        "schema": "carnot.v572.source_unit_manifest.v1",
++        "bounded_unit_count": len(units),
++        "units": units,
++    }
++    manifest["manifest_hash"] = _sha_json(manifest)
++    prompt = "Use only the source. Return one JSON claim object."
++    budget = {
++        "max_prompt_tokens": 4096,
++        "max_output_tokens": 512,
++        "temperature": 0.0,
++        "top_p": 1.0,
++    }
++    family_rows = []
++    for family in exp.FAMILY_SPECS:
++        family_rows.append(
++            {
++                "task_id": family["task_id"],
++                "model_family": family["repository_id"],
++                "seed": family["seed"],
++                "prompt_sha256": _sha_bytes(prompt.encode()),
++                "token_budget_hash": _sha_json(budget),
++                "per_source_unit_timeout_s": 720,
++                "task_timeout_s": 4200,
++                "family_specific_prompt_allowed": False,
++            }
++        )
++    return {
++        "v572_source_method_ready_score": 1.0,
++        "source_unit_manifest": manifest,
++        "prompt_seed_budget_contract": {
++            "family_neutral_prompt": prompt,
++            "prompt_sha256": _sha_bytes(prompt.encode()),
++            "token_budget": budget,
++            "family_rows": family_rows,
++            "one_family_task_mapping": {
++                family["task_id"]: family["repository_id"] for family in exp.FAMILY_SPECS
++            },
++            "stop_rules": ["<|eot_id|>", "<stop>"],
++            "timeout_s": 4200,
++            "raw_before_derived_write_order": True,
++            "failure_retention_required": True,
++            "fresh_process_per_family": True,
++        },
++    }
++
++
++def _json_response(label: str) -> bytes:
++    return json.dumps(
++        {
++            "claim_id": label,
++            "supported_spans": [label],
++            "unsupported_reason": None,
++            "release_action": "release",
++        },
++        separators=(",", ":"),
++    ).encode()
++
++
++def _write_family(
++    root: Path,
++    protocol: dict[str, Any],
++    family: dict[str, Any],
++    *,
++    pid: int,
++    responses: list[bytes] | None = None,
++    stored_ready: float = 1.0,
++) -> dict[str, Any]:
++    artifact_path = root / family["artifact_path"]
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    raw_dir = root / "raw" / family["family_id"]
++    raw_dir.mkdir(parents=True, exist_ok=True)
++    blob = root / "models" / f"{family['family_id']}.gguf"
++    blob.parent.mkdir(parents=True, exist_ok=True)
++    blob.write_bytes(f"GGUF-{family['family_id']}".encode())
++    gguf_hash = _sha_bytes(blob.read_bytes())
++    command = [
++        "llama-server",
++        "--model",
++        str(blob),
++        "--n-gpu-layers",
++        "all",
++        "--split-mode",
++        "none",
++    ]
++    command_hash = _sha_json(command)
++    units = protocol["source_unit_manifest"]["units"]
++    prompt = protocol["prompt_seed_budget_contract"]["family_neutral_prompt"]
++    responses = responses or [
++        _json_response(f"{family['family_id']}-{i}") for i in range(len(units))
++    ]
++    rows = []
++    checkpoints = []
++    diagnostics = []
++    raw_receipts = []
++    for index, (unit, response) in enumerate(zip(units, responses, strict=True)):
++        request = f"{prompt}\n\nSOURCE BYTES:\n{unit['exact_source_bytes']}".encode()
++        components = [
++            {"metric": "prompt_tokens", "quantity": 10 + index, "unit_cost": 1.0},
++            {"metric": "response_tokens", "quantity": 5 + index, "unit_cost": 1.0},
++            {"metric": "latency_s", "quantity": 0.25 + index, "unit_cost": 1.0},
++        ]
++        raw_row: dict[str, Any] = {
++            "row_type": "raw_terminal_source_unit",
++            "unit_id": unit["unit_id"],
++            "fixture_id": unit["fixture_id"],
++            "case_kind": unit["case_kind"],
++            "split": unit["split"],
++            "order_index": index,
++            "source_manifest_hash": protocol["source_unit_manifest"]["manifest_hash"],
++            "source_content_hash": unit["content_hash"],
++            "source_bytes_b64": base64.b64encode(unit["exact_source_bytes"].encode()).decode(),
++            "source_bytes_sha256": unit["source_bytes_sha256"],
++            "prompt_sha256": _sha_bytes(prompt.encode()),
++            "request_bytes_b64": base64.b64encode(request).decode(),
++            "request_sha256": _sha_bytes(request),
++            "repository_id": family["repository_id"],
++            "revision": f"revision-{family['family_id']}",
++            "gguf_sha256": gguf_hash,
++            "gguf_blob_path": str(blob),
++            "command_sha256": command_hash,
++            "pid": pid,
++            "cuda_device": 0,
++            "offloaded_layers": 32,
++            "seed": family["seed"],
++            "attempt_count": 1,
++            "retry_count": 0,
++            "raw_response_bytes_b64": base64.b64encode(response).decode(),
++            "raw_response_byte_count": len(response),
++            "raw_response_sha256": _sha_bytes(response),
++            "raw_api_response_sha256": _sha_json({"response": response.decode()}),
++            "prompt_token_count": 10 + index,
++            "response_token_count": 5 + index,
++            "total_token_count": 15 + (2 * index),
++            "latency_s": 0.25 + index,
++            "stop_reason": "stop",
++            "request_exit_code": 0,
++            "stderr_sha256_at_terminal": _sha_bytes(f"stderr-{index}".encode()),
++            "failure_flags": {
++                "timeout": False,
++                "malformed_output": False,
++                "refusal": False,
++                "empty_output": False,
++                "no_claim": False,
++                "process_failure": False,
++            },
++            "charged_cost_unit": "normalized_token_and_second_units",
++            "charged_cost_components": components,
++            "charged_cost": 15.25 + (3 * index),
++            "raw_response_recorded_monotonic_ns": 1000 + (index * 100),
++        }
++        raw_row["row_hash"] = _row_hash(raw_row)
++        checkpoint = raw_dir / f"{index:02d}-{raw_row['row_hash'][7:]}.json"
++        checkpoint.write_text(_canonical(raw_row) + "\n", encoding="utf-8")
++        checkpoint_hash = _sha_bytes(checkpoint.read_bytes())
++        checkpoint_receipt = {
++            "unit_id": unit["unit_id"],
++            "order_index": index,
++            "absolute_path": str(checkpoint),
++            "raw_row_hash": raw_row["row_hash"],
++            "checkpoint_sha256": checkpoint_hash,
++            "written_monotonic_ns": 1050 + (index * 100),
++            "atomic_replace": True,
++        }
++        diagnostic: dict[str, Any] = {
++            "unit_id": unit["unit_id"],
++            "order_index": index,
++            "diagnostic_only": True,
++            "raw_row_hash": raw_row["row_hash"],
++            "parser_started_monotonic_ns": 1075 + (index * 100),
++            "raw_before_parser": True,
++            "claim_bearing": True,
++            "parser_can_filter_rows": False,
++        }
++        diagnostic["row_hash"] = _row_hash(diagnostic)
++        final = dict(raw_row)
++        final.update(
++            {
++                "raw_checkpoint_path": str(checkpoint),
++                "raw_checkpoint_sha256": checkpoint_hash,
++                "raw_checkpoint_row_hash": raw_row["row_hash"],
++                "parser_diagnostic_row_hash": diagnostic["row_hash"],
++                "claim_bearing": True,
++                "process_receipt": {
++                    "pid": pid,
++                    "parent_pid": pid - 1,
++                    "started_monotonic_ns": 100,
++                    "ended_monotonic_ns": 2000,
++                    "exit_code": 0,
++                    "normal_shutdown": True,
++                    "worker_alive_after_exit": False,
++                    "stdout_sha256": _sha_bytes(b""),
++                    "stderr_sha256": _sha_bytes(b"server stderr"),
++                },
++            }
++        )
++        final["row_hash"] = _row_hash(final)
++        rows.append(final)
++        checkpoints.append(checkpoint_receipt)
++        diagnostics.append(diagnostic)
++        raw_receipts.append(
++            {
++                "unit_id": unit["unit_id"],
++                "raw_response_sha256": raw_row["raw_response_sha256"],
++                "raw_response_byte_count": len(response),
++                "raw_bytes_present": True,
++                "recoverable_path": str(checkpoint),
++                "checkpoint_sha256": checkpoint_hash,
++                "raw_before_parser": True,
++            }
++        )
++    gpu_samples = [
++        {
++            "stage": "before",
++            "device": {"memory_used_mb": 4, "utilization_pct": 0},
++            "compute_processes": [],
++        },
++        {
++            "stage": "during",
++            "device": {"memory_used_mb": 2048, "utilization_pct": 80},
++            "compute_processes": [{"pid": pid, "used_memory_mb": 2044}],
++        },
++        {
++            "stage": "during",
++            "device": {"memory_used_mb": 2050, "utilization_pct": 75},
++            "compute_processes": [{"pid": pid, "used_memory_mb": 2046}],
++        },
++        {
++            "stage": "after",
++            "device": {"memory_used_mb": 4, "utilization_pct": 0},
++            "compute_processes": [],
++        },
++    ]
++    process = {
++        "command": command,
++        "os_command": command,
++        "command_sha256": command_hash,
++        "os_command_sha256": command_hash,
++        "command_matches_os": True,
++        "pid": pid,
++        "parent_pid": pid - 1,
++        "os_pid_verified": True,
++        "os_parent_pid_verified": True,
++        "fresh_process": True,
++        "selected_blob_path": str(blob),
++        "gguf_sha256": gguf_hash,
++        "selected_gpu": 0,
++        "cuda_visible_devices": "0",
++        "offloaded_layers": 32,
++        "gpu_samples": gpu_samples,
++        "resident_model_families": [family["repository_id"]],
++        "server_healthy": True,
++        "http_status": 200,
++        "started_monotonic_ns": 100,
++        "ended_monotonic_ns": 2000,
++        "shutdown_requested": True,
++        "normal_shutdown": True,
++        "exit_code": 0,
++        "worker_alive_after_exit": False,
++        "stdout_sha256": _sha_bytes(b""),
++        "stderr_sha256": _sha_bytes(b"server stderr"),
++        "evidence_mode": "measured",
++        "signals_sent_to_unrelated_pids": [],
++        "embedded_tokenizer": True,
++    }
++    unload = {
++        "worker_pid": pid,
++        "shutdown_requested": True,
++        "normal_shutdown": True,
++        "exit_code": 0,
++        "worker_absent_from_proc": True,
++        "worker_absent_from_nvidia_smi": True,
++        "port_closed": True,
++        "memory_delta_from_baseline_mb": 0,
++        "recovery_tolerance_mb": 256,
++        "no_task_worker_remains": True,
++        "recovery_bounded": True,
++        "signals_sent_to_unrelated_pids": [],
++        "recovery_complete": True,
++    }
++    payload = {
++        "schema": family["schema"],
++        "task_id": family["task_id"],
++        "status": "complete",
++        "honest_verdict": f"complete_{family['family_id']}_source_shard",
++        "verdict_class": None,
++        family["readiness_field"]: stored_ready,
++        "rows": rows,
++        "raw_response_receipts": raw_receipts,
++        "checkpoint_receipts": checkpoints,
++        "parser_diagnostic_rows": diagnostics,
++        "process_and_gpu_receipts": process,
++        "unload_and_recovery_rows": [unload],
++        "model_revision_and_hash_receipt": {
++            "repository_id": family["repository_id"],
++            "selected_blob_path": str(blob),
++            "trusted_sha256": gguf_hash,
++            "provenance": {
++                "revision": f"revision-{family['family_id']}",
++                "valid": True,
++                "repository_id": family["repository_id"],
++            },
++            "content_metadata": {
++                "architecture": family["architecture"],
++                "tokenizer_metadata": {
++                    "model": family["tokenizer_model"],
++                    "token_count": 256000,
++                    "chat_template_present": True,
++                },
++            },
++        },
++        "protected_files_unchanged": {"all_unchanged": True},
++    }
++    artifact_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
++    return payload
++
++
++def _repo(tmp_path: Path, *, unit_count: int = 2) -> tuple[dict[str, Any], dict[str, Any]]:
++    protocol = _protocol(unit_count)
++    protocol_path = tmp_path / exp.PROTOCOL_RELATIVE_PATH
++    protocol_path.parent.mkdir(parents=True, exist_ok=True)
++    protocol_path.write_text(json.dumps(protocol, indent=2) + "\n", encoding="utf-8")
++    for protected in exp.PROTECTED_RELATIVE_PATHS:
++        path = tmp_path / protected
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(f"protected {protected}\n", encoding="utf-8")
++    payloads = {}
++    for index, family in enumerate(exp.FAMILY_SPECS):
++        payloads[family["family_id"]] = _write_family(tmp_path, protocol, family, pid=2000 + index)
++    return protocol, payloads
++
++
++def _inspector(path: Path) -> dict[str, Any]:
++    family = next(family for family in exp.FAMILY_SPECS if family["family_id"] in path.name)
++    return {
++        "architecture": family["architecture"],
++        "tokenizer_metadata": {
++            "model": family["tokenizer_model"],
++            "token_count": 256000,
++            "chat_template_present": True,
++        },
++    }
++
++
++def _build(tmp_path: Path, *, protected_before: dict[str, str] | None = None) -> dict[str, Any]:
++    return exp.build_audit(
++        tmp_path,
++        duration_s=1.25,
++        tests_run=[{"command": "focused", "exit_code": 0, "duration_s": 0.1}],
++        protected_before=protected_before,
++        gguf_inspector=_inspector,
++    )
++
++
++def _rewrite(root: Path, family: dict[str, Any], payload: dict[str, Any]) -> None:
++    (root / family["artifact_path"]).write_text(
++        json.dumps(payload, indent=2) + "\n", encoding="utf-8"
++    )
++
++
++def test_spec_declares_exp6584_requirements_and_scenarios() -> None:
++    """REQ-REPORT-6584: OpenSpec owns replay, merge, attacks, and atomic output."""
++
++    text = (exp.REPO_ROOT / exp.SPEC_RELATIVE_PATH).read_text(encoding="utf-8")
++    section = text[text.index("### REQ-REPORT-6584") :]
++    for anchor in (
++        "REQ-REPORT-6584-PRECONDITIONS",
++        "REQ-REPORT-6584-REPLAY",
++        "REQ-REPORT-6584-MERGE",
++        "REQ-REPORT-6584-RAW-FIRST",
++        "REQ-REPORT-6584-FAILURES",
++        "REQ-REPORT-6584-DUPLICATES",
++        "REQ-REPORT-6584-UNLOAD",
++        "REQ-REPORT-6584-REDUCER",
++        "REQ-REPORT-6584-RETIREMENT",
++        "REQ-REPORT-6584-ATOMIC",
++        "SCENARIO-REPORT-6584-MISSING",
++        "SCENARIO-REPORT-6584-REPLAY",
++        "SCENARIO-REPORT-6584-MERGE",
++        "SCENARIO-REPORT-6584-ATTACKS",
++        "SCENARIO-REPORT-6584-UNLOAD",
++        "SCENARIO-REPORT-6584-ATOMIC",
++    ):
++        assert anchor in section
++
++
++def test_hash_recovery_failure_and_cost_helpers(tmp_path: Path) -> None:
++    """REQ-REPORT-6584-REPLAY: byte, cost, and failure reducers are independent."""
++
++    path = tmp_path / "bytes.bin"
++    path.write_bytes(b"abc")
++    assert exp.sha256_file(path) == exp.sha256_bytes(b"abc")
++    assert exp.sha256_file(tmp_path / "missing") == "missing"
++    row = {"value": 1}
++    row["row_hash"] = exp.row_hash(row)
++    assert exp.row_hash(row) == row["row_hash"]
++    assert exp.recover_bytes({"value_bytes_b64": "YWJj"}, "value") == (b"abc", "inline_base64")
++    assert exp.recover_bytes({"value_bytes_b64": "!"}, "value") == (None, "invalid_base64")
++    assert (
++        exp.cost_from_components(
++            [{"quantity": 2, "unit_cost": 3}, {"quantity": 0.25, "unit_cost": 4}]
++        )
++        == 7.0
++    )
++    assert exp.classify_response(b"")["empty_output"] is True
++    assert exp.classify_response(b"I cannot comply")["refusal"] is True
++    assert exp.classify_response(b"Please provide the claim")["no_claim"] is True
++    fenced = b'```json\n{"claim_id":"x","supported_spans":[],"unsupported_reason":null,"release_action":"release"}\n```'
++    classified = exp.classify_response(fenced)
++    assert classified["malformed_output"] is True
++    assert classified["claim_bearing"] is True
++
++
++def test_clean_three_family_replay_merges_rows_and_recomputes_every_aggregate(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-6584-REPLAY/MERGE/UNLOAD: all raw evidence replays."""
++
++    protocol, _ = _repo(tmp_path)
++    artifact = _build(tmp_path)
++    aggregate = artifact["aggregate_row_recomputation"]
++    assert artifact["all_family_source_audit_ready_score"] == 1.0
++    assert artifact["verdict_class"] is None
++    assert len(artifact["rows"]) == 6
++    assert len(artifact["family_coverage_rows"]) == 6
++    assert len(artifact["unload_and_recovery_rows"]) == 3
++    assert aggregate["expected_row_count"] == 6
++    assert aggregate["observed_row_count"] == 6
++    assert aggregate["replayed_row_count"] == 6
++    assert aggregate["source_unit_coverage"] == 1.0
++    assert aggregate["failure_row_count"] == 0
++    assert aggregate["prompt_token_count"] == 63
++    assert aggregate["response_token_count"] == 33
++    assert aggregate["total_token_count"] == 96
++    assert aggregate["latency_s"] == 4.5
++    assert aggregate["charged_cost"] == 100.5
++    assert aggregate["family_readiness_recomputation"] == {
++        family["family_id"]: 1.0 for family in exp.FAMILY_SPECS
++    }
++    assert all(row["passed"] for row in artifact["duplicate_drift_and_substitution_rows"])
++    assert all(row["retained"] for row in artifact["failure_retention_rows"])
++    assert (
++        artifact["preconditions_checked"]["source_manifest_hash"]
++        == protocol["source_unit_manifest"]["manifest_hash"]
++    )
++    assert artifact["reproducibility_checksum"] == exp.artifact_checksum(artifact)
++    assert exp.validate_artifact(artifact) == []
++
++
++def test_missing_and_blocked_family_names_exact_field_without_synthetic_rows(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-6584-MISSING: missing family rows block and stay absent."""
++
++    _, payloads = _repo(tmp_path)
++    qwen = exp.FAMILY_SPECS[0]
++    blocked = payloads[qwen["family_id"]]
++    blocked["status"] = "blocked"
++    blocked["verdict_class"] = "blocked"
++    blocked["rows"] = []
++    blocked["checkpoint_receipts"] = []
++    blocked["parser_diagnostic_rows"] = []
++    blocked["raw_response_receipts"] = []
++    blocked[qwen["readiness_field"]] = 0.0
++    _rewrite(tmp_path, qwen, blocked)
++    artifact = _build(tmp_path)
++    assert artifact["all_family_source_audit_ready_score"] == 0.0
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"].startswith("blocked_")
++    first = artifact["gate_check_summary"]["first_failure"]
++    assert first["field"] == f"{qwen['artifact_path']}.status"
++    assert first["observed"] == "blocked"
++    assert len(artifact["rows"]) == 4
++    assert len(artifact["family_coverage_rows"]) == 6
++    assert sum(not row["row_present"] for row in artifact["family_coverage_rows"]) == 2
++    assert artifact["gate_check_summary"]["retirement"]["activated"] is False
++    assert artifact["gate_check_summary"]["retirement"]["same_missing_chain_as_exp6577"] is False
++    assert exp.validate_artifact(artifact) == []
++
++    (tmp_path / qwen["artifact_path"]).unlink()
++    missing = _build(tmp_path)
++    first = missing["gate_check_summary"]["first_failure"]
++    assert first == {
++        "field": qwen["artifact_path"],
++        "expected": "file_exists",
++        "observed": "missing",
++        "passed": False,
++    }
++
++
++@pytest.mark.parametrize(
++    ("attack_id", "mutation"),
++    [
++        ("legacy_substitution", "legacy"),
++        ("source_alias", "source"),
++        ("prompt_drift", "prompt"),
++        ("seed_drift", "seed"),
++        ("duplicate_unit_id", "duplicate"),
++        ("copied_output_across_families", "copied"),
++        ("selective_retry", "retry"),
++        ("hidden_row_drop", "drop"),
++        ("null_only_rows", "null"),
++        ("stale_pid", "pid"),
++        ("zero_layer_offload", "offload"),
++        ("missing_raw_path", "raw_path"),
++        ("missing_unload", "unload"),
++        ("reused_process", "process_reuse"),
++        ("protected_drift", "protected"),
++        ("readiness_contradicted_by_rows", "readiness"),
++    ],
++)
++def test_every_attack_mutation_fails_closed(tmp_path: Path, attack_id: str, mutation: str) -> None:
++    """SCENARIO-REPORT-6584-ATTACKS: each named invariant mutation closes."""
++
++    _, payloads = _repo(tmp_path)
++    family = exp.FAMILY_SPECS[0]
++    payload = payloads[family["family_id"]]
++    protected_before = None
++    if mutation == "legacy":
++        payload["rows"][0]["repository_id"] = "Qwen/Qwen3.5-0.8B"
++    elif mutation == "source":
++        payload["rows"][0]["source_bytes_b64"] = base64.b64encode(b"alias").decode()
++    elif mutation == "prompt":
++        payload["rows"][0]["prompt_sha256"] = _sha_bytes(b"drift")
++    elif mutation == "seed":
++        payload["rows"][0]["seed"] = -1
++    elif mutation == "duplicate":
++        payload["rows"][1]["unit_id"] = payload["rows"][0]["unit_id"]
++    elif mutation == "copied":
++        other = exp.FAMILY_SPECS[1]
++        other_payload = payloads[other["family_id"]]
++        other_payload["rows"][0]["raw_response_sha256"] = payload["rows"][0]["raw_response_sha256"]
++        _rewrite(tmp_path, other, other_payload)
++    elif mutation == "retry":
++        payload["rows"][0]["attempt_count"] = 2
++    elif mutation == "drop":
++        payload["rows"].pop()
++    elif mutation == "null":
++        for row in payload["rows"]:
++            response = b"Please provide the claim"
++            row["raw_response_bytes_b64"] = base64.b64encode(response).decode()
++            row["raw_response_sha256"] = _sha_bytes(response)
++    elif mutation == "pid":
++        payload["rows"][0]["pid"] += 99
++    elif mutation == "offload":
++        payload["process_and_gpu_receipts"]["offloaded_layers"] = 0
++        for row in payload["rows"]:
++            row["offloaded_layers"] = 0
++    elif mutation == "raw_path":
++        Path(payload["rows"][0]["raw_checkpoint_path"]).unlink()
++    elif mutation == "unload":
++        payload["unload_and_recovery_rows"] = []
++    elif mutation == "process_reuse":
++        other = exp.FAMILY_SPECS[1]
++        other_payload = payloads[other["family_id"]]
++        reused = payload["process_and_gpu_receipts"]["pid"]
++        other_payload["process_and_gpu_receipts"]["pid"] = reused
++        other_payload["unload_and_recovery_rows"][0]["worker_pid"] = reused
++        for row in other_payload["rows"]:
++            row["pid"] = reused
++        _rewrite(tmp_path, other, other_payload)
++    elif mutation == "protected":
++        protected_before = exp.protected_hashes(tmp_path)
++        (tmp_path / exp.PROTECTED_RELATIVE_PATHS[0]).write_text("drift\n", encoding="utf-8")
++    elif mutation == "readiness":
++        payload[family["readiness_field"]] = 0.0
++    else:  # pragma: no cover - the parameter table owns every branch.
++        raise AssertionError(mutation)
++    _rewrite(tmp_path, family, payload)
++    artifact = _build(tmp_path, protected_before=protected_before)
++    attack = next(
++        row
++        for row in artifact["duplicate_drift_and_substitution_rows"]
++        if row["attack_id"] == attack_id
++    )
++    assert attack["passed"] is False
++    assert artifact["all_family_source_audit_ready_score"] == 0.0
++
++
++def test_failure_retention_recomputes_raw_classes_and_keeps_denominator(tmp_path: Path) -> None:
++    """REQ-REPORT-6584-FAILURES: no-claim and malformed rows stay visible."""
++
++    protocol, _ = _repo(tmp_path)
++    dense = exp.FAMILY_SPECS[1]
++    moe = exp.FAMILY_SPECS[2]
++    _write_family(
++        tmp_path,
++        protocol,
++        dense,
++        pid=2001,
++        responses=[b"Please provide the claim", b"Please provide the claim"],
++        stored_ready=0.0,
++    )
++    fenced = [
++        b'```json\n{"claim_id":"x","supported_spans":[],"unsupported_reason":null,"release_action":"release"}\n```'
++    ] * 2
++    _write_family(tmp_path, protocol, moe, pid=2002, responses=fenced)
++    artifact = _build(tmp_path)
++    counts = artifact["aggregate_row_recomputation"]["failure_class_counts"]
++    assert counts["no_claim"] == 2
++    assert counts["malformed_output"] == 2
++    assert artifact["aggregate_row_recomputation"]["failure_row_count"] == 4
++    assert artifact["aggregate_row_recomputation"]["observed_row_count"] == 6
++    assert all(row["retained"] for row in artifact["failure_retention_rows"])
++
++
++def test_validator_atomic_writer_and_exact_required_fields(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6584-ATOMIC: validation precedes same-directory replace."""
++
++    _repo(tmp_path)
++    artifact = _build(tmp_path)
++    target = tmp_path / "terminal.json"
++    receipt = exp.atomic_write_json(target, artifact)
++    assert receipt["atomic_replace"] is True
++    assert receipt["sha256"] == exp.sha256_file(target)
++    loaded = json.loads(target.read_text(encoding="utf-8"))
++    assert loaded == artifact
++
++    for mutation in (
++        lambda value: value.pop("rows"),
++        lambda value: value.__setitem__("inference_substrate", "live_llm_inference"),
++        lambda value: value.__setitem__("verifier_is_oracle", False),
++        lambda value: value.__setitem__("verdict_class", "positive"),
++        lambda value: value.__setitem__("all_family_source_audit_ready_score", 0.0),
++        lambda value: value.__setitem__("reproducibility_checksum", "sha256:bad"),
++    ):
++        bad = deepcopy(artifact)
++        mutation(bad)
++        assert exp.validate_artifact(bad)
++    with pytest.raises(ValueError, match="artifact validation failed"):
++        exp.atomic_write_json(target, {"bad": True})
++
++
++def test_blocked_real_shape_has_required_principles_and_no_positive_science(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-6584-REDUCER: blocked output remains complete and non-positive."""
++
++    _, payloads = _repo(tmp_path)
++    qwen = exp.FAMILY_SPECS[0]
++    payload = payloads[qwen["family_id"]]
++    payload["status"] = "blocked"
++    payload["rows"] = []
++    payload["checkpoint_receipts"] = []
++    payload["parser_diagnostic_rows"] = []
++    payload["raw_response_receipts"] = []
++    payload[qwen["readiness_field"]] = 0.0
++    _rewrite(tmp_path, qwen, payload)
++    artifact = _build(tmp_path)
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS) == set(artifact["field_provenance"])
++    assert artifact["inference_substrate"] == "immutable_three_family_source_replay_no_llm"
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["preconditions_checked"]["llm_calls_issued"] == 0
++    assert artifact["preconditions_checked"]["model_inference_invoked"] is False
++    assert artifact["status"].startswith("blocked_")
++    assert "lineage=" in artifact["honest_verdict"]
++    assert "coverage=" in artifact["honest_verdict"]
++    assert "failure_retention=" in artifact["honest_verdict"]
++    assert "unload=" in artifact["honest_verdict"]
++    assert "merge=" in artifact["honest_verdict"]
++
++
++def test_error_receipts_and_validator_branches_fail_closed(tmp_path: Path) -> None:
++    """REQ-REPORT-6584-ATOMIC: malformed evidence cannot evade validation."""
++
++    assert exp.classify_response(b"```json\n{broken}\n```")["malformed_output"] is True
++    assert exp.classify_response(b"\xff")["malformed_output"] is True
++
++    broken_json = tmp_path / "broken.json"
++    broken_json.write_text("{", encoding="utf-8")
++    assert exp._read_json(broken_json)[1] == "unreadable:JSONDecodeError"
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    assert exp._read_json(list_json)[1] == "schema_not_object"
++
++    _, payloads = _repo(tmp_path)
++    family = exp.FAMILY_SPECS[0]
++
++    def broken_inspector(_path: Path) -> dict[str, Any]:
++        raise ValueError("bad metadata")
++
++    metadata = exp._metadata_receipt(payloads[family["family_id"]], family, broken_inspector)
++    assert metadata["passed"] is False
++    assert metadata["inspect_error"] == "ValueError:bad metadata"
++    raw_paths = exp._raw_path_preconditions({family["family_id"]: {"rows": [None]}})
++    assert raw_paths == []
++
++    artifact = _build(tmp_path)
++    bad_prefix = deepcopy(artifact)
++    bad_prefix["verdict_class"] = "blocked"
++    bad_prefix["honest_verdict"] = "not_blocked"
++    assert "blocked_verdict_prefix_missing" in exp.validate_artifact(bad_prefix)
++
++    bad_principle = deepcopy(artifact)
++    bad_principle["field_provenance"]["status"]["principle"] = "wrong"
++    assert "field_principle_mismatch:status" in exp.validate_artifact(bad_principle)
++
++    bad_container = deepcopy(artifact)
++    bad_container["family_coverage_rows"] = {}
++    assert "family_coverage_rows_not_list" in exp.validate_artifact(bad_container)
++
++    bad_row = deepcopy(artifact)
++    bad_row["failure_retention_rows"][0]["row_hash"] = "sha256:bad"
++    assert "failure_retention_rows_row_hash:0" in exp.validate_artifact(bad_row)
+-- 
+2.55.0
+

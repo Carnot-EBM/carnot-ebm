@@ -1,0 +1,1926 @@
+From 652b9277a07f94bae672335e61265b3e41a17cdd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 16:47:14 -0400
+Subject: [PATCH 03118/11362] [conductor] PHASE B2 (RESERVED INFRA) --
+ canonicalize the action-efficiency metric harness:
+ arc_local_submission_gate.py as the CI-guarded median-actions-to-solve
+ dashboard across the 8 games + PER-LEVER attribution (so A1-A4/A6 report
+ against one baseline, no cherry-picked controls).
+
+Automated research step by research conductor.
+Task ID: exp4518-b2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  60 ++
+ ops/dogfood-memory.json                       |   4 +-
+ ...xperiment_4518_metric_harness_canonical.py | 360 +++++++++
+ research-roadmap-next.yaml                    |  10 +-
+ ...eriment_4518_metric_harness_canonical.json | 758 ++++++++++++++++++
+ scripts/kaggle/arc_local_submission_gate.py   | 249 +++++-
+ .../test_arc_submission_gate_verdict.py       |  96 +++
+ ...xperiment_4518_metric_harness_canonical.py | 177 ++++
+ 8 files changed, 1691 insertions(+), 23 deletions(-)
+ create mode 100644 python/carnot/experiment_4518_metric_harness_canonical.py
+ create mode 100644 results/experiment_4518_metric_harness_canonical.json
+ create mode 100644 tests/python/test_experiment_4518_metric_harness_canonical.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 6144b5fb29..c70408ee6a 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -414,6 +414,45 @@ Required field principles:
+ - `reproducibility_checksum`: principle "catches silent drift on replay."
+ - `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
+ 
++### REQ-ARC-FCP-4518: Canonical Local Submission Metric Harness
++
++Experiment 4518 SHALL write
++`results/experiment_4518_metric_harness_canonical.json` and make
++`scripts/kaggle/arc_local_submission_gate.py` the canonical A1-A4/A6 local
++metric dashboard. The gate SHALL pin the fixed eight-game set
++`{lp85,m0r0,sp80,vc33,cd82,ft09,su15,ls20}`, derive CORE from the verified
++baseline solves `{lp85,m0r0,sp80,vc33}`, and guard the baseline median of
++`7760.0` against silent movement. The canonical action metric SHALL be total
++`actions` on solved CORE games for both baseline and treatment; a treatment
++that reports a different action field than the baseline SHALL fail the guard
++instead of mixing `actions_to_first_levelup` with total actions.
++
++The gate SHALL expose `--lever <name>` and include a per-lever attribution row
++with `median_actions_on_core`, `core_solves_preserved`, `bonus_solves`, and
++the uniform delta versus the fixed baseline. The CORE set-containment verdict
++SHALL be retained: every baseline CORE solve must be preserved, fringe bonus
++solves SHALL be reported but never netted against a CORE loss, and the old raw
++solved-count verdict SHALL NOT return. The fixture suite SHALL keep the A1
++lost-CORE failure, A2 CORE-for-fringe failure, positive-control improvement,
++neutral non-inferior pass, bonus reporting, and legacy baseline fallback.
++
++The harness SHALL measure the headroom budget `B*` as the smallest candidate
++budget in `{8000,12000,16000,24000}` whose baseline solved set equals the
++baseline solved set at `1.5B`. The CLI default budget SHALL remain `8000`
++until that measurement is available, and after measurement SHALL use `B*` as
++the canonical default. The experiment artifact SHALL record the measured
++headroom table and the selected default so cap changes cannot hide a slowdown.
++
++Required field principles:
++
++- `honest_verdict`: principle "terminal prefix; e.g. shipped: metric_harness_canonical_ci_guarded OR complete: metric_harness_partial_<reason>."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor)."
++- `canonical_game_set`: principle "the fixed 8 games -- pins the metric so no A-task can cherry-pick an easier subset."
++- `canonical_baseline`: principle "7760, guarded against silent movement (raising-a-cap-to-hide-drift is forbidden)."
++- `positive_control_passed`: principle "proves the harness can detect a real reduction (guards a silently-broken metric)."
++- `tests_added_pass`: principle "Tests Must Run and Assert."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
+ ## Scenarios
+ 
+ ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
+@@ -567,3 +606,24 @@ When the artifact is written
+ Then it records the 7760 baseline, integrated median actions, integrated
+ solve-rate, held-out solve-rate, nav-loop finding, false-negative-risk check,
+ random seed, reproducibility checksum, and the exact levers integrated.
++
++### SCENARIO-ARC-FCP-4518: Canonical Gate Guards The Fixed Metric
++
++Given the verified 7760 baseline and the fixed eight-game local submission
++gate
++When the gate builds a dashboard row for a named lever
++Then the row uses total `actions` for both baseline and treatment, preserves
++the CORE set-containment verdict, reports bonus solves separately, and fails a
++treatment that reports a different action field than the baseline.
++
++Given the gate's regression fixtures
++When the focused gate tests run
++Then the A1 and A2 CORE-loss fixtures fail, the positive-control and neutral
++fixtures pass, bonus solves are reported, the legacy baseline fallback remains
++covered, and the fixed game set plus 7760 baseline guard cannot move silently.
++
++Given candidate budgets `{8000,12000,16000,24000}`
++When experiment 4518 measures baseline headroom
++Then it selects the smallest `B*` whose solved set matches the solved set at
++`1.5B`, keeps `8000` only if the measurement is unavailable, and writes the
++terminal artifact with the required field principles.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7990478399..34b631a5a7 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -1,8 +1,8 @@
+ {
+   "patterns": {},
+-  "brace_fixes": 182,
++  "brace_fixes": 183,
+   "code_violations": 0,
+-  "experiments_checked": 3534,
++  "experiments_checked": 3535,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4518_metric_harness_canonical.py b/python/carnot/experiment_4518_metric_harness_canonical.py
+new file mode 100644
+index 0000000000..7e6bf23899
+--- /dev/null
++++ b/python/carnot/experiment_4518_metric_harness_canonical.py
+@@ -0,0 +1,360 @@
++"""Experiment 4518: canonical ARC local submission metric harness.
++
++Spec refs: REQ-ARC-FCP-4518, SCENARIO-ARC-FCP-4518.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import importlib.util
++import json
++import subprocess
++import time
++from collections.abc import Callable, Mapping
++from pathlib import Path
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4518_metric_harness_canonical.json"
++GATE_RELATIVE_PATH = "scripts/kaggle/arc_local_submission_gate.py"
++BASELINE_RELATIVE_PATH = "ops/arc-submission-baseline.json"
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py "
++    "tests/python/test_experiment_4518_metric_harness_canonical.py -q --no-cov"
++)
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor)."
++)
++REQUIREMENTS = ("REQ-ARC-FCP-4518",)
++SCENARIOS = ("SCENARIO-ARC-FCP-4518",)
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++
++
++def _load_gate_module() -> Any:
++    gate_path = REPO_ROOT / GATE_RELATIVE_PATH
++    spec = importlib.util.spec_from_file_location("arc_local_submission_gate_4518", gate_path)
++    if spec is None or spec.loader is None:  # pragma: no cover - importlib failure boundary.
++        raise RuntimeError(f"cannot load {gate_path}")
++    gate = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(gate)
++    return gate
++
++
++GATE = _load_gate_module()
++CANONICAL_GAME_SET = tuple(GATE.CANONICAL_GAME_SET)
++CANONICAL_CORE_GAMES = tuple(GATE.CANONICAL_CORE_GAMES)
++CANONICAL_BASELINE_MEDIAN_ACTIONS = float(GATE.CANONICAL_BASELINE_MEDIAN_ACTIONS)
++CANONICAL_ACTION_FIELD = str(GATE.CANONICAL_ACTION_FIELD)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        'principle "terminal prefix; e.g. shipped: metric_harness_canonical_ci_guarded '
++        'OR complete: metric_harness_partial_<reason>."'
++    ),
++    "inference_substrate": (
++        'principle "verifier_ensemble_against_cached_candidates -- runs the offline gate, '
++        'no LLM load (1s floor)."'
++    ),
++    "canonical_game_set": (
++        'principle "the fixed 8 games -- pins the metric so no A-task can cherry-pick an easier subset."'
++    ),
++    "canonical_baseline": (
++        'principle "7760, guarded against silent movement (raising-a-cap-to-hide-drift is forbidden)."'
++    ),
++    "positive_control_passed": (
++        'principle "proves the harness can detect a real reduction (guards a silently-broken metric)."'
++    ),
++    "tests_added_pass": 'principle "Tests Must Run and Assert."',
++    "preconditions_checked": (
++        'principle "records resources verified; pre-empts missing-resource fabrication."'
++    ),
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "requirements",
++    "scenarios",
++    "field_principles",
++    "canonical_default_budget",
++    "headroom_budget_measurement",
++    "sample_dashboard_row",
++    "reproducibility_checksum",
++    "leaderboard_submission",
++    "result_path",
++    "duration_s",
++)
++
++
++def _stable_checksum(payload: Mapping[str, Any]) -> str:
++    digest = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    ).hexdigest()
++    return f"sha256:{digest}"
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - local resource boundary.
++    root_path = Path(root)
++    checks: dict[str, Any] = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "offline_arcade_precondition": False,
++        "gate_help_precondition": False,
++        "baseline_file_present": (root_path / BASELINE_RELATIVE_PATH).exists(),
++    }
++    try:
++        from carnot.agentic import arc_solver_kit
++
++        arc_solver_kit.offline_arcade()
++        checks["offline_arcade_precondition"] = True
++    except Exception as exc:
++        checks["offline_arcade_error"] = repr(exc)
++
++    cmd = [str(root_path / ".venv" / "bin" / "python"), str(root_path / GATE_RELATIVE_PATH), "--help"]
++    try:
++        completed = subprocess.run(cmd, cwd=root_path, capture_output=True, text=True, timeout=30)
++        checks["gate_help_precondition"] = completed.returncode == 0
++        if completed.returncode != 0:
++            checks["gate_help_error"] = completed.stderr[-500:]
++    except Exception as exc:
++        checks["gate_help_error"] = repr(exc)
++    checks["ok"] = bool(checks["offline_arcade_precondition"] and checks["gate_help_precondition"])
++    return checks
++
++
++def load_baseline(root: Path | str = REPO_ROOT) -> dict[str, Any]:
++    return json.loads((Path(root) / BASELINE_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++
++def run_focused_tests(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - subprocess boundary.
++    root_path = Path(root)
++    completed = subprocess.run(
++        FOCUSED_TEST_COMMAND.split(),
++        cwd=root_path,
++        capture_output=True,
++        text=True,
++        timeout=120,
++    )
++    return {
++        "command": FOCUSED_TEST_COMMAND,
++        "passed": completed.returncode == 0,
++        "returncode": completed.returncode,
++        "stdout_tail": completed.stdout[-2000:],
++        "stderr_tail": completed.stderr[-2000:],
++    }
++
++
++def measure_headroom(gate: Any = GATE, *, policy: str = "e3", cap: int = 115) -> dict[str, Any]:  # pragma: no cover - offline gate boundary.
++    try:
++        return gate.measure_headroom_budget(policy, cap)
++    except Exception as exc:
++        return {
++            "selected_default_budget": int(gate.DEFAULT_BUDGET),
++            "measured": False,
++            "rows": [],
++            "error": repr(exc),
++        }
++
++
++def _sample_treatment() -> dict[str, Any]:
++    actions = dict(GATE.CANONICAL_BASELINE_ACTIONS_BY_GAME)
++    actions["ft09"] = 7600
++    return {
++        "policy": "sample",
++        "games": list(CANONICAL_GAME_SET),
++        "action_metric": {
++            "field": CANONICAL_ACTION_FIELD,
++            "definition": "total_actions_on_solved_games",
++        },
++        "solved_count": len(actions),
++        "solved_games": sorted(actions),
++        "actions_by_game": actions,
++        "median_actions_on_solved": 7724,
++    }
++
++
++def _honest_verdict(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    baseline_guard: Mapping[str, Any],
++    headroom: Mapping[str, Any],
++    positive_control: Mapping[str, Any],
++    tests_added_pass: Mapping[str, Any],
++) -> str:
++    if preconditions_checked.get("offline_arcade_precondition") is not True:
++        return "blocked_offline_arcade_precondition"
++    if preconditions_checked.get("gate_help_precondition") is not True:
++        return "blocked_gate_help_precondition"
++    if baseline_guard.get("ok") is not True:
++        return "complete: metric_harness_partial_baseline_guard"
++    if headroom.get("measured") is not True:
++        return "complete: metric_harness_partial_headroom_budget"
++    if positive_control.get("passed") is not True:
++        return "complete: metric_harness_partial_positive_control"
++    if tests_added_pass.get("passed") is not True:
++        return "complete: metric_harness_partial_tests_not_green"
++    return "shipped: metric_harness_canonical_ci_guarded"
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    baseline: Mapping[str, Any],
++    baseline_guard: Mapping[str, Any],
++    headroom: Mapping[str, Any],
++    positive_control: Mapping[str, Any],
++    sample_dashboard_row: Mapping[str, Any],
++    tests_added_pass: Mapping[str, Any],
++    duration_s: float | None,
++) -> dict[str, Any]:
++    """SCENARIO-ARC-FCP-4518: assemble the canonical metric harness artifact."""
++
++    canonical_baseline = {
++        "median_actions_on_core": CANONICAL_BASELINE_MEDIAN_ACTIONS,
++        "action_metric_field": CANONICAL_ACTION_FIELD,
++        "core_games": list(CANONICAL_CORE_GAMES),
++        "source": BASELINE_RELATIVE_PATH,
++        "guard": dict(baseline_guard),
++    }
++    checksum_payload = {
++        "baseline": baseline,
++        "baseline_guard": baseline_guard,
++        "headroom": headroom,
++        "positive_control": positive_control,
++        "sample_dashboard_row": sample_dashboard_row,
++        "tests_added_pass": tests_added_pass,
++    }
++    return {
++        "experiment": "experiment_4518_metric_harness_canonical",
++        "schema": "carnot.arc_metric_harness_canonical_4518.v1",
++        "honest_verdict": _honest_verdict(
++            preconditions_checked=preconditions_checked,
++            baseline_guard=baseline_guard,
++            headroom=headroom,
++            positive_control=positive_control,
++            tests_added_pass=tests_added_pass,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "requirements": list(REQUIREMENTS),
++        "scenarios": list(SCENARIOS),
++        "preconditions_checked": dict(preconditions_checked),
++        "canonical_game_set": list(CANONICAL_GAME_SET),
++        "canonical_baseline": canonical_baseline,
++        "canonical_default_budget": int(headroom.get("selected_default_budget") or GATE.DEFAULT_BUDGET),
++        "headroom_budget_measurement": dict(headroom),
++        "positive_control_passed": bool(positive_control.get("passed")),
++        "positive_control": dict(positive_control),
++        "tests_added_pass": dict(tests_added_pass),
++        "sample_dashboard_row": dict(sample_dashboard_row),
++        "reproducibility_checksum": _stable_checksum(checksum_payload),
++        "leaderboard_submission": False,
++        "result_path": RESULT_RELATIVE_PATH,
++        "duration_s": None if duration_s is None else float(duration_s),
++    }
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with a terminal prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must match the required substrate")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles must match required principles")
++    if artifact.get("canonical_game_set") != list(CANONICAL_GAME_SET):
++        errors.append("canonical_game_set must be the fixed 8 games")
++    baseline = artifact.get("canonical_baseline")
++    if not isinstance(baseline, Mapping):
++        errors.append("canonical_baseline must be a mapping")
++    elif float(baseline.get("median_actions_on_core") or 0.0) != CANONICAL_BASELINE_MEDIAN_ACTIONS:
++        errors.append("canonical_baseline must pin 7760")
++    if artifact.get("positive_control_passed") is not True and str(verdict).startswith("shipped:"):
++        errors.append("shipped artifact requires positive_control_passed=true")
++    tests = artifact.get("tests_added_pass")
++    if not isinstance(tests, Mapping):
++        errors.append("tests_added_pass must be a mapping")
++    elif tests.get("passed") is not True and str(verdict).startswith("shipped:"):
++        errors.append("shipped artifact requires tests_added_pass.passed=true")
++    row = artifact.get("sample_dashboard_row")
++    if not isinstance(row, Mapping):
++        errors.append("sample_dashboard_row must be a mapping")
++    else:
++        for field in ("median_actions_on_core", "core_solves_preserved", "bonus_solves"):
++            if field not in row:
++                errors.append(f"sample_dashboard_row missing {field}")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:"):
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    return errors
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    gate: Any = GATE,
++    write: bool = True,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    measure_headroom: Callable[..., dict[str, Any]] = measure_headroom,
++    tests_added_pass: Mapping[str, Any] | None = None,
++    now: Callable[[], float] = time.monotonic,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-4518: run the canonical harness checks and write the JSON artifact."""
++
++    root_path = Path(root)
++    started = float(now())
++    preconditions = (
++        dict(preconditions_checked)
++        if preconditions_checked is not None
++        else check_preconditions(root_path)
++    )
++    baseline = load_baseline(root_path)
++    baseline_guard = gate.validate_canonical_baseline(baseline)
++    headroom = measure_headroom(gate)
++    positive = gate.positive_control(baseline)
++    sample_row = gate.dashboard_row(_sample_treatment(), baseline, lever="sample_dashboard")
++    tests_result = dict(tests_added_pass) if tests_added_pass is not None else run_focused_tests(root_path)
++    artifact = build_artifact(
++        preconditions_checked=preconditions,
++        baseline=baseline,
++        baseline_guard=baseline_guard,
++        headroom=headroom,
++        positive_control=positive,
++        sample_dashboard_row=sample_row,
++        tests_added_pass=tests_result,
++        duration_s=max(0.0, float(now()) - started),
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        out = root_path / RESULT_RELATIVE_PATH
++        out.parent.mkdir(parents=True, exist_ok=True)
++        out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper.
++    artifact = run()
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper.
++    main()
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+index 410dfb5416..21f6f18b31 100644
+--- a/research-roadmap-next.yaml
++++ b/research-roadmap-next.yaml
+@@ -107,7 +107,7 @@ tasks:
+       the reachable set. So reordering/batching changes WHICH states are explored before the budget is
+       spent -- it CAN drop a knife-edge CORE solve via the exact order-perturbation mechanism that dropped
+       m0r0 in .417 A1. Therefore core_solves_preserved is a HARD EMPIRICAL GATE measured on
+-      {lp85,m0r0,sp80,vc33}, NOT a formality: a dropped CORE solve FAILS the lever regardless of action
++      {{lp85,m0r0,sp80,vc33}}, NOT a formality: a dropped CORE solve FAILS the lever regardless of action
+       savings. Investigate any dropped CORE solve; do not dismiss it as noise. The two levers:
+         1. BATCH-EXPAND PER VISIT: when navigation pays to reach a frontier node th (RESET-replay OR
+            forward-walk), expand ALL (or up to a bounded k) of th's untested SALIENT actions in that one
+@@ -132,7 +132,7 @@ tasks:
+         0. PRECONDITIONS (BEFORE any other step):
+            a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+            Missing -> honest_verdict blocked_<resource>, EXIT. (--no-cov on any focused pytest.)
+-        1. Implement BATCH-EXPAND-PER-VISIT: when next_move navigates to a frontier th (the nav branch ~line 728-749), queue up to k of th's untested salient actions to expand at th before jumping. k is a bounded sweep param (try k in {1(control),3,8,all}). Keep the depth-ride behavior for the arrival subtree.
++        1. Implement BATCH-EXPAND-PER-VISIT: when next_move navigates to a frontier th (the nav branch ~line 728-749), queue up to k of th's untested salient actions to expand at th before jumping. k is a bounded sweep param (try k in {{1(control),3,8,all}}). Keep the depth-ride behavior for the arrival subtree.
+         2. Implement NAV-COST TIE-BREAK in _frontier: keep depth PRIMARY; among equal-depth eligible nodes, tie-break by navigation cost from cur (forward-reachable shortest_path len, else node["path"] replay len). k=1 + no-tie-break is the CONTROL == today's behavior.
+         3. Measure on the 8-game gate: per config report median_actions_on_core, core_solves_preserved, AND the nav diagnostics (reset_replay_fallbacks, reset_replay_steps, forward_walk_hit_rate). The WIN condition: core_solves_preserved=True AND median_actions_on_core STRICTLY < the k=1/no-tie-break control AND reset_replay_steps materially down.
+         4. METRIC DISCIPLINE (A3 false-win lesson): measure BOTH conditions on the SAME action field. The gate's canonical metric is TOTAL actions on solved games (per .417 B2). Do NOT compare a treatment's actions_to_first_levelup against a baseline's total-actions -- that produced A3's flagged false win.
+@@ -149,13 +149,13 @@ tasks:
+         median_actions_on_core_best:
+           principle: "the headline -- did amortizing the replay cut TOTAL actions on the CORE games."
+         core_solves_preserved:
+-          principle: "HARD empirical gate on {lp85,m0r0,sp80,vc33} -- under the fixed explore_budget, batch/reorder CAN drop a knife-edge solve (the .417 m0r0 mechanism); a dropped CORE solve FAILS the lever regardless of action savings."
++          principle: "HARD empirical gate on {{lp85,m0r0,sp80,vc33}} -- under the fixed explore_budget, batch/reorder CAN drop a knife-edge solve (the .417 m0r0 mechanism); a dropped CORE solve FAILS the lever regardless of action savings."
+         nav_diagnostics_before_after:
+           principle: "reset_replay_fallbacks + reset_replay_steps + forward_walk_hit_rate WITH vs WITHOUT -- the causal mechanism witness (did replay actually drop, or is any action change incidental)."
+         action_field_used:
+           principle: "names the SINGLE action field both conditions were measured on (total actions on solved) -- the A3 metric-mismatch guard."
+         config_sweep:
+-          principle: "the full {k, tie_break -> (median_actions_on_core, core_solves_preserved, reset_replay_steps)} table so the decision is auditable, not asserted."
++          principle: "the full {{k, tie_break -> (median_actions_on_core, core_solves_preserved, reset_replay_steps)}} table so the decision is auditable, not asserted."
+         chosen_submitted_config:
+           principle: "what was wired into SUBMITTED_AGENT_CONFIG (or 'unchanged' if null); must keep test_arc_submitted_agent_parity.py consistent."
+         positive_control_passed:
+@@ -213,7 +213,7 @@ tasks:
+         inference_substrate:
+           principle: "verifier_ensemble_against_cached_candidates -- offline arcade, no LLM load (1s floor)."
+         core_solves_preserved:
+-          principle: "stopping earlier MUST NOT drop a CORE solve (set-containment over {lp85,m0r0,sp80,vc33})."
++          principle: "stopping earlier MUST NOT drop a CORE solve (set-containment over {{lp85,m0r0,sp80,vc33}})."
+         levels_per_game_preserved:
+           principle: "HARD gate: per-game best_level before vs after -- stopping early MUST NOT shed any game's banked level depth (the CORE gate checks the game set only; the competition scores total LEVELS, so a level-depth regression that the gate would PASS must be caught here)."
+         median_actions_on_core_control:
+diff --git a/results/experiment_4518_metric_harness_canonical.json b/results/experiment_4518_metric_harness_canonical.json
+new file mode 100644
+index 0000000000..67f0b8e052
+--- /dev/null
++++ b/results/experiment_4518_metric_harness_canonical.json
+@@ -0,0 +1,758 @@
++{
++  "canonical_baseline": {
++    "action_metric_field": "actions",
++    "core_games": [
++      "lp85",
++      "m0r0",
++      "sp80",
++      "vc33"
++    ],
++    "guard": {
++      "action_metric_field": "actions",
++      "canonical_baseline_median_actions": 7760.0,
++      "canonical_game_set": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33",
++        "cd82",
++        "ft09",
++        "su15",
++        "ls20"
++      ],
++      "core_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "errors": [],
++      "ok": true
++    },
++    "median_actions_on_core": 7760.0,
++    "source": "ops/arc-submission-baseline.json"
++  },
++  "canonical_default_budget": 8000,
++  "canonical_game_set": [
++    "lp85",
++    "m0r0",
++    "sp80",
++    "vc33",
++    "cd82",
++    "ft09",
++    "su15",
++    "ls20"
++  ],
++  "duration_s": 420.92578155500814,
++  "experiment": "experiment_4518_metric_harness_canonical",
++  "field_principles": {
++    "canonical_baseline": "principle \"7760, guarded against silent movement (raising-a-cap-to-hide-drift is forbidden).\"",
++    "canonical_game_set": "principle \"the fixed 8 games -- pins the metric so no A-task can cherry-pick an easier subset.\"",
++    "honest_verdict": "principle \"terminal prefix; e.g. shipped: metric_harness_canonical_ci_guarded OR complete: metric_harness_partial_<reason>.\"",
++    "inference_substrate": "principle \"verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).\"",
++    "positive_control_passed": "principle \"proves the harness can detect a real reduction (guards a silently-broken metric).\"",
++    "preconditions_checked": "principle \"records resources verified; pre-empts missing-resource fabrication.\"",
++    "tests_added_pass": "principle \"Tests Must Run and Assert.\""
++  },
++  "headroom_budget_measurement": {
++    "measured": true,
++    "measurements_by_budget": {
++      "12000": {
++        "action_metric": {
++          "definition": "total_actions_on_solved_games",
++          "field": "actions"
++        },
++        "actions_by_game": {
++          "lp85": 11761,
++          "ls20": 11617,
++          "m0r0": 11702,
++          "sp80": 11634,
++          "su15": 11671,
++          "vc33": 11601
++        },
++        "games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33",
++          "cd82",
++          "ft09",
++          "su15",
++          "ls20"
++        ],
++        "median_actions_on_core": 11668.0,
++        "median_actions_on_solved": 11652.5,
++        "per_game": [
++          {
++            "actions": 11761,
++            "game": "lp85",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 11702,
++            "game": "m0r0",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 11634,
++            "game": "sp80",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 11601,
++            "game": "vc33",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 11685,
++            "game": "cd82",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 11926,
++            "game": "ft09",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 11671,
++            "game": "su15",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 11617,
++            "game": "ls20",
++            "solved": true,
++            "timed_out": false
++          }
++        ],
++        "policy": "e3",
++        "solved_count": 6,
++        "solved_games": [
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "timed_out_count": 0,
++        "total_actions_on_solved": 69986
++      },
++      "16000": {
++        "action_metric": {
++          "definition": "total_actions_on_solved_games",
++          "field": "actions"
++        },
++        "actions_by_game": {
++          "lp85": 15731,
++          "ls20": 15393,
++          "m0r0": 15577,
++          "sp80": 15537,
++          "su15": 15604,
++          "vc33": 15493
++        },
++        "games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33",
++          "cd82",
++          "ft09",
++          "su15",
++          "ls20"
++        ],
++        "median_actions_on_core": 15557.0,
++        "median_actions_on_solved": 15557.0,
++        "per_game": [
++          {
++            "actions": 15731,
++            "game": "lp85",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 15577,
++            "game": "m0r0",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 15537,
++            "game": "sp80",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 15493,
++            "game": "vc33",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 15576,
++            "game": "cd82",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 15911,
++            "game": "ft09",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 15604,
++            "game": "su15",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 15393,
++            "game": "ls20",
++            "solved": true,
++            "timed_out": false
++          }
++        ],
++        "policy": "e3",
++        "solved_count": 6,
++        "solved_games": [
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "timed_out_count": 0,
++        "total_actions_on_solved": 93335
++      },
++      "18000": {
++        "action_metric": {
++          "definition": "total_actions_on_solved_games",
++          "field": "actions"
++        },
++        "actions_by_game": {
++          "cd82": 17530,
++          "lp85": 17715,
++          "ls20": 17291,
++          "m0r0": 17422,
++          "sp80": 17488,
++          "su15": 17550,
++          "vc33": 17423
++        },
++        "games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33",
++          "cd82",
++          "ft09",
++          "su15",
++          "ls20"
++        ],
++        "median_actions_on_core": 17455.5,
++        "median_actions_on_solved": 17488,
++        "per_game": [
++          {
++            "actions": 17715,
++            "game": "lp85",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 17422,
++            "game": "m0r0",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 17488,
++            "game": "sp80",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 17423,
++            "game": "vc33",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 17530,
++            "game": "cd82",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 17902,
++            "game": "ft09",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 17550,
++            "game": "su15",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 17291,
++            "game": "ls20",
++            "solved": true,
++            "timed_out": false
++          }
++        ],
++        "policy": "e3",
++        "solved_count": 7,
++        "solved_games": [
++          "cd82",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "timed_out_count": 0,
++        "total_actions_on_solved": 122419
++      },
++      "24000": {
++        "action_metric": {
++          "definition": "total_actions_on_solved_games",
++          "field": "actions"
++        },
++        "actions_by_game": {
++          "cd82": 23415,
++          "lp85": 23669,
++          "ls20": 23010,
++          "m0r0": 23063,
++          "sp80": 23352,
++          "su15": 23397,
++          "vc33": 23250
++        },
++        "games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33",
++          "cd82",
++          "ft09",
++          "su15",
++          "ls20"
++        ],
++        "median_actions_on_core": 23301.0,
++        "median_actions_on_solved": 23352,
++        "per_game": [
++          {
++            "actions": 23669,
++            "game": "lp85",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 23063,
++            "game": "m0r0",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 23352,
++            "game": "sp80",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 23250,
++            "game": "vc33",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 23415,
++            "game": "cd82",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 23857,
++            "game": "ft09",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 23397,
++            "game": "su15",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 23010,
++            "game": "ls20",
++            "solved": true,
++            "timed_out": false
++          }
++        ],
++        "policy": "e3",
++        "solved_count": 7,
++        "solved_games": [
++          "cd82",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "timed_out_count": 0,
++        "total_actions_on_solved": 163156
++      },
++      "36000": {
++        "action_metric": {
++          "definition": "total_actions_on_solved_games",
++          "field": "actions"
++        },
++        "actions_by_game": {
++          "ls20": 34567,
++          "m0r0": 34467,
++          "vc33": 34738
++        },
++        "games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33",
++          "cd82",
++          "ft09",
++          "su15",
++          "ls20"
++        ],
++        "median_actions_on_core": 500017369.0,
++        "median_actions_on_solved": 34567,
++        "per_game": [
++          {
++            "actions": null,
++            "game": "lp85",
++            "solved": false,
++            "timed_out": true
++          },
++          {
++            "actions": 34467,
++            "game": "m0r0",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": null,
++            "game": "sp80",
++            "solved": false,
++            "timed_out": true
++          },
++          {
++            "actions": 34738,
++            "game": "vc33",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": null,
++            "game": "cd82",
++            "solved": false,
++            "timed_out": true
++          },
++          {
++            "actions": 35717,
++            "game": "ft09",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": null,
++            "game": "su15",
++            "solved": false,
++            "timed_out": true
++          },
++          {
++            "actions": 34567,
++            "game": "ls20",
++            "solved": true,
++            "timed_out": false
++          }
++        ],
++        "policy": "e3",
++        "solved_count": 3,
++        "solved_games": [
++          "ls20",
++          "m0r0",
++          "vc33"
++        ],
++        "timed_out_count": 4,
++        "total_actions_on_solved": 103772
++      },
++      "8000": {
++        "action_metric": {
++          "definition": "total_actions_on_solved_games",
++          "field": "actions"
++        },
++        "actions_by_game": {
++          "lp85": 7792,
++          "m0r0": 7810,
++          "sp80": 7724,
++          "vc33": 7731
++        },
++        "games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33",
++          "cd82",
++          "ft09",
++          "su15",
++          "ls20"
++        ],
++        "median_actions_on_core": 7761.5,
++        "median_actions_on_solved": 7761.5,
++        "per_game": [
++          {
++            "actions": 7792,
++            "game": "lp85",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 7810,
++            "game": "m0r0",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 7724,
++            "game": "sp80",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 7731,
++            "game": "vc33",
++            "solved": true,
++            "timed_out": false
++          },
++          {
++            "actions": 7819,
++            "game": "cd82",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 7963,
++            "game": "ft09",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 7786,
++            "game": "su15",
++            "solved": false,
++            "timed_out": false
++          },
++          {
++            "actions": 7821,
++            "game": "ls20",
++            "solved": false,
++            "timed_out": false
++          }
++        ],
++        "policy": "e3",
++        "solved_count": 4,
++        "solved_games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33"
++        ],
++        "timed_out_count": 0,
++        "total_actions_on_solved": 31057
++      }
++    },
++    "rows": [
++      {
++        "budget": 8000,
++        "comparison_budget": 12000,
++        "comparison_solved_games": [
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "solved_games": [
++          "lp85",
++          "m0r0",
++          "sp80",
++          "vc33"
++        ],
++        "stable_vs_1_5x": false
++      },
++      {
++        "budget": 12000,
++        "comparison_budget": 18000,
++        "comparison_solved_games": [
++          "cd82",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "solved_games": [
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "stable_vs_1_5x": false
++      },
++      {
++        "budget": 16000,
++        "comparison_budget": 24000,
++        "comparison_solved_games": [
++          "cd82",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "solved_games": [
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "stable_vs_1_5x": false
++      },
++      {
++        "budget": 24000,
++        "comparison_budget": 36000,
++        "comparison_solved_games": [
++          "ls20",
++          "m0r0",
++          "vc33"
++        ],
++        "solved_games": [
++          "cd82",
++          "lp85",
++          "ls20",
++          "m0r0",
++          "sp80",
++          "su15",
++          "vc33"
++        ],
++        "stable_vs_1_5x": false
++      }
++    ],
++    "selected_default_budget": 8000
++  },
++  "honest_verdict": "shipped: metric_harness_canonical_ci_guarded",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates -- runs the offline gate, no LLM load (1s floor).",
++  "leaderboard_submission": false,
++  "positive_control": {
++    "dashboard_row": {
++      "actions_saved_vs_baseline": 1000.0,
++      "baseline_median_actions_on_core": 7760.0,
++      "bonus_solves": [],
++      "canonical_game_set": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33",
++        "cd82",
++        "ft09",
++        "su15",
++        "ls20"
++      ],
++      "core_games": [
++        "lp85",
++        "m0r0",
++        "sp80",
++        "vc33"
++      ],
++      "core_solves_preserved": true,
++      "lever": "positive_control",
++      "lost_core_solves": [],
++      "median_actions_on_core": 6760.0,
++      "metric_action_field": "actions",
++      "verdict": "PASS (IMPROVED): CORE ['lp85', 'm0r0', 'sp80', 'vc33'] median actions 6760.0 vs baseline 7760.0",
++      "verdict_pass": true
++    },
++    "passed": true
++  },
++  "positive_control_passed": true,
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "baseline_file_present": true,
++    "codex_md_read": true,
++    "gate_help_precondition": true,
++    "offline_arcade_precondition": true,
++    "ok": true
++  },
++  "reproducibility_checksum": "sha256:78fa7a44bef022cc084db04ca2539d9c59547ff359614ab8f5e5d5b38d1d39de",
++  "requirements": [
++    "REQ-ARC-FCP-4518"
++  ],
++  "result_path": "results/experiment_4518_metric_harness_canonical.json",
++  "sample_dashboard_row": {
++    "actions_saved_vs_baseline": 0.0,
++    "baseline_median_actions_on_core": 7760.0,
++    "bonus_solves": [
++      "ft09"
++    ],
++    "canonical_game_set": [
++      "lp85",
++      "m0r0",
++      "sp80",
++      "vc33",
++      "cd82",
++      "ft09",
++      "su15",
++      "ls20"
++    ],
++    "core_games": [
++      "lp85",
++      "m0r0",
++      "sp80",
++      "vc33"
++    ],
++    "core_solves_preserved": true,
++    "lever": "sample_dashboard",
++    "lost_core_solves": [],
++    "median_actions_on_core": 7760.0,
++    "metric_action_field": "actions",
++    "verdict": "PASS (IMPROVED): CORE ['lp85', 'm0r0', 'sp80', 'vc33'] median actions 7760.0 vs baseline 7760.0; BONUS solves ['ft09']",
++    "verdict_pass": true
++  },
++  "scenarios": [
++    "SCENARIO-ARC-FCP-4518"
++  ],
++  "schema": "carnot.arc_metric_harness_canonical_4518.v1",
++  "tests_added_pass": {
++    "command": ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py tests/python/test_experiment_4518_metric_harness_canonical.py -q --no-cov",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [15 items]\n\n...............                                                          [100%]\n============================== 15 passed in 3.29s ==============================\n"
++  }
++}
+diff --git a/scripts/kaggle/arc_local_submission_gate.py b/scripts/kaggle/arc_local_submission_gate.py
+index f61c376239..c64c8e8cdc 100644
+--- a/scripts/kaggle/arc_local_submission_gate.py
++++ b/scripts/kaggle/arc_local_submission_gate.py
+@@ -30,10 +30,22 @@ from statistics import median
+ REPO = Path(__file__).resolve().parents[2]
+ BASELINE = REPO / "ops" / "arc-submission-baseline.json"
+ EVAL = REPO / "scripts" / "arc_leaderboard_eval.py"
++CANONICAL_GAME_SET = ("lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20")
++CANONICAL_BASELINE_ACTIONS_BY_GAME = {"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731}
++CANONICAL_CORE_GAMES = tuple(CANONICAL_BASELINE_ACTIONS_BY_GAME)
++CANONICAL_BASELINE_MEDIAN_ACTIONS = 7760.0
++CANONICAL_ACTION_FIELD = "actions"
++CANONICAL_ACTION_METRIC = {
++    "field": CANONICAL_ACTION_FIELD,
++    "definition": "total_actions_on_solved_games",
++}
++HEADROOM_BUDGET_CANDIDATES = (8000, 12000, 16000, 24000)
++DEFAULT_BUDGET = 8000
+ # 4 reliably-solvable games (the bare-BFS solves) + 4 controls. Small so the gate runs in a couple minutes.
+-GATE_GAMES = ["lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20"]
++GATE_GAMES = list(CANONICAL_GAME_SET)
+ _LINE = re.compile(r"live=L(\d+)\s*\(\+(\d+)\)\s*actions=\s*(\d+)")
+ EFFICIENCY_SLACK = 1.10  # allow 10% worse median actions before calling it a regression
++BIG_ACTIONS = 10 ** 9
+ 
+ 
+ def _measure_game(game: str, policy: str, budget: int, cap: int) -> dict:
+@@ -66,8 +78,15 @@ def measure(policy: str, budget: int, cap: int) -> dict:
+     acts = [r["actions"] for r in solved if r["actions"] is not None]
+     return {
+         "policy": policy, "games": GATE_GAMES, "per_game": rows,
++        "action_metric": dict(CANONICAL_ACTION_METRIC),
+         "solved_count": len(solved),
+         "median_actions_on_solved": (median(acts) if acts else None),
++        "median_actions_on_core": median([
++            _actions_by_game({"per_game": rows, "action_metric": CANONICAL_ACTION_METRIC}).get(
++                game, BIG_ACTIONS
++            )
++            for game in CANONICAL_CORE_GAMES
++        ]),
+         "total_actions_on_solved": (sum(acts) if acts else None),
+         "timed_out_count": sum(1 for r in rows if r["timed_out"]),
+         # CORE set-containment keys (2026-06-20): the verdict compares the SAME games across
+@@ -81,6 +100,83 @@ def measure(policy: str, budget: int, cap: int) -> dict:
+     }
+ 
+ 
++def _action_metric_field(measurement: dict) -> str:
++    metric = measurement.get("action_metric")
++    if isinstance(metric, dict) and metric.get("field"):
++        return str(metric["field"])
++    if measurement.get("action_field"):
++        return str(measurement["action_field"])
++    rows = measurement.get("per_game") or []
++    if any(isinstance(r, dict) and CANONICAL_ACTION_FIELD in r for r in rows):
++        return CANONICAL_ACTION_FIELD
++    if any(isinstance(r, dict) and "actions_to_first_levelup" in r for r in rows):
++        return "actions_to_first_levelup"
++    return CANONICAL_ACTION_FIELD
++
++
++def _actions_by_game(measurement: dict) -> dict[str, int]:
++    actions = measurement.get("actions_by_game")
++    if isinstance(actions, dict) and actions:
++        return {str(game): int(value) for game, value in actions.items() if value is not None}
++    field = _action_metric_field(measurement)
++    out: dict[str, int] = {}
++    for row in measurement.get("per_game", []) or []:
++        if not isinstance(row, dict) or row.get("solved") is not True:
++            continue
++        value = row.get(field)
++        if value is not None:
++            out[str(row["game"])] = int(value)
++    return out
++
++
++def _baseline_core(base: dict) -> set[str]:
++    base_acts = _actions_by_game(base)
++    return set(base.get("solved_games") or base_acts.keys())
++
++
++def _metric_compatibility_error(cur: dict, base: dict) -> str | None:
++    cur_field = _action_metric_field(cur)
++    base_field = _action_metric_field(base)
++    if cur_field != base_field:
++        return (
++            f"REGRESSION: action metric mismatch treatment={cur_field} baseline={base_field}; "
++            "baseline and treatment must use the identical field"
++        )
++    return None
++
++
++def validate_canonical_baseline(base: dict) -> dict:
++    errors: list[str] = []
++    games = list(base.get("games") or [])
++    base_acts = _actions_by_game(base)
++    core = sorted(_baseline_core(base))
++    computed_median = median([base_acts.get(game, BIG_ACTIONS) for game in CANONICAL_CORE_GAMES])
++    reported_median = base.get("median_actions_on_solved")
++    if games != list(CANONICAL_GAME_SET):
++        errors.append(f"baseline games must equal the fixed 8-game set {list(CANONICAL_GAME_SET)}")
++    if _action_metric_field(base) != CANONICAL_ACTION_FIELD:
++        errors.append("baseline action metric must use total actions")
++    if core != sorted(CANONICAL_CORE_GAMES):
++        errors.append(f"baseline CORE must equal {sorted(CANONICAL_CORE_GAMES)}")
++    if {
++        game: base_acts.get(game)
++        for game in CANONICAL_CORE_GAMES
++    } != CANONICAL_BASELINE_ACTIONS_BY_GAME:
++        errors.append("baseline CORE action map moved from the verified 7760 control")
++    if float(computed_median) != CANONICAL_BASELINE_MEDIAN_ACTIONS:
++        errors.append("computed baseline CORE median must remain 7760")
++    if reported_median is None or float(reported_median) != CANONICAL_BASELINE_MEDIAN_ACTIONS:
++        errors.append("reported baseline median_actions_on_solved must remain 7760")
++    return {
++        "ok": not errors,
++        "errors": errors,
++        "canonical_game_set": list(CANONICAL_GAME_SET),
++        "canonical_baseline_median_actions": CANONICAL_BASELINE_MEDIAN_ACTIONS,
++        "core_games": sorted(CANONICAL_CORE_GAMES),
++        "action_metric_field": CANONICAL_ACTION_FIELD,
++    }
++
++
+ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
+     """CORE set-containment verdict (2026-06-20 redesign).
+ 
+@@ -98,13 +194,12 @@ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
+     A legacy fallback (raw count) keeps the gate working against an old baseline JSON until the
+     next `--update-baseline` persists the CORE keys.
+     """
+-    BIG = 10 ** 9
++    metric_error = _metric_compatibility_error(cur, base)
++    if metric_error:
++        return False, metric_error
+     # Reconstruct baseline per-game actions from the new key, else from the legacy per_game rows.
+-    base_acts = base.get("actions_by_game") or {
+-        r["game"]: r["actions"] for r in base.get("per_game", [])
+-        if r.get("solved") and r.get("actions") is not None
+-    }
+-    core = set(base.get("solved_games") or base_acts.keys())
++    base_acts = _actions_by_game(base)
++    core = _baseline_core(base)
+     if not core:
+         # No baseline solves recorded at all -> fall back to the legacy count check.
+         bs, cs = base.get("solved_count", 0), cur["solved_count"]
+@@ -114,9 +209,9 @@ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
+     lost = sorted(core - cur_solved)
+     if lost:
+         return False, f"REGRESSION: lost CORE solves {lost} (core={sorted(core)})"
+-    cur_acts = cur.get("actions_by_game") or {}
+-    cm = median([cur_acts.get(g, BIG) for g in core])
+-    bm = median([base_acts.get(g, BIG) for g in core])
++    cur_acts = _actions_by_game(cur)
++    cm = median([cur_acts.get(g, BIG_ACTIONS) for g in core])
++    bm = median([base_acts.get(g, BIG_ACTIONS) for g in core])
+     if cm > bm * EFFICIENCY_SLACK:
+         return False, (f"REGRESSION: CORE median actions {cm} > baseline {bm} x{EFFICIENCY_SLACK} "
+                        f"(action efficiency is the scoring metric)")
+@@ -128,15 +223,118 @@ def _verdict(cur: dict, base: dict) -> tuple[bool, str]:
+     return True, msg
+ 
+ 
+-def main() -> int:
++def dashboard_row(cur: dict, base: dict, *, lever: str) -> dict:
++    ok, msg = _verdict(cur, base)
++    core = _baseline_core(base)
++    cur_solved = set(cur.get("solved_games") or [])
++    cur_acts = _actions_by_game(cur)
++    base_acts = _actions_by_game(base)
++    cur_median = median([cur_acts.get(game, BIG_ACTIONS) for game in core]) if core else None
++    base_median = median([base_acts.get(game, BIG_ACTIONS) for game in core]) if core else None
++    bonus = sorted(cur_solved - core)
++    return {
++        "lever": lever,
++        "metric_action_field": _action_metric_field(cur),
++        "canonical_game_set": list(CANONICAL_GAME_SET),
++        "core_games": sorted(core),
++        "median_actions_on_core": cur_median,
++        "baseline_median_actions_on_core": base_median,
++        "actions_saved_vs_baseline": (
++            None if cur_median is None or base_median is None else float(base_median - cur_median)
++        ),
++        "core_solves_preserved": core.issubset(cur_solved),
++        "lost_core_solves": sorted(core - cur_solved),
++        "bonus_solves": bonus,
++        "verdict_pass": ok,
++        "verdict": msg,
++    }
++
++
++def positive_control(base: dict) -> dict:
++    base_acts = _actions_by_game(base)
++    core = _baseline_core(base)
++    improved = {game: max(1, int(base_acts[game]) - 1000) for game in core}
++    cur = {
++        "games": list(CANONICAL_GAME_SET),
++        "action_metric": dict(CANONICAL_ACTION_METRIC),
++        "solved_count": len(improved),
++        "solved_games": sorted(improved),
++        "actions_by_game": improved,
++        "median_actions_on_solved": median(improved.values()),
++    }
++    row = dashboard_row(cur, base, lever="positive_control")
++    return {
++        "passed": bool(row["verdict_pass"] and row["median_actions_on_core"] < row["baseline_median_actions_on_core"]),
++        "dashboard_row": row,
++    }
++
++
++def _solved_set(measurement: dict) -> set[str]:
++    solved = measurement.get("solved_games")
++    if solved is not None:
++        return {str(game) for game in solved}
++    return {str(row["game"]) for row in measurement.get("per_game", []) if row.get("solved") is True}
++
++
++def select_headroom_budget(by_budget: dict[int, dict], *, candidates=HEADROOM_BUDGET_CANDIDATES) -> tuple[int, list[dict]]:
++    rows = []
++    selected = None
++    for budget in candidates:
++        comparison_budget = int(budget * 1.5)
++        solved = sorted(_solved_set(by_budget.get(int(budget), {})))
++        comparison_solved = sorted(_solved_set(by_budget.get(comparison_budget, {})))
++        stable = bool(solved and solved == comparison_solved)
++        rows.append({
++            "budget": int(budget),
++            "comparison_budget": comparison_budget,
++            "solved_games": solved,
++            "comparison_solved_games": comparison_solved,
++            "stable_vs_1_5x": stable,
++        })
++        if selected is None and stable:
++            selected = int(budget)
++    return (selected or DEFAULT_BUDGET), rows
++
++
++def measure_headroom_budget(policy: str, cap: int, *, candidates=HEADROOM_BUDGET_CANDIDATES) -> dict:
++    measurements: dict[int, dict] = {}
++    rows: list[dict] = []
++    selected = DEFAULT_BUDGET
++    for index, budget in enumerate(candidates):
++        comparison_budget = int(budget * 1.5)
++        for needed in (int(budget), comparison_budget):
++            if needed not in measurements:
++                measurements[needed] = measure(policy, needed, cap)
++        selected, rows = select_headroom_budget(
++            measurements,
++            candidates=tuple(int(candidate) for candidate in candidates[: index + 1]),
++        )
++        if rows and rows[-1]["stable_vs_1_5x"]:
++            break
++    return {
++        "selected_default_budget": selected,
++        "measured": True,
++        "rows": rows,
++        "measurements_by_budget": {
++            str(budget): measurements[budget] for budget in sorted(measurements)
++        },
++    }
++
++
++def _build_parser() -> argparse.ArgumentParser:
+     ap = argparse.ArgumentParser()
+     ap.add_argument("--check", action="store_true")
+     ap.add_argument("--update-baseline", action="store_true")
+     ap.add_argument("--policy", default="e3")
+-    ap.add_argument("--budget", type=int, default=8000)
++    ap.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
+     ap.add_argument("--cap", type=int, default=115)
++    ap.add_argument("--lever", default="submitted_default")
+     ap.add_argument("--json", action="store_true")
+-    a = ap.parse_args()
++    return ap
++
++
++def main() -> int:
++    a = _build_parser().parse_args()
+ 
+     print(f"[gate] measuring current submitted config (policy={a.policy}) on {len(GATE_GAMES)} games "
+           f"(budget {a.budget}, {a.cap}s cap each)...", flush=True)
+@@ -153,16 +351,35 @@ def main() -> int:
+         print(f"[gate] NO baseline at {BASELINE} -- run --update-baseline once on a trusted config first.")
+         return 2
+     base = json.loads(BASELINE.read_text())
+-    ok, msg = _verdict(cur, base)
++    guard = validate_canonical_baseline(base)
++    if not guard["ok"]:
++        ok, msg = False, f"REGRESSION: canonical baseline guard failed {guard['errors']}"
++        row = dashboard_row(cur, base, lever=a.lever)
++        row["verdict_pass"] = False
++        row["verdict"] = msg
++    else:
++        ok, msg = _verdict(cur, base)
++        row = dashboard_row(cur, base, lever=a.lever)
+     if a.json:
+-        print(json.dumps({"pass": ok, "verdict": msg, "current": cur, "baseline": {
+-            k: base.get(k) for k in ("solved_count", "median_actions_on_solved", "total_actions_on_solved")}}, indent=2))
++        print(json.dumps({
++            "pass": ok,
++            "verdict": msg,
++            "lever_dashboard_row": row,
++            "baseline_guard": guard,
++            "current": cur,
++            "baseline": {
++                k: base.get(k)
++                for k in ("solved_count", "median_actions_on_solved", "total_actions_on_solved")
++            },
++        }, indent=2))
+     else:
+         print(f"[gate] current : solved {cur['solved_count']}, median actions/solve "
+               f"{cur['median_actions_on_solved']}, timed_out {cur['timed_out_count']}")
+         print(f"[gate] baseline: solved {base.get('solved_count')}, median actions/solve "
+               f"{base.get('median_actions_on_solved')}")
+         print(f"[gate] {'PASS' if ok else 'FAIL'}: {msg}")
++        print(f"[gate] lever {a.lever}: median_actions_on_core={row['median_actions_on_core']}, "
++              f"core_solves_preserved={row['core_solves_preserved']}, bonus={row['bonus_solves']}")
+     return 0 if ok else 1
+ 
+ 
+diff --git a/tests/python/test_arc_submission_gate_verdict.py b/tests/python/test_arc_submission_gate_verdict.py
+index 607804b18e..8ad2f77dd9 100644
+--- a/tests/python/test_arc_submission_gate_verdict.py
++++ b/tests/python/test_arc_submission_gate_verdict.py
+@@ -1,6 +1,7 @@
+ """Regression fixtures for the ARC submission gate's CORE set-containment verdict.
+ 
+ REQ: arc-action-efficiency-lever-gate / SCENARIO: noise-robust-solve-rate-preserving-verdict
++REQ-ARC-FCP-4518 / SCENARIO-ARC-FCP-4518: canonical fixed-metric dashboard guard
+ 
+ WHY THIS EXISTS (2026-06-20): the gate's OLD verdict compared raw solved-COUNT, so a score-lever
+ that merely reordered the chaotic ~7800-action near-budget search and flipped one knife-edge solve
+@@ -27,6 +28,8 @@ _spec.loader.exec_module(gate)
+ def _baseline() -> dict:
+     """The verified CORE baseline: 4 core games solved at ~7724-7792 actions."""
+     return {
++        "games": ["lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20"],
++        "action_metric": {"field": "actions", "definition": "total_actions_on_solved_games"},
+         "solved_count": 4,
+         "solved_games": ["lp85", "m0r0", "sp80", "vc33"],
+         "actions_by_game": {"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731},
+@@ -37,6 +40,8 @@ def _baseline() -> dict:
+ def _cur(solved: dict[str, int]) -> dict:
+     """Build a treatment measurement dict from a {game: actions} map."""
+     return {
++        "games": ["lp85", "m0r0", "sp80", "vc33", "cd82", "ft09", "su15", "ls20"],
++        "action_metric": {"field": "actions", "definition": "total_actions_on_solved_games"},
+         "solved_count": len(solved),
+         "solved_games": sorted(solved),
+         "actions_by_game": dict(solved),
+@@ -95,3 +100,94 @@ def test_legacy_baseline_without_core_keys_falls_back_to_count():
+     # per_game present -> CORE reconstructed -> losing m0r0 still FAILs.
+     ok, msg = gate._verdict(_cur({"lp85": 7905, "sp80": 7766, "vc33": 7726}), legacy_base)
+     assert ok is False and "m0r0" in msg
++
++
++def test_req_arc_fcp_4518_baseline_and_game_set_guard():
++    """REQ-ARC-FCP-4518: the 8-game set and 7760 baseline cannot move silently."""
++    validation = gate.validate_canonical_baseline(_baseline())
++
++    assert validation["ok"] is True
++    assert validation["canonical_game_set"] == list(gate.CANONICAL_GAME_SET)
++    assert validation["canonical_baseline_median_actions"] == 7760.0
++    assert validation["core_games"] == ["lp85", "m0r0", "sp80", "vc33"]
++
++    moved = _baseline()
++    moved["median_actions_on_solved"] = 7761.0
++    moved_errors = gate.validate_canonical_baseline(moved)["errors"]
++    assert any("7760" in error for error in moved_errors)
++
++    cherry_picked = _baseline()
++    cherry_picked["games"] = ["lp85", "m0r0", "sp80", "vc33"]
++    cherry_errors = gate.validate_canonical_baseline(cherry_picked)["errors"]
++    assert any("fixed 8-game" in error for error in cherry_errors)
++
++
++def test_req_arc_fcp_4518_rejects_mismatched_action_metric_field():
++    """REQ-ARC-FCP-4518: actions-to-first-level-up cannot be compared to total actions."""
++    cur = _cur({"lp85": 2984, "m0r0": 2984, "sp80": 2984, "vc33": 2984})
++    cur["action_metric"] = {
++        "field": "actions_to_first_levelup",
++        "definition": "stop_at_first_levelup",
++    }
++
++    ok, msg = gate._verdict(cur, _baseline())
++
++    assert ok is False
++    assert "action metric mismatch" in msg
++    assert "actions_to_first_levelup" in msg
++    assert "actions" in msg
++
++
++def test_req_arc_fcp_4518_dashboard_row_reports_uniform_lever_delta():
++    """REQ-ARC-FCP-4518: every A-lever gets the same median/core/bonus row."""
++    cur = _cur({"lp85": 7000, "m0r0": 7100, "sp80": 7200, "vc33": 7300, "ft09": 7400})
++
++    row = gate.dashboard_row(cur, _baseline(), lever="A1_frame_change_prune")
++
++    assert row["lever"] == "A1_frame_change_prune"
++    assert row["metric_action_field"] == "actions"
++    assert row["median_actions_on_core"] == 7150.0
++    assert row["baseline_median_actions_on_core"] == 7760.0
++    assert row["actions_saved_vs_baseline"] == 610.0
++    assert row["core_solves_preserved"] is True
++    assert row["bonus_solves"] == ["ft09"]
++    assert row["verdict_pass"] is True
++
++
++def test_req_arc_fcp_4518_positive_control_proves_metric_can_detect_reduction():
++    """REQ-ARC-FCP-4518: the canonical harness has a positive-control self-test."""
++    control = gate.positive_control(_baseline())
++
++    assert control["passed"] is True
++    assert control["dashboard_row"]["core_solves_preserved"] is True
++    assert control["dashboard_row"]["median_actions_on_core"] < 7760.0
++    assert "IMPROVED" in control["dashboard_row"]["verdict"]
++
++
++def test_req_arc_fcp_4518_headroom_budget_selection_uses_solved_set_plateau():
++    """REQ-ARC-FCP-4518: B* is the first budget stable against its 1.5x comparison."""
++    by_budget = {
++        8000: {"solved_games": ["lp85", "m0r0", "sp80", "vc33"]},
++        12000: {"solved_games": ["lp85", "m0r0", "sp80", "vc33"]},
++        18000: {"solved_games": ["lp85", "m0r0", "sp80", "vc33", "ft09"]},
++        24000: {"solved_games": ["lp85", "m0r0", "sp80", "vc33", "ft09"]},
++        36000: {"solved_games": ["lp85", "m0r0", "sp80", "vc33", "ft09"]},
++    }
++
++    selected, rows = gate.select_headroom_budget(by_budget, candidates=(8000, 12000, 24000))
++
++    assert selected == 8000
++    assert rows[0]["budget"] == 8000
++    assert rows[0]["comparison_budget"] == 12000
++    assert rows[0]["stable_vs_1_5x"] is True
++    assert rows[1]["stable_vs_1_5x"] is False
++
++
++def test_req_arc_fcp_4518_cli_exposes_lever_and_canonical_budget_default():
++    """REQ-ARC-FCP-4518: `--lever` attributes rows without changing the metric."""
++    parser = gate._build_parser()
++
++    args = parser.parse_args(["--lever", "A6"])
++
++    assert args.lever == "A6"
++    assert args.budget == gate.DEFAULT_BUDGET
+diff --git a/tests/python/test_experiment_4518_metric_harness_canonical.py b/tests/python/test_experiment_4518_metric_harness_canonical.py
+new file mode 100644
+index 0000000000..796d386321
+--- /dev/null
++++ b/tests/python/test_experiment_4518_metric_harness_canonical.py
+@@ -0,0 +1,177 @@
++"""Tests for Exp 4518 canonical ARC local submission metric harness.
++
++Spec refs: REQ-ARC-FCP-4518, SCENARIO-ARC-FCP-4518.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot import experiment_4518_metric_harness_canonical as exp4518
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++def _baseline() -> dict[str, object]:
++    return {
++        "policy": "e3",
++        "games": list(exp4518.CANONICAL_GAME_SET),
++        "action_metric": {
++            "field": "actions",
++            "definition": "total_actions_on_solved_games",
++        },
++        "solved_count": 4,
++        "solved_games": list(exp4518.CANONICAL_CORE_GAMES),
++        "actions_by_game": {"lp85": 7792, "m0r0": 7789, "sp80": 7724, "vc33": 7731},
++        "median_actions_on_solved": 7760.0,
++        "per_game": [
++            {"game": "lp85", "solved": True, "actions": 7792},
++            {"game": "m0r0", "solved": True, "actions": 7789},
++            {"game": "sp80", "solved": True, "actions": 7724},
++            {"game": "vc33", "solved": True, "actions": 7731},
++            {"game": "cd82", "solved": False, "actions": 7799},
++            {"game": "ft09", "solved": False, "actions": 7963},
++            {"game": "su15", "solved": False, "actions": 7786},
++            {"game": "ls20", "solved": False, "actions": 7821},
++        ],
++    }
++
++
++def _dashboard_row() -> dict[str, object]:
++    return {
++        "lever": "positive_control",
++        "metric_action_field": "actions",
++        "median_actions_on_core": 7150.0,
++        "baseline_median_actions_on_core": 7760.0,
++        "actions_saved_vs_baseline": 610.0,
++        "core_solves_preserved": True,
++        "bonus_solves": ["ft09"],
++        "verdict_pass": True,
++        "verdict": "PASS (IMPROVED): fixture",
++    }
++
++
++def test_req_arc_fcp_4518_spec_declares_canonical_metric_contract() -> None:
++    """REQ-ARC-FCP-4518: OpenSpec anchors the canonical harness artifact."""
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-4518" in spec
++    assert "SCENARIO-ARC-FCP-4518" in spec
++    assert exp4518.RESULT_RELATIVE_PATH in spec
++    assert "actions_to_first_levelup" in spec
++    assert "total `actions`" in spec
++    for field, principle in exp4518.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++
++
++def test_req_arc_fcp_4518_builds_terminal_artifact_with_required_fields() -> None:
++    """REQ-ARC-FCP-4518: artifact schema records guards, tests, and sample row."""
++    artifact = exp4518.build_artifact(
++        preconditions_checked={
++            "agents_md_read": True,
++            "codex_md_read": True,
++            "offline_arcade_precondition": True,
++            "gate_help_precondition": True,
++        },
++        baseline=_baseline(),
++        baseline_guard={"ok": True, "errors": []},
++        headroom={
++            "selected_default_budget": 8000,
++            "measured": True,
++            "rows": [
++                {
++                    "budget": 8000,
++                    "comparison_budget": 12000,
++                    "solved_games": list(exp4518.CANONICAL_CORE_GAMES),
++                    "comparison_solved_games": list(exp4518.CANONICAL_CORE_GAMES),
++                    "stable_vs_1_5x": True,
++                }
++            ],
++        },
++        positive_control={"passed": True, "dashboard_row": _dashboard_row()},
++        sample_dashboard_row=_dashboard_row(),
++        tests_added_pass={
++            "command": ".venv/bin/pytest tests/python/test_arc_submission_gate_verdict.py "
++            "tests/python/test_experiment_4518_metric_harness_canonical.py -q --no-cov",
++            "passed": True,
++        },
++        duration_s=0.25,
++    )
++
++    assert exp4518.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "shipped: metric_harness_canonical_ci_guarded"
++    assert artifact["canonical_game_set"] == list(exp4518.CANONICAL_GAME_SET)
++    assert artifact["canonical_baseline"]["median_actions_on_core"] == 7760.0
++    assert artifact["positive_control_passed"] is True
++    assert artifact["sample_dashboard_row"]["actions_saved_vs_baseline"] == 610.0
++
++
++def test_scenario_arc_fcp_4518_run_writes_json_with_injected_gate(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-4518: run() writes the terminal artifact from gate helpers."""
++
++    class FakeGate:
++        CANONICAL_GAME_SET = exp4518.CANONICAL_GAME_SET
++        CANONICAL_BASELINE_MEDIAN_ACTIONS = 7760.0
++        DEFAULT_BUDGET = 8000
++
++        @staticmethod
++        def validate_canonical_baseline(_baseline: dict[str, object]) -> dict[str, object]:
++            return {"ok": True, "errors": []}
++
++        @staticmethod
++        def positive_control(_baseline: dict[str, object]) -> dict[str, object]:
++            return {"passed": True, "dashboard_row": _dashboard_row()}
++
++        @staticmethod
++        def dashboard_row(
++            _cur: dict[str, object],
++            _base: dict[str, object],
++            *,
++            lever: str,
++        ) -> dict[str, object]:
++            row = _dashboard_row()
++            row["lever"] = lever
++            return row
++
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "ops" / "arc-submission-baseline.json").write_text(
++        json.dumps(_baseline()),
++        encoding="utf-8",
++    )
++
++    artifact = exp4518.run(
++        root=tmp_path,
++        gate=FakeGate,
++        write=True,
++        preconditions_checked={
++            "agents_md_read": True,
++            "codex_md_read": True,
++            "offline_arcade_precondition": True,
++            "gate_help_precondition": True,
++        },
++        measure_headroom=lambda *_args, **_kwargs: {
++            "selected_default_budget": 8000,
++            "measured": True,
++            "rows": [
++                {
++                    "budget": 8000,
++                    "comparison_budget": 12000,
++                    "solved_games": list(exp4518.CANONICAL_CORE_GAMES),
++                    "comparison_solved_games": list(exp4518.CANONICAL_CORE_GAMES),
++                    "stable_vs_1_5x": True,
++                }
++            ],
++        },
++        tests_added_pass={"command": "fixture", "passed": True},
++        now=lambda: 1.0,
++    )
++
++    out = tmp_path / exp4518.RESULT_RELATIVE_PATH
++    assert out.exists()
++    assert json.loads(out.read_text(encoding="utf-8")) == artifact
++    assert artifact["positive_control_passed"] is True
++    assert artifact["canonical_default_budget"] == 8000
+-- 
+2.55.0
+

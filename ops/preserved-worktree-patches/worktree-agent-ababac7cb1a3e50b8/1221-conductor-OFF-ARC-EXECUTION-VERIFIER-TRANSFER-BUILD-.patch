@@ -1,0 +1,3934 @@
+From 04a6956d4b0e5c9ddbfafca043056ef55c1fe508 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 04:42:48 -0400
+Subject: [PATCH 01221/11362] [conductor] OFF-ARC EXECUTION-VERIFIER TRANSFER
+ -- BUILD+LAUNCH (operator TOP PRIORITY 2026-06-11; G1; split-long-codex BUILD
+ half): write the standalone two-arm + positive-control runner that measures
+ whether the SAME GAP-4 execution-consistency primitive transfers to CODE.
+ Reuse the DOMAIN-GENERAL primitives (python/carnot/verify/sandbox.py
+ restricted exec + the demo-fit/content-hash logic in
+ python/carnot/agentic/arc_gap4_execution_verifier.py) -- do NOT write a
+ code-specific verifier; the whole point is the primitive is SHARED. Corpus:
+ MBPP (and/or HumanEval); visible example tests = the 'demos', hidden tests =
+ held-out 'gold'. Smoke on 2 tasks, commit the runner, then LAUNCH the full
+ run BACKGROUNDED (the run makes N>=30 x k>=8 local-GGUF generations and must
+ not hold an agent past the 80-min cap).
+
+Automated research step by research conductor.
+Task ID: exp4031-offarc-exec-verifier-transfer-build
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ logs/offarc_transfer_run.log                  |    4 +
+ openspec/capabilities/verification/spec.md    |   71 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...experiment_4031_offarc_transfer_build.json |   42 +
+ ...4031_offarc_transfer_smoke.checkpoint.json |  104 +
+ ...riment_4031_offarc_transfer_smoke_raw.json |  159 ++
+ ...arc_exec_verifier_transfer.checkpoint.json | 1692 +++++++++++++++++
+ .../exp4031_offarc_transfer_build.py          |  270 +++
+ .../offarc_exec_verifier_transfer_run.py      |  940 +++++++++
+ .../test_experiment_4031_offarc_transfer.py   |  539 ++++++
+ 10 files changed, 3822 insertions(+), 1 deletion(-)
+ create mode 100644 logs/offarc_transfer_run.log
+ create mode 100644 results/experiment_4031_offarc_transfer_build.json
+ create mode 100644 results/experiment_4031_offarc_transfer_smoke.checkpoint.json
+ create mode 100644 results/experiment_4031_offarc_transfer_smoke_raw.json
+ create mode 100644 results/experiment_4032_offarc_exec_verifier_transfer.checkpoint.json
+ create mode 100644 scripts/experiments/exp4031_offarc_transfer_build.py
+ create mode 100644 scripts/experiments/offarc_exec_verifier_transfer_run.py
+ create mode 100644 tests/python/test_experiment_4031_offarc_transfer.py
+
+diff --git a/logs/offarc_transfer_run.log b/logs/offarc_transfer_run.log
+new file mode 100644
+index 0000000000..3d8962d2f9
+--- /dev/null
++++ b/logs/offarc_transfer_run.log
+@@ -0,0 +1,4 @@
++llama_context: n_ctx_seq (8192) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++llama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)
++llama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048
++llama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 97242df5bc..74360897b4 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -12233,3 +12233,74 @@ must cite the chain-arms adversarial narrowing, the Exp 3988 poison-skip, Exp
+ 3999's zero-call pending execution, Exp 4009's zero-call execution-floor miss,
+ and the unfeedable-power finding. The registry and gaps text must both state
+ that the demo-fit execution safety gate is kept.
++
++### REQ-VERIFY-4031: OFF-ARC Execution-Verifier Transfer Build
++
++The repository SHALL provide Exp 4031 at
++`scripts/experiments/exp4031_offarc_transfer_build.py` and the backgroundable
++runner `scripts/experiments/offarc_exec_verifier_transfer_run.py` to convert the
++GAP-4 execution-verifier transfer claim from argued to measured on a non-ARC code
++synthesis corpus. Before any live inference, the build script SHALL check the
++local `unsloth/gemma-4-12B-it-GGUF` cache, `llama_cpp` importability, MBPP or
++HumanEval corpus loadability, and `carnot.verify.sandbox` importability. If any
++resource is missing, Exp 4031 SHALL write
++`results/experiment_4031_offarc_transfer_build.json` with
++`honest_verdict=blocked_<resource>`, `runner_ready=false`,
++`smoke_passed=false`, `launched_pid=0`, the full `preconditions_checked` list,
++and `inference_substrate=live_llm_inference`, then stop without launching the
++runner.
++
++When preconditions pass, Exp 4031 SHALL smoke the runner on exactly two code
++tasks and require a well-formed raw artifact before launching the full run. The
++full run SHALL be launched in the background with output redirected to
++`logs/offarc_transfer_run.log`; Exp 4031 SHALL record the owning process id in
++`launched_pid` as a bare integer. The build artifact SHALL include bare
++top-level fields `honest_verdict`, `runner_ready`, `smoke_passed`,
++`launched_pid`, `preconditions_checked`, and `inference_substrate`, plus any
++supporting paths needed by the collector.
++
++### SCENARIO-VERIFY-4031: Build Smokes And Launches The OFF-ARC Runner
++
++Given the local GGUF cache, `llama_cpp`, code corpus, and sandbox primitive are
++available, when Exp 4031 runs, then it first writes a valid two-task smoke raw
++artifact, validates it, launches `offarc_exec_verifier_transfer_run.py` in the
++background for at least 40 tasks with at least eight candidates per task, writes
++`results/experiment_4031_offarc_transfer_build.json` with
++`runner_ready=true`, `smoke_passed=true`, a positive integer `launched_pid`, and
++`honest_verdict=success: offarc_transfer_runner_built_smoked_launched`.
++
++### REQ-VERIFY-4032: OFF-ARC Execution-Verifier Transfer Measurement
++
++The OFF-ARC runner SHALL load MBPP or HumanEval tasks with visible example tests
++and held-out hidden tests, generate at least eight candidate programs per task
++from the local Gemma 4 12B GGUF for at least 30 tasks in full mode, and evaluate
++all candidates through `carnot.verify.sandbox.sandboxed_exec_function`. All
++selection arms SHALL use the same candidate pool. Arm A SHALL select by
++majority/self-consistency over candidate visible behavior. Arm A++ SHALL select
++by ACES-style leave-one-out visible test-consistency. Arm B SHALL be the
++model-free GAP-4 verifier transfer: keep candidates that pass every visible
++example test exactly, then select from those demo-perfect candidates without an
++LLM judge. Hidden tests SHALL be used only to score held-out pass@1 and pass@2
++after selection.
++
++The raw artifact SHALL write
++`results/experiment_4032_offarc_exec_verifier_transfer_raw.json` with
++`honest_verdict`, `corpus`, `n_tasks`, `k_candidates_per_task`,
++`armA_vote_passrate`, `armA_vote_pass2`, `armAplusplus_aces_passrate`,
++`armAplusplus_aces_pass2`, `armB_demofit_passrate`, `armB_demofit_pass2`,
++`delta_pp`, `bootstrap_ci95`, `oracle_passrate`, `model_specs`,
++`random_seed`, `reproducibility_checksum`, `truncation_rate`,
++`preconditions_checked`, `missing_verifier_gaps`, and
++`inference_substrate=live_llm_inference`. It SHALL compute a bootstrap 95%
++confidence interval for Arm B minus Arm A and report the oracle/best-of-pool
++hidden pass-rate as a positive control.
++
++### SCENARIO-VERIFY-4032: Demo-Fit Transfer Is Measured Against Vote And ACES
++
++Given a shared pool of local GGUF code candidates over MBPP or HumanEval, when
++the OFF-ARC runner evaluates the pool, then Arm A, Arm A++, and Arm B each
++select candidates from that exact pool, hidden pass@1/pass@2 are computed after
++selection, `delta_pp` equals Arm B pass@1 minus Arm A pass@1 in percentage
++points, `bootstrap_ci95` is a two-element numeric interval for that delta, and
++`oracle_passrate` records whether any candidate in each task's pool passes all
++hidden tests so the collector can distinguish no-transfer from no-headroom.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e984f85a07..035eebd457 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 163,
+   "code_violations": 0,
+-  "experiments_checked": 3062,
++  "experiments_checked": 3063,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_4031_offarc_transfer_build.json b/results/experiment_4031_offarc_transfer_build.json
+new file mode 100644
+index 0000000000..9cfb90670d
+--- /dev/null
++++ b/results/experiment_4031_offarc_transfer_build.json
+@@ -0,0 +1,42 @@
++{
++  "duration_s": 14.13,
++  "experiment": "experiment_4031_offarc_transfer_build",
++  "field_principles": {
++    "honest_verdict": "Terminal-prefix build verdict; blocked resources stop before inference.",
++    "inference_substrate": "live_llm_inference because both smoke and full launch use the local GGUF.",
++    "launched_pid": "Bare int; Exp 4032 polls the process owning the full run.",
++    "preconditions_checked": "List of resources verified before any inference.",
++    "runner_ready": "Bare bool; the collector gates on this value.",
++    "smoke_passed": "Bare bool; full launch is forbidden when the two-task smoke fails."
++  },
++  "full_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4032_offarc_exec_verifier_transfer_raw.json",
++  "honest_verdict": "success: offarc_transfer_runner_built_smoked_launched",
++  "inference_substrate": "live_llm_inference",
++  "launched_pid": 2566095,
++  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/offarc_transfer_run.log",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
++      "resource": "local_gguf_cached"
++    },
++    {
++      "available": true,
++      "resource": "llama_cpp_importable"
++    },
++    {
++      "available": true,
++      "detail": "mbpp_sanitized",
++      "resource": "code_corpus_loadable"
++    },
++    {
++      "available": true,
++      "resource": "restricted_exec_importable"
++    }
++  ],
++  "runner_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/offarc_exec_verifier_transfer_run.py",
++  "runner_ready": true,
++  "schema": "carnot.experiment_4031_offarc_transfer_build.v1",
++  "smoke_passed": true,
++  "smoke_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4031_offarc_transfer_smoke_raw.json"
++}
+diff --git a/results/experiment_4031_offarc_transfer_smoke.checkpoint.json b/results/experiment_4031_offarc_transfer_smoke.checkpoint.json
+new file mode 100644
+index 0000000000..9b47f08d76
+--- /dev/null
++++ b/results/experiment_4031_offarc_transfer_smoke.checkpoint.json
+@@ -0,0 +1,104 @@
++{
++  "evaluations_by_task": {
++    "MBPP:11": [
++      {
++        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    temp_s = s[:first_idx] + s[first_idx+1:]\n    \n    # Find the last occurrence in the new string\n    last_idx = temp_s.rfind(char)\n    if last_idx == -1:\n        return temp_s\n    \n    # Return string without the last occurrence\n    return temp_s[:last_idx] + temp_s[last_idx+1:]",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 2.283,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ],
++    "MBPP:12": [
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=lambda row: sum(row))",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 0.827,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ]
++  },
++  "k_candidates_per_task": 1,
++  "schema": "carnot.experiment_4032.checkpoint.v1"
++}
+diff --git a/results/experiment_4031_offarc_transfer_smoke_raw.json b/results/experiment_4031_offarc_transfer_smoke_raw.json
+new file mode 100644
+index 0000000000..a8db3c500f
+--- /dev/null
++++ b/results/experiment_4031_offarc_transfer_smoke_raw.json
+@@ -0,0 +1,159 @@
++{
++  "armA_vote_pass2": 1.0,
++  "armA_vote_passrate": 1.0,
++  "armAplusplus_aces_pass2": 1.0,
++  "armAplusplus_aces_passrate": 1.0,
++  "armB_demofit_pass2": 1.0,
++  "armB_demofit_passrate": 1.0,
++  "bootstrap_ci95": [
++    0.0,
++    0.0
++  ],
++  "bootstrap_ci95_pass2": [
++    0.0,
++    0.0
++  ],
++  "candidate_pool": {
++    "MBPP:11": [
++      {
++        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    temp_s = s[:first_idx] + s[first_idx+1:]\n    \n    # Find the last occurrence in the new string\n    last_idx = temp_s.rfind(char)\n    if last_idx == -1:\n        return temp_s\n    \n    # Return string without the last occurrence\n    return temp_s[:last_idx] + temp_s[last_idx+1:]",
++        "code_sha256": "b64e51e4235d8814",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 2.283,
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "truncated": false,
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ],
++    "MBPP:12": [
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=lambda row: sum(row))",
++        "code_sha256": "0195521fb2cf9a67",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 0.827,
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "truncated": false,
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ]
++  },
++  "corpus": "mbpp_sanitized",
++  "delta_pp": 0.0,
++  "duration_s": 11.03,
++  "experiment": "experiment_4032_offarc_exec_verifier_transfer",
++  "field_principles": {
++    "armA_vote_passrate": "Arm A pass@1 from majority/self-consistency over visible behavior.",
++    "armAplusplus_aces_passrate": "Arm A++ pass@1 from leave-one-out visible test-consistency.",
++    "armB_demofit_passrate": "Arm B pass@1 from demo-perfect visible-test filtering.",
++    "bootstrap_ci95": "Bootstrap 95% CI for Arm B minus Arm A, in percentage points.",
++    "corpus": "The non-ARC code corpus used for the transfer measurement.",
++    "delta_pp": "Arm B pass@1 minus Arm A pass@1, in percentage points.",
++    "honest_verdict": "Terminal-prefix verdict; success only when demo-fit beats vote with CI > 0.",
++    "k_candidates_per_task": "Bare int; >=8 in full mode to mirror best-of-N transfer.",
++    "n_tasks": "Bare int; >=30 in full mode for a percentage-point claim.",
++    "oracle_passrate": "Positive-control pass@1: any candidate in the same pool passes hidden tests.",
++    "reproducibility_checksum": "SHA-256 over deterministic task, candidate, and metric content.",
++    "truncation_rate": "Generation truncation guard; fraction of candidates ended by token limit."
++  },
++  "honest_verdict": "success: offarc_transfer_smoke_raw_complete",
++  "inference_substrate": "live_llm_inference",
++  "k_candidates_per_task": 1,
++  "missing_verifier_gaps": [],
++  "mode": "smoke",
++  "model_specs": {
++    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
++    "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
++    "generator_model": "gemma-4-12B-it-GGUF",
++    "verifier": "sandboxed_exec_function visible demo-fit exact-output selector"
++  },
++  "n_tasks": 2,
++  "oracle_passrate": 1.0,
++  "per_task": [
++    {
++      "armA_vote_pass1": true,
++      "armA_vote_pass2": true,
++      "armA_vote_selected": [
++        0
++      ],
++      "armAplusplus_aces_pass1": true,
++      "armAplusplus_aces_pass2": true,
++      "armAplusplus_aces_selected": [
++        0
++      ],
++      "armB_demo_perfect_count": 1,
++      "armB_demofit_pass1": true,
++      "armB_demofit_pass2": true,
++      "armB_demofit_selected": [
++        0
++      ],
++      "func_name": "remove_Occ",
++      "n_candidates": 1,
++      "n_hidden_tests": 1,
++      "n_visible_tests": 2,
++      "oracle_hidden_pass": true,
++      "task_id": "MBPP:11"
++    },
++    {
++      "armA_vote_pass1": true,
++      "armA_vote_pass2": true,
++      "armA_vote_selected": [
++        0
++      ],
++      "armAplusplus_aces_pass1": true,
++      "armAplusplus_aces_pass2": true,
++      "armAplusplus_aces_selected": [
++        0
++      ],
++      "armB_demo_perfect_count": 1,
++      "armB_demofit_pass1": true,
++      "armB_demofit_pass2": true,
++      "armB_demofit_selected": [
++        0
++      ],
++      "func_name": "sort_matrix",
++      "n_candidates": 1,
++      "n_hidden_tests": 1,
++      "n_visible_tests": 2,
++      "oracle_hidden_pass": true,
++      "task_id": "MBPP:12"
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
++      "resource": "local_gguf_cached"
++    },
++    {
++      "available": true,
++      "resource": "llama_cpp_importable"
++    },
++    {
++      "available": true,
++      "detail": "mbpp_sanitized",
++      "resource": "code_corpus_loadable"
++    },
++    {
++      "available": true,
++      "resource": "restricted_exec_importable"
++    }
++  ],
++  "random_seed": 4032,
++  "reproducibility_checksum": "a316f79d7a9237e24eb768f702680442a1e1cdd9baf13d6661126df7ab178112",
++  "schema": "carnot.experiment_4032_offarc_exec_verifier_transfer_raw.v1",
++  "truncation_rate": 0.0
++}
+diff --git a/results/experiment_4032_offarc_exec_verifier_transfer.checkpoint.json b/results/experiment_4032_offarc_exec_verifier_transfer.checkpoint.json
+new file mode 100644
+index 0000000000..239ef2c124
+--- /dev/null
++++ b/results/experiment_4032_offarc_exec_verifier_transfer.checkpoint.json
+@@ -0,0 +1,1692 @@
++{
++  "evaluations_by_task": {
++    "MBPP:11": [
++      {
++        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    temp_s = s[:first_idx] + s[first_idx+1:]\n    \n    # Find the last occurrence in the new string\n    last_idx = temp_s.rfind(char)\n    if last_idx == -1:\n        return temp_s\n    \n    # Return string without the last occurrence\n    return temp_s[:last_idx] + temp_s[last_idx+1:]",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 2.224,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    temp_s = s[:first_idx] + s[first_idx + 1:]\n    \n    # Find the last occurrence in the new string\n    last_idx = temp_s.rfind(char)\n    if last_idx == -1:\n        return temp_s\n    \n    # Return string without the last occurrence\n    return temp_s[:last_idx] + temp_s[last_idx + 1:]",
++        "draw_index": 1,
++        "error": null,
++        "generation_seconds": 1.873,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    temp_s = s[:first_idx] + s[first_idx + 1:]\n    \n    # Find the last occurrence in the new string\n    last_idx = temp_s.rfind(char)\n    if last_idx == -1:\n        return temp_s\n    \n    # Return string without the last occurrence\n    return temp_s[:last_idx] + temp_s[last_idx + 1:]",
++        "draw_index": 2,
++        "error": null,
++        "generation_seconds": 1.904,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Find the last occurrence starting from the end\n    last_idx = s.rfind(char)\n    \n    # If there is only one occurrence, remove it\n    if first_idx == last_idx:\n        return s[:first_idx] + s[first_idx+1:]\n    \n    # Otherwise, remove both first and last\n    # We construct the string by skipping the first and last index\n    # Note: If they are adjacent or separated, slicing works correctly\n    res = \"\"\n    for i in range(len(s)):\n        if i == first_idx or i == last_idx:\n            continue\n        res += s[i]\n    return res",
++        "draw_index": 3,
++        "error": null,
++        "generation_seconds": 2.477,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    temp_s = s[:first_idx] + s[first_idx + 1:]\n    \n    # Find the last occurrence in the new string\n    last_idx = temp_s.rfind(char)\n    if last_idx == -1:\n        return temp_s\n    \n    # Remove the last occurrence\n    return temp_s[:last_idx] + temp_s[last_idx + 1:]",
++        "draw_index": 4,
++        "error": null,
++        "generation_seconds": 1.884,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_Occ(string, char):\n    if char not in string:\n        return string\n    \n    first_idx = string.find(char)\n    last_idx = string.rfind(char)\n    \n    if first_idx == last_idx:\n        # Only one occurrence exists\n        return string[:first_idx] + string[first_idx+1:]\n    else:\n        # Remove first and last occurrences\n        # Note: If they are adjacent or separated, we slice correctly\n        # to avoid removing the same index twice or overlapping.\n        # Since find and rfind are distinct indices:\n        part1 = string[:first_idx]\n        part2 = string[first_idx+1 : last_idx]\n        part3 = string[last_idx+1:]\n        return part1 + part2 + part3",
++        "draw_index": 5,
++        "error": null,
++        "generation_seconds": 2.455,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_Occ(s, char):\n    first_index = s.find(char)\n    if first_index == -1:\n        return s\n    \n    # Create string with first occurrence removed\n    temp_s = s[:first_index] + s[first_index + 1:]\n    \n    # Find last occurrence in the new string\n    # Note: We must find the last occurrence of the original char \n    # in the modified string to handle cases correctly.\n    last_index = temp_s.rfind(char)\n    \n    if last_index == -1:\n        return temp_s\n    \n    return temp_s[:last_index] + temp_s[last_index + 1:]",
++        "draw_index": 6,
++        "error": null,
++        "generation_seconds": 2.154,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_Occ(s, char):\n    first_index = s.find(char)\n    if first_index == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    s_temp = s[:first_index] + s[first_index+1:]\n    \n    # Find the last occurrence in the modified string\n    last_index = s_temp.rfind(char)\n    if last_index == -1:\n        return s_temp\n    \n    # Remove the last occurrence\n    return s_temp[:last_index] + s_temp[last_index+1:]",
++        "draw_index": 7,
++        "error": null,
++        "generation_seconds": 1.852,
++        "hidden_outputs": [
++          "H"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:11",
++        "truncated": false,
++        "visible_outputs": [
++          "heo",
++          "bcd"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ],
++    "MBPP:12": [
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=sum)",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 0.667,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=sum)",
++        "draw_index": 1,
++        "error": null,
++        "generation_seconds": 0.607,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order based on the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=lambda row: sum(row))",
++        "draw_index": 2,
++        "error": null,
++        "generation_seconds": 0.683,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=lambda row: sum(row))",
++        "draw_index": 3,
++        "error": null,
++        "generation_seconds": 0.666,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=lambda row: sum(row))",
++        "draw_index": 4,
++        "error": null,
++        "generation_seconds": 0.661,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def sort_matrix(matrix):\n    return sorted(matrix, key=lambda row: sum(row))",
++        "draw_index": 5,
++        "error": null,
++        "generation_seconds": 0.362,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=sum)",
++        "draw_index": 6,
++        "error": null,
++        "generation_seconds": 0.599,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order based on the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=lambda row: sum(row))",
++        "draw_index": 7,
++        "error": null,
++        "generation_seconds": 0.678,
++        "hidden_outputs": [
++          [
++            [
++              2,
++              1,
++              4
++            ],
++            [
++              6,
++              4,
++              3
++            ],
++            [
++              5,
++              8,
++              9
++            ]
++          ]
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:12",
++        "truncated": false,
++        "visible_outputs": [
++          [
++            [
++              1,
++              1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ],
++            [
++              2,
++              4,
++              5
++            ]
++          ],
++          [
++            [
++              -2,
++              4,
++              -5
++            ],
++            [
++              1,
++              -1,
++              1
++            ],
++            [
++              1,
++              2,
++              3
++            ]
++          ]
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ],
++    "MBPP:14": [
++      {
++        "code": "def find_Volume(length, width, height):\n    \"\"\"\n    Calculates the volume of a triangular prism.\n    The formula for the volume of a triangular prism is:\n    Volume = (base_area) * height_of_prism\n    Where base_area = (length * width) / 2\n    \"\"\"\n    base_area = (length * width) / 2\n    volume = base_area * height\n    return volume",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 1.321,
++        "hidden_outputs": [
++          1.0
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:14",
++        "truncated": false,
++        "visible_outputs": [
++          240.0,
++          6.0
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def find_Volume(length, width, height):\n    \"\"\"\n    Calculates the volume of a triangular prism.\n    Formula: Volume = (base_area) * height\n    Where base_area = (length * width) / 2\n    \"\"\"\n    return (length * width * height) / 2",
++        "draw_index": 1,
++        "error": null,
++        "generation_seconds": 0.933,
++        "hidden_outputs": [
++          1.0
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:14",
++        "truncated": false,
++        "visible_outputs": [
++          240.0,
++          6.0
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def find_Volume(length, width, height):\n    \"\"\"\n    Calculates the volume of a triangular prism.\n    Formula: Volume = (base_area) * height\n    Where base_area = 0.5 * length * width\n    \"\"\"\n    return 0.5 * length * width * height",
++        "draw_index": 2,
++        "error": null,
++        "generation_seconds": 0.916,
++        "hidden_outputs": [
++          1.0
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:14",
++        "truncated": false,
++        "visible_outputs": [
++          240.0,
++          6.0
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def find_Volume(length, width, height):\n    \"\"\"\n    Calculates the volume of a triangular prism.\n    The formula is: Volume = (base_area) * height\n    Where base_area = (length * width) / 2\n    \"\"\"\n    base_area = (length * width) / 2\n    volume = base_area * height\n    return volume",
++        "draw_index": 3,
++        "error": null,
++        "generation_seconds": 1.123,
++        "hidden_outputs": [
++          1.0
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:14",
++        "truncated": false,
++        "visible_outputs": [
++          240.0,
++          6.0
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def find_Volume(length, width, height):\n    \"\"\"\n    Calculates the volume of a triangular prism.\n    Formula: Volume = (base_area) * height\n    Where base_area = (length * width) / 2\n    \"\"\"\n    return (length * width * height) / 2",
++        "draw_index": 4,
++        "error": null,
++        "generation_seconds": 0.926,
++        "hidden_outputs": [
++          1.0
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:14",
++        "truncated": false,
++        "visible_outputs": [
++          240.0,
++          6.0
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def find_Volume(base_length, base_width, height):\n    \"\"\"\n    Calculates the volume of a triangular prism.\n    The formula is: (base_length * base_width * height) / 2\n    Note: In the context of the provided test cases (10*8*6/2 = 240 and 3*2*2/2 = 6),\n    the volume is calculated as (base_length * base_width * height) / 2.\n    \"\"\"\n    return (base_length * base_width * height) / 2",
++        "draw_index": 5,
++        "error": null,
++        "generation_seconds": 1.666,
++        "hidden_outputs": [
++          1.0
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:14",
++        "truncated": false,
++        "visible_outputs": [
++          240.0,
++          6.0
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def find_Volume(length, width, height):\n    \"\"\"\n    Calculates the volume of a triangular prism.\n    Formula: Volume = (base_area * length)\n    Where base_area = (1/2 * width * height)\n    \"\"\"\n    return 0.5 * length * width * height",
++        "draw_index": 6,
++        "error": null,
++        "generation_seconds": 0.924,
++        "hidden_outputs": [
++          1.0
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:14",
++        "truncated": false,
++        "visible_outputs": [
++          240.0,
++          6.0
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def find_Volume(length, width, height):\n    \"\"\"\n    Calculates the volume of a triangular prism.\n    Note: Based on the provided test cases:\n    find_Volume(10, 8, 6) -> (10 * 8 * 6) / 2 = 240\n    find_Volume(3, 2, 2) -> (3 * 2 * 2) / 2 = 6\n    The formula used is (Length * Width * Height) / 2.\n    \"\"\"\n    return (length * width * height) / 2",
++        "draw_index": 7,
++        "error": null,
++        "generation_seconds": 1.708,
++        "hidden_outputs": [
++          1.0
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:14",
++        "truncated": false,
++        "visible_outputs": [
++          240.0,
++          6.0
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ],
++    "MBPP:16": [
++      {
++        "code": "import re\n\ndef text_lowercase_underscore(text: str) -> bool:\n    \"\"\"\n    Returns True if the input string contains sequences of lowercase letters \n    joined with an underscore, and False otherwise.\n    \n    Note: Based on the provided test cases, the function checks if the \n    entire string consists only of lowercase letters and underscores.\n    \"\"\"\n    # The test cases suggest the string must only contain lowercase letters and underscores.\n    # \"aab_cbbbc\" -> True\n    # \"aab_Abbbc\" -> False (contains uppercase 'A')\n    \n    # Check if there is any character that is NOT a lowercase letter or an underscore\n    for char in text:\n        if not (char.islower() or char == '_'):\n            return False\n    \n    # Ensure there is at least one underscore and some letters to satisfy \"joined\"\n    # and check if it's not just an empty string or just underscores.\n    if '_' not in text or not any(c.islower() for c in text):\n        return False\n        \n    return True",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 3.191,
++        "hidden_outputs": [
++          false
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:16",
++        "truncated": false,
++        "visible_outputs": [
++          true,
++          false
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "import re\n\ndef text_lowercase_underscore(text: str) -> bool:\n    \"\"\"\n    Returns True if the input string contains sequences of lowercase letters \n    joined with an underscore, and False otherwise.\n    \n    Note: Based on the provided test cases, the function checks if the string \n    consists entirely of lowercase letters and underscores, or specifically \n    validates the presence of lowercase letters and underscores without \n    uppercase characters.\n    \"\"\"\n    # The test cases imply that the string must contain only lowercase letters \n    # and underscores, and must contain at least one underscore.\n    # However, looking at \"aab_cbbbc\" (True) and \"aab_Abbbc\" (False), \n    # the primary differentiator is the presence of uppercase letters.\n    \n    if any(c.isupper() for c in text):\n        return False\n    \n    # Check if it contains at least one lowercase letter and at least one underscore\n    has_lowercase = any(c.islower() for c in text)\n    has_underscore = \"_\" in text\n    \n    return has_lowercase and has_underscore",
++        "draw_index": 1,
++        "error": null,
++        "generation_seconds": 3.271,
++        "hidden_outputs": [
++          false
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:16",
++        "truncated": false,
++        "visible_outputs": [
++          true,
++          false
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "import re\n\ndef text_lowercase_underscore(text: str) -> bool:\n    \"\"\"\n    Returns True if the input string contains sequences of lowercase letters \n    joined with an underscore, and False otherwise.\n    \n    Based on the provided examples, the logic implies that the string must \n    consist entirely of lowercase letters and underscores, and must contain \n    at least one underscore separating lowercase letter sequences.\n    \"\"\"\n    # Check if the string contains only lowercase letters and underscores\n    if not re.fullmatch(r'[a-z_]+', text):\n        return False\n    \n    # Check if there is at least one underscore separating lowercase letters\n    # and that it's not just a string of letters or just underscores.\n    # The example \"aab_cbbbc\" is True, \"aab_Abbbc\" is False (due to uppercase).\n    # To satisfy the \"joined with an underscore\" condition:\n    return \"_\" in text and any(c.islower() for c in text)",
++        "draw_index": 2,
++        "error": null,
++        "generation_seconds": 2.921,
++        "hidden_outputs": [
++          false
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:16",
++        "truncated": false,
++        "visible_outputs": [
++          true,
++          false
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "import re\n\ndef text_lowercase_underscore(text: str) -> bool:\n    \"\"\"\n    Returns true if the input string contains sequences of lowercase letters \n    joined with an underscore and false otherwise.\n    \n    Note: Based on the provided test cases, the function returns True if \n    the string contains at least one underscore surrounded by lowercase \n    letters, and False if it contains uppercase letters or lacks such a pattern.\n    \"\"\"\n    # Check if there are any uppercase letters\n    if any(c.isupper() for c in text):\n        return False\n    \n    # Check if there is at least one underscore joined by lowercase letters\n    # The pattern looks for a lowercase letter, an underscore, and another lowercase letter\n    return bool(re.search(r'[a-z]_[a-z]', text))",
++        "draw_index": 3,
++        "error": null,
++        "generation_seconds": 2.362,
++        "hidden_outputs": [
++          false
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:16",
++        "truncated": false,
++        "visible_outputs": [
++          true,
++          false
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "import re\n\ndef text_lowercase_underscore(text: str) -> bool:\n    \"\"\"\n    Returns true if the input string contains sequences of lowercase letters \n    joined with an underscore and false otherwise.\n    \n    Note: Based on the provided test cases, the logic checks if the string \n    consists entirely of lowercase letters and underscores.\n    \"\"\"\n    # The test cases suggest that if any character is not a lowercase \n    # letter or an underscore, it returns False.\n    # \"aab_cbbbc\" -> True (all lowercase and underscore)\n    # \"aab_Abbbc\" -> False (contains uppercase 'A')\n    \n    # Check if the string contains only lowercase letters and underscores\n    # and ensures there is at least one underscore and lowercase content.\n    if not text:\n        return False\n        \n    # Check if every character is either a lowercase letter or an underscore\n    # and that there is at least one underscore.\n    is_valid_chars = all(c.islower() or c == '_' for c in text)\n    has_underscore = '_' in text\n    \n    return is_valid_chars and has_underscore",
++        "draw_index": 4,
++        "error": null,
++        "generation_seconds": 3.632,
++        "hidden_outputs": [
++          false
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:16",
++        "truncated": false,
++        "visible_outputs": [
++          true,
++          false
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "import re\n\ndef text_lowercase_underscore(text):\n    \"\"\"\n    Returns True if the input string contains sequences of lowercase letters \n    joined with an underscore, and False otherwise.\n    \n    The logic interprets \"contains sequences of lowercase letters joined \n    with an underscore\" as requiring at least one underscore connecting \n    two lowercase letter sequences.\n    \"\"\"\n    # Regex explanation:\n    # [a-z]+ matches one or more lowercase letters\n    # _ matches the underscore\n    # [a-z]+ matches one or more lowercase letters again\n    return bool(re.search(r'[a-z]+_[a-z]+', text))",
++        "draw_index": 5,
++        "error": null,
++        "generation_seconds": 1.875,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          false
++        ],
++        "status": "ok",
++        "task_id": "MBPP:16",
++        "truncated": false,
++        "visible_outputs": [
++          true,
++          false
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "import re\n\ndef text_lowercase_underscore(text):\n    # The requirement asks for sequences of lowercase letters joined with an underscore.\n    # To be strictly correct based on the examples:\n    # \"aab_cbbbc\" is True (lowercase letters, underscore, lowercase letters)\n    # \"aab_Abbbc\" is False (contains an uppercase letter)\n    \n    # Check if the string contains any uppercase letters\n    if any(c.isupper() for c in text):\n        return False\n    \n    # Check if the string contains at least one underscore and consists only of \n    # lowercase letters and underscores (and potentially other non-uppercase chars \n    # depending on interpretation, but usually implies lowercase + underscores).\n    # The example suggests the core rule is: lowercase letters + underscores.\n    \n    # Ensure it contains at least one underscore and only lowercase letters/underscores\n    if \"_\" in text and all(c.islower() or c == \"_\" for c in text):\n        return True\n    \n    return False",
++        "draw_index": 6,
++        "error": null,
++        "generation_seconds": 2.978,
++        "hidden_outputs": [
++          false
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:16",
++        "truncated": false,
++        "visible_outputs": [
++          true,
++          false
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "import re\n\ndef text_lowercase_underscore(text: str) -> bool:\n    # Check if the string contains only lowercase letters and underscores\n    # and ensure it actually contains at least one lowercase letter and an underscore\n    # based on the description \"sequences of lowercase letters joined with an underscore\"\n    # However, the examples suggest the check is simply if the string \n    # contains ONLY lowercase letters and underscores.\n    \n    if not text:\n        return False\n        \n    # Regex to check if the entire string consists of lowercase letters and underscores\n    # and contains at least one underscore.\n    pattern = r'^[a-z_]+$'\n    \n    # Based on the example \"aab_cbbbc\" (True) and \"aab_Abbbc\" (False),\n    # it validates that there are no uppercase letters and no special chars \n    # other than underscores.\n    if re.match(pattern, text) and '_' in text:\n        return True\n    return False",
++        "draw_index": 7,
++        "error": null,
++        "generation_seconds": 2.873,
++        "hidden_outputs": [
++          false
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:16",
++        "truncated": false,
++        "visible_outputs": [
++          true,
++          false
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ],
++    "MBPP:17": [
++      {
++        "code": "def square_perimeter(side_length):\n    return 4 * side_length",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 0.338,
++        "hidden_outputs": [
++          16
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:17",
++        "truncated": false,
++        "visible_outputs": [
++          40,
++          20
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def square_perimeter(side_length):\n    return 4 * side_length",
++        "draw_index": 1,
++        "error": null,
++        "generation_seconds": 0.298,
++        "hidden_outputs": [
++          16
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:17",
++        "truncated": false,
++        "visible_outputs": [
++          40,
++          20
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def square_perimeter(side_length):\n    return 4 * side_length",
++        "draw_index": 2,
++        "error": null,
++        "generation_seconds": 0.505,
++        "hidden_outputs": [
++          16
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:17",
++        "truncated": false,
++        "visible_outputs": [
++          40,
++          20
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def square_perimeter(side_length):\n    return 4 * side_length",
++        "draw_index": 3,
++        "error": null,
++        "generation_seconds": 0.383,
++        "hidden_outputs": [
++          16
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:17",
++        "truncated": false,
++        "visible_outputs": [
++          40,
++          20
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def square_perimeter(side_length):\n    return 4 * side_length",
++        "draw_index": 4,
++        "error": null,
++        "generation_seconds": 0.451,
++        "hidden_outputs": [
++          16
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:17",
++        "truncated": false,
++        "visible_outputs": [
++          40,
++          20
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def square_perimeter(side_length):\n    return 4 * side_length",
++        "draw_index": 5,
++        "error": null,
++        "generation_seconds": 0.311,
++        "hidden_outputs": [
++          16
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:17",
++        "truncated": false,
++        "visible_outputs": [
++          40,
++          20
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def square_perimeter(side_length):\n    return 4 * side_length",
++        "draw_index": 6,
++        "error": null,
++        "generation_seconds": 0.295,
++        "hidden_outputs": [
++          16
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:17",
++        "truncated": false,
++        "visible_outputs": [
++          40,
++          20
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def square_perimeter(side_length):\n    return 4 * side_length",
++        "draw_index": 7,
++        "error": null,
++        "generation_seconds": 0.296,
++        "hidden_outputs": [
++          16
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:17",
++        "truncated": false,
++        "visible_outputs": [
++          40,
++          20
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ],
++    "MBPP:18": [
++      {
++        "code": "def remove_dirty_chars(first_string, second_string):\n    dirty_chars = set(second_string)\n    return \"\".join(char for char in first_string if char not in dirty_chars)",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 1.037,
++        "hidden_outputs": [
++          "emles"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:18",
++        "truncated": false,
++        "visible_outputs": [
++          "bacuve",
++          "digiidi"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_dirty_chars(first_string, second_string):\n    dirty_chars = set(second_string)\n    return \"\".join(char for char in first_string if char not in dirty_chars)",
++        "draw_index": 1,
++        "error": null,
++        "generation_seconds": 0.676,
++        "hidden_outputs": [
++          "emles"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:18",
++        "truncated": false,
++        "visible_outputs": [
++          "bacuve",
++          "digiidi"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_dirty_chars(first_string, second_string):\n    dirty_chars = set(second_string)\n    return \"\".join(char for char in first_string if char not in dirty_chars)",
++        "draw_index": 2,
++        "error": null,
++        "generation_seconds": 0.66,
++        "hidden_outputs": [
++          "emles"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:18",
++        "truncated": false,
++        "visible_outputs": [
++          "bacuve",
++          "digiidi"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_dirty_chars(first_string, second_string):\n    dirty_chars = set(second_string)\n    return \"\".join(char for char in first_string if char not in dirty_chars)",
++        "draw_index": 3,
++        "error": null,
++        "generation_seconds": 0.884,
++        "hidden_outputs": [
++          "emles"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:18",
++        "truncated": false,
++        "visible_outputs": [
++          "bacuve",
++          "digiidi"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_dirty_chars(first_string, second_string):\n    dirty_chars = set(second_string)\n    return \"\".join(char for char in first_string if char not in dirty_chars)",
++        "draw_index": 4,
++        "error": null,
++        "generation_seconds": 0.723,
++        "hidden_outputs": [
++          "emles"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:18",
++        "truncated": false,
++        "visible_outputs": [
++          "bacuve",
++          "digiidi"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_dirty_chars(first_string, second_string):\n    dirty_chars = set(second_string)\n    return \"\".join(char for char in first_string if char not in dirty_chars)",
++        "draw_index": 5,
++        "error": null,
++        "generation_seconds": 0.669,
++        "hidden_outputs": [
++          "emles"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:18",
++        "truncated": false,
++        "visible_outputs": [
++          "bacuve",
++          "digiidi"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_dirty_chars(first_string, second_string):\n    dirty_chars = set(second_string)\n    return \"\".join(char for char in first_string if char not in dirty_chars)",
++        "draw_index": 6,
++        "error": null,
++        "generation_seconds": 0.656,
++        "hidden_outputs": [
++          "emles"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:18",
++        "truncated": false,
++        "visible_outputs": [
++          "bacuve",
++          "digiidi"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def remove_dirty_chars(first_string, second_string):\n    dirty_chars = set(second_string)\n    return \"\".join(char for char in first_string if char not in dirty_chars)",
++        "draw_index": 7,
++        "error": null,
++        "generation_seconds": 0.651,
++        "hidden_outputs": [
++          "emles"
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:18",
++        "truncated": false,
++        "visible_outputs": [
++          "bacuve",
++          "digiidi"
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ],
++    "MBPP:19": [
++      {
++        "code": "def test_duplicate(arr):\n    return len(arr) != len(set(arr))",
++        "draw_index": 0,
++        "error": null,
++        "generation_seconds": 0.374,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:19",
++        "truncated": false,
++        "visible_outputs": [
++          false,
++          true
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def test_duplicate(arr):\n    return len(arr) != len(set(arr))",
++        "draw_index": 1,
++        "error": null,
++        "generation_seconds": 0.328,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:19",
++        "truncated": false,
++        "visible_outputs": [
++          false,
++          true
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def test_duplicate(arr):\n    return len(arr) != len(set(arr))",
++        "draw_index": 2,
++        "error": null,
++        "generation_seconds": 0.55,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:19",
++        "truncated": false,
++        "visible_outputs": [
++          false,
++          true
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def test_duplicate(arr):\n    return len(arr) != len(set(arr))",
++        "draw_index": 3,
++        "error": null,
++        "generation_seconds": 0.42,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:19",
++        "truncated": false,
++        "visible_outputs": [
++          false,
++          true
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def test_duplicate(arr):\n    return len(arr) != len(set(arr))",
++        "draw_index": 4,
++        "error": null,
++        "generation_seconds": 0.64,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:19",
++        "truncated": false,
++        "visible_outputs": [
++          false,
++          true
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def test_duplicate(arr):\n    return len(arr) != len(set(arr))",
++        "draw_index": 5,
++        "error": null,
++        "generation_seconds": 0.536,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:19",
++        "truncated": false,
++        "visible_outputs": [
++          false,
++          true
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def test_duplicate(arr):\n    return len(arr) != len(set(arr))",
++        "draw_index": 6,
++        "error": null,
++        "generation_seconds": 0.673,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:19",
++        "truncated": false,
++        "visible_outputs": [
++          false,
++          true
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      },
++      {
++        "code": "def test_duplicate(arr):\n    return len(arr) != len(set(arr))",
++        "draw_index": 7,
++        "error": null,
++        "generation_seconds": 1.07,
++        "hidden_outputs": [
++          true
++        ],
++        "hidden_passes": [
++          true
++        ],
++        "status": "ok",
++        "task_id": "MBPP:19",
++        "truncated": false,
++        "visible_outputs": [
++          false,
++          true
++        ],
++        "visible_passes": [
++          true,
++          true
++        ]
++      }
++    ]
++  },
++  "k_candidates_per_task": 8,
++  "schema": "carnot.experiment_4032.checkpoint.v1"
++}
+diff --git a/scripts/experiments/exp4031_offarc_transfer_build.py b/scripts/experiments/exp4031_offarc_transfer_build.py
+new file mode 100644
+index 0000000000..49b608e216
+--- /dev/null
++++ b/scripts/experiments/exp4031_offarc_transfer_build.py
+@@ -0,0 +1,270 @@
++"""Exp 4031 build gate for OFF-ARC execution-verifier transfer.
++
++Spec refs: REQ-VERIFY-4031, SCENARIO-VERIFY-4031.
++
++This script checks the live resources, smokes the Exp 4032 runner on two code
++tasks, launches the full run in the background, and writes the collector-facing
++build artifact. It does not wait for the full measurement to finish.
++"""
++
++from __future__ import annotations
++
++import json
++import subprocess
++import sys
++import time
++from pathlib import Path
++from typing import Any, Callable
++
++import offarc_exec_verifier_transfer_run as runner
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RUNNER_PATH = REPO_ROOT / "scripts" / "experiments" / "offarc_exec_verifier_transfer_run.py"
++OUTPUT = REPO_ROOT / "results" / "experiment_4031_offarc_transfer_build.json"
++SMOKE_OUTPUT = REPO_ROOT / "results" / "experiment_4031_offarc_transfer_smoke_raw.json"
++SMOKE_CHECKPOINT = REPO_ROOT / "results" / "experiment_4031_offarc_transfer_smoke.checkpoint.json"
++FULL_OUTPUT = REPO_ROOT / "results" / "experiment_4032_offarc_exec_verifier_transfer_raw.json"
++LOG_PATH = REPO_ROOT / "logs" / "offarc_transfer_run.log"
++
++INFERENCE_SUBSTRATE = "live_llm_inference"
++SUCCESS_VERDICT = "success: offarc_transfer_runner_built_smoked_launched"
++
++REQUIRED_BUILD_FIELDS = [
++    "honest_verdict",
++    "runner_ready",
++    "smoke_passed",
++    "launched_pid",
++    "preconditions_checked",
++    "inference_substrate",
++]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefix build verdict; blocked resources stop before inference.",
++    "runner_ready": "Bare bool; the collector gates on this value.",
++    "smoke_passed": "Bare bool; full launch is forbidden when the two-task smoke fails.",
++    "launched_pid": "Bare int; Exp 4032 polls the process owning the full run.",
++    "preconditions_checked": "List of resources verified before any inference.",
++    "inference_substrate": "live_llm_inference because both smoke and full launch use the local GGUF.",
++}
++
++
++def build_artifact(
++    *,
++    honest_verdict: str,
++    runner_ready: bool,
++    smoke_passed: bool,
++    launched_pid: int,
++    preconditions_checked: list[dict[str, Any]],
++    duration_s: float,
++    smoke_output_path: Path = SMOKE_OUTPUT,
++    full_output_path: Path = FULL_OUTPUT,
++    log_path: Path = LOG_PATH,
++    error: str | None = None,
++) -> dict[str, Any]:
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4031_offarc_transfer_build",
++        "schema": "carnot.experiment_4031_offarc_transfer_build.v1",
++        "honest_verdict": honest_verdict,
++        "runner_ready": runner_ready,
++        "smoke_passed": smoke_passed,
++        "launched_pid": launched_pid,
++        "preconditions_checked": preconditions_checked,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(duration_s, 2),
++        "runner_path": str(RUNNER_PATH),
++        "smoke_raw_path": str(smoke_output_path),
++        "full_raw_path": str(full_output_path),
++        "log_path": str(log_path),
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    if error:
++        artifact["error"] = error
++    validate_build_artifact(artifact)
++    return artifact
++
++
++def validate_build_artifact(artifact: dict[str, Any]) -> None:
++    for field in REQUIRED_BUILD_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required build field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("success:")
++        or verdict.startswith("complete:")
++        or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    for field in ("runner_ready", "smoke_passed"):
++        if not isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare bool")
++    if not isinstance(artifact["launched_pid"], int) or isinstance(artifact["launched_pid"], bool):
++        raise ValueError("launched_pid must be a bare int")
++    if verdict.startswith("success:") and artifact["launched_pid"] <= 0:
++        raise ValueError("launched_pid must be positive after a successful launch")
++    if not isinstance(artifact["preconditions_checked"], list):
++        raise ValueError("preconditions_checked must be a list")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be live_llm_inference")
++
++
++def default_smoke_runner(
++    **kwargs: Any,
++) -> dict[str, Any]:  # pragma: no cover - live GGUF smoke path.
++    return runner.run(
++        output_path=kwargs["output_path"],
++        checkpoint_path=SMOKE_CHECKPOINT,
++        n_tasks=kwargs.get("n_tasks", 2),
++        k=kwargs.get("k", 1),
++        mode="smoke",
++        preconditions_checked=kwargs["preconditions_checked"],
++    )
++
++
++def launch_full_run(
++    *,
++    runner_path: Path,
++    output_path: Path,
++    log_path: Path,
++    n_tasks: int,
++    k: int,
++) -> int:  # pragma: no cover - process launch exercised by required build command.
++    log_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    cmd = [
++        "nohup",
++        sys.executable,
++        str(runner_path),
++        "--output",
++        str(output_path),
++        "--n-tasks",
++        str(n_tasks),
++        "--k",
++        str(k),
++        "--mode",
++        "full",
++    ]
++    log_handle = log_path.open("ab")
++    try:
++        process = subprocess.Popen(
++            cmd,
++            cwd=REPO_ROOT,
++            stdout=log_handle,
++            stderr=subprocess.STDOUT,
++            stdin=subprocess.DEVNULL,
++            start_new_session=True,
++            close_fds=True,
++        )
++    finally:
++        log_handle.close()
++    return int(process.pid)
++
++
++def run_build(
++    *,
++    output_path: Path = OUTPUT,
++    smoke_output_path: Path = SMOKE_OUTPUT,
++    full_output_path: Path = FULL_OUTPUT,
++    log_path: Path = LOG_PATH,
++    precondition_checker: Callable[[], list[dict[str, Any]]] = runner.check_preconditions,
++    smoke_runner: Callable[..., dict[str, Any]] = default_smoke_runner,
++    launcher: Callable[..., int] = launch_full_run,
++    full_n_tasks: int = runner.DEFAULT_N_TASKS,
++    full_k: int = runner.DEFAULT_K,
++) -> dict[str, Any]:
++    started = time.time()
++    preconditions = precondition_checker()
++    blocker = runner.blocker_from_preconditions(preconditions)
++    if blocker:
++        artifact = build_artifact(
++            honest_verdict=blocker,
++            runner_ready=False,
++            smoke_passed=False,
++            launched_pid=0,
++            preconditions_checked=preconditions,
++            duration_s=time.time() - started,
++            smoke_output_path=smoke_output_path,
++            full_output_path=full_output_path,
++            log_path=log_path,
++        )
++        _write_json(output_path, artifact)
++        print(f"-> {artifact['honest_verdict']}", flush=True)
++        return artifact
++
++    try:
++        smoke_artifact = smoke_runner(
++            output_path=smoke_output_path,
++            n_tasks=2,
++            k=1,
++            mode="smoke",
++            preconditions_checked=preconditions,
++        )
++        runner.validate_raw_artifact(smoke_artifact, require_full=False)
++    except Exception as exc:
++        artifact = build_artifact(
++            honest_verdict="blocked_smoke_failed",
++            runner_ready=True,
++            smoke_passed=False,
++            launched_pid=0,
++            preconditions_checked=preconditions,
++            duration_s=time.time() - started,
++            smoke_output_path=smoke_output_path,
++            full_output_path=full_output_path,
++            log_path=log_path,
++            error=f"{type(exc).__name__}: {exc}",
++        )
++        _write_json(output_path, artifact)
++        print(f"-> {artifact['honest_verdict']}", flush=True)
++        return artifact
++
++    try:
++        pid = launcher(
++            runner_path=RUNNER_PATH,
++            output_path=full_output_path,
++            log_path=log_path,
++            n_tasks=full_n_tasks,
++            k=full_k,
++        )
++    except Exception as exc:
++        artifact = build_artifact(
++            honest_verdict="blocked_launch_failed",
++            runner_ready=True,
++            smoke_passed=True,
++            launched_pid=0,
++            preconditions_checked=preconditions,
++            duration_s=time.time() - started,
++            smoke_output_path=smoke_output_path,
++            full_output_path=full_output_path,
++            log_path=log_path,
++            error=f"{type(exc).__name__}: {exc}",
++        )
++        _write_json(output_path, artifact)
++        print(f"-> {artifact['honest_verdict']}", flush=True)
++        return artifact
++
++    artifact = build_artifact(
++        honest_verdict=SUCCESS_VERDICT,
++        runner_ready=True,
++        smoke_passed=True,
++        launched_pid=pid,
++        preconditions_checked=preconditions,
++        duration_s=time.time() - started,
++        smoke_output_path=smoke_output_path,
++        full_output_path=full_output_path,
++        log_path=log_path,
++    )
++    _write_json(output_path, artifact)
++    print(f"-> {artifact['honest_verdict']} pid={pid}", flush=True)
++    return artifact
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:  # pragma: no cover
++    run_build()
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/scripts/experiments/offarc_exec_verifier_transfer_run.py b/scripts/experiments/offarc_exec_verifier_transfer_run.py
+new file mode 100644
+index 0000000000..14e11b1224
+--- /dev/null
++++ b/scripts/experiments/offarc_exec_verifier_transfer_run.py
+@@ -0,0 +1,940 @@
++"""Exp 4032 OFF-ARC execution-verifier transfer runner.
++
++Spec refs: REQ-VERIFY-4032, SCENARIO-VERIFY-4032.
++
++This runner ports the GAP-4 demo-fit execution primitive from ARC grids to a
++standard code-synthesis setting. Candidate programs are generated by a local
++Gemma 4 12B GGUF, executed through Carnot's sandbox-compatible function runner,
++selected by vote / ACES / visible demo-fit, and scored only afterward on held-out
++tests.
++"""
++
++from __future__ import annotations
++
++import argparse
++import ast
++import hashlib
++import json
++import random
++import re
++import time
++from collections import Counter
++from dataclasses import asdict, dataclass
++from pathlib import Path
++from typing import Any, Callable
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++OUTPUT = REPO_ROOT / "results" / "experiment_4032_offarc_exec_verifier_transfer_raw.json"
++CHECKPOINT = REPO_ROOT / "results" / "experiment_4032_offarc_exec_verifier_transfer.checkpoint.json"
++GGUF_CACHE = Path.home() / ".cache" / "huggingface" / "hub" / "models--unsloth--gemma-4-12B-it-GGUF"
++
++RANDOM_SEED = 4032
++DEFAULT_K = 8
++DEFAULT_N_TASKS = 40
++FULL_TASK_FLOOR = 30
++FULL_K_FLOOR = 8
++INFERENCE_SUBSTRATE = "live_llm_inference"
++
++REQUIRED_RAW_FIELDS = [
++    "honest_verdict",
++    "corpus",
++    "n_tasks",
++    "k_candidates_per_task",
++    "armA_vote_passrate",
++    "armA_vote_pass2",
++    "armAplusplus_aces_passrate",
++    "armAplusplus_aces_pass2",
++    "armB_demofit_passrate",
++    "armB_demofit_pass2",
++    "delta_pp",
++    "bootstrap_ci95",
++    "oracle_passrate",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "truncation_rate",
++    "preconditions_checked",
++    "missing_verifier_gaps",
++    "inference_substrate",
++]
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefix verdict; success only when demo-fit beats vote with CI > 0.",
++    "corpus": "The non-ARC code corpus used for the transfer measurement.",
++    "n_tasks": "Bare int; >=30 in full mode for a percentage-point claim.",
++    "k_candidates_per_task": "Bare int; >=8 in full mode to mirror best-of-N transfer.",
++    "armA_vote_passrate": "Arm A pass@1 from majority/self-consistency over visible behavior.",
++    "armAplusplus_aces_passrate": "Arm A++ pass@1 from leave-one-out visible test-consistency.",
++    "armB_demofit_passrate": "Arm B pass@1 from demo-perfect visible-test filtering.",
++    "delta_pp": "Arm B pass@1 minus Arm A pass@1, in percentage points.",
++    "bootstrap_ci95": "Bootstrap 95% CI for Arm B minus Arm A, in percentage points.",
++    "oracle_passrate": "Positive-control pass@1: any candidate in the same pool passes hidden tests.",
++    "truncation_rate": "Generation truncation guard; fraction of candidates ended by token limit.",
++    "reproducibility_checksum": "SHA-256 over deterministic task, candidate, and metric content.",
++}
++
++
++@dataclass(frozen=True)
++class CodeTest:
++    source: str
++    func_name: str
++    args: tuple[Any, ...]
++    expected: Any
++
++
++@dataclass(frozen=True)
++class CodeTask:
++    task_id: str
++    corpus: str
++    prompt: str
++    func_name: str
++    visible_tests: list[CodeTest]
++    hidden_tests: list[CodeTest]
++
++
++@dataclass(frozen=True)
++class GeneratedCandidate:
++    draw_index: int
++    raw_text: str
++    code: str
++    generation_seconds: float
++    finish_reason: str | None
++    truncated: bool
++
++
++@dataclass(frozen=True)
++class CandidateEvaluation:
++    task_id: str
++    draw_index: int
++    status: str
++    code: str
++    visible_passes: list[bool]
++    hidden_passes: list[bool]
++    visible_outputs: list[Any]
++    hidden_outputs: list[Any]
++    generation_seconds: float
++    truncated: bool
++    error: str | None
++
++
++def parse_assertion_test(source: str) -> CodeTest | None:
++    """Parse a simple `assert f(args) == expected` test into an exact-output demo."""
++    stripped = source.strip()
++    try:
++        tree = ast.parse(stripped)
++    except SyntaxError:
++        return None
++    if len(tree.body) != 1 or not isinstance(tree.body[0], ast.Assert):
++        return None
++    expr = tree.body[0].test
++    if not (
++        isinstance(expr, ast.Compare)
++        and len(expr.ops) == 1
++        and isinstance(expr.ops[0], ast.Eq)
++        and len(expr.comparators) == 1
++    ):
++        return None
++    left, right = expr.left, expr.comparators[0]
++    parsed = _call_and_expected(left, right)
++    if parsed is None:
++        parsed = _call_and_expected(right, left)
++    if parsed is None:
++        return None
++    func_name, args, expected = parsed
++    return CodeTest(stripped, func_name, args, expected)
++
++
++def _call_and_expected(
++    call_node: ast.AST, expected_node: ast.AST
++) -> tuple[str, tuple[Any, ...], Any] | None:
++    if not isinstance(call_node, ast.Call) or not isinstance(call_node.func, ast.Name):
++        return None
++    if call_node.keywords:
++        return None
++    try:
++        args = tuple(ast.literal_eval(arg) for arg in call_node.args)
++        expected = ast.literal_eval(expected_node)
++    except (SyntaxError, ValueError):
++        return None
++    return call_node.func.id, args, expected
++
++
++def extract_code_block(text: str, func_name: str) -> str:
++    """Extract the generated Python function from fenced or plain model text."""
++    fence = re.compile(r"```(?:python)?\s*(.*?)```", re.IGNORECASE | re.DOTALL)
++    for match in fence.finditer(text):
++        block = match.group(1).strip()
++        if re.search(rf"\bdef\s+{re.escape(func_name)}\s*\(", block):
++            return block
++    match = re.search(rf"\bdef\s+{re.escape(func_name)}\s*\(", text)
++    if match:
++        return text[match.start() :].strip().strip("`")
++    return ""
++
++
++def _stable_repr(value: Any) -> str:
++    try:
++        return json.dumps(value, sort_keys=True)
++    except TypeError:
++        return repr(value)
++
++
++def default_executor(
++    code: str, func_name: str, args: tuple[Any, ...], timeout: float
++) -> tuple[
++    Any, Exception | None
++]:  # pragma: no cover - integration path exercised by smoke/full runs.
++    from carnot.verify.sandbox import sandboxed_exec_function
++
++    return sandboxed_exec_function(code, func_name, args, timeout=timeout, allow_fallback=True)
++
++
++def evaluate_candidate(
++    task: CodeTask,
++    candidate: GeneratedCandidate,
++    *,
++    executor: Callable[
++        [str, str, tuple[Any, ...], float], tuple[Any, Exception | None]
++    ] = default_executor,
++    timeout: float = 2.0,
++) -> CandidateEvaluation:
++    """Run one candidate on visible and hidden tests and record exact-output pass bits."""
++    if not candidate.code:
++        return CandidateEvaluation(
++            task_id=task.task_id,
++            draw_index=candidate.draw_index,
++            status="no_code",
++            code="",
++            visible_passes=[False for _ in task.visible_tests],
++            hidden_passes=[False for _ in task.hidden_tests],
++            visible_outputs=["no_code" for _ in task.visible_tests],
++            hidden_outputs=["no_code" for _ in task.hidden_tests],
++            generation_seconds=candidate.generation_seconds,
++            truncated=candidate.truncated,
++            error="no_code",
++        )
++
++    visible_passes, visible_outputs, visible_error = _run_tests(
++        candidate.code, task.visible_tests, executor=executor, timeout=timeout
++    )
++    hidden_passes, hidden_outputs, hidden_error = _run_tests(
++        candidate.code, task.hidden_tests, executor=executor, timeout=timeout
++    )
++    return CandidateEvaluation(
++        task_id=task.task_id,
++        draw_index=candidate.draw_index,
++        status="ok",
++        code=candidate.code,
++        visible_passes=visible_passes,
++        hidden_passes=hidden_passes,
++        visible_outputs=visible_outputs,
++        hidden_outputs=hidden_outputs,
++        generation_seconds=candidate.generation_seconds,
++        truncated=candidate.truncated,
++        error=visible_error or hidden_error,
++    )
++
++
++def _run_tests(
++    code: str,
++    tests: list[CodeTest],
++    *,
++    executor: Callable[[str, str, tuple[Any, ...], float], tuple[Any, Exception | None]],
++    timeout: float,
++) -> tuple[list[bool], list[Any], str | None]:
++    passes: list[bool] = []
++    outputs: list[Any] = []
++    first_error: str | None = None
++    for test in tests:
++        result, error = executor(code, test.func_name, test.args, timeout)
++        if error is not None:
++            passes.append(False)
++            err = f"{type(error).__name__}: {error}"
++            outputs.append({"error": err})
++            first_error = first_error or err
++            continue
++        passes.append(result == test.expected)
++        outputs.append(result)
++    return passes, outputs, first_error
++
++
++def aces_leave_one_out_scores(evaluations: list[CandidateEvaluation]) -> dict[int, float]:
++    """Compute a bounded ACES-style score from visible pass/fail consistency."""
++    if not evaluations:
++        return {}
++    n_tests = max((len(ev.visible_passes) for ev in evaluations), default=0)
++    if n_tests == 0:
++        return {ev.draw_index: 0.0 for ev in evaluations}
++    if n_tests == 1:
++        return {ev.draw_index: float(ev.visible_passes[0]) for ev in evaluations}
++
++    weights: list[float] = []
++    for held_out in range(n_tests):
++        other_scores = []
++        for ev in evaluations:
++            other = [passed for i, passed in enumerate(ev.visible_passes) if i != held_out]
++            other_scores.append(sum(other) / max(1, len(other)))
++        best = max(other_scores)
++        top = [
++            ev.visible_passes[held_out]
++            for ev, score in zip(evaluations, other_scores, strict=False)
++            if score == best
++        ]
++        rest = [
++            ev.visible_passes[held_out]
++            for ev, score in zip(evaluations, other_scores, strict=False)
++            if score != best
++        ]
++        top_rate = sum(top) / max(1, len(top))
++        rest_rate = sum(rest) / max(1, len(rest))
++        weights.append(max(0.0, top_rate - rest_rate))
++    if not any(weights):
++        weights = [1.0 for _ in range(n_tests)]
++
++    denom = sum(weights)
++    scores = {}
++    for ev in evaluations:
++        weighted = sum(
++            weight * float(passed)
++            for weight, passed in zip(weights, ev.visible_passes, strict=False)
++        )
++        scores[ev.draw_index] = weighted / denom if denom else 0.0
++    return scores
++
++
++def score_evaluated_tasks(
++    tasks: list[CodeTask],
++    evaluations_by_task: dict[str, list[CandidateEvaluation]],
++    *,
++    seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    """Score Arm A vote, Arm A++ ACES, Arm B demo-fit, and oracle on hidden tests."""
++    per_task = []
++    a1: list[int] = []
++    a2: list[int] = []
++    app1: list[int] = []
++    app2: list[int] = []
++    b1: list[int] = []
++    b2: list[int] = []
++    oracle: list[int] = []
++    n_candidates = 0
++    n_truncated = 0
++    missing_gaps: list[str] = []
++
++    for task in tasks:
++        evaluations = list(evaluations_by_task.get(task.task_id, []))
++        n_candidates += len(evaluations)
++        n_truncated += sum(1 for ev in evaluations if ev.truncated)
++        vote_rank = _rank_vote(evaluations)
++        aces_rank = _rank_aces(evaluations)
++        demofit_rank = _rank_demofit(evaluations)
++        oracle_hit = any(_hidden_all(ev) for ev in evaluations)
++
++        arm_a_1 = _pass_at(vote_rank, 1)
++        arm_a_2 = _pass_at(vote_rank, 2)
++        arm_app_1 = _pass_at(aces_rank, 1)
++        arm_app_2 = _pass_at(aces_rank, 2)
++        arm_b_1 = _pass_at(demofit_rank, 1)
++        arm_b_2 = _pass_at(demofit_rank, 2)
++        if oracle_hit and not arm_b_1:
++            missing_gaps.append(task.task_id)
++
++        a1.append(int(arm_a_1))
++        a2.append(int(arm_a_2))
++        app1.append(int(arm_app_1))
++        app2.append(int(arm_app_2))
++        b1.append(int(arm_b_1))
++        b2.append(int(arm_b_2))
++        oracle.append(int(oracle_hit))
++
++        per_task.append(
++            {
++                "task_id": task.task_id,
++                "func_name": task.func_name,
++                "n_candidates": len(evaluations),
++                "n_visible_tests": len(task.visible_tests),
++                "n_hidden_tests": len(task.hidden_tests),
++                "armA_vote_selected": [ev.draw_index for ev in vote_rank[:2]],
++                "armAplusplus_aces_selected": [ev.draw_index for ev in aces_rank[:2]],
++                "armB_demofit_selected": [ev.draw_index for ev in demofit_rank[:2]],
++                "armB_demo_perfect_count": sum(1 for ev in evaluations if _demo_perfect(ev)),
++                "armA_vote_pass1": arm_a_1,
++                "armA_vote_pass2": arm_a_2,
++                "armAplusplus_aces_pass1": arm_app_1,
++                "armAplusplus_aces_pass2": arm_app_2,
++                "armB_demofit_pass1": arm_b_1,
++                "armB_demofit_pass2": arm_b_2,
++                "oracle_hidden_pass": oracle_hit,
++            }
++        )
++
++    arm_a_rate = _rate(a1)
++    arm_b_rate = _rate(b1)
++    return {
++        "armA_vote_passrate": arm_a_rate,
++        "armA_vote_pass2": _rate(a2),
++        "armAplusplus_aces_passrate": _rate(app1),
++        "armAplusplus_aces_pass2": _rate(app2),
++        "armB_demofit_passrate": arm_b_rate,
++        "armB_demofit_pass2": _rate(b2),
++        "delta_pp": round((arm_b_rate - arm_a_rate) * 100.0, 4),
++        "bootstrap_ci95": _bootstrap_ci_pp(
++            [b - a for a, b in zip(a1, b1, strict=False)], seed=seed
++        ),
++        "bootstrap_ci95_pass2": _bootstrap_ci_pp(
++            [b - a for a, b in zip(a2, b2, strict=False)], seed=seed + 2
++        ),
++        "oracle_passrate": _rate(oracle),
++        "truncation_rate": n_truncated / max(1, n_candidates),
++        "missing_verifier_gaps": missing_gaps,
++        "per_task": per_task,
++    }
++
++
++def _rank_vote(evaluations: list[CandidateEvaluation]) -> list[CandidateEvaluation]:
++    counts = Counter(_visible_signature(ev) for ev in evaluations)
++    return sorted(evaluations, key=lambda ev: (-counts[_visible_signature(ev)], ev.draw_index))
++
++
++def _rank_aces(evaluations: list[CandidateEvaluation]) -> list[CandidateEvaluation]:
++    scores = aces_leave_one_out_scores(evaluations)
++    return sorted(
++        evaluations,
++        key=lambda ev: (-scores.get(ev.draw_index, 0.0), -sum(ev.visible_passes), ev.draw_index),
++    )
++
++
++def _rank_demofit(evaluations: list[CandidateEvaluation]) -> list[CandidateEvaluation]:
++    demo_perfect = [ev for ev in evaluations if _demo_perfect(ev)]
++    if not demo_perfect:
++        return []
++    counts = Counter(_visible_signature(ev) for ev in demo_perfect)
++    aces = aces_leave_one_out_scores(demo_perfect)
++    return sorted(
++        demo_perfect,
++        key=lambda ev: (
++            -aces.get(ev.draw_index, 0.0),
++            -counts[_visible_signature(ev)],
++            ev.draw_index,
++        ),
++    )
++
++
++def _visible_signature(ev: CandidateEvaluation) -> tuple[str, ...]:
++    return tuple(_stable_repr(output) for output in ev.visible_outputs)
++
++
++def _demo_perfect(ev: CandidateEvaluation) -> bool:
++    return bool(ev.visible_passes) and all(ev.visible_passes)
++
++
++def _hidden_all(ev: CandidateEvaluation) -> bool:
++    return bool(ev.hidden_passes) and all(ev.hidden_passes)
++
++
++def _pass_at(ranked: list[CandidateEvaluation], k: int) -> bool:
++    return any(_hidden_all(ev) for ev in ranked[:k])
++
++
++def _rate(values: list[int]) -> float:
++    return round(sum(values) / max(1, len(values)), 6)
++
++
++def _bootstrap_ci_pp(values: list[int], *, seed: int, n_boot: int = 2000) -> list[float]:
++    if not values:
++        return [0.0, 0.0]
++    rng = random.Random(seed)
++    samples = []
++    for _ in range(n_boot):
++        draw = [values[rng.randrange(len(values))] for _ in values]
++        samples.append(sum(draw) / len(draw) * 100.0)
++    samples.sort()
++    lo = samples[int(0.025 * (len(samples) - 1))]
++    hi = samples[int(0.975 * (len(samples) - 1))]
++    return [round(lo, 4), round(hi, 4)]
++
++
++def build_raw_artifact(
++    *,
++    tasks: list[CodeTask],
++    evaluations_by_task: dict[str, list[CandidateEvaluation]],
++    preconditions_checked: list[dict[str, Any]],
++    model_specs: dict[str, Any],
++    k: int,
++    started_s: float,
++    ended_s: float,
++    mode: str,
++    seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    scored = score_evaluated_tasks(tasks, evaluations_by_task, seed=seed)
++    verdict = _verdict(scored, mode=mode)
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4032_offarc_exec_verifier_transfer",
++        "schema": "carnot.experiment_4032_offarc_exec_verifier_transfer_raw.v1",
++        "honest_verdict": verdict,
++        "corpus": tasks[0].corpus if tasks else "unknown",
++        "n_tasks": len(tasks),
++        "k_candidates_per_task": k,
++        "armA_vote_passrate": scored["armA_vote_passrate"],
++        "armA_vote_pass2": scored["armA_vote_pass2"],
++        "armAplusplus_aces_passrate": scored["armAplusplus_aces_passrate"],
++        "armAplusplus_aces_pass2": scored["armAplusplus_aces_pass2"],
++        "armB_demofit_passrate": scored["armB_demofit_passrate"],
++        "armB_demofit_pass2": scored["armB_demofit_pass2"],
++        "delta_pp": scored["delta_pp"],
++        "bootstrap_ci95": scored["bootstrap_ci95"],
++        "bootstrap_ci95_pass2": scored["bootstrap_ci95_pass2"],
++        "oracle_passrate": scored["oracle_passrate"],
++        "model_specs": model_specs,
++        "random_seed": seed,
++        "reproducibility_checksum": "",
++        "truncation_rate": scored["truncation_rate"],
++        "preconditions_checked": preconditions_checked,
++        "missing_verifier_gaps": scored["missing_verifier_gaps"],
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "mode": mode,
++        "duration_s": round(ended_s - started_s, 2),
++        "per_task": scored["per_task"],
++        "candidate_pool": _candidate_pool_records(evaluations_by_task),
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    artifact["reproducibility_checksum"] = _artifact_checksum(artifact)
++    return artifact
++
++
++def _verdict(scored: dict[str, Any], *, mode: str) -> str:
++    if mode == "smoke":
++        return "success: offarc_transfer_smoke_raw_complete"
++    if (
++        scored["armB_demofit_passrate"] > scored["armA_vote_passrate"]
++        and scored["bootstrap_ci95"][0] > 0.0
++    ):
++        return "success: exec_verifier_transfers_to_code_deltaPP_ci_excl0"
++    if scored["oracle_passrate"] <= scored["armA_vote_passrate"] + 0.01:
++        return "complete: exec_verifier_transfer_uninformative_no_selectable_headroom"
++    return "complete: exec_verifier_no_transfer_code_headroom_exists"
++
++
++def _candidate_pool_records(
++    evaluations_by_task: dict[str, list[CandidateEvaluation]],
++) -> dict[str, list[dict[str, Any]]]:
++    records: dict[str, list[dict[str, Any]]] = {}
++    for task_id, evaluations in sorted(evaluations_by_task.items()):
++        rows = []
++        for ev in evaluations:
++            rows.append(
++                {
++                    "draw_index": ev.draw_index,
++                    "status": ev.status,
++                    "code_sha256": hashlib.sha256(ev.code.encode("utf-8")).hexdigest()[:16],
++                    "code": ev.code,
++                    "visible_passes": ev.visible_passes,
++                    "hidden_passes": ev.hidden_passes,
++                    "generation_seconds": ev.generation_seconds,
++                    "truncated": ev.truncated,
++                    "error": ev.error,
++                }
++            )
++        records[task_id] = rows
++    return records
++
++
++def _artifact_checksum(artifact: dict[str, Any]) -> str:
++    payload = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"reproducibility_checksum", "duration_s", "field_principles"}
++    }
++    encoded = json.dumps(payload, sort_keys=True, default=repr)
++    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
++
++
++def validate_raw_artifact(artifact: dict[str, Any], *, require_full: bool) -> None:
++    if "runner_ready" in artifact:
++        raise ValueError("unexpected raw artifact field: runner_ready")
++    for field in REQUIRED_RAW_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required raw field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("success:")
++        or verdict.startswith("complete:")
++        or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    for field in ("n_tasks", "k_candidates_per_task", "random_seed"):
++        if not isinstance(artifact[field], int) or isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare int")
++    for field in (
++        "armA_vote_passrate",
++        "armA_vote_pass2",
++        "armAplusplus_aces_passrate",
++        "armAplusplus_aces_pass2",
++        "armB_demofit_passrate",
++        "armB_demofit_pass2",
++        "delta_pp",
++        "oracle_passrate",
++        "truncation_rate",
++    ):
++        if not isinstance(artifact[field], float) or isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare float")
++    if not (isinstance(artifact["bootstrap_ci95"], list) and len(artifact["bootstrap_ci95"]) == 2):
++        raise ValueError("bootstrap_ci95 must be a two-element list")
++    if not all(isinstance(value, (int, float)) for value in artifact["bootstrap_ci95"]):
++        raise ValueError("bootstrap_ci95 values must be numeric")
++    if not isinstance(artifact["model_specs"], dict):
++        raise ValueError("model_specs must be an object")
++    if (
++        not isinstance(artifact["reproducibility_checksum"], str)
++        or not artifact["reproducibility_checksum"]
++    ):
++        raise ValueError("reproducibility_checksum must be a non-empty string")
++    if not isinstance(artifact["preconditions_checked"], list):
++        raise ValueError("preconditions_checked must be a list")
++    if not isinstance(artifact["missing_verifier_gaps"], list):
++        raise ValueError("missing_verifier_gaps must be a list")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be live_llm_inference")
++    if require_full and (
++        artifact["n_tasks"] < FULL_TASK_FLOOR or artifact["k_candidates_per_task"] < FULL_K_FLOOR
++    ):
++        raise ValueError("full run must include at least 30 tasks and k>=8")
++
++
++def resolve_gemma_gguf(
++    cache_dir: Path = GGUF_CACHE,
++) -> Path | None:  # pragma: no cover - filesystem live check.
++    candidates = sorted(cache_dir.glob("snapshots/**/*.gguf"))
++    for candidate in candidates:
++        if candidate.exists():
++            return candidate
++    return None
++
++
++def check_preconditions() -> list[
++    dict[str, Any]
++]:  # pragma: no cover - exercised by required build command.
++    model_path = resolve_gemma_gguf()
++    llama_ok = _import_ok("llama_cpp")
++    sandbox_ok = _sandbox_import_ok()
++    corpus_ok = False
++    corpus_detail = None
++    try:
++        corpus_ok = bool(load_code_tasks(limit=2))
++        corpus_detail = "mbpp_sanitized"
++    except Exception as exc:
++        corpus_detail = f"{type(exc).__name__}: {str(exc)[:120]}"
++    return [
++        {
++            "resource": "local_gguf_cached",
++            "available": model_path is not None,
++            "path": str(model_path) if model_path else None,
++        },
++        {"resource": "llama_cpp_importable", "available": llama_ok},
++        {"resource": "code_corpus_loadable", "available": corpus_ok, "detail": corpus_detail},
++        {"resource": "restricted_exec_importable", "available": sandbox_ok},
++    ]
++
++
++def _import_ok(module_name: str) -> bool:  # pragma: no cover
++    try:
++        __import__(module_name)
++        return True
++    except Exception:
++        return False
++
++
++def _sandbox_import_ok() -> bool:  # pragma: no cover
++    try:
++        from carnot.verify import sandbox  # noqa: F401
++
++        return True
++    except Exception:
++        return False
++
++
++def blocker_from_preconditions(preconditions: list[dict[str, Any]]) -> str | None:
++    blockers = {
++        "local_gguf_cached": "blocked_local_gguf_not_cached",
++        "llama_cpp_importable": "blocked_llama_cpp_unavailable",
++        "code_corpus_loadable": "blocked_code_corpus_unavailable",
++        "restricted_exec_importable": "blocked_sandbox_unavailable",
++    }
++    for row in preconditions:
++        if not bool(row.get("available")):
++            return blockers.get(
++                str(row.get("resource")), f"blocked_{row.get('resource', 'resource')}"
++            )
++    return None
++
++
++def load_code_tasks(
++    *,
++    corpus: str = "mbpp",
++    limit: int = DEFAULT_N_TASKS,
++) -> list[CodeTask]:  # pragma: no cover - live HF dataset path.
++    if corpus != "mbpp":
++        raise ValueError("only mbpp is implemented for Exp 4032")
++    from datasets import load_dataset
++
++    ds = load_dataset("mbpp", "sanitized", split="test")
++    tasks: list[CodeTask] = []
++    for row in ds:
++        parsed = [parse_assertion_test(item) for item in row.get("test_list", [])]
++        tests = [test for test in parsed if test is not None]
++        if len(tests) < 3:
++            continue
++        func_name = tests[0].func_name
++        tests = [test for test in tests if test.func_name == func_name]
++        if len(tests) < 3:
++            continue
++        tasks.append(
++            CodeTask(
++                task_id=f"MBPP:{row['task_id']}",
++                corpus="mbpp_sanitized",
++                prompt=str(row["prompt"]),
++                func_name=func_name,
++                visible_tests=tests[:2],
++                hidden_tests=tests[2:],
++            )
++        )
++        if limit and len(tasks) >= limit:
++            break
++    return tasks
++
++
++def build_prompt(
++    task: CodeTask,
++) -> str:  # pragma: no cover - covered indirectly by live generation.
++    visible = "\n".join(test.source for test in task.visible_tests)
++    return (
++        "Write a correct Python function for this programming task.\n\n"
++        f"Task:\n{task.prompt}\n\n"
++        f"Function name: {task.func_name}\n\n"
++        "Visible example tests:\n"
++        f"{visible}\n\n"
++        "Return only one Python code block defining the requested function. "
++        "Do not include hidden tests, file IO, network access, or explanations."
++    )
++
++
++class LocalGemmaSampler:  # pragma: no cover - live model path.
++    SYSTEM = (
++        "You are an expert Python programmer. Produce only a Python code block "
++        "containing the requested function."
++    )
++
++    def __init__(self, llama: Any, *, max_tokens: int = 1024, base_seed: int = RANDOM_SEED) -> None:
++        self._llama = llama
++        self.max_tokens = max_tokens
++        self.base_seed = base_seed
++
++    def __call__(self, task: CodeTask, draw_index: int) -> GeneratedCandidate:
++        prompt = build_prompt(task)
++        temperature = round(min(0.95, 0.25 + 0.07 * (draw_index % 8)), 3)
++        seed = self.base_seed + draw_index * 1009
++        started = time.time()
++        try:
++            out = self._llama.create_chat_completion(
++                messages=[
++                    {"role": "system", "content": self.SYSTEM},
++                    {"role": "user", "content": prompt},
++                ],
++                max_tokens=self.max_tokens,
++                temperature=temperature,
++                top_p=0.95,
++                seed=seed,
++            )
++            choice = out["choices"][0]
++            raw = choice["message"]["content"] or ""
++            finish_reason = choice.get("finish_reason")
++        except Exception as exc:
++            raw = f"__local_error__:{type(exc).__name__}: {exc}"
++            finish_reason = "error"
++        code = extract_code_block(raw, task.func_name)
++        return GeneratedCandidate(
++            draw_index=draw_index,
++            raw_text=raw,
++            code=code,
++            generation_seconds=round(time.time() - started, 3),
++            finish_reason=finish_reason,
++            truncated=finish_reason == "length",
++        )
++
++
++def load_local_llama(model_path: Path, *, n_ctx: int, seed: int) -> Any:  # pragma: no cover
++    from llama_cpp import Llama
++
++    return Llama(model_path=str(model_path), n_ctx=n_ctx, n_gpu_layers=-1, seed=seed, verbose=False)
++
++
++def _load_checkpoint(
++    path: Path, *, k: int
++) -> dict[str, list[CandidateEvaluation]]:  # pragma: no cover
++    if not path.exists():
++        return {}
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except Exception:
++        return {}
++    if payload.get("k_candidates_per_task") != k:
++        return {}
++    out: dict[str, list[CandidateEvaluation]] = {}
++    for task_id, rows in payload.get("evaluations_by_task", {}).items():
++        out[task_id] = [CandidateEvaluation(**row) for row in rows]
++    return out
++
++
++def _save_checkpoint(
++    path: Path, evaluations_by_task: dict[str, list[CandidateEvaluation]], *, k: int
++) -> None:  # pragma: no cover
++    path.parent.mkdir(parents=True, exist_ok=True)
++    payload = {
++        "schema": "carnot.experiment_4032.checkpoint.v1",
++        "k_candidates_per_task": k,
++        "evaluations_by_task": {
++            task_id: [asdict(ev) for ev in evaluations]
++            for task_id, evaluations in evaluations_by_task.items()
++        },
++    }
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True, default=repr) + "\n", encoding="utf-8"
++    )
++
++
++def run(
++    *,
++    output_path: Path = OUTPUT,
++    checkpoint_path: Path = CHECKPOINT,
++    n_tasks: int = DEFAULT_N_TASKS,
++    k: int = DEFAULT_K,
++    mode: str = "full",
++    n_ctx: int = 8192,
++    preconditions_checked: list[dict[str, Any]] | None = None,
++    sampler: Callable[[CodeTask, int], GeneratedCandidate] | None = None,
++) -> dict[str, Any]:  # pragma: no cover - live runner is smoked by build script.
++    started = time.time()
++    preconditions = (
++        preconditions_checked if preconditions_checked is not None else check_preconditions()
++    )
++    blocker = blocker_from_preconditions(preconditions)
++    if blocker:
++        artifact = _blocked_raw_artifact(
++            blocker, preconditions, started_s=started, ended_s=time.time(), k=k
++        )
++        _write_json(output_path, artifact)
++        print(f"-> {artifact['honest_verdict']}", flush=True)
++        return artifact
++
++    tasks = load_code_tasks(limit=n_tasks)
++    if sampler is None:
++        model_path = resolve_gemma_gguf()
++        if model_path is None:
++            raise RuntimeError("local GGUF precondition passed but no .gguf path resolved")
++        sampler = LocalGemmaSampler(load_local_llama(model_path, n_ctx=n_ctx, seed=RANDOM_SEED))
++        model_specs = {
++            "generator_model": "gemma-4-12B-it-GGUF",
++            "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
++            "generator_gguf_path": str(model_path),
++            "verifier": "sandboxed_exec_function visible demo-fit exact-output selector",
++        }
++    else:
++        model_specs = {
++            "generator_model": "injected_sampler",
++            "verifier": "sandboxed_exec_function visible demo-fit exact-output selector",
++        }
++
++    evaluations_by_task = _load_checkpoint(checkpoint_path, k=k)
++    for task in tasks:
++        cached = evaluations_by_task.get(task.task_id)
++        if cached is not None and len(cached) >= k:
++            evaluations_by_task[task.task_id] = cached[:k]
++            continue
++        rows = []
++        for draw_index in range(k):
++            candidate = sampler(task, draw_index)
++            rows.append(evaluate_candidate(task, candidate))
++        evaluations_by_task[task.task_id] = rows
++        _save_checkpoint(checkpoint_path, evaluations_by_task, k=k)
++
++    artifact = build_raw_artifact(
++        tasks=tasks,
++        evaluations_by_task=evaluations_by_task,
++        preconditions_checked=preconditions,
++        model_specs=model_specs,
++        k=k,
++        started_s=started,
++        ended_s=time.time(),
++        mode=mode,
++    )
++    validate_raw_artifact(artifact, require_full=mode == "full")
++    _write_json(output_path, artifact)
++    print(
++        f"-> {artifact['honest_verdict']} n={artifact['n_tasks']} k={artifact['k_candidates_per_task']} "
++        f"A={artifact['armA_vote_passrate']} B={artifact['armB_demofit_passrate']} "
++        f"delta_pp={artifact['delta_pp']} CI={artifact['bootstrap_ci95']}",
++        flush=True,
++    )
++    return artifact
++
++
++def _blocked_raw_artifact(
++    verdict: str, preconditions: list[dict[str, Any]], *, started_s: float, ended_s: float, k: int
++) -> dict[str, Any]:  # pragma: no cover
++    artifact = {
++        "experiment": "experiment_4032_offarc_exec_verifier_transfer",
++        "schema": "carnot.experiment_4032_offarc_exec_verifier_transfer_raw.v1",
++        "honest_verdict": verdict,
++        "corpus": "unknown",
++        "n_tasks": 0,
++        "k_candidates_per_task": k,
++        "armA_vote_passrate": 0.0,
++        "armA_vote_pass2": 0.0,
++        "armAplusplus_aces_passrate": 0.0,
++        "armAplusplus_aces_pass2": 0.0,
++        "armB_demofit_passrate": 0.0,
++        "armB_demofit_pass2": 0.0,
++        "delta_pp": 0.0,
++        "bootstrap_ci95": [0.0, 0.0],
++        "oracle_passrate": 0.0,
++        "model_specs": {},
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "blocked",
++        "truncation_rate": 0.0,
++        "preconditions_checked": preconditions,
++        "missing_verifier_gaps": [],
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(ended_s - started_s, 2),
++    }
++    validate_raw_artifact(artifact, require_full=False)
++    return artifact
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True, default=repr) + "\n", encoding="utf-8"
++    )
++
++
++def main() -> None:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output", type=Path, default=OUTPUT)
++    parser.add_argument("--checkpoint", type=Path, default=CHECKPOINT)
++    parser.add_argument("--n-tasks", type=int, default=DEFAULT_N_TASKS)
++    parser.add_argument("--k", type=int, default=DEFAULT_K)
++    parser.add_argument("--mode", choices=["full", "smoke"], default="full")
++    parser.add_argument("--n-ctx", type=int, default=8192)
++    args = parser.parse_args()
++    run(
++        output_path=args.output,
++        checkpoint_path=args.checkpoint,
++        n_tasks=args.n_tasks,
++        k=args.k,
++        mode=args.mode,
++        n_ctx=args.n_ctx,
++    )
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_4031_offarc_transfer.py b/tests/python/test_experiment_4031_offarc_transfer.py
+new file mode 100644
+index 0000000000..c052578d09
+--- /dev/null
++++ b/tests/python/test_experiment_4031_offarc_transfer.py
+@@ -0,0 +1,539 @@
++"""Tests for Exp 4031/4032 OFF-ARC execution-verifier transfer.
++
++Spec refs: REQ-VERIFY-4031, SCENARIO-VERIFY-4031,
++REQ-VERIFY-4032, SCENARIO-VERIFY-4032.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++import exp4031_offarc_transfer_build as build
++import offarc_exec_verifier_transfer_run as runner
++
++
++def _check(resource: str, available: bool) -> dict[str, Any]:
++    return {"resource": resource, "available": available}
++
++
++def _task(task_id: str = "MBPP:1") -> runner.CodeTask:
++    return runner.CodeTask(
++        task_id=task_id,
++        corpus="mbpp",
++        prompt="Write a function to add two numbers.",
++        func_name="add",
++        visible_tests=[
++            runner.CodeTest("assert add(1, 2) == 3", "add", (1, 2), 3),
++            runner.CodeTest("assert add(4, 5) == 9", "add", (4, 5), 9),
++        ],
++        hidden_tests=[runner.CodeTest("assert add(2, 7) == 9", "add", (2, 7), 9)],
++    )
++
++
++def _eval(
++    task_id: str,
++    draw_index: int,
++    *,
++    visible_passes: list[bool],
++    hidden_passes: list[bool],
++    visible_outputs: list[Any],
++    truncated: bool = False,
++) -> runner.CandidateEvaluation:
++    return runner.CandidateEvaluation(
++        task_id=task_id,
++        draw_index=draw_index,
++        status="ok",
++        code=f"def add(a, b):\n    return a + b  # {task_id}-{draw_index}\n",
++        visible_passes=visible_passes,
++        hidden_passes=hidden_passes,
++        visible_outputs=visible_outputs,
++        hidden_outputs=["hidden"],
++        generation_seconds=0.1,
++        truncated=truncated,
++        error=None,
++    )
++
++
++def _synthetic_evaluations() -> tuple[
++    list[runner.CodeTask], dict[str, list[runner.CandidateEvaluation]]
++]:
++    tasks = [_task("MBPP:1"), _task("MBPP:2")]
++    evaluations = {
++        "MBPP:1": [
++            _eval(
++                "MBPP:1",
++                0,
++                visible_passes=[False, False],
++                hidden_passes=[False],
++                visible_outputs=[0, 0],
++            ),
++            _eval(
++                "MBPP:1",
++                1,
++                visible_passes=[True, True],
++                hidden_passes=[True],
++                visible_outputs=[3, 9],
++            ),
++            _eval(
++                "MBPP:1",
++                2,
++                visible_passes=[False, False],
++                hidden_passes=[False],
++                visible_outputs=[0, 0],
++            ),
++        ],
++        "MBPP:2": [
++            _eval(
++                "MBPP:2",
++                0,
++                visible_passes=[True, True],
++                hidden_passes=[True],
++                visible_outputs=[3, 9],
++            ),
++            _eval(
++                "MBPP:2",
++                1,
++                visible_passes=[False, True],
++                hidden_passes=[False],
++                visible_outputs=[2, 9],
++            ),
++            _eval(
++                "MBPP:2",
++                2,
++                visible_passes=[False, False],
++                hidden_passes=[False],
++                visible_outputs=[0, 0],
++                truncated=True,
++            ),
++        ],
++    }
++    return tasks, evaluations
++
++
++def test_req_4031_4032_spec_declared() -> None:
++    # REQ-VERIFY-4031 / REQ-VERIFY-4032: OpenSpec declares build and run contracts first.
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-4031",
++        "SCENARIO-VERIFY-4031",
++        "REQ-VERIFY-4032",
++        "SCENARIO-VERIFY-4032",
++        "offarc_exec_verifier_transfer_run.py",
++        "armAplusplus_aces_passrate",
++    ):
++        assert marker in spec
++
++
++def test_parse_assertion_test_extracts_function_args_and_expected() -> None:
++    # REQ-VERIFY-4032: visible and hidden tests are parsed as exact-output demos.
++    parsed = runner.parse_assertion_test("assert add(2, 3) == 5")
++    assert parsed == runner.CodeTest("assert add(2, 3) == 5", "add", (2, 3), 5)
++    assert runner.parse_assertion_test("assert add(1, b=2) == 3") is None
++    assert runner.parse_assertion_test("assert add(1) > 0") is None
++    assert runner.parse_assertion_test("assert add(x) == 3") is None
++    assert runner.parse_assertion_test("assert (") is None
++    assert runner.parse_assertion_test("print('not an assert')") is None
++
++
++def test_extract_code_block_prefers_python_fence_and_function_name() -> None:
++    # SCENARIO-VERIFY-4032: generated text is normalized to the candidate program body.
++    text = "notes\n```python\ndef add(a, b):\n    return a + b\n```\ntrailing"
++    assert runner.extract_code_block(text, "add") == "def add(a, b):\n    return a + b"
++    unfenced = "Here is code:\ndef add(a, b):\n    return a - b\n"
++    assert runner.extract_code_block(unfenced, "add").startswith("def add")
++    assert runner.extract_code_block("no function here", "add") == ""
++
++
++def test_evaluate_candidate_uses_injected_executor_for_visible_and_hidden_tests() -> None:
++    # REQ-VERIFY-4032: candidates are executed through the sandbox-compatible executor hook.
++    calls: list[tuple[str, tuple[Any, ...]]] = []
++
++    def executor(
++        code: str, func_name: str, args: tuple[Any, ...], timeout: float
++    ) -> tuple[Any, Exception | None]:
++        del code, timeout
++        calls.append((func_name, args))
++        return sum(args), None
++
++    candidate = runner.GeneratedCandidate(
++        draw_index=0,
++        raw_text="```python\ndef add(a, b):\n    return a + b\n```",
++        code="def add(a, b):\n    return a + b\n",
++        generation_seconds=0.1,
++        finish_reason="stop",
++        truncated=False,
++    )
++    evaluated = runner.evaluate_candidate(_task(), candidate, executor=executor)
++    assert evaluated.visible_passes == [True, True]
++    assert evaluated.hidden_passes == [True]
++    assert calls == [("add", (1, 2)), ("add", (4, 5)), ("add", (2, 7))]
++
++
++def test_evaluate_candidate_records_no_code_and_executor_errors() -> None:
++    # REQ-VERIFY-4032: malformed candidates and execution errors remain in the shared pool as failures.
++    no_code = runner.GeneratedCandidate(0, "text", "", 0.1, "stop", False)
++    evaluated = runner.evaluate_candidate(_task(), no_code, executor=lambda *args: (None, None))
++    assert evaluated.status == "no_code"
++    assert evaluated.visible_passes == [False, False]
++
++    def executor(*args: Any) -> tuple[Any, Exception | None]:
++        del args
++        return None, RuntimeError("boom")
++
++    candidate = runner.GeneratedCandidate(
++        1, "raw", "def add(a, b):\n    return a + b\n", 0.1, "stop", False
++    )
++    evaluated = runner.evaluate_candidate(_task(), candidate, executor=executor)
++    assert evaluated.visible_passes == [False, False]
++    assert evaluated.hidden_passes == [False]
++    assert "RuntimeError" in (evaluated.error or "")
++
++
++def test_aces_degenerate_inputs_are_bounded() -> None:
++    # REQ-VERIFY-4032: ACES remains deterministic when visible tests are absent, singleton, or tied.
++    assert runner._stable_repr({1, 2}) == repr({1, 2})
++    assert runner.aces_leave_one_out_scores([]) == {}
++    no_tests = [_eval("T", 0, visible_passes=[], hidden_passes=[False], visible_outputs=[])]
++    assert runner.aces_leave_one_out_scores(no_tests) == {0: 0.0}
++    one_test = [_eval("T", 1, visible_passes=[True], hidden_passes=[True], visible_outputs=[1])]
++    assert runner.aces_leave_one_out_scores(one_test) == {1: 1.0}
++    tied = [
++        _eval("T", 0, visible_passes=[True, False], hidden_passes=[False], visible_outputs=[1, 0]),
++        _eval("T", 1, visible_passes=[False, True], hidden_passes=[False], visible_outputs=[0, 1]),
++    ]
++    assert runner.aces_leave_one_out_scores(tied) == {0: 0.5, 1: 0.5}
++
++
++def test_score_evaluated_tasks_measures_vote_aces_demofit_and_oracle() -> None:
++    # SCENARIO-VERIFY-4032: all arms use one pool and hidden pass@1/pass@2 are measured after selection.
++    tasks, evaluations = _synthetic_evaluations()
++    scored = runner.score_evaluated_tasks(tasks, evaluations, seed=4032)
++    assert scored["armA_vote_passrate"] == pytest.approx(0.5)
++    assert scored["armB_demofit_passrate"] == pytest.approx(1.0)
++    assert scored["armAplusplus_aces_passrate"] == pytest.approx(1.0)
++    assert scored["delta_pp"] == pytest.approx(50.0)
++    assert scored["oracle_passrate"] == pytest.approx(1.0)
++    assert scored["truncation_rate"] == pytest.approx(1 / 6)
++    assert scored["bootstrap_ci95"][0] >= 0.0
++    assert scored["per_task"][0]["armB_demo_perfect_count"] == 1
++
++
++def test_score_evaluated_tasks_records_missing_gap_and_no_demofit() -> None:
++    task = _task("MBPP:gap")
++    evaluations = {
++        "MBPP:gap": [
++            _eval(
++                "MBPP:gap",
++                0,
++                visible_passes=[False, False],
++                hidden_passes=[True],
++                visible_outputs=[1, 1],
++            ),
++            _eval(
++                "MBPP:gap",
++                1,
++                visible_passes=[False, True],
++                hidden_passes=[False],
++                visible_outputs=[2, 9],
++            ),
++        ]
++    }
++    scored = runner.score_evaluated_tasks([task], evaluations, seed=1)
++    assert scored["missing_verifier_gaps"] == ["MBPP:gap"]
++    assert scored["armB_demofit_passrate"] == 0.0
++
++
++def test_full_verdict_branches_cover_success_no_headroom_and_no_transfer() -> None:
++    assert runner._verdict(
++        {
++            "armB_demofit_passrate": 1.0,
++            "armA_vote_passrate": 0.0,
++            "bootstrap_ci95": [1.0, 100.0],
++            "oracle_passrate": 1.0,
++        },
++        mode="full",
++    ).startswith("success:")
++    assert runner._verdict(
++        {
++            "armB_demofit_passrate": 0.5,
++            "armA_vote_passrate": 0.5,
++            "bootstrap_ci95": [0.0, 0.0],
++            "oracle_passrate": 0.5,
++        },
++        mode="full",
++    ).startswith("complete: exec_verifier_transfer_uninformative")
++    assert runner._verdict(
++        {
++            "armB_demofit_passrate": 0.0,
++            "armA_vote_passrate": 0.5,
++            "bootstrap_ci95": [-50.0, 0.0],
++            "oracle_passrate": 1.0,
++        },
++        mode="full",
++    ).startswith("complete: exec_verifier_no_transfer")
++    assert runner._bootstrap_ci_pp([], seed=1) == [0.0, 0.0]
++
++
++def test_build_raw_artifact_validates_required_fields_and_checksum() -> None:
++    # REQ-VERIFY-4032: raw artifact contains required metrics and reproducibility checksum.
++    tasks, evaluations = _synthetic_evaluations()
++    artifact = runner.build_raw_artifact(
++        tasks=tasks,
++        evaluations_by_task=evaluations,
++        preconditions_checked=[
++            _check("local_gguf_cached", True),
++            _check("llama_cpp_importable", True),
++            _check("code_corpus_loadable", True),
++            _check("restricted_exec_importable", True),
++        ],
++        model_specs={"generator_model": "gemma-4-12B", "verifier": "sandboxed demo-fit"},
++        k=3,
++        started_s=10.0,
++        ended_s=12.0,
++        mode="smoke",
++    )
++    runner.validate_raw_artifact(artifact, require_full=False)
++    assert artifact["honest_verdict"].startswith(("success:", "complete:"))
++    assert artifact["reproducibility_checksum"]
++
++    poisoned = dict(artifact)
++    poisoned["runner_ready"] = True
++    with pytest.raises(ValueError, match="unexpected raw artifact field"):
++        runner.validate_raw_artifact(poisoned, require_full=False)
++
++
++def test_raw_artifact_full_mode_requires_n_and_k_floor() -> None:
++    tasks, evaluations = _synthetic_evaluations()
++    artifact = runner.build_raw_artifact(
++        tasks=tasks,
++        evaluations_by_task=evaluations,
++        preconditions_checked=[_check("all", True)],
++        model_specs={"generator_model": "fixture"},
++        k=3,
++        started_s=0.0,
++        ended_s=1.0,
++        mode="full",
++    )
++    with pytest.raises(ValueError, match="full run must include"):
++        runner.validate_raw_artifact(artifact, require_full=True)
++
++
++@pytest.mark.parametrize(
++    ("field", "value", "message"),
++    [
++        ("honest_verdict", "done", "terminal prefix"),
++        ("n_tasks", 2.5, "n_tasks must be a bare int"),
++        ("armA_vote_passrate", "0.0", "armA_vote_passrate must be a bare float"),
++        ("bootstrap_ci95", [0.0], "two-element list"),
++        ("bootstrap_ci95", [0.0, "bad"], "values must be numeric"),
++        ("model_specs", [], "model_specs must be an object"),
++        ("reproducibility_checksum", "", "non-empty string"),
++        ("preconditions_checked", {}, "preconditions_checked must be a list"),
++        ("missing_verifier_gaps", {}, "missing_verifier_gaps must be a list"),
++        ("inference_substrate", "cached", "inference_substrate must be live_llm_inference"),
++    ],
++)
++def test_validate_raw_artifact_rejects_schema_poison(field: str, value: Any, message: str) -> None:
++    tasks, evaluations = _synthetic_evaluations()
++    artifact = runner.build_raw_artifact(
++        tasks=tasks,
++        evaluations_by_task=evaluations,
++        preconditions_checked=[_check("all", True)],
++        model_specs={"generator_model": "fixture"},
++        k=3,
++        started_s=0.0,
++        ended_s=1.0,
++        mode="smoke",
++    )
++    artifact[field] = value
++    with pytest.raises(ValueError, match=message):
++        runner.validate_raw_artifact(artifact, require_full=False)
++
++
++def test_validate_raw_artifact_rejects_missing_required_field() -> None:
++    with pytest.raises(ValueError, match="missing required raw field"):
++        runner.validate_raw_artifact({}, require_full=False)
++
++
++def test_runner_write_json_creates_parent(tmp_path: Path) -> None:
++    out = tmp_path / "nested" / "artifact.json"
++    runner._write_json(out, {"ok": True})
++    assert out.exists()
++
++
++def test_precondition_blocker_uses_first_missing_resource() -> None:
++    # REQ-VERIFY-4031: missing resources block before inference or launch.
++    checks = [
++        _check("local_gguf_cached", True),
++        _check("llama_cpp_importable", False),
++        _check("code_corpus_loadable", False),
++    ]
++    assert runner.blocker_from_preconditions(checks) == "blocked_llama_cpp_unavailable"
++    assert runner.blocker_from_preconditions([_check("local_gguf_cached", True)]) is None
++
++
++def test_build_artifact_blocked_path_does_not_smoke_or_launch(tmp_path: Path) -> None:
++    # REQ-VERIFY-4031: blocked preconditions write the build artifact and stop.
++    def boom(*args: Any, **kwargs: Any) -> Any:
++        raise AssertionError("must not be called")
++
++    artifact = build.run_build(
++        output_path=tmp_path / "build.json",
++        precondition_checker=lambda: [_check("local_gguf_cached", False)],
++        smoke_runner=boom,
++        launcher=boom,
++    )
++    assert artifact["honest_verdict"] == "blocked_local_gguf_not_cached"
++    assert artifact["runner_ready"] is False
++    assert artifact["smoke_passed"] is False
++    assert artifact["launched_pid"] == 0
++    assert (tmp_path / "build.json").exists()
++
++
++def test_build_artifact_smoke_failure_blocks_launch(tmp_path: Path) -> None:
++    # REQ-VERIFY-4031: a failed two-task smoke prevents launching the full run.
++    def smoke_runner(**kwargs: Any) -> dict[str, Any]:
++        del kwargs
++        raise RuntimeError("smoke failed")
++
++    def launcher(**kwargs: Any) -> int:
++        del kwargs
++        raise AssertionError("launch should not run")
++
++    artifact = build.run_build(
++        output_path=tmp_path / "build.json",
++        precondition_checker=lambda: [_check("local_gguf_cached", True)],
++        smoke_runner=smoke_runner,
++        launcher=launcher,
++    )
++    assert artifact["honest_verdict"] == "blocked_smoke_failed"
++    assert artifact["runner_ready"] is True
++    assert artifact["smoke_passed"] is False
++    assert "smoke failed" in artifact["error"]
++
++
++def test_build_artifact_launch_failure_is_recorded(tmp_path: Path) -> None:
++    # REQ-VERIFY-4031: launch failures are honest blocked artifacts after smoke passes.
++    def smoke_runner(**kwargs: Any) -> dict[str, Any]:
++        tasks, evaluations = _synthetic_evaluations()
++        return runner.build_raw_artifact(
++            tasks=tasks,
++            evaluations_by_task=evaluations,
++            preconditions_checked=kwargs["preconditions_checked"],
++            model_specs={"generator_model": "fixture"},
++            k=3,
++            started_s=0.0,
++            ended_s=1.0,
++            mode="smoke",
++        )
++
++    def launcher(**kwargs: Any) -> int:
++        del kwargs
++        raise OSError("no nohup")
++
++    artifact = build.run_build(
++        output_path=tmp_path / "build.json",
++        precondition_checker=lambda: [_check("local_gguf_cached", True)],
++        smoke_runner=smoke_runner,
++        launcher=launcher,
++    )
++    assert artifact["honest_verdict"] == "blocked_launch_failed"
++    assert artifact["smoke_passed"] is True
++    assert "no nohup" in artifact["error"]
++
++
++def test_build_artifact_success_path_smokes_then_launches(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4031: a valid smoke artifact gates the background launch.
++    launched: list[dict[str, Any]] = []
++
++    def smoke_runner(**kwargs: Any) -> dict[str, Any]:
++        tasks, evaluations = _synthetic_evaluations()
++        artifact = runner.build_raw_artifact(
++            tasks=tasks,
++            evaluations_by_task=evaluations,
++            preconditions_checked=kwargs["preconditions_checked"],
++            model_specs={"generator_model": "fixture"},
++            k=3,
++            started_s=0.0,
++            ended_s=1.0,
++            mode="smoke",
++        )
++        kwargs["output_path"].write_text("{}", encoding="utf-8")
++        return artifact
++
++    def launcher(**kwargs: Any) -> int:
++        launched.append(kwargs)
++        return 4321
++
++    artifact = build.run_build(
++        output_path=tmp_path / "build.json",
++        smoke_output_path=tmp_path / "smoke.json",
++        full_output_path=tmp_path / "raw.json",
++        log_path=tmp_path / "run.log",
++        precondition_checker=lambda: [
++            _check("local_gguf_cached", True),
++            _check("llama_cpp_importable", True),
++            _check("code_corpus_loadable", True),
++            _check("restricted_exec_importable", True),
++        ],
++        smoke_runner=smoke_runner,
++        launcher=launcher,
++    )
++    build.validate_build_artifact(artifact)
++    assert artifact["honest_verdict"] == "success: offarc_transfer_runner_built_smoked_launched"
++    assert artifact["runner_ready"] is True
++    assert artifact["smoke_passed"] is True
++    assert artifact["launched_pid"] == 4321
++    assert launched and launched[0]["n_tasks"] >= 40 and launched[0]["k"] >= 8
++
++
++@pytest.mark.parametrize(
++    ("field", "value", "message"),
++    [
++        ("runner_ready", {"value": True}, "runner_ready must be a bare bool"),
++        ("smoke_passed", "yes", "smoke_passed must be a bare bool"),
++        ("launched_pid", True, "launched_pid must be a bare int"),
++        ("preconditions_checked", {}, "preconditions_checked must be a list"),
++        ("inference_substrate", "cached", "inference_substrate must be live_llm_inference"),
++    ],
++)
++def test_validate_build_artifact_rejects_schema_poison(
++    field: str, value: Any, message: str
++) -> None:
++    artifact = build.build_artifact(
++        honest_verdict="blocked_local_gguf_not_cached",
++        runner_ready=False,
++        smoke_passed=False,
++        launched_pid=0,
++        preconditions_checked=[_check("local_gguf_cached", False)],
++        duration_s=0.1,
++    )
++    artifact[field] = value
++    with pytest.raises(ValueError, match=message):
++        build.validate_build_artifact(artifact)
++
++
++def test_validate_build_artifact_rejects_missing_bad_verdict_and_missing_pid() -> None:
++    with pytest.raises(ValueError, match="missing required build field"):
++        build.validate_build_artifact({})
++    artifact = build.build_artifact(
++        honest_verdict="blocked_local_gguf_not_cached",
++        runner_ready=False,
++        smoke_passed=False,
++        launched_pid=0,
++        preconditions_checked=[_check("local_gguf_cached", False)],
++        duration_s=0.1,
++        error="recorded",
++    )
++    assert artifact["error"] == "recorded"
++    artifact["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="terminal prefix"):
++        build.validate_build_artifact(artifact)
++    artifact["honest_verdict"] = "success: ok"
++    artifact["smoke_passed"] = True
++    artifact["launched_pid"] = 0
++    with pytest.raises(ValueError, match="positive after a successful launch"):
++        build.validate_build_artifact(artifact)
+-- 
+2.55.0
+

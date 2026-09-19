@@ -1,0 +1,300 @@
+From fa9f66d6293b5f7f2de7991c261df377d6e201d2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 00:06:54 -0400
+Subject: [PATCH 11146/11362] [outer-loop] Resolve no-LLM alias members
+ structurally (SCENARIO-SUBSTRATE-ALIAS-1-B)
+
+First of the three triaged audit findings. The guard asked whether a diff adds
+a quoted *_no_llm string. The tuple is not written that way: of 53 members, 32
+are constant names, 1 is a starred tuple, and 20 are bare literals. So it
+covered a minority of the shapes in use and the normal way to add an alias --
+define a constant, name it in the tuple -- produced no matching literal and
+walked through.
+
+The named missed input resolves to a value that does not end in _no_llm at all,
+so widening the regex would not have caught it either. The fix reads the tuple
+from the staged and HEAD sources with ast and diffs the resolved values,
+expanding constant names and starred tuples. The literal scan is kept because
+it also catches an alias added outside the tuple.
+
+Mutation result stated honestly: 2 of 3 RED. The third deleted an empty-staged
+early return and the suite stayed green, proving that branch decorative, since
+the empty set minus anything is already empty. Removed rather than left to read
+as protection. That is the discipline's own instruction applied to my own code.
+
+Verified the widened lint exits 0 against the current repo, so it does not
+retroactively refuse the existing tuple.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   | 25 +++++
+ scripts/substrate_alias_evidence_lint.py      | 93 ++++++++++++++++++
+ ...est_substrate_alias_structural_20260905.py | 95 +++++++++++++++++++
+ 3 files changed, 213 insertions(+)
+ create mode 100644 tests/python/test_substrate_alias_structural_20260905.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 2a08abebef..9bdef17599 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -9974,6 +9974,31 @@ Implementation status: implemented 2026-08-30
+ (`python/carnot/testing/long_run_receipt.py`; `tests/python/test_long_run_receipt.py`, 6 tests
+ in real child processes, 5/5 mutations RED).
+ 
++**SCENARIO-SUBSTRATE-ALIAS-1-B: an alias is caught however its tuple member is written.**
++
++`scripts/substrate_alias_evidence_lint.py` SHALL resolve the members of
++`NO_LLM_SUBSTRATE_ALIASES` from the STAGED and HEAD sources structurally, and SHALL treat any
++value present in the staged tuple and absent from HEAD's as new. A member written as a bare
++literal, as a module constant NAME, or contributed by a `*STARRED` tuple SHALL all be resolved.
++The literal diff scan is retained alongside it, because that also catches an alias added
++somewhere other than the tuple.
++
++Origin: QA-layer `SILENT_NON_FIRING`, 2026-09-04, confirmed 2026-09-05. The guard asked "does
++this diff add a quoted `*_no_llm` string". The tuple is not written that way. Measured at the
++time of the fix: of 53 members, **32 are constant names, 1 is a starred tuple, and only 20 are
++bare literals** — so the guard covered a minority of the shapes actually in use, and the normal
++way to add an alias walked straight through. The named missed input,
++`+ LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,`, resolves to
++`live_local_sota_gguf_fixed_sequence_representation`, a value that does not end in `_no_llm`, so
++widening the regex alone would not have caught it either.
++
++Implementation status: implemented 2026-09-05
++(`scripts/substrate_alias_evidence_lint.py:resolve_alias_members`, `:new_aliases_structural`;
++`tests/python/test_substrate_alias_structural_20260905.py`, 7 tests). Mutation result stated
++honestly: **2 of 3 mutations RED**. The third deleted an empty-staged early return and the suite
++stayed GREEN, which proved that guard decorative — the empty set minus anything is already empty
++— so the no-op was removed rather than kept as apparent protection.
++
+ ### REQ-INFRA-6840: The hourly dashboard SHALL report measured state, never recalled state
+ 
+ `scripts/outer_loop_dashboard.py` SHALL derive every line it prints from a live read of the
+diff --git a/scripts/substrate_alias_evidence_lint.py b/scripts/substrate_alias_evidence_lint.py
+index d0e503bcac..4435c2c3fe 100644
+--- a/scripts/substrate_alias_evidence_lint.py
++++ b/scripts/substrate_alias_evidence_lint.py
+@@ -36,6 +36,7 @@ worst state a guard can be in (CLAUDE.md, QA-Layer Authenticity Discipline).
+ from __future__ import annotations
+ 
+ import argparse
++import ast
+ import re
+ import subprocess
+ import sys
+@@ -64,6 +65,92 @@ def find_alias_literals(text: str) -> list[str]:
+     return [m.group(2) for m in ALIAS_RE.finditer(text)]
+ 
+ 
++ALIAS_TUPLE_NAME = "NO_LLM_SUBSTRATE_ALIASES"
++
++
++def _module_string_constants(tree: ast.Module) -> dict[str, str]:
++    """Module-level `NAME = "literal"` bindings, for resolving a tuple written by name."""
++
++    out: dict[str, str] = {}
++    for node in tree.body:
++        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant):
++            if isinstance(node.value.value, str):
++                for target in node.targets:
++                    if isinstance(target, ast.Name):
++                        out[target.id] = node.value.value
++    return out
++
++
++def _module_string_tuples(tree: ast.Module, consts: dict[str, str]) -> dict[str, list[str]]:
++    """Module-level tuples of strings or of names, for resolving a `*STARRED` member."""
++
++    out: dict[str, list[str]] = {}
++    for node in tree.body:
++        if not isinstance(node, ast.Assign) or not isinstance(node.value, (ast.Tuple, ast.List)):
++            continue
++        values: list[str] = []
++        for element in node.value.elts:
++            if isinstance(element, ast.Constant) and isinstance(element.value, str):
++                values.append(element.value)
++            elif isinstance(element, ast.Name) and element.id in consts:
++                values.append(consts[element.id])
++        for target in node.targets:
++            if isinstance(target, ast.Name):
++                out[target.id] = values
++    return out
++
++
++def resolve_alias_members(source_text: str) -> set[str]:
++    """Every alias VALUE the no-LLM tuple holds, however each member is written.
++
++    WHY THIS EXISTS (2026-09-05, QA-layer SILENT_NON_FIRING). The literal scan below answers
++    "does this diff add a quoted `*_no_llm` string". The tuple is not written that way. Measured
++    at the time of this fix: of 53 members, 32 are CONSTANT NAMES, 1 is a starred tuple, and only
++    20 are bare literals. So the normal way to add an alias -- define a module constant, then
++    name it in the tuple -- produced no matching literal on any added line and walked straight
++    through. The named missed input was `+ LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,`,
++    whose value is `live_local_sota_gguf_fixed_sequence_representation` -- a value that does not
++    even end in `_no_llm`, so widening the regex alone would not have caught it either.
++
++    Reads the document instead of the diff text. Returns an empty set when the source cannot be
++    parsed, and the caller treats an empty STAGED set as "no structural evidence available"
++    rather than as "nothing was added".
++    """
++
++    try:
++        tree = ast.parse(source_text)
++    except SyntaxError:
++        return set()
++    consts = _module_string_constants(tree)
++    tuples = _module_string_tuples(tree, consts)
++    for node in tree.body:
++        if not isinstance(node, ast.Assign) or not isinstance(node.value, (ast.Tuple, ast.List)):
++            continue
++        if not any(isinstance(t, ast.Name) and t.id == ALIAS_TUPLE_NAME for t in node.targets):
++            continue
++        members: set[str] = set()
++        for element in node.value.elts:
++            if isinstance(element, ast.Constant) and isinstance(element.value, str):
++                members.add(element.value)
++            elif isinstance(element, ast.Name):
++                if element.id in consts:
++                    members.add(consts[element.id])
++            elif isinstance(element, ast.Starred) and isinstance(element.value, ast.Name):
++                members.update(tuples.get(element.value.id, []))
++        return members
++    return set()
++
++
++def new_aliases_structural(head_text: str, staged_text: str) -> list[str]:
++    """Alias values present in the STAGED tuple and absent from HEAD's."""
++
++    # No empty-staged special case: an unparseable or tuple-less staged file resolves to the
++    # empty set, and the empty set minus anything is empty, so the subtraction already returns
++    # nothing. A guard was written here and a mutation proved it decorative -- deleting it left
++    # the suite green -- so it is gone rather than left to read as protection.
++    return sorted(resolve_alias_members(staged_text) - resolve_alias_members(head_text))
++
++
+ class GitUnavailable(RuntimeError):
+     """Raised when the staged diff cannot be read. Callers must refuse, not pass."""
+ 
+@@ -148,12 +235,18 @@ def main(argv: list[str] | None = None) -> int:
+         if not diff.strip():
+             return 0
+         head = _run_git(["show", f"HEAD:{GATE_FILE}"])
++        staged = _run_git(["show", f":{GATE_FILE}"])
+     except GitUnavailable as exc:
+         print(f"substrate-alias-evidence-lint: REFUSING -- {exc}", file=sys.stderr)
+         print("  Cannot verify whether this commit widens the fabrication gate.", file=sys.stderr)
+         return 1
+ 
++    # Union of both readings. The literal scan is kept because it also catches an alias added
++    # somewhere other than the tuple; the structural read is what catches the tuple itself.
+     aliases = new_aliases(diff, head)
++    for alias in new_aliases_structural(head, staged):
++        if alias not in aliases:
++            aliases.append(alias)
+     if not aliases:
+         return 0
+ 
+diff --git a/tests/python/test_substrate_alias_structural_20260905.py b/tests/python/test_substrate_alias_structural_20260905.py
+new file mode 100644
+index 0000000000..f23e696b1a
+--- /dev/null
++++ b/tests/python/test_substrate_alias_structural_20260905.py
+@@ -0,0 +1,95 @@
++"""Spec: REQ-SUBSTRATE-ALIAS-1, SCENARIO-SUBSTRATE-ALIAS-1-B
++
++An alias added to the no-LLM tuple needs evidence however the member is written.
++
++QA-LAYER FINDING 2026-09-04, confirmed 2026-09-05. The guard answered "does this diff add a
++quoted `*_no_llm` string". The tuple is not written that way. Measured when this was fixed: of
++53 members, 32 are CONSTANT NAMES, one is a starred tuple, and only 20 are bare literals. So the
++normal way to add an alias -- define a module constant, then name it in the tuple -- put no
++matching literal on any added line and walked straight through.
++
++The named missed input was the staged line `+ LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,`
++whose value is `live_local_sota_gguf_fixed_sequence_representation`. That value does not end in
++`_no_llm`, so widening the regex alone would not have caught it either. The fix reads the tuple
++instead of the diff text.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "scripts"))
++
++import substrate_alias_evidence_lint as lint  # noqa: E402
++
++_HEAD = """
++A_SUB = "already_present_no_llm"
++DETERMINISTIC_VERIFIER_SUBSTRATES = ("det_one", "det two, no LLM")
++NO_LLM_SUBSTRATE_ALIASES = (
++    A_SUB,
++    *DETERMINISTIC_VERIFIER_SUBSTRATES,
++    "a_bare_literal_no_llm",
++)
++"""
++
++_STAGED_BY_NAME = """
++A_SUB = "already_present_no_llm"
++LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE = (
++    "live_local_sota_gguf_fixed_sequence_representation"
++)
++DETERMINISTIC_VERIFIER_SUBSTRATES = ("det_one", "det two, no LLM")
++NO_LLM_SUBSTRATE_ALIASES = (
++    A_SUB,
++    *DETERMINISTIC_VERIFIER_SUBSTRATES,
++    "a_bare_literal_no_llm",
++    LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,
++)
++"""
++
++
++def test_an_alias_added_by_constant_name_is_caught() -> None:
++    """The incident. No `_no_llm` literal appears on the added line at all."""
++    assert lint.new_aliases_structural(_HEAD, _STAGED_BY_NAME) == [
++        "live_local_sota_gguf_fixed_sequence_representation"
++    ]
++
++
++def test_the_literal_scan_alone_would_have_missed_it() -> None:
++    """States plainly why the structural read had to be added, not just widened."""
++    diff = "+    LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,"
++    assert lint.new_aliases(diff, _HEAD) == []
++
++
++def test_an_alias_added_as_a_bare_literal_is_still_caught() -> None:
++    staged = _HEAD.replace(
++        '    "a_bare_literal_no_llm",',
++        '    "a_bare_literal_no_llm",\n    "brand_new_literal_no_llm",',
++    )
++    assert lint.new_aliases_structural(_HEAD, staged) == ["brand_new_literal_no_llm"]
++
++
++def test_an_alias_added_inside_the_starred_tuple_is_caught() -> None:
++    """A member can be added one level down without touching the alias tuple at all."""
++    staged = _HEAD.replace(
++        'DETERMINISTIC_VERIFIER_SUBSTRATES = ("det_one", "det two, no LLM")',
++        'DETERMINISTIC_VERIFIER_SUBSTRATES = ("det_one", "det two, no LLM", "det_three")',
++    )
++    assert lint.new_aliases_structural(_HEAD, staged) == ["det_three"]
++
++
++def test_an_unchanged_tuple_reports_nothing() -> None:
++    assert lint.new_aliases_structural(_HEAD, _HEAD) == []
++
++
++def test_an_unparseable_staged_file_reports_nothing_rather_than_everything() -> None:
++    """A syntax error mid-edit must not spray a refusal naming every existing alias."""
++    assert lint.new_aliases_structural(_HEAD, "def broken( :\n") == []
++
++
++def test_the_real_tuple_resolves_every_member_shape() -> None:
++    """Against the live file, not a fixture: names, starred tuple and literals all resolve."""
++    members = lint.resolve_alias_members((REPO / "scripts" / "adversarial_verify.py").read_text())
++    assert len(members) > 50
++    assert "deterministic_verifier" in members
+-- 
+2.55.0
+

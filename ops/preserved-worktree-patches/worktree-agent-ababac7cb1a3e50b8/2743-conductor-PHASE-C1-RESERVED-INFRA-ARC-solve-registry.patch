@@ -1,0 +1,1435 @@
+From ab18288cfd5fa03e745a8b4e9aef3f382e8a3054 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 04:54:56 -0400
+Subject: [PATCH 02743/11362] [conductor] PHASE C1 (RESERVED INFRA) -- ARC
+ solve-registry reproducibility audit + scorecard refresh: re-run
+ arc_solver_kit.reproduce across ALL registry games, flag any
+ provisional/non-reproducing entries.
+
+Automated research step by research conductor.
+Task ID: exp4426-infra-arc-registry-repro-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  39 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_4426_arc_registry_repro_audit.py | 474 ++++++++++++++++
+ results/arc3_replay_aggregate_scorecard.json  |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...eriment_4426_arc_registry_repro_audit.json | 504 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xperiment_4426_arc_registry_repro_audit.py | 206 +++++++
+ 13 files changed, 1242 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/experiment_4426_arc_registry_repro_audit.py
+ create mode 100644 results/experiment_4426_arc_registry_repro_audit.json
+ create mode 100644 tests/python/test_experiment_4426_arc_registry_repro_audit.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 7677dc8794..f0be8b1a80 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -24732,6 +24732,45 @@ the ARC solve registry.
+ |---|---|---|
+ | REQ-REPORT-4423 | Planned (`python/carnot/experiment_4423_generic_first_contact_breadth.py`, `results/experiment_4423_generic_first_contact_breadth.py`) | Planned (`tests/python/test_experiment_4423_generic_first_contact_breadth.py`) |
+ 
++### REQ-REPORT-4426: ARC Registry Reproducibility Audit Refreshes The Single Progress Metric
++
++The Exp 4426 ARC registry audit workflow SHALL run the aggregate offline replay
++meta-harness `scripts/arc3_replay_scorecard_metaharness.py` and SHALL audit every
++entry in `ops/arc_solve_registry.yaml`. Every entry marked as counted
++(`reproducibility: reproduced` with `levels_reproduced > 0`) SHALL be checked by
++`arc_solver_kit.reproduce()` or an injected equivalent over the offline ARC
++environment. The workflow SHALL compute `reproducible_total_levels` from the
++audited reproduction results rather than trusting the registry's asserted total.
++
++The workflow SHALL write
++`results/experiment_4426_arc_registry_repro_audit.json` with required top-level
++fields `reproducible_total_levels`, `honest_verdict`, and
++`inference_substrate`. Any counted entry whose offline replay reaches fewer
++levels than the registry claim SHALL be flagged in the artifact with
++`downgraded_to_provisional=true` and SHALL not contribute unreproduced levels to
++the authoritative total. The artifact SHALL also report the aggregate replay
++meta-harness total separately from the registry-wide audit total, and SHALL
++confirm whether Exp 4421, Exp 4422, Exp 4423, and Exp 4424 artifacts are
++reproduction-gated without counting non-reproduced partials as new ARC progress.
++
++#### SCENARIO-REPORT-4426: Counted Registry Rows Must Reproduce Before They Count
++
++**Given** an ARC solve registry with counted, unsolved, and provisional entries
++and the `.409` result artifacts for Exp 4421 through Exp 4424
++**When** the Exp 4426 audit runs the aggregate replay meta-harness and audits
++each counted registry entry through the offline reproduction gate
++**Then** the terminal artifact records a bare integer
++`reproducible_total_levels` computed from reproduced evidence, includes a
++terminal-prefixed `honest_verdict`, declares a no-LLM CPU
++`inference_substrate`, flags any non-reproducing counted row as provisional in
++the audit output, and reports per-experiment `.409` reproduction-gate status.
++
++## Implementation Status (REQ-REPORT-4426)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4426 | Planned (`python/carnot/experiment_4426_arc_registry_repro_audit.py`, `results/experiment_4426_arc_registry_repro_audit.json`) | Planned (`tests/python/test_experiment_4426_arc_registry_repro_audit.py`) |
++
+ ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+ 
+ The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b9dea36bad..c056a67e88 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 181,
+   "code_violations": 0,
+-  "experiments_checked": 3444,
++  "experiments_checked": 3445,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4426_arc_registry_repro_audit.py b/python/carnot/experiment_4426_arc_registry_repro_audit.py
+new file mode 100644
+index 0000000000..d6e7d343ec
+--- /dev/null
++++ b/python/carnot/experiment_4426_arc_registry_repro_audit.py
+@@ -0,0 +1,474 @@
++"""Exp 4426: ARC solve-registry reproducibility audit.
++
++Spec refs: REQ-REPORT-4426, SCENARIO-REPORT-4426.
++"""
++
++from __future__ import annotations
++
++import json
++import subprocess
++import sys
++import time
++from pathlib import Path
++from typing import Any, Callable, Mapping, Sequence
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4426_arc_registry_repro_audit.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++RANDOM_SEED = 4426
++SPEC_REFS = ("REQ-REPORT-4426", "SCENARIO-REPORT-4426")
++INFERENCE_SUBSTRATE = "offline_arc_registry_repro_audit_cpu_no_llm"
++REQUIRED_ARTIFACT_FIELDS = (
++    "reproducible_total_levels",
++    "honest_verdict",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "reproducible_total_levels": (
++        "Bare int: the single ARC progress metric is recomputed from offline "
++        "reproduction evidence instead of trusted from the registry assertion."
++    ),
++    "honest_verdict": "Terminal-prefixed final audit state.",
++    "inference_substrate": "No LLM: CPU/offline ARC simulator plus arc_solver_kit.reproduce.",
++}
++
++MILESTONE_409_ARTIFACTS = {
++    "exp4421": "results/experiment_4421_config_rule_solve_unseen.json",
++    "exp4422": "results/experiment_4422_glyph_rewrite_perception.json",
++    "exp4423": "results/experiment_4423_generic_first_contact_breadth.json",
++    "exp4424": "results/experiment_4424_deeper_solved_game.json",
++}
++
++SCORECARD_PLAN_SOURCES = {
++    "lp85": ("results/experiment_4372_e3_deeper_high_headroom_games.json", "per_target_scorecard"),
++    "tu93": ("results/experiment_4361_e3_deeper_high_headroom_games.json", "per_target_scorecard"),
++    "tn36": ("results/experiment_4372_e3_deeper_high_headroom_games.json", "per_target_scorecard"),
++    "ft09": ("results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json", "per_game_scorecard"),
++}
++
++GENERIC_ACTION_ARTIFACTS = {
++    "r11l": "results/experiment_4296_arc_incremental_progress_new_game.json",
++    "ls20": "results/experiment_4285_arc_incremental_progress_new_game.json",
++    "wa30": "results/experiment_4275_arc_incremental_progress_new_game.json",
++    "cd82": "results/arc_explore_trajectory_cd82.json",
++    "sp80": "results/arc_explore_trajectory_sp80.json",
++    "su15": "results/arc_explore_trajectory_su15.json",
++    "cn04": "results/arc_explore_trajectory_cn04.json",
++    "m0r0": "results/arc_explore_trajectory_m0r0.json",
++    "sk48": "results/arc_explore_trajectory_sk48.json",
++}
++
++ReproduceEntryFn = Callable[[Mapping[str, Any], Path], Mapping[str, Any]]
++MetaharnessRunner = Callable[[Path], Mapping[str, Any]]
++
++
++def _load_json(path: Path) -> dict[str, Any]:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def load_registry(root: Path = REPO_ROOT) -> dict[str, Any]:
++    try:
++        loaded = yaml.safe_load((root / REGISTRY_RELATIVE_PATH).read_text(encoding="utf-8"))
++    except (OSError, yaml.YAMLError):
++        return {"games": []}
++    return loaded if isinstance(loaded, dict) else {"games": []}
++
++
++def _as_int(value: Any) -> int:
++    try:
++        return int(value or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def _counted_by_registry(entry: Mapping[str, Any]) -> bool:
++    return entry.get("reproducibility") == "reproduced" and _as_int(entry.get("levels_reproduced")) > 0
++
++
++def _terminal_prefixed(value: Any) -> bool:
++    return isinstance(value, str) and value.startswith(("success:", "complete:", "blocked:", "failed:"))
++
++
++def _actual_reproduced_levels(result: Mapping[str, Any]) -> int:
++    return max(0, _as_int(result.get("reached_level", result.get("reproduced_levels"))))
++
++
++def _entry_audit(entry: Mapping[str, Any], reproduction_result: Mapping[str, Any] | None) -> dict[str, Any]:
++    claimed = _as_int(entry.get("levels_reproduced"))
++    counted = _counted_by_registry(entry)
++    result = dict(reproduction_result or {})
++    reached = _actual_reproduced_levels(result) if counted else 0
++    claim_reproduced = bool(result.get("reproduced")) and reached >= claimed
++    downgraded = bool(counted and not claim_reproduced)
++    return {
++        "game": str(entry.get("game") or ""),
++        "registry_reproducibility": entry.get("reproducibility", ""),
++        "registry_levels_reproduced": claimed,
++        "counted_by_registry": counted,
++        "reproduction_result": result,
++        "offline_reproduced_claim": bool(claim_reproduced),
++        "effective_levels_reproduced": reached if counted else 0,
++        "effective_reproducibility": (
++            "provisional" if downgraded else "reproduced" if counted else str(entry.get("reproducibility", ""))
++        ),
++        "downgraded_to_provisional": downgraded,
++        "gate": "arc_solver_kit.reproduce" if counted else "not_counted",
++    }
++
++
++def audit_registry(
++    root: Path,
++    *,
++    reproduce_entry_fn: ReproduceEntryFn,
++) -> dict[str, Any]:
++    registry = load_registry(root)
++    rows: list[dict[str, Any]] = []
++    for entry in registry.get("games", []):
++        if not isinstance(entry, Mapping):
++            continue
++        result: Mapping[str, Any] | None = None
++        if _counted_by_registry(entry):
++            try:
++                result = reproduce_entry_fn(entry, root)
++            except Exception as exc:  # pragma: no cover - defensive live-boundary guard
++                result = {
++                    "game": entry.get("game", ""),
++                    "claimed_level": _as_int(entry.get("levels_reproduced")),
++                    "reached_level": 0,
++                    "reproduced": False,
++                    "mode": f"registry_repro_audit_exception_{type(exc).__name__}",
++                    "error": str(exc),
++                }
++        rows.append(_entry_audit(entry, result))
++
++    downgraded = [row["game"] for row in rows if row["downgraded_to_provisional"]]
++    total = sum(_as_int(row["effective_levels_reproduced"]) for row in rows)
++    return {
++        "registry": registry,
++        "rows": rows,
++        "downgraded": downgraded,
++        "reproducible_total_levels": total,
++        "counted_entries_audited": sum(1 for row in rows if row["counted_by_registry"]),
++    }
++
++
++def run_metaharness(root: Path = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - subprocess boundary
++    python = root / ".venv" / "bin" / "python"
++    executable = str(python if python.exists() else Path(sys.executable))
++    command = [executable, str(root / "scripts" / "arc3_replay_scorecard_metaharness.py")]
++    completed = subprocess.run(command, cwd=root, text=True, capture_output=True, check=False)
++    path = root / "results" / "arc3_replay_aggregate_scorecard.json"
++    payload = _load_json(path)
++    per_game = payload.get("per_game") if isinstance(payload.get("per_game"), list) else []
++    return {
++        "command": " ".join(command),
++        "returncode": int(completed.returncode),
++        "artifact_path": str(path.relative_to(root)),
++        "total_levels": _as_int(payload.get("total_levels")),
++        "games": len(per_game),
++        "stdout_tail": completed.stdout[-4000:],
++        "stderr_tail": completed.stderr[-4000:],
++    }
++
++
++def _find_scorecard_plan(root: Path, game: str) -> tuple[list[str], str]:  # pragma: no cover
++    rel_path, row_key = SCORECARD_PLAN_SOURCES[game]
++    artifact = _load_json(root / rel_path)
++    rows = artifact.get(row_key)
++    if isinstance(rows, list):
++        for row in rows:
++            if isinstance(row, Mapping) and row.get("game") == game and isinstance(row.get("plan"), list):
++                return [str(label) for label in row["plan"]], rel_path
++    return [], rel_path
++
++
++def _normalize_action(action: Mapping[str, Any]) -> tuple[int | None, dict[str, int] | None]:
++    action_id = action.get("action")
++    if "data" in action:
++        return (_as_int(action_id) if action_id is not None else None), action.get("data")
++    x = action.get("x", action.get("world_x"))
++    y = action.get("y", action.get("world_y"))
++    if x is None or y is None:
++        return (_as_int(action_id) if action_id is not None else None), None
++    return (_as_int(action_id) if action_id is not None else 6), {"x": _as_int(x), "y": _as_int(y)}
++
++
++def _load_action_dicts(root: Path, rel_path: str) -> list[Mapping[str, Any]]:  # pragma: no cover
++    artifact = _load_json(root / rel_path)
++    for keys in (
++        ("solution",),
++        ("trajectory",),
++        ("solve_trace", "actions"),
++        ("solver_trace", "actions"),
++        ("plan_executed_detail", "plan_result", "executed_steps"),
++    ):
++        current: Any = artifact
++        for key in keys:
++            current = current.get(key) if isinstance(current, Mapping) else None
++            if current is None:
++                break
++        if isinstance(current, list) and current:
++            return [row for row in current if isinstance(row, Mapping)]
++    return []
++
++
++def _labels_from_action_artifact(root: Path, game: str) -> tuple[list[str], str]:  # pragma: no cover
++    rel_path = GENERIC_ACTION_ARTIFACTS[game]
++    labels = []
++    for action in _load_action_dicts(root, rel_path):
++        action_id, data = _normalize_action(action)
++        if action_id is not None:
++            payload: dict[str, Any] = {"action": action_id}
++            if data is not None:
++                payload["data"] = data
++            labels.append(json.dumps(payload, sort_keys=True))
++    return labels, rel_path
++
++
++def _labels_for_game(root: Path, game: str) -> tuple[list[str], str]:  # pragma: no cover
++    if game in SCORECARD_PLAN_SOURCES:
++        return _find_scorecard_plan(root, game)
++    if game == "tr87":
++        rel_path = "results/arc_loop_solve_tr87.json"
++        artifact = _load_json(root / rel_path)
++        labels = artifact.get("solution_labels") or []
++        return [str(label) for label in labels], rel_path
++    if game in GENERIC_ACTION_ARTIFACTS:
++        return _labels_from_action_artifact(root, game)
++    return [], ""
++
++
++def _generic_apply_label(env: Any, label: str, _frame: Any = None) -> Any:  # pragma: no cover
++    from arcengine import GameAction
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++
++    parsed: Any = json.loads(label)
++    if isinstance(parsed, int):
++        action_id, data = parsed, None
++    elif isinstance(parsed, Mapping):
++        action_id = parsed.get("action")
++        data = parsed.get("data")
++        if action_id is None and parsed.get("x") is not None and parsed.get("y") is not None:
++            action_id = 6
++            data = {"x": _as_int(parsed["x"]), "y": _as_int(parsed["y"])}
++    else:
++        raise ValueError(f"unsupported action label: {label!r}")
++    return env.step(_game_action(GameAction, _as_int(action_id)), data=data)
++
++
++def _kit_reproduce(
++    game: str,
++    labels: Sequence[str],
++    apply_fn: Callable[[Any, str, Any], Any],
++    *,
++    claimed_level: int,
++    source: str,
++    warmup_label: str | None = None,
++) -> dict[str, Any]:  # pragma: no cover
++    from carnot.agentic import arc_solver_kit
++
++    result = dict(
++        arc_solver_kit.reproduce(
++            game,
++            labels,
++            apply_fn,
++            warmup_label=warmup_label,
++            claimed_level=claimed_level,
++        )
++    )
++    result["source"] = source
++    result["gate"] = "arc_solver_kit.reproduce"
++    return result
++
++
++def reproduce_registry_entry(entry: Mapping[str, Any], root: Path = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover
++    """REQ-REPORT-4426: replay one counted registry row through arc_solver_kit.reproduce."""
++
++    game = str(entry.get("game") or "")
++    claimed = _as_int(entry.get("levels_reproduced"))
++    if game == "s5i5":  # pragma: no cover - ARC SDK boundary
++        from carnot import experiment_4421_config_rule_solve_unseen as exp4421
++
++        artifact = _load_json(root / exp4421.RESULT_RELATIVE_PATH)
++        solution = artifact.get("solver", {}).get("solution") or exp4421.derive_s5i5_l1_path()
++        return _kit_reproduce(game, [str(label) for label in solution], exp4421.apply_s5i5_label,
++                              claimed_level=claimed, source=exp4421.RESULT_RELATIVE_PATH)
++    if game == "sc25":  # pragma: no cover - ARC SDK boundary
++        from carnot.experiment_4341_e3_sc25_reproduction import L1_SOLUTION_LABELS, _apply_sc25_label
++
++        return _kit_reproduce(game, L1_SOLUTION_LABELS, _apply_sc25_label, warmup_label="warmup",
++                              claimed_level=claimed, source="python/carnot/experiment_4341_e3_sc25_reproduction.py")
++    if game == "ar25":  # pragma: no cover - ARC SDK boundary
++        from carnot.experiment_4339_e3_explore_verify_plan_ar25 import L1_SOLUTION_LABELS, _apply_ar25_label
++
++        return _kit_reproduce(game, L1_SOLUTION_LABELS, _apply_ar25_label,
++                              claimed_level=claimed, source="python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py")
++    if game == "ka59":  # pragma: no cover - ARC SDK boundary
++        from carnot.experiment_4350_e3_explore_verify_plan_ka59 import L1_SOLUTION_LABELS, _apply_ka59_label
++
++        return _kit_reproduce(game, L1_SOLUTION_LABELS, _apply_ka59_label,
++                              claimed_level=claimed, source="python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py")
++
++    labels, source = _labels_for_game(root, game)  # pragma: no cover - ARC SDK boundary
++    if not labels:  # pragma: no cover - ARC SDK boundary
++        return {
++            "game": game,
++            "claimed_level": claimed,
++            "reached_level": 0,
++            "reproduced": False,
++            "mode": "missing_replay_plan_for_registry_entry",
++            "source": source,
++        }
++    return _kit_reproduce(game, labels, _generic_apply_label, claimed_level=claimed, source=source)
++
++
++def _gate_evidence(artifact: Mapping[str, Any]) -> Mapping[str, Any]:
++    for key in ("reproduction_result", "reproduce_result", "standing_loop_result", "reproduction_gate"):
++        value = artifact.get(key)
++        if isinstance(value, Mapping):
++            return value
++    return {}
++
++
++def milestone_409_gate_rows(root: Path = REPO_ROOT) -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for exp_id, rel_path in MILESTONE_409_ARTIFACTS.items():
++        artifact = _load_json(root / rel_path)
++        evidence = _gate_evidence(artifact)
++        evidence_present = bool(evidence)
++        offline_reproduced = bool(artifact.get("offline_reproduced"))
++        reproduced_levels = _as_int(artifact.get("reproduced_levels"))
++        explicit_new = artifact.get("new_levels_reproduced")
++        new_levels = _as_int(explicit_new) if explicit_new is not None and offline_reproduced else 0
++        rows.append(
++            {
++                "experiment": exp_id,
++                "artifact": rel_path,
++                "artifact_present": bool(artifact),
++                "reproduction_gated": evidence_present,
++                "offline_reproduced": offline_reproduced,
++                "reproduced_levels": reproduced_levels,
++                "new_levels_counted": new_levels,
++                "artifact_flagged_adversarial": bool(artifact.get("flagged_adversarial")),
++                "honest_verdict": artifact.get("honest_verdict", ""),
++                "gate_evidence_keys": sorted(str(key) for key in evidence.keys()),
++            }
++        )
++    return rows
++
++
++def _honest_verdict(total: int, registry_claimed: int, downgraded: Sequence[str]) -> str:
++    if downgraded:
++        return f"complete: registry_repro_audit_flagged_{len(downgraded)}_counted_entries"
++    if total != registry_claimed:
++        return f"complete: registry_repro_audit_total_{registry_claimed}_asserted_{total}_audited"
++    return f"success: registry_reproducible_total_levels_{total}_audited"
++
++
++def build_artifact(
++    *,
++    registry_audit: Mapping[str, Any],
++    metaharness: Mapping[str, Any],
++    gate_rows: Sequence[Mapping[str, Any]],
++    started_at: float,
++    ended_at: float,
++) -> dict[str, Any]:
++    registry = registry_audit.get("registry") if isinstance(registry_audit.get("registry"), Mapping) else {}
++    rows = registry_audit.get("rows") if isinstance(registry_audit.get("rows"), list) else []
++    downgraded = registry_audit.get("downgraded") if isinstance(registry_audit.get("downgraded"), list) else []
++    total = _as_int(registry_audit.get("reproducible_total_levels"))
++    claimed_total = _as_int(registry.get("reproducible_total_levels"))
++    artifact = {
++        "experiment": "experiment_4426_arc_registry_repro_audit",
++        "schema": "carnot.exp4426.arc_registry_repro_audit.v1",
++        "reproducible_total_levels": total,
++        "registry_claimed_reproducible_total_levels": claimed_total,
++        "registry_claimed_reproducible_total_games": _as_int(registry.get("reproducible_total_games")),
++        "counted_entries_audited": _as_int(registry_audit.get("counted_entries_audited")),
++        "registry_entry_audits": [dict(row) for row in rows],
++        "entries_downgraded_to_provisional": [str(game) for game in downgraded],
++        "all_counted_entries_reproduced": not downgraded,
++        "metaharness": dict(metaharness),
++        "milestone_409_reproduction_gates": [dict(row) for row in gate_rows],
++        "honest_verdict": _honest_verdict(total, claimed_total, [str(game) for game in downgraded]),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "spec_refs": list(SPEC_REFS),
++        "random_seed": RANDOM_SEED,
++        "submitted_to_leaderboard": False,
++        "result_path": RESULT_RELATIVE_PATH,
++        "duration_s": max(0.0, round(float(ended_at - started_at), 6)),
++    }
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing {field}")
++    if type(artifact.get("reproducible_total_levels")) is not int:
++        errors.append("reproducible_total_levels must be bare int")
++    if not _terminal_prefixed(artifact.get("honest_verdict")):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if not isinstance(artifact.get("inference_substrate"), str) or not artifact.get("inference_substrate"):
++        errors.append("inference_substrate must be non-empty string")
++    if not isinstance(artifact.get("registry_entry_audits"), list):
++        errors.append("registry_entry_audits must be list")
++    if not isinstance(artifact.get("milestone_409_reproduction_gates"), list):
++        errors.append("milestone_409_reproduction_gates must be list")
++    if not isinstance(artifact.get("metaharness"), Mapping):
++        errors.append("metaharness must be dict")
++    return errors
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    reproduce_entry_fn: ReproduceEntryFn = reproduce_registry_entry,
++    metaharness_runner: MetaharnessRunner = run_metaharness,
++    now: Callable[[], float] = time.perf_counter,
++) -> dict[str, Any]:
++    """SCENARIO-REPORT-4426: run the replay harness, audit registry rows, and write JSON."""
++
++    started = now()
++    metaharness = dict(metaharness_runner(root))
++    registry_audit = audit_registry(root, reproduce_entry_fn=reproduce_entry_fn)
++    artifact = build_artifact(
++        registry_audit=registry_audit,
++        metaharness=metaharness,
++        gate_rows=milestone_409_gate_rows(root),
++        started_at=started,
++        ended_at=now(),
++    )
++    write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    artifact = run(REPO_ROOT)
++    print(REPO_ROOT / RESULT_RELATIVE_PATH)
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/arc3_replay_aggregate_scorecard.json b/results/arc3_replay_aggregate_scorecard.json
+index cfc96dbfc7..25c77f9bed 100644
+--- a/results/arc3_replay_aggregate_scorecard.json
++++ b/results/arc3_replay_aggregate_scorecard.json
+@@ -1,5 +1,5 @@
+ {
+-  "scorecard_id": "21f8db6d-ac67-416d-8190-303bc92abd7a",
++  "scorecard_id": "58647658-9e84-4434-a715-dda8e301597c",
+   "total_levels": 32,
+   "per_game": [
+     {
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 2cbfb57a1a..d7799e4f47 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-19T08:36:38.368423Z",
+-  "duration_s": 0.01909160614013672,
++  "run_date": "2026-06-19T08:53:20.205220Z",
++  "duration_s": 0.026835918426513672,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ad18eb09db9c6b279e1cff0ef4fdafa822dc38179622a3d5799ba6dc78177ebc",
++  "reproducibility_checksum": "8c8025aca0512ab8ecbc6336c0a9d2e56e7918bf61d2bfe44d4d0cbd74594d90",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "fc8a63d22c79eb38fe96ac881aa7a900c6ddd1f7"
++    "adversarial_verify_version": "05cd58344da36a202ee6321fdcf6e268fc04ef26"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index eefb6688a3..63138e1fca 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-19T08:36:38.400092Z",
+-  "duration_s": 0.02784252166748047,
++  "run_date": "2026-06-19T08:53:20.237810Z",
++  "duration_s": 0.026315927505493164,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "d8a35359f20a0afdc486d5914cb75d19a6b6cf2b56e34e0c27126bf265168aa1",
++  "reproducibility_checksum": "f0e63b7a3cc535c639ea5227fd8fc21977755fbbf6c9762f4eb4b35029d56c96",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "fc8a63d22c79eb38fe96ac881aa7a900c6ddd1f7"
++    "adversarial_verify_version": "05cd58344da36a202ee6321fdcf6e268fc04ef26"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 2b4617a9a1..c9fa1c672f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.112865447998047,
++  "efficiency_gains_ms": 2.100706100463867,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index ab4ab60f81..d98c2297d2 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.0267052352428436e-05,
++  "duration_s": 3.1449017114937305e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4426_arc_registry_repro_audit.json b/results/experiment_4426_arc_registry_repro_audit.json
+new file mode 100644
+index 0000000000..4436507a24
+--- /dev/null
++++ b/results/experiment_4426_arc_registry_repro_audit.json
+@@ -0,0 +1,504 @@
++{
++  "all_counted_entries_reproduced": true,
++  "counted_entries_audited": 18,
++  "duration_s": 3.39947,
++  "entries_downgraded_to_provisional": [],
++  "experiment": "experiment_4426_arc_registry_repro_audit",
++  "field_principles": {
++    "honest_verdict": "Terminal-prefixed final audit state.",
++    "inference_substrate": "No LLM: CPU/offline ARC simulator plus arc_solver_kit.reproduce.",
++    "reproducible_total_levels": "Bare int: the single ARC progress metric is recomputed from offline reproduction evidence instead of trusted from the registry assertion."
++  },
++  "honest_verdict": "complete: registry_repro_audit_total_35_asserted_36_audited",
++  "inference_substrate": "offline_arc_registry_repro_audit_cpu_no_llm",
++  "metaharness": {
++    "artifact_path": "results/arc3_replay_aggregate_scorecard.json",
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc3_replay_scorecard_metaharness.py",
++    "games": 16,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "-06-19 04:52:05 | INFO | Successfully loaded game class Cd82 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/cd82/fb555c5d/cd82.py\n  cd82  replayed   5 actions -> levels_completed=1\n2026-06-19 04:52:05 | INFO | Found latest version of sp80: sp80-589a99af (downloaded: 2026-06-08 07:25:24.172393+00:00)\n2026-06-19 04:52:05 | INFO | Successfully loaded game class Sp80 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/sp80/589a99af/sp80.py\n  sp80  replayed   4 actions -> levels_completed=1\n2026-06-19 04:52:05 | INFO | Found latest version of su15: su15-1944f8ab (downloaded: 2026-06-08 07:25:24.919195+00:00)\n2026-06-19 04:52:05 | INFO | Successfully loaded game class Su15 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/su15/1944f8ab/su15.py\n  su15  replayed   7 actions -> levels_completed=1\n2026-06-19 04:52:05 | INFO | Found latest version of tu93: tu93-0768757b (downloaded: 2026-06-08 07:25:18.086006+00:00)\n2026-06-19 04:52:05 | INFO | Successfully loaded game class Tu93 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/tu93/0768757b/tu93.py\n  tu93  replayed  47 actions -> levels_completed=3\n2026-06-19 04:52:06 | INFO | Found latest version of cn04: cn04-2fe56bfb (downloaded: 2026-06-08 07:25:21.406909+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Cn04 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/cn04/2fe56bfb/cn04.py\n  cn04  replayed  13 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of m0r0: m0r0-492f87ba (downloaded: 2026-06-08 07:25:20.521902+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class M0r0 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/m0r0/492f87ba/m0r0.py\n  m0r0  replayed  15 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of sk48: sk48-d8078629 (downloaded: 2026-06-08 07:25:17.742140+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Sk48 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/sk48/d8078629/sk48.py\n  sk48  replayed  14 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of tn36: tn36-ef4dde99 (downloaded: 2026-06-08 07:25:22.107920+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Tn36 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/tn36/ef4dde99/tn36.py\n  tn36  replayed 102 actions -> levels_completed=7\n2026-06-19 04:52:06 | INFO | Found latest version of ar25: ar25-0c556536 (downloaded: 2026-06-08 07:25:25.608502+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Ar25 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/ar25/0c556536/ar25.py\n  ar25  replayed  15 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of ka59: ka59-38d34dbb (downloaded: 2026-06-08 07:25:23.298190+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Ka59 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59/38d34dbb/ka59.py\n  ka59  replayed  11 actions -> levels_completed=1\n2026-06-19 04:52:06 | INFO | Found latest version of tr87: tr87-cd924810 (downloaded: 2026-06-08 07:25:23.848054+00:00)\n2026-06-19 04:52:06 | INFO | Successfully loaded game class Tr87 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/tr87/cd924810/tr87.py\n  tr87  replayed 127 actions -> levels_completed=6\n2026-06-19 04:52:06 | INFO | Closed scorecard: 58647658-9e84-4434-a715-dda8e301597c\n\n== AGGREGATE SCORECARD (the 'what we'd publish' card) ==\n  games: 16   total levels_completed: 32\n    r11l  L1\n    sc25  L1\n    lp85  L4\n    ls20  L1\n    wa30  L1\n    cd82  L1\n    sp80  L1\n    su15  L1\n    tu93  L3\n    cn04  L1\n    m0r0  L1\n    sk48  L1\n    tn36  L7\n    ar25  L1\n    ka59  L1\n    tr87  L6\n  scorecard object: EnvironmentScorecard  valid: True\n  OFFLINE \u2014 zero network/quota; nothing submitted.\n  wrote results/arc3_replay_aggregate_scorecard.json\n",
++    "total_levels": 32
++  },
++  "milestone_409_reproduction_gates": [
++    {
++      "artifact": "results/experiment_4421_config_rule_solve_unseen.json",
++      "artifact_flagged_adversarial": true,
++      "artifact_present": true,
++      "experiment": "exp4421",
++      "gate_evidence_keys": [
++        "claimed_level",
++        "game",
++        "mode",
++        "reached_level",
++        "reproduced"
++      ],
++      "honest_verdict": "success_s5i5_L1_offline_reproduced",
++      "new_levels_counted": 1,
++      "offline_reproduced": true,
++      "reproduced_levels": 1,
++      "reproduction_gated": true
++    },
++    {
++      "artifact": "results/experiment_4422_glyph_rewrite_perception.json",
++      "artifact_flagged_adversarial": false,
++      "artifact_present": true,
++      "experiment": "exp4422",
++      "gate_evidence_keys": [
++        "claimed_level",
++        "game",
++        "mode",
++        "reached_level",
++        "reproduced"
++      ],
++      "honest_verdict": "success_glyph_rewrite_perception_tr87_grounded_reproduced",
++      "new_levels_counted": 0,
++      "offline_reproduced": true,
++      "reproduced_levels": 6,
++      "reproduction_gated": true
++    },
++    {
++      "artifact": "results/experiment_4423_generic_first_contact_breadth.json",
++      "artifact_flagged_adversarial": false,
++      "artifact_present": true,
++      "experiment": "exp4423",
++      "gate_evidence_keys": [
++        "command",
++        "game",
++        "general_gotchas",
++        "guidance",
++        "instruction",
++        "mode",
++        "returncode",
++        "status",
++        "stderr",
++        "stdout",
++        "transfer_recommendation"
++      ],
++      "honest_verdict": "partial: generic_first_contact_g50t_routed_missing_verifier_gap_logged",
++      "new_levels_counted": 0,
++      "offline_reproduced": false,
++      "reproduced_levels": 0,
++      "reproduction_gated": true
++    },
++    {
++      "artifact": "results/experiment_4424_deeper_solved_game.json",
++      "artifact_flagged_adversarial": false,
++      "artifact_present": true,
++      "experiment": "exp4424",
++      "gate_evidence_keys": [
++        "claimed_level",
++        "game",
++        "mode",
++        "prior_best_level",
++        "reached_level",
++        "reproduced",
++        "reproduction_scope",
++        "root",
++        "solution_labels"
++      ],
++      "honest_verdict": "complete: sc25_L2_hud_cleanup_fixed_reproduction_gap",
++      "new_levels_counted": 0,
++      "offline_reproduced": false,
++      "reproduced_levels": 1,
++      "reproduction_gated": true
++    }
++  ],
++  "random_seed": 4426,
++  "registry_claimed_reproducible_total_games": 18,
++  "registry_claimed_reproducible_total_levels": 35,
++  "registry_entry_audits": [
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "r11l",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "r11l",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4296_arc_incremental_progress_new_game.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "ls20",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "ls20",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4285_arc_incremental_progress_new_game.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "wa30",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "wa30",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4275_arc_incremental_progress_new_game.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "s5i5",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "s5i5",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4421_config_rule_solve_unseen.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 5,
++      "effective_reproducibility": "reproduced",
++      "game": "lp85",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 5,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 5,
++        "game": "lp85",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 5,
++        "reproduced": true,
++        "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "sc25",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "sc25",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "python/carnot/experiment_4341_e3_sc25_reproduction.py"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "cd82",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "cd82",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_cd82.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "sp80",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "sp80",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_sp80.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "su15",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "su15",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_su15.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 4,
++      "effective_reproducibility": "reproduced",
++      "game": "tu93",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 4,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 4,
++        "game": "tu93",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 4,
++        "reproduced": true,
++        "source": "results/experiment_4361_e3_deeper_high_headroom_games.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 7,
++      "effective_reproducibility": "reproduced",
++      "game": "tn36",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 7,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 7,
++        "game": "tn36",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 7,
++        "reproduced": true,
++        "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "cn04",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "cn04",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_cn04.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "m0r0",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "m0r0",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_m0r0.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "sk48",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "sk48",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/arc_explore_trajectory_sk48.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "ar25",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "ar25",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "ka59",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "ka59",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 1,
++      "effective_reproducibility": "reproduced",
++      "game": "ft09",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 1,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 1,
++        "game": "ft09",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": true,
++        "source": "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json"
++      }
++    },
++    {
++      "counted_by_registry": true,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 6,
++      "effective_reproducibility": "reproduced",
++      "game": "tr87",
++      "gate": "arc_solver_kit.reproduce",
++      "offline_reproduced_claim": true,
++      "registry_levels_reproduced": 6,
++      "registry_reproducibility": "reproduced",
++      "reproduction_result": {
++        "claimed_level": 6,
++        "game": "tr87",
++        "gate": "arc_solver_kit.reproduce",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 6,
++        "reproduced": true,
++        "source": "results/arc_loop_solve_tr87.json"
++      }
++    },
++    {
++      "counted_by_registry": false,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 0,
++      "effective_reproducibility": "unsolved",
++      "game": "vc33",
++      "gate": "not_counted",
++      "offline_reproduced_claim": false,
++      "registry_levels_reproduced": 0,
++      "registry_reproducibility": "unsolved",
++      "reproduction_result": {}
++    },
++    {
++      "counted_by_registry": false,
++      "downgraded_to_provisional": false,
++      "effective_levels_reproduced": 0,
++      "effective_reproducibility": "unsolved",
++      "game": "g50t",
++      "gate": "not_counted",
++      "offline_reproduced_claim": false,
++      "registry_levels_reproduced": 0,
++      "registry_reproducibility": "unsolved",
++      "reproduction_result": {}
++    }
++  ],
++  "reproducible_total_levels": 36,
++  "result_path": "results/experiment_4426_arc_registry_repro_audit.json",
++  "schema": "carnot.exp4426.arc_registry_repro_audit.v1",
++  "spec_refs": [
++    "REQ-REPORT-4426",
++    "SCENARIO-REPORT-4426"
++  ],
++  "submitted_to_leaderboard": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index b12451adf4..2c11bbc5ec 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T08:36:28Z",
+-  "finished_at": "2026-06-19T08:36:28Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-19T08:53:10Z",
++  "finished_at": "2026-06-19T08:53:10Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 38bc6a67f1..0fa1fc3cba 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T08:36:28Z",
+-  "finished_at": "2026-06-19T08:36:28Z",
++  "started_at": "2026-06-19T08:53:10Z",
++  "finished_at": "2026-06-19T08:53:10Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 87fa354660..9a3591663d 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T08:36:28Z",
+-  "finished_at": "2026-06-19T08:36:28Z",
++  "started_at": "2026-06-19T08:53:10Z",
++  "finished_at": "2026-06-19T08:53:10Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4426_arc_registry_repro_audit.py b/tests/python/test_experiment_4426_arc_registry_repro_audit.py
+new file mode 100644
+index 0000000000..847f1adcd0
+--- /dev/null
++++ b/tests/python/test_experiment_4426_arc_registry_repro_audit.py
+@@ -0,0 +1,206 @@
++"""Tests for Exp 4426 ARC registry reproducibility audit.
++
++Spec refs: REQ-REPORT-4426, SCENARIO-REPORT-4426.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import yaml
++
++from carnot import experiment_4426_arc_registry_repro_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++def _write_fixture_repo(root: Path) -> None:
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "arc_solve_registry.yaml").write_text(
++        yaml.safe_dump(
++            {
++                "schema_version": 1,
++                "reproducible_total_levels": 99,
++                "reproducible_total_games": 2,
++                "games": [
++                    "not-a-row",
++                    {
++                        "game": "alpha",
++                        "reproducibility": "reproduced",
++                        "levels_reproduced": 2,
++                    },
++                    {
++                        "game": "beta",
++                        "reproducibility": "reproduced",
++                        "levels_reproduced": 3,
++                    },
++                    {
++                        "game": "gamma",
++                        "reproducibility": "unsolved",
++                        "levels_reproduced": 0,
++                    },
++                ],
++            },
++            sort_keys=False,
++        ),
++        encoding="utf-8",
++    )
++    _write_json(
++        root / "results" / "experiment_4421_config_rule_solve_unseen.json",
++        {
++            "experiment": "experiment_4421_config_rule_solve_unseen",
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "new_levels_reproduced": 1,
++            "reproduction_result": {"reproduced": True, "reached_level": 1},
++            "flagged_adversarial": True,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4422_glyph_rewrite_perception.json",
++        {
++            "experiment": "experiment_4422_glyph_rewrite_perception",
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "reproduction_result": {"reproduced": True, "reached_level": 1},
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4423_generic_first_contact_breadth.json",
++        {
++            "experiment": "experiment_4423_generic_first_contact_breadth",
++            "offline_reproduced": False,
++            "reproduced_levels": 0,
++            "new_levels_reproduced": 0,
++            "standing_loop_result": {
++                "offline_reproduced": False,
++                "reproduced_levels": 0,
++                "mode": "standing_arc_loop_routing_only",
++            },
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4424_deeper_solved_game.json",
++        {
++            "experiment": "experiment_4424_deeper_solved_game",
++            "offline_reproduced": False,
++            "reproduced_levels": 1,
++            "new_levels_reproduced": 0,
++            "reproduce_result": {"reproduced": False, "reached_level": 1, "claimed_level": 2},
++        },
++    )
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _fake_reproduce(entry: Mapping[str, Any], _root: Path) -> dict[str, Any]:
++    game = str(entry["game"])
++    if game == "alpha":
++        return {"game": game, "claimed_level": 2, "reached_level": 2, "reproduced": True}
++    if game == "beta":
++        return {"game": game, "claimed_level": 3, "reached_level": 1, "reproduced": False}
++    raise AssertionError(f"unexpected reproduced entry {game}")
++
++
++def test_req_report_4426_spec_declares_required_audit_contract() -> None:
++    """REQ-REPORT-4426: OpenSpec names the audit artifact and required fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4426" in spec
++    assert "SCENARIO-REPORT-4426" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    assert "scripts/arc3_replay_scorecard_metaharness.py" in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_report_4426_audits_registry_total_and_flags_downgrade(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4426: total comes from reproduction, not registry assertion."""
++
++    _write_fixture_repo(tmp_path)
++
++    artifact = mod.run(
++        root=tmp_path,
++        reproduce_entry_fn=_fake_reproduce,
++        metaharness_runner=lambda _root: {
++            "returncode": 0,
++            "artifact_path": "results/arc3_replay_aggregate_scorecard.json",
++            "total_levels": 32,
++            "games": 16,
++        },
++        now=lambda: 10.0,
++    )
++
++    assert artifact["reproducible_total_levels"] == 3
++    assert artifact["registry_claimed_reproducible_total_levels"] == 99
++    assert artifact["honest_verdict"] == "complete: registry_repro_audit_flagged_1_counted_entries"
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["metaharness"]["total_levels"] == 32
++    assert artifact["counted_entries_audited"] == 2
++    assert artifact["entries_downgraded_to_provisional"] == ["beta"]
++    by_game = {row["game"]: row for row in artifact["registry_entry_audits"]}
++    assert by_game["alpha"]["effective_levels_reproduced"] == 2
++    assert by_game["beta"]["downgraded_to_provisional"] is True
++    assert by_game["beta"]["effective_reproducibility"] == "provisional"
++    assert by_game["gamma"]["counted_by_registry"] is False
++    gates = {row["experiment"]: row for row in artifact["milestone_409_reproduction_gates"]}
++    assert gates["exp4421"]["reproduction_gated"] is True
++    assert gates["exp4421"]["artifact_flagged_adversarial"] is True
++    assert gates["exp4421"]["new_levels_counted"] == 1
++    assert gates["exp4423"]["reproduction_gated"] is True
++    assert gates["exp4423"]["new_levels_counted"] == 0
++    assert gates["exp4424"]["reproduction_gated"] is True
++    assert gates["exp4424"]["new_levels_counted"] == 0
++    assert mod.artifact_schema_errors(artifact) == []
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written["reproducible_total_levels"] == 3
++
++
++def test_req_report_4426_schema_rejects_fabricated_terminal_artifact() -> None:
++    """REQ-REPORT-4426: required artifact fields are bare and terminal-prefixed."""
++
++    assert mod._load_json(Path("/definitely/missing/artifact.json")) == {}
++    assert mod.load_registry(Path("/definitely/missing/repo")) == {"games": []}
++    assert mod._as_int("bad") == 0
++    assert mod._normalize_action({"action": 4, "data": None}) == (4, None)
++    assert mod._normalize_action({"action": 3}) == (3, None)
++    assert mod._normalize_action({"x": 9, "y": 10}) == (6, {"x": 9, "y": 10})
++    assert mod._honest_verdict(3, 99, []) == "complete: registry_repro_audit_total_99_asserted_3_audited"
++    assert mod._honest_verdict(3, 3, []) == "success: registry_reproducible_total_levels_3_audited"
++    assert mod.milestone_409_gate_rows(Path("/definitely/missing/repo"))[0]["reproduction_gated"] is False
++
++    artifact = {
++        "reproducible_total_levels": "3",
++        "honest_verdict": "maybe",
++        "inference_substrate": "",
++        "registry_entry_audits": {},
++        "milestone_409_reproduction_gates": {},
++        "metaharness": "bad",
++    }
++
++    errors = mod.artifact_schema_errors(artifact)
++
++    assert "reproducible_total_levels must be bare int" in errors
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "inference_substrate must be non-empty string" in errors
++    assert "registry_entry_audits must be list" in errors
++    assert "milestone_409_reproduction_gates must be list" in errors
++    assert "metaharness must be dict" in errors
++
++    missing_errors = mod.artifact_schema_errors({})
++    assert "missing reproducible_total_levels" in missing_errors
++    try:
++        mod.write_artifact(Path("/tmp"), artifact)
++    except ValueError as exc:
++        assert "reproducible_total_levels must be bare int" in str(exc)
++    else:  # pragma: no cover - write_artifact must reject invalid artifacts
++        raise AssertionError("invalid artifact unexpectedly wrote")
+-- 
+2.55.0
+

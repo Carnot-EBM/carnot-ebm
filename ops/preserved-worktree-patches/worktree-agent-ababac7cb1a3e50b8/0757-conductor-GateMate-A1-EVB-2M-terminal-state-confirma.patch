@@ -1,0 +1,1232 @@
+From 3baa6ce2e7d509e095f8e2c289a158ed4b1f8dc4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 6 Jun 2026 23:19:56 -0400
+Subject: [PATCH 00757/11362] =?UTF-8?q?[conductor]=20GateMate=20A1-EVB-2M?=
+ =?UTF-8?q?=20terminal-state=20confirmation=20=E2=80=94=20re-confirm=20the?=
+ =?UTF-8?q?=20n=3D16=20Carnot=20Ising=20tile=20is=20flashed=20with=20DISTI?=
+ =?UTF-8?q?NCT=20wall-clock=20timers=20(the=20de-flagged=20exp3889=20patte?=
+ =?UTF-8?q?rn),=20attempt/record=20JTAG=20readback,=20and=20ASSESS=20wheth?=
+ =?UTF-8?q?er=20the=20board=20meets=20its=20terminal=20state=20(gatemate?=
+ =?UTF-8?q?=5Fbitstream=5Fflashed=20+=20smoke=20+=20no=5Ftautology)=20so?=
+ =?UTF-8?q?=20it=20can=20graduate=20to=20opportunistic=20per=20Hardware-Ta?=
+ =?UTF-8?q?sk=20Continuity.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3900-gatemate-terminal-confirmation
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/fpga/spec.md            |  72 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ ...ent_3900_gatemate_terminal_confirmation.py | 270 ++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...t_3900_gatemate_terminal_confirmation.json | 163 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...ent_3900_gatemate_terminal_confirmation.py |  37 ++
+ ...ent_3900_gatemate_terminal_confirmation.py | 342 ++++++++++++++++++
+ 22 files changed, 914 insertions(+), 30 deletions(-)
+ create mode 100644 python/carnot/experiment_3900_gatemate_terminal_confirmation.py
+ create mode 100644 results/experiment_3900_gatemate_terminal_confirmation.json
+ create mode 100644 scripts/experiments/experiment_3900_gatemate_terminal_confirmation.py
+ create mode 100644 tests/python/test_experiment_3900_gatemate_terminal_confirmation.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index 3e02374a91..4d102ee91f 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -4038,6 +4038,78 @@ LUT/DFF counts; and an honest readback-supported/readback-verified record.
+ 
+ ---
+ 
++### REQ-HW-3900
++
++**Title:** GateMate terminal confirmation MUST re-confirm the n=16 flash state with distinct timers and honest readback
++
++**Description:**
++Experiment 3900 MUST re-confirm the GateMate A1-EVB-2M n=16 Carnot Ising tile
++state after the Exp 3889 timer corrigendum. Before any synthesis, packing,
++flashing, or readback attempt, it MUST check the GateMate toolchain with
++`command -v nextpnr-himbaechel && command -v yosys && command -v
++openFPGALoader` and MUST check board contact with `openFPGALoader -c dirtyJtag
++--detect` proving the Cologne Chip GateMate/GM1Ax IDCODE. Missing tools MUST
++emit `blocked_gatemate_toolchain_missing`; missing board contact MUST emit
++`blocked_gatemate_board_unreachable`.
++
++When preconditions pass, the experiment MUST run the current open-source
++GateMate flow (`yosys synth_gatemate`, `nextpnr-himbaechel --device CCGM1A1`,
++`gmpack`, and `openFPGALoader -c dirtyJtag -b olimex_gatemateevb`) against the
++n=16 tile or otherwise confirm the same flashed state with equivalent board
++evidence. The artifact MUST record `duration_s` as total task wall-clock and
++`run_duration_s` as on-board run time only; the two timer fields MUST be
++distinct and MUST NOT repeat the Exp 3866 tautology. The artifact MUST honestly
++record whether JTAG readback is supported, compare readback bytes to the flashed
++bitstream hash when supported, and set a bare `terminal_state_reached` boolean
++only when the bitstream is flashed, smoke evidence is OK, the readback gate is
++either verified or unsupported, and no timer tautology is present.
++
++**Acceptance criteria:**
++- `scripts/experiments/experiment_3900_gatemate_terminal_confirmation.py`
++  writes `results/experiment_3900_gatemate_terminal_confirmation.json`.
++- The artifact includes bare `duration_s`, `run_duration_s`,
++  `readback_verified`, `readback_supported`, `terminal_state_reached`,
++  `gatemate_bitstream_flashed`, `fmax_mhz`, `lut_used`, `dff_used`,
++  `preconditions_checked`, `reproducibility_checksum`, and
++  `inference_substrate` fields.
++- `duration_s != run_duration_s` for every flashed artifact, and
++  `terminal_state_reached=false` whenever the two timer fields are equal.
++- A terminal artifact emits an `honest_verdict` beginning
++  `success: gatemate_TERMINAL_reached_fmax` and ending
++  `_can_graduate_to_opportunistic`.
++- A flashed artifact with supported but unverified readback emits an
++  `honest_verdict` beginning
++  `success: gatemate_flashed_readback_inconclusive_fmax` and ending
++  `_stays_mandatory`.
++- Failed preconditions or failed flash/build flow artifacts emit
++  `honest_verdict` values beginning with `blocked_`.
++- Required fields are annotated through `field_provenance`; the fields
++  themselves MUST remain bare booleans, numbers, strings, or lists rather than
++  `{value, principle}` wrappers.
++
++**Implementation status:** Pending (Exp 3900)
++
++---
++
++### SCENARIO-HW-3900
++
++**Scenario:** GateMate terminal confirmation records graduation or mandatory state without timer tautology.
++
++**Given:** The GateMate toolchain may or may not be installed, the Olimex
++GateMate A1-EVB-2M may or may not be reachable over DirtyJTAG, and the installed
++`openFPGALoader` may or may not expose a compatible `--readback` command.
++**When:** Experiment 3900 runs its preconditions and, only on pass, re-confirms
++the n=16 tile through the synth_gatemate -> nextpnr-himbaechel -> gmpack ->
++openFPGALoader flow plus the readback probe.
++**Then:** It writes the terminal-confirmation artifact with distinct task and
++on-board timers, real Fmax and LUT/DFF counts, readback-supported/readback-
++verified evidence, a bare terminal-state boolean, and a terminal, caveated, or
++blocked verdict.
++
++**Implementation status:** Pending (Exp 3900)
++
++---
++
+ ### REQ-HW-3890
+ 
+ **Title:** PolarFire plus KV260 consolidated continuity audit MUST preserve SSH-only preconditions and no fabric-acceleration claim
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 76c37e3d07..8ea5594962 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 157,
+   "code_violations": 0,
+-  "experiments_checked": 2969,
++  "experiments_checked": 2970,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_3900_gatemate_terminal_confirmation.py b/python/carnot/experiment_3900_gatemate_terminal_confirmation.py
+new file mode 100644
+index 0000000000..579f4f28d7
+--- /dev/null
++++ b/python/carnot/experiment_3900_gatemate_terminal_confirmation.py
+@@ -0,0 +1,270 @@
++"""GateMate terminal confirmation for Exp 3900.
++
++Exp 3889 corrected the Exp 3866 timer tautology by measuring total task time and
++board-facing run time with separate clocks. This module reuses that hardware
++flow and adds the terminal-state graduation decision the operator asked for:
++the board must accept the n=16 tile, the flash smoke evidence must be OK, the
++readback gate must either verify or be honestly unsupported, and the two timer
++fields must remain distinct.
++
++Spec refs: REQ-HW-3900, SCENARIO-HW-3900.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import shutil
++import time
++from pathlib import Path
++
++from carnot.experiment_3866_gatemate_ising_tile_flash_v2 import (
++    ClockFunc,
++    CommandResult,
++    RunCommand,
++    WhichFunc,
++    _default_run_command,
++)
++from carnot.experiment_3889_gatemate_continuity_corrigendum import (
++    ARTIFACT_FILENAME as PRIOR_ARTIFACT_FILENAME,
++    build_artifact as _build_corrigendum_artifact,
++    resolve_toolchain_path,
++)
++
++
++ARTIFACT_FILENAME = "experiment_3900_gatemate_terminal_confirmation.json"
++EXPERIMENT_ID = 3900
++RUN_DATE = "20260607"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "duration_s",
++    "run_duration_s",
++    "readback_verified",
++    "readback_supported",
++    "terminal_state_reached",
++    "gatemate_bitstream_flashed",
++    "fmax_mhz",
++    "lut_used",
++    "dff_used",
++    "preconditions_checked",
++    "reproducibility_checksum",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "duration_s": (
++        "Total task wall-clock -- MUST be distinct from run_duration_s "
++        "(the exp3866 TAUTOLOGY corrigendum)."
++    ),
++    "run_duration_s": "On-board run time only -- distinct timer.",
++    "readback_verified": (
++        "BARE BOOL -- did a JTAG readback confirm the flashed tile matches the bitstream."
++    ),
++    "readback_supported": "Honest record of whether this flow supports readback at all.",
++    "terminal_state_reached": (
++        "BARE BOOL -- flashed + smoke + readback-or-unsupported + no-tautology; "
++        "the graduation signal."
++    ),
++    "gatemate_bitstream_flashed": (
++        "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    ),
++    "fmax_mhz": (
++        "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    ),
++    "lut_used": (
++        "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    ),
++    "dff_used": (
++        "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    ),
++    "preconditions_checked": (
++        "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    ),
++    "reproducibility_checksum": (
++        "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    ),
++    "inference_substrate": (
++        "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    ),
++    "honest_verdict": (
++        "Terminal prefix or blocked prefix records whether GateMate can graduate "
++        "from mandatory to opportunistic hardware continuity."
++    ),
++    "smoke_ok": (
++        "BARE BOOL -- the flash/contact smoke stage completed with board-visible success evidence."
++    ),
++    "no_tautology": (
++        "BARE BOOL -- total wall-clock and board-run timers are distinct."
++    ),
++}
++
++
++def _metric_label(value: float | int | None) -> str:
++    if value is None:
++        return "unknown"
++    if isinstance(value, float):
++        return f"{value:.2f}"
++    return str(value)
++
++
++def _no_tautology(artifact: dict) -> bool:
++    return artifact.get("duration_s") != artifact.get("run_duration_s")
++
++
++def _smoke_ok(artifact: dict) -> bool:
++    if not bool(artifact.get("gatemate_bitstream_flashed")):
++        return False
++    for entry in artifact.get("command_transcript", []):
++        if entry.get("stage") == "flash" and entry.get("returncode") == 0:
++            return True
++    return bool(artifact.get("synth_pnr_pack_succeeded"))
++
++
++def _readback_gate(artifact: dict) -> bool:
++    return bool(artifact.get("readback_verified")) or artifact.get("readback_supported") is False
++
++
++def _readback_label(artifact: dict) -> str:
++    if artifact.get("readback_verified"):
++        return "true"
++    if artifact.get("readback_supported") is False:
++        return "unsupported"
++    return "false"
++
++
++def _terminal_state_reached(artifact: dict) -> bool:
++    return (
++        bool(artifact.get("gatemate_bitstream_flashed"))
++        and bool(artifact.get("smoke_ok"))
++        and _readback_gate(artifact)
++        and bool(artifact.get("no_tautology"))
++    )
++
++
++def _verdict(artifact: dict) -> str:
++    prior_verdict = str(artifact.get("honest_verdict", ""))
++    if prior_verdict.startswith("blocked_"):
++        return prior_verdict
++    if not bool(artifact.get("gatemate_bitstream_flashed")):
++        return "blocked_gatemate_flash_flow_failed_unknown"
++    fmax = _metric_label(artifact.get("fmax_mhz"))
++    if artifact.get("terminal_state_reached"):
++        return (
++            "success: "
++            f"gatemate_TERMINAL_reached_fmax{fmax}_readback{_readback_label(artifact)}_"
++            "can_graduate_to_opportunistic"
++        )
++    return f"success: gatemate_flashed_readback_inconclusive_fmax{fmax}_stays_mandatory"
++
++
++def _field_provenance(existing: dict | None) -> dict:
++    provenance = dict(existing or {})
++    provenance.update({field: {"principle": principle} for field, principle in FIELD_PRINCIPLES.items()})
++    return provenance
++
++
++def _reproducibility_checksum(artifact: dict) -> str:
++    material = {
++        "experiment": EXPERIMENT_ID,
++        "prior_corrigendum_sha256": artifact.get("prior_corrigendum_sha256", ""),
++        "bitstream_sha256": artifact.get("bitstream_sha256", ""),
++        "readback_sha256": artifact.get("readback_sha256", ""),
++        "readback_supported": artifact.get("readback_supported"),
++        "readback_verified": artifact.get("readback_verified"),
++        "terminal_state_reached": artifact.get("terminal_state_reached"),
++        "no_tautology": artifact.get("no_tautology"),
++        "preconditions_checked": artifact.get("preconditions_checked", []),
++        "command_transcript": artifact.get("command_transcript", []),
++        "honest_verdict": artifact.get("honest_verdict", ""),
++    }
++    encoded = json.dumps(material, sort_keys=True, default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _prior_corrigendum_sha256(repo_root: Path) -> str:
++    prior = repo_root / "results" / PRIOR_ARTIFACT_FILENAME
++    if not prior.exists():
++        return ""
++    digest = hashlib.sha256()
++    with prior.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return digest.hexdigest()
++
++
++def confirm_terminal_artifact(
++    base_artifact: dict,
++    *,
++    prior_corrigendum_sha256: str,
++) -> dict:
++    """Add the Exp 3900 terminal-state decision to an Exp 3889-style artifact."""
++    artifact = json.loads(json.dumps(base_artifact, sort_keys=True, default=str))
++    artifact["experiment"] = EXPERIMENT_ID
++    artifact["run_date"] = RUN_DATE
++    artifact["prior_corrigendum_artifact"] = f"results/{PRIOR_ARTIFACT_FILENAME}"
++    artifact["prior_corrigendum_sha256"] = prior_corrigendum_sha256
++    artifact["no_tautology"] = _no_tautology(artifact)
++    artifact["smoke_ok"] = _smoke_ok(artifact)
++    artifact["terminal_state_reached"] = _terminal_state_reached(artifact)
++    artifact["honest_verdict"] = _verdict(artifact)
++    artifact["field_provenance"] = _field_provenance(artifact.get("field_provenance"))
++    artifact["reproducibility_checksum"] = _reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    repo_root: Path,
++    run_command: RunCommand = _default_run_command,
++    which_func: WhichFunc = shutil.which,
++    monotonic: ClockFunc = time.monotonic,
++) -> dict:
++    """Run the GateMate confirmation flow and return the terminal artifact."""
++    prior_sha256 = _prior_corrigendum_sha256(repo_root)
++    base = _build_corrigendum_artifact(
++        repo_root=repo_root,
++        run_command=run_command,
++        which_func=which_func,
++        monotonic=monotonic,
++    )
++    return confirm_terminal_artifact(base, prior_corrigendum_sha256=prior_sha256)
++
++
++def run_experiment(
++    *,
++    repo_root: Path | None = None,
++    artifact_path: Path | None = None,
++    run_command: RunCommand = _default_run_command,
++    which_func: WhichFunc = shutil.which,
++    monotonic: ClockFunc = time.monotonic,
++) -> dict:
++    """Run Exp 3900 and write the requested deliverable JSON."""
++    root = repo_root or Path.cwd()
++    destination = artifact_path or root / "results" / ARTIFACT_FILENAME
++    artifact = build_artifact(
++        repo_root=root,
++        run_command=run_command,
++        which_func=which_func,
++        monotonic=monotonic,
++    )
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    destination.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover
++    resolve_toolchain_path()
++    artifact = run_experiment()
++    print(f"artifact: results/{ARTIFACT_FILENAME}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"gatemate_bitstream_flashed: {artifact['gatemate_bitstream_flashed']}")
++    print(f"readback_supported: {artifact['readback_supported']}")
++    print(f"readback_verified: {artifact['readback_verified']}")
++    print(f"terminal_state_reached: {artifact['terminal_state_reached']}")
++    print(f"duration_s: {artifact['duration_s']}")
++    print(f"run_duration_s: {artifact['run_duration_s']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 8328dcfbbc..76df25968e 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T02:38:51.957143+00:00",
+-  "finished_at": "2026-06-07T02:38:51.981870+00:00",
+-  "duration_s": 0.025,
++  "started_at": "2026-06-07T03:19:37.023571+00:00",
++  "finished_at": "2026-06-07T03:19:37.047471+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 17a226b8e0..263ee8b1c9 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-07T02:38:52Z",
++  "run_date": "2026-06-07T03:19:37Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 9b87706ab2..cdce0bcbf0 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T02:38:53Z",
+-  "finished_at": "2026-06-07T02:38:53Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-07T03:19:38Z",
++  "finished_at": "2026-06-07T03:19:38Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index f58f9313ea..5727f6414a 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-07T02:38:53Z",
++  "run_date": "2026-06-07T03:19:38Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 0c181ff915..eceaed7654 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-07T02:38:53Z",
++  "run_date": "2026-06-07T03:19:38Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 6bed0f566f..d113073b1a 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-07T02:37:00.710481Z",
+-  "duration_s": 0.012947320938110352,
++  "run_date": "2026-06-07T03:17:57.825187Z",
++  "duration_s": 0.010068893432617188,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "1ca87475282b8b726b5b37a77f4099f0f2c03da7e3819eee6886a31a90cee1db",
++  "reproducibility_checksum": "cb0305a12ed6094a94a805a9902b1982fa1d0a583ef97063a12ab20aed1a2947",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "b0ff5a762d9d55e7c0f7bc15e1a255b683642ceb"
++    "adversarial_verify_version": "736b4129c83adf5548d4347300ffd0c559c48a99"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 262aa0d343..1645a0e7d9 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-07T02:37:00.724067Z",
+-  "duration_s": 0.009555816650390625,
++  "run_date": "2026-06-07T03:17:57.837668Z",
++  "duration_s": 0.009147405624389648,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "0ea103cb42f19d59025bd6235eca3df11aac5976ee70c449024948388aa79aae",
++  "reproducibility_checksum": "6313346c9dfe3e7eea0e3035f4842e5f50e9fd33105c2bdd080f2aedac24ccb2",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "b0ff5a762d9d55e7c0f7bc15e1a255b683642ceb"
++    "adversarial_verify_version": "736b4129c83adf5548d4347300ffd0c559c48a99"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 92c4c0e462..bbe80996a6 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.139568328857422,
++  "efficiency_gains_ms": 2.111673355102539,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index e51d69e6ef..eee660e175 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2339763641357422,
++  "duration_s": 0.24234533309936523,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 5b23aa6e0f..3415031469 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0007836818695068359,
++  "duration_s": 0.0008263587951660156,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 3171633e3c..cd0b8a464a 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.101798938587308e-05,
++  "duration_s": 2.6920984964817762e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 66c3d7d059..ae7fadc552 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.2098766900599e-07,
++  "duration_s": 1.0730000212788582e-06,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 5d59e5fca1..f4012d4d50 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.651878356933594e-05,
++  "duration_s": 5.1021575927734375e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3900_gatemate_terminal_confirmation.json b/results/experiment_3900_gatemate_terminal_confirmation.json
+new file mode 100644
+index 0000000000..d8af75277d
+--- /dev/null
++++ b/results/experiment_3900_gatemate_terminal_confirmation.json
+@@ -0,0 +1,163 @@
++{
++  "bitstream_path": "",
++  "bitstream_sha256": "",
++  "build_log_paths": [],
++  "command_transcript": [],
++  "dff_used": 0,
++  "duration_s": 0.089863,
++  "experiment": 3900,
++  "field_provenance": {
++    "dff_used": {
++      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    },
++    "duration_s": {
++      "principle": "Total task wall-clock -- MUST be distinct from run_duration_s (the exp3866 TAUTOLOGY corrigendum)."
++    },
++    "fmax_mhz": {
++      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    },
++    "gatemate_bitstream_flashed": {
++      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    },
++    "honest_verdict": {
++      "principle": "Terminal prefix or blocked prefix records whether GateMate can graduate from mandatory to opportunistic hardware continuity."
++    },
++    "inference_substrate": {
++      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    },
++    "lut_dff_utilization": {
++      "principle": "Real synthesis/P&R numbers anchor the n=16 tile to actual GateMate resources instead of a paper estimate."
++    },
++    "lut_used": {
++      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    },
++    "no_tautology": {
++      "principle": "BARE BOOL -- total wall-clock and board-run timers are distinct."
++    },
++    "preconditions_checked": {
++      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    },
++    "readback_supported": {
++      "principle": "Honest record of whether this flow supports readback at all."
++    },
++    "readback_verified": {
++      "principle": "BARE BOOL -- did a JTAG readback confirm the flashed tile matches the bitstream."
++    },
++    "reproducibility_checksum": {
++      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
++    },
++    "run_duration_s": {
++      "principle": "On-board run time only -- distinct timer."
++    },
++    "sample_timing_basis": {
++      "principle": "Explains the timing basis so a routed clock estimate is not confused with a host-visible sampler transcript."
++    },
++    "sample_timing_note": {
++      "principle": "Explains why sample_timing_us is null when the board can be flashed but the programmed design has no supported host-visible timing path."
++    },
++    "sample_timing_us": {
++      "principle": "Sample-level one-clock spin-update timing derived from routed Fmax; this is not host readback latency."
++    },
++    "smoke_ok": {
++      "principle": "BARE BOOL -- the flash/contact smoke stage completed with board-visible success evidence."
++    },
++    "synth_pnr_pack_succeeded": {
++      "principle": "Bare bool -- the toolchain end-to-end produced a bitstream, separable from the flash step."
++    },
++    "terminal_state_reached": {
++      "principle": "BARE BOOL -- flashed + smoke + readback-or-unsupported + no-tautology; the graduation signal."
++    },
++    "thermal_note": {
++      "principle": "GateMate is passively cooled, so the artifact must disclose that burst smoke results are not sustained-load thermal evidence."
++    }
++  },
++  "fmax_mhz": null,
++  "gatemate_bitstream_flashed": false,
++  "honest_verdict": "blocked_gatemate_board_unreachable",
++  "inference_substrate": "hardware_smoke",
++  "lut_dff_utilization": null,
++  "lut_used": 0,
++  "model_specs": {
++    "device": "CCGM1A1",
++    "n_spins": 16,
++    "rtl_path": "rtl/gatemate_ising_n16.v",
++    "rtl_top": "gatemate_ising_n16"
++  },
++  "no_tautology": true,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v nextpnr-himbaechel && command -v yosys && command -v openFPGALoader",
++      "detail": {
++        "nextpnr-himbaechel": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++        "openFPGALoader": "/opt/oss-cad-suite/bin/openFPGALoader",
++        "yosys": "/opt/oss-cad-suite/bin/yosys"
++      },
++      "resource": "gatemate_toolchain"
++    },
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v yosys && yosys -V && yosys -Q -p 'help synth_gatemate'",
++      "detail": "ell $_DFFE_????_ 01 -cell $_DLATCH_???_ 01\n        techmap -map +/gatemate/reg_map.v\n        opt_expr -mux_undef\n        simplemap\n        opt_clean\n\n    map_muxs:\n        muxcover  -mux4 -mux8\n        opt -full\n        simplemap\n        techmap -map +/gatemate/mux_map.v\n\n    map_luts:\n        abc  -genlib +/gatemate/lut_tree_cells.genlib    (with -luttree)\n        techmap -map +/gatemate/lut_tree_map.v    (with -luttree)\n        gatemate_foldinv    (with -luttree)\n        techmap -map +/gatemate/inv_map.v    (with -luttree)\n        abc  -dress -lut 4    (without -luttree)\n        clean\n\n    map_cells:\n        techmap -map +/gatemate/lut_map.v\n        clean\n\n    map_bufg:    (skip if '-noclkbuf')\n        clkbufmap -buf CC_BUFG O:I\n        clean\n\n    check:\n        hierarchy -check\n        stat -width\n        check -noinit\n        blackbox =A:whitebox\n\n    vlog:\n        opt_clean -purge\n        write_verilog -noattr <file-name>\n\n    json:\n        write_json <file-name>\n\nEnd of script. Logfile hash: ce4836ed80, time: 0.00s, user: 0.00s, system: 0.00s, MEM: 182.16 MB peak\nYosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nTime spent: 99% 1x help (0 sec), 0% 0x id_gc (0 sec)",
++      "path": "/opt/oss-cad-suite/bin/yosys",
++      "resource": "yosys",
++      "synth_gatemate_returncode": 0,
++      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
++      "version_returncode": 0
++    },
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v nextpnr-himbaechel && nextpnr-himbaechel --help",
++      "detail": "               enable experimental timing-driven ripup\n                                        in router\n  --router2-tmg-ripup                   enable experimental timing-driven ripup\n                                        in router (deprecated; use --tmg-ripup \n                                        instead)\n  --router2-alt-weights                 use alternate router2 weights\n  --report arg                          write timing and utilization report in \n                                        JSON format to file\n  --detailed-timing-report              Append detailed net timing data to the \n                                        JSON report\n  --placed-svg arg                      write render of placement to SVG file\n  --routed-svg arg                      write render of routing to SVG file\n\nArchitecture specific options:\n  --device arg                          name of device to use\n  --chipdb arg                          override path to chip database file\n  --list-uarch                          list included uarches\n  -o [ --vopt ] arg                     options to pass to the himb\u00e4chel uarch\n                                        (use help as argument to get more info)",
++      "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++      "resource": "nextpnr-himbaechel",
++      "returncode": 0
++    },
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v gmpack",
++      "detail": "/opt/oss-cad-suite/bin/gmpack",
++      "path": "/opt/oss-cad-suite/bin/gmpack",
++      "resource": "gmpack"
++    },
++    {
++      "available": true,
++      "blocker": "",
++      "command": "command -v openFPGALoader",
++      "detail": "/opt/oss-cad-suite/bin/openFPGALoader",
++      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++      "resource": "openFPGALoader"
++    },
++    {
++      "available": false,
++      "blocker": "blocked_gatemate_board_not_detected",
++      "command": "openFPGALoader -c dirtyJtag --detect",
++      "detail": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
++      "resource": "gatemate_board_detect",
++      "returncode": 0
++    }
++  ],
++  "prior_corrigendum_artifact": "results/experiment_3889_gatemate_continuity_corrigendum.json",
++  "prior_corrigendum_sha256": "ef34717dfc35e16da4c4eb5c7c2014828adaec80cbc5bea6c9985fcf1d6dfc75",
++  "random_seed": 41442,
++  "readback_attempted": false,
++  "readback_reason": "not attempted: precondition or RTL failure",
++  "readback_sha256": "",
++  "readback_supported": false,
++  "readback_verified": false,
++  "reproducibility_checksum": "2479c3c7b0a6108aeffdcae7f91c92ddaccd233eded7710414bbfa57f5734b65",
++  "run_date": "20260607",
++  "run_duration_s": 0.0,
++  "sample_timing_basis": "unavailable_no_fmax",
++  "sample_timing_note": "No supported GateMate host-visible readback/timing path is present for this DirtyJTAG-flashed RTL; sample_timing_us is null and not fabricating timing.",
++  "sample_timing_us": null,
++  "smoke_ok": false,
++  "soc_temp_max_c": null,
++  "synth_pnr_pack_succeeded": false,
++  "terminal_state_reached": false,
++  "thermal_note": "passively cooled; no active fan; sustained-load results may differ from production with active cooling"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 5353f81b38..cfc5761206 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T02:42:00Z",
+-  "finished_at": "2026-06-07T02:42:00Z",
++  "started_at": "2026-06-07T03:17:49Z",
++  "finished_at": "2026-06-07T03:17:49Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 7fb5d7b9ca..dbab8470de 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T02:42:00Z",
+-  "finished_at": "2026-06-07T02:42:00Z",
++  "started_at": "2026-06-07T03:17:49Z",
++  "finished_at": "2026-06-07T03:17:49Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 8ed6ecb063..8026b11a8f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T02:42:00Z",
+-  "finished_at": "2026-06-07T02:42:01Z",
++  "started_at": "2026-06-07T03:17:49Z",
++  "finished_at": "2026-06-07T03:17:49Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/experiment_3900_gatemate_terminal_confirmation.py b/scripts/experiments/experiment_3900_gatemate_terminal_confirmation.py
+new file mode 100644
+index 0000000000..6c930211c3
+--- /dev/null
++++ b/scripts/experiments/experiment_3900_gatemate_terminal_confirmation.py
+@@ -0,0 +1,37 @@
++#!/usr/bin/env python3
++"""Runner for Exp 3900 GateMate terminal confirmation.
++
++Spec refs: REQ-HW-3900, SCENARIO-HW-3900.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++
++def main() -> None:
++    from carnot.experiment_3900_gatemate_terminal_confirmation import (
++        ARTIFACT_FILENAME,
++        resolve_toolchain_path,
++        run_experiment,
++    )
++
++    resolve_toolchain_path()
++    artifact = run_experiment(repo_root=REPO_ROOT)
++    print(f"artifact: results/{ARTIFACT_FILENAME}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"gatemate_bitstream_flashed: {artifact['gatemate_bitstream_flashed']}")
++    print(f"readback_supported: {artifact['readback_supported']}")
++    print(f"readback_verified: {artifact['readback_verified']}")
++    print(f"terminal_state_reached: {artifact['terminal_state_reached']}")
++    print(f"duration_s: {artifact['duration_s']}")
++    print(f"run_duration_s: {artifact['run_duration_s']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_3900_gatemate_terminal_confirmation.py b/tests/python/test_experiment_3900_gatemate_terminal_confirmation.py
+new file mode 100644
+index 0000000000..48c7f2b002
+--- /dev/null
++++ b/tests/python/test_experiment_3900_gatemate_terminal_confirmation.py
+@@ -0,0 +1,342 @@
++"""Tests for Exp 3900 GateMate terminal confirmation.
++
++Spec refs: REQ-HW-3900, SCENARIO-HW-3900.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++
++from carnot import experiment_3900_gatemate_terminal_confirmation as exp
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO_ROOT / "openspec" / "capabilities" / "fpga" / "spec.md"
++DETECT_OK = (
++    "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
++    "index 0:\n"
++    "\tidcode 0x20000001\n"
++    "\tmanufacturer colognechip\n"
++    "\tfamily GateMate Series\n"
++    "\tmodel  GM1Ax\n"
++)
++BITSTREAM_BYTES = b"exp3900-gatemate-bitstream"
++
++
++def _clock(step: float = 0.25):
++    state = {"value": 0.0}
++
++    def monotonic() -> float:
++        current = state["value"]
++        state["value"] += step
++        return current
++
++    return monotonic
++
++
++def _paths() -> dict[str, str]:
++    return {
++        "yosys": "/suite/bin/yosys",
++        "nextpnr-himbaechel": "/suite/bin/nextpnr-himbaechel",
++        "gmpack": "/suite/bin/gmpack",
++        "openFPGALoader": "/suite/bin/openFPGALoader",
++    }
++
++
++def _which_from(paths: dict[str, str]):
++    def which(name: str) -> str | None:
++        return paths.get(name)
++
++    return which
++
++
++def _write_rtl(repo_root: Path) -> None:
++    rtl = repo_root / "rtl" / "gatemate_ising_n16.v"
++    rtl.parent.mkdir(parents=True, exist_ok=True)
++    rtl.write_text(
++        "module gatemate_ising_n16(input wire S_AXI_ACLK, output wire [15:0] out);\n"
++        "reg [15:0] state;\n"
++        "always @(posedge S_AXI_ACLK) state <= state + 16'h1;\n"
++        "assign out = state;\n"
++        "endmodule\n",
++        encoding="utf-8",
++    )
++
++
++def _write_prior(repo_root: Path, content: bytes = b"prior-exp3889") -> str:
++    prior = repo_root / "results" / "experiment_3889_gatemate_continuity_corrigendum.json"
++    prior.parent.mkdir(parents=True, exist_ok=True)
++    prior.write_bytes(content)
++    return hashlib.sha256(content).hexdigest()
++
++
++def _tool_runner(
++    *,
++    detect_text: str = DETECT_OK,
++    detect_rc: int = 0,
++    synthesis_rc: int = 0,
++    flash_rc: int = 0,
++    readback_supported: bool = False,
++    readback_matches: bool = True,
++):
++    calls: list[tuple[str, ...]] = []
++
++    def run(args: list[str], timeout_s: float) -> exp.CommandResult:
++        del timeout_s
++        call = tuple([Path(args[0]).name, *args[1:]])
++        calls.append(call)
++        if call == ("yosys", "-V"):
++            return exp.CommandResult(0, "Yosys 0.64+149\n", "")
++        if call == ("yosys", "-Q", "-p", "help synth_gatemate"):
++            return exp.CommandResult(0, "synth_gatemate command help\n", "")
++        if call == ("nextpnr-himbaechel", "--help"):
++            return exp.CommandResult(0, "Usage: nextpnr-himbaechel --device CCGM1A1\n", "")
++        if call == ("openFPGALoader", "-c", "dirtyJtag", "--detect"):
++            return exp.CommandResult(detect_rc, detect_text, "")
++        if call[0] == "yosys" and "synth_gatemate" in " ".join(args):
++            if synthesis_rc:
++                return exp.CommandResult(synthesis_rc, "", "synthesis failed\n")
++            json_out = Path(args[-1].split("-json ", 1)[1].split(";")[0])
++            json_out.parent.mkdir(parents=True, exist_ok=True)
++            json_out.write_text('{"modules":{}}\n', encoding="utf-8")
++            return exp.CommandResult(
++                0,
++                "Number of cells:              251\n"
++                "     CC_DFF                  53\n"
++                "     CC_LUT2                 19\n",
++                "",
++            )
++        if call[0] == "nextpnr-himbaechel" and "--device" in call:
++            out_vopt = next(item for item in call if item.startswith("out="))
++            cfg_path = Path(out_vopt.removeprefix("out="))
++            cfg_path.parent.mkdir(parents=True, exist_ok=True)
++            cfg_path.write_text("cfg-bitstream-text\n", encoding="utf-8")
++            pnr_json = Path(call[call.index("--write") + 1])
++            pnr_json.write_text('{"pnr":true}\n', encoding="utf-8")
++            return exp.CommandResult(
++                0,
++                "Info: Max frequency for clock 'S_AXI_ACLK': 50.00 MHz\n"
++                "Info:              CPE_LT:      19/  40960     0%\n"
++                "Info:              CPE_FF:      53/  40960     0%\n",
++                "",
++            )
++        if call[0] == "gmpack":
++            Path(args[2]).write_bytes(BITSTREAM_BYTES)
++            return exp.CommandResult(0, "Packed bitstream\n", "")
++        if call[:4] == ("openFPGALoader", "-c", "dirtyJtag", "-b"):
++            return exp.CommandResult(
++                flash_rc,
++                "Load SRAM via JTAG: 100.00%\nDone\n" if flash_rc == 0 else "",
++                "flash failed\n" if flash_rc else "",
++            )
++        if call == ("openFPGALoader", "--help"):
++            help_text = "--readback readback.bin\n" if readback_supported else "--dump-flash --verify\n"
++            return exp.CommandResult(0, help_text, "")
++        if call[:3] == ("openFPGALoader", "-c", "dirtyJtag") and "--readback" in call:
++            readback_path = Path(call[-1])
++            readback_path.parent.mkdir(parents=True, exist_ok=True)
++            readback_path.write_bytes(BITSTREAM_BYTES if readback_matches else b"different")
++            return exp.CommandResult(0, "readback complete\n", "")
++        raise AssertionError(f"unexpected command: {call}")
++
++    return run, calls
++
++
++def test_exp3900_spec_entry_present() -> None:
++    """REQ-HW-3900: the FPGA capability spec anchors terminal confirmation."""
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    assert "REQ-HW-3900" in spec
++    assert "SCENARIO-HW-3900" in spec
++    assert exp.ARTIFACT_FILENAME in spec
++
++
++def test_exp3900_terminal_when_readback_unsupported(tmp_path: Path) -> None:
++    """SCENARIO-HW-3900: unsupported readback can graduate when flash and smoke pass."""
++    _write_rtl(tmp_path)
++    prior_sha = _write_prior(tmp_path)
++    run_command, calls = _tool_runner(readback_supported=False)
++
++    artifact = exp.build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock(),
++    )
++
++    assert [field for field in exp.REQUIRED_ARTIFACT_FIELDS if field not in artifact] == []
++    assert artifact["honest_verdict"].startswith(
++        "success: gatemate_TERMINAL_reached_fmax50.00_readbackunsupported"
++    )
++    assert artifact["honest_verdict"].endswith("_can_graduate_to_opportunistic")
++    assert artifact["terminal_state_reached"] is True
++    assert artifact["gatemate_bitstream_flashed"] is True
++    assert artifact["smoke_ok"] is True
++    assert artifact["no_tautology"] is True
++    assert artifact["readback_supported"] is False
++    assert artifact["readback_verified"] is False
++    assert artifact["duration_s"] != artifact["run_duration_s"]
++    assert artifact["duration_s"] > artifact["run_duration_s"] > 0
++    assert artifact["lut_used"] == 19
++    assert artifact["dff_used"] == 53
++    assert artifact["prior_corrigendum_sha256"] == prior_sha
++    assert artifact["inference_substrate"] == "hardware_smoke"
++    assert len(artifact["reproducibility_checksum"]) == 64
++    assert not any("--readback" in call for call in calls)
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert not isinstance(artifact[field], dict)
++        assert artifact["field_provenance"][field]["principle"]
++
++
++def test_exp3900_terminal_when_readback_hash_matches(tmp_path: Path) -> None:
++    """REQ-HW-3900: supported readback graduates only when it verifies the bitstream."""
++    _write_rtl(tmp_path)
++    run_command, calls = _tool_runner(readback_supported=True, readback_matches=True)
++
++    artifact = exp.build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock(),
++    )
++
++    assert artifact["readback_supported"] is True
++    assert artifact["readback_attempted"] is True
++    assert artifact["readback_verified"] is True
++    assert artifact["terminal_state_reached"] is True
++    assert artifact["honest_verdict"].startswith(
++        "success: gatemate_TERMINAL_reached_fmax50.00_readbacktrue"
++    )
++    assert any("--readback" in call for call in calls)
++
++
++def test_exp3900_supported_readback_mismatch_stays_mandatory(tmp_path: Path) -> None:
++    """SCENARIO-HW-3900: supported readback mismatch remains mandatory."""
++    _write_rtl(tmp_path)
++    run_command, _calls = _tool_runner(readback_supported=True, readback_matches=False)
++
++    artifact = exp.build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock(),
++    )
++
++    assert artifact["gatemate_bitstream_flashed"] is True
++    assert artifact["readback_supported"] is True
++    assert artifact["readback_verified"] is False
++    assert artifact["terminal_state_reached"] is False
++    assert artifact["honest_verdict"].startswith(
++        "success: gatemate_flashed_readback_inconclusive_fmax50.00"
++    )
++    assert artifact["honest_verdict"].endswith("_stays_mandatory")
++
++
++def test_exp3900_timer_tautology_blocks_terminal_graduation() -> None:
++    """REQ-HW-3900: equal duration timers keep terminal_state_reached false."""
++    base = {
++        "honest_verdict": "success: prior",
++        "duration_s": 1.0,
++        "run_duration_s": 1.0,
++        "readback_verified": False,
++        "readback_supported": False,
++        "gatemate_bitstream_flashed": True,
++        "synth_pnr_pack_succeeded": True,
++        "fmax_mhz": 50.0,
++        "lut_used": 19,
++        "dff_used": 53,
++        "preconditions_checked": [],
++        "reproducibility_checksum": "old",
++        "inference_substrate": "hardware_smoke",
++        "command_transcript": [{"stage": "flash", "returncode": 0}],
++        "field_provenance": {},
++    }
++
++    artifact = exp.confirm_terminal_artifact(base, prior_corrigendum_sha256="")
++
++    assert artifact["no_tautology"] is False
++    assert artifact["terminal_state_reached"] is False
++    assert artifact["honest_verdict"].startswith(
++        "success: gatemate_flashed_readback_inconclusive_fmax50.00"
++    )
++
++
++def test_exp3900_helper_edges_are_explicit() -> None:
++    """SCENARIO-HW-3900: helper edge cases keep labels and smoke fallback deterministic."""
++    assert exp._metric_label(None) == "unknown"
++    assert exp._metric_label(7) == "7"
++    assert exp._readback_label({"readback_verified": False, "readback_supported": True}) == "false"
++    assert exp._smoke_ok(
++        {
++            "gatemate_bitstream_flashed": True,
++            "synth_pnr_pack_succeeded": True,
++            "command_transcript": [],
++        }
++    )
++
++
++def test_exp3900_missing_tool_blocks_before_synthesis(tmp_path: Path) -> None:
++    """REQ-HW-3900: missing toolchain emits the required blocker and stops."""
++    _write_rtl(tmp_path)
++    run_command, calls = _tool_runner()
++    paths = _paths()
++    del paths["nextpnr-himbaechel"]
++
++    artifact = exp.build_artifact(
++        repo_root=tmp_path,
++        run_command=run_command,
++        which_func=_which_from(paths),
++        monotonic=_clock(),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_gatemate_toolchain_missing"
++    assert artifact["terminal_state_reached"] is False
++    assert artifact["gatemate_bitstream_flashed"] is False
++    assert artifact["run_duration_s"] == 0.0
++    assert not any(call[0] == "yosys" and "-l" in call for call in calls)
++
++
++def test_exp3900_failed_flow_uses_blocked_prefix() -> None:
++    """SCENARIO-HW-3900: non-flashed non-blocked base output is relabeled blocked."""
++    base = {
++        "honest_verdict": "complete: prior_failed",
++        "duration_s": 2.0,
++        "run_duration_s": 0.0,
++        "readback_verified": False,
++        "readback_supported": False,
++        "gatemate_bitstream_flashed": False,
++        "synth_pnr_pack_succeeded": False,
++        "fmax_mhz": None,
++        "lut_used": 0,
++        "dff_used": 0,
++        "preconditions_checked": [],
++        "reproducibility_checksum": "old",
++        "inference_substrate": "hardware_smoke",
++        "command_transcript": [],
++        "field_provenance": {},
++    }
++
++    artifact = exp.confirm_terminal_artifact(base, prior_corrigendum_sha256="")
++
++    assert artifact["honest_verdict"] == "blocked_gatemate_flash_flow_failed_unknown"
++    assert artifact["terminal_state_reached"] is False
++
++
++def test_exp3900_run_experiment_writes_artifact(tmp_path: Path) -> None:
++    """REQ-HW-3900: run_experiment writes the requested JSON deliverable."""
++    _write_rtl(tmp_path)
++    run_command, _calls = _tool_runner(readback_supported=False)
++    destination = tmp_path / "results" / exp.ARTIFACT_FILENAME
++
++    artifact = exp.run_experiment(
++        repo_root=tmp_path,
++        artifact_path=destination,
++        run_command=run_command,
++        which_func=_which_from(_paths()),
++        monotonic=_clock(),
++    )
++
++    on_disk = json.loads(destination.read_text(encoding="utf-8"))
++    assert on_disk == artifact
++    assert destination.name == exp.ARTIFACT_FILENAME
+-- 
+2.55.0
+

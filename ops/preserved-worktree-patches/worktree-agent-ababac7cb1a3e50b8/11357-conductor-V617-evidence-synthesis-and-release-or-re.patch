@@ -1,0 +1,3915 @@
+From eec466023e574c2cfa6ddeca82880cc8f32d3537 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 22:04:32 -0400
+Subject: [PATCH 11357/11362] [conductor] V617 evidence synthesis and
+ release-or-retire disposition
+
+Automated research step by research conductor.
+Task ID: exp7049-v617-evidence-disposition-capstone
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   77 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...periment_7049_v617_capstone_disposition.py | 1116 +++++++++
+ ...riment_7049_v617_capstone_disposition.json | 2111 +++++++++++++++++
+ ...periment_7049_v617_capstone_disposition.py |   19 +
+ ...periment_7049_v617_capstone_disposition.py |  521 ++++
+ 6 files changed, 3845 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_7049_v617_capstone_disposition.py
+ create mode 100644 results/experiment_7049_v617_capstone_disposition.json
+ create mode 100644 scripts/experiments/experiment_7049_v617_capstone_disposition.py
+ create mode 100644 tests/python/test_experiment_7049_v617_capstone_disposition.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 3122c234f3..9d48fa5cac 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -4401,3 +4401,80 @@ records, and reproducibility checksum are present and internally consistent.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-CAPSTONE-7027 | Implemented (`python/carnot/experiment_7027_v615_capstone.py`, `results/experiment_7027_v615_capstone.json`) | Covered (`tests/python/test_experiment_7027_v615_capstone.py`) |
++
++- REQ-CAP-7049: The V617 capstone SHALL parse the active YAML roadmap and
++  Markdown design independently. It SHALL require exactly 12 ordered task IDs
++  from Exp7038 through Exp7049. It SHALL classify every task artifact with the
++  closed verdict enum. Missing upstream artifacts and external gate blocks
++  SHALL be terminal `blocked` evidence, never `partial`. A missing roadmap,
++  design, results directory, exclusion manifest, or writable output path SHALL
++  block the capstone itself.
++- The workflow SHALL recompute file hashes, declared source hashes, verdict
++  class and terminal-prefix consistency, structured gates, required gate
++  fields, and row-to-headline consistency. A present artifact with a failed
++  integrity check SHALL be `disqualified`. The workflow SHALL keep identity
++  transport, uniform belief value, learning safety, policy nontriviality, live
++  transfer, solve evidence, and hardware evidence in separate claim rows.
++- The identity disposition SHALL be `release` only after the bridge, attack
++  audit, live shadow transport, and shadow audit pass. A blocked identity chain
++  SHALL be `repair` when terminal evidence names a repairable integrity defect.
++  Otherwise it SHALL be `hold`. The uniform disposition SHALL be `release` for
++  an independently positive Exp7045 result, `retire` for a reproduced uniform
++  null, `repair` for disqualified evidence, and `hold` for blocked evidence.
++  Retirement SHALL cover only uniform belief influence. It SHALL preserve the
++  safe belief ledger, query API, and exact outcome memory substrate.
++- A safe Exp7047 all-abstain result SHALL remain a null safety result and SHALL
++  keep Exp7048 blocked. An independently positive Exp7048 result SHALL permit
++  only a default-off canary with a frozen policy hash and rollback. The normal
++  production path SHALL remain default-off in every branch.
++- The artifact SHALL contain `field_principles`, `preconditions_checked`,
++  `inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
++  `roadmap_contract_rows`, `task_artifact_rows`, `artifact_hash_rows`,
++  `verdict_consistency_rows`, `gate_replay_rows`, `row_consistency_rows`,
++  `identity_claim_rows`, `uniform_value_claim_rows`,
++  `continuous_learning_claim_rows`, `selective_transfer_claim_rows`,
++  `solve_claim_rows`, `hardware_claim_rows`, `blocked_input_rows`,
++  `null_input_rows`, `disqualified_input_rows`,
++  `release_hold_repair_retire_rows`, `exclusion_manifest_rows`,
++  `documentation_reconciliation_rows`, `production_default_unchanged`,
++  `next_handoff`, `expected_task_count`, `observed_task_count`,
++  `expected_id_order`, `observed_id_order`,
++  `v617_capstone_complete_score`, `random_seed`,
++  `reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
++  `verdict_class`, and `honest_verdict`. Each required field SHALL have one
++  scientific principle. The inference substrate SHALL be
++  `aggregation_from_upstream_artifacts`. The verifier SHALL not be an oracle.
++- SCENARIO-CAP-7049-ALL-POSITIVE: Given conforming contracts and positive
++  identity, uniform, safe nontrivial learner, and selective live-transfer
++  evidence, when the capstone runs, then it SHALL release the repaired identity
++  path, release uniform evidence without changing the default, and release only
++  a rollback-ready default-off selective canary with its frozen policy hash.
++- SCENARIO-CAP-7049-BRANCHES: Given identity-blocked, uniform-null,
++  uniform-disqualified, safe-all-abstain, selective-gate-blocked, or
++  selective-positive evidence, when the capstone runs, then it SHALL choose the
++  deterministic `release`, `hold`, `repair`, or `retire` disposition for each
++  branch and preserve the separate claim classes.
++- SCENARIO-CAP-7049-MISSING: Given a missing upstream task artifact, when the
++  ungated capstone runs, then it SHALL emit a blocked task row and may set
++  `v617_capstone_complete_score=1` after all 12 rows receive terminal classes.
++  Given a missing capstone input, it SHALL set the score to zero and name the
++  failed check, expected value, and observed value.
++- SCENARIO-CAP-7049-CONTRACT: Given readable Markdown and YAML contracts with a
++  count, order, ID, title, deliverable, or gate mismatch, when the capstone
++  compares them, then it SHALL return a terminal `disqualified` result. It
++  SHALL not treat the mismatch as partial work.
++- SCENARIO-CAP-7049-INTEGRITY: Given a present upstream artifact, when its file
++  hash, declared source hash, checksum, verdict prefix, required gate field, or
++  row headline fails recomputation, then the task row SHALL be disqualified and
++  no downstream scientific claim SHALL be inferred from its readiness score.
++- SCENARIO-CAP-7049-HANDOFF: Given any terminal branch combination, when the
++  capstone finishes, then it SHALL name exactly one bounded next handoff. It
++  SHALL not reopen a retired belief scope, pair-centered latent scoring,
++  external text scoring, KAN compression, generated-answer grammar or search,
++  or a retired hardware line.
++
++## Implementation Status (REQ-CAP-7049)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-CAP-7049 | Implemented (`python/carnot/experiment_7049_v617_capstone_disposition.py`, `results/experiment_7049_v617_capstone_disposition.json`) | Covered with 100% new-code line coverage (`tests/python/test_experiment_7049_v617_capstone_disposition.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3ad1ce563f..9d112aa2ac 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5352,
++  "experiments_checked": 5353,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_7049_v617_capstone_disposition.py b/python/carnot/experiment_7049_v617_capstone_disposition.py
+new file mode 100644
+index 0000000000..30cd832aee
+--- /dev/null
++++ b/python/carnot/experiment_7049_v617_capstone_disposition.py
+@@ -0,0 +1,1116 @@
++"""Build the V617 release, hold, repair, and retirement disposition.
++
++The reducer reads stored task artifacts and independently parsed contracts. It
++does not run a model or infer a downstream claim from an upstream ready flag.
++Missing upstream work is useful terminal evidence, so it becomes blocked data.
++
++Spec refs: REQ-CAP-7049 and SCENARIO-CAP-7049-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import tempfile
++import time
++from typing import Any, Mapping, Sequence
++
++import yaml
++
++from carnot.experiment_7038_v617_active_contract_preflight import parse_markdown_contract
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++MILESTONE = "2026.09.617"
++DESIGN_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++ROADMAP_PATH = Path("research-roadmap.yaml")
++EXCLUSION_PATH = Path("ops/exclusion_manifest.yaml")
++SPEC_PATH = Path("openspec/capabilities/capstone/spec.md")
++DEFAULT_OUTPUT_PATH = Path("results/experiment_7049_v617_capstone_disposition.json")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++RANDOM_SEED = 704920260906
++UNIFORM_SCOPE_KEY = "v617_uniform_belief_influence_repeated_exact_outcome_null"
++
++EXPECTED_TASK_IDS = (
++    "exp7038-v617-active-contract-preflight",
++    "exp7039-live-model-report-channel-forensics",
++    "exp7040-typed-model-identity-report-bridge",
++    "exp7041-identity-report-channel-cold-audit",
++    "exp7042-typed-identity-belief-shadow-trace",
++    "exp7043-belief-shadow-trace-cold-audit",
++    "exp7044-uniform-belief-two-model-live-ab",
++    "exp7045-uniform-belief-value-cold-audit",
++    "exp7046-frontier-stratified-exact-outcome-curriculum",
++    "exp7047-selective-belief-exact-advantage-csl",
++    "exp7048-selective-belief-two-model-live-ab",
++    "exp7049-v617-evidence-disposition-capstone",
++)
++EXPECTED_TASK_COUNT = len(EXPECTED_TASK_IDS)
++
++TASK_PATHS = {
++    EXPECTED_TASK_IDS[0]: "results/experiment_7038_v617_active_contract_preflight.json",
++    EXPECTED_TASK_IDS[1]: "results/experiment_7039_v617_model_report_forensics.json",
++    EXPECTED_TASK_IDS[2]: "results/experiment_7040_v617_typed_identity_bridge.json",
++    EXPECTED_TASK_IDS[3]: "results/experiment_7041_v617_identity_attack_audit.json",
++    EXPECTED_TASK_IDS[4]: "results/experiment_7042_v617_belief_shadow_trace.json",
++    EXPECTED_TASK_IDS[5]: "results/experiment_7043_v617_belief_shadow_cold_audit.json",
++    EXPECTED_TASK_IDS[6]: "results/experiment_7044_v617_uniform_belief_live_ab.json",
++    EXPECTED_TASK_IDS[7]: "results/experiment_7045_v617_uniform_belief_cold_audit.json",
++    EXPECTED_TASK_IDS[8]: "results/experiment_7046_v617_frontier_stratified_curriculum.json",
++    EXPECTED_TASK_IDS[9]: "results/experiment_7047_v617_selective_belief_csl.json",
++    EXPECTED_TASK_IDS[10]: "results/experiment_7048_v617_selective_belief_live_ab.json",
++    EXPECTED_TASK_IDS[11]: str(DEFAULT_OUTPUT_PATH),
++}
++
++EXPECTED_GATES = {
++    EXPECTED_TASK_IDS[2]: ((EXPECTED_TASK_IDS[1], "arc_report_channel_forensics_ready_score"),),
++    EXPECTED_TASK_IDS[3]: ((EXPECTED_TASK_IDS[2], "arc_typed_identity_bridge_ready_score"),),
++    EXPECTED_TASK_IDS[4]: (
++        (EXPECTED_TASK_IDS[2], "arc_typed_identity_bridge_ready_score"),
++        (EXPECTED_TASK_IDS[3], "arc_identity_report_attack_audit_ready_score"),
++    ),
++    EXPECTED_TASK_IDS[5]: ((EXPECTED_TASK_IDS[4], "belief_shadow_transport_ready_score"),),
++    EXPECTED_TASK_IDS[6]: (
++        (EXPECTED_TASK_IDS[4], "belief_shadow_transport_ready_score"),
++        (EXPECTED_TASK_IDS[5], "belief_shadow_trace_audit_ready_score"),
++    ),
++    EXPECTED_TASK_IDS[7]: ((EXPECTED_TASK_IDS[6], "uniform_belief_live_ab_complete_score"),),
++    EXPECTED_TASK_IDS[8]: (
++        (EXPECTED_TASK_IDS[7], "uniform_belief_value_audit_complete_score"),
++    ),
++    EXPECTED_TASK_IDS[9]: ((EXPECTED_TASK_IDS[8], "belief_frontier_curriculum_ready_score"),),
++    EXPECTED_TASK_IDS[10]: (
++        (EXPECTED_TASK_IDS[9], "selective_belief_policy_safety_score"),
++        (EXPECTED_TASK_IDS[9], "selective_belief_policy_nontrivial_score"),
++    ),
++}
++
++OWN_GATE_FIELDS = {
++    EXPECTED_TASK_IDS[0]: ("v617_task_contract_conforms_score",),
++    EXPECTED_TASK_IDS[1]: ("arc_report_channel_forensics_ready_score",),
++    EXPECTED_TASK_IDS[2]: ("arc_typed_identity_bridge_ready_score",),
++    EXPECTED_TASK_IDS[3]: ("arc_identity_report_attack_audit_ready_score",),
++    EXPECTED_TASK_IDS[4]: ("belief_shadow_transport_ready_score",),
++    EXPECTED_TASK_IDS[5]: ("belief_shadow_trace_audit_ready_score",),
++    EXPECTED_TASK_IDS[6]: ("uniform_belief_live_ab_complete_score",),
++    EXPECTED_TASK_IDS[7]: ("uniform_belief_value_audit_complete_score",),
++    EXPECTED_TASK_IDS[8]: ("belief_frontier_curriculum_ready_score",),
++    EXPECTED_TASK_IDS[9]: (
++        "selective_belief_policy_safety_score",
++        "selective_belief_policy_nontrivial_score",
++    ),
++    EXPECTED_TASK_IDS[10]: ("selective_belief_live_ab_complete_score",),
++}
++
++VALUE_POSITIVE_FIELDS = {
++    EXPECTED_TASK_IDS[6]: "uniform_belief_value_positive_score",
++    EXPECTED_TASK_IDS[7]: "uniform_belief_value_audit_positive_score",
++    EXPECTED_TASK_IDS[10]: "selective_belief_live_value_positive_score",
++}
++
++CLOSED_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++
++REQUIRED_FIELDS = {
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "rows",
++    "roadmap_contract_rows",
++    "task_artifact_rows",
++    "artifact_hash_rows",
++    "verdict_consistency_rows",
++    "gate_replay_rows",
++    "row_consistency_rows",
++    "identity_claim_rows",
++    "uniform_value_claim_rows",
++    "continuous_learning_claim_rows",
++    "selective_transfer_claim_rows",
++    "solve_claim_rows",
++    "hardware_claim_rows",
++    "blocked_input_rows",
++    "null_input_rows",
++    "disqualified_input_rows",
++    "release_hold_repair_retire_rows",
++    "exclusion_manifest_rows",
++    "documentation_reconciliation_rows",
++    "production_default_unchanged",
++    "next_handoff",
++    "expected_task_count",
++    "observed_task_count",
++    "expected_id_order",
++    "observed_id_order",
++    "v617_capstone_complete_score",
++    "random_seed",
++    "reproducibility_checksum",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++}
++
++_PRINCIPLE_OVERRIDES = {
++    "inference_substrate": "This value separates stored-evidence reduction from new model inference.",
++    "source_artifact_hashes": "Content hashes expose source drift before a claim is reused.",
++    "rows": "Claim rows keep unlike identity, value, learning, solve, and hardware evidence separate.",
++    "production_default_unchanged": "A new belief policy must prove value before it can affect normal production.",
++    "v617_capstone_complete_score": "Completion measures terminal classification, not whether every input was positive.",
++    "reproducibility_checksum": "A canonical digest makes silent result changes detectable.",
++    "verifier_is_oracle": "The evidence reducer audits claims but does not create an oracle-distinct result.",
++    "honest_verdict": "A terminal summary prevents an external block from becoming repeated partial work.",
++}
++
++
++def task_number(task_id: object) -> int | None:
++    """Return the experiment number so Markdown gates can use short IDs."""
++
++    match = re.match(r"exp(\d+)(?:-|$)", str(task_id), re.I)
++    return int(match.group(1)) if match else None
++
++
++def canonical_json(value: Any) -> bytes:
++    """Encode JSON deterministically for evidence checksums."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
++
++
++def sha256_file(path: Path) -> str | None:
++    """Hash one file without changing its timestamps or contents."""
++
++    if not path.is_file():
++        return None
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def upstream_checksum(artifact: Mapping[str, Any]) -> str:
++    """Recompute the checksum convention used by V617 task artifacts."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return "sha256:" + hashlib.sha256(canonical_json(payload)).hexdigest()
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Bind the final capstone fields with the same canonical convention."""
++
++    return upstream_checksum(artifact)
++
++
++def _field_principles() -> dict[str, str]:
++    """Give every required field a short scientific reason."""
++
++    return {
++        field: _PRINCIPLE_OVERRIDES.get(
++            field,
++            f"The {field} field preserves evidence needed to reproduce or falsify the V617 disposition.",
++        )
++        for field in sorted(REQUIRED_FIELDS)
++    }
++
++
++def _terminal_prefix(verdict: object) -> bool:
++    """Require the project terminal marker before descriptive verdict text."""
++
++    return str(verdict).lower().startswith(TERMINAL_PREFIXES)
++
++
++def _class_from_verdict(verdict: object) -> str | None:
++    """Derive the closed class without trusting the declared class field."""
++
++    text = str(verdict).lower()
++    if not _terminal_prefix(text):
++        return None
++    if "disqualified" in text:
++        return "disqualified"
++    if "circular_positive" in text or "circular-positive" in text:
++        return "circular_positive"
++    if "blocked" in text:
++        return "blocked"
++    if "partial" in text:
++        return "partial"
++    if "null" in text:
++        return "null"
++    return "positive"
++
++
++def _canonical_gates(task: Mapping[str, Any]) -> list[tuple[Any, Any, Any, Any]]:
++    """Normalize structured gates without losing order or scalar values."""
++
++    gates = task.get("gated_on", task.get("gates", []))
++    if not isinstance(gates, list):
++        return []
++    return [
++        (gate.get("upstream"), gate.get("artifact_field"), gate.get("op"), gate.get("value"))
++        for gate in gates
++        if isinstance(gate, Mapping)
++    ]
++
++
++def _load_yaml_contract(path: Path) -> tuple[dict[str, Any], list[dict[str, Any]], str | None]:
++    """Parse only the activated YAML source into its own contract rows."""
++
++    try:
++        document = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except (OSError, UnicodeError, yaml.YAMLError) as exc:
++        return {}, [], f"{type(exc).__name__}: {exc}"
++    if not isinstance(document, Mapping) or not isinstance(document.get("tasks"), list):
++        return {}, [], "active roadmap is not a task mapping"
++    rows = []
++    for order, raw in enumerate(document["tasks"], 1):
++        if not isinstance(raw, Mapping):
++            rows.append({"order": order, "id": None, "title": None, "deliverable": None, "gates": []})
++            continue
++        rows.append(
++            {
++                "order": order,
++                "id": raw.get("id"),
++                "title": raw.get("title"),
++                "deliverable": raw.get("deliverable"),
++                "gates": _canonical_gates(raw),
++            }
++        )
++    return dict(document), rows, None
++
++
++def _load_markdown_contract(path: Path) -> tuple[dict[str, Any], list[dict[str, Any]], str | None]:
++    """Parse Markdown through the independent V617 table parser."""
++
++    try:
++        parsed = parse_markdown_contract(path.read_text(encoding="utf-8"))
++    except (OSError, UnicodeError, ValueError, yaml.YAMLError) as exc:
++        return {}, [], f"{type(exc).__name__}: {exc}"
++    rows = [
++        {
++            "order": row.get("order"),
++            "id": row.get("id"),
++            "title": row.get("title"),
++            "deliverable": row.get("deliverable"),
++            "gates": _canonical_gates(row),
++        }
++        for row in parsed.get("tasks", [])
++        if isinstance(row, Mapping)
++    ]
++    return parsed, rows, None
++
++
++def _readable_file(path: Path) -> tuple[bool, str]:
++    """Report file readability without creating a replacement."""
++
++    if not path.is_file():
++        return False, "missing"
++    try:
++        return (bool(path.read_bytes()), "readable_nonempty" if path.stat().st_size else "empty")
++    except OSError as exc:
++        return False, f"{type(exc).__name__}: {exc}"
++
++
++def _writable_file(path: Path) -> tuple[bool, str]:
++    """Check an existing document or output parent without writing a probe."""
++
++    target = path if path.exists() else path.parent
++    available = target.exists() and os.access(target, os.W_OK)
++    return available, "writable" if available else "not_writable"
++
++
++def _preconditions(root: Path, output_path: Path) -> list[dict[str, Any]]:
++    """Keep capstone-input checks separate from missing upstream evidence."""
++
++    checks: list[tuple[str, bool, str, str]] = []
++    for name, relative in (
++        ("v617_active_yaml_readable", ROADMAP_PATH),
++        ("v617_markdown_readable", DESIGN_PATH),
++        ("exclusion_manifest_readable", EXCLUSION_PATH),
++        ("capstone_spec_readable", SPEC_PATH),
++    ):
++        available, observed = _readable_file(root / relative)
++        checks.append((name, available, "readable_nonempty_file", observed))
++    results_dir = root / "results"
++    checks.append(
++        (
++            "results_directory_readable",
++            results_dir.is_dir() and os.access(results_dir, os.R_OK),
++            "readable_directory",
++            "readable_directory" if results_dir.is_dir() and os.access(results_dir, os.R_OK) else "missing_or_unreadable",
++        )
++    )
++    target = output_path if output_path.is_absolute() else root / output_path
++    writable, observed = _writable_file(target)
++    checks.append(("artifact_path_writable", writable, "writable", observed))
++    for relative in (Path("ops/status.md"), Path("ops/changelog.md"), Path("_bmad/traceability.md")):
++        writable, observed = _writable_file(root / relative)
++        checks.append((f"documentation_path_writable:{relative}", writable, "writable", observed))
++    return [
++        {"check": name, "available": available, "expected_value": expected, "observed_value": observed}
++        for name, available, expected, observed in checks
++    ]
++
++
++def _contract_rows(
++    yaml_rows: Sequence[Mapping[str, Any]], markdown_rows: Sequence[Mapping[str, Any]]
++) -> list[dict[str, Any]]:
++    """Compare two separately built contract views against the fixed ID order."""
++
++    rows = []
++    for index in range(max(EXPECTED_TASK_COUNT, len(yaml_rows), len(markdown_rows))):
++        expected = EXPECTED_TASK_IDS[index] if index < EXPECTED_TASK_COUNT else None
++        yaml_row = yaml_rows[index] if index < len(yaml_rows) else {}
++        markdown_row = markdown_rows[index] if index < len(markdown_rows) else {}
++        matches = (
++            yaml_row.get("order") == index + 1
++            and markdown_row.get("order") == index + 1
++            and yaml_row.get("id") == expected
++            and markdown_row.get("id") == expected
++            and yaml_row.get("title") == markdown_row.get("title")
++            and yaml_row.get("deliverable") == markdown_row.get("deliverable")
++            and yaml_row.get("gates") == markdown_row.get("gates")
++        )
++        rows.append(
++            {
++                "order": index + 1,
++                "expected_id": expected,
++                "yaml_id": yaml_row.get("id"),
++                "markdown_id": markdown_row.get("id"),
++                "title_matches": yaml_row.get("title") == markdown_row.get("title"),
++                "deliverable_matches": yaml_row.get("deliverable") == markdown_row.get("deliverable"),
++                "gates_match": yaml_row.get("gates") == markdown_row.get("gates"),
++                "matches": matches,
++            }
++        )
++    return rows
++
++
++def _source_hash_rows(root: Path, artifact: Mapping[str, Any]) -> list[dict[str, Any]]:
++    """Recompute every declared upstream source hash from current bytes."""
++
++    declared = artifact.get("source_artifact_hashes")
++    if not isinstance(declared, Mapping):
++        return [{"path": None, "declared_hash": None, "observed_hash": None, "matches": False}]
++    rows = []
++    for raw_path, expected in sorted(declared.items(), key=lambda item: str(item[0])):
++        relative = Path(str(raw_path))
++        path = relative if relative.is_absolute() else root / relative
++        observed = sha256_file(path)
++        rows.append(
++            {
++                "path": str(raw_path),
++                "declared_hash": expected,
++                "observed_hash": observed,
++                "matches": expected == observed,
++            }
++        )
++    return rows
++
++
++def _headline_consistent(task_id: str, artifact: Mapping[str, Any], declared: str) -> bool:
++    """Check ready and value headlines against the artifact's declared class."""
++
++    fields = OWN_GATE_FIELDS.get(task_id, ())
++    values = [artifact.get(field) for field in fields]
++    if any(value not in (0, 1) for value in values):
++        return False
++    if declared in {"positive", "circular_positive", "null"} and any(value != 1 for value in values):
++        if not (task_id == EXPECTED_TASK_IDS[9] and declared == "null" and values == [1, 0]):
++            return False
++    if declared == "blocked" and any(value != 0 for value in values):
++        return False
++    positive_field = VALUE_POSITIVE_FIELDS.get(task_id)
++    if positive_field is not None:
++        positive_value = artifact.get(positive_field)
++        if positive_value not in (0, 1):
++            return False
++        if (declared == "positive") != (positive_value == 1):
++            return False
++    return True
++
++
++def _task_rows(root: Path) -> tuple[list[dict[str, Any]], dict[str, JsonDict]]:
++    """Load exact task paths and turn integrity failures into disqualification."""
++
++    rows: list[dict[str, Any]] = []
++    artifacts: dict[str, JsonDict] = {}
++    for task_id in EXPECTED_TASK_IDS[:-1]:
++        relative = TASK_PATHS[task_id]
++        path = root / relative
++        file_hash = sha256_file(path)
++        if file_hash is None:
++            rows.append(
++                {
++                    "task_id": task_id,
++                    "artifact_path": relative,
++                    "artifact_state": "missing",
++                    "artifact_hash": None,
++                    "declared_verdict_class": None,
++                    "effective_verdict_class": "blocked",
++                    "honest_verdict": "complete_blocked_upstream_artifact_missing",
++                    "integrity_errors": ["artifact_missing"],
++                    "source_hash_rows": [],
++                }
++            )
++            continue
++        try:
++            loaded = json.loads(path.read_text(encoding="utf-8"))
++        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
++            rows.append(
++                {
++                    "task_id": task_id,
++                    "artifact_path": relative,
++                    "artifact_state": "unreadable",
++                    "artifact_hash": file_hash,
++                    "declared_verdict_class": None,
++                    "effective_verdict_class": "blocked",
++                    "honest_verdict": "complete_blocked_upstream_artifact_unreadable",
++                    "integrity_errors": [f"artifact_unreadable:{type(exc).__name__}"],
++                    "source_hash_rows": [],
++                }
++            )
++            continue
++        if not isinstance(loaded, dict):
++            rows.append(
++                {
++                    "task_id": task_id,
++                    "artifact_path": relative,
++                    "artifact_state": "unreadable",
++                    "artifact_hash": file_hash,
++                    "declared_verdict_class": None,
++                    "effective_verdict_class": "blocked",
++                    "honest_verdict": "complete_blocked_upstream_artifact_not_object",
++                    "integrity_errors": ["artifact_not_object"],
++                    "source_hash_rows": [],
++                }
++            )
++            continue
++        artifacts[task_id] = loaded
++        declared = loaded.get("verdict_class")
++        honest = loaded.get("honest_verdict")
++        derived = _class_from_verdict(honest)
++        source_rows = _source_hash_rows(root, loaded)
++        errors = []
++        if declared not in CLOSED_CLASSES:
++            errors.append("verdict_class_outside_closed_enum")
++        if derived is None:
++            errors.append("honest_verdict_terminal_prefix_missing")
++        elif derived != declared:
++            errors.append("honest_verdict_class_mismatch")
++        if loaded.get("reproducibility_checksum") != upstream_checksum(loaded):
++            errors.append("reproducibility_checksum_mismatch")
++        if any(row["matches"] is not True for row in source_rows):
++            errors.append("source_artifact_hash_mismatch")
++        if loaded.get("flagged_adversarial") is True:
++            errors.append("flagged_adversarial")
++        rows_value = loaded.get("rows")
++        if not isinstance(rows_value, list):
++            errors.append("rows_missing_or_not_list")
++        if not _headline_consistent(task_id, loaded, str(declared)):
++            errors.append("row_to_headline_mismatch")
++        if errors:
++            effective = "disqualified"
++        elif declared == "positive" and loaded.get("verifier_is_oracle") is True:
++            effective = "circular_positive"
++        else:
++            effective = str(declared)
++        rows.append(
++            {
++                "task_id": task_id,
++                "artifact_path": relative,
++                "artifact_state": "present",
++                "artifact_hash": file_hash,
++                "declared_verdict_class": declared,
++                "effective_verdict_class": effective,
++                "honest_verdict": honest,
++                "integrity_errors": errors,
++                "source_hash_rows": source_rows,
++            }
++        )
++    return rows, artifacts
++
++
++def _gate_replay(
++    yaml_document: Mapping[str, Any], task_rows: list[dict[str, Any]], artifacts: Mapping[str, JsonDict]
++) -> list[dict[str, Any]]:
++    """Replay gates in roadmap order and reject claims behind failed evidence."""
++
++    by_id = {row["task_id"]: row for row in task_rows}
++    result = []
++    tasks = yaml_document.get("tasks", [])
++    for raw_task in tasks if isinstance(tasks, list) else []:
++        if not isinstance(raw_task, Mapping):
++            continue
++        consumer = str(raw_task.get("id"))
++        for upstream, field, op, expected in _canonical_gates(raw_task):
++            producer_row = by_id.get(str(upstream), {})
++            producer = artifacts.get(str(upstream), {})
++            observed = producer.get(str(field))
++            value_passed = op == "==" and observed == expected
++            evidence_usable = producer_row.get("effective_verdict_class") in {
++                "positive",
++                "circular_positive",
++                "null",
++            }
++            passed = value_passed and evidence_usable
++            consumer_row = by_id.get(consumer)
++            consumer_consistent = consumer_row is None or passed or consumer_row.get(
++                "effective_verdict_class"
++            ) in {"blocked", "disqualified"}
++            if consumer_row is not None and not consumer_consistent:
++                consumer_row["integrity_errors"].append("upstream_gate_replay_failed")
++                consumer_row["effective_verdict_class"] = "disqualified"
++            result.append(
++                {
++                    "consumer": consumer,
++                    "upstream": upstream,
++                    "artifact_field": field,
++                    "op": op,
++                    "expected_value": expected,
++                    "observed_value": observed,
++                    "producer_evidence_usable": evidence_usable,
++                    "passed": passed,
++                    "consumer_consistent": consumer_consistent,
++                }
++            )
++    return result
++
++
++def _claim_rows(
++    task_rows: Sequence[Mapping[str, Any]], artifacts: Mapping[str, JsonDict]
++) -> tuple[list[JsonDict], list[JsonDict], list[JsonDict], list[JsonDict], list[JsonDict], list[JsonDict]]:
++    """Keep each scientific claim class on a separate evidence row."""
++
++    by_id = {str(row["task_id"]): row for row in task_rows}
++
++    def claim(task_id: str, claim_name: str, field: str | None = None) -> JsonDict:
++        task_row = by_id[task_id]
++        source = artifacts.get(task_id, {})
++        return {
++            "claim": claim_name,
++            "task_id": task_id,
++            "claim_class": task_row["effective_verdict_class"],
++            "evidence_field": field,
++            "observed_value": source.get(field) if field else None,
++            "artifact_hash": task_row["artifact_hash"],
++        }
++
++    identity = [
++        claim(EXPECTED_TASK_IDS[2], "typed_identity_transport", "arc_typed_identity_bridge_ready_score"),
++        claim(EXPECTED_TASK_IDS[3], "identity_attack_resistance", "arc_identity_report_attack_audit_ready_score"),
++        claim(EXPECTED_TASK_IDS[4], "belief_shadow_transport", "belief_shadow_transport_ready_score"),
++        claim(EXPECTED_TASK_IDS[5], "belief_shadow_transport_audit", "belief_shadow_trace_audit_ready_score"),
++    ]
++    uniform = [
++        claim(EXPECTED_TASK_IDS[6], "uniform_live_value", "uniform_belief_value_positive_score"),
++        claim(EXPECTED_TASK_IDS[7], "uniform_live_value_cold_authority", "uniform_belief_value_audit_positive_score"),
++    ]
++    learner = artifacts.get(EXPECTED_TASK_IDS[9], {})
++    learner_class = by_id[EXPECTED_TASK_IDS[9]]["effective_verdict_class"]
++    all_abstain = (
++        learner_class == "null"
++        and learner.get("selective_belief_policy_safety_score") == 1
++        and learner.get("selective_belief_policy_nontrivial_score") == 0
++        and int(learner.get("helpful_use_count") or 0) == 0
++        and int(learner.get("harmful_use_count") or 0) == 0
++    )
++    continuous = [
++        {
++            **claim(EXPECTED_TASK_IDS[9], "selective_learning_safety"),
++            "safety_score": learner.get("selective_belief_policy_safety_score"),
++            "nontrivial_score": learner.get("selective_belief_policy_nontrivial_score"),
++            "all_abstain": all_abstain,
++            "continuous_self_learning_task": learner.get("continuous_self_learning_task"),
++        }
++    ]
++    selective = [
++        {
++            **claim(
++                EXPECTED_TASK_IDS[10],
++                "selective_live_transfer",
++                "selective_belief_live_value_positive_score",
++            ),
++            "policy_hash": artifacts.get(EXPECTED_TASK_IDS[10], {}).get("final_policy_hash"),
++        }
++    ]
++    solve = []
++    for task_id in (EXPECTED_TASK_IDS[4], EXPECTED_TASK_IDS[5], EXPECTED_TASK_IDS[6], EXPECTED_TASK_IDS[10]):
++        source = artifacts.get(task_id, {})
++        task_row = by_id[task_id]
++        claimed = source.get("game_level_solve_claim") is True
++        eligible = (
++            claimed
++            and source.get("solve_provenance") == "live_agent_self_discovery"
++            and source.get("verifier_is_oracle") is False
++            and task_row["effective_verdict_class"] == "positive"
++        )
++        solve.append(
++            {
++                "claim": "incidental_arc_solve",
++                "task_id": task_id,
++                "claim_class": task_row["effective_verdict_class"] if claimed else "null",
++                "game_level_solve_claim": claimed,
++                "solve_provenance": source.get("solve_provenance"),
++                "headline_eligible": eligible,
++            }
++        )
++    hardware = [
++        {
++            "claim": "hardware_execution_or_performance",
++            "claim_class": "null",
++            "evidence": "V617 contains no hardware task or changed authenticated hardware receipt.",
++            "headline_eligible": False,
++        }
++    ]
++    return identity, uniform, continuous, selective, solve, hardware
++
++
++def _dispositions(
++    task_rows: Sequence[Mapping[str, Any]], artifacts: Mapping[str, JsonDict]
++) -> list[JsonDict]:
++    """Apply the fixed branch table without pooling unlike measurements."""
++
++    by_id = {str(row["task_id"]): row for row in task_rows}
++    identity_rows = [by_id[task_id] for task_id in EXPECTED_TASK_IDS[2:6]]
++    identity_classes = {row["effective_verdict_class"] for row in identity_rows}
++    if identity_classes == {"positive"}:
++        identity = {"branch": "identity", "disposition": "release", "release_mode": "repaired_transport"}
++    elif "disqualified" in identity_classes or any(
++        any(token in str(row.get("honest_verdict", "")).lower() for token in ("identity", "hash", "checksum", "artifact_invalid"))
++        for row in identity_rows
++    ):
++        identity = {"branch": "identity", "disposition": "repair", "release_mode": None}
++    else:
++        identity = {"branch": "identity", "disposition": "hold", "release_mode": None}
++
++    uniform_task = by_id[EXPECTED_TASK_IDS[7]]
++    uniform_artifact = artifacts.get(EXPECTED_TASK_IDS[7], {})
++    uniform_class = uniform_task["effective_verdict_class"]
++    if uniform_class == "positive" and uniform_artifact.get("uniform_belief_value_audit_positive_score") == 1:
++        uniform = {"branch": "uniform_belief", "disposition": "release", "release_mode": "evidence_only_default_off"}
++    elif (
++        uniform_class == "null"
++        and uniform_artifact.get("uniform_belief_value_audit_complete_score") == 1
++        and uniform_artifact.get("uniform_belief_value_audit_positive_score") == 0
++    ):
++        uniform = {"branch": "uniform_belief", "disposition": "retire", "release_mode": None}
++    elif uniform_class == "disqualified":
++        uniform = {"branch": "uniform_belief", "disposition": "repair", "release_mode": None}
++    else:
++        uniform = {"branch": "uniform_belief", "disposition": "hold", "release_mode": None}
++
++    learner_task = by_id[EXPECTED_TASK_IDS[9]]
++    transfer_task = by_id[EXPECTED_TASK_IDS[10]]
++    learner = artifacts.get(EXPECTED_TASK_IDS[9], {})
++    transfer = artifacts.get(EXPECTED_TASK_IDS[10], {})
++    policy_hash = transfer.get("final_policy_hash")
++    rollback_rows = transfer.get("rollback_rows")
++    rollback_ready = isinstance(rollback_rows, list) and bool(rollback_rows) and all(
++        isinstance(row, Mapping) and row.get("passed") is True for row in rollback_rows
++    )
++    selective_positive = (
++        learner_task["effective_verdict_class"] == "positive"
++        and transfer_task["effective_verdict_class"] == "positive"
++        and learner.get("selective_belief_policy_safety_score") == 1
++        and learner.get("selective_belief_policy_nontrivial_score") == 1
++        and transfer.get("selective_belief_live_ab_complete_score") == 1
++        and transfer.get("selective_belief_live_value_positive_score") == 1
++        and isinstance(policy_hash, str)
++        and policy_hash == learner.get("final_policy_hash")
++        and rollback_ready
++    )
++    if selective_positive:
++        selective = {
++            "branch": "selective_learning",
++            "disposition": "release",
++            "release_mode": "default_off_canary",
++            "policy_hash": policy_hash,
++            "rollback_ready": True,
++        }
++    elif "disqualified" in {
++        learner_task["effective_verdict_class"],
++        transfer_task["effective_verdict_class"],
++    } or transfer_task["effective_verdict_class"] == "positive":
++        selective = {
++            "branch": "selective_learning",
++            "disposition": "repair",
++            "release_mode": None,
++            "policy_hash": policy_hash,
++            "rollback_ready": rollback_ready,
++        }
++    else:
++        selective = {
++            "branch": "selective_learning",
++            "disposition": "hold",
++            "release_mode": None,
++            "policy_hash": learner.get("final_policy_hash"),
++            "rollback_ready": False,
++        }
++    return [identity, uniform, selective]
++
++
++def _next_handoff(dispositions: Sequence[Mapping[str, Any]], input_blocked: bool) -> list[JsonDict]:
++    """Choose one bounded action and avoid every forbidden reopened scope."""
++
++    by_branch = {str(row["branch"]): row for row in dispositions}
++    if input_blocked:
++        action = "restore_the_single_missing_v617_markdown_contract_and_rerun_the_receipt_reducer"
++    elif by_branch["identity"]["disposition"] == "repair":
++        action = "repair_the_first_typed_identity_evidence_integrity_failure"
++    elif by_branch["uniform_belief"]["disposition"] == "repair":
++        action = "repair_the_uniform_cold_audit_evidence_integrity_failure"
++    elif by_branch["uniform_belief"]["disposition"] == "retire":
++        action = "record_the_exact_uniform_influence_retirement_and_evaluate_only_the_frozen_selective_policy"
++    elif by_branch["selective_learning"]["disposition"] == "release":
++        action = "run_one_default_off_selective_canary_rollback_drill_with_the_frozen_policy_hash"
++    else:
++        action = "resolve_the_first_blocked_selective_transfer_prerequisite_without_changing_the_default"
++    return [{"action": action, "bounded_to_one_action": True}]
++
++
++def _gate_summary(
++    preconditions: Sequence[Mapping[str, Any]],
++    contract_conforms: bool,
++    overall_class: str,
++    task_rows: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    """Name the first concrete failure for every blocked capstone verdict."""
++
++    failed = next((row for row in preconditions if row.get("available") is not True), None)
++    if failed is not None:
++        return {
++            "passed": False,
++            "failed_check": failed["check"],
++            "expected_value": failed["expected_value"],
++            "observed_value": failed["observed_value"],
++        }
++    if not contract_conforms:
++        return {
++            "passed": False,
++            "failed_check": "v617_markdown_yaml_contract_conformance",
++            "expected_value": True,
++            "observed_value": False,
++        }
++    if overall_class == "blocked":
++        blocked = [row["task_id"] for row in task_rows if row["effective_verdict_class"] == "blocked"]
++        return {
++            "passed": False,
++            "failed_check": "upstream_terminal_block",
++            "expected_value": [],
++            "observed_value": blocked,
++        }
++    return {"passed": overall_class == "positive", "failed_check": None, "expected_value": None, "observed_value": overall_class}
++
++
++def build_capstone(
++    root: Path = REPO_ROOT,
++    run_date: str = "20260906",
++    *,
++    output_path: Path = DEFAULT_OUTPUT_PATH,
++) -> JsonDict:
++    """Reduce the V617 repository state into one deterministic artifact."""
++
++    started = time.monotonic()
++    root = Path(root)
++    preconditions = _preconditions(root, output_path)
++    input_blocked = any(row["available"] is not True for row in preconditions)
++    yaml_document, yaml_rows, yaml_error = _load_yaml_contract(root / ROADMAP_PATH)
++    markdown_document, markdown_rows, markdown_error = _load_markdown_contract(root / DESIGN_PATH)
++    contract_rows = _contract_rows(yaml_rows, markdown_rows)
++    observed_ids = [row.get("id") for row in yaml_rows]
++    contract_conforms = (
++        yaml_error is None
++        and markdown_error is None
++        and yaml_document.get("milestone") == MILESTONE
++        and markdown_document.get("milestone") == MILESTONE
++        and len(contract_rows) == EXPECTED_TASK_COUNT
++        and all(row["matches"] for row in contract_rows)
++        and observed_ids == list(EXPECTED_TASK_IDS)
++    )
++
++    task_rows, artifacts = _task_rows(root)
++    gate_rows = _gate_replay(yaml_document, task_rows, artifacts)
++    identity, uniform, continuous, selective, solve, hardware = _claim_rows(task_rows, artifacts)
++    dispositions = _dispositions(task_rows, artifacts)
++    partial_present = any(row["effective_verdict_class"] == "partial" for row in task_rows)
++    complete_score = int(
++        not input_blocked
++        and contract_conforms
++        and len(task_rows) == EXPECTED_TASK_COUNT - 1
++        and not partial_present
++        and len(dispositions) == 3
++    )
++
++    upstream_classes = {row["effective_verdict_class"] for row in task_rows}
++    if input_blocked:
++        overall_class = "blocked"
++        honest_verdict = "complete_blocked_v617_capstone_input_missing"
++    elif not contract_conforms:
++        overall_class = "disqualified"
++        honest_verdict = "complete_disqualified_v617_markdown_yaml_contract_mismatch"
++    elif "disqualified" in upstream_classes:
++        overall_class = "disqualified"
++        honest_verdict = "complete_disqualified_v617_terminal_evidence_disposition"
++    elif "partial" in upstream_classes:
++        overall_class = "partial"
++        honest_verdict = "complete_partial_v617_nonterminal_upstream_evidence"
++    elif "blocked" in upstream_classes:
++        overall_class = "blocked"
++        honest_verdict = "complete_blocked_v617_terminal_evidence_disposition"
++    elif "null" in upstream_classes:
++        overall_class = "null"
++        honest_verdict = "complete_null_v617_terminal_evidence_disposition"
++    elif "circular_positive" in upstream_classes:
++        overall_class = "circular_positive"
++        honest_verdict = "complete_circular_positive_v617_terminal_evidence_disposition"
++    else:
++        overall_class = "positive"
++        honest_verdict = "complete_positive_v617_default_off_disposition"
++
++    self_row = {
++        "task_id": EXPECTED_TASK_IDS[-1],
++        "artifact_path": TASK_PATHS[EXPECTED_TASK_IDS[-1]],
++        "artifact_state": "generated_by_this_run",
++        "artifact_hash": None,
++        "declared_verdict_class": overall_class,
++        "effective_verdict_class": overall_class,
++        "honest_verdict": honest_verdict,
++        "integrity_errors": [],
++        "source_hash_rows": [],
++    }
++    task_rows.append(self_row)
++
++    exclusion_rows = []
++    if dispositions[1]["disposition"] == "retire":
++        exclusion_rows.append(
++            {
++                "action": "record_through_exclusion_manifest_workflow",
++                "scope_key": UNIFORM_SCOPE_KEY,
++                "experiment_ids": [EXPECTED_TASK_IDS[6], EXPECTED_TASK_IDS[7]],
++                "retired_milestone": MILESTONE,
++                "retire_if_same_verdict": True,
++                "operator_reopen_required": True,
++                "preserved_scopes": [
++                    "safe_belief_ledger",
++                    "bounded_belief_query_api",
++                    "exact_outcome_memory_substrate",
++                ],
++            }
++        )
++
++    documentation_rows = []
++    for relative in (
++        SPEC_PATH,
++        Path("_bmad/traceability.md"),
++        Path("ops/status.md"),
++        Path("ops/changelog.md"),
++    ):
++        documentation_rows.append(
++            {
++                "path": str(relative),
++                "terminal_evidence_only": True,
++                "modified_by_capstone": False,
++                "status": "requirement_present" if relative == SPEC_PATH else "deferred_to_conductor_reconciler",
++            }
++        )
++
++    source_paths = [ROADMAP_PATH, DESIGN_PATH, EXCLUSION_PATH, SPEC_PATH]
++    source_paths.extend(Path(TASK_PATHS[task_id]) for task_id in EXPECTED_TASK_IDS[:-1])
++    source_hashes = {str(path): sha256_file(root / path) for path in source_paths}
++    artifact_hash_rows = [
++        {"task_id": row["task_id"], "artifact_path": row["artifact_path"], "sha256": row["artifact_hash"]}
++        for row in task_rows
++    ]
++    verdict_rows = [
++        {
++            "task_id": row["task_id"],
++            "declared_verdict_class": row["declared_verdict_class"],
++            "derived_verdict_class": _class_from_verdict(row["honest_verdict"]),
++            "effective_verdict_class": row["effective_verdict_class"],
++            "terminal_prefix_valid": _terminal_prefix(row["honest_verdict"]),
++            "consistent": not any(
++                error.startswith("honest_verdict") or error == "verdict_class_outside_closed_enum"
++                for error in row["integrity_errors"]
++            ),
++        }
++        for row in task_rows
++    ]
++    row_consistency = [
++        {
++            "task_id": row["task_id"],
++            "consistent": "row_to_headline_mismatch" not in row["integrity_errors"],
++            "integrity_errors": list(row["integrity_errors"]),
++        }
++        for row in task_rows
++    ]
++    gate_summary = _gate_summary(preconditions, contract_conforms, overall_class, task_rows)
++    next_handoff = _next_handoff(dispositions, input_blocked)
++
++    all_claim_rows = identity + uniform + continuous + selective + solve + hardware
++    artifact: JsonDict = {
++        "schema": "carnot.exp7049.v617_capstone_disposition.v1",
++        "experiment_id": 7049,
++        "run_date": run_date,
++        "field_principles": _field_principles(),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": 0.0,
++        "source_artifact_hashes": source_hashes,
++        "rows": task_rows + all_claim_rows + dispositions,
++        "roadmap_contract_rows": contract_rows,
++        "task_artifact_rows": task_rows,
++        "artifact_hash_rows": artifact_hash_rows,
++        "verdict_consistency_rows": verdict_rows,
++        "gate_replay_rows": gate_rows,
++        "row_consistency_rows": row_consistency,
++        "identity_claim_rows": identity,
++        "uniform_value_claim_rows": uniform,
++        "continuous_learning_claim_rows": continuous,
++        "selective_transfer_claim_rows": selective,
++        "solve_claim_rows": solve,
++        "hardware_claim_rows": hardware,
++        "blocked_input_rows": [row for row in task_rows if row["effective_verdict_class"] == "blocked"],
++        "null_input_rows": [row for row in task_rows if row["effective_verdict_class"] == "null"],
++        "disqualified_input_rows": [row for row in task_rows if row["effective_verdict_class"] == "disqualified"],
++        "release_hold_repair_retire_rows": dispositions,
++        "exclusion_manifest_rows": exclusion_rows,
++        "documentation_reconciliation_rows": documentation_rows,
++        "production_default_unchanged": True,
++        "next_handoff": next_handoff,
++        "expected_task_count": EXPECTED_TASK_COUNT,
++        "observed_task_count": len(yaml_rows),
++        "expected_id_order": list(EXPECTED_TASK_IDS),
++        "observed_id_order": observed_ids,
++        "v617_capstone_complete_score": complete_score,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "gate_check_summary": gate_summary,
++        "verifier_is_oracle": False,
++        "verdict_class": overall_class,
++        "honest_verdict": honest_verdict,
++        "contract_parse_errors": {"yaml": yaml_error, "markdown": markdown_error},
++    }
++    artifact["duration_s"] = round(time.monotonic() - started, 6)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Recompute the final schema invariants before atomic output."""
++
++    missing = sorted(REQUIRED_FIELDS - artifact.keys())
++    if missing:
++        return ["missing_required_fields:" + ",".join(missing)]
++    errors = []
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or set(principles) != REQUIRED_FIELDS or not all(
++        isinstance(value, str) and value.strip() for value in principles.values()
++    ):
++        errors.append("field_principles_invalid")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_invalid")
++    if artifact.get("production_default_unchanged") is not True:
++        errors.append("production_default_changed")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_invalid")
++    if artifact.get("expected_task_count") != EXPECTED_TASK_COUNT:
++        errors.append("expected_task_count_invalid")
++    if artifact.get("expected_id_order") != list(EXPECTED_TASK_IDS):
++        errors.append("expected_id_order_invalid")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed_invalid")
++    if artifact.get("verdict_class") not in CLOSED_CLASSES:
++        errors.append("verdict_class_invalid")
++    if _class_from_verdict(artifact.get("honest_verdict")) != artifact.get("verdict_class"):
++        errors.append("honest_verdict_invalid")
++    duration = artifact.get("duration_s")
++    if isinstance(duration, bool) or not isinstance(duration, (int, float)) or duration < 0:
++        errors.append("duration_s_invalid")
++    if artifact.get("v617_capstone_complete_score") not in (0, 1):
++        errors.append("complete_score_invalid")
++    task_rows = artifact.get("task_artifact_rows")
++    if not isinstance(task_rows, list) or len(task_rows) != EXPECTED_TASK_COUNT:
++        errors.append("task_artifact_rows_invalid")
++    elif artifact.get("v617_capstone_complete_score") == 1 and any(
++        row.get("effective_verdict_class") == "partial" for row in task_rows if isinstance(row, Mapping)
++    ):
++        errors.append("complete_score_contains_partial")
++    dispositions = artifact.get("release_hold_repair_retire_rows")
++    if not isinstance(dispositions, list) or [row.get("branch") for row in dispositions] != [
++        "identity",
++        "uniform_belief",
++        "selective_learning",
++    ]:
++        errors.append("disposition_rows_invalid")
++    if not isinstance(artifact.get("next_handoff"), list) or len(artifact["next_handoff"]) != 1:
++        errors.append("next_handoff_invalid")
++    if artifact.get("verdict_class") == "blocked":
++        summary = artifact.get("gate_check_summary")
++        if not isinstance(summary, Mapping) or not {
++            "failed_check",
++            "expected_value",
++            "observed_value",
++        } <= summary.keys():
++            errors.append("blocked_gate_summary_invalid")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def _write_json_atomic(path: Path, artifact: Mapping[str, Any]) -> None:
++    """Replace only the requested artifact after a complete temporary write."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent, suffix=".tmp", delete=False) as handle:
++        temp_path = Path(handle.name)
++        json.dump(artifact, handle, indent=2, sort_keys=True)
++        handle.write("\n")
++        handle.flush()
++        os.fsync(handle.fileno())
++    temp_path.replace(path)
++
++
++def _date_argument(value: str) -> str:
++    """Reject ambiguous dates so the artifact names one execution day."""
++
++    if re.fullmatch(r"\d{8}", value) is None:
++        raise argparse.ArgumentTypeError("date must use YYYYMMDD")
++    return value
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run the deterministic reducer and write its validated JSON artifact."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", required=True, type=_date_argument)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT_PATH)
++    args = parser.parse_args(argv)
++    artifact = build_capstone(args.root, args.date, output_path=args.output)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise SystemExit("invalid Exp7049 artifact: " + "; ".join(errors))
++    target = args.output if args.output.is_absolute() else args.root / args.output
++    _write_json_atomic(target, artifact)
++    print(json.dumps({"artifact": str(target), "verdict_class": artifact["verdict_class"], "complete_score": artifact["v617_capstone_complete_score"]}, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - the thin script wrapper is the CLI path.
++    raise SystemExit(main())
+diff --git a/results/experiment_7049_v617_capstone_disposition.json b/results/experiment_7049_v617_capstone_disposition.json
+new file mode 100644
+index 0000000000..1c5e2fcdd8
+--- /dev/null
++++ b/results/experiment_7049_v617_capstone_disposition.json
+@@ -0,0 +1,2111 @@
++{
++  "artifact_hash_rows": [
++    {
++      "artifact_path": "results/experiment_7038_v617_active_contract_preflight.json",
++      "sha256": "sha256:f85ba16c70b989b18cf2a87a709bf8dca61bcb304401e2d04f85695264b04e0b",
++      "task_id": "exp7038-v617-active-contract-preflight"
++    },
++    {
++      "artifact_path": "results/experiment_7039_v617_model_report_forensics.json",
++      "sha256": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++      "task_id": "exp7039-live-model-report-channel-forensics"
++    },
++    {
++      "artifact_path": "results/experiment_7040_v617_typed_identity_bridge.json",
++      "sha256": "sha256:b8ededb43d80786e2ec7b747ef2fd19cbae080ea12fbdb1a9e4a653af9dffec3",
++      "task_id": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "artifact_path": "results/experiment_7041_v617_identity_attack_audit.json",
++      "sha256": null,
++      "task_id": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "artifact_path": "results/experiment_7042_v617_belief_shadow_trace.json",
++      "sha256": null,
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "artifact_path": "results/experiment_7043_v617_belief_shadow_cold_audit.json",
++      "sha256": null,
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "artifact_path": "results/experiment_7044_v617_uniform_belief_live_ab.json",
++      "sha256": null,
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "artifact_path": "results/experiment_7045_v617_uniform_belief_cold_audit.json",
++      "sha256": null,
++      "task_id": "exp7045-uniform-belief-value-cold-audit"
++    },
++    {
++      "artifact_path": "results/experiment_7046_v617_frontier_stratified_curriculum.json",
++      "sha256": null,
++      "task_id": "exp7046-frontier-stratified-exact-outcome-curriculum"
++    },
++    {
++      "artifact_path": "results/experiment_7047_v617_selective_belief_csl.json",
++      "sha256": null,
++      "task_id": "exp7047-selective-belief-exact-advantage-csl"
++    },
++    {
++      "artifact_path": "results/experiment_7048_v617_selective_belief_live_ab.json",
++      "sha256": null,
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    },
++    {
++      "artifact_path": "results/experiment_7049_v617_capstone_disposition.json",
++      "sha256": null,
++      "task_id": "exp7049-v617-evidence-disposition-capstone"
++    }
++  ],
++  "blocked_input_rows": [
++    {
++      "artifact_hash": "sha256:f85ba16c70b989b18cf2a87a709bf8dca61bcb304401e2d04f85695264b04e0b",
++      "artifact_path": "results/experiment_7038_v617_active_contract_preflight.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_v617_active_contract_preflight_prerequisite_missing",
++      "integrity_errors": [],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++          "matches": true,
++          "observed_hash": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++          "path": "CLAUDE.md"
++        },
++        {
++          "declared_hash": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++          "matches": true,
++          "observed_hash": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++          "path": "CODEX.md"
++        },
++        {
++          "declared_hash": "sha256:eb0463e4259ff2a35def1aa2e8b5916fa288c706ed971b8284f9643334b32a66",
++          "matches": true,
++          "observed_hash": "sha256:eb0463e4259ff2a35def1aa2e8b5916fa288c706ed971b8284f9643334b32a66",
++          "path": "openspec/capabilities/research-reporting/spec.md"
++        },
++        {
++          "declared_hash": null,
++          "matches": true,
++          "observed_hash": null,
++          "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
++        },
++        {
++          "declared_hash": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++          "matches": true,
++          "observed_hash": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++          "path": "ops/exclusion_manifest.yaml"
++        },
++        {
++          "declared_hash": "sha256:70d0fa9aac95f2de63ed1cd7f2f0c2f992e083b4cd0fecbecda2ba5d6d8e36e9",
++          "matches": true,
++          "observed_hash": "sha256:70d0fa9aac95f2de63ed1cd7f2f0c2f992e083b4cd0fecbecda2ba5d6d8e36e9",
++          "path": "python/carnot/experiment_7038_v617_active_contract_preflight.py"
++        },
++        {
++          "declared_hash": "sha256:fbe111ee257416db996b7c47ebc5e88fe565ceb84f08d0bc887e9a214bc1784c",
++          "matches": true,
++          "observed_hash": "sha256:fbe111ee257416db996b7c47ebc5e88fe565ceb84f08d0bc887e9a214bc1784c",
++          "path": "research-complete.yaml"
++        },
++        {
++          "declared_hash": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++          "matches": true,
++          "observed_hash": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++          "path": "research-program.md"
++        },
++        {
++          "declared_hash": "sha256:83ec41ee3742c21ed44b247b81a2fad69955015f8e353b6fa6f5ad201d14c7db",
++          "matches": true,
++          "observed_hash": "sha256:83ec41ee3742c21ed44b247b81a2fad69955015f8e353b6fa6f5ad201d14c7db",
++          "path": "research-references.md"
++        },
++        {
++          "declared_hash": null,
++          "matches": true,
++          "observed_hash": null,
++          "path": "research-roadmap-next.yaml"
++        },
++        {
++          "declared_hash": "sha256:9f23b5afff18a768548b546cdc7ac3d71559d2dfcb7c790fef43905ea7e8d46f",
++          "matches": true,
++          "observed_hash": "sha256:9f23b5afff18a768548b546cdc7ac3d71559d2dfcb7c790fef43905ea7e8d46f",
++          "path": "research-roadmap.yaml"
++        },
++        {
++          "declared_hash": "sha256:1d53919a34330b3438f3470fcb276d445fc642ee3fecdeba6f890a04a7f55249",
++          "matches": true,
++          "observed_hash": "sha256:1d53919a34330b3438f3470fcb276d445fc642ee3fecdeba6f890a04a7f55249",
++          "path": "results/experiment_7028_v616_active_contract_preflight.json"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
++          "matches": true,
++          "observed_hash": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
++          "path": "scripts/audit_roadmap_gates.py"
++        },
++        {
++          "declared_hash": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
++          "matches": true,
++          "observed_hash": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
++          "path": "scripts/conductor_gates.py"
++        },
++        {
++          "declared_hash": "sha256:cc5a6a8dd9edb0991599939357148e0e8783e067440d6359fcaa2715a4e381a2",
++          "matches": true,
++          "observed_hash": "sha256:cc5a6a8dd9edb0991599939357148e0e8783e067440d6359fcaa2715a4e381a2",
++          "path": "scripts/experiments/experiment_7038_v617_active_contract_preflight.py"
++        },
++        {
++          "declared_hash": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++          "matches": true,
++          "observed_hash": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++          "path": "scripts/validate_prior_failures.py"
++        },
++        {
++          "declared_hash": "sha256:95652fb6221b0ca1b0fe15d657c80a43c437a653e2a03907ba1d0e0a0a1411e5",
++          "matches": true,
++          "observed_hash": "sha256:95652fb6221b0ca1b0fe15d657c80a43c437a653e2a03907ba1d0e0a0a1411e5",
++          "path": "tests/python/test_experiment_7038_v617_active_contract_preflight.py"
++        }
++      ],
++      "task_id": "exp7038-v617-active-contract-preflight"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7041_v617_identity_attack_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7042_v617_belief_shadow_trace.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7043_v617_belief_shadow_cold_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7044_v617_uniform_belief_live_ab.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7045_v617_uniform_belief_cold_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7045-uniform-belief-value-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7046_v617_frontier_stratified_curriculum.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7046-frontier-stratified-exact-outcome-curriculum"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7047_v617_selective_belief_csl.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7047-selective-belief-exact-advantage-csl"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7048_v617_selective_belief_live_ab.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7049_v617_capstone_disposition.json",
++      "artifact_state": "generated_by_this_run",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_v617_capstone_input_missing",
++      "integrity_errors": [],
++      "source_hash_rows": [],
++      "task_id": "exp7049-v617-evidence-disposition-capstone"
++    }
++  ],
++  "continuous_learning_claim_rows": [
++    {
++      "all_abstain": false,
++      "artifact_hash": null,
++      "claim": "selective_learning_safety",
++      "claim_class": "blocked",
++      "continuous_self_learning_task": null,
++      "evidence_field": null,
++      "nontrivial_score": null,
++      "observed_value": null,
++      "safety_score": null,
++      "task_id": "exp7047-selective-belief-exact-advantage-csl"
++    }
++  ],
++  "contract_parse_errors": {
++    "markdown": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md'",
++    "yaml": null
++  },
++  "disqualified_input_rows": [
++    {
++      "artifact_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++      "artifact_path": "results/experiment_7039_v617_model_report_forensics.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "positive",
++      "effective_verdict_class": "disqualified",
++      "honest_verdict": "complete_positive_arc_report_channel_forensics_ready",
++      "integrity_errors": [
++        "reproducibility_checksum_mismatch",
++        "source_artifact_hash_mismatch",
++        "flagged_adversarial"
++      ],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:b9a594af69939bb38565161ba8fa10a4117721f421972d8d4e8174c89d102952",
++          "matches": false,
++          "observed_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "path": "openspec/capabilities/arc-agi/spec.md"
++        },
++        {
++          "declared_hash": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
++          "matches": false,
++          "observed_hash": "sha256:c1b300ba2b0fd9611500b36432173695c777f8c9fa01217f9ebf83a52033ab10",
++          "path": "python/carnot/agentic/arc_executable_world_model.py"
++        },
++        {
++          "declared_hash": "sha256:269a9c00f99e7496dcd7153e0de5223e758efd2c8efbc4fb7405ed925e1e01c8",
++          "matches": false,
++          "observed_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "path": "python/carnot/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "matches": true,
++          "observed_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "path": "python/carnot/gpu_lease_phase_journal.py"
++        },
++        {
++          "declared_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "matches": true,
++          "observed_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "path": "python/carnot/inference/sota_models.py"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "matches": true,
++          "observed_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "path": "scripts/experiment_template.py"
++        },
++        {
++          "declared_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "matches": true,
++          "observed_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "path": "scripts/experiments/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:845f80c04fa0b5003c2e9435c09c6736f1c534b4d4619e6aab9cb83a4869421d",
++          "matches": false,
++          "observed_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "path": "tests/python/test_experiment_7039_v617_model_report_forensics.py"
++        }
++      ],
++      "task_id": "exp7039-live-model-report-channel-forensics"
++    },
++    {
++      "artifact_hash": "sha256:b8ededb43d80786e2ec7b747ef2fd19cbae080ea12fbdb1a9e4a653af9dffec3",
++      "artifact_path": "results/experiment_7040_v617_typed_identity_bridge.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "disqualified",
++      "honest_verdict": "blocked_exp7039_artifact_invalid",
++      "integrity_errors": [
++        "honest_verdict_terminal_prefix_missing",
++        "source_artifact_hash_mismatch"
++      ],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "matches": true,
++          "observed_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "path": "openspec/capabilities/arc-agi/spec.md"
++        },
++        {
++          "declared_hash": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
++          "matches": false,
++          "observed_hash": "sha256:c1b300ba2b0fd9611500b36432173695c777f8c9fa01217f9ebf83a52033ab10",
++          "path": "python/carnot/agentic/arc_executable_world_model.py"
++        },
++        {
++          "declared_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "matches": true,
++          "observed_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "path": "python/carnot/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "matches": true,
++          "observed_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "path": "python/carnot/gpu_lease_phase_journal.py"
++        },
++        {
++          "declared_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "matches": true,
++          "observed_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "path": "python/carnot/inference/sota_models.py"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++          "matches": true,
++          "observed_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++          "path": "results/experiment_7039_v617_model_report_forensics.json"
++        },
++        {
++          "declared_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "matches": true,
++          "observed_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "path": "scripts/experiment_template.py"
++        },
++        {
++          "declared_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "matches": true,
++          "observed_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "path": "scripts/experiments/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "matches": true,
++          "observed_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "path": "tests/python/test_experiment_7039_v617_model_report_forensics.py"
++        }
++      ],
++      "task_id": "exp7040-typed-model-identity-report-bridge"
++    }
++  ],
++  "documentation_reconciliation_rows": [
++    {
++      "modified_by_capstone": false,
++      "path": "openspec/capabilities/capstone/spec.md",
++      "status": "requirement_present",
++      "terminal_evidence_only": true
++    },
++    {
++      "modified_by_capstone": false,
++      "path": "_bmad/traceability.md",
++      "status": "deferred_to_conductor_reconciler",
++      "terminal_evidence_only": true
++    },
++    {
++      "modified_by_capstone": false,
++      "path": "ops/status.md",
++      "status": "deferred_to_conductor_reconciler",
++      "terminal_evidence_only": true
++    },
++    {
++      "modified_by_capstone": false,
++      "path": "ops/changelog.md",
++      "status": "deferred_to_conductor_reconciler",
++      "terminal_evidence_only": true
++    }
++  ],
++  "duration_s": 0.038863,
++  "exclusion_manifest_rows": [],
++  "expected_id_order": [
++    "exp7038-v617-active-contract-preflight",
++    "exp7039-live-model-report-channel-forensics",
++    "exp7040-typed-model-identity-report-bridge",
++    "exp7041-identity-report-channel-cold-audit",
++    "exp7042-typed-identity-belief-shadow-trace",
++    "exp7043-belief-shadow-trace-cold-audit",
++    "exp7044-uniform-belief-two-model-live-ab",
++    "exp7045-uniform-belief-value-cold-audit",
++    "exp7046-frontier-stratified-exact-outcome-curriculum",
++    "exp7047-selective-belief-exact-advantage-csl",
++    "exp7048-selective-belief-two-model-live-ab",
++    "exp7049-v617-evidence-disposition-capstone"
++  ],
++  "expected_task_count": 12,
++  "experiment_id": 7049,
++  "field_principles": {
++    "artifact_hash_rows": "The artifact_hash_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "blocked_input_rows": "The blocked_input_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "continuous_learning_claim_rows": "The continuous_learning_claim_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "disqualified_input_rows": "The disqualified_input_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "documentation_reconciliation_rows": "The documentation_reconciliation_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "duration_s": "The duration_s field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "exclusion_manifest_rows": "The exclusion_manifest_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "expected_id_order": "The expected_id_order field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "expected_task_count": "The expected_task_count field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "field_principles": "The field_principles field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "gate_check_summary": "The gate_check_summary field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "gate_replay_rows": "The gate_replay_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "hardware_claim_rows": "The hardware_claim_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "honest_verdict": "A terminal summary prevents an external block from becoming repeated partial work.",
++    "identity_claim_rows": "The identity_claim_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "inference_substrate": "This value separates stored-evidence reduction from new model inference.",
++    "next_handoff": "The next_handoff field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "null_input_rows": "The null_input_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "observed_id_order": "The observed_id_order field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "observed_task_count": "The observed_task_count field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "preconditions_checked": "The preconditions_checked field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "production_default_unchanged": "A new belief policy must prove value before it can affect normal production.",
++    "random_seed": "The random_seed field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "release_hold_repair_retire_rows": "The release_hold_repair_retire_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "reproducibility_checksum": "A canonical digest makes silent result changes detectable.",
++    "roadmap_contract_rows": "The roadmap_contract_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "row_consistency_rows": "The row_consistency_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "rows": "Claim rows keep unlike identity, value, learning, solve, and hardware evidence separate.",
++    "selective_transfer_claim_rows": "The selective_transfer_claim_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "solve_claim_rows": "The solve_claim_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "source_artifact_hashes": "Content hashes expose source drift before a claim is reused.",
++    "task_artifact_rows": "The task_artifact_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "uniform_value_claim_rows": "The uniform_value_claim_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "v617_capstone_complete_score": "Completion measures terminal classification, not whether every input was positive.",
++    "verdict_class": "The verdict_class field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "verdict_consistency_rows": "The verdict_consistency_rows field preserves evidence needed to reproduce or falsify the V617 disposition.",
++    "verifier_is_oracle": "The evidence reducer audits claims but does not create an oracle-distinct result."
++  },
++  "gate_check_summary": {
++    "expected_value": "readable_nonempty_file",
++    "failed_check": "v617_markdown_readable",
++    "observed_value": "missing",
++    "passed": false
++  },
++  "gate_replay_rows": [
++    {
++      "artifact_field": "arc_report_channel_forensics_ready_score",
++      "consumer": "exp7040-typed-model-identity-report-bridge",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": 1,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7039-live-model-report-channel-forensics"
++    },
++    {
++      "artifact_field": "arc_typed_identity_bridge_ready_score",
++      "consumer": "exp7041-identity-report-channel-cold-audit",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": 0,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "artifact_field": "arc_typed_identity_bridge_ready_score",
++      "consumer": "exp7042-typed-identity-belief-shadow-trace",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": 0,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "artifact_field": "arc_identity_report_attack_audit_ready_score",
++      "consumer": "exp7042-typed-identity-belief-shadow-trace",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "artifact_field": "belief_shadow_transport_ready_score",
++      "consumer": "exp7043-belief-shadow-trace-cold-audit",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "artifact_field": "belief_shadow_transport_ready_score",
++      "consumer": "exp7044-uniform-belief-two-model-live-ab",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "artifact_field": "belief_shadow_trace_audit_ready_score",
++      "consumer": "exp7044-uniform-belief-two-model-live-ab",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "artifact_field": "uniform_belief_live_ab_complete_score",
++      "consumer": "exp7045-uniform-belief-value-cold-audit",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "artifact_field": "uniform_belief_value_audit_complete_score",
++      "consumer": "exp7046-frontier-stratified-exact-outcome-curriculum",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7045-uniform-belief-value-cold-audit"
++    },
++    {
++      "artifact_field": "belief_frontier_curriculum_ready_score",
++      "consumer": "exp7047-selective-belief-exact-advantage-csl",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7046-frontier-stratified-exact-outcome-curriculum"
++    },
++    {
++      "artifact_field": "selective_belief_policy_safety_score",
++      "consumer": "exp7048-selective-belief-two-model-live-ab",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7047-selective-belief-exact-advantage-csl"
++    },
++    {
++      "artifact_field": "selective_belief_policy_nontrivial_score",
++      "consumer": "exp7048-selective-belief-two-model-live-ab",
++      "consumer_consistent": true,
++      "expected_value": 1,
++      "observed_value": null,
++      "op": "==",
++      "passed": false,
++      "producer_evidence_usable": false,
++      "upstream": "exp7047-selective-belief-exact-advantage-csl"
++    }
++  ],
++  "hardware_claim_rows": [
++    {
++      "claim": "hardware_execution_or_performance",
++      "claim_class": "null",
++      "evidence": "V617 contains no hardware task or changed authenticated hardware receipt.",
++      "headline_eligible": false
++    }
++  ],
++  "honest_verdict": "complete_blocked_v617_capstone_input_missing",
++  "identity_claim_rows": [
++    {
++      "artifact_hash": "sha256:b8ededb43d80786e2ec7b747ef2fd19cbae080ea12fbdb1a9e4a653af9dffec3",
++      "claim": "typed_identity_transport",
++      "claim_class": "disqualified",
++      "evidence_field": "arc_typed_identity_bridge_ready_score",
++      "observed_value": 0,
++      "task_id": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "identity_attack_resistance",
++      "claim_class": "blocked",
++      "evidence_field": "arc_identity_report_attack_audit_ready_score",
++      "observed_value": null,
++      "task_id": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "belief_shadow_transport",
++      "claim_class": "blocked",
++      "evidence_field": "belief_shadow_transport_ready_score",
++      "observed_value": null,
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "belief_shadow_transport_audit",
++      "claim_class": "blocked",
++      "evidence_field": "belief_shadow_trace_audit_ready_score",
++      "observed_value": null,
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    }
++  ],
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "next_handoff": [
++    {
++      "action": "restore_the_single_missing_v617_markdown_contract_and_rerun_the_receipt_reducer",
++      "bounded_to_one_action": true
++    }
++  ],
++  "null_input_rows": [],
++  "observed_id_order": [
++    "exp7038-v617-active-contract-preflight",
++    "exp7039-live-model-report-channel-forensics",
++    "exp7040-typed-model-identity-report-bridge",
++    "exp7041-identity-report-channel-cold-audit",
++    "exp7042-typed-identity-belief-shadow-trace",
++    "exp7043-belief-shadow-trace-cold-audit",
++    "exp7044-uniform-belief-two-model-live-ab",
++    "exp7045-uniform-belief-value-cold-audit",
++    "exp7046-frontier-stratified-exact-outcome-curriculum",
++    "exp7047-selective-belief-exact-advantage-csl",
++    "exp7048-selective-belief-two-model-live-ab",
++    "exp7049-v617-evidence-disposition-capstone"
++  ],
++  "observed_task_count": 12,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "check": "v617_active_yaml_readable",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty"
++    },
++    {
++      "available": false,
++      "check": "v617_markdown_readable",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "missing"
++    },
++    {
++      "available": true,
++      "check": "exclusion_manifest_readable",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty"
++    },
++    {
++      "available": true,
++      "check": "capstone_spec_readable",
++      "expected_value": "readable_nonempty_file",
++      "observed_value": "readable_nonempty"
++    },
++    {
++      "available": true,
++      "check": "results_directory_readable",
++      "expected_value": "readable_directory",
++      "observed_value": "readable_directory"
++    },
++    {
++      "available": true,
++      "check": "artifact_path_writable",
++      "expected_value": "writable",
++      "observed_value": "writable"
++    },
++    {
++      "available": true,
++      "check": "documentation_path_writable:ops/status.md",
++      "expected_value": "writable",
++      "observed_value": "writable"
++    },
++    {
++      "available": true,
++      "check": "documentation_path_writable:ops/changelog.md",
++      "expected_value": "writable",
++      "observed_value": "writable"
++    },
++    {
++      "available": true,
++      "check": "documentation_path_writable:_bmad/traceability.md",
++      "expected_value": "writable",
++      "observed_value": "writable"
++    }
++  ],
++  "production_default_unchanged": true,
++  "random_seed": 704920260906,
++  "release_hold_repair_retire_rows": [
++    {
++      "branch": "identity",
++      "disposition": "repair",
++      "release_mode": null
++    },
++    {
++      "branch": "uniform_belief",
++      "disposition": "hold",
++      "release_mode": null
++    },
++    {
++      "branch": "selective_learning",
++      "disposition": "hold",
++      "policy_hash": null,
++      "release_mode": null,
++      "rollback_ready": false
++    }
++  ],
++  "reproducibility_checksum": "sha256:56d35c0b74386547965368c6b3facaf6c610a48a682c16131667c51eca8876bf",
++  "roadmap_contract_rows": [
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7038-v617-active-contract-preflight",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 1,
++      "title_matches": false,
++      "yaml_id": "exp7038-v617-active-contract-preflight"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7039-live-model-report-channel-forensics",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 2,
++      "title_matches": false,
++      "yaml_id": "exp7039-live-model-report-channel-forensics"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7040-typed-model-identity-report-bridge",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 3,
++      "title_matches": false,
++      "yaml_id": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7041-identity-report-channel-cold-audit",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 4,
++      "title_matches": false,
++      "yaml_id": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7042-typed-identity-belief-shadow-trace",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 5,
++      "title_matches": false,
++      "yaml_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7043-belief-shadow-trace-cold-audit",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 6,
++      "title_matches": false,
++      "yaml_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7044-uniform-belief-two-model-live-ab",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 7,
++      "title_matches": false,
++      "yaml_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7045-uniform-belief-value-cold-audit",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 8,
++      "title_matches": false,
++      "yaml_id": "exp7045-uniform-belief-value-cold-audit"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7046-frontier-stratified-exact-outcome-curriculum",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 9,
++      "title_matches": false,
++      "yaml_id": "exp7046-frontier-stratified-exact-outcome-curriculum"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7047-selective-belief-exact-advantage-csl",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 10,
++      "title_matches": false,
++      "yaml_id": "exp7047-selective-belief-exact-advantage-csl"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7048-selective-belief-two-model-live-ab",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 11,
++      "title_matches": false,
++      "yaml_id": "exp7048-selective-belief-two-model-live-ab"
++    },
++    {
++      "deliverable_matches": false,
++      "expected_id": "exp7049-v617-evidence-disposition-capstone",
++      "gates_match": false,
++      "markdown_id": null,
++      "matches": false,
++      "order": 12,
++      "title_matches": false,
++      "yaml_id": "exp7049-v617-evidence-disposition-capstone"
++    }
++  ],
++  "row_consistency_rows": [
++    {
++      "consistent": true,
++      "integrity_errors": [],
++      "task_id": "exp7038-v617-active-contract-preflight"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "reproducibility_checksum_mismatch",
++        "source_artifact_hash_mismatch",
++        "flagged_adversarial"
++      ],
++      "task_id": "exp7039-live-model-report-channel-forensics"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "honest_verdict_terminal_prefix_missing",
++        "source_artifact_hash_mismatch"
++      ],
++      "task_id": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "task_id": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "task_id": "exp7045-uniform-belief-value-cold-audit"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "task_id": "exp7046-frontier-stratified-exact-outcome-curriculum"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "task_id": "exp7047-selective-belief-exact-advantage-csl"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    },
++    {
++      "consistent": true,
++      "integrity_errors": [],
++      "task_id": "exp7049-v617-evidence-disposition-capstone"
++    }
++  ],
++  "rows": [
++    {
++      "artifact_hash": "sha256:f85ba16c70b989b18cf2a87a709bf8dca61bcb304401e2d04f85695264b04e0b",
++      "artifact_path": "results/experiment_7038_v617_active_contract_preflight.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_v617_active_contract_preflight_prerequisite_missing",
++      "integrity_errors": [],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++          "matches": true,
++          "observed_hash": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++          "path": "CLAUDE.md"
++        },
++        {
++          "declared_hash": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++          "matches": true,
++          "observed_hash": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++          "path": "CODEX.md"
++        },
++        {
++          "declared_hash": "sha256:eb0463e4259ff2a35def1aa2e8b5916fa288c706ed971b8284f9643334b32a66",
++          "matches": true,
++          "observed_hash": "sha256:eb0463e4259ff2a35def1aa2e8b5916fa288c706ed971b8284f9643334b32a66",
++          "path": "openspec/capabilities/research-reporting/spec.md"
++        },
++        {
++          "declared_hash": null,
++          "matches": true,
++          "observed_hash": null,
++          "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
++        },
++        {
++          "declared_hash": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++          "matches": true,
++          "observed_hash": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++          "path": "ops/exclusion_manifest.yaml"
++        },
++        {
++          "declared_hash": "sha256:70d0fa9aac95f2de63ed1cd7f2f0c2f992e083b4cd0fecbecda2ba5d6d8e36e9",
++          "matches": true,
++          "observed_hash": "sha256:70d0fa9aac95f2de63ed1cd7f2f0c2f992e083b4cd0fecbecda2ba5d6d8e36e9",
++          "path": "python/carnot/experiment_7038_v617_active_contract_preflight.py"
++        },
++        {
++          "declared_hash": "sha256:fbe111ee257416db996b7c47ebc5e88fe565ceb84f08d0bc887e9a214bc1784c",
++          "matches": true,
++          "observed_hash": "sha256:fbe111ee257416db996b7c47ebc5e88fe565ceb84f08d0bc887e9a214bc1784c",
++          "path": "research-complete.yaml"
++        },
++        {
++          "declared_hash": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++          "matches": true,
++          "observed_hash": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++          "path": "research-program.md"
++        },
++        {
++          "declared_hash": "sha256:83ec41ee3742c21ed44b247b81a2fad69955015f8e353b6fa6f5ad201d14c7db",
++          "matches": true,
++          "observed_hash": "sha256:83ec41ee3742c21ed44b247b81a2fad69955015f8e353b6fa6f5ad201d14c7db",
++          "path": "research-references.md"
++        },
++        {
++          "declared_hash": null,
++          "matches": true,
++          "observed_hash": null,
++          "path": "research-roadmap-next.yaml"
++        },
++        {
++          "declared_hash": "sha256:9f23b5afff18a768548b546cdc7ac3d71559d2dfcb7c790fef43905ea7e8d46f",
++          "matches": true,
++          "observed_hash": "sha256:9f23b5afff18a768548b546cdc7ac3d71559d2dfcb7c790fef43905ea7e8d46f",
++          "path": "research-roadmap.yaml"
++        },
++        {
++          "declared_hash": "sha256:1d53919a34330b3438f3470fcb276d445fc642ee3fecdeba6f890a04a7f55249",
++          "matches": true,
++          "observed_hash": "sha256:1d53919a34330b3438f3470fcb276d445fc642ee3fecdeba6f890a04a7f55249",
++          "path": "results/experiment_7028_v616_active_contract_preflight.json"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
++          "matches": true,
++          "observed_hash": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
++          "path": "scripts/audit_roadmap_gates.py"
++        },
++        {
++          "declared_hash": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
++          "matches": true,
++          "observed_hash": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
++          "path": "scripts/conductor_gates.py"
++        },
++        {
++          "declared_hash": "sha256:cc5a6a8dd9edb0991599939357148e0e8783e067440d6359fcaa2715a4e381a2",
++          "matches": true,
++          "observed_hash": "sha256:cc5a6a8dd9edb0991599939357148e0e8783e067440d6359fcaa2715a4e381a2",
++          "path": "scripts/experiments/experiment_7038_v617_active_contract_preflight.py"
++        },
++        {
++          "declared_hash": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++          "matches": true,
++          "observed_hash": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++          "path": "scripts/validate_prior_failures.py"
++        },
++        {
++          "declared_hash": "sha256:95652fb6221b0ca1b0fe15d657c80a43c437a653e2a03907ba1d0e0a0a1411e5",
++          "matches": true,
++          "observed_hash": "sha256:95652fb6221b0ca1b0fe15d657c80a43c437a653e2a03907ba1d0e0a0a1411e5",
++          "path": "tests/python/test_experiment_7038_v617_active_contract_preflight.py"
++        }
++      ],
++      "task_id": "exp7038-v617-active-contract-preflight"
++    },
++    {
++      "artifact_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++      "artifact_path": "results/experiment_7039_v617_model_report_forensics.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "positive",
++      "effective_verdict_class": "disqualified",
++      "honest_verdict": "complete_positive_arc_report_channel_forensics_ready",
++      "integrity_errors": [
++        "reproducibility_checksum_mismatch",
++        "source_artifact_hash_mismatch",
++        "flagged_adversarial"
++      ],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:b9a594af69939bb38565161ba8fa10a4117721f421972d8d4e8174c89d102952",
++          "matches": false,
++          "observed_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "path": "openspec/capabilities/arc-agi/spec.md"
++        },
++        {
++          "declared_hash": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
++          "matches": false,
++          "observed_hash": "sha256:c1b300ba2b0fd9611500b36432173695c777f8c9fa01217f9ebf83a52033ab10",
++          "path": "python/carnot/agentic/arc_executable_world_model.py"
++        },
++        {
++          "declared_hash": "sha256:269a9c00f99e7496dcd7153e0de5223e758efd2c8efbc4fb7405ed925e1e01c8",
++          "matches": false,
++          "observed_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "path": "python/carnot/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "matches": true,
++          "observed_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "path": "python/carnot/gpu_lease_phase_journal.py"
++        },
++        {
++          "declared_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "matches": true,
++          "observed_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "path": "python/carnot/inference/sota_models.py"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "matches": true,
++          "observed_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "path": "scripts/experiment_template.py"
++        },
++        {
++          "declared_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "matches": true,
++          "observed_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "path": "scripts/experiments/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:845f80c04fa0b5003c2e9435c09c6736f1c534b4d4619e6aab9cb83a4869421d",
++          "matches": false,
++          "observed_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "path": "tests/python/test_experiment_7039_v617_model_report_forensics.py"
++        }
++      ],
++      "task_id": "exp7039-live-model-report-channel-forensics"
++    },
++    {
++      "artifact_hash": "sha256:b8ededb43d80786e2ec7b747ef2fd19cbae080ea12fbdb1a9e4a653af9dffec3",
++      "artifact_path": "results/experiment_7040_v617_typed_identity_bridge.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "disqualified",
++      "honest_verdict": "blocked_exp7039_artifact_invalid",
++      "integrity_errors": [
++        "honest_verdict_terminal_prefix_missing",
++        "source_artifact_hash_mismatch"
++      ],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "matches": true,
++          "observed_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "path": "openspec/capabilities/arc-agi/spec.md"
++        },
++        {
++          "declared_hash": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
++          "matches": false,
++          "observed_hash": "sha256:c1b300ba2b0fd9611500b36432173695c777f8c9fa01217f9ebf83a52033ab10",
++          "path": "python/carnot/agentic/arc_executable_world_model.py"
++        },
++        {
++          "declared_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "matches": true,
++          "observed_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "path": "python/carnot/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "matches": true,
++          "observed_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "path": "python/carnot/gpu_lease_phase_journal.py"
++        },
++        {
++          "declared_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "matches": true,
++          "observed_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "path": "python/carnot/inference/sota_models.py"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++          "matches": true,
++          "observed_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++          "path": "results/experiment_7039_v617_model_report_forensics.json"
++        },
++        {
++          "declared_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "matches": true,
++          "observed_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "path": "scripts/experiment_template.py"
++        },
++        {
++          "declared_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "matches": true,
++          "observed_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "path": "scripts/experiments/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "matches": true,
++          "observed_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "path": "tests/python/test_experiment_7039_v617_model_report_forensics.py"
++        }
++      ],
++      "task_id": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7041_v617_identity_attack_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7042_v617_belief_shadow_trace.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7043_v617_belief_shadow_cold_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7044_v617_uniform_belief_live_ab.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7045_v617_uniform_belief_cold_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7045-uniform-belief-value-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7046_v617_frontier_stratified_curriculum.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7046-frontier-stratified-exact-outcome-curriculum"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7047_v617_selective_belief_csl.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7047-selective-belief-exact-advantage-csl"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7048_v617_selective_belief_live_ab.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7049_v617_capstone_disposition.json",
++      "artifact_state": "generated_by_this_run",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_v617_capstone_input_missing",
++      "integrity_errors": [],
++      "source_hash_rows": [],
++      "task_id": "exp7049-v617-evidence-disposition-capstone"
++    },
++    {
++      "artifact_hash": "sha256:b8ededb43d80786e2ec7b747ef2fd19cbae080ea12fbdb1a9e4a653af9dffec3",
++      "claim": "typed_identity_transport",
++      "claim_class": "disqualified",
++      "evidence_field": "arc_typed_identity_bridge_ready_score",
++      "observed_value": 0,
++      "task_id": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "identity_attack_resistance",
++      "claim_class": "blocked",
++      "evidence_field": "arc_identity_report_attack_audit_ready_score",
++      "observed_value": null,
++      "task_id": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "belief_shadow_transport",
++      "claim_class": "blocked",
++      "evidence_field": "belief_shadow_transport_ready_score",
++      "observed_value": null,
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "belief_shadow_transport_audit",
++      "claim_class": "blocked",
++      "evidence_field": "belief_shadow_trace_audit_ready_score",
++      "observed_value": null,
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "uniform_live_value",
++      "claim_class": "blocked",
++      "evidence_field": "uniform_belief_value_positive_score",
++      "observed_value": null,
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "uniform_live_value_cold_authority",
++      "claim_class": "blocked",
++      "evidence_field": "uniform_belief_value_audit_positive_score",
++      "observed_value": null,
++      "task_id": "exp7045-uniform-belief-value-cold-audit"
++    },
++    {
++      "all_abstain": false,
++      "artifact_hash": null,
++      "claim": "selective_learning_safety",
++      "claim_class": "blocked",
++      "continuous_self_learning_task": null,
++      "evidence_field": null,
++      "nontrivial_score": null,
++      "observed_value": null,
++      "safety_score": null,
++      "task_id": "exp7047-selective-belief-exact-advantage-csl"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "selective_live_transfer",
++      "claim_class": "blocked",
++      "evidence_field": "selective_belief_live_value_positive_score",
++      "observed_value": null,
++      "policy_hash": null,
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    },
++    {
++      "claim": "incidental_arc_solve",
++      "claim_class": "null",
++      "game_level_solve_claim": false,
++      "headline_eligible": false,
++      "solve_provenance": null,
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "claim": "incidental_arc_solve",
++      "claim_class": "null",
++      "game_level_solve_claim": false,
++      "headline_eligible": false,
++      "solve_provenance": null,
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "claim": "incidental_arc_solve",
++      "claim_class": "null",
++      "game_level_solve_claim": false,
++      "headline_eligible": false,
++      "solve_provenance": null,
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "claim": "incidental_arc_solve",
++      "claim_class": "null",
++      "game_level_solve_claim": false,
++      "headline_eligible": false,
++      "solve_provenance": null,
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    },
++    {
++      "claim": "hardware_execution_or_performance",
++      "claim_class": "null",
++      "evidence": "V617 contains no hardware task or changed authenticated hardware receipt.",
++      "headline_eligible": false
++    },
++    {
++      "branch": "identity",
++      "disposition": "repair",
++      "release_mode": null
++    },
++    {
++      "branch": "uniform_belief",
++      "disposition": "hold",
++      "release_mode": null
++    },
++    {
++      "branch": "selective_learning",
++      "disposition": "hold",
++      "policy_hash": null,
++      "release_mode": null,
++      "rollback_ready": false
++    }
++  ],
++  "run_date": "20260906",
++  "schema": "carnot.exp7049.v617_capstone_disposition.v1",
++  "selective_transfer_claim_rows": [
++    {
++      "artifact_hash": null,
++      "claim": "selective_live_transfer",
++      "claim_class": "blocked",
++      "evidence_field": "selective_belief_live_value_positive_score",
++      "observed_value": null,
++      "policy_hash": null,
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    }
++  ],
++  "solve_claim_rows": [
++    {
++      "claim": "incidental_arc_solve",
++      "claim_class": "null",
++      "game_level_solve_claim": false,
++      "headline_eligible": false,
++      "solve_provenance": null,
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "claim": "incidental_arc_solve",
++      "claim_class": "null",
++      "game_level_solve_claim": false,
++      "headline_eligible": false,
++      "solve_provenance": null,
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "claim": "incidental_arc_solve",
++      "claim_class": "null",
++      "game_level_solve_claim": false,
++      "headline_eligible": false,
++      "solve_provenance": null,
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "claim": "incidental_arc_solve",
++      "claim_class": "null",
++      "game_level_solve_claim": false,
++      "headline_eligible": false,
++      "solve_provenance": null,
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    }
++  ],
++  "source_artifact_hashes": {
++    "openspec/capabilities/capstone/spec.md": "sha256:d17e32bb14efcf2efddf30436b339d7724291363c57e06d13ef797603d30dcf8",
++    "openspec/change-proposals/research-roadmap-vNEXT.md": null,
++    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++    "research-roadmap.yaml": "sha256:9f23b5afff18a768548b546cdc7ac3d71559d2dfcb7c790fef43905ea7e8d46f",
++    "results/experiment_7038_v617_active_contract_preflight.json": "sha256:f85ba16c70b989b18cf2a87a709bf8dca61bcb304401e2d04f85695264b04e0b",
++    "results/experiment_7039_v617_model_report_forensics.json": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++    "results/experiment_7040_v617_typed_identity_bridge.json": "sha256:b8ededb43d80786e2ec7b747ef2fd19cbae080ea12fbdb1a9e4a653af9dffec3",
++    "results/experiment_7041_v617_identity_attack_audit.json": null,
++    "results/experiment_7042_v617_belief_shadow_trace.json": null,
++    "results/experiment_7043_v617_belief_shadow_cold_audit.json": null,
++    "results/experiment_7044_v617_uniform_belief_live_ab.json": null,
++    "results/experiment_7045_v617_uniform_belief_cold_audit.json": null,
++    "results/experiment_7046_v617_frontier_stratified_curriculum.json": null,
++    "results/experiment_7047_v617_selective_belief_csl.json": null,
++    "results/experiment_7048_v617_selective_belief_live_ab.json": null
++  },
++  "task_artifact_rows": [
++    {
++      "artifact_hash": "sha256:f85ba16c70b989b18cf2a87a709bf8dca61bcb304401e2d04f85695264b04e0b",
++      "artifact_path": "results/experiment_7038_v617_active_contract_preflight.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_v617_active_contract_preflight_prerequisite_missing",
++      "integrity_errors": [],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++          "matches": true,
++          "observed_hash": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
++          "path": "CLAUDE.md"
++        },
++        {
++          "declared_hash": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++          "matches": true,
++          "observed_hash": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++          "path": "CODEX.md"
++        },
++        {
++          "declared_hash": "sha256:eb0463e4259ff2a35def1aa2e8b5916fa288c706ed971b8284f9643334b32a66",
++          "matches": true,
++          "observed_hash": "sha256:eb0463e4259ff2a35def1aa2e8b5916fa288c706ed971b8284f9643334b32a66",
++          "path": "openspec/capabilities/research-reporting/spec.md"
++        },
++        {
++          "declared_hash": null,
++          "matches": true,
++          "observed_hash": null,
++          "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
++        },
++        {
++          "declared_hash": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++          "matches": true,
++          "observed_hash": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++          "path": "ops/exclusion_manifest.yaml"
++        },
++        {
++          "declared_hash": "sha256:70d0fa9aac95f2de63ed1cd7f2f0c2f992e083b4cd0fecbecda2ba5d6d8e36e9",
++          "matches": true,
++          "observed_hash": "sha256:70d0fa9aac95f2de63ed1cd7f2f0c2f992e083b4cd0fecbecda2ba5d6d8e36e9",
++          "path": "python/carnot/experiment_7038_v617_active_contract_preflight.py"
++        },
++        {
++          "declared_hash": "sha256:fbe111ee257416db996b7c47ebc5e88fe565ceb84f08d0bc887e9a214bc1784c",
++          "matches": true,
++          "observed_hash": "sha256:fbe111ee257416db996b7c47ebc5e88fe565ceb84f08d0bc887e9a214bc1784c",
++          "path": "research-complete.yaml"
++        },
++        {
++          "declared_hash": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++          "matches": true,
++          "observed_hash": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++          "path": "research-program.md"
++        },
++        {
++          "declared_hash": "sha256:83ec41ee3742c21ed44b247b81a2fad69955015f8e353b6fa6f5ad201d14c7db",
++          "matches": true,
++          "observed_hash": "sha256:83ec41ee3742c21ed44b247b81a2fad69955015f8e353b6fa6f5ad201d14c7db",
++          "path": "research-references.md"
++        },
++        {
++          "declared_hash": null,
++          "matches": true,
++          "observed_hash": null,
++          "path": "research-roadmap-next.yaml"
++        },
++        {
++          "declared_hash": "sha256:9f23b5afff18a768548b546cdc7ac3d71559d2dfcb7c790fef43905ea7e8d46f",
++          "matches": true,
++          "observed_hash": "sha256:9f23b5afff18a768548b546cdc7ac3d71559d2dfcb7c790fef43905ea7e8d46f",
++          "path": "research-roadmap.yaml"
++        },
++        {
++          "declared_hash": "sha256:1d53919a34330b3438f3470fcb276d445fc642ee3fecdeba6f890a04a7f55249",
++          "matches": true,
++          "observed_hash": "sha256:1d53919a34330b3438f3470fcb276d445fc642ee3fecdeba6f890a04a7f55249",
++          "path": "results/experiment_7028_v616_active_contract_preflight.json"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
++          "matches": true,
++          "observed_hash": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
++          "path": "scripts/audit_roadmap_gates.py"
++        },
++        {
++          "declared_hash": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
++          "matches": true,
++          "observed_hash": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
++          "path": "scripts/conductor_gates.py"
++        },
++        {
++          "declared_hash": "sha256:cc5a6a8dd9edb0991599939357148e0e8783e067440d6359fcaa2715a4e381a2",
++          "matches": true,
++          "observed_hash": "sha256:cc5a6a8dd9edb0991599939357148e0e8783e067440d6359fcaa2715a4e381a2",
++          "path": "scripts/experiments/experiment_7038_v617_active_contract_preflight.py"
++        },
++        {
++          "declared_hash": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++          "matches": true,
++          "observed_hash": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++          "path": "scripts/validate_prior_failures.py"
++        },
++        {
++          "declared_hash": "sha256:95652fb6221b0ca1b0fe15d657c80a43c437a653e2a03907ba1d0e0a0a1411e5",
++          "matches": true,
++          "observed_hash": "sha256:95652fb6221b0ca1b0fe15d657c80a43c437a653e2a03907ba1d0e0a0a1411e5",
++          "path": "tests/python/test_experiment_7038_v617_active_contract_preflight.py"
++        }
++      ],
++      "task_id": "exp7038-v617-active-contract-preflight"
++    },
++    {
++      "artifact_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++      "artifact_path": "results/experiment_7039_v617_model_report_forensics.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "positive",
++      "effective_verdict_class": "disqualified",
++      "honest_verdict": "complete_positive_arc_report_channel_forensics_ready",
++      "integrity_errors": [
++        "reproducibility_checksum_mismatch",
++        "source_artifact_hash_mismatch",
++        "flagged_adversarial"
++      ],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:b9a594af69939bb38565161ba8fa10a4117721f421972d8d4e8174c89d102952",
++          "matches": false,
++          "observed_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "path": "openspec/capabilities/arc-agi/spec.md"
++        },
++        {
++          "declared_hash": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
++          "matches": false,
++          "observed_hash": "sha256:c1b300ba2b0fd9611500b36432173695c777f8c9fa01217f9ebf83a52033ab10",
++          "path": "python/carnot/agentic/arc_executable_world_model.py"
++        },
++        {
++          "declared_hash": "sha256:269a9c00f99e7496dcd7153e0de5223e758efd2c8efbc4fb7405ed925e1e01c8",
++          "matches": false,
++          "observed_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "path": "python/carnot/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "matches": true,
++          "observed_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "path": "python/carnot/gpu_lease_phase_journal.py"
++        },
++        {
++          "declared_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "matches": true,
++          "observed_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "path": "python/carnot/inference/sota_models.py"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "matches": true,
++          "observed_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "path": "scripts/experiment_template.py"
++        },
++        {
++          "declared_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "matches": true,
++          "observed_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "path": "scripts/experiments/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:845f80c04fa0b5003c2e9435c09c6736f1c534b4d4619e6aab9cb83a4869421d",
++          "matches": false,
++          "observed_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "path": "tests/python/test_experiment_7039_v617_model_report_forensics.py"
++        }
++      ],
++      "task_id": "exp7039-live-model-report-channel-forensics"
++    },
++    {
++      "artifact_hash": "sha256:b8ededb43d80786e2ec7b747ef2fd19cbae080ea12fbdb1a9e4a653af9dffec3",
++      "artifact_path": "results/experiment_7040_v617_typed_identity_bridge.json",
++      "artifact_state": "present",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "disqualified",
++      "honest_verdict": "blocked_exp7039_artifact_invalid",
++      "integrity_errors": [
++        "honest_verdict_terminal_prefix_missing",
++        "source_artifact_hash_mismatch"
++      ],
++      "source_hash_rows": [
++        {
++          "declared_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "matches": true,
++          "observed_hash": "sha256:0b5c8673dd62a9f686cbe5ba33bd7aef92079f4d679e9ac351d9d443c0d01018",
++          "path": "openspec/capabilities/arc-agi/spec.md"
++        },
++        {
++          "declared_hash": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
++          "matches": false,
++          "observed_hash": "sha256:c1b300ba2b0fd9611500b36432173695c777f8c9fa01217f9ebf83a52033ab10",
++          "path": "python/carnot/agentic/arc_executable_world_model.py"
++        },
++        {
++          "declared_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "matches": true,
++          "observed_hash": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
++          "path": "python/carnot/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "matches": true,
++          "observed_hash": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
++          "path": "python/carnot/gpu_lease_phase_journal.py"
++        },
++        {
++          "declared_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "matches": true,
++          "observed_hash": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
++          "path": "python/carnot/inference/sota_models.py"
++        },
++        {
++          "declared_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "matches": true,
++          "observed_hash": "sha256:1b1062286923a1a79ee878acb43e5f8e50ff49bec2dd0c383f25a851a8a9ee15",
++          "path": "results/experiment_7032_repaired_belief_shadow_live_trace.json"
++        },
++        {
++          "declared_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++          "matches": true,
++          "observed_hash": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
++          "path": "results/experiment_7039_v617_model_report_forensics.json"
++        },
++        {
++          "declared_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "matches": true,
++          "observed_hash": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
++          "path": "scripts/experiment_template.py"
++        },
++        {
++          "declared_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "matches": true,
++          "observed_hash": "sha256:3931770778b6bf63f1dbc6293513374285996e2480c613b5b37ce5f6ead3e959",
++          "path": "scripts/experiments/experiment_7039_v617_model_report_forensics.py"
++        },
++        {
++          "declared_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "matches": true,
++          "observed_hash": "sha256:4a31398bf600274547731c618e8acb76bc8a337082ee62e9171f5db7b544f074",
++          "path": "tests/python/test_experiment_7039_v617_model_report_forensics.py"
++        }
++      ],
++      "task_id": "exp7040-typed-model-identity-report-bridge"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7041_v617_identity_attack_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7041-identity-report-channel-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7042_v617_belief_shadow_trace.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7042-typed-identity-belief-shadow-trace"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7043_v617_belief_shadow_cold_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7043-belief-shadow-trace-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7044_v617_uniform_belief_live_ab.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7045_v617_uniform_belief_cold_audit.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7045-uniform-belief-value-cold-audit"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7046_v617_frontier_stratified_curriculum.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7046-frontier-stratified-exact-outcome-curriculum"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7047_v617_selective_belief_csl.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7047-selective-belief-exact-advantage-csl"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7048_v617_selective_belief_live_ab.json",
++      "artifact_state": "missing",
++      "declared_verdict_class": null,
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_upstream_artifact_missing",
++      "integrity_errors": [
++        "artifact_missing"
++      ],
++      "source_hash_rows": [],
++      "task_id": "exp7048-selective-belief-two-model-live-ab"
++    },
++    {
++      "artifact_hash": null,
++      "artifact_path": "results/experiment_7049_v617_capstone_disposition.json",
++      "artifact_state": "generated_by_this_run",
++      "declared_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "honest_verdict": "complete_blocked_v617_capstone_input_missing",
++      "integrity_errors": [],
++      "source_hash_rows": [],
++      "task_id": "exp7049-v617-evidence-disposition-capstone"
++    }
++  ],
++  "uniform_value_claim_rows": [
++    {
++      "artifact_hash": null,
++      "claim": "uniform_live_value",
++      "claim_class": "blocked",
++      "evidence_field": "uniform_belief_value_positive_score",
++      "observed_value": null,
++      "task_id": "exp7044-uniform-belief-two-model-live-ab"
++    },
++    {
++      "artifact_hash": null,
++      "claim": "uniform_live_value_cold_authority",
++      "claim_class": "blocked",
++      "evidence_field": "uniform_belief_value_audit_positive_score",
++      "observed_value": null,
++      "task_id": "exp7045-uniform-belief-value-cold-audit"
++    }
++  ],
++  "v617_capstone_complete_score": 0,
++  "verdict_class": "blocked",
++  "verdict_consistency_rows": [
++    {
++      "consistent": true,
++      "declared_verdict_class": "blocked",
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7038-v617-active-contract-preflight",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": "positive",
++      "derived_verdict_class": "positive",
++      "effective_verdict_class": "disqualified",
++      "task_id": "exp7039-live-model-report-channel-forensics",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": false,
++      "declared_verdict_class": "blocked",
++      "derived_verdict_class": null,
++      "effective_verdict_class": "disqualified",
++      "task_id": "exp7040-typed-model-identity-report-bridge",
++      "terminal_prefix_valid": false
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": null,
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7041-identity-report-channel-cold-audit",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": null,
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7042-typed-identity-belief-shadow-trace",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": null,
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7043-belief-shadow-trace-cold-audit",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": null,
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7044-uniform-belief-two-model-live-ab",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": null,
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7045-uniform-belief-value-cold-audit",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": null,
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7046-frontier-stratified-exact-outcome-curriculum",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": null,
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7047-selective-belief-exact-advantage-csl",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": null,
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7048-selective-belief-two-model-live-ab",
++      "terminal_prefix_valid": true
++    },
++    {
++      "consistent": true,
++      "declared_verdict_class": "blocked",
++      "derived_verdict_class": "blocked",
++      "effective_verdict_class": "blocked",
++      "task_id": "exp7049-v617-evidence-disposition-capstone",
++      "terminal_prefix_valid": true
++    }
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_7049_v617_capstone_disposition.py b/scripts/experiments/experiment_7049_v617_capstone_disposition.py
+new file mode 100644
+index 0000000000..ce07beb62f
+--- /dev/null
++++ b/scripts/experiments/experiment_7049_v617_capstone_disposition.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run the receipt-only V617 capstone from REQ-CAP-7049."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++ROOT = Path(__file__).resolve().parents[2]
++PYTHON = ROOT / "python"
++if str(PYTHON) not in sys.path:
++    sys.path.insert(0, str(PYTHON))
++
++from carnot.experiment_7049_v617_capstone_disposition import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_7049_v617_capstone_disposition.py b/tests/python/test_experiment_7049_v617_capstone_disposition.py
+new file mode 100644
+index 0000000000..d101e54689
+--- /dev/null
++++ b/tests/python/test_experiment_7049_v617_capstone_disposition.py
+@@ -0,0 +1,521 @@
++"""Tests for REQ-CAP-7049 and SCENARIO-CAP-7049-* branches."""
++
++from __future__ import annotations
++
++import argparse
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot import experiment_7049_v617_capstone_disposition as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++def _roadmap() -> dict:
++    tasks = []
++    for index, task_id in enumerate(mod.EXPECTED_TASK_IDS):
++        number = 7038 + index
++        task = {
++            "id": task_id,
++            "title": f"Task {number}",
++            "deliverable": mod.TASK_PATHS[task_id],
++            "prompt": "REQUIRED ARTIFACT FIELDS: rows; verdict_class; honest_verdict.",
++        }
++        gates = mod.EXPECTED_GATES.get(task_id, ())
++        if gates:
++            task["gated_on"] = [
++                {"upstream": upstream, "artifact_field": field, "op": "==", "value": 1}
++                for upstream, field in gates
++            ]
++        tasks.append(task)
++    return {"milestone": mod.MILESTONE, "tasks": tasks}
++
++
++def _design(roadmap: dict) -> str:
++    rows = []
++    for order, task in enumerate(roadmap["tasks"], 1):
++        gates = task.get("gated_on", [])
++        prerequisites = "; ".join(
++            f"Exp{mod.task_number(gate['upstream'])} `{gate['artifact_field']} == {gate['value']}`"
++            for gate in gates
++        ) or "None"
++        rows.append(
++            f"| {order} | `{task['id']}` | {task['title']} | "
++            f"`{task['deliverable']}` | {prerequisites} |"
++        )
++    return (
++        "# V617\n\n"
++        f"**Milestone:** `{mod.MILESTONE}`\n\n"
++        "## 7. Phases and Exact Task Contract\n\n"
++        "| Order | Experiment | Title | Deliverable | Structured prerequisites |\n"
++        "|---:|---|---|---|---|\n"
++        + "\n".join(rows)
++        + "\n\n### Phase I\n"
++    )
++
++
++def _write_contract(root: Path) -> dict:
++    roadmap = _roadmap()
++    (root / "openspec/change-proposals").mkdir(parents=True)
++    (root / "openspec/capabilities/capstone").mkdir(parents=True)
++    (root / "results").mkdir()
++    (root / "ops").mkdir()
++    (root / "_bmad").mkdir()
++    (root / "research-roadmap.yaml").write_text(yaml.safe_dump(roadmap, sort_keys=False))
++    (root / mod.DESIGN_PATH).write_text(_design(roadmap))
++    (root / mod.EXCLUSION_PATH).write_text("retired: []\nretired_experiments: []\nretired_extras: []\n")
++    (root / mod.SPEC_PATH).write_text("REQ-CAP-7049\n")
++    (root / "ops/status.md").write_text("status\n")
++    (root / "ops/changelog.md").write_text("changelog\n")
++    (root / "_bmad/traceability.md").write_text("traceability\n")
++    return roadmap
++
++
++def _artifact(verdict_class: str = "positive", **fields: object) -> dict:
++    verdicts = {
++        "positive": "complete_positive_fixture",
++        "null": "complete_null_fixture",
++        "blocked": "complete_blocked_fixture",
++        "disqualified": "complete_disqualified_fixture",
++        "partial": "complete_partial_fixture",
++        "circular_positive": "complete_circular_positive_fixture",
++    }
++    artifact = {
++        "verdict_class": verdict_class,
++        "honest_verdict": verdicts[verdict_class],
++        "rows": [{"row_id": "fixture", "terminal": True}],
++        "source_artifact_hashes": {},
++        "verifier_is_oracle": False,
++        **fields,
++    }
++    artifact["reproducibility_checksum"] = mod.upstream_checksum(artifact)
++    return artifact
++
++
++def _positive_artifacts() -> dict[str, dict]:
++    values = {
++        7038: {"v617_task_contract_conforms_score": 1},
++        7039: {"arc_report_channel_forensics_ready_score": 1},
++        7040: {"arc_typed_identity_bridge_ready_score": 1},
++        7041: {"arc_identity_report_attack_audit_ready_score": 1},
++        7042: {"belief_shadow_transport_ready_score": 1, "game_level_solve_claim": False},
++        7043: {"belief_shadow_trace_audit_ready_score": 1, "game_level_solve_claim": False},
++        7044: {
++            "uniform_belief_live_ab_complete_score": 1,
++            "uniform_belief_value_positive_score": 1,
++            "game_level_solve_claim": False,
++        },
++        7045: {
++            "uniform_belief_value_audit_complete_score": 1,
++            "uniform_belief_value_audit_positive_score": 1,
++        },
++        7046: {"belief_frontier_curriculum_ready_score": 1},
++        7047: {
++            "selective_belief_policy_safety_score": 1,
++            "selective_belief_policy_nontrivial_score": 1,
++            "abstention_count": 2,
++            "helpful_use_count": 8,
++            "harmful_use_count": 0,
++            "final_policy_hash": "sha256:policy",
++            "continuous_self_learning_task": True,
++        },
++        7048: {
++            "selective_belief_live_ab_complete_score": 1,
++            "selective_belief_live_value_positive_score": 1,
++            "final_policy_hash": "sha256:policy",
++            "rollback_rows": [{"passed": True}],
++            "game_level_solve_claim": False,
++            "continuous_self_learning_task": True,
++        },
++    }
++    return {mod.EXPECTED_TASK_IDS[n - 7038]: _artifact(**values[n]) for n in values}
++
++
++def _write_artifacts(root: Path, artifacts: dict[str, dict]) -> None:
++    for task_id, artifact in artifacts.items():
++        path = root / mod.TASK_PATHS[task_id]
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(artifact, indent=2) + "\n")
++
++
++def _refresh(artifact: dict) -> None:
++    artifact["reproducibility_checksum"] = mod.upstream_checksum(artifact)
++
++
++def _refresh_capstone(artifact: dict) -> None:
++    artifact["reproducibility_checksum"] = mod.reproducibility_checksum(artifact)
++
++
++def test_req_cap_7049_is_specified_before_implementation() -> None:
++    """REQ-CAP-7049: the capstone contract exists before its implementation."""
++    text = (REPO / "openspec/capabilities/capstone/spec.md").read_text()
++    assert "REQ-CAP-7049" in text
++    assert "SCENARIO-CAP-7049-ALL-POSITIVE" in text
++    assert "SCENARIO-CAP-7049-INTEGRITY" in text
++
++
++def test_all_positive_releases_only_default_off_canary(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-ALL-POSITIVE: release stays bounded and reversible."""
++    _write_contract(tmp_path)
++    _write_artifacts(tmp_path, _positive_artifacts())
++
++    artifact = mod.build_capstone(tmp_path, "20260906")
++    decisions = {row["branch"]: row for row in artifact["release_hold_repair_retire_rows"]}
++
++    assert mod.REQUIRED_FIELDS <= artifact.keys()
++    assert artifact["v617_capstone_complete_score"] == 1
++    assert artifact["verdict_class"] == "positive"
++    assert decisions["identity"]["disposition"] == "release"
++    assert decisions["uniform_belief"]["disposition"] == "release"
++    assert decisions["selective_learning"]["disposition"] == "release"
++    assert decisions["selective_learning"]["release_mode"] == "default_off_canary"
++    assert decisions["selective_learning"]["policy_hash"] == "sha256:policy"
++    assert decisions["selective_learning"]["rollback_ready"] is True
++    assert artifact["production_default_unchanged"] is True
++    assert len(artifact["next_handoff"]) == 1
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_identity_block_is_a_repair_disposition(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-BRANCHES: a named identity defect requires repair."""
++    _write_contract(tmp_path)
++    artifacts = _positive_artifacts()
++    identity = artifacts[mod.EXPECTED_TASK_IDS[2]]
++    identity.update(
++        verdict_class="blocked",
++        honest_verdict="complete_blocked_identity_hash_mismatch",
++        arc_typed_identity_bridge_ready_score=0,
++    )
++    _refresh(identity)
++    for index in range(3, 11):
++        blocked = artifacts[mod.EXPECTED_TASK_IDS[index]]
++        blocked.update(verdict_class="blocked", honest_verdict="complete_blocked_identity_gate")
++        for field in mod.OWN_GATE_FIELDS.get(mod.EXPECTED_TASK_IDS[index], ()):
++            blocked[field] = 0
++        _refresh(blocked)
++    _write_artifacts(tmp_path, artifacts)
++
++    artifact = mod.build_capstone(tmp_path, "20260906")
++    decisions = {row["branch"]: row for row in artifact["release_hold_repair_retire_rows"]}
++
++    assert decisions["identity"]["disposition"] == "repair"
++
++
++def test_uniform_null_retires_only_exact_influence_scope(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-BRANCHES: a reproduced uniform null retires exact use."""
++    _write_contract(tmp_path)
++    artifacts = _positive_artifacts()
++    for index in (6, 7):
++        uniform = artifacts[mod.EXPECTED_TASK_IDS[index]]
++        uniform.update(verdict_class="null", honest_verdict="complete_null_uniform_belief")
++        for key in tuple(uniform):
++            if "positive_score" in key:
++                uniform[key] = 0
++        _refresh(uniform)
++    _write_artifacts(tmp_path, artifacts)
++
++    artifact = mod.build_capstone(tmp_path, "20260906")
++    decisions = {row["branch"]: row for row in artifact["release_hold_repair_retire_rows"]}
++
++    assert decisions["uniform_belief"]["disposition"] == "retire"
++    assert artifact["exclusion_manifest_rows"][0]["scope_key"] == mod.UNIFORM_SCOPE_KEY
++    assert artifact["exclusion_manifest_rows"][0]["preserved_scopes"] == [
++        "safe_belief_ledger",
++        "bounded_belief_query_api",
++        "exact_outcome_memory_substrate",
++    ]
++    assert artifact["verdict_class"] == "null"
++    assert artifact["v617_capstone_complete_score"] == 1
++
++
++def test_uniform_disqualification_and_tampered_hash_require_repair(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-INTEGRITY: invalid uniform evidence cannot promote."""
++    _write_contract(tmp_path)
++    artifacts = _positive_artifacts()
++    uniform = artifacts[mod.EXPECTED_TASK_IDS[7]]
++    uniform.update(
++        verdict_class="disqualified",
++        honest_verdict="complete_disqualified_uniform_chronology",
++        uniform_belief_value_audit_positive_score=0,
++    )
++    _refresh(uniform)
++    artifacts[mod.EXPECTED_TASK_IDS[1]]["rows"].append({"tampered": True})
++    _write_artifacts(tmp_path, artifacts)
++
++    artifact = mod.build_capstone(tmp_path, "20260906")
++    decisions = {row["branch"]: row for row in artifact["release_hold_repair_retire_rows"]}
++    task_rows = {row["task_id"]: row for row in artifact["task_artifact_rows"]}
++
++    assert decisions["uniform_belief"]["disposition"] == "repair"
++    assert task_rows[mod.EXPECTED_TASK_IDS[1]]["effective_verdict_class"] == "disqualified"
++    assert "reproducibility_checksum_mismatch" in task_rows[mod.EXPECTED_TASK_IDS[1]]["integrity_errors"]
++    assert artifact["verdict_class"] == "disqualified"
++
++
++def test_safe_all_abstain_is_null_and_keeps_live_transfer_blocked(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-BRANCHES: safe all-abstain learning is a null result."""
++    _write_contract(tmp_path)
++    artifacts = _positive_artifacts()
++    learner = artifacts[mod.EXPECTED_TASK_IDS[9]]
++    learner.update(
++        verdict_class="null",
++        honest_verdict="complete_null_safe_all_abstain",
++        selective_belief_policy_nontrivial_score=0,
++        abstention_count=30,
++        helpful_use_count=0,
++        harmful_use_count=0,
++    )
++    _refresh(learner)
++    transfer = artifacts[mod.EXPECTED_TASK_IDS[10]]
++    transfer.update(
++        verdict_class="blocked",
++        honest_verdict="complete_blocked_selective_nontrivial_gate",
++        selective_belief_live_ab_complete_score=0,
++        selective_belief_live_value_positive_score=0,
++    )
++    _refresh(transfer)
++    _write_artifacts(tmp_path, artifacts)
++
++    artifact = mod.build_capstone(tmp_path, "20260906")
++
++    assert artifact["continuous_learning_claim_rows"][0]["claim_class"] == "null"
++    assert artifact["continuous_learning_claim_rows"][0]["all_abstain"] is True
++    assert artifact["selective_transfer_claim_rows"][0]["claim_class"] == "blocked"
++    assert artifact["release_hold_repair_retire_rows"][2]["disposition"] == "hold"
++
++
++def test_selective_gate_block_and_missing_artifact_are_terminal_blocked(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-MISSING: upstream absence is blocked, never partial."""
++    _write_contract(tmp_path)
++    artifacts = _positive_artifacts()
++    learner = artifacts[mod.EXPECTED_TASK_IDS[9]]
++    learner.update(
++        verdict_class="blocked",
++        honest_verdict="complete_blocked_curriculum_gate",
++        selective_belief_policy_safety_score=0,
++        selective_belief_policy_nontrivial_score=0,
++    )
++    _refresh(learner)
++    artifacts.pop(mod.EXPECTED_TASK_IDS[6])
++    artifacts.pop(mod.EXPECTED_TASK_IDS[10])
++    for index in (7, 8):
++        blocked = artifacts[mod.EXPECTED_TASK_IDS[index]]
++        blocked.update(verdict_class="blocked", honest_verdict="complete_blocked_missing_uniform_input")
++        for field in mod.OWN_GATE_FIELDS[mod.EXPECTED_TASK_IDS[index]]:
++            blocked[field] = 0
++        for field in mod.VALUE_POSITIVE_FIELDS.values():
++            if field in blocked:
++                blocked[field] = 0
++        _refresh(blocked)
++    _write_artifacts(tmp_path, artifacts)
++
++    artifact = mod.build_capstone(tmp_path, "20260906")
++
++    assert artifact["v617_capstone_complete_score"] == 1
++    assert artifact["verdict_class"] == "blocked"
++    assert len(artifact["blocked_input_rows"]) >= 2
++    assert all(row["effective_verdict_class"] != "partial" for row in artifact["blocked_input_rows"])
++    assert artifact["release_hold_repair_retire_rows"][2]["disposition"] == "hold"
++
++
++def test_markdown_yaml_mismatch_is_terminal_disqualification(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-CONTRACT: independent contract mismatch disqualifies."""
++    _write_contract(tmp_path)
++    _write_artifacts(tmp_path, _positive_artifacts())
++    design = tmp_path / mod.DESIGN_PATH
++    design.write_text(design.read_text().replace("Task 7044", "Changed task 7044"))
++
++    artifact = mod.build_capstone(tmp_path, "20260906")
++
++    assert artifact["verdict_class"] == "disqualified"
++    assert artifact["v617_capstone_complete_score"] == 0
++    assert any(not row["matches"] for row in artifact["roadmap_contract_rows"])
++    assert artifact["honest_verdict"].startswith("complete_disqualified")
++
++
++def test_missing_design_blocks_capstone_input_but_still_inventories_rows(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-MISSING: a missing capstone input sets complete score zero."""
++    _write_contract(tmp_path)
++    _write_artifacts(tmp_path, _positive_artifacts())
++    (tmp_path / mod.DESIGN_PATH).unlink()
++
++    artifact = mod.build_capstone(tmp_path, "20260906")
++
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["v617_capstone_complete_score"] == 0
++    assert len(artifact["task_artifact_rows"]) == 12
++    assert artifact["gate_check_summary"]["failed_check"] == "v617_markdown_readable"
++    assert artifact["gate_check_summary"]["expected_value"] == "readable_nonempty_file"
++
++
++def test_validator_and_cli_reject_mutation_and_write_atomically(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-INTEGRITY: final schema and checksum are self-checking."""
++    _write_contract(tmp_path)
++    _write_artifacts(tmp_path, _positive_artifacts())
++    artifact = mod.build_capstone(tmp_path, "20260906")
++    broken = dict(artifact)
++    broken.pop("rows")
++    assert mod.validate_artifact(broken) == ["missing_required_fields:rows"]
++    changed = dict(artifact)
++    changed["production_default_unchanged"] = False
++    assert "production_default_changed" in mod.validate_artifact(changed)
++
++    output = tmp_path / "results/out.json"
++    assert mod.main(["--date", "20260906", "--root", str(tmp_path), "--output", str(output)]) == 0
++    written = json.loads(output.read_text())
++    assert written["reproducibility_checksum"] == mod.reproducibility_checksum(written)
++    assert not list(output.parent.glob("*.tmp"))
++
++
++def test_real_repository_preserves_current_terminal_block() -> None:
++    """REQ-CAP-7049: current missing design is reported without changing defaults."""
++    artifact = mod.build_capstone(REPO, "20260906")
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["gate_check_summary"]["failed_check"] == "v617_markdown_readable"
++    assert artifact["production_default_unchanged"] is True
++    assert artifact["observed_id_order"] == list(mod.EXPECTED_TASK_IDS)
++
++
++def test_defensive_parsers_and_unreadable_artifacts_remain_terminal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """SCENARIO-CAP-7049-MISSING: malformed inputs remain explicit evidence."""
++    assert mod._class_from_verdict("complete_circular-positive_fixture") == "circular_positive"
++    assert mod._class_from_verdict("complete_partial_fixture") == "partial"
++    assert mod._canonical_gates({"gated_on": "invalid"}) == []
++    assert mod._load_yaml_contract(tmp_path / "missing.yaml")[2].startswith("FileNotFoundError")
++    invalid = tmp_path / "invalid.yaml"
++    invalid.write_text("tasks: wrong\n")
++    assert mod._load_yaml_contract(invalid)[2] == "active roadmap is not a task mapping"
++    invalid.write_text("tasks:\n  - bad\n")
++    assert mod._load_yaml_contract(invalid)[1][0]["id"] is None
++    assert mod._source_hash_rows(tmp_path, {"source_artifact_hashes": []})[0]["matches"] is False
++
++    probe = tmp_path / "probe"
++    probe.write_text("x")
++
++    def fail_read(_: Path) -> bytes:
++        raise OSError("denied")
++
++    monkeypatch.setattr(Path, "read_bytes", fail_read)
++    assert mod._readable_file(probe)[1].startswith("OSError")
++    monkeypatch.undo()
++
++    _write_contract(tmp_path)
++    artifacts = _positive_artifacts()
++    _write_artifacts(tmp_path, artifacts)
++    (tmp_path / mod.TASK_PATHS[mod.EXPECTED_TASK_IDS[0]]).write_text("{")
++    (tmp_path / mod.TASK_PATHS[mod.EXPECTED_TASK_IDS[1]]).write_text("[]")
++    rows, _ = mod._task_rows(tmp_path)
++    assert rows[0]["artifact_state"] == "unreadable"
++    assert rows[1]["integrity_errors"] == ["artifact_not_object"]
++
++
++def test_integrity_failure_classes_and_hold_table(tmp_path: Path) -> None:
++    """SCENARIO-CAP-7049-INTEGRITY: every declared field failure is checked."""
++    _write_contract(tmp_path)
++    artifacts = _positive_artifacts()
++    cases = {
++        0: {"verdict_class": "unknown"},
++        1: {"honest_verdict": "complete_null_wrong_class"},
++        2: {"rows": None},
++        3: {"arc_identity_report_attack_audit_ready_score": None},
++        4: {"belief_shadow_transport_ready_score": 0},
++        5: {"verdict_class": "blocked", "honest_verdict": "complete_blocked_fixture", "belief_shadow_trace_audit_ready_score": 1},
++        6: {"uniform_belief_value_positive_score": None},
++        7: {"uniform_belief_value_audit_positive_score": 0},
++    }
++    for index, changes in cases.items():
++        artifacts[mod.EXPECTED_TASK_IDS[index]].update(changes)
++        _refresh(artifacts[mod.EXPECTED_TASK_IDS[index]])
++    oracle = artifacts[mod.EXPECTED_TASK_IDS[8]]
++    oracle["verifier_is_oracle"] = True
++    _refresh(oracle)
++    _write_artifacts(tmp_path, artifacts)
++
++    rows, loaded = mod._task_rows(tmp_path)
++    errors = [error for row in rows for error in row["integrity_errors"]]
++    assert "verdict_class_outside_closed_enum" in errors
++    assert "honest_verdict_class_mismatch" in errors
++    assert "rows_missing_or_not_list" in errors
++    assert errors.count("row_to_headline_mismatch") >= 4
++    assert rows[8]["effective_verdict_class"] == "circular_positive"
++
++    for row in rows[2:6]:
++        row["effective_verdict_class"] = "blocked"
++        row["honest_verdict"] = "complete_blocked_external_resource"
++    decisions = mod._dispositions(rows, loaded)
++    assert decisions[0]["disposition"] == "hold"
++    assert mod._next_handoff(
++        [
++            {"branch": "identity", "disposition": "release"},
++            {"branch": "uniform_belief", "disposition": "repair"},
++            {"branch": "selective_learning", "disposition": "hold"},
++        ],
++        False,
++    )[0]["action"].startswith("repair_the_uniform")
++    assert mod._gate_replay({"tasks": ["invalid"]}, rows, loaded) == []
++
++
++def test_partial_and_circular_outcomes_stay_distinct(tmp_path: Path) -> None:
++    """REQ-CAP-7049: partial and circular inputs cannot become positive evidence."""
++    _write_contract(tmp_path)
++    artifacts = _positive_artifacts()
++    partial = artifacts[mod.EXPECTED_TASK_IDS[0]]
++    partial.update(verdict_class="partial", honest_verdict="complete_partial_fixture")
++    _refresh(partial)
++    _write_artifacts(tmp_path, artifacts)
++    artifact = mod.build_capstone(tmp_path, "20260906")
++    assert artifact["verdict_class"] == "partial"
++    assert artifact["v617_capstone_complete_score"] == 0
++
++    circular = artifacts[mod.EXPECTED_TASK_IDS[0]]
++    circular.update(verdict_class="positive", honest_verdict="complete_positive_fixture", verifier_is_oracle=True)
++    _refresh(circular)
++    _write_artifacts(tmp_path, artifacts)
++    artifact = mod.build_capstone(tmp_path, "20260906")
++    assert artifact["verdict_class"] == "circular_positive"
++
++
++def test_validator_covers_every_final_invariant(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """SCENARIO-CAP-7049-INTEGRITY: final validation fails closed by field."""
++    _write_contract(tmp_path)
++    _write_artifacts(tmp_path, _positive_artifacts())
++    valid = mod.build_capstone(tmp_path, "20260906")
++    mutations = [
++        ("field_principles", {}, "field_principles_invalid"),
++        ("inference_substrate", "wrong", "inference_substrate_invalid"),
++        ("verifier_is_oracle", True, "verifier_is_oracle_invalid"),
++        ("expected_task_count", 11, "expected_task_count_invalid"),
++        ("expected_id_order", [], "expected_id_order_invalid"),
++        ("random_seed", 0, "random_seed_invalid"),
++        ("verdict_class", "unknown", "verdict_class_invalid"),
++        ("honest_verdict", "not_terminal", "honest_verdict_invalid"),
++        ("duration_s", True, "duration_s_invalid"),
++        ("v617_capstone_complete_score", 2, "complete_score_invalid"),
++        ("task_artifact_rows", [], "task_artifact_rows_invalid"),
++        ("release_hold_repair_retire_rows", [], "disposition_rows_invalid"),
++        ("next_handoff", [], "next_handoff_invalid"),
++    ]
++    for field, value, expected in mutations:
++        changed = dict(valid)
++        changed[field] = value
++        _refresh_capstone(changed)
++        assert expected in mod.validate_artifact(changed)
++
++    partial = json.loads(json.dumps(valid))
++    partial["task_artifact_rows"][0]["effective_verdict_class"] = "partial"
++    _refresh_capstone(partial)
++    assert "complete_score_contains_partial" in mod.validate_artifact(partial)
++    blocked = dict(valid)
++    blocked.update(verdict_class="blocked", honest_verdict="complete_blocked_fixture", gate_check_summary={})
++    _refresh_capstone(blocked)
++    assert "blocked_gate_summary_invalid" in mod.validate_artifact(blocked)
++
++    with pytest.raises(argparse.ArgumentTypeError):
++        mod._date_argument("2026-09-06")
++    monkeypatch.setattr(mod, "build_capstone", lambda *args, **kwargs: {})
++    with pytest.raises(SystemExit, match="invalid Exp7049 artifact"):
++        mod.main(["--date", "20260906", "--root", str(tmp_path)])
+-- 
+2.55.0
+

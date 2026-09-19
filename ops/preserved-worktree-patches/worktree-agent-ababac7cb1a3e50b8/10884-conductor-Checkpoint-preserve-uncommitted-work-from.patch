@@ -1,0 +1,629 @@
+From 4a563483f157b7017ed8f66b43aa0d4b1a03ca02 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 08:23:39 -0400
+Subject: [PATCH 10884/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json |   2 +-
+ ops/conductor-log.md         |   2 +
+ ops/conductor-state.json     |   2 +-
+ research-roadmap-next.yaml   | 577 -----------------------------------
+ 4 files changed, 4 insertions(+), 579 deletions(-)
+ delete mode 100644 research-roadmap-next.yaml
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2620328d36..3e59ea50ab 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-09-03T11:01:33Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-09-03T12:23:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 68fb2e2993..9a11b1e7b7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17134,3 +17134,5 @@ code |
+ | 2026-09-03 10:14 UTC | Task-owned runtime receipt adoption | OK | 91 passed, 1 warning in 8.36s |
+ | 2026-09-03 10:40 UTC | V606 SOTA ingestion and method map | OK | 89 passed, 1 warning in 11.44s |
+ | 2026-09-03 10:59 UTC | Exact span-first relation fixture | OK | 113 passed, 1 warning in 8.62s |
++| 2026-09-03 12:18 UTC | Plan milestone 2026.09.607 | OK | 7 tasks proposed |
++| 2026-09-03 12:21 UTC | Milestone 2026.09.607 activated | OK | 7 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c7ff380ef9..d0b1b36db1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 21, "phase": "iteration_start", "started_at": "2026-09-03T11:01:33Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 23, "phase": "iteration_start", "started_at": "2026-09-03T12:23:32Z"}
+\ No newline at end of file
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+deleted file mode 100644
+index 5ed78927ab..0000000000
+--- a/research-roadmap-next.yaml
++++ /dev/null
+@@ -1,577 +0,0 @@
+-milestone: 2026.09.607
+-milestone_title: Grounded learning, non-saturated energy, and internal verification
+-milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+-tasks:
+-- id: exp6927-v607-literature-delta
+-  title: V607 execution-time literature delta and compatibility map
+-  track: research
+-  priority: high
+-  agent_type: claude
+-  model: sonnet
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 120
+-  per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6927_v607_literature_delta.json
+-  prompt: |
+-    CONTEXT:
+-    V607 planning found one new high-value verifier lead, HSRM arXiv:2608.30841, and one
+-    supporting sparse-reward lead, arXiv:2602.00986. Exp6925 also proved that the public ISM
+-    implementation depends on hosted OpenAI services. This task is the milestone's advisory
+-    execution-time SOTA-ingestion slot. No science task gates on it.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/research-references.md and
+-      {project_root}/results/experiment_6925_v606_sota_ingestion.json
+-    - {project_root}/research-roadmap.yaml and
+-      {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+-    - {project_root}/research-complete.yaml and {project_root}/ops/conductor-log.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Recheck the dated V607 source set. Verify paper metadata, implementation state, local-GGUF
+-    compatibility, and any new citation edges. Append only new findings to the reference ledger.
+-    Do not rewrite the locked roadmap or promote an unavailable dependency.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the current reference ledger, active roadmap, dated query plan,
+-       network access policy, and writable results path. On failure, write
+-       blocked_v607_literature_delta with gate_check_summary.
+-    1. Freeze queries, source domains, UTC timestamps, retry limits, and acceptance rules before
+-       network access.
+-    2. Search arXiv first for 2025-2026 work on EBMs for verification, neural constraints, Ising
+-       ML, hallucination detection, KANs, energy-guided decoding, hardware sampling, and continual
+-       constraint learning.
+-    3. Recheck OpenReview, Hugging Face Papers, Semantic Scholar citations to EBT 2507.02092 and
+-       ARM-EBM 2512.15605, official GitHub repositories, Extropic writing, and Logical
+-       Intelligence pages.
+-    4. Deep-check HSRM, Sparse Reward Subsystem, NSVIF, Sampling for Quality, ISM, Memoir,
+-       Solver-Hard, KAN verification, Torx, and Thermalizers.
+-    5. Emit one row for every query and every accepted or rejected finding. Record canonical URL,
+-       date, evidence grade, code state, local compatibility, and exclusion reason.
+-    6. Append only genuinely new verified facts to research-references.md. Preserve all prior
+-       entries. Put future ideas in v608_candidate_rows.
+-    7. Set v607_literature_delta_complete_score=1 when every required source family has a terminal
+-       row, including explicit no-update, unavailable, or incompatible results.
+-    8. Add REQ-REPORT-6927 and focused deterministic ledger tests. Run Ruff for code changes,
+-       OpenSpec coverage, docs audit, artifact-convention audit, verdict-row consistency lint, and
+-       root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and v607_literature_delta_complete_score; preconditions_checked; inference_substrate
+-       (bounded_primary_source_web_research_no_model_inference); duration_s;
+-       source_artifact_hashes; rows; query_rows; source_family_rows; candidate_rows;
+-       accepted_finding_rows; rejected_finding_rows; citation_edge_rows; implementation_rows;
+-       compatibility_rows; ledger_append_rows; v608_candidate_rows; rate_limit_rows; random_seed;
+-       reproducibility_checksum; v607_literature_delta_complete_score; gate_check_summary with the
+-       failed check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class (positive | circular_positive | null | blocked |
+-       disqualified | partial); honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6927_v607_literature_delta.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp6928-sota-runtime-receipt-qualification
+-  title: Dual-GPU SOTA runtime receipt qualification
+-  track: infrastructure
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: true
+-  max_turns: 100
+-  estimated_wall_time_min: 360
+-  per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6928_sota_runtime_receipt_qualification.json
+-  prompt: |
+-    CONTEXT:
+-    Exp6924 made the task-owned runtime receipt helper adoption-ready with deterministic CPU
+-    fixtures. Its honest verdict remained null because it did not prove the contract on a real
+-    SOTA dual-GPU subprocess. V607 needs one advisory hardware receipt before later compute claims.
+-    No science task gates on this infrastructure task.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/python/carnot/task_runtime_receipts.py
+-    - {project_root}/scripts/experiment_template.py
+-    - {project_root}/scripts/inference_sota_models.py
+-    - {project_root}/results/experiment_6924_task_runtime_receipt_adoption.json
+-    - {project_root}/tests/python/test_inference_sota_models.py
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Qualify the existing receipt helper on a bounded live run of all three mandated local GGUF
+-    model families. Prove task ownership, runner identity, CUDA devices, offload, phase intervals,
+-    cache state, sequential model lifecycle, and teardown. Do not build a second telemetry system.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require two authenticated RTX 3090 CUDA devices, cached or resolvable GGUF
+-       files, the existing receipt helper, and enough disk. On failure, write
+-       blocked_sota_runtime_receipt_qualification with gate_check_summary.
+-    1. Add REQ-REPORT-6928 and tests first. Cover PID and GPU ownership, monotonic phases, missing
+-       teardown, UUID mismatch, cache hit and miss, sequential load, and fresh-process replay.
+-    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF,
+-       unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use cached_sota_pair or
+-       the current resolver. Do not call AutoTokenizer on a GGUF repository ID.
+-    3. Run one short deterministic prompt per model. Load models sequentially. Record exact
+-       quantization, model file, runner, command, child PID, GPU UUIDs, layer offload, context,
+-       cache state, sampled VRAM, utilization, and teardown.
+-    4. Re-read the receipt in a fresh process. Recompute phase ordering, device ownership,
+-       concurrency, teardown, and total duration from rows.
+-    5. Reject a copied receipt, a cross-process receipt, an unresolved GPU identity, or missing
+-       teardown. Keep failed model rows.
+-    6. Set sota_runtime_receipt_ready_score=1 only when all three model families have valid
+-       task-owned CUDA receipts and fresh-process replay passes.
+-    7. Run focused tests, Ruff, OpenSpec coverage, the applicable model-loading smoke check,
+-       artifact-convention audit, verdict-row consistency lint, docs audit, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and sota_runtime_receipt_ready_score; preconditions_checked; inference_substrate
+-       (task_owned_local_gguf_cuda_inference); duration_s; source_artifact_hashes; rows;
+-       model_specs; model_rows; model_file_rows; runner_selection_rows; process_lineage_rows;
+-       task_phase_timing_rows; task_gpu_telemetry_rows; model_concurrency_rows;
+-       server_lifecycle_rows; cache_state_rows; teardown_rows; fresh_process_recheck_rows;
+-       forged_receipt_rejection_rows; task_runtime_receipt; random_seed;
+-       reproducibility_checksum; sota_runtime_receipt_ready_score; gate_check_summary with the
+-       failed check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class (positive | circular_positive | null | blocked |
+-       disqualified | partial); honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6924-task-runtime-receipt-adoption
+-      verdict: complete_null_task_runtime_receipt_adoption_ready
+-      addressed_by: The new task requires live receipts for all three mandated GGUF families on authenticated dual RTX 3090 CUDA devices instead of accepting a CPU-only adoption fixture.
+-      retire_if_same_verdict: true
+-
+-- id: exp6929-three-family-span-acquisition
+-  title: Three-family live span-first relation acquisition
+-  track: acquisition
+-  priority: critical
+-  agent_type: claude
+-  model: sonnet
+-  requires_gpu: true
+-  max_turns: 50
+-  estimated_wall_time_min: 720
+-  per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6929_three_family_span_acquisition.json
+-  prompt: |
+-    CONTEXT:
+-    Exp6926 produced an exact 69-row span-first fixture across 15 family-label cells. It proved
+-    offsets, aliases, direction, and labels, but it used a deterministic fixture and earned a
+-    circular-positive verdict. Exp6915's free-form relation bank qualified only eight events.
+-    V607 must test live held-out acquisition with every required SOTA family.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/scripts/experiments/experiment_6926_span_first_relation_fixture.py
+-    - {project_root}/results/experiment_6926_span_first_relation_fixture.json
+-    - {project_root}/scripts/experiments/experiment_6912_alias_safe_relation_corpus_reducer.py
+-    - {project_root}/results/experiment_6915_qualified_relation_event_bank.json
+-    - {project_root}/scripts/experiment_template.py and
+-      {project_root}/scripts/inference_sota_models.py
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Run live span-first relation acquisition on held-out prompts with all three required GGUF
+-    families. Require two verbatim source spans before a directed typed relation. Keep hidden
+-    labels out of prompts and reprompts. Preserve all malformed, timed-out, and failed rows.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the Exp6926 fixture contract and source hashes, held-out source text,
+-       cached or resolvable mandated models, dual CUDA, and exact offset utilities. On failure,
+-       write blocked_three_family_span_acquisition with gate_check_summary.
+-    1. Add REQ-REPORT-6929 and tests before implementation. Cover Unicode byte offsets, duplicate
+-       spans, reversed direction, aliases, missing spans, invalid JSON, and hidden-label isolation.
+-    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF,
+-       unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use the current cached SOTA
+-       resolver. Legacy small models may run smoke tests only.
+-    3. Freeze held-out prompt IDs, source hashes, five relation families, seeds, decoding settings,
+-       and at least six examples per model-family cell before inference.
+-    4. Ask each model to copy span A and span B verbatim, then return one directed relation type.
+-       Do not expose offsets, aliases, relation labels, exact-checker output, or prior failures.
+-    5. Map copied bytes to offsets with exact code. Reject ambiguous matches rather than choosing
+-       an offset. Normalize aliases only after both spans are grounded.
+-    6. Save one row per attempted model-prompt-seed tuple with raw output, parse state, spans,
+-       offsets, directed relation, token budget, runner receipt, and failure reason.
+-    7. Set span_acquisition_bank_ready_score=1 only when all 15 model-family cells meet the frozen
+-       attempt count and every attempt has a terminal row. This is readiness, not accuracy.
+-    8. Run focused tests, Ruff, OpenSpec coverage, the applicable live model check,
+-       artifact-convention audit, verdict-row consistency lint, docs audit, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and span_acquisition_bank_ready_score; preconditions_checked; inference_substrate
+-       (live_local_gguf_span_first_relation_acquisition); duration_s; source_artifact_hashes; rows;
+-       per_game_results; model_specs; model_rows; model_family_cell_rows; heldout_split_hashes;
+-       source_text_rows; raw_output_rows; span_grounding_rows; offset_rows; alias_rows;
+-       direction_rows; parse_failure_rows; timeout_rows; hidden_label_isolation_rows;
+-       task_runtime_receipt; random_seed; reproducibility_checksum;
+-       span_acquisition_bank_ready_score; gate_check_summary with the failed check, expected value,
+-       and observed value for any blocked verdict; verifier_is_oracle (false);
+-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6929_three_family_span_acquisition.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6915-qualified-relation-event-bank
+-      verdict: complete_disqualified_qualified_relation_event_bank_thresholds_not_met
+-      addressed_by: The new acquisition interface grounds two verbatim spans before relation typing, uses the Exp6926 exact fixture contract, and requires complete coverage from all three mandated SOTA families.
+-      retire_if_same_verdict: true
+-
+-- id: exp6930-independent-relation-qualification
+-  title: Independent exact relation qualification
+-  track: acquisition
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 240
+-  per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6930_independent_relation_qualification.json
+-  gated_on:
+-    - upstream: exp6929-three-family-span-acquisition
+-      artifact_field: span_acquisition_bank_ready_score
+-      op: '=='
+-      value: 1
+-  prompt: |
+-    CONTEXT:
+-    Exp6929 creates a complete raw bank but does not make an accuracy claim. Exp6901 blocked on a
+-    missing upstream field, and Exp6915 later disqualified a small single-model bank. This task
+-    uses a fresh process and hidden exact references. Its gate names the producer field verbatim.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6929_three_family_span_acquisition.json
+-    - {project_root}/results/experiment_6926_span_first_relation_fixture.json
+-    - {project_root}/results/experiment_6901_independent_model_relation_qualification.json
+-    - {project_root}/results/experiment_6915_qualified_relation_event_bank.json
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Independently qualify the raw Exp6929 bank. Recompute byte grounding, aliases, direction,
+-    schema validity, and correctness against hidden held-out references. Report every model and
+-    relation family. Do not repair outputs or infer missing rows.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the exact Exp6929 artifact, its raw-row checkpoint, source hashes,
+-       frozen hidden references, and span_acquisition_bank_ready_score=1. On failure, write
+-       blocked_independent_relation_qualification with gate_check_summary.
+-    1. Add REQ-REPORT-6930 and tests first. Cover source-hash mismatch, duplicate spans, alias
+-       ambiguity, reversed edges, missing cells, row duplication, and aggregate-row disagreement.
+-    2. Load the raw bank in a fresh process. Verify its checksum before reading any headline.
+-    3. Recompute offsets from source bytes. Recompute normalized relation labels and directed
+-       edges. Compare them with the hidden reference table.
+-    4. Emit one qualification row for every attempted Exp6929 row. Keep parse failures in the
+-       denominator. Report exact accuracy, grounded-span rate, directed-edge accuracy, coverage,
+-       and confidence intervals by model and family.
+-    5. Check that no prompt or raw model output contains hidden reference metadata or exact-checker
+-       feedback. Disqualify the claim on any leak.
+-    6. Set qualified_relation_bank_score=1 only when every required cell is present, macro exact
+-       accuracy exceeds the frozen threshold, each model clears the per-family floor, and no leak
+-       or row-consistency check fails.
+-    7. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, adversarial verification, docs audit, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and qualified_relation_bank_score; preconditions_checked; inference_substrate
+-       (fresh_process_exact_span_and_relation_qualification_no_llm); duration_s;
+-       source_artifact_hashes; rows; per_game_results; qualification_rows;
+-       model_family_metric_rows; byte_offset_recheck_rows; alias_recheck_rows;
+-       direction_recheck_rows; hidden_reference_rows_hash; label_isolation_rows;
+-       aggregate_recompute_rows; missing_row_rows; disqualification_rows; random_seed;
+-       reproducibility_checksum; qualified_relation_bank_score; gate_check_summary with the failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class (positive | circular_positive | null | blocked |
+-       disqualified | partial); honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6930_independent_relation_qualification.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6901-independent-model-relation-qualification
+-      verdict: complete_blocked_independent_model_relation_qualification
+-      addressed_by: The gate now names a field declared by an upstream task in this roadmap, and the raw producer must emit that exact readiness field before this task can dispatch.
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6915-qualified-relation-event-bank
+-      verdict: complete_disqualified_qualified_relation_event_bank_thresholds_not_met
+-      addressed_by: Qualification now starts from a balanced three-model span-grounded bank with fixed cell counts and hidden exact references instead of eight single-model free-form events.
+-      retire_if_same_verdict: true
+-
+-- id: exp6931-strategy-episode-fixture
+-  title: Exact strategy-episode and delayed-write fixture
+-  track: self_learning
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6931_strategy_episode_fixture.json
+-  prompt: |
+-    CONTEXT:
+-    The V605 self-learning chain blocked because its relation stream did not qualify. Earlier
+-    memory audits also mixed update safety with uncertain upstream data. V607 needs an independent,
+-    exact strategy-episode fixture before any live memory comparison. Fixture readiness is
+-    circular-positive evidence only. It is not a self-learning gain.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/python/carnot/learning/constraint_memory.py
+-    - {project_root}/tests/python/test_constraint_memory.py
+-    - {project_root}/results/experiment_6856_sealed_risk_sensitive_learning_audit.json
+-    - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+-    - {project_root}/results/experiment_6916_isomorphic_prospective_relation_stream.json
+-    - {project_root}/openspec/capabilities/learning/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Build a deterministic ordered strategy-episode fixture for prospective memory tests. Each
+-    episode must bind exact state, action, outcome, constraint receipt, strategy, provenance, and
+-    update eligibility. Include safe, irrelevant, contradictory, poisoned, retention, restart,
+-    tombstone, and rollback cases.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the current memory schema, exact checker interfaces, test and spec
+-       locations, and writable checkpoint storage. On failure, write
+-       blocked_strategy_episode_fixture with gate_check_summary.
+-    1. Add REQ-LEARN-6931 and tests first. Cover immutable receipts, event ordering, delayed writes,
+-       split isolation, invalid provenance, poison, duplicate update IDs, rollback, and restart.
+-    2. Create at least 120 ordered episodes across three strategy families. Freeze train,
+-       prospective evaluation, and old-family retention segments before any later model run.
+-    3. Store state_before, proposed_action, exact outcome, constraint receipt hash, reusable
+-       strategy, provenance chain, event time, update time, and admission label for every episode.
+-    4. Include useful, irrelevant, contradictory, delayed-copy poison, provenance-loss, tombstone
+-       reappearance, and rollback examples. No model output may define its own correctness label.
+-    5. Replay the fixture in a fresh process. Recompute every hash, order constraint, admission
+-       label, retention target, and rollback target.
+-    6. Set strategy_episode_fixture_ready_score=1 only when all required case families exist,
+-       replay is exact, labels are isolated, and no update precedes its outcome.
+-    7. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, docs audit, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and strategy_episode_fixture_ready_score; preconditions_checked; inference_substrate
+-       (deterministic_exact_strategy_episode_fixture_no_llm); duration_s;
+-       source_artifact_hashes; rows; episode_rows; strategy_family_rows; split_rows;
+-       outcome_receipt_rows; update_order_rows; provenance_rows; poison_rows; retention_rows;
+-       restart_rows; tombstone_rows; rollback_rows; fresh_process_replay_rows;
+-       hidden_label_isolation_rows; fixture_checkpoint_path; random_seed;
+-       reproducibility_checksum; strategy_episode_fixture_ready_score; gate_check_summary with the
+-       failed check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (true for fixture conformance only); verdict_class (positive |
+-       circular_positive | null | blocked | disqualified | partial, with circular_positive
+-       required for a ready fixture); honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6931_strategy_episode_fixture.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6916-isomorphic-prospective-relation-stream
+-      verdict: blocked_gate_check_failed
+-      addressed_by: The new fixture is an independent exact root with no relation-bank prerequisite, and it freezes all episode labels and order before the live memory task.
+-      retire_if_same_verdict: true
+-
+-- id: exp6932-selective-episodic-memory
+-  title: Prospective selective episodic self-learning
+-  track: self_learning
+-  priority: critical
+-  agent_type: claude
+-  model: sonnet
+-  requires_gpu: true
+-  max_turns: 50
+-  estimated_wall_time_min: 720
+-  per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6932_selective_episodic_memory.json
+-  gated_on:
+-    - upstream: exp6931-strategy-episode-fixture
+-      artifact_field: strategy_episode_fixture_ready_score
+-      op: '=='
+-      value: 1
+-  prompt: |
+-    CONTEXT:
+-    Exp6856 found harmful writes and uncalibrated abstention. Exp6873 found no prospective sealed
+-    utility. Exp6931 now provides an independent exact ordered fixture. V607 tests Tier-2
+-    continuous self-learning with immutable receipts, hard resets, delayed writes, and complete
+-    no-memory and read-only controls.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+-      {project_root}/research-program.md
+-    - {project_root}/results/experiment_6931_strategy_episode_fixture.json
+-    - {project_root}/results/experiment_6856_sealed_risk_sensitive_learning_audit.json
+-    - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+-    - {project_root}/python/carnot/learning/constraint_memory.py
+-    - {project_root}/scripts/experiment_template.py and
+-      {project_root}/scripts/inference_sota_models.py
+-    - {project_root}/openspec/capabilities/learning/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Compare no memory, read-only retrieval, and exact-admitted delayed-write episodic memory in
+-    prospective order. Run every arm with every required SOTA family. Keep weights frozen. Measure
+-    next-event utility, abstention, old-family retention, poison resistance, and rollback.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the exact Exp6931 artifact and checkpoint,
+-       strategy_episode_fixture_ready_score=1, three mandated model files, dual CUDA, and enough
+-       disk. On failure, write blocked_selective_episodic_memory with gate_check_summary.
+-    1. Add REQ-LEARN-6932 and tests first. Cover arm reset, frozen model weights, delayed admission,
+-       read-only enforcement, no-memory isolation, poison rejection, retention, and rollback.
+-    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF,
+-       unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use the current cached SOTA
+-       resolver. Legacy small models may run smoke tests only.
+-    3. Freeze prompts, episode order, retrieval budget, token budget, seeds, admission threshold,
+-       abstention rule, and success criteria before loading a model.
+-    4. Run complete no-memory, read-only, and admitted-write arms in separate fresh processes for
+-       every model. Match prompts, tokens, candidate count, and event order.
+-    5. In the admitted-write arm, write only after an exact outcome receipt exists. A write may
+-       affect later events only. Never use the current event's hidden label in retrieval or
+-       generation.
+-    6. Record one row per model-arm-event tuple. Include retrieved IDs, memory hashes before and
+-       after, action, exact outcome, abstention, write decision, rejection reason, latency, tokens,
+-       and runner receipt.
+-    7. Run the frozen old-family retention segment after the prospective segment. Run poison,
+-       tombstone, restart, and rollback cases without changing thresholds.
+-    8. Set episodic_memory_run_complete_score=1 when all planned rows and fresh-process arms finish,
+-       regardless of effect direction. Set selective_memory_positive_score=1 only when admitted
+-       writes beat the strongest control on next-event exact utility with a paired confidence
+-       interval above zero, do not reduce retention, accept no poison, and pass rollback.
+-    9. Record continuous_self_learning_task=true, learning_tier=2, and
+-       no_model_weight_mutation=true. Hash model files before and after.
+-    10. Run focused tests, Ruff, OpenSpec coverage, applicable live model checks,
+-        artifact-convention audit, verdict-row consistency lint, adversarial verification, docs
+-        audit, and root-clutter checks.
+-    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-        and both episodic_memory_run_complete_score and selective_memory_positive_score;
+-        preconditions_checked; inference_substrate
+-        (prospective_local_gguf_exact_admitted_external_memory); duration_s;
+-        source_artifact_hashes; rows; per_game_results; model_specs; model_rows; arm_rows;
+-        event_rows; prompt_hashes; split_hashes; exact_outcome_rows; retrieval_rows; write_rows;
+-        abstention_rows; memory_hash_rows; poison_rows; retention_rows; restart_rows;
+-        tombstone_rows; rollback_rows; paired_metric_rows; confidence_interval_rows;
+-        task_runtime_receipt; continuous_self_learning_task (true); learning_tier (2);
+-        no_model_weight_mutation (true); model_hashes_before; model_hashes_after; random_seed;
+-        reproducibility_checksum; episodic_memory_run_complete_score;
+-        selective_memory_positive_score; gate_check_summary with the failed check, expected value,
+-        and observed value for any blocked verdict; verifier_is_oracle (false);
+-        verdict_class (positive | circular_positive | null | blocked | disqualified | partial);
+-        honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6932_selective_episodic_memory.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6856-sealed-risk-sensitive-learning-audit
+-      verdict: complete_null_sealed_risk_sensitive_learning_harmful_writes_and_uncalibrated_abstention
+-      addressed_by: The new task uses an independently frozen exact episode fixture, hard process resets, delayed exact-receipt writes, an explicit read-only arm, and fixed abstention and rollback gates.
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6873-prospective-sealed-self-learning-audit
+-      verdict: complete_null_prospective_sealed_self_learning_utility_not_demonstrated
+-      addressed_by: The new attempt evaluates typed strategy episodes with balanced reusable events across all three mandated SOTA families and compares admitted writes with both no-memory and read-only controls.
+-      retire_if_same_verdict: true
+-
+-- id: exp6933-memory-cold-audit
+-  title: Fresh-process episodic-memory safety audit
+-  track: self_learning
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 240
+-  per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6933_memory_cold_audit.json
+-  gated_on:
+-    - upstream: exp6932-selective-episodic-memory
+-      artifact_field: episodic_memory_run_complete_score
+-      op: '=='
+-      value: 1
+-  prompt: |
+-    CONTEXT:
+-    Exp6932 gates this audit on execution completeness, not on a positive memory result. Earlier
+-    audits exposed harmful writes and no prospective utility. V607 needs an independent fresh
+-    process to recompute the claim and attack persistence, provenance, retention, and rollback.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6932_selective_episodic_memory.json
+-    - {project_root}/results/experiment_6931_strategy_episode_fixture.json
+-    - {project_root}/results/experiment_6856_sealed_risk_sensitive_learning_audit.json
+-    - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/python/carnot/learning/constraint_memory.py
+-    - {project_root}/openspec/capabilities/learning/spec.md
+-
+-    TASK:
+-    Audit Exp6932 from raw rows and checkpoints in a fresh process. Recompute every comparative
+-    metric. Verify temporal isolation, provenance, poison rejection, restart, tombstones,
+-    old-family retention, rollback, and model immutability. Preserve a null result when warranted.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the exact Exp6932 artifact, raw rows, checkpoint hashes,
+-       episodic_memory_run_complete_score=1, and the frozen Exp6931 fixture. On failure, write
+-       blocked_memory_cold_audit with gate_check_summary.
+-    1. Add REQ-LEARN-6933 and tests first. Cover truncated rows, duplicate events, reordered events,
+-       future-label leakage, forged receipts, stale tombstones, failed rollback, and aggregate-row
+-       disagreement.
+-    2. Start a fresh process with no inherited memory state. Verify every source checksum before
+-       reading headline fields.
+-    3. Recompute arm completeness, exact utility, paired differences, confidence intervals,
+-       abstention, write acceptance, poison rejection, retention, and latency from per-event rows.
+-    4. Replay restart, delayed-copy poison, provenance-loss, tombstone reappearance, retention, and
+-       rollback cases from the saved store. Do not change thresholds or repair records.
+-    5. Verify that every accepted write follows its exact outcome receipt and can affect only later
+-       events. Verify model file hashes are unchanged.
+-    6. Set memory_safety_audit_complete_score=1 when all audit checks have terminal rows. Set
+-       audited_selective_memory_positive_score=1 only when the raw rows independently satisfy every
+-       Exp6932 positive gate.
+-    7. If the upstream positive field disagrees with the audit, mark the artifact disqualified and
+-       name every contradiction. Never upgrade an upstream null.
+-    8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, adversarial verification, docs audit, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and both memory_safety_audit_complete_score and
+-       audited_selective_memory_positive_score; preconditions_checked; inference_substrate
+-       (fresh_process_exact_memory_audit_no_llm); duration_s; source_artifact_hashes; rows;
+-       audit_rows; arm_recompute_rows; event_order_rows; future_label_isolation_rows;
+-       receipt_recheck_rows; provenance_rows; poison_rows; restart_rows; tombstone_rows;
+-       retention_rows; rollback_rows; model_immutability_rows; paired_metric_rows;
+-       confidence_interval_rows; aggregate_consistency_rows; contradiction_rows; random_seed;
+-       reproducibility_checksum; memory_safety_audit_complete_score;
+-       audited_selective_memory_positive_score; gate_check_summary with the failed check, expected
+-       value, and observed value for any blocked verdict; verifier_is_oracle (false);
+-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6933_memory_cold_audit.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-  prior_failures:
+-    - experiment_id: exp6856-sealed-risk-sensitive-learning-audit
+-      verdict: complete_null_sealed_risk_sensitive_learning_harmful_writes_and_uncalibrated_abstention
+-      addressed_by: This audit consumes a completed three-arm run with fixed abstention, exact delayed-write receipts, explicit poison rows, and deterministic rollback targets.
+-      retire_if_same_verdict: true
+-    - experiment_id: exp6873-prospective-sealed-self-learning-audit
+-      verdict: complete_null_prospective_sealed_self_learning_utility_not_demonstrated
+-      addressed_by: The audit now recomputes typed next-event utility and retention from complete per-event rows for all three required model families in a clean process.
+-      retire_if_same_verdict: true
+-- 
+2.55.0
+

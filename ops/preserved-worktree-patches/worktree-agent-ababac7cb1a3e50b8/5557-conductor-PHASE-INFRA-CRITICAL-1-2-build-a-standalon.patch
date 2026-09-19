@@ -1,0 +1,1542 @@
+From 330a9753499c4de718cad261833438254de0412e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 13:06:40 -0400
+Subject: [PATCH 05557/11362] [conductor] PHASE INFRA-CRITICAL 1/2 -- build a
+ standalone pretest-triage module that detects the
+ "agent-shipped-test-references-not-yet-produced-artifact" pattern (4th
+ occurrence this milestone) and prepares a scoped, auditable xfail remediation
+
+Automated research step by research conductor.
+Task ID: exp5194-poison-test-cascade-triage-module-v476
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/autoresearch/spec.md    |  68 ++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ ...oison_test_cascade_triage_module_v476.json | 136 ++++
+ scripts/pretest_triage.py                     | 719 ++++++++++++++++++
+ tests/python/test_pretest_triage.py           | 524 +++++++++++++
+ 8 files changed, 1451 insertions(+), 3 deletions(-)
+ create mode 100644 results/experiment_5194_poison_test_cascade_triage_module_v476.json
+ create mode 100644 scripts/pretest_triage.py
+ create mode 100644 tests/python/test_pretest_triage.py
+
+diff --git a/openspec/capabilities/autoresearch/spec.md b/openspec/capabilities/autoresearch/spec.md
+index 6ee12559c1..4de9f00d87 100644
+--- a/openspec/capabilities/autoresearch/spec.md
++++ b/openspec/capabilities/autoresearch/spec.md
+@@ -3618,3 +3618,71 @@ If AR+SC32 > 0.75, it must ABORT as ceiling-polluted. If AR_greedy ~ 0.20 and AR
+ **Given** a generator for grid tasks
+ **When** the headroom gate is evaluated
+ **Then** it outputs a valid json artifact with bare boolean headroom_confirmed, and principle-annotated values for ar_greedy_solve_rate, ar_sc32_solve_rate, oracle_solve_rate, headroom_margin, corpus_path, n_instances, difficulty_strata, preconditions_checked, inference_substrate, random_seed, reproducibility_checksum, and duration_s.
++
++
++### REQ-AUTO-5194: Standalone Poison-Test-Cascade Pretest-Triage Module
++
++The autoresearch system SHALL provide a standalone module
++`scripts/pretest_triage.py` that the conductor's smart-subset pretest gate can
++import to recognize the *poison-test-cascade* failure signature: a task's own
++`tests/python/test_experiment_*.py` (or `test_exp*.py`) that reads a
++`results/*.json` deliverable a SIBLING module's `main()` would produce, but the
++task failed (wall-clock timeout or otherwise) BEFORE `main()` wrote that file,
++leaving one red test whose `FileNotFoundError` (or `JSONDecodeError`) poisons the
++SHARED pretest gate and SKIP/GATE_BLOCK-cascades every remaining task in the
++milestone (milestone `2026.07.475` lost 10 of 12 tasks this way).
++
++The module SHALL expose a pure `detect_poison_cascade(pytest_output, repo_root)`
++function that returns which failing test node ids match this NARROW signature and
++which do not. A failure matches ONLY when ALL of: (1) the failing test file is an
++experiment-specific test (`test_experiment_*` / `test_exp*`, never a core/shared
++test); (2) its failure block references a `results/*.json` path P; (3) P is a
++declared `deliverable` of a task in the current `research-roadmap.yaml`; (4) P
++does NOT yet exist on disk (the producing task has not delivered); and (5) the
++failure block carries a file-absence marker (`FileNotFoundError`,
++`No such file or directory`, or `JSONDecodeError`). A failure that lacks any of
++these — an unrelated assertion, an import error, a stale/typo path not in the
++roadmap, a deliverable already present on disk, or a core test — MUST NOT match,
++so genuine regressions keep blocking the gate. The remediation the module
++recommends/applies SHALL be a per-node-id `xfail` (never a blanket `skip` and
++never file removal), gated on `condition=not os.path.exists(<deliverable>)` so it
++SELF-EXPIRES the moment the deliverable lands and the test runs live again. The
++module MUST NOT modify `scripts/research_conductor.py`; it carries documented
++wiring instructions in its own docstring, mirroring
++`scripts/retro_timing_fallback.py`.
++
++#### SCENARIO-AUTO-5194-PRIMARY: The .475 Signature Is Detected And Scoped To One Node
++
++**Given** the milestone `2026.07.475` pretest output where
++`test_experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py::test_ondisk_deliverable_is_valid`
++fails with `FileNotFoundError` on
++`results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json`, a
++roadmap declaring that path as exp5182's deliverable, and a repo root where the
++deliverable does not exist
++**When** `detect_poison_cascade` evaluates the output
++**Then** it reports `matched=true` with exactly that one node id scoped for
++`xfail`, names exp5182 as the producing task, and renders a self-expiring
++`xfail` whose condition is the deliverable's on-disk absence.
++
++#### SCENARIO-AUTO-5194-PRECISION: Genuinely Broken Tests Are Not Masked
++
++**Given** pretest output containing an unrelated failing test (an assertion or
++import error with no `results/*.json` reference), a test referencing a
++`results/*.json` path that is not a roadmap deliverable, a test referencing a
++declared deliverable that already exists on disk, and a core test
++(`test_pipeline_extract.py`) referencing a pending deliverable
++**When** `detect_poison_cascade` evaluates the output
++**Then** none of those failures match the poison signature, they are reported as
++unmatched failures that still block the gate, and `all_failures_explained` is
++false whenever any real failure remains.
++
++#### SCENARIO-AUTO-5194-HISTORICAL: Retrospective Classification Is Honest
++
++**Given** the four cited incidents (exp3521/.325, exp3544/.326, exp3612/.332,
++exp5182/.475)
++**When** the module's historical validation runs
++**Then** it confirms exp5182/.475 matches the deliverable-read signature exactly,
++and honestly classifies exp3521/.325, exp3544/.326, exp3612/.332 as the sibling
++verdict-assertion poison sub-class (zero `results/*.json` references) covered by
++the pre-existing consecutive-fail auto-quarantine guard, rather than falsely
++claiming a 4/4 narrow-signature match.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f8074c4eb4..804ab58582 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3678205, "iteration": 71, "phase": "iteration_start", "last_beat": "2026-07-03T16:33:55Z"}
+\ No newline at end of file
++{"pid": 3678205, "iteration": 72, "phase": "iteration_start", "last_beat": "2026-07-03T17:00:00Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 25cc9fd544..d132e7b1f7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10232,3 +10232,4 @@ web search: |
+ | 2026-07-03 16:14 UTC | Plan milestone 2026.07.476 | OK | 14 tasks proposed |
+ | 2026-07-03 16:16 UTC | Milestone 2026.07.476 activated | OK | 14 tasks queued |
+ | 2026-07-03 16:31 UTC | PHASE 0 transition -- archive .475 truth (poison-t | OK | 85 passed, 1 warning in 10.77s |
++| 2026-07-03 16:58 UTC | PHASE INFRA-CRITICAL 1/2 -- build a standalone pre | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 6d2bd79675..ade18cfbad 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3678205, "iteration": 71, "phase": "iteration_start", "started_at": "2026-07-03T16:33:55Z"}
+\ No newline at end of file
++{"pid": 3678205, "iteration": 72, "phase": "iteration_start", "started_at": "2026-07-03T17:00:00Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index cc87bca7b5..deb5375120 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 208,
+   "code_violations": 0,
+-  "experiments_checked": 4171,
++  "experiments_checked": 4172,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_5194_poison_test_cascade_triage_module_v476.json b/results/experiment_5194_poison_test_cascade_triage_module_v476.json
+new file mode 100644
+index 0000000000..208a07110b
+--- /dev/null
++++ b/results/experiment_5194_poison_test_cascade_triage_module_v476.json
+@@ -0,0 +1,136 @@
++{
++  "experiment": "experiment_5194_poison_test_cascade_triage_module_v476",
++  "experiment_id": "exp5194-poison-test-cascade-triage-module-v476",
++  "milestone": "2026.07.476",
++  "run_date": "20260703",
++  "schema": "carnot.experiment_5194_poison_test_cascade_triage_module_v476.v1",
++  "duration_s": 261.0,
++  "random_seed": 5194,
++  "reproducibility_checksum": "sha256:31694aea15545910395cf00bf8218757eb1cdb2c2fab8c2b22051ae3549517be",
++  "result_path": "results/experiment_5194_poison_test_cascade_triage_module_v476.json",
++
++  "triage_module_path": "scripts/pretest_triage.py",
++
++  "detection_signature_precision": {
++    "value": "MATCHES (safe to xfail) ONLY when ALL FIVE hold for a failing test: (1) its test file is experiment-specific (tests/python/test_experiment_*.py or test_exp*.py -- never a core/shared test); (2) its failure block references a results/*.json path P; (3) P is a declared `deliverable` of a task in the CURRENT research-roadmap.yaml; (4) P does NOT exist on disk at repo_root/P (the producing task's main() has not delivered); (5) its failure block carries a file-absence marker (FileNotFoundError / 'No such file or directory' / '[Errno 2]' / JSONDecodeError). CORRECTLY DOES NOT MATCH (keeps blocking the gate): a plain AssertionError with no results path (test_unrelated_assertion_failure_does_not_match); a results path that is NOT a declared roadmap deliverable, e.g. a typo/stale path (test_results_path_not_in_roadmap_does_not_match); a deliverable that IS present on disk but the test still fails -- that is a real assertion bug (test_deliverable_present_on_disk_does_not_match); a test that names a pending deliverable but fails on a VALUE assertion rather than a missing-file error (test_missing_absence_marker_does_not_match); a core/shared test (test_pipeline_*, docs, cli) even when it references a pending deliverable (test_core_test_is_never_triaged); and a poison-wait mixed with a genuine failure yields all_failures_explained==False so the gate still blocks (test_mixed_real_and_poison_failure_still_blocks). xfail is scoped to the single matched test node (never a blanket module skip), and its condition re-checks the deliverable's on-disk absence on every collection, so it self-expires the instant the file lands.",
++    "principle": "An over-broad triage rule would silently mask real regressions -- exactly the failure mode Tests-Must-Run-And-Assert exists to prevent. Precision here is the safety property: the five-part conjunction plus the experiment-specific-file gate plus the on-disk-absence recheck together ensure only the narrow deliverable-read-before-produced signature is ever xfailed, and only while the deliverable is genuinely absent."
++  },
++
++  "historical_incidents_matched": [
++    {
++      "experiment_id": "exp5182",
++      "milestone": "2026.07.475",
++      "poison_class": "deliverable_read",
++      "detector_matches": true,
++      "note": "test_experiment_5182_...::test_ondisk_deliverable_is_valid reads results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json before its sibling main() wrote it -> FileNotFoundError. EXACT match of the narrow signature; used as the primary regression fixture (test_detects_the_475_signature)."
++    },
++    {
++      "experiment_id": "exp3521",
++      "milestone": "2026.05.325",
++      "poison_class": "verdict_assertion",
++      "detector_matches": false,
++      "note": "Poison test asserts on the script's in-memory arm results / honest verdict, with 0 results/experiment_*.json references. This is the SIBLING sub-class of the poison cascade, already handled by the conductor's pre-existing consecutive-fail auto-quarantine guard -- NOT the deliverable-read signature this narrow detector targets."
++    },
++    {
++      "experiment_id": "exp3544",
++      "milestone": "2026.05.326",
++      "poison_class": "verdict_assertion",
++      "detector_matches": false,
++      "note": "Poison test asserts on the script's honest verdict, not a deliverable read (0 results/experiment_*.json references). Sibling sub-class; handled by the consecutive-fail quarantine guard."
++    },
++    {
++      "experiment_id": "exp3612",
++      "milestone": "2026.05.332",
++      "poison_class": "verdict_assertion",
++      "detector_matches": false,
++      "note": "Poison test patches assert_deliverable_written and asserts honest_verdict strings on synthetic input (0 results/experiment_*.json references). Sibling sub-class."
++    }
++  ],
++  "historical_incidents_honesty_note": "HONEST retrospective: of the four cited incidents, only exp5182/.475 actually took the deliverable-READ shape this narrow detector targets (1/4 exact match). The three earlier incidents (exp3521/.325, exp3544/.326, exp3612/.332) were the VERDICT-ASSERTION sub-class -- their poison tests assert on the script's in-memory return value / honest_verdict, not on a missing results/*.json file -- and are covered by the conductor's pre-existing consecutive-fail auto-quarantine guard, a sibling mechanism. Claiming the detector would have caught all four as-they-occurred would be false and is deliberately NOT asserted (see scripts/pretest_triage.py:validate_historical_incidents and the _HISTORICAL_INCIDENTS table). The module DOES demonstrate (test_synthetic_deliverable_read_variant_would_match + _synthetic_output_for) that had any of the three earlier incidents instead read its own deliverable, the detector would have matched it -- so the detector fully covers the deliverable-read variant across all four, while honestly scoping its retrospective claim to the one incident that actually took that shape.",
++
++  "wiring_instructions_documented": true,
++  "regression_tests_added": 32,
++  "research_conductor_py_untouched_confirmed": true,
++  "research_conductor_modified": false,
++
++  "inference_substrate": {
++    "value": "aggregation_from_upstream_artifacts",
++    "principle": "This task builds and unit-tests a standalone triage module and aggregates the .475 conductor-log failure signature + roadmap deliverable declarations; it loads no GGUF/CUDA model and runs no LLM inference. Duration floor is 0.0001s for this substrate."
++  },
++
++  "honest_verdict": {
++    "value": "complete_pretest_triage_module_ready_and_tested_wiring_documented_conductor_not_yet_patched_1of4_exact_signature",
++    "principle": "Must start with complete:/complete_/success:/success_. Must NOT claim the conductor's pretest gate is actually patched -- only that a ready, tested triage module (scripts/pretest_triage.py, 100% covered, 32 passing regression tests) plus documented in-file wiring instructions now exist. Same limitation class as scripts/retro_timing_fallback.py's own patch-prep precedent: the module is import-ready for research_conductor.py::run_tests to call, but this task did NOT edit research_conductor.py (confirmed via git) and the wiring is left for the operator/outer-loop to apply."
++  },
++
++  "module_verification": {
++    "tests_passed": 32,
++    "tests_failed": 0,
++    "new_module_coverage_pct": 100.0,
++    "new_module_statements": 273,
++    "new_module_missed": 0,
++    "coverage_note": "scripts/pretest_triage.py is 100% covered by tests/python/test_pretest_triage.py (273 stmts, 0 missed), measured with `coverage run --rcfile=/dev/null --source=scripts.pretest_triage`. The project's pyproject.toml [tool.coverage.run] omits scripts/*.py from the global 100%-gate (scripts are 'not core product code'), consistent with the retro_timing_fallback.py precedent -- so the rcfile override is required to measure it, and it is clean."
++  },
++
++  "wiring_summary": {
++    "target_function": "scripts/research_conductor.py::run_tests (smart-subset pretest gate, failure branch ~lines 1504-1519)",
++    "hook_functions": ["detect_poison_cascade (pure, no side effects)", "apply_xfail (only function that edits test files; only ever ADDS a conditional self-expiring xfail marker)"],
++    "convention": "mirrors scripts/retro_timing_fallback.py -- a standalone module the conductor imports, documented in the module docstring's 'HOW TO WIRE THIS IN' section with the exact `from scripts.pretest_triage import ...` replacement snippet; no direct research_conductor.py edit performed by this task."
++  },
++
++  "self_expiry_mechanism": {
++    "marker": "pytest.mark.xfail scoped to the single matched test node (never a module skip)",
++    "condition": "condition=not os.path.exists(<repo_root>/<deliverable_path>) -- re-evaluated on every pytest collection",
++    "strict": false,
++    "expiry": "the instant the producing task's main() writes the declared deliverable, the xfail condition flips to inactive and the test runs live again; a surprise pass surfaces as a visible XPASS (useful telemetry), never a silent no-op or a re-block",
++    "idempotency": "a per-node `# pretest-triage:xfail <task_id> -> <deliverable>` sentinel prevents double-application; apply_xfail is a no-op on an already-triaged test"
++  },
++
++  "spec_refs": [
++    "REQ-AUTO-5194",
++    "SCENARIO-AUTO-5194-PRIMARY",
++    "SCENARIO-AUTO-5194-PRECISION",
++    "SCENARIO-AUTO-5194-HISTORICAL"
++  ],
++
++  "tests_run": [
++    ".venv/bin/python -m pytest tests/python/test_pretest_triage.py -q  (32 passed)",
++    ".venv/bin/python -m coverage run --rcfile=/dev/null --source=scripts.pretest_triage -m pytest tests/python/test_pretest_triage.py -q -o addopts='' -p no:cacheprovider",
++    ".venv/bin/python -m coverage report -m --rcfile=/dev/null  (scripts/pretest_triage.py 273 0 100%)",
++    "git status --short scripts/research_conductor.py  (empty -> untouched)"
++  ],
++
++  "source_artifacts_read": [
++    {
++      "path": "scripts/retro_timing_fallback.py",
++      "role": "precedent pattern: standalone module the conductor imports without editing research_conductor.py; its docstring wiring-instructions convention was mirrored"
++    },
++    {
++      "path": "scripts/research_conductor.py",
++      "role": "read-only: the run_tests smart-subset pretest gate failure branch (the hook target); NOT modified by this task"
++    },
++    {
++      "path": "ops/conductor-log.md",
++      "sha256": "sha256:9320a7ee735ccb2e65e1cdfa3eeefc6d9bd1dbe64668ecfdac4d024b7dc940da",
++      "role": "the .475 failure signature (2026-07-03 08:39-09:42 UTC 'Pre-tests failing, self-heal failed: 1 failed, 116 passed' x~19) reconstructed into the primary regression fixture"
++    },
++    {
++      "path": "research-roadmap.yaml",
++      "role": "the CURRENT (.476) task/deliverable declarations that detect_poison_cascade cross-references to distinguish a pending declared deliverable from a genuinely broken test"
++    }
++  ],
++
++  "artifact_sha256_of_module": "sha256:31694aea15545910395cf00bf8218757eb1cdb2c2fab8c2b22051ae3549517be",
++  "artifact_sha256_of_tests": "sha256:52dab4c146ceed2095e9140157e23005ec4452f38fce035429d7a3ff80b3172e",
++
++  "field_principles": {
++    "triage_module_path": "The single deliverable module; standalone under scripts/ so no task edits research_conductor.py, per the retro_timing_fallback.py precedent.",
++    "historical_incidents_matched": "Honest retrospective classification -- 1/4 exact deliverable-read match, 3/4 the sibling verdict-assertion class handled by the pre-existing quarantine guard; over-claiming 4/4 would itself be a fabrication.",
++    "wiring_instructions_documented": "The conductor cannot be edited by this task, so the value is realized only if the documented wiring is applied later; the module docstring carries the exact snippet.",
++    "regression_tests_added": "The triage module's own logic is tested to 100% coverage using .475's actual failure signature as the primary fixture.",
++    "research_conductor_py_untouched_confirmed": "Structural guarantee that this task did not violate the 'no task edits research_conductor.py' constraint (git-verified)."
++  },
++
++  "flagged_adversarial": false,
++  "notes": "Resume of an interrupted .475/.476 run: scripts/pretest_triage.py + tests/python/test_pretest_triage.py were already authored and staged; this run verified them (32 pass, 100% module coverage), confirmed research_conductor.py is untouched, and emitted this deliverable. This closes the incident_agent_shipped_test_cascade class (4 occurrences) with reusable tooling instead of manual per-milestone triage."
++}
+diff --git a/scripts/pretest_triage.py b/scripts/pretest_triage.py
+new file mode 100644
+index 0000000000..6086e3e8aa
+--- /dev/null
++++ b/scripts/pretest_triage.py
+@@ -0,0 +1,719 @@
++"""Standalone poison-test-cascade pretest triage.
++
++WHY THIS EXISTS
++---------------
++The conductor runs a *smart-subset* pytest gate BEFORE launching each task in a
++milestone (``scripts/research_conductor.py::run_tests``). That gate is SHARED
++across every subsequent task, not scoped per-task. So a SINGLE red test poisons
++the gate for the whole milestone tail: every later task reads "Pre-tests
++failing, self-heal failed: 1 failed, N passed" and is SKIPped / GATE_BLOCKed.
++
++One recurring way a red test appears: a task ships its own
++``tests/python/test_experiment_NNNN*.py`` whose assertion READS a
++``results/experiment_NNNN*.json`` deliverable that a SIBLING module in the SAME
++task's ``main()`` would have written -- but the task hit a wall-clock timeout (or
++otherwise died) BEFORE ``main()`` ran, so the file never landed and the test
++fails with ``FileNotFoundError``. Milestone ``2026.07.475`` lost 10 of 12 tasks
++to exactly this: ``test_experiment_5182_...::test_ondisk_deliverable_is_valid``
++read a not-yet-produced deliverable and cascade-blocked the rest of the run
++(see ``ops/conductor-log.md`` 2026-07-03 08:39-09:42 UTC).
++
++WHAT THIS DOES
++--------------
++This module is a NARROW detector for that ONE signature. Given the pytest failure
++output plus the current ``research-roadmap.yaml`` it returns which failing test
++node ids are "waiting on an as-yet-unproduced declared deliverable" (and which are
++NOT -- those keep blocking, because a genuine regression must never be masked).
++For a matched node it recommends / applies a self-expiring ``xfail`` marker: the
++test still RUNS and still ASSERTS (per the project's Tests-Must-Run-And-Assert
++rule), but its failure is *expected* WHILE the deliverable is absent. The instant
++the deliverable lands, the ``xfail`` condition flips to inactive and the test runs
++live again -- so the marker cannot silently outlive the problem it triages.
++
++This is the same pattern as ``scripts/retro_timing_fallback.py``: a new standalone
++module the conductor imports, so no task (including the one that built this) has to
++edit ``scripts/research_conductor.py`` directly.
++
++HOW TO WIRE THIS IN
++-------------------
++In ``scripts/research_conductor.py::run_tests`` (the smart-subset pretest gate),
++the failure branch currently reads (around lines 1504-1519)::
++
++    elif failed_names:
++        logger.warning("Pre-test failures (showing %d of %d): %s", ...)
++        if not full:
++            _handle_pretest_poison(failed_names)
++
++Wrap that branch so the deliverable-read poison is triaged BEFORE the blunt
++consecutive-fail quarantine, and re-run the subset once if every failure is an
++explained poison-cascade wait::
++
++    elif failed_names:
++        logger.warning("Pre-test failures (showing %d of %d): %s", ...)
++        if not full:
++            from scripts.pretest_triage import detect_poison_cascade, apply_xfail
++            triage = detect_poison_cascade(stdout or stderr, PROJECT_ROOT)
++            if triage.matched and triage.all_failures_explained:
++                apply_xfail(triage, PROJECT_ROOT)          # self-expiring xfail
++                return run_tests(full=full)                # re-run once; expect green
++            _handle_pretest_poison(failed_names)           # fall back to the old guard
++
++``detect_poison_cascade`` is a pure function (no side effects); ``apply_xfail`` is
++the only function that edits test files, and it only ever ADDS a conditional
++``xfail`` marker -- it never removes a test or its assertions. Both are optional:
++skipping the wiring leaves the pre-existing consecutive-fail quarantine guard as
++the (slower, coverage-losing) backstop.
++
++This module NEVER edits ``scripts/research_conductor.py``.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterable, Mapping
++from dataclasses import dataclass, field
++from pathlib import Path
++import re
++
++
++MODULE_REL_PATH = "scripts/pretest_triage.py"
++
++# A ``results/...json`` deliverable path, matched wherever it appears in the
++# pytest output. It is a substring of the absolute path pytest prints in a
++# ``FileNotFoundError`` (``/repo/results/experiment_5182_....json`` contains
++# ``results/experiment_5182_....json``), so anchoring on ``results/`` captures the
++# repo-relative tail from both absolute and relative renderings. The character
++# class is exactly the set that appears in these deliverable names.
++_RESULT_PATH_RE = re.compile(r"results/[A-Za-z0-9_./-]+\.json")
++
++# Tokens that mean "the failure was caused by the deliverable being MISSING /
++# UNREADABLE", not by a real assertion on already-present data. Requiring one of
++# these is a precision guard: a test that merely mentions a results path in an
++# unrelated repr, or that fails a numeric assertion on a file that DOES exist,
++# will not carry one of these markers and therefore will NOT be triaged.
++_FILE_ABSENCE_MARKERS = (
++    "FileNotFoundError",
++    "No such file or directory",
++    "[Errno 2]",
++    "JSONDecodeError",  # a partially-written / empty deliverable read mid-flight
++)
++
++# The pytest FAILURES / ERRORS per-test header, e.g.
++# ``______________________ test_ondisk_deliverable_is_valid ______________________``
++# The captured group is the test's display name (function, ``Class.method``, or a
++# parametrized ``test_x[case]``).
++_FAILURE_HEADER_RE = re.compile(r"^_{3,}\s+(.+?)\s+_{3,}\s*$")
++
++# A short-test-summary line: ``FAILED tests/python/test_x.py::test_y`` (optionally
++# ``ERROR ...``; optionally a ``- reason`` suffix when ``-ra`` is active).
++_SUMMARY_LINE_RE = re.compile(r"^(?:FAILED|ERROR)\s+(tests/[^\s:]+\.py)(::[^\s]+)?(?:\s+-\s+.*)?$")
++
++# A traceback location line naming the failing test file: ``tests/python/test_x.py:12: in ...``
++_TRACEBACK_FILE_RE = re.compile(r"(tests/[^\s:]+\.py):\d+:")
++
++
++@dataclass(frozen=True)
++class TriageMatch:
++    """One failing test confirmed to be waiting on a not-yet-produced deliverable."""
++
++    test_file: str
++    nodeid: str
++    deliverable_path: str
++    producing_task_id: str
++    reason: str
++
++
++@dataclass(frozen=True)
++class TriageResult:
++    """The outcome of triaging one pretest failure blob against the roadmap."""
++
++    matched: bool
++    matches: tuple[TriageMatch, ...] = ()
++    unmatched_failures: tuple[str, ...] = ()
++    roadmap_milestone: str | None = None
++
++    @property
++    def all_failures_explained(self) -> bool:
++        """True iff EVERY failing test is an explained poison-cascade wait.
++
++        The conductor should only treat the gate as recoverable-by-xfail when this
++        is True. If any unmatched failure remains, there is a genuine regression
++        mixed in and the gate must still block.
++        """
++        return self.matched and not self.unmatched_failures
++
++
++@dataclass
++class _FailureEvidence:
++    """Per-failing-test evidence gathered from the pytest output blob."""
++
++    nodeid: str
++    test_file: str
++    result_paths: list[str] = field(default_factory=list)
++    has_absence_marker: bool = False
++
++
++def _normalize_rel_path(path_value: object, repo_root: Path) -> str | None:
++    """Return a repo-relative POSIX path string, or None if unusable.
++
++    Absolute paths under ``repo_root`` are made relative; a stray ``./`` prefix is
++    stripped. This lets a roadmap ``deliverable`` and a path scraped from a
++    traceback compare equal regardless of how each was written.
++    """
++    if not isinstance(path_value, str) or not path_value.strip():
++        return None
++    raw = Path(path_value.strip())
++    if raw.is_absolute():
++        try:
++            return raw.relative_to(repo_root).as_posix()
++        except ValueError:
++            return raw.as_posix()
++    return raw.as_posix().lstrip("./") or None
++
++
++def _load_yaml(path: Path) -> dict:
++    """Load a YAML mapping, returning ``{}`` on any error (missing file, parse)."""
++    if not path.exists():
++        return {}
++    try:
++        import yaml
++
++        loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++    except Exception:
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def load_roadmap_deliverables(
++    repo_root: Path | str = Path.cwd(),  # noqa: B008 - matches retro_timing_fallback.py idiom
++) -> tuple[dict[str, str], str | None]:
++    """Map each declared ``results/*.json`` deliverable to the task id that owns it.
++
++    Reads ``research-roadmap.yaml`` (the CURRENT active milestone). Returns a
++    ``(deliverable_path -> task_id)`` dict plus the milestone string. A task with
++    no deliverable, or a non-results deliverable, is skipped -- only ``results/``
++    JSON artifacts can be the subject of the deliverable-read poison.
++    """
++    root = Path(repo_root)
++    roadmap = _load_yaml(root / "research-roadmap.yaml")
++    milestone = roadmap.get("milestone")
++    milestone_str = str(milestone) if milestone is not None else None
++    mapping: dict[str, str] = {}
++    tasks = roadmap.get("tasks", [])
++    if isinstance(tasks, list):
++        for task in tasks:
++            if not isinstance(task, Mapping):
++                continue
++            rel = _normalize_rel_path(task.get("deliverable"), root)
++            if rel is None or not _RESULT_PATH_RE.fullmatch(rel):
++                continue
++            mapping.setdefault(rel, str(task.get("id") or Path(rel).stem))
++    return mapping, milestone_str
++
++
++def is_experiment_specific_test(test_file: str) -> bool:
++    """Whether a test file is safe to auto-xfail (experiment-specific only).
++
++    Mirrors the conductor's ``_is_auto_quarantinable`` SAFETY rule: only
++    ``tests/python/test_experiment_*.py`` / ``test_exp*.py`` may be triaged. A
++    core/shared test (pipeline, docs, cli) failing the gate is a REAL regression
++    and must keep blocking -- it is never a poison-cascade candidate.
++    """
++    if not test_file.startswith("tests/python/test_"):
++        return False
++    if not test_file.endswith(".py"):
++        return False
++    if "/quarantine/" in test_file:
++        return False
++    base = test_file[len("tests/python/") :]
++    return base.startswith("test_experiment_") or base.startswith("test_exp")
++
++
++def _iter_failure_sections(output: str) -> Iterable[tuple[str, str]]:
++    """Yield ``(display_name, section_text)`` for each per-test FAILURES/ERRORS block.
++
++    pytest groups tracebacks under ``=== FAILURES ===`` / ``=== ERRORS ===`` and
++    separates each with an ``___ name ___`` header. We segment on those headers so
++    each test's evidence (its referenced paths + error markers) stays associated
++    with that test and does not bleed across unrelated failures.
++    """
++    lines = output.splitlines()
++    in_section = False
++    current_name: str | None = None
++    buffer: list[str] = []
++
++    def _flush() -> Iterable[tuple[str, str]]:
++        if current_name is not None:
++            yield current_name, "\n".join(buffer)
++
++    for line in lines:
++        stripped = line.strip()
++        # A ``=== FAILURES ===`` / ``=== ERRORS ===`` banner opens the section;
++        # ``=== short test summary`` / ``=== warnings`` / a bare ``===`` closes it.
++        if stripped.startswith("=") and stripped.endswith("="):
++            banner = stripped.strip("= ").lower()
++            if banner in ("failures", "errors"):
++                yield from _flush()
++                current_name, buffer = None, []
++                in_section = True
++                continue
++            if in_section:
++                yield from _flush()
++                current_name, buffer = None, []
++                in_section = False
++                continue
++        if not in_section:
++            continue
++        header = _FAILURE_HEADER_RE.match(line)
++        if header:
++            yield from _flush()
++            current_name = header.group(1).strip()
++            buffer = []
++            continue
++        if current_name is not None:
++            buffer.append(line)
++    yield from _flush()
++
++
++def _parse_summary_failures(output: str) -> list[tuple[str, str | None]]:
++    """Return ``(test_file, nodeid_or_None)`` for each short-summary FAILED/ERROR line.
++
++    This is the authoritative source of WHICH tests failed and their exact node
++    ids (present even under ``-q``, which omits the ``- reason`` suffix).
++    """
++    found: list[tuple[str, str | None]] = []
++    for line in output.splitlines():
++        m = _SUMMARY_LINE_RE.match(line.strip())
++        if not m:
++            continue
++        test_file = m.group(1)
++        node_suffix = m.group(2)
++        nodeid = f"{test_file}{node_suffix}" if node_suffix else None
++        found.append((test_file, nodeid))
++    return found
++
++
++def _display_name_matches_nodeid(display_name: str, nodeid: str) -> bool:
++    """Whether a FAILURES-header display name refers to the same test as a node id.
++
++    pytest headers render ``Class.method`` / ``test_x[case]`` while node ids render
++    ``file.py::Class::method`` / ``file.py::test_x[case]``. Compare on the node
++    id's function part with ``::`` normalized to ``.`` and any ``[param]`` stripped,
++    so both spellings of the same test agree.
++    """
++    node_func = nodeid.split("::", 1)[1] if "::" in nodeid else nodeid
++    node_func = node_func.replace("::", ".").split("[", 1)[0]
++    disp = display_name.replace("::", ".").split("[", 1)[0]
++    return disp == node_func
++
++
++def _collect_failure_evidence(output: str) -> list[_FailureEvidence]:
++    """Build one evidence record per failing node id from the pytest blob.
++
++    Combines the authoritative summary node ids with the traceback section that
++    carries the paths + error markers. When a node id has no matching section
++    header (rare -- e.g. a differently-rendered header), its section falls back to
++    the traceback block that names the same test file, so the path/marker evidence
++    is still associated correctly.
++    """
++    sections = list(_iter_failure_sections(output))
++    summary = _parse_summary_failures(output)
++    evidence: list[_FailureEvidence] = []
++    used_sections: set[int] = set()
++
++    def _section_for(nodeid: str, test_file: str) -> str:
++        # Prefer the section whose header name matches this node id.
++        for idx, (name, text) in enumerate(sections):
++            if _display_name_matches_nodeid(name, nodeid):
++                used_sections.add(idx)
++                return text
++        # Fallback: a section whose traceback names this same test file.
++        for idx, (_name, text) in enumerate(sections):
++            if any(
++                _TRACEBACK_FILE_RE.search(l) and _TRACEBACK_FILE_RE.search(l).group(1) == test_file  # type: ignore[union-attr]
++                for l in text.splitlines()
++            ):
++                used_sections.add(idx)
++                return text
++        return ""
++
++    seen_nodeids: set[str] = set()
++    for test_file, nodeid in summary:
++        node = nodeid or f"{test_file}::<unknown>"
++        if node in seen_nodeids:
++            continue
++        seen_nodeids.add(node)
++        text = _section_for(node, test_file)
++        evidence.append(
++            _FailureEvidence(
++                nodeid=node,
++                test_file=test_file,
++                result_paths=_RESULT_PATH_RE.findall(text),
++                has_absence_marker=any(m in text for m in _FILE_ABSENCE_MARKERS),
++            )
++        )
++
++    # A traceback-only failure with no summary line (e.g. summary suppressed):
++    # recover it from any section not already consumed above.
++    for idx, (name, text) in enumerate(sections):
++        if idx in used_sections:
++            continue
++        file_match = _TRACEBACK_FILE_RE.search(text)
++        if not file_match:
++            continue
++        test_file = file_match.group(1)
++        node = f"{test_file}::{name.replace('.', '::')}"
++        if node in seen_nodeids:
++            continue
++        seen_nodeids.add(node)
++        evidence.append(
++            _FailureEvidence(
++                nodeid=node,
++                test_file=test_file,
++                result_paths=_RESULT_PATH_RE.findall(text),
++                has_absence_marker=any(m in text for m in _FILE_ABSENCE_MARKERS),
++            )
++        )
++    return evidence
++
++
++def detect_poison_cascade(
++    pytest_output: str,
++    repo_root: Path | str = Path.cwd(),  # noqa: B008 - matches retro_timing_fallback.py idiom
++    roadmap_deliverables: Mapping[str, str] | None = None,
++    roadmap_milestone: str | None = None,
++) -> TriageResult:
++    """Detect the deliverable-read poison-test-cascade signature. Pure; no side effects.
++
++    A failing test MATCHES (is a poison-cascade wait, safe to xfail) ONLY when ALL:
++
++    1. its test file is experiment-specific (``test_experiment_*`` / ``test_exp*``);
++    2. its failure block references a ``results/*.json`` path P;
++    3. P is a declared ``deliverable`` of a task in ``research-roadmap.yaml``;
++    4. P does NOT exist on disk at ``repo_root/P`` (the producer has not delivered);
++    5. its failure block carries a file-absence marker (FileNotFoundError / No such
++       file or directory / JSONDecodeError).
++
++    Anything failing to meet all five is left in ``unmatched_failures`` and keeps
++    blocking the gate -- an unrelated assertion, an import error, a stale/typo path
++    absent from the roadmap, a deliverable already on disk (a genuine bug), or a
++    core test are all correctly NOT masked.
++    """
++    root = Path(repo_root)
++    if roadmap_deliverables is None:
++        deliverables, milestone = load_roadmap_deliverables(root)
++    else:
++        deliverables = dict(roadmap_deliverables)
++        milestone = roadmap_milestone
++
++    matches: list[TriageMatch] = []
++    unmatched: list[str] = []
++
++    for ev in _collect_failure_evidence(pytest_output):
++        match = _match_one(ev, deliverables, root)
++        if match is not None:
++            matches.append(match)
++        else:
++            unmatched.append(ev.nodeid)
++
++    return TriageResult(
++        matched=bool(matches),
++        matches=tuple(matches),
++        unmatched_failures=tuple(unmatched),
++        roadmap_milestone=milestone,
++    )
++
++
++def _match_one(
++    ev: _FailureEvidence,
++    deliverables: Mapping[str, str],
++    repo_root: Path,
++) -> TriageMatch | None:
++    """Apply the five-part signature to one failure. Returns a match or None."""
++    if not is_experiment_specific_test(ev.test_file):
++        return None
++    if not ev.has_absence_marker:
++        return None
++    for raw_path in ev.result_paths:
++        rel = _normalize_rel_path(raw_path, repo_root)
++        if rel is None or rel not in deliverables:
++            continue  # not a declared deliverable -> a genuinely broken test
++        if (repo_root / rel).exists():
++            continue  # deliverable IS present -> failure is a real assertion bug
++        task_id = deliverables[rel]
++        reason = (
++            f"poison-test-cascade: {ev.nodeid} reads deliverable {rel}, which task "
++            f"{task_id} main() has not yet produced; xfail self-expires when the "
++            f"file lands"
++        )
++        return TriageMatch(
++            test_file=ev.test_file,
++            nodeid=ev.nodeid,
++            deliverable_path=rel,
++            producing_task_id=task_id,
++            reason=reason,
++        )
++    return None
++
++
++# ---------------------------------------------------------------------------
++# xfail remediation -- the ONLY functions that touch test files. They never
++# remove a test or an assertion; they only ADD a conditional, self-expiring mark.
++# ---------------------------------------------------------------------------
++
++_RUNTIME_SENTINEL = "# >>> pretest-triage runtime (auto-inserted) >>>"
++_RUNTIME_BLOCK = """\
++# >>> pretest-triage runtime (auto-inserted) >>>
++import os as _pretest_triage_os  # noqa: E402
++import pytest as _pretest_triage_pytest  # noqa: E402
++
++_PRETEST_TRIAGE_REPO_ROOT = _pretest_triage_os.path.abspath(
++    _pretest_triage_os.path.join(_pretest_triage_os.path.dirname(__file__), "..", "..")
++)
++# <<< pretest-triage runtime <<<
++"""
++
++
++def _xfail_sentinel(match: TriageMatch) -> str:
++    """The per-node idempotency marker + human "remove me when delivered" hint."""
++    return f"# pretest-triage:xfail {match.producing_task_id} -> {match.deliverable_path}"
++
++
++def render_xfail_decorator(match: TriageMatch) -> str:
++    """Return the exact source of the self-expiring xfail decorator for a match.
++
++    The decorator is scoped to a SINGLE test (never the module) and its
++    ``condition`` re-checks the deliverable's on-disk absence on every collection,
++    so the moment the producing task delivers, the mark deactivates and the test
++    runs live again. ``strict=False`` keeps an unexpected pass (should not happen
++    while the condition holds) a non-failing XPASS signal, never a re-block.
++    """
++    reason = (
++        f"pretest-triage poison-cascade guard: waits on not-yet-produced deliverable "
++        f"{match.deliverable_path} from task {match.producing_task_id}; self-expires "
++        f"when the file lands. See scripts/pretest_triage.py."
++    )
++    return (
++        f"@_pretest_triage_pytest.mark.xfail(\n"
++        f"    condition=not _pretest_triage_os.path.exists(\n"
++        f"        _pretest_triage_os.path.join(_PRETEST_TRIAGE_REPO_ROOT, "
++        f"{match.deliverable_path!r})\n"
++        f"    ),\n"
++        f"    reason={reason!r},\n"
++        f"    strict=False,\n"
++        f")  {_xfail_sentinel(match)}\n"
++    )
++
++
++def _nodeid_function(nodeid: str) -> str:
++    """The bare ``def`` name to locate in source (``Class::m`` -> ``m``, strip params)."""
++    func = nodeid.split("::", 1)[1] if "::" in nodeid else nodeid
++    func = func.split("::")[-1]  # inner-most def for a class method
++    return func.split("[", 1)[0]
++
++
++def _ensure_runtime_block(lines: list[str]) -> list[str]:
++    """Insert the aliased-import runtime block once, after the file's import head."""
++    if any(_RUNTIME_SENTINEL in ln for ln in lines):
++        return lines
++    # Place it after the last top-level import (or __future__) near the top so the
++    # aliased names exist before any injected decorator references them.
++    insert_at = 0
++    for idx, ln in enumerate(lines[:80]):
++        stripped = ln.strip()
++        if stripped.startswith(("import ", "from ")):
++            insert_at = idx + 1
++    block_lines = _RUNTIME_BLOCK.splitlines()
++    return lines[:insert_at] + [""] + block_lines + lines[insert_at:]
++
++
++def apply_xfail(result: TriageResult, repo_root: Path | str = Path.cwd()) -> list[str]:  # noqa: B008
++    """Insert a self-expiring xfail decorator above each matched test's ``def``.
++
++    Idempotent (skips a match whose sentinel is already above its def) and
++    conservative: a node whose ``def`` cannot be confidently located at column 0 is
++    left UNTOUCHED rather than risk corrupting the file. Returns the sorted list of
++    test files actually modified. This is the only function here with side effects.
++    """
++    root = Path(repo_root)
++    modified: set[str] = set()
++    # Group matches by file so each file is read/written once.
++    by_file: dict[str, list[TriageMatch]] = {}
++    for m in result.matches:
++        by_file.setdefault(m.test_file, []).append(m)
++
++    for test_file, file_matches in by_file.items():
++        path = root / test_file
++        if not path.exists():
++            continue
++        lines = path.read_text(encoding="utf-8").splitlines()
++        changed = False
++        for match in file_matches:
++            func = _nodeid_function(match.nodeid)
++            def_prefix = f"def {func}("
++            def_idx = _find_module_level_def(lines, def_prefix)
++            if def_idx is None:
++                continue  # cannot locate safely -> leave it to the fallback guard
++            if _sentinel_already_above(lines, def_idx, _xfail_sentinel(match)):
++                continue  # already triaged
++            lines = _ensure_runtime_block(lines)
++            def_idx = _find_module_level_def(lines, def_prefix)  # re-find post-insert
++            if def_idx is None:  # pragma: no cover - defensive, block never hides a def
++                continue
++            deco_lines = render_xfail_decorator(match).splitlines()
++            lines = lines[:def_idx] + deco_lines + lines[def_idx:]
++            changed = True
++        if changed:
++            path.write_text("\n".join(lines) + "\n", encoding="utf-8")
++            modified.add(test_file)
++    return sorted(modified)
++
++
++def _find_module_level_def(lines: list[str], def_prefix: str) -> int | None:
++    """Index of a top-level (column-0) ``def <name>(`` line, or None if not found."""
++    for idx, ln in enumerate(lines):
++        if ln.startswith(def_prefix):
++            return idx
++    return None
++
++
++def _sentinel_already_above(lines: list[str], def_idx: int, sentinel: str) -> bool:
++    """Whether this match's xfail sentinel is already in the def's decorator head."""
++    scan = max(0, def_idx - 12)
++    return any(sentinel in ln for ln in lines[scan:def_idx])
++
++
++# ---------------------------------------------------------------------------
++# Historical retrospective validation (honest -- see the incident audit).
++# ---------------------------------------------------------------------------
++
++# The four cited incidents. Only exp5182/.475 is the deliverable-read signature
++# this detector targets; the earlier three assert on the script's in-memory
++# verdict / return value (verified: 0 ``results/experiment_*.json`` references in
++# their poison versions) and are the SIBLING sub-class already handled by the
++# conductor's consecutive-fail auto-quarantine guard. Reporting a 4/4 narrow-
++# signature match would be false; this table reports the truth.
++_HISTORICAL_INCIDENTS = (
++    {
++        "experiment_id": "exp5182",
++        "milestone": "2026.07.475",
++        "poison_class": "deliverable_read",
++        "detector_matches": True,
++        "note": (
++            "test_experiment_5182_...::test_ondisk_deliverable_is_valid reads "
++            "results/experiment_5182_...json before main() wrote it -> "
++            "FileNotFoundError. Exact match; primary regression fixture."
++        ),
++    },
++    {
++        "experiment_id": "exp3521",
++        "milestone": "2026.05.325",
++        "poison_class": "verdict_assertion",
++        "detector_matches": False,
++        "note": (
++            "Poison test asserts on in-memory arm results (0 results/experiment_*.json "
++            "refs). Sibling sub-class; handled by the consecutive-fail quarantine guard."
++        ),
++    },
++    {
++        "experiment_id": "exp3544",
++        "milestone": "2026.05.326",
++        "poison_class": "verdict_assertion",
++        "detector_matches": False,
++        "note": (
++            "Poison test asserts on the script's honest verdict, not a deliverable read "
++            "(0 results/experiment_*.json refs). Sibling sub-class."
++        ),
++    },
++    {
++        "experiment_id": "exp3612",
++        "milestone": "2026.05.332",
++        "poison_class": "verdict_assertion",
++        "detector_matches": False,
++        "note": (
++            "Poison test patches assert_deliverable_written and asserts honest_verdict "
++            "strings on synthetic input (0 results/experiment_*.json refs). Sibling sub-class."
++        ),
++    },
++)
++
++
++def validate_historical_incidents() -> list[dict]:
++    """Return the honest per-incident retrospective classification.
++
++    For each of the four cited incidents, records whether THIS narrow detector
++    would have matched it. Deliberately does NOT over-claim: only the deliverable-
++    read variant (.475) matches; the verdict-assertion variants (.325/.326/.332)
++    are correctly left to the pre-existing consecutive-fail quarantine guard.
++    """
++    return [dict(row) for row in _HISTORICAL_INCIDENTS]
++
++
++def _synthetic_output_for(experiment_id: str, deliverable: str) -> str:
++    """A minimal pytest FAILURES blob for the deliverable-read variant of an incident.
++
++    Used to demonstrate that, HAD any incident read its real deliverable (the .475
++    shape), the detector would catch it -- while keeping the honest note that the
++    three earlier incidents did not actually take that shape.
++    """
++    test_file = f"tests/python/test_{experiment_id.replace('exp', 'experiment_')}_demo.py"
++    return (
++        "=================================== FAILURES ===================================\n"
++        f"_______________________ test_ondisk_deliverable_is_valid _______________________\n"
++        "    def test_ondisk_deliverable_is_valid() -> None:\n"
++        f">       art = json.loads((REPO / '{deliverable}').read_text())\n"
++        f"{test_file}:9: \n"
++        f"E       FileNotFoundError: [Errno 2] No such file or directory: '/repo/{deliverable}'\n"
++        "=========================== short test summary info ============================\n"
++        f"FAILED {test_file}::test_ondisk_deliverable_is_valid\n"
++        "1 failed in 0.10s\n"
++    )
++
++
++def _cli(argv: list[str] | None = None) -> int:
++    """Console entry point: ``--validate-historical`` or triage a pytest-output file."""
++    import argparse
++    import json
++
++    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0] if __doc__ else "")
++    parser.add_argument(
++        "output_file",
++        nargs="?",
++        help="Path to a file holding captured pytest output to triage.",
++    )
++    parser.add_argument("--repo-root", default=str(Path.cwd()))
++    parser.add_argument(
++        "--validate-historical",
++        action="store_true",
++        help="Print the honest retrospective classification of the 4 cited incidents.",
++    )
++    args = parser.parse_args(argv)
++
++    if args.validate_historical:
++        print(json.dumps(validate_historical_incidents(), indent=2))
++        return 0
++
++    if not args.output_file:
++        parser.error("provide a pytest-output file, or use --validate-historical")
++
++    output = Path(args.output_file).read_text(encoding="utf-8")
++    result = detect_poison_cascade(output, repo_root=Path(args.repo_root))
++    payload = {
++        "matched": result.matched,
++        "all_failures_explained": result.all_failures_explained,
++        "roadmap_milestone": result.roadmap_milestone,
++        "matches": [
++            {
++                "nodeid": m.nodeid,
++                "deliverable_path": m.deliverable_path,
++                "producing_task_id": m.producing_task_id,
++            }
++            for m in result.matches
++        ],
++        "unmatched_failures": list(result.unmatched_failures),
++    }
++    print(json.dumps(payload, indent=2))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised via _cli in tests
++    raise SystemExit(_cli())
+diff --git a/tests/python/test_pretest_triage.py b/tests/python/test_pretest_triage.py
+new file mode 100644
+index 0000000000..9061da3956
+--- /dev/null
++++ b/tests/python/test_pretest_triage.py
+@@ -0,0 +1,524 @@
++"""Tests for the poison-test-cascade pretest triage module (Exp 5194).
++
++Spec refs: REQ-AUTO-5194, SCENARIO-AUTO-5194-PRIMARY,
++SCENARIO-AUTO-5194-PRECISION, SCENARIO-AUTO-5194-HISTORICAL.
++
++The primary fixture is the ACTUAL milestone-2026.07.475 failure that lost 10 of
++12 tasks: ``test_experiment_5182_...::test_ondisk_deliverable_is_valid`` reading a
++``results/experiment_5182_...json`` deliverable its sibling ``main()`` never wrote
++(reconstructed from ops/conductor-log.md + the live pytest rendering).
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++import pytest
++
++from scripts import pretest_triage as pt
++
++
++# --- fixtures reproducing the real .475 signature -------------------------------
++
++_D5182 = "results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json"
++_T5182 = "tests/python/test_experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py"
++
++
++def _v475_output() -> str:
++    """The exact shape of the .475 pretest failure blob (FileNotFoundError)."""
++    return (
++        "=================================== FAILURES ===================================\n"
++        "_______________________ test_ondisk_deliverable_is_valid _______________________\n"
++        "    def test_ondisk_deliverable_is_valid() -> None:\n"
++        f"        path = REPO / mod.RESULT_RELATIVE_PATH\n"
++        '>       art = json.loads(path.read_text(encoding="utf-8"))\n'
++        f"{_T5182}:495: \n"
++        "self = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/"
++        f"{_D5182}'), mode = 'r'\n"
++        f"E       FileNotFoundError: [Errno 2] No such file or directory: "
++        f"'/home/ianblenke/github.com/ianblenke/carnot/{_D5182}'\n"
++        "=========================== short test summary info ============================\n"
++        f"FAILED {_T5182}::test_ondisk_deliverable_is_valid\n"
++        "1 failed, 116 passed, 15 warnings in 12.58s\n"
++    )
++
++
++def _roadmap() -> dict[str, str]:
++    return {_D5182: "exp5182-diffusiongemma-meta-tensor-rootcause-fix-v475"}
++
++
++# --- SCENARIO-AUTO-5194-PRIMARY -------------------------------------------------
++
++
++def test_detects_the_475_signature(tmp_path: Path) -> None:
++    """REQ-AUTO-5194: the .475 FileNotFoundError-on-deliverable is matched to one node."""
++    res = pt.detect_poison_cascade(
++        _v475_output(), repo_root=tmp_path, roadmap_deliverables=_roadmap()
++    )
++    assert res.matched is True
++    assert res.all_failures_explained is True
++    assert len(res.matches) == 1
++    m = res.matches[0]
++    assert m.nodeid == f"{_T5182}::test_ondisk_deliverable_is_valid"
++    assert m.deliverable_path == _D5182
++    assert m.producing_task_id == "exp5182-diffusiongemma-meta-tensor-rootcause-fix-v475"
++    assert "self-expires" in m.reason
++
++
++def test_rendered_xfail_is_self_expiring_and_scoped(tmp_path: Path) -> None:
++    """SCENARIO-AUTO-5194-PRIMARY: the xfail condition is the deliverable's absence."""
++    res = pt.detect_poison_cascade(
++        _v475_output(), repo_root=tmp_path, roadmap_deliverables=_roadmap()
++    )
++    deco = pt.render_xfail_decorator(res.matches[0])
++    assert "mark.xfail" in deco
++    assert "condition=not _pretest_triage_os.path.exists" in deco
++    assert _D5182 in deco
++    assert "strict=False" in deco
++    assert "pretest-triage:xfail" in deco  # idempotency sentinel present
++
++
++# --- SCENARIO-AUTO-5194-PRECISION: genuine failures are NOT masked --------------
++
++
++def test_unrelated_assertion_failure_does_not_match(tmp_path: Path) -> None:
++    """A plain assertion failure (no results path) keeps blocking."""
++    out = (
++        "=================================== FAILURES ===================================\n"
++        "____________________________ test_math ____________________________\n"
++        "    def test_math() -> None:\n"
++        ">       assert add(2, 2) == 5\n"
++        "E       assert 4 == 5\n"
++        "tests/python/test_experiment_4242_math.py:7: AssertionError\n"
++        "=========================== short test summary info ============================\n"
++        "FAILED tests/python/test_experiment_4242_math.py::test_math\n"
++    )
++    res = pt.detect_poison_cascade(out, repo_root=tmp_path, roadmap_deliverables=_roadmap())
++    assert res.matched is False
++    assert res.unmatched_failures == ("tests/python/test_experiment_4242_math.py::test_math",)
++    assert res.all_failures_explained is False
++
++
++def test_results_path_not_in_roadmap_does_not_match(tmp_path: Path) -> None:
++    """A test reading a results path that is NOT a declared deliverable stays broken."""
++    out = (
++        "=================================== FAILURES ===================================\n"
++        "____________________ test_ondisk_deliverable_is_valid ____________________\n"
++        ">       art = json.loads(path.read_text())\n"
++        "tests/python/test_experiment_9999_typo.py:9: \n"
++        "E       FileNotFoundError: [Errno 2] No such file or directory: "
++        "'/repo/results/experiment_9999_TYPO.json'\n"
++        "=========================== short test summary info ============================\n"
++        "FAILED tests/python/test_experiment_9999_typo.py::test_ondisk_deliverable_is_valid\n"
++    )
++    res = pt.detect_poison_cascade(out, repo_root=tmp_path, roadmap_deliverables=_roadmap())
++    assert res.matched is False
++
++
++def test_deliverable_present_on_disk_does_not_match(tmp_path: Path) -> None:
++    """If the deliverable EXISTS, a failure is a real assertion bug, not a wait."""
++    (tmp_path / "results").mkdir()
++    (tmp_path / _D5182).write_text("{}", encoding="utf-8")
++    res = pt.detect_poison_cascade(
++        _v475_output(), repo_root=tmp_path, roadmap_deliverables=_roadmap()
++    )
++    assert res.matched is False
++    assert res.unmatched_failures  # still blocks
++
++
++def test_missing_absence_marker_does_not_match(tmp_path: Path) -> None:
++    """A test that names a pending deliverable but fails on a VALUE (no FileNotFound)."""
++    out = (
++        "=================================== FAILURES ===================================\n"
++        "____________________ test_ondisk_deliverable_is_valid ____________________\n"
++        ">       assert art['diffusiongemma_loadable'] is True\n"
++        f"        # loaded from {_D5182}\n"
++        "E       assert False is True\n"
++        f"{_T5182}:497: AssertionError\n"
++        "=========================== short test summary info ============================\n"
++        f"FAILED {_T5182}::test_ondisk_deliverable_is_valid\n"
++    )
++    res = pt.detect_poison_cascade(out, repo_root=tmp_path, roadmap_deliverables=_roadmap())
++    assert res.matched is False
++
++
++def test_core_test_is_never_triaged(tmp_path: Path) -> None:
++    """SCENARIO-AUTO-5194-PRECISION: a core/shared test failing the gate keeps blocking."""
++    out = (
++        "=================================== FAILURES ===================================\n"
++        "____________________ test_reads_pending ____________________\n"
++        "tests/python/test_pipeline_extract.py:9: \n"
++        f"E       FileNotFoundError: [Errno 2] No such file or directory: '/repo/{_D5182}'\n"
++        "=========================== short test summary info ============================\n"
++        "FAILED tests/python/test_pipeline_extract.py::test_reads_pending\n"
++    )
++    res = pt.detect_poison_cascade(out, repo_root=tmp_path, roadmap_deliverables=_roadmap())
++    assert res.matched is False
++
++
++def test_mixed_real_and_poison_failure_still_blocks(tmp_path: Path) -> None:
++    """A poison wait mixed with a genuine failure -> all_failures_explained is False."""
++    out = _v475_output().replace(
++        "1 failed, 116 passed, 15 warnings in 12.58s\n",
++        "FAILED tests/python/test_experiment_4242_math.py::test_math\n"
++        "2 failed, 116 passed in 12.58s\n",
++    )
++    # add a real FAILURES block for the math test
++    out = out.replace(
++        "=========================== short test summary info",
++        "____________________________ test_math ____________________________\n"
++        ">       assert add(2, 2) == 5\n"
++        "E       assert 4 == 5\n"
++        "tests/python/test_experiment_4242_math.py:7: AssertionError\n"
++        "=========================== short test summary info",
++    )
++    res = pt.detect_poison_cascade(out, repo_root=tmp_path, roadmap_deliverables=_roadmap())
++    assert res.matched is True  # the poison wait IS detected
++    assert res.all_failures_explained is False  # but a real failure remains
++    assert "tests/python/test_experiment_4242_math.py::test_math" in res.unmatched_failures
++
++
++# --- roadmap loading from disk --------------------------------------------------
++
++
++def _write_roadmap(tmp_path: Path, body: str) -> None:
++    (tmp_path / "research-roadmap.yaml").write_text(body, encoding="utf-8")
++
++
++def test_load_roadmap_deliverables_from_disk(tmp_path: Path) -> None:
++    """REQ-AUTO-5194: deliverables + milestone are read from research-roadmap.yaml."""
++    _write_roadmap(
++        tmp_path,
++        "milestone: 2026.07.476\n"
++        "tasks:\n"
++        f"  - id: exp5182-x\n    deliverable: {_D5182}\n"
++        "  - id: nodeliv\n    title: no deliverable\n"
++        "  - id: notjson\n    deliverable: docs/report.md\n"
++        "  - not-a-mapping\n",
++    )
++    mapping, milestone = pt.load_roadmap_deliverables(tmp_path)
++    assert milestone == "2026.07.476"
++    assert mapping == {_D5182: "exp5182-x"}
++
++
++def test_detect_loads_roadmap_when_not_passed(tmp_path: Path) -> None:
++    """detect_poison_cascade reads the roadmap itself when no mapping is supplied."""
++    _write_roadmap(
++        tmp_path,
++        f"milestone: 2026.07.476\ntasks:\n  - id: exp5182-x\n    deliverable: {_D5182}\n",
++    )
++    res = pt.detect_poison_cascade(_v475_output(), repo_root=tmp_path)
++    assert res.matched is True
++    assert res.roadmap_milestone == "2026.07.476"
++    assert res.matches[0].producing_task_id == "exp5182-x"
++
++
++def test_load_roadmap_missing_file_is_empty(tmp_path: Path) -> None:
++    mapping, milestone = pt.load_roadmap_deliverables(tmp_path)
++    assert mapping == {}
++    assert milestone is None
++
++
++def test_load_roadmap_no_milestone_key(tmp_path: Path) -> None:
++    _write_roadmap(tmp_path, "tasks: []\n")
++    _, milestone = pt.load_roadmap_deliverables(tmp_path)
++    assert milestone is None
++
++
++def test_load_yaml_parse_error_and_nondict(tmp_path: Path) -> None:
++    bad = tmp_path / "bad.yaml"
++    bad.write_text("::: not: [valid", encoding="utf-8")
++    assert pt._load_yaml(bad) == {}
++    lst = tmp_path / "list.yaml"
++    lst.write_text("- a\n- b\n", encoding="utf-8")
++    assert pt._load_yaml(lst) == {}
++
++
++# --- unit coverage: helpers -----------------------------------------------------
++
++
++def test_normalize_rel_path_variants(tmp_path: Path) -> None:
++    assert pt._normalize_rel_path(None, tmp_path) is None
++    assert pt._normalize_rel_path("   ", tmp_path) is None
++    assert pt._normalize_rel_path("./", tmp_path) is None
++    assert pt._normalize_rel_path("results/x.json", tmp_path) == "results/x.json"
++    assert pt._normalize_rel_path("./results/x.json", tmp_path) == "results/x.json"
++    inside = tmp_path / "results" / "x.json"
++    assert pt._normalize_rel_path(str(inside), tmp_path) == "results/x.json"
++    # absolute path outside the repo root -> returned as-is (ValueError branch)
++    assert pt._normalize_rel_path("/other/results/x.json", tmp_path) == "/other/results/x.json"
++
++
++def test_is_experiment_specific_test() -> None:
++    assert pt.is_experiment_specific_test("tests/python/test_experiment_1_a.py") is True
++    assert pt.is_experiment_specific_test("tests/python/test_exp_a.py") is True
++    assert pt.is_experiment_specific_test("tests/python/test_pipeline_extract.py") is False
++    assert pt.is_experiment_specific_test("tests/python/test_experiment_1.txt") is False
++    assert pt.is_experiment_specific_test("scripts/test_experiment_1.py") is False
++    assert pt.is_experiment_specific_test("tests/python/quarantine/test_experiment_1.py") is False
++    # a test_-prefixed path that nonetheless sits under a quarantine dir (defensive guard)
++    assert pt.is_experiment_specific_test("tests/python/test_experiment_9/quarantine/x.py") is False
++
++
++def test_display_name_matches_nodeid() -> None:
++    node = "tests/python/test_experiment_1_a.py::test_x"
++    assert pt._display_name_matches_nodeid("test_x", node) is True
++    assert pt._display_name_matches_nodeid("test_y", node) is False
++    cls = "tests/python/test_experiment_1_a.py::TestC::test_m"
++    assert pt._display_name_matches_nodeid("TestC.test_m", cls) is True
++    param = "tests/python/test_experiment_1_a.py::test_x[case1]"
++    assert pt._display_name_matches_nodeid("test_x[case1]", param) is True
++    # a display name with no "::" nodeid (defensive edge)
++    assert pt._display_name_matches_nodeid("bare", "bare") is True
++
++
++def test_parse_summary_failures_nodeid_optional() -> None:
++    out = (
++        "FAILED tests/python/test_experiment_1_a.py::test_x\n"
++        "ERROR tests/python/test_experiment_2_b.py::test_y - some reason\n"
++        "FAILED tests/python/test_experiment_3_c.py\n"  # no ::nodeid
++        "not a summary line\n"
++    )
++    got = pt._parse_summary_failures(out)
++    assert (
++        "tests/python/test_experiment_1_a.py",
++        "tests/python/test_experiment_1_a.py::test_x",
++    ) in got
++    assert (
++        "tests/python/test_experiment_2_b.py",
++        "tests/python/test_experiment_2_b.py::test_y",
++    ) in got
++    assert ("tests/python/test_experiment_3_c.py", None) in got
++    assert len(got) == 3
++
++
++def test_collect_evidence_fallback_and_recovery(tmp_path: Path) -> None:
++    """Cover the header-mismatch fallback + the traceback-only recovery branches."""
++    # Fallback: summary nodeid func 'test_actual' but header says 'test_renamed'.
++    fallback = (
++        "=================================== FAILURES ===================================\n"
++        "____________________ test_renamed ____________________\n"
++        "tests/python/test_experiment_7777_x.py:9: in test_actual\n"
++        "E       FileNotFoundError: results/experiment_7777_x.json\n"
++        "=========================== short test summary info ============================\n"
++        "FAILED tests/python/test_experiment_7777_x.py::test_actual\n"
++    )
++    ev = pt._collect_failure_evidence(fallback)
++    assert ev[0].nodeid == "tests/python/test_experiment_7777_x.py::test_actual"
++    assert ev[0].result_paths == ["results/experiment_7777_x.json"]
++    assert ev[0].has_absence_marker is True
++
++    # Recovery: a section with a traceback file but NO FAILED/ERROR summary line.
++    recovery = (
++        "=================================== ERRORS =====================================\n"
++        "____________________ test_orphan ____________________\n"
++        "tests/python/test_experiment_8888_y.py:3: in <module>\n"
++        "E       FileNotFoundError: results/experiment_8888_y.json\n"
++        "=========================== short test summary info ============================\n"
++        "1 error in 0.10s\n"
++    )
++    ev2 = pt._collect_failure_evidence(recovery)
++    assert ev2[0].nodeid == "tests/python/test_experiment_8888_y.py::test_orphan"
++    assert ev2[0].has_absence_marker is True
++
++
++def test_collect_evidence_recovery_skips_sectionless_and_dup() -> None:
++    """Cover the recovery-loop guards: a section with no traceback file, and a dup node."""
++    # A leftover FAILURES section with NO 'tests/...py:NN:' traceback line and no
++    # summary entry -> the recovery loop must skip it (no file to recover).
++    sectionless = (
++        "=================================== FAILURES ===================================\n"
++        "____________________ test_no_file ____________________\n"
++        "some prose with no test-file path at all\n"
++        "=========================== short test summary info ============================\n"
++        "1 failed in 0.1s\n"
++    )
++    assert pt._collect_failure_evidence(sectionless) == []
++
++    # Two sections for the SAME node; the summary consumes one, the recovery loop
++    # meets the second and must skip it as an already-seen node.
++    dup = (
++        "=================================== FAILURES ===================================\n"
++        "____________________ test_dup ____________________\n"
++        "tests/python/test_experiment_1_a.py:9: \n"
++        "E       FileNotFoundError: results/experiment_1_a.json\n"
++        "____________________ test_dup ____________________\n"
++        "tests/python/test_experiment_1_a.py:5: \n"
++        "E       FileNotFoundError: results/experiment_1_a.json\n"
++        "=========================== short test summary info ============================\n"
++        "FAILED tests/python/test_experiment_1_a.py::test_dup\n"
++    )
++    ev = pt._collect_failure_evidence(dup)
++    assert [e.nodeid for e in ev] == ["tests/python/test_experiment_1_a.py::test_dup"]
++
++
++def test_collect_evidence_dedups_repeated_summary() -> None:
++    out = (
++        "FAILED tests/python/test_experiment_1_a.py::test_x\n"
++        "FAILED tests/python/test_experiment_1_a.py::test_x\n"
++    )
++    ev = pt._collect_failure_evidence(out)
++    assert len(ev) == 1
++
++
++def test_collect_evidence_nodeid_none_becomes_unknown() -> None:
++    out = "FAILED tests/python/test_experiment_3_c.py\n"
++    ev = pt._collect_failure_evidence(out)
++    assert ev[0].nodeid == "tests/python/test_experiment_3_c.py::<unknown>"
++
++
++def test_iter_failure_sections_ignores_preamble_and_no_name() -> None:
++    out = (
++        "=================== test session starts ===================\n"
++        "collected 3 items\n"
++        "=================================== FAILURES ===================================\n"
++        "leading line before any header\n"
++        "___ test_a ___\n"
++        "body a\n"
++        "=================================== warnings summary ===========================\n"
++    )
++    sections = list(pt._iter_failure_sections(out))
++    assert sections == [("test_a", "body a")]
++
++
++# --- xfail application -----------------------------------------------------------
++
++
++def _make_test_file(tmp_path: Path, rel: str) -> Path:
++    p = tmp_path / rel
++    p.parent.mkdir(parents=True, exist_ok=True)
++    p.write_text(
++        '"""demo."""\n'
++        "from __future__ import annotations\n"
++        "import json\n"
++        "\n"
++        "def test_ondisk_deliverable_is_valid() -> None:\n"
++        "    assert True\n",
++        encoding="utf-8",
++    )
++    return p
++
++
++def _match_for(tmp_path: Path) -> pt.TriageMatch:
++    return pt.TriageMatch(
++        test_file=_T5182,
++        nodeid=f"{_T5182}::test_ondisk_deliverable_is_valid",
++        deliverable_path=_D5182,
++        producing_task_id="exp5182-x",
++        reason="r",
++    )
++
++
++def test_apply_xfail_inserts_and_is_idempotent(tmp_path: Path) -> None:
++    """apply_xfail adds the runtime block + a scoped decorator, and does not double-add."""
++    _make_test_file(tmp_path, _T5182)
++    result = pt.TriageResult(matched=True, matches=(_match_for(tmp_path),))
++
++    modified = pt.apply_xfail(result, repo_root=tmp_path)
++    assert modified == [_T5182]
++    text = (tmp_path / _T5182).read_text(encoding="utf-8")
++    assert pt._RUNTIME_SENTINEL in text
++    assert "_pretest_triage_pytest.mark.xfail" in text
++    assert text.count("pretest-triage:xfail") == 1
++    # the decorator sits directly above the def
++    lines = text.splitlines()
++    def_idx = next(
++        i for i, ln in enumerate(lines) if ln.startswith("def test_ondisk_deliverable_is_valid(")
++    )
++    assert any("mark.xfail" in ln for ln in lines[max(0, def_idx - 8) : def_idx])
++
++    # second application is a no-op (idempotent)
++    modified2 = pt.apply_xfail(result, repo_root=tmp_path)
++    assert modified2 == []
++    assert (tmp_path / _T5182).read_text(encoding="utf-8").count("pretest-triage:xfail") == 1
++
++
++def test_apply_xfail_skips_missing_file_and_missing_def(tmp_path: Path) -> None:
++    # file missing entirely
++    result_missing = pt.TriageResult(matched=True, matches=(_match_for(tmp_path),))
++    assert pt.apply_xfail(result_missing, repo_root=tmp_path) == []
++
++    # file present but the def cannot be located -> left untouched
++    other = "tests/python/test_experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py"
++    (tmp_path / "tests" / "python").mkdir(parents=True, exist_ok=True)
++    (tmp_path / other).write_text("def test_something_else():\n    assert True\n", encoding="utf-8")
++    assert pt.apply_xfail(result_missing, repo_root=tmp_path) == []
++    assert "mark.xfail" not in (tmp_path / other).read_text(encoding="utf-8")
++
++
++def test_ensure_runtime_block_only_once() -> None:
++    lines = ["import os", "x = 1"]
++    once = pt._ensure_runtime_block(lines)
++    assert once.count(pt._RUNTIME_SENTINEL) == 1
++    twice = pt._ensure_runtime_block(once)
++    assert twice.count(pt._RUNTIME_SENTINEL) == 1
++
++
++def test_nodeid_function_variants() -> None:
++    assert pt._nodeid_function("f.py::test_x") == "test_x"
++    assert pt._nodeid_function("f.py::TestC::test_m") == "test_m"
++    assert pt._nodeid_function("f.py::test_x[case]") == "test_x"
++    assert pt._nodeid_function("bare") == "bare"
++
++
++def test_find_and_sentinel_helpers() -> None:
++    lines = ["import os", "", "def test_a():", "    pass"]
++    assert pt._find_module_level_def(lines, "def test_a(") == 2
++    assert pt._find_module_level_def(lines, "def test_missing(") is None
++    marked = ["# pretest-triage:xfail t -> d", "def test_a():"]
++    assert pt._sentinel_already_above(marked, 1, "pretest-triage:xfail t -> d") is True
++    assert pt._sentinel_already_above(["def test_a():"], 0, "sent") is False
++
++
++# --- SCENARIO-AUTO-5194-HISTORICAL: honest retrospective ------------------------
++
++
++def test_historical_incidents_honest_classification() -> None:
++    """SCENARIO-AUTO-5194-HISTORICAL: 1/4 exact match; 3/4 honestly the sibling class."""
++    rows = pt.validate_historical_incidents()
++    by_id = {r["experiment_id"]: r for r in rows}
++    assert set(by_id) == {"exp5182", "exp3521", "exp3544", "exp3612"}
++    assert by_id["exp5182"]["detector_matches"] is True
++    assert by_id["exp5182"]["poison_class"] == "deliverable_read"
++    for eid in ("exp3521", "exp3544", "exp3612"):
++        assert by_id[eid]["detector_matches"] is False
++        assert by_id[eid]["poison_class"] == "verdict_assertion"
++
++
++def test_synthetic_deliverable_read_variant_would_match(tmp_path: Path) -> None:
++    """The deliverable-read VARIANT of an earlier incident WOULD be caught (demonstration)."""
++    deliverable = "results/experiment_3521_demo.json"
++    out = pt._synthetic_output_for("exp3521", deliverable)
++    res = pt.detect_poison_cascade(
++        out, repo_root=tmp_path, roadmap_deliverables={deliverable: "exp3521-demo"}
++    )
++    assert res.matched is True
++    assert res.matches[0].deliverable_path == deliverable
++
++
++# --- CLI ------------------------------------------------------------------------
++
++
++def test_cli_validate_historical(capsys: pytest.CaptureFixture[str]) -> None:
++    rc = pt._cli(["--validate-historical"])
++    assert rc == 0
++    assert "exp5182" in capsys.readouterr().out
++
++
++def test_cli_triage_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
++    _write_roadmap(
++        tmp_path,
++        f"milestone: 2026.07.476\ntasks:\n  - id: exp5182-x\n    deliverable: {_D5182}\n",
++    )
++    out_file = tmp_path / "pytest.out"
++    out_file.write_text(_v475_output(), encoding="utf-8")
++    rc = pt._cli([str(out_file), "--repo-root", str(tmp_path)])
++    assert rc == 0
++    printed = capsys.readouterr().out
++    assert '"matched": true' in printed
++    assert "exp5182-x" in printed
++
++
++def test_cli_requires_an_argument() -> None:
++    with pytest.raises(SystemExit):
++        pt._cli([])
+-- 
+2.55.0
+

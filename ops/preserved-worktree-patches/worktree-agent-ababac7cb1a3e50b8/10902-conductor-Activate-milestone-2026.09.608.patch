@@ -1,0 +1,1540 @@
+From eb7b6c424bab6f24de8f24ba853a51a626797e61 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 12:36:04 -0400
+Subject: [PATCH 10902/11362] [conductor] Activate milestone 2026.09.608
+
+Archived previous milestone, activated 2026.09.608.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ research-roadmap.yaml | 1328 +++++++++++++++++++++++++++++------------
+ 1 file changed, 946 insertions(+), 382 deletions(-)
+
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index 5ed78927ab..5f872ccdbb 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -1,9 +1,9 @@
+-milestone: 2026.09.607
+-milestone_title: Grounded learning, non-saturated energy, and internal verification
++milestone: 2026.09.608
++milestone_title: Causal verification, branch-discriminative energy, and reversible trace learning
+ milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+ tasks:
+-- id: exp6927-v607-literature-delta
+-  title: V607 execution-time literature delta and compatibility map
++- id: exp6941-v608-source-delta
++  title: V608 post-marker source delta and compatibility audit
+   track: research
+   priority: high
+   agent_type: claude
+@@ -12,13 +12,14 @@ tasks:
+   max_turns: 30
+   estimated_wall_time_min: 120
+   per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6927_v607_literature_delta.json
++  milestone: 2026.09.608
++  deliverable: results/experiment_6941_v608_source_delta.json
+   prompt: |
+     CONTEXT:
+-    V607 planning found one new high-value verifier lead, HSRM arXiv:2608.30841, and one
+-    supporting sparse-reward lead, arXiv:2602.00986. Exp6925 also proved that the public ISM
+-    implementation depends on hosted OpenAI services. This task is the milestone's advisory
++    The V608 planner refresh added arXiv:2609.02438, 2609.02885, 2609.02702,
++    2609.02859, 2609.02417, 2609.02817, and 2609.02783. It also checked
++    OpenReview, Semantic Scholar, Hugging Face Papers, GitHub Trending,
++    Extropic, and Logical Intelligence. This task is the milestone's advisory
+     execution-time SOTA-ingestion slot. No science task gates on it.
+ 
+     Work at {project_root}. The execution date is {date}.
+@@ -26,369 +27,818 @@ tasks:
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+       {project_root}/research-program.md
+-    - {project_root}/research-references.md and
+-      {project_root}/results/experiment_6925_v606_sota_ingestion.json
++    - {project_root}/research-references.md
++    - {project_root}/results/experiment_6927_v607_literature_delta.json
+     - {project_root}/research-roadmap.yaml and
+       {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+     - {project_root}/research-complete.yaml and {project_root}/ops/conductor-log.md
+     - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Recheck the dated V607 source set. Verify paper metadata, implementation state, local-GGUF
+-    compatibility, and any new citation edges. Append only new findings to the reference ledger.
+-    Do not rewrite the locked roadmap or promote an unavailable dependency.
++    Recheck the dated V608 source set after the planner marker. Verify metadata,
++    code state, local compatibility, and new citation edges. Append only new
++    facts to research-references.md. Do not change the locked milestone design.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the current reference ledger, active roadmap, dated query plan,
+-       network access policy, and writable results path. On failure, write
+-       blocked_v607_literature_delta with gate_check_summary.
+-    1. Freeze queries, source domains, UTC timestamps, retry limits, and acceptance rules before
+-       network access.
+-    2. Search arXiv first for 2025-2026 work on EBMs for verification, neural constraints, Ising
+-       ML, hallucination detection, KANs, energy-guided decoding, hardware sampling, and continual
+-       constraint learning.
+-    3. Recheck OpenReview, Hugging Face Papers, Semantic Scholar citations to EBT 2507.02092 and
+-       ARM-EBM 2512.15605, official GitHub repositories, Extropic writing, and Logical
+-       Intelligence pages.
+-    4. Deep-check HSRM, Sparse Reward Subsystem, NSVIF, Sampling for Quality, ISM, Memoir,
+-       Solver-Hard, KAN verification, Torx, and Thermalizers.
+-    5. Emit one row for every query and every accepted or rejected finding. Record canonical URL,
+-       date, evidence grade, code state, local compatibility, and exclusion reason.
+-    6. Append only genuinely new verified facts to research-references.md. Preserve all prior
+-       entries. Put future ideas in v608_candidate_rows.
+-    7. Set v607_literature_delta_complete_score=1 when every required source family has a terminal
+-       row, including explicit no-update, unavailable, or incompatible results.
+-    8. Add REQ-REPORT-6927 and focused deterministic ledger tests. Run Ruff for code changes,
+-       OpenSpec coverage, docs audit, artifact-convention audit, verdict-row consistency lint, and
+-       root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and v607_literature_delta_complete_score; preconditions_checked; inference_substrate
++    0. PRECONDITIONS: require the V608 planner marker, the active roadmap, the
++       design document, network policy, and a writable results path. On failure,
++       write blocked_v608_source_delta with gate_check_summary.
++    1. Freeze queries, source domains, UTC timestamps, retry limits, and accept
++       rules before network access.
++    2. Search arXiv first for 2025-2026 work on EBM verification, neural
++       constraints, Ising ML, hallucination detection, KANs, energy-guided
++       decoding, sampling hardware, and continual constraint learning.
++    3. Recheck OpenReview, Hugging Face Papers, Semantic Scholar citations to
++       EBT 2507.02092 and ARM-EBM 2512.15605, official GitHub repositories,
++       Extropic writing, and Logical Intelligence pages.
++    4. Deep-check every V608 selected paper. Record title, version, date,
++       evidence grade, code state, and compatibility. Keep explicit no-update
++       and unavailable rows.
++    5. Append only facts newer than the V608 marker. Do not add a dependency
++       from an announcement, non-public model, or unverified repository.
++    6. Set v608_source_delta_complete_score=1 when every required source family
++       has a terminal row. This score means coverage, not a positive finding.
++    7. Add REQ-REPORT-6941 and focused deterministic ledger tests. Run Ruff,
++       OpenSpec coverage, docs audit, artifact-convention audit,
++       verdict-row consistency lint, and root-clutter checks.
++    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
++       per required field and v608_source_delta_complete_score;
++       preconditions_checked; inference_substrate
+        (bounded_primary_source_web_research_no_model_inference); duration_s;
+-       source_artifact_hashes; rows; query_rows; source_family_rows; candidate_rows;
+-       accepted_finding_rows; rejected_finding_rows; citation_edge_rows; implementation_rows;
+-       compatibility_rows; ledger_append_rows; v608_candidate_rows; rate_limit_rows; random_seed;
+-       reproducibility_checksum; v607_literature_delta_complete_score; gate_check_summary with the
+-       failed check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class (positive | circular_positive | null | blocked |
+-       disqualified | partial); honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6927_v607_literature_delta.py --date {date}
++       source_artifact_hashes; rows; query_rows; source_family_rows;
++       accepted_finding_rows; rejected_finding_rows; citation_edge_rows;
++       implementation_rows; compatibility_rows; ledger_append_rows;
++       v609_candidate_rows; rate_limit_rows; random_seed;
++       reproducibility_checksum; v608_source_delta_complete_score;
++       gate_check_summary with failed check, expected value, and observed value
++       for any blocked verdict; verifier_is_oracle (false); verdict_class
++       (positive | circular_positive | null | blocked | disqualified | partial);
++       honest_verdict with a terminal prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6941_v608_source_delta.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6185-v536-post-marker-source-delta
++      verdict: "complete_null: accepted_count=0; no dated reproducible post-marker deltas; references unchanged"
++      addressed_by: "This pass starts after the V608 marker and tests a new dated source set that includes seven papers published on 2026-09-02."
++      retire_if_same_verdict: true
+ 
+-- id: exp6928-sota-runtime-receipt-qualification
+-  title: Dual-GPU SOTA runtime receipt qualification
++- id: exp6942-v608-contract-preflight
++  title: V608 executable contract and bounded-shard preflight
+   track: infrastructure
+   priority: critical
+   agent_type: claude
+   model: opus
+-  requires_gpu: true
++  requires_gpu: false
+   max_turns: 100
+-  estimated_wall_time_min: 360
++  estimated_wall_time_min: 90
+   per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6928_sota_runtime_receipt_qualification.json
++  milestone: 2026.09.608
++  deliverable: results/experiment_6942_v608_contract_preflight.json
+   prompt: |
+     CONTEXT:
+-    Exp6924 made the task-owned runtime receipt helper adoption-ready with deterministic CPU
+-    fixtures. Its honest verdict remained null because it did not prove the contract on a real
+-    SOTA dual-GPU subprocess. V607 needs one advisory hardware receipt before later compute claims.
+-    No science task gates on this infrastructure task.
++    Milestones 2026.09.602, .603, .606, and .607 had document/YAML task
++    divergence. V607 declared 14 tasks but activated 7. V608 uses exactly 12
++    tasks because the recent clean 12-task plan fit while both recent 14-task
++    plans diverged. This task validates the executable contract before science.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/python/carnot/task_runtime_receipts.py
+-    - {project_root}/scripts/experiment_template.py
+-    - {project_root}/scripts/inference_sota_models.py
+-    - {project_root}/results/experiment_6924_task_runtime_receipt_adoption.json
+-    - {project_root}/tests/python/test_inference_sota_models.py
++    - {project_root}/research-roadmap.yaml
++    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++    - {project_root}/scripts/roadmap_schema.py
++    - {project_root}/scripts/validate_prior_failures.py
++    - {project_root}/scripts/exclusion_manifest_lint.py
++    - {project_root}/scripts/audit_roadmap_gates.py
++    - {project_root}/scripts/verdict_row_consistency_lint.py
++    - {project_root}/ops/exclusion_manifest.yaml and
++      {project_root}/ops/known-issues.md
+     - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Qualify the existing receipt helper on a bounded live run of all three mandated local GGUF
+-    model families. Prove task ownership, runner identity, CUDA devices, offload, phase intervals,
+-    cache state, sequential model lifecycle, and teardown. Do not build a second telemetry system.
++    Prove that the active V608 YAML and design document describe the same 12
++    tasks in the same order. Validate gates, required producer fields, model
++    contracts, prior-failure blocks, prompt endings, and bounded task scopes.
++    Do not edit scripts/research_conductor.py.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require two authenticated RTX 3090 CUDA devices, cached or resolvable GGUF
+-       files, the existing receipt helper, and enough disk. On failure, write
+-       blocked_sota_runtime_receipt_qualification with gate_check_summary.
+-    1. Add REQ-REPORT-6928 and tests first. Cover PID and GPU ownership, monotonic phases, missing
+-       teardown, UUID mismatch, cache hit and miss, sequential load, and fresh-process replay.
+-    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF,
+-       unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use cached_sota_pair or
+-       the current resolver. Do not call AutoTokenizer on a GGUF repository ID.
+-    3. Run one short deterministic prompt per model. Load models sequentially. Record exact
+-       quantization, model file, runner, command, child PID, GPU UUIDs, layer offload, context,
+-       cache state, sampled VRAM, utilization, and teardown.
+-    4. Re-read the receipt in a fresh process. Recompute phase ordering, device ownership,
+-       concurrency, teardown, and total duration from rows.
+-    5. Reject a copied receipt, a cross-process receipt, an unresolved GPU identity, or missing
+-       teardown. Keep failed model rows.
+-    6. Set sota_runtime_receipt_ready_score=1 only when all three model families have valid
+-       task-owned CUDA receipts and fresh-process replay passes.
+-    7. Run focused tests, Ruff, OpenSpec coverage, the applicable model-loading smoke check,
+-       artifact-convention audit, verdict-row consistency lint, docs audit, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and sota_runtime_receipt_ready_score; preconditions_checked; inference_substrate
+-       (task_owned_local_gguf_cuda_inference); duration_s; source_artifact_hashes; rows;
+-       model_specs; model_rows; model_file_rows; runner_selection_rows; process_lineage_rows;
+-       task_phase_timing_rows; task_gpu_telemetry_rows; model_concurrency_rows;
+-       server_lifecycle_rows; cache_state_rows; teardown_rows; fresh_process_recheck_rows;
+-       forged_receipt_rejection_rows; task_runtime_receipt; random_seed;
+-       reproducibility_checksum; sota_runtime_receipt_ready_score; gate_check_summary with the
+-       failed check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class (positive | circular_positive | null | blocked |
+-       disqualified | partial); honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py --date {date}
++    0. PRECONDITIONS: require both contract files, the roadmap schema, the
++       exclusion manifest, and all named lint commands. On failure, write
++       blocked_v608_contract_preflight with gate_check_summary.
++    1. Add REQ-REPORT-6942 and mutation tests first. Mutate task count, ID
++       order, title, deliverable, gate field, MODEL_SPECS, prior-failure fields,
++       and prompt ending. Require every mutation to fail.
++    2. Parse both files independently. Require milestone 2026.09.608, exactly
++       12 tasks, and IDs exp6941 through exp6952 in the declared order.
++    3. Compare every task ID, title, deliverable, and structured gate. For each
++       gate, require the upstream task in this roadmap and require the field in
++       that task's own REQUIRED ARTIFACT FIELDS.
++    4. Require CONTEXT, EXISTING CODE TO READ FIRST, TASK, CONCRETE STEPS, the
++       run command, and both final prohibitions in every prompt.
++    5. Require each model-bearing task to name at least one mandated GGUF model.
++       Reject legacy-only headline plans and AutoTokenizer calls on GGUF IDs.
++    6. Run schema validation, prior-failure validation, exclusion-manifest lint,
++       gate audit, and a retired-upstream check. Record raw command receipts.
++    7. Check that GPU tasks checkpoint per unit and have bounded row counts.
++       Flag any single task estimated above 720 minutes or lacking a terminal
++       blocked artifact contract.
++    8. Set v608_execution_contract_ready_score=1 only when every check and
++       mutation test passes. A failed contract is blocked, never partial-ready.
++    9. Run focused tests, Ruff, OpenSpec coverage, docs audit,
++       artifact-convention audit, verdict-row consistency lint, and
++       root-clutter checks.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and v608_execution_contract_ready_score;
++        preconditions_checked; inference_substrate
++        (deterministic_roadmap_contract_preflight_no_llm); duration_s;
++        source_artifact_hashes; rows; document_task_rows; yaml_task_rows;
++        task_parity_rows; gate_contract_rows; producer_field_rows;
++        prompt_contract_rows; model_contract_rows; prior_failure_rows;
++        exclusion_manifest_rows; lint_command_rows; mutation_rows;
++        bounded_scope_rows; random_seed; reproducibility_checksum;
++        v608_execution_contract_ready_score; gate_check_summary with failed
++        check, expected value, and observed value for any blocked verdict;
++        verifier_is_oracle (true for contract conformance only); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial,
++        with circular_positive required when ready); honest_verdict with a
++        terminal prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6942_v608_contract_preflight.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++- id: exp6943-verifier-density-prefix-corpus
++  title: Verifier-density prefix corpus with exact first-error labels
++  track: verification
++  priority: critical
++  agent_type: codex
++  model: gpt-5.6-sol
++  requires_gpu: false
++  max_turns: 30
++  estimated_wall_time_min: 180
++  per_unit_rows: true
++  milestone: 2026.09.608
++  deliverable: results/experiment_6943_verifier_density_prefix_corpus.json
++  gated_on:
++    - upstream: exp6942-v608-contract-preflight
++      artifact_field: v608_execution_contract_ready_score
++      op: '=='
++      value: 1
++  prompt: |
++    CONTEXT:
++    arXiv:2609.02817 uses a first-mistake boundary for process rewards.
++    arXiv:2609.02417 shows that targeted credit can fail when verifier coverage
++    is sparse. Carnot needs an exact fixture that measures verifier information
++    density before it trains or applies any prefix energy.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
++      {project_root}/research-program.md
++    - {project_root}/python/carnot/verification
++    - {project_root}/python/carnot/constraints
++    - {project_root}/python/carnot/verify
++    - {project_root}/results/experiment_6926_span_first_relation_fixture.json
++    - {project_root}/scripts/verdict_row_consistency_lint.py
++    - {project_root}/openspec/capabilities/verification/spec.md
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
++
++    TASK:
++    Build a deterministic line-oriented reasoning corpus with exact step
++    semantics and exact first-error labels. Measure verifier information density
++    for every trace. Include outcome-only, dense-step, sparse-step, and ambiguous
++    coverage cases. This fixture proves conformance only.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require v608_execution_contract_ready_score=1, current
++       exact checker interfaces, deterministic seed control, and a writable
++       checkpoint path. On failure, write blocked_verifier_density_prefix_corpus
++       with gate_check_summary.
++    1. Add REQ-VERIFY-6943 and tests first. Cover correct traces, first-line
++       errors, late errors, multiple errors, invalid syntax, missing terminal
++       states, and deterministic replay.
++    2. Create at least 144 trace pairs across arithmetic state updates, graph
++       reachability, and small scheduling constraints. Use existing exact
++       solvers or interpreters as authority.
++    3. For each valid trace, create a matched single-corruption trace. Freeze
++       corruption type, first invalid step, suffix, trace length, and split.
++    4. Emit an exact prefix-validity vector for every step. Compute verifier
++       information density k/C from observable step labels and causal-chain
++       length. Keep terminal-only cases distinct from dense cases.
++    5. Freeze calibration, held-out, and prospective-family splits by problem
++       identity. Prove no isomorphic pair crosses a split.
++    6. Replay all rows in a fresh process. Recompute the first invalid step,
++       prefix vector, final outcome, density, hashes, and split membership.
++    7. Set prefix_corpus_ready_score=1 only when all required families and
++       density bands have complete rows and fresh-process replay is exact.
++    8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
++       verdict-row consistency lint, docs audit, and root-clutter checks.
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
++       per required field and prefix_corpus_ready_score; preconditions_checked;
++       inference_substrate (deterministic_exact_prefix_fixture_no_llm);
++       duration_s; source_artifact_hashes; rows; trace_rows; step_rows;
++       prefix_validity_rows; corruption_rows; domain_rows; density_band_rows;
++       split_rows; isomorphism_rows; hidden_label_isolation_rows;
++       fresh_process_replay_rows; corpus_checkpoint_path; random_seed;
++       reproducibility_checksum; prefix_corpus_ready_score; gate_check_summary
++       with failed check, expected value, and observed value for any blocked
++       verdict; verifier_is_oracle (true for fixture conformance only);
++       verdict_class (positive | circular_positive | null | blocked |
++       disqualified | partial, with circular_positive required when ready);
++       honest_verdict with a terminal prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6943_verifier_density_prefix_corpus.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6924-task-runtime-receipt-adoption
+-      verdict: complete_null_task_runtime_receipt_adoption_ready
+-      addressed_by: The new task requires live receipts for all three mandated GGUF families on authenticated dual RTX 3090 CUDA devices instead of accepting a CPU-only adoption fixture.
++    - experiment_id: exp2600-safety-corpus-verifier
++      verdict: blocked_sklearn
++      addressed_by: "This task builds deterministic exact step labels with existing solver and interpreter interfaces. It does not train the blocked sklearn safety verifier or reuse its synthetic safety corpus."
++      retire_if_same_verdict: true
++    - experiment_id: exp3441-verifier-ensemble-vs-adaptive-injection-corpus-v3
++      verdict: "complete: ensemble_beats_sidecar_but_below_replacement_grade"
++      addressed_by: "This task proves exact fixture conformance only. It does not train a verifier ensemble, use the adaptive injection corpus, or seek replacement-grade discrimination."
++      retire_if_same_verdict: true
++    - experiment_id: exp4077-verifier-reward-rft-corpus-build
++      verdict: blocked_precision_gate_unmet_0.6818_1.0000
++      addressed_by: "This task uses exact matched corruptions across three deterministic domains. It has no verifier-certification precision gate, ARC RFT corpus, or LoRA training dependency."
++      retire_if_same_verdict: true
++    - experiment_id: exp4088-verifier-reward-rft-corpus-build
++      verdict: blocked_lora_smoke_checkpoints
++      addressed_by: "This task writes and replays a deterministic exact prefix fixture. It does not require generated ARC programs, LoRA smoke checkpoints, or a trainable language model."
+       retire_if_same_verdict: true
+ 
+-- id: exp6929-three-family-span-acquisition
+-  title: Three-family live span-first relation acquisition
+-  track: acquisition
++- id: exp6944-three-family-prefix-bank
++  title: Three-family bounded non-saturated prefix reasoning bank
++  track: generation
+   priority: critical
+   agent_type: claude
+   model: sonnet
+   requires_gpu: true
+   max_turns: 50
+-  estimated_wall_time_min: 720
++  estimated_wall_time_min: 600
+   per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6929_three_family_span_acquisition.json
++  milestone: 2026.09.608
++  deliverable: results/experiment_6944_three_family_prefix_bank.json
++  gated_on:
++    - upstream: exp6943-verifier-density-prefix-corpus
++      artifact_field: prefix_corpus_ready_score
++      op: '=='
++      value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6926 produced an exact 69-row span-first fixture across 15 family-label cells. It proved
+-    offsets, aliases, direction, and labels, but it used a deterministic fixture and earned a
+-    circular-positive verdict. Exp6915's free-form relation bank qualified only eight events.
+-    V607 must test live held-out acquisition with every required SOTA family.
++    Exp6175 retired a CCTU pool because its preregistered headroom conjuncts
++    failed. V607's live span task also exceeded its wall cap and then hit agent
++    network failures. This task uses a different line-oriented exact task and a
++    fixed 144-output budget. It checkpoints every output before the next call.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+       {project_root}/research-program.md
+-    - {project_root}/scripts/experiments/experiment_6926_span_first_relation_fixture.py
+-    - {project_root}/results/experiment_6926_span_first_relation_fixture.json
+-    - {project_root}/scripts/experiments/experiment_6912_alias_safe_relation_corpus_reducer.py
+-    - {project_root}/results/experiment_6915_qualified_relation_event_bank.json
+-    - {project_root}/scripts/experiment_template.py and
+-      {project_root}/scripts/inference_sota_models.py
++    - {project_root}/results/experiment_6943_verifier_density_prefix_corpus.json
++    - {project_root}/results/experiment_6175_cctu_headroom_audit.json
++    - {project_root}/scripts/experiment_template.py
++    - {project_root}/scripts/inference_sota_models.py
++    - {project_root}/python/carnot/task_runtime_receipts.py
++    - {project_root}/openspec/capabilities/verification/spec.md
+     - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Run live span-first relation acquisition on held-out prompts with all three required GGUF
+-    families. Require two verbatim source spans before a directed typed relation. Keep hidden
+-    labels out of prompts and reprompts. Preserve all malformed, timed-out, and failed rows.
++    Generate a bounded candidate bank for the exact V608 line-oriented tasks.
++    Run all three mandated GGUF families. Keep full traces, raw outputs, exact
++    prefix labels, and failures. Select headroom groups only after all outputs
++    are frozen. Do not feed checker output back to a model.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the Exp6926 fixture contract and source hashes, held-out source text,
+-       cached or resolvable mandated models, dual CUDA, and exact offset utilities. On failure,
+-       write blocked_three_family_span_acquisition with gate_check_summary.
+-    1. Add REQ-REPORT-6929 and tests before implementation. Cover Unicode byte offsets, duplicate
+-       spans, reversed direction, aliases, missing spans, invalid JSON, and hidden-label isolation.
++    0. PRECONDITIONS: require the exact Exp6943 artifact and checkpoint,
++       prefix_corpus_ready_score=1, all three model files, authenticated CUDA,
++       disk space, and per-row checkpoint recovery. On failure, write
++       blocked_three_family_prefix_bank with gate_check_summary.
++    1. Add REQ-VERIFY-6944 and tests first. Cover resume without duplication,
++       malformed output, timeout, trace truncation, hidden-label isolation,
++       sequential teardown, and aggregate-row mismatch.
+     2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF,
+-       unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use the current cached SOTA
++       unsloth/gemma-4-31B-it-GGUF, and
++       unsloth/gemma-4-26B-A4B-it-GGUF. Use cached_sota_pair or the current
+        resolver. Legacy small models may run smoke tests only.
+-    3. Freeze held-out prompt IDs, source hashes, five relation families, seeds, decoding settings,
+-       and at least six examples per model-family cell before inference.
+-    4. Ask each model to copy span A and span B verbatim, then return one directed relation type.
+-       Do not expose offsets, aliases, relation labels, exact-checker output, or prior failures.
+-    5. Map copied bytes to offsets with exact code. Reject ambiguous matches rather than choosing
+-       an offset. Normalize aliases only after both spans are grounded.
+-    6. Save one row per attempted model-prompt-seed tuple with raw output, parse state, spans,
+-       offsets, directed relation, token budget, runner receipt, and failure reason.
+-    7. Set span_acquisition_bank_ready_score=1 only when all 15 model-family cells meet the frozen
+-       attempt count and every attempt has a terminal row. This is readiness, not accuracy.
+-    8. Run focused tests, Ruff, OpenSpec coverage, the applicable live model check,
+-       artifact-convention audit, verdict-row consistency lint, docs audit, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and span_acquisition_bank_ready_score; preconditions_checked; inference_substrate
+-       (live_local_gguf_span_first_relation_acquisition); duration_s; source_artifact_hashes; rows;
+-       per_game_results; model_specs; model_rows; model_family_cell_rows; heldout_split_hashes;
+-       source_text_rows; raw_output_rows; span_grounding_rows; offset_rows; alias_rows;
+-       direction_rows; parse_failure_rows; timeout_rows; hidden_label_isolation_rows;
+-       task_runtime_receipt; random_seed; reproducibility_checksum;
+-       span_acquisition_bank_ready_score; gate_check_summary with the failed check, expected value,
+-       and observed value for any blocked verdict; verifier_is_oracle (false);
+-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict (terminal and prefixed complete_ or blocked_).
++    3. Freeze 12 held-out problems per model, K=4 candidates, seeds, decoding,
++       prompt hashes, context, and token limits. The total headline budget is
++       exactly 144 attempted outputs.
++    4. Ask for the compact line trace and final state. Do not expose exact
++       labels, checker messages, other candidates, or memory from later tasks.
++    5. After each call, atomically checkpoint raw text, token IDs, parse state,
++       runtime receipt, and failure reason. Resume from the next missing key.
++    6. Run the exact step checker only after raw output is durable. Record every
++       prefix label and first invalid step. Keep malformed and timed-out rows in
++       the denominator.
++    7. Form candidate groups after generation. Report model competence,
++       selectable headroom, oracle@K, majority, likelihood, parse rate, and
++       density bands. Readiness does not require high accuracy.
++    8. Set reasoning_bank_complete_score=1 only when all 144 attempt keys have
++       terminal rows and all model lifecycle receipts close. Report
++       selectable_headroom_group_count separately.
++    9. Run focused tests, Ruff, OpenSpec coverage, the applicable live-model
++       check, artifact-convention audit, verdict-row consistency lint, docs
++       audit, and root-clutter checks.
++    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and reasoning_bank_complete_score;
++        preconditions_checked; inference_substrate
++        (task_owned_local_gguf_exact_prefix_generation); duration_s;
++        source_artifact_hashes; rows; per_game_results; model_specs;
++        model_rows; attempt_rows; candidate_group_rows; raw_output_rows;
++        parse_rows; prefix_label_rows; first_error_rows; density_band_rows;
++        headroom_rows; hidden_label_isolation_rows; checkpoint_rows;
++        task_runtime_receipt; random_seed; reproducibility_checksum;
++        reasoning_bank_complete_score; selectable_headroom_group_count;
++        gate_check_summary with failed check, expected value, and observed value
++        for any blocked verdict; verifier_is_oracle (false); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
+ 
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6929_three_family_span_acquisition.py --date {date}
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6944_three_family_prefix_bank.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6915-qualified-relation-event-bank
+-      verdict: complete_disqualified_qualified_relation_event_bank_thresholds_not_met
+-      addressed_by: The new acquisition interface grounds two verbatim spans before relation typing, uses the Exp6926 exact fixture contract, and requires complete coverage from all three mandated SOTA families.
++    - experiment_id: exp6175-cctu-headroom-audit
++      verdict: "retired: Exp6174 CCTU pool failed preregistered headroom conjuncts: parseability, competence, headroom, minority, family_support"
++      addressed_by: "This task uses a new exact line-oriented corpus, a fixed 144-attempt budget, all three current GGUF families, and readiness that is separate from headroom or quality."
+       retire_if_same_verdict: true
+ 
+-- id: exp6930-independent-relation-qualification
+-  title: Independent exact relation qualification
+-  track: acquisition
++- id: exp6945-prefix-credit-energy-canary
++  title: Exact-prefix credit geometry and structural-energy canary
++  track: verification
+   priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+-  max_turns: 30
++  max_turns: 50
+   estimated_wall_time_min: 240
+   per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6930_independent_relation_qualification.json
++  milestone: 2026.09.608
++  deliverable: results/experiment_6945_prefix_credit_energy_canary.json
+   gated_on:
+-    - upstream: exp6929-three-family-span-acquisition
+-      artifact_field: span_acquisition_bank_ready_score
++    - upstream: exp6944-three-family-prefix-bank
++      artifact_field: reasoning_bank_complete_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6929 creates a complete raw bank but does not make an accuracy claim. Exp6901 blocked on a
+-    missing upstream field, and Exp6915 later disqualified a small single-model bank. This task
+-    uses a fresh process and hidden exact references. Its gate names the producer field verbatim.
++    Cliff suggests first-error credit. Coverage, Not Targeting predicts that
++    uniform credit can be stronger when exact step coverage is sparse. Carnot
++    must compare these geometries before it treats a localized prefix energy as
++    useful. This task uses exact labels only for training and evaluation.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6929_three_family_span_acquisition.json
+-    - {project_root}/results/experiment_6926_span_first_relation_fixture.json
+-    - {project_root}/results/experiment_6901_independent_model_relation_qualification.json
+-    - {project_root}/results/experiment_6915_qualified_relation_event_bank.json
++    - {project_root}/results/experiment_6943_verifier_density_prefix_corpus.json
++    - {project_root}/results/experiment_6944_three_family_prefix_bank.json
++    - {project_root}/python/carnot/verify
++    - {project_root}/python/carnot/energy
+     - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
++    - {project_root}/openspec/capabilities/verification/spec.md
+ 
+     TASK:
+-    Independently qualify the raw Exp6929 bank. Recompute byte grounding, aliases, direction,
+-    schema validity, and correctness against hidden held-out references. Report every model and
+-    relation family. Do not repair outputs or infer missing rows.
++    Train bounded structural prefix energies under four credit geometries:
++    outcome-only, uniform reward-to-go, exact first-error targeting, and shuffled
++    matched-concentration targeting. Compare localization and actual candidate
++    selection on held-out groups. Do not score raw text with an LLM judge.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the exact Exp6929 artifact, its raw-row checkpoint, source hashes,
+-       frozen hidden references, and span_acquisition_bank_ready_score=1. On failure, write
+-       blocked_independent_relation_qualification with gate_check_summary.
+-    1. Add REQ-REPORT-6930 and tests first. Cover source-hash mismatch, duplicate spans, alias
+-       ambiguity, reversed edges, missing cells, row duplication, and aggregate-row disagreement.
+-    2. Load the raw bank in a fresh process. Verify its checksum before reading any headline.
+-    3. Recompute offsets from source bytes. Recompute normalized relation labels and directed
+-       edges. Compare them with the hidden reference table.
+-    4. Emit one qualification row for every attempted Exp6929 row. Keep parse failures in the
+-       denominator. Report exact accuracy, grounded-span rate, directed-edge accuracy, coverage,
+-       and confidence intervals by model and family.
+-    5. Check that no prompt or raw model output contains hidden reference metadata or exact-checker
+-       feedback. Disqualify the claim on any leak.
+-    6. Set qualified_relation_bank_score=1 only when every required cell is present, macro exact
+-       accuracy exceeds the frozen threshold, each model clears the per-family floor, and no leak
+-       or row-consistency check fails.
+-    7. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, adversarial verification, docs audit, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and qualified_relation_bank_score; preconditions_checked; inference_substrate
+-       (fresh_process_exact_span_and_relation_qualification_no_llm); duration_s;
+-       source_artifact_hashes; rows; per_game_results; qualification_rows;
+-       model_family_metric_rows; byte_offset_recheck_rows; alias_recheck_rows;
+-       direction_recheck_rows; hidden_reference_rows_hash; label_isolation_rows;
+-       aggregate_recompute_rows; missing_row_rows; disqualification_rows; random_seed;
+-       reproducibility_checksum; qualified_relation_bank_score; gate_check_summary with the failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class (positive | circular_positive | null | blocked |
+-       disqualified | partial); honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6930_independent_relation_qualification.py --date {date}
++    0. PRECONDITIONS: require the complete Exp6944 bank, raw rows, exact prefix
++       labels, fixed splits, and reasoning_bank_complete_score=1. On failure,
++       write blocked_prefix_credit_energy_canary with gate_check_summary.
++    1. Add REQ-VERIFY-6945 and tests first. Cover target leakage, split overlap,
++       equal reward mass, shuffled-control construction, tie handling, and
++       aggregate recomputation.
++    2. Freeze compact non-text structural features before reading held-out
++       labels. Use trace length, operator type, state deltas, syntax state, and
++       prefix position. Exclude final checker verdict and exact error code.
++    3. Train the four arms with the same architecture, examples, optimizer,
++       epochs, seeds, and total reward mass. Use calibration data for thresholds.
++    4. Evaluate first-error localization, prefix AUROC, calibration, top-1 group
++       selection, oracle@K headroom captured, latency, and density-stratified
++       effects on held-out problem groups.
++    5. Compare exact targeting with uniform and shuffled matched-concentration
++       controls. Treat a high AUROC without a top-1 decision gain as null.
++    6. Set credit_geometry_run_complete_score=1 when all arms and seeds have
++       terminal rows. Set prefix_energy_positive_score=1 only when the best
++       learned structural energy beats the strongest non-oracle baseline on
++       paired top-1 accuracy with CI95 above zero and no leak or control failure.
++    7. Save checkpoints and split hashes. Replay headline metrics from rows in a
++       fresh process.
++    8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
++       verdict-row consistency lint, adversarial verification, docs audit, and
++       root-clutter checks.
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
++       per required field and both credit_geometry_run_complete_score and
++       prefix_energy_positive_score; preconditions_checked; inference_substrate
++       (exact_label_small_structural_energy_training_no_llm); duration_s;
++       source_artifact_hashes; rows; per_game_results; feature_rows;
++       credit_geometry_rows; seed_rows; training_rows; heldout_rows;
++       density_band_rows; localization_rows; calibration_rows; selection_rows;
++       baseline_rows; shuffled_control_rows; paired_metric_rows;
++       confidence_interval_rows; label_isolation_rows; fresh_process_replay_rows;
++       random_seed; reproducibility_checksum; credit_geometry_run_complete_score;
++       prefix_energy_positive_score; gate_check_summary with failed check,
++       expected value, and observed value for any blocked verdict;
++       verifier_is_oracle (false); verdict_class (positive | circular_positive |
++       null | blocked | disqualified | partial); honest_verdict with a terminal
++       prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6945_prefix_credit_energy_canary.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++- id: exp6946-gguf-causal-state-surface
++  title: GGUF causal-state surface and replay receipt
++  track: verification
++  priority: critical
++  agent_type: claude
++  model: opus
++  requires_gpu: true
++  max_turns: 100
++  estimated_wall_time_min: 480
++  per_unit_rows: true
++  milestone: 2026.09.608
++  deliverable: results/experiment_6946_gguf_causal_state_surface.json
++  gated_on:
++    - upstream: exp6944-three-family-prefix-bank
++      artifact_field: reasoning_bank_complete_score
++      op: '=='
++      value: 1
++  prompt: |
++    CONTEXT:
++    Earlier hidden-state tasks repeatedly blocked on missing upstream pools.
++    arXiv:2609.02438 now shows that validity decodability can have no causal
++    behavioral value. This task is an independent runtime root after the frozen
++    Exp6944 bank. It records only state surfaces the current GGUF runner can
++    reproduce and use in a later selection intervention.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6944_three_family_prefix_bank.json
++    - {project_root}/results/experiment_6118_phase_d_per_layer_surface.json
++    - {project_root}/results/experiment_6203_matching_base_code_hidden_state_v2.json
++    - {project_root}/scripts/experiment_template.py
++    - {project_root}/scripts/inference_sota_models.py
++    - {project_root}/python/carnot/task_runtime_receipts.py
++    - {project_root}/openspec/capabilities/verification/spec.md
++
++    TASK:
++    Qualify replayable GGUF state surfaces at exact trace-line boundaries. Test
++    tokens, logits, pooled embeddings, token embeddings, and intermediate layers
++    only when the runner exposes them. Prove that a later ranker can change
++    candidate selection without reusing labels. Unsupported surfaces are honest
++    terminal rows, not fabricated substitutes.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require the complete Exp6944 bank, raw token sequences,
++       all three model files, authenticated CUDA, and task-owned runtime receipt
++       support. On failure, write blocked_gguf_causal_state_surface with
++       gate_check_summary.
++    1. Add REQ-VERIFY-6946 and tests first. Cover token-boundary drift, layer
++       mismatch, pooled-vs-token confusion, replay mismatch, copied arrays,
++       unsupported APIs, model teardown, and source-row leakage.
++    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF,
++       unsloth/gemma-4-31B-it-GGUF, and
++       unsloth/gemma-4-26B-A4B-it-GGUF. Use the current local GGUF resolver.
++       Legacy small models may run smoke tests only.
++    3. Freeze at least 12 candidate sequences per model across valid and invalid
++       prefixes. Evaluate the stored token sequences with generation disabled.
++    4. Record every exposed surface at each exact line boundary. For unavailable
++       layers, record the API probe, exception, and unsupported status. Do not
++       replace a hidden state with text features.
++    5. Repeat a subset in a fresh process. Require matching model-file hash,
++       tokenizer fingerprint, token IDs, boundary indices, shapes, and values
++       within a frozen tolerance.
++    6. Build label-blind random directions and projection interfaces for every
++       usable state shape. Do not train or report a validity classifier here.
++    7. Set causal_state_surface_ready_score=1 only when at least two mandated
++       model families, including one Qwen and one Gemma, expose a replayable
++       non-text state at exact boundaries and the later selector interface can
++       consume it. Report all three family outcomes.
++    8. Run focused tests, Ruff, OpenSpec coverage, applicable live-model checks,
++       artifact-convention audit, verdict-row consistency lint, docs audit, and
++       root-clutter checks.
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
++       per required field and causal_state_surface_ready_score;
++       preconditions_checked; inference_substrate
++       (task_owned_local_gguf_forced_sequence_state_capture); duration_s;
++       source_artifact_hashes; rows; per_game_results; model_specs; model_rows;
++       token_sequence_rows; boundary_rows; api_probe_rows; state_surface_rows;
++       unsupported_surface_rows; shape_rows; tokenizer_rows; replay_rows;
++       random_direction_rows; selector_interface_rows; checkpoint_paths;
++       task_runtime_receipt; random_seed; reproducibility_checksum;
++       causal_state_surface_ready_score; gate_check_summary with failed check,
++       expected value, and observed value for any blocked verdict;
++       verifier_is_oracle (false); verdict_class (positive | circular_positive |
++       null | blocked | disqualified | partial); honest_verdict with a terminal
++       prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6946_gguf_causal_state_surface.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6901-independent-model-relation-qualification
+-      verdict: complete_blocked_independent_model_relation_qualification
+-      addressed_by: The gate now names a field declared by an upstream task in this roadmap, and the raw producer must emit that exact readiness field before this task can dispatch.
++    - experiment_id: exp6118-phase-d-per-layer-surface
++      verdict: blocked_gate_check_failed
++      addressed_by: "This task is an independent root over a complete current three-family bank. It does not depend on the missing Exp6117 pool and records unsupported runner surfaces directly."
+       retire_if_same_verdict: true
+-    - experiment_id: exp6915-qualified-relation-event-bank
+-      verdict: complete_disqualified_qualified_relation_event_bank_thresholds_not_met
+-      addressed_by: Qualification now starts from a balanced three-model span-grounded bank with fixed cell counts and hidden exact references instead of eight single-model free-form events.
++    - experiment_id: exp6203-matching-base-code-hidden-state-v2
++      verdict: blocked_gate_check_failed
++      addressed_by: "This task uses the V608 exact-prefix bank and a non-generation forced-sequence receipt instead of the missing LiveCodeBench headroom chain."
+       retire_if_same_verdict: true
+ 
+-- id: exp6931-strategy-episode-fixture
+-  title: Exact strategy-episode and delayed-write fixture
+-  track: self_learning
++- id: exp6947-causal-hidden-selection
++  title: Causal hidden-state selection with random-direction controls
++  track: verification
+   priority: critical
+   agent_type: codex
+   model: gpt-5.6-sol
+   requires_gpu: false
+   max_turns: 50
++  estimated_wall_time_min: 240
++  per_unit_rows: true
++  milestone: 2026.09.608
++  deliverable: results/experiment_6947_causal_hidden_selection.json
++  gated_on:
++    - upstream: exp6946-gguf-causal-state-surface
++      artifact_field: causal_state_surface_ready_score
++      op: '=='
++      value: 1
++  prompt: |
++    CONTEXT:
++    Exp6946 supplies replayable non-text states. arXiv:2609.02438 requires a
++    sharper test than probe AUROC: a validity direction must change an exact
++    decision and beat matched random directions. Earlier CLUE selector chains
++    blocked before this comparison. This task performs it from frozen rows.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6944_three_family_prefix_bank.json
++    - {project_root}/results/experiment_6946_gguf_causal_state_surface.json
++    - {project_root}/results/experiment_6177_clue_latent_selector_freeze.json
++    - {project_root}/results/experiment_6190_calibration_clue_linear_code_selector.json
++    - {project_root}/scripts/verdict_row_consistency_lint.py
++    - {project_root}/openspec/capabilities/verification/spec.md
++
++    TASK:
++    Train compact tie-safe rankers on calibration-only states. Test decodability
++    and actual held-out candidate selection. Compare the learned direction with
++    matched random directions, likelihood, final embedding, structural energy,
++    and shuffled-label controls. Exact outcomes are labels only.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require causal_state_surface_ready_score=1, exact source
++       hashes, usable states from at least two model families, fixed candidate
++       groups, and sealed held-out labels. On failure, write
++       blocked_causal_hidden_selection with gate_check_summary.
++    1. Add REQ-VERIFY-6947 and tests first. Cover split leakage, group leakage,
++       random-direction norm mismatch, tie bias, shuffled labels, candidate
++       reorder, and aggregate-row disagreement.
++    2. Freeze group-disjoint calibration and held-out splits before fitting.
++       Fit compact linear and small nonlinear rankers with fixed seeds.
++    3. Create at least 20 matched random directions per learned direction with
++       identical dimension and norm. Keep their full per-group results.
++    4. Report probe AUROC, but make top-1 exact selection and headroom captured
++       the decision metrics. A decodable signal with no decision gain is null.
++    5. Compare learned state, random direction, likelihood, final embedding,
++       Exp6945 structural energy, shuffled labels, and fixed-order selection
++       under identical candidate groups.
++    6. Set causal_selection_run_complete_score=1 when every arm, family, seed,
++       and group has a terminal row. Set causal_hidden_state_positive_score=1
++       only when the learned-state arm beats the strongest non-oracle baseline
++       and the random-direction distribution on paired top-1 accuracy with CI95
++       above zero, without leakage or calibration failure.
++    7. Replay all headline metrics from rows in a fresh process. Keep family
++       heterogeneity and unsupported-family rows visible.
++    8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
++       verdict-row consistency lint, adversarial verification, docs audit, and
++       root-clutter checks.
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
++       per required field and both causal_selection_run_complete_score and
++       causal_hidden_state_positive_score; preconditions_checked;
++       inference_substrate (frozen_gguf_state_ranker_no_model_generation);
++       duration_s; source_artifact_hashes; rows; per_game_results; split_rows;
++       family_rows; ranker_rows; direction_rows; random_direction_rows;
++       shuffled_label_rows; likelihood_rows; embedding_rows;
++       structural_energy_rows; decodability_rows; selection_rows;
++       headroom_rows; paired_metric_rows; confidence_interval_rows;
++       leakage_rows; fresh_process_replay_rows; random_seed;
++       reproducibility_checksum; causal_selection_run_complete_score;
++       causal_hidden_state_positive_score; gate_check_summary with failed check,
++       expected value, and observed value for any blocked verdict;
++       verifier_is_oracle (false); verdict_class (positive | circular_positive |
++       null | blocked | disqualified | partial); honest_verdict with a terminal
++       prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6947_causal_hidden_selection.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6177-clue-latent-selector-freeze
++      verdict: blocked_gate_check_failed
++      addressed_by: "The V608 task starts from a task-local replayable state receipt and requires a held-out behavioral selection gain against matched random directions, not a CLUE score from a missing upstream chain."
++      retire_if_same_verdict: true
++    - experiment_id: exp6190-calibration-clue-linear-code-selector
++      verdict: blocked_gate_check_failed
++      addressed_by: "The new selector has complete producer rows in this roadmap, uses exact prefix tasks, and tests causal top-1 changes with random-direction and shuffled-label controls."
++      retire_if_same_verdict: true
++
++- id: exp6948-arc-branch-corpus
++  title: ARC live-attempt branching corpus audit
++  track: arc
++  priority: high
++  agent_type: codex
++  model: gpt-5.6-sol
++  requires_gpu: false
++  max_turns: 30
+   estimated_wall_time_min: 180
+   per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6931_strategy_episode_fixture.json
++  milestone: 2026.09.608
++  deliverable: results/experiment_6948_arc_branch_corpus.json
++  gated_on:
++    - upstream: exp6942-v608-contract-preflight
++      artifact_field: v608_execution_contract_ready_score
++      op: '=='
++      value: 1
+   prompt: |
+     CONTEXT:
+-    The V605 self-learning chain blocked because its relation stream did not qualify. Earlier
+-    memory audits also mixed update safety with uncertain upstream data. V607 needs an independent,
+-    exact strategy-episode fixture before any live memory comparison. Fixture readiness is
+-    circular-positive evidence only. It is not a self-learning gain.
++    Discriminative World Models, arXiv:2609.02885, needs decision points with
++    alternative actions and observed successor states. Carnot has many live
++    ARC attempt receipts, but their branching coverage has not been measured.
++    This task audits and freezes only transitions produced by the live agent's
++    own attempts. It does not seek or claim a game-level solve.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+       {project_root}/research-program.md
+-    - {project_root}/python/carnot/learning/constraint_memory.py
+-    - {project_root}/tests/python/test_constraint_memory.py
+-    - {project_root}/results/experiment_6856_sealed_risk_sensitive_learning_audit.json
+-    - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+-    - {project_root}/results/experiment_6916_isomorphic_prospective_relation_stream.json
+-    - {project_root}/openspec/capabilities/learning/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
++    - {project_root}/ops/arc_solve_registry.yaml
++    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
++    - {project_root}/python/carnot/agentic/arc_world_model_trust_energy.py
++    - {project_root}/python/carnot/agentic/arc_live_trajectory_frontier.py
++    - {project_root}/results/experiment_5767_arc_game_blind_composition_hardening.json
++    - {project_root}/ops/verifier_gaps.md
++    - {project_root}/openspec/capabilities/arc-agi3/spec.md
+ 
+     TASK:
+-    Build a deterministic ordered strategy-episode fixture for prospective memory tests. Each
+-    episode must bind exact state, action, outcome, constraint receipt, strategy, provenance, and
+-    update eligibility. Include safe, irrelevant, contradictory, poisoned, retention, restart,
+-    tombstone, and rollback cases.
++    Find repeated normalized ARC states where the live agent tried at least two
++    distinct actions and recorded exact successor observations. Freeze a
++    branch-point corpus with provenance, state normalization, action identity,
++    successor hashes, and chronological splits. Do not read game source, build a
++    per-game adapter, or run an offline ground-truth search.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the current memory schema, exact checker interfaces, test and spec
+-       locations, and writable checkpoint storage. On failure, write
+-       blocked_strategy_episode_fixture with gate_check_summary.
+-    1. Add REQ-LEARN-6931 and tests first. Cover immutable receipts, event ordering, delayed writes,
+-       split isolation, invalid provenance, poison, duplicate update IDs, rollback, and restart.
+-    2. Create at least 120 ordered episodes across three strategy families. Freeze train,
+-       prospective evaluation, and old-family retention segments before any later model run.
+-    3. Store state_before, proposed_action, exact outcome, constraint receipt hash, reusable
+-       strategy, provenance chain, event time, update time, and admission label for every episode.
+-    4. Include useful, irrelevant, contradictory, delayed-copy poison, provenance-loss, tombstone
+-       reappearance, and rollback examples. No model output may define its own correctness label.
+-    5. Replay the fixture in a fresh process. Recompute every hash, order constraint, admission
+-       label, retention target, and rollback target.
+-    6. Set strategy_episode_fixture_ready_score=1 only when all required case families exist,
+-       replay is exact, labels are isolated, and no update precedes its outcome.
+-    7. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, docs audit, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and strategy_episode_fixture_ready_score; preconditions_checked; inference_substrate
+-       (deterministic_exact_strategy_episode_fixture_no_llm); duration_s;
+-       source_artifact_hashes; rows; episode_rows; strategy_family_rows; split_rows;
+-       outcome_receipt_rows; update_order_rows; provenance_rows; poison_rows; retention_rows;
+-       restart_rows; tombstone_rows; rollback_rows; fresh_process_replay_rows;
+-       hidden_label_isolation_rows; fixture_checkpoint_path; random_seed;
+-       reproducibility_checksum; strategy_episode_fixture_ready_score; gate_check_summary with the
+-       failed check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (true for fixture conformance only); verdict_class (positive |
+-       circular_positive | null | blocked | disqualified | partial, with circular_positive
+-       required for a ready fixture); honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6931_strategy_episode_fixture.py --date {date}
++    0. PRECONDITIONS: require v608_execution_contract_ready_score=1, the ARC
++       solve registry, live attempt artifacts, normalization code, and exact
++       action and state hashes. On failure, write blocked_arc_branch_corpus with
++       gate_check_summary.
++    1. Add REQ-ARC-6948 and tests first. Cover HUD normalization collisions,
++       action alias collisions, same-action duplicates, time reversal, reset
++       boundaries, level changes, and forged provenance.
++    2. Run the registry precheck. Record that this task makes no new level or
++       game solve claim and cannot change levels_reproduced.
++    3. Scan only live-agent own-attempt receipts. Group by normalized pre-action
++       state within game and level. Keep groups with at least two distinct
++       executed actions and exact observed successors.
++    4. Preserve raw and normalized state hashes, action payload, successor hash,
++       level before and after, timestamp, run ID, and source artifact hash.
++       Exclude outer-loop RE, hand adapters, and synthetic counterfactuals.
++    5. Freeze chronological calibration and held-out branch points within each
++       eligible game. Do not claim unseen-game transfer.
++    6. Report branch count, action diversity, state-collision rate, successor
++       diversity, game and level coverage, and exclusions. Keep every scanned
++       unit in rows.
++    7. Set arc_branch_corpus_ready_score=1 only when at least 24 valid branch
++       points across at least three games survive provenance and collision
++       checks. Insufficient authentic coverage is a complete null, not a fake
++       synthetic substitute.
++    8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
++       verdict-row consistency lint, ARC solve-registry audit, docs audit, and
++       root-clutter checks.
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
++       per required field and arc_branch_corpus_ready_score;
++       preconditions_checked; inference_substrate
++       (existing_live_agent_attempt_receipts_no_model_inference); duration_s;
++       source_artifact_hashes; rows; per_game_results; registry_precheck_rows;
++       scan_rows; provenance_rows; normalization_rows; collision_rows;
++       branch_point_rows; action_rows; successor_rows; split_rows;
++       exclusion_rows; corpus_checkpoint_path; solve_claimed (false);
++       random_seed; reproducibility_checksum; arc_branch_corpus_ready_score;
++       gate_check_summary with failed check, expected value, and observed value
++       for any blocked verdict; verifier_is_oracle (false); verdict_class
++       (positive | circular_positive | null | blocked | disqualified | partial);
++       honest_verdict with a terminal prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6948_arc_branch_corpus.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6916-isomorphic-prospective-relation-stream
++    - experiment_id: exp5767-arc-game-blind-composition-hardening
+       verdict: blocked_gate_check_failed
+-      addressed_by: The new fixture is an independent exact root with no relation-bank prerequisite, and it freezes all episode labels and order before the live memory task.
++      addressed_by: "This task only measures authentic live-attempt branch coverage and has no selector prerequisite or live model influence. It cannot promote a solve or composition patch."
+       retire_if_same_verdict: true
+ 
+-- id: exp6932-selective-episodic-memory
+-  title: Prospective selective episodic self-learning
++- id: exp6949-arc-branch-energy
++  title: Within-game branch-discriminative world-state energy
++  track: arc
++  priority: high
++  agent_type: codex
++  model: gpt-5.6-sol
++  requires_gpu: false
++  max_turns: 50
++  estimated_wall_time_min: 240
++  per_unit_rows: true
++  milestone: 2026.09.608
++  deliverable: results/experiment_6949_arc_branch_energy.json
++  gated_on:
++    - upstream: exp6948-arc-branch-corpus
++      artifact_field: arc_branch_corpus_ready_score
++      op: '=='
++      value: 1
++  prompt: |
++    CONTEXT:
++    Exp6948 supplies authentic alternative-action branches. arXiv:2609.02885
++    argues that next-state models should distinguish the true successor from
++    states caused by alternative actions. Earlier action-role encoders did not
++    transfer between games. This task makes a narrower within-game shadow claim
++    and does not modify the live agent.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
++    - {project_root}/results/experiment_6948_arc_branch_corpus.json
++    - {project_root}/results/experiment_4342_self_learning_action_role_cross_game_encoder.json
++    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
++    - {project_root}/python/carnot/agentic/arc_world_model_trust_energy.py
++    - {project_root}/scripts/verdict_row_consistency_lint.py
++    - {project_root}/openspec/capabilities/arc-agi3/spec.md
++
++    TASK:
++    Compare a predicted-state-matching energy with supervised next-state
++    regression, action-only ranking, and shuffled-label controls on held-out
++    chronological branch points within each game. Measure action ranking and
++    successor discrimination. Keep the module shadow-only and default-off.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require arc_branch_corpus_ready_score=1, exact branch rows,
++       fixed chronological splits, and provenance hashes. On failure, write
++       blocked_arc_branch_energy with gate_check_summary.
++    1. Add REQ-ARC-6949 and tests first. Cover branch-group leakage, state-hash
++       leakage, action-only shortcuts, shuffled labels, ties, reset boundaries,
++       and aggregate-row mismatch.
++    2. Freeze compact state-delta features and all hyperparameters before
++       opening held-out labels. Train only within each game. Make no claim about
++       an unseen game.
++    3. Fit four matched-budget arms: predicted-state matching energy,
++       supervised next-state regression then distance ranking, action-only
++       ranking, and shuffled-label energy.
++    4. Evaluate exact true-action top-1, successor-match rank, pairwise AUROC,
++       calibration, latency, and changed-cell fidelity on held-out branch groups.
++    5. Require the learned energy to beat the strongest non-oracle baseline and
++       shuffled labels. Report game heterogeneity and all no-headroom groups.
++    6. Set branch_energy_run_complete_score=1 when every eligible game, arm,
++       seed, and branch has a terminal row. Set branch_energy_positive_score=1
++       only when paired top-1 improvement has CI95 above zero, no single game
++       carries the result, and all leak and shortcut checks pass.
++    7. Do not change live flags, selectors, solve registry, or level credit.
++       Record solve_claimed=false and default_off=true.
++    8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
++       verdict-row consistency lint, adversarial verification, ARC registry
++       audit, docs audit, and root-clutter checks.
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
++       per required field and both branch_energy_run_complete_score and
++       branch_energy_positive_score; preconditions_checked;
++       inference_substrate (within_game_branch_energy_shadow_no_llm);
++       duration_s; source_artifact_hashes; rows; per_game_results; split_rows;
++       feature_rows; arm_rows; training_rows; branch_group_rows;
++       state_matching_rows; regression_rows; action_only_rows;
++       shuffled_label_rows; ranking_rows; changed_cell_rows; calibration_rows;
++       latency_rows; paired_metric_rows; confidence_interval_rows;
++       leakage_rows; shortcut_rows; default_off (true); solve_claimed (false);
++       random_seed; reproducibility_checksum; branch_energy_run_complete_score;
++       branch_energy_positive_score; gate_check_summary with failed check,
++       expected value, and observed value for any blocked verdict;
++       verifier_is_oracle (false); verdict_class (positive | circular_positive |
++       null | blocked | disqualified | partial); honest_verdict with a terminal
++       prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6949_arc_branch_energy.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp4342-self-learning-action-role-cross-game-encoder
++      verdict: "complete: action_role_encoder_transfer_no_improvement_positive_control_passed"
++      addressed_by: "The new method uses authentic alternative-action successor pairs, trains and evaluates within each game in chronological order, and makes no unseen-game transfer or live-solve claim."
++      retire_if_same_verdict: true
++
++- id: exp6950-trace-state-self-learning
++  title: Prospective Trace-as-State continuous self-learning
+   track: self_learning
+   priority: critical
+   agent_type: claude
+@@ -397,99 +847,110 @@ tasks:
+   max_turns: 50
+   estimated_wall_time_min: 720
+   per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6932_selective_episodic_memory.json
++  milestone: 2026.09.608
++  deliverable: results/experiment_6950_trace_state_self_learning.json
+   gated_on:
+-    - upstream: exp6931-strategy-episode-fixture
+-      artifact_field: strategy_episode_fixture_ready_score
++    - upstream: exp6943-verifier-density-prefix-corpus
++      artifact_field: prefix_corpus_ready_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6856 found harmful writes and uncalibrated abstention. Exp6873 found no prospective sealed
+-    utility. Exp6931 now provides an independent exact ordered fixture. V607 tests Tier-2
+-    continuous self-learning with immutable receipts, hard resets, delayed writes, and complete
+-    no-memory and read-only controls.
++    Exp6856 found harmful writes and weak abstention. Exp6873 found no sealed
++    prospective utility. arXiv:2609.02702 gives a new matched mechanism: place
++    an exact-admitted prior trace before the fresh context instead of appending
++    it after the context. arXiv:2609.02859 shows why an exact external outcome,
++    not a model judge, must authorize the write. This is V608's required
++    continuous self-learning experiment.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
+       {project_root}/research-program.md
+-    - {project_root}/results/experiment_6931_strategy_episode_fixture.json
++    - {project_root}/results/experiment_6943_verifier_density_prefix_corpus.json
+     - {project_root}/results/experiment_6856_sealed_risk_sensitive_learning_audit.json
+     - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+     - {project_root}/python/carnot/learning/constraint_memory.py
+-    - {project_root}/scripts/experiment_template.py and
+-      {project_root}/scripts/inference_sota_models.py
++    - {project_root}/scripts/experiment_template.py
++    - {project_root}/scripts/inference_sota_models.py
+     - {project_root}/openspec/capabilities/learning/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+ 
+     TASK:
+-    Compare no memory, read-only retrieval, and exact-admitted delayed-write episodic memory in
+-    prospective order. Run every arm with every required SOTA family. Keep weights frozen. Measure
+-    next-event utility, abstention, old-family retention, poison resistance, and rollback.
++    Run a chronological three-arm comparison: no memory, exact-admitted trace
++    appended after context, and the same trace placed before context on a fresh
++    pass. Let only prior exact-success receipts enter memory. Keep weights frozen,
++    reset processes between arms, and measure later-event utility and safety.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the exact Exp6931 artifact and checkpoint,
+-       strategy_episode_fixture_ready_score=1, three mandated model files, dual CUDA, and enough
+-       disk. On failure, write blocked_selective_episodic_memory with gate_check_summary.
+-    1. Add REQ-LEARN-6932 and tests first. Cover arm reset, frozen model weights, delayed admission,
+-       read-only enforcement, no-memory isolation, poison rejection, retention, and rollback.
+-    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF,
+-       unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Use the current cached SOTA
+-       resolver. Legacy small models may run smoke tests only.
+-    3. Freeze prompts, episode order, retrieval budget, token budget, seeds, admission threshold,
+-       abstention rule, and success criteria before loading a model.
+-    4. Run complete no-memory, read-only, and admitted-write arms in separate fresh processes for
+-       every model. Match prompts, tokens, candidate count, and event order.
+-    5. In the admitted-write arm, write only after an exact outcome receipt exists. A write may
+-       affect later events only. Never use the current event's hidden label in retrieval or
+-       generation.
+-    6. Record one row per model-arm-event tuple. Include retrieved IDs, memory hashes before and
+-       after, action, exact outcome, abstention, write decision, rejection reason, latency, tokens,
+-       and runner receipt.
+-    7. Run the frozen old-family retention segment after the prospective segment. Run poison,
+-       tombstone, restart, and rollback cases without changing thresholds.
+-    8. Set episodic_memory_run_complete_score=1 when all planned rows and fresh-process arms finish,
+-       regardless of effect direction. Set selective_memory_positive_score=1 only when admitted
+-       writes beat the strongest control on next-event exact utility with a paired confidence
+-       interval above zero, do not reduce retention, accept no poison, and pass rollback.
+-    9. Record continuous_self_learning_task=true, learning_tier=2, and
+-       no_model_weight_mutation=true. Hash model files before and after.
+-    10. Run focused tests, Ruff, OpenSpec coverage, applicable live model checks,
+-        artifact-convention audit, verdict-row consistency lint, adversarial verification, docs
+-        audit, and root-clutter checks.
+-    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-        and both episodic_memory_run_complete_score and selective_memory_positive_score;
+-        preconditions_checked; inference_substrate
+-        (prospective_local_gguf_exact_admitted_external_memory); duration_s;
+-        source_artifact_hashes; rows; per_game_results; model_specs; model_rows; arm_rows;
+-        event_rows; prompt_hashes; split_hashes; exact_outcome_rows; retrieval_rows; write_rows;
+-        abstention_rows; memory_hash_rows; poison_rows; retention_rows; restart_rows;
+-        tombstone_rows; rollback_rows; paired_metric_rows; confidence_interval_rows;
+-        task_runtime_receipt; continuous_self_learning_task (true); learning_tier (2);
+-        no_model_weight_mutation (true); model_hashes_before; model_hashes_after; random_seed;
+-        reproducibility_checksum; episodic_memory_run_complete_score;
+-        selective_memory_positive_score; gate_check_summary with the failed check, expected value,
+-        and observed value for any blocked verdict; verifier_is_oracle (false);
+-        verdict_class (positive | circular_positive | null | blocked | disqualified | partial);
+-        honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6932_selective_episodic_memory.py --date {date}
++    0. PRECONDITIONS: require prefix_corpus_ready_score=1, exact prospective
++       splits, both model files, authenticated CUDA, a transactional memory
++       store, and per-event checkpoint recovery. On failure, write
++       blocked_trace_state_self_learning with gate_check_summary.
++    1. Add REQ-LEARN-6950 and tests first. Cover arm isolation, future-label
++       leakage, write-before-outcome, copied receipts, trace-token mismatch,
++       poison, contradiction, duplicate update, restart, tombstone, and rollback.
++    2. Define MODEL_SPECS with unsloth/Qwen3.6-35B-A3B-GGUF and
++       unsloth/gemma-4-26B-A4B-it-GGUF. Use the current local GGUF resolver.
++       Legacy small models may run smoke tests only.
++    3. Freeze at least 18 prospective events per model, six seed events, event
++       order, prompt and trace budgets, retrieval count, seeds, abstention rule,
++       and positive gates before inference.
++    4. Run no-memory, append-after, and trace-before arms in separate fresh
++       processes. Use the same admitted trace text and the same total token
++       budget in the two memory arms.
++    5. After each event, obtain the exact outcome from the Exp6943 checker. Write
++       only a prior successful trace with immutable receipt, provenance, family,
++       and time. The current outcome may affect later events only.
++    6. Record one row per model, arm, and event. Include prompt order, retrieved
++       IDs, memory hashes, answer, exact outcome, abstention, write decision,
++       rejection reason, tokens, latency, and runtime receipt.
++    7. After the prospective stream, run old-family retention, irrelevant
++       retrieval, contradiction, delayed-copy poison, restart, tombstone, and
++       rollback tests without changing thresholds.
++    8. Set trace_state_run_complete_score=1 when all planned rows and safety
++       cases finish. Set trace_state_positive_score=1 only when trace-before
++       beats the strongest control on paired later-event exact accuracy with
++       CI95 above zero, does not reduce retention, admits no poison, and passes
++       restart and rollback.
++    9. Record continuous_self_learning_task=true, learning_tier=2,
++       no_model_weight_mutation=true, and model hashes before and after.
++    10. Run focused tests, Ruff, OpenSpec coverage, applicable live-model checks,
++        artifact-convention audit, verdict-row consistency lint, adversarial
++        verification, docs audit, and root-clutter checks.
++    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and both trace_state_run_complete_score and
++        trace_state_positive_score; preconditions_checked;
++        inference_substrate (prospective_local_gguf_exact_admitted_trace_state);
++        duration_s; source_artifact_hashes; rows; per_game_results; model_specs;
++        model_rows; arm_rows; event_rows; prompt_order_rows; exact_outcome_rows;
++        retrieval_rows; write_rows; memory_hash_rows; abstention_rows;
++        token_budget_rows; poison_rows; contradiction_rows; retention_rows;
++        restart_rows; tombstone_rows; rollback_rows; paired_metric_rows;
++        confidence_interval_rows; task_runtime_receipt;
++        continuous_self_learning_task (true); learning_tier (2);
++        no_model_weight_mutation (true); model_hashes_before;
++        model_hashes_after; random_seed; reproducibility_checksum;
++        trace_state_run_complete_score; trace_state_positive_score;
++        gate_check_summary with failed check, expected value, and observed value
++        for any blocked verdict; verifier_is_oracle (false); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6950_trace_state_self_learning.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+     - experiment_id: exp6856-sealed-risk-sensitive-learning-audit
+       verdict: complete_null_sealed_risk_sensitive_learning_harmful_writes_and_uncalibrated_abstention
+-      addressed_by: The new task uses an independently frozen exact episode fixture, hard process resets, delayed exact-receipt writes, an explicit read-only arm, and fixed abstention and rollback gates.
++      addressed_by: "The new mechanism writes only exact-success traces after outcomes, uses fixed abstention, separates fresh processes, and compares trace placement under the same token budget."
+       retire_if_same_verdict: true
+     - experiment_id: exp6873-prospective-sealed-self-learning-audit
+       verdict: complete_null_prospective_sealed_self_learning_utility_not_demonstrated
+-      addressed_by: The new attempt evaluates typed strategy episodes with balanced reusable events across all three mandated SOTA families and compares admitted writes with both no-memory and read-only controls.
++      addressed_by: "The new attempt tests the Trace-as-State ordering mechanism on an exact line-oriented prospective stream with append-after and no-memory controls, two current GGUF families, and full retention and rollback gates."
+       retire_if_same_verdict: true
+ 
+-- id: exp6933-memory-cold-audit
+-  title: Fresh-process episodic-memory safety audit
++- id: exp6951-trace-memory-cold-audit
++  title: Fresh-process trace-memory causal audit
+   track: self_learning
+   priority: critical
+   agent_type: codex
+@@ -498,80 +959,183 @@ tasks:
+   max_turns: 30
+   estimated_wall_time_min: 240
+   per_unit_rows: true
+-  milestone: 2026.09.607
+-  deliverable: results/experiment_6933_memory_cold_audit.json
++  milestone: 2026.09.608
++  deliverable: results/experiment_6951_trace_memory_cold_audit.json
+   gated_on:
+-    - upstream: exp6932-selective-episodic-memory
+-      artifact_field: episodic_memory_run_complete_score
++    - upstream: exp6950-trace-state-self-learning
++      artifact_field: trace_state_run_complete_score
+       op: '=='
+       value: 1
+   prompt: |
+     CONTEXT:
+-    Exp6932 gates this audit on execution completeness, not on a positive memory result. Earlier
+-    audits exposed harmful writes and no prospective utility. V607 needs an independent fresh
+-    process to recompute the claim and attack persistence, provenance, retention, and rollback.
++    Exp6950 gates this task on run completion, not on a positive effect. Prior
++    memory results were flagged when aggregate claims conflicted with rows or
++    safety evidence. This task replays the trace store and recomputes the
++    placement comparison in a process with no inherited memory.
+ 
+     Work at {project_root}. The execution date is {date}.
+ 
+     EXISTING CODE TO READ FIRST:
+     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6932_selective_episodic_memory.json
+-    - {project_root}/results/experiment_6931_strategy_episode_fixture.json
+-    - {project_root}/results/experiment_6856_sealed_risk_sensitive_learning_audit.json
++    - {project_root}/results/experiment_6950_trace_state_self_learning.json
++    - {project_root}/results/experiment_6943_verifier_density_prefix_corpus.json
+     - {project_root}/results/experiment_6873_prospective_sealed_self_learning_audit.json
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+     - {project_root}/python/carnot/learning/constraint_memory.py
++    - {project_root}/scripts/verdict_row_consistency_lint.py
+     - {project_root}/openspec/capabilities/learning/spec.md
+ 
+     TASK:
+-    Audit Exp6932 from raw rows and checkpoints in a fresh process. Recompute every comparative
+-    metric. Verify temporal isolation, provenance, poison rejection, restart, tombstones,
+-    old-family retention, rollback, and model immutability. Preserve a null result when warranted.
++    Audit Exp6950 from raw event rows and saved stores in a fresh process.
++    Recompute every comparison. Verify temporal isolation, exact receipt
++    authority, matched trace content, token budgets, poison resistance,
++    retention, restart, tombstones, rollback, and model immutability.
+ 
+     CONCRETE STEPS:
+-    0. PRECONDITIONS: require the exact Exp6932 artifact, raw rows, checkpoint hashes,
+-       episodic_memory_run_complete_score=1, and the frozen Exp6931 fixture. On failure, write
+-       blocked_memory_cold_audit with gate_check_summary.
+-    1. Add REQ-LEARN-6933 and tests first. Cover truncated rows, duplicate events, reordered events,
+-       future-label leakage, forged receipts, stale tombstones, failed rollback, and aggregate-row
+-       disagreement.
+-    2. Start a fresh process with no inherited memory state. Verify every source checksum before
+-       reading headline fields.
+-    3. Recompute arm completeness, exact utility, paired differences, confidence intervals,
+-       abstention, write acceptance, poison rejection, retention, and latency from per-event rows.
+-    4. Replay restart, delayed-copy poison, provenance-loss, tombstone reappearance, retention, and
+-       rollback cases from the saved store. Do not change thresholds or repair records.
+-    5. Verify that every accepted write follows its exact outcome receipt and can affect only later
+-       events. Verify model file hashes are unchanged.
+-    6. Set memory_safety_audit_complete_score=1 when all audit checks have terminal rows. Set
+-       audited_selective_memory_positive_score=1 only when the raw rows independently satisfy every
+-       Exp6932 positive gate.
+-    7. If the upstream positive field disagrees with the audit, mark the artifact disqualified and
+-       name every contradiction. Never upgrade an upstream null.
++    0. PRECONDITIONS: require the exact Exp6950 artifact, raw rows, saved stores,
++       source hashes, and trace_state_run_complete_score=1. On failure, write
++       blocked_trace_memory_cold_audit with gate_check_summary.
++    1. Add REQ-LEARN-6951 and tests first. Cover missing rows, duplicate events,
++       reordered events, future labels, forged receipts, trace-content drift,
++       unequal budgets, stale tombstones, failed rollback, and aggregate drift.
++    2. Start with an empty process state. Verify all checksums before reading
++       any headline or verdict field.
++    3. Recompute arm completeness, per-event exact outcomes, paired accuracy,
++       confidence intervals, abstention, writes, tokens, latency, and retention
++       directly from rows.
++    4. Prove that append-after and trace-before used the same trace bytes and
++       matched total budgets. Prove that no write preceded its exact outcome or
++       crossed an arm boundary.
++    5. Replay poison, contradiction, restart, tombstone, retention, and rollback
++       cases from the saved stores. Verify model hashes did not change.
++    6. Set trace_state_audit_complete_score=1 when every audit check has a
++       terminal row. Set audited_trace_state_positive_score=1 only when the raw
++       rows independently satisfy every Exp6950 positive gate.
++    7. If the upstream positive field disagrees with recomputation, mark the
++       artifact disqualified and name each contradiction. Never upgrade a null.
+     8. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
+-       verdict-row consistency lint, adversarial verification, docs audit, and root-clutter checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle per required field
+-       and both memory_safety_audit_complete_score and
+-       audited_selective_memory_positive_score; preconditions_checked; inference_substrate
+-       (fresh_process_exact_memory_audit_no_llm); duration_s; source_artifact_hashes; rows;
+-       audit_rows; arm_recompute_rows; event_order_rows; future_label_isolation_rows;
+-       receipt_recheck_rows; provenance_rows; poison_rows; restart_rows; tombstone_rows;
+-       retention_rows; rollback_rows; model_immutability_rows; paired_metric_rows;
+-       confidence_interval_rows; aggregate_consistency_rows; contradiction_rows; random_seed;
+-       reproducibility_checksum; memory_safety_audit_complete_score;
+-       audited_selective_memory_positive_score; gate_check_summary with the failed check, expected
+-       value, and observed value for any blocked verdict; verifier_is_oracle (false);
+-       verdict_class (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict (terminal and prefixed complete_ or blocked_).
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6933_memory_cold_audit.py --date {date}
++       verdict-row consistency lint, adversarial verification, docs audit, and
++       root-clutter checks.
++    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
++       per required field and both trace_state_audit_complete_score and
++       audited_trace_state_positive_score; preconditions_checked;
++       inference_substrate (fresh_process_exact_trace_memory_audit_no_llm);
++       duration_s; source_artifact_hashes; rows; audit_rows; arm_recompute_rows;
++       event_order_rows; future_label_isolation_rows; receipt_recheck_rows;
++       trace_content_rows; token_budget_rows; provenance_rows; poison_rows;
++       contradiction_rows; restart_rows; tombstone_rows; retention_rows;
++       rollback_rows; model_immutability_rows; paired_metric_rows;
++       confidence_interval_rows; aggregate_consistency_rows;
++       contradiction_report_rows; random_seed; reproducibility_checksum;
++       trace_state_audit_complete_score; audited_trace_state_positive_score;
++       gate_check_summary with failed check, expected value, and observed value
++       for any blocked verdict; verifier_is_oracle (false); verdict_class
++       (positive | circular_positive | null | blocked | disqualified | partial);
++       honest_verdict with a terminal prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6951_trace_memory_cold_audit.py --date {date}
+     Do NOT push. Do NOT modify scripts/research_conductor.py.
+   prior_failures:
+-    - experiment_id: exp6856-sealed-risk-sensitive-learning-audit
+-      verdict: complete_null_sealed_risk_sensitive_learning_harmful_writes_and_uncalibrated_abstention
+-      addressed_by: This audit consumes a completed three-arm run with fixed abstention, exact delayed-write receipts, explicit poison rows, and deterministic rollback targets.
+-      retire_if_same_verdict: true
+     - experiment_id: exp6873-prospective-sealed-self-learning-audit
+       verdict: complete_null_prospective_sealed_self_learning_utility_not_demonstrated
+-      addressed_by: The audit now recomputes typed next-event utility and retention from complete per-event rows for all three required model families in a clean process.
++      addressed_by: "This audit consumes a completed three-arm Trace-as-State run, verifies byte-identical memory content and matched budgets, and replays safety and retention from saved stores in a fresh process."
++      retire_if_same_verdict: true
++
++- id: exp6952-v608-capstone
++  title: V608 independent capstone and V609 handoff
++  track: infrastructure
++  priority: critical
++  agent_type: claude
++  model: opus
++  requires_gpu: false
++  max_turns: 100
++  estimated_wall_time_min: 180
++  per_unit_rows: true
++  milestone: 2026.09.608
++  deliverable: results/experiment_6952_v608_capstone.json
++  prompt: |
++    CONTEXT:
++    V608 has independent branches for exact prefix energy, hidden-state causal
++    selection, ARC branch energy, and prospective trace learning. The capstone
++    must preserve null, blocked, circular, partial, disqualified, and flagged
++    states. It must also recheck the exact 12-task document/YAML contract that
++    failed in four recent milestones.
++
++    Work at {project_root}. The execution date is {date}.
++
++    EXISTING CODE TO READ FIRST:
++    - {project_root}/CLAUDE.md, {project_root}/CODEX.md, and
++      {project_root}/research-program.md
++    - {project_root}/research-roadmap.yaml
++    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++    - {project_root}/results/experiment_6942_v608_contract_preflight.json
++    - all available V608 artifacts in {project_root}/results
++    - {project_root}/scripts/adversarial_verify.py
++    - {project_root}/scripts/verdict_row_consistency_lint.py
++    - {project_root}/ops/exclusion_manifest.yaml
++    - {project_root}/openspec/capabilities/research-reporting/spec.md
++
++    TASK:
++    Independently reconcile all available V608 evidence and create the V609
++    handoff. Recompute document/YAML parity, gates, branch metrics, causal
++    controls, continuous-learning safety, ARC claim boundaries, runtime
++    provenance, and exclusion implications. Do not rerun missing science.
++
++    CONCRETE STEPS:
++    0. PRECONDITIONS: require the active V608 roadmap and design document. The
++       capstone remains runnable when science artifacts are missing or blocked.
++       On a missing core contract file, write blocked_v608_capstone with
++       gate_check_summary.
++    1. Add REQ-REPORT-6952 and tests first. Cover missing artifacts, blocked
++       gates, circular positives, flagged artifacts, row-headline conflicts,
++       verdict-prefix/class conflicts, and contract mismatch.
++    2. Parse the document and YAML independently. Require exactly 12 tasks,
++       IDs exp6941 through exp6952, matching order, titles, deliverables, and
++       structured gates.
++    3. Classify each artifact from raw status, honest_verdict, verdict_class,
++       gate fields, and adversarial verification. Do not trust conductor OK
++       alone. Keep missing artifacts explicit.
++    4. Recompute every available comparative headline from per-unit rows. Check
++       confidence intervals, strongest baselines, random-direction controls,
++       shuffled controls, model coverage, and label isolation.
++    5. Report prefix_energy_positive_score, causal_hidden_state_positive_score,
++       branch_energy_positive_score, trace_state_positive_score, and
++       audited_trace_state_positive_score only from their authoritative
++       artifacts. Do not synthesize a positive score from partial evidence.
++    6. Verify that ARC artifacts made no new solve claim and did not change the
++       solve registry. Verify continuous_self_learning_task=true,
++       learning_tier=2, delayed exact writes, and unchanged model hashes.
++    7. Record exclusion-manifest candidates only where the same prior verdict
++       recurred under retire_if_same_verdict=true. Do not edit the manifest in
++       this task.
++    8. Produce a three-gap V609 handoff from evidence that actually ran. Keep
++       unavailable hardware and external product claims outside the result.
++    9. Set v608_capstone_complete_score=1 when every roadmap task has a terminal
++       classification row and the contract audit completes. Use verdict_class
++       partial when evidence is incomplete, with a matching partial_ verdict
++       prefix.
++    10. Run focused tests, Ruff, OpenSpec coverage, artifact-convention audit,
++        verdict-row consistency lint, adversarial verification, docs audit, and
++        root-clutter checks.
++    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
++        principle per required field and v608_capstone_complete_score;
++        preconditions_checked; inference_substrate
++        (independent_artifact_replay_and_contract_reconciliation_no_llm);
++        duration_s; source_artifact_hashes; rows; task_contract_rows;
++        task_state_rows; gate_replay_rows; verdict_class_rows;
++        adversarial_verify_rows; aggregate_recompute_rows; model_coverage_rows;
++        prefix_energy_rows; hidden_state_rows; arc_branch_rows;
++        trace_learning_rows; safety_rows; exclusion_candidate_rows;
++        hardware_provenance_rows; v609_gap_rows; random_seed;
++        reproducibility_checksum; v608_capstone_complete_score;
++        gate_check_summary with failed check, expected value, and observed value
++        for any blocked verdict; verifier_is_oracle (false); verdict_class
++        (positive | circular_positive | null | blocked | disqualified | partial);
++        honest_verdict with a terminal prefix consistent with verdict_class.
++
++    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6952_v608_capstone.py --date {date}
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  prior_failures:
++    - experiment_id: exp6922-v605-independent-capstone
++      verdict: complete_partial_v605_evidence_synthesized_without_science_promotion
++      addressed_by: "The V608 capstone requires prefix and class consistency, exact 12-task document/YAML parity, per-unit recomputation, and explicit terminal rows for every missing or blocked branch."
+       retire_if_same_verdict: true
+-- 
+2.55.0
+

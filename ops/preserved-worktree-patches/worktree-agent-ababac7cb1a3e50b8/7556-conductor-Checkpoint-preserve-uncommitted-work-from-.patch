@@ -1,0 +1,43 @@
+From 23d2f83c7b2543810d5b0c7309c7a4fe6d1c6697 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 17:39:30 -0400
+Subject: [PATCH 07556/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 92ae815fd7..840149147d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 264, "phase": "iteration_start", "last_beat": "2026-07-22T21:37:06Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 265, "phase": "iteration_start", "last_beat": "2026-07-22T21:39:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5f01437127..9a77f6c571 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14134,3 +14134,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 20:35 UTC | Companion audit for Exp5799 event definitions, row | OK | 97 passed, 1 warning in 27.87s |
+ | 2026-07-22 21:11 UTC | Gated on Exp5811 clean evidence: implement split-b | OK | 87 passed, 1 warning in 26.78s |
+ | 2026-07-22 21:35 UTC | Gated on Exp5812 contract: changed-mechanism canar | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (665s silence). Last out |
++| 2026-07-22 21:37 UTC | Gated on Exp5812 contract: changed-mechanism canar | SKIP | Pre-tests failing, self-heal failed:  |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1bcc8b01f9..f674c50ef8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 264, "phase": "iteration_start", "started_at": "2026-07-22T21:37:06Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 265, "phase": "iteration_start", "started_at": "2026-07-22T21:39:26Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

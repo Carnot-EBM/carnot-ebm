@@ -1,0 +1,915 @@
+From bdd4a584d857485e10c3a22416513be4c2ed1cd8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 19 Aug 2026 16:55:04 -0400
+Subject: [PATCH 09358/11362] [outer-loop] Label the h2h substrate, and
+ preserve conductor state before stop
+
+Record `gpu_index` on every 6440 head-to-head cell. `server_n_ctx` was already
+recorded, so a context change was always visible in the shard. A card-count
+change was not: a cell run on one card and a cell run on two looked identical.
+
+On 2026-08-19 that gap became live. The runner passed `--gpu 1`, which
+overrides the arm script's own default of "0,1". Qwen3.8-27B fits on one card
+at n_ctx 131072 and kept running. Gemma-4-31B does not, and its server exited
+with rc=-11 after 14 seconds, so that arm produced zero cells. Had both models
+fit, the two arms would have been compared across different hardware with
+nothing in the data to show it.
+
+The field is additive metadata. It cannot change what a cell measures.
+
+The conductor state files are committed here because the conductor is being
+stopped to free GPU 0 for the gemma arm, which needs both cards at this
+context. Commit first, never stash.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |  15 +
+ ops/conductor-state.json                      |   2 +-
+ research-complete.yaml                        | 812 ++++++++++++++++++
+ ...xperiment_6440_qwen38_generator_h2h_arm.py |   7 +
+ 5 files changed, 836 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 654861bb85..7fae6f7238 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3504065, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-19T19:26:00Z"}
+\ No newline at end of file
++{"pid": 3504065, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-08-19T20:54:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 46a05c3748..5938350ba9 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16075,3 +16075,18 @@ code |
+ | 2026-08-19 18:47 UTC | Independent unique-event CSL provenance and lifecy | OK | 87 passed, 1 warning in 11.09s |
+ | 2026-08-19 19:04 UTC | ARC generic safety-shield objective A/B without so | OK | 88 passed, 1 warning in 13.83s |
+ | 2026-08-19 19:24 UTC | V556 independent adversarial capstone and reconcil | OK | 88 passed, 1 warning in 12.66s |
++| 2026-08-19 20:22 UTC | Plan milestone 2026.08.557 | OK | 7 tasks proposed |
++| 2026-08-19 20:25 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:27 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:29 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:31 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:34 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:36 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:38 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:40 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:43 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:45 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:47 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:49 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:52 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
++| 2026-08-19 20:54 UTC | Activation REFUSED: milestone 2026.08.557 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 021d036dd8..1f9ecf0021 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3504065, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-19T19:26:00Z"}
+\ No newline at end of file
++{"pid": 3504065, "iteration": 30, "phase": "iteration_start", "started_at": "2026-08-19T20:54:11Z"}
+\ No newline at end of file
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 85ea42ae59..3345308377 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -77692,3 +77692,815 @@ milestones:
+     title: V555 adversarial capstone and reconciliation
+     deliverable: results/experiment_6459_v555_adversarial_capstone.json
+     result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
++- id: 2026.08.556
++  title: Provenance-Complete Constraint Routing and Unique-Event Self-Learning
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-08-19'
++  finding: See conductor log for per-experiment results.
++  tasks:
++  - id: exp6460-v556-terminal-handoff-and-queue-integrity
++    title: V555 terminal handoff and V556 queue integrity
++    deliverable: results/experiment_6460_v556_terminal_handoff_and_queue_integrity.json
++    result: OK (conductor)
++  - id: exp6461-v556-primary-source-freshness-receipt
++    title: V556 primary-source freshness receipt
++    deliverable: results/experiment_6461_v556_sota_source_and_benchmark_delta.json
++    result: OK (conductor)
++  - id: exp6462-sota-raw-persistence-uniqueness-canary
++    title: SOTA raw persistence and unique-event canary
++    deliverable: results/experiment_6462_sota_raw_persistence_uniqueness_canary.json
++    result: OK (conductor)
++  - id: exp6463-sota-fixed-policy-candidate-corpus-v2
++    title: 'Gated on Exp6462 canary readiness: provenance-complete fixed-policy corpus v2'
++    deliverable: results/experiment_6463_sota_fixed_policy_candidate_corpus_v2.json
++    result: OK (conductor)
++  - id: exp6464-fixed-slot-grounding-exact-logic-ab
++    title: 'Gated on Exp6463 corpus readiness: fixed-slot grounding and exact logic A/B'
++    deliverable: results/experiment_6464_fixed_slot_grounding_exact_logic_ab.json
++    result: OK (conductor)
++  - id: exp6465-representation-objective-causal-ab-v2
++    title: 'Gated on Exp6464 grounding readiness: representation-objective causal A/B v2'
++    deliverable: results/experiment_6465_representation_objective_causal_ab_v2.json
++    result: OK (conductor)
++  - id: exp6466-held-verifier-budget-allocation-v2
++    title: 'Gated on Exp6463 corpus readiness: held verifier budget allocation v2'
++    deliverable: results/experiment_6466_held_verifier_budget_allocation_v2.json
++    result: OK (conductor)
++  - id: exp6467-held-exact-constraint-energy-selection-v2
++    title: 'Gated on Exp6465 objective causality: held exact-constraint energy selection v2'
++    deliverable: results/experiment_6467_held_exact_constraint_energy_selection_v2.json
++    result: OK (conductor)
++  - id: exp6468-unique-event-verifier-bounded-csl
++    title: Prospective unique-event verifier-bounded continuous self-learning
++    deliverable: results/experiment_6468_unique_event_verifier_bounded_csl.json
++    result: OK (conductor)
++  - id: exp6469-unique-event-csl-corruption-restart
++    title: 'Gated on Exp6468 CSL readiness: unique-event corruption and restart replication'
++    deliverable: results/experiment_6469_unique_event_csl_corruption_restart.json
++    result: OK (conductor)
++  - id: exp6470-independent-unique-event-csl-audit
++    title: Independent unique-event CSL provenance and lifecycle audit v2
++    deliverable: results/experiment_6470_independent_unique_event_csl_audit.json
++    result: OK (conductor)
++  - id: exp6471-arc-generic-safety-shield-objective-ab
++    title: ARC generic safety-shield objective A/B without solve claim
++    deliverable: results/experiment_6471_arc_generic_safety_shield_objective_ab.json
++    result: OK (conductor)
++  - id: exp6472-v556-adversarial-capstone
++    title: V556 independent adversarial capstone and reconciliation
++    deliverable: results/experiment_6472_v556_adversarial_capstone.json
++    result: OK (conductor)
+diff --git a/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py b/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
+index fd53a6e045..0e2ae4a1e4 100644
+--- a/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
++++ b/scripts/experiments/experiment_6440_qwen38_generator_h2h_arm.py
+@@ -877,6 +877,13 @@ def main() -> int:
+             row["elapsed_s"] = round(time.time() - c0, 2)
+             row["residency_mib_at_cell_start"] = res
+             row["server_n_ctx"] = N_CTX
++            # Which cards served this cell. `server_n_ctx` was already recorded, so a context change
++            # was always visible -- but a cell run on one card versus two looked identical in the
++            # shard. A caller that passes `--gpu 1` silently gets a different substrate, and on
++            # 2026-08-19 one did: the gemma arm segfaulted on a single card at this context while
++            # the qwen arm fit and kept running, so the two arms would have been compared across
++            # different hardware with nothing in the data to show it.
++            row["gpu_index"] = GPU_INDEX
+             with shard.open("a") as f:  # PER-CELL cache write
+                 f.write(json.dumps(row) + "\n")
+             done[(game, t)] = row
+-- 
+2.55.0
+

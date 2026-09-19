@@ -1,0 +1,1432 @@
+From a8cecbbc4e836829ffd752a06c07951d16c7c0f3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 10:40:37 -0400
+Subject: [PATCH 06434/11362] [conductor] ARC trajectory target precheck with
+ duplicate-solve avoidance
+
+Automated research step by research conductor.
+Task ID: exp5493-arc-trajectory-target-precheck-v498
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |  76 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...493_arc_trajectory_target_precheck_v498.py | 567 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...3_arc_trajectory_target_precheck_v498.json | 171 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...493_arc_trajectory_target_precheck_v498.py | 327 ++++++++++
+ 19 files changed, 1166 insertions(+), 25 deletions(-)
+ create mode 100644 python/carnot/experiment_5493_arc_trajectory_target_precheck_v498.py
+ create mode 100644 results/experiment_5493_arc_trajectory_target_precheck_v498.json
+ create mode 100644 tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 5dd5b460ab..7183b6526c 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -1534,6 +1534,53 @@ Required field principles:
+ - `random_seed`: principle "deterministic seed for the bounded live attempt."
+ - `honest_verdict`: principle "one-line verdict starting complete:, honest_null:, or blocked:."
+ 
++### REQ-ARC-FCP-5493: Registry-Only Trajectory Target Precheck
++
++Experiment 5493 SHALL write
++`results/experiment_5493_arc_trajectory_target_precheck_v498.json` as a
++no-solve ARC registry and live-path precheck for the follow-on Exp5494
++trajectory/option-induction attempt. The workflow SHALL read
++`ops/arc_solve_registry.yaml`, `ops/exclusion_manifest.yaml`,
++`ops/known-issues.md`, and the recent Exp5479/Exp5480 target artifacts before
++selecting any target. It SHALL report each candidate game's current
++`levels_reproduced`, reject any already reproduced target level, and avoid
++recent no-bank targets `sb26:L3`, `bp35:L3`, `ka59:L2`, `cn04:L4`, and
++`re86:L3` unless the registry proves a different target level and mechanism.
++
++The workflow SHALL reject retired generic exploration-signal scopes from
++Exp5154, including novelty-only, curiosity-only, energy-as-fitness
++quality-diversity, and archive-granularity reruns. It SHALL prefer a target
++whose registry row records live-path mechanism hooks and enough visible
++runtime-observation structure for the live agent to form trajectory or option
++hypotheses from its own observations. It SHALL NOT read game source, run
++offline ground-truth BFS, or build or credit a per-game hand adapter. When no
++eligible target exists, it SHALL emit a clean blocked no-target artifact rather
++than selecting a stale duplicate.
++
++The result artifact SHALL include `registry_path`,
++`excluded_recent_no_bank_targets`, `duplicate_solve_avoided`,
++`selected_game`, `selected_target_level`, `prior_levels_reproduced`,
++`proposed_live_mechanism`, `trajectory_induction_preconditions`,
++`offline_bfs_used`, `per_game_adapter_used`,
++`arc_trajectory_precheck_ready`, `inference_substrate`, and
++`honest_verdict`.
++
++Required field principles:
++
++- `registry_path`: principle "must equal ops/arc_solve_registry.yaml."
++- `excluded_recent_no_bank_targets`: principle "auditable list containing sb26:L3, bp35:L3, ka59:L2, cn04:L4, and re86:L3 unless the selected target proves a different level and mechanism."
++- `duplicate_solve_avoided`: principle "bare bool proving the selected target is strictly deeper than the registry depth."
++- `selected_game`: principle "selected game id, or empty string when no eligible target exists."
++- `selected_target_level`: principle "selected next target level as a bare int, or 0 when blocked."
++- `prior_levels_reproduced`: principle "authoritative registry depth for the selected game before Exp5493."
++- `proposed_live_mechanism`: principle "one-line live-path mechanism to hand to Exp5494, not a retired exploration-signal rerun."
++- `trajectory_induction_preconditions`: principle "list of live-observation prerequisites that must hold before Exp5494 attempts the target."
++- `offline_bfs_used`: principle "must be false; this precheck is registry-only and no offline ground-truth BFS is run."
++- `per_game_adapter_used`: principle "must be false; target eligibility is not credited to a hand adapter."
++- `arc_trajectory_precheck_ready`: principle "true only when a non-duplicate, non-recent-no-bank, non-retired-scope target is selected."
++- `inference_substrate`: principle "must equal registry_precheck_no_solve."
++- `honest_verdict`: principle "one-line verdict starting complete: or blocked: without a solve claim."
++
+ ## Scenarios
+ 
+ ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
+@@ -2138,3 +2185,32 @@ depth
+ Then and only then `offline_reproduced=true`, `reproduced_levels>=1`,
+ `new_level_banked=true`, `registry_updated=true`, `first_win_trace_path` is
+ non-empty, and `honest_verdict` starts with `complete:`.
++
++### SCENARIO-ARC-FCP-5493: Trajectory Target Precheck Avoids Stale And Retired Lanes
++
++Given the registry records `sb26`, `bp35`, and `re86` at L2, `ka59` at L1,
++`cn04` at L3, and `dc22` at L2
++When experiment 5493 evaluates trajectory/option-induction candidates
++Then it excludes `sb26:L3`, `bp35:L3`, `ka59:L2`, `cn04:L4`, and `re86:L3`,
++rejects any candidate target whose level is already reproduced, rejects
++novelty-only, curiosity-only, energy-as-fitness quality-diversity, and
++archive-granularity reruns from the Exp5154 retired scope, and selects the
++first remaining target with live-observation trajectory hooks.
++
++Given `dc22:L3` survives those filters
++When experiment 5493 writes
++`results/experiment_5493_arc_trajectory_target_precheck_v498.json`
++Then `registry_path=ops/arc_solve_registry.yaml`,
++`duplicate_solve_avoided=true`, `selected_game=dc22`,
++`selected_target_level=3`, `prior_levels_reproduced=2`,
++`offline_bfs_used=false`, `per_game_adapter_used=false`,
++`arc_trajectory_precheck_ready=true`,
++`inference_substrate=registry_precheck_no_solve`, and `honest_verdict`
++starts with `complete:`.
++
++Given no candidate survives duplicate, recent no-bank, and retired-scope
++filters
++When experiment 5493 writes its artifact
++Then `selected_game` is an empty string, `selected_target_level=0`,
++`arc_trajectory_precheck_ready=false`, `offline_bfs_used=false`,
++`per_game_adapter_used=false`, and `honest_verdict` starts with `blocked:`.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ad186f8559..6b64120d57 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4451,
++  "experiments_checked": 4452,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5493_arc_trajectory_target_precheck_v498.py b/python/carnot/experiment_5493_arc_trajectory_target_precheck_v498.py
+new file mode 100644
+index 0000000000..f7dcb2eb35
+--- /dev/null
++++ b/python/carnot/experiment_5493_arc_trajectory_target_precheck_v498.py
+@@ -0,0 +1,567 @@
++"""Experiment 5493: ARC trajectory/option target precheck.
++
++Spec refs: REQ-ARC-FCP-5493, SCENARIO-ARC-FCP-5493.
++
++This module deliberately stops before a solve attempt. It reads the ARC solve
++registry and the retired-scope manifest, filters out duplicate or stale
++no-bank targets, and emits the one target that a later Exp5494 live agent can
++attempt using runtime trajectory or option induction from its own observations.
++The code never reads game source, never runs offline BFS, and never builds a
++per-game adapter because those paths would make the hidden-game live-agent
++claim weaker rather than stronger.
++"""
++
++from __future__ import annotations
++
++import json
++import time
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++
++REPO = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = 5493
++EXPERIMENT = "experiment_5493_arc_trajectory_target_precheck_v498"
++MILESTONE = "2026.07.498"
++RESULT_RELATIVE_PATH = "results/experiment_5493_arc_trajectory_target_precheck_v498.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++EXCLUSION_MANIFEST_RELATIVE_PATH = "ops/exclusion_manifest.yaml"
++KNOWN_ISSUES_RELATIVE_PATH = "ops/known-issues.md"
++EXP5479_RELATIVE_PATH = "results/experiment_5479_arc_target_rotation_precheck_v497.json"
++EXP5480_RELATIVE_PATH = "results/experiment_5480_arc_live_salience_levelup_v497.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-human-replay-frame-change/spec.md"
++SPEC_REFS = ["REQ-ARC-FCP-5493", "SCENARIO-ARC-FCP-5493"]
++INFERENCE_SUBSTRATE = "registry_precheck_no_solve"
++RECENT_NO_BANK_TARGETS = ("sb26:L3", "bp35:L3", "ka59:L2", "cn04:L4", "re86:L3")
++RETIRED_SCOPE_TOKENS = (
++    "novelty-only",
++    "novelty-bonus",
++    "curiosity-only",
++    "curiosity",
++    "energy-as-fitness",
++    "quality-diversity",
++    "archive-granularity",
++    "archive granularity",
++)
++DEFAULT_TESTS_RUN = [
++    (
++        ".venv/bin/pytest "
++        "tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py "
++        "-q --no-cov"
++    ),
++    (
++        ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest "
++        "tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py "
++        "-q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m "
++        "python/carnot/experiment_5493_arc_trajectory_target_precheck_v498.py"
++    ),
++    ".venv/bin/pytest tests/python -q",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "registry_path": {"principle": "must equal ops/arc_solve_registry.yaml."},
++    "excluded_recent_no_bank_targets": {
++        "principle": "auditable list containing sb26:L3, bp35:L3, ka59:L2, cn04:L4, and re86:L3 unless the selected target proves a different level and mechanism."
++    },
++    "duplicate_solve_avoided": {
++        "principle": "bare bool proving the selected target is strictly deeper than the registry depth."
++    },
++    "selected_game": {
++        "principle": "selected game id, or empty string when no eligible target exists."
++    },
++    "selected_target_level": {
++        "principle": "selected next target level as a bare int, or 0 when blocked."
++    },
++    "prior_levels_reproduced": {
++        "principle": "authoritative registry depth for the selected game before Exp5493."
++    },
++    "proposed_live_mechanism": {
++        "principle": "one-line live-path mechanism to hand to Exp5494, not a retired exploration-signal rerun."
++    },
++    "trajectory_induction_preconditions": {
++        "principle": "list of live-observation prerequisites that must hold before Exp5494 attempts the target."
++    },
++    "offline_bfs_used": {
++        "principle": "must be false; this precheck is registry-only and no offline ground-truth BFS is run."
++    },
++    "per_game_adapter_used": {
++        "principle": "must be false; target eligibility is not credited to a hand adapter."
++    },
++    "arc_trajectory_precheck_ready": {
++        "principle": "true only when a non-duplicate, non-recent-no-bank, non-retired-scope target is selected."
++    },
++    "inference_substrate": {"principle": "must equal registry_precheck_no_solve."},
++    "honest_verdict": {
++        "principle": "one-line verdict starting complete: or blocked: without a solve claim."
++    },
++}
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++@dataclass(frozen=True)
++class TrajectoryCandidate:
++    """Candidate metadata used by the registry-only selector.
++
++    Each row is a proposed future Exp5494 target, not an implementation of that
++    target. The preconditions describe what the live agent must be able to see
++    from runtime frames and action effects before it spends a bounded attempt.
++    """
++
++    game: str
++    target_level: int
++    proposed_live_mechanism: str
++    trajectory_induction_preconditions: tuple[str, ...]
++    priority: int
++    live_mechanism_hooks: tuple[str, ...] = ()
++    evidence: str = ""
++
++
++DEFAULT_TRAJECTORY_CANDIDATES: tuple[TrajectoryCandidate, ...] = (
++    TrajectoryCandidate(
++        game="sb26",
++        target_level=3,
++        proposed_live_mechanism="connected-component salience sequence induction",
++        trajectory_induction_preconditions=("runtime_action_effect_observations",),
++        priority=10,
++    ),
++    TrajectoryCandidate(
++        game="bp35",
++        target_level=3,
++        proposed_live_mechanism="platformer trajectory option induction from visible falls and blocker clears",
++        trajectory_induction_preconditions=("runtime_action_effect_observations",),
++        priority=20,
++    ),
++    TrajectoryCandidate(
++        game="ka59",
++        target_level=2,
++        proposed_live_mechanism="object-motion trajectory induction from pushed block effects",
++        trajectory_induction_preconditions=("runtime_action_effect_observations",),
++        priority=30,
++    ),
++    TrajectoryCandidate(
++        game="cn04",
++        target_level=4,
++        proposed_live_mechanism="marker-pair option reinduction from observed sprite moves",
++        trajectory_induction_preconditions=("runtime_action_effect_observations",),
++        priority=40,
++    ),
++    TrajectoryCandidate(
++        game="re86",
++        target_level=3,
++        proposed_live_mechanism="sprite-overlay trajectory reinduction from observed source cycling",
++        trajectory_induction_preconditions=("runtime_action_effect_observations",),
++        priority=50,
++    ),
++    TrajectoryCandidate(
++        game="dc22",
++        target_level=3,
++        proposed_live_mechanism=(
++            "E3AgentPolicy + LiveCoExLandmarkFrontierGenerator option induction "
++            "over visible toggle-navigation action effects"
++        ),
++        trajectory_induction_preconditions=(
++            "runtime_action_effect_observations",
++            "visible_toggle_or_navigation_state_changes",
++            "level_counter_delta_read_from_frames",
++            "frontier_prefixes_grouped_into_options",
++        ),
++        priority=60,
++        live_mechanism_hooks=(
++            "python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy",
++            "python/carnot/agentic/arc_live_trajectory_frontier.py:LiveCoExLandmarkFrontierGenerator",
++        ),
++        evidence="registry records dc22 L2 config-toggle navigation with visible movement and ACTION6 toggles",
++    ),
++    TrajectoryCandidate(
++        game="g50t",
++        target_level=3,
++        proposed_live_mechanism="target-offset trajectory induction from clone-support action effects",
++        trajectory_induction_preconditions=("runtime_action_effect_observations",),
++        priority=70,
++    ),
++)
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return int(default)
++
++
++def _level_label(level: int) -> str:
++    return f"L{max(0, int(level))}"
++
++
++def _target_marker(game: str, level: int) -> str:
++    return f"{game}:{_level_label(level)}"
++
++
++def _registry_rows(registry: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
++    return {
++        str(row.get("game")): row
++        for row in registry.get("games", []) or []
++        if isinstance(row, Mapping) and row.get("game")
++    }
++
++
++def _load_yaml(path: Path) -> dict[str, Any]:
++    if not path.exists():  # pragma: no cover - defensive missing-repo path
++        return {}
++    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++
++
++def _load_json(path: Path) -> dict[str, Any]:
++    if not path.exists():  # pragma: no cover - defensive missing-repo path
++        return {}
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _load_text(path: Path) -> str:
++    if not path.exists():  # pragma: no cover - defensive missing-repo path
++        return ""
++    return path.read_text(encoding="utf-8")
++
++
++def load_registry(root: Path = REPO) -> dict[str, Any]:
++    registry = _load_yaml(root / REGISTRY_RELATIVE_PATH)
++    if registry:
++        return registry
++    return {"reproducible_total_levels": 0, "games": []}
++
++
++def _retired_scope_patterns(exclusion_manifest: Mapping[str, Any]) -> list[str]:
++    patterns = set(RETIRED_SCOPE_TOKENS)
++    for section in ("retired_extras", "retired_experiments", "retired"):
++        for item in exclusion_manifest.get(section) or []:
++            if not isinstance(item, Mapping):
++                continue
++            text = " ".join(
++                str(item.get(key) or "")
++                for key in ("id", "experiment_scope", "reason")
++            ).lower()
++            if "exp5154" in text or "generation_axis_exploration_signal" in text:
++                for pattern in item.get("blocked_patterns") or []:
++                    patterns.add(str(pattern).lower())
++    return sorted(patterns)
++
++
++def _matches_retired_scope(mechanism: str, patterns: Sequence[str]) -> bool:
++    text = str(mechanism).lower()
++    return any(pattern and pattern in text for pattern in patterns)
++
++
++def _levels_by_candidate_game(
++    registry: Mapping[str, Any],
++    candidates: Sequence[TrajectoryCandidate],
++) -> dict[str, int]:
++    rows = _registry_rows(registry)
++    return {
++        candidate.game: _as_int((rows.get(candidate.game) or {}).get("levels_reproduced"))
++        for candidate in candidates
++    }
++
++
++def _exp5494_command(selection: Mapping[str, Any]) -> str:
++    game = str(selection.get("selected_game") or "")
++    target = _as_int(selection.get("selected_target_level"))
++    prior = _as_int(selection.get("prior_levels_reproduced"))
++    if not game or target <= 0:
++        return ""
++    return (
++        ".venv/bin/python -m "
++        "carnot.experiment_5494_arc_live_trajectory_option_induction_v498 "
++        f"--game {game} --target-level {target} --prior-levels {prior} "
++        "--mechanism live-coex-landmark-frontier --no-offline-bfs --no-per-game-adapter"
++    )
++
++
++def select_trajectory_target(
++    registry: Mapping[str, Any],
++    exclusion_manifest: Mapping[str, Any],
++    *,
++    candidates: Sequence[TrajectoryCandidate] = DEFAULT_TRAJECTORY_CANDIDATES,
++    recent_no_bank_targets: Sequence[str] = RECENT_NO_BANK_TARGETS,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-5493: choose one non-duplicate trajectory target, or block."""
++
++    rows = _registry_rows(registry)
++    recent = [str(item) for item in recent_no_bank_targets]
++    recent_set = set(recent)
++    retired_patterns = _retired_scope_patterns(exclusion_manifest)
++    audit: dict[str, dict[str, Any]] = {}
++    sorted_candidates = sorted(candidates, key=lambda item: item.priority)
++    levels_by_game = _levels_by_candidate_game(registry, sorted_candidates)
++
++    for candidate in sorted_candidates:
++        row = rows.get(candidate.game)
++        prior = _as_int((row or {}).get("levels_reproduced"))
++        target = _as_int(candidate.target_level)
++        marker = _target_marker(candidate.game, target)
++        base = {
++            "game": candidate.game,
++            "target_level": target,
++            "prior_levels_reproduced": prior,
++            "proposed_live_mechanism": candidate.proposed_live_mechanism,
++        }
++        if row is None or str(row.get("reproducibility") or "") != "reproduced":
++            audit[marker] = {**base, "decision": "rejected_missing_reproduced_registry_row"}
++            continue
++        if target <= prior:
++            audit[marker] = {**base, "decision": "rejected_duplicate"}
++            continue
++        if marker in recent_set:
++            audit[marker] = {**base, "decision": "rejected_recent_no_bank"}
++            continue
++        if _matches_retired_scope(candidate.proposed_live_mechanism, retired_patterns):
++            audit[marker] = {**base, "decision": "rejected_retired_scope"}
++            continue
++        if not candidate.trajectory_induction_preconditions or not candidate.live_mechanism_hooks:
++            audit[marker] = {**base, "decision": "rejected_missing_live_trajectory_hooks"}
++            continue
++
++        audit[marker] = {
++            **base,
++            "decision": "selected",
++            "live_mechanism_hooks": list(candidate.live_mechanism_hooks),
++            "evidence": candidate.evidence,
++        }
++        selection = {
++            "blocked": False,
++            "selected_game": candidate.game,
++            "selected_target_level": target,
++            "prior_levels_reproduced": prior,
++            "proposed_live_mechanism": candidate.proposed_live_mechanism,
++            "trajectory_induction_preconditions": list(
++                candidate.trajectory_induction_preconditions
++            ),
++            "duplicate_solve_avoided": target > prior,
++            "candidate_audit": audit,
++            "levels_reproduced_by_candidate_game": levels_by_game,
++            "excluded_recent_no_bank_targets": recent,
++            "excluded_retired_scope_patterns": retired_patterns,
++            "selection_reason": f"{marker} is the first eligible trajectory target after registry filters",
++        }
++        selection["exp5494_command"] = _exp5494_command(selection)
++        return selection
++
++    return {
++        "blocked": True,
++        "blocker": "no_eligible_trajectory_target",
++        "selected_game": "",
++        "selected_target_level": 0,
++        "prior_levels_reproduced": 0,
++        "proposed_live_mechanism": "",
++        "trajectory_induction_preconditions": [],
++        "duplicate_solve_avoided": True,
++        "candidate_audit": audit,
++        "levels_reproduced_by_candidate_game": levels_by_game,
++        "excluded_recent_no_bank_targets": recent,
++        "excluded_retired_scope_patterns": retired_patterns,
++        "selection_reason": "no eligible target survived duplicate, recent no-bank, and retired-scope filters",
++        "exp5494_command": "",
++    }
++
++
++def build_artifact(
++    *,
++    selection: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    tests_run: Sequence[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    ready = bool(
++        not selection.get("blocked")
++        and selection.get("selected_game")
++        and _as_int(selection.get("selected_target_level"))
++        > _as_int(selection.get("prior_levels_reproduced"))
++        and selection.get("duplicate_solve_avoided") is True
++    )
++    selected_game = str(selection.get("selected_game") or "")
++    selected_target_level = _as_int(selection.get("selected_target_level"))
++    artifact = {
++        "experiment_id": EXPERIMENT_ID,
++        "experiment": EXPERIMENT,
++        "milestone": MILESTONE,
++        "schema": "carnot.experiment_5493_arc_trajectory_target_precheck_v498.v1",
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "status": "complete" if ready else "blocked",
++        "registry_path": REGISTRY_RELATIVE_PATH,
++        "excluded_recent_no_bank_targets": list(
++            selection.get("excluded_recent_no_bank_targets") or RECENT_NO_BANK_TARGETS
++        ),
++        "duplicate_solve_avoided": selection.get("duplicate_solve_avoided") is True,
++        "selected_game": selected_game,
++        "selected_target_level": int(selected_target_level),
++        "prior_levels_reproduced": _as_int(selection.get("prior_levels_reproduced")),
++        "proposed_live_mechanism": str(selection.get("proposed_live_mechanism") or ""),
++        "trajectory_induction_preconditions": list(
++            selection.get("trajectory_induction_preconditions") or []
++        ),
++        "offline_bfs_used": False,
++        "per_game_adapter_used": False,
++        "arc_trajectory_precheck_ready": bool(ready),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": (
++            f"complete: {selected_game} {_level_label(selected_target_level)} trajectory precheck ready for Exp5494"
++            if ready
++            else f"blocked: {selection.get('blocker') or 'no_eligible_trajectory_target'}"
++        ),
++        "candidate_audit": dict(selection.get("candidate_audit") or {}),
++        "levels_reproduced_by_candidate_game": dict(
++            selection.get("levels_reproduced_by_candidate_game") or {}
++        ),
++        "excluded_retired_scope_patterns": list(
++            selection.get("excluded_retired_scope_patterns") or []
++        ),
++        "selection_reason": str(selection.get("selection_reason") or ""),
++        "exp5494_command": str(selection.get("exp5494_command") or ""),
++        "preconditions_checked": dict(preconditions_checked),
++        "tests_run": list(tests_run),
++        "duration_s": float(duration_s),
++    }
++    return artifact
++
++
++def _verdict_claims_solve(verdict: str) -> bool:
++    text = verdict.lower()
++    return "solved" in text or "solve reproduced" in text or "new level banked" in text
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [
++        f"missing required field: {field}" for field in REQUIRED_FIELDS if field not in artifact
++    ]
++    if artifact.get("registry_path") != REGISTRY_RELATIVE_PATH:
++        errors.append(f"registry_path must be {REGISTRY_RELATIVE_PATH}")
++    recent = artifact.get("excluded_recent_no_bank_targets")
++    if not isinstance(recent, list):
++        errors.append("excluded_recent_no_bank_targets must be a list")
++        recent = []
++    for marker in RECENT_NO_BANK_TARGETS:
++        if marker not in recent:
++            errors.append(f"excluded_recent_no_bank_targets missing {marker}")
++    for field in ("duplicate_solve_avoided", "offline_bfs_used", "per_game_adapter_used", "arc_trajectory_precheck_ready"):
++        if type(artifact.get(field)) is not bool:
++            errors.append(f"{field} must be bare bool")
++    if not isinstance(artifact.get("selected_game"), str):
++        errors.append("selected_game must be a string")
++    for field in ("selected_target_level", "prior_levels_reproduced"):
++        if type(artifact.get(field)) is not int:
++            errors.append(f"{field} must be bare int")
++    mechanism = artifact.get("proposed_live_mechanism")
++    if not isinstance(mechanism, str):
++        errors.append("proposed_live_mechanism must be a string")
++        mechanism = ""
++    if _matches_retired_scope(str(mechanism), RETIRED_SCOPE_TOKENS):
++        errors.append("proposed_live_mechanism must not match retired exploration-signal scope")
++    if not isinstance(artifact.get("trajectory_induction_preconditions"), list):
++        errors.append("trajectory_induction_preconditions must be a list")
++    for field in ("offline_bfs_used", "per_game_adapter_used"):
++        if artifact.get(field) is True:
++            errors.append(f"{field} must be false")
++    if artifact.get("arc_trajectory_precheck_ready") is True:
++        selected_level = _as_int(artifact.get("selected_target_level"))
++        prior = _as_int(artifact.get("prior_levels_reproduced"))
++        if not artifact.get("selected_game"):
++            errors.append("arc_trajectory_precheck_ready requires selected_game")
++        if selected_level <= prior:
++            errors.append("arc_trajectory_precheck_ready requires selected_target_level > prior_levels_reproduced")
++        if not artifact.get("trajectory_induction_preconditions"):
++            errors.append("arc_trajectory_precheck_ready requires trajectory_induction_preconditions")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append(f"inference_substrate must be {INFERENCE_SUBSTRATE}")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(("complete:", "blocked:")):
++        errors.append("honest_verdict must start with complete: or blocked:")
++    if _verdict_claims_solve(verdict):
++        errors.append("honest_verdict must not claim a solve")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def _write_artifact(root: Path, artifact: Mapping[str, Any]) -> None:
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def run_experiment(
++    *,
++    root: Path = REPO,
++    tests_run: Sequence[str] = DEFAULT_TESTS_RUN,
++) -> dict[str, Any]:
++    started = time.monotonic()
++    root = Path(root)
++    spec_path = root / SPEC_RELATIVE_PATH
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    manifest_path = root / EXCLUSION_MANIFEST_RELATIVE_PATH
++    known_issues_path = root / KNOWN_ISSUES_RELATIVE_PATH
++    exp5479_path = root / EXP5479_RELATIVE_PATH
++    exp5480_path = root / EXP5480_RELATIVE_PATH
++    preconditions = {
++        "AGENTS.md": (root / "AGENTS.md").exists(),
++        "CODEX.md": (root / "CODEX.md").exists(),
++        "spec_has_req_5493": (
++            "REQ-ARC-FCP-5493" in spec_path.read_text(encoding="utf-8")
++            if spec_path.exists()
++            else False
++        ),
++        "registry_present": registry_path.exists(),
++        "exclusion_manifest_present": manifest_path.exists(),
++        "known_issues_present": known_issues_path.exists(),
++        "exp5479_present": exp5479_path.exists(),
++        "exp5480_present": exp5480_path.exists(),
++        "offline_bfs_used": False,
++        "per_game_adapter_used": False,
++    }
++    registry = load_registry(root)
++    exclusion_manifest = _load_yaml(manifest_path)
++    known_issues_text = _load_text(known_issues_path)
++    exp5479 = _load_json(exp5479_path)
++    exp5480 = _load_json(exp5480_path)
++    recent = list(RECENT_NO_BANK_TARGETS)
++    for row in (exp5479, exp5480):
++        game = str(row.get("selected_game") or row.get("game") or "")
++        level = _as_int(row.get("selected_target_level") or row.get("target_level"))
++        if game and level > 0 and row.get("new_level_banked") is not True:
++            marker = _target_marker(game, level)
++            if marker not in recent:
++                recent.append(marker)
++    if "archive granularity" in known_issues_text.lower():
++        preconditions["retired_archive_granularity_scope_seen"] = True
++    selection = select_trajectory_target(
++        registry,
++        exclusion_manifest,
++        recent_no_bank_targets=recent,
++    )
++    artifact = build_artifact(
++        selection=selection,
++        preconditions_checked=preconditions,
++        tests_run=tests_run,
++        duration_s=time.monotonic() - started,
++    )
++    validate_artifact(artifact)
++    _write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    artifact = run_experiment()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index c731235d97..85112a5862 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T14:25:55.175962+00:00",
+-  "finished_at": "2026-07-09T14:25:55.202581+00:00",
++  "started_at": "2026-07-09T14:39:42.141930+00:00",
++  "finished_at": "2026-07-09T14:39:42.168479+00:00",
+   "duration_s": 0.027,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index f764900fbc..de06d037c8 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-09T14:25:55Z",
++  "run_date": "2026-07-09T14:39:42Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 4482461cc0..cac72984e9 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T14:25:56Z",
+-  "finished_at": "2026-07-09T14:25:56Z",
++  "started_at": "2026-07-09T14:39:43Z",
++  "finished_at": "2026-07-09T14:39:43Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 9424e8d599..eccac5e399 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-09T14:25:56Z",
++  "run_date": "2026-07-09T14:39:43Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 0be11add06..4d66937c34 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-09T14:25:57Z",
++  "run_date": "2026-07-09T14:39:43Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 4388b9e0d3..303851d9f1 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1767616271972656,
++  "efficiency_gains_ms": 2.146482467651367,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 085b6ff9ab..fdb6fd62bb 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00016276584938168526,
+-  "latency_domino_seconds": 0.00028777122497558594,
++  "latency_legacy_seconds": 0.00015157368034124374,
++  "latency_domino_seconds": 0.00028671789914369583,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 1f42bc9bf0..6d85ebc0e2 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T14:25:52Z",
+-  "finished_at": "2026-07-09T14:25:52Z",
++  "started_at": "2026-07-09T14:39:36Z",
++  "finished_at": "2026-07-09T14:39:36Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index b3697301a5..d3a80bfa76 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T14:26:27Z",
+-  "finished_at": "2026-07-09T14:26:27Z",
++  "started_at": "2026-07-09T14:40:10Z",
++  "finished_at": "2026-07-09T14:40:10Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.07128715515136719,
++  "latency_ms": 0.05078315734863281,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 1c0ed00297..0050f2b0af 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5942707061767578,
++  "duration_s": 0.5937817096710205,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 4bb3fd5007..f51e7163c2 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.302104935050011e-05,
++  "duration_s": 4.2280182242393494e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5493_arc_trajectory_target_precheck_v498.json b/results/experiment_5493_arc_trajectory_target_precheck_v498.json
+new file mode 100644
+index 0000000000..8309cf0316
+--- /dev/null
++++ b/results/experiment_5493_arc_trajectory_target_precheck_v498.json
+@@ -0,0 +1,171 @@
++{
++  "arc_trajectory_precheck_ready": true,
++  "candidate_audit": {
++    "bp35:L3": {
++      "decision": "rejected_recent_no_bank",
++      "game": "bp35",
++      "prior_levels_reproduced": 2,
++      "proposed_live_mechanism": "platformer trajectory option induction from visible falls and blocker clears",
++      "target_level": 3
++    },
++    "cn04:L4": {
++      "decision": "rejected_recent_no_bank",
++      "game": "cn04",
++      "prior_levels_reproduced": 3,
++      "proposed_live_mechanism": "marker-pair option reinduction from observed sprite moves",
++      "target_level": 4
++    },
++    "dc22:L3": {
++      "decision": "selected",
++      "evidence": "registry records dc22 L2 config-toggle navigation with visible movement and ACTION6 toggles",
++      "game": "dc22",
++      "live_mechanism_hooks": [
++        "python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy",
++        "python/carnot/agentic/arc_live_trajectory_frontier.py:LiveCoExLandmarkFrontierGenerator"
++      ],
++      "prior_levels_reproduced": 2,
++      "proposed_live_mechanism": "E3AgentPolicy + LiveCoExLandmarkFrontierGenerator option induction over visible toggle-navigation action effects",
++      "target_level": 3
++    },
++    "ka59:L2": {
++      "decision": "rejected_recent_no_bank",
++      "game": "ka59",
++      "prior_levels_reproduced": 1,
++      "proposed_live_mechanism": "object-motion trajectory induction from pushed block effects",
++      "target_level": 2
++    },
++    "re86:L3": {
++      "decision": "rejected_recent_no_bank",
++      "game": "re86",
++      "prior_levels_reproduced": 2,
++      "proposed_live_mechanism": "sprite-overlay trajectory reinduction from observed source cycling",
++      "target_level": 3
++    },
++    "sb26:L3": {
++      "decision": "rejected_recent_no_bank",
++      "game": "sb26",
++      "prior_levels_reproduced": 2,
++      "proposed_live_mechanism": "connected-component salience sequence induction",
++      "target_level": 3
++    }
++  },
++  "duplicate_solve_avoided": true,
++  "duration_s": 0.1255987361073494,
++  "excluded_recent_no_bank_targets": [
++    "sb26:L3",
++    "bp35:L3",
++    "ka59:L2",
++    "cn04:L4",
++    "re86:L3"
++  ],
++  "excluded_retired_scope_patterns": [
++    "archive granularity",
++    "archive-granularity",
++    "curiosity",
++    "curiosity-only",
++    "energy-as-fitness",
++    "energy-as-fitness first-contact rerun",
++    "first contact exploration signal rerun",
++    "first-contact candidate-generation rerun",
++    "novelty-bonus",
++    "novelty-bonus first-contact rerun",
++    "novelty-only",
++    "program-synthesis first-contact rerun",
++    "quality-diversity"
++  ],
++  "exp5494_command": ".venv/bin/python -m carnot.experiment_5494_arc_live_trajectory_option_induction_v498 --game dc22 --target-level 3 --prior-levels 2 --mechanism live-coex-landmark-frontier --no-offline-bfs --no-per-game-adapter",
++  "experiment": "experiment_5493_arc_trajectory_target_precheck_v498",
++  "experiment_id": 5493,
++  "field_principles": {
++    "arc_trajectory_precheck_ready": {
++      "principle": "true only when a non-duplicate, non-recent-no-bank, non-retired-scope target is selected."
++    },
++    "duplicate_solve_avoided": {
++      "principle": "bare bool proving the selected target is strictly deeper than the registry depth."
++    },
++    "excluded_recent_no_bank_targets": {
++      "principle": "auditable list containing sb26:L3, bp35:L3, ka59:L2, cn04:L4, and re86:L3 unless the selected target proves a different level and mechanism."
++    },
++    "honest_verdict": {
++      "principle": "one-line verdict starting complete: or blocked: without a solve claim."
++    },
++    "inference_substrate": {
++      "principle": "must equal registry_precheck_no_solve."
++    },
++    "offline_bfs_used": {
++      "principle": "must be false; this precheck is registry-only and no offline ground-truth BFS is run."
++    },
++    "per_game_adapter_used": {
++      "principle": "must be false; target eligibility is not credited to a hand adapter."
++    },
++    "prior_levels_reproduced": {
++      "principle": "authoritative registry depth for the selected game before Exp5493."
++    },
++    "proposed_live_mechanism": {
++      "principle": "one-line live-path mechanism to hand to Exp5494, not a retired exploration-signal rerun."
++    },
++    "registry_path": {
++      "principle": "must equal ops/arc_solve_registry.yaml."
++    },
++    "selected_game": {
++      "principle": "selected game id, or empty string when no eligible target exists."
++    },
++    "selected_target_level": {
++      "principle": "selected next target level as a bare int, or 0 when blocked."
++    },
++    "trajectory_induction_preconditions": {
++      "principle": "list of live-observation prerequisites that must hold before Exp5494 attempts the target."
++    }
++  },
++  "honest_verdict": "complete: dc22 L3 trajectory precheck ready for Exp5494",
++  "inference_substrate": "registry_precheck_no_solve",
++  "levels_reproduced_by_candidate_game": {
++    "bp35": 2,
++    "cn04": 3,
++    "dc22": 2,
++    "g50t": 2,
++    "ka59": 1,
++    "re86": 2,
++    "sb26": 2
++  },
++  "milestone": "2026.07.498",
++  "offline_bfs_used": false,
++  "per_game_adapter_used": false,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "exclusion_manifest_present": true,
++    "exp5479_present": true,
++    "exp5480_present": true,
++    "known_issues_present": true,
++    "offline_bfs_used": false,
++    "per_game_adapter_used": false,
++    "registry_present": true,
++    "retired_archive_granularity_scope_seen": true,
++    "spec_has_req_5493": true
++  },
++  "prior_levels_reproduced": 2,
++  "proposed_live_mechanism": "E3AgentPolicy + LiveCoExLandmarkFrontierGenerator option induction over visible toggle-navigation action effects",
++  "registry_path": "ops/arc_solve_registry.yaml",
++  "result_path": "results/experiment_5493_arc_trajectory_target_precheck_v498.json",
++  "schema": "carnot.experiment_5493_arc_trajectory_target_precheck_v498.v1",
++  "selected_game": "dc22",
++  "selected_target_level": 3,
++  "selection_reason": "dc22:L3 is the first eligible trajectory target after registry filters",
++  "spec_refs": [
++    "REQ-ARC-FCP-5493",
++    "SCENARIO-ARC-FCP-5493"
++  ],
++  "status": "complete",
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py -q --no-cov",
++    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5493_arc_trajectory_target_precheck_v498.py",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "trajectory_induction_preconditions": [
++    "runtime_action_effect_observations",
++    "visible_toggle_or_navigation_state_changes",
++    "level_counter_delta_read_from_frames",
++    "frontier_prefixes_grouped_into_options"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 437db6b701..a8feb09e83 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T14:25:02Z",
+-  "finished_at": "2026-07-09T14:25:02Z",
++  "started_at": "2026-07-09T14:38:46Z",
++  "finished_at": "2026-07-09T14:38:47Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index de31d9d399..0ce7e64fb9 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T14:25:02Z",
+-  "finished_at": "2026-07-09T14:25:02Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-09T14:38:47Z",
++  "finished_at": "2026-07-09T14:38:47Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d21da6ac93..b4048dcd0f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T14:25:02Z",
+-  "finished_at": "2026-07-09T14:25:02Z",
++  "started_at": "2026-07-09T14:38:47Z",
++  "finished_at": "2026-07-09T14:38:47Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py b/tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py
+new file mode 100644
+index 0000000000..f97f9abd2e
+--- /dev/null
++++ b/tests/python/test_experiment_5493_arc_trajectory_target_precheck_v498.py
+@@ -0,0 +1,327 @@
++"""Tests for Exp5493 ARC trajectory target precheck.
++
++Spec refs: REQ-ARC-FCP-5493,
++SCENARIO-ARC-FCP-5493.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_5493_arc_trajectory_target_precheck_v498 as exp5493
++
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++def _registry() -> dict[str, Any]:
++    return {
++        "reproducible_total_levels": 69,
++        "games": [
++            {"game": "sb26", "reproducibility": "reproduced", "levels_reproduced": 2},
++            {"game": "bp35", "reproducibility": "reproduced", "levels_reproduced": 2},
++            {"game": "ka59", "reproducibility": "reproduced", "levels_reproduced": 1},
++            {"game": "cn04", "reproducibility": "reproduced", "levels_reproduced": 3},
++            {"game": "re86", "reproducibility": "reproduced", "levels_reproduced": 2},
++            {
++                "game": "dc22",
++                "reproducibility": "reproduced",
++                "levels_reproduced": 2,
++                "mechanic_class": "config_toggle_navigation",
++                "action_model": "Keyboard movement plus ACTION6 visible toggle clicks.",
++                "learned_verifier_checkpoint": "models/arc_verifier_dc22.json",
++                "dead_ends": ["Exp4894 dc22 no-bank duplicate_depth"],
++            },
++            {
++                "game": "g50t",
++                "reproducibility": "reproduced",
++                "levels_reproduced": 2,
++                "dead_ends": ["Exp4981 g50t no-bank no_grounded_l3_delta"],
++            },
++        ],
++    }
++
++
++def _manifest() -> dict[str, Any]:
++    return {
++        "retired_extras": [
++            "non-mapping retired row",
++            {
++                "id": "generation_axis_exploration_signal_retired_exp5154_v473",
++                "experiment_scope": (
++                    "ARC first-contact candidate-generation exploration-signal tweaks "
++                    "after novelty, program-synthesis filter, and energy-as-fitness QD nulls"
++                ),
++                "blocked_patterns": [
++                    "novelty-bonus first-contact rerun",
++                    "energy-as-fitness first-contact rerun",
++                ],
++            }
++        ]
++    }
++
++
++def test_req_arc_fcp_5493_spec_declares_required_artifact_fields() -> None:
++    """REQ-ARC-FCP-5493: OpenSpec anchors the registry-only artifact contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-5493" in spec
++    assert "SCENARIO-ARC-FCP-5493" in spec
++    assert exp5493.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp5493.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_fcp_5493_selects_dc22_after_exclusions() -> None:
++    """SCENARIO-ARC-FCP-5493: recent no-bank and retired lanes are skipped."""
++
++    selection = exp5493.select_trajectory_target(_registry(), _manifest())
++
++    assert selection["blocked"] is False
++    assert selection["selected_game"] == "dc22"
++    assert selection["selected_target_level"] == 3
++    assert selection["prior_levels_reproduced"] == 2
++    assert selection["duplicate_solve_avoided"] is True
++    assert selection["candidate_audit"]["sb26:L3"]["decision"] == "rejected_recent_no_bank"
++    assert selection["candidate_audit"]["bp35:L3"]["decision"] == "rejected_recent_no_bank"
++    assert selection["candidate_audit"]["ka59:L2"]["decision"] == "rejected_recent_no_bank"
++    assert selection["candidate_audit"]["cn04:L4"]["decision"] == "rejected_recent_no_bank"
++    assert selection["candidate_audit"]["re86:L3"]["decision"] == "rejected_recent_no_bank"
++    assert selection["candidate_audit"]["dc22:L3"]["decision"] == "selected"
++    assert "LiveCoExLandmarkFrontierGenerator" in selection["proposed_live_mechanism"]
++    assert "runtime_action_effect_observations" in selection["trajectory_induction_preconditions"]
++
++
++def test_scenario_arc_fcp_5493_rejects_duplicates_and_retired_scopes() -> None:
++    """SCENARIO-ARC-FCP-5493: duplicate targets and retired mechanisms fail closed."""
++
++    candidates = [
++        exp5493.TrajectoryCandidate(
++            game="zz99",
++            target_level=1,
++            proposed_live_mechanism="LiveCoExLandmarkFrontierGenerator trajectory induction",
++            trajectory_induction_preconditions=("runtime_action_effect_observations",),
++            priority=0,
++            live_mechanism_hooks=("hook",),
++        ),
++        exp5493.TrajectoryCandidate(
++            game="dc22",
++            target_level=2,
++            proposed_live_mechanism="LiveCoExLandmarkFrontierGenerator trajectory induction",
++            trajectory_induction_preconditions=("runtime_action_effect_observations",),
++            priority=1,
++        ),
++        exp5493.TrajectoryCandidate(
++            game="g50t",
++            target_level=3,
++            proposed_live_mechanism="novelty-only first-contact exploration signal",
++            trajectory_induction_preconditions=("runtime_action_effect_observations",),
++            priority=2,
++        ),
++        exp5493.TrajectoryCandidate(
++            game="dc22",
++            target_level=3,
++            proposed_live_mechanism="LiveCoExLandmarkFrontierGenerator trajectory induction",
++            trajectory_induction_preconditions=("runtime_action_effect_observations",),
++            priority=3,
++        ),
++    ]
++
++    selection = exp5493.select_trajectory_target(
++        _registry(),
++        _manifest(),
++        candidates=candidates,
++        recent_no_bank_targets=(),
++    )
++
++    assert selection["blocked"] is True
++    assert selection["selected_game"] == ""
++    assert selection["selected_target_level"] == 0
++    assert selection["candidate_audit"]["zz99:L1"]["decision"] == (
++        "rejected_missing_reproduced_registry_row"
++    )
++    assert selection["candidate_audit"]["dc22:L2"]["decision"] == "rejected_duplicate"
++    assert selection["candidate_audit"]["g50t:L3"]["decision"] == "rejected_retired_scope"
++    assert selection["candidate_audit"]["dc22:L3"]["decision"] == "rejected_missing_live_trajectory_hooks"
++    assert selection["blocker"] == "no_eligible_trajectory_target"
++    assert exp5493._exp5494_command({"selected_game": "", "selected_target_level": 0}) == ""  # noqa: SLF001
++    assert exp5493._as_int("not-an-int", 4) == 4  # noqa: SLF001
++
++
++def test_scenario_arc_fcp_5493_artifact_schema_ready_and_blocked() -> None:
++    """SCENARIO-ARC-FCP-5493: artifacts expose required ready and no-target fields."""
++
++    ready = exp5493.build_artifact(
++        selection=exp5493.select_trajectory_target(_registry(), _manifest()),
++        preconditions_checked={"unit": True},
++        tests_run=["unit"],
++        duration_s=0.1,
++    )
++    blocked = exp5493.build_artifact(
++        selection={
++            "blocked": True,
++            "blocker": "no_eligible_trajectory_target",
++            "selected_game": "",
++            "selected_target_level": 0,
++            "prior_levels_reproduced": 0,
++            "proposed_live_mechanism": "",
++            "trajectory_induction_preconditions": [],
++            "duplicate_solve_avoided": True,
++            "candidate_audit": {},
++            "levels_reproduced_by_candidate_game": {},
++        },
++        preconditions_checked={"unit": True},
++        tests_run=["unit"],
++        duration_s=0.1,
++    )
++
++    exp5493.validate_artifact(ready)
++    exp5493.validate_artifact(blocked)
++    assert ready["registry_path"] == exp5493.REGISTRY_RELATIVE_PATH
++    assert ready["excluded_recent_no_bank_targets"] == list(exp5493.RECENT_NO_BANK_TARGETS)
++    assert ready["duplicate_solve_avoided"] is True
++    assert ready["selected_game"] == "dc22"
++    assert ready["selected_target_level"] == 3
++    assert ready["prior_levels_reproduced"] == 2
++    assert ready["offline_bfs_used"] is False
++    assert ready["per_game_adapter_used"] is False
++    assert ready["arc_trajectory_precheck_ready"] is True
++    assert ready["inference_substrate"] == "registry_precheck_no_solve"
++    assert ready["honest_verdict"].startswith("complete:")
++    assert blocked["selected_game"] == ""
++    assert blocked["selected_target_level"] == 0
++    assert blocked["arc_trajectory_precheck_ready"] is False
++    assert blocked["honest_verdict"].startswith("blocked:")
++
++
++def test_scenario_arc_fcp_5493_schema_rejects_bad_claims() -> None:
++    """SCENARIO-ARC-FCP-5493: schema rejects prohibited paths and non-bare fields."""
++
++    artifact = exp5493.build_artifact(
++        selection=exp5493.select_trajectory_target(_registry(), _manifest()),
++        preconditions_checked={"unit": True},
++        tests_run=["unit"],
++        duration_s=0.1,
++    )
++    invalid = {
++        **artifact,
++        "registry_path": "ops/wrong.yaml",
++        "excluded_recent_no_bank_targets": ["sb26:L3"],
++        "duplicate_solve_avoided": "true",
++        "selected_game": 7,
++        "selected_target_level": "3",
++        "prior_levels_reproduced": "2",
++        "proposed_live_mechanism": "energy-as-fitness quality-diversity rerun",
++        "trajectory_induction_preconditions": "runtime",
++        "offline_bfs_used": True,
++        "per_game_adapter_used": True,
++        "arc_trajectory_precheck_ready": "true",
++        "inference_substrate": "arc_live_agent_self_discovery",
++        "honest_verdict": "complete: solved dc22 L3",
++    }
++
++    errors = exp5493.artifact_schema_errors(invalid)
++    list_errors = exp5493.artifact_schema_errors(
++        {**artifact, "excluded_recent_no_bank_targets": "sb26:L3"}
++    )
++    type_errors = exp5493.artifact_schema_errors(
++        {**artifact, "proposed_live_mechanism": 7}
++    )
++    ready_errors = exp5493.artifact_schema_errors(
++        {
++            **artifact,
++            "selected_game": "",
++            "selected_target_level": 2,
++            "prior_levels_reproduced": 2,
++            "trajectory_induction_preconditions": [],
++            "arc_trajectory_precheck_ready": True,
++            "honest_verdict": "pending",
++        }
++    )
++
++    assert "registry_path must be ops/arc_solve_registry.yaml" in errors
++    assert "excluded_recent_no_bank_targets missing bp35:L3" in errors
++    assert "excluded_recent_no_bank_targets must be a list" in list_errors
++    assert "duplicate_solve_avoided must be bare bool" in errors
++    assert "selected_game must be a string" in errors
++    assert "selected_target_level must be bare int" in errors
++    assert "prior_levels_reproduced must be bare int" in errors
++    assert "proposed_live_mechanism must be a string" in type_errors
++    assert "proposed_live_mechanism must not match retired exploration-signal scope" in errors
++    assert "trajectory_induction_preconditions must be a list" in errors
++    assert "offline_bfs_used must be false" in errors
++    assert "per_game_adapter_used must be false" in errors
++    assert "arc_trajectory_precheck_ready must be bare bool" in errors
++    assert "arc_trajectory_precheck_ready requires selected_game" in ready_errors
++    assert (
++        "arc_trajectory_precheck_ready requires selected_target_level > prior_levels_reproduced"
++        in ready_errors
++    )
++    assert "arc_trajectory_precheck_ready requires trajectory_induction_preconditions" in ready_errors
++    assert "inference_substrate must be registry_precheck_no_solve" in errors
++    assert "honest_verdict must start with complete: or blocked:" in ready_errors
++    assert "honest_verdict must not claim a solve" in errors
++    with pytest.raises(ValueError):
++        exp5493.validate_artifact(invalid)
++
++
++def test_scenario_arc_fcp_5493_run_experiment_writes_json(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-5493: runner writes the required deliverable JSON."""
++
++    root = tmp_path
++    (root / "openspec" / "capabilities" / "arc-human-replay-frame-change").mkdir(parents=True)
++    (root / "ops").mkdir()
++    (root / "results").mkdir()
++    (root / "AGENTS.md").write_text("# AGENTS\n", encoding="utf-8")
++    (root / "CODEX.md").write_text("# CODEX\n", encoding="utf-8")
++    (root / exp5493.SPEC_RELATIVE_PATH).write_text(
++        "REQ-ARC-FCP-5493\nSCENARIO-ARC-FCP-5493\n",
++        encoding="utf-8",
++    )
++    (root / exp5493.REGISTRY_RELATIVE_PATH).write_text(
++        yaml.safe_dump(_registry()),
++        encoding="utf-8",
++    )
++    (root / exp5493.EXCLUSION_MANIFEST_RELATIVE_PATH).write_text(
++        yaml.safe_dump(_manifest()),
++        encoding="utf-8",
++    )
++    (root / exp5493.KNOWN_ISSUES_RELATIVE_PATH).write_text(
++        "ARC standing floor; Exp5154 retired novelty/curiosity and archive granularity reruns.",
++        encoding="utf-8",
++    )
++    (root / exp5493.EXP5479_RELATIVE_PATH).write_text(
++        json.dumps({"selected_game": "lf52", "selected_target_level": 3}),
++        encoding="utf-8",
++    )
++    (root / exp5493.EXP5480_RELATIVE_PATH).write_text(
++        json.dumps({"game": "sb26", "target_level": 3, "new_level_banked": False}),
++        encoding="utf-8",
++    )
++
++    artifact = exp5493.run_experiment(root=root, tests_run=["unit 5493"])
++    written = json.loads((root / exp5493.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert written == artifact
++    assert artifact["selected_game"] == "dc22"
++    assert artifact["selected_target_level"] == 3
++    assert artifact["prior_levels_reproduced"] == 2
++    assert artifact["arc_trajectory_precheck_ready"] is True
++    assert artifact["inference_substrate"] == "registry_precheck_no_solve"
++    assert artifact["tests_run"] == ["unit 5493"]
++
++
++def test_scenario_arc_fcp_5493_missing_registry_defaults(tmp_path: Path) -> None:
++    """SCENARIO-ARC-FCP-5493: missing registry loads as an empty metric surface."""
++
++    assert exp5493.load_registry(tmp_path) == {"reproducible_total_levels": 0, "games": []}
+-- 
+2.55.0
+

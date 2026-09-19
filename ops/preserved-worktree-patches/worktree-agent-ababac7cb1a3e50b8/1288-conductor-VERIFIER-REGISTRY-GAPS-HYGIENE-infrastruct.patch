@@ -1,0 +1,1465 @@
+From 9965bb00fa0089c785787c5942800f82a743621e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 13:06:52 -0400
+Subject: [PATCH 01288/11362] [conductor] VERIFIER-REGISTRY + GAPS HYGIENE
+ (infrastructure; reserved infra slot): bit-exact OFFLINE re-eval that
+ reproduces the canonical GAP-4 ARC-1 (28/30) and ARC-2 numbers from cached
+ candidates (zero codex, zero GGUF -- the regression guard); RECORD the .374
+ G1 off-ARC power outcome from exp4045 (update the GAP-CODE-EXEC-DEMOFIT
+ ledger entry with the full-N CI -- did a stronger discriminator close it?);
+ RECORD the G2 closed-loop outcome from exp4046 (did closed-loop grounding
+ break the wall, or is there a sim2real ceiling gap to log?). Keeps
+ ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth
+ for what the verifier covers.
+
+Automated research step by research conductor.
+Task ID: exp4051-verifier-registry-and-gaps-hygiene
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  46 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ops/verifier_gaps.md                          |  20 +
+ ops/verifier_registry.yaml                    |   6 +
+ ...verifier_registry_and_gaps_hygiene_4051.py | 621 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...51_verifier_registry_and_gaps_hygiene.json | 106 +++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...4051_verifier_registry_and_gaps_hygiene.py |  19 +
+ ...4051_verifier_registry_and_gaps_hygiene.py | 408 ++++++++++++
+ 15 files changed, 1246 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/reporting/verifier_registry_and_gaps_hygiene_4051.py
+ create mode 100644 results/experiment_4051_verifier_registry_and_gaps_hygiene.json
+ create mode 100644 scripts/experiments/exp4051_verifier_registry_and_gaps_hygiene.py
+ create mode 100644 tests/python/test_exp4051_verifier_registry_and_gaps_hygiene.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 1496124abb..718fbf3ad4 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -12583,6 +12583,52 @@ selection, preserve the oracle hidden pass indicator, and expose Arm C's
+ equivalence-class metadata so the collector can compare demo-fit against both
+ ACES and the symbolic-equivalence proxy.
+ 
++### REQ-VERIFY-4051: GAP-4 Registry And Gaps Hygiene Re-Eval
++
++The repository SHALL provide Exp 4051 at
++`scripts/experiments/exp4051_verifier_registry_and_gaps_hygiene.py` to replay
++the registered GAP-4 verifier headline from cached artifacts and record the
++.374 G1/G2 outcomes in the registry and gaps ledgers without Codex, GGUF, or
++live inference. The runner SHALL read `ops/verifier_registry.yaml`,
++`ops/verifier_gaps.md`, `results/arc3_gap4_rule_exec_verifier.json`,
++`results/arc3_gap4_arc2_rule_exec_verifier.json`,
++`results/experiment_4045_offarc_transfer_power.json`, and
++`results/experiment_4046_closed_loop_replan_over_vc33_wm.json`.
++
++The offline replay SHALL assert bit-exact ARC-1 vote `0.4516` to gated
++`0.5806` and ARC-2 vote `0.0645` to gated `0.0645`, including the recorded
++task count and recovered/lost counts. If these cached numbers do not match, the
++terminal artifact SHALL set `offline_reeval_bitexact=false` and preserve the
++mismatch details.
++
++The G1 ledger update SHALL record the Exp 4045 full-power off-ARC outcome in
++`GAP-CODE-EXEC-DEMOFIT`: demo-fit transfer if the demo-fit CI excludes zero,
++stronger-arm closure if ACES or symbolic partition excludes zero, open gap with
++the measured bound if all arms touch zero, or `g1_off_arc_power_pending` when
++the upstream artifact is absent, blocked, partial, or below the powered task
++floor. The G2 ledger update SHALL record the Exp 4046 closed-loop outcome as a
++verified-WM closed-loop capability in the registry only when it broke the vc33
++wall, otherwise it SHALL add or update a sim2real-ceiling gap with the measured
++WM-real divergence, or `g2_closed_loop_pending` when the upstream artifact is
++absent or incomplete.
++
++The terminal artifact SHALL write
++`results/experiment_4051_verifier_registry_and_gaps_hygiene.json` with
++`honest_verdict`, bare bool `offline_reeval_bitexact`,
++`g1_off_arc_outcome_recorded`, `g2_closed_loop_outcome_recorded`, bare bools
++`registry_updated` and `gaps_updated`, and
++`inference_substrate=aggregation_from_upstream_artifacts`.
++
++### SCENARIO-VERIFY-4051: Cached Hygiene Records G1 And G2 Outcomes
++
++Given the GAP-4 cached ARC replay artifacts plus Exp 4045 and Exp 4046 outcome
++artifacts are readable, when Exp 4051 runs, then it writes the terminal artifact
++with `offline_reeval_bitexact=true`, records G1 in the code demo-fit gap ledger
++or code-domain registry according to the measured CI outcome, records G2 as a
++closed-loop capability or sim2real-ceiling gap according to the real-env result,
++sets `registry_updated` and `gaps_updated` to reflect the resulting ledgers,
++and uses no inference substrate other than aggregation from upstream artifacts.
++
+ ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
+ 
+ The repository SHALL provide Exp 4033 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 9034ced075..1d4313b56a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 163,
+   "code_violations": 0,
+-  "experiments_checked": 3081,
++  "experiments_checked": 3082,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 3afa90c6c0..affa38a025 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -493,3 +493,23 @@ registry version that closed them when a new verifier captures a previously-open
+ - candidate design: extend GAP-4 execution/program induction or add a larger-base candidate source before distillation.
+ - priority: high
+ - missing_verifier_gaps: 17cae0c1, 1a2e2828, 1a6449f1
++
++<!-- exp4051-g1:start -->
++#### Exp 4051 G1 off-ARC power update for GAP-CODE-EXEC-DEMOFIT
++- status: g1_off_arc_power_pending
++- evidence: `results/experiment_4045_offarc_transfer_power.json`; n_tasks=22; powered_task_floor=160; demo_fit_CI95=[0.0, 0.0]; best_arm=armC_symbolic; best_arm_CI95=[0.0, 0.0].
++- failure mode: visible/demo-fit code tests are not yet a powered hidden-semantic discriminator.
++- missing discriminator: code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics.
++- candidate design: finish the powered code run or add hidden-property, symbolic, or formal/runtime oracles.
++- priority: high
++<!-- exp4051-g1:end -->
++
++<!-- exp4051-g2:start -->
++### GAP-ARC3-VC33-SIM2REAL-CEILING: vc33 verified-WM closed-loop sim2real ceiling
++- status: g2_sim2real_ceiling_gap_logged
++- evidence: `results/experiment_4046_closed_loop_replan_over_vc33_wm.json`; per_step_wm_real_divergence_rate=0.207031; divergence_gate_fired_count=1.
++- failure mode: bounded WM search produced a plan whose predicted next state diverged from the real environment.
++- missing discriminator: per-step WM-to-real transition trust signal strong enough to plan past vc33's wall.
++- candidate design: improve the verified world model or add a conservative real-env grounding/replan guard.
++- priority: high
++<!-- exp4051-g2:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index 432ba10c08..b31c3c765f 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -199,6 +199,12 @@ verifiers:
+     arc1_offline_reproduced: true
+     eval_exp: results/experiment_4001_gap4_registration_offline_eval.json
+     eval_exp_4033: results/experiment_4033_verifier_registry_harness_registration.json
++    eval_exp_4051: results/experiment_4051_verifier_registry_and_gaps_hygiene.json
++    arc1_rule_exec_vote_pass2: 0.4516
++    arc1_rule_exec_gated_pass2: 0.5806
++    arc2_rule_exec_vote_pass2: 0.0645
++    arc2_rule_exec_gated_pass2: 0.0645
++    exp4051_offline_reeval_bitexact: true
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+diff --git a/python/carnot/reporting/verifier_registry_and_gaps_hygiene_4051.py b/python/carnot/reporting/verifier_registry_and_gaps_hygiene_4051.py
+new file mode 100644
+index 0000000000..d7ef2a7d08
+--- /dev/null
++++ b/python/carnot/reporting/verifier_registry_and_gaps_hygiene_4051.py
+@@ -0,0 +1,621 @@
++"""Exp 4051 registry and gaps hygiene for the GAP-4 verifier line.
++
++Spec refs: REQ-VERIFY-4051, SCENARIO-VERIFY-4051.
++"""
++
++from __future__ import annotations
++
++import json
++import time
++from copy import deepcopy
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++
++EXP4051_ARTIFACT_PATH = "results/experiment_4051_verifier_registry_and_gaps_hygiene.json"
++REGISTRY_PATH = "ops/verifier_registry.yaml"
++GAPS_PATH = "ops/verifier_gaps.md"
++
++ARC1_RULE_EXEC_PATH = "results/arc3_gap4_rule_exec_verifier.json"
++ARC2_RULE_EXEC_PATH = "results/arc3_gap4_arc2_rule_exec_verifier.json"
++ARC2_CHAIN_PATH = "results/arc3_gap4_arc2_chain_ensemble.json"
++G1_OFF_ARC_PATH = "results/experiment_4045_offarc_transfer_power.json"
++G2_CLOSED_LOOP_PATH = "results/experiment_4046_closed_loop_replan_over_vc33_wm.json"
++
++GAP4_VERIFIER_ID = "gap4_program_induction_stack"
++G1_DEMOFIT_VERIFIER_ID = "gap4_code_demo_fit_execution_transfer_4045"
++G2_CLOSED_LOOP_VERIFIER_ID = "arc3_vc33_verified_wm_closed_loop_planner_4046"
++CODE_GAP_ID = "GAP-CODE-EXEC-DEMOFIT"
++SIM2REAL_GAP_ID = "GAP-ARC3-VC33-SIM2REAL-CEILING"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "offline_reeval_bitexact",
++    "g1_off_arc_outcome_recorded",
++    "g2_closed_loop_outcome_recorded",
++    "registry_updated",
++    "gaps_updated",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefix summary of GAP-4 replay and .374 G1/G2 ledger routing.",
++    "offline_reeval_bitexact": (
++        "A reusable verifier that does not reproduce its headline numbers is not the same verifier."
++    ),
++    "g1_off_arc_outcome_recorded": (
++        "The off-ARC power measurement must land in the ledger, not just an artifact."
++    ),
++    "g2_closed_loop_outcome_recorded": (
++        "The planning outcome becomes either a registry capability, a new gap, or a pending record."
++    ),
++    "registry_updated": "Bare bool; registry reflects the verifier coverage after Exp 4051.",
++    "gaps_updated": "Bare bool; gaps ledger reflects the missing-verifier state after Exp 4051.",
++    "inference_substrate": "aggregation_from_upstream_artifacts; no Codex, GGUF, or live inference.",
++}
++
++
++def _load_json(path: Path) -> dict[str, Any]:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _load_registry(path: Path) -> dict[str, Any]:
++    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    if isinstance(loaded, dict):
++        loaded.setdefault("verifiers", [])
++        return loaded
++    return {"verifiers": []}
++
++
++def _write_registry(path: Path, registry: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(yaml.safe_dump(registry, sort_keys=False), encoding="utf-8")
++
++
++def _find_verifier(registry: dict[str, Any], verifier_id: str) -> dict[str, Any] | None:
++    for entry in registry.get("verifiers", []):
++        if entry.get("verifier_id") == verifier_id:
++            return entry
++    return None
++
++
++def _upsert_verifier(registry: dict[str, Any], entry: dict[str, Any]) -> bool:
++    existing = _find_verifier(registry, entry["verifier_id"])
++    if existing is None:
++        registry.setdefault("verifiers", []).append(entry)
++        return True
++    if existing != entry:
++        existing.clear()
++        existing.update(entry)
++        return True
++    return False
++
++
++def _round4(value: float) -> float:
++    return round(float(value), 4)
++
++
++def replay_gap4_headlines(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """Replay GAP-4 ARC headline numbers from cached artifacts only."""
++    arc1 = _load_json(repo_root / ARC1_RULE_EXEC_PATH)
++    arc2 = _load_json(repo_root / ARC2_RULE_EXEC_PATH)
++    arc2_chain = _load_json(repo_root / ARC2_CHAIN_PATH)
++
++    arc1_summary = {
++        "n": int(arc1["n_tasks"]),
++        "vote_pass2": _round4(arc1["rankers"]["TRM_VOTE"]["pass@2"]),
++        "gated_pass2": _round4(arc1["rankers"]["GAP4_GATED"]["pass@2"]),
++        "headroom_recovered": int(arc1["gates"]["headroom_recovered"]),
++        "vote_wins_lost": int(arc1["gates"]["vote_wins_lost"]),
++    }
++    arc2_summary = {
++        "n": int(arc2["n_tasks"]),
++        "vote_pass2": _round4(arc2["rankers"]["TRM_VOTE"]["pass@2"]),
++        "gated_pass2": _round4(arc2["rankers"]["GAP4_GATED"]["pass@2"]),
++        "headroom_recovered": int(arc2["gates"]["headroom_recovered"]),
++        "vote_wins_lost": int(arc2["gates"]["vote_wins_lost"]),
++    }
++    fresh = arc2_chain["per_arm_gold_given_perfect"]["fresh"]
++    chain_summary = {
++        "gold": int(fresh["gold"]),
++        "n": 31,
++        "pass_at_1": _round4(int(fresh["gold"]) / 31),
++    }
++    expected = {
++        "arc1_rule_exec": {
++            "n": 31,
++            "vote_pass2": 0.4516,
++            "gated_pass2": 0.5806,
++            "headroom_recovered": 4,
++            "vote_wins_lost": 0,
++        },
++        "arc2_rule_exec": {
++            "n": 31,
++            "vote_pass2": 0.0645,
++            "gated_pass2": 0.0645,
++            "headroom_recovered": 0,
++            "vote_wins_lost": 0,
++        },
++        "arc2_registered_chain": {
++            "gold": 19,
++            "n": 31,
++            "pass_at_1": 0.6129,
++        },
++    }
++    observed = {
++        "arc1_rule_exec": arc1_summary,
++        "arc2_rule_exec": arc2_summary,
++        "arc2_registered_chain": chain_summary,
++    }
++    return {
++        "offline_reeval_bitexact": observed == expected,
++        **observed,
++        "expected": expected,
++    }
++
++
++def classify_g1_off_arc_outcome(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """Classify Exp 4045 into registry transfer, stronger closure, open gap, or pending."""
++    rel_path = G1_OFF_ARC_PATH
++    path = repo_root / rel_path
++    if not path.exists():
++        return _pending_g1("missing_exp4045_artifact", rel_path)
++
++    artifact = _load_json(path)
++    common = _g1_common(rel_path, artifact)
++    n_tasks = int(artifact.get("n_tasks", 0))
++    powered_floor = int(artifact.get("powered_task_floor", 160))
++    verdict = str(artifact.get("honest_verdict", ""))
++    if (
++        n_tasks < powered_floor
++        or "partial" in verdict
++        or artifact.get("raw_artifact_present") is False
++    ):
++        return _pending_g1("partial_or_incomplete_exp4045", rel_path, artifact)
++
++    if bool(artifact.get("demofit_ci_excludes_zero")):
++        return {
++            "g1_off_arc_outcome_recorded": "g1_demofit_ci_excludes_zero",
++            "status": "transfer",
++            **common,
++        }
++
++    if bool(artifact.get("best_arm_ci_excludes_zero")):
++        best_arm = str(artifact.get("best_arm", "stronger_arm"))
++        return {
++            "g1_off_arc_outcome_recorded": f"g1_stronger_{best_arm}_ci_excludes_zero",
++            "status": "stronger_discriminator_registered",
++            **common,
++        }
++
++    return {
++        "g1_off_arc_outcome_recorded": "g1_all_arms_touch_zero_gap_open",
++        "status": "gap_open",
++        **common,
++    }
++
++
++def _pending_g1(
++    reason: str,
++    artifact_path: str,
++    artifact: dict[str, Any] | None = None,
++) -> dict[str, Any]:
++    payload = {
++        "g1_off_arc_outcome_recorded": "g1_off_arc_power_pending",
++        "status": "pending",
++        "reason": reason,
++        "artifact_path": artifact_path,
++    }
++    if artifact is not None:
++        payload.update(_g1_common(artifact_path, artifact))
++    return payload
++
++
++def _g1_common(artifact_path: str, artifact: dict[str, Any]) -> dict[str, Any]:
++    return {
++        "artifact_path": artifact_path,
++        "n_tasks": int(artifact.get("n_tasks", 0)),
++        "powered_task_floor": int(artifact.get("powered_task_floor", 160)),
++        "demofit_delta_pp": float(artifact.get("demofit_delta_pp", 0.0)),
++        "demofit_bootstrap_ci95": list(artifact.get("demofit_bootstrap_ci95", [0.0, 0.0])),
++        "best_arm": str(artifact.get("best_arm", "")),
++        "best_arm_delta_pp": float(artifact.get("best_arm_delta_pp", 0.0)),
++        "best_arm_ci95": list(artifact.get("best_arm_ci95", [0.0, 0.0])),
++        "oracle_passrate": float(artifact.get("oracle_passrate", 0.0)),
++        "oracle_headroom": bool(artifact.get("oracle_headroom", False)),
++        "reproducibility_checksum": str(artifact.get("reproducibility_checksum", "")),
++    }
++
++
++def classify_g2_closed_loop_outcome(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """Classify Exp 4046 as closed-loop capability, sim2real ceiling gap, or pending."""
++    rel_path = G2_CLOSED_LOOP_PATH
++    path = repo_root / rel_path
++    if not path.exists():
++        return _pending_g2("missing_exp4046_artifact", rel_path)
++
++    artifact = _load_json(path)
++    common = _g2_common(rel_path, artifact)
++    if bool(artifact.get("closed_loop_broke_wall")):
++        return {
++            "g2_closed_loop_outcome_recorded": "g2_closed_loop_capability_registered",
++            "status": "capability_registered",
++            **common,
++        }
++
++    return {
++        "g2_closed_loop_outcome_recorded": "g2_sim2real_ceiling_gap_logged",
++        "status": "gap_logged",
++        **common,
++    }
++
++
++def _pending_g2(reason: str, artifact_path: str) -> dict[str, Any]:
++    return {
++        "g2_closed_loop_outcome_recorded": "g2_closed_loop_pending",
++        "status": "pending",
++        "reason": reason,
++        "artifact_path": artifact_path,
++    }
++
++
++def _g2_common(artifact_path: str, artifact: dict[str, Any]) -> dict[str, Any]:
++    return {
++        "artifact_path": artifact_path,
++        "closed_loop_broke_wall": bool(artifact.get("closed_loop_broke_wall", False)),
++        "new_levels_solved_this_task": int(artifact.get("new_levels_solved_this_task", 0)),
++        "per_step_wm_real_divergence_rate": float(
++            artifact.get("per_step_wm_real_divergence_rate", 0.0)
++        ),
++        "divergence_gate_fired_count": int(artifact.get("divergence_gate_fired_count", 0)),
++        "real_env_confirmed": bool(artifact.get("real_env_confirmed", False)),
++        "goal_predicate_heldout_precision": float(
++            artifact.get("goal_predicate_heldout_precision", 0.0)
++        ),
++    }
++
++
++def ensure_ledgers_record_outcomes(
++    registry: dict[str, Any],
++    gaps_text: str,
++    offline_replay: dict[str, Any],
++    g1_outcome: dict[str, Any],
++    g2_outcome: dict[str, Any],
++) -> tuple[dict[str, Any], str, dict[str, bool]]:
++    """Return registry and gaps text with Exp 4051 outcomes represented idempotently."""
++    updated_registry = deepcopy(registry)
++    updated_gaps = gaps_text
++    registry_changed = _ensure_gap4_eval(updated_registry, offline_replay)
++
++    g1_recorded = g1_outcome["g1_off_arc_outcome_recorded"]
++    if g1_recorded == "g1_demofit_ci_excludes_zero":
++        registry_changed = (
++            _upsert_verifier(updated_registry, _g1_demofit_entry(g1_outcome)) or registry_changed
++        )
++    elif g1_outcome["status"] == "stronger_discriminator_registered":
++        registry_changed = (
++            _upsert_verifier(updated_registry, _g1_stronger_entry(g1_outcome)) or registry_changed
++        )
++    else:
++        updated_gaps = _replace_marked_block(updated_gaps, "exp4051-g1", _g1_gap_block(g1_outcome))
++
++    g2_recorded = g2_outcome["g2_closed_loop_outcome_recorded"]
++    if g2_recorded == "g2_closed_loop_capability_registered":
++        registry_changed = (
++            _upsert_verifier(updated_registry, _g2_capability_entry(g2_outcome)) or registry_changed
++        )
++    else:
++        updated_gaps = _replace_marked_block(updated_gaps, "exp4051-g2", _g2_gap_block(g2_outcome))
++
++    registry_ok = _registry_contains_outcomes(updated_registry, g1_outcome, g2_outcome)
++    gaps_ok = _gaps_contain_outcomes(updated_gaps, g1_outcome, g2_outcome)
++    return (
++        updated_registry,
++        updated_gaps,
++        {
++            "registry_updated": registry_ok or registry_changed,
++            "gaps_updated": gaps_ok,
++        },
++    )
++
++
++def _ensure_gap4_eval(registry: dict[str, Any], offline_replay: dict[str, Any]) -> bool:
++    entry = _find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:  # pragma: no cover - defensive for malformed local ledgers
++        entry = {"verifier_id": GAP4_VERIFIER_ID, "domain": "arc_agi2_grid", "eval": {}}
++        registry.setdefault("verifiers", []).append(entry)
++    eval_block = entry.setdefault("eval", {})
++    required = {
++        "eval_exp_4051": EXP4051_ARTIFACT_PATH,
++        "arc1_rule_exec_vote_pass2": offline_replay.get("arc1_rule_exec", {}).get("vote_pass2"),
++        "arc1_rule_exec_gated_pass2": offline_replay.get("arc1_rule_exec", {}).get("gated_pass2"),
++        "arc2_rule_exec_vote_pass2": offline_replay.get("arc2_rule_exec", {}).get("vote_pass2"),
++        "arc2_rule_exec_gated_pass2": offline_replay.get("arc2_rule_exec", {}).get("gated_pass2"),
++        "exp4051_offline_reeval_bitexact": bool(offline_replay.get("offline_reeval_bitexact")),
++    }
++    changed = False
++    for key, value in required.items():
++        if eval_block.get(key) != value:
++            eval_block[key] = value
++            changed = True
++    return changed
++
++
++def _g1_demofit_entry(outcome: dict[str, Any]) -> dict[str, Any]:
++    return {
++        "verifier_id": G1_DEMOFIT_VERIFIER_ID,
++        "domain": "code",
++        "version": 1,
++        "kind": "process_verifier",
++        "code_commit": "HEAD",
++        "code_path": "scripts/experiments/exp4045_offarc_transfer_power_collect.py",
++        "weights_hf": None,
++        "weights_cid": None,
++        "weights_sha256": None,
++        "training_data_ref": outcome["artifact_path"],
++        "label_source": "hidden_tests",
++        "eval": {
++            "metric": "hidden_pass_at_1_delta_pp",
++            "delta_pp": outcome["demofit_delta_pp"],
++            "bootstrap_ci95": outcome["demofit_bootstrap_ci95"],
++            "n": outcome["n_tasks"],
++            "eval_artifact": outcome["artifact_path"],
++        },
++        "lineage": {
++            "from": GAP4_VERIFIER_ID,
++            "change": "Exp 4051 recorded Exp 4045 demo-fit CI excluding zero.",
++        },
++        "status": "candidate",
++        "notes": "G1 off-ARC power outcome recorded by Exp 4051.",
++    }
++
++
++def _g1_stronger_entry(outcome: dict[str, Any]) -> dict[str, Any]:
++    best_arm = outcome["best_arm"] or "stronger_arm"
++    return {
++        "verifier_id": f"gap4_code_{best_arm}_transfer_4045",
++        "domain": "code",
++        "version": 1,
++        "kind": "process_verifier",
++        "code_commit": "HEAD",
++        "code_path": "scripts/experiments/exp4045_offarc_transfer_power_collect.py",
++        "weights_hf": None,
++        "weights_cid": None,
++        "weights_sha256": None,
++        "training_data_ref": outcome["artifact_path"],
++        "label_source": "hidden_tests",
++        "eval": {
++            "metric": "hidden_pass_at_1_delta_pp",
++            "delta_pp": outcome["best_arm_delta_pp"],
++            "bootstrap_ci95": outcome["best_arm_ci95"],
++            "n": outcome["n_tasks"],
++            "eval_artifact": outcome["artifact_path"],
++        },
++        "lineage": {
++            "from": GAP4_VERIFIER_ID,
++            "change": f"Exp 4051 recorded stronger code-domain discriminator {best_arm}.",
++        },
++        "status": "candidate",
++        "notes": "G1 stronger-arm off-ARC outcome recorded by Exp 4051.",
++    }
++
++
++def _g2_capability_entry(outcome: dict[str, Any]) -> dict[str, Any]:
++    return {
++        "verifier_id": G2_CLOSED_LOOP_VERIFIER_ID,
++        "domain": "arc_agi3_game",
++        "version": 1,
++        "kind": "closed_loop_planner",
++        "code_commit": "HEAD",
++        "code_path": "python/carnot/agentic/arc_vc33_closed_loop_replan.py",
++        "weights_hf": None,
++        "weights_cid": None,
++        "weights_sha256": None,
++        "training_data_ref": outcome["artifact_path"],
++        "label_source": "real_env",
++        "eval": {
++            "metric": "new_levels_solved_this_task",
++            "value": int(outcome.get("new_levels_solved_this_task", 0)),
++            "wm_real_divergence_rate": outcome["per_step_wm_real_divergence_rate"],
++            "eval_artifact": outcome["artifact_path"],
++        },
++        "lineage": {
++            "from": "arc3_vc33_verified_world_model",
++            "change": "Exp 4051 recorded verified-WM closed-loop planner as a capability.",
++        },
++        "status": "candidate",
++        "notes": "G2 closed-loop outcome recorded by Exp 4051.",
++    }
++
++
++def _g1_gap_block(outcome: dict[str, Any]) -> str:
++    return (
++        f"#### Exp 4051 G1 off-ARC power update for {CODE_GAP_ID}\n"
++        f"- status: {outcome['g1_off_arc_outcome_recorded']}\n"
++        f"- evidence: `{outcome.get('artifact_path', G1_OFF_ARC_PATH)}`; "
++        f"n_tasks={outcome.get('n_tasks', 0)}; powered_task_floor="
++        f"{outcome.get('powered_task_floor', 160)}; demo_fit_CI95="
++        f"{outcome.get('demofit_bootstrap_ci95')}; best_arm={outcome.get('best_arm')}; "
++        f"best_arm_CI95={outcome.get('best_arm_ci95')}.\n"
++        "- failure mode: visible/demo-fit code tests are not yet a powered hidden-semantic discriminator.\n"
++        "- missing discriminator: code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics.\n"
++        "- candidate design: finish the powered code run or add hidden-property, symbolic, or formal/runtime oracles.\n"
++        "- priority: high\n"
++    )
++
++
++def _g2_gap_block(outcome: dict[str, Any]) -> str:
++    return (
++        f"### {SIM2REAL_GAP_ID}: vc33 verified-WM closed-loop sim2real ceiling\n"
++        f"- status: {outcome['g2_closed_loop_outcome_recorded']}\n"
++        f"- evidence: `{outcome.get('artifact_path', G2_CLOSED_LOOP_PATH)}`; "
++        f"per_step_wm_real_divergence_rate="
++        f"{outcome.get('per_step_wm_real_divergence_rate')}; "
++        f"divergence_gate_fired_count={outcome.get('divergence_gate_fired_count')}.\n"
++        "- failure mode: bounded WM search produced a plan whose predicted next state diverged from the real environment.\n"
++        "- missing discriminator: per-step WM-to-real transition trust signal strong enough to plan past vc33's wall.\n"
++        "- candidate design: improve the verified world model or add a conservative real-env grounding/replan guard.\n"
++        "- priority: high\n"
++    )
++
++
++def _replace_marked_block(text: str, marker: str, block: str) -> str:
++    start = f"<!-- {marker}:start -->"
++    end = f"<!-- {marker}:end -->"
++    replacement = f"{start}\n{block.rstrip()}\n{end}"
++    if start in text and end in text:
++        prefix, rest = text.split(start, 1)
++        _, suffix = rest.split(end, 1)
++        return f"{prefix}{replacement}{suffix}"
++    return text.rstrip() + "\n\n" + replacement + "\n"
++
++
++def _registry_contains_outcomes(
++    registry: dict[str, Any],
++    g1_outcome: dict[str, Any],
++    g2_outcome: dict[str, Any],
++) -> bool:
++    gap4 = _find_verifier(registry, GAP4_VERIFIER_ID)
++    if gap4 is None:
++        return False
++    if gap4.get("eval", {}).get("eval_exp_4051") != EXP4051_ARTIFACT_PATH:
++        return False
++    ok = True
++    if g1_outcome["g1_off_arc_outcome_recorded"] == "g1_demofit_ci_excludes_zero":
++        ok = ok and _find_verifier(registry, G1_DEMOFIT_VERIFIER_ID) is not None
++    if g2_outcome["g2_closed_loop_outcome_recorded"] == "g2_closed_loop_capability_registered":
++        ok = ok and _find_verifier(registry, G2_CLOSED_LOOP_VERIFIER_ID) is not None
++    return ok
++
++
++def _gaps_contain_outcomes(
++    gaps_text: str,
++    g1_outcome: dict[str, Any],
++    g2_outcome: dict[str, Any],
++) -> bool:
++    needs_g1_gap = g1_outcome["g1_off_arc_outcome_recorded"] not in {
++        "g1_demofit_ci_excludes_zero",
++        "g1_stronger_armC_symbolic_ci_excludes_zero",
++        "g1_stronger_armApp_aces_ci_excludes_zero",
++    }
++    needs_g2_gap = (
++        g2_outcome["g2_closed_loop_outcome_recorded"] != "g2_closed_loop_capability_registered"
++    )
++    g1_ok = (not needs_g1_gap) or (
++        CODE_GAP_ID in gaps_text and g1_outcome["g1_off_arc_outcome_recorded"] in gaps_text
++    )
++    g2_ok = (not needs_g2_gap) or (
++        SIM2REAL_GAP_ID in gaps_text and g2_outcome["g2_closed_loop_outcome_recorded"] in gaps_text
++    )
++    return g1_ok and g2_ok and (needs_g1_gap or needs_g2_gap)
++
++
++def build_artifact(
++    *,
++    offline_replay: dict[str, Any],
++    g1_outcome: dict[str, Any],
++    g2_outcome: dict[str, Any],
++    registry_updated: bool,
++    gaps_updated: bool,
++    duration_s: float,
++) -> dict[str, Any]:
++    bit_label = "bitexact" if offline_replay.get("offline_reeval_bitexact") else "mismatch"
++    g1_label = g1_outcome["g1_off_arc_outcome_recorded"]
++    g2_label = g2_outcome["g2_closed_loop_outcome_recorded"]
++    artifact = {
++        "experiment": "experiment_4051_verifier_registry_and_gaps_hygiene",
++        "schema": "carnot.experiment_4051_verifier_registry_and_gaps_hygiene.v1",
++        "honest_verdict": f"complete: gap4_reeval_{bit_label}_g1_{g1_label}_g2_{g2_label}_recorded",
++        "offline_reeval_bitexact": bool(offline_replay.get("offline_reeval_bitexact")),
++        "g1_off_arc_outcome_recorded": g1_label,
++        "g2_closed_loop_outcome_recorded": g2_label,
++        "registry_updated": bool(registry_updated),
++        "gaps_updated": bool(gaps_updated),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(duration_s, 3),
++        "offline_replay": offline_replay,
++        "g1_off_arc_outcome": g1_outcome,
++        "g2_closed_loop_outcome": g2_outcome,
++        "registry_path": REGISTRY_PATH,
++        "gaps_path": GAPS_PATH,
++        "field_principles": FIELD_PRINCIPLES,
++        "cited_upstream_artifacts": [
++            ARC1_RULE_EXEC_PATH,
++            ARC2_RULE_EXEC_PATH,
++            ARC2_CHAIN_PATH,
++            G1_OFF_ARC_PATH,
++            G2_CLOSED_LOOP_PATH,
++        ],
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required artifact field: {field}")  # pragma: no cover
++    if not str(artifact["honest_verdict"]).startswith(("complete:", "blocked_", "success:")):
++        raise ValueError("honest_verdict must use a terminal prefix")  # pragma: no cover
++    for field in ("offline_reeval_bitexact", "registry_updated", "gaps_updated"):
++        if not isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare bool")  # pragma: no cover
++    if not isinstance(artifact["g1_off_arc_outcome_recorded"], str):
++        raise ValueError("g1_off_arc_outcome_recorded must be a string")  # pragma: no cover
++    if not isinstance(artifact["g2_closed_loop_outcome_recorded"], str):
++        raise ValueError("g2_closed_loop_outcome_recorded must be a string")  # pragma: no cover
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError(f"inference_substrate must be {INFERENCE_SUBSTRATE}")  # pragma: no cover
++
++
++def run_hygiene(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    started = time.time()
++    registry_path = repo_root / REGISTRY_PATH
++    gaps_path = repo_root / GAPS_PATH
++
++    registry = _load_registry(registry_path)
++    gaps_text = gaps_path.read_text(encoding="utf-8")
++    offline_replay = replay_gap4_headlines(repo_root)
++    g1_outcome = classify_g1_off_arc_outcome(repo_root)
++    g2_outcome = classify_g2_closed_loop_outcome(repo_root)
++
++    registry, gaps_text, ledger_summary = ensure_ledgers_record_outcomes(
++        registry,
++        gaps_text,
++        offline_replay,
++        g1_outcome,
++        g2_outcome,
++    )
++    _write_registry(registry_path, registry)
++    gaps_path.write_text(gaps_text, encoding="utf-8")
++
++    artifact = build_artifact(
++        offline_replay=offline_replay,
++        g1_outcome=g1_outcome,
++        g2_outcome=g2_outcome,
++        registry_updated=ledger_summary["registry_updated"],
++        gaps_updated=ledger_summary["gaps_updated"],
++        duration_s=time.time() - started,
++    )
++    _write_json(repo_root / EXP4051_ARTIFACT_PATH, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised by the experiment command
++    artifact = run_hygiene(REPO_ROOT)
++    print(f"Wrote {REPO_ROOT / EXP4051_ARTIFACT_PATH}")
++    print(f"honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index d4eac10600..f899d929ae 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-11T16:47:31.387644Z",
+-  "duration_s": 0.08238363265991211,
++  "run_date": "2026-06-11T17:05:58.227002Z",
++  "duration_s": 0.14438104629516602,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "dfd6787429b99f1050f508bebdeb11c522b3c8c5d19d889df2850fbb7ee38b1e",
++  "reproducibility_checksum": "bff131799a28b179f84719c341f9eaf642a423a9e34f7b7833b1ef50a310b698",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "1f6fbd02eb40f9be5f69a9a63305ac864022106e"
++    "adversarial_verify_version": "27b59d6f3f67042aca8cec7a0e5b0b510bb8fc9b"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 9487ef56ed..2f6f65e031 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-11T16:47:31.477080Z",
+-  "duration_s": 0.06818199157714844,
++  "run_date": "2026-06-11T17:05:58.319292Z",
++  "duration_s": 0.08308672904968262,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "da5c58464e88bdc1566513e0201f073ac90613ad703ee962d9eb45a0383c9b53",
++  "reproducibility_checksum": "3065badd56fded6bb25d3108c775e483d4b9b38592e96c3513396b8c2f3ef9fe",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "1f6fbd02eb40f9be5f69a9a63305ac864022106e"
++    "adversarial_verify_version": "27b59d6f3f67042aca8cec7a0e5b0b510bb8fc9b"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 54c2eb857f..ca826d70de 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.137899398803711,
++  "efficiency_gains_ms": 2.124309539794922,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index d3ca1a81b1..56c0beffc7 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.782100975513458e-05,
++  "duration_s": 3.143900539726019e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4051_verifier_registry_and_gaps_hygiene.json b/results/experiment_4051_verifier_registry_and_gaps_hygiene.json
+new file mode 100644
+index 0000000000..ae9489138a
+--- /dev/null
++++ b/results/experiment_4051_verifier_registry_and_gaps_hygiene.json
+@@ -0,0 +1,106 @@
++{
++  "cited_upstream_artifacts": [
++    "results/arc3_gap4_rule_exec_verifier.json",
++    "results/arc3_gap4_arc2_rule_exec_verifier.json",
++    "results/arc3_gap4_arc2_chain_ensemble.json",
++    "results/experiment_4045_offarc_transfer_power.json",
++    "results/experiment_4046_closed_loop_replan_over_vc33_wm.json"
++  ],
++  "duration_s": 0.028,
++  "experiment": "experiment_4051_verifier_registry_and_gaps_hygiene",
++  "field_principles": {
++    "g1_off_arc_outcome_recorded": "The off-ARC power measurement must land in the ledger, not just an artifact.",
++    "g2_closed_loop_outcome_recorded": "The planning outcome becomes either a registry capability, a new gap, or a pending record.",
++    "gaps_updated": "Bare bool; gaps ledger reflects the missing-verifier state after Exp 4051.",
++    "honest_verdict": "Terminal-prefix summary of GAP-4 replay and .374 G1/G2 ledger routing.",
++    "inference_substrate": "aggregation_from_upstream_artifacts; no Codex, GGUF, or live inference.",
++    "offline_reeval_bitexact": "A reusable verifier that does not reproduce its headline numbers is not the same verifier.",
++    "registry_updated": "Bare bool; registry reflects the verifier coverage after Exp 4051."
++  },
++  "g1_off_arc_outcome": {
++    "artifact_path": "results/experiment_4045_offarc_transfer_power.json",
++    "best_arm": "armC_symbolic",
++    "best_arm_ci95": [
++      0.0,
++      0.0
++    ],
++    "best_arm_delta_pp": 0.0,
++    "demofit_bootstrap_ci95": [
++      0.0,
++      0.0
++    ],
++    "demofit_delta_pp": 0.0,
++    "g1_off_arc_outcome_recorded": "g1_off_arc_power_pending",
++    "n_tasks": 22,
++    "oracle_headroom": false,
++    "oracle_passrate": 1.0,
++    "powered_task_floor": 160,
++    "reason": "partial_or_incomplete_exp4045",
++    "reproducibility_checksum": "d84c50ee9e3be21fdb4500cec1aae44bd9f9863aa645b5e5402a2d8bcdf8e487",
++    "status": "pending"
++  },
++  "g1_off_arc_outcome_recorded": "g1_off_arc_power_pending",
++  "g2_closed_loop_outcome": {
++    "artifact_path": "results/experiment_4046_closed_loop_replan_over_vc33_wm.json",
++    "closed_loop_broke_wall": false,
++    "divergence_gate_fired_count": 1,
++    "g2_closed_loop_outcome_recorded": "g2_sim2real_ceiling_gap_logged",
++    "goal_predicate_heldout_precision": 1.0,
++    "new_levels_solved_this_task": 0,
++    "per_step_wm_real_divergence_rate": 0.207031,
++    "real_env_confirmed": false,
++    "status": "gap_logged"
++  },
++  "g2_closed_loop_outcome_recorded": "g2_sim2real_ceiling_gap_logged",
++  "gaps_path": "ops/verifier_gaps.md",
++  "gaps_updated": true,
++  "honest_verdict": "complete: gap4_reeval_bitexact_g1_g1_off_arc_power_pending_g2_g2_sim2real_ceiling_gap_logged_recorded",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "offline_reeval_bitexact": true,
++  "offline_replay": {
++    "arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "arc2_registered_chain": {
++      "gold": 19,
++      "n": 31,
++      "pass_at_1": 0.6129
++    },
++    "arc2_rule_exec": {
++      "gated_pass2": 0.0645,
++      "headroom_recovered": 0,
++      "n": 31,
++      "vote_pass2": 0.0645,
++      "vote_wins_lost": 0
++    },
++    "expected": {
++      "arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      },
++      "arc2_registered_chain": {
++        "gold": 19,
++        "n": 31,
++        "pass_at_1": 0.6129
++      },
++      "arc2_rule_exec": {
++        "gated_pass2": 0.0645,
++        "headroom_recovered": 0,
++        "n": 31,
++        "vote_pass2": 0.0645,
++        "vote_wins_lost": 0
++      }
++    },
++    "offline_reeval_bitexact": true
++  },
++  "registry_path": "ops/verifier_registry.yaml",
++  "registry_updated": true,
++  "schema": "carnot.experiment_4051_verifier_registry_and_gaps_hygiene.v1"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index caa40bbbaf..661eef0f96 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T16:47:05Z",
+-  "finished_at": "2026-06-11T16:47:05Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-11T17:05:32Z",
++  "finished_at": "2026-06-11T17:05:33Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 4b2113981d..da3a35e263 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T16:47:05Z",
+-  "finished_at": "2026-06-11T16:47:05Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-11T17:05:33Z",
++  "finished_at": "2026-06-11T17:05:33Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index fb71771f77..84c7aaf1e1 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T16:47:05Z",
+-  "finished_at": "2026-06-11T16:47:06Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-11T17:05:33Z",
++  "finished_at": "2026-06-11T17:05:33Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/exp4051_verifier_registry_and_gaps_hygiene.py b/scripts/experiments/exp4051_verifier_registry_and_gaps_hygiene.py
+new file mode 100644
+index 0000000000..db0be8481a
+--- /dev/null
++++ b/scripts/experiments/exp4051_verifier_registry_and_gaps_hygiene.py
+@@ -0,0 +1,19 @@
++"""Run Exp 4051 verifier registry and gaps hygiene.
++
++Spec refs: REQ-VERIFY-4051, SCENARIO-VERIFY-4051.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.verifier_registry_and_gaps_hygiene_4051 import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/python/test_exp4051_verifier_registry_and_gaps_hygiene.py b/tests/python/test_exp4051_verifier_registry_and_gaps_hygiene.py
+new file mode 100644
+index 0000000000..926b4c25ac
+--- /dev/null
++++ b/tests/python/test_exp4051_verifier_registry_and_gaps_hygiene.py
+@@ -0,0 +1,408 @@
++"""Tests for Exp 4051 verifier registry and gaps hygiene.
++
++Spec refs: REQ-VERIFY-4051, SCENARIO-VERIFY-4051.
++"""
++
++from __future__ import annotations
++
++import json
++import shutil
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot.reporting import verifier_registry_and_gaps_hygiene_4051 as exp4051
++
++
++REPO_ROOT = Path(__file__).parents[2]
++
++
++def _minimal_registry() -> dict[str, Any]:
++    return {
++        "verifiers": [
++            {
++                "verifier_id": "gap4_program_induction_stack",
++                "domain": "arc_agi2_grid",
++                "version": 1,
++                "kind": "process_verifier",
++                "code_path": "python/carnot/agentic/gap4_program_induction_stack.py",
++                "eval": {
++                    "metric": "pass_at_1",
++                    "arc2_gold": 19,
++                    "arc2_n": 31,
++                },
++                "status": "candidate",
++            }
++        ]
++    }
++
++
++def _write_minimal_repo(tmp_path: Path) -> None:
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "verifier_gaps.md").write_text(
++        "# Verifier Gaps\n\n"
++        "### GAP-CODE-EXEC-DEMOFIT: code hidden-semantic execution discriminator\n"
++        "- status: open\n"
++        "- evidence: prior evidence\n"
++        "- failure mode: candidates can pass visible demo tests while failing hidden semantic tests.\n"
++        "- missing discriminator: code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics.\n"
++        "- candidate design: stronger hidden-property tests.\n"
++        "- priority: high\n",
++        encoding="utf-8",
++    )
++    for name in (
++        "arc3_gap4_rule_exec_verifier.json",
++        "arc3_gap4_arc2_rule_exec_verifier.json",
++        "arc3_gap4_arc2_chain_ensemble.json",
++        "experiment_4045_offarc_transfer_power.json",
++        "experiment_4046_closed_loop_replan_over_vc33_wm.json",
++    ):
++        shutil.copy2(REPO_ROOT / "results" / name, tmp_path / "results" / name)
++
++
++def _g1_artifact(
++    *,
++    n_tasks: int = 160,
++    demofit_ci_excludes_zero: bool = False,
++    demofit_ci: list[float] | None = None,
++    demofit_delta: float = 0.0,
++    best_arm: str = "armC_symbolic",
++    best_arm_ci_excludes_zero: bool = False,
++    best_arm_ci: list[float] | None = None,
++    best_arm_delta: float = 0.0,
++    oracle_headroom: bool = True,
++) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4045_offarc_transfer_power",
++        "honest_verdict": "complete: fixture",
++        "n_tasks": n_tasks,
++        "powered_task_floor": 160,
++        "raw_artifact_present": True,
++        "demofit_ci_excludes_zero": demofit_ci_excludes_zero,
++        "demofit_delta_pp": demofit_delta,
++        "demofit_bootstrap_ci95": demofit_ci or [0.0, 0.0],
++        "best_arm": best_arm,
++        "best_arm_ci_excludes_zero": best_arm_ci_excludes_zero,
++        "best_arm_delta_pp": best_arm_delta,
++        "best_arm_ci95": best_arm_ci or [0.0, 0.0],
++        "armA_vote_passrate": 0.5,
++        "armB_demofit_passrate": 0.5,
++        "armApp_aces_passrate": 0.5,
++        "armC_symbolic_passrate": 0.5,
++        "oracle_passrate": 0.75 if oracle_headroom else 0.5,
++        "oracle_headroom": oracle_headroom,
++        "reproducibility_checksum": "fixture",
++        "inference_substrate": "verifier_ensemble_against_cached_candidates",
++    }
++
++
++def _g2_artifact(
++    *,
++    broke_wall: bool,
++    divergence_rate: float,
++    gate_count: int,
++) -> dict[str, Any]:
++    verdict = (
++        "complete: closed_loop_solved_vc33_L1_real_env_confirmed"
++        if broke_wall
++        else f"complete: closed_loop_no_solve_vc33_wm_sim2real_ceiling_divergence_{divergence_rate:.3f}"
++    )
++    return {
++        "experiment": "experiment_4046_closed_loop_replan_over_vc33_wm",
++        "honest_verdict": verdict,
++        "closed_loop_broke_wall": broke_wall,
++        "new_levels_solved_this_task": 1 if broke_wall else 0,
++        "per_step_wm_real_divergence_rate": divergence_rate,
++        "divergence_gate_fired_count": gate_count,
++        "real_env_confirmed": broke_wall,
++        "degenerate_plan_refused": False,
++        "goal_predicate_heldout_precision": 1.0,
++        "inference_substrate": ("offline_arc_agi3_closed_loop_replanning_with_real_env_grounding"),
++    }
++
++
++def test_req_4051_spec_declared() -> None:
++    # REQ-VERIFY-4051: OpenSpec declares the hygiene runner and required fields.
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-4051",
++        "SCENARIO-VERIFY-4051",
++        "exp4051_verifier_registry_and_gaps_hygiene.py",
++        "offline_reeval_bitexact",
++        "g1_off_arc_outcome_recorded",
++        "g2_closed_loop_outcome_recorded",
++        "aggregation_from_upstream_artifacts",
++    ):
++        assert marker in spec
++
++
++def test_replay_gap4_headlines_from_cached_artifacts_bitexact() -> None:
++    # SCENARIO-VERIFY-4051: cached ARC artifacts reproduce ARC-1 and ARC-2 headline numbers.
++    replay = exp4051.replay_gap4_headlines(REPO_ROOT)
++    assert replay["offline_reeval_bitexact"] is True
++    assert replay["arc1_rule_exec"] == {
++        "n": 31,
++        "vote_pass2": pytest.approx(0.4516),
++        "gated_pass2": pytest.approx(0.5806),
++        "headroom_recovered": 4,
++        "vote_wins_lost": 0,
++    }
++    assert replay["arc2_rule_exec"] == {
++        "n": 31,
++        "vote_pass2": pytest.approx(0.0645),
++        "gated_pass2": pytest.approx(0.0645),
++        "headroom_recovered": 0,
++        "vote_wins_lost": 0,
++    }
++    assert replay["arc2_registered_chain"] == {
++        "gold": 19,
++        "n": 31,
++        "pass_at_1": pytest.approx(0.6129),
++    }
++
++
++def test_classifies_actual_374_g1_and_g2_outcomes() -> None:
++    # REQ-VERIFY-4051: incomplete G1 records pending, and no-solve G2 logs sim2real ceiling.
++    g1 = exp4051.classify_g1_off_arc_outcome(REPO_ROOT)
++    g2 = exp4051.classify_g2_closed_loop_outcome(REPO_ROOT)
++    assert g1["g1_off_arc_outcome_recorded"] == "g1_off_arc_power_pending"
++    assert g1["n_tasks"] == 22
++    assert g2["g2_closed_loop_outcome_recorded"] == "g2_sim2real_ceiling_gap_logged"
++    assert g2["per_step_wm_real_divergence_rate"] == pytest.approx(0.207031)
++
++
++def test_g1_classifier_distinguishes_transfer_stronger_and_open_bound(tmp_path: Path) -> None:
++    # REQ-VERIFY-4051: G1 routing separates demo-fit transfer, stronger-arm closure, and open gap.
++    assert exp4051.classify_g1_off_arc_outcome(tmp_path)["g1_off_arc_outcome_recorded"] == (
++        "g1_off_arc_power_pending"
++    )
++
++    results = tmp_path / "results"
++    results.mkdir()
++    g1_path = results / "experiment_4045_offarc_transfer_power.json"
++
++    g1_path.write_text(
++        json.dumps(
++            _g1_artifact(
++                demofit_ci_excludes_zero=True,
++                demofit_delta=9.5,
++                demofit_ci=[1.0, 18.0],
++            )
++        ),
++        encoding="utf-8",
++    )
++    assert exp4051.classify_g1_off_arc_outcome(tmp_path)["g1_off_arc_outcome_recorded"] == (
++        "g1_demofit_ci_excludes_zero"
++    )
++
++    g1_path.write_text(
++        json.dumps(
++            _g1_artifact(
++                best_arm="armC_symbolic",
++                best_arm_ci_excludes_zero=True,
++                best_arm_delta=7.5,
++                best_arm_ci=[0.5, 15.0],
++            )
++        ),
++        encoding="utf-8",
++    )
++    assert exp4051.classify_g1_off_arc_outcome(tmp_path)["g1_off_arc_outcome_recorded"] == (
++        "g1_stronger_armC_symbolic_ci_excludes_zero"
++    )
++
++    g1_path.write_text(json.dumps(_g1_artifact()), encoding="utf-8")
++    open_gap = exp4051.classify_g1_off_arc_outcome(tmp_path)
++    assert open_gap["g1_off_arc_outcome_recorded"] == "g1_all_arms_touch_zero_gap_open"
++    assert open_gap["demofit_bootstrap_ci95"] == [0.0, 0.0]
++
++
++def test_g2_classifier_distinguishes_capability_gap_and_pending(tmp_path: Path) -> None:
++    # REQ-VERIFY-4051: G2 routing separates solved capability, sim2real gap, and pending.
++    assert exp4051.classify_g2_closed_loop_outcome(tmp_path)["g2_closed_loop_outcome_recorded"] == (
++        "g2_closed_loop_pending"
++    )
++
++    results = tmp_path / "results"
++    results.mkdir()
++    g2_path = results / "experiment_4046_closed_loop_replan_over_vc33_wm.json"
++    g2_path.write_text(
++        json.dumps(_g2_artifact(broke_wall=False, divergence_rate=0.25, gate_count=2)),
++        encoding="utf-8",
++    )
++    assert exp4051.classify_g2_closed_loop_outcome(tmp_path)["g2_closed_loop_outcome_recorded"] == (
++        "g2_sim2real_ceiling_gap_logged"
++    )
++
++    g2_path.write_text(
++        json.dumps(_g2_artifact(broke_wall=True, divergence_rate=0.0, gate_count=0)),
++        encoding="utf-8",
++    )
++    assert exp4051.classify_g2_closed_loop_outcome(tmp_path)["g2_closed_loop_outcome_recorded"] == (
++        "g2_closed_loop_capability_registered"
++    )
++
++
++def test_ensure_ledgers_record_pending_g1_and_g2_sim2real_gap() -> None:
++    # SCENARIO-VERIFY-4051: ledger text records pending G1 and the G2 sim2real-ceiling gap.
++    registry = _minimal_registry()
++    gaps_text = "# Verifier Gaps\n"
++    replay = {
++        "offline_reeval_bitexact": True,
++        "arc1_rule_exec": {"vote_pass2": 0.4516, "gated_pass2": 0.5806},
++        "arc2_rule_exec": {"vote_pass2": 0.0645, "gated_pass2": 0.0645},
++    }
++    g1 = {
++        "g1_off_arc_outcome_recorded": "g1_off_arc_power_pending",
++        "status": "pending",
++        "artifact_path": exp4051.G1_OFF_ARC_PATH,
++        "n_tasks": 22,
++        "powered_task_floor": 160,
++        "demofit_bootstrap_ci95": [0.0, 0.0],
++        "best_arm": "armC_symbolic",
++        "best_arm_ci95": [0.0, 0.0],
++        "reason": "partial_or_incomplete_exp4045",
++    }
++    g2 = {
++        "g2_closed_loop_outcome_recorded": "g2_sim2real_ceiling_gap_logged",
++        "status": "gap_logged",
++        "artifact_path": exp4051.G2_CLOSED_LOOP_PATH,
++        "per_step_wm_real_divergence_rate": 0.207031,
++        "divergence_gate_fired_count": 1,
++        "closed_loop_broke_wall": False,
++    }
++
++    new_registry, new_gaps, summary = exp4051.ensure_ledgers_record_outcomes(
++        registry,
++        gaps_text,
++        replay,
++        g1,
++        g2,
++    )
++
++    assert summary == {"registry_updated": True, "gaps_updated": True}
++    gap4_eval = new_registry["verifiers"][0]["eval"]
++    assert gap4_eval["eval_exp_4051"] == exp4051.EXP4051_ARTIFACT_PATH
++    assert "GAP-CODE-EXEC-DEMOFIT" in new_gaps
++    assert "g1_off_arc_power_pending" in new_gaps
++    assert "GAP-ARC3-VC33-SIM2REAL-CEILING" in new_gaps
++    assert "0.207031" in new_gaps
++
++
++def test_ensure_ledgers_adds_g1_and_g2_registry_entries() -> None:
++    # REQ-VERIFY-4051: successful G1/G2 outcomes are represented as registry capabilities.
++    registry = _minimal_registry()
++    replay = {"offline_reeval_bitexact": True}
++    g1 = {
++        "g1_off_arc_outcome_recorded": "g1_demofit_ci_excludes_zero",
++        "status": "transfer",
++        "artifact_path": exp4051.G1_OFF_ARC_PATH,
++        "n_tasks": 160,
++        "demofit_delta_pp": 8.0,
++        "demofit_bootstrap_ci95": [1.0, 14.0],
++        "best_arm": "armB_demofit",
++    }
++    g2 = {
++        "g2_closed_loop_outcome_recorded": "g2_closed_loop_capability_registered",
++        "status": "capability_registered",
++        "artifact_path": exp4051.G2_CLOSED_LOOP_PATH,
++        "per_step_wm_real_divergence_rate": 0.0,
++        "divergence_gate_fired_count": 0,
++        "closed_loop_broke_wall": True,
++        "goal_predicate_heldout_precision": 1.0,
++    }
++
++    new_registry, new_gaps, summary = exp4051.ensure_ledgers_record_outcomes(
++        registry,
++        "# Verifier Gaps\n",
++        replay,
++        g1,
++        g2,
++    )
++    ids = {entry["verifier_id"] for entry in new_registry["verifiers"]}
++    assert exp4051.G1_DEMOFIT_VERIFIER_ID in ids
++    assert exp4051.G2_CLOSED_LOOP_VERIFIER_ID in ids
++    assert summary == {"registry_updated": True, "gaps_updated": False}
++    assert "GAP-ARC3-VC33-SIM2REAL-CEILING" not in new_gaps
++
++
++def test_ensure_ledgers_adds_stronger_g1_registry_entry() -> None:
++    # REQ-VERIFY-4051: stronger-arm G1 closure is a code-domain registry entry.
++    registry = _minimal_registry()
++    g1 = {
++        "g1_off_arc_outcome_recorded": "g1_stronger_armC_symbolic_ci_excludes_zero",
++        "status": "stronger_discriminator_registered",
++        "artifact_path": exp4051.G1_OFF_ARC_PATH,
++        "n_tasks": 160,
++        "best_arm": "armC_symbolic",
++        "best_arm_delta_pp": 7.5,
++        "best_arm_ci95": [0.5, 15.0],
++    }
++    g2 = {
++        "g2_closed_loop_outcome_recorded": "g2_closed_loop_capability_registered",
++        "status": "capability_registered",
++        "artifact_path": exp4051.G2_CLOSED_LOOP_PATH,
++        "per_step_wm_real_divergence_rate": 0.0,
++        "closed_loop_broke_wall": True,
++    }
++    new_registry, _, summary = exp4051.ensure_ledgers_record_outcomes(
++        registry,
++        "# Verifier Gaps\n",
++        {"offline_reeval_bitexact": True},
++        g1,
++        g2,
++    )
++    ids = {entry["verifier_id"] for entry in new_registry["verifiers"]}
++    assert "gap4_code_armC_symbolic_transfer_4045" in ids
++    assert summary == {"registry_updated": True, "gaps_updated": False}
++
++
++def test_private_helpers_cover_idempotent_and_malformed_paths(tmp_path: Path) -> None:
++    # REQ-VERIFY-4051: helper paths keep repeated runs stable and malformed YAML bounded.
++    invalid = tmp_path / "registry.yaml"
++    invalid.write_text("- not-a-map\n", encoding="utf-8")
++    assert exp4051._load_registry(invalid) == {"verifiers": []}
++
++    entry = {"verifier_id": "v", "field": 1}
++    registry = {"verifiers": [dict(entry)]}
++    assert exp4051._upsert_verifier(registry, dict(entry)) is False
++    assert exp4051._upsert_verifier(registry, {"verifier_id": "v", "field": 2}) is True
++    assert registry["verifiers"][0]["field"] == 2
++
++    original = exp4051._replace_marked_block("", "marker", "first")
++    replaced = exp4051._replace_marked_block(original, "marker", "second")
++    assert "first" not in replaced
++    assert "second" in replaced
++
++    assert exp4051._registry_contains_outcomes({}, {}, {}) is False
++    incomplete = _minimal_registry()
++    assert exp4051._registry_contains_outcomes(incomplete, {}, {}) is False
++
++
++def test_run_hygiene_writes_terminal_artifact_and_ledgers(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4051: run writes the required artifact and updates registry/gaps.
++    _write_minimal_repo(tmp_path)
++    artifact = exp4051.run_hygiene(tmp_path)
++    exp4051.validate_artifact(artifact)
++
++    out_path = tmp_path / exp4051.EXP4051_ARTIFACT_PATH
++    assert out_path.exists()
++    written = json.loads(out_path.read_text(encoding="utf-8"))
++    assert written["honest_verdict"] == (
++        "complete: gap4_reeval_bitexact_g1_g1_off_arc_power_pending_"
++        "g2_g2_sim2real_ceiling_gap_logged_recorded"
++    )
++    assert written["offline_reeval_bitexact"] is True
++    assert written["registry_updated"] is True
++    assert written["gaps_updated"] is True
++
++    registry = yaml.safe_load((tmp_path / "ops" / "verifier_registry.yaml").read_text())
++    assert registry["verifiers"][0]["eval"]["eval_exp_4051"] == exp4051.EXP4051_ARTIFACT_PATH
++    gaps = (tmp_path / "ops" / "verifier_gaps.md").read_text(encoding="utf-8")
++    assert "GAP-ARC3-VC33-SIM2REAL-CEILING" in gaps
+-- 
+2.55.0
+

@@ -1,0 +1,186 @@
+From 00d642cfca8125478220b692c255a60aaedcdc6e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 18 Aug 2026 08:36:26 -0400
+Subject: [PATCH 09292/11362] Record the throughput answer and the confound
+ that a dead lever exposed
+
+Two findings from the overnight measurements, neither previously written down.
+
+THE THROUGHPUT ANSWER, and it is a config change rather than a migration.
+Measured on the scored Blackwell card at production request shape: llama.cpp
+batches decode 4.37x to k=16 with MTP OFF (52.2 -> 228.3 tok/s), and 1.15x with
+MTP ON. MTP wins single-stream 1.81x and loses at k=16 by 2.1x. With 25 game
+threads sharing slots the aggregate is the currency, so the scored path wants
+--parallel 16 with MTP off. Against ~100 inductions at a 61k median needing
+~148 tok/s to fit the 11.5h cap, 228 clears it. The shipped config gets neither
+side of the trade: MTP is off AND --parallel is never passed, so it runs the
+k=1 arm at 52.2.
+
+That closes the vLLM question. The case for migrating rested on "llama.cpp does
+not batch", and it does. A 3.7 GB wheel closure was resolved and uploaded as
+insurance and is not needed -- the correct outcome for insurance.
+
+Four invalid predecessors are recorded in the claim rather than quietly dropped,
+because the shape repeats: wrong GPU (the bench kernel omitted the competition
+source that provisions Blackwell), then two arms at a 32:1 prompt:output ratio
+where prefill dominates and caps the observable effect at ~1.7x regardless of
+engine behaviour, then an arm that reshaped the prompt but left max_tokens as a
+ceiling and got 190 tokens against a requested 8192. Only the fifth, with
+ignore_eos forcing the count and finish_reason captured per request, measured
+the regime production lives in.
+
+THE CONFOUND, which is the more valuable finding. The paired goal-defect A/B ran
+control on GPU 0 and treatment on GPU 1 for the entire corpus. Treatment was
+faster on 10 of 11 pairs, mean ratio 0.922 -- because GPU 1 is 8-11% faster on
+this workload, not because of any treatment effect.
+
+It was caught only because the lever turned out to be DEAD: byte-identical
+engines across arms proved no treatment effect could exist, so the timing gap
+had to come from somewhere else. Had the lever been live, that same 8-11% would
+have looked exactly like a plausible mechanism -- the flags letting the model
+abandon a dead goal early -- and would likely have been reported as one. An
+invalid run exposed a defect a valid run would have hidden. Any re-run must
+alternate GPU assignment mid-corpus.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ okf/claims/gpu-lane-confound.md               | 42 +++++++++++++
+ okf/claims/llamacpp-batches-mtp-suppresses.md | 62 +++++++++++++++++++
+ okf/index.md                                  |  2 +
+ 3 files changed, 106 insertions(+)
+ create mode 100644 okf/claims/gpu-lane-confound.md
+ create mode 100644 okf/claims/llamacpp-batches-mtp-suppresses.md
+
+diff --git a/okf/claims/gpu-lane-confound.md b/okf/claims/gpu-lane-confound.md
+new file mode 100644
+index 0000000000..64f4d5154f
+--- /dev/null
++++ b/okf/claims/gpu-lane-confound.md
+@@ -0,0 +1,42 @@
++---
++type: Claim
++title: Arm was confounded with GPU lane in the paired A/B design
++description: GPU 1 is 8-11% faster than GPU 0 on this workload; a dead lever is what exposed it.
++tags: [arc-agi-3, methodology, confound, paired-ab]
++status: stable
++sources:
++  - id: goal-ab
++    resource: /home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen/goalab
++    author: repair-extend
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T12:40:00Z }
++verified:
++  - { by: repair-extend, at: 2026-08-18T12:30:00Z }
++---
++
++# The finding
++
++The paired A/B ran control on GPU 0 and treatment on GPU 1 for the whole corpus. Treatment was
++faster on 10 of 11 completed pairs, mean ratio 0.922, median 0.893. **GPU 1 is 8-11% faster than
++GPU 0 on this workload**, consistently across all four games. Arm and lane were confounded, and
++nothing in the design would have separated them.
++
++# Why it was caught, which is the interesting part
++
++Only because the lever was DEAD. The two arms produced byte-identical engines and zero re-asks
++fired, so no treatment effect could exist -- which meant the 8-11% timing difference had to come
++from somewhere else. Had the lever been live, that same asymmetry would have looked exactly like
++a plausible mechanism (the flags letting the model abandon a dead goal early instead of grinding),
++and it would likely have been reported as one.
++
++So an invalid run exposed a defect that a valid run would have hidden.
++
++# The dependent artifact
++
++Control's `tr87 t1` hit the 3600s induce timeout while treatment's identical-seed run completed
++in 2875.8s. At the lane penalty control was heading for 3100-3300s and its retry ladder pushed it
++past the cliff. That is a lane artifact, not a dropout and not a treatment effect.
++
++# Required of any re-run
++
++Alternate or swap GPU assignment mid-corpus so arm and lane are not confounded. This requirement
++did not exist in the original design.
+diff --git a/okf/claims/llamacpp-batches-mtp-suppresses.md b/okf/claims/llamacpp-batches-mtp-suppresses.md
+new file mode 100644
+index 0000000000..4a90e80b25
+--- /dev/null
++++ b/okf/claims/llamacpp-batches-mtp-suppresses.md
+@@ -0,0 +1,62 @@
++---
++type: Claim
++title: llama.cpp batches decode 4.37x at k=16, and MTP suppresses it
++description: Measured on the scored Blackwell card. MTP wins single-stream 1.81x and loses 2.1x at k=16.
++tags: [arc-agi-3, throughput, mtp, concurrency, blackwell]
++status: stable
++resource: https://www.kaggle.com/code/iancblenke/carnot-arc-blackwell-bench
++sources:
++  - id: bench-v5
++    resource: /home/ianblenke/.claude/jobs/ad0c053d/tmp/kbench5/bench_results.json
++    author: outer-loop/claude-opus-5
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T12:40:00Z }
++verified:
++  - { by: outer-loop/claude-opus-5, at: 2026-08-18T07:25:00Z }
++---
++
++# The measurement
++
++RTX PRO 6000 Blackwell, NVFP4 Qwen3.8-27B, 22000-token prompt and 8192 generated tokens per
++request with `ignore_eos` forcing the count. Every arm finished `length`, no truncation.
++
++| arm | k=1 | k=4 | k=16 |
++|---|---|---|---|
++| MTP off | 52.2 | 134.7 (2.58x) | **228.3 (4.37x)** |
++| MTP on | 94.7 | 101.5 (1.07x) | 108.8 (1.15x) |
++
++llama.cpp batches decode. MTP is what was suppressing it -- speculative decoding trades bandwidth
++for compute, and 16 slots each running draft-and-verify saturates compute, where batching has
++nothing left to amortise.
++
++# The crossover, which is the actionable part
++
++MTP wins single-stream 1.81x (94.7 vs 52.2). MTP-off wins at k=16 by 2.1x (228.3 vs 108.8). With
++25 game threads sharing slots, aggregate is the currency, so the scored path should run
++`--parallel 16` with MTP OFF.
++
++Against the budget: roughly 100 induction calls at a 61,284-token median need about 148 tok/s
++aggregate to fit the 11.5h swarm cap. 228 clears it with ~54% headroom. The shipped config today
++gets neither side of the trade -- MTP is off AND `--parallel` is never passed, so it runs the
++k=1 arm at 52.2.
++
++# What this closes
++
++The case for migrating to vLLM rested on "llama.cpp does not batch". It does. A 3.7 GB wheel
++closure was resolved and uploaded as insurance and is not needed.
++
++# Caveat, stated because it is not yet measured
++
++This ran 8192 generated tokens; production generates ~61k. Longer generations mean more KV
++pressure per slot at k=16. The arithmetic fits (16 x 32k cells against 96 GB) but has not been
++measured at production length.
++
++# Four invalid predecessors, recorded so the shape is not repeated
++
++v1 ran on a Tesla P100 because the bench kernel omitted `competition_sources` -- the Blackwell
++card is provisioned for the competition. v2 and v3 used a 32:1 prompt:output ratio, which is
++prefill-dominated; prefill saturates at batch 1 and cannot be batched away, so the observable
++ceiling was ~1.7x no matter how well the engine batched. v4 reshaped the prompt to 22000 but
++left `max_tokens` as a ceiling with a prompt saying "reply with a short plan", and got ~190
++tokens -- a 116:1 ratio, worse than what it replaced. Only v5, with `ignore_eos` forcing the
++token count and `finish_reason` captured per request, measured the decode regime production
++actually lives in.
+diff --git a/okf/index.md b/okf/index.md
+index 614ca064c1..5418b8d655 100644
+--- a/okf/index.md
++++ b/okf/index.md
+@@ -47,6 +47,8 @@ never-prune rule. Read the `superseded_by` field before acting on anything here.
+ | [The goal predicate never fires on a real win](/okf/claims/goal-predicate-never-fires.md) | stable |
+ | [Seeded repair converts catastrophic cells](/okf/claims/seeded-repair-converts.md) | stable |
+ | [Carried engines do not transfer](/okf/claims/carried-engines-do-not-transfer.md) | stable |
++| [llama.cpp batches 4.37x; MTP suppresses it](/okf/claims/llamacpp-batches-mtp-suppresses.md) | stable |
++| [Arm was confounded with GPU lane](/okf/claims/gpu-lane-confound.md) | stable |
+ 
+ ## Submissions
+ 
+-- 
+2.55.0
+

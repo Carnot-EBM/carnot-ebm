@@ -1,0 +1,75 @@
+From 00558ccc59d33e030f8b501f69a2fd51c279f946 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 07:36:44 -0400
+Subject: [PATCH 06420/11362] [conductor] Operational retrospective for
+ milestone 2026.07.497
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_497.json | 29 ++++++++++++++++++++++
+ 3 files changed, 36 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_497.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 16039a3ce9..c84c7a81ae 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5853,3 +5853,9 @@ The critical path for milestone .250:
+ - theme: empty authorized timing window for operational efficiency accounting
+ - key result: no data available this milestone; the timing block records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so slowest-run ranking, compute-bound GPU efficiency, and DualGPURunner assessment remain unmeasured
+ - acceptance: 0/0 criteria met -- no milestone-scoped timing rows were available to evaluate
++
++### Milestone 2026.07.497
++- exp_range: no data available this milestone
++- theme: retrospective limited to an empty activation-window timing record
++- key result: no data available this milestone; 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments leave no supported compute-bound slow path, GPU-efficiency finding, or DualGPURunner assessment
++- acceptance: 0/0 criteria met -- no milestone-scoped experiment rows were available for scoring
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 0febeaa080..4327942c56 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11235,3 +11235,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-09: ARC target rotation and perception/salience precheck (✅ Complete) — honest_verdict=complete: sb26 L3 live-path precheck ready; no level bank claimed; results/experiment_5479_arc_target_rotation_precheck_v497.json
+ - 2026-07-09: Gated ARC live salience level-up attempt on rotated target (⚠️ Research Finding) — honest_verdict=honest_null: sb26 L3 bounded_budget_no_target_level_reproduction; results/experiment_5480_arc_live_salience_levelup_v497.json
+ - 2026-07-09: Milestone .497 capstone, PRD gap table, and next-roadmap recommendations (✅ Complete) — honest_verdict=complete: .497 capstone read 13/13 artifacts; guided_decoding=quarantined; csl=headline_ready; arc_registry_delta=0; hardware_speedup_claim=False.; results/experiment_5481_capstone_v497.json
++- 2026-07-09: Operational retrospective for milestone 2026.07.497 (Complete) -- no data available this milestone: the authorized timing window found no experiment commits by live git-log or disk-mtime reconstruction. Artifact remains total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null; the idle GPU monitor is non-actionable because there are no compute-bound rows, and no DualGPURunner miss is claimed. Tooling recommendation: persist per-experiment timing rows during conductor execution instead of relying on closeout reconstruction. estimated_time_savings_pct=0; results/operational_retro_2026_07_497.json
+diff --git a/results/operational_retro_2026_07_497.json b/results/operational_retro_2026_07_497.json
+new file mode 100644
+index 0000000000..8eaa89b372
+--- /dev/null
++++ b/results/operational_retro_2026_07_497.json
+@@ -0,0 +1,29 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.497",
++  "generated_at": "2026-07-09T11:33:39Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": false,
++  "timing_integrity_mismatch": false,
++  "summary": "No data available this milestone: the locked timing fields record 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. The idle GPU snapshot is therefore not evidence of a compute-bound utilization problem, and no slowest experiment or parallel-model runner issue can be inferred.",
++  "bottlenecks_identified": [
++    "No experiment-level timing rows were available for this milestone, so compute-bound duration ranking, GPU-efficiency assessment, and DualGPURunner assessment could not be measured."
++  ],
++  "improvements_suggested": [
++    "Persist a milestone-scoped timing manifest at activation and append each experiment receipt to it as the conductor commits results, so the retrospective does not depend on reconstructing timing after the fact.",
++    "Add a closeout guard that emits an explicit no-data retrospective when the activation window has 0 experiment commits, with GPU-idle claims automatically gated off unless compute-bound rows exist.",
++    "Record model-count and compute-bound tags in the timing manifest so DualGPURunner eligibility can be checked directly in the next milestone."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Make the conductor write authoritative per-experiment timing rows during execution.",
++    "Add a regression check for empty milestone timing windows before retrospective generation.",
++    "Include compute-bound and parallel-model metadata in timing rows for automatic GPU-runner gating."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The useful lesson is procedural rather than performance-related: with 0 milestone-scoped experiment rows, operational analysis must stop at the evidence boundary. The next improvement should make missing timing data explicit at capture time instead of asking the retrospective step to recover it later."
++}
+-- 
+2.55.0
+

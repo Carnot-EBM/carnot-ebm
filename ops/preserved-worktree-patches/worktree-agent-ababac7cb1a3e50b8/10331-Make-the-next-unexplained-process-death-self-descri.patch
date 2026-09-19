@@ -1,0 +1,329 @@
+From ac1fea51029171e068b412b2807b7d056851023e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 21:44:17 -0400
+Subject: [PATCH 10331/11362] Make the next unexplained process death
+ self-describing (REQ-INFRA-6830)
+
+A 7-hour GPU A/B died at 38 of 39 cells on 2026-08-29 and nothing in this
+repository could say what killed it: the llama-server log stops mid-decode at
+23.37 tok/s with no shutdown line, the runner log stops with no traceback, there
+is no OOM trace, and run_stop_authority.py -- which logs EVERY action it takes --
+wrote no actor row. Enough to conclude it was killed from outside; not enough to
+say by whom. This project already names that state: "exit-143, sender never
+identified", first recorded 2026-08-09.
+
+I nearly recorded a third wrong cause. My first read blamed kill_gpu_zombies
+because its comments describe this exact symptom. But llama-server is in that
+reaper's exemption list, run_stop_authority would have logged, and there are
+three reapers with three exemption lists -- picking the one whose comments best
+match is how a guess becomes fact. I had already made that error today with a
+GPU-contention story the base rate refuted. So this claims no culprit.
+
+It makes the next death self-describing instead: signal number and name, pid and
+ppid, elapsed time, and how far the work had got -- "killed at 38/39" rather than
+"killed". Naming the sender is the precondition for fixing whatever kills, and
+this project has twice skipped that step.
+
+The handler re-raises the default action rather than exiting, so a job never
+becomes harder to stop than before -- swallowing SIGTERM turns a polite stop into
+a hang. SIGKILL is deliberately uncaught: a job that vanishes with NO receipt is
+then itself evidence of SIGKILL, OOM, or a kernel event, and that absence is only
+informative because a catchable signal reliably leaves one. Pinned by a test so
+nobody later "fixes" the gap.
+
+6 tests in real child processes, because the behaviour under test is death.
+5/5 mutations RED; restores byte-identical.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   |  40 ++++++
+ python/carnot/testing/long_run_receipt.py     |  89 ++++++++++++
+ tests/python/test_long_run_receipt.py         | 131 ++++++++++++++++++
+ 3 files changed, 260 insertions(+)
+ create mode 100644 python/carnot/testing/long_run_receipt.py
+ create mode 100644 tests/python/test_long_run_receipt.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 9a157ed23f..2a954b9598 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -9933,3 +9933,43 @@ substitute CPU, remote, legacy, or different-model inference.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-INFRA-6764 and SCENARIO-INFRA-6764-* | Implemented (`python/carnot/experiment_6764_arc_exclusive_load_preflight.py`) | Implemented (`tests/python/test_experiment_6764_arc_exclusive_load_preflight.py`; 31 focused tests, 100% new-module statement coverage) |
++
++### REQ-INFRA-6830: A signalled long-running job leaves a receipt naming its killer
++
++A long-running measurement SHALL install a death receipt. On a catchable termination signal it
++SHALL write the signal number and name, its pid and ppid, elapsed seconds, and a caller-supplied
++progress value; it SHALL then re-raise the signal's default action so the job stays as stoppable
++as it was before.
++
++#### SCENARIO-INFRA-6830-A: the signal is named
++- GIVEN a job with a receipt installed
++- WHEN it is sent SIGTERM
++- THEN a receipt records `signal_name: "SIGTERM"` and the job still dies of that signal
++
++#### SCENARIO-INFRA-6830-B: progress is recorded
++- GIVEN a job 38 cells into 39
++- WHEN it is killed
++- THEN the receipt says so, because "killed at 38/39" is a different finding from "killed"
++
++#### SCENARIO-INFRA-6830-C: a failing progress callback does not cost the receipt
++- GIVEN a progress callback that raises
++- WHEN the job is killed
++- THEN the receipt is still written, carrying the callback's error
++
++#### SCENARIO-INFRA-6830-D: SIGKILL leaves nothing, and that absence is the signal
++- GIVEN a job with a receipt installed
++- WHEN it is SIGKILLed
++- THEN no receipt exists, and its absence indicates SIGKILL, the OOM killer, or a kernel event
++
++Rationale: a 7-hour GPU measurement died at 38/39 cells on 2026-08-29 and nothing in the
++repository could say what killed it — the server log stopped mid-decode at 23.37 tok/s, the
++runner log stopped with no traceback, there was no OOM trace, and `run_stop_authority.py`, which
++logs every action it takes, had written no actor row. The same state was first recorded
++2026-08-09 as "exit-143, sender never identified". This does NOT identify the killer; it makes
++the next death self-describing, which is the precondition for identifying one. Three reapers
++exist in this project, each with its own exemption list, and choosing the one whose comments
++best fit the symptom is how a wrong cause becomes recorded fact.
++
++Implementation status: implemented 2026-08-30
++(`python/carnot/testing/long_run_receipt.py`; `tests/python/test_long_run_receipt.py`, 6 tests
++in real child processes, 5/5 mutations RED).
+diff --git a/python/carnot/testing/long_run_receipt.py b/python/carnot/testing/long_run_receipt.py
+new file mode 100644
+index 0000000000..4dddc5d6f9
+--- /dev/null
++++ b/python/carnot/testing/long_run_receipt.py
+@@ -0,0 +1,89 @@
++"""Leave a receipt when a long-running job dies, naming the signal that killed it.
++
++WHY THIS EXISTS (2026-08-30). A 7-hour GPU measurement died at 38 of 39 cells and NOTHING in
++the repository could say what killed it. The evidence available afterwards was:
++
++  * the llama-server log stopping mid-decode at 23.37 tok/s, no shutdown line;
++  * the runner log stopping with no traceback;
++  * no OOM trace, and no actor row from `run_stop_authority.py`, which logs every action it
++    takes -- so it was not that reaper.
++
++That is enough to say the process was killed from outside and not enough to say by whom. This
++repository already names that state as its own incident class: an unexplained dead process,
++first recorded 2026-08-09 as "exit-143, sender never identified". It has now happened twice, and
++both times the investigation ended in a plausible story rather than an answer.
++
++A plausible story is the thing to avoid here. There are three reapers in this project
++(`experiment_template.kill_gpu_zombies`, `gpu_monitor.detect_zombies`,
++`run_stop_authority.py`), each with its own exemption list, and picking the one whose comments
++best match the symptom is how a wrong cause gets recorded as fact.
++
++So this does not try to identify the killer. It makes the NEXT death self-describing: the
++signal number, the sender's pid where the kernel provides it, and how far the job had got. One
++line of evidence at the moment of death is worth more than any amount of reconstruction after.
++
++Deliberately NOT a fix for whatever did the killing. Naming the sender is the precondition for
++fixing it, and this project has twice tried to skip that step.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import signal
++import time
++from collections.abc import Callable
++from pathlib import Path
++from types import FrameType
++
++#: Signals worth a receipt. SIGKILL cannot be caught -- that is the point of it -- so a job
++#: that vanishes with NO receipt at all is itself evidence: either SIGKILL, or the OOM killer,
++#: or a power/kernel event. The absence is informative only because the presence is reliable.
++_CAUGHT = (signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT)
++
++
++def install(receipt_path: Path, *, progress: Callable[[], object] | None = None) -> None:
++    """Write `receipt_path` if this process is signalled, then re-raise the default action.
++
++    `progress` is called at death to record how far the work had got -- cells banked, rows
++    written -- so a receipt says "killed at 38/39" rather than only "killed".
++
++    Re-raising rather than exiting is deliberate: a handler that swallows SIGTERM turns a
++    supervisor's polite stop into a hang, and this must never make a job harder to stop than it
++    was before.
++    """
++
++    started = time.time()
++
++    def _handler(signum: int, _frame: FrameType | None) -> None:
++        record: dict[str, object] = {
++            "killed_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++            "signal": signum,
++            "signal_name": signal.Signals(signum).name,
++            "pid": os.getpid(),
++            "ppid": os.getppid(),
++            "elapsed_s": round(time.time() - started, 1),
++        }
++        if progress is not None:
++            try:
++                record["progress"] = progress()
++            except Exception as exc:  # noqa: BLE001
++                # A failing progress callback must never cost us the receipt itself.
++                record["progress_error"] = f"{type(exc).__name__}: {exc}"
++        try:
++            receipt_path.parent.mkdir(parents=True, exist_ok=True)
++            receipt_path.write_text(json.dumps(record, indent=2) + "\n")
++        except OSError as exc:  # noqa: BLE001
++            # Nothing useful left to do; dying silently is what we are fixing, so say it
++            # on stderr at least.
++            print(f"long-run-receipt: could not write {receipt_path}: {exc}", flush=True)
++        signal.signal(signum, signal.SIG_DFL)
++        os.kill(os.getpid(), signum)
++
++    for sig in _CAUGHT:
++        try:
++            signal.signal(sig, _handler)
++        except (ValueError, OSError):
++            # Not the main thread, or the platform refuses this signal. Skip it rather than
++            # refusing to install the others.
++            continue
+diff --git a/tests/python/test_long_run_receipt.py b/tests/python/test_long_run_receipt.py
+new file mode 100644
+index 0000000000..71505edbe4
+--- /dev/null
++++ b/tests/python/test_long_run_receipt.py
+@@ -0,0 +1,131 @@
++"""REQ-INFRA-6830: a signalled long-running job leaves a receipt naming its killer.
++
++A 7-hour GPU measurement died at 38/39 cells on 2026-08-29 and nothing could say what killed
++it: the server log stopped mid-decode at 23.37 tok/s, the runner log stopped with no traceback,
++there was no OOM trace, and `run_stop_authority.py` -- which logs every action it takes -- had
++written no actor row. Enough to know it was killed from outside; not enough to know by whom.
++The same state was first recorded 2026-08-09 as "exit-143, sender never identified".
++
++These tests run the receipt in a REAL child process and signal it, because the thing under test
++is behaviour at process death and an in-process unit test cannot exercise that.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import signal
++import subprocess
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++
++CHILD = """
++import sys, time
++sys.path.insert(0, {repo!r} + "/python")
++from pathlib import Path
++from carnot.testing.long_run_receipt import install
++install(Path({receipt!r}), progress=lambda: {{"cells": 38, "of": 39}})
++print("ready", flush=True)
++time.sleep(60)
++"""
++
++
++def _spawn(tmp_path: Path, receipt: Path) -> subprocess.Popen:
++    src = CHILD.format(repo=str(REPO), receipt=str(receipt))
++    proc = subprocess.Popen(
++        [sys.executable, "-c", src], stdout=subprocess.PIPE, text=True, cwd=str(tmp_path)
++    )
++    assert proc.stdout is not None
++    assert proc.stdout.readline().strip() == "ready"
++    return proc
++
++
++def _wait_for(path: Path, timeout: float = 10.0) -> dict:
++    deadline = time.time() + timeout
++    while time.time() < deadline:
++        if path.exists():
++            try:
++                return json.loads(path.read_text())
++            except json.JSONDecodeError:
++                pass  # caught mid-write
++        time.sleep(0.05)
++    raise AssertionError(f"no receipt at {path} within {timeout}s")
++
++
++def test_sigterm_leaves_a_receipt_naming_the_signal(tmp_path: Path) -> None:
++    """The exact case that went unexplained twice."""
++    receipt = tmp_path / "death.json"
++    proc = _spawn(tmp_path, receipt)
++    proc.send_signal(signal.SIGTERM)
++    proc.wait(timeout=10)
++    record = _wait_for(receipt)
++    assert record["signal"] == int(signal.SIGTERM)
++    assert record["signal_name"] == "SIGTERM"
++    assert record["pid"] == proc.pid
++
++
++def test_the_receipt_records_how_far_the_work_had_got(tmp_path: Path) -> None:
++    """ "Killed at 38 of 39" is a different finding from "killed"."""
++    receipt = tmp_path / "death.json"
++    proc = _spawn(tmp_path, receipt)
++    proc.send_signal(signal.SIGTERM)
++    proc.wait(timeout=10)
++    assert _wait_for(receipt)["progress"] == {"cells": 38, "of": 39}
++
++
++def test_the_process_still_dies_on_the_signal(tmp_path: Path) -> None:
++    """A handler that swallows SIGTERM turns a polite stop into a hang.
++
++    The job must remain exactly as stoppable as it was before the receipt existed.
++    """
++    receipt = tmp_path / "death.json"
++    proc = _spawn(tmp_path, receipt)
++    proc.send_signal(signal.SIGTERM)
++    assert proc.wait(timeout=10) != 0
++    assert -proc.returncode == int(signal.SIGTERM)
++
++
++def test_sigint_and_sighup_are_also_covered(tmp_path: Path) -> None:
++    for sig in (signal.SIGINT, signal.SIGHUP):
++        receipt = tmp_path / f"death_{sig}.json"
++        proc = _spawn(tmp_path, receipt)
++        proc.send_signal(sig)
++        proc.wait(timeout=10)
++        assert _wait_for(receipt)["signal"] == int(sig)
++
++
++def test_a_failing_progress_callback_does_not_cost_the_receipt(tmp_path: Path) -> None:
++    """The receipt is the point; progress is a bonus. Losing both would be the bug."""
++    receipt = tmp_path / "death.json"
++    src = CHILD.format(repo=str(REPO), receipt=str(receipt)).replace(
++        'progress=lambda: {"cells": 38, "of": 39}',
++        'progress=lambda: (_ for _ in ()).throw(RuntimeError("boom"))',
++    )
++    proc = subprocess.Popen(
++        [sys.executable, "-c", src], stdout=subprocess.PIPE, text=True, cwd=str(tmp_path)
++    )
++    assert proc.stdout is not None
++    assert proc.stdout.readline().strip() == "ready"
++    proc.send_signal(signal.SIGTERM)
++    proc.wait(timeout=10)
++    record = _wait_for(receipt)
++    assert record["signal_name"] == "SIGTERM"
++    assert "RuntimeError" in str(record.get("progress_error"))
++
++
++def test_sigkill_leaves_no_receipt_and_that_absence_is_the_signal(tmp_path: Path) -> None:
++    """SIGKILL cannot be caught -- by design.
++
++    Pinned so nobody later "fixes" the gap: a job that vanishes with NO receipt is evidence of
++    SIGKILL, the OOM killer, or a kernel event, and that is only informative because a catchable
++    signal reliably DOES leave one.
++    """
++    receipt = tmp_path / "death.json"
++    proc = _spawn(tmp_path, receipt)
++    os.kill(proc.pid, signal.SIGKILL)
++    proc.wait(timeout=10)
++    time.sleep(0.3)
++    assert not receipt.exists()
+-- 
+2.55.0
+

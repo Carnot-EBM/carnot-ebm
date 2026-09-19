@@ -1,0 +1,70 @@
+From 6e76a1207242124c38b0a65a25114d153bc198d8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 00:42:42 -0400
+Subject: [PATCH 06126/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...392_formal_encoding_safety_fixture_v491.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f44ec78897..0d61707949 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 269, "phase": "iteration_start", "last_beat": "2026-07-08T04:22:53Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 270, "phase": "iteration_start", "last_beat": "2026-07-08T04:42:39Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ba75be14f0..184555bc98 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10516,3 +10516,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
+ | 2026-07-08 03:49 UTC | Archive .490 outcomes and stage .491 execution con | OK | 87 passed, 1 warning in 8.27s |
+ | 2026-07-08 04:05 UTC | Execution-time SOTA source delta for .491 | OK | 116 passed, 1 warning in 8.37s |
+ | 2026-07-08 04:20 UTC | Scale the local SOTA constraint-tax panel with det | OK | 107 passed, 1 warning in 8.69s |
++| 2026-07-08 04:40 UTC | Formal-encoding safety and intent constraint fixtu | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5bd18c8102..48db212fc8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 269, "phase": "iteration_start", "started_at": "2026-07-08T04:22:53Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 270, "phase": "iteration_start", "started_at": "2026-07-08T04:42:39Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5392_formal_encoding_safety_fixture_v491.json b/results/experiment_5392_formal_encoding_safety_fixture_v491.json
+index 5ae47f4319..d258e6e084 100644
+--- a/results/experiment_5392_formal_encoding_safety_fixture_v491.json
++++ b/results/experiment_5392_formal_encoding_safety_fixture_v491.json
+@@ -436,5 +436,18 @@
+   ],
+   "traceability_modified": false,
+   "unconstrained_intent_consistency_rate": 1.0,
+-  "unconstrained_model_false_negative_rate": 0.0
+-}
++  "unconstrained_model_false_negative_rate": 0.0,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "constrained_intent_consistency_rate=0.6666666666666666 and constrained_model_false_negative_rate=0.6666666666666666 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

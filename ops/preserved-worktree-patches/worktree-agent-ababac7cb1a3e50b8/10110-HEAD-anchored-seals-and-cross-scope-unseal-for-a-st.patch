@@ -1,0 +1,347 @@
+From d6575af27218f2b564bb1b6fd9337c6b66a304a4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 12:49:51 -0400
+Subject: [PATCH 10110/11362] HEAD-anchored seals and cross-scope unseal, for a
+ standing declaration
+
+Measuring what the conductor actually commits killed the obvious design. It
+has AUTHORED changes to scripts/adversarial_verify.py 90 times, to
+.pre-commit-config.yaml 9 times and to tests/python/conftest.py 3 times --
+extending the fabrication gate is normal task work here, not an anomaly. So
+sealing the harness against the conductor as first written would have refused
+its commits routinely and wedged the research loop.
+
+--seal-anchor head compares the working tree to HEAD instead of to a hash
+captured at declaration time. A declaration that outlives many commits would
+otherwise go stale the first time anyone legitimately committed a harness
+change, then refuse every commit until a human noticed. Anchored to HEAD, a
+committed change moves the baseline with it and only UNCOMMITTED harness edits
+refuse -- which is the actual harm: an in-flight edit swept into someone else's
+commit, changing the harness unreviewed and misattributed.
+
+An explicit --unseal in ANY active declaration lifts that path for the commit.
+Without it a standing seal deadlocks whoever is repairing the file it seals:
+their own --unseal cannot reach another declaration's seal, so they would have
+to release someone else's scope to commit -- the exact move the refusal text
+tells them not to make. This does permit bypassing a standing seal by naming
+the path, deliberately: a glob still never unseals, so the bypass costs a typed
+path name and leaves the intent in the record.
+
+Mutation-proved: 13 of 13 rules RED when deleted, guard restored
+byte-identical, suite green before and after. 31 tests.
+
+REQ-INFRA-6801.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ scripts/harness_integrity_lint.py           | 111 ++++++++++++++++++--
+ tests/python/test_harness_integrity_lint.py | 104 +++++++++++++++++-
+ 2 files changed, 205 insertions(+), 10 deletions(-)
+
+diff --git a/scripts/harness_integrity_lint.py b/scripts/harness_integrity_lint.py
+index c92a895e60..ccd8de71f0 100644
+--- a/scripts/harness_integrity_lint.py
++++ b/scripts/harness_integrity_lint.py
+@@ -145,6 +145,39 @@ def _sha256(path: Path) -> str | None:
+         return None
+ 
+ 
++#: Stored in place of a hash when a declaration is anchored to HEAD instead of to the moment
++#: it was made. See `--seal-anchor head`.
++HEAD_ANCHOR = "@HEAD"
++
++
++def _head_blob(rel: str) -> tuple[str | None, bool]:
++    """(blob id at HEAD, ok). `ok` is False when git could not answer at all.
++
++    `git ls-tree` is used rather than `rev-parse HEAD:<path>` because rev-parse exits
++    non-zero both when git is broken and when the path simply is not in HEAD -- and those
++    must not be confused. ls-tree exits 0 either way and prints nothing for an absent path.
++    """
++    out = _git("ls-tree", "HEAD", "--", rel)
++    if out == "":
++        # Empty means "absent at HEAD" only if git is answering at all; ask once more.
++        if _git("rev-parse", "--git-dir") == "":
++            return None, False
++        return None, True
++    fields = out.split()
++    return (fields[2] if len(fields) >= 3 else None), True
++
++
++def _worktree_blob(rel: str) -> tuple[str | None, bool]:
++    """(blob id the working-tree file would hash to, ok). None with ok=True means absent."""
++    path = REPO / rel
++    if not path.exists():
++        return None, True
++    out = _git("hash-object", "--", rel)
++    if out == "":
++        return None, False
++    return out.strip(), True
++
++
+ def _auto_run_id() -> str:
+     """An id containing the parent PID and a timestamp.
+ 
+@@ -197,7 +230,11 @@ def _matches(path: str, patterns: list[str]) -> bool:
+             return True
+         # `--scope docs/notes` is read as "that directory and everything in it", which is what
+         # people mean when they type a directory and is otherwise a common false refusal.
+-        if pattern and not any(ch in pattern for ch in "*?[") and path.startswith(f"{pattern.rstrip('/')}/"):
++        if (
++            pattern
++            and not any(ch in pattern for ch in "*?[")
++            and path.startswith(f"{pattern.rstrip('/')}/")
++        ):
+             return True
+     return False
+ 
+@@ -215,8 +252,16 @@ def _scope_self_staged(scope_path: Path, staged: list[str]) -> bool:
+     return rel in staged
+ 
+ 
+-def declare(globs: list[str], unseal: list[str], run_id: str) -> int:
+-    """Record the intended blast radius and the seal, before the work starts."""
++def declare(globs: list[str], unseal: list[str], run_id: str, anchor: str = "declaration") -> int:
++    """Record the intended blast radius and the seal, before the work starts.
++
++    `anchor` chooses what the seal is measured against. "declaration" hashes each sealed file
++    now, which is right for a short scoped task. "head" records a sentinel and compares the
++    working tree to HEAD at check time, which is right for a STANDING declaration that will
++    outlive many commits -- a declaration-time hash would go stale the first time anyone
++    legitimately committed a harness change and then refuse every commit until a human
++    noticed.
++    """
+     if not globs:
+         print("harness-integrity: --declare needs at least one --scope pattern.")
+         return 1
+@@ -237,6 +282,9 @@ def declare(globs: list[str], unseal: list[str], run_id: str) -> int:
+     for rel in SEALED_PATHS:
+         if rel in unseal:
+             continue
++        if anchor == "head":
++            seals[rel] = HEAD_ANCHOR
++            continue
+         digest = _sha256(REPO / rel)
+         # A sealed path that does not exist is recorded as absent, so its later APPEARANCE is
+         # itself drift -- adding a conftest.py is as much a harness change as editing one.
+@@ -249,6 +297,7 @@ def declare(globs: list[str], unseal: list[str], run_id: str) -> int:
+         "pid": os.getpid(),
+         "scope": list(globs),
+         "unsealed": sorted(unseal),
++        "seal_anchor": anchor,
+         "seals": seals,
+         "why_this_blocks_commits": (
+             "This session declared the paths it intended to touch. A staged path outside that "
+@@ -264,8 +313,10 @@ def declare(globs: list[str], unseal: list[str], run_id: str) -> int:
+         print(f"  scope   {pattern}")
+     for path in sorted(unseal):
+         print(f"  unseal  {path}")
+-    print(f"  sealed  {len(seals)} harness file(s)")
+-    print(f"\nRelease it when the work is done:\n  python3 {Path(__file__).name} --release --run-id {run_id}")
++    print(f"  sealed  {len(seals)} harness file(s), anchored to {anchor}")
++    print(
++        f"\nRelease it when the work is done:\n  python3 {Path(__file__).name} --release --run-id {run_id}"
++    )
+     return 0
+ 
+ 
+@@ -281,6 +332,23 @@ def check() -> int:
+         print("  A guard that reports clean when git is broken is worse than no guard.")
+         return 1
+ 
++    # A path explicitly named by ANY active declaration is unsealed for this commit.
++    #
++    # Without this, a STANDING declaration (the conductor's) deadlocks harness work: it seals
++    # the record-preservation lints, and the person legitimately fixing one cannot unseal it,
++    # because their own --unseal does not reach another declaration's seal. They would have to
++    # release someone else's scope to commit, which is exactly the "release it to get past
++    # this" move the refusal text warns against.
++    #
++    # This does let an agent bypass a standing seal by naming the path. That is deliberate and
++    # consistent with the rest of the design: a glob still never unseals, so the bypass costs
++    # a typed path name and leaves the intent in the record, which is the bar the seal sets.
++    explicitly_unsealed: set[str] = set()
++    for scope_path in scopes:
++        record = _load_scope(scope_path)
++        if record:
++            explicitly_unsealed.update(record.get("unsealed") or [])
++
+     failures: list[str] = []
+     for scope_path in scopes:
+         record = _load_scope(scope_path)
+@@ -315,6 +383,26 @@ def check() -> int:
+         seals = record.get("seals") or {}
+         drifted = []
+         for rel, expected in seals.items():
++            if rel in explicitly_unsealed:
++                continue
++            if expected == HEAD_ANCHOR:
++                # Anchored to HEAD, not to the declaration. A standing declaration -- one that
++                # outlives many commits, like the conductor's -- would otherwise go stale the
++                # first time anyone legitimately commits a harness change, and then refuse
++                # every commit until a human noticed. Anchored here, a committed change moves
++                # the baseline with it and only UNCOMMITTED harness edits refuse.
++                head, ok_head = _head_blob(rel)
++                work, ok_work = _worktree_blob(rel)
++                if not (ok_head and ok_work):
++                    drifted.append(f"{rel} (git could not be asked; refusing rather than guessing)")
++                elif head != work:
++                    if head is None:
++                        drifted.append(f"{rel} (not in HEAD, present uncommitted)")
++                    elif work is None:
++                        drifted.append(f"{rel} (in HEAD, deleted uncommitted)")
++                    else:
++                        drifted.append(f"{rel} (modified, uncommitted)")
++                continue
+             actual = _sha256(REPO / rel)
+             if actual != expected:
+                 if expected is None:
+@@ -402,14 +490,23 @@ def main(argv: list[str] | None = None) -> int:
+     mode.add_argument("--list", action="store_true", help="show active declarations")
+     parser.add_argument("--scope", action="append", default=[], help="a glob the commit may touch")
+     parser.add_argument(
+-        "--unseal", action="append", default=[],
++        "--unseal",
++        action="append",
++        default=[],
+         help="a sealed harness path this scope is permitted to change (exact path, no globs)",
+     )
++    parser.add_argument(
++        "--seal-anchor",
++        choices=("declaration", "head"),
++        default="declaration",
++        help="measure seals against the moment of declaration (default) or against HEAD "
++        "(for a standing declaration that will outlive many commits)",
++    )
+     parser.add_argument("--run-id", default=None)
+     args = parser.parse_args(argv)
+ 
+     if args.declare:
+-        return declare(args.scope, args.unseal, _resolve_run_id(args.run_id))
++        return declare(args.scope, args.unseal, _resolve_run_id(args.run_id), args.seal_anchor)
+     if args.check:
+         return check()
+     if args.release:
+diff --git a/tests/python/test_harness_integrity_lint.py b/tests/python/test_harness_integrity_lint.py
+index e15c542b81..e6484f4c47 100644
+--- a/tests/python/test_harness_integrity_lint.py
++++ b/tests/python/test_harness_integrity_lint.py
+@@ -145,9 +145,7 @@ def test_sealed_file_appearing_is_drift(guard, monkeypatch, capsys):
+ def test_scenario_infra_6806_scope_staged_in_its_own_commit_refuses(guard, monkeypatch, capsys):
+     """SCENARIO-INFRA-6806: a scope edited in the commit it governs proves nothing."""
+     _declare(guard, "ops/.agent_scopes/test-run.scope.json")
+-    monkeypatch.setattr(
+-        guard, "_staged_paths", lambda: ["ops/.agent_scopes/test-run.scope.json"]
+-    )
++    monkeypatch.setattr(guard, "_staged_paths", lambda: ["ops/.agent_scopes/test-run.scope.json"])
+     assert guard.check() == 1
+     assert "proves nothing" in capsys.readouterr().out
+ 
+@@ -241,3 +239,103 @@ def test_main_dispatches_each_mode(guard, monkeypatch):
+     assert guard.main(["--list"]) == 0
+     assert guard.main(["--check"]) == 0
+     assert guard.main(["--release", "--run-id", "cli-run"]) == 0
++
++
++# --- HEAD-anchored seals (REQ-INFRA-6801) -------------------------------------------------
++# A standing declaration -- one that outlives many commits, like the conductor's -- cannot use
++# a declaration-time hash: the first legitimate commit of a harness file would make the seal
++# stale and refuse every commit afterwards until a human noticed. Anchored to HEAD, a
++# committed change moves the baseline with it and only UNCOMMITTED edits refuse.
++
++
++def _declare_head(module, *globs, run_id="head-run"):
++    assert module.declare(list(globs), [], run_id, "head") == 0
++
++
++def test_head_anchor_records_the_sentinel_not_a_hash(guard):
++    _declare_head(guard, "scripts/foo.py")
++    record = json.loads((guard.SCOPES / "head-run.scope.json").read_text())
++    assert record["seal_anchor"] == "head"
++    assert set(record["seals"].values()) == {guard.HEAD_ANCHOR}
++
++
++def test_head_anchor_passes_when_worktree_matches_head(guard, monkeypatch):
++    _declare_head(guard, "scripts/foo.py")
++    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("abc123", True))
++    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("abc123", True))
++    assert guard.check() == 0
++
++
++def test_head_anchor_refuses_an_uncommitted_harness_edit(guard, monkeypatch, capsys):
++    """The case that matters: a harness file edited but not yet committed."""
++    _declare_head(guard, "scripts/foo.py")
++    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("committed", True))
++    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("edited", True))
++    assert guard.check() == 1
++    assert "modified, uncommitted" in capsys.readouterr().out
++
++
++def test_head_anchor_survives_a_committed_harness_change(guard, monkeypatch):
++    """A legitimate commit moves the baseline; the standing declaration does not go stale."""
++    _declare_head(guard, "scripts/foo.py")
++    # Both sides move together, which is what committing does.
++    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("v2", True))
++    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("v2", True))
++    assert guard.check() == 0
++
++
++def test_head_anchor_refuses_a_file_absent_from_head(guard, monkeypatch, capsys):
++    _declare_head(guard, "scripts/foo.py")
++    monkeypatch.setattr(guard, "_head_blob", lambda rel: (None, True))
++    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("new", True))
++    assert guard.check() == 1
++    assert "not in HEAD" in capsys.readouterr().out
++
++
++def test_head_anchor_refuses_an_uncommitted_deletion(guard, monkeypatch, capsys):
++    _declare_head(guard, "scripts/foo.py")
++    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("committed", True))
++    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: (None, True))
++    assert guard.check() == 1
++    assert "deleted uncommitted" in capsys.readouterr().out
++
++
++def test_head_anchor_refuses_when_git_cannot_be_asked(guard, monkeypatch, capsys):
++    """Fail-closed: an unanswerable git is not evidence the harness is intact."""
++    _declare_head(guard, "scripts/foo.py")
++    monkeypatch.setattr(guard, "_head_blob", lambda rel: (None, False))
++    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("x", True))
++    assert guard.check() == 1
++    assert "refusing rather than guessing" in capsys.readouterr().out
++
++
++def test_an_explicit_unseal_in_one_scope_lifts_a_standing_seal(guard, monkeypatch):
++    """A standing declaration must not deadlock the person fixing the file it seals.
++
++    The conductor's scope is long-lived and seals the record-preservation lints. Without
++    this, an agent legitimately repairing one of them could not commit: its own --unseal
++    does not reach the conductor's seal, so it would have to release someone else's scope --
++    the exact move the refusal text tells it not to make.
++    """
++    _declare_head(guard, "*", run_id="standing")
++    guard._sealed_file.write_text("# a deliberate repair\n")
++    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("committed", True))
++    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("edited", True))
++    assert guard.check() == 1  # the standing seal refuses on its own
++    _declare(
++        guard,
++        "scripts/adversarial_verify.py",
++        unseal=("scripts/adversarial_verify.py",),
++        run_id="repair",
++    )
++    assert guard.check() == 0  # the named path lifts it
++
++
++def test_a_glob_still_never_lifts_a_standing_seal(guard, monkeypatch, capsys):
++    """The bypass costs a typed path name. A wide glob does not buy it."""
++    _declare_head(guard, "*", run_id="standing")
++    monkeypatch.setattr(guard, "_head_blob", lambda rel: ("committed", True))
++    monkeypatch.setattr(guard, "_worktree_blob", lambda rel: ("edited", True))
++    _declare(guard, "scripts/*", run_id="wide")
++    assert guard.check() == 1
++    assert "sealed harness file" in capsys.readouterr().out
+-- 
+2.55.0
+

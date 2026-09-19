@@ -1,0 +1,156 @@
+From 580aa9f74f2bb9832dfc4c52a5980f35493b17c8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 16:17:26 -0400
+Subject: [PATCH 09729/11362] [outer-loop] Quality scorer sweeps archived
+ attempts; ops docs for REQ-ARC-WMTE-6690
+
+arc_induction_quality.py (written this session, previously uncommitted)
+now also sweeps <store>/<game>/attempts/wm_*.py and labels each row's
+population (survivor vs attempt). A survivor-only degenerate rate is a
+worst-attempt sample -- re-induction fires on stagnation -- so the 28%
+figure this session produced was a survivor rate, not a generator rate.
+With per-attempt retention the unbiased population exists on disk.
+
+ops/status.md + ops/changelog.md: record the retention ship (append-only).
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/changelog.md                 | 38 ++++++++++++++++++++++++++++++++
+ ops/status.md                    | 15 ++++++++++++-
+ scripts/arc_induction_quality.py | 21 +++++++++++++++++-
+ 3 files changed, 72 insertions(+), 2 deletions(-)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 482909d3d0..990fb967bf 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,43 @@
+ # Carnot — Changelog
+ 
++## 2026-08-23 (outer-loop, per-attempt world-model retention: the engine store stops destroying its own work)
++
++REQ-ARC-WMTE-6690, commits 8e2f938a0f (+ bulk swept into 99fdf2797e by
++the conductor's auto-commit mid-flight). Team-lead directed; the defect
++is the one `project_arc_engine_store_regression` recorded on 2026-07-29
++and that was still shipping a month later.
++
++- The measured loss: `results/arc_e3/<game>/world_model.py` is keyed by
++  game only. The 2026-08-22 baseline run made 40 induction attempts and
++  left 25 files — 15 induced models destroyed by last-write-wins.
++  Corpus-wide, 355 committed store versions across 27 files survive only
++  as git archaeology; writes between conductor commits are gone.
++- The fix: every producer write (`_gen_to_file`, `_write_world_model`,
++  codex post-hoc) now ALSO archives to `E3_DIR/<game>/attempts/` —
++  content-hash-deduplicated copy + append-only manifest.jsonl. The
++  canonical write, return values, and read path are unchanged
++  (on/off equivalence asserted byte-for-byte). Kill switch:
++  `CARNOT_ARC_ENGINE_ATTEMPT_ARCHIVE=0`. Fail-open past the test-guard,
++  direction stated in the docstring.
++- Restore sites (REQ-6035 rollback, resample rollback) deliberately do
++  not archive: they write back content a producer already archived.
++- The lever harness rows now carry `induction_archive` (manifest delta
++  per cell, sha16 list) — the provenance `induction_engine_sources`
++  never had for LLM-tier attempts, and the join key multi-seed runs
++  need (`--seeds` no longer destroys its own data).
++- `scripts/arc_induction_quality.py` (committed alongside) sweeps
++  `attempts/` too and labels populations, so degenerate-rates can be
++  per-attempt instead of worst-attempt-survivor-biased (the 28% figure
++  from this session was a survivor sample, not a generator rate).
++- Evidence: 14 tests (SCENARIO-6690-1..6), 10 mutations each RED then
++  restored byte-identical. During mutation M6 the guard-deleted mutant
++  wrote untracked `results/arc_e3/gme/` — cleaned; the guard test now
++  aims at a stand-in tracked dir so a broken guard cannot touch real
++  evidence.
++- Pre-existing, NOT from this change (identical at 99fdf2797e~1): 8
++  failures in test_codeonly_induce_scoping.py +
++  test_induce_split_fallback.py.
++
+ ## 2026-08-23 (outer-loop, shadow-mode supervisor: every run records its counterfactual)
+ 
+ Standing-mandate work (operator: fully unattended iteration on the
+diff --git a/ops/status.md b/ops/status.md
+index 18ae160b59..70d7e6f9ba 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,19 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-08-23, later (llama-server reaper RESOLVED: the standing
++**Last Updated:** 2026-08-23, latest (per-attempt world-model retention SHIPPED,
++REQ-ARC-WMTE-6690, commit 8e2f938a0f: the live engine store no longer destroys
++its own induced models — every producer write is archived under
++`E3_DIR/<game>/attempts/` with a manifest; canonical file, returns, and read
++path proven unchanged (on/off byte-equivalence + 10 deletion mutations). Harness
++rows carry `induction_archive` provenance, so multi-seed runs stop destroying
++their own data and `arc_induction_quality.py` can score per-attempt instead of
++worst-attempt survivors. Live tu93 multi-attempt verification run in flight on
++GPU 1 (scratch store, --no-spawn, Qwen3.8-27B thinking-ON); result lands in
++ops/test-results.md. Defect 2 from `project_arc_engine_store_regression` — the
++serial goal-predicate gate that blocks planning even with perfect dynamics —
++remains OPEN and out of this change's scope.)
++
++Prior: 2026-08-23, later (llama-server reaper RESOLVED: the standing
+ 2026-08-09 mystery was `ExperimentTemplate.kill_gpu_zombies()` — its nvidia-smi
+ fallback gated kills on MIN utilization across ALL GPUs, had no server
+ exemption, and fires in every `setup()` including pytest imports, so the
+diff --git a/scripts/arc_induction_quality.py b/scripts/arc_induction_quality.py
+index 7d86bab74a..51e5f978b0 100644
+--- a/scripts/arc_induction_quality.py
++++ b/scripts/arc_induction_quality.py
+@@ -29,6 +29,16 @@ So: use this to answer "is the generator producing real work at all", which is
+ cheap and answerable now. Use rows to answer "is arm A better than arm B", which
+ is expensive and needs a run that survives.
+ 
++SAMPLING BIAS WARNING, and the fix (REQ-ARC-WMTE-6690). A sweep over surviving
++`world_model.py` files is a WORST-ATTEMPT sample: re-induction fires on
++stagnation, so the survivor is systematically the attempt made under the worst
++conditions, and 15 of 40 attempts on the 2026-08-22 baseline run were destroyed
++before anyone could score them. Since REQ-ARC-WMTE-6690 every producer write is
++also archived under `<store>/<game>/attempts/wm_*__<sha16>.py`; this scorer
++sweeps those too, so a degenerate-rate computed over attempts/ is a
++per-attempt generator-quality rate, not a survivor rate. Rows report which
++population they came from (`population: survivor|attempt`).
++
+ Read-only. Touches nothing.
+ """
+ 
+@@ -74,7 +84,10 @@ def score_model(path: Path) -> dict:
+ 
+     out: dict = {
+         "path": str(path),
+-        "game": path.parent.name,
++        # Archived attempts live one level deeper (<game>/attempts/wm_*.py), so the game
++        # is the grandparent there and the parent for a canonical survivor file.
++        "game": path.parent.parent.name if path.parent.name == "attempts" else path.parent.name,
++        "population": "attempt" if path.parent.name == "attempts" else "survivor",
+         "bytes": len(src.encode("utf-8")),
+         "lines": src.count("\n") + 1,
+     }
+@@ -141,6 +154,8 @@ def find_models(roots: list[Path]) -> list[Path]:
+     for root in roots:
+         if root.is_dir():
+             found.extend(sorted(root.rglob("world_model.py")))
++            # REQ-ARC-WMTE-6690 archived attempts: the unbiased per-attempt population.
++            found.extend(sorted(root.rglob("attempts/wm_*.py")))
+     return found
+ 
+ 
+@@ -180,10 +195,14 @@ def main(argv: list[str] | None = None) -> int:
+         )
+     n_deg = sum(1 for s in scored if s.get("degenerate"))
+     n_struct = sum(1 for s in scored if s.get("goal_predicate") == "structural")
++    n_att = sum(1 for s in scored if s.get("population") == "attempt")
+     print("")
+     print(
+         f"  {len(scored)} model(s); {n_deg} degenerate; {n_struct} with a structural goal predicate"
+     )
++    # Survivor-only rates are worst-attempt-biased (see module docstring); say which
++    # population the number came from so it cannot be misread as a generator rate.
++    print(f"  populations: {len(scored) - n_att} survivor / {n_att} archived attempt")
+     print("  Structure is not correctness. Held-out transition accuracy needs a run that survives.")
+     print("")
+     return 0
+-- 
+2.55.0
+

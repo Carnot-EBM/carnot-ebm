@@ -1,0 +1,66 @@
+From 424523f312d042d64b2abd8cd22701bde78f90e5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 08:37:21 -0400
+Subject: [PATCH 10630/11171] Record that the queued run cannot unblock exp6844
+ on its own
+
+exp6844's supervisor outcome-credit audit pins its input to one frozen path,
+results/experiment_6681_arc_post_redirect_outcomes.json, hardcoded in four places.
+It is not a glob over applied receipts. So the queued cd82/r11l run can produce
+level-up-credited redirects and exp6844's headroom_nonzero gate will still observe
+False, because it never reads the new artifact.
+
+Producing the evidence is necessary and not sufficient. A follow-on audit has to
+name the new artifact as its source.
+
+Recorded because the failure mode is silent. A later session sees a fresh supervised
+run land, re-runs the audit, gets the same blocked verdict, and concludes the run
+failed -- when the audit was simply pointed somewhere else.
+
+Context from this hour: exp6845 returned the same shape as exp6844 -- audit machinery
+complete, zero input, gate failing on zero obligations. Two consecutive artifacts,
+which is a sequencing observation and not yet a milestone pattern; only 2 of the
+exp68xx set show it, so it is not reported as one. Building an auditor before its
+evidence exists is legitimate ordering, provided someone connects the two, which is
+exactly what this note exists to make sure happens.
+
+Not checked, and flagged as such: whether exp6845's tool-gap audit is pinned the same
+way. Worth confirming before assuming a tool-loop run would unblock it.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index 7b5d3b5ae2..fb859d5ae2 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -70,6 +70,23 @@ release at least 21.5 GB before starting `scripts/arc_scored_path_lever_harness.
+ refuses to launch rather than fall back to the iGPU path, which times out. It uses the lever
+ harness because that one records the receipt; the eval does not.
+ 
++
++**LIMIT ON THE QUEUED RUN, checked 2026-09-01 12:40Z — it will not unblock exp6844 by itself.**
++`python/carnot/experiment_6844_supervisor_action_outcome_credit_audit.py` pins its input to a
++single frozen path, `results/experiment_6681_arc_post_redirect_outcomes.json`, hardcoded at lines
++143, 393, 590 and 738. It is not a glob over applied receipts. So the queued cd82/r11l run can
++produce all the level-up-credited redirects in the world and exp6844's `headroom_nonzero` gate
++will still observe False, because it never looks at the new artifact.
++
++Producing the evidence is therefore necessary and NOT sufficient. A follow-on audit has to name
++the new artifact as its source. Recorded because the failure mode is silent: a later session sees
++a fresh supervised run land, re-runs the audit, gets the same blocked verdict, and concludes the
++run failed rather than that the audit was pointed elsewhere.
++
++Not checked: whether exp6845's tool-gap audit is pinned the same way. It returned the identical
++shape (`tool_gap_audit_complete_score` 1, `tool_gap_effect_eligible_score` 0, gate failing on zero
++obligations), so it is worth checking before anyone assumes a tool-loop run would unblock it.
++
+ **Proposed, not built:** move the artifact write inside the per-game loop so each
+ game banks independently. Small and safe, but it cannot help a run already in
+ flight (the module is imported once at start), so it should be done between runs.
+-- 
+2.55.0
+

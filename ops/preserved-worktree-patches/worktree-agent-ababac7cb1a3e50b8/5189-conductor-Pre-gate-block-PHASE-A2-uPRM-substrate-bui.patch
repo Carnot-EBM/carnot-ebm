@@ -1,0 +1,62 @@
+From 367952c3882865772c814de3d0d5cf126ec83cb5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 02:36:23 -0400
+Subject: [PATCH 05189/11362] [conductor] Pre-gate block: PHASE A2 uPRM
+ substrate -- build token/step SOTA GGUF logprob cache for process-reward
+ scoring
+
+1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logprob_endpoint_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         | 2 +-
+ ops/conductor-log.md                                 | 1 +
+ ops/conductor-state.json                             | 2 +-
+ results/experiment_5072_uprm_logprob_cache_v466.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 733d154502..51586082ad 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 52, "phase": "iteration_start", "last_beat": "2026-07-01T06:34:21Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 53, "phase": "iteration_start", "last_beat": "2026-07-01T06:36:23Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a781bbcc63..0db08739d5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9707,3 +9707,4 @@ The contro |
+ | 2026-07-01 05:54 UTC | PHASE 0 transition -- archive .465 truth, activate | OK | 85 passed, 1 warning in 9.14s |
+ | 2026-07-01 06:17 UTC | PHASE R1 SOTA backfill -- replace failed Exp5066 G | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-07-01 06:32 UTC | PHASE A1 GGUF/logprob preflight -- prove model cac | OK | 89 passed, 1 warning in 5.96s |
++| 2026-07-01 06:34 UTC | PHASE A2 uPRM substrate -- build token/step SOTA G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logpro |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index dc58077720..60d4e479c6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 52, "phase": "iteration_start", "started_at": "2026-07-01T06:34:21Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 53, "phase": "iteration_start", "started_at": "2026-07-01T06:36:23Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5072_uprm_logprob_cache_v466.json b/results/experiment_5072_uprm_logprob_cache_v466.json
+index 0cc50cb966..db0e6734f3 100644
+--- a/results/experiment_5072_uprm_logprob_cache_v466.json
++++ b/results/experiment_5072_uprm_logprob_cache_v466.json
+@@ -2,8 +2,8 @@
+   "experiment": 5072,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-01",
+-  "started_at": "2026-07-01T06:34:21.719332+00:00",
+-  "finished_at": "2026-07-01T06:34:21.719332+00:00",
++  "started_at": "2026-07-01T06:36:23.795878+00:00",
++  "finished_at": "2026-07-01T06:36:23.795878+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "PHASE A2 uPRM substrate -- build token/step SOTA GGUF logprob cache for process-reward scoring",
+-- 
+2.55.0
+

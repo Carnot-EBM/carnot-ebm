@@ -1,0 +1,1927 @@
+From 44532b468e7d09348b249e3c94b057ae13c3ebea Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 02:14:00 -0400
+Subject: [PATCH 05406/11362] [conductor] PHASE B1 symbolic KAN certificates --
+ distill residual rules and cycle-check explanations
+
+Automated research step by research conductor.
+Task ID: exp5140-symbolic-kan-certificate-distillation-v471
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/kan/spec.md             |  47 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...bolic_kan_certificate_distillation_v471.py | 718 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...lic_kan_certificate_distillation_v471.json | 197 +++++
+ ...n_certificate_distillation_v471_rules.json | 420 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...bolic_kan_certificate_distillation_v471.py |  22 +
+ ...bolic_kan_certificate_distillation_v471.py | 270 +++++++
+ 16 files changed, 1696 insertions(+), 22 deletions(-)
+ create mode 100644 python/carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py
+ create mode 100644 results/experiment_5140_symbolic_kan_certificate_distillation_v471.json
+ create mode 100644 results/experiment_5140_symbolic_kan_certificate_distillation_v471_rules.json
+ create mode 100644 scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py
+ create mode 100644 tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py
+
+diff --git a/openspec/capabilities/kan/spec.md b/openspec/capabilities/kan/spec.md
+index 657d57c4ba..4e1f20a215 100644
+--- a/openspec/capabilities/kan/spec.md
++++ b/openspec/capabilities/kan/spec.md
+@@ -653,6 +653,52 @@ symbolic checker, reports certificate breadth and cycle soundness, and sets
+ `kan_certificate_breadth_ready=true` only when all controls and explanation
+ cycles are sound.
+ 
++## REQ-KAN-5140: Symbolic-KAN Certificate Distillation Cycle Check
++
++The KAN verification tier SHALL provide an Exp 5140 CPU-only experiment that
++loads the Exp 5128 KAN certificate/explanation artifact and distills its
++residual/certificate behavior into an explicit finite primitive rule set. The
++primitive set MUST include monotone segments, threshold clauses, affine
++intervals, and bounded residual rules, and the experiment MUST use exact code
++checks rather than an LLM judge.
++
++The experiment MUST reconstruct each distilled explanation's property metadata,
++verdict, margin, and abstention condition from the symbolic rules and compare
++them with the original Exp 5128 certificate/explanation records. It MUST include
++false-property, label-shuffle, near-margin, and family-holdout controls. If the
++Exp 5128 upstream artifact or its certificate/explanation records are missing,
++the experiment MUST write a blocked terminal artifact rather than fabricating
++rules or metrics.
++
++The deliverable MUST be written to
++`results/experiment_5140_symbolic_kan_certificate_distillation_v471.json` with
++these top-level fields: `experiment_id`, `milestone`, `honest_verdict`,
++`inference_substrate`, `duration_s`, `exp5128_loaded`,
++`symbolic_primitives`, `distilled_rules_path`, `symbolic_equivalence_rate`,
++`certificate_soundness`, `cycle_reconstruction_rate`,
++`false_property_detected`, `near_margin_abstention_rate`,
++`family_holdout_results`, `symbolic_kan_ready`, `conductor_modified`, and
++`tests_run`.
++
++The artifact MUST set
++`experiment_id="exp5140-symbolic-kan-certificate-distillation-v471"`,
++`milestone="2026.07.471"`, and
++`inference_substrate="exact_checked_symbolic_kan_distillation"`.
++`symbolic_kan_ready` MUST be true only when certificate soundness is preserved,
++the cycle reconstruction is exact, the false-property and label-shuffle
++controls pass, and near-margin behavior abstains instead of overclaiming.
++
++### SCENARIO-KAN-5140: Symbolic Rules Reconstruct Certificate Verdicts
++
++Given the complete Exp 5128 KAN certificate/explanation artifact,
++When Exp 5140 distills certificate residual behavior into symbolic primitive
++rules,
++Then exact reconstruction of property metadata, verdict, margin, and
++abstention condition matches the original certificates, false-property and
++label-shuffle controls are detected, near-margin controls abstain, family
++holdout checks report their rates, and `symbolic_kan_ready=true` only when all
++soundness and control gates pass.
++
+ ## Implementation Status
+ 
+ | Requirement | Status | Notes |
+@@ -690,6 +736,7 @@ cycles are sound.
+ | REQ-KAN-5108 | Implemented | Exp 5108: swept N=5/10/20 (300s/solve budget). Wall found between N=10 (solved, 120.9s) and N=20 (timed out, 300s) -- an order of magnitude below the N=100 production reference. Solve time: 0.15s (N=5) -> 120.9s (N=10), a ~800x jump for 2x the units -- combinatorial, not polynomial. Adversarial rigor (false-control + margin-abstention) held at every solved N. Honest answer: this exact-MILP approach does NOT currently scale to the deployed KAEM cutover. |
+ | REQ-KAN-5114 | Proposed | Exp 5114 target: post-wall CPU abstraction-refinement/decomposition diagnostic that compares against Exp 5108, preserves false-property and near-margin controls, and reports progress only when conservative certificates avoid unsound false positives beyond the exact-MILP wall. |
+ | REQ-KAN-5128 | Proposed | Exp 5128 target: V470 certificate-breadth audit across independent property families with deterministic explanation reconstruction and symbolic cycle-consistency checks over Exp 5114 certificates. |
++| REQ-KAN-5140 | Proposed | Exp 5140 target: V471 symbolic distillation of Exp 5128 residual/certificate behavior with exact cycle reconstruction and adversarial controls. |
+ 
+ ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
+ 
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e77f76fc38..969cf452b4 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 206,
+   "code_violations": 0,
+-  "experiments_checked": 4133,
++  "experiments_checked": 4134,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py b/python/carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py
+new file mode 100644
+index 0000000000..656466f3df
+--- /dev/null
++++ b/python/carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py
+@@ -0,0 +1,718 @@
++"""Exp 5140: symbolic distillation of KAN certificate behavior.
++
++Spec refs: REQ-KAN-5140, SCENARIO-KAN-5140.
++
++Exp 5128 showed that KAN certificate explanations can round-trip across a
++bounded family. This module keeps the same CPU-only evidence boundary and asks
++whether the residual and certificate behavior can be represented by explicit
++symbolic primitives whose exact code reconstruction recovers the original
++property metadata, verdict, margin, and abstention condition. No LLM judge is
++used; the source of truth is the machine-readable Exp 5128 certificate data.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import copy
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = "exp5140-symbolic-kan-certificate-distillation-v471"
++MILESTONE = "2026.07.471"
++RUN_DATE = "20260702"
++RESULT_RELATIVE_PATH = "results/experiment_5140_symbolic_kan_certificate_distillation_v471.json"
++DISTILLED_RULES_RELATIVE_PATH = (
++    "results/experiment_5140_symbolic_kan_certificate_distillation_v471_rules.json"
++)
++EXP5128_RESULT_RELATIVE_PATH = "results/experiment_5128_kan_certificate_explanation_v470.json"
++INFERENCE_SUBSTRATE = "exact_checked_symbolic_kan_distillation"
++SPEC_REFS = ["REQ-KAN-5140", "SCENARIO-KAN-5140"]
++
++SUCCESS_VERDICT = "success_symbolic_kan_certificate_distillation_ready"
++COMPLETE_NOT_READY_VERDICT = "complete_symbolic_kan_certificate_distillation_not_ready"
++BLOCKED_UPSTREAM_VERDICT = "blocked_symbolic_kan_certificate_distillation_missing_exp5128"
++TERMINAL_PREFIXES = ("complete_", "success_", "blocked_")
++EPSILON = 1e-9
++
++SYMBOLIC_PRIMITIVES = [
++    {
++        "name": "monotone_segment",
++        "meaning": "unit-index interval over which additive certificate bounds are monotone",
++    },
++    {
++        "name": "threshold_clause",
++        "meaning": "exact or certified quantity compared with the property threshold",
++    },
++    {
++        "name": "affine_interval",
++        "meaning": "closed interval between exact, observed, and certified affine quantities",
++    },
++    {
++        "name": "bounded_residual_rule",
++        "meaning": "residual abstraction bound that can force abstention near a threshold",
++    },
++]
++SYMBOLIC_PRIMITIVE_NAMES = tuple(primitive["name"] for primitive in SYMBOLIC_PRIMITIVES)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "experiment_id",
++    "milestone",
++    "honest_verdict",
++    "inference_substrate",
++    "duration_s",
++    "exp5128_loaded",
++    "symbolic_primitives",
++    "distilled_rules_path",
++    "symbolic_equivalence_rate",
++    "certificate_soundness",
++    "cycle_reconstruction_rate",
++    "false_property_detected",
++    "near_margin_abstention_rate",
++    "family_holdout_results",
++    "symbolic_kan_ready",
++    "conductor_modified",
++    "tests_run",
++)
++
++FIELD_PRINCIPLES = {
++    "experiment_id": "traceability",
++    "milestone": "milestone accountability",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "duration_s": "timing accountability",
++    "exp5128_loaded": "upstream evidence",
++    "symbolic_primitives": "interpretability",
++    "distilled_rules_path": "artifact provenance",
++    "symbolic_equivalence_rate": "explanation fidelity",
++    "certificate_soundness": "formal correctness",
++    "cycle_reconstruction_rate": "explanation cycle consistency",
++    "false_property_detected": "adversarial control",
++    "near_margin_abstention_rate": "uncertainty control",
++    "family_holdout_results": "generalization caution",
++    "symbolic_kan_ready": "downstream readiness",
++    "conductor_modified": "conductor immutability",
++    "tests_run": "verification evidence",
++}
++
++DEFAULT_TESTS_RUN = [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python "
++    "scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py --date 20260702",
++    '.venv/bin/pytest tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py -q -o addopts=""',
++    ".venv/bin/coverage erase && .venv/bin/coverage run "
++    "--include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/"
++    "experiment_5140_symbolic_kan_certificate_distillation_v471.py' -m pytest "
++    'tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py -q -o addopts="" && '
++    ".venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/"
++    "carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py' --fail-under=100 -m",
++    "python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py",
++    ".venv/bin/pytest tests/python -q",
++]
++
++
++def _repo_root() -> Path:
++    return Path(__file__).resolve().parents[2]
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def _float_token(value: float) -> str:
++    return f"{float(value):.12g}"
++
++
++def _sha256_file(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _read_json(path: Path) -> JsonDict | None:
++    if not path.exists():
++        return None
++    try:
++        parsed = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError as exc:  # pragma: no cover - defensive malformed-artifact path.
++        return {"__error__": f"{type(exc).__name__}: {exc}"}
++    return dict(parsed) if isinstance(parsed, Mapping) else {"__error__": "artifact is not a JSON object"}
++
++
++def _relative_or_absolute(path: Path, base: Path) -> str:
++    try:
++        return str(path.relative_to(base))
++    except ValueError:
++        return str(path)
++
++
++def load_exp5128_artifact(root: str | Path | None = None) -> tuple[JsonDict | None, JsonDict]:
++    """Load and minimally validate the upstream V470 certificate artifact."""
++
++    base = Path(root) if root is not None else _repo_root()
++    path = base / EXP5128_RESULT_RELATIVE_PATH
++    payload = _read_json(path)
++    if payload is None:
++        return None, {
++            "loaded": False,
++            "path": str(path),
++            "reason": "missing upstream Exp 5128 artifact",
++        }
++    if "__error__" in payload:
++        return None, {
++            "loaded": False,
++            "path": _relative_or_absolute(path, base),
++            "reason": str(payload["__error__"]),
++        }
++    certificates = payload.get("certificates_emitted")
++    explanations = payload.get("explanation_records")
++    if not certificates or not explanations:
++        return None, {
++            "loaded": False,
++            "path": _relative_or_absolute(path, base),
++            "reason": "missing certificate/explanation records",
++        }
++    if payload.get("kan_certificate_breadth_ready") is not True:
++        return None, {
++            "loaded": False,
++            "path": _relative_or_absolute(path, base),
++            "reason": "upstream Exp 5128 artifact is not ready",
++        }
++    return payload, {
++        "loaded": True,
++        "path": _relative_or_absolute(path, base),
++        "sha256": _sha256_file(path),
++        "honest_verdict": payload.get("honest_verdict"),
++        "certificate_count": len(certificates),
++        "explanation_count": len(explanations),
++    }
++
++
++def _abstention_condition(verdict: str) -> str:
++    if verdict == "abstained":
++        return "exact_value <= threshold < certified_upper_bound"
++    return "not_applicable"
++
++
++def _rule_kind(certificate: Mapping[str, Any]) -> str:
++    family = str(certificate["property"]["family"])
++    return "refinement_budget" if family == "refinement_error_budget" else "threshold_bound"
++
++
++def _numeric_record(certificate: Mapping[str, Any]) -> JsonDict:
++    prop = certificate["property"]
++    bounds = certificate.get("bounds", {})
++    if _rule_kind(certificate) == "refinement_budget":
++        observed = float(prop["observed"])
++        return {
++            "threshold": float(prop["threshold"]),
++            "observed": observed,
++            "exact_upper_bound": observed,
++            "certified_upper_bound": observed,
++            "abstraction_error": float(certificate["abstraction_error"]),
++            "unit_count": int(prop["unit_count"]),
++        }
++    return {
++        "threshold": float(prop["threshold"]),
++        "observed": float(bounds["exact_upper_bound"]),
++        "exact_upper_bound": float(bounds["exact_upper_bound"]),
++        "certified_upper_bound": float(bounds["certified_upper_bound"]),
++        "abstraction_error": float(certificate["abstraction_error"]),
++        "unit_count": int(prop["unit_count"]),
++    }
++
++
++def _source_metadata(certificate: Mapping[str, Any]) -> dict[str, str]:
++    prop = certificate["property"]
++    numeric = _numeric_record(certificate)
++    return {
++        "property_id": str(prop["id"]),
++        "family": str(prop["family"]),
++        "verdict": str(certificate["verdict"]),
++        "margin": _float_token(float(certificate["margin"])),
++        "abstraction_error": _float_token(float(certificate["abstraction_error"])),
++        "proof_status": str(certificate["proof_status"]),
++        "threshold": _float_token(numeric["threshold"]),
++        "unit_count": str(numeric["unit_count"]),
++        "abstention_condition": _abstention_condition(str(certificate["verdict"])),
++    }
++
++
++def _primitive_records(certificate: Mapping[str, Any]) -> list[JsonDict]:
++    numeric = _numeric_record(certificate)
++    margin = float(certificate["margin"])
++    return [
++        {
++            "name": "monotone_segment",
++            "variable": "unit_index",
++            "interval": [0, numeric["unit_count"]],
++            "direction": "nondecreasing_additive_bound",
++        },
++        {
++            "name": "threshold_clause",
++            "left": "certified_or_exact_quantity",
++            "operator": "<=",
++            "threshold": numeric["threshold"],
++        },
++        {
++            "name": "affine_interval",
++            "lower": min(numeric["exact_upper_bound"], numeric["certified_upper_bound"]),
++            "upper": max(numeric["exact_upper_bound"], numeric["certified_upper_bound"]),
++            "slope": 1.0,
++            "intercept": 0.0,
++        },
++        {
++            "name": "bounded_residual_rule",
++            "residual_bound": numeric["abstraction_error"],
++            "margin": margin,
++            "abstain_when": "exact_value <= threshold < certified_upper_bound",
++        },
++    ]
++
++
++def distill_symbolic_rules(upstream: Mapping[str, Any]) -> list[JsonDict]:
++    """Extract symbolic primitive rules from Exp 5128 certificates."""
++
++    explanations = {
++        record["certificate_id"]: record for record in upstream.get("explanation_records", [])
++    }
++    rules: list[JsonDict] = []
++    for certificate in upstream.get("certificates_emitted", []):
++        prop = certificate["property"]
++        certificate_id = str(prop["id"])
++        explanation = explanations.get(certificate_id, {})
++        numeric = _numeric_record(certificate)
++        rules.append(
++            {
++                "rule_id": f"symbolic_rule::{certificate_id}",
++                "source_certificate_id": certificate_id,
++                "family": str(prop["family"]),
++                "rule_kind": _rule_kind(certificate),
++                "source_explanation": explanation.get("explanation"),
++                "source_metadata": _source_metadata(certificate),
++                "numeric": numeric,
++                "primitives": _primitive_records(certificate),
++                "cycle_predicates": {
++                    "verified_when": "certified_upper_bound <= threshold",
++                    "counterexample_when": "exact_upper_bound > threshold",
++                    "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
++                },
++                "llm_judge_used": False,
++            }
++        )
++    return rules
++
++
++def reconstruct_from_rule(rule: Mapping[str, Any]) -> dict[str, str]:
++    """Reconstruct certificate metadata using only the distilled symbolic rule."""
++
++    numeric = rule["numeric"]
++    threshold = float(numeric["threshold"])
++    observed = float(numeric["observed"])
++    exact_upper = float(numeric["exact_upper_bound"])
++    certified_upper = float(numeric["certified_upper_bound"])
++    if rule["rule_kind"] == "refinement_budget":
++        if observed <= threshold + EPSILON:
++            verdict = "verified"
++            proof_status = "proved_by_refinement_budget"
++            margin = threshold - observed
++        else:
++            verdict = "counterexample"
++            proof_status = "refuted_by_exact_witness"
++            margin = observed - threshold
++    elif certified_upper <= threshold + EPSILON:
++        verdict = "verified"
++        proof_status = "proved_by_conservative_bound"
++        margin = threshold - certified_upper
++    elif exact_upper <= threshold + EPSILON < certified_upper:
++        verdict = "abstained"
++        proof_status = "abstained_residual_gap"
++        margin = certified_upper - threshold
++    else:
++        verdict = "counterexample"
++        proof_status = "refuted_by_exact_witness"
++        margin = exact_upper - threshold
++    return {
++        "property_id": str(rule["source_certificate_id"]),
++        "family": str(rule["family"]),
++        "verdict": verdict,
++        "margin": _float_token(max(0.0, margin)),
++        "abstraction_error": _float_token(float(numeric["abstraction_error"])),
++        "proof_status": proof_status,
++        "threshold": _float_token(threshold),
++        "unit_count": str(numeric["unit_count"]),
++        "abstention_condition": _abstention_condition(verdict),
++    }
++
++
++def soundness_check_reconstruction(
++    rule: Mapping[str, Any],
++    reconstructed: Mapping[str, str],
++) -> bool:
++    """Check reconstructed metadata against exact threshold and residual logic."""
++
++    if reconstructed != rule["source_metadata"]:
++        return False
++    numeric = rule["numeric"]
++    threshold = float(numeric["threshold"])
++    observed = float(numeric["observed"])
++    exact_upper = float(numeric["exact_upper_bound"])
++    certified_upper = float(numeric["certified_upper_bound"])
++    verdict = reconstructed["verdict"]
++    if rule["rule_kind"] == "refinement_budget":
++        return verdict == "verified" and observed <= threshold + EPSILON
++    if verdict == "verified":
++        return certified_upper <= threshold + EPSILON
++    if verdict == "counterexample":
++        return exact_upper > threshold + EPSILON
++    if verdict == "abstained":
++        return exact_upper <= threshold + EPSILON < certified_upper
++    return False
++
++
++def cycle_check_rules(rules: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Measure exact reconstruction and soundness rates for distilled rules."""
++
++    records = []
++    for rule in rules:
++        reconstructed = reconstruct_from_rule(rule)
++        equivalent = reconstructed == rule["source_metadata"]
++        sound = soundness_check_reconstruction(rule, reconstructed)
++        records.append(
++            {
++                "rule_id": rule["rule_id"],
++                "equivalent": equivalent,
++                "sound": sound,
++                "reconstructed": reconstructed,
++            }
++        )
++    total = len(records)
++    equivalent_count = sum(1 for record in records if record["equivalent"])
++    sound_count = sum(1 for record in records if record["sound"])
++    rate = equivalent_count / total if total else 0.0
++    return {
++        "records": records,
++        "symbolic_equivalence_rate": rate,
++        "cycle_reconstruction_rate": sound_count / total if total else 0.0,
++        "certificate_soundness": bool(total) and sound_count == total,
++    }
++
++
++def label_shuffle_control(rules: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Shuffle family labels and confirm the cycle checker detects the mismatch."""
++
++    families = [str(rule["family"]) for rule in rules]
++    rotated = families[1:] + families[:1]
++    mismatches = 0
++    for rule, family in zip(rules, rotated, strict=True):
++        shuffled = copy.deepcopy(rule)
++        shuffled["family"] = family
++        if reconstruct_from_rule(shuffled) != rule["source_metadata"]:
++            mismatches += 1
++    return {
++        "detected": mismatches > 0,
++        "mismatch_count": mismatches,
++        "rules_checked": len(rules),
++    }
++
++
++def family_holdout_results(rules: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Run leave-one-family-out checks while reporting their limited scope."""
++
++    families = sorted({str(rule["family"]) for rule in rules})
++    results: list[JsonDict] = []
++    for family in families:
++        heldout = [rule for rule in rules if rule["family"] == family]
++        train = [rule for rule in rules if rule["family"] != family]
++        cycle = cycle_check_rules(heldout)
++        results.append(
++            {
++                "heldout_family": family,
++                "train_family_count": len({str(rule["family"]) for rule in train}),
++                "heldout_rule_count": len(heldout),
++                "primitive_templates_seen": sorted(
++                    {primitive["name"] for rule in train for primitive in rule["primitives"]}
++                ),
++                "symbolic_equivalence_rate": cycle["symbolic_equivalence_rate"],
++                "cycle_reconstruction_rate": cycle["cycle_reconstruction_rate"],
++                "certificate_soundness": cycle["certificate_soundness"],
++                "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++            }
++        )
++    return results
++
++
++def evaluate_controls(rules: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Evaluate adversarial and uncertainty controls over the distilled rules."""
++
++    false_property_detected = any(
++        rule["source_metadata"]["family"] == "false_low_threshold_control"
++        and reconstruct_from_rule(rule)["verdict"] == "counterexample"
++        and soundness_check_reconstruction(rule, reconstruct_from_rule(rule))
++        for rule in rules
++    )
++    near_margin_rules = [
++        rule for rule in rules if rule["source_metadata"]["family"] == "near_margin_residual_gap"
++    ]
++    near_abstained = sum(
++        1 for rule in near_margin_rules if reconstruct_from_rule(rule)["verdict"] == "abstained"
++    )
++    return {
++        "false_property_detected": false_property_detected,
++        "near_margin_abstention_rate": (
++            near_abstained / len(near_margin_rules) if near_margin_rules else 0.0
++        ),
++        "label_shuffle_control": label_shuffle_control(rules),
++        "family_holdout_results": family_holdout_results(rules),
++    }
++
++
++def _distilled_rule_summaries(rules: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    return [
++        {
++            "rule_id": rule["rule_id"],
++            "source_certificate_id": rule["source_certificate_id"],
++            "family": rule["family"],
++            "primitive_names": [primitive["name"] for primitive in rule["primitives"]],
++            "verdict": rule["source_metadata"]["verdict"],
++        }
++        for rule in rules
++    ]
++
++
++def build_rules_payload(
++    *,
++    upstream_status: Mapping[str, Any],
++    rules: Sequence[Mapping[str, Any]],
++    cycle: Mapping[str, Any],
++    controls: Mapping[str, Any],
++    run_date: str,
++) -> JsonDict:
++    """Build the separate distilled-rule provenance artifact."""
++
++    return {
++        "schema": "carnot.symbolic_kan_certificate_distillation.rules.v471",
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": run_date,
++        "source_artifact": upstream_status,
++        "symbolic_primitives": list(SYMBOLIC_PRIMITIVES),
++        "distilled_rules": list(rules),
++        "cycle_records": cycle["records"],
++        "controls": dict(controls),
++        "llm_judge_used": False,
++    }
++
++
++def _empty_cycle() -> JsonDict:
++    return {
++        "records": [],
++        "symbolic_equivalence_rate": 0.0,
++        "cycle_reconstruction_rate": 0.0,
++        "certificate_soundness": False,
++    }
++
++
++def _empty_controls() -> JsonDict:
++    return {
++        "false_property_detected": False,
++        "near_margin_abstention_rate": 0.0,
++        "label_shuffle_control": {"detected": False, "mismatch_count": 0, "rules_checked": 0},
++        "family_holdout_results": [],
++    }
++
++
++def build_artifact(
++    *,
++    root: str | Path | None = None,
++    run_date: str = RUN_DATE,
++    tests_run: Sequence[str] = DEFAULT_TESTS_RUN,
++    current_duration_s: float | None = None,
++    distilled_rules_path: str | None = DISTILLED_RULES_RELATIVE_PATH,
++) -> JsonDict:
++    """Build the Exp 5140 terminal artifact."""
++
++    start = time.perf_counter()
++    upstream, upstream_status = load_exp5128_artifact(root)
++    exp5128_loaded = bool(upstream_status.get("loaded"))
++    if upstream is None:
++        rules: list[JsonDict] = []
++        cycle = _empty_cycle()
++        controls = _empty_controls()
++        symbolic_kan_ready = False
++        honest_verdict = BLOCKED_UPSTREAM_VERDICT
++        rules_path: str | None = None
++    else:
++        rules = distill_symbolic_rules(upstream)
++        cycle = cycle_check_rules(rules)
++        controls = evaluate_controls(rules)
++        holdouts = controls["family_holdout_results"]
++        symbolic_kan_ready = (
++            cycle["symbolic_equivalence_rate"] == 1.0
++            and cycle["cycle_reconstruction_rate"] == 1.0
++            and cycle["certificate_soundness"] is True
++            and controls["false_property_detected"] is True
++            and controls["label_shuffle_control"]["detected"] is True
++            and controls["near_margin_abstention_rate"] > 0.0
++            and bool(holdouts)
++            and all(result["certificate_soundness"] for result in holdouts)
++        )
++        honest_verdict = SUCCESS_VERDICT if symbolic_kan_ready else COMPLETE_NOT_READY_VERDICT
++        rules_path = distilled_rules_path
++    duration_s = current_duration_s
++    if duration_s is None:
++        duration_s = round(time.perf_counter() - start, 6)
++    artifact = {
++        "schema": "carnot.symbolic_kan_certificate_distillation.v471",
++        "experiment": 5140,
++        "artifact": "experiment_5140_symbolic_kan_certificate_distillation_v471",
++        "run_date": run_date,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": float(duration_s),
++        "exp5128_loaded": exp5128_loaded,
++        "upstream_status": upstream_status,
++        "symbolic_primitives": list(SYMBOLIC_PRIMITIVES),
++        "distilled_rules_path": rules_path,
++        "distilled_rule_summaries": _distilled_rule_summaries(rules),
++        "symbolic_equivalence_rate": float(cycle["symbolic_equivalence_rate"]),
++        "certificate_soundness": bool(cycle["certificate_soundness"]),
++        "cycle_reconstruction_rate": float(cycle["cycle_reconstruction_rate"]),
++        "false_property_detected": bool(controls["false_property_detected"]),
++        "near_margin_abstention_rate": float(controls["near_margin_abstention_rate"]),
++        "label_shuffle_control": controls["label_shuffle_control"],
++        "family_holdout_results": controls["family_holdout_results"],
++        "symbolic_kan_ready": symbolic_kan_ready,
++        "conductor_modified": False,
++        "source_artifacts": [EXP5128_RESULT_RELATIVE_PATH],
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "methodology_note": (
++            "Exp 5140 distills Exp 5128 certificate residual behavior into exact "
++            "symbolic primitives and checks cycle reconstruction without an LLM judge."
++        ),
++        "tests_run": list(tests_run),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Fail closed when the Exp 5140 artifact drifts from the contract."""
++
++    missing = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact)
++    _require(not missing, f"missing required artifact fields: {sorted(missing)}")
++    _require(artifact["experiment_id"] == EXPERIMENT_ID, "experiment_id mismatch")
++    _require(artifact["milestone"] == MILESTONE, "milestone mismatch")
++    _require(artifact["inference_substrate"] == INFERENCE_SUBSTRATE, "substrate mismatch")
++    _require(str(artifact["honest_verdict"]).startswith(TERMINAL_PREFIXES), "bad verdict prefix")
++    _require(float(artifact["duration_s"]) >= 0.0, "duration_s cannot be negative")
++    _require(artifact["conductor_modified"] is False, "conductor must remain unmodified")
++    _require(
++        set(REQUIRED_ARTIFACT_FIELDS).issubset(artifact["field_principles"]),
++        "field principles must cover required fields",
++    )
++    primitive_names = {primitive["name"] for primitive in artifact["symbolic_primitives"]}
++    _require(primitive_names == set(SYMBOLIC_PRIMITIVE_NAMES), "primitive set mismatch")
++    if artifact["symbolic_kan_ready"]:
++        _require(artifact["honest_verdict"] == SUCCESS_VERDICT, "ready verdict mismatch")
++        _require(artifact["exp5128_loaded"] is True, "ready requires Exp 5128")
++        _require(artifact["distilled_rules_path"] is not None, "ready requires rule artifact")
++        _require(artifact["symbolic_equivalence_rate"] == 1.0, "ready requires equivalence")
++        _require(artifact["certificate_soundness"] is True, "ready requires soundness")
++        _require(artifact["cycle_reconstruction_rate"] == 1.0, "ready requires cycle consistency")
++        _require(artifact["false_property_detected"] is True, "ready requires false control")
++        _require(artifact["near_margin_abstention_rate"] > 0.0, "ready requires abstention")
++        _require(
++            artifact["label_shuffle_control"]["detected"] is True,
++            "ready requires label-shuffle detection",
++        )
++        _require(
++            all(result["certificate_soundness"] for result in artifact["family_holdout_results"]),
++            "ready requires holdout soundness",
++        )
++    elif artifact["exp5128_loaded"]:
++        _require(artifact["honest_verdict"] == COMPLETE_NOT_READY_VERDICT, "not-ready mismatch")
++    else:
++        _require(artifact["honest_verdict"] == BLOCKED_UPSTREAM_VERDICT, "blocked mismatch")
++        _require(artifact["distilled_rules_path"] is None, "blocked artifacts have no rules path")
++
++
++def write_outputs(
++    *,
++    root: str | Path | None = None,
++    run_date: str = RUN_DATE,
++    tests_run: Sequence[str] = DEFAULT_TESTS_RUN,
++    current_duration_s: float | None = None,
++    artifact_path: str | Path | None = None,
++    rules_output: str | Path | None = None,
++) -> JsonDict:
++    """Write the terminal artifact and, when possible, the distilled rules."""
++
++    base = Path(root) if root is not None else _repo_root()
++    output = Path(artifact_path) if artifact_path is not None else base / RESULT_RELATIVE_PATH
++    rules_path = Path(rules_output) if rules_output is not None else base / DISTILLED_RULES_RELATIVE_PATH
++    artifact_rules_path = (
++        str(rules_path) if rules_output is not None else DISTILLED_RULES_RELATIVE_PATH
++    )
++    artifact = build_artifact(
++        root=base,
++        run_date=run_date,
++        tests_run=tests_run,
++        current_duration_s=current_duration_s,
++        distilled_rules_path=artifact_rules_path,
++    )
++    if artifact["exp5128_loaded"]:
++        upstream, upstream_status = load_exp5128_artifact(base)
++        rules = distill_symbolic_rules(upstream or {})
++        cycle = cycle_check_rules(rules)
++        controls = evaluate_controls(rules)
++        rules_payload = build_rules_payload(
++            upstream_status=upstream_status,
++            rules=rules,
++            cycle=cycle,
++            controls=controls,
++            run_date=run_date,
++        )
++        rules_path.parent.mkdir(parents=True, exist_ok=True)
++        rules_path.write_text(
++            json.dumps(rules_payload, indent=2, sort_keys=True) + "\n",
++            encoding="utf-8",
++        )
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """CLI entrypoint for writing the default Exp 5140 artifacts."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE, help="Run date as YYYYMMDD")
++    parser.add_argument("--root", default=None, help="Optional repository root override")
++    parser.add_argument("--output", default=None, help="Optional terminal artifact output path")
++    parser.add_argument("--rules-output", default=None, help="Optional distilled rules output path")
++    args = parser.parse_args(argv)
++
++    root = Path(args.root) if args.root else _repo_root()
++    output = Path(args.output) if args.output else root / RESULT_RELATIVE_PATH
++    artifact = write_outputs(
++        root=root,
++        run_date=str(args.date),
++        artifact_path=output,
++        rules_output=args.rules_output,
++    )
++    print(artifact["honest_verdict"])
++    print(f"wrote {output}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised through script wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index c448560a82..cc2318df86 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-02T05:13:35.395403Z",
+-  "duration_s": 0.054459571838378906,
++  "run_date": "2026-07-02T06:12:19.357824Z",
++  "duration_s": 0.07601642608642578,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "93069ea7e99b3fde54c01ac0c4d9e3b18329c17e2fe31cfa44cfe265ad614725",
++  "reproducibility_checksum": "750710e53f692136e7e82778e75674d51d712befd6f9f4fdc6df5ecb2dedf9a7",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "76da8c34f423755f67edeed7474b91ae4d0eb943"
++    "adversarial_verify_version": "a5cb0420f2bd4bc14eeb73ca79811e2bae8ee365"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 320cb0fda7..504c172c13 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-02T05:15:04.804218Z",
+-  "duration_s": 12.90044355392456,
++  "run_date": "2026-07-02T06:13:43.820925Z",
++  "duration_s": 11.903084993362427,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index e79024409e..038055187f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-02T05:13:35.479441Z",
+-  "duration_s": 0.07630610466003418,
++  "run_date": "2026-07-02T06:12:19.457820Z",
++  "duration_s": 0.08986711502075195,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e9d99f57a2eea3ad262b6988cad109ed65afdfbf81d1e86bd957848923e341df",
++  "reproducibility_checksum": "cbac6e0d1432fff898909939d0e5aa138b3bf141ceb7a0e1865dc47849424cf4",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "76da8c34f423755f67edeed7474b91ae4d0eb943"
++    "adversarial_verify_version": "a5cb0420f2bd4bc14eeb73ca79811e2bae8ee365"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index c280773bb2..06da90f23d 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1581649780273438,
++  "efficiency_gains_ms": 2.1271705627441406,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index dc1febd37d..64f3514441 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.4674868583679199,
++  "duration_s": 0.5738096237182617,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index ea89f51964..9ec888f2f0 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.111696034669876e-05,
++  "duration_s": 3.982498310506344e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5140_symbolic_kan_certificate_distillation_v471.json b/results/experiment_5140_symbolic_kan_certificate_distillation_v471.json
+new file mode 100644
+index 0000000000..691289669c
+--- /dev/null
++++ b/results/experiment_5140_symbolic_kan_certificate_distillation_v471.json
+@@ -0,0 +1,197 @@
++{
++  "artifact": "experiment_5140_symbolic_kan_certificate_distillation_v471",
++  "certificate_soundness": true,
++  "conductor_modified": false,
++  "cycle_reconstruction_rate": 1.0,
++  "distilled_rule_summaries": [
++    {
++      "family": "global_energy_upper_bound",
++      "primitive_names": [
++        "monotone_segment",
++        "threshold_clause",
++        "affine_interval",
++        "bounded_residual_rule"
++      ],
++      "rule_id": "symbolic_rule::kan_n100_global_energy_upper_bound",
++      "source_certificate_id": "kan_n100_global_energy_upper_bound",
++      "verdict": "verified"
++    },
++    {
++      "family": "refinement_error_budget",
++      "primitive_names": [
++        "monotone_segment",
++        "threshold_clause",
++        "affine_interval",
++        "bounded_residual_rule"
++      ],
++      "rule_id": "symbolic_rule::kan_n100_refinement_error_budget",
++      "source_certificate_id": "kan_n100_refinement_error_budget",
++      "verdict": "verified"
++    },
++    {
++      "family": "false_low_threshold_control",
++      "primitive_names": [
++        "monotone_segment",
++        "threshold_clause",
++        "affine_interval",
++        "bounded_residual_rule"
++      ],
++      "rule_id": "symbolic_rule::kan_n100_false_low_threshold_control",
++      "source_certificate_id": "kan_n100_false_low_threshold_control",
++      "verdict": "counterexample"
++    },
++    {
++      "family": "near_margin_residual_gap",
++      "primitive_names": [
++        "monotone_segment",
++        "threshold_clause",
++        "affine_interval",
++        "bounded_residual_rule"
++      ],
++      "rule_id": "symbolic_rule::kan_n100_near_margin_residual_gap",
++      "source_certificate_id": "kan_n100_near_margin_residual_gap",
++      "verdict": "abstained"
++    }
++  ],
++  "distilled_rules_path": "results/experiment_5140_symbolic_kan_certificate_distillation_v471_rules.json",
++  "duration_s": 0.000437,
++  "exp5128_loaded": true,
++  "experiment": 5140,
++  "experiment_id": "exp5140-symbolic-kan-certificate-distillation-v471",
++  "false_property_detected": true,
++  "family_holdout_results": [
++    {
++      "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++      "certificate_soundness": true,
++      "cycle_reconstruction_rate": 1.0,
++      "heldout_family": "false_low_threshold_control",
++      "heldout_rule_count": 1,
++      "primitive_templates_seen": [
++        "affine_interval",
++        "bounded_residual_rule",
++        "monotone_segment",
++        "threshold_clause"
++      ],
++      "symbolic_equivalence_rate": 1.0,
++      "train_family_count": 3
++    },
++    {
++      "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++      "certificate_soundness": true,
++      "cycle_reconstruction_rate": 1.0,
++      "heldout_family": "global_energy_upper_bound",
++      "heldout_rule_count": 1,
++      "primitive_templates_seen": [
++        "affine_interval",
++        "bounded_residual_rule",
++        "monotone_segment",
++        "threshold_clause"
++      ],
++      "symbolic_equivalence_rate": 1.0,
++      "train_family_count": 3
++    },
++    {
++      "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++      "certificate_soundness": true,
++      "cycle_reconstruction_rate": 1.0,
++      "heldout_family": "near_margin_residual_gap",
++      "heldout_rule_count": 1,
++      "primitive_templates_seen": [
++        "affine_interval",
++        "bounded_residual_rule",
++        "monotone_segment",
++        "threshold_clause"
++      ],
++      "symbolic_equivalence_rate": 1.0,
++      "train_family_count": 3
++    },
++    {
++      "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++      "certificate_soundness": true,
++      "cycle_reconstruction_rate": 1.0,
++      "heldout_family": "refinement_error_budget",
++      "heldout_rule_count": 1,
++      "primitive_templates_seen": [
++        "affine_interval",
++        "bounded_residual_rule",
++        "monotone_segment",
++        "threshold_clause"
++      ],
++      "symbolic_equivalence_rate": 1.0,
++      "train_family_count": 3
++    }
++  ],
++  "field_principles": {
++    "certificate_soundness": "formal correctness",
++    "conductor_modified": "conductor immutability",
++    "cycle_reconstruction_rate": "explanation cycle consistency",
++    "distilled_rules_path": "artifact provenance",
++    "duration_s": "timing accountability",
++    "exp5128_loaded": "upstream evidence",
++    "experiment_id": "traceability",
++    "false_property_detected": "adversarial control",
++    "family_holdout_results": "generalization caution",
++    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
++    "inference_substrate": "substrate honesty",
++    "milestone": "milestone accountability",
++    "near_margin_abstention_rate": "uncertainty control",
++    "symbolic_equivalence_rate": "explanation fidelity",
++    "symbolic_kan_ready": "downstream readiness",
++    "symbolic_primitives": "interpretability",
++    "tests_run": "verification evidence"
++  },
++  "honest_verdict": "success_symbolic_kan_certificate_distillation_ready",
++  "inference_substrate": "exact_checked_symbolic_kan_distillation",
++  "label_shuffle_control": {
++    "detected": true,
++    "mismatch_count": 4,
++    "rules_checked": 4
++  },
++  "methodology_note": "Exp 5140 distills Exp 5128 certificate residual behavior into exact symbolic primitives and checks cycle reconstruction without an LLM judge.",
++  "milestone": "2026.07.471",
++  "near_margin_abstention_rate": 1.0,
++  "run_date": "20260702",
++  "schema": "carnot.symbolic_kan_certificate_distillation.v471",
++  "source_artifacts": [
++    "results/experiment_5128_kan_certificate_explanation_v470.json"
++  ],
++  "spec_refs": [
++    "REQ-KAN-5140",
++    "SCENARIO-KAN-5140"
++  ],
++  "symbolic_equivalence_rate": 1.0,
++  "symbolic_kan_ready": true,
++  "symbolic_primitives": [
++    {
++      "meaning": "unit-index interval over which additive certificate bounds are monotone",
++      "name": "monotone_segment"
++    },
++    {
++      "meaning": "exact or certified quantity compared with the property threshold",
++      "name": "threshold_clause"
++    },
++    {
++      "meaning": "closed interval between exact, observed, and certified affine quantities",
++      "name": "affine_interval"
++    },
++    {
++      "meaning": "residual abstraction bound that can force abstention near a threshold",
++      "name": "bounded_residual_rule"
++    }
++  ],
++  "tests_run": [
++    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py --date 20260702",
++    ".venv/bin/pytest tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py -q -o addopts=\"\"",
++    ".venv/bin/coverage erase && .venv/bin/coverage run --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py' -m pytest tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py -q -o addopts=\"\" && .venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py' --fail-under=100 -m",
++    "python scripts/check_spec_coverage.py tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "upstream_status": {
++    "certificate_count": 4,
++    "explanation_count": 4,
++    "honest_verdict": "success_kan_certificate_explanation_cycle_sound_breadth_ready",
++    "loaded": true,
++    "path": "results/experiment_5128_kan_certificate_explanation_v470.json",
++    "sha256": "2f464f4ef9b6299afa57ff774ed0c07d7d286ff796d3fa2dc4bda06941582d13"
++  }
++}
+diff --git a/results/experiment_5140_symbolic_kan_certificate_distillation_v471_rules.json b/results/experiment_5140_symbolic_kan_certificate_distillation_v471_rules.json
+new file mode 100644
+index 0000000000..ae1feb1a00
+--- /dev/null
++++ b/results/experiment_5140_symbolic_kan_certificate_distillation_v471_rules.json
+@@ -0,0 +1,420 @@
++{
++  "controls": {
++    "false_property_detected": true,
++    "family_holdout_results": [
++      {
++        "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++        "certificate_soundness": true,
++        "cycle_reconstruction_rate": 1.0,
++        "heldout_family": "false_low_threshold_control",
++        "heldout_rule_count": 1,
++        "primitive_templates_seen": [
++          "affine_interval",
++          "bounded_residual_rule",
++          "monotone_segment",
++          "threshold_clause"
++        ],
++        "symbolic_equivalence_rate": 1.0,
++        "train_family_count": 3
++      },
++      {
++        "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++        "certificate_soundness": true,
++        "cycle_reconstruction_rate": 1.0,
++        "heldout_family": "global_energy_upper_bound",
++        "heldout_rule_count": 1,
++        "primitive_templates_seen": [
++          "affine_interval",
++          "bounded_residual_rule",
++          "monotone_segment",
++          "threshold_clause"
++        ],
++        "symbolic_equivalence_rate": 1.0,
++        "train_family_count": 3
++      },
++      {
++        "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++        "certificate_soundness": true,
++        "cycle_reconstruction_rate": 1.0,
++        "heldout_family": "near_margin_residual_gap",
++        "heldout_rule_count": 1,
++        "primitive_templates_seen": [
++          "affine_interval",
++          "bounded_residual_rule",
++          "monotone_segment",
++          "threshold_clause"
++        ],
++        "symbolic_equivalence_rate": 1.0,
++        "train_family_count": 3
++      },
++      {
++        "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
++        "certificate_soundness": true,
++        "cycle_reconstruction_rate": 1.0,
++        "heldout_family": "refinement_error_budget",
++        "heldout_rule_count": 1,
++        "primitive_templates_seen": [
++          "affine_interval",
++          "bounded_residual_rule",
++          "monotone_segment",
++          "threshold_clause"
++        ],
++        "symbolic_equivalence_rate": 1.0,
++        "train_family_count": 3
++      }
++    ],
++    "label_shuffle_control": {
++      "detected": true,
++      "mismatch_count": 4,
++      "rules_checked": 4
++    },
++    "near_margin_abstention_rate": 1.0
++  },
++  "cycle_records": [
++    {
++      "equivalent": true,
++      "reconstructed": {
++        "abstention_condition": "not_applicable",
++        "abstraction_error": "2.86990586255",
++        "family": "global_energy_upper_bound",
++        "margin": "1.13009413745",
++        "proof_status": "proved_by_conservative_bound",
++        "property_id": "kan_n100_global_energy_upper_bound",
++        "threshold": "83.5032414198",
++        "unit_count": "100",
++        "verdict": "verified"
++      },
++      "rule_id": "symbolic_rule::kan_n100_global_energy_upper_bound",
++      "sound": true
++    },
++    {
++      "equivalent": true,
++      "reconstructed": {
++        "abstention_condition": "not_applicable",
++        "abstraction_error": "2.86990586255",
++        "family": "refinement_error_budget",
++        "margin": "5.45688729633",
++        "proof_status": "proved_by_refinement_budget",
++        "property_id": "kan_n100_refinement_error_budget",
++        "threshold": "8.32679315888",
++        "unit_count": "100",
++        "verdict": "verified"
++      },
++      "rule_id": "symbolic_rule::kan_n100_refinement_error_budget",
++      "sound": true
++    },
++    {
++      "equivalent": true,
++      "reconstructed": {
++        "abstention_condition": "not_applicable",
++        "abstraction_error": "2.86990586255",
++        "family": "false_low_threshold_control",
++        "margin": "0.05",
++        "proof_status": "refuted_by_exact_witness",
++        "property_id": "kan_n100_false_low_threshold_control",
++        "threshold": "79.4532414198",
++        "unit_count": "100",
++        "verdict": "counterexample"
++      },
++      "rule_id": "symbolic_rule::kan_n100_false_low_threshold_control",
++      "sound": true
++    },
++    {
++      "equivalent": true,
++      "reconstructed": {
++        "abstention_condition": "exact_value <= threshold < certified_upper_bound",
++        "abstraction_error": "2.86990586255",
++        "family": "near_margin_residual_gap",
++        "margin": "2.86890586255",
++        "proof_status": "abstained_residual_gap",
++        "property_id": "kan_n100_near_margin_residual_gap",
++        "threshold": "79.5042414198",
++        "unit_count": "100",
++        "verdict": "abstained"
++      },
++      "rule_id": "symbolic_rule::kan_n100_near_margin_residual_gap",
++      "sound": true
++    }
++  ],
++  "distilled_rules": [
++    {
++      "cycle_predicates": {
++        "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
++        "counterexample_when": "exact_upper_bound > threshold",
++        "verified_when": "certified_upper_bound <= threshold"
++      },
++      "family": "global_energy_upper_bound",
++      "llm_judge_used": false,
++      "numeric": {
++        "abstraction_error": 2.8699058625510503,
++        "certified_upper_bound": 82.37314728234323,
++        "exact_upper_bound": 79.50324141979218,
++        "observed": 79.50324141979218,
++        "threshold": 83.50324141979218,
++        "unit_count": 100
++      },
++      "primitives": [
++        {
++          "direction": "nondecreasing_additive_bound",
++          "interval": [
++            0,
++            100
++          ],
++          "name": "monotone_segment",
++          "variable": "unit_index"
++        },
++        {
++          "left": "certified_or_exact_quantity",
++          "name": "threshold_clause",
++          "operator": "<=",
++          "threshold": 83.50324141979218
++        },
++        {
++          "intercept": 0.0,
++          "lower": 79.50324141979218,
++          "name": "affine_interval",
++          "slope": 1.0,
++          "upper": 82.37314728234323
++        },
++        {
++          "abstain_when": "exact_value <= threshold < certified_upper_bound",
++          "margin": 1.1300941374489497,
++          "name": "bounded_residual_rule",
++          "residual_bound": 2.8699058625510503
++        }
++      ],
++      "rule_id": "symbolic_rule::kan_n100_global_energy_upper_bound",
++      "rule_kind": "threshold_bound",
++      "source_certificate_id": "kan_n100_global_energy_upper_bound",
++      "source_explanation": "KAN_CERT_EXPLANATION_V1|property_id=kan_n100_global_energy_upper_bound|family=global_energy_upper_bound|verdict=verified|margin=1.13009413745|abstraction_error=2.86990586255|proof_status=proved_by_conservative_bound",
++      "source_metadata": {
++        "abstention_condition": "not_applicable",
++        "abstraction_error": "2.86990586255",
++        "family": "global_energy_upper_bound",
++        "margin": "1.13009413745",
++        "proof_status": "proved_by_conservative_bound",
++        "property_id": "kan_n100_global_energy_upper_bound",
++        "threshold": "83.5032414198",
++        "unit_count": "100",
++        "verdict": "verified"
++      }
++    },
++    {
++      "cycle_predicates": {
++        "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
++        "counterexample_when": "exact_upper_bound > threshold",
++        "verified_when": "certified_upper_bound <= threshold"
++      },
++      "family": "refinement_error_budget",
++      "llm_judge_used": false,
++      "numeric": {
++        "abstraction_error": 2.8699058625510503,
++        "certified_upper_bound": 2.8699058625510503,
++        "exact_upper_bound": 2.8699058625510503,
++        "observed": 2.8699058625510503,
++        "threshold": 8.326793158878274,
++        "unit_count": 100
++      },
++      "primitives": [
++        {
++          "direction": "nondecreasing_additive_bound",
++          "interval": [
++            0,
++            100
++          ],
++          "name": "monotone_segment",
++          "variable": "unit_index"
++        },
++        {
++          "left": "certified_or_exact_quantity",
++          "name": "threshold_clause",
++          "operator": "<=",
++          "threshold": 8.326793158878274
++        },
++        {
++          "intercept": 0.0,
++          "lower": 2.8699058625510503,
++          "name": "affine_interval",
++          "slope": 1.0,
++          "upper": 2.8699058625510503
++        },
++        {
++          "abstain_when": "exact_value <= threshold < certified_upper_bound",
++          "margin": 5.456887296327224,
++          "name": "bounded_residual_rule",
++          "residual_bound": 2.8699058625510503
++        }
++      ],
++      "rule_id": "symbolic_rule::kan_n100_refinement_error_budget",
++      "rule_kind": "refinement_budget",
++      "source_certificate_id": "kan_n100_refinement_error_budget",
++      "source_explanation": "KAN_CERT_EXPLANATION_V1|property_id=kan_n100_refinement_error_budget|family=refinement_error_budget|verdict=verified|margin=5.45688729633|abstraction_error=2.86990586255|proof_status=proved_by_refinement_budget",
++      "source_metadata": {
++        "abstention_condition": "not_applicable",
++        "abstraction_error": "2.86990586255",
++        "family": "refinement_error_budget",
++        "margin": "5.45688729633",
++        "proof_status": "proved_by_refinement_budget",
++        "property_id": "kan_n100_refinement_error_budget",
++        "threshold": "8.32679315888",
++        "unit_count": "100",
++        "verdict": "verified"
++      }
++    },
++    {
++      "cycle_predicates": {
++        "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
++        "counterexample_when": "exact_upper_bound > threshold",
++        "verified_when": "certified_upper_bound <= threshold"
++      },
++      "family": "false_low_threshold_control",
++      "llm_judge_used": false,
++      "numeric": {
++        "abstraction_error": 2.8699058625510503,
++        "certified_upper_bound": 82.37314728234323,
++        "exact_upper_bound": 79.50324141979218,
++        "observed": 79.50324141979218,
++        "threshold": 79.45324141979218,
++        "unit_count": 100
++      },
++      "primitives": [
++        {
++          "direction": "nondecreasing_additive_bound",
++          "interval": [
++            0,
++            100
++          ],
++          "name": "monotone_segment",
++          "variable": "unit_index"
++        },
++        {
++          "left": "certified_or_exact_quantity",
++          "name": "threshold_clause",
++          "operator": "<=",
++          "threshold": 79.45324141979218
++        },
++        {
++          "intercept": 0.0,
++          "lower": 79.50324141979218,
++          "name": "affine_interval",
++          "slope": 1.0,
++          "upper": 82.37314728234323
++        },
++        {
++          "abstain_when": "exact_value <= threshold < certified_upper_bound",
++          "margin": 0.04999999999999716,
++          "name": "bounded_residual_rule",
++          "residual_bound": 2.8699058625510503
++        }
++      ],
++      "rule_id": "symbolic_rule::kan_n100_false_low_threshold_control",
++      "rule_kind": "threshold_bound",
++      "source_certificate_id": "kan_n100_false_low_threshold_control",
++      "source_explanation": "KAN_CERT_EXPLANATION_V1|property_id=kan_n100_false_low_threshold_control|family=false_low_threshold_control|verdict=counterexample|margin=0.05|abstraction_error=2.86990586255|proof_status=refuted_by_exact_witness",
++      "source_metadata": {
++        "abstention_condition": "not_applicable",
++        "abstraction_error": "2.86990586255",
++        "family": "false_low_threshold_control",
++        "margin": "0.05",
++        "proof_status": "refuted_by_exact_witness",
++        "property_id": "kan_n100_false_low_threshold_control",
++        "threshold": "79.4532414198",
++        "unit_count": "100",
++        "verdict": "counterexample"
++      }
++    },
++    {
++      "cycle_predicates": {
++        "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
++        "counterexample_when": "exact_upper_bound > threshold",
++        "verified_when": "certified_upper_bound <= threshold"
++      },
++      "family": "near_margin_residual_gap",
++      "llm_judge_used": false,
++      "numeric": {
++        "abstraction_error": 2.8699058625510503,
++        "certified_upper_bound": 82.37314728234323,
++        "exact_upper_bound": 79.50324141979218,
++        "observed": 79.50324141979218,
++        "threshold": 79.50424141979218,
++        "unit_count": 100
++      },
++      "primitives": [
++        {
++          "direction": "nondecreasing_additive_bound",
++          "interval": [
++            0,
++            100
++          ],
++          "name": "monotone_segment",
++          "variable": "unit_index"
++        },
++        {
++          "left": "certified_or_exact_quantity",
++          "name": "threshold_clause",
++          "operator": "<=",
++          "threshold": 79.50424141979218
++        },
++        {
++          "intercept": 0.0,
++          "lower": 79.50324141979218,
++          "name": "affine_interval",
++          "slope": 1.0,
++          "upper": 82.37314728234323
++        },
++        {
++          "abstain_when": "exact_value <= threshold < certified_upper_bound",
++          "margin": 2.8689058625510455,
++          "name": "bounded_residual_rule",
++          "residual_bound": 2.8699058625510503
++        }
++      ],
++      "rule_id": "symbolic_rule::kan_n100_near_margin_residual_gap",
++      "rule_kind": "threshold_bound",
++      "source_certificate_id": "kan_n100_near_margin_residual_gap",
++      "source_explanation": "KAN_CERT_EXPLANATION_V1|property_id=kan_n100_near_margin_residual_gap|family=near_margin_residual_gap|verdict=abstained|margin=2.86890586255|abstraction_error=2.86990586255|proof_status=abstained_residual_gap",
++      "source_metadata": {
++        "abstention_condition": "exact_value <= threshold < certified_upper_bound",
++        "abstraction_error": "2.86990586255",
++        "family": "near_margin_residual_gap",
++        "margin": "2.86890586255",
++        "proof_status": "abstained_residual_gap",
++        "property_id": "kan_n100_near_margin_residual_gap",
++        "threshold": "79.5042414198",
++        "unit_count": "100",
++        "verdict": "abstained"
++      }
++    }
++  ],
++  "experiment_id": "exp5140-symbolic-kan-certificate-distillation-v471",
++  "llm_judge_used": false,
++  "milestone": "2026.07.471",
++  "run_date": "20260702",
++  "schema": "carnot.symbolic_kan_certificate_distillation.rules.v471",
++  "source_artifact": {
++    "certificate_count": 4,
++    "explanation_count": 4,
++    "honest_verdict": "success_kan_certificate_explanation_cycle_sound_breadth_ready",
++    "loaded": true,
++    "path": "results/experiment_5128_kan_certificate_explanation_v470.json",
++    "sha256": "2f464f4ef9b6299afa57ff774ed0c07d7d286ff796d3fa2dc4bda06941582d13"
++  },
++  "symbolic_primitives": [
++    {
++      "meaning": "unit-index interval over which additive certificate bounds are monotone",
++      "name": "monotone_segment"
++    },
++    {
++      "meaning": "exact or certified quantity compared with the property threshold",
++      "name": "threshold_clause"
++    },
++    {
++      "meaning": "closed interval between exact, observed, and certified affine quantities",
++      "name": "affine_interval"
++    },
++    {
++      "meaning": "residual abstraction bound that can force abstention near a threshold",
++      "name": "bounded_residual_rule"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 0b61b16eee..33b3b0786a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T05:13:20Z",
+-  "finished_at": "2026-07-02T05:13:20Z",
++  "started_at": "2026-07-02T06:12:04Z",
++  "finished_at": "2026-07-02T06:12:04Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 54930c237f..9a256e0d70 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T05:13:20Z",
+-  "finished_at": "2026-07-02T05:13:20Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-02T06:12:04Z",
++  "finished_at": "2026-07-02T06:12:04Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 7158cf4630..79ec75df1f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T05:13:20Z",
+-  "finished_at": "2026-07-02T05:13:20Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-02T06:12:05Z",
++  "finished_at": "2026-07-02T06:12:05Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py b/scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py
+new file mode 100644
+index 0000000000..1334371322
+--- /dev/null
++++ b/scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py
+@@ -0,0 +1,22 @@
++#!/usr/bin/env python
++"""CLI wrapper for Exp 5140 symbolic KAN certificate distillation."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++if str(REPO_ROOT / "python") not in sys.path:  # pragma: no cover - direct execution guard
++    sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot import experiment_5140_symbolic_kan_certificate_distillation_v471 as experiment  # noqa: E402
++
++
++def main(argv: list[str] | None = None) -> int:
++    return experiment.main(argv)
++
++
++if __name__ == "__main__":  # pragma: no cover - direct execution guard
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py b/tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py
+new file mode 100644
+index 0000000000..af25952dda
+--- /dev/null
++++ b/tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py
+@@ -0,0 +1,270 @@
++"""Tests for Exp 5140 symbolic KAN certificate distillation.
++
++Spec refs: REQ-KAN-5140, SCENARIO-KAN-5140.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5140_symbolic_kan_certificate_distillation_v471 as mod
++from scripts import experiment_5140_symbolic_kan_certificate_distillation_v471 as script_mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/kan/spec.md"
++UPSTREAM_PATH = REPO / mod.EXP5128_RESULT_RELATIVE_PATH
++
++
++def _load_repo_upstream() -> dict[str, object]:
++    return json.loads(UPSTREAM_PATH.read_text(encoding="utf-8"))
++
++
++def _write_upstream(root: Path, payload: dict[str, object] | None = None) -> None:
++    upstream_path = root / mod.EXP5128_RESULT_RELATIVE_PATH
++    upstream_path.parent.mkdir(parents=True, exist_ok=True)
++    upstream_path.write_text(
++        json.dumps(payload or _load_repo_upstream(), indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def test_req_kan_5140_spec_declares_distillation_contract() -> None:
++    """REQ-KAN-5140: OpenSpec anchors symbolic distillation and controls."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    start = spec.index("## REQ-KAN-5140")
++    end = spec.index("## Implementation Status", start)
++    section = spec[start:end]
++
++    assert "SCENARIO-KAN-5140" in section
++    assert mod.EXPERIMENT_ID in section
++    assert mod.MILESTONE in section
++    assert mod.RESULT_RELATIVE_PATH in section
++    assert mod.INFERENCE_SUBSTRATE in section
++    assert "LLM judge" in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_kan_5140_distills_primitives_and_reconstructs_exactly() -> None:
++    """SCENARIO-KAN-5140: primitive rules reconstruct source certificates exactly."""
++
++    upstream = _load_repo_upstream()
++    rules = mod.distill_symbolic_rules(upstream)
++    cycle = mod.cycle_check_rules(rules)
++    primitive_names = {
++        primitive["name"]
++        for rule in rules
++        for primitive in rule["primitives"]
++    }
++
++    assert len(rules) == len(upstream["certificates_emitted"])
++    assert primitive_names == set(mod.SYMBOLIC_PRIMITIVE_NAMES)
++    assert cycle["symbolic_equivalence_rate"] == pytest.approx(1.0)
++    assert cycle["cycle_reconstruction_rate"] == pytest.approx(1.0)
++    assert cycle["certificate_soundness"] is True
++    for rule in rules:
++        reconstructed = mod.reconstruct_from_rule(rule)
++        assert reconstructed == rule["source_metadata"]
++        assert mod.soundness_check_reconstruction(rule, reconstructed) is True
++        assert "abstain_when" in rule["cycle_predicates"]
++
++
++def test_req_kan_5140_controls_detect_false_shuffle_margin_and_holdout() -> None:
++    """REQ-KAN-5140: false, label-shuffle, near-margin, and holdout controls run."""
++
++    rules = mod.distill_symbolic_rules(_load_repo_upstream())
++    controls = mod.evaluate_controls(rules)
++
++    assert controls["false_property_detected"] is True
++    assert controls["label_shuffle_control"]["detected"] is True
++    assert controls["near_margin_abstention_rate"] == pytest.approx(1.0)
++    assert controls["family_holdout_results"]
++    assert all(item["certificate_soundness"] for item in controls["family_holdout_results"])
++    assert all(
++        item["symbolic_equivalence_rate"] == pytest.approx(1.0)
++        for item in controls["family_holdout_results"]
++    )
++
++    shuffled = mod.label_shuffle_control(rules)
++    assert shuffled["detected"] is True
++    assert shuffled["mismatch_count"] > 0
++
++
++def test_req_kan_5140_artifact_reports_required_fields_and_writes_rules(tmp_path: Path) -> None:
++    """REQ-KAN-5140: ready artifact and distilled-rules artifact are schema-valid."""
++
++    _write_upstream(tmp_path)
++    artifact = mod.write_outputs(
++        root=tmp_path,
++        run_date="20260702",
++        tests_run=["focused"],
++        current_duration_s=0.25,
++    )
++
++    mod.validate_artifact(artifact)
++    payload = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    rules_payload = json.loads(
++        (tmp_path / mod.DISTILLED_RULES_RELATIVE_PATH).read_text(encoding="utf-8")
++    )
++
++    assert payload == artifact
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["milestone"] == mod.MILESTONE
++    assert artifact["honest_verdict"] == mod.SUCCESS_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["duration_s"] == pytest.approx(0.25)
++    assert artifact["exp5128_loaded"] is True
++    assert artifact["distilled_rules_path"] == mod.DISTILLED_RULES_RELATIVE_PATH
++    assert artifact["symbolic_equivalence_rate"] == pytest.approx(1.0)
++    assert artifact["certificate_soundness"] is True
++    assert artifact["cycle_reconstruction_rate"] == pytest.approx(1.0)
++    assert artifact["false_property_detected"] is True
++    assert artifact["near_margin_abstention_rate"] == pytest.approx(1.0)
++    assert artifact["symbolic_kan_ready"] is True
++    assert artifact["conductor_modified"] is False
++    assert artifact["tests_run"] == ["focused"]
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS).issubset(artifact["field_principles"])
++    assert rules_payload["experiment_id"] == mod.EXPERIMENT_ID
++    assert len(rules_payload["distilled_rules"]) == len(artifact["distilled_rule_summaries"])
++    assert rules_payload["llm_judge_used"] is False
++
++
++def test_req_kan_5140_missing_or_dirty_upstream_blocks_honestly(tmp_path: Path) -> None:
++    """REQ-KAN-5140: absent or incomplete Exp 5128 evidence fails closed."""
++
++    assert mod._repo_root() == REPO
++    assert mod._relative_or_absolute(Path("/definitely/outside/carnot.json"), tmp_path).startswith(
++        "/definitely/outside"
++    )
++
++    missing = mod.write_outputs(
++        root=tmp_path,
++        run_date="20260702",
++        tests_run=["focused"],
++        current_duration_s=0.1,
++    )
++    mod.validate_artifact(missing)
++    assert missing["honest_verdict"] == mod.BLOCKED_UPSTREAM_VERDICT
++    assert missing["exp5128_loaded"] is False
++    assert missing["distilled_rules_path"] is None
++    assert missing["symbolic_kan_ready"] is False
++    assert not (tmp_path / mod.DISTILLED_RULES_RELATIVE_PATH).exists()
++
++    incomplete = dict(_load_repo_upstream())
++    incomplete["explanation_records"] = []
++    _write_upstream(tmp_path, incomplete)
++    blocked = mod.write_outputs(
++        root=tmp_path,
++        run_date="20260702",
++        tests_run=["focused"],
++        current_duration_s=0.2,
++    )
++    assert blocked["honest_verdict"] == mod.BLOCKED_UPSTREAM_VERDICT
++    assert blocked["exp5128_loaded"] is False
++    assert "missing certificate/explanation records" in blocked["upstream_status"]["reason"]
++
++    upstream_path = tmp_path / mod.EXP5128_RESULT_RELATIVE_PATH
++    upstream_path.write_text("[]\n", encoding="utf-8")
++    non_object = mod.write_outputs(
++        root=tmp_path,
++        run_date="20260702",
++        tests_run=["focused"],
++        current_duration_s=0.21,
++    )
++    assert "artifact is not a JSON object" in non_object["upstream_status"]["reason"]
++
++    not_ready_payload = dict(_load_repo_upstream())
++    not_ready_payload["kan_certificate_breadth_ready"] = False
++    _write_upstream(tmp_path, not_ready_payload)
++    not_ready_upstream = mod.write_outputs(
++        root=tmp_path,
++        run_date="20260702",
++        tests_run=["focused"],
++        current_duration_s=0.22,
++    )
++    assert "not ready" in not_ready_upstream["upstream_status"]["reason"]
++
++
++def test_req_kan_5140_validation_edges_and_cli(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-KAN-5140: validation catches drift and the CLI writes the deliverable."""
++
++    _write_upstream(tmp_path)
++    rules = mod.distill_symbolic_rules(_load_repo_upstream())
++    tampered_rule = copy.deepcopy(rules[0])
++    tampered_rule["source_metadata"]["verdict"] = "counterexample"
++    assert mod.soundness_check_reconstruction(
++        tampered_rule,
++        mod.reconstruct_from_rule(tampered_rule),
++    ) is False
++
++    refinement_counterexample = copy.deepcopy(
++        next(rule for rule in rules if rule["rule_kind"] == "refinement_budget")
++    )
++    refinement_counterexample["numeric"]["observed"] = (
++        refinement_counterexample["numeric"]["threshold"] + 1.0
++    )
++    assert mod.reconstruct_from_rule(refinement_counterexample)["verdict"] == "counterexample"
++
++    unknown_verdict = copy.deepcopy(rules[0])
++    unknown_verdict["source_metadata"] = mod.reconstruct_from_rule(unknown_verdict)
++    unknown_verdict["source_metadata"]["verdict"] = "mystery"
++    assert mod.soundness_check_reconstruction(
++        unknown_verdict,
++        unknown_verdict["source_metadata"],
++    ) is False
++
++    bad = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260702",
++        tests_run=["focused"],
++        current_duration_s=0.3,
++    )
++    bad["honest_verdict"] = "ready_without_prefix"
++    with pytest.raises(ValueError, match="bad verdict prefix"):
++        mod.validate_artifact(bad)
++
++    monkeypatch.setattr(
++        mod,
++        "evaluate_controls",
++        lambda _rules: {
++            "false_property_detected": False,
++            "near_margin_abstention_rate": 1.0,
++            "label_shuffle_control": {"detected": True, "mismatch_count": 1},
++            "family_holdout_results": [],
++        },
++    )
++    not_ready = mod.build_artifact(
++        root=tmp_path,
++        run_date="20260702",
++        tests_run=["focused"],
++        current_duration_s=0.4,
++    )
++    mod.validate_artifact(not_ready)
++    assert not_ready["honest_verdict"] == mod.COMPLETE_NOT_READY_VERDICT
++    assert not_ready["symbolic_kan_ready"] is False
++
++    output = tmp_path / "cli-result.json"
++    rules_output = tmp_path / "cli-rules.json"
++    assert (
++        script_mod.main(
++            [
++                "--date",
++                "20260702",
++                "--root",
++                str(tmp_path),
++                "--output",
++                str(output),
++                "--rules-output",
++                str(rules_output),
++            ]
++        )
++        == 0
++    )
++    assert json.loads(output.read_text(encoding="utf-8"))["experiment_id"] == mod.EXPERIMENT_ID
++    assert json.loads(rules_output.read_text(encoding="utf-8"))["experiment_id"] == mod.EXPERIMENT_ID
+-- 
+2.55.0
+

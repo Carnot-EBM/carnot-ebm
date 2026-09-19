@@ -1,0 +1,252 @@
+From 21c2848433cb5407e005ed4b0e83009e6f9f80e0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 07:16:29 -0400
+Subject: [PATCH 08875/11362] exp6255: the win exemplar makes dynamics
+ induction WORSE (1 improved, 3 worse)
+
+REQ-ARC-WMTE-6255. Pooled delta -0.2476. Not inert -- actively harmful. ls20 is
+the clearest case: a near-perfect engine (0.9038 held-out) collapsed to 0.0678
+when the exemplar was added. dc22 -0.4285, cn04 -0.1095, s5i5 +0.3834.
+
+This one is well-controlled, unlike two earlier runs in this batch. Four of four
+games comparable with no skips, all eight induce calls returned ok, and no game
+sits at the 0.0 floor or the 1.0 ceiling -- controls span 0.147 to 0.904 and
+treatments 0.037 to 0.892, so every game had room to move in both directions.
+Paired on an identical split and budget; the only variable is whether
+win_transition and previous_level_complete_grid were passed.
+
+THE LIMITATION THAT MAY INVERT THIS READING. The metric scores the ENGINE, i.e.
+dynamics fidelity. The win exemplar's purpose is arguably the GOAL predicate,
+which this did not score at all. So the honest claim is: the exemplar hurts
+dynamics induction, and its effect on goal induction is UNMEASURED. It may well
+help the thing it was designed for while degrading the thing measured here. That
+follow-up is cheap and is the obvious next step on this axis.
+
+Scope limit unchanged: the exemplar is replayed from a banked solve through a
+GameAdapter, a development proxy. A hidden game has neither, so this says nothing
+about the live agent obtaining an exemplar on a hidden level 1. n=4, far below the
+n>=30 bar.
+
+Consequence for the standing diagnosis: the empty win-exemplar slot was the best
+remaining explanation for offline induction sitting near 0.38-0.5. Filling it
+lowers those numbers rather than raising them, so that hypothesis is dead and the
+induction-quality wall stands unexplained. Session tally on induction-adjacent
+levers: search structure null, sampling breadth null, goal gradient null, model
+architecture null, win exemplar negative.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      | 49 +++++++++++
+ ops/known-issues.md                           | 46 ++++++++++
+ ...riment_6255_win_exemplar_induction_ab.json | 87 +++++++++++++++++++
+ 3 files changed, 182 insertions(+)
+ create mode 100644 results/experiment_6255_win_exemplar_induction_ab.json
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index dc14ba99b3..71f6c24512 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -25427,3 +25427,52 @@ before drawing it) and is flagged per game. **Authorizes no generator pin change
+ 
+ Second-draw slowdown (222.4s after 109.7s; 383.6s after 97.8s) and s5i5's 836.6s
+ no-candidate outlier are unexplained and were not investigated.
++
++
++### REQ-ARC-WMTE-6255: Win-Exemplar Induction A/B
++
++**Origin:** 2026-08-12, following the correction to the exp6252 root cause. `induce_prompt`
++has dedicated slots for `win_transition` and `previous_level_complete_grid`, and every prior
++offline induction run passed NEITHER, because `collect_transitions` never reaches a level-up
++(measured 0 of 200 steps on dc22 and cn04). Nobody had measured what filling them does.
++
++`carnot.agentic.arc_executable_world_model.replay_win_transition(game, cell)` SHALL recover a
++level-up transition by replaying the banked `solution_labels` from
++`results/arc_loop_solve_<game>.json` through the game's OWN `GameAdapter.apply`, and SHALL
++return None whenever no banked solve, adapter, or level-up exists. Callers SHALL treat None as
++"no exemplar" and SHALL NOT substitute a fabricated one.
++
++`scripts/experiments/experiment_6255_win_exemplar_induction_ab.py` SHALL run one induce call
++per arm per game, paired on an identical split and budget, differing ONLY in whether the
++exemplar is passed, and SHALL delete any prior engine from the store before each arm so one
++arm's output can never be read as the other's.
++
++**Pre-registered gate:** >= 3 of the comparable games improve AND pooled delta > 0.
++
++#### SCENARIO-ARC-WMTE-6255-MISSING-EXEMPLAR-SKIPS-THE-PAIR
++
++Given no banked solve or adapter produces a level-up, the game SHALL be recorded as skipped
++and excluded from the comparison rather than scored against a fabricated exemplar.
++
++#### UPDATE 2026-08-12 — RESULT: gate NOT met; the exemplar HURTS dynamics induction
++
++`complete_win_exemplar_gate_not_met_1_improved_3_worse_of_4_pooled_delta_-0.2476`.
++
++| game | control | treatment | delta |
++|---|---|---|---|
++| dc22 | 0.8571 | 0.4286 | -0.4285 |
++| cn04 | 0.1468 | 0.0373 | -0.1095 |
++| ls20 | 0.9038 | 0.0678 | -0.8360 |
++| s5i5 | 0.5083 | 0.8917 | +0.3834 |
++
++Well-controlled: 4 of 4 comparable, all 8 induce calls ok, and no game at the 0.0 floor or
++1.0 ceiling, so every one could move in either direction.
++
++**The limitation that may invert this.** The metric scores the ENGINE (dynamics fidelity)
++only. The exemplar's purpose is arguably the GOAL predicate, which this did not score at all.
++So: the exemplar hurts dynamics induction; its effect on goal induction is UNMEASURED, and
++that follow-up is the obvious next step.
++
++**Scope limit.** The exemplar is replayed from a banked solve through a `GameAdapter` — a
++development proxy. A hidden game has neither, so this says nothing about the live agent
++obtaining an exemplar on a hidden level 1. n=4.
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index a88ef9c301..12b4d23880 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -17239,3 +17239,49 @@ commits. Every one of these guards only fires for a committer who is not exempt.
+ asymmetry recorded for `artifact-freshness-lint` yesterday, now demonstrated on a second
+ guard and with real data loss narrowly avoided rather than a mere inconvenience. The
+ options listed in that entry apply here with more urgency.
++
++## 2026-08-12 REQ-ARC-WMTE-6255 RESULT: the win exemplar makes dynamics induction WORSE
++
++`honest_verdict: complete_win_exemplar_gate_not_met_1_improved_3_worse_of_4_pooled_delta_-0.2476`.
++
++| game | control held | treatment held | delta | exemplar |
++|---|---|---|---|---|
++| dc22 | 0.8571 | 0.4286 | **-0.4285** | L0->L1 |
++| cn04 | 0.1468 | 0.0373 | **-0.1095** | L0->L1 |
++| ls20 | 0.9038 | 0.0678 | **-0.8360** | L0->L1 |
++| s5i5 | 0.5083 | 0.8917 | +0.3834 | L0->L1 |
++
++Pooled delta **-0.2476**. Not inert -- actively harmful. ls20 is the clearest case: a
++near-perfect engine (0.9038) collapsed to 0.0678 when the exemplar was added.
++
++**This one is well-controlled, unlike two earlier runs in this batch.** All four games are
++comparable with no skips. All eight induce calls returned ok=True, so no arm is empty.
++Control values span 0.1468 to 0.9038 and treatments 0.0373 to 0.8917, so NO game sits at the
++0.0 floor or the 1.0 ceiling and every one had room to move in both directions. Paired,
++same TRAIN/VALID/HELD split, same budget, same generator; the only variable is whether
++`win_transition` and `previous_level_complete_grid` were passed.
++
++**THE LIMITATION THAT MATTERS MOST, and it may invert the reading.** The metric is
++`WorldModelVerifier.score(engine)` -- DYNAMICS fidelity only. But the win exemplar's
++purpose is arguably the GOAL predicate (`is_level_complete`), not the transition function.
++This experiment did not score the goal predicate at all. So the honest statement is: the
++exemplar HURTS dynamics induction, and its effect on goal induction is UNMEASURED. It is
++entirely possible it helps the thing it was designed for while degrading the thing measured
++here. That follow-up is cheap and is the obvious next step on this axis.
++
++**Mechanism, hypothesis only, not measured.** The exemplar appends a large grid pair (1125
++to 3988 changed cells on the probed games) to an already-long induce prompt. Attention may
++shift from "learn the transition function" to "explain the win". Untested.
++
++**Scope limit, unchanged and load-bearing.** The exemplar comes from `replay_win_transition`,
++which replays a banked solve through the game's own `GameAdapter`. That is a DEVELOPMENT
++PROXY. A hidden game has no banked solve and no adapter, so this says nothing about whether
++the live agent can obtain an exemplar on a hidden level 1 -- on the live path one exists only
++from level 2 onward, captured from the agent's own play. n=4, far below the n>=30 bar.
++
++**Consequence for the standing diagnosis.** The empty win-exemplar slot was the best
++remaining explanation for why offline induction numbers sit near 0.38-0.5. Filling it does
++not raise them; it lowers them. So that hypothesis is dead as an explanation for the
++induction-quality wall, and the wall stands unexplained. Session tally on induction-adjacent
++levers: search structure null, sampling breadth null, goal gradient null, model architecture
++null, win exemplar NEGATIVE.
+diff --git a/results/experiment_6255_win_exemplar_induction_ab.json b/results/experiment_6255_win_exemplar_induction_ab.json
+new file mode 100644
+index 0000000000..b8c30c2ba5
+--- /dev/null
++++ b/results/experiment_6255_win_exemplar_induction_ab.json
+@@ -0,0 +1,87 @@
++{
++  "experiment": "experiment_6255_win_exemplar_induction_ab",
++  "title": "Win-exemplar induction A/B: does filling induce_prompt's win slot help?",
++  "run_date": "2026-08-12T11:04:50Z",
++  "roster": [
++    "dc22",
++    "cn04",
++    "ls20",
++    "s5i5"
++  ],
++  "per_game_results": [
++    {
++      "game": "dc22",
++      "win_exemplar_available": true,
++      "control_held": 0.8571,
++      "treatment_held": 0.4286,
++      "control_wall_s": 224.3,
++      "treatment_wall_s": 220.0,
++      "control_ok": true,
++      "treatment_ok": true,
++      "win_level": "0->1",
++      "delta": -0.4285
++    },
++    {
++      "game": "cn04",
++      "win_exemplar_available": true,
++      "control_held": 0.1468,
++      "treatment_held": 0.0373,
++      "control_wall_s": 188.7,
++      "treatment_wall_s": 408.2,
++      "control_ok": true,
++      "treatment_ok": true,
++      "win_level": "0->1",
++      "delta": -0.1095
++    },
++    {
++      "game": "ls20",
++      "win_exemplar_available": true,
++      "control_held": 0.9038,
++      "treatment_held": 0.0678,
++      "control_wall_s": 265.0,
++      "treatment_wall_s": 292.8,
++      "control_ok": true,
++      "treatment_ok": true,
++      "win_level": "0->1",
++      "delta": -0.836
++    },
++    {
++      "game": "s5i5",
++      "win_exemplar_available": true,
++      "control_held": 0.5083,
++      "treatment_held": 0.8917,
++      "control_wall_s": 227.8,
++      "treatment_wall_s": 250.3,
++      "control_ok": true,
++      "treatment_ok": true,
++      "win_level": "0->1",
++      "delta": 0.3834
++    }
++  ],
++  "n_games_comparable": 4,
++  "n_games_improved": 1,
++  "n_games_worse": 3,
++  "pooled_mean_delta": -0.2476,
++  "gate_condition": ">= 3 of the comparable games improve AND pooled delta > 0",
++  "gate_min_games_improved": 3,
++  "gate_met": false,
++  "why_this_was_never_measured": "collect_transitions yields no level-up under a salience-biased random walk (0 of 200 steps on dc22 and cn04), so every prior offline induction run passed neither win_transition nor previous_level_complete_grid",
++  "exemplar_source": "replay_win_transition: banked solve replayed through the game's GameAdapter",
++  "development_proxy_limit": "a hidden game has no banked solve and no adapter, so the LIVE agent cannot obtain an exemplar this way. On the live path it comes from the agent's own play and so exists from level 2 onward, never for level 1. A positive here means the prompt slot is worth filling WHEN an exemplar exists; it does not show the live agent can get one on a hidden level 1.",
++  "sample_size_note": "at most 4 games, far below the project's n>=30 bar for a percentage-point claim. Directional signal only.",
++  "solve_provenance": "development_proxy",
++  "arc_solve_claim": false,
++  "verifier_is_oracle": false,
++  "verifier_is_oracle_principle": "held-out change_fidelity is an oracle-distinct graded dynamics score, not the executable win-condition oracle; no level is claimed",
++  "inference_substrate": "live_llm_inference",
++  "model_specs": {
++    "generator": "unsloth/gemma-4-31B-it-qat-GGUF",
++    "quant": "UD-Q4_K_XL",
++    "kv_cache_quant": "q8_0",
++    "port": 8943
++  },
++  "random_seed": 6255,
++  "honest_verdict": "complete_win_exemplar_gate_not_met_1_improved_3_worse_of_4_pooled_delta_-0.2476",
++  "duration_s": 2103.001,
++  "reproducibility_checksum": "6127271c7ad542d9b26efa59bd8fa91ef70c312ebd501ac4be365f03f9348e68"
++}
+-- 
+2.55.0
+

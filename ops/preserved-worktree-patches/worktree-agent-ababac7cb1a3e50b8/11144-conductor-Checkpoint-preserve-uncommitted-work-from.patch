@@ -1,0 +1,761 @@
+From bcf0b4d00b98501796ac3add1bf0f3631bee99c5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 23:52:11 -0400
+Subject: [PATCH 11144/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json |   2 +-
+ ops/conductor-log.md         |   2 +
+ ops/conductor-state.json     |   2 +-
+ research-roadmap-next.yaml   | 709 -----------------------------------
+ 4 files changed, 4 insertions(+), 711 deletions(-)
+ delete mode 100644 research-roadmap-next.yaml
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8cfa3e644f..908cd1a1b1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 58, "phase": "iteration_start", "last_beat": "2026-09-05T02:22:47Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 60, "phase": "iteration_start", "last_beat": "2026-09-05T03:52:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e5e14e1662..16828776ea 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17302,3 +17302,5 @@ code |
+ | 2026-09-05 01:57 UTC | Z1T sparse scorer placement receipt | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7000-certified-blinded-pwa-kan) |
+ | 2026-09-05 01:57 UTC | Z1T substrate partition recomputation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7006-z1t-sparse-placement) |
+ | 2026-09-05 02:20 UTC | V613 independent evidence capstone and V614 handof | OK | 112 passed, 1 warning in 8.06s |
++| 2026-09-05 03:47 UTC | Plan milestone 2026.09.614 | OK | 7 tasks proposed |
++| 2026-09-05 03:50 UTC | Milestone 2026.09.614 activated | OK | 7 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3eb7ca6a7d..94535e8659 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 58, "phase": "iteration_start", "started_at": "2026-09-05T02:22:47Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 60, "phase": "iteration_start", "started_at": "2026-09-05T03:52:02Z"}
+\ No newline at end of file
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+deleted file mode 100644
+index f74c9a3ffb..0000000000
+--- a/research-roadmap-next.yaml
++++ /dev/null
+@@ -1,709 +0,0 @@
+-milestone: 2026.09.614
+-milestone_title: Causal pair energy, belief-state self-learning, and live ARC selection
+-milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+-tasks:
+-- id: exp7009-v614-source-contract-preflight
+-  title: V614 source delta and task-contract preflight
+-  track: infrastructure
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: false
+-  max_turns: 100
+-  estimated_wall_time_min: 90
+-  per_unit_rows: true
+-  milestone: 2026.09.614
+-  deliverable: results/experiment_7009_v614_source_contract_preflight.json
+-  prior_failures:
+-    - experiment_id: exp6942-v608-contract-preflight
+-      verdict: blocked_v608_contract_preflight
+-      addressed_by: "Exp7009 audits a frozen 14-task contract after the reference delta and validates every producer field, model rule, prompt tail, and exclusion entry before activation."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    V613 completed all 13 slots with an honest terminal null. Its pointwise
+-    feature bank was disqualified because mutation metadata alone reached
+-    AUROC 0.9537. V614 contains exactly 14 tasks, exp7009 through exp7022, and
+-    changes the evidence unit to exact intervention pairs plus a separate ARC
+-    belief-state branch. This advisory infrastructure task freezes the source
+-    delta and independently checks the executable contract.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md
+-    - {project_root}/_bmad/prd.md
+-    - {project_root}/_bmad/architecture.md
+-    - {project_root}/research-references.md V614 Planner Refresh
+-    - {project_root}/research-roadmap-next.yaml
+-    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+-    - {project_root}/results/experiment_7008_v613_capstone.json
+-    - {project_root}/ops/exclusion_manifest.yaml
+-    - {project_root}/scripts/conductor_gates.py
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Run a bounded post-planner source delta and build an independent V614
+-    Markdown-YAML preflight. Verify exact task count and order, titles,
+-    deliverables, gates and producers, model declarations, prior-failure
+-    discipline, comparative rows, artifact fields, and prompt tails. Report
+-    findings without activating a roadmap or editing the conductor.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require readable V614 Markdown and YAML, the V613
+-       capstone, reference marker, exclusion manifest, network access, and a
+-       writable artifact path. On failure write blocked_v614_contract_preflight
+-       with gate_check_summary; an external block is terminal, not partial.
+-    1. Add REQ-REPORT-7009 and RED tests before implementation. Cover exact
+-       count 14, ordered IDs exp7009-exp7022, title and deliverable parity,
+-       gate parity, producer spelling, prior-failure schema, MODEL_SPECS,
+-       verdict_class, per-unit declarations, and prompt-tail requirements.
+-    2. Recheck arXiv, OpenReview, Hugging Face Papers, Semantic Scholar routes
+-       for EBT 2507.02092 and ARM-EBM 2512.15605, Extropic writing, GitHub, and
+-       Logical Intelligence. Preserve query, URL, publication/update date, and
+-       access outcome. Append only genuinely new post-marker evidence.
+-    3. Parse the Markdown task table and YAML independently. Require milestone
+-       2026.09.614, exactly 14 tasks, and exact ordered IDs exp7009-exp7022.
+-       Compare every exact title, deliverable, and structured gate.
+-    4. Prove every gated_on upstream occurs earlier in this roadmap and names
+-       a bare top-level field required by that upstream prompt with identical
+-       spelling. Reject cross-milestone or missing producers.
+-    5. Check every task for verdict_class, blocked gate_check_summary,
+-       field_principles, reproducibility fields, legal inference_substrate,
+-       and per_unit_rows=true for every comparative claim.
+-    6. Check that every matching failed scope has all four prior_failures
+-       fields, no retired ID is reused, no task requires a retired task, and
+-       the capstone is structurally ungated.
+-    7. Check every LLM task includes a mandated SOTA GGUF. Confirm Exp7013
+-       declares all three required families and Exp7021 declares at least
+-       Qwen3.6-35B-A3B. Legacy small models must be smoke-only.
+-    8. Set v614_source_delta_complete_score=1 when every requested source route
+-       has a terminal row. Set v614_task_contract_conforms_score=1 only when
+-       all 14 contract rows agree and every producer resolves. A mismatch is
+-       disqualified and must not be repaired silently by this task.
+-    9. Run focused tests, YAML parsing, artifact validation, adversarial
+-       verification, row-consistency lint, OpenSpec coverage, and root-clutter
+-       checks. Reconcile the requirement and reporting docs you change.
+-    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle for every field below; preconditions_checked;
+-        inference_substrate (deterministic_source_contract_audit_no_llm);
+-        duration_s; source_artifact_hashes; source_query_rows;
+-        primary_source_rows; secondary_source_rows; semantic_scholar_rows;
+-        post_marker_delta_rows; reference_append_rows; rows;
+-        markdown_task_rows; yaml_task_rows; task_contract_rows;
+-        title_parity_rows; deliverable_parity_rows; gate_contract_rows;
+-        gate_producer_rows; prior_failure_rows; retired_id_rows;
+-        model_compliance_rows; artifact_field_rows; prompt_tail_rows;
+-        command_receipt_rows; expected_task_count (14); observed_task_count;
+-        expected_id_order; observed_id_order;
+-        v614_source_delta_complete_score;
+-        v614_task_contract_conforms_score; random_seed;
+-        reproducibility_checksum; gate_check_summary with failed check,
+-        expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (false); verdict_class
+-        (positive | circular_positive | null | blocked | disqualified | partial);
+-        honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7009_v614_source_contract_preflight.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7010-arc-eval-provenance-contract
+-  title: ARC evaluation hardware and context provenance contract
+-  track: infrastructure
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: false
+-  max_turns: 100
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.614
+-  deliverable: results/experiment_7010_arc_eval_provenance_contract.json
+-  prior_failures:
+-    - experiment_id: exp6968-arc-post-refit-induction-audit
+-      verdict: blocked_arc_post_refit_induction_audit
+-      addressed_by: "Exp7010 repairs the producer-consumer schema before evaluation, adds deterministic acceptance and rejection fixtures, and does not depend on the absent post-refit artifact that blocked Exp6968."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    V613 found that recent ARC evaluation artifacts omit some combination of
+-    GPU identity, model hash, n_ctx, server binary, lease, completion counters,
+-    and solve provenance. Existing helper code captures part of the contract,
+-    but producers and consumers do not require one complete top-level schema.
+-    V614 must fix that forward contract before its live A/B.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/ops/e2e-test-plan.md
+-    - {project_root}/python/carnot/agentic/arc_eval_provenance.py
+-    - {project_root}/python/carnot/agentic/arc_producer_evidence.py
+-    - {project_root}/scripts/arc_leaderboard_eval.py
+-    - {project_root}/python/carnot/agentic/arc_live_runner_capability_lease.py
+-    - {project_root}/python/carnot/agentic/arc_live_runner_execution_binding.py
+-    - {project_root}/results/experiment_6993_arc_producer_evidence_contract.json
+-    - {project_root}/results/experiment_7005_arc_live_envelope_audit.json
+-    - {project_root}/openspec/capabilities/arc-agi/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Define and wire one forward ARC evaluation provenance contract used by
+-    producers, persisted rows, and consumers. Require complete hardware,
+-    model, context, server, lease, completion, policy, factory, and solve
+-    provenance. Add deterministic fixtures and rejection tests without
+-    rewriting historical artifacts.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the current provenance helper, leaderboard
+-       producer, live lease/binding modules, relevant specs, and writable code,
+-       tests, and artifact paths. On failure write blocked_arc_eval_provenance_contract
+-       with gate_check_summary.
+-    1. Add REQ-ARC-7010 and RED tests before implementation. Cover absent,
+-       null, malformed, aliased, and contradictory fields; CPU/no-LLM rows;
+-       CUDA rows; partial requests; port reuse; stale leases; and all three
+-       solve_provenance enum values.
+-    2. Define one typed builder and validator. For every live evaluation row
+-       require GPU UUID/model, CUDA device, model repository/filename/hash,
+-       n_ctx, server binary/command hash, endpoint/port, lease identity,
+-       request/completion/error counters, policy/factory hashes, git commit,
+-       and solve_provenance.
+-    3. Wire the builder at the producer boundary and validation at artifact
+-       consumption. Do not infer missing values from filenames or backfill old
+-       results. Missing required live fields must reject headline eligibility.
+-    4. Preserve legal no-LLM evaluation rows with explicit not_applicable
+-       values and a no-LLM substrate. Never attach a GGUF or CUDA claim to a
+-       path that did not invoke it.
+-    5. Emit one accepted deterministic live-shaped fixture and rejection
+-       fixtures for every required field. Prove producer-consumer key parity
+-       and stable hashes in a fresh process.
+-    6. Set arc_eval_provenance_contract_ready_score=1 only when both producer
+-       and consumer use the same schema, all rejection fixtures fail closed,
+-       the accepted fixture round-trips, and solve_provenance is present on
+-       every evaluation row.
+-    7. Run focused tests, Ruff, artifact validation, adversarial verification,
+-       row-consistency lint, OpenSpec coverage, worktree-import guard, harness
+-       integrity lint, and applicable ARC E2E checks. Reconcile specs and ops
+-       docs for the code changed.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below and the bare field
+-       arc_eval_provenance_contract_ready_score; preconditions_checked;
+-       inference_substrate (deterministic_arc_provenance_contract_no_llm);
+-       duration_s; source_artifact_hashes; schema_version; required_key_rows;
+-       producer_wiring_rows; consumer_wiring_rows; rows; accepted_fixture_rows;
+-       rejected_fixture_rows; gpu_identity_rows; model_provenance_rows;
+-       context_rows; server_rows; lease_rows; completion_counter_rows;
+-       policy_factory_rows; solve_provenance_rows; missing_field_rows;
+-       alias_rejection_rows; historical_artifacts_modified (false);
+-       command_receipt_rows; arc_eval_provenance_contract_ready_score;
+-       random_seed; reproducibility_checksum; gate_check_summary with failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7010_arc_eval_provenance_contract.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7011-v614-sota-ingestion
+-  title: V614 pairwise-verifier and belief-model SOTA ingestion
+-  track: research
+-  priority: high
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 30
+-  estimated_wall_time_min: 90
+-  per_unit_rows: true
+-  milestone: 2026.09.614
+-  deliverable: results/experiment_7011_v614_sota_ingestion.json
+-  prompt: |
+-    CONTEXT:
+-    The V614 planner selected BB-WM, HIPPO, BatchSum reward regularization,
+-    IntroConformal as a watch item, and Extropic's newly public Z1T software.
+-    This execution-time ingestion task verifies primary artifacts and maps only
+-    implementable mechanisms to Carnot modules. It prevents headline claims
+-    from drifting beyond what the sources or local hardware support.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md
+-    - {project_root}/research-references.md V614 Planner Refresh
+-    - {project_root}/research-hardware-wishlist.md
+-    - {project_root}/python/carnot/agentic/arc_pinductor.py
+-    - {project_root}/python/carnot/agentic/arc_invariant_memory.py
+-    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Verify the V614 primary-source and public-code delta and write a bounded
+-    method-to-module ingestion map for pair-anchored constraint responses,
+-    pair-centered energy regularization, game-blind belief state, and Z1T
+-    software. Record unsupported prerequisites and non-claims explicitly.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require network access, the V614 reference marker,
+-       readable target modules/specs, and a writable artifact path. On failure
+-       write blocked_v614_sota_ingestion with gate_check_summary.
+-    1. Add REQ-REPORT-7011 and RED tests for source URL, publication/update
+-       date, access outcome, public-code commit or release identity, method
+-       extraction, target-module mapping, unsupported dependency, and non-claim.
+-    2. Open the primary arXiv/OpenReview pages and public repositories for
+-       BB-WM 2609.00455, HIPPO 2606.29481, BatchSum Tf4lRAOGkj,
+-       IntroConformal 2609.01375, and Z1T. Do not use search snippets as facts.
+-    3. Record which mechanisms can be implemented with current GGUF outputs
+-       and ARC transitions. Separate direct adaptation, architectural analogy,
+-       watch-only dependency, and unsupported hardware claim.
+-    4. Map each accepted mechanism to named Carnot modules, required inputs,
+-       leakage boundary, control arm, and falsification test. Keep exact
+-       authorities external to learner inputs.
+-    5. Recheck EBT and ARM-EBM citation routes and current Kona material.
+-       Preserve rate limits or absent public artifacts as terminal access rows;
+-       do not invent citation counts or implementation availability.
+-    6. Append a dated post-marker note to research-references.md only if a
+-       primary artifact changed after planning. Otherwise record no_change.
+-    7. Set v614_sota_ingestion_complete_score=1 when every selected source has
+-       a terminal verification row and every accepted method has a bounded
+-       module/control/falsification mapping.
+-    8. Run focused tests, Ruff where applicable, artifact validation,
+-       adversarial verification, row-consistency lint, OpenSpec coverage, and
+-       root-clutter checks. Reconcile reporting docs changed by the task.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below and the bare field
+-       v614_sota_ingestion_complete_score; preconditions_checked;
+-       inference_substrate (deterministic_primary_source_ingestion_no_llm);
+-       duration_s; source_query_rows; primary_source_rows; repository_rows;
+-       release_identity_rows; method_rows; method_to_module_rows;
+-       leakage_boundary_rows; control_rows; falsification_rows;
+-       unsupported_dependency_rows; non_claim_rows; secondary_check_rows;
+-       reference_append_rows; rows; command_receipt_rows;
+-       v614_sota_ingestion_complete_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7011_v614_sota_ingestion.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7012-exact-intervention-pair-fixture
+-  title: Exact minimal constraint-intervention pair fixture
+-  track: infrastructure
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.614
+-  deliverable: results/experiment_7012_exact_intervention_pair_fixture.json
+-  prior_failures:
+-    - experiment_id: exp6999-blinded-feature-cold-audit
+-      verdict: complete_disqualified_blinded_feature_shortcut_gate
+-      addressed_by: "Exp7012 changes the causal unit from absolute candidate rows to exact minimal intervention blocks whose mutation, serialization, length, and source metadata are balanced within each block and excluded from learner input."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    V613's absolute feature bank remained shortcut-predictive even after an
+-    authority sidecar. V614 adopts exact minimal interventions as matched
+-    causal units. Every block must hold nuisance variables fixed and preserve
+-    exact authority labels outside the learner view before any model scoring.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_6984_exact_contrast_fixture.json
+-    - {project_root}/results/experiment_6997_authority_sidecar_rebuild.json
+-    - {project_root}/results/experiment_6999_blinded_feature_cold_audit.json
+-    - {project_root}/scripts/experiments/experiment_6984_exact_contrast_fixture.py
+-    - {project_root}/python/carnot/experiment_6984_exact_contrast_fixture.py
+-    - {project_root}/python/carnot/verifiers
+-    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Build and freeze at least 48 exact minimal constraint-intervention pairs
+-    across at least four source families. Balance mutation, serialization,
+-    length, source bookkeeping, and label prevalence within matched blocks.
+-    Emit a feature-free learner fixture and hashed authority sidecar.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require at least four executable authority families,
+-       deterministic mutation and isomorphism support, and writable immutable
+-       fixture paths. On failure write blocked_intervention_pair_fixture with
+-       gate_check_summary.
+-    1. Add REQ-VERIFY-7012 and RED tests before implementation. Cover no-op and
+-       multi-edit mutations, ambiguous authority outcomes, nonminimal repairs,
+-       invalid isomorphisms, duplicate semantic keys, label imbalance, length
+-       mismatch, metadata aliases, row reordering, and sidecar leakage.
+-    2. For each source family build matched blocks with a clean candidate, one
+-       single-edit exact violation or repair, and an isomorphic surface variant.
+-       Prove minimality by edit distance and exact authority witnesses.
+-    3. Freeze at least 48 primary intervention pairs and source-group train,
+-       calibration, held-source, and sealed-headroom partitions before scoring.
+-       Do not split rows from one block across partitions.
+-    4. Balance mutation kind, serialization template, token/character length,
+-       source bookkeeping, candidate order, and label prevalence inside blocks.
+-       Preserve every rejected or unbalanced block as a row.
+-    5. Emit learner prompts keyed only by semantic content and neutral block
+-       position. Put exact labels, source family, split, mutation kind,
+-       witnesses, and authority records in a separately hashed sidecar.
+-    6. Replay every authority and isomorphism in a network-disabled fresh
+-       process. Require byte-stable learner prompts under sidecar permutation,
+-       replacement, deletion, and alpha-renaming.
+-    7. Set intervention_pair_fixture_ready_score=1 only when counts and family
+-       coverage pass, every accepted intervention is exact and minimal,
+-       nuisance balance passes, and no prohibited field reaches learner input.
+-       Because exact authorities define the fixture, a ready verdict is
+-       circular_positive, not positive.
+-    8. Run focused tests, Ruff, artifact validation, adversarial verification,
+-       row-consistency lint, OpenSpec coverage, and root-clutter checks.
+-       Reconcile the requirement and reporting docs you change.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below and the bare field
+-       intervention_pair_fixture_ready_score; preconditions_checked;
+-       inference_substrate (deterministic_exact_pair_fixture_no_llm);
+-       duration_s; source_artifact_hashes; authority_family_rows; rows;
+-       pair_rows; block_rows; rejected_block_rows; intervention_rows;
+-       minimality_rows; authority_witness_rows; isomorphism_rows;
+-       nuisance_balance_rows; label_balance_rows; length_balance_rows;
+-       serialization_balance_rows; group_split_rows; learner_prompt_path;
+-       learner_prompt_hash; authority_sidecar_path; authority_sidecar_hash;
+-       sidecar_intervention_rows; prohibited_feature_rows;
+-       expected_pair_count (48); observed_pair_count;
+-       expected_family_count (4); observed_family_count;
+-       intervention_pair_fixture_ready_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (true); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7012_exact_intervention_pair_fixture.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7013-three-family-intervention-surface
+-  title: Three-family exact intervention response surface
+-  track: inference
+-  priority: critical
+-  agent_type: claude
+-  model: sonnet
+-  requires_gpu: true
+-  max_turns: 50
+-  estimated_wall_time_min: 360
+-  per_unit_rows: true
+-  milestone: 2026.09.614
+-  deliverable: results/experiment_7013_three_family_intervention_surface.json
+-  gated_on:
+-    - upstream: exp7012-exact-intervention-pair-fixture
+-      artifact_field: intervention_pair_fixture_ready_score
+-      op: '=='
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp6998-three-family-commitment-controls
+-      verdict: complete_null_shortcut_commitment_not_detected
+-      addressed_by: "Exp7013 discards self-commitment timing and instead measures teacher-forced signed responses to exact minimal violations, repairs, and isomorphic controls at matched token positions."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7012 freezes exact, metadata-balanced intervention pairs. V613 found no
+-    useful self-commitment effect across the required SOTA families. This task
+-    changes the measured signal to the signed teacher-forced response caused by
+-    one exact constraint intervention. Labels remain sealed until responses
+-    and checksums are frozen.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/scripts/experiment_template.py cached_sota_pair docstring
+-    - {project_root}/results/experiment_7012_exact_intervention_pair_fixture.json
+-    - {project_root}/results/experiment_6998_three_family_commitment_controls.json
+-    - {project_root}/results/experiment_6986_three_family_contrast_features.json
+-    - {project_root}/scripts/experiments/experiment_6998_three_family_commitment_controls.py
+-    - {project_root}/python/carnot/llm_runtime.py
+-    - {project_root}/openspec/capabilities/energy-verification/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Score every frozen intervention block with all three mandated local GGUF
+-    families. Measure signed teacher-forced response changes for clean,
+-    minimal-violation, minimal-repair, and isomorphic conditions using matched
+-    prompts and positions. Freeze model outputs before opening labels.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require Exp7012 readiness, all frozen prompt/sidecar
+-       hashes, cached mandated GGUF files, CUDA llama.cpp health, one owned GPU
+-       lease, enough VRAM, and writable output paths. On failure write
+-       blocked_intervention_surface with gate_check_summary.
+-    1. Add REQ-ENERGY-7013 and RED tests before implementation. Cover missing
+-       family, CPU fallback, stale server, non-owned process, prompt mismatch,
+-       token-position drift, label access before freeze, duplicate rows, null
+-       logits, teardown failure, and implausible duration.
+-    2. MODEL_SPECS must include all three headline families:
+-       unsloth/Qwen3.6-35B-A3B-GGUF,
+-       unsloth/gemma-4-31B-it-GGUF, and
+-       unsloth/gemma-4-26B-A4B-it-GGUF. Legacy models are prohibited except an
+-       explicitly non-headline CPU smoke that cannot populate result rows.
+-    3. Acquire the conductor GPU lease and run one family at a time. Record
+-       model repository, filename, quantization, file hash, llama binary and
+-       command hash, GPU UUID/device, n_ctx, port, PID ownership, request and
+-       completion counters, timing, teardown, and foreign-process snapshots.
+-    4. Use identical semantic prompts and aligned scoring positions within
+-       each block. Record teacher-forced sequence log-likelihood and normalized
+-       signed clean-to-violation, clean-to-repair, and isomorphic deltas.
+-    5. Prohibit commitment timing, rationales, self-grades, source IDs,
+-       mutation kind, split, authority witnesses, and labels from response
+-       features. The task may open the sidecar only after all raw response
+-       rows and a freeze manifest are hashed.
+-    6. Report every pair and family, including failures and ties. Recompute
+-       direction by family and held source group with paired intervals; do not
+-       pool away a family reversal.
+-    7. Set intervention_surface_complete_score=1 when every expected
+-       pair-family-condition cell has a terminal row, all three families have
+-       authentic CUDA receipts, prompts/positions match, and the label-open
+-       timestamp follows the response freeze. Scientific direction may be null.
+-    8. Run focused tests, Ruff, artifact validation, adversarial verification,
+-       row-consistency lint, OpenSpec coverage, GPU cleanup checks, and
+-       root-clutter checks. Reconcile specs and ops docs changed.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below and the bare field
+-       intervention_surface_complete_score; preconditions_checked;
+-       inference_substrate (live_llm_inference); duration_s; MODEL_SPECS;
+-       model_rows; model_file_hashes; llama_binary_hash; command_hash;
+-       gpu_identity_rows; gpu_lease_rows; server_rows; request_counter_rows;
+-       completion_counter_rows; teardown_rows; source_artifact_hashes;
+-       prompt_freeze_hash; response_freeze_hash; label_opened_at;
+-       response_frozen_at; rows; per_pair_results; condition_rows;
+-       token_position_rows; signed_response_rows; family_effect_rows;
+-       held_source_effect_rows; tie_rows; failed_cell_rows;
+-       prohibited_feature_rows; expected_family_count (3);
+-       observed_family_count; expected_pair_count; observed_pair_count;
+-       intervention_surface_complete_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7013_three_family_intervention_surface.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7014-causal-feature-cold-audit
+-  title: Cold causal identifiability and shortcut audit
+-  track: audit
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 150
+-  per_unit_rows: true
+-  milestone: 2026.09.614
+-  deliverable: results/experiment_7014_causal_feature_cold_audit.json
+-  gated_on:
+-    - upstream: exp7012-exact-intervention-pair-fixture
+-      artifact_field: intervention_pair_fixture_ready_score
+-      op: '=='
+-      value: 1
+-    - upstream: exp7013-three-family-intervention-surface
+-      artifact_field: intervention_surface_complete_score
+-      op: '=='
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp6999-blinded-feature-cold-audit
+-      verdict: complete_disqualified_blinded_feature_shortcut_gate
+-      addressed_by: "Exp7014 audits signed within-pair responses with balanced nuisances, explicit isomorphic invariance, and norm/magnitude controls instead of V613's shortcut-predictive absolute table."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    The pair fixture and three-family response surface do not become admissible
+-    merely because they are paired. This cold task must independently prove
+-    that signed responses are causally identifiable and that metadata, length,
+-    serialization, model identity, score norm, or magnitude cannot substitute
+-    for the exact intervention.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_7012_exact_intervention_pair_fixture.json
+-    - {project_root}/results/experiment_7013_three_family_intervention_surface.json
+-    - {project_root}/results/experiment_6999_blinded_feature_cold_audit.json
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+-    - {project_root}/openspec/capabilities/energy-verification/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Rebuild the causal learner matrix in a fresh read-only process. Audit exact
+-    leakage, sidecar invariance, nuisance-only prediction, isomorphic stability,
+-    and signed-effect identifiability by model and held source. Release one
+-    bare readiness field or disqualify the bank.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require Exp7012 readiness, Exp7013 completion, immutable
+-       prompt/response/sidecar hashes, and a network-disabled fresh process.
+-       On failure write blocked_causal_feature_audit with gate_check_summary.
+-    1. Add REQ-VERIFY-7014 and RED tests before implementation. Cover direct
+-       labels, aliases, nested provenance, row keys, serialization, length,
+-       mutation kind, source, split, model identity, norm, magnitude, hash
+-       mismatch, sidecar access, and incomplete family cells.
+-    2. Recompute every learner tensor from signed response rows only. Permute,
+-       replace, delete, and alpha-rename the sidecar; require byte-identical
+-       tensors and reference predictions.
+-    3. Fit grouped prohibited-feature probes for metadata, serialization,
+-       length, mutation/source/split, row ordering, model ID, norm-only, and
+-       magnitude-only inputs. Bootstrap by block and source, never by row.
+-    4. Recompute clean-to-violation and clean-to-repair signs independently for
+-       each mandated family and held source group. Test isomorphic variants for
+-       invariant direction within the frozen tolerance.
+-    5. Require direct_leakage_count=0; every prohibited metadata-only AUROC
+-       upper 95% bound <0.80; isomorphic invariance pass; and identifiable
+-       signed direction on at least two of three mandated families. Preserve
+-       every row behind aggregate claims.
+-    6. Set causal_bank_audit_complete_score=1 after all checks have terminal
+-       rows. Set causal_feature_bank_ready_score=1 only when every release rule
+-       passes. A leakage failure is disqualified; absent signed direction is
+-       null. Do not tune thresholds after viewing held rows.
+-    7. Run focused tests, Ruff, artifact validation, adversarial verification,
+-       row-consistency lint, OpenSpec coverage, and root-clutter checks.
+-       Reconcile the specs and ops docs you change.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below and the bare fields
+-       causal_bank_audit_complete_score and causal_feature_bank_ready_score;
+-       preconditions_checked; inference_substrate
+-       (fresh_process_causal_feature_audit_no_llm); duration_s;
+-       source_artifact_hashes; replay_hash_rows; rows; per_pair_results;
+-       learner_tensor_rows; sidecar_intervention_rows; direct_leakage_rows;
+-       metadata_probe_rows; serialization_probe_rows; length_probe_rows;
+-       mutation_probe_rows; source_probe_rows; split_probe_rows;
+-       model_identity_probe_rows; norm_only_probe_rows;
+-       magnitude_only_probe_rows; grouped_bootstrap_rows;
+-       isomorphic_invariance_rows; family_identifiability_rows;
+-       held_source_identifiability_rows; direct_leakage_count;
+-       prohibited_auroc_upper_bound_max; identifiable_family_count;
+-       causal_bank_audit_complete_score; causal_feature_bank_ready_score;
+-       random_seed; reproducibility_checksum; gate_check_summary with failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7014_causal_feature_cold_audit.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7015-pair-centered-pwa-kan
+-  title: BatchSum pair-centered PWA-KAN energy
+-  track: verification
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 240
+-  per_unit_rows: true
+-  milestone: 2026.09.614
+-  deliverable: results/experiment_7015_pair_centered_pwa_kan.json
+-  gated_on:
+-    - upstream: exp7014-causal-feature-cold-audit
+-      artifact_field: causal_feature_bank_ready_score
+-      op: '=='
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp6988-certified-pwa-kan-ranker
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "Exp7015 replaces the unreleased pointwise bank with an independently released signed intervention bank and adds pair centering, source-group splits, and BatchSum norm/magnitude controls."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp7000-certified-blinded-pwa-kan
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "Exp7000 inherited V613's disqualified absolute feature view. Exp7015 has a new same-milestone causal release gate and trains only on within-pair response differences."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7014 is the sole release gate for a new causal response bank. If it
+-    passes, this task tests whether pair-centered PWA-KAN energy adds useful
+-    prospective ranking rather than score magnitude or norm. Exact authorities
+-    may provide train labels and post-selection evaluation but never appear in
+-    features or selection calls.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_7014_causal_feature_cold_audit.json
+-    - {project_root}/results/experiment_6988_certified_pwa_kan_ranker.json
+-    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
+-    - {project_root}/python/carnot/ebm
+-    - {project_root}/python/carnot/verification
+-    - {project_root}/openspec/capabilities/kan-verifier/spec.md
+-    - {project_root}/openspec/capabilities/energy-verification/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Train and freeze a compact pair-centered PWA-KAN using signed causal
+-    responses only. Add a BatchSum-style sum-to-zero penalty and compare paired
+-    logistic, size-matched MLP, absolute-score, norm-only, and magnitude-only
+-    controls under source-group splits.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require causal_feature_bank_ready_score=1, immutable
+-       learner rows and authority joins, train/calibration/held-source group
+-       partitions, and available MILP support. On failure write
+-       blocked_pair_centered_pwa_kan with gate_check_summary.
+-    1. Add REQ-KAN-7015 and RED tests before implementation. Cover sidecar
+-       access, authority use during predict, pair splitting, zero-headroom
+-       blocks, sum-to-zero violation, model-size mismatch, held-row fitting,
+-       norm/magnitude shortcuts, nondeterminism, and invalid PWA bounds.
+-    2. Materialize the feature matrix before joining train labels. Use only
+-       signed within-pair features. Freeze source-group partitions and forbid
+-       train/calibration leakage into sealed headroom groups.
+-    3. Train constant/fixed, paired logistic, size-matched MLP, absolute-score,
+-       norm-only, magnitude-only, and compact PWA-KAN arms. Apply pair centering
+-       and a frozen BatchSum-style sum-to-zero penalty to eligible learned arms.
+-    4. Choose hyperparameters on calibration groups only. Freeze model weights,
+-       feature allowlist, PWA abstraction, calibration decision, and selection
+-       API before opening any held label.
+-    5. Use a real MILP solver to check frozen-domain PWA consistency, feature
+-       bounds, irrelevant-field invariance, and local Lipschitz claims. Preserve
+-       solver status, objective, timeout, and counterexample rows.
+-    6. The selection API accepts learner tensors only and must fail if given an
+-       authority, label, sidecar, source, mutation, or split object. Exact
+-       execution is an evaluator and ceiling after selections are frozen.
+-    7. Set pairwise_energy_fit_complete_score=1 when all arms and certificates
+-       have terminal rows. Set pairwise_energy_model_ready_score=1 only when the
+-       PWA-KAN passes the frozen leakage, certificate, calibration, and control
+-       rules. Readiness does not itself claim prospective superiority.
+-    8. Run focused tests, Ruff, artifact validation, adversarial verification,
+-       row-consistency lint, OpenSpec coverage, and root-clutter checks.
+-       Reconcile specs and ops docs changed.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below and the bare fields
+-       pairwise_energy_fit_complete_score and
+-       pairwise_energy_model_ready_score; preconditions_checked;
+-       inference_substrate (deterministic_pairwise_energy_training_no_llm);
+-       duration_s; source_artifact_hashes; feature_allowlist;
+-       group_split_rows; rows; per_pair_results; training_rows;
+-       calibration_rows; model_arm_rows; parameter_count_rows;
+-       batchsum_penalty_rows; pair_centering_rows; control_rows;
+-       norm_only_rows; magnitude_only_rows; held_selection_freeze_rows;
+-       authority_denial_rows; pwa_abstraction_path; pwa_abstraction_hash;
+-       milp_certificate_rows; counterexample_rows; model_hashes;
+-       pairwise_energy_fit_complete_score;
+-       pairwise_energy_model_ready_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7015_pair_centered_pwa_kan.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-- 
+2.55.0
+

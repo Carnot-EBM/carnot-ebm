@@ -1,0 +1,1427 @@
+From 4e0a9209cd3bc415b809e5aba3c44f2ae929c955 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 02:29:38 -0400
+Subject: [PATCH 03525/11362] [conductor] PHASE A3 (ARC NORTH STAR; operator
+ MANDATORY; LEVEL-UP ATTEMPT GUARANTEE + SELF-PLAY EVERY MILESTONE) -- run the
+ standing self-play loop (arc_loop_solve --auto or a rotation target) to bank
+ +1 NEW reproducible level on a game NOT deepened in .421-.424 (ft09 was .424,
+ ar25 .423, cn04 .422, m0r0 .421; PREFER sk48 L1->L2 [graph/world-model
+ family, closest to the proven graph_astar primitive], else another shallow L1
+ game; SKIP ka59 [hidden-register stall] / cd82-L3 / sp80-L3 / su15-L3
+ dead-ends) AND train+checkpoint the learned verifier on pos/neg traces. Gate:
+ offline_reproduced new level -> reproducible_total_levels 55 -> 56+.
+
+Automated research step by research conductor.
+Task ID: exp4606-a3
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ models/arc_verifier_dc22.json                 |  20 +
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/agentic/arc_game_adapters.py    |  71 +++-
+ .../experiment_4606_levelup_selfplay.py       | 363 ++++++++++++++++
+ results/arc_loop_solve_dc22.json              | 268 +++++++++++-
+ results/experiment_4606_levelup_selfplay.json | 154 +++++++
+ .../test_experiment_4606_levelup_selfplay.py  | 393 ++++++++++++++++++
+ 8 files changed, 1245 insertions(+), 29 deletions(-)
+ create mode 100644 models/arc_verifier_dc22.json
+ create mode 100644 python/carnot/experiment_4606_levelup_selfplay.py
+ create mode 100644 results/experiment_4606_levelup_selfplay.json
+ create mode 100644 tests/python/test_experiment_4606_levelup_selfplay.py
+
+diff --git a/models/arc_verifier_dc22.json b/models/arc_verifier_dc22.json
+new file mode 100644
+index 0000000000..2fe9be11a4
+--- /dev/null
++++ b/models/arc_verifier_dc22.json
+@@ -0,0 +1,20 @@
++{
++  "schema": "carnot_arc_learned_verifier_v1",
++  "kind": "linear_value_head",
++  "weights": [
++    -1.0589315987888395,
++    -1.3574394812056023,
++    1.1535231667383714,
++    -2.655224487913816,
++    0.9146697588190013,
++    -0.6776265482341612,
++    0.7197003861319974,
++    -0.14323134229936205
++  ],
++  "feature_names": "adapter_featurize",
++  "trained_games": [
++    "dc22"
++  ],
++  "n_samples": 71,
++  "provenance": "arc_loop_solve dc22->L2"
++}
+\ No newline at end of file
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index d72336822e..8176c24a48 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -261,3 +261,6 @@
+ - REQ-CAPSTONE-4602: The .424 capstone must aggregate the milestone artifacts Exp4592 through Exp4598 plus `ops/arc_solve_registry.yaml` and `results/arc3_live_submit.json` through the Reading-Results discipline. It SHALL run or use `scripts/summarize_artifact.py` live flags before importing any headline metric, skip every `flagged_adversarial:true` or live-critical upstream except the mechanical control==best explicit null-delta TAUTOLOGY carve-out for diagnosis-only context, honor the offline-ARC methodology and learned-CNN duration guards so fast offline artifacts are not excluded merely for duration or missing model specs, treat positive-control-failed or false-negative-risk-open nulls as broken-test signals rather than clean nulls, and treat failed acceptance gates as overriding celebratory verdicts. The capstone SHALL answer whether A1 wiring cleanly raised `winner_generated_rate` strictly above `1/25` and `generic_transfer_rate_over_variants` strictly above `0.04`, whether A3 goal energy helped the residual classes, whether A2 grew reproducible capability from 54 to at least 55, whether A4 is operator-resubmit-ready above the 33-level scorecard, and whether A6/B1 cleanly move any submitted metric. It SHALL write `results/experiment_4602_capstone_v424.json` and SHALL NOT submit to the leaderboard or modify `scripts/research_conductor.py`.
+ - SCENARIO-CAPSTONE-4602: The artifact `results/experiment_4602_capstone_v424.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `winner_generated_moved`, `generic_transfer_moved`, `goal_energy_helped`, `reproducible_total_levels_delta`, `live_submittable_level_count`, `winner_generated_rate`, `action_efficiency_score`, `generic_transfer_rate_over_variants`, `verifier_is_oracle_distinct_levers`, `flagged_artifacts_handled`, `cited_upstream_artifacts`, `ready_for_operator_submit`, and `preconditions_checked`; it must also report `reproducible_total_levels`, `generic_transfer_ci`, `action_efficiency_ci`, co-headline metric provenance, the A5 primitive transfer result, the A6 integration headline status, no leaderboard submission, random seed, duration, spec refs, and reproducibility checksum. The default .424 read must quarantine Exp4592's stamped/live-critical positive generation numbers, mark Exp4594's null as false-negative-risk-open when the positive control is missing, count Exp4593's clean `ft09` bank from 54 to 55, count Exp4595's clean 55-level package as operator-resubmit-ready above 33, and report Exp4598/B1 winner-generated co-headline numbers only as quarantined context when that artifact is stamped/live-critical.
+ - SCENARIO-CAPSTONE-4602-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: generation_completeness_winner_generated_above_1of25_or_transfer_above_0.04 OR complete: generation_wall_persists_residual_logged_capability_grew."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `winner_generated_moved` = "the bottom line -- did A1 wiring raise winner_generated_rate STRICTLY above 1/25 with CI + a passing no-wiring control (the generation wall finally cracking)."; `generic_transfer_moved` = "did A1/A3 raise generic_transfer_rate_over_variants STRICTLY above 0.04 with CI (the seen->hidden solve-rate)."; `goal_energy_helped` = "did the A3 goal-energy generation prior raise winner_generated_rate on the wired-but-failing classes with a passing no-energy control."; `reproducible_total_levels_delta` = "did solve CAPABILITY grow this milestone (A2 bank, 54->55+)."; `live_submittable_level_count` = "the honest leaderboard score (A4/B1) reported alongside reproducible_total_levels + generic_transfer + action efficiency + winner_generated_rate."; `winner_generated_rate` = "the generation-vs-ranking gap co-headline (B1) -- can the system GENERATE the winner at all (1/25 baseline)."; `action_efficiency_score` = "min(human/agent,1)^2 with CI (the .422 B1 metric) -- a co-headline number."; `generic_transfer_rate_over_variants` = "the held-out first-contact solve-rate reported WITH a CI -- a co-headline metric."; `verifier_is_oracle_distinct_levers` = "A1/A3 value claims are verifier_is_oracle:false -- a circular win would not count (Oracle-Distinctness)."; `flagged_artifacts_handled` = "names any flagged_adversarial artifact excluded AND any null-delta-carve-out (mechanical via .424 B2) / offline-arc-methodology / positive-control-failed artifact handled -- fabrication-gate + false-negative-risk compliance."; `cited_upstream_artifacts` = "every headline number traces to a real upstream measurement (the audit trail)."; `ready_for_operator_submit` = "True only if the integrated config + refreshed package beat the last 33-level submitted scorecard on a real metric worth a 1/day slot; never submits."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4606: The level-up self-play workflow SHALL run the standing ARC offline loop on a rotated public game that was not deepened in milestones .421-.424, skip registry-recorded stalled approaches including `ka59` hidden-StepCounter L2 and games with no grounded next-level delta, and count progress only when `arc_solver_kit.reproduce` offline-reproduces at least one newly banked level. The workflow SHALL train or refresh the learned verifier checkpoint from the run's positive steps-to-go trace and recorded off-path/dead-end evidence, persist `models/arc_verifier_<game>.json`, update the ARC solve registry for the banked game, and write `results/experiment_4606_levelup_selfplay.json` without modifying `scripts/research_conductor.py`.
++- SCENARIO-CAPSTONE-4606: The artifact `results/experiment_4606_levelup_selfplay.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `solve_provenance`, `offline_reproduced`, `reproduced_levels`, `target_game`, `verifier_checkpoint_updated`, `registry_updated`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also include `spec_refs`, `standing_loop_result_path`, `reproduction_gate`, `solution_labels`, `dead_ends_recorded`, `target_selection`, and `verifier_delta`. A success verdict requires `offline_reproduced=true`, `reproduced_levels >= 1` for newly banked levels beyond the prior registry depth, a non-null verifier checkpoint path, a registry update, and a content-addressed replay checksum. If no next level reproduces, the artifact must report `complete: <game>_delta_identified_no_bank` and record the stalled approach without incrementing the bank count.
++- SCENARIO-CAPSTONE-4606-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank)."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged."; `solve_provenance` = "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game."; `offline_reproduced` = "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels."; `reproduced_levels` = "the integer new-level count banked this task (>=1 satisfies the level-up guarantee)."; `target_game` = "the rotated game attempted -- traceable to the rotation discipline (not a game deepened in .421-.424)."; `verifier_checkpoint_updated` = "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."; `registry_updated` = "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "catches silent drift on replay."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a8563323af..1bc181448e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3622,
++  "experiments_checked": 3623,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_game_adapters.py b/python/carnot/agentic/arc_game_adapters.py
+index a3dfd64845..6b97c036dd 100644
+--- a/python/carnot/agentic/arc_game_adapters.py
++++ b/python/carnot/agentic/arc_game_adapters.py
+@@ -838,26 +838,52 @@ def _dc22():
+     """
+     from carnot.agentic.arc_agi3_live_adapter import _game_action
+ 
+-    click_labels = [
+-        json.dumps(
+-            {"action": 6, "grid": [48, 26], "sprite": "buezna-blrmbx", "x": 48, "y": 36},
+-            sort_keys=True,
+-            separators=(",", ":"),
+-        ),
+-        json.dumps(
+-            {"action": 6, "grid": [48, 9], "sprite": "buezna-refgps", "x": 48, "y": 19},
+-            sort_keys=True,
+-            separators=(",", ":"),
+-        ),
+-    ]
+     move_labels = [
+         json.dumps({"action": action}, sort_keys=True, separators=(",", ":"))
+         for action in (1, 2, 3, 4)
+     ]
+ 
++    def _click_label(game, sprite):
++        grid_w, grid_h = getattr(getattr(game, "current_level", None), "grid_size", None) or (64, 64)
++        grid_x = int(getattr(sprite, "x", 0)) + int(getattr(sprite, "width", 1)) // 2
++        grid_y = int(getattr(sprite, "y", 0)) + int(getattr(sprite, "height", 1)) // 2
++        display_x = grid_x + max(0, (64 - int(grid_w)) // 2)
++        display_y = grid_y + max(0, (64 - int(grid_h)) // 2)
++        return json.dumps(
++            {
++                "action": 6,
++                "grid": [grid_x, grid_y],
++                "sprite": str(getattr(sprite, "name", "")),
++                "x": display_x,
++                "y": display_y,
++            },
++            sort_keys=True,
++            separators=(",", ":"),
++        )
++
++    def _current_click_labels(game):
++        level = getattr(game, "current_level", None)
++        getter = getattr(level, "get_sprites_by_tag", None)
++        if not callable(getter):
++            return []
++        labels = []
++        for sprite in sorted(
++            getter("buezna"),
++            key=lambda item: (
++                str(getattr(item, "name", "")),
++                int(getattr(item, "x", 0)),
++                int(getattr(item, "y", 0)),
++            ),
++        ):
++            if "sys_click" not in getattr(sprite, "tags", []):
++                continue
++            labels.append(_click_label(game, sprite))
++        return labels
++
+     def action_labels(env, frame=None, path=None):
+-        del env, frame, path
+-        return [*move_labels, *click_labels]
++        del frame, path
++        game = getattr(env, "_game", None)
++        return [*move_labels, *_current_click_labels(game)]
+ 
+     def apply(env, label, frame):
+         del frame
+@@ -908,24 +934,33 @@ def _dc22():
+         return level, player_key, goal_key, blockers
+ 
+     def hand_verifier(game, frame=None):
+-        if frame is not None and int(getattr(frame, "levels_completed", 0) or 0) > 0:
+-            return 0.0
+         player = getattr(game, "qnnpcoyzd", None)
+         goal = getattr(game, "hfuqkxulm", None)
+         if player is None or goal is None:
+             return 1000.0
+         return float(abs(int(player.x) - int(goal.x)) + abs(int(player.y) - int(goal.y)))
+ 
++    def featurize(game):
++        player = getattr(game, "qnnpcoyzd", None)
++        goal = getattr(game, "hfuqkxulm", None)
++        px = float(getattr(player, "x", 0))
++        py = float(getattr(player, "y", 0))
++        gx = float(getattr(goal, "x", 0))
++        gy = float(getattr(goal, "y", 0))
++        distance = abs(px - gx) + abs(py - gy)
++        steps = float(getattr(getattr(game, "ujotjblwn", None), "current_steps", 0) or 0)
++        return [distance, px, py, gx, gy, float(len(_current_click_labels(game))), steps]
++
+     return GameAdapter(
+         game="dc22",
+         action_labels=action_labels,
+         apply=apply,
+         state_key=state_key,
+-        featurize=None,
++        featurize=featurize,
+         hand_verifier=hand_verifier,
+         warmup_label=None,
+         depth_caps={1: 24, 2: 80, 3: 120, 4: 160, 5: 256, 6: 512},
+-        branch_mode="replay",
++        branch_mode="fresh_env",
+     )
+ 
+ 
+diff --git a/python/carnot/experiment_4606_levelup_selfplay.py b/python/carnot/experiment_4606_levelup_selfplay.py
+new file mode 100644
+index 0000000000..ba0f3da106
+--- /dev/null
++++ b/python/carnot/experiment_4606_levelup_selfplay.py
+@@ -0,0 +1,363 @@
++"""Experiment 4606: run the standing ARC level-up self-play loop.
++
++This wrapper is intentionally thin. The solve path stays in
++``scripts/arc_loop_solve.py`` so the standing reproduction gate and learned
++verifier training are reused instead of forked.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import re
++import subprocess
++import sys
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++REPO = Path(__file__).resolve().parents[2]
++RESULTS = REPO / "results"
++MODELS = REPO / "models"
++REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
++ARTIFACT = RESULTS / "experiment_4606_levelup_selfplay.json"
++RANDOM_SEED = 4606
++
++SPEC_REFS = ["REQ-CAPSTONE-4606", "SCENARIO-CAPSTONE-4606"]
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++SOLVE_PROVENANCE = "development_proxy"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
++    "solve_provenance": "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game.",
++    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
++    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
++    "target_game": "the rotated game attempted -- traceable to the rotation discipline (not a game deepened in .421-.424).",
++    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone).",
++    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
++    "random_seed": "determinism precondition for reproducibility.",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++}
++
++PREFERRED_TARGETS = (
++    "sk48",
++    "dc22",
++    "re86",
++    "bp35",
++    "g50t",
++    "vc33",
++    "r11l",
++    "s5i5",
++    "lf52",
++    "wa30",
++    "ls20",
++)
++
++
++def sha256_file(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _registry_data(registry_path: Path = REGISTRY) -> dict[str, Any]:
++    return yaml.safe_load(registry_path.read_text())
++
++
++def _game_entry(registry: dict[str, Any], game: str) -> dict[str, Any]:
++    for entry in registry.get("games", []):
++        if entry.get("game") == game:
++            return entry
++    return {}
++
++
++def registry_level(game: str, registry_path: Path = REGISTRY) -> int:
++    entry = _game_entry(_registry_data(registry_path), game)
++    try:
++        return int(entry.get("levels_reproduced") or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def registry_total_levels(registry_path: Path = REGISTRY) -> int:
++    try:
++        return int(_registry_data(registry_path).get("reproducible_total_levels") or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def select_target(
++    preferred: tuple[str, ...] = PREFERRED_TARGETS, registry_path: Path = REGISTRY
++) -> tuple[str, dict[str, Any]]:
++    text = registry_path.read_text()
++    registry = _registry_data(registry_path)
++    skipped: list[dict[str, str]] = []
++    recently_deepened = {"m0r0", "cn04", "ar25", "ft09"}
++    hard_stalls = {"ka59", "cd82", "sp80", "su15"}
++    for game in preferred:
++        entry = _game_entry(registry, game)
++        reasons: list[str] = []
++        if game in recently_deepened:
++            reasons.append("deepened_in_421_424_rotation_window")
++        if game in hard_stalls:
++            reasons.append("registry_recorded_stalled_next_level_delta")
++        if game == "sk48" and "sk48 remained" in text:
++            reasons.append("registry_records_sk48_chain_permutation_no_bank")
++        if int(entry.get("levels_reproduced") or 0) != 1:
++            reasons.append("not_a_shallow_L1_target")
++        if reasons:
++            skipped.append({"game": game, "reason": "; ".join(reasons)})
++            continue
++        return game, {
++            "preferred_targets": list(preferred),
++            "selected": game,
++            "skipped": skipped,
++            "rotation_rule": "not_deepened_in_421_424_and_not_registry_stalled",
++        }
++    raise RuntimeError(f"no eligible target in {preferred!r}")
++
++
++def run_standing_loop(game: str, target_level: int) -> dict[str, Any]:
++    cmd = [
++        sys.executable,
++        "scripts/arc_loop_solve.py",
++        "--game",
++        game,
++        "--target-level",
++        str(target_level),
++    ]
++    proc = subprocess.run(
++        cmd,
++        cwd=REPO,
++        check=False,
++        text=True,
++        stdout=subprocess.PIPE,
++        stderr=subprocess.STDOUT,
++    )
++    if proc.returncode != 0:
++        raise RuntimeError(proc.stdout)
++    result_path = RESULTS / f"arc_loop_solve_{game}.json"
++    out = json.loads(result_path.read_text())
++    out["_standing_loop_stdout"] = proc.stdout
++    return out
++
++
++def _stable_checksum(payload: dict[str, Any]) -> str:
++    checksum_payload = {
++        "target_game": payload.get("target_game"),
++        "prior_level": payload.get("prior_reproduced_level"),
++        "offline_reproduced": payload.get("offline_reproduced"),
++        "reproduced_levels": payload.get("reproduced_levels"),
++        "reproduction_gate": payload.get("reproduction_gate"),
++        "solution_labels": payload.get("solution_labels"),
++        "verifier_delta": payload.get("verifier_delta"),
++    }
++    raw = json.dumps(checksum_payload, sort_keys=True, separators=(",", ":")).encode()
++    return hashlib.sha256(raw).hexdigest()
++
++
++def build_artifact(
++    loop_result: dict[str, Any],
++    *,
++    prior_level: int,
++    prior_total_levels: int,
++    registry_updated: bool,
++    checkpoint_before_sha: str | None,
++    checkpoint_after_sha: str | None,
++    dead_ends_recorded: list[str],
++    preconditions_checked: list[str],
++    target_selection: dict[str, Any] | None = None,
++) -> dict[str, Any]:
++    game = str(loop_result.get("game") or "")
++    reached_level = int(loop_result.get("reached_level") or loop_result.get("reproduced_levels") or 0)
++    gate = dict(loop_result.get("reproduction_gate") or {})
++    gate_reproduced = bool(gate.get("reproduced", loop_result.get("offline_reproduced")))
++    checkpoint_path = loop_result.get("learned_verifier_checkpoint")
++    checkpoint_updated = bool(checkpoint_path and checkpoint_after_sha)
++    new_levels = max(0, reached_level - int(prior_level))
++    success = bool(gate_reproduced and new_levels >= 1 and checkpoint_updated and registry_updated)
++    verdict = (
++        f"success: {game}_L{reached_level}_offline_reproduced"
++        if success
++        else f"complete: {game}_delta_identified_no_bank"
++    )
++    artifact: dict[str, Any] = {
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "solve_provenance": loop_result.get("solve_provenance") or SOLVE_PROVENANCE,
++        "offline_reproduced": bool(success),
++        "reproduced_levels": int(new_levels if success else 0),
++        "target_game": game,
++        "verifier_checkpoint_updated": checkpoint_updated,
++        "registry_updated": bool(registry_updated),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "preconditions_checked": preconditions_checked,
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "standing_loop_result_path": f"results/arc_loop_solve_{game}.json",
++        "reproduction_gate": gate,
++        "solution_labels": list(loop_result.get("solution_labels") or []),
++        "dead_ends_recorded": list(dead_ends_recorded),
++        "target_selection": target_selection or {},
++        "prior_reproduced_level": int(prior_level),
++        "reached_level": reached_level,
++        "reproducible_total_levels_before": int(prior_total_levels),
++        "reproducible_total_levels_after": int(prior_total_levels + (new_levels if success else 0)),
++        "verifier_delta": {
++            "checkpoint_path": checkpoint_path,
++            "before_sha256": checkpoint_before_sha,
++            "after_sha256": checkpoint_after_sha,
++            "updated": checkpoint_updated,
++            "sha_changed": bool(checkpoint_after_sha and checkpoint_after_sha != checkpoint_before_sha),
++            "positive_trace_steps": len(loop_result.get("solution_labels") or []),
++            "negative_trace_notes": list(dead_ends_recorded),
++        },
++        "states_expanded": loop_result.get("states_expanded"),
++    }
++    artifact["reproducibility_checksum"] = _stable_checksum(artifact)
++    return artifact
++
++
++def _replace_game_block(text: str, game: str, update) -> str:
++    marker = f"- game: {game}\n"
++    start = text.index(marker)
++    next_match = re.search(r"\n- game: ", text[start + len(marker) :])
++    end = start + len(marker) + next_match.start() + 1 if next_match else len(text)
++    return text[:start] + update(text[start:end]) + text[end:]
++
++
++def update_registry_for_success(
++    artifact: dict[str, Any], registry_path: Path = REGISTRY
++) -> bool:
++    game = artifact["target_game"]
++    reached = int(artifact["reached_level"])
++    checkpoint = artifact["verifier_delta"]["checkpoint_path"]
++    text = registry_path.read_text()
++    old_text = text
++
++    def update_block(block: str) -> str:
++        block2 = re.sub(r"levels_reproduced: \d+", f"levels_reproduced: {reached}", block, count=1)
++        if game == "dc22":
++            block2 = re.sub(
++                r"win_condition: 'L1 toggle-navigation predicate:.*?'\n",
++                "win_condition: 'L1/L2 toggle-navigation predicate: click current-level buezna toggles, then navigate jfva to the goknoi coordinate; next_level fires only when the offline env level counter advances.'\n",
++                block2,
++                count=1,
++            )
++            block2 = re.sub(
++                r"action_model: Keyboard ACTION1-4 move jfva; ACTION6 click payloads.*?Reproduced 20-label L1 plan from Exp4467.\n",
++                "action_model: Keyboard ACTION1-4 move jfva; ACTION6 click payloads are discovered from the current offline level's buezna/sys_click sprite centers, including the L2 blrmbx/refgps/matkhq toggles. Exp4606 reproduces a 46-label L2 plan.\n",
++                block2,
++                count=1,
++            )
++        if "latest_exp4606_levelup_selfplay:" not in block2:
++            block2 += (
++                f"  latest_exp4606_levelup_selfplay:\n"
++                f"    artifact: results/experiment_4606_levelup_selfplay.json\n"
++                f"    loop_artifact: results/arc_loop_solve_{game}.json\n"
++                f"    offline_reproduced: true\n"
++                f"    reproduced_levels: {reached}\n"
++                f"    new_levels_banked: {artifact['reproduced_levels']}\n"
++                f"    verifier_checkpoint: {checkpoint}\n"
++                f"    reproducibility_checksum: {artifact['reproducibility_checksum']}\n"
++            )
++        if "learned_verifier_checkpoint:" not in block2:
++            block2 += (
++                f"  learned_verifier_checkpoint: {checkpoint} trained by scripts/arc_loop_solve.py\n"
++                f"    on the {game} L1+L2 positive steps-to-go trace; Exp4606 records the skipped/stalled\n"
++                f"    target-selection evidence as negative dead-end context.\n"
++            )
++        return block2
++
++    text = _replace_game_block(text, game, update_block)
++    text = re.sub(r"updated: '[^']+'", "updated: '2026-06-23'", text, count=1)
++    before_total = int(artifact["reproducible_total_levels_before"])
++    after_total = int(artifact["reproducible_total_levels_after"])
++    text = text.replace(
++        f"reproducible_total_levels: {before_total}",
++        f"reproducible_total_levels: {after_total}",
++        1,
++    )
++    if text != old_text:
++        registry_path.write_text(text)
++    return text != old_text or f"latest_exp4606_levelup_selfplay" in old_text
++
++
++def _write_artifact(payload: dict[str, Any], path: Path = ARTIFACT) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--game")
++    args = parser.parse_args(argv)
++
++    preconditions_checked = ["offline_arcade_importable"]
++    from carnot.agentic import arc_solver_kit as kit
++
++    kit.offline_arcade()
++    target_selection: dict[str, Any]
++    if args.game:
++        game = args.game
++        target_selection = {"selected": game, "override": True}
++    else:
++        game, target_selection = select_target()
++
++    prior_level = registry_level(game)
++    prior_total = registry_total_levels()
++    checkpoint = MODELS / f"arc_verifier_{game}.json"
++    before_sha = sha256_file(checkpoint)
++    loop = run_standing_loop(game, prior_level + 1)
++    after_sha = sha256_file(checkpoint)
++    reached_level = int(loop.get("reached_level") or loop.get("reproduced_levels") or 0)
++    dead_ends = [
++        item["reason"]
++        for item in target_selection.get("skipped", [])
++        if item.get("game") in {"sk48", "ka59", "cd82", "sp80", "su15"}
++    ]
++    if reached_level <= prior_level:
++        dead_ends.append(f"{game} standing loop reached L{reached_level}, not beyond prior L{prior_level}")
++
++    success_ready = bool(
++        loop.get("offline_reproduced")
++        and reached_level > prior_level
++        and loop.get("learned_verifier_checkpoint")
++        and after_sha
++    )
++    draft = build_artifact(
++        loop,
++        prior_level=prior_level,
++        prior_total_levels=prior_total,
++        registry_updated=success_ready,
++        checkpoint_before_sha=before_sha,
++        checkpoint_after_sha=after_sha,
++        dead_ends_recorded=dead_ends,
++        preconditions_checked=preconditions_checked,
++        target_selection=target_selection,
++    )
++    _write_artifact(draft)
++    registry_updated = update_registry_for_success(draft) if success_ready else False
++    artifact = build_artifact(
++        loop,
++        prior_level=prior_level,
++        prior_total_levels=prior_total,
++        registry_updated=registry_updated,
++        checkpoint_before_sha=before_sha,
++        checkpoint_after_sha=after_sha,
++        dead_ends_recorded=dead_ends,
++        preconditions_checked=preconditions_checked,
++        target_selection=target_selection,
++    )
++    _write_artifact(artifact)
++    print(json.dumps({k: artifact[k] for k in ("honest_verdict", "target_game", "offline_reproduced", "reproduced_levels", "verifier_checkpoint_updated", "registry_updated")}, indent=2))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised by the experiment command.
++    raise SystemExit(main())
+diff --git a/results/arc_loop_solve_dc22.json b/results/arc_loop_solve_dc22.json
+index 07e65c90e1..2648b7b416 100644
+--- a/results/arc_loop_solve_dc22.json
++++ b/results/arc_loop_solve_dc22.json
+@@ -1,14 +1,22 @@
+ {
+   "game": "dc22",
+-  "reached_level": 1,
+-  "moves": 20,
+-  "states_expanded": 352,
++  "reached_level": 2,
++  "moves": 71,
++  "states_expanded": 2049,
+   "verifier_src": "hand_verifier_cold_start",
+-  "hazard_prune": false,
+-  "hazard_pruner_stats": null,
+-  "offline_reproduced": true,
+-  "reproduced_levels": 1,
+-  "learned_verifier_checkpoint": null,
++  "hazard_prune": true,
++  "hazard_pruner_stats": {
++    "observed": 2049,
++    "pruned": 0,
++    "n_deaths": 0,
++    "lethal_mode": null,
++    "trust": 0.0,
++    "specificity": 0.0,
++    "model_fitted": false
++  },
++  "offline_reproduced": false,
++  "reproduced_levels": 2,
++  "learned_verifier_checkpoint": "models/arc_verifier_dc22.json",
+   "selected_generic_operators": [
+     {
+       "operator": "approach_dispatcher_operator",
+@@ -165,8 +173,8 @@
+   "reproduction_gate": {
+     "game": "dc22",
+     "reached_level": 1,
+-    "claimed_level": 1,
+-    "reproduced": true,
++    "claimed_level": 2,
++    "reproduced": false,
+     "mode": "offline_reproduction_gate_no_quota"
+   },
+   "solution_labels": [
+@@ -189,6 +197,57 @@
+     "{\"action\":1}",
+     "{\"action\":1}",
+     "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":6,\"grid\":[52,32],\"sprite\":\"buezna-blrmbx\",\"x\":52,\"y\":40}",
++    "{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":6,\"grid\":[52,23],\"sprite\":\"buezna-inzejt-refgps\",\"x\":52,\"y\":31}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
+     "{\"action\":4}"
+   ],
+   "solution": [
+@@ -270,9 +329,198 @@
+     {
+       "action": 4
+     },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "grid": [
++        52,
++        14
++      ],
++      "sprite": "buezna-matkhq",
++      "x": 52,
++      "y": 22
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "grid": [
++        52,
++        32
++      ],
++      "sprite": "buezna-blrmbx",
++      "x": 52,
++      "y": 40
++    },
++    {
++      "action": 6,
++      "grid": [
++        52,
++        14
++      ],
++      "sprite": "buezna-matkhq",
++      "x": 52,
++      "y": 22
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "grid": [
++        52,
++        14
++      ],
++      "sprite": "buezna-matkhq",
++      "x": 52,
++      "y": 22
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 6,
++      "grid": [
++        52,
++        23
++      ],
++      "sprite": "buezna-inzejt-refgps",
++      "x": 52,
++      "y": 31
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 1
++    },
+     {
+       "action": 4
+     }
+   ],
++  "solve_provenance": "development_proxy",
+   "mode": "standing_arc_loop_offline_no_quota"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4606_levelup_selfplay.json b/results/experiment_4606_levelup_selfplay.json
+new file mode 100644
+index 0000000000..bdb11ce2cb
+--- /dev/null
++++ b/results/experiment_4606_levelup_selfplay.json
+@@ -0,0 +1,154 @@
++{
++  "dead_ends_recorded": [
++    "registry_records_sk48_chain_permutation_no_bank"
++  ],
++  "field_principles": {
++    "honest_verdict": "terminal prefix; success: <game>_L<n>_offline_reproduced OR complete: <game>_delta_identified_no_bank (honest progress, not a bank).",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve + verifier training, no headline LLM load (1s floor); declared so a fast real solve is not DURATION_TOO_SHORT false-flagged.",
++    "offline_reproduced": "a solve not reproducible offline is wasted effort -- only reproduced levels count toward reproducible_total_levels.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++    "random_seed": "determinism precondition for reproducibility.",
++    "registry_updated": "the per-game win-condition/action-model/gotchas/dead-ends persisted so the next attempt reuses, not re-derives.",
++    "reproduced_levels": "the integer new-level count banked this task (>=1 satisfies the level-up guarantee).",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "solve_provenance": "development_proxy -- the offline dev twin (arc_loop_solve + a hand GameAdapter); honest that this is the registry/dev proxy, not live-agent self-discovery on a hidden game.",
++    "target_game": "the rotated game attempted -- traceable to the rotation discipline (not a game deepened in .421-.424).",
++    "verifier_checkpoint_updated": "the learned-verifier checkpoint trained on this run's pos/neg traces (the self-play self-improvement step the operator mandated every milestone)."
++  },
++  "honest_verdict": "complete: dc22_delta_identified_no_bank",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "offline_reproduced": false,
++  "preconditions_checked": [
++    "offline_arcade_importable"
++  ],
++  "prior_reproduced_level": 1,
++  "random_seed": 4606,
++  "reached_level": 2,
++  "registry_updated": false,
++  "reproduced_levels": 0,
++  "reproducibility_checksum": "d6d2f2f56234746e4287d46cc4b9869bf20e13668f8ab7aad5c5ac5c6d260590",
++  "reproducible_total_levels_after": 55,
++  "reproducible_total_levels_before": 55,
++  "reproduction_gate": {
++    "claimed_level": 2,
++    "game": "dc22",
++    "mode": "offline_reproduction_gate_no_quota",
++    "reached_level": 1,
++    "reproduced": false
++  },
++  "solution_labels": [
++    "{\"action\":1}",
++    "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":6,\"grid\":[48,9],\"sprite\":\"buezna-refgps\",\"x\":48,\"y\":19}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":6,\"grid\":[48,26],\"sprite\":\"buezna-blrmbx\",\"x\":48,\"y\":36}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":2}",
++    "{\"action\":3}",
++    "{\"action\":3}",
++    "{\"action\":6,\"grid\":[52,32],\"sprite\":\"buezna-blrmbx\",\"x\":52,\"y\":40}",
++    "{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":4}",
++    "{\"action\":6,\"grid\":[52,14],\"sprite\":\"buezna-matkhq\",\"x\":52,\"y\":22}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":2}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":6,\"grid\":[52,23],\"sprite\":\"buezna-inzejt-refgps\",\"x\":52,\"y\":31}",
++    "{\"action\":4}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":1}",
++    "{\"action\":4}"
++  ],
++  "solve_provenance": "development_proxy",
++  "spec_refs": [
++    "REQ-CAPSTONE-4606",
++    "SCENARIO-CAPSTONE-4606"
++  ],
++  "standing_loop_result_path": "results/arc_loop_solve_dc22.json",
++  "states_expanded": 2049,
++  "target_game": "dc22",
++  "target_selection": {
++    "preferred_targets": [
++      "sk48",
++      "dc22",
++      "re86",
++      "bp35",
++      "g50t",
++      "vc33",
++      "r11l",
++      "s5i5",
++      "lf52",
++      "wa30",
++      "ls20"
++    ],
++    "rotation_rule": "not_deepened_in_421_424_and_not_registry_stalled",
++    "selected": "dc22",
++    "skipped": [
++      {
++        "game": "sk48",
++        "reason": "registry_records_sk48_chain_permutation_no_bank"
++      }
++    ]
++  },
++  "verifier_checkpoint_updated": true,
++  "verifier_delta": {
++    "after_sha256": "23f1b70a2f08e2739a1fdd6332dbcf2bd3507bcaa12c0c0062d0b5bb7073ecbc",
++    "before_sha256": null,
++    "checkpoint_path": "models/arc_verifier_dc22.json",
++    "negative_trace_notes": [
++      "registry_records_sk48_chain_permutation_no_bank"
++    ],
++    "positive_trace_steps": 71,
++    "updated": true
++  }
++}
+diff --git a/tests/python/test_experiment_4606_levelup_selfplay.py b/tests/python/test_experiment_4606_levelup_selfplay.py
+new file mode 100644
+index 0000000000..9cbb50b265
+--- /dev/null
++++ b/tests/python/test_experiment_4606_levelup_selfplay.py
+@@ -0,0 +1,393 @@
++"""Tests for REQ-CAPSTONE-4606 / SCENARIO-CAPSTONE-4606."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++import pytest
++
++from carnot import experiment_4606_levelup_selfplay as exp4606
++from carnot.agentic import arc_game_adapters
++
++
++def test_spec_mentions_4606_contract() -> None:
++    """SCENARIO-CAPSTONE-4606: the level-up self-play artifact is spec anchored."""
++
++    spec = Path("openspec/capabilities/capstone/spec.md").read_text()
++    assert "REQ-CAPSTONE-4606" in spec
++    assert "SCENARIO-CAPSTONE-4606" in spec
++    assert "results/experiment_4606_levelup_selfplay.json" in spec
++
++
++def test_success_artifact_counts_only_new_reproduced_levels() -> None:
++    """SCENARIO-CAPSTONE-4606: success requires an offline-reproduced new bank."""
++
++    loop_result = {
++        "game": "dc22",
++        "reached_level": 2,
++        "offline_reproduced": True,
++        "reproduced_levels": 2,
++        "learned_verifier_checkpoint": "models/arc_verifier_dc22.json",
++        "reproduction_gate": {"reproduced": True, "reached_level": 2},
++        "solution_labels": ["{\"action\":1}", "{\"action\":2}"],
++        "solve_provenance": "development_proxy",
++        "states_expanded": 23,
++    }
++
++    artifact = exp4606.build_artifact(
++        loop_result,
++        prior_level=1,
++        prior_total_levels=55,
++        registry_updated=True,
++        checkpoint_before_sha=None,
++        checkpoint_after_sha="abc123",
++        dead_ends_recorded=[],
++        preconditions_checked=["offline_arcade_importable"],
++    )
++
++    assert artifact["honest_verdict"] == "success: dc22_L2_offline_reproduced"
++    assert artifact["offline_reproduced"] is True
++    assert artifact["reproduced_levels"] == 1
++    assert artifact["target_game"] == "dc22"
++    assert artifact["verifier_checkpoint_updated"] is True
++    assert artifact["registry_updated"] is True
++    assert artifact["reproducible_total_levels_before"] == 55
++    assert artifact["reproducible_total_levels_after"] == 56
++    assert len(artifact["reproducibility_checksum"]) == 64
++    assert artifact["field_principles"] == exp4606.FIELD_PRINCIPLES
++    assert artifact["spec_refs"] == ["REQ-CAPSTONE-4606", "SCENARIO-CAPSTONE-4606"]
++
++
++def test_no_new_level_artifact_is_complete_not_bank() -> None:
++    """SCENARIO-CAPSTONE-4606: reproduced old depth is honest progress, not a bank."""
++
++    loop_result = {
++        "game": "sk48",
++        "status": "needs_per_game_RE",
++        "offline_reproduced": False,
++        "reproduced_levels": 0,
++        "learned_verifier_checkpoint": None,
++        "reproduction_gate": {"reproduced": False, "reached_level": 1},
++        "solution_labels": [],
++        "solve_provenance": "development_proxy",
++    }
++
++    artifact = exp4606.build_artifact(
++        loop_result,
++        prior_level=1,
++        prior_total_levels=55,
++        registry_updated=False,
++        checkpoint_before_sha=None,
++        checkpoint_after_sha=None,
++        dead_ends_recorded=["sk48 chain-permutation L2 remained ungrounded"],
++        preconditions_checked=["offline_arcade_importable"],
++    )
++
++    assert artifact["honest_verdict"] == "complete: sk48_delta_identified_no_bank"
++    assert artifact["offline_reproduced"] is False
++    assert artifact["reproduced_levels"] == 0
++    assert artifact["verifier_checkpoint_updated"] is False
++    assert artifact["registry_updated"] is False
++    assert artifact["dead_ends_recorded"] == ["sk48 chain-permutation L2 remained ungrounded"]
++
++
++def test_target_selection_skips_recorded_stalls(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: selection skips stalled/deepened rotation targets."""
++
++    registry = tmp_path / "registry.yaml"
++    registry.write_text(
++        "\n".join(
++            [
++                "schema_version: 1",
++                "games:",
++                "- game: sk48",
++                "  levels_reproduced: 1",
++                "- game: dc22",
++                "  levels_reproduced: 1",
++                "reproducible_total_levels: 55",
++                "notes: sk48 remained routing/search-progress only; no offline L2 bank.",
++            ]
++        )
++    )
++
++    target, selection = exp4606.select_target(("sk48", "dc22"), registry_path=registry)
++
++    assert target == "dc22"
++    assert selection["skipped"] == [
++        {"game": "sk48", "reason": "registry_records_sk48_chain_permutation_no_bank"}
++    ]
++
++
++def test_registry_helpers_and_file_sha(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: registry depth and checksum inputs are deterministic."""
++
++    registry = tmp_path / "registry.yaml"
++    registry.write_text(
++        "games:\n- game: dc22\n  levels_reproduced: 1\nreproducible_total_levels: 55\n"
++    )
++    payload = tmp_path / "payload.txt"
++    payload.write_text("banked")
++
++    assert exp4606.registry_level("dc22", registry_path=registry) == 1
++    assert exp4606.registry_level("missing", registry_path=registry) == 0
++    assert exp4606.registry_total_levels(registry_path=registry) == 55
++    assert exp4606.sha256_file(payload) == "f1e53b902d342070d2517c1fdfd5d14e1c615d0754ec92d8a3bbe3d3c4c291f5"
++    assert exp4606.sha256_file(tmp_path / "missing") is None
++
++    registry.write_text(
++        "games:\n- game: dc22\n  levels_reproduced: not-an-int\nreproducible_total_levels: none\n"
++    )
++    assert exp4606.registry_level("dc22", registry_path=registry) == 0
++    assert exp4606.registry_total_levels(registry_path=registry) == 0
++
++
++def test_target_selection_reports_all_skip_reasons_and_blocks_empty_pool(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: target selection refuses disallowed rotations."""
++
++    registry = tmp_path / "registry.yaml"
++    registry.write_text(
++        "\n".join(
++            [
++                "games:",
++                "- game: m0r0",
++                "  levels_reproduced: 2",
++                "- game: ka59",
++                "  levels_reproduced: 1",
++                "- game: fresh",
++                "  levels_reproduced: 0",
++                "reproducible_total_levels: 55",
++            ]
++        )
++    )
++
++    with pytest.raises(RuntimeError, match="no eligible target"):
++        exp4606.select_target(("m0r0", "ka59", "fresh"), registry_path=registry)
++
++
++def test_update_registry_for_success_is_scoped_to_game_block(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: success persists the bank and checkpoint in registry."""
++
++    registry = tmp_path / "registry.yaml"
++    registry.write_text(
++        "\n".join(
++            [
++                "updated: '2026-06-22'",
++                "games:",
++                "- game: dc22",
++                "  reproducibility: reproduced",
++                "  levels_reproduced: 1",
++                "  win_condition: 'L1 toggle-navigation predicate: old'",
++                "  action_model: Keyboard ACTION1-4 move jfva; ACTION6 click payloads old. Reproduced 20-label L1 plan from Exp4467.",
++                "- game: other",
++                "  levels_reproduced: 1",
++                "reproducible_total_levels: 55",
++                "",
++            ]
++        )
++    )
++    artifact = {
++        "target_game": "dc22",
++        "reached_level": 2,
++        "reproduced_levels": 1,
++        "reproducibility_checksum": "f" * 64,
++        "reproducible_total_levels_before": 55,
++        "reproducible_total_levels_after": 56,
++        "verifier_delta": {"checkpoint_path": "models/arc_verifier_dc22.json"},
++    }
++
++    assert exp4606.update_registry_for_success(artifact, registry_path=registry) is True
++    text = registry.read_text()
++    assert "levels_reproduced: 2" in text
++    assert "latest_exp4606_levelup_selfplay" in text
++    assert "models/arc_verifier_dc22.json" in text
++    assert "reproducible_total_levels: 56" in text
++    assert "- game: other\n  levels_reproduced: 1" in text
++
++
++def test_run_standing_loop_reads_current_result(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: wrapper delegates solve to the standing loop."""
++
++    result_dir = tmp_path / "results"
++    result_dir.mkdir()
++    (result_dir / "arc_loop_solve_dc22.json").write_text('{"game":"dc22","reached_level":2}')
++    monkeypatch.setattr(exp4606, "REPO", tmp_path)
++    monkeypatch.setattr(exp4606, "RESULTS", result_dir)
++
++    def fake_run(cmd, cwd, check, text, stdout, stderr):
++        assert cmd[-4:] == ["--game", "dc22", "--target-level", "2"]
++        assert cwd == tmp_path
++        assert check is False and text is True
++        return SimpleNamespace(returncode=0, stdout="standing loop ok")
++
++    monkeypatch.setattr(exp4606.subprocess, "run", fake_run)
++
++    out = exp4606.run_standing_loop("dc22", 2)
++    assert out["game"] == "dc22"
++    assert out["_standing_loop_stdout"] == "standing loop ok"
++
++
++def test_run_standing_loop_raises_on_subprocess_failure(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: loop failures do not fabricate an artifact."""
++
++    monkeypatch.setattr(exp4606, "REPO", tmp_path)
++
++    def fake_run(cmd, cwd, check, text, stdout, stderr):
++        return SimpleNamespace(returncode=2, stdout="loop failed")
++
++    monkeypatch.setattr(exp4606.subprocess, "run", fake_run)
++
++    with pytest.raises(RuntimeError, match="loop failed"):
++        exp4606.run_standing_loop("dc22", 2)
++
++
++def test_write_artifact_and_main_are_side_effect_controllable(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: main writes the final success artifact after registry update."""
++
++    written: list[dict] = []
++    checkpoint = tmp_path / "arc_verifier_dc22.json"
++    checkpoint.write_text("after")
++    monkeypatch.setattr(exp4606, "MODELS", tmp_path)
++    monkeypatch.setattr(exp4606, "select_target", lambda: ("dc22", {"selected": "dc22"}))
++    monkeypatch.setattr(exp4606, "registry_level", lambda game: 1)
++    monkeypatch.setattr(exp4606, "registry_total_levels", lambda: 55)
++    checkpoint_shas = iter([None, "after-sha"])
++    monkeypatch.setattr(exp4606, "sha256_file", lambda path: next(checkpoint_shas))
++    monkeypatch.setattr(exp4606, "update_registry_for_success", lambda artifact: True)
++    monkeypatch.setattr(exp4606, "_write_artifact", lambda payload: written.append(payload))
++    monkeypatch.setattr(
++        exp4606,
++        "run_standing_loop",
++        lambda game, target_level: {
++            "game": game,
++            "reached_level": target_level,
++            "offline_reproduced": True,
++            "reproduced_levels": target_level,
++            "learned_verifier_checkpoint": "models/arc_verifier_dc22.json",
++            "reproduction_gate": {"reproduced": True, "reached_level": target_level},
++            "solution_labels": ["{\"action\":1}"],
++            "solve_provenance": "development_proxy",
++        },
++    )
++    from carnot.agentic import arc_solver_kit
++
++    monkeypatch.setattr(arc_solver_kit, "offline_arcade", lambda: object())
++
++    assert exp4606.main([]) == 0
++    assert len(written) == 2
++    assert written[-1]["honest_verdict"] == "success: dc22_L2_offline_reproduced"
++    assert written[-1]["registry_updated"] is True
++    assert written[-1]["reproducible_total_levels_after"] == 56
++
++
++def test_main_override_records_dead_end_when_no_new_level(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: CLI game override still emits honest no-bank."""
++
++    written: list[dict] = []
++    monkeypatch.setattr(exp4606, "MODELS", tmp_path)
++    monkeypatch.setattr(exp4606, "registry_level", lambda game: 1)
++    monkeypatch.setattr(exp4606, "registry_total_levels", lambda: 55)
++    monkeypatch.setattr(exp4606, "sha256_file", lambda path: None)
++    monkeypatch.setattr(exp4606, "update_registry_for_success", lambda artifact: False)
++    monkeypatch.setattr(exp4606, "_write_artifact", lambda payload: written.append(payload))
++    monkeypatch.setattr(
++        exp4606,
++        "run_standing_loop",
++        lambda game, target_level: {
++            "game": game,
++            "reached_level": 1,
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "learned_verifier_checkpoint": None,
++            "reproduction_gate": {"reproduced": True, "reached_level": 1},
++            "solution_labels": [],
++        },
++    )
++    from carnot.agentic import arc_solver_kit
++
++    monkeypatch.setattr(arc_solver_kit, "offline_arcade", lambda: object())
++
++    assert exp4606.main(["--game", "dc22"]) == 0
++    assert written[-1]["honest_verdict"] == "complete: dc22_delta_identified_no_bank"
++    assert written[-1]["dead_ends_recorded"] == [
++        "dc22 standing loop reached L1, not beyond prior L1"
++    ]
++    assert written[-1]["target_selection"] == {"selected": "dc22", "override": True}
++
++
++def test_write_artifact_serializes_sorted_json(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4606: result artifact is stable JSON on disk."""
++
++    out = tmp_path / "artifact.json"
++    exp4606._write_artifact({"b": 1, "a": 2}, path=out)
++    assert out.read_text().splitlines()[1].strip() == '"a": 2,'
++
++
++class _FakeSprite:
++    def __init__(
++        self,
++        name: str,
++        x: int,
++        y: int,
++        width: int,
++        height: int,
++        tags: list[str],
++        interaction: str = "InteractionMode.TANGIBLE",
++    ) -> None:
++        self.name = name
++        self.x = x
++        self.y = y
++        self.width = width
++        self.height = height
++        self.tags = tags
++        self.interaction = interaction
++
++
++class _FakeLevel:
++    grid_size = (64, 48)
++
++    def __init__(self, sprites: list[_FakeSprite]) -> None:
++        self._sprites = sprites
++
++    def get_sprites_by_tag(self, tag: str) -> list[_FakeSprite]:
++        return [sprite for sprite in self._sprites if tag in sprite.tags]
++
++
++def test_dc22_adapter_discovers_l2_buttons_and_verifier_gradient() -> None:
++    """SCENARIO-CAPSTONE-4606: dc22 L2 exposes current env buttons and goal distance."""
++
++    adapter = arc_game_adapters.get_adapter("dc22")
++    player = _FakeSprite("jfva", 6, 22, 2, 2, ["jfva"])
++    goal = _FakeSprite("goknoi", 22, 4, 2, 2, ["goknoi"])
++    game = SimpleNamespace(
++        current_level=_FakeLevel(
++            [
++                _FakeSprite("buezna-blrmbx", 46, 30, 13, 5, ["b", "buezna", "sys_click"]),
++                _FakeSprite(
++                    "buezna-inzejt-refgps",
++                    46,
++                    21,
++                    13,
++                    5,
++                    ["a", "buezna", "sys_click"],
++                    interaction="InteractionMode.REMOVED",
++                ),
++                _FakeSprite("buezna-matkhq", 46, 12, 13, 5, ["c", "buezna", "sys_click"]),
++                player,
++                goal,
++            ]
++        ),
++        qnnpcoyzd=player,
++        hfuqkxulm=goal,
++    )
++
++    labels = adapter.action_labels(SimpleNamespace(_game=game), frame=SimpleNamespace(levels_completed=1), path=[])
++    click_rows = [json.loads(label) for label in labels if json.loads(label)["action"] == 6]
++    assert {row["sprite"] for row in click_rows} == {
++        "buezna-blrmbx",
++        "buezna-inzejt-refgps",
++        "buezna-matkhq",
++    }
++    assert any(row["x"] == 52 and row["y"] == 40 for row in click_rows)
++    assert adapter.hand_verifier(game, frame=SimpleNamespace(levels_completed=1)) == 34.0
+-- 
+2.55.0
+

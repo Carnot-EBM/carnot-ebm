@@ -1,0 +1,3341 @@
+From 08c2f0a53ed21e037bd9e944d4047af05d317b0a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 18:21:48 -0400
+Subject: [PATCH 06298/11362] [conductor] Gated local SOTA verifier-potential
+ decoding pilot after Exp5443
+
+Automated research step by research conductor.
+Task ID: exp5444-gated-sota-energy-guided-decoding-v495
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/safety/spec.md          |  100 ++
+ .../papers/paper-v6/section-6-limitations.md  |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ ..._gated_sota_energy_guided_decoding_v495.py | 1210 +++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |    6 +-
+ .../experiment_1038_milestone_retro_80.json   |    2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |    4 +-
+ .../experiment_1089_milestone_retro_84.json   |    2 +-
+ .../experiment_1103_milestone_retro_85.json   |    2 +-
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...riment_1911_phase4_canonical_decision.json |    2 +-
+ ...periment_1970_domino_fast_constraints.json |    4 +-
+ results/experiment_2031.json                  |    4 +-
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...ated_sota_energy_guided_decoding_v495.json | 1199 ++++++++++++++++
+ ...ota_energy_guided_decoding_v495_rows.jsonl |   12 +
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ..._gated_sota_energy_guided_decoding_v495.py |  499 +++++++
+ 22 files changed, 3049 insertions(+), 26 deletions(-)
+ create mode 100644 python/carnot/experiment_5444_gated_sota_energy_guided_decoding_v495.py
+ create mode 100644 results/experiment_5444_gated_sota_energy_guided_decoding_v495.json
+ create mode 100644 results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl
+ create mode 100644 tests/python/test_experiment_5444_gated_sota_energy_guided_decoding_v495.py
+
+diff --git a/openspec/capabilities/safety/spec.md b/openspec/capabilities/safety/spec.md
+index 949aecf340..b18b4f7493 100644
+--- a/openspec/capabilities/safety/spec.md
++++ b/openspec/capabilities/safety/spec.md
+@@ -1307,6 +1307,105 @@ aggregate, or if cost accounting no longer matches row records,
+ **Then** validation fails closed and no downstream verifier-potential fixture
+ readiness claim is made.
+ 
++### REQ-SAFE-5444: Gated SOTA Verifier-Potential Decoding Pilot V495
++
++Carnot SHALL provide Exp5444 at
++`python/carnot/experiment_5444_gated_sota_energy_guided_decoding_v495.py`
++and write
++`results/experiment_5444_gated_sota_energy_guided_decoding_v495.json`
++without modifying `scripts/research_conductor.py`.  The workflow SHALL run only
++when Exp5443 reports `verifier_potential_fixture_ready=true`; otherwise it
++SHALL emit a blocked artifact before model generation.
++
++Before generation, the workflow SHALL verify a CUDA-visible
++llama.cpp-compatible GGUF runtime, non-empty local `model_path` entries for the
++mandated local SOTA GGUF IDs, and GPU-offload evidence.  `model_specs` SHALL
++include all of:
++- `unsloth/Qwen3.6-35B-A3B-GGUF`
++- `unsloth/gemma-4-31B-it-GGUF`
++- `unsloth/gemma-4-26B-A4B-it-GGUF`
++
++The pilot SHALL select a bounded Exp5443 fixture set that exact final verifiers
++can score.  For every selected fixture it SHALL attempt three conditions where
++the local runtime supports them: unconstrained decoding,
++grammar-only constrained decoding, and
++verifier-potential guided prefix/particle decoding.
++Every generated candidate SHALL record the model spec, GGUF path,
++runtime backend, `n_gpu_layers`/offload evidence, random seed, prompt hash,
++token budget, reward-evaluation count, and generation duration.
++
++Exact final verifiers SHALL run on every candidate.  Model self-verdicts,
++prompt compliance claims, grammar validity, and verifier-potential scores SHALL
++be advisory only and SHALL NOT replace deterministic final authority.  Aggregate
++metrics SHALL be recomputed from row records with independent predicates:
++accepted-validity, semantic false accepts, unsafe false accepts, action
++unreachability false accepts, abstention, reward budget, and guided-validity
++deltas.  `guided_validity_delta_vs_unconstrained` and
++`guided_validity_delta_vs_grammar_only` SHALL be computed as
++guided accepted rate minus the respective baseline rate; validation SHALL fail
++if either delta is copied from a baseline rate.
++
++The terminal result artifact MUST include:
++`preconditions_checked`, `model_specs`, `headline_required_any_of`,
++`runtime_backend`, `gpu_offload_verified`, `fixture_count`, `condition_names`,
++`row_results_path`, `exact_final_authority`, `reward_evaluation_budget`,
++`guided_validity_delta_vs_unconstrained`,
++`guided_validity_delta_vs_grammar_only`, `semantic_false_accept_rate`,
++`unsafe_false_accept_rate`, `action_unreachability_rate`, `abstention_rate`,
++`metric_independence_checks_passed`, `verifier_guided_decoding_ready`,
++`inference_substrate`, and `honest_verdict`.  A complete artifact SHALL set
++`inference_substrate=live_llm_inference`, and `honest_verdict` SHALL start with
++`complete:` or `blocked:`.
++
++Field principles:
++- `preconditions_checked`: compute-bound task must fail fast.
++- `model_specs`: mandated SOTA GGUF provenance.
++- `headline_required_any_of`: confirms at least one mandated SOTA model ran.
++- `runtime_backend`: GGUF/llama.cpp path, not transformers tokenizer path.
++- `gpu_offload_verified`: no CPU-only SOTA headline.
++- `fixture_count`: bounded evaluation size.
++- `condition_names`: baseline clarity.
++- `row_results_path`: inspectable evidence.
++- `exact_final_authority`: deterministic verifier authority.
++- `reward_evaluation_budget`: inference cost accounting.
++- `guided_validity_delta_vs_unconstrained`: utility measurement.
++- `guided_validity_delta_vs_grammar_only`: incremental utility measurement.
++- `semantic_false_accept_rate`: hallucination boundary.
++- `unsafe_false_accept_rate`: safety boundary.
++- `action_unreachability_rate`: action-reachability boundary.
++- `abstention_rate`: selective behavior boundary.
++- `metric_independence_checks_passed`: tautology prevention.
++- `verifier_guided_decoding_ready`: capstone evidence.
++- `inference_substrate`: real local model invocation.
++- `honest_verdict`: terminal status; start with "complete:" or "blocked:".
++
++### SCENARIO-SAFE-5444: Guided Decoding Rows Are Judged By Exact Final Verifiers
++
++**Given** Exp5443 is ready, at least one mandated local SOTA GGUF resolves to a
++local `.gguf` file, and the llama.cpp runtime reports CUDA/GPU-offload evidence,
++
++**When** Exp5444 runs the bounded unconstrained, grammar-only, and
++verifier-potential guided conditions,
++
++**Then** it writes
++`results/experiment_5444_gated_sota_energy_guided_decoding_v495.json`, writes
++row-level evidence to
++`results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl`,
++records the three
++mandated model specs, records the runtime/backend/offload receipts, runs exact
++final verifiers on every candidate, computes the two guided-validity deltas from
++row-derived condition rates, and sets `verifier_guided_decoding_ready=true` only
++when exact authority, offload, row evidence, reward-budget accounting, and
++metric-independence checks all pass.
++
++**And** if the Exp5443 gate is false, mandated model specs are missing, GPU
++offload is absent, final verifier authority is bypassed, row evidence is
++missing, a guided delta is copied from a baseline rate, or
++`scripts/research_conductor.py` is modified,
++
++**Then** validation fails closed or emits a blocked artifact, and no
++verifier-guided decoding readiness claim is made.
++
+ ## Implementation Status
+ 
+ | Requirement | Status | Notes |
+@@ -1335,5 +1434,6 @@ readiness claim is made.
+ | REQ-SAFE-5430 | Planned | Exp 5430: row-level structured tautology corrigendum |
+ | REQ-SAFE-5431 | Planned | Exp 5431: structured constraint taxonomy replication |
+ | REQ-SAFE-5443 | Planned | Exp 5443: deterministic verifier-potential prefix fixture |
++| REQ-SAFE-5444 | Planned | Exp 5444: gated local SOTA verifier-potential decoding pilot |
+ | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
+ | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 6cd7102300..6726bee2f0 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -730,5 +730,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 2b50f9f240..efc2f2dcdb 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4410,
++  "experiments_checked": 4411,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5444_gated_sota_energy_guided_decoding_v495.py b/python/carnot/experiment_5444_gated_sota_energy_guided_decoding_v495.py
+new file mode 100644
+index 0000000000..e05bd7fa46
+--- /dev/null
++++ b/python/carnot/experiment_5444_gated_sota_energy_guided_decoding_v495.py
+@@ -0,0 +1,1210 @@
++#!/usr/bin/env python3
++"""Exp5444 gated local SOTA verifier-potential decoding pilot.
++
++Spec refs: REQ-SAFE-5444, SCENARIO-SAFE-5444.
++
++This experiment is deliberately narrow: it compares unconstrained decoding,
++grammar-only JSON decoding, and verifier-potential guided prefix decoding on
++the deterministic Exp5443 fixtures.  The live model is only a candidate
++generator.  Every candidate is judged by the same exact final verifiers used by
++the fixture, so a model self-claim, a parseable JSON object, or a promising
++prefix can never become final evidence by itself.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter, defaultdict
++from collections.abc import Callable, Mapping, Sequence
++import copy
++import hashlib
++import json
++import math
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++from carnot import experiment_5443_verifier_potential_prefix_fixture_v495 as exp5443
++from carnot.inference.sota_models import resolve_cached_gguf
++
++
++JsonDict = dict[str, Any]
++ModelResolver = Callable[[str, str], str | None]
++RuntimeProbe = Callable[..., JsonDict]
++GenerationRunner = Callable[..., JsonDict]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5444_gated_sota_energy_guided_decoding_v495.json")
++ROW_RESULTS_RELATIVE_PATH = Path(
++    "results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl"
++)
++EXPERIMENT_ID = "experiment_5444_gated_sota_energy_guided_decoding_v495"
++TASK_ID = "exp5444-v495-gated-sota-energy-guided-decoding"
++MILESTONE = "2026.07.495"
++RUN_DATE = "2026-07-08"
++SCHEMA = "carnot.experiment_5444.gated_sota_energy_guided_decoding.v495"
++SPEC_REFS = ("REQ-SAFE-5444", "SCENARIO-SAFE-5444")
++RANDOM_SEED = 5444
++DEFAULT_QUANTIZATION = "Q4_K_M"
++DEFAULT_TOKEN_BUDGET = 96
++DEFAULT_MAX_FIXTURES = 4
++N_GPU_LAYERS = -1
++INFERENCE_SUBSTRATE = "live_llm_inference"
++BLOCKED_INFERENCE_SUBSTRATE = "blocked_preconditions_no_live_llm"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++CONDITION_NAMES = ("unconstrained", "grammar_only", "verifier_potential_guided")
++GUIDED_CONDITION = "verifier_potential_guided"
++BASELINE_CONDITIONS = ("unconstrained", "grammar_only")
++UNSAFE_FALSE_ACCEPT_FAMILIES = {"schema_only_trap", "api_call_witness"}
++
++MANDATED_MODEL_SPECS: tuple[JsonDict, ...] = (
++    {
++        "role": "flagship_moe",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++    {
++        "role": "flagship_dense",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++    {
++        "role": "middle_moe",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "quantization": DEFAULT_QUANTIZATION,
++    },
++)
++MANDATED_HF_IDS = tuple(str(spec["hf_id"]) for spec in MANDATED_MODEL_SPECS)
++RUN_ROLE_PREFERENCE = ("middle_moe", "flagship_dense", "flagship_moe")
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "preconditions_checked": "compute-bound task must fail fast.",
++    "model_specs": "mandated SOTA GGUF provenance.",
++    "headline_required_any_of": "confirms at least one mandated SOTA model ran.",
++    "runtime_backend": "GGUF/llama.cpp path, not transformers tokenizer path.",
++    "gpu_offload_verified": "no CPU-only SOTA headline.",
++    "fixture_count": "bounded evaluation size.",
++    "condition_names": "baseline clarity.",
++    "row_results_path": "inspectable evidence.",
++    "exact_final_authority": "deterministic verifier authority.",
++    "reward_evaluation_budget": "inference cost accounting.",
++    "guided_validity_delta_vs_unconstrained": "utility measurement.",
++    "guided_validity_delta_vs_grammar_only": "incremental utility measurement.",
++    "semantic_false_accept_rate": "hallucination boundary.",
++    "unsafe_false_accept_rate": "safety boundary.",
++    "action_unreachability_rate": "action-reachability boundary.",
++    "abstention_rate": "selective behavior boundary.",
++    "metric_independence_checks_passed": "tautology prevention.",
++    "verifier_guided_decoding_ready": "capstone evidence.",
++    "inference_substrate": "real local model invocation.",
++    "honest_verdict": 'terminal status; start with "complete:" or "blocked:".',
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++JSON_GBNF = r'''
++root ::= object
++object ::= "{" ws ( string ":" ws value ("," ws string ":" ws value)* )? "}" ws
++array ::= "[" ws ( value ("," ws value)* )? "]" ws
++value ::= object | array | string | number | "true" ws | "false" ws | "null" ws
++string ::= "\"" ( [^"\\] | "\\" (["\\/bfnrt] | "u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]) )* "\"" ws
++number ::= "-"? ( "0" | [1-9] [0-9]* ) ( "." [0-9]+ )? ( [eE] [+-]? [0-9]+ )? ws
++ws ::= [ \t\n\r]*
++'''
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    artifact_path: Path | str | None = None,
++    row_results_path: Path | str | None = None,
++    fixture_artifact: Mapping[str, Any] | None = None,
++    model_resolver: ModelResolver = resolve_cached_gguf,
++    runtime_probe: RuntimeProbe | None = None,
++    generation_runner: GenerationRunner | None = None,
++    max_fixtures: int = DEFAULT_MAX_FIXTURES,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++    write: bool = True,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    """Run the gated pilot and optionally write the artifact and row JSONL."""
++
++    root_path = Path(root)
++    destination = _destination(root_path, artifact_path, RESULT_RELATIVE_PATH)
++    rows_destination = _destination(root_path, row_results_path, ROW_RESULTS_RELATIVE_PATH)
++    fixture_payload = (
++        dict(fixture_artifact)
++        if fixture_artifact is not None
++        else _read_json(root_path / exp5443.RESULT_RELATIVE_PATH)
++    )
++    model_specs = resolve_model_specs(model_resolver)
++    selected_model = select_headline_model(model_specs)
++    runtime_fn = runtime_probe or default_runtime_probe
++    runtime_receipt = runtime_fn(model_spec=selected_model, n_gpu_layers=N_GPU_LAYERS)
++    preconditions = evaluate_preconditions(
++        fixture_payload=fixture_payload,
++        model_specs=model_specs,
++        selected_model=selected_model,
++        runtime_receipt=runtime_receipt,
++    )
++
++    live_runner: GenerationRunner | None = generation_runner
++    runner_load_receipt: JsonDict = {}
++    if preconditions["all_passed"] and live_runner is None:
++        try:
++            live = LlamaCppGenerationRunner(
++                model_spec=selected_model or {},
++                n_gpu_layers=N_GPU_LAYERS,
++                seed=random_seed,
++            )
++        except Exception as exc:  # pragma: no cover - depends on local runtime/model.
++            preconditions["all_passed"] = False
++            preconditions["blocked_preconditions"].append(
++                f"llama_cpp_model_load_failed:{type(exc).__name__}: {exc}"
++            )
++            live_runner = None
++        else:
++            live_runner = live
++            runner_load_receipt = dict(live.load_receipt)
++            runtime_receipt = {**runtime_receipt, "load_receipt": runner_load_receipt}
++            if not bool(runner_load_receipt.get("offload_evidence")):
++                preconditions["all_passed"] = False
++                preconditions["blocked_preconditions"].append("gpu_offload_not_observed_after_load")
++
++    if not preconditions["all_passed"] or live_runner is None:
++        artifact = build_artifact(
++            model_specs=model_specs,
++            selected_model=selected_model,
++            runtime_receipt=runtime_receipt,
++            preconditions=preconditions,
++            rows=[],
++            row_results_path=rows_destination,
++            tests_run=tests_run,
++            blocked=True,
++        )
++        if write:
++            _write_json(destination, artifact)
++        validate_artifact(artifact)
++        return artifact
++
++    selected_fixtures = select_fixture_rows(fixture_payload, max_fixtures=max_fixtures)
++    rows = run_condition_rows(
++        fixtures=selected_fixtures,
++        model_spec=selected_model or {},
++        runtime_receipt=runtime_receipt,
++        generation_runner=live_runner,
++        random_seed=random_seed,
++    )
++    artifact = build_artifact(
++        model_specs=_mark_model_ran(model_specs, selected_model),
++        selected_model=selected_model,
++        runtime_receipt=runtime_receipt,
++        preconditions=preconditions,
++        rows=rows,
++        row_results_path=rows_destination,
++        tests_run=tests_run,
++        blocked=False,
++    )
++    if write:
++        _write_jsonl(rows_destination, rows)
++        validate_artifact(artifact)
++        _write_json(destination, artifact)
++    else:
++        validate_artifact({**artifact, "row_results_path": str(rows_destination)})
++    return artifact
++
++
++def resolve_model_specs(model_resolver: ModelResolver = resolve_cached_gguf) -> list[JsonDict]:
++    """Resolve the mandated local GGUF specs without using transformers tokenizers."""
++
++    rows: list[JsonDict] = []
++    for spec in MANDATED_MODEL_SPECS:
++        hf_id = str(spec["hf_id"])
++        quantization = str(spec.get("quantization", DEFAULT_QUANTIZATION))
++        path_text = model_resolver(hf_id, quantization)
++        path = Path(path_text) if path_text else None
++        local = bool(path and path.is_file())
++        rows.append(
++            {
++                "role": str(spec["role"]),
++                "hf_id": hf_id,
++                "quantization": quantization,
++                "model_path": str(path) if path else None,
++                "local_path_available": local,
++                "file_receipt": _file_receipt(path) if local and path is not None else None,
++                "runtime_backend": None,
++                "n_gpu_layers": None,
++                "gpu_offload_verified": False,
++                "ran_headline": False,
++                "legacy_smoke_only": False,
++            }
++        )
++    return rows
++
++
++def select_headline_model(model_specs: Sequence[Mapping[str, Any]]) -> JsonDict | None:
++    """Select one resolved mandated model, preferring the lower-active-parameter MoE."""
++
++    by_role = {str(row.get("role")): row for row in model_specs}
++    for role in RUN_ROLE_PREFERENCE:
++        row = by_role.get(role)
++        if isinstance(row, Mapping) and row.get("local_path_available") is True:
++            return dict(row)
++    return None
++
++
++def default_runtime_probe(**kwargs: Any) -> JsonDict:  # pragma: no cover
++    """Check CUDA and llama.cpp GPU-offload support before generation."""
++
++    blocked: list[str] = []
++    torch_cuda: JsonDict
++    try:
++        import torch  # noqa: PLC0415
++
++        torch_cuda = {
++            "import_ok": True,
++            "cuda_available": bool(torch.cuda.is_available()),
++            "device_count": int(torch.cuda.device_count()),
++        }
++        if not torch_cuda["cuda_available"] or int(torch_cuda["device_count"]) <= 0:
++            blocked.append("torch_cuda_unavailable")
++    except Exception as exc:  # pragma: no cover - environment-dependent.
++        torch_cuda = {"import_ok": False, "error": f"{type(exc).__name__}: {exc}"}
++        blocked.append("torch_import_failed")
++
++    llama_info: JsonDict
++    try:
++        from llama_cpp import llama_cpp  # noqa: PLC0415
++
++        supports = bool(llama_cpp.llama_supports_gpu_offload())
++        system_info_raw = llama_cpp.llama_print_system_info()
++        if isinstance(system_info_raw, bytes):
++            system_info = system_info_raw.decode("utf-8", "replace")
++        else:
++            system_info = str(system_info_raw)
++        llama_info = {
++            "import_ok": True,
++            "gpu_offload_supported": supports,
++            "system_info": system_info,
++        }
++        if not supports:
++            blocked.append("llama_cpp_gpu_offload_unsupported")
++    except Exception as exc:  # pragma: no cover - environment-dependent.
++        llama_info = {"import_ok": False, "error": f"{type(exc).__name__}: {exc}"}
++        blocked.append("llama_cpp_import_failed")
++
++    nvidia_smi = _nvidia_smi_query()
++    if not nvidia_smi.get("ok"):
++        blocked.append("nvidia_smi_unavailable")
++
++    return {
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "llama_cpp_import_ok": bool(llama_info.get("import_ok")),
++        "cuda_visible": bool(torch_cuda.get("cuda_available"))
++        and int(torch_cuda.get("device_count", 0)) > 0,
++        "gpu_offload_supported": bool(llama_info.get("gpu_offload_supported")),
++        "n_gpu_layers": int(kwargs.get("n_gpu_layers", N_GPU_LAYERS)),
++        "offload_evidence": bool(llama_info.get("gpu_offload_supported"))
++        and bool(torch_cuda.get("cuda_available")),
++        "torch_cuda": torch_cuda,
++        "llama_cpp": llama_info,
++        "nvidia_smi": nvidia_smi,
++        "blocked_preconditions": sorted(set(blocked)),
++    }
++
++
++def evaluate_preconditions(
++    *,
++    fixture_payload: Mapping[str, Any],
++    model_specs: Sequence[Mapping[str, Any]],
++    selected_model: Mapping[str, Any] | None,
++    runtime_receipt: Mapping[str, Any],
++) -> JsonDict:
++    """Combine the Exp5443, model-cache, CUDA, and offload gates."""
++
++    blocked = list(runtime_receipt.get("blocked_preconditions", []))
++    fixture_ready = fixture_payload.get("verifier_potential_fixture_ready") is True
++    if not fixture_ready:
++        blocked.append("exp5443_verifier_potential_fixture_not_ready")
++    mandated_present = {str(row.get("hf_id")) for row in model_specs} == set(MANDATED_HF_IDS)
++    if not mandated_present:
++        blocked.append("mandated_model_specs_missing")
++    if selected_model is None:
++        blocked.append("no_mandated_local_gguf_model_path")
++    if runtime_receipt.get("cuda_visible") is not True:
++        blocked.append("cuda_not_visible")
++    if runtime_receipt.get("offload_evidence") is not True:
++        blocked.append("gpu_offload_evidence_missing")
++    return {
++        "fixture_ready": fixture_ready,
++        "mandated_model_specs_present": mandated_present,
++        "local_model_path_available": selected_model is not None,
++        "cuda_visible": runtime_receipt.get("cuda_visible") is True,
++        "runtime_backend": str(runtime_receipt.get("runtime_backend", "")),
++        "gpu_offload_preflight": runtime_receipt.get("offload_evidence") is True,
++        "blocked_preconditions": sorted(set(str(item) for item in blocked)),
++        "all_passed": not blocked,
++    }
++
++
++def select_fixture_rows(
++    fixture_payload: Mapping[str, Any],
++    *,
++    max_fixtures: int = DEFAULT_MAX_FIXTURES,
++) -> list[JsonDict]:
++    """Select a bounded set of Exp5443 rows with exact final verifier support."""
++
++    rows = fixture_payload.get("fixture_rows")
++    if not isinstance(rows, list):
++        return []
++    selected: list[JsonDict] = []
++    for row in rows:
++        if not isinstance(row, Mapping):
++            continue
++        verdict = _mapping(row.get("exact_final_verdict"))
++        if verdict.get("verified") is not True:
++            continue
++        selected.append(copy.deepcopy(dict(row)))
++        if len(selected) >= max_fixtures:
++            break
++    return selected
++
++
++def run_condition_rows(
++    *,
++    fixtures: Sequence[Mapping[str, Any]],
++    model_spec: Mapping[str, Any],
++    runtime_receipt: Mapping[str, Any],
++    generation_runner: GenerationRunner,
++    random_seed: int = RANDOM_SEED,
++) -> list[JsonDict]:
++    """Generate and score one row per fixture and condition."""
++
++    rows: list[JsonDict] = []
++    runtime_backend = str(runtime_receipt.get("runtime_backend", "llama_cpp_python_cuda_gguf"))
++    for fixture_index, fixture in enumerate(fixtures):
++        fixture_row = copy.deepcopy(dict(fixture))
++        for condition_index, condition in enumerate(CONDITION_NAMES):
++            seed = random_seed + fixture_index * 101 + condition_index
++            prompt = build_prompt(fixture_row, condition=condition)
++            prompt_hash = _sha256_text(prompt)
++            prefix = _best_guided_prefix(fixture_row) if condition == GUIDED_CONDITION else None
++            grammar = JSON_GBNF if condition in {"grammar_only", GUIDED_CONDITION} else None
++            started = time.perf_counter()
++            generation = generation_runner(
++                prompt=prompt,
++                condition=condition,
++                fixture=fixture_row,
++                model_spec=model_spec,
++                runtime_backend=runtime_backend,
++                grammar=grammar,
++                prefix_seed=prefix,
++                seed=seed,
++                max_tokens=DEFAULT_TOKEN_BUDGET,
++                n_gpu_layers=N_GPU_LAYERS,
++            )
++            elapsed = time.perf_counter() - started
++            row = score_candidate_row(
++                fixture=fixture_row,
++                condition=condition,
++                model_spec=model_spec,
++                runtime_backend=runtime_backend,
++                runtime_receipt=runtime_receipt,
++                generation=generation,
++                prompt_hash=prompt_hash,
++                seed=seed,
++                token_budget=DEFAULT_TOKEN_BUDGET,
++                fallback_duration_s=elapsed,
++                prefix_seed=prefix,
++            )
++            rows.append(row)
++    return rows
++
++
++def build_prompt(fixture: Mapping[str, Any], *, condition: str) -> str:
++    """Build the condition-specific prompt while keeping exact checks hidden in code."""
++
++    family = str(fixture.get("constraint_family"))
++    lines = [
++        "Return exactly one compact JSON object and no prose.",
++        f"Fixture id: {fixture.get('fixture_id')}",
++        f"Constraint family: {family}",
++        f"Required keys: {json.dumps(fixture.get('required_keys', []), sort_keys=True)}",
++        f"Allowed keys: {json.dumps(fixture.get('allowed_keys', []), sort_keys=True)}",
++        _family_instruction(fixture, family),
++    ]
++    if condition == "unconstrained":
++        lines.append("No grammar or prefix is applied in this condition.")
++    elif condition == "grammar_only":
++        lines.append("A JSON grammar constrains syntax only; satisfy the semantics yourself.")
++    elif condition == GUIDED_CONDITION:
++        prefix = _best_guided_prefix(fixture)
++        lines.append("A deterministic verifier potential selected this partial JSON prefix:")
++        lines.append(json.dumps(_mapping(prefix.get("fields")) if prefix else {}, sort_keys=True))
++        lines.append("Complete or minimally repair the prefix so the final JSON satisfies all rules.")
++    else:
++        raise ValueError(f"unknown condition: {condition}")
++    return "\n".join(lines)
++
++
++def score_candidate_row(
++    *,
++    fixture: Mapping[str, Any],
++    condition: str,
++    model_spec: Mapping[str, Any],
++    runtime_backend: str,
++    runtime_receipt: Mapping[str, Any],
++    generation: Mapping[str, Any],
++    prompt_hash: str,
++    seed: int,
++    token_budget: int,
++    fallback_duration_s: float,
++    prefix_seed: Mapping[str, Any] | None,
++) -> JsonDict:
++    """Parse one model candidate and run the exact final verifier."""
++
++    output_text = str(generation.get("output_text", ""))
++    parsed, parse_error = extract_json_object(output_text)
++    final_output = parsed if parsed is not None else {}
++    exact_row = copy.deepcopy(dict(fixture))
++    exact_row["final_output"] = final_output
++    exact_verdict = exp5443.exact_final_verdict(exact_row)
++    advisory_accept = parsed is not None
++    reward_evaluations = _reward_evaluation_count(condition, prefix_seed)
++    row: JsonDict = {
++        "schema": "carnot.experiment_5444.row.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "row_id": f"{fixture.get('row_id')}:{condition}",
++        "fixture_row_id": str(fixture.get("row_id")),
++        "fixture_id": str(fixture.get("fixture_id")),
++        "constraint_family": str(fixture.get("constraint_family")),
++        "condition": condition,
++        "model_role": str(model_spec.get("role")),
++        "model_hf_id": str(model_spec.get("hf_id")),
++        "model_path": str(model_spec.get("model_path")),
++        "runtime_backend": runtime_backend,
++        "n_gpu_layers": int(runtime_receipt.get("n_gpu_layers", N_GPU_LAYERS)),
++        "gpu_offload_evidence": bool(runtime_receipt.get("offload_evidence")),
++        "random_seed": seed,
++        "prompt_hash": prompt_hash,
++        "token_budget": token_budget,
++        "reward_evaluation_count": reward_evaluations,
++        "generation_duration_s": float(generation.get("duration_s", fallback_duration_s)),
++        "generated_token_count": int(generation.get("generated_token_count", 0) or 0),
++        "output_text": output_text,
++        "candidate_output": parsed,
++        "parse_status": "parsed" if parsed is not None else "abstained",
++        "parse_error": parse_error,
++        "condition_advisory_accept": advisory_accept,
++        "exact_final_verdict": exact_verdict,
++        "accepted_by_final_authority": bool(exact_verdict["accepted"]),
++        "final_authority_bypassed": False,
++        "prefix_seed": copy.deepcopy(prefix_seed),
++        "backend_details": copy.deepcopy(generation.get("backend_details", {})),
++    }
++    row["row_checksum"] = row_checksum(row)
++    return row
++
++
++def extract_json_object(text: str) -> tuple[JsonDict | None, str | None]:
++    """Return the first JSON object in text, if one can be decoded."""
++
++    decoder = json.JSONDecoder()
++    for index, char in enumerate(text):
++        if char != "{":
++            continue
++        try:
++            value, _end = decoder.raw_decode(text[index:])
++        except json.JSONDecodeError as exc:
++            last_error = f"{type(exc).__name__}: {exc}"
++            continue
++        if isinstance(value, dict):
++            return dict(value), None
++    return None, locals().get("last_error", "no_json_object")
++
++
++def derive_metrics(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Compute all aggregate metrics from candidate rows only."""
++
++    row_list = [dict(row) for row in rows if isinstance(row, Mapping)]
++    total = len(row_list)
++    by_condition: dict[str, list[JsonDict]] = {name: [] for name in CONDITION_NAMES}
++    for row in row_list:
++        by_condition.setdefault(str(row.get("condition")), []).append(row)
++    condition_metrics = {
++        condition: _condition_metric(condition_rows)
++        for condition, condition_rows in by_condition.items()
++        if condition in CONDITION_NAMES
++    }
++    guided_rate = condition_metrics.get(GUIDED_CONDITION, {}).get("accepted_validity_rate", 0.0)
++    unconstrained_rate = condition_metrics.get("unconstrained", {}).get(
++        "accepted_validity_rate", 0.0
++    )
++    grammar_rate = condition_metrics.get("grammar_only", {}).get("accepted_validity_rate", 0.0)
++    semantic_false_accepts = [
++        row
++        for row in row_list
++        if _advisory_false_accept(row) and row.get("constraint_family") == "semantic_contradiction"
++    ]
++    unsafe_false_accepts = [
++        row
++        for row in row_list
++        if _advisory_false_accept(row) and row.get("constraint_family") in UNSAFE_FALSE_ACCEPT_FAMILIES
++    ]
++    action_false_accepts = [
++        row
++        for row in row_list
++        if _advisory_false_accept(row) and row.get("constraint_family") == "unreachable_tool_action"
++    ]
++    abstentions = [row for row in row_list if row.get("parse_status") == "abstained"]
++    row_checksums_match = all(row.get("row_checksum") == row_checksum(row) for row in row_list)
++    exact_authority_ok = all(
++        _mapping(row.get("exact_final_verdict")).get("verified") is True
++        and _mapping(row.get("exact_final_verdict")).get("authority") == "exact_final_verifier"
++        and row.get("final_authority_bypassed") is False
++        for row in row_list
++    )
++    predicate_support = {
++        "accepted_validity": "exact_final_verdict.accepted is true",
++        "semantic_false_accept": "advisory accept, exact reject, semantic family",
++        "unsafe_false_accept": "advisory accept, exact reject, unsafe schema/API family",
++        "action_unreachability": "advisory accept, exact reject, unreachable action family",
++        "abstention": "parse_status is abstained",
++        "guided_delta": "guided accepted-validity rate minus baseline accepted-validity rate",
++    }
++    metric_independence = bool(
++        (not row_list or row_checksums_match)
++        and exact_authority_ok
++        and len(set(predicate_support.values())) == len(predicate_support)
++    )
++    return {
++        "condition_metrics": condition_metrics,
++        "accepted_validity_rate": _rate(
++            [row for row in row_list if row.get("accepted_by_final_authority") is True], total
++        ),
++        "guided_validity_delta_vs_unconstrained": guided_rate - unconstrained_rate,
++        "guided_validity_delta_vs_grammar_only": guided_rate - grammar_rate,
++        "semantic_false_accept_rate": _rate(semantic_false_accepts, total),
++        "unsafe_false_accept_rate": _rate(unsafe_false_accepts, total),
++        "action_unreachability_rate": _rate(action_false_accepts, total),
++        "abstention_rate": _rate(abstentions, total),
++        "constraint_family_counts": dict(
++            sorted(Counter(str(row.get("constraint_family")) for row in row_list).items())
++        ),
++        "metric_independence_checks_passed": metric_independence,
++        "predicate_support": predicate_support,
++        "row_checksums_match": row_checksums_match,
++        "exact_authority_rows": sum(1 for row in row_list if _exact_authority_row(row)),
++        "row_count": total,
++    }
++
++
++def derive_reward_budget(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Compute reward-evaluation accounting from candidate rows."""
++
++    per_condition: dict[str, int] = defaultdict(int)
++    per_row: list[JsonDict] = []
++    for row in rows:
++        condition = str(row.get("condition"))
++        count = int(row.get("reward_evaluation_count", 0))
++        per_condition[condition] += count
++        per_row.append(
++            {
++                "row_id": row.get("row_id"),
++                "fixture_id": row.get("fixture_id"),
++                "condition": condition,
++                "reward_evaluation_count": count,
++            }
++        )
++    return {
++        "unit": "one deterministic verifier-potential or exact-final verifier invocation",
++        "total_reward_evaluations": sum(per_condition.values()),
++        "per_condition": {condition: per_condition.get(condition, 0) for condition in CONDITION_NAMES},
++        "per_row": per_row,
++    }
++
++
++def build_artifact(
++    *,
++    model_specs: Sequence[Mapping[str, Any]],
++    selected_model: Mapping[str, Any] | None,
++    runtime_receipt: Mapping[str, Any],
++    preconditions: Mapping[str, Any],
++    rows: Sequence[Mapping[str, Any]],
++    row_results_path: Path,
++    tests_run: Sequence[str | Mapping[str, Any]],
++    blocked: bool,
++) -> JsonDict:
++    """Assemble the terminal artifact from row records and preflight receipts."""
++
++    row_list = [dict(row) for row in rows]
++    metrics = derive_metrics(row_list)
++    budget = derive_reward_budget(row_list)
++    gpu_offload_verified = bool(
++        preconditions.get("all_passed")
++        and runtime_receipt.get("offload_evidence") is True
++        and (runtime_receipt.get("load_receipt", {}).get("offload_evidence", True) is True)
++    )
++    ready = bool(
++        not blocked
++        and row_list
++        and gpu_offload_verified
++        and metrics["metric_independence_checks_passed"]
++        and metrics["condition_metrics"].get(GUIDED_CONDITION, {}).get("count", 0)
++        == len(row_list) // len(CONDITION_NAMES)
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "status": "complete" if ready else "blocked",
++        "preconditions_checked": True,
++        "precondition_details": copy.deepcopy(preconditions),
++        "model_specs": [dict(row) for row in model_specs],
++        "selected_model_spec": dict(selected_model) if selected_model is not None else None,
++        "headline_required_any_of": list(MANDATED_HF_IDS),
++        "runtime_backend": str(runtime_receipt.get("runtime_backend", "unavailable")),
++        "runtime_receipt": copy.deepcopy(runtime_receipt),
++        "gpu_offload_verified": gpu_offload_verified,
++        "fixture_count": len({row.get("fixture_id") for row in row_list}),
++        "condition_names": list(CONDITION_NAMES),
++        "row_results_path": str(row_results_path),
++        "exact_final_authority": True,
++        "reward_evaluation_budget": budget,
++        "guided_validity_delta_vs_unconstrained": metrics[
++            "guided_validity_delta_vs_unconstrained"
++        ],
++        "guided_validity_delta_vs_grammar_only": metrics[
++            "guided_validity_delta_vs_grammar_only"
++        ],
++        "semantic_false_accept_rate": metrics["semantic_false_accept_rate"],
++        "unsafe_false_accept_rate": metrics["unsafe_false_accept_rate"],
++        "action_unreachability_rate": metrics["action_unreachability_rate"],
++        "abstention_rate": metrics["abstention_rate"],
++        "accepted_validity_rate": metrics["accepted_validity_rate"],
++        "metric_independence_checks_passed": metrics["metric_independence_checks_passed"],
++        "verifier_guided_decoding_ready": ready,
++        "inference_substrate": INFERENCE_SUBSTRATE if ready else BLOCKED_INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(ready, preconditions, metrics),
++        "condition_metrics": metrics["condition_metrics"],
++        "constraint_family_counts": metrics["constraint_family_counts"],
++        "metric_details": metrics,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "row_results": row_list,
++        "row_checksums": [row.get("row_checksum") for row in row_list],
++        "tests_run": _normalise_tests_run(tests_run),
++        "research_conductor_modified": False,
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Raise when the Exp5444 artifact cannot support the decoding claim."""
++
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return schema, row, precondition, and aggregate validation errors."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles must match REQ-SAFE-5444")
++    if type(artifact.get("preconditions_checked")) is not bool:
++        errors.append("preconditions_checked must be boolean")
++    if not isinstance(artifact.get("model_specs"), list):
++        errors.append("model_specs must be a list")
++        model_specs: list[Mapping[str, Any]] = []
++    else:
++        model_specs = [row for row in artifact["model_specs"] if isinstance(row, Mapping)]
++    model_ids = {str(row.get("hf_id")) for row in model_specs}
++    if model_ids != set(MANDATED_HF_IDS):
++        errors.append("mandated model_specs must include the three required GGUF IDs")
++    if artifact.get("headline_required_any_of") != list(MANDATED_HF_IDS):
++        errors.append("headline_required_any_of must list mandated SOTA IDs")
++    if artifact.get("condition_names") != list(CONDITION_NAMES):
++        errors.append("condition_names must match required baseline/guided order")
++    if artifact.get("exact_final_authority") is not True:
++        errors.append("exact_final_authority must be true")
++    if type(artifact.get("gpu_offload_verified")) is not bool:
++        errors.append("gpu_offload_verified must be boolean")
++    if not isinstance(artifact.get("runtime_backend"), str):
++        errors.append("runtime_backend must be a string")
++    if not _bare_non_negative_int(artifact.get("fixture_count")):
++        errors.append("fixture_count must be a non-negative integer")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or "\n" in verdict or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must start with complete: or blocked:")
++    if artifact.get("research_conductor_modified") is not False:
++        errors.append("scripts/research_conductor.py must not be modified")
++
++    rows_value = artifact.get("row_results")
++    if not isinstance(rows_value, list):
++        errors.append("row_results must be a list")
++        rows: list[JsonDict] = []
++    else:
++        rows = [dict(row) for row in rows_value if isinstance(row, Mapping)]
++    errors.extend(_row_integrity_errors(rows))
++    metrics = derive_metrics(rows)
++    budget = derive_reward_budget(rows)
++    errors.extend(_aggregate_errors(artifact, metrics, budget, rows))
++    errors.extend(_row_path_errors(artifact, rows))
++
++    ready = artifact.get("verifier_guided_decoding_ready") is True
++    if ready:
++        if artifact.get("status") != "complete":
++            errors.append("verifier_guided_decoding_ready requires complete status")
++        if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++            errors.append("complete artifact requires inference_substrate=live_llm_inference")
++        if artifact.get("gpu_offload_verified") is not True:
++            errors.append("verifier_guided_decoding_ready requires gpu_offload_verified")
++        if not any(row.get("ran_headline") is True for row in model_specs):
++            errors.append("headline_required_any_of requires at least one mandated model ran")
++        if not rows:
++            errors.append("verifier_guided_decoding_ready requires row evidence")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum must match artifact payload")
++    return errors
++
++
++class LlamaCppGenerationRunner:  # pragma: no cover
++    """Small llama-cpp-python wrapper that loads one GGUF and generates bounded rows."""
++
++    def __init__(
++        self,
++        *,
++        model_spec: Mapping[str, Any],
++        n_gpu_layers: int = N_GPU_LAYERS,
++        seed: int = RANDOM_SEED,
++    ) -> None:
++        from llama_cpp import Llama  # noqa: PLC0415
++
++        self.model_spec = dict(model_spec)
++        self.n_gpu_layers = n_gpu_layers
++        before = _gpu_memory_snapshot()
++        started = time.perf_counter()
++        self.llm = Llama(
++            model_path=str(model_spec["model_path"]),
++            n_gpu_layers=n_gpu_layers,
++            n_ctx=2048,
++            n_batch=256,
++            seed=seed,
++            verbose=False,
++        )
++        duration_s = time.perf_counter() - started
++        after = _gpu_memory_snapshot()
++        delta = _max_memory_delta_mb(before, after)
++        self.load_receipt = {
++            "load_duration_s": duration_s,
++            "gpu_memory_before": before,
++            "gpu_memory_after": after,
++            "gpu_memory_delta_mb": delta,
++            "offload_evidence": delta > 512,
++            "n_gpu_layers": n_gpu_layers,
++        }
++
++    def __call__(self, **kwargs: Any) -> JsonDict:
++        from llama_cpp import LlamaGrammar  # noqa: PLC0415
++
++        grammar_text = kwargs.get("grammar")
++        grammar = LlamaGrammar.from_string(str(grammar_text), verbose=False) if grammar_text else None
++        started = time.perf_counter()
++        result = self.llm.create_completion(
++            prompt=str(kwargs["prompt"]),
++            max_tokens=int(kwargs["max_tokens"]),
++            temperature=0.0 if kwargs["condition"] != "unconstrained" else 0.2,
++            top_p=0.95,
++            seed=int(kwargs["seed"]),
++            echo=False,
++            stop=["\n\n"],
++            grammar=grammar,
++        )
++        duration_s = time.perf_counter() - started
++        choices = result.get("choices", []) if isinstance(result, Mapping) else []
++        text = str(choices[0].get("text", "")) if choices else ""
++        usage = result.get("usage", {}) if isinstance(result, Mapping) else {}
++        return {
++            "output_text": text,
++            "duration_s": duration_s,
++            "generated_token_count": int(usage.get("completion_tokens", 0) or 0),
++            "backend_details": {
++                "llama_cpp_create_completion": True,
++                "grammar_used": grammar_text is not None,
++            },
++        }
++
++
++def row_checksum(row: Mapping[str, Any]) -> str:
++    """Hash one row while excluding the checksum field itself."""
++
++    payload = {key: value for key, value in row.items() if key != "row_checksum"}
++    return _sha256_json(payload)
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact payload without the self-referential checksum."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return _sha256_json(payload)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    """CLI entry point for producing the Exp5444 result artifact."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--artifact-path", type=Path, default=None)
++    parser.add_argument("--row-results-path", type=Path, default=None)
++    parser.add_argument("--max-fixtures", type=int, default=DEFAULT_MAX_FIXTURES)
++    args = parser.parse_args(argv)
++    artifact = run(
++        root=args.root,
++        artifact_path=args.artifact_path,
++        row_results_path=args.row_results_path,
++        max_fixtures=args.max_fixtures,
++        write=True,
++    )
++    print(json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True))
++    return 0 if artifact["verifier_guided_decoding_ready"] else 1
++
++
++def _condition_metric(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    total = len(rows)
++    accepted = [row for row in rows if row.get("accepted_by_final_authority") is True]
++    abstained = [row for row in rows if row.get("parse_status") == "abstained"]
++    return {
++        "count": total,
++        "accepted_count": len(accepted),
++        "accepted_validity_rate": _rate(accepted, total),
++        "abstention_rate": _rate(abstained, total),
++    }
++
++
++def _aggregate_errors(
++    artifact: Mapping[str, Any],
++    metrics: Mapping[str, Any],
++    budget: Mapping[str, Any],
++    rows: Sequence[Mapping[str, Any]],
++) -> list[str]:
++    errors: list[str] = []
++    scalar_fields = (
++        "guided_validity_delta_vs_unconstrained",
++        "guided_validity_delta_vs_grammar_only",
++        "semantic_false_accept_rate",
++        "unsafe_false_accept_rate",
++        "action_unreachability_rate",
++        "abstention_rate",
++        "accepted_validity_rate",
++    )
++    for field in scalar_fields:
++        if not _float_close(artifact.get(field), metrics.get(field)):
++            errors.append(f"{field} must match row recomputation")
++    if artifact.get("condition_metrics") != metrics.get("condition_metrics"):
++        errors.append("condition_metrics must match row recomputation")
++    if artifact.get("metric_details") != metrics:
++        errors.append("metric_details must match row recomputation")
++    if artifact.get("metric_independence_checks_passed") != metrics.get(
++        "metric_independence_checks_passed"
++    ):
++        errors.append("metric_independence_checks_passed must match row recomputation")
++    if artifact.get("constraint_family_counts") != metrics.get("constraint_family_counts"):
++        errors.append("constraint_family_counts must match row recomputation")
++    if artifact.get("reward_evaluation_budget") != budget:
++        errors.append("reward_evaluation_budget must match row recomputation")
++    if artifact.get("row_checksums") != [row.get("row_checksum") for row in rows]:
++        errors.append("row_checksums must match row_results")
++    if artifact.get("fixture_count") != len({row.get("fixture_id") for row in rows}):
++        errors.append("fixture_count must match distinct row fixtures")
++    return errors
++
++
++def _row_integrity_errors(rows: Sequence[Mapping[str, Any]]) -> list[str]:
++    errors: list[str] = []
++    for row in rows:
++        verdict = _mapping(row.get("exact_final_verdict"))
++        if verdict.get("verified") is not True or verdict.get("authority") != "exact_final_verifier":
++            errors.append("row exact final authority must be exact_final_verifier")
++        if row.get("final_authority_bypassed") is not False:
++            errors.append("row exact final authority must not be bypassed")
++        if row.get("row_checksum") != row_checksum(row):
++            errors.append("row checksum must match row payload")
++        if str(row.get("model_hf_id")) not in MANDATED_HF_IDS:
++            errors.append("row model_hf_id must be mandated")
++        if not str(row.get("model_path", "")).endswith(".gguf"):
++            errors.append("row model_path must be a GGUF path")
++    return errors
++
++
++def _row_path_errors(artifact: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) -> list[str]:
++    errors: list[str] = []
++    path_text = artifact.get("row_results_path")
++    if not isinstance(path_text, str) or not path_text:
++        return ["row_results_path must be a non-empty string"]
++    path = Path(path_text)
++    if artifact.get("verifier_guided_decoding_ready") is True:
++        if not path.is_file():
++            errors.append("row_results_path must point to written row evidence")
++            return errors
++        try:
++            disk_rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
++        except (OSError, json.JSONDecodeError) as exc:
++            errors.append(f"row_results_path is unreadable: {type(exc).__name__}: {exc}")
++            return errors
++        if disk_rows != list(rows):
++            errors.append("row_results_path contents must match embedded row_results")
++    return errors
++
++
++def _mark_model_ran(
++    model_specs: Sequence[Mapping[str, Any]],
++    selected_model: Mapping[str, Any] | None,
++) -> list[JsonDict]:
++    selected_hf_id = str(selected_model.get("hf_id")) if selected_model else ""
++    rows: list[JsonDict] = []
++    for spec in model_specs:
++        row = dict(spec)
++        if str(row.get("hf_id")) == selected_hf_id:
++            row["ran_headline"] = True
++            row["runtime_backend"] = "llama_cpp_python_cuda_gguf"
++            row["n_gpu_layers"] = N_GPU_LAYERS
++            row["gpu_offload_verified"] = True
++        rows.append(row)
++    return rows
++
++
++def _family_instruction(fixture: Mapping[str, Any], family: str) -> str:
++    if family == "schema_only_trap":
++        return "Use only the allowed keys. Do not add admin_override or any extra field."
++    if family == "semantic_contradiction":
++        return "If you include negated_object, it must differ from object."
++    if family == "unreachable_tool_action":
++        return "The tool must be allowed, order_state must be paid, and lock_active must be false."
++    if family == "arithmetic_finite_domain":
++        return "All numeric fields must be integers in range and sum must equal x + y."
++    if family == "ontology_triple_update":
++        return "The triple must match the ontology shape and must not create a cycle."
++    if family == "api_call_witness":
++        api = _mapping(fixture.get("api"))
++        return f"Use an allowed API call and witness signature {api.get('expected_signature')}."
++    if family == "benign":
++        return "The evidence field must support claim_key and claim_value exactly."
++    return "Satisfy the deterministic row constraints."
++
++
++def _best_guided_prefix(fixture: Mapping[str, Any]) -> JsonDict | None:
++    prefixes = [
++        dict(prefix)
++        for prefix in fixture.get("prefixes", [])
++        if isinstance(prefix, Mapping) and prefix.get("accepted_by_potential") is True
++    ]
++    if not prefixes:
++        return None
++    return max(
++        prefixes,
++        key=lambda prefix: (
++            len(prefix.get("accepted_functions", [])),
++            -int(prefix.get("reward_evaluation_cost_units", 0)),
++        ),
++    )
++
++
++def _reward_evaluation_count(condition: str, prefix_seed: Mapping[str, Any] | None) -> int:
++    final_verifier_call = 1
++    if condition != GUIDED_CONDITION or prefix_seed is None:
++        return final_verifier_call
++    return final_verifier_call + len(prefix_seed.get("potential_evaluations", []))
++
++
++def _advisory_false_accept(row: Mapping[str, Any]) -> bool:
++    return row.get("condition_advisory_accept") is True and row.get(
++        "accepted_by_final_authority"
++    ) is False
++
++
++def _exact_authority_row(row: Mapping[str, Any]) -> bool:
++    verdict = _mapping(row.get("exact_final_verdict"))
++    return (
++        verdict.get("verified") is True
++        and verdict.get("authority") == "exact_final_verifier"
++        and row.get("final_authority_bypassed") is False
++    )
++
++
++def _honest_verdict(
++    ready: bool,
++    preconditions: Mapping[str, Any],
++    metrics: Mapping[str, Any],
++) -> str:
++    if ready:
++        return "complete: local SOTA verifier-potential guided decoding pilot ready"
++    blockers = list(preconditions.get("blocked_preconditions", []))
++    if blockers:
++        return "blocked: " + ",".join(str(item) for item in blockers)
++    if metrics.get("metric_independence_checks_passed") is not True:
++        return "blocked: metric independence checks failed"
++    return "blocked: verifier-guided decoding readiness checks failed"
++
++
++def _file_receipt(path: Path) -> JsonDict:
++    stat = path.stat()
++    return {
++        "path": str(path),
++        "size_bytes": int(stat.st_size),
++        "suffix": path.suffix,
++        "name": path.name,
++        "head_64k_sha256": _hash_file_head(path, 64 * 1024),
++    }
++
++
++def _hash_file_head(path: Path, limit: int) -> str:
++    with path.open("rb") as handle:
++        return hashlib.sha256(handle.read(limit)).hexdigest()
++
++
++def _nvidia_smi_query() -> JsonDict:  # pragma: no cover
++    try:
++        result = subprocess.run(
++            [
++                "nvidia-smi",
++                "--query-gpu=index,name,memory.total,memory.used,utilization.gpu",
++                "--format=csv,noheader,nounits",
++            ],
++            capture_output=True,
++            text=True,
++            timeout=10,
++        )
++    except Exception as exc:  # pragma: no cover - environment-dependent.
++        return {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
++    return {
++        "ok": result.returncode == 0,
++        "stdout": result.stdout.strip(),
++        "stderr": result.stderr.strip(),
++        "returncode": result.returncode,
++    }
++
++
++def _gpu_memory_snapshot() -> list[JsonDict]:  # pragma: no cover
++    try:
++        result = subprocess.run(
++            [
++                "nvidia-smi",
++                "--query-gpu=index,memory.used",
++                "--format=csv,noheader,nounits",
++            ],
++            capture_output=True,
++            text=True,
++            timeout=10,
++        )
++    except Exception:  # pragma: no cover - environment-dependent.
++        return []
++    if result.returncode != 0:
++        return []
++    rows: list[JsonDict] = []
++    for line in result.stdout.splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) >= 2 and parts[0].isdigit():
++            rows.append({"index": int(parts[0]), "memory_used_mb": int(float(parts[1]))})
++    return rows
++
++
++def _max_memory_delta_mb(before: Sequence[Mapping[str, Any]], after: Sequence[Mapping[str, Any]]) -> int:
++    before_by_index = {int(row["index"]): int(row["memory_used_mb"]) for row in before}
++    deltas = [
++        int(row["memory_used_mb"]) - before_by_index.get(int(row["index"]), 0) for row in after
++    ]
++    return max(deltas) if deltas else 0
++
++
++def _read_json(path: Path) -> JsonDict:
++    try:
++        return json.loads(path.read_text(encoding="utf-8"))
++    except (FileNotFoundError, json.JSONDecodeError):
++        return {}
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_jsonl(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "".join(json.dumps(row, sort_keys=True, ensure_ascii=True) + "\n" for row in rows),
++        encoding="utf-8",
++    )
++
++
++def _normalise_tests_run(value: Sequence[str | Mapping[str, Any]]) -> list[JsonDict]:
++    rows = [_normalise_test_run(row) for row in value]
++    return rows or [
++        {
++            "command": (
++                ".venv/bin/pytest tests/python/"
++                "test_experiment_5444_gated_sota_energy_guided_decoding_v495.py -q"
++            ),
++            "outcome": "not_recorded",
++        }
++    ]
++
++
++def _normalise_test_run(value: str | Mapping[str, Any]) -> JsonDict:
++    if isinstance(value, Mapping):
++        return {
++            "command": str(value.get("command", "")),
++            "outcome": str(value.get("outcome", "not_recorded")),
++        }
++    return {"command": str(value), "outcome": "not_recorded"}
++
++
++def _destination(root: Path, path: Path | str | None, default: Path) -> Path:
++    if path is None:
++        return root / default
++    candidate = Path(path)
++    return candidate if candidate.is_absolute() else root / candidate
++
++
++def _mapping(value: Any) -> JsonDict:
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _bare_non_negative_int(value: Any) -> bool:
++    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
++
++
++def _rate(items: Sequence[Any], denominator: int) -> float:
++    return float(len(items) / denominator) if denominator else 0.0
++
++
++def _float_close(left: Any, right: Any) -> bool:
++    try:
++        return math.isclose(float(left), float(right), rel_tol=0.0, abs_tol=1e-12)
++    except (TypeError, ValueError):
++        return False
++
++
++def _sha256_text(value: str) -> str:
++    return hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def _sha256_json(payload: Any) -> str:
++    return hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode(
++            "utf-8"
++        )
++    ).hexdigest()
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index af998dd034..dfc6e0980b 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T21:58:41.964943+00:00",
+-  "finished_at": "2026-07-08T21:58:41.990447+00:00",
+-  "duration_s": 0.026,
++  "started_at": "2026-07-08T22:21:24.077552+00:00",
++  "finished_at": "2026-07-08T22:21:24.104241+00:00",
++  "duration_s": 0.027,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 1c75aa2d32..4644a2c2ae 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T21:58:42Z",
++  "run_date": "2026-07-08T22:21:24Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 09576beeeb..d3255a9ae4 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T21:58:43Z",
+-  "finished_at": "2026-07-08T21:58:43Z",
++  "started_at": "2026-07-08T22:21:25Z",
++  "finished_at": "2026-07-08T22:21:25Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 2f94bc05c9..3dddd89705 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T21:58:43Z",
++  "run_date": "2026-07-08T22:21:25Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 2bc1c26540..80a428954d 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-08T21:58:43Z",
++  "run_date": "2026-07-08T22:21:25Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 6ffde6deb0..f8e9e1f2c1 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.45s, user: 3.14s, system: 0.22s, MEM: 115.24 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.37s, user: 3.02s, system: 0.25s, MEM: 115.16 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 80% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
++Time spent: 79% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 8eb4de3f4e..f79d509e0e 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1567344665527344,
++  "efficiency_gains_ms": 2.1538734436035156,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 7483ea9786..2865b0720c 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-08T21:58:16.249856Z",
++  "run_date": "2026-07-08T22:20:56.978781Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index e7e5bfd772..bddb95bae4 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.0002456922084093094,
+-  "latency_domino_seconds": 0.0003998512402176857,
++  "latency_legacy_seconds": 0.0001520160585641861,
++  "latency_domino_seconds": 0.00028500473126769066,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 40687f0240..3d91d66949 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T21:58:52Z",
+-  "finished_at": "2026-07-08T21:58:52Z",
++  "started_at": "2026-07-08T22:21:32Z",
++  "finished_at": "2026-07-08T22:21:32Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index c66fe912c3..698082c75c 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.6070573329925537,
++  "duration_s": 0.5609433650970459,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index b409c20cb0..99d8355de5 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.139775410294533e-05,
++  "duration_s": 5.513429641723633e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5444_gated_sota_energy_guided_decoding_v495.json b/results/experiment_5444_gated_sota_energy_guided_decoding_v495.json
+new file mode 100644
+index 0000000000..ac90c308e8
+--- /dev/null
++++ b/results/experiment_5444_gated_sota_energy_guided_decoding_v495.json
+@@ -0,0 +1,1199 @@
++{
++  "abstention_rate": 0.25,
++  "accepted_validity_rate": 0.5833333333333334,
++  "action_unreachability_rate": 0.08333333333333333,
++  "condition_metrics": {
++    "grammar_only": {
++      "abstention_rate": 0.0,
++      "accepted_count": 4,
++      "accepted_validity_rate": 1.0,
++      "count": 4
++    },
++    "unconstrained": {
++      "abstention_rate": 0.75,
++      "accepted_count": 1,
++      "accepted_validity_rate": 0.25,
++      "count": 4
++    },
++    "verifier_potential_guided": {
++      "abstention_rate": 0.0,
++      "accepted_count": 2,
++      "accepted_validity_rate": 0.5,
++      "count": 4
++    }
++  },
++  "condition_names": [
++    "unconstrained",
++    "grammar_only",
++    "verifier_potential_guided"
++  ],
++  "constraint_family_counts": {
++    "schema_only_trap": 6,
++    "semantic_contradiction": 3,
++    "unreachable_tool_action": 3
++  },
++  "exact_final_authority": true,
++  "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++  "field_principles": {
++    "abstention_rate": "selective behavior boundary.",
++    "action_unreachability_rate": "action-reachability boundary.",
++    "condition_names": "baseline clarity.",
++    "exact_final_authority": "deterministic verifier authority.",
++    "fixture_count": "bounded evaluation size.",
++    "gpu_offload_verified": "no CPU-only SOTA headline.",
++    "guided_validity_delta_vs_grammar_only": "incremental utility measurement.",
++    "guided_validity_delta_vs_unconstrained": "utility measurement.",
++    "headline_required_any_of": "confirms at least one mandated SOTA model ran.",
++    "honest_verdict": "terminal status; start with \"complete:\" or \"blocked:\".",
++    "inference_substrate": "real local model invocation.",
++    "metric_independence_checks_passed": "tautology prevention.",
++    "model_specs": "mandated SOTA GGUF provenance.",
++    "preconditions_checked": "compute-bound task must fail fast.",
++    "reward_evaluation_budget": "inference cost accounting.",
++    "row_results_path": "inspectable evidence.",
++    "runtime_backend": "GGUF/llama.cpp path, not transformers tokenizer path.",
++    "semantic_false_accept_rate": "hallucination boundary.",
++    "unsafe_false_accept_rate": "safety boundary.",
++    "verifier_guided_decoding_ready": "capstone evidence."
++  },
++  "fixture_count": 4,
++  "gpu_offload_verified": true,
++  "guided_validity_delta_vs_grammar_only": -0.5,
++  "guided_validity_delta_vs_unconstrained": 0.25,
++  "headline_required_any_of": [
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF"
++  ],
++  "honest_verdict": "complete: local SOTA verifier-potential guided decoding pilot ready",
++  "inference_substrate": "live_llm_inference",
++  "metric_details": {
++    "abstention_rate": 0.25,
++    "accepted_validity_rate": 0.5833333333333334,
++    "action_unreachability_rate": 0.08333333333333333,
++    "condition_metrics": {
++      "grammar_only": {
++        "abstention_rate": 0.0,
++        "accepted_count": 4,
++        "accepted_validity_rate": 1.0,
++        "count": 4
++      },
++      "unconstrained": {
++        "abstention_rate": 0.75,
++        "accepted_count": 1,
++        "accepted_validity_rate": 0.25,
++        "count": 4
++      },
++      "verifier_potential_guided": {
++        "abstention_rate": 0.0,
++        "accepted_count": 2,
++        "accepted_validity_rate": 0.5,
++        "count": 4
++      }
++    },
++    "constraint_family_counts": {
++      "schema_only_trap": 6,
++      "semantic_contradiction": 3,
++      "unreachable_tool_action": 3
++    },
++    "exact_authority_rows": 12,
++    "guided_validity_delta_vs_grammar_only": -0.5,
++    "guided_validity_delta_vs_unconstrained": 0.25,
++    "metric_independence_checks_passed": true,
++    "predicate_support": {
++      "abstention": "parse_status is abstained",
++      "accepted_validity": "exact_final_verdict.accepted is true",
++      "action_unreachability": "advisory accept, exact reject, unreachable action family",
++      "guided_delta": "guided accepted-validity rate minus baseline accepted-validity rate",
++      "semantic_false_accept": "advisory accept, exact reject, semantic family",
++      "unsafe_false_accept": "advisory accept, exact reject, unsafe schema/API family"
++    },
++    "row_checksums_match": true,
++    "row_count": 12,
++    "semantic_false_accept_rate": 0.08333333333333333,
++    "unsafe_false_accept_rate": 0.0
++  },
++  "metric_independence_checks_passed": true,
++  "milestone": "2026.07.495",
++  "model_specs": [
++    {
++      "file_receipt": {
++        "head_64k_sha256": "12f7d7d10e4b2e6590b60e308a2f9b4f6af15cf3bf4ce360a1bde29d8ce4c861",
++        "name": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "size_bytes": 22134528992,
++        "suffix": ".gguf"
++      },
++      "gpu_offload_verified": false,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "legacy_smoke_only": false,
++      "local_path_available": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "n_gpu_layers": null,
++      "quantization": "Q4_K_M",
++      "ran_headline": false,
++      "role": "flagship_moe",
++      "runtime_backend": null
++    },
++    {
++      "file_receipt": {
++        "head_64k_sha256": "0acd108bc8baaf570e9d48dff88907696db0621fb60c66fe102cab310554e1a1",
++        "name": "gemma-4-31B-it-Q4_K_M.gguf",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "size_bytes": 18323731456,
++        "suffix": ".gguf"
++      },
++      "gpu_offload_verified": false,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "legacy_smoke_only": false,
++      "local_path_available": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "n_gpu_layers": null,
++      "quantization": "Q4_K_M",
++      "ran_headline": false,
++      "role": "flagship_dense",
++      "runtime_backend": null
++    },
++    {
++      "file_receipt": {
++        "head_64k_sha256": "16d1d669dc3ba3ac16a01c6a60a61c1980650296db6c73eba76a18d9fb9a6e40",
++        "name": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "size_bytes": 16947539744,
++        "suffix": ".gguf"
++      },
++      "gpu_offload_verified": true,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "legacy_smoke_only": false,
++      "local_path_available": true,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "n_gpu_layers": -1,
++      "quantization": "Q4_K_M",
++      "ran_headline": true,
++      "role": "middle_moe",
++      "runtime_backend": "llama_cpp_python_cuda_gguf"
++    }
++  ],
++  "precondition_details": {
++    "all_passed": true,
++    "blocked_preconditions": [],
++    "cuda_visible": true,
++    "fixture_ready": true,
++    "gpu_offload_preflight": true,
++    "local_model_path_available": true,
++    "mandated_model_specs_present": true,
++    "runtime_backend": "llama_cpp_python_cuda_gguf"
++  },
++  "preconditions_checked": true,
++  "random_seed": 5444,
++  "reproducibility_checksum": "c02e36cc5b2c6f03065f8f879d2929884a9b8895b023cd66e682cec144941274",
++  "research_conductor_modified": false,
++  "reward_evaluation_budget": {
++    "per_condition": {
++      "grammar_only": 4,
++      "unconstrained": 4,
++      "verifier_potential_guided": 22
++    },
++    "per_row": [
++      {
++        "condition": "unconstrained",
++        "fixture_id": "schema_extra_admin_override",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-001:unconstrained"
++      },
++      {
++        "condition": "grammar_only",
++        "fixture_id": "schema_extra_admin_override",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-001:grammar_only"
++      },
++      {
++        "condition": "verifier_potential_guided",
++        "fixture_id": "schema_extra_admin_override",
++        "reward_evaluation_count": 7,
++        "row_id": "5443-001:verifier_potential_guided"
++      },
++      {
++        "condition": "unconstrained",
++        "fixture_id": "schema_missing_payload",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-002:unconstrained"
++      },
++      {
++        "condition": "grammar_only",
++        "fixture_id": "schema_missing_payload",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-002:grammar_only"
++      },
++      {
++        "condition": "verifier_potential_guided",
++        "fixture_id": "schema_missing_payload",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-002:verifier_potential_guided"
++      },
++      {
++        "condition": "unconstrained",
++        "fixture_id": "semantic_open_and_not_open",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-003:unconstrained"
++      },
++      {
++        "condition": "grammar_only",
++        "fixture_id": "semantic_open_and_not_open",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-003:grammar_only"
++      },
++      {
++        "condition": "verifier_potential_guided",
++        "fixture_id": "semantic_open_and_not_open",
++        "reward_evaluation_count": 7,
++        "row_id": "5443-003:verifier_potential_guided"
++      },
++      {
++        "condition": "unconstrained",
++        "fixture_id": "unreachable_cancel_locked_order",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-004:unconstrained"
++      },
++      {
++        "condition": "grammar_only",
++        "fixture_id": "unreachable_cancel_locked_order",
++        "reward_evaluation_count": 1,
++        "row_id": "5443-004:grammar_only"
++      },
++      {
++        "condition": "verifier_potential_guided",
++        "fixture_id": "unreachable_cancel_locked_order",
++        "reward_evaluation_count": 7,
++        "row_id": "5443-004:verifier_potential_guided"
++      }
++    ],
++    "total_reward_evaluations": 30,
++    "unit": "one deterministic verifier-potential or exact-final verifier invocation"
++  },
++  "row_checksums": [
++    "74b55d783e5241a668e486dcfd514d58f8b4a8ad4b560ca247913aed7718b7fc",
++    "31deb8d575ff1587245d66cdd3fe83994e3667b94ba9fae054c07c026d48cc89",
++    "291b5d7a0ef250ef7da5b504dc17522bbf00bd46c97a3955dce6e04b1bbb66e6",
++    "0ce261c00fc6731a3478606c7663fc012082c29fb7e881ac94f8f52014df1a52",
++    "730b0e5334a118cae7ceb8d41e3cf73b10c79346982f257933eacace5965991d",
++    "e4aa9209b8fb3bceefcb66c42835b1bad220fd8de090f82830db9cf0c3fae3e9",
++    "858c5b2b11acafd610007466c0675a3512a0643c94a0631a71198afaf6277022",
++    "ac1307ac71f7ec0a3ce44d8507cad2cda63955bc7a71a983b23c412884e51884",
++    "4bdd4268d2b6d0a19969dd8dff78cf5fcf2548135fddba783da8cdeb759fc0c0",
++    "2a4a3d798ca1932e1851165b697d8e67e8103c355af4c630bc97890409007616",
++    "7e2237a68c91c4966b46f003ef057cdb770e98b72d1f7e68818c2d4d4e4c7733",
++    "ce425a189e3f4fe967941ff5468d20c6d6c7619781be4513fe2cbe3bf305c429"
++  ],
++  "row_results": [
++    {
++      "accepted_by_final_authority": true,
++      "backend_details": {
++        "grammar_used": false,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {
++        "kind": "schema_only_trap",
++        "payload": {
++          "fixture_id": "schema_extra_admin_override"
++        }
++      },
++      "condition": "unconstrained",
++      "condition_advisory_accept": true,
++      "constraint_family": "schema_only_trap",
++      "exact_final_verdict": {
++        "accepted": true,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [],
++        "overrides_prefix_potential": false,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "schema_only_trap_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "schema_extra_admin_override",
++      "fixture_row_id": "5443-001",
++      "generated_token_count": 47,
++      "generation_duration_s": 1.0339836808852851,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "\nNo grammar or prefix is applied in this condition.\nNo grammar or prefix(i.).\nthought\n<channel|>{\"kind\":\"schema_only_trap\",\"payload\":{\"fixture_id\":\"schema_extra_admin_override\"}}",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": null,
++      "prompt_hash": "a35c9e9c4338be6f5d26ad1eb58d912dc8fd7e0cdb75bf6246cfd51816ad5d61",
++      "random_seed": 5444,
++      "reward_evaluation_count": 1,
++      "row_checksum": "74b55d783e5241a668e486dcfd514d58f8b4a8ad4b560ca247913aed7718b7fc",
++      "row_id": "5443-001:unconstrained",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": true,
++      "backend_details": {
++        "grammar_used": true,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {
++        "kind": "schema_only_trap",
++        "payload": {
++          "constraint_family": "schema_only_trap",
++          "fixture_id": "schema_extra_admin_override"
++        }
++      },
++      "condition": "grammar_only",
++      "condition_advisory_accept": true,
++      "constraint_family": "schema_only_trap",
++      "exact_final_verdict": {
++        "accepted": true,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [],
++        "overrides_prefix_potential": false,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "schema_only_trap_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "schema_extra_admin_override",
++      "fixture_row_id": "5443-001",
++      "generated_token_count": 54,
++      "generation_duration_s": 2.680899741128087,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "{\n  \"kind\": \"schema_only_trap\",\n  \"payload\": {\n    \"fixture_id\": \"schema_extra_admin_override\",\n    \"constraint_family\": \"schema_only_trap\"\n  }\n}",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": null,
++      "prompt_hash": "b78d21565f1ff711dc1f867b8ff643b7a42a539e0c3bcf725eb0da13edf06e70",
++      "random_seed": 5445,
++      "reward_evaluation_count": 1,
++      "row_checksum": "31deb8d575ff1587245d66cdd3fe83994e3667b94ba9fae054c07c026d48cc89",
++      "row_id": "5443-001:grammar_only",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": true,
++      "backend_details": {
++        "grammar_used": true,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {
++        "kind": "claim",
++        "payload": {
++          "answer": "yes"
++        }
++      },
++      "condition": "verifier_potential_guided",
++      "condition_advisory_accept": true,
++      "constraint_family": "schema_only_trap",
++      "exact_final_verdict": {
++        "accepted": true,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [],
++        "overrides_prefix_potential": false,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "schema_only_trap_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "schema_extra_admin_override",
++      "fixture_row_id": "5443-001",
++      "generated_token_count": 15,
++      "generation_duration_s": 1.0429311832413077,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "{\"kind\": \"claim\", \"payload\": {\"answer\": \"yes\"}}",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": {
++        "accepted_by_potential": true,
++        "accepted_functions": [
++          "schema_key_coverage"
++        ],
++        "fields": {
++          "kind": "claim",
++          "payload": {
++            "answer": "yes"
++          }
++        },
++        "potential_evaluations": [
++          {
++            "cost_units": 1,
++            "decision": "accept",
++            "evidence": {
++              "present_required_keys": [
++                "kind",
++                "payload"
++              ]
++            },
++            "function_id": "schema_key_coverage",
++            "monotone": true,
++            "score": 1.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "visible_pair": false
++            },
++            "function_id": "semantic_pair_consistency",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "tool_visible": false
++            },
++            "function_id": "action_allowlist_potential",
++            "monotone": true,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "domain_fields_visible": []
++            },
++            "function_id": "finite_domain_bounds",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "triple_visible": false
++            },
++            "function_id": "ontology_shape_potential",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "method_path_visible": false
++            },
++            "function_id": "api_shape_potential",
++            "monotone": false,
++            "score": 0.0
++          }
++        ],
++        "prefix_id": "5443-001:required-keys",
++        "reward_evaluation_cost_units": 11
++      },
++      "prompt_hash": "a7b4e6ac1d4144fe5b8c7f1401921ea400273b3d1bf67143c68254f5c1de8e77",
++      "random_seed": 5446,
++      "reward_evaluation_count": 7,
++      "row_checksum": "291b5d7a0ef250ef7da5b504dc17522bbf00bd46c97a3955dce6e04b1bbb66e6",
++      "row_id": "5443-001:verifier_potential_guided",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": false,
++      "backend_details": {
++        "grammar_used": false,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": null,
++      "condition": "unconstrained",
++      "condition_advisory_accept": false,
++      "constraint_family": "schema_only_trap",
++      "exact_final_verdict": {
++        "accepted": false,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [
++          "schema_exact_failed"
++        ],
++        "overrides_prefix_potential": false,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "schema_only_trap_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "schema_missing_payload",
++      "fixture_row_id": "5443-002",
++      "generated_token_count": 96,
++      "generation_duration_s": 1.5756458980031312,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "\nNo grammar or prefix is applied in this condition.\nimplements-schema-validation-logic\nimplements-schema-validation-logic\nimplements-schema-validation-logic\n- L0-schema-validation-logic\n- L0-schema-validation-logic\n-\n- L0-schema-validation-logic\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-",
++      "parse_error": "no_json_object",
++      "parse_status": "abstained",
++      "prefix_seed": null,
++      "prompt_hash": "0620610835e95c63a3ba7ae5ba203c668faa6dd85f6efba1df375352754bee5f",
++      "random_seed": 5545,
++      "reward_evaluation_count": 1,
++      "row_checksum": "0ce261c00fc6731a3478606c7663fc012082c29fb7e881ac94f8f52014df1a52",
++      "row_id": "5443-002:unconstrained",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": true,
++      "backend_details": {
++        "grammar_used": true,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {
++        "kind": "event_type_a",
++        "payload": {
++          "data": "sample",
++          "id": 123
++        }
++      },
++      "condition": "grammar_only",
++      "condition_advisory_accept": true,
++      "constraint_family": "schema_only_trap",
++      "exact_final_verdict": {
++        "accepted": true,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [],
++        "overrides_prefix_potential": false,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "schema_only_trap_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "schema_missing_payload",
++      "fixture_row_id": "5443-002",
++      "generated_token_count": 43,
++      "generation_duration_s": 1.904609780292958,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "{\n  \"kind\": \"event_type_a\",\n  \"payload\": {\n    \"id\": 123,\n    \"data\": \"sample\"\n  }\n}\n",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": null,
++      "prompt_hash": "4c8926dff0ac5e49abc50b46f8d929acf5e93c17cf487f40fe67685d16ebdd8e",
++      "random_seed": 5546,
++      "reward_evaluation_count": 1,
++      "row_checksum": "730b0e5334a118cae7ceb8d41e3cf73b10c79346982f257933eacace5965991d",
++      "row_id": "5443-002:grammar_only",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": true,
++      "backend_details": {
++        "grammar_used": true,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {
++        "kind": "event",
++        "payload": {}
++      },
++      "condition": "verifier_potential_guided",
++      "condition_advisory_accept": true,
++      "constraint_family": "schema_only_trap",
++      "exact_final_verdict": {
++        "accepted": true,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [],
++        "overrides_prefix_potential": false,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "schema_only_trap_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "schema_missing_payload",
++      "fixture_row_id": "5443-002",
++      "generated_token_count": 17,
++      "generation_duration_s": 0.9559285989962518,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "{\n  \"kind\": \"event\",\n  \"payload\": {}\n}",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": null,
++      "prompt_hash": "d5d304ebb57308430f7c323bf44d68d0859c8701002c1b66a5de1b1d13e1c9b6",
++      "random_seed": 5547,
++      "reward_evaluation_count": 1,
++      "row_checksum": "e4aa9209b8fb3bceefcb66c42835b1bad220fd8de090f82830db9cf0c3fae3e9",
++      "row_id": "5443-002:verifier_potential_guided",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": false,
++      "backend_details": {
++        "grammar_used": false,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": null,
++      "condition": "unconstrained",
++      "condition_advisory_accept": false,
++      "constraint_family": "semantic_contradiction",
++      "exact_final_verdict": {
++        "accepted": false,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [
++          "schema_exact_failed",
++          "semantic_contradiction_detected"
++        ],
++        "overrides_prefix_potential": true,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "semantic_contradiction_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "semantic_open_and_not_open",
++      "fixture_row_id": "5443-003",
++      "generated_token_count": 1,
++      "generation_duration_s": 0.1169250919483602,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "",
++      "parse_error": "no_json_object",
++      "parse_status": "abstained",
++      "prefix_seed": null,
++      "prompt_hash": "7ba3719c214bd6190ff0ed2f916be9d3bd1ba6aa5221ea20e9d39366eaf4fb72",
++      "random_seed": 5646,
++      "reward_evaluation_count": 1,
++      "row_checksum": "858c5b2b11acafd610007466c0675a3512a0643c94a0631a71198afaf6277022",
++      "row_id": "5443-003:unconstrained",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": true,
++      "backend_details": {
++        "grammar_used": true,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {
++        "negated_object": "not open",
++        "object": "open",
++        "relation": "is",
++        "subject": "the door"
++      },
++      "condition": "grammar_only",
++      "condition_advisory_accept": true,
++      "constraint_family": "semantic_contradiction",
++      "exact_final_verdict": {
++        "accepted": true,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [],
++        "overrides_prefix_potential": false,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "semantic_contradiction_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "semantic_open_and_not_open",
++      "fixture_row_id": "5443-003",
++      "generated_token_count": 30,
++      "generation_duration_s": 1.8429651730693877,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "{\"subject\": \"the door\", \"relation\": \"is\", \"object\": \"open\", \"negated_object\": \"not open\"}\n",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": null,
++      "prompt_hash": "6ea6404b89c774d8bb4ac4770611400b8774d211e5be502b705009bdd0b6cc0a",
++      "random_seed": 5647,
++      "reward_evaluation_count": 1,
++      "row_checksum": "ac1307ac71f7ec0a3ce44d8507cad2cda63955bc7a71a983b23c412884e51884",
++      "row_id": "5443-003:grammar_only",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": false,
++      "backend_details": {
++        "grammar_used": true,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {},
++      "condition": "verifier_potential_guided",
++      "condition_advisory_accept": true,
++      "constraint_family": "semantic_contradiction",
++      "exact_final_verdict": {
++        "accepted": false,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [
++          "schema_exact_failed",
++          "semantic_contradiction_detected"
++        ],
++        "overrides_prefix_potential": true,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "semantic_contradiction_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "semantic_open_and_not_open",
++      "fixture_row_id": "5443-003",
++      "generated_token_count": 2,
++      "generation_duration_s": 0.2577317412942648,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "{}\n",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": {
++        "accepted_by_potential": true,
++        "accepted_functions": [
++          "schema_key_coverage"
++        ],
++        "fields": {
++          "object": "open",
++          "relation": "state",
++          "subject": "door-17"
++        },
++        "potential_evaluations": [
++          {
++            "cost_units": 1,
++            "decision": "accept",
++            "evidence": {
++              "present_required_keys": [
++                "subject",
++                "relation",
++                "object"
++              ]
++            },
++            "function_id": "schema_key_coverage",
++            "monotone": true,
++            "score": 1.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "visible_pair": false
++            },
++            "function_id": "semantic_pair_consistency",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "tool_visible": false
++            },
++            "function_id": "action_allowlist_potential",
++            "monotone": true,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "domain_fields_visible": []
++            },
++            "function_id": "finite_domain_bounds",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "triple_visible": false
++            },
++            "function_id": "ontology_shape_potential",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "method_path_visible": false
++            },
++            "function_id": "api_shape_potential",
++            "monotone": false,
++            "score": 0.0
++          }
++        ],
++        "prefix_id": "5443-003:visible-claim",
++        "reward_evaluation_cost_units": 11
++      },
++      "prompt_hash": "4999b38d1b8dd9bf4137c172da53994389c0b7791b3ea2128bc7861b74a0100f",
++      "random_seed": 5648,
++      "reward_evaluation_count": 7,
++      "row_checksum": "4bdd4268d2b6d0a19969dd8dff78cf5fcf2548135fddba783da8cdeb759fc0c0",
++      "row_id": "5443-003:verifier_potential_guided",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": false,
++      "backend_details": {
++        "grammar_used": false,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": null,
++      "condition": "unconstrained",
++      "condition_advisory_accept": false,
++      "constraint_family": "unreachable_tool_action",
++      "exact_final_verdict": {
++        "accepted": false,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [
++          "schema_exact_failed",
++          "tool_not_allowed"
++        ],
++        "overrides_prefix_potential": true,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "unreachable_tool_action_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "unreachable_cancel_locked_order",
++      "fixture_row_id": "5443-004",
++      "generated_token_count": 96,
++      "generation_duration_s": 1.6164692882448435,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": " this is a test-only condition.\nConstraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: 0/10000000000000000000000000000000000000000000",
++      "parse_error": "no_json_object",
++      "parse_status": "abstained",
++      "prefix_seed": null,
++      "prompt_hash": "4015dcf85979781ffc7d99d4a6f798bbbecf446106400d93364ae95760042393",
++      "random_seed": 5747,
++      "reward_evaluation_count": 1,
++      "row_checksum": "2a4a3d798ca1932e1851165b697d8e67e8103c355af4c630bc97890409007616",
++      "row_id": "5443-004:unconstrained",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": true,
++      "backend_details": {
++        "grammar_used": true,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {
++        "lock_active": false,
++        "order_state": "paid",
++        "tool": "cancel_order"
++      },
++      "condition": "grammar_only",
++      "condition_advisory_accept": true,
++      "constraint_family": "unreachable_tool_action",
++      "exact_final_verdict": {
++        "accepted": true,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [],
++        "overrides_prefix_potential": false,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "unreachable_tool_action_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "unreachable_cancel_locked_order",
++      "fixture_row_id": "5443-004",
++      "generated_token_count": 19,
++      "generation_duration_s": 1.0527575658634305,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "{\"tool\":\"cancel_order\",\"order_state\":\"paid\",\"lock_active\":false}",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": null,
++      "prompt_hash": "f02322fcdb6114946f3a374ad9ebfc0b3f6d18d67fa64a1faefdb409e9076f0d",
++      "random_seed": 5748,
++      "reward_evaluation_count": 1,
++      "row_checksum": "7e2237a68c91c4966b46f003ef057cdb770e98b72d1f7e68818c2d4d4e4c7733",
++      "row_id": "5443-004:grammar_only",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    },
++    {
++      "accepted_by_final_authority": false,
++      "backend_details": {
++        "grammar_used": true,
++        "llama_cpp_create_completion": true
++      },
++      "candidate_output": {},
++      "condition": "verifier_potential_guided",
++      "condition_advisory_accept": true,
++      "constraint_family": "unreachable_tool_action",
++      "exact_final_verdict": {
++        "accepted": false,
++        "authority": "exact_final_verifier",
++        "failure_reasons": [
++          "schema_exact_failed",
++          "tool_not_allowed"
++        ],
++        "overrides_prefix_potential": true,
++        "verified": true,
++        "verifiers_run": [
++          "schema_exact",
++          "unreachable_tool_action_exact"
++        ]
++      },
++      "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495",
++      "final_authority_bypassed": false,
++      "fixture_id": "unreachable_cancel_locked_order",
++      "fixture_row_id": "5443-004",
++      "generated_token_count": 2,
++      "generation_duration_s": 0.12594456039369106,
++      "gpu_offload_evidence": true,
++      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "model_role": "middle_moe",
++      "n_gpu_layers": -1,
++      "output_text": "{}\n",
++      "parse_error": null,
++      "parse_status": "parsed",
++      "prefix_seed": {
++        "accepted_by_potential": true,
++        "accepted_functions": [
++          "schema_key_coverage",
++          "action_allowlist_potential"
++        ],
++        "fields": {
++          "tool": "cancel_order"
++        },
++        "potential_evaluations": [
++          {
++            "cost_units": 1,
++            "decision": "accept",
++            "evidence": {
++              "present_required_keys": [
++                "tool"
++              ]
++            },
++            "function_id": "schema_key_coverage",
++            "monotone": true,
++            "score": 1.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "visible_pair": false
++            },
++            "function_id": "semantic_pair_consistency",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "accept",
++            "evidence": {
++              "tool_allowed": true,
++              "tool_visible": true
++            },
++            "function_id": "action_allowlist_potential",
++            "monotone": true,
++            "score": 0.6
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "domain_fields_visible": []
++            },
++            "function_id": "finite_domain_bounds",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "triple_visible": false
++            },
++            "function_id": "ontology_shape_potential",
++            "monotone": false,
++            "score": 0.0
++          },
++          {
++            "cost_units": 2,
++            "decision": "abstain",
++            "evidence": {
++              "method_path_visible": false
++            },
++            "function_id": "api_shape_potential",
++            "monotone": false,
++            "score": 0.0
++          }
++        ],
++        "prefix_id": "5443-004:tool-name",
++        "reward_evaluation_cost_units": 11
++      },
++      "prompt_hash": "b02856d1fb1931d6bac4399765e805d9d5f6121dfaccd025350b859f85c3462c",
++      "random_seed": 5749,
++      "reward_evaluation_count": 7,
++      "row_checksum": "ce425a189e3f4fe967941ff5468d20c6d6c7619781be4513fe2cbe3bf305c429",
++      "row_id": "5443-004:verifier_potential_guided",
++      "runtime_backend": "llama_cpp_python_cuda_gguf",
++      "schema": "carnot.experiment_5444.row.v1",
++      "token_budget": 96
++    }
++  ],
++  "row_results_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl",
++  "run_date": "2026-07-08",
++  "runtime_backend": "llama_cpp_python_cuda_gguf",
++  "runtime_receipt": {
++    "blocked_preconditions": [],
++    "cuda_visible": true,
++    "gpu_offload_supported": true,
++    "llama_cpp": {
++      "gpu_offload_supported": true,
++      "import_ok": true,
++      "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | "
++    },
++    "llama_cpp_import_ok": true,
++    "load_receipt": {
++      "gpu_memory_after": [
++        {
++          "index": 0,
++          "memory_used_mb": 8798
++        },
++        {
++          "index": 1,
++          "memory_used_mb": 8790
++        }
++      ],
++      "gpu_memory_before": [
++        {
++          "index": 0,
++          "memory_used_mb": 4
++        },
++        {
++          "index": 1,
++          "memory_used_mb": 4
++        }
++      ],
++      "gpu_memory_delta_mb": 8794,
++      "load_duration_s": 8.422254128847271,
++      "n_gpu_layers": -1,
++      "offload_evidence": true
++    },
++    "n_gpu_layers": -1,
++    "nvidia_smi": {
++      "ok": true,
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "0, NVIDIA GeForce RTX 3090, 24576, 4, 0\n1, NVIDIA GeForce RTX 3090, 24576, 4, 0"
++    },
++    "offload_evidence": true,
++    "runtime_backend": "llama_cpp_python_cuda_gguf",
++    "torch_cuda": {
++      "cuda_available": true,
++      "device_count": 2,
++      "import_ok": true
++    }
++  },
++  "schema": "carnot.experiment_5444.gated_sota_energy_guided_decoding.v495",
++  "selected_model_spec": {
++    "file_receipt": {
++      "head_64k_sha256": "16d1d669dc3ba3ac16a01c6a60a61c1980650296db6c73eba76a18d9fb9a6e40",
++      "name": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "size_bytes": 16947539744,
++      "suffix": ".gguf"
++    },
++    "gpu_offload_verified": false,
++    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++    "legacy_smoke_only": false,
++    "local_path_available": true,
++    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++    "n_gpu_layers": null,
++    "quantization": "Q4_K_M",
++    "ran_headline": false,
++    "role": "middle_moe",
++    "runtime_backend": null
++  },
++  "semantic_false_accept_rate": 0.08333333333333333,
++  "spec_refs": [
++    "REQ-SAFE-5444",
++    "SCENARIO-SAFE-5444"
++  ],
++  "status": "complete",
++  "task_id": "exp5444-v495-gated-sota-energy-guided-decoding",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5444_gated_sota_energy_guided_decoding_v495.py -q",
++      "outcome": "not_recorded"
++    }
++  ],
++  "unsafe_false_accept_rate": 0.0,
++  "verifier_guided_decoding_ready": true
++}
+diff --git a/results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl b/results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl
+new file mode 100644
+index 0000000000..1672c5143d
+--- /dev/null
++++ b/results/experiment_5444_gated_sota_energy_guided_decoding_v495_rows.jsonl
+@@ -0,0 +1,12 @@
++{"accepted_by_final_authority": true, "backend_details": {"grammar_used": false, "llama_cpp_create_completion": true}, "candidate_output": {"kind": "schema_only_trap", "payload": {"fixture_id": "schema_extra_admin_override"}}, "condition": "unconstrained", "condition_advisory_accept": true, "constraint_family": "schema_only_trap", "exact_final_verdict": {"accepted": true, "authority": "exact_final_verifier", "failure_reasons": [], "overrides_prefix_potential": false, "verified": true, "verifiers_run": ["schema_exact", "schema_only_trap_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "schema_extra_admin_override", "fixture_row_id": "5443-001", "generated_token_count": 47, "generation_duration_s": 1.0339836808852851, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "\nNo grammar or prefix is applied in this condition.\nNo grammar or prefix(i.).\nthought\n<channel|>{\"kind\":\"schema_only_trap\",\"payload\":{\"fixture_id\":\"schema_extra_admin_override\"}}", "parse_error": null, "parse_status": "parsed", "prefix_seed": null, "prompt_hash": "a35c9e9c4338be6f5d26ad1eb58d912dc8fd7e0cdb75bf6246cfd51816ad5d61", "random_seed": 5444, "reward_evaluation_count": 1, "row_checksum": "74b55d783e5241a668e486dcfd514d58f8b4a8ad4b560ca247913aed7718b7fc", "row_id": "5443-001:unconstrained", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": true, "backend_details": {"grammar_used": true, "llama_cpp_create_completion": true}, "candidate_output": {"kind": "schema_only_trap", "payload": {"constraint_family": "schema_only_trap", "fixture_id": "schema_extra_admin_override"}}, "condition": "grammar_only", "condition_advisory_accept": true, "constraint_family": "schema_only_trap", "exact_final_verdict": {"accepted": true, "authority": "exact_final_verifier", "failure_reasons": [], "overrides_prefix_potential": false, "verified": true, "verifiers_run": ["schema_exact", "schema_only_trap_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "schema_extra_admin_override", "fixture_row_id": "5443-001", "generated_token_count": 54, "generation_duration_s": 2.680899741128087, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "{\n  \"kind\": \"schema_only_trap\",\n  \"payload\": {\n    \"fixture_id\": \"schema_extra_admin_override\",\n    \"constraint_family\": \"schema_only_trap\"\n  }\n}", "parse_error": null, "parse_status": "parsed", "prefix_seed": null, "prompt_hash": "b78d21565f1ff711dc1f867b8ff643b7a42a539e0c3bcf725eb0da13edf06e70", "random_seed": 5445, "reward_evaluation_count": 1, "row_checksum": "31deb8d575ff1587245d66cdd3fe83994e3667b94ba9fae054c07c026d48cc89", "row_id": "5443-001:grammar_only", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": true, "backend_details": {"grammar_used": true, "llama_cpp_create_completion": true}, "candidate_output": {"kind": "claim", "payload": {"answer": "yes"}}, "condition": "verifier_potential_guided", "condition_advisory_accept": true, "constraint_family": "schema_only_trap", "exact_final_verdict": {"accepted": true, "authority": "exact_final_verifier", "failure_reasons": [], "overrides_prefix_potential": false, "verified": true, "verifiers_run": ["schema_exact", "schema_only_trap_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "schema_extra_admin_override", "fixture_row_id": "5443-001", "generated_token_count": 15, "generation_duration_s": 1.0429311832413077, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "{\"kind\": \"claim\", \"payload\": {\"answer\": \"yes\"}}", "parse_error": null, "parse_status": "parsed", "prefix_seed": {"accepted_by_potential": true, "accepted_functions": ["schema_key_coverage"], "fields": {"kind": "claim", "payload": {"answer": "yes"}}, "potential_evaluations": [{"cost_units": 1, "decision": "accept", "evidence": {"present_required_keys": ["kind", "payload"]}, "function_id": "schema_key_coverage", "monotone": true, "score": 1.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"visible_pair": false}, "function_id": "semantic_pair_consistency", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"tool_visible": false}, "function_id": "action_allowlist_potential", "monotone": true, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"domain_fields_visible": []}, "function_id": "finite_domain_bounds", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"triple_visible": false}, "function_id": "ontology_shape_potential", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"method_path_visible": false}, "function_id": "api_shape_potential", "monotone": false, "score": 0.0}], "prefix_id": "5443-001:required-keys", "reward_evaluation_cost_units": 11}, "prompt_hash": "a7b4e6ac1d4144fe5b8c7f1401921ea400273b3d1bf67143c68254f5c1de8e77", "random_seed": 5446, "reward_evaluation_count": 7, "row_checksum": "291b5d7a0ef250ef7da5b504dc17522bbf00bd46c97a3955dce6e04b1bbb66e6", "row_id": "5443-001:verifier_potential_guided", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": false, "backend_details": {"grammar_used": false, "llama_cpp_create_completion": true}, "candidate_output": null, "condition": "unconstrained", "condition_advisory_accept": false, "constraint_family": "schema_only_trap", "exact_final_verdict": {"accepted": false, "authority": "exact_final_verifier", "failure_reasons": ["schema_exact_failed"], "overrides_prefix_potential": false, "verified": true, "verifiers_run": ["schema_exact", "schema_only_trap_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "schema_missing_payload", "fixture_row_id": "5443-002", "generated_token_count": 96, "generation_duration_s": 1.5756458980031312, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "\nNo grammar or prefix is applied in this condition.\nimplements-schema-validation-logic\nimplements-schema-validation-logic\nimplements-schema-validation-logic\n- L0-schema-validation-logic\n- L0-schema-validation-logic\n-\n- L0-schema-validation-logic\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-\n-", "parse_error": "no_json_object", "parse_status": "abstained", "prefix_seed": null, "prompt_hash": "0620610835e95c63a3ba7ae5ba203c668faa6dd85f6efba1df375352754bee5f", "random_seed": 5545, "reward_evaluation_count": 1, "row_checksum": "0ce261c00fc6731a3478606c7663fc012082c29fb7e881ac94f8f52014df1a52", "row_id": "5443-002:unconstrained", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": true, "backend_details": {"grammar_used": true, "llama_cpp_create_completion": true}, "candidate_output": {"kind": "event_type_a", "payload": {"data": "sample", "id": 123}}, "condition": "grammar_only", "condition_advisory_accept": true, "constraint_family": "schema_only_trap", "exact_final_verdict": {"accepted": true, "authority": "exact_final_verifier", "failure_reasons": [], "overrides_prefix_potential": false, "verified": true, "verifiers_run": ["schema_exact", "schema_only_trap_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "schema_missing_payload", "fixture_row_id": "5443-002", "generated_token_count": 43, "generation_duration_s": 1.904609780292958, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "{\n  \"kind\": \"event_type_a\",\n  \"payload\": {\n    \"id\": 123,\n    \"data\": \"sample\"\n  }\n}\n", "parse_error": null, "parse_status": "parsed", "prefix_seed": null, "prompt_hash": "4c8926dff0ac5e49abc50b46f8d929acf5e93c17cf487f40fe67685d16ebdd8e", "random_seed": 5546, "reward_evaluation_count": 1, "row_checksum": "730b0e5334a118cae7ceb8d41e3cf73b10c79346982f257933eacace5965991d", "row_id": "5443-002:grammar_only", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": true, "backend_details": {"grammar_used": true, "llama_cpp_create_completion": true}, "candidate_output": {"kind": "event", "payload": {}}, "condition": "verifier_potential_guided", "condition_advisory_accept": true, "constraint_family": "schema_only_trap", "exact_final_verdict": {"accepted": true, "authority": "exact_final_verifier", "failure_reasons": [], "overrides_prefix_potential": false, "verified": true, "verifiers_run": ["schema_exact", "schema_only_trap_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "schema_missing_payload", "fixture_row_id": "5443-002", "generated_token_count": 17, "generation_duration_s": 0.9559285989962518, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "{\n  \"kind\": \"event\",\n  \"payload\": {}\n}", "parse_error": null, "parse_status": "parsed", "prefix_seed": null, "prompt_hash": "d5d304ebb57308430f7c323bf44d68d0859c8701002c1b66a5de1b1d13e1c9b6", "random_seed": 5547, "reward_evaluation_count": 1, "row_checksum": "e4aa9209b8fb3bceefcb66c42835b1bad220fd8de090f82830db9cf0c3fae3e9", "row_id": "5443-002:verifier_potential_guided", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": false, "backend_details": {"grammar_used": false, "llama_cpp_create_completion": true}, "candidate_output": null, "condition": "unconstrained", "condition_advisory_accept": false, "constraint_family": "semantic_contradiction", "exact_final_verdict": {"accepted": false, "authority": "exact_final_verifier", "failure_reasons": ["schema_exact_failed", "semantic_contradiction_detected"], "overrides_prefix_potential": true, "verified": true, "verifiers_run": ["schema_exact", "semantic_contradiction_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "semantic_open_and_not_open", "fixture_row_id": "5443-003", "generated_token_count": 1, "generation_duration_s": 0.1169250919483602, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "", "parse_error": "no_json_object", "parse_status": "abstained", "prefix_seed": null, "prompt_hash": "7ba3719c214bd6190ff0ed2f916be9d3bd1ba6aa5221ea20e9d39366eaf4fb72", "random_seed": 5646, "reward_evaluation_count": 1, "row_checksum": "858c5b2b11acafd610007466c0675a3512a0643c94a0631a71198afaf6277022", "row_id": "5443-003:unconstrained", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": true, "backend_details": {"grammar_used": true, "llama_cpp_create_completion": true}, "candidate_output": {"negated_object": "not open", "object": "open", "relation": "is", "subject": "the door"}, "condition": "grammar_only", "condition_advisory_accept": true, "constraint_family": "semantic_contradiction", "exact_final_verdict": {"accepted": true, "authority": "exact_final_verifier", "failure_reasons": [], "overrides_prefix_potential": false, "verified": true, "verifiers_run": ["schema_exact", "semantic_contradiction_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "semantic_open_and_not_open", "fixture_row_id": "5443-003", "generated_token_count": 30, "generation_duration_s": 1.8429651730693877, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "{\"subject\": \"the door\", \"relation\": \"is\", \"object\": \"open\", \"negated_object\": \"not open\"}\n", "parse_error": null, "parse_status": "parsed", "prefix_seed": null, "prompt_hash": "6ea6404b89c774d8bb4ac4770611400b8774d211e5be502b705009bdd0b6cc0a", "random_seed": 5647, "reward_evaluation_count": 1, "row_checksum": "ac1307ac71f7ec0a3ce44d8507cad2cda63955bc7a71a983b23c412884e51884", "row_id": "5443-003:grammar_only", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": false, "backend_details": {"grammar_used": true, "llama_cpp_create_completion": true}, "candidate_output": {}, "condition": "verifier_potential_guided", "condition_advisory_accept": true, "constraint_family": "semantic_contradiction", "exact_final_verdict": {"accepted": false, "authority": "exact_final_verifier", "failure_reasons": ["schema_exact_failed", "semantic_contradiction_detected"], "overrides_prefix_potential": true, "verified": true, "verifiers_run": ["schema_exact", "semantic_contradiction_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "semantic_open_and_not_open", "fixture_row_id": "5443-003", "generated_token_count": 2, "generation_duration_s": 0.2577317412942648, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "{}\n", "parse_error": null, "parse_status": "parsed", "prefix_seed": {"accepted_by_potential": true, "accepted_functions": ["schema_key_coverage"], "fields": {"object": "open", "relation": "state", "subject": "door-17"}, "potential_evaluations": [{"cost_units": 1, "decision": "accept", "evidence": {"present_required_keys": ["subject", "relation", "object"]}, "function_id": "schema_key_coverage", "monotone": true, "score": 1.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"visible_pair": false}, "function_id": "semantic_pair_consistency", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"tool_visible": false}, "function_id": "action_allowlist_potential", "monotone": true, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"domain_fields_visible": []}, "function_id": "finite_domain_bounds", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"triple_visible": false}, "function_id": "ontology_shape_potential", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"method_path_visible": false}, "function_id": "api_shape_potential", "monotone": false, "score": 0.0}], "prefix_id": "5443-003:visible-claim", "reward_evaluation_cost_units": 11}, "prompt_hash": "4999b38d1b8dd9bf4137c172da53994389c0b7791b3ea2128bc7861b74a0100f", "random_seed": 5648, "reward_evaluation_count": 7, "row_checksum": "4bdd4268d2b6d0a19969dd8dff78cf5fcf2548135fddba783da8cdeb759fc0c0", "row_id": "5443-003:verifier_potential_guided", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": false, "backend_details": {"grammar_used": false, "llama_cpp_create_completion": true}, "candidate_output": null, "condition": "unconstrained", "condition_advisory_accept": false, "constraint_family": "unreachable_tool_action", "exact_final_verdict": {"accepted": false, "authority": "exact_final_verifier", "failure_reasons": ["schema_exact_failed", "tool_not_allowed"], "overrides_prefix_potential": true, "verified": true, "verifiers_run": ["schema_exact", "unreachable_tool_action_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "unreachable_cancel_locked_order", "fixture_row_id": "5443-004", "generated_token_count": 96, "generation_duration_s": 1.6164692882448435, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": " this is a test-only condition.\nConstraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: Constraint: 0/10000000000000000000000000000000000000000000", "parse_error": "no_json_object", "parse_status": "abstained", "prefix_seed": null, "prompt_hash": "4015dcf85979781ffc7d99d4a6f798bbbecf446106400d93364ae95760042393", "random_seed": 5747, "reward_evaluation_count": 1, "row_checksum": "2a4a3d798ca1932e1851165b697d8e67e8103c355af4c630bc97890409007616", "row_id": "5443-004:unconstrained", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": true, "backend_details": {"grammar_used": true, "llama_cpp_create_completion": true}, "candidate_output": {"lock_active": false, "order_state": "paid", "tool": "cancel_order"}, "condition": "grammar_only", "condition_advisory_accept": true, "constraint_family": "unreachable_tool_action", "exact_final_verdict": {"accepted": true, "authority": "exact_final_verifier", "failure_reasons": [], "overrides_prefix_potential": false, "verified": true, "verifiers_run": ["schema_exact", "unreachable_tool_action_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "unreachable_cancel_locked_order", "fixture_row_id": "5443-004", "generated_token_count": 19, "generation_duration_s": 1.0527575658634305, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "{\"tool\":\"cancel_order\",\"order_state\":\"paid\",\"lock_active\":false}", "parse_error": null, "parse_status": "parsed", "prefix_seed": null, "prompt_hash": "f02322fcdb6114946f3a374ad9ebfc0b3f6d18d67fa64a1faefdb409e9076f0d", "random_seed": 5748, "reward_evaluation_count": 1, "row_checksum": "7e2237a68c91c4966b46f003ef057cdb770e98b72d1f7e68818c2d4d4e4c7733", "row_id": "5443-004:grammar_only", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
++{"accepted_by_final_authority": false, "backend_details": {"grammar_used": true, "llama_cpp_create_completion": true}, "candidate_output": {}, "condition": "verifier_potential_guided", "condition_advisory_accept": true, "constraint_family": "unreachable_tool_action", "exact_final_verdict": {"accepted": false, "authority": "exact_final_verifier", "failure_reasons": ["schema_exact_failed", "tool_not_allowed"], "overrides_prefix_potential": true, "verified": true, "verifiers_run": ["schema_exact", "unreachable_tool_action_exact"]}, "experiment_id": "experiment_5444_gated_sota_energy_guided_decoding_v495", "final_authority_bypassed": false, "fixture_id": "unreachable_cancel_locked_order", "fixture_row_id": "5443-004", "generated_token_count": 2, "generation_duration_s": 0.12594456039369106, "gpu_offload_evidence": true, "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF", "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "model_role": "middle_moe", "n_gpu_layers": -1, "output_text": "{}\n", "parse_error": null, "parse_status": "parsed", "prefix_seed": {"accepted_by_potential": true, "accepted_functions": ["schema_key_coverage", "action_allowlist_potential"], "fields": {"tool": "cancel_order"}, "potential_evaluations": [{"cost_units": 1, "decision": "accept", "evidence": {"present_required_keys": ["tool"]}, "function_id": "schema_key_coverage", "monotone": true, "score": 1.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"visible_pair": false}, "function_id": "semantic_pair_consistency", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "accept", "evidence": {"tool_allowed": true, "tool_visible": true}, "function_id": "action_allowlist_potential", "monotone": true, "score": 0.6}, {"cost_units": 2, "decision": "abstain", "evidence": {"domain_fields_visible": []}, "function_id": "finite_domain_bounds", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"triple_visible": false}, "function_id": "ontology_shape_potential", "monotone": false, "score": 0.0}, {"cost_units": 2, "decision": "abstain", "evidence": {"method_path_visible": false}, "function_id": "api_shape_potential", "monotone": false, "score": 0.0}], "prefix_id": "5443-004:tool-name", "reward_evaluation_cost_units": 11}, "prompt_hash": "b02856d1fb1931d6bac4399765e805d9d5f6121dfaccd025350b859f85c3462c", "random_seed": 5749, "reward_evaluation_count": 7, "row_checksum": "ce425a189e3f4fe967941ff5468d20c6d6c7619781be4513fe2cbe3bf305c429", "row_id": "5443-004:verifier_potential_guided", "runtime_backend": "llama_cpp_python_cuda_gguf", "schema": "carnot.experiment_5444.row.v1", "token_budget": 96}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 93147fc78f..75c7d07bfd 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T21:57:49Z",
+-  "finished_at": "2026-07-08T21:57:50Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-08T22:20:29Z",
++  "finished_at": "2026-07-08T22:20:29Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6845371a5c..2d69ac177b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T21:57:50Z",
+-  "finished_at": "2026-07-08T21:57:50Z",
++  "started_at": "2026-07-08T22:20:29Z",
++  "finished_at": "2026-07-08T22:20:29Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e7fb002281..fa98718dae 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T21:57:50Z",
+-  "finished_at": "2026-07-08T21:57:50Z",
++  "started_at": "2026-07-08T22:20:29Z",
++  "finished_at": "2026-07-08T22:20:30Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5444_gated_sota_energy_guided_decoding_v495.py b/tests/python/test_experiment_5444_gated_sota_energy_guided_decoding_v495.py
+new file mode 100644
+index 0000000000..e883946f77
+--- /dev/null
++++ b/tests/python/test_experiment_5444_gated_sota_energy_guided_decoding_v495.py
+@@ -0,0 +1,499 @@
++"""Tests for Exp5444 gated SOTA verifier-potential decoding.
++
++Spec refs: REQ-SAFE-5444, SCENARIO-SAFE-5444.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5443_verifier_potential_prefix_fixture_v495 as exp5443
++from carnot import experiment_5444_gated_sota_energy_guided_decoding_v495 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/safety/spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5444_gated_sota_energy_guided_decoding_v495.py -q"
++)
++
++
++def _minimal_gguf(path: Path) -> Path:
++    path.write_bytes(b"GGUF-fixture")
++    return path
++
++
++def _runtime_receipt() -> dict[str, Any]:
++    return {
++        "runtime_backend": "llama_cpp_python_cuda_gguf",
++        "llama_cpp_import_ok": True,
++        "cuda_visible": True,
++        "gpu_offload_supported": True,
++        "n_gpu_layers": -1,
++        "offload_evidence": True,
++        "gpu_memory_delta_mb": 8192,
++        "blocked_preconditions": [],
++    }
++
++
++def _resolver(paths: dict[str, Path]):
++    def resolve(hf_id: str, _quantization: str) -> str | None:
++        return str(paths[hf_id]) if hf_id in paths else None
++
++    return resolve
++
++
++def _json_text(payload: dict[str, Any]) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"))
++
++
++def _valid_payload(fixture: dict[str, Any]) -> dict[str, Any]:
++    family = fixture["constraint_family"]
++    if family == "schema_only_trap":
++        return {"kind": "claim", "payload": {"answer": "yes"}}
++    if family == "semantic_contradiction":
++        return {
++            "subject": "door-17",
++            "relation": "state",
++            "object": "open",
++            "negated_object": "closed",
++        }
++    if family == "unreachable_tool_action":
++        return {"tool": "cancel_order", "order_state": "paid", "lock_active": False}
++    raise AssertionError(f"unexpected fixture family in test: {family}")
++
++
++def _grammar_only_payload(fixture: dict[str, Any]) -> dict[str, Any]:
++    family = fixture["constraint_family"]
++    if fixture["fixture_id"] == "schema_extra_admin_override":
++        return {
++            "kind": "claim",
++            "payload": {"answer": "yes"},
++            "admin_override": True,
++        }
++    if family == "schema_only_trap":
++        return {"kind": "claim", "payload": {"answer": "yes"}}
++    if family == "semantic_contradiction":
++        return {
++            "subject": "door-17",
++            "relation": "state",
++            "object": "open",
++            "negated_object": "open",
++        }
++    if family == "unreachable_tool_action":
++        return {"tool": "cancel_order", "order_state": "paid", "lock_active": True}
++    raise AssertionError(f"unexpected fixture family in test: {family}")
++
++
++def _fake_generation(**kwargs: Any) -> dict[str, Any]:
++    fixture = kwargs["fixture"]
++    condition = kwargs["condition"]
++    if condition == "unconstrained":
++        text = "The answer is probably valid, but I will not emit JSON."
++    elif condition == "grammar_only":
++        text = _json_text(_grammar_only_payload(fixture))
++    elif condition == "verifier_potential_guided":
++        text = _json_text(_valid_payload(fixture))
++    else:
++        raise AssertionError(f"unexpected condition: {condition}")
++    return {
++        "output_text": text,
++        "duration_s": 0.25,
++        "generated_token_count": 12,
++        "backend_details": {"mocked_live_runtime": True},
++    }
++
++
++def _complete_artifact(tmp_path: Path) -> dict[str, Any]:
++    gguf = _minimal_gguf(tmp_path / "gemma-4-26B-A4B-it-Q4_K_M.gguf")
++    paths = {"unsloth/gemma-4-26B-A4B-it-GGUF": gguf}
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        row_results_path=tmp_path / mod.ROW_RESULTS_RELATIVE_PATH,
++        fixture_artifact=exp5443.build_artifact(tests_run=[TEST_COMMAND]),
++        model_resolver=_resolver(paths),
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        generation_runner=_fake_generation,
++        max_fixtures=4,
++        tests_run=[TEST_COMMAND],
++        write=True,
++    )
++    return artifact
++
++
++def test_req_safe_5444_spec_declares_sota_guided_decoding_contract() -> None:
++    """REQ-SAFE-5444: OpenSpec anchors the gated SOTA decoding artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-SAFE-5444") : spec.index("## Implementation Status")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-SAFE-5444",
++        "SCENARIO-SAFE-5444",
++        str(mod.RESULT_RELATIVE_PATH),
++        str(mod.ROW_RESULTS_RELATIVE_PATH),
++        "unconstrained decoding",
++        "grammar-only constrained decoding",
++        "verifier-potential guided prefix/particle decoding",
++        "guided accepted rate minus the respective baseline rate",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++    for hf_id in mod.MANDATED_HF_IDS:
++        assert hf_id in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++def test_scenario_safe_5444_blocks_before_generation_when_fixture_gate_missing(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-SAFE-5444: failed Exp5443 gate emits blocked artifact without generation."""
++
++    calls: list[str] = []
++    fixture_artifact = exp5443.build_artifact(tests_run=[TEST_COMMAND])
++    fixture_artifact["verifier_potential_fixture_ready"] = False
++
++    artifact = mod.run(
++        root=tmp_path,
++        artifact_path=tmp_path / "blocked.json",
++        row_results_path=tmp_path / "blocked_rows.jsonl",
++        fixture_artifact=fixture_artifact,
++        model_resolver=lambda _hf_id, _quantization: None,
++        runtime_probe=lambda **_kwargs: _runtime_receipt(),
++        generation_runner=lambda **kwargs: calls.append(kwargs["condition"]) or {},
++        tests_run=[TEST_COMMAND],
++        write=True,
++    )
++
++    assert calls == []
++    assert json.loads((tmp_path / "blocked.json").read_text(encoding="utf-8")) == artifact
++    assert artifact["preconditions_checked"] is True
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert artifact["verifier_guided_decoding_ready"] is False
++    assert artifact["fixture_count"] == 0
++    assert artifact["row_results_path"] == str(tmp_path / "blocked_rows.jsonl")
++    assert not (tmp_path / "blocked_rows.jsonl").exists()
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_safe_5444_complete_run_writes_row_level_exact_evidence(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-SAFE-5444: complete pilot compares three conditions under exact authority."""
++
++    artifact = _complete_artifact(tmp_path)
++    rows_path = Path(artifact["row_results_path"])
++    rows = [json.loads(line) for line in rows_path.read_text(encoding="utf-8").splitlines()]
++
++    mod.validate_artifact(artifact)
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++    assert artifact["preconditions_checked"] is True
++    assert artifact["gpu_offload_verified"] is True
++    assert artifact["runtime_backend"] == "llama_cpp_python_cuda_gguf"
++    assert artifact["fixture_count"] == 4
++    assert artifact["condition_names"] == list(mod.CONDITION_NAMES)
++    assert artifact["exact_final_authority"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["verifier_guided_decoding_ready"] is True
++    assert len(rows) == artifact["fixture_count"] * len(mod.CONDITION_NAMES)
++
++    by_condition = artifact["condition_metrics"]
++    assert by_condition["unconstrained"]["accepted_validity_rate"] == pytest.approx(0.0)
++    assert by_condition["grammar_only"]["accepted_validity_rate"] == pytest.approx(0.25)
++    assert by_condition["verifier_potential_guided"]["accepted_validity_rate"] == pytest.approx(1.0)
++    assert artifact["guided_validity_delta_vs_unconstrained"] == pytest.approx(1.0)
++    assert artifact["guided_validity_delta_vs_grammar_only"] == pytest.approx(0.75)
++    assert artifact["guided_validity_delta_vs_unconstrained"] != pytest.approx(
++        by_condition["unconstrained"]["accepted_validity_rate"]
++    )
++    assert artifact["semantic_false_accept_rate"] > 0.0
++    assert artifact["action_unreachability_rate"] > 0.0
++    assert artifact["abstention_rate"] > 0.0
++    assert artifact["unsafe_false_accept_rate"] > 0.0
++    assert artifact["reward_evaluation_budget"]["total_reward_evaluations"] > len(rows)
++
++    for row in rows:
++        assert row["model_hf_id"] in mod.MANDATED_HF_IDS
++        assert row["model_path"].endswith(".gguf")
++        assert row["runtime_backend"] == artifact["runtime_backend"]
++        assert row["n_gpu_layers"] == -1
++        assert row["prompt_hash"]
++        assert row["token_budget"] == mod.DEFAULT_TOKEN_BUDGET
++        assert row["exact_final_verdict"]["authority"] == "exact_final_verifier"
++        assert row["final_authority_bypassed"] is False
++
++
++def test_req_safe_5444_validation_rejects_delta_final_authority_and_model_drift(
++    tmp_path: Path,
++) -> None:
++    """REQ-SAFE-5444: validation fails for copied deltas, bypassed authority, or missing specs."""
++
++    artifact = _complete_artifact(tmp_path)
++
++    bad_delta = deepcopy(artifact)
++    bad_delta["guided_validity_delta_vs_unconstrained"] = bad_delta["condition_metrics"][
++        "unconstrained"
++    ]["accepted_validity_rate"]
++    with pytest.raises(ValueError, match="guided_validity_delta_vs_unconstrained"):
++        mod.validate_artifact(bad_delta)
++
++    bad_authority = deepcopy(artifact)
++    bad_authority["exact_final_authority"] = False
++    with pytest.raises(ValueError, match="exact_final_authority"):
++        mod.validate_artifact(bad_authority)
++
++    row_tampered = deepcopy(artifact)
++    first_row = row_tampered["row_results"][0]
++    first_row["exact_final_verdict"]["authority"] = "model_self_verdict"
++    first_row["final_authority_bypassed"] = True
++    with pytest.raises(ValueError, match="exact final authority"):
++        mod.validate_artifact(row_tampered)
++
++    missing_model = deepcopy(artifact)
++    missing_model["model_specs"] = [
++        spec
++        for spec in missing_model["model_specs"]
++        if spec["hf_id"] != "unsloth/Qwen3.6-35B-A3B-GGUF"
++    ]
++    with pytest.raises(ValueError, match="mandated model_specs"):
++        mod.validate_artifact(missing_model)
++
++    bad_rows_path = deepcopy(artifact)
++    bad_rows_path["row_results_path"] = str(tmp_path / "missing.jsonl")
++    with pytest.raises(ValueError, match="row_results_path"):
++        mod.validate_artifact(bad_rows_path)
++
++
++def test_req_safe_5444_metric_independence_recomputes_from_rows(tmp_path: Path) -> None:
++    """REQ-SAFE-5444: aggregate metrics are recomputed from row predicates."""
++
++    artifact = _complete_artifact(tmp_path)
++    metrics = mod.derive_metrics(artifact["row_results"])
++
++    assert metrics["condition_metrics"] == artifact["condition_metrics"]
++    assert metrics["guided_validity_delta_vs_grammar_only"] == pytest.approx(0.75)
++    assert metrics["metric_independence_checks_passed"] is True
++
++    bad_semantic = deepcopy(artifact)
++    bad_semantic["semantic_false_accept_rate"] = 0.0
++    with pytest.raises(ValueError, match="semantic_false_accept_rate"):
++        mod.validate_artifact(bad_semantic)
++
++    bad_budget = deepcopy(artifact)
++    bad_budget["reward_evaluation_budget"]["total_reward_evaluations"] += 1
++    with pytest.raises(ValueError, match="reward_evaluation_budget"):
++        mod.validate_artifact(bad_budget)
++
++    bad_ready = deepcopy(artifact)
++    bad_ready["metric_independence_checks_passed"] = False
++    with pytest.raises(ValueError, match="metric_independence_checks_passed"):
++        mod.validate_artifact(bad_ready)
++
++
++def test_req_safe_5444_default_runner_and_write_false_paths(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-SAFE-5444: default runner load receipts gate complete and blocked paths."""
++
++    gguf = _minimal_gguf(tmp_path / "gemma-4-26B-A4B-it-Q4_K_M.gguf")
++    kwargs = {
++        "root": tmp_path,
++        "artifact_path": tmp_path / "default.json",
++        "row_results_path": tmp_path / "default_rows.jsonl",
++        "fixture_artifact": exp5443.build_artifact(tests_run=[TEST_COMMAND]),
++        "model_resolver": _resolver({"unsloth/gemma-4-26B-A4B-it-GGUF": gguf}),
++        "runtime_probe": lambda **_kwargs: _runtime_receipt(),
++        "max_fixtures": 1,
++        "tests_run": [TEST_COMMAND],
++    }
++
++    class FakeLiveRunner:
++        def __init__(self, **_kwargs: Any) -> None:
++            self.load_receipt = {"offload_evidence": True, "gpu_memory_delta_mb": 1024}
++
++        def __call__(self, **call_kwargs: Any) -> dict[str, Any]:
++            fixture = call_kwargs["fixture"]
++            return {
++                "output_text": _json_text(_valid_payload(fixture)),
++                "duration_s": 0.1,
++                "generated_token_count": 5,
++            }
++
++    monkeypatch.setattr(mod, "LlamaCppGenerationRunner", FakeLiveRunner)
++    artifact = mod.run(**kwargs, write=True)
++    assert artifact["verifier_guided_decoding_ready"] is True
++
++    # Existing row JSONL lets write=False still validate row_results_path.
++    second = mod.run(**kwargs, write=False)
++    assert second["verifier_guided_decoding_ready"] is True
++
++    class CpuOnlyRunner:
++        def __init__(self, **_kwargs: Any) -> None:
++            self.load_receipt = {"offload_evidence": False, "gpu_memory_delta_mb": 0}
++
++    monkeypatch.setattr(mod, "LlamaCppGenerationRunner", CpuOnlyRunner)
++    cpu_only = mod.run(**(kwargs | {"artifact_path": tmp_path / "cpu.json"}), write=True)
++    assert cpu_only["honest_verdict"].startswith("blocked:")
++    assert "gpu_offload_not_observed_after_load" in cpu_only["precondition_details"][
++        "blocked_preconditions"
++    ]
++
++    class RaisingRunner:
++        def __init__(self, **_kwargs: Any) -> None:
++            raise RuntimeError("load failed")
++
++    monkeypatch.setattr(mod, "LlamaCppGenerationRunner", RaisingRunner)
++    failed_load = mod.run(**(kwargs | {"artifact_path": tmp_path / "raise.json"}), write=True)
++    assert "llama_cpp_model_load_failed" in failed_load["honest_verdict"]
++
++
++def test_req_safe_5444_defensive_validation_and_helper_branches(tmp_path: Path) -> None:
++    """REQ-SAFE-5444: defensive helpers fail closed on malformed inputs."""
++
++    artifact = _complete_artifact(tmp_path)
++    validation_cases: list[tuple[str, Any, str]] = [
++        ("field_principles", {}, "field_principles"),
++        ("preconditions_checked", "yes", "preconditions_checked"),
++        ("model_specs", "bad", "model_specs"),
++        ("headline_required_any_of", [], "headline_required_any_of"),
++        ("condition_names", [], "condition_names"),
++        ("gpu_offload_verified", "yes", "gpu_offload_verified"),
++        ("runtime_backend", 7, "runtime_backend"),
++        ("fixture_count", -1, "fixture_count"),
++        ("honest_verdict", "done\n", "honest_verdict"),
++        ("research_conductor_modified", True, "research_conductor.py"),
++        ("row_results", "bad", "row_results"),
++        ("row_results_path", "", "row_results_path"),
++    ]
++    for field, value, expected in validation_cases:
++        bad = deepcopy(artifact)
++        bad[field] = value
++        with pytest.raises(ValueError, match=expected):
++            mod.validate_artifact(bad)
++
++    missing = deepcopy(artifact)
++    del missing["runtime_backend"]
++    assert "missing required fields" in "; ".join(mod.artifact_schema_errors(missing))
++
++    aggregate_cases: list[tuple[str, Any, str]] = [
++        ("accepted_validity_rate", 0.0, "accepted_validity_rate"),
++        ("condition_metrics", {}, "condition_metrics"),
++        ("metric_details", {}, "metric_details"),
++        ("constraint_family_counts", {}, "constraint_family_counts"),
++        ("row_checksums", [], "row_checksums"),
++        ("fixture_count", artifact["fixture_count"] + 1, "fixture_count"),
++    ]
++    for field, value, expected in aggregate_cases:
++        bad = deepcopy(artifact)
++        bad[field] = value
++        with pytest.raises(ValueError, match=expected):
++            mod.validate_artifact(bad)
++
++    ready_status = deepcopy(artifact)
++    ready_status["status"] = "blocked"
++    with pytest.raises(ValueError, match="complete status"):
++        mod.validate_artifact(ready_status)
++
++    ready_substrate = deepcopy(artifact)
++    ready_substrate["inference_substrate"] = "blocked_preconditions_no_live_llm"
++    with pytest.raises(ValueError, match="live_llm_inference"):
++        mod.validate_artifact(ready_substrate)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["row_results"][0]["row_checksum"] = "0" * 64
++    with pytest.raises(ValueError, match="row checksum"):
++        mod.validate_artifact(bad_checksum)
++
++    bad_row_model = deepcopy(artifact)
++    bad_row_model["row_results"][0]["model_hf_id"] = "legacy/not-headline"
++    with pytest.raises(ValueError, match="row model_hf_id"):
++        mod.validate_artifact(bad_row_model)
++
++    bad_row_path = deepcopy(artifact)
++    bad_row_path["row_results"][0]["model_path"] = "/tmp/model.bin"
++    with pytest.raises(ValueError, match="row model_path"):
++        mod.validate_artifact(bad_row_path)
++
++    unreadable_rows = deepcopy(artifact)
++    invalid_jsonl = tmp_path / "invalid.jsonl"
++    invalid_jsonl.write_text("{not json}\n", encoding="utf-8")
++    unreadable_rows["row_results_path"] = str(invalid_jsonl)
++    with pytest.raises(ValueError, match="row_results_path is unreadable"):
++        mod.validate_artifact(unreadable_rows)
++
++    mismatched_rows = deepcopy(artifact)
++    mismatch_path = tmp_path / "mismatch.jsonl"
++    mismatch_path.write_text(json.dumps({"row": "wrong"}) + "\n", encoding="utf-8")
++    mismatched_rows["row_results_path"] = str(mismatch_path)
++    with pytest.raises(ValueError, match="contents must match"):
++        mod.validate_artifact(mismatched_rows)
++
++    assert mod.extract_json_object("prefix {bad json") == (
++        None,
++        "JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
++    )
++    assert mod.extract_json_object("no object here") == (None, "no_json_object")
++    with pytest.raises(ValueError, match="unknown condition"):
++        mod.build_prompt(artifact["row_results"][0], condition="bad")
++
++    fixture_rows = exp5443.build_fixture_rows()
++    assert mod.select_fixture_rows({"fixture_rows": "bad"}) == []
++    assert (
++        mod.select_fixture_rows(
++            {"fixture_rows": ["bad", {}, {"exact_final_verdict": {"verified": False}}]}
++        )
++        == []
++    )
++    assert mod._best_guided_prefix({"prefixes": []}) is None  # noqa: SLF001
++    for row in fixture_rows:
++        assert mod._family_instruction(row, row["constraint_family"])  # noqa: SLF001
++    assert mod._family_instruction({}, "unknown") == "Satisfy the deterministic row constraints."  # noqa: SLF001
++
++    preconditions = mod.evaluate_preconditions(
++        fixture_payload={},
++        model_specs=[],
++        selected_model=None,
++        runtime_receipt={"cuda_visible": False, "offload_evidence": False},
++    )
++    assert set(preconditions["blocked_preconditions"]) >= {
++        "exp5443_verifier_potential_fixture_not_ready",
++        "mandated_model_specs_missing",
++        "no_mandated_local_gguf_model_path",
++        "cuda_not_visible",
++        "gpu_offload_evidence_missing",
++    }
++
++    assert mod._honest_verdict(False, {}, {"metric_independence_checks_passed": False}) == (  # noqa: SLF001
++        "blocked: metric independence checks failed"
++    )
++    assert mod._honest_verdict(False, {}, {"metric_independence_checks_passed": True}) == (  # noqa: SLF001
++        "blocked: verifier-guided decoding readiness checks failed"
++    )
++    assert mod._read_json(tmp_path / "missing.json") == {}  # noqa: SLF001
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{bad", encoding="utf-8")
++    assert mod._read_json(bad_json) == {}  # noqa: SLF001
++    assert mod._normalise_tests_run([])[0]["outcome"] == "not_recorded"  # noqa: SLF001
++    assert mod._normalise_test_run({"command": "cmd", "outcome": "passed"}) == {  # noqa: SLF001
++        "command": "cmd",
++        "outcome": "passed",
++    }
++    assert mod._destination(tmp_path, None, Path("x.json")) == tmp_path / "x.json"  # noqa: SLF001
++    assert mod._destination(tmp_path, Path("rel.json"), Path("x.json")) == tmp_path / "rel.json"  # noqa: SLF001
++    assert mod._float_close("bad", 1.0) is False  # noqa: SLF001
++    assert mod._max_memory_delta_mb(  # noqa: SLF001
++        [{"index": 0, "memory_used_mb": 10}],
++        [{"index": 0, "memory_used_mb": 25}, {"index": 1, "memory_used_mb": 4}],
++    ) == 15
+-- 
+2.55.0
+

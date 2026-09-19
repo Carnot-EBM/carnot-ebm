@@ -1,0 +1,50 @@
+From 1a9083837569fadb885ef28f2b45321023fcbbf1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 16 Jul 2026 15:31:37 -0400
+Subject: [PATCH 07217/11362] [outer-loop] Prepare submission package with
+ REQ-35's graduated fixes (kernel v9)
+
+Ran the standing prep_daily_submission.py routine: refreshed the
+iancblenke/carnot-agent-code dataset from the repo's current python/carnot
+(now including REQ-ARC-FCP-5699-35's graduated fixes -- default-on
+stall-refactor-loop, max_tokens/timeout 4096/600, structural reminder),
+re-pushed the submission kernel (v9), and validated the save-run.
+
+All safety guards passed: MAX_ACTIONS=400 present, no leaked _rust.so,
+and a real import+build smoke test of the graduated agent code in the
+staged bundle. The script's own 24x15s poll exited before the kernel
+genuinely finished (Kaggle notebook runs took longer this time); manually
+polled kernels status to KernelWorkerStatus.COMPLETE and confirmed
+submission.parquet present via `kaggle kernels output` before correcting
+the status file to reflect ground truth.
+
+This does NOT submit to the competition -- per Operator-Only External
+Publication discipline, that remains an explicit operator decision via
+the printed --submit-only command.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc-daily-prep-status.json | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/arc-daily-prep-status.json b/ops/arc-daily-prep-status.json
+index 37bfd739f7..c732cfb8b5 100644
+--- a/ops/arc-daily-prep-status.json
++++ b/ops/arc-daily-prep-status.json
+@@ -1,8 +1,9 @@
+ {
+-  "prepped_at": "2026-06-19T23:49Z",
+-  "kernel_version": "4",
++  "prepped_at": "2026-07-16T19:18Z",
++  "kernel_version": "9",
+   "save_run": "complete",
+   "parquet_ok": true,
+   "ready_for_operator_submit": true,
+-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 4"
++  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 9",
++  "note": "the automated prep script's own 24x15s poll exited with save_run='?' before the kernel genuinely finished; manually polled to KernelWorkerStatus.COMPLETE and confirmed submission.parquet present via `kaggle kernels output` before correcting this file to reflect ground truth. Kernel v9 bundles REQ-ARC-FCP-5699-35's graduated fixes (default-on stall-refactor-loop, max_tokens/timeout 4096/600, structural reminder) via the re-versioned iancblenke/carnot-agent-code dataset."
+ }
+-- 
+2.55.0
+

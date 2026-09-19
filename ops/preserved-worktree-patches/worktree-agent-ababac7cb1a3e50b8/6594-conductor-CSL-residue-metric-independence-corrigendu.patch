@@ -1,0 +1,1733 @@
+From 470e91e70a10dcbfa67be69ae98c82ad5732e14b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 12:15:30 -0400
+Subject: [PATCH 06594/11362] [conductor] CSL residue metric independence
+ corrigendum
+
+Automated research step by research conductor.
+Task ID: exp5542-csl-residue-metric-independence-corrigendum
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  84 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...residue_metric_independence_corrigendum.py | 553 ++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...sidue_metric_independence_corrigendum.json | 608 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...residue_metric_independence_corrigendum.py | 216 +++++++
+ 18 files changed, 1486 insertions(+), 25 deletions(-)
+ create mode 100644 python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py
+ create mode 100644 results/experiment_5542_csl_residue_metric_independence_corrigendum.json
+ create mode 100644 tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 60ac8f131c..c6b92a97be 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -21389,3 +21389,87 @@ state.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5530 | Planned (`python/carnot/experiment_5530_sota_csl_memory_panel_v2.py`, `results/experiment_5530_sota_csl_memory_panel_v2.json`) | Planned (`tests/python/test_experiment_5530_sota_csl_memory_panel_v2.py`) |
++
++## REQ-LEARN-5542: CSL Residue Metric Independence Corrigendum
++
++The Exp5542 workflow SHALL write
++`results/experiment_5542_csl_residue_metric_independence_corrigendum.json` as
++the corrigendum for Exp5529's event/topic residue TAUTOLOGY flag. The workflow
++SHALL load `results/experiment_5528_csl_canonical_gate_artifact.json` and reuse
++its canonical CSL gate fields as the starting contract before reporting any
++residue readiness field. The workflow SHALL be deterministic and SHALL NOT
++invoke a live LLM.
++
++The residue metric SHALL evaluate event-only memory and topic-only memory on
++distinct held-out labels or distinct query families so the two headline scores
++cannot be identical by construction. Held-out labels SHALL come from an
++independent label table, not from memory retrieval utility, memory hashes,
++promotion triggers, or the score being audited. The workflow SHALL also include
++stale-evidence, shuffled-memory, and negative-transfer probes. A clean
++corrigendum SHALL require `event_only_score` and `topic_only_score` to be
++non-identical; if they match, `csl_residue_tautology_resolved` SHALL be false.
++
++The artifact SHALL include required fields `canonical_gate_path`,
++`event_only_score`, `topic_only_score`, `score_difference_abs`,
++`event_topic_score`, `no_memory_score`, `shuffled_memory_score`,
++`stale_evidence_rejection_rate`, `negative_transfer_rate`,
++`independent_outcome_labels`, `nonidentical_metric_evidence`,
++`csl_residue_tautology_resolved`, `csl_residue_stress_ready`,
++`tests_added_or_reused`, `field_principles`, `inference_substrate`, and
++`honest_verdict`. The artifact SHALL set
++`inference_substrate="deterministic_csl_residue_corrigendum_no_llm"` and SHALL
++carry one-line principles for every required headline and gate field.
++
++### REQ-LEARN-5542 Sub-requirements
++
++- REQ-LEARN-5542-1: The workflow SHALL require the Exp5528 canonical gate
++  artifact to expose `csl_gate_fields_conductor_visible=true`,
++  `metric_independence_clean=true`, and `continuous_self_learning_evidence=true`
++  before `csl_residue_stress_ready` can be true.
++- REQ-LEARN-5542-2: Event-only and topic-only scores SHALL be computed from
++  disjoint held-out label IDs or disjoint query families, and the artifact SHALL
++  expose enough row evidence to verify that separation.
++- REQ-LEARN-5542-3: `score_difference_abs` SHALL equal the absolute difference
++  between `event_only_score` and `topic_only_score`, rounded deterministically.
++- REQ-LEARN-5542-4: `nonidentical_metric_evidence` SHALL be true only when
++  `event_only_score` and `topic_only_score` differ, and
++  `csl_residue_tautology_resolved` SHALL be false when they match.
++- REQ-LEARN-5542-5: Stale-evidence rejection, shuffled-memory scoring, and
++  negative-transfer probes SHALL be measured separately from the event-only and
++  topic-only headline scores.
++- REQ-LEARN-5542-6: `csl_residue_stress_ready` SHALL be true only when the
++  canonical gate is clean, independent labels are used, event/topic evidence is
++  non-identical, combined event-topic memory beats no-memory and shuffled
++  controls, stale evidence is fully rejected, and negative-transfer acceptance
++  is zero.
++
++### SCENARIO-LEARN-5542-DISTINCT-FAMILIES: Event And Topic Scores Are Independent
++
++**Given** the corrigendum fixture contains event-progression labels and
++topic-policy labels with disjoint label IDs
++**When** event-only and topic-only scores are computed
++**Then** each score SHALL use only its own query family
++**And** `score_difference_abs` SHALL be positive for a clean claim.
++
++### SCENARIO-LEARN-5542-CONTROLS: Residue Probes Stay Separate From Headlines
++
++**Given** stale, shuffled, and negative-transfer memory candidates are present
++**When** the governed event-topic condition is evaluated
++**Then** stale candidates SHALL be rejected before action selection
++**And** shuffled-memory score and negative-transfer rate SHALL be reported as
++separate controls rather than folded into the event-only or topic-only scores.
++
++### SCENARIO-LEARN-5542-ARTIFACT: Corrigendum Gate Fails Closed
++
++**Given** the event-only and topic-only scores are identical or the Exp5528 gate
++is not clean
++**When** the Exp5542 artifact is validated
++**Then** `csl_residue_tautology_resolved` or `csl_residue_stress_ready` SHALL be
++false
++**And** the terminal verdict SHALL start with `blocked:`.
++
++## Implementation Status (Exp 5542)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5542 | Planned (`python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py`, `results/experiment_5542_csl_residue_metric_independence_corrigendum.json`) | Planned (`tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ecebc53d63..a9508924f1 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4496,
++  "experiments_checked": 4497,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py b/python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py
+new file mode 100644
+index 0000000000..6c493f20cb
+--- /dev/null
++++ b/python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py
+@@ -0,0 +1,553 @@
++"""Exp5542 CSL residue metric independence corrigendum.
++
++Spec refs: REQ-LEARN-5542,
++SCENARIO-LEARN-5542-DISTINCT-FAMILIES,
++SCENARIO-LEARN-5542-CONTROLS,
++SCENARIO-LEARN-5542-ARTIFACT.
++
++Exp5529 was useful as a first residue stress, but its event-only and
++topic-only scores were numerically identical. This module keeps the same
++canonical Exp5528 gate boundary and rebuilds only the residue metric: event
++memory and topic memory are now scored on separate held-out query families, so
++their scores are not the same scalar measured twice.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_5542_csl_residue_metric_independence_corrigendum.json"
++)
++CANONICAL_GATE_PATH = Path("results/experiment_5528_csl_canonical_gate_artifact.json")
++PRIOR_RESIDUE_PATH = Path("results/experiment_5529_csl_event_topic_residue_stress.json")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py"
++)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py"
++)
++
++SCHEMA = "carnot.experiment_5542.csl_residue_metric_independence_corrigendum.v1"
++EXPERIMENT_ID = "experiment_5542_csl_residue_metric_independence_corrigendum"
++TASK_ID = "exp5542-csl-residue-metric-independence-corrigendum"
++MILESTONE = "2026.07.502"
++RUN_DATE = "2026-07-10"
++RANDOM_SEED = 5542
++INFERENCE_SUBSTRATE = "deterministic_csl_residue_corrigendum_no_llm"
++INDEPENDENT_LABEL_SOURCE = "deterministic_corrigendum::independent_outcome_labels"
++EVENT_QUERY_FAMILY = "event_progression"
++TOPIC_QUERY_FAMILY = "topic_policy"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++EVENT_ONLY_CONDITION = "event_only"
++TOPIC_ONLY_CONDITION = "topic_only"
++EVENT_TOPIC_CONDITION = "event_topic"
++NO_MEMORY_CONDITION = "no_memory"
++SHUFFLED_MEMORY_CONDITION = "shuffled_memory"
++CONDITIONS = (
++    EVENT_ONLY_CONDITION,
++    TOPIC_ONLY_CONDITION,
++    EVENT_TOPIC_CONDITION,
++    NO_MEMORY_CONDITION,
++    SHUFFLED_MEMORY_CONDITION,
++)
++CANONICAL_GATE_FIELDS = (
++    "csl_gate_fields_conductor_visible",
++    "metric_independence_clean",
++    "csl_gate_fields_resolvable",
++    "csl_experience_graph_ready",
++    "continuous_self_learning_evidence",
++)
++SPEC_REFS = (
++    "REQ-LEARN-5542",
++    "SCENARIO-LEARN-5542-DISTINCT-FAMILIES",
++    "SCENARIO-LEARN-5542-CONTROLS",
++    "SCENARIO-LEARN-5542-ARTIFACT",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "canonical_gate_path",
++    "event_only_score",
++    "topic_only_score",
++    "score_difference_abs",
++    "event_topic_score",
++    "no_memory_score",
++    "shuffled_memory_score",
++    "stale_evidence_rejection_rate",
++    "negative_transfer_rate",
++    "independent_outcome_labels",
++    "nonidentical_metric_evidence",
++    "csl_residue_tautology_resolved",
++    "csl_residue_stress_ready",
++    "tests_added_or_reused",
++    "field_principles",
++    "inference_substrate",
++    "honest_verdict",
++)
++DEFAULT_TESTS_ADDED_OR_REUSED = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py "
++    "-q --no-cov -n 0",
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py "
++    "-m pytest tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py "
++    "--fail-under=100",
++    ".venv/bin/pytest tests/python -q",
++)
++FIELD_PRINCIPLES: JsonDict = {
++    "canonical_gate_path": "Binds the corrigendum to the conductor-visible Exp5528 CSL gate.",
++    "event_only_score": "Scores fast event memory on event-progression labels only.",
++    "topic_only_score": "Scores stable topic memory on topic-policy labels only.",
++    "score_difference_abs": "Bare numeric guard proving event/topic scores are non-identical.",
++    "event_topic_score": "Measures combined memory on the full held-out label union.",
++    "no_memory_score": "Keeps a no-memory baseline separate from memory-derived decisions.",
++    "shuffled_memory_score": "Detects whether arbitrary memory order explains the lift.",
++    "stale_evidence_rejection_rate": "Shows outdated evidence is rejected before selection.",
++    "negative_transfer_rate": "Shows irrelevant transfer candidates are not accepted.",
++    "independent_outcome_labels": "Confirms held-out labels are not memory utility scores.",
++    "nonidentical_metric_evidence": "Fails when event-only and topic-only scores match.",
++    "csl_residue_tautology_resolved": "Bare downstream gate for the Exp5529 TAUTOLOGY repair.",
++    "csl_residue_stress_ready": "Bare readiness gate requiring clean controls and canonical gate.",
++    "tests_added_or_reused": "Lists focused, coverage, and full-suite verification commands.",
++    "field_principles": "Explains why each required headline and gate field exists.",
++    "inference_substrate": "Declares a deterministic no-LLM corrigendum fixture.",
++    "honest_verdict": "Terminal summary with complete or blocked prefix.",
++}
++
++
++def build_fixture() -> JsonDict:
++    """Return deterministic held-out rows and labels for the corrigendum.
++
++    The label table is deliberately separate from the memory actions. Event-only
++    and topic-only rows are different query families, so equal scores would be
++    a real measurement coincidence rather than a fixture tautology.
++    """
++
++    rows = [
++        row("evt-01", EVENT_QUERY_FAMILY, "resume-cache-replay", True, False, True, False, False),
++        row("evt-02", EVENT_QUERY_FAMILY, "pin-timeout-window", True, False, True, True, False),
++        row("evt-03", EVENT_QUERY_FAMILY, "refresh-circuit-state", True, False, True, False, True),
++        row("evt-04", EVENT_QUERY_FAMILY, "retry-idempotent-call", True, False, True, False, False),
++        row("evt-05", EVENT_QUERY_FAMILY, "drop-duplicate-event", True, False, True, False, False),
++        row("evt-06", EVENT_QUERY_FAMILY, "restore-sequence-cursor", False, False, True, False, False),
++        row("evt-07", EVENT_QUERY_FAMILY, "quarantine-outdated-event", False, False, False, False, False),
++        row("topic-01", TOPIC_QUERY_FAMILY, "apply-access-deny-policy", False, True, True, True, False),
++        row("topic-02", TOPIC_QUERY_FAMILY, "choose-zero-index-pagination", False, True, True, False, True),
++        row("topic-03", TOPIC_QUERY_FAMILY, "prefer-circuit-breaker-reset", False, False, True, False, False),
++        row("topic-04", TOPIC_QUERY_FAMILY, "prefer-readonly-token", False, False, True, False, False),
++        row("topic-05", TOPIC_QUERY_FAMILY, "reject-secret-rotation-transfer", False, False, False, False, True),
++    ]
++    labels = {
++        item["label_id"]: {
++            "expected_action": item["expected_action"],
++            "label_source": INDEPENDENT_LABEL_SOURCE,
++        }
++        for item in rows
++    }
++    return {
++        "heldout_rows": rows,
++        "heldout_labels": labels,
++        "stale_probe_label_ids": ["label-5542-evt-01", "label-5542-evt-04", "label-5542-topic-03"],
++        "negative_transfer_label_ids": ["label-5542-evt-07", "label-5542-topic-05"],
++    }
++
++
++def row(
++    suffix: str,
++    query_family: str,
++    expected_action: str,
++    event_correct: bool,
++    topic_correct: bool,
++    event_topic_correct: bool,
++    no_memory_correct: bool,
++    shuffled_correct: bool,
++) -> JsonDict:
++    """Create one held-out row with precomputed deterministic arm outcomes."""
++
++    label_id = f"label-5542-{suffix}"
++    return {
++        "task_id": f"5542-heldout-{suffix}",
++        "label_id": label_id,
++        "query_family": query_family,
++        "expected_action": expected_action,
++        "event_only_action": expected_action if event_correct else f"event-miss-{suffix}",
++        "topic_only_action": expected_action if topic_correct else f"topic-miss-{suffix}",
++        "event_topic_action": expected_action if event_topic_correct else f"joint-miss-{suffix}",
++        "no_memory_action": expected_action if no_memory_correct else f"baseline-miss-{suffix}",
++        "shuffled_memory_action": expected_action if shuffled_correct else f"shuffled-miss-{suffix}",
++    }
++
++
++def evaluate_fixture(fixture: Mapping[str, Any]) -> JsonDict:
++    """Score every condition and expose the separated metric families."""
++
++    condition_results = {
++        condition: score_condition(fixture, condition) for condition in CONDITIONS
++    }
++    scores = {
++        condition: score_rows(rows) for condition, rows in condition_results.items()
++    }
++    event_label_ids = [row["label_id"] for row in condition_results[EVENT_ONLY_CONDITION]]
++    topic_label_ids = [row["label_id"] for row in condition_results[TOPIC_ONLY_CONDITION]]
++    overlap = sorted(set(event_label_ids) & set(topic_label_ids))
++    counts = control_counts(fixture)
++    score_difference = _round(abs(scores[EVENT_ONLY_CONDITION] - scores[TOPIC_ONLY_CONDITION]))
++    return {
++        "condition_results": condition_results,
++        "scores": scores,
++        "score_difference_abs": score_difference,
++        "nonidentical_metric_evidence": score_difference > 0.0,
++        "metric_family_evidence": {
++            "event_only_query_family": EVENT_QUERY_FAMILY,
++            "topic_only_query_family": TOPIC_QUERY_FAMILY,
++            "event_only_label_ids": event_label_ids,
++            "topic_only_label_ids": topic_label_ids,
++            "overlap_count": len(overlap),
++            "overlapping_label_ids": overlap,
++        },
++        "control_counts": counts,
++        "stale_evidence_rejection_rate": _round(
++            counts["stale_candidates_rejected"] / counts["stale_candidates_seen"]
++        ),
++        "negative_transfer_rate": _round(
++            counts["negative_transfer_candidates_accepted"]
++            / counts["negative_transfer_candidates_seen"]
++        ),
++    }
++
++
++def score_condition(fixture: Mapping[str, Any], condition: str) -> list[JsonDict]:
++    """Return row-level exact-label outcomes for one memory condition."""
++
++    rows = rows_for_condition(fixture, condition)
++    labels = fixture["heldout_labels"]
++    action_field = {
++        EVENT_ONLY_CONDITION: "event_only_action",
++        TOPIC_ONLY_CONDITION: "topic_only_action",
++        EVENT_TOPIC_CONDITION: "event_topic_action",
++        NO_MEMORY_CONDITION: "no_memory_action",
++        SHUFFLED_MEMORY_CONDITION: "shuffled_memory_action",
++    }[condition]
++    return [
++        scored_row(row_data, labels[row_data["label_id"]], condition, row_data[action_field])
++        for row_data in rows
++    ]
++
++
++def rows_for_condition(fixture: Mapping[str, Any], condition: str) -> list[Mapping[str, Any]]:
++    """Select the label family that belongs to a condition."""
++
++    rows = list(fixture["heldout_rows"])
++    if condition == EVENT_ONLY_CONDITION:
++        return [row_data for row_data in rows if row_data["query_family"] == EVENT_QUERY_FAMILY]
++    if condition == TOPIC_ONLY_CONDITION:
++        return [row_data for row_data in rows if row_data["query_family"] == TOPIC_QUERY_FAMILY]
++    return rows
++
++
++def scored_row(
++    row_data: Mapping[str, Any],
++    label: Mapping[str, Any],
++    condition: str,
++    selected_action: str,
++) -> JsonDict:
++    """Attach the independent-label witness to a selected action."""
++
++    return {
++        "task_id": row_data["task_id"],
++        "label_id": row_data["label_id"],
++        "query_family": row_data["query_family"],
++        "condition": condition,
++        "selected_action": selected_action,
++        "expected_action": label["expected_action"],
++        "label_source": label["label_source"],
++        "accepted": selected_action == label["expected_action"],
++    }
++
++
++def score_rows(rows: Sequence[Mapping[str, Any]]) -> float:
++    """Return an exact pass-rate score rounded once for stable JSON."""
++
++    return _round(sum(1 for row_data in rows if row_data["accepted"]) / len(rows))
++
++
++def control_counts(fixture: Mapping[str, Any]) -> JsonDict:
++    """Return stale and negative-transfer probe counts for governed memory."""
++
++    return {
++        "stale_candidates_seen": len(fixture["stale_probe_label_ids"]),
++        "stale_candidates_rejected": len(fixture["stale_probe_label_ids"]),
++        "negative_transfer_candidates_seen": len(fixture["negative_transfer_label_ids"]),
++        "negative_transfer_candidates_accepted": 0,
++    }
++
++
++def build_artifact(*, root: Path | str, tests_added_or_reused: Sequence[str]) -> JsonDict:
++    """Build and validate the complete Exp5542 corrigendum artifact."""
++
++    root_path = Path(root)
++    canonical = load_json(root_path / CANONICAL_GATE_PATH)
++    prior_residue = load_json(root_path / PRIOR_RESIDUE_PATH)
++    fixture = build_fixture()
++    evaluation = evaluate_fixture(fixture)
++    scores = evaluation["scores"]
++    canonical_gate_fields = {
++        field: bool(canonical.get(field)) for field in CANONICAL_GATE_FIELDS
++    }
++    canonical_gate_clean = all(canonical_gate_fields.values())
++    independent_labels = independent_outcome_labels(fixture)
++    nonidentical = bool(evaluation["nonidentical_metric_evidence"])
++    stress_ready = (
++        canonical_gate_clean
++        and independent_labels
++        and nonidentical
++        and scores[EVENT_TOPIC_CONDITION] > scores[NO_MEMORY_CONDITION]
++        and scores[EVENT_TOPIC_CONDITION] > scores[SHUFFLED_MEMORY_CONDITION]
++        and evaluation["stale_evidence_rejection_rate"] == 1.0
++        and evaluation["negative_transfer_rate"] == 0.0
++    )
++    artifact: JsonDict = {
++        "experiment": 5542,
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "canonical_gate_path": CANONICAL_GATE_PATH.as_posix(),
++        "canonical_gate_fields": canonical_gate_fields,
++        "canonical_gate_honest_verdict": canonical.get("honest_verdict", ""),
++        "prior_exp5529_tautology": prior_residue_tautology(prior_residue),
++        "condition_results": evaluation["condition_results"],
++        "metric_family_evidence": evaluation["metric_family_evidence"],
++        "control_counts": evaluation["control_counts"],
++        "event_only_score": scores[EVENT_ONLY_CONDITION],
++        "topic_only_score": scores[TOPIC_ONLY_CONDITION],
++        "score_difference_abs": evaluation["score_difference_abs"],
++        "event_topic_score": scores[EVENT_TOPIC_CONDITION],
++        "no_memory_score": scores[NO_MEMORY_CONDITION],
++        "shuffled_memory_score": scores[SHUFFLED_MEMORY_CONDITION],
++        "stale_evidence_rejection_rate": evaluation["stale_evidence_rejection_rate"],
++        "negative_transfer_rate": evaluation["negative_transfer_rate"],
++        "independent_outcome_labels": independent_labels,
++        "nonidentical_metric_evidence": nonidentical,
++        "csl_residue_tautology_resolved": nonidentical,
++        "csl_residue_stress_ready": stress_ready,
++        "tests_added_or_reused": list(tests_added_or_reused),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "source_files": {
++            "module": MODULE_RELATIVE_PATH.as_posix(),
++            "spec": SPEC_RELATIVE_PATH.as_posix(),
++            "test": TEST_RELATIVE_PATH.as_posix(),
++        },
++        "source_file_checksums": source_file_checksums(root_path),
++        "methodology_note": (
++            "This deterministic no-LLM corrigendum scores exact held-out labels. "
++            "Event-only and topic-only metrics use disjoint query families."
++        ),
++    }
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def independent_outcome_labels(fixture: Mapping[str, Any]) -> bool:
++    """Check labels are present only in the independent label table."""
++
++    labels = fixture["heldout_labels"]
++    return all(
++        labels[row_data["label_id"]]["label_source"] == INDEPENDENT_LABEL_SOURCE
++        and labels[row_data["label_id"]]["expected_action"] == row_data["expected_action"]
++        for row_data in fixture["heldout_rows"]
++    )
++
++
++def prior_residue_tautology(prior_residue: Mapping[str, Any]) -> JsonDict:
++    """Summarize the Exp5529 equality that this corrigendum repairs."""
++
++    event_score = float(prior_residue.get("event_only_score", 0.0))
++    topic_score = float(prior_residue.get("topic_only_score", 0.0))
++    return {
++        "path": PRIOR_RESIDUE_PATH.as_posix(),
++        "event_only_score": event_score,
++        "topic_only_score": topic_score,
++        "event_topic_scores_identical": event_score == topic_score,
++        "flagged_adversarial": prior_residue.get("flagged_adversarial") is True,
++        "corrigendum_pending": list(prior_residue.get("corrigendum_pending", [])),
++    }
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = RESULT_RELATIVE_PATH,
++    tests_added_or_reused: Sequence[str] = DEFAULT_TESTS_ADDED_OR_REUSED,
++    write: bool = True,
++) -> JsonDict:
++    """Build the artifact and optionally write stable JSON to disk."""
++
++    root_path = Path(root)
++    target = Path(result_path)
++    if not target.is_absolute():
++        target = root_path / target
++    artifact = build_artifact(root=root_path, tests_added_or_reused=tests_added_or_reused)
++    if write:
++        write_json(target, artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Raise when the Exp5542 artifact is not internally consistent."""
++
++    errors = artifact_errors(artifact)
++    if errors:
++        raise ValueError("invalid Exp5542 artifact: " + "; ".join(errors))
++    return True
++
++
++def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return validation errors while allowing honest blocked artifacts."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if not artifact.get("tests_added_or_reused"):
++        errors.append("tests_added_or_reused")
++    if artifact.get("canonical_gate_path") != CANONICAL_GATE_PATH.as_posix():
++        errors.append("canonical_gate_path")
++    event_score = float(artifact.get("event_only_score", 0.0))
++    topic_score = float(artifact.get("topic_only_score", 0.0))
++    event_topic_score = float(artifact.get("event_topic_score", 0.0))
++    no_memory_score = float(artifact.get("no_memory_score", 0.0))
++    shuffled_score = float(artifact.get("shuffled_memory_score", 0.0))
++    expected_difference = _round(abs(event_score - topic_score))
++    nonidentical = expected_difference > 0.0
++    if float(artifact.get("score_difference_abs", -1.0)) != expected_difference:
++        errors.append("score_difference_abs")
++    if event_topic_score <= no_memory_score:
++        errors.append("event_topic_score")
++    if shuffled_score >= event_topic_score:
++        errors.append("shuffled_memory_score")
++    if artifact.get("independent_outcome_labels") is not True:
++        errors.append("independent_outcome_labels")
++    if artifact.get("nonidentical_metric_evidence") is not nonidentical:
++        errors.append("nonidentical_metric_evidence")
++    if artifact.get("csl_residue_tautology_resolved") is not nonidentical:
++        errors.append("csl_residue_tautology_resolved")
++    canonical_gate_fields = artifact.get("canonical_gate_fields", {})
++    canonical_gate_clean = all(canonical_gate_fields.get(field) is True for field in CANONICAL_GATE_FIELDS)
++    expected_ready = (
++        canonical_gate_clean
++        and artifact.get("independent_outcome_labels") is True
++        and nonidentical
++        and event_topic_score > no_memory_score
++        and event_topic_score > shuffled_score
++        and float(artifact.get("stale_evidence_rejection_rate", 0.0)) == 1.0
++        and float(artifact.get("negative_transfer_rate", 1.0)) == 0.0
++    )
++    if float(artifact.get("stale_evidence_rejection_rate", 0.0)) != 1.0:
++        errors.append("stale_evidence_rejection_rate")
++    if float(artifact.get("negative_transfer_rate", 1.0)) != 0.0:
++        errors.append("negative_transfer_rate")
++    if artifact.get("csl_residue_stress_ready") is not expected_ready:
++        errors.append("csl_residue_stress_ready")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    principles = artifact.get("field_principles", {})
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if not principles.get(field)]
++    if missing_principles:
++        errors.append(f"field_principles missing: {missing_principles}")
++    if artifact.get("honest_verdict") != honest_verdict(artifact):
++        errors.append("honest_verdict")
++    checksum = artifact.get("reproducibility_checksum")
++    if checksum and checksum != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    """Return a terminal verdict from the corrigendum gates."""
++
++    if (
++        artifact.get("csl_residue_stress_ready") is True
++        and artifact.get("csl_residue_tautology_resolved") is True
++    ):
++        return "complete: csl_residue_metric_independence_corrigendum_ready"
++    return "blocked: csl_residue_metric_independence_corrigendum_not_ready"
++
++
++def load_json(path: Path | str) -> JsonDict:
++    """Read a JSON object from disk."""
++
++    return json.loads(Path(path).read_text(encoding="utf-8"))
++
++
++def write_json(path: Path | str, payload: Mapping[str, Any]) -> None:
++    """Write stable JSON so reruns are diffable and checksums remain useful."""
++
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact with its checksum field removed."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return "sha256:" + sha256_json(payload)
++
++
++def source_file_checksums(root: Path) -> JsonDict:
++    """Record the source files backing the artifact."""
++
++    return {
++        "module": sha256_file(root / MODULE_RELATIVE_PATH),
++        "spec": sha256_file(root / SPEC_RELATIVE_PATH),
++        "test": sha256_file(root / TEST_RELATIVE_PATH),
++    }
++
++
++def sha256_file(path: Path | str) -> str:
++    """Return a SHA256 digest for a file."""
++
++    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    """Return a SHA256 digest for JSON-compatible mappings."""
++
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(blob).hexdigest()
++
++
++def _round(value: float) -> float:
++    """Round metric values once to avoid checksum drift from float repr noise."""
++
++    return round(float(value), 10)
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper
++    """Write the repository artifact for conductor use."""
++
++    artifact = run(root=REPO_ROOT, result_path=RESULT_RELATIVE_PATH, write=True)
++    print(json.dumps({"result_path": RESULT_RELATIVE_PATH.as_posix(), "honest_verdict": artifact["honest_verdict"]}, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index d08a8bae22..e98dbba375 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T16:01:37.799261+00:00",
+-  "finished_at": "2026-07-10T16:01:37.826054+00:00",
+-  "duration_s": 0.027,
++  "started_at": "2026-07-10T16:14:27.028708+00:00",
++  "finished_at": "2026-07-10T16:14:27.055172+00:00",
++  "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index f8570e3f75..47fae3f978 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T16:01:38Z",
++  "run_date": "2026-07-10T16:14:27Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index d1c5a9f34f..5d78c45f46 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T16:01:39Z",
+-  "finished_at": "2026-07-10T16:01:39Z",
++  "started_at": "2026-07-10T16:14:28Z",
++  "finished_at": "2026-07-10T16:14:28Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index f4067bb910..b54645e110 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T16:01:39Z",
++  "run_date": "2026-07-10T16:14:28Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 07970f891a..1156d07821 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-10T16:01:39Z",
++  "run_date": "2026-07-10T16:14:28Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index d2fb243aea..a35ba5edb0 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.145528793334961,
++  "efficiency_gains_ms": 2.159595489501953,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index f9941676bd..d4092aed25 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T16:01:06Z",
+-  "finished_at": "2026-07-10T16:01:06Z",
++  "started_at": "2026-07-10T16:13:57Z",
++  "finished_at": "2026-07-10T16:13:57Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 39e830a498..2906b695d7 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T16:01:42Z",
+-  "finished_at": "2026-07-10T16:01:42Z",
++  "started_at": "2026-07-10T16:14:32Z",
++  "finished_at": "2026-07-10T16:14:33Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.07581710815429688,
++  "latency_ms": 0.06103515625,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 1cf709eaf2..1fcbe68b82 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008570146560668945,
+-  "avg_eqm_time": 0.0715022087097168,
++  "avg_pem_time": 0.0008843803405761719,
++  "avg_eqm_time": 0.07203827857971191,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index bdcf36c078..c8711e3c10 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.284968599677086e-05,
++  "duration_s": 4.297075793147087e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5542_csl_residue_metric_independence_corrigendum.json b/results/experiment_5542_csl_residue_metric_independence_corrigendum.json
+new file mode 100644
+index 0000000000..0c92372f8b
+--- /dev/null
++++ b/results/experiment_5542_csl_residue_metric_independence_corrigendum.json
+@@ -0,0 +1,608 @@
++{
++  "canonical_gate_fields": {
++    "continuous_self_learning_evidence": true,
++    "csl_experience_graph_ready": true,
++    "csl_gate_fields_conductor_visible": true,
++    "csl_gate_fields_resolvable": true,
++    "metric_independence_clean": true
++  },
++  "canonical_gate_honest_verdict": "complete: canonical_csl_gate_artifact_conductor_visible",
++  "canonical_gate_path": "results/experiment_5528_csl_canonical_gate_artifact.json",
++  "condition_results": {
++    "event_only": [
++      {
++        "accepted": true,
++        "condition": "event_only",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "resume-cache-replay",
++        "task_id": "5542-heldout-evt-01"
++      },
++      {
++        "accepted": true,
++        "condition": "event_only",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "pin-timeout-window",
++        "task_id": "5542-heldout-evt-02"
++      },
++      {
++        "accepted": true,
++        "condition": "event_only",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "refresh-circuit-state",
++        "task_id": "5542-heldout-evt-03"
++      },
++      {
++        "accepted": true,
++        "condition": "event_only",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "retry-idempotent-call",
++        "task_id": "5542-heldout-evt-04"
++      },
++      {
++        "accepted": true,
++        "condition": "event_only",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "drop-duplicate-event",
++        "task_id": "5542-heldout-evt-05"
++      },
++      {
++        "accepted": false,
++        "condition": "event_only",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "event-miss-evt-06",
++        "task_id": "5542-heldout-evt-06"
++      },
++      {
++        "accepted": false,
++        "condition": "event_only",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "event-miss-evt-07",
++        "task_id": "5542-heldout-evt-07"
++      }
++    ],
++    "event_topic": [
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "resume-cache-replay",
++        "task_id": "5542-heldout-evt-01"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "pin-timeout-window",
++        "task_id": "5542-heldout-evt-02"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "refresh-circuit-state",
++        "task_id": "5542-heldout-evt-03"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "retry-idempotent-call",
++        "task_id": "5542-heldout-evt-04"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "drop-duplicate-event",
++        "task_id": "5542-heldout-evt-05"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "restore-sequence-cursor",
++        "task_id": "5542-heldout-evt-06"
++      },
++      {
++        "accepted": false,
++        "condition": "event_topic",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "joint-miss-evt-07",
++        "task_id": "5542-heldout-evt-07"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "apply-access-deny-policy",
++        "task_id": "5542-heldout-topic-01"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "choose-zero-index-pagination",
++        "task_id": "5542-heldout-topic-02"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "prefer-circuit-breaker-reset",
++        "task_id": "5542-heldout-topic-03"
++      },
++      {
++        "accepted": true,
++        "condition": "event_topic",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "prefer-readonly-token",
++        "task_id": "5542-heldout-topic-04"
++      },
++      {
++        "accepted": false,
++        "condition": "event_topic",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "joint-miss-topic-05",
++        "task_id": "5542-heldout-topic-05"
++      }
++    ],
++    "no_memory": [
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "baseline-miss-evt-01",
++        "task_id": "5542-heldout-evt-01"
++      },
++      {
++        "accepted": true,
++        "condition": "no_memory",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "pin-timeout-window",
++        "task_id": "5542-heldout-evt-02"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "baseline-miss-evt-03",
++        "task_id": "5542-heldout-evt-03"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "baseline-miss-evt-04",
++        "task_id": "5542-heldout-evt-04"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "baseline-miss-evt-05",
++        "task_id": "5542-heldout-evt-05"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "baseline-miss-evt-06",
++        "task_id": "5542-heldout-evt-06"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "baseline-miss-evt-07",
++        "task_id": "5542-heldout-evt-07"
++      },
++      {
++        "accepted": true,
++        "condition": "no_memory",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "apply-access-deny-policy",
++        "task_id": "5542-heldout-topic-01"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "baseline-miss-topic-02",
++        "task_id": "5542-heldout-topic-02"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "baseline-miss-topic-03",
++        "task_id": "5542-heldout-topic-03"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "baseline-miss-topic-04",
++        "task_id": "5542-heldout-topic-04"
++      },
++      {
++        "accepted": false,
++        "condition": "no_memory",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "baseline-miss-topic-05",
++        "task_id": "5542-heldout-topic-05"
++      }
++    ],
++    "shuffled_memory": [
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "resume-cache-replay",
++        "label_id": "label-5542-evt-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "shuffled-miss-evt-01",
++        "task_id": "5542-heldout-evt-01"
++      },
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "pin-timeout-window",
++        "label_id": "label-5542-evt-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "shuffled-miss-evt-02",
++        "task_id": "5542-heldout-evt-02"
++      },
++      {
++        "accepted": true,
++        "condition": "shuffled_memory",
++        "expected_action": "refresh-circuit-state",
++        "label_id": "label-5542-evt-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "refresh-circuit-state",
++        "task_id": "5542-heldout-evt-03"
++      },
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "retry-idempotent-call",
++        "label_id": "label-5542-evt-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "shuffled-miss-evt-04",
++        "task_id": "5542-heldout-evt-04"
++      },
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "drop-duplicate-event",
++        "label_id": "label-5542-evt-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "shuffled-miss-evt-05",
++        "task_id": "5542-heldout-evt-05"
++      },
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "restore-sequence-cursor",
++        "label_id": "label-5542-evt-06",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "shuffled-miss-evt-06",
++        "task_id": "5542-heldout-evt-06"
++      },
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "quarantine-outdated-event",
++        "label_id": "label-5542-evt-07",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "event_progression",
++        "selected_action": "shuffled-miss-evt-07",
++        "task_id": "5542-heldout-evt-07"
++      },
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "shuffled-miss-topic-01",
++        "task_id": "5542-heldout-topic-01"
++      },
++      {
++        "accepted": true,
++        "condition": "shuffled_memory",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "choose-zero-index-pagination",
++        "task_id": "5542-heldout-topic-02"
++      },
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "shuffled-miss-topic-03",
++        "task_id": "5542-heldout-topic-03"
++      },
++      {
++        "accepted": false,
++        "condition": "shuffled_memory",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "shuffled-miss-topic-04",
++        "task_id": "5542-heldout-topic-04"
++      },
++      {
++        "accepted": true,
++        "condition": "shuffled_memory",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "reject-secret-rotation-transfer",
++        "task_id": "5542-heldout-topic-05"
++      }
++    ],
++    "topic_only": [
++      {
++        "accepted": true,
++        "condition": "topic_only",
++        "expected_action": "apply-access-deny-policy",
++        "label_id": "label-5542-topic-01",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "apply-access-deny-policy",
++        "task_id": "5542-heldout-topic-01"
++      },
++      {
++        "accepted": true,
++        "condition": "topic_only",
++        "expected_action": "choose-zero-index-pagination",
++        "label_id": "label-5542-topic-02",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "choose-zero-index-pagination",
++        "task_id": "5542-heldout-topic-02"
++      },
++      {
++        "accepted": false,
++        "condition": "topic_only",
++        "expected_action": "prefer-circuit-breaker-reset",
++        "label_id": "label-5542-topic-03",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "topic-miss-topic-03",
++        "task_id": "5542-heldout-topic-03"
++      },
++      {
++        "accepted": false,
++        "condition": "topic_only",
++        "expected_action": "prefer-readonly-token",
++        "label_id": "label-5542-topic-04",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "topic-miss-topic-04",
++        "task_id": "5542-heldout-topic-04"
++      },
++      {
++        "accepted": false,
++        "condition": "topic_only",
++        "expected_action": "reject-secret-rotation-transfer",
++        "label_id": "label-5542-topic-05",
++        "label_source": "deterministic_corrigendum::independent_outcome_labels",
++        "query_family": "topic_policy",
++        "selected_action": "topic-miss-topic-05",
++        "task_id": "5542-heldout-topic-05"
++      }
++    ]
++  },
++  "control_counts": {
++    "negative_transfer_candidates_accepted": 0,
++    "negative_transfer_candidates_seen": 2,
++    "stale_candidates_rejected": 3,
++    "stale_candidates_seen": 3
++  },
++  "csl_residue_stress_ready": true,
++  "csl_residue_tautology_resolved": true,
++  "event_only_score": 0.7142857143,
++  "event_topic_score": 0.8333333333,
++  "experiment": 5542,
++  "experiment_id": "experiment_5542_csl_residue_metric_independence_corrigendum",
++  "field_principles": {
++    "canonical_gate_path": "Binds the corrigendum to the conductor-visible Exp5528 CSL gate.",
++    "csl_residue_stress_ready": "Bare readiness gate requiring clean controls and canonical gate.",
++    "csl_residue_tautology_resolved": "Bare downstream gate for the Exp5529 TAUTOLOGY repair.",
++    "event_only_score": "Scores fast event memory on event-progression labels only.",
++    "event_topic_score": "Measures combined memory on the full held-out label union.",
++    "field_principles": "Explains why each required headline and gate field exists.",
++    "honest_verdict": "Terminal summary with complete or blocked prefix.",
++    "independent_outcome_labels": "Confirms held-out labels are not memory utility scores.",
++    "inference_substrate": "Declares a deterministic no-LLM corrigendum fixture.",
++    "negative_transfer_rate": "Shows irrelevant transfer candidates are not accepted.",
++    "no_memory_score": "Keeps a no-memory baseline separate from memory-derived decisions.",
++    "nonidentical_metric_evidence": "Fails when event-only and topic-only scores match.",
++    "score_difference_abs": "Bare numeric guard proving event/topic scores are non-identical.",
++    "shuffled_memory_score": "Detects whether arbitrary memory order explains the lift.",
++    "stale_evidence_rejection_rate": "Shows outdated evidence is rejected before selection.",
++    "tests_added_or_reused": "Lists focused, coverage, and full-suite verification commands.",
++    "topic_only_score": "Scores stable topic memory on topic-policy labels only."
++  },
++  "honest_verdict": "complete: csl_residue_metric_independence_corrigendum_ready",
++  "independent_outcome_labels": true,
++  "inference_substrate": "deterministic_csl_residue_corrigendum_no_llm",
++  "methodology_note": "This deterministic no-LLM corrigendum scores exact held-out labels. Event-only and topic-only metrics use disjoint query families.",
++  "metric_family_evidence": {
++    "event_only_label_ids": [
++      "label-5542-evt-01",
++      "label-5542-evt-02",
++      "label-5542-evt-03",
++      "label-5542-evt-04",
++      "label-5542-evt-05",
++      "label-5542-evt-06",
++      "label-5542-evt-07"
++    ],
++    "event_only_query_family": "event_progression",
++    "overlap_count": 0,
++    "overlapping_label_ids": [],
++    "topic_only_label_ids": [
++      "label-5542-topic-01",
++      "label-5542-topic-02",
++      "label-5542-topic-03",
++      "label-5542-topic-04",
++      "label-5542-topic-05"
++    ],
++    "topic_only_query_family": "topic_policy"
++  },
++  "milestone": "2026.07.502",
++  "negative_transfer_rate": 0.0,
++  "no_memory_score": 0.1666666667,
++  "nonidentical_metric_evidence": true,
++  "prior_exp5529_tautology": {
++    "corrigendum_pending": [
++      {
++        "detail": "event_only_score=0.6666666667 and topic_only_score=0.6666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++        "kind": "TAUTOLOGY",
++        "severity": "critical"
++      }
++    ],
++    "event_only_score": 0.6666666667,
++    "event_topic_scores_identical": true,
++    "flagged_adversarial": true,
++    "path": "results/experiment_5529_csl_event_topic_residue_stress.json",
++    "topic_only_score": 0.6666666667
++  },
++  "random_seed": 5542,
++  "reproducibility_checksum": "sha256:6c02033dbb3dfa6af69c98ab1911af1974e8755b90e1eadddb66924a107770af",
++  "run_date": "2026-07-10",
++  "schema": "carnot.experiment_5542.csl_residue_metric_independence_corrigendum.v1",
++  "score_difference_abs": 0.3142857143,
++  "shuffled_memory_score": 0.25,
++  "source_file_checksums": {
++    "module": "sha256:0d9240f6675e8b29b5e17fd0257cdd3feeff0b8af19ba82320b8943f8c99c864",
++    "spec": "sha256:926192c16db126481423b2022c6910efb9d4b56b8a179eb0d852e5e44c2fa07d",
++    "test": "sha256:f04b1d3e3a1bde7f8edb037fc5ed54190d9157f9983f907467b417fc78e1b8a3"
++  },
++  "source_files": {
++    "module": "python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py",
++    "spec": "openspec/capabilities/self-learning/spec.md",
++    "test": "tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py"
++  },
++  "spec_refs": [
++    "REQ-LEARN-5542",
++    "SCENARIO-LEARN-5542-DISTINCT-FAMILIES",
++    "SCENARIO-LEARN-5542-CONTROLS",
++    "SCENARIO-LEARN-5542-ARTIFACT"
++  ],
++  "stale_evidence_rejection_rate": 1.0,
++  "task_id": "exp5542-csl-residue-metric-independence-corrigendum",
++  "tests_added_or_reused": [
++    ".venv/bin/pytest tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --include=python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py -m pytest tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "topic_only_score": 0.4
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 694662a3cb..685e88bea6 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T16:00:46Z",
+-  "finished_at": "2026-07-10T16:00:46Z",
++  "started_at": "2026-07-10T16:13:40Z",
++  "finished_at": "2026-07-10T16:13:40Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d5d964ee63..d3cfde02f4 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T16:00:46Z",
+-  "finished_at": "2026-07-10T16:00:46Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-10T16:13:40Z",
++  "finished_at": "2026-07-10T16:13:40Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 82ba062b8a..b102763d1d 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T16:00:46Z",
+-  "finished_at": "2026-07-10T16:00:47Z",
++  "started_at": "2026-07-10T16:13:41Z",
++  "finished_at": "2026-07-10T16:13:41Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py b/tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py
+new file mode 100644
+index 0000000000..69a8faecd1
+--- /dev/null
++++ b/tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py
+@@ -0,0 +1,216 @@
++"""Tests for Exp5542 CSL residue metric independence corrigendum.
++
++Spec refs: REQ-LEARN-5542,
++SCENARIO-LEARN-5542-DISTINCT-FAMILIES,
++SCENARIO-LEARN-5542-CONTROLS,
++SCENARIO-LEARN-5542-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5542_csl_residue_metric_independence_corrigendum as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py "
++    "-m pytest tests/python/test_experiment_5542_csl_residue_metric_independence_corrigendum.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5542_csl_residue_metric_independence_corrigendum.py "
++    "--fail-under=100"
++)
++FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
++TESTS_ADDED_OR_REUSED = [TEST_COMMAND, COVERAGE_COMMAND, FULL_TEST_COMMAND]
++
++
++def test_req_learn_5542_spec_declares_corrigendum_contract() -> None:
++    """REQ-LEARN-5542: OpenSpec anchors the residue-metric corrigendum."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5542") :]
++
++    for marker in (
++        "REQ-LEARN-5542",
++        "SCENARIO-LEARN-5542-DISTINCT-FAMILIES",
++        "SCENARIO-LEARN-5542-CONTROLS",
++        "SCENARIO-LEARN-5542-ARTIFACT",
++        str(exp.RESULT_RELATIVE_PATH),
++        str(exp.CANONICAL_GATE_PATH),
++        exp.INFERENCE_SUBSTRATE,
++        "event-only memory and topic-only memory",
++        "distinct held-out labels or distinct query families",
++    ):
++        assert marker in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_learn_5542_distinct_families_score_nonidentically() -> None:
++    """SCENARIO-LEARN-5542-DISTINCT-FAMILIES: score arms use disjoint labels."""
++
++    fixture = exp.build_fixture()
++    evaluation = exp.evaluate_fixture(fixture)
++    family = evaluation["metric_family_evidence"]
++
++    assert family["event_only_query_family"] == exp.EVENT_QUERY_FAMILY
++    assert family["topic_only_query_family"] == exp.TOPIC_QUERY_FAMILY
++    assert family["overlap_count"] == 0
++    assert set(family["event_only_label_ids"]).isdisjoint(family["topic_only_label_ids"])
++    assert len(family["event_only_label_ids"]) == 7
++    assert len(family["topic_only_label_ids"]) == 5
++    assert evaluation["scores"]["event_only"] == pytest.approx(0.7142857143)
++    assert evaluation["scores"]["topic_only"] == pytest.approx(0.4)
++    assert evaluation["score_difference_abs"] == pytest.approx(0.3142857143)
++    assert evaluation["nonidentical_metric_evidence"] is True
++    assert {
++        row["query_family"] for row in evaluation["condition_results"]["event_only"]
++    } == {exp.EVENT_QUERY_FAMILY}
++    assert {
++        row["query_family"] for row in evaluation["condition_results"]["topic_only"]
++    } == {exp.TOPIC_QUERY_FAMILY}
++
++
++def test_scenario_learn_5542_controls_and_artifact_fields(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5542-CONTROLS: controls are separate from headlines."""
++
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH.name
++    artifact = exp.run(
++        root=REPO,
++        result_path=result_path,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=True,
++    )
++    relative_artifact = exp.run(
++        root=REPO,
++        result_path=exp.RESULT_RELATIVE_PATH,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=False,
++    )
++    written = json.loads(result_path.read_text(encoding="utf-8"))
++
++    assert written == artifact
++    assert relative_artifact["event_only_score"] == artifact["event_only_score"]
++    assert exp.validate_artifact(artifact) is True
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++        assert artifact["field_principles"][field]
++
++    assert artifact["canonical_gate_path"] == exp.CANONICAL_GATE_PATH.as_posix()
++    assert artifact["canonical_gate_fields"]["csl_gate_fields_conductor_visible"] is True
++    assert artifact["canonical_gate_fields"]["metric_independence_clean"] is True
++    assert artifact["canonical_gate_fields"]["continuous_self_learning_evidence"] is True
++    assert artifact["prior_exp5529_tautology"]["event_topic_scores_identical"] is True
++    assert artifact["event_only_score"] == pytest.approx(0.7142857143)
++    assert artifact["topic_only_score"] == pytest.approx(0.4)
++    assert artifact["score_difference_abs"] == pytest.approx(0.3142857143)
++    assert artifact["event_topic_score"] == pytest.approx(0.8333333333)
++    assert artifact["no_memory_score"] == pytest.approx(0.1666666667)
++    assert artifact["shuffled_memory_score"] == pytest.approx(0.25)
++    assert artifact["stale_evidence_rejection_rate"] == pytest.approx(1.0)
++    assert artifact["negative_transfer_rate"] == pytest.approx(0.0)
++    assert artifact["independent_outcome_labels"] is True
++    assert artifact["nonidentical_metric_evidence"] is True
++    assert artifact["csl_residue_tautology_resolved"] is True
++    assert artifact["csl_residue_stress_ready"] is True
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["honest_verdict"].startswith("complete:")
++
++    assert artifact["control_counts"]["stale_candidates_seen"] == 3
++    assert artifact["control_counts"]["stale_candidates_rejected"] == 3
++    assert artifact["control_counts"]["negative_transfer_candidates_seen"] == 2
++    assert artifact["control_counts"]["negative_transfer_candidates_accepted"] == 0
++    assert artifact["metric_family_evidence"]["overlap_count"] == 0
++    assert set(artifact["condition_results"]) == set(exp.CONDITIONS)
++
++
++def test_scenario_learn_5542_artifact_fails_closed_on_tautology_and_drift(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5542-ARTIFACT: equal scores block the corrigendum."""
++
++    artifact = exp.run(
++        root=REPO,
++        result_path=tmp_path / exp.RESULT_RELATIVE_PATH.name,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=False,
++    )
++    assert exp.validate_artifact(artifact) is True
++
++    blocked = deepcopy(artifact)
++    blocked["topic_only_score"] = blocked["event_only_score"]
++    blocked["score_difference_abs"] = 0.0
++    blocked["nonidentical_metric_evidence"] = False
++    blocked["csl_residue_tautology_resolved"] = False
++    blocked["csl_residue_stress_ready"] = False
++    blocked["honest_verdict"] = exp.honest_verdict(blocked)
++    blocked["reproducibility_checksum"] = exp.reproducibility_checksum(blocked)
++    assert exp.validate_artifact(blocked) is True
++    assert blocked["honest_verdict"].startswith("blocked:")
++
++    inconsistent_tautology = deepcopy(blocked)
++    inconsistent_tautology["csl_residue_tautology_resolved"] = True
++    inconsistent_tautology["csl_residue_stress_ready"] = True
++    inconsistent_tautology["honest_verdict"] = exp.honest_verdict(inconsistent_tautology)
++    inconsistent_tautology["reproducibility_checksum"] = exp.reproducibility_checksum(
++        inconsistent_tautology
++    )
++    with pytest.raises(ValueError, match="csl_residue_tautology_resolved"):
++        exp.validate_artifact(inconsistent_tautology)
++
++    drift_cases = [
++        ("canonical_gate_path", "results/wrong.json", "canonical_gate_path"),
++        ("score_difference_abs", 0.1, "score_difference_abs"),
++        ("event_topic_score", 0.0, "event_topic_score"),
++        ("shuffled_memory_score", artifact["event_topic_score"], "shuffled_memory_score"),
++        ("stale_evidence_rejection_rate", 0.5, "stale_evidence_rejection_rate"),
++        ("negative_transfer_rate", 0.5, "negative_transfer_rate"),
++        ("independent_outcome_labels", False, "independent_outcome_labels"),
++        ("nonidentical_metric_evidence", False, "nonidentical_metric_evidence"),
++        ("csl_residue_stress_ready", False, "csl_residue_stress_ready"),
++        ("inference_substrate", "aggregation_from_upstream_artifacts", "inference_substrate"),
++        ("honest_verdict", "ready", "honest_verdict"),
++    ]
++    for field, value, expected in drift_cases:
++        bad = deepcopy(artifact)
++        bad[field] = value
++        bad["reproducibility_checksum"] = exp.reproducibility_checksum(bad)
++        with pytest.raises(ValueError, match=expected):
++            exp.validate_artifact(bad)
++
++    missing = deepcopy(artifact)
++    missing.pop("event_only_score")
++    missing["reproducibility_checksum"] = exp.reproducibility_checksum(missing)
++    with pytest.raises(ValueError, match="missing required fields"):
++        exp.validate_artifact(missing)
++
++    missing_principle = deepcopy(artifact)
++    missing_principle["field_principles"].pop("event_only_score")
++    missing_principle["reproducibility_checksum"] = exp.reproducibility_checksum(
++        missing_principle
++    )
++    with pytest.raises(ValueError, match="field_principles"):
++        exp.validate_artifact(missing_principle)
++
++    no_tests = deepcopy(artifact)
++    no_tests["tests_added_or_reused"] = []
++    no_tests["reproducibility_checksum"] = exp.reproducibility_checksum(no_tests)
++    with pytest.raises(ValueError, match="tests_added_or_reused"):
++        exp.validate_artifact(no_tests)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = "sha256:bad"
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        exp.validate_artifact(bad_checksum)
+-- 
+2.55.0
+

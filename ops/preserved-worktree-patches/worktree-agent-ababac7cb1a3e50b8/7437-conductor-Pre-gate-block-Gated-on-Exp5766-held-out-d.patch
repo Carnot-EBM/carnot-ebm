@@ -1,0 +1,104 @@
+From bc8e82f89bcabdc02f2c9adcd6d87ddc02148f3d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 11:10:33 -0400
+Subject: [PATCH 07437/11362] [conductor] Pre-gate block: Gated on Exp5766
+ held-out delta>0: harden one game-blind ARC live-path composition rule
+
+2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audit.loo_generalization_delta_lcb (actual=0.0 > expected=0.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._arc_game_blind_composition_hardening.json | 51 +++++++++++++++++++
+ 4 files changed, 54 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5767_arc_game_blind_composition_hardening.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6ef83d9b55..0be9361fce 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-07-21T14:53:45Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-07-21T15:10:33Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e48990a06b..f10ad5d1c6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13861,3 +13861,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-21 14:06 UTC | Gated on Exp5762 recovery>0: scale constraint acqu | OK | 89 passed, 1 warning in 12.44s |
+ | 2026-07-21 14:31 UTC | Gated on Exp5758 scalar parity: profile and optimi | OK | Deliverable already exists in repo |
+ | 2026-07-21 14:51 UTC | Gated on Exp5764 parity: run the final matched Rus | OK | 138 passed, 1 warning in 20.82s |
++| 2026-07-21 15:08 UTC | Measure ARC leave-one-game-out generalization and  | OK | 89 passed, 1 warning in 13.90s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 0038cbf154..4eb6ba4e3f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 2, "phase": "iteration_start", "started_at": "2026-07-21T14:53:45Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 3, "phase": "iteration_start", "started_at": "2026-07-21T15:10:33Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5767_arc_game_blind_composition_hardening.json b/results/experiment_5767_arc_game_blind_composition_hardening.json
+new file mode 100644
+index 0000000000..535907e323
+--- /dev/null
++++ b/results/experiment_5767_arc_game_blind_composition_hardening.json
+@@ -0,0 +1,51 @@
++{
++  "experiment": 5767,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-21",
++  "started_at": "2026-07-21T15:10:33.454678+00:00",
++  "finished_at": "2026-07-21T15:10:33.454678+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp5766 held-out delta>0: harden one game-blind ARC live-path composition rule",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "2 of 4 gate(s) failed; first failure: exp5766-arc-loo-component-interaction-audit.loo_generalization_delta_lcb (actual=0.0 > expected=0.0)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5766-arc-loo-component-interaction-audit",
++      "artifact_field": "loo_generalization_delta_lcb",
++      "op": ">",
++      "expected": 0.0,
++      "actual": 0.0,
++      "passed": false,
++      "reason": "actual=0.0 > expected=0.0"
++    },
++    {
++      "upstream": "exp5766-arc-loo-component-interaction-audit",
++      "artifact_field": "causal_interaction_count",
++      "op": ">=",
++      "expected": 1,
++      "actual": 0,
++      "passed": false,
++      "reason": "actual=0 >= expected=1"
++    },
++    {
++      "upstream": "exp5766-arc-loo-component-interaction-audit",
++      "artifact_field": "source_leak_count",
++      "op": "==",
++      "expected": 0,
++      "actual": 0,
++      "passed": true,
++      "reason": "actual=0 == expected=0"
++    },
++    {
++      "upstream": "exp5766-arc-loo-component-interaction-audit",
++      "artifact_field": "game_identity_leak_count",
++      "op": "==",
++      "expected": 0,
++      "actual": 0,
++      "passed": true,
++      "reason": "actual=0 == expected=0"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From 9df7a45b8485a049f1fae7b6312420167e4f4854 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 11:12:12 -0400
+Subject: [PATCH 10399/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 948d574d5a..82f0c189ef 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-08-30T15:10:00Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-08-30T15:12:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 191b0c176b..6e95e127f6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16839,3 +16839,4 @@ The l |
+ | 2026-08-30 15:03 UTC | Plan milestone 2026.08.591 | OK | 3 tasks proposed |
+ | 2026-08-30 15:05 UTC | Milestone 2026.08.591 activated | OK | 3 tasks queued |
+ | 2026-08-30 15:08 UTC | V591 SOTA delta and retirement-aware method contra | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
++| 2026-08-30 15:10 UTC | V591 SOTA delta and retirement-aware method contra | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d03184654a..5a2b523a5c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 25, "phase": "iteration_start", "started_at": "2026-08-30T15:10:00Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 26, "phase": "iteration_start", "started_at": "2026-08-30T15:12:08Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

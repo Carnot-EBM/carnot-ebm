@@ -1,0 +1,2283 @@
+From 8d614a082e77b3a5d8ecaad044386edc61dbc45f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 24 Jun 2026 00:43:43 -0400
+Subject: [PATCH 03740/11362] [conductor] PHASE E (CAPSTONE .429) -- aggregate
+ the scorecard + the HEADLINE DECISION: did the AFFORDABLE value head (A1)
+ cross the bridge for live first-win/solve-rate, did energy-as-fitness QD (A2)
+ GENERATE a winner the search missed, did A3 bank +1 (57->58+)? Skip
+ flagged_adversarial / ablation-failed / control-failed artifacts. Confirm
+ verifier_is_oracle:false on every included value claim. Re-affirm G1-G4
+ paper_ready (FoVer 0.9131 frozen). Submission operator-only.
+
+Automated research step by research conductor.
+Task ID: exp4662-e
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_4662_capstone_v429.py   | 963 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_4662_capstone_v429.json    | 658 ++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../test_experiment_4662_capstone_v429.py     | 467 +++++++++
+ 11 files changed, 2109 insertions(+), 17 deletions(-)
+ create mode 100644 python/carnot/experiment_4662_capstone_v429.py
+ create mode 100644 results/experiment_4662_capstone_v429.json
+ create mode 100644 tests/python/test_experiment_4662_capstone_v429.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index d9bd82c675..771ffeb43e 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -310,6 +310,10 @@
+ - SCENARIO-CAPSTONE-4651: The artifact `results/experiment_4651_archive_428_activate_429.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `close_state_428`, and `v429_pivot`; it must also emit `transition`, `cited_upstream_artifacts`, `field_provenance`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, and `leaderboard_submission`. The complete path must terminal-prefix `honest_verdict`, set `inference_substrate` to `aggregation_from_upstream_artifacts`, confirm active milestone `2026.06.429`, assert the smart-subset pre-test gate is green, cite upstream artifacts by sha256, preserve Exp4650's capstone verdict `complete: capability_grew_56_to_57`, and never submit to the leaderboard.
+ - SCENARIO-CAPSTONE-4651-BLOCKED-PRECONDITION: If `research-roadmap-next.yaml` is absent or unparsable, active `.429` cannot be confirmed, offline arcade is unavailable, the smart-subset pre-test gate is red, the registry is missing, or any required upstream .428 artifact is missing, the workflow must still write `results/experiment_4651_archive_428_activate_429.json` with `honest_verdict=blocked_<resource>`, `transition.activation_state=blocked_missing_or_failed_precondition`, the failed resource recorded in `preconditions_checked`, and empty `close_state_428` and `v429_pivot`.
+ - SCENARIO-CAPSTONE-4651-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."; `inference_substrate` = "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."; `preconditions_checked` = "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."; `close_state_428` = "the honest .428 numbers (A3 56->57; A1/A2 both energy-generation NULLS; A4 57>33) carried forward so the record does not drift."; `v429_pivot` = "the .429 headline rationale (PIVOT to GENERATION GUIDANCE: A1 productionize the compute-cost value-routing fix; A2 energy-as-fitness QD evolution) recorded so the milestone intent is traceable."
++- REQ-CAPSTONE-4662: The .429 capstone scorecard SHALL aggregate Exp4652 through Exp4659 plus `ops/arc_solve_registry.yaml` through the Reading-Results discipline by running or using `scripts/summarize_artifact.py` before citing any upstream number. It SHALL verify the registry is YAML-loadable and every cited upstream artifact exists before proceeding, otherwise writing `results/experiment_4662_capstone_v429.json` with `honest_verdict=blocked_<resource>`. It SHALL exclude any stamped `flagged_adversarial:true`, live-critical, ablation-failed, positive-control-failed, false-negative-risk-open, value-routing-cost-control-failed, or QD-random-mutation-ablation-failed artifact from clean headline value claims. It SHALL count A1 value-routing as a headline win only when `per_node_feature_cost_ms` is present, `sim_timed_out=false`, and the lift CI excludes the `value_weight=0` baseline; count A2 QD as a headline win only when `winner_generated=true` and `random_mutation_ablation_passed=true`; take `reproducible_total_levels` authoritatively from the registry header; require `verifier_is_oracle:false` on every included value claim; re-affirm G1-G4 `paper_ready` with the frozen FoVer 0.9131 headline; and keep submission operator-only with `leaderboard_submission=false`. It SHALL write `results/experiment_4662_capstone_v429.json` and SHALL NOT modify `scripts/research_conductor.py` or submit to the leaderboard.
++- SCENARIO-CAPSTONE-4662: The artifact `results/experiment_4662_capstone_v429.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `cited_upstream_artifacts`, `a1_value_routing_live_lift`, `a2_winner_generated`, `reproducible_total_levels`, `reproducible_total_levels_delta`, `bridge_crossed_for_solve`, `live_submittable_level_count`, `flagged_artifacts_handled`, `verifier_is_oracle`, `paper_ready`, `leaderboard_submission`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit `scorecard`, `field_principles`, `spec_refs`, `schema`, `experiment`, `result_path`, and `duration_s`. The default .429 read must exclude Exp4657 from the headline when stamped/live-critical, must not promote Exp4652's zero value-routing delta despite valid cost controls because the CI does not exclude the baseline, must not promote Exp4653's QD result when `winner_generated=false` or `random_mutation_ablation_passed=false`, must import Exp4654/registry capability growth from 57 to the registry total, must import Exp4655 live-submittable count when clean and above 33, must record Exp4658/Exp4659 as shipped guards, must report `bridge_crossed_for_solve=false`, and must keep `leaderboard_submission=false`.
++- SCENARIO-CAPSTONE-4662-BLOCKED-PRECONDITION: If `ops/arc_solve_registry.yaml` is missing or not YAML-loadable, `scripts/summarize_artifact.py` is unavailable, the capstone spec lacks `REQ-CAPSTONE-4662`, or any required upstream artifact from Exp4652 through Exp4659 is missing, the workflow must still write `results/experiment_4662_capstone_v429.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, no clean headline bridge win, empty or quarantined source imports, `leaderboard_submission=false`, and a valid reproducibility checksum.
++- SCENARIO-CAPSTONE-4662-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: bridge_crossed_live_<firstwin|solverate|winner_generated>_up_<n> OR complete: generation_guidance_levers_characterized_no_live_solve_lift OR complete: capability_grew_57_to_<n>."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `cited_upstream_artifacts` = "every headline number traces to a real upstream artifact with sha256 (the audit trail)."; `a1_value_routing_live_lift` = "the A1 affordable-value-head live first-win/solve-rate delta -- counted ONLY if cost-controlled (per_node_cost + no-timeout) + CI excludes the value_weight=0 baseline."; `a2_winner_generated` = "the A2 energy-fitness QD winner_generated -- counted ONLY if random-mutation-ablation-passed (else the search/branching, not the energy)."; `reproducible_total_levels` = "authoritative from the registry (A3 bank, 57->58+) -- did solve CAPABILITY grow."; `reproducible_total_levels_delta` = "registry after - 57, emitted explicitly so a null is annotated."; `bridge_crossed_for_solve` = "the headline decision -- did ANY .429 lever cross the offline->live bridge for SOLVE-RATE/DEPTH (the 0.04 wall), or did generation-guidance get characterized as another honest null."; `live_submittable_level_count` = "the A4 operator-resubmit count (must stay > 33)."; `flagged_artifacts_handled` = "names any flagged_adversarial / ablation-failed / control-failed artifact EXCLUDED + the guards applied (.428-B2 goal-energy + .429-B2 QD-ablation/value-routing-cost) -- fabrication-gate + false-negative-risk compliance."; `verifier_is_oracle` = "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."; `paper_ready` = "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .429 headline."; `leaderboard_submission` = "MUST be false -- submission is operator-only (External Publication Discipline)."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash catches silent drift on replay."; `preconditions_checked` = "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
+ - REQ-CAPSTONE-4655: The operator-resubmit package refresh workflow SHALL rebuild the ARC-AGI-3 live-submit package from the current `ops/arc_solve_registry.yaml`, using `results/experiment_4643_refresh_submission_package.json` and `results/experiment_4643_submission_package_operator_resubmit.json` as the .428 A4 baseline. It SHALL fold in Exp4654's newly offline-reproduced A3 `vc33` L2 bank plus any Exp4652/Exp4653 newly reproduced A1/A2 variant solve only when the claimed game depth is present in the registry and has a replayable trajectory or env-adaptive resolver. The workflow SHALL verify `arc_solver_kit.offline_arcade()` and registry-load preconditions before packaging, SHALL record claimed-vs-offline caps for every game, SHALL extend env-adaptive recovery through the persisted `primitive_env_adaptive_resolve_operator` pattern for any newly version-drifted game, SHALL keep submission operator-only with no online submit, SHALL not modify `scripts/research_conductor.py`, and SHALL write `results/experiment_4655_refresh_submission_package.json`.
+ - SCENARIO-CAPSTONE-4655: The artifact `results/experiment_4655_refresh_submission_package.json` must emit top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `live_submittable_level_count`, `live_submittable_count_prev`, `count_delta`, `levels_folded_in`, `refreshed_package_path`, `per_game_submittable`, `ready_for_operator_submit`, `offline_reproduced`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit `null_delta_methodology_note` when `count_delta==0`, `submitted_to_leaderboard:false`, `package_manifest`, `claimed_caps`, `trajectory_refreshes`, `env_adaptive_recovery`, `upstream_fold_audit`, and spec references. The default run must read the current registry, the .428 A4 refreshed package, Exp4654, Exp4652, and Exp4653; count a level as live-submittable only when it offline-reproduces and has a replayable trajectory or env-adaptive resolver on a fresh env; compare against previous count `57`; emit `count_delta = live_submittable_level_count - 57`; set `ready_for_operator_submit` true only when the refreshed count is strictly above `33` and every counted row is offline-reproduction-gated; and never submit to the leaderboard.
+ - SCENARIO-CAPSTONE-4655-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: package_refreshed_live_submittable_<n>_above_33 OR complete: package_refreshed_unchanged_depth."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor)."; `verifier_is_oracle` = "MUST be false -- packaging + env-adaptive replay bank already-earned solves (no circular moat claim)."; `live_submittable_level_count` = "the offline-reproduction-gated count of levels with a replayable trajectory or env-adaptive re-solver (the honest leaderboard score, must stay > 33)."; `live_submittable_count_prev` = "57 -- the .428 A4 count, the apples-to-apples comparison."; `count_delta` = "live_submittable_level_count - 57 (>=0; positive = more submittable levels folded in), emitted explicitly so a null is annotated."; `levels_folded_in` = "names the games whose new banks (A3 + A1/A2 variant solves) were folded into the refreshed package this milestone."; `refreshed_package_path` = "the path to the refreshed validated package the operator's live-submit driver will load -- the deliverable the operator resubmits."; `per_game_submittable` = "per-game offline-reproduced level + has-trajectory + drift-robust flags -- the audit trail that no level is over-claimed above its offline depth."; `ready_for_operator_submit` = "True if the refreshed package's live-submittable count beats 33 and every claim is offline-reproduction-gated; the task NEVER submits (operator-only)."; `offline_reproduced` = "every claimed-submittable level must offline-reproduce to count (no frozen-trajectory over-claim)."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash catches silent registry/trajectory drift on replay."; `preconditions_checked` = "records resources verified (offline arcade, registry loadable); pre-empts missing-resource fabrication."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b2237a873b..eb847fbd2b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 185,
+   "code_violations": 0,
+-  "experiments_checked": 3678,
++  "experiments_checked": 3679,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4662_capstone_v429.py b/python/carnot/experiment_4662_capstone_v429.py
+new file mode 100644
+index 0000000000..83932548f8
+--- /dev/null
++++ b/python/carnot/experiment_4662_capstone_v429.py
+@@ -0,0 +1,963 @@
++"""Experiment 4662: .429 ARC generation-guidance bridge capstone.
++
++This module aggregates the landed A1-A6 and B1/B2 artifacts. It is not a
++solver, never loads a model, and never submits to the leaderboard.
++
++Spec refs: REQ-CAPSTONE-4662, SCENARIO-CAPSTONE-4662,
++SCENARIO-CAPSTONE-4662-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++SCRIPTS_ROOT = REPO_ROOT / "scripts"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(SCRIPTS_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(SCRIPTS_ROOT))
++
++try:  # pragma: no cover - tests inject flags and publication state
++    import summarize_artifact as artifact_reader
++except Exception:  # pragma: no cover - defensive import boundary
++    artifact_reader = None  # type: ignore[assignment]
++
++try:  # pragma: no cover - tests inject publication state
++    import publication_gate as publication_gate_reader
++except Exception:  # pragma: no cover - defensive import boundary
++    publication_gate_reader = None  # type: ignore[assignment]
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT = "experiment_4662_capstone_v429"
++SCHEMA = "carnot.exp4662.capstone_v429.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4662_capstone_v429.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/capstone/spec.md"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++RANDOM_SEED = 4662
++BASELINE_REPRODUCIBLE_TOTAL_LEVELS = 57
++LIVE_SUBMITTABLE_SCORECARD_BASELINE = 33
++FROZEN_FOVER_AUROC = 0.9131
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++TERMINAL_PREFIXES = ("success:", "complete:", "blocked_", "passed:", "shipped:")
++
++
++@dataclass(frozen=True)
++class SourceSpec:
++    name: str
++    relative_path: str
++    role: str
++
++
++UPSTREAM_SOURCES: dict[str, SourceSpec] = {
++    "A1": SourceSpec(
++        "A1",
++        "results/experiment_4652_value_routing_cost_fix_live.json",
++        "value_routing_cost_fix_live",
++    ),
++    "A2": SourceSpec(
++        "A2",
++        "results/experiment_4653_energy_fitness_qd_generation_live.json",
++        "energy_fitness_qd_generation_live",
++    ),
++    "A3": SourceSpec(
++        "A3",
++        "results/experiment_4654_levelup_selfplay.json",
++        "levelup_selfplay_bank",
++    ),
++    "A4": SourceSpec(
++        "A4",
++        "results/experiment_4655_refresh_submission_package.json",
++        "refresh_submission_package",
++    ),
++    "A5": SourceSpec(
++        "A5",
++        "results/experiment_4656_primitive_persist_transfer.json",
++        "primitive_persist_transfer",
++    ),
++    "A6": SourceSpec(
++        "A6",
++        "results/experiment_4657_integration_gate.json",
++        "integration_gate",
++    ),
++    "B1": SourceSpec(
++        "B1",
++        "results/experiment_4658_value_routing_cigate_diagnostic.json",
++        "value_routing_cigate_diagnostic",
++    ),
++    "B2": SourceSpec(
++        "B2",
++        "results/experiment_4659_adversarial_verify_hardening.json",
++        "adversarial_verify_qd_and_value_routing_guards",
++    ),
++}
++
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: bridge_crossed_live_<firstwin|solverate|winner_generated>_up_<n> "
++            "OR complete: generation_guidance_levers_characterized_no_live_solve_lift OR complete: "
++            "capability_grew_57_to_<n>."
++        )
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++    },
++    "cited_upstream_artifacts": {
++        "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
++    },
++    "a1_value_routing_live_lift": {
++        "principle": (
++            "the A1 affordable-value-head live first-win/solve-rate delta -- counted ONLY if "
++            "cost-controlled (per_node_cost + no-timeout) + CI excludes the value_weight=0 baseline."
++        )
++    },
++    "a2_winner_generated": {
++        "principle": (
++            "the A2 energy-fitness QD winner_generated -- counted ONLY if random-mutation-ablation-passed "
++            "(else the search/branching, not the energy)."
++        )
++    },
++    "reproducible_total_levels": {
++        "principle": "authoritative from the registry (A3 bank, 57->58+) -- did solve CAPABILITY grow."
++    },
++    "reproducible_total_levels_delta": {
++        "principle": "registry after - 57, emitted explicitly so a null is annotated."
++    },
++    "bridge_crossed_for_solve": {
++        "principle": (
++            "the headline decision -- did ANY .429 lever cross the offline->live bridge for "
++            "SOLVE-RATE/DEPTH (the 0.04 wall), or did generation-guidance get characterized "
++            "as another honest null."
++        )
++    },
++    "live_submittable_level_count": {
++        "principle": "the A4 operator-resubmit count (must stay > 33)."
++    },
++    "flagged_artifacts_handled": {
++        "principle": (
++            "names any flagged_adversarial / ablation-failed / control-failed artifact EXCLUDED + "
++            "the guards applied (.428-B2 goal-energy + .429-B2 QD-ablation/value-routing-cost) -- "
++            "fabrication-gate + false-negative-risk compliance."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- "
++            "a circular win would not count."
++        )
++    },
++    "paper_ready": {
++        "principle": (
++            "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication "
++            "invariant, not a new .429 headline."
++        )
++    },
++    "leaderboard_submission": {
++        "principle": "MUST be false -- submission is operator-only (External Publication Discipline)."
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {
++        "principle": "content-addressed hash catches silent drift on replay."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records resources verified (registry loadable, upstream artifacts present); "
++            "pre-empts missing-resource fabrication."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "field_principles",
++    "scorecard",
++    "publication_gate",
++    "duration_s",
++)
++SPEC_REFS = [
++    "REQ-CAPSTONE-4662",
++    "SCENARIO-CAPSTONE-4662",
++    "SCENARIO-CAPSTONE-4662-FIELD-PRINCIPLES",
++]
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _checksum(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _checksum(payload)
++
++
++def _read_json(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    return loaded if isinstance(loaded, dict) else {}  # pragma: no cover - malformed artifact guard
++
++
++def _read_yaml(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    try:
++        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except yaml.YAMLError:  # pragma: no cover - defensive malformed registry guard
++        return {}
++    return loaded if isinstance(loaded, dict) else {}  # pragma: no cover - malformed registry guard
++
++
++def _file_sha256(path: Path) -> str | None:
++    try:
++        return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return None
++
++
++def _as_float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool) or value is None:
++        return default
++    try:
++        parsed = float(value)
++    except (TypeError, ValueError):  # pragma: no cover - malformed artifact guard
++        return default
++    return parsed if parsed == parsed else default
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool) or value is None:
++        return default
++    try:
++        return int(value)
++    except (TypeError, ValueError):  # pragma: no cover - malformed artifact guard
++        return default
++
++
++def _format_number(value: float) -> str:
++    return f"{float(value):.6f}".rstrip("0").rstrip(".")
++
++
++def _summarize_and_live_flags(path: Path) -> tuple[int | None, list[dict[str, Any]]]:  # pragma: no cover - external reader
++    if artifact_reader is None:
++        return None, []
++    summary_code = artifact_reader.summarize(path) if hasattr(artifact_reader, "summarize") else None
++    flags = artifact_reader._live_flags(path) if hasattr(artifact_reader, "_live_flags") else []
++    return summary_code, [dict(flag) for flag in flags if isinstance(flag, Mapping)]
++
++
++def _severity(flag: Mapping[str, Any]) -> str:
++    return str(flag.get("severity") or "").lower()
++
++
++def _critical_flags(flags: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
++    return [dict(flag) for flag in flags if _severity(flag) == "critical"]
++
++
++def _false_negative_risk_open(flags: Sequence[Mapping[str, Any]]) -> bool:
++    return any(
++        flag.get("kind") == "FALSE_NEGATIVE_RISK"
++        and "false_negative_risk_open" in str(flag.get("detail") or "")
++        for flag in flags
++    )
++
++
++def _acceptance_gate_failures(artifact: Mapping[str, Any]) -> list[str]:
++    failures: list[str] = []
++    for key, value in artifact.items():
++        lowered = key.lower()
++        is_gate = "acceptance_gate" in lowered or lowered.startswith("gate_") or lowered.endswith("_gate")
++        if is_gate and value is False:
++            failures.append(key)
++    return failures
++
++
++def _positive_control_failed(artifact: Mapping[str, Any]) -> bool:
++    if artifact.get("positive_control_passed") is False:
++        return True
++    if "bare_control_passed" in artifact and artifact.get("bare_control_passed") is not True:
++        return True
++    return "false_negative_risk_checked" in artifact and artifact.get("false_negative_risk_checked") is not True
++
++
++def _a1_cost_control_failed(name: str, artifact: Mapping[str, Any]) -> bool:
++    if name != "A1" or not artifact:
++        return False
++    has_cost = "per_node_feature_cost_ms" in artifact and _as_float(artifact.get("per_node_feature_cost_ms"), -1.0) >= 0.0
++    return not (has_cost and artifact.get("sim_timed_out") is False)
++
++
++def _a2_random_mutation_ablation_failed(name: str, artifact: Mapping[str, Any]) -> bool:
++    return bool(name == "A2" and artifact and artifact.get("random_mutation_ablation_passed") is not True)
++
++
++def _source_status(
++    *,
++    name: str,
++    source: SourceSpec,
++    root: Path,
++    artifact: Mapping[str, Any],
++    exists: bool,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None,
++) -> JsonDict:
++    path = root / source.relative_path
++    if live_flags_by_name is not None:
++        summary_exit_code = None
++        flags = [dict(flag) for flag in live_flags_by_name.get(name, [])]
++    elif exists:
++        summary_exit_code, flags = _summarize_and_live_flags(path)
++    else:
++        summary_exit_code, flags = None, []
++    critical = _critical_flags(flags)
++    stamped = artifact.get("flagged_adversarial") is True
++    gate_failures = _acceptance_gate_failures(artifact)
++    positive_failed = _positive_control_failed(artifact)
++    false_negative = _false_negative_risk_open(flags)
++    cost_failed = _a1_cost_control_failed(name, artifact)
++    ablation_failed = _a2_random_mutation_ablation_failed(name, artifact)
++    flagged = bool(stamped or critical)
++    included = bool(
++        exists
++        and artifact
++        and not flagged
++        and not gate_failures
++        and not positive_failed
++        and not false_negative
++        and not cost_failed
++        and not ablation_failed
++    )
++    reason = "included_clean"
++    if not exists:
++        reason = "missing"
++    elif flagged:
++        reason = "flagged_adversarial_or_live_critical_excluded"
++    elif gate_failures:
++        reason = "failed_acceptance_gate"
++    elif positive_failed:
++        reason = "positive_control_failed"
++    elif false_negative:
++        reason = "false_negative_risk_open"
++    elif cost_failed:
++        reason = "value_routing_cost_control_failed"
++    elif ablation_failed:
++        reason = "random_mutation_ablation_failed"
++    return {
++        "name": name,
++        "artifact": source.relative_path,
++        "role": source.role,
++        "exists": exists,
++        "honest_verdict": artifact.get("honest_verdict"),
++        "stamped_flagged_adversarial": stamped,
++        "live_critical": bool(critical),
++        "live_flags": flags,
++        "critical_flags": critical,
++        "positive_control_failed": positive_failed,
++        "false_negative_risk_open": false_negative,
++        "value_routing_cost_control_failed": cost_failed,
++        "random_mutation_ablation_failed": ablation_failed,
++        "acceptance_gate_failures": gate_failures,
++        "summary_exit_code": summary_exit_code,
++        "duration_s": artifact.get("duration_s"),
++        "inference_substrate": artifact.get("inference_substrate"),
++        "included_in_headline": included,
++        "reason": reason,
++        "sha256": _file_sha256(path) if path.exists() else _checksum(artifact),
++    }
++
++
++def _load_artifacts(
++    root: Path,
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]] | None,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None,
++) -> tuple[dict[str, JsonDict], dict[str, JsonDict]]:
++    loaded: dict[str, JsonDict] = {}
++    statuses: dict[str, JsonDict] = {}
++    for name, source in UPSTREAM_SOURCES.items():
++        loaded[name] = dict(artifacts[name]) if artifacts is not None and name in artifacts else _read_json(root / source.relative_path)
++        exists = bool(name in artifacts) if artifacts is not None else (root / source.relative_path).exists()
++        statuses[name] = _source_status(
++            name=name,
++            source=source,
++            root=root,
++            artifact=loaded[name],
++            exists=exists,
++            live_flags_by_name=live_flags_by_name,
++        )
++    return loaded, statuses
++
++
++def check_preconditions(
++    root: Path | str = REPO_ROOT,
++    *,
++    statuses: Mapping[str, Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    registry = _read_yaml(root_path / REGISTRY_RELATIVE_PATH)
++    source_exists = {
++        name: (
++            bool(statuses.get(name, {}).get("exists"))
++            if statuses is not None
++            else (root_path / source.relative_path).exists()
++        )
++        for name, source in UPSTREAM_SOURCES.items()
++    }
++    missing = [UPSTREAM_SOURCES[name].relative_path for name, exists in source_exists.items() if not exists]
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "spec_has_req_4662": "REQ-CAPSTONE-4662" in spec_text,
++        "registry_yaml_loadable": bool(registry),
++        "registry_path": REGISTRY_RELATIVE_PATH,
++        "registry_reproducible_total_levels": _as_int(registry.get("reproducible_total_levels")),
++        "summarize_artifact_py_available": (root_path / "scripts" / "summarize_artifact.py").exists(),
++        "summarize_artifact_py_used_for_every_upstream": artifact_reader is not None,
++        "upstream_artifacts_present": source_exists,
++        "missing_upstream_artifacts": missing,
++        "leaderboard_submission": False,
++        "operator_only": True,
++        "network_required": False,
++        "research_conductor_modified": False,
++    }
++    required = (
++        ("agents_md_read", "agents_md"),
++        ("codex_or_opencode_md_read", "codex_or_opencode_md"),
++        ("spec_has_req_4662", "spec_req_4662"),
++        ("registry_yaml_loadable", "registry_yaml"),
++        ("summarize_artifact_py_available", "summarize_artifact"),
++    )
++    failed = [resource for key, resource in required if not checks[key]]
++    if missing:
++        failed.append("upstream_artifacts")
++    checks["ok"] = not failed
++    if failed:
++        checks["blocked_resource"] = failed[0]
++    return checks
++
++
++def _clean(statuses: Mapping[str, Mapping[str, Any]], name: str) -> bool:
++    return bool(statuses.get(name, {}).get("included_in_headline"))
++
++
++def _mapping_at(payload: Mapping[str, Any], key: str) -> Mapping[str, Any]:
++    value = payload.get(key)
++    return value if isinstance(value, Mapping) else {}
++
++
++def _ci_excludes_zero(ci: Mapping[str, Any]) -> bool:
++    ci95 = ci.get("ci95")
++    if not isinstance(ci95, Sequence) or isinstance(ci95, (str, bytes)) or len(ci95) != 2:
++        return False
++    lo = _as_float(ci95[0])
++    hi = _as_float(ci95[1])
++    return lo > 0.0 or hi < 0.0
++
++
++def _a1_value_routing_live_lift(a1: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    first_delta = _as_float(a1.get("first_win_rate_delta"))
++    solve_delta = _as_float(a1.get("solve_rate_delta"))
++    selected_metric = "solve_rate_delta" if solve_delta > first_delta else "first_win_rate_delta"
++    selected_delta = max(first_delta, solve_delta)
++    live_lift_ci = _mapping_at(a1, "live_lift_ci")
++    cost = a1.get("per_node_feature_cost_ms")
++    cost_controlled = status.get("value_routing_cost_control_failed") is False
++    ci_clean = _ci_excludes_zero(live_lift_ci)
++    clean = status.get("included_in_headline") is True
++    counted = bool(clean and cost_controlled and ci_clean and selected_delta > 0.0)
++    if counted:
++        reason = "cost_controlled_and_ci_excludes_value_weight_zero_baseline"
++    elif not clean:
++        reason = str(status.get("reason"))
++    elif not cost_controlled:
++        reason = "value_routing_cost_control_failed"
++    elif not ci_clean:
++        reason = "ci_does_not_exclude_value_weight_zero_baseline"
++    else:
++        reason = "no_positive_live_lift"
++    return {
++        "headline_counted": counted,
++        "selected_metric": selected_metric,
++        "selected_delta": selected_delta,
++        "first_win_rate_delta": first_delta,
++        "solve_rate_delta": solve_delta,
++        "live_first_win_rate_value_routed": _as_float(a1.get("live_first_win_rate_value_routed")),
++        "live_solve_rate_value_routed": _as_float(a1.get("live_solve_rate_value_routed")),
++        "value_weight_zero_baseline": {
++            "first_win_rate": _as_float(_mapping_at(a1, "live_baseline_value_weight_zero").get("first_win_rate")),
++            "solve_rate": _as_float(_mapping_at(a1, "live_baseline_value_weight_zero").get("solve_rate")),
++            "value_weight": _as_float(_mapping_at(a1, "live_baseline_value_weight_zero").get("value_weight")),
++        },
++        "value_weight_set": _as_float(a1.get("value_weight_set")),
++        "per_node_feature_cost_ms": None if cost is None else _as_float(cost),
++        "sim_timed_out": a1.get("sim_timed_out"),
++        "cost_controlled": cost_controlled,
++        "live_lift_ci": dict(live_lift_ci),
++        "ci_excludes_value_weight_zero_baseline": ci_clean,
++        "reason": reason,
++        "source": UPSTREAM_SOURCES["A1"].relative_path,
++    }
++
++
++def _a2_winner_generated(a2: Mapping[str, Any], status: Mapping[str, Any]) -> JsonDict:
++    winner = a2.get("winner_generated") is True
++    count = _as_int(a2.get("winner_generated_count"))
++    ablation = a2.get("random_mutation_ablation_passed") is True
++    clean = status.get("included_in_headline") is True
++    counted = bool(clean and winner and ablation)
++    reason = (
++        "winner_generated_and_random_mutation_ablation_passed"
++        if counted
++        else (str(status.get("reason")) if not clean else "no_winner_generated")
++    )
++    return {
++        "headline_counted": counted,
++        "winner_generated": winner,
++        "winner_generated_count": count,
++        "random_mutation_ablation_passed": ablation,
++        "qd_lift_ci": dict(_mapping_at(a2, "qd_lift_ci")),
++        "live_solve_rate_qd": _as_float(a2.get("live_solve_rate_qd")),
++        "live_solve_rate_search_baseline": _as_float(a2.get("live_solve_rate_search_baseline")),
++        "first_win_rate_delta": _as_float(a2.get("first_win_rate_delta")),
++        "solve_rate_delta": _as_float(a2.get("solve_rate_delta")),
++        "offline_reproduced": a2.get("offline_reproduced") is True,
++        "reason": reason,
++        "source": UPSTREAM_SOURCES["A2"].relative_path,
++    }
++
++
++def _tests_passed(block: Any) -> bool:
++    return not isinstance(block, Mapping) or block.get("passed") is True
++
++
++def _b2_guards_active(b2: Mapping[str, Any]) -> JsonDict:
++    qd = bool(
++        b2.get("qd_ablation_guard_added") is True
++        or b2.get("qd_random_mutation_ablation_guard_added") is True
++    )
++    value = bool(
++        b2.get("value_routing_cost_guard_added") is True
++        or b2.get("value_routing_cost_control_guard_added") is True
++    )
++    return {
++        ".428-B2 goal-energy": True,
++        ".429-B2 QD-ablation": qd and _tests_passed(b2.get("tests_added")),
++        ".429-B2 value-routing-cost": value and _tests_passed(b2.get("tests_added")),
++    }
++
++
++def _flagged_artifacts_handled(statuses: Mapping[str, Mapping[str, Any]], b2: Mapping[str, Any]) -> JsonDict:
++    excluded_details: list[JsonDict] = []
++    flagged: list[JsonDict] = []
++    positive_failed: list[JsonDict] = []
++    false_negative_open: list[JsonDict] = []
++    ablation_failed: list[JsonDict] = []
++    cost_failed: list[JsonDict] = []
++    gate_failures: list[JsonDict] = []
++    for name, status in statuses.items():
++        row = {"name": name, "artifact": status.get("artifact")}
++        if status.get("included_in_headline") is False and status.get("reason") not in {"missing", "included_clean"}:
++            excluded_details.append(
++                {
++                    **row,
++                    "reason": status.get("reason"),
++                    "critical_flags": [
++                        {"kind": flag.get("kind"), "detail": flag.get("detail")}
++                        for flag in status.get("critical_flags", [])
++                    ],
++                }
++            )
++        if status.get("stamped_flagged_adversarial") or status.get("live_critical"):
++            flagged.append(row)
++        if status.get("positive_control_failed"):
++            positive_failed.append(row)
++        if status.get("false_negative_risk_open"):
++            false_negative_open.append(row)
++        if status.get("random_mutation_ablation_failed"):
++            ablation_failed.append(row)
++        if status.get("value_routing_cost_control_failed"):
++            cost_failed.append(row)
++        if status.get("acceptance_gate_failures"):
++            gate_failures.append({**row, "failed_gates": status.get("acceptance_gate_failures")})
++    return {
++        "excluded_artifacts": [str(row["artifact"]) for row in excluded_details],
++        "excluded_details": excluded_details,
++        "flagged_adversarial_artifacts": flagged,
++        "positive_control_failed_artifacts": positive_failed,
++        "false_negative_risk_open_artifacts": false_negative_open,
++        "ablation_failed_artifacts": ablation_failed,
++        "cost_control_failed_artifacts": cost_failed,
++        "failed_acceptance_gate_overrides": gate_failures,
++        "guards_applied": _b2_guards_active(b2),
++        "guard_note": (
++            "Stamped flagged, live-critical, ablation-failed, control-failed, and "
++            "cost-control-failed artifacts are excluded from clean headline claims."
++        ),
++    }
++
++
++def _claim_audit(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    statuses: Mapping[str, Mapping[str, Any]],
++) -> JsonDict:
++    rows: JsonDict = {}
++    for name in ("A1", "A2", "A3", "A4", "A5", "A6"):
++        included = _clean(statuses, name)
++        rows[name] = {
++            "artifact": UPSTREAM_SOURCES[name].relative_path,
++            "included_in_headline": included,
++            "verifier_is_oracle": artifacts.get(name, {}).get("verifier_is_oracle"),
++            "oracle_distinct": artifacts.get(name, {}).get("verifier_is_oracle") is False,
++        }
++    rows["all_included_value_claims_false"] = all(
++        row["oracle_distinct"]
++        for row in rows.values()
++        if isinstance(row, Mapping) and row.get("included_in_headline") is True
++    )
++    return rows
++
++
++def _cited_upstream_artifacts(statuses: Mapping[str, Mapping[str, Any]], *, root: Path) -> JsonDict:
++    imported_fields = {
++        "A1": [
++            "first_win_rate_delta",
++            "solve_rate_delta",
++            "per_node_feature_cost_ms",
++            "sim_timed_out",
++            "live_lift_ci",
++        ],
++        "A2": ["winner_generated", "winner_generated_count", "random_mutation_ablation_passed", "qd_lift_ci"],
++        "A3": ["reproduced_levels", "offline_reproduced", "reproduction_gate"],
++        "A4": ["live_submittable_level_count", "ready_for_operator_submit", "offline_reproduced"],
++        "A5": ["primitive_persisted", "transfer_value_per_game"],
++        "A6": ["live_first_win_rate_delta_vs_pre_integration", "live_multi_level_solve_rate_delta_vs_pre_integration"],
++        "B1": ["ci_gate", "distribution_shift_score", "tests_added"],
++        "B2": ["qd_ablation_guard_added", "value_routing_cost_guard_added", "tests_added"],
++    }
++    cited: JsonDict = {}
++    for name, status in statuses.items():
++        included = status.get("included_in_headline") is True
++        cited[name] = {
++            "artifact": status.get("artifact"),
++            "role": status.get("role"),
++            "exists": status.get("exists"),
++            "sha256": status.get("sha256"),
++            "included_in_headline": included,
++            "reason": status.get("reason"),
++            "read_via_summarize_artifact": True,
++            "summarize_exit_code": status.get("summary_exit_code"),
++            "honest_verdict": status.get("honest_verdict"),
++            "stamped_flagged_adversarial": status.get("stamped_flagged_adversarial"),
++            "live_critical": status.get("live_critical"),
++            "positive_control_failed": status.get("positive_control_failed"),
++            "false_negative_risk_open": status.get("false_negative_risk_open"),
++            "ablation_failed": status.get("random_mutation_ablation_failed"),
++            "cost_control_failed": status.get("value_routing_cost_control_failed"),
++            "duration_s": status.get("duration_s"),
++            "inference_substrate": status.get("inference_substrate"),
++            "imported_fields": imported_fields.get(name, []) if included else [],
++            "quarantined_fields_reported": imported_fields.get(name, []) if not included else [],
++        }
++    cited["REGISTRY"] = {
++        "artifact": REGISTRY_RELATIVE_PATH,
++        "role": "authoritative_reproducible_total_levels",
++        "exists": (root / REGISTRY_RELATIVE_PATH).exists(),
++        "sha256": _file_sha256(root / REGISTRY_RELATIVE_PATH),
++        "included_in_headline": True,
++        "reason": "authoritative_registry_header",
++        "read_via_summarize_artifact": False,
++        "imported_fields": ["reproducible_total_levels"],
++        "quarantined_fields_reported": [],
++    }
++    return cited
++
++
++def _publication_gate(publication_gate: Mapping[str, Any] | None) -> JsonDict:
++    if publication_gate is not None:
++        gate = dict(publication_gate)
++    elif publication_gate_reader is not None:  # pragma: no cover - integration boundary
++        gate = dict(publication_gate_reader.evaluate())
++    else:  # pragma: no cover - defensive import boundary
++        gate = {"paper_ready": False, "gates": {}, "unmet_gates": ["publication_gate_unavailable"]}
++    return {
++        "paper_ready": gate.get("paper_ready") is True,
++        "gates": dict(_mapping_at(gate, "gates")),
++        "unmet_gates": list(gate.get("unmet_gates") or []),
++        "frozen_fover_auroc": FROZEN_FOVER_AUROC,
++        "fover_0_9131_substituted": False,
++        "note": "FoVer 0.9131 is re-affirmed only as the frozen publication invariant.",
++    }
++
++
++def _scorecard(
++    artifacts: Mapping[str, Mapping[str, Any]],
++    statuses: Mapping[str, Mapping[str, Any]],
++    *,
++    a1_lift: Mapping[str, Any],
++    a2_winner: Mapping[str, Any],
++    registry_total: int,
++    registry_delta: int,
++    live_count: int,
++    ready: bool,
++    publication: Mapping[str, Any],
++) -> JsonDict:
++    a1_crossed = a1_lift.get("headline_counted") is True
++    a2_crossed = a2_winner.get("headline_counted") is True
++    crossing_source = "A2_energy_fitness_qd" if a2_crossed else ("A1_value_routing" if a1_crossed else "none")
++    return {
++        "headline": {
++            "bridge_crossed_for_solve": bool(a1_crossed or a2_crossed),
++            "crossing_source": crossing_source,
++            "a1_value_routing_live_lift_counted": a1_crossed,
++            "a2_qd_winner_generated_counted": a2_crossed,
++            "a3_registry_capability_plus_one": registry_delta > 0,
++            "a4_operator_resubmit_ready_above_33": ready,
++            "submission_operator_only": True,
++        },
++        "A1": {
++            "artifact": UPSTREAM_SOURCES["A1"].relative_path,
++            "included_in_headline": _clean(statuses, "A1"),
++            "value_routing_live_lift": dict(a1_lift),
++            "reason": statuses["A1"]["reason"],
++        },
++        "A2": {
++            "artifact": UPSTREAM_SOURCES["A2"].relative_path,
++            "included_in_headline": _clean(statuses, "A2"),
++            "winner_generated": dict(a2_winner),
++            "reason": statuses["A2"]["reason"],
++        },
++        "A3": {
++            "artifact": UPSTREAM_SOURCES["A3"].relative_path,
++            "included_in_headline": _clean(statuses, "A3"),
++            "reproduced_levels": _as_int(artifacts["A3"].get("reproduced_levels")),
++            "offline_reproduced": artifacts["A3"].get("offline_reproduced") is True,
++            "registry_reproducible_total_levels": registry_total,
++            "registry_delta_vs_57": registry_delta,
++        },
++        "A4": {
++            "artifact": UPSTREAM_SOURCES["A4"].relative_path,
++            "included_in_headline": _clean(statuses, "A4"),
++            "live_submittable_level_count": live_count,
++            "ready_for_operator_submit": ready,
++            "count_delta": _as_int(artifacts["A4"].get("count_delta")),
++            "levels_folded_in": list(artifacts["A4"].get("levels_folded_in") or []),
++        },
++        "A5": {
++            "artifact": UPSTREAM_SOURCES["A5"].relative_path,
++            "included_in_headline": _clean(statuses, "A5"),
++            "primitive_persisted": artifacts["A5"].get("primitive_persisted"),
++        },
++        "A6": {
++            "artifact": UPSTREAM_SOURCES["A6"].relative_path,
++            "included_in_headline": _clean(statuses, "A6"),
++            "live_first_win_rate_delta_vs_pre_integration": _as_float(
++                artifacts["A6"].get("live_first_win_rate_delta_vs_pre_integration")
++            ),
++            "live_multi_level_solve_rate_delta_vs_pre_integration": _as_float(
++                artifacts["A6"].get("live_multi_level_solve_rate_delta_vs_pre_integration")
++            ),
++            "reason": statuses["A6"]["reason"],
++        },
++        "B1": {
++            "artifact": UPSTREAM_SOURCES["B1"].relative_path,
++            "included_in_headline": _clean(statuses, "B1"),
++            "ci_gate": artifacts["B1"].get("ci_gate"),
++            "distribution_shift_score": artifacts["B1"].get("distribution_shift_score"),
++        },
++        "B2": {
++            "artifact": UPSTREAM_SOURCES["B2"].relative_path,
++            "included_in_headline": _clean(statuses, "B2"),
++            "guards_active": _b2_guards_active(artifacts["B2"]),
++        },
++        "verifier_is_oracle_claim_audit": _claim_audit(artifacts, statuses),
++        "paper_ready": dict(publication),
++    }
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    artifacts: Mapping[str, Mapping[str, Any]] | None = None,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++    registry: Mapping[str, Any] | None = None,
++    publication_gate: Mapping[str, Any] | None = None,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    duration_s: float | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    upstream, statuses = _load_artifacts(root_path, artifacts=artifacts, live_flags_by_name=live_flags_by_name)
++    registry_payload = dict(registry) if registry is not None else _read_yaml(root_path / REGISTRY_RELATIVE_PATH)
++    checks = dict(preconditions_checked or check_preconditions(root_path, statuses=statuses))
++    registry_total = _as_int(
++        registry_payload.get("reproducible_total_levels"),
++        _as_int(checks.get("registry_reproducible_total_levels")),
++    )
++    registry_delta = registry_total - BASELINE_REPRODUCIBLE_TOTAL_LEVELS
++    a1_lift = _a1_value_routing_live_lift(upstream["A1"], statuses["A1"])
++    a2_winner = _a2_winner_generated(upstream["A2"], statuses["A2"])
++    bridge_crossed = bool(a1_lift.get("headline_counted") or a2_winner.get("headline_counted"))
++    live_count = _as_int(upstream["A4"].get("live_submittable_level_count")) if _clean(statuses, "A4") else 0
++    ready = bool(
++        checks.get("ok", True)
++        and _clean(statuses, "A4")
++        and live_count > LIVE_SUBMITTABLE_SCORECARD_BASELINE
++        and upstream["A4"].get("ready_for_operator_submit") is True
++        and upstream["A4"].get("offline_reproduced") is True
++    )
++    publication = _publication_gate(publication_gate)
++    if checks.get("ok") is False:
++        verdict = f"blocked_{checks.get('blocked_resource') or 'precondition'}"
++    elif a1_lift.get("headline_counted") is True:
++        metric = "solverate" if a1_lift.get("selected_metric") == "solve_rate_delta" else "firstwin"
++        verdict = (
++            f"success: bridge_crossed_live_{metric}_up_"
++            f"{_format_number(_as_float(a1_lift.get('selected_delta')))}"
++        )
++    elif a2_winner.get("headline_counted") is True:
++        verdict = (
++            "success: bridge_crossed_live_winner_generated_up_"
++            f"{_format_number(_as_float(a2_winner.get('winner_generated_count')))}"
++        )
++    elif registry_delta > 0:
++        verdict = f"complete: capability_grew_57_to_{registry_total}"
++    else:
++        verdict = "complete: generation_guidance_levers_characterized_no_live_solve_lift"
++
++    flagged = _flagged_artifacts_handled(statuses, upstream["B2"])
++    scorecard = _scorecard(
++        upstream,
++        statuses,
++        a1_lift=a1_lift,
++        a2_winner=a2_winner,
++        registry_total=registry_total,
++        registry_delta=registry_delta,
++        live_count=live_count,
++        ready=ready,
++        publication=publication,
++    )
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "cited_upstream_artifacts": _cited_upstream_artifacts(statuses, root=root_path),
++        "a1_value_routing_live_lift": a1_lift,
++        "a2_winner_generated": a2_winner,
++        "reproducible_total_levels": registry_total,
++        "reproducible_total_levels_delta": registry_delta,
++        "bridge_crossed_for_solve": bridge_crossed,
++        "live_submittable_level_count": live_count,
++        "flagged_artifacts_handled": flagged,
++        "verifier_is_oracle": False,
++        "paper_ready": publication["paper_ready"],
++        "publication_gate": publication,
++        "leaderboard_submission": False,
++        "submitted_to_leaderboard": False,
++        "field_principles": FIELD_PRINCIPLES,
++        "scorecard": scorecard,
++        "preconditions_checked": checks,
++        "random_seed": RANDOM_SEED,
++        "duration_s": float(duration_s if duration_s is not None else 0.0),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing required field {field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if not str(artifact.get("honest_verdict") or "").startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++    if type(artifact.get("reproducible_total_levels")) is not int:
++        errors.append("reproducible_total_levels must be bare int")
++    if type(artifact.get("reproducible_total_levels_delta")) is not int:
++        errors.append("reproducible_total_levels_delta must be bare int")
++    if type(artifact.get("bridge_crossed_for_solve")) is not bool:
++        errors.append("bridge_crossed_for_solve must be bare bool")
++    if type(artifact.get("live_submittable_level_count")) is not int:
++        errors.append("live_submittable_level_count must be bare int")
++    if type(artifact.get("paper_ready")) is not bool:
++        errors.append("paper_ready must be bare bool")
++    if artifact.get("leaderboard_submission") is not False:
++        errors.append("leaderboard_submission must be false")
++    if artifact.get("submitted_to_leaderboard") is not False:
++        errors.append("submitted_to_leaderboard must be false")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    audit = _mapping_at(_mapping_at(artifact, "scorecard"), "verifier_is_oracle_claim_audit")
++    if audit.get("all_included_value_claims_false") is not True:
++        errors.append("included verifier value claims must be oracle-distinct")
++    return errors
++
++
++def write_artifact(*, path: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    live_flags_by_name: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
++    publication_gate: Mapping[str, Any] | None = None,
++    write: bool = True,
++    duration_s: float | None = None,
++) -> JsonDict:
++    start = time.perf_counter()
++    elapsed = duration_s if duration_s is not None else None
++    artifact = build_artifact(
++        root,
++        live_flags_by_name=live_flags_by_name,
++        publication_gate=publication_gate,
++        duration_s=float(elapsed if elapsed is not None else time.perf_counter() - start),
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(path=Path(root) / RESULT_RELATIVE_PATH, artifact=artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - CLI wrapper
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index d79114f7dd..58c71fa50c 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-24T04:08:07.073089Z",
+-  "duration_s": 0.029127836227416992,
++  "run_date": "2026-06-24T04:41:42.670463Z",
++  "duration_s": 0.030193090438842773,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "b20652315ed3d5208d9b86b47313c8bec5ffbb6feb10b9e01390c4e4eb8d42e2",
++  "reproducibility_checksum": "82bf596325a1b12efd185f4f564e841160289bd2c3a0dbabc556082e8f4fc5c1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "a9c9380b5bea67c481c1880be0b84112ba3db5c1"
++    "adversarial_verify_version": "933c8b289fc29b448a9a7779751b3874edd9db63"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index cc23c5ea3c..f2be87a5c8 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-24T04:08:07.111507Z",
+-  "duration_s": 0.03294849395751953,
++  "run_date": "2026-06-24T04:41:42.709266Z",
++  "duration_s": 0.032773733139038086,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "adde2730394615877be9eee9cd8102142e6371fb8214e5f9f224274f3060774e",
++  "reproducibility_checksum": "77ee1f69d4715ec737b6f893ead6c66b5b0f23902c86ce3ade106028410c5562",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "a9c9380b5bea67c481c1880be0b84112ba3db5c1"
++    "adversarial_verify_version": "933c8b289fc29b448a9a7779751b3874edd9db63"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index cc6113ccac..da4ab3389c 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.2661017030477524e-05,
++  "duration_s": 3.358302637934685e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4662_capstone_v429.json b/results/experiment_4662_capstone_v429.json
+new file mode 100644
+index 0000000000..8671676718
+--- /dev/null
++++ b/results/experiment_4662_capstone_v429.json
+@@ -0,0 +1,658 @@
++{
++  "a1_value_routing_live_lift": {
++    "ci_excludes_value_weight_zero_baseline": false,
++    "cost_controlled": true,
++    "first_win_rate_delta": 0.0,
++    "headline_counted": false,
++    "live_first_win_rate_value_routed": 0.04,
++    "live_lift_ci": {
++      "bootstrap_resamples": 1000,
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "method": "paired_percentile_bootstrap",
++      "metric": "first_win_rate",
++      "point": 0.0,
++      "random_seed": 4652
++    },
++    "live_solve_rate_value_routed": 0.0,
++    "per_node_feature_cost_ms": 0.397451,
++    "reason": "ci_does_not_exclude_value_weight_zero_baseline",
++    "selected_delta": 0.0,
++    "selected_metric": "first_win_rate_delta",
++    "sim_timed_out": false,
++    "solve_rate_delta": 0.0,
++    "source": "results/experiment_4652_value_routing_cost_fix_live.json",
++    "value_weight_set": 1e-12,
++    "value_weight_zero_baseline": {
++      "first_win_rate": 0.04,
++      "solve_rate": 0.0,
++      "value_weight": 0.0
++    }
++  },
++  "a2_winner_generated": {
++    "first_win_rate_delta": 0.0,
++    "headline_counted": false,
++    "live_solve_rate_qd": 0.0,
++    "live_solve_rate_search_baseline": 0.0,
++    "offline_reproduced": true,
++    "qd_lift_ci": {
++      "bootstrap_resamples": 1000,
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "method": "paired_percentile_bootstrap",
++      "metric": "winner_generated_delta",
++      "paired_n": 4,
++      "point": 0.0
++    },
++    "random_mutation_ablation_passed": false,
++    "reason": "random_mutation_ablation_failed",
++    "solve_rate_delta": 0.0,
++    "source": "results/experiment_4653_energy_fitness_qd_generation_live.json",
++    "winner_generated": false,
++    "winner_generated_count": 0
++  },
++  "bridge_crossed_for_solve": false,
++  "cited_upstream_artifacts": {
++    "A1": {
++      "ablation_failed": false,
++      "artifact": "results/experiment_4652_value_routing_cost_fix_live.json",
++      "cost_control_failed": false,
++      "duration_s": 585.61272,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration.",
++      "imported_fields": [
++        "first_win_rate_delta",
++        "solve_rate_delta",
++        "per_node_feature_cost_ms",
++        "sim_timed_out",
++        "live_lift_ci"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the value head is a small CPU computation, no live_llm_inference.",
++      "live_critical": false,
++      "positive_control_failed": false,
++      "quarantined_fields_reported": [],
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "value_routing_cost_fix_live",
++      "sha256": "sha256:8ae6a72b78936ceefdaf669df718f39429305353e05b0e0fd5e5bf8311292571",
++      "stamped_flagged_adversarial": false,
++      "summarize_exit_code": 0
++    },
++    "A2": {
++      "ablation_failed": true,
++      "artifact": "results/experiment_4653_energy_fitness_qd_generation_live.json",
++      "cost_control_failed": false,
++      "duration_s": 21.780247,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened",
++      "imported_fields": [],
++      "included_in_headline": false,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline-arcade live-search measurement over cached variants (1s floor); the QD scorer (goal-energy + action-effect CNN forward-pass) is CPU, declared so a fast pass is not DURATION_TOO_SHORT false-flagged; no live_llm_inference",
++      "live_critical": false,
++      "positive_control_failed": false,
++      "quarantined_fields_reported": [
++        "winner_generated",
++        "winner_generated_count",
++        "random_mutation_ablation_passed",
++        "qd_lift_ci"
++      ],
++      "read_via_summarize_artifact": true,
++      "reason": "random_mutation_ablation_failed",
++      "role": "energy_fitness_qd_generation_live",
++      "sha256": "sha256:ee2f10e1846ed9bb77be96ea75a21857806d8da9fe9e909b36e26a54f0a72fdb",
++      "stamped_flagged_adversarial": false,
++      "summarize_exit_code": 0
++    },
++    "A3": {
++      "ablation_failed": false,
++      "artifact": "results/experiment_4654_levelup_selfplay.json",
++      "cost_control_failed": false,
++      "duration_s": null,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "success: vc33_L2_offline_reproduced",
++      "imported_fields": [
++        "reproduced_levels",
++        "offline_reproduced",
++        "reproduction_gate"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates",
++      "live_critical": false,
++      "positive_control_failed": false,
++      "quarantined_fields_reported": [],
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "levelup_selfplay_bank",
++      "sha256": "sha256:948d8a93ad608d05100600596669eba6f75e73a5df68189346d3b59ecaa6635e",
++      "stamped_flagged_adversarial": false,
++      "summarize_exit_code": 0
++    },
++    "A4": {
++      "ablation_failed": false,
++      "artifact": "results/experiment_4655_refresh_submission_package.json",
++      "cost_control_failed": false,
++      "duration_s": 3.125764,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "success: package_refreshed_live_submittable_58_above_33",
++      "imported_fields": [
++        "live_submittable_level_count",
++        "ready_for_operator_submit",
++        "offline_reproduced"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline reproduction-gated packaging, no LLM load (1s floor).",
++      "live_critical": false,
++      "positive_control_failed": false,
++      "quarantined_fields_reported": [],
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "refresh_submission_package",
++      "sha256": "sha256:862d32460ad6e12b85faf3b692f43c979a09e549e855c216425c2fa160b54afc",
++      "stamped_flagged_adversarial": false,
++      "summarize_exit_code": 0
++    },
++    "A5": {
++      "ablation_failed": false,
++      "artifact": "results/experiment_4656_primitive_persist_transfer.json",
++      "cost_control_failed": false,
++      "duration_s": 1.0,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
++      "imported_fields": [
++        "primitive_persisted",
++        "transfer_value_per_game"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline transfer measurement over cached games (1s floor).",
++      "live_critical": false,
++      "positive_control_failed": false,
++      "quarantined_fields_reported": [],
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "primitive_persist_transfer",
++      "sha256": "sha256:aae2540ae8fff34665e52184779d2fa0612df6012776da38f24d50bd65c17afc",
++      "stamped_flagged_adversarial": false,
++      "summarize_exit_code": 0
++    },
++    "A6": {
++      "ablation_failed": false,
++      "artifact": "results/experiment_4657_integration_gate.json",
++      "cost_control_failed": false,
++      "duration_s": 1.923102,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "success: integrated_a1_value_routing_cost_fix_shipped_parity_green",
++      "imported_fields": [],
++      "included_in_headline": false,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline end-to-end re-measure (1s floor).",
++      "live_critical": true,
++      "positive_control_failed": false,
++      "quarantined_fields_reported": [
++        "live_first_win_rate_delta_vs_pre_integration",
++        "live_multi_level_solve_rate_delta_vs_pre_integration"
++      ],
++      "read_via_summarize_artifact": true,
++      "reason": "flagged_adversarial_or_live_critical_excluded",
++      "role": "integration_gate",
++      "sha256": "sha256:80eb4198f0f66e75299d3cdb7aeb6ece1a630056d521e9f74e31d229a3333267",
++      "stamped_flagged_adversarial": true,
++      "summarize_exit_code": 2
++    },
++    "B1": {
++      "ablation_failed": false,
++      "artifact": "results/experiment_4658_value_routing_cigate_diagnostic.json",
++      "cost_control_failed": false,
++      "duration_s": 1.50731,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "success: value_routing_cigate_plus_diagnostic_shipped_tests_green.",
++      "imported_fields": [
++        "ci_gate",
++        "distribution_shift_score",
++        "tests_added"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline value-head re-scoring + a small sim re-run (1s floor); no live_llm_inference.",
++      "live_critical": false,
++      "positive_control_failed": false,
++      "quarantined_fields_reported": [],
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "value_routing_cigate_diagnostic",
++      "sha256": "sha256:b05378adc6a973cafed13793aed130e949ae20d5bab67897ec2445a71546cfdf",
++      "stamped_flagged_adversarial": false,
++      "summarize_exit_code": 0
++    },
++    "B2": {
++      "ablation_failed": false,
++      "artifact": "results/experiment_4659_adversarial_verify_hardening.json",
++      "cost_control_failed": false,
++      "duration_s": 0.03592876298353076,
++      "exists": true,
++      "false_negative_risk_open": false,
++      "honest_verdict": "success: adversarial_verify_hardened_qd_ablation_and_value_routing_cost_guards_tests_green.",
++      "imported_fields": [
++        "qd_ablation_guard_added",
++        "value_routing_cost_guard_added",
++        "tests_added"
++      ],
++      "included_in_headline": true,
++      "inference_substrate": "aggregation_from_upstream_artifacts -- reads fixtures + edits the linter, no model load (100us floor).",
++      "live_critical": false,
++      "positive_control_failed": false,
++      "quarantined_fields_reported": [],
++      "read_via_summarize_artifact": true,
++      "reason": "included_clean",
++      "role": "adversarial_verify_qd_and_value_routing_guards",
++      "sha256": "sha256:3f0ad24a036bda75b96b1bcc0befa7dfcb342826516722daec03122789bc11e5",
++      "stamped_flagged_adversarial": false,
++      "summarize_exit_code": 0
++    },
++    "REGISTRY": {
++      "artifact": "ops/arc_solve_registry.yaml",
++      "exists": true,
++      "imported_fields": [
++        "reproducible_total_levels"
++      ],
++      "included_in_headline": true,
++      "quarantined_fields_reported": [],
++      "read_via_summarize_artifact": false,
++      "reason": "authoritative_registry_header",
++      "role": "authoritative_reproducible_total_levels",
++      "sha256": "sha256:e91ae56fd73bc72bdc8f02060732f0872614c7b625874d0b30773ccf86aff707"
++    }
++  },
++  "duration_s": 3.600725904107094e-07,
++  "experiment": "experiment_4662_capstone_v429",
++  "field_principles": {
++    "a1_value_routing_live_lift": {
++      "principle": "the A1 affordable-value-head live first-win/solve-rate delta -- counted ONLY if cost-controlled (per_node_cost + no-timeout) + CI excludes the value_weight=0 baseline."
++    },
++    "a2_winner_generated": {
++      "principle": "the A2 energy-fitness QD winner_generated -- counted ONLY if random-mutation-ablation-passed (else the search/branching, not the energy)."
++    },
++    "bridge_crossed_for_solve": {
++      "principle": "the headline decision -- did ANY .429 lever cross the offline->live bridge for SOLVE-RATE/DEPTH (the 0.04 wall), or did generation-guidance get characterized as another honest null."
++    },
++    "cited_upstream_artifacts": {
++      "principle": "every headline number traces to a real upstream artifact with sha256 (the audit trail)."
++    },
++    "flagged_artifacts_handled": {
++      "principle": "names any flagged_adversarial / ablation-failed / control-failed artifact EXCLUDED + the guards applied (.428-B2 goal-energy + .429-B2 QD-ablation/value-routing-cost) -- fabrication-gate + false-negative-risk compliance."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: bridge_crossed_live_<firstwin|solverate|winner_generated>_up_<n> OR complete: generation_guidance_levers_characterized_no_live_solve_lift OR complete: capability_grew_57_to_<n>."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."
++    },
++    "leaderboard_submission": {
++      "principle": "MUST be false -- submission is operator-only (External Publication Discipline)."
++    },
++    "live_submittable_level_count": {
++      "principle": "the A4 operator-resubmit count (must stay > 33)."
++    },
++    "paper_ready": {
++      "principle": "G1-G4 re-affirmed (FoVer 0.9131 NEVER substituted) -- the frozen publication invariant, not a new .429 headline."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified (registry loadable, upstream artifacts present); pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash catches silent drift on replay."
++    },
++    "reproducible_total_levels": {
++      "principle": "authoritative from the registry (A3 bank, 57->58+) -- did solve CAPABILITY grow."
++    },
++    "reproducible_total_levels_delta": {
++      "principle": "registry after - 57, emitted explicitly so a null is annotated."
++    },
++    "verifier_is_oracle": {
++      "principle": "MUST be false on every included value claim (A1/A2/A3/A4/A5/A6 oracle-distinct) -- a circular win would not count."
++    }
++  },
++  "flagged_artifacts_handled": {
++    "ablation_failed_artifacts": [
++      {
++        "artifact": "results/experiment_4653_energy_fitness_qd_generation_live.json",
++        "name": "A2"
++      }
++    ],
++    "cost_control_failed_artifacts": [],
++    "excluded_artifacts": [
++      "results/experiment_4653_energy_fitness_qd_generation_live.json",
++      "results/experiment_4657_integration_gate.json"
++    ],
++    "excluded_details": [
++      {
++        "artifact": "results/experiment_4653_energy_fitness_qd_generation_live.json",
++        "critical_flags": [],
++        "name": "A2",
++        "reason": "random_mutation_ablation_failed"
++      },
++      {
++        "artifact": "results/experiment_4657_integration_gate.json",
++        "critical_flags": [
++          {
++            "detail": "live_first_win_rate_integrated=0.04 and live_first_win_rate_pre_integration=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++            "kind": "TAUTOLOGY"
++          }
++        ],
++        "name": "A6",
++        "reason": "flagged_adversarial_or_live_critical_excluded"
++      }
++    ],
++    "failed_acceptance_gate_overrides": [],
++    "false_negative_risk_open_artifacts": [],
++    "flagged_adversarial_artifacts": [
++      {
++        "artifact": "results/experiment_4657_integration_gate.json",
++        "name": "A6"
++      }
++    ],
++    "guard_note": "Stamped flagged, live-critical, ablation-failed, control-failed, and cost-control-failed artifacts are excluded from clean headline claims.",
++    "guards_applied": {
++      ".428-B2 goal-energy": true,
++      ".429-B2 QD-ablation": true,
++      ".429-B2 value-routing-cost": true
++    },
++    "positive_control_failed_artifacts": []
++  },
++  "honest_verdict": "complete: capability_grew_57_to_58",
++  "inference_substrate": "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor).",
++  "leaderboard_submission": false,
++  "live_submittable_level_count": 58,
++  "paper_ready": true,
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "codex_or_opencode_md_read": true,
++    "leaderboard_submission": false,
++    "missing_upstream_artifacts": [],
++    "network_required": false,
++    "ok": true,
++    "operator_only": true,
++    "registry_path": "ops/arc_solve_registry.yaml",
++    "registry_reproducible_total_levels": 58,
++    "registry_yaml_loadable": true,
++    "research_conductor_modified": false,
++    "spec_has_req_4662": true,
++    "summarize_artifact_py_available": true,
++    "summarize_artifact_py_used_for_every_upstream": true,
++    "upstream_artifacts_present": {
++      "A1": true,
++      "A2": true,
++      "A3": true,
++      "A4": true,
++      "A5": true,
++      "A6": true,
++      "B1": true,
++      "B2": true
++    }
++  },
++  "publication_gate": {
++    "fover_0_9131_substituted": false,
++    "frozen_fover_auroc": 0.9131,
++    "gates": {
++      "G1": {
++        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      },
++      "G2": {
++        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++        "pass": true
++      },
++      "G3": {
++        "detail": "no retracted phrasings asserted as live claims",
++        "hits": [],
++        "pass": true
++      },
++      "G4": {
++        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      }
++    },
++    "note": "FoVer 0.9131 is re-affirmed only as the frozen publication invariant.",
++    "paper_ready": true,
++    "unmet_gates": []
++  },
++  "random_seed": 4662,
++  "reproducibility_checksum": "sha256:f2414cc93641ed76caca1c1c742834f7f3cebdc3e77fcb556f01a6b410d16abc",
++  "reproducible_total_levels": 58,
++  "reproducible_total_levels_delta": 1,
++  "result_path": "results/experiment_4662_capstone_v429.json",
++  "schema": "carnot.exp4662.capstone_v429.v1",
++  "scorecard": {
++    "A1": {
++      "artifact": "results/experiment_4652_value_routing_cost_fix_live.json",
++      "included_in_headline": true,
++      "reason": "included_clean",
++      "value_routing_live_lift": {
++        "ci_excludes_value_weight_zero_baseline": false,
++        "cost_controlled": true,
++        "first_win_rate_delta": 0.0,
++        "headline_counted": false,
++        "live_first_win_rate_value_routed": 0.04,
++        "live_lift_ci": {
++          "bootstrap_resamples": 1000,
++          "ci95": [
++            0.0,
++            0.0
++          ],
++          "method": "paired_percentile_bootstrap",
++          "metric": "first_win_rate",
++          "point": 0.0,
++          "random_seed": 4652
++        },
++        "live_solve_rate_value_routed": 0.0,
++        "per_node_feature_cost_ms": 0.397451,
++        "reason": "ci_does_not_exclude_value_weight_zero_baseline",
++        "selected_delta": 0.0,
++        "selected_metric": "first_win_rate_delta",
++        "sim_timed_out": false,
++        "solve_rate_delta": 0.0,
++        "source": "results/experiment_4652_value_routing_cost_fix_live.json",
++        "value_weight_set": 1e-12,
++        "value_weight_zero_baseline": {
++          "first_win_rate": 0.04,
++          "solve_rate": 0.0,
++          "value_weight": 0.0
++        }
++      }
++    },
++    "A2": {
++      "artifact": "results/experiment_4653_energy_fitness_qd_generation_live.json",
++      "included_in_headline": false,
++      "reason": "random_mutation_ablation_failed",
++      "winner_generated": {
++        "first_win_rate_delta": 0.0,
++        "headline_counted": false,
++        "live_solve_rate_qd": 0.0,
++        "live_solve_rate_search_baseline": 0.0,
++        "offline_reproduced": true,
++        "qd_lift_ci": {
++          "bootstrap_resamples": 1000,
++          "ci95": [
++            0.0,
++            0.0
++          ],
++          "method": "paired_percentile_bootstrap",
++          "metric": "winner_generated_delta",
++          "paired_n": 4,
++          "point": 0.0
++        },
++        "random_mutation_ablation_passed": false,
++        "reason": "random_mutation_ablation_failed",
++        "solve_rate_delta": 0.0,
++        "source": "results/experiment_4653_energy_fitness_qd_generation_live.json",
++        "winner_generated": false,
++        "winner_generated_count": 0
++      }
++    },
++    "A3": {
++      "artifact": "results/experiment_4654_levelup_selfplay.json",
++      "included_in_headline": true,
++      "offline_reproduced": true,
++      "registry_delta_vs_57": 1,
++      "registry_reproducible_total_levels": 58,
++      "reproduced_levels": 1
++    },
++    "A4": {
++      "artifact": "results/experiment_4655_refresh_submission_package.json",
++      "count_delta": 1,
++      "included_in_headline": true,
++      "levels_folded_in": [
++        "vc33"
++      ],
++      "live_submittable_level_count": 58,
++      "ready_for_operator_submit": true
++    },
++    "A5": {
++      "artifact": "results/experiment_4656_primitive_persist_transfer.json",
++      "included_in_headline": true,
++      "primitive_persisted": {
++        "base_operator": "value_head_bridge_fix_operator",
++        "derived_from_artifacts": [
++          "results/experiment_4652_value_routing_cost_fix_live.json",
++          "results/experiment_4653_energy_fitness_qd_generation_live.json"
++        ],
++        "feature_subset": "cross_game_features_v3:v2_plus_frame_delta",
++        "operator": "cheap_value_routing_cost_fix_operator",
++        "registry_general_gotcha_id": "primitive_cheap_value_routing_cost_fix_operator",
++        "source": "A1_cheap_value_routing_cost_fix"
++      }
++    },
++    "A6": {
++      "artifact": "results/experiment_4657_integration_gate.json",
++      "included_in_headline": false,
++      "live_first_win_rate_delta_vs_pre_integration": 0.0,
++      "live_multi_level_solve_rate_delta_vs_pre_integration": 0.0,
++      "reason": "flagged_adversarial_or_live_critical_excluded"
++    },
++    "B1": {
++      "artifact": "results/experiment_4658_value_routing_cigate_diagnostic.json",
++      "ci_gate": {
++        "baseline_attempt_count": 25,
++        "baseline_attempt_timeout_count": 0,
++        "errors": [],
++        "expected_attempts": 25,
++        "first_win_floor": 0.04,
++        "first_win_rate": 0.04,
++        "passed": true,
++        "sim_timed_out": false,
++        "solve_rate": 0.0,
++        "solve_rate_floor": 0.0,
++        "value_routed_attempt_count": 25,
++        "value_routed_attempt_timeout_count": 0
++      },
++      "distribution_shift_score": 0.699108,
++      "included_in_headline": true
++    },
++    "B2": {
++      "artifact": "results/experiment_4659_adversarial_verify_hardening.json",
++      "guards_active": {
++        ".428-B2 goal-energy": true,
++        ".429-B2 QD-ablation": true,
++        ".429-B2 value-routing-cost": true
++      },
++      "included_in_headline": true
++    },
++    "headline": {
++      "a1_value_routing_live_lift_counted": false,
++      "a2_qd_winner_generated_counted": false,
++      "a3_registry_capability_plus_one": true,
++      "a4_operator_resubmit_ready_above_33": true,
++      "bridge_crossed_for_solve": false,
++      "crossing_source": "none",
++      "submission_operator_only": true
++    },
++    "paper_ready": {
++      "fover_0_9131_substituted": false,
++      "frozen_fover_auroc": 0.9131,
++      "gates": {
++        "G1": {
++          "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++          "pass": true,
++          "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++        },
++        "G2": {
++          "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++          "pass": true
++        },
++        "G3": {
++          "detail": "no retracted phrasings asserted as live claims",
++          "hits": [],
++          "pass": true
++        },
++        "G4": {
++          "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++          "pass": true,
++          "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++        }
++      },
++      "note": "FoVer 0.9131 is re-affirmed only as the frozen publication invariant.",
++      "paper_ready": true,
++      "unmet_gates": []
++    },
++    "verifier_is_oracle_claim_audit": {
++      "A1": {
++        "artifact": "results/experiment_4652_value_routing_cost_fix_live.json",
++        "included_in_headline": true,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A2": {
++        "artifact": "results/experiment_4653_energy_fitness_qd_generation_live.json",
++        "included_in_headline": false,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A3": {
++        "artifact": "results/experiment_4654_levelup_selfplay.json",
++        "included_in_headline": true,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A4": {
++        "artifact": "results/experiment_4655_refresh_submission_package.json",
++        "included_in_headline": true,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A5": {
++        "artifact": "results/experiment_4656_primitive_persist_transfer.json",
++        "included_in_headline": true,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "A6": {
++        "artifact": "results/experiment_4657_integration_gate.json",
++        "included_in_headline": false,
++        "oracle_distinct": true,
++        "verifier_is_oracle": false
++      },
++      "all_included_value_claims_false": true
++    }
++  },
++  "spec_refs": [
++    "REQ-CAPSTONE-4662",
++    "SCENARIO-CAPSTONE-4662",
++    "SCENARIO-CAPSTONE-4662-FIELD-PRINCIPLES"
++  ],
++  "submitted_to_leaderboard": false,
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 7e716c5ae2..abf7bbc357 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260624",
+-  "started_at": "2026-06-24T04:07:50Z",
+-  "finished_at": "2026-06-24T04:07:50Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-24T04:41:25Z",
++  "finished_at": "2026-06-24T04:41:25Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index be83a19b65..5a50c68af0 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260624",
+-  "started_at": "2026-06-24T04:07:50Z",
+-  "finished_at": "2026-06-24T04:07:50Z",
++  "started_at": "2026-06-24T04:41:25Z",
++  "finished_at": "2026-06-24T04:41:25Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index b95949a431..429c410121 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260624",
+-  "started_at": "2026-06-24T04:07:50Z",
+-  "finished_at": "2026-06-24T04:07:50Z",
++  "started_at": "2026-06-24T04:41:25Z",
++  "finished_at": "2026-06-24T04:41:25Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4662_capstone_v429.py b/tests/python/test_experiment_4662_capstone_v429.py
+new file mode 100644
+index 0000000000..b38cab8e02
+--- /dev/null
++++ b/tests/python/test_experiment_4662_capstone_v429.py
+@@ -0,0 +1,467 @@
++"""Tests for Exp 4662 .429 capstone scorecard.
++
++Spec refs: REQ-CAPSTONE-4662, SCENARIO-CAPSTONE-4662,
++SCENARIO-CAPSTONE-4662-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Mapping
++
++import pytest
++
++from carnot import experiment_4662_capstone_v429 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _a1_value_routing(
++    *,
++    first_win_delta: float = 0.0,
++    solve_delta: float = 0.0,
++    ci95: tuple[float, float] = (0.0, 0.0),
++    cost: float | None = 0.397451,
++    timed_out: bool = False,
++) -> dict[str, Any]:
++    payload: dict[str, Any] = {
++        "experiment": "experiment_4652_value_routing_cost_fix_live",
++        "honest_verdict": (
++            "success: value_routing_cost_fixed_live_firstwin_up_0.08"
++            if first_win_delta > 0.0
++            else "complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration."
++        ),
++        "verifier_is_oracle": False,
++        "bare_control_passed": True,
++        "false_negative_risk_checked": True,
++        "first_win_rate_delta": first_win_delta,
++        "solve_rate_delta": solve_delta,
++        "live_first_win_rate_value_routed": 0.04 + first_win_delta,
++        "live_solve_rate_value_routed": solve_delta,
++        "live_baseline_value_weight_zero": {"first_win_rate": 0.04, "solve_rate": 0.0, "value_weight": 0.0},
++        "live_lift_ci": {
++            "ci95": list(ci95),
++            "metric": "first_win_rate" if first_win_delta >= solve_delta else "solve_rate",
++            "point": max(first_win_delta, solve_delta),
++        },
++        "sim_timed_out": timed_out,
++        "value_weight_set": 1e-12,
++        "duration_s": 1.0,
++        "inference_substrate": "verifier_ensemble_against_cached_candidates",
++    }
++    if cost is not None:
++        payload["per_node_feature_cost_ms"] = cost
++    return payload
++
++
++def _a2_qd(*, winner: bool = False, ablation: bool = False) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4653_energy_fitness_qd_generation_live",
++        "honest_verdict": (
++            "success: energy_fitness_qd_winner_generated_1"
++            if winner
++            else "complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened"
++        ),
++        "verifier_is_oracle": False,
++        "bare_control_passed": True,
++        "false_negative_risk_checked": True,
++        "winner_generated": winner,
++        "winner_generated_count": 1 if winner else 0,
++        "random_mutation_ablation_passed": ablation,
++        "qd_lift_ci": {"ci95": [0.2, 0.4] if winner and ablation else [0.0, 0.0], "point": 1 if winner else 0},
++        "live_solve_rate_qd": 0.0,
++        "live_solve_rate_search_baseline": 0.0,
++        "first_win_rate_delta": 0.0,
++        "solve_rate_delta": 0.0,
++        "offline_reproduced": winner,
++        "duration_s": 1.0,
++        "inference_substrate": "verifier_ensemble_against_cached_candidates",
++    }
++
++
++def _a3_bank() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4654_levelup_selfplay",
++        "honest_verdict": "success: vc33_L2_offline_reproduced",
++        "verifier_is_oracle": False,
++        "reproduced_levels": 1,
++        "offline_reproduced": True,
++        "reproduction_gate": {"game": "vc33", "claimed_level": 2, "reached_level": 2, "reproduced": True},
++    }
++
++
++def _a4_package() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4655_refresh_submission_package",
++        "honest_verdict": "success: package_refreshed_live_submittable_58_above_33",
++        "verifier_is_oracle": False,
++        "live_submittable_level_count": 58,
++        "live_submittable_count_prev": 57,
++        "count_delta": 1,
++        "levels_folded_in": ["vc33"],
++        "ready_for_operator_submit": True,
++        "offline_reproduced": True,
++    }
++
++
++def _a5_transfer() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4656_primitive_persist_transfer",
++        "honest_verdict": "complete: primitive_persisted_transfer_null_characterized",
++        "verifier_is_oracle": False,
++        "primitive_persisted": {"operator": "cost_fixed_value_routing_operator"},
++        "transfer_value_per_game": {"bp35": {"value_added": False}},
++    }
++
++
++def _a6_integration(*, flagged: bool = True) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4657_integration_gate",
++        "honest_verdict": "success: integrated_a1_value_routing_cost_fix_shipped_parity_green",
++        "verifier_is_oracle": False,
++        "flagged_adversarial": flagged,
++        "live_first_win_rate_integrated": 0.04,
++        "live_first_win_rate_pre_integration": 0.04,
++        "live_first_win_rate_delta_vs_pre_integration": 0.0,
++        "live_multi_level_solve_rate_integrated": 0.0,
++        "live_multi_level_solve_rate_pre_integration": 0.0,
++        "live_multi_level_solve_rate_delta_vs_pre_integration": 0.0,
++    }
++
++
++def _b1_diagnostic() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4658_value_routing_cigate_diagnostic",
++        "honest_verdict": "success: value_routing_cigate_plus_diagnostic_shipped_tests_green.",
++        "verifier_is_oracle": False,
++        "ci_gate": {"passed": True, "sim_timed_out": False},
++        "distribution_shift_score": 0.699108,
++        "tests_added": {"passed": True},
++    }
++
++
++def _b2_guard() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4659_adversarial_verify_hardening",
++        "honest_verdict": "success: adversarial_verify_hardened_qd_ablation_and_value_routing_cost_guards_tests_green.",
++        "qd_random_mutation_ablation_guard_added": True,
++        "value_routing_cost_control_guard_added": True,
++        "tests_added": {"passed": True},
++    }
++
++
++def _artifacts(
++    *,
++    a1_first_win_delta: float = 0.0,
++    a1_solve_delta: float = 0.0,
++    a1_ci95: tuple[float, float] = (0.0, 0.0),
++    a1_cost: float | None = 0.397451,
++    a1_timed_out: bool = False,
++    a2_winner: bool = False,
++    a2_ablation: bool = False,
++    a6_flagged: bool = True,
++) -> dict[str, dict[str, Any]]:
++    return {
++        "A1": _a1_value_routing(
++            first_win_delta=a1_first_win_delta,
++            solve_delta=a1_solve_delta,
++            ci95=a1_ci95,
++            cost=a1_cost,
++            timed_out=a1_timed_out,
++        ),
++        "A2": _a2_qd(winner=a2_winner, ablation=a2_ablation),
++        "A3": _a3_bank(),
++        "A4": _a4_package(),
++        "A5": _a5_transfer(),
++        "A6": _a6_integration(flagged=a6_flagged),
++        "B1": _b1_diagnostic(),
++        "B2": _b2_guard(),
++    }
++
++
++def _preconditions(total: int = 58) -> dict[str, Any]:
++    return {
++        "ok": True,
++        "agents_md_read": True,
++        "codex_or_opencode_md_read": True,
++        "spec_has_req_4662": True,
++        "registry_yaml_loadable": True,
++        "registry_reproducible_total_levels": total,
++        "summarize_artifact_py_available": True,
++        "summarize_artifact_py_used_for_every_upstream": True,
++        "upstream_artifacts_present": {name: True for name in mod.UPSTREAM_SOURCES},
++        "missing_upstream_artifacts": [],
++        "leaderboard_submission": False,
++        "operator_only": True,
++        "research_conductor_modified": False,
++    }
++
++
++def _paper_gate(ready: bool = True) -> dict[str, Any]:
++    return {
++        "paper_ready": ready,
++        "gates": {
++            "G1": {"pass": ready, "detail": "FoVer dual-condition AUROC artifact present"},
++            "G2": {"pass": ready, "detail": "independent reproducer confirmed"},
++            "G3": {"pass": ready, "detail": "narrowing-clean"},
++            "G4": {"pass": ready, "detail": "numbers trace to artifact"},
++        },
++        "unmet_gates": [] if ready else ["G2"],
++    }
++
++
++def test_req_capstone_4662_spec_declares_required_contract() -> None:
++    """REQ-CAPSTONE-4662: OpenSpec declares the .429 scorecard fields and gates."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4662" in spec
++    assert "SCENARIO-CAPSTONE-4662" in spec
++    assert "SCENARIO-CAPSTONE-4662-FIELD-PRINCIPLES" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_capstone_4662_default_null_bridge_counts_registry_growth() -> None:
++    """SCENARIO-CAPSTONE-4662: default .429 gates exclude null/failed levers from bridge headline."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 58},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "complete: capability_grew_57_to_58"
++    assert artifact["bridge_crossed_for_solve"] is False
++    assert artifact["a1_value_routing_live_lift"]["cost_controlled"] is True
++    assert artifact["a1_value_routing_live_lift"]["ci_excludes_value_weight_zero_baseline"] is False
++    assert artifact["a1_value_routing_live_lift"]["headline_counted"] is False
++    assert artifact["a2_winner_generated"]["winner_generated"] is False
++    assert artifact["a2_winner_generated"]["random_mutation_ablation_passed"] is False
++    assert artifact["cited_upstream_artifacts"]["A2"]["reason"] == "random_mutation_ablation_failed"
++    assert artifact["cited_upstream_artifacts"]["A6"]["reason"] == "flagged_adversarial_or_live_critical_excluded"
++    assert artifact["flagged_artifacts_handled"]["ablation_failed_artifacts"] == [
++        {"name": "A2", "artifact": "results/experiment_4653_energy_fitness_qd_generation_live.json"}
++    ]
++    assert artifact["flagged_artifacts_handled"]["flagged_adversarial_artifacts"] == [
++        {"name": "A6", "artifact": "results/experiment_4657_integration_gate.json"}
++    ]
++    assert artifact["reproducible_total_levels"] == 58
++    assert artifact["reproducible_total_levels_delta"] == 1
++    assert artifact["live_submittable_level_count"] == 58
++    assert artifact["paper_ready"] is True
++    assert artifact["leaderboard_submission"] is False
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_capstone_4662_a1_firstwin_success_requires_cost_and_clean_ci() -> None:
++    """SCENARIO-CAPSTONE-4662: A1 value-routing bridge wins only with cost control and CI."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(a1_first_win_delta=0.08, a1_ci95=(0.04, 0.12), a2_ablation=True, a6_flagged=False),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 57},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=57),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "success: bridge_crossed_live_firstwin_up_0.08"
++    assert artifact["bridge_crossed_for_solve"] is True
++    assert artifact["a1_value_routing_live_lift"]["headline_counted"] is True
++    assert artifact["a1_value_routing_live_lift"]["selected_metric"] == "first_win_rate_delta"
++
++    blocked_by_cost = mod.build_artifact(
++        artifacts=_artifacts(
++            a1_first_win_delta=0.08,
++            a1_ci95=(0.04, 0.12),
++            a1_cost=None,
++            a1_timed_out=True,
++            a2_ablation=True,
++            a6_flagged=False,
++        ),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 57},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=57),
++        duration_s=0.001,
++    )
++
++    assert blocked_by_cost["honest_verdict"] == "complete: generation_guidance_levers_characterized_no_live_solve_lift"
++    assert blocked_by_cost["a1_value_routing_live_lift"]["cost_controlled"] is False
++    assert blocked_by_cost["flagged_artifacts_handled"]["cost_control_failed_artifacts"] == [
++        {"name": "A1", "artifact": "results/experiment_4652_value_routing_cost_fix_live.json"}
++    ]
++
++
++def test_scenario_capstone_4662_a2_winner_success_requires_random_mutation_ablation() -> None:
++    """SCENARIO-CAPSTONE-4662: A2 QD winner counts only after random-mutation ablation passes."""
++
++    artifact = mod.build_artifact(
++        artifacts=_artifacts(a2_winner=True, a2_ablation=True, a6_flagged=False),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 57},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(total=57),
++        duration_s=0.001,
++    )
++
++    assert artifact["honest_verdict"] == "success: bridge_crossed_live_winner_generated_up_1"
++    assert artifact["bridge_crossed_for_solve"] is True
++    assert artifact["a2_winner_generated"]["headline_counted"] is True
++    assert artifact["scorecard"]["headline"]["crossing_source"] == "A2_energy_fitness_qd"
++
++
++def test_req_capstone_4662_exclusion_guards_cover_control_flags_and_gates() -> None:
++    """REQ-CAPSTONE-4662: flagged, control-failed, false-negative, and gate-failed inputs are excluded."""
++
++    artifacts = _artifacts(a2_ablation=True, a6_flagged=False)
++    artifacts["A4"]["false_negative_risk_checked"] = False
++    artifacts["A5"]["acceptance_gate_transfer"] = False
++
++    artifact = mod.build_artifact(
++        artifacts=artifacts,
++        live_flags_by_name={
++            "A3": [
++                {
++                    "kind": "FALSE_NEGATIVE_RISK",
++                    "severity": "warn",
++                    "detail": "false_negative_risk_open: bank control absent",
++                }
++            ],
++            "A6": [
++                {
++                    "kind": "TAUTOLOGY",
++                    "severity": "critical",
++                    "detail": "live_first_win_rate_integrated=0.04 and pre=0.04",
++                }
++            ],
++        },
++        registry={"reproducible_total_levels": 58},
++        publication_gate=_paper_gate(),
++        preconditions_checked=_preconditions(),
++        duration_s=0.001,
++    )
++
++    assert artifact["cited_upstream_artifacts"]["A3"]["reason"] == "false_negative_risk_open"
++    assert artifact["cited_upstream_artifacts"]["A4"]["reason"] == "positive_control_failed"
++    assert artifact["cited_upstream_artifacts"]["A5"]["reason"] == "failed_acceptance_gate"
++    assert artifact["cited_upstream_artifacts"]["A6"]["reason"] == "flagged_adversarial_or_live_critical_excluded"
++    assert artifact["live_submittable_level_count"] == 0
++    assert artifact["flagged_artifacts_handled"]["guards_applied"][".429-B2 QD-ablation"] is True
++    assert artifact["flagged_artifacts_handled"]["guards_applied"][".429-B2 value-routing-cost"] is True
++
++
++def test_req_capstone_4662_run_reads_injected_files_and_records_missing(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4662: missing upstreams block without fabricated headline metrics."""
++
++    for name, payload in _artifacts().items():
++        if name == "A5":
++            continue
++        _write_json(tmp_path / mod.UPSTREAM_SOURCES[name].relative_path, payload)
++    registry_path = tmp_path / mod.REGISTRY_RELATIVE_PATH
++    registry_path.parent.mkdir(parents=True, exist_ok=True)
++    registry_path.write_text("reproducible_total_levels: 58\n", encoding="utf-8")
++    (tmp_path / "AGENTS.md").write_text("# test\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("# test\n", encoding="utf-8")
++    spec_path = tmp_path / mod.SPEC_RELATIVE_PATH
++    spec_path.parent.mkdir(parents=True, exist_ok=True)
++    spec_path.write_text("REQ-CAPSTONE-4662\n", encoding="utf-8")
++    scripts_path = tmp_path / "scripts" / "summarize_artifact.py"
++    scripts_path.parent.mkdir(parents=True, exist_ok=True)
++    scripts_path.write_text("# test\n", encoding="utf-8")
++
++    artifact = mod.run(tmp_path, live_flags_by_name={}, publication_gate=_paper_gate(), write=True, duration_s=0.001)
++
++    assert artifact["honest_verdict"] == "blocked_upstream_artifacts"
++    assert artifact["preconditions_checked"]["missing_upstream_artifacts"] == [
++        "results/experiment_4656_primitive_persist_transfer.json"
++    ]
++    assert artifact["cited_upstream_artifacts"]["A5"]["exists"] is False
++    assert artifact["bridge_crossed_for_solve"] is False
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++
++def test_req_capstone_4662_validation_and_defensive_edges(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-CAPSTONE-4662: schema validation, checksum, and defensive helpers fail closed."""
++
++    blocked = mod.build_artifact(
++        artifacts=_artifacts(a2_ablation=True),
++        live_flags_by_name={},
++        registry={"reproducible_total_levels": 58},
++        publication_gate=_paper_gate(False),
++        preconditions_checked={**_preconditions(), "ok": False, "blocked_resource": "registry_yaml"},
++        duration_s=0.001,
++    )
++    bad = dict(blocked)
++    bad["verifier_is_oracle"] = True
++
++    def bad_build(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
++        return {"honest_verdict": "complete: invalid"}
++
++    assert blocked["honest_verdict"] == "blocked_registry_yaml"
++    assert blocked["paper_ready"] is False
++    assert mod._read_yaml(tmp_path / "missing.yaml") == {}
++    assert mod._as_float(True, 3.0) == pytest.approx(3.0)
++    assert mod._as_int(False, 4) == 4
++    assert mod._file_sha256(tmp_path / "missing.json") is None
++    assert mod._positive_control_failed({"positive_control_passed": False}) is True
++    assert mod._positive_control_failed({"bare_control_passed": False}) is True
++    assert mod._ci_excludes_zero({"ci95": "bad"}) is False
++    assert mod._a1_value_routing_live_lift(
++        _a1_value_routing(first_win_delta=0.08, ci95=(0.04, 0.12)),
++        {"included_in_headline": True, "value_routing_cost_control_failed": True, "reason": "manual"},
++    )["reason"] == "value_routing_cost_control_failed"
++    assert mod._a1_value_routing_live_lift(
++        _a1_value_routing(first_win_delta=0.0, ci95=(0.01, 0.02)),
++        {"included_in_headline": True, "value_routing_cost_control_failed": False, "reason": "manual"},
++    )["reason"] == "no_positive_live_lift"
++    monkeypatch.setattr(
++        mod,
++        "_summarize_and_live_flags",
++        lambda _path: (
++            0,
++            [{"kind": "TAUTOLOGY", "severity": "critical", "detail": "fixture"}],
++        ),
++    )
++    status = mod._source_status(
++        name="X",
++        source=mod.SourceSpec("X", "results/existing.json", "fixture"),
++        root=tmp_path,
++        artifact={"honest_verdict": "complete: fixture"},
++        exists=True,
++        live_flags_by_name=None,
++    )
++    missing_status = mod._source_status(
++        name="X",
++        source=mod.SourceSpec("X", "results/missing.json", "fixture"),
++        root=tmp_path,
++        artifact={},
++        exists=False,
++        live_flags_by_name=None,
++    )
++    assert status["summary_exit_code"] == 0
++    assert status["reason"] == "flagged_adversarial_or_live_critical_excluded"
++    assert missing_status["reason"] == "missing"
++    with pytest.raises(ValueError, match="verifier_is_oracle"):
++        mod.write_artifact(path=tmp_path / "bad.json", artifact=bad)
++    malformed = dict(blocked)
++    malformed["honest_verdict"] = "still_running"
++    malformed["reproducibility_checksum"] = mod.payload_checksum(malformed)
++    assert "honest_verdict must be terminal-prefixed" in mod.validate_artifact(malformed)
++    monkeypatch.setattr(mod, "build_artifact", bad_build)
++    with pytest.raises(ValueError, match="missing required field"):
++        mod.run(tmp_path, write=False, duration_s=0.001)
+-- 
+2.55.0
+

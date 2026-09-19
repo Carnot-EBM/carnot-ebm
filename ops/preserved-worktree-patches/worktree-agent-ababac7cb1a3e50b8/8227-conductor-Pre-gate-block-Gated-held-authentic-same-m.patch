@@ -1,0 +1,61 @@
+From 48b38b6baeba61b0066aed46e1e16e78a3bcaf3c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 4 Aug 2026 17:22:48 -0400
+Subject: [PATCH 08227/11362] [conductor] Pre-gate block: Gated held authentic
+ same-model Phase-D candidate pool
+
+1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_calibration_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                             | 2 +-
+ ops/conductor-log.md                                     | 1 +
+ ops/conductor-state.json                                 | 2 +-
+ results/experiment_6116_phase_d_held_candidate_pool.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 96614cc0a5..e1d043e900 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 24, "phase": "iteration_start", "last_beat": "2026-08-04T21:20:45Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-08-04T21:22:48Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 27126fa39e..63f7c44c32 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15310,3 +15310,4 @@ No output thi |
+ | 2026-08-04 20:36 UTC | Phase-D task-scoped GPU engagement and sealed-ladd | OK | 86 passed, 1 warning in 26.10s |
+ | 2026-08-04 21:16 UTC | Gated calibration-only authentic Phase-D candidate | OK | 86 passed, 1 warning in 10.65s |
+ | 2026-08-04 21:18 UTC | Gated held authentic same-model Phase-D candidate  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_c |
++| 2026-08-04 21:20 UTC | Gated held authentic same-model Phase-D candidate  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_c |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8fcbd38f34..ca3098f72b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 24, "phase": "iteration_start", "started_at": "2026-08-04T21:20:45Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 25, "phase": "iteration_start", "started_at": "2026-08-04T21:22:48Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6116_phase_d_held_candidate_pool.json b/results/experiment_6116_phase_d_held_candidate_pool.json
+index ec745dc398..1b9eb3bfd6 100644
+--- a/results/experiment_6116_phase_d_held_candidate_pool.json
++++ b/results/experiment_6116_phase_d_held_candidate_pool.json
+@@ -2,8 +2,8 @@
+   "experiment": 6116,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-04",
+-  "started_at": "2026-08-04T21:20:45.632358+00:00",
+-  "finished_at": "2026-08-04T21:20:45.632358+00:00",
++  "started_at": "2026-08-04T21:22:48.339161+00:00",
++  "finished_at": "2026-08-04T21:22:48.339161+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated held authentic same-model Phase-D candidate pool",
+-- 
+2.55.0
+

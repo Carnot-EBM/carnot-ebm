@@ -1,0 +1,93 @@
+From 5f8761bee25709aa1113e4f64421531d02c3ffdc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 12:24:16 -0400
+Subject: [PATCH 01641/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md                    | 10 ++++++++++
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._baseline_harvest_contiguous_continue.json | 20 ++++++++++++++++++-
+ 5 files changed, 32 insertions(+), 3 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 0abfc76a87..189211b013 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -331,3 +331,13 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_4153_verifier_registry_gaps_hygiene.json
++
++## experiment_4156_archive_v384_activate_v385.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
++- artifact: results/experiment_4156_archive_v384_activate_v385.json
++
++## experiment_4157_baseline_harvest_contiguous_continue.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_4157_baseline_harvest_contiguous_continue.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index aa6f86ceb5..a2bc86b84c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 37, "phase": "iteration_start", "last_beat": "2026-06-13T16:03:14Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 38, "phase": "iteration_start", "last_beat": "2026-06-13T16:24:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5dabfe809e..fe09c247d5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8432,3 +8432,4 @@ c |
+ | 2026-06-13 15:44 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+ | 2026-06-13 15:46 UTC | Milestone 2026.06.385 activated | OK | 10 tasks queued |
+ | 2026-06-13 16:01 UTC | Archive .384 -> activate .385; KEEP the hardened g | OK | 91 passed, 1 warning in 6.83s |
++| 2026-06-13 16:22 UTC | BASELINE HARVEST + DEFENSIVE contiguous continuati | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index be2da9afac..09cd6483e1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 37, "phase": "iteration_start", "started_at": "2026-06-13T16:03:14Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 38, "phase": "iteration_start", "started_at": "2026-06-13T16:24:14Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4157_baseline_harvest_contiguous_continue.json b/results/experiment_4157_baseline_harvest_contiguous_continue.json
+index 21d6d7ee24..754d3137a8 100644
+--- a/results/experiment_4157_baseline_harvest_contiguous_continue.json
++++ b/results/experiment_4157_baseline_harvest_contiguous_continue.json
+@@ -390,5 +390,23 @@
+       "step": 21304,
+       "val_exact_accuracy": 0.501041650772
+     }
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "current_val=0.501041650772 and max_val=0.501041650772 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=10.2 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
++    }
+   ]
+-}
++}
+\ No newline at end of file
+-- 
+2.55.0
+

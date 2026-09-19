@@ -1,0 +1,3874 @@
+From 6ce29569be1614baa6b334966c064bd92a8c0f1d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 15 Aug 2026 03:06:10 -0400
+Subject: [PATCH 09224/11362] [conductor] V554 terminal handoff and V555 queue
+ integrity
+
+Automated research step by research conductor.
+Task ID: exp6448-v555-terminal-handoff-and-queue-integrity
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |   80 +
+ ops/artifact_convention_audit_report.md       |   90 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...55_terminal_handoff_and_queue_integrity.py | 1266 ++++++++++++
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ results/experiment_2031.json                  |    6 +-
+ ..._terminal_handoff_and_queue_integrity.json | 1794 +++++++++++++++++
+ ...55_terminal_handoff_and_queue_integrity.py |  480 +++++
+ 8 files changed, 3702 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py
+ create mode 100644 results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json
+ create mode 100644 tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 66b8a6a980..ec075e634e 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -51850,3 +51850,83 @@ checksum, inference substrate, and terminal verdict prefix is present.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6185 | Planned (`python/carnot/experiment_6185_v536_post_marker_source_delta.py`, `results/experiment_6185_v536_post_marker_source_delta.json`) | Planned (`tests/python/test_experiment_6185_v536_post_marker_source_delta.py`) |
++
++### REQ-REPORT-6448: V554 Terminal Evidence Freeze And V555 Queue Integrity
++
++The Exp6448 workflow SHALL freeze one terminal row for each activated V554
++task from Exp6436 through Exp6444. Each row SHALL record task ID,
++deliverable path, byte count, artifact state, status, `honest_verdict`,
++readiness fields, gate summary, current adversarial findings, and final claim
++eligibility. Missing and zero-byte artifacts SHALL stay visible. The workflow
++SHALL NOT repair, rerun, or strengthen V554 evidence.
++
++The workflow SHALL validate the active V555 roadmap as exactly twelve tasks in
++conductor order, all in milestone `2026.08.555`, with unique task IDs, unique
++`results/*.json` deliverables, no retired task ID, and no dependency or gate
++upstream that points to a retired or absent task. It SHALL validate the
++Pydantic roadmap schema, prior-failure validator, exclusion-manifest linter,
++structured gate audit, duplicate ID and deliverable checks, gate producer
++required-field contracts, prompt terminal lines, comparative row contracts,
++blocked artifact contracts, and the mandatory local GGUF model policy.
++
++The workflow SHALL set `v555_queue_integrity_score=1.0` only when every check
++passes and protected inputs remain byte-identical. Otherwise it SHALL emit a
++terminal blocked status, set the score to `0.0`, and populate
++`gate_check_summary` with the failed check, expected condition, observed
++value, and evidence path. The workflow SHALL write
++`results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json` even
++when checks fail.
++
++The Exp6448 artifact SHALL include, at minimum, `status`,
++`v554_terminal_rows`, `v554_activated_task_count`,
++`v554_missing_zero_byte_or_blocked_artifacts`,
++`v554_terminal_claim_determinations`, `active_roadmap_hash`, `task_count`,
++`task_ids_in_order`, `unique_id_and_deliverable_check`,
++`milestone_consistency_check`, `schema_validation`,
++`prior_failure_validation`, `exclusion_manifest_validation`,
++`structured_gate_validation`, `gate_producer_contract_rows`,
++`model_policy_validation`, `per_unit_row_contract_validation`,
++`prompt_terminal_line_validation`, `protected_files_unchanged`,
++`v555_queue_integrity_score`, `blocked_reason`, `gate_check_summary`,
++`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
++`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
++`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
++`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
++
++#### SCENARIO-REPORT-6448-V554-FREEZE: V554 Evidence Is Frozen As Found
++
++**Given** Exp6436 recorded nine activated V554 tasks
++**When** Exp6448 builds terminal rows
++**Then** it records nine rows, preserves missing and blocked artifacts, and
++does not create or edit any V554 result.
++
++#### SCENARIO-REPORT-6448-V555-QUEUE: Active Queue Must Be Exact
++
++**Given** the active roadmap names milestone `2026.08.555`
++**When** Exp6448 validates queue identity
++**Then** it requires the exact twelve Exp6448 through Exp6459 task IDs,
++ordered by experiment number, with twelve unique result JSON deliverables.
++
++#### SCENARIO-REPORT-6448-GATES-PRIORS-MODELS: Contracts Are Cross-Checked
++
++**Given** V555 tasks include gates, rerun declarations, comparisons, blocked
++contracts, and local GGUF model prompts
++**When** Exp6448 validates the roadmap
++**Then** each gate upstream exists and declares the exact field, every
++matching rerun has the four required prior-failure fields, each LLM task
++declares the mandatory GGUF resolver and embedded tokenizer rule, and each
++comparative task requires `per_unit_rows`.
++
++#### SCENARIO-REPORT-6448-SCHEMA: Artifact Is Machine-Checkable
++
++**Given** the Exp6448 artifact is emitted
++**When** its schema is validated
++**Then** every required field, field principle, field provenance entry,
++blocked diagnostic, protected-file receipt, command receipt, checksum,
++substrate declaration, and terminal verdict prefix is present.
++
++## Implementation Status (REQ-REPORT-6448)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6448 | Planned (`python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py`, `results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json`) | Planned (`tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py`) |
+diff --git a/ops/artifact_convention_audit_report.md b/ops/artifact_convention_audit_report.md
+index 58c0d887f7..b6637f8acd 100644
+--- a/ops/artifact_convention_audit_report.md
++++ b/ops/artifact_convention_audit_report.md
+@@ -9,26 +9,88 @@ evidence the reviewer could not have read -- do NOT act on them.
+ 
+ | verdict | count |
+ |---|---|
+-| CHECKABLE | 7 |
++| CHECKABLE | 11 |
+ | CANNOT_DETERMINE | 1 |
+ 
+-## experiment_6436_v554_terminal_handoff_and_queue_preflight.json
++## experiment_6433_csl_row_recomputation_safety_audit.json
++
++**CHECKABLE**
++
++## VERDICT
++CHECKABLE
++
++## WHAT THE CLAIM IS
++The audit completed as a null result: the prospective CSL claim remains ineligible due to `DURATION_TOO_SHORT` on `exp6432`.
++
++## WHAT IS MISSING
++nothing
++
++## THE CHECK A READER CANNOT DO
++none
++
++## experiment_6434_arc_state_key_reachability_ab.json
+ 
+ **CANNOT_DETERMINE**
+ 
+-> Audit-integrity guard: quoted field(s) ['gate_check_summary'] do not appear in the artifact, so this verdict was downgraded and must not be acted on.
++## VERDICT
++CANNOT_DETERMINE
++
++## WHAT THE CLAIM IS
++no claim
++
++## WHAT IS MISSING
++the artifact body itself; no fields are present, including `gate_check_summary` or per-unit rows
++
++## THE CHECK A READER CANNOT DO
++A reader cannot tell whether the artifact made a comparative claim, reported a blocker, or recorded enough data to check either.
++
++## experiment_6435_v553_adversarial_capstone.json
++
++**CHECKABLE**
+ 
+ ## VERDICT
+-BLOCKED_WITHOUT_DIAGNOSTIC
++CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The artifact claims completion is blocked because the V554 queue is incomplete.
++The artifact claims the V553 capstone is complete but blocked/gated: 10 of 11 upstream tasks completed, exp6434 is missing, and only the public factor claim is eligible while other claim classes are blocked.
+ 
+ ## WHAT IS MISSING
+-A `gate_check_summary` or equivalent V554 diagnostic identifying the failed queue check and its observed value; `"status": "complete_blocked_v554_queue_incomplete"` is present, but only V553 artifact details and blockers are recorded.
++nothing
+ 
+ ## THE CHECK A READER CANNOT DO
+-Which V554 queue item or completeness check failed, and what actual value caused the blocked verdict?
++none
++
++## experiment_6440_inducer_h2h_qwen38_vs_gemma31b.json
++
++**CHECKABLE**
++
++## VERDICT
++CHECKABLE
++
++## WHAT THE CLAIM IS
++The artifact claims no valid head-to-head comparison was made because only the qwen27b arm completed while gemma31b/qwen38_27b did not.
++
++## WHAT IS MISSING
++nothing
++
++## THE CHECK A READER CANNOT DO
++none
++
++## experiment_6436_v554_terminal_handoff_and_queue_preflight.json
++
++**CHECKABLE**
++
++## VERDICT
++CHECKABLE
++
++## WHAT THE CLAIM IS
++V553 narrow factor evidence is eligible, while other claim families remain blocked by flagged, underpowered, missing, or unauthenticated evidence.
++
++## WHAT IS MISSING
++nothing
++
++## THE CHECK A READER CANNOT DO
++none
+ 
+ ## experiment_6437_generation_to_verdict_receipt_replay_contract.json
+ 
+@@ -38,7 +100,7 @@ Which V554 queue item or completeness check failed, and what actual value caused
+ CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The task was blocked because `v554_queue_ready_score` was 0.0 instead of the required 1.0.
++The task was blocked because 1 of 1 gate failed: `v554_queue_ready_score` was `0.0` but expected `1.0`.
+ 
+ ## WHAT IS MISSING
+ nothing
+@@ -54,7 +116,7 @@ none
+ CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The experiment was blocked because the required upstream Exp6439 artifact was not found.
++The task was blocked because 1 of 1 pre-gate failed: the upstream artifact for `exp6439-factor-clause-influence-ab` was not found.
+ 
+ ## WHAT IS MISSING
+ nothing
+@@ -70,7 +132,7 @@ none
+ CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The experiment was blocked because the Exp6441 upstream artifact required to check `prospective_csl_ready_score == 1.0` was not found.
++The task was blocked because the pre-gate check failed: the upstream artifact was not found.
+ 
+ ## WHAT IS MISSING
+ nothing
+@@ -86,7 +148,7 @@ none
+ CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The CERCE ledger was added and implemented.
++The artifact claims the CERCE ledger was added/implemented and the task completed.
+ 
+ ## WHAT IS MISSING
+ nothing
+@@ -118,7 +180,7 @@ none
+ CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-Experiment 1736 achieved simulated Vivado success and generated a bitfile.
++The artifact claims experiment 1736 succeeded with `honest_verdict` of `vivado_simulated_success`.
+ 
+ ## WHAT IS MISSING
+ nothing
+@@ -134,10 +196,10 @@ none
+ CHECKABLE
+ 
+ ## WHAT THE CLAIM IS
+-The V554 CSL lifecycle recomputation audit is blocked by missing or failed upstream evidence.
++The audit is blocked because required upstream evidence is missing or failed.
+ 
+ ## WHAT IS MISSING
+-nothing; `"blocked_reason"`, `"csl_ineligibility_reasons"`, and `"gate_check_summary.failed_checks"` identify the failed checks and observed evidence.
++nothing
+ 
+ ## THE CHECK A READER CANNOT DO
+ none
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f44b07dd24..a947582362 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4978,
++  "experiments_checked": 4979,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py b/python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py
+new file mode 100644
+index 0000000000..084222d512
+--- /dev/null
++++ b/python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py
+@@ -0,0 +1,1266 @@
++"""Exp6448 V554 terminal handoff and V555 queue integrity.
++
++Spec refs: REQ-REPORT-6448, SCENARIO-REPORT-6448-V554-FREEZE,
++SCENARIO-REPORT-6448-V555-QUEUE,
++SCENARIO-REPORT-6448-GATES-PRIORS-MODELS,
++SCENARIO-REPORT-6448-SCHEMA.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++import re
++import time
++from typing import Any
++
++from carnot.experiment_6272_v541_terminal_transition import (
++    exp_number,
++    gate_ok,
++    git_status_lines,
++    load_retired_exp_ids,
++    prior_ok,
++    read_yaml_mapping,
++    required_artifact_fields_from_prompt,
++)
++from carnot.experiment_6284_v542_terminal_transition import model_specs_named_in_prompt
++from carnot.experiment_6404_v551_terminal_handoff_and_queue_preflight import (
++    ALLOWED_HONEST_PREFIXES,
++    FINAL_PROHIBITION_LINE,
++    GGUF_ID_RE,
++    MANDATED_GGUF_IDS,
++    _gate_expression,
++    _live_adversarial,
++    _risk_rows,
++    read_json_mapping,
++    render_prompt,
++)
++from carnot.experiment_artifacts import atomic_write_json
++from carnot.terminal_artifacts import canonical_json, path_sha256, payload_sha256
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++MILESTONE_V554 = "2026.08.554"
++MILESTONE_V555 = "2026.08.555"
++RUN_DATE = "20260815"
++EXPERIMENT_ID = "exp6448-v555-terminal-handoff-and-queue-integrity"
++SCHEMA = "carnot.experiment_6448.v555_terminal_handoff_and_queue_integrity.v1"
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++
++ACTIVE_ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++MILESTONE_DOC_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++RESEARCH_COMPLETE_RELATIVE_PATH = Path("research-complete.yaml")
++RESEARCH_REFERENCES_RELATIVE_PATH = Path("research-references.md")
++RESEARCH_PROGRAM_RELATIVE_PATH = Path("research-program.md")
++RESEARCH_HARDWARE_WISHLIST_RELATIVE_PATH = Path("research-hardware-wishlist.md")
++PRD_RELATIVE_PATH = Path("_bmad/prd.md")
++ARCHITECTURE_RELATIVE_PATH = Path("_bmad/architecture.md")
++CODEX_RELATIVE_PATH = Path("CODEX.md")
++CLAUDE_RELATIVE_PATH = Path("CLAUDE.md")
++RESEARCH_CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++ROADMAP_SCHEMA_RELATIVE_PATH = Path("scripts/roadmap_schema.py")
++PRIOR_FAILURE_LINT_RELATIVE_PATH = Path("scripts/validate_prior_failures.py")
++EXCLUSION_LINT_RELATIVE_PATH = Path("scripts/exclusion_manifest_lint.py")
++ROADMAP_GATE_AUDIT_RELATIVE_PATH = Path("scripts/audit_roadmap_gates.py")
++CONDUCTOR_GATES_RELATIVE_PATH = Path("scripts/conductor_gates.py")
++ADVERSARIAL_VERIFY_RELATIVE_PATH = Path("scripts/adversarial_verify.py")
++E2E_PLAN_RELATIVE_PATH = Path("ops/e2e-test-plan.md")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++STATUS_RELATIVE_PATH = Path("ops/status.md")
++CHANGELOG_RELATIVE_PATH = Path("ops/changelog.md")
++
++EXPECTED_V554_ACTIVATED_TASK_IDS = (
++    "exp6436-v554-terminal-handoff-and-queue-preflight",
++    "exp6437-generation-to-verdict-receipt-replay-contract",
++    "exp6438-powered-verification-cost-repair-ab",
++    "exp6439-factor-clause-influence-ab",
++    "exp6440-held-factor-revocation-binding-shift-ab",
++    "exp6441-prospective-query-conditioned-factor-reuse",
++    "exp6442-skill-misevolution-quarantine-rollback-ab",
++    "exp6443-fresh-held-restart-csl-replication",
++    "exp6444-csl-lifecycle-recomputation-audit",
++)
++V554_DELIVERABLES_BY_TASK = {
++    "exp6436-v554-terminal-handoff-and-queue-preflight": (
++        "results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json"
++    ),
++    "exp6437-generation-to-verdict-receipt-replay-contract": (
++        "results/experiment_6437_generation_to_verdict_receipt_replay_contract.json"
++    ),
++    "exp6438-powered-verification-cost-repair-ab": (
++        "results/experiment_6438_powered_verification_cost_repair_ab.json"
++    ),
++    "exp6439-factor-clause-influence-ab": (
++        "results/experiment_6439_factor_clause_influence_ab.json"
++    ),
++    "exp6440-held-factor-revocation-binding-shift-ab": (
++        "results/experiment_6440_held_factor_revocation_binding_shift_ab.json"
++    ),
++    "exp6441-prospective-query-conditioned-factor-reuse": (
++        "results/experiment_6441_prospective_query_conditioned_factor_reuse.json"
++    ),
++    "exp6442-skill-misevolution-quarantine-rollback-ab": (
++        "results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json"
++    ),
++    "exp6443-fresh-held-restart-csl-replication": (
++        "results/experiment_6443_fresh_held_restart_csl_replication.json"
++    ),
++    "exp6444-csl-lifecycle-recomputation-audit": (
++        "results/experiment_6444_csl_lifecycle_recomputation_audit.json"
++    ),
++}
++
++EXPECTED_V555_TASK_IDS = (
++    "exp6448-v555-terminal-handoff-and-queue-integrity",
++    "exp6449-generation-to-verdict-path-receipt-contract",
++    "exp6450-sota-fixed-policy-candidate-corpus",
++    "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++    "exp6452-representation-objective-causal-ab",
++    "exp6453-held-verifier-budget-allocation-ab",
++    "exp6454-held-exact-constraint-energy-selection-ab",
++    "exp6455-prospective-verifier-bounded-factor-weight-csl",
++    "exp6456-corrupt-feedback-held-restart-csl-replication",
++    "exp6457-independent-verifier-bounded-csl-audit",
++    "exp6458-arc-representation-objective-generalization-ab",
++    "exp6459-v555-adversarial-capstone",
++)
++REQUIRED_PRIOR_FAILURE_TASK_IDS = (
++    "exp6449-generation-to-verdict-path-receipt-contract",
++    "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++    "exp6453-held-verifier-budget-allocation-ab",
++    "exp6454-held-exact-constraint-energy-selection-ab",
++    "exp6456-corrupt-feedback-held-restart-csl-replication",
++    "exp6457-independent-verifier-bounded-csl-audit",
++    "exp6458-arc-representation-objective-generalization-ab",
++)
++LLM_TASK_IDS = (
++    "exp6450-sota-fixed-policy-candidate-corpus",
++    "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++    "exp6455-prospective-verifier-bounded-factor-weight-csl",
++    "exp6456-corrupt-feedback-held-restart-csl-replication",
++)
++
++RUN_COMMAND = (
++    "cd /home/ianblenke/github.com/ianblenke/carnot && "
++    ".venv/bin/python -m "
++    "carnot.experiment_6448_v555_terminal_handoff_and_queue_integrity "
++    "--date 20260815"
++)
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_RUN_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py "
++    "-m pytest "
++    "tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py "
++    "--fail-under=100 --show-missing"
++)
++DEFAULT_TEST_COMMANDS = (
++    FOCUSED_TEST_COMMAND,
++    COVERAGE_RUN_COMMAND,
++    COVERAGE_REPORT_COMMAND,
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py",
++    ".venv/bin/python -c 'import yaml; from pathlib import Path; "
++    "from scripts.roadmap_schema import Roadmap; "
++    'Roadmap.model_validate(yaml.safe_load(Path("research-roadmap.yaml").read_text()))'
++    "'",
++    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
++    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml --complete research-complete.yaml",
++    ".venv/bin/python scripts/artifact_convention_audit.py",
++    ".venv/bin/python scripts/determination_preservation_lint.py",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    ".venv/bin/pytest tests/python -q",
++    RUN_COMMAND,
++)
++EXTERNAL_TEST_RECEIPT_PATH = Path("/tmp/carnot_exp6448_test_receipts.json")
++
++PROTECTED_RELATIVE_PATHS = (
++    ACTIVE_ROADMAP_RELATIVE_PATH,
++    MILESTONE_DOC_RELATIVE_PATH,
++    RESEARCH_COMPLETE_RELATIVE_PATH,
++    RESEARCH_REFERENCES_RELATIVE_PATH,
++    RESEARCH_HARDWARE_WISHLIST_RELATIVE_PATH,
++    RESEARCH_PROGRAM_RELATIVE_PATH,
++    PRD_RELATIVE_PATH,
++    ARCHITECTURE_RELATIVE_PATH,
++    CODEX_RELATIVE_PATH,
++    CLAUDE_RELATIVE_PATH,
++    RESEARCH_CONDUCTOR_RELATIVE_PATH,
++    ROADMAP_SCHEMA_RELATIVE_PATH,
++    PRIOR_FAILURE_LINT_RELATIVE_PATH,
++    EXCLUSION_LINT_RELATIVE_PATH,
++    ROADMAP_GATE_AUDIT_RELATIVE_PATH,
++    CONDUCTOR_GATES_RELATIVE_PATH,
++    ADVERSARIAL_VERIFY_RELATIVE_PATH,
++    E2E_PLAN_RELATIVE_PATH,
++    CONDUCTOR_LOG_RELATIVE_PATH,
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++    STATUS_RELATIVE_PATH,
++    CHANGELOG_RELATIVE_PATH,
++    SPEC_RELATIVE_PATH,
++    *[Path(path) for path in V554_DELIVERABLES_BY_TASK.values()],
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "v554_terminal_rows",
++    "v554_activated_task_count",
++    "v554_missing_zero_byte_or_blocked_artifacts",
++    "v554_terminal_claim_determinations",
++    "active_roadmap_hash",
++    "task_count",
++    "task_ids_in_order",
++    "unique_id_and_deliverable_check",
++    "milestone_consistency_check",
++    "schema_validation",
++    "prior_failure_validation",
++    "exclusion_manifest_validation",
++    "structured_gate_validation",
++    "gate_producer_contract_rows",
++    "model_policy_validation",
++    "per_unit_row_contract_validation",
++    "prompt_terminal_line_validation",
++    "protected_files_unchanged",
++    "v555_queue_integrity_score",
++    "blocked_reason",
++    "gate_check_summary",
++    "preconditions_checked",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_principles",
++    "field_provenance",
++    "random_seed",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "status": "The status states whether the V555 queue passed or failed closed.",
++    "v554_terminal_rows": "Each activated V554 task row preserves its exact artifact state.",
++    "v554_activated_task_count": "The V554 denominator comes from Exp6436, not from reconstruction.",
++    "v554_missing_zero_byte_or_blocked_artifacts": "Absent and blocked V554 evidence stays visible.",
++    "v554_terminal_claim_determinations": "V554 claim boundaries remain blocked unless terminal evidence allows them.",
++    "active_roadmap_hash": "The activated V555 queue is content-addressed.",
++    "task_count": "V555 readiness requires exactly twelve active tasks.",
++    "task_ids_in_order": "Conductor order must stay deterministic.",
++    "unique_id_and_deliverable_check": "IDs and result JSON deliverables define the queue identity.",
++    "milestone_consistency_check": "Every task must belong to milestone 2026.08.555.",
++    "schema_validation": "The Pydantic roadmap schema must accept the activated queue.",
++    "prior_failure_validation": "Rerun scopes must state the prior verdict and retirement rule.",
++    "exclusion_manifest_validation": "Retired IDs and hard exclusion risks block the queue.",
++    "structured_gate_validation": "Every gate must name a valid upstream task, field, operator, and value.",
++    "gate_producer_contract_rows": "Each gate field must be declared by its producer artifact contract.",
++    "model_policy_validation": "LLM tasks must use local GGUF policy without AutoTokenizer headline paths.",
++    "per_unit_row_contract_validation": "Comparative tasks need row-level evidence, not aggregates only.",
++    "prompt_terminal_line_validation": "Rendered prompts must end with the conductor and push prohibition.",
++    "protected_files_unchanged": "The audit must not mutate protected inputs.",
++    "v555_queue_integrity_score": "The scalar gate is one only when every queue contract passes.",
++    "blocked_reason": "A failed queue audit must name every failed readiness condition.",
++    "gate_check_summary": "Blocked diagnostics must show expected and observed values.",
++    "preconditions_checked": "Input files, state, and substrate are recorded before conclusions.",
++    "inference_substrate": "This task reads repository evidence without a model call.",
++    "verifier_is_oracle": "The audit validates contracts and proves no scientific claim.",
++    "field_principles": "Every required field and acceptance gate has a stated purpose.",
++    "field_provenance": "Every required field identifies its source kind.",
++    "random_seed": "No random sampling is used by this deterministic audit.",
++    "duration_s": "Wall time is measured without padding.",
++    "tests_run": "Verification commands and exit codes stay attached to the artifact.",
++    "reproducibility_checksum": "The normalized payload is content-addressed.",
++    "honest_verdict": "The verdict uses a terminal prefix and states the queue boundary.",
++    "acceptance_gate:v555_queue_integrity_score": (
++        "The queue-integrity scalar must fail closed unless all validation surfaces pass."
++    ),
++}
++FIELD_PROVENANCE = {
++    "status": "derived",
++    "v554_terminal_rows": "derived",
++    "v554_activated_task_count": "derived",
++    "v554_missing_zero_byte_or_blocked_artifacts": "derived",
++    "v554_terminal_claim_determinations": "derived",
++    "active_roadmap_hash": "measured",
++    "task_count": "derived",
++    "task_ids_in_order": "upstream",
++    "unique_id_and_deliverable_check": "derived",
++    "milestone_consistency_check": "derived",
++    "schema_validation": "derived",
++    "prior_failure_validation": "derived",
++    "exclusion_manifest_validation": "derived",
++    "structured_gate_validation": "derived",
++    "gate_producer_contract_rows": "derived",
++    "model_policy_validation": "derived",
++    "per_unit_row_contract_validation": "derived",
++    "prompt_terminal_line_validation": "derived",
++    "protected_files_unchanged": "measured",
++    "v555_queue_integrity_score": "derived",
++    "blocked_reason": "derived",
++    "gate_check_summary": "derived",
++    "preconditions_checked": "measured",
++    "inference_substrate": "constant",
++    "verifier_is_oracle": "constant",
++    "field_principles": "constant",
++    "field_provenance": "constant",
++    "random_seed": "constant",
++    "duration_s": "measured",
++    "tests_run": "measured",
++    "reproducibility_checksum": "derived",
++    "honest_verdict": "derived",
++}
++
++
++def payload_checksum(report: JsonMap) -> str:
++    normalized = json.loads(canonical_json(report))
++    normalized["duration_s"] = 0.0
++    normalized["reproducibility_checksum"] = ""
++    return payload_sha256(normalized)
++
++
++def path_receipt(path: Path) -> JsonDict:
++    return {
++        "path": path.as_posix(),
++        "present": path.exists(),
++        "sha256": path_sha256(path),
++        "size_bytes": path.stat().st_size if path.exists() else None,
++    }
++
++
++def protected_hashes(root: Path, paths: Sequence[Path] = PROTECTED_RELATIVE_PATHS) -> JsonDict:
++    return {path.as_posix(): path_sha256(root / path) for path in paths}
++
++
++def _protected_files_unchanged(before: JsonMap, after: JsonMap) -> JsonDict:
++    rows = {
++        path: {
++            "before": before.get(path),
++            "after": after.get(path),
++            "unchanged": before.get(path) == after.get(path),
++        }
++        for path in sorted(set(before) | set(after))
++    }
++    return {"ok": all(row["unchanged"] for row in rows.values()), "rows": rows}
++
++
++def _tasks(data: JsonMap) -> list[JsonDict]:
++    tasks = data.get("tasks")
++    if not isinstance(tasks, list):
++        return []
++    return [dict(task) for task in tasks if isinstance(task, Mapping)]
++
++
++def _artifact_status(payload: JsonMap, meta: JsonMap) -> str:
++    if meta.get("error") == "missing":
++        return "missing"
++    if meta.get("size_bytes") == 0:
++        return "zero_byte"
++    if meta.get("error"):
++        return "malformed"
++    return str(payload.get("status") or "unknown")
++
++
++def _is_blocked(payload: JsonMap, meta: JsonMap) -> bool:
++    if meta.get("error"):
++        return False
++    status = str(payload.get("status") or "").lower()
++    verdict = str(payload.get("honest_verdict") or "").lower()
++    return status.startswith("blocked") or verdict.startswith("blocked") or "complete_blocked" in status
++
++
++def _artifact_state(payload: JsonMap, meta: JsonMap) -> str:
++    base = _artifact_status(payload, meta)
++    if base in {"missing", "zero_byte", "malformed"}:
++        return base
++    if _is_blocked(payload, meta):
++        return "blocked"
++    if base.startswith("complete"):
++        return "complete"
++    return base
++
++
++def _artifact_meta(root: Path, rel: Path) -> tuple[JsonDict, JsonDict]:
++    payload, meta = read_json_mapping(root / rel)
++    meta = dict(meta)
++    meta["size_bytes"] = (root / rel).stat().st_size if (root / rel).exists() else None
++    return payload, meta
++
++
++def _readiness_fields(payload: JsonMap) -> JsonDict:
++    return {
++        str(key): value
++        for key, value in payload.items()
++        if isinstance(key, str) and (key.endswith("_score") or key.endswith("_ready"))
++    }
++
++
++def _claim_eligibility_for_task(task_id: str, state: str, payload: JsonMap) -> JsonDict:
++    if state in {"missing", "zero_byte", "malformed"}:
++        return {"eligible": False, "blockers": [f"{state}_artifact"], "scope": task_id}
++    if state == "blocked":
++        blockers = payload.get("csl_ineligibility_reasons")
++        if not isinstance(blockers, list) or not blockers:
++            blockers = [str(payload.get("blocked_reason") or "blocked_artifact")]
++        return {"eligible": False, "blockers": blockers, "scope": task_id}
++    if task_id == "exp6436-v554-terminal-handoff-and-queue-preflight":
++        ready = payload.get("v554_queue_ready_score") == 1.0
++        return {
++            "eligible": ready,
++            "blockers": [] if ready else ["v554_queue_ready_score=0.0"],
++            "scope": "queue integrity",
++        }
++    return {"eligible": False, "blockers": ["no_claim_promoted_by_exp6448"], "scope": task_id}
++
++
++def _v554_terminal_rows(root: Path) -> tuple[list[JsonDict], JsonDict]:
++    source_payload, _source_meta = _artifact_meta(
++        root, Path(V554_DELIVERABLES_BY_TASK[EXPECTED_V554_ACTIVATED_TASK_IDS[0]])
++    )
++    source_ids = source_payload.get("task_ids_in_order")
++    task_ids = (
++        [str(task_id) for task_id in source_ids]
++        if isinstance(source_ids, list) and source_ids
++        else list(EXPECTED_V554_ACTIVATED_TASK_IDS)
++    )
++    rows: list[JsonDict] = []
++    for task_id in task_ids:
++        rel = Path(V554_DELIVERABLES_BY_TASK.get(task_id, ""))
++        payload, meta = _artifact_meta(root, rel)
++        state = _artifact_state(payload, meta)
++        live = _live_adversarial(root, rel, meta.get("error") is None)
++        rows.append(
++            {
++                "task_id": task_id,
++                "deliverable_path": rel.as_posix(),
++                "byte_count": meta.get("size_bytes"),
++                "artifact_state": state,
++                "status": _artifact_status(payload, meta),
++                "honest_verdict": payload.get("honest_verdict"),
++                "readiness_fields": _readiness_fields(payload),
++                "gate_summary": payload.get("gate_check_summary"),
++                "current_adversarial_findings": live,
++                "final_claim_eligibility": _claim_eligibility_for_task(task_id, state, payload),
++            }
++        )
++    return rows, _v554_claim_determinations(root, rows)
++
++
++def _v554_claim_determinations(root: Path, rows: Sequence[JsonMap]) -> JsonDict:
++    rows_by_task = {str(row.get("task_id")): row for row in rows}
++    exp6444, _meta = _artifact_meta(
++        root, Path(V554_DELIVERABLES_BY_TASK["exp6444-csl-lifecycle-recomputation-audit"])
++    )
++    csl_blockers = exp6444.get("csl_ineligibility_reasons")
++    if not isinstance(csl_blockers, list) or not csl_blockers:
++        csl_blockers = ["v554_csl_evidence_missing_or_blocked"]
++    return {
++        "v554_queue_integrity": {
++            "eligible": False,
++            "blockers": ["v554_queue_ready_score=0.0"],
++            "source": rows_by_task.get(EXPECTED_V554_ACTIVATED_TASK_IDS[0], {}).get(
++                "deliverable_path"
++            ),
++        },
++        "path_receipt": {
++            "eligible": False,
++            "blockers": ["exp6437_blocked_gate_check_failed"],
++            "source": rows_by_task.get("exp6437-generation-to-verdict-receipt-replay-contract", {}).get(
++                "deliverable_path"
++            ),
++        },
++        "factor_influence": {
++            "eligible": False,
++            "blockers": ["missing_or_blocked_v554_factor_chain"],
++            "source": MILESTONE_DOC_RELATIVE_PATH.as_posix(),
++        },
++        "prospective_csl": {
++            "eligible": False,
++            "blockers": csl_blockers,
++            "source": V554_DELIVERABLES_BY_TASK["exp6444-csl-lifecycle-recomputation-audit"],
++        },
++        "internal_arc_reachability": {
++            "eligible": False,
++            "blockers": ["exp6445_not_activated"],
++            "source": MILESTONE_DOC_RELATIVE_PATH.as_posix(),
++        },
++        "public_arc": {
++            "eligible": False,
++            "blockers": ["no_v554_public_arc_claim_eligible"],
++            "source": MILESTONE_DOC_RELATIVE_PATH.as_posix(),
++        },
++        "hardware": {
++            "eligible": False,
++            "blockers": ["v554_contains_no_authenticated_hardware_evidence"],
++            "source": MILESTONE_DOC_RELATIVE_PATH.as_posix(),
++        },
++    }
++
++
++def _required_fields_by_task(
++    tasks_by_id: Mapping[str, JsonDict],
++    root: Path,
++    date: str,
++) -> tuple[dict[str, str], dict[str, JsonDict], dict[str, set[str]]]:
++    rendered_prompts: dict[str, str] = {}
++    render_receipts: dict[str, JsonDict] = {}
++    required_fields: dict[str, set[str]] = {}
++    for task_id, task in tasks_by_id.items():
++        rendered, receipt = render_prompt(str(task.get("prompt") or ""), root, date)
++        rendered_prompts[task_id] = rendered
++        render_receipts[task_id] = receipt
++        required_fields[task_id] = required_artifact_fields_from_prompt(rendered)
++    return rendered_prompts, render_receipts, required_fields
++
++
++def _prior_failure_linter(root: Path) -> JsonDict:
++    schema_errors, prior_errors = __import__(
++        "scripts.validate_prior_failures", fromlist=["validate_roadmap"]
++    ).validate_roadmap(root / ACTIVE_ROADMAP_RELATIVE_PATH, root / RESEARCH_COMPLETE_RELATIVE_PATH)
++    return {"schema_errors": schema_errors, "prior_failure_violations": prior_errors}
++
++
++def _gate_audit(root: Path) -> JsonDict:
++    return (
++        __import__("scripts.audit_roadmap_gates", fromlist=["audit_roadmap"])
++        .audit_roadmap(
++            root / ACTIVE_ROADMAP_RELATIVE_PATH,
++            complete_path=root / RESEARCH_COMPLETE_RELATIVE_PATH,
++        )
++        .to_artifact()
++    )
++
++
++def _exclusion_validation(root: Path) -> JsonDict:
++    risks = __import__("scripts.exclusion_manifest_lint", fromlist=["lint"]).lint(
++        root / ACTIVE_ROADMAP_RELATIVE_PATH
++    )
++    hard_count = sum(1 for risk in risks if risk.severity == "HARD")
++    return {
++        "ok": hard_count == 0,
++        "hard_exclusion_count": hard_count,
++        "risk_count": len(risks),
++        "risks": _risk_rows(risks),
++    }
++
++
++def _model_policy_failures(task_id: str, rendered_prompt: str) -> list[JsonDict]:
++    prompt_lower = rendered_prompt.lower()
++    named_models = set(model_specs_named_in_prompt(rendered_prompt)) | set(
++        GGUF_ID_RE.findall(rendered_prompt)
++    )
++    declares_mandated = bool(MANDATED_GGUF_IDS & named_models) or (
++        "mandated gguf" in prompt_lower or "mandatory gguf" in prompt_lower
++    )
++    failures: list[JsonDict] = []
++    if "MODEL_SPECS" not in rendered_prompt:
++        failures.append({"task_id": task_id, "reason": "missing_model_specs"})
++    if "cached_sota_pair()" not in rendered_prompt and "same resolver" not in prompt_lower:
++        failures.append({"task_id": task_id, "reason": "missing_cache_resolver"})
++    if not declares_mandated:
++        failures.append({"task_id": task_id, "reason": "missing_mandated_gguf_declaration"})
++    if named_models and not named_models <= MANDATED_GGUF_IDS:
++        failures.append(
++            {
++                "task_id": task_id,
++                "reason": "non_mandated_gguf_id",
++                "ids": sorted(named_models - MANDATED_GGUF_IDS),
++            }
++        )
++    if "embedded" not in prompt_lower or "tokenizer" not in prompt_lower:
++        failures.append({"task_id": task_id, "reason": "missing_embedded_tokenizer_rule"})
++    if not re.search(r"\b(no|never|do not)\b.{0,80}\bautotokenizer\b", prompt_lower):
++        failures.append({"task_id": task_id, "reason": "missing_no_autotokenizer_rule"})
++    if "autotokenizer.from_pretrained" in prompt_lower:
++        failures.append({"task_id": task_id, "reason": "forbidden_autotokenizer_from_pretrained"})
++    return failures
++
++
++def _has_blocked_verdict_contract(prompt: str, required_fields: set[str]) -> bool:
++    return "gate_check_summary" in required_fields or "gate_check_summary" in prompt
++
++
++def _queue_prompt_checks(
++    tasks: Sequence[JsonDict],
++    rendered_prompts: Mapping[str, str],
++    render_receipts: Mapping[str, JsonDict],
++    root: Path,
++    date: str,
++) -> JsonDict:
++    failures: list[JsonDict] = []
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        raw = str(task.get("prompt") or "")
++        rendered = rendered_prompts.get(task_id, "")
++        checks = {
++            "format_failed": not render_receipts.get(task_id, {}).get("format_ok", False),
++            "missing_context": "CONTEXT" not in rendered,
++            "missing_existing_code": "EXISTING CODE TO READ FIRST" not in rendered,
++            "missing_task": "\nTASK" not in rendered and "\n      TASK" not in rendered,
++            "missing_concrete_steps": "CONCRETE STEPS" not in rendered,
++            "missing_project_root_placeholder": "{project_root}" not in raw,
++            "missing_date_placeholder": "{date}" not in raw,
++            "missing_project_root_literal": root.as_posix() not in rendered,
++            "missing_date_literal": date not in rendered,
++            "missing_run_command": "Run command:" not in rendered,
++            "missing_final_prohibition": not rendered.strip().endswith(FINAL_PROHIBITION_LINE),
++            "missing_required_artifact_block": not required_artifact_fields_from_prompt(rendered),
++        }
++        for reason, failed in checks.items():
++            if failed:
++                failures.append({"task_id": task_id, "reason": reason})
++    return {"ok": not failures, "checked_task_count": len(tasks), "failures": failures}
++
++
++def _gate_rows(
++    tasks: Sequence[JsonDict],
++    tasks_by_id: Mapping[str, JsonDict],
++    required_fields_by_id: Mapping[str, set[str]],
++) -> tuple[list[JsonDict], list[JsonDict], list[str]]:
++    rows: list[JsonDict] = []
++    failures: list[JsonDict] = []
++    expressions: list[str] = []
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        gates = task.get("gated_on")
++        for gate in gates if isinstance(gates, list) else []:
++            if not isinstance(gate, Mapping):
++                failures.append({"task_id": task_id, "reason": "gate_not_mapping", "gate": gate})
++                continue
++            expressions.append(_gate_expression(task_id, gate))
++            ok, reason = gate_ok(gate, tasks_by_id, required_fields_by_id)
++            upstream = str(gate.get("upstream") or "")
++            artifact_field = str(gate.get("artifact_field") or "")
++            producer = tasks_by_id.get(upstream, {})
++            declares = artifact_field in required_fields_by_id.get(upstream, set())
++            row = {
++                "consumer_task_id": task_id,
++                "upstream": upstream,
++                "artifact_field": artifact_field,
++                "operator": gate.get("op"),
++                "expected_value": gate.get("value"),
++                "producer_task_id": upstream,
++                "producer_deliverable": producer.get("deliverable"),
++                "producer_declares_artifact_field": declares,
++                "gate_ok": ok,
++                "failure_reason": reason,
++            }
++            rows.append(row)
++            if not ok:
++                failures.append({"task_id": task_id, "gate": dict(gate), "reason": reason})
++    return rows, failures, expressions
++
++
++def _operator_override_rows(tasks_by_id: Mapping[str, JsonDict]) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for task_id, task in tasks_by_id.items():
++        override = str(task.get("operator_override") or "").strip()
++        if not override:
++            continue
++        rows.append(
++            {
++                "task_id": task_id,
++                "operator_override_present": True,
++                "cites_standing_transition_directive": (
++                    "2026-05-29 operator directive" in override
++                    and "standing" in override.lower()
++                ),
++                "value": override,
++            }
++        )
++    return rows
++
++
++def _prior_validation(
++    tasks_by_id: Mapping[str, JsonDict],
++    root: Path,
++) -> JsonDict:
++    linter = _prior_failure_linter(root)
++    gate_audit = _gate_audit(root)
++    rows: list[JsonDict] = []
++    failures: list[JsonDict] = []
++    missing: list[str] = []
++    for task_id in REQUIRED_PRIOR_FAILURE_TASK_IDS:
++        task = tasks_by_id.get(task_id)
++        if not task:
++            missing.append(task_id)
++            rows.append({"task_id": task_id, "present_in_roadmap": False, "complete": False})
++            continue
++        priors = task.get("prior_failures")
++        if not isinstance(priors, list) or not priors:
++            failures.append({"task_id": task_id, "reason": "missing_or_empty_prior_failures"})
++            rows.append({"task_id": task_id, "present_in_roadmap": True, "complete": False})
++            continue
++        for prior in priors:
++            ok, reason = prior_ok(prior)
++            row = {
++                "task_id": task_id,
++                "present_in_roadmap": True,
++                "experiment_id": prior.get("experiment_id") if isinstance(prior, Mapping) else None,
++                "verdict": prior.get("verdict") if isinstance(prior, Mapping) else None,
++                "addressed_by": prior.get("addressed_by") if isinstance(prior, Mapping) else None,
++                "retire_if_same_verdict": prior.get("retire_if_same_verdict")
++                if isinstance(prior, Mapping)
++                else None,
++                "complete": ok,
++                "failure_reason": reason,
++            }
++            rows.append(row)
++            if not ok:
++                failures.append({"task_id": task_id, "reason": reason, "prior": prior})
++    operator_rows = _operator_override_rows(tasks_by_id)
++    exp6448_override_ok = any(
++        row["task_id"] == EXPERIMENT_ID and row["cites_standing_transition_directive"]
++        for row in operator_rows
++    )
++    if not exp6448_override_ok:
++        failures.append({"task_id": EXPERIMENT_ID, "reason": "missing_standing_transition_override"})
++    return {
++        "ok": not missing
++        and not failures
++        and not linter["schema_errors"]
++        and not linter["prior_failure_violations"]
++        and gate_audit["roadmap_gate_audit_passed"] is True,
++        "required_rerun_task_ids": list(REQUIRED_PRIOR_FAILURE_TASK_IDS),
++        "missing_required_rerun_task_ids": missing,
++        "required_prior_failure_rows": rows,
++        "operator_override_rows": operator_rows,
++        "failures": failures,
++        "validate_prior_failures": linter,
++        "gate_audit_prior_missing": gate_audit["n_prior_failures_missing"],
++        "gate_audit_failure_details": gate_audit.get("failure_details", []),
++        "gate_audit_passed": gate_audit["roadmap_gate_audit_passed"],
++    }
++
++
++def validate_v555_queue_data(
++    data: JsonMap,
++    root: Path,
++    date: str,
++    *,
++    retired_exp_ids: set[int] | None = None,
++) -> JsonDict:
++    tasks = _tasks(data)
++    ids = [str(task.get("id") or "") for task in tasks]
++    deliverables = [str(task.get("deliverable") or "") for task in tasks]
++    tasks_by_id = {str(task.get("id") or ""): task for task in tasks}
++    rendered_prompts, render_receipts, required_fields_by_id = _required_fields_by_task(
++        tasks_by_id, root, date
++    )
++    schema_errors: list[str] = []
++    try:
++        from scripts.roadmap_schema import Roadmap
++
++        Roadmap.model_validate(data)
++    except Exception as exc:  # noqa: BLE001
++        schema_errors.append(str(exc))
++    exp_numbers = [exp_number(task_id) for task_id in ids]
++    duplicate_ids = sorted(task_id for task_id, count in Counter(ids).items() if count > 1)
++    duplicate_deliverables = sorted(
++        path for path, count in Counter(deliverables).items() if path and count > 1
++    )
++    deliverable_failures = [
++        {"task_id": str(task.get("id") or ""), "deliverable": str(task.get("deliverable") or "")}
++        for task in tasks
++        if not str(task.get("deliverable") or "").startswith("results/")
++        or not str(task.get("deliverable") or "").endswith(".json")
++    ]
++    retired_ids = retired_exp_ids
++    if retired_ids is None:
++        retired_ids = load_retired_exp_ids(root / EXCLUSION_MANIFEST_RELATIVE_PATH)
++    retired_task_ids = [task_id for task_id in ids if exp_number(task_id) in retired_ids]
++    id_index = {task_id: index for index, task_id in enumerate(ids)}
++    retired_references: list[JsonDict] = []
++    dependency_failures: list[JsonDict] = []
++    for task_index, task in enumerate(tasks):
++        task_id = str(task.get("id") or "")
++        requires = task.get("requires")
++        for dependency in requires if isinstance(requires, list) else []:
++            dep = str(dependency)
++            if dep not in id_index or id_index[dep] >= task_index:
++                dependency_failures.append({"task_id": task_id, "dependency": dep})
++            if exp_number(dep) in retired_ids:
++                retired_references.append({"task_id": task_id, "dependency": dep})
++    gate_contract_rows, gate_failures, gate_expressions = _gate_rows(
++        tasks, tasks_by_id, required_fields_by_id
++    )
++    for row in gate_contract_rows:
++        if exp_number(str(row["upstream"])) in retired_ids:
++            retired_references.append(
++                {"task_id": row["consumer_task_id"], "gate_upstream": row["upstream"]}
++            )
++    milestone_failures = [
++        {"task_id": str(task.get("id") or ""), "milestone": task.get("milestone")}
++        for task in tasks
++        if task.get("milestone") != MILESTONE_V555
++    ]
++    llm_present: list[str] = []
++    model_failures: list[JsonDict] = []
++    for task_id in ids:
++        prompt = rendered_prompts.get(task_id, "")
++        prompt_lower = prompt.lower()
++        declares_model_specs = "MODEL_SPECS" in prompt
++        is_expected_llm = task_id in LLM_TASK_IDS
++        if is_expected_llm or declares_model_specs:
++            if task_id not in llm_present:
++                llm_present.append(task_id)
++            model_failures.extend(_model_policy_failures(task_id, prompt))
++        if task_id not in LLM_TASK_IDS and declares_model_specs:
++            model_failures.append({"task_id": task_id, "reason": "unexpected_model_specs_task"})
++        if "autotokenizer.from_pretrained" in prompt_lower:
++            model_failures.append({"task_id": task_id, "reason": "forbidden_autotokenizer_path"})
++    comparative_ids: list[str] = []
++    per_unit_failures: list[JsonDict] = []
++    blocked_summary_failures: list[JsonDict] = []
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        rendered = rendered_prompts.get(task_id, "")
++        lower = rendered.lower()
++        required_fields = required_fields_by_id.get(task_id, set())
++        is_comparative = any(
++            token in lower
++            for token in (" compare ", " compares ", "matched arms", " a/b", "matched arm")
++        )
++        if is_comparative:
++            comparative_ids.append(task_id)
++            if task.get("per_unit_rows") is not True:
++                per_unit_failures.append({"task_id": task_id, "reason": "per_unit_rows_not_true"})
++            if "per_unit_rows" not in required_fields:
++                per_unit_failures.append(
++                    {"task_id": task_id, "reason": "missing_per_unit_rows_required_field"}
++                )
++            if "emit per_unit_rows" not in lower and "per_unit_rows must contain" not in lower:
++                per_unit_failures.append({"task_id": task_id, "reason": "missing_row_emission_rule"})
++        if ("blocked_" in lower or "blocked artifact" in lower) and not _has_blocked_verdict_contract(
++            rendered, required_fields
++        ):
++            blocked_summary_failures.append(
++                {"task_id": task_id, "reason": "missing_gate_check_summary"}
++            )
++    prompt_checks = _queue_prompt_checks(tasks, rendered_prompts, render_receipts, root, date)
++    prior_validation = _prior_validation(tasks_by_id, root)
++    exclusion = _exclusion_validation(root)
++    identity_ok = (
++        ids == list(EXPECTED_V555_TASK_IDS)
++        and not duplicate_ids
++        and not duplicate_deliverables
++        and not deliverable_failures
++        and exp_numbers == sorted(exp_numbers)
++        and None not in exp_numbers
++        and not retired_task_ids
++    )
++    return {
++        "schema_validation": {"ok": not schema_errors, "errors": schema_errors},
++        "task_count": len(ids),
++        "task_ids_in_order": ids,
++        "unique_id_and_deliverable_check": {
++            "ok": identity_ok,
++            "task_count": len(ids),
++            "expected_task_count": len(EXPECTED_V555_TASK_IDS),
++            "expected_task_ids": list(EXPECTED_V555_TASK_IDS),
++            "missing_expected_task_ids": [
++                task_id for task_id in EXPECTED_V555_TASK_IDS if task_id not in ids
++            ],
++            "extra_task_ids": [task_id for task_id in ids if task_id not in EXPECTED_V555_TASK_IDS],
++            "duplicate_task_ids": duplicate_ids,
++            "unique_task_ids": not duplicate_ids,
++            "duplicate_deliverables": duplicate_deliverables,
++            "unique_deliverables": not duplicate_deliverables,
++            "deliverable_failures": deliverable_failures,
++            "execution_order_ok": exp_numbers == sorted(exp_numbers) and None not in exp_numbers,
++            "retired_task_ids": retired_task_ids,
++        },
++        "milestone_consistency_check": {
++            "ok": data.get("milestone") == MILESTONE_V555 and not milestone_failures,
++            "roadmap_milestone": data.get("milestone"),
++            "expected_milestone": MILESTONE_V555,
++            "failures": milestone_failures,
++        },
++        "prior_failure_validation": prior_validation,
++        "exclusion_manifest_validation": exclusion,
++        "structured_gate_validation": {
++            "ok": not gate_failures and not dependency_failures and not retired_references,
++            "gate_count": len(gate_contract_rows),
++            "gate_failures": gate_failures,
++            "dependency_failures": dependency_failures,
++            "retired_references": retired_references,
++            "structured_gate_expressions": gate_expressions,
++        },
++        "gate_producer_contract_rows": gate_contract_rows,
++        "model_policy_validation": {
++            "ok": not model_failures and llm_present == list(LLM_TASK_IDS),
++            "llm_task_ids": llm_present,
++            "expected_llm_task_ids": list(LLM_TASK_IDS),
++            "mandated_gguf_ids": sorted(MANDATED_GGUF_IDS),
++            "failures": model_failures,
++        },
++        "per_unit_row_contract_validation": {
++            "ok": not per_unit_failures and not blocked_summary_failures,
++            "comparative_task_ids": comparative_ids,
++            "per_unit_failures": per_unit_failures,
++            "blocked_summary_failures": blocked_summary_failures,
++            "failures": per_unit_failures + blocked_summary_failures,
++        },
++        "prompt_terminal_line_validation": prompt_checks,
++    }
++
++
++def _failed_checks(report_fields: JsonMap) -> list[JsonDict]:
++    failures: list[JsonDict] = []
++    if report_fields.get("task_count") != len(EXPECTED_V555_TASK_IDS):
++        failures.append(
++            {
++                "failed_check": "task_count",
++                "expected_condition": "task_count == 12",
++                "observed_value": report_fields.get("task_count"),
++                "evidence_path": ACTIVE_ROADMAP_RELATIVE_PATH.as_posix(),
++            }
++        )
++    for field in (
++        "unique_id_and_deliverable_check",
++        "milestone_consistency_check",
++        "schema_validation",
++        "prior_failure_validation",
++        "exclusion_manifest_validation",
++        "structured_gate_validation",
++        "model_policy_validation",
++        "per_unit_row_contract_validation",
++        "prompt_terminal_line_validation",
++        "protected_files_unchanged",
++    ):
++        value = report_fields.get(field, {})
++        if isinstance(value, Mapping) and value.get("ok") is False:
++            failures.append(
++                {
++                    "failed_check": field,
++                    "expected_condition": f"{field}.ok is true",
++                    "observed_value": value,
++                    "evidence_path": ACTIVE_ROADMAP_RELATIVE_PATH.as_posix(),
++                }
++            )
++    test_rows = report_fields.get("tests_run", [])
++    if isinstance(test_rows, Sequence) and not isinstance(test_rows, (str, bytes)):
++        failed_test_rows = [
++            dict(row)
++            for row in test_rows
++            if isinstance(row, Mapping) and row.get("exit_code") != 0
++        ]
++        if failed_test_rows:
++            failures.append(
++                {
++                    "failed_check": "tests_run",
++                    "expected_condition": "every tests_run.exit_code is 0",
++                    "observed_value": failed_test_rows,
++                    "evidence_path": EXTERNAL_TEST_RECEIPT_PATH.as_posix(),
++                }
++            )
++    return failures
++
++
++def _first_failed_check(report_fields: JsonMap) -> JsonDict:
++    failures = _failed_checks(report_fields)
++    if failures:
++        first = dict(failures[0])
++        first["failed_checks"] = failures
++        return first
++    return {
++        "failed_check": "unknown",
++        "failed_checks": [],
++        "expected_condition": "all checks pass",
++        "observed_value": None,
++        "evidence_path": ACTIVE_ROADMAP_RELATIVE_PATH.as_posix(),
++    }
++
++
++def _test_rows(command_receipts: Sequence[JsonMap] | None) -> list[JsonDict]:
++    if command_receipts:
++        return [dict(row) for row in command_receipts if isinstance(row, Mapping)]
++    return [
++        {"source": "declared", "command": command, "exit_code": None}
++        for command in DEFAULT_TEST_COMMANDS
++    ]
++
++
++def read_external_test_receipts(path: Path = EXTERNAL_TEST_RECEIPT_PATH) -> list[JsonDict]:
++    if not path.exists():
++        return []
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return []
++    if not isinstance(payload, list):
++        return []
++    return [dict(row) for row in payload if isinstance(row, Mapping)]
++
++
++def build_report(
++    root: Path,
++    *,
++    date: str,
++    command_receipts: Sequence[JsonMap] | None,
++    before_hashes: JsonMap,
++    duration_s: float,
++) -> JsonDict:
++    roadmap = read_yaml_mapping(root / ACTIVE_ROADMAP_RELATIVE_PATH)
++    v554_rows, determinations = _v554_terminal_rows(root)
++    checks = validate_v555_queue_data(roadmap, root, date)
++    after_hashes = protected_hashes(root)
++    protected = _protected_files_unchanged(before_hashes, after_hashes)
++    tests_run = _test_rows(command_receipts)
++    check_names = (
++        "unique_id_and_deliverable_check",
++        "milestone_consistency_check",
++        "schema_validation",
++        "prior_failure_validation",
++        "exclusion_manifest_validation",
++        "structured_gate_validation",
++        "model_policy_validation",
++        "per_unit_row_contract_validation",
++        "prompt_terminal_line_validation",
++    )
++    all_checks_ok = (
++        checks["task_count"] == len(EXPECTED_V555_TASK_IDS)
++        and all(checks[name]["ok"] is True for name in check_names)
++        and protected["ok"] is True
++        and all(row.get("exit_code") == 0 for row in tests_run)
++    )
++    integrity_score = 1.0 if all_checks_ok else 0.0
++    summary = {
++        "failed_check": None,
++        "expected_condition": "all checks pass",
++        "observed_value": "all checks pass",
++        "evidence_path": None,
++    }
++    blocked_reason = None
++    status = "complete_v555_queue_integrity_passed"
++    if not all_checks_ok:
++        summary = _first_failed_check(
++            {
++                **checks,
++                "protected_files_unchanged": protected,
++                "tests_run": tests_run,
++            }
++        )
++        blocked_reason = "; ".join(
++            f"{failure['failed_check']}: expected {failure['expected_condition']}"
++            for failure in summary.get("failed_checks", [summary])
++        )
++        status = "complete_blocked_v555_queue_integrity_failed"
++    honest_verdict = {
++        "complete_v555_queue_integrity_passed": (
++            "complete_v555_queue_integrity_passed: V554 terminal facts are "
++            "preserved and the twelve-task V555 queue validates"
++        ),
++        "complete_blocked_v555_queue_integrity_failed": (
++            "complete_blocked_v555_queue_integrity_failed: V554 terminal facts "
++            "are preserved but a V555 queue contract failed"
++        ),
++    }[status]
++    report: JsonDict = {
++        "status": status,
++        "v554_terminal_rows": v554_rows,
++        "v554_activated_task_count": len(v554_rows),
++        "v554_missing_zero_byte_or_blocked_artifacts": [
++            row
++            for row in v554_rows
++            if row["artifact_state"] in {"missing", "zero_byte", "blocked", "malformed"}
++        ],
++        "v554_terminal_claim_determinations": determinations,
++        "active_roadmap_hash": {
++            **path_receipt(root / ACTIVE_ROADMAP_RELATIVE_PATH),
++            "milestone": roadmap.get("milestone"),
++        },
++        "task_count": checks["task_count"],
++        "task_ids_in_order": checks["task_ids_in_order"],
++        "unique_id_and_deliverable_check": checks["unique_id_and_deliverable_check"],
++        "milestone_consistency_check": checks["milestone_consistency_check"],
++        "schema_validation": checks["schema_validation"],
++        "prior_failure_validation": checks["prior_failure_validation"],
++        "exclusion_manifest_validation": checks["exclusion_manifest_validation"],
++        "structured_gate_validation": checks["structured_gate_validation"],
++        "gate_producer_contract_rows": checks["gate_producer_contract_rows"],
++        "model_policy_validation": checks["model_policy_validation"],
++        "per_unit_row_contract_validation": checks["per_unit_row_contract_validation"],
++        "prompt_terminal_line_validation": checks["prompt_terminal_line_validation"],
++        "protected_files_unchanged": protected,
++        "v555_queue_integrity_score": integrity_score,
++        "blocked_reason": blocked_reason,
++        "gate_check_summary": summary,
++        "preconditions_checked": {
++            "schema": SCHEMA,
++            "experiment_id": EXPERIMENT_ID,
++            "date": date,
++            "repo_root": root.as_posix(),
++            "active_milestone": roadmap.get("milestone"),
++            "git_status_before": git_status_lines(root),
++            "before_hashes": dict(before_hashes),
++            "after_hashes": after_hashes,
++            "active_roadmap": path_receipt(root / ACTIVE_ROADMAP_RELATIVE_PATH),
++            "v554_artifacts": [
++                path_receipt(root / Path(path)) for path in V554_DELIVERABLES_BY_TASK.values()
++            ],
++            "v554_missing_or_zero_byte": [
++                row
++                for row in v554_rows
++                if row["artifact_state"] in {"missing", "zero_byte", "malformed"}
++            ],
++            "exclusion_manifest": path_receipt(root / EXCLUSION_MANIFEST_RELATIVE_PATH),
++            "roadmap_schema": path_receipt(root / ROADMAP_SCHEMA_RELATIVE_PATH),
++            "protected_files": [path.as_posix() for path in PROTECTED_RELATIVE_PATHS],
++            "research_compute_started": False,
++        },
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "field_provenance": dict(FIELD_PROVENANCE),
++        "random_seed": None,
++        "duration_s": duration_s,
++        "tests_run": tests_run,
++        "reproducibility_checksum": "",
++        "honest_verdict": honest_verdict,
++    }
++    report["reproducibility_checksum"] = payload_checksum(report)
++    return report
++
++
++def validate_report(report: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in report:
++            errors.append(f"missing required field: {field}")
++    if errors:
++        return errors
++    if report.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if report.get("random_seed") is not None:
++        errors.append("random_seed must be null")
++    determinations = report.get("v554_terminal_claim_determinations")
++    if isinstance(determinations, Mapping):
++        for claim in ("v554_queue_integrity", "prospective_csl", "public_arc", "hardware"):
++            if determinations.get(claim, {}).get("eligible") is not False:
++                errors.append(f"{claim} must remain blocked")
++    else:
++        errors.append("v554_terminal_claim_determinations must be a mapping")
++    protected = report.get("protected_files_unchanged")
++    if not isinstance(protected, Mapping) or protected.get("ok") is not True:
++        errors.append("protected files changed")
++    summary = report.get("gate_check_summary")
++    if not isinstance(summary, Mapping):
++        errors.append("gate_check_summary must be a mapping")
++    principles = report.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles must be a mapping")
++    else:
++        for field in list(REQUIRED_ARTIFACT_FIELDS) + ["acceptance_gate:v555_queue_integrity_score"]:
++            if field not in principles:
++                errors.append(f"missing field_principles entry: {field}")
++    provenance = report.get("field_provenance")
++    if not isinstance(provenance, Mapping):
++        errors.append("field_provenance must be a mapping")
++    else:
++        if set(provenance) != set(REQUIRED_ARTIFACT_FIELDS):
++            errors.append("field_provenance must cover exactly required fields")
++        if not set(provenance.values()) <= {"measured", "derived", "constant", "upstream"}:
++            errors.append("field_provenance has invalid classification")
++    check_fields = (
++        "unique_id_and_deliverable_check",
++        "milestone_consistency_check",
++        "schema_validation",
++        "prior_failure_validation",
++        "exclusion_manifest_validation",
++        "structured_gate_validation",
++        "model_policy_validation",
++        "per_unit_row_contract_validation",
++        "prompt_terminal_line_validation",
++    )
++    checks_pass = (
++        report.get("task_count") == len(EXPECTED_V555_TASK_IDS)
++        and all(
++            isinstance(report.get(field), Mapping) and report[field].get("ok") is True
++            for field in check_fields
++        )
++        and isinstance(protected, Mapping)
++        and protected.get("ok") is True
++    )
++    if report.get("v555_queue_integrity_score") == 1.0 and not checks_pass:
++        errors.append("integrity score cannot pass with failed checks")
++    if report.get("v555_queue_integrity_score") == 0.0 and not report.get("blocked_reason"):
++        errors.append("blocked report must name blocked_reason")
++    if (
++        str(report.get("status") or "").startswith("complete_blocked")
++        and isinstance(summary, Mapping)
++        and not summary.get("failed_check")
++    ):
++        errors.append("blocked report must name failed_check")
++    honest = str(report.get("honest_verdict") or "")
++    if not honest.startswith(ALLOWED_HONEST_PREFIXES):
++        errors.append("honest_verdict lacks terminal prefix")
++    if report.get("reproducibility_checksum") != payload_checksum(report):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_report(
++    report: JsonMap,
++    root: Path = REPO_ROOT,
++    *,
++    env: Mapping[str, str] | None = None,
++) -> Path:
++    return atomic_write_json(RESULT_RELATIVE_PATH, report, root=root, env=env)
++
++
++def run(
++    *,
++    date: str = RUN_DATE,
++    root: Path = REPO_ROOT,
++    write: bool = True,
++    command_receipts: Sequence[JsonMap] | None = None,
++) -> JsonDict:
++    start = time.perf_counter()
++    before_hashes = protected_hashes(root)
++    if command_receipts is None:
++        command_receipts = read_external_test_receipts()
++    report = build_report(
++        root,
++        date=date,
++        command_receipts=command_receipts,
++        before_hashes=before_hashes,
++        duration_s=time.perf_counter() - start,
++    )
++    errors = validate_report(report)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_report(report, root)
++    return report
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    args = parser.parse_args(argv)
++    report = run(date=args.date)
++    print(f"{RESULT_RELATIVE_PATH.name}: {report['status']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 9da5eda167..593e827abe 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.92s, user: 2.31s, system: 0.20s, MEM: 115.62 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.74s, user: 2.47s, system: 0.22s, MEM: 116.01 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 76% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 78% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index e7d55f639d..0036b04fa7 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -2,9 +2,9 @@
+   "experiment": 2031,
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+-  "run_date": "20260814",
+-  "started_at": "2026-08-14T14:29:43Z",
+-  "finished_at": "2026-08-14T14:29:43Z",
++  "run_date": "20260815",
++  "started_at": "2026-08-15T06:59:53Z",
++  "finished_at": "2026-08-15T06:59:53Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json b/results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json
+new file mode 100644
+index 0000000000..49aa10e156
+--- /dev/null
++++ b/results/experiment_6448_v555_terminal_handoff_and_queue_integrity.json
+@@ -0,0 +1,1794 @@
++{
++  "status": "complete_blocked_v555_queue_integrity_failed",
++  "v554_terminal_rows": [
++    {
++      "task_id": "exp6436-v554-terminal-handoff-and-queue-preflight",
++      "deliverable_path": "results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json",
++      "byte_count": 124818,
++      "artifact_state": "blocked",
++      "status": "complete_blocked_v554_queue_incomplete",
++      "honest_verdict": "complete_blocked_v554_queue_incomplete: V553 terminal facts are preserved but the activated V554 queue contains 9 of 12 required tasks",
++      "readiness_fields": {
++        "v554_queue_ready_score": 0.0
++      },
++      "gate_summary": {
++        "failed_check": "task_count",
++        "expected_condition": "task_count == 12",
++        "observed_value": 9,
++        "evidence_path": "research-roadmap.yaml"
++      },
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "task_count: expected 12 observed 9"
++        ],
++        "scope": "exp6436-v554-terminal-handoff-and-queue-preflight"
++      }
++    },
++    {
++      "task_id": "exp6437-generation-to-verdict-receipt-replay-contract",
++      "deliverable_path": "results/experiment_6437_generation_to_verdict_receipt_replay_contract.json",
++      "byte_count": 882,
++      "artifact_state": "blocked",
++      "status": "blocked",
++      "honest_verdict": "blocked_gate_check_failed",
++      "readiness_fields": {},
++      "gate_summary": "1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-preflight.v554_queue_ready_score (actual=0.0 == expected=1.0)",
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "blocked_artifact"
++        ],
++        "scope": "exp6437-generation-to-verdict-receipt-replay-contract"
++      }
++    },
++    {
++      "task_id": "exp6438-powered-verification-cost-repair-ab",
++      "deliverable_path": "results/experiment_6438_powered_verification_cost_repair_ab.json",
++      "byte_count": null,
++      "artifact_state": "missing",
++      "status": "missing",
++      "honest_verdict": null,
++      "readiness_fields": {},
++      "gate_summary": null,
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "absent"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "missing_artifact"
++        ],
++        "scope": "exp6438-powered-verification-cost-repair-ab"
++      }
++    },
++    {
++      "task_id": "exp6439-factor-clause-influence-ab",
++      "deliverable_path": "results/experiment_6439_factor_clause_influence_ab.json",
++      "byte_count": null,
++      "artifact_state": "missing",
++      "status": "missing",
++      "honest_verdict": null,
++      "readiness_fields": {},
++      "gate_summary": null,
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "absent"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "missing_artifact"
++        ],
++        "scope": "exp6439-factor-clause-influence-ab"
++      }
++    },
++    {
++      "task_id": "exp6440-held-factor-revocation-binding-shift-ab",
++      "deliverable_path": "results/experiment_6440_held_factor_revocation_binding_shift_ab.json",
++      "byte_count": 960,
++      "artifact_state": "blocked",
++      "status": "blocked",
++      "honest_verdict": "blocked_gate_check_failed",
++      "readiness_fields": {},
++      "gate_summary": "1 of 1 gate(s) failed; first failure: exp6439-factor-clause-influence-ab.factor_influence_ready_score (upstream artifact not found for task id 'exp6439-factor-clause-influence-ab')",
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "blocked_artifact"
++        ],
++        "scope": "exp6440-held-factor-revocation-binding-shift-ab"
++      }
++    },
++    {
++      "task_id": "exp6441-prospective-query-conditioned-factor-reuse",
++      "deliverable_path": "results/experiment_6441_prospective_query_conditioned_factor_reuse.json",
++      "byte_count": null,
++      "artifact_state": "missing",
++      "status": "missing",
++      "honest_verdict": null,
++      "readiness_fields": {},
++      "gate_summary": null,
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "absent"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "missing_artifact"
++        ],
++        "scope": "exp6441-prospective-query-conditioned-factor-reuse"
++      }
++    },
++    {
++      "task_id": "exp6442-skill-misevolution-quarantine-rollback-ab",
++      "deliverable_path": "results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json",
++      "byte_count": 1027,
++      "artifact_state": "blocked",
++      "status": "blocked",
++      "honest_verdict": "blocked_gate_check_failed",
++      "readiness_fields": {},
++      "gate_summary": "1 of 1 gate(s) failed; first failure: exp6441-prospective-query-conditioned-factor-reuse.prospective_csl_ready_score (upstream artifact not found for task id 'exp6441-prospective-query-conditioned-factor-reuse')",
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "blocked_artifact"
++        ],
++        "scope": "exp6442-skill-misevolution-quarantine-rollback-ab"
++      }
++    },
++    {
++      "task_id": "exp6443-fresh-held-restart-csl-replication",
++      "deliverable_path": "results/experiment_6443_fresh_held_restart_csl_replication.json",
++      "byte_count": null,
++      "artifact_state": "missing",
++      "status": "missing",
++      "honest_verdict": null,
++      "readiness_fields": {},
++      "gate_summary": null,
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "absent"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "missing_artifact"
++        ],
++        "scope": "exp6443-fresh-held-restart-csl-replication"
++      }
++    },
++    {
++      "task_id": "exp6444-csl-lifecycle-recomputation-audit",
++      "deliverable_path": "results/experiment_6444_csl_lifecycle_recomputation_audit.json",
++      "byte_count": 749929,
++      "artifact_state": "blocked",
++      "status": "complete_blocked",
++      "honest_verdict": "complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence",
++      "readiness_fields": {
++        "csl_audit_ready_score": 0.0
++      },
++      "gate_summary": {
++        "failed_check_count": 11,
++        "failed_checks": [
++          {
++            "check": "blocked_upstream",
++            "observed_evidence": "blocked_upstream:exp6442",
++            "passed": false
++          },
++          {
++            "check": "current_adversarial_critical_flag",
++            "observed_evidence": "current_adversarial_critical_flag:DURATION_TOO_SHORT:exp6432",
++            "passed": false
++          },
++          {
++            "check": "current_adversarial_critical_flag",
++            "observed_evidence": "current_adversarial_critical_flag:artifact_missing:exp6441",
++            "passed": false
++          },
++          {
++            "check": "current_adversarial_critical_flag",
++            "observed_evidence": "current_adversarial_critical_flag:artifact_missing:exp6443",
++            "passed": false
++          },
++          {
++            "check": "missing_required_upstream_artifact",
++            "observed_evidence": "missing_required_upstream_artifact:exp6441",
++            "passed": false
++          },
++          {
++            "check": "missing_required_upstream_artifact",
++            "observed_evidence": "missing_required_upstream_artifact:exp6443",
++            "passed": false
++          },
++          {
++            "check": "required_evidence_attack_open",
++            "observed_evidence": "required_evidence_attack_open",
++            "passed": false
++          },
++          {
++            "check": "upstream_duration_or_substrate_flag",
++            "observed_evidence": "upstream_duration_or_substrate_flag:exp6432:DURATION_TOO_SHORT",
++            "passed": false
++          },
++          {
++            "check": "upstream_duration_or_substrate_unavailable",
++            "observed_evidence": "upstream_duration_or_substrate_unavailable:exp6441",
++            "passed": false
++          },
++          {
++            "check": "upstream_duration_or_substrate_unavailable",
++            "observed_evidence": "upstream_duration_or_substrate_unavailable:exp6442",
++            "passed": false
++          },
++          {
++            "check": "upstream_duration_or_substrate_unavailable",
++            "observed_evidence": "upstream_duration_or_substrate_unavailable:exp6443",
++            "passed": false
++          }
++        ],
++        "schema": "carnot.experiment_6444.csl_lifecycle_recomputation_audit.v1.gate_check_summary",
++        "summary": "11 audit check(s) failed; first failure: blocked_upstream:exp6442"
++      },
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "blocked_upstream:exp6442",
++          "current_adversarial_critical_flag:DURATION_TOO_SHORT:exp6432",
++          "current_adversarial_critical_flag:artifact_missing:exp6441",
++          "current_adversarial_critical_flag:artifact_missing:exp6443",
++          "missing_required_upstream_artifact:exp6441",
++          "missing_required_upstream_artifact:exp6443",
++          "required_evidence_attack_open",
++          "upstream_duration_or_substrate_flag:exp6432:DURATION_TOO_SHORT",
++          "upstream_duration_or_substrate_unavailable:exp6441",
++          "upstream_duration_or_substrate_unavailable:exp6442",
++          "upstream_duration_or_substrate_unavailable:exp6443"
++        ],
++        "scope": "exp6444-csl-lifecycle-recomputation-audit"
++      }
++    }
++  ],
++  "v554_activated_task_count": 9,
++  "v554_missing_zero_byte_or_blocked_artifacts": [
++    {
++      "task_id": "exp6436-v554-terminal-handoff-and-queue-preflight",
++      "deliverable_path": "results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json",
++      "byte_count": 124818,
++      "artifact_state": "blocked",
++      "status": "complete_blocked_v554_queue_incomplete",
++      "honest_verdict": "complete_blocked_v554_queue_incomplete: V553 terminal facts are preserved but the activated V554 queue contains 9 of 12 required tasks",
++      "readiness_fields": {
++        "v554_queue_ready_score": 0.0
++      },
++      "gate_summary": {
++        "failed_check": "task_count",
++        "expected_condition": "task_count == 12",
++        "observed_value": 9,
++        "evidence_path": "research-roadmap.yaml"
++      },
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "task_count: expected 12 observed 9"
++        ],
++        "scope": "exp6436-v554-terminal-handoff-and-queue-preflight"
++      }
++    },
++    {
++      "task_id": "exp6437-generation-to-verdict-receipt-replay-contract",
++      "deliverable_path": "results/experiment_6437_generation_to_verdict_receipt_replay_contract.json",
++      "byte_count": 882,
++      "artifact_state": "blocked",
++      "status": "blocked",
++      "honest_verdict": "blocked_gate_check_failed",
++      "readiness_fields": {},
++      "gate_summary": "1 of 1 gate(s) failed; first failure: exp6436-v554-terminal-handoff-and-queue-preflight.v554_queue_ready_score (actual=0.0 == expected=1.0)",
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "blocked_artifact"
++        ],
++        "scope": "exp6437-generation-to-verdict-receipt-replay-contract"
++      }
++    },
++    {
++      "task_id": "exp6438-powered-verification-cost-repair-ab",
++      "deliverable_path": "results/experiment_6438_powered_verification_cost_repair_ab.json",
++      "byte_count": null,
++      "artifact_state": "missing",
++      "status": "missing",
++      "honest_verdict": null,
++      "readiness_fields": {},
++      "gate_summary": null,
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "absent"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "missing_artifact"
++        ],
++        "scope": "exp6438-powered-verification-cost-repair-ab"
++      }
++    },
++    {
++      "task_id": "exp6439-factor-clause-influence-ab",
++      "deliverable_path": "results/experiment_6439_factor_clause_influence_ab.json",
++      "byte_count": null,
++      "artifact_state": "missing",
++      "status": "missing",
++      "honest_verdict": null,
++      "readiness_fields": {},
++      "gate_summary": null,
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "absent"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "missing_artifact"
++        ],
++        "scope": "exp6439-factor-clause-influence-ab"
++      }
++    },
++    {
++      "task_id": "exp6440-held-factor-revocation-binding-shift-ab",
++      "deliverable_path": "results/experiment_6440_held_factor_revocation_binding_shift_ab.json",
++      "byte_count": 960,
++      "artifact_state": "blocked",
++      "status": "blocked",
++      "honest_verdict": "blocked_gate_check_failed",
++      "readiness_fields": {},
++      "gate_summary": "1 of 1 gate(s) failed; first failure: exp6439-factor-clause-influence-ab.factor_influence_ready_score (upstream artifact not found for task id 'exp6439-factor-clause-influence-ab')",
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "blocked_artifact"
++        ],
++        "scope": "exp6440-held-factor-revocation-binding-shift-ab"
++      }
++    },
++    {
++      "task_id": "exp6441-prospective-query-conditioned-factor-reuse",
++      "deliverable_path": "results/experiment_6441_prospective_query_conditioned_factor_reuse.json",
++      "byte_count": null,
++      "artifact_state": "missing",
++      "status": "missing",
++      "honest_verdict": null,
++      "readiness_fields": {},
++      "gate_summary": null,
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "absent"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "missing_artifact"
++        ],
++        "scope": "exp6441-prospective-query-conditioned-factor-reuse"
++      }
++    },
++    {
++      "task_id": "exp6442-skill-misevolution-quarantine-rollback-ab",
++      "deliverable_path": "results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json",
++      "byte_count": 1027,
++      "artifact_state": "blocked",
++      "status": "blocked",
++      "honest_verdict": "blocked_gate_check_failed",
++      "readiness_fields": {},
++      "gate_summary": "1 of 1 gate(s) failed; first failure: exp6441-prospective-query-conditioned-factor-reuse.prospective_csl_ready_score (upstream artifact not found for task id 'exp6441-prospective-query-conditioned-factor-reuse')",
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "blocked_artifact"
++        ],
++        "scope": "exp6442-skill-misevolution-quarantine-rollback-ab"
++      }
++    },
++    {
++      "task_id": "exp6443-fresh-held-restart-csl-replication",
++      "deliverable_path": "results/experiment_6443_fresh_held_restart_csl_replication.json",
++      "byte_count": null,
++      "artifact_state": "missing",
++      "status": "missing",
++      "honest_verdict": null,
++      "readiness_fields": {},
++      "gate_summary": null,
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "absent"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "missing_artifact"
++        ],
++        "scope": "exp6443-fresh-held-restart-csl-replication"
++      }
++    },
++    {
++      "task_id": "exp6444-csl-lifecycle-recomputation-audit",
++      "deliverable_path": "results/experiment_6444_csl_lifecycle_recomputation_audit.json",
++      "byte_count": 749929,
++      "artifact_state": "blocked",
++      "status": "complete_blocked",
++      "honest_verdict": "complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence",
++      "readiness_fields": {
++        "csl_audit_ready_score": 0.0
++      },
++      "gate_summary": {
++        "failed_check_count": 11,
++        "failed_checks": [
++          {
++            "check": "blocked_upstream",
++            "observed_evidence": "blocked_upstream:exp6442",
++            "passed": false
++          },
++          {
++            "check": "current_adversarial_critical_flag",
++            "observed_evidence": "current_adversarial_critical_flag:DURATION_TOO_SHORT:exp6432",
++            "passed": false
++          },
++          {
++            "check": "current_adversarial_critical_flag",
++            "observed_evidence": "current_adversarial_critical_flag:artifact_missing:exp6441",
++            "passed": false
++          },
++          {
++            "check": "current_adversarial_critical_flag",
++            "observed_evidence": "current_adversarial_critical_flag:artifact_missing:exp6443",
++            "passed": false
++          },
++          {
++            "check": "missing_required_upstream_artifact",
++            "observed_evidence": "missing_required_upstream_artifact:exp6441",
++            "passed": false
++          },
++          {
++            "check": "missing_required_upstream_artifact",
++            "observed_evidence": "missing_required_upstream_artifact:exp6443",
++            "passed": false
++          },
++          {
++            "check": "required_evidence_attack_open",
++            "observed_evidence": "required_evidence_attack_open",
++            "passed": false
++          },
++          {
++            "check": "upstream_duration_or_substrate_flag",
++            "observed_evidence": "upstream_duration_or_substrate_flag:exp6432:DURATION_TOO_SHORT",
++            "passed": false
++          },
++          {
++            "check": "upstream_duration_or_substrate_unavailable",
++            "observed_evidence": "upstream_duration_or_substrate_unavailable:exp6441",
++            "passed": false
++          },
++          {
++            "check": "upstream_duration_or_substrate_unavailable",
++            "observed_evidence": "upstream_duration_or_substrate_unavailable:exp6442",
++            "passed": false
++          },
++          {
++            "check": "upstream_duration_or_substrate_unavailable",
++            "observed_evidence": "upstream_duration_or_substrate_unavailable:exp6443",
++            "passed": false
++          }
++        ],
++        "schema": "carnot.experiment_6444.csl_lifecycle_recomputation_audit.v1.gate_check_summary",
++        "summary": "11 audit check(s) failed; first failure: blocked_upstream:exp6442"
++      },
++      "current_adversarial_findings": {
++        "flag_count": 0,
++        "critical_count": 0,
++        "flags": [],
++        "verdict": "clean"
++      },
++      "final_claim_eligibility": {
++        "eligible": false,
++        "blockers": [
++          "blocked_upstream:exp6442",
++          "current_adversarial_critical_flag:DURATION_TOO_SHORT:exp6432",
++          "current_adversarial_critical_flag:artifact_missing:exp6441",
++          "current_adversarial_critical_flag:artifact_missing:exp6443",
++          "missing_required_upstream_artifact:exp6441",
++          "missing_required_upstream_artifact:exp6443",
++          "required_evidence_attack_open",
++          "upstream_duration_or_substrate_flag:exp6432:DURATION_TOO_SHORT",
++          "upstream_duration_or_substrate_unavailable:exp6441",
++          "upstream_duration_or_substrate_unavailable:exp6442",
++          "upstream_duration_or_substrate_unavailable:exp6443"
++        ],
++        "scope": "exp6444-csl-lifecycle-recomputation-audit"
++      }
++    }
++  ],
++  "v554_terminal_claim_determinations": {
++    "v554_queue_integrity": {
++      "eligible": false,
++      "blockers": [
++        "v554_queue_ready_score=0.0"
++      ],
++      "source": "results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json"
++    },
++    "path_receipt": {
++      "eligible": false,
++      "blockers": [
++        "exp6437_blocked_gate_check_failed"
++      ],
++      "source": "results/experiment_6437_generation_to_verdict_receipt_replay_contract.json"
++    },
++    "factor_influence": {
++      "eligible": false,
++      "blockers": [
++        "missing_or_blocked_v554_factor_chain"
++      ],
++      "source": "openspec/change-proposals/research-roadmap-vNEXT.md"
++    },
++    "prospective_csl": {
++      "eligible": false,
++      "blockers": [
++        "blocked_upstream:exp6442",
++        "current_adversarial_critical_flag:DURATION_TOO_SHORT:exp6432",
++        "current_adversarial_critical_flag:artifact_missing:exp6441",
++        "current_adversarial_critical_flag:artifact_missing:exp6443",
++        "missing_required_upstream_artifact:exp6441",
++        "missing_required_upstream_artifact:exp6443",
++        "required_evidence_attack_open",
++        "upstream_duration_or_substrate_flag:exp6432:DURATION_TOO_SHORT",
++        "upstream_duration_or_substrate_unavailable:exp6441",
++        "upstream_duration_or_substrate_unavailable:exp6442",
++        "upstream_duration_or_substrate_unavailable:exp6443"
++      ],
++      "source": "results/experiment_6444_csl_lifecycle_recomputation_audit.json"
++    },
++    "internal_arc_reachability": {
++      "eligible": false,
++      "blockers": [
++        "exp6445_not_activated"
++      ],
++      "source": "openspec/change-proposals/research-roadmap-vNEXT.md"
++    },
++    "public_arc": {
++      "eligible": false,
++      "blockers": [
++        "no_v554_public_arc_claim_eligible"
++      ],
++      "source": "openspec/change-proposals/research-roadmap-vNEXT.md"
++    },
++    "hardware": {
++      "eligible": false,
++      "blockers": [
++        "v554_contains_no_authenticated_hardware_evidence"
++      ],
++      "source": "openspec/change-proposals/research-roadmap-vNEXT.md"
++    }
++  },
++  "active_roadmap_hash": {
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++    "present": true,
++    "sha256": "sha256:2901851d9b4ea1b2dcc0bd4ef14abee9d7a65cc086599721820251ed198c61ce",
++    "size_bytes": 80472,
++    "milestone": "2026.08.555"
++  },
++  "task_count": 12,
++  "task_ids_in_order": [
++    "exp6448-v555-terminal-handoff-and-queue-integrity",
++    "exp6449-generation-to-verdict-path-receipt-contract",
++    "exp6450-sota-fixed-policy-candidate-corpus",
++    "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++    "exp6452-representation-objective-causal-ab",
++    "exp6453-held-verifier-budget-allocation-ab",
++    "exp6454-held-exact-constraint-energy-selection-ab",
++    "exp6455-prospective-verifier-bounded-factor-weight-csl",
++    "exp6456-corrupt-feedback-held-restart-csl-replication",
++    "exp6457-independent-verifier-bounded-csl-audit",
++    "exp6458-arc-representation-objective-generalization-ab",
++    "exp6459-v555-adversarial-capstone"
++  ],
++  "unique_id_and_deliverable_check": {
++    "ok": true,
++    "task_count": 12,
++    "expected_task_count": 12,
++    "expected_task_ids": [
++      "exp6448-v555-terminal-handoff-and-queue-integrity",
++      "exp6449-generation-to-verdict-path-receipt-contract",
++      "exp6450-sota-fixed-policy-candidate-corpus",
++      "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++      "exp6452-representation-objective-causal-ab",
++      "exp6453-held-verifier-budget-allocation-ab",
++      "exp6454-held-exact-constraint-energy-selection-ab",
++      "exp6455-prospective-verifier-bounded-factor-weight-csl",
++      "exp6456-corrupt-feedback-held-restart-csl-replication",
++      "exp6457-independent-verifier-bounded-csl-audit",
++      "exp6458-arc-representation-objective-generalization-ab",
++      "exp6459-v555-adversarial-capstone"
++    ],
++    "missing_expected_task_ids": [],
++    "extra_task_ids": [],
++    "duplicate_task_ids": [],
++    "unique_task_ids": true,
++    "duplicate_deliverables": [],
++    "unique_deliverables": true,
++    "deliverable_failures": [],
++    "execution_order_ok": true,
++    "retired_task_ids": []
++  },
++  "milestone_consistency_check": {
++    "ok": true,
++    "roadmap_milestone": "2026.08.555",
++    "expected_milestone": "2026.08.555",
++    "failures": []
++  },
++  "schema_validation": {
++    "ok": true,
++    "errors": []
++  },
++  "prior_failure_validation": {
++    "ok": false,
++    "required_rerun_task_ids": [
++      "exp6449-generation-to-verdict-path-receipt-contract",
++      "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++      "exp6453-held-verifier-budget-allocation-ab",
++      "exp6454-held-exact-constraint-energy-selection-ab",
++      "exp6456-corrupt-feedback-held-restart-csl-replication",
++      "exp6457-independent-verifier-bounded-csl-audit",
++      "exp6458-arc-representation-objective-generalization-ab"
++    ],
++    "missing_required_rerun_task_ids": [],
++    "required_prior_failure_rows": [
++      {
++        "task_id": "exp6449-generation-to-verdict-path-receipt-contract",
++        "present_in_roadmap": true,
++        "experiment_id": "exp6437-generation-to-verdict-receipt-replay-contract",
++        "verdict": "blocked_gate_check_failed",
++        "addressed_by": "This task is ungated, runs directly on immutable nonzero V553 fixtures, and validates identity, injected-boundary, and restored-boundary controls without depending on queue readiness.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++        "present_in_roadmap": true,
++        "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
++        "verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
++        "addressed_by": "This task fills a fixed predeclared predicate inventory and executes a fixed rule program; it does not generate ConstraintIR, a schema, a solver, or a finite answer channel, and it scores exact semantics rather than structural validity.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6453-held-verifier-budget-allocation-ab",
++        "present_in_roadmap": true,
++        "experiment_id": "exp6429-constraint-saturation-verification-cost-ab",
++        "verdict": "complete: selective verification matched always-refine accuracy with lower median and tail cost",
++        "addressed_by": "This rerun freezes the allocator before a sealed held split, charges probe cost, uses enough distinct units per budget cell, adds a constructed zero-gain control, and enforces the live duration and row-recomputation rules that made Exp6429 ineligible.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++        "present_in_roadmap": true,
++        "experiment_id": "exp1006-energy-selection-ssd",
++        "verdict": "blocked_gate_check_failed",
++        "addressed_by": "Never executed a comparison -- blocked at its own pre-gate, so it recorded no evidence about energy selection. This task is gated on Exp6452's objective-causality result and runs only if that lands.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++        "present_in_roadmap": true,
++        "experiment_id": "exp5708-sota-exact-constraint-canary",
++        "verdict": "blocked: parse_failures",
++        "addressed_by": "Blocked on candidate parsing, not on the selection question. This task consumes Exp6450's already-parsed reserved held partition instead of re-parsing SOTA output.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++        "present_in_roadmap": true,
++        "experiment_id": "exp6205-held-code-selection-v2",
++        "verdict": "blocked_gate_check_failed",
++        "addressed_by": "Also never ran; blocked on an upstream readiness score. Same gating class, different upstream, and this task's upstream (Exp6452) is in the same milestone rather than a prior one.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++        "present_in_roadmap": true,
++        "experiment_id": "exp787-sstar-energy-ranked-code-selection",
++        "verdict": "energy_prefilter_efficient",
++        "addressed_by": "The one prior that DID run, and it was POSITIVE (energy prefilter efficient), so it is not a failure this task repeats. What is different: a frozen learned objective from Exp6452 and a held partition the objective never saw, rather than a hand-specified prefilter on development rows.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6456-corrupt-feedback-held-restart-csl-replication",
++        "present_in_roadmap": true,
++        "experiment_id": "exp6432-held-shift-process-restart-csl-replication",
++        "verdict": "complete: held-shift process-restart replication improved future exact yield",
++        "addressed_by": "This rerun uses a different verifier-bounded external weight learner, new held bytes from all three mandatory GGUFs, an injected corrupt-feedback transport event, receipt-based quarantine, tombstone rollback, and real restart and duration receipts.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6457-independent-verifier-bounded-csl-audit",
++        "present_in_roadmap": true,
++        "experiment_id": "exp6433-csl-row-recomputation-safety-audit",
++        "verdict": "complete_null: V553 row recomputation audit completed; prospective CSL claim remains ineligible",
++        "addressed_by": "This audit evaluates a different verifier-bounded external weight mechanism with exact-sign updates, a new held corruption-and-restart replication, independent reducers, and current duration checks.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6457-independent-verifier-bounded-csl-audit",
++        "present_in_roadmap": true,
++        "experiment_id": "exp6444-csl-lifecycle-recomputation-audit",
++        "verdict": "complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence",
++        "addressed_by": "This audit remains ungated but reads the independently executable Exp6455 branch and the directly gated Exp6456 branch; it preserves missing evidence and retires the scope if the same blocked determination repeats.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      },
++      {
++        "task_id": "exp6458-arc-representation-objective-generalization-ab",
++        "present_in_roadmap": true,
++        "experiment_id": "exp6434-arc-state-key-reachability-ab",
++        "verdict": "no_honest_verdict: zero-byte artifact after hard wall-clock failure",
++        "addressed_by": "This recovery splits the roster into bounded CPU shards, writes atomic checkpoints after every cell, resumes without repeating finished cells, accepts a terminal partial artifact, and separates state representation from objective quality.",
++        "retire_if_same_verdict": true,
++        "complete": true,
++        "failure_reason": null
++      }
++    ],
++    "operator_override_rows": [
++      {
++        "task_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
++        "operator_override_present": true,
++        "cites_standing_transition_directive": true,
++        "value": "2026-05-29 operator directive (standing): routine milestone-transition work scope-matches prior handoffs by construction. This task hands off V554 and validates the new V555 queue; no previous task could validate this milestone."
++      },
++      {
++        "task_id": "exp6459-v555-adversarial-capstone",
++        "operator_override_present": true,
++        "cites_standing_transition_directive": true,
++        "value": "2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive scope-match; a VN adversarial capstone scope-matches every prior capstone by construction and is structurally never a doomed rerun. This instance reconciles V555, which no prior capstone can have done."
++      }
++    ],
++    "failures": [],
++    "validate_prior_failures": {
++      "schema_errors": [],
++      "prior_failure_violations": [
++        "Task 'exp6448-v555-terminal-handoff-and-queue-integrity' ('V554 terminal handoff and V555 queue integrity') matches archived experiments ['exp6363-v548-terminal-handoff-and-queue-preflight', 'exp6377-v549-terminal-handoff-and-queue-preflight', 'exp6391-v550-terminal-handoff-and-queue-preflight', 'exp6404-v551-terminal-handoff-and-queue-preflight', 'exp6410-v552-terminal-handoff-and-queue-preflight'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope",
++        "Task 'exp6455-prospective-verifier-bounded-factor-weight-csl' ('Prospective verifier-bounded factor-weight continuous self-learning') matches archived experiments ['exp5735-zero-gate-kan-continuous-self-learning', 'exp5749-csl-render-matched-mechanism-audit', 'exp5867-prospective-certified-continuous-learning', 'exp5882-shortcut-resistant-continuous-self-learning', 'exp5895-shortcut-safe-continuous-self-learning'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope",
++        "Task 'exp6459-v555-adversarial-capstone' ('V555 adversarial capstone and reconciliation') matches archived experiments ['exp6155-v533-capstone-reconciliation', 'exp6168-v534-capstone-reconciliation', 'exp6196-v536-capstone', 'exp6224-v538-adversarial-capstone', 'exp6238-v539-adversarial-capstone'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
++      ]
++    },
++    "gate_audit_prior_missing": 5,
++    "gate_audit_failure_details": [
++      "PRIOR_FAILURES_COVERAGE exp6448-v555-terminal-handoff-and-queue-integrity: title matches prior tasks ['exp5849-transition-v521', 'exp5863-transition-v522', 'exp5877-transition-v523', 'exp5890-transition-v524', 'exp5890-transition-v524'] but prior_failures is missing or empty",
++      "PRIOR_FAILURES_COVERAGE exp6450-sota-fixed-policy-candidate-corpus: title matches prior tasks ['exp6160-sota-decision-calibration-corpus', 'exp6195-arc-task-aware-prospective-fresh-transition', 'exp6263-clean-sota-event-replay-bridge', 'exp6414-fresh-three-family-factor-event-corpus', 'exp6427-fresh-constraint-saturation-factor-corpus'] but prior_failures is missing or empty",
++      "PRIOR_FAILURES_COVERAGE exp6452-representation-objective-causal-ab: title matches prior tasks ['exp5720-sota-attested-exact-envelope-canary', 'exp5722-fr11-compliance-recovery-rollback-canary', 'exp5726-arc-epistemic-ledger-live-ab', 'exp5734-sota-exact-proposal-stream', 'exp5741-arc-generic-primitive-live-ab'] but prior_failures is missing or empty",
++      "PRIOR_FAILURES_COVERAGE exp6455-prospective-verifier-bounded-factor-weight-csl: title matches prior tasks ['exp5721-fr11-memops-lifecycle-shadow-stream', 'exp5735-zero-gate-kan-continuous-self-learning', 'exp5749-csl-render-matched-mechanism-audit', 'exp5750-dependent-task-continuous-self-learning', 'exp5787-validation-gated-constraint-skill-ab'] but prior_failures is missing or empty",
++      "PRIOR_FAILURES_COVERAGE exp6459-v555-adversarial-capstone: title matches prior tasks ['exp5931-v526-capstone-reconciliation', 'exp5931-v526-capstone-reconciliation', 'exp5973-v528-capstone-reconciliation', 'exp6123-v530-capstone-reconciliation', 'exp6155-v533-capstone-reconciliation'] but prior_failures is missing or empty"
++    ],
++    "gate_audit_passed": false
++  },
++  "exclusion_manifest_validation": {
++    "ok": true,
++    "hard_exclusion_count": 0,
++    "risk_count": 2,
++    "risks": [
++      {
++        "task_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
++        "task_title": "V554 terminal handoff and V555 queue integrity",
++        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE",
++        "retired_exp_id": null,
++        "retirement_reason": "4 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
++        "has_operator_override": true,
++        "severity": "WARNING",
++        "detail": "4 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
++        "matched_priors": [
++          "exp6350-v547-bounded-terminal-handoff",
++          "exp6363-v548-terminal-handoff-and-queue-preflight",
++          "exp6404-v551-terminal-handoff-and-queue-preflight",
++          "exp6436-v554-terminal-handoff-and-queue-preflight"
++        ]
++      },
++      {
++        "task_id": "exp6459-v555-adversarial-capstone",
++        "task_title": "V555 adversarial capstone and reconciliation",
++        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE",
++        "retired_exp_id": null,
++        "retirement_reason": "12 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
++        "has_operator_override": true,
++        "severity": "WARNING",
++        "detail": "12 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
++        "matched_priors": [
++          "exp3041-matrix-capstone-adversarial-flag-hygiene-v1",
++          "exp6210-v537-adversarial-capstone",
++          "exp6224-v538-adversarial-capstone",
++          "exp6238-v539-adversarial-capstone",
++          "exp6271-v540-adversarial-capstone"
++        ]
++      }
++    ]
++  },
++  "structured_gate_validation": {
++    "ok": true,
++    "gate_count": 5,
++    "gate_failures": [],
++    "dependency_failures": [],
++    "retired_references": [],
++    "structured_gate_expressions": [
++      "gate:exp6451-typed-fact-grounding-fixed-policy-logic-ab:exp6450-sota-fixed-policy-candidate-corpus.sota_corpus_ready_score==1.0",
++      "gate:exp6452-representation-objective-causal-ab:exp6451-typed-fact-grounding-fixed-policy-logic-ab.typed_grounding_ready_score==1.0",
++      "gate:exp6453-held-verifier-budget-allocation-ab:exp6450-sota-fixed-policy-candidate-corpus.sota_corpus_ready_score==1.0",
++      "gate:exp6454-held-exact-constraint-energy-selection-ab:exp6452-representation-objective-causal-ab.objective_causal_ready_score==1.0",
++      "gate:exp6456-corrupt-feedback-held-restart-csl-replication:exp6455-prospective-verifier-bounded-factor-weight-csl.verifier_bounded_csl_ready_score==1.0"
++    ]
++  },
++  "gate_producer_contract_rows": [
++    {
++      "consumer_task_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++      "upstream": "exp6450-sota-fixed-policy-candidate-corpus",
++      "artifact_field": "sota_corpus_ready_score",
++      "operator": "==",
++      "expected_value": 1.0,
++      "producer_task_id": "exp6450-sota-fixed-policy-candidate-corpus",
++      "producer_deliverable": "results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
++      "producer_declares_artifact_field": true,
++      "gate_ok": true,
++      "failure_reason": null
++    },
++    {
++      "consumer_task_id": "exp6452-representation-objective-causal-ab",
++      "upstream": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++      "artifact_field": "typed_grounding_ready_score",
++      "operator": "==",
++      "expected_value": 1.0,
++      "producer_task_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++      "producer_deliverable": "results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json",
++      "producer_declares_artifact_field": true,
++      "gate_ok": true,
++      "failure_reason": null
++    },
++    {
++      "consumer_task_id": "exp6453-held-verifier-budget-allocation-ab",
++      "upstream": "exp6450-sota-fixed-policy-candidate-corpus",
++      "artifact_field": "sota_corpus_ready_score",
++      "operator": "==",
++      "expected_value": 1.0,
++      "producer_task_id": "exp6450-sota-fixed-policy-candidate-corpus",
++      "producer_deliverable": "results/experiment_6450_sota_fixed_policy_candidate_corpus.json",
++      "producer_declares_artifact_field": true,
++      "gate_ok": true,
++      "failure_reason": null
++    },
++    {
++      "consumer_task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++      "upstream": "exp6452-representation-objective-causal-ab",
++      "artifact_field": "objective_causal_ready_score",
++      "operator": "==",
++      "expected_value": 1.0,
++      "producer_task_id": "exp6452-representation-objective-causal-ab",
++      "producer_deliverable": "results/experiment_6452_representation_objective_causal_ab.json",
++      "producer_declares_artifact_field": true,
++      "gate_ok": true,
++      "failure_reason": null
++    },
++    {
++      "consumer_task_id": "exp6456-corrupt-feedback-held-restart-csl-replication",
++      "upstream": "exp6455-prospective-verifier-bounded-factor-weight-csl",
++      "artifact_field": "verifier_bounded_csl_ready_score",
++      "operator": "==",
++      "expected_value": 1.0,
++      "producer_task_id": "exp6455-prospective-verifier-bounded-factor-weight-csl",
++      "producer_deliverable": "results/experiment_6455_prospective_verifier_bounded_factor_weight_csl.json",
++      "producer_declares_artifact_field": true,
++      "gate_ok": true,
++      "failure_reason": null
++    }
++  ],
++  "model_policy_validation": {
++    "ok": true,
++    "llm_task_ids": [
++      "exp6450-sota-fixed-policy-candidate-corpus",
++      "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++      "exp6455-prospective-verifier-bounded-factor-weight-csl",
++      "exp6456-corrupt-feedback-held-restart-csl-replication"
++    ],
++    "expected_llm_task_ids": [
++      "exp6450-sota-fixed-policy-candidate-corpus",
++      "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++      "exp6455-prospective-verifier-bounded-factor-weight-csl",
++      "exp6456-corrupt-feedback-held-restart-csl-replication"
++    ],
++    "mandated_gguf_ids": [
++      "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "unsloth/gemma-4-31B-it-GGUF"
++    ],
++    "failures": []
++  },
++  "per_unit_row_contract_validation": {
++    "ok": true,
++    "comparative_task_ids": [
++      "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++      "exp6452-representation-objective-causal-ab",
++      "exp6453-held-verifier-budget-allocation-ab",
++      "exp6454-held-exact-constraint-energy-selection-ab",
++      "exp6455-prospective-verifier-bounded-factor-weight-csl",
++      "exp6456-corrupt-feedback-held-restart-csl-replication",
++      "exp6458-arc-representation-objective-generalization-ab"
++    ],
++    "per_unit_failures": [],
++    "blocked_summary_failures": [],
++    "failures": []
++  },
++  "prompt_terminal_line_validation": {
++    "ok": true,
++    "checked_task_count": 12,
++    "failures": []
++  },
++  "protected_files_unchanged": {
++    "ok": true,
++    "rows": {
++      "CLAUDE.md": {
++        "before": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
++        "after": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
++        "unchanged": true
++      },
++      "CODEX.md": {
++        "before": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "after": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++        "unchanged": true
++      },
++      "_bmad/architecture.md": {
++        "before": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
++        "after": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
++        "unchanged": true
++      },
++      "_bmad/prd.md": {
++        "before": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
++        "after": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
++        "unchanged": true
++      },
++      "openspec/capabilities/research-reporting/spec.md": {
++        "before": "sha256:ee05946d6a008d99f83855aa406bb2ebf296d9214fa288c159aeb3f1a6fb6011",
++        "after": "sha256:ee05946d6a008d99f83855aa406bb2ebf296d9214fa288c159aeb3f1a6fb6011",
++        "unchanged": true
++      },
++      "openspec/change-proposals/research-roadmap-vNEXT.md": {
++        "before": "sha256:c22bf78255966030322b3d3f4fab314c8af3baa37b03cc9de657adeefff3545b",
++        "after": "sha256:c22bf78255966030322b3d3f4fab314c8af3baa37b03cc9de657adeefff3545b",
++        "unchanged": true
++      },
++      "ops/changelog.md": {
++        "before": "sha256:a92b47eb7b6b6a8ca7027dea06c429bd01a914a3c3134ddb1e0193a78e63a615",
++        "after": "sha256:a92b47eb7b6b6a8ca7027dea06c429bd01a914a3c3134ddb1e0193a78e63a615",
++        "unchanged": true
++      },
++      "ops/conductor-log.md": {
++        "before": "sha256:18259f74f14e9fcaa7149b8b40ac195b9f05ecc6e7073b44f6603560c1587e5d",
++        "after": "sha256:18259f74f14e9fcaa7149b8b40ac195b9f05ecc6e7073b44f6603560c1587e5d",
++        "unchanged": true
++      },
++      "ops/e2e-test-plan.md": {
++        "before": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++        "after": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++        "unchanged": true
++      },
++      "ops/exclusion_manifest.yaml": {
++        "before": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++        "after": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++        "unchanged": true
++      },
++      "ops/status.md": {
++        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++        "unchanged": true
++      },
++      "research-complete.yaml": {
++        "before": "sha256:c32d0f9e1e179e8b1085cdedea70832e30b03debbdeeb88d42c20017cc873542",
++        "after": "sha256:c32d0f9e1e179e8b1085cdedea70832e30b03debbdeeb88d42c20017cc873542",
++        "unchanged": true
++      },
++      "research-hardware-wishlist.md": {
++        "before": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
++        "after": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
++        "unchanged": true
++      },
++      "research-program.md": {
++        "before": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++        "after": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++        "unchanged": true
++      },
++      "research-references.md": {
++        "before": "sha256:fc54fc705a78d90bdfccc6d3f0d58f579835d107d28c35c10eb3eba9cce05d34",
++        "after": "sha256:fc54fc705a78d90bdfccc6d3f0d58f579835d107d28c35c10eb3eba9cce05d34",
++        "unchanged": true
++      },
++      "research-roadmap.yaml": {
++        "before": "sha256:2901851d9b4ea1b2dcc0bd4ef14abee9d7a65cc086599721820251ed198c61ce",
++        "after": "sha256:2901851d9b4ea1b2dcc0bd4ef14abee9d7a65cc086599721820251ed198c61ce",
++        "unchanged": true
++      },
++      "results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json": {
++        "before": "sha256:2844ba3c75198686db1b527a26d4b7454046c1a49bd3e00c550c10a8eb98365c",
++        "after": "sha256:2844ba3c75198686db1b527a26d4b7454046c1a49bd3e00c550c10a8eb98365c",
++        "unchanged": true
++      },
++      "results/experiment_6437_generation_to_verdict_receipt_replay_contract.json": {
++        "before": "sha256:b6975bda8a9ece5a9599a8b73a3edc6200361fb391cae00a7e5169cfcdf67782",
++        "after": "sha256:b6975bda8a9ece5a9599a8b73a3edc6200361fb391cae00a7e5169cfcdf67782",
++        "unchanged": true
++      },
++      "results/experiment_6438_powered_verification_cost_repair_ab.json": {
++        "before": null,
++        "after": null,
++        "unchanged": true
++      },
++      "results/experiment_6439_factor_clause_influence_ab.json": {
++        "before": null,
++        "after": null,
++        "unchanged": true
++      },
++      "results/experiment_6440_held_factor_revocation_binding_shift_ab.json": {
++        "before": "sha256:0da29a6e4fef78e9e81dd804ffe1680f2a395c56a964a52ab345182d480beb19",
++        "after": "sha256:0da29a6e4fef78e9e81dd804ffe1680f2a395c56a964a52ab345182d480beb19",
++        "unchanged": true
++      },
++      "results/experiment_6441_prospective_query_conditioned_factor_reuse.json": {
++        "before": null,
++        "after": null,
++        "unchanged": true
++      },
++      "results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json": {
++        "before": "sha256:6706622ebc77f0bfa4e8b76bc5d81cf68a98f8fd4f1a16891b05537f0bfda470",
++        "after": "sha256:6706622ebc77f0bfa4e8b76bc5d81cf68a98f8fd4f1a16891b05537f0bfda470",
++        "unchanged": true
++      },
++      "results/experiment_6443_fresh_held_restart_csl_replication.json": {
++        "before": null,
++        "after": null,
++        "unchanged": true
++      },
++      "results/experiment_6444_csl_lifecycle_recomputation_audit.json": {
++        "before": "sha256:eb7d2f93be3fe89d430826d9d78d9eb38d8d5c36f91b9a6b11fa50cd2e9520ea",
++        "after": "sha256:eb7d2f93be3fe89d430826d9d78d9eb38d8d5c36f91b9a6b11fa50cd2e9520ea",
++        "unchanged": true
++      },
++      "scripts/adversarial_verify.py": {
++        "before": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
++        "after": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
++        "unchanged": true
++      },
++      "scripts/audit_roadmap_gates.py": {
++        "before": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
++        "after": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
++        "unchanged": true
++      },
++      "scripts/conductor_gates.py": {
++        "before": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
++        "after": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
++        "unchanged": true
++      },
++      "scripts/exclusion_manifest_lint.py": {
++        "before": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
++        "after": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
++        "unchanged": true
++      },
++      "scripts/research_conductor.py": {
++        "before": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
++        "after": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
++        "unchanged": true
++      },
++      "scripts/roadmap_schema.py": {
++        "before": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
++        "after": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
++        "unchanged": true
++      },
++      "scripts/validate_prior_failures.py": {
++        "before": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++        "after": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++        "unchanged": true
++      }
++    }
++  },
++  "v555_queue_integrity_score": 0.0,
++  "blocked_reason": "prior_failure_validation: prior_failure_validation.ok is true",
++  "gate_check_summary": {
++    "failed_check": "prior_failure_validation",
++    "expected_condition": "prior_failure_validation.ok is true",
++    "observed_value": {
++      "ok": false,
++      "required_rerun_task_ids": [
++        "exp6449-generation-to-verdict-path-receipt-contract",
++        "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++        "exp6453-held-verifier-budget-allocation-ab",
++        "exp6454-held-exact-constraint-energy-selection-ab",
++        "exp6456-corrupt-feedback-held-restart-csl-replication",
++        "exp6457-independent-verifier-bounded-csl-audit",
++        "exp6458-arc-representation-objective-generalization-ab"
++      ],
++      "missing_required_rerun_task_ids": [],
++      "required_prior_failure_rows": [
++        {
++          "task_id": "exp6449-generation-to-verdict-path-receipt-contract",
++          "present_in_roadmap": true,
++          "experiment_id": "exp6437-generation-to-verdict-receipt-replay-contract",
++          "verdict": "blocked_gate_check_failed",
++          "addressed_by": "This task is ungated, runs directly on immutable nonzero V553 fixtures, and validates identity, injected-boundary, and restored-boundary controls without depending on queue readiness.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++          "present_in_roadmap": true,
++          "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
++          "verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
++          "addressed_by": "This task fills a fixed predeclared predicate inventory and executes a fixed rule program; it does not generate ConstraintIR, a schema, a solver, or a finite answer channel, and it scores exact semantics rather than structural validity.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6453-held-verifier-budget-allocation-ab",
++          "present_in_roadmap": true,
++          "experiment_id": "exp6429-constraint-saturation-verification-cost-ab",
++          "verdict": "complete: selective verification matched always-refine accuracy with lower median and tail cost",
++          "addressed_by": "This rerun freezes the allocator before a sealed held split, charges probe cost, uses enough distinct units per budget cell, adds a constructed zero-gain control, and enforces the live duration and row-recomputation rules that made Exp6429 ineligible.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++          "present_in_roadmap": true,
++          "experiment_id": "exp1006-energy-selection-ssd",
++          "verdict": "blocked_gate_check_failed",
++          "addressed_by": "Never executed a comparison -- blocked at its own pre-gate, so it recorded no evidence about energy selection. This task is gated on Exp6452's objective-causality result and runs only if that lands.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++          "present_in_roadmap": true,
++          "experiment_id": "exp5708-sota-exact-constraint-canary",
++          "verdict": "blocked: parse_failures",
++          "addressed_by": "Blocked on candidate parsing, not on the selection question. This task consumes Exp6450's already-parsed reserved held partition instead of re-parsing SOTA output.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++          "present_in_roadmap": true,
++          "experiment_id": "exp6205-held-code-selection-v2",
++          "verdict": "blocked_gate_check_failed",
++          "addressed_by": "Also never ran; blocked on an upstream readiness score. Same gating class, different upstream, and this task's upstream (Exp6452) is in the same milestone rather than a prior one.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6454-held-exact-constraint-energy-selection-ab",
++          "present_in_roadmap": true,
++          "experiment_id": "exp787-sstar-energy-ranked-code-selection",
++          "verdict": "energy_prefilter_efficient",
++          "addressed_by": "The one prior that DID run, and it was POSITIVE (energy prefilter efficient), so it is not a failure this task repeats. What is different: a frozen learned objective from Exp6452 and a held partition the objective never saw, rather than a hand-specified prefilter on development rows.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6456-corrupt-feedback-held-restart-csl-replication",
++          "present_in_roadmap": true,
++          "experiment_id": "exp6432-held-shift-process-restart-csl-replication",
++          "verdict": "complete: held-shift process-restart replication improved future exact yield",
++          "addressed_by": "This rerun uses a different verifier-bounded external weight learner, new held bytes from all three mandatory GGUFs, an injected corrupt-feedback transport event, receipt-based quarantine, tombstone rollback, and real restart and duration receipts.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6457-independent-verifier-bounded-csl-audit",
++          "present_in_roadmap": true,
++          "experiment_id": "exp6433-csl-row-recomputation-safety-audit",
++          "verdict": "complete_null: V553 row recomputation audit completed; prospective CSL claim remains ineligible",
++          "addressed_by": "This audit evaluates a different verifier-bounded external weight mechanism with exact-sign updates, a new held corruption-and-restart replication, independent reducers, and current duration checks.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6457-independent-verifier-bounded-csl-audit",
++          "present_in_roadmap": true,
++          "experiment_id": "exp6444-csl-lifecycle-recomputation-audit",
++          "verdict": "complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence",
++          "addressed_by": "This audit remains ungated but reads the independently executable Exp6455 branch and the directly gated Exp6456 branch; it preserves missing evidence and retires the scope if the same blocked determination repeats.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        },
++        {
++          "task_id": "exp6458-arc-representation-objective-generalization-ab",
++          "present_in_roadmap": true,
++          "experiment_id": "exp6434-arc-state-key-reachability-ab",
++          "verdict": "no_honest_verdict: zero-byte artifact after hard wall-clock failure",
++          "addressed_by": "This recovery splits the roster into bounded CPU shards, writes atomic checkpoints after every cell, resumes without repeating finished cells, accepts a terminal partial artifact, and separates state representation from objective quality.",
++          "retire_if_same_verdict": true,
++          "complete": true,
++          "failure_reason": null
++        }
++      ],
++      "operator_override_rows": [
++        {
++          "task_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
++          "operator_override_present": true,
++          "cites_standing_transition_directive": true,
++          "value": "2026-05-29 operator directive (standing): routine milestone-transition work scope-matches prior handoffs by construction. This task hands off V554 and validates the new V555 queue; no previous task could validate this milestone."
++        },
++        {
++          "task_id": "exp6459-v555-adversarial-capstone",
++          "operator_override_present": true,
++          "cites_standing_transition_directive": true,
++          "value": "2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive scope-match; a VN adversarial capstone scope-matches every prior capstone by construction and is structurally never a doomed rerun. This instance reconciles V555, which no prior capstone can have done."
++        }
++      ],
++      "failures": [],
++      "validate_prior_failures": {
++        "schema_errors": [],
++        "prior_failure_violations": [
++          "Task 'exp6448-v555-terminal-handoff-and-queue-integrity' ('V554 terminal handoff and V555 queue integrity') matches archived experiments ['exp6363-v548-terminal-handoff-and-queue-preflight', 'exp6377-v549-terminal-handoff-and-queue-preflight', 'exp6391-v550-terminal-handoff-and-queue-preflight', 'exp6404-v551-terminal-handoff-and-queue-preflight', 'exp6410-v552-terminal-handoff-and-queue-preflight'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope",
++          "Task 'exp6455-prospective-verifier-bounded-factor-weight-csl' ('Prospective verifier-bounded factor-weight continuous self-learning') matches archived experiments ['exp5735-zero-gate-kan-continuous-self-learning', 'exp5749-csl-render-matched-mechanism-audit', 'exp5867-prospective-certified-continuous-learning', 'exp5882-shortcut-resistant-continuous-self-learning', 'exp5895-shortcut-safe-continuous-self-learning'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope",
++          "Task 'exp6459-v555-adversarial-capstone' ('V555 adversarial capstone and reconciliation') matches archived experiments ['exp6155-v533-capstone-reconciliation', 'exp6168-v534-capstone-reconciliation', 'exp6196-v536-capstone', 'exp6224-v538-adversarial-capstone', 'exp6238-v539-adversarial-capstone'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
++        ]
++      },
++      "gate_audit_prior_missing": 5,
++      "gate_audit_failure_details": [
++        "PRIOR_FAILURES_COVERAGE exp6448-v555-terminal-handoff-and-queue-integrity: title matches prior tasks ['exp5849-transition-v521', 'exp5863-transition-v522', 'exp5877-transition-v523', 'exp5890-transition-v524', 'exp5890-transition-v524'] but prior_failures is missing or empty",
++        "PRIOR_FAILURES_COVERAGE exp6450-sota-fixed-policy-candidate-corpus: title matches prior tasks ['exp6160-sota-decision-calibration-corpus', 'exp6195-arc-task-aware-prospective-fresh-transition', 'exp6263-clean-sota-event-replay-bridge', 'exp6414-fresh-three-family-factor-event-corpus', 'exp6427-fresh-constraint-saturation-factor-corpus'] but prior_failures is missing or empty",
++        "PRIOR_FAILURES_COVERAGE exp6452-representation-objective-causal-ab: title matches prior tasks ['exp5720-sota-attested-exact-envelope-canary', 'exp5722-fr11-compliance-recovery-rollback-canary', 'exp5726-arc-epistemic-ledger-live-ab', 'exp5734-sota-exact-proposal-stream', 'exp5741-arc-generic-primitive-live-ab'] but prior_failures is missing or empty",
++        "PRIOR_FAILURES_COVERAGE exp6455-prospective-verifier-bounded-factor-weight-csl: title matches prior tasks ['exp5721-fr11-memops-lifecycle-shadow-stream', 'exp5735-zero-gate-kan-continuous-self-learning', 'exp5749-csl-render-matched-mechanism-audit', 'exp5750-dependent-task-continuous-self-learning', 'exp5787-validation-gated-constraint-skill-ab'] but prior_failures is missing or empty",
++        "PRIOR_FAILURES_COVERAGE exp6459-v555-adversarial-capstone: title matches prior tasks ['exp5931-v526-capstone-reconciliation', 'exp5931-v526-capstone-reconciliation', 'exp5973-v528-capstone-reconciliation', 'exp6123-v530-capstone-reconciliation', 'exp6155-v533-capstone-reconciliation'] but prior_failures is missing or empty"
++      ],
++      "gate_audit_passed": false
++    },
++    "evidence_path": "research-roadmap.yaml"
++  },
++  "preconditions_checked": {
++    "schema": "carnot.experiment_6448.v555_terminal_handoff_and_queue_integrity.v1",
++    "experiment_id": "exp6448-v555-terminal-handoff-and-queue-integrity",
++    "date": "20260815",
++    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
++    "active_milestone": "2026.08.555",
++    "git_status_before": [
++      " M openspec/capabilities/research-reporting/spec.md",
++      " M ops/artifact_convention_audit_report.md",
++      " M results/experiment_1736_kanele_synth.json",
++      " M results/experiment_1822_rtl_synth.log",
++      " M results/experiment_2031.json",
++      "?? python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py",
++      "?? tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py"
++    ],
++    "before_hashes": {
++      "research-roadmap.yaml": "sha256:2901851d9b4ea1b2dcc0bd4ef14abee9d7a65cc086599721820251ed198c61ce",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:c22bf78255966030322b3d3f4fab314c8af3baa37b03cc9de657adeefff3545b",
++      "research-complete.yaml": "sha256:c32d0f9e1e179e8b1085cdedea70832e30b03debbdeeb88d42c20017cc873542",
++      "research-references.md": "sha256:fc54fc705a78d90bdfccc6d3f0d58f579835d107d28c35c10eb3eba9cce05d34",
++      "research-hardware-wishlist.md": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
++      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++      "_bmad/prd.md": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
++      "_bmad/architecture.md": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
++      "scripts/research_conductor.py": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
++      "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
++      "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++      "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
++      "scripts/audit_roadmap_gates.py": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
++      "scripts/conductor_gates.py": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
++      "scripts/adversarial_verify.py": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
++      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++      "ops/conductor-log.md": "sha256:18259f74f14e9fcaa7149b8b40ac195b9f05ecc6e7073b44f6603560c1587e5d",
++      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++      "ops/changelog.md": "sha256:a92b47eb7b6b6a8ca7027dea06c429bd01a914a3c3134ddb1e0193a78e63a615",
++      "openspec/capabilities/research-reporting/spec.md": "sha256:ee05946d6a008d99f83855aa406bb2ebf296d9214fa288c159aeb3f1a6fb6011",
++      "results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json": "sha256:2844ba3c75198686db1b527a26d4b7454046c1a49bd3e00c550c10a8eb98365c",
++      "results/experiment_6437_generation_to_verdict_receipt_replay_contract.json": "sha256:b6975bda8a9ece5a9599a8b73a3edc6200361fb391cae00a7e5169cfcdf67782",
++      "results/experiment_6438_powered_verification_cost_repair_ab.json": null,
++      "results/experiment_6439_factor_clause_influence_ab.json": null,
++      "results/experiment_6440_held_factor_revocation_binding_shift_ab.json": "sha256:0da29a6e4fef78e9e81dd804ffe1680f2a395c56a964a52ab345182d480beb19",
++      "results/experiment_6441_prospective_query_conditioned_factor_reuse.json": null,
++      "results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json": "sha256:6706622ebc77f0bfa4e8b76bc5d81cf68a98f8fd4f1a16891b05537f0bfda470",
++      "results/experiment_6443_fresh_held_restart_csl_replication.json": null,
++      "results/experiment_6444_csl_lifecycle_recomputation_audit.json": "sha256:eb7d2f93be3fe89d430826d9d78d9eb38d8d5c36f91b9a6b11fa50cd2e9520ea"
++    },
++    "after_hashes": {
++      "research-roadmap.yaml": "sha256:2901851d9b4ea1b2dcc0bd4ef14abee9d7a65cc086599721820251ed198c61ce",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:c22bf78255966030322b3d3f4fab314c8af3baa37b03cc9de657adeefff3545b",
++      "research-complete.yaml": "sha256:c32d0f9e1e179e8b1085cdedea70832e30b03debbdeeb88d42c20017cc873542",
++      "research-references.md": "sha256:fc54fc705a78d90bdfccc6d3f0d58f579835d107d28c35c10eb3eba9cce05d34",
++      "research-hardware-wishlist.md": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
++      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++      "_bmad/prd.md": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
++      "_bmad/architecture.md": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
++      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
++      "CLAUDE.md": "sha256:f17347721678c3f9cd796ff2ad3a8205d75a3dea566e94bb4559e86c6e520d59",
++      "scripts/research_conductor.py": "sha256:01ee05e4b261754164ffac978bbd6920e51cbc172618162734fec806a9c11949",
++      "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
++      "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
++      "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
++      "scripts/audit_roadmap_gates.py": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9",
++      "scripts/conductor_gates.py": "sha256:7f20adf70913d4b122b855df1df485415f3e279f44cae59b29037e63efa4f9c8",
++      "scripts/adversarial_verify.py": "sha256:40272d26671f59237ec08b5d3952cf86cc100f19900be0bffaeb5f1fb7a764a6",
++      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
++      "ops/conductor-log.md": "sha256:18259f74f14e9fcaa7149b8b40ac195b9f05ecc6e7073b44f6603560c1587e5d",
++      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++      "ops/changelog.md": "sha256:a92b47eb7b6b6a8ca7027dea06c429bd01a914a3c3134ddb1e0193a78e63a615",
++      "openspec/capabilities/research-reporting/spec.md": "sha256:ee05946d6a008d99f83855aa406bb2ebf296d9214fa288c159aeb3f1a6fb6011",
++      "results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json": "sha256:2844ba3c75198686db1b527a26d4b7454046c1a49bd3e00c550c10a8eb98365c",
++      "results/experiment_6437_generation_to_verdict_receipt_replay_contract.json": "sha256:b6975bda8a9ece5a9599a8b73a3edc6200361fb391cae00a7e5169cfcdf67782",
++      "results/experiment_6438_powered_verification_cost_repair_ab.json": null,
++      "results/experiment_6439_factor_clause_influence_ab.json": null,
++      "results/experiment_6440_held_factor_revocation_binding_shift_ab.json": "sha256:0da29a6e4fef78e9e81dd804ffe1680f2a395c56a964a52ab345182d480beb19",
++      "results/experiment_6441_prospective_query_conditioned_factor_reuse.json": null,
++      "results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json": "sha256:6706622ebc77f0bfa4e8b76bc5d81cf68a98f8fd4f1a16891b05537f0bfda470",
++      "results/experiment_6443_fresh_held_restart_csl_replication.json": null,
++      "results/experiment_6444_csl_lifecycle_recomputation_audit.json": "sha256:eb7d2f93be3fe89d430826d9d78d9eb38d8d5c36f91b9a6b11fa50cd2e9520ea"
++    },
++    "active_roadmap": {
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
++      "present": true,
++      "sha256": "sha256:2901851d9b4ea1b2dcc0bd4ef14abee9d7a65cc086599721820251ed198c61ce",
++      "size_bytes": 80472
++    },
++    "v554_artifacts": [
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json",
++        "present": true,
++        "sha256": "sha256:2844ba3c75198686db1b527a26d4b7454046c1a49bd3e00c550c10a8eb98365c",
++        "size_bytes": 124818
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6437_generation_to_verdict_receipt_replay_contract.json",
++        "present": true,
++        "sha256": "sha256:b6975bda8a9ece5a9599a8b73a3edc6200361fb391cae00a7e5169cfcdf67782",
++        "size_bytes": 882
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6438_powered_verification_cost_repair_ab.json",
++        "present": false,
++        "sha256": null,
++        "size_bytes": null
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6439_factor_clause_influence_ab.json",
++        "present": false,
++        "sha256": null,
++        "size_bytes": null
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6440_held_factor_revocation_binding_shift_ab.json",
++        "present": true,
++        "sha256": "sha256:0da29a6e4fef78e9e81dd804ffe1680f2a395c56a964a52ab345182d480beb19",
++        "size_bytes": 960
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6441_prospective_query_conditioned_factor_reuse.json",
++        "present": false,
++        "sha256": null,
++        "size_bytes": null
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json",
++        "present": true,
++        "sha256": "sha256:6706622ebc77f0bfa4e8b76bc5d81cf68a98f8fd4f1a16891b05537f0bfda470",
++        "size_bytes": 1027
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6443_fresh_held_restart_csl_replication.json",
++        "present": false,
++        "sha256": null,
++        "size_bytes": null
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6444_csl_lifecycle_recomputation_audit.json",
++        "present": true,
++        "sha256": "sha256:eb7d2f93be3fe89d430826d9d78d9eb38d8d5c36f91b9a6b11fa50cd2e9520ea",
++        "size_bytes": 749929
++      }
++    ],
++    "v554_missing_or_zero_byte": [
++      {
++        "task_id": "exp6438-powered-verification-cost-repair-ab",
++        "deliverable_path": "results/experiment_6438_powered_verification_cost_repair_ab.json",
++        "byte_count": null,
++        "artifact_state": "missing",
++        "status": "missing",
++        "honest_verdict": null,
++        "readiness_fields": {},
++        "gate_summary": null,
++        "current_adversarial_findings": {
++          "flag_count": 0,
++          "critical_count": 0,
++          "flags": [],
++          "verdict": "absent"
++        },
++        "final_claim_eligibility": {
++          "eligible": false,
++          "blockers": [
++            "missing_artifact"
++          ],
++          "scope": "exp6438-powered-verification-cost-repair-ab"
++        }
++      },
++      {
++        "task_id": "exp6439-factor-clause-influence-ab",
++        "deliverable_path": "results/experiment_6439_factor_clause_influence_ab.json",
++        "byte_count": null,
++        "artifact_state": "missing",
++        "status": "missing",
++        "honest_verdict": null,
++        "readiness_fields": {},
++        "gate_summary": null,
++        "current_adversarial_findings": {
++          "flag_count": 0,
++          "critical_count": 0,
++          "flags": [],
++          "verdict": "absent"
++        },
++        "final_claim_eligibility": {
++          "eligible": false,
++          "blockers": [
++            "missing_artifact"
++          ],
++          "scope": "exp6439-factor-clause-influence-ab"
++        }
++      },
++      {
++        "task_id": "exp6441-prospective-query-conditioned-factor-reuse",
++        "deliverable_path": "results/experiment_6441_prospective_query_conditioned_factor_reuse.json",
++        "byte_count": null,
++        "artifact_state": "missing",
++        "status": "missing",
++        "honest_verdict": null,
++        "readiness_fields": {},
++        "gate_summary": null,
++        "current_adversarial_findings": {
++          "flag_count": 0,
++          "critical_count": 0,
++          "flags": [],
++          "verdict": "absent"
++        },
++        "final_claim_eligibility": {
++          "eligible": false,
++          "blockers": [
++            "missing_artifact"
++          ],
++          "scope": "exp6441-prospective-query-conditioned-factor-reuse"
++        }
++      },
++      {
++        "task_id": "exp6443-fresh-held-restart-csl-replication",
++        "deliverable_path": "results/experiment_6443_fresh_held_restart_csl_replication.json",
++        "byte_count": null,
++        "artifact_state": "missing",
++        "status": "missing",
++        "honest_verdict": null,
++        "readiness_fields": {},
++        "gate_summary": null,
++        "current_adversarial_findings": {
++          "flag_count": 0,
++          "critical_count": 0,
++          "flags": [],
++          "verdict": "absent"
++        },
++        "final_claim_eligibility": {
++          "eligible": false,
++          "blockers": [
++            "missing_artifact"
++          ],
++          "scope": "exp6443-fresh-held-restart-csl-replication"
++        }
++      }
++    ],
++    "exclusion_manifest": {
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
++      "present": true,
++      "sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++      "size_bytes": 47866
++    },
++    "roadmap_schema": {
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/roadmap_schema.py",
++      "present": true,
++      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
++      "size_bytes": 9371
++    },
++    "protected_files": [
++      "research-roadmap.yaml",
++      "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "research-complete.yaml",
++      "research-references.md",
++      "research-hardware-wishlist.md",
++      "research-program.md",
++      "_bmad/prd.md",
++      "_bmad/architecture.md",
++      "CODEX.md",
++      "CLAUDE.md",
++      "scripts/research_conductor.py",
++      "scripts/roadmap_schema.py",
++      "scripts/validate_prior_failures.py",
++      "scripts/exclusion_manifest_lint.py",
++      "scripts/audit_roadmap_gates.py",
++      "scripts/conductor_gates.py",
++      "scripts/adversarial_verify.py",
++      "ops/e2e-test-plan.md",
++      "ops/conductor-log.md",
++      "ops/exclusion_manifest.yaml",
++      "ops/status.md",
++      "ops/changelog.md",
++      "openspec/capabilities/research-reporting/spec.md",
++      "results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json",
++      "results/experiment_6437_generation_to_verdict_receipt_replay_contract.json",
++      "results/experiment_6438_powered_verification_cost_repair_ab.json",
++      "results/experiment_6439_factor_clause_influence_ab.json",
++      "results/experiment_6440_held_factor_revocation_binding_shift_ab.json",
++      "results/experiment_6441_prospective_query_conditioned_factor_reuse.json",
++      "results/experiment_6442_skill_misevolution_quarantine_rollback_ab.json",
++      "results/experiment_6443_fresh_held_restart_csl_replication.json",
++      "results/experiment_6444_csl_lifecycle_recomputation_audit.json"
++    ],
++    "research_compute_started": false
++  },
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "verifier_is_oracle": false,
++  "field_principles": {
++    "status": "The status states whether the V555 queue passed or failed closed.",
++    "v554_terminal_rows": "Each activated V554 task row preserves its exact artifact state.",
++    "v554_activated_task_count": "The V554 denominator comes from Exp6436, not from reconstruction.",
++    "v554_missing_zero_byte_or_blocked_artifacts": "Absent and blocked V554 evidence stays visible.",
++    "v554_terminal_claim_determinations": "V554 claim boundaries remain blocked unless terminal evidence allows them.",
++    "active_roadmap_hash": "The activated V555 queue is content-addressed.",
++    "task_count": "V555 readiness requires exactly twelve active tasks.",
++    "task_ids_in_order": "Conductor order must stay deterministic.",
++    "unique_id_and_deliverable_check": "IDs and result JSON deliverables define the queue identity.",
++    "milestone_consistency_check": "Every task must belong to milestone 2026.08.555.",
++    "schema_validation": "The Pydantic roadmap schema must accept the activated queue.",
++    "prior_failure_validation": "Rerun scopes must state the prior verdict and retirement rule.",
++    "exclusion_manifest_validation": "Retired IDs and hard exclusion risks block the queue.",
++    "structured_gate_validation": "Every gate must name a valid upstream task, field, operator, and value.",
++    "gate_producer_contract_rows": "Each gate field must be declared by its producer artifact contract.",
++    "model_policy_validation": "LLM tasks must use local GGUF policy without AutoTokenizer headline paths.",
++    "per_unit_row_contract_validation": "Comparative tasks need row-level evidence, not aggregates only.",
++    "prompt_terminal_line_validation": "Rendered prompts must end with the conductor and push prohibition.",
++    "protected_files_unchanged": "The audit must not mutate protected inputs.",
++    "v555_queue_integrity_score": "The scalar gate is one only when every queue contract passes.",
++    "blocked_reason": "A failed queue audit must name the first exact defect.",
++    "gate_check_summary": "Blocked diagnostics must show expected and observed values.",
++    "preconditions_checked": "Input files, state, and substrate are recorded before conclusions.",
++    "inference_substrate": "This task reads repository evidence without a model call.",
++    "verifier_is_oracle": "The audit validates contracts and proves no scientific claim.",
++    "field_principles": "Every required field and acceptance gate has a stated purpose.",
++    "field_provenance": "Every required field identifies its source kind.",
++    "random_seed": "No random sampling is used by this deterministic audit.",
++    "duration_s": "Wall time is measured without padding.",
++    "tests_run": "Verification commands and exit codes stay attached to the artifact.",
++    "reproducibility_checksum": "The normalized payload is content-addressed.",
++    "honest_verdict": "The verdict uses a terminal prefix and states the queue boundary.",
++    "acceptance_gate:v555_queue_integrity_score": "The queue-integrity scalar must fail closed unless all validation surfaces pass."
++  },
++  "field_provenance": {
++    "status": "derived",
++    "v554_terminal_rows": "derived",
++    "v554_activated_task_count": "derived",
++    "v554_missing_zero_byte_or_blocked_artifacts": "derived",
++    "v554_terminal_claim_determinations": "derived",
++    "active_roadmap_hash": "measured",
++    "task_count": "derived",
++    "task_ids_in_order": "upstream",
++    "unique_id_and_deliverable_check": "derived",
++    "milestone_consistency_check": "derived",
++    "schema_validation": "derived",
++    "prior_failure_validation": "derived",
++    "exclusion_manifest_validation": "derived",
++    "structured_gate_validation": "derived",
++    "gate_producer_contract_rows": "derived",
++    "model_policy_validation": "derived",
++    "per_unit_row_contract_validation": "derived",
++    "prompt_terminal_line_validation": "derived",
++    "protected_files_unchanged": "measured",
++    "v555_queue_integrity_score": "derived",
++    "blocked_reason": "derived",
++    "gate_check_summary": "derived",
++    "preconditions_checked": "measured",
++    "inference_substrate": "constant",
++    "verifier_is_oracle": "constant",
++    "field_principles": "constant",
++    "field_provenance": "constant",
++    "random_seed": "constant",
++    "duration_s": "measured",
++    "tests_run": "measured",
++    "reproducibility_checksum": "derived",
++    "honest_verdict": "derived"
++  },
++  "random_seed": null,
++  "duration_s": 0.014277149923145771,
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py -q --no-cov -n 0",
++      "exit_code": 0,
++      "duration_s": 28.09351,
++      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 6 items\n\ntests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py . [ 16%]\n.....                                                                    [100%]\n\n============================== 6 passed in 26.05s ==============================\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py -m pytest tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py -q --no-cov -n 0",
++      "exit_code": 0,
++      "duration_s": 45.970675,
++      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 6 items\n\ntests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py . [ 16%]\n.....                                                                    [100%]\n\n============================== 6 passed in 43.34s ==============================\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py --fail-under=100 --show-missing",
++      "exit_code": 0,
++      "duration_s": 0.136996,
++      "stdout_tail": "Name                                                                         Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------------------------------\npython/carnot/experiment_6448_v555_terminal_handoff_and_queue_integrity.py     439      0   100%\n----------------------------------------------------------------------------------------------------------\nTOTAL                                                                          439      0   100%\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py",
++      "exit_code": 0,
++      "duration_s": 0.029435,
++      "stdout_tail": "OK: All tests reference specification requirements.\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/python -c 'import yaml; from pathlib import Path; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(Path(\"research-roadmap.yaml\").read_text())); print(\"schema ok\")'",
++      "exit_code": 0,
++      "duration_s": 0.144409,
++      "stdout_tail": "schema ok\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
++      "exit_code": 1,
++      "duration_s": 4.273381,
++      "stdout_tail": "\n[PRIOR FAILURE VIOLATIONS] research-roadmap.yaml\n  VIOLATION: Task 'exp6448-v555-terminal-handoff-and-queue-integrity' ('V554 terminal handoff and V555 queue integrity') matches archived experiments ['exp6363-v548-terminal-handoff-and-queue-preflight', 'exp6377-v549-terminal-handoff-and-queue-preflight', 'exp6391-v550-terminal-handoff-and-queue-preflight', 'exp6404-v551-terminal-handoff-and-queue-preflight', 'exp6410-v552-terminal-handoff-and-queue-preflight'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope\n  VIOLATION: Task 'exp6455-prospective-verifier-bounded-factor-weight-csl' ('Prospective verifier-bounded factor-weight continuous self-learning') matches archived experiments ['exp5735-zero-gate-kan-continuous-self-learning', 'exp5749-csl-render-matched-mechanism-audit', 'exp5867-prospective-certified-continuous-learning', 'exp5882-shortcut-resistant-continuous-self-learning', 'exp5895-shortcut-safe-continuous-self-learning'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope\n  VIOLATION: Task 'exp6459-v555-adversarial-capstone' ('V555 adversarial capstone and reconciliation') matches archived experiments ['exp6155-v533-capstone-reconciliation', 'exp6168-v534-capstone-reconciliation', 'exp6196-v536-capstone', 'exp6224-v538-adversarial-capstone', 'exp6238-v539-adversarial-capstone'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope\n\nTotal violations: 3\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++      "exit_code": 0,
++      "duration_s": 3.821062,
++      "stdout_tail": "Exclusion-manifest lint found 2 violation(s) in research-roadmap.yaml:\nWARNING violations (2, override present):\n  [SCOPE_MATCHED_PRIOR_FAILURE] exp6448-v555-terminal-handoff-and-queue-integrity (V554 terminal handoff and V555 queue integrity)\n    detail: 4 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task\n  [SCOPE_MATCHED_PRIOR_FAILURE] exp6459-v555-adversarial-capstone (V555 adversarial capstone and reconciliation)\n    detail: 12 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task\n\nAll violations have operator_override \u2014 activation would proceed with warnings.\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml --complete research-complete.yaml",
++      "exit_code": 1,
++      "duration_s": 4.321675,
++      "stdout_tail": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [\n    \"PRIOR_FAILURES_COVERAGE exp6448-v555-terminal-handoff-and-queue-integrity: title matches prior tasks ['exp5849-transition-v521', 'exp5863-transition-v522', 'exp5877-transition-v523', 'exp5890-transition-v524', 'exp5890-transition-v524'] but prior_failures is missing or empty\",\n    \"PRIOR_FAILURES_COVERAGE exp6450-sota-fixed-policy-candidate-corpus: title matches prior tasks ['exp6160-sota-decision-calibration-corpus', 'exp6195-arc-task-aware-prospective-fresh-transition', 'exp6263-clean-sota-event-replay-bridge', 'exp6414-fresh-three-family-factor-event-corpus', 'exp6427-fresh-constraint-saturation-factor-corpus'] but prior_failures is missing or empty\",\n    \"PRIOR_FAILURES_COVERAGE exp6452-representation-objective-causal-ab: title matches prior tasks ['exp5720-sota-attested-exact-envelope-canary', 'exp5722-fr11-compliance-recovery-rollback-canary', 'exp5726-arc-epistemic-ledger-live-ab', 'exp5734-sota-exact-proposal-stream', 'exp5741-arc-generic-primitive-live-ab'] but prior_failures is missing or empty\",\n    \"PRIOR_FAILURES_COVERAGE exp6455-prospective-verifier-bounded-factor-weight-csl: title matches prior tasks ['exp5721-fr11-memops-lifecycle-shadow-stream', 'exp5735-zero-gate-kan-continuous-self-learning', 'exp5749-csl-render-matched-mechanism-audit', 'exp5750-dependent-task-continuous-self-learning', 'exp5787-validation-gated-constraint-skill-ab'] but prior_failures is missing or empty\",\n    \"PRIOR_FAILURES_COVERAGE exp6459-v555-adversarial-capstone: title matches prior tasks ['exp5931-v526-capstone-reconciliation', 'exp5931-v526-capstone-reconciliation', 'exp5973-v528-capstone-reconciliation', 'exp6123-v530-capstone-reconciliation', 'exp6155-v533-capstone-reconciliation'] but prior_failures is missing or empty\"\n  ],\n  \"honest_verdict\": \"prior_failures_gaps_found\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 5,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 12,\n  \"n_prior_failures_missing\": 5,\n  \"n_tasks_audited\": 12,\n  \"roadmap_gate_audit_passed\": false,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"research-roadmap.yaml\"\n}\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/python scripts/artifact_convention_audit.py",
++      "exit_code": 0,
++      "duration_s": 194.909233,
++      "stdout_tail": "  [CHECKABLE                 ] experiment_6433_csl_row_recomputation_safety_audit.json\n  [CANNOT_DETERMINE          ] experiment_6434_arc_state_key_reachability_ab.json\n  [CHECKABLE                 ] experiment_6435_v553_adversarial_capstone.json\n  [CHECKABLE                 ] experiment_6440_inducer_h2h_qwen38_vs_gemma31b.json\n  [CHECKABLE                 ] experiment_6436_v554_terminal_handoff_and_queue_preflight.json\n  [CHECKABLE                 ] experiment_6437_generation_to_verdict_receipt_replay_contract.json\n  [CHECKABLE                 ] experiment_6440_held_factor_revocation_binding_shift_ab.json\n  [CHECKABLE                 ] experiment_6442_skill_misevolution_quarantine_rollback_ab.json\n  [CHECKABLE                 ] experiment_1644_cerce_ledger.json\n  [CHECKABLE                 ] experiment_1767_e2e_qwen.json\n  [CHECKABLE                 ] experiment_1736_kanele_synth.json\n  [CHECKABLE                 ] experiment_6444_csl_lifecycle_recomputation_audit.json\n\nartifact-convention-audit: wrote ops/artifact_convention_audit_report.md\n  {'CHECKABLE': 11, 'AGGREGATE_ONLY': 0, 'BLOCKED_WITHOUT_DIAGNOSTIC': 0, 'CANNOT_DETERMINE': 1, 'UNKNOWN': 0}\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/python scripts/determination_preservation_lint.py",
++      "exit_code": 0,
++      "duration_s": 0.04613,
++      "stdout_tail": "determination-preservation-lint: OK\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
++      "exit_code": 0,
++      "duration_s": 0.046496,
++      "stdout_tail": "[root-clutter-sweep] DRY-RUN (use --apply to act)  min_age=120min\n  quarantine -> .root-scratch-trash/: 0 files\n  delete (regenerable artifacts): 0 files\n  WARN tracked non-allowlist root files (a human should relocate these): ['skills-lock.json']\n",
++      "stderr_tail": ""
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "exit_code": 130,
++      "duration_s": null,
++      "stdout_tail": "Full tests/python suite was attempted; collection reached 55310 items and execution reached roughly 18% before repeated pre-existing xdist worker crashes/segfaults and unrelated failures. Interrupted after confirming it was not converging to a clean pass.",
++      "stderr_tail": "Observed worker crashes included Z3 stack traces in python/carnot/verify/z3_math_verifier.py via tests/python/test_adaptive.py and a JAX abort in python/carnot/models/compliance_checker.py via tests/python/test_compliance_checker.py."
++    }
++  ],
++  "reproducibility_checksum": "sha256:99ba911f21d492752eaecba426e14c7c76fc082dddbc2ec833dbf2f4c53ab82f",
++  "honest_verdict": "complete_blocked_v555_queue_integrity_failed: V554 terminal facts are preserved but a V555 queue contract failed"
++}
+diff --git a/tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py b/tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py
+new file mode 100644
+index 0000000000..bc32e4db4e
+--- /dev/null
++++ b/tests/python/test_experiment_6448_v555_terminal_handoff_and_queue_integrity.py
+@@ -0,0 +1,480 @@
++"""Tests for Exp6448 V555 queue integrity.
++
++Spec refs: REQ-REPORT-6448, SCENARIO-REPORT-6448-V554-FREEZE,
++SCENARIO-REPORT-6448-V555-QUEUE,
++SCENARIO-REPORT-6448-GATES-PRIORS-MODELS,
++SCENARIO-REPORT-6448-SCHEMA.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_6448_v555_terminal_handoff_and_queue_integrity as mod
++from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++_REPORT_CACHE: dict[str, object] | None = None
++
++
++def _report() -> dict[str, object]:
++    global _REPORT_CACHE
++    if _REPORT_CACHE is None:
++        _REPORT_CACHE = mod.build_report(
++            REPO,
++            date="20260815",
++            command_receipts=[{"command": "focused", "exit_code": 0}],
++            before_hashes=mod.protected_hashes(REPO),
++            duration_s=1.0,
++        )
++    return copy.deepcopy(_REPORT_CACHE)
++
++
++def test_req_report_6448_spec_declares_required_contract() -> None:
++    """REQ-REPORT-6448: OpenSpec owns the V555 queue audit contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-REPORT-6448") :]
++
++    for marker in (
++        "SCENARIO-REPORT-6448-V554-FREEZE",
++        "SCENARIO-REPORT-6448-V555-QUEUE",
++        "SCENARIO-REPORT-6448-GATES-PRIORS-MODELS",
++        "SCENARIO-REPORT-6448-SCHEMA",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_report_6448_v554_terminal_rows_preserve_mixed_evidence() -> None:
++    """SCENARIO-REPORT-6448-V554-FREEZE: V554 evidence stays as found."""
++
++    report = _report()
++
++    assert mod.validate_report(report) == []
++    assert report["v554_activated_task_count"] == 9
++    assert [row["task_id"] for row in report["v554_terminal_rows"]] == list(
++        mod.EXPECTED_V554_ACTIVATED_TASK_IDS
++    )
++
++    rows = {row["task_id"]: row for row in report["v554_terminal_rows"]}
++    assert rows["exp6436-v554-terminal-handoff-and-queue-preflight"]["readiness_fields"][
++        "v554_queue_ready_score"
++    ] == 0.0
++    assert rows["exp6444-csl-lifecycle-recomputation-audit"]["readiness_fields"][
++        "csl_audit_ready_score"
++    ] == 0.0
++
++    missing = {
++        row["task_id"]
++        for row in report["v554_missing_zero_byte_or_blocked_artifacts"]
++        if row["artifact_state"] == "missing"
++    }
++    assert missing == {
++        "exp6438-powered-verification-cost-repair-ab",
++        "exp6439-factor-clause-influence-ab",
++        "exp6441-prospective-query-conditioned-factor-reuse",
++        "exp6443-fresh-held-restart-csl-replication",
++    }
++    blocked = {
++        row["task_id"]
++        for row in report["v554_missing_zero_byte_or_blocked_artifacts"]
++        if row["artifact_state"] == "blocked"
++    }
++    assert blocked >= {
++        "exp6437-generation-to-verdict-receipt-replay-contract",
++        "exp6440-held-factor-revocation-binding-shift-ab",
++        "exp6442-skill-misevolution-quarantine-rollback-ab",
++        "exp6444-csl-lifecycle-recomputation-audit",
++    }
++
++    determinations = report["v554_terminal_claim_determinations"]
++    assert determinations["v554_queue_integrity"]["eligible"] is False
++    assert determinations["prospective_csl"]["eligible"] is False
++    assert determinations["public_arc"]["eligible"] is False
++    assert determinations["hardware"]["eligible"] is False
++
++
++def test_scenario_report_6448_v555_queue_identity_passes_but_prior_validator_blocks() -> None:
++    """SCENARIO-REPORT-6448-V555-QUEUE: exact queue is still fail-closed."""
++
++    report = _report()
++
++    assert report["task_count"] == 12
++    assert report["task_ids_in_order"] == list(mod.EXPECTED_V555_TASK_IDS)
++    assert report["unique_id_and_deliverable_check"]["ok"] is True
++    assert report["milestone_consistency_check"]["ok"] is True
++    assert report["schema_validation"]["ok"] is True
++    assert report["exclusion_manifest_validation"]["ok"] is True
++    assert report["prior_failure_validation"]["ok"] is False
++    assert report["structured_gate_validation"]["ok"] is True
++    assert report["v555_queue_integrity_score"] == 0.0
++    assert report["status"] == "complete_blocked_v555_queue_integrity_failed"
++    assert report["gate_check_summary"]["failed_check"] == "prior_failure_validation"
++    assert [
++        failure["failed_check"] for failure in report["gate_check_summary"]["failed_checks"]
++    ] == ["prior_failure_validation"]
++    assert "prior_failure_validation" in report["blocked_reason"]
++    assert "exp6455-prospective-verifier-bounded-factor-weight-csl" in json.dumps(
++        report["prior_failure_validation"], sort_keys=True
++    )
++
++
++def test_scenario_report_6448_gates_models_per_unit_and_prompts() -> None:
++    """SCENARIO-REPORT-6448-GATES-PRIORS-MODELS: roadmap contracts are explicit."""
++
++    report = _report()
++
++    assert report["structured_gate_validation"]["gate_count"] == 5
++    assert report["structured_gate_validation"]["gate_failures"] == []
++    assert all(row["producer_declares_artifact_field"] for row in report["gate_producer_contract_rows"])
++    assert {
++        (row["consumer_task_id"], row["upstream"], row["artifact_field"])
++        for row in report["gate_producer_contract_rows"]
++    } >= {
++        (
++            "exp6451-typed-fact-grounding-fixed-policy-logic-ab",
++            "exp6450-sota-fixed-policy-candidate-corpus",
++            "sota_corpus_ready_score",
++        ),
++        (
++            "exp6456-corrupt-feedback-held-restart-csl-replication",
++            "exp6455-prospective-verifier-bounded-factor-weight-csl",
++            "verifier_bounded_csl_ready_score",
++        ),
++    }
++
++    assert report["model_policy_validation"]["ok"] is True
++    assert report["model_policy_validation"]["llm_task_ids"] == list(mod.LLM_TASK_IDS)
++    assert report["per_unit_row_contract_validation"]["ok"] is True
++    assert report["prompt_terminal_line_validation"]["ok"] is True
++
++    override_rows = {
++        row["task_id"]: row for row in report["prior_failure_validation"]["operator_override_rows"]
++    }
++    assert override_rows["exp6448-v555-terminal-handoff-and-queue-integrity"][
++        "cites_standing_transition_directive"
++    ] is True
++
++
++def test_scenario_report_6448_schema_write_and_validation_edges(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """SCENARIO-REPORT-6448-SCHEMA: artifact schema is stable."""
++
++    report = _report()
++
++    assert report["protected_files_unchanged"]["ok"] is True
++    assert report["verifier_is_oracle"] is False
++    assert report["random_seed"] is None
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(report["field_principles"])
++    assert "acceptance_gate:v555_queue_integrity_score" in report["field_principles"]
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) == set(report["field_provenance"])
++    assert set(report["field_provenance"].values()) <= {
++        "measured",
++        "derived",
++        "constant",
++        "upstream",
++    }
++    assert report["reproducibility_checksum"] == mod.payload_checksum(report)
++
++    validations = [
++        ("delete", "status", "missing required field: status"),
++        ("set", ("verifier_is_oracle", True), "verifier_is_oracle must be false"),
++        ("set", ("random_seed", 6448), "random_seed must be null"),
++        ("set", ("v555_queue_integrity_score", 1.0), "integrity score cannot pass"),
++        ("set", ("gate_check_summary", []), "gate_check_summary must be a mapping"),
++        ("set", ("protected_files_unchanged.ok", False), "protected files changed"),
++        ("set", ("honest_verdict", "ok"), "honest_verdict lacks terminal prefix"),
++        ("set", ("reproducibility_checksum", "sha256:bad"), "reproducibility_checksum mismatch"),
++    ]
++    for mode, spec, expected in validations:
++        bad = copy.deepcopy(report)
++        if mode == "delete":
++            del bad[spec]
++        else:
++            dotted, value = spec
++            target = bad
++            parts = dotted.split(".")
++            for part in parts[:-1]:
++                target = target[part]
++            target[parts[-1]] = value
++        if expected != "reproducibility_checksum mismatch":
++            bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++        assert any(expected in error for error in mod.validate_report(bad))
++
++    for field_name, expected in (
++        ("field_principles", "field_principles must be a mapping"),
++        ("field_provenance", "field_provenance must be a mapping"),
++        ("v554_terminal_claim_determinations", "v554_terminal_claim_determinations must be a mapping"),
++    ):
++        bad = copy.deepcopy(report)
++        bad[field_name] = []
++        bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++        assert expected in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_provenance"] = {}
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "field_provenance must cover exactly required fields" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_provenance"] = dict.fromkeys(mod.REQUIRED_ARTIFACT_FIELDS, "bad_kind")
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "field_provenance has invalid classification" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_principles"] = dict(bad["field_principles"])
++    del bad["field_principles"]["status"]
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "missing field_principles entry: status" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["v554_terminal_claim_determinations"]["prospective_csl"]["eligible"] = True
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "prospective_csl must remain blocked" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["blocked_reason"] = None
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "blocked report must name blocked_reason" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["gate_check_summary"] = dict(bad["gate_check_summary"])
++    bad["gate_check_summary"]["failed_check"] = None
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "blocked report must name failed_check" in mod.validate_report(bad)
++
++    artifact_root = tmp_path / "artifacts"
++    artifact_root.mkdir()
++    path = mod.write_report(report, REPO, env={ARTIFACT_ROOT_ENV: str(artifact_root)})
++    assert path == artifact_root / mod.RESULT_RELATIVE_PATH.name
++    assert json.loads(path.read_text(encoding="utf-8")) == report
++
++    monkeypatch.setattr(
++        mod,
++        "run",
++        lambda *, date, root=REPO, write=True, command_receipts=None: {
++            "status": f"complete-{date}",
++            "honest_verdict": "complete: patched",
++        },
++    )
++    assert mod.main(["--date", "20260815"]) == 0
++    assert mod.RESULT_RELATIVE_PATH.name in capsys.readouterr().out
++
++
++def test_req_report_6448_helper_edges_and_dirty_queue_validation(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-6448: malformed inputs fail closed without fabrication."""
++
++    assert mod.path_receipt(tmp_path / "missing.json")["present"] is False
++    assert mod._artifact_status({}, {"error": "missing", "size_bytes": None}) == "missing"
++    assert mod._artifact_status({}, {"error": "json_error", "size_bytes": 4}) == "malformed"
++    assert mod._artifact_status({}, {"error": "json_error", "size_bytes": 0}) == "zero_byte"
++    assert mod._artifact_state({"status": "complete"}, {"error": None, "size_bytes": 2}) == "complete"
++    assert mod._artifact_state({"status": "odd"}, {"error": None, "size_bytes": 2}) == "odd"
++    assert mod._tasks({"tasks": "bad"}) == []
++    assert mod._is_blocked({}, {"error": "missing"}) is False
++    assert mod._is_blocked({"status": "blocked"}, {"error": None}) is True
++    assert mod._claim_eligibility_for_task(
++        "exp6436-v554-terminal-handoff-and-queue-preflight",
++        "complete",
++        {"v554_queue_ready_score": 1.0},
++    ) == {"eligible": True, "blockers": [], "scope": "queue integrity"}
++    assert mod._claim_eligibility_for_task("exp1-other", "complete", {}) == {
++        "eligible": False,
++        "blockers": ["no_claim_promoted_by_exp6448"],
++        "scope": "exp1-other",
++    }
++    assert mod._v554_claim_determinations(REPO, [])["v554_queue_integrity"]["eligible"] is False
++    with monkeypatch.context() as scoped:
++        scoped.setattr(mod, "_artifact_meta", lambda root, rel: ({}, {}))
++        assert mod._v554_claim_determinations(REPO, [])["prospective_csl"]["blockers"] == [
++            "v554_csl_evidence_missing_or_blocked"
++        ]
++    assert {
++        failure["reason"]
++        for failure in mod._model_policy_failures(
++            "exp-test",
++            "Bad/Unexpected-GGUF AutoTokenizer.from_pretrained",
++        )
++    } >= {
++        "missing_model_specs",
++        "missing_cache_resolver",
++        "missing_embedded_tokenizer_rule",
++        "forbidden_autotokenizer_from_pretrained",
++    }
++    gate_rows, gate_failures, gate_expressions = mod._gate_rows(
++        [{"id": "exp1-test", "gated_on": ["bad"]}], {}, {}
++    )
++    assert gate_rows == []
++    assert gate_expressions == []
++    assert gate_failures == [
++        {"task_id": "exp1-test", "reason": "gate_not_mapping", "gate": "bad"}
++    ]
++
++    monkeypatch.setattr(
++        mod,
++        "_prior_failure_linter",
++        lambda root: {"schema_errors": [], "prior_failure_violations": []},
++    )
++    monkeypatch.setattr(
++        mod,
++        "_gate_audit",
++        lambda root: {
++            "roadmap_gate_audit_passed": True,
++            "n_prior_failures_missing": 0,
++            "failure_details": [],
++        },
++    )
++    prior_validation = mod._prior_validation(
++        {"exp6449-generation-to-verdict-path-receipt-contract": {"prior_failures": []}},
++        REPO,
++    )
++    assert prior_validation["required_prior_failure_rows"][0] == {
++        "task_id": "exp6449-generation-to-verdict-path-receipt-contract",
++        "present_in_roadmap": True,
++        "complete": False,
++    }
++    invalid_prior_validation = mod._prior_validation(
++        {
++            "exp6449-generation-to-verdict-path-receipt-contract": {
++                "prior_failures": [{"experiment_id": "", "verdict": "", "addressed_by": ""}]
++            },
++            mod.EXPERIMENT_ID: {
++                "operator_override": "2026-05-29 operator directive (standing): test"
++            },
++        },
++        REPO,
++    )
++    assert invalid_prior_validation["required_prior_failure_rows"][0]["complete"] is False
++    assert invalid_prior_validation["failures"][0]["reason"] == "missing_experiment_id"
++
++    data = copy.deepcopy(mod.read_yaml_mapping(REPO / mod.ACTIVE_ROADMAP_RELATIVE_PATH))
++    checks = mod.validate_v555_queue_data(data, REPO, "20260815", retired_exp_ids=set())
++    assert checks["task_count"] == 12
++    assert checks["unique_id_and_deliverable_check"]["ok"] is True
++
++    dirty = copy.deepcopy(data)
++    tasks = dirty["tasks"]
++    tasks[1]["id"] = tasks[0]["id"]
++    tasks[2]["deliverable"] = "not-results.txt"
++    tasks[3]["gated_on"] = [
++        {"upstream": "exp9999-missing", "artifact_field": "missing_field", "op": "??", "value": 1.0}
++    ]
++    tasks[4]["milestone"] = "2026.08.554"
++    tasks[5]["prompt"] = "CONTEXT\nTASK\nCONCRETE STEPS\nRun command: x\nDo NOT push."
++    tasks[6]["prompt"] = (
++        "CONTEXT\nEXISTING CODE TO READ FIRST\nTASK\nCONCRETE STEPS\n"
++        "MODEL_SPECS Bad/Unexpected-GGUF cached_sota_pair() embedded tokenizer "
++        "AutoTokenizer.from_pretrained raw output\nRun command: x\n"
++        "Do NOT push. Do NOT modify scripts/research_conductor.py."
++    )
++    tasks[7]["requires"] = [tasks[7]["id"], "exp6448-v555-terminal-handoff-and-queue-integrity"]
++    dirty_checks = mod.validate_v555_queue_data(dirty, REPO, "20260815", retired_exp_ids={6448})
++    assert dirty_checks["schema_validation"]["ok"] is False
++    assert dirty_checks["unique_id_and_deliverable_check"]["ok"] is False
++    assert dirty_checks["milestone_consistency_check"]["ok"] is False
++    assert dirty_checks["structured_gate_validation"]["ok"] is False
++    assert dirty_checks["model_policy_validation"]["ok"] is False
++    assert dirty_checks["prompt_terminal_line_validation"]["ok"] is False
++
++    retired_gate = copy.deepcopy(data)
++    retired_gate["tasks"][1]["gated_on"] = [
++        {
++            "upstream": "exp6448-v555-terminal-handoff-and-queue-integrity",
++            "artifact_field": "v555_queue_integrity_score",
++            "op": "==",
++            "value": 1.0,
++        }
++    ]
++    retired_checks = mod.validate_v555_queue_data(
++        retired_gate, REPO, "20260815", retired_exp_ids={6448}
++    )
++    assert retired_checks["structured_gate_validation"]["retired_references"] == [
++        {
++            "task_id": "exp6449-generation-to-verdict-path-receipt-contract",
++            "gate_upstream": "exp6448-v555-terminal-handoff-and-queue-integrity",
++        }
++    ]
++
++    bad_per_unit = copy.deepcopy(data)
++    bad_per_unit["tasks"][4]["per_unit_rows"] = False
++    bad_per_unit["tasks"][4]["prompt"] = (
++        "CONTEXT\nEXISTING CODE TO READ FIRST\nTASK\nCONCRETE STEPS\n"
++        "must compare arms and write blocked_ verdict\nRun command: x\n"
++        "Do NOT push. Do NOT modify scripts/research_conductor.py."
++    )
++    per_unit_checks = mod.validate_v555_queue_data(
++        bad_per_unit, REPO, "20260815", retired_exp_ids=set()
++    )
++    assert {
++        failure["reason"]
++        for failure in per_unit_checks["per_unit_row_contract_validation"]["failures"]
++    } >= {
++        "per_unit_rows_not_true",
++        "missing_per_unit_rows_required_field",
++        "missing_row_emission_rule",
++        "missing_gate_check_summary",
++    }
++
++    assert mod._first_failed_check({"task_count": 1})["failed_check"] == "task_count"
++    assert (
++        mod._first_failed_check({"task_count": 12, "schema_validation": {"ok": False}})[
++            "failed_check"
++        ]
++        == "schema_validation"
++    )
++    failed_tests = mod._first_failed_check(
++        {"task_count": 12, "tests_run": [{"command": "full", "exit_code": 130}]}
++    )
++    assert failed_tests["failed_check"] == "tests_run"
++    assert failed_tests["failed_checks"][0]["observed_value"] == [
++        {"command": "full", "exit_code": 130}
++    ]
++    assert mod._first_failed_check({"task_count": 12})["failed_check"] == "unknown"
++    assert mod._test_rows(None)[0]["source"] == "declared"
++
++    receipt = tmp_path / "receipts.json"
++    assert mod.read_external_test_receipts(receipt) == []
++    receipt.write_text("{", encoding="utf-8")
++    assert mod.read_external_test_receipts(receipt) == []
++    receipt.write_text("{}", encoding="utf-8")
++    assert mod.read_external_test_receipts(receipt) == []
++    receipt.write_text('[{"command": "ok", "exit_code": 0}, "skip"]', encoding="utf-8")
++    assert mod.read_external_test_receipts(receipt) == [{"command": "ok", "exit_code": 0}]
++
++    writes: list[dict[str, object]] = []
++    monkeypatch.setattr(mod, "protected_hashes", lambda root: {"x": "sha256:x"})
++    monkeypatch.setattr(mod, "read_external_test_receipts", lambda: [{"command": "external"}])
++    monkeypatch.setattr(
++        mod,
++        "build_report",
++        lambda root, *, date, command_receipts, before_hashes, duration_s: {
++            "date": date,
++            "command_receipts": command_receipts,
++            "before_hashes": before_hashes,
++            "duration_s": duration_s,
++            "reproducibility_checksum": "sha256:fake",
++        },
++    )
++    monkeypatch.setattr(mod, "validate_report", lambda report: [])
++    monkeypatch.setattr(mod, "write_report", lambda report, root: writes.append(report))
++
++    report = mod.run(date="20260815", root=REPO, write=True)
++    assert report["command_receipts"] == [{"command": "external"}]
++    assert writes == [report]
++
++    monkeypatch.setattr(mod, "validate_report", lambda report: ["bad"])
++    with pytest.raises(ValueError, match="bad"):
++        mod.run(date="20260815", root=REPO, write=False, command_receipts=[{"command": "c"}])
+-- 
+2.55.0
+

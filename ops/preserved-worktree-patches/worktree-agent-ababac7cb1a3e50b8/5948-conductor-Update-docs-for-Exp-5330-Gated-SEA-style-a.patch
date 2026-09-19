@@ -1,0 +1,183 @@
+From 2b4d4ce07909c959edd96866ecef053fcbe96aca Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 22:04:16 -0400
+Subject: [PATCH 05948/11362] [conductor] Update docs for Exp 5330: Gated
+ SEA-style anytime certificate for self-learning policy promotion
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md        | 12 +++++
+ ops/changelog.md             |  1 +
+ ops/conductor-heartbeat.json |  2 +-
+ ops/conductor-log.md         |  1 +
+ ops/conductor-state.json     |  2 +-
+ ops/known-issues.md          | 87 ++++++++++++++++++++++++++++++++++++
+ ops/status.md                |  1 +
+ 7 files changed, 104 insertions(+), 2 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 67784c6c95..cddc770152 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -2155,3 +2155,15 @@ legacy tests.
+ | REQ-LEARN-5329-4 | Context Lifecycle Policy Matches Always-Full Quality While Avoiding Calls | Implemented | Artifact records context_lifecycle_policy_with_rollback.final_quality=1.0 matching always_full_verification.final_quality=1.0, verifier_calls_avoided=3, quality_delta_vs_always_full=0.0, bank_failure_delta=0.0, retrieval_failure_delta=0.0, answer_failure_delta=0.0, and unsafe_false_accepts=0. |
+ | REQ-LEARN-5329-5 | Ready Gate Requires All Variants, Safety Deltas, Tests, And No Weight Mutation | Implemented | Artifact records policy_rollout_ready=true, status.value=policy_rollout_ready, fixture_gate.all_passed=true, all policy variants present, no_weight_mutation=true, focused Exp5329 coverage passed, and tests/python -q passed. |
+ | SCENARIO-LEARN-5329-POLICY | Lifecycle Policy Avoids Calls Without Lowering Quality | Implemented | Artifact follows the complete rollout path: context-lifecycle policy matched always-full final quality at 1.0, reduced verifier calls from 16 to 13, kept bank/retrieval/answer failure deltas at 0.0, exercised 2 rollbacks and 2 recoveries, and preserved no weight mutation. No retro closure, AUC/TP/FP/signed_improvement, violation_rate, live LLM quality, or hardware speedup claim is recorded. |
++| REQ-LEARN-5330 | Anytime Certificate Gate for Context Lifecycle Policy Promotion | Implemented | `python/carnot/experiment_5330_sea_anytime_certificate_gate_v486.py`; `tests/python/test_experiment_5330_sea_anytime_certificate_gate_v486.py`; `openspec/capabilities/self-learning/spec.md`; `results/experiment_5330_sea_anytime_certificate_gate_v486.json`; honest_verdict={"principle":"Terminal Exp5330 verdict; starts with complete: or blocked_ and states whether reproducible policy promotion avoided unsafe accepts and model-weight mutation.","value":"complete: deterministic anytime certificate promoted 1 lifecycle policy, rejected 3, deferred 1, kept unsafe promotions at 0, recorded 2 rollback events, and preserved frozen-model discipline"}; status.value=anytime_certificate_gate_ready; anytime_certificate_gate_ready=true; policy_promotions=1; policy_rejections=3; policy_deferrals=1; unsafe_promotions=0; rollback_events=2; no_op_control_delta=0.0; decisions_reproducible=true; no_weight_mutation=true; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; claim is limited to deterministic lifecycle policy promotion, not model-weight mutation. |
++| REQ-LEARN-5330-1 | Gate Loads Exp5328 Lifecycle Fixture | Implemented | Artifact records fixture_gate.all_passed=true, context_lifecycle_fixture_ready=true, lifecycle_rows_present=true, action_counts_present=true, source_honest_verdict from Exp5328, and no_weight_mutation=true before reporting anytime_certificate_gate_ready=true. |
++| REQ-LEARN-5330-2 | Candidate Policies Cover Promotion, Unsafe, Insufficient-Evidence, And Control Cases | Implemented | Artifact records candidate_policy_count=5 with context_lifecycle_certificate_update, unsafe_accept_all_lifecycle_actions, thin_evidence_context_lifecycle, no_op_shuffled_control, and retrieval_fast_path_later_invalidated candidates. |
++| REQ-LEARN-5330-3 | Certificate Emits Promote Reject Or Defer For Each Candidate | Implemented | Artifact certificate_rows record one `promote`, three `reject`, and one `defer` decision across deterministic fixture evidence, matching policy_promotions=1, policy_rejections=3, and policy_deferrals=1. |
++| REQ-LEARN-5330-4 | Promoted Candidate Clears Control, Unsafe, Evidence, And Frozen-Model Gates | Implemented | Promoted context_lifecycle_certificate_update row records observed_delta=0.1875, certified_delta=0.1875, no_op_control_delta=0.0, evidence_count=16, unsafe_accepts=0, model_weights_mutated=false, and no_weight_mutation=true. |
++| REQ-LEARN-5330-5 | Unsafe Or Invalidated Candidates Record Rollback | Implemented | Artifact records rollback_events=2 from unsafe_accept_all_lifecycle_actions and retrieval_fast_path_later_invalidated certificate rows, with the latter carrying preliminary_decision=promote and reasons including later_invalidated_promotion and unsafe_accepts. |
++| REQ-LEARN-5330-6 | Ready Gate Requires Reproducible Decisions, Safety, Control, Rollback, Tests, And Frozen Weights | Implemented | Artifact records anytime_certificate_gate_ready=true, decisions_reproducible=true, unsafe_promotions=0, policy_promotions=1, policy_rejections=3, policy_deferrals=1, a no_op_shuffled_control row, rollback_events=2, no_weight_mutation=true, and tests_run outcomes passed for focused Exp5330 coverage and tests/python -q. |
++| SCENARIO-LEARN-5330-PROMOTE | Certificate Promotes Safe Lifecycle Policy | Implemented | Artifact promotes context_lifecycle_certificate_update with final_quality=1.0 over baseline_quality=0.8125, certified_delta=0.1875 greater than no_op_control_delta=0.0, unsafe_accepts=0, and model_weights_mutated=false. |
++| SCENARIO-LEARN-5330-REJECT | Certificate Rejects Unsafe Policy | Implemented | Artifact rejects unsafe_accept_all_lifecycle_actions with unsafe_accepts=8, final_quality=0.5, certified_delta=-0.3125, reasons=[unsafe_accepts], and rollback_event=true. |
++| SCENARIO-LEARN-5330-DEFER | Certificate Defers Insufficient Evidence | Implemented | Artifact defers thin_evidence_context_lifecycle with evidence_count=7 below the effective anytime bound, anytime_bound=0.5625, certified_delta=-0.375, and reasons=[insufficient_evidence], rather than reporting promotion. |
++| SCENARIO-LEARN-5330-NOOP | No-Op Control Blocks Selection Noise | Implemented | Artifact includes no_op_shuffled_control with is_control=true, observed_delta=0.0, certified_delta=0.0, decision=reject, reasons=[control_policy_not_promotable], and no_op_control_delta=0.0; the promoted candidate clears that control delta. |
++| SCENARIO-LEARN-5330-ROLLBACK | Invalidated Promotion Rolls Back | Implemented | Artifact rejects retrieval_fast_path_later_invalidated after preliminary_decision=promote, records rollback_event=true, reasons=[later_invalidated_promotion, unsafe_accepts], unsafe_accepts=2, and contributes to rollback_events=2. No retro closure, AUC/TP/FP/signed_improvement, violation_rate, live LLM quality, or hardware speedup claim is recorded. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index a7357581d5..546123bdec 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10984,3 +10984,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-07: Exp 5327 SMT hint protocol corrigendum and clean re-emit (✅ Complete) — honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ and state whether the Exp5318 methodology flag was repaired without broadening the claim.","value":"complete: Exp5318 SMT hint protocol re-emitted with clean deterministic solver substrate, actual methodology timing, and no runtime marker text"}; status.value=complete; inference_substrate.value=deterministic_smt_solver_protocol; valid_hint_acceptance_rate=1.0; unsound_hint_rejection_rate=1.0; usefulness_rate=0.5; solver_fallback_complete=true; methodology_duration_s=0.028402; compute_bound_marker_present=false; smt_hint_protocol_clean=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5327_smt_hint_corrigendum_reemit_v486.json
+ - 2026-07-07: Exp 5328 continuous self-learning context-object lifecycle fixture (✅ Complete) — honest_verdict={"principle":"Terminal Exp5328 verdict; starts with complete: or blocked_ and states whether lifecycle safety and recoverability gates passed.","value":"complete: deterministic context-object lifecycle fixture ready for Exp5329 and Exp5330; safe actions commit, unsafe actions reject, rollback succeeds at 1.0, and no model weights mutate"}; status.value=ready_for_exp5329_exp5330; inference_substrate.value=deterministic_context_lifecycle_fixture; context_lifecycle_fixture_ready=true; context_object_count=9; bank_failure_detection_rate=1.0; retrieval_failure_detection_rate=1.0; answer_failure_detection_rate=1.0; rollback_success_rate=1.0; no_weight_mutation=true; tests_run focused Exp5328 coverage and tests/python -q passed per artifact; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5328_context_object_lifecycle_self_learning_v486.json
+ - 2026-07-07: Exp 5329 gated memory/context lifecycle policy rollout (✅ Complete) — honest_verdict={"principle":"Terminal Exp5329 verdict; starts with complete: or blocked_ and states whether lifecycle policy avoided verifier calls without lowering quality or accepting unsafe state changes.","value":"complete: context-lifecycle policy matched always-full quality, avoided 3 verifier calls, kept bank/retrieval/answer failure deltas at 0, exercised 2 rollbacks and 2 recoveries, and preserved no weight mutation"}; status.value=policy_rollout_ready; policy_rollout_ready=true; verifier_calls_avoided=3; quality_delta_vs_always_full=0.0; bank_failure_delta=0.0; retrieval_failure_delta=0.0; answer_failure_delta=0.0; unsafe_false_accepts=0; no_weight_mutation=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5329_memory_context_policy_rollout_v486.json
++- 2026-07-07: Exp 5330 gated SEA-style anytime certificate for self-learning policy promotion (✅ Complete) — honest_verdict={"principle":"Terminal Exp5330 verdict; starts with complete: or blocked_ and states whether reproducible policy promotion avoided unsafe accepts and model-weight mutation.","value":"complete: deterministic anytime certificate promoted 1 lifecycle policy, rejected 3, deferred 1, kept unsafe promotions at 0, recorded 2 rollback events, and preserved frozen-model discipline"}; status.value=anytime_certificate_gate_ready; inference_substrate.value=deterministic_anytime_certificate_gate; candidate_policy_count=5; policy_promotions=1; policy_rejections=3; policy_deferrals=1; unsafe_promotions=0; rollback_events=2; no_op_control_delta=0.0; no_weight_mutation=true; decisions_reproducible=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5330_sea_anytime_certificate_gate_v486.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e918fd853b..000acaa31b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 191, "phase": "iteration_start", "last_beat": "2026-07-07T01:44:08Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 192, "phase": "iteration_start", "last_beat": "2026-07-07T02:01:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 69e725cc05..31ed661fae 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10436,3 +10436,4 @@ web search: Semantic Schola |
+ | 2026-07-07 01:06 UTC | Exp 5327: SMT hint protocol corrigendum and clean  | OK | 87 passed, 1 warning in 12.41s |
+ | 2026-07-07 01:22 UTC | Exp 5328: Continuous self-learning context-object  | OK | 91 passed, 1 warning in 11.24s |
+ | 2026-07-07 01:42 UTC | Exp 5329: Gated memory/context lifecycle policy ro | OK | 89 passed, 1 warning in 10.46s |
++| 2026-07-07 01:59 UTC | Exp 5330: Gated SEA-style anytime certificate for  | OK | 92 passed, 1 warning in 10.17s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3324c9366d..8806334a36 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 191, "phase": "iteration_start", "started_at": "2026-07-07T01:44:08Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 192, "phase": "iteration_start", "started_at": "2026-07-07T02:01:32Z"}
+\ No newline at end of file
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index a0fe7ce99c..fc61992dab 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -4,6 +4,93 @@
+ 
+ ## CURRENT ACTIVE PRIORITIES (20260507 audit)
+ 
++### 2026-07-06 (MANDATORY-NEXT-MILESTONE, operator-directed "continue trying new and novel ideas to forward progress with ARC-AGI-3... likely includes more ARC and AGI study"): ARC-AGI-3 opportunistic slot — perception audit + classical salience front-end, in priority order
++
++**Origin:** 2026-07-06 operator directive. Per the 2026-06-30 Phase D entry below, ARC dropped from
++majority lever to opportunistic-only once the submission sprint deadline passed. The operator asked to
++resume ACTIVE novel-idea generation for ARC-AGI-3 — but first confirm we haven't tried the idea before. This
++entry is the product of that check: an internal do-not-repeat audit (~40 tried ARC mechanism classes,
++sourced from `ops/exclusion_manifest.yaml`, `ops/known-issues.md`, `ops/arc_solve_registry.yaml`,
++`docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md`, `docs/research-notes/arc-generation-
++program-2026-06-28.md`) cross-referenced against a deep-research literature pass (23 sources fetched, 17/25
++claims survived adversarial verification; several papers' headline NUMBERS were refuted on verification even
++where the underlying MECHANISM held up — treat every cited number below as needing independent confirmation,
++trust only the architecture descriptions). **This entry supplies the concrete content for ARC's opportunistic
++slot; it does NOT reclaim majority share from Phase D.**
++
++**What was checked and is NOT being re-proposed (already tried, already null):** generic novelty/curiosity
++bonuses, a program-synthesis action-effect proposal filter, energy-as-fitness QD search over trajectories,
++hierarchical subgoal value-head search, a PoE-World factored world-model planner, the GAP-3 trained-content-
++energy candidate selector, cross-game learned value-head transfer, an IGE-style LLM Go-Explore cell-selector
++(tested at TWO granularities — bins=6 AND bins=16, both null, `results/arc_ige_llm_go_explore_ab.json`: "even
++at bins=16 the winning prefix is never in the pool" — the wall is not archive granularity), and a frontier-LLM
++tool-use/MCP driving loop with tool access to env/BFS/verifier/induced-model (built+run on re86/ft09,
++ceiling-negative, 0 first-level-ups). All retired per `ops/exclusion_manifest.yaml`; a rerun of any of these
++needs an `operator_override` citing a genuinely new mechanism — do not re-skeleton them.
++
++**What is explicitly OUTSIDE the retired scope** — per `generation_axis_exploration_signal_retired_exp5154_v473`'s
++own reason field: "deepen-wall cross-level warm-starts and **representation/perception fixes are outside this
++retired scope**." The two priority tasks below sit in that explicitly-open lane.
++
++**THE TASKS (opportunistic ARC slot, in priority order; `agent_type: codex`):**
++
++1. **Perception-grounding audit (cheap, run first).** arXiv:2603.17683 ("Sensi") found that once a
++   curriculum/self-verification layer is added to an LLM game agent, its failure mode shifts from exploration
++   efficiency to perception: an LLM-as-judge validates its own hallucinated frame-diff reads as internally
++   self-consistent rather than checking them against ground truth, producing a self-reinforcing error
++   cascade. This corroborates this project's own prior finding (GAP-4891 ladder / `project_arc_live_agent_
++   learning_gaps` memory) that frame-only order-1 features sit at LOO=chance. Audit whatever frame-diff /
++   state-change read the live agent's perception layer currently relies on (`arc_frame_change_predictor`,
++   `arc_online_action_effect_scorer`, or equivalent) for exactly this failure mode. This is a diagnostic, not
++   a rebuild — report findings before proposing a fix.
++2. **Classical connected-component/color-blob segmentation + salience-tiered action prioritization (the main
++   new lever).** A real ARC-AGI-3 competitor (arXiv:2512.24156 / github.com/dolphin-in-a-coma/arc-agi-3-just-
++   explore, 3rd place, 12/25 PRIVATE hidden levels, no learning, no LLM) segments each frame into single-color
++   connected components, masks the status bar, and ranks detected blobs into five priority tiers by
++   size/morphology/color salience, exploring high-salience/untested actions first. This is a
++   **generation-stage** action-prioritization bias, not a post-hoc selection/ranking mechanism over a fixed
++   candidate pool — it is not subject to this project's own `WALL_IS_HIDDEN_STATE` finding (exp4914/exp4893),
++   which showed (frame, action-history) features are insufficient to DISCRIMINATE among already-generated
++   candidates; this instead changes what gets tried in the first place. Differentiator from our own retired
++   "action-effect/clickability predictor" attempts (exp4568/4641/4490/4501, all learned/CNN-based, honest_null
++   or corpus-blocked): this is classical and untrained, and may generalize far better to a genuinely novel
++   game than a small trained CNN that never saw it. Prototype against the offline dev sim (`arc_solver_kit` /
++   `scripts/arc_loop_solve.py`) first, then wire into the live `E3AgentPolicy` exploration policy per the ARC
++   Live-Path Reachability Discipline — a standalone experiment the live agent cannot reach is wasted effort.
++3. **(Lower priority, pilot-only) "Ontology-error" exploration signal.** arXiv:2607.01531 (OPINE-World)
++   proposes prioritizing interactions that resolve uncertainty about which OBJECT TYPES exist in a game (a
++   Bayesian noisy-OR over per-object-type classification uncertainty and per-context effect-distribution
++   uncertainty), mechanistically distinct from the retired novelty/curiosity bonuses (which target
++   state-visitation novelty, not object-ontology uncertainty). Caution: architecturally close to our own
++   retired PoE-World work; the source paper's own headline result (20/25 solved) did NOT survive this
++   project's adversarial verification; 6-day-old, single-author, unreviewed preprint (submitted 2026-07-01).
++   Pilot only if task 2 lands and there's slack — not a standing commitment.
++
++**Explicitly checked and rejected in this pass (do not re-propose without a real differentiator):** an IGE
++archive-granularity fix (already tested at bins=6 AND bins=16, both null — the wall is not granularity); the
++Code-World-Models/CEGIS-style "LLM induces an explicit Python simulator, then classical search plans inside
++it" pattern (arXiv:2510.04542, arXiv:2605.05138) is closely related to the already-run, ceiling-negative
++frontier tool-use/MCP loop (re86/ft09) — needs an `operator_override` naming a mechanism genuinely distinct
++from "LLM interrogates/drives the loop via tool calls" before another attempt.
++
++**Falsifiable gate:** task 2 is decision-grade if it moves `ops/arc_solve_registry.yaml`'s
++`reproducible_total_levels` OR produces a genuine new first-contact win on a held-out unsolved game (rotate
++targets per the Level-Up Attempt Guarantee) that the current pipeline doesn't reach. Record the result with
++the same rigor as every other row in `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md`
++(update that ledger too). `solve_provenance` must be declared per the ARC Live-Path Reachability Discipline.
++
++**Reserved slots still apply** (2 infra, 1-per-board hardware-continuity, SOTA-ingestion, Phase D majority per
++the entry below). This is the content for ARC's opportunistic slot, not a reclaim of majority share.
++
++**Cross-references:**
++- 2026-07-06 operator directive (this session) — origin
++- Internal do-not-repeat audit + external deep-research pass (this session, not yet filed as a standalone doc)
++- `ops/exclusion_manifest.yaml:generation_axis_exploration_signal_retired_exp5154_v473` — the retirement whose
++  own reason field carves out representation/perception fixes as in-scope
++- CLAUDE.md "ARC Live-Path Reachability Discipline" — task 2 must be wired into the live entrypoint
++- CLAUDE.md "Failed-Experiment Rerun Discipline" / "Exclusion-Manifest Cross-Check Before Planning" — governs
++  why the IGE/tool-loop family is excluded here and why tasks 1/3 are scoped the way they are
++
+ ### 2026-06-30 (MANDATORY-NEXT-MILESTONE, operator-directed "unlock the conductor running PHASE D experiments immediately"): EXECUTE the off-ARC distributional-energy verifier moat — the majority lever now
+ 
+ > **UPDATE 2026-06-30 (outer-loop): D1 is ANSWERED — bounded null. Do NOT re-skeleton D1.** The conductor's
+diff --git a/ops/status.md b/ops/status.md
+index 3cde3143a8..22729d8677 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5951,3 +5951,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-07 | Exp 5327: SMT hint protocol corrigendum and clean re-emit | ✅ Complete | honest_verdict={"principle":"Terminal verdict must start with complete: or blocked_ and state whether the Exp5318 methodology flag was repaired without broadening the claim.","value":"complete: Exp5318 SMT hint protocol re-emitted with clean deterministic solver substrate, actual methodology timing, and no runtime marker text"}; status.value=complete; inference_substrate.value=deterministic_smt_solver_protocol; exp5318_flag_reason.value=Exp5318 was quarantined because it reported 0.029515s actual deterministic solver duration while also carrying future runtime marker text; valid_hint_acceptance_rate=1.0; unsound_hint_rejection_rate=1.0; usefulness_rate=0.5; solver_fallback_complete=true; methodology_duration_s=0.028402; compute_bound_marker_present=false; smt_hint_protocol_clean=true; tests_run=[]; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5327, SCENARIO-VERIFY-5327; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:`, status.value=complete, and artifact records deterministic solver substrate, actual measured duration 0.028402s, no compute-bound marker text, valid_hint_acceptance_rate=1.0, unsound_hint_rejection_rate=1.0, and complete solver fallback | results/experiment_5327_smt_hint_corrigendum_reemit_v486.json |
+ | 2026-07-07 | Exp 5328: Continuous self-learning context-object lifecycle fixture | ✅ Complete | honest_verdict={"principle":"Terminal Exp5328 verdict; starts with complete: or blocked_ and states whether lifecycle safety and recoverability gates passed.","value":"complete: deterministic context-object lifecycle fixture ready for Exp5329 and Exp5330; safe actions commit, unsafe actions reject, rollback succeeds at 1.0, and no model weights mutate"}; status.value=ready_for_exp5329_exp5330; inference_substrate.value=deterministic_context_lifecycle_fixture; continuous_self_learning_target=true; no_weight_mutation=true; context_object_count=9; lifecycle_action_set=create,revise,fold,mask,archive,retrieve,commit,rollback; bank_failure_detection_rate=1.0; retrieval_failure_detection_rate=1.0; answer_failure_detection_rate=1.0; rollback_success_rate=1.0; context_lifecycle_fixture_ready=true; tests_run focused Exp5328 coverage and tests/python -q passed per artifact; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-LEARN-5328, REQ-LEARN-5328-1, REQ-LEARN-5328-2, REQ-LEARN-5328-3, REQ-LEARN-5328-4, REQ-LEARN-5328-5, REQ-LEARN-5328-6, SCENARIO-LEARN-5328, SCENARIO-LEARN-5329; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:`, status.value=ready_for_exp5329_exp5330, context_lifecycle_fixture_ready=true, all three failure-detection rates are 1.0, rollback_success_rate=1.0, and no_weight_mutation=true | results/experiment_5328_context_object_lifecycle_self_learning_v486.json |
+ | 2026-07-07 | Exp 5329: Gated memory/context lifecycle policy rollout | ✅ Complete | honest_verdict={"principle":"Terminal Exp5329 verdict; starts with complete: or blocked_ and states whether lifecycle policy avoided verifier calls without lowering quality or accepting unsafe state changes.","value":"complete: context-lifecycle policy matched always-full quality, avoided 3 verifier calls, kept bank/retrieval/answer failure deltas at 0, exercised 2 rollbacks and 2 recoveries, and preserved no weight mutation"}; status.value=policy_rollout_ready; inference_substrate.value=deterministic_context_policy_rollout; policy_rollout_ready=true; context_lifecycle_policy_with_rollback.final_quality=1.0; always_full_verification.final_quality=1.0; verifier_calls_avoided=3; verifier_calls context_lifecycle=13 always_full=16; quality_delta_vs_always_full=0.0; bank_failure_delta=0.0; retrieval_failure_delta=0.0; answer_failure_delta=0.0; rollback_events=2; recoveries=2; unsafe_false_accepts=0; no_weight_mutation=true; tests_run focused Exp5329 coverage and tests/python -q passed per artifact; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-LEARN-5329, REQ-LEARN-5329-1, REQ-LEARN-5329-2, REQ-LEARN-5329-3, REQ-LEARN-5329-4, REQ-LEARN-5329-5, SCENARIO-LEARN-5329-POLICY; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:`, status.value=policy_rollout_ready, final quality matched always-full at 1.0, verifier calls fell from 16 to 13, all failure deltas were 0.0, unsafe_false_accepts=0, and no_weight_mutation=true | results/experiment_5329_memory_context_policy_rollout_v486.json |
++| 2026-07-07 | Exp 5330: Gated SEA-style anytime certificate for self-learning policy promotion | ✅ Complete | honest_verdict={"principle":"Terminal Exp5330 verdict; starts with complete: or blocked_ and states whether reproducible policy promotion avoided unsafe accepts and model-weight mutation.","value":"complete: deterministic anytime certificate promoted 1 lifecycle policy, rejected 3, deferred 1, kept unsafe promotions at 0, recorded 2 rollback events, and preserved frozen-model discipline"}; status.value=anytime_certificate_gate_ready; inference_substrate.value=deterministic_anytime_certificate_gate; continuous_self_learning_target=true; anytime_certificate_gate_ready=true; candidate_policy_count=5; policy_promotions=1; policy_rejections=3; policy_deferrals=1; unsafe_promotions=0; rollback_events=2; no_op_control_delta=0.0; no_weight_mutation=true; decisions_reproducible=true; fixture_gate.all_passed=true; tests_run focused Exp5330 coverage and tests/python -q passed per artifact; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-LEARN-5330, REQ-LEARN-5330-1, REQ-LEARN-5330-2, REQ-LEARN-5330-3, REQ-LEARN-5330-4, REQ-LEARN-5330-5, REQ-LEARN-5330-6, SCENARIO-LEARN-5330-PROMOTE, SCENARIO-LEARN-5330-REJECT, SCENARIO-LEARN-5330-DEFER, SCENARIO-LEARN-5330-NOOP, SCENARIO-LEARN-5330-ROLLBACK; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:`, status.value=anytime_certificate_gate_ready, one lifecycle policy was promoted, three were rejected, one was deferred, unsafe_promotions=0, rollback_events=2, decisions_reproducible=true, and no_weight_mutation=true | results/experiment_5330_sea_anytime_certificate_gate_v486.json |
+-- 
+2.55.0
+

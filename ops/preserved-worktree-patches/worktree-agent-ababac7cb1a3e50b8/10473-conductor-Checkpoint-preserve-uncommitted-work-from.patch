@@ -1,0 +1,43 @@
+From a8f989d4f5f9d6c6c67ee6a37590547ae78cc5bd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 21:42:58 -0400
+Subject: [PATCH 10473/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b34678b15a..6e3e1c0234 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 14, "phase": "iteration_start", "last_beat": "2026-08-31T00:40:35Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-08-31T01:42:48Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 553982b503..73ff736266 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16874,3 +16874,4 @@ The l |
+ | 2026-08-31 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | exclusion_manifest_lint.py age-week 0: OPEN 1 days: SILENT_NON_FIRING on exclusi |
+ | 2026-08-31 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_timestamp_field age-week 0: OPEN 1 days: SILENT_NON_F |
+ | 2026-08-31 00:38 UTC | Canonical transaction-byte replay fixture | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
++| 2026-08-31 01:40 UTC | Independent byte-grounded CSL causal and safety au | OK | 98 passed, 1 warning in 43.34s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5b3be8cba7..433685a2b6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 14, "phase": "iteration_start", "started_at": "2026-08-31T00:40:35Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 15, "phase": "iteration_start", "started_at": "2026-08-31T01:42:48Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

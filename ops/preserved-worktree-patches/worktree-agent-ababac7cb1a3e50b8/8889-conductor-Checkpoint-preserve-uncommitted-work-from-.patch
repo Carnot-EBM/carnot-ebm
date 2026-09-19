@@ -1,0 +1,43 @@
+From f100a6d2acb975bdec40cecf0fd5bbc36d22190a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 08:46:39 -0400
+Subject: [PATCH 08889/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index ded03b979d..338e0b3384 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-08-12T12:29:53Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-08-12T12:46:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6c85ca8a92..6d687356ac 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15702,3 +15702,4 @@ code |
+ | 2026-08-12 10:10 UTC | Exact terminal-boundary handoff from V544 into V54 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: EQ-INFRA-6323  |
+ | 2026-08-12 11:29 UTC | Post-marker SOTA receipt and executable V545 scope | OK | 95 passed, 1 warning in 13.74s |
+ | 2026-08-12 11:45 UTC | GateMate dated-receipt single non-destructive dete | OK | 93 passed, 1 warning in 8.45s |
++| 2026-08-12 12:44 UTC | Restricted policy DSL and exact behavioral contrac | OK | 116 passed, 1 warning in 10.96s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 93615c2aec..7c3dba90e4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 1, "phase": "iteration_start", "started_at": "2026-08-12T12:29:53Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 2, "phase": "iteration_start", "started_at": "2026-08-12T12:46:35Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

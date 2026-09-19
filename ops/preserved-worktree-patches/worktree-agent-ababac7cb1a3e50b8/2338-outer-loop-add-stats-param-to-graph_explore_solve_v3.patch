@@ -1,0 +1,63 @@
+From 20111199fb3195cba43c5f38521bd1f4b12b7eeb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 12:20:09 -0400
+Subject: [PATCH 02338/11362] [outer-loop] add stats param to
+ graph_explore_solve_v3 (for engine A/B expansion measurement)
+
+Mirrors the v2 stats instrumentation: optional stats dict records expansions/states
+so the engine A/B can measure v3's search cost vs v2. Additive, no behavior change.
+(Re-applied after the prior uncommitted edit was reverted by the conductor git cycle;
+committing immediately this time.)
+---
+ python/carnot/agentic/arc_graph_explore.py | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_graph_explore.py b/python/carnot/agentic/arc_graph_explore.py
+index 8dd4515fe8..3aba5046fa 100644
+--- a/python/carnot/agentic/arc_graph_explore.py
++++ b/python/carnot/agentic/arc_graph_explore.py
+@@ -377,7 +377,8 @@ def misplaced_region_distance(win, connectivity: int = 8):
+ 
+ def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: int = 30000,
+                            warmup: bool = False, max_depth: int = 80,
+-                           verifier=None) -> tuple[Optional[list], int]:
++                           verifier=None, stats: Optional[dict] = None
++                           ) -> tuple[Optional[list], int]:
+     """Value/novelty-guided graph-explore for DEEP games (e.g. wa30 ~33-deep keyboard)
+     where uniform BFS exhausts its budget before reaching the win. Best-first over the
+     frontier by: an optional VERIFIER (predicted steps-to-go on the frame, the learned
+@@ -412,6 +413,13 @@ def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: in
+     heap = [(priority(f0, 0), next(counter), h0)]
+     best = start_level
+     expansions = 0
++
++    def _ret(traj, lvl):
++        if stats is not None:
++            stats["expansions"] = expansions
++            stats["states"] = len(states)
++        return traj, lvl
++
+     while heap and expansions < max_expansions:
+         _, _, h = heapq.heappop(heap)
+         st = states.get(h)
+@@ -431,7 +439,7 @@ def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: in
+             traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
+             lvl = _levels_completed(nf)
+             if lvl > start_level:
+-                return traj, lvl
++                return _ret(traj, lvl)
+             best = max(best, lvl)
+             if _game_over(nf):
+                 continue
+@@ -444,7 +452,7 @@ def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: in
+             heapq.heappush(heap, (priority(nf, len(traj)), next(counter), nh))
+             if expansions >= max_expansions:
+                 break
+-    return None, best
++    return _ret(None, best)
+ 
+ 
+ def trajectory_labels(traj: list) -> list[str]:
+-- 
+2.55.0
+

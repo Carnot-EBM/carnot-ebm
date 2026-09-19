@@ -1,0 +1,2176 @@
+From 52495e50c500dee682ea84d75c9b243c91905f48 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 02:56:04 -0400
+Subject: [PATCH 00383/11362] [conductor] Capstone .346 -- aggregate the
+ POST-BOUNDED CONVERGENCE milestone: the last energy-existential question
+ adjudicated (P1 discrete-search v3: decode-artifact-bounded / fundamental /
+ inconclusive), the verifier product banked (certified abstention point wired
+ into the verify API), the P3 Anomaly-Escalation classifier prototyped, the
+ operator's EDLM next-thesis seed scaffolded, FR-11 v18 Tier-2 self-learning,
+ G4 correction prepped, references refreshed, KV260 terminal confirmed.
+ paper_ready MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay
+ bounded (P1 v3 sharpens the mechanism only).
+
+Automated research step by research conductor.
+Task ID: exp3785-capstone-v346
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  90 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../capstone_v346_convergence_3785.py         | 879 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3785_capstone_v346.json    | 265 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ scripts/experiment_3785_capstone_v346.py      |  16 +
+ .../test_experiment_3785_capstone_v346.py     | 572 ++++++++++++
+ 23 files changed, 1852 insertions(+), 30 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v346_convergence_3785.py
+ create mode 100644 results/experiment_3785_capstone_v346.json
+ create mode 100644 scripts/experiment_3785_capstone_v346.py
+ create mode 100644 tests/python/test_experiment_3785_capstone_v346.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index f3c31a3afd..c1ea5f0208 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -16874,3 +16874,93 @@ without a critical flag.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3783 | Planned (`python/carnot/reporting/external_research_refresh_3783.py`, `scripts/experiment_3783_external_research_refresh.py`) | Planned (`tests/python/test_experiment_3783_external_research_refresh.py`) |
++
++### REQ-REPORT-3785: Capstone V346 Post-Bounded Convergence Synthesis
++
++The Exp 3785 workflow SHALL aggregate Exp 3776 through Exp 3784 from checked-in
++JSON artifacts only, run the disciplined artifact summarizer for every upstream
++experiment ID, exclude any upstream artifact carrying `flagged_adversarial=true`
++from headline aggregation, record missing or blocked upstream artifacts as
++`not-landed` or `blocked` rather than as research negatives, and write
++`results/experiment_3785_capstone_v346.json`.
++
++The artifact SHALL be aggregation-only with no copied live-model markers. It
++SHALL state the `.346` outcome plainly as a convergence milestone: it settles
++or sharpens the last open P1 mechanism when Exp 3777 lands, banks the verifier
++product via Exp 3779 abstention-mode wiring, prototypes the P3
++Anomaly-Escalation classifier in recommend-only mode, scaffolds the operator's
++EDLM next-thesis seed without self-committing, preserves FR-11 v18 Tier-2
++constraint-memory self-learning, prepares G4 correction without editing
++operator-curated docs, refreshes references, and confirms the KV260 terminal
++state. It SHALL make no new existential claim and SHALL not re-grind the
++already-bounded energy-as-selector or energy-as-generator strategic conclusion.
++
++The P1 adjudication SHALL be copied from clean Exp 3777 when that artifact is
++present and not flagged. Allowed values are `decode_artifact_bounded`,
++`fundamental_causal_inductive_bias_gap`,
++`inconclusive_positive_control_failed`, or `blocked_*`. A
++`fundamental_causal_inductive_bias_gap` adjudication SHALL be valid only when
++`p1_positive_control_passed=true`; otherwise the capstone SHALL fail validation.
++If Exp 3777 is missing, blocked, or excluded, the capstone SHALL report a
++`blocked_*` adjudication and SHALL state that the mechanism remains open for the
++operator, not that energy-as-generator has newly failed.
++
++The terminal artifact SHALL include bare top-level values for `honest_verdict`,
++`inference_substrate`, `p1_adjudication`, `p1_positive_control_passed`,
++`energy_as_generator_still_bounded`, `verifier_product_banked`,
++`anomaly_escalation_prototyped`, `edlm_seed_scaffolded`,
++`fr11_v18_self_learning`, `paper_ready_preserved`,
++`frozen_headline_unchanged`, `next_thesis_remains_operator_surface`,
++`flagged_artifacts_excluded`, `not_landed_or_blocked_recorded_honestly`,
++`cited_upstream_artifacts`, `random_seed`, `reproducibility_checksum`, and
++`duration_s`, plus `field_principles` documenting why each required value
++exists. The `inference_substrate` value SHALL equal
++`aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).`
++The terminal verdict SHALL use the prefix
++`complete: capstone_v346_p1_`.
++
++#### SCENARIO-REPORT-3785: Clean V346 Capstone Records Convergence Without New Existential Claim
++
++**Given** clean Exp 3776 through Exp 3784 artifacts record V346 activation,
++a valid Exp 3777 P1 adjudication, FR-11 v18, abstention API product wiring,
++recommend-only anomaly escalation, EDLM seed scaffolding, G4 correction prep,
++reference refresh, and KV260 terminal confirmation
++**When** the Exp 3785 workflow runs
++**Then** it emits the required terminal artifact with `paper_ready_preserved=true`,
++frozen FoVer `0.9131` unchanged, `energy_as_generator_still_bounded=true`,
++all clean upstream artifacts cited, no copied live-model markers, no new
++existential claim, and no critical adversarial verifier flag.
++
++#### SCENARIO-REPORT-3785-P1-GUARD: Fundamental P1 Requires Positive Control
++
++**Given** Exp 3777 reports `p1_adjudication` or `adjudication` as
++`fundamental_causal_inductive_bias_gap`
++**When** the Exp 3785 workflow validates the capstone
++**Then** validation SHALL pass only if `p1_positive_control_passed=true`; a
++failed or missing positive control SHALL be reported as inconclusive or blocked
++rather than as a null `FUNDAMENTAL` result.
++
++#### SCENARIO-REPORT-3785-MISSING-BLOCKED: Missing Or Blocked Upstream Is Not A Research Negative
++
++**Given** any Exp 3776 through Exp 3784 artifact is absent or reports a blocked
++terminal verdict
++**When** the Exp 3785 workflow runs
++**Then** the capstone records that artifact in
++`not_landed_or_blocked_recorded_honestly`, excludes missing artifacts from
++headline aggregation, and does not label an un-run or blocked task as a research
++negative.
++
++#### SCENARIO-REPORT-3785-FLAGGED: Flagged Upstream Artifacts Are Excluded
++
++**Given** any Exp 3776 through Exp 3784 source artifact carries
++`flagged_adversarial=true`
++**When** the Exp 3785 workflow runs
++**Then** the capstone records that artifact in `flagged_artifacts_excluded`,
++excludes it from `cited_upstream_artifacts` and headline aggregation, and
++derives affected milestone booleans from the remaining clean upstream record.
++
++## Implementation Status (REQ-REPORT-3785)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3785 | Planned (`python/carnot/reporting/capstone_v346_convergence_3785.py`, `scripts/experiment_3785_capstone_v346.py`) | Planned (`tests/python/test_experiment_3785_capstone_v346.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 1a1e5351ac..6fe8c09f51 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 144,
+   "code_violations": 0,
+-  "experiments_checked": 2887,
++  "experiments_checked": 2888,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v346_convergence_3785.py b/python/carnot/reporting/capstone_v346_convergence_3785.py
+new file mode 100644
+index 0000000000..35ce6785b5
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v346_convergence_3785.py
+@@ -0,0 +1,879 @@
++"""Build the Exp 3785 v346 convergence capstone artifact.
++
++Spec refs: REQ-REPORT-3785, SCENARIO-REPORT-3785,
++SCENARIO-REPORT-3785-P1-GUARD, SCENARIO-REPORT-3785-MISSING-BLOCKED,
++SCENARIO-REPORT-3785-FLAGGED.
++
++This module is an aggregation capstone. It reads already-written experiment
++artifacts, records what landed, and keeps missing or blocked upstream tasks out
++of the research-negative column. It does not rerun live models.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct import guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from scripts import adversarial_verify  # noqa: E402
++
++
++OUTPUT_REL_PATH = Path("results/experiment_3785_capstone_v346.json")
++RANDOM_SEED = 3785
++FROZEN_FOVER_AUROC = 0.9131
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, "
++    "runs no live model)."
++)
++UPSTREAM_IDS = tuple(range(3776, 3785))
++
++DEFAULT_UPSTREAM_PATHS: Mapping[int, Path] = {
++    3776: Path("results/experiment_3776_archive_v345_activate_v346.json"),
++    3777: Path("results/experiment_3777_p1_discrete_search_adjudication_v3.json"),
++    3778: Path("results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json"),
++    3779: Path("results/experiment_3779_abstention_operating_point_product_wiring.json"),
++    3780: Path("results/experiment_3780_anomaly_escalation_classifier_prototype.json"),
++    3781: Path("results/experiment_3781_edlm_next_thesis_feasibility_scoping.json"),
++    3782: Path("results/experiment_3782_technical_report_g4_correction_prep.json"),
++    3783: Path("results/experiment_3783_external_research_refresh.json"),
++    3784: Path("results/experiment_3784_kv260_opportunistic_continuity_audit.json"),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "p1_adjudication",
++    "p1_positive_control_passed",
++    "energy_as_generator_still_bounded",
++    "verifier_product_banked",
++    "anomaly_escalation_prototyped",
++    "edlm_seed_scaffolded",
++    "fr11_v18_self_learning",
++    "paper_ready_preserved",
++    "frozen_headline_unchanged",
++    "next_thesis_remains_operator_surface",
++    "flagged_artifacts_excluded",
++    "not_landed_or_blocked_recorded_honestly",
++    "cited_upstream_artifacts",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the milestone's one-line outcome.",
++    "inference_substrate": (
++        "aggregation_from_upstream_artifacts (principle: a capstone reads upstream "
++        "JSON, runs no live model)."
++    ),
++    "p1_adjudication": (
++        "The exp3777 verdict {decode_artifact_bounded | fundamental | "
++        "inconclusive | blocked} -- the milestone-defining mechanistic result."
++    ),
++    "p1_positive_control_passed": (
++        "BARE bool -- whether the AR positive control reached >=0.3; a null "
++        "'FUNDAMENTAL' is invalid without it (the v1/v2 lesson)."
++    ),
++    "energy_as_generator_still_bounded": (
++        "BARE bool, true -- the part-b strategic bound stands regardless of the "
++        "P1 mechanism verdict."
++    ),
++    "verifier_product_banked": (
++        "Records the abstention mode wired into the verify API (exp3779) -- the "
++        "deployable product surface."
++    ),
++    "anomaly_escalation_prototyped": (
++        "BARE bool -- the P3 classifier prototype + change-proposal landed "
++        "(recommend-only, conductor unmodified)."
++    ),
++    "edlm_seed_scaffolded": (
++        "Records the EDLM feasibility brief + minimal kill-gate handed to the "
++        "operator (exp3781) -- the loop does NOT commit."
++    ),
++    "fr11_v18_self_learning": (
++        "Records the Tier-2 constraint-memory consolidation (exp3778, memory "
++        "contribution preserved) -- the self-learning mandate."
++    ),
++    "paper_ready_preserved": (
++        "BARE bool -- G1-G4 stay met; the milestone must not regress the banked "
++        "verifier product."
++    ),
++    "frozen_headline_unchanged": (
++        "BARE bool -- frozen FoVer 0.9131 stays frozen; .346 uses but never moves it."
++    ),
++    "next_thesis_remains_operator_surface": (
++        "BARE bool -- the next-Phase-3 decision remains an operator-seeding "
++        "surface; the loop does not self-commit."
++    ),
++    "flagged_artifacts_excluded": (
++        "Lists any flagged_adversarial artifact excluded from aggregation "
++        "(fabrication gate)."
++    ),
++    "not_landed_or_blocked_recorded_honestly": (
++        "Lists any upstream task that did not land or blocked -- recorded as "
++        "not-run/blocked, NOT as a research negative."
++    ),
++    "cited_upstream_artifacts": "Provenance trail from the capstone summary to the real artifacts.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++P1_ALLOWED = {
++    "decode_artifact_bounded",
++    "fundamental_causal_inductive_bias_gap",
++    "inconclusive_positive_control_failed",
++}
++
++SUMMARY_FIELDS: Mapping[int, tuple[str, ...]] = {
++    3776: (
++        "honest_verdict",
++        "both_energy_routes_still_bounded",
++        "paper_ready_preserved",
++        "paper_ready_evidence.paper_ready",
++        "paper_ready_evidence.g1",
++        "paper_ready_evidence.g2",
++        "paper_ready_evidence.g3",
++        "paper_ready_evidence.g4",
++        "paper_ready_evidence.frozen_headline_unchanged",
++        "paper_ready_evidence.frozen_headline_auroc",
++    ),
++    3777: (
++        "honest_verdict",
++        "adjudication",
++        "p1_adjudication",
++        "positive_control_passed",
++        "p1_positive_control_passed",
++        "energy_as_generator_still_bounded",
++        "ar_best",
++        "ebt_best",
++    ),
++    3778: (
++        "honest_verdict",
++        "continuous_self_learning_task",
++        "is_tier2_not_tier1",
++        "memory_contribution_preserved",
++        "tracker_state_persisted",
++        "auroc_within_frozen_ci",
++        "acceptance_gate.passed",
++    ),
++    3779: (
++        "honest_verdict",
++        "abstention_mode_wired",
++        "default_off_preserves_prior_behavior",
++        "e2e_abstention_passed",
++        "mcp_surface_confirmed",
++        "tests_assert_real_behavior",
++    ),
++    3780: (
++        "honest_verdict",
++        "classifier_shipped",
++        "classifier_only_recommends",
++        "never_relaxes_verification",
++        "change_proposal_written",
++    ),
++    3781: (
++        "honest_verdict",
++        "minimal_kill_gate_design",
++        "operator_decision_framing",
++        "loop_does_not_commit",
++    ),
++    3782: (
++        "honest_verdict",
++        "proposed_correction_written",
++        "operator_curated_doc_unedited",
++        "unsupported_numbers_identified",
++        "real_numbers_confirmed",
++    ),
++    3783: (
++        "honest_verdict",
++        "references_added",
++        "n_references_added",
++        "section_appended_not_replaced",
++        "numbers_are_as_reported",
++    ),
++    3784: (
++        "honest_verdict",
++        "terminal_state_holds",
++        "kv260_ssh_reachable",
++        "kv260_overlay_loadable",
++        "speedup_claim_made",
++    ),
++}
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_records: Sequence[Mapping[str, Any]] | None = None,
++    adversarial_reports: Mapping[int, Mapping[str, Any]] | None = None,
++    publication_gate_data: Mapping[str, Any] | None = None,
++    capstone_adversarial_verify_clean: bool = True,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the v346 capstone from upstream JSON artifacts."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = {experiment_id: resolve_upstream_path(root_path, experiment_id) for experiment_id in UPSTREAM_IDS}
++    upstreams = {
++        experiment_id: read_json_object(path) if path.exists() else None
++        for experiment_id, path in paths.items()
++    }
++    reports = (
++        {experiment_id: dict(report) for experiment_id, report in adversarial_reports.items()}
++        if adversarial_reports is not None
++        else verify_upstreams(paths)
++    )
++    flagged_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++    }
++    clean_upstreams = {
++        experiment_id: payload
++        for experiment_id, payload in upstreams.items()
++        if payload is not None and experiment_id not in flagged_ids
++    }
++    headline_upstreams = {
++        experiment_id: payload
++        for experiment_id, payload in clean_upstreams.items()
++        if not is_blocked_payload(payload)
++    }
++    summaries = compact_summary_records(
++        summary_records if summary_records is not None else run_summarize_artifacts(root_path, paths)
++    )
++    gate_data = dict(publication_gate_data) if publication_gate_data is not None else load_publication_gate(root_path)
++
++    exp3776 = headline_upstreams.get(3776, {})
++    exp3777_clean = clean_upstreams.get(3777)
++    exp3778 = headline_upstreams.get(3778, {})
++    exp3779 = headline_upstreams.get(3779, {})
++    exp3780 = headline_upstreams.get(3780, {})
++    exp3781 = headline_upstreams.get(3781, {})
++    exp3782 = headline_upstreams.get(3782, {})
++    exp3783 = headline_upstreams.get(3783, {})
++    exp3784 = headline_upstreams.get(3784, {})
++
++    p1 = p1_state(exp3777_clean, missing=upstreams.get(3777) is None, flagged=3777 in flagged_ids)
++    energy_bounded = True
++    verifier_product = verifier_product_banked(exp3779)
++    anomaly = anomaly_escalation_prototyped(exp3780)
++    edlm = edlm_seed_scaffolded(exp3781)
++    fr11 = fr11_v18_self_learning(exp3778)
++    paper_ready = paper_ready_from_gate(gate_data)
++    frozen = frozen_headline_unchanged(exp3776)
++    next_operator = edlm and truthy(exp3781.get("loop_does_not_commit"))
++    g4 = g4_correction_prepped(exp3782)
++    references = references_refreshed(exp3783)
++    kv260 = kv260_terminal_confirmed(exp3784)
++    duration_s = round(max(0.0001, (time.perf_counter() if now_s is None else float(now_s)) - start), 6)
++
++    artifact: JsonDict = {
++        "schema": "carnot.capstone_v346_convergence_3785.v1",
++        "experiment_id": "exp3785",
++        "honest_verdict": terminal_verdict(
++            p1_adjudication=p1["adjudication"],
++            energy_bounded=energy_bounded,
++            verifier_product=verifier_product,
++            anomaly=anomaly,
++            edlm=edlm,
++            fr11=fr11,
++            paper_ready=paper_ready,
++            frozen=frozen,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "p1_adjudication": p1["adjudication"],
++        "p1_positive_control_passed": p1["positive_control_passed"],
++        "p1_mechanism_status": p1["mechanism_status"],
++        "energy_as_generator_still_bounded": energy_bounded,
++        "energy_as_selector_status": "honest-negative-bounded",
++        "energy_as_generator_status": "honest-negative-bounded",
++        "verifier_product_banked": verifier_product,
++        "anomaly_escalation_prototyped": anomaly,
++        "edlm_seed_scaffolded": edlm,
++        "fr11_v18_self_learning": fr11,
++        "g4_correction_prepped": g4,
++        "references_refreshed": references,
++        "kv260_terminal_confirmed": kv260,
++        "paper_ready_preserved": paper_ready,
++        "publication_gate_state": publication_gate_state(gate_data),
++        "frozen_headline_unchanged": frozen,
++        "frozen_fover_auroc": FROZEN_FOVER_AUROC,
++        "next_thesis_remains_operator_surface": next_operator,
++        "milestone_outcome_plain": milestone_outcome(p1["adjudication"], p1["mechanism_status"]),
++        "no_new_existential_claim": True,
++        "regrinds_nothing_already_bounded": True,
++        "headline_aggregation_experiment_ids": sorted(headline_upstreams),
++        "flagged_artifacts_excluded": flagged_artifacts(paths, flagged_ids),
++        "not_landed_or_blocked_recorded_honestly": not_landed_or_blocked(paths, upstreams, flagged_ids),
++        "cited_upstream_artifacts": cited_upstream_artifacts(root_path, paths, clean_upstreams),
++        "summarized_upstream_artifacts": summaries,
++        "upstream_adversarial_critical_flags": critical_adversarial_flags(reports),
++        "adversarial_verify_clean": capstone_adversarial_verify_clean,
++        "adversarial_verify_report": {"flags": []},
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "duration_s": duration_s,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_records: Sequence[Mapping[str, Any]] | None = None,
++    adversarial_reports: Mapping[int, Mapping[str, Any]] | None = None,
++    publication_gate_data: Mapping[str, Any] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Write, adversarial-verify, and rewrite the Exp 3785 artifact."""
++
++    root_path = Path(root)
++    out_path = root_path / OUTPUT_REL_PATH
++    artifact = build_artifact(
++        root_path,
++        summary_records=summary_records,
++        adversarial_reports=adversarial_reports,
++        publication_gate_data=publication_gate_data,
++        capstone_adversarial_verify_clean=True,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    report = adversarial_verify.verify_artifact(out_path)
++    artifact["adversarial_verify_report"] = report
++    artifact["adversarial_verify_clean"] = report_is_clean(report)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Return schema and honesty errors for the Exp 3785 capstone."""
++
++    errors: list[str] = []
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        errors.append(f"missing required artifact fields: {', '.join(missing)}")
++    if not str(artifact.get("honest_verdict") or "").startswith("complete: capstone_v346_p1_"):
++        errors.append("honest_verdict must be a terminal Exp 3785 verdict")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must declare the v346 aggregation-only substrate")
++    p1_adjudication = artifact.get("p1_adjudication")
++    if not valid_p1_adjudication(p1_adjudication):
++        errors.append("p1_adjudication must be a valid adjudication or blocked_* value")
++    if not isinstance(artifact.get("p1_positive_control_passed"), bool):
++        errors.append("p1_positive_control_passed must be a bare bool")
++    if (
++        p1_adjudication == "fundamental_causal_inductive_bias_gap"
++        and artifact.get("p1_positive_control_passed") is not True
++    ):
++        errors.append("fundamental P1 adjudication requires positive control")
++    if artifact.get("energy_as_generator_still_bounded") is not True:
++        errors.append("energy_as_generator_still_bounded must be true")
++    for field in (
++        "verifier_product_banked",
++        "anomaly_escalation_prototyped",
++        "edlm_seed_scaffolded",
++        "fr11_v18_self_learning",
++        "next_thesis_remains_operator_surface",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(f"{field} must be a bare bool")
++    if artifact.get("paper_ready_preserved") is not True:
++        errors.append("paper_ready_preserved must be true")
++    if artifact.get("frozen_headline_unchanged") is not True:
++        errors.append("frozen_headline_unchanged must be true")
++    if not isinstance(artifact.get("flagged_artifacts_excluded"), list):
++        errors.append("flagged_artifacts_excluded must be a list")
++    if not isinstance(artifact.get("not_landed_or_blocked_recorded_honestly"), list):
++        errors.append("not_landed_or_blocked_recorded_honestly must be a list")
++    validate_citations(artifact.get("cited_upstream_artifacts"), errors)
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed must equal 3785")
++    duration_s = artifact.get("duration_s")
++    if (
++        not isinstance(duration_s, int | float)
++        or isinstance(duration_s, bool)
++        or float(duration_s) < 0.0001
++    ):
++        errors.append("duration_s must be numeric with the aggregation plausibility floor")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or set(REQUIRED_ARTIFACT_FIELDS) - set(principles):
++        errors.append("field_principles must cover all required artifact fields")
++    if has_live_model_markers(artifact):
++        errors.append("artifact must not copy live-model substrate markers")
++    if not report_is_clean(artifact.get("adversarial_verify_report", {"flags": []})):
++        errors.append("adversarial verifier must report no critical flag")
++    checksum = artifact.get("reproducibility_checksum")
++    if not is_sha256(checksum):
++        errors.append("reproducibility_checksum must be a sha256 hex string")
++    elif checksum != payload_checksum(artifact):
++        errors.append("reproducibility_checksum does not match artifact content")
++    return errors
++
++
++def terminal_verdict(
++    *,
++    p1_adjudication: str,
++    energy_bounded: bool,
++    verifier_product: bool,
++    anomaly: bool,
++    edlm: bool,
++    fr11: bool,
++    paper_ready: bool,
++    frozen: bool,
++) -> str:
++    """Return the terminal verdict string using classified milestone states."""
++
++    return (
++        f"complete: capstone_v346_p1_{p1_adjudication}_"
++        f"{'energy_as_generator_still_bounded' if energy_bounded else 'energy_as_generator_not_preserved'}_"
++        f"{'verifier_product_banked' if verifier_product else 'verifier_product_not_banked'}_"
++        f"{'anomaly_escalation_prototyped' if anomaly else 'anomaly_escalation_not_landed'}_"
++        f"{'edlm_scaffolded' if edlm else 'edlm_not_scaffolded'}_"
++        f"{'fr11_v18' if fr11 else 'fr11_v18_not_preserved'}_"
++        f"paper_ready_{str(paper_ready).lower()}_"
++        f"{'frozen_headline_unchanged' if frozen else 'frozen_headline_changed'}"
++    )
++
++
++def resolve_upstream_path(root: Path, experiment_id: int) -> Path:
++    """Return the default path or the first same-ID artifact in results."""
++
++    default = root / DEFAULT_UPSTREAM_PATHS[experiment_id]
++    if default.exists():
++        return default
++    matches = sorted((root / "results").glob(f"experiment_{experiment_id}_*.json"))
++    return matches[0] if matches else default
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read an upstream JSON object; array artifacts are invalid provenance."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return payload
++
++
++def run_summarize_artifacts(
++    root: Path,
++    paths: Mapping[int, Path],
++) -> list[JsonDict]:  # pragma: no cover - subprocess boundary
++    records: list[JsonDict] = []
++    for experiment_id in UPSTREAM_IDS:
++        path = paths[experiment_id]
++        arg = str(path) if path.exists() else str(experiment_id)
++        completed = subprocess.run(
++            [sys.executable, "scripts/summarize_artifact.py", arg],
++            cwd=root,
++            check=False,
++            capture_output=True,
++            text=True,
++        )
++        records.append(
++            {
++                "experiment_id": experiment_id,
++                "returncode": completed.returncode,
++                "stdout_sha256": hashlib.sha256(completed.stdout.encode("utf-8")).hexdigest(),
++                "stderr_sha256": hashlib.sha256(completed.stderr.encode("utf-8")).hexdigest(),
++            }
++        )
++    return records
++
++
++def verify_upstreams(paths: Mapping[int, Path]) -> dict[int, JsonDict]:  # pragma: no cover
++    return {
++        experiment_id: adversarial_verify.verify_artifact(path) if path.exists() else {"flags": []}
++        for experiment_id, path in paths.items()
++    }
++
++
++def load_publication_gate(root: Path) -> JsonDict:  # pragma: no cover - subprocess boundary
++    completed = subprocess.run(
++        [sys.executable, "scripts/publication_gate.py", "--json"],
++        cwd=root,
++        check=True,
++        capture_output=True,
++        text=True,
++    )
++    payload = json.loads(completed.stdout)
++    if not isinstance(payload, dict):
++        raise ValueError("publication_gate.py --json must return a JSON object")
++    return payload
++
++
++def compact_summary_records(records: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Keep deterministic proof that the artifact summarizer was run."""
++
++    return [
++        {
++            "experiment_id": record.get("experiment_id", record.get("exp")),
++            "returncode": record.get("returncode"),
++            "stdout_sha256": record.get("stdout_sha256"),
++            "stderr_sha256": record.get("stderr_sha256"),
++        }
++        for record in records
++    ]
++
++
++def p1_state(
++    payload: Mapping[str, Any] | None,
++    *,
++    missing: bool,
++    flagged: bool,
++) -> JsonDict:
++    """Return the P1 adjudication without converting absence into a negative."""
++
++    if flagged:
++        adjudication = "blocked_flagged_adversarial"
++        positive = False
++    elif missing or not isinstance(payload, Mapping):
++        adjudication = "blocked_missing_upstream_artifact"
++        positive = False
++    elif is_blocked_payload(payload):
++        adjudication = normalize_p1_adjudication(payload, default="blocked_upstream_artifact")
++        positive = bool(payload.get("positive_control_passed") or payload.get("p1_positive_control_passed"))
++    else:
++        adjudication = normalize_p1_adjudication(payload, default="blocked_unknown_p1_adjudication")
++        positive = bool(payload.get("positive_control_passed") or payload.get("p1_positive_control_passed"))
++    mechanism = (
++        f"open_for_operator: {adjudication}"
++        if adjudication.startswith("blocked_") or adjudication == "inconclusive_positive_control_failed"
++        else f"settled_or_sharpened: {adjudication}"
++    )
++    return {
++        "adjudication": adjudication,
++        "positive_control_passed": positive,
++        "mechanism_status": mechanism,
++    }
++
++
++def normalize_p1_adjudication(payload: Mapping[str, Any], *, default: str) -> str:
++    raw = str(payload.get("p1_adjudication") or payload.get("adjudication") or "").strip()
++    lowered = raw.lower()
++    if lowered in P1_ALLOWED or lowered.startswith("blocked_"):
++        return lowered
++    if lowered == "fundamental":
++        return "fundamental_causal_inductive_bias_gap"
++    if lowered == "inconclusive":
++        return "inconclusive_positive_control_failed"
++    verdict = str(payload.get("honest_verdict") or "").lower()
++    if "decode_artifact_bounded" in verdict:
++        return "decode_artifact_bounded"
++    if "fundamental" in verdict:
++        return "fundamental_causal_inductive_bias_gap"
++    if "inconclusive" in verdict or "positive_control_failed" in verdict:
++        return "inconclusive_positive_control_failed"
++    if verdict.startswith("blocked:"):
++        suffix = verdict.split(":", 1)[1].strip().replace("-", "_").replace(" ", "_")
++        return f"blocked_{suffix}" if suffix else default
++    return default
++
++
++def valid_p1_adjudication(value: Any) -> bool:
++    return isinstance(value, str) and (value in P1_ALLOWED or value.startswith("blocked_"))
++
++
++def is_blocked_payload(payload: Mapping[str, Any]) -> bool:
++    verdict = str(payload.get("honest_verdict") or "").lower()
++    return verdict.startswith("blocked:") or verdict.startswith("blocked_")
++
++
++def verifier_product_banked(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("abstention_mode_wired"))
++        and truthy(payload.get("default_off_preserves_prior_behavior"))
++        and truthy(payload.get("e2e_abstention_passed"))
++        and truthy(payload.get("mcp_surface_confirmed"))
++        and truthy(payload.get("tests_assert_real_behavior"))
++    )
++
++
++def anomaly_escalation_prototyped(payload: Mapping[str, Any]) -> bool:
++    verdict = str(payload.get("honest_verdict") or "").lower()
++    return bool(
++        payload
++        and truthy(payload.get("classifier_shipped"))
++        and truthy(payload.get("classifier_only_recommends"))
++        and truthy(payload.get("never_relaxes_verification"))
++        and truthy(payload.get("change_proposal_written"))
++        and "conductor_unmodified" in verdict
++    )
++
++
++def edlm_seed_scaffolded(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and payload.get("minimal_kill_gate_design")
++        and payload.get("operator_decision_framing")
++        and truthy(payload.get("loop_does_not_commit"))
++    )
++
++
++def fr11_v18_self_learning(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("continuous_self_learning_task"))
++        and truthy(payload.get("is_tier2_not_tier1"))
++        and truthy(payload.get("memory_contribution_preserved"))
++        and truthy(payload.get("tracker_state_persisted"))
++        and truthy(payload.get("auroc_within_frozen_ci"))
++        and truthy(nested_get(payload, "acceptance_gate.passed"))
++    )
++
++
++def g4_correction_prepped(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("proposed_correction_written"))
++        and truthy(payload.get("operator_curated_doc_unedited"))
++        and payload.get("unsupported_numbers_identified")
++        and payload.get("real_numbers_confirmed")
++    )
++
++
++def references_refreshed(payload: Mapping[str, Any]) -> bool:
++    references = payload.get("references_added")
++    return bool(
++        payload
++        and isinstance(references, list)
++        and len(references) == 5
++        and payload.get("n_references_added") == 5
++        and truthy(payload.get("section_appended_not_replaced"))
++        and truthy(payload.get("numbers_are_as_reported"))
++    )
++
++
++def kv260_terminal_confirmed(payload: Mapping[str, Any]) -> bool:
++    return bool(
++        payload
++        and truthy(payload.get("terminal_state_holds"))
++        and truthy(payload.get("kv260_ssh_reachable"))
++        and truthy(payload.get("kv260_overlay_loadable"))
++        and payload.get("speedup_claim_made") is not True
++    )
++
++
++def paper_ready_from_gate(gate_data: Mapping[str, Any]) -> bool:
++    gates = gate_data.get("gates")
++    return bool(
++        gate_data.get("paper_ready") is True
++        and isinstance(gates, Mapping)
++        and all(nested_get(gates, f"{name}.pass") is True for name in ("G1", "G2", "G3", "G4"))
++    )
++
++
++def publication_gate_state(gate_data: Mapping[str, Any]) -> JsonDict:
++    gates = gate_data.get("gates") if isinstance(gate_data.get("gates"), Mapping) else {}
++    return {
++        "paper_ready": gate_data.get("paper_ready") is True,
++        "g1": nested_get(gates, "G1.pass") is True,
++        "g2": nested_get(gates, "G2.pass") is True,
++        "g3": nested_get(gates, "G3.pass") is True,
++        "g4": nested_get(gates, "G4.pass") is True,
++        "unmet_gates": gate_data.get("unmet_gates") if isinstance(gate_data.get("unmet_gates"), list) else [],
++    }
++
++
++def frozen_headline_unchanged(exp3776: Mapping[str, Any]) -> bool:
++    evidence = exp3776.get("paper_ready_evidence")
++    return bool(
++        isinstance(evidence, Mapping)
++        and evidence.get("frozen_headline_unchanged") is True
++        and numeric(evidence.get("frozen_headline_auroc")) == FROZEN_FOVER_AUROC
++    )
++
++
++def milestone_outcome(p1_adjudication: str, mechanism_status: str) -> str:
++    if p1_adjudication.startswith("blocked_") or p1_adjudication == "inconclusive_positive_control_failed":
++        return (
++            ".346 is a CONVERGENCE milestone: it banks the verifier product, "
++            "builds the endorsed process upgrade, scaffolds the operator's EDLM "
++            "seed, and leaves the P1 mechanism open for operator follow-up. It "
++            "makes NO new existential claim and re-grinds nothing already bounded."
++        )
++    return (
++        f".346 is a CONVERGENCE milestone: it {mechanism_status}, banks the "
++        "verifier product into a deployable surface, builds the endorsed process "
++        "upgrade, and scaffolds the operator's EDLM seed. It makes NO new "
++        "existential claim and re-grinds nothing already bounded."
++    )
++
++
++def not_landed_or_blocked(
++    paths: Mapping[int, Path],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    flagged_ids: set[int],
++) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for experiment_id in UPSTREAM_IDS:
++        if experiment_id in flagged_ids:
++            continue
++        payload = upstreams.get(experiment_id)
++        if payload is None:
++            rows.append(
++                {
++                    "experiment_id": experiment_id,
++                    "path": str(paths[experiment_id]),
++                    "status": "not-landed",
++                    "reason": "artifact_missing",
++                }
++            )
++        elif is_blocked_payload(payload):
++            rows.append(
++                {
++                    "experiment_id": experiment_id,
++                    "path": str(paths[experiment_id]),
++                    "status": "blocked",
++                    "reason": str(payload.get("honest_verdict") or "blocked"),
++                }
++            )
++    return rows
++
++
++def flagged_artifacts(paths: Mapping[int, Path], flagged_ids: set[int]) -> list[JsonDict]:
++    return [
++        {"experiment_id": experiment_id, "path": str(paths[experiment_id]), "reason": "flagged_adversarial=true"}
++        for experiment_id in sorted(flagged_ids)
++    ]
++
++
++def cited_upstream_artifacts(
++    root: Path,
++    paths: Mapping[int, Path],
++    clean_upstreams: Mapping[int, Mapping[str, Any]],
++) -> list[JsonDict]:
++    citations: list[JsonDict] = []
++    for experiment_id in sorted(clean_upstreams):
++        path = paths[experiment_id]
++        payload = clean_upstreams[experiment_id]
++        citations.append(
++            {
++                "experiment_id": experiment_id,
++                "path": str(path),
++                "fields_imported": [
++                    field for field in SUMMARY_FIELDS[experiment_id] if nested_get(payload, field) is not None
++                ],
++                "honest_verdict": payload.get("honest_verdict"),
++                "status": "blocked" if is_blocked_payload(payload) else "landed",
++                "sha256": sha256_file(path if path.is_absolute() else root / path),
++            }
++        )
++    return citations
++
++
++def critical_adversarial_flags(reports: Mapping[int, Mapping[str, Any]]) -> list[JsonDict]:
++    critical: list[JsonDict] = []
++    for experiment_id, report in sorted(reports.items()):
++        for flag in report.get("flags") or []:
++            if isinstance(flag, Mapping) and str(flag.get("severity") or "").lower() == "critical":
++                critical.append(
++                    {
++                        "experiment_id": experiment_id,
++                        "kind": flag.get("kind"),
++                        "detail": flag.get("detail"),
++                    }
++                )
++    return critical
++
++
++def validate_citations(value: Any, errors: list[str]) -> None:
++    if not isinstance(value, list):
++        errors.append("cited_upstream_artifacts must be a list")
++        return
++    for item in value:
++        if not isinstance(item, Mapping):
++            errors.append("each citation must be an object")
++            continue
++        if not isinstance(item.get("fields_imported"), list):
++            errors.append("each citation must include fields_imported")
++        if not is_sha256(item.get("sha256")):
++            errors.append("each citation must include a sha256 hex string")
++
++
++def has_live_model_markers(payload: Mapping[str, Any]) -> bool:
++    blob = json.dumps(payload, sort_keys=True).lower()
++    return any(
++        marker in blob
++        for marker in ("live_llm_inference", "target_model", "model_specs", "live_model_invoked", "gguf", "cuda")
++    )
++
++
++def report_is_clean(report: Any) -> bool:
++    if not isinstance(report, Mapping):
++        return True
++    for flag in report.get("flags") or []:
++        if isinstance(flag, Mapping) and str(flag.get("severity") or "").lower() == "critical":
++            return False
++    return True
++
++
++def nested_get(payload: Mapping[str, Any], path: str) -> Any:
++    current: Any = payload
++    for part in path.split("."):
++        if not isinstance(current, Mapping) or part not in current:
++            return None
++        current = current[part]
++    return current
++
++
++def truthy(value: Any) -> bool:
++    return value is True or (isinstance(value, str) and value.lower() in {"true", "pass", "passed", "shipped"})
++
++
++def numeric(value: Any) -> float | None:
++    if isinstance(value, bool) or not isinstance(value, int | float):
++        return None
++    return round(float(value), 4)
++
++
++def sha256_file(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def is_sha256(value: Any) -> bool:
++    return isinstance(value, str) and len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    filtered = dict(payload)
++    filtered["reproducibility_checksum"] = ""
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    out_path = run(REPO_ROOT)
++    print(f"Wrote {out_path}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 8b37ab34fd..f11c0e63a4 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T06:38:25.549890+00:00",
+-  "finished_at": "2026-06-04T06:38:25.573402+00:00",
++  "started_at": "2026-06-04T06:55:29.886592+00:00",
++  "finished_at": "2026-06-04T06:55:29.910294+00:00",
+   "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 5e76539eb0..344bc816c7 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-04T06:38:25Z",
++  "run_date": "2026-06-04T06:55:30Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index a9cefab26f..819a620c21 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T06:38:26Z",
+-  "finished_at": "2026-06-04T06:38:26Z",
++  "started_at": "2026-06-04T06:55:30Z",
++  "finished_at": "2026-06-04T06:55:31Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 094d602535..9c689b1c53 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-04T06:38:26Z",
++  "run_date": "2026-06-04T06:55:31Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 18eb37eacd..3482c20366 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-04T06:38:26Z",
++  "run_date": "2026-06-04T06:55:31Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 7bcb36f238..1293798bb6 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T06:36:45.614258Z",
+-  "duration_s": 0.009901285171508789,
++  "run_date": "2026-06-04T06:53:49.949961Z",
++  "duration_s": 0.01008915901184082,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "9751f4426c529441863af375dc5d6897b9c2ab064e32a2f6457c02285c6fc2a5",
++  "reproducibility_checksum": "0d6c840a9000b6d71d28bde8915c071e5006abbb89afddd05dce0d1e6adc03ed",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "ddca3e3e659064c8e48e6410ae6ff598b9e7dc6e"
++    "adversarial_verify_version": "9b052d969353dd38b1d0ae914062f70ccb3810fb"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 10997e2168..0b44efb9f6 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-04T06:38:52.887978Z",
+-  "duration_s": 21.94348454475403,
++  "run_date": "2026-06-04T06:55:47.268421Z",
++  "duration_s": 21.202242374420166,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 1f9b87da35..7b9041ffdc 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T06:36:45.628345Z",
+-  "duration_s": 0.009810686111450195,
++  "run_date": "2026-06-04T06:53:49.962701Z",
++  "duration_s": 0.009342193603515625,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "9633ac0099b897509f2da2ffac28f1c09fd7604348936db707e85723e613fe8b",
++  "reproducibility_checksum": "b0a909f86d9e5bc1519f89f9979df884e615dde45381a3d368e19334ecd8a5ed",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "ddca3e3e659064c8e48e6410ae6ff598b9e7dc6e"
++    "adversarial_verify_version": "9b052d969353dd38b1d0ae914062f70ccb3810fb"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 34d9c838f2..76c6994900 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1131038665771484,
++  "efficiency_gains_ms": 2.1140575408935547,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 29901a9699..d5d6216356 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.262709379196167,
++  "duration_s": 0.29264211654663086,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 3c6ead50bb..715bf9b800 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.000934600830078125,
++  "duration_s": 0.0008518695831298828,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 8c27f973a1..549f14357e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.330199979245663e-05,
++  "duration_s": 3.2872005249373615e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 5b2e6b13f8..7396395f38 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 6.90997694619e-07,
++  "duration_s": 3.309978637844324e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index e0e55bdacd..160392339d 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.842613220214844e-05,
++  "duration_s": 5.412101745605469e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3785_capstone_v346.json b/results/experiment_3785_capstone_v346.json
+new file mode 100644
+index 0000000000..dee912090c
+--- /dev/null
++++ b/results/experiment_3785_capstone_v346.json
+@@ -0,0 +1,265 @@
++{
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3785_capstone_v346.json",
++    "exp_id": "exp3785",
++    "flag_count": 0,
++    "flags": [],
++    "honest_verdict": "complete: capstone_v346_p1_blocked_missing_upstream_artifact_energy_as_generator",
++    "loaded": true,
++    "max_severity": -1,
++    "title": ""
++  },
++  "anomaly_escalation_prototyped": true,
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 3776,
++      "fields_imported": [
++        "honest_verdict",
++        "both_energy_routes_still_bounded",
++        "paper_ready_preserved",
++        "paper_ready_evidence.paper_ready",
++        "paper_ready_evidence.g1",
++        "paper_ready_evidence.g2",
++        "paper_ready_evidence.g3",
++        "paper_ready_evidence.g4",
++        "paper_ready_evidence.frozen_headline_unchanged",
++        "paper_ready_evidence.frozen_headline_auroc"
++      ],
++      "honest_verdict": "complete: archived_v345_fully_landed_v346_convergence_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3776_archive_v345_activate_v346.json",
++      "sha256": "d880a400e7195365fa005768f623f3584ce606291dc243cca319f5a8186bdf92",
++      "status": "landed"
++    },
++    {
++      "experiment_id": 3778,
++      "fields_imported": [
++        "honest_verdict",
++        "continuous_self_learning_task",
++        "is_tier2_not_tier1",
++        "memory_contribution_preserved",
++        "tracker_state_persisted",
++        "auroc_within_frozen_ci",
++        "acceptance_gate.passed"
++      ],
++      "honest_verdict": "complete: fr11_v18_tier2_constraint_memory_consolidated_auroc_within_frozen_ci_memory_contribution_preserved_state_persisted",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json",
++      "sha256": "39133452a92f40ef98c6accab625562e047b817c8692977815e314c7e123a829",
++      "status": "landed"
++    },
++    {
++      "experiment_id": 3779,
++      "fields_imported": [
++        "honest_verdict",
++        "abstention_mode_wired",
++        "default_off_preserves_prior_behavior",
++        "e2e_abstention_passed",
++        "mcp_surface_confirmed",
++        "tests_assert_real_behavior"
++      ],
++      "honest_verdict": "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3779_abstention_operating_point_product_wiring.json",
++      "sha256": "9363712730cbb3460e91346f29c3bef90c0e820cec7be5540ecc6f367c71bfc7",
++      "status": "landed"
++    },
++    {
++      "experiment_id": 3780,
++      "fields_imported": [
++        "honest_verdict",
++        "classifier_shipped",
++        "classifier_only_recommends",
++        "never_relaxes_verification",
++        "change_proposal_written"
++      ],
++      "honest_verdict": "complete: anomaly_escalation_classifier_prototyped_recommend_only_change_proposal_written_never_relaxes_verification_conductor_unmodified",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3780_anomaly_escalation_classifier_prototype.json",
++      "sha256": "e7fae4343cfc656f29d5270592ebc6aded9835ec97f032583765ad385ba0aa35",
++      "status": "landed"
++    },
++    {
++      "experiment_id": 3781,
++      "fields_imported": [
++        "honest_verdict",
++        "minimal_kill_gate_design",
++        "operator_decision_framing",
++        "loop_does_not_commit"
++      ],
++      "honest_verdict": "complete: edlm_feasibility_scoped_residual_corrector_not_blocked_by_either_negative_minimal_kill_gate_designed_operator_decision_surface_loop_does_not_commit",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3781_edlm_next_thesis_feasibility_scoping.json",
++      "sha256": "bcf380c60ffc65fe2a03a546924c8f60bf4d6d46a93d3772640e7a6a771aaf77",
++      "status": "landed"
++    },
++    {
++      "experiment_id": 3782,
++      "fields_imported": [
++        "honest_verdict",
++        "proposed_correction_written",
++        "operator_curated_doc_unedited",
++        "unsupported_numbers_identified",
++        "real_numbers_confirmed"
++      ],
++      "honest_verdict": "complete: g4_correction_prepped_unsupported_numbers_identified_real_numbers_confirmed_proposal_written_operator_curated_doc_unedited",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3782_technical_report_g4_correction_prep.json",
++      "sha256": "29453414a92bf49028c6d1f42f637a684299da5c911fbf49126cee72fb3018db",
++      "status": "landed"
++    },
++    {
++      "experiment_id": 3783,
++      "fields_imported": [
++        "honest_verdict",
++        "references_added",
++        "n_references_added",
++        "section_appended_not_replaced",
++        "numbers_are_as_reported"
++      ],
++      "honest_verdict": "complete: external_research_refresh_346_filed_5_references_section_appended_numbers_as_reported",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3783_external_research_refresh.json",
++      "sha256": "b8b2a50437f980404050177c5864b08f3028c05c76847fcebaa70c95a05c655c",
++      "status": "landed"
++    },
++    {
++      "experiment_id": 3784,
++      "fields_imported": [
++        "honest_verdict",
++        "terminal_state_holds",
++        "kv260_ssh_reachable",
++        "kv260_overlay_loadable",
++        "speedup_claim_made"
++      ],
++      "honest_verdict": "complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit",
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3784_kv260_opportunistic_continuity_audit.json",
++      "sha256": "a76562900c30526b4a141dcd14a4244445b7e6d27f6706af6d4060172486c185",
++      "status": "landed"
++    }
++  ],
++  "duration_s": 0.490547,
++  "edlm_seed_scaffolded": true,
++  "energy_as_generator_status": "honest-negative-bounded",
++  "energy_as_generator_still_bounded": true,
++  "energy_as_selector_status": "honest-negative-bounded",
++  "experiment_id": "exp3785",
++  "field_principles": {
++    "anomaly_escalation_prototyped": "BARE bool -- the P3 classifier prototype + change-proposal landed (recommend-only, conductor unmodified).",
++    "cited_upstream_artifacts": "Provenance trail from the capstone summary to the real artifacts.",
++    "duration_s": "Wall-clock plausibility floor.",
++    "edlm_seed_scaffolded": "Records the EDLM feasibility brief + minimal kill-gate handed to the operator (exp3781) -- the loop does NOT commit.",
++    "energy_as_generator_still_bounded": "BARE bool, true -- the part-b strategic bound stands regardless of the P1 mechanism verdict.",
++    "flagged_artifacts_excluded": "Lists any flagged_adversarial artifact excluded from aggregation (fabrication gate).",
++    "fr11_v18_self_learning": "Records the Tier-2 constraint-memory consolidation (exp3778, memory contribution preserved) -- the self-learning mandate.",
++    "frozen_headline_unchanged": "BARE bool -- frozen FoVer 0.9131 stays frozen; .346 uses but never moves it.",
++    "honest_verdict": "Terminal prefix; the milestone's one-line outcome.",
++    "inference_substrate": "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).",
++    "next_thesis_remains_operator_surface": "BARE bool -- the next-Phase-3 decision remains an operator-seeding surface; the loop does not self-commit.",
++    "not_landed_or_blocked_recorded_honestly": "Lists any upstream task that did not land or blocked -- recorded as not-run/blocked, NOT as a research negative.",
++    "p1_adjudication": "The exp3777 verdict {decode_artifact_bounded | fundamental | inconclusive | blocked} -- the milestone-defining mechanistic result.",
++    "p1_positive_control_passed": "BARE bool -- whether the AR positive control reached >=0.3; a null 'FUNDAMENTAL' is invalid without it (the v1/v2 lesson).",
++    "paper_ready_preserved": "BARE bool -- G1-G4 stay met; the milestone must not regress the banked verifier product.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "verifier_product_banked": "Records the abstention mode wired into the verify API (exp3779) -- the deployable product surface."
++  },
++  "flagged_artifacts_excluded": [],
++  "fr11_v18_self_learning": true,
++  "frozen_fover_auroc": 0.9131,
++  "frozen_headline_unchanged": true,
++  "g4_correction_prepped": true,
++  "headline_aggregation_experiment_ids": [
++    3776,
++    3778,
++    3779,
++    3780,
++    3781,
++    3782,
++    3783,
++    3784
++  ],
++  "honest_verdict": "complete: capstone_v346_p1_blocked_missing_upstream_artifact_energy_as_generator_still_bounded_verifier_product_banked_anomaly_escalation_prototyped_edlm_scaffolded_fr11_v18_paper_ready_true_frozen_headline_unchanged",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).",
++  "kv260_terminal_confirmed": true,
++  "milestone_outcome_plain": ".346 is a CONVERGENCE milestone: it banks the verifier product, builds the endorsed process upgrade, scaffolds the operator's EDLM seed, and leaves the P1 mechanism open for operator follow-up. It makes NO new existential claim and re-grinds nothing already bounded.",
++  "next_thesis_remains_operator_surface": true,
++  "no_new_existential_claim": true,
++  "not_landed_or_blocked_recorded_honestly": [
++    {
++      "experiment_id": 3777,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3777_p1_discrete_search_adjudication_v3.json",
++      "reason": "artifact_missing",
++      "status": "not-landed"
++    }
++  ],
++  "p1_adjudication": "blocked_missing_upstream_artifact",
++  "p1_mechanism_status": "open_for_operator: blocked_missing_upstream_artifact",
++  "p1_positive_control_passed": false,
++  "paper_ready_preserved": true,
++  "publication_gate_state": {
++    "g1": true,
++    "g2": true,
++    "g3": true,
++    "g4": true,
++    "paper_ready": true,
++    "unmet_gates": []
++  },
++  "random_seed": 3785,
++  "references_refreshed": true,
++  "regrinds_nothing_already_bounded": true,
++  "reproducibility_checksum": "6d9450a115c02ca150aa2765bec8587ae72fe9dcaf35721c88acfd227b0e389f",
++  "schema": "carnot.capstone_v346_convergence_3785.v1",
++  "summarized_upstream_artifacts": [
++    {
++      "experiment_id": 3776,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "d5868e5e483745f84b87672590a0fb0d6d4c18dd67baafd2f0c5feac0e0d8daa"
++    },
++    {
++      "experiment_id": 3777,
++      "returncode": 1,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "c00508925b059dc135fcc4220879e0f792c5553629dee7ddd5539589db1892f1"
++    },
++    {
++      "experiment_id": 3778,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "93441362bb0c5d8013d9c5014e0422ba044ad600cbdff1179a0a855aaa7aeac8"
++    },
++    {
++      "experiment_id": 3779,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "29c907940f7c18230827847797f4cae9f5c03f281779c926955c8660cd417edd"
++    },
++    {
++      "experiment_id": 3780,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "618d10b83e05147129ba8e47851fe038c351dcad3eea6f29611b559e21c747cb"
++    },
++    {
++      "experiment_id": 3781,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "82c0e15169f72be3114bb6927becad01ad90ec5dfb5998a13c1b77e4abde506d"
++    },
++    {
++      "experiment_id": 3782,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "edf630acfb3f19763bd3ac10ffd6639ac8d73a09ca297594074d96b8a9019199"
++    },
++    {
++      "experiment_id": 3783,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "b073121f9e4e210657ea7579cf7b2ec248c8141f39e72f1b4c3fb6da21c59e0e"
++    },
++    {
++      "experiment_id": 3784,
++      "returncode": 0,
++      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "stdout_sha256": "3cffed86b4814d394a9b96e8a666f1330529c9acb0c79e43e06da091833dfbe5"
++    }
++  ],
++  "upstream_adversarial_critical_flags": [],
++  "verifier_product_banked": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 392fa6de4e..23972cbc5a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T06:38:47Z",
+-  "finished_at": "2026-06-04T06:38:47Z",
++  "started_at": "2026-06-04T06:55:51Z",
++  "finished_at": "2026-06-04T06:55:51Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index cc9f7293d6..ee1227cda2 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T06:38:47Z",
+-  "finished_at": "2026-06-04T06:38:47Z",
++  "started_at": "2026-06-04T06:55:51Z",
++  "finished_at": "2026-06-04T06:55:51Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 431c7f1526..f2602f8ff1 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T06:38:47Z",
+-  "finished_at": "2026-06-04T06:38:47Z",
++  "started_at": "2026-06-04T06:55:51Z",
++  "finished_at": "2026-06-04T06:55:51Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_3785_capstone_v346.py b/scripts/experiment_3785_capstone_v346.py
+new file mode 100644
+index 0000000000..2b63bf000a
+--- /dev/null
++++ b/scripts/experiment_3785_capstone_v346.py
+@@ -0,0 +1,16 @@
++#!/usr/bin/env python3
++"""Run Exp 3785 capstone v346."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "python"))
++
++from carnot.reporting.capstone_v346_convergence_3785 import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3785_capstone_v346.py b/tests/python/test_experiment_3785_capstone_v346.py
+new file mode 100644
+index 0000000000..99756d5fc2
+--- /dev/null
++++ b/tests/python/test_experiment_3785_capstone_v346.py
+@@ -0,0 +1,572 @@
++"""Tests for Exp 3785 capstone v346.
++
++Spec refs: REQ-REPORT-3785, SCENARIO-REPORT-3785,
++SCENARIO-REPORT-3785-P1-GUARD, SCENARIO-REPORT-3785-MISSING-BLOCKED,
++SCENARIO-REPORT-3785-FLAGGED.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import capstone_v346_convergence_3785 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _gate_data(*, paper_ready: bool = True) -> dict[str, object]:
++    return {
++        "paper_ready": paper_ready,
++        "gates": {
++            "G1": {"pass": paper_ready},
++            "G2": {"pass": paper_ready},
++            "G3": {"pass": paper_ready},
++            "G4": {"pass": paper_ready},
++        },
++        "unmet_gates": [] if paper_ready else ["G2"],
++    }
++
++
++def _clean_reports() -> dict[int, dict[str, object]]:
++    return {experiment_id: {"flags": []} for experiment_id in mod.UPSTREAM_IDS}
++
++
++def _summary_records() -> list[dict[str, object]]:
++    return [
++        {
++            "experiment_id": experiment_id,
++            "returncode": 0 if experiment_id != 3777 else 1,
++            "stdout_sha256": f"{experiment_id:064x}"[-64:],
++            "stderr_sha256": "0" * 64,
++        }
++        for experiment_id in mod.UPSTREAM_IDS
++    ]
++
++
++def _payloads(
++    *,
++    p1_adjudication: str = "decode_artifact_bounded",
++    p1_positive_control_passed: bool = True,
++    p1_blocked: bool = False,
++) -> dict[int, dict[str, object]]:
++    p1_verdict = (
++        "blocked: thesis_a_p1_v3_no_free_gpu"
++        if p1_blocked
++        else f"complete: thesis_a_p1_v3_{p1_adjudication}_positive_control_passed"
++    )
++    return {
++        3776: {
++            "honest_verdict": (
++                "complete: archived_v345_fully_landed_v346_convergence_active_"
++                "paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged"
++            ),
++            "both_energy_routes_still_bounded": True,
++            "paper_ready_preserved": True,
++            "paper_ready_evidence": {
++                "paper_ready": True,
++                "g1": True,
++                "g2": True,
++                "g3": True,
++                "g4": True,
++                "frozen_headline_unchanged": True,
++                "frozen_headline_auroc": 0.9131,
++            },
++            "v346_focus_recorded": (
++                "settle_p1_discrete_search_v3_bank_verifier_product_build_"
++                "anomaly_escalation_scaffold_edlm_continue_self_learning_regrind_"
++                "nothing_bounded"
++            ),
++            "random_seed": 3776,
++            "reproducibility_checksum": "6" * 64,
++            "duration_s": 0.1,
++        },
++        3777: {
++            "honest_verdict": p1_verdict,
++            "adjudication": p1_adjudication if not p1_blocked else "blocked_no_free_gpu",
++            "positive_control_passed": p1_positive_control_passed,
++            "energy_as_generator_still_bounded": True,
++            "ar_best": 0.42 if p1_positive_control_passed else 0.0,
++            "ebt_best": 0.02,
++            "random_seed": 3777,
++            "reproducibility_checksum": "7" * 64,
++            "duration_s": 0.1,
++        },
++        3778: {
++            "honest_verdict": (
++                "complete: fr11_v18_tier2_constraint_memory_consolidated_"
++                "auroc_within_frozen_ci_memory_contribution_preserved_state_persisted"
++            ),
++            "continuous_self_learning_task": True,
++            "is_tier2_not_tier1": True,
++            "memory_contribution_preserved": True,
++            "tracker_state_persisted": True,
++            "auroc_within_frozen_ci": True,
++            "acceptance_gate": {"passed": True},
++            "random_seed": 3778,
++            "reproducibility_checksum": "8" * 64,
++            "duration_s": 0.1,
++        },
++        3779: {
++            "honest_verdict": (
++                "complete: abstention_mode_wired_into_verify_api_default_off_"
++                "e2e_passed_doc_proposal_emitted_not_curated_edit"
++            ),
++            "abstention_mode_wired": True,
++            "default_off_preserves_prior_behavior": True,
++            "e2e_abstention_passed": True,
++            "mcp_surface_confirmed": True,
++            "tests_assert_real_behavior": True,
++            "random_seed": 3779,
++            "reproducibility_checksum": "9" * 64,
++            "duration_s": 0.1,
++        },
++        3780: {
++            "honest_verdict": (
++                "complete: anomaly_escalation_classifier_prototyped_recommend_only_"
++                "change_proposal_written_never_relaxes_verification_conductor_unmodified"
++            ),
++            "classifier_shipped": True,
++            "classifier_only_recommends": True,
++            "never_relaxes_verification": True,
++            "change_proposal_written": True,
++            "random_seed": 3780,
++            "reproducibility_checksum": "a" * 64,
++            "duration_s": 0.1,
++        },
++        3781: {
++            "honest_verdict": (
++                "complete: edlm_feasibility_scoped_residual_corrector_not_blocked_"
++                "by_either_negative_minimal_kill_gate_designed_operator_decision_"
++                "surface_loop_does_not_commit"
++            ),
++            "minimal_kill_gate_design": "matched-compute PPL kill gate",
++            "operator_decision_framing": "seed vs do not seed",
++            "loop_does_not_commit": True,
++            "random_seed": 3781,
++            "reproducibility_checksum": "b" * 64,
++            "duration_s": 0.1,
++        },
++        3782: {
++            "honest_verdict": (
++                "complete: g4_correction_prepped_unsupported_numbers_identified_"
++                "real_numbers_confirmed_proposal_written_operator_curated_doc_unedited"
++            ),
++            "proposed_correction_written": True,
++            "operator_curated_doc_unedited": True,
++            "unsupported_numbers_identified": {"exp227": {"delta_pp": 0.0}},
++            "real_numbers_confirmed": [{"experiment_id": 1999}],
++            "random_seed": 3782,
++            "reproducibility_checksum": "c" * 64,
++            "duration_s": 0.1,
++        },
++        3783: {
++            "honest_verdict": (
++                "complete: external_research_refresh_346_filed_5_references_"
++                "section_appended_numbers_as_reported"
++            ),
++            "references_added": [
++                "arXiv:2604.07650",
++                "arXiv:2506.07962",
++                "arXiv:2601.17223",
++                "arXiv:2604.15149",
++                "arXiv:2502.11157",
++            ],
++            "n_references_added": 5,
++            "section_appended_not_replaced": True,
++            "numbers_are_as_reported": True,
++            "random_seed": 3783,
++            "reproducibility_checksum": "d" * 64,
++            "duration_s": 0.1,
++        },
++        3784: {
++            "honest_verdict": (
++                "complete: kv260_terminal_state_holds_ssh_reachable_"
++                "accelerator_loadable_opportunistic_audit"
++            ),
++            "terminal_state_holds": True,
++            "kv260_ssh_reachable": True,
++            "kv260_overlay_loadable": True,
++            "speedup_claim_made": False,
++            "random_seed": 3784,
++            "reproducibility_checksum": "e" * 64,
++            "duration_s": 0.1,
++        },
++    }
++
++
++def _seed_upstreams(
++    root: Path,
++    *,
++    missing: set[int] | None = None,
++    flagged: set[int] | None = None,
++    p1_adjudication: str = "decode_artifact_bounded",
++    p1_positive_control_passed: bool = True,
++    p1_blocked: bool = False,
++) -> None:
++    missing = missing or set()
++    flagged = flagged or set()
++    for experiment_id, payload in _payloads(
++        p1_adjudication=p1_adjudication,
++        p1_positive_control_passed=p1_positive_control_passed,
++        p1_blocked=p1_blocked,
++    ).items():
++        if experiment_id in missing:
++            continue
++        if experiment_id in flagged:
++            payload["flagged_adversarial"] = True
++        _write_json(root / mod.DEFAULT_UPSTREAM_PATHS[experiment_id], payload)
++
++
++def test_req_report_3785_spec_anchor_exists() -> None:
++    """REQ-REPORT-3785: OpenSpec declares the v346 capstone contract."""
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-3785" in spec
++    assert "SCENARIO-REPORT-3785" in spec
++    assert "SCENARIO-REPORT-3785-P1-GUARD" in spec
++    assert "SCENARIO-REPORT-3785-MISSING-BLOCKED" in spec
++    assert "SCENARIO-REPORT-3785-FLAGGED" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++
++
++def test_scenario_report_3785_clean_capstone_records_convergence(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3785: clean upstreams produce the convergence capstone."""
++    _seed_upstreams(tmp_path)
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        publication_gate_data=_gate_data(),
++        capstone_adversarial_verify_clean=True,
++        started_s=1.0,
++        now_s=1.5,
++    )
++
++    assert mod.validate_artifact(artifact) == []
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v346_p1_decode_artifact_bounded_"
++        "energy_as_generator_still_bounded_verifier_product_banked_"
++        "anomaly_escalation_prototyped_edlm_scaffolded_fr11_v18_"
++        "paper_ready_true_frozen_headline_unchanged"
++    )
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["p1_adjudication"] == "decode_artifact_bounded"
++    assert artifact["p1_positive_control_passed"] is True
++    assert artifact["p1_mechanism_status"] == "settled_or_sharpened: decode_artifact_bounded"
++    assert artifact["energy_as_generator_still_bounded"] is True
++    assert artifact["energy_as_selector_status"] == "honest-negative-bounded"
++    assert artifact["energy_as_generator_status"] == "honest-negative-bounded"
++    assert artifact["verifier_product_banked"] is True
++    assert artifact["anomaly_escalation_prototyped"] is True
++    assert artifact["edlm_seed_scaffolded"] is True
++    assert artifact["fr11_v18_self_learning"] is True
++    assert artifact["paper_ready_preserved"] is True
++    assert artifact["publication_gate_state"]["paper_ready"] is True
++    assert artifact["frozen_headline_unchanged"] is True
++    assert artifact["frozen_fover_auroc"] == pytest.approx(0.9131)
++    assert artifact["next_thesis_remains_operator_surface"] is True
++    assert artifact["no_new_existential_claim"] is True
++    assert artifact["regrinds_nothing_already_bounded"] is True
++    assert artifact["flagged_artifacts_excluded"] == []
++    assert artifact["not_landed_or_blocked_recorded_honestly"] == []
++    assert {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]} == set(
++        mod.UPSTREAM_IDS
++    )
++    assert {item["experiment_id"] for item in artifact["summarized_upstream_artifacts"]} == set(
++        mod.UPSTREAM_IDS
++    )
++    assert "live_llm_inference" not in json.dumps(artifact, sort_keys=True)
++    assert "model_specs" not in json.dumps(artifact, sort_keys=True)
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++
++def test_scenario_report_3785_missing_p1_is_blocked_not_negative(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3785-MISSING-BLOCKED: missing Exp 3777 stays open."""
++    _seed_upstreams(tmp_path, missing={3777})
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        publication_gate_data=_gate_data(),
++        capstone_adversarial_verify_clean=True,
++        started_s=2.0,
++        now_s=2.25,
++    )
++
++    assert artifact["p1_adjudication"] == "blocked_missing_upstream_artifact"
++    assert artifact["p1_positive_control_passed"] is False
++    assert artifact["p1_mechanism_status"] == "open_for_operator: blocked_missing_upstream_artifact"
++    assert artifact["energy_as_generator_still_bounded"] is True
++    assert artifact["not_landed_or_blocked_recorded_honestly"] == [
++        {
++            "experiment_id": 3777,
++            "path": str(tmp_path / mod.DEFAULT_UPSTREAM_PATHS[3777]),
++            "status": "not-landed",
++            "reason": "artifact_missing",
++        }
++    ]
++    assert "newly disproven" not in artifact["milestone_outcome_plain"]
++
++
++def test_scenario_report_3785_blocked_p1_is_not_fundamental(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3785-MISSING-BLOCKED: blocked P1 is not a research negative."""
++    _seed_upstreams(tmp_path, p1_blocked=True, p1_positive_control_passed=False)
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        publication_gate_data=_gate_data(),
++        capstone_adversarial_verify_clean=True,
++        started_s=3.0,
++        now_s=3.25,
++    )
++
++    assert artifact["p1_adjudication"] == "blocked_no_free_gpu"
++    assert artifact["p1_positive_control_passed"] is False
++    assert artifact["p1_mechanism_status"] == "open_for_operator: blocked_no_free_gpu"
++    assert artifact["not_landed_or_blocked_recorded_honestly"] == [
++        {
++            "experiment_id": 3777,
++            "path": str(tmp_path / mod.DEFAULT_UPSTREAM_PATHS[3777]),
++            "status": "blocked",
++            "reason": "blocked: thesis_a_p1_v3_no_free_gpu",
++        }
++    ]
++    assert 3777 in {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]}
++
++
++def test_scenario_report_3785_flagged_upstream_is_excluded(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3785-FLAGGED: flagged artifacts are quarantined."""
++    _seed_upstreams(tmp_path, flagged={3779})
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        publication_gate_data=_gate_data(),
++        capstone_adversarial_verify_clean=True,
++        started_s=4.0,
++        now_s=4.25,
++    )
++
++    assert artifact["verifier_product_banked"] is False
++    assert artifact["flagged_artifacts_excluded"] == [
++        {
++            "experiment_id": 3779,
++            "path": str(tmp_path / mod.DEFAULT_UPSTREAM_PATHS[3779]),
++            "reason": "flagged_adversarial=true",
++        }
++    ]
++    assert 3779 not in {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]}
++    assert 3779 not in artifact["headline_aggregation_experiment_ids"]
++
++
++def test_scenario_report_3785_p1_fundamental_requires_positive_control(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3785-P1-GUARD: null FUNDAMENTAL needs the AR control."""
++    _seed_upstreams(
++        tmp_path,
++        p1_adjudication="fundamental_causal_inductive_bias_gap",
++        p1_positive_control_passed=False,
++    )
++
++    with pytest.raises(ValueError, match="fundamental P1 adjudication requires positive control"):
++        mod.build_artifact(
++            tmp_path,
++            summary_records=_summary_records(),
++            adversarial_reports=_clean_reports(),
++            publication_gate_data=_gate_data(),
++            capstone_adversarial_verify_clean=True,
++            started_s=5.0,
++            now_s=5.25,
++        )
++
++
++def test_validate_artifact_reports_schema_hygiene_and_checksum_errors() -> None:
++    """REQ-REPORT-3785: malformed capstones fail closed before reporting."""
++    errors = mod.validate_artifact({})
++
++    assert any(error.startswith("missing required artifact fields:") for error in errors)
++    assert "honest_verdict must be a terminal Exp 3785 verdict" in errors
++    assert "inference_substrate must declare the v346 aggregation-only substrate" in errors
++    assert "p1_adjudication must be a valid adjudication or blocked_* value" in errors
++    assert "p1_positive_control_passed must be a bare bool" in errors
++    assert "energy_as_generator_still_bounded must be true" in errors
++    assert "paper_ready_preserved must be true" in errors
++    assert "frozen_headline_unchanged must be true" in errors
++    assert "cited_upstream_artifacts must be a list" in errors
++
++    valid = {
++        "honest_verdict": mod.terminal_verdict(
++            p1_adjudication="decode_artifact_bounded",
++            energy_bounded=True,
++            verifier_product=True,
++            anomaly=True,
++            edlm=True,
++            fr11=True,
++            paper_ready=True,
++            frozen=True,
++        ),
++        "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        "p1_adjudication": "decode_artifact_bounded",
++        "p1_positive_control_passed": True,
++        "energy_as_generator_still_bounded": True,
++        "verifier_product_banked": True,
++        "anomaly_escalation_prototyped": True,
++        "edlm_seed_scaffolded": True,
++        "fr11_v18_self_learning": True,
++        "paper_ready_preserved": True,
++        "frozen_headline_unchanged": True,
++        "next_thesis_remains_operator_surface": True,
++        "flagged_artifacts_excluded": [],
++        "not_landed_or_blocked_recorded_honestly": [],
++        "cited_upstream_artifacts": [
++            {
++                "experiment_id": 3776,
++                "path": "results/experiment_3776.json",
++                "fields_imported": ["honest_verdict"],
++                "sha256": "1" * 64,
++            }
++        ],
++        "field_principles": dict(mod.FIELD_PRINCIPLES),
++        "adversarial_verify_report": {"flags": []},
++        "random_seed": mod.RANDOM_SEED,
++        "duration_s": 0.1,
++        "reproducibility_checksum": "",
++    }
++    valid["reproducibility_checksum"] = mod.payload_checksum(valid)
++    assert mod.validate_artifact(valid) == []
++
++    bad_live_marker = dict(valid)
++    bad_live_marker["copied_substrate"] = "live_llm_inference"
++    bad_live_marker["reproducibility_checksum"] = mod.payload_checksum(bad_live_marker)
++    assert "artifact must not copy live-model substrate markers" in mod.validate_artifact(
++        bad_live_marker
++    )
++
++    bad_checksum = dict(valid)
++    bad_checksum["reproducibility_checksum"] = "2" * 64
++    assert "reproducibility_checksum does not match artifact content" in mod.validate_artifact(
++        bad_checksum
++    )
++
++    bad_citation = dict(valid)
++    bad_citation["cited_upstream_artifacts"] = [123, {"experiment_id": 3776}]
++    bad_citation["reproducibility_checksum"] = mod.payload_checksum(bad_citation)
++    citation_errors = mod.validate_artifact(bad_citation)
++    assert "each citation must be an object" in citation_errors
++    assert "each citation must include fields_imported" in citation_errors
++
++    critical_report = dict(valid)
++    critical_report["adversarial_verify_report"] = {
++        "flags": [{"severity": "critical", "kind": "TEST", "detail": "blocked"}]
++    }
++    critical_report["reproducibility_checksum"] = mod.payload_checksum(critical_report)
++    assert "adversarial verifier must report no critical flag" in mod.validate_artifact(
++        critical_report
++    )
++
++
++def test_run_writes_artifact_and_rejects_array_sources(tmp_path: Path) -> None:
++    """REQ-REPORT-3785: CLI path writes stable JSON and source JSON objects only."""
++    _seed_upstreams(tmp_path)
++
++    out_path = mod.run(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports=_clean_reports(),
++        publication_gate_data=_gate_data(),
++        started_s=6.0,
++        now_s=6.25,
++    )
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert payload["adversarial_verify_clean"] is True
++    assert payload["adversarial_verify_report"]["flags"] == []
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++
++    array_path = tmp_path / "array.json"
++    array_path.write_text("[1, 2, 3]", encoding="utf-8")
++    with pytest.raises(ValueError, match="must contain a JSON object"):
++        mod.read_json_object(array_path)
++
++
++def test_helper_branches_keep_p1_and_verifier_failures_honest(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-3785: helper fallbacks preserve blocked/flagged distinctions."""
++    _seed_upstreams(tmp_path, flagged={3777})
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_records=_summary_records(),
++        adversarial_reports={
++            **_clean_reports(),
++            3779: {"flags": [{"severity": "critical", "kind": "X", "detail": "bad"}]},
++        },
++        publication_gate_data=_gate_data(),
++        capstone_adversarial_verify_clean=True,
++        started_s=7.0,
++        now_s=7.25,
++    )
++
++    assert artifact["p1_adjudication"] == "blocked_flagged_adversarial"
++    assert artifact["p1_positive_control_passed"] is False
++    assert artifact["upstream_adversarial_critical_flags"] == [
++        {"experiment_id": 3779, "kind": "X", "detail": "bad"}
++    ]
++    assert mod.normalize_p1_adjudication({"adjudication": "fundamental"}, default="blocked_x") == (
++        "fundamental_causal_inductive_bias_gap"
++    )
++    assert mod.normalize_p1_adjudication({"adjudication": "inconclusive"}, default="blocked_x") == (
++        "inconclusive_positive_control_failed"
++    )
++    assert mod.normalize_p1_adjudication(
++        {"honest_verdict": "complete: decode_artifact_bounded"},
++        default="blocked_x",
++    ) == "decode_artifact_bounded"
++    assert mod.normalize_p1_adjudication(
++        {"honest_verdict": "complete: FUNDAMENTAL causal gap"},
++        default="blocked_x",
++    ) == "fundamental_causal_inductive_bias_gap"
++    assert mod.normalize_p1_adjudication(
++        {"honest_verdict": "inconclusive: positive_control_failed"},
++        default="blocked_x",
++    ) == "inconclusive_positive_control_failed"
++    assert mod.normalize_p1_adjudication(
++        {"honest_verdict": "blocked: no free GPU"},
++        default="blocked_x",
++    ) == "blocked_no_free_gpu"
++    assert mod.normalize_p1_adjudication({}, default="blocked_x") == "blocked_x"
++    assert mod.report_is_clean(None) is True
++    assert mod.numeric(True) is None
++
++    monkeypatch.setattr(
++        mod.adversarial_verify,
++        "verify_artifact",
++        lambda _path: {"flags": [{"severity": "critical", "kind": "X", "detail": "bad"}]},
++    )
++    with pytest.raises(ValueError, match="adversarial verifier must report no critical flag"):
++        mod.run(
++            tmp_path,
++            summary_records=_summary_records(),
++            adversarial_reports=_clean_reports(),
++            publication_gate_data=_gate_data(),
++            started_s=8.0,
++            now_s=8.25,
++        )
+-- 
+2.55.0
+

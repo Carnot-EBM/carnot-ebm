@@ -1,0 +1,43 @@
+From a8f12adfe4f88cb2218fa85befd4a7ddce0e9a2a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 21:44:09 -0400
+Subject: [PATCH 10826/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1399a40462..dc78339443 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-09-03T01:18:03Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-09-03T01:44:01Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 16eea32376..5376571048 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17110,3 +17110,4 @@ code |
+ | 2026-09-03 00:29 UTC | Milestone 2026.09.605 activated | OK | 12 tasks queued |
+ | 2026-09-03 01:16 UTC | V605 document-YAML execution and evidence contract | OK | 123 passed, 1 warning in 155.36s (0:02:35) |
+ | 2026-09-03 01:18 UTC | Conductor re-exec: fresh committed source | OK | d615af6127c7 -> 48f45c9cced2; argv preserved |
++| 2026-09-03 01:42 UTC | Alias-safe immutable relation-corpus reducer | OK | 96 passed, 1 warning in 8.64s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f4890a499b..7e4832826f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 1, "phase": "iteration_start", "started_at": "2026-09-03T01:18:03Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 2, "phase": "iteration_start", "started_at": "2026-09-03T01:44:01Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

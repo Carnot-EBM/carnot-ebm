@@ -1,0 +1,973 @@
+From b62d8981a8b9fea3bd0909b6f4543652e1b8a0ef Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 13:10:11 -0400
+Subject: [PATCH 06902/11362] [outer-loop] bp35: round 7 honest null, notch
+ exits ruled out (codex)
+
+Round-7 gpt-5.6-sol session reproduced the protected L6 notch cleanly
+but did not find a safe exit -- ruled out several candidates instead:
+ACTION1/ACTION2/ACTION5 are inert at the notch, the consumed second
+cyan switch can't be re-clicked, the goal diamond and left blocking
+cell don't respond to clicks, and reopening the right shaft's X shield
+just converts it back to a pillar hazard.
+
+New mechanic: ACTION7 is a bounded live-play undo (not a no-op) --
+repeated presses reversed the two most recent X-toggle changes, with
+an undo window that closed after six reversible actions; it appears
+usable only before GAME_OVER.
+
+Independently re-verified by the outer loop: the saved 194-action
+sequence (dict-shaped labels, JSON-normalized before replay) replayed
+cleanly from a fresh env.reset() to level=5, state=GameState.NOT_FINISHED
+-- matches the session's own report, no hidden win, no regression. No
+new level banked; frontier stays at level 5. Strongest lead for next
+attempt: click the second gravity switch one or two columns earlier,
+while still under the x=6/x=7 shields, to avoid the lethal lateral
+step from x=5.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   |  28 +
+ ...oop_fable5_bp35_probe_round7_20260712.json | 890 ++++++++++++++++++
+ 2 files changed, 918 insertions(+)
+ create mode 100644 results/outer_loop_fable5_bp35_probe_round7_20260712.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 6281dec797..e7ad64a07e 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -4581,6 +4581,34 @@ games:
+     the notch is LETHAL, killing both attempts at that exact point. The
+     exit from this protected notch is the concrete unresolved blocker. No
+     new level banked; frontier stays at level 5.'
++  - 'L6 notch exit still unresolved, round 7 (2026-07-12, gpt-5.6-sol via
++    codex, results/outer_loop_fable5_bp35_probe_round7_20260712.json):
++    ruled out several exits from the protected x=5 notch rather than
++    finding one. At the notch, ACTION1/ACTION2/ACTION5 do not move the
++    player or change puzzle state (only the UI/action index changes);
++    the consumed second cyan switch cannot be re-clicked; and neither
++    the visible goal diamond nor the blocking cell immediately left of
++    the player responds to clicks. Reopening the lower X shield above
++    the right shaft converts it back into a pillar hazard (closing it
++    restores the shield) -- toggling it alone does not make the right
++    exit safe. NEW MECHANIC: ACTION7 is a bounded live-play UNDO, not a
++    no-op -- repeated presses decremented the world action index and
++    reversed the two most recent X-toggle state changes, though the
++    observable undo window closed after six reversible actions in this
++    trial; it appears usable only before GAME_OVER, not to recover a
++    dead game. Session cost broke down as 164 calls for the mandatory
++    gate + 164 for L6 component mapping + 178 to reconstruct/checkpoint
++    the safe notch route + 178 replay + 16 notch probes = exactly 700,
++    the standing session cap. Independently re-verified by the outer
++    loop: the saved 194-action action_sequence (dict-shaped labels,
++    JSON-normalized before replay) replayed cleanly from a fresh
++    env.reset() to level=5, state=GameState.NOT_FINISHED -- matches the
++    session''s own report exactly, no hidden win, no regression. No new
++    level banked; frontier stays at level 5. STRONGEST LEAD for next
++    attempt: click the second gravity switch one or two columns
++    EARLIER, while the player is still under the x=6/x=7 shields --
++    this avoids the lethal lateral step from x=5 that has killed every
++    attempt at this exact point across two rounds now.'
+   - 'L5 (mapped in a PRIOR session, unsolved at the time, not banked then --
+     partially superseded by the entry above): a wider multi-screen tower with
+     chained E-door descents. Every then-known descent branch dead-ended: one
+diff --git a/results/outer_loop_fable5_bp35_probe_round7_20260712.json b/results/outer_loop_fable5_bp35_probe_round7_20260712.json
+new file mode 100644
+index 0000000000..0c97dd79ec
+--- /dev/null
++++ b/results/outer_loop_fable5_bp35_probe_round7_20260712.json
+@@ -0,0 +1,890 @@
++{
++  "game": "bp35",
++  "model": "GPT-5 Codex",
++  "starting_level": 5,
++  "max_level_reached": 5,
++  "total_env_steps_used": 700,
++  "reproduction_verified": false,
++  "action_sequence": [
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 30
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 24,
++        "y": 36
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 36
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 30
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 30
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 30
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 30
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 36
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 24,
++        "y": 36
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 36
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 12,
++        "y": 36
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 12,
++        "y": 30
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 30
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 30
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 30
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 30
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 18,
++        "y": 30
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 24,
++        "y": 36
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 36
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 36,
++        "y": 36
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 42,
++        "y": 36
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 36
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 30
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 48,
++        "y": 30
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 30,
++        "y": 30
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 39
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 40,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 27,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 21,
++        "y": 33
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 27
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 33
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 27
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 33
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 39
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 39
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 27,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 33
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 15,
++        "y": 33
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 39
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 27
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 21,
++        "y": 33
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 21,
++        "y": 39
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 33,
++        "y": 57
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 45,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 45,
++        "y": 39
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 45,
++        "y": 33
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 27,
++        "y": 39
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 51,
++        "y": 39
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 45,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 45,
++        "y": 35
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 57,
++        "y": 35
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 51,
++        "y": 59
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 21,
++        "y": 34
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 27,
++        "y": 34
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 33
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 57,
++        "y": 33
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 51,
++        "y": 39
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 45,
++        "y": 39
++      }
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 51
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 45,
++        "y": 51
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 33
++      }
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 4
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 3
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 27,
++        "y": 29
++      }
++    },
++    {
++      "action": 1
++    },
++    {
++      "action": 2
++    },
++    {
++      "action": 5
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 9
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 39,
++        "y": 9
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 27,
++        "y": 45
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 15,
++        "y": 45
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 27,
++        "y": 39
++      }
++    },
++    {
++      "action": 6,
++      "data": {
++        "x": 15,
++        "y": -51
++      }
++    },
++    {
++      "action": 7
++    },
++    {
++      "action": 7
++    },
++    {
++      "action": 7
++    },
++    {
++      "action": 7
++    },
++    {
++      "action": 7
++    },
++    {
++      "action": 7
++    },
++    {
++      "action": 7
++    }
++  ],
++  "levels_won_this_session": [],
++  "novel_mechanics_found": [
++    "ACTION7 is a bounded live-play undo, not a pure no-op: repeated ACTION7 inputs decremented the world action index and reversed the two most recent X-toggle state changes. The observable undo window stopped after six reversible actions in this trial.",
++    "At the protected notch, ACTION1, ACTION2, and ACTION5 do not move the player or alter the puzzle state; only the UI/action index changes (ACTION5 did not advance the world index in this observation).",
++    "Reopening the lower X block above the right shaft converts its safe solid shield back into a pillar hazard (object transition yuuqpmlxorv -> oonshderxef); reclosing it restores the shield. This cannot by itself make the right exit safe.",
++    "The consumed second cyan switch cannot be clicked again, and neither the visible goal diamond nor the blocking cell immediately left of the player responds to clicks."
++  ],
++  "narrative": "Fresh-reset precondition passed: resolve_replay_plan({\"game\":\"bp35\",\"levels_reproduced\":5}, Path(\".\")) returned the 164-action banked plan, and replay reached frame_level(frame)==5. The established L6 route was then reproduced exactly: click the two lower X blocks at display (39,51) and (45,51), move right three columns, click the first cyan switch at (39,33), move right into the shaft, move left until blocked, and click the second switch at its camera-adjusted position (27,29). This reached the protected notch at player world position (5,30), camera 144, with upward gravity active. Compact frame diffs and object tuples were used from there. ACTION1/ACTION2/wait, clicking the consumed switch, clicking the goal, clicking the left partition, and attempting an off-screen click of the orange-outlined object all produced no puzzle-state change. Reopening and reclosing the right lower X shield proved that its open state is a pillar hazard. ACTION7 unexpectedly behaved as bounded undo and reversed those toggle changes, correcting the prior no-op classification. No safe exit was executed before the cumulative 700 env.step call ceiling was reached, so max_level_reached remains 5 and reproduction_verified is false for a new win. The most promising next-round hypothesis is to click the second gravity switch one or two columns earlier (while the player is still under the x=6/x=7 shields), avoiding the need for the known-lethal lateral step from x=5 after reversal.",
++  "gotchas": [
++    "Cumulative accounting includes four fresh replays: 164 calls for the mandatory gate, 164 for compact L6 component mapping, 178 to reconstruct and checkpoint the safe notch route, and 178 replay calls plus 16 notch probes in the persistent session, totaling exactly 700.",
++    "A fresh L6 life still costs the full 164-action game prefix; diagnostic replays consume the same env.step budget as exploration.",
++    "Do not step right from the protected x=5 notch: two prior rounds independently found that naive move lethal.",
++    "Do not reopen the x=6 lower X shield and then enter that column; the open glyph is represented as a pillar hazard.",
++    "ACTION7 is useful only before GAME_OVER and appears to have a short undo window. Earlier evidence says it does not recover a dead game.",
++    "The orange-outlined object is off-screen at the protected notch; an out-of-screen coordinate click did not interact with it.",
++    "The saved action_sequence ends safely at level 5 after undoing the experimental X-toggle changes; it is an exploration trace, not an L6-winning candidate."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

@@ -1,0 +1,23 @@
+From 9c87e3ff08b9b8d38d1639b6e2cd5ab1bac60fa6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 6 Aug 2026 11:01:15 -0400
+Subject: [PATCH 08341/11362] [conductor] In-process docs for Gated on Exp6159
+ readiness: fresh flagship-GGUF decision-calibration corpus
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index ce88155c2d..adf4d75efb 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16503,3 +16503,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-06: Exact terminal-boundary handoff from .533 into .534 (⚠️ Research Finding) — honest_verdict=complete: .533 archived exactly once with quarantine, null, block, partial, and skip states preserved; .534 activation mode=already_active; results/experiment_6156_transition_v534.json
+ - 2026-08-06: Reliable dated evidence refresh after the V534 planner marker (✅ Complete) — honest_verdict=complete_null: no accepted post-V534 source deltas; references unchanged; results/experiment_6158_v534_source_delta_ingestion.json
+ - 2026-08-06: Fresh chronological decision-calibration stream and sealed endpoint preregistration (✅ Complete) — honest_verdict=complete_ready: prospective_preregistration_valid=true; fresh_stream_ready; results/experiment_6159_decision_calibrated_stream.json
++- 2026-08-06: Gated on Exp6159 readiness: fresh flagship-GGUF decision-calibration corpus (⚠️ Blocked) — honest_verdict=blocked: cuda_offload_or_gpu_engagement,lifecycle_cleanup,no_inherited_model_server,preconditions_ready,row_conservation_and_prior_corpus_nonoverlap; results/experiment_6160_sota_decision_calibration_corpus.json
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From 0717f80e2e9de8c17c9053c142e608613bf265c7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 06:33:15 -0400
+Subject: [PATCH 00984/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index dc9e8bc5c3..9440f2ca34 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 36, "phase": "iteration_start", "last_beat": "2026-06-09T10:24:17Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 37, "phase": "iteration_start", "last_beat": "2026-06-09T10:33:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a79d122ab7..2a217dd313 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8087,3 +8087,4 @@ c |
+ | 2026-06-09 10:03 UTC | OWED from .365: induce a GOAL-PREDICATE from obser | OK | 122 passed in 5.08s |
+ | 2026-06-09 10:09 UTC | OWED from .365: latent-register augmentation for t | OK | 83 passed in 4.47s |
+ | 2026-06-09 10:22 UTC | CROSS-GAME DSL TRANSFER (self-learning MANDATE, re | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
++| 2026-06-09 10:31 UTC | CROSS-GAME DSL TRANSFER (self-learning MANDATE, re | OK | cache hit: 104 passed in 4.90s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 04016397b8..fc51268e5b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 36, "phase": "iteration_start", "started_at": "2026-06-09T10:24:17Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 37, "phase": "iteration_start", "started_at": "2026-06-09T10:33:14Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

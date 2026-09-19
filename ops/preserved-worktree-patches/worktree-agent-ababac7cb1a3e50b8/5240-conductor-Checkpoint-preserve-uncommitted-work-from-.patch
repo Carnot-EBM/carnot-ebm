@@ -1,0 +1,88 @@
+From 3a9a87fb07f4b3b9a2cba603f913c4181c63e776 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 1 Jul 2026 06:30:57 -0400
+Subject: [PATCH 05240/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._static_csr_constrained_decoding_v467.json | 28 +++++++++++++++++--
+ 4 files changed, 28 insertions(+), 5 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b159914aa1..4a421bc9f2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 75, "phase": "iteration_start", "last_beat": "2026-07-01T10:16:35Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 76, "phase": "iteration_start", "last_beat": "2026-07-01T10:30:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c0b1d00a71..22a8158f13 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9739,3 +9739,4 @@ The contro |
+ | 2026-07-01 09:49 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
+ | 2026-07-01 10:01 UTC | PHASE B1 logprob-free process verifier -- temporal | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, MOAT_CLAIM_RIGOR — result quara |
+ | 2026-07-01 10:14 UTC | PHASE B2 exact-verifier pivot -- p-bit/Ising-guide | FLAGGED | adversarial_verify CRITICAL: MOAT_CLAIM_RIGOR — result quarantined, not a clean  |
++| 2026-07-01 10:28 UTC | PHASE B3 structured generation pivot -- STATIC-sty | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, DURATION_TOO_SHORT |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index fcc34fc5b1..ec50334dce 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 75, "phase": "iteration_start", "started_at": "2026-07-01T10:16:35Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 76, "phase": "iteration_start", "started_at": "2026-07-01T10:30:55Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5090_static_csr_constrained_decoding_v467.json b/results/experiment_5090_static_csr_constrained_decoding_v467.json
+index 6819944836..78ccbe6019 100644
+--- a/results/experiment_5090_static_csr_constrained_decoding_v467.json
++++ b/results/experiment_5090_static_csr_constrained_decoding_v467.json
+@@ -62,7 +62,7 @@
+       "vocab_size": 129
+     }
+   },
+-  "flagged_adversarial": false,
++  "flagged_adversarial": true,
+   "honest_verdict": "success_static_csr_masks_speedup_and_validity_win",
+   "inference_substrate": "deterministic_static_csr_mask_benchmark",
+   "live_llm_invoked": false,
+@@ -133,5 +133,27 @@
+   "trie_latency_ms": 0.010393,
+   "trie_memory_bytes": 482128,
+   "trie_state_count": 1691,
+-  "validity_rate": 1.0
+-}
++  "validity_rate": 1.0,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "csr_state_count=1691.0 and prefix_count=1691.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "csr_state_count=1691.0 and trie_state_count=1691.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "prefix_count=1691.0 and trie_state_count=1691.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=35.628679 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

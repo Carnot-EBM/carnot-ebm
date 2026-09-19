@@ -1,0 +1,61 @@
+From c9e9ff6b45f3368970de9f70f0b8e4b947009918 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 15 Aug 2026 05:14:41 -0400
+Subject: [PATCH 09238/11362] [conductor] Pre-gate block: Gated on Exp6450
+ corpus readiness: typed fact grounding into fixed policy logic
+
+1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus.sota_corpus_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...iment_6451_typed_fact_grounding_fixed_policy_logic_ab.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 515dec4093..256a328a9c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 202, "phase": "iteration_start", "last_beat": "2026-08-15T09:12:37Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 203, "phase": "iteration_start", "last_beat": "2026-08-15T09:14:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c3929de3ea..3ce4e80665 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16036,3 +16036,4 @@ code |
+ | 2026-08-15 08:22 UTC | Fresh SOTA fixed-policy candidate corpus | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6450_sota_fi |
+ | 2026-08-15 09:08 UTC | Fresh SOTA fixed-policy candidate corpus | OK | cache hit: 88 passed, 2 warnings in 173.87s (0:02:53) |
+ | 2026-08-15 09:10 UTC | Gated on Exp6450 corpus readiness: typed fact grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
++| 2026-08-15 09:12 UTC | Gated on Exp6450 corpus readiness: typed fact grou | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6450-sota-fixed-policy-candidate-corpus |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index eaa46e9ab5..4f615a6a4b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2667701, "iteration": 202, "phase": "iteration_start", "started_at": "2026-08-15T09:12:37Z"}
+\ No newline at end of file
++{"pid": 2667701, "iteration": 203, "phase": "iteration_start", "started_at": "2026-08-15T09:14:40Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json b/results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json
+index c86bb087cd..98d047e095 100644
+--- a/results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json
++++ b/results/experiment_6451_typed_fact_grounding_fixed_policy_logic_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 6451,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-15",
+-  "started_at": "2026-08-15T09:12:37.578605+00:00",
+-  "finished_at": "2026-08-15T09:12:37.578605+00:00",
++  "started_at": "2026-08-15T09:14:40.653553+00:00",
++  "finished_at": "2026-08-15T09:14:40.653553+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6450 corpus readiness: typed fact grounding into fixed policy logic",
+-- 
+2.55.0
+

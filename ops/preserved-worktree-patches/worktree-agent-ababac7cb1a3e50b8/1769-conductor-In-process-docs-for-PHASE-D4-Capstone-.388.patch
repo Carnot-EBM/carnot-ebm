@@ -1,0 +1,37 @@
+From 8b2a55186c3c5ab6f751835207fea44f9adc1b1f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 09:19:20 -0400
+Subject: [PATCH 01769/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20PHASE=20D4=20=E2=80=94=20Capstone=20.388=20(UNGATED):=20he?=
+ =?UTF-8?q?adline=20question=20is=20IS=20THE=20VERIFIER=20MOAT=20WON=20ON?=
+ =?UTF-8?q?=20THE=20AXIS=20THE=20NORTH=20STAR=20NEEDS=20=E2=80=94=20EFFICI?=
+ =?UTF-8?q?ENCY-PARITY=20vs=20an=20LLM-as-judge=20(exp4186),=20AND=20IS=20?=
+ =?UTF-8?q?THE=20ARC=20EXECUTION=20VERIFIER=20NOW=20PRODUCTION-SAFE=20(exp?=
+ =?UTF-8?q?4187)=20AND=20SOVEREIGN=20(exp4188)=3F=20Aggregate:=20EFFICIENC?=
+ =?UTF-8?q?Y=20=3D=20exp4186=20(verifier=5Fefficiency=5Fwin=20+=20cost=20r?=
+ =?UTF-8?q?atio=20+=20CI);=20GAP-4=20GRADED=20GATE=20=3D=20exp4187;=20SOVE?=
+ =?UTF-8?q?REIGN=20GEN=20=3D=20exp4188;=20DIFFUSIONGEMMA=20=3D=20exp4189;?=
+ =?UTF-8?q?=20ARC=20=3D=20exp4190;=20LIVE-ENV=20=3D=20exp4191;=20SOTA=20?=
+ =?UTF-8?q?=3D=20exp4192.=20SKIP=20any=20flagged=5Fadversarial=20artifact;?=
+ =?UTF-8?q?=20cite=20upstream=20sha256.=20NO=20gated=5Fon.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index f3c00ea651..31456df3e9 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -9102,3 +9102,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-14: PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding-edge track). Ingest the .388 sweep mapped onto the efficiency-moat / GAP-4-sovereignty / DiffusionGemma stack: arXiv 2602.22871 (reward-guided diffusion stitching), 2604.06260 (S^3 stratified scaling search), openreview cve4NOiyVp (1/1000-cost LLM judge), 2504.01005 (SC cost crossover), 2504.16828 (ThinkPRM). RE-FLAG CEM 2510.20607 as needing OPERATOR authorization (trained-content-energy SELECTOR lineage is retired). SOTA->experiment mapping note; flag the strongest for .389. Cite real arXiv IDs. (✅ Complete) — honest_verdict=complete: sota_ingestion_efficiency_gap4_diffusion_mapped_v389; results/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.json
+ - 2026-06-14: PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .388 state into ops/verifier_gaps.md: the efficiency-moat verdict (exp4186 verifier_efficiency_win + cost ratio), the GAP-4 graded-gate (exp4187), and the sovereign-generator result (exp4188). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune). (⚠️ Research Finding) — honest_verdict=complete: registry_gaps_reconciled_to_v388_truth_regression_guard_passed_True_efficiency_filled_verifier_efficiency_win_gap4_filled_guarded_graded_gate_holds_plus4_minus0_sovereign_building_sovereign_local_generator_positive_flagged; results/experiment_4193_verifier_registry_gaps_hygiene.json
+ - 2026-06-14: PHASE D3 — Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board. (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_4194_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only; results/experiment_4194_hardware_continuity.json
++- 2026-06-14: PHASE D4 — Capstone .388 (UNGATED): headline question is IS THE VERIFIER MOAT WON ON THE AXIS THE NORTH STAR NEEDS — EFFICIENCY-PARITY vs an LLM-as-judge (exp4186), AND IS THE ARC EXECUTION VERIFIER NOW PRODUCTION-SAFE (exp4187) AND SOVEREIGN (exp4188)? Aggregate: EFFICIENCY = exp4186 (verifier_efficiency_win + cost ratio + CI); GAP-4 GRADED GATE = exp4187; SOVEREIGN GEN = exp4188; DIFFUSIONGEMMA = exp4189; ARC = exp4190; LIVE-ENV = exp4191; SOTA = exp4192. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on. (✅ Complete) — honest_verdict=complete: capstone_v388_efficiency_moat_won_efficiency_WON_gap4_safe_true_sovereign_false_diffusiongemma_false_arc_levels15_flagged_skipped2; results/experiment_4195_capstone_v388.json
+-- 
+2.55.0
+

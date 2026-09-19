@@ -1,0 +1,92 @@
+From 2afeccefc94aa3fa441e852d18a2c0397394ba8c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 29 Jul 2026 06:50:15 -0400
+Subject: [PATCH 08010/11362] =?UTF-8?q?[outer-loop]=20Survey=20method:=20w?=
+ =?UTF-8?q?orktree=20isolation=20is=20a=20mitigation,=20not=20containment?=
+ =?UTF-8?q?=20=E2=80=94=20and=20it=20leaked=20three=20times?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Docs only. Corrects the method section rather than leaving it overstating what isolation achieved.
+
+1. TWO OF THE THREE HARNESSES DID NOT SET THE PYTHONPATH OVERRIDE. The whole-suite and per-batch
+   attribution runs put the worktree's python/ ahead of the editable-install .pth; the two per-file
+   subset harnesses (the 20 runpy candidates and the 125 test_arc_* files) did not. Found while
+   writing this up. Their conclusions still stand, but for a different reason than stated: the
+   canonical repo's 31,564 tracked files were sha256-hashed before and after those runs and showed
+   only this session's deliberate edits. Isolation was the intended mechanism; the hash comparison
+   is the one that actually carries the conclusion. Said plainly rather than left implied.
+
+2. ISOLATION LEAKED THREE TIMES, WHICH IS ITSELF A RESULT. experiment_3734, experiment_2427 and
+   experiment_3351 each appeared as modified in the CANONICAL repo while every test run was pointed
+   at a /tmp worktree. All three restored and verified byte-identical against HEAD. Two are
+   explained by the hardcoded absolute path finding. The third is NOT:
+   scripts/experiment_3351_gatemate_latency_benchmark.py:9 resolves
+   REPO_ROOT = Path(__file__).resolve().parents[1], which is correct and repo-relative. So at least
+   one leak route remains unidentified. Anyone repeating this survey should treat "ran it in a
+   worktree" as a mitigation and rely on the before/after hash of the canonical tree instead.
+
+3. Coverage section gains two stated gaps: subprocess writers cannot be attributed by a CPython
+   audit hook (three of batch 01's sixteen are in that class), and the unidentified leak route.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...e-rewrites-the-record-survey-2026-07-29.md | 33 +++++++++++++++----
+ 1 file changed, 27 insertions(+), 6 deletions(-)
+
+diff --git a/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md b/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
+index de0ccdcbf7..9b3939c57d 100644
+--- a/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
++++ b/docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md
+@@ -48,12 +48,27 @@ repo was never the test target. `environment_files/` (5.2 MB, gitignored) was co
+ worktree — without it the ARC tests abort early with `Game <id> not found in scanned environments`
+ and the survey would under-report.
+ 
+-**The editable-install trap.** The venv installs `carnot` in editable mode via
+-`__editable__.carnot_ebm-0.1.0b1.pth`, which points at the **canonical** `.../ianblenke/carnot/python`.
+-A worktree run would therefore have imported the real repo's package, and any module computing a
+-path from `carnot.__file__` would have written into the real repo. Every run set
+-`PYTHONPATH=<worktree>/python:<worktree>/scripts/experiments` so `sys.path` order puts the worktree
+-first.
++**The editable-install trap — and where this survey did not fully avoid it.** The venv installs
++`carnot` in editable mode via `__editable__.carnot_ebm-0.1.0b1.pth`, which points at the
++**canonical** `.../ianblenke/carnot/python`. A worktree run therefore imports the real repo's
++package unless `sys.path` is reordered, and any module computing a path from `carnot.__file__`
++writes into the real repo. The whole-suite run and the per-batch attribution runs set
++`PYTHONPATH=<worktree>/python:<worktree>/scripts/experiments` to put the worktree first. **The two
++per-file subset harnesses (§3.1, §3.2) did not** — an oversight found while writing this up. Their
++results are nevertheless sound, because they rest on a stronger check than isolation: the canonical
++repo's 31,564 tracked files were sha256-hashed before and after those runs and showed only this
++session's deliberate edits. Isolation was the intended mechanism; the hash comparison is the one
++that actually carries the conclusion.
++
++**Isolation leaked three times anyway, which is itself a result.** Over the whole session, three
++artifacts appeared as modified in the CANONICAL repo while every test run was pointed at a `/tmp`
++worktree: `results/experiment_3734_…json`, `results/experiment_2427_kv260_yosys_v4.json`, and
++`results/experiment_3351_gatemate_latency_benchmark.json`. All three were restored and verified
++byte-identical against `HEAD`. Two are explained by §3.4 (a hardcoded absolute path in the script).
++The third is **not**: `scripts/experiment_3351_gatemate_latency_benchmark.py:9` resolves
++`REPO_ROOT = Path(__file__).resolve().parents[1]`, which is correct and repo-relative. So there is at
++least one leak route this survey did not identify. Treat "the tests were run in a worktree" as a
++mitigation, never as containment.
+ 
+ **The oracle is git, not inference.** After each unit of work, `git status --porcelain -uno` names
+ every tracked file that moved. Untracked files are deliberately excluded: an experiment script
+@@ -325,6 +340,12 @@ minutes earlier while edits are still landing.
+ * Six ARC tests and two experiment tests fail in the worktree for environment reasons. Failures
+   short-circuit writes, so each is a potential false negative; the six ARC ones were re-checked in
+   the canonical repo (§3.2), the experiment-side ones were not individually re-checked.
++* **Subprocess writers are invisible to per-test attribution.** The audit hook sees only the Python
++  process it is installed in, so a script shelling out to Vivado or yosys is unattributable. Three
++  of batch 01's 16 are in that class.
++* **At least one leak route into the canonical repo is unidentified** (§2, exp3351). Worktree
++  isolation is a mitigation here, not containment; the load-bearing check is the before/after hash
++  of the canonical tree.
+ 
+ ---
+ 
+-- 
+2.55.0
+

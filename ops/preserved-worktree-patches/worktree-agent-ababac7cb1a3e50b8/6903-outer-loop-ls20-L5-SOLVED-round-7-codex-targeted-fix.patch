@@ -1,0 +1,145 @@
+From 67ec71e7ad6249236b5b062dc5afb92dd2129252 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 13:12:08 -0400
+Subject: [PATCH 06903/11362] [outer-loop] ls20: L5 SOLVED round 7 (codex,
+ targeted fix worked)
+
+Round-7 gpt-5.6-sol session executed the exact targeted hypothesis
+queued from round 6's near-miss: finance color 8 via the newly-found
+top-middle ring instead of the upper-left ring, closing the
+one-action gap that blocked every prior attempt. Key precision: the
+top-middle ring can be entered on the EXACT action that decrements the
+counter from 2 to 0, resetting it to 42 before the next-action-death
+rule fires -- a timing window not previously exploited.
+
+Full winning sequence: 303 actions (244-action banked prefix + a
+59-action L5 tail). The source agent's own reproduction_verified is
+honestly false (budget ran out before a fresh-reset gate could be
+re-run), but the outer loop independently verified regardless: 5x
+fresh env.reset() + replay via a new resolver priority branch, all 5
+confirmed level=5, state=GameState.NOT_FINISHED.
+
+ops/arc_solve_registry.yaml: ls20 levels_reproduced 4 -> 5.
+reproducible_total_levels 160 -> 161 (sum-checked;
+arc_count_integrity_lint exit 0).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   | 27 +++++++++++++++++--
+ ...experiment_4460_submission_package_prep.py | 19 +++++++++++++
+ ...oop_fable5_ls20_probe_round7_20260712.json | 19 +++++++++++++
+ 3 files changed, 63 insertions(+), 2 deletions(-)
+ create mode 100644 results/outer_loop_fable5_ls20_probe_round7_20260712.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index e7ad64a07e..24c7ee7866 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -892,7 +892,7 @@ games:
+     verifier_checkpoint: null
+ - game: ls20
+   reproducibility: reproduced
+-  levels_reproduced: 4
++  levels_reproduced: 5
+   mechanic_class: clean_navigation_shape_color_rotation_step_counter
+   win_condition: >-
+     L1 first-solve navigation plus L2 clean-nav target match: enter each
+@@ -1033,6 +1033,29 @@ games:
+     prefix. No L5 win observed or claimed; frontier stays at level 4. Next
+     attempt should finance color 8 via the newly-found top-middle ring
+     reset (not the upper-left ring) to close the one-action gap.'
++  - 'L5 SOLVED round 7 (2026-07-12, gpt-5.6-sol via codex,
++    results/outer_loop_fable5_ls20_probe_round7_20260712.json): round 6''s
++    targeted hypothesis was correct -- financed color 8 via the
++    newly-found top-middle ring instead of the upper-left ring, closing
++    the one-action gap that blocked every prior attempt. After the third
++    pinwheel entry set color 8 at x29,y25, ACTION4,ACTION4 reaches the
++    launcher placement at x39,y5 and the next ACTION4 collects the
++    top-middle green-center ring; the ring can be entered on the EXACT
++    action that decrements the counter from 2 to 0, resetting it to 42
++    before the next-action-death rule fires (a precise timing window not
++    previously exploited). From there the upper-left ring financed two
++    upper-pad contacts (shape 4->5->0), the lower contact sequence 443
++    set rotation 2, and the lower-left ring financed a bottom-corridor
++    launcher that placed the completed target tuple one move below the
++    target; the final action entered the target with tuple
++    (shape=0,color=3,rotation=2) and levels_completed advanced to 5. The
++    full winning sequence is 303 actions (244-action banked prefix + a
++    59-action L5 tail). The source agent''s own reproduction_verified is
++    honestly false (only 153 of 547 used calls remained under the
++    700-call cap, short of the 303 needed for a fresh-reset gate), but
++    the outer loop independently verified regardless: 5x fresh
++    env.reset() + replay via a new resolver priority branch, all 5
++    confirmed level=5, state=GameState.NOT_FINISHED.'
+   dead_ends:
+   - sk48 is skipped because it was the .426 failed/deepened rotation target.
+   - dc22 is skipped because it was the .425 failed deepen target.
+@@ -4642,7 +4665,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 160
++reproducible_total_levels: 161
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index 11b42ec1f6..5eec13c274 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -1122,7 +1122,26 @@ def resolve_replay_plan(
+             adapter.apply,
+             warmup_label=adapter.warmup_label,
+         )
++    if game == "ls20" and _as_int(entry.get("levels_reproduced")) >= 5:
++        from carnot.agentic.arc_game_adapters import get_adapter
++
++        adapter = get_adapter(game)
++        rel_path = "results/outer_loop_fable5_ls20_probe_round7_20260712.json"
++        artifact = _load_json(root / rel_path)
++        labels = [str(label) for label in artifact.get("action_sequence") or []]
++        if adapter is None:
++            raise RuntimeError("ls20 adapter missing")
++        return ReplayPlan(
++            game,
++            labels,
++            rel_path,
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++        )
+     if game == "ls20" and _as_int(entry.get("levels_reproduced")) >= 4:
++        # NOTE: unreachable for the live registry entry (which is >=5 as of the
++        # round-7 L5 win); retained as historical dead code documenting the
++        # round-6-and-earlier (level-4) resolution.
+         from carnot.agentic.arc_game_adapters import get_adapter
+ 
+         adapter = get_adapter(game)
+diff --git a/results/outer_loop_fable5_ls20_probe_round7_20260712.json b/results/outer_loop_fable5_ls20_probe_round7_20260712.json
+new file mode 100644
+index 0000000000..4129fef4bc
+--- /dev/null
++++ b/results/outer_loop_fable5_ls20_probe_round7_20260712.json
+@@ -0,0 +1,19 @@
++{
++  "game": "ls20",
++  "model": "GPT-5 Codex",
++  "starting_level": 4,
++  "max_level_reached": 5,
++  "total_env_steps_used": 547,
++  "reproduction_verified": false,
++  "action_sequence": ["{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":4}", "{\"action\":4}", "{\"action\":2}", "{\"action\":4}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":4}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":4}", "{\"action\":1}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":4}", "{\"action\":2}", "{\"action\":2}", "{\"action\":4}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":1}", "{\"action\":2}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":4}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":4}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":1}", "{\"action\":2}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":1}", "{\"action\":2}", "{\"action\":1}", "{\"action\":2}", "{\"action\":1}", "{\"action\":2}", "{\"action\":1}", "{\"action\":1}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":2}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":1}", "{\"action\":2}", "{\"action\":1}", "{\"action\":2}", "{\"action\":2}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":1}", "{\"action\":2}", "{\"action\":1}", "{\"action\":2}", "{\"action\":1}", "{\"action\":2}", "{\"action\":1}", "{\"action\":4}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":1}", "{\"action\":2}", "{\"action\":2}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":1}", "{\"action\":4}", "{\"action\":1}", "{\"action\":4}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":1}", "{\"action\":3}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":4}", "{\"action\":3}", "{\"action\":4}", "{\"action\":3}", "{\"action\":1}", "{\"action\":1}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":1}", "{\"action\":3}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":3}", "{\"action\":1}", "{\"action\":3}", "{\"action\":4}", "{\"action\":4}", "{\"action\":3}", "{\"action\":4}", "{\"action\":2}", "{\"action\":2}", "{\"action\":2}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":3}", "{\"action\":3}", "{\"action\":2}", "{\"action\":2}", "{\"action\":4}", "{\"action\":4}", "{\"action\":2}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":4}", "{\"action\":1}"],
++  "levels_won_this_session": [5],
++  "novel_mechanics_found": "The round-6 hypothesis is correct: after the third pinwheel entry sets color 8 at x29,y25, ACTION4,ACTION4 reaches the launcher placement at x39,y5 and the next ACTION4 collects the top-middle green-center ring. The ring may be entered on the exact action that decrements the counter from 2 to 0; it resets the counter to 42 before the next-action death rule fires. After the lower-left reset, traversing the bottom corridor to x49,y50 and pressing ACTION4 invokes a launcher that places the completed target tuple at x54,y10, one move below the target.",
++  "narrative": "Resolved the required 244-action prefix through resolve_replay_plan and replayed it from a fresh env.reset(); frame_level was exactly 4. A corrected compact diagnostic relaunch independently reached level 4 again. On L5, the targeted top-middle-ring financing splice succeeded: color 8 reached the ring on the last counter decrement, then the upper-left ring financed two upper-pad contacts (shape 4->5->0), lower contact sequence 443 set rotation 2, and the lower-left ring financed the bottom-corridor launcher. The final ACTION1 entered the target with tuple (shape=0,color=3,rotation=2), and the returned frame reported level 5. The winning run is the full 303-label action_sequence (244-action banked prefix plus a 59-action L5 tail). A separate post-discovery fresh-reset replay would require 303 more env.step calls, but only 153 remained under the 700-call cap, so reproduction_verified is honestly false despite the live fresh-start win.",
++  "gotchas": [
++    "The counter is stored as 42 units but drains by 2 per keypress, so L5 has 21 actions per reset.",
++    "Seven blocked moves in the inherited compact near-miss are retained in this winning sequence; they reduce the counter from 20 to 6, but the three-action launcher/ring splice still resets safely on the final decrement.",
++    "At counter 0 the level restarts on the next action, not immediately; entering a reset ring on the decrement-to-zero action is valid.",
++    "The exact full winner was observed from a fresh reset, but no independent post-discovery reproduction gate fit within the remaining global step budget."
++  ],
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

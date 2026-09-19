@@ -1,0 +1,313 @@
+From 9f4a758f3cf6d8b7425e93003f19f25d03b28d91 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 17:23:19 -0400
+Subject: [PATCH 02387/11362] [conductor] Pre-gate block: PHASE A2 (HEADLINE
+ skeptic-proofing; GATED on exp4348 s3_guided_beats_control==true) -- PAPO
+ REWARD-STATE-ALIGNMENT DIAGNOSTIC (arXiv:2606.08501 VERIFIED 'Back on Track:
+ Aligning Rewards and States for Reasoning in Diffusion LLMs'). IF exp4348
+ shows an S3 generation gain, the operator (twice-burned on DiffusionGemma
+ over-claims, .396/.397) will ask: is the gain from rewards aligned to
+ AUTHENTIC denoising states, or an artifact of remasking / position cues / the
+ scorer correlating with something other than process quality? PAPO is the
+ diagnostic: evaluate the leak-robust scorer's one-step partial-state
+ predictions against AUTHENTIC recorded denoising trajectories vs
+ RANDOMLY-REMASKED (artificial-context) states, and report the reward-state
+ ALIGNMENT (does the reward track genuine intermediate process quality, not
+ reconstructed/leaked context?). Emit reward_state_alignment_passed BARE bool
+ := (the scorer's reward correlates with authentic-trajectory process quality
+ SIGNIFICANTLY MORE than with randomly-remasked states, CI95-excl-0).
+ verifier_is_oracle=false. A pass = the S3 gain is genuine (headline
+ graduates); a fail = the gain is alignment-confounded and is QUARANTINED (not
+ headline-eligible) + the residual logged as a missing-verifier gap. NO
+ training; NO TRM training; DiffusionGemma via the llama.cpp PR binary.
+
+1 of 1 gate(s) failed; first failure: exp4348-s3-stratified-verifier-guided-search.s3_guided_beats_control (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/arc_solve_registry.yaml                   |  6 ++---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._s3_stratified_verifier_guided_search.json | 22 ++++++++++++++--
+ ...apo_reward_state_alignment_diagnostic.json | 24 +++++++++++++++++
+ tests/python/test_arc_maze_planner.py         | 20 +++++++-------
+ tests/python/test_arc_strategy_router.py      | 26 +++++++++----------
+ 8 files changed, 73 insertions(+), 30 deletions(-)
+ create mode 100644 results/experiment_4349_papo_reward_state_alignment_diagnostic.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 8ee96d198f..3cf97734be 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -129,11 +129,11 @@ games:
+   - game: tn36
+     reproducibility: reproduced   # SOLVED 2026-06-17 via program-editor RE (L1-L6, reproduction-gated)
+     mechanic_class: program_editor  # strategy-router class (arc_strategy_router): routes to the frame-only program-editor model + SKIPS the goal-distance heuristic portfolio (a category error here — blind clicks can't drive 5-attribute alignment)
+-    levels_reproduced: 6
++    levels_reproduced: 7
+     win_condition: "MATCH a movable object to a target on FIVE attributes simultaneously: x, y, scale, rotation, and sjmtdfxdrc (a 5th property). Source: tn36.py:2153 vklyonlcrw = (obj.x==tgt.x and obj.y==tgt.y and obj.scale==tgt.scale and obj.rotation==tgt.rotation and obj.sjmtdfxdrc==tgt.sjmtdfxdrc). L1 at reset: obj=(x30,y13,s1,r0,sj11) tgt=(x30,y33,s1,r0,sj11) -> ONLY y is wrong (move down 20). Internal state is readable: env._game.fdksqlmpki.bzirenxmrg.{htntnzkbzu(obj),aqszntqeae(tgt)}."
+     solver: "PROGRAM-EDITOR mechanic (FULLY RE'd 2026-06-17). The object runs an N-slot MOVE-PROGRAM (vkuvtkaerv); each slot holds a command code (tn36.py:2171 okllwtboml: 0=settle,1=left,2=right,3=down,33=up,5/6/7/16=rotate,8/9=scale+/-,14/15/63=property). Step CSPOIQWER=4. TOOL PALETTE = a 6-BIT code editor per slot: bit b's toggle-button is at (slot_x, slot_y_top + 3*b) for b=0..5 (values 1,2,4,8,16,32), so ANY code = sum of its set bits (down 3=bit0+bit1; up 33=bit0+bit5; scale+ 8=bit3; rotate+90 5=bit0+bit2). Slot positions ARE READABLE (controller.pfyayhyovw[i].{x,y}) and RE-LAY-OUT per level (L1: 5 slots; L2: 4 slots; different x/y) -> DISCOVER, don't hardcode. RUN by clicking the object sub-button sxhtkytekm (center, discovered). L1: program [3,3,3,3,3]=5 downs->y13->33. L2: [33,33,33,33]=4 ups->y24->8."
+     reproduce: "scripts/arc3_tn36_offline_solver.py — GENERAL from-scratch solver: reads obj/target deltas + the per-level button layout (pfyayhyovw), computes the move-program (down/up/left/right + scale/rotate), edits slots via bit-toggle clicks, runs, and CHAINS levels. Reproduces L1-L3 (reproduced=True claimed_level=3, 25 clicks). PATH-ROUTING: some levels have wall OBSTACLES (bizgpiltwm) with a gap; cwtesiybfx (tn36.py:2269) reverts a move that collides, so the move ORDER must route the object through the gap. The solver computes the move MULTISET from deltas then searches orderings (the game is the path oracle) until one wins -> two-pass (discover winning order per level, then clean minimal replay on a fresh env, since env.reset() does NOT rewind an advanced episode). L3: gap at y[16,20) between walls at x45; winning order [33,2,2,2,33,2]. L4: SCALE<->collision interaction -- the object box changes size when scaled, so the SCALE-down move must be interleaved at the right point (straight [3,3,3,3,1,9] LOSES; winner e.g. [3,9,3,1,3,3]); the ordering search finds it. GOTCHA: a FRESH env is required per ordering attempt -- accumulating failed runs on one env trips the game's LOSS condition and resets the whole episode to L0 (was masking L4). L5: rotation (270->0=code5) + scale-up (code8) + PROPERTY change (sjmtdfxdrc 11->15 = code 63). PROPERTY codes DECODED 2026-06-17 (set sjmtdfxdrc absolutely): code14->9, code15->8, code63->15 (PROP_CODE map; code 63 = all 6 bits set). L6: MULTI-RUN MAZE -- the collision-free path (8 moves) exceeds the 6 slots, so it uses the CHECKPOINT mechanic (wgzwawbgew): a run that ENDS on a checkpoint advances the object's base (mnvoffrbex), so progress carries across runs. Solver reads box/obstacles/checkpoints from internal state, BFS-plans a path start->checkpoint->target with each leg <= n moves, runs the legs in sequence. L6: leg1 [2,2,2,2,33,33]->checkpoint(49,20), leg2 [1,1,33,33,33,1]->target. Reproduces L1-L6 (reproduced=True claimed_level=6, 74 clicks). Frozen trajectory at results/arc_explore_trajectory_tn36.json."
+-    next: "L7 CORRECTED DIAGNOSIS (2026-06-17): it is NOT transforms-during-maze (the prior note misdiagnosed it). L7 is a TIMED SPIKE-TRAP puzzle. ekdwmirldx = blinking spike obstacles at y[16,20) x[37,61) (two: (37,16,14,4),(47,16,14,4)), initially invisible. jmwdvdqntf (tn36.py:2350) toggles their visibility every 3 moves (when oocupkguhu%3==2, i.e. AFTER moves 2,5,8...). cwtesiybfx/adjust_scale (tn36.py:2277) call htntnzkbzu.qobvpoiega() = DISABLE the object (byqkqlmkfo=False, brvmvgfchj stuck) if it moves into OR is caught on a VISIBLE spike. Confirmed: straight 5-ups from (41,28) reaches (41,16) at move 2, the toggle turns spikes visible, object on the spike row -> DISABLED -> run fails. The y[16,20) band is fully walled (static (33,16,4,4) at x[33,37) + spikes at x[37,61)); the ONLY safe crossing is x[37,61) during a spikes-invisible window, exiting to y<=12 by the toggle move. Timing analysis: the object must be at y=24 at a run-start with spikes invisible, then [up,up,up] exits to y=12 by move 2 (toggle finds it safe at y12). No checkpoint sits at the needed y=24/x in [37,61), so a SINGLE run cannot both descend to y24 and cross; a solution needs a TIMED-STATE multi-run planner that models (position, run-move-index, spike-visibility-parity) across the maze+checkpoints. NOT YET SOLVED (no fabrication). This is the next genuine build: a timed path-planner."
++    next: "L7 CORRECTED DIAGNOSIS (2026-06-17): it is NOT transforms-during-maze (the prior note misdiagnosed it). L7 is a TIMED SPIKE-TRAP puzzle. ekdwmirldx = blinking spike obstacles at y[16,20) x[37,61) (two: (37,16,14,4),(47,16,14,4)), initially invisible. jmwdvdqntf (tn36.py:2350) toggles their visibility every 3 moves (when oocupkguhu%3==2, i.e. AFTER moves 2,5,8...). cwtesiybfx/adjust_scale (tn36.py:2277) call htntnzkbzu.qobvpoiega() = DISABLE the object (byqkqlmkfo=False, brvmvgfchj stuck) if it moves into OR is caught on a VISIBLE spike. Confirmed: straight 5-ups from (41,28) reaches (41,16) at move 2, the toggle turns spikes visible, object on the spike row -> DISABLED -> run fails. The y[16,20) band is fully walled (static (33,16,4,4) at x[33,37) + spikes at x[37,61)); the ONLY safe crossing is x[37,61) during a spikes-invisible window, exiting to y<=12 by the toggle move. Timing analysis: the object must be at y=24 at a run-start with spikes invisible, then [up,up,up] exits to y=12 by move 2 (toggle finds it safe at y12). No checkpoint sits at the needed y=24/x in [37,61), so a SINGLE run cannot both descend to y24 and cross; a solution needs a TIMED-STATE multi-run planner that models (position, run-move-index, spike-visibility-parity) across the maze+checkpoints. SOLVED 2026-06-17 (reproduced=True L7, 102 clicks): the timed planner (carnot.agentic.arc_maze_planner.timed_trap_plan) does waypoint BFS over checkpoints where each leg is a BFS over (position, run-slot-index) respecting the spike schedule (invisible slots 0-2, visible 3-5, death on the post-slot-2 toggle + residual hidden hitbox olbuwgbgyz). Winning plan: leg1 [up,up,right,right,right,down]->checkpoint(53,24); leg2 [up*4]->checkpoint(53,8); leg3 [down,left,left,left,up]->target(41,8). Validated against the real env + reproduction-gated."
+     action_model: "ACTION6 click; data schema IS {x,y} and display->grid is 1:1 (camera.display_to_grid(30,13)==(30,13)). Clicks register (121/121 change the grid). Control is a PROGRAM/transform EDITOR, not direct steering: dispatch (tn36.py:2500) routes a click to a tool-palette (miytdaqzei, EMPTY at reset) else mvqheosngn(apply/2nd-object) else bzirenxmrg(the object); the object carries a move-program vkuvtkaerv=[3,0,3,0,0]; clicking it runs mmmdksslmq()->olrpupaury(). The exact EDIT->EXECUTE semantics that drive obj.y 13->33 are not yet cracked (directly invoking mmmdksslmq did NOT move the object; palette empty)."
+     gotchas:
+       - "CORRECTION (2026-06-17, deep RE): the prior 'ACTION6 schema is NOT {x,y} / KeyError x / explorer ERRORED' note is STALE/WRONG. {x,y} works; the KeyError only fires for data=None. rich_action_candidates emits {x,y} and graph_explore_solve_v2 runs CLEAN on tn36 (no error) — it just NO-ADVANCEs because the win needs the program-editor mechanic, not blind clicks."
+@@ -195,7 +195,7 @@ games:
+ #   + tu93 1 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 = 15 across 12 games  (lp85 L3->L4 landed
+ #   2026-06-17 via the standing loop adaptered path, offline-reproduction-gated; verify with
+ #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
+-reproducible_total_levels: 21   # ... -> 19 (+tn36 L4 scale-collision) -> 20 (+tn36 L5 property) -> 21 (+tn36 L6 multi-run maze path-planner, 2026-06-17)
++reproducible_total_levels: 22   # ... -> 20 (+tn36 L5 property) -> 21 (+tn36 L6 multi-run maze path-planner) -> 22 (+tn36 L7 TIMED spike-trap planner, 2026-06-17; first L7 solve)
+ reproducible_total_games: 13    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, tn36
+ provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
+ 
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9942e0b9bc..a8b7ec98b7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 42, "phase": "iteration_start", "last_beat": "2026-06-17T20:37:09Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 43, "phase": "iteration_start", "last_beat": "2026-06-17T21:23:19Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9ba87ab6e5..3eb2b1226a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8674,3 +8674,4 @@ c |
+ | 2026-06-17 20:14 UTC | Plan milestone 2026.06.402 | OK | 11 tasks proposed |
+ | 2026-06-17 20:16 UTC | Milestone 2026.06.402 activated | OK | 11 tasks queued |
+ | 2026-06-17 20:35 UTC | Archive .401 -> activate .402; KEEP the hardened g | FLAGGED | adversarial_verify CRITICAL: CIRCULAR_MOAT_OVERCLAIM — result quarantined, not a |
++| 2026-06-17 21:21 UTC | PHASE A1 (HEADLINE; convert the PROVEN moat into a | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantine |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f59e4f36da..051371fada 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 42, "phase": "iteration_start", "started_at": "2026-06-17T20:37:09Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 43, "phase": "iteration_start", "started_at": "2026-06-17T21:23:19Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4348_s3_stratified_verifier_guided_search.json b/results/experiment_4348_s3_stratified_verifier_guided_search.json
+index 7616c1994a..75ffc92452 100644
+--- a/results/experiment_4348_s3_stratified_verifier_guided_search.json
++++ b/results/experiment_4348_s3_stratified_verifier_guided_search.json
+@@ -740,5 +740,23 @@
+     "REQ-VERIFY-4348",
+     "SCENARIO-VERIFY-4348"
+   ],
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "s3_minus_best_of_k_delta=0.266667 and s3_minus_self_reward_smc_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "s3_minus_best_of_k_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "s3_minus_self_reward_smc_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_4349_papo_reward_state_alignment_diagnostic.json b/results/experiment_4349_papo_reward_state_alignment_diagnostic.json
+new file mode 100644
+index 0000000000..b3b3159b7b
+--- /dev/null
++++ b/results/experiment_4349_papo_reward_state_alignment_diagnostic.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 4349,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-06-17",
++  "started_at": "2026-06-17T21:23:19.379181+00:00",
++  "finished_at": "2026-06-17T21:23:19.379181+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4348 s3_guided_beats_control==true) -- PAPO REWARD-STATE-ALIGNMENT DIAGNOSTIC (arXiv:2606.08501 VERIFIED 'Back on Track: Aligning Rewards and States for Reasoning in Diffusion LLMs'). IF exp4348 shows an S3 generation gain, the operator (twice-burned on DiffusionGemma over-claims, .396/.397) will ask: is the gain from rewards aligned to AUTHENTIC denoising states, or an artifact of remasking / position cues / the scorer correlating with something other than process quality? PAPO is the diagnostic: evaluate the leak-robust scorer's one-step partial-state predictions against AUTHENTIC recorded denoising trajectories vs RANDOMLY-REMASKED (artificial-context) states, and report the reward-state ALIGNMENT (does the reward track genuine intermediate process quality, not reconstructed/leaked context?). Emit reward_state_alignment_passed BARE bool := (the scorer's reward correlates with authentic-trajectory process quality SIGNIFICANTLY MORE than with randomly-remasked states, CI95-excl-0). verifier_is_oracle=false. A pass = the S3 gain is genuine (headline graduates); a fail = the gain is alignment-confounded and is QUARANTINED (not headline-eligible) + the residual logged as a missing-verifier gap. NO training; NO TRM training; DiffusionGemma via the llama.cpp PR binary.",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4348-s3-stratified-verifier-guided-search.s3_guided_beats_control (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp4348-s3-stratified-verifier-guided-search",
++      "artifact_field": "s3_guided_beats_control",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+diff --git a/tests/python/test_arc_maze_planner.py b/tests/python/test_arc_maze_planner.py
+index e301356711..072311dc66 100644
+--- a/tests/python/test_arc_maze_planner.py
++++ b/tests/python/test_arc_maze_planner.py
+@@ -9,7 +9,7 @@ end-to-end real-env check; these pin the algorithm itself.)
+ 
+ Spec: REQ-PHASE4-081, SCENARIO-PHASE4-081 (the strategy-class solvers the router dispatches).
+ """
+-from carnot.agentic import arc_maze_planner as MP
++from carnot.agentic import arc_maze_planner as planner
+ from carnot.agentic.arc_maze_planner import MazeModel
+ 
+ # command codes for the synthetic games (arbitrary, just distinct): up/down/left/right + settle
+@@ -29,12 +29,12 @@ def _walk(model, plan):
+         for idx, code in enumerate(leg):
+             dx, dy = _DELTA.get(code, (0, 0))
+             nx, ny = pos[0] + dx, pos[1] + dy
+-            if MP._collide(model, nx, ny):
++            if planner._collide(model, nx, ny):
+                 nx, ny = pos                                   # wall reverts
+             visible = idx >= model.invisible_slots
+-            if MP._spike_death(model, nx, ny, visible):
++            if planner._spike_death(model, nx, ny, visible):
+                 return (nx, ny), True
+-            if idx == model.invisible_slots - 1 and MP._spike_death(model, nx, ny, True):
++            if idx == model.invisible_slots - 1 and planner._spike_death(model, nx, ny, True):
+                 return (nx, ny), True
+             pos = (nx, ny)
+         if pos in model.checkpoints:                            # ending on a checkpoint advances base
+@@ -52,7 +52,7 @@ def _model(**kw):
+ def test_checkpoint_multirun_direct_leg():
+     # target reachable within one run's slots, no checkpoint needed -> a single padded leg.
+     m = _model(start=(8, 8), target=(8, 16))
+-    plan = MP.checkpoint_multirun_plan(m)
++    plan = planner.checkpoint_multirun_plan(m)
+     assert plan is not None and len(plan) == 1
+     assert all(len(leg) == m.n_slots for leg in plan)         # padded to the slot budget
+     assert _walk(m, plan) == ((8, 16), False)
+@@ -61,7 +61,7 @@ def test_checkpoint_multirun_direct_leg():
+ def test_checkpoint_multirun_stages_via_checkpoint():
+     # target is 6 steps away but each run has only 3 slots -> must stage via the checkpoint.
+     m = _model(start=(4, 4), target=(4, 28), checkpoints=[(4, 16)], n_slots=3)
+-    plan = MP.checkpoint_multirun_plan(m)
++    plan = planner.checkpoint_multirun_plan(m)
+     assert plan is not None and len(plan) == 2                 # two legs: start->cp, cp->target
+     assert _walk(m, plan) == ((4, 28), False)
+ 
+@@ -70,13 +70,13 @@ def test_checkpoint_multirun_unreachable_returns_none():
+     # target fully walled in -> no plan.
+     walls = [(4, 0, 4, 4), (4, 8, 4, 4), (0, 4, 4, 4), (8, 4, 4, 4)]
+     m = _model(start=(40, 40), target=(4, 4), walls=walls)
+-    assert MP.checkpoint_multirun_plan(m) is None
++    assert planner.checkpoint_multirun_plan(m) is None
+ 
+ 
+ def test_timed_trap_requires_spikes():
+     # no spikes declared -> the timed planner declines (use the plain checkpoint planner).
+     m = _model(start=(8, 24), target=(8, 8))
+-    assert MP.timed_trap_plan(m) is None
++    assert planner.timed_trap_plan(m) is None
+ 
+ 
+ def test_timed_trap_crosses_during_invisible_window():
+@@ -84,7 +84,7 @@ def test_timed_trap_crosses_during_invisible_window():
+     # (out of band when it turns visible) -> a safe single-leg crossing the timed planner must find.
+     band = [(0, 16, 64, 4)]
+     m = _model(start=(8, 24), target=(8, 8), spikes_visible=band, spikes_hidden=[], invisible_slots=3)
+-    plan = MP.timed_trap_plan(m)
++    plan = planner.timed_trap_plan(m)
+     assert plan is not None
+     pos, died = _walk(m, plan)
+     assert pos == (8, 8) and not died                          # reached target, never on a visible spike
+@@ -95,4 +95,4 @@ def test_timed_trap_none_when_band_cannot_be_cleared_in_time():
+     # by the slot-2 toggle (3 ups only reach y16, in-band) -> no safe crossing exists.
+     band = [(0, 16, 64, 4)]
+     m = _model(start=(8, 28), target=(8, 8), spikes_visible=band, spikes_hidden=[], invisible_slots=3)
+-    assert MP.timed_trap_plan(m) is None
++    assert planner.timed_trap_plan(m) is None
+diff --git a/tests/python/test_arc_strategy_router.py b/tests/python/test_arc_strategy_router.py
+index 81846a4341..5dd3f13abb 100644
+--- a/tests/python/test_arc_strategy_router.py
++++ b/tests/python/test_arc_strategy_router.py
+@@ -9,7 +9,7 @@ graph-explore default, and honest handling of recognised-but-unwired classes.
+ Spec: REQ-PHASE4-081, SCENARIO-PHASE4-081 (ARC-AGI-3 frame-only mechanic-class strategy router).
+ """
+ 
+-from carnot.agentic import arc_strategy_router as SR
++from carnot.agentic import arc_strategy_router as router
+ 
+ 
+ _FAKE_REG = {
+@@ -23,20 +23,20 @@ _FAKE_REG = {
+ def test_detect_precedence_injected_then_registry_then_default():
+     # injected frame-only verdict wins over everything (the live unseen-game path)
+     assert (
+-        SR.detect_mechanic("anything", mechanic="program_editor", reg=_FAKE_REG) == "program_editor"
++        router.detect_mechanic("anything", mechanic="program_editor", reg=_FAKE_REG) == "program_editor"
+     )
+     # known game -> structured registry class
+-    assert SR.detect_mechanic("tn36", reg=_FAKE_REG) == "program_editor"
++    assert router.detect_mechanic("tn36", reg=_FAKE_REG) == "program_editor"
+     # game with no recorded class -> default graph_explore
+-    assert SR.detect_mechanic("lp85", reg=_FAKE_REG) == "graph_explore"
++    assert router.detect_mechanic("lp85", reg=_FAKE_REG) == "graph_explore"
+     # unknown game entirely -> default
+-    assert SR.detect_mechanic("zz99", reg=_FAKE_REG) == "graph_explore"
++    assert router.detect_mechanic("zz99", reg=_FAKE_REG) == "graph_explore"
+     # an injected class outside the taxonomy falls back to default (route only to what we recognise)
+-    assert SR.detect_mechanic("tn36", mechanic="martian_mechanic", reg=_FAKE_REG) == "graph_explore"
++    assert router.detect_mechanic("tn36", mechanic="martian_mechanic", reg=_FAKE_REG) == "graph_explore"
+ 
+ 
+ def test_program_editor_routes_to_frame_only_model_and_skips_heuristic():
+-    r = SR.route_strategy("program_editor")
++    r = router.route_strategy("program_editor")
+     assert r["name"] == "program_editor" and r["wired"] is True
+     # the goal-distance heuristic is a category error here -> must be short-circuited
+     assert r["uses_goal_distance_heuristic"] is False
+@@ -44,7 +44,7 @@ def test_program_editor_routes_to_frame_only_model_and_skips_heuristic():
+ 
+ 
+ def test_graph_explore_is_default_and_uses_heuristic():
+-    r = SR.route_strategy("graph_explore")
++    r = router.route_strategy("graph_explore")
+     assert r["name"] == "graph_explore" and r["uses_goal_distance_heuristic"] is True
+ 
+ 
+@@ -53,7 +53,7 @@ def test_checkpoint_and_timed_classes_route_to_the_maze_planner():
+     # tn36 L6; timed_trap_aware reproduces tn36 L7) and skip the goal-distance heuristic.
+     for mech, fn in [("checkpoint_multirun", "checkpoint_multirun_plan"),
+                      ("timed_trap_aware", "timed_trap_plan")]:
+-        r = SR.route_strategy(mech)
++        r = router.route_strategy(mech)
+         assert r["name"] == mech and r["wired"] is True
+         assert r["uses_goal_distance_heuristic"] is False
+         assert "arc_maze_planner" in r["solver"] and fn in r["solver"]
+@@ -65,16 +65,16 @@ def test_route_flags_an_unwired_class_without_pretending():
+     fake = {"name": "future_class", "mechanic": "future_class", "wired": False,
+             "uses_goal_distance_heuristic": False, "solver": "PENDING", "search_engine": "x",
+             "needs": "a frame-only solver"}
+-    SR._BY_MECHANIC["future_class"] = fake
++    router._BY_MECHANIC["future_class"] = fake
+     try:
+-        r = SR.route_strategy("future_class")
++        r = router.route_strategy("future_class")
+         assert r["name"] == "future_class" and r["wired"] is False
+         assert "not yet wired" in r["reason"].lower()
+     finally:
+-        del SR._BY_MECHANIC["future_class"]
++        del router._BY_MECHANIC["future_class"]
+ 
+ 
+ def test_route_for_game_combines_detect_and_route():
+-    out = SR.route_for_game("tn36", reg=_FAKE_REG)
++    out = router.route_for_game("tn36", reg=_FAKE_REG)
+     assert out["game"] == "tn36" and out["name"] == "program_editor"
+     assert out["routed_mechanic"] == "program_editor"
+-- 
+2.55.0
+

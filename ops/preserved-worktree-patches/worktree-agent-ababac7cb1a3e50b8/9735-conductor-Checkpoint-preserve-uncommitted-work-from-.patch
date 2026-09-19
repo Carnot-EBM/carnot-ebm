@@ -1,0 +1,98 @@
+From d5425c44b209dfe77b85cfaaff8cb03b41aed87a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 16:56:58 -0400
+Subject: [PATCH 09735/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                  |  2 +-
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ .../python/test_arc_engine_attempt_archive.py | 33 +++++++++++++++++++
+ 5 files changed, 37 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 6ef55042b6..e6da389afb 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -7,5 +7,5 @@
+  "last_scan_notes": [
+   "pid 2934327 /home/ianblenke/.claude/jobs/ad0c053d/tmp/retention_run/rows.json: out file missing, run unsupervisable this cycle"
+  ],
+- "last_scan_utc": "2026-08-23T20:42:49Z"
++ "last_scan_utc": "2026-08-23T20:56:53Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 28f2f1724d..d1e1fbe77d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1940365, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-23T20:35:16Z"}
+\ No newline at end of file
++{"pid": 1940365, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-08-23T20:56:52Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1a4cf62047..2c191cc737 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16358,3 +16358,4 @@ code |
+ | 2026-08-23 20:10 UTC | Plan milestone 2026.08.568 | OK | 4 tasks proposed |
+ | 2026-08-23 20:12 UTC | Milestone 2026.08.568 activated | OK | 4 tasks queued |
+ | 2026-08-23 20:33 UTC | V568 evidence eligibility, exclusion, model, and g | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-08-23 20:54 UTC | Independent V567 constraint-saturation audit from  | OK | 87 passed, 1 warning in 12.75s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 80ac112c95..187d699c20 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1940365, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-23T20:35:16Z"}
+\ No newline at end of file
++{"pid": 1940365, "iteration": 18, "phase": "iteration_start", "started_at": "2026-08-23T20:56:52Z"}
+\ No newline at end of file
+diff --git a/tests/python/test_arc_engine_attempt_archive.py b/tests/python/test_arc_engine_attempt_archive.py
+index b364612d30..d1337b512d 100644
+--- a/tests/python/test_arc_engine_attempt_archive.py
++++ b/tests/python/test_arc_engine_attempt_archive.py
+@@ -247,3 +247,36 @@ def test_run_cell_wires_induction_archive_row_field():
+     assert 'row["induction_archive"]' in src
+     assert "_attempt_archive_delta(_man_path, _man_before)" in src
+     assert "_manifest_line_count(_man_path)" in src
++
++
++# SCENARIO-ARC-WMTE-6690-7: the archived attempt names the model that ACTUALLY loaded.
++def test_manifest_model_is_the_effective_label_not_the_frozen_pin(store, monkeypatch):
++    """A CARNOT_ARC_GGUF_PATH override supersedes `repo_substr` at load time, so the
++    manifest must name the overriding weights. Recording `repo_substr` instead writes a
++    provenance record that names a model the run never loaded -- the same mislabel
++    REQ-ARC-WMTE-6670 exists to stop, which "misdirected a whole investigation".
++
++    Observed live 2026-08-23: a Qwen3.8-27B retention run archived
++    `"model": "Qwen3.5-9B-MTP"`, the harness's frozen pin.
++    """
++    prop = _proposer_with_stub(_ENGINE_A)
++    prop.model_path = "/cache/models--unsloth--Qwen3.8-27B-GGUF/Qwen3.8-27B-Q4_K_M.gguf"
++    prop.repo_substr = "Qwen3.5-9B-MTP"
++
++    prop._gen_to_file("gme", "prompt")
++    prop._write_world_model("gme", _ENGINE_B, note="split induce")
++
++    models = [ln["model"] for ln in _manifest_lines(store, "gme")]
++    assert models == ["Qwen3.8-27B-Q4_K_M.gguf"] * 2, models
++    assert "Qwen3.5-9B-MTP" not in models
++
++
++def test_manifest_model_falls_back_to_repo_substr_without_override(store):
++    """With no path override the declared repo substring IS the effective label."""
++    prop = _proposer_with_stub(_ENGINE_A)
++    prop.model_path = None
++    prop.repo_substr = "Qwen3.5-9B-MTP"
++
++    prop._gen_to_file("gme", "prompt")
++
++    assert [ln["model"] for ln in _manifest_lines(store, "gme")] == ["Qwen3.5-9B-MTP"]
+-- 
+2.55.0
+

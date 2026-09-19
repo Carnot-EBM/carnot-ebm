@@ -1,0 +1,43 @@
+From c59e12bd791332a55dd67723f5896d53154a6353 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 05:03:31 -0400
+Subject: [PATCH 10601/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0d3681a744..307a9cae32 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 69, "phase": "iteration_start", "last_beat": "2026-09-01T08:39:17Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 70, "phase": "iteration_start", "last_beat": "2026-09-01T09:03:22Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 56ac5ace3a..e1a89f19b8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16995,3 +16995,4 @@ The l |
+ | 2026-09-01 07:15 UTC | Three-family output-free obligation compatibility  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6837_three_f |
+ | 2026-09-01 08:37 UTC | Three-family output-free obligation compatibility  | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ad-suite failu |
+ | 2026-09-01 08:39 UTC | Independent obligation compatibility shortcut and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6837-three-family-output-free-compatibili |
++| 2026-09-01 09:01 UTC | Bounded exact-outcome residual-memory kernel canar | OK | 96 passed, 1 warning in 20.92s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e4d39d1e49..711f948b36 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 69, "phase": "iteration_start", "started_at": "2026-09-01T08:39:17Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 70, "phase": "iteration_start", "started_at": "2026-09-01T09:03:22Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

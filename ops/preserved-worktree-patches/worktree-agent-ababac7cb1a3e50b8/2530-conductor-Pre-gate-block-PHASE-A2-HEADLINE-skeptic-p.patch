@@ -1,0 +1,78 @@
+From 2e4b127d23a4f2286fd653e0f2821272ac6da4f7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 09:05:04 -0400
+Subject: [PATCH 02530/11362] [conductor] Pre-gate block: PHASE A2 (HEADLINE
+ skeptic-proofing; GATED on exp4381 detector_localization_actionable==true) --
+ is the A1 localization/abstention win GENUINE, or an artifact? The operator
+ (twice-burned on over-claims) will ask: does the bidirectional localization
+ win come from (a) POSITION/LENGTH bias (the detector just predicts 'the error
+ is late/early' -- test against a position-only baseline that ignores
+ content), (b) R2L FUTURE-CONTEXT LEAK making the bidirectional gain
+ ONLINE-INVALID (the bidirectional number uses suffix context an in-loop actor
+ never has -- confirm the causal/L2R-only delta is the honest online claim),
+ or (c) single-split/seed OVERFIT (re-test on a held-out split + a second seed
+ regime, bootstrap CI95)? This DIAGNOSTIC (no new scoring infra, no live LLM)
+ re-tests the A1 winning localization three ways and decides whether the
+ actionable-detector headline graduates. Emit localization_win_is_genuine BARE
+ bool := (the A1 localization advantage survives the position-only-baseline
+ control AND the causal-online delta is itself > 0 with CI95-excl-0 AND it
+ holds on a held-out split). verifier_is_oracle=false. A pass = the
+ actionable-detector headline graduates; a fail = the A1 win is
+ artifact-confounded and is QUARANTINED + the residual logged as a
+ missing-verifier gap. NO TRM training; CPU-offline.
+
+1 of 1 gate(s) failed; first failure: exp4381-biprm-detector-localization-abstention.detector_localization_actionable (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_4382_detector_localization_skeptic_proof.json  | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6dc1b60b0f..3bb023e276 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 90, "phase": "iteration_start", "last_beat": "2026-06-18T13:03:02Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 91, "phase": "iteration_start", "last_beat": "2026-06-18T13:05:04Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 47a4b556b7..dd483aeb42 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8723,3 +8723,4 @@ c |
+ +         |
+ | 2026-06-18 12:59 UTC | PHASE A1 (HEADLINE; oracle-distinct DETECTOR made  | OK | 91 passed, 1 warning in 7.40s |
+ | 2026-06-18 13:01 UTC | PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4381-biprm-detector-localization-absten |
++| 2026-06-18 13:03 UTC | PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4381-biprm-detector-localization-absten |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8a624dc465..8c19071023 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1883638, "iteration": 90, "phase": "iteration_start", "started_at": "2026-06-18T13:03:02Z"}
+\ No newline at end of file
++{"pid": 1883638, "iteration": 91, "phase": "iteration_start", "started_at": "2026-06-18T13:05:04Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4382_detector_localization_skeptic_proof.json b/results/experiment_4382_detector_localization_skeptic_proof.json
+index 4c722c0fee..85b81e2567 100644
+--- a/results/experiment_4382_detector_localization_skeptic_proof.json
++++ b/results/experiment_4382_detector_localization_skeptic_proof.json
+@@ -2,8 +2,8 @@
+   "experiment": 4382,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-06-18",
+-  "started_at": "2026-06-18T13:03:02.545382+00:00",
+-  "finished_at": "2026-06-18T13:03:02.545382+00:00",
++  "started_at": "2026-06-18T13:05:04.543960+00:00",
++  "finished_at": "2026-06-18T13:05:04.543960+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4381 detector_localization_actionable==true) -- is the A1 localization/abstention win GENUINE, or an artifact? The operator (twice-burned on over-claims) will ask: does the bidirectional localization win come from (a) POSITION/LENGTH bias (the detector just predicts 'the error is late/early' -- test against a position-only baseline that ignores content), (b) R2L FUTURE-CONTEXT LEAK making the bidirectional gain ONLINE-INVALID (the bidirectional number uses suffix context an in-loop actor never has -- confirm the causal/L2R-only delta is the honest online claim), or (c) single-split/seed OVERFIT (re-test on a held-out split + a second seed regime, bootstrap CI95)? This DIAGNOSTIC (no new scoring infra, no live LLM) re-tests the A1 winning localization three ways and decides whether the actionable-detector headline graduates. Emit localization_win_is_genuine BARE bool := (the A1 localization advantage survives the position-only-baseline control AND the causal-online delta is itself > 0 with CI95-excl-0 AND it holds on a held-out split). verifier_is_oracle=false. A pass = the actionable-detector headline graduates; a fail = the A1 win is artifact-confounded and is QUARANTINED + the residual logged as a missing-verifier gap. NO TRM training; CPU-offline.",
+-- 
+2.55.0
+

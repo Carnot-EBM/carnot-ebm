@@ -1,0 +1,45 @@
+From 9714391efa7c1097b3142ef3b0e1e20ee69f930f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 01:30:13 -0400
+Subject: [PATCH 02227/11362] [outer-loop] budget finding: 30k advance rolled
+ back (mechanic-limited); 12k discovery sweep is load-bearing
+
+Ablation per operator 'if the larger budget is not helping roll it back': the +1-level
+ADVANCE on solved games gains nothing from budget (30k -> 0 reproducible advances,
+1218s/game) -- killed it, keep advance at the 4000 default. But the DISCOVERY sweep's
+12k bump WAS load-bearing: cn04/m0r0/sk48 each re-confirmed no-advance at 4000, only
+solve at >4000. Committed defaults stay conservative 4000; raise per-run only for a
+thorough discovery sweep. No inflated default was ever committed.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/arc_solve_registry.yaml | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index a9d4870bba..2fd655c43b 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -227,6 +227,19 @@ learning_loop:
+   #   representation (more solved games + a learned frame encoder), NOT generic transfer.
+   # CALIBRATED ARC STRATEGY: easy/medium -> adapter-free systematic explore (r11l,ls20 work);
+   #   adaptered -> verifier-routed efficient solve (lp85, self-improving); hard/deep -> per-game RE.
++  # BUDGET FINDING (2026-06-17 ablation, operator "if the larger budget is not helping
++  # roll it back"). The effort budget is a PER-TASK-TYPE decision, not a global knob:
++  #   - DISCOVERY sweep (first-level on a NEW game): ~12000 expansions is load-bearing.
++  #     cn04/m0r0/sk48 were each re-confirmed to NO-ADVANCE at the 4000 default (even
++  #     with E1 salience+mask) and only solve at >4000. The 4000->12000 bump earned +3
++  #     games. Use ~12000 for a thorough discovery sweep.
++  #   - +1-LEVEL ADVANCE (next level on a SOLVED game): budget does NOT help. Raising it
++  #     to 30000 produced 0 reproducible advances (ls20 burned 1218s; sp80 "found" L2 but
++  #     reproduced=False — hidden state beyond HUD-masking). This frontier is
++  #     MECHANIC-limited; it needs E3 (learned world model) or per-game RE, NOT budget.
++  #     Rolled back the 30k advance run; keep the advance at the 4000 default and don't
++  #     re-inflate it. Committed code defaults stay 4000 (conservative); raise per-run via
++  #     ARC_MAX_EXPANSIONS only for a discovery sweep.
+   adapter_free_explore: python/carnot/agentic/arc_graph_explore.py  # v2 (systematic) / v3 (value-guided)
+   cross_game_verifier: scripts/arc_cross_game_verifier_train.py      # built; generic features too weak for hard tail
+   demos:
+-- 
+2.55.0
+

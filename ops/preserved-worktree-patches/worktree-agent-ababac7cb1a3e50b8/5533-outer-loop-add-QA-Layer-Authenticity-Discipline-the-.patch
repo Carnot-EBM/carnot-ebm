@@ -1,0 +1,1586 @@
+From 7214da21fd4ce498e7c5f047303d4215e3f1040d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 22:34:38 -0400
+Subject: [PATCH 05533/11362] [outer-loop] add QA-Layer Authenticity
+ Discipline: the auditor now has an auditor
+
+Operator, after digging into 4 real bugs found in scripts/adversarial_verify.py
+today: 'are all of these fixes due to using sonnet 5 instead of opus 4.8?
+shouldn't the adversarial agent be catching these?' Investigated honestly:
+no, not the model swap (every bug predated it or was in codex-authored
+artifacts, unrelated to the planner). But the second question was right --
+there's a real, standing gap. Confirmed by checking existing audit scope:
+verifier_authenticity_audit.py covers python/carnot/verify/*.py only;
+pages_adversarial_audit.py covers docs/index.html only. The mechanical
+fabrication-detection/gate/reconciliation layer itself (adversarial_verify.py,
+exclusion_manifest_lint.py, in_process_doc_reconcile.py) was outside every
+existing audit's scope by design. Nobody polices the auditor.
+
+Added scripts/qa_layer_authenticity_audit.py, sibling to
+verifier_authenticity_audit.py, reusing its battle-tested pattern (call_gemini/
+call_claude/call_codex dispatch, structured VERDICT/FINDINGS output, the
+audit-integrity Layer-1.5 guard that fact-checks the LLM reviewer's own quoted
+evidence against the real source so a hallucinated smoking gun auto-downgrades
+to CANNOT_DETERMINE instead of being acted on). Two audit granularities:
+whole-file for the two small targets, function-level chunking (via ast) for
+adversarial_verify.py (5685 lines, far too large for a single-shot audit to
+stay focused) -- extracts every top-level function, filters to the 152 whose
+body does field extraction or string pattern-matching (the exact bug class
+already found), audits each independently. Added persisted rotation state
+(ops/.qa_layer_audit_rotation.json, gitignored, mirrors ops/.pretest-cache.json's
+precedent) so successive --limit 20 milestone-close runs advance through the
+whole 154-unit corpus over time instead of always re-auditing the same
+head-slice -- the unaddressed limitation the sibling audit still has.
+
+Wired into research_conductor.py's milestone-close path alongside the
+existing two audits (same AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT routing, same
+non-fatal try/except, same --limit 20 bound).
+
+Live-tested end-to-end with codex before wiring (claude was contended --
+the conductor's own verifier-authenticity audit was running concurrently at
+milestone-close, correctly left undisturbed). First real run found a genuine,
+well-evidenced issue on the first unit scanned: exclusion_manifest_lint.py's
+BLOCKED_PATTERN_MATCHED check has the same two bug classes already fixed
+elsewhere today (raw substring matching with no word-boundary awareness;
+principle-wrapped id/requires/operator_override/title/prompt fields not
+unwrapped), plus negation handling that's only wired for the KV260 check, not
+blocked_patterns generally. Included a concrete, plausible counterexample
+(a roadmap task explicitly guarding against FoVer premise reuse gets
+wrongly blocked because its own prompt text names the retired phrase).
+Not yet acted on -- flagging for the operator per the discipline's own
+'audit never edits, operator decides' contract. Report committed as-is
+(ops/qa_layer_authenticity_audit_report.md), matching the tracked-in-git
+precedent of the sibling audit reports.
+
+17 new tests (tests/python/test_qa_layer_authenticity_audit.py) covering the
+pure-logic pieces: function-chunk extraction (risky-marker filtering, nested-
+function handling, tiny-function floor, syntax-error/missing-file handling),
+verdict parsing, the audit-integrity guard (including a fix discovered while
+writing the test -- the specificity regex was missing np.random/time.sleep/
+torch.load patterns the sibling audit's own regex has, narrowing coverage
+unintentionally when I adapted it), and rotation-state wraparound math.
+LLM-CLI subprocess wrappers (call_claude/call_gemini/call_codex) are
+untested by design, matching the sibling script's own precedent -- they
+require live external CLIs and are exercised by use.
+
+Documented as a new MANDATORY CLAUDE.md discipline (three-layer structure
+mirroring Verifier Authenticity and Adversarial Landing-Page: Layer 1
+deliberately absent since the target files ARE the mechanical-lint layer,
+Layer 2 the new AI audit, Layer 3 this rule), added to the Rule Index.
+
+Full suite: 271 tests green (254 adversarial_verify + 17 new).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+---
+ .gitignore                                    |   5 +
+ CLAUDE.md                                     | 164 ++++-
+ ops/qa_layer_authenticity_audit_report.md     |  54 ++
+ scripts/qa_layer_authenticity_audit.py        | 610 ++++++++++++++++++
+ scripts/research_conductor.py                 | 212 +++---
+ .../test_qa_layer_authenticity_audit.py       | 159 +++++
+ 6 files changed, 1100 insertions(+), 104 deletions(-)
+ create mode 100644 ops/qa_layer_authenticity_audit_report.md
+ create mode 100644 scripts/qa_layer_authenticity_audit.py
+ create mode 100644 tests/python/test_qa_layer_authenticity_audit.py
+
+diff --git a/.gitignore b/.gitignore
+index 067a8a9d80..b52919f46b 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -172,6 +172,11 @@ tests/python/test_conductor_supervisor.py
+ # Conductor pre-test fingerprint cache — local-only, regenerated on first run
+ ops/.pretest-cache.json
+ 
++# QA-layer authenticity audit rotation state — local-only, tracks which
++# adversarial_verify.py function-chunk the next milestone-close audit
++# starts from, regenerated on first run
++ops/.qa_layer_audit_rotation.json
++
+ # Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
+ # an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
+ ebt_tmp/
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 782a5665c6..47b17e4c87 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -38,7 +38,10 @@ Scope-Reduction-When-Flagged · Hardware-Task Continuity (see north-star §3 for
+ the recommended KV260-focus relaxation) · KV260 SSH-Not-SD-Card ·
+ Operator-Only External Publication · Never-Stash-Commit-First ·
+ Decentralization-Respecting Design Constraints · Pre-Staged Roadmap Convention ·
+-Documentation Update Rules · Tests Must Run and Assert ·
++Documentation Update Rules · Tests Must Run and Assert · QA-Layer Authenticity
++(2026-07-03 — the auditor now has an auditor; Layer 2 AI audit of
++adversarial_verify.py/exclusion_manifest_lint.py/in_process_doc_reconcile.py,
++deliberately no Layer 1 since those files ARE the mechanical-lint layer) ·
+ ARC-AGI-3 IS a Live Hidden-Game Discovery Agent (foundational framing — read FIRST for any
+ ARC work; the deliverable is the live runtime discovery loop, NOT trained weights or offline
+ public-game replays; an offline null may be a corpus artifact).
+@@ -339,6 +342,165 @@ intact.
+ - `scripts/canonical_url_lint.py` + `scripts/exclusion_manifest_lint.py`
+   — sibling structural-discipline linters
+ 
++## QA-Layer Authenticity Discipline (MANDATORY)
++
++**Origin:** 2026-07-03 operator question, after a single outer-loop session
++found FOUR real bugs in the project's own fabrication-detection / gating /
++reconciliation machinery in one sitting:
++
++1. `in_process_doc_reconcile.py`'s `map_status_label` was missing "success"
++   from its terminal-win-token list, silently misclassifying ~19% of the
++   ENTIRE historical artifact corpus (352+13 of ~4160 artifacts) for an
++   unknown number of months.
++2. `adversarial_verify.py`'s `_inference_substrate_text()` did
++   `str(d.get("inference_substrate"))` assuming a bare string, but the
++   project's own "Principle-Annotated Artifact Fields" discipline (below)
++   allows ANY field to be written as `{"principle": ..., "value": ...}` —
++   silently defeating substrate recognition on 176 artifacts corpus-wide.
++3. `adversarial_verify.py`'s `_flips_gate()` did a plain substring check
++   (`"diffusiongemma_met" in verdict.lower()`) that matched inside the
++   unrelated word "meta" (as in `meta_tensor`, a real PyTorch term) — no
++   word-boundary awareness.
++4. `adversarial_verify.py` had no substrate category for live embedding-only
++   LLM calls (real compute, much cheaper than full generation), so a
++   genuinely fast-but-real 35s run got floored against a 60s threshold
++   calibrated for full generative inference.
++
++None of these were caught by the linter's own pre-existing unit tests (tests
++test what the author thought to test, not the shape of real corpus
++diversity) or by any EXISTING adversarial audit — the Verifier Authenticity
++Discipline's Layer 2 audit is scoped to `python/carnot/verify/*.py` only,
++and the Adversarial Landing-Page Discipline's Layer 2 audit is scoped to
++`docs/index.html` only. The mechanical fabrication-detection / gate /
++reconciliation layer itself — `scripts/adversarial_verify.py`,
++`scripts/exclusion_manifest_lint.py`, `scripts/in_process_doc_reconcile.py`
++— was outside every existing audit's scope by design. The operator's exact
++question: **"shouldn't the adversarial agent be catching these?"** The
++honest answer was no adversarial agent had this layer in scope. This
++discipline closes that gap — the auditor now has an auditor.
++
++**Why this matters more than an ordinary bug class.** A bug in this layer
++is not a bug in one experiment — it is a bug in the thing that DECIDES
++whether every OTHER experiment's result counts as clean or fabricated. A
++false negative here lets fabrication through silently (the linter's entire
++purpose fails without anyone noticing). A false positive quarantines honest
++work, wastes investigation time, and — worse — teaches the project's own
++retrospective process the wrong lesson ("this direction keeps failing")
++when the truth is "the linter was wrong." Both failure modes compound
++silently until someone happens to investigate deeply enough to notice, as
++happened here.
++
++**Three-layer adversarial defense (shipped 2026-07-03), sibling structure
++to the Verifier Authenticity and Adversarial Landing-Page disciplines:**
++
++**Layer 1 — none (deliberately).** Unlike the other two disciplines, this
++layer has no commit-time mechanical lint. The target files ARE the
++mechanical-lint layer for the rest of the project; a lint-of-the-lint would
++just be more of the same pattern-matching code subject to the same bug
++class. Layer 2's adversarial AI audit is the primary defense here.
++
++**Layer 2 — Adversarial AI audit
++(`scripts/qa_layer_authenticity_audit.py`).** Runs at every milestone-close
++(wired into `_run_operational_retrospective`'s caller in
++`scripts/research_conductor.py`, alongside the verifier-authenticity and
++landing-page audits). Invokes an independent LLM with a HOSTILE SOFTWARE
++REVIEWER prompt that hunts the exact bug classes found in the origin
++incident: field-shape assumptions that don't handle principle-wrapped
++fields, substring matching without word/token boundaries, negation/context
++blindness (does a check confuse "did X" with "explicitly did NOT do X"?),
++and off-by-one/boundary floor errors. Two audit granularities:
++
++- **Whole-file** (`exclusion_manifest_lint.py`, `in_process_doc_reconcile.py`
++  — small enough to audit in one shot, mirroring
++  `verifier_authenticity_audit.py`'s pattern).
++- **Function-chunked** (`adversarial_verify.py` — 5600+ lines, far too large
++  for a single-shot audit to stay focused. Extracts every top-level function
++  via `ast`, filters to functions whose body does field extraction or
++  string pattern-matching — the exact risk class — and audits each
++  independently.) `adversarial_verify.py` alone has 150+ risky-function
++  chunks, so a bounded `--limit` run uses **persisted rotation state**
++  (`ops/.qa_layer_audit_rotation.json`) so successive milestone-close runs
++  advance through the whole corpus instead of always re-auditing the same
++  head-slice (the unaddressed limitation the sibling verifier-authenticity
++  audit still has for its own `--limit 20`).
++
++Output: `ops/qa_layer_authenticity_audit_report.md`, structured markdown
++with per-unit verdicts (`CLEAN | MINOR_RISK | REAL_BUG | CANNOT_DETERMINE |
++NEEDS_REDESIGN`). Reuses the same **audit-integrity guard (Layer 1.5)** as
++`verifier_authenticity_audit.py`: an LLM hostile reviewer can hallucinate
++its smoking gun, so any flagged verdict whose quoted high-specificity
++evidence (a code span, file path, or distinctive identifier) does not
++literally appear in the audited source is auto-downgraded to
++`CANNOT_DETERMINE` rather than acted on. **Critical: the audit NEVER edits
++any file** — operator decides what to act on (fix, add a test case, or
++leave as acceptable risk).
++
++**Layer 3 — This CLAUDE.md rule.** Documents the contract. Same
++defense-in-depth reasoning as every other MANDATORY discipline in this
++file: mechanical/AI enforcement is the safety net, but naming the
++discipline here means any future agent extending `adversarial_verify.py`
++or its siblings reads this as required context and writes the SAME care
++into new checks from the start, rather than waiting for the next
++milestone's audit to catch a preventable gap.
++
++**How to apply (operator).** When the audit report flags a unit:
++
++1. Read `ops/qa_layer_authenticity_audit_report.md` for the flagged
++   function/file's full reasoning and constructed counterexample.
++2. Verify the counterexample is real (the audit-integrity guard already
++   filters hallucinated evidence, but a constructed counterexample is
++   still worth a quick sanity check before spending fix effort).
++3. Fix per the recommendation (`ADD_WORD_BOUNDARY`, `ADD_FIELD_UNWRAP`,
++   `ADD_TEST_CASE`, `ADD_TOKEN`, or `NEEDS_REDESIGN` for structural
++   rework), write a regression test reproducing the counterexample, run
++   the full `adversarial_verify.py` test suite, then do a corpus-wide
++   `--backfill` dry-run sanity check before committing (per the pattern
++   established fixing the four origin-incident bugs).
++
++**How to apply (agent-side, when writing NEW checks in this layer).** When
++adding a check to `adversarial_verify.py` / `exclusion_manifest_lint.py` /
++`in_process_doc_reconcile.py` that reads a field or pattern-matches free
++text:
++
++- Never do `str(d.get("field"))` or `d.get("field")` assuming a bare type
++  without considering the field might be principle-wrapped
++  (`{"value": ..., "principle": "..."}` — see "Principle-Annotated
++  Artifact Fields" below). Either read through a shared unwrap helper, or
++  document explicitly why the field cannot be wrapped for this check.
++- Never do a raw `substring in text` check against free-text fields
++  (`honest_verdict`, prompts, docstrings) without considering whether the
++  substring could appear inside an unrelated longer word. Use a
++  word-boundary-aware regex when the pattern is a multi-character token
++  that could plausibly be a prefix of another real word.
++- When scanning for a forbidden/flagged phrase, consider whether the
++  surrounding text might be explicitly NEGATING it ("do NOT do X",
++  "correctly avoided X") rather than claiming it.
++- Write the regression test for the exact incident/counterexample that
++  motivated the check, not just a synthetic happy-path case.
++
++**Cross-references:**
++
++- 2026-07-03 operator question ("shouldn't the adversarial agent be
++  catching these?") — origin
++- `scripts/qa_layer_authenticity_audit.py` — Layer 2 adversarial AI
++- `ops/qa_layer_authenticity_audit_report.md` — per-milestone audit output
++- `ops/.qa_layer_audit_rotation.json` — rotation state for the
++  function-chunked `adversarial_verify.py` target
++- CLAUDE.md "Verifier Authenticity Discipline" — the sibling this
++  discipline extends coverage from (research verifiers, not QA tooling)
++- CLAUDE.md "Adversarial Landing-Page Discipline" — the other sibling
++  (public docs, not QA tooling)
++- CLAUDE.md "Principle-Annotated Artifact Fields + Verifier-Principle
++  Discipline" — the convention whose unhandled-wrapping was origin bug #2
++- CLAUDE.md "Inference-Substrate Declaration Discipline" — the taxonomy
++  origin bug #4 extended (`live_llm_embedding_extraction`, the 6th value)
++- exp5161 (`results/experiment_5161_gap4_protocol_execution_pilot_v473.json`)
++  — origin bug #2's exemplar incident
++- exp5173 (`results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`)
++  — origin bug #3's exemplar incident
++- exp5178 (`results/experiment_5178_hidden_state_verifier_pilot_v474.json`)
++  — origin bug #4's exemplar incident
++
+ ## Canonical Repository URL Discipline (MANDATORY)
+ 
+ > **STATUS (2026-05-29): MECHANICALLY ENFORCED — prose is reference-only.**
+diff --git a/ops/qa_layer_authenticity_audit_report.md b/ops/qa_layer_authenticity_audit_report.md
+new file mode 100644
+index 0000000000..6d97902001
+--- /dev/null
++++ b/ops/qa_layer_authenticity_audit_report.md
+@@ -0,0 +1,54 @@
++<!-- generated by scripts/qa_layer_authenticity_audit.py — 2026-07-02 -->
++<!-- per CLAUDE.md 'QA-Layer Authenticity Discipline' — advisory only -->
++
++# qa_layer_authenticity_audit_report — 2026-07-02
++
++## Summary
++
++| Verdict | Count |
++|---|---|
++| `CLEAN` | 0 |
++| `MINOR_RISK` | 0 |
++| `REAL_BUG` | 1 |
++| `CANNOT_DETERMINE` | 0 |
++| `NEEDS_REDESIGN` | 0 |
++| `UNKNOWN` | 0 |
++
++### FLAGGED — operator action recommended
++- `exclusion_manifest_lint.py` — **REAL_BUG**
++
++---
++
++Scanned 1 unit(s) (whole-files + function-chunks) with codex as the hostile reviewer. Targets: exclusion_manifest_lint.py, in_process_doc_reconcile.py (whole-file), adversarial_verify.py (function-chunked).
++
++## exclusion_manifest_lint.py
++
++**Verdict:** `REAL_BUG`
++
++## VERDICT
++REAL_BUG
++
++## FINDINGS
++1. `BLOCKED_PATTERN_MATCHED` uses raw substring matching: `pattern_str.lower() in haystack`. That can match inside unrelated longer words and also hard-block avoidance/audit language that merely mentions a retired phrase.
++
++2. Principle-wrapped fields are not unwrapped. `id`, `requires`, `operator_override`, `title`, and `prompt` are treated as bare values, so `{principle: ..., value: exp2091...}` can evade `EXP_ID_RETIRED` / `REQUIRES_RETIRED_EXP` or fail override recognition.
++
++3. Negation handling is partial. `_is_negated_context` only applies to the KV260 `/dev/mmcblk` check, not `blocked_patterns`, and its marker list misses common forms like “correctly avoided”, “must not rely on”, and curly-apostrophe “don’t”.
++
++4. Terminal verdict prefixes are not classified in this file. There is no local recognition logic for `complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`, `shipped:`, or `shipped_`; that may be fine only if this file never consumes terminal verdicts directly.
++
++## COUNTEREXAMPLE
++```yaml
++tasks:
++  - id: exp9001-v472-fover-guard
++    title: Guard against FoVer premise reuse
++    prompt: "Do not reuse the FoVer in-domain candidate-selection-pool premise; verify all candidate-pool analysis avoids it."
++```
++If `blocked_patterns` contains `FoVer` or the longer FoVer premise phrase, this gets classified as `BLOCKED_PATTERN_MATCHED` even though it is explicitly preventing the retired scope.
++
++## RECOMMENDATION
++NEEDS_REDESIGN
++
++## RATIONALE
++This file is a gatekeeper, but it relies on raw strings, substring scans, and ad hoc negation lists. The biggest defect is not a single missing token; it is that classification lacks normalization, field unwrapping, boundaries, and context-aware matching.
++
+diff --git a/scripts/qa_layer_authenticity_audit.py b/scripts/qa_layer_authenticity_audit.py
+new file mode 100644
+index 0000000000..38b1e4ff42
+--- /dev/null
++++ b/scripts/qa_layer_authenticity_audit.py
+@@ -0,0 +1,610 @@
++#!/usr/bin/env python3
++"""Periodic adversarial AI audit of the QA/reconciliation layer itself:
++scripts/adversarial_verify.py, scripts/exclusion_manifest_lint.py,
++scripts/in_process_doc_reconcile.py.
++
++This is the sibling of scripts/verifier_authenticity_audit.py -- that audit
++polices whether python/carnot/verify/*.py verifiers do what they claim.
++Nobody polices the auditor. Every check in this project's fabrication/gate/
++reconciliation machinery is itself hand-written pattern-matching code, and
++pattern-matching code has exactly the bug class this audit hunts for.
++
++Origin: 2026-07-03 operator question, after a single outer-loop session found
++FOUR real bugs in this exact layer in one sitting:
++  - in_process_doc_reconcile.py's map_status_label was missing "success" from
++    its win-token list, misclassifying ~19% of the ENTIRE historical artifact
++    corpus (352+13 of ~4160 artifacts) for an unknown number of months.
++  - adversarial_verify.py's _inference_substrate_text() did str(d.get(...))
++    on a field that is commonly a {"principle": ..., "value": ...} dict per
++    CLAUDE.md's own "Principle-Annotated Artifact Fields" discipline --
++    silently defeating substrate recognition on 176 artifacts corpus-wide.
++  - adversarial_verify.py's _flips_gate() did a plain substring check
++    ("diffusiongemma_met" in verdict) that matched inside the unrelated word
++    "meta" (as in meta_tensor, a real PyTorch term) -- no word-boundary
++    awareness.
++  - adversarial_verify.py had no substrate category for live embedding-only
++    LLM calls, so a genuinely fast-but-real 35s embedding-extraction run got
++    floored against the 60s full-generation threshold.
++None of these were caught by the linter's own 254 pre-existing unit tests
++(tests test what the author thought to test, not the shape of real corpus
++diversity) or by any existing adversarial audit (out of scope for both
++Layer-2 audits that currently exist). The operator's question: "shouldn't
++the adversarial agent be catching these?" -- the honest answer was no
++adversarial agent has this layer in scope. This script closes that gap.
++
++Two audit granularities, chosen by target-file size:
++  - Small files (exclusion_manifest_lint.py, in_process_doc_reconcile.py):
++    whole-file audit, mirroring verifier_authenticity_audit.py's pattern.
++  - adversarial_verify.py (5600+ lines): function-level chunking. Extracts
++    every top-level function via `ast`, filters to functions whose body
++    does field extraction / string pattern-matching (the exact bug class
++    this audit hunts), and audits each chunk independently with its own
++    docstring as context. Auditing the whole file in one LLM call would
++    either exceed context or produce a shallow, unfocused review.
++
++The audit produces a structured report at
++ops/qa_layer_authenticity_audit_report.md. It does NOT edit any file --
++operator decides what to act on. Reuses the same audit-integrity guard
++(Layer 1.5) as verifier_authenticity_audit.py: an LLM hostile reviewer can
++hallucinate its smoking gun, so any flagged verdict whose quoted
++high-specificity evidence does not literally appear in the source is
++auto-downgraded to CANNOT_DETERMINE rather than acted on.
++
++Usage:
++    python scripts/qa_layer_authenticity_audit.py [--model gemini|claude|codex]
++                                                   [--file FILE]
++                                                   [--limit N]
++
++Designed to be called from the conductor's milestone-close path (see
++scripts/research_conductor.py:_run_operational_retrospective's caller),
++alongside the existing verifier and landing-page audits.
++"""
++
++from __future__ import annotations
++
++import argparse
++import ast
++import datetime
++import json
++import re
++import subprocess
++import sys
++from dataclasses import dataclass
++from pathlib import Path
++
++PROJECT_ROOT = Path(__file__).resolve().parent.parent
++REPORT_PATH = PROJECT_ROOT / "ops" / "qa_layer_authenticity_audit_report.md"
++
++# Whole-file targets: small enough to audit in one shot.
++WHOLE_FILE_TARGETS = (
++    PROJECT_ROOT / "scripts" / "exclusion_manifest_lint.py",
++    PROJECT_ROOT / "scripts" / "in_process_doc_reconcile.py",
++)
++
++# Function-chunked target: too large for a whole-file audit.
++CHUNKED_FILE_TARGETS = (PROJECT_ROOT / "scripts" / "adversarial_verify.py",)
++
++# A function body is audit-worthy (does field extraction / pattern-matching --
++# the exact bug class this audit hunts) if it contains any of these markers.
++# Excludes pure scaffolding (argparse setup, report string-building, Flag
++# dataclass definitions) that has no field-shape or substring-boundary risk.
++RISKY_BODY_MARKERS = (
++    ".get(",
++    " in ",
++    ".lower()",
++    ".upper()",
++    "re.search(",
++    "re.match(",
++    "re.compile(",
++    ".startswith(",
++    ".endswith(",
++    "isinstance(",
++)
++
++PER_CHUNK_PROMPT = """\
++You are a hostile software reviewer auditing a piece of QA/fabrication-detection
++code from the Carnot project's adversarial_verify.py -- the mechanical linter
++that runs on every research-experiment artifact to catch fabricated or
++implausible results (fake AUROC numbers, impossibly-short compute durations,
++gamed statistical tests, etc).
++
++This code is CRITICAL infrastructure: a bug here either lets fabrication
++through (a false negative -- dangerous, the linter's whole purpose fails
++silently) or falsely quarantines honest work (a false positive -- costly,
++wastes investigation time and can mislead the project into thinking real
++progress is suspect). A single outer-loop session on 2026-07-03 found FOUR
++real bugs of this kind in one sitting:
++
++1. A field-shape assumption bug: code did `str(d.get("some_field"))` assuming
++   the field is always a bare string/number, but the project's own
++   "Principle-Annotated Artifact Fields" convention (documented in CLAUDE.md)
++   allows ANY field to be written as `{"principle": "...", "value": ...}`.
++   `str()` on that dict produces a Python repr matching nothing -- silent
++   failure across 176 real artifacts.
++
++2. A substring-boundary bug: `"diffusiongemma_met" in verdict.lower()` matched
++   inside the unrelated word "meta" (as in "meta_tensor", a real PyTorch
++   term) purely by coincidence -- no word-boundary check.
++
++3. A substrate-taxonomy gap: a real, honest, fast-but-genuine compute pattern
++   (embedding-only LLM calls, much cheaper than full generation) had no
++   matching category, so it fell through to a floor calibrated for a
++   completely different (much more expensive) workload.
++
++Your job: find more bugs like these in the function below. Answer THIS
++structured set of questions. Do not soften the answers. Do not rationalize.
++
++1. **Field extraction assumptions.** For every `d.get("field_name")` or
++   similar dict-field read: does the code assume a specific TYPE (bare
++   string, bare number, bare bool) without handling the case where the
++   field might be a `{"principle": ..., "value": ...}` wrapped dict, a list,
++   or None? Quote the specific line.
++
++2. **String/substring matching without boundaries.** For every `in`,
++   `.startswith(`, `.endswith(`, or `re.search`/`re.match` against free-text
++   fields (honest_verdict, inference_substrate, docstrings, etc.): could the
++   pattern match INSIDE an unrelated, longer word or phrase that happens to
++   contain it as a substring? Try to construct a concrete counterexample
++   string that would falsely match (or falsely fail to match).
++
++3. **Negation / context blindness.** Does any check that scans free text for
++   a forbidden/flagged phrase fail to distinguish "the artifact DOES X" from
++   "the artifact explicitly did NOT do X" / "the artifact correctly avoided
++   X" / "this check exists to detect X"? (E.g. would a verdict saying
++   "blocked_X_not_attempted" incorrectly trigger a check meant to catch
++   artifacts that DID X?)
++
++4. **Boundary / off-by-one errors.** For any numeric threshold, comparison,
++   or floor: is the comparison operator correct (`>` vs `>=`, `<` vs `<=`)?
++   Does it handle the exact-equal-to-threshold case the way the docstring
++   implies it should?
++
++5. **Does the implementation match what the function's own docstring or name
++   claims it detects?** Quote the claim, then say whether the actual logic
++   is narrower, broader, or different from that claim.
++
++6. **Construct one concrete, realistic artifact fragment** (a plausible
++   honest_verdict string, or a plausible field dict) that would be
++   MIS-classified by this function -- either a false positive (flags honest
++   work) or a false negative (misses something it should catch). If you
++   cannot construct one, say so explicitly.
++
++Output format -- exactly this structure (no preamble, no postscript):
++
++```
++## VERDICT
++<one of: CLEAN | MINOR_RISK | REAL_BUG | CANNOT_DETERMINE>
++
++## CLAIM
++<what the function's docstring/name claims to do, 1 sentence>
++
++## FINDINGS
++<numbered list of concrete issues found per the 6 questions above, or "none found">
++
++## COUNTEREXAMPLE
++<the concrete mis-classifying input you constructed, or "none constructed">
++
++## RECOMMENDATION
++<one of: KEEP | ADD_WORD_BOUNDARY | ADD_FIELD_UNWRAP | ADD_TEST_CASE | NEEDS_REDESIGN>
++
++## RATIONALE
++<2-3 sentences>
++```
++
++Be hostile. If you find no problems, say CLEAN and move on -- do not invent
++issues to seem thorough.
++"""
++
++PER_FILE_PROMPT = """\
++You are a hostile software reviewer auditing a QA/reconciliation script from
++the Carnot project -- code that classifies, gates, or reconciles research
++artifacts and roadmap tasks. A single outer-loop session on 2026-07-03 found
++a real bug of exactly this shape: in_process_doc_reconcile.py's
++map_status_label was missing "success" from its list of terminal-success
++tokens, silently misclassifying ~19% of the entire historical artifact
++corpus (352+13 of ~4160 artifacts, going back many months) as something
++other than Complete.
++
++Your job: review the WHOLE FILE below for the same class of bug. Answer:
++
++1. **Classification/token lists.** For every list of tokens, prefixes, or
++   markers used to classify a status/verdict/pattern: is it plausibly
++   INCOMPLETE (missing an obvious synonym or common real-world phrasing)?
++   Cross-check against the project's documented "Verdict Terminal-Prefix
++   Discipline" (CLAUDE.md): terminal verdicts start with complete:/complete_/
++   success:/success_/passed:/passed_/shipped:/shipped_. Does every one of
++   those 8 prefix forms have matching recognition logic?
++
++2. **Substring matching without boundaries.** Same question as for
++   adversarial_verify.py -- could a pattern match inside an unrelated
++   longer word?
++
++3. **Field-shape assumptions.** Does this file assume fields are bare
++   strings/numbers when the project's "Principle-Annotated Artifact Fields"
++   convention allows `{"principle": ..., "value": ...}` wrapping?
++
++4. **Negation / context blindness.** Does any forbidden-pattern scan fail
++   to distinguish "did X" from "explicitly did not do X" / "correctly
++   avoided X"?
++
++5. **Construct one concrete, realistic counterexample** (a plausible
++   verdict string or roadmap task fragment) that this file would
++   mis-classify.
++
++Output format -- exactly this structure (no preamble, no postscript):
++
++```
++## VERDICT
++<one of: CLEAN | MINOR_RISK | REAL_BUG | CANNOT_DETERMINE>
++
++## FINDINGS
++<numbered list of concrete issues, or "none found">
++
++## COUNTEREXAMPLE
++<the concrete mis-classifying input you constructed, or "none constructed">
++
++## RECOMMENDATION
++<one of: KEEP | ADD_WORD_BOUNDARY | ADD_FIELD_UNWRAP | ADD_TOKEN | ADD_TEST_CASE | NEEDS_REDESIGN>
++
++## RATIONALE
++<2-3 sentences>
++```
++
++Be hostile. If you find no problems, say CLEAN and move on -- do not invent
++issues to seem thorough.
++"""
++
++
++@dataclass
++class Chunk:
++    label: str  # e.g. "adversarial_verify.py::_flips_gate"
++    body: str
++    source_file: Path
++
++
++def extract_risky_functions(path: Path) -> list[Chunk]:
++    """Extract top-level function defs whose body does field extraction or
++    string pattern-matching -- the exact bug class this audit hunts. Skips
++    pure scaffolding (argparse, report formatting, dataclasses) with no such
++    risk."""
++    try:
++        source = path.read_text()
++    except Exception:
++        return []
++    try:
++        tree = ast.parse(source)
++    except SyntaxError:
++        return []
++    lines = source.splitlines()
++    chunks: list[Chunk] = []
++    for node in ast.walk(tree):
++        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
++            continue
++        if getattr(node, "col_offset", 0) != 0:
++            continue  # only top-level functions, not nested/methods
++        start = node.lineno - 1
++        end = getattr(node, "end_lineno", node.lineno)
++        body = "\n".join(lines[start:end])
++        if not any(marker in body for marker in RISKY_BODY_MARKERS):
++            continue
++        if len(body) < 40:
++            continue
++        chunks.append(Chunk(label=f"{path.name}::{node.name}", body=body, source_file=path))
++    return chunks
++
++
++def call_gemini(prompt: str, body: str, model: str = "gemini-3.1-pro-preview") -> tuple[bool, str]:
++    try:
++        full = f"{prompt}\n\n---\nCODE:\n\n{body}"
++        proc = subprocess.run(
++            ["gemini", "--model", model, "--yolo", "-p", full],
++            capture_output=True,
++            text=True,
++            timeout=300,
++            check=False,
++            cwd=PROJECT_ROOT,
++        )
++        if proc.returncode != 0:
++            return False, f"gemini exit {proc.returncode}: {proc.stderr[:200]}"
++        return True, proc.stdout
++    except Exception as exc:
++        return False, str(exc)
++
++
++def call_claude(prompt: str, body: str, model: str = "claude-opus-4-8") -> tuple[bool, str]:
++    try:
++        full = f"{prompt}\n\n---\nCODE:\n\n{body}"
++        proc = subprocess.run(
++            ["claude", "--model", model, "--effort", "max", "--print", full],
++            capture_output=True,
++            text=True,
++            timeout=300,
++            check=False,
++            cwd=PROJECT_ROOT,
++        )
++        if proc.returncode != 0:
++            return False, f"claude exit {proc.returncode}: {proc.stderr[:200]}"
++        return True, proc.stdout
++    except Exception as exc:
++        return False, str(exc)
++
++
++def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, str]:
++    """Codex (gpt-5.5) hostile reviewer -- quota-conserve path, mirrors verifier_authenticity_audit.py."""
++    try:
++        full = f"{prompt}\n\n---\nCODE:\n\n{body}"
++        proc = subprocess.run(
++            [
++                "codex",
++                "exec",
++                "--dangerously-bypass-approvals-and-sandbox",
++                "--color",
++                "never",
++                "--model",
++                model,
++                "--cd",
++                str(PROJECT_ROOT),
++                "--ephemeral",
++                "-",
++            ],
++            input=full,
++            capture_output=True,
++            text=True,
++            timeout=600,
++            check=False,
++            cwd=PROJECT_ROOT,
++        )
++        if proc.returncode != 0:
++            return False, f"codex exit {proc.returncode}: {proc.stderr[:200]}"
++        return True, proc.stdout
++    except Exception as exc:
++        return False, str(exc)
++
++
++def call_model(model_kind: str, model_name: str | None, prompt: str, body: str) -> tuple[bool, str]:
++    if model_kind == "gemini":
++        return call_gemini(prompt, body, model=model_name or "gemini-3.1-pro-preview")
++    if model_kind == "codex":
++        return call_codex(prompt, body, model=model_name or "gpt-5.5")
++    return call_claude(prompt, body, model=model_name or "sonnet")
++
++
++def parse_verdict(report: str) -> str:
++    m = re.search(r"##\s*VERDICT\s*\n\s*(\S+)", report)
++    return m.group(1).strip() if m else "UNKNOWN"
++
++
++def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str]]:
++    """Audit-integrity guard (Layer 1.5) -- identical logic to
++    verifier_authenticity_audit.py's guard of the same name. An LLM hostile
++    reviewer can hallucinate its smoking gun (a quoted line, a fabricated
++    counterexample string, a path that doesn't exist). We can't fact-check
++    prose, but we CAN fact-check high-specificity quoted spans (backtick
++    code spans that look like a file path, a line of code, or contain a
++    distinctive identifier) against the actual source. Missing evidence ->
++    the flagged verdict is auto-downgraded rather than acted on.
++    """
++    norm_body = re.sub(r"\s+", "", body)
++
++    def is_present(core: str) -> bool:
++        if re.sub(r"\s+", "", core) in norm_body:
++            return True
++        toks = re.findall(r"[A-Za-z0-9_./-]{6,}", core)
++        return any(re.sub(r"\s+", "", t) in norm_body for t in toks)
++
++    high: list[str] = []
++    missing: list[str] = []
++    for span in re.findall(r"`([^`]+)`", report):
++        core = span.strip()
++        if len(core) < 6:
++            continue
++        is_high_specificity = bool(
++            re.search(r"\.(json|py|ya?ml|txt|md)\b", core)
++            or "/" in core
++            or re.search(
++                r"\b(d\.get|re\.search|re\.match|\.lower\(\)|\.startswith|\.endswith|"
++                r"np\.random|numpy\.random|time\.sleep|torch\.load)\b",
++                core,
++            )
++        )
++        if not is_high_specificity:
++            continue
++        high.append(core)
++        if not is_present(core):
++            missing.append(core)
++    return high, missing
++
++
++def _run_one(
++    label: str,
++    body: str,
++    prompt: str,
++    args: argparse.Namespace,
++    out: list[str],
++    counts: dict[str, int],
++    flagged: list[tuple[str, str]],
++    integrity_voids: list[tuple[str, str, list[str]]],
++) -> None:
++    flagged_verdicts = {"REAL_BUG", "NEEDS_REDESIGN"}
++    ok, report = call_model(args.model, args.model_name, prompt, body)
++    if not ok:
++        out.append(f"## {label}\n\n(audit call failed: {report[:200]})\n")
++        counts["UNKNOWN"] = counts.get("UNKNOWN", 0) + 1
++        return
++    verdict = parse_verdict(report)
++    guard_note = ""
++    if verdict in flagged_verdicts:
++        _high, missing = verify_quoted_evidence(report, body)
++        if missing:
++            integrity_voids.append((label, verdict, missing[:6]))
++            guard_note = (
++                "\n> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** "
++                f"The `{verdict}` verdict cited high-specificity evidence (code spans / "
++                "file paths / distinctive identifiers) that does NOT appear in the source "
++                "chunk (checked literally + by distinctive sub-token). This is the auditor "
++                "hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` "
++                "and removed from the action list; DO NOT act on this basis. Absent "
++                "evidence: " + "; ".join(f"`{m}`" for m in missing[:6]) + "\n"
++            )
++            print(
++                f"    [integrity-guard] VOIDED {label}: {verdict} cited "
++                f"{len(missing)} absent evidence string(s)",
++                file=sys.stderr,
++            )
++            verdict = "CANNOT_DETERMINE"
++    counts[verdict] = counts.get(verdict, 0) + 1
++    if verdict in flagged_verdicts:
++        flagged.append((label, verdict))
++    out.append(f"## {label}\n")
++    out.append(f"**Verdict:** `{verdict}`\n")
++    out.append(report.strip())
++    if guard_note:
++        out.append(guard_note)
++    out.append("\n")
++
++
++def main() -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument(
++        "--model",
++        default="claude",  # matches verifier_authenticity_audit.py's default; gemini is never
++        # the default per the 2026-06-10 global-stall directive.
++        choices=["gemini", "claude", "codex"],
++    )
++    parser.add_argument("--model-name", default=None)
++    parser.add_argument(
++        "--file",
++        default=None,
++        help="Audit a single file (chunked if it's adversarial_verify.py, whole-file otherwise)",
++    )
++    parser.add_argument(
++        "--limit",
++        type=int,
++        default=0,
++        help="Stop after N chunks/files total (for time-bounded sampling)",
++    )
++    args = parser.parse_args()
++
++    units: list[tuple[str, str, str]] = []  # (label, body, prompt)
++
++    if args.file:
++        p = Path(args.file)
++        if p in CHUNKED_FILE_TARGETS:
++            for chunk in extract_risky_functions(p):
++                units.append((chunk.label, chunk.body, PER_CHUNK_PROMPT))
++        else:
++            try:
++                units.append((p.name, p.read_text(), PER_FILE_PROMPT))
++            except Exception:
++                pass
++        rotated = False
++    else:
++        for p in WHOLE_FILE_TARGETS:
++            try:
++                units.append((p.name, p.read_text(), PER_FILE_PROMPT))
++            except Exception:
++                continue
++        for p in CHUNKED_FILE_TARGETS:
++            for chunk in extract_risky_functions(p):
++                units.append((chunk.label, chunk.body, PER_CHUNK_PROMPT))
++        rotated = True
++
++    # Rotation state: adversarial_verify.py alone has 150+ risky-function chunks --
++    # far more than a single milestone-close pass (--limit ~20-25) can cover. Without
++    # rotation, a fixed head-slice would always re-audit the same first N units and
++    # NEVER reach the rest (the exact limitation verifier_authenticity_audit.py has,
++    # unaddressed, for its own --limit 20). Persist an offset so successive full-corpus
++    # runs advance through the whole list over time; --file runs (single-target,
++    # rotated=False) don't touch rotation state.
++    if args.limit > 0 and rotated and units:
++        state_path = PROJECT_ROOT / "ops" / ".qa_layer_audit_rotation.json"
++        offset = 0
++        try:
++            offset = int(json.loads(state_path.read_text()).get("offset", 0))
++        except Exception:
++            offset = 0
++        offset = offset % len(units)
++        rotated_units = units[offset:] + units[:offset]
++        units = rotated_units[: args.limit]
++        try:
++            state_path.write_text(
++                json.dumps({"offset": (offset + args.limit) % len(rotated_units)})
++            )
++        except Exception:
++            pass
++    elif args.limit > 0:
++        units = units[: args.limit]
++
++    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
++    today = datetime.date.today().isoformat()
++
++    out = [
++        f"<!-- generated by scripts/qa_layer_authenticity_audit.py — {today} -->",
++        f"<!-- per CLAUDE.md 'QA-Layer Authenticity Discipline' — advisory only -->",
++        f"",
++        f"# qa_layer_authenticity_audit_report — {today}",
++        f"",
++        f"Scanned {len(units)} unit(s) (whole-files + function-chunks) with {args.model} as "
++        f"the hostile reviewer. Targets: {', '.join(p.name for p in WHOLE_FILE_TARGETS)} "
++        f"(whole-file), {', '.join(p.name for p in CHUNKED_FILE_TARGETS)} (function-chunked).",
++        f"",
++    ]
++
++    counts: dict[str, int] = {
++        "CLEAN": 0,
++        "MINOR_RISK": 0,
++        "REAL_BUG": 0,
++        "CANNOT_DETERMINE": 0,
++        "NEEDS_REDESIGN": 0,
++        "UNKNOWN": 0,
++    }
++    flagged: list[tuple[str, str]] = []
++    integrity_voids: list[tuple[str, str, list[str]]] = []
++
++    for i, (label, body, prompt) in enumerate(units, 1):
++        print(f"[{i}/{len(units)}] {label}", file=sys.stderr)
++        _run_one(label, body, prompt, args, out, counts, flagged, integrity_voids)
++
++    summary = [
++        "## Summary",
++        "",
++        "| Verdict | Count |",
++        "|---|---|",
++    ]
++    for v, n in counts.items():
++        summary.append(f"| `{v}` | {n} |")
++    if flagged:
++        summary.append("")
++        summary.append("### FLAGGED — operator action recommended")
++        for label, verdict in flagged:
++            summary.append(f"- `{label}` — **{verdict}**")
++    if integrity_voids:
++        summary.append("")
++        summary.append(
++            "### AUDIT-INTEGRITY GUARD — flags voided (auditor hallucinated its evidence)"
++        )
++        summary.append(
++            "These verdicts were FLAGGED by the LLM reviewer but cited concrete code/path "
++            "strings that do NOT exist in the source chunk. Auto-downgraded to "
++            "`CANNOT_DETERMINE`; **do NOT act on them.** They indicate the audit RUN was "
++            "partly unreliable, not that the code is buggy."
++        )
++        for label, verdict, missing in integrity_voids:
++            ev = "; ".join(f"`{m}`" for m in missing) if missing else "(none captured)"
++            summary.append(f"- `{label}` — was **{verdict}**; absent evidence: {ev}")
++    summary.append("")
++    summary.append("---")
++    summary.append("")
++    out = out[:5] + summary + out[5:]
++
++    REPORT_PATH.write_text("\n".join(out))
++    print(f"audit complete — report at {REPORT_PATH.relative_to(PROJECT_ROOT)}")
++    print(f"  scanned: {len(units)} unit(s)")
++    print(f"  flagged: {len(flagged)}")
++    for label, verdict in flagged:
++        print(f"    {label}: {verdict}")
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 5bcbbe702e..d417f84413 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -352,7 +352,7 @@ def _meaningful_error_tail(full_output: str, prompt: str, n: int = 500) -> str:
+     tail_marker = prompt[-200:] if prompt and len(prompt) >= 40 else prompt
+     post = full_output
+     if tail_marker and tail_marker in full_output:
+-        post = full_output[full_output.rindex(tail_marker) + len(tail_marker):]
++        post = full_output[full_output.rindex(tail_marker) + len(tail_marker) :]
+     post = post.strip()
+     if not post:
+         return (
+@@ -656,16 +656,13 @@ def run_agent(
+                         # stability.
+                         bootstrap_only = False
+                         try:
+-                            with deliverable_file.open(
+-                                "r", encoding="utf-8"
+-                            ) as _fh:
++                            with deliverable_file.open("r", encoding="utf-8") as _fh:
+                                 _payload = json.load(_fh)
+                             if isinstance(_payload, dict):
+                                 _st_field = _payload.get("status")
+                                 if (
+                                     isinstance(_st_field, str)
+-                                    and _st_field.lower()
+-                                    in _BOOTSTRAP_STATUSES
++                                    and _st_field.lower() in _BOOTSTRAP_STATUSES
+                                 ):
+                                     bootstrap_only = True
+                         except (OSError, json.JSONDecodeError):
+@@ -682,9 +679,7 @@ def run_agent(
+                             # early-kill. JSON deliverables are unaffected.
+                             if str(deliverable_file).endswith((".yaml", ".yml")):
+                                 try:
+-                                    with deliverable_file.open(
+-                                        "r", encoding="utf-8"
+-                                    ) as _yfh:
++                                    with deliverable_file.open("r", encoding="utf-8") as _yfh:
+                                         _ydoc = yaml.safe_load(_yfh)
+                                     if (
+                                         isinstance(_ydoc, dict)
+@@ -1423,10 +1418,8 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
+         # (contained, retried/self-healed) instead of poisoning the next task.
+         try:
+             _, wt_out, _ = run_cmd(["git", "diff", "--name-only", "HEAD"])
+-            _, untracked_out, _ = run_cmd(
+-                ["git", "ls-files", "--others", "--exclude-standard"]
+-            )
+-            for f in (wt_out.splitlines() + untracked_out.splitlines()):
++            _, untracked_out, _ = run_cmd(["git", "ls-files", "--others", "--exclude-standard"])
++            for f in wt_out.splitlines() + untracked_out.splitlines():
+                 f = f.strip()
+                 if (
+                     f.startswith("tests/python/")
+@@ -2891,9 +2884,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+     except Exception:
+         pass
+     for _e in experiment_times:
+-        _e["compute_bound"] = any(
+-            _ct in _e["experiment"] for _ct in compute_bound_titles
+-        )
++        _e["compute_bound"] = any(_ct in _e["experiment"] for _ct in compute_bound_titles)
+ 
+     # Gather GPU utilization data
+     gpu_report_text = ""
+@@ -2910,9 +2901,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+     # compute_bound_count is referenced by the prompt + pre-fill skeleton
+     # below; define unconditionally at function scope so it's always
+     # bound (even when experiment_times is empty).
+-    compute_bound_count = sum(
+-        1 for _e in experiment_times if _e.get("compute_bound")
+-    )
++    compute_bound_count = sum(1 for _e in experiment_times if _e.get("compute_bound"))
+     if experiment_times:
+         total_min = sum(e["duration_min"] for e in experiment_times)
+         slowest = sorted(experiment_times, key=lambda x: x["duration_min"], reverse=True)[:5]
+@@ -2930,12 +2919,8 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+             f"Slowest experiments (compute_bound flag in [..]):\n"
+         )
+         for e in slowest:
+-            cb_flag = (
+-                "compute_bound" if e.get("compute_bound") else "synthesis_only"
+-            )
+-            timing_summary += (
+-                f"  - {e['duration_min']:.0f}min [{cb_flag}]: {e['experiment']}\n"
+-            )
++            cb_flag = "compute_bound" if e.get("compute_bound") else "synthesis_only"
++            timing_summary += f"  - {e['duration_min']:.0f}min [{cb_flag}]: {e['experiment']}\n"
+     else:
+         timing_summary = (
+             "MILESTONE-SCOPED DATA: no experiment commits found since "
+@@ -2960,18 +2945,18 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+         f"STEP 0 (MANDATORY, FIRST): Immediately write a SKELETON artifact JSON to\n"
+         f"   results/operational_retro_{current.replace('.', '_')}.json with:\n"
+         f"     {{\n"
+-        f"       \"schema\": \"carnot.operational_retro.v64\",\n"
+-        f"       \"milestone\": \"{current}\",\n"
+-        f"       \"generated_at\": \"<current ISO-8601 UTC>\",\n"
+-        f"       \"retro_type\": \"operational_in_progress\",\n"
+-        f"       \"summary\": \"in progress — being filled in this turn\",\n"
+-        f"       \"slowest_experiments\": [],\n"
+-        f"       \"bottlenecks_identified\": [],\n"
+-        f"       \"improvements_suggested\": [],\n"
+-        f"       \"top_3_highest_leverage_actions\": [],\n"
+-        f"       \"compute_bound_experiments_count\": 0,\n"
+-        f"       \"gpu_idle_on_compute_bound_tasks\": null,\n"
+-        f"       \"meta_reflection\": \"\"\n"
++        f'       "schema": "carnot.operational_retro.v64",\n'
++        f'       "milestone": "{current}",\n'
++        f'       "generated_at": "<current ISO-8601 UTC>",\n'
++        f'       "retro_type": "operational_in_progress",\n'
++        f'       "summary": "in progress — being filled in this turn",\n'
++        f'       "slowest_experiments": [],\n'
++        f'       "bottlenecks_identified": [],\n'
++        f'       "improvements_suggested": [],\n'
++        f'       "top_3_highest_leverage_actions": [],\n'
++        f'       "compute_bound_experiments_count": 0,\n'
++        f'       "gpu_idle_on_compute_bound_tasks": null,\n'
++        f'       "meta_reflection": ""\n'
+         f"     }}\n"
+         f"   This protects against turn-budget exhaustion: even if you run out\n"
+         f"   of turns mid-analysis, the artifact exists at status='success'\n"
+@@ -3010,7 +2995,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+         f"4. What tooling change would speed up the next milestone?\n\n"
+         f"DELIVERABLES:\n"
+         f"1. Write results/operational_retro_{current.replace('.', '_')}.json with:\n"
+-        f"   - schema: \"carnot.operational_retro.v64\"\n"
++        f'   - schema: "carnot.operational_retro.v64"\n'
+         f"   - total_wall_time_minutes (from TIMING DATA)\n"
+         f"   - experiments_completed (from TIMING DATA)\n"
+         f"   - compute_bound_experiments_count (from TIMING DATA)\n"
+@@ -3054,12 +3039,8 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+     retro_artifact_path = (
+         PROJECT_ROOT / "results" / f"operational_retro_{current.replace('.', '_')}.json"
+     )
+-    pre_total_min = (
+-        sum(e["duration_min"] for e in experiment_times) if experiment_times else 0
+-    )
+-    pre_slowest = sorted(
+-        experiment_times, key=lambda x: x["duration_min"], reverse=True
+-    )[:5]
++    pre_total_min = sum(e["duration_min"] for e in experiment_times) if experiment_times else 0
++    pre_slowest = sorted(experiment_times, key=lambda x: x["duration_min"], reverse=True)[:5]
+     skeleton: dict = {
+         "schema": "carnot.operational_retro.v64",
+         "milestone": current,
+@@ -3076,9 +3057,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+             }
+             for e in pre_slowest
+         ],
+-        "gpu_idle_on_compute_bound_tasks": (
+-            None if compute_bound_count == 0 else False
+-        ),
++        "gpu_idle_on_compute_bound_tasks": (None if compute_bound_count == 0 else False),
+         "summary": "",
+         "bottlenecks_identified": [],
+         "improvements_suggested": [],
+@@ -3169,8 +3148,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+             with open(retro_artifact_path, "w") as _rf:
+                 json.dump(agent_artifact, _rf, indent=2)
+             logger.warning(
+-                "Retro post-fix: restored %d locked fields the agent "
+-                "modified despite instruction",
++                "Retro post-fix: restored %d locked fields the agent modified despite instruction",
+                 restored,
+             )
+     except Exception as _e:
+@@ -3633,8 +3611,7 @@ def _activate_next_roadmap(push: bool = True) -> bool:
+                 _flagged = {
+                     r.task_id
+                     for r in _pre_risks
+-                    if r.severity == "HARD"
+-                    and r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"
++                    if r.severity == "HARD" and r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"
+                 }
+                 if _flagged:
+                     _rdata = yaml.safe_load(NEXT_ROADMAP_FILE.read_text()) or {}
+@@ -3646,13 +3623,9 @@ def _activate_next_roadmap(push: bool = True) -> bool:
+                         if _t is None:
+                             continue
+                         _is_transition = bool(
+-                            _re_stamp.search(
+-                                r"(archive-v\d|capstone-v\d|plan-milestone-)", _tid
+-                            )
+-                        )
+-                        _is_hw = (
+-                            str(_t.get("track", "")).strip().lower() == "hardware"
++                            _re_stamp.search(r"(archive-v\d|capstone-v\d|plan-milestone-)", _tid)
+                         )
++                        _is_hw = str(_t.get("track", "")).strip().lower() == "hardware"
+                         if not (_is_transition or _is_hw):
+                             continue  # lineage/rerun → leave for judgment
+                         _oo = _t.get("operator_override")
+@@ -3685,17 +3658,14 @@ def _activate_next_roadmap(push: bool = True) -> bool:
+                             _stamped,
+                         )
+             except Exception as _se:
+-                logger.warning(
+-                    "Structural override auto-stamp skipped (%s)", _se
+-                )
++                logger.warning("Structural override auto-stamp skipped (%s)", _se)
+ 
+             ex_risks = _exclusion_lint(NEXT_ROADMAP_FILE)
+             hard = [r for r in ex_risks if r.severity == "HARD"]
+             warn = [r for r in ex_risks if r.severity == "WARNING"]
+             if warn:
+                 logger.warning(
+-                    "Exclusion-manifest linter: %d WARNING(s) with "
+-                    "operator_override (proceeding):",
++                    "Exclusion-manifest linter: %d WARNING(s) with operator_override (proceeding):",
+                     len(warn),
+                 )
+                 for r in warn[:10]:
+@@ -3889,7 +3859,7 @@ def _plan_next_milestone(push: bool = True) -> bool:
+         f"5-9 min Sonnet call entirely when the prerequisite verdict doesn't\n"
+         f"satisfy the gate.\n\n"
+         f"  prior_failures: [REQUIRED list when task scope matches a retired exp_id]\n"
+-        f"    Per CLAUDE.md \"Failed-Experiment Rerun Discipline\" + Layer 2\n"
++        f'    Per CLAUDE.md "Failed-Experiment Rerun Discipline" + Layer 2\n'
+         f"    exclusion-manifest pre-emit lint: if THIS task's scope matches\n"
+         f"    a previously failed/retired experiment (same deliverable shape,\n"
+         f"    same technique, same upstream chain), you MUST include a\n"
+@@ -3900,9 +3870,9 @@ def _plan_next_milestone(push: bool = True) -> bool:
+         f"        prior_failures:\n"
+         f"          - experiment_id: expNNN-the-retired-task-id   # required\n"
+         f"            verdict: <prior honest_verdict string>      # required\n"
+-        f"            addressed_by: \"One-line explanation of what is\n"
++        f'            addressed_by: "One-line explanation of what is\n'
+         f"                           DIFFERENT this attempt: technique\n"
+-        f"                           changed, prerequisite shipped, etc.\"\n"
++        f'                           changed, prerequisite shipped, etc."\n'
+         f"            retire_if_same_verdict: true                # required\n\n"
+         f"    The `retire_if_same_verdict: true` field is LOAD-BEARING — it's\n"
+         f"    the mechanical retirement signal: if this attempt produces the\n"
+@@ -4432,7 +4402,10 @@ def research_step(
+                             str(PROJECT_ROOT / "scripts" / "pages_adversarial_audit.py"),
+                             # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
+                             # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+-                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
++                            "--model",
++                            AGENT_TYPE_AUDIT,
++                            "--model-name",
++                            AGENT_MODEL_AUDIT,
+                         ],
+                         cwd=PROJECT_ROOT,
+                         timeout=720,
+@@ -4458,10 +4431,14 @@ def research_step(
+                         [
+                             sys.executable,
+                             str(PROJECT_ROOT / "scripts" / "verifier_authenticity_audit.py"),
+-                            "--limit", "20",
++                            "--limit",
++                            "20",
+                             # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
+                             # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+-                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
++                            "--model",
++                            AGENT_TYPE_AUDIT,
++                            "--model-name",
++                            AGENT_MODEL_AUDIT,
+                         ],
+                         cwd=PROJECT_ROOT,
+                         timeout=900,
+@@ -4470,6 +4447,43 @@ def research_step(
+                 except Exception as _e:
+                     logger.warning("Verifier authenticity audit failed (non-fatal): %s", _e)
+ 
++            # QA-layer authenticity audit (2026-07-03 operator question: "shouldn't
++            # the adversarial agent be catching these?" -- after a single outer-loop
++            # session found FOUR real bugs in scripts/adversarial_verify.py /
++            # exclusion_manifest_lint.py / in_process_doc_reconcile.py in one sitting,
++            # none caught by any existing audit because none of them are in scope --
++            # the verifier-authenticity audit above only covers python/carnot/verify/,
++            # the landing-page audit only covers docs/index.html). Sibling of the
++            # verifier authenticity audit: independent LLM invocation as HOSTILE
++            # SOFTWARE REVIEWER hunts the exact bug class already found (substring
++            # matching without word boundaries, field-shape assumptions that don't
++            # handle CLAUDE.md's principle-wrapped-field convention, negation/context
++            # blindness, off-by-one floors). Writes ops/qa_layer_authenticity_audit_
++            # report.md. Does NOT edit any file -- operator decides what to act on.
++            # Bounded with --limit + rotation state (adversarial_verify.py alone has
++            # 150+ risky-function chunks; rotation ensures successive runs advance
++            # through the whole corpus instead of always re-auditing the same head-slice).
++            if not dry_run:
++                try:
++                    logger.info("Running QA-layer authenticity audit...")
++                    subprocess.run(
++                        [
++                            sys.executable,
++                            str(PROJECT_ROOT / "scripts" / "qa_layer_authenticity_audit.py"),
++                            "--limit",
++                            "20",
++                            "--model",
++                            AGENT_TYPE_AUDIT,
++                            "--model-name",
++                            AGENT_MODEL_AUDIT,
++                        ],
++                        cwd=PROJECT_ROOT,
++                        timeout=900,
++                        check=False,
++                    )
++                except Exception as _e:
++                    logger.warning("QA-layer authenticity audit failed (non-fatal): %s", _e)
++
+             # ARC live-agent self-solve audit (2026-06-22 operator directive, 2nd
+             # recurrence: "aggressively caught and stopped"). Hostile review that the
+             # recent ARC work made the LIVE agent better at self-discovering
+@@ -4487,10 +4501,14 @@ def research_step(
+                         [
+                             sys.executable,
+                             str(PROJECT_ROOT / "scripts" / "arc_self_solve_audit.py"),
+-                            "--since-days", "7",
++                            "--since-days",
++                            "7",
+                             # 2026-06-08: adversarial agent on Claude Opus 4.8; 2026-06-30:
+                             # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+-                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
++                            "--model",
++                            AGENT_TYPE_AUDIT,
++                            "--model-name",
++                            AGENT_MODEL_AUDIT,
+                         ],
+                         cwd=PROJECT_ROOT,
+                         timeout=900,
+@@ -4518,7 +4536,10 @@ def research_step(
+                         [
+                             sys.executable,
+                             str(PROJECT_ROOT / "scripts" / "adversarial_verify.py"),
+-                            "--backfill", "--apply", "--since-hours", "24",
++                            "--backfill",
++                            "--apply",
++                            "--since-hours",
++                            "24",
+                         ],
+                         cwd=PROJECT_ROOT,
+                         timeout=300,
+@@ -5149,7 +5170,9 @@ def research_step(
+         and task_model != "opus"
+         and (task_agent_type or AGENT_TYPE) == "claude"
+         and "Reached max turns" in output
+-        and task.get("escalate_on_max_turns", False)  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
++        and task.get(
++            "escalate_on_max_turns", False
++        )  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
+     ):
+         logger.warning(
+             "%s hit max-turns (%d); escalating to Opus 100 turns",
+@@ -5183,7 +5206,9 @@ def research_step(
+         and task_max_turns < 100
+         and (task_agent_type or AGENT_TYPE) == "claude"
+         and "Reached max turns" in output
+-        and task.get("escalate_on_max_turns", False)  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
++        and task.get(
++            "escalate_on_max_turns", False
++        )  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
+     ):
+         logger.warning(
+             "Opus hit max-turns (%d) on pre-routed task; retrying with 100 turns",
+@@ -5502,8 +5527,7 @@ def _check_parity_tautology(task: dict) -> None:
+         for k, v in d.items():
+             full = f"{prefix}.{k}" if prefix else k
+             if isinstance(v, (int, float)) and any(
+-                tok in str(k).lower()
+-                for tok in ("delta", "kl_divergence", "magnetization_delta")
++                tok in str(k).lower() for tok in ("delta", "kl_divergence", "magnetization_delta")
+             ):
+                 out.append((full, float(v)))
+             elif isinstance(v, dict) and len(prefix) < 80:
+@@ -5520,9 +5544,7 @@ def _check_parity_tautology(task: dict) -> None:
+         out: list[tuple[str, list]] = []
+         for k, v in d.items():
+             full = f"{prefix}.{k}" if prefix else k
+-            if isinstance(v, list) and len(v) >= 8 and all(
+-                isinstance(x, (int, float)) for x in v
+-            ):
++            if isinstance(v, list) and len(v) >= 8 and all(isinstance(x, (int, float)) for x in v):
+                 if "count" in str(k).lower() or "hist" in str(k).lower():
+                     out.append((full, list(v)))
+             elif isinstance(v, dict) and len(prefix) < 80:
+@@ -5551,12 +5573,8 @@ def _check_parity_tautology(task: dict) -> None:
+         "timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+         "task_id": task.get("id", "unknown"),
+         "deliverable": deliverable,
+-        "exact_zero_deltas": [
+-            {"key": k, "value": v} for k, v in exact_zero_deltas[:8]
+-        ],
+-        "identical_histogram_pairs": [
+-            {"a": a, "b": b} for a, b in identical_pairs[:8]
+-        ],
++        "exact_zero_deltas": [{"key": k, "value": v} for k, v in exact_zero_deltas[:8]],
++        "identical_histogram_pairs": [{"a": a, "b": b} for a, b in identical_pairs[:8]],
+         "detail": (
+             f"Task {task.get('id', 'unknown')} reports parity-test outputs "
+             f"that are bit-identical or exactly zero across "
+@@ -5572,8 +5590,7 @@ def _check_parity_tautology(task: dict) -> None:
+     with open(alerts_path, "a") as f:
+         f.write(_json.dumps(record) + "\n")
+     logger.warning(
+-        "PARITY_TAUTOLOGY alert for %s: %d exact-zero deltas, "
+-        "%d identical histogram pairs",
++        "PARITY_TAUTOLOGY alert for %s: %d exact-zero deltas, %d identical histogram pairs",
+         task.get("id", "unknown"),
+         len(exact_zero_deltas),
+         len(identical_pairs),
+@@ -5641,18 +5658,13 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
+                 flags = report.get("flags") or []
+                 if flags:
+                     critical = [
+-                        f
+-                        for f in flags
+-                        if str(f.get("severity", "")).lower() == "critical"
++                        f for f in flags if str(f.get("severity", "")).lower() == "critical"
+                     ]
+                     if critical:
+                         _adversarial_critical = True
+-                        _adversarial_kinds = [
+-                            str(f.get("kind", "?")) for f in critical
+-                        ]
++                        _adversarial_kinds = [str(f.get("kind", "?")) for f in critical]
+                         logger.warning(
+-                            "Adversarial-verify flagged %s with %d critical "
+-                            "flag(s): %s",
++                            "Adversarial-verify flagged %s with %d critical flag(s): %s",
+                             task.get("id", "?"),
+                             len(critical),
+                             ", ".join(_adversarial_kinds),
+@@ -5664,9 +5676,7 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
+                                 art = json.load(_af)
+                             if isinstance(art, dict):
+                                 art["flagged_adversarial"] = True
+-                                art.setdefault("corrigendum_pending", []).extend(
+-                                    flags
+-                                )
++                                art.setdefault("corrigendum_pending", []).extend(flags)
+                                 with open(deliverable_path, "w") as _af:
+                                     json.dump(art, _af, indent=2)
+                         except Exception as _e:
+@@ -5682,17 +5692,13 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
+                     try:
+                         with open(deliverable_path) as _af:
+                             _existing = json.load(_af)
+-                        if isinstance(_existing, dict) and _existing.get(
+-                            "flagged_adversarial"
+-                        ):
++                        if isinstance(_existing, dict) and _existing.get("flagged_adversarial"):
+                             _adversarial_critical = True
+                             _adversarial_kinds = ["preexisting_flagged_adversarial"]
+                     except Exception:
+                         pass
+     except Exception as exc:
+-        logger.warning(
+-            "Adversarial-verify pass failed for %s: %s", task.get("id", "?"), exc
+-        )
++        logger.warning("Adversarial-verify pass failed for %s: %s", task.get("id", "?"), exc)
+     # Fabrication gate (2026-05-30 operator directive). A CRITICAL adversarial
+     # flag (DURATION_TOO_SHORT / IMPLAUSIBLE_PERFECT / TAUTOLOGY /
+     # GATE_PASSED_WITHOUT_DATA / SAMPLE_SIZE_BELOW_CLAIM) means the result is
+diff --git a/tests/python/test_qa_layer_authenticity_audit.py b/tests/python/test_qa_layer_authenticity_audit.py
+new file mode 100644
+index 0000000000..355fb001c0
+--- /dev/null
++++ b/tests/python/test_qa_layer_authenticity_audit.py
+@@ -0,0 +1,159 @@
++"""Tests for scripts/qa_layer_authenticity_audit.py's pure-logic components.
++
++This is the "who audits the auditor" tool (CLAUDE.md "QA-Layer Authenticity
++Discipline") -- added 2026-07-03 after a single outer-loop session found four
++real bugs in the QA/reconciliation layer in one sitting, none caught by any
++existing adversarial audit because none of them were in scope.
++
++Mirrors the untested-by-design pattern of the sibling
++scripts/verifier_authenticity_audit.py for the thin LLM-CLI subprocess
++wrappers (call_claude/call_gemini/call_codex -- these require live external
++CLIs and are exercised by use, not unit tests). Covers the pure-logic pieces
++that ARE unit-testable: function-chunk extraction, verdict parsing, the
++audit-integrity (Layer 1.5) hallucination guard, and rotation-state math.
++
++Spec refs: none (operational tooling, no OpenSpec capability).
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++import scripts.qa_layer_authenticity_audit as qla
++
++
++class TestExtractRiskyFunctions:
++    def test_finds_function_with_dict_get(self, tmp_path: Path) -> None:
++        src = tmp_path / "mod.py"
++        src.write_text(
++            "def check_thing(d):\n"
++            "    v = d.get('honest_verdict')\n"
++            "    if v is not None:\n"
++            "        return v\n"
++            "    return None\n"
++        )
++        chunks = qla.extract_risky_functions(src)
++        assert len(chunks) == 1
++        assert chunks[0].label == "mod.py::check_thing"
++
++    def test_skips_function_with_no_risky_markers(self, tmp_path: Path) -> None:
++        src = tmp_path / "mod.py"
++        src.write_text("def add(a, b):\n    return a + b\n")
++        chunks = qla.extract_risky_functions(src)
++        assert chunks == []
++
++    def test_skips_nested_functions(self, tmp_path: Path) -> None:
++        src = tmp_path / "mod.py"
++        src.write_text(
++            "def outer(d):\n    def inner(x):\n        return x.get('a')\n    return inner(d)\n"
++        )
++        chunks = qla.extract_risky_functions(src)
++        # outer() itself has no risky marker at its own top level scan text
++        # (the .get( is inside inner, but since chunk extraction slices by line
++        # range including the nested def, outer's body text DOES contain '.get(').
++        assert len(chunks) == 1
++        assert chunks[0].label == "mod.py::outer"
++
++    def test_skips_tiny_functions(self, tmp_path: Path) -> None:
++        src = tmp_path / "mod.py"
++        src.write_text("def f(d):\n    return d.get('x')\n")
++        chunks = qla.extract_risky_functions(src)
++        # body is under the 40-char floor -- excluded to avoid auditing trivial one-liners
++        assert chunks == []
++
++    def test_returns_empty_for_missing_file(self, tmp_path: Path) -> None:
++        chunks = qla.extract_risky_functions(tmp_path / "does_not_exist.py")
++        assert chunks == []
++
++    def test_returns_empty_for_syntax_error(self, tmp_path: Path) -> None:
++        src = tmp_path / "broken.py"
++        src.write_text("def f(:\n    this is not python\n")
++        chunks = qla.extract_risky_functions(src)
++        assert chunks == []
++
++
++class TestParseVerdict:
++    def test_parses_clean_verdict(self) -> None:
++        report = "## VERDICT\nCLEAN\n\n## FINDINGS\nnone found\n"
++        assert qla.parse_verdict(report) == "CLEAN"
++
++    def test_parses_real_bug_verdict(self) -> None:
++        report = "## VERDICT\nREAL_BUG\n\n## FINDINGS\n1. something\n"
++        assert qla.parse_verdict(report) == "REAL_BUG"
++
++    def test_returns_unknown_when_missing(self) -> None:
++        assert qla.parse_verdict("no structured output here") == "UNKNOWN"
++
++
++class TestVerifyQuotedEvidence:
++    def test_real_evidence_is_not_missing(self) -> None:
++        body = "def _flips_gate(d):\n    return 'gate_met' in d.get('honest_verdict', '').lower()\n"
++        report = "## FINDINGS\n1. Uses `d.get('honest_verdict')` without unwrapping.\n"
++        high, missing = qla.verify_quoted_evidence(report, body)
++        assert high
++        assert missing == []
++
++    def test_hallucinated_evidence_is_flagged_missing(self) -> None:
++        body = "def _flips_gate(d):\n    return 'gate_met' in d.get('honest_verdict', '').lower()\n"
++        report = "## FINDINGS\n1. Calls `np.random.randn(48)` to fabricate scores.\n"
++        high, missing = qla.verify_quoted_evidence(report, body)
++        assert high
++        assert missing == ["np.random.randn(48)"]
++
++    def test_low_specificity_spans_are_ignored(self) -> None:
++        """Plain identifiers/short spans don't count as high-specificity evidence --
++        mirrors the sibling audit's rationale (a symbol name can legitimately be
++        referenced even in a wrong verdict, so it shouldn't gate the integrity check)."""
++        body = "def f(d):\n    return d.get('x')\n"
++        report = "## FINDINGS\n1. See `foo`.\n"
++        high, missing = qla.verify_quoted_evidence(report, body)
++        assert high == []
++        assert missing == []
++
++
++class TestRotationStateAdvances:
++    """The rotation logic itself lives inline in main(); this exercises the same
++    slice+wraparound math extracted to a standalone check, matching what main() does."""
++
++    @staticmethod
++    def _rotate(units: list[int], offset: int, limit: int) -> tuple[list[int], int]:
++        offset = offset % len(units)
++        rotated_units = units[offset:] + units[:offset]
++        result = rotated_units[:limit]
++        next_offset = (offset + limit) % len(rotated_units)
++        return result, next_offset
++
++    def test_successive_runs_advance_through_the_list(self) -> None:
++        units = list(range(50))
++        r1, off1 = self._rotate(units, 0, 20)
++        assert r1 == list(range(0, 20))
++        r2, off2 = self._rotate(units, off1, 20)
++        assert r2 == list(range(20, 40))
++        r3, off3 = self._rotate(units, off2, 20)
++        # wraps around: 40..49 then 0..9
++        assert r3 == list(range(40, 50)) + list(range(0, 10))
++
++    def test_offset_beyond_list_length_wraps_via_modulo(self) -> None:
++        units = list(range(10))
++        r, off = self._rotate(units, 37, 3)
++        assert r == [7, 8, 9]
++        assert off == 0
++
++    def test_single_run_covers_whole_short_list(self) -> None:
++        units = list(range(5))
++        r, off = self._rotate(units, 0, 20)
++        assert r == units
++        assert off == 0
++
++
++class TestWholeFileAndChunkedTargetsAreDistinct:
++    def test_no_overlap_between_target_sets(self) -> None:
++        whole = set(qla.WHOLE_FILE_TARGETS)
++        chunked = set(qla.CHUNKED_FILE_TARGETS)
++        assert whole.isdisjoint(chunked)
++
++    def test_adversarial_verify_is_chunked_not_whole(self) -> None:
++        names = {p.name for p in qla.CHUNKED_FILE_TARGETS}
++        assert "adversarial_verify.py" in names
++        whole_names = {p.name for p in qla.WHOLE_FILE_TARGETS}
++        assert "adversarial_verify.py" not in whole_names
+-- 
+2.55.0
+

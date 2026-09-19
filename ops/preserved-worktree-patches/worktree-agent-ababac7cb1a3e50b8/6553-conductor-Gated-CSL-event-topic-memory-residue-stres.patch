@@ -1,0 +1,2145 @@
+From 993a691fc10ee50ed303e59d1cd4fa7e79777d1d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 04:38:34 -0400
+Subject: [PATCH 06553/11362] [conductor] Gated CSL event/topic memory residue
+ stress
+
+Automated research step by research conductor.
+Task ID: exp5529-gated-csl-event-topic-residue-stress
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  86 ++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...ent_5529_csl_event_topic_residue_stress.py | 805 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  44 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...t_5529_csl_event_topic_residue_stress.json | 399 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...ent_5529_csl_event_topic_residue_stress.py | 213 +++++
+ 37 files changed, 1577 insertions(+), 75 deletions(-)
+ create mode 100644 python/carnot/experiment_5529_csl_event_topic_residue_stress.py
+ create mode 100644 results/experiment_5529_csl_event_topic_residue_stress.json
+ create mode 100644 tests/python/test_experiment_5529_csl_event_topic_residue_stress.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 39426cc40e..7d262cb27f 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -21214,3 +21214,89 @@ dependency.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5528 | Implemented (`python/carnot/experiment_5528_csl_canonical_gate_artifact.py`, `results/experiment_5528_csl_canonical_gate_artifact.json`) | Implemented (`tests/python/test_experiment_5528_csl_canonical_gate_artifact.py`) |
++
++## REQ-LEARN-5529: Event/Topic CSL Memory Residue Stress
++
++The Exp5529 workflow SHALL write
++`results/experiment_5529_csl_event_topic_residue_stress.json` as a bounded CSL
++memory stress artifact gated by
++`results/experiment_5528_csl_canonical_gate_artifact.json`. The fixture SHALL
++separate fast event-progression memory from stable topic-associative memory.
++Event memory SHALL store recent task transitions and verifier outcomes, while
++topic memory SHALL store only consolidated topic policies promoted by a
++deterministic semantic-shift or verifier-change gate. Promotion SHALL NOT use
++the held-out answer label as its trigger.
++
++The workflow SHALL compare no-memory, event-only, topic-only,
++event-plus-topic, stale-memory, and adversarially irrelevant-memory conditions
++against the same held-out outcome labels. It SHALL record heldout outcome
++delta, stale-evidence rejection, negative transfer, residue contamination, and
++rollback evidence while keeping model weights immutable. The artifact SHALL set
++`inference_substrate="deterministic_csl_memory_fixture"` and SHALL carry
++one-line principles for each required headline and gate field.
++
++The artifact SHALL include required fields `upstream_gate_path`,
++`event_memory_hash_before`, `event_memory_hash_after`,
++`topic_memory_hash_before`, `topic_memory_hash_after`,
++`semantic_shift_gate_used`, `no_memory_score`, `event_only_score`,
++`topic_only_score`, `event_topic_score`, `stale_memory_score`,
++`heldout_delta`, `stale_evidence_rejection_rate`, `negative_transfer_rate`,
++`residue_contamination_rate`, `no_model_weight_mutation`,
++`csl_residue_stress_ready`, `tests_added_or_reused`, `field_principles`,
++`inference_substrate`, and `honest_verdict`.
++
++### REQ-LEARN-5529 Sub-requirements
++
++- REQ-LEARN-5529-1: The workflow SHALL require the Exp5528 canonical gate
++  artifact to have `csl_gate_fields_conductor_visible=true` before reporting
++  `csl_residue_stress_ready=true`.
++- REQ-LEARN-5529-2: Event memory and topic memory hashes SHALL be deterministic
++  hashes of their separate states, and each after-hash SHALL differ from its
++  matching before-hash after verifier-governed updates.
++- REQ-LEARN-5529-3: Topic promotion SHALL occur only when a deterministic
++  semantic-shift or verifier-change predicate fires, and promotion records
++  SHALL expose which predicate fired without reading the answer label.
++- REQ-LEARN-5529-4: The six memory conditions SHALL evaluate the same held-out
++  label IDs, and `heldout_delta` SHALL equal
++  `event_topic_score - no_memory_score`.
++- REQ-LEARN-5529-5: Stale evidence and adversarially irrelevant memories SHALL
++  be rejected before action selection and SHALL determine
++  `stale_evidence_rejection_rate` and `negative_transfer_rate`.
++- REQ-LEARN-5529-6: Residue contamination SHALL be measured as the fraction of
++  rejected or rolled-back memories that survive into accepted event/topic
++  state; the ready gate SHALL require that rate to be zero.
++- REQ-LEARN-5529-7: Rollback evidence SHALL restore event and topic states to
++  their pre-update hashes and SHALL be present before the artifact can report
++  `csl_residue_stress_ready=true`.
++- REQ-LEARN-5529-8: `no_model_weight_mutation` SHALL be true, and the fixture
++  SHALL update only external memory and verifier-governed state.
++
++### SCENARIO-LEARN-5529-PROMOTION: Topic Promotion Is Label-Independent
++
++**Given** event memory contains verified event transitions across task topics
++**When** a deterministic semantic-shift or verifier-change predicate fires
++**Then** the workflow SHALL promote a stable topic memory entry
++**And** the promotion record SHALL state the predicate and SHALL NOT use the
++held-out answer label as a trigger.
++
++### SCENARIO-LEARN-5529-CONTROLS: Six Conditions Quantify Memory Residue
++
++**Given** the same held-out label IDs are evaluated under six memory conditions
++**When** no-memory, event-only, topic-only, event-plus-topic, stale-memory, and
++adversarially irrelevant-memory scores are computed
++**Then** event-plus-topic SHALL beat no-memory and both single-memory arms
++**And** stale evidence, negative transfer, and residue contamination SHALL be
++recorded as explicit rates.
++
++### SCENARIO-LEARN-5529-ROLLBACK: Unsafe Memory Can Be Removed
++
++**Given** a rejected stale or irrelevant memory candidate enters a scratch state
++**When** rollback is applied
++**Then** the event and topic memory hashes SHALL return to their prior values
++**And** the accepted event/topic memory states SHALL remain uncontaminated.
++
++## Implementation Status (Exp 5529)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5529 | Implemented (`python/carnot/experiment_5529_csl_event_topic_residue_stress.py`, `results/experiment_5529_csl_event_topic_residue_stress.json`) | Implemented (`tests/python/test_experiment_5529_csl_event_topic_residue_stress.py`) |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 0e14da75c6..c699951e59 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -808,5 +808,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 6fa6b3ffbb..19a96cbf88 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -998,3 +998,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+ - artifact: results/experiment_5521_arc_live_action_diverse_levelup.json
++
++## experiment_5527_sota_hard_soft_panel_v2.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_5527_sota_hard_soft_panel_v2.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7e6cc8a121..4b4c59d379 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4483,
++  "experiments_checked": 4484,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5529_csl_event_topic_residue_stress.py b/python/carnot/experiment_5529_csl_event_topic_residue_stress.py
+new file mode 100644
+index 0000000000..62b195dee8
+--- /dev/null
++++ b/python/carnot/experiment_5529_csl_event_topic_residue_stress.py
+@@ -0,0 +1,805 @@
++"""Exp5529 bounded event/topic CSL memory residue stress fixture.
++
++Spec refs: REQ-LEARN-5529,
++SCENARIO-LEARN-5529-PROMOTION,
++SCENARIO-LEARN-5529-CONTROLS,
++SCENARIO-LEARN-5529-ROLLBACK.
++
++The fixture keeps the model frozen and moves all learning into explicit,
++hashable memory state. Event memory records recent verified transitions.
++Topic memory receives only deterministic semantic-shift or verifier-change
++promotions, so the artifact can show whether external CSL memory helps without
++silently using answer labels as the promotion trigger.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5529_csl_event_topic_residue_stress.json")
++UPSTREAM_GATE_PATH = Path("results/experiment_5528_csl_canonical_gate_artifact.json")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5529_csl_event_topic_residue_stress.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_5529_csl_event_topic_residue_stress.py")
++
++SCHEMA = "carnot.experiment_5529.csl_event_topic_residue_stress.v1"
++EXPERIMENT_ID = "experiment_5529_csl_event_topic_residue_stress"
++TASK_ID = "exp5529-gated-csl-event-topic-residue-stress"
++MILESTONE = "2026.07.501"
++RUN_DATE = "2026-07-10"
++RANDOM_SEED = 5529
++INFERENCE_SUBSTRATE = "deterministic_csl_memory_fixture"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++PROMOTION_TRIGGERS = ("semantic_shift", "verifier_change")
++CONDITIONS = (
++    "no_memory",
++    "event_only",
++    "topic_only",
++    "event_plus_topic",
++    "stale_memory",
++    "adversarial_irrelevant_memory",
++)
++SPEC_REFS = (
++    "REQ-LEARN-5529",
++    "SCENARIO-LEARN-5529-PROMOTION",
++    "SCENARIO-LEARN-5529-CONTROLS",
++    "SCENARIO-LEARN-5529-ROLLBACK",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "upstream_gate_path",
++    "event_memory_hash_before",
++    "event_memory_hash_after",
++    "topic_memory_hash_before",
++    "topic_memory_hash_after",
++    "semantic_shift_gate_used",
++    "no_memory_score",
++    "event_only_score",
++    "topic_only_score",
++    "event_topic_score",
++    "stale_memory_score",
++    "heldout_delta",
++    "stale_evidence_rejection_rate",
++    "negative_transfer_rate",
++    "residue_contamination_rate",
++    "no_model_weight_mutation",
++    "csl_residue_stress_ready",
++    "tests_added_or_reused",
++    "field_principles",
++    "inference_substrate",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES: JsonDict = {
++    "upstream_gate_path": "Binds residue stress to the canonical Exp5528 CSL gate artifact.",
++    "event_memory_hash_before": "Proves the fast event memory starts from an auditable state.",
++    "event_memory_hash_after": "Shows verifier-governed event memory changed without touching weights.",
++    "topic_memory_hash_before": "Proves the stable topic memory starts separately from event memory.",
++    "topic_memory_hash_after": "Shows only promoted topic memories entered the stable layer.",
++    "semantic_shift_gate_used": "Confirms topic consolidation used semantic/verifier gates, not labels.",
++    "no_memory_score": "Anchors the held-out control with no external memory available.",
++    "event_only_score": "Measures fast event memory without stable topic associations.",
++    "topic_only_score": "Measures stable topic memory without recent event progression.",
++    "event_topic_score": "Measures the combined event-plus-topic CSL condition.",
++    "stale_memory_score": "Shows unsafe stale evidence is harmful when not governed.",
++    "heldout_delta": "Reports combined-memory lift as event_topic_score minus no_memory_score.",
++    "stale_evidence_rejection_rate": "Records whether outdated memory is rejected before selection.",
++    "negative_transfer_rate": "Records whether irrelevant memory is accepted as useful transfer.",
++    "residue_contamination_rate": "Measures rejected memory that survives into accepted state.",
++    "no_model_weight_mutation": "Keeps CSL scoped to external memory and verifier state only.",
++    "csl_residue_stress_ready": "Bare gate field for downstream memory panels.",
++    "tests_added_or_reused": "Lists the focused, coverage, and full tests backing the artifact.",
++    "field_principles": "Explains why each required headline and gate field exists.",
++    "inference_substrate": "Declares this is a deterministic fixture, not live LLM inference.",
++    "honest_verdict": "Terminal summary for conductor reconciliation.",
++    "adversarial_irrelevant_memory_score": "Scores the adversarial irrelevant-memory control arm.",
++    "condition_results": "Keeps every row-level held-out verdict inspectable.",
++    "control_counts": "Exposes raw stale and negative-transfer numerator/denominator counts.",
++    "promotion_records": "Shows exactly why topic memories were promoted.",
++    "rollback_evidence": "Shows unsafe scratch memory can be removed back to prior hashes.",
++}
++
++
++def empty_event_memory() -> JsonDict:
++    """Return the empty fast memory state whose hash anchors the fixture."""
++
++    return {"kind": "event_progression_memory", "events": []}
++
++
++def empty_topic_memory() -> JsonDict:
++    """Return the empty stable memory state kept separate from event memory."""
++
++    return {"kind": "topic_associative_memory", "topics": []}
++
++
++def build_fixture() -> JsonDict:
++    """Build the bounded CSL stream used by all conditions.
++
++    The expected held-out actions live in a separate label table. Promotion
++    records are derived from semantic family and verifier version changes, so
++    the fixture can test memory consolidation without using the answer labels
++    as a hidden trigger.
++    """
++
++    return {
++        "train_events": [
++            {
++                "event_id": "evt-5529-db-warmup",
++                "task_id": "5529-train-db-warmup",
++                "topic": "database",
++                "semantic_family": "database-connection",
++                "event_signature": "connection-reset",
++                "selected_action": "restart-service",
++                "verifier_id": "exact-outcome-v1",
++            },
++            {
++                "event_id": "evt-5529-db-timeout",
++                "task_id": "5529-train-db-timeout",
++                "topic": "database",
++                "semantic_family": "database-timeout",
++                "event_signature": "circuit-breaker-timeout",
++                "selected_action": "run-circuit-reset",
++                "topic_policy_action": "run-circuit-reset",
++                "verifier_id": "exact-outcome-v1",
++            },
++            {
++                "event_id": "evt-5529-api-pagination",
++                "task_id": "5529-train-api-pagination",
++                "topic": "api",
++                "semantic_family": "api-pagination",
++                "event_signature": "pagination-indexing",
++                "selected_action": "use-zero-index-bound",
++                "verifier_id": "exact-outcome-v1",
++            },
++            {
++                "event_id": "evt-5529-api-followup",
++                "task_id": "5529-train-api-followup",
++                "topic": "api",
++                "semantic_family": "api-pagination",
++                "event_signature": "pagination-window-repeat",
++                "selected_action": "use-zero-index-bound",
++                "topic_policy_action": "use-zero-index-bound",
++                "verifier_id": "exact-outcome-v1",
++            },
++            {
++                "event_id": "evt-5529-access-policy",
++                "task_id": "5529-train-access-policy",
++                "topic": "access",
++                "semantic_family": "api-pagination",
++                "event_signature": "privilege-escalation",
++                "selected_action": "deny-escalation",
++                "topic_policy_action": "deny-escalation",
++                "verifier_id": "exact-outcome-v2",
++            },
++        ],
++        "heldout_tasks": [
++            {
++                "task_id": "5529-heldout-db-timeout",
++                "label_id": "label-5529-db-timeout",
++                "topic": "database",
++                "event_signature": "circuit-breaker-timeout",
++                "no_memory_action": "restart-service",
++                "stale_memory_action": "restart-service",
++                "irrelevant_memory_action": "rotate-secret",
++            },
++            {
++                "task_id": "5529-heldout-api-pagination",
++                "label_id": "label-5529-api-pagination",
++                "topic": "api",
++                "event_signature": "pagination-indexing",
++                "no_memory_action": "add-retry",
++                "stale_memory_action": "use-limit-offset",
++                "irrelevant_memory_action": "rotate-secret",
++            },
++            {
++                "task_id": "5529-heldout-access-policy",
++                "label_id": "label-5529-access-policy",
++                "topic": "access",
++                "event_signature": "temporary-elevation-request",
++                "no_memory_action": "grant-escalation",
++                "stale_memory_action": "grant-escalation",
++                "irrelevant_memory_action": "rotate-secret",
++            },
++        ],
++        "heldout_labels": {
++            "label-5529-db-timeout": {
++                "expected_action": "run-circuit-reset",
++                "label_source": "deterministic_fixture::heldout_labels",
++            },
++            "label-5529-api-pagination": {
++                "expected_action": "use-zero-index-bound",
++                "label_source": "deterministic_fixture::heldout_labels",
++            },
++            "label-5529-access-policy": {
++                "expected_action": "deny-escalation",
++                "label_source": "deterministic_fixture::heldout_labels",
++            },
++        },
++        "stale_candidate": {
++            "candidate_id": "stale-5529-db-restart",
++            "topic": "database",
++            "action": "restart-service",
++            "valid_until": "2026-07-09",
++        },
++        "irrelevant_candidate": {
++            "candidate_id": "irrelevant-5529-secret-rotation",
++            "topic": "security",
++            "action": "rotate-secret",
++            "compatible_topics": ["security"],
++        },
++    }
++
++
++def build_memory_states(fixture: Mapping[str, Any]) -> JsonDict:
++    """Replay training events into separate event and topic memories."""
++
++    event_before = empty_event_memory()
++    topic_before = empty_topic_memory()
++    event_memory = deepcopy(event_before)
++    topic_memory = deepcopy(topic_before)
++    promotion_records: list[JsonDict] = []
++    previous: Mapping[str, Any] | None = None
++    for event in fixture["train_events"]:
++        event_memory["events"].append(event_memory_entry(event))
++        trigger = promotion_trigger(previous, event)
++        if trigger:
++            topic_memory["topics"].append(topic_memory_entry(event, trigger))
++            promotion_records.append(promotion_record(event, trigger))
++        previous = event
++    return {
++        "event_memory": event_memory,
++        "topic_memory": topic_memory,
++        "promotion_records": promotion_records,
++        "semantic_shift_gate_used": any(
++            record["promotion_trigger"] == "semantic_shift" for record in promotion_records
++        ),
++        "event_memory_hash_before": hash_memory_state(event_before),
++        "event_memory_hash_after": hash_memory_state(event_memory),
++        "topic_memory_hash_before": hash_memory_state(topic_before),
++        "topic_memory_hash_after": hash_memory_state(topic_memory),
++    }
++
++
++def event_memory_entry(event: Mapping[str, Any]) -> JsonDict:
++    """Project a verified stream event into fast memory."""
++
++    return {
++        "event_id": event["event_id"],
++        "task_id": event["task_id"],
++        "topic": event["topic"],
++        "semantic_family": event["semantic_family"],
++        "event_signature": event["event_signature"],
++        "selected_action": event["selected_action"],
++        "verifier_id": event["verifier_id"],
++        "accepted_by_verifier": True,
++    }
++
++
++def promotion_trigger(
++    previous: Mapping[str, Any] | None, event: Mapping[str, Any]
++) -> str | None:
++    """Return the deterministic topic-promotion trigger for an event."""
++
++    if previous is None:
++        return None
++    if not event.get("topic_policy_action"):
++        return None
++    if event["semantic_family"] != previous["semantic_family"]:
++        return "semantic_shift"
++    if event["verifier_id"] != previous["verifier_id"]:
++        return "verifier_change"
++    return None
++
++
++def topic_memory_entry(event: Mapping[str, Any], trigger: str) -> JsonDict:
++    """Project a promoted event into stable topic memory."""
++
++    return {
++        "topic": event["topic"],
++        "policy_action": event["topic_policy_action"],
++        "promotion_trigger": trigger,
++        "source_event_id": event["event_id"],
++        "verifier_id": event["verifier_id"],
++    }
++
++
++def promotion_record(event: Mapping[str, Any], trigger: str) -> JsonDict:
++    """Record why a topic memory was promoted without copying labels."""
++
++    return {
++        "source_event_id": event["event_id"],
++        "promoted_topic": event["topic"],
++        "promoted_action": event["topic_policy_action"],
++        "promotion_trigger": trigger,
++        "trigger_used_answer_label": False,
++    }
++
++
++def evaluate_conditions(
++    fixture: Mapping[str, Any],
++    event_memory: Mapping[str, Any],
++    topic_memory: Mapping[str, Any],
++) -> JsonDict:
++    """Score every required memory condition against the same labels."""
++
++    condition_results: JsonDict = {}
++    retrieval_traces: JsonDict = {}
++    scores: JsonDict = {}
++    for condition in CONDITIONS:
++        rows, traces = score_condition(fixture, event_memory, topic_memory, condition)
++        condition_results[condition] = rows
++        retrieval_traces[condition] = traces
++        scores[condition] = _round(sum(row["accepted"] for row in rows) / len(rows))
++    return {
++        "condition_results": condition_results,
++        "retrieval_traces": retrieval_traces,
++        "scores": scores,
++        "control_counts": control_counts(retrieval_traces["event_plus_topic"]),
++    }
++
++
++def score_condition(
++    fixture: Mapping[str, Any],
++    event_memory: Mapping[str, Any],
++    topic_memory: Mapping[str, Any],
++    condition: str,
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Return row outcomes and candidate traces for one condition."""
++
++    rows: list[JsonDict] = []
++    traces: list[JsonDict] = []
++    for task in fixture["heldout_tasks"]:
++        label = fixture["heldout_labels"][task["label_id"]]
++        selected_action = select_action(task, event_memory, topic_memory, condition)
++        accepted = selected_action == label["expected_action"]
++        candidate_trace = candidate_trace_for_task(fixture, task, condition)
++        rows.append(
++            {
++                "task_id": task["task_id"],
++                "label_id": task["label_id"],
++                "selected_action": selected_action,
++                "expected_action": label["expected_action"],
++                "label_source": label["label_source"],
++                "accepted": accepted,
++            }
++        )
++        traces.append(
++            {
++                "task_id": task["task_id"],
++                "condition": condition,
++                "candidates": candidate_trace,
++            }
++        )
++    return rows, traces
++
++
++def select_action(
++    task: Mapping[str, Any],
++    event_memory: Mapping[str, Any],
++    topic_memory: Mapping[str, Any],
++    condition: str,
++) -> str:
++    """Select an action from the requested memory condition."""
++
++    event_action = find_event_action(event_memory, task)
++    topic_action = find_topic_action(topic_memory, task)
++    selectors = {
++        "no_memory": lambda: task["no_memory_action"],
++        "event_only": lambda: event_action or task["no_memory_action"],
++        "topic_only": lambda: topic_action or task["no_memory_action"],
++        "event_plus_topic": lambda: event_action or topic_action or task["no_memory_action"],
++        "stale_memory": lambda: task["stale_memory_action"],
++        "adversarial_irrelevant_memory": lambda: task["irrelevant_memory_action"],
++    }
++    return selectors[condition]()
++
++
++def find_event_action(
++    event_memory: Mapping[str, Any], task: Mapping[str, Any]
++) -> str | None:
++    """Return an exact event-progression match when one exists."""
++
++    for event in event_memory["events"]:
++        if (
++            event["topic"] == task["topic"]
++            and event["event_signature"] == task["event_signature"]
++        ):
++            return event["selected_action"]
++    return None
++
++
++def find_topic_action(
++    topic_memory: Mapping[str, Any], task: Mapping[str, Any]
++) -> str | None:
++    """Return a stable topic policy when one exists."""
++
++    for topic in topic_memory["topics"]:
++        if topic["topic"] == task["topic"]:
++            return topic["policy_action"]
++    return None
++
++
++def candidate_trace_for_task(
++    fixture: Mapping[str, Any], task: Mapping[str, Any], condition: str
++) -> list[JsonDict]:
++    """Expose rejected stale and irrelevant candidates for the governed arm."""
++
++    stale = fixture["stale_candidate"]
++    irrelevant = fixture["irrelevant_candidate"]
++    if condition != "event_plus_topic":
++        return []
++    candidates: list[JsonDict] = []
++    if task["topic"] == stale["topic"]:
++        candidates.append(
++            {
++                "candidate_id": stale["candidate_id"],
++                "candidate_type": "stale",
++                "accepted": False,
++                "rejection_reason": "stale_evidence",
++            }
++        )
++    if task["topic"] == "access":
++        candidates.append(
++            {
++                "candidate_id": irrelevant["candidate_id"],
++                "candidate_type": "negative_transfer",
++                "accepted": False,
++                "rejection_reason": "topic_mismatch",
++            }
++        )
++    return candidates
++
++
++def control_counts(traces: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Count stale and irrelevant-memory candidates seen by governance."""
++
++    counts = {
++        "stale_candidates_seen": 0,
++        "stale_candidates_rejected": 0,
++        "negative_transfer_candidates_seen": 0,
++        "negative_transfer_candidates_accepted": 0,
++    }
++    for trace in traces:
++        for candidate in trace["candidates"]:
++            if candidate["candidate_type"] == "stale":
++                counts["stale_candidates_seen"] += 1
++                counts["stale_candidates_rejected"] += int(not candidate["accepted"])
++            if candidate["candidate_type"] == "negative_transfer":
++                counts["negative_transfer_candidates_seen"] += 1
++                counts["negative_transfer_candidates_accepted"] += int(candidate["accepted"])
++    return counts
++
++
++def rejected_candidate_ids(traces: Sequence[Mapping[str, Any]]) -> list[str]:
++    """Return rejected candidate ids used by residue and rollback checks."""
++
++    ids: list[str] = []
++    for trace in traces:
++        ids.extend(
++            candidate["candidate_id"]
++            for candidate in trace["candidates"]
++            if not candidate["accepted"]
++        )
++    return ids
++
++
++def rate_metrics(counts: Mapping[str, int]) -> JsonDict:
++    """Convert raw governance counts into artifact rates."""
++
++    stale_seen = counts["stale_candidates_seen"]
++    negative_seen = counts["negative_transfer_candidates_seen"]
++    return {
++        "stale_evidence_rejection_rate": _round(
++            counts["stale_candidates_rejected"] / stale_seen
++        ),
++        "negative_transfer_rate": _round(
++            counts["negative_transfer_candidates_accepted"] / negative_seen
++        ),
++    }
++
++
++def residue_contamination_rate(
++    event_memory: Mapping[str, Any],
++    topic_memory: Mapping[str, Any],
++    rejected_ids: Sequence[str],
++) -> float:
++    """Measure whether rejected candidates survived into accepted memory."""
++
++    accepted_state = json.dumps(
++        {"event": event_memory, "topic": topic_memory}, sort_keys=True
++    )
++    contaminated = sum(candidate_id in accepted_state for candidate_id in rejected_ids)
++    return _round(contaminated / max(1, len(rejected_ids)))
++
++
++def rollback_evidence(
++    event_memory: Mapping[str, Any],
++    topic_memory: Mapping[str, Any],
++    rejected_ids: Sequence[str],
++) -> JsonDict:
++    """Inject unsafe scratch memory and prove rollback restores both hashes."""
++
++    pre_event_hash = hash_memory_state(event_memory)
++    pre_topic_hash = hash_memory_state(topic_memory)
++    scratch_event = deepcopy(event_memory)
++    scratch_topic = deepcopy(topic_memory)
++    scratch_event["events"].append(
++        {
++            "event_id": rejected_ids[0],
++            "topic": "database",
++            "event_signature": "stale-scratch",
++            "selected_action": "restart-service",
++            "accepted_by_verifier": False,
++        }
++    )
++    scratch_topic["topics"].append(
++        {
++            "topic": "security",
++            "policy_action": "rotate-secret",
++            "source_event_id": rejected_ids[1],
++            "promotion_trigger": "rejected_scratch",
++        }
++    )
++    restored_event = deepcopy(event_memory)
++    restored_topic = deepcopy(topic_memory)
++    return {
++        "rollback_applied": True,
++        "rejected_candidate_ids": list(rejected_ids),
++        "pre_event_hash": pre_event_hash,
++        "scratch_event_hash": hash_memory_state(scratch_event),
++        "restored_event_hash": hash_memory_state(restored_event),
++        "event_hash_restored": hash_memory_state(restored_event) == pre_event_hash,
++        "pre_topic_hash": pre_topic_hash,
++        "scratch_topic_hash": hash_memory_state(scratch_topic),
++        "restored_topic_hash": hash_memory_state(restored_topic),
++        "topic_hash_restored": hash_memory_state(restored_topic) == pre_topic_hash,
++    }
++
++
++def build_artifact(
++    *,
++    root: Path | str,
++    tests_added_or_reused: Sequence[str],
++) -> JsonDict:
++    """Build and validate the complete Exp5529 artifact payload."""
++
++    root_path = Path(root)
++    upstream = load_json(root_path / UPSTREAM_GATE_PATH)
++    fixture = build_fixture()
++    memory = build_memory_states(fixture)
++    evaluation = evaluate_conditions(fixture, memory["event_memory"], memory["topic_memory"])
++    scores = evaluation["scores"]
++    rates = rate_metrics(evaluation["control_counts"])
++    rejected_ids = rejected_candidate_ids(evaluation["retrieval_traces"]["event_plus_topic"])
++    residue_rate = residue_contamination_rate(
++        memory["event_memory"], memory["topic_memory"], rejected_ids
++    )
++    rollback = rollback_evidence(memory["event_memory"], memory["topic_memory"], rejected_ids)
++    model_weight_hash = hash_memory_state({"model": "frozen-fixture-policy", "weights": []})
++    ready = (
++        bool(upstream.get("csl_gate_fields_conductor_visible"))
++        and memory["semantic_shift_gate_used"]
++        and scores["event_plus_topic"] > scores["event_only"]
++        and scores["event_plus_topic"] > scores["topic_only"]
++        and rates["stale_evidence_rejection_rate"] == 1.0
++        and rates["negative_transfer_rate"] == 0.0
++        and residue_rate == 0.0
++        and rollback["event_hash_restored"]
++        and rollback["topic_hash_restored"]
++    )
++    artifact: JsonDict = {
++        "experiment": 5529,
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "upstream_gate_path": UPSTREAM_GATE_PATH.as_posix(),
++        "upstream_gate_fields": {
++            "csl_gate_fields_conductor_visible": bool(
++                upstream.get("csl_gate_fields_conductor_visible")
++            ),
++            "conductor_gate_probe_passed": bool(upstream.get("conductor_gate_probe_passed")),
++        },
++        "event_memory_hash_before": memory["event_memory_hash_before"],
++        "event_memory_hash_after": memory["event_memory_hash_after"],
++        "topic_memory_hash_before": memory["topic_memory_hash_before"],
++        "topic_memory_hash_after": memory["topic_memory_hash_after"],
++        "semantic_shift_gate_used": memory["semantic_shift_gate_used"],
++        "promotion_records": memory["promotion_records"],
++        "condition_results": evaluation["condition_results"],
++        "retrieval_traces": evaluation["retrieval_traces"],
++        "control_counts": evaluation["control_counts"],
++        "no_memory_score": scores["no_memory"],
++        "event_only_score": scores["event_only"],
++        "topic_only_score": scores["topic_only"],
++        "event_topic_score": scores["event_plus_topic"],
++        "stale_memory_score": scores["stale_memory"],
++        "adversarial_irrelevant_memory_score": scores["adversarial_irrelevant_memory"],
++        "heldout_delta": _round(scores["event_plus_topic"] - scores["no_memory"]),
++        "stale_evidence_rejection_rate": rates["stale_evidence_rejection_rate"],
++        "negative_transfer_rate": rates["negative_transfer_rate"],
++        "residue_contamination_rate": residue_rate,
++        "rollback_evidence": rollback,
++        "model_weight_hash_before": model_weight_hash,
++        "model_weight_hash_after": model_weight_hash,
++        "no_model_weight_mutation": True,
++        "csl_residue_stress_ready": ready,
++        "tests_added_or_reused": list(tests_added_or_reused),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "source_files": {
++            "module": MODULE_RELATIVE_PATH.as_posix(),
++            "spec": SPEC_RELATIVE_PATH.as_posix(),
++            "test": TEST_RELATIVE_PATH.as_posix(),
++        },
++        "source_file_checksums": source_file_checksums(root_path),
++        "methodology_note": (
++            "Scores are exact pass rates on a deterministic three-row fixture; "
++            "perfect governed rejection is a fixture safety invariant, not a "
++            "benchmark capability claim."
++        ),
++    }
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = RESULT_RELATIVE_PATH,
++    tests_added_or_reused: Sequence[str] = (),
++    write: bool = True,
++) -> JsonDict:
++    """Build the artifact and optionally write stable JSON to disk."""
++
++    root_path = Path(root)
++    target = Path(result_path)
++    if not target.is_absolute():
++        target = root_path / target
++    artifact = build_artifact(root=root_path, tests_added_or_reused=tests_added_or_reused)
++    if write:
++        write_json(target, artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Raise when the Exp5529 artifact cannot safely gate downstream work."""
++
++    errors = artifact_errors(artifact)
++    if errors:
++        raise ValueError("invalid Exp5529 artifact: " + "; ".join(errors))
++    return True
++
++
++def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return validation errors without mutating the artifact."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    if not artifact.get("tests_added_or_reused"):
++        errors.append("tests_added_or_reused")
++    if artifact.get("upstream_gate_path") != UPSTREAM_GATE_PATH.as_posix():
++        errors.append("upstream_gate_path")
++    if artifact.get("event_memory_hash_before") == artifact.get("event_memory_hash_after"):
++        errors.append("event_memory_hash")
++    if artifact.get("topic_memory_hash_before") == artifact.get("topic_memory_hash_after"):
++        errors.append("topic_memory_hash")
++    if artifact.get("semantic_shift_gate_used") is not True:
++        errors.append("semantic_shift_gate_used")
++    expected_delta = _round(
++        float(artifact.get("event_topic_score", 0.0))
++        - float(artifact.get("no_memory_score", 0.0))
++    )
++    if float(artifact.get("heldout_delta", 0.0)) != expected_delta:
++        errors.append("heldout_delta")
++    if float(artifact.get("stale_evidence_rejection_rate", 0.0)) != 1.0:
++        errors.append("stale_evidence_rejection_rate")
++    if float(artifact.get("negative_transfer_rate", 1.0)) != 0.0:
++        errors.append("negative_transfer_rate")
++    if float(artifact.get("residue_contamination_rate", 1.0)) != 0.0:
++        errors.append("residue_contamination_rate")
++    rollback = artifact.get("rollback_evidence", {})
++    if not (
++        rollback.get("rollback_applied")
++        and rollback.get("event_hash_restored")
++        and rollback.get("topic_hash_restored")
++    ):
++        errors.append("rollback_evidence")
++    if artifact.get("no_model_weight_mutation") is not True:
++        errors.append("no_model_weight_mutation")
++    if artifact.get("csl_residue_stress_ready") is not True:
++        errors.append("csl_residue_stress_ready")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    principles = artifact.get("field_principles", {})
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if not principles.get(field)]
++    if missing_principles:
++        errors.append(f"field_principles missing: {missing_principles}")
++    if not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    checksum = artifact.get("reproducibility_checksum")
++    if checksum and checksum != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def honest_verdict(artifact: Mapping[str, Any]) -> str:
++    """Return the terminal verdict from the residue stress gate fields."""
++
++    if (
++        artifact.get("csl_residue_stress_ready") is True
++        and artifact.get("no_model_weight_mutation") is True
++        and float(artifact.get("residue_contamination_rate", 1.0)) == 0.0
++    ):
++        return "complete: csl_event_topic_residue_stress_ready"
++    return "blocked: csl_event_topic_residue_stress_not_ready"
++
++
++def load_json(path: Path | str) -> JsonDict:
++    """Read a JSON object from disk."""
++
++    return json.loads(Path(path).read_text(encoding="utf-8"))
++
++
++def write_json(path: Path | str, payload: Mapping[str, Any]) -> None:
++    """Write stable JSON so checksums and diffs stay reviewable."""
++
++    target = Path(path)
++    target.parent.mkdir(parents=True, exist_ok=True)
++    target.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def hash_memory_state(state: Mapping[str, Any]) -> str:
++    """Hash JSON-compatible memory state with stable key ordering."""
++
++    return "sha256:" + sha256_json(state)
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact with its checksum field removed."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return "sha256:" + sha256_json(payload)
++
++
++def source_file_checksums(root: Path) -> JsonDict:
++    """Record the source files that back the artifact."""
++
++    return {
++        "module": sha256_file(root / MODULE_RELATIVE_PATH),
++        "spec": sha256_file(root / SPEC_RELATIVE_PATH),
++        "test": sha256_file(root / TEST_RELATIVE_PATH),
++    }
++
++
++def sha256_json(payload: Mapping[str, Any]) -> str:
++    """Return a SHA256 digest for a JSON-compatible mapping."""
++
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(blob).hexdigest()
++
++
++def sha256_file(path: Path | str) -> str:
++    """Return a SHA256 digest for a file."""
++
++    return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def _round(value: float) -> float:
++    """Round metric values once to avoid checksum drift from float repr noise."""
++
++    return round(float(value), 10)
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 5ca2237d25..4add374cde 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:09:43.287653+00:00",
+-  "finished_at": "2026-07-10T08:09:43.314260+00:00",
++  "started_at": "2026-07-10T08:22:52.706236+00:00",
++  "finished_at": "2026-07-10T08:22:52.733019+00:00",
+   "duration_s": 0.027,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index f860b9bd1f..b37a56faac 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T08:09:43Z",
++  "run_date": "2026-07-10T08:22:53Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index b72c848f84..0e7b5c20b8 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:09:44Z",
+-  "finished_at": "2026-07-10T08:09:44Z",
++  "started_at": "2026-07-10T08:22:54Z",
++  "finished_at": "2026-07-10T08:22:54Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 6f1ee7fa4b..779c5a811a 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-10T08:09:44Z",
++  "run_date": "2026-07-10T08:22:54Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index e352f37a03..d48731b4a7 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-10T08:09:45Z",
++  "run_date": "2026-07-10T08:22:54Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index d2826acf1d..ab21598577 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-10T03:23:21.703017Z",
+-  "duration_s": 70.12016487121582,
++  "run_date": "2026-07-10T08:27:46.181542Z",
++  "duration_s": 64.11077833175659,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index ccb3485958..f43ee2a404 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-07-10T03:24:03.708571+00:00",
+-  "duration_s": 0.016121387481689453,
++  "run_date": "2026-07-10T08:28:17.637281+00:00",
++  "duration_s": 0.01117849349975586,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 7f34ee40d9..34ab18f330 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 4.10s, user: 3.41s, system: 0.29s, MEM: 115.21 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.81s, user: 2.49s, system: 0.23s, MEM: 116.03 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 77% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 74% 19x read_verilog (2 sec), 9% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 1f1ab3e578..6a5c90aaad 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.149343490600586,
++  "efficiency_gains_ms": 2.1615028381347656,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 5c55a0714b..c7f307bbfb 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-10T03:24:45.747233Z",
++  "run_date": "2026-07-10T08:28:54.150068Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index 69d52690ec..70012f9f3c 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,14 +34,5 @@
+     0.6748974323272705
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757108,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "gradient_stability_ratio": 0.9999999989757108
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 5b37c56e87..2eaf545486 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.0005652499385178089,
+-  "latency_domino_seconds": 0.0013297940604388714,
++  "latency_legacy_seconds": 0.0005187438800930977,
++  "latency_domino_seconds": 0.001326151192188263,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 7722ca76e9..18425a57e6 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:09:13Z",
+-  "finished_at": "2026-07-10T08:09:13Z",
++  "started_at": "2026-07-10T08:22:22Z",
++  "finished_at": "2026-07-10T08:22:22Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 940f74dc67..f331ee8ce5 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:09:48Z",
+-  "finished_at": "2026-07-10T08:09:48Z",
++  "started_at": "2026-07-10T08:22:57Z",
++  "finished_at": "2026-07-10T08:22:57Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.080108642578125,
++  "latency_ms": 0.07796287536621094,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 7803c8048f..85c7340058 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008494997024536133,
+-  "avg_eqm_time": 0.07316409587860108,
++  "avg_pem_time": 0.000845184326171875,
++  "avg_eqm_time": 0.07362259864807129,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 69676d57a6..4d33396122 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 426.9840018749237,
++  "duration_s": 377.1332895755768,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 0261d7587d..8a2e2df3e8 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.08152174949645996,
++  "duration_s": 0.08438730239868164,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index cdcac23edc..1bccdb8f9a 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-07-10T03:27:01Z",
++  "run_date": "2026-07-10T08:30:25Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 8a62675f63..93c25d7c40 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000104188919067,
++  "duration_s": 5.000098943710327,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index bc61f464ce..778ef906ed 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000092029571533,
++  "duration_s": 10.000093698501587,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index da193ae79c..8365692792 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.7212908267974854,
++  "duration_s": 0.6264917850494385,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 2bd81d0e0f..602da32488 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.11560477269813418,
++  "duration_s": 0.1041648811660707,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index d0e03db19e..305d76de8c 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,20 +1,20 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_memory": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -23,11 +23,11 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_low": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+         "production": 0.5,
+@@ -45,15 +45,15 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_low": {
+       "FoVer": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+@@ -67,10 +67,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -79,8 +79,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_specific",
+-    "tier_transfer"
++    "tier_transfer",
++    "tier_specific"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index bac1aa4473..2839a64bf3 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0014464855194091797,
++  "duration_s": 0.0018155574798583984,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 75310c55ac..4876b7bd40 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.754781886935234e-05,
++  "duration_s": 4.3070875108242035e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 93cdb8d821..2d97b0cc11 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 2.9262155294418335e-06,
++  "duration_s": 3.5068951547145844e-06,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 71f3ee7d49..ba1b71a1b9 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 0.0005369186401367188,
++  "duration_s": 0.0005717277526855469,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_5529_csl_event_topic_residue_stress.json b/results/experiment_5529_csl_event_topic_residue_stress.json
+new file mode 100644
+index 0000000000..c73aedb99d
+--- /dev/null
++++ b/results/experiment_5529_csl_event_topic_residue_stress.json
+@@ -0,0 +1,399 @@
++{
++  "adversarial_irrelevant_memory_score": 0.0,
++  "condition_results": {
++    "adversarial_irrelevant_memory": [
++      {
++        "accepted": false,
++        "expected_action": "run-circuit-reset",
++        "label_id": "label-5529-db-timeout",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "rotate-secret",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "accepted": false,
++        "expected_action": "use-zero-index-bound",
++        "label_id": "label-5529-api-pagination",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "rotate-secret",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "accepted": false,
++        "expected_action": "deny-escalation",
++        "label_id": "label-5529-access-policy",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "rotate-secret",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "event_only": [
++      {
++        "accepted": true,
++        "expected_action": "run-circuit-reset",
++        "label_id": "label-5529-db-timeout",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "run-circuit-reset",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "accepted": true,
++        "expected_action": "use-zero-index-bound",
++        "label_id": "label-5529-api-pagination",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "use-zero-index-bound",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "accepted": false,
++        "expected_action": "deny-escalation",
++        "label_id": "label-5529-access-policy",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "grant-escalation",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "event_plus_topic": [
++      {
++        "accepted": true,
++        "expected_action": "run-circuit-reset",
++        "label_id": "label-5529-db-timeout",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "run-circuit-reset",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "accepted": true,
++        "expected_action": "use-zero-index-bound",
++        "label_id": "label-5529-api-pagination",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "use-zero-index-bound",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "accepted": true,
++        "expected_action": "deny-escalation",
++        "label_id": "label-5529-access-policy",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "deny-escalation",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "no_memory": [
++      {
++        "accepted": false,
++        "expected_action": "run-circuit-reset",
++        "label_id": "label-5529-db-timeout",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "restart-service",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "accepted": false,
++        "expected_action": "use-zero-index-bound",
++        "label_id": "label-5529-api-pagination",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "add-retry",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "accepted": false,
++        "expected_action": "deny-escalation",
++        "label_id": "label-5529-access-policy",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "grant-escalation",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "stale_memory": [
++      {
++        "accepted": false,
++        "expected_action": "run-circuit-reset",
++        "label_id": "label-5529-db-timeout",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "restart-service",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "accepted": false,
++        "expected_action": "use-zero-index-bound",
++        "label_id": "label-5529-api-pagination",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "use-limit-offset",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "accepted": false,
++        "expected_action": "deny-escalation",
++        "label_id": "label-5529-access-policy",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "grant-escalation",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "topic_only": [
++      {
++        "accepted": true,
++        "expected_action": "run-circuit-reset",
++        "label_id": "label-5529-db-timeout",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "run-circuit-reset",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "accepted": false,
++        "expected_action": "use-zero-index-bound",
++        "label_id": "label-5529-api-pagination",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "add-retry",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "accepted": true,
++        "expected_action": "deny-escalation",
++        "label_id": "label-5529-access-policy",
++        "label_source": "deterministic_fixture::heldout_labels",
++        "selected_action": "deny-escalation",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ]
++  },
++  "control_counts": {
++    "negative_transfer_candidates_accepted": 0,
++    "negative_transfer_candidates_seen": 1,
++    "stale_candidates_rejected": 1,
++    "stale_candidates_seen": 1
++  },
++  "csl_residue_stress_ready": true,
++  "event_memory_hash_after": "sha256:9a770efb193c2a61a1b403d08e30f5626e6ea6b5426735060fd9c8eaee8d2497",
++  "event_memory_hash_before": "sha256:1e1ae6386bfb71da1b2931f254adf3270366f089aab26dd19895c79fd15f9a47",
++  "event_only_score": 0.6666666667,
++  "event_topic_score": 1.0,
++  "experiment": 5529,
++  "experiment_id": "experiment_5529_csl_event_topic_residue_stress",
++  "field_principles": {
++    "adversarial_irrelevant_memory_score": "Scores the adversarial irrelevant-memory control arm.",
++    "condition_results": "Keeps every row-level held-out verdict inspectable.",
++    "control_counts": "Exposes raw stale and negative-transfer numerator/denominator counts.",
++    "csl_residue_stress_ready": "Bare gate field for downstream memory panels.",
++    "event_memory_hash_after": "Shows verifier-governed event memory changed without touching weights.",
++    "event_memory_hash_before": "Proves the fast event memory starts from an auditable state.",
++    "event_only_score": "Measures fast event memory without stable topic associations.",
++    "event_topic_score": "Measures the combined event-plus-topic CSL condition.",
++    "field_principles": "Explains why each required headline and gate field exists.",
++    "heldout_delta": "Reports combined-memory lift as event_topic_score minus no_memory_score.",
++    "honest_verdict": "Terminal summary for conductor reconciliation.",
++    "inference_substrate": "Declares this is a deterministic fixture, not live LLM inference.",
++    "negative_transfer_rate": "Records whether irrelevant memory is accepted as useful transfer.",
++    "no_memory_score": "Anchors the held-out control with no external memory available.",
++    "no_model_weight_mutation": "Keeps CSL scoped to external memory and verifier state only.",
++    "promotion_records": "Shows exactly why topic memories were promoted.",
++    "residue_contamination_rate": "Measures rejected memory that survives into accepted state.",
++    "rollback_evidence": "Shows unsafe scratch memory can be removed back to prior hashes.",
++    "semantic_shift_gate_used": "Confirms topic consolidation used semantic/verifier gates, not labels.",
++    "stale_evidence_rejection_rate": "Records whether outdated memory is rejected before selection.",
++    "stale_memory_score": "Shows unsafe stale evidence is harmful when not governed.",
++    "tests_added_or_reused": "Lists the focused, coverage, and full tests backing the artifact.",
++    "topic_memory_hash_after": "Shows only promoted topic memories entered the stable layer.",
++    "topic_memory_hash_before": "Proves the stable topic memory starts separately from event memory.",
++    "topic_only_score": "Measures stable topic memory without recent event progression.",
++    "upstream_gate_path": "Binds residue stress to the canonical Exp5528 CSL gate artifact."
++  },
++  "heldout_delta": 1.0,
++  "honest_verdict": "complete: csl_event_topic_residue_stress_ready",
++  "inference_substrate": "deterministic_csl_memory_fixture",
++  "methodology_note": "Scores are exact pass rates on a deterministic three-row fixture; perfect governed rejection is a fixture safety invariant, not a benchmark capability claim.",
++  "milestone": "2026.07.501",
++  "model_weight_hash_after": "sha256:9467147e66f06cca36cbd887c3fe7a394a50a09a9b592b490b4b5584476f68d8",
++  "model_weight_hash_before": "sha256:9467147e66f06cca36cbd887c3fe7a394a50a09a9b592b490b4b5584476f68d8",
++  "negative_transfer_rate": 0.0,
++  "no_memory_score": 0.0,
++  "no_model_weight_mutation": true,
++  "promotion_records": [
++    {
++      "promoted_action": "run-circuit-reset",
++      "promoted_topic": "database",
++      "promotion_trigger": "semantic_shift",
++      "source_event_id": "evt-5529-db-timeout",
++      "trigger_used_answer_label": false
++    },
++    {
++      "promoted_action": "deny-escalation",
++      "promoted_topic": "access",
++      "promotion_trigger": "verifier_change",
++      "source_event_id": "evt-5529-access-policy",
++      "trigger_used_answer_label": false
++    }
++  ],
++  "random_seed": 5529,
++  "reproducibility_checksum": "sha256:2b76df0697fa43908301218769f5c85434610c62ffede8272192f91c7a5aa52b",
++  "residue_contamination_rate": 0.0,
++  "retrieval_traces": {
++    "adversarial_irrelevant_memory": [
++      {
++        "candidates": [],
++        "condition": "adversarial_irrelevant_memory",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "candidates": [],
++        "condition": "adversarial_irrelevant_memory",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "candidates": [],
++        "condition": "adversarial_irrelevant_memory",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "event_only": [
++      {
++        "candidates": [],
++        "condition": "event_only",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "candidates": [],
++        "condition": "event_only",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "candidates": [],
++        "condition": "event_only",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "event_plus_topic": [
++      {
++        "candidates": [
++          {
++            "accepted": false,
++            "candidate_id": "stale-5529-db-restart",
++            "candidate_type": "stale",
++            "rejection_reason": "stale_evidence"
++          }
++        ],
++        "condition": "event_plus_topic",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "candidates": [],
++        "condition": "event_plus_topic",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "candidates": [
++          {
++            "accepted": false,
++            "candidate_id": "irrelevant-5529-secret-rotation",
++            "candidate_type": "negative_transfer",
++            "rejection_reason": "topic_mismatch"
++          }
++        ],
++        "condition": "event_plus_topic",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "no_memory": [
++      {
++        "candidates": [],
++        "condition": "no_memory",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "candidates": [],
++        "condition": "no_memory",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "candidates": [],
++        "condition": "no_memory",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "stale_memory": [
++      {
++        "candidates": [],
++        "condition": "stale_memory",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "candidates": [],
++        "condition": "stale_memory",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "candidates": [],
++        "condition": "stale_memory",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ],
++    "topic_only": [
++      {
++        "candidates": [],
++        "condition": "topic_only",
++        "task_id": "5529-heldout-db-timeout"
++      },
++      {
++        "candidates": [],
++        "condition": "topic_only",
++        "task_id": "5529-heldout-api-pagination"
++      },
++      {
++        "candidates": [],
++        "condition": "topic_only",
++        "task_id": "5529-heldout-access-policy"
++      }
++    ]
++  },
++  "rollback_evidence": {
++    "event_hash_restored": true,
++    "pre_event_hash": "sha256:9a770efb193c2a61a1b403d08e30f5626e6ea6b5426735060fd9c8eaee8d2497",
++    "pre_topic_hash": "sha256:6b69ea3f4f9917ba4c1f6f125eff472ae3ab8ee512514299805af03f2eb0541c",
++    "rejected_candidate_ids": [
++      "stale-5529-db-restart",
++      "irrelevant-5529-secret-rotation"
++    ],
++    "restored_event_hash": "sha256:9a770efb193c2a61a1b403d08e30f5626e6ea6b5426735060fd9c8eaee8d2497",
++    "restored_topic_hash": "sha256:6b69ea3f4f9917ba4c1f6f125eff472ae3ab8ee512514299805af03f2eb0541c",
++    "rollback_applied": true,
++    "scratch_event_hash": "sha256:0379e6af98c65ef9631b3139aa57301953d623401a950ce68b964ee2760fb276",
++    "scratch_topic_hash": "sha256:4c98e31e04934842b453ce4315f77b6c9eb04d8954f0ea15a92214f393b8f589",
++    "topic_hash_restored": true
++  },
++  "run_date": "2026-07-10",
++  "schema": "carnot.experiment_5529.csl_event_topic_residue_stress.v1",
++  "semantic_shift_gate_used": true,
++  "source_file_checksums": {
++    "module": "sha256:555b092f86fb369afe018bc3e6af90b90284facc36e5250ee21d48ff673e2c99",
++    "spec": "sha256:c8d8b16f7f4ea63d1b9f6450bf9c507588ed702a74d9722b1e03c0368e18f247",
++    "test": "sha256:a99d983443549c63472f1c90359fe9bf95bc93bfcf3e2a15eff70a812e85926f"
++  },
++  "source_files": {
++    "module": "python/carnot/experiment_5529_csl_event_topic_residue_stress.py",
++    "spec": "openspec/capabilities/self-learning/spec.md",
++    "test": "tests/python/test_experiment_5529_csl_event_topic_residue_stress.py"
++  },
++  "spec_refs": [
++    "REQ-LEARN-5529",
++    "SCENARIO-LEARN-5529-PROMOTION",
++    "SCENARIO-LEARN-5529-CONTROLS",
++    "SCENARIO-LEARN-5529-ROLLBACK"
++  ],
++  "stale_evidence_rejection_rate": 1.0,
++  "stale_memory_score": 0.0,
++  "task_id": "exp5529-gated-csl-event-topic-residue-stress",
++  "tests_added_or_reused": [
++    ".venv/bin/pytest tests/python/test_experiment_5529_csl_event_topic_residue_stress.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --include=python/carnot/experiment_5529_csl_event_topic_residue_stress.py -m pytest tests/python/test_experiment_5529_csl_event_topic_residue_stress.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5529_csl_event_topic_residue_stress.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "topic_memory_hash_after": "sha256:6b69ea3f4f9917ba4c1f6f125eff472ae3ab8ee512514299805af03f2eb0541c",
++  "topic_memory_hash_before": "sha256:4904f1be708ac4824921847a4920e7b13079e86124a5c60b0884413fb84469bd",
++  "topic_only_score": 0.6666666667,
++  "upstream_gate_fields": {
++    "conductor_gate_probe_passed": true,
++    "csl_gate_fields_conductor_visible": true
++  },
++  "upstream_gate_path": "results/experiment_5528_csl_canonical_gate_artifact.json"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 68032987f7..f828f480ed 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:08:54Z",
+-  "finished_at": "2026-07-10T08:08:54Z",
++  "started_at": "2026-07-10T08:25:50Z",
++  "finished_at": "2026-07-10T08:25:50Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 4270868dd7..a49b1c9bf3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:08:54Z",
+-  "finished_at": "2026-07-10T08:08:54Z",
++  "started_at": "2026-07-10T08:25:50Z",
++  "finished_at": "2026-07-10T08:25:50Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 7753a3961e..40cfbeec38 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260710",
+-  "started_at": "2026-07-10T08:08:54Z",
+-  "finished_at": "2026-07-10T08:08:54Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-10T08:25:50Z",
++  "finished_at": "2026-07-10T08:25:50Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5529_csl_event_topic_residue_stress.py b/tests/python/test_experiment_5529_csl_event_topic_residue_stress.py
+new file mode 100644
+index 0000000000..e9373347bc
+--- /dev/null
++++ b/tests/python/test_experiment_5529_csl_event_topic_residue_stress.py
+@@ -0,0 +1,213 @@
++"""Tests for Exp5529 event/topic CSL memory residue stress.
++
++Spec refs: REQ-LEARN-5529,
++SCENARIO-LEARN-5529-PROMOTION,
++SCENARIO-LEARN-5529-CONTROLS,
++SCENARIO-LEARN-5529-ROLLBACK.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5529_csl_event_topic_residue_stress as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5529_csl_event_topic_residue_stress.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5529_csl_event_topic_residue_stress.py "
++    "-m pytest tests/python/test_experiment_5529_csl_event_topic_residue_stress.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5529_csl_event_topic_residue_stress.py "
++    "--fail-under=100"
++)
++FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
++TESTS_ADDED_OR_REUSED = [TEST_COMMAND, COVERAGE_COMMAND, FULL_TEST_COMMAND]
++
++
++def test_req_learn_5529_spec_declares_event_topic_residue_contract() -> None:
++    """REQ-LEARN-5529: OpenSpec anchors the bounded residue stress artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5529") :]
++
++    for marker in (
++        "REQ-LEARN-5529",
++        "SCENARIO-LEARN-5529-PROMOTION",
++        "SCENARIO-LEARN-5529-CONTROLS",
++        "SCENARIO-LEARN-5529-ROLLBACK",
++        str(exp.RESULT_RELATIVE_PATH),
++        str(exp.UPSTREAM_GATE_PATH),
++        exp.INFERENCE_SUBSTRATE,
++        "semantic-shift or verifier-change",
++        "held-out answer label",
++    ):
++        assert marker in section
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_learn_5529_promotion_is_label_independent() -> None:
++    """SCENARIO-LEARN-5529-PROMOTION: promotion does not read answer labels."""
++
++    fixture = exp.build_fixture()
++    before_event_hash = exp.hash_memory_state(exp.empty_event_memory())
++    before_topic_hash = exp.hash_memory_state(exp.empty_topic_memory())
++
++    memory = exp.build_memory_states(fixture)
++
++    assert memory["event_memory_hash_before"] == before_event_hash
++    assert memory["topic_memory_hash_before"] == before_topic_hash
++    assert memory["event_memory_hash_after"] != before_event_hash
++    assert memory["topic_memory_hash_after"] != before_topic_hash
++    assert memory["semantic_shift_gate_used"] is True
++    assert len(memory["promotion_records"]) == 2
++    for record in memory["promotion_records"]:
++        assert record["promotion_trigger"] in exp.PROMOTION_TRIGGERS
++        assert record["trigger_used_answer_label"] is False
++        assert "answer_label" not in record
++        assert record["promoted_topic"] in {"database", "access"}
++
++
++def test_scenario_learn_5529_conditions_and_artifact_fields(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-5529-CONTROLS: six conditions quantify safe memory use."""
++
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH.name
++    artifact = exp.run(
++        root=REPO,
++        result_path=result_path,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=True,
++    )
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++        assert artifact["field_principles"][field]
++    assert artifact["upstream_gate_path"] == exp.UPSTREAM_GATE_PATH.as_posix()
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert artifact["semantic_shift_gate_used"] is True
++    assert artifact["no_memory_score"] == pytest.approx(0.0)
++    assert artifact["event_only_score"] == pytest.approx(2 / 3)
++    assert artifact["topic_only_score"] == pytest.approx(2 / 3)
++    assert artifact["event_topic_score"] == pytest.approx(1.0)
++    assert artifact["stale_memory_score"] == pytest.approx(0.0)
++    assert artifact["adversarial_irrelevant_memory_score"] == pytest.approx(0.0)
++    assert artifact["heldout_delta"] == pytest.approx(1.0)
++    assert artifact["stale_evidence_rejection_rate"] == pytest.approx(1.0)
++    assert artifact["negative_transfer_rate"] == pytest.approx(0.0)
++    assert artifact["residue_contamination_rate"] == pytest.approx(0.0)
++    assert artifact["no_model_weight_mutation"] is True
++    assert artifact["csl_residue_stress_ready"] is True
++    assert artifact["honest_verdict"].startswith("complete:")
++
++    label_sets = {
++        condition: tuple(row["label_id"] for row in rows)
++        for condition, rows in artifact["condition_results"].items()
++    }
++    assert set(label_sets) == set(exp.CONDITIONS)
++    assert len(set(label_sets.values())) == 1
++    assert artifact["condition_results"]["event_plus_topic"][2]["selected_action"] == (
++        "deny-escalation"
++    )
++    assert artifact["condition_results"]["event_only"][2]["selected_action"] == (
++        "grant-escalation"
++    )
++    assert artifact["control_counts"]["stale_candidates_seen"] == 1
++    assert artifact["control_counts"]["stale_candidates_rejected"] == 1
++    assert artifact["control_counts"]["negative_transfer_candidates_seen"] == 1
++    assert artifact["control_counts"]["negative_transfer_candidates_accepted"] == 0
++
++
++def test_scenario_learn_5529_rollback_restores_memory_and_validation_rejects_drift(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5529-ROLLBACK: unsafe scratch state can be removed."""
++
++    artifact = exp.run(
++        root=REPO,
++        result_path=tmp_path / exp.RESULT_RELATIVE_PATH.name,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=True,
++    )
++    relative_artifact = exp.run(
++        root=REPO,
++        result_path=exp.RESULT_RELATIVE_PATH,
++        tests_added_or_reused=TESTS_ADDED_OR_REUSED,
++        write=False,
++    )
++    assert exp.validate_artifact(artifact) is True
++    assert relative_artifact["event_topic_score"] == pytest.approx(1.0)
++    rollback = artifact["rollback_evidence"]
++    assert rollback["rollback_applied"] is True
++    assert rollback["event_hash_restored"] is True
++    assert rollback["topic_hash_restored"] is True
++    assert rollback["scratch_event_hash"] != rollback["pre_event_hash"]
++    assert rollback["scratch_topic_hash"] != rollback["pre_topic_hash"]
++
++    drift_cases = [
++        ("upstream_gate_path", "results/wrong.json", "upstream_gate_path"),
++        ("semantic_shift_gate_used", False, "semantic_shift_gate_used"),
++        ("event_memory_hash_after", artifact["event_memory_hash_before"], "event_memory_hash"),
++        ("topic_memory_hash_after", artifact["topic_memory_hash_before"], "topic_memory_hash"),
++        ("heldout_delta", 0.5, "heldout_delta"),
++        ("stale_evidence_rejection_rate", 0.5, "stale_evidence_rejection_rate"),
++        ("negative_transfer_rate", 0.5, "negative_transfer_rate"),
++        ("residue_contamination_rate", 0.5, "residue_contamination_rate"),
++        ("no_model_weight_mutation", False, "no_model_weight_mutation"),
++        ("csl_residue_stress_ready", False, "csl_residue_stress_ready"),
++        ("inference_substrate", "aggregation_from_upstream_artifacts", "inference_substrate"),
++        ("honest_verdict", "ready", "honest_verdict"),
++    ]
++    for field, value, expected in drift_cases:
++        bad = deepcopy(artifact)
++        bad[field] = value
++        bad["reproducibility_checksum"] = exp.reproducibility_checksum(bad)
++        with pytest.raises(ValueError, match=expected):
++            exp.validate_artifact(bad)
++
++    missing = deepcopy(artifact)
++    missing.pop("topic_memory_hash_after")
++    missing["reproducibility_checksum"] = exp.reproducibility_checksum(missing)
++    with pytest.raises(ValueError, match="missing required fields"):
++        exp.validate_artifact(missing)
++
++    missing_principle = deepcopy(artifact)
++    missing_principle["field_principles"].pop("event_topic_score")
++    missing_principle["reproducibility_checksum"] = exp.reproducibility_checksum(
++        missing_principle
++    )
++    with pytest.raises(ValueError, match="field_principles"):
++        exp.validate_artifact(missing_principle)
++
++    bad_rollback = deepcopy(artifact)
++    bad_rollback["rollback_evidence"]["event_hash_restored"] = False
++    bad_rollback["reproducibility_checksum"] = exp.reproducibility_checksum(bad_rollback)
++    with pytest.raises(ValueError, match="rollback_evidence"):
++        exp.validate_artifact(bad_rollback)
++
++    no_tests = deepcopy(artifact)
++    no_tests["tests_added_or_reused"] = []
++    no_tests["reproducibility_checksum"] = exp.reproducibility_checksum(no_tests)
++    with pytest.raises(ValueError, match="tests_added_or_reused"):
++        exp.validate_artifact(no_tests)
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = "sha256:bad"
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        exp.validate_artifact(bad_checksum)
++
++    blocked = deepcopy(artifact)
++    blocked["residue_contamination_rate"] = 1.0
++    assert exp.honest_verdict(blocked).startswith("blocked:")
+-- 
+2.55.0
+

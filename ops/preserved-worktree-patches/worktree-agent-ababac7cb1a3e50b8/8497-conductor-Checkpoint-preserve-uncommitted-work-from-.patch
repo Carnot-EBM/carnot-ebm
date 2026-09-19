@@ -1,0 +1,54 @@
+From cde5ac35553149c7bdc7a34bf4cddb664190f6c1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 19:26:42 -0400
+Subject: [PATCH 08497/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ ops/supervisor-alerts.json   | 1 +
+ 4 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5a2b113edf..53b298f2d7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 112, "phase": "iteration_start", "last_beat": "2026-08-07T22:24:59Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 113, "phase": "iteration_start", "last_beat": "2026-08-07T23:26:34Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a607c90828..99583db6f1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15498,3 +15498,5 @@ Still active  |
+ | 2026-08-07 22:20 UTC | Two-family live strategy seed gated on Exp6200 CSL | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
+ | 2026-08-07 22:22 UTC | Two-family live strategy seed gated on Exp6200 CSL | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
+ | 2026-08-07 22:24 UTC | Prospective procedural-memory continuous learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6206-live-strategy-seed-v2) |
++| 2026-08-07 23:24 UTC | Default-off mode-jump runtime integration from qua | OK | 113 passed, 1 warning in 29.48s |
++| 2026-08-07 23:26 UTC | Prospective procedural-memory continuous learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6206-live-strategy-seed-v2) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 14c58d3174..5a2b063d71 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 112, "phase": "iteration_start", "started_at": "2026-08-07T22:24:59Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 113, "phase": "iteration_start", "started_at": "2026-08-07T23:26:34Z"}
+\ No newline at end of file
+diff --git a/ops/supervisor-alerts.json b/ops/supervisor-alerts.json
+index 56abd7d892..f49792195f 100644
+--- a/ops/supervisor-alerts.json
++++ b/ops/supervisor-alerts.json
+@@ -73,3 +73,4 @@
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-07-24T21:43:42Z", "task_id": "exp5902-arc-structured-memory-live-ab", "deliverable": "results/experiment_5902_arc_structured_memory_live_ab.json", "exact_zero_deltas": [{"key": "accuracy_efficiency_and_safety_metrics.structured_actions_delta_vs_none", "value": 0.0}, {"key": "accuracy_efficiency_and_safety_metrics.structured_actions_delta_vs_raw", "value": 0.0}, {"key": "accuracy_efficiency_and_safety_metrics.structured_over_none_accuracy_delta", "value": 0.0}, {"key": "accuracy_efficiency_and_safety_metrics.structured_over_raw_accuracy_delta", "value": 0.0}, {"key": "shuffled_and_deletion_confirmatory_controls.relevant_deletion_effect_delta", "value": 0.0}, {"key": "shuffled_and_deletion_confirmatory_controls.shuffle_effect_delta", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp5902-arc-structured-memory-live-ab reports parity-test outputs that are bit-identical or exactly zero across 6 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-07-25T10:58:22Z", "task_id": "exp5916-arc-structured-memory-live-held-ab", "deliverable": "results/experiment_5916_arc_structured_memory_live_held_ab.json", "exact_zero_deltas": [{"key": "held_accuracy_progress_efficiency_and_safety_metrics.structured_actions_delta_vs_none", "value": 0.0}, {"key": "held_accuracy_progress_efficiency_and_safety_metrics.structured_actions_delta_vs_raw", "value": 0.0}, {"key": "held_accuracy_progress_efficiency_and_safety_metrics.structured_over_none_accuracy_delta", "value": 0.0}, {"key": "held_accuracy_progress_efficiency_and_safety_metrics.structured_over_none_progress_delta", "value": 0.0}, {"key": "held_accuracy_progress_efficiency_and_safety_metrics.structured_over_raw_accuracy_delta", "value": 0.0}, {"key": "held_accuracy_progress_efficiency_and_safety_metrics.structured_over_raw_progress_delta", "value": 0.0}, {"key": "shuffled_and_deletion_confirmatory_controls.relevant_deletion_effect_delta", "value": 0.0}, {"key": "shuffled_and_deletion_confirmatory_controls.shuffle_effect_delta", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp5916-arc-structured-memory-live-held-ab reports parity-test outputs that are bit-identical or exactly zero across 8 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+ {"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-08-07T16:33:07Z", "task_id": "exp6194-mode-jump-rust-pyo3-parity", "deliverable": "results/experiment_6194_mode_jump_rust_pyo3_parity.json", "exact_zero_deltas": [{"key": "acceptance_autocorrelation_and_ess_metrics.acceptance_delta", "value": 0.0}, {"key": "distribution_frequency_tv_kl_metrics.acceptance_delta", "value": 0.0}, {"key": "distribution_frequency_tv_kl_metrics.python_rust_frequency_delta_max", "value": 0.0}, {"key": "distribution_frequency_tv_kl_metrics.tolerances.acceptance_delta", "value": 0.0}, {"key": "distribution_frequency_tv_kl_metrics.tolerances.python_rust_freq_delta", "value": 0.0}, {"key": "fixed_algorithm_equations_config_and_seed.tolerances.acceptance_delta", "value": 0.0}, {"key": "fixed_algorithm_equations_config_and_seed.tolerances.python_rust_freq_delta", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp6194-mode-jump-rust-pyo3-parity reports parity-test outputs that are bit-identical or exactly zero across 7 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
++{"alert_type": "PARITY_TAUTOLOGY", "timestamp": "2026-08-07T23:24:34Z", "task_id": "exp6208-mode-jump-runtime-integration", "deliverable": "results/experiment_6208_mode_jump_runtime_integration.json", "exact_zero_deltas": [{"key": "autocorrelation_and_effective_sample_size.acceptance_delta", "value": 0.0}, {"key": "autocorrelation_and_effective_sample_size.autocorrelation_delta", "value": 0.0}, {"key": "autocorrelation_and_effective_sample_size.ess_delta", "value": 0.0}, {"key": "distribution_tv_kl_and_interval_receipts.rust_fallback_frequency_delta_max", "value": 0.0}], "identical_histogram_pairs": [], "detail": "Task exp6208-mode-jump-runtime-integration reports parity-test outputs that are bit-identical or exactly zero across 4 delta fields and 0 histogram pairs. Two truly independent stochastic samplers cannot produce bit-identical 10k-sample histograms; the test likely compares one sampler against itself (shared PRNGKey path, or one is a wrapper around the other). Audit before shipping in any headline claim. See .117 exp1526-1531 incident in ops/known-issues.md (2026-05-08)."}
+-- 
+2.55.0
+

@@ -1,0 +1,136 @@
+From 3aeea01a21e855f04f835c06cb170535501b13fd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 01:44:14 -0400
+Subject: [PATCH 07759/11362] [outer-loop] ARC nav inducer confidence gate:
+ don't fire on non-nav games (REQ-ARC-WMTE-5844)
+
+Source-check (workflow): sk48 (two-snake sequence-match) and wa30 (Sokoban crate-push)
+are NOT navigation games -- the fitter spuriously fits them and wa30 installed a wasted
+plan (+4 actions in the 5843 A/B). Added InducedNavWorldModel.is_confident_nav (avatar
+must exclude padding-0 + move in >=3 directions + have a goal) and gated the E3
+structured-nav path on it. Verified: tu93 still fires+solves (levelup), sk48/wa30 gated
+out (no wasted plan). 5 unit tests, ruff+mypy clean. Conservative gate: a missed real
+nav game costs a forgone level-up (no harm); firing on non-nav wastes actions.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../carnot/agentic/arc_competition_agent.py   |  8 ++++
+ python/carnot/agentic/arc_nav_world_model.py  | 24 ++++++++++
+ .../python/test_nav_world_model_confidence.py | 46 +++++++++++++++++++
+ 3 files changed, 78 insertions(+)
+ create mode 100644 tests/python/test_nav_world_model_confidence.py
+
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 1985132543..f21d6ea6fc 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -3806,10 +3806,18 @@ class E3AgentPolicy:
+                     from carnot.agentic.arc_nav_world_model import InducedNavWorldModel
+ 
+                     nav = InducedNavWorldModel.fit(active_transitions)
++                    # CONFIDENCE-GATED (REQ-ARC-WMTE-5844): only fire on a HIGH-confidence nav fit -- the
++                    # fitter also fits a (spurious) model for source-verified NON-nav games (sk48 two-snake
++                    # sequence-match; wa30 Sokoban crate-push), where firing installs a plan that cannot win
++                    # and wastes actions. is_confident_nav rejects those (avatar captured padding-0, or <3
++                    # directions) while keeping tu93.
+                     is_nav = bool(getattr(nav, "displacement", None)) and (
+                         getattr(nav, "goal_color", None) is not None
+                     )
++                    is_confident = is_nav and nav.is_confident_nav()
+                     attempt["structured_nav_is_nav_game"] = bool(is_nav)
++                    attempt["structured_nav_confident"] = bool(is_confident)
++                    is_nav = is_confident
+                     if is_nav and self.root_grid is not None:
+                         nav_eng, nav_isdone = nav.as_callables()
+                         # Record the standard metrics for diagnostics, but do NOT gate on the full-grid
+diff --git a/python/carnot/agentic/arc_nav_world_model.py b/python/carnot/agentic/arc_nav_world_model.py
+index 1475892e72..fdd119a4c7 100644
+--- a/python/carnot/agentic/arc_nav_world_model.py
++++ b/python/carnot/agentic/arc_nav_world_model.py
+@@ -329,6 +329,30 @@ class InducedNavWorldModel:
+     def as_callables(self):
+         return self.engine, self.is_level_complete
+ 
++    def is_confident_nav(self, *, min_directions: int = 3) -> bool:
++        """A HIGH-CONFIDENCE navigation fit -- used to gate the live inducer so it does NOT fire on
++        non-navigation games where the fit is spurious (REQ-ARC-WMTE-5844). Two tells separate the one real
++        nav game (tu93: avatar={9,4}, all 4 directions, goal=14) from the source-verified NON-nav games the
++        fitter still fit a model for (sk48 = two-snake sequence-match, avatar={0,1}, only [1,2]; wa30 =
++        Sokoban crate-push, avatar={0,14}, win reads CRATE positions not the avatar):
++
++          1. The avatar must NOT include colour 0. Colour 0 is the PADDING/letterbox/void in the ARC render
++             (confirmed in wa30 source, PADDING_COLOR=0); a genuine avatar sprite is non-padding, so an
++             avatar that captured colour 0 has latched onto static frame-edge padding -> a corrupt fit.
++          2. The avatar must translate in at least `min_directions` (default 3) of the 4 directional actions.
++             A free-moving grid avatar moves in most directions; a fit that only saw <3 (sk48's orientation-
++             locked snake, only up/down) is not a free 4-direction navigator.
++
++        Plus a real goal colour. This is a CONSERVATIVE gate: a missed real nav game costs at most a
++        forgone level-up (no harm), whereas firing on a non-nav game installs a plan that cannot win and
++        wastes real actions (the wa30 A/B cost). tu93 passes (no 0, 4 directions, goal=14); sk48/wa30 fail.
++        """
++        if self.goal_color is None:
++            return False
++        if 0 in set(self.avatar_colors):
++            return False
++        return len({a for a in self.displacement if a in _NAV_ACTIONS}) >= int(min_directions)
++
+ 
+ def _blobs(mask):
+     """Connected components (4-neighbour) of a boolean mask -> list of (centre_row, centre_col, size)."""
+diff --git a/tests/python/test_nav_world_model_confidence.py b/tests/python/test_nav_world_model_confidence.py
+new file mode 100644
+index 0000000000..48f2d450f9
+--- /dev/null
++++ b/tests/python/test_nav_world_model_confidence.py
+@@ -0,0 +1,46 @@
++"""Regression: InducedNavWorldModel.is_confident_nav gates the live nav inducer off NON-nav games.
++
++The fitter fits a (spurious) model for source-verified non-navigation games (sk48 two-snake sequence-match;
++wa30 Sokoban crate-push), where firing installs a plan that cannot win and wastes actions. is_confident_nav
++rejects those (avatar captured padding-0, or <3 directions) while keeping the real nav game (tu93).
++Spec: REQ-ARC-WMTE-5844.
++"""
++
++from __future__ import annotations
++
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel
++
++
++def _model(avatar, disp_keys, goal):
++    return InducedNavWorldModel(
++        displacement={a: (1, 0) for a in disp_keys},
++        avatar_colors=frozenset(avatar),
++        bg_color=5,
++        floor_color=5,
++        wall_colors=frozenset(),
++        goal_color=goal,
++    )
++
++
++def test_tu93_like_is_confident():
++    # avatar {9,4}, all 4 directions, goal 14 -> confident
++    assert _model({9, 4}, [1, 2, 3, 4], 14).is_confident_nav() is True
++
++
++def test_sk48_like_not_confident_padding_and_few_dirs():
++    # avatar includes 0 (padding) AND only 2 directions -> not confident
++    assert _model({0, 1}, [1, 2], 3).is_confident_nav() is False
++
++
++def test_wa30_like_not_confident_padding_in_avatar():
++    # avatar includes 0 (padding) even with 4 directions -> not confident
++    assert _model({0, 14}, [1, 2, 3, 4], 2).is_confident_nav() is False
++
++
++def test_no_goal_not_confident():
++    assert _model({9, 4}, [1, 2, 3, 4], None).is_confident_nav() is False
++
++
++def test_too_few_directions_not_confident():
++    # a clean avatar but only 2 directions -> not confident (default min 3)
++    assert _model({9}, [1, 2], 14).is_confident_nav() is False
+-- 
+2.55.0
+

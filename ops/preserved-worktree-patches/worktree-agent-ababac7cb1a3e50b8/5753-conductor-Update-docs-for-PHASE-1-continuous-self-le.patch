@@ -1,0 +1,80 @@
+From 3d62fa790fe99228de4a998267152e4ddc1cc98f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 5 Jul 2026 05:02:21 -0400
+Subject: [PATCH 05753/11362] [conductor] Update docs for PHASE 1 continuous
+ self-learning -- typed-memory retention and interference audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ _bmad/traceability.md        | 8 ++++++++
+ ops/changelog.md             | 1 +
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ ops/status.md                | 1 +
+ 6 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 1156e2c7c5..7a517e5b27 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -1951,3 +1951,11 @@ legacy tests.
+ | REQ-LEARN-5260-5 | Rollback behavior requires a rolled-back entry to change a held-out degradation decision | Implemented-Partial | Artifact records rollback_exercised.value=false, so no rollback-closure or useful-transfer claim is made. |
+ | SCENARIO-LEARN-5260-COMPLETE-MEASUREMENT | Ready SOTA runtime measures source-to-target transfer with aligned, shuffled, and no-memory arms | Implemented-Partial | Artifact used live_llm_inference_local_gguf_sota and completed the aligned/shuffled/no-memory measurement, but the terminal verdict is null with delta_over_no_memory=0.000000 and delta_over_shuffled_memory=0.000000 rather than a measured improvement. |
+ | SCENARIO-LEARN-5260-BLOCKED-PRECONDITION | Missing SOTA runtime readiness emits a blocked artifact | Scaffolding | The blocked-precondition behavior is specified and test-scaffolded, but Exp 5260 did not follow it because Exp 5259 reported `sota_runtime_ready=true`; no retro_* closure or AUC/TP/FP/signed_improvement/violation_rate metric is claimed. |
++| REQ-LEARN-5261 | Typed-memory retention and interference audit | Implemented | `python/carnot/pipeline/typed_memory_interference_audit.py`; `tests/python/test_experiment_5261_typed_memory_interference_audit_v481.py`; `openspec/capabilities/self-learning/spec.md`; `results/experiment_5261_typed_memory_interference_audit_v481.json`; honest_verdict=complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed; status=<missing>; memory_policy_ready=true; retention_rate=1.0; interference_rate=0.0; harmful_memory_rollback_passed=true; tests_run=[]; no retro_* flags; no AUC/TP/FP/signed_improvement/violation_rate fields; no live cross-model memory claim is made. |
++| REQ-LEARN-5261-1 | Count retention on aligned useful memories after deterministic distractor insertion | Implemented | Artifact records retention_rate=1.0 after cached fixture replay with aligned, irrelevant, conflicting, stale, and shuffled memories. |
++| REQ-LEARN-5261-2 | Count interference when unrelated tasks receive non-null irrelevant memory action | Implemented | Artifact records interference_rate=0.0 and memory_policy_ready=true, so unrelated tasks did not receive harmful non-null memory actions in this cached audit. |
++| REQ-LEARN-5261-3 | Evict stale and conflicting entries before retrieval metrics | Implemented | Artifact records promotion_eviction_policy eviction summary with evicted_n=2, evicted_by_reason.conflicting=1, and evicted_by_reason.stale=1 before the ready verdict. |
++| REQ-LEARN-5261-4 | Keep promotion gated by deterministic guard, leakage rejection, and held-out delta threshold | Implemented | Artifact promotion decisions preserve threshold-gated promotions while null, negative, missing, and harmful deltas roll back; memory_policy_ready=true is limited to cached/no-LLM replay. |
++| REQ-LEARN-5261-5 | Harmful memory rollback selects a safe action | Implemented | Artifact records harmful_memory_rollback_passed=true and the honest verdict includes harmful_rollback_passed=true. |
++| REQ-LEARN-5261-6 | State whether the current memory policy is ready, blocked, harmful, or needs redesign | Implemented | Artifact records memory_policy_ready=true and honest_verdict starts `complete: memory policy ready for cached fixture replay`, while explicitly leaving live cross-model memory unclaimed. |
++| SCENARIO-LEARN-5261 | Cached fixture replay audits memory safety | Implemented | Artifact uses cached_fixture_replay_no_llm, reports retention_rate=1.0, interference_rate=0.0, eviction and rollback outcomes, and writes `results/experiment_5261_typed_memory_interference_audit_v481.json`; no retro closure or live LLM usefulness claim is inferred. |
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 355b34e8eb..81268c10da 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -10909,3 +10909,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-05: PHASE 0 SOTA refresh -- V481 deltas after planning references (✅ Complete) — honest_verdict={"principle":"Must start with complete: and distinguish new actionable findings from an honest no-op refresh.","value":"complete: 7 new actionable findings appended; executable .481 plan unchanged."}; status=<missing>; new_references_added.value=7; references_md_updated.value=true; actionable_deltas.count=7; all planned_task_impact=no_plan_edit; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5258_sota_refresh_v481.json
+ - 2026-07-05: PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight (✅ Complete) — honest_verdict={"principle":"Terminal preflight verdict; starts with complete: or blocked_ and states whether the mandated SOTA GGUF runtime is ready.","value":"complete: sota_runtime_ready=true ready through flagship_moe"}; status=<missing>; sota_runtime_ready=true; runtime_ready models=flagship_dense,flagship_moe,middle_moe; n_gpu_layers=-1; no_quality_claim.value=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json
+ - 2026-07-05: PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Terminal verdict; starts with complete: or blocked_ and states whether cross-model memory was useful, harmful, null, or unmeasured.","value":"complete: cross-model typed memory null; delta_over_no_memory=0.000000; delta_over_shuffled_memory=0.000000; unsafe_false_accepts=0; rollback_exercised=false"}; status=<missing>; cross_model_memory_useful=false; delta_over_no_memory.value=0.0; delta_over_shuffled_memory.value=0.0; unsafe_false_accepts.value=0; repeated_error_rate.value=0.0; rollback_exercised.value=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5260_cross_model_typed_memory_retry_v481.json
++- 2026-07-05: PHASE 1 continuous self-learning -- typed-memory retention and interference audit (✅ Complete) — honest_verdict=complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed; status=<missing>; memory_policy_ready=true; retention_rate=1.0; interference_rate=0.0; harmful_memory_rollback_passed=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5261_typed_memory_interference_audit_v481.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1bbeab574b..c20560b3c9 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 93, "phase": "iteration_start", "last_beat": "2026-07-05T08:39:57Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 94, "phase": "iteration_start", "last_beat": "2026-07-05T08:57:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 141d4665c1..8ff0a1e05f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10329,3 +10329,4 @@ web search: |
+ | 2026-07-05 07:01 UTC | PHASE 0 runtime unblock -- mandated SOTA GGUF llam | OK | cache hit: 88 passed, 1 warning in 13.26s |
+ | 2026-07-05 08:27 UTC | PHASE 1 gated on exp5259 sota_runtime_ready -- cro | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: T_PATH.read_te |
+ | 2026-07-05 08:37 UTC | PHASE 1 gated on exp5259 sota_runtime_ready -- cro | OK | cache hit: 89 passed, 1 warning in 9.78s |
++| 2026-07-05 08:55 UTC | PHASE 1 continuous self-learning -- typed-memory r | OK | 87 passed, 1 warning in 8.65s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b149be0a7f..e448a79cba 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 93, "phase": "iteration_start", "started_at": "2026-07-05T08:39:57Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 94, "phase": "iteration_start", "started_at": "2026-07-05T08:57:02Z"}
+\ No newline at end of file
+diff --git a/ops/status.md b/ops/status.md
+index 4702ec655f..03cd8d2607 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -5840,3 +5840,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
+ | 2026-07-05 | Exp 5258: PHASE 0 SOTA refresh -- V481 deltas after planning references | ✅ Complete | honest_verdict={"principle":"Must start with complete: and distinguish new actionable findings from an honest no-op refresh.","value":"complete: 7 new actionable findings appended; executable .481 plan unchanged."}; status=<missing>; new_references_added.value=7; references_md_updated.value=true; actionable_deltas.count=7; all planned_task_impact=no_plan_edit; retired_scope_reopened.value=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-REPORT-5258, SCENARIO-REPORT-5258-APPEND-DELTAS, SCENARIO-REPORT-5258-NOOP; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:` and records 7 new actionable findings appended with references_md_updated.value=true | results/experiment_5258_sota_refresh_v481.json |
+ | 2026-07-05 | Exp 5259: PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight | ✅ Complete | honest_verdict={"principle":"Terminal preflight verdict; starts with complete: or blocked_ and states whether the mandated SOTA GGUF runtime is ready.","value":"complete: sota_runtime_ready=true ready through flagship_moe"}; status=<missing>; sota_runtime_ready=true; gpu_visible=true; llama_cpp.version=0.3.29; n_gpu_layers=-1; runtime_ready models=flagship_dense,flagship_moe,middle_moe; no_quality_claim.value=true; focused pytest passed and module coverage reached 100%; default addopts pytest failed on repo-wide coverage 0.48% < 99%; spec coverage failed existing repository-wide traceability debt; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-VERIFY-5259, SCENARIO-VERIFY-5259; status label mapped to ✅ Complete because honest_verdict.value starts with `complete:` and artifact records sota_runtime_ready=true with all mandated model runtime probes ready while making no quality/uplift claim | results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json |
+ | 2026-07-05 | Exp 5260: PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry | ⚠️ Partial / Not Viable / Research Finding | honest_verdict={"principle":"Terminal verdict; starts with complete: or blocked_ and states whether cross-model memory was useful, harmful, null, or unmeasured.","value":"complete: cross-model typed memory null; delta_over_no_memory=0.000000; delta_over_shuffled_memory=0.000000; unsafe_false_accepts=0; rollback_exercised=false"}; status=<missing>; cross_model_memory_useful=false; delta_over_no_memory.value=0.0; delta_over_shuffled_memory.value=0.0; aligned/no-memory/shuffled accuracies all 1.0; unsafe_false_accepts.value=0; repeated_error_rate.value=0.0; rollback_exercised.value=false; leakage_controls.value.passed=true; memory_store_snapshot_before_mutation.entry_count=6; promotion_state_counts promoted=2 rolled_back=4; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-LEARN-5260, REQ-LEARN-5260-1, REQ-LEARN-5260-2, REQ-LEARN-5260-3, REQ-LEARN-5260-4, REQ-LEARN-5260-5, SCENARIO-LEARN-5260-COMPLETE-MEASUREMENT, SCENARIO-LEARN-5260-BLOCKED-PRECONDITION; status label mapped to ⚠️ Partial / Not Viable / Research Finding because honest_verdict.value records a null result with zero measured transfer deltas and no rollback exercise | results/experiment_5260_cross_model_typed_memory_retry_v481.json |
++| 2026-07-05 | Exp 5261: PHASE 1 continuous self-learning -- typed-memory retention and interference audit | ✅ Complete | honest_verdict=complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed; status=<missing>; memory_policy_ready=true; retention_rate=1.0; interference_rate=0.0; harmful_memory_rollback_passed=true; evicted_n=2 with conflicting=1 and stale=1; tests_run=[]; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; introduces REQ-LEARN-5261, REQ-LEARN-5261-1, REQ-LEARN-5261-2, REQ-LEARN-5261-3, REQ-LEARN-5261-4, REQ-LEARN-5261-5, REQ-LEARN-5261-6, SCENARIO-LEARN-5261; status label mapped to ✅ Complete because honest_verdict starts with `complete:`, memory_policy_ready=true, retention_rate=1.0, interference_rate=0.0, harmful_memory_rollback_passed=true, and the verdict explicitly keeps live cross-model memory unclaimed | results/experiment_5261_typed_memory_interference_audit_v481.json |
+-- 
+2.55.0
+

@@ -1,0 +1,62 @@
+From 2c532fdea75c05d672fee57230b18e594c347fd3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 02:18:09 -0400
+Subject: [PATCH 10235/11362] [conductor] Pre-gate block: Cold object-table
+ row, statistic, and live-provenance audit
+
+1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.object_table_ab_completed (upstream artifact not found for task id 'exp6731-object-table-fetch-on-demand-ab')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                            | 2 +-
+ ops/conductor-log.md                                    | 2 ++
+ ops/conductor-state.json                                | 2 +-
+ results/experiment_6732_object_table_ab_cold_audit.json | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5d443fe6d5..d594c1d99d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-08-29T06:16:05Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-29T06:18:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index fbcd0ad89a..e4bdfafaab 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16739,3 +16739,5 @@ The l |
+ | 2026-08-29 06:14 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
+ | 2026-08-29 06:14 UTC | Cold object-table row, statistic, and live-provena | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.ob |
+ | 2026-08-29 06:16 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
++| 2026-08-29 06:16 UTC | Cold object-table row, statistic, and live-provena | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6731-object-table-fetch-on-demand-ab.ob |
++| 2026-08-29 06:18 UTC | Object-table fetch-on-demand paired A/B on the liv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6730-arc-context-tool-preflight) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 51fb54976a..8d42649276 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2575553, "iteration": 10, "phase": "iteration_start", "started_at": "2026-08-29T06:16:05Z"}
+\ No newline at end of file
++{"pid": 2575553, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-29T06:18:08Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6732_object_table_ab_cold_audit.json b/results/experiment_6732_object_table_ab_cold_audit.json
+index 8b5fd52cc2..ebae8f0627 100644
+--- a/results/experiment_6732_object_table_ab_cold_audit.json
++++ b/results/experiment_6732_object_table_ab_cold_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 6732,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-29",
+-  "started_at": "2026-08-29T06:16:05.877127+00:00",
+-  "finished_at": "2026-08-29T06:16:05.877127+00:00",
++  "started_at": "2026-08-29T06:18:09.153876+00:00",
++  "finished_at": "2026-08-29T06:18:09.153876+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Cold object-table row, statistic, and live-provenance audit",
+-- 
+2.55.0
+

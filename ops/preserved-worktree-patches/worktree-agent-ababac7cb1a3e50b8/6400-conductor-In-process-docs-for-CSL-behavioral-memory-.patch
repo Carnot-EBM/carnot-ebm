@@ -1,0 +1,23 @@
+From e97709e1c23b51c5e1850cda987a5867aa79c332 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 04:39:09 -0400
+Subject: [PATCH 06400/11362] [conductor] In-process docs for CSL behavioral
+ memory evidence ladder and replay audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index ef2a5be421..b01c414e83 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11228,3 +11228,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-09: Gated local SOTA evidence telemetry panel after Exp5471, not guided decoding (✅ Complete) — honest_verdict=complete: local SOTA GGUF evidence telemetry collected with GPU offload; guided decoding not used; results/experiment_5472_sota_evidence_telemetry_v497.json
+ - 2026-07-09: Continuous self-learning KAN surrogate assurance policy (✅ Complete) — honest_verdict=complete: deterministic CSL KAN surrogate audited frozen policy routing with chance-style assurance and no model weight mutation; results/experiment_5473_csl_kan_surrogate_assurance_v497.json
+ - 2026-07-09: Gated local SOTA CSL memory/action routing scale-up after Exp5473 (✅ Complete) — honest_verdict=complete: local SOTA GGUF CSL scale-up used KAN assurance with frozen weights; results/experiment_5474_sota_csl_scale_v497.json
++- 2026-07-09: CSL behavioral memory evidence ladder and replay audit (✅ Complete) — honest_verdict=complete: deterministic replay audited behavioral CSL memory use without live SOTA inference; results/experiment_5475_csl_behavioral_memory_ladder_v497.json
+-- 
+2.55.0
+

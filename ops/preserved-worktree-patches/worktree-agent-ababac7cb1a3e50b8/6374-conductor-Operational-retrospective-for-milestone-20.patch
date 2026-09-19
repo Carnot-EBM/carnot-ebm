@@ -1,0 +1,76 @@
+From 01fd88be20207181c360eabf4e8479b2d864981e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 01:57:01 -0400
+Subject: [PATCH 06374/11362] [conductor] Operational retrospective for
+ milestone 2026.07.496
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_496.json | 30 ++++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_496.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 9c9732bf1d..16039a3ce9 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5847,3 +5847,9 @@ The critical path for milestone .250:
+ - theme: timing detector mismatch blocks compute-efficiency ranking
+ - key result: no data available this milestone; the authorized timing block records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments while also reporting changelog references, so GPU utilization and DualGPURunner questions remain unscored
+ - acceptance: 0/0 criteria met -- no milestone-scoped timing rows were available for acceptance scoring
++
++### Milestone 2026.07.496
++- exp_range: no data available this milestone
++- theme: empty authorized timing window for operational efficiency accounting
++- key result: no data available this milestone; the timing block records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so slowest-run ranking, compute-bound GPU efficiency, and DualGPURunner assessment remain unmeasured
++- acceptance: 0/0 criteria met -- no milestone-scoped timing rows were available to evaluate
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b2200c6b64..8b3becf10a 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11220,3 +11220,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-09: Gated ARC live connected-component salience +1 level-up attempt after Exp5464 (⚠️ Research Finding) — honest_verdict=honest_null: bp35 L3 bounded_budget_no_levelup; results/experiment_5465_gated_arc_connected_component_salience_levelup_v496.json
+ - 2026-07-09: PRD gap and agent-failure table for .496 (⚠️ Blocked) — honest_verdict=complete: .496 PRD gap table read actual Exp5454-Exp5465 artifacts; closed=8, partial=2, blocked=2, honest_null=2, missing=0, skipped=0.; results/experiment_5466_prd_gap_agent_failure_table_v496.json
+ - 2026-07-09: Milestone .496 capstone and next-roadmap recommendations (⚠️ Blocked) — honest_verdict=complete: .496 capstone truth table from actual artifacts; headline_ready=4, bounded=3, blocked=1, honest_null=2; guided decoding quarantined, ARC no-bank, hardware_speedup_claim=false.; results/experiment_5467_capstone_v496.json
++- 2026-07-09: Operational retrospective for milestone 2026.07.496 (Complete) -- no data available this milestone from the authoritative timing block; no experiment commits were found since activation by live git-log or disk-mtime reconstruction. Locked artifact fields remain total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null; GPU idle is not reported as a compute-bound bottleneck and no DualGPURunner finding is made without compute-bound parallel-model timing rows. estimated_time_savings_pct=0; results/operational_retro_2026_07_496.json
+diff --git a/results/operational_retro_2026_07_496.json b/results/operational_retro_2026_07_496.json
+new file mode 100644
+index 0000000000..1e01b9fa03
+--- /dev/null
++++ b/results/operational_retro_2026_07_496.json
+@@ -0,0 +1,30 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.496",
++  "generated_at": "2026-07-09T05:52:01Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": false,
++  "timing_integrity_mismatch": false,
++  "summary": "No data available this milestone for operational throughput: the locked fields show 0 total wall-time minutes, 0 completed experiments, 0 compute-bound experiments, and no slowest-experiment entries. With gpu_idle_on_compute_bound_tasks=null, compute-bound GPU efficiency and DualGPURunner engagement have no measurable basis.",
++  "bottlenecks_identified": [
++    "no data available this milestone for experiment-level bottlenecks; the authoritative timing block contains 0 completed experiments and 0 compute-bound experiments.",
++    "GPU-idle behavior is not flagged as a bottleneck because gpu_idle_on_compute_bound_tasks is null and no compute-bound timing row is present."
++  ],
++  "improvements_suggested": [
++    "Emit an explicit empty-window timing receipt before retrospective generation when live git-log and disk-mtime reconstruction find no experiment commits since activation.",
++    "Render fixed no-data text for slowest-experiment, compute-bound GPU, and parallel-runner sections whenever experiments_completed is 0.",
++    "Keep GPU-utilization advice gated on compute-bound timing rows instead of acting on an idle synthesis-only snapshot."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add a pre-retro timing receipt that records the milestone activation boundary and both reconstruction paths.",
++    "Make zero-experiment milestones short-circuit slowest-run and GPU-efficiency ranking into explicit no-data output.",
++    "Require timing-row evidence of parallel model loading before producing any DualGPURunner recommendation."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "This retrospective is a measurement-boundary record rather than a throughput diagnosis: with no milestone-scoped timing rows, ranking slow paths would fabricate precision. The next milestone should make the empty-window case explicit before narrative generation so operators do not spend time interpreting absent measurements as runtime behavior."
++}
+-- 
+2.55.0
+

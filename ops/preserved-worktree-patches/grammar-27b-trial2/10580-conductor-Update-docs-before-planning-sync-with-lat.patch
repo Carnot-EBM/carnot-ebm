@@ -1,0 +1,60 @@
+From 3d828c9f46a66a48e866a80e42f24aa733694d21 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 23:20:42 -0400
+Subject: [PATCH 10580/11171] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index c079afafbd..3a8b44ce21 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,921</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,925</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fa2b19c6a1..d83b88675f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 61, "phase": "iteration_start", "last_beat": "2026-09-01T02:38:11Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 62, "phase": "iteration_start", "last_beat": "2026-09-01T03:16:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9fa4b69635..ea1c17df98 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16986,3 +16986,4 @@ The l |
+ | 2026-09-01 01:58 UTC | Three-family operational-obligation saturation cor | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: odels)]
+ +    p |
+ | 2026-09-01 02:36 UTC | Three-family operational-obligation saturation cor | OK | 98 passed, 1 warning in 13.20s |
++| 2026-09-01 03:14 UTC | Cold operational-saturation identifiability audit | OK | 95 passed, 1 warning in 29.65s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c3f8cba3a8..70a1f482f9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 61, "phase": "iteration_start", "started_at": "2026-09-01T02:38:11Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 62, "phase": "iteration_start", "started_at": "2026-09-01T03:16:35Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

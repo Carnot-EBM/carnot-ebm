@@ -1,0 +1,432 @@
+From 923a84cebfd29fd39122f24a31ed1761007e3379 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 16:46:27 -0400
+Subject: [PATCH 08470/11362] [outer-loop] ARC lever #1 (partial): flip
+ CARNOT_ARC_OBJECT_PERCEPTION to DEFAULT ON (REQ-ARC-OBJPERC-DEFAULT-ON-1)
+
+Operator directive 2026-08-07 ("tackle #1" -- adopt the Duck/TAAF leaderboard
+lesson of object-level, not raw-grid, perception), amending the 2026-08-03
+one-slot ruling. The mechanism already existed and was already A/B'd
+positive: the pre-registered 2026-08-01 held-out change-fidelity A/B
+(results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json)
+measured this exact flag SIGNIFICANT on its primary metric (mean delta
++0.072084, sign-test p=0.0192 over 19/20 discordant games, min reachable
+p=3.81e-06, gemma-4-31B, 13171.65s real GPU wall time, AA control
+byte-identical, clean on live adversarial re-check) but shipped with the
+flag deliberately left off -- recorded explicitly as "moving it is a
+separate operator decision." This commit is that decision.
+
+_object_perception_on(): os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION") ==
+"1" (default off) -> os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION", "1") !=
+"0" (default on, opt out with =0). Every induce_prompt call now appends the
+connected-component OBJECT STRUCTURE table (translation-invariant
+object_hash, containment, adjacency) unless explicitly disabled.
+
+Tests updated in lockstep, not just left to bit-rot: the crash-guard test
+that asserted "unset -> no object block" now asserts "unset -> object block
+present, no crash", with a new symmetric guard for the opt-out path and the
+byte-identity check flipped to assert "1" == unset rather than "0" == unset.
+32/32 pass across test_object_perception_induction.py and
+test_object_perception_ab_stats.py (the latter's own A/B-comparison test
+updated to set both arms explicitly rather than relying on unset-means-off).
+
+NOT done here (forward work, per the spec entry): per-transition
+BEFORE/AFTER object diffs, translation-invariant tracking across those
+diffs, and HUD-strip rejection inside the object table specifically --
+today's table covers only the initial grid + win-precursor/opening-board
+frame. These are the genuine remaining Duck/TAAF-adoption work, distinct
+from flipping an already-evidenced flag.
+
+Artifact-freshness: 6 artifacts drifted on arc_executable_world_model.py.
+5 had zero references to induce_prompt/CARNOT_ARC_OBJECT_PERCEPTION in
+their generating scripts (grep-verified, genuinely unrelated). One
+(outer_loop_arc_generator_concurrency_fix_20260727.json) DOES call
+induce_prompt directly, inside a helper that self-calibrates the transition
+count k via the server's real tokenizer until a target TOKEN COUNT is
+reached -- so the harness converges on the same target prompt SIZE
+regardless of what content (object block or not) fills those tokens; its
+acceptance gates are about n_ctx/concurrency/mutation-testing, not prompt
+content. artifact-freshness-lint: OK.
+
+Mutation-marker resolution: deleted
+ops/.test_suite_mutation_runs/05fb6b27918a4cbcb6c55422197355c6.pending.json,
+armed by the conductor's concurrent, unrelated
+test_experiment_6198_v537_post_marker_source_scope_audit.py run and flagging
+these files "[NOT this run]" -- verified every flagged file is my own
+deliberate edit from this session.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      | 45 +++++++++++
+ .../agentic/arc_executable_world_model.py     | 25 ++++--
+ ...6011_world_model_change_gate_four_arm.json |  8 ++
+ ...ent_6012_hidden_state_trust_gate_hole.json |  8 ++
+ ...6013_hidden_state_change_gate_closure.json |  8 ++
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |  8 ++
+ ..._win_llm_on_eval_concurrency_20260727.json |  8 ++
+ ...rc_generator_concurrency_fix_20260727.json |  8 ++
+ ...rc_llm_on_wallclock_envelope_20260726.json |  8 ++
+ .../python/test_object_perception_ab_stats.py |  5 +-
+ .../test_object_perception_induction.py       | 79 +++++++++++++------
+ 11 files changed, 177 insertions(+), 33 deletions(-)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index e5eb4e203f..eb7410adb2 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22128,3 +22128,48 @@ bundled default.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6198 | `python/carnot/agentic/arc_executable_world_model.py:induce_think_on`, wired in `LocalGGUFProposer.generate`/`induce`; `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_AGENT_CONFIG["frozen_generator"]["think_mode"]`. | `tests/python/test_arc_induce_think_mode_20260807.py`. |
++
++### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
++
++**Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
++-- "adopt the Duck/TAAF leaderboard lesson: object-level, not raw-grid, perception"). The mechanism
++already existed (`_object_perception_on()`, `objects_block`, first built for the goal-hypothesis
++verifier line and cited there as REQ-ARC-WMTE-5830) and had ALREADY been A/B'd positive: the
++pre-registered 2026-08-01 held-out change-fidelity A/B
++(`results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json`) measured
++`CARNOT_ARC_OBJECT_PERCEPTION` SIGNIFICANT on its primary metric -- mean delta +0.072084, sign-test
++p=0.0192 over 19/20 discordant games (min reachable p=3.81e-06), gemma-4-31B, 13171.65s real GPU
++wall time, AA control byte-identical, clean on adversarial re-check -- but shipped with the flag
++deliberately left off, recorded explicitly as "moving it is a separate operator decision." This REQ
++is that decision, made on evidence already in hand rather than a fresh measurement.
++
++**THE FLIP.** `_object_perception_on()` (`arc_executable_world_model.py`) changed from
++`os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION") == "1"` (default off) to
++`os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION", "1") != "0"` (default on, opt out with `=0`). Every
++`induce_prompt` call now appends the connected-component OBJECT STRUCTURE table (translation-invariant
++`object_hash`, containment, adjacency) alongside the raw run-length grid, unless explicitly disabled.
++
++**VERIFICATION.** `tests/python/test_object_perception_induction.py` and
++`test_object_perception_ab_stats.py` updated in lockstep: the crash-guard test that used to assert
++"unset -> no object block" now asserts "unset -> object block present, no crash" (renamed
++`test_induce_prompt_default_path_appends_object_block`), with a new symmetric guard for the opt-out
++path (`test_flag_explicit_off_never_crashes`) and the identity check flipped to assert `"1" ==
++unset` rather than `"0" == unset`. 54/54 tests pass across both files plus
++`test_arc_win_state_positive_example_2026_07_29.py` (unaffected; calls `objects_block` directly, not
++gated by this flag).
++
++**NOT YET DONE (forward work, explicitly not silently dropped).** The recon that motivated this
++lever also named three unbuilt enhancements beyond the existing (now-default-on) mechanism:
++per-transition BEFORE/AFTER object-level diffs (today's object table covers only the INITIAL grid
++plus the win-precursor/opening-board frame, not each transition), translation-invariant object
++TRACKING across those per-transition diffs (reusing `arc_color_blob_salience.object_hash`, which the
++existing table does not consume), and HUD-strip rejection inside the object table specifically (the
++existing `hud_mask` parameter reaches `_transitions_block`'s changed/inert classification but not
++`objects_block`). None of these three land in this pass; they are the genuine "Duck/TAAF adoption"
++work still ahead, distinct from flipping an already-evidenced flag.
++
++## Implementation Status (REQ-ARC-OBJPERC-DEFAULT-ON-1)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-OBJPERC-DEFAULT-ON-1 | `python/carnot/agentic/arc_executable_world_model.py:_object_perception_on`. | `tests/python/test_object_perception_induction.py`, `tests/python/test_object_perception_ab_stats.py`. |
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index cc892add6f..30b422ed5b 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -2917,15 +2917,26 @@ def _induce_transitions_k() -> Optional[int]:
+ 
+ 
+ def _object_perception_on() -> bool:
+-    """LEVER #1 (REQ-ARC-WMTE-5830): DEV-ONLY (unset -> byte-identical pre-existing prompt). When
+-    CARNOT_ARC_OBJECT_PERCEPTION=1, induce_prompt appends a connected-component OBJECT table
+-    (translation-invariant object_hash for cross-frame identity, containment tree, adjacency)
+-    ALONGSIDE the raw run-length grid -- feeding the inducer the object structure that today only
+-    feeds the (gated-off) search salience prior. Attacks GAP-ARCH-FEATURES: the raw grid gives the LLM
+-    order-1 position-only features (can't track an object across frames after it moves); object_hash can."""
++    """LEVER #1 (REQ-ARC-WMTE-5830, DEFAULT ON since 2026-08-07). When on, induce_prompt appends a
++    connected-component OBJECT table (translation-invariant object_hash for cross-frame identity,
++    containment tree, adjacency) ALONGSIDE the raw run-length grid -- feeding the inducer the object
++    structure that today only feeds the (gated-off) search salience prior. Attacks
++    GAP-ARCH-FEATURES: the raw grid gives the LLM order-1 position-only features (can't track an
++    object across frames after it moves); object_hash can.
++
++    DEFAULT FLIPPED ON (2026-08-07, operator directive: adopt the Duck/TAAF leaderboard lesson --
++    object-level, not raw-grid, perception -- lever #1 of the ARC six-lever push,
++    ops/known-issues.md). Evidence, not a guess: the pre-registered 2026-08-01 held-out A/B
++    (results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json) measured
++    this EXACT flag SIGNIFICANT on its primary metric -- change_fidelity mean delta +0.072084,
++    sign-test p=0.0192 over 19/20 discordant games (min reachable p=3.81e-06), on gemma-4-31B,
++    13171.65s real GPU wall time, AA control byte-identical, clean on adversarial re-check. That
++    artifact shipped with the flag deliberately left off ("moving it is a separate operator
++    decision"); this is that decision, made on the evidence already in hand. Opt out with
++    CARNOT_ARC_OBJECT_PERCEPTION=0."""
+     import os
+ 
+-    return os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION") == "1"
++    return os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION", "1") != "0"
+ 
+ 
+ # REQ-ARC-WMTE-5717: DEV-ONLY playbook methodology exemplars for the STALL re-induction
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index a8829610c5..7a6b7321b2 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52708,6 +52708,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "sha256_now": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON (previously default off), on the pre-registered 2026-08-01 A/B evidence already measured for this exact flag (change_fidelity +0.072, p=0.0192). This artifact's generating script(s) contain zero references to induce_prompt, .induce(, or CARNOT_ARC_OBJECT_PERCEPTION -- they do not construct or measure an induction prompt at all, so the flag's default has no path to affect anything this artifact reports.",
++        "evidence": "grep -c 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION|\\.induce\\(' scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py: 0 hits."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 3c69bb1bc4..a452a296ef 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -192,6 +192,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "sha256_now": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON (previously default off), on the pre-registered 2026-08-01 A/B evidence already measured for this exact flag (change_fidelity +0.072, p=0.0192). This artifact's generating script(s) contain zero references to induce_prompt, .induce(, or CARNOT_ARC_OBJECT_PERCEPTION -- they do not construct or measure an induction prompt at all, so the flag's default has no path to affect anything this artifact reports.",
++        "evidence": "grep -c 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION|\\.induce\\(' scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py: 0 hits."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index ce6fea1128..0bfe13fa39 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8734,6 +8734,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "sha256_now": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON (previously default off), on the pre-registered 2026-08-01 A/B evidence already measured for this exact flag (change_fidelity +0.072, p=0.0192). This artifact's generating script(s) contain zero references to induce_prompt, .induce(, or CARNOT_ARC_OBJECT_PERCEPTION -- they do not construct or measure an induction prompt at all, so the flag's default has no path to affect anything this artifact reports.",
++        "evidence": "grep -c 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION|\\.induce\\(' scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py: 0 hits."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 205bcae246..3c8e02a231 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1430,6 +1430,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
+         "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "sha256_now": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON (previously default off), on the pre-registered 2026-08-01 A/B evidence already measured for this exact flag (change_fidelity +0.072, p=0.0192). This artifact's generating script(s) contain zero references to induce_prompt, .induce(, or CARNOT_ARC_OBJECT_PERCEPTION -- they do not construct or measure an induction prompt at all, so the flag's default has no path to affect anything this artifact reports.",
++        "evidence": "grep -c 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION|\\.induce\\(' results/inducer_h2h_6021/{build_artifact_6021.py,h2h_arm_runner.py.frozen,h2h_reason_tag_probe.py.frozen}: 0 hits."
+       }
+     ],
+     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index a4dbcdf18e..69a1ca0aa2 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3492,6 +3492,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
+         "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "sha256_now": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON (previously default off), on the pre-registered 2026-08-01 A/B evidence already measured for this exact flag (change_fidelity +0.072, p=0.0192). This artifact's generating script(s) contain zero references to induce_prompt, .induce(, or CARNOT_ARC_OBJECT_PERCEPTION -- they do not construct or measure an induction prompt at all, so the flag's default has no path to affect anything this artifact reports.",
++        "evidence": "grep -c 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION|\\.induce\\(' results/first_win_llm_on_20260727/{firstwin,analyse,build_artifact}.py + python/carnot/experiment_4605_live_integration_scored_agent.py: 0 hits."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 4d372f3cb4..7233d0c032 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1141,6 +1141,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "sha256_now": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON. results/generator_concurrency_fix_20260727/fixverify.py:161 DOES call induce_prompt(...) directly, inside build_real_shape_prompt() -- but its purpose is to construct a REALISTICALLY-SIZED prompt for server-concurrency/VRAM testing, calibrated by TUNING k (the transition count) via a real-tokenizer feedback loop (line 167: `if n >= target_tokens: break`) until the ACTUAL token count reaches a target size, independent of what content fills those tokens. With the object block now appended by default, fewer transitions (a smaller k) reach the same target_tokens -- the harness self-corrects to the same target prompt SIZE either way. This artifact's acceptance gates (G1-G6: n_ctx=81920 fault reproduction, HTTP concurrency handling, DEAD_GENERATOR mutation-testing) are about prompt SIZE and server behavior under load, not induction-prompt CONTENT -- none reference OBJECT STRUCTURE, objects_block, or any object-perception-specific field.",
++        "evidence": "grep -n 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION' results/generator_concurrency_fix_20260727/fixverify.py: 1 hit (line 161, inside build_real_shape_prompt, self-calibrating on real-tokenizer token COUNT not content); build_fix_artifact.py's 1 hit (line 684) is a docstring reference to the same builder, not a call. No acceptance gate in the artifact's own verdict/headline reads prompt content."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index 29bcc8fc96..7860cb0e06 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -368,6 +368,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
+         "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
++        "sha256_now": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON (previously default off), on the pre-registered 2026-08-01 A/B evidence already measured for this exact flag (change_fidelity +0.072, p=0.0192). This artifact's generating script(s) contain zero references to induce_prompt, .induce(, or CARNOT_ARC_OBJECT_PERCEPTION -- they do not construct or measure an induction prompt at all, so the flag's default has no path to affect anything this artifact reports.",
++        "evidence": "grep -c 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION|\\.induce\\(' scripts/arc_llm_on_wallclock_budget_probe.py scripts/analyze_arc_llm_on_wallclock_envelope.py: 0 hits both."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/tests/python/test_object_perception_ab_stats.py b/tests/python/test_object_perception_ab_stats.py
+index 0bf6458554..0b706d7dcd 100644
+--- a/tests/python/test_object_perception_ab_stats.py
++++ b/tests/python/test_object_perception_ab_stats.py
+@@ -290,8 +290,11 @@ class TestHeldoutSplitAgainstTheRealPrompt:
+         assert held == []
+ 
+     def test_object_block_changes_the_prompt_but_not_the_split(self, monkeypatch) -> None:
++        # Explicit "0"/"1", not unset, for BOTH arms: CARNOT_ARC_OBJECT_PERCEPTION defaults ON
++        # since 2026-08-07 (the flip this A/B's own evidence justified -- see
++        # _object_perception_on()'s docstring), so unset no longer means "off".
+         window = _synthetic_window(12)
+-        monkeypatch.delenv("CARNOT_ARC_OBJECT_PERCEPTION", raising=False)
++        monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "0")
+         p_off = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+         monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "1")
+         p_on = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+diff --git a/tests/python/test_object_perception_induction.py b/tests/python/test_object_perception_induction.py
+index 5a8840c25d..c662319749 100644
+--- a/tests/python/test_object_perception_induction.py
++++ b/tests/python/test_object_perception_induction.py
+@@ -1,13 +1,19 @@
+ """LEVER #1 (REQ-ARC-WMTE-5830): object-structured perception in the inducer prompt.
+ 
+-Behind CARNOT_ARC_OBJECT_PERCEPTION (default off), induce_prompt appends a connected-component object
+-table (translation-invariant object_hash + containment + adjacency) alongside the raw grid, so the LLM
+-inducer can track an object across frames after it moves -- which the order-1 raw-grid features cannot.
+-
+-These tests also GUARD the default path: the injection is inside an f-string whose condition
++CARNOT_ARC_OBJECT_PERCEPTION is DEFAULT ON since 2026-08-07 (operator directive, adopting the
++Duck/TAAF leaderboard lesson; see _object_perception_on()'s docstring for the pre-registered A/B
++evidence -- change_fidelity +0.072, p=0.0192 over 19/20 discordant games -- that motivated flipping
++it). When on, induce_prompt appends a connected-component object table (translation-invariant
++object_hash + containment + adjacency) alongside the raw grid, so the LLM inducer can track an
++object across frames after it moves -- which the order-1 raw-grid features cannot. Opt out with
++CARNOT_ARC_OBJECT_PERCEPTION=0.
++
++These tests also GUARD both paths: the injection is inside an f-string whose condition
+ `_object_perception_on()` is evaluated on EVERY induce_prompt call, so if that helper (or objects_block)
+-is ever removed, induce_prompt NameErrors on the live path -- test_induce_prompt_default_path_never_crashes
+-catches exactly that (it was a real conductor-commit-race regression, 2026-07-24).
++is ever removed, induce_prompt NameErrors on the live path -- test_induce_prompt_default_path_appends_object_block
++and test_flag_explicit_off_never_crashes catch exactly that (the former replaces a pre-2026-08-07
++test of the same name that asserted the OPPOSITE default; it was a real conductor-commit-race
++regression, 2026-07-24, that first motivated a crash guard here).
+ """
+ 
+ from __future__ import annotations
+@@ -32,35 +38,50 @@ def _grid(r: int, c: int) -> np.ndarray:
+ 
+ def _trans():
+     return [
+-        Transition(grid=_grid(1, 1), action=4, data=None, next_grid=_grid(1, 2),
+-                   level_before=0, level_after=0),
+-        Transition(grid=_grid(1, 2), action=4, data=None, next_grid=_grid(1, 3),
+-                   level_before=0, level_after=0),
++        Transition(
++            grid=_grid(1, 1),
++            action=4,
++            data=None,
++            next_grid=_grid(1, 2),
++            level_before=0,
++            level_after=0,
++        ),
++        Transition(
++            grid=_grid(1, 2),
++            action=4,
++            data=None,
++            next_grid=_grid(1, 3),
++            level_before=0,
++            level_after=0,
++        ),
+     ]
+ 
+ 
+-def test_induce_prompt_default_path_never_crashes(monkeypatch):
+-    # Flag unset -> the raw-grid-only prompt, no object block, NO crash (guards the race regression).
++def test_induce_prompt_default_path_appends_object_block(monkeypatch):
++    # Flag unset -> DEFAULT ON since 2026-08-07: object block present, NO crash (guards the race
++    # regression this file was originally written for).
+     monkeypatch.delenv("CARNOT_ARC_OBJECT_PERCEPTION", raising=False)
+     p = induce_prompt("xx", _trans(), 1)
+     assert "OBSERVED TRANSITIONS" in p
+-    assert "OBJECT STRUCTURE" not in p
+-
+-
+-def test_flag_on_appends_object_block(monkeypatch):
+-    monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "1")
+-    p = induce_prompt("xx", _trans(), 1)
+     assert "OBJECT STRUCTURE" in p
+     assert "shape=" in p  # the translation-invariant object hash is present
+ 
+ 
+-def test_flag_off_is_byte_identical_to_unset(monkeypatch):
++def test_flag_explicit_off_never_crashes(monkeypatch):
++    # The opt-out path: raw-grid-only prompt, no object block, no crash.
+     monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "0")
+-    p_off = induce_prompt("xx", _trans(), 1)
++    p = induce_prompt("xx", _trans(), 1)
++    assert "OBSERVED TRANSITIONS" in p
++    assert "OBJECT STRUCTURE" not in p
++
++
++def test_flag_explicit_on_is_byte_identical_to_unset(monkeypatch):
++    monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "1")
++    p_on = induce_prompt("xx", _trans(), 1)
+     monkeypatch.delenv("CARNOT_ARC_OBJECT_PERCEPTION", raising=False)
+     p_unset = induce_prompt("xx", _trans(), 1)
+-    assert p_off == p_unset
+-    assert "OBJECT STRUCTURE" not in p_off
++    assert p_on == p_unset
++    assert "OBJECT STRUCTURE" in p_on
+ 
+ 
+ def test_objects_block_serializes_objects_and_shape_hash():
+@@ -72,6 +93,14 @@ def test_objects_block_serializes_objects_and_shape_hash():
+ 
+ def test_objects_block_defensive_on_bad_input():
+     # A degenerate transition list must not raise -- objects_block returns "" rather than break induction.
+-    bad = [Transition(grid=np.zeros((0,), dtype=np.int16), action=0, data=None,
+-                      next_grid=np.zeros((0,), dtype=np.int16), level_before=0, level_after=0)]
++    bad = [
++        Transition(
++            grid=np.zeros((0,), dtype=np.int16),
++            action=0,
++            data=None,
++            next_grid=np.zeros((0,), dtype=np.int16),
++            level_before=0,
++            level_after=0,
++        )
++    ]
+     assert isinstance(objects_block(bad), str)  # no exception
+-- 
+2.55.0
+

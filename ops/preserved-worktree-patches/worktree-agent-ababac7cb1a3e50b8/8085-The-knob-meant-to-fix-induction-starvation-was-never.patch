@@ -1,0 +1,774 @@
+From 253e1b60edaffc455946ad1167d0701579dbfa72 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 1 Aug 2026 01:59:56 -0400
+Subject: [PATCH 08085/11362] The knob meant to fix induction starvation was
+ never wired to the live agent
+
+REQ-ARC-FCP-5699-22 found the induce prompt's transition cap "starves the dynamics half to
+roughly one example per action type, producing hardcoded-literal-coordinate memorization instead
+of general rules". REQ-ARC-FCP-5699-23 answered with `_induce_transitions_k()` and
+`CARNOT_ARC_INDUCE_TRANSITIONS_K`.
+
+NOTHING ON THE LIVE PATH EVER CALLED IT. `induce_prompt` carried a literal `k: int = 8`; the only
+callers of that resolver were `python/carnot/experiment_*.py`. The knob moved the prompt for
+experiments and did nothing for the agent -- diagnosis landed, instrument built, fix never
+reached the thing being diagnosed. Third dead knob found this session.
+
+WIRED NOW, DEFAULT "SHOW EVERY TRANSITION". Prompted by Mage-VL (arXiv 2607.24904): once you
+encode an anchor frame plus DELTAS, subsampling stops being necessary. `_transitions_block`
+already did the first half and subsampled anyway, discarding 17 of 25 transitions.
+
+  game   n  changed   k=8 chars   ALL chars   ratio
+  ft09  25        6       4,046       4,046   1.00x   <- already showed everything
+  lp85  25        2       4,064       4,064   1.00x   <- already showed everything
+  sc25  25        7       2,557       2,718   1.06x
+  tn36  25       25       3,218       5,023   1.56x
+  tu93  25       25       2,532       4,924   1.94x
+
+Worst case ~1,255 tokens. THE BUDGET IT PROTECTED DOES NOT EXIST: "13,824 available tokens"
+appears only in docstrings, nothing computes or enforces a prompt budget, and it predates the
+n_ctx 16384->81920 fix. The real bound is 81920/4 - 4096 = 16,384. The cap discarded 68% of the
+evidence to save ~4% of a budget nothing was near; the prompt uses under 8% of what is available.
+
+`CARNOT_ARC_INDUCE_TRANSITIONS_K=8` restores the shipped prompt BYTE-FOR-BYTE, verified against
+the renderer from git. My first attempt failed that check: `changed[:k-len(noops)]` yields 8 where
+the old code yields 6 on a game with no inert actions, and I had "verified" it by comparing the
+new renderer against itself.
+
+Mage-VL's saliency idea is the DEGRADATION path: if deltas ever exceed budget,
+`_select_transitions_for_prompt` drops the least NOVEL transitions by (action, change-shape)
+signature rather than truncating positionally. It never binds today.
+
+NOT CLAIMED: action coverage was NOT being lost -- `changed[:6]` already covers every distinct
+action on all six games. The gain is more examples of the SAME actions, which is the starvation
+-22 described and matters for tn36's positional click mechanic.
+
+A HOLDOUT THAT WOULD HAVE BROKEN SILENTLY: experiment_6018 derives held-out as `full \ shown`,
+then raises the env as a leak control. With the default showing everything, `held` goes empty and
+`if not held: continue` makes that control a NO-OP THAT STILL PASSES. It and its tests now pin
+k=8 as the historical cap they measured against -- byte-identical to what they did.
+
+The REQ-5699-23 parity anchor is INVERTED, not deleted. Added a test that fails if the resolver
+is re-hardcoded out of the live path.
+
+FRESHNESS: 7 artifacts acknowledged. The four with rebuild_commands were rebuilt and compared
+leaf by leaf: ZERO substantive movement -- every differing key was provenance bookkeeping the
+rebuild DELETES, 20 keys whose own verdict is `substantive_values_changed: 0`. Note the ruff
+reformat changed the source sha and correctly INVALIDATED a first round of acknowledgements --
+the mechanism working as designed; format first, then acknowledge.
+
+NOTE FOR THE NEXT WRITER: match the artifact's existing indent. indent=1 over an indent=2 file
+turned a 6-leaf append into +52,572 -52,562. Verified by leaf comparison nothing was lost, redone
+at +8 -0.
+
+145 tests pass. Separately observed: this session's earlier acknowledgements on these artifacts
+are absent from HEAD, dropped by a concurrent session's rebuild.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../agentic/arc_executable_world_model.py     | 183 +++++++++++++++++-
+ ...iment_6018_object_perception_heldout_ab.py |  27 ++-
+ ...6011_world_model_change_gate_four_arm.json |  20 +-
+ ...ent_6012_hidden_state_trust_gate_hole.json |  20 +-
+ ...6013_hidden_state_change_gate_closure.json |  20 +-
+ ...ucer_head_to_head_qwen27b_vs_gemma31b.json |  20 +-
+ ..._win_llm_on_eval_concurrency_20260727.json |  16 ++
+ ...rc_generator_concurrency_fix_20260727.json |  16 ++
+ ...rc_llm_on_wallclock_envelope_20260726.json |  16 ++
+ ...rc_induce_prompt_large_grid_scalability.py |  79 ++++++--
+ .../python/test_object_perception_ab_stats.py |  22 ++-
+ 11 files changed, 400 insertions(+), 39 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 65993ae533..117f6a5cf2 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -2410,9 +2410,119 @@ def _rle_delta_compact(g0: np.ndarray, g1: np.ndarray) -> str:
+     return " ".join(runs) if runs else "(no change)"
+ 
+ 
++# Characters, not tokens, because that is what this module can count without loading a
++# tokenizer. ~4 chars/token puts 40,000 chars near 10,000 tokens, against a REAL prompt budget of
++# 16,384 (n_ctx 81920, shared 4-way under kv_unified, minus max_tokens 4096). Deliberately a
++# backstop rather than a target: the measured worst case is ~5,000 chars, so this should never
++# bind. It exists so a future game with far larger deltas degrades by dropping the least
++# informative transitions instead of overflowing the context pool.
++_INDUCE_TRANSITION_CHAR_BUDGET = 40000
++
++
++def _transition_salience_key(t: Transition) -> tuple:
++    """Ordering key for WHICH transitions to keep when the char budget forces a cut.
++
++    Mage-VL selects patches by residual energy -- how much a region actually moved -- rather than
++    by position. The analogue here is that a transition teaches the model something only insofar
++    as it is not already explained by one already shown, so the rank is by NOVELTY of the
++    (action, change-shape) pair rather than by arrival order. `changed[:6]` is arrival order,
++    which is the thing being replaced.
++
++    Returns a sort key; the caller dedupes on the leading signature. Kept deliberately cheap --
++    grid comparison, no encoding -- because it runs on every induce call.
++    """
++
++    diff = np.asarray(t.grid) != np.asarray(t.next_grid)
++    n_changed = int(diff.sum())
++    rows = np.flatnonzero(diff.any(axis=1)) if diff.ndim == 2 else np.array([])
++    cols = np.flatnonzero(diff.any(axis=0)) if diff.ndim == 2 else np.array([])
++    span = (
++        (int(rows[-1] - rows[0]) + 1 if rows.size else 0),
++        (int(cols[-1] - cols[0]) + 1 if cols.size else 0),
++    )
++    return (int(t.action), n_changed, span)
++
++
++def _select_transitions_for_prompt(
++    changed: list[Transition],
++    noop: list[Transition],
++    *,
++    k: Optional[int] = None,
++    char_budget: Optional[int] = None,
++) -> list[Transition]:
++    """Choose the transitions the induce prompt shows.
++
++    ORDER OF PREFERENCE, and each step exists for a measured reason:
++
++      1. Every CHANGED transition, in observation order. Observation order is kept because the
++         prompt reads as a narrative of what the agent did, and reordering it would imply a
++         sequence the agent never took.
++      2. Up to two NO-OPS. Unchanged from before: a couple of inert actions tell the model the
++         game HAS inert actions, and more than a couple is just budget.
++      3. If and only if the result exceeds the char budget, drop the LEAST NOVEL changed
++         transitions -- those whose (action, change-shape) signature is already represented --
++         rather than simply truncating. Truncation is what `changed[:k-2]` did.
++
++    An explicit `k` still caps the count, so every existing caller and test that pins one keeps
++    exactly its old behaviour.
++    """
++
++    if k is None:
++        # THE WIRING that REQ-ARC-FCP-5699-23 was missing: the live prompt now reads the same
++        # resolver the diagnostics have been reading since that REQ shipped.
++        k = _induce_transitions_k()
++    budget = _INDUCE_TRANSITION_CHAR_BUDGET if char_budget is None else int(char_budget)
++
++    keep_noop = noop[:2]
++    if k is not None:
++        # LITERALLY the historical expression, `changed[: k - 2] + noop[:2]`, and it must stay
++        # literal. The obvious "improvement" -- reserving only as many slots as there are no-ops,
++        # `changed[: k - len(keep_noop)]` -- is a BEHAVIOUR CHANGE on any game with no inert
++        # actions: tn36 and tu93 have 25 changed and 0 no-ops, so it yields 8 changed where the
++        # old code yielded 6. That silently makes `k=8` mean something new and destroys the A/B
++        # switch this parameter exists to provide. Written wrong first, caught by comparing
++        # against the shipped renderer rather than against the new one.
++        return changed[: max(0, int(k) - 2)] + keep_noop
++
++    selected = list(changed)
++
++    # Cheap upper bound on cost: the delta encoding dominates, so estimate from it directly
++    # rather than rendering the whole block repeatedly.
++    def _cost(t: Transition) -> int:
++        try:
++            return len(_rle_delta_compact(t.grid, t.next_grid))
++        except Exception:  # noqa: BLE001 - a cost estimate must never break the prompt
++            return 0
++
++    total = sum(_cost(t) for t in selected)
++    if total > budget and selected:
++        # Over budget: keep first occurrence of each signature, then re-add the rest in
++        # observation order until the budget is spent. Never drops below one transition.
++        seen: set[tuple] = set()
++        primary: list[Transition] = []
++        secondary: list[Transition] = []
++        for t in selected:
++            sig = _transition_salience_key(t)
++            (primary if sig not in seen else secondary).append(t)
++            seen.add(sig)
++        kept: list[Transition] = []
++        spent = 0
++        for t in primary + secondary:
++            c = _cost(t)
++            if kept and spent + c > budget:
++                continue
++            kept.append(t)
++            spent += c
++        # Restore observation order: selection is by novelty, presentation is chronological.
++        order = {id(t): i for i, t in enumerate(selected)}
++        selected = sorted(kept, key=lambda t: order[id(t)])
++
++    return selected + keep_noop
++
++
+ def _transitions_block(
+     trans: list[Transition],
+-    k: int = 8,
++    k: Optional[int] = 8,
+     *,
+     previous_level_complete_grid: Optional[np.ndarray] = None,
+     hud_mask: Optional[np.ndarray] = None,
+@@ -2454,7 +2564,7 @@ def _transitions_block(
+ 
+     changed = [t for t in trans if _is_changed(t)]
+     noop = [t for t in trans if not _is_changed(t)]
+-    sample = changed[: k - 2] + noop[:2]
++    sample = _select_transitions_for_prompt(changed, noop, k=k)
+     out = []
+     if sample:
+         out.append(
+@@ -2631,15 +2741,67 @@ _L2_CODEONLY_DIRECTIVE = (
+ )
+ 
+ 
+-def _induce_transitions_k() -> int:
+-    """REQ-ARC-FCP-5699-23: DEV-ONLY override (unset in production -- returns 8, the
+-    pre-existing _transitions_block/induce_prompt default, byte-identical behavior). Lets a
+-    diagnostic run test whether showing the LLM more per-action-type examples reduces the
+-    literal-coordinate-memorization pattern REQ-ARC-FCP-5699-22 found under the default cap."""
++def _induce_transitions_k() -> Optional[int]:
++    """How many transitions the induce prompt shows. `None` means ALL of them (the default since
++    2026-08-01). An int caps the sample at `changed[:k-2] + noop[:2]`, the historical shape.
++
++    IT WAS 8, AND -- WORSE -- IT WAS NOT WIRED. REQ-ARC-FCP-5699-22 found that the cap "starves
++    the dynamics half to roughly one example per action type, producing hardcoded-literal-
++    coordinate memorization instead of general rules". REQ-ARC-FCP-5699-23 responded by adding
++    this resolver and `CARNOT_ARC_INDUCE_TRANSITIONS_K` so a diagnostic could test raising it.
++    But NOTHING ON THE LIVE PATH EVER CALLED IT: `induce_prompt` carried a literal `k: int = 8`,
++    and the only callers of this function were `python/carnot/experiment_*.py`. So the knob moved
++    the prompt for experiments and did nothing whatsoever for the agent -- the diagnosis landed,
++    the instrument was built, and the fix never reached the thing being diagnosed. It is wired
++    now, via `induce_prompt(k=None)` -> `_select_transitions_for_prompt`.
++
++    WHY THE DEFAULT IS NOW "ALL" (measured 2026-08-01; prompted by Mage-VL, arXiv 2607.24904).
++    That paper's video result is that once you encode an anchor frame plus DELTAS for the rest,
++    subsampling frames stops being necessary -- it keeps every frame at ~1/8 the tokens and gains
++    accuracy. This module already did the first half: `_transitions_block` emits ONE full grid
++    plus per-transition deltas. It then subsampled anyway, discarding 17 of 25 transitions.
++
++    The cap was correct when written -- before `_rle_grid`, a SINGLE 64x64 transition overflowed
++    the budget. After the run-length fixes it is not. Rendering ALL transitions instead of 8,
++    measured on the six captured games:
++
++        game   n   changed   k=8 chars   ALL chars   ratio
++        ft09  25         6       4,046       4,046   1.00x    <- already showed everything
++        lp85  25         2       4,064       4,064   1.00x    <- already showed everything
++        sc25  25         7       2,557       2,718   1.06x
++        tn36  25        25       3,218       5,023   1.56x
++        tu93  25        25       2,532       4,924   1.94x
++                                             TOTAL   1.24x
++
++    Worst case ~5,000 chars, about 1,255 tokens, against a 16,384-token prompt budget. The cap
++    was discarding 68% of the evidence to save roughly 4% of a budget nothing was near; the
++    prompt uses under 8% of what is available.
++
++    WHAT THIS DOES *NOT* CLAIM. Action coverage was checked and was NOT being lost -- `changed[:6]`
++    already covers every distinct action on all six games, so the stronger story ("whole actions
++    were hidden from the model") is false and is not being told. What the extra transitions buy
++    is more examples of the SAME actions, which matters for a positional mechanic (tn36 is 25
++    clicks whose effect depends on WHERE you click, of which 6 were shown) and is exactly the
++    starvation REQ-5699-22 described. Whether it actually improves induction is an empirical
++    question this change makes measurable; the token arithmetic alone does not settle it.
++
++    `CARNOT_ARC_INDUCE_TRANSITIONS_K=8` restores the previous prompt byte-for-byte.
++    """
+     import os
+ 
+     override = os.environ.get("CARNOT_ARC_INDUCE_TRANSITIONS_K")
+-    return int(override) if override else 8
++    if override is None:
++        return None
++    text = str(override).strip().lower()
++    if text in {"all", "none", ""}:
++        return None
++    try:
++        value = int(text)
++    except (TypeError, ValueError):
++        return None
++    # A non-positive cap would render an empty transitions block -- an induce prompt with no
++    # evidence at all. Treat it as "all" rather than as "show nothing".
++    return value if value > 0 else None
+ 
+ 
+ def _object_perception_on() -> bool:
+@@ -2686,7 +2848,10 @@ def induce_prompt(
+     cell: int,
+     *,
+     previous_level_complete_grid: Optional[np.ndarray] = None,
+-    k: int = 8,
++    # `None` -> `_induce_transitions_k()`, which is "all" as of 2026-08-01. This was a literal
++    # `8` that never consulted that resolver at all, so REQ-ARC-FCP-5699-23's knob moved the
++    # prompt for diagnostics and did nothing for the live agent. An explicit int still caps.
++    k: Optional[int] = None,
+     include_playbook_exemplars: bool | str = False,
+     hud_mask: Optional[np.ndarray] = None,
+     hud_mask_enabled: Optional[bool] = None,
+diff --git a/python/carnot/experiment_6018_object_perception_heldout_ab.py b/python/carnot/experiment_6018_object_perception_heldout_ab.py
+index e4a2f48024..3a12dd5489 100644
+--- a/python/carnot/experiment_6018_object_perception_heldout_ab.py
++++ b/python/carnot/experiment_6018_object_perception_heldout_ab.py
+@@ -70,6 +70,19 @@ if str(ROOT / "python") not in sys.path:  # pragma: no cover - script bootstrap
+ 
+ import numpy as np  # noqa: E402
+ 
++
++# THE CAP THIS EXPERIMENT WAS MEASURED AGAINST (pinned 2026-08-01, behaviour-preserving).
++# This module's held-out design is `full \ shown`: it pops CARNOT_ARC_INDUCE_TRANSITIONS_K to
++# get "the production prompt", derives the withheld indices from it, then RAISES the env as a
++# positive control that shows the model every transition. That only works while the production
++# default withholds something. On 2026-08-01 the default became "show every transition", which
++# would have made `held` empty -- and `if not held: continue` would then have skipped the
++# positive control SILENTLY, turning a leak check into a no-op without failing.
++# 8 was the production default when this experiment ran and is what its published artifact
++# measured, so pinning it keeps the result reproducible rather than tracking a default that has
++# since moved underneath it.
++_PRODUCTION_K_AT_MEASUREMENT = 8
++
+ EXPERIMENT_ID = 6018
+ REQUIREMENT = "REQ-ARC-WMTE-5830"
+ RANDOM_SEED = 6018
+@@ -602,7 +615,7 @@ def run() -> int:  # noqa: C901 - one linear measurement procedure, kept in one
+             continue
+         windows[game] = w
+         win, _full, cell = w
+-        p_off = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
++        p_off = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
+         shown, held = split_shown_heldout(e3, game, list(win), cell, p_off)
+         prefix, tail = wmte._split_prefix_heldout(list(win))
+         window_meta[game] = {
+@@ -626,10 +639,10 @@ def run() -> int:  # noqa: C901 - one linear measurement procedure, kept in one
+     for game, (win, _full, cell) in windows.items():
+         os.environ.pop("CARNOT_ARC_OBJECT_PERCEPTION", None)
+         assert not e3._object_perception_on()
+-        p_off = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
++        p_off = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
+         os.environ["CARNOT_ARC_OBJECT_PERCEPTION"] = "1"
+         assert e3._object_perception_on()
+-        p_on = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
++        p_on = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
+         os.environ.pop("CARNOT_ARC_OBJECT_PERCEPTION", None)
+         treatment_witness.append(
+             {
+@@ -727,7 +740,7 @@ def run() -> int:  # noqa: C901 - one linear measurement procedure, kept in one
+                 os.environ["CARNOT_ARC_OBJECT_PERCEPTION"] = flag
+                 assert e3._object_perception_on() is (flag == "1"), "arm flag not in effect"
+                 e3.E3_DIR = e3_dir  # per-cell isolation: no cell can read another's engine
+-                prompt = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
++                prompt = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
+                 shown, held = split_shown_heldout(e3, game, list(win), cell, prompt)
+                 sf0, cf0 = prop.n_server_failures, prop.n_content_failures
+                 t0 = time.time()
+@@ -1508,7 +1521,7 @@ def reverify_rows(rows: list[dict], windows: dict[str, tuple], *, e3: Any) -> di
+ 
+ def window_heldout_indices(e3: Any, game: str, window_tuple: tuple) -> list[int]:
+     win, _full, cell = window_tuple
+-    prompt = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
++    prompt = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
+     _shown, held = split_shown_heldout(e3, game, list(win), cell, prompt)
+     return held
+ 
+@@ -1659,12 +1672,12 @@ def run_positive_control(reps: int = 2) -> dict:
+         win, _full, cell = w
+         # the PRODUCTION-withheld indices, computed from the production k=8 prompt
+         os.environ.pop("CARNOT_ARC_INDUCE_TRANSITIONS_K", None)
+-        prod_prompt = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
++        prod_prompt = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
+         _shown, held = split_shown_heldout(e3, game, list(win), cell, prod_prompt)
+         if not held:
+             continue
+         os.environ["CARNOT_ARC_INDUCE_TRANSITIONS_K"] = str(len(win) + 4)
+-        leak_prompt = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
++        leak_prompt = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
+         leak_shown, leak_held = split_shown_heldout(e3, game, list(win), cell, leak_prompt)
+         for rep in range(reps):
+             e3.E3_DIR = OUT_DIR / "e3_positive_control" / f"{game}__r{rep}"
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index 624e70caad..975339c469 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52539,7 +52539,25 @@
+     ],
+     "engine_store": "results/arc_e3_origin_fixtures",
+     "engine_store_is_frozen_fixtures": true,
+-    "rebuild_command": "CARNOT_ARC_E3_DIR=\"$(git rev-parse --show-toplevel)\"/results/arc_e3_origin_fixtures .venv/bin/python scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py --out <this file>"
++    "rebuild_command": "CARNOT_ARC_E3_DIR=\"$(git rev-parse --show-toplevel)\"/results/arc_e3_origin_fixtures .venv/bin/python scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py --out <this file>",
++    "freshness_acknowledgements": [
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (48501 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (48501 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      }
++    ]
+   },
+   "verifier_is_oracle": false,
+   "honest_verdict": "complete_four_arm_matrix_measured",
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index cc3f781654..c9f4d8f39a 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -23,7 +23,25 @@
+     ],
+     "engine_store": "results/arc_e3_origin_fixtures",
+     "engine_store_is_frozen_fixtures": true,
+-    "rebuild_command": "CARNOT_ARC_E3_DIR=\"$(git rev-parse --show-toplevel)\"/results/arc_e3_origin_fixtures .venv/bin/python scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py"
++    "rebuild_command": "CARNOT_ARC_E3_DIR=\"$(git rev-parse --show-toplevel)\"/results/arc_e3_origin_fixtures .venv/bin/python scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py",
++    "freshness_acknowledgements": [
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (20337 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (20337 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      }
++    ]
+   },
+   "honest_verdict": "complete_hidden_state_gate_hole_measured_req6011_not_wired_into_that_branch",
+   "inference_substrate": "verifier_ensemble_against_cached_candidates",
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index be99c2e6df..ff343577af 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8565,7 +8565,25 @@
+     ],
+     "engine_store": "results/arc_e3_origin_fixtures",
+     "engine_store_is_frozen_fixtures": true,
+-    "rebuild_command": "CARNOT_ARC_E3_DIR=\"$(git rev-parse --show-toplevel)\"/results/arc_e3_origin_fixtures .venv/bin/python scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py"
++    "rebuild_command": "CARNOT_ARC_E3_DIR=\"$(git rev-parse --show-toplevel)\"/results/arc_e3_origin_fixtures .venv/bin/python scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py",
++    "freshness_acknowledgements": [
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (7403 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (7403 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      }
++    ]
+   },
+   "honest_verdict": "complete_hidden_state_change_gate_closed_and_verified",
+   "reproducibility_checksum": "7612040a7dfde22511cb8e51f9431ccd90e7ad0f09fe4ad71a01a905bb7029f7",
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 3a4702c6e4..b5b828b253 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1310,7 +1310,25 @@
+         "sha256": "e51fec6a88846c281cc5b79715c4a12b0ca567764c08830b42cede4de9297d60"
+       }
+     ],
+-    "what_this_block_does_and_does_not_certify": "artifact_freshness_lint compares these sha256s against the files on disk, so a later edit to any of them marks this artifact STALE. That is a statement about the AGGREGATION and about the gemma arm, both of which ran against the bytes recorded here. It is NOT a statement about the qwen arm: see code_provenance -- arc_executable_world_model.py was rewritten mid-run, the qwen arm imported the earlier bytes, and those bytes were never snapshotted. A 'fresh' verdict from the lint must not be read as 'both arms ran identical code'. They did not."
++    "what_this_block_does_and_does_not_certify": "artifact_freshness_lint compares these sha256s against the files on disk, so a later edit to any of them marks this artifact STALE. That is a statement about the AGGREGATION and about the gemma arm, both of which ran against the bytes recorded here. It is NOT a statement about the qwen arm: see code_provenance -- arc_executable_world_model.py was rewritten mid-run, the qwen arm imported the earlier bytes, and those bytes were never snapshotted. A 'fresh' verdict from the lint must not be read as 'both arms ran identical code'. They did not.",
++    "freshness_acknowledgements": [
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
++        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
++      }
++    ]
+   },
+   "question": "WHICH INDUCER? base Qwen3.6-27B vs gemma-4-31B-it on world-model induction quality, matched on quantisation (both Q4_K_M, verified from GGUF general.file_type==15), corpus (exp5764's 13 games), mechanism (exp5726.run_reason_cell_budget at budget 16384), repeats (3/game), n_ctx (32768), and card (GPU 1, sequential, one server at a time). Decides which model the ARC induction path should use.",
+   "qwen_zero_reason_split": {
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index b36d5d401e..4c78629e0a 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3334,6 +3334,22 @@
+         "reason": "The drift is the multi-GPU layer-split wiring: CARNOT_ARC_GENERATOR_CUDA_GPU gained a comma-list form, plus _parse_generator_cuda_gpus/_split_args_for_env and a split->single->iGPU fallback ordering. All of it is INERT unless the env var holds more than one index, and nothing in the repo sets that. The scalar form is byte-for-byte unchanged, so every number in this artifact -- measured under the scalar form -- is unaffected.",
+         "why_not_rebuilt": "No rebuild_command exists for this artifact: it was produced by a live multi-hour GPU measurement, not a deterministic analyser. Re-running it would produce a genuinely NEW measurement, not a reproduction, which is a worse answer to 'are these numbers still valid' than a stated argument for inertness.",
+         "evidence": "tests/python/test_arc_generator_layer_split.py::TestPartialHeadroomIsARefusal::test_single_card_form_still_pins_one_card asserts the scalar form yields CUDA_VISIBLE_DEVICES=<idx> with NO split flags; ::test_single_card_gets_nothing asserts _split_args_for_env returns [] for one visible device."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 8e6af7e239..abbd74cd72 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -967,6 +967,22 @@
+         "reason": "The drift is the multi-GPU layer-split wiring: CARNOT_ARC_GENERATOR_CUDA_GPU gained a comma-list form, plus _parse_generator_cuda_gpus/_split_args_for_env and a split->single->iGPU fallback ordering. All of it is INERT unless the env var holds more than one index, and nothing in the repo sets that. The scalar form is byte-for-byte unchanged, so every number in this artifact -- measured under the scalar form -- is unaffected.",
+         "why_not_rebuilt": "No rebuild_command exists for this artifact: it was produced by a live multi-hour GPU measurement, not a deterministic analyser. Re-running it would produce a genuinely NEW measurement, not a reproduction, which is a worse answer to 'are these numbers still valid' than a stated argument for inertness.",
+         "evidence": "tests/python/test_arc_generator_layer_split.py::TestPartialHeadroomIsARefusal::test_single_card_form_still_pins_one_card asserts the scalar form yields CUDA_VISIBLE_DEVICES=<idx> with NO split flags; ::test_single_card_gets_nothing asserts _split_args_for_env returns [] for one visible device."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index 9e1b3f3e17..92aeee83ee 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -209,6 +209,22 @@
+         "reason": "The drift is one line: os.environ.setdefault(\"CARNOT_ARC_GENERATOR_CUDA_GPU\", \"1\") -> \"1,0\", enabling the two-GPU layer split on FUTURE runs of this harness, plus its explanatory comment. This harness PRODUCED the rows summarised here; a change to which GPU it will use next time cannot alter rows already written.",
+         "why_not_rebuilt": "No rebuild_command exists: this artifact came from a multi-hour live GPU measurement, not a deterministic analyser. Re-running would produce a NEW measurement, not a reproduction.",
+         "evidence": "The three sibling artifacts that DO have rebuild commands and share this exact dependency were rebuilt in this same commit and moved 0 substantive values."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
++        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
++        "acknowledged_on": "2026-07-31",
++        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
++        "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/tests/python/test_arc_induce_prompt_large_grid_scalability.py b/tests/python/test_arc_induce_prompt_large_grid_scalability.py
+index 150fee4fa6..80516f1bae 100644
+--- a/tests/python/test_arc_induce_prompt_large_grid_scalability.py
++++ b/tests/python/test_arc_induce_prompt_large_grid_scalability.py
+@@ -7,6 +7,7 @@ SCENARIO-ARC-WMTE-5593-2-REAL-BUDGET-FIT.
+ from __future__ import annotations
+ 
+ import numpy as np
++import pytest
+ 
+ from carnot.agentic import arc_executable_world_model as e3
+ 
+@@ -133,10 +134,23 @@ def test_req_arc_wmte_5593_2_spec_declares_scalability_fix() -> None:
+ 
+ 
+ # ---------------------------------------------------------------------------
+-# REQ-ARC-FCP-5699-23: DEV-ONLY override so the LLM can be shown more than the
+-# default ~6 grid-changing transitions -- REQ-ARC-FCP-5699-22 found the default
+-# starves the dynamics half to roughly one example per action type, producing
+-# hardcoded-literal-coordinate memorization instead of general rules (g50t).
++# REQ-ARC-FCP-5699-23: how many transitions the induce prompt shows.
++# REQ-ARC-FCP-5699-22 found the old cap "starves the dynamics half to roughly
++# one example per action type, producing hardcoded-literal-coordinate
++# memorization instead of general rules" (g50t).
++#
++# UPDATED 2026-08-01. -23 shipped `_induce_transitions_k()` + the env override,
++# but NOTHING ON THE LIVE PATH CALLED IT -- `induce_prompt` carried a literal
++# `k: int = 8` and the only callers were python/carnot/experiment_*.py. So the
++# diagnosis landed, the instrument was built, and the agent never got the fix.
++# The resolver is now wired into `induce_prompt`, and its default is ALL
++# transitions: measured worst case ~1,255 tokens against a 16,384-token budget,
++# i.e. the cap was discarding 68% of the evidence to save ~4% of a budget
++# nothing was near.
++#
++# The parity anchor below is DELIBERATELY INVERTED rather than deleted: what it
++# protected (an exactly recoverable pre-existing prompt) is still protected, but
++# now via the env switch instead of via the default.
+ # ---------------------------------------------------------------------------
+ 
+ 
+@@ -150,9 +164,19 @@ def _transitions(n, *, shape=(8, 8)):
+     return out
+ 
+ 
+-def test_req_arc_fcp_5699_23_induce_transitions_k_defaults_to_8_when_unset(monkeypatch):
++def test_req_arc_fcp_5699_23_induce_transitions_k_defaults_to_ALL_when_unset(monkeypatch):
++    """`None` means "show every observed transition" -- see the resolver for the measurement."""
+     monkeypatch.delenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", raising=False)
+-    assert e3._induce_transitions_k() == 8
++    assert e3._induce_transitions_k() is None
++
++
++@pytest.mark.parametrize("raw", ["0", "-3", "abc", "", "all", "none"])
++def test_req_arc_fcp_5699_23_unusable_values_mean_all_not_nothing(monkeypatch, raw):
++    """Fail-safe direction is MORE evidence. A cap of 0 would render a transitions block with no
++    examples in it -- an induce prompt asking the model to explain a game it was shown nothing
++    about -- so a non-positive or malformed value resolves to "all" rather than to "none"."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", raw)
++    assert e3._induce_transitions_k() is None
+ 
+ 
+ def test_req_arc_fcp_5699_23_induce_transitions_k_env_override(monkeypatch):
+@@ -160,13 +184,44 @@ def test_req_arc_fcp_5699_23_induce_transitions_k_env_override(monkeypatch):
+     assert e3._induce_transitions_k() == 20
+ 
+ 
+-def test_req_arc_fcp_5699_23_induce_prompt_default_k_matches_pre_existing_behavior():
+-    """Regression-safety anchor: induce_prompt with NO explicit k arg (every pre-5699-23 call
+-    site) must show the exact same transitions as before -- k defaults to 8, byte-identical."""
++def test_req_arc_fcp_5699_23_the_env_switch_restores_the_pre_existing_prompt(monkeypatch):
++    """The parity anchor, moved from the default onto the env switch.
++
++    It used to assert `induce_prompt()` with no `k` equalled `k=8`. That is no longer true and
++    is no longer wanted -- the whole point of the 2026-08-01 change is that the default shows
++    everything. What the anchor was PROTECTING, though, is still worth protecting: the previous
++    prompt must remain exactly recoverable, so an A/B against it measures one variable rather
++    than an approximation of the old renderer. That is what this now asserts.
++    """
++    trans = _transitions(25)
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", "8")
++    assert e3.induce_prompt("paritytest", trans, cell=1) == e3.induce_prompt(
++        "paritytest", trans, cell=1, k=8
++    )
++
++
++def test_req_arc_fcp_5699_23_the_default_now_shows_every_transition(monkeypatch):
++    """The change itself. 25 synthetic transitions, all grid-changing, no no-ops: the old
++    default rendered 6 (`changed[:k-2]`), the new one renders all 25."""
++    trans = _transitions(25)
++    monkeypatch.delenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", raising=False)
++    assert e3.induce_prompt("paritytest", trans, cell=1).count("--- ACTION") == 25
++    assert e3.induce_prompt("paritytest", trans, cell=1, k=8).count("--- ACTION") == 6
++
++
++def test_req_arc_fcp_5699_23_the_resolver_is_actually_wired_to_the_live_prompt(monkeypatch):
++    """THE DEFECT THIS RELEASE FIXES, pinned so it cannot silently return.
++
++    `_induce_transitions_k()` existed from -23 onward and `induce_prompt` ignored it, carrying a
++    literal `k: int = 8`. The env override therefore moved the prompt for every
++    `python/carnot/experiment_*.py` caller that passed it explicitly, and moved nothing at all
++    for the live agent. If a future edit re-hardcodes the default, this fails.
++    """
+     trans = _transitions(25)
+-    prompt_default = e3.induce_prompt("paritytest", trans, cell=1)
+-    prompt_explicit_8 = e3.induce_prompt("paritytest", trans, cell=1, k=8)
+-    assert prompt_default == prompt_explicit_8
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", "4")
++    assert e3.induce_prompt("paritytest", trans, cell=1).count("--- ACTION") == 2  # k-2, no no-ops
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", "12")
++    assert e3.induce_prompt("paritytest", trans, cell=1).count("--- ACTION") == 10
+ 
+ 
+ def test_req_arc_fcp_5699_23_raising_k_shows_more_transitions_to_the_llm():
+diff --git a/tests/python/test_object_perception_ab_stats.py b/tests/python/test_object_perception_ab_stats.py
+index ff47c55bcb..0bf6458554 100644
+--- a/tests/python/test_object_perception_ab_stats.py
++++ b/tests/python/test_object_perception_ab_stats.py
+@@ -213,10 +213,18 @@ def _synthetic_window(n: int = 12) -> list[e3.Transition]:
+     return rows
+ 
+ 
++# The induce prompt's default became "show every transition" on 2026-08-01 (REQ-ARC-FCP-5699-23
++# rewired + default flipped). These tests are ABOUT the shown/held split, and a split only exists
++# when something is withheld -- so they pin the cap that produced the split they assert, rather
++# than inheriting a default whose whole purpose is now to withhold nothing. 8 is the historical
++# production cap these expectations were measured against.
++_PRODUCTION_K_AT_MEASUREMENT = 8
++
++
+ class TestHeldoutSplitAgainstTheRealPrompt:
+     def test_default_k_shows_six_of_twelve_and_holds_out_the_rest(self) -> None:
+         window = _synthetic_window(12)
+-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
++        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+         shown, held = split_shown_heldout(e3, "zz00", window, 1, prompt)
+         assert len(shown) + len(held) == 12
+         # k=8 -> changed[:6] + noop[:2]; this window is all-changing, so 6 are shown.
+@@ -241,7 +249,7 @@ class TestHeldoutSplitAgainstTheRealPrompt:
+                 after = before.copy()
+                 after[i % 8, (i * 3) % 8] = i + 2
+                 window.append(_t(before, after, action=(i % 5) + 1))
+-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
++        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+         shown, held = split_shown_heldout(e3, "zz00", window, 1, prompt)
+         assert shown != list(range(len(shown))), (
+             "with no-ops present the shown set must not be a positional prefix, or this test "
+@@ -257,7 +265,7 @@ class TestHeldoutSplitAgainstTheRealPrompt:
+ 
+     def test_every_heldout_line_is_genuinely_absent_from_the_prompt(self) -> None:
+         window = _synthetic_window(12)
+-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
++        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+         _shown, held = split_shown_heldout(e3, "zz00", window, 1, prompt)
+         assert held, "the split must find something held out on a 12-transition window"
+         for i in held:
+@@ -265,7 +273,7 @@ class TestHeldoutSplitAgainstTheRealPrompt:
+ 
+     def test_every_shown_line_is_genuinely_present_in_the_prompt(self) -> None:
+         window = _synthetic_window(12)
+-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
++        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+         shown, _held = split_shown_heldout(e3, "zz00", window, 1, prompt)
+         for i in shown:
+             assert transition_prompt_line(e3, window[i]) in prompt
+@@ -276,7 +284,7 @@ class TestHeldoutSplitAgainstTheRealPrompt:
+         # THE exp5831 defect, pinned: a window the prompt shows entirely yields NO held-out
+         # transition, so any accuracy on it is training accuracy.
+         window = _synthetic_window(4)
+-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
++        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+         shown, held = split_shown_heldout(e3, "zz00", window, 1, prompt)
+         assert len(shown) == 4
+         assert held == []
+@@ -284,9 +292,9 @@ class TestHeldoutSplitAgainstTheRealPrompt:
+     def test_object_block_changes_the_prompt_but_not_the_split(self, monkeypatch) -> None:
+         window = _synthetic_window(12)
+         monkeypatch.delenv("CARNOT_ARC_OBJECT_PERCEPTION", raising=False)
+-        p_off = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
++        p_off = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+         monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "1")
+-        p_on = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
++        p_on = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
+         assert p_on != p_off
+         assert p_on.startswith(p_off)
+         assert "OBJECT STRUCTURE" in p_on
+-- 
+2.55.0
+

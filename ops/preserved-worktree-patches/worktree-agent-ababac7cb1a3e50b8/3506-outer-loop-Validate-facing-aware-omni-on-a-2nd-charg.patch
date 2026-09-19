@@ -1,0 +1,260 @@
+From f39940ae0ddc1adbb5b19c9374d8407785b35881 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 21:03:15 -0400
+Subject: [PATCH 03506/11362] [outer-loop] Validate facing-aware omni on a 2nd
+ charger config (tu93 L2); chargers tu93-specific in reachable set
+
+Operator: "test facing-aware omni on a second charger level." The omni rule is CLEAN on a second
+charger configuration. Write-up docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md.
+
+- Generalized experiment_hazard_l3_calibration.py (--game/--target-level): reaches the charger level via
+  the full escalation loop, then position-keyed real-env BFS -> win path + died/safe labels -> scores
+  omni's is_lethal (FN/FP/win-path-pruned).
+- RESULT: facing-aware omni is CLEAN (FN=0, FP=0, win-path-unpruned) on BOTH tu93 L2 (1 horizontal charger
+  facing LEFT; 41 labels/2 deaths) and tu93 L3 (3 chargers facing RIGHT+DOWN; 88 labels/5 deaths) -- a
+  different charger COUNT, different maze LAYOUT, and 3 of 4 facing directions. So the rule (calibrated vs
+  L3) is NOT overfit to L3's layout; it transfers cleanly to L2's different config.
+- Cross-GAME scan of the reproduced set: completed batches found NO second charging-enemy game
+  (wa30/ls20/dc22/ar25/cn04 have no block that moves at a death); chargers appear tu93-specific in the
+  reachable set (most other games are click/paint/match, not nav). The within-tu93 L2-vs-L3 generalization
+  is the achievable evidence. Both calibration artifacts adversarial-verify clean.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...ard-aware-omni-second-config-2026-06-22.md | 52 +++++++++++++++++++
+ ops/changelog.md                              | 19 +++++++
+ results/experiment_hazard_l3_calibration.json |  2 +-
+ ...eriment_hazard_l3_calibration_tu93_L2.json | 23 ++++++++
+ .../experiment_hazard_l3_calibration.py       | 43 +++++++++------
+ .../experiment_reinduction_hazard_loop.py     |  3 +-
+ 6 files changed, 124 insertions(+), 18 deletions(-)
+ create mode 100644 docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md
+ create mode 100644 results/experiment_hazard_l3_calibration_tu93_L2.json
+
+diff --git a/docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md b/docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md
+new file mode 100644
+index 0000000000..78ed1ae58b
+--- /dev/null
++++ b/docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md
+@@ -0,0 +1,52 @@
++# Facing-aware omni — validated on a second charger configuration
++
++Date: 2026-06-22 · Outer-loop (interactive, ultracode) · OFFLINE, zero quota · `verifier_is_oracle: false`
++
++Directly addresses the scope limitation the adversarial review forced on
++`hazard-aware-L3-calibrated-2026-06-22.md`: that the facing-aware `omni` rule was "validated on ONE level of
++ONE game (tu93 L3's single static layout)." This note tests it on a **second charger configuration** and
++shows the facing mechanism is not overfit to L3's specific layout.
++
++## Result — omni is CLEAN on tu93 L2 AND L3 (two different configs)
++
++The generalized calibration harness (`scripts/experiments/experiment_hazard_l3_calibration.py`, now
++`--game/--target-level`) runs the same reproducible test on each charger level: position-keyed real-env BFS →
++win path + per-move died/safe labels → score the `omni` `is_lethal` predicate (FN / FP / win-path-pruned).
++
++| level | chargers | facings observed | BFS labels (deaths) | omni FN / FP / win-pruned |
++|---|---|---|---|---|
++| **tu93 L2** | **1** (horizontal) | left `(0,-1)` | 41 (2) | **0 / 0 / 0** |
++| **tu93 L3** | **3** | right `(0,+1)` + down `(1,0)` | 88 (5) | **0 / 0 / 0** |
++
++So the *same* facing-aware rule — each charger kills only on its facing line, on the side it faces, at
++distance 1..reach, collision-exempt — is **clean (FN=0, FP=0, win-path-unpruned)** on:
++
++- a **different charger count** (1 vs 3),
++- a **different maze layout** (L2 ≠ L3),
++- and **three of the four facing directions** (left at L2; right + down at L3),
++
++with the facing read from the centre-marker offset in each case. The rule was *calibrated* against L3's BFS
++labels but is *not* overfit to L3 — it transfers cleanly to L2's different configuration. Artifacts:
++`results/experiment_hazard_l3_calibration.json` (L3) and `..._tu93_L2.json`.
++
++The escalation loop confirms the same end-to-end: `omni` deepens tu93 L3 (where it is needed), and forced on
++L2 it also solves L2 (`level_up`, plan_len 10) — though in the live ladder L2 is taken by the cheaper
++`toward` rung first.
++
++## Scope (still honest)
++
++This is a second CONFIGURATION (count / layout / facings) but still within tu93 — same game, same charger
++sprite encoding. A second *game* (different art / encoding) would be stronger evidence still. A parallel scan
++of the reproduced-game set probed for a nav-reachable charging-enemy level (the signature: a non-avatar block
++that *translates/charges* at a death, with a rigid-nav avatar). The completed batches found **none** —
++wa30, ls20, dc22, ar25, cn04 have no charging-enemy mechanic (no block moves at a death) — so charging
++enemies appear **tu93-specific within the reachable reproduced set** (most other games are click/paint/match,
++not nav, so the omni loop cannot reach any charger level they might have). The cross-game test is therefore
++**not currently available**; the layout/count/direction generalization within tu93 (L2 vs L3) is the
++achievable evidence, and the facing-from-centre-marker mechanism is general by construction.
++
++## Artifacts
++
++- `scripts/experiments/experiment_hazard_l3_calibration.py` — generalized (`--game --target-level`); reproducible FN/FP scoring
++- `results/experiment_hazard_l3_calibration.json` (tu93 L3) + `results/experiment_hazard_l3_calibration_tu93_L2.json` (tu93 L2)
++- `python/carnot/agentic/arc_nav_world_model.py` — the facing-aware `omni` rule + `_charger_facing`
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 531a58290a..f341c0bf75 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,24 @@
+ # Carnot — Changelog
+ 
++## 2026-06-22 (Facing-aware omni validated on a 2nd charger config (tu93 L2); chargers tu93-specific in reachable set — outer-loop, ultracode)
++
++Operator: "test facing-aware omni on a second charger level." Done — the omni rule is CLEAN on a second
++charger configuration. Write-up `docs/research-notes/hazard-aware-omni-second-config-2026-06-22.md`.
++
++- Generalized the calibration harness (`experiment_hazard_l3_calibration.py` now `--game/--target-level`):
++  reaches the charger level via the full escalation loop, then position-keyed real-env BFS → win path +
++  died/safe labels → scores omni's is_lethal (FN/FP/win-path-pruned).
++- RESULT: facing-aware omni is CLEAN (FN=0, FP=0, win-path-unpruned) on BOTH tu93 L2 (1 horizontal charger,
++  facing LEFT; 41 labels/2 deaths) and tu93 L3 (3 chargers, facing RIGHT+DOWN; 88 labels/5 deaths) — a
++  different charger COUNT, different maze LAYOUT, and 3 of 4 facing directions. So the rule (calibrated vs
++  L3) is NOT overfit to L3's layout; it transfers cleanly to L2's different config. (omni also solves L2
++  end-to-end when forced; in the live ladder L2 is taken by the cheaper toward rung.)
++- Cross-GAME scan (parallel, reproduced game set): completed batches found NO second charging-enemy game —
++  wa30/ls20/dc22/ar25/cn04 have no block that moves at a death; chargers appear tu93-specific in the
++  reachable set (most other games are click/paint/match, not nav, so the loop can't reach their charger
++  levels if any). The within-tu93 L2-vs-L3 generalization is the achievable evidence. Artifacts:
++  `experiment_hazard_l3_calibration.json` (L3) + `..._tu93_L2.json` (L2). Conductor STOPPED. Committed `[outer-loop]`.
++
+ ## 2026-06-22 (tu93 L3 SOLVED: hazard interception zone CALIBRATED against the BFS path — outer-loop, ultracode)
+ 
+ Operator: "calibrate the static interception zone against the BFS path." Done — the escalation loop now
+diff --git a/results/experiment_hazard_l3_calibration.json b/results/experiment_hazard_l3_calibration.json
+index 8514bcb08f..768a75a4b3 100644
+--- a/results/experiment_hazard_l3_calibration.json
++++ b/results/experiment_hazard_l3_calibration.json
+@@ -20,5 +20,5 @@
+     "('col', (1, 0))": 56
+   },
+   "methodology_note": "Position-keyed real-env BFS over tu93 L3 gives the ground-truth win path + per-move died/safe labels (the chargers are static-until-triggered, so a position key is sound). The 'omni' is_lethal rule (per-charger facing read from the centre-marker offset; directional; collision-exempt; dist 1..reach) is scored against those labels. CLEAN = FN==0 (no real death missed) AND win_path_pruned==0 (the verified path is not over-pruned). SCOPE: tu93 L3 is a SINGLE static layout (seed-invariant); this validates the calibration on that one level, not a general hazard solver.",
+-  "duration_s": 5.0
++  "duration_s": 6.1
+ }
+\ No newline at end of file
+diff --git a/results/experiment_hazard_l3_calibration_tu93_L2.json b/results/experiment_hazard_l3_calibration_tu93_L2.json
+new file mode 100644
+index 0000000000..acb3c67373
+--- /dev/null
++++ b/results/experiment_hazard_l3_calibration_tu93_L2.json
+@@ -0,0 +1,23 @@
++{
++  "experiment": "experiment_hazard_l3_calibration",
++  "game": "tu93",
++  "honest_verdict": "success: facing_aware_omni_lethal_zone_CLEAN_FN0_FP0_winpath_unpruned_on_tu93_L2",
++  "verifier_is_oracle": false,
++  "inference_substrate": "offline_arc_search_plus_induced_world_model",
++  "random_seed": 7,
++  "n_bfs_nodes": 11,
++  "n_labelled_moves": 41,
++  "n_real_deaths": 2,
++  "win_path_len": 10,
++  "omni_FN_missed_deaths": 0,
++  "omni_FP_over_prune": 0,
++  "omni_win_path_moves_pruned": 0,
++  "calibration_clean": true,
++  "hazard_center_color": 15,
++  "charge_range": 6,
++  "distinct_charger_facings_observed": {
++    "('row', (0, -1))": 28
++  },
++  "methodology_note": "Position-keyed real-env BFS over tu93 L3 gives the ground-truth win path + per-move died/safe labels (the chargers are static-until-triggered, so a position key is sound). The 'omni' is_lethal rule (per-charger facing read from the centre-marker offset; directional; collision-exempt; dist 1..reach) is scored against those labels. CLEAN = FN==0 (no real death missed) AND win_path_pruned==0 (the verified path is not over-pruned). SCOPE: tu93 L3 is a SINGLE static layout (seed-invariant); this validates the calibration on that one level, not a general hazard solver.",
++  "duration_s": 6.1
++}
+\ No newline at end of file
+diff --git a/scripts/experiments/experiment_hazard_l3_calibration.py b/scripts/experiments/experiment_hazard_l3_calibration.py
+index ad1c70410b..06feb6cd09 100644
+--- a/scripts/experiments/experiment_hazard_l3_calibration.py
++++ b/scripts/experiments/experiment_hazard_l3_calibration.py
+@@ -42,7 +42,11 @@ _ha = _load("exp_haz", "experiment_hazard_aware.py")
+ _loop = _load("exp_loop", "experiment_reinduction_hazard_loop.py")
+ 
+ REPO = _here.parents[1]
+-OUT = REPO / "results" / "experiment_hazard_l3_calibration.json"
++
++
++def _out(game, level):
++    suffix = "" if (game == "tu93" and level == 3) else f"_{game}_L{level}"
++    return REPO / "results" / f"experiment_hazard_l3_calibration{suffix}.json"
+ 
+ 
+ def _ok(f):
+@@ -59,21 +63,27 @@ def _avatar_pos(g, av_colors):
+ 
+ def main() -> int:
+     ap = argparse.ArgumentParser()
++    ap.add_argument("--game", default="tu93")
++    ap.add_argument("--target-level", type=int, default=3, help="the charger level to BFS-calibrate at")
+     ap.add_argument("--seed", type=int, default=7)
+     ap.add_argument("--max-nodes", type=int, default=80)
+     args = ap.parse_args()
+     t0 = time.time()
+-    game, seed = "tu93", args.seed
+-
+-    # --- reach L3: L1 (nav) -> L2 (hazard toward); bank the L1->L2 action prefix -----------------------
+-    m0, pre, cell, _ = _ri.reach_level_one(game, 120000, 80, seed=seed)
+-    goal = m0.goal_color
+-    tr2, _ = _ri.collect_at_level(game, pre, 150, seed=seed + 1)
+-    nav = InducedNavWorldModel.fit(tr2); nav.goal_color = goal
+-    nd = _ha.nav_death_transitions(nav, game, pre, cell, 120000, 80)
+-    haz2 = HazardAwareNavWorldModel.fit(list(tr2) + nd, goal_color=goal, lethal_mode="toward")
+-    l1l2 = _loop.execute_from(game, pre, cell, haz2, 120000, 80)["banked"]
+-    av_colors = nav.avatar_colors
++    game, seed = args.game, args.seed
++
++    # --- reach the charger level via the full escalation loop; bank the prefix that reaches it ----------
++    deep = _loop.escalating_deepen(game, args.target_level - 1, 150, 120000, 120, seed)
++    if not deep.get("reached_L1") or deep.get("deepest_level", 0) < args.target_level - 1:
++        art = {"experiment": "experiment_hazard_l3_calibration", "game": game,
++               "honest_verdict": f"complete: could_not_reach_level_{args.target_level - 1}_to_calibrate_at_L{args.target_level}",
++               "verifier_is_oracle": False, "random_seed": seed,
++               "reached_level": deep.get("deepest_level", 0), "duration_s": round(time.time() - t0, 1)}
++        _out(game, args.target_level).write_text(json.dumps(art, indent=2))
++        print(f"VERDICT: {art['honest_verdict']}")
++        return 0
++    l1l2, cell, goal = deep["banked"], deep["cell"], deep["goal_color"]
++    nav0, _p, _c, _t = _ri.reach_level_one(game, 120000, 80, seed=seed)
++    av_colors = nav0.avatar_colors
+ 
+     def run(actions):
+         arc = kit.offline_arcade(); env = arc.make(game, scorecard_id=arc.open_scorecard()); f = _warm(env, False)
+@@ -132,8 +142,8 @@ def main() -> int:
+ 
+     n_deaths = sum(1 for _p, _a, d in labels if d)
+     clean = (fn == 0 and wpp == 0 and winpath is not None)
+-    verdict = ("success: omni_lethal_zone_CALIBRATED_clean_FN0_winpath_unpruned_on_tu93_L3_single_layout"
+-               if clean else f"complete: calibration_not_clean_FN{fn}_winpathpruned{wpp}_inspect")
++    verdict = (f"success: facing_aware_omni_lethal_zone_CLEAN_FN0_FP0_winpath_unpruned_on_{game}_L{args.target_level}"
++               if clean else f"complete: omni_calibration_not_clean_on_{game}_L{args.target_level}_FN{fn}_winpathpruned{wpp}_inspect")
+ 
+     art = {"experiment": "experiment_hazard_l3_calibration", "game": game, "honest_verdict": verdict,
+            "verifier_is_oracle": False, "inference_substrate": "offline_arc_search_plus_induced_world_model",
+@@ -152,10 +162,11 @@ def main() -> int:
+                                 "a SINGLE static layout (seed-invariant); this validates the calibration on "
+                                 "that one level, not a general hazard solver."),
+            "duration_s": round(time.time() - t0, 1)}
+-    OUT.write_text(json.dumps(art, indent=2))
++    out = _out(game, args.target_level)
++    out.write_text(json.dumps(art, indent=2))
+     print(f"VERDICT: {verdict}")
+     print(f"  BFS nodes={nodes} labels={len(labels)} deaths={n_deaths} win_path_len={art['win_path_len']}")
+-    print(f"  omni: FN={fn} FP={fp} win_path_pruned={wpp} | facings={dict(facings)} -> {OUT}")
++    print(f"  omni: FN={fn} FP={fp} win_path_pruned={wpp} | facings={dict(facings)} -> {out}")
+     return 0
+ 
+ 
+diff --git a/scripts/experiments/experiment_reinduction_hazard_loop.py b/scripts/experiments/experiment_reinduction_hazard_loop.py
+index 97085c1e94..a7e1009f07 100644
+--- a/scripts/experiments/experiment_reinduction_hazard_loop.py
++++ b/scripts/experiments/experiment_reinduction_hazard_loop.py
+@@ -154,7 +154,8 @@ def escalating_deepen(game, target_level, n_reinduce, max_plan, max_depth, seed)
+             break
+     reproduced = _levels_completed(fr) - base
+     return {"reached_L1": True, "deepest_level": int(level), "reproduced_level": int(reproduced),
+-            "per_level": per_level, "n_banked_actions": len(banked),
++            "per_level": per_level, "n_banked_actions": len(banked), "banked": banked, "cell": cell,
++            "goal_color": goal_color,
+             "escalated_to_hazard_aware": any(str(p.get("model_class", "")).startswith("hazard_aware")
+                                              for p in per_level)}
+ 
+-- 
+2.55.0
+

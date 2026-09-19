@@ -1,0 +1,528 @@
+From 2473307ac9680f874519bc3292e99b6899c27898 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 15:24:35 -0400
+Subject: [PATCH 03290/11362] [outer-loop] arc live-TTT: scaffold + offline
+ gate (honest negative -> redirect to neural backend)
+
+The operator reframed strategy (2026-06-21): stop offline-optimizing; LEARN each unseen game at live
+runtime within the 12h/10-steps-sec budget (internal sim is FREE -> learn a transition model from a few
+real probes, plan for free, commit the short path, give up gracefully banking each reached level).
+
+Built standalone (low-collision, the conductor wires it in later, NOT this pass):
+- python/carnot/agentic/arc_live_ttt.py: LiveTTTWorldModel -- per-game world model learned from played
+  transitions, exposing the exact engine(grid,action,data)->grid + is_level_complete contract the
+  EXISTING WorldModelVerifier trust gate + plan_in_model BFS consume. L0 exact table + L1 ObjectDeltaModel.
+- scripts/arc_ttt_validate.py: offline learning-curve gate (collect_transitions -> train/held-out ->
+  learned-vs-LLM held-out accuracy). De-risks BEFORE any submission. 5 unit tests green.
+- Codebase finding: the learner was ALREADY fit in-core (_fit_dsl_model) but UNUSED for planning -- the
+  planner still calls the failing LLM engine (arc_competition_agent.py:1417). The fix is to make the
+  learned model the engine.
+
+HONEST GATE RESULT (the gate did its job): 0/3 games clear the 0.5 trust gate. Diagnostic: the rule
+learner predicts 100% of NO-OPs and 0% of state-CHANGING transitions (cd82 0/32, ar25 0/30) on novel
+held-out states -- the ObjectDeltaModel hypothesis class genuinely can't express these mechanics. Caught
+offline before any submission, exactly as designed.
+
+REDIRECT: this points at the operator's greenlit neural learned-dynamics backend (small grid->grid
+CNN / TRM refiner, build step 7) -- now the PRIMARY path, gated by the same harness. Full write-up:
+docs/research-notes/arc-live-ttt-2026-06-21.md.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../research-notes/arc-live-ttt-2026-06-21.md |  59 ++++++++
+ python/carnot/agentic/arc_live_ttt.py         | 143 ++++++++++++++++++
+ results/arc_ttt_validate.json                 |  53 +++++++
+ scripts/arc_ttt_validate.py                   | 129 ++++++++++++++++
+ tests/python/test_arc_live_ttt.py             |  67 ++++++++
+ 5 files changed, 451 insertions(+)
+ create mode 100644 docs/research-notes/arc-live-ttt-2026-06-21.md
+ create mode 100644 python/carnot/agentic/arc_live_ttt.py
+ create mode 100644 results/arc_ttt_validate.json
+ create mode 100644 scripts/arc_ttt_validate.py
+ create mode 100644 tests/python/test_arc_live_ttt.py
+
+diff --git a/docs/research-notes/arc-live-ttt-2026-06-21.md b/docs/research-notes/arc-live-ttt-2026-06-21.md
+new file mode 100644
+index 0000000000..15c58860b6
+--- /dev/null
++++ b/docs/research-notes/arc-live-ttt-2026-06-21.md
+@@ -0,0 +1,59 @@
++# ARC-AGI-3 live test-time-learning (TTT): scaffold + first offline gate (2026-06-21 outer-loop)
++
++Operator reframe (2026-06-21): stop optimizing OFFLINE; LEARN each unseen game on the fly at live
++runtime. Verified competition facts that force this: the agent gets only a frame→action INTERFACE (never
++the game's code/rules), rate-limited to 10 REAL steps/sec (~288k steps / 8h over ~110 games); internal
++compute (model fit, simulated rollouts) is FREE; score = `min(human/agent_actions,1)²` meaned over all
++levels (unsolved=0). So the winning loop is: **gather a few rate-limited real transitions → learn a
++transition model → plan for free inside it → commit only the short winning path**, with graceful give-up
++that banks each reached level (the gateway records `levels_completed` continuously).
++
++## Built this session (standalone, low-collision, offline-validated)
++
++- `python/carnot/agentic/arc_live_ttt.py` — `LiveTTTWorldModel`: a per-game world model learned from
++  played transitions, exposing the exact `engine(grid,action,data)->grid` + `is_level_complete` contract
++  that the EXISTING `WorldModelVerifier` trust gate and `plan_in_model` BFS already consume. Layered:
++  L0 exact transition table (full-bytes keyed, zero-train) + L1 `ObjectDeltaModel` (the existing zero-LLM
++  rule learner). 5 unit tests green.
++- `scripts/arc_ttt_validate.py` — the offline learning-curve gate: per game, collect transitions from the
++  bundled `environment_files/` sim, split train/held-out, fit the learned model, and compare its held-out
++  transition accuracy vs the frozen-9B-INDUCED engine. The de-risk BEFORE any submission.
++- Key codebase finding: the learn-from-play substrate was ALREADY in the core — `E3AgentPolicy` fits
++  `ObjectDeltaModel` every step (`_fit_dsl_model`) but uses it only for a diagnostic energy; the planner
++  still calls the FAILING LLM engine (`e3.load_engine`, arc_competition_agent.py:1417). The real fix is
++  to make the learned model the planning engine — which this module packages.
++
++## First offline gate result — HONEST NEGATIVE (the gate did its job)
++
++| game | learned held-out acc | LLM held-out acc | acc on NO-OPs | acc on CHANGING | held-out novel |
++|---|---|---|---|---|---|
++| cd82 | 0.20 | 0.00 | 8/8 (100%) | **0/32 (0%)** | 40/40 |
++| ar25 | 0.25 | 0.525 | 10/10 (100%) | **0/30 (0%)** | 40/40 |
++| ka59 | 0.20 | 0.20 | — | — | — |
++
++**0/3 games clear the 0.5 trust gate.** The decisive diagnostic: the learned `ObjectDeltaModel` predicts
++**100% of no-op transitions and 0% of state-CHANGING transitions** on entirely-novel held-out states. The
++0.20-0.25 accuracy is *entirely* no-ops. So the rule hypothesis class (translate / object-translate /
++recolor / click-recolor) **genuinely does not capture these games' change dynamics** — not a measurement
++artifact. This is precisely the "biggest risk" the design named (the rule class can't express gravity /
++growth / multi-object physics / timers / hidden state), materializing — and caught offline, before any
++submission, exactly as the gate is meant to.
++
++## What this redirects to — the neural learned-dynamics backend (operator-greenlit live-TRM)
++
++The honest negative points directly at the operator's greenlight: replace the fixed-rule L1 with a
++**learned neural dynamics model** (a small grid→grid CNN, or a TRM-style refiner) trained per-game on the
++played transitions. Unlike a fixed rule class, a neural learner can fit arbitrary local change rules from
++the ~120 transitions a probe gathers. This is build step 7 (`dynamics_backend='cnn'|'trm'`), now the
++PRIMARY path rather than the optional fallback. The same harness re-runs unchanged to gate it: does the
++neural model clear 0.5 held-out accuracy + beat the rule learner on the CHANGING transitions?
++
++Open question the next gate answers: **can a tiny net learn these mechanics' exact full-grid transitions
++from ~120 examples?** If yes → it becomes the planning engine (conductor wires it in per build step 8). If
++no → the per-game-from-scratch-learning thesis has a sample-complexity wall on these mechanics, and the
++honest fallback is the bare explorer + a richer-but-still-cheap structured learner.
++
++## Build order status
++1-2 (module L0+L1) ✓ · 3 (offline gate) ✓ · **7 (neural backend) — NEXT, now primary** · 4 (ValueNet
++adapters), 5-6 (give-up watchdog + global scheduler) follow · 8 (conductor wires the winning engine into
++`_induce_and_plan` + flips `SUBMITTED_EARLY_STOP_GRACE`) only AFTER the harness gate passes.
+diff --git a/python/carnot/agentic/arc_live_ttt.py b/python/carnot/agentic/arc_live_ttt.py
+new file mode 100644
+index 0000000000..38afb81b7b
+--- /dev/null
++++ b/python/carnot/agentic/arc_live_ttt.py
+@@ -0,0 +1,143 @@
++"""Live test-time-learning (TTT) world model for the ARC-AGI-3 competition agent.
++
++OPERATOR REFRAME (2026-06-21): the competition scores the agent on HIDDEN games it never sees the
++rules for -- only a frame->action INTERFACE, rate-limited to 10 REAL steps/sec (~288k steps / 8h over
++~110 games). INTERNAL compute (model fit, simulated rollouts) is FREE. So the winning move is to LEARN
++each game's transition model from a few rate-limited real probes, then PLAN for free inside the learned
++model and COMMIT only the short winning path -- the score min(human/agent_actions, 1)^2 rewards few
++committed real actions, and reaching more games raises the index-weighted mean.
++
++WHY LEARN, NOT INDUCE: the frozen Qwen3.5-9B is too weak to INDUCE a coherent world model (exp4557 scored
++0.0 held-out accuracy -- it failed its own single training transition). This module LEARNS the model from
++played transitions using the EXISTING zero-LLM rule learner ``arc_world_model_dsl.ObjectDeltaModel`` --
++which already fits ARC dynamics (translate / object-translate / recolor / click-recolor rules, greedily
++composed; sub-second pure-numpy fit) from <100 transitions. That learner was ALREADY being fit every step
++inside ``E3AgentPolicy`` (``_fit_dsl_model``) but used only for a diagnostic consistency-energy -- never as
++the planning engine (the planner still calls the failing ``e3.load_engine``). This module packages the
++learned model as the planning engine.
++
++LAYERED ENGINE (all expose the ``engine(grid, action, data) -> grid`` contract that
++``WorldModelVerifier`` and ``plan_in_model`` already expect, so it drops into the existing trust-gate +
++BFS planner with NO new planner):
++
++  L0  EXACT TABLE  -- (full grid bytes, action_key) -> observed next_grid. Zero training, O(1)/step,
++                      reproduces every visited transition EXACTLY (so a corrected divergence is predicted
++                      exactly on replan). Keyed on full ``grid.tobytes()`` (NOT lossy ascii) to avoid the
++                      tens-digit colour-aliasing risk.
++  L1  GENERALIZER  -- ObjectDeltaModel, for states never seen at L0.
++
++ORACLE-DISTINCTNESS: this is a LEARNED dynamics model, not the executable oracle that defines correctness,
++so any value claim carries ``verifier_is_oracle: False`` per the CLAUDE.md Circularity discipline.
++
++STANDALONE: depends only on stable APIs (``ObjectDeltaModel``, ``WorldModelVerifier``, ``_action_key``-
++equivalent). It does NOT edit the conductor-active core; the conductor wires it into
++``E3AgentPolicy._induce_and_plan`` later (replacing ``e3.load_engine``), gated by the same
++``WorldModelVerifier(...).score(engine).accuracy >= 0.5`` trust check and the same ``plan_in_model`` BFS.
++Validate offline FIRST via ``scripts/arc_ttt_validate.py`` (the learning-curve dual-run gate).
++"""
++from __future__ import annotations
++
++from typing import Any, Optional
++
++import numpy as np
++
++from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
++
++
++def action_key(action_id: int, data: Any) -> tuple:
++    """Canonical action key: ``(6, x, y)`` for a click with coords, else ``(action_id,)``. Mirrors
++    ``arc_competition_agent._action_key`` exactly so L0/L1 keying matches the live agent."""
++    if int(action_id) == 6 and isinstance(data, dict) and "x" in data and "y" in data:
++        return (6, int(data["x"]), int(data["y"]))
++    return (int(action_id),)
++
++
++class LiveTTTWorldModel:
++    """A per-game world model learned from played transitions, exposing the engine + win predicate the
++    existing ``plan_in_model`` BFS and ``WorldModelVerifier`` consume."""
++
++    def __init__(self, game: str = "?", *, refit_every: int = 8, min_transitions: int = 16) -> None:
++        self.game = game
++        self.refit_every = int(refit_every)
++        self.min_transitions = int(min_transitions)
++        self._l0: dict[tuple, np.ndarray] = {}        # (grid.tobytes(), akey) -> next_grid (exact backbone)
++        self._dsl_transitions: list[tuple] = []       # (s, akey, s2) feed for ObjectDeltaModel.fit
++        self._win_states: set[bytes] = set()          # next_grid bytes observed at a level-up
++        self._l1: Optional[ObjectDeltaModel] = None
++        self._last_refit = -1
++        self._refits = 0
++
++    # --- learning from play (FREE compute; NOT rate-limited) ----------------------------------------
++    def observe(self, grid: Any, action: int, data: Any, next_grid: Any,
++                level_before: int = 0, level_after: int = 0) -> None:
++        """Record one played transition into L0 + the L1 fit buffer; mark a win-state on a level-up."""
++        g = np.asarray(grid)
++        ng = np.asarray(next_grid)
++        akey = action_key(action, data)
++        self._l0[(g.tobytes(), akey)] = ng.copy()
++        self._dsl_transitions.append((g, akey, ng))
++        if int(level_after) > int(level_before):
++            self._win_states.add(ng.tobytes())
++
++    def observe_transition(self, t: Any) -> None:
++        """Convenience for the ``Transition`` dataclass (grid, action, data, next_grid, level_*)."""
++        self.observe(t.grid, t.action, t.data, t.next_grid,
++                     getattr(t, "level_before", 0), getattr(t, "level_after", 0))
++
++    def maybe_refit(self, step_idx: int) -> bool:
++        """Refit L1 if ``refit_every`` steps elapsed and enough transitions accumulated. FREE compute."""
++        if (step_idx - self._last_refit) < self.refit_every:
++            return False
++        if len(self._dsl_transitions) < self.min_transitions:
++            return False
++        self._l1 = ObjectDeltaModel(self.game).fit(self._dsl_transitions)
++        self._last_refit = step_idx
++        self._refits += 1
++        return True
++
++    def fit_now(self) -> "LiveTTTWorldModel":
++        """Force an immediate L1 fit on all accumulated transitions (offline-harness convenience)."""
++        if self._dsl_transitions:
++            self._l1 = ObjectDeltaModel(self.game).fit(self._dsl_transitions)
++            self._refits += 1
++        return self
++
++    # --- the engine seam: engine(grid, action, data) -> grid ----------------------------------------
++    def engine(self, grid: np.ndarray, action: int, data: Optional[dict]) -> np.ndarray:
++        """The pure transition model ``WorldModelVerifier`` / ``plan_in_model`` call. L0 exact hit ->
++        the stored next_grid; miss -> L1 ObjectDeltaModel; no model yet -> identity (planning then
++        simply finds no win, never crashes)."""
++        g = np.asarray(grid)
++        hit = self._l0.get((g.tobytes(), action_key(action, data)))
++        if hit is not None:
++            return hit
++        if self._l1 is not None:
++            return self._l1.predict(g, action_key(action, data))
++        return g
++
++    def is_level_complete(self, grid: np.ndarray) -> bool:
++        """True if ``grid`` matches an observed win-state (a grid reached at a level-up). The BFS in
++        ``plan_in_model`` halts here. (L2 value-epsilon goal is a follow-up; this is the MVP predicate.)"""
++        return np.asarray(grid).tobytes() in self._win_states
++
++    # --- trust gate (oracle-distinct held-out verification) -----------------------------------------
++    def trust(self, held_out: list) -> float:
++        """Held-out transition accuracy of the LEARNED engine -- the input to the existing
++        ``WorldModelVerifier`` 0.5 trust gate. ``held_out`` is a list of ``Transition``. The model
++        EARNS trust only by predicting transitions it was not fit to (the same bar the LLM engine failed
++        at 0.0). Returns accuracy in [0, 1]."""
++        from carnot.agentic.arc_executable_world_model import WorldModelVerifier
++        if not held_out:
++            return 0.0
++        return float(WorldModelVerifier(held_out).score(self.engine).accuracy)
++
++    # --- diagnostics --------------------------------------------------------------------------------
++    def ttt_diagnostics(self) -> dict:
++        return {
++            "game": self.game,
++            "l0_table_size": len(self._l0),
++            "n_transitions": len(self._dsl_transitions),
++            "l1_refits": self._refits,
++            "n_win_states": len(self._win_states),
++            "verifier_is_oracle": False,
++        }
+diff --git a/results/arc_ttt_validate.json b/results/arc_ttt_validate.json
+new file mode 100644
+index 0000000000..34a7c384a2
+--- /dev/null
++++ b/results/arc_ttt_validate.json
+@@ -0,0 +1,53 @@
++{
++  "experiment": "arc_ttt_validate",
++  "honest_verdict": "complete_live_ttt_offline_gate_0_of_3_games_pass",
++  "games_scored": 3,
++  "games_gate_pass": 0,
++  "games_learned_beats_llm": 1,
++  "mean_learned_heldout_accuracy": 0.2167,
++  "per_game": [
++    {
++      "game": "ar25",
++      "n_train": 120,
++      "n_heldout": 40,
++      "learned_heldout_accuracy": 0.25,
++      "llm_heldout_accuracy": 0.525,
++      "n_win_states": 0,
++      "plan_found": false,
++      "plan_length": null,
++      "gate_pass": false,
++      "learned_beats_llm": false,
++      "duration_s": 2.04
++    },
++    {
++      "game": "ka59",
++      "n_train": 120,
++      "n_heldout": 40,
++      "learned_heldout_accuracy": 0.2,
++      "llm_heldout_accuracy": 0.2,
++      "n_win_states": 0,
++      "plan_found": false,
++      "plan_length": null,
++      "gate_pass": false,
++      "learned_beats_llm": false,
++      "duration_s": 1.22
++    },
++    {
++      "game": "cd82",
++      "n_train": 120,
++      "n_heldout": 40,
++      "learned_heldout_accuracy": 0.2,
++      "llm_heldout_accuracy": 0.0,
++      "n_win_states": 0,
++      "plan_found": false,
++      "plan_length": null,
++      "gate_pass": false,
++      "learned_beats_llm": true,
++      "duration_s": 0.82
++    }
++  ],
++  "random_seed": 0,
++  "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade transition collection + learned-vs-LLM engine scoring; no live LLM inference",
++  "verifier_is_oracle": false,
++  "methodology_note": "held-out = the last 25% of the salience-ordered probe; the learned engine earns accuracy only on transitions outside its L0 table / fit set. The LLM comparison uses the same held-out set (apples-to-apples)."
++}
+\ No newline at end of file
+diff --git a/scripts/arc_ttt_validate.py b/scripts/arc_ttt_validate.py
+new file mode 100644
+index 0000000000..7dda3864e4
+--- /dev/null
++++ b/scripts/arc_ttt_validate.py
+@@ -0,0 +1,129 @@
++"""Offline learning-curve gate for the live-TTT world model (2026-06-21, build step 3).
++
++Validates the operator's live-learning thesis BEFORE any submission: a world model LEARNED from a few
++played transitions (LiveTTTWorldModel = L0 exact table + L1 ObjectDeltaModel) predicts HELD-OUT
++transitions -- and can plan a win inside itself -- where the frozen-9B-INDUCED engine fails (exp4557
++scored 0.0 held-out accuracy, failing its own single training transition).
++
++Per game: collect_transitions from the OFFLINE sim, split train / held-out, fit the learned model on
++train, then measure HELD-OUT transition accuracy of (a) the LEARNED engine vs (b) the LLM-induced engine
++(when a world_model.py exists to compare). Then attempt plan_in_model INSIDE the learned model. The
++learned model EARNS trust only by predicting transitions it was not fit to -- the same bar the LLM failed.
++
++PASS GATE (per game): learned_heldout_accuracy >= 0.5 (the WorldModelVerifier trust gate) AND
++learned_heldout_accuracy >= llm_heldout_accuracy (when an LLM engine exists). The aggregate verdict
++reports how many games the LEARNED model clears -- the de-risk before the conductor wires it into the
++submitted agent (arc_competition_agent.py:1417, replacing the failing e3.load_engine).
++
++Offline, CPU-only (ObjectDeltaModel is pure numpy) -- NO GPU, no conductor-reaper collision, zero quota.
++
++PRECONDITIONS:
++  0. the offline arcade + environment_files sim for each game must load (collect_transitions); a game
++     that fails to load is recorded with an error and skipped, never fabricated.
++
++Usage: .venv/bin/python scripts/arc_ttt_validate.py [game ...]   (default: a spread of public games)
++"""
++from __future__ import annotations
++
++import json
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO / "python"))
++
++DEFAULT_GAMES = ["ar25", "ka59", "cd82", "sp80", "m0r0", "su15"]
++HELDOUT_FRAC = 0.25
++N_COLLECT = 160
++
++
++def validate_game(game: str) -> dict:
++    from carnot.agentic.arc_executable_world_model import (
++        WorldModelVerifier, collect_transitions, load_engine, plan_in_model,
++    )
++    from carnot.agentic.arc_live_ttt import LiveTTTWorldModel
++
++    t0 = time.time()
++    try:
++        transitions, _cell = collect_transitions(game, n=N_COLLECT)
++    except Exception as e:  # never fabricate -- record the blocked reason
++        return {"game": game, "error": f"collect_transitions: {type(e).__name__}: {e}"[:160]}
++    if len(transitions) < 8:
++        return {"game": game, "error": f"too few transitions ({len(transitions)})"}
++
++    k = max(2, int(len(transitions) * HELDOUT_FRAC))
++    train, held = transitions[:-k], transitions[-k:]
++
++    learned = LiveTTTWorldModel(game)
++    for t in train:
++        learned.observe_transition(t)
++    learned.fit_now()
++
++    out: dict = {"game": game, "n_train": len(train), "n_heldout": len(held)}
++    out["learned_heldout_accuracy"] = round(learned.trust(held), 4)
++    try:  # the frozen-9B-induced engine, if one was written for this game
++        eng, _ = load_engine(game)
++        out["llm_heldout_accuracy"] = round(float(WorldModelVerifier(held).score(eng).accuracy), 4)
++    except Exception:
++        out["llm_heldout_accuracy"] = None
++
++    # planning inside the learned model (meaningful only if a win-state was observed in the probe)
++    full = LiveTTTWorldModel(game)
++    for t in transitions:
++        full.observe_transition(t)
++    full.fit_now()
++    out["n_win_states"] = full.ttt_diagnostics()["n_win_states"]
++    plan = None
++    if out["n_win_states"] > 0:
++        plan = plan_in_model(full.engine, full.is_level_complete, transitions[0].grid, max_nodes=8000)
++    out["plan_found"] = plan is not None
++    out["plan_length"] = len(plan) if plan else None
++
++    la, lm = out["learned_heldout_accuracy"], out["llm_heldout_accuracy"]
++    out["gate_pass"] = bool(la >= 0.5 and (lm is None or la >= lm))
++    out["learned_beats_llm"] = None if lm is None else bool(la > lm)
++    out["duration_s"] = round(time.time() - t0, 2)
++    return out
++
++
++def main(argv: list[str]) -> int:
++    games = [a for a in argv if not a.startswith("-")] or DEFAULT_GAMES
++    rows = [validate_game(g) for g in games]
++    scored = [r for r in rows if "learned_heldout_accuracy" in r]
++    passed = [r for r in scored if r.get("gate_pass")]
++    beats = [r for r in scored if r.get("learned_beats_llm")]
++    mean_learned = round(sum(r["learned_heldout_accuracy"] for r in scored) / max(1, len(scored)), 4)
++
++    for r in rows:
++        if "error" in r:
++            print(f"  {r['game']:5} ERROR {r['error']}", flush=True)
++        else:
++            print(f"  {r['game']:5} learned={r['learned_heldout_accuracy']:.3f} "
++                  f"llm={r['llm_heldout_accuracy']} win_states={r['n_win_states']} "
++                  f"plan={'Y' if r['plan_found'] else 'n'} gate={'PASS' if r['gate_pass'] else 'fail'}",
++                  flush=True)
++
++    out = {
++        "experiment": "arc_ttt_validate",
++        "honest_verdict": f"complete_live_ttt_offline_gate_{len(passed)}_of_{len(scored)}_games_pass",
++        "games_scored": len(scored), "games_gate_pass": len(passed),
++        "games_learned_beats_llm": len(beats), "mean_learned_heldout_accuracy": mean_learned,
++        "per_game": rows,
++        "random_seed": 0,
++        "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade transition "
++                               "collection + learned-vs-LLM engine scoring; no live LLM inference",
++        "verifier_is_oracle": False,
++        "methodology_note": "held-out = the last 25% of the salience-ordered probe; the learned engine "
++                            "earns accuracy only on transitions outside its L0 table / fit set. The LLM "
++                            "comparison uses the same held-out set (apples-to-apples).",
++    }
++    (REPO / "results" / "arc_ttt_validate.json").write_text(json.dumps(out, indent=2, default=str))
++    print(f"\n  {len(passed)}/{len(scored)} games pass the trust gate; mean learned held-out "
++          f"accuracy={mean_learned}; learned beats LLM on {len(beats)}. -> {out['honest_verdict']}",
++          flush=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/tests/python/test_arc_live_ttt.py b/tests/python/test_arc_live_ttt.py
+new file mode 100644
+index 0000000000..e8a88a286c
+--- /dev/null
++++ b/tests/python/test_arc_live_ttt.py
+@@ -0,0 +1,67 @@
++"""Unit tests for the live-TTT world model (LiveTTTWorldModel) -- 2026-06-21.
++
++REQ: the live test-time-learning world model must (1) learn an exact transition table from played
++transitions and reproduce them via its engine(grid, action, data)->grid contract; (2) recognize observed
++win-states for the planner's is_level_complete; (3) score held-out transitions through the
++WorldModelVerifier trust gate without crashing. These are the contracts the conductor wires into
++E3AgentPolicy._induce_and_plan (replacing the failing LLM engine).
++
++SCENARIO-TTT-1: an observed transition is reproduced EXACTLY by the engine (L0 exact table).
++SCENARIO-TTT-2: a grid reached at a level-up is recognized as a win-state.
++SCENARIO-TTT-3: the engine never crashes on an unseen (state, action) -- returns a same-shape grid.
++SCENARIO-TTT-4: trust() returns a [0,1] held-out accuracy (the WorldModelVerifier gate input).
++"""
++import numpy as np
++
++from carnot.agentic.arc_live_ttt import LiveTTTWorldModel, action_key
++
++
++def test_scenario_ttt_1_engine_reproduces_observed_transition() -> None:
++    """SCENARIO-TTT-1: L0 exact table reproduces a played click transition."""
++    m = LiveTTTWorldModel("toy")
++    g = np.zeros((5, 5), dtype=np.int16)
++    ng = g.copy()
++    ng[2, 3] = 7
++    m.observe(g, 6, {"x": 3, "y": 2}, ng)
++    assert np.array_equal(np.asarray(m.engine(g, 6, {"x": 3, "y": 2})), ng)
++
++
++def test_scenario_ttt_2_win_state_recognized() -> None:
++    """SCENARIO-TTT-2: a grid reached at a level-up is a win-state; an unrelated grid is not."""
++    m = LiveTTTWorldModel("toy")
++    g = np.zeros((4, 4), dtype=np.int16)
++    win = g.copy()
++    win[0, 0] = 1
++    m.observe(g, 1, None, win, level_before=0, level_after=1)
++    assert m.is_level_complete(win)
++    assert not m.is_level_complete(g)
++
++
++def test_scenario_ttt_3_engine_never_crashes_on_unseen() -> None:
++    """SCENARIO-TTT-3: an unseen (state, action) returns a same-shape grid (identity fallback), no crash."""
++    m = LiveTTTWorldModel("toy")
++    g = np.zeros((4, 4), dtype=np.int16)
++    out = np.asarray(m.engine(g, 3, None))  # nothing observed, no L1 fit -> identity
++    assert out.shape == g.shape
++
++
++def test_scenario_ttt_4_trust_is_a_unit_interval_accuracy() -> None:
++    """SCENARIO-TTT-4: trust() returns a held-out accuracy in [0,1] and exact-reproduced held-outs score 1."""
++    from carnot.agentic.arc_executable_world_model import Transition
++
++    m = LiveTTTWorldModel("toy")
++    g = np.zeros((4, 4), dtype=np.int16)
++    ng = g.copy()
++    ng[1, 1] = 2
++    m.observe(g, 6, {"x": 1, "y": 1}, ng)
++    held = [Transition(grid=g, action=6, data={"x": 1, "y": 1}, next_grid=ng, level_before=0, level_after=0)]
++    acc = m.trust(held)
++    assert 0.0 <= acc <= 1.0
++    assert acc == 1.0  # the engine reproduces this exact transition from its L0 table
++
++
++def test_action_key_canonical_form() -> None:
++    """action_key matches the live agent's _action_key: (6,x,y) for clicks, (id,) otherwise."""
++    assert action_key(6, {"x": 5, "y": 9}) == (6, 5, 9)
++    assert action_key(3, None) == (3,)
++    assert action_key(6, None) == (6,)  # click without coords -> keyboard-style key
+-- 
+2.55.0
+

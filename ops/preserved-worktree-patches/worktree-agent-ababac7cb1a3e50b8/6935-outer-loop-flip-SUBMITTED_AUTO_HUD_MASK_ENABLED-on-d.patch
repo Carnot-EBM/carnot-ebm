@@ -1,0 +1,182 @@
+From b472445322598c64b2c6197daf202ea68f1fad65 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 22:05:58 -0400
+Subject: [PATCH 06935/11362] [outer-loop] flip SUBMITTED_AUTO_HUD_MASK_ENABLED
+ on; defer levels_gained to live telemetry
+
+Operator directive: after two offline matched-budget A/Bs (exp5584, exp5585)
+both confirmed the mechanism's direct effect (distinct_states_delta: large,
+consistent, HUD-positive-only reductions; positive control clean both
+times; zero measured harm on the in-roster HUD-negative control game) but
+both hit the same floor effect on levels_gained (no level-up reached in
+EITHER arm on ANY roster game, at either the bare or the real submitted
+search config) -- a limitation of the current from-scratch explorer's basic
+capability ceiling on this roster, independent of auto_hud_mask -- the
+operator rejected invoking the tier-3 LLM proposer to manufacture headroom
+for a third offline A/B (the verified hidden-leaderboard top-3 all use NO
+LLM proposer, per this session's comparative leaderboard analysis) and
+instead deferred the levels_gained question to live-submission telemetry.
+
+Deferring to live telemetry requires the mechanism to actually run during
+live play for telemetry to exist to defer to, so SUBMITTED_AUTO_HUD_MASK_ENABLED
+flips True on the strength of the established safety case (structurally the
+mechanism can only collapse cells already proven action-invariant, never
+introduce a false collapse of genuine board state), not a proven
+levels_gained win. Updated REQ-ARC-WMTE-5583 with a full RESOLUTION record
+and REQ-ARC-WMTE-5583-DEFAULT-PARITY (renamed from DEFAULT-OFF-PARITY) to
+track the constant rather than assert a hardcoded value. Updated the two
+test_arc_hud_mask.py assertions that hardcoded the old default to compare
+against SUBMITTED_AUTO_HUD_MASK_ENABLED instead.
+
+Verified zero new regressions: the same 53-file arc_competition_agent
+regression sweep produces the identical 10 pre-existing failures / 335
+passed as the pre-flip baseline (independently confirmed earlier this
+session via an isolated worktree of the pre-change commit).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      | 51 +++++++++++++++++--
+ .../carnot/agentic/arc_competition_agent.py   | 23 +++++++--
+ tests/python/test_arc_hud_mask.py             | 11 ++--
+ 3 files changed, 74 insertions(+), 11 deletions(-)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index d5342e6529..ce16eefd21 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -14625,6 +14625,48 @@ Adversarial Check Discipline, and SHALL be retired per the Failed-Experiment
+ Rerun Discipline if it comes back null rather than silently left half-
+ validated.
+ 
++**RESOLUTION (2026-07-12).** Two offline A/Bs ran: `exp5584`
++(`results/experiment_5584_hud_mask_offline_ab.json`, 6-game roster, the
++stripped-down bare explorer config `exp5578` also used) and `exp5585`
++(`results/experiment_5585_hud_mask_strong_config_ab.json`, a 3-game roster
++picked for the shortest known scripted-solve lengths, using
++`E3AgentPolicy`'s OWN real default components -- `DaggerWinReachabilityValueHead`,
++`CrossGameDiscriminativeCandidateRouter`, `GroundTruthValidatedFrameChangeScorer`,
++`ColorBlobSaliencePrior` -- not a weak stand-in). Both independently confirmed
++the mechanism's designed-for direct effect (`distinct_states_delta`: large,
++consistent, HUD-positive-only reductions in duplicate-state discovery;
++`mask_fired_matches_survey: true` both times) with zero measured harm on the
++in-roster HUD-negative control game (`sk48`, states unchanged both runs). Both
++also hit the SAME floor effect on `levels_gained` (`levels_gained_headroom_present:
++false` both times) -- no level-up reached in EITHER arm on ANY roster game at
++either budget, meaning the null on `levels_gained` is uninformative (CLAUDE.md
++FALSE_NEGATIVE_RISK, independently flagged by `adversarial_verify.py` on both
++artifacts) rather than evidence against the mechanism. The floor persisted even
++with the real submitted search components, indicating the current from-scratch
++explorer's basic capability ceiling on this roster is the binding constraint, not
++`auto_hud_mask` specifically.
++
++Per operator directive (2026-07-12): given a comparative leaderboard analysis
++independently found the top 3 verified hidden-leaderboard entries use NO LLM
++proposer at all (see `docs/research-notes/` session record; the one LLM-as-core-
++solver family measures <0.4% on truly hidden games), invoking the tier-3 LLM
++proposer to manufacture levels_gained headroom for a THIRD offline A/B was
++rejected as contrary to that evidence. **The `levels_gained` question is
++DEFERRED to live-submission telemetry rather than further offline A/B attempts.**
++Because deferring to live telemetry requires the mechanism to actually run
++during live play for telemetry to exist to defer to, `SUBMITTED_AUTO_HUD_MASK_ENABLED`
++is flipped to `True` on the strength of the safety case established by both
++A/Bs (positive control clean both times, zero regression on the HUD-negative
++control, the mechanism structurally can only collapse cells already proven
++action-invariant -- it cannot introduce a false collapse of genuine board
++state; see `_compute_hud_mask_from_frame`'s docstring). This is NOT a claim
++that `levels_gained` is proven positive -- it remains genuinely unmeasured;
++it is a claim that the downside risk is low enough to ship while telemetry
++accumulates. A future session reviewing live-submission telemetry (levels
++reached, actions used, RHAE) from a run with this flag on, compared against
++telemetry from before this flip, is the intended resolution path for the
++still-open `levels_gained` question.
++
+ #### SCENARIO-ARC-WMTE-5583-STATUS-BAR-CHANGE-DEDUPS
+ 
+ Given a frame whose top row is a full-width, thin, edge-touching status bar
+@@ -14645,11 +14687,14 @@ previously-hashed frame
+ Then `_hash` returns a DIFFERENT hash, proving the mask does not collapse
+ genuine state changes
+ 
+-#### SCENARIO-ARC-WMTE-5583-DEFAULT-OFF-PARITY
++#### SCENARIO-ARC-WMTE-5583-DEFAULT-PARITY
+ 
+ Given `E3AgentPolicy` constructed with its default arguments (the shipped
+ configuration)
+ When `pol.explorer.auto_hud_mask` is compared against
+ `SUBMITTED_AGENT_CONFIG["auto_hud_mask_enabled"]`
+-Then they are equal, and both are `False` until an offline validation pass
+-justifies flipping the default.
++Then they are equal -- both `False` until the 2026-07-12 RESOLUTION above,
++both `True` after it (deferred to live-submission telemetry per operator
++directive, on the strength of the safety case rather than a levels_gained
++win)-- so a silent divergence between what is measured and what ships is
++still caught regardless of which value is current.
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 47981ab56e..dc4e509491 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -144,10 +144,25 @@ MATM_SIMILARITY_MAX_CANDIDATES = 8
+ # extra actions) rather than the probe-based `arc_graph_explore.discover_hud_mask` (burns up
+ # to 4 real actions from reset -- fine for the offline dev harness where resets are free, not
+ # viable under RHAE live scoring where extra actions are squared against the human baseline).
+-# Default OFF pending the Phase Prototype + Empirical Validation + Adversarial Check
+-# Discipline's offline validation pass (see docs/research-notes/ for the comparison that
+-# surfaced this gap; flip only after a matched-budget A/B clears a real bar).
+-SUBMITTED_AUTO_HUD_MASK_ENABLED = False
++# 2026-07-12 RESOLUTION (REQ-ARC-WMTE-5583): two offline matched-budget A/Bs (exp5584,
++# exp5585 -- the second using E3AgentPolicy's own REAL default search components, not a
++# weak stand-in) both confirmed the mechanism's direct effect (distinct_states_delta:
++# large, consistent, HUD-positive-games-only reductions; positive control clean both
++# times) with ZERO measured harm on the in-roster HUD-negative control game, but both
++# hit the SAME floor effect on levels_gained (no level-up reached in EITHER arm on ANY
++# roster game at either budget) -- a limitation of the current from-scratch explorer's
++# basic capability ceiling on this roster, independent of auto_hud_mask, confirmed by
++# adversarial_verify.py's FALSE_NEGATIVE_RISK flag on both artifacts. Per operator
++# directive: invoking the tier-3 LLM proposer to manufacture headroom for a third
++# offline A/B was rejected (the verified hidden-leaderboard top-3 all use NO LLM
++# proposer at all, per a comparative leaderboard analysis this session). The
++# levels_gained question is DEFERRED to live-submission telemetry rather than further
++# offline attempts; flipped ON here on the strength of the established safety case
++# (structurally the mechanism can only collapse cells already proven action-invariant,
++# never introduce a false collapse of genuine board state -- see
++# _compute_hud_mask_from_frame's docstring), not a proven levels_gained win. See
++# REQ-ARC-WMTE-5583's RESOLUTION note for the full record.
++SUBMITTED_AUTO_HUD_MASK_ENABLED = True
+ SUBMITTED_AUTO_HUD_MASK_MODE = "rule_based_status_bar_classifier_single_frame"
+ _DEFAULT_VALUE_HEAD = object()
+ _DEFAULT_CANDIDATE_ROUTER = object()
+diff --git a/tests/python/test_arc_hud_mask.py b/tests/python/test_arc_hud_mask.py
+index 273fbbde59..f94862129f 100644
+--- a/tests/python/test_arc_hud_mask.py
++++ b/tests/python/test_arc_hud_mask.py
+@@ -132,19 +132,22 @@ def test_step_wise_explorer_explicit_hud_mask_disables_auto_detection() -> None:
+     assert explorer.hud_mask is explicit
+ 
+ 
+-def test_step_wise_explorer_auto_hud_mask_defaults_off() -> None:
++def test_step_wise_explorer_auto_hud_mask_defaults_to_submitted_flag() -> None:
++    """Tracks SUBMITTED_AUTO_HUD_MASK_ENABLED rather than a hardcoded literal -- see
++    REQ-ARC-WMTE-5583's 2026-07-12 RESOLUTION for why the value is True as of that
++    date (deferred to live-submission telemetry, not a hardcoded True/False pin)."""
++
+     explorer = StepwiseExplorer()
+-    assert explorer.auto_hud_mask is False
+     assert explorer.auto_hud_mask == SUBMITTED_AUTO_HUD_MASK_ENABLED
+ 
+ 
+ def test_e3_agent_policy_default_auto_hud_mask_matches_submitted_config() -> None:
+-    """SCENARIO-ARC-WMTE-5583-DEFAULT-OFF-PARITY."""
++    """SCENARIO-ARC-WMTE-5583-DEFAULT-PARITY."""
+ 
+     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _f: 0.0)
+ 
+     assert pol.explorer.auto_hud_mask == SUBMITTED_AGENT_CONFIG["auto_hud_mask_enabled"]
+-    assert pol.explorer.auto_hud_mask is False
++    assert pol.explorer.auto_hud_mask == SUBMITTED_AUTO_HUD_MASK_ENABLED
+ 
+ 
+ def test_e3_agent_policy_auto_hud_mask_can_be_opted_in() -> None:
+-- 
+2.55.0
+

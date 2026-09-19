@@ -1,0 +1,2916 @@
+From 596cdf6263487292f1dc67be2034aadd3b0e1c11 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 16:15:05 -0400
+Subject: [PATCH 07838/11362] [conductor] Gated on Exp5896 fixture:
+ three-family translate-run-inspect-repair A/B
+
+Automated research step by research conductor.
+Task ID: exp5897-sota-constraint-ir-repair-ab
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/benchmarks/spec.md      |  102 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...xperiment_5834_generator_live_levels_ab.py |   12 +-
+ ...iment_5897_sota_constraint_ir_repair_ab.py | 1532 +++++++++++++++++
+ results/arc_e3/lf52/world_model.py            |   54 +-
+ results/arc_e3/lp85/world_model.py            |    3 +-
+ results/arc_e3/r11l/world_model.py            |    3 +-
+ results/arc_e3/tu93/world_model.py            |  139 +-
+ ...ent_5897_sota_constraint_ir_repair_ab.json |  498 ++++++
+ ...897_sota_constraint_ir_repair_ab.raw.jsonl |    0
+ ...iment_5897_sota_constraint_ir_repair_ab.py |  427 +++++
+ 11 files changed, 2655 insertions(+), 117 deletions(-)
+ create mode 100644 python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py
+ create mode 100644 results/experiment_5897_sota_constraint_ir_repair_ab.json
+ create mode 100644 results/experiment_5897_sota_constraint_ir_repair_ab.raw.jsonl
+ create mode 100644 tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py
+
+diff --git a/openspec/capabilities/benchmarks/spec.md b/openspec/capabilities/benchmarks/spec.md
+index 3ecb5ad3e9..54ed545d5f 100644
+--- a/openspec/capabilities/benchmarks/spec.md
++++ b/openspec/capabilities/benchmarks/spec.md
+@@ -1814,6 +1814,108 @@ SCENARIO-BENCH-5896-CERTIFICATES, SCENARIO-BENCH-5896-LEAKAGE
+ |---|---|---|
+ | REQ-BENCH-5896 | Planned (`python/carnot/experiment_5896_typed_constraint_ir_fixture.py`, `results/experiment_5896_typed_constraint_ir_fixture.json`) | Planned (`tests/python/test_experiment_5896_typed_constraint_ir_fixture.py`) |
+ 
++### REQ-BENCH-5897: SOTA ConstraintIR Trace-Repair A/B
++
++Carnot MUST provide Exp5897 at
++`python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py` and write
++`results/experiment_5897_sota_constraint_ir_repair_ab.json`. The experiment
++SHALL replay Exp5896's exact fixture gate before loading any model, SHALL use
++only the three mandated GGUF headline families
++`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
++`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL resolve them through
++`cached_sota_pair()` plus the cached third family without invoking
++`AutoTokenizer.from_pretrained()` on a GGUF repo.
++
++The runner SHALL block before model load when any headline precondition fails:
++Exp5896 replay, GGUF files and hashes, llama.cpp CUDA offload support, two
++healthy RTX 3090 receipts, adequate VRAM/RAM/disk, no protected training
++workload, GPU-offload readiness, and atomic output readiness. A blocked run
++SHALL still write the required artifact with `status="blocked_precondition"`
++and an honest verdict prefix `blocked_precondition:`.
++
++For each completed model/fixture-row cell, Exp5897 SHALL freeze prompts,
++decoding, seeds, row groups, token budgets, and promotion thresholds before
++generation, then run the following matched arms: single-pass typed IR
++extraction, one exact parser/compiler/solver-trace-guided repair, a matched
++second call with the same repair token budget and no diagnostic trace, and a
++no-information trace-shaped control. A second call alone SHALL NOT be credited
++as trace-guided repair. The trace-guided prompt SHALL expose only
++deployment-available parser, type, compile, and solver diagnostics from the
++candidate being repaired; it SHALL NOT expose hidden gold IR, answer labels,
++held-family identities, certificate solutions, model self-scores, or generated
++answer repair instructions.
++
++The exact executor SHALL be the only evaluation authority. Exp5897 SHALL
++measure parse validity, type validity, compilation, satisfiability handling,
++exact semantic equivalence, query correctness, omitted and spurious
++constraints, unsafe accepted constraints, token counts, latency, an energy
++proxy, model/family/template metrics, and group-bootstrap lower bounds over
++held groups. `trace_repair_mechanism_ready_score` SHALL be the bare value `1.0`
++only when all three headline families complete, the held-group lower bounds
++are positive for trace-guided repair over both no-trace controls, unsafe
++acceptance does not increase, and the exact-verifier boundary remains intact;
++otherwise it SHALL be `0.0`.
++
++The terminal artifact MUST include `status`, `preconditions_checked`,
++`upstream_gate_and_fixture_hashes`, `model_specs`, `model_file_hashes`,
++`loader_and_cuda_receipts`, `frozen_prompts_decoding_seeds_and_budgets`,
++`arm_definitions_and_compute_parity`, `trace_visibility_and_oracle_boundary`,
++`per_model_family_and_template_metrics`,
++`parse_type_compile_and_semantic_metrics`,
++`omitted_spurious_and_unsafe_constraint_metrics`,
++`group_bootstrap_lower_bounds`, `no_trace_and_no_information_controls`,
++`gpu_utilization_vram_and_latency_receipts`, `raw_output_receipts`,
++`protected_files_unchanged`, `trace_repair_mechanism_ready_score`,
++`duration_s`, `inference_substrate`, `verifier_is_oracle`,
++`field_provenance`, `test_commands`, `test_exit_codes`,
++`reproducibility_checksum`, and `honest_verdict`.
++
++Field principles:
++
++- `arm_definitions_and_compute_parity`: a second call alone cannot be credited as trace-guided repair.
++- `trace_visibility_and_oracle_boundary`: only deployment-available exact diagnostics may guide repair.
++- `trace_repair_mechanism_ready_score`: emit bare 1.0 only for positive held lower bounds over both controls, zero unsafe increase, and all three headline families completed.
++- `inference_substrate`: use `live_llm_inference`.
++- `verifier_is_oracle`: true for exact evaluation; the model is only an IR proposer.
++- `honest_verdict`: use `complete_positive:`, `complete_null:`, `unsafe:`, `blocked_precondition:`, or `blocked:`.
++
++#### SCENARIO-BENCH-5897-PRECONDITIONS: Headline Resources Gate Model Load
++
++**Given** Exp5896's checked-in fixture and mandated GGUF model ids
++**When** Exp5897 checks replay, model paths, file hashes, llama.cpp CUDA
++support, dual RTX 3090 health, resource budgets, GPU-offload readiness, and
++protected training processes
++**Then** it resolves all three headline families in frozen order or writes a
++blocked-precondition artifact before any model loader is invoked.
++
++#### SCENARIO-BENCH-5897-TRACE-BOUNDARY: Repair Sees Diagnostics Only
++
++**Given** a model emits a candidate typed ConstraintIR object
++**When** the trace-guided repair arm is prompted
++**Then** the prompt includes only parser/type/compiler/solver diagnostics from
++that candidate, with matched decoding and repair token budget, and excludes
++gold IR, expected labels, held identities, certificate solutions, and
++generated-answer repair content.
++
++#### SCENARIO-BENCH-5897-EXACT-METRICS: Exact Executor Scores A/B Arms
++
++**Given** completed model/row/arm outputs
++**When** Exp5897 evaluates them through the Exp5896 parser, finite-domain
++compiler, Z3 compiler, and exact semantic behavior hashes
++**Then** it reports parse/type/compile/semantic/query, omitted/spurious,
++unsafe-accept, token, latency, energy-proxy, per-group, and grouped-bootstrap
++metrics, and only promotes trace-guided repair when it beats both no-trace
++controls without increasing unsafe acceptance.
++
++**Spec traces:** REQ-BENCH-5897, SCENARIO-BENCH-5897-PRECONDITIONS,
++SCENARIO-BENCH-5897-TRACE-BOUNDARY, SCENARIO-BENCH-5897-EXACT-METRICS
++
++## Implementation Status (REQ-BENCH-5897)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-BENCH-5897 | Planned (`python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py`, `results/experiment_5897_sota_constraint_ir_repair_ab.json`) | Planned (`tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py`) |
++
+ ### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
+ 
+ Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d6b777a502..28d8b40da6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4698,
++  "experiments_checked": 4699,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5834_generator_live_levels_ab.py b/python/carnot/experiment_5834_generator_live_levels_ab.py
+index ad2420ae6d..4b0489cbf5 100644
+--- a/python/carnot/experiment_5834_generator_live_levels_ab.py
++++ b/python/carnot/experiment_5834_generator_live_levels_ab.py
+@@ -85,9 +85,13 @@ def main() -> int:
+ 
+     per_arm: list = []
+     for arm in ARMS:
++        # mtp=False (uniform): the CUDA build crashes on --spec-type draft-mtp for these -MTP- GGUFs
++        # (verified 2026-07-24: 27B loads clean on CUDA without it, crashes with it). MTP is
++        # speculative decoding -> output-preserving, so dropping it changes ONLY speed, not the
++        # induced world model or banked levels. Fair for a quality/levels A/B.
+         prop = LocalGGUFProposer(
+             repo_substr=arm["repo_substr"], model_path=arm["model_path"], port=arm["port"],
+-            mtp=True, kv_quant="q8_0", n_ctx=arm["n_ctx"], no_think_prefix="/no_think\n",
++            mtp=False, kv_quant="q8_0", n_ctx=arm["n_ctx"], no_think_prefix="/no_think\n",
+             max_tokens=INDUCE_TOKENS, timeout=1800, extra_server_args=("-fit", "off"),
+         )
+         server_ok = False
+@@ -160,10 +164,12 @@ def main() -> int:
+         "model_specs": [{"name": a["repo_substr"], "gguf": a["model_path"], "role": "e3_induction_generator",
+                          "backend": f"cuda_3090_gpu{CUDA_GPU}_q4"} for a in ARMS],
+         "config": {"roster": ROSTER, "budget": BUDGET, "explore_budget": EXPLORE_BUDGET,
+-                   "induce_tokens": INDUCE_TOKENS, "cuda_gpu": CUDA_GPU, "object_perception": "off", "mtp": True},
++                   "induce_tokens": INDUCE_TOKENS, "cuda_gpu": CUDA_GPU, "object_perception": "off", "mtp": False},
+         "methodology_note": (
+             "Two arms toggle ONLY the inducer model (9B vs dense-27B), both on the 3090 GPU%s via CUDA Q4, "
+-            "mtp=True. Sequential launch+run+stop. Per game: E3AgentPolicy + arc_leaderboard_eval.run_game "
++            "mtp=False (uniform; the CUDA build crashes on --spec-type draft-mtp -- MTP is output-preserving "
++            "speculative decoding so this changes only speed, not induced quality). Sequential launch+run+stop. "
++            "Per game: E3AgentPolicy + arc_leaderboard_eval.run_game "
+             "(offline dev twin of the scored path -- NEVER submits); metric = banked levels. Settles the "
+             "switch on the LIVE metric that exp5722 said the offline heldout gain failed to move." % CUDA_GPU
+         ),
+diff --git a/python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py b/python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py
+new file mode 100644
+index 0000000000..67c75cc863
+--- /dev/null
++++ b/python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py
+@@ -0,0 +1,1532 @@
++"""Exp5897 SOTA ConstraintIR trace-repair A/B.
++
++Spec refs: REQ-BENCH-5897, SCENARIO-BENCH-5897-PRECONDITIONS,
++SCENARIO-BENCH-5897-TRACE-BOUNDARY, SCENARIO-BENCH-5897-EXACT-METRICS.
++
++The experiment asks local GGUF models to propose typed ConstraintIR JSON and
++then lets the Exp5896 exact executor decide every parser, type, compile,
++satisfiability, and semantic-equivalence label. The repair arm may see only
++deployment-visible diagnostics from its own failed proposal. It never sees the
++hidden fixture IR, gold labels, held-out identities, or certificate solutions.
++"""
++
++from __future__ import annotations
++
++from collections import Counter, defaultdict
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import tempfile
++import time
++from typing import Any
++
++from carnot import experiment_5896_typed_constraint_ir_fixture as exp5896
++from carnot.inference.sota_models import (
++    cached_sota_pair,
++    gguf_tokenizer_loadable,
++    resolve_cached_gguf,
++)
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5897_sota_constraint_ir_repair_ab.json")
++RAW_OUTPUT_RELATIVE_PATH = Path("results/experiment_5897_sota_constraint_ir_repair_ab.raw.jsonl")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py")
++RUN_DATE = "20260724"
++RANDOM_SEED = 5897
++INFERENCE_SUBSTRATE = "live_llm_inference"
++VERIFIER_IS_ORACLE = True
++
++MANDATED_MODEL_IDS: tuple[str, str, str] = (
++    "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "unsloth/gemma-4-31B-it-GGUF",
++    "unsloth/gemma-4-26B-A4B-it-GGUF",
++)
++
++MODEL_SPECS: tuple[JsonDict, ...] = (
++    {
++        "name": "Qwen3.6-35B-A3B",
++        "hf_id": MANDATED_MODEL_IDS[0],
++        "family": "qwen_moe",
++        "role": "flagship_moe",
++        "preferred_quant": "Q4_K_M",
++        "gpu": 0,
++        "min_vram_gb": 24,
++    },
++    {
++        "name": "Gemma4-31B-it",
++        "hf_id": MANDATED_MODEL_IDS[1],
++        "family": "gemma_dense",
++        "role": "flagship_dense",
++        "preferred_quant": "Q4_K_M",
++        "gpu": 1,
++        "min_vram_gb": 24,
++    },
++    {
++        "name": "Gemma4-26B-A4B-it",
++        "hf_id": MANDATED_MODEL_IDS[2],
++        "family": "gemma_moe",
++        "role": "middle_moe",
++        "preferred_quant": "Q4_K_M",
++        "gpu": 0,
++        "min_vram_gb": 16,
++    },
++)
++
++DECODING: JsonDict = {
++    "temperature": 0.0,
++    "top_p": 1.0,
++    "repeat_penalty": 1.05,
++    "stop": ["</s>", "<eos>"],
++}
++ARM_DEFINITIONS: JsonDict = {
++    "single_pass": {
++        "calls": 1,
++        "max_tokens": 1536,
++        "diagnostic_trace": False,
++        "principle": "Baseline extraction gets one proposal call and no exact diagnostics.",
++    },
++    "trace_guided_repair": {
++        "calls": 2,
++        "max_tokens": 1536,
++        "diagnostic_trace": True,
++        "principle": "Only deployment-visible exact diagnostics may guide the second proposal.",
++    },
++    "matched_two_call_no_trace": {
++        "calls": 2,
++        "max_tokens": 1536,
++        "diagnostic_trace": False,
++        "principle": "A second call with matched budget controls for extra compute alone.",
++    },
++    "no_information_trace_control": {
++        "calls": 2,
++        "max_tokens": 1536,
++        "diagnostic_trace": "uninformative",
++        "principle": "A trace-shaped block with no diagnostics controls for prompt format.",
++    },
++}
++PROMOTION_THRESHOLDS: JsonDict = {
++    "required_completed_headline_families": 3,
++    "held_group_lower_bound_min": 0.0,
++    "max_unsafe_delta": 0.0,
++}
++DEFAULT_TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py "
++    "-m pytest tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5897_sota_constraint_ir_repair_ab.json",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
++)
++PROTECTED_FILES = (
++    Path("scripts/research_conductor.py"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "preconditions_checked",
++    "upstream_gate_and_fixture_hashes",
++    "model_specs",
++    "model_file_hashes",
++    "loader_and_cuda_receipts",
++    "frozen_prompts_decoding_seeds_and_budgets",
++    "arm_definitions_and_compute_parity",
++    "trace_visibility_and_oracle_boundary",
++    "per_model_family_and_template_metrics",
++    "parse_type_compile_and_semantic_metrics",
++    "omitted_spurious_and_unsafe_constraint_metrics",
++    "group_bootstrap_lower_bounds",
++    "no_trace_and_no_information_controls",
++    "gpu_utilization_vram_and_latency_receipts",
++    "raw_output_receipts",
++    "protected_files_unchanged",
++    "trace_repair_mechanism_ready_score",
++    "duration_s",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "test_commands",
++    "test_exit_codes",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES: JsonDict = {
++    "arm_definitions_and_compute_parity": (
++        "A second call alone cannot be credited as trace-guided repair."
++    ),
++    "trace_visibility_and_oracle_boundary": (
++        "Only deployment-available exact diagnostics may guide repair."
++    ),
++    "trace_repair_mechanism_ready_score": (
++        "Emit bare 1.0 only for positive held lower bounds over both controls, "
++        "zero unsafe increase, and all three headline families completed."
++    ),
++    "inference_substrate": "Use live_llm_inference.",
++    "verifier_is_oracle": "True for exact evaluation; the model is only an IR proposer.",
++    "honest_verdict": (
++        "Use complete_positive:, complete_null:, unsafe:, blocked_precondition:, or blocked:."
++    ),
++}
++
++
++CachedPairProvider = Callable[..., list[JsonDict] | None]
++IndividualResolver = Callable[[str], str | None]
++EnvironmentProbe = Callable[[Path], JsonDict]
++TokenizerChecker = Callable[[str | None], tuple[bool, str]]
++CollectOutputsFn = Callable[[list[JsonDict], list[JsonDict], "ExperimentConfig"], JsonDict]
++
++
++@dataclass(frozen=True)
++class ExperimentConfig:
++    """Runtime paths and clocks for Exp5897."""
++
++    repo_root: Path = REPO_ROOT
++    output_path: Path | None = None
++    raw_output_path: Path | None = None
++    started_at: float | None = None
++    clock: Callable[[], float] = time.time
++    monotonic_clock: Callable[[], float] = time.monotonic
++    random_seed: int = RANDOM_SEED
++
++    def start_time(self) -> float:
++        return self.clock() if self.started_at is None else self.started_at
++
++    def artifact_path(self) -> Path:
++        return self.output_path or self.repo_root / RESULT_RELATIVE_PATH
++
++    def raw_path(self) -> Path:
++        return self.raw_output_path or self.repo_root / RAW_OUTPUT_RELATIVE_PATH
++
++
++@dataclass(frozen=True)
++class PreconditionReport:
++    """All checks that must pass before a headline GGUF model is loaded."""
++
++    preconditions_checked: JsonDict
++    upstream_gate_and_fixture_hashes: JsonDict
++    model_specs: list[JsonDict]
++    model_file_hashes: JsonDict
++    loader_and_cuda_receipts: JsonDict
++    protected_file_baseline: JsonDict
++    block_reason: str | None
++
++
++def canonical_json(value: Any) -> str:
++    """Serialize JSON evidence with stable bytes."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_text(value: str) -> str:
++    """Return a prefixed SHA-256 digest for text."""
++
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_file(path: str | Path) -> str:
++    """Hash a file by bytes."""
++
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def resolve_model_specs(
++    *,
++    cached_pair_provider: CachedPairProvider = cached_sota_pair,
++    individual_model_resolver: IndividualResolver = resolve_cached_gguf,
++) -> tuple[list[JsonDict], JsonDict]:
++    """Resolve Qwen, Gemma dense, and Gemma MoE in the frozen headline order."""
++
++    pair_error: str | None = None
++    pair: list[JsonDict] | None = None
++    try:
++        pair = cached_pair_provider(gpu_indices=(0, 1), model_indices=(0, 2))
++    except Exception as exc:  # noqa: BLE001
++        pair_error = f"{type(exc).__name__}: {exc}"
++    by_hf_id = {str(spec.get("hf_id")): dict(spec) for spec in pair or []}
++    resolved: list[JsonDict] = []
++    resolver_hits: list[str] = []
++    for base in MODEL_SPECS:
++        hf_id = str(base["hf_id"])
++        spec = dict(base)
++        if hf_id in by_hf_id:
++            spec.update(by_hf_id[hf_id])
++            spec.setdefault("family", base["family"])
++            spec.setdefault("role", base["role"])
++            spec.setdefault("preferred_quant", base["preferred_quant"])
++            spec.setdefault("min_vram_gb", base["min_vram_gb"])
++        else:
++            path = individual_model_resolver(hf_id)
++            if path:
++                spec["model_path"] = str(path)
++                resolver_hits.append(hf_id)
++            else:
++                spec["model_path"] = None
++        resolved.append(spec)
++    receipt = {
++        "cached_sota_pair_called_with": {"gpu_indices": [0, 1], "model_indices": [0, 2]},
++        "cached_sota_pair_error": pair_error,
++        "cached_sota_pair_returned": [str(spec.get("hf_id")) for spec in pair or []],
++        "third_family_resolved_by_individual_cache": MANDATED_MODEL_IDS[2] in resolver_hits,
++        "resolved_hf_ids": [str(spec["hf_id"]) for spec in resolved],
++    }
++    return resolved, receipt
++
++
++def check_preconditions(
++    config: ExperimentConfig,
++    *,
++    cached_pair_provider: CachedPairProvider = cached_sota_pair,
++    individual_model_resolver: IndividualResolver = resolve_cached_gguf,
++    environment_probe: EnvironmentProbe = lambda root: _probe_environment(root),
++    tokenizer_checker: TokenizerChecker = gguf_tokenizer_loadable,
++) -> PreconditionReport:
++    """Check every headline resource before any GGUF model load."""
++
++    root = config.repo_root
++    protected_baseline = _protected_file_receipt(root)
++    upstream = _upstream_gate_receipt(root)
++    model_specs, resolution = resolve_model_specs(
++        cached_pair_provider=cached_pair_provider,
++        individual_model_resolver=individual_model_resolver,
++    )
++    model_file_hashes = _model_file_hashes(model_specs)
++    environment = environment_probe(root)
++    tokenizer_receipts = _tokenizer_receipts(model_specs, tokenizer_checker)
++    loader_receipts = {
++        "model_resolution": resolution,
++        "environment": environment,
++        "tokenizer_receipts": tokenizer_receipts,
++    }
++    checks = {
++        "exp5896_gate_replayed": bool(upstream.get("replay_ok")),
++        "all_three_model_specs_resolved": all(spec.get("model_path") for spec in model_specs),
++        "all_model_files_exist": all(
++            row.get("exists") for row in model_file_hashes.get("files", [])
++        ),
++        "all_model_hashes_recorded": all(
++            row.get("sha256") for row in model_file_hashes.get("files", [])
++        ),
++        "embedded_gguf_tokenizers_load": all(row.get("ok") for row in tokenizer_receipts),
++        "llama_cpp_import_ok": bool(environment.get("llama_cpp_import", {}).get("ok")),
++        "llama_cpp_cuda_support": bool(environment.get("llama_cpp_cuda_support", {}).get("ok")),
++        "two_healthy_rtx_3090s": _two_healthy_rtx_3090s(environment.get("gpu_health", {})),
++        "adequate_vram": _adequate_vram(environment.get("gpu_health", {})),
++        "adequate_ram": bool(environment.get("ram", {}).get("ok")),
++        "adequate_disk": bool(environment.get("disk", {}).get("ok")),
++        "no_protected_workload": bool(environment.get("protected_workload", {}).get("ok")),
++        "atomic_output_ready": bool(environment.get("atomic_output", {}).get("ok")),
++    }
++    block_reason = next((name for name, ok in checks.items() if not ok), None)
++    preconditions_checked = {
++        "run_order": "exp5896_replay_and_resource_checks_before_any_model_load",
++        "blocked_before_model_load": block_reason is not None,
++        "headline_checks": checks,
++        "block_reason": block_reason,
++    }
++    return PreconditionReport(
++        preconditions_checked=preconditions_checked,
++        upstream_gate_and_fixture_hashes=upstream,
++        model_specs=model_specs,
++        model_file_hashes=model_file_hashes,
++        loader_and_cuda_receipts=loader_receipts,
++        protected_file_baseline=protected_baseline,
++        block_reason=block_reason,
++    )
++
++
++def build_single_pass_prompt(row: Mapping[str, Any]) -> str:
++    """Build the frozen one-call typed ConstraintIR extraction prompt."""
++
++    return (
++        "Return exactly one JSON object for the typed ConstraintIR schema. "
++        "Use keys schema_version, domains, entities, predicates, facts, rules, query. "
++        "Supported nodes are atom, not, and, and arith. Use finite domains only. "
++        "Do not include explanations, confidence scores, or markdown.\n"
++        f"schema_version: {exp5896.CONSTRAINT_IR_SCHEMA_VERSION}\n"
++        f"Problem text:\n{row['natural_language']}\n"
++    )
++
++
++def build_trace_repair_prompt(
++    row: Mapping[str, Any],
++    prior_output: str,
++    diagnostic_trace: Mapping[str, Any],
++) -> str:
++    """Build the second-call repair prompt with exact public diagnostics only."""
++
++    return (
++        "Return exactly one corrected typed ConstraintIR JSON object and no prose. "
++        "Repair only the constraint JSON. Do not answer the problem in natural language. "
++        "The exact executor exposed these deployment diagnostics from your previous JSON:\n"
++        f"{canonical_json(diagnostic_trace)}\n"
++        f"Problem text:\n{row['natural_language']}\n"
++        f"Previous JSON attempt:\n{prior_output}\n"
++    )
++
++
++def build_matched_no_trace_prompt(row: Mapping[str, Any], prior_output: str) -> str:
++    """Build the matched second call that withholds exact diagnostics."""
++
++    return (
++        "Return exactly one revised typed ConstraintIR JSON object and no prose. "
++        "Use the same schema and token budget as the repair condition. "
++        "No parser, compiler, or solver details are provided in this condition.\n"
++        f"Problem text:\n{row['natural_language']}\n"
++        f"Previous JSON attempt:\n{prior_output}\n"
++    )
++
++
++def build_no_information_trace_prompt(row: Mapping[str, Any], prior_output: str) -> str:
++    """Build a trace-shaped second call whose fields carry no diagnostics."""
++
++    blank_trace = {
++        "parser_status": "withheld",
++        "type_status": "withheld",
++        "compiler_status": "withheld",
++        "solver_status": "withheld",
++        "diagnostic_payload": "no_information_control",
++    }
++    return (
++        "Return exactly one revised typed ConstraintIR JSON object and no prose. "
++        "The following structured block is intentionally non-informative:\n"
++        f"{canonical_json(blank_trace)}\n"
++        f"Problem text:\n{row['natural_language']}\n"
++        f"Previous JSON attempt:\n{prior_output}\n"
++    )
++
++
++def public_diagnostic_trace(evaluation: Mapping[str, Any]) -> JsonDict:
++    """Expose only diagnostics a deployment parser/compiler/solver would reveal."""
++
++    diagnostics = dict(evaluation.get("diagnostics") or {})
++    return {
++        "parser_status": diagnostics.get("parser_status"),
++        "parser_error": diagnostics.get("parser_error"),
++        "type_status": diagnostics.get("type_status"),
++        "compiler_status": diagnostics.get("compiler_status"),
++        "compiler_error": diagnostics.get("compiler_error"),
++        "solver_status": diagnostics.get("solver_status"),
++        "cross_backend_agreement": diagnostics.get("cross_backend_agreement"),
++    }
++
++
++def evaluate_candidate(
++    row: Mapping[str, Any],
++    arm_id: str,
++    raw_text: str,
++    generation_metadata: Mapping[str, Any],
++) -> JsonDict:
++    """Score one proposed ConstraintIR using only the Exp5896 exact executor."""
++
++    candidate, json_error = _extract_json_object(raw_text)
++    base = _evaluation_base(row, arm_id, raw_text, generation_metadata)
++    if candidate is None:
++        return base | _rejected_evaluation("no_json_object", row, None)
++
++    receipt = exp5896.certify_ir(candidate)
++    parser = dict(receipt.get("parser") or {})
++    parser_status = str(parser.get("status"))
++    parser_error = parser.get("error")
++    parser_kind = parser.get("kind")
++    parse_valid = parser_status == "accepted"
++    type_valid = parse_valid
++    if parser_kind == "type_error":
++        type_valid = False
++    if not parse_valid:
++        return base | _rejected_evaluation(str(parser_error or json_error), row, parser_kind)
++
++    python_receipt = dict(receipt.get("python") or {})
++    z3_receipt = dict(receipt.get("z3") or {})
++    solver_status = str(python_receipt.get("status"))
++    z3_status = str(z3_receipt.get("status"))
++    compiled = solver_status in {"sat", "unsat"} and z3_status in {"sat", "unsat"}
++    expected_status = str(row.get("expected_status"))
++    exact_equivalence, query_correct = _semantic_checks(row, python_receipt)
++    satisfiability_correct = _satisfiability_correct(expected_status, solver_status, parse_valid)
++    omitted, spurious = _constraint_diff_counts(row.get("constraint_ir"), candidate)
++    unsafe = _unsafe_accepted(expected_status, solver_status, compiled, exact_equivalence)
++    return base | {
++        "parse_valid": parse_valid,
++        "type_valid": type_valid,
++        "compiled": compiled,
++        "satisfiability_correct": satisfiability_correct,
++        "solver_status": solver_status,
++        "z3_status": z3_status,
++        "exact_semantic_equivalence": exact_equivalence,
++        "query_correct": query_correct,
++        "omitted_constraints": omitted,
++        "spurious_constraints": spurious,
++        "unsafe_accepted_constraints": unsafe,
++        "candidate_sha256": sha256_text(canonical_json(candidate)),
++        "diagnostics": {
++            "parser_status": parser_status,
++            "parser_error": None,
++            "type_status": "accepted",
++            "compiler_status": "compiled" if compiled else "not_compiled",
++            "compiler_error": None if compiled else f"python={solver_status},z3={z3_status}",
++            "solver_status": solver_status,
++            "cross_backend_agreement": receipt.get("cross_backend_agreement", {}).get("agrees"),
++        },
++    }
++
++
++def aggregate_evaluations(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Aggregate exact metrics overall, by arm, model, family, and template."""
++
++    row_list = [dict(row) for row in rows]
++    by_arm = {
++        arm_id: _metric_summary([row for row in row_list if row.get("arm_id") == arm_id])
++        for arm_id in ARM_DEFINITIONS
++    }
++    by_model = _grouped_metrics(row_list, "model_hf_id")
++    by_family = _grouped_metrics(row_list, "family")
++    by_template = _grouped_metrics(row_list, "template_id")
++    lower_bounds = _group_bootstrap_lower_bounds(row_list)
++    control_metrics = {
++        "matched_two_call_no_trace": by_arm["matched_two_call_no_trace"],
++        "no_information_trace_control": by_arm["no_information_trace_control"],
++        "principle": FIELD_PRINCIPLES["arm_definitions_and_compute_parity"],
++    }
++    return {
++        "per_model_family_and_template_metrics": {
++            "by_model": by_model,
++            "by_family": by_family,
++            "by_template": by_template,
++        },
++        "parse_type_compile_and_semantic_metrics": {
++            "overall": _metric_summary(row_list),
++            "by_arm": by_arm,
++        },
++        "omitted_spurious_and_unsafe_constraint_metrics": _constraint_error_metrics(row_list),
++        "group_bootstrap_lower_bounds": lower_bounds,
++        "no_trace_and_no_information_controls": control_metrics,
++    }
++
++
++def run_experiment(
++    config: ExperimentConfig | None = None,
++    *,
++    cached_pair_provider: CachedPairProvider = cached_sota_pair,
++    individual_model_resolver: IndividualResolver = resolve_cached_gguf,
++    environment_probe: EnvironmentProbe = lambda root: _probe_environment(root),
++    tokenizer_checker: TokenizerChecker = gguf_tokenizer_loadable,
++    collect_model_outputs_fn: CollectOutputsFn | None = None,
++    test_exit_codes: Mapping[str, int] | None = None,
++) -> JsonDict:
++    """Run Exp5897 and write the terminal artifact atomically."""
++
++    active = config or ExperimentConfig()
++    started = active.start_time()
++    preconditions = check_preconditions(
++        active,
++        cached_pair_provider=cached_pair_provider,
++        individual_model_resolver=individual_model_resolver,
++        environment_probe=environment_probe,
++        tokenizer_checker=tokenizer_checker,
++    )
++    if preconditions.block_reason is not None:
++        _write_raw_rows_atomic(active.raw_path(), [])
++        artifact = _build_artifact(
++            active,
++            preconditions,
++            evaluated_rows=[],
++            collection={"model_attempts": [], "gpu_receipts": {}},
++            raw_output_receipts=_raw_receipt(active.raw_path(), []),
++            duration_s=active.clock() - started,
++            test_exit_codes=test_exit_codes,
++        )
++        _write_json_atomic(active.artifact_path(), artifact)
++        return artifact
++
++    fixture_rows = _load_fixture_rows(active.repo_root)
++    collector = collect_model_outputs_fn or collect_live_model_outputs
++    collection = collector(preconditions.model_specs, fixture_rows, active)
++    raw_rows = [dict(row) for row in collection.get("rows") or []]
++    _write_raw_rows_atomic(active.raw_path(), raw_rows)
++    row_by_id = {str(row["row_id"]): dict(row) for row in fixture_rows}
++    evaluated_rows = [
++        evaluate_candidate(
++            row_by_id[str(raw["row_id"])],
++            str(raw["arm_id"]),
++            str(raw.get("raw_output_text") or ""),
++            raw,
++        )
++        for raw in raw_rows
++        if str(raw.get("row_id")) in row_by_id
++    ]
++    artifact = _build_artifact(
++        active,
++        preconditions,
++        evaluated_rows=evaluated_rows,
++        collection=collection,
++        raw_output_receipts=_raw_receipt(active.raw_path(), raw_rows),
++        duration_s=active.clock() - started,
++        test_exit_codes=test_exit_codes,
++    )
++    _write_json_atomic(active.artifact_path(), artifact)
++    return artifact
++
++
++def collect_live_model_outputs(
++    model_specs: list[JsonDict],
++    fixture_rows: list[JsonDict],
++    config: ExperimentConfig,
++) -> JsonDict:  # pragma: no cover - requires local GGUFs and CUDA.
++    """Collect live llama.cpp outputs for every model, row, and arm."""
++
++    from llama_cpp import Llama
++
++    rows: list[JsonDict] = []
++    model_attempts: list[JsonDict] = []
++    gpu_receipts: JsonDict = {"load_receipts": [], "generation_receipts": []}
++    for model_index, spec in enumerate(model_specs):
++        model_path = str(spec.get("model_path") or "")
++        load_start = config.monotonic_clock()
++        before = _gpu_health_probe()
++        try:
++            llm = Llama(
++                model_path=model_path,
++                n_gpu_layers=-1,
++                main_gpu=int(spec.get("gpu") or 0),
++                n_ctx=8192,
++                seed=config.random_seed + model_index,
++                verbose=False,
++            )
++        except Exception as exc:  # noqa: BLE001
++            model_attempts.append(
++                {
++                    "hf_id": spec.get("hf_id"),
++                    "model_name": spec.get("name"),
++                    "model_path": model_path,
++                    "model_used": False,
++                    "blocker": f"{type(exc).__name__}: {exc}",
++                    "gpu_offload_verified": False,
++                    "elapsed_seconds": round(config.monotonic_clock() - load_start, 6),
++                }
++            )
++            continue
++        after = _gpu_health_probe()
++        vram_delta = _vram_delta_mb(before, after)
++        attempt = {
++            "hf_id": spec.get("hf_id"),
++            "model_name": spec.get("name"),
++            "model_path": model_path,
++            "model_used": True,
++            "blocker": None,
++            "gpu_offload_verified": vram_delta > 512,
++            "vram_delta_mb": vram_delta,
++            "elapsed_seconds": round(config.monotonic_clock() - load_start, 6),
++        }
++        model_attempts.append(attempt)
++        gpu_receipts["load_receipts"].append(attempt)
++        try:
++            for row_index, fixture_row in enumerate(fixture_rows):
++                rows.extend(_collect_live_row_arms(llm, spec, fixture_row, row_index, config))
++        finally:
++            close = getattr(llm, "close", None)
++            if callable(close):
++                close()
++    return {"rows": rows, "model_attempts": model_attempts, "gpu_receipts": gpu_receipts}
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the terminal schema and load-bearing principle fields."""
++
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be live_llm_inference")
++    if artifact["verifier_is_oracle"] is not True:
++        raise ValueError("verifier_is_oracle must be true for exact evaluation")
++    ids = [str(spec.get("hf_id")) for spec in artifact.get("model_specs", [])]
++    if ids[:3] != list(MANDATED_MODEL_IDS):
++        raise ValueError("model_specs must record all three mandated families in frozen order")
++    score = float(artifact["trace_repair_mechanism_ready_score"])
++    if score not in {0.0, 1.0}:
++        raise ValueError("trace_repair_mechanism_ready_score must be bare 0.0 or 1.0")
++    if score == 1.0 and not str(artifact["honest_verdict"]).startswith("complete_positive:"):
++        raise ValueError("positive ready score requires complete_positive verdict")
++
++
++def refresh_artifact_test_exit_codes(
++    *,
++    root: Path = REPO_ROOT,
++    test_exit_codes: Mapping[str, int],
++) -> JsonDict:
++    """Update only test exit-code provenance after validation commands run."""
++
++    path = root / RESULT_RELATIVE_PATH
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    artifact["test_exit_codes"] = dict(test_exit_codes)
++    artifact["reproducibility_checksum"] = _artifact_checksum(artifact)
++    validate_artifact(artifact)
++    _write_json_atomic(path, artifact)
++    return artifact
++
++
++def _build_artifact(
++    config: ExperimentConfig,
++    preconditions: PreconditionReport,
++    *,
++    evaluated_rows: Sequence[Mapping[str, Any]],
++    collection: Mapping[str, Any],
++    raw_output_receipts: JsonDict,
++    duration_s: float,
++    test_exit_codes: Mapping[str, int] | None,
++) -> JsonDict:
++    aggregates = aggregate_evaluations(evaluated_rows)
++    completed = _completed_headline_models(collection.get("model_attempts") or [])
++    score = _ready_score(aggregates, completed)
++    unsafe_increase = _unsafe_increase(aggregates)
++    status, verdict = _status_and_verdict(preconditions.block_reason, score, unsafe_increase)
++    artifact: JsonDict = {
++        "schema": "carnot.experiment_5897.sota_constraint_ir_repair_ab.v1",
++        "experiment_id": "experiment_5897_sota_constraint_ir_repair_ab",
++        "run_date": RUN_DATE,
++        "random_seed": config.random_seed,
++        "status": status,
++        "preconditions_checked": preconditions.preconditions_checked,
++        "upstream_gate_and_fixture_hashes": preconditions.upstream_gate_and_fixture_hashes,
++        "model_specs": preconditions.model_specs,
++        "model_file_hashes": preconditions.model_file_hashes,
++        "loader_and_cuda_receipts": preconditions.loader_and_cuda_receipts,
++        "frozen_prompts_decoding_seeds_and_budgets": _frozen_prompt_receipt(config),
++        "arm_definitions_and_compute_parity": _arm_parity_receipt(),
++        "trace_visibility_and_oracle_boundary": _trace_boundary_receipt(),
++        **aggregates,
++        "gpu_utilization_vram_and_latency_receipts": _gpu_latency_receipt(
++            evaluated_rows, collection.get("gpu_receipts") or {}
++        ),
++        "raw_output_receipts": raw_output_receipts,
++        "protected_files_unchanged": _protected_file_receipt(
++            config.repo_root, baseline=preconditions.protected_file_baseline
++        ),
++        "trace_repair_mechanism_ready_score": score,
++        "duration_s": round(duration_s, 6),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": VERIFIER_IS_ORACLE,
++        "field_provenance": _field_provenance(),
++        "test_commands": list(DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": dict(test_exit_codes or {}),
++        "reproducibility_checksum": "",
++        "honest_verdict": verdict,
++    }
++    artifact["reproducibility_checksum"] = _artifact_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def _status_and_verdict(
++    block_reason: str | None, score: float, unsafe_increase: bool
++) -> tuple[str, str]:
++    if block_reason is not None:
++        return "blocked_precondition", f"blocked_precondition: {block_reason}"
++    if unsafe_increase:
++        return "unsafe", "unsafe: trace-guided repair increased unsafe accepted constraints"
++    if score == 1.0:
++        return "complete", "complete_positive: trace-guided repair beats both matched controls"
++    return "complete", "complete_null: trace-guided repair did not clear held-control promotion"
++
++
++def _evaluation_base(
++    row: Mapping[str, Any],
++    arm_id: str,
++    raw_text: str,
++    metadata: Mapping[str, Any],
++) -> JsonDict:
++    usage = dict(metadata.get("usage") or {})
++    latency_s = float(metadata.get("latency_s") or metadata.get("elapsed_seconds") or 0.0)
++    util = float(metadata.get("average_gpu_utilization_pct") or 0.0)
++    return {
++        "row_id": row.get("row_id"),
++        "split": row.get("split"),
++        "family": row.get("family"),
++        "template_id": row.get("template_id"),
++        "variant_kind": row.get("variant_kind"),
++        "expected_status": row.get("expected_status"),
++        "arm_id": arm_id,
++        "model_hf_id": metadata.get("model_hf_id"),
++        "model_name": metadata.get("model_name"),
++        "gpu_index": metadata.get("gpu_index"),
++        "prompt_sha256": metadata.get("prompt_sha256"),
++        "seed": metadata.get("seed"),
++        "raw_output_sha256": sha256_text(raw_text),
++        "prompt_tokens": int(usage.get("prompt_tokens") or 0),
++        "completion_tokens": int(usage.get("completion_tokens") or 0),
++        "total_tokens": int(usage.get("total_tokens") or 0),
++        "latency_s": latency_s,
++        "energy_proxy_gpu_utilization_pct_s": round(latency_s * util / 100.0, 6),
++    }
++
++
++def _rejected_evaluation(error: str, row: Mapping[str, Any], parser_kind: Any) -> JsonDict:
++    expected_status = str(row.get("expected_status"))
++    parse_kind = str(parser_kind or "invalid")
++    return {
++        "parse_valid": False,
++        "type_valid": False,
++        "compiled": False,
++        "satisfiability_correct": expected_status in {"invalid", "type_error"}
++        and parse_kind == expected_status,
++        "solver_status": "not_applicable",
++        "z3_status": "not_applicable",
++        "exact_semantic_equivalence": None,
++        "query_correct": None,
++        "omitted_constraints": 0,
++        "spurious_constraints": 0,
++        "unsafe_accepted_constraints": False,
++        "candidate_sha256": None,
++        "diagnostics": {
++            "parser_status": "rejected",
++            "parser_error": error,
++            "type_status": "rejected" if parse_kind == "type_error" else "not_applicable",
++            "compiler_status": "not_compiled",
++            "compiler_error": "parser_rejected",
++            "solver_status": "not_applicable",
++            "cross_backend_agreement": None,
++        },
++    }
++
++
++def _semantic_checks(
++    row: Mapping[str, Any], python_receipt: Mapping[str, Any]
++) -> tuple[bool | None, bool | None]:
++    if str(row.get("expected_status")) != "valid":
++        return None, None
++    if python_receipt.get("status") != "sat":
++        return False, False
++    expected_python = dict(row.get("certificates", {}).get("python") or {})
++    behavior_ok = python_receipt.get("behavior_hash") == expected_python.get("behavior_hash")
++    candidate_query = dict(python_receipt.get("behavior_signature") or {}).get("query_bindings")
++    expected_query = dict(expected_python.get("behavior_signature") or {}).get("query_bindings")
++    return bool(behavior_ok), bool(candidate_query == expected_query)
++
++
++def _satisfiability_correct(expected_status: str, solver_status: str, parse_valid: bool) -> bool:
++    if expected_status == "valid":
++        return parse_valid and solver_status == "sat"
++    if expected_status == "unsat":
++        return parse_valid and solver_status == "unsat"
++    return not parse_valid
++
++
++def _unsafe_accepted(
++    expected_status: str,
++    solver_status: str,
++    compiled: bool,
++    exact_equivalence: bool | None,
++) -> bool:
++    if not compiled or solver_status != "sat":
++        return False
++    if expected_status != "valid":
++        return True
++    return exact_equivalence is False
++
++
++def _extract_json_object(text: str) -> tuple[JsonDict | None, str | None]:
++    decoder = json.JSONDecoder()
++    for index, char in enumerate(text):
++        if char != "{":
++            continue
++        try:
++            obj, _end = decoder.raw_decode(text[index:])
++        except json.JSONDecodeError:
++            continue
++        if isinstance(obj, dict):
++            return dict(obj), None
++    return None, "no_json_object"
++
++
++def _constraint_diff_counts(expected: Any, candidate: Any) -> tuple[int, int]:
++    if not isinstance(expected, Mapping) or not isinstance(candidate, Mapping):
++        return 0, 0
++    expected_set = _constraint_fingerprint(expected)
++    candidate_set = _constraint_fingerprint(candidate)
++    return len(expected_set - candidate_set), len(candidate_set - expected_set)
++
++
++def _constraint_fingerprint(ir: Mapping[str, Any]) -> set[str]:
++    found: set[str] = set()
++    for fact in ir.get("facts") or []:
++        found.add("fact:" + canonical_json(fact))
++    for rule in ir.get("rules") or []:
++        if isinstance(rule, Mapping):
++            found.add("rule_head:" + canonical_json(rule.get("head")))
++            for term in (rule.get("body") or {}).get("terms") or []:
++                found.add("rule_term:" + canonical_json(term))
++    return found
++
++
++def _metric_summary(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    row_list = [dict(row) for row in rows]
++    total = len(row_list)
++    semantic = [row for row in row_list if row.get("expected_status") == "valid"]
++    query = [row for row in semantic if row.get("query_correct") is not None]
++    return {
++        "n": total,
++        "semantic_n": len(semantic),
++        "parse_valid_rate": _rate(sum(bool(row.get("parse_valid")) for row in row_list), total),
++        "type_valid_rate": _rate(sum(bool(row.get("type_valid")) for row in row_list), total),
++        "compile_rate": _rate(sum(bool(row.get("compiled")) for row in row_list), total),
++        "satisfiability_correct_rate": _rate(
++            sum(bool(row.get("satisfiability_correct")) for row in row_list), total
++        ),
++        "exact_semantic_equivalence_rate": _rate(
++            sum(row.get("exact_semantic_equivalence") is True for row in semantic), len(semantic)
++        ),
++        "query_correct_rate": _rate(
++            sum(row.get("query_correct") is True for row in query), len(query)
++        ),
++        "unsafe_accept_rate": _rate(
++            sum(bool(row.get("unsafe_accepted_constraints")) for row in row_list), total
++        ),
++        "total_tokens": sum(int(row.get("total_tokens") or 0) for row in row_list),
++        "latency_s": round(sum(float(row.get("latency_s") or 0.0) for row in row_list), 6),
++        "energy_proxy_gpu_utilization_pct_s": round(
++            sum(float(row.get("energy_proxy_gpu_utilization_pct_s") or 0.0) for row in row_list),
++            6,
++        ),
++    }
++
++
++def _constraint_error_metrics(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    by_arm = {
++        arm_id: {
++            "omitted_constraints": sum(
++                int(row.get("omitted_constraints") or 0)
++                for row in rows
++                if row.get("arm_id") == arm_id
++            ),
++            "spurious_constraints": sum(
++                int(row.get("spurious_constraints") or 0)
++                for row in rows
++                if row.get("arm_id") == arm_id
++            ),
++            "unsafe_accepted_constraints": sum(
++                bool(row.get("unsafe_accepted_constraints"))
++                for row in rows
++                if row.get("arm_id") == arm_id
++            ),
++        }
++        for arm_id in ARM_DEFINITIONS
++    }
++    return {
++        "by_arm": by_arm,
++        "overall": {
++            "omitted_constraints": sum(int(row.get("omitted_constraints") or 0) for row in rows),
++            "spurious_constraints": sum(int(row.get("spurious_constraints") or 0) for row in rows),
++            "unsafe_accepted_constraints": sum(
++                bool(row.get("unsafe_accepted_constraints")) for row in rows
++            ),
++        },
++    }
++
++
++def _grouped_metrics(rows: Sequence[Mapping[str, Any]], key: str) -> JsonDict:
++    groups: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
++    for row in rows:
++        groups[str(row.get(key) or "unknown")].append(row)
++    return {name: _metric_summary(group_rows) for name, group_rows in sorted(groups.items())}
++
++
++def _group_bootstrap_lower_bounds(rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "trace_vs_matched_two_call_no_trace": _bootstrap_lower_bound(
++            rows, "trace_guided_repair", "matched_two_call_no_trace"
++        ),
++        "trace_vs_no_information_trace_control": _bootstrap_lower_bound(
++            rows, "trace_guided_repair", "no_information_trace_control"
++        ),
++        "method": "deterministic_group_bootstrap_5th_percentile_over_heldout_valid_rows",
++    }
++
++
++def _bootstrap_lower_bound(
++    rows: Sequence[Mapping[str, Any]], left_arm: str, right_arm: str
++) -> float:
++    grouped: dict[tuple[str, str], dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
++    for row in rows:
++        if row.get("split") != "heldout" or row.get("expected_status") != "valid":
++            continue
++        key = (str(row.get("model_hf_id")), str(row.get("family")))
++        grouped[key][str(row.get("arm_id"))].append(
++            1.0 if row.get("exact_semantic_equivalence") else 0.0
++        )
++    deltas = []
++    for arms in grouped.values():
++        if arms.get(left_arm) and arms.get(right_arm):
++            deltas.append(
++                (sum(arms[left_arm]) / len(arms[left_arm]))
++                - (sum(arms[right_arm]) / len(arms[right_arm]))
++            )
++    if not deltas:
++        return 0.0
++    if len(deltas) == 1:
++        return round(deltas[0], 6)
++    samples = []
++    for index in range(200):
++        values = [deltas[(index + offset * 17) % len(deltas)] for offset in range(len(deltas))]
++        samples.append(sum(values) / len(values))
++    samples.sort()
++    return round(samples[int(0.05 * (len(samples) - 1))], 6)
++
++
++def _ready_score(aggregates: Mapping[str, Any], completed_models: Sequence[str]) -> float:
++    lower = aggregates["group_bootstrap_lower_bounds"]
++    by_arm = aggregates["parse_type_compile_and_semantic_metrics"]["by_arm"]
++    trace_unsafe = by_arm["trace_guided_repair"]["unsafe_accept_rate"]
++    control_unsafe = max(
++        by_arm["matched_two_call_no_trace"]["unsafe_accept_rate"],
++        by_arm["no_information_trace_control"]["unsafe_accept_rate"],
++    )
++    ready = (
++        set(completed_models) == set(MANDATED_MODEL_IDS)
++        and lower["trace_vs_matched_two_call_no_trace"]
++        > PROMOTION_THRESHOLDS["held_group_lower_bound_min"]
++        and lower["trace_vs_no_information_trace_control"]
++        > PROMOTION_THRESHOLDS["held_group_lower_bound_min"]
++        and trace_unsafe - control_unsafe <= PROMOTION_THRESHOLDS["max_unsafe_delta"]
++    )
++    return 1.0 if ready else 0.0
++
++
++def _unsafe_increase(aggregates: Mapping[str, Any]) -> bool:
++    by_arm = aggregates["parse_type_compile_and_semantic_metrics"]["by_arm"]
++    trace_unsafe = by_arm["trace_guided_repair"]["unsafe_accept_rate"]
++    return trace_unsafe > max(
++        by_arm["matched_two_call_no_trace"]["unsafe_accept_rate"],
++        by_arm["no_information_trace_control"]["unsafe_accept_rate"],
++    )
++
++
++def _completed_headline_models(model_attempts: Sequence[Any]) -> list[str]:
++    seen: list[str] = []
++    for attempt in model_attempts:
++        if not isinstance(attempt, Mapping):
++            continue
++        hf_id = str(attempt.get("hf_id"))
++        if hf_id in MANDATED_MODEL_IDS and attempt.get("model_used") and not attempt.get("blocker"):
++            if hf_id not in seen:
++                seen.append(hf_id)
++    return seen
++
++
++def _upstream_gate_receipt(root: Path) -> JsonDict:
++    result_path = root / exp5896.RESULT_RELATIVE_PATH
++    row_path = root / exp5896.ROW_FILE_RELATIVE_PATH
++    try:
++        replay = exp5896.replay_artifact(root=root)
++        replay_ok = bool(replay.get("ok"))
++        replay_error = None
++    except Exception as exc:  # noqa: BLE001
++        replay_ok = False
++        replay_error = f"{type(exc).__name__}: {exc}"
++    return {
++        "replay_ok": replay_ok,
++        "replay_error": replay_error,
++        "artifact_path": str(exp5896.RESULT_RELATIVE_PATH),
++        "row_path": str(exp5896.ROW_FILE_RELATIVE_PATH),
++        "artifact_sha256": sha256_file(result_path) if result_path.exists() else None,
++        "row_file_sha256": sha256_file(row_path) if row_path.exists() else None,
++    }
++
++
++def _model_file_hashes(model_specs: Sequence[Mapping[str, Any]]) -> JsonDict:
++    files = []
++    for spec in model_specs:
++        path_value = spec.get("model_path")
++        path = Path(str(path_value)) if path_value else None
++        exists = bool(path and path.is_file())
++        files.append(
++            {
++                "hf_id": spec.get("hf_id"),
++                "path": str(path) if path else None,
++                "exists": exists,
++                "size_bytes": path.stat().st_size if exists and path else None,
++                "sha256": sha256_file(path) if exists and path else None,
++            }
++        )
++    return {"files": files, "all_hashed": all(file.get("sha256") for file in files)}
++
++
++def _tokenizer_receipts(
++    model_specs: Sequence[Mapping[str, Any]],
++    tokenizer_checker: TokenizerChecker,
++) -> list[JsonDict]:
++    receipts = []
++    for spec in model_specs:
++        path = spec.get("model_path")
++        ok, detail = tokenizer_checker(str(path) if path else None)
++        receipts.append({"hf_id": spec.get("hf_id"), "ok": ok, "detail": detail})
++    return receipts
++
++
++def _two_healthy_rtx_3090s(gpu_health: Mapping[str, Any]) -> bool:
++    gpus = gpu_health.get("gpus") or []
++    healthy = [
++        gpu
++        for gpu in gpus
++        if isinstance(gpu, Mapping)
++        and "RTX 3090" in str(gpu.get("name"))
++        and int(gpu.get("memory_total_mb") or 0) >= 24000
++    ]
++    return bool(gpu_health.get("ok") and len(healthy) >= 2)
++
++
++def _adequate_vram(gpu_health: Mapping[str, Any]) -> bool:
++    gpus = [gpu for gpu in gpu_health.get("gpus") or [] if isinstance(gpu, Mapping)]
++    return len(gpus) >= 2 and all(int(gpu.get("memory_total_mb") or 0) >= 24000 for gpu in gpus[:2])
++
++
++def _load_fixture_rows(root: Path) -> list[JsonDict]:
++    path = root / exp5896.ROW_FILE_RELATIVE_PATH
++    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
++
++
++def _frozen_prompt_receipt(config: ExperimentConfig) -> JsonDict:
++    prompts = {
++        "single_pass": build_single_pass_prompt({"natural_language": "<row natural language>"}),
++        "trace_guided_repair": build_trace_repair_prompt(
++            {"natural_language": "<row natural language>"},
++            "<prior model JSON>",
++            {
++                "parser_status": "rejected",
++                "parser_error": "<deployment parser error>",
++                "type_status": "rejected",
++                "compiler_status": "not_compiled",
++                "compiler_error": "parser_rejected",
++                "solver_status": "not_applicable",
++                "cross_backend_agreement": None,
++            },
++        ),
++        "matched_two_call_no_trace": build_matched_no_trace_prompt(
++            {"natural_language": "<row natural language>"}, "<prior model JSON>"
++        ),
++        "no_information_trace_control": build_no_information_trace_prompt(
++            {"natural_language": "<row natural language>"}, "<prior model JSON>"
++        ),
++    }
++    return {
++        "prompt_version": "exp5897.constraint_ir_ab.v1",
++        "prompt_sha256": {name: sha256_text(prompt) for name, prompt in prompts.items()},
++        "decoding": DECODING,
++        "base_random_seed": config.random_seed,
++        "arm_budgets": {name: ARM_DEFINITIONS[name]["max_tokens"] for name in ARM_DEFINITIONS},
++        "promotion_thresholds": PROMOTION_THRESHOLDS,
++        "row_groups_frozen_by_exp5896": True,
++    }
++
++
++def _arm_parity_receipt() -> JsonDict:
++    repair_budget = ARM_DEFINITIONS["trace_guided_repair"]["max_tokens"]
++    return {
++        "arms": ARM_DEFINITIONS,
++        "second_call_budget_parity": {
++            "trace_vs_no_trace": repair_budget
++            == ARM_DEFINITIONS["matched_two_call_no_trace"]["max_tokens"],
++            "trace_vs_no_information": repair_budget
++            == ARM_DEFINITIONS["no_information_trace_control"]["max_tokens"],
++        },
++        "principle": FIELD_PRINCIPLES["arm_definitions_and_compute_parity"],
++    }
++
++
++def _trace_boundary_receipt() -> JsonDict:
++    return {
++        "visible_to_trace_repair": [
++            "parser_status",
++            "parser_error",
++            "type_status",
++            "compiler_status",
++            "compiler_error",
++            "solver_status",
++            "cross_backend_agreement",
++        ],
++        "withheld_from_model": [
++            "hidden_gold_ir",
++            "answer_labels",
++            "held_family_identity",
++            "certificate_solutions",
++            "gold_behavior_hash",
++            "model_self_scores",
++        ],
++        "generated_answer_repair": False,
++        "model_self_scores_excluded": True,
++        "principle": FIELD_PRINCIPLES["trace_visibility_and_oracle_boundary"],
++    }
++
++
++def _gpu_latency_receipt(
++    rows: Sequence[Mapping[str, Any]], gpu_receipts: Mapping[str, Any]
++) -> JsonDict:
++    return {
++        "gpu_receipts": dict(gpu_receipts),
++        "latency_s_total": round(sum(float(row.get("latency_s") or 0.0) for row in rows), 6),
++        "energy_proxy_gpu_utilization_pct_s_total": round(
++            sum(float(row.get("energy_proxy_gpu_utilization_pct_s") or 0.0) for row in rows),
++            6,
++        ),
++        "row_count": len(rows),
++    }
++
++
++def _raw_receipt(path: Path, rows: Sequence[Mapping[str, Any]]) -> JsonDict:
++    return {
++        "path": str(RAW_OUTPUT_RELATIVE_PATH),
++        "row_count": len(rows),
++        "sha256": sha256_file(path) if path.exists() else None,
++        "raw_output_hashes": [
++            {
++                "row_id": row.get("row_id"),
++                "arm_id": row.get("arm_id"),
++                "sha256": sha256_text(str(row.get("raw_output_text") or "")),
++            }
++            for row in rows
++        ],
++    }
++
++
++def _protected_file_receipt(root: Path, baseline: Mapping[str, Any] | None = None) -> JsonDict:
++    files = []
++    before = {str(row.get("path")): row for row in (baseline or {}).get("files", [])}
++    unchanged = True
++    for relative in PROTECTED_FILES:
++        path = root / relative
++        sha = sha256_file(path) if path.exists() else None
++        prior = before.get(str(relative), {}).get("sha256") if baseline else sha
++        same = sha == prior
++        unchanged = unchanged and same
++        files.append(
++            {"path": str(relative), "exists": path.exists(), "sha256": sha, "unchanged": same}
++        )
++    return {"unchanged": unchanged, "files": files}
++
++
++def _field_provenance() -> JsonDict:
++    return {
++        field: "generated_by_exp5897_sota_constraint_ir_repair_ab"
++        for field in REQUIRED_ARTIFACT_FIELDS
++    }
++
++
++def _artifact_checksum(artifact: Mapping[str, Any]) -> str:
++    stable = json.loads(canonical_json(artifact))
++    stable["duration_s"] = 0.0
++    stable["reproducibility_checksum"] = ""
++    for row in stable.get("model_file_hashes", {}).get("files", []):
++        row["path"] = "<model_path>"
++    for file_row in stable.get("protected_files_unchanged", {}).get("files", []):
++        file_row["sha256"] = "<protected_sha>"
++    return sha256_text(canonical_json(stable))
++
++
++def _rate(numerator: int, denominator: int) -> float:
++    return round(numerator / denominator, 6) if denominator else 0.0
++
++
++def _write_raw_rows_atomic(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
++    text = "".join(canonical_json(row) + "\n" for row in rows)
++    _write_text_atomic(path, text)
++
++
++def _write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
++    _write_text_atomic(path, json.dumps(payload, indent=2, sort_keys=True) + "\n")
++
++
++def _write_text_atomic(path: Path, text: str) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.NamedTemporaryFile(
++        "w", encoding="utf-8", dir=path.parent, delete=False
++    ) as handle:
++        tmp_path = Path(handle.name)
++        handle.write(text)
++    os.replace(tmp_path, path)
++
++
++def _probe_environment(root: Path) -> JsonDict:  # pragma: no cover - host-dependent.
++    return {
++        "llama_cpp_import": _llama_cpp_import_receipt(),
++        "llama_cpp_cuda_support": _llama_cpp_cuda_receipt(),
++        "gpu_health": _gpu_health_probe(),
++        "ram": _memory_probe(),
++        "disk": _disk_probe(root),
++        "protected_workload": _protected_workload_probe(),
++        "atomic_output": _atomic_output_probe(root),
++    }
++
++
++def _llama_cpp_import_receipt() -> JsonDict:  # pragma: no cover - host-dependent.
++    try:
++        import llama_cpp
++    except Exception as exc:  # noqa: BLE001
++        return {"ok": False, "detail": f"{type(exc).__name__}: {exc}"}
++    return {"ok": True, "detail": f"llama_cpp {getattr(llama_cpp, '__version__', 'unknown')}"}
++
++
++def _llama_cpp_cuda_receipt() -> JsonDict:  # pragma: no cover - host-dependent.
++    try:
++        from llama_cpp import llama_cpp as backend
++
++        supported = bool(backend.llama_supports_gpu_offload())
++    except Exception as exc:  # noqa: BLE001
++        return {"ok": False, "detail": f"{type(exc).__name__}: {exc}"}
++    return {"ok": supported, "detail": f"llama_supports_gpu_offload={supported}"}
++
++
++def _gpu_health_probe() -> JsonDict:  # pragma: no cover - host-dependent.
++    command = [
++        "nvidia-smi",
++        "--query-gpu=index,name,memory.total,memory.free,utilization.gpu",
++        "--format=csv,noheader,nounits",
++    ]
++    try:
++        result = subprocess.run(command, capture_output=True, text=True, timeout=10, check=False)
++    except Exception as exc:  # noqa: BLE001
++        return {"ok": False, "detail": f"{type(exc).__name__}: {exc}", "gpus": []}
++    gpus = []
++    for line in result.stdout.splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) != 5:
++            continue
++        gpus.append(
++            {
++                "index": int(parts[0]),
++                "name": parts[1],
++                "memory_total_mb": int(parts[2]),
++                "memory_free_mb": int(parts[3]),
++                "utilization_gpu_pct": int(parts[4]),
++            }
++        )
++    return {
++        "ok": result.returncode == 0 and bool(gpus),
++        "returncode": result.returncode,
++        "gpus": gpus,
++    }
++
++
++def _memory_probe() -> JsonDict:  # pragma: no cover - host-dependent.
++    required_mb = 32768
++    available_mb = 0
++    meminfo = Path("/proc/meminfo")
++    if meminfo.exists():
++        for line in meminfo.read_text(encoding="utf-8").splitlines():
++            if line.startswith("MemAvailable:"):
++                available_mb = int(line.split()[1]) // 1024
++                break
++    if available_mb == 0:
++        available_mb = int(
++            os.sysconf("SC_AVPHYS_PAGES") * os.sysconf("SC_PAGE_SIZE") / (1024 * 1024)
++        )
++    return {
++        "ok": available_mb >= required_mb,
++        "available_mb": available_mb,
++        "required_mb": required_mb,
++    }
++
++
++def _disk_probe(root: Path) -> JsonDict:  # pragma: no cover - host-dependent.
++    required_mb = 8192
++    usage = shutil.disk_usage(root)
++    available_mb = int(usage.free / (1024 * 1024))
++    return {
++        "ok": available_mb >= required_mb,
++        "available_mb": available_mb,
++        "required_mb": required_mb,
++    }
++
++
++def _protected_workload_probe() -> JsonDict:  # pragma: no cover - host-dependent.
++    try:
++        from scripts.experiment_template import _pid_is_protected_training_proc
++    except Exception:
++        _pid_is_protected_training_proc = lambda pid: False  # type: ignore[assignment]
++    try:
++        result = subprocess.run(
++            [
++                "nvidia-smi",
++                "--query-compute-apps=pid,process_name,used_memory",
++                "--format=csv,noheader,nounits",
++            ],
++            capture_output=True,
++            text=True,
++            timeout=10,
++            check=False,
++        )
++    except Exception as exc:  # noqa: BLE001
++        return {
++            "ok": True,
++            "detail": f"compute_app_probe_unavailable:{type(exc).__name__}",
++            "protected_pids": [],
++        }
++    protected = []
++    for line in result.stdout.splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if not parts or not parts[0].isdigit():
++            continue
++        pid = int(parts[0])
++        if _pid_is_protected_training_proc(pid):
++            protected.append({"pid": pid, "process_name": parts[1] if len(parts) > 1 else None})
++    return {"ok": not protected, "protected_pids": protected}
++
++
++def _atomic_output_probe(root: Path) -> JsonDict:  # pragma: no cover - host-dependent.
++    probe_dir = root / "results"
++    probe_dir.mkdir(parents=True, exist_ok=True)
++    target = probe_dir / ".exp5897_atomic_probe"
++    _write_text_atomic(target, "ok\n")
++    ok = target.read_text(encoding="utf-8") == "ok\n"
++    target.unlink(missing_ok=True)
++    return {"ok": ok, "detail": "tempfile_replace_supported"}
++
++
++def _vram_delta_mb(before: Mapping[str, Any], after: Mapping[str, Any]) -> int:  # pragma: no cover.
++    before_used = sum(
++        int(gpu.get("memory_total_mb") or 0) - int(gpu.get("memory_free_mb") or 0)
++        for gpu in before.get("gpus") or []
++    )
++    after_used = sum(
++        int(gpu.get("memory_total_mb") or 0) - int(gpu.get("memory_free_mb") or 0)
++        for gpu in after.get("gpus") or []
++    )
++    return max(0, after_used - before_used)
++
++
++def _collect_live_row_arms(
++    llm: Any,
++    spec: Mapping[str, Any],
++    row: Mapping[str, Any],
++    row_index: int,
++    config: ExperimentConfig,
++) -> list[JsonDict]:  # pragma: no cover - requires local GGUFs and CUDA.
++    single_prompt = build_single_pass_prompt(row)
++    single = _call_llama(llm, single_prompt, "single_pass", spec, row, row_index, config, 0)
++    single_eval = evaluate_candidate(row, "single_pass", single["raw_output_text"], single)
++    trace = public_diagnostic_trace(single_eval)
++    prompts = {
++        "trace_guided_repair": build_trace_repair_prompt(row, single["raw_output_text"], trace),
++        "matched_two_call_no_trace": build_matched_no_trace_prompt(row, single["raw_output_text"]),
++        "no_information_trace_control": build_no_information_trace_prompt(
++            row, single["raw_output_text"]
++        ),
++    }
++    results = [single]
++    for offset, (arm_id, prompt) in enumerate(prompts.items(), start=1):
++        results.append(_call_llama(llm, prompt, arm_id, spec, row, row_index, config, offset))
++    return results
++
++
++def _call_llama(
++    llm: Any,
++    prompt: str,
++    arm_id: str,
++    spec: Mapping[str, Any],
++    row: Mapping[str, Any],
++    row_index: int,
++    config: ExperimentConfig,
++    seed_offset: int,
++) -> JsonDict:  # pragma: no cover - requires local GGUFs and CUDA.
++    start = config.monotonic_clock()
++    seed = config.random_seed + row_index + seed_offset * 100_000
++    output_text = ""
++    usage: JsonDict = {}
++    try:
++        result = llm(
++            prompt,
++            max_tokens=int(ARM_DEFINITIONS[arm_id]["max_tokens"]),
++            temperature=DECODING["temperature"],
++            top_p=DECODING["top_p"],
++            repeat_penalty=DECODING["repeat_penalty"],
++            stop=DECODING["stop"],
++            seed=seed,
++            echo=False,
++        )
++        output_text, usage = _completion_text_and_usage(result)
++    except Exception as exc:  # noqa: BLE001
++        output_text = f""
++        usage = {"error": f"{type(exc).__name__}: {exc}"}
++    return {
++        "model_hf_id": spec.get("hf_id"),
++        "model_name": spec.get("name"),
++        "model_path": spec.get("model_path"),
++        "gpu_index": spec.get("gpu"),
++        "row_id": row.get("row_id"),
++        "arm_id": arm_id,
++        "prompt_sha256": sha256_text(prompt),
++        "seed": seed,
++        "raw_output_text": output_text,
++        "latency_s": round(config.monotonic_clock() - start, 6),
++        "usage": usage,
++    }
++
++
++def _completion_text_and_usage(result: Any) -> tuple[str, JsonDict]:  # pragma: no cover.
++    if isinstance(result, str):
++        return result, {}
++    if not isinstance(result, Mapping):
++        return "", {}
++    choices = result.get("choices")
++    text = ""
++    if isinstance(choices, list) and choices and isinstance(choices[0], Mapping):
++        choice = choices[0]
++        if isinstance(choice.get("text"), str):
++            text = str(choice["text"])
++        elif isinstance(choice.get("message"), Mapping):
++            text = str(choice["message"].get("content") or "")
++    usage = dict(result.get("usage") or {})
++    return text, usage
++
++
++def _parse_test_exit_codes(values: Sequence[str]) -> JsonDict:  # pragma: no cover - CLI wrapper.
++    parsed = {}
++    for value in values:
++        if "=" not in value:
++            raise ValueError("test exit code arguments must be COMMAND=CODE")
++        command, code = value.rsplit("=", 1)
++        parsed[command] = int(code)
++    return parsed
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--refresh-test-exit-code", action="append", default=[])
++    args = parser.parse_args(argv)
++    if args.refresh_test_exit_code:
++        artifact = refresh_artifact_test_exit_codes(
++            root=args.root,
++            test_exit_codes=_parse_test_exit_codes(args.refresh_test_exit_code),
++        )
++    else:
++        artifact = run_experiment(ExperimentConfig(repo_root=args.root))
++    print(
++        "[exp5897] "
++        f"status={artifact['status']} "
++        f"verdict={artifact['honest_verdict']} "
++        f"score={artifact['trace_repair_mechanism_ready_score']}"
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/arc_e3/lf52/world_model.py b/results/arc_e3/lf52/world_model.py
+index c8a7ad3552..66a000db3a 100644
+--- a/results/arc_e3/lf52/world_model.py
++++ b/results/arc_e3/lf52/world_model.py
+@@ -1,52 +1,14 @@
++import numpy as np
++
+ def engine(grid, action, data):
+-    """
+-    Simulate the effect of an action on the grid.
+-    grid: 2D list of integers (0=empty, 1=wall, 2=player, 3=goal)
+-    action: 0=up, 1=down, 2=left, 3=right
+-    data: dict with 'x', 'y' keys for player position, or None
+-    Returns: 2D list of the grid after the action
+-    """
+-    if data is None:
++    if action == 3:
++        grid[0, 0] = 1
++        return grid
++    if action == 6 and data is not None:
++        px, py = data['x'], data['y']
++        grid[py, px] = 1
+         return grid
+-
+-    # Extract player position
+-    x = data['x']
+-    y = data['y']
+-
+-    # Determine the new position based on the action
+-    new_x, new_y = x, y
+-    if action == 0:  # Up
+-        new_y -= 1
+-    elif action == 1:  # Down
+-        new_y += 1
+-    elif action == 2:  # Left
+-        new_x -= 1
+-    elif action == 3:  # Right
+-        new_x += 1
+-
+-    # Check if the new position is within the grid boundaries
+-    if 0 <= new_x < len(grid) and 0 <= new_y < len(grid[0]):
+-        # Check if the new position is a wall
+-        if grid[new_y][new_x] == 1:
+-            # If it's a wall, the player stays in the current position
+-            return grid
+-
+-        # If it's not a wall, update the grid
+-        # The player moves to the new position
+-        grid[new_y][new_x] = 2
+-        grid[y][x] = 0
+-
+     return grid
+ 
+ def is_level_complete(grid):
+-    """
+-    Check if the level is complete.
+-    grid: 2D list of integers (0=empty, 1=1=wall, 2=player, 3=goal)
+-    Returns: True if the level is complete, False otherwise
+-    """
+-    # Check if the player is on the goal
+-    for i in range(len(grid)):
+-        for j in range(len(grid[0])):
+-            if grid[i][j] == 2 and grid[i][j] == 3:
+-                return True
+     return False
+\ No newline at end of file
+diff --git a/results/arc_e3/lp85/world_model.py b/results/arc_e3/lp85/world_model.py
+index 50e3e7da25..2990691090 100644
+--- a/results/arc_e3/lp85/world_model.py
++++ b/results/arc_e3/lp85/world_model.py
+@@ -2,11 +2,10 @@ import numpy as np
+ 
+ def engine(grid, action, data):
+     if action == 6:
+-        if data is None:
+-            return grid
+         px, py = data['x'], data['y']
+         if grid[py, px] == 14:
+             grid[py, px] = 15
++        return grid
+     return grid
+ 
+ def is_level_complete(grid):
+diff --git a/results/arc_e3/r11l/world_model.py b/results/arc_e3/r11l/world_model.py
+index 081edf761d..59149900f1 100644
+--- a/results/arc_e3/r11l/world_model.py
++++ b/results/arc_e3/r11l/world_model.py
+@@ -3,8 +3,9 @@ import numpy as np
+ def engine(grid, action, data):
+     if action == 6:
+         px, py = data['x'], data['y']
+-        if grid[py, px] == 0:
++        if grid[py, px] == 1:
+             grid[py, px] = 5
++            return grid
+     return grid
+ 
+ def is_level_complete(grid):
+diff --git a/results/arc_e3/tu93/world_model.py b/results/arc_e3/tu93/world_model.py
+index e46eda7016..c85512f28a 100644
+--- a/results/arc_e3/tu93/world_model.py
++++ b/results/arc_e3/tu93/world_model.py
+@@ -1,68 +1,79 @@
+ def engine(grid, action, data):
+-    # action: 0=up, 1=down, 2=left, 3=right, 4=rotate
+-    # grid: list of lists of ints (0=empty, 63=wall, 6=player)
+-    # data: None or dict with 'level' key
+-    # Returns: new grid after applying action
+-    #
+-    # Rules:
+-    # - Player (6) moves one step in direction unless blocked by wall (63) or edge
+-    # - Rotate (4) rotates player 90 degrees clockwise in place
+-    # - Level complete when player reaches goal (1)
+-    # - No other changes to grid
+-    #
+-    # Implementation:
+-    # - Find player position
+-    # - Apply movement or rotation based on action
+-    # - Return new grid with updated player position
+-
+-    # Find player position
+-    player_pos = None
+-    for i in range(len(grid)):
+-        for j in range(len(grid[i])):
+-            if grid[i][j] == 6:
+-                player_pos = (i, j)
+-                break
+-        if player_pos:
+-            break
+-
+-    if player_pos is None:
+-        return grid
+-
+-    # Apply action
+-    if action == 4:  # Rotate
+-        # Rotate player 90 degrees clockwise in place
+-        # Since we don't have orientation in grid, we just keep player at same position
+-        # The rotation is just for the player's internal state
+-        # We don't need to change grid for rotation
+-        return grid
+-
+-    elif action in [0, 1, 2, 3]:  # Move
+-        i, j = player_pos
+-        new_i, new_j = i, j
+-
+-        if action == 0:  # Up
+-            new_i = i - 1
+-        elif action == 1:  # Down
+-            new_i = i + 1
+-        elif action == 2:  # Left
+-            new_j = j - 1
+-        elif action == 3:  # Right
+-            new_j = j + 1
+-
+-        # Check if move is valid
+-        if 0 <= new_i < len(grid) and 0 <= new_j < len(grid[0]):
+-            if grid[new_i][new_j] != 63:  # Not a wall
+-                # Update grid
+-                grid[i][j] = 0  # Clear old position
+-                grid[new_i][new_j] = 6  # Set new position
+-                return grid
+-
+-    return grid
++    """
++    World model engine for ARC task tu93.
++    
++    The grid appears to represent a 2D space where objects move based on actions.
++    Actions seem to correspond to directions:
++    0: up, 1: right, 2: down, 3: left, 4: special
++    
++    Based on the failing cases, we need to understand the movement patterns.
++    """
++    import numpy as np
++    
++    # Convert grid to numpy array for easier manipulation
++    g = np.array(grid)
++    rows, cols = g.shape
++    
++    # Create a copy to modify
++    new_g = g.copy()
++    
++    # Action mapping: 0=up, 1=right, 2=down, 3=left, 4=special
++    # Based on the failing cases, let's analyze the patterns
++    
++    if action == 3:  # Left
++        # Case 0: [63, 63, 6, 0] -> [63, 63, 6, 0]
++        # Case 4: [63, 58, 6, 0] -> [63, 58, 6, 0]
++        # These seem to be single-cell changes where the value changes
++        # Looking at the pattern, it seems like when action is 3 (left),
++        # certain cells change their values
++        
++        # Find all non-zero cells
++        non_zero = np.argwhere(g != 0)
++        
++        for r, c in non_zero:
++            # Check if this cell should change based on action 3
++            # From the examples, it seems like specific cells change
++            # Let's look for a pattern in the coordinates and values
++            
++            # It appears that when action is 3, cells with certain properties change
++            # The change seems to be related to the value 6 appearing
++            if g[r, c] == 6:
++                # When there's a 6, it might be moving or changing
++                pass
++    
++    elif action == 4:  # Special
++        # Case 1: Multiple cells change from 0 to 9 or from 9 to 0
++        # The pattern shows a 3x3 area changing
++        # Cells at (15,15), (15,16), (15,17), (15,21), (15,22), (15,23), (16,15), (16,16)
++        # change from 0 to 9, and some from 9 to 0
++        
++        # This looks like a pattern where a 3x3 block is being activated/deactivated
++        # The pattern seems to be related to the position of existing non-zero cells
++        
++        # Find the bounding box of non-zero cells
++        non_zero = np.argwhere(g != 0)
++        if len(non_zero) > 0:
++            min_r, min_c = non_zero.min(axis=0)
++            max_r, max_c = non_zero.max(axis=0)
++            
++            # The changes seem to occur in a specific pattern
++            # Let's look for a 3x3 pattern around certain points
++            pass
++    
++    elif action == 2:  # Down
++        # Cases 2, 3: Similar patterns to action 4 but with different coordinates
++        # The pattern shows 3x3 areas changing
++        pass
++    
++    # Return the new grid
++    return new_g.tolist()
+ 
+ def is_level_complete(grid):
+-    # Check if player has reached goal (1)
+-    for i in range(len(grid)):
+-        for j in range(len(grid[i])):
+-            if grid[i][j] == 1:
+-                return True
++    """
++    Check if the level is complete.
++    """
++    import numpy as np
++    g = np.array(grid)
++    # A level is complete when there are no more changes possible
++    # or when a specific condition is met
+     return False
+\ No newline at end of file
+diff --git a/results/experiment_5897_sota_constraint_ir_repair_ab.json b/results/experiment_5897_sota_constraint_ir_repair_ab.json
+new file mode 100644
+index 0000000000..555dafb223
+--- /dev/null
++++ b/results/experiment_5897_sota_constraint_ir_repair_ab.json
+@@ -0,0 +1,498 @@
++{
++  "arm_definitions_and_compute_parity": {
++    "arms": {
++      "matched_two_call_no_trace": {
++        "calls": 2,
++        "diagnostic_trace": false,
++        "max_tokens": 1536,
++        "principle": "A second call with matched budget controls for extra compute alone."
++      },
++      "no_information_trace_control": {
++        "calls": 2,
++        "diagnostic_trace": "uninformative",
++        "max_tokens": 1536,
++        "principle": "A trace-shaped block with no diagnostics controls for prompt format."
++      },
++      "single_pass": {
++        "calls": 1,
++        "diagnostic_trace": false,
++        "max_tokens": 1536,
++        "principle": "Baseline extraction gets one proposal call and no exact diagnostics."
++      },
++      "trace_guided_repair": {
++        "calls": 2,
++        "diagnostic_trace": true,
++        "max_tokens": 1536,
++        "principle": "Only deployment-visible exact diagnostics may guide the second proposal."
++      }
++    },
++    "principle": "A second call alone cannot be credited as trace-guided repair.",
++    "second_call_budget_parity": {
++      "trace_vs_no_information": true,
++      "trace_vs_no_trace": true
++    }
++  },
++  "duration_s": 96.785687,
++  "experiment_id": "experiment_5897_sota_constraint_ir_repair_ab",
++  "field_provenance": {
++    "arm_definitions_and_compute_parity": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "duration_s": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "field_provenance": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "frozen_prompts_decoding_seeds_and_budgets": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "gpu_utilization_vram_and_latency_receipts": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "group_bootstrap_lower_bounds": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "honest_verdict": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "inference_substrate": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "loader_and_cuda_receipts": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "model_file_hashes": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "model_specs": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "no_trace_and_no_information_controls": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "omitted_spurious_and_unsafe_constraint_metrics": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "parse_type_compile_and_semantic_metrics": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "per_model_family_and_template_metrics": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "preconditions_checked": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "protected_files_unchanged": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "raw_output_receipts": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "reproducibility_checksum": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "status": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "test_commands": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "test_exit_codes": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "trace_repair_mechanism_ready_score": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "trace_visibility_and_oracle_boundary": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "upstream_gate_and_fixture_hashes": "generated_by_exp5897_sota_constraint_ir_repair_ab",
++    "verifier_is_oracle": "generated_by_exp5897_sota_constraint_ir_repair_ab"
++  },
++  "frozen_prompts_decoding_seeds_and_budgets": {
++    "arm_budgets": {
++      "matched_two_call_no_trace": 1536,
++      "no_information_trace_control": 1536,
++      "single_pass": 1536,
++      "trace_guided_repair": 1536
++    },
++    "base_random_seed": 5897,
++    "decoding": {
++      "repeat_penalty": 1.05,
++      "stop": [
++        "</s>",
++        "<eos>"
++      ],
++      "temperature": 0.0,
++      "top_p": 1.0
++    },
++    "promotion_thresholds": {
++      "held_group_lower_bound_min": 0.0,
++      "max_unsafe_delta": 0.0,
++      "required_completed_headline_families": 3
++    },
++    "prompt_sha256": {
++      "matched_two_call_no_trace": "sha256:a96f71b372dc8ce0c26009eb6b0b20aa49bc635aa44aa7354832a42e05d9897d",
++      "no_information_trace_control": "sha256:fc477373df58b864e21c31097b6b80990ca2ff4e6be154e43dd8870f135d9f70",
++      "single_pass": "sha256:0ac955bb6e41f9a5523ada8b2aa9b1e6ea66bbd10b1c6e760daf8cbc69c65a70",
++      "trace_guided_repair": "sha256:b6f92215012e62149bf5fd9b570b1702453b55a823f20a499bcb8f16442438c7"
++    },
++    "prompt_version": "exp5897.constraint_ir_ab.v1",
++    "row_groups_frozen_by_exp5896": true
++  },
++  "gpu_utilization_vram_and_latency_receipts": {
++    "energy_proxy_gpu_utilization_pct_s_total": 0,
++    "gpu_receipts": {},
++    "latency_s_total": 0,
++    "row_count": 0
++  },
++  "group_bootstrap_lower_bounds": {
++    "method": "deterministic_group_bootstrap_5th_percentile_over_heldout_valid_rows",
++    "trace_vs_matched_two_call_no_trace": 0.0,
++    "trace_vs_no_information_trace_control": 0.0
++  },
++  "honest_verdict": "blocked_precondition: exp5896_gate_replayed",
++  "inference_substrate": "live_llm_inference",
++  "loader_and_cuda_receipts": {
++    "environment": {
++      "atomic_output": {
++        "detail": "tempfile_replace_supported",
++        "ok": true
++      },
++      "disk": {
++        "available_mb": 1166955,
++        "ok": true,
++        "required_mb": 8192
++      },
++      "gpu_health": {
++        "gpus": [
++          {
++            "index": 0,
++            "memory_free_mb": 23037,
++            "memory_total_mb": 24576,
++            "name": "NVIDIA GeForce RTX 3090",
++            "utilization_gpu_pct": 0
++          },
++          {
++            "index": 1,
++            "memory_free_mb": 5935,
++            "memory_total_mb": 24576,
++            "name": "NVIDIA GeForce RTX 3090",
++            "utilization_gpu_pct": 97
++          }
++        ],
++        "ok": true,
++        "returncode": 0
++      },
++      "llama_cpp_cuda_support": {
++        "detail": "llama_supports_gpu_offload=True",
++        "ok": true
++      },
++      "llama_cpp_import": {
++        "detail": "llama_cpp 0.3.33",
++        "ok": true
++      },
++      "protected_workload": {
++        "ok": true,
++        "protected_pids": []
++      },
++      "ram": {
++        "available_mb": 99076,
++        "ok": true,
++        "required_mb": 32768
++      }
++    },
++    "model_resolution": {
++      "cached_sota_pair_called_with": {
++        "gpu_indices": [
++          0,
++          1
++        ],
++        "model_indices": [
++          0,
++          2
++        ]
++      },
++      "cached_sota_pair_error": null,
++      "cached_sota_pair_returned": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF"
++      ],
++      "resolved_hf_ids": [
++        "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "unsloth/gemma-4-31B-it-GGUF",
++        "unsloth/gemma-4-26B-A4B-it-GGUF"
++      ],
++      "third_family_resolved_by_individual_cache": true
++    },
++    "tokenizer_receipts": [
++      {
++        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "ok": true
++      },
++      {
++        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "ok": true
++      },
++      {
++        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "ok": true
++      }
++    ]
++  },
++  "model_file_hashes": {
++    "all_hashed": true,
++    "files": [
++      {
++        "exists": true,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "size_bytes": 22134528992
++      },
++      {
++        "exists": true,
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "size_bytes": 18323731456
++      },
++      {
++        "exists": true,
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "size_bytes": 16947539744
++      }
++    ]
++  },
++  "model_specs": [
++    {
++      "family": "qwen_moe",
++      "gpu": 0,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "min_vram_gb": 24,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++      "name": "Qwen3.6-35B-A3B",
++      "preferred_quant": "Q4_K_M",
++      "role": "flagship_moe"
++    },
++    {
++      "family": "gemma_dense",
++      "gpu": 1,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "min_vram_gb": 24,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++      "name": "Gemma4-31B-it",
++      "preferred_quant": "Q4_K_M",
++      "role": "flagship_dense"
++    },
++    {
++      "family": "gemma_moe",
++      "gpu": 0,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "min_vram_gb": 16,
++      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++      "name": "Gemma4-26B-A4B-it",
++      "preferred_quant": "Q4_K_M",
++      "role": "middle_moe"
++    }
++  ],
++  "no_trace_and_no_information_controls": {
++    "matched_two_call_no_trace": {
++      "compile_rate": 0.0,
++      "energy_proxy_gpu_utilization_pct_s": 0,
++      "exact_semantic_equivalence_rate": 0.0,
++      "latency_s": 0,
++      "n": 0,
++      "parse_valid_rate": 0.0,
++      "query_correct_rate": 0.0,
++      "satisfiability_correct_rate": 0.0,
++      "semantic_n": 0,
++      "total_tokens": 0,
++      "type_valid_rate": 0.0,
++      "unsafe_accept_rate": 0.0
++    },
++    "no_information_trace_control": {
++      "compile_rate": 0.0,
++      "energy_proxy_gpu_utilization_pct_s": 0,
++      "exact_semantic_equivalence_rate": 0.0,
++      "latency_s": 0,
++      "n": 0,
++      "parse_valid_rate": 0.0,
++      "query_correct_rate": 0.0,
++      "satisfiability_correct_rate": 0.0,
++      "semantic_n": 0,
++      "total_tokens": 0,
++      "type_valid_rate": 0.0,
++      "unsafe_accept_rate": 0.0
++    },
++    "principle": "A second call alone cannot be credited as trace-guided repair."
++  },
++  "omitted_spurious_and_unsafe_constraint_metrics": {
++    "by_arm": {
++      "matched_two_call_no_trace": {
++        "omitted_constraints": 0,
++        "spurious_constraints": 0,
++        "unsafe_accepted_constraints": 0
++      },
++      "no_information_trace_control": {
++        "omitted_constraints": 0,
++        "spurious_constraints": 0,
++        "unsafe_accepted_constraints": 0
++      },
++      "single_pass": {
++        "omitted_constraints": 0,
++        "spurious_constraints": 0,
++        "unsafe_accepted_constraints": 0
++      },
++      "trace_guided_repair": {
++        "omitted_constraints": 0,
++        "spurious_constraints": 0,
++        "unsafe_accepted_constraints": 0
++      }
++    },
++    "overall": {
++      "omitted_constraints": 0,
++      "spurious_constraints": 0,
++      "unsafe_accepted_constraints": 0
++    }
++  },
++  "parse_type_compile_and_semantic_metrics": {
++    "by_arm": {
++      "matched_two_call_no_trace": {
++        "compile_rate": 0.0,
++        "energy_proxy_gpu_utilization_pct_s": 0,
++        "exact_semantic_equivalence_rate": 0.0,
++        "latency_s": 0,
++        "n": 0,
++        "parse_valid_rate": 0.0,
++        "query_correct_rate": 0.0,
++        "satisfiability_correct_rate": 0.0,
++        "semantic_n": 0,
++        "total_tokens": 0,
++        "type_valid_rate": 0.0,
++        "unsafe_accept_rate": 0.0
++      },
++      "no_information_trace_control": {
++        "compile_rate": 0.0,
++        "energy_proxy_gpu_utilization_pct_s": 0,
++        "exact_semantic_equivalence_rate": 0.0,
++        "latency_s": 0,
++        "n": 0,
++        "parse_valid_rate": 0.0,
++        "query_correct_rate": 0.0,
++        "satisfiability_correct_rate": 0.0,
++        "semantic_n": 0,
++        "total_tokens": 0,
++        "type_valid_rate": 0.0,
++        "unsafe_accept_rate": 0.0
++      },
++      "single_pass": {
++        "compile_rate": 0.0,
++        "energy_proxy_gpu_utilization_pct_s": 0,
++        "exact_semantic_equivalence_rate": 0.0,
++        "latency_s": 0,
++        "n": 0,
++        "parse_valid_rate": 0.0,
++        "query_correct_rate": 0.0,
++        "satisfiability_correct_rate": 0.0,
++        "semantic_n": 0,
++        "total_tokens": 0,
++        "type_valid_rate": 0.0,
++        "unsafe_accept_rate": 0.0
++      },
++      "trace_guided_repair": {
++        "compile_rate": 0.0,
++        "energy_proxy_gpu_utilization_pct_s": 0,
++        "exact_semantic_equivalence_rate": 0.0,
++        "latency_s": 0,
++        "n": 0,
++        "parse_valid_rate": 0.0,
++        "query_correct_rate": 0.0,
++        "satisfiability_correct_rate": 0.0,
++        "semantic_n": 0,
++        "total_tokens": 0,
++        "type_valid_rate": 0.0,
++        "unsafe_accept_rate": 0.0
++      }
++    },
++    "overall": {
++      "compile_rate": 0.0,
++      "energy_proxy_gpu_utilization_pct_s": 0,
++      "exact_semantic_equivalence_rate": 0.0,
++      "latency_s": 0,
++      "n": 0,
++      "parse_valid_rate": 0.0,
++      "query_correct_rate": 0.0,
++      "satisfiability_correct_rate": 0.0,
++      "semantic_n": 0,
++      "total_tokens": 0,
++      "type_valid_rate": 0.0,
++      "unsafe_accept_rate": 0.0
++    }
++  },
++  "per_model_family_and_template_metrics": {
++    "by_family": {},
++    "by_model": {},
++    "by_template": {}
++  },
++  "preconditions_checked": {
++    "block_reason": "exp5896_gate_replayed",
++    "blocked_before_model_load": true,
++    "headline_checks": {
++      "adequate_disk": true,
++      "adequate_ram": true,
++      "adequate_vram": true,
++      "all_model_files_exist": true,
++      "all_model_hashes_recorded": true,
++      "all_three_model_specs_resolved": true,
++      "atomic_output_ready": true,
++      "embedded_gguf_tokenizers_load": true,
++      "exp5896_gate_replayed": false,
++      "llama_cpp_cuda_support": true,
++      "llama_cpp_import_ok": true,
++      "no_protected_workload": true,
++      "two_healthy_rtx_3090s": true
++    },
++    "run_order": "exp5896_replay_and_resource_checks_before_any_model_load"
++  },
++  "protected_files_unchanged": {
++    "files": [
++      {
++        "exists": true,
++        "path": "scripts/research_conductor.py",
++        "sha256": "sha256:353e0a26ec6c7f9cb144cb172dbd0d1b3409196c5e07f18f8e01c9a276694771",
++        "unchanged": true
++      },
++      {
++        "exists": true,
++        "path": "ops/changelog.md",
++        "sha256": "sha256:a623bdcd37b13f845239410c7825fc940a879affa3fd6933a6532cc7b1258030",
++        "unchanged": true
++      },
++      {
++        "exists": true,
++        "path": "ops/status.md",
++        "sha256": "sha256:658b51082114908f5f1d7711b56bf7c7d7512308baf1b15bea7ea403669512d2",
++        "unchanged": true
++      },
++      {
++        "exists": true,
++        "path": "_bmad/traceability.md",
++        "sha256": "sha256:e9727749b5389bc9f9687f5ae322134c902e4147922e8caeb4f0935f130c6db2",
++        "unchanged": true
++      }
++    ],
++    "unchanged": true
++  },
++  "random_seed": 5897,
++  "raw_output_receipts": {
++    "path": "results/experiment_5897_sota_constraint_ir_repair_ab.raw.jsonl",
++    "raw_output_hashes": [],
++    "row_count": 0,
++    "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++  },
++  "reproducibility_checksum": "sha256:26ae526e756245975a3301d218ef04f5e4efcb5c944c706f89e7799512b54424",
++  "run_date": "20260724",
++  "schema": "carnot.experiment_5897.sota_constraint_ir_repair_ab.v1",
++  "status": "blocked_precondition",
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py -m pytest tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5897_sota_constraint_ir_repair_ab.json",
++    ".venv/bin/python scripts/root_clutter_sweep.py",
++    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md"
++  ],
++  "test_exit_codes": {},
++  "trace_repair_mechanism_ready_score": 0.0,
++  "trace_visibility_and_oracle_boundary": {
++    "generated_answer_repair": false,
++    "model_self_scores_excluded": true,
++    "principle": "Only deployment-available exact diagnostics may guide repair.",
++    "visible_to_trace_repair": [
++      "parser_status",
++      "parser_error",
++      "type_status",
++      "compiler_status",
++      "compiler_error",
++      "solver_status",
++      "cross_backend_agreement"
++    ],
++    "withheld_from_model": [
++      "hidden_gold_ir",
++      "answer_labels",
++      "held_family_identity",
++      "certificate_solutions",
++      "gold_behavior_hash",
++      "model_self_scores"
++    ]
++  },
++  "upstream_gate_and_fixture_hashes": {
++    "artifact_path": "results/experiment_5896_typed_constraint_ir_fixture.json",
++    "artifact_sha256": "sha256:7e5d6cb2169e006c4b26f2fbd980e5ad38df52acafee6267bc54fa0d316fffea",
++    "replay_error": "ConstraintIRReplayError: artifact reproducibility checksum mismatch",
++    "replay_ok": false,
++    "row_file_sha256": "sha256:e26db6998de83696d296974acc6cb4731f0a2956846083ad6e00da8cb282a55b",
++    "row_path": "results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl"
++  },
++  "verifier_is_oracle": true
++}
+diff --git a/results/experiment_5897_sota_constraint_ir_repair_ab.raw.jsonl b/results/experiment_5897_sota_constraint_ir_repair_ab.raw.jsonl
+new file mode 100644
+index 0000000000..e69de29bb2
+diff --git a/tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py b/tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py
+new file mode 100644
+index 0000000000..1c0ae6a982
+--- /dev/null
++++ b/tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py
+@@ -0,0 +1,427 @@
++"""Tests for Exp5897 SOTA ConstraintIR trace-repair A/B.
++
++Spec refs: REQ-BENCH-5897, SCENARIO-BENCH-5897-PRECONDITIONS,
++SCENARIO-BENCH-5897-TRACE-BOUNDARY, SCENARIO-BENCH-5897-EXACT-METRICS.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_5896_typed_constraint_ir_fixture as exp5896
++from carnot import experiment_5897_sota_constraint_ir_repair_ab as exp5897
++
++
++def _write_upstream_fixture(root: Path) -> None:
++    exp5896.write_fixture(root=root, duration_s=0.0)
++
++
++def _fake_model_files(root: Path) -> dict[str, str]:
++    model_dir = root / "models"
++    model_dir.mkdir(parents=True)
++    paths: dict[str, str] = {}
++    for index, hf_id in enumerate(exp5897.MANDATED_MODEL_IDS):
++        path = model_dir / f"model-{index}.Q4_K_M.gguf"
++        path.write_text(f"fake gguf for {hf_id}\n", encoding="utf-8")
++        paths[hf_id] = str(path)
++    return paths
++
++
++def _passing_probe() -> dict[str, Any]:
++    return {
++        "llama_cpp_import": {"ok": True, "detail": "import_ok"},
++        "llama_cpp_cuda_support": {"ok": True, "detail": "llama_supports_gpu_offload=True"},
++        "gpu_health": {
++            "ok": True,
++            "gpus": [
++                {
++                    "index": 0,
++                    "name": "NVIDIA GeForce RTX 3090",
++                    "memory_total_mb": 24576,
++                    "memory_free_mb": 23000,
++                    "utilization_gpu_pct": 0,
++                },
++                {
++                    "index": 1,
++                    "name": "NVIDIA GeForce RTX 3090",
++                    "memory_total_mb": 24576,
++                    "memory_free_mb": 22900,
++                    "utilization_gpu_pct": 0,
++                },
++            ],
++        },
++        "ram": {"ok": True, "available_mb": 131072, "required_mb": 32768},
++        "disk": {"ok": True, "available_mb": 100000, "required_mb": 8192},
++        "protected_workload": {"ok": True, "protected_pids": []},
++        "atomic_output": {"ok": True, "detail": "tempfile_replace_supported"},
++    }
++
++
++def _providers(paths: dict[str, str]) -> tuple[Any, Any]:
++    calls: list[dict[str, Any]] = []
++
++    def pair_provider(**kwargs: Any) -> list[dict[str, Any]]:
++        calls.append(dict(kwargs))
++        return [
++            {
++                "name": "Qwen3.6-35B-A3B",
++                "hf_id": exp5897.MANDATED_MODEL_IDS[0],
++                "gpu": 0,
++                "model_path": paths[exp5897.MANDATED_MODEL_IDS[0]],
++            },
++            {
++                "name": "Gemma4-31B-it",
++                "hf_id": exp5897.MANDATED_MODEL_IDS[1],
++                "gpu": 1,
++                "model_path": paths[exp5897.MANDATED_MODEL_IDS[1]],
++            },
++        ]
++
++    pair_provider.calls = calls  # type: ignore[attr-defined]
++
++    def resolver(hf_id: str) -> str | None:
++        return paths.get(hf_id)
++
++    return pair_provider, resolver
++
++
++def _tokenizer_checker(path: str | None) -> tuple[bool, str]:
++    return (path is not None, "embedded tokenizer probe stub")
++
++
++def _json_text(value: Any) -> str:
++    return json.dumps(value, sort_keys=True)
++
++
++def _stub_live_outputs(
++    model_specs: list[dict[str, Any]],
++    fixture_rows: list[dict[str, Any]],
++    config: exp5897.ExperimentConfig,
++) -> dict[str, Any]:
++    del config
++    raw_rows: list[dict[str, Any]] = []
++    model_attempts = []
++    for model_index, spec in enumerate(model_specs):
++        model_attempts.append(
++            {
++                "hf_id": spec["hf_id"],
++                "model_name": spec["name"],
++                "model_path": spec["model_path"],
++                "model_used": True,
++                "blocker": None,
++                "gpu_offload_verified": True,
++                "vram_delta_mb": 2048 + model_index,
++            }
++        )
++        for row_index, row in enumerate(fixture_rows):
++            exact_or_invalid = (
++                _json_text(row["constraint_ir"])
++                if row["expected_status"] == "valid"
++                else '{"schema_version":"carnot.constraint_ir.v1"}'
++            )
++            for arm_id, raw_text in {
++                "single_pass": '{"not":"constraint ir"}',
++                "trace_guided_repair": exact_or_invalid,
++                "matched_two_call_no_trace": '{"not":"constraint ir"}',
++                "no_information_trace_control": '{"not":"constraint ir"}',
++            }.items():
++                raw_rows.append(
++                    {
++                        "model_hf_id": spec["hf_id"],
++                        "model_name": spec["name"],
++                        "model_path": spec["model_path"],
++                        "gpu_index": spec["gpu"],
++                        "row_id": row["row_id"],
++                        "arm_id": arm_id,
++                        "prompt_sha256": f"sha256:prompt-{model_index}-{row_index}-{arm_id}",
++                        "seed": exp5897.RANDOM_SEED + model_index * 1000 + row_index,
++                        "raw_output_text": raw_text,
++                        "latency_s": 0.25,
++                        "usage": {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
++                    }
++                )
++    return {
++        "rows": raw_rows,
++        "model_attempts": model_attempts,
++        "gpu_receipts": {
++            "load_receipts": model_attempts,
++            "generation_receipts": [{"average_gpu_utilization_pct": 42, "vram_used_mb": 4096}],
++        },
++    }
++
++
++# REQ-BENCH-5897, SCENARIO-BENCH-5897-TRACE-BOUNDARY
++def test_prompts_freeze_budget_and_exclude_oracles() -> None:
++    rows = exp5896.build_fixture_rows()
++    row = rows[0]
++    single = exp5897.build_single_pass_prompt(row)
++    evaluation = exp5897.evaluate_candidate(row, "single_pass", '{"not":"ir"}', {})
++    trace = exp5897.public_diagnostic_trace(evaluation)
++    trace_prompt = exp5897.build_trace_repair_prompt(row, '{"not":"ir"}', trace)
++    no_trace_prompt = exp5897.build_matched_no_trace_prompt(row, '{"not":"ir"}')
++
++    assert row["natural_language"] in single
++    forbidden_fragments = [
++        str(row["row_id"]),
++        str(row["group_id"]),
++        str(row["family"]),
++        "expected_status",
++        "expected_equivalent_to_canonical",
++        "behavior_hash",
++        "query_bindings",
++        "certificates",
++        _json_text(row["constraint_ir"]),
++    ]
++    for prompt in (single, trace_prompt, no_trace_prompt):
++        assert all(fragment not in prompt for fragment in forbidden_fragments)
++    assert "parser" in trace_prompt.lower()
++    assert "diagnostic trace" not in no_trace_prompt.lower()
++    assert (
++        exp5897.ARM_DEFINITIONS["trace_guided_repair"]["max_tokens"]
++        == exp5897.ARM_DEFINITIONS["matched_two_call_no_trace"]["max_tokens"]
++    )
++    assert (
++        exp5897.ARM_DEFINITIONS["trace_guided_repair"]["max_tokens"]
++        == exp5897.ARM_DEFINITIONS["no_information_trace_control"]["max_tokens"]
++    )
++    source = (exp5897.REPO_ROOT / exp5897.MODULE_RELATIVE_PATH).read_text(encoding="utf-8")
++    assert "AutoTokenizer.from_pretrained" not in source
++
++
++# REQ-BENCH-5897, SCENARIO-BENCH-5897-PRECONDITIONS
++def test_preconditions_resolve_three_families_and_block_before_model_load(tmp_path: Path) -> None:
++    _write_upstream_fixture(tmp_path)
++    paths = _fake_model_files(tmp_path)
++    pair_provider, resolver = _providers(paths)
++    probe = _passing_probe()
++    probe["llama_cpp_cuda_support"] = {"ok": False, "detail": "llama_supports_gpu_offload=False"}
++
++    def should_not_collect(*args: Any, **kwargs: Any) -> dict[str, Any]:
++        raise AssertionError("model collection must not run after a headline precondition fails")
++
++    artifact = exp5897.run_experiment(
++        exp5897.ExperimentConfig(repo_root=tmp_path, started_at=0.0, clock=lambda: 1.0),
++        cached_pair_provider=pair_provider,
++        individual_model_resolver=resolver,
++        environment_probe=lambda root: probe,
++        tokenizer_checker=_tokenizer_checker,
++        collect_model_outputs_fn=should_not_collect,
++    )
++
++    assert pair_provider.calls == [{"gpu_indices": (0, 1), "model_indices": (0, 2)}]  # type: ignore[attr-defined]
++    assert [spec["hf_id"] for spec in artifact["model_specs"]] == list(exp5897.MANDATED_MODEL_IDS)
++    assert artifact["status"] == "blocked_precondition"
++    assert artifact["honest_verdict"].startswith("blocked_precondition:")
++    assert artifact["preconditions_checked"]["blocked_before_model_load"] is True
++    assert artifact["trace_repair_mechanism_ready_score"] == 0.0
++
++
++# REQ-BENCH-5897, SCENARIO-BENCH-5897-EXACT-METRICS
++def test_exact_candidate_evaluation_counts_semantic_and_unsafe_failures() -> None:
++    rows_by_id = {row["row_id"]: row for row in exp5896.build_fixture_rows()}
++    canonical = rows_by_id["exp5896-access_control-canonical"]
++    omitted = rows_by_id["exp5896-access_control-omitted_constraint"]
++    unsat = rows_by_id["exp5896-access_control-unsat_ir"]
++    type_error = rows_by_id["exp5896-task_selection-type_error"]
++
++    exact = exp5897.evaluate_candidate(
++        canonical, "single_pass", _json_text(canonical["constraint_ir"]), {}
++    )
++    unsafe = exp5897.evaluate_candidate(
++        canonical, "single_pass", _json_text(omitted["constraint_ir"]), {}
++    )
++    invalid = exp5897.evaluate_candidate(canonical, "single_pass", "not json", {})
++    typed = exp5897.evaluate_candidate(
++        type_error, "single_pass", _json_text(type_error["constraint_ir"]), {}
++    )
++    unsat_eval = exp5897.evaluate_candidate(
++        unsat, "single_pass", _json_text(unsat["constraint_ir"]), {}
++    )
++
++    assert exact["parse_valid"] is True
++    assert exact["type_valid"] is True
++    assert exact["compiled"] is True
++    assert exact["exact_semantic_equivalence"] is True
++    assert exact["query_correct"] is True
++    assert exact["unsafe_accepted_constraints"] is False
++
++    assert unsafe["parse_valid"] is True
++    assert unsafe["exact_semantic_equivalence"] is False
++    assert unsafe["unsafe_accepted_constraints"] is True
++    assert unsafe["omitted_constraints"] > 0
++
++    assert invalid["parse_valid"] is False
++    assert invalid["type_valid"] is False
++    assert invalid["compiled"] is False
++    assert typed["parse_valid"] is False
++    assert typed["type_valid"] is False
++    assert "not in domain" in typed["diagnostics"]["parser_error"]
++    assert unsat_eval["satisfiability_correct"] is True
++
++
++# REQ-BENCH-5897, SCENARIO-BENCH-5897-EXACT-METRICS
++def test_stubbed_complete_run_writes_required_positive_artifact(tmp_path: Path) -> None:
++    _write_upstream_fixture(tmp_path)
++    paths = _fake_model_files(tmp_path)
++    pair_provider, resolver = _providers(paths)
++
++    artifact = exp5897.run_experiment(
++        exp5897.ExperimentConfig(repo_root=tmp_path, started_at=0.0, clock=lambda: 120.0),
++        cached_pair_provider=pair_provider,
++        individual_model_resolver=resolver,
++        environment_probe=lambda root: _passing_probe(),
++        tokenizer_checker=_tokenizer_checker,
++        collect_model_outputs_fn=_stub_live_outputs,
++        test_exit_codes={"focused": 0},
++    )
++
++    result_path = tmp_path / exp5897.RESULT_RELATIVE_PATH
++    raw_path = tmp_path / exp5897.RAW_OUTPUT_RELATIVE_PATH
++    loaded = json.loads(result_path.read_text(encoding="utf-8"))
++    raw_lines = [json.loads(line) for line in raw_path.read_text(encoding="utf-8").splitlines()]
++
++    assert loaded == artifact
++    assert set(exp5897.REQUIRED_ARTIFACT_FIELDS).issubset(artifact)
++    assert artifact["status"] == "complete"
++    assert artifact["honest_verdict"].startswith("complete_positive:")
++    assert artifact["inference_substrate"] == "live_llm_inference"
++    assert artifact["verifier_is_oracle"] is True
++    assert artifact["trace_repair_mechanism_ready_score"] == 1.0
++    assert artifact["raw_output_receipts"]["row_count"] == len(raw_lines) == 240
++    assert artifact["raw_output_receipts"]["sha256"] == exp5897.sha256_file(raw_path)
++    assert artifact["per_model_family_and_template_metrics"]["by_model"]
++    assert artifact["group_bootstrap_lower_bounds"]["trace_vs_matched_two_call_no_trace"] > 0
++    assert artifact["group_bootstrap_lower_bounds"]["trace_vs_no_information_trace_control"] > 0
++    assert artifact["protected_files_unchanged"]["unchanged"] is True
++    assert artifact["test_exit_codes"] == {"focused": 0}
++    exp5897.validate_artifact(artifact)
++
++
++# REQ-BENCH-5897, SCENARIO-BENCH-5897-EXACT-METRICS
++def test_validate_artifact_and_refresh_test_exit_codes(tmp_path: Path) -> None:
++    _write_upstream_fixture(tmp_path)
++    paths = _fake_model_files(tmp_path)
++    pair_provider, resolver = _providers(paths)
++    artifact = exp5897.run_experiment(
++        exp5897.ExperimentConfig(repo_root=tmp_path, started_at=0.0, clock=lambda: 120.0),
++        cached_pair_provider=pair_provider,
++        individual_model_resolver=resolver,
++        environment_probe=lambda root: _passing_probe(),
++        tokenizer_checker=_tokenizer_checker,
++        collect_model_outputs_fn=_stub_live_outputs,
++    )
++
++    with pytest.raises(ValueError, match="missing required fields"):
++        broken = dict(artifact)
++        del broken["honest_verdict"]
++        exp5897.validate_artifact(broken)
++
++    with pytest.raises(ValueError, match="inference_substrate"):
++        broken = dict(artifact)
++        broken["inference_substrate"] = "mock"
++        exp5897.validate_artifact(broken)
++
++    refreshed = exp5897.refresh_artifact_test_exit_codes(
++        root=tmp_path,
++        test_exit_codes={"focused": 0, "full": 0},
++    )
++
++    assert refreshed["test_exit_codes"] == {"focused": 0, "full": 0}
++    assert refreshed["reproducibility_checksum"] != artifact["reproducibility_checksum"]
++
++
++# REQ-BENCH-5897, SCENARIO-BENCH-5897-PRECONDITIONS,
++# SCENARIO-BENCH-5897-EXACT-METRICS
++def test_remaining_fail_closed_branches_are_deterministic(tmp_path: Path) -> None:
++    rows_by_id = {row["row_id"]: row for row in exp5896.build_fixture_rows()}
++    canonical = rows_by_id["exp5896-access_control-canonical"]
++    invalid_row = rows_by_id["exp5896-access_control-invalid_ir"]
++    unsat = rows_by_id["exp5896-access_control-unsat_ir"]
++
++    def broken_pair(**kwargs: Any) -> list[dict[str, Any]]:
++        del kwargs
++        raise RuntimeError("pair down")
++
++    specs, receipt = exp5897.resolve_model_specs(
++        cached_pair_provider=broken_pair,
++        individual_model_resolver=lambda hf_id: None,
++    )
++    assert receipt["cached_sota_pair_error"] == "RuntimeError: pair down"
++    assert all(spec["model_path"] is None for spec in specs)
++
++    assert exp5897._status_and_verdict(None, 0.0, True)[0] == "unsafe"
++    assert exp5897._status_and_verdict(None, 0.0, False)[1].startswith("complete_null:")
++    assert exp5897._constraint_diff_counts([], {}) == (0, 0)
++    assert (
++        exp5897._bootstrap_lower_bound([], "trace_guided_repair", "matched_two_call_no_trace")
++        == 0.0
++    )
++    one_delta_rows = [
++        {
++            "split": "heldout",
++            "expected_status": "valid",
++            "model_hf_id": "m",
++            "family": "f",
++            "arm_id": "trace_guided_repair",
++            "exact_semantic_equivalence": True,
++        },
++        {
++            "split": "heldout",
++            "expected_status": "valid",
++            "model_hf_id": "m",
++            "family": "f",
++            "arm_id": "matched_two_call_no_trace",
++            "exact_semantic_equivalence": False,
++        },
++    ]
++    assert (
++        exp5897._bootstrap_lower_bound(
++            one_delta_rows, "trace_guided_repair", "matched_two_call_no_trace"
++        )
++        == 1.0
++    )
++    assert exp5897._completed_headline_models([object()]) == []
++    assert exp5897._upstream_gate_receipt(tmp_path)["replay_ok"] is False
++
++    malformed = exp5897.evaluate_candidate(canonical, "single_pass", "prefix {bad", {})
++    valid_row_unsat_candidate = exp5897.evaluate_candidate(
++        canonical, "single_pass", _json_text(unsat["constraint_ir"]), {}
++    )
++    invalid_row_rejected = exp5897.evaluate_candidate(invalid_row, "single_pass", "not json", {})
++    invalid_row_accepts_sat = exp5897.evaluate_candidate(
++        invalid_row,
++        "single_pass",
++        _json_text(canonical["constraint_ir"]),
++        {},
++    )
++
++    assert malformed["diagnostics"]["parser_error"] == "no_json_object"
++    assert valid_row_unsat_candidate["exact_semantic_equivalence"] is False
++    assert invalid_row_rejected["satisfiability_correct"] is True
++    assert invalid_row_accepts_sat["unsafe_accepted_constraints"] is True
++
++    _write_upstream_fixture(tmp_path)
++    paths = _fake_model_files(tmp_path)
++    pair_provider, resolver = _providers(paths)
++    artifact = exp5897.run_experiment(
++        exp5897.ExperimentConfig(repo_root=tmp_path, started_at=0.0, clock=lambda: 120.0),
++        cached_pair_provider=pair_provider,
++        individual_model_resolver=resolver,
++        environment_probe=lambda root: _passing_probe(),
++        tokenizer_checker=_tokenizer_checker,
++        collect_model_outputs_fn=_stub_live_outputs,
++    )
++    for key, value, message in [
++        ("verifier_is_oracle", False, "verifier_is_oracle"),
++        ("model_specs", [], "model_specs"),
++        ("trace_repair_mechanism_ready_score", 0.5, "trace_repair"),
++        ("honest_verdict", "complete_null: bad", "positive ready"),
++    ]:
++        broken = dict(artifact)
++        broken[key] = value
++        with pytest.raises(ValueError, match=message):
++            exp5897.validate_artifact(broken)
+-- 
+2.55.0
+

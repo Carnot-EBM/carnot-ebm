@@ -1,0 +1,24 @@
+From a9b92ab4364313c91a3d7591bb3df2bf18f4fa48 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 20:55:52 -0400
+Subject: [PATCH 07451/11362] [conductor] In-process docs for Archive terminal
+ .514 evidence with collision-disclosed canonical deliverables and allocate
+ .515
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 91f34d0af7..00271be9ee 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11680,3 +11680,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - Re-verified on GPU 1 of the dual-3090 rig after the fix: 14.1s pipeline load, 16.67GB peak VRAM, real 1024x1024 image generated in 56.6s at 8 steps for the test prompt "a minimalist line-art diagram of three connected boxes labeled A, B, C". Visually inspected the output image: legible "A"/"B"/"C" text, correctly connected boxes with directional arrows -- a genuinely correct, on-prompt result. GPU released cleanly afterward (0 MiB residual). Full mocked test suite (13/13), ruff, ruff-format, mypy all re-verified clean after the fix.
+ - This is the project's first live-GPU-provenance evidence for REQ-PUBLISH-042 (CLAUDE.md "All headline results must have live GPU provenance") -- everything before this point was mocked/precondition-only.
+ - `openspec/capabilities/publication/spec.md` REQ-PUBLISH-042 + SCENARIO-PUBLISH-042 revised in place (third revision note + a new VRAM-offload SCENARIO); `_bmad/traceability.md` rows updated to "Implemented, live-verified"; `ops/known-issues.md` "FOURTH SAME-DAY REVISION" addendum; `ops/status.md` "What's next" weights-not-downloaded item struck through with the fix date per Documentation Update Rules.
++- 2026-07-22: Archive terminal .514 evidence with collision-disclosed canonical deliverables and allocate .515 (✅ Complete) — honest_verdict=complete: archived terminal .514 evidence by exact declared deliverables into .515; same-number aliases disclosed; next_range_collision_count=0; research_complete_append_count=0; results/experiment_5769_transition_v515.json
+-- 
+2.55.0
+

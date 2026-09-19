@@ -453,6 +453,110 @@ decision-change gate fails,
 **then** online capture remains complete and online learning value stays zero
 **and** the terminal verdict is complete null rather than partial or positive.
 
+### REQ-AUTO-7410: Seal an attributed source-context calibration corpus
+
+Exp7410 SHALL fetch only the README, development Parquet, and test Parquet
+from `s-nlp/EnokiQA` revision
+`06638fd6fa5c599f3249e27d1cb489b9bd584411`. The fetch SHALL use a private
+external cache. It SHALL stop after 600 seconds or 300 MiB. Each asset SHALL
+retain its revision URL, byte size, SHA-256 hash, license, and attribution.
+The experiment SHALL not install Enoki or load a neural model.
+
+The corpus SHALL contain at most the 3,990 published rows. Before reading
+labels, it SHALL connect rows through normalized article titles, full context
+hashes, normalized questions, or duplicate normalized answer text. Official
+test groups SHALL remain a sealed final partition. Development groups that
+overlap a test group SHALL be excluded. No test row may move to a development
+role.
+
+For each answer, a frozen label-blind hash over its answer identity and
+sentence index SHALL select at most one usable annotated sentence. The
+predictor view SHALL contain only question, context, answer, and selected
+sentence text. It SHALL not contain triples, hypotheses, entailment scores,
+neutral scores, contradiction scores, hallucination probability, spans,
+model identity, source identifiers, or labels. The evaluator view SHALL apply
+the published `hall_prob > 0.5` rule only after selection. Empty, unmatched,
+or malformed annotations SHALL remain in disposition rows and SHALL be
+unscored.
+
+Whole eligible development groups SHALL be assigned by salt
+`carnot-v650-source-1` to train, probability calibration, policy calibration,
+and online stream with proportions 40, 15, 15, and 30 percent. Membership and
+label masks SHALL be sealed before feature fitting. Natural class prevalence
+SHALL not trigger a resplit. Inferential support requires at least 20 groups
+in each calibration role and 80 online groups. Lower support SHALL remain a
+valid corpus contract and SHALL force later inferential claims to a
+support-limited null.
+
+The experiment SHALL write a compact manifest and capped text shards below
+`results/raw/experiment_7410_v650_source_corpus/`. Every shard SHALL declare
+machine-label authority and attribution. It SHALL not store the full release,
+teacher fields, or model weights in git. `source_corpus_ready_score` SHALL be
+one only when source authentication, grouping, sealed views, deterministic
+reload, scoped validation, cold replay, adversarial verification, and strict
+row consistency pass. Readiness SHALL remain independent of class balance or
+model benefit.
+
+The terminal artifact SHALL use date `20260919`, `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current LLM counts,
+`inference_substrate=no_model_load`,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`.
+`promotion_score` SHALL remain zero. The label authority SHALL be
+`machine_annotation`. The artifact SHALL preserve all required ordinary
+schema fields, exact source hashes, split membership, source disposition rows,
+validation receipts, and a checksum that binds code, protocol, source bytes,
+and emitted raw rows.
+
+The required ordinary fields SHALL include `run_date`,
+`preconditions_checked`, `MODEL_SPECS`, `model_invoked`,
+`invocation_counts`, `inference_substrate`, `inference_substrate_details`,
+`inference_substrate_class`, `execution_venue`,
+`duration_s`, `phase_spans`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `rows`, `sample_size_budget`,
+`acceptance_gate_results`, `gate_check_summary`, `verifier_is_oracle`,
+`honest_verdict`, `verdict_class`, `flagged_adversarial`,
+`validation_receipts`, `field_principles`, `promotion_score`,
+`source_corpus_ready_score`,
+`corpus_manifest_path`, `split_manifest`, `label_authority`, and
+`source_disposition_rows`.
+
+#### SCENARIO-AUTO-7410-01: Pinned source assets fail closed
+
+**Given** the exact EnokiQA revision and the three allowed asset paths,
+**when** a revision is missing, an asset exceeds a bound, decoding is
+unavailable, or network access fails,
+**then** Exp7410 emits a terminal blocked result with the exact failed check
+**and** it does not publish a ready corpus manifest.
+
+#### SCENARIO-AUTO-7410-02: Connected groups cannot cross the final test boundary
+
+**Given** rows linked by title, context, question, or duplicate answer text,
+**when** groups and roles are assigned before labels are read,
+**then** every connected row has one group disposition
+**and** any development group connected to official test is excluded.
+
+#### SCENARIO-AUTO-7410-03: Predictor readers cannot access teacher fields
+
+**Given** a selected sentence and its separate evaluator annotation,
+**when** an ordinary downstream reader loads predictor records,
+**then** only question, context, answer, and sentence text are visible
+**and** labels, scores, spans, triples, model identity, and source identifiers
+remain denied.
+
+#### SCENARIO-AUTO-7410-04: Unsupported annotations stay unscored
+
+**Given** an empty, unmatched, or malformed annotation,
+**when** the frozen sentence selector and evaluator run,
+**then** the input remains in the source disposition ledger
+**and** it does not become either a correct or incorrect scored row.
+
+#### SCENARIO-AUTO-7410-05: Reload preserves the sealed corpus
+
+**Given** authenticated source bytes and completed corpus shards,
+**when** a fresh process reloads and independently reduces the manifest,
+**then** memberships, masks, counts, hashes, and predictor boundaries match
+**and** any changed row, duplicate leak, or test overlap fails readiness.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the

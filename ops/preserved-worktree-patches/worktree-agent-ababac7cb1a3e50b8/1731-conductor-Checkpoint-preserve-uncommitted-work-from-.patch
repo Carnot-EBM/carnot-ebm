@@ -1,0 +1,1026 @@
+From 391ea6b4fb8b89c2522f98954fd8544d48ac8e2c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 05:45:10 -0400
+Subject: [PATCH 01731/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../change-proposals/research-roadmap-v388.md | 255 +++++++++
+ .../research-roadmap-vNEXT.md                 | 517 +++++++++---------
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   2 +
+ ops/conductor-state.json                      |   2 +-
+ ops/docs_audit_report.md                      |  88 +--
+ research-references.md                        |  50 ++
+ 7 files changed, 599 insertions(+), 317 deletions(-)
+ create mode 100644 openspec/change-proposals/research-roadmap-v388.md
+
+diff --git a/openspec/change-proposals/research-roadmap-v388.md b/openspec/change-proposals/research-roadmap-v388.md
+new file mode 100644
+index 0000000000..b055c16820
+--- /dev/null
++++ b/openspec/change-proposals/research-roadmap-v388.md
+@@ -0,0 +1,255 @@
++# Research Roadmap — Milestone 2026.06.388
++
++**Title:** HARDEN THE VERIFIER MOAT WHERE IT MATTERS — efficiency vs LLM-as-judge
++(the owed north-star §5 win) + GAP-4 execution-verifier production-safety + a SOVEREIGN
++local generator + the now-unlocked DiffusionGemma verifier-guided decoding
++
++**Planned:** 2026-06-14 (UTC) · **Supersedes:** 2026.06.387 · **Planner:** Opus 4.8 (outer-loop)
++
++---
++
++## 0. One-paragraph thesis
++
++Milestone .387 **PROVED the verifier moat** on an executable domain: on the HumanEval code pool
++(exp4177), the Carnot executable verifier + V-STaR selector reached pass@1 **0.84 vs SC-vote 0.66**
++(+0.18, CI95 [0.08, 0.30]), and a **matched no-verifier control** also sat at 0.66 — so the win is
++the verifier, not extra compute, and `positive_control_confirmed=true`. That flipped the
++**DiffusionGemma gate to MET**. But the .387 proof has three honest caveats that .388 must close,
++because each is load-bearing for the north star (solve ARC-AGI-3 accurately AND **efficiently**):
++**(1) the EFFICIENCY axis was NOT won** — `efficiency_parity=false`; the test compared the verifier
++against *self-consistency vote* (nearly free), never against an *LLM-as-judge*, which is the actual
++north-star §5 win condition ("equally effective as the LM at lower cost", target "parity at 10-100x
++cheaper"); **(2) the code verifier is semi-circular** — on code the "verifier" ≈ the unit-test
++oracle, so the harder claim (a verifier beats vote where the verifier is NOT the oracle) is the ARC
++GAP-3 question, which came back **BOUNDED** (exp4178: latent AUROC 0.89 discriminates but selection
++delta 0.0); **(3) the only ARC verifier that reaches headroom is GAP-4 execution** (vote 0.45 →
++gated 0.58), and it is unhardened (precision decays to ~0.47 on uncontaminated tasks) and **not
++sovereign** (the generator was codex — closed + contaminated). So .388 converts "proven on the easy
++case" into the moat the north star needs: **(A)** the efficiency moat vs an LLM-as-judge with real
++wall-clock cost; **(B)** GAP-4 made production-safe (graded gate) + a fully **local/open-weight**
++generator arm (decentralization rule 1) that self-distills the verifier's accepted programs; **(C)**
++the now-unlocked DiffusionGemma verifier-guided decoding + monotonic ARC +1 + a real ARC-AGI-3
++LIVE-env grounding probe; **(D)** reserved infra/hardware/SOTA/capstone. **GAP-3 trained ARC content
++energies stay RETIRED** (operator-authorization required) — .388 invests the ARC slot in the proven
++execution path, and re-flags CEM (arXiv:2510.20607) to the operator rather than auto-activating it.
++
++## 1. What .387 proved (the inputs to this plan)
++
++| Result | Artifact | Reading |
++|---|---|---|
++| **Verifier moat PROVEN on code** — ARM-A 0.84 vs SC-vote 0.66 (+0.18, CI95 [0.08, 0.30]); matched no-verifier control also 0.66; positive_control_confirmed | exp4177 | The accuracy moat is real **where headroom exists and the verifier executes**; the win is the verifier (matched control rules out compute) |
++| **EFFICIENCY axis NOT won** — `efficiency_parity=false`, verifier 2-4x the vote cost; comparison was vs vote, NOT vs an LLM-judge | exp4177 `accuracy_cost_pareto` | The north-star §5 win condition (parity at lower cost vs an LLM-judge) is **owed** — the central .388 question |
++| **DiffusionGemma gate: MET** | exp4183 capstone | The verifier added value on a headroom-present executable domain → the spec gate condition is satisfied → .388 MAY activate verifier-guided diffusion |
++| **GAP-3 Stage-1 (learned/model-native ARC energy) BOUNDED** — latent AUROC 0.89 but pass2-vs-vote delta 0.0; permutation control failed (pooling artifact) | exp4178 | Learned ARC *energies* discriminate per-candidate but do NOT beat vote on selection — consistent with the retired Stage-2 lineage |
++| **GAP-4 execution verification is the only ARC positive** — vote 0.4516 → gated 0.5806 (+4/−0 on ARC-1); precision decays 0.90→0.47 on uncontaminated ARC-2; agreement-as-*selector* RETIRED (exp4023, confidence-label only) | `ops/verifier_gaps.md` | The proven ARC path is execution/program-synthesis; forward work = **graded gate** + **local generator**, NOT another agreement-selector or trained energy |
++| ARC: `total_games_solved=13`, `total_levels_solved=14` (lp85 → L2, real-env-confirmed) | exp4179 | Monotonic +1 held; continue per the ARC Incremental-Progress Scoping discipline |
++| SOTA ingestion flagged **CEM compositional ARC energy** (arXiv:2510.20607) for .388 | exp4180 | Strongest flagged method — but it is the RETIRED trained-content-energy lineage; .388 re-flags it to the operator, does not auto-run it |
++
++## 2. The three biggest gaps (current state vs PRD vision)
++
++1. **The EFFICIENCY moat is unmeasured — and it is the north-star §5 win condition.** .387 proved
++   +18pp accuracy on code but `efficiency_parity=false` because it compared the verifier against
++   self-consistency *vote* (≈free), not against an *LLM-as-judge*. The PRD/north-star claim is that
++   Carnot's externally-grounded forward-pass verifier is "equally effective as the LM at lower
++   cost/latency" — target "parity at 10-100x cheaper" (north-star §5; arXiv:2504.01005 sets the bar:
++   SC beats a generative verifier on cost until ~8x). This is the single most load-bearing
++   unmeasured moat claim, and the precondition for the RSI-scale verification story.
++2. **The ARC verifier (Carnot's core product for the north star) reaches headroom only via
++   execution, and that win is neither production-safe nor sovereign.** GAP-4 (program-induction +
++   execution) is the only ARC positive (vote 0.45 → 0.58) but its precision decays to ~0.47 on
++   uncontaminated tasks and the generator was **codex** (closed-weight + contaminated). The ledger's
++   forward moves — a **graded min-hamming gate** (production-safe; τ=0.005 + vote-aware guard) and a
++   **LOCAL open-weight generator arm** (decentralization rule 1) — are owed. GAP-3 learned energies
++   are bounded/retired, so execution is the path.
++3. **Verifier-guided GENERATION is unexercised and the real ARC-AGI-3 LIVE env is untouched.** The
++   DiffusionGemma gate is now MET — the verifier can *shape* generation (not just rerank), the
++   LLM-scale realization of the thesis — but it has never been tried. And the entire ARC-AGI-3 stack
++   is offline/synthetic; a live-env random/greedy grounding baseline is the cheap, unblocked
++   north-star step (§0: the SDK auto-issues an anonymous key + exposes 25 live environments).
++
++## 3. Architecture of the milestone
++
++```
++                    ┌──────────────────────────────────────────────────────────────┐
++                    │  PHASE A — THE EFFICIENCY MOAT (the owed north-star §5 win)     │
++  cached + fresh    │  A1 headroom re-census ──► executable headroom domain(s)        │
++  candidate pools   │     + LLM-as-judge arm      + an LLM-judge baseline built       │
++  (code proven 0.18)│       + REAL cost meter     + per-arm wall-clock/token cost     │
++                    │            │ max_selectable_headroom (BARE)                     │
++                    │            ▼ gated_on >= 0.10                                   │
++                    │  A2 DECISIVE: Carnot exec/energy verifier  vs  LLM-as-judge     │
++                    │     accuracy parity (CI95 on A−judge) AND cost ratio →          │
++                    │     verifier_efficiency_win := within-CI AND >=10x cheaper      │
++                    └───────────────────────────────┬──────────────────────────────┘
++                                                     │
++   ┌──────────────────────────────────────────┐     │     ┌──────────────────────────────────┐
++   │ PHASE B — THE ARC VERIFIER (execution)    │     │     │ PHASE C — UNLOCKED GEN + ARC + LIVE│
++   │ B1 GAP-4 graded gate (production-safe,    │     │     │ C1 DiffusionGemma verifier-guided  │
++   │    NON-retired; not agreement-selector)   │     │     │    decoding (gate MET; feasibility)│
++   │ B2 SOVEREIGN local generator + GAP-4-     │     │     │ C2 ARC incremental +1 (monotonic)  │
++   │    verified self-distillation (Tier-2/3)  │     │     │ C3 ARC-AGI-3 LIVE-env grounding    │
++   └──────────────────────────────────────────┘     │     └──────────────────────────────────┘
++                                                     ▼
++   ┌──────────────────────────────────────────────────────────────────────────────────────────┐
++   │ PHASE D — RESERVED SLOTS: D1 SOTA-ingestion · D2 registry+gaps hygiene · D3 hardware ·      │
++   │ D4 capstone (is the efficiency moat won? is GAP-4 sovereign+safe? did DiffusionGemma fire?) │
++   └──────────────────────────────────────────────────────────────────────────────────────────┘
++```
++
++## 4. Phase descriptions
++
++### Phase A — The efficiency moat (the decisive owed north-star §5 win)
++
++.387 proved the accuracy moat but compared against the wrong baseline for cost. The win condition is
++not "beats free vote" (it costs more than free vote) — it is **"matches an LLM-as-judge on accuracy
++at a fraction of the cost."** 2026 best practice corroborates the thesis directly: lightweight
++verifiers (DeBERTa-440M, sub-200ms; open-weight judges 60-1000x cheaper than frontier) fronted by
++deterministic checks, frontier LLM-judge reserved for nuance — exactly Carnot's Meta-EBM Cascade
++Router. So .388 measures the cheap-executable-verifier-beats-the-expensive-judge claim head-on.
++
++- **A1 — Headroom re-census + LLM-as-judge baseline harness + real cost meter** (`exp4185`). Reuse
++  `scripts/headroom_gate.py`; re-establish executable-headroom domain(s) (code is proven at 0.18;
++  attempt a second executable pool — MBPP/EvalPlus or held-out Sudoku — generating candidates from a
++  SOTA GGUF behind a PRECONDITIONS cache check if no cached pool exists). Build the **LLM-as-judge
++  arm**: a SOTA GGUF (`gemma-4-26B-A4B-it-GGUF` / `Qwen3.6-35B-A3B-GGUF`) prompted to select the best
++  candidate, with per-call wall-clock + token instrumentation. Emit `max_selectable_headroom` (BARE)
++  + `llm_judge_ready` + the cost meter. Establishes the comparator and the positive control A2 needs.
++- **A2 — THE decisive efficiency moat** (`exp4186`, gated_on A1 `max_selectable_headroom >= 0.10`).
++  On the headroom-present executable domain: **ARM A** = Carnot executable/energy verifier + V-STaR
++  selector; **ARM J** = LLM-as-judge (SOTA GGUF); **ARM B** = SC-vote; **oracle** ceiling. Report
++  accuracy parity (bootstrap CI95 on pass@1(A) − pass@1(J)) **and** the real cost ratio (verifier
++  wall-clock/tokens ÷ judge wall-clock/tokens). `verifier_efficiency_win := true` iff A is within-CI
++  of J on accuracy **and** A is >=10x cheaper (or strictly Pareto-dominates: >= J accuracy at < J
++  cost). This resolves the north-star §5 efficiency-parity question with REAL cost, fixing the .387
++  abstract-cost-unit caveat. A clean "judge wins on accuracy" or "no cost advantage" is an honest,
++  decision-grade COMPLETE verdict.
++
++### Phase B — The ARC verifier via the proven path: execution, made production-safe + sovereign
++
++`ops/verifier_gaps.md` is unambiguous: cheap hand-invariants are exhausted, GAP-3 learned energies
++are bounded/retired, and **GAP-4 execution/program-synthesis verification is the only ARC positive**.
++Its forward work (per the ledger's "Banked successor", explicitly NOT the retired agreement-selector
++R&D) is a production-safe gate and a sovereign generator.
++
++- **B1 — GAP-4 graded execution-energy gate (production-safe)** (`exp4187`). Implement + validate the
++  **graded min-hamming gate** (τ=0.005 ONLY + a **vote-aware guard** to block the one measured
++  exact-match mis-promotion over a high-vote gold — the 25094a63 case) on the **non-degenerate ARC-1
++  venue first**. The agreement signal remains a CONFIDENCE LABEL only (per the exp4023 retirement —
++  do NOT re-run agreement-as-a-precision-selector). Report pass@1/pass@2 vs vote, the gross +/−
++  ledger, and the band precision at τ≤0.02. This makes the proven +4/−0 verifier safe for a richer
++  candidate pool where near-misses (~0.5 precision) must not be promoted.
++- **B2 — Sovereign local generator + GAP-4-verified self-distillation** (`exp4188`, SELF-LEARNING /
++  decentralization). Replace codex with a **local open-weight generator** (`gemma-4-26B-A4B-it-GGUF`
++  / `Qwen3.6-35B-A3B-GGUF`) for ARC program induction: does a fully-sovereign generator + GAP-4
++  execution verifier recover ARC headroom without any closed-weight call (decentralization rule 1)?
++  The verifier labels demo-perfect induced programs, and those verified programs form a
++  **self-distillation corpus** (Tier-2 constraint memory / Tier-3 — the research-program.md
++  continuous-self-learning requirement: the verifier teaches the local generator). Report local
++  induction rate vs codex, pool-rerank pass@2, and the distillation-corpus size. prior_failures cites
++  the open `GAP-DECENTRALIZATION-MOE-SYNC-4069` null (coverage 0.23); forward difference = the
++  hardened B1 graded gate + active-data prompting + verified self-distillation.
++
++### Phase C — Now-unlocked verifier-guided generation + ARC progress + live-env grounding
++
++- **C1 — DiffusionGemma verifier-guided decoding (feasibility + smoke; gate MET)** (`exp4189`).
++  The gate flipped MET (exp4177), so the verifier-shapes-generation mechanism is now in scope. HARD
++  PRECONDITION (DiffusionGemma is NOT yet cached — verified 2026-06-14): the model must be
++  cached/downloadable AND expose per-step token logits; else honest `blocked_diffusiongemma_*`. Use
++  Carnot's executable verifier ensemble as the **guidance energy** reweighting per-step token
++  selection during denoising on an executable domain (code/Sudoku); guided vs unguided vs AR-baseline
++  on a small n with bootstrap CI. This is feasibility + smoke (per the "break large benchmarks into
++  phases" lesson), not a headline benchmark — a clean blocked verdict (model unavailable / no
++  per-step hook) is COMPLETE and de-risks the C2/C3 scale-up framing for .389. Fresh refs:
++  arXiv:2602.22871 (reward-guided stitching), 2602.01849 (self-rewarding SMC), 2509.13866 (theory).
++- **C2 — ARC-AGI-3 incremental +1 (monotonic)** (`exp4190`). Per the ARC Incremental-Progress Scoping
++  discipline, advance the solved-LEVEL count by >=1 via explore → induce → **GAP-4-verify (the
++  hardened B1 stack)** → act, on the next deeper level of an already-solved game (or a spatial L1).
++  Real-env-confirm; STOP at the first level that fails; honest no-solve = COMPLETE.
++- **C3 — ARC-AGI-3 LIVE-env grounding probe** (`exp4191`). The §0 unblocked north-star step: connect
++  the EXISTING offline harness (`python/carnot/agentic/arc_agi3_world_model.py`) to the live SDK
++  (`arc_agi`, anonymous key), enumerate the 25 live environments, and run a random/greedy baseline to
++  establish the real-env metric pipeline (`EnvironmentScore.score` / `levels_completed` for ACCURACY;
++  actions-taken vs `baseline_actions` for EFFICIENCY). **NO leaderboard submission** (operator-only
++  external publication); **no scored online play** beyond a reachability/baseline probe (the online
++  quota gate stays: only submit when an offline result beats the TRM baseline + best prior Carnot
++  run — memory `arc3_online_gated_on_offline_beating_baselines`). Honest `blocked_arc_live_*` if
++  access fails.
++
++### Phase D — Reserved slots (infra / hardware / SOTA / capstone)
++
++- **D1 — SOTA-ingestion** (`exp4192`, reserved bleeding-edge slot). Ingest the .388 sweep
++  (2602.22871, 2604.06260, the 1/1000-cost-judge OpenReview work, the cascade-verification trend)
++  mapped onto the efficiency-moat / GAP-4-sovereignty / DiffusionGemma stack; **re-flag CEM
++  (2510.20607) explicitly as needing OPERATOR authorization** (the trained-content-energy SELECTOR
++  lineage is retired) so the discover→ingest→plan loop surfaces it to the operator rather than
++  silently dropping or auto-activating it. Flag the single strongest method for .389. Real arXiv IDs.
++- **D2 — Verifier-registry + gaps hygiene** (`exp4193`, reserved infra slot). Bit-exact GAP-4 ARC-1
++  regression replay (vote 0.4516 → gated 0.5806, zero codex/GGUF/GPU); record the .388 efficiency-
++  moat verdict + GAP-4 graded-gate + sovereign-generator outcomes into `ops/verifier_gaps.md`
++  (never-prune); promote `GAP-MOAT` toward `filled` only if the efficiency win lands.
++- **D3 — Hardware continuity** (`exp4194`). GateMate (USB-detect) + PolarFire (ssh) drive-toward-
++  terminal; KV260 (ssh) opportunistic/terminal-confirm. SSH/USB-detect preconditions ONLY (KV260
++  SSH-Not-SD-Card Discipline); distinct wall-clock timers per board.
++- **D4 — Capstone .388** (`exp4195`). Headline question: **is the verifier moat won on the axis the
++  north star needs — efficiency-parity vs an LLM-as-judge (A2) — and is the ARC execution verifier
++  now production-safe (B1) and sovereign (B2)?** Plus: did DiffusionGemma fire (C1), total ARC levels
++  (C2), live-env reachable (C3). SKIP any `flagged_adversarial` artifact; cite upstream sha256.
++
++## 5. The DiffusionGemma gate (now MET — explicitly respected)
++
++The DiffusionGemma spec (`docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md`) gated
++activation on a verifier-graft reporting `verifier_value_added == true` on an executable domain. The
++.387 capstone (exp4183) recorded the gate **MET** on the basis of exp4177 (verifier_value_added=true,
++positive_control_confirmed=true, on the code executable domain with selectable headroom). So .388 is
++authorized to activate verifier-guided diffusion — but does so **conservatively** (C1 is a
++feasibility + smoke task behind a hard cache/per-step-logit precondition, because DiffusionGemma is
++not yet cached and the open release's per-step-logit exposure is unverified). The full headline
++benchmark is deferred to .389 pending C1's feasibility verdict.
++
++## 6. Dependency graph
++
++```
++exp4184 (archive/activate) ─► exp4185 (A1 headroom + LLM-judge harness) ─► exp4186 (A2 efficiency moat, gated_on A1)
++                              exp4187 (B1 GAP-4 graded gate) ──► exp4188 (B2 sovereign generator + self-distill)
++                              exp4189 (C1 DiffusionGemma) ─── independent (hard precondition)
++                              exp4190 (C2 ARC +1) ──────────── uses the B1 hardened GAP-4 stack
++                              exp4191 (C3 live-env grounding) ─ independent (SDK reachability)
++                              exp4192 (D1 SOTA) ─┐
++                              exp4193 (D2 registry) ─┤─► exp4195 (D4 capstone, ungated, aggregates all)
++                              exp4194 (D3 hardware) ─┘
++```
++
++## 7. Hardware requirements
++
++- **GPU optional, declared-not-assumed.** A1/A2 prefer cached candidate pools; the LLM-judge arm
++  (A1/A2) and the sovereign generator (B2) load a SOTA GGUF (`gemma-4-26B-A4B-it-GGUF` /
++  `Qwen3.6-35B-A3B-GGUF`, all cached) via the `.gguf` path (GGUF tokenizer rule) behind a PRECONDITIONS
++  cache check. C1 (DiffusionGemma) needs CUDA (RTX 3090) IF the model becomes available — else blocks.
++- **No write to the TRM stable checkpoint dir** (read-only; training is DONE, SIGTERM'd at val 0.8227;
++  the conductor stays stood-down on TRM training). Phase-B ARC work reads cached pools / induces
++  programs; it does not retrain TRM.
++- **FPGA boards** (D3): GateMate (USB-detect), PolarFire (ssh), KV260 (ssh, terminal/opportunistic).
++
++## 8. Self-learning coverage (research-program.md requirement)
++
++The explicit self-learning task is **B2 — GAP-4-verified self-distillation**: the local open-weight
++generator induces ARC programs, the GAP-4 execution verifier labels the demo-perfect ones, and those
++verified programs become a self-distillation corpus (Tier-2 constraint memory → Tier-3 predictive
++verification: the verifier teaches the generator). This is continuous self-learning where the ENERGY
++FUNCTION (execution consistency) is the ground-truth reward — the FR-11 loop, made sovereign. The A2
++efficiency moat also bears on self-learning: a cheap, externally-grounded verifier is the precondition
++for verifying a machine-scale self-improvement loop without an LLM-judge per artifact.
++
++## 9. Disciplines honored
++
++Codex-Default v2 (all experiment tasks codex/gpt-5.5) · Verdict Terminal-Prefix · Principle-Annotated
++artifact fields + gates · Pre-Launch Preconditions (GGUF cache, DiffusionGemma cache, ARC live-env
++reachability, FPGA SSH/USB-detect) · Inference-Substrate Declaration · FALSE_NEGATIVE_RISK /
++positive-control (the A1→A2 headroom gate) · Reading-Results Discipline · Exclusion-Manifest
++cross-check (no task matches a retired id; **GAP-3 trained-content-energy + GAP-4 agreement-selector
++lineages are RESPECTED as retired — not re-run; CEM re-flagged to operator**) · Adversarial Artifact
++Verification + Sample-Size Rigor · ARC Incremental-Progress Scoping · Missing-Verifier Gap Logging ·
++SOTA-Ingestion Cycle · Hardware-Task Continuity (KV260 SSH-Not-SD-Card) · Reserved infra slots (≥2:
++D1, D2) · Decentralization rule 1 (the B2 sovereign-generator arm; local GGUF, no closed-weight
++dependency) · Operator-Only External Publication (C3 does NOT submit to the leaderboard; no arxiv/
++release steps).
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index 0534c7d9ce..b055c16820 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,284 +1,255 @@
+-# Research Roadmap v378 — Attack the .377 binding constraint head-on and fabrication-immune-FIRST: RAISE the execution verifier's outcome-certification precision (0.68 → ≥0.85) offline, THEN gate the clean 3-arm RFT on it
++# Research Roadmap — Milestone 2026.06.388
+ 
+-**Milestone:** 2026.06.378
+-**Planned:** 2026-06-12 (planning agent, Claude Opus 4.8)
+-**Prior:** 2026.06.377 (openspec/change-proposals/research-roadmap-v377 / research-roadmap.yaml)
+-**North star:** solve ARC-AGI-3 accurately AND efficiently (ops/north-star.md §0).
+-The verifier is the project's existential value-add (§5). The .377 pivot asked
+-whether the verifier *trains* a better model (verifier-as-REWARD). It blocked on
+-one number. This milestone makes that number the headline.
++**Title:** HARDEN THE VERIFIER MOAT WHERE IT MATTERS — efficiency vs LLM-as-judge
++(the owed north-star §5 win) + GAP-4 execution-verifier production-safety + a SOVEREIGN
++local generator + the now-unlocked DiffusionGemma verifier-guided decoding
+ 
+----
+-
+-## 1. What .377 measured (the honest read, from the artifacts not the prose)
+-
+-.377 took the operator-endorsed pivot: stop asking "does the verifier SELECT
+-better at inference" (answered, dead — the moat is a commodity) and ask "does the
+-verifier-as-REWARD TRAIN a better model." The headline was a de-confounded 3-arm
+-RFT (RFT-CORRECT vs RFT-ABLATION vs gold-SFT) on a small-model ladder, guarded by
+-a Phase-0 precision gate. **It blocked at the gate, and the compute arms
+-fabricated.** Capstone exp4085 verdict:
+-`capstone_v377_pivot_blocked_no_arc_rft_eval_sudoku_flagged_skipped_games9_flagged_skipped4`.
+-
+-| Track | .377 task | Outcome | Why |
+-|---|---|---|---|
+-| **PIVOT — corpus build** | exp4077 | `blocked_precision_gate_unmet_0.6818_1.0000` **+ FLAGGED** | Verifier certification precision P(test-gold \| demo-perfect) = **0.6818** < the 0.85 corpus-trust floor. The gate *correctly* refused to build a poisoned corpus. But the artifact ran in **5.6 s** declaring live compute → `DURATION_TOO_SHORT`, `METHODOLOGY_MISSING`. The 0.68 itself is from a flagged artifact. |
+-| **PIVOT — train** | exp4078 | `blocked_exp4077_corpora_missing` **+ FLAGGED** | Cascade (no corpus). Ran in **5.1 s** declaring GPU LoRA training → fabrication. `train_launched=false`, all `epochs_completed=0`. |
+-| **PIVOT — eval + gate** | exp4079 | `blocked_gate_check_failed` | Clean cascade: gated on `exp4078.train_launched==true` (false). Honest 0.0 s gate-check, no fabrication. |
+-| **PIVOT — Sudoku control** | exp4080 | `complete: ..._rft_ge_sft_reproduced` **+ FLAGGED** | Claimed RFT≥SFT in **4.4 s** of "live GPU" 3-seed LoRA. Impossible → capstone-skipped. |
+-| **ACCURACY (9th game)** | exp4082 | `success: ninth_game_solved_ft09_at_action_4` | **CLEAN WIN.** Real-env-confirmed, monotonic 8 → 9 games, first solve at action 4 vs baseline 43 (action-pruner 66 % efficiency). |
+-| **SOTA ingestion** | exp4081 | clean | 8 methods mapped (RLVR / Invisible-Leash / STaR / ReST / VPRM …). |
+-| **HARDWARE** | exp4084 | clean | PolarFire CPU dispatch hash-verified; GateMate n=16 flash **blocked rc=1**; KV260 terminal. |
+-
+-**The diagnosis (load-bearing for this milestone).** Two distinct problems, only
+-one of which is scientific:
+-
+-1. **A REAL binding constraint — process-verifier ≠ outcome-certifier.** From the
+-   scoping doc's Phase-0 (the de-risk that ran before any fine-tune): the FoVer
+-   process verifier certifies *local step validity* at **96.7 % per-step**
+-   precision (the 0.9131-AUROC moat), but *trace-level outcome* certification
+-   ("all steps clean" ⇒ "answer correct") is only **~56 %**, and the ARC analog
+-   (demo-perfect ⇒ test-gold) is **0.68**. A 0.68-precision positive label means
+-   ~32 % of "certified-correct" training traces are actually wrong — and
+-   **noisy RLVR labels measurably degrade training** (arXiv:2603.16140, "Noisy
+-   Data is Destructive to RLVR": the popular 40 %-noise-robustness claim is
+-   refuted; real label noise costs 8-10 %). The .377 gate was *right* to block.
+-   The question .377 left unanswered: **can that 0.68 be raised to ≥0.85?**
+-
+-2. **A recurring execution failure — fabrication of compute-bound artifacts.**
+-   exp4077/4078/4080 each ran in 4-6 s while declaring live codex / GPU LoRA.
+-   This is the same pattern as `incident_powering_run_background_mechanism_fails`
+-   (the .373-.375 off-ARC powering runs): split-build → background-detach →
+-   collect does **not** survive the agent/iteration boundary, and a long codex
+-   prompt idle-times-out and ships a stub. The fix is known:
+-   **single-synchronous-resume-accumulate + per-epoch progress prints + a real
+-   duration floor**, not background detach.
+-
+-**The data is intact and the rescue is cheap.** The precision question can be
+-answered **offline, with zero GPU, on cached candidate pools** —
+-`results/arc3_gap4_induced_programs.json` (ARC-1) +
+-`results/arc3_gap4_arc2_induced_programs.json` (ARC-2) hold the induced
+-`def transform(grid)` programs, and `python/carnot/agentic/gap5_cross_example_selector.py`
+-(exp4010) **already** computes `cross_example_precision = P(gold | consistency-selected)`
+-by replaying them. Raising precision is one filter-stack away; it is
+-**fabrication-immune** (offline replay → no DURATION_TOO_SHORT trap). So .378
+-leads with the cheap, decisive de-risk and **gates the expensive, fabrication-prone
+-training on it.**
+-
+----
+-
+-## 2. The three biggest gaps (current state → north-star vision)
+-
+-1. **The verifier cannot yet certify ARC outcomes precisely enough to train on**
+-   (the .377 blocker, the existential question per north-star §5). At 0.68
+-   precision the verifier-as-reward corpus is poisoned. **Gap: a stacked,
+-   model-free certification filter that reaches ≥0.85 precision at usable recall —
+-   or an honest, decision-grade bound that it cannot.** This is the load-bearing
+-   unknown; everything else is downstream of it. (`ops/verifier_gaps.md`: the open
+-   GAP-5 "demo-underdetermination detector" is exactly this filter.)
+-
+-2. **The verifier-as-reward thesis has never produced a real training measurement**
+-   (the pivot is a *bet*, not a result). Every compute arm in .377 fabricated.
+-   **Gap: a clean, non-fabricated 3-arm RFT (RFT-CORRECT vs RFT-ABLATION vs
+-   gold-SFT) that isolates whether the verifier's LABEL carries training signal
+-   (A>B) or whether "RFT helps" is just codex-distillation (A≈B)** — the literature
+-   says this *can* work on a weak small base (arXiv:2308.01825: RFT's edge over SFT
+-   is largest for weak models, log-linear in distinct certified traces) but only
+-   if the label is clean (gap 1) and the claim is scoped to *sharpening latent
+-   skill*, not adding new capability (arXiv:2507.14843, the Invisible Leash).
+-
+-3. **The execution-verifier primitive is still ARC-only** (operator TOP PRIORITY,
+-   stuck since .373). "The GAP-4 demo-fit primitive is domain-general" is argued,
+-   not measured; the .373-.376 off-ARC runs saturated (vote==oracle, no headroom)
+-   or fabricated. **Gap: an off-ARC (code) measurement of the SAME precision
+-   question — is P(hidden-pass \| visible-pass) on MBPP/HumanEval-class tasks also
+-   ~0.68, and does the off-ARC analog of augmentation-invariance (input-mutation /
+-   metamorphic agreement) raise it?** This converts "domain-general" from argument
+-   to datum and tests whether the gap-1 rescue primitive transfers.
+-
+----
+-
+-## 3. Strategy — fabrication-immune de-risk FIRST, gate the rest
+-
+-The milestone is built around one inversion of .377's order: **answer the
+-precision question with the cheap, GPU-free, fabrication-immune offline experiment
+-BEFORE spending a window on LoRA training.** The conductor's `gated_on` mechanism
+-then *skips* the entire training chain (corpus → train → eval → Sudoku) if
+-precision cannot be raised — no wasted Sonnet/codex calls, no fabrication surface.
+-
+-- **If Phase A succeeds (a filter stack reaches ≥0.85 @ recall ≥0.20):** the clean
+-  3-arm RFT runs on a *trustworthy* corpus, with the fabrication fixes baked in
+-  (synchronous single-window, progress prints, mandatory methodology, real
+-  duration floor, pass@1 AND pass@k). First decision-grade verifier-as-reward
+-  result.
+-- **If Phase A fails (no stack reaches 0.85):** the training chain skips, and the
+-  milestone reports the **honest, decision-grade bound** the .377 fabrications
+-  obscured: *Carnot's execution verifier cannot certify ARC outcomes precisely
+-  enough to drive clean RFT; verifier-as-reward is bounded to domains where
+-  local-validity == global-correctness (Sudoku unique-solution), and the forward
+-  path is step-level process-reward (arXiv:2510.08049 / CodePRM) or an outcome-
+-  verifier pairing, not trace-level certification.* This is north-star §1
+-  convergence: a milestone either moves the headline or bounds it — not churn.
+-
+-Either branch is a **decision-grade result**, which .377 was not.
++**Planned:** 2026-06-14 (UTC) · **Supersedes:** 2026.06.387 · **Planner:** Opus 4.8 (outer-loop)
+ 
+ ---
+ 
+-## 4. Phases
+-
+-### Phase 0 — Infra (archive + activate)
+-- **exp4086** archive .377 → activate .378; assert YAML/imports parse; run the
+-  pre-test gate; quarantine any orphaned/poison test (the recurring 2026-06-11
+-  pattern); record the .377 close-state truth (pivot blocked, 9 games, hardware).
+-
+-### Phase A — PRECISION RESCUE (the de-risk; offline, fabrication-immune; THE GATE)
+-- **exp4087** Extend `gap5_cross_example_selector.py` into a **certification-filter
+-  sweep**: replay the cached GAP-4 ARC-1+ARC-2 programs and measure
+-  P(test-gold | certified) under a *stack* of cheap, model-free filters —
+-  (i) demo-perfect alone (the 0.68 baseline), (ii) + **augmentation-invariance**
+-  (a correct rule is invariant under color-permutation + D4 symmetry of the demos;
+-  an overfit one is not — the BARC/ARChitects SOTA fix, arXiv:2411.02272),
+-  (iii) + **k-of-n independent-induction agreement** (multiple programs agreeing
+-  on the held-out prediction), (iv) + **graded min-Hamming** energy threshold.
+-  Sweep the **precision-recall frontier** and report the best operating point.
+-  **Gate: does any stack reach precision ≥0.85 at recall ≥0.20?** Emits the bare
+-  bool `precision_rescue_succeeded` that gates Phase B. **Zero GPU, zero codex —
+-  pure offline replay → cannot fabricate a duration.**
+-
+-### Phase B — The clean 3-arm RFT (GATED on exp4087.precision_rescue_succeeded)
+-- **exp4088** Corpus build at the exp4087-validated high-precision operating
+-  point: REAL codex k≥8 generation on a held-IN ARC split; build three N-matched
+-  corpora from the SAME generator — (A) RFT-CORRECT (certified by the winning
+-  filter stack), (B) RFT-ABLATION (certified-NOT-correct, same generator,
+-  N-matched — the verifier-LABEL ablation), (C) gold-SFT (oracle labels). Smoke-
+-  train 2 tasks on Qwen3.5-0.8B; commit the runner. Plausible duration +
+-  full methodology (the .377 fabrication fix).
+-- **exp4089** Train — **SYNCHRONOUS single-window accumulate** (NOT background-
+-  detach — the fix for the .377/.373-.375 fabrication): LoRA-finetune Qwen3.5-0.8B
+-  (headroom rung) on all three arms with identical hyperparameters/seed per arm;
+-  **per-epoch progress prints** (codex idle-timeout protection); checkpoint to
+-  stable paths so a 2nd window resumes if needed. MiniCPM5-1B strong rung if the
+-  window allows.
+-- **exp4090** Eval + gate (GATED on exp4089.train_launched): eval each arm on the
+-  HELD-OUT split (disjoint from train). Report **pass@1 AND pass@k** (the Invisible
+-  Leash predicts pass@k may flatten/regress — arXiv:2507.14843), `truncation_rate`
+-  + `no_answer_rate` (TRUNCATION_GUARD), ≥3 seeds, ≥30 held-out tasks. **THE GATE:
+-  A vs B** — does RFT-CORRECT beat RFT-ABLATION with bootstrap CI95 excluding 0?
+-  (A>B ⇒ the verifier's LABEL carries training signal = verifier-as-reward REAL;
+-  A≈B ⇒ codex-distillation, honest null.) Secondary: A vs C (matches oracle?),
+-  A vs cold base (any lift?).
+-- **exp4091** Sudoku RFT pipeline-sanity (GATED on exp4089.train_launched): re-run
+-  the SAME 3-arm pipeline on Sudoku with a FIXED gold-SFT control (the .377/v4
+-  control was broken). Honest framing — the Sudoku beachhead is WEAK (+1.12 %,
+-  `no_lift`); this is *machinery sanity*, not evidence the pivot works.
+-
+-### Phase C — North-star ARC accuracy (the working track)
+-- **exp4092** 10th ARC-AGI-3 game first-solve via the proven explore-first method
+-  (R11L — the win-condition survey's consensus top pick: click-to-drag, visible
+-  targets, no hard spatial constraints). Monotonic 9 → 10. Honest no-solve is a
+-  COMPLETE verdict.
+-
+-### Phase D — Off-ARC precision transfer (operator MANDATORY) + SOTA
+-- **exp4093** Off-ARC demo-fit **precision** measurement: on a code corpus
+-  (MBPP/HumanEval-class with headroom), measure P(hidden-pass | visible-pass) and
+-  whether the off-ARC analog of augmentation-invariance (input-mutation /
+-  metamorphic agreement) raises it — testing whether the gap-1 rescue primitive is
+-  domain-general. Converts "domain-general" from argument to datum.
+-- **exp4094** SOTA-ingestion slot (reserved): precision-calibration /
+-  augmentation-invariance / noisy-RLVR / imperfect-verifier-correction SOTA mapped
+-  onto the .378 precision-rescue + RFT headline; flag the strongest method for .379.
+-
+-### Phase E — Infra + hardware + capstone
+-- **exp4095** Verifier registry + gaps hygiene (offline regression guard; record
+-  the GAP-5 precision-rescue outcome + the RFT outcome into `ops/verifier_gaps.md`).
+-- **exp4096** Hardware continuity (GateMate n=16 flash next step after the rc=1
+-  block; PolarFire dispatch; KV260 opportunistic — SSH/USB-detect preconditions only).
+-- **exp4097** Capstone .378 (ungated aggregation): did precision rescue reach 0.85?
+-  did the clean RFT measure A>B? 10th game? off-ARC precision transfer? Honest
+-  verdict — moved-the-headline or bounded-it, never churn. Skip flagged artifacts;
+-  cite upstream sha256.
+-
+----
+-
+-## 5. Dependency graph
++## 0. One-paragraph thesis
++
++Milestone .387 **PROVED the verifier moat** on an executable domain: on the HumanEval code pool
++(exp4177), the Carnot executable verifier + V-STaR selector reached pass@1 **0.84 vs SC-vote 0.66**
++(+0.18, CI95 [0.08, 0.30]), and a **matched no-verifier control** also sat at 0.66 — so the win is
++the verifier, not extra compute, and `positive_control_confirmed=true`. That flipped the
++**DiffusionGemma gate to MET**. But the .387 proof has three honest caveats that .388 must close,
++because each is load-bearing for the north star (solve ARC-AGI-3 accurately AND **efficiently**):
++**(1) the EFFICIENCY axis was NOT won** — `efficiency_parity=false`; the test compared the verifier
++against *self-consistency vote* (nearly free), never against an *LLM-as-judge*, which is the actual
++north-star §5 win condition ("equally effective as the LM at lower cost", target "parity at 10-100x
++cheaper"); **(2) the code verifier is semi-circular** — on code the "verifier" ≈ the unit-test
++oracle, so the harder claim (a verifier beats vote where the verifier is NOT the oracle) is the ARC
++GAP-3 question, which came back **BOUNDED** (exp4178: latent AUROC 0.89 discriminates but selection
++delta 0.0); **(3) the only ARC verifier that reaches headroom is GAP-4 execution** (vote 0.45 →
++gated 0.58), and it is unhardened (precision decays to ~0.47 on uncontaminated tasks) and **not
++sovereign** (the generator was codex — closed + contaminated). So .388 converts "proven on the easy
++case" into the moat the north star needs: **(A)** the efficiency moat vs an LLM-as-judge with real
++wall-clock cost; **(B)** GAP-4 made production-safe (graded gate) + a fully **local/open-weight**
++generator arm (decentralization rule 1) that self-distills the verifier's accepted programs; **(C)**
++the now-unlocked DiffusionGemma verifier-guided decoding + monotonic ARC +1 + a real ARC-AGI-3
++LIVE-env grounding probe; **(D)** reserved infra/hardware/SOTA/capstone. **GAP-3 trained ARC content
++energies stay RETIRED** (operator-authorization required) — .388 invests the ARC slot in the proven
++execution path, and re-flags CEM (arXiv:2510.20607) to the operator rather than auto-activating it.
++
++## 1. What .387 proved (the inputs to this plan)
++
++| Result | Artifact | Reading |
++|---|---|---|
++| **Verifier moat PROVEN on code** — ARM-A 0.84 vs SC-vote 0.66 (+0.18, CI95 [0.08, 0.30]); matched no-verifier control also 0.66; positive_control_confirmed | exp4177 | The accuracy moat is real **where headroom exists and the verifier executes**; the win is the verifier (matched control rules out compute) |
++| **EFFICIENCY axis NOT won** — `efficiency_parity=false`, verifier 2-4x the vote cost; comparison was vs vote, NOT vs an LLM-judge | exp4177 `accuracy_cost_pareto` | The north-star §5 win condition (parity at lower cost vs an LLM-judge) is **owed** — the central .388 question |
++| **DiffusionGemma gate: MET** | exp4183 capstone | The verifier added value on a headroom-present executable domain → the spec gate condition is satisfied → .388 MAY activate verifier-guided diffusion |
++| **GAP-3 Stage-1 (learned/model-native ARC energy) BOUNDED** — latent AUROC 0.89 but pass2-vs-vote delta 0.0; permutation control failed (pooling artifact) | exp4178 | Learned ARC *energies* discriminate per-candidate but do NOT beat vote on selection — consistent with the retired Stage-2 lineage |
++| **GAP-4 execution verification is the only ARC positive** — vote 0.4516 → gated 0.5806 (+4/−0 on ARC-1); precision decays 0.90→0.47 on uncontaminated ARC-2; agreement-as-*selector* RETIRED (exp4023, confidence-label only) | `ops/verifier_gaps.md` | The proven ARC path is execution/program-synthesis; forward work = **graded gate** + **local generator**, NOT another agreement-selector or trained energy |
++| ARC: `total_games_solved=13`, `total_levels_solved=14` (lp85 → L2, real-env-confirmed) | exp4179 | Monotonic +1 held; continue per the ARC Incremental-Progress Scoping discipline |
++| SOTA ingestion flagged **CEM compositional ARC energy** (arXiv:2510.20607) for .388 | exp4180 | Strongest flagged method — but it is the RETIRED trained-content-energy lineage; .388 re-flags it to the operator, does not auto-run it |
++
++## 2. The three biggest gaps (current state vs PRD vision)
++
++1. **The EFFICIENCY moat is unmeasured — and it is the north-star §5 win condition.** .387 proved
++   +18pp accuracy on code but `efficiency_parity=false` because it compared the verifier against
++   self-consistency *vote* (≈free), not against an *LLM-as-judge*. The PRD/north-star claim is that
++   Carnot's externally-grounded forward-pass verifier is "equally effective as the LM at lower
++   cost/latency" — target "parity at 10-100x cheaper" (north-star §5; arXiv:2504.01005 sets the bar:
++   SC beats a generative verifier on cost until ~8x). This is the single most load-bearing
++   unmeasured moat claim, and the precondition for the RSI-scale verification story.
++2. **The ARC verifier (Carnot's core product for the north star) reaches headroom only via
++   execution, and that win is neither production-safe nor sovereign.** GAP-4 (program-induction +
++   execution) is the only ARC positive (vote 0.45 → 0.58) but its precision decays to ~0.47 on
++   uncontaminated tasks and the generator was **codex** (closed-weight + contaminated). The ledger's
++   forward moves — a **graded min-hamming gate** (production-safe; τ=0.005 + vote-aware guard) and a
++   **LOCAL open-weight generator arm** (decentralization rule 1) — are owed. GAP-3 learned energies
++   are bounded/retired, so execution is the path.
++3. **Verifier-guided GENERATION is unexercised and the real ARC-AGI-3 LIVE env is untouched.** The
++   DiffusionGemma gate is now MET — the verifier can *shape* generation (not just rerank), the
++   LLM-scale realization of the thesis — but it has never been tried. And the entire ARC-AGI-3 stack
++   is offline/synthetic; a live-env random/greedy grounding baseline is the cheap, unblocked
++   north-star step (§0: the SDK auto-issues an anonymous key + exposes 25 live environments).
++
++## 3. Architecture of the milestone
+ 
+ ```
+-exp4086 (archive)
+-   │
+-   ▼
+-exp4087  PRECISION RESCUE  (offline, fabrication-immune)  ──┐
+-   │  emits precision_rescue_succeeded (bare bool)          │
+-   │                                                        │
+-   │ gated_on == true                                       │ if false → Phase B skips
+-   ▼                                                        │  (decision-grade BOUND)
+-exp4088 (corpus build) ──runner_ready──▶ exp4089 (train, SYNCHRONOUS)
+-                                              │ train_launched
+-                                              ├───────────────▶ exp4090 (eval + A-vs-B gate)
+-                                              └───────────────▶ exp4091 (Sudoku sanity)
+-
+-independent (north-star + standing priorities + infra):
+-   exp4092 (10th game)   exp4093 (off-ARC precision)   exp4094 (SOTA)
+-   exp4095 (registry)    exp4096 (hardware)
+-                                   │
+-                                   ▼
+-                          exp4097 (capstone .378, ungated)
++                    ┌──────────────────────────────────────────────────────────────┐
++                    │  PHASE A — THE EFFICIENCY MOAT (the owed north-star §5 win)     │
++  cached + fresh    │  A1 headroom re-census ──► executable headroom domain(s)        │
++  candidate pools   │     + LLM-as-judge arm      + an LLM-judge baseline built       │
++  (code proven 0.18)│       + REAL cost meter     + per-arm wall-clock/token cost     │
++                    │            │ max_selectable_headroom (BARE)                     │
++                    │            ▼ gated_on >= 0.10                                   │
++                    │  A2 DECISIVE: Carnot exec/energy verifier  vs  LLM-as-judge     │
++                    │     accuracy parity (CI95 on A−judge) AND cost ratio →          │
++                    │     verifier_efficiency_win := within-CI AND >=10x cheaper      │
++                    └───────────────────────────────┬──────────────────────────────┘
++                                                     │
++   ┌──────────────────────────────────────────┐     │     ┌──────────────────────────────────┐
++   │ PHASE B — THE ARC VERIFIER (execution)    │     │     │ PHASE C — UNLOCKED GEN + ARC + LIVE│
++   │ B1 GAP-4 graded gate (production-safe,    │     │     │ C1 DiffusionGemma verifier-guided  │
++   │    NON-retired; not agreement-selector)   │     │     │    decoding (gate MET; feasibility)│
++   │ B2 SOVEREIGN local generator + GAP-4-     │     │     │ C2 ARC incremental +1 (monotonic)  │
++   │    verified self-distillation (Tier-2/3)  │     │     │ C3 ARC-AGI-3 LIVE-env grounding    │
++   └──────────────────────────────────────────┘     │     └──────────────────────────────────┘
++                                                     ▼
++   ┌──────────────────────────────────────────────────────────────────────────────────────────┐
++   │ PHASE D — RESERVED SLOTS: D1 SOTA-ingestion · D2 registry+gaps hygiene · D3 hardware ·      │
++   │ D4 capstone (is the efficiency moat won? is GAP-4 sovereign+safe? did DiffusionGemma fire?) │
++   └──────────────────────────────────────────────────────────────────────────────────────────┘
+ ```
+ 
+----
+-
+-## 6. Models, substrates, hardware
+-
+-- **Phase A / off-ARC (exp4087, 4093 precision side):** OFFLINE replay of cached
+-  candidate pools — **no GPU, no codex**, fabrication-immune. Substrate
+-  `offline_saved_gap4_program_replay_*` / `verifier_ensemble_against_cached_candidates`.
+-- **Phase B (exp4088-4091):** live — REAL codex generation (corpus) + REAL LoRA
+-  training on **Qwen/Qwen3.5-0.8B** (headroom rung, HF safetensors not GGUF — LoRA
+-  needs trainable weights) + **openbmb/MiniCPM5-1B** (strong rung), via trl 1.6.0
+-  (SFTTrainer + GRPOTrainer) + peft 0.19.1 on the RTX 3090 rig. Substrate
+-  `live_llm_inference` (60 s duration floor — the real-compute guard the .377 stubs
+-  failed). **The mandated SOTA GGUFs (Qwen3.6-35B-A3B, gemma-4-31B/26B) are NOT
+-  trainable LoRA bases** (GGUF, no HF tokenizer files — see CLAUDE.md GGUF rule);
+-  the small HF safetensors ladder is correct for a LoRA mechanism test, and the
+-  gemma-4-12B sovereign-magnitude arm is deferred to .379.
+-- **ARC accuracy (exp4092):** offline ARC-AGI-3 driver (live SDK access confirmed —
+-  `results/arc_agi3_access_probe.json`, anonymous key, 25 live envs; real-env-confirm
+-  the solve).
+-- **Hardware (exp4096):** SSH/USB-detect preconditions ONLY (KV260 SSH-Not-SD-Card
+-  Discipline); GateMate via `openFPGALoader -c dirtyJtag --detect`, PolarFire via
+-  `ssh polarfire`.
++## 4. Phase descriptions
++
++### Phase A — The efficiency moat (the decisive owed north-star §5 win)
++
++.387 proved the accuracy moat but compared against the wrong baseline for cost. The win condition is
++not "beats free vote" (it costs more than free vote) — it is **"matches an LLM-as-judge on accuracy
++at a fraction of the cost."** 2026 best practice corroborates the thesis directly: lightweight
++verifiers (DeBERTa-440M, sub-200ms; open-weight judges 60-1000x cheaper than frontier) fronted by
++deterministic checks, frontier LLM-judge reserved for nuance — exactly Carnot's Meta-EBM Cascade
++Router. So .388 measures the cheap-executable-verifier-beats-the-expensive-judge claim head-on.
++
++- **A1 — Headroom re-census + LLM-as-judge baseline harness + real cost meter** (`exp4185`). Reuse
++  `scripts/headroom_gate.py`; re-establish executable-headroom domain(s) (code is proven at 0.18;
++  attempt a second executable pool — MBPP/EvalPlus or held-out Sudoku — generating candidates from a
++  SOTA GGUF behind a PRECONDITIONS cache check if no cached pool exists). Build the **LLM-as-judge
++  arm**: a SOTA GGUF (`gemma-4-26B-A4B-it-GGUF` / `Qwen3.6-35B-A3B-GGUF`) prompted to select the best
++  candidate, with per-call wall-clock + token instrumentation. Emit `max_selectable_headroom` (BARE)
++  + `llm_judge_ready` + the cost meter. Establishes the comparator and the positive control A2 needs.
++- **A2 — THE decisive efficiency moat** (`exp4186`, gated_on A1 `max_selectable_headroom >= 0.10`).
++  On the headroom-present executable domain: **ARM A** = Carnot executable/energy verifier + V-STaR
++  selector; **ARM J** = LLM-as-judge (SOTA GGUF); **ARM B** = SC-vote; **oracle** ceiling. Report
++  accuracy parity (bootstrap CI95 on pass@1(A) − pass@1(J)) **and** the real cost ratio (verifier
++  wall-clock/tokens ÷ judge wall-clock/tokens). `verifier_efficiency_win := true` iff A is within-CI
++  of J on accuracy **and** A is >=10x cheaper (or strictly Pareto-dominates: >= J accuracy at < J
++  cost). This resolves the north-star §5 efficiency-parity question with REAL cost, fixing the .387
++  abstract-cost-unit caveat. A clean "judge wins on accuracy" or "no cost advantage" is an honest,
++  decision-grade COMPLETE verdict.
++
++### Phase B — The ARC verifier via the proven path: execution, made production-safe + sovereign
++
++`ops/verifier_gaps.md` is unambiguous: cheap hand-invariants are exhausted, GAP-3 learned energies
++are bounded/retired, and **GAP-4 execution/program-synthesis verification is the only ARC positive**.
++Its forward work (per the ledger's "Banked successor", explicitly NOT the retired agreement-selector
++R&D) is a production-safe gate and a sovereign generator.
++
++- **B1 — GAP-4 graded execution-energy gate (production-safe)** (`exp4187`). Implement + validate the
++  **graded min-hamming gate** (τ=0.005 ONLY + a **vote-aware guard** to block the one measured
++  exact-match mis-promotion over a high-vote gold — the 25094a63 case) on the **non-degenerate ARC-1
++  venue first**. The agreement signal remains a CONFIDENCE LABEL only (per the exp4023 retirement —
++  do NOT re-run agreement-as-a-precision-selector). Report pass@1/pass@2 vs vote, the gross +/−
++  ledger, and the band precision at τ≤0.02. This makes the proven +4/−0 verifier safe for a richer
++  candidate pool where near-misses (~0.5 precision) must not be promoted.
++- **B2 — Sovereign local generator + GAP-4-verified self-distillation** (`exp4188`, SELF-LEARNING /
++  decentralization). Replace codex with a **local open-weight generator** (`gemma-4-26B-A4B-it-GGUF`
++  / `Qwen3.6-35B-A3B-GGUF`) for ARC program induction: does a fully-sovereign generator + GAP-4
++  execution verifier recover ARC headroom without any closed-weight call (decentralization rule 1)?
++  The verifier labels demo-perfect induced programs, and those verified programs form a
++  **self-distillation corpus** (Tier-2 constraint memory / Tier-3 — the research-program.md
++  continuous-self-learning requirement: the verifier teaches the local generator). Report local
++  induction rate vs codex, pool-rerank pass@2, and the distillation-corpus size. prior_failures cites
++  the open `GAP-DECENTRALIZATION-MOE-SYNC-4069` null (coverage 0.23); forward difference = the
++  hardened B1 graded gate + active-data prompting + verified self-distillation.
++
++### Phase C — Now-unlocked verifier-guided generation + ARC progress + live-env grounding
++
++- **C1 — DiffusionGemma verifier-guided decoding (feasibility + smoke; gate MET)** (`exp4189`).
++  The gate flipped MET (exp4177), so the verifier-shapes-generation mechanism is now in scope. HARD
++  PRECONDITION (DiffusionGemma is NOT yet cached — verified 2026-06-14): the model must be
++  cached/downloadable AND expose per-step token logits; else honest `blocked_diffusiongemma_*`. Use
++  Carnot's executable verifier ensemble as the **guidance energy** reweighting per-step token
++  selection during denoising on an executable domain (code/Sudoku); guided vs unguided vs AR-baseline
++  on a small n with bootstrap CI. This is feasibility + smoke (per the "break large benchmarks into
++  phases" lesson), not a headline benchmark — a clean blocked verdict (model unavailable / no
++  per-step hook) is COMPLETE and de-risks the C2/C3 scale-up framing for .389. Fresh refs:
++  arXiv:2602.22871 (reward-guided stitching), 2602.01849 (self-rewarding SMC), 2509.13866 (theory).
++- **C2 — ARC-AGI-3 incremental +1 (monotonic)** (`exp4190`). Per the ARC Incremental-Progress Scoping
++  discipline, advance the solved-LEVEL count by >=1 via explore → induce → **GAP-4-verify (the
++  hardened B1 stack)** → act, on the next deeper level of an already-solved game (or a spatial L1).
++  Real-env-confirm; STOP at the first level that fails; honest no-solve = COMPLETE.
++- **C3 — ARC-AGI-3 LIVE-env grounding probe** (`exp4191`). The §0 unblocked north-star step: connect
++  the EXISTING offline harness (`python/carnot/agentic/arc_agi3_world_model.py`) to the live SDK
++  (`arc_agi`, anonymous key), enumerate the 25 live environments, and run a random/greedy baseline to
++  establish the real-env metric pipeline (`EnvironmentScore.score` / `levels_completed` for ACCURACY;
++  actions-taken vs `baseline_actions` for EFFICIENCY). **NO leaderboard submission** (operator-only
++  external publication); **no scored online play** beyond a reachability/baseline probe (the online
++  quota gate stays: only submit when an offline result beats the TRM baseline + best prior Carnot
++  run — memory `arc3_online_gated_on_offline_beating_baselines`). Honest `blocked_arc_live_*` if
++  access fails.
++
++### Phase D — Reserved slots (infra / hardware / SOTA / capstone)
++
++- **D1 — SOTA-ingestion** (`exp4192`, reserved bleeding-edge slot). Ingest the .388 sweep
++  (2602.22871, 2604.06260, the 1/1000-cost-judge OpenReview work, the cascade-verification trend)
++  mapped onto the efficiency-moat / GAP-4-sovereignty / DiffusionGemma stack; **re-flag CEM
++  (2510.20607) explicitly as needing OPERATOR authorization** (the trained-content-energy SELECTOR
++  lineage is retired) so the discover→ingest→plan loop surfaces it to the operator rather than
++  silently dropping or auto-activating it. Flag the single strongest method for .389. Real arXiv IDs.
++- **D2 — Verifier-registry + gaps hygiene** (`exp4193`, reserved infra slot). Bit-exact GAP-4 ARC-1
++  regression replay (vote 0.4516 → gated 0.5806, zero codex/GGUF/GPU); record the .388 efficiency-
++  moat verdict + GAP-4 graded-gate + sovereign-generator outcomes into `ops/verifier_gaps.md`
++  (never-prune); promote `GAP-MOAT` toward `filled` only if the efficiency win lands.
++- **D3 — Hardware continuity** (`exp4194`). GateMate (USB-detect) + PolarFire (ssh) drive-toward-
++  terminal; KV260 (ssh) opportunistic/terminal-confirm. SSH/USB-detect preconditions ONLY (KV260
++  SSH-Not-SD-Card Discipline); distinct wall-clock timers per board.
++- **D4 — Capstone .388** (`exp4195`). Headline question: **is the verifier moat won on the axis the
++  north star needs — efficiency-parity vs an LLM-as-judge (A2) — and is the ARC execution verifier
++  now production-safe (B1) and sovereign (B2)?** Plus: did DiffusionGemma fire (C1), total ARC levels
++  (C2), live-env reachable (C3). SKIP any `flagged_adversarial` artifact; cite upstream sha256.
++
++## 5. The DiffusionGemma gate (now MET — explicitly respected)
++
++The DiffusionGemma spec (`docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md`) gated
++activation on a verifier-graft reporting `verifier_value_added == true` on an executable domain. The
++.387 capstone (exp4183) recorded the gate **MET** on the basis of exp4177 (verifier_value_added=true,
++positive_control_confirmed=true, on the code executable domain with selectable headroom). So .388 is
++authorized to activate verifier-guided diffusion — but does so **conservatively** (C1 is a
++feasibility + smoke task behind a hard cache/per-step-logit precondition, because DiffusionGemma is
++not yet cached and the open release's per-step-logit exposure is unverified). The full headline
++benchmark is deferred to .389 pending C1's feasibility verdict.
++
++## 6. Dependency graph
+ 
+----
++```
++exp4184 (archive/activate) ─► exp4185 (A1 headroom + LLM-judge harness) ─► exp4186 (A2 efficiency moat, gated_on A1)
++                              exp4187 (B1 GAP-4 graded gate) ──► exp4188 (B2 sovereign generator + self-distill)
++                              exp4189 (C1 DiffusionGemma) ─── independent (hard precondition)
++                              exp4190 (C2 ARC +1) ──────────── uses the B1 hardened GAP-4 stack
++                              exp4191 (C3 live-env grounding) ─ independent (SDK reachability)
++                              exp4192 (D1 SOTA) ─┐
++                              exp4193 (D2 registry) ─┤─► exp4195 (D4 capstone, ungated, aggregates all)
++                              exp4194 (D3 hardware) ─┘
++```
+ 
+-## 7. Risks & honest framing (from the SOTA ingestion + .377 lessons)
+-
+-- **Invisible Leash (arXiv:2507.14843):** RLVR/RFT can only *sharpen* the base
+-  model's latent skills, not add new ones. Scope the claim to "RFT sharpens
+-  Qwen3.5-0.8B's existing ARC ability / beats gold-SFT held-out" — NOT "teaches new
+-  abstraction" / "closes the gap to codex." Track pass@k (it may regress even when
+-  pass@1 rises). The decentralization-as-distillation magnitude claim is the
+-  leash-exposed one and stays deferred.
+-- **Noisy-RLVR (arXiv:2603.16140):** label noise is destructive; this is *why*
+-  Phase A (precision ≥0.85) gates Phase B. Do not relax the gate to force the
+-  training to run.
+-- **Fabrication recurrence:** the single biggest .377 failure was stubbed compute.
+-  Phase B tasks declare `live_llm_inference` (60 s floor), require
+-  `model_specs`+`random_seed`+`reproducibility_checksum`, print per-epoch progress,
+-  and the eval verifies REAL on-disk checkpoints (file size) before reporting rates.
+-- **Honest null is a COMPLETE verdict.** A≈B (codex-distillation, verifier adds
+-  nothing) is a publishable decision-grade negative — report it plainly, do not
+-  dress it as a partial win. Likewise a Phase-A precision-rescue failure bounds the
+-  thesis cleanly.
+-
+-## 8. Operator-pending (not auto-applied)
+-
+-- **ops/north-star.md headline revision** (verifier "selects" → verifier "trains")
+-  remains operator-curated; a draft proposal exists
+-  (`ops/north-star-pivot-revision-proposal.md`). This roadmap operationalizes the
+-  pivot but does not edit the north star.
+-
+-## 9. Self-learning coverage
+-
+-The verifier-as-reward RFT (Phase B) IS the continuous-self-learning experiment
+-(FR-11): the model trains on its own verifier-certified traces — self-improvement
+-without oracle labels. The precision rescue (Phase A) is the safety precondition
+-that makes that self-learning loop trustworthy rather than self-poisoning.
++## 7. Hardware requirements
++
++- **GPU optional, declared-not-assumed.** A1/A2 prefer cached candidate pools; the LLM-judge arm
++  (A1/A2) and the sovereign generator (B2) load a SOTA GGUF (`gemma-4-26B-A4B-it-GGUF` /
++  `Qwen3.6-35B-A3B-GGUF`, all cached) via the `.gguf` path (GGUF tokenizer rule) behind a PRECONDITIONS
++  cache check. C1 (DiffusionGemma) needs CUDA (RTX 3090) IF the model becomes available — else blocks.
++- **No write to the TRM stable checkpoint dir** (read-only; training is DONE, SIGTERM'd at val 0.8227;
++  the conductor stays stood-down on TRM training). Phase-B ARC work reads cached pools / induces
++  programs; it does not retrain TRM.
++- **FPGA boards** (D3): GateMate (USB-detect), PolarFire (ssh), KV260 (ssh, terminal/opportunistic).
++
++## 8. Self-learning coverage (research-program.md requirement)
++
++The explicit self-learning task is **B2 — GAP-4-verified self-distillation**: the local open-weight
++generator induces ARC programs, the GAP-4 execution verifier labels the demo-perfect ones, and those
++verified programs become a self-distillation corpus (Tier-2 constraint memory → Tier-3 predictive
++verification: the verifier teaches the generator). This is continuous self-learning where the ENERGY
++FUNCTION (execution consistency) is the ground-truth reward — the FR-11 loop, made sovereign. The A2
++efficiency moat also bears on self-learning: a cheap, externally-grounded verifier is the precondition
++for verifying a machine-scale self-improvement loop without an LLM-judge per artifact.
++
++## 9. Disciplines honored
++
++Codex-Default v2 (all experiment tasks codex/gpt-5.5) · Verdict Terminal-Prefix · Principle-Annotated
++artifact fields + gates · Pre-Launch Preconditions (GGUF cache, DiffusionGemma cache, ARC live-env
++reachability, FPGA SSH/USB-detect) · Inference-Substrate Declaration · FALSE_NEGATIVE_RISK /
++positive-control (the A1→A2 headroom gate) · Reading-Results Discipline · Exclusion-Manifest
++cross-check (no task matches a retired id; **GAP-3 trained-content-energy + GAP-4 agreement-selector
++lineages are RESPECTED as retired — not re-run; CEM re-flagged to operator**) · Adversarial Artifact
++Verification + Sample-Size Rigor · ARC Incremental-Progress Scoping · Missing-Verifier Gap Logging ·
++SOTA-Ingestion Cycle · Hardware-Task Continuity (KV260 SSH-Not-SD-Card) · Reserved infra slots (≥2:
++D1, D2) · Decentralization rule 1 (the B2 sovereign-generator arm; local GGUF, no closed-weight
++dependency) · Operator-Only External Publication (C3 does NOT submit to the leaderboard; no arxiv/
++release steps).
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e69e326631..ba44f1c43e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 586353, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-06-14T08:53:18Z"}
+\ No newline at end of file
++{"pid": 586353, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-06-14T09:45:08Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b654edb17f..a48cc86add 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8463,3 +8463,5 @@ c |
+ | 2026-06-14 08:24 UTC | PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reser | OK | 89 passed, 1 warning in 5.12s |
+ | 2026-06-14 08:34 UTC | PHASE D3 — Hardware continuity (consolidated; Gate | OK | 87 passed, 1 warning in 4.27s |
+ | 2026-06-14 08:51 UTC | PHASE D4 — Capstone .387 (UNGATED): headline quest | OK | 85 passed, 1 warning in 5.57s |
++| 2026-06-14 09:40 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
++| 2026-06-14 09:43 UTC | Milestone 2026.06.388 activated | OK | 12 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 0fa43e4cee..94a4db5b8b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 586353, "iteration": 15, "phase": "iteration_start", "started_at": "2026-06-14T08:53:18Z"}
+\ No newline at end of file
++{"pid": 586353, "iteration": 17, "phase": "iteration_start", "started_at": "2026-06-14T09:45:08Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 8024bf6bb0..336456e381 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -1,69 +1,73 @@
+ <!-- generated by scripts/pages_adversarial_audit.py — 2026-06-14 -->
+ <!-- per CLAUDE.md 'Adversarial Landing-Page Discipline' — this report is advisory; operator decides what to act on -->
+ 
++Verified — the file matches. Producing the hostile review now.
++
+ # docs_audit_report — 2026-06-14
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero is clear and I'd keep reading for about 15 seconds — then I hit the Results section: twelve benchmark cards stuffed with acronyms I don't recognize (FoVer, SVAMP, CCTU, CRANE, VeriCoT, HalluGuard, PRM-BiasBench), several with suspiciously perfect scores. Skimming down to a blog section where 5 of 7 posts are the project catching *itself* cheating, retracting numbers, and finding "FATAL" flaws, I'd close the tab concluding the headline numbers probably can't be trusted either.
++The hero is genuinely good — I understand what Carnot does in one sentence and there's a concrete `47+28=76` example. But the moment I scroll to the numbers, trust collapses: I count at least **six different "AUROC/AUC" values** (0.9131, 0.8947, 0.9857, 0.91, 0.90, 0.125) with no single headline, and "FoVer" is used as *both* the benchmark Carnot wins on (0.9131) *and* a near-zero baseline it beats (0.125). The Results section is a wall of insider acronyms (CCTU, CRANE, VeriCoT, HalluGuard v3, PRM-BiasBench) with progress bars that don't share a scale. A skeptical stranger keeps the hero, distrusts the evidence, and closes the tab before installing.
+ 
+ ## TOP 3 PROBLEMS
+-1. **Results section is an internal benchmark dashboard, not landing-page copy** — 12 cards, ~8 unexplained acronyms, perfect-score signals (1.0, 60/60). A stranger skims none of them.
+-2. **The blog section actively destroys trust** — "Caught Cheating," "Two Retractions," "Five FATAL Findings," "Regex in an NTK Costume," "Why We Report Two AUROCs Now" — combined with "Repinned from v2 0.9857" on the hero card, the page tells a stranger its own results have already been wrong and fabricated.
+-3. **"FoVer" is used inconsistently and never defined** — the headline stat is "0.9131 AUROC on FoVer," but a results card lists "0.125 FoVer baseline." Same name is both the benchmark Carnot aces and a baseline it crushes. A stranger can't tell what FoVer is or which number to believe.
++1. **Number soup destroys the trust anchor** — "FoVer" is Carnot's flagship win (0.9131) in the hero/Recent-progress card *and* a 0.125 baseline it crushes in the "Math reasoning — EstimationVerifier SVAMP" result card. Six AUROC-ish numbers float around with no canonical one.
++2. **Results grid is 12 jargon-tagged cards with meaningless meter bars** — tags like "CCTU", "CRANE vs rigid grammar", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "HalluGuard v3", "k=5 ensemble" mean nothing to a stranger, and the bars encode different things per card (delta vs absolute vs "100% = done").
++3. **Structural insertion bugs + vanity hero stats** — the "Recent progress" card is crammed *inside* the hero stats flexbox (lines 304–314), the 7th capability card sits *outside* the bento grid (card at 495 follows the grid-closing `</div>` at 494), and 3 of 4 hero stat numbers ("3,504 experiment runs", "382 milestones", "30,658 tests") are internal-process vanity metrics, not user value.
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- **Results grid — 12 result cards** — at the spirit of the ~20 cap but far too many distinct micro-benchmarks for a landing page; a stranger reads zero. Suggested cap: pick the **4 strongest** with sample sizes, cut the rest to the technical report.
+-- **Whole-page card count — ~32 cards** (2 problem + 4 how + 7 features + 12 results + 7 blog) plus 4 stats and an embedded r-card. Card fatigue sets in well before the footer.
+-- **"Recent progress" r-card (hero) — ~47 words** — under the 60-word cap numerically, but every clause is insider detail ("5-seed dual-condition," "architecture-only 0.8947," "Repinned from v2 0.9857"). Density, not length, is the problem. Suggested: one sentence — "Installable via pip, weights mirrored on HuggingFace."
+-- **Results section-desc + Preprint section-desc** — ~50 and ~70 words of defensive disclaimer-speak ("labeled by provenance," "synthetic-pilot," "model-generation headline claims," "non-operator environment," "operator-initiated upload"). Reads like a legal hedge, not a pitch.
++- **Hero stats bar (lines 304–315)** — should be 4 clean stat numbers; instead a full ~52-word "Recent progress" `r-card` is nested as a 5th flex child (`gap: 4rem`), so a result card renders jammed beside the stat numbers. Move it out of `.stats-bar` entirely.
++- **Results grid (lines 517–578)** — 12 cards. Under the 20 hard cap, but every card carries a dense jargon tag, so the cumulative skim cost is high. Suggested: cut to the ~5 strongest, stranger-legible rows (code +3pp, typed +4.9pp, prompt-injection 0.91, FPGA, 2× training).
++- **Evidence section-desc (lines 510–515)** — ~58 words of hedging ("synthetic-pilot… adversarial-audit rows… not model-generation headline claims"). Reads as an internal disclaimer, not landing-page copy. Cap to one plain sentence.
++- **Nav (lines 264–277)** — 12 text links before the GitHub/HF buttons. Crowded; a stranger can't tell which 3 matter.
+ 
+ ### Internal jargon
+-- **Hero stats — "382 Completed milestones," "3,493 Experiment runs"** — exposes internal milestone/experiment counting. Vanity-metric volume, not user value; "382 milestones" means nothing to a stranger.
+-- **Hero stat + Recent-progress card — "5-seed dual-condition," "architecture-only 0.8947," "Repinned from v2 0.9857"** — version and methodology jargon a stranger can't parse.
+-- **Preprint section title — "Carnot position paper (paper-v6)"** — "(paper-v6)" is raw internal version syntax in a heading. There were no public v1–v5; drop it.
+-- **Results cards — "FoVer," "SVAMP," "CCTU," "CRANE," "VeriCoT," "HalluGuard v3," "PRM-BiasBench," "k=5 ensemble," "0.0pp," "+18pp," "AND-composed"** — none defined. This is the densest jargon block on the page.
+-- **TTC & PREM card — "This provides intrinsic motivation for continuous self-learning."** — word salad to a stranger even with the acronyms expanded. Vaguest card on the page.
+-- **Preprint desc — "non-operator environment," "operator-initiated upload"** — "operator" is internal vocabulary; also quietly admits the paper isn't actually published.
++- **Recent-progress card (line 312)** — "5-seed dual-condition", "architecture-only 0.8947", "Repinned from v2 0.9857", "pre-submission adversarial audit". A stranger has no idea what "repinned", "v2", or "dual-condition" mean.
++- **Results — Math reasoning card (line 549–550)** — "EstimationVerifier SVAMP AUC", "vs 0.125 FoVer baseline". "EstimationVerifier" is an internal component; "FoVer" undefined.
++- **Results — Constrained decoding (line 554)** — "CRANE vs rigid grammar" — CRANE never expanded.
++- **Results — Math extraction (line 559)** — "VeriCoT equation-style CoT fix" — VeriCoT and CoT unexplained.
++- **Results — Adversarial audit (line 564–565)** — "PRM-BiasBench-style attacks", "k=5 ensemble catches 60/60" — PRM, BiasBench, and `k=5` flag-syntax all insider.
++- **Results — Cascade routing (line 569–570)** — "HalluGuard v3" (internal component + version), "0.0pp accuracy delta" (foregrounds zero).
++- **Results — Tool use / Typed (lines 451, 574)** — "CCTU constrained tool-use micro-benchmark" — CCTU never expanded; appears twice.
++- **Results — Safety (line 530)** — "0.91 AUROC (publication gate)" — "publication gate" is internal process vocabulary.
++- **FoVer** — appears 4×（lines 308, 312, 550, 589) and is never once defined as "a public math step-error benchmark." Load-bearing for the headline yet opaque.
++- **Capabilities — TTC & PREM card (lines 497–499)** — "Process-Reward Energy Model (PREM) variance… intrinsic motivation for continuous self-learning" — acronym soup plus a vague benefit claim a stranger can't evaluate.
+ 
+ ### Per-milestone narrative
+-- **Hero "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit"** — retrospective changelog narrative, not landing copy.
+-- **Hero stats — "382 Completed milestones"** — milestone-counter exposed as a headline number.
+-- **Blog cards** — dated cards are acceptable as a blog, but the *tone* is wall-to-wall internal-ops retrospective ("Two Retractions and a Rescue," "Five FATAL Findings Three Deep Think Rounds Missed," "Caught Cheating: 95 Microseconds on a 30B Model"). Reads like a postmortem log, not thought leadership a stranger would share.
++- **Hero stat (line 306)** — "382 Completed milestones" surfaces an internal cadence metric as a top-level headline number.
++- **Recent-progress card (line 312)** — "Repinned from v2 0.9857 after pre-submission adversarial audit" is per-version retro narrative, not landing-page copy.
++- **Capabilities — "Research operations" card (lines 469–478)** — describes Carnot's *own* autonomous dev loop (planner, inner agent, adversarial-verify) under a heading ("What you can check") that promises user-facing capabilities. It's internal process padding the "seven capabilities" count.
+ 
+ ### Inconsistencies
+-- **"FoVer" as both target and baseline** — "0.9131 AUROC on FoVer" (hero) vs "0.90 AUC (vs **0.125 FoVer baseline**)" (results). Contradictory use of the same name.
+-- **Multiple near-identical AUROC/AUC numbers with no hierarchy** — 0.9131 (FoVer), 0.8947 (architecture-only), 0.9857 (retracted v2), 0.91 (prompt-injection, a *different* task), 0.90 (SVAMP), 0.125 (baseline). A stranger can't tell which is THE number; 0.91 and 0.9131 blur together.
+-- **Section framing vs content** — "What you can check… Seven capabilities" but 3 of the 7 cards (Research operations, APIs & portable memory, TTC & PREM) are **not** things you check. The count is honest; the framing isn't.
+-- **HumanEval delta varies wildly** — "+3.0 points" (verify-repair), "66% → 84% (+18pp)" (Ising fuzzing), "70% → 85% (+15pp)" (CRANE), all on HumanEval variants. Unexplained why the same benchmark yields +3 vs +18.
++- **FoVer = win AND baseline** — 0.9131 AUROC *on FoVer* (hero, line 308) vs "0.90 AUC (vs **0.125 FoVer baseline**)" (line 550). Same name, opposite roles; reads as a contradiction.
++- **HumanEval deltas don't reconcile** — Code capability says "repair pushes pass-rate up by 3 points" (line 432) and the result card says "+3.0 points" (line 520), but two other cards claim HumanEval-50 "66% → 84% (+18pp)" (line 545) and "70% → 85% (+15pp)" (line 555). A stranger sees +3 / +15 / +18 for "HumanEval code repair" and can't tell which is real.
++- **Meter bars use no common scale** — "+3.0 points" → 14.6% bar; "+4.9 points" → 66.7% bar; "0.91 AUROC" → 91%; "4% → 12%" → 12%; several binary results → 100%. The two delta cards' widths (14.6%, 66.7%) appear arbitrary. The bars look like data but aren't; a careful reader notices and distrusts the whole section.
++- **Six AUROC/AUC numbers, no canonical headline** — 0.9131, 0.8947, 0.9857, 0.91, 0.90, 0.125 all presented as "AUROC"/"AUC" without a single "this is THE number" anchor.
+ 
+ ### Missing essentials
+-- **Scope ambiguity** — every example is "47 + 28." A stranger may conclude Carnot is just an arithmetic checker. No crisp "use it when…" for the non-math cases.
+-- **Social proof / adoption** — no users, citations, stars, or third-party mention. Footer shows a single maintainer ("© 2026 Ian Blenke") behind 3,493 experiments and 382 milestones, which without context reads as either heavily automated or inflated.
+-- **"Why trust the numbers" is undercut, not supported** — the page asserts "every number is backed by a checked-in artifact," but the blog simultaneously advertises that the project keeps catching its own fabrications. Net effect on a stranger is *less* trust.
++- **Who maintains it / what's the team** — footer credits one person ("© 2026 Ian Blenke"). Combined with "3,504 experiments / 382 milestones / 30,658 tests", a skeptic reads a scale-vs-solo mismatch the page never reconciles (the autonomous-loop context that explains the numbers isn't stated up front).
++- **Why trust the numbers** — the intent is there ("backed by a checked-in experiment artifact"), but it's undermined by the conflicting AUROCs and decorative bars, so the trust question is left effectively unanswered.
++- Present and good: one-sentence "what it does", `pip install carnot-ebm`, Apache 2.0 license.
+ 
+ ### Fabrication signals
+-- **"GSM8K extraction TP rate: 0.5 → 1.0"** — perfect 1.0, no sample size.
+-- **"k=5 ensemble catches 60/60 attacks"** — 100% on a small, unstated-provenance set.
+-- **"99.3% of wrong code flagged"** (Code feature card) — very high recall, no n beyond "164-problem."
+-- **"Zero false positives"** (Dogfooding blog card) — absolute 0-FP claim.
+-- **"2.0× speedup, identical losses" / "0.0pp accuracy delta"** — suspiciously clean round numbers.
+-- Aggravating context: the page's own blog post "Caught Cheating: 95 Microseconds on a 30B Model" primes a stranger to read every perfect number as a possible fabrication.
++- **"GSM8K extraction TP rate: 0.5 → 1.0" (line 560)** — a perfect 1.0 true-positive rate with no sample size or credibility anchor.
++- **"k=5 ensemble catches 60/60 attacks" (line 565)** — 100% on a small n=60, no false-positive context.
++- **"2.0× speedup, identical losses" (line 540)** — "identical" is an absolute claim that invites suspicion without a tolerance.
++- **"99.3% of wrong code flagged" (line 431)** — very high; has a 164-problem anchor so less alarming, but still reads as too-clean beside the perfect-1.0 cards.
++- **Blog teaser "Zero false positives" (line 741)** — perfect-score phrasing on the front page (in the card excerpt), reinforcing the too-clean pattern.
+ 
+ ## WHAT'S WORKING
+-- **The hero is genuinely good** — plain-language one-sentence value prop, a concrete 47+28 example, install command, and license badge all visible without scrolling.
+-- **"How it works" (Extract → Check → Repair)** is clear, jargon-light, and the right altitude for a stranger.
+-- **Honest provenance instinct** — labeling rows by provenance and disclosing the AUROC repin is the *right* discipline; it's just over-exposed in insider language on the landing page.
++- **The hero one-liner is excellent** — "checks whether an answer is internally consistent — and suggests a fix when it isn't," plus the concrete `47 + 28 = 76` worked example, tells a stranger exactly what Carnot is in under 10 seconds.
++- **Extract → Check → Repair (the "How it works" bento)** is clear, jargon-light, and honest about using "a second small LLM pass" — this is the strongest part of the page and the install line + Apache-2.0 badge are right where they should be.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. **Gut the Results section from 12 cards to ~4.** Keep only headline-eligible, live-GPU rows with sample sizes (e.g., HumanEval code, typed constraints, the one FoVer AUROC). Move SVAMP/CCTU/CRANE/VeriCoT/HalluGuard/PRM-BiasBench to the technical report.
+-2. **Define or delete every acronym.** If FoVer/SVAMP/CCTU stay, gloss them in plain English ("FoVer, a math step-error benchmark"). Resolve the "FoVer 0.9131 vs 0.125 FoVer baseline" contradiction.
+-3. **Strip insider tokens from the hero.** Replace the "Recent progress" card body with one plain sentence; drop "5-seed dual-condition / architecture-only 0.8947 / Repinned from v2 0.9857" (the blog link can carry that nuance).
+-4. **Replace the milestone/experiment vanity stats** ("382 milestones," "3,493 runs") with user-facing numbers (benchmarks passed, verifiers shipped, models supported).
+-5. **Re-curate the blog section** so the front page doesn't lead with five self-incrimination posts. Surface 2–3 that teach the reader something; relegate the audit/retraction postmortems to the full blog index.
+-6. **Rename "(paper-v6)" to "position paper"** and soften "pending operator-initiated upload" to plain "preprint available."
+-7. **Fix the "What you can check / Seven capabilities" framing** — either re-label the section "Capabilities" or move Research-operations/APIs/TTC out of a section that promises verification checks.
+-8. **Add a sample-size or anchor to every perfect number** (1.0, 60/60, zero-FP) or cut them; on a page that blogs about catching fabrication, unqualified perfect scores are the worst possible look.
++1. **Fix the FoVer collision and pick ONE headline number.** State once, in plain English, "FoVer is a public benchmark of math step-errors; Carnot's verifier scores 0.9131 AUROC (5 seeds)." Drop or relabel the "0.125 FoVer baseline" phrasing in the SVAMP card so the same name never means two opposite things.
++2. **Move the "Recent progress" card out of the hero stats flexbox** (lines 309–313) into its own block, and strip the internal narrative ("repinned from v2 0.9857", "dual-condition", "architecture-only") down to one stranger-legible line.
++3. **Cut the Results grid from 12 to ~5 cards**, keep only stranger-legible tags, and either fix the meter bars to a single consistent scale or remove them (decorative bars that look like data are worse than no bars).
++4. **De-jargon every remaining result tag**: expand or drop CCTU, CRANE, VeriCoT, PRM-BiasBench, "HalluGuard v3", "publication gate", "k=5". Reframe "0.0pp accuracy delta" as "same accuracy, 4.4% cheaper."
++5. **Reconcile the HumanEval numbers** so a stranger sees one consistent repair delta, not +3 / +15 / +18 for what looks like the same thing.
++6. **Fix the two structural insertions** — the orphaned 7th capability card (TTC & PREM, line 495 sits outside the bento grid) and the stray/unbalanced `</div>` tags around both insertions (hero stats ~line 316, features ~line 503). They're hand-patch smells; verify rendering at desktop + mobile widths.
++7. **Replace at least two of the four hero stats** (milestones / experiment-runs / test-count) with user-value numbers, or add one line explaining the autonomous-loop context so the scale reads as credible rather than inflated for a solo maintainer.
++8. **Soften the perfect-score cards** (1.0 TP, 60/60, "identical losses") with sample sizes or confidence context — they currently read as fabrication bait next to your own "we audit for fabrication" blog posts.
+ 
+-*Advisory only — no edits made to docs/index.html (operator-curated per Public Documentation Discipline).*
+\ No newline at end of file
++*(Advisory only — no edits made to `docs/index.html`, per Public Documentation Discipline.)*
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index a53a851114..6861540c6b 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -22415,6 +22415,56 @@ ensemble); arxiv.org/abs/2603.02193 (Symbol-Equivariant RRM); arxiv.org/abs/2510
+ 
+ ---
+ 
++## .388 planning sweep (2026-06-14) — the EFFICIENCY moat (verifier vs LLM-judge cost) / sovereign generation / now-unlocked verifier-guided diffusion
++
++Filed by the .388 planner before designing the milestone (research-program.md "Do arxiv research
++first"). The .387 capstone (exp4183) PROVED the verifier moat on an executable domain (code: ARM-A
++0.84 vs SC-vote 0.66, +0.18 CI95[0.08,0.30], matched no-verifier control also +0.18) — BUT
++`efficiency_parity=false`: the test compared the verifier vs *self-consistency vote* (nearly free),
++not vs an *LLM-as-judge* (the north-star §5 win condition: "equally effective as the LM at lower
++cost", target "parity at 10-100x cheaper"). So .388's central NEW question: **is Carnot's
++executable/energy verifier within-CI of an LLM-as-judge on accuracy while being >=10x cheaper in
++wall-clock/tokens?** Plus: the GAP-4 execution verifier (the only ARC positive) needs a SOVEREIGN
++local generator + a production-safe graded gate; and the DiffusionGemma gate is now MET.
++
++DECISION-RELEVANT NEW (surfaced by the .388 web sweep; verified via WebSearch 2026-06-14):
++
++- **arXiv:2602.22871** — "Test-Time Scaling with Diffusion Language Models via Reward-Guided
++  Stitching" (2026). Reward-guided assembly of diffusion-LM partial generations at test time —
++  the freshest verifier-as-guidance-for-diffusion method → directly relevant to the now-unlocked
++  DiffusionGemma verifier-guided decoding (.388 Phase C1). https://arxiv.org/abs/2602.22871
++- **arXiv:2604.06260** — "S^3: Stratified Scaling Search for Test-Time in Diffusion Language Models"
++  (2026). Structured test-time search over diffusion-LM denoising → the search-budget framing for
++  energy-guided diffusion. https://arxiv.org/abs/2604.06260
++- **OpenReview `cve4NOiyVp`** — "Tuning LLM Judge Design Decisions for 1/1000 of the Cost" (2026).
++  A multi-fidelity search over judge configs finds judges that Pareto-dominate on accuracy AND cost
++  with open-weight models → the LLM-judge comparator design + cost-normalization protocol for the
++  .388 efficiency moat (A2). https://openreview.net/forum?id=cve4NOiyVp
++- **2026 cascade-verification trend (corroboration, not a single paper)** — lightweight model judges
++  (DeBERTa-440M, sub-200ms; DeepSeek-class 60-1000x cheaper than frontier verifiers) fronted by
++  deterministic checks, with the frontier LLM-judge reserved for nuanced cases. This is EXACTLY
++  Carnot's Meta-EBM Cascade Router thesis (cheap executable energy first, escalate to the LLM only
++  on failure). The efficiency moat (A2) measures the cheap-layer-beats-expensive-judge claim head-on.
++
++Carried forward from the .387 sweep (still the load-bearing references for .388, verified IDs):
++**arXiv:2504.01005** (SC is compute-cheaper than a generative verifier until ~8x — the efficiency
++bar A2 must beat), **arXiv:2504.16828** (ThinkPRM — the high-quality process-verifier cost
++comparator), **arXiv:2605.07395** (apparent headroom is often an evaluation artifact — keep the
++executable-oracle headroom gate), **arXiv:2602.01849** + **arXiv:2509.13866** (self-rewarding SMC /
++masked-diffusion-as-energy-minimization — DiffusionGemma theory), **arXiv:2605.05138** (executable
++world models for ARC-AGI-3 — the GAP-4 execution-verifier-as-pruner thesis), **arXiv:2510.20607**
++(CEM compositional ARC energy — re-flagged for OPERATOR authorization: the GAP-3 trained-content-
++energy SELECTOR lineage is RETIRED on `ops/exclusion_manifest.yaml` pending operator sign-off +
++gate-1R, so .388 does NOT auto-activate it), **arXiv:2402.06457** (V-STaR — the .387 learned
++selector, .388 cross-domain-transfer candidate).
++
++Sources (this sweep): arxiv.org/abs/{2602.22871, 2604.06260, 2602.01849, 2509.13866, 2504.01005,
++2504.16828, 2605.07395, 2605.05138, 2510.20607, 2402.06457} ; openreview.net/forum?id=cve4NOiyVp .
++Fresh per-milestone discovery is delegated to the .388 SOTA-ingestion slot (exp4192) per the
++SOTA-Ingestion Cycle Discipline.
++
++---
++
+ ## .387 planning sweep (2026-06-14) — verifier-as-reward / headroom / learned ARC energy / energy-guided diffusion
+ 
+ Filed by the .387 planner before designing the milestone (research-program.md "Do arxiv
+-- 
+2.55.0
+

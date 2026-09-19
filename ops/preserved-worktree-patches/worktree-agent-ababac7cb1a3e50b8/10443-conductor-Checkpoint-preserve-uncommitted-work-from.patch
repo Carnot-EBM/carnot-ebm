@@ -1,0 +1,43 @@
+From dd9605e634455e200afde1e2a2282dd9d435d0ac Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 17:19:10 -0400
+Subject: [PATCH 10443/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e8b11f3961..7fca08a67a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-08-30T20:50:37Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-08-30T21:19:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 97db113573..75461825d3 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16858,3 +16858,4 @@ The l |
+ | 2026-08-30 20:33 UTC | Compositional online constraint-routing comparison | OK | 111 passed, 1 warning in 43.77s |
+ | 2026-08-30 20:35 UTC | Conductor re-exec: fresh committed source | OK | 63c64c3af372 -> 765dc53838c6; argv preserved |
+ | 2026-08-30 20:48 UTC | Cold causal-use, forgetting, poison, restart, and  | OK | 116 passed, 1 warning in 14.73s |
++| 2026-08-30 21:17 UTC | Temporal coupling sampler target-law study | OK | 104 passed, 1 warning in 61.15s (0:01:01) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7d6167c643..e1167ef236 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 2, "phase": "iteration_start", "started_at": "2026-08-30T20:50:37Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 3, "phase": "iteration_start", "started_at": "2026-08-30T21:19:02Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

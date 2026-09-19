@@ -1,0 +1,101 @@
+From 9f1db82049233934e3b3b00197dadbf347827188 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 22:13:24 -0400
+Subject: [PATCH 11360/11362] [conductor] Operational retrospective for
+ milestone 2026.09.617
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_09_617.json | 54 ++++++++++++++++++++++
+ 3 files changed, 62 insertions(+)
+ create mode 100644 results/operational_retro_2026_09_617.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 21f65efed5..d60b672246 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6626,3 +6626,10 @@ The critical path for milestone .250:
+ - theme: provenance-trace repair dominated a fast mixed-execution window while causal telemetry remained incomplete
+ - key result: the repaired provenance-complete live belief shadow trace set the critical path; the locked compute-task idle indicator was false, while no data available this milestone explains the duration or establishes a parallel multi-model runner miss
+ - acceptance: no data available this milestone
++
++### Milestone 2026.09.617
++
++- exp_range: no data available this milestone
++- theme: report-channel capture dominated a short mixed-execution window while task-scoped accelerator and dispatch telemetry remained incomplete
++- key result: honest operational negative — the report-channel forensic capture set the critical path; no compute-bound GPU-idle fault was recorded, while no data available this milestone explains the duration or establishes a parallel multi-model runner miss
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 6e930a3cd7..9c5b6f6d4d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -19456,3 +19456,4 @@ trial on GPU 1 if the grammar holds. Outcome:
+   SCENARIO-ARC-WMTE-7046-C, flag ledger evidence, `ops/test-results.md`.
+ >>>>>>> grammar-27b-trial2
+ - 2026-09-06: V617 evidence synthesis and release-or-retire disposition (⚠️ Blocked) — honest_verdict=complete_blocked_v617_capstone_input_missing; results/experiment_7049_v617_capstone_disposition.json
++- 2026-09-06: Operational retrospective for milestone 2026.09.617 — 4 experiments completed in 0.8 minutes, including 3 compute-bound entries. The 0.78-minute official-live llama.cpp model report-channel forensic capture set the critical path; the supplied evidence does not explain its phase cost, establish task-window GPU efficiency, or show a parallel multi-model dispatch. Experiment-correlated phase, GPU, model-count, and runner telemetry is the highest-leverage tooling change; no measurable time-saving percentage is supported.
+diff --git a/results/operational_retro_2026_09_617.json b/results/operational_retro_2026_09_617.json
+new file mode 100644
+index 0000000000..782621c287
+--- /dev/null
++++ b/results/operational_retro_2026_09_617.json
+@@ -0,0 +1,54 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.09.617",
++  "generated_at": "2026-09-06T02:11:07Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.8,
++  "experiments_completed": 4,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "Official-live llama.cpp model report-channel forensic capture",
++      "duration_minutes": 0.78,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V617 active-roadmap and design-document contract preflight",
++      "duration_minutes": 0.06,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Typed raw-to-canonical ARC model identity report bridge",
++      "duration_minutes": 0.01,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V617 evidence synthesis and release-or-retire disposition",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 4 experiments in 0.8 minutes, including 3 compute-bound experiments. The official-live llama.cpp model report-channel forensic capture set the critical path at 0.78 minutes, while the locked task-level indicator recorded no compute-bound GPU-idle event.",
++  "bottlenecks_identified": [
++    "The official-live llama.cpp model report-channel forensic capture consumed nearly all reconstructed milestone wall time.",
++    "Disk-mtime reconstruction exposes end-to-end durations but no phase-level evidence explaining why the report-channel capture was longest.",
++    "No task-window correlation connects the point-in-time GPU snapshot to a named compute-bound experiment, preventing a defensible utilization-efficiency finding.",
++    "No model-concurrency or runner-selection evidence is available, so DualGPURunner applicability cannot be audited."
++  ],
++  "improvements_suggested": [
++    "Emit task-scoped phase timings for model startup, inference, report capture, and teardown.",
++    "Sample GPU utilization, memory, and process identity inside each compute-bound task window and attach the samples to that experiment's artifact.",
++    "Record model count and selected runner at launch, validating DualGPURunner only when multiple models are loaded concurrently.",
++    "Add post-task accelerator-process lifecycle reporting so allocated but inactive processes can be distinguished from active experiment work."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add experiment-correlated phase and GPU telemetry to the research conductor's operational artifacts.",
++    "Instrument the report-channel forensic workflow to isolate startup, inference, capture, and teardown cost.",
++    "Persist launch-time model concurrency and runner selection, plus post-task process cleanup status."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The reconstructed timing identifies the critical path but does not explain its phase cost. The point-in-time GPU report cannot establish compute-task efficiency or a missed parallel-runner dispatch without experiment-window and model-concurrency correlation, so no nonzero savings estimate is supported."
++}
+-- 
+2.55.0
+

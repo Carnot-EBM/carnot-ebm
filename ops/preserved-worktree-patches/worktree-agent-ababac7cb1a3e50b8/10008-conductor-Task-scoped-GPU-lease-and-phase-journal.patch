@@ -1,0 +1,3607 @@
+From c1591ce7bd1ee54600dbc5ff4d705e0393408aa8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 07:04:50 -0400
+Subject: [PATCH 10008/11362] [conductor] Task-scoped GPU lease and phase
+ journal
+
+Automated research step by research conductor.
+Task ID: exp6633-gpu-lease-phase-journal
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |    2 +-
+ ...experiment_6633_gpu_lease_phase_journal.py |   34 +-
+ ...e557eeb765a96e8b8831e80a82779.journal.json |   62 +
+ ...d17a8404e557eeb765a96e8b8831e80a82779.lock |    1 +
+ ...3ee2b7b4c662a22d7339252fef61e.journal.json |   53 +
+ ...cc5df9b03ee2b7b4c662a22d7339252fef61e.lock |    1 +
+ ...c193d6a48e1368237ac9410b07ac9.journal.json |   91 ++
+ ...64e2895fc193d6a48e1368237ac9410b07ac9.lock |    1 +
+ .../attacks/partial_write/atomic.json         |    3 +
+ ...ecd5284d162980f07a6365182e774.journal.json |   62 +
+ ...ddcd2917ecd5284d162980f07a6365182e774.lock |    1 +
+ ...9107f1f4267412a17bc5a30a062f9.journal.json |   53 +
+ ...9bdf52ab9107f1f4267412a17bc5a30a062f9.lock |    1 +
+ ...33baa2232823590694146497af000.journal.json |   53 +
+ ...42d30bd033baa2232823590694146497af000.lock |    1 +
+ ...75db634c7e152765dd1667a245d54.journal.json |   53 +
+ ...08e1142875db634c7e152765dd1667a245d54.lock |    1 +
+ ...7a8c486f4ac3c9fa5476732730501.journal.json |   62 +
+ ...3316493d7a8c486f4ac3c9fa5476732730501.lock |    1 +
+ ...25f47ad08f12f8961ed2b9602a508.journal.json |   53 +
+ ...85594c6125f47ad08f12f8961ed2b9602a508.lock |    1 +
+ ...83ebb653b671f155c320c1192f392.journal.json |    1 +
+ ...952dd58083ebb653b671f155c320c1192f392.lock |    1 +
+ ...32f8a2518f8b006fba2d2797dced4.journal.json |   53 +
+ ...6f49bd8532f8a2518f8b006fba2d2797dced4.lock |    1 +
+ ...058f78dbc45d3350e40deedf780d1.journal.json |   53 +
+ ...ffbb46aa058f78dbc45d3350e40deedf780d1.lock |    1 +
+ ...81ba8600df2e50c02d71035e5e126.journal.json |   53 +
+ ...20d75de881ba8600df2e50c02d71035e5e126.lock |    1 +
+ ...009012c628b024a086f27a002fbf7.journal.json |   53 +
+ ...13bf2c71009012c628b024a086f27a002fbf7.lock |    1 +
+ ...aa7bf51c4d89e4487a18c90f79091.journal.json |  122 ++
+ ...b68f96d3aa7bf51c4d89e4487a18c90f79091.lock |    1 +
+ ...4e95ff6a7163f7f8437a6a2fca131.journal.json |   62 +
+ ...1ea3620c4e95ff6a7163f7f8437a6a2fca131.lock |    1 +
+ ...ab381d2ac13eb00a979b107b8a487.journal.json |   62 +
+ ...2c7b5176ab381d2ac13eb00a979b107b8a487.lock |    1 +
+ ...94d0fa6c7f455389a25855c6150f2.journal.json |   53 +
+ ...35fead7094d0fa6c7f455389a25855c6150f2.lock |    1 +
+ ...b3f1286e7099707f93f431d6b1e78.journal.json |  127 ++
+ ...008a8601b3f1286e7099707f93f431d6b1e78.lock |    1 +
+ ...d5369e244b66fc39b81aab7300fce.journal.json |  122 ++
+ ...e2cf376dd5369e244b66fc39b81aab7300fce.lock |    1 +
+ ...4d9047a4b955996e3f4948b89dad1.journal.json |  122 ++
+ ...4b52f91b4d9047a4b955996e3f4948b89dad1.lock |    1 +
+ ...72b0a9587d026d37fef51e279850d.journal.json |  122 ++
+ ...6d37fef51e279850d.journal.json.partial.tmp |    1 +
+ ...0f2a10f272b0a9587d026d37fef51e279850d.lock |    1 +
+ ...68e30af1167cc452c51ec03786041.journal.json |  122 ++
+ ...ac49f34b68e30af1167cc452c51ec03786041.lock |    1 +
+ ...79e0cc6dcbb2a8eeae94b2eba196c.journal.json |  127 ++
+ ...ea1a251979e0cc6dcbb2a8eeae94b2eba196c.lock |    1 +
+ ...5d21fa7b0104536cf8d6bd2d378b8.journal.json |    1 +
+ ...d1bca79c5d21fa7b0104536cf8d6bd2d378b8.lock |    1 +
+ ...periment_6633_gpu_lease_phase_journal.json | 1185 +++++++++++++++++
+ ...experiment_6633_gpu_lease_phase_journal.py |   21 +-
+ 56 files changed, 3059 insertions(+), 9 deletions(-)
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/api/device-0f767280bf64749d1ae12456e4cd17a8404e557eeb765a96e8b8831e80a82779.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/api/device-0f767280bf64749d1ae12456e4cd17a8404e557eeb765a96e8b8831e80a82779.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/live_owner_recovery/device-d0678c0a8b3c54f66fa43e80fdfcc5df9b03ee2b7b4c662a22d7339252fef61e.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/live_owner_recovery/device-d0678c0a8b3c54f66fa43e80fdfcc5df9b03ee2b7b4c662a22d7339252fef61e.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/missing_unload/device-1ec7fdf71b31ed1da5144cb33f964e2895fc193d6a48e1368237ac9410b07ac9.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/missing_unload/device-1ec7fdf71b31ed1da5144cb33f964e2895fc193d6a48e1368237ac9410b07ac9.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/partial_write/atomic.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_reversal/device-c5be9703ccbeb0c1ed95cd75825ddcd2917ecd5284d162980f07a6365182e774.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_reversal/device-c5be9703ccbeb0c1ed95cd75825ddcd2917ecd5284d162980f07a6365182e774.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_skip/device-ce9410699672a594ef4ab7079db9bdf52ab9107f1f4267412a17bc5a30a062f9.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_skip/device-ce9410699672a594ef4ab7079db9bdf52ab9107f1f4267412a17bc5a30a062f9.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/pid_reuse/device-f8d96043573b6a16d5ca4f7fd1242d30bd033baa2232823590694146497af000.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/pid_reuse/device-f8d96043573b6a16d5ca4f7fd1242d30bd033baa2232823590694146497af000.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/same_device_race/device-d511a6b67a9b220d42894c3046308e1142875db634c7e152765dd1667a245d54.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/same_device_race/device-d511a6b67a9b220d42894c3046308e1142875db634c7e152765dd1667a245d54.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/second_terminal/device-8f6b8e353e64b0bdda66f7a440c3316493d7a8c486f4ac3c9fa5476732730501.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/second_terminal/device-8f6b8e353e64b0bdda66f7a440c3316493d7a8c486f4ac3c9fa5476732730501.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/stale_heartbeat/device-00c4771f31b9139e7c17dffa22f85594c6125f47ad08f12f8961ed2b9602a508.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/stale_heartbeat/device-00c4771f31b9139e7c17dffa22f85594c6125f47ad08f12f8961ed2b9602a508.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/tamper/device-974c51b4f92fab6f793288a8ebe952dd58083ebb653b671f155c320c1192f392.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/tamper/device-974c51b4f92fab6f793288a8ebe952dd58083ebb653b671f155c320c1192f392.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/timeout/device-af5e7270a320ffefccedb016bbd6f49bd8532f8a2518f8b006fba2d2797dced4.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/timeout/device-af5e7270a320ffefccedb016bbd6f49bd8532f8a2518f8b006fba2d2797dced4.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_device/device-e11455234a57336fc9dcc3bc598ffbb46aa058f78dbc45d3350e40deedf780d1.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_device/device-e11455234a57336fc9dcc3bc598ffbb46aa058f78dbc45d3350e40deedf780d1.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_model/device-715e996324cd8c585a27299fb0f20d75de881ba8600df2e50c02d71035e5e126.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_model/device-715e996324cd8c585a27299fb0f20d75de881ba8600df2e50c02d71035e5e126.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_token/device-c3fc86ac18e4260b24a95a7438d13bf2c71009012c628b024a086f27a002fbf7.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_token/device-c3fc86ac18e4260b24a95a7438d13bf2c71009012c628b024a086f27a002fbf7.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/allowed/device-d83f13bd3f72c759999b91eb5d8b68f96d3aa7bf51c4d89e4487a18c90f79091.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/allowed/device-d83f13bd3f72c759999b91eb5d8b68f96d3aa7bf51c4d89e4487a18c90f79091.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/reversal/device-29988fd8f1c921005b2b3fcdd851ea3620c4e95ff6a7163f7f8437a6a2fca131.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/reversal/device-29988fd8f1c921005b2b3fcdd851ea3620c4e95ff6a7163f7f8437a6a2fca131.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/second_terminal/device-40f8b1c06efe98e48f003efc1672c7b5176ab381d2ac13eb00a979b107b8a487.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/second_terminal/device-40f8b1c06efe98e48f003efc1672c7b5176ab381d2ac13eb00a979b107b8a487.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/skip/device-61c8ae9f8ca019e8090b34dd64235fead7094d0fa6c7f455389a25855c6150f2.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/skip/device-61c8ae9f8ca019e8090b34dd64235fead7094d0fa6c7f455389a25855c6150f2.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-3310892ee977394c416c4796c37e2cf376dd5369e244b66fc39b81aab7300fce.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-3310892ee977394c416c4796c37e2cf376dd5369e244b66fc39b81aab7300fce.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-8b9aa90c4054bbe11378d3f06b44b52f91b4d9047a4b955996e3f4948b89dad1.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-8b9aa90c4054bbe11378d3f06b44b52f91b4d9047a4b955996e3f4948b89dad1.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json.partial.tmp
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race/device-2b5f39904c0c38b714373d1d6ccac49f34b68e30af1167cc452c51ec03786041.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race/device-2b5f39904c0c38b714373d1d6ccac49f34b68e30af1167cc452c51ec03786041.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.lock
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper/device-6973a19f7ef8fa8bff4d7b25afad1bca79c5d21fa7b0104536cf8d6bd2d378b8.journal.json
+ create mode 100644 results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper/device-6973a19f7ef8fa8bff4d7b25afad1bca79c5d21fa7b0104536cf8d6bd2d378b8.lock
+ create mode 100644 results/experiment_6633_gpu_lease_phase_journal.json
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 2b34dc4a54..f82e0a3ad3 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5121,
++  "experiments_checked": 5122,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6633_gpu_lease_phase_journal.py b/python/carnot/experiment_6633_gpu_lease_phase_journal.py
+index 6f56d5b1a0..f44f93f933 100644
+--- a/python/carnot/experiment_6633_gpu_lease_phase_journal.py
++++ b/python/carnot/experiment_6633_gpu_lease_phase_journal.py
+@@ -153,7 +153,15 @@ DEFAULT_TESTS_RUN = (
+         "exit_code": 0,
+         "summary": "new modules have 100% scoped line and branch coverage",
+     },
+-    {"command": FULL_TEST_COMMAND, "exit_code": 0, "summary": "all Python tests passed"},
++    {
++        "command": FULL_TEST_COMMAND,
++        "exit_code": 3,
++        "summary": (
++            "1037 failed, 34797 passed, 103 skipped, 140 warnings in 2310.03s; "
++            "pytest/xdist stopped at 62% after an existing test removed its worker CWD, "
++            "raising FileNotFoundError"
++        ),
++    },
+     {"command": SPEC_COMMAND, "exit_code": 0, "summary": "focused spec coverage passed"},
+     {"command": RUFF_COMMAND, "exit_code": 0, "summary": "focused lint passed"},
+     {"command": FORMAT_COMMAND, "exit_code": 0, "summary": "focused format check passed"},
+@@ -961,11 +969,6 @@ def _readiness_failures(artifact: Mapping[str, Any]) -> list[JsonDict]:
+             True,
+             artifact.get("lease_api_receipts", {}).get("all_owner_bound") is True,
+         ),
+-        (
+-            "focused_tests",
+-            True,
+-            bool(tests) and all(row.get("exit_code") == 0 for row in tests),
+-        ),
+         (
+             "protected_files",
+             True,
+@@ -979,7 +982,7 @@ def _readiness_failures(artifact: Mapping[str, Any]) -> list[JsonDict]:
+             .get("model_load_attempt_count"),
+         ),
+     )
+-    return [
++    failures = [
+         {
+             "check": name,
+             "expected": sorted(expected) if isinstance(expected, set) else expected,
+@@ -988,6 +991,23 @@ def _readiness_failures(artifact: Mapping[str, Any]) -> list[JsonDict]:
+         for name, expected, observed in checks
+         if observed != expected
+     ]
++    failed_tests = [
++        {
++            "command": row.get("command") if isinstance(row, Mapping) else None,
++            "exit_code": row.get("exit_code") if isinstance(row, Mapping) else None,
++        }
++        for row in tests
++        if not isinstance(row, Mapping) or row.get("exit_code") != 0
++    ]
++    if not tests or failed_tests:
++        failures.append(
++            {
++                "check": "tests_run",
++                "expected": "all_exit_codes_zero",
++                "observed": failed_tests,
++            }
++        )
++    return failures
+ 
+ 
+ def _field_provenance(artifact: Mapping[str, Any]) -> dict[str, JsonDict]:
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/api/device-0f767280bf64749d1ae12456e4cd17a8404e557eeb765a96e8b8831e80a82779.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/api/device-0f767280bf64749d1ae12456e4cd17a8404e557eeb765a96e8b8831e80a82779.journal.json
+new file mode 100644
+index 0000000000..02bba5a9a5
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/api/device-0f767280bf64749d1ae12456e4cd17a8404e557eeb765a96e8b8831e80a82779.journal.json
+@@ -0,0 +1,62 @@
++{
++  "acquired_monotonic_ns": 33797214479820,
++  "checksum": "sha256:84966c1f1ab856bcd6a690eaf4bf1bda9cb1dda416da638d0645470ad5f90df8",
++  "device_uuid": "GPU-lease-api-receipt",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33827411167868,
++  "heartbeat_monotonic_ns": 33797411167868,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:259b5a9e04324270d0b190946c88a325208488ab4ebcb3bf5c9e1fa3936fddeb"
++  },
++  "phase": "terminal_blocked",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:b380b88f84a8a29d70c8dbc4a7a12713ef86b148a980b7139cc6f8d0cefa3b88",
++      "monotonic_ns": 33797214479820,
++      "owner_token_digest": "sha256:259b5a9e04324270d0b190946c88a325208488ab4ebcb3bf5c9e1fa3936fddeb",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:4b66f92aab2e48c223ec56f7ac154f8901234b5e3656d07d5900138ba5560477",
++      "monotonic_ns": 33797610805833,
++      "owner_token_digest": "sha256:259b5a9e04324270d0b190946c88a325208488ab4ebcb3bf5c9e1fa3936fddeb",
++      "phase": "terminal_blocked",
++      "previous_event_checksum": "sha256:b380b88f84a8a29d70c8dbc4a7a12713ef86b148a980b7139cc6f8d0cefa3b88",
++      "previous_phase": "preflight"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": true,
++  "released_monotonic_ns": 33797811836012,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "lease-api-receipt",
++  "ttl_ns": 30000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/api/device-0f767280bf64749d1ae12456e4cd17a8404e557eeb765a96e8b8831e80a82779.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/api/device-0f767280bf64749d1ae12456e4cd17a8404e557eeb765a96e8b8831e80a82779.lock
+new file mode 100644
+index 0000000000..e0679e279c
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/api/device-0f767280bf64749d1ae12456e4cd17a8404e557eeb765a96e8b8831e80a82779.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-lease-api-receipt","pid":332096,"pid_start_ticks":3377747,"task_id":"lease-api-receipt"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/live_owner_recovery/device-d0678c0a8b3c54f66fa43e80fdfcc5df9b03ee2b7b4c662a22d7339252fef61e.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/live_owner_recovery/device-d0678c0a8b3c54f66fa43e80fdfcc5df9b03ee2b7b4c662a22d7339252fef61e.journal.json
+new file mode 100644
+index 0000000000..dee09439d6
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/live_owner_recovery/device-d0678c0a8b3c54f66fa43e80fdfcc5df9b03ee2b7b4c662a22d7339252fef61e.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33797209859006,
++  "checksum": "sha256:2a5fbf7eae5e0dcad96be9a7d14a0493ff89002ea31f506a6de7ee24ab847599",
++  "device_uuid": "GPU-attack-live_owner_recovery",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33802209859006,
++  "heartbeat_monotonic_ns": 33797209859006,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:279caca7f79cc9c4443059f056e0e30169712011561bbc00b71645d3d60002c6"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:6bd716b21951fe8e20c9459a6789fd816536f51f988f353fedf4ec3b4ad5916e",
++      "monotonic_ns": 33797209859006,
++      "owner_token_digest": "sha256:279caca7f79cc9c4443059f056e0e30169712011561bbc00b71645d3d60002c6",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-live_owner_recovery",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/live_owner_recovery/device-d0678c0a8b3c54f66fa43e80fdfcc5df9b03ee2b7b4c662a22d7339252fef61e.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/live_owner_recovery/device-d0678c0a8b3c54f66fa43e80fdfcc5df9b03ee2b7b4c662a22d7339252fef61e.lock
+new file mode 100644
+index 0000000000..9fcc9ff8aa
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/live_owner_recovery/device-d0678c0a8b3c54f66fa43e80fdfcc5df9b03ee2b7b4c662a22d7339252fef61e.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-live_owner_recovery","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-live_owner_recovery"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/missing_unload/device-1ec7fdf71b31ed1da5144cb33f964e2895fc193d6a48e1368237ac9410b07ac9.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/missing_unload/device-1ec7fdf71b31ed1da5144cb33f964e2895fc193d6a48e1368237ac9410b07ac9.journal.json
+new file mode 100644
+index 0000000000..84fa7050ba
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/missing_unload/device-1ec7fdf71b31ed1da5144cb33f964e2895fc193d6a48e1368237ac9410b07ac9.journal.json
+@@ -0,0 +1,91 @@
++{
++  "acquired_monotonic_ns": 33796203984002,
++  "checksum": "sha256:00d3d89cd3c3b4f5d7c3ee9349d17ce656e733e1bde74381d46b55eb947cbca8",
++  "device_uuid": "GPU-attack-missing_unload",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33801203984002,
++  "heartbeat_monotonic_ns": 33796203984002,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57"
++  },
++  "phase": "unloading",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:bc843d8cabbbf68b8529570daed6593f6573fa0916f6cf872fdd435cffffb5ea",
++      "monotonic_ns": 33796203984002,
++      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:a486e7c094299da5f0b025bf32f78c9bbe19588f077b0e66e0c2f0744f768fe6",
++      "monotonic_ns": 33796205595958,
++      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:bc843d8cabbbf68b8529570daed6593f6573fa0916f6cf872fdd435cffffb5ea",
++      "previous_phase": "preflight"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:afebcef0355198cda8c9f94f95eacee7da4324c504c77bc10f359a687b3d6e0b",
++      "monotonic_ns": 33796404562793,
++      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
++      "phase": "loading",
++      "previous_event_checksum": "sha256:a486e7c094299da5f0b025bf32f78c9bbe19588f077b0e66e0c2f0744f768fe6",
++      "previous_phase": "admitted"
++    },
++    {
++      "details": {
++        "vram_resident_mb": 800
++      },
++      "event_checksum": "sha256:d09761cb40f748a708685ee095f2bd3d73dcf0f59270f8952ece146ee5d4fb9d",
++      "monotonic_ns": 33796406256412,
++      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
++      "phase": "resident",
++      "previous_event_checksum": "sha256:afebcef0355198cda8c9f94f95eacee7da4324c504c77bc10f359a687b3d6e0b",
++      "previous_phase": "loading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:0f1395c4f9d15fb2fb3e639737f2385815911e2f21e081e714184da67adbf2c0",
++      "monotonic_ns": 33796605574659,
++      "owner_token_digest": "sha256:0f7e3fcd39704b4d24e6d5b9c66d5e29f1fbe14b2d1784ca248d4bde67f38c57",
++      "phase": "unloading",
++      "previous_event_checksum": "sha256:d09761cb40f748a708685ee095f2bd3d73dcf0f59270f8952ece146ee5d4fb9d",
++      "previous_phase": "resident"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-missing_unload",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": true
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": 800
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/missing_unload/device-1ec7fdf71b31ed1da5144cb33f964e2895fc193d6a48e1368237ac9410b07ac9.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/missing_unload/device-1ec7fdf71b31ed1da5144cb33f964e2895fc193d6a48e1368237ac9410b07ac9.lock
+new file mode 100644
+index 0000000000..125030f653
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/missing_unload/device-1ec7fdf71b31ed1da5144cb33f964e2895fc193d6a48e1368237ac9410b07ac9.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-missing_unload","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-missing_unload"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/partial_write/atomic.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/partial_write/atomic.json
+new file mode 100644
+index 0000000000..61a2092b1b
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/partial_write/atomic.json
+@@ -0,0 +1,3 @@
++{
++  "version": 1
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_reversal/device-c5be9703ccbeb0c1ed95cd75825ddcd2917ecd5284d162980f07a6365182e774.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_reversal/device-c5be9703ccbeb0c1ed95cd75825ddcd2917ecd5284d162980f07a6365182e774.journal.json
+new file mode 100644
+index 0000000000..bb68bb87bc
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_reversal/device-c5be9703ccbeb0c1ed95cd75825ddcd2917ecd5284d162980f07a6365182e774.journal.json
+@@ -0,0 +1,62 @@
++{
++  "acquired_monotonic_ns": 33794196210150,
++  "checksum": "sha256:38a782042526c6fe49268b7c9d49d5254bc072651bff72505bf033dd63767af4",
++  "device_uuid": "GPU-attack-phase_reversal",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33799196210150,
++  "heartbeat_monotonic_ns": 33794196210150,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:24e55412b7ff74073ff6143ceb9341a869c873b171eee8c658c9e36bbfff3cd1"
++  },
++  "phase": "admitted",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:243a0ccc371b95bb112176ae3819a0e757cdb5a892cf4aee1f82263f8571bfe6",
++      "monotonic_ns": 33794196210150,
++      "owner_token_digest": "sha256:24e55412b7ff74073ff6143ceb9341a869c873b171eee8c658c9e36bbfff3cd1",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:8754c976bafee5b616ebb981b67b5a071cdde0802c7cd9fedea8d5219c382687",
++      "monotonic_ns": 33794397227162,
++      "owner_token_digest": "sha256:24e55412b7ff74073ff6143ceb9341a869c873b171eee8c658c9e36bbfff3cd1",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:243a0ccc371b95bb112176ae3819a0e757cdb5a892cf4aee1f82263f8571bfe6",
++      "previous_phase": "preflight"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-phase_reversal",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_reversal/device-c5be9703ccbeb0c1ed95cd75825ddcd2917ecd5284d162980f07a6365182e774.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_reversal/device-c5be9703ccbeb0c1ed95cd75825ddcd2917ecd5284d162980f07a6365182e774.lock
+new file mode 100644
+index 0000000000..31284195ee
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_reversal/device-c5be9703ccbeb0c1ed95cd75825ddcd2917ecd5284d162980f07a6365182e774.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-phase_reversal","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-phase_reversal"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_skip/device-ce9410699672a594ef4ab7079db9bdf52ab9107f1f4267412a17bc5a30a062f9.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_skip/device-ce9410699672a594ef4ab7079db9bdf52ab9107f1f4267412a17bc5a30a062f9.journal.json
+new file mode 100644
+index 0000000000..f1f20241d3
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_skip/device-ce9410699672a594ef4ab7079db9bdf52ab9107f1f4267412a17bc5a30a062f9.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33793992609969,
++  "checksum": "sha256:ae1ba1f4ccfb8614a3c2e2ad3d493bb146d2d13cdeac0834a4a31b54f326b532",
++  "device_uuid": "GPU-attack-phase_skip",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33798992609969,
++  "heartbeat_monotonic_ns": 33793992609969,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:c254ce16fa73b1ca024cb1ca567874c10036671e0f97355a38f2e74d19b24eac"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:a575d9f7ea5e379ee05ec6ccdf34272235fd67d2d7c681fc3ad5367299daff46",
++      "monotonic_ns": 33793992609969,
++      "owner_token_digest": "sha256:c254ce16fa73b1ca024cb1ca567874c10036671e0f97355a38f2e74d19b24eac",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-phase_skip",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_skip/device-ce9410699672a594ef4ab7079db9bdf52ab9107f1f4267412a17bc5a30a062f9.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_skip/device-ce9410699672a594ef4ab7079db9bdf52ab9107f1f4267412a17bc5a30a062f9.lock
+new file mode 100644
+index 0000000000..dd5d5f697c
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/phase_skip/device-ce9410699672a594ef4ab7079db9bdf52ab9107f1f4267412a17bc5a30a062f9.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-phase_skip","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-phase_skip"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/pid_reuse/device-f8d96043573b6a16d5ca4f7fd1242d30bd033baa2232823590694146497af000.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/pid_reuse/device-f8d96043573b6a16d5ca4f7fd1242d30bd033baa2232823590694146497af000.journal.json
+new file mode 100644
+index 0000000000..b511112069
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/pid_reuse/device-f8d96043573b6a16d5ca4f7fd1242d30bd033baa2232823590694146497af000.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33794997160615,
++  "checksum": "sha256:a92a01cb3f283b2145f4ece300f12b463c0f0d8c73c6f76aa99ec14b2f1c79a8",
++  "device_uuid": "GPU-attack-pid_reuse",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33799997160615,
++  "heartbeat_monotonic_ns": 33794997160615,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:8870cb7781b648a0a112951dc0d04adff3f0b2bee26c42312a92f4bb17214040"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:32c6199fae371aecd22ef61e8263d94c41613238f7dde3cd3571f5429271d3a9",
++      "monotonic_ns": 33794997160615,
++      "owner_token_digest": "sha256:8870cb7781b648a0a112951dc0d04adff3f0b2bee26c42312a92f4bb17214040",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-pid_reuse",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/pid_reuse/device-f8d96043573b6a16d5ca4f7fd1242d30bd033baa2232823590694146497af000.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/pid_reuse/device-f8d96043573b6a16d5ca4f7fd1242d30bd033baa2232823590694146497af000.lock
+new file mode 100644
+index 0000000000..129ad912bd
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/pid_reuse/device-f8d96043573b6a16d5ca4f7fd1242d30bd033baa2232823590694146497af000.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-pid_reuse","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-pid_reuse"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/same_device_race/device-d511a6b67a9b220d42894c3046308e1142875db634c7e152765dd1667a245d54.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/same_device_race/device-d511a6b67a9b220d42894c3046308e1142875db634c7e152765dd1667a245d54.journal.json
+new file mode 100644
+index 0000000000..f794f5b2ac
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/same_device_race/device-d511a6b67a9b220d42894c3046308e1142875db634c7e152765dd1667a245d54.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33793791974057,
++  "checksum": "sha256:375d5a176fea43aa1a85b0d76c2f7b2cd8ecf3eaf4c489f8f179aca5815d51af",
++  "device_uuid": "GPU-attack-same_device_race",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33798791974057,
++  "heartbeat_monotonic_ns": 33793791974057,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:e86716fd9a72953220d7174c02f0414b61bdc2fe0b73297119a92488faf56d26"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:80244aa16a86befdbe1182015689123bbb981fb49b29f6e2a6594437eda1ee07",
++      "monotonic_ns": 33793791974057,
++      "owner_token_digest": "sha256:e86716fd9a72953220d7174c02f0414b61bdc2fe0b73297119a92488faf56d26",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-same_device_race",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/same_device_race/device-d511a6b67a9b220d42894c3046308e1142875db634c7e152765dd1667a245d54.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/same_device_race/device-d511a6b67a9b220d42894c3046308e1142875db634c7e152765dd1667a245d54.lock
+new file mode 100644
+index 0000000000..ca165a0fe8
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/same_device_race/device-d511a6b67a9b220d42894c3046308e1142875db634c7e152765dd1667a245d54.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-same_device_race","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-same_device_race"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/second_terminal/device-8f6b8e353e64b0bdda66f7a440c3316493d7a8c486f4ac3c9fa5476732730501.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/second_terminal/device-8f6b8e353e64b0bdda66f7a440c3316493d7a8c486f4ac3c9fa5476732730501.journal.json
+new file mode 100644
+index 0000000000..6da2c60aea
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/second_terminal/device-8f6b8e353e64b0bdda66f7a440c3316493d7a8c486f4ac3c9fa5476732730501.journal.json
+@@ -0,0 +1,62 @@
++{
++  "acquired_monotonic_ns": 33794595632607,
++  "checksum": "sha256:5c92bdc82150b21ca99de1354f6f311d788eb6a12f7d8c05d916a43c0783d89e",
++  "device_uuid": "GPU-attack-second_terminal",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33799595632607,
++  "heartbeat_monotonic_ns": 33794595632607,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:990dbeb1671f96ce3c01d389d88b13252d5752ce6294ba3a1f4a44ffd1a8dad8"
++  },
++  "phase": "terminal_blocked",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:72c36b12b78442d9c652399d11572019c9a1154570f53c7fa20cf4a8bb409f6b",
++      "monotonic_ns": 33794595632607,
++      "owner_token_digest": "sha256:990dbeb1671f96ce3c01d389d88b13252d5752ce6294ba3a1f4a44ffd1a8dad8",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:129fd071de9d50323694b25ec72c4387ba87c4421bd4019e184a369d24197f4c",
++      "monotonic_ns": 33794799238761,
++      "owner_token_digest": "sha256:990dbeb1671f96ce3c01d389d88b13252d5752ce6294ba3a1f4a44ffd1a8dad8",
++      "phase": "terminal_blocked",
++      "previous_event_checksum": "sha256:72c36b12b78442d9c652399d11572019c9a1154570f53c7fa20cf4a8bb409f6b",
++      "previous_phase": "preflight"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-second_terminal",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/second_terminal/device-8f6b8e353e64b0bdda66f7a440c3316493d7a8c486f4ac3c9fa5476732730501.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/second_terminal/device-8f6b8e353e64b0bdda66f7a440c3316493d7a8c486f4ac3c9fa5476732730501.lock
+new file mode 100644
+index 0000000000..916cb01eb6
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/second_terminal/device-8f6b8e353e64b0bdda66f7a440c3316493d7a8c486f4ac3c9fa5476732730501.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-second_terminal","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-second_terminal"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/stale_heartbeat/device-00c4771f31b9139e7c17dffa22f85594c6125f47ad08f12f8961ed2b9602a508.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/stale_heartbeat/device-00c4771f31b9139e7c17dffa22f85594c6125f47ad08f12f8961ed2b9602a508.journal.json
+new file mode 100644
+index 0000000000..7043a1b144
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/stale_heartbeat/device-00c4771f31b9139e7c17dffa22f85594c6125f47ad08f12f8961ed2b9602a508.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33795199116311,
++  "checksum": "sha256:be6a06cd6f60e3a4e8d28776e0f1de0727a868e2a3cedda05cecb500eb0d9c18",
++  "device_uuid": "GPU-attack-stale_heartbeat",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33800199116311,
++  "heartbeat_monotonic_ns": 33795199116311,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:5733644146bb9c86a3133da6fd4cd804211aa491846f5601a31528335e5ed44f"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:58b6d8a27f8506021635e2ef144329912592c2024d1d602b2bcb77d49b6c8574",
++      "monotonic_ns": 33795199116311,
++      "owner_token_digest": "sha256:5733644146bb9c86a3133da6fd4cd804211aa491846f5601a31528335e5ed44f",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-stale_heartbeat",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/stale_heartbeat/device-00c4771f31b9139e7c17dffa22f85594c6125f47ad08f12f8961ed2b9602a508.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/stale_heartbeat/device-00c4771f31b9139e7c17dffa22f85594c6125f47ad08f12f8961ed2b9602a508.lock
+new file mode 100644
+index 0000000000..d3005bb40b
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/stale_heartbeat/device-00c4771f31b9139e7c17dffa22f85594c6125f47ad08f12f8961ed2b9602a508.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-stale_heartbeat","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-stale_heartbeat"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/tamper/device-974c51b4f92fab6f793288a8ebe952dd58083ebb653b671f155c320c1192f392.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/tamper/device-974c51b4f92fab6f793288a8ebe952dd58083ebb653b671f155c320c1192f392.journal.json
+new file mode 100644
+index 0000000000..26e350a8a0
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/tamper/device-974c51b4f92fab6f793288a8ebe952dd58083ebb653b671f155c320c1192f392.journal.json
+@@ -0,0 +1 @@
++{"schema": "carnot.gpu_lease_phase_journal.v1", "task_id": "attack-tamper", "owner": {"pid": 332096, "pid_start_ticks": 3377747, "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12", "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f", "token_digest": "sha256:1564145e31d7b058b72941a59b76067d84d72762b2b9168de698abdf7366dd3d"}, "device_uuid": "GPU-attack-tamper", "expected_model": "tampered/model.gguf", "acquired_monotonic_ns": 33797007053685, "heartbeat_monotonic_ns": 33797007053685, "expires_monotonic_ns": 33802007053685, "ttl_ns": 5000000000, "phase": "preflight", "phase_history": [{"phase": "preflight", "previous_phase": null, "previous_event_checksum": null, "monotonic_ns": 33797007053685, "owner_token_digest": "sha256:1564145e31d7b058b72941a59b76067d84d72762b2b9168de698abdf7366dd3d", "details": {"recovery_performed": false}, "event_checksum": "sha256:bde863790a10b70878406e71adae17677f4eaf97e034ae75911f71d8a4ed282f"}], "vram_mb": {"before": 4, "resident": null, "after": null}, "exit_evidence": {"exit_code": null, "observed_monotonic_ns": null}, "unload_evidence": {"required": false, "observed": false, "observed_monotonic_ns": null}, "recovery": {"performed": false, "signals_sent": []}, "released": false, "released_monotonic_ns": null, "lease_generation": 1, "checksum": "sha256:415fb921e504892ece3f54b18fdba0059b1db145dbe05c9f46d485710753e800"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/tamper/device-974c51b4f92fab6f793288a8ebe952dd58083ebb653b671f155c320c1192f392.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/tamper/device-974c51b4f92fab6f793288a8ebe952dd58083ebb653b671f155c320c1192f392.lock
+new file mode 100644
+index 0000000000..7c0273da66
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/tamper/device-974c51b4f92fab6f793288a8ebe952dd58083ebb653b671f155c320c1192f392.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-tamper","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-tamper"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/timeout/device-af5e7270a320ffefccedb016bbd6f49bd8532f8a2518f8b006fba2d2797dced4.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/timeout/device-af5e7270a320ffefccedb016bbd6f49bd8532f8a2518f8b006fba2d2797dced4.journal.json
+new file mode 100644
+index 0000000000..2c8e9232bb
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/timeout/device-af5e7270a320ffefccedb016bbd6f49bd8532f8a2518f8b006fba2d2797dced4.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33796002265923,
++  "checksum": "sha256:01fb40f618995ce21760e8941fc7ce1cd102c64d074c87f4eb87d5909da73227",
++  "device_uuid": "GPU-attack-timeout",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33801002265923,
++  "heartbeat_monotonic_ns": 33796002265923,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:19c66598d9e3503088a365f97ca2eea0f4f2569e46ca922132114441205ee95b"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:567425adfaf13ebcdf71f7390bd406b987f58a854ddc0fb5e954ca18373f96f7",
++      "monotonic_ns": 33796002265923,
++      "owner_token_digest": "sha256:19c66598d9e3503088a365f97ca2eea0f4f2569e46ca922132114441205ee95b",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-timeout",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/timeout/device-af5e7270a320ffefccedb016bbd6f49bd8532f8a2518f8b006fba2d2797dced4.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/timeout/device-af5e7270a320ffefccedb016bbd6f49bd8532f8a2518f8b006fba2d2797dced4.lock
+new file mode 100644
+index 0000000000..38d80a2163
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/timeout/device-af5e7270a320ffefccedb016bbd6f49bd8532f8a2518f8b006fba2d2797dced4.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-timeout","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-timeout"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_device/device-e11455234a57336fc9dcc3bc598ffbb46aa058f78dbc45d3350e40deedf780d1.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_device/device-e11455234a57336fc9dcc3bc598ffbb46aa058f78dbc45d3350e40deedf780d1.journal.json
+new file mode 100644
+index 0000000000..55c0e2fa04
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_device/device-e11455234a57336fc9dcc3bc598ffbb46aa058f78dbc45d3350e40deedf780d1.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33795601931145,
++  "checksum": "sha256:15ddc8f781ec1366b41a908888c60f9c05aa3a698cbe69af84a5f2f624aa69dc",
++  "device_uuid": "GPU-attack-wrong_device",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33800601931145,
++  "heartbeat_monotonic_ns": 33795601931145,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:073430d6f61a756c596590a358672278958e120e569b7b96385c9fc2d1fc31ab"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:2dcda3e35f773eeadc5158ca54b6b2d2aa7e0ab4304d5708cb1c38e5b2b05bab",
++      "monotonic_ns": 33795601931145,
++      "owner_token_digest": "sha256:073430d6f61a756c596590a358672278958e120e569b7b96385c9fc2d1fc31ab",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-wrong_device",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_device/device-e11455234a57336fc9dcc3bc598ffbb46aa058f78dbc45d3350e40deedf780d1.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_device/device-e11455234a57336fc9dcc3bc598ffbb46aa058f78dbc45d3350e40deedf780d1.lock
+new file mode 100644
+index 0000000000..11581017cd
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_device/device-e11455234a57336fc9dcc3bc598ffbb46aa058f78dbc45d3350e40deedf780d1.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-wrong_device","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-wrong_device"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_model/device-715e996324cd8c585a27299fb0f20d75de881ba8600df2e50c02d71035e5e126.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_model/device-715e996324cd8c585a27299fb0f20d75de881ba8600df2e50c02d71035e5e126.journal.json
+new file mode 100644
+index 0000000000..b35a0b52d0
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_model/device-715e996324cd8c585a27299fb0f20d75de881ba8600df2e50c02d71035e5e126.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33795801787578,
++  "checksum": "sha256:f2119ac7c41ec6a4fd3f30944b7230273b73ba4e69a9316d1dafe4b06ab38a8d",
++  "device_uuid": "GPU-attack-wrong_model",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33800801787578,
++  "heartbeat_monotonic_ns": 33795801787578,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:1ea5e8632b337554811074dec08f14bed5d47a5cd7003a4296d96ca6bddca17d"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:c1ca8e0ee7b02518f487a6b4735704d3c700e81df1151e63f78c654e9767c623",
++      "monotonic_ns": 33795801787578,
++      "owner_token_digest": "sha256:1ea5e8632b337554811074dec08f14bed5d47a5cd7003a4296d96ca6bddca17d",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-wrong_model",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_model/device-715e996324cd8c585a27299fb0f20d75de881ba8600df2e50c02d71035e5e126.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_model/device-715e996324cd8c585a27299fb0f20d75de881ba8600df2e50c02d71035e5e126.lock
+new file mode 100644
+index 0000000000..c569e919dd
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_model/device-715e996324cd8c585a27299fb0f20d75de881ba8600df2e50c02d71035e5e126.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-wrong_model","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-wrong_model"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_token/device-c3fc86ac18e4260b24a95a7438d13bf2c71009012c628b024a086f27a002fbf7.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_token/device-c3fc86ac18e4260b24a95a7438d13bf2c71009012c628b024a086f27a002fbf7.journal.json
+new file mode 100644
+index 0000000000..38b22e40c2
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_token/device-c3fc86ac18e4260b24a95a7438d13bf2c71009012c628b024a086f27a002fbf7.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33795400161158,
++  "checksum": "sha256:28a12b1a8ed66229a5c25032852f57f15d6f5dd1fc4902573c8bb5ef1f8330e8",
++  "device_uuid": "GPU-attack-wrong_token",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33800400161158,
++  "heartbeat_monotonic_ns": 33795400161158,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:a1721781275676a439855f8c84b1ac145027789f59ce848cf4f76ea2bf7ee7aa"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:480bb89d7b66e2b0304c1326ad1974d48fdb87370083ff6810bb81554a70ba07",
++      "monotonic_ns": 33795400161158,
++      "owner_token_digest": "sha256:a1721781275676a439855f8c84b1ac145027789f59ce848cf4f76ea2bf7ee7aa",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "attack-wrong_token",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_token/device-c3fc86ac18e4260b24a95a7438d13bf2c71009012c628b024a086f27a002fbf7.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_token/device-c3fc86ac18e4260b24a95a7438d13bf2c71009012c628b024a086f27a002fbf7.lock
+new file mode 100644
+index 0000000000..834b16c68d
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/attacks/wrong_token/device-c3fc86ac18e4260b24a95a7438d13bf2c71009012c628b024a086f27a002fbf7.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-attack-wrong_token","pid":332096,"pid_start_ticks":3377747,"task_id":"attack-wrong_token"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/allowed/device-d83f13bd3f72c759999b91eb5d8b68f96d3aa7bf51c4d89e4487a18c90f79091.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/allowed/device-d83f13bd3f72c759999b91eb5d8b68f96d3aa7bf51c4d89e4487a18c90f79091.journal.json
+new file mode 100644
+index 0000000000..f8be6c9cce
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/allowed/device-d83f13bd3f72c759999b91eb5d8b68f96d3aa7bf51c4d89e4487a18c90f79091.journal.json
+@@ -0,0 +1,122 @@
++{
++  "acquired_monotonic_ns": 33792122857283,
++  "checksum": "sha256:d6907bb1630a705746bd6c8fe62cb8816aa15a211bcb08d486528bff60c8d43e",
++  "device_uuid": "GPU-phase-allowed",
++  "exit_evidence": {
++    "exit_code": 0,
++    "observed_monotonic_ns": 33792888225195
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33822122857283,
++  "heartbeat_monotonic_ns": 33792122857283,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd"
++  },
++  "phase": "terminal_complete",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:a7e00ee45a62901d4be4c6cbbd48ca35d999874a6a407c7f3527b8b98b0e2bff",
++      "monotonic_ns": 33792122857283,
++      "owner_token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:e747e6449fd7e8c0a5350e31116512a68c3147d279f5c9139895d16e6ad2b0fc",
++      "monotonic_ns": 33792124895779,
++      "owner_token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:a7e00ee45a62901d4be4c6cbbd48ca35d999874a6a407c7f3527b8b98b0e2bff",
++      "previous_phase": "preflight"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:1827e098cd5d27fc654e81d11d4a05fb0d6502d4f5a92f8804cdda91b3d03c47",
++      "monotonic_ns": 33792282906597,
++      "owner_token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd",
++      "phase": "loading",
++      "previous_event_checksum": "sha256:e747e6449fd7e8c0a5350e31116512a68c3147d279f5c9139895d16e6ad2b0fc",
++      "previous_phase": "admitted"
++    },
++    {
++      "details": {
++        "vram_resident_mb": 1028
++      },
++      "event_checksum": "sha256:a38f096a02682402724f1bb622fc8598d95cbb4ed192728676a521291ac40834",
++      "monotonic_ns": 33792484189118,
++      "owner_token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd",
++      "phase": "resident",
++      "previous_event_checksum": "sha256:1827e098cd5d27fc654e81d11d4a05fb0d6502d4f5a92f8804cdda91b3d03c47",
++      "previous_phase": "loading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:4f0bb1d9fc8ee7c0625a398a22f3aca562346987fe2e703df0b638319cb7e7d9",
++      "monotonic_ns": 33792684972695,
++      "owner_token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd",
++      "phase": "inferencing",
++      "previous_event_checksum": "sha256:a38f096a02682402724f1bb622fc8598d95cbb4ed192728676a521291ac40834",
++      "previous_phase": "resident"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:f406b45eb48b0b859722b1f9cfb0af0bd44aad07df591da340db5e125d24a371",
++      "monotonic_ns": 33792886188973,
++      "owner_token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd",
++      "phase": "unloading",
++      "previous_event_checksum": "sha256:4f0bb1d9fc8ee7c0625a398a22f3aca562346987fe2e703df0b638319cb7e7d9",
++      "previous_phase": "inferencing"
++    },
++    {
++      "details": {
++        "exit_code": 0,
++        "unload_observed": true,
++        "vram_after_mb": 4
++      },
++      "event_checksum": "sha256:f58239ed5fd5c43774801fded0e4fe3c5d1b17e228fd34a36c3b698582b83782",
++      "monotonic_ns": 33792888225195,
++      "owner_token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd",
++      "phase": "validating",
++      "previous_event_checksum": "sha256:f406b45eb48b0b859722b1f9cfb0af0bd44aad07df591da340db5e125d24a371",
++      "previous_phase": "unloading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:c06b0487aa0a7fd63e44a5979aa0b058aba1fb73e93de8c555020321de46e6e1",
++      "monotonic_ns": 33792889926208,
++      "owner_token_digest": "sha256:57d10a89615677425157d2b9133cd212f11a5952e68cf0d11bdbf5ab67d56ddd",
++      "phase": "terminal_complete",
++      "previous_event_checksum": "sha256:f58239ed5fd5c43774801fded0e4fe3c5d1b17e228fd34a36c3b698582b83782",
++      "previous_phase": "validating"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": true,
++  "released_monotonic_ns": 33792891256255,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "phase-allowed",
++  "ttl_ns": 30000000000,
++  "unload_evidence": {
++    "observed": true,
++    "observed_monotonic_ns": 33792888225195,
++    "required": true
++  },
++  "vram_mb": {
++    "after": 4,
++    "before": 4,
++    "resident": 1028
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/allowed/device-d83f13bd3f72c759999b91eb5d8b68f96d3aa7bf51c4d89e4487a18c90f79091.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/allowed/device-d83f13bd3f72c759999b91eb5d8b68f96d3aa7bf51c4d89e4487a18c90f79091.lock
+new file mode 100644
+index 0000000000..201d37f829
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/allowed/device-d83f13bd3f72c759999b91eb5d8b68f96d3aa7bf51c4d89e4487a18c90f79091.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-phase-allowed","pid":332096,"pid_start_ticks":3377747,"task_id":"phase-allowed"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/reversal/device-29988fd8f1c921005b2b3fcdd851ea3620c4e95ff6a7163f7f8437a6a2fca131.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/reversal/device-29988fd8f1c921005b2b3fcdd851ea3620c4e95ff6a7163f7f8437a6a2fca131.journal.json
+new file mode 100644
+index 0000000000..57f2f75cd2
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/reversal/device-29988fd8f1c921005b2b3fcdd851ea3620c4e95ff6a7163f7f8437a6a2fca131.journal.json
+@@ -0,0 +1,62 @@
++{
++  "acquired_monotonic_ns": 33793088402644,
++  "checksum": "sha256:f6d218a0a3f9f6ea4f0dd1856d5efc72b3184d36d0624c6417f6b0eb6fab8b79",
++  "device_uuid": "GPU-phase-reversal",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33823088402644,
++  "heartbeat_monotonic_ns": 33793088402644,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:6feab5b24db8c733135a193ea9d4d828e8d83ce5040a2b9e180aaa01403079c4"
++  },
++  "phase": "admitted",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:4f24a9b81ecc2b5e7cadbc61637c0b3f4328030fe51b61916170a898b4d0c252",
++      "monotonic_ns": 33793088402644,
++      "owner_token_digest": "sha256:6feab5b24db8c733135a193ea9d4d828e8d83ce5040a2b9e180aaa01403079c4",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:7814e5957dd0b11ed94dc788ce5705ed7b768464acb178f914999827c00edc6e",
++      "monotonic_ns": 33793188566027,
++      "owner_token_digest": "sha256:6feab5b24db8c733135a193ea9d4d828e8d83ce5040a2b9e180aaa01403079c4",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:4f24a9b81ecc2b5e7cadbc61637c0b3f4328030fe51b61916170a898b4d0c252",
++      "previous_phase": "preflight"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "phase-reversal",
++  "ttl_ns": 30000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/reversal/device-29988fd8f1c921005b2b3fcdd851ea3620c4e95ff6a7163f7f8437a6a2fca131.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/reversal/device-29988fd8f1c921005b2b3fcdd851ea3620c4e95ff6a7163f7f8437a6a2fca131.lock
+new file mode 100644
+index 0000000000..a6d8eaabae
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/reversal/device-29988fd8f1c921005b2b3fcdd851ea3620c4e95ff6a7163f7f8437a6a2fca131.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-phase-reversal","pid":332096,"pid_start_ticks":3377747,"task_id":"phase-reversal"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/second_terminal/device-40f8b1c06efe98e48f003efc1672c7b5176ab381d2ac13eb00a979b107b8a487.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/second_terminal/device-40f8b1c06efe98e48f003efc1672c7b5176ab381d2ac13eb00a979b107b8a487.journal.json
+new file mode 100644
+index 0000000000..5b637f9809
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/second_terminal/device-40f8b1c06efe98e48f003efc1672c7b5176ab381d2ac13eb00a979b107b8a487.journal.json
+@@ -0,0 +1,62 @@
++{
++  "acquired_monotonic_ns": 33793389860202,
++  "checksum": "sha256:0f91f0da5b11b94e532b3028b76bcc4e2c12c59ada7332d6061ce652a62a1ff9",
++  "device_uuid": "GPU-phase-second_terminal",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33823389860202,
++  "heartbeat_monotonic_ns": 33793389860202,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:8afa001070278fe9adba93adc7275ba53e9a61a43271e91d5624bae07e884707"
++  },
++  "phase": "terminal_blocked",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:b35dfb32ae59b38ce5a8f86ba8db36642c64199f6ebd9eb5d08bcef4f8652c63",
++      "monotonic_ns": 33793389860202,
++      "owner_token_digest": "sha256:8afa001070278fe9adba93adc7275ba53e9a61a43271e91d5624bae07e884707",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:f9aed363d4a9025a2492a4a286ae449f3f0341d81a24395cb45b05b8778988f9",
++      "monotonic_ns": 33793593157967,
++      "owner_token_digest": "sha256:8afa001070278fe9adba93adc7275ba53e9a61a43271e91d5624bae07e884707",
++      "phase": "terminal_blocked",
++      "previous_event_checksum": "sha256:b35dfb32ae59b38ce5a8f86ba8db36642c64199f6ebd9eb5d08bcef4f8652c63",
++      "previous_phase": "preflight"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "phase-second_terminal",
++  "ttl_ns": 30000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/second_terminal/device-40f8b1c06efe98e48f003efc1672c7b5176ab381d2ac13eb00a979b107b8a487.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/second_terminal/device-40f8b1c06efe98e48f003efc1672c7b5176ab381d2ac13eb00a979b107b8a487.lock
+new file mode 100644
+index 0000000000..f8ba2e0717
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/second_terminal/device-40f8b1c06efe98e48f003efc1672c7b5176ab381d2ac13eb00a979b107b8a487.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-phase-second_terminal","pid":332096,"pid_start_ticks":3377747,"task_id":"phase-second_terminal"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/skip/device-61c8ae9f8ca019e8090b34dd64235fead7094d0fa6c7f455389a25855c6150f2.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/skip/device-61c8ae9f8ca019e8090b34dd64235fead7094d0fa6c7f455389a25855c6150f2.journal.json
+new file mode 100644
+index 0000000000..208bdd8d94
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/skip/device-61c8ae9f8ca019e8090b34dd64235fead7094d0fa6c7f455389a25855c6150f2.journal.json
+@@ -0,0 +1,53 @@
++{
++  "acquired_monotonic_ns": 33792892266742,
++  "checksum": "sha256:8de589e16da9dcb54136baeb9aaa58ce079a34d25eac8cb3f93389989ba2b1bc",
++  "device_uuid": "GPU-phase-skip",
++  "exit_evidence": {
++    "exit_code": null,
++    "observed_monotonic_ns": null
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33822892266742,
++  "heartbeat_monotonic_ns": 33792892266742,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332096,
++    "pid_start_ticks": 3377747,
++    "token_digest": "sha256:0c381de260f208aefbe56a25e6e4a15759cc3c6307636b84590ee4bf60f0978f"
++  },
++  "phase": "preflight",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:0fbea3d2270e5b193b0ff8e911f4a24950ce4639b2715b0f2ba2962ee28707a8",
++      "monotonic_ns": 33792892266742,
++      "owner_token_digest": "sha256:0c381de260f208aefbe56a25e6e4a15759cc3c6307636b84590ee4bf60f0978f",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": false,
++  "released_monotonic_ns": null,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "phase-skip",
++  "ttl_ns": 30000000000,
++  "unload_evidence": {
++    "observed": false,
++    "observed_monotonic_ns": null,
++    "required": false
++  },
++  "vram_mb": {
++    "after": null,
++    "before": 4,
++    "resident": null
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/skip/device-61c8ae9f8ca019e8090b34dd64235fead7094d0fa6c7f455389a25855c6150f2.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/skip/device-61c8ae9f8ca019e8090b34dd64235fead7094d0fa6c7f455389a25855c6150f2.lock
+new file mode 100644
+index 0000000000..54bf5be11a
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/phases/skip/device-61c8ae9f8ca019e8090b34dd64235fead7094d0fa6c7f455389a25855c6150f2.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-phase-skip","pid":332096,"pid_start_ticks":3377747,"task_id":"phase-skip"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.journal.json
+new file mode 100644
+index 0000000000..24e402a1fc
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.journal.json
+@@ -0,0 +1,127 @@
++{
++  "acquired_monotonic_ns": 33784264927405,
++  "checksum": "sha256:5998471bf3af89e91ec3fa740ed4f35aec66428a92897febc91f14b2de4bb840",
++  "device_uuid": "GPU-fixture-crash",
++  "exit_evidence": {
++    "exit_code": 0,
++    "observed_monotonic_ns": 33785046727661
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33789264927405,
++  "heartbeat_monotonic_ns": 33784264927405,
++  "lease_generation": 2,
++  "owner": {
++    "argv_digest": "sha256:eeac4cae9804945800c96616f421259fdef4feea28236f23cc37656cb2bdf7a5",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332270,
++    "pid_start_ticks": 3378384,
++    "token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30"
++  },
++  "phase": "terminal_complete",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": true
++      },
++      "event_checksum": "sha256:deb1ae797c439144caced59739bb1b4a0d907c2f00c832e23a9846446998755c",
++      "monotonic_ns": 33784264927405,
++      "owner_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:f210924fa02723d27684435e84934a6005f1cede39853b3cb471616f27bfc2d0",
++      "monotonic_ns": 33784442843346,
++      "owner_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:deb1ae797c439144caced59739bb1b4a0d907c2f00c832e23a9846446998755c",
++      "previous_phase": "preflight"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:2488cb5177e6460a154fe7a8946bd800634b0db8720bac79e1e691217f417e0a",
++      "monotonic_ns": 33784643141300,
++      "owner_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "phase": "loading",
++      "previous_event_checksum": "sha256:f210924fa02723d27684435e84934a6005f1cede39853b3cb471616f27bfc2d0",
++      "previous_phase": "admitted"
++    },
++    {
++      "details": {
++        "vram_resident_mb": 1028
++      },
++      "event_checksum": "sha256:b3e8c354fe3c02ee21c0f7366574fbe9d599166626adc9e65653a473ed8fce74",
++      "monotonic_ns": 33784645011821,
++      "owner_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "phase": "resident",
++      "previous_event_checksum": "sha256:2488cb5177e6460a154fe7a8946bd800634b0db8720bac79e1e691217f417e0a",
++      "previous_phase": "loading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:4a043300a4eff40dc6551ce517ab92cf3741cc178bc56f0bcc0b8e508d78bfa8",
++      "monotonic_ns": 33784843912442,
++      "owner_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "phase": "inferencing",
++      "previous_event_checksum": "sha256:b3e8c354fe3c02ee21c0f7366574fbe9d599166626adc9e65653a473ed8fce74",
++      "previous_phase": "resident"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:c899b2c51b6b6ec5af9ee83ddd7f76095ea63f0fb0608714d24ed1b42d54af3f",
++      "monotonic_ns": 33785045192550,
++      "owner_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "phase": "unloading",
++      "previous_event_checksum": "sha256:4a043300a4eff40dc6551ce517ab92cf3741cc178bc56f0bcc0b8e508d78bfa8",
++      "previous_phase": "inferencing"
++    },
++    {
++      "details": {
++        "exit_code": 0,
++        "unload_observed": true,
++        "vram_after_mb": 4
++      },
++      "event_checksum": "sha256:aa21609a0c8a1df17eee4e1b0f981066e049f4748588fbdb87f6f089637e9995",
++      "monotonic_ns": 33785046727661,
++      "owner_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "phase": "validating",
++      "previous_event_checksum": "sha256:c899b2c51b6b6ec5af9ee83ddd7f76095ea63f0fb0608714d24ed1b42d54af3f",
++      "previous_phase": "unloading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:1f8a8379b498201b9aff2f66f57209088f893e9b6245d5f1a6db847c37fc38b0",
++      "monotonic_ns": 33785047808630,
++      "owner_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "phase": "terminal_complete",
++      "previous_event_checksum": "sha256:aa21609a0c8a1df17eee4e1b0f981066e049f4748588fbdb87f6f089637e9995",
++      "previous_phase": "validating"
++    }
++  ],
++  "recovery": {
++    "performed": true,
++    "previous_checksum": "sha256:3e5029fda95a9bfbde2bbd7b0188855544be2583394b84117220a608a25ad0cd",
++    "previous_pid": 332246,
++    "previous_pid_start_ticks": 3378325,
++    "previous_task_id": "crash-owner",
++    "reason": "recorded_owner_absent_or_pid_reused",
++    "signals_sent": []
++  },
++  "released": true,
++  "released_monotonic_ns": 33785048903215,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "recovery-owner",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": true,
++    "observed_monotonic_ns": 33785046727661,
++    "required": true
++  },
++  "vram_mb": {
++    "after": 4,
++    "before": 4,
++    "resident": 1028
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.lock
+new file mode 100644
+index 0000000000..580e54726e
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-fixture-crash","pid":332270,"pid_start_ticks":3378384,"task_id":"recovery-owner"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-3310892ee977394c416c4796c37e2cf376dd5369e244b66fc39b81aab7300fce.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-3310892ee977394c416c4796c37e2cf376dd5369e244b66fc39b81aab7300fce.journal.json
+new file mode 100644
+index 0000000000..2d8813169c
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-3310892ee977394c416c4796c37e2cf376dd5369e244b66fc39b81aab7300fce.journal.json
+@@ -0,0 +1,122 @@
++{
++  "acquired_monotonic_ns": 33781448769199,
++  "checksum": "sha256:2f129ff5b247fa74fc4e507ec4994262b7dde2fcb38d4e140e9ec5f88c764486",
++  "device_uuid": "GPU-fixture-independent-0",
++  "exit_evidence": {
++    "exit_code": 0,
++    "observed_monotonic_ns": 33782332288698
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33786448769199,
++  "heartbeat_monotonic_ns": 33781448769199,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:cc429a652eb0819e027b6c18f998ac72efe6896261ac6da493f1a98cb9af395c",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332198,
++    "pid_start_ticks": 3378093,
++    "token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a"
++  },
++  "phase": "terminal_complete",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:7d4f841dfea216f51e62d3a3a88fbcc0850c764e15b12fec5f60301a8af35baf",
++      "monotonic_ns": 33781448769199,
++      "owner_token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:d80d5189984d1be4a14e162949ad1a5de97772eb46f9f1865fc493bec6ee0846",
++      "monotonic_ns": 33781601403514,
++      "owner_token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:7d4f841dfea216f51e62d3a3a88fbcc0850c764e15b12fec5f60301a8af35baf",
++      "previous_phase": "preflight"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:f6db6e8f855b08e6757d2310010658eb70f36206dd54726de0c6e42cf28b99a8",
++      "monotonic_ns": 33781603738768,
++      "owner_token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++      "phase": "loading",
++      "previous_event_checksum": "sha256:d80d5189984d1be4a14e162949ad1a5de97772eb46f9f1865fc493bec6ee0846",
++      "previous_phase": "admitted"
++    },
++    {
++      "details": {
++        "vram_resident_mb": 1028
++      },
++      "event_checksum": "sha256:596465aad72ddeb6261a1f1a075faff6ba2d8a8596c26efbca06cbe3476b1ba1",
++      "monotonic_ns": 33781728672608,
++      "owner_token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++      "phase": "resident",
++      "previous_event_checksum": "sha256:f6db6e8f855b08e6757d2310010658eb70f36206dd54726de0c6e42cf28b99a8",
++      "previous_phase": "loading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:8dfadd26614f13e6334957ca057c675c2a876d81749cf4fc1f7858480f8d408d",
++      "monotonic_ns": 33781759651538,
++      "owner_token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++      "phase": "inferencing",
++      "previous_event_checksum": "sha256:596465aad72ddeb6261a1f1a075faff6ba2d8a8596c26efbca06cbe3476b1ba1",
++      "previous_phase": "resident"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:384a1867f38e2e96807aaaeec815ecdcd16b449f12ca8f34289d18dfeea00360",
++      "monotonic_ns": 33781931679016,
++      "owner_token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++      "phase": "unloading",
++      "previous_event_checksum": "sha256:8dfadd26614f13e6334957ca057c675c2a876d81749cf4fc1f7858480f8d408d",
++      "previous_phase": "inferencing"
++    },
++    {
++      "details": {
++        "exit_code": 0,
++        "unload_observed": true,
++        "vram_after_mb": 4
++      },
++      "event_checksum": "sha256:178284dc880e2d86d50411f29f68823bcef88614405f22265caf3b9bbf855e80",
++      "monotonic_ns": 33782332288698,
++      "owner_token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++      "phase": "validating",
++      "previous_event_checksum": "sha256:384a1867f38e2e96807aaaeec815ecdcd16b449f12ca8f34289d18dfeea00360",
++      "previous_phase": "unloading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:514f15e79f8b4d49cda26e9b07fc58df12522d7aa594a54e1a046fbae2d73acf",
++      "monotonic_ns": 33782533705143,
++      "owner_token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++      "phase": "terminal_complete",
++      "previous_event_checksum": "sha256:178284dc880e2d86d50411f29f68823bcef88614405f22265caf3b9bbf855e80",
++      "previous_phase": "validating"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": true,
++  "released_monotonic_ns": 33782735137716,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "independent-0",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": true,
++    "observed_monotonic_ns": 33782332288698,
++    "required": true
++  },
++  "vram_mb": {
++    "after": 4,
++    "before": 4,
++    "resident": 1028
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-3310892ee977394c416c4796c37e2cf376dd5369e244b66fc39b81aab7300fce.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-3310892ee977394c416c4796c37e2cf376dd5369e244b66fc39b81aab7300fce.lock
+new file mode 100644
+index 0000000000..06f59d2fc4
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-3310892ee977394c416c4796c37e2cf376dd5369e244b66fc39b81aab7300fce.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-fixture-independent-0","pid":332198,"pid_start_ticks":3378093,"task_id":"independent-0"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-8b9aa90c4054bbe11378d3f06b44b52f91b4d9047a4b955996e3f4948b89dad1.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-8b9aa90c4054bbe11378d3f06b44b52f91b4d9047a4b955996e3f4948b89dad1.journal.json
+new file mode 100644
+index 0000000000..73e253038b
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-8b9aa90c4054bbe11378d3f06b44b52f91b4d9047a4b955996e3f4948b89dad1.journal.json
+@@ -0,0 +1,122 @@
++{
++  "acquired_monotonic_ns": 33781457714049,
++  "checksum": "sha256:423ee293a7a7015afd25cd3e32c9f5b393b24deae30d2fe00218900cce04ee45",
++  "device_uuid": "GPU-fixture-independent-1",
++  "exit_evidence": {
++    "exit_code": 0,
++    "observed_monotonic_ns": 33782934208988
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33786457714049,
++  "heartbeat_monotonic_ns": 33781457714049,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:4b7e6e4bb703b69305462e830fe1214cfa6fc399de6b06a1c7c282325b94f72b",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332199,
++    "pid_start_ticks": 3378093,
++    "token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6"
++  },
++  "phase": "terminal_complete",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:9414a063f4404abe707b7ab309275015f7107f97dc8dffc9ed21f5efbdd11c34",
++      "monotonic_ns": 33781457714049,
++      "owner_token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:598caa40c153919c6cb67b6f701da08e23db91dbc2f607029bef2214d9d0aea4",
++      "monotonic_ns": 33781756745944,
++      "owner_token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:9414a063f4404abe707b7ab309275015f7107f97dc8dffc9ed21f5efbdd11c34",
++      "previous_phase": "preflight"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:6dbfda305a1461b3122e4f50cd954b78d0e145d872e445236da1866cb14a69d5",
++      "monotonic_ns": 33781928984308,
++      "owner_token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++      "phase": "loading",
++      "previous_event_checksum": "sha256:598caa40c153919c6cb67b6f701da08e23db91dbc2f607029bef2214d9d0aea4",
++      "previous_phase": "admitted"
++    },
++    {
++      "details": {
++        "vram_resident_mb": 1028
++      },
++      "event_checksum": "sha256:275aa3e7f99b59475ab565871e2ae261e6c8aab1d0a118056184c19dfa1f7fe0",
++      "monotonic_ns": 33782330781138,
++      "owner_token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++      "phase": "resident",
++      "previous_event_checksum": "sha256:6dbfda305a1461b3122e4f50cd954b78d0e145d872e445236da1866cb14a69d5",
++      "previous_phase": "loading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:19f39388032db600dff97cee2e06b63730bea972ebff5d97a6affd2f204607cc",
++      "monotonic_ns": 33782532066767,
++      "owner_token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++      "phase": "inferencing",
++      "previous_event_checksum": "sha256:275aa3e7f99b59475ab565871e2ae261e6c8aab1d0a118056184c19dfa1f7fe0",
++      "previous_phase": "resident"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:ed25bfd3b1805cf1256ce87a69fd4d33b5d883a456ddb6fbeb576006ff89bb3f",
++      "monotonic_ns": 33782733081346,
++      "owner_token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++      "phase": "unloading",
++      "previous_event_checksum": "sha256:19f39388032db600dff97cee2e06b63730bea972ebff5d97a6affd2f204607cc",
++      "previous_phase": "inferencing"
++    },
++    {
++      "details": {
++        "exit_code": 0,
++        "unload_observed": true,
++        "vram_after_mb": 4
++      },
++      "event_checksum": "sha256:54c6bfb29a2ea255753b4856c9fe0ae9f99026b8bcd06603b9ed03b766645d54",
++      "monotonic_ns": 33782934208988,
++      "owner_token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++      "phase": "validating",
++      "previous_event_checksum": "sha256:ed25bfd3b1805cf1256ce87a69fd4d33b5d883a456ddb6fbeb576006ff89bb3f",
++      "previous_phase": "unloading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:8e36cca89e4f8422874dba8215b6ded188dbefcf68d8a5275ce8f7f8baa8159d",
++      "monotonic_ns": 33783135656340,
++      "owner_token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++      "phase": "terminal_complete",
++      "previous_event_checksum": "sha256:54c6bfb29a2ea255753b4856c9fe0ae9f99026b8bcd06603b9ed03b766645d54",
++      "previous_phase": "validating"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": true,
++  "released_monotonic_ns": 33783137570643,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "independent-1",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": true,
++    "observed_monotonic_ns": 33782934208988,
++    "required": true
++  },
++  "vram_mb": {
++    "after": 4,
++    "before": 4,
++    "resident": 1028
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-8b9aa90c4054bbe11378d3f06b44b52f91b4d9047a4b955996e3f4948b89dad1.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-8b9aa90c4054bbe11378d3f06b44b52f91b4d9047a4b955996e3f4948b89dad1.lock
+new file mode 100644
+index 0000000000..49f451d285
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices/device-8b9aa90c4054bbe11378d3f06b44b52f91b4d9047a4b955996e3f4948b89dad1.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-fixture-independent-1","pid":332199,"pid_start_ticks":3378093,"task_id":"independent-1"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json
+new file mode 100644
+index 0000000000..279972e6f1
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json
+@@ -0,0 +1,122 @@
++{
++  "acquired_monotonic_ns": 33789416178886,
++  "checksum": "sha256:79070e0fe1d2f6b16ad0bac508aaf0ce3a0587a4a33405e22944995bb5635c69",
++  "device_uuid": "GPU-fixture-partial",
++  "exit_evidence": {
++    "exit_code": 0,
++    "observed_monotonic_ns": 33790172256989
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33794416178886,
++  "heartbeat_monotonic_ns": 33789416178886,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:926790ce04ff3c09c2fdd8ba0ef8f760fe1e819280c095f5f1b5a2d0b213aabf",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332370,
++    "pid_start_ticks": 3378897,
++    "token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340"
++  },
++  "phase": "terminal_complete",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:d34ef1b8f5ec0e534bd78b9f98a7d4018872ed1f8c4206496cc111ff4616d739",
++      "monotonic_ns": 33789416178886,
++      "owner_token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:08add9aa54f5a20cc84e39c9e4280d37f68afd65882b532ec6c51ee8bcdd674d",
++      "monotonic_ns": 33789418239824,
++      "owner_token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:d34ef1b8f5ec0e534bd78b9f98a7d4018872ed1f8c4206496cc111ff4616d739",
++      "previous_phase": "preflight"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:e33be7a8cb84088673aa884b18b0cc684e82a6cb47fec657e1644b2b4563daae",
++      "monotonic_ns": 33789568772334,
++      "owner_token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340",
++      "phase": "loading",
++      "previous_event_checksum": "sha256:08add9aa54f5a20cc84e39c9e4280d37f68afd65882b532ec6c51ee8bcdd674d",
++      "previous_phase": "admitted"
++    },
++    {
++      "details": {
++        "vram_resident_mb": 1028
++      },
++      "event_checksum": "sha256:bdfe541eeb495f62d58764b90c534961f77a9f407f01dcb4d0562716ea9c3110",
++      "monotonic_ns": 33789570852208,
++      "owner_token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340",
++      "phase": "resident",
++      "previous_event_checksum": "sha256:e33be7a8cb84088673aa884b18b0cc684e82a6cb47fec657e1644b2b4563daae",
++      "previous_phase": "loading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:d14a5b0f630d9a908b0f35c3ad3cece466744a7903507cfce2a0a8cf7afd3bbe",
++      "monotonic_ns": 33789769900748,
++      "owner_token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340",
++      "phase": "inferencing",
++      "previous_event_checksum": "sha256:bdfe541eeb495f62d58764b90c534961f77a9f407f01dcb4d0562716ea9c3110",
++      "previous_phase": "resident"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:9b1ae66bcbde8b3e0cde948ce378bffeb051440b7a6cbf7d704e992781b05dd6",
++      "monotonic_ns": 33789970766648,
++      "owner_token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340",
++      "phase": "unloading",
++      "previous_event_checksum": "sha256:d14a5b0f630d9a908b0f35c3ad3cece466744a7903507cfce2a0a8cf7afd3bbe",
++      "previous_phase": "inferencing"
++    },
++    {
++      "details": {
++        "exit_code": 0,
++        "unload_observed": true,
++        "vram_after_mb": 4
++      },
++      "event_checksum": "sha256:873e8ee17e5fbbbfe6c9fa03a42cad8ed79f0670fa966ad20a0352a74e6dbf0d",
++      "monotonic_ns": 33790172256989,
++      "owner_token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340",
++      "phase": "validating",
++      "previous_event_checksum": "sha256:9b1ae66bcbde8b3e0cde948ce378bffeb051440b7a6cbf7d704e992781b05dd6",
++      "previous_phase": "unloading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:2628ab8ec51ec7c6df307973f4f91e4669140f3b9908ee2f338691c092914ab1",
++      "monotonic_ns": 33790174806154,
++      "owner_token_digest": "sha256:4ad5b9e377c3d58eab5794179246711a3ea8f7f297f2c354ff746bbb742a3340",
++      "phase": "terminal_complete",
++      "previous_event_checksum": "sha256:873e8ee17e5fbbbfe6c9fa03a42cad8ed79f0670fa966ad20a0352a74e6dbf0d",
++      "previous_phase": "validating"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": true,
++  "released_monotonic_ns": 33790176093691,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "partial-owner",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": true,
++    "observed_monotonic_ns": 33790172256989,
++    "required": true
++  },
++  "vram_mb": {
++    "after": 4,
++    "before": 4,
++    "resident": 1028
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json.partial.tmp b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json.partial.tmp
+new file mode 100644
+index 0000000000..dbfe2d0790
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json.partial.tmp
+@@ -0,0 +1 @@
++{"phase":
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.lock
+new file mode 100644
+index 0000000000..327b500218
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-fixture-partial","pid":332370,"pid_start_ticks":3378897,"task_id":"partial-owner"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race/device-2b5f39904c0c38b714373d1d6ccac49f34b68e30af1167cc452c51ec03786041.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race/device-2b5f39904c0c38b714373d1d6ccac49f34b68e30af1167cc452c51ec03786041.journal.json
+new file mode 100644
+index 0000000000..80394e1fb6
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race/device-2b5f39904c0c38b714373d1d6ccac49f34b68e30af1167cc452c51ec03786041.journal.json
+@@ -0,0 +1,122 @@
++{
++  "acquired_monotonic_ns": 33778379147455,
++  "checksum": "sha256:28eaeecf48b3dbda7fb7032aa78c2f5966d5228ae1429829377ef4331e341bfe",
++  "device_uuid": "GPU-fixture-race",
++  "exit_evidence": {
++    "exit_code": 0,
++    "observed_monotonic_ns": 33780823462060
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33783379147455,
++  "heartbeat_monotonic_ns": 33778379147455,
++  "lease_generation": 1,
++  "owner": {
++    "argv_digest": "sha256:a00017b90040f7a85007dc2a508e37f09fae6f65f277c01c9939473b06bcfc08",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332146,
++    "pid_start_ticks": 3377798,
++    "token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591"
++  },
++  "phase": "terminal_complete",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": false
++      },
++      "event_checksum": "sha256:bee942cb41fb74b9d2dc44dc39652418fb750e982920813fb75f9a8f8160415d",
++      "monotonic_ns": 33778379147455,
++      "owner_token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:dbf9ce1e3b31c26174297c309b7cc0fe753054c9dc9c8c375cc36f404c2d2cc1",
++      "monotonic_ns": 33779881704964,
++      "owner_token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:bee942cb41fb74b9d2dc44dc39652418fb750e982920813fb75f9a8f8160415d",
++      "previous_phase": "preflight"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:3686882bf70818bd0c356af268ecb38db12d8053d03ce2c73a143c72799f9130",
++      "monotonic_ns": 33780018906582,
++      "owner_token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "phase": "loading",
++      "previous_event_checksum": "sha256:dbf9ce1e3b31c26174297c309b7cc0fe753054c9dc9c8c375cc36f404c2d2cc1",
++      "previous_phase": "admitted"
++    },
++    {
++      "details": {
++        "vram_resident_mb": 1028
++      },
++      "event_checksum": "sha256:3f77cd4b5de46b25606cd51e999ff63dccbe51339da1fe8dff409706a3fb2263",
++      "monotonic_ns": 33780219917696,
++      "owner_token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "phase": "resident",
++      "previous_event_checksum": "sha256:3686882bf70818bd0c356af268ecb38db12d8053d03ce2c73a143c72799f9130",
++      "previous_phase": "loading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:c5e8644c7ca4b2519ba2b3fb3d3bbd1b915359bbbc14d42731c0d0004d9bf941",
++      "monotonic_ns": 33780421123021,
++      "owner_token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "phase": "inferencing",
++      "previous_event_checksum": "sha256:3f77cd4b5de46b25606cd51e999ff63dccbe51339da1fe8dff409706a3fb2263",
++      "previous_phase": "resident"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:1021d0e532163d6a261eb3b4b483b4a29f930bb3ba2367cc345bbac593970f13",
++      "monotonic_ns": 33780622173839,
++      "owner_token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "phase": "unloading",
++      "previous_event_checksum": "sha256:c5e8644c7ca4b2519ba2b3fb3d3bbd1b915359bbbc14d42731c0d0004d9bf941",
++      "previous_phase": "inferencing"
++    },
++    {
++      "details": {
++        "exit_code": 0,
++        "unload_observed": true,
++        "vram_after_mb": 4
++      },
++      "event_checksum": "sha256:00fa4115e663e7f05bcadcc8d669586e7cf42bf5f3c10d4394f7b45aeada83bb",
++      "monotonic_ns": 33780823462060,
++      "owner_token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "phase": "validating",
++      "previous_event_checksum": "sha256:1021d0e532163d6a261eb3b4b483b4a29f930bb3ba2367cc345bbac593970f13",
++      "previous_phase": "unloading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:192d65d353a26135b67ecd6cdb9868ed3805304adf6832c1b09854f5ad96d7ff",
++      "monotonic_ns": 33780825240959,
++      "owner_token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "phase": "terminal_complete",
++      "previous_event_checksum": "sha256:00fa4115e663e7f05bcadcc8d669586e7cf42bf5f3c10d4394f7b45aeada83bb",
++      "previous_phase": "validating"
++    }
++  ],
++  "recovery": {
++    "performed": false,
++    "signals_sent": []
++  },
++  "released": true,
++  "released_monotonic_ns": 33780826580203,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "race-owner",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": true,
++    "observed_monotonic_ns": 33780823462060,
++    "required": true
++  },
++  "vram_mb": {
++    "after": 4,
++    "before": 4,
++    "resident": 1028
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race/device-2b5f39904c0c38b714373d1d6ccac49f34b68e30af1167cc452c51ec03786041.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race/device-2b5f39904c0c38b714373d1d6ccac49f34b68e30af1167cc452c51ec03786041.lock
+new file mode 100644
+index 0000000000..fcb1012961
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race/device-2b5f39904c0c38b714373d1d6ccac49f34b68e30af1167cc452c51ec03786041.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-fixture-race","pid":332146,"pid_start_ticks":3377798,"task_id":"race-owner"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.journal.json
+new file mode 100644
+index 0000000000..76d5f9f08a
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.journal.json
+@@ -0,0 +1,127 @@
++{
++  "acquired_monotonic_ns": 33787682271313,
++  "checksum": "sha256:a5c764032ee0ad5e37ae2d82d6aa2ae867dcd077ada0a7cb377281057078cb93",
++  "device_uuid": "GPU-fixture-stale",
++  "exit_evidence": {
++    "exit_code": 0,
++    "observed_monotonic_ns": 33788665686805
++  },
++  "expected_model": "fixture/model.gguf",
++  "expires_monotonic_ns": 33792682271313,
++  "heartbeat_monotonic_ns": 33787682271313,
++  "lease_generation": 2,
++  "owner": {
++    "argv_digest": "sha256:ccb31aa0ee45f453432c4f0f01b187264a73f464402a1d1a24b224ebb31f66a6",
++    "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++    "pid": 332346,
++    "pid_start_ticks": 3378725,
++    "token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246"
++  },
++  "phase": "terminal_complete",
++  "phase_history": [
++    {
++      "details": {
++        "recovery_performed": true
++      },
++      "event_checksum": "sha256:85bc01d33423cbe27e58b725f37213d15bae3093dd3e2e780d617006adea4222",
++      "monotonic_ns": 33787682271313,
++      "owner_token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++      "phase": "preflight",
++      "previous_event_checksum": null,
++      "previous_phase": null
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:56e588aff04676b34cd53384962b62bf84039de67fa5f6b9fb7a1d1c7c8ec2ff",
++      "monotonic_ns": 33787860748768,
++      "owner_token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++      "phase": "admitted",
++      "previous_event_checksum": "sha256:85bc01d33423cbe27e58b725f37213d15bae3093dd3e2e780d617006adea4222",
++      "previous_phase": "preflight"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:d4891e09bfa50021187712ba64bec640d14ab8adf042116e43cf165d24f65982",
++      "monotonic_ns": 33788060951754,
++      "owner_token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++      "phase": "loading",
++      "previous_event_checksum": "sha256:56e588aff04676b34cd53384962b62bf84039de67fa5f6b9fb7a1d1c7c8ec2ff",
++      "previous_phase": "admitted"
++    },
++    {
++      "details": {
++        "vram_resident_mb": 1028
++      },
++      "event_checksum": "sha256:b0ff8a50504f8ac9a369b226436117ce44701f8aaf793489ba06ad241c5ad491",
++      "monotonic_ns": 33788261925304,
++      "owner_token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++      "phase": "resident",
++      "previous_event_checksum": "sha256:d4891e09bfa50021187712ba64bec640d14ab8adf042116e43cf165d24f65982",
++      "previous_phase": "loading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:a03f2cfaed5fa11564aecf3b4adedab824338c2b4a53eaf8bacb92051bddcc24",
++      "monotonic_ns": 33788463037978,
++      "owner_token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++      "phase": "inferencing",
++      "previous_event_checksum": "sha256:b0ff8a50504f8ac9a369b226436117ce44701f8aaf793489ba06ad241c5ad491",
++      "previous_phase": "resident"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:da451cbfe11f202b98f87e875f44612fe67c8bf38f00d0fe714b53f8289f4ea0",
++      "monotonic_ns": 33788664034143,
++      "owner_token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++      "phase": "unloading",
++      "previous_event_checksum": "sha256:a03f2cfaed5fa11564aecf3b4adedab824338c2b4a53eaf8bacb92051bddcc24",
++      "previous_phase": "inferencing"
++    },
++    {
++      "details": {
++        "exit_code": 0,
++        "unload_observed": true,
++        "vram_after_mb": 4
++      },
++      "event_checksum": "sha256:c90e9f5b1af68bd2b2291c9b931fb1be1e430e48ba8a2d918cebafba82da1a6e",
++      "monotonic_ns": 33788665686805,
++      "owner_token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++      "phase": "validating",
++      "previous_event_checksum": "sha256:da451cbfe11f202b98f87e875f44612fe67c8bf38f00d0fe714b53f8289f4ea0",
++      "previous_phase": "unloading"
++    },
++    {
++      "details": {},
++      "event_checksum": "sha256:301ee4fca5b45022bceeee26ec833e5a7b7d1128c5b55ded2c8d963db4e7b360",
++      "monotonic_ns": 33788667124715,
++      "owner_token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++      "phase": "terminal_complete",
++      "previous_event_checksum": "sha256:c90e9f5b1af68bd2b2291c9b931fb1be1e430e48ba8a2d918cebafba82da1a6e",
++      "previous_phase": "validating"
++    }
++  ],
++  "recovery": {
++    "performed": true,
++    "previous_checksum": "sha256:7dfa5578876c8e4e778532337073af562ca4044224315f1c7715fb4db0dcb43c",
++    "previous_pid": 332298,
++    "previous_pid_start_ticks": 3378515,
++    "previous_task_id": "stale-owner",
++    "reason": "recorded_owner_absent_or_pid_reused",
++    "signals_sent": []
++  },
++  "released": true,
++  "released_monotonic_ns": 33788668194994,
++  "schema": "carnot.gpu_lease_phase_journal.v1",
++  "task_id": "stale-recovery",
++  "ttl_ns": 5000000000,
++  "unload_evidence": {
++    "observed": true,
++    "observed_monotonic_ns": 33788665686805,
++    "required": true
++  },
++  "vram_mb": {
++    "after": 4,
++    "before": 4,
++    "resident": 1028
++  }
++}
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.lock
+new file mode 100644
+index 0000000000..d4f5f9aead
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-fixture-stale","pid":332346,"pid_start_ticks":3378725,"task_id":"stale-recovery"}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper/device-6973a19f7ef8fa8bff4d7b25afad1bca79c5d21fa7b0104536cf8d6bd2d378b8.journal.json b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper/device-6973a19f7ef8fa8bff4d7b25afad1bca79c5d21fa7b0104536cf8d6bd2d378b8.journal.json
+new file mode 100644
+index 0000000000..36a666ec2b
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper/device-6973a19f7ef8fa8bff4d7b25afad1bca79c5d21fa7b0104536cf8d6bd2d378b8.journal.json
+@@ -0,0 +1 @@
++{"acquired_monotonic_ns": 33790741584130, "checksum": "sha256:6245b2681c0d762552bd5d5933f805f562b402f83f31875179dfa1e644bd94ae", "device_uuid": "GPU-fixture-tamper", "exit_evidence": {"exit_code": 0, "observed_monotonic_ns": 33791277180674}, "expected_model": "tampered/model.gguf", "expires_monotonic_ns": 33795741584130, "heartbeat_monotonic_ns": 33790741584130, "lease_generation": 1, "owner": {"argv_digest": "sha256:76f311aaeab1372afe482349fadd43cdfa6d8328cf8e8a4cfeb17247612a4e41", "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12", "pid": 332399, "pid_start_ticks": 3379031, "token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1"}, "phase": "terminal_complete", "phase_history": [{"details": {"recovery_performed": false}, "event_checksum": "sha256:772cf7a3cce476232edd9b86369fd4e82f31f8636352f9ac2971a09d8b30754b", "monotonic_ns": 33790741584130, "owner_token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1", "phase": "preflight", "previous_event_checksum": null, "previous_phase": null}, {"details": {}, "event_checksum": "sha256:093e47cd50896d8bfb3dfd89508416548ad26dc8754c7c51e00ab2cad5084bb9", "monotonic_ns": 33790744293756, "owner_token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1", "phase": "admitted", "previous_event_checksum": "sha256:772cf7a3cce476232edd9b86369fd4e82f31f8636352f9ac2971a09d8b30754b", "previous_phase": "preflight"}, {"details": {}, "event_checksum": "sha256:6c86af0e2c854426e929625e0e24ea87b1b5637181cca4222de8a7b5d1c390db", "monotonic_ns": 33790745772302, "owner_token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1", "phase": "loading", "previous_event_checksum": "sha256:093e47cd50896d8bfb3dfd89508416548ad26dc8754c7c51e00ab2cad5084bb9", "previous_phase": "admitted"}, {"details": {"vram_resident_mb": 1028}, "event_checksum": "sha256:6dcdc0fa5fe9a0bb1b5dd079475bfc504bf0025823e06f69b5e9d715c9cd4118", "monotonic_ns": 33790875845138, "owner_token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1", "phase": "resident", "previous_event_checksum": "sha256:6c86af0e2c854426e929625e0e24ea87b1b5637181cca4222de8a7b5d1c390db", "previous_phase": "loading"}, {"details": {}, "event_checksum": "sha256:9b49b22e485b4736af42bbfcef643a84d8db871768d309c06eca27854969e956", "monotonic_ns": 33790877826156, "owner_token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1", "phase": "inferencing", "previous_event_checksum": "sha256:6dcdc0fa5fe9a0bb1b5dd079475bfc504bf0025823e06f69b5e9d715c9cd4118", "previous_phase": "resident"}, {"details": {}, "event_checksum": "sha256:e485a295ea4336fa7b41c11935d5a8c9e77757075ff129021a523f481a6a76e4", "monotonic_ns": 33791076981105, "owner_token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1", "phase": "unloading", "previous_event_checksum": "sha256:9b49b22e485b4736af42bbfcef643a84d8db871768d309c06eca27854969e956", "previous_phase": "inferencing"}, {"details": {"exit_code": 0, "unload_observed": true, "vram_after_mb": 4}, "event_checksum": "sha256:59ade08455dbb15edfa8cc5c8c06c5d312951c29a4eb76e821a24a0bfc35c6bc", "monotonic_ns": 33791277180674, "owner_token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1", "phase": "validating", "previous_event_checksum": "sha256:e485a295ea4336fa7b41c11935d5a8c9e77757075ff129021a523f481a6a76e4", "previous_phase": "unloading"}, {"details": {}, "event_checksum": "sha256:ea892a934a582293d0b80b703f33fe6cdb9f0eb24f45cc57ef5b806e24f21ace", "monotonic_ns": 33791278941279, "owner_token_digest": "sha256:c362849efe59781da82b1e5ecfd3933c3d395cdae92e4dcc0118f26c458153d1", "phase": "terminal_complete", "previous_event_checksum": "sha256:59ade08455dbb15edfa8cc5c8c06c5d312951c29a4eb76e821a24a0bfc35c6bc", "previous_phase": "validating"}], "recovery": {"performed": false, "signals_sent": []}, "released": true, "released_monotonic_ns": 33791479069253, "schema": "carnot.gpu_lease_phase_journal.v1", "task_id": "tamper-owner", "ttl_ns": 5000000000, "unload_evidence": {"observed": true, "observed_monotonic_ns": 33791277180674, "required": true}, "vram_mb": {"after": 4, "before": 4, "resident": 1028}}
+\ No newline at end of file
+diff --git a/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper/device-6973a19f7ef8fa8bff4d7b25afad1bca79c5d21fa7b0104536cf8d6bd2d378b8.lock b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper/device-6973a19f7ef8fa8bff4d7b25afad1bca79c5d21fa7b0104536cf8d6bd2d378b8.lock
+new file mode 100644
+index 0000000000..d85079d080
+--- /dev/null
++++ b/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper/device-6973a19f7ef8fa8bff4d7b25afad1bca79c5d21fa7b0104536cf8d6bd2d378b8.lock
+@@ -0,0 +1 @@
++{"device_uuid":"GPU-fixture-tamper","pid":332399,"pid_start_ticks":3379031,"task_id":"tamper-owner"}
+\ No newline at end of file
+diff --git a/results/experiment_6633_gpu_lease_phase_journal.json b/results/experiment_6633_gpu_lease_phase_journal.json
+new file mode 100644
+index 0000000000..da5ca6da9d
+--- /dev/null
++++ b/results/experiment_6633_gpu_lease_phase_journal.json
+@@ -0,0 +1,1185 @@
++{
++  "accelerator_receipt_examples": [
++    {
++      "device_uuid": "GPU-fixture-race",
++      "exit_code": 0,
++      "expected_model": "fixture/model.gguf",
++      "pid": 332146,
++      "pid_start_ticks": 3377798,
++      "token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++      "unload_observed": true,
++      "vram_mb": {
++        "after": 4,
++        "before": 4,
++        "resident": 1028
++      }
++    }
++  ],
++  "attack_rows": [
++    {
++      "accepted": false,
++      "attack_id": "same_device_race",
++      "fail_closed": true,
++      "outcome": "LeaseBusy",
++      "reason": "device_busy:GPU-attack-same_device_race",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "phase_skip",
++      "fail_closed": true,
++      "outcome": "TransitionError",
++      "reason": "transition_not_allowed:preflight->loading",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "phase_reversal",
++      "fail_closed": true,
++      "outcome": "TransitionError",
++      "reason": "transition_not_allowed:admitted->preflight",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "second_terminal",
++      "fail_closed": true,
++      "outcome": "TransitionError",
++      "reason": "terminal_already_set",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "pid_reuse",
++      "fail_closed": true,
++      "outcome": "OwnershipError",
++      "reason": "pid_start_mismatch",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "stale_heartbeat",
++      "fail_closed": true,
++      "outcome": "LeaseExpired",
++      "reason": "lease_expired_stale_heartbeat",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "wrong_token",
++      "fail_closed": true,
++      "outcome": "OwnershipError",
++      "reason": "wrong_token",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "wrong_device",
++      "fail_closed": true,
++      "outcome": "OwnershipError",
++      "reason": "wrong_device",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "wrong_model",
++      "fail_closed": true,
++      "outcome": "OwnershipError",
++      "reason": "wrong_model",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "timeout",
++      "fail_closed": true,
++      "outcome": "LeaseExpired",
++      "reason": "lease_expired_stale_heartbeat",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "missing_unload",
++      "fail_closed": true,
++      "outcome": "TransitionError",
++      "reason": "missing_unload_evidence",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "partial_write",
++      "fail_closed": true,
++      "outcome": "OSError",
++      "reason": "replace failed",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "tamper",
++      "fail_closed": true,
++      "outcome": "JournalError",
++      "reason": "checksum_mismatch",
++      "signals_sent": []
++    },
++    {
++      "accepted": false,
++      "attack_id": "live_owner_recovery",
++      "fail_closed": true,
++      "outcome": "RecoveryError",
++      "reason": "recorded_owner_still_live",
++      "signals_sent": []
++    }
++  ],
++  "duration_s": 20.054345,
++  "field_provenance": {
++    "accelerator_receipt_examples": {
++      "function": "build_artifact",
++      "hash": "sha256:e27976a014aa9feab43208d6fbf4ebbaa75eb73ec1836e8a49164a013200f8fc",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Device, process, model, VRAM, exit, and unload fields share one owner.",
++      "schema": "carnot.experiment_6633.field.accelerator_receipt_examples.v1",
++      "source_path": "python/carnot/gpu_lease_phase_journal.py"
++    },
++    "attack_rows": {
++      "function": "build_artifact",
++      "hash": "sha256:0989fd4e7c13605d04ed7908abc4ea5e28eef67387a68e1c8df915dbdf1486bd",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Each named ownership or evidence attack must fail closed.",
++      "schema": "carnot.experiment_6633.field.attack_rows.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "duration_s": {
++      "function": "build_artifact",
++      "hash": "sha256:e1e96debe519bd90c1f1ce96bd0f1743adc789ace95af65a3e390840864a0205",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "A monotonic duration proves that bounded fixtures executed.",
++      "schema": "carnot.experiment_6633.field.duration_s.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "field_provenance": {
++      "function": "_field_provenance",
++      "hash": "sha256:9d1f19e5ac9670b89c1c9a801ea81161cb41ebab25e5066972c33c02624b60ea",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Every field names its parser, producer, source, schema, and hash.",
++      "schema": "carnot.experiment_6633.field.field_provenance.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "gate_check_summary": {
++      "function": "build_artifact",
++      "hash": "sha256:39ca3a0548135c21dafafc916dfcb0db97cbd4186624f54842523b024ab48f73",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Every block names its failed check and observed value.",
++      "schema": "carnot.experiment_6633.field.gate_check_summary.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "gpu_lease_scheduler_ready_score": {
++      "function": "build_artifact",
++      "hash": "sha256:8aed642bf5118b9d3c859bd4be35ecac75b6e873cce34e7b6f554b06f75550d7",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "One exact binary field gates later model admission.",
++      "schema": "carnot.experiment_6633.field.gpu_lease_scheduler_ready_score.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "honest_verdict": {
++      "function": "build_artifact",
++      "hash": "sha256:37bf3d5746d5f7ece3f0c4d8412b94e4e059162607ebc413f5b156d01098a20c",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "The verdict reports infrastructure only and makes no model-quality claim.",
++      "schema": "carnot.experiment_6633.field.honest_verdict.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "inference_substrate": {
++      "function": "build_artifact",
++      "hash": "sha256:7adbfc7092f8540a87d61d5cd082e8fed2c23778f023c9c5860b19f72ce8029b",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "The declared substrate prevents fixture evidence from becoming an inference claim.",
++      "schema": "carnot.experiment_6633.field.inference_substrate.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "lease_api_receipts": {
++      "function": "build_artifact",
++      "hash": "sha256:c39159b4ebaaa5b1eaf5285bcbd9bb2069ce1e78fddf95dc4c77c672291eefac",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Acquire, heartbeat, release, timeout, and recovery remain owner-bound.",
++      "schema": "carnot.experiment_6633.field.lease_api_receipts.v1",
++      "source_path": "python/carnot/gpu_lease_phase_journal.py"
++    },
++    "phase_transition_rows": {
++      "function": "build_artifact",
++      "hash": "sha256:76db6bc2b276df5ff7236084fc45f8baca59d41739f3a88a808f1c5f23ead397",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Allowed and rejected changes make the phase state machine replayable.",
++      "schema": "carnot.experiment_6633.field.phase_transition_rows.v1",
++      "source_path": "python/carnot/gpu_lease_phase_journal.py"
++    },
++    "preconditions_checked": {
++      "function": "collect_preconditions",
++      "hash": "sha256:b61655decd7ae57aa1950a3ea6fb4084f767048d33a52759fb0986f4b20ba510",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Inputs, helpers, tools, host resources, and the no-LLM boundary are explicit.",
++      "schema": "carnot.experiment_6633.field.preconditions_checked.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "process_fixture_rows": {
++      "function": "build_artifact",
++      "hash": "sha256:6b362d26d0cfba002fd2bd75e0955bc0315c661d3df261b5c7f73aec66f399ec",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Bounded child processes prove races, crashes, stale owners, and recovery.",
++      "schema": "carnot.experiment_6633.field.process_fixture_rows.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "protected_files_unchanged": {
++      "function": "_protected_receipt",
++      "hash": "sha256:bd40c672b8573261426e8f4c232a886a8155b33c397d1cea18b506bb90da7470",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Roadmap and conductor hashes must remain byte-identical.",
++      "schema": "carnot.experiment_6633.field.protected_files_unchanged.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "reproducibility_checksum": {
++      "function": "payload_checksum",
++      "hash": "self_excluded_from_content_hash",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "A final content hash detects artifact mutation.",
++      "schema": "carnot.experiment_6633.field.reproducibility_checksum.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "status": {
++      "function": "build_artifact",
++      "hash": "sha256:3400f1b8aa0df0f2640bb6afe3e6612ef75ac3fe53cf096703c77bec931fa52f",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "The infrastructure run closes in one explicit terminal state.",
++      "schema": "carnot.experiment_6633.field.status.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "tests_run": {
++      "function": "build_artifact",
++      "hash": "sha256:7255af935b3dcd990f50584b725bca0420d6c2bec01032843591f27b31515ced",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Command exits and summaries show focused, coverage, suite, lint, and E2E checks.",
++      "schema": "carnot.experiment_6633.field.tests_run.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "verdict_class": {
++      "function": "build_artifact",
++      "hash": "sha256:7b92de7d08814ff2863dbd0239cdcb3cd107364ebf588b5d95693527f066f106",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "Ready infrastructure is null; a failed gate is blocked.",
++      "schema": "carnot.experiment_6633.field.verdict_class.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    },
++    "verifier_is_oracle": {
++      "function": "build_artifact",
++      "hash": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
++      "parser": "json.loads_and_structural_validation",
++      "principle": "This executable infrastructure checker is the null-result oracle.",
++      "schema": "carnot.experiment_6633.field.verifier_is_oracle.v1",
++      "source_path": "python/carnot/experiment_6633_gpu_lease_phase_journal.py"
++    }
++  },
++  "gate_check_summary": [
++    {
++      "check": "focused_tests",
++      "expected": true,
++      "observed": false
++    }
++  ],
++  "gpu_lease_scheduler_ready_score": 0.0,
++  "honest_verdict": "blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim",
++  "inference_substrate": "task_scoped_gpu_lease_process_fixtures_no_llm",
++  "lease_api_receipts": {
++    "acquire": {
++      "acquired_monotonic_ns": 33797214479820,
++      "argv_digest": "sha256:f8eb0ce75f861ffadd5e01182dd11e548dfb35ac26c65a2b0206dfb4b07dce3f",
++      "device_uuid": "GPU-lease-api-receipt",
++      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++      "expected_model": "fixture/model.gguf",
++      "expires_monotonic_ns": 33827214479820,
++      "pid": 332096,
++      "pid_start_ticks": 3377747,
++      "recovery": {
++        "performed": false,
++        "signals_sent": []
++      },
++      "signals_sent": [],
++      "task_id": "lease-api-receipt",
++      "token_digest": "sha256:259b5a9e04324270d0b190946c88a325208488ab4ebcb3bf5c9e1fa3936fddeb",
++      "token_length": 43,
++      "token_opaque": true
++    },
++    "all_owner_bound": true,
++    "heartbeat": {
++      "checksum": "sha256:a55226deb16e67c1ce4d489e7c57a13e84d986762c215cc45a3464a72423fa0c",
++      "expires_monotonic_ns": 33827411167868,
++      "heartbeat_monotonic_ns": 33797411167868,
++      "owner_verified": true
++    },
++    "recovery": {
++      "performed": true,
++      "previous_checksum": "sha256:3e5029fda95a9bfbde2bbd7b0188855544be2583394b84117220a608a25ad0cd",
++      "previous_pid": 332246,
++      "previous_pid_start_ticks": 3378325,
++      "previous_task_id": "crash-owner",
++      "reason": "recorded_owner_absent_or_pid_reused",
++      "signals_sent": []
++    },
++    "release": {
++      "checksum": "sha256:84966c1f1ab856bcd6a690eaf4bf1bda9cb1dda416da638d0645470ad5f90df8",
++      "device_uuid": "GPU-lease-api-receipt",
++      "phase": "terminal_blocked",
++      "pid": 332096,
++      "pid_start_ticks": 3377747,
++      "released": true,
++      "signals_sent": []
++    },
++    "timeout": {
++      "outcome": "fail_closed",
++      "owner_bound": true,
++      "source": "attack_rows.timeout"
++    }
++  },
++  "phase_transition_rows": [
++    {
++      "accepted": true,
++      "case": "initial_acquire",
++      "from_phase": null,
++      "reason": "atomic_acquire",
++      "to_phase": "preflight"
++    },
++    {
++      "accepted": true,
++      "case": "allowed",
++      "event_checksum": "sha256:e747e6449fd7e8c0a5350e31116512a68c3147d279f5c9139895d16e6ad2b0fc",
++      "from_phase": "preflight",
++      "journal_checksum": "sha256:9468471b6ae821ee0c3b515bfea079b4842a3f9860c23f22fa405fbfa8debb7d",
++      "reason": "allowed",
++      "to_phase": "admitted"
++    },
++    {
++      "accepted": true,
++      "case": "allowed",
++      "event_checksum": "sha256:1827e098cd5d27fc654e81d11d4a05fb0d6502d4f5a92f8804cdda91b3d03c47",
++      "from_phase": "admitted",
++      "journal_checksum": "sha256:76683110155813e8e0d0179a06dff8679f5c3a6876d70e48218a2be1321f624c",
++      "reason": "allowed",
++      "to_phase": "loading"
++    },
++    {
++      "accepted": true,
++      "case": "allowed",
++      "event_checksum": "sha256:a38f096a02682402724f1bb622fc8598d95cbb4ed192728676a521291ac40834",
++      "from_phase": "loading",
++      "journal_checksum": "sha256:63f9a65dc44bd88f71f55eef3f6e3a95ffd95bb4d2f0d05842ec8828d89f3695",
++      "reason": "allowed",
++      "to_phase": "resident"
++    },
++    {
++      "accepted": true,
++      "case": "allowed",
++      "event_checksum": "sha256:4f0bb1d9fc8ee7c0625a398a22f3aca562346987fe2e703df0b638319cb7e7d9",
++      "from_phase": "resident",
++      "journal_checksum": "sha256:6920b10fe01ed306e6de80e5f8849bd10252c4ec68673a10c0fc998d28f17827",
++      "reason": "allowed",
++      "to_phase": "inferencing"
++    },
++    {
++      "accepted": true,
++      "case": "allowed",
++      "event_checksum": "sha256:f406b45eb48b0b859722b1f9cfb0af0bd44aad07df591da340db5e125d24a371",
++      "from_phase": "inferencing",
++      "journal_checksum": "sha256:e53dfa016905b52c50ab7690644224964483865cde927088b8bef6ae363ba5e7",
++      "reason": "allowed",
++      "to_phase": "unloading"
++    },
++    {
++      "accepted": true,
++      "case": "allowed",
++      "event_checksum": "sha256:f58239ed5fd5c43774801fded0e4fe3c5d1b17e228fd34a36c3b698582b83782",
++      "from_phase": "unloading",
++      "journal_checksum": "sha256:33b69770f39a743568831882d79aaf92e86d2af7ee8d9dc87735ff119e5a097c",
++      "reason": "allowed",
++      "to_phase": "validating"
++    },
++    {
++      "accepted": true,
++      "case": "allowed",
++      "event_checksum": "sha256:c06b0487aa0a7fd63e44a5979aa0b058aba1fb73e93de8c555020321de46e6e1",
++      "from_phase": "validating",
++      "journal_checksum": "sha256:8350fb49fa7f7c7dab8c0393a7f07563a01e49b909695f4145ba3dce075b067f",
++      "reason": "allowed",
++      "to_phase": "terminal_complete"
++    },
++    {
++      "accepted": false,
++      "case": "skip",
++      "from_phase": "preflight",
++      "reason": "transition_not_allowed:preflight->loading",
++      "to_phase": "loading"
++    },
++    {
++      "accepted": false,
++      "case": "reversal",
++      "from_phase": "admitted",
++      "reason": "transition_not_allowed:admitted->preflight",
++      "to_phase": "preflight"
++    },
++    {
++      "accepted": false,
++      "case": "second_terminal",
++      "from_phase": "terminal_blocked",
++      "reason": "terminal_already_set",
++      "to_phase": "terminal_complete"
++    }
++  ],
++  "preconditions_checked": {
++    "accelerator_diagnostics": {
++      "cuda_initialized": false,
++      "nvidia_smi": {
++        "command": [
++          "nvidia-smi",
++          "--query-gpu=index,uuid,name,memory.total,memory.used",
++          "--format=csv,noheader,nounits"
++        ],
++        "diagnostic_only": true,
++        "exit_code": 0,
++        "stderr": "",
++        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 24576, 4\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 24576, 4"
++      },
++      "used_as_gate": false
++    },
++    "helpers": [
++      {
++        "exists": true,
++        "path": "python/carnot/gpu_lease_phase_journal.py",
++        "sha256": "sha256:b2bf64903fe4927f956025b01e099a010a9ddf36131a89b8f048a247312c43e0"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/inference/llama_server_supervisor.py",
++        "sha256": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/phase_concurrency_receipts.py",
++        "sha256": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/task_runtime_receipts.py",
++        "sha256": "sha256:a2be3b161441a5ce097a50e401a6fd9982a871fbcceb97217f41a56134450b99"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/pipeline/atomic_writer.py",
++        "sha256": "sha256:34d31d117f6d454f59b9983e1864fdec76d0380601769ea90a054bd39008ce6e"
++      },
++      {
++        "exists": true,
++        "path": "scripts/experiment_template.py",
++        "sha256": "sha256:dae91dd5b37a1597684aea1c2a433cce62f409eb90b1d098bdb8cded063db2e0"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/inference/sota_models.py",
++        "sha256": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab"
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/pipeline/gemma4_quantized_loader.py",
++        "sha256": "sha256:4a7a0d38209af457821531f3f3941cfd73e3d16aa14a99802a19e6664671c16d"
++      }
++    ],
++    "host_resources": {
++      "cpu_count": 24,
++      "disk_free_bytes": 1074733199360,
++      "disk_total_bytes": 3953289023488,
++      "ram_bytes": 134304591872
++    },
++    "inputs": {
++      "core_sha256": "sha256:b2bf64903fe4927f956025b01e099a010a9ddf36131a89b8f048a247312c43e0",
++      "module_sha256": "sha256:776f679af3262244e44cf5df96fa9a1fae03db382a10787f1c54f90cb096ce04",
++      "planning_date": "20260826",
++      "root": "/home/ianblenke/github.com/ianblenke/carnot",
++      "spec_sha256": "sha256:4fe74a61146deda6fbd0fbea92613a3fedad9fc1624632757b35586aae73cf69"
++    },
++    "no_llm": {
++      "generation_attempt_count": 0,
++      "inference_substrate": "task_scoped_gpu_lease_process_fixtures_no_llm",
++      "llm_import_required": false,
++      "model_load_attempt_count": 0
++    },
++    "process_apis": {
++      "directory_fsync": true,
++      "fcntl_flock": true,
++      "file_fsync": true,
++      "os_replace": true,
++      "proc_stat": true
++    },
++    "protected_hashes_before": {
++      "research-roadmap.yaml": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
++      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
++    },
++    "python": {
++      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "implementation": "CPython",
++      "version": "3.12.13"
++    },
++    "runtime_paths": {
++      "fixture_root": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729",
++      "journal_path_pattern": "device-<sha256(device_uuid)>.journal.json",
++      "lease_path_pattern": "device-<sha256(device_uuid)>.lock"
++    },
++    "schema": "carnot.experiment_6633.preconditions.v1"
++  },
++  "process_fixture_rows": [
++    {
++      "acquired_count": 1,
++      "bounded": true,
++      "busy_count": 1,
++      "commands": [
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race",
++          "--task-id",
++          "race-owner",
++          "--device-uuid",
++          "GPU-fixture-race",
++          "--behavior",
++          "hold_complete",
++          "--hold-s",
++          "1.5",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ],
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/same-device-race",
++          "--task-id",
++          "race-contender",
++          "--device-uuid",
++          "GPU-fixture-race",
++          "--behavior",
++          "complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ]
++      ],
++      "contender_exit_code": 3,
++      "fixture_id": "same_device_race",
++      "holder_exit_code": 0,
++      "holder_terminal_rows": [
++        {
++          "outcome": "released",
++          "release": {
++            "checksum": "sha256:28eaeecf48b3dbda7fb7032aa78c2f5966d5228ae1429829377ef4331e341bfe",
++            "device_uuid": "GPU-fixture-race",
++            "phase": "terminal_complete",
++            "pid": 332146,
++            "pid_start_ticks": 3377798,
++            "released": true,
++            "signals_sent": []
++          }
++        }
++      ],
++      "owner": {
++        "acquired_monotonic_ns": 33778379147455,
++        "argv_digest": "sha256:a00017b90040f7a85007dc2a508e37f09fae6f65f277c01c9939473b06bcfc08",
++        "device_uuid": "GPU-fixture-race",
++        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++        "expected_model": "fixture/model.gguf",
++        "expires_monotonic_ns": 33783379147455,
++        "pid": 332146,
++        "pid_start_ticks": 3377798,
++        "recovery": {
++          "performed": false,
++          "signals_sent": []
++        },
++        "signals_sent": [],
++        "task_id": "race-owner",
++        "token_digest": "sha256:fda09d5f601477504e7d30394051d7f1c396689ab354bd2e9d73ceebdbc40591",
++        "token_length": 43,
++        "token_opaque": true
++      },
++      "passed": true,
++      "signals_sent": [],
++      "timeout_s": 5.0
++    },
++    {
++      "acquired_count": 2,
++      "bounded": true,
++      "commands": [
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices",
++          "--task-id",
++          "independent-0",
++          "--device-uuid",
++          "GPU-fixture-independent-0",
++          "--behavior",
++          "hold_complete",
++          "--hold-s",
++          "0.15",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ],
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/independent-devices",
++          "--task-id",
++          "independent-1",
++          "--device-uuid",
++          "GPU-fixture-independent-1",
++          "--behavior",
++          "hold_complete",
++          "--hold-s",
++          "0.15",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ]
++      ],
++      "exit_codes": [
++        0,
++        0
++      ],
++      "fixture_id": "independent_devices",
++      "owners": [
++        {
++          "acquired_monotonic_ns": 33781448769199,
++          "argv_digest": "sha256:cc429a652eb0819e027b6c18f998ac72efe6896261ac6da493f1a98cb9af395c",
++          "device_uuid": "GPU-fixture-independent-0",
++          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++          "expected_model": "fixture/model.gguf",
++          "expires_monotonic_ns": 33786448769199,
++          "pid": 332198,
++          "pid_start_ticks": 3378093,
++          "recovery": {
++            "performed": false,
++            "signals_sent": []
++          },
++          "signals_sent": [],
++          "task_id": "independent-0",
++          "token_digest": "sha256:e4ccd30b0618299ec5552c1fa4c4aff63e13c08003554ef474f26aeaf15a764a",
++          "token_length": 43,
++          "token_opaque": true
++        },
++        {
++          "acquired_monotonic_ns": 33781457714049,
++          "argv_digest": "sha256:4b7e6e4bb703b69305462e830fe1214cfa6fc399de6b06a1c7c282325b94f72b",
++          "device_uuid": "GPU-fixture-independent-1",
++          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++          "expected_model": "fixture/model.gguf",
++          "expires_monotonic_ns": 33786457714049,
++          "pid": 332199,
++          "pid_start_ticks": 3378093,
++          "recovery": {
++            "performed": false,
++            "signals_sent": []
++          },
++          "signals_sent": [],
++          "task_id": "independent-1",
++          "token_digest": "sha256:e898a491f8205beca94f2957fd23e6553d3df1342392860ae797831e22fa87c6",
++          "token_length": 43,
++          "token_opaque": true
++        }
++      ],
++      "passed": true,
++      "signals_sent": [],
++      "timeout_s": 5.0
++    },
++    {
++      "bounded": true,
++      "commands": [
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
++          "--task-id",
++          "crash-owner",
++          "--device-uuid",
++          "GPU-fixture-crash",
++          "--behavior",
++          "crash",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ],
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
++          "--task-id",
++          "recovery-owner",
++          "--device-uuid",
++          "GPU-fixture-crash",
++          "--behavior",
++          "recover_complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ]
++      ],
++      "crash_exit_code": 23,
++      "crash_rows": [
++        {
++          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery/device-d871d91814595322471c6e11dcd008a8601b3f1286e7099707f93f431d6b1e78.journal.json",
++          "outcome": "acquired",
++          "owner": {
++            "acquired_monotonic_ns": 33783676060609,
++            "argv_digest": "sha256:f44b86e24d17392073a502d202126e81eceb4744e787eff8147f28552975c9c2",
++            "device_uuid": "GPU-fixture-crash",
++            "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++            "expected_model": "fixture/model.gguf",
++            "expires_monotonic_ns": 33788676060609,
++            "pid": 332246,
++            "pid_start_ticks": 3378325,
++            "recovery": {
++              "performed": false,
++              "signals_sent": []
++            },
++            "signals_sent": [],
++            "task_id": "crash-owner",
++            "token_digest": "sha256:316af33e1247697da8ebe8e22d3c7093ef799554e45ab623a12b77aa5afc5bf4",
++            "token_length": 43,
++            "token_opaque": true
++          }
++        }
++      ],
++      "fixture_id": "owner_crash",
++      "passed": true,
++      "recovery_exit_code": 0,
++      "signals_sent": [],
++      "timeout_s": 5.0
++    },
++    {
++      "bounded": true,
++      "commands": [
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
++          "--task-id",
++          "crash-owner",
++          "--device-uuid",
++          "GPU-fixture-crash",
++          "--behavior",
++          "crash",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ],
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
++          "--task-id",
++          "recovery-owner",
++          "--device-uuid",
++          "GPU-fixture-crash",
++          "--behavior",
++          "recover_complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ]
++      ],
++      "fixture_id": "restart_recovery",
++      "new_token_digest": "sha256:466857d05c2fdb805917f38bafb845bfd4a9e4913b17ce637d6db9c5757e7c30",
++      "passed": true,
++      "recovery": {
++        "performed": true,
++        "previous_checksum": "sha256:3e5029fda95a9bfbde2bbd7b0188855544be2583394b84117220a608a25ad0cd",
++        "previous_pid": 332246,
++        "previous_pid_start_ticks": 3378325,
++        "previous_task_id": "crash-owner",
++        "reason": "recorded_owner_absent_or_pid_reused",
++        "signals_sent": []
++      },
++      "recovery_performed": true,
++      "signals_sent": [],
++      "timeout_s": 5.0
++    },
++    {
++      "bounded": true,
++      "commands": [
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat",
++          "--task-id",
++          "stale-owner",
++          "--device-uuid",
++          "GPU-fixture-stale",
++          "--behavior",
++          "stale",
++          "--hold-s",
++          "1.5",
++          "--ttl-s",
++          "0.05",
++          "--exit-code",
++          "24"
++        ],
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat",
++          "--task-id",
++          "stale-contender",
++          "--device-uuid",
++          "GPU-fixture-stale",
++          "--behavior",
++          "complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ],
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat",
++          "--task-id",
++          "stale-recovery",
++          "--device-uuid",
++          "GPU-fixture-stale",
++          "--behavior",
++          "recover_complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ]
++      ],
++      "fixture_id": "stale_heartbeat",
++      "live_contender_exit_code": 3,
++      "live_contender_outcome": "busy",
++      "owner": {
++        "acquired_monotonic_ns": 33785602065202,
++        "argv_digest": "sha256:fa3e12b68ede1c22eac71fb62823ff79677ccec9d12b59f75b368da4dc6ac7eb",
++        "device_uuid": "GPU-fixture-stale",
++        "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++        "expected_model": "fixture/model.gguf",
++        "expires_monotonic_ns": 33785652065202,
++        "pid": 332298,
++        "pid_start_ticks": 3378515,
++        "recovery": {
++          "performed": false,
++          "signals_sent": []
++        },
++        "signals_sent": [],
++        "task_id": "stale-owner",
++        "token_digest": "sha256:ed04094334d225466c2ac0cde6787ba121acefd339ec086b5951b17ce3c787a0",
++        "token_length": 43,
++        "token_opaque": true
++      },
++      "passed": true,
++      "recovery_exit_code": 0,
++      "recovery_rows": [
++        {
++          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/stale-heartbeat/device-202df990edcb623f689bddba8d4ea1a251979e0cc6dcbb2a8eeae94b2eba196c.journal.json",
++          "outcome": "acquired",
++          "owner": {
++            "acquired_monotonic_ns": 33787682271313,
++            "argv_digest": "sha256:ccb31aa0ee45f453432c4f0f01b187264a73f464402a1d1a24b224ebb31f66a6",
++            "device_uuid": "GPU-fixture-stale",
++            "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
++            "expected_model": "fixture/model.gguf",
++            "expires_monotonic_ns": 33792682271313,
++            "pid": 332346,
++            "pid_start_ticks": 3378725,
++            "recovery": {
++              "performed": true,
++              "previous_checksum": "sha256:7dfa5578876c8e4e778532337073af562ca4044224315f1c7715fb4db0dcb43c",
++              "previous_pid": 332298,
++              "previous_pid_start_ticks": 3378515,
++              "previous_task_id": "stale-owner",
++              "reason": "recorded_owner_absent_or_pid_reused",
++              "signals_sent": []
++            },
++            "signals_sent": [],
++            "task_id": "stale-recovery",
++            "token_digest": "sha256:1d2927c6f6efec4096eb89e3ba1fb59fe7bceb0556f1b49ce7a271b6f13bc246",
++            "token_length": 43,
++            "token_opaque": true
++          }
++        },
++        {
++          "outcome": "released",
++          "release": {
++            "checksum": "sha256:a5c764032ee0ad5e37ae2d82d6aa2ae867dcd077ada0a7cb377281057078cb93",
++            "device_uuid": "GPU-fixture-stale",
++            "phase": "terminal_complete",
++            "pid": 332346,
++            "pid_start_ticks": 3378725,
++            "released": true,
++            "signals_sent": []
++          }
++        }
++      ],
++      "signals_sent": [],
++      "stale_owner_exit_code": 24,
++      "timeout_s": 5.0
++    },
++    {
++      "bounded": true,
++      "commands": [
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/crash-recovery",
++          "--task-id",
++          "recovery-owner",
++          "--device-uuid",
++          "GPU-fixture-crash",
++          "--behavior",
++          "recover_complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ]
++      ],
++      "errors": [
++        "pid_start_mismatch"
++      ],
++      "fixture_id": "pid_reuse",
++      "outcome": "fail_closed",
++      "passed": true,
++      "recorded_pid": 332270,
++      "recorded_start_ticks": 3378384,
++      "replayed_start_ticks": 3378385,
++      "signals_sent": [],
++      "timeout_s": 5.0
++    },
++    {
++      "bounded": true,
++      "commands": [
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write",
++          "--task-id",
++          "partial-owner",
++          "--device-uuid",
++          "GPU-fixture-partial",
++          "--behavior",
++          "complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ],
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-c",
++          "from pathlib import Path; import sys; Path(sys.argv[1] + '.partial.tmp').write_text('{\\\"phase\\\":')",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/partial-write/device-602546ed34f4638d5bce18560420f2a10f272b0a9587d026d37fef51e279850d.journal.json"
++        ]
++      ],
++      "final_checksum_after": "sha256:57c9624dfd03308321f24b9a6aae24cf437a6e0f03efc178a7efcaebfb405cdd",
++      "final_checksum_before": "sha256:57c9624dfd03308321f24b9a6aae24cf437a6e0f03efc178a7efcaebfb405cdd",
++      "final_checksum_unchanged": true,
++      "fixture_id": "partial_write",
++      "owner_exit_code": 0,
++      "passed": true,
++      "signals_sent": [],
++      "timeout_s": 5.0,
++      "writer_exit_code": 0
++    },
++    {
++      "bounded": true,
++      "commands": [
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper",
++          "--task-id",
++          "tamper-owner",
++          "--device-uuid",
++          "GPU-fixture-tamper",
++          "--behavior",
++          "complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ],
++        [
++          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++          "-m",
++          "carnot.gpu_lease_phase_journal",
++          "--runtime-dir",
++          "/home/ianblenke/github.com/ianblenke/carnot/results/.experiment_6633_gpu_lease_phase_journal/run-33777957524729/process/tamper",
++          "--task-id",
++          "tamper-contender",
++          "--device-uuid",
++          "GPU-fixture-tamper",
++          "--behavior",
++          "complete",
++          "--hold-s",
++          "0.0",
++          "--ttl-s",
++          "5.0",
++          "--exit-code",
++          "23"
++        ]
++      ],
++      "contender_exit_code": 4,
++      "errors": [
++        {
++          "outcome": "fail_closed",
++          "reason": "checksum_mismatch",
++          "signals_sent": []
++        }
++      ],
++      "fixture_id": "tamper",
++      "outcome": "fail_closed",
++      "owner_exit_code": 0,
++      "passed": true,
++      "signals_sent": [],
++      "timeout_s": 5.0
++    }
++  ],
++  "protected_files_unchanged": {
++    "after_hashes": {
++      "research-roadmap.yaml": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
++      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
++    },
++    "all_unchanged": true,
++    "before_hashes": {
++      "research-roadmap.yaml": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
++      "scripts/research_conductor.py": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd"
++    },
++    "files": {
++      "research-roadmap.yaml": {
++        "after": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
++        "before": "sha256:5e5bcd585422afce545a67d09516e3d0c1ef82af621d3102feee8fedf74fd621",
++        "unchanged": true
++      },
++      "scripts/research_conductor.py": {
++        "after": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
++        "before": "sha256:fd4736a54c9e244caee4ed695609f5b06317a7174ebe8411c5f70a55907d73bd",
++        "unchanged": true
++      }
++    },
++    "schema": "carnot.experiment_6633.protected_files.v1"
++  },
++  "reproducibility_checksum": "sha256:ba660ae2f7c3cdcbcfa348636dddf01811d42a033ab29e5903b48fbea9cece81",
++  "status": "blocked_gpu_lease_scheduler_not_ready",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py -q --no-cov -n 0",
++      "exit_code": 0,
++      "summary": "focused tests passed"
++    },
++    {
++      "command": "JAX_PLATFORMS=cpu PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/coverage run --branch --include='*/gpu_lease_phase_journal.py,*/experiment_6633_gpu_lease_phase_journal.py' -m pytest -c /dev/null --noconftest tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py -q",
++      "exit_code": 0,
++      "summary": "scoped coverage run passed"
++    },
++    {
++      "command": ".venv/bin/coverage report -m --fail-under=100",
++      "exit_code": 0,
++      "summary": "new modules have 100% scoped line and branch coverage"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "exit_code": 3,
++      "summary": "1037 failed, 34797 passed, 103 skipped, 140 warnings in 2310.03s; pytest/xdist stopped at 62% after an existing test removed its worker CWD, raising FileNotFoundError"
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py",
++      "exit_code": 0,
++      "summary": "focused spec coverage passed"
++    },
++    {
++      "command": ".venv/bin/ruff check python/carnot/gpu_lease_phase_journal.py python/carnot/experiment_6633_gpu_lease_phase_journal.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py",
++      "exit_code": 0,
++      "summary": "focused lint passed"
++    },
++    {
++      "command": ".venv/bin/ruff format --check python/carnot/gpu_lease_phase_journal.py python/carnot/experiment_6633_gpu_lease_phase_journal.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_6633_gpu_lease_phase_journal.py",
++      "exit_code": 0,
++      "summary": "focused format check passed"
++    },
++    {
++      "command": ".venv/bin/python -m carnot.experiment_6633_gpu_lease_phase_journal --validate",
++      "exit_code": 0,
++      "summary": "artifact validation passed"
++    },
++    {
++      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6633_gpu_lease_phase_journal.json",
++      "exit_code": 0,
++      "summary": "no critical adversarial finding"
++    },
++    {
++      "command": "Exp6633 E2E: bounded process race, crash, stale owner, tamper, and restart recovery",
++      "exit_code": 0,
++      "summary": "all bounded process fixtures passed without LLM load"
++    }
++  ],
++  "verdict_class": "blocked",
++  "verifier_is_oracle": true
++}
+diff --git a/tests/python/test_experiment_6633_gpu_lease_phase_journal.py b/tests/python/test_experiment_6633_gpu_lease_phase_journal.py
+index 8e7a3f506d..94ebde23f8 100644
+--- a/tests/python/test_experiment_6633_gpu_lease_phase_journal.py
++++ b/tests/python/test_experiment_6633_gpu_lease_phase_journal.py
+@@ -79,6 +79,15 @@ def test_req_report_6633_spec_and_principled_fields() -> None:
+         assert field in exp.FIELD_PRINCIPLES
+ 
+ 
++def test_req_report_6633_default_receipts_preserve_full_suite_blocker() -> None:
++    """REQ-REPORT-6633: a nonzero required suite cannot open readiness."""
++
++    receipt = next(row for row in exp.DEFAULT_TESTS_RUN if row["command"] == exp.FULL_TEST_COMMAND)
++    assert receipt["exit_code"] == 3
++    assert "1037 failed" in receipt["summary"]
++    assert "FileNotFoundError" in receipt["summary"]
++
++
+ def test_process_fixtures_cover_race_crash_stale_tamper_and_restart(tmp_path: Path) -> None:
+     """Bounded fixtures replay atomic ownership and crash recovery."""
+ 
+@@ -202,7 +211,16 @@ def test_req_report_6633_cli_run_and_validate(
+         == 0
+     )
+     summary = json.loads(capsys.readouterr().out.splitlines()[-1])
+-    assert summary["gpu_lease_scheduler_ready_score"] == 1.0
++    assert summary["status"].startswith("blocked_")
++    assert summary["gpu_lease_scheduler_ready_score"] == 0.0
++    written = json.loads(output.read_text(encoding="utf-8"))
++    assert written["gate_check_summary"] == [
++        {
++            "check": "tests_run",
++            "expected": "all_exit_codes_zero",
++            "observed": [{"command": exp.FULL_TEST_COMMAND, "exit_code": 3}],
++        }
++    ]
+     assert exp.main(["--validate", "--output", str(output)]) == 0
+     assert json.loads(capsys.readouterr().out.splitlines()[-1])["valid"] is True
+ 
+@@ -316,6 +334,7 @@ def test_scenario_report_6633_validator_rejects_every_schema_mutation(
+     assert "ready_gate_summary_not_empty" in errors_for(gate_check_summary=[{"bad": True}])
+     assert "inference_substrate_mismatch" in errors_for(inference_substrate="wrong")
+     assert "verifier_is_oracle_mismatch" in errors_for(verifier_is_oracle=False)
++    assert "readiness_score_mismatch" in errors_for(tests_run=[None])
+ 
+     invalid_provenance = deepcopy(ready["field_provenance"])
+     invalid_provenance["status"] = {}
+-- 
+2.55.0
+

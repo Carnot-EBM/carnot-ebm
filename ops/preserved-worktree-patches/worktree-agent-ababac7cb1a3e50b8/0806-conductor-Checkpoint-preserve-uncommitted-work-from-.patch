@@ -1,0 +1,69 @@
+From f2894b3db3a61cc822411de329eebd85647ae7c6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 08:45:50 -0400
+Subject: [PATCH 00806/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                      |  2 +-
+ ops/conductor-log.md                              |  1 +
+ ops/conductor-state.json                          |  2 +-
+ ...ent_3922_hardware_continuity_consolidated.json | 15 ++++++++++++++-
+ 4 files changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d691b5998d..2c869907cc 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 563504, "iteration": 60, "phase": "iteration_start", "last_beat": "2026-06-07T11:59:00Z"}
+\ No newline at end of file
++{"pid": 563504, "iteration": 61, "phase": "iteration_start", "last_beat": "2026-06-07T12:45:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f4170003aa..442338165b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8007,3 +8007,4 @@ ERROR: {
+ c |
+ | 2026-06-07 11:42 UTC | FACTS graph-grounding verifier — LAST DISCIPLINED  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-07 11:57 UTC | FR-11 continuous self-learning v25 (research-progr | OK | 88 passed in 4.17s |
++| 2026-06-07 12:43 UTC | Hardware continuity (consolidated) — GateMate term | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 394f35cf63..abaa474561 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 563504, "iteration": 60, "phase": "iteration_start", "started_at": "2026-06-07T11:59:00Z"}
+\ No newline at end of file
++{"pid": 563504, "iteration": 61, "phase": "iteration_start", "started_at": "2026-06-07T12:45:49Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3922_hardware_continuity_consolidated.json b/results/experiment_3922_hardware_continuity_consolidated.json
+index ca66d17b52..30c2eb0d1c 100644
+--- a/results/experiment_3922_hardware_continuity_consolidated.json
++++ b/results/experiment_3922_hardware_continuity_consolidated.json
+@@ -111,5 +111,18 @@
+   "spec_refs": [
+     "REQ-HW-3922",
+     "SCENARIO-HW-3922"
++  ],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
+   ]
+-}
++}
+\ No newline at end of file
+-- 
+2.55.0
+

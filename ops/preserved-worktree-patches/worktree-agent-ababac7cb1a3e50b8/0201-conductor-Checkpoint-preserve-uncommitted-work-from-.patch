@@ -1,0 +1,43 @@
+From 5b2836f383998e081df138eeea871770db5dcd3c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 15:38:07 -0400
+Subject: [PATCH 00201/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8a4446d322..c135602209 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 239, "phase": "iteration_start", "last_beat": "2026-06-02T19:25:09Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 240, "phase": "iteration_start", "last_beat": "2026-06-02T19:38:06Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1c8167952e..19b111787d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7613,3 +7613,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-02 19:16 UTC | Build + UNIT-TEST the matched-COMPUTE evaluation h | FAIL | Post-tests failed: 85 passed, 1 error in 4.57s |
+ | 2026-06-02 19:18 UTC | Build + UNIT-TEST the matched-COMPUTE evaluation h | OK | Deliverable already exists in repo |
+ | 2026-06-02 19:23 UTC | Bounded CHECKPOINTED training of the tiny EBT + a  | OK | 88 passed in 5.12s |
++| 2026-06-02 19:36 UTC | Thesis-A kill-gate part-(a) VERDICT: did the tiny  | OK | 93 passed in 4.77s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a0f74ed995..a0a2982a44 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 239, "phase": "iteration_start", "started_at": "2026-06-02T19:25:09Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 240, "phase": "iteration_start", "started_at": "2026-06-02T19:38:06Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

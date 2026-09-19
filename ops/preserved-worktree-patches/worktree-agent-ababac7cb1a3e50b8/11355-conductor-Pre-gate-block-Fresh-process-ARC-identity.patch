@@ -1,0 +1,75 @@
+From ad6d2943b8ec37f622d0e8862fba452701f5157b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 21:42:01 -0400
+Subject: [PATCH 11355/11362] [conductor] Pre-gate block: Fresh-process ARC
+ identity report-channel attack audit
+
+1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge.arc_typed_identity_bridge_ready_score (actual=0 == expected=1)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md                                   | 5 +++++
+ ops/conductor-heartbeat.json                                 | 2 +-
+ ops/conductor-log.md                                         | 1 +
+ ops/conductor-state.json                                     | 2 +-
+ .../experiment_7041_identity_report_channel_cold_audit.json  | 4 ++--
+ 5 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 87c3ad262d..49a8af547c 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1772,3 +1772,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['NONTERMINAL_DECLARED_ARTIFACT'] on a non-negative verdict
+ - artifact: results/experiment_6996_v613_source_contract_preflight.json
++
++## experiment_7039_v617_model_report_forensics.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_7039_v617_model_report_forensics.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 12e80db2c2..dbadc415eb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 27, "phase": "iteration_start", "last_beat": "2026-09-06T01:39:22Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-09-06T01:42:00Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1fb2172348..c267639627 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17373,3 +17373,4 @@ code |
+ | 2026-09-06 01:27 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 745995 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
+ | 2026-09-06 01:34 UTC | Typed raw-to-canonical ARC model identity report b | OK | cache hit: 94 passed, 1 warning in 7.36s |
+ | 2026-09-06 01:37 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
++| 2026-09-06 01:40 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b9823daa37..a53b3e9a54 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 27, "phase": "iteration_start", "started_at": "2026-09-06T01:39:22Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 28, "phase": "iteration_start", "started_at": "2026-09-06T01:42:00Z"}
+\ No newline at end of file
+diff --git a/results/experiment_7041_identity_report_channel_cold_audit.json b/results/experiment_7041_identity_report_channel_cold_audit.json
+index fe2cb6048a..5bc8ecc536 100644
+--- a/results/experiment_7041_identity_report_channel_cold_audit.json
++++ b/results/experiment_7041_identity_report_channel_cold_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 7041,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-09-06",
+-  "started_at": "2026-09-06T01:39:23.347470+00:00",
+-  "finished_at": "2026-09-06T01:39:23.347470+00:00",
++  "started_at": "2026-09-06T01:42:01.291171+00:00",
++  "finished_at": "2026-09-06T01:42:01.291171+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Fresh-process ARC identity report-channel attack audit",
+-- 
+2.55.0
+

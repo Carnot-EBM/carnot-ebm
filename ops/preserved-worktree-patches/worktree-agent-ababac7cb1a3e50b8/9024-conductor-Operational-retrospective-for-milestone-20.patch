@@ -1,0 +1,305 @@
+From e332b0b3d90ab10293e4c3420a3f877d37c7d0e3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 06:17:50 -0400
+Subject: [PATCH 09024/11362] [conductor] Operational retrospective for
+ milestone 2026.08.549
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                          |   7 +
+ ops/changelog.md                              |   1 +
+ ...ment_6250_rex_ensemble_prospective_ab.json |   7 +-
+ results/operational_retro_2026_08_549.json    |  58 ++++++++
+ scripts/research_conductor.py                 |  29 +++-
+ ...etermination_restore_downgrade_20260813.py | 124 ++++++++++++++++++
+ 6 files changed, 222 insertions(+), 4 deletions(-)
+ create mode 100644 results/operational_retro_2026_08_549.json
+ create mode 100644 tests/python/test_conductor_determination_restore_downgrade_20260813.py
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 6a648b316a..6175bac074 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6164,3 +6164,10 @@ The critical path for milestone .250:
+ - theme: repaired multi-model runtime checks concentrated a short compute-only milestone under coarse timing reconstruction
+ - key result: the compute tail is ranked, but phase-level causes, task-time GPU efficiency, parallel model loading, and runner engagement are not established by the supplied evidence
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.549
++
++- exp_range: exp6379-exp6387 (visible readiness-reference bounds only; the complete milestone range is not available)
++- theme: readiness-gated canonical transport work concentrated a brief compute-heavy milestone under coarse timing reconstruction
++- key result: the locked classification reports no compute-task GPU-idle fault, while the supplied data does not establish concurrent model loading or runner selection
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 2dd1757c97..dc25ef80ea 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16713,3 +16713,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-13: Gated on Exp6386 readiness: live-path active reward-machine discriminator (✅ Complete) — honest_verdict=complete_active_reward_machine_default_off_live_reachable_no_solve_claim; results/experiment_6387_arc_active_reward_machine_discriminator.json
+ - 2026-08-13: Gated on Exp6387 readiness: three-family ARC goal evidence-response calibration (✅ Complete) — honest_verdict=complete_goal_evidence_response_calibration_no_solve_claim; results/experiment_6388_arc_goal_evidence_response_calibration.json
+ - 2026-08-13: V549 adversarial capstone and PRD-gap reconciliation (⚠️ Blocked) — honest_verdict=complete_v549_adversarial_capstone_blocks_preserved: public_claim_eligibility_false; factor_transport_null; fr11_blocked; arc_goal_evidence_advanced_default_off_no_solve; results/experiment_6390_v549_adversarial_capstone.json
++- 2026-08-13: Operational retrospective for 2026.08.549: 13 experiments completed in 5.8 minutes, including 7 compute-bound tasks. The 3.75-minute readiness-gated canonical factor transport canary led the timing list, and the 1.72-minute canonical factor-edit contract was next. The locked classification reports no compute-bound GPU-idle fault. The data does not establish parallel model loading or runner selection. The next milestone should add readiness preflight, phase timing, task-linked GPU samples, and model-count and dispatch receipts. Estimated savings are 0% because no measured counterfactual is available. Artifact: results/operational_retro_2026_08_549.json.
+diff --git a/results/experiment_6250_rex_ensemble_prospective_ab.json b/results/experiment_6250_rex_ensemble_prospective_ab.json
+index 58029ac20d..8dbd3ef78f 100644
+--- a/results/experiment_6250_rex_ensemble_prospective_ab.json
++++ b/results/experiment_6250_rex_ensemble_prospective_ab.json
+@@ -115,7 +115,7 @@
+   "honest_verdict": "complete_ensemble_gate_not_met_3_of_3_matched_held_optimal_ensemble_0.5118_vs_best_pure_0.481",
+   "duration_s": 25016.827,
+   "reproducibility_checksum": "7a62af9bf6d53d7ad7a1fb24a74015a1aaaff1f860ec2a1a5a33a5309f6e943e",
+-  "flagged_adversarial": true,
++  "flagged_adversarial": false,
+   "corrigendum_pending": [
+     {
+       "kind": "TAUTOLOGY",
+@@ -123,5 +123,6 @@
+       "detail": "rex_pooled_mean_held=0.481 and best_pure_arm_pooled_mean_held=0.481 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+     }
+   ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+-}
+\ No newline at end of file
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation. | 2026-08-13: the TAUTOLOGY entry in corrigendum_pending is a FALSE POSITIVE, retained per never-prune; see flagged_adversarial_cleared_note.",
++  "flagged_adversarial_cleared_note": "CLEARED 2026-08-13 after re-verification. The TAUTOLOGY flag fired on rex_pooled_mean_held == best_pure_arm_pooled_mean_held == 0.481. That equality is STRUCTURAL, not a coincidence between two measurements: this experiment computes best_pure_arm_pooled_mean_held = max(linear_pooled_mean_held, rex_pooled_mean_held) (scripts/experiments/experiment_6250_rex_ensemble_prospective_ab.py:297). linear scored 0.2032 and rex 0.4810, so best_pure IS rex by construction and the two cannot differ. Verified by reading the source and by checking best_pure == max(linear, rex) in the artifact. Same class as the identifier/seed carve-out the TAUTOLOGY check already carries (CLAUDE.md, 'TAUTOLOGY excludes identifiers/seeds'). A general derived-extremum carve-out was attempted in adversarial_verify.py and REVERTED: the sibling match pulled in ensemble_pooled_mean_held (0.5118, not a pure arm), so the verified-max test failed, and a name-inference heuristic that misfires on its first real case must not be shipped into a fabrication gate. Cleared per-artifact instead, which is auditable and cannot become a blanket exemption. The underlying result is unchanged: selector 3/3, ensemble 0.5118 vs best pure 0.4810, gate NOT met on coverage (sc25 produced no candidate from either arm)."
++}
+diff --git a/results/operational_retro_2026_08_549.json b/results/operational_retro_2026_08_549.json
+new file mode 100644
+index 0000000000..98bd655720
+--- /dev/null
++++ b/results/operational_retro_2026_08_549.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.549",
++  "generated_at": "2026-08-13T10:12:32Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 5.8,
++  "experiments_completed": 13,
++  "compute_bound_experiments_count": 7,
++  "slowest_experiments": [
++    {
++      "experiment": "Gated on Exp6379 readiness: three-family canonical factor transport canary",
++      "duration_minutes": 3.75,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Canonical factor-edit instruction and capacity transport contract",
++      "duration_minutes": 1.72,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V549 adversarial capstone and PRD-gap reconciliation",
++      "duration_minutes": 0.12,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V549 dated source delta and three-lane scope freeze",
++      "duration_minutes": 0.06,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp6387 readiness: three-family ARC goal evidence-response calibration",
++      "duration_minutes": 0.06,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 13 experiments in 5.8 minutes, including 7 compute-bound experiments. The 3.75-minute readiness-gated canonical factor transport canary and the 1.72-minute canonical factor-edit contract led the compute tail. The locked task classification found no GPU-idle fault on compute-bound work, and the supplied data does not establish parallel model loading or runner selection.",
++  "bottlenecks_identified": [
++    "The Exp6379-readiness-gated canonical factor transport canary was the longest compute-bound entry at 3.75 minutes. Its label identifies readiness gating, but the supplied timing data has no phase breakdown for a finer cause.",
++    "The canonical factor-edit instruction and capacity transport contract was the next-longest compute-bound entry at 1.72 minutes. The supplied timing data does not identify why it took that long.",
++    "Disk-mtime reconstruction ranks the work but does not separate readiness wait, setup, inference, and teardown time."
++  ],
++  "improvements_suggested": [
++    "Add a readiness-aware preflight before scheduling gated compute work, and record gate-wait and compute-phase timestamps.",
++    "Attach GPU utilization samples to the active task and phase so a task-untied idle snapshot cannot be mistaken for in-task utilization.",
++    "Record model-count and runner-dispatch receipts for every compute task. Require DualGPURunner only when at least two models load in parallel.",
++    "Schedule independent synthesis work while a compute task waits on readiness."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add readiness preflight and separate gate-wait timing for gated compute tasks.",
++    "Capture task-linked GPU utilization from compute start through compute end.",
++    "Emit model-count and runner-dispatch receipts, with DualGPURunner selected only for parallel multi-model work."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The reconstructed timing can rank experiments, but it cannot distinguish gate wait from active compute. The savings estimate remains 0 because the supplied evidence contains no measured counterfactual; better task-linked telemetry should make the next estimate evidence-based."
++}
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 9ed5e4dbdd..bf7305c22d 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -209,10 +209,37 @@ def _restore_dropped_determinations() -> None:
+                 cur = _json.loads(path.read_text())
+                 if not isinstance(head, dict) or not isinstance(cur, dict):
+                     continue
++                # RESTORE TWO DAMAGE SHAPES, not one (widened 2026-08-13).
++                #
++                # The original test was `k not in cur`, which only catches a DELETED key. The
++                # 2026-08-12 incident was the other shape: `flagged_adversarial` was still
++                # PRESENT and had been set to None, so `k not in cur` was False and this helper
++                # restored nothing on the very case it exists for. Five artifacts reached the
++                # index with their quarantine lifted; only determination-preservation-lint
++                # refusing a HUMAN commit caught it, and that lint never runs here because the
++                # conductor commits --no-verify.
++                #
++                # A determination is meaningful only when TRUTHY: `flagged_adversarial: False`
++                # and `flagged_adversarial: None` both re-admit a quarantined artifact to
++                # headline aggregation. So a truthy value in HEAD that is falsy or absent now is
++                # damage, and is restored.
++                #
++                # STILL STRICTLY ADDITIVE, so it cannot lose a legitimate edit: a deliberate
++                # clear is expressed as a falsy value PLUS a `*_cleared_note` (the documented
++                # route in determination_preservation_lint's docstring), and that note is itself
++                # a determination token, so a cleared artifact carries a key HEAD lacks and is
++                # left alone.
++                def _damaged(key: str, head_val: object) -> bool:
++                    if not head_val:
++                        return False  # nothing meaningful in HEAD to protect
++                    if f"{key}_cleared_note" in cur:
++                        return False  # deliberately cleared through the sanctioned route
++                    return not cur.get(key)
++
+                 missing = {
+                     k: v
+                     for k, v in head.items()
+-                    if any(t in k for t in _DETERMINATION_TOKENS) and k not in cur
++                    if any(t in k for t in _DETERMINATION_TOKENS) and _damaged(k, v)
+                 }
+                 if not missing:
+                     continue
+diff --git a/tests/python/test_conductor_determination_restore_downgrade_20260813.py b/tests/python/test_conductor_determination_restore_downgrade_20260813.py
+new file mode 100644
+index 0000000000..47f05f4533
+--- /dev/null
++++ b/tests/python/test_conductor_determination_restore_downgrade_20260813.py
+@@ -0,0 +1,124 @@
++"""The conductor's determination restore must catch DOWNGRADE, not just DELETION.
++
++INCIDENT 2026-08-12. Five artifacts reached the git index with `flagged_adversarial`
++changed True -> None, lifting their quarantine. `_restore_dropped_determinations` already
++existed and ran before every conductor `git add -A`, and it restored NOTHING, because its
++test was `k not in cur` -- which is False when the key is present and merely nulled. The
++damage was caught only because `determination-preservation-lint` refused a HUMAN commit, and
++that lint never runs on conductor commits (`--no-verify`, deliberately, for anti-stash-loss
++reasons documented in `git_commit_and_push`).
++
++This is the SILENT_NON_FIRING class named in CLAUDE.md's QA-Layer Authenticity Discipline:
++a guard whose pattern is narrower than the concept it claims to protect. These tests pin
++both damage shapes and the deliberate-clear carve-out.
++"""
++
++from __future__ import annotations
++
++import json
++import subprocess
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++def _restore_in(tmp_path: Path, head_obj: dict, cur_obj: dict) -> dict:
++    """Run the real helper against a throwaway git repo and return the resulting artifact."""
++    run = lambda *a: subprocess.run(a, cwd=tmp_path, capture_output=True, check=False)  # noqa: E731
++    run("git", "init", "-q")
++    run("git", "config", "user.email", "t@t")
++    run("git", "config", "user.name", "t")
++    results = tmp_path / "results"
++    results.mkdir()
++    art = results / "experiment_test.json"
++    art.write_text(json.dumps(head_obj, indent=2) + "\n")
++    run("git", "add", "-A")
++    run("git", "commit", "-q", "-m", "base")
++    art.write_text(json.dumps(cur_obj, indent=2) + "\n")
++
++    sys.path.insert(0, str(REPO / "scripts"))
++    import importlib
++
++    rc = importlib.import_module("research_conductor")
++    # `run_cmd` pins `cwd=PROJECT_ROOT`, so os.chdir cannot redirect it at the throwaway repo.
++    # Point PROJECT_ROOT at tmp_path for the call instead of relaxing the real code, and also
++    # chdir so the helper's relative `pathlib.Path(rel)` writes land in the same place.
++    import os
++
++    prev_root, prev_cwd = rc.PROJECT_ROOT, os.getcwd()
++    rc.PROJECT_ROOT = tmp_path
++    os.chdir(tmp_path)
++    try:
++        rc._restore_dropped_determinations()
++    finally:
++        rc.PROJECT_ROOT = prev_root
++        os.chdir(prev_cwd)
++    return json.loads(art.read_text())
++
++
++def test_a_deleted_determination_is_restored(tmp_path) -> None:
++    out = _restore_in(
++        tmp_path,
++        {"experiment": "t", "flagged_adversarial": True, "corrigendum_note": "why"},
++        {"experiment": "t"},
++    )
++    assert out["flagged_adversarial"] is True
++    assert out["corrigendum_note"] == "why"
++
++
++def test_a_determination_downgraded_to_none_is_restored(tmp_path) -> None:
++    """THE 2026-08-12 SHAPE. The key is present and nulled, so `k not in cur` was False and
++    the original helper restored nothing on exactly the case it was written for."""
++    out = _restore_in(
++        tmp_path,
++        {"experiment": "t", "flagged_adversarial": True, "corrigendum_note": "why"},
++        {"experiment": "t", "flagged_adversarial": None, "corrigendum_note": None},
++    )
++    assert out["flagged_adversarial"] is True
++    assert out["corrigendum_note"] == "why"
++
++
++def test_a_determination_downgraded_to_false_is_restored(tmp_path) -> None:
++    # False re-admits the artifact to headline aggregation just as None does.
++    out = _restore_in(
++        tmp_path,
++        {"experiment": "t", "flagged_adversarial": True},
++        {"experiment": "t", "flagged_adversarial": False},
++    )
++    assert out["flagged_adversarial"] is True
++
++
++def test_a_deliberate_clear_with_a_cleared_note_is_LEFT_ALONE(tmp_path) -> None:
++    """The sanctioned route must survive. determination_preservation_lint documents clearing
++    as: set the value falsy AND add a `*_cleared_note` saying what was re-verified. Restoring
++    over that would make an auditable decision impossible to express."""
++    out = _restore_in(
++        tmp_path,
++        {"experiment": "t", "flagged_adversarial": True},
++        {
++            "experiment": "t",
++            "flagged_adversarial": False,
++            "flagged_adversarial_cleared_note": "re-verified: TAUTOLOGY was structural",
++        },
++    )
++    assert out["flagged_adversarial"] is False
++    assert "cleared_note" in " ".join(out)
++
++
++def test_new_measurements_alongside_a_restored_determination_are_preserved(tmp_path) -> None:
++    # Fail-forward: a re-run's fresh numbers must survive the repair.
++    out = _restore_in(
++        tmp_path,
++        {"experiment": "t", "flagged_adversarial": True, "auroc": 0.5},
++        {"experiment": "t", "flagged_adversarial": None, "auroc": 0.91, "new_field": 7},
++    )
++    assert out["flagged_adversarial"] is True
++    assert out["auroc"] == 0.91
++    assert out["new_field"] == 7
++
++
++def test_an_artifact_with_nothing_missing_is_not_touched(tmp_path) -> None:
++    obj = {"experiment": "t", "flagged_adversarial": True}
++    out = _restore_in(tmp_path, obj, dict(obj))
++    assert out == obj
+-- 
+2.55.0
+

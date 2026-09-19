@@ -1,0 +1,1325 @@
+From 6a492501dc25114501f0a1c5047356509972f7cf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 4 Jul 2026 16:33:50 -0400
+Subject: [PATCH 05686/11362] [conductor] PHASE 1 GAP-1 stability decision --
+ freeze a non-leaky subset or retire the current promotion path
+
+Automated research step by research conductor.
+Task ID: exp5237-gap1-stability-freeze-or-retire-v479
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  47 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ops/verifier_gaps.md                          |   3 +
+ .../arc_gap1_stability_freeze_or_retire.py    | 527 ++++++++++++++++++
+ ..._gap1_stability_freeze_or_retire_v479.json | 155 ++++++
+ ...37_gap1_stability_freeze_or_retire_v479.py | 508 +++++++++++++++++
+ 6 files changed, 1241 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
+ create mode 100644 results/experiment_5237_gap1_stability_freeze_or_retire_v479.json
+ create mode 100644 tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 70f6496039..c7cc5cad1d 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -7236,6 +7236,52 @@ substrate, and an honest verdict that explicitly says GAP-1 registry promotion
+ was blocked by subset instability rather than by the earlier Exp 5210 gate
+ shape failure alone.
+ 
++### REQ-VERIFY-5237: GAP-1 Stability Freeze-or-Retire Decision
++
++The repository shall provide a deterministic GAP-1 stability decision builder
++that reads the existing Exp 5209 and Exp 5222 artifacts, predeclares the
++freeze rule before any new performance result is consulted, and evaluates only
++the Exp 5209 candidate subset evidence plus predeclared stability projection.
++It SHALL NOT run a fresh open-ended discriminator or subset search.
++
++The predeclared stability rule SHALL require all of these before freezing or
++registry promotion: Exp 5209's positive gate was parsed from
++`gap1_hardened_positive.value`; the leakage audit and no-held-out-tuning
++guards pass; one exact selected subset wins at least half of grouped splits;
++every invariant in that exact subset has inclusion frequency at least half of
++grouped splits; and `directional_adjacency_refuted_20260609` is excluded from
++the frozen verifier. If any rule fails, the decision SHALL be one of
++`blocked_instability`, `retired_current_path`, or `blocked_missing_evidence`
++and `gap1_registry_promoted.value` SHALL remain false.
++
++The terminal artifact
++`results/experiment_5237_gap1_stability_freeze_or_retire_v479.json` SHALL
++include top-level principle-wrapped fields `gap1_stability_decision`,
++`gap1_registry_promoted`, `frozen_subset`, `stability_rule_predeclared`,
++`no_new_broad_search`, `refuted_single_invariant_excluded`, `tests_run`,
++`inference_substrate`, and `honest_verdict`. `gap1_stability_decision.value`
++MUST be one of `frozen_promoted`, `blocked_instability`,
++`retired_current_path`, or `blocked_missing_evidence`.
++`inference_substrate.value` MUST be `deterministic_gap1_stability_analysis`.
++`honest_verdict.value` MUST begin with `complete:`, `complete_`, `success:`,
++or `success_`, and MUST state whether GAP-1 was frozen, blocked, or retired.
++
++### SCENARIO-VERIFY-5237: Unstable Exp 5209 Subset Blocks the Current Promotion Path
++
++Given Exp 5209 reports a positive held-out GAP-1 result but
++`best_subset_stable.value=false`, a top exact subset selected in 9 of 20
++grouped splits, leakage guards passing, and no held-out subset tuning,
++And Exp 5222 already records `gap1_registry_promoted.value=false`,
++When Exp 5237 applies the predeclared stability rule without a new broad
++search,
++Then it writes the terminal artifact with
++`gap1_stability_decision.value="blocked_instability"`,
++`gap1_registry_promoted.value=false`, `frozen_subset.value=null`,
++`stability_rule_predeclared.value=true`, `no_new_broad_search.value=true`, a
++true refuted-single-invariant exclusion flag, the deterministic GAP-1 stability
++analysis substrate, a concrete future criterion for reopening, and an honest
++verdict that says GAP-1 was blocked by instability.
++
+ ## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878/1879/1880)
+ 
+ | Requirement | Python | Tests |
+@@ -7289,6 +7335,7 @@ shape failure alone.
+ | REQ-VERIFY-5205 | Implemented (`python/carnot/verify/arc_gap1_autopyverifier_pilot.py`) | Implemented (`tests/python/test_experiment_5205_autopyverifier_gap1_pilot_v476.py`) |
+ | REQ-VERIFY-5209 | Implemented (`python/carnot/verify/arc_gap1_set_search_holdout_hardening.py`) | Implemented (`tests/python/test_experiment_5209_gap1_set_search_holdout_hardening_v477.py`) |
+ | REQ-VERIFY-5222 | Implemented (`python/carnot/verify/arc_gap1_registry_promotion_decision.py`) | Implemented (`tests/python/test_experiment_5222_gap1_gate_field_registry_promotion_v478.py`) |
++| REQ-VERIFY-5237 | Implemented (`python/carnot/verify/arc_gap1_stability_freeze_or_retire.py`) | Implemented (`tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py`) |
+ | REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
+ | REQ-VERIFY-1666 | Implemented (`python/carnot/pipeline/nsvif_parser.py`) | Implemented (`tests/python/test_pipeline_nsvif_parser.py`) |
+ | REQ-VERIFY-1878 | Implemented (`python/carnot/pipeline/roce_validator_tree.py`) | Implemented (`tests/python/test_roce_validator_tree.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 720529415b..8bba6ccd74 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4211,
++  "experiments_checked": 4212,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index e2405f7514..f67c8d0e72 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -450,6 +450,9 @@ a live artifact-clobber bug — record reconstructed from transcripts, guard add
+ <!-- experiment_5222_gap1_gate_field_registry_promotion_v478 start -->
+ - experiment_5222 GAP-1 registry promotion decision (2026-07-04): decision=blocked_instability, gap1_registry_promoted=False, exp5209_gate_parsed_from_value=True, frozen_subset=None. Follow-up criterion: Reconsider registry promotion only after a predeclared frozen subset is selected from training evidence alone, one exact subset wins at least half of grouped splits, leakage guards pass, and directional_adjacency_refuted_20260609 remains excluded from the promoted frozen verifier. Verdict: complete: GAP-1 registry promotion blocked_instability; exp5209 gate parsed from gap1_hardened_positive.value=True, but the selected subset is not stable enough to freeze without held-out tuning; this is not the exp5210 gate-shape failure alone.
+ <!-- experiment_5222_gap1_gate_field_registry_promotion_v478 end -->
++<!-- experiment_5237_gap1_stability_freeze_or_retire_v479 start -->
++- experiment_5237 GAP-1 stability freeze-or-retire decision (2026-07-04): decision=blocked_instability, gap1_registry_promoted=False, frozen_subset=None, stability_rule_predeclared=True, no_new_broad_search=True. Block condition: Freeze is blocked unless the exact-subset and invariant-inclusion stability checks both pass under the no-held-out-tuning leakage guard. Minimum evidence to reopen: Minimum evidence to reopen: choose one frozen subset from training evidence alone, before held-out scoring, and have the exact subset win at least 10 of 20 grouped splits; every frozen invariant must appear in at least half of those splits, all leakage/no-held-out-tuning guards must pass, and directional_adjacency_refuted_20260609 must remain excluded. Verdict: complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze.
++<!-- experiment_5237_gap1_stability_freeze_or_retire_v479 end -->
+ 
+ - Exp 5214 verifier-memory pointer: `results/verifier_memory_v477.json` stores the GAP-1 orientation-discriminator set as a memory-only promotion (not a registry fill) because deterministic guardrails passed and held-out delta cleared the memory threshold.
+ 
+diff --git a/python/carnot/verify/arc_gap1_stability_freeze_or_retire.py b/python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
+new file mode 100644
+index 0000000000..86c075be71
+--- /dev/null
++++ b/python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
+@@ -0,0 +1,527 @@
++"""Exp 5237: GAP-1 stability freeze-or-retire decision.
++
++Spec refs: REQ-VERIFY-5237, SCENARIO-VERIFY-5237.
++
++This module makes the final stability decision for the current GAP-1 registry
++promotion path. It does not search for new invariants. It reads the existing
++Exp 5209 hardening evidence and Exp 5222 registry decision, applies a
++predeclared stability rule, and writes a terminal artifact that either freezes
++the deterministic subset or blocks/retires the current path with a concrete
++criterion for future reopening.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++import re
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++EXPERIMENT = "experiment_5237_gap1_stability_freeze_or_retire_v479"
++EXPERIMENT_ID = 5237
++SCHEMA = "carnot.arc_gap1_stability_freeze_or_retire_5237.v1"
++RUN_DATE = "2026-07-04"
++RESULT_RELATIVE_PATH = "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json"
++EXP5209_RELATIVE_PATH = "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json"
++EXP5222_RELATIVE_PATH = "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json"
++VERIFIER_GAPS_RELATIVE_PATH = "ops/verifier_gaps.md"
++VERIFIER_REGISTRY_RELATIVE_PATH = "ops/verifier_registry.yaml"
++REFUTED_SINGLE_INVARIANT = "directional_adjacency_refuted_20260609"
++INFERENCE_SUBSTRATE = "deterministic_gap1_stability_analysis"
++SPEC_REFS = ("REQ-VERIFY-5237", "SCENARIO-VERIFY-5237")
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_")
++VALID_DECISIONS = {
++    "frozen_promoted",
++    "blocked_instability",
++    "retired_current_path",
++    "blocked_missing_evidence",
++}
++DECISION_PATH_FEATURES = [
++    "exp5209.gap1_hardened_positive.value",
++    "exp5209.leakage_audit_passed.value",
++    "exp5209.leakage_audit.no_subset_selection_on_heldout_rows",
++    "exp5209.subset_stability.selection_counts",
++    "exp5222.gap1_registry_promoted.value",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "gap1_stability_decision": (
++        "Final GAP-1 stability decision enum: frozen_promoted, blocked_instability, "
++        "retired_current_path, or blocked_missing_evidence."
++    ),
++    "gap1_registry_promoted": (
++        "BARE top-level boolean. True only when a deterministic non-leaky stable subset is frozen."
++    ),
++    "frozen_subset": "List of frozen invariant names, or null when GAP-1 is not promoted.",
++    "stability_rule_predeclared": (
++        "True only when the stability rule is declared before any new performance result."
++    ),
++    "no_new_broad_search": (
++        "True only when Exp 5237 evaluates existing Exp 5209 subset evidence without a new search."
++    ),
++    "refuted_single_invariant_excluded": (
++        "True when directional_adjacency_refuted_20260609 is absent from the frozen/current subset."
++    ),
++    "tests_run": "List of verification commands with pass/fail booleans for this decision.",
++    "ops_verifier_gaps_updated": "True when ops/verifier_gaps.md records the block/freeze decision.",
++    "inference_substrate": "Must be deterministic_gap1_stability_analysis.",
++    "honest_verdict": (
++        "Must start with complete:/complete_/success:/success_ and state whether GAP-1 was "
++        "frozen, blocked, or retired."
++    ),
++}
++REQUIRED_PRINCIPLED_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def _value(artifact: Mapping[str, Any], field: str, default: Any = None) -> Any:
++    raw = artifact.get(field, default)
++    if isinstance(raw, Mapping) and "value" in raw:
++        return raw["value"]
++    return raw
++
++
++def _wrap(field: str, value: Any) -> JsonDict:
++    return {"value": value, "principle": FIELD_PRINCIPLES[field]}
++
++
++def _read_json(path: Path) -> JsonDict:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _subset_list(value: Any) -> list[str] | None:
++    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
++        return [str(item) for item in value]
++    return None
++
++
++def _selection_counts(exp5209: Mapping[str, Any]) -> list[JsonDict]:
++    stability = exp5209.get("subset_stability")
++    if not isinstance(stability, Mapping):
++        return []
++    rows = stability.get("selection_counts")
++    if not isinstance(rows, Sequence) or isinstance(rows, (str, bytes)):
++        return []
++    parsed: list[JsonDict] = []
++    for row in rows:
++        if not isinstance(row, Mapping):
++            continue
++        subset = _subset_list(row.get("subset"))
++        count = row.get("count")
++        if subset is None or not isinstance(count, int) or count < 1:
++            continue
++        parsed.append({"subset": subset, "count": count})
++    return parsed
++
++
++def _top_subset(exp5209: Mapping[str, Any]) -> list[str] | None:
++    stability = exp5209.get("subset_stability")
++    if not isinstance(stability, Mapping):
++        return None
++    return _subset_list(stability.get("top_subset"))
++
++
++def _top_subset_count(exp5209: Mapping[str, Any], top_subset: Sequence[str] | None) -> int:
++    stability = exp5209.get("subset_stability")
++    if isinstance(stability, Mapping) and isinstance(stability.get("top_subset_count"), int):
++        return int(stability["top_subset_count"])
++    if top_subset is None:
++        return 0
++    return sum(
++        int(row["count"]) for row in _selection_counts(exp5209) if row["subset"] == list(top_subset)
++    )
++
++
++def _n_grouped_splits(exp5209: Mapping[str, Any], counts: Sequence[Mapping[str, Any]]) -> int:
++    raw = _value(exp5209, "n_grouped_splits", None)
++    if isinstance(raw, int) and raw > 0:
++        return raw
++    return sum(int(row["count"]) for row in counts)
++
++
++def _ceil_half(value: int) -> int:
++    if value <= 0:
++        return 0
++    return (value + 1) // 2
++
++
++def _frequency(count: int, total: int) -> float:
++    return round(count / total, 6) if total > 0 else 0.0
++
++
++def _invariant_inclusion_frequencies(
++    *,
++    top_subset: Sequence[str] | None,
++    selection_counts: Sequence[Mapping[str, Any]],
++    n_grouped_splits: int,
++) -> dict[str, float]:
++    if top_subset is None:
++        return {}
++    frequencies: dict[str, float] = {}
++    for invariant in top_subset:
++        count = sum(
++            int(row["count"]) for row in selection_counts if invariant in row.get("subset", [])
++        )
++        frequencies[invariant] = _frequency(count, n_grouped_splits)
++    return frequencies
++
++
++def _exp5209_gate_parsed_from_value(exp5209: Mapping[str, Any]) -> bool:
++    raw = exp5209.get("gap1_hardened_positive")
++    return isinstance(raw, Mapping) and raw.get("value") is True
++
++
++def _exp5222_evidence_present(exp5222: Mapping[str, Any]) -> bool:
++    promoted = exp5222.get("gap1_registry_promoted")
++    decision = exp5222.get("gap1_registry_decision")
++    return (
++        isinstance(promoted, Mapping)
++        and isinstance(promoted.get("value"), bool)
++        and isinstance(decision, Mapping)
++        and isinstance(decision.get("value"), str)
++    )
++
++
++def _leakage_audit_passed(exp5209: Mapping[str, Any]) -> bool:
++    audit = exp5209.get("leakage_audit")
++    if not isinstance(audit, Mapping):
++        return False
++    return (
++        _value(exp5209, "leakage_audit_passed", False) is True
++        and audit.get("passed") is not False
++        and audit.get("no_duplicate_task_ids_across_train_eval") is True
++        and audit.get("no_subset_selection_on_heldout_rows") is True
++        and audit.get("no_test_gold_in_scoring") is True
++        and audit.get("no_test_output_derived_features") is True
++    )
++
++
++def _predeclared_stability_audit(
++    exp5209: Mapping[str, Any], exp5222: Mapping[str, Any]
++) -> JsonDict:
++    top_subset = _top_subset(exp5209)
++    counts = _selection_counts(exp5209)
++    n_grouped_splits = _n_grouped_splits(exp5209, counts)
++    top_count = _top_subset_count(exp5209, top_subset)
++    min_count = _ceil_half(n_grouped_splits)
++    inclusion_frequencies = _invariant_inclusion_frequencies(
++        top_subset=top_subset,
++        selection_counts=counts,
++        n_grouped_splits=n_grouped_splits,
++    )
++    inclusion_passed = bool(inclusion_frequencies) and all(
++        frequency >= 0.5 for frequency in inclusion_frequencies.values()
++    )
++    exact_subset_passed = (
++        _value(exp5209, "best_subset_stable", False) is True
++        and top_subset is not None
++        and top_count >= min_count
++        and n_grouped_splits > 0
++    )
++    audit = exp5209.get("leakage_audit")
++    no_heldout_tuning = (
++        isinstance(audit, Mapping) and audit.get("no_subset_selection_on_heldout_rows") is True
++    )
++    return {
++        "rule": (
++            "Freeze only if the Exp 5209 positive gate is parsed from its value field, leakage "
++            "guards pass, no held-out rows select the subset, one exact subset wins at least half "
++            "of grouped splits, each frozen invariant appears in at least half of grouped splits, "
++            f"and {REFUTED_SINGLE_INVARIANT} is excluded."
++        ),
++        "source_subset_evidence": "exp5209.subset_stability.selection_counts",
++        "heldout_rows_used_for_freeze": False,
++        "no_heldout_tuning": no_heldout_tuning,
++        "top_subset": top_subset,
++        "top_subset_count": top_count,
++        "n_grouped_splits": n_grouped_splits,
++        "exact_subset_min_count": min_count,
++        "exact_subset_selection_frequency": _frequency(top_count, n_grouped_splits),
++        "exact_subset_stability_passed": exact_subset_passed,
++        "invariant_inclusion_min_frequency": 0.5,
++        "invariant_inclusion_frequencies": inclusion_frequencies,
++        "invariant_inclusion_stability_passed": inclusion_passed,
++        "exp5209_gate_parsed_from_value": _exp5209_gate_parsed_from_value(exp5209),
++        "leakage_audit_passed": _leakage_audit_passed(exp5209),
++        "exp5222_registry_promoted": _value(exp5222, "gap1_registry_promoted", None),
++        "exp5222_registry_decision": _value(exp5222, "gap1_registry_decision", None),
++        "refuted_single_invariant_excluded": (
++            top_subset is None or REFUTED_SINGLE_INVARIANT not in top_subset
++        ),
++    }
++
++
++def _required_evidence_present(
++    exp5209: Mapping[str, Any],
++    exp5222: Mapping[str, Any],
++    audit: Mapping[str, Any],
++) -> bool:
++    return (
++        isinstance(exp5209.get("gap1_hardened_positive"), Mapping)
++        and isinstance(exp5209.get("leakage_audit_passed"), Mapping)
++        and isinstance(exp5209.get("best_subset_stable"), Mapping)
++        and audit.get("top_subset") is not None
++        and bool(_selection_counts(exp5209))
++        and _exp5222_evidence_present(exp5222)
++    )
++
++
++def _decision(
++    exp5209: Mapping[str, Any], exp5222: Mapping[str, Any], audit: Mapping[str, Any]
++) -> str:
++    if not _required_evidence_present(exp5209, exp5222, audit):
++        return "blocked_missing_evidence"
++    if audit.get("refuted_single_invariant_excluded") is False:
++        return "retired_current_path"
++    if (
++        audit.get("exp5209_gate_parsed_from_value") is not True
++        or audit.get("leakage_audit_passed") is not True
++        or audit.get("no_heldout_tuning") is not True
++    ):
++        return "blocked_missing_evidence"
++    if (
++        audit.get("exact_subset_stability_passed") is not True
++        or audit.get("invariant_inclusion_stability_passed") is not True
++    ):
++        return "blocked_instability"
++    return "frozen_promoted"
++
++
++def _future_reopen_criterion(audit: Mapping[str, Any]) -> str:
++    n_grouped_splits = audit.get("n_grouped_splits")
++    min_count = audit.get("exact_subset_min_count")
++    if isinstance(n_grouped_splits, int) and n_grouped_splits > 0 and isinstance(min_count, int):
++        exact_clause = f"at least {min_count} of {n_grouped_splits} grouped splits"
++    else:
++        exact_clause = "at least half of predeclared grouped splits"
++    return (
++        "Minimum evidence to reopen: choose one frozen subset from training evidence alone, before "
++        f"held-out scoring, and have the exact subset win {exact_clause}; every frozen invariant must "
++        "appear in at least half of those splits, all leakage/no-held-out-tuning guards must pass, "
++        f"and {REFUTED_SINGLE_INVARIANT} must remain excluded."
++    )
++
++
++def _verdict(decision: str) -> str:
++    if decision == "frozen_promoted":
++        return "complete: GAP-1 was frozen and promoted with a deterministic stable subset."
++    if decision == "retired_current_path":
++        return (
++            "complete: GAP-1 current promotion path retired_current_path because the refuted "
++            "single directional-adjacency invariant remains on the freeze path."
++        )
++    if decision == "blocked_instability":
++        return (
++            "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is "
++            "non-leaky, but the exact selected subset is not stable enough to freeze."
++        )
++    return "complete: GAP-1 blocked_missing_evidence; decision-grade stability evidence is absent."
++
++
++def _tests_run_shape_ok(value: Any) -> bool:
++    return isinstance(value, list) and all(
++        isinstance(row, Mapping)
++        and isinstance(row.get("command"), str)
++        and isinstance(row.get("passed"), bool)
++        for row in value
++    )
++
++
++def _registry_audit(root: Path | str | None) -> JsonDict:
++    path = (
++        Path(root) / VERIFIER_REGISTRY_RELATIVE_PATH
++        if root is not None
++        else Path(VERIFIER_REGISTRY_RELATIVE_PATH)
++    )
++    text = path.read_text(encoding="utf-8") if path.exists() else ""
++    verifier_ids = re.findall(r"verifier_id:\s*([^\s#]+)", text)
++    promoted_gap1_ids = [
++        verifier_id for verifier_id in verifier_ids if "gap1" in verifier_id.lower()
++    ]
++    return {
++        "path": VERIFIER_REGISTRY_RELATIVE_PATH,
++        "exists": path.exists(),
++        "verifier_ids_loaded": verifier_ids,
++        "promoted_gap1_registry_entry_present": bool(promoted_gap1_ids),
++        "promoted_gap1_verifier_ids": promoted_gap1_ids,
++    }
++
++
++def build_artifact(
++    *,
++    exp5209: Mapping[str, Any],
++    exp5222: Mapping[str, Any],
++    root: Path | str | None = None,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++    ops_docs_updated: bool = False,
++    duration_s: float = 0.0,
++) -> JsonDict:
++    stability_audit = _predeclared_stability_audit(exp5209, exp5222)
++    decision = _decision(exp5209, exp5222, stability_audit)
++    promoted = decision == "frozen_promoted"
++    frozen_subset = stability_audit["top_subset"] if promoted else None
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "run_date": RUN_DATE,
++        "result_path": RESULT_RELATIVE_PATH,
++        "source_artifacts": [EXP5209_RELATIVE_PATH, EXP5222_RELATIVE_PATH],
++        "gap1_stability_decision": _wrap("gap1_stability_decision", decision),
++        "gap1_registry_promoted": _wrap("gap1_registry_promoted", promoted),
++        "frozen_subset": _wrap("frozen_subset", frozen_subset),
++        "stability_rule_predeclared": _wrap("stability_rule_predeclared", True),
++        "no_new_broad_search": _wrap("no_new_broad_search", True),
++        "refuted_single_invariant_excluded": _wrap(
++            "refuted_single_invariant_excluded",
++            bool(stability_audit["refuted_single_invariant_excluded"]),
++        ),
++        "tests_run": _wrap("tests_run", [dict(row) for row in tests_run]),
++        "ops_verifier_gaps_updated": _wrap("ops_verifier_gaps_updated", bool(ops_docs_updated)),
++        "inference_substrate": _wrap("inference_substrate", INFERENCE_SUBSTRATE),
++        "honest_verdict": _wrap("honest_verdict", _verdict(decision)),
++        "stability_audit": stability_audit,
++        "registry_audit": _registry_audit(root),
++        "decision_path_features": list(DECISION_PATH_FEATURES),
++        "future_reopen_criterion": _future_reopen_criterion(stability_audit),
++        "retirement_or_block_condition": (
++            "Freeze is blocked unless the exact-subset and invariant-inclusion stability checks both "
++            "pass under the no-held-out-tuning leakage guard."
++        ),
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": round(float(duration_s), 3),
++    }
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_PRINCIPLED_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {', '.join(missing)}")
++    for field in REQUIRED_PRINCIPLED_FIELDS:
++        raw = artifact.get(field)
++        if not isinstance(raw, Mapping) or "value" not in raw or "principle" not in raw:
++            errors.append(f"{field} must be principle-wrapped")
++            continue
++        if raw.get("principle") != FIELD_PRINCIPLES[field]:
++            errors.append(f"{field} principle mismatch")
++    decision = _value(artifact, "gap1_stability_decision")
++    promoted = _value(artifact, "gap1_registry_promoted")
++    frozen_subset = _value(artifact, "frozen_subset")
++    if decision not in VALID_DECISIONS:
++        errors.append("gap1_stability_decision must be a valid decision enum")
++    if not isinstance(promoted, bool):
++        errors.append("gap1_registry_promoted must be bool")
++    if decision == "frozen_promoted":
++        if promoted is not True or not isinstance(frozen_subset, list) or not frozen_subset:
++            errors.append("frozen_promoted requires true gap1_registry_promoted and frozen_subset")
++    elif promoted is not False or frozen_subset is not None:
++        errors.append(
++            "non-promoted decisions require false gap1_registry_promoted and null frozen_subset"
++        )
++    if _value(artifact, "stability_rule_predeclared") is not True:
++        errors.append("stability_rule_predeclared must be true")
++    if _value(artifact, "no_new_broad_search") is not True:
++        errors.append("no_new_broad_search must be true")
++    if not isinstance(_value(artifact, "refuted_single_invariant_excluded"), bool):
++        errors.append("refuted_single_invariant_excluded must be bool")
++    if not isinstance(_value(artifact, "ops_verifier_gaps_updated"), bool):
++        errors.append("ops_verifier_gaps_updated must be bool")
++    if not _tests_run_shape_ok(_value(artifact, "tests_run")):
++        errors.append("tests_run must list commands with boolean passed fields")
++    if _value(artifact, "inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must be deterministic_gap1_stability_analysis")
++    verdict = _value(artifact, "honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must use a terminal complete/success prefix")
++    elif not any(word in verdict for word in ("frozen", "blocked", "retired")):
++        errors.append("honest_verdict must state whether GAP-1 was frozen, blocked, or retired")
++    return errors
++
++
++def _gap_update_block(artifact: Mapping[str, Any]) -> str:
++    return (
++        "<!-- experiment_5237_gap1_stability_freeze_or_retire_v479 start -->\n"
++        "- experiment_5237 GAP-1 stability freeze-or-retire decision (2026-07-04): "
++        f"decision={_value(artifact, 'gap1_stability_decision')}, "
++        f"gap1_registry_promoted={_value(artifact, 'gap1_registry_promoted')}, "
++        f"frozen_subset={_value(artifact, 'frozen_subset')}, "
++        f"stability_rule_predeclared={_value(artifact, 'stability_rule_predeclared')}, "
++        f"no_new_broad_search={_value(artifact, 'no_new_broad_search')}. "
++        f"Block condition: {artifact['retirement_or_block_condition']} "
++        f"Minimum evidence to reopen: {artifact['future_reopen_criterion']} "
++        f"Verdict: {_value(artifact, 'honest_verdict')}\n"
++        "<!-- experiment_5237_gap1_stability_freeze_or_retire_v479 end -->\n"
++    )
++
++
++def update_verifier_gap_doc(root: Path | str, artifact: Mapping[str, Any]) -> bool:
++    path = Path(root) / VERIFIER_GAPS_RELATIVE_PATH
++    if not path.exists():  # pragma: no cover - temp or partial repos can omit ops docs.
++        return False
++    text = path.read_text(encoding="utf-8")
++    start = "<!-- experiment_5237_gap1_stability_freeze_or_retire_v479 start -->"
++    end = "<!-- experiment_5237_gap1_stability_freeze_or_retire_v479 end -->"
++    block = _gap_update_block(artifact)
++    if start in text and end in text:
++        before, rest = text.split(start, 1)
++        _old, after = rest.split(end, 1)
++        path.write_text(before + block + after, encoding="utf-8")
++        return True
++    prior_end = "<!-- experiment_5222_gap1_gate_field_registry_promotion_v478 end -->"
++    if prior_end in text:
++        text = text.replace(prior_end, prior_end + "\n" + block.rstrip("\n"), 1)
++        path.write_text(text, encoding="utf-8")
++        return True
++    path.write_text(text.rstrip() + "\n" + block, encoding="utf-8")
++    return True
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str | None = None,
++    update_gap_doc: bool = True,
++    tests_run: Sequence[Mapping[str, Any]] = (),
++    duration_s: float | None = None,
++) -> JsonDict:
++    started = time.time()
++    root_path = Path(root)
++    exp5209 = _read_json(root_path / EXP5209_RELATIVE_PATH)
++    exp5222 = _read_json(root_path / EXP5222_RELATIVE_PATH)
++    elapsed = time.time() - started if duration_s is None else duration_s
++    ops_docs_will_update = bool(
++        update_gap_doc and (root_path / VERIFIER_GAPS_RELATIVE_PATH).exists()
++    )
++    artifact = build_artifact(
++        exp5209=exp5209,
++        exp5222=exp5222,
++        root=root_path,
++        tests_run=tests_run,
++        ops_docs_updated=ops_docs_will_update,
++        duration_s=elapsed,
++    )
++    output = Path(result_path) if result_path is not None else root_path / RESULT_RELATIVE_PATH
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    if update_gap_doc:
++        update_verifier_gap_doc(root_path, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - direct experiment entrypoint.
++    artifact = run()
++    print(_value(artifact, "honest_verdict"))
++    print(f"wrote {RESULT_RELATIVE_PATH}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5237_gap1_stability_freeze_or_retire_v479.json b/results/experiment_5237_gap1_stability_freeze_or_retire_v479.json
+new file mode 100644
+index 0000000000..2188afa8f1
+--- /dev/null
++++ b/results/experiment_5237_gap1_stability_freeze_or_retire_v479.json
+@@ -0,0 +1,155 @@
++{
++  "decision_path_features": [
++    "exp5209.gap1_hardened_positive.value",
++    "exp5209.leakage_audit_passed.value",
++    "exp5209.leakage_audit.no_subset_selection_on_heldout_rows",
++    "exp5209.subset_stability.selection_counts",
++    "exp5222.gap1_registry_promoted.value"
++  ],
++  "duration_s": 0.0,
++  "experiment": "experiment_5237_gap1_stability_freeze_or_retire_v479",
++  "experiment_id": 5237,
++  "field_principles": {
++    "frozen_subset": "List of frozen invariant names, or null when GAP-1 is not promoted.",
++    "gap1_registry_promoted": "BARE top-level boolean. True only when a deterministic non-leaky stable subset is frozen.",
++    "gap1_stability_decision": "Final GAP-1 stability decision enum: frozen_promoted, blocked_instability, retired_current_path, or blocked_missing_evidence.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.",
++    "inference_substrate": "Must be deterministic_gap1_stability_analysis.",
++    "no_new_broad_search": "True only when Exp 5237 evaluates existing Exp 5209 subset evidence without a new search.",
++    "ops_verifier_gaps_updated": "True when ops/verifier_gaps.md records the block/freeze decision.",
++    "refuted_single_invariant_excluded": "True when directional_adjacency_refuted_20260609 is absent from the frozen/current subset.",
++    "stability_rule_predeclared": "True only when the stability rule is declared before any new performance result.",
++    "tests_run": "List of verification commands with pass/fail booleans for this decision."
++  },
++  "frozen_subset": {
++    "principle": "List of frozen invariant names, or null when GAP-1 is not promoted.",
++    "value": null
++  },
++  "future_reopen_criterion": "Minimum evidence to reopen: choose one frozen subset from training evidence alone, before held-out scoring, and have the exact subset win at least 10 of 20 grouped splits; every frozen invariant must appear in at least half of those splits, all leakage/no-held-out-tuning guards must pass, and directional_adjacency_refuted_20260609 must remain excluded.",
++  "gap1_registry_promoted": {
++    "principle": "BARE top-level boolean. True only when a deterministic non-leaky stable subset is frozen.",
++    "value": false
++  },
++  "gap1_stability_decision": {
++    "principle": "Final GAP-1 stability decision enum: frozen_promoted, blocked_instability, retired_current_path, or blocked_missing_evidence.",
++    "value": "blocked_instability"
++  },
++  "honest_verdict": {
++    "principle": "Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.",
++    "value": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."
++  },
++  "inference_substrate": {
++    "principle": "Must be deterministic_gap1_stability_analysis.",
++    "value": "deterministic_gap1_stability_analysis"
++  },
++  "no_new_broad_search": {
++    "principle": "True only when Exp 5237 evaluates existing Exp 5209 subset evidence without a new search.",
++    "value": true
++  },
++  "ops_verifier_gaps_updated": {
++    "principle": "True when ops/verifier_gaps.md records the block/freeze decision.",
++    "value": true
++  },
++  "refuted_single_invariant_excluded": {
++    "principle": "True when directional_adjacency_refuted_20260609 is absent from the frozen/current subset.",
++    "value": true
++  },
++  "registry_audit": {
++    "exists": true,
++    "path": "ops/verifier_registry.yaml",
++    "promoted_gap1_registry_entry_present": false,
++    "promoted_gap1_verifier_ids": [],
++    "verifier_ids_loaded": [
++      "fover_production_ensemble",
++      "outcome_verifier_math_proc_plus_sc",
++      "code_outcome_verifier_formal_oracle",
++      "arc_grid_structural_pruner",
++      "arc_grid_combined_verifier",
++      "gap4_program_induction_stack",
++      "arc_agi3_learned_action_cost_heuristic_4353",
++      "sprite_overlay_resize_verifier"
++    ]
++  },
++  "result_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
++  "retirement_or_block_condition": "Freeze is blocked unless the exact-subset and invariant-inclusion stability checks both pass under the no-held-out-tuning leakage guard.",
++  "run_date": "2026-07-04",
++  "schema": "carnot.arc_gap1_stability_freeze_or_retire_5237.v1",
++  "source_artifacts": [
++    "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json",
++    "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json"
++  ],
++  "spec_refs": [
++    "REQ-VERIFY-5237",
++    "SCENARIO-VERIFY-5237"
++  ],
++  "stability_audit": {
++    "exact_subset_min_count": 10,
++    "exact_subset_selection_frequency": 0.45,
++    "exact_subset_stability_passed": false,
++    "exp5209_gate_parsed_from_value": true,
++    "exp5222_registry_decision": "blocked_instability",
++    "exp5222_registry_promoted": false,
++    "heldout_rows_used_for_freeze": false,
++    "invariant_inclusion_frequencies": {
++      "color_centroid_orientation": 0.6,
++      "row_column_run_profile": 1.0
++    },
++    "invariant_inclusion_min_frequency": 0.5,
++    "invariant_inclusion_stability_passed": true,
++    "leakage_audit_passed": true,
++    "n_grouped_splits": 20,
++    "no_heldout_tuning": true,
++    "refuted_single_invariant_excluded": true,
++    "rule": "Freeze only if the Exp 5209 positive gate is parsed from its value field, leakage guards pass, no held-out rows select the subset, one exact subset wins at least half of grouped splits, each frozen invariant appears in at least half of grouped splits, and directional_adjacency_refuted_20260609 is excluded.",
++    "source_subset_evidence": "exp5209.subset_stability.selection_counts",
++    "top_subset": [
++      "color_centroid_orientation",
++      "row_column_run_profile"
++    ],
++    "top_subset_count": 9
++  },
++  "stability_rule_predeclared": {
++    "principle": "True only when the stability rule is declared before any new performance result.",
++    "value": true
++  },
++  "tests_run": {
++    "principle": "List of verification commands with pass/fail booleans for this decision.",
++    "value": [
++      {
++        "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py -q",
++        "details": "5 passed",
++        "passed": true
++      },
++      {
++        "command": ".venv/bin/coverage erase; .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py -q; .venv/bin/coverage report --fail-under=100 --show-missing python/carnot/verify/arc_gap1_stability_freeze_or_retire.py",
++        "details": "5 passed; arc_gap1_stability_freeze_or_retire.py 229 statements, 0 missed, 100% coverage",
++        "passed": true
++      },
++      {
++        "command": ".venv/bin/ruff check python/carnot/verify/arc_gap1_stability_freeze_or_retire.py tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py",
++        "details": "All checks passed",
++        "passed": true
++      },
++      {
++        "command": ".venv/bin/ruff format --check python/carnot/verify/arc_gap1_stability_freeze_or_retire.py tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py",
++        "details": "2 files already formatted",
++        "passed": true
++      },
++      {
++        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py",
++        "details": "OK: All tests reference specification requirements.",
++        "passed": true
++      },
++      {
++        "command": ".venv/bin/python scripts/check_spec_coverage.py",
++        "details": "Failed on 1231 pre-existing untraced tests outside the Exp 5237 test file.",
++        "passed": false
++      },
++      {
++        "command": ".venv/bin/pytest tests/python -q",
++        "details": "Interrupted after the run was already red and worker-unstable: 302 failed, 25524 passed, 90 skipped, 1 error in 2632.75s; observed Z3 segmentation fault, JAX abort, xdist worker crashes, and unrelated historical/spec-anchor failures.",
++        "passed": false
++      }
++    ]
++  }
++}
+diff --git a/tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py b/tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py
+new file mode 100644
+index 0000000000..357d4cc329
+--- /dev/null
++++ b/tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py
+@@ -0,0 +1,508 @@
++"""Tests for Exp 5237's GAP-1 stability freeze-or-retire decision.
++
++Spec refs: REQ-VERIFY-5237, SCENARIO-VERIFY-5237.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot.verify import arc_gap1_stability_freeze_or_retire as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def _field(value: object, principle: str = "fixture principle") -> dict[str, object]:
++    return {"value": value, "principle": principle}
++
++
++def _selection_counts(
++    top_subset: list[str],
++    *,
++    top_count: int,
++) -> list[dict[str, object]]:
++    if top_subset == [mod.REFUTED_SINGLE_INVARIANT]:
++        return [{"subset": top_subset, "count": top_count}]
++    return [
++        {"subset": top_subset, "count": top_count},
++        {
++            "subset": [
++                "row_ordered_edge_profile",
++                "column_ordered_edge_profile",
++                "diagonal_adjacency_asymmetry",
++                "row_column_run_profile",
++            ],
++            "count": 4,
++        },
++        {"subset": ["column_ordered_edge_profile", "row_column_run_profile"], "count": 2},
++        {
++            "subset": [
++                "column_ordered_edge_profile",
++                "color_centroid_orientation",
++                "row_column_run_profile",
++            ],
++            "count": 1,
++        },
++        {
++            "subset": [
++                mod.REFUTED_SINGLE_INVARIANT,
++                "diagonal_adjacency_asymmetry",
++                "border_ordered_profile",
++                "color_centroid_orientation",
++                "row_column_run_profile",
++            ],
++            "count": 1,
++        },
++        {
++            "subset": [
++                "row_ordered_edge_profile",
++                "diagonal_adjacency_asymmetry",
++                "color_centroid_orientation",
++                "row_column_run_profile",
++            ],
++            "count": 1,
++        },
++        {
++            "subset": [
++                "row_ordered_edge_profile",
++                "diagonal_adjacency_asymmetry",
++                "row_column_run_profile",
++            ],
++            "count": 1,
++        },
++        {"subset": ["row_ordered_edge_profile", "row_column_run_profile"], "count": 1},
++    ]
++
++
++def _exp5209_fixture(
++    *,
++    gate: bool = True,
++    stable: bool = False,
++    leakage: bool = True,
++    no_heldout_selection: bool = True,
++    top_subset: list[str] | None = None,
++) -> dict[str, object]:
++    top = top_subset or ["color_centroid_orientation", "row_column_run_profile"]
++    top_count = 11 if stable else 9
++    selection_counts = _selection_counts(top, top_count=top_count)
++    n_splits = sum(int(row["count"]) for row in selection_counts)
++    return {
++        "experiment": "experiment_5209_gap1_set_search_holdout_hardening_v477",
++        "result_path": mod.EXP5209_RELATIVE_PATH,
++        "gap1_hardened_positive": _field(gate),
++        "leakage_audit_passed": _field(leakage),
++        "best_subset_stable": _field(stable),
++        "n_grouped_splits": _field(n_splits),
++        "heldout_pass_at_2_mean": _field(0.189584),
++        "baseline_always_on_pass_at_2_mean": _field(0.088976),
++        "single_refuted_directional_pass_at_2_mean": _field(0.147787),
++        "paired_delta_ci95": _field("[0.023148, 0.060446]"),
++        "subset_stability": {
++            "selection_counts": selection_counts,
++            "stability_rule": "one exact subset selected in at least half of grouped splits",
++            "top_subset": top,
++            "top_subset_count": top_count,
++            "top_subset_fraction": round(top_count / n_splits, 6),
++        },
++        "leakage_audit": {
++            "passed": leakage,
++            "errors": [] if leakage else ["fixture leakage"],
++            "no_duplicate_task_ids_across_train_eval": leakage,
++            "no_subset_selection_on_heldout_rows": no_heldout_selection,
++            "no_test_gold_in_scoring": leakage,
++            "no_test_output_derived_features": leakage,
++        },
++        "baseline_definitions": {
++            "always_on": ["object_count", "palette_histogram_shape"],
++            "selected_subset_rule": (
++                "Within each split, maximize train pass@2, then train transpose captures, then "
++                "smaller subset; held-out rows are used only for final metrics."
++            ),
++            "single_refuted_directional": [mod.REFUTED_SINGLE_INVARIANT],
++        },
++    }
++
++
++def _exp5222_fixture(
++    *,
++    promoted: bool = False,
++    decision: str = "blocked_instability",
++) -> dict[str, object]:
++    return {
++        "experiment": "experiment_5222_gap1_gate_field_registry_promotion_v478",
++        "result_path": mod.EXP5222_RELATIVE_PATH,
++        "gap1_registry_promoted": _field(promoted),
++        "gap1_registry_decision": _field(decision),
++        "frozen_subset": _field(None),
++        "exp5209_gate_parsed_from_value": _field(True),
++        "refuted_single_invariant_excluded": _field(True),
++    }
++
++
++def _write_fixture_repo(
++    root: Path,
++    exp5209: dict[str, object],
++    exp5222: dict[str, object] | None = None,
++) -> None:
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / mod.EXP5209_RELATIVE_PATH).write_text(
++        json.dumps(exp5209, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    (root / mod.EXP5222_RELATIVE_PATH).write_text(
++        json.dumps(exp5222 or _exp5222_fixture(), indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / mod.VERIFIER_GAPS_RELATIVE_PATH).write_text(
++        "### GAP-1: transpose / orientation discrimination\n"
++        "- status: open -- exp5209 positive but unstable\n"
++        "<!-- experiment_5209_gap1_set_search_holdout_hardening_v477 start -->\n"
++        "- exp5209 line\n"
++        "<!-- experiment_5209_gap1_set_search_holdout_hardening_v477 end -->\n"
++        "<!-- experiment_5222_gap1_gate_field_registry_promotion_v478 start -->\n"
++        "- exp5222 line\n"
++        "<!-- experiment_5222_gap1_gate_field_registry_promotion_v478 end -->\n"
++        "\n### GAP-2: next\n",
++        encoding="utf-8",
++    )
++    (root / mod.VERIFIER_REGISTRY_RELATIVE_PATH).write_text(
++        "verifiers:\n- verifier_id: arc_grid_combined_verifier\n  domain: arc_agi1_grid\n",
++        encoding="utf-8",
++    )
++
++
++def test_req_verify_5237_spec_declares_stability_decision_contract() -> None:
++    """REQ-VERIFY-5237: OpenSpec declares the stability artifact and rule."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section_start = spec.index("### REQ-VERIFY-5237")
++    section_end = spec.index("## Implementation Status", section_start)
++    section = spec[section_start:section_end]
++
++    for marker in (
++        "REQ-VERIFY-5237",
++        "SCENARIO-VERIFY-5237",
++        mod.RESULT_RELATIVE_PATH,
++        "gap1_stability_decision",
++        "gap1_registry_promoted",
++        "stability_rule_predeclared",
++        "no_new_broad_search",
++        "directional_adjacency_refuted_20260609",
++        "deterministic_gap1_stability_analysis",
++        "blocked_instability",
++    ):
++        assert marker in section
++
++
++def test_scenario_verify_5237_unstable_exp5209_blocks_current_promotion_path(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-VERIFY-5237: positive Exp 5209 evidence remains blocked if unstable."""
++
++    _write_fixture_repo(tmp_path, _exp5209_fixture())
++    tests_run = [
++        {
++            "command": ".venv/bin/pytest tests/python/test_experiment_5237... -q",
++            "passed": True,
++        }
++    ]
++
++    artifact = mod.run(
++        root=tmp_path,
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH,
++        update_gap_doc=True,
++        tests_run=tests_run,
++        duration_s=0.25,
++    )
++
++    assert artifact["gap1_stability_decision"]["value"] == "blocked_instability"
++    assert artifact["gap1_registry_promoted"]["value"] is False
++    assert artifact["frozen_subset"]["value"] is None
++    assert artifact["stability_rule_predeclared"]["value"] is True
++    assert artifact["no_new_broad_search"]["value"] is True
++    assert artifact["refuted_single_invariant_excluded"]["value"] is True
++    assert artifact["tests_run"]["value"] == tests_run
++    assert artifact["inference_substrate"]["value"] == mod.INFERENCE_SUBSTRATE
++    assert "blocked" in artifact["honest_verdict"]["value"]
++    assert artifact["stability_audit"]["top_subset_count"] == 9
++    assert artifact["stability_audit"]["n_grouped_splits"] == 20
++    assert artifact["stability_audit"]["exact_subset_selection_frequency"] == 0.45
++    assert artifact["stability_audit"]["exact_subset_stability_passed"] is False
++    assert artifact["stability_audit"]["invariant_inclusion_stability_passed"] is True
++    assert artifact["stability_audit"]["invariant_inclusion_frequencies"] == {
++        "color_centroid_orientation": 0.6,
++        "row_column_run_profile": 1.0,
++    }
++    assert artifact["stability_audit"]["no_heldout_tuning"] is True
++    assert artifact["decision_path_features"] == [
++        "exp5209.gap1_hardened_positive.value",
++        "exp5209.leakage_audit_passed.value",
++        "exp5209.leakage_audit.no_subset_selection_on_heldout_rows",
++        "exp5209.subset_stability.selection_counts",
++        "exp5222.gap1_registry_promoted.value",
++    ]
++    assert "at least 10 of 20 grouped splits" in artifact["future_reopen_criterion"]
++    assert mod.artifact_schema_errors(artifact) == []
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++
++    gap_doc = (tmp_path / mod.VERIFIER_GAPS_RELATIVE_PATH).read_text(encoding="utf-8")
++    assert "experiment_5237 GAP-1 stability freeze-or-retire decision" in gap_doc
++    assert "decision=blocked_instability" in gap_doc
++    assert "Minimum evidence to reopen" in gap_doc
++    assert gap_doc.count("experiment_5237 GAP-1 stability freeze-or-retire decision") == 1
++    assert mod.update_verifier_gap_doc(tmp_path, artifact) is True
++
++
++def test_req_verify_5237_stability_rule_freezes_only_clean_deterministic_subsets() -> None:
++    """REQ-VERIFY-5237: freeze requires gate, leakage, split agreement, and exclusion."""
++
++    clean_stable = mod.build_artifact(
++        exp5209=_exp5209_fixture(stable=True),
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    missing = mod.build_artifact(
++        exp5209={},
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    missing_exp5222 = mod.build_artifact(
++        exp5209=_exp5209_fixture(stable=True),
++        exp5222={},
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    weak_gate = mod.build_artifact(
++        exp5209=_exp5209_fixture(gate=False),
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    leakage = mod.build_artifact(
++        exp5209=_exp5209_fixture(leakage=False),
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    heldout_tuned = mod.build_artifact(
++        exp5209=_exp5209_fixture(no_heldout_selection=False),
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    refuted_path = mod.build_artifact(
++        exp5209=_exp5209_fixture(
++            stable=True,
++            top_subset=[mod.REFUTED_SINGLE_INVARIANT],
++        ),
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++
++    assert clean_stable["gap1_stability_decision"]["value"] == "frozen_promoted"
++    assert clean_stable["gap1_registry_promoted"]["value"] is True
++    assert clean_stable["frozen_subset"]["value"] == [
++        "color_centroid_orientation",
++        "row_column_run_profile",
++    ]
++    assert clean_stable["refuted_single_invariant_excluded"]["value"] is True
++    assert missing["gap1_stability_decision"]["value"] == "blocked_missing_evidence"
++    assert missing_exp5222["gap1_stability_decision"]["value"] == "blocked_missing_evidence"
++    assert weak_gate["gap1_stability_decision"]["value"] == "blocked_missing_evidence"
++    assert leakage["gap1_stability_decision"]["value"] == "blocked_missing_evidence"
++    assert heldout_tuned["gap1_stability_decision"]["value"] == "blocked_missing_evidence"
++    assert refuted_path["gap1_stability_decision"]["value"] == "retired_current_path"
++    assert refuted_path["refuted_single_invariant_excluded"]["value"] is False
++    assert "retired" in refuted_path["honest_verdict"]["value"]
++    assert all(mod.artifact_schema_errors(row) == [] for row in (clean_stable, refuted_path))
++
++
++def test_req_verify_5237_schema_rejects_malformed_artifacts() -> None:
++    """REQ-VERIFY-5237: malformed stability decision artifacts fail closed."""
++
++    artifact = mod.build_artifact(
++        exp5209=_exp5209_fixture(),
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    clean_stable = mod.build_artifact(
++        exp5209=_exp5209_fixture(stable=True),
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++
++    missing = {key: value for key, value in artifact.items() if key != "gap1_stability_decision"}
++    bad_decision = artifact | {
++        "gap1_stability_decision": {
++            "value": "weird",
++            "principle": mod.FIELD_PRINCIPLES["gap1_stability_decision"],
++        }
++    }
++    bad_promoted = artifact | {
++        "gap1_registry_promoted": {
++            "value": "false",
++            "principle": mod.FIELD_PRINCIPLES["gap1_registry_promoted"],
++        }
++    }
++    bad_frozen = artifact | {
++        "frozen_subset": {
++            "value": ["color_centroid_orientation"],
++            "principle": mod.FIELD_PRINCIPLES["frozen_subset"],
++        }
++    }
++    bad_frozen_promoted = clean_stable | {
++        "gap1_registry_promoted": {
++            "value": False,
++            "principle": mod.FIELD_PRINCIPLES["gap1_registry_promoted"],
++        }
++    }
++    bad_rule = artifact | {
++        "stability_rule_predeclared": {
++            "value": False,
++            "principle": mod.FIELD_PRINCIPLES["stability_rule_predeclared"],
++        }
++    }
++    bad_search = artifact | {
++        "no_new_broad_search": {
++            "value": False,
++            "principle": mod.FIELD_PRINCIPLES["no_new_broad_search"],
++        }
++    }
++    bad_refuted = artifact | {
++        "refuted_single_invariant_excluded": {
++            "value": "yes",
++            "principle": mod.FIELD_PRINCIPLES["refuted_single_invariant_excluded"],
++        }
++    }
++    bad_tests = artifact | {
++        "tests_run": {
++            "value": [{"command": "pytest"}],
++            "principle": mod.FIELD_PRINCIPLES["tests_run"],
++        }
++    }
++    bad_ops_docs_flag = artifact | {
++        "ops_verifier_gaps_updated": {
++            "value": "no",
++            "principle": mod.FIELD_PRINCIPLES["ops_verifier_gaps_updated"],
++        }
++    }
++    bad_substrate = artifact | {
++        "inference_substrate": {
++            "value": "deterministic_verifier_registry",
++            "principle": mod.FIELD_PRINCIPLES["inference_substrate"],
++        }
++    }
++    bad_verdict = artifact | {
++        "honest_verdict": {
++            "value": "blocked",
++            "principle": mod.FIELD_PRINCIPLES["honest_verdict"],
++        }
++    }
++    vague_verdict = artifact | {
++        "honest_verdict": {
++            "value": "complete: decision-grade outcome recorded",
++            "principle": mod.FIELD_PRINCIPLES["honest_verdict"],
++        }
++    }
++    bad_principle = artifact | {
++        "no_new_broad_search": {
++            "value": True,
++            "principle": "wrong principle",
++        }
++    }
++
++    assert any("missing required fields" in error for error in mod.artifact_schema_errors(missing))
++    assert any(
++        "gap1_stability_decision" in error for error in mod.artifact_schema_errors(bad_decision)
++    )
++    assert any(
++        "gap1_registry_promoted" in error for error in mod.artifact_schema_errors(bad_promoted)
++    )
++    assert any("frozen_subset" in error for error in mod.artifact_schema_errors(bad_frozen))
++    assert any(
++        "frozen_promoted" in error for error in mod.artifact_schema_errors(bad_frozen_promoted)
++    )
++    assert any(
++        "stability_rule_predeclared" in error for error in mod.artifact_schema_errors(bad_rule)
++    )
++    assert any("no_new_broad_search" in error for error in mod.artifact_schema_errors(bad_search))
++    assert any(
++        "refuted_single_invariant_excluded" in error
++        for error in mod.artifact_schema_errors(bad_refuted)
++    )
++    assert any("tests_run" in error for error in mod.artifact_schema_errors(bad_tests))
++    assert any(
++        "ops_verifier_gaps_updated" in error
++        for error in mod.artifact_schema_errors(bad_ops_docs_flag)
++    )
++    assert any(
++        "inference_substrate" in error for error in mod.artifact_schema_errors(bad_substrate)
++    )
++    assert any("honest_verdict" in error for error in mod.artifact_schema_errors(bad_verdict))
++    assert any("honest_verdict" in error for error in mod.artifact_schema_errors(vague_verdict))
++    assert any("principle mismatch" in error for error in mod.artifact_schema_errors(bad_principle))
++
++
++def test_req_verify_5237_malformed_stability_projection_fails_closed(tmp_path: Path) -> None:
++    """REQ-VERIFY-5237: malformed stability projections cannot freeze or search anew."""
++
++    malformed_rows = _exp5209_fixture(stable=True)
++    stability = malformed_rows["subset_stability"]
++    assert isinstance(stability, dict)
++    stability.pop("top_subset_count")
++    stability["selection_counts"] = [
++        "not-a-row",
++        {"subset": "not-a-list", "count": 1},
++        {"subset": ["color_centroid_orientation"], "count": 0},
++        {"subset": ["color_centroid_orientation", "row_column_run_profile"], "count": 11},
++    ]
++    artifact = mod.build_artifact(
++        exp5209=malformed_rows,
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    assert artifact["stability_audit"]["top_subset_count"] == 11
++    assert artifact["gap1_stability_decision"]["value"] == "frozen_promoted"
++
++    no_rows = _exp5209_fixture(stable=True)
++    no_rows["subset_stability"] = {
++        "top_subset": "not-a-list",
++        "selection_counts": "not-a-list",
++    }
++    blocked = mod.build_artifact(
++        exp5209=no_rows,
++        exp5222=_exp5222_fixture(),
++        tests_run=[],
++        ops_docs_updated=False,
++        duration_s=0.0,
++    )
++    assert blocked["gap1_stability_decision"]["value"] == "blocked_missing_evidence"
++
++    (tmp_path / "ops").mkdir(parents=True)
++    (tmp_path / mod.VERIFIER_GAPS_RELATIVE_PATH).write_text(
++        "### GAP-1: transpose / orientation discrimination\n",
++        encoding="utf-8",
++    )
++    assert mod.update_verifier_gap_doc(tmp_path, artifact) is True
++    gap_doc = (tmp_path / mod.VERIFIER_GAPS_RELATIVE_PATH).read_text(encoding="utf-8")
++    assert "experiment_5237 GAP-1 stability freeze-or-retire decision" in gap_doc
+-- 
+2.55.0
+

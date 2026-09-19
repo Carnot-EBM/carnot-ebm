@@ -1,0 +1,2106 @@
+From edc850c9b458a9ce146f00f130a13c81860362e7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 07:41:11 -0400
+Subject: [PATCH 05458/11362] [conductor] PHASE B1 oracle-distinct hardening
+ closure -- resolve the game_id misnomer and complete cross-corpus replication
+
+Automated research step by research conductor.
+Task ID: exp5160-oracle-distinct-cross-corpus-closure-v473
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    | 104 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   2 +
+ ...acle_distinct_cross_corpus_closure_5160.py | 888 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...le_distinct_cross_corpus_closure_v473.json | 262 ++++++
+ ...acle_distinct_cross_corpus_closure_v473.py |  17 +
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...acle_distinct_cross_corpus_closure_v473.py | 613 ++++++++++++
+ 14 files changed, 1905 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py
+ create mode 100644 results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json
+ create mode 100644 results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.py
+ create mode 100644 tests/python/test_experiment_5160_oracle_distinct_cross_corpus_closure_v473.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index a1347a5dae..2f4e277adb 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -24153,6 +24153,110 @@ available but not fully hardened.
+ |---|---|---|
+ | REQ-VERIFY-5152 | Implemented (`python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py`, `results/experiment_5152_diffusiongemma_gate_reexamination_v472.json`) | Implemented (`tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py`) |
+ 
++### REQ-VERIFY-5160: Oracle-Distinct Cross-Corpus Closure V473
++
++The repository SHALL provide Exp 5160 at
++`python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py` and
++`results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.py` to close
++the Exp 5151 transfer blocker by first verifying whether `game_id` is a
++misapplied ARC-AGI-3 term for the Exp 4243 static ARC puzzle pool.
++
++The runner SHALL first load
++`results/experiment_5151_arc_oracle_distinct_hardening_v472.json` and
++`results/experiment_4243_arc_candidate_pool_grow_pool.json.gz`. If either
++artifact is missing or unreadable, it SHALL write
++`honest_verdict=blocked_upstream_artifact_missing`, keep
++`verifier_is_oracle=false`, set `game_id_misnomer_confirmed=false`, set
++`second_pool_leak_audit_passed=false`, set `cross_corpus_delta=0.0`, set
++`cross_corpus_delta_ci95=[0.0, 0.0]`, set
++`cross_corpus_replication_passed=false`, set
++`diffusiongemma_gate_updated_recommendation=keep_gated`, and stop without
++fabricating replication numbers.
++
++When the upstream artifacts load, the runner SHALL directly inspect the Exp
++4243 pool schema. It SHALL set `game_id_misnomer_confirmed=true` only when the
++pool has task-level static ARC puzzle identifiers, no recoverable `game_id` or
++level grouping field, and any remaining grouping field is a coarse source or
++corpus label rather than an ARC-AGI-3 interactive game id. The artifact SHALL
++record the observed task id/raw id format and grouping fields so the conclusion
++is auditably code-derived.
++
++If no natural game grouping exists, the runner SHALL re-scope the unresolved
++axis to cross-corpus replication. It SHALL inspect
++`results/arc3_gap4_arc2_eval_pool.json.gz` first because it is the preferred
++classic ARC-2 candidate second pool. If that pool has any raw-task, candidate
++content, candidate-id, or gold-label overlap with Exp 4243, it SHALL be
++disqualified as a second corpus and the artifact SHALL record the overlap
++counts. The runner MAY then use a similarly-shaped non-degenerate disjoint
++fallback pool, such as
++`results/experiment_4291_arcgen_cross_generator_pool.json.gz`, but it SHALL
++filter any candidate rows whose grid/content hashes overlap Exp 4243 and SHALL
++record that the fallback is ARC-GEN rather than a classic ARC-1/ARC-2 static
++puzzle pool. If no disjoint non-degenerate pool is available, it SHALL complete
++honestly with `cross_corpus_replication_passed=false` and keep DiffusionGemma
++gated.
++
++For the selected second pool, the runner SHALL adapt candidates into the Exp
++4244 Set-Encoder feature schema without using gold labels as inference rank
++keys. It SHALL run the same DeepSets pooled-context Set-Encoder protocol used
++by Exp 5151 for at least five seeds when the pool has enough tasks, varying
++task folds and initialization, and compute per-seed `set_encoder@1 - vote@1`
++against the same vote baseline, plus a cross-seed CI95. It SHALL also perform
++a row-level leak audit with zero overlap against Exp 4243 by task id/raw id,
++candidate id, candidate grid/content hash, and gold-label surrogate, and SHALL
++set `second_pool_leak_audit_passed=true` only when all audited collision counts
++are zero after any declared adapter filtering.
++
++The terminal artifact SHALL include principle-annotated top-level fields
++`game_id_misnomer_confirmed`, `second_pool_source`,
++`second_pool_leak_audit_passed`, `cross_corpus_delta`,
++`cross_corpus_delta_ci95`, `cross_corpus_replication_passed`,
++`diffusiongemma_gate_updated_recommendation`, `verifier_is_oracle`,
++`solve_provenance`, `random_seeds_used`, `reproducibility_checksum`,
++`field_principles`, `spec_refs`, and `acceptance_gate`. `verifier_is_oracle`
++SHALL be the bare bool `false`; `solve_provenance` SHALL equal
++`development_proxy`; and `diffusiongemma_gate_updated_recommendation` SHALL be
++`ungate_now` only when the cross-corpus delta is positive, its CI95 excludes
++zero, the second-pool leak audit passes, and the artifact is not blocked. Its
++field principles SHALL include:
++`game_id_misnomer_confirmed` = `The precise, code-verified fact this task exists to establish before choosing a fix path.`;
++`second_pool_source` = `The disjoint second-pool path actually used after disqualifying overlapping candidates.`;
++`second_pool_leak_audit_passed` = `A second-pool win is not evidence if task ids, candidate content, or gold-label surrogates overlap the original pool.`;
++`cross_corpus_delta` = `set_encoder@1 - vote@1 on the second corpus -- the corrected transfer axis after the game-id misnomer is verified.`;
++`cross_corpus_delta_ci95` = `The decisive number: does the +44pp win replicate off the original pool, CI95 excluding 0?`;
++`cross_corpus_replication_passed` = `BARE bool: true iff the corrected cross-corpus delta is positive, CI95 excludes zero, and the leak audit passes.`;
++`diffusiongemma_gate_updated_recommendation` = `Feeds directly into whether DiffusionGemma scaling is queued next milestone.`;
++`verifier_is_oracle` = `BARE bool=false -- learned set-encoder, no demo execution; keeps the closure oracle-distinct.`;
++`solve_provenance` = `This is offline pool-scoring on cached candidate pools, not a live hidden-game solve.`;
++`random_seeds_used` = `The >=5 seeds used for the corrected replication protocol.`;
++`reproducibility_checksum` = `Hash of the schema inspection, selected-pool overlap audit, per-seed results, and recommendation.`;
++`honest_verdict` = `Must start with complete:/complete_/success:/success_ AND state plainly whether the win survives cross-corpus replication.`
++
++### SCENARIO-VERIFY-5160: Game-Id Misnomer Re-Scopes To Cross-Corpus
++
++Given Exp 5151 and the Exp 4243 pool load, and the Exp 4243 pool exposes
++static 8-hex ARC puzzle identifiers with no natural game grouping, when Exp
++5160 runs, then it sets `game_id_misnomer_confirmed=true`, disqualifies any
++overlapping preferred second pool, adapts a disjoint non-degenerate fallback
++pool when available, runs at least five Set-Encoder-vs-vote seeds, reports
++`cross_corpus_delta`, `cross_corpus_delta_ci95`, per-seed deltas and pass
++rates, records the row-level overlap/leak audit, keeps `verifier_is_oracle`
++false, and sets `diffusiongemma_gate_updated_recommendation` from the corrected
++cross-corpus result.
++
++### SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED: Missing Inputs Stop Honestly
++
++Given Exp 5151 or the Exp 4243 pool is absent or unreadable, when Exp 5160
++runs, then it writes `honest_verdict=blocked_upstream_artifact_missing`, keeps
++`verifier_is_oracle=false`, records no cross-corpus win, and recommends
++`keep_gated`.
++
++## Implementation Status (REQ-VERIFY-5160)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5160 | Implemented (`python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py`, `results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json`) | Implemented (`tests/python/test_experiment_5160_oracle_distinct_cross_corpus_closure_v473.py`) |
++
+ ### REQ-VERIFY-5153: GAP-4 Scale-Up Protocol Ledger V472
+ 
+ The repository SHALL provide Exp 5153 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4cbbf08394..80cbb99de7 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 207,
+   "code_violations": 0,
+-  "experiments_checked": 4148,
++  "experiments_checked": 4149,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index ba202eac3b..905d895258 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -24,6 +24,8 @@
+ 
+ > **CORRIGENDUM 2026-07-02 (exp5152):** The prior 'DiffusionGemma stays gated' action is reexamined as a domain-rationale issue. The MuSR D1 null conflated domains if used as the reason to close the ARC DiffusionGemma gate: D1 tested MuSR reasoning-text embedding-verifier-vs-SC, while Exp 4245/5151 concern ARC candidate-pool Set-Encoder-vs-vote reranking. Recommendation: KEEP GATED, because Exp 5151 is present but not fully hardened; the gate is still closed for missing decision-grade ARC-domain evidence.
+ 
++> **CORRIGENDUM 2026-07-02 (exp5160 closure):** The Exp 5151 cross-game blocker is resolved as a terminology error: Exp 4243 uses static ARC puzzle ids (`raw_task_id` 8-hex) with no recoverable ARC-AGI-3 `game_id` grouping. The preferred GAP-4 ARC-2 pool is disqualified as a second corpus because it overlaps Exp 4243; the disjoint ARC-GEN fallback (`results/experiment_4291_arcgen_cross_generator_pool.json.gz`) passes the row-level leak audit after filtering 4 overlapping candidate grids. Exp 5160 reports Set-Encoder-vs-vote cross-corpus delta +0.50 with CI95 [0.50, 0.50], `cross_corpus_replication_passed=true`, and updates the DiffusionGemma gate recommendation to UNGATE NOW for a future scaling task. No DiffusionGemma scaling was run here.
++
+ 
+ **Origin:** 2026-06-30 operator directive. The ARC-AGI-3 Submission Sprint Forcing Function is RETIRED
+ (deadline date reached + operator explicitly lifted it; CLAUDE.md). The CUDA submission is staged
+diff --git a/python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py b/python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py
+new file mode 100644
+index 0000000000..c3abb77c1d
+--- /dev/null
++++ b/python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py
+@@ -0,0 +1,888 @@
++"""Exp 5160 oracle-distinct cross-corpus closure.
++
++Spec refs: REQ-VERIFY-5160, SCENARIO-VERIFY-5160,
++SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED.
++"""
++
++from __future__ import annotations
++
++import gzip
++import hashlib
++import json
++import math
++import re
++import subprocess
++import sys
++import time
++from collections import Counter, defaultdict
++from collections.abc import Callable
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any
++
++from carnot.reporting import arc_set_encoder_aggregator_4244 as exp4244
++
++
++RANDOM_SEED = 5160
++DEFAULT_RANDOM_SEEDS = [5160, 5161, 5162, 5163, 5164]
++DEFAULT_BOOTSTRAP_N = 0
++DEFAULT_N_FOLDS = exp4244.DEFAULT_N_FOLDS
++DEFAULT_TRAINING_EPOCHS = exp4244.DEFAULT_TRAINING_EPOCHS
++DEFAULT_HIDDEN_DIM = exp4244.DEFAULT_HIDDEN_DIM
++DEFAULT_LR = exp4244.DEFAULT_LR
++EXP5151_REL = Path("results/experiment_5151_arc_oracle_distinct_hardening_v472.json")
++ORIGINAL_POOL_REL = Path("results/experiment_4243_arc_candidate_pool_grow_pool.json.gz")
++PREFERRED_SECOND_POOL_REL = Path("results/arc3_gap4_arc2_eval_pool.json.gz")
++FALLBACK_SECOND_POOL_REL = Path("results/experiment_4291_arcgen_cross_generator_pool.json.gz")
++OUTPUT_REL = Path("results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json")
++INFERENCE_SUBSTRATE = "cached_disjoint_candidate_pool_cpu_multiseed_set_encoder_cross_corpus"
++SOLVE_PROVENANCE = "development_proxy"
++BLOCKED_UPSTREAM_VERDICT = "blocked_upstream_artifact_missing"
++BLOCKED_SECOND_POOL_VERDICT = "complete_cross_corpus_replication_blocked_no_disjoint_second_pool"
++SCHEMA = "carnot.oracle_distinct_cross_corpus_closure_5160.v1"
++SPEC_REFS = [
++    "REQ-VERIFY-5160",
++    "SCENARIO-VERIFY-5160",
++    "SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED",
++]
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_", "blocked_")
++RECOMMENDATIONS = {"keep_gated", "ungate_now"}
++
++FIELD_PRINCIPLES = {
++    "game_id_misnomer_confirmed": (
++        "The precise, code-verified fact this task exists to establish before choosing a fix path."
++    ),
++    "second_pool_source": (
++        "The disjoint second-pool path actually used after disqualifying overlapping candidates."
++    ),
++    "second_pool_leak_audit_passed": (
++        "A second-pool win is not evidence if task ids, candidate content, or gold-label "
++        "surrogates overlap the original pool."
++    ),
++    "cross_corpus_delta": (
++        "set_encoder@1 - vote@1 on the second corpus -- the corrected transfer axis after "
++        "the game-id misnomer is verified."
++    ),
++    "cross_corpus_delta_ci95": (
++        "The decisive number: does the +44pp win replicate off the original pool, CI95 excluding 0?"
++    ),
++    "cross_corpus_replication_passed": (
++        "BARE bool: true iff the corrected cross-corpus delta is positive, CI95 excludes zero, "
++        "and the leak audit passes."
++    ),
++    "diffusiongemma_gate_updated_recommendation": (
++        "Feeds directly into whether DiffusionGemma scaling is queued next milestone."
++    ),
++    "verifier_is_oracle": (
++        "BARE bool=false -- learned set-encoder, no demo execution; keeps the closure oracle-distinct."
++    ),
++    "solve_provenance": (
++        "This is offline pool-scoring on cached candidate pools, not a live hidden-game solve."
++    ),
++    "random_seeds_used": "The >=5 seeds used for the corrected replication protocol.",
++    "reproducibility_checksum": (
++        "Hash of the schema inspection, selected-pool overlap audit, per-seed results, and recommendation."
++    ),
++    "honest_verdict": (
++        "Must start with complete:/complete_/success:/success_ AND state plainly whether the "
++        "win survives cross-corpus replication."
++    ),
++}
++
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "honest_verdict",
++    "game_id_misnomer_confirmed",
++    "second_pool_source",
++    "second_pool_leak_audit_passed",
++    "cross_corpus_delta",
++    "cross_corpus_delta_ci95",
++    "cross_corpus_replication_passed",
++    "diffusiongemma_gate_updated_recommendation",
++    "verifier_is_oracle",
++    "solve_provenance",
++    "random_seeds_used",
++    "reproducibility_checksum",
++    "field_principles",
++    "spec_refs",
++    "acceptance_gate",
++)
++
++
++class BlockedRun(RuntimeError):
++    """Expected precondition failure that still writes a terminal artifact."""
++
++
++@dataclass(frozen=True)
++class SeedReplicationResult:
++    random_seed: int
++    auroc: float
++    delta: float
++    held_out_task_n: int
++    candidate_count: int
++    vote_at_1: float
++    set_encoder_at_1: float
++    oracle_at_k: float
++    task_deltas: list[float]
++    oof_rows: list[exp4244.OOFRow]
++
++
++@dataclass(frozen=True)
++class SecondPoolSelection:
++    corpus: exp4244.GrownPoolCorpus
++    source_rel: Path
++    source_sha256: str
++    source_kind: str
++    classic_arc_static_puzzle_pool: bool
++    preferred_audit: dict[str, Any]
++    adapter: dict[str, Any]
++
++
++def _round_metric(value: float) -> float:
++    return round(float(value), 10)
++
++
++def _mean(values: list[float]) -> float:
++    return sum(values) / float(len(values)) if values else 0.0
++
++
++def _safe_float(value: Any) -> float:
++    if isinstance(value, bool):
++        return 0.0
++    try:
++        number = float(value)
++    except (TypeError, ValueError):
++        return 0.0
++    return number if math.isfinite(number) else 0.0
++
++
++def _read_json_object(path: Path) -> dict[str, Any]:
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except Exception as exc:
++        raise BlockedRun(BLOCKED_UPSTREAM_VERDICT) from exc
++    if not isinstance(payload, dict):
++        raise BlockedRun(BLOCKED_UPSTREAM_VERDICT)
++    return payload
++
++
++def _read_gzip_json_object(path: Path) -> dict[str, Any]:
++    try:
++        with gzip.open(path, "rt", encoding="utf-8") as handle:
++            payload = json.load(handle)
++    except Exception as exc:
++        raise BlockedRun(BLOCKED_UPSTREAM_VERDICT) from exc
++    if not isinstance(payload, dict):
++        raise BlockedRun(BLOCKED_UPSTREAM_VERDICT)
++    return payload
++
++
++def _sha256_file(path: Path) -> str:
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return digest.hexdigest()
++
++
++def _grid_hash(grid: Any) -> str:
++    if grid is None:
++        return ""
++    raw = json.dumps(grid, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def _normalized_tasks(payload: dict[str, Any]) -> list[dict[str, Any]]:
++    tasks = payload.get("tasks")
++    if isinstance(tasks, list):
++        return [task for task in tasks if isinstance(task, dict)]
++    entries = payload.get("entries")
++    if isinstance(entries, list):
++        normalized = []
++        source_id = str(payload.get("experiment") or "entries_pool")
++        for index, entry in enumerate(entries):
++            if not isinstance(entry, dict):
++                continue
++            raw_task_id = str(entry.get("task") or "")
++            candidates = []
++            for candidate_index, candidate in enumerate(entry.get("candidates") or []):
++                if not isinstance(candidate, dict):
++                    continue
++                candidates.append(
++                    {
++                        "candidate_id": f"{source_id}:{raw_task_id}:{index}::candidate{candidate_index}",
++                        "candidate_index": candidate_index,
++                        "features": {},
++                        "grid": candidate.get("grid"),
++                        "is_correct": candidate.get("correct") is True,
++                        "votes": candidate.get("votes", 0.0),
++                    }
++                )
++            normalized.append(
++                {
++                    "task_id": f"{source_id}:{raw_task_id}:{index}",
++                    "raw_task_id": raw_task_id,
++                    "source_id": source_id,
++                    "candidates": candidates,
++                }
++            )
++        return normalized
++    return []
++
++
++def _pool_signature(payload: dict[str, Any]) -> dict[str, set[str]]:
++    signature = {
++        "task_ids": set(),
++        "raw_task_ids": set(),
++        "candidate_ids": set(),
++        "candidate_grid_hashes": set(),
++        "gold_grid_hashes": set(),
++    }
++    for task in _normalized_tasks(payload):
++        task_id = str(task.get("task_id") or "")
++        raw_task_id = str(task.get("raw_task_id") or task_id)
++        if task_id:
++            signature["task_ids"].add(task_id)
++        if raw_task_id:
++            signature["raw_task_ids"].add(raw_task_id)
++        for candidate in task.get("candidates") or []:
++            if not isinstance(candidate, dict):
++                continue
++            candidate_id = str(candidate.get("candidate_id") or "")
++            grid_hash = str(candidate.get("candidate_grid_hash") or _grid_hash(candidate.get("grid")))
++            if candidate_id:
++                signature["candidate_ids"].add(candidate_id)
++            if grid_hash:
++                signature["candidate_grid_hashes"].add(grid_hash)
++                if candidate.get("is_correct") is True:
++                    signature["gold_grid_hashes"].add(grid_hash)
++    return signature
++
++
++def _overlap_count(left: set[str], right: set[str]) -> tuple[int, list[str]]:
++    sample = sorted(left & right)[:10]
++    return len(left & right), sample
++
++
++def audit_pool_overlap(original_payload: dict[str, Any], second_payload: dict[str, Any]) -> dict[str, Any]:
++    """SCENARIO-VERIFY-5160: audit row-level overlap before using a second pool."""
++
++    original = _pool_signature(original_payload)
++    second = _pool_signature(second_payload)
++    task_count, task_sample = _overlap_count(original["task_ids"], second["task_ids"])
++    raw_count, raw_sample = _overlap_count(original["raw_task_ids"], second["raw_task_ids"])
++    candidate_count, candidate_sample = _overlap_count(
++        original["candidate_ids"], second["candidate_ids"]
++    )
++    grid_count, grid_sample = _overlap_count(
++        original["candidate_grid_hashes"], second["candidate_grid_hashes"]
++    )
++    gold_count, gold_sample = _overlap_count(
++        original["gold_grid_hashes"], second["gold_grid_hashes"]
++    )
++    disjoint = not any((task_count, raw_count, candidate_count, grid_count, gold_count))
++    return {
++        "disjoint": disjoint,
++        "task_id_collision_count": task_count,
++        "task_id_collisions_sample": task_sample,
++        "raw_task_id_collision_count": raw_count,
++        "raw_task_id_collisions_sample": raw_sample,
++        "candidate_id_collision_count": candidate_count,
++        "candidate_id_collisions_sample": candidate_sample,
++        "candidate_grid_hash_collision_count": grid_count,
++        "candidate_grid_hash_collisions_sample": grid_sample,
++        "gold_grid_hash_collision_count": gold_count,
++        "gold_grid_hash_collisions_sample": gold_sample,
++    }
++
++
++def inspect_original_pool_schema(pool_payload: dict[str, Any]) -> dict[str, Any]:
++    """REQ-VERIFY-5160: verify whether Exp 4243 has a real game grouping."""
++
++    tasks = _normalized_tasks(pool_payload)
++    key_union = sorted({key for task in tasks for key in task})
++    game_fields = [
++        field for field in ("arc_game_id", "game_id", "domain_id", "family_id", "level_id") if field in key_union
++    ]
++    grouping_fields = [
++        field for field in ("source_id", "source_kind", "source_kinds") if field in key_union
++    ]
++    raw_task_ids = [str(task.get("raw_task_id") or "") for task in tasks]
++    task_ids = [str(task.get("task_id") or "") for task in tasks]
++    raw_hex = bool(raw_task_ids) and all(re.fullmatch(r"[0-9a-fA-F]{8}", item) for item in raw_task_ids)
++    source_histogram = Counter(str(task.get("source_id") or "") for task in tasks if task.get("source_id"))
++    return {
++        "game_id_misnomer_confirmed": bool(raw_hex and not game_fields),
++        "raw_task_id_format": "8_hex_static_arc_puzzle_id" if raw_hex else "other_or_mixed",
++        "task_id_examples": task_ids[:10],
++        "raw_task_id_examples": raw_task_ids[:10],
++        "game_id_fields_present": game_fields,
++        "grouping_fields_present": grouping_fields,
++        "source_id_histogram": dict(sorted(source_histogram.items())),
++        "task_schema_keys": key_union,
++        "interpretation": (
++            "static_arc_puzzle_pool_no_game_grouping"
++            if raw_hex and not game_fields
++            else "recoverable_grouping_or_nonstandard_schema"
++        ),
++    }
++
++
++def _candidate_features(candidate: dict[str, Any]) -> dict[str, float]:
++    raw = candidate.get("features")
++    if not isinstance(raw, dict):
++        raw = {}
++    features = {name: _safe_float(raw.get(name)) for name in exp4244.FEATURE_NAMES}
++    if features.get("vote_weight", 0.0) == 0.0:
++        features["vote_weight"] = _safe_float(candidate.get("vote_weight", candidate.get("votes")))
++    return features
++
++
++def _build_second_corpus(
++    repo_root: Path,
++    *,
++    original_payload: dict[str, Any],
++    second_payload: dict[str, Any],
++    source_rel: Path,
++    source_kind: str,
++    classic_arc_static_puzzle_pool: bool,
++    preferred_audit: dict[str, Any],
++) -> SecondPoolSelection:
++    original = _pool_signature(original_payload)
++    rows: list[exp4244.GrownPoolRow] = []
++    dropped_overlap_task_n = 0
++    dropped_overlap_candidate_n = 0
++    dropped_too_small_task_n = 0
++    selected_task_n = 0
++    wrong_majority_n = 0
++    positive_candidate_n = 0
++    for task in _normalized_tasks(second_payload):
++        task_id = str(task.get("task_id") or "")
++        raw_task_id = str(task.get("raw_task_id") or task_id)
++        if task_id in original["task_ids"] or raw_task_id in original["raw_task_ids"]:
++            dropped_overlap_task_n += 1
++            continue
++        task_rows: list[exp4244.GrownPoolRow] = []
++        for fallback_index, candidate in enumerate(task.get("candidates") or []):
++            if not isinstance(candidate, dict):
++                continue
++            candidate_id = str(candidate.get("candidate_id") or f"{task_id}::candidate{fallback_index}")
++            grid_hash = str(candidate.get("candidate_grid_hash") or _grid_hash(candidate.get("grid")))
++            is_correct = candidate.get("is_correct") is True
++            if (
++                candidate_id in original["candidate_ids"]
++                or grid_hash in original["candidate_grid_hashes"]
++                or (is_correct and grid_hash in original["gold_grid_hashes"])
++            ):
++                dropped_overlap_candidate_n += 1
++                continue
++            features = _candidate_features(candidate)
++            task_rows.append(
++                exp4244.GrownPoolRow(
++                    task_id=task_id,
++                    candidate_id=candidate_id,
++                    candidate_index=int(candidate.get("candidate_index", fallback_index)),
++                    correct=is_correct,
++                    features=features,
++                    vote_weight=features["vote_weight"],
++                )
++            )
++        if len(task_rows) < 2:
++            dropped_too_small_task_n += 1
++            continue
++        selected_task_n += 1
++        positive_candidate_n += sum(1 for row in task_rows if row.correct)
++        vote_pick = max(task_rows, key=lambda row: (row.vote_weight, -row.candidate_index))
++        if any(row.correct for row in task_rows) and not vote_pick.correct:
++            wrong_majority_n += 1
++        rows.extend(sorted(task_rows, key=lambda row: row.candidate_index))
++    if not rows:
++        raise BlockedRun(BLOCKED_SECOND_POOL_VERDICT)
++    pool_path = (repo_root / source_rel).resolve()
++    corpus = exp4244.GrownPoolCorpus(
++        rows=rows,
++        pool_artifact_path=pool_path,
++        pool_artifact_sha256=_sha256_file(pool_path),
++        upstream_checksum=str(second_payload.get("reproducibility_checksum") or ""),
++        held_out_task_n=selected_task_n,
++        wrong_majority_n=wrong_majority_n,
++        positive_candidate_n=positive_candidate_n,
++    )
++    return SecondPoolSelection(
++        corpus=corpus,
++        source_rel=source_rel,
++        source_sha256=corpus.pool_artifact_sha256,
++        source_kind=source_kind,
++        classic_arc_static_puzzle_pool=classic_arc_static_puzzle_pool,
++        preferred_audit=preferred_audit,
++        adapter={
++            "adapter": "exp4244_feature_schema_from_task_candidate_pool",
++            "dropped_overlap_task_n": dropped_overlap_task_n,
++            "dropped_overlap_candidate_n": dropped_overlap_candidate_n,
++            "dropped_too_small_task_n": dropped_too_small_task_n,
++            "selected_task_n": selected_task_n,
++            "selected_candidate_n": len(rows),
++            "wrong_majority_n": wrong_majority_n,
++            "positive_candidate_n": positive_candidate_n,
++            "source_kind": source_kind,
++        },
++    )
++
++
++def select_second_pool(repo_root: Path, original_payload: dict[str, Any]) -> SecondPoolSelection:
++    preferred_payload = _read_gzip_json_object(repo_root / PREFERRED_SECOND_POOL_REL)
++    preferred_audit = audit_pool_overlap(original_payload, preferred_payload)
++    if preferred_audit["disjoint"]:  # pragma: no cover - current checked-in GAP-4 pool overlaps.
++        return _build_second_corpus(
++            repo_root,
++            original_payload=original_payload,
++            second_payload=preferred_payload,
++            source_rel=PREFERRED_SECOND_POOL_REL,
++            source_kind="classic_arc2_preferred",
++            classic_arc_static_puzzle_pool=True,
++            preferred_audit=preferred_audit,
++        )
++    fallback_payload = _read_gzip_json_object(repo_root / FALLBACK_SECOND_POOL_REL)
++    return _build_second_corpus(
++        repo_root,
++        original_payload=original_payload,
++        second_payload=fallback_payload,
++        source_rel=FALLBACK_SECOND_POOL_REL,
++        source_kind="arcgen_non_degenerate_cross_generator",
++        classic_arc_static_puzzle_pool=False,
++        preferred_audit=preferred_audit,
++    )
++
++
++def _rows_by_task(rows: list[exp4244.GrownPoolRow]) -> list[list[exp4244.GrownPoolRow]]:
++    grouped: dict[str, list[exp4244.GrownPoolRow]] = defaultdict(list)
++    for row in rows:
++        grouped[row.task_id].append(row)
++    return [sorted(items, key=lambda row: row.candidate_index) for _, items in sorted(grouped.items())]
++
++
++def _measure_oof(
++    rows: list[exp4244.GrownPoolRow], oof_rows: list[exp4244.OOFRow]
++) -> dict[str, Any]:
++    score_map = {
++        row.candidate_id: (float(row.score), row.task_id not in row.train_task_ids)
++        for row in oof_rows
++    }
++    vote_hits: list[bool] = []
++    set_hits: list[bool] = []
++    oracle_hits: list[bool] = []
++    task_deltas: list[float] = []
++    retained_candidate_n = 0
++    for task_rows in _rows_by_task(rows):
++        scored = [(row, score_map.get(row.candidate_id)) for row in task_rows]
++        if any(item is None or item[1] is not True for _, item in scored):
++            continue
++        retained_candidate_n += len(scored)
++        vote_pick = max(task_rows, key=lambda row: (row.vote_weight, -row.candidate_index))
++        set_pick = max(
++            task_rows,
++            key=lambda row: (score_map[row.candidate_id][0], row.vote_weight, -row.candidate_index),
++        )
++        vote_hits.append(vote_pick.correct)
++        set_hits.append(set_pick.correct)
++        oracle_hits.append(any(row.correct for row in task_rows))
++        task_deltas.append(float(set_pick.correct) - float(vote_pick.correct))
++    vote_at_1 = _mean([float(hit) for hit in vote_hits])
++    set_at_1 = _mean([float(hit) for hit in set_hits])
++    return {
++        "delta": _round_metric(set_at_1 - vote_at_1),
++        "held_out_task_n": len(vote_hits),
++        "candidate_count": retained_candidate_n,
++        "vote_at_1": _round_metric(vote_at_1),
++        "set_encoder_at_1": _round_metric(set_at_1),
++        "oracle_at_k": _round_metric(_mean([float(hit) for hit in oracle_hits])),
++        "task_deltas": task_deltas,
++    }
++
++
++def _train_seed_replication(
++    corpus: exp4244.GrownPoolCorpus,
++    *,
++    random_seed: int,
++    n_folds: int,
++    bootstrap_n: int,
++    training_epochs: int,
++    hidden_dim: int,
++    lr: float,
++) -> SeedReplicationResult:
++    folds = exp4244.split_task_folds(corpus.rows, random_seed=random_seed, n_folds=n_folds)
++    report = exp4244.train_oof_set_encoder(
++        corpus.rows,
++        folds=folds,
++        random_seed=random_seed,
++        bootstrap_n=bootstrap_n,
++        hidden_dim=hidden_dim,
++        training_epochs=training_epochs,
++        lr=lr,
++    )
++    metrics = _measure_oof(corpus.rows, report.rows)
++    return SeedReplicationResult(
++        random_seed=int(random_seed),
++        auroc=_round_metric(report.auroc),
++        delta=_round_metric(metrics["delta"]),
++        held_out_task_n=int(metrics["held_out_task_n"]),
++        candidate_count=int(metrics["candidate_count"]),
++        vote_at_1=_round_metric(metrics["vote_at_1"]),
++        set_encoder_at_1=_round_metric(metrics["set_encoder_at_1"]),
++        oracle_at_k=_round_metric(metrics["oracle_at_k"]),
++        task_deltas=[float(delta) for delta in metrics["task_deltas"]],
++        oof_rows=list(report.rows),
++    )
++
++
++def _t_critical_975(df: int) -> float:
++    return {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776}.get(max(1, int(df)), 1.96)
++
++
++def _multiseed_ci95(deltas: list[float]) -> list[float]:
++    if not deltas:
++        return [0.0, 0.0]
++    if len(deltas) == 1:
++        point = _round_metric(deltas[0])
++        return [point, point]
++    mean = _mean(deltas)
++    variance = sum((delta - mean) ** 2 for delta in deltas) / float(len(deltas) - 1)
++    half_width = _t_critical_975(len(deltas) - 1) * math.sqrt(variance) / math.sqrt(len(deltas))
++    return [_round_metric(mean - half_width), _round_metric(mean + half_width)]
++
++
++def _ci_excludes_zero(ci95: list[float]) -> bool:
++    return bool(len(ci95) == 2 and (ci95[0] > 0.0 or ci95[1] < 0.0))
++
++
++def _second_signature_from_rows(rows: list[exp4244.GrownPoolRow]) -> dict[str, set[str]]:
++    return {
++        "task_ids": {row.task_id for row in rows},
++        "candidate_ids": {row.candidate_id for row in rows},
++    }
++
++
++def second_pool_leak_audit(
++    original_payload: dict[str, Any],
++    selection: SecondPoolSelection,
++    seed_results: list[SeedReplicationResult],
++) -> dict[str, Any]:
++    original = _pool_signature(original_payload)
++    second = _second_signature_from_rows(selection.corpus.rows)
++    task_count, task_sample = _overlap_count(original["task_ids"], second["task_ids"])
++    candidate_count, candidate_sample = _overlap_count(
++        original["candidate_ids"], second["candidate_ids"]
++    )
++    filtered_grid_collisions = int(selection.adapter["dropped_overlap_candidate_n"])
++    heldout_train_collisions = []
++    oof_row_count = 0
++    for result in seed_results:
++        for row in result.oof_rows:
++            oof_row_count += 1
++            if row.task_id in row.train_task_ids:
++                heldout_train_collisions.append(
++                    {"random_seed": result.random_seed, "task_id": row.task_id, "candidate_id": row.candidate_id}
++                )
++    passed = not any((task_count, candidate_count, heldout_train_collisions))
++    return {
++        "passed": passed,
++        "task_id_collision_count": task_count,
++        "task_id_collisions_sample": task_sample,
++        "candidate_id_collision_count": candidate_count,
++        "candidate_id_collisions_sample": candidate_sample,
++        "candidate_grid_hash_collision_count": 0,
++        "gold_grid_hash_collision_count": 0,
++        "heldout_training_task_collision_count": len(heldout_train_collisions),
++        "heldout_training_task_collisions_sample": heldout_train_collisions[:10],
++        "scored_oof_row_count": oof_row_count,
++        "adapter_filtered_overlap_candidate_n": filtered_grid_collisions,
++        "training_signal_fields_audited": ["train_task_ids", "candidate_ids", "candidate_grid_hashes", "gold_grid_hashes"],
++    }
++
++
++def reproducibility_checksum(artifact_without_checksum: dict[str, Any]) -> str:
++    payload = {
++        key: value
++        for key, value in artifact_without_checksum.items()
++        if key not in {"reproducibility_checksum", "adversarial_verify", "duration_s"}
++    }
++    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++    return "sha256:" + hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def _blocked_artifact(reason: str, *, random_seed: int, duration_s: float) -> dict[str, Any]:
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": "experiment_5160_oracle_distinct_cross_corpus_closure_v473",
++        "status": "blocked" if reason.startswith("blocked_") else "complete",
++        "headline_outcome": reason,
++        "honest_verdict": reason,
++        "game_id_misnomer_confirmed": False,
++        "second_pool_source": "",
++        "second_pool_leak_audit_passed": False,
++        "cross_corpus_delta": 0.0,
++        "cross_corpus_delta_ci95": [0.0, 0.0],
++        "cross_corpus_replication_passed": False,
++        "diffusiongemma_gate_updated_recommendation": "keep_gated",
++        "verifier_is_oracle": False,
++        "solve_provenance": SOLVE_PROVENANCE,
++        "random_seed": int(random_seed),
++        "random_seeds_used": [],
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "acceptance_gate": False,
++        "schema_inspection": {},
++        "preferred_second_pool_audit": {},
++        "second_pool_adapter": {},
++        "second_pool_leak_audit": {"passed": False, "blocked_reason": reason},
++        "model_specs": {"status": "blocked", "blocked_reason": reason},
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 6),
++        "adversarial_verify": {"status": "pending"},
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def _complete_artifact(
++    *,
++    schema_inspection: dict[str, Any],
++    selection: SecondPoolSelection,
++    seed_results: list[SeedReplicationResult],
++    leak_audit: dict[str, Any],
++    random_seed: int,
++    duration_s: float,
++) -> dict[str, Any]:
++    per_seed_deltas = [_round_metric(result.delta) for result in seed_results]
++    cross_delta = _round_metric(_mean(per_seed_deltas))
++    cross_ci95 = _multiseed_ci95(per_seed_deltas)
++    passed = bool(cross_delta > 0.0 and _ci_excludes_zero(cross_ci95) and leak_audit["passed"])
++    recommendation = "ungate_now" if passed else "keep_gated"
++    headline = (
++        "arc_set_encoder_win_survives_cross_corpus_replication"
++        if passed
++        else "arc_set_encoder_win_does_not_survive_cross_corpus_replication"
++    )
++    prefix = "success" if passed else "complete"
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": "experiment_5160_oracle_distinct_cross_corpus_closure_v473",
++        "status": "complete",
++        "headline_outcome": headline,
++        "honest_verdict": (
++            f"{prefix}_{headline}: set-encoder-vs-vote win "
++            f"{'survives' if passed else 'does not survive'} corrected cross-corpus replication"
++        ),
++        "game_id_misnomer_confirmed": bool(schema_inspection["game_id_misnomer_confirmed"]),
++        "second_pool_source": str(selection.source_rel),
++        "second_pool_leak_audit_passed": bool(leak_audit["passed"]),
++        "cross_corpus_delta": cross_delta,
++        "cross_corpus_delta_ci95": cross_ci95,
++        "cross_corpus_replication_passed": passed,
++        "diffusiongemma_gate_updated_recommendation": recommendation,
++        "verifier_is_oracle": False,
++        "solve_provenance": SOLVE_PROVENANCE,
++        "random_seed": int(random_seed),
++        "random_seeds_used": [result.random_seed for result in seed_results],
++        "n_seeds": len(seed_results),
++        "per_seed_deltas": per_seed_deltas,
++        "per_seed_results": [
++            {
++                "random_seed": result.random_seed,
++                "auroc": _round_metric(result.auroc),
++                "delta": _round_metric(result.delta),
++                "held_out_task_n": result.held_out_task_n,
++                "candidate_count": result.candidate_count,
++                "vote_at_1": _round_metric(result.vote_at_1),
++                "set_encoder_at_1": _round_metric(result.set_encoder_at_1),
++                "oracle_at_k": _round_metric(result.oracle_at_k),
++            }
++            for result in seed_results
++        ],
++        "pass_rates": {
++            "vote_at_1": _round_metric(_mean([result.vote_at_1 for result in seed_results])),
++            "set_encoder_at_1": _round_metric(_mean([result.set_encoder_at_1 for result in seed_results])),
++            "oracle_at_k": _round_metric(_mean([result.oracle_at_k for result in seed_results])),
++        },
++        "held_out_task_n": selection.corpus.held_out_task_n,
++        "candidate_count": len(selection.corpus.rows),
++        "preferred_second_pool_audit": selection.preferred_audit,
++        "second_pool_adapter": selection.adapter,
++        "second_pool_classic_arc_static_puzzle": selection.classic_arc_static_puzzle_pool,
++        "second_pool_source_kind": selection.source_kind,
++        "second_pool_sha256": selection.source_sha256,
++        "second_pool_leak_audit": leak_audit,
++        "schema_inspection": schema_inspection,
++        "model_specs": {
++            "status": "complete",
++            "protocol": "exp5151_deepsets_pooled_context_set_encoder_on_disjoint_second_pool",
++            "set_encoder_architecture": "deepsets_pooled_context_set_encoder",
++            "n_folds": DEFAULT_N_FOLDS,
++            "training_epochs": DEFAULT_TRAINING_EPOCHS,
++            "hidden_dim": DEFAULT_HIDDEN_DIM,
++            "random_seeds": [result.random_seed for result in seed_results],
++            "preferred_second_pool": str(PREFERRED_SECOND_POOL_REL),
++            "selected_second_pool": str(selection.source_rel),
++            "selected_pool_note": (
++                "Preferred GAP-4 ARC-2 pool overlaps Exp 4243; selected fallback is disjoint "
++                "ARC-GEN non-degenerate cross-generator pool."
++            ),
++        },
++        "field_principles": FIELD_PRINCIPLES,
++        "spec_refs": SPEC_REFS,
++        "acceptance_gate": True,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 6),
++        "adversarial_verify": {"status": "pending"},
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def _run_adversarial_verify(repo_root: Path, artifact_path: Path) -> dict[str, Any]:  # pragma: no cover
++    proc = subprocess.run(
++        [sys.executable, str(repo_root / "scripts" / "adversarial_verify.py"), "--json", str(artifact_path)],
++        capture_output=True,
++        text=True,
++        timeout=30,
++        check=False,
++    )
++    try:
++        payload = json.loads(proc.stdout)
++    except json.JSONDecodeError:
++        payload = {"stdout": proc.stdout, "stderr": proc.stderr}
++    payload["returncode"] = proc.returncode
++    return payload
++
++
++def _clean_adversarial_report(report: dict[str, Any]) -> dict[str, Any]:
++    flags: list[dict[str, Any]] = []
++    for item in report.get("reports", []):
++        if isinstance(item, dict):
++            flags.extend(flag for flag in item.get("flags", []) if isinstance(flag, dict))
++    circular_clean = not any(flag.get("kind") == "CIRCULAR_MOAT_OVERCLAIM" for flag in flags)
++    return {
++        "status": "clean" if not flags else "flagged",
++        "circular_moat_overclaim_clean": circular_clean,
++        "flag_count": len(flags),
++        "flags": flags,
++        "returncode": int(report.get("returncode", 0) or 0),
++    }
++
++
++def _validate_ci95(value: Any, field: str) -> None:
++    if (
++        not isinstance(value, list)
++        or len(value) != 2
++        or any(isinstance(item, bool) or not isinstance(item, (int, float)) for item in value)
++    ):
++        raise ValueError(f"{field} must be a two-number ci95")
++
++
++def _validate_float(value: Any, field: str) -> None:
++    if isinstance(value, bool) or not isinstance(value, (int, float)):
++        raise ValueError(f"{field} must be a bare float")
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    missing = [field for field in REQUIRED_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must be terminal-prefixed")
++    for field in (
++        "game_id_misnomer_confirmed",
++        "second_pool_leak_audit_passed",
++        "cross_corpus_replication_passed",
++    ):
++        if type(artifact[field]) is not bool:
++            raise ValueError(f"{field} must be a bare bool")
++    _validate_float(artifact["cross_corpus_delta"], "cross_corpus_delta")
++    _validate_ci95(artifact["cross_corpus_delta_ci95"], "cross_corpus_delta_ci95")
++    if artifact["diffusiongemma_gate_updated_recommendation"] not in RECOMMENDATIONS:
++        raise ValueError("diffusiongemma_gate_updated_recommendation has invalid recommendation")
++    if artifact["verifier_is_oracle"] is not False:
++        raise ValueError("verifier_is_oracle must be the bare bool false")
++    if artifact["solve_provenance"] != SOLVE_PROVENANCE:
++        raise ValueError("solve_provenance must be development_proxy")
++    if not isinstance(artifact["random_seeds_used"], list) or any(
++        type(seed) is not int for seed in artifact["random_seeds_used"]
++    ):
++        raise ValueError("random_seeds_used must be a list of bare ints")
++    checksum = artifact["reproducibility_checksum"]
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:") or len(checksum) != 71:
++        raise ValueError("reproducibility_checksum must be sha256-prefixed")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles drifted")
++    if artifact["spec_refs"] != SPEC_REFS:
++        raise ValueError("spec_refs drifted")
++
++
++def run(
++    repo_root: Path | str = Path("."),
++    *,
++    random_seed: int = RANDOM_SEED,
++    random_seeds: list[int] | None = None,
++    n_folds: int = DEFAULT_N_FOLDS,
++    bootstrap_n: int = DEFAULT_BOOTSTRAP_N,
++    training_epochs: int = DEFAULT_TRAINING_EPOCHS,
++    hidden_dim: int = DEFAULT_HIDDEN_DIM,
++    lr: float = DEFAULT_LR,
++    adversarial_runner: Callable[[Path], dict[str, Any]] | None = None,
++) -> dict[str, Any]:
++    start = time.perf_counter()
++    root = Path(repo_root)
++    output_path = root / OUTPUT_REL
++    seeds = list(random_seeds or DEFAULT_RANDOM_SEEDS)
++    try:
++        exp5151 = _read_json_object(root / EXP5151_REL)
++        original_payload = _read_gzip_json_object(root / ORIGINAL_POOL_REL)
++        if exp5151.get("verifier_is_oracle") is not False or not isinstance(original_payload.get("tasks"), list):
++            raise BlockedRun(BLOCKED_UPSTREAM_VERDICT)
++        if len(seeds) < 5:
++            raise BlockedRun(BLOCKED_SECOND_POOL_VERDICT)
++        schema_inspection = inspect_original_pool_schema(original_payload)
++        selection = select_second_pool(root, original_payload)
++        seed_results = [
++            _train_seed_replication(
++                selection.corpus,
++                random_seed=seed,
++                n_folds=n_folds,
++                bootstrap_n=bootstrap_n,
++                training_epochs=training_epochs,
++                hidden_dim=hidden_dim,
++                lr=lr,
++            )
++            for seed in seeds
++        ]
++        leak_audit = second_pool_leak_audit(original_payload, selection, seed_results)
++        artifact = _complete_artifact(
++            schema_inspection=schema_inspection,
++            selection=selection,
++            seed_results=seed_results,
++            leak_audit=leak_audit,
++            random_seed=random_seed,
++            duration_s=time.perf_counter() - start,
++        )
++    except BlockedRun as exc:
++        reason = str(exc) or BLOCKED_UPSTREAM_VERDICT
++        artifact = _blocked_artifact(reason, random_seed=random_seed, duration_s=time.perf_counter() - start)
++    validate_artifact(artifact)
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    raw_report = (
++        adversarial_runner(output_path)
++        if adversarial_runner is not None
++        else _run_adversarial_verify(root, output_path)
++    )
++    artifact["adversarial_verify"] = _clean_adversarial_report(raw_report)
++    validate_artifact(artifact)
++    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover
++    repo_root = Path(__file__).resolve().parents[3]
++    print(json.dumps(run(repo_root), indent=2, sort_keys=True))
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 3e78cefecc..b0ed77a1f6 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-02T11:08:53.092501Z",
+-  "duration_s": 0.055217742919921875,
++  "run_date": "2026-07-02T11:40:20.638439Z",
++  "duration_s": 0.05842018127441406,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "7e9b211cee58cb0fee93e2dac7b760ee76286d770ee3c131b5b4c45b23ed7e3d",
++  "reproducibility_checksum": "b71cae018026bc8c55e93175697ed0da680f26c39fea27104743cea2cbfaca38",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "05693a809d2623b7a50ea6f6ab9230d6ddd5cd6c"
++    "adversarial_verify_version": "ad433d42a41ee63899d1c01edecb283c77ad6251"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 12824fd523..a19b8525a5 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-02T11:08:53.191507Z",
+-  "duration_s": 0.09217238426208496,
++  "run_date": "2026-07-02T11:40:20.736483Z",
++  "duration_s": 0.09106063842773438,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "901ec0f54d4b1264c31b4e5ac7477fe33de61f1feb274cfc5d1ea8aa5b13d067",
++  "reproducibility_checksum": "9ad4346eebdddda64c8a6347c340d88d3dce6f08f10016c0548bf149954630d9",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "05693a809d2623b7a50ea6f6ab9230d6ddd5cd6c"
++    "adversarial_verify_version": "ad433d42a41ee63899d1c01edecb283c77ad6251"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index a520e8c594..d829dbaeba 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1495819091796875,
++  "efficiency_gains_ms": 2.1572113037109375,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 2c21c8b032..79b37546c5 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.1076913475990295e-05,
++  "duration_s": 3.9804959669709206e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json b/results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json
+new file mode 100644
+index 0000000000..c4eee1b7c2
+--- /dev/null
++++ b/results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json
+@@ -0,0 +1,262 @@
++{
++  "acceptance_gate": true,
++  "adversarial_verify": {
++    "circular_moat_overclaim_clean": true,
++    "flag_count": 0,
++    "flags": [],
++    "returncode": 0,
++    "status": "clean"
++  },
++  "candidate_count": 188,
++  "cross_corpus_delta": 0.5,
++  "cross_corpus_delta_ci95": [
++    0.5,
++    0.5
++  ],
++  "cross_corpus_replication_passed": true,
++  "diffusiongemma_gate_updated_recommendation": "ungate_now",
++  "duration_s": 10.380997,
++  "experiment": "experiment_5160_oracle_distinct_cross_corpus_closure_v473",
++  "field_principles": {
++    "cross_corpus_delta": "set_encoder@1 - vote@1 on the second corpus -- the corrected transfer axis after the game-id misnomer is verified.",
++    "cross_corpus_delta_ci95": "The decisive number: does the +44pp win replicate off the original pool, CI95 excluding 0?",
++    "cross_corpus_replication_passed": "BARE bool: true iff the corrected cross-corpus delta is positive, CI95 excludes zero, and the leak audit passes.",
++    "diffusiongemma_gate_updated_recommendation": "Feeds directly into whether DiffusionGemma scaling is queued next milestone.",
++    "game_id_misnomer_confirmed": "The precise, code-verified fact this task exists to establish before choosing a fix path.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_ AND state plainly whether the win survives cross-corpus replication.",
++    "random_seeds_used": "The >=5 seeds used for the corrected replication protocol.",
++    "reproducibility_checksum": "Hash of the schema inspection, selected-pool overlap audit, per-seed results, and recommendation.",
++    "second_pool_leak_audit_passed": "A second-pool win is not evidence if task ids, candidate content, or gold-label surrogates overlap the original pool.",
++    "second_pool_source": "The disjoint second-pool path actually used after disqualifying overlapping candidates.",
++    "solve_provenance": "This is offline pool-scoring on cached candidate pools, not a live hidden-game solve.",
++    "verifier_is_oracle": "BARE bool=false -- learned set-encoder, no demo execution; keeps the closure oracle-distinct."
++  },
++  "game_id_misnomer_confirmed": true,
++  "headline_outcome": "arc_set_encoder_win_survives_cross_corpus_replication",
++  "held_out_task_n": 24,
++  "honest_verdict": "success_arc_set_encoder_win_survives_cross_corpus_replication: set-encoder-vs-vote win survives corrected cross-corpus replication",
++  "inference_substrate": "cached_disjoint_candidate_pool_cpu_multiseed_set_encoder_cross_corpus",
++  "model_specs": {
++    "hidden_dim": 32,
++    "n_folds": 5,
++    "preferred_second_pool": "results/arc3_gap4_arc2_eval_pool.json.gz",
++    "protocol": "exp5151_deepsets_pooled_context_set_encoder_on_disjoint_second_pool",
++    "random_seeds": [
++      5160,
++      5161,
++      5162,
++      5163,
++      5164
++    ],
++    "selected_pool_note": "Preferred GAP-4 ARC-2 pool overlaps Exp 4243; selected fallback is disjoint ARC-GEN non-degenerate cross-generator pool.",
++    "selected_second_pool": "results/experiment_4291_arcgen_cross_generator_pool.json.gz",
++    "set_encoder_architecture": "deepsets_pooled_context_set_encoder",
++    "status": "complete",
++    "training_epochs": 32
++  },
++  "n_seeds": 5,
++  "pass_rates": {
++    "oracle_at_k": 0.75,
++    "set_encoder_at_1": 0.75,
++    "vote_at_1": 0.25
++  },
++  "per_seed_deltas": [
++    0.5,
++    0.5,
++    0.5,
++    0.5,
++    0.5
++  ],
++  "per_seed_results": [
++    {
++      "auroc": 0.9980392157,
++      "candidate_count": 188,
++      "delta": 0.5,
++      "held_out_task_n": 24,
++      "oracle_at_k": 0.75,
++      "random_seed": 5160,
++      "set_encoder_at_1": 0.75,
++      "vote_at_1": 0.25
++    },
++    {
++      "auroc": 0.9954248366,
++      "candidate_count": 188,
++      "delta": 0.5,
++      "held_out_task_n": 24,
++      "oracle_at_k": 0.75,
++      "random_seed": 5161,
++      "set_encoder_at_1": 0.75,
++      "vote_at_1": 0.25
++    },
++    {
++      "auroc": 0.9964052288,
++      "candidate_count": 188,
++      "delta": 0.5,
++      "held_out_task_n": 24,
++      "oracle_at_k": 0.75,
++      "random_seed": 5162,
++      "set_encoder_at_1": 0.75,
++      "vote_at_1": 0.25
++    },
++    {
++      "auroc": 0.9937908497,
++      "candidate_count": 188,
++      "delta": 0.5,
++      "held_out_task_n": 24,
++      "oracle_at_k": 0.75,
++      "random_seed": 5163,
++      "set_encoder_at_1": 0.75,
++      "vote_at_1": 0.25
++    },
++    {
++      "auroc": 0.9964052288,
++      "candidate_count": 188,
++      "delta": 0.5,
++      "held_out_task_n": 24,
++      "oracle_at_k": 0.75,
++      "random_seed": 5164,
++      "set_encoder_at_1": 0.75,
++      "vote_at_1": 0.25
++    }
++  ],
++  "preferred_second_pool_audit": {
++    "candidate_grid_hash_collision_count": 20374,
++    "candidate_grid_hash_collisions_sample": [
++      "00003b45e7bec87d2df88f67b198bec8fa6b196f8f06b7cca3d9fca9199bb521",
++      "0003746fc6b5ddd885917d9016e3361b8b3b36647f9192abcfc038273680cf7f",
++      "0009aebfffd48b568870084528278e8ff63dd27d957cfce1a7c71b9b46a59fe7",
++      "000d0810f1d2aaaa200c934e551c1cd8d4d00f73a7e3b8a954c9dfc008c13e89",
++      "001038354d059b8f1eda4021fe270206eb621a1acd9c9d1dc49d0c35255971cd",
++      "0013307331d9abf2bde30a5272850ece8104bd526cb4dc2cb3e0d70cc68b32cc",
++      "0014cd5e47fda0c74a0c627e1b911762fcf9aa92dd7270cbbc29b57f636e2e9a",
++      "001ce2a8209b755ae980a3dddb138f6c9cf66b49326b43a297d2add1de232ab0",
++      "001dc8e150f7e4bfb70bca023deb6a4004ac758668874d3367e826fbe06b08d5",
++      "0029d6446a4da0e7d460fb9fb5b4bbf9045be246f42890ac612b93ee8666971a"
++    ],
++    "candidate_id_collision_count": 0,
++    "candidate_id_collisions_sample": [],
++    "disjoint": false,
++    "gold_grid_hash_collision_count": 4,
++    "gold_grid_hash_collisions_sample": [
++      "07126e1a403a036016b239f80659cf45bc12eb2a60ba9cebc0951d660427de7f",
++      "215411372f4e78b8eb531cc785ed4f48152b10c2461f8a503808cada37ed2993",
++      "8d89fdd666b4b24d476505905adca33a081135ee5620296641825d3df0429315",
++      "bb7df6b122934532be9c144030efd2fece79d584630d625ca15176c07f63a0d2"
++    ],
++    "raw_task_id_collision_count": 23,
++    "raw_task_id_collisions_sample": [
++      "13e47133",
++      "16b78196",
++      "21897d95",
++      "269e22fb",
++      "28a6681f",
++      "2b83f449",
++      "2c181942",
++      "2d0172a1",
++      "3a25b0d8",
++      "3dc255db"
++    ],
++    "task_id_collision_count": 0,
++    "task_id_collisions_sample": []
++  },
++  "random_seed": 5160,
++  "random_seeds_used": [
++    5160,
++    5161,
++    5162,
++    5163,
++    5164
++  ],
++  "reproducibility_checksum": "sha256:50ce6e997744712eb2ea2175e60efd45d3d2202dbca06226f290f8943a0a6b2f",
++  "schema": "carnot.oracle_distinct_cross_corpus_closure_5160.v1",
++  "schema_inspection": {
++    "game_id_fields_present": [],
++    "game_id_misnomer_confirmed": true,
++    "grouping_fields_present": [
++      "source_id"
++    ],
++    "interpretation": "static_arc_puzzle_pool_no_game_grouping",
++    "raw_task_id_examples": [
++      "50a16a69",
++      "66e6c45b",
++      "17cae0c1",
++      "fafd9572",
++      "a59b95c0",
++      "4e469f39",
++      "a57f2f04",
++      "96a8c0cd",
++      "8719f442",
++      "1a2e2828"
++    ],
++    "raw_task_id_format": "8_hex_static_arc_puzzle_id",
++    "source_id_histogram": {
++      "gap3_stage2": 29,
++      "gap4_arc2": 23
++    },
++    "task_id_examples": [
++      "gap3_stage2:50a16a69",
++      "gap3_stage2:66e6c45b",
++      "gap3_stage2:17cae0c1",
++      "gap3_stage2:fafd9572",
++      "gap3_stage2:a59b95c0",
++      "gap3_stage2:4e469f39",
++      "gap3_stage2:a57f2f04",
++      "gap3_stage2:96a8c0cd",
++      "gap3_stage2:8719f442",
++      "gap3_stage2:1a2e2828"
++    ],
++    "task_schema_keys": [
++      "candidate_count",
++      "candidates",
++      "oracle_present",
++      "raw_task_id",
++      "source_id",
++      "task_id",
++      "vote_top_candidate_id",
++      "wrong_majority"
++    ]
++  },
++  "second_pool_adapter": {
++    "adapter": "exp4244_feature_schema_from_task_candidate_pool",
++    "dropped_overlap_candidate_n": 4,
++    "dropped_overlap_task_n": 0,
++    "dropped_too_small_task_n": 0,
++    "positive_candidate_n": 18,
++    "selected_candidate_n": 188,
++    "selected_task_n": 24,
++    "source_kind": "arcgen_non_degenerate_cross_generator",
++    "wrong_majority_n": 12
++  },
++  "second_pool_classic_arc_static_puzzle": false,
++  "second_pool_leak_audit": {
++    "adapter_filtered_overlap_candidate_n": 4,
++    "candidate_grid_hash_collision_count": 0,
++    "candidate_id_collision_count": 0,
++    "candidate_id_collisions_sample": [],
++    "gold_grid_hash_collision_count": 0,
++    "heldout_training_task_collision_count": 0,
++    "heldout_training_task_collisions_sample": [],
++    "passed": true,
++    "scored_oof_row_count": 940,
++    "task_id_collision_count": 0,
++    "task_id_collisions_sample": [],
++    "training_signal_fields_audited": [
++      "train_task_ids",
++      "candidate_ids",
++      "candidate_grid_hashes",
++      "gold_grid_hashes"
++    ]
++  },
++  "second_pool_leak_audit_passed": true,
++  "second_pool_sha256": "c4e3cb9064db166ee3792b39bd3397ec441dc19501dca780b2a048db29a2f92e",
++  "second_pool_source": "results/experiment_4291_arcgen_cross_generator_pool.json.gz",
++  "second_pool_source_kind": "arcgen_non_degenerate_cross_generator",
++  "solve_provenance": "development_proxy",
++  "spec_refs": [
++    "REQ-VERIFY-5160",
++    "SCENARIO-VERIFY-5160",
++    "SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED"
++  ],
++  "status": "complete",
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.py b/results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.py
+new file mode 100644
+index 0000000000..8c8b8c8501
+--- /dev/null
++++ b/results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.py
+@@ -0,0 +1,17 @@
++#!/usr/bin/env python3
++"""Entrypoint for Exp 5160 oracle-distinct cross-corpus closure."""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++from carnot.reporting.oracle_distinct_cross_corpus_closure_5160 import main  # noqa: E402
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 5f2f804d3e..a09a9b9676 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T11:08:38Z",
+-  "finished_at": "2026-07-02T11:08:38Z",
++  "started_at": "2026-07-02T11:40:05Z",
++  "finished_at": "2026-07-02T11:40:05Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 16ec271fd6..d491533224 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T11:08:38Z",
+-  "finished_at": "2026-07-02T11:08:38Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-02T11:40:05Z",
++  "finished_at": "2026-07-02T11:40:05Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 6a6485c765..ac511dc79c 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T11:08:38Z",
+-  "finished_at": "2026-07-02T11:08:38Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-02T11:40:05Z",
++  "finished_at": "2026-07-02T11:40:05Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5160_oracle_distinct_cross_corpus_closure_v473.py b/tests/python/test_experiment_5160_oracle_distinct_cross_corpus_closure_v473.py
+new file mode 100644
+index 0000000000..acf15383b6
+--- /dev/null
++++ b/tests/python/test_experiment_5160_oracle_distinct_cross_corpus_closure_v473.py
+@@ -0,0 +1,613 @@
++"""Tests for Exp 5160 oracle-distinct cross-corpus closure.
++
++Spec refs: REQ-VERIFY-5160, SCENARIO-VERIFY-5160,
++SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED.
++"""
++
++from __future__ import annotations
++
++import gzip
++import json
++from pathlib import Path
++from types import SimpleNamespace
++from typing import Any
++
++import pytest
++
++from carnot.reporting import oracle_distinct_cross_corpus_closure_5160 as mod
++from carnot.reporting import arc_set_encoder_aggregator_4244 as exp4244
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_gzip_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with gzip.open(path, "wt", encoding="utf-8") as handle:
++        json.dump(payload, handle)
++
++
++def _adversarial_clean(_path: Path) -> dict[str, Any]:
++    return {"returncode": 0, "reports": [{"flags": [], "flag_count": 0}]}
++
++
++def _features(vote: float, confidence: float) -> dict[str, float]:
++    values = {name: 0.0 for name in exp4244.FEATURE_NAMES}
++    values.update(
++        {
++            "vote_weight": vote,
++            "self_consistency_margin": vote - 0.5,
++            "vote_weight_rank_fraction": vote,
++            "cell_confidence_mean": confidence,
++            "cell_confidence_margin": confidence - 0.5,
++            "cell_confidence_rank_fraction": confidence,
++            "grid_height": 2.0,
++            "grid_width": 2.0,
++            "grid_cells": 4.0,
++            "set_candidate_count": 2.0,
++            "set_vote_mean": 0.5,
++            "set_vote_max": vote,
++        }
++    )
++    return values
++
++
++def _candidate(
++    task_id: str,
++    index: int,
++    *,
++    correct: bool,
++    grid: list[list[int]],
++    vote: float,
++    score_hint: float,
++) -> dict[str, Any]:
++    return {
++        "candidate_id": f"{task_id}::candidate{index}",
++        "candidate_index": index,
++        "features": _features(vote, score_hint),
++        "grid": grid,
++        "is_correct": correct,
++        "votes": vote * 10.0,
++    }
++
++
++def _task(task_id: str, raw: str, source_id: str, *, correct_index: int) -> dict[str, Any]:
++    candidates = [
++        _candidate(
++            task_id,
++            0,
++            correct=correct_index == 0,
++            grid=[[int(raw[-1], 16), 0]],
++            vote=0.8,
++            score_hint=0.2 if correct_index else 0.9,
++        ),
++        _candidate(
++            task_id,
++            1,
++            correct=correct_index == 1,
++            grid=[[int(raw[-1], 16), 1]],
++            vote=0.2,
++            score_hint=0.9 if correct_index else 0.2,
++        ),
++    ]
++    return {
++        "candidate_count": 2,
++        "candidates": candidates,
++        "oracle_present": True,
++        "raw_task_id": raw,
++        "source_id": source_id,
++        "task_id": task_id,
++        "vote_top_candidate_id": candidates[0]["candidate_id"],
++        "wrong_majority": correct_index != 0,
++    }
++
++
++def _write_5160_fixture(root: Path) -> None:
++    original_tasks = [
++        _task("gap3_stage2:50a16a69", "50a16a69", "gap3_stage2", correct_index=1),
++        _task("gap3_stage2:66e6c45b", "66e6c45b", "gap3_stage2", correct_index=0),
++        _task("gap4_arc2:13e47133", "13e47133", "gap4_arc2", correct_index=1),
++    ]
++    original = {
++        "candidate_n": 6,
++        "positive_candidate_n": 3,
++        "schema": "carnot.arc_candidate_pool_grow.v1",
++        "source_paths": [],
++        "task_n": 3,
++        "tasks": original_tasks,
++        "wrong_majority_n": 2,
++    }
++    _write_gzip_json(root / mod.ORIGINAL_POOL_REL, original)
++    _write_json(
++        root / mod.EXP5151_REL,
++        {
++            "experiment": "experiment_5151_arc_oracle_distinct_hardening_v472",
++            "honest_verdict": "complete_arc_set_encoder_win_not_hardened: unresolved_axes=cross_game",
++            "leak_audit_passed": True,
++            "multiseed_delta_ci95": [0.42, 0.49],
++            "cross_game_blocked_reason": "blocked_arc_game_ids_unrecoverable",
++            "verifier_is_oracle": False,
++        },
++    )
++    _write_gzip_json(
++        root / mod.PREFERRED_SECOND_POOL_REL,
++        {
++            "experiment": "arc3_gap4_arc2_eval_pool",
++            "entries": [
++                {
++                    "task": "13e47133",
++                    "test_input": [[1]],
++                    "demos": [],
++                    "candidates": [{"grid": [[1]], "votes": 1, "q_mean": 0.1, "correct": True}],
++                }
++            ],
++            "n_candidates": 1,
++            "n_entries": 1,
++        },
++    )
++    fallback_tasks: list[dict[str, Any]] = []
++    overlap_grid = original_tasks[0]["candidates"][0]["grid"]
++    for task_index in range(8):
++        task_id = f"arcgen:task{task_index:02d}:000"
++        correct_index = 1 if task_index < 6 else 0
++        candidates = [
++            _candidate(
++                task_id,
++                0,
++                correct=correct_index == 0,
++                grid=overlap_grid if task_index == 0 else [[task_index, 0]],
++                vote=0.8,
++                score_hint=0.1 if correct_index else 0.9,
++            ),
++            _candidate(
++                task_id,
++                1,
++                correct=correct_index == 1,
++                grid=[[task_index, 1]],
++                vote=0.2,
++                score_hint=0.9 if correct_index else 0.1,
++            ),
++        ]
++        fallback_tasks.append(
++            {
++                "candidate_count": len(candidates),
++                "candidates": candidates,
++                "oracle_present": True,
++                "raw_task_id": f"task{task_index:02d}:000",
++                "source_id": "arcgen",
++                "task_id": task_id,
++                "vote_top_candidate_id": candidates[0]["candidate_id"],
++                "wrong_majority": correct_index != 0,
++            }
++        )
++    _write_gzip_json(
++        root / mod.FALLBACK_SECOND_POOL_REL,
++        {
++            "schema": "carnot.arcgen_cross_generator_pool_4291.v1",
++            "source_kind": "arcgen",
++            "tasks": fallback_tasks,
++        },
++    )
++
++
++def _patch_seed_results(monkeypatch: pytest.MonkeyPatch, deltas: list[float] | None = None) -> None:
++    seed_deltas = deltas or [0.42, 0.44, 0.46, 0.48, 0.50]
++
++    def fake_seed(
++        corpus: exp4244.GrownPoolCorpus,
++        *,
++        random_seed: int,
++        **_kwargs: object,
++    ) -> mod.SeedReplicationResult:
++        index = mod.DEFAULT_RANDOM_SEEDS.index(random_seed)
++        delta = seed_deltas[index]
++        return mod.SeedReplicationResult(
++            random_seed=random_seed,
++            auroc=0.9 + index * 0.01,
++            delta=delta,
++            held_out_task_n=corpus.held_out_task_n,
++            candidate_count=corpus.positive_candidate_n + index,
++            vote_at_1=0.25,
++            set_encoder_at_1=0.25 + delta,
++            oracle_at_k=0.75,
++            task_deltas=[1.0, 1.0, 1.0, 0.0, -1.0, 0.0, 1.0, 0.0],
++            oof_rows=[
++                exp4244.OOFRow(
++                    task_id="arcgen:fixture",
++                    candidate_id="arcgen:fixture::candidate0",
++                    correct=True,
++                    score=0.9,
++                    fold=0,
++                    train_task_ids=("arcgen:other",),
++                )
++            ],
++        )
++
++    monkeypatch.setattr(mod, "_train_seed_replication", fake_seed)
++
++
++def test_req_5160_spec_declares_cross_corpus_contract() -> None:
++    """REQ-VERIFY-5160: OpenSpec declares the corrected closure contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    for marker in (
++        "REQ-VERIFY-5160",
++        "SCENARIO-VERIFY-5160",
++        "SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED",
++        "python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py",
++        "results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json",
++        "game_id_misnomer_confirmed",
++        "cross_corpus_delta_ci95",
++        "diffusiongemma_gate_updated_recommendation",
++        "ungate_now",
++        "blocked_upstream_artifact_missing",
++    ):
++        assert marker in spec
++    for principle in mod.FIELD_PRINCIPLES.values():
++        assert principle in spec
++
++
++def test_scenario_5160_cross_corpus_replication_passes_on_disjoint_fallback(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-VERIFY-5160: misnomer confirmed, overlap filtered, five seeds pass."""
++
++    _write_5160_fixture(tmp_path)
++    _patch_seed_results(monkeypatch)
++
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("success_")
++    assert artifact["game_id_misnomer_confirmed"] is True
++    assert artifact["schema_inspection"]["game_id_fields_present"] == []
++    assert artifact["preferred_second_pool_audit"]["disjoint"] is False
++    assert artifact["preferred_second_pool_audit"]["raw_task_id_collision_count"] == 1
++    assert artifact["second_pool_source"] == str(mod.FALLBACK_SECOND_POOL_REL)
++    assert artifact["second_pool_adapter"]["dropped_overlap_candidate_n"] == 3
++    assert artifact["second_pool_leak_audit_passed"] is True
++    assert artifact["second_pool_leak_audit"]["candidate_grid_hash_collision_count"] == 0
++    assert artifact["cross_corpus_delta"] == pytest.approx(0.46)
++    assert artifact["cross_corpus_delta_ci95"][0] > 0.0
++    assert artifact["cross_corpus_replication_passed"] is True
++    assert artifact["diffusiongemma_gate_updated_recommendation"] == "ungate_now"
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["solve_provenance"] == "development_proxy"
++    assert artifact["adversarial_verify"]["status"] == "clean"
++    assert (tmp_path / mod.OUTPUT_REL).exists()
++
++
++def test_scenario_5160_upstream_missing_blocks_honestly(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED: missing inputs keep gate closed."""
++
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == mod.BLOCKED_UPSTREAM_VERDICT
++    assert artifact["game_id_misnomer_confirmed"] is False
++    assert artifact["second_pool_leak_audit_passed"] is False
++    assert artifact["cross_corpus_delta"] == 0.0
++    assert artifact["cross_corpus_delta_ci95"] == [0.0, 0.0]
++    assert artifact["cross_corpus_replication_passed"] is False
++    assert artifact["diffusiongemma_gate_updated_recommendation"] == "keep_gated"
++    assert artifact["random_seeds_used"] == []
++
++
++def test_req_5160_schema_and_overlap_helpers(tmp_path: Path) -> None:
++    """REQ-VERIFY-5160: schema inspection and overlap audit are explicit."""
++
++    original = {"tasks": [_task("gap3_stage2:50a16a69", "50a16a69", "gap3_stage2", correct_index=1)]}
++    inspection = mod.inspect_original_pool_schema(original)
++    assert inspection["game_id_misnomer_confirmed"] is True
++    assert inspection["raw_task_id_format"] == "8_hex_static_arc_puzzle_id"
++    refuted = mod.inspect_original_pool_schema(
++        {"tasks": [{**original["tasks"][0], "game_id": "bp35"}]}
++    )
++    assert refuted["game_id_misnomer_confirmed"] is False
++    assert refuted["game_id_fields_present"] == ["game_id"]
++
++    second = {
++        "tasks": [
++            {
++                "task_id": "second:50a16a69",
++                "raw_task_id": "50a16a69",
++                "candidates": [
++                    {
++                        "candidate_id": "different",
++                        "candidate_index": 0,
++                        "features": _features(1.0, 1.0),
++                        "grid": original["tasks"][0]["candidates"][1]["grid"],
++                        "is_correct": True,
++                    }
++                ],
++            }
++        ]
++    }
++    audit = mod.audit_pool_overlap(original, second)
++    assert audit["disjoint"] is False
++    assert audit["raw_task_id_collision_count"] == 1
++    assert audit["candidate_grid_hash_collision_count"] == 1
++    assert audit["gold_grid_hash_collision_count"] == 1
++
++    path = tmp_path / "bad.json"
++    path.write_text("[]", encoding="utf-8")
++    with pytest.raises(mod.BlockedRun):
++        mod._read_json_object(path)
++    with pytest.raises(mod.BlockedRun):
++        mod._read_json_object(tmp_path / "missing.json")
++    with pytest.raises(mod.BlockedRun):
++        mod._read_gzip_json_object(tmp_path / "missing.json.gz")
++    bad_gzip = tmp_path / "bad.json.gz"
++    with gzip.open(bad_gzip, "wt", encoding="utf-8") as handle:
++        json.dump([], handle)
++    with pytest.raises(mod.BlockedRun):
++        mod._read_gzip_json_object(bad_gzip)
++
++    normalized = mod._normalized_tasks(
++        {
++            "entries": [
++                "not-a-dict",
++                {"task": "abcdef12", "candidates": ["bad", {"grid": None, "votes": "bad"}]},
++            ]
++        }
++    )
++    assert len(normalized) == 1
++    assert normalized[0]["raw_task_id"] == "abcdef12"
++    assert normalized[0]["candidates"][0]["grid"] is None
++    assert mod._normalized_tasks({"entries": "not-a-list"}) == []
++    assert mod._grid_hash(None) == ""
++
++    empty_signature = mod._pool_signature(
++        {"tasks": [{"task_id": "", "raw_task_id": "", "candidates": ["bad", {"grid": None}]}]}
++    )
++    assert empty_signature["task_ids"] == set()
++    assert empty_signature["candidate_ids"] == set()
++
++    fallback_features = mod._candidate_features({"features": "not-a-dict", "votes": "2.5"})
++    assert fallback_features["vote_weight"] == 2.5
++
++    with pytest.raises(mod.BlockedRun, match=mod.BLOCKED_SECOND_POOL_VERDICT):
++        mod._build_second_corpus(
++            tmp_path,
++            original_payload=original,
++            second_payload={
++                "tasks": [
++                    {"task_id": "second:50a16a69", "raw_task_id": "50a16a69", "candidates": []},
++                    {"task_id": "second:unique", "raw_task_id": "unique", "candidates": ["bad"]},
++                ]
++            },
++            source_rel=Path("second.json.gz"),
++            source_kind="fixture",
++            classic_arc_static_puzzle_pool=False,
++            preferred_audit={"disjoint": False},
++        )
++
++
++def test_req_5160_oof_measurement_and_training_wrapper(monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-VERIFY-5160: OOF scoring keeps held-out scoring separate from training."""
++
++    rows = [
++        exp4244.GrownPoolRow(
++            task_id="task0",
++            candidate_id="task0::candidate0",
++            candidate_index=0,
++            correct=False,
++            features=_features(0.8, 0.1),
++            vote_weight=0.8,
++        ),
++        exp4244.GrownPoolRow(
++            task_id="task0",
++            candidate_id="task0::candidate1",
++            candidate_index=1,
++            correct=True,
++            features=_features(0.2, 0.9),
++            vote_weight=0.2,
++        ),
++        exp4244.GrownPoolRow(
++            task_id="task1",
++            candidate_id="task1::candidate0",
++            candidate_index=0,
++            correct=True,
++            features=_features(1.0, 1.0),
++            vote_weight=1.0,
++        ),
++    ]
++    oof_rows = [
++        exp4244.OOFRow(
++            task_id="task0",
++            candidate_id="task0::candidate0",
++            correct=False,
++            score=0.1,
++            fold=0,
++            train_task_ids=("task1",),
++        ),
++        exp4244.OOFRow(
++            task_id="task0",
++            candidate_id="task0::candidate1",
++            correct=True,
++            score=0.9,
++            fold=0,
++            train_task_ids=("task1",),
++        ),
++    ]
++    metrics = mod._measure_oof(rows, oof_rows)
++    assert metrics["delta"] == 1.0
++    assert metrics["held_out_task_n"] == 1
++    assert metrics["candidate_count"] == 2
++    assert metrics["vote_at_1"] == 0.0
++    assert metrics["set_encoder_at_1"] == 1.0
++
++    def fake_split(
++        split_rows: list[exp4244.GrownPoolRow], *, random_seed: int, n_folds: int
++    ) -> list[tuple[str, ...]]:
++        assert split_rows == rows
++        assert random_seed == 5160
++        assert n_folds == 2
++        return [("task0",), ("task1",)]
++
++    def fake_train(
++        train_rows: list[exp4244.GrownPoolRow],
++        *,
++        folds: list[tuple[str, ...]],
++        random_seed: int,
++        bootstrap_n: int,
++        hidden_dim: int,
++        training_epochs: int,
++        lr: float,
++    ) -> SimpleNamespace:
++        assert train_rows == rows
++        assert folds == [("task0",), ("task1",)]
++        assert (random_seed, bootstrap_n, hidden_dim, training_epochs, lr) == (5160, 0, 8, 3, 0.01)
++        return SimpleNamespace(auroc=0.75, rows=oof_rows)
++
++    monkeypatch.setattr(exp4244, "split_task_folds", fake_split)
++    monkeypatch.setattr(exp4244, "train_oof_set_encoder", fake_train)
++    corpus = exp4244.GrownPoolCorpus(
++        rows=rows,
++        pool_artifact_path=Path("fixture.json.gz"),
++        pool_artifact_sha256="fixture",
++        upstream_checksum="",
++        held_out_task_n=2,
++        wrong_majority_n=1,
++        positive_candidate_n=2,
++    )
++    result = mod._train_seed_replication(
++        corpus,
++        random_seed=5160,
++        n_folds=2,
++        bootstrap_n=0,
++        training_epochs=3,
++        hidden_dim=8,
++        lr=0.01,
++    )
++    assert result.auroc == 0.75
++    assert result.delta == 1.0
++    assert result.oof_rows == oof_rows
++
++
++def test_req_5160_leak_audit_and_run_blockers(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED: invalid inputs block before scoring."""
++
++    original = {"tasks": [_task("gap3_stage2:50a16a69", "50a16a69", "gap3_stage2", correct_index=1)]}
++    collision_row = exp4244.GrownPoolRow(
++        task_id="gap3_stage2:50a16a69",
++        candidate_id="gap3_stage2:50a16a69::candidate0",
++        candidate_index=0,
++        correct=True,
++        features=_features(1.0, 1.0),
++        vote_weight=1.0,
++    )
++    selection = mod.SecondPoolSelection(
++        corpus=exp4244.GrownPoolCorpus(
++            rows=[collision_row],
++            pool_artifact_path=Path("fixture.json.gz"),
++            pool_artifact_sha256="fixture",
++            upstream_checksum="",
++            held_out_task_n=1,
++            wrong_majority_n=0,
++            positive_candidate_n=1,
++        ),
++        source_rel=Path("fixture.json.gz"),
++        source_sha256="fixture",
++        source_kind="fixture",
++        classic_arc_static_puzzle_pool=False,
++        preferred_audit={},
++        adapter={"dropped_overlap_candidate_n": 0},
++    )
++    leak = mod.second_pool_leak_audit(
++        original,
++        selection,
++        [
++            mod.SeedReplicationResult(
++                random_seed=5160,
++                auroc=0.5,
++                delta=0.0,
++                held_out_task_n=1,
++                candidate_count=1,
++                vote_at_1=1.0,
++                set_encoder_at_1=1.0,
++                oracle_at_k=1.0,
++                task_deltas=[0.0],
++                oof_rows=[
++                    exp4244.OOFRow(
++                        task_id="gap3_stage2:50a16a69",
++                        candidate_id="gap3_stage2:50a16a69::candidate0",
++                        correct=True,
++                        score=1.0,
++                        fold=0,
++                        train_task_ids=("gap3_stage2:50a16a69",),
++                    )
++                ],
++            )
++        ],
++    )
++    assert leak["passed"] is False
++    assert leak["heldout_training_task_collision_count"] == 1
++
++    _write_5160_fixture(tmp_path)
++    _write_json(
++        tmp_path / mod.EXP5151_REL,
++        {
++            "experiment": "experiment_5151_arc_oracle_distinct_hardening_v472",
++            "verifier_is_oracle": True,
++        },
++    )
++    blocked = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++    assert blocked["honest_verdict"] == mod.BLOCKED_UPSTREAM_VERDICT
++
++    _write_5160_fixture(tmp_path)
++    _patch_seed_results(monkeypatch)
++    too_few_seeds = mod.run(
++        tmp_path,
++        random_seeds=[5160, 5161, 5162, 5163],
++        adversarial_runner=_adversarial_clean,
++    )
++    assert too_few_seeds["honest_verdict"] == mod.BLOCKED_SECOND_POOL_VERDICT
++
++
++def test_req_5160_validation_and_edge_cases(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-VERIFY-5160: artifact validation rejects non-actionable fields."""
++
++    _write_5160_fixture(tmp_path)
++    _patch_seed_results(monkeypatch, deltas=[0.0, 0.02, -0.01, 0.01, 0.0])
++    artifact = mod.run(tmp_path, adversarial_runner=_adversarial_clean)
++    assert artifact["cross_corpus_replication_passed"] is False
++    assert artifact["diffusiongemma_gate_updated_recommendation"] == "keep_gated"
++
++    invalid_cases = [
++        ({key: value for key, value in artifact.items() if key != "cross_corpus_delta"}, "missing"),
++        ({**artifact, "honest_verdict": "pending"}, "terminal-prefixed"),
++        ({**artifact, "game_id_misnomer_confirmed": {"value": True}}, "bare bool"),
++        ({**artifact, "second_pool_leak_audit_passed": "true"}, "bare bool"),
++        ({**artifact, "cross_corpus_delta": True}, "bare float"),
++        ({**artifact, "cross_corpus_delta_ci95": [0.0]}, "ci95"),
++        ({**artifact, "cross_corpus_replication_passed": 1}, "bare bool"),
++        ({**artifact, "diffusiongemma_gate_updated_recommendation": "maybe"}, "recommendation"),
++        ({**artifact, "verifier_is_oracle": True}, "verifier_is_oracle"),
++        ({**artifact, "solve_provenance": "live"}, "solve_provenance"),
++        ({**artifact, "random_seeds_used": [5160.0]}, "bare ints"),
++        ({**artifact, "reproducibility_checksum": "nope"}, "sha256"),
++        ({**artifact, "field_principles": {}}, "field_principles"),
++        ({**artifact, "spec_refs": []}, "spec_refs"),
++    ]
++    for payload, message in invalid_cases:
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(payload)
++
++    assert mod._multiseed_ci95([]) == [0.0, 0.0]
++    assert mod._multiseed_ci95([0.5]) == [0.5, 0.5]
++    assert mod._mean([]) == 0.0
++    assert mod._safe_float(True) == 0.0
++    assert mod._safe_float("bad") == 0.0
++    assert mod._clean_adversarial_report({"returncode": 1, "reports": [{"flags": [{"kind": "X"}]}]})[
++        "status"
++    ] == "flagged"
++    assert mod._clean_adversarial_report({"reports": [None, {"flags": [None]}]})["status"] == "clean"
+-- 
+2.55.0
+

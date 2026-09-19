@@ -1,0 +1,74 @@
+From 307eeca18c36ee6daa10264ccced3b273a166dfc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 01:13:20 -0400
+Subject: [PATCH 09983/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 5 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 0f683eb3db..fa9c86eabc 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">5,809</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">5,811</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 78facad54a..13f695e1ea 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T05:07:12Z"
++ "last_scan_utc": "2026-08-26T05:09:15Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 73ed24d90c..e347e54f97 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-08-26T05:07:11Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-26T05:09:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8e47d155f6..cc04255755 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16511,3 +16511,5 @@ code |
+ | 2026-08-26 05:01 UTC | V577 phase-receipt and retirement contract | OK | 93 passed, 1 warning in 8.78s |
+ | 2026-08-26 05:03 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
+ | 2026-08-26 05:05 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
++| 2026-08-26 05:07 UTC | Readiness-aware GPU lease and task phase receipts | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6616-v577-execution-contract.execution_ |
++| 2026-08-26 05:09 UTC | Independent mandated-model accelerator admission c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6617-gpu-lease-phase-receipts) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b2e34b4dba..c980c84f44 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 10, "phase": "iteration_start", "started_at": "2026-08-26T05:07:11Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-26T05:09:14Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

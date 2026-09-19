@@ -1,0 +1,104 @@
+From c48108c3adaa1cedd64d859e2689d9a2e9d8ebac Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 10:42:57 -0400
+Subject: [PATCH 07520/11362] [conductor] Operational retrospective for
+ milestone 2026.07.516
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_516.json | 58 ++++++++++++++++++++++
+ 3 files changed, 65 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_516.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index effbb25cfe..18882acf14 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5967,3 +5967,9 @@ The critical path for milestone .250:
+ - theme: evidence-handling latency dominated a synthesis-heavy operational closeout
+ - key result: honest operational result -- the lone compute-bound entry was gated at 0.0 minutes, task-conditioned GPU idle was false, and no concurrent multi-model runner miss was evidenced; the runtime opportunity is incremental evidence indexing and receipt reuse
+ - acceptance: 4/4 operational questions answered
++
++### Milestone 2026.07.516
++- exp_range: no data available this milestone
++- theme: transition processing led a synthesis-heavy runtime tail while gated compute work remained coarsely timed
++- key result: honest operational result -- compute-task GPU idle was not indicated, but phase timing and model-concurrency evidence are insufficient to explain the longest compute durations or establish a missed DualGPURunner engagement
++- acceptance: 4/4 operational questions answered
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 17b0ca1097..9185216207 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11721,3 +11721,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-22: Gated on Exp5790 admission readiness: run a matched three-family independent single-shot ARC hypothesis panel (⚠️ Blocked) — honest_verdict=blocked: headline_gpu_offload_receipts_present; results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+ - 2026-07-22: Board-state hash ledger and operator handoff packet (⚠️ Blocked) — honest_verdict=complete: cached hardware reconciliation; kv260=ssh_bitstream_poc polarfire=reachable_no_terminal_workload gatemate=blocked_dirtyjtag_cable extropic=no_authenticated_local_execution_surface kona=no_authenticated_local_execution_surface no_speedup_claim no_energy_claim no_production_ready_claim; results/experiment_5794_hardware_terminal_action_receipt.json
+ - 2026-07-22: Reconcile .516 evidence, phase telemetry, specs, operations docs, and honest promotion decisions (✅ Complete) — honest_verdict=complete: v516 reconciled by exact declared artifacts; constraint_adapter_promoted=false; arc_live_influence_promoted=false; hardware_speedup_claimed=false; arc_registry_unchanged=true; results/experiment_5795_v516_capstone_reconciliation.json
++- 2026-07-22: Operational retrospective for milestone 2026.07.516 — 12 experiments consumed 597.5 minutes, with 4 compute-bound entries. The longest listed compute entries took 102.48 and 50.93 minutes, but the data does not isolate gate, setup, or execution time; compute-task GPU idle is false, and no evidence establishes a missed parallel-model DualGPURunner opportunity. The next tooling focus is resumable transition processing plus task-correlated phase, GPU, concurrency, and runner telemetry; estimated_time_savings_pct=0 because no measured alternative supports a nonzero forecast; results/operational_retro_2026_07_516.json
+diff --git a/results/operational_retro_2026_07_516.json b/results/operational_retro_2026_07_516.json
+new file mode 100644
+index 0000000000..48f90f78ac
+--- /dev/null
++++ b/results/operational_retro_2026_07_516.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.516",
++  "generated_at": "2026-07-22T14:39:39Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 597.5,
++  "experiments_completed": 12,
++  "compute_bound_experiments_count": 4,
++  "slowest_experiments": [
++    {
++      "experiment": "Transition terminal .515 evidence and allocate collision-free .516 identities",
++      "duration_minutes": 196.27,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5790 admission readiness: run a matched three-family independent sin",
++      "duration_minutes": 102.48,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Time-windowed literature freshness receipt",
++      "duration_minutes": 58.13,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Qualify the existing exact-deliverable index with terminal test receipts and gat",
++      "duration_minutes": 56.83,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5785 fixture readiness: run the three-family prospective exact const",
++      "duration_minutes": 50.93,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Across 597.5 minutes, 12 experiments completed, including 4 compute-bound experiments. The listed tail peaks at 196.27 minutes for synthesis work and at 102.48 minutes for compute work; the locked task-level field reports no compute-bound GPU-idle condition.",
++  "bottlenecks_identified": [
++    "Runtime concentration in the 196.27-minute synthesis-only transition and collision-free identity allocation entry.",
++    "The compute tail includes 102.48-minute admission-gated and 50.93-minute fixture-gated entries; the data supplies no phase breakdown, so their durations cannot be causally assigned to gate waiting, setup, or model execution.",
++    "The absence of per-task time-series GPU and model-concurrency evidence prevents utilization measurement and runner-selection attribution."
++  ],
++  "improvements_suggested": [
++    "Add gate-aware phase timing to every experiment receipt, separating readiness wait, environment or model setup, execution, verification, and artifact persistence.",
++    "Record task-correlated GPU utilization, active model count, and runner identity throughout compute-bound experiments.",
++    "Make transition evidence and collision-free identity allocation incremental and resumable, then compare the next measured duration with the 196.27-minute entry.",
++    "Dispatch through DualGPURunner only when a task declares at least 2 models intended to run in parallel; retain single-GPU execution for single-model work."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Build an incremental, resumable transition and identity-allocation path for the longest listed task.",
++    "Emit phase-level gate, setup, execution, verification, and artifact-write timers in experiment receipts.",
++    "Attach continuous GPU samples, active-model count, and runner identity to compute-bound receipts, with conditional DualGPURunner dispatch for parallel-model tasks."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The bounded evidence ranks the visible runtime tail and rules out a task-level GPU-idle flag, but it does not reveal why the compute entries ran long or whether parallel-model execution occurred. A nonzero savings estimate would be unsupported until phase and concurrency telemetry is recorded."
++}
+-- 
+2.55.0
+

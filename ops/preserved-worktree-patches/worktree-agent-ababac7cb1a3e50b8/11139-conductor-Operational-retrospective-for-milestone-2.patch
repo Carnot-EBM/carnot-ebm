@@ -1,0 +1,115 @@
+From 8ab7db8807e588ac57c9e44392a19ca5e23972a5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 22:29:40 -0400
+Subject: [PATCH 11139/11362] [conductor] Operational retrospective for
+ milestone 2026.09.613
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 11 ++++
+ results/operational_retro_2026_09_613.json | 58 ++++++++++++++++++++++
+ 3 files changed, 76 insertions(+)
+ create mode 100644 results/operational_retro_2026_09_613.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index de1bbee7ea..9c48de1ae2 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6598,3 +6598,10 @@ The critical path for milestone .250:
+ - theme: one compute-bound feature-bank run set the critical path while inference batching remained underused
+ - key result: active GPU use avoided a compute-idle fault, but single-process inference batching is the clearest operational improvement
+ - acceptance: no data available this milestone
++
++### Milestone 2026.09.613
++
++- exp_range: no data available this milestone
++- theme: one compute-bound controls run dominated reconstructed time while task-level phase and accelerator traces remained unavailable
++- key result: honest operational negative — the critical path is known, but its cause and any parallel-model runner miss are not established
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 4075217f23..bf8b3449d3 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18866,3 +18866,14 @@ plan and implement improvements across four axes". Commits on branch
+ - Agent-initiated, not from the brief: the mutation harness gained a baseline gate after its
+   first pass produced 11 void REDs from a pytest flag that conflicts with the project addopts.
+ - 2026-09-05: V613 independent evidence capstone and V614 handoff (⚠️ Research Finding) — honest_verdict=complete_null_v613_capstone_no_oracle_distinct_science_positive; results/experiment_7008_v613_capstone.json
++
++## Milestone 2026.09.613 operational retrospective
++
++The reconstructed 15.7-minute window completed 7 experiments, including 3
++compute-bound entries. Three-family self-commitment shortcut controls took
++15.54 minutes and formed the critical path. The supplied timing does not
++identify the cause. The locked compute-task GPU-idle field is false. The data
++does not establish a parallel multi-model launch or a missed DualGPURunner
++dispatch. Add phase timing, task-linked GPU traces, and launch receipts that
++record model count and runner selection. No measured alternative supports a
++time-savings estimate, so the estimate is 0%.
+diff --git a/results/operational_retro_2026_09_613.json b/results/operational_retro_2026_09_613.json
+new file mode 100644
+index 0000000000..0b3333fca0
+--- /dev/null
++++ b/results/operational_retro_2026_09_613.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.09.613",
++  "generated_at": "2026-09-05T02:26:33Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 15.7,
++  "experiments_completed": 7,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "Three-family self-commitment shortcut controls",
++      "duration_minutes": 15.54,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Independent blinded feature isolation and shortcut audit",
++      "duration_minutes": 0.17,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Authority-only mutation sidecar and blinded learner view",
++      "duration_minutes": 0.01,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Prospective ARC live-envelope held-out engine audit",
++      "duration_minutes": 0.01,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V613 source delta and task-contract preflight",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 7 experiments in 15.7 minutes. Three-family self-commitment shortcut controls took 15.54 minutes and formed the critical path. Authority-only mutation sidecar and blinded learner view took 0.01 minutes, while V613 source delta and task-contract preflight took 0.0 minutes; the supplied timing does not identify the cause of these durations.",
++  "bottlenecks_identified": [
++    "Three-family self-commitment shortcut controls used 15.54 of the 15.7 minutes, which concentrated the milestone wall time in one compute-bound task.",
++    "Disk-mtime reconstruction has no phase-level timing, so the cause of the longest experiment cannot be identified.",
++    "The GPU report is not linked to task execution windows, so it cannot measure utilization across the compute-bound work.",
++    "No model-count or runner-selection data is available, so a missed DualGPURunner dispatch cannot be identified."
++  ],
++  "improvements_suggested": [
++    "Record phase-level durations for each compute-bound experiment.",
++    "Capture task-linked GPU utilization throughout each compute-bound execution window.",
++    "Write a launch receipt with model count and runner selection, and use DualGPURunner only when 2 or more models load in parallel."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add phase timers to the Three-family self-commitment shortcut controls path.",
++    "Add task-linked GPU activity receipts for compute-bound runs.",
++    "Add model-count and runner-selection fields to launch receipts."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The reconstructed timing identifies the critical path but does not explain its internal cost. No measured alternative is available, so the time-savings estimate remains 0%."
++}
+-- 
+2.55.0
+

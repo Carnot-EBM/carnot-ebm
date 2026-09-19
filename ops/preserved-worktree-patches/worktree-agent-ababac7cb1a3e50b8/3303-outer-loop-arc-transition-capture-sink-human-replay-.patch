@@ -1,0 +1,354 @@
+From 352ebc043e89f5a4473cc36414adced6ca7f9e8f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 16:22:25 -0400
+Subject: [PATCH 03303/11362] [outer-loop] arc: transition-capture sink +
+ human-replay ingestion (14.6k-transition corpus)
+
+Operator directive (2026-06-21): capture gameplay for learning/training, augmenting the human-recorded
+play datasets. We were discarding every transition (recordings empty; collect_transitions on-demand).
+
+python/carnot/agentic/arc_transition_capture.py:
+- TransitionCorpus: append-only, deduped per-game npz store of (game, grid, action, data, next_grid,
+  level_before, level_after) under data/arc_transition_corpus/ (gitignored; regenerable). add/flush/load/
+  stats round-trip validated.
+- capture_public_games(): offline-arcade probe over the 25 public games -> corpus.
+- ingest_human_replays(): folds the HUMAN play corpus (data/arc_public_demo_human_replay_corpus,
+  frame_action_delta.v1, ~14,797 rows / 25 games, CC BY 4.0) by pairing consecutive frames per session
+  guid into transitions; robust to int|'ACTIONn' action ids; level-up flagged on level_progress reset.
+
+Result: 14,628 transitions across all 25 public games, OVERWHELMINGLY state-changing (human play is
+goal-directed -- e.g. wa30 1532/1545, lf52 1210/1210 changing) vs the no-op-dominated random probes. This
+is the high-signal fuel for the pretrained mechanic PRIOR (the 25 public games are our only window into
+the mechanic distribution the hidden eval is drawn from; we cannot capture the hidden games -- learn, not
+memorize). 3.4MB compressed.
+
+NEXT (the remaining two of the three): turn on live-session recording in arc3_live_submit (feed the sink
++ debug trail), then the pretrain-prior path (dynamics backbone on this corpus -> LiveTTTWorldModel
+warm-start -> measure transfer on held-out public games).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .gitignore                                    |   3 +
+ docs/index.html                               |   2 +-
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ .../carnot/agentic/arc_transition_capture.py  | 205 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ 9 files changed, 219 insertions(+), 10 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_transition_capture.py
+
+diff --git a/.gitignore b/.gitignore
+index 0a17d9c8aa..067a8a9d80 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -214,3 +214,6 @@ recordings/arc_live_probe/
+ # to deliberately track a specific small checkpoint if ever needed. (Legitimate SMALL models in models/
+ # *.safetensors / *.pt stay tracked -- not ignored here.)
+ *.ckpt
++
++# Generated transition-capture corpus (large npz; regenerated from probes + human replays)
++data/arc_transition_corpus/
+diff --git a/docs/index.html b/docs/index.html
+index 2583f9f222..be78b868f4 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">3,908</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">3,920</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d652a57091..cec6c4cfe1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 182, "phase": "iteration_start", "last_beat": "2026-06-21T19:54:03Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 183, "phase": "iteration_start", "last_beat": "2026-06-21T20:14:30Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d3a90fd417..97d0b8fbbc 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9036,3 +9036,4 @@ c |
+ | 2026-06-21 19:25 UTC | PHASE B2 (RESERVED INFRA) -- POSITIVE-CONTROL-FAIL | OK | 143 passed, 1 warning in 7.43s |
+ | 2026-06-21 19:36 UTC | PHASE C (HARDWARE CONTINUITY; operator MANDATORY;  | OK | 86 passed, 1 warning in 6.50s |
+ | 2026-06-21 19:52 UTC | PHASE D (SOTA-INGESTION; reserved; bleeding-edge t | OK | 123 passed, 1 warning in 9.16s |
++| 2026-06-21 20:12 UTC | PHASE E (CAPSTONE .421) -- the scorecard: did OPER | OK | 85 passed, 1 warning in 7.96s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 167e8707de..cd526c1458 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3460259, "iteration": 182, "phase": "iteration_start", "started_at": "2026-06-21T19:54:03Z"}
+\ No newline at end of file
++{"pid": 3460259, "iteration": 183, "phase": "iteration_start", "started_at": "2026-06-21T20:14:30Z"}
+\ No newline at end of file
+diff --git a/python/carnot/agentic/arc_transition_capture.py b/python/carnot/agentic/arc_transition_capture.py
+new file mode 100644
+index 0000000000..4dcf131f64
+--- /dev/null
++++ b/python/carnot/agentic/arc_transition_capture.py
+@@ -0,0 +1,205 @@
++"""Transition-capture sink: a growing, on-disk corpus of played ARC-AGI-3 transitions.
++
++Operator directive (2026-06-21): capture gameplay for learning/training. We were discarding every
++transition (recordings dir empty; collect_transitions gathered on-demand and threw the data away). This
++sink persists every observed (game, grid, action, data, next_grid, level_before, level_after) so it can
++fuel (a) the PRETRAINED MECHANIC PRIOR -- a dynamics backbone trained on the public-game corpus that the
++live per-game learner warm-starts from (faster adaptation = fewer real probe actions = more of the 5n
++per-level budget left to solve), and (b) the offline dev harness, and (c) debugging (the sc25-style
++offline-reproduce-but-live-fail case).
++
++IMPORTANT competition caveat: this captures only the 25 PUBLIC games (the only accessible signal) -- the
++55 semi-private + 55 fully-private eval games are held out and NEVER seen before scoring. So the corpus
++is for training a GENERAL, transferable prior + the machinery, NOT for memorizing the eval games. The
++public games are our window into the mechanic DISTRIBUTION the hidden games are drawn from.
++
++Storage: one compressed .npz per game under data/arc_transition_corpus/<game>.npz, deduped by
++(grid.tobytes(), action, x, y) so repeated probes don't bloat it. Append-only across runs; survives.
++Pure numpy, no torch -- the capture path stays light.
++"""
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any, Optional
++
++import numpy as np
++
++_REPO = Path(__file__).resolve().parents[3]
++DEFAULT_ROOT = _REPO / "data" / "arc_transition_corpus"
++# The human-recorded play corpus (frame_action_delta.v1, ~14,797 rows over the 25 public games, CC BY 4.0
++# from ARC Prize). Goal-directed human play -- reaches wins, demonstrates mechanics competently -- so it is
++# far higher-signal than random/salience probes for pretraining the mechanic prior.
++HUMAN_REPLAY_DIR = _REPO / "data" / "arc_public_demo_human_replay_corpus"
++
++
++def _parse_action_id(raw: Any) -> Optional[int]:
++    """Action ids appear as ints (2) OR strings ('ACTION4'); RESET/None -> not a transition action."""
++    if isinstance(raw, bool):
++        return None
++    if isinstance(raw, (int, float)):
++        return int(raw)
++    s = str(raw).upper().replace("ACTION", "").strip()
++    return int(s) if s.isdigit() else None
++
++
++def _akey(action: int, data: Any) -> tuple:
++    if int(action) == 6 and isinstance(data, dict) and "x" in data and "y" in data:
++        return (6, int(data["x"]), int(data["y"]))
++    return (int(action), -1, -1)
++
++
++class TransitionCorpus:
++    """Append-only per-game store of played transitions. Dedups on (grid, action, x, y)."""
++
++    def __init__(self, root: Optional[Path] = None) -> None:
++        self.root = Path(root) if root is not None else DEFAULT_ROOT
++        self.root.mkdir(parents=True, exist_ok=True)
++        self._buf: dict[str, dict[str, list]] = {}     # game -> {grids, next_grids, actions, xs, ys, lb, la}
++        self._seen: dict[str, set] = {}                # game -> set of dedup keys (loaded lazily)
++
++    # --- write path ---------------------------------------------------------------------------------
++    def _ensure_seen(self, game: str) -> set:
++        if game not in self._seen:
++            keys: set = set()
++            p = self.root / f"{game}.npz"
++            if p.exists():
++                d = np.load(p, allow_pickle=False)
++                for g, a, x, y in zip(d["grids"], d["actions"], d["xs"], d["ys"]):
++                    keys.add((g.tobytes(), int(a), int(x), int(y)))
++            self._seen[game] = keys
++        return self._seen[game]
++
++    def add(self, game: str, grid: Any, action: int, data: Any, next_grid: Any,
++            level_before: int = 0, level_after: int = 0) -> bool:
++        """Buffer one transition; returns True if NEW (not a dedup hit). Call flush() to persist."""
++        g = np.asarray(grid).astype(np.int16)
++        ng = np.asarray(next_grid).astype(np.int16)
++        ak = _akey(action, data)
++        key = (g.tobytes(), ak[0], ak[1], ak[2])
++        if key in self._ensure_seen(game):
++            return False
++        self._seen[game].add(key)
++        b = self._buf.setdefault(game, {k: [] for k in ("grids", "next_grids", "actions", "xs", "ys", "lb", "la")})
++        b["grids"].append(g); b["next_grids"].append(ng)
++        b["actions"].append(ak[0]); b["xs"].append(ak[1]); b["ys"].append(ak[2])
++        b["lb"].append(int(level_before)); b["la"].append(int(level_after))
++        return True
++
++    def add_transition(self, game: str, t: Any) -> bool:
++        return self.add(game, t.grid, t.action, t.data, t.next_grid,
++                        getattr(t, "level_before", 0), getattr(t, "level_after", 0))
++
++    def flush(self) -> dict:
++        """Persist all buffered games (merging with any existing on-disk corpus). Returns per-game counts."""
++        counts = {}
++        for game, b in self._buf.items():
++            if not b["grids"]:
++                continue
++            p = self.root / f"{game}.npz"
++            arrs = {k: np.asarray(v) for k, v in b.items()}
++            arrs["grids"] = np.stack(b["grids"]).astype(np.int16)
++            arrs["next_grids"] = np.stack(b["next_grids"]).astype(np.int16)
++            if p.exists():
++                old = np.load(p, allow_pickle=False)
++                for k in arrs:
++                    arrs[k] = np.concatenate([old[k], arrs[k]], axis=0)
++            np.savez_compressed(p, **arrs)
++            counts[game] = int(arrs["grids"].shape[0])
++        self._buf.clear()
++        return counts
++
++    # --- read path ----------------------------------------------------------------------------------
++    def games(self) -> list[str]:
++        return sorted(p.stem for p in self.root.glob("*.npz"))
++
++    def load(self, game: str) -> list:
++        """Return stored transitions as Transition objects (for training / the harness)."""
++        from carnot.agentic.arc_executable_world_model import Transition
++
++        p = self.root / f"{game}.npz"
++        if not p.exists():
++            return []
++        d = np.load(p, allow_pickle=False)
++        out = []
++        for i in range(d["grids"].shape[0]):
++            a = int(d["actions"][i]); x = int(d["xs"][i]); y = int(d["ys"][i])
++            data = {"x": x, "y": y} if a == 6 and x >= 0 else None
++            out.append(Transition(grid=d["grids"][i], action=a, data=data, next_grid=d["next_grids"][i],
++                                  level_before=int(d["lb"][i]), level_after=int(d["la"][i])))
++        return out
++
++    def stats(self) -> dict:
++        per_game = {}
++        total = 0
++        for g in self.games():
++            d = np.load(self.root / f"{g}.npz", allow_pickle=False)
++            n = int(d["grids"].shape[0])
++            chg = int(np.sum([not np.array_equal(d["grids"][i], d["next_grids"][i]) for i in range(n)]))
++            per_game[g] = {"transitions": n, "changing": chg, "grid_shape": list(d["grids"].shape[1:])}
++            total += n
++        return {"root": str(self.root), "games": len(per_game), "total_transitions": total, "per_game": per_game}
++
++
++def ingest_human_replays(corpus_dir: Optional[Path] = None, games: Optional[list[str]] = None,
++                         root: Optional[Path] = None) -> dict:
++    """Fold the HUMAN play corpus into the transition store. Each row is (env, frame, action,
++    level_progress) ordered within a session `guid`; transitions are derived by pairing CONSECUTIVE
++    frames: (frame_i, action_i) -> frame_{i+1}. A level-up is flagged when level_progress RESETS (a high
++    progress followed by ~0 = the action completed the level). Deduped against the existing corpus, so it
++    AUGMENTS the probe transitions without duplication."""
++    d = Path(corpus_dir) if corpus_dir is not None else HUMAN_REPLAY_DIR
++    shards = sorted((d / "shards").glob("*.jsonl"))
++    if not shards:
++        return {"error": f"no shards under {d}/shards"}
++    corpus = TransitionCorpus(root)
++    sessions: dict[str, list] = {}
++    for sh in shards:
++        with sh.open() as fh:
++            for line in fh:
++                try:
++                    r = json.loads(line)
++                except Exception:
++                    continue
++                if games and r.get("env") not in games:
++                    continue
++                sessions.setdefault(r.get("guid"), []).append(r)
++    added = 0
++    for rows in sessions.values():
++        rows.sort(key=lambda r: r.get("step_index", 0))
++        for a, b in zip(rows, rows[1:]):
++            act = a.get("action") or {}
++            aid = _parse_action_id(act.get("id"))
++            if aid is None:  # RESET / unparseable -> not a frame transition
++                continue
++            adata = act.get("data") or {}
++            x, y = adata.get("x"), adata.get("y")
++            data = {"x": int(x), "y": int(y)} if (aid == 6 and x is not None and y is not None) else None
++            la = 1 if float(b.get("level_progress", 0.0)) < float(a.get("level_progress", 0.0)) - 1e-6 else 0
++            if corpus.add(a["env"], a["frame"], aid, data, b["frame"], 0, la):
++                added += 1
++    corpus.flush()
++    return {"human_transitions_added": added, "sessions": len(sessions), "stats": corpus.stats()}
++
++
++def capture_public_games(games: Optional[list[str]] = None, n_per_game: int = 240,
++                         root: Optional[Path] = None) -> dict:
++    """Run the offline arcade probe over the public games and persist every transition to the corpus.
++    The 25 public games are the only accessible signal; this is the training fuel for the mechanic prior."""
++    from carnot.agentic.arc_executable_world_model import collect_transitions
++
++    corpus = TransitionCorpus(root)
++    if games is None:
++        env_dir = _REPO / "environment_files"
++        games = sorted(p.name for p in env_dir.iterdir() if p.is_dir()) if env_dir.exists() else []
++    added = {}
++    for game in games:
++        try:
++            transitions, _ = collect_transitions(game, n=n_per_game)
++        except Exception as e:  # never fabricate; record the skip
++            added[game] = f"ERROR: {type(e).__name__}"
++            continue
++        new = sum(corpus.add_transition(game, t) for t in transitions)
++        added[game] = new
++    corpus.flush()
++    return {"added": added, "stats": corpus.stats()}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index da4350c366..6fa37bf68a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T20:10:08Z",
+-  "finished_at": "2026-06-21T20:10:08Z",
++  "started_at": "2026-06-21T20:14:55Z",
++  "finished_at": "2026-06-21T20:14:55Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 71d9d1284b..8219e853c3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T20:10:08Z",
+-  "finished_at": "2026-06-21T20:10:08Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-21T20:14:55Z",
++  "finished_at": "2026-06-21T20:14:55Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 2d362ba15c..6cad6cc863 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T20:10:08Z",
+-  "finished_at": "2026-06-21T20:10:08Z",
++  "started_at": "2026-06-21T20:14:55Z",
++  "finished_at": "2026-06-21T20:14:55Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+-- 
+2.55.0
+

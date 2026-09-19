@@ -1,0 +1,36 @@
+From 044b56d4e1747b09000da7c0e4393dd570b0a5f1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 06:46:13 -0400
+Subject: [PATCH 00132/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20FORMALLY=20CLOSE=20the=20discrimination-vs-selection=20dia?=
+ =?UTF-8?q?gnosis=20question=20(recommend=20retirement,=20do=20NOT=20grind?=
+ =?UTF-8?q?=20a=20third=20attempt)=20=E2=80=94=20exp3672=20stands=20as=20t?=
+ =?UTF-8?q?he=20earned-negative=20(ensemble=20discriminates=20~0.93=20but?=
+ =?UTF-8?q?=20selects=20worse=20than=20SC);=20the=20diagnosis-of-WHY=20blo?=
+ =?UTF-8?q?cked=20twice=20(exp3682=20degenerate=20no-op,=20exp3694=20no=20?=
+ =?UTF-8?q?multi-candidate=20corpus);=20energy-selection=20is=20settled-bo?=
+ =?UTF-8?q?unded=20per=20the=20project=20memory=20+=20arXiv:2512.23067=20(?=
+ =?UTF-8?q?Reward=20Model=20Selection=20Crisis).=20Record=20the=20closure?=
+ =?UTF-8?q?=20+=20an=20operator=20retirement=20recommendation;=20doc/synth?=
+ =?UTF-8?q?esis-only?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 7a095f382e..371d4645a1 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8243,3 +8243,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-02: DISAMBIGUATE the re-freeze candidate at full G1-rigor — exp3693 found the published external de-entangled/CIG baseline (0.9287) BEAT the dependency-aware candidate (0.9249). Run dependency-aware vs external vs a FUSION (multi-verifier, arXiv:2502.20379) head-to-head under the FROZEN dual-condition protocol (5-seed, CI, DeLong, adversarial-clean, leak-free), pick the SINGLE strongest candidate > frozen 0.9131, and re-emit the CLEAN operator re-freeze package for THAT winner — PREPARE-ONLY; the frozen 0.9131 stays frozen, the agent never edits north-star.md or triggers the CI run (✅ Complete) — honest_verdict=complete: refreeze_disambiguated_no_candidate_beats_frozen_headline_stays_0_9131; results/experiment_3704_refreeze_disambiguate_dependency_vs_external_vs_fusion.json
+ - 2026-06-02: Adversarial leak-audit + HELD-OUT replication of the code-native verifier — exp3695 returned code AUROC=1.0, which is IMPLAUSIBLE_PERFECT (the exp1851/exp3397 fabrication pattern + the AUROC>=0.99-is-a-leak rule). Audit for leakage (arXiv:2603.21454 / arXiv:2502.00678), re-measure on a DIFFERENT held-out code corpus (arXiv:2605.11006 / fresh GGUF-generated candidates) with a TraceCoder-style execution-trace signal (arXiv:2602.06875), 5 seeds, larger n. Does the code signal survive HELD-OUT with a CI excluding 0.5 and AUROC < 0.99 (i.e. a real, non-leaked signal), or was the 1.0 a leak/separable-by-construction artifact? (✅ Complete) — honest_verdict=complete: code_native_one_point_zero_was_a_leak_code_claim_narrowed_earned; results/experiment_3705_code_native_leak_audit_heldout.json
+ - 2026-06-02: Reconcile the SHIPPED detector's code operating point with the exp3705 held-out audit — the detector (exp3696) was re-wired on exp3695's AUROC=1.0; if exp3705 shows the code signal survives held-out, recalibrate the shipped code operating point to the HELD-OUT number; if it was a leak, NARROW the shipped detector back to math-only with an explicit abstain-on-code path. Re-run the E2E green. The shipped surface must be honest either way (runs unconditionally) (✅ Complete) — honest_verdict=complete: shipped_detector_narrowed_to_math_only_abstain_on_code_e2e_green; results/experiment_3706_reconcile_shipped_detector_heldout.json
++- 2026-06-02: FORMALLY CLOSE the discrimination-vs-selection diagnosis question (recommend retirement, do NOT grind a third attempt) — exp3672 stands as the earned-negative (ensemble discriminates ~0.93 but selects worse than SC); the diagnosis-of-WHY blocked twice (exp3682 degenerate no-op, exp3694 no multi-candidate corpus); energy-selection is settled-bounded per the project memory + arXiv:2512.23067 (Reward Model Selection Crisis). Record the closure + an operator retirement recommendation; doc/synthesis-only (✅ Complete) — honest_verdict=complete: selection_diagnosis_formally_closed_retirement_recommended_to_operator; results/experiment_3707_selection_diagnosis_formal_closure.json
+-- 
+2.55.0
+

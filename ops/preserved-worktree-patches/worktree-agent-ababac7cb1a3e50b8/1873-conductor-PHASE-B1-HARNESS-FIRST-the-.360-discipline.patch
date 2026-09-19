@@ -1,0 +1,518 @@
+From b1d56ee01c6529d123330a50dcaf267b0b62079c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 22:39:38 -0400
+Subject: [PATCH 01873/11362] [conductor] PHASE B1 (HARNESS-FIRST, the .360
+ discipline) -- FIX + SMOKE the LoRA training harness that died 3x. .390's
+ exp4211 failed with `ValueError: Target module Gemma4ClippableLinear(...) is
+ not supported` -- PEFT/LoRA matched the custom Carnot Gemma4 wrapper (whose
+ .linear submodule is the real nn.Linear) instead of a standard module. FIX:
+ load the NON-Qwen base via standard
+ transformers.AutoModelForCausalLM.from_pretrained('google/gemma-4-E4B-it')
+ (NOT the custom Gemma4 wrapper) so PEFT sees standard nn.Linear, with
+ explicit target_modules
+ (q_proj/k_proj/v_proj/o_proj/gate_proj/up_proj/down_proj) -- OR unwrap/patch
+ the wrapper to expose its inner .linear. DELIVERABLE = a PASSING SMOKE (a
+ positive control ON THE HARNESS): assert LoRA attaches, 1 training step runs,
+ loss is finite, on a 8-16-example fixture from the intact corpora. NO full
+ 3-arm run here (that is B2). harness_smoke_passed BARE bool. NO TRM.
+
+Automated research step by research conductor.
+Task ID: exp4222-verifier-reward-lora-harness-fix-smoke
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |  2 +-
+ ..._verifier_reward_lora_harness_fix_smoke.py | 14 ++--
+ results/experiment_1717_findings_audit.json   |  8 +--
+ ...xperiment_1796_findings_audit_186_187.json |  8 +--
+ results/experiment_1869_hiled.json            |  2 +-
+ ...periment_3350_kv260_latency_benchmark.json |  2 +-
+ ...erifier_reward_lora_harness_fix_smoke.json | 49 +++++++------
+ results/experiment_625_tier1_fr11_relay.json  |  6 +-
+ results/experiment_638_tier1_fr11_relay.json  |  4 +-
+ results/experiment_645_tier1_fr11_relay.json  |  4 +-
+ .../verifier_reward_code_lora_rft_3arm.py     | 26 +++++--
+ ..._verifier_reward_lora_harness_fix_smoke.py | 68 +++++++++++++++++++
+ 12 files changed, 142 insertions(+), 51 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c8981b1c7e..03549f8111 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 175,
+   "code_violations": 0,
+-  "experiments_checked": 3242,
++  "experiments_checked": 3243,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py b/python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py
+index d74dc1ce5a..3c5efbda4a 100644
+--- a/python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py
++++ b/python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py
+@@ -34,6 +34,7 @@ STANDARD_ATTACH_PATH = "standard_auto_model_for_causal_lm_target_modules"
+ WRAPPER_INNER_LINEAR_ATTACH_PATH = "wrapper_inner_linear_target_modules"
+ STANDARD_LORA_TARGET_MODULES = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+ INNER_LINEAR_LORA_TARGET_MODULES = [f"{name}.linear" for name in STANDARD_LORA_TARGET_MODULES]
++LORA_EXCLUDE_MODULES = ["vision_tower"]
+ SPEC_REFS = [
+     "REQ-CODE-4222",
+     "SCENARIO-CODE-4222-BLOCKED-PRECONDITION",
+@@ -152,6 +153,7 @@ def working_lora_config(target_modules: Sequence[str] | None = None) -> dict[str
+         "learning_rate": 2e-4,
+         "max_length": 1024,
+         "target_modules": list(target_modules or STANDARD_LORA_TARGET_MODULES),
++        "exclude_modules": list(LORA_EXCLUDE_MODULES),
+     }
+ 
+ 
+@@ -232,6 +234,7 @@ def _lora_config_kwargs(lora_config: Mapping[str, Any]) -> dict[str, Any]:
+         "lora_dropout": float(lora_config["lora_dropout"]),
+         "task_type": str(lora_config["task_type"]),
+         "target_modules": list(lora_config["target_modules"]),
++        "exclude_modules": list(lora_config.get("exclude_modules") or []),
+     }
+ 
+ 
+@@ -306,7 +309,6 @@ def run_lora_attach_and_step(
+     (seed_fn or _seed_torch)(random_seed)
+     model = load_model(model_id)
+     tokenizer = load_tokenizer(model_id)
+-    attach_error: Exception | None = None
+     attached_path = STANDARD_ATTACH_PATH
+     attached_lora_config = working_lora_config()
+     for target_modules, attach_path in (
+@@ -320,16 +322,12 @@ def run_lora_attach_and_step(
+             model = get_peft_model_fn(model, peft_config)
+             attached_path = attach_path
+             attached_lora_config = lora_config
+-            attach_error = None
+             break
+         except ValueError as exc:
+-            attach_error = exc
+             if attach_path == STANDARD_ATTACH_PATH and "Gemma4ClippableLinear" in str(exc):
+                 print("standard attach rejected Gemma4ClippableLinear; retrying inner .linear modules", flush=True)
+                 continue
+             raise
+-    if attach_error is not None:
+-        raise attach_error
+     trainable = trainable_param_count(model)
+     print(f"trainable_param_count={trainable}", flush=True)
+     if trainable <= 0:
+@@ -365,7 +363,7 @@ def run_lora_attach_and_step(
+     )
+ 
+ 
+-def _model_specs(cache_path: Path, lora_config: Mapping[str, Any]) -> dict[str, Any]:
++def _model_specs(cache_path: Path, lora_config: Mapping[str, Any], *, lora_attach_path: str) -> dict[str, Any]:
+     return {
+         "trainable_base": MODEL_ID,
+         "trainable_base_cache_path": str(cache_path),
+@@ -373,7 +371,7 @@ def _model_specs(cache_path: Path, lora_config: Mapping[str, Any]) -> dict[str,
+         "on_policy_generator": MODEL_ID,
+         "qwen_train_base_forbidden": True,
+         "load_method": 'transformers.AutoModelForCausalLM.from_pretrained("google/gemma-4-E4B-it")',
+-        "lora_attach_path": STANDARD_ATTACH_PATH,
++        "lora_attach_path": lora_attach_path,
+         "lora_config": _jsonable(lora_config),
+         "runner": "scripts/experiments/verifier_reward_code_lora_rft_3arm.py",
+     }
+@@ -411,7 +409,7 @@ def build_artifact(
+         "lora_attach_path": str(smoke.lora_attach_path),
+         "trainable_param_count": int(smoke.trainable_param_count),
+         "verifier_is_oracle": True,
+-        "model_specs": _model_specs(cache_path, attached_lora_config),
++        "model_specs": _model_specs(cache_path, attached_lora_config, lora_attach_path=smoke.lora_attach_path),
+         "random_seed": int(random_seed),
+         "reproducibility_checksum": checksum,
+         "field_principles": FIELD_PRINCIPLES,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 863a90ed51..a085afcd73 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-15T02:11:06.822509Z",
+-  "duration_s": 0.019593238830566406,
++  "run_date": "2026-06-15T02:39:15.411977Z",
++  "duration_s": 0.016916990280151367,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "b9c42078c790ffe98ba12eb4f24243439bc237e8032afb948319f5b1acdf5a44",
++  "reproducibility_checksum": "be59c30881615451c2959aac4de7c8831148201488a8330937cce63e0f7151b1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "990d16a6a83d6293bc0982d955355a521b41086e"
++    "adversarial_verify_version": "8c0ff9aed1bc08925f06b5af35d04c2293c30555"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 76d9874ee5..e430177e32 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-15T02:11:06.850514Z",
+-  "duration_s": 0.021266698837280273,
++  "run_date": "2026-06-15T02:39:15.438343Z",
++  "duration_s": 0.02211785316467285,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "c3e8324bc9893ef7d7543a39cd6424e83ac32c473e5c046fa5ca6320f38b079f",
++  "reproducibility_checksum": "50e7214de629d3ee3a4f67b1d0071a3321e44859d28a6dc50d5a07361f5a10ef",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "990d16a6a83d6293bc0982d955355a521b41086e"
++    "adversarial_verify_version": "8c0ff9aed1bc08925f06b5af35d04c2293c30555"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index eccfee8ca1..2e7a4260f5 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.0744800567626953,
++  "efficiency_gains_ms": 2.1092891693115234,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 7a8ecf8b6c..4aac952a50 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.0597992008551955e-05,
++  "duration_s": 3.517599543556571e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json b/results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json
+index fe95c1d4d4..bddfc03fe2 100644
+--- a/results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json
++++ b/results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json
+@@ -1,10 +1,10 @@
+ {
+   "acceptance_gate": {
+     "condition": "harness_smoke_passed true with trainable_param_count>0 and lora_attach_path recorded, OR an honest blocked_* verdict",
+-    "satisfied": false
++    "satisfied": true
+   },
+-  "created_at": "2026-06-15T02:26:55Z",
+-  "duration_s": 26.528906,
++  "created_at": "2026-06-15T02:36:58Z",
++  "duration_s": 14.064674,
+   "experiment": "experiment_4222_verifier_reward_lora_harness_fix_smoke",
+   "field_principles": {
+     "harness_smoke_passed": "BARE bool: B2's gate compares this raw value (gated-fields-must-be-bare); true iff LoRA attached with >0 trainable params AND 1 training step ran AND loss was finite on the fixture.",
+@@ -25,14 +25,17 @@
+     "size": 8,
+     "source": "stable_checkpoint_corpora"
+   },
+-  "harness_smoke_passed": false,
+-  "honest_verdict": "failed: verifier_reward_lora_harness_smoke_failed",
++  "harness_smoke_passed": true,
++  "honest_verdict": "complete: verifier_reward_lora_harness_smoke_passed",
+   "honest_verdict_principle": "Terminal-prefixed. A passing harness smoke OR an honest blocked_* is COMPLETE -- B2 gates on the smoke so a broken harness surfaces HERE, not as another failed training run.",
+-  "lora_attach_path": "standard_auto_model_for_causal_lm_target_modules",
++  "lora_attach_path": "wrapper_inner_linear_target_modules",
+   "model_specs": {
+     "load_method": "transformers.AutoModelForCausalLM.from_pretrained(\"google/gemma-4-E4B-it\")",
+-    "lora_attach_path": "standard_auto_model_for_causal_lm_target_modules",
++    "lora_attach_path": "wrapper_inner_linear_target_modules",
+     "lora_config": {
++      "exclude_modules": [
++        "vision_tower"
++      ],
+       "learning_rate": 0.0002,
+       "lora_alpha": 32,
+       "lora_dropout": 0.05,
+@@ -40,13 +43,13 @@
+       "method": "LoRA-SFT",
+       "r": 16,
+       "target_modules": [
+-        "q_proj",
+-        "k_proj",
+-        "v_proj",
+-        "o_proj",
+-        "gate_proj",
+-        "up_proj",
+-        "down_proj"
++        "q_proj.linear",
++        "k_proj.linear",
++        "v_proj.linear",
++        "o_proj.linear",
++        "gate_proj.linear",
++        "up_proj.linear",
++        "down_proj.linear"
+       ],
+       "task_type": "CAUSAL_LM"
+     },
+@@ -71,19 +74,25 @@
+     "stable_checkpoint_readable": true
+   },
+   "random_seed": 4198,
+-  "reproducibility_checksum": "sha256:bec941a849bab7de44103835d5334d47ddb4d75353391fad4f5f318045269603",
++  "reproducibility_checksum": "sha256:0eaa917b379feeaa63f34f11f6190bf6496f2eff3767fb41b502a0fdd883331c",
+   "schema": "carnot.experiment_4222_verifier_reward_lora_harness_fix_smoke.v1",
+   "spec_refs": [
+     "REQ-CODE-4222",
+     "SCENARIO-CODE-4222-BLOCKED-PRECONDITION",
+     "SCENARIO-CODE-4222-STANDARD-LORA-ATTACH"
+   ],
+-  "trainable_param_count": 0,
++  "trainable_param_count": 5701632,
+   "training_step": {
+-    "error": "ValueError: Target module Gemma4ClippableLinear(\n  (linear): Linear(in_features=768, out_features=768, bias=False)\n) is not supported. Currently, only the following modules are supported: `torch.nn.Linear`, `torch.nn.Embedding`, `torch.nn.Conv1d`, `torch.nn.Conv2d`, `torch.nn.Conv3d`, `transformers.pytorch_utils.Conv1D`, `torch.nn.MultiheadAttention.`.",
+-    "finite_loss": false,
+-    "loss": null,
+-    "progress_events": []
++    "error": null,
++    "finite_loss": true,
++    "loss": 2.2497692108154297,
++    "progress_events": [
++      {
++        "finite_loss": true,
++        "loss": 2.2497692108154297,
++        "step": 1
++      }
++    ]
+   },
+   "verifier_is_oracle": true
+ }
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 98111a92ef..ec8ab18789 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T02:10:57Z",
+-  "finished_at": "2026-06-15T02:10:57Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-15T02:39:06Z",
++  "finished_at": "2026-06-15T02:39:06Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 839a5e5bb7..6d28d20c35 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T02:10:57Z",
+-  "finished_at": "2026-06-15T02:10:57Z",
++  "started_at": "2026-06-15T02:39:06Z",
++  "finished_at": "2026-06-15T02:39:06Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index f8e5caa9d7..e7ef698865 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260615",
+-  "started_at": "2026-06-15T02:10:57Z",
+-  "finished_at": "2026-06-15T02:10:57Z",
++  "started_at": "2026-06-15T02:39:06Z",
++  "finished_at": "2026-06-15T02:39:06Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/verifier_reward_code_lora_rft_3arm.py b/scripts/experiments/verifier_reward_code_lora_rft_3arm.py
+index 2597420642..91fb9623cd 100644
+--- a/scripts/experiments/verifier_reward_code_lora_rft_3arm.py
++++ b/scripts/experiments/verifier_reward_code_lora_rft_3arm.py
+@@ -34,6 +34,7 @@ from carnot.verify.sandbox import sandboxed_exec_function  # noqa: E402
+ OUT = REPO_ROOT / "results" / "experiment_4197_verifier_reward_code_lora_rft_3arm_smoke.json"
+ LORA_TARGET_MODULES = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+ LORA_INNER_LINEAR_TARGET_MODULES = [f"{name}.linear" for name in LORA_TARGET_MODULES]
++LORA_EXCLUDE_MODULES = ["vision_tower"]
+ LORA_CHECKPOINT_EVERY_STEPS = 25
+ 
+ 
+@@ -162,9 +163,11 @@ def _train_lora_sft(
+         model = PeftModel.from_pretrained(model, output_dir, is_trainable=True)
+         lora_attach_path = "resume_existing_adapter"
+         attached_target_modules = None
++        attached_lora_config = None
+     else:
+         lora_attach_path = "standard_auto_model_for_causal_lm_target_modules"
+         attached_target_modules = LORA_TARGET_MODULES
++        attached_lora_config = None
+         for target_modules, attach_path in (
+             (LORA_TARGET_MODULES, "standard_auto_model_for_causal_lm_target_modules"),
+             (LORA_INNER_LINEAR_TARGET_MODULES, "wrapper_inner_linear_target_modules"),
+@@ -175,13 +178,24 @@ def _train_lora_sft(
+                 lora_dropout=0.05,
+                 task_type="CAUSAL_LM",
+                 target_modules=target_modules,
+-                exclude_modules=["vision_tower"],
++                exclude_modules=LORA_EXCLUDE_MODULES,
+             )
+             try:
+                 print(f"[{time.strftime('%H:%M:%S')}] lora_attach_path={attach_path}", flush=True)
+                 model = get_peft_model(model, lora)
+                 lora_attach_path = attach_path
+                 attached_target_modules = target_modules
++                attached_lora_config = {
++                    "method": "LoRA-SFT",
++                    "task_type": "CAUSAL_LM",
++                    "r": 16,
++                    "lora_alpha": 32,
++                    "lora_dropout": 0.05,
++                    "learning_rate": 2e-4,
++                    "max_length": 1024,
++                    "target_modules": list(target_modules),
++                    "exclude_modules": list(LORA_EXCLUDE_MODULES),
++                }
+                 break
+             except ValueError as exc:
+                 if attach_path == "standard_auto_model_for_causal_lm_target_modules" and "Gemma4ClippableLinear" in str(exc):
+@@ -197,10 +211,11 @@ def _train_lora_sft(
+         return {
+             "arm": arm_name,
+             "status": "blocked_no_trainable_lora_parameters",
+-                "n_examples": len(examples),
+-                "target_modules": attached_target_modules,
+-                "lora_attach_path": lora_attach_path,
+-            }
++            "n_examples": len(examples),
++            "target_modules": attached_target_modules,
++            "lora_attach_path": lora_attach_path,
++            "lora_config": attached_lora_config,
++        }
+     optimizer = torch.optim.AdamW((p for p in model.parameters() if p.requires_grad), lr=2e-4)
+     model.train()
+     steps = completed_steps
+@@ -282,6 +297,7 @@ def _train_lora_sft(
+         "trainable_params": trainable_params,
+         "lora_attach_path": lora_attach_path,
+         "target_modules": attached_target_modules,
++        "lora_config": attached_lora_config,
+         "output_dir": str(output_dir),
+         "progress_events": progress_events,
+     }
+diff --git a/tests/python/test_experiment_4222_verifier_reward_lora_harness_fix_smoke.py b/tests/python/test_experiment_4222_verifier_reward_lora_harness_fix_smoke.py
+index 712806f8f5..73519f90f5 100644
+--- a/tests/python/test_experiment_4222_verifier_reward_lora_harness_fix_smoke.py
++++ b/tests/python/test_experiment_4222_verifier_reward_lora_harness_fix_smoke.py
+@@ -131,6 +131,17 @@ def test_req_code_4222_fixture_and_checksum_are_deterministic(tmp_path: Path) ->
+     assert lora_config["target_modules"] == exp4222.STANDARD_LORA_TARGET_MODULES
+ 
+ 
++def test_scenario_code_4222_lora_config_excludes_vision_tower_wrappers() -> None:
++    """SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: PEFT skips Gemma4ClippableLinear vision modules."""
++
++    lora_config = exp4222.working_lora_config()
++    kwargs = exp4222._lora_config_kwargs(lora_config)
++
++    assert lora_config["target_modules"] == exp4222.STANDARD_LORA_TARGET_MODULES
++    assert lora_config["exclude_modules"] == ["vision_tower"]
++    assert kwargs["exclude_modules"] == ["vision_tower"]
++
++
+ def test_req_code_4222_fixture_fallback_and_jsonable_edges(tmp_path: Path) -> None:
+     """REQ-CODE-4222: fallback fixtures and serialization helpers are deterministic."""
+ 
+@@ -244,6 +255,32 @@ def test_scenario_code_4222_wrapper_inner_linear_fallback_attaches() -> None:
+     assert result.lora_config["target_modules"] == exp4222.INNER_LINEAR_LORA_TARGET_MODULES
+ 
+ 
++def test_scenario_code_4222_non_wrapper_peft_error_is_not_hidden() -> None:
++    """SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: unrelated PEFT errors stay visible."""
++
++    class FakeModel:
++        def parameters(self):
++            return []
++
++    class FakeLoraConfig:
++        def __init__(self, **_kwargs) -> None:
++            pass
++
++    with pytest.raises(ValueError, match="different PEFT failure"):
++        exp4222.run_lora_attach_and_step(
++            [{"prompt": "Complete f.", "completion": "def f(x):\n    return x\n"}],
++            model_id=exp4222.MODEL_ID,
++            random_seed=4198,
++            load_model=lambda _model_id: FakeModel(),
++            load_tokenizer=lambda _model_id: object(),
++            lora_config_cls=FakeLoraConfig,
++            get_peft_model_fn=lambda _model, _config: (_ for _ in ()).throw(
++                ValueError("different PEFT failure")
++            ),
++            seed_fn=lambda _seed: None,
++        )
++
++
+ def test_scenario_code_4222_zero_trainable_lora_is_failed_attach() -> None:
+     """SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: zero LoRA params cannot pass."""
+ 
+@@ -312,6 +349,37 @@ def test_scenario_code_4222_success_artifact_records_bare_gate_fields(tmp_path:
+     assert artifact["verifier_is_oracle"] is True
+     assert artifact["acceptance_gate"]["satisfied"] is True
+     assert artifact["model_specs"]["lora_config"]["target_modules"] == exp4222.STANDARD_LORA_TARGET_MODULES
++    assert artifact["model_specs"]["lora_attach_path"] == exp4222.STANDARD_ATTACH_PATH
++
++
++def test_scenario_code_4222_artifact_records_fallback_attach_path(tmp_path: Path) -> None:
++    """SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: model specs preserve the working attach path."""
++
++    stable = _stable_checkpoint(tmp_path)
++    cache = tmp_path / "models--google--gemma-4-E4B-it"
++    cache.mkdir()
++    inner_config = exp4222.working_lora_config(exp4222.INNER_LINEAR_LORA_TARGET_MODULES)
++
++    artifact = exp4222.build_artifact(
++        preconditions={"cuda_available": True, "nonqwen_base_cached": True},
++        fixture=exp4222.load_or_build_fixture(stable),
++        smoke=exp4222.SmokeResult(
++            True,
++            exp4222.WRAPPER_INNER_LINEAR_ATTACH_PATH,
++            123,
++            0.25,
++            [{"step": 1, "loss": 0.25}],
++            lora_config=inner_config,
++        ),
++        cache_path=cache,
++        lora_config=exp4222.working_lora_config(),
++        random_seed=4198,
++        duration_s=0.1,
++    )
++
++    assert artifact["lora_attach_path"] == exp4222.WRAPPER_INNER_LINEAR_ATTACH_PATH
++    assert artifact["model_specs"]["lora_attach_path"] == exp4222.WRAPPER_INNER_LINEAR_ATTACH_PATH
++    assert artifact["model_specs"]["lora_config"]["target_modules"] == exp4222.INNER_LINEAR_LORA_TARGET_MODULES
+ 
+ 
+ def test_scenario_code_4222_failed_and_default_smoke_paths(
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From fe723c094dca87d578d8c3ef2bc899edb7c76acd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 30 Aug 2026 16:50:45 -0400
+Subject: [PATCH 10440/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 94c939d7e5..e8b11f3961 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-08-30T20:35:46Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-08-30T20:50:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 640d760f97..97db113573 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16857,3 +16857,4 @@ The l |
+ | 2026-08-30 20:18 UTC | Conductor self-edit reverted | WARN | working-tree edit to research_conductor.py reverted; diff at 20260830T201812Z.pa |
+ | 2026-08-30 20:33 UTC | Compositional online constraint-routing comparison | OK | 111 passed, 1 warning in 43.77s |
+ | 2026-08-30 20:35 UTC | Conductor re-exec: fresh committed source | OK | 63c64c3af372 -> 765dc53838c6; argv preserved |
++| 2026-08-30 20:48 UTC | Cold causal-use, forgetting, poison, restart, and  | OK | 116 passed, 1 warning in 14.73s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f05b27bab5..7d6167c643 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3271677, "iteration": 1, "phase": "iteration_start", "started_at": "2026-08-30T20:35:46Z"}
+\ No newline at end of file
++{"pid": 3271677, "iteration": 2, "phase": "iteration_start", "started_at": "2026-08-30T20:50:37Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

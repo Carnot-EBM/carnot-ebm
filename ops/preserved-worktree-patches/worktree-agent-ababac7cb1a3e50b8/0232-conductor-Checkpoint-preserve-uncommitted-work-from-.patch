@@ -1,0 +1,44 @@
+From d475438f0e79a23040191a1064f43e834675e884 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 18:14:07 -0400
+Subject: [PATCH 00232/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index cae701a95e..92478da7f3 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 252, "phase": "iteration_start", "last_beat": "2026-06-02T21:55:51Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 253, "phase": "iteration_start", "last_beat": "2026-06-02T22:14:05Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7631cfd009..a8bddc37b7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7627,3 +7627,5 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-02 21:51 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3736-real-kill-gate-part-a-verdict.gree |
+ | 2026-06-02 21:53 UTC | EBT energy-descent GENERATION smoke on held-out GS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3736-real-kill-gate-part-a-verdict.gree |
+ | 2026-06-02 21:55 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
++| 2026-06-02 22:12 UTC | Thesis-A kill-gate part-(b) VERDICT: at EQUAL infe | OK | 129 passed in 5.99s |
++| 2026-06-02 22:14 UTC | THE THESIS TEST (kill-gate part b): matched-COMPUT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3737-ebt-generation-smoke) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9235e3f1f6..71e3eef728 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 252, "phase": "iteration_start", "started_at": "2026-06-02T21:55:51Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 253, "phase": "iteration_start", "started_at": "2026-06-02T22:14:05Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

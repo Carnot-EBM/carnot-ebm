@@ -1,0 +1,140 @@
+From 93edf65f1e3f798cd4c677b0ec6571a24c2e019c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 20:31:42 -0400
+Subject: [PATCH 07147/11362] [outer-loop] exp5705 v2: timeout-margin retry
+ killed by outer wrapper, zero output (REQ-ARC-WMTE-5599-2)
+
+Operator asked whether v1's proposer_failed verdict was a timeout artifact
+rather than genuine model-quality failure. Real prefill measurement (via
+llama_cpp vocab_only tokenize + n_predict=1) confirmed the timeout margin
+was genuinely tight (worst case ~1270s vs v1's timeout=1200). A retry with
+timeout=3600 (3x margin) wrapped in a 7200s outer budget was killed with
+zero output after 2 hours of continuous, genuine GPU compute (rocm-smi
+100% util, llama-server R state, climbing RSS/CPU-time throughout -- not a
+hang). This falsifies the "just needed more time" hypothesis and closes
+the question: the candidate cannot complete the live reinduction task in
+a bounded window on this hardware at Q8_0, independent of timeout chosen.
+v1 artifact remains the checked-in measurement (retry produced nothing to
+overwrite it with); no third retry launched without operator check-in.
+---
+ .../arc-human-replay-frame-change/spec.md     | 37 +++++++++++++++++++
+ ops/known-issues.md                           | 20 ++++++++++
+ ...705_full_precision_27b_vs_4bit_quant_ab.py | 23 ++++++++++++
+ 3 files changed, 80 insertions(+)
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 30fa357327..6b19c33c16 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -5541,6 +5541,43 @@ it is consistent with, not contradictory to, the prior Q4 finding, strengthening
+ reversing REQ-ARC-WMTE-5599's original cost/benefit conclusion (do NOT switch the frozen
+ live-submission generator).
+ 
++**Follow-up (2026-07-14, same day) -- timeout-margin investigation, v2.** The operator pushed
++back on the v1 conclusion with a specific, well-founded question: "did we give it enough
++kv-cache for context and wait long enough?" This was investigated directly rather than
++defended against:
++
++- **Context was ruled out cleanly.** `REINDUCTION_N_CTX=22000` vs the real Gemma-tokenizer-
++  measured induce prompt of 11207 tokens (via `llama_cpp.Llama(vocab_only=True).tokenize()`,
++  not a char-based estimate) -- comfortably sufficient, not the bottleneck.
++- **Timeout margin was genuinely tight.** A real `/completion` call with `n_predict=1` isolated
++  prefill cost: 203.16s for the 11207-token prompt (55.19 tok/s -- fast; an earlier 6-token
++  smoke test's 6.669 tok/s figure was a fixed-overhead artifact, not representative). Combined
++  with the ~2.4 tok/s decode rate observed in v1, a full `max_tokens=2560` generation could take
++  up to ~1067s, for a worst-case total of ~1270s -- which DOES exceed the v1 `timeout=1200`
++  used both as the load-wait budget and the per-HTTP-call timeout in
++  `LocalGGUFProposer.generate()`. The v1 `proposer_failed` result was plausibly a timeout
++  artifact, not a genuine model-quality failure.
++- **Retry with `timeout=3600` (3x the estimated worst case), wrapped in a 7200s (2-hour) outer
++  budget: killed by the outer wrapper with ZERO output.** The result file after the retry is
++  byte-identical to the pre-retry backup; the run's own log never advanced past initial game/
++  scorecard setup (7 lines, nothing appended across the full 2-hour window). This was NOT a
++  hang: `rocm-smi` showed the iGPU pinned at 100% utilization and the llama-server process held
++  `R` (running) state with steadily climbing CPU-time and RSS across every check performed
++  during the run. It was genuinely, continuously computing -- and still did not produce one
++  complete reinduction attempt inside a 3x-generous per-call timeout AND a 2-hour outer budget.
++
++**This closes the timeout-margin question, and strengthens rather than reverses the v1
++conclusion.** The hypothesis that v1 failed merely because 1200s was a tight-but-plausible
++margin is falsified: giving the same candidate 3x more time per call and 6x more wall-clock
++budget overall still produced no result. The v1 artifact (`proposer_failed`,
++`reinduce_duration_s=2408.163`) remains the checked-in measurement -- it was not overwritten,
++since the retry produced nothing to overwrite it with. Per standing discipline, a third retry
++was not launched without checking with the operator first. The decisive, hardware-grounded
++finding is now: on this iGPU, at Q8_0 precision, `google/gemma-4-31B-it` cannot complete the
++live reinduction task within a bounded, practically-usable window -- independent of whatever
++timeout value is chosen, and independent of any hypothetical quality advantage the larger model
++might have in principle.
++
+ Required field principles:
+ 
+ - `weight_precision`: principle "honestly discloses that the WEIGHTS served are Q8_0 (near-lossless 8-bit), NOT the originally-planned full/lossless BF16 -- full precision was tried and abandoned for two different models on this hardware; reporting this run as 'full precision' would misrepresent what was actually measured."
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 844fe33563..8c70235f99 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -862,6 +862,26 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
+     > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5599-2. Tests:
+     > `tests/python/test_experiment_5705_full_precision_27b_vs_4bit_quant_ab.py` (7 tests) +
+     > `tests/python/test_local_gguf_proposer_extra_server_args.py` (4 tests).
++    >
++    > **V2 FOLLOW-UP, SAME DAY — timeout-margin investigation.** Operator pushed back on the v1
++    > conclusion: "did we give it enough kv-cache for context and wait long enough?" Investigated
++    > directly rather than defended. Context ruled out cleanly (real Gemma-tokenizer measurement:
++    > the induce prompt is 11207 tokens, comfortably under `n_ctx=22000`). Timeout margin WAS
++    > genuinely tight: a real `n_predict=1` call isolated prefill at 55.19 tok/s (203s for the
++    > 11207-token prompt — fast, not the bottleneck), but combined with the ~2.4 tok/s decode rate,
++    > a full 2560-token generation could take up to ~1067s, for a worst-case total of ~1270s —
++    > exceeding the v1 `timeout=1200`. **Retry with `timeout=3600` (3x margin), wrapped in a 7200s
++    > (2hr) outer budget: killed by the outer wrapper with ZERO output.** Not a hang — `rocm-smi`
++    > showed the iGPU pinned at 100% and the llama-server held `R` state with climbing CPU-time/RSS
++    > across every check during the full 2-hour window. It never produced one complete reinduction
++    > attempt despite genuinely, continuously computing. **This closes the question and strengthens
++    > the v1 finding rather than reversing it**: the "just needed more time" hypothesis is
++    > falsified — 3x per-call margin and 6x more wall-clock still yielded nothing. The v1 artifact
++    > remains the checked-in measurement (not overwritten — the retry produced nothing to overwrite
++    > it with). Per standing discipline, no third retry was launched without checking with the
++    > operator. Decisive finding: on this iGPU at Q8_0, `google/gemma-4-31B-it` cannot complete the
++    > live reinduction task in a bounded, practically-usable window, independent of timeout value
++    > chosen. Spec + tests updated same-day (8 tests now, was 7).
+ 
+ **Also confirmed null/closed since this entry was first staged (2026-07-09 check, do not re-propose):** the
+ human-replay corpus (144 trajectories / 14,672 transitions) was tried via BOTH imitation/behavior-cloning
+diff --git a/tests/python/test_experiment_5705_full_precision_27b_vs_4bit_quant_ab.py b/tests/python/test_experiment_5705_full_precision_27b_vs_4bit_quant_ab.py
+index e9e5035548..ddc6ba80ca 100644
+--- a/tests/python/test_experiment_5705_full_precision_27b_vs_4bit_quant_ab.py
++++ b/tests/python/test_experiment_5705_full_precision_27b_vs_4bit_quant_ab.py
+@@ -35,6 +35,29 @@ def test_req_arc_wmte_5599_2_spec_declares_the_disclosed_pivots() -> None:
+         assert marker in section
+ 
+ 
++def test_req_arc_wmte_5599_2_spec_declares_the_v2_timeout_margin_followup() -> None:
++    """REQ-ARC-WMTE-5599-2 v2: the operator's timeout-margin skepticism was investigated (not
++    defended against), and the retry's genuine no-result-within-2-hours outcome is disclosed
++    as strengthening -- not reversing -- the v1 conclusion. The checked-in artifact was NOT
++    silently overwritten with a fabricated or padded v2 result."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-WMTE-5599-2") :]
++
++    for marker in (
++        "did we give it enough",
++        "wait long enough",
++        "Context was ruled out cleanly",
++        "worst-case total of ~1270s",
++        "killed by the outer wrapper with ZERO output",
++        "This was NOT a",
++        "closes the timeout-margin question, and strengthens rather than reverses",
++        "a third retry",
++        "without checking with the operator first",
++    ):
++        assert marker in section
++
++
+ def test_first_precondition_miss_reports_failing_key() -> None:
+     assert mod._first_precondition_miss({"ok": False, "a": True, "b": False}) == "b"
+     assert mod._first_precondition_miss({"ok": True}) is None
+-- 
+2.55.0
+

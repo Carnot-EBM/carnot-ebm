@@ -1,0 +1,4334 @@
+From c179245e74aa3c0101636d89db635c0f5cf90d97 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 1 Sep 2026 23:35:35 -0400
+Subject: [PATCH 10712/11362] [conductor] V601 evidence and method-change
+ contract
+
+Automated research step by research conductor.
+Task ID: exp6865-v601-evidence-method-change-contract
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  134 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...65_v601_evidence_method_change_contract.py | 1315 ++++++++++
+ ..._v601_evidence_method_change_contract.json | 2334 +++++++++++++++++
+ ...65_v601_evidence_method_change_contract.py |   22 +
+ ...65_v601_evidence_method_change_contract.py |  458 ++++
+ 6 files changed, 4264 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6865_v601_evidence_method_change_contract.py
+ create mode 100644 results/experiment_6865_v601_evidence_method_change_contract.json
+ create mode 100644 scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py
+ create mode 100644 tests/python/test_experiment_6865_v601_evidence_method_change_contract.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 0439564ab1..0cfea3c5dc 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -60373,3 +60373,137 @@ null, disqualified, blocked, or partial classes.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6861 and SCENARIO-REPORT-6861-* | Implemented (`python/carnot/experiment_6861_v600_branch_retirement_evidence_contract.py`, `scripts/experiments/experiment_6861_v600_branch_retirement_evidence_contract.py`, `results/experiment_6861_v600_branch_retirement_evidence_contract.json`) | Implemented (`tests/python/test_experiment_6861_v600_branch_retirement_evidence_contract.py`; 15 focused tests; 100% scoped statement coverage) |
++
++### REQ-REPORT-6865: V601 Evidence Contract SHALL Freeze Changed Methods From Primary Records
++
++Exp6865 SHALL perform deterministic, read-only CPU reduction. It SHALL not run
++model inference, token scoring, ARC rollouts, or memory-policy experiments. It
++SHALL require the V600 artifacts for Exp6861 through Exp6864. It SHALL also
++require the active V601 roadmap, the completed V600 roadmap ledger, the
++conductor record, the exclusion manifest, and the ARC truncation note. A failed
++precondition SHALL produce a complete blocked artifact. The gate summary SHALL
++name the failed check, expected value, and observed value.
++
++The reducer SHALL reconstruct all four V600 task identifiers and deliverables
++from the completed roadmap ledger. It SHALL read verdict strings and classes
++from the primary artifacts. It SHALL preserve the conductor result separately.
++It SHALL preserve the Exp6864 gate diagnostic as evidence. It SHALL recompute
++current adversarial status with the checked-in verifier. Stored and current
++adversarial states SHALL remain separate when they disagree.
++
++The reducer SHALL prove that Exp6850 and Exp6863 stored different tokenizer
++receipt field sets. It SHALL record both exact field sets and their set
++difference. It SHALL mark the old cross-schema hash comparison invalid. It
++SHALL not infer that either Gemma tokenizer is equal to or different from the
++other tokenizer.
++
++The artifact SHALL freeze `canonical_tokenizer_payload_schema` as version
++`v1`. The schema SHALL include semantic vocabulary metadata, special-token
++identifiers, add-BOS behavior, chat-template identity, tokenization settings,
++and frozen probe outputs. The schema SHALL exclude timestamps, paths, prose
++detail, nested receipt hashes, and wrapper-only fields. Canonical JSON SHALL
++use sorted keys and UTF-8. Future comparisons SHALL use the same schema version
++on both sides.
++
++The artifact SHALL freeze all 100 accepted Exp6862 group identities. It SHALL
++record the Exp6862 source SHA-256 and an ordered identity-manifest SHA-256.
++Downstream work MAY filter cells from this bank. It SHALL NOT regenerate,
++replace, or relabel the bank.
++
++The artifact SHALL separate decision-time memory fields from offline-only
++supervision fields. A decision SHALL use only the prior bounded reliability
++state and decision-time fields. A later exact outcome MAY update the state only
++after the action closes. The update contract SHALL require finite values,
++symmetry, a frozen entry bound, a frozen spectral bound, and a state checksum.
++The quarantine contract SHALL freeze exact coverage, preservation, source
++faithfulness, provenance, old-family retention, delayed invalidation,
++tombstone, replay, restart, and byte-exact rollback checks.
++
++The ARC context contract SHALL require prompt identity and token count, slot
++identity and capacity, actual `n_ctx`, requested completion tokens, generated
++reasoning tokens, final-channel output, truncation evidence, VRAM evidence, and
++measured headroom. It SHALL preserve the full shared-pool diagnostic. A repair
++that only raises the completion-token limit SHALL remain retired. The contract
++SHALL require pool and slot measurement before a context-size change.
++
++Each contract and changed-mechanism boundary SHALL carry its own source hashes
++and contract hash. Exp6865 SHALL set `v601_evidence_contract_ready_score` to one
++only when every required source is readable, V600 task reconstruction is
++complete, all contract hashes replay, and the proposed boundaries do not reopen
++an excluded scope.
++
++The artifact SHALL include `field_principles`, `preconditions_checked`,
++`inference_substrate`, `duration_s`, `source_artifact_hashes`,
++`roadmap_task_rows`, `conductor_gate_rows`,
++`stored_vs_live_adversarial_rows`, `v600_branch_dispositions`,
++`tokenizer_receipt_schema_diff`, `canonical_tokenizer_payload_schema`,
++`frozen_semantic_probe_contract`, `frozen_contrast_bank_identity_manifest`,
++`memory_observability_contract`, `memory_transition_quarantine_contract`,
++`arc_context_headroom_contract`, `retired_scope_non_reopen_manifest`,
++`random_seed`, `reproducibility_checksum`,
++`v601_evidence_contract_ready_score`, `gate_check_summary`,
++`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
++`inference_substrate` SHALL equal
++`deterministic CPU read-only evidence reduction`. `verifier_is_oracle` SHALL be
++false. `verdict_class` SHALL use the closed project enum. `honest_verdict` SHALL
++start with `complete_`.
++
++#### SCENARIO-REPORT-6865-MISSING-ARTIFACT: Missing Primary Evidence Blocks
++
++**Given** a required V600 artifact is missing or unreadable
++**When** Exp6865 checks its preconditions
++**Then** readiness is zero
++**And** the complete blocked artifact names the exact path and failure.
++
++**Spec traces:** REQ-REPORT-6865
++
++#### SCENARIO-REPORT-6865-SYNTHETIC-GATE: Gate Artifacts Are Terminal Evidence
++
++**Given** a conductor-created blocked artifact has no project verdict class
++**When** Exp6865 reads its typed gate diagnostic
++**Then** it derives class `blocked`
++**And** it preserves the upstream, field, operator, expected value, and observed value.
++
++**Spec traces:** REQ-REPORT-6865
++
++#### SCENARIO-REPORT-6865-WRAPPED-FIELD: Principle Wrappers Do Not Hide Values
++
++**Given** a required scalar or list uses a `{principle, value}` wrapper
++**When** Exp6865 reads that field
++**Then** it reads the wrapped value
++**And** it does not unwrap an ordinary dictionary that lacks both wrapper keys.
++
++**Spec traces:** REQ-REPORT-6865
++
++#### SCENARIO-REPORT-6865-STALE-ROADMAP: A Stale Active Roadmap Blocks
++
++**Given** the live roadmap does not identify milestone `2026.09.601`
++**When** Exp6865 checks its active task record
++**Then** readiness is zero
++**And** the gate summary records the expected and observed milestones.
++
++**Spec traces:** REQ-REPORT-6865
++
++#### SCENARIO-REPORT-6865-HASH-SCHEMA: Different Receipt Schemas Are Incomparable
++
++**Given** two tokenizer receipt hashes come from different field sets or schema versions
++**When** Exp6865 evaluates the comparison
++**Then** it records the exact field-set difference
++**And** it makes no tokenizer equality or change claim.
++
++**Spec traces:** REQ-REPORT-6865
++
++#### SCENARIO-REPORT-6865-RETIRED-MAX-TOKEN: Token-Budget-Only Repair Stays Retired
++
++**Given** a proposed ARC remedy only raises induce or refactor completion tokens
++**When** Exp6865 checks the exclusion manifest
++**Then** it marks the remedy as a retired-scope reopen
++**And** readiness remains zero until a different mechanism is specified.
++
++**Spec traces:** REQ-REPORT-6865
++
++## Implementation Status (REQ-REPORT-6865)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6865 and SCENARIO-REPORT-6865-* | Implemented (`python/carnot/experiment_6865_v601_evidence_method_change_contract.py`, `scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py`, `results/experiment_6865_v601_evidence_method_change_contract.json`) | Implemented (`tests/python/test_experiment_6865_v601_evidence_method_change_contract.py`; 20 focused tests; 100% scoped statement coverage) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ee38be03fc..cff74e2d8f 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5246,
++  "experiments_checked": 5247,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6865_v601_evidence_method_change_contract.py b/python/carnot/experiment_6865_v601_evidence_method_change_contract.py
+new file mode 100644
+index 0000000000..71311c986e
+--- /dev/null
++++ b/python/carnot/experiment_6865_v601_evidence_method_change_contract.py
+@@ -0,0 +1,1315 @@
++"""Build the read-only V601 evidence and method-change contract.
++
++The reducer reads checked-in evidence and recomputes small manifests. It does
++not tokenize text, run a model, execute ARC, or update memory. This boundary
++keeps method design separate from the science tasks that will test it later.
++
++Spec refs: REQ-REPORT-6865 and SCENARIO-REPORT-6865-*.
++"""
++
++from __future__ import annotations
++
++import argparse
++from copy import deepcopy
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import re
++import sys
++import time
++from typing import Any, Mapping, Sequence
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++OUTPUT_PATH = Path("results/experiment_6865_v601_evidence_method_change_contract.json")
++EXPECTED_ACTIVE_MILESTONE = "2026.09.601"
++V600_MILESTONE = "2026.09.600"
++EXP6865_TASK_ID = "exp6865-v601-evidence-method-change-contract"
++INFERENCE_SUBSTRATE = "deterministic CPU read-only evidence reduction"
++RANDOM_SEED = 6865
++TOKENIZER_PROBE = " execution readiness is checked without a scientific label."
++
++V600_TASK_IDS = (
++    "exp6861-v600-branch-retirement-evidence-contract",
++    "exp6862-dual-side-semantic-contrast-bank",
++    "exp6863-tokenizer-aware-semantic-contrast-preregistration",
++    "exp6864-three-family-semantic-contrast-scoring-stream",
++)
++V600_ARTIFACT_PATHS = {
++    V600_TASK_IDS[0]: "results/experiment_6861_v600_branch_retirement_evidence_contract.json",
++    V600_TASK_IDS[1]: "results/experiment_6862_dual_side_semantic_contrast_bank.json",
++    V600_TASK_IDS[2]: (
++        "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json"
++    ),
++    V600_TASK_IDS[3]: "results/experiment_6864_three_family_semantic_contrast_scoring_stream.json",
++}
++DEFAULT_SOURCE_PATHS = {
++    "exp6850": "results/experiment_6850_three_family_scoring_admission_canary.json",
++    "exp6856": "results/experiment_6856_sealed_risk_sensitive_learning_audit.json",
++    "exp6859": "results/experiment_6859_first_party_tool_gap_receipt_wiring.json",
++    "exp6861": V600_ARTIFACT_PATHS[V600_TASK_IDS[0]],
++    "exp6862": V600_ARTIFACT_PATHS[V600_TASK_IDS[1]],
++    "exp6863": V600_ARTIFACT_PATHS[V600_TASK_IDS[2]],
++    "exp6864": V600_ARTIFACT_PATHS[V600_TASK_IDS[3]],
++    "active_roadmap": "research-roadmap.yaml",
++    "completed_roadmap": "research-complete.yaml",
++    "conductor_log": "ops/conductor-log.md",
++    "exclusion_manifest": "ops/exclusion_manifest.yaml",
++    "arc_truncation_note": (
++        "docs/research-notes/induce-shared-pool-truncation-2026-09-02.md"
++    ),
++    "adversarial_verifier": "scripts/adversarial_verify.py",
++}
++OWN_SOURCE_PATHS = {
++    "module": "python/carnot/experiment_6865_v601_evidence_method_change_contract.py",
++    "wrapper": "scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py",
++    "focused_tests": (
++        "tests/python/test_experiment_6865_v601_evidence_method_change_contract.py"
++    ),
++    "spec": "openspec/capabilities/research-reporting/spec.md",
++}
++
++CLOSED_VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++CONTRACT_FIELDS = (
++    "canonical_tokenizer_payload_schema",
++    "frozen_semantic_probe_contract",
++    "frozen_contrast_bank_identity_manifest",
++    "memory_observability_contract",
++    "memory_transition_quarantine_contract",
++    "arc_context_headroom_contract",
++    "retired_scope_non_reopen_manifest",
++)
++REQUIRED_ARTIFACT_FIELDS = {
++    "schema",
++    "experiment_id",
++    "run_date",
++    "status",
++    "field_principles",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "source_artifact_hashes",
++    "roadmap_task_rows",
++    "conductor_gate_rows",
++    "stored_vs_live_adversarial_rows",
++    "v600_branch_dispositions",
++    "tokenizer_receipt_schema_diff",
++    *CONTRACT_FIELDS,
++    "random_seed",
++    "reproducibility_checksum",
++    "v601_evidence_contract_ready_score",
++    "gate_check_summary",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++}
++
++FIELD_PRINCIPLES = {
++    "schema": "A versioned artifact schema prevents silent consumer drift.",
++    "experiment_id": "The fixed identifier binds this contract to its roadmap task.",
++    "run_date": "The operator date distinguishes this reduction from later evidence states.",
++    "status": "The status records that the reducer reached a terminal artifact write.",
++    "field_principles": "One reason per field keeps schema compliance tied to its purpose.",
++    "preconditions_checked": "Exact source checks make a blocked reduction diagnosable.",
++    "inference_substrate": "The substrate proves that no science or model run occurred.",
++    "duration_s": "Measured wall time makes the local reduction operationally auditable.",
++    "source_artifact_hashes": "Source hashes bind every frozen statement to exact bytes.",
++    "roadmap_task_rows": "Task rows prevent a V600 task from leaving the evidence denominator.",
++    "conductor_gate_rows": "Conductor rows preserve execution state apart from artifact claims.",
++    "stored_vs_live_adversarial_rows": "Separate states expose verifier drift and unstamped warnings.",
++    "v600_branch_dispositions": "Branch rows preserve null and blocked outcomes without promotion.",
++    "tokenizer_receipt_schema_diff": "Exact field sets prove why the old hash comparison is invalid.",
++    "canonical_tokenizer_payload_schema": "One semantic schema makes future tokenizer comparisons valid.",
++    "frozen_semantic_probe_contract": "Frozen probes prevent comparison inputs from changing later.",
++    "frozen_contrast_bank_identity_manifest": "Bank identities stop downstream cell filtering from becoming regeneration.",
++    "memory_observability_contract": "The observability split prevents future outcomes from selecting actions.",
++    "memory_transition_quarantine_contract": "Exact checks stop unsafe writes before admission.",
++    "arc_context_headroom_contract": "Full headroom fields separate shared-pool truncation from token limits.",
++    "retired_scope_non_reopen_manifest": "Retirement rows stop changed labels from reopening failed mechanisms.",
++    "random_seed": "The fixed seed freezes any ordered manifest operation.",
++    "reproducibility_checksum": "One checksum binds the deterministic output contract.",
++    "v601_evidence_contract_ready_score": "Downstream gates consume this exact readiness field.",
++    "gate_check_summary": "Expected and observed values explain every blocked verdict.",
++    "verifier_is_oracle": "False prevents this evidence reducer from authorizing its own claims.",
++    "verdict_class": "The closed class states the contract's evidence boundary.",
++    "honest_verdict": "A terminal prefix lets the conductor classify the result safely.",
++}
++
++
++def canonical_json(value: Any) -> bytes:
++    """Return stable UTF-8 JSON bytes for content identities."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode(
++        "utf-8"
++    )
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return the project SHA-256 form for exact bytes."""
++
++    return f"sha256:{hashlib.sha256(value).hexdigest()}"
++
++
++def sha256_path(path: Path) -> str:
++    """Hash one file, or keep a missing file visible as an empty digest."""
++
++    if not path.is_file():
++        return ""
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return f"sha256:{digest.hexdigest()}"
++
++
++def unwrap_principle(value: Any) -> Any:
++    """Unwrap only the explicit two-key field convention.
++
++    Ordinary dictionaries can contain a key named ``value``. Requiring both
++    wrapper keys avoids erasing such dictionaries during evidence reduction.
++    """
++
++    if isinstance(value, Mapping) and "principle" in value and "value" in value:
++        return value["value"]
++    return value
++
++
++def _check(check: str, expected: Any, observed: Any, passed: bool) -> JsonDict:
++    """Build one gate row with exact expected and observed values."""
++
++    return {
++        "check": check,
++        "expected": expected,
++        "observed": observed,
++        "passed": bool(passed),
++    }
++
++
++def _gate_summary(checks: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Summarize checks while retaining the first exact failure."""
++
++    failures = [dict(row) for row in checks if row.get("passed") is not True]
++    first = failures[0] if failures else None
++    return {
++        "checks": [dict(row) for row in checks],
++        "passed": not failures,
++        "failed_check": first.get("check") if first else None,
++        "expected": first.get("expected") if first else "all checks pass",
++        "observed": first.get("observed") if first else "all checks pass",
++        "failed_checks": failures,
++    }
++
++
++def active_roadmap_check(roadmap: Mapping[str, Any]) -> JsonDict:
++    """Require the live V601 task and its exact output path."""
++
++    milestone = str(unwrap_principle(roadmap.get("milestone")) or "")
++    tasks_value = unwrap_principle(roadmap.get("tasks"))
++    tasks = tasks_value if isinstance(tasks_value, list) else []
++    task = next(
++        (
++            row
++            for row in tasks
++            if isinstance(row, Mapping) and unwrap_principle(row.get("id")) == EXP6865_TASK_ID
++        ),
++        None,
++    )
++    deliverable = unwrap_principle(task.get("deliverable")) if isinstance(task, Mapping) else None
++    passed = milestone == EXPECTED_ACTIVE_MILESTONE and deliverable == OUTPUT_PATH.as_posix()
++    observed: Any = milestone
++    if milestone == EXPECTED_ACTIVE_MILESTONE and not passed:
++        observed = {"task_id": EXP6865_TASK_ID, "deliverable": deliverable}
++    expected: Any = EXPECTED_ACTIVE_MILESTONE
++    if milestone == EXPECTED_ACTIVE_MILESTONE:
++        expected = {"task_id": EXP6865_TASK_ID, "deliverable": OUTPUT_PATH.as_posix()}
++    return _check("active_v601_roadmap", expected, observed, passed)
++
++
++def _completed_v600_tasks(completed: Mapping[str, Any]) -> list[JsonDict]:
++    """Read the archived V600 task rows without consulting current prompts."""
++
++    milestones_value = unwrap_principle(completed.get("milestones"))
++    milestones = milestones_value if isinstance(milestones_value, list) else []
++    milestone = next(
++        (
++            row
++            for row in milestones
++            if isinstance(row, Mapping) and str(unwrap_principle(row.get("id"))) == V600_MILESTONE
++        ),
++        None,
++    )
++    tasks_value = unwrap_principle(milestone.get("tasks")) if isinstance(milestone, Mapping) else []
++    return [dict(row) for row in tasks_value if isinstance(row, Mapping)] if isinstance(tasks_value, list) else []
++
++
++def _read_document(path: Path) -> tuple[Any, str | None]:
++    """Read one required source and report malformed content as evidence."""
++
++    try:
++        text = path.read_text(encoding="utf-8")
++        if not text.strip():
++            return None, "empty"
++        if path.suffix == ".json":
++            value = json.loads(text)
++            if not isinstance(value, Mapping):
++                return None, "json_object_required"
++            return dict(value), None
++        if path.suffix in {".yaml", ".yml"}:
++            value = yaml.safe_load(text)
++            if not isinstance(value, Mapping):
++                return None, "yaml_mapping_required"
++            return dict(value), None
++        return text, None
++    except (OSError, UnicodeError, json.JSONDecodeError, yaml.YAMLError) as exc:
++        return None, f"{type(exc).__name__}:{exc}"
++
++
++def inspect_preconditions(
++    root: Path, source_paths: Mapping[str, str] = DEFAULT_SOURCE_PATHS
++) -> JsonDict:
++    """Load all evidence inputs and fail closed on any unreadable source."""
++
++    documents: dict[str, Any] = {}
++    source_rows: list[JsonDict] = []
++    source_hashes: dict[str, JsonDict] = {}
++    unreadable: list[JsonDict] = []
++    for source_id, relative in source_paths.items():
++        path = root / relative
++        value, error = _read_document(path)
++        digest = sha256_path(path)
++        row = {
++            "source_id": source_id,
++            "path": relative,
++            "readable": error is None,
++            "sha256": digest,
++            "error": error,
++        }
++        source_rows.append(row)
++        source_hashes[source_id] = {"path": relative, "sha256": digest}
++        if error is None:
++            documents[source_id] = value
++        else:
++            unreadable.append(row)
++
++    checks = [
++        _check(
++            "required_source_readability",
++            "all required sources readable",
++            [
++                {"source_id": row["source_id"], "path": row["path"], "error": row["error"]}
++                for row in unreadable
++            ],
++            not unreadable,
++        )
++    ]
++    roadmap = documents.get("active_roadmap")
++    checks.append(active_roadmap_check(roadmap if isinstance(roadmap, Mapping) else {}))
++
++    completed = documents.get("completed_roadmap")
++    archived_tasks = _completed_v600_tasks(completed if isinstance(completed, Mapping) else {})
++    observed_ids = [str(unwrap_principle(row.get("id")) or "") for row in archived_tasks]
++    checks.append(
++        _check("completed_v600_task_set", list(V600_TASK_IDS), observed_ids, observed_ids == list(V600_TASK_IDS))
++    )
++
++    conductor = documents.get("conductor_log")
++    conductor_text = conductor if isinstance(conductor, str) else ""
++    conductor_markers = [
++        "Milestone 2026.09.600 activated",
++        "V600 branch retirement and evidence contract",
++        "Dual-side exact semantic contrast bank",
++        "Tokenizer-aware nuisance and split preregistration",
++        "Three-family semantic contrast scoring stream",
++    ]
++    missing_markers = [marker for marker in conductor_markers if marker not in conductor_text]
++    checks.append(_check("v600_conductor_record", [], missing_markers, not missing_markers))
++
++    exclusion = documents.get("exclusion_manifest")
++    extras = exclusion.get("retired_extras") if isinstance(exclusion, Mapping) else []
++    retired_ids = {
++        str(row.get("id")) for row in extras if isinstance(row, Mapping) and row.get("id")
++    } if isinstance(extras, list) else set()
++    checks.append(
++        _check(
++            "max_token_retirement_record",
++            "arc-induce-completion-budget-raise",
++            "arc-induce-completion-budget-raise" if "arc-induce-completion-budget-raise" in retired_ids else None,
++            "arc-induce-completion-budget-raise" in retired_ids,
++        )
++    )
++
++    note = documents.get("arc_truncation_note")
++    note_text = note if isinstance(note, str) else ""
++    note_markers = [
++        "shared context pool",
++        "raising max_tokens would make this worse",
++        "n_ctx=49152",
++    ]
++    note_casefolded = note_text.casefold()
++    missing_note_markers = [marker for marker in note_markers if marker not in note_casefolded]
++    checks.append(_check("arc_truncation_note_contract", [], missing_note_markers, not missing_note_markers))
++    return {
++        "documents": documents,
++        "source_rows": source_rows,
++        "source_hashes": source_hashes,
++        "gate_check_summary": _gate_summary(checks),
++    }
++
++
++def read_terminal_verdict(payload: Mapping[str, Any]) -> tuple[str, str]:
++    """Read a terminal verdict and recognize conductor gate artifacts."""
++
++    honest = str(unwrap_principle(payload.get("honest_verdict")) or "")
++    verdict_class = unwrap_principle(payload.get("verdict_class"))
++    if verdict_class in CLOSED_VERDICT_CLASSES:
++        return honest, str(verdict_class)
++    if payload.get("schema") == "blocked_gate_check_v1" or (
++        payload.get("status") == "blocked" and payload.get("blocked_at_layer")
++    ):
++        return honest, "blocked"
++    return honest, "partial"
++
++
++def normalized_gate_rows(payload: Mapping[str, Any]) -> list[JsonDict]:
++    """Normalize source gates without changing expected or observed values."""
++
++    gates_value = unwrap_principle(payload.get("gates_evaluated"))
++    if not isinstance(gates_value, list):
++        summary = unwrap_principle(payload.get("gate_check_summary"))
++        gates_value = summary.get("checks") if isinstance(summary, Mapping) else []
++    rows: list[JsonDict] = []
++    for gate in gates_value if isinstance(gates_value, list) else []:
++        if not isinstance(gate, Mapping):
++            continue
++        observed = gate.get("actual") if "actual" in gate else gate.get("observed")
++        rows.append(
++            {
++                "upstream": gate.get("upstream"),
++                "artifact_field": gate.get("artifact_field") or gate.get("check"),
++                "operator": gate.get("op") or gate.get("operator") or "check",
++                "expected": deepcopy(gate.get("expected")),
++                "observed": deepcopy(observed),
++                "passed": gate.get("passed"),
++            }
++        )
++    return rows
++
++
++def build_roadmap_task_rows(
++    completed: Mapping[str, Any], payloads: Mapping[str, Mapping[str, Any]]
++) -> list[JsonDict]:
++    """Join archived roadmap rows to their exact terminal artifacts."""
++
++    archived = {str(unwrap_principle(row.get("id"))): row for row in _completed_v600_tasks(completed)}
++    rows: list[JsonDict] = []
++    for task_id in V600_TASK_IDS:
++        roadmap = archived.get(task_id, {})
++        payload = payloads.get(task_id, {})
++        honest, verdict_class = read_terminal_verdict(payload)
++        rows.append(
++            {
++                "task_id": task_id,
++                "title": unwrap_principle(roadmap.get("title")),
++                "deliverable": unwrap_principle(roadmap.get("deliverable")),
++                "roadmap_result": unwrap_principle(roadmap.get("result")),
++                "honest_verdict": honest,
++                "verdict_class": verdict_class,
++                "gate_fields": normalized_gate_rows(payload),
++                "stored_flagged_adversarial": (
++                    unwrap_principle(payload.get("flagged_adversarial"))
++                    if "flagged_adversarial" in payload
++                    else None
++                ),
++                "source_sha256": "",
++            }
++        )
++    return rows
++
++
++def _conductor_records(text: str) -> list[JsonDict]:
++    """Parse the four-column conductor table without reading free prose."""
++
++    pattern = re.compile(
++        r"^\|\s*(?P<timestamp>[^|]+?)\s*\|\s*(?P<title>[^|]+?)\s*\|"
++        r"\s*(?P<status>[^|]+?)\s*\|\s*(?P<detail>[^|]*?)\s*\|$"
++    )
++    rows: list[JsonDict] = []
++    for line in text.splitlines():
++        match = pattern.match(line)
++        if match:
++            rows.append({key: value.strip() for key, value in match.groupdict().items()})
++    return rows
++
++
++def build_conductor_gate_rows(text: str, task_rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """Preserve each V600 terminal conductor state and its gate fields."""
++
++    records = _conductor_records(text)
++    rows: list[JsonDict] = []
++    for task in task_rows:
++        title = str(task.get("title") or "")
++        record = next(
++            (
++                row
++                for row in records
++                if title.startswith(row["title"]) or row["title"].startswith(title)
++            ),
++            {},
++        )
++        rows.append(
++            {
++                "task_id": task.get("task_id"),
++                "timestamp": record.get("timestamp"),
++                "conductor_status": record.get("status", "missing"),
++                "conductor_detail": record.get("detail"),
++                "is_gate_block": record.get("status") == "GATE_BLOCK",
++                "gate_fields": deepcopy(task.get("gate_fields") or []),
++            }
++        )
++    return rows
++
++
++def _load_validator(root: Path) -> Any:
++    """Load the exact verifier source that is included in the source hashes."""
++
++    path = root / DEFAULT_SOURCE_PATHS["adversarial_verifier"]
++    module_name = "_exp6865_adversarial_verify"
++    spec = importlib.util.spec_from_file_location(module_name, path)
++    if spec is None or spec.loader is None:
++        raise RuntimeError("adversarial verifier import failed")
++    module = importlib.util.module_from_spec(spec)
++    sys.modules[module_name] = module
++    spec.loader.exec_module(module)
++    return module.verify_artifact
++
++
++def collect_live_adversarial_reports(root: Path) -> dict[str, JsonDict]:
++    """Re-run the current read-only verifier for each V600 artifact."""
++
++    verify_artifact = _load_validator(root)
++    reports: dict[str, JsonDict] = {}
++    for task_id, relative in V600_ARTIFACT_PATHS.items():
++        reports[task_id] = dict(verify_artifact(root / relative))
++    return reports
++
++
++def stored_vs_live_adversarial_rows(
++    payloads: Mapping[str, Mapping[str, Any]], reports: Mapping[str, Mapping[str, Any]]
++) -> list[JsonDict]:
++    """Keep stored determinations separate from current verifier output."""
++
++    rows: list[JsonDict] = []
++    for task_id in V600_TASK_IDS:
++        payload = payloads.get(task_id, {})
++        stored = (
++            unwrap_principle(payload.get("flagged_adversarial"))
++            if "flagged_adversarial" in payload
++            else None
++        )
++        stored_status = "flagged" if stored is True else "clear" if stored is False else "unstamped"
++        report = reports.get(task_id, {})
++        flags = [dict(row) for row in report.get("flags", []) if isinstance(row, Mapping)]
++        severities = {str(row.get("severity") or "").lower() for row in flags}
++        live_status = "critical" if "critical" in severities else "warn" if flags else "clean"
++        disagreement = (stored is True and live_status == "clean") or (
++            stored is not True and live_status != "clean"
++        )
++        rows.append(
++            {
++                "task_id": task_id,
++                "stored_status": stored_status,
++                "stored_flagged_adversarial": stored,
++                "stored_corrigendum_pending": deepcopy(payload.get("corrigendum_pending")),
++                "live_status": live_status,
++                "live_flag_count": len(flags),
++                "live_flags": flags,
++                "live_gate_version": report.get("gate_version"),
++                "disagreement": disagreement,
++            }
++        )
++    return rows
++
++
++def _receipt_fields(payload: Mapping[str, Any]) -> tuple[list[str], list[JsonDict]]:
++    """Return the exact stored field union and one field set per model."""
++
++    receipts_value = unwrap_principle(payload.get("tokenizer_receipts"))
++    receipts = receipts_value if isinstance(receipts_value, list) else []
++    rows = [dict(row) for row in receipts if isinstance(row, Mapping)]
++    field_sets = [
++        {"hf_id": row.get("hf_id"), "fields": sorted(str(key) for key in row)} for row in rows
++    ]
++    fields = sorted({str(key) for row in rows for key in row})
++    return fields, field_sets
++
++
++def tokenizer_receipt_schema_diff(exp6850: Mapping[str, Any], exp6863: Mapping[str, Any]) -> JsonDict:
++    """Prove schema mismatch without interpreting the tokenizer hashes."""
++
++    fields_6850, model_fields_6850 = _receipt_fields(exp6850)
++    fields_6863, model_fields_6863 = _receipt_fields(exp6863)
++    set_6850 = set(fields_6850)
++    set_6863 = set(fields_6863)
++    receipts_6850 = {
++        str(row.get("hf_id")): row
++        for row in unwrap_principle(exp6850.get("tokenizer_receipts")) or []
++        if isinstance(row, Mapping)
++    }
++    receipts_6863 = {
++        str(row.get("hf_id")): row
++        for row in unwrap_principle(exp6863.get("tokenizer_receipts")) or []
++        if isinstance(row, Mapping)
++    }
++    gemma_rows = []
++    for hf_id in sorted(set(receipts_6850) & set(receipts_6863)):
++        if "gemma" not in hf_id.lower():
++            continue
++        gemma_rows.append(
++            {
++                "hf_id": hf_id,
++                "exp6850_tokenizer_sha256": receipts_6850[hf_id].get("tokenizer_sha256"),
++                "exp6863_tokenizer_sha256": receipts_6863[hf_id].get("tokenizer_sha256"),
++                "comparison_valid": False,
++                "semantic_relation": "undetermined",
++            }
++        )
++    identical = fields_6850 == fields_6863 and bool(fields_6850)
++    return {
++        "exp6850_receipt_fields": fields_6850,
++        "exp6863_receipt_fields": fields_6863,
++        "per_model_exp6850_field_sets": model_fields_6850,
++        "per_model_exp6863_field_sets": model_fields_6863,
++        "only_in_exp6850": sorted(set_6850 - set_6863),
++        "only_in_exp6863": sorted(set_6863 - set_6850),
++        "exp6850_field_set_sha256": sha256_bytes(canonical_json(fields_6850)),
++        "exp6863_field_set_sha256": sha256_bytes(canonical_json(fields_6863)),
++        "schemas_identical": identical,
++        "hash_comparison_valid": identical,
++        "tokenizer_relation": (
++            "not_evaluated" if identical else "undetermined_incomparable_schemas"
++        ),
++        "gemma_hash_witnesses": gemma_rows,
++        "claim_boundary": "Receipt-schema mismatch proves only that the old comparison is invalid.",
++    }
++
++
++def _digest(source_hashes: Mapping[str, Any], source_id: str) -> str:
++    """Read a digest from either the compact or path-annotated hash form."""
++
++    value = source_hashes.get(source_id, "")
++    if isinstance(value, Mapping):
++        return str(value.get("sha256") or "")
++    return str(value or "")
++
++
++def _contract_sources(source_hashes: Mapping[str, Any], source_ids: Sequence[str]) -> JsonDict:
++    """Bind one contract to only the sources that define it."""
++
++    return {source_id: _digest(source_hashes, source_id) for source_id in source_ids}
++
++
++def _with_contract_hash(contract: JsonDict) -> JsonDict:
++    """Attach a hash that excludes only its own identity field."""
++
++    value = deepcopy(contract)
++    value.pop("contract_sha256", None)
++    contract["contract_sha256"] = sha256_bytes(canonical_json(value))
++    return contract
++
++
++def contract_hash_valid(contract: Mapping[str, Any]) -> bool:
++    """Replay one self-contained contract identity."""
++
++    value = deepcopy(dict(contract))
++    expected = value.pop("contract_sha256", None)
++    return expected == sha256_bytes(canonical_json(value))
++
++
++def canonical_tokenizer_schema(source_hashes: Mapping[str, Any]) -> JsonDict:
++    """Freeze the semantic tokenizer payload and its exclusion boundary."""
++
++    return _with_contract_hash(
++        {
++            "schema_id": "carnot.canonical_tokenizer_payload.v1",
++            "version": "v1",
++            "required_payload_fields": [
++                "semantic_vocabulary_metadata",
++                "special_token_ids",
++                "add_bos_behavior",
++                "chat_template_identity",
++                "tokenization_settings",
++                "frozen_probe_outputs",
++            ],
++            "semantic_vocabulary_metadata_fields": [
++                "tokenizer_model",
++                "tokenizer_pretokenizer",
++                "vocabulary_size",
++                "token_pieces_sha256",
++                "token_scores_sha256",
++                "token_types_sha256",
++                "merges_sha256",
++            ],
++            "special_token_id_fields": [
++                "bos_token_id",
++                "eos_token_id",
++                "unknown_token_id",
++                "padding_token_id",
++                "mask_token_id",
++                "separator_token_id",
++            ],
++            "add_bos_behavior_fields": ["metadata_default", "requested", "observed_prefix_ids"],
++            "chat_template_fields": ["present", "template_sha256"],
++            "tokenization_setting_fields": [
++                "add_bos",
++                "special",
++                "utf8_error_mode",
++                "unicode_normalization",
++            ],
++            "frozen_probe_output_fields": [
++                "probe_id",
++                "text_utf8_sha256",
++                "settings",
++                "token_ids",
++            ],
++            "excluded_field_classes": [
++                "timestamps",
++                "paths",
++                "prose_detail",
++                "wrapper_only_fields",
++                "nested_receipt_hashes",
++            ],
++            "canonicalization": {
++                "encoding": "UTF-8",
++                "json_keys": "sorted",
++                "json_separators": [",", ":"],
++                "hash": "SHA-256",
++                "schema_version_must_match_on_both_sides": True,
++            },
++            "source_hashes": _contract_sources(source_hashes, ["exp6850", "exp6863"]),
++        }
++    )
++
++
++def frozen_semantic_probe_contract(
++    exp6850: Mapping[str, Any], exp6863: Mapping[str, Any], source_hashes: Mapping[str, Any]
++) -> JsonDict:
++    """Freeze legacy outputs as witnesses, not as canonical equality evidence."""
++
++    witnesses: list[JsonDict] = []
++    for source_id, payload in (("exp6850", exp6850), ("exp6863", exp6863)):
++        receipts = unwrap_principle(payload.get("tokenizer_receipts"))
++        for receipt in receipts if isinstance(receipts, list) else []:
++            if not isinstance(receipt, Mapping):
++                continue
++            witnesses.append(
++                {
++                    "source_experiment": source_id,
++                    "hf_id": receipt.get("hf_id"),
++                    "probe_token_ids": deepcopy(receipt.get("probe_token_ids")),
++                    "stored_tokenize_settings": deepcopy(receipt.get("tokenize_settings")),
++                    "canonical_output": False,
++                    "use": "legacy_schema_mismatch_witness_only",
++                }
++            )
++    return _with_contract_hash(
++        {
++            "schema": "carnot.frozen_semantic_probe_contract.v1",
++            "probe_text": TOKENIZER_PROBE,
++            "probe_text_utf8_sha256": sha256_bytes(TOKENIZER_PROBE.encode("utf-8")),
++            "required_probe_classes": [
++                "whitespace",
++                "newline",
++                "tab",
++                "unicode_nfc",
++                "unicode_nfd",
++                "punctuation",
++                "label_swap",
++                "control_like_text",
++                "literal_special_token_text",
++                "empty_text",
++                "chat_template_boundary",
++                "exp6862_sequence_templates",
++            ],
++            "canonical_outputs_must_be_frozen_before_scoring": True,
++            "legacy_output_witnesses": witnesses,
++            "source_hashes": _contract_sources(source_hashes, ["exp6850", "exp6863"]),
++        }
++    )
++
++
++def frozen_contrast_bank_manifest(exp6862: Mapping[str, Any], source_sha256: str) -> JsonDict:
++    """Freeze accepted bank identities without regenerating a single group."""
++
++    groups_value = unwrap_principle(exp6862.get("semantic_contrast_group_manifest"))
++    groups = groups_value if isinstance(groups_value, list) else []
++    identities = [
++        {
++            "group_id": row.get("group_id"),
++            "semantic_identity": row.get("semantic_identity"),
++            "contrast_id": row.get("contrast_id"),
++            "source_pair_id": row.get("source_pair_id"),
++            "family": row.get("family"),
++        }
++        for row in groups
++        if isinstance(row, Mapping)
++    ]
++    return _with_contract_hash(
++        {
++            "schema": "carnot.frozen_contrast_bank_identity_manifest.v1",
++            "source_artifact": V600_ARTIFACT_PATHS[V600_TASK_IDS[1]],
++            "source_artifact_sha256": source_sha256,
++            "accepted_group_count": len(identities),
++            "group_identities": identities,
++            "identity_manifest_sha256": sha256_bytes(canonical_json(identities)),
++            "cell_filtering_allowed": True,
++            "bank_regeneration_allowed": False,
++            "identity_relabeling_allowed": False,
++        }
++    )
++
++
++def memory_observability_contract(
++    exp6856: Mapping[str, Any], exp6861: Mapping[str, Any], source_hashes: Mapping[str, Any]
++) -> JsonDict:
++    """Freeze the action-time boundary and preserve conflicting write counts."""
++
++    support = unwrap_principle(exp6856.get("counterfactual_support_results"))
++    support = support if isinstance(support, Mapping) else {}
++    branches = unwrap_principle(exp6861.get("terminal_branch_manifest"))
++    branch_rows = branches if isinstance(branches, list) else []
++    self_learning = next(
++        (row for row in branch_rows if isinstance(row, Mapping) and row.get("branch") == "self_learning"),
++        {},
++    )
++    count_6856 = support.get("harmful_write_count")
++    count_6861 = self_learning.get("harmful_write_count")
++    return _with_contract_hash(
++        {
++            "schema": "carnot.memory_observability_contract.v1",
++            "decision_time_observable_fields": [
++                "event_identity",
++                "source_identity",
++                "source_content_sha256",
++                "decision_sequence_index",
++                "available_actions",
++                "pre_action_memory_state_sha256",
++                "prior_reliability_state",
++                "age_at_decision",
++                "capacity_at_decision",
++                "known_correction_status",
++                "exact_pre_action_compatibility",
++                "relevance_at_decision",
++                "uncertainty_at_decision",
++                "action_cost",
++            ],
++            "offline_supervision_only_fields": [
++                "later_exact_outcome",
++                "outcome_signed_direction",
++                "feedback_reveal_sequence_index",
++                "memory_effect_class",
++                "counterfactual_benefit",
++                "helpful_or_harmful_label",
++                "audit_verdict",
++                "future_correction",
++                "held_split_label",
++                "task_order_label",
++            ],
++            "same_event_outcome_may_select_action": False,
++            "reliability_update_boundary": {
++                "initial_state": "finite symmetric zero matrix over frozen source and action nodes",
++                "update_time": "after action close and later exact outcome reveal",
++                "same_event_feedback_allowed": False,
++                "entry_delta_bound_field": "max_abs_entry_delta_per_event",
++                "spectral_delta_bound_field": "max_spectral_norm_delta_per_event",
++                "bounds_frozen_before_replay": True,
++                "state_checksum_before_and_after_required": True,
++            },
++            "v599_overall_abstention_rate": self_learning.get("abstention_rate"),
++            "preserved_harmful_write_counts": {
++                "exp6856_fresh_reducer": count_6856,
++                "exp6861_branch_contract": count_6861,
++            },
++            "harmful_write_count_disagreement_preserved": count_6856 != count_6861,
++            "source_hashes": _contract_sources(source_hashes, ["exp6856", "exp6861", "active_roadmap"]),
++        }
++    )
++
++
++def memory_transition_quarantine_contract(source_hashes: Mapping[str, Any]) -> JsonDict:
++    """Freeze exact write-admission checks and their fail-closed action."""
++
++    conditions = {
++        "coverage": "Every affected key and authority is present in the transition receipt.",
++        "preservation": "Every unrelated key remains byte-identical.",
++        "source_faithfulness": "The stored value matches the cited exact source bytes.",
++        "provenance": "Source, event, action, parent, and content identities are complete.",
++        "old_family_retention": "Every frozen old-family anchor remains exact.",
++        "delayed_invalidation": "A later exact correction invalidates the affected write.",
++        "tombstone_non_reappearance": "A tombstoned write cannot return during replay.",
++        "replay_equivalence": "Fresh replay produces the same state bytes.",
++        "restart_equivalence": "Restart restores the same state bytes and checksum.",
++        "rollback_byte_exact": "Rollback restores the exact parent bytes and checksum.",
++    }
++    return _with_contract_hash(
++        {
++            "schema": "carnot.memory_transition_quarantine_contract.v1",
++            "exact_transition_checks": [
++                {"check_id": check_id, "condition": condition, "failure_action": "quarantine"}
++                for check_id, condition in conditions.items()
++            ],
++            "admission_rule": "all exact transition checks must pass before a write is visible",
++            "quarantined_write_may_influence_decision": False,
++            "source_hashes": _contract_sources(source_hashes, ["exp6856", "exp6861", "active_roadmap"]),
++        }
++    )
++
++
++def arc_context_headroom_contract(source_hashes: Mapping[str, Any]) -> JsonDict:
++    """Freeze the measurements needed to size the shared context pool."""
++
++    required_fields = [
++        "prompt_sha256",
++        "prompt_token_count",
++        "prompt_truncated",
++        "slot_id",
++        "slot_count",
++        "slot_state_receipt_sha256",
++        "measured_slot_context_capacity_tokens",
++        "actual_server_n_ctx_tokens",
++        "requested_completion_tokens",
++        "generated_reasoning_token_count",
++        "generated_reasoning_character_count",
++        "final_channel_token_count",
++        "final_channel_character_count",
++        "engine_field_present",
++        "stop_type",
++        "shared_pool_truncated",
++        "raw_completion_length",
++        "full_limit_diagnostic",
++        "vram_free_bytes_before",
++        "vram_used_bytes_before",
++        "model_resident_bytes",
++        "kv_cache_bytes",
++        "measured_generation_headroom_tokens",
++        "required_context_pool_tokens",
++        "headroom_deficit_tokens",
++        "headroom_formula_version",
++    ]
++    return _with_contract_hash(
++        {
++            "schema": "carnot.arc_context_headroom_contract.v1",
++            "required_attempt_fields": required_fields,
++            "observed_evidence": {
++                "actual_server_n_ctx_tokens": 49152,
++                "slot_count": 4,
++                "requested_completion_tokens": 26800,
++                "generated_reasoning_token_counts": [18431, 2996, 4066],
++                "last_stop_type": "limit",
++                "last_prompt_truncated": False,
++                "last_raw_completion_length": 12151,
++                "r11l_final_channel_characters": 3457,
++                "stored_error_prefix_characters": 29,
++                "stored_diagnostic_clip_characters": 150,
++                "stored_error_characters": 179,
++                "full_diagnostic_characters": 216,
++            },
++            "diagnostic_storage_rule": "Store the full typed diagnostic outside any prose clip.",
++            "slot_capacity_may_be_inferred_by_division": False,
++            "max_token_only_repair_allowed": False,
++            "context_resize_requires": [
++                "measured prompt tokens",
++                "measured slot capacity",
++                "actual server n_ctx",
++                "measured VRAM headroom",
++                "measured generation headroom",
++            ],
++            "headroom_formula": (
++                "measured_generation_headroom_tokens = measured_slot_context_capacity_tokens "
++                "- prompt_token_count - reserved_runtime_tokens"
++            ),
++            "claim_boundary": "This contract does not claim that a larger context pool improves solve rate.",
++            "source_hashes": _contract_sources(
++                source_hashes, ["arc_truncation_note", "exclusion_manifest", "active_roadmap"]
++            ),
++        }
++    )
++
++
++def retired_scope_violations(
++    proposed_changes: Sequence[str], exclusion_manifest: Mapping[str, Any]
++) -> list[JsonDict]:
++    """Match proposed mechanisms against explicit retired-scope phrases."""
++
++    extras = exclusion_manifest.get("retired_extras")
++    rows = extras if isinstance(extras, list) else []
++    violations: list[JsonDict] = []
++    for row in rows:
++        if not isinstance(row, Mapping):
++            continue
++        patterns = []
++        for field in ("blocked_patterns", "blocked_same_mechanism_retries"):
++            value = row.get(field)
++            if isinstance(value, list):
++                patterns.extend(str(item) for item in value)
++        for proposed in proposed_changes:
++            normalized_proposed = " ".join(proposed.lower().split())
++            for pattern in patterns:
++                normalized_pattern = " ".join(pattern.lower().split())
++                named_levers = re.findall(r"\b[A-Z][A-Z0-9_]{3,}\b", pattern)
++                named_lever_match = any(lever in proposed for lever in named_levers)
++                if normalized_pattern and (
++                    normalized_pattern in normalized_proposed or named_lever_match
++                ):
++                    violations.append(
++                        {
++                            "retired_scope_id": row.get("id") or row.get("scope_key"),
++                            "blocked_pattern": pattern,
++                            "proposed_change": proposed,
++                        }
++                    )
++    return violations
++
++
++def retired_scope_manifest(
++    exp6861: Mapping[str, Any], exclusion: Mapping[str, Any], source_hashes: Mapping[str, Any]
++) -> JsonDict:
++    """Freeze V600 retirements and the exclusion-manifest context remedy."""
++
++    extras = exclusion.get("retired_extras")
++    extra_rows = extras if isinstance(extras, list) else []
++    max_token = next(
++        (
++            dict(row)
++            for row in extra_rows
++            if isinstance(row, Mapping) and row.get("id") == "arc-induce-completion-budget-raise"
++        ),
++        {},
++    )
++    retired_value = unwrap_principle(exp6861.get("retired_mechanism_manifest"))
++    retired = [dict(row) for row in retired_value if isinstance(row, Mapping)] if isinstance(retired_value, list) else []
++    proposed_changes = [
++        "canonical tokenizer payload requalification under one schema",
++        "filter cells from the frozen Exp6862 bank without regeneration",
++        "bounded reliability state updated after later exact outcomes",
++        "measure prompt, slot, n_ctx, VRAM, and shared-pool headroom",
++    ]
++    violations = retired_scope_violations(proposed_changes, exclusion)
++    return _with_contract_hash(
++        {
++            "schema": "carnot.retired_scope_non_reopen_manifest.v1",
++            "v600_retired_mechanisms": retired,
++            "max_token_only_arc_remedy": {
++                "retired_scope_id": max_token.get("id"),
++                "operator_reopen_required": max_token.get("operator_reopen_required"),
++                "blocked_patterns": deepcopy(max_token.get("blocked_patterns") or []),
++                "allowed": False,
++            },
++            "contrast_bank_regeneration": {"allowed": False, "source": "Exp6862 identity contract"},
++            "proposed_changed_boundaries": proposed_changes,
++            "proposed_boundary_violations": violations,
++            "source_hashes": _contract_sources(source_hashes, ["exp6861", "exclusion_manifest", "active_roadmap"]),
++        }
++    )
++
++
++def v600_branch_dispositions(task_rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    """State each V600 branch without turning infrastructure into science."""
++
++    branch_names = ("evidence_contract", "contrast_bank", "tokenizer_preregistration", "scoring_stream")
++    dispositions = []
++    for branch, row in zip(branch_names, task_rows, strict=False):
++        dispositions.append(
++            {
++                "branch": branch,
++                "task_id": row.get("task_id"),
++                "honest_verdict": row.get("honest_verdict"),
++                "verdict_class": row.get("verdict_class"),
++                "roadmap_result": row.get("roadmap_result"),
++                "scientific_claim_eligible": False,
++                "disposition": (
++                    "frozen_infrastructure"
++                    if branch in {"evidence_contract", "contrast_bank"}
++                    else "terminal_blocked"
++                ),
++            }
++        )
++    return dispositions
++
++
++def _all_contract_sources_hashed(contracts: Sequence[Mapping[str, Any]]) -> bool:
++    """Require every declared source digest to be non-empty."""
++
++    for contract in contracts:
++        sources = contract.get("source_hashes")
++        if isinstance(sources, Mapping) and any(not value for value in sources.values()):
++            return False
++    return True
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash deterministic content while excluding wall time and the hash itself."""
++
++    payload = deepcopy(dict(artifact))
++    payload.pop("duration_s", None)
++    payload.pop("reproducibility_checksum", None)
++    return sha256_bytes(canonical_json(payload))
++
++
++def build_artifact(
++    root: Path,
++    run_date: str,
++    *,
++    live_reports: Mapping[str, Mapping[str, Any]] | None = None,
++    source_paths: Mapping[str, str] = DEFAULT_SOURCE_PATHS,
++) -> JsonDict:
++    """Read, reduce, and validate the V601 evidence boundary in memory."""
++
++    started = time.perf_counter()
++    preconditions = inspect_preconditions(root, source_paths)
++    documents = preconditions["documents"]
++    source_hashes = dict(preconditions["source_hashes"])
++    for source_id, relative in OWN_SOURCE_PATHS.items():
++        source_hashes[source_id] = {"path": relative, "sha256": sha256_path(root / relative)}
++
++    completed = documents.get("completed_roadmap")
++    payloads = {
++        task_id: documents.get(f"exp{6861 + index}", {})
++        for index, task_id in enumerate(V600_TASK_IDS)
++    }
++    payloads = {
++        task_id: payload if isinstance(payload, Mapping) else {}
++        for task_id, payload in payloads.items()
++    }
++    task_rows = build_roadmap_task_rows(completed if isinstance(completed, Mapping) else {}, payloads)
++    for row in task_rows:
++        short_id = re.match(r"exp\d+", str(row["task_id"]))
++        source_id = short_id.group(0) if short_id else ""
++        row["source_sha256"] = _digest(source_hashes, source_id)
++
++    conductor = documents.get("conductor_log")
++    conductor_rows = build_conductor_gate_rows(conductor if isinstance(conductor, str) else "", task_rows)
++    if live_reports is None:
++        live_reports = collect_live_adversarial_reports(root) if preconditions["gate_check_summary"]["passed"] else {}
++    adversarial_rows = stored_vs_live_adversarial_rows(payloads, live_reports)
++
++    exp6850 = documents.get("exp6850") if isinstance(documents.get("exp6850"), Mapping) else {}
++    exp6856 = documents.get("exp6856") if isinstance(documents.get("exp6856"), Mapping) else {}
++    exp6861 = documents.get("exp6861") if isinstance(documents.get("exp6861"), Mapping) else {}
++    exp6862 = documents.get("exp6862") if isinstance(documents.get("exp6862"), Mapping) else {}
++    exp6863 = documents.get("exp6863") if isinstance(documents.get("exp6863"), Mapping) else {}
++    exclusion = documents.get("exclusion_manifest") if isinstance(documents.get("exclusion_manifest"), Mapping) else {}
++
++    tokenizer_diff = tokenizer_receipt_schema_diff(exp6850, exp6863)
++    tokenizer_schema = canonical_tokenizer_schema(source_hashes)
++    probe_contract = frozen_semantic_probe_contract(exp6850, exp6863, source_hashes)
++    bank_manifest = frozen_contrast_bank_manifest(exp6862, _digest(source_hashes, "exp6862"))
++    observability = memory_observability_contract(exp6856, exp6861, source_hashes)
++    quarantine = memory_transition_quarantine_contract(source_hashes)
++    arc_contract = arc_context_headroom_contract(source_hashes)
++    retired_manifest = retired_scope_manifest(exp6861, exclusion, source_hashes)
++    contracts = [
++        tokenizer_schema,
++        probe_contract,
++        bank_manifest,
++        observability,
++        quarantine,
++        arc_contract,
++        retired_manifest,
++    ]
++
++    checks = list(preconditions["gate_check_summary"]["checks"])
++    expected_deliverables = [V600_ARTIFACT_PATHS[task_id] for task_id in V600_TASK_IDS]
++    checks.append(
++        _check(
++            "v600_task_reconstruction",
++            {"task_ids": list(V600_TASK_IDS), "deliverables": expected_deliverables},
++            {
++                "task_ids": [row.get("task_id") for row in task_rows],
++                "deliverables": [row.get("deliverable") for row in task_rows],
++            },
++            [row.get("task_id") for row in task_rows] == list(V600_TASK_IDS)
++            and [row.get("deliverable") for row in task_rows] == expected_deliverables,
++        )
++    )
++    checks.append(
++        _check(
++            "v600_conductor_terminal_rows",
++            4,
++            len([row for row in conductor_rows if row.get("conductor_status") != "missing"]),
++            len(conductor_rows) == 4
++            and all(row.get("conductor_status") != "missing" for row in conductor_rows),
++        )
++    )
++    checks.append(
++        _check(
++            "tokenizer_receipt_schema_mismatch_proven",
++            False,
++            tokenizer_diff["schemas_identical"],
++            tokenizer_diff["schemas_identical"] is False
++            and tokenizer_diff["hash_comparison_valid"] is False,
++        )
++    )
++    group_ids = [row.get("group_id") for row in bank_manifest["group_identities"]]
++    checks.append(
++        _check(
++            "frozen_contrast_bank_identities",
++            {"count": 100, "unique": 100},
++            {"count": len(group_ids), "unique": len(set(group_ids))},
++            len(group_ids) == 100 and len(set(group_ids)) == 100,
++        )
++    )
++    bad_contracts = [field for field, contract in zip(CONTRACT_FIELDS, contracts, strict=True) if not contract_hash_valid(contract)]
++    checks.append(_check("contract_hash_replay", [], bad_contracts, not bad_contracts))
++    checks.append(
++        _check(
++            "contract_source_hashes",
++            True,
++            _all_contract_sources_hashed(contracts),
++            _all_contract_sources_hashed(contracts),
++        )
++    )
++    violations = retired_manifest["proposed_boundary_violations"]
++    checks.append(_check("exclusion_safe_changed_boundaries", [], violations, not violations))
++    critical_rows = [row["task_id"] for row in adversarial_rows if row.get("live_status") == "critical"]
++    checks.append(_check("no_live_critical_v600_source", [], critical_rows, not critical_rows))
++    gate_summary = _gate_summary(checks)
++    ready = int(gate_summary["passed"])
++
++    artifact: JsonDict = {
++        "schema": "carnot.experiment_6865.v601_evidence_method_change_contract.v1",
++        "experiment_id": 6865,
++        "run_date": run_date,
++        "status": "complete",
++        "field_principles": {},
++        "preconditions_checked": {
++            "sources": preconditions["source_rows"],
++            "passed": preconditions["gate_check_summary"]["passed"],
++        },
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(time.perf_counter() - started, 6),
++        "source_artifact_hashes": source_hashes,
++        "roadmap_task_rows": task_rows,
++        "conductor_gate_rows": conductor_rows,
++        "stored_vs_live_adversarial_rows": adversarial_rows,
++        "v600_branch_dispositions": v600_branch_dispositions(task_rows),
++        "tokenizer_receipt_schema_diff": tokenizer_diff,
++        "canonical_tokenizer_payload_schema": tokenizer_schema,
++        "frozen_semantic_probe_contract": probe_contract,
++        "frozen_contrast_bank_identity_manifest": bank_manifest,
++        "memory_observability_contract": observability,
++        "memory_transition_quarantine_contract": quarantine,
++        "arc_context_headroom_contract": arc_contract,
++        "retired_scope_non_reopen_manifest": retired_manifest,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "v601_evidence_contract_ready_score": ready,
++        "gate_check_summary": gate_summary,
++        "verifier_is_oracle": False,
++        "verdict_class": "positive" if ready else "blocked",
++        "honest_verdict": (
++            "complete_positive_v601_evidence_method_change_contract_ready"
++            if ready
++            else "complete_blocked_v601_evidence_method_change_contract"
++        ),
++    }
++    artifact["field_principles"] = {field: FIELD_PRINCIPLES[field] for field in artifact}
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Replay the output contract before any result file is replaced."""
++
++    errors: list[str] = []
++    missing = sorted(REQUIRED_ARTIFACT_FIELDS - set(artifact))
++    extra = sorted(set(artifact) - REQUIRED_ARTIFACT_FIELDS)
++    if missing:
++        errors.append(f"missing_required_fields:{','.join(missing)}")
++    if extra:
++        errors.append(f"unexpected_fields:{','.join(extra)}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping) or set(principles) != set(artifact):
++        errors.append("field_principles_must_cover_every_field")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("invalid_inference_substrate")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_must_be_false")
++    if artifact.get("verdict_class") not in CLOSED_VERDICT_CLASSES:
++        errors.append("invalid_verdict_class")
++    if not str(artifact.get("honest_verdict") or "").startswith("complete_"):
++        errors.append("honest_verdict_not_terminal")
++    for field in CONTRACT_FIELDS:
++        contract = artifact.get(field)
++        if not isinstance(contract, Mapping) or not contract_hash_valid(contract):
++            errors.append(f"contract_hash_mismatch:{field}")
++    ready = artifact.get("v601_evidence_contract_ready_score")
++    if ready not in {0, 1}:
++        errors.append("invalid_ready_score")
++    if ready == 1:
++        bank = artifact.get("frozen_contrast_bank_identity_manifest")
++        if not isinstance(bank, Mapping) or bank.get("accepted_group_count") != 100:
++            errors.append("ready_contract_requires_100_bank_groups")
++        gate = artifact.get("gate_check_summary")
++        if not isinstance(gate, Mapping) or gate.get("passed") is not True:
++            errors.append("ready_contract_has_failed_gate")
++        if artifact.get("verdict_class") != "positive":
++            errors.append("ready_contract_must_be_positive")
++    if ready == 0:
++        gate = artifact.get("gate_check_summary")
++        if not isinstance(gate, Mapping) or not gate.get("failed_check"):
++            errors.append("blocked_contract_requires_exact_failed_check")
++        if artifact.get("verdict_class") != "blocked":
++            errors.append("blocked_contract_must_use_blocked_class")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_atomic(path: Path, artifact: Mapping[str, Any]) -> None:
++    """Replace the result only after a complete JSON document exists."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    temporary = path.with_suffix(path.suffix + ".tmp")
++    temporary.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    temporary.replace(path)
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Parse the operator date, validate the contract, and write it once."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", required=True)
++    parser.add_argument("--output", default=OUTPUT_PATH.as_posix())
++    args = parser.parse_args(argv)
++    artifact = build_artifact(REPO_ROOT, args.date)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    output = Path(args.output)
++    write_atomic(output, artifact)
++    print(
++        json.dumps(
++            {
++                "result": output.as_posix(),
++                "ready_score": artifact["v601_evidence_contract_ready_score"],
++                "verdict_class": artifact["verdict_class"],
++            },
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_6865_v601_evidence_method_change_contract.json b/results/experiment_6865_v601_evidence_method_change_contract.json
+new file mode 100644
+index 0000000000..2522fcfc8f
+--- /dev/null
++++ b/results/experiment_6865_v601_evidence_method_change_contract.json
+@@ -0,0 +1,2334 @@
++{
++  "arc_context_headroom_contract": {
++    "claim_boundary": "This contract does not claim that a larger context pool improves solve rate.",
++    "context_resize_requires": [
++      "measured prompt tokens",
++      "measured slot capacity",
++      "actual server n_ctx",
++      "measured VRAM headroom",
++      "measured generation headroom"
++    ],
++    "contract_sha256": "sha256:8e16c58ceb7b5dd3cd331ac7d561fa3ad36a6e8340220d39d14679e907357bfb",
++    "diagnostic_storage_rule": "Store the full typed diagnostic outside any prose clip.",
++    "headroom_formula": "measured_generation_headroom_tokens = measured_slot_context_capacity_tokens - prompt_token_count - reserved_runtime_tokens",
++    "max_token_only_repair_allowed": false,
++    "observed_evidence": {
++      "actual_server_n_ctx_tokens": 49152,
++      "full_diagnostic_characters": 216,
++      "generated_reasoning_token_counts": [
++        18431,
++        2996,
++        4066
++      ],
++      "last_prompt_truncated": false,
++      "last_raw_completion_length": 12151,
++      "last_stop_type": "limit",
++      "r11l_final_channel_characters": 3457,
++      "requested_completion_tokens": 26800,
++      "slot_count": 4,
++      "stored_diagnostic_clip_characters": 150,
++      "stored_error_characters": 179,
++      "stored_error_prefix_characters": 29
++    },
++    "required_attempt_fields": [
++      "prompt_sha256",
++      "prompt_token_count",
++      "prompt_truncated",
++      "slot_id",
++      "slot_count",
++      "slot_state_receipt_sha256",
++      "measured_slot_context_capacity_tokens",
++      "actual_server_n_ctx_tokens",
++      "requested_completion_tokens",
++      "generated_reasoning_token_count",
++      "generated_reasoning_character_count",
++      "final_channel_token_count",
++      "final_channel_character_count",
++      "engine_field_present",
++      "stop_type",
++      "shared_pool_truncated",
++      "raw_completion_length",
++      "full_limit_diagnostic",
++      "vram_free_bytes_before",
++      "vram_used_bytes_before",
++      "model_resident_bytes",
++      "kv_cache_bytes",
++      "measured_generation_headroom_tokens",
++      "required_context_pool_tokens",
++      "headroom_deficit_tokens",
++      "headroom_formula_version"
++    ],
++    "schema": "carnot.arc_context_headroom_contract.v1",
++    "slot_capacity_may_be_inferred_by_division": false,
++    "source_hashes": {
++      "active_roadmap": "sha256:b4e8a2c25a1f62e9facc905fb20398a518c944b8c9914409c74d401f3e614633",
++      "arc_truncation_note": "sha256:9efd63d4e1b69f8e6ef6dd9568d87c4e231d4137f36c1e3fbbc94bfbb4f326d4",
++      "exclusion_manifest": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
++    }
++  },
++  "canonical_tokenizer_payload_schema": {
++    "add_bos_behavior_fields": [
++      "metadata_default",
++      "requested",
++      "observed_prefix_ids"
++    ],
++    "canonicalization": {
++      "encoding": "UTF-8",
++      "hash": "SHA-256",
++      "json_keys": "sorted",
++      "json_separators": [
++        ",",
++        ":"
++      ],
++      "schema_version_must_match_on_both_sides": true
++    },
++    "chat_template_fields": [
++      "present",
++      "template_sha256"
++    ],
++    "contract_sha256": "sha256:17dec7cf6795156e040d443b4e722ce7947dc830417576d90fdf9eb17457a37f",
++    "excluded_field_classes": [
++      "timestamps",
++      "paths",
++      "prose_detail",
++      "wrapper_only_fields",
++      "nested_receipt_hashes"
++    ],
++    "frozen_probe_output_fields": [
++      "probe_id",
++      "text_utf8_sha256",
++      "settings",
++      "token_ids"
++    ],
++    "required_payload_fields": [
++      "semantic_vocabulary_metadata",
++      "special_token_ids",
++      "add_bos_behavior",
++      "chat_template_identity",
++      "tokenization_settings",
++      "frozen_probe_outputs"
++    ],
++    "schema_id": "carnot.canonical_tokenizer_payload.v1",
++    "semantic_vocabulary_metadata_fields": [
++      "tokenizer_model",
++      "tokenizer_pretokenizer",
++      "vocabulary_size",
++      "token_pieces_sha256",
++      "token_scores_sha256",
++      "token_types_sha256",
++      "merges_sha256"
++    ],
++    "source_hashes": {
++      "exp6850": "sha256:0093104ffb1d4f3f22e7ab9369d56561d8d01fa84406faa89d8f0117ced6977d",
++      "exp6863": "sha256:fa74cb9537c3bb8eeadbd58542900e225e8086c46d6d3d1b896d9af68974197a"
++    },
++    "special_token_id_fields": [
++      "bos_token_id",
++      "eos_token_id",
++      "unknown_token_id",
++      "padding_token_id",
++      "mask_token_id",
++      "separator_token_id"
++    ],
++    "tokenization_setting_fields": [
++      "add_bos",
++      "special",
++      "utf8_error_mode",
++      "unicode_normalization"
++    ],
++    "version": "v1"
++  },
++  "conductor_gate_rows": [
++    {
++      "conductor_detail": "96 passed, 1 warning in 11.00s",
++      "conductor_status": "OK",
++      "gate_fields": [
++        {
++          "artifact_field": "source_preconditions",
++          "expected": true,
++          "observed": true,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "changed_mechanisms_valid",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "primary_references_verified",
++          "expected": 4,
++          "observed": 4,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "downstream_gate_consumers_named",
++          "expected": [
++            "exp6862",
++            "exp6867",
++            "exp6870"
++          ],
++          "observed": [
++            "exp6862",
++            "exp6867",
++            "exp6870"
++          ],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        }
++      ],
++      "is_gate_block": false,
++      "task_id": "exp6861-v600-branch-retirement-evidence-contract",
++      "timestamp": "2026-09-02 00:27 UTC"
++    },
++    {
++      "conductor_detail": "108 passed, 1 warning in 17.60s",
++      "conductor_status": "OK",
++      "gate_fields": [
++        {
++          "artifact_field": "v600_evidence_contract_ready_score",
++          "expected": 1,
++          "observed": 1,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "exp6849_typed_sources_readable",
++          "expected": {
++            "typed_program_authority_ready_score": 1,
++            "typed_source_count": ">=4"
++          },
++          "observed": {
++            "typed_program_authority_ready_score": 1,
++            "typed_source_count": 4
++          },
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "exp6852_failure_witnesses_present",
++          "expected": {
++            "failed_checks": [
++              "isomorphic_direction_survives",
++              "shortcut_controls_clear"
++            ],
++            "failed_shortcut_count": ">0"
++          },
++          "observed": {
++            "failed_checks": [
++              "isomorphic_direction_survives",
++              "shortcut_controls_clear"
++            ],
++            "failed_shortcut_count": 78
++          },
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "accepted_group_floor",
++          "expected": ">=96",
++          "observed": 100,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "semantic_identities_unique",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "content_identities_unique",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "accepted_authorities_agree",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "nuisance_labels_preserved",
++          "expected": true,
++          "observed": true,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "semantic_mutations_flip",
++          "expected": true,
++          "observed": true,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "negative_controls_rejected",
++          "expected": 7,
++          "observed": 7,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "build_rejection_count",
++          "expected": 0,
++          "observed": 0,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        }
++      ],
++      "is_gate_block": false,
++      "task_id": "exp6862-dual-side-semantic-contrast-bank",
++      "timestamp": "2026-09-02 01:04 UTC"
++    },
++    {
++      "conductor_detail": "96 passed, 1 warning in 9.44s",
++      "conductor_status": "OK",
++      "gate_fields": [
++        {
++          "artifact_field": "exp6862_readiness",
++          "expected": 1,
++          "observed": 1,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "exp6862_model_scores_absent",
++          "expected": false,
++          "observed": false,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "exp6862_semantic_groups",
++          "expected": ">=40",
++          "observed": 100,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "preexisting_model_scores_for_new_identities",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/Qwen3.6-35B-A3B-GGUF.file_binding",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/gemma-4-31B-it-GGUF.file_binding",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/gemma-4-26B-A4B-it-GGUF.file_binding",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/gemma-4-31B-it-GGUF.binding",
++          "expected": [],
++          "observed": [
++            "tokenizer_hash_drift"
++          ],
++          "operator": "check",
++          "passed": false,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/gemma-4-26B-A4B-it-GGUF.binding",
++          "expected": [],
++          "observed": [
++            "tokenizer_hash_drift"
++          ],
++          "operator": "check",
++          "passed": false,
++          "upstream": null
++        },
++        {
++          "artifact_field": "all_three_native_tokenizers",
++          "expected": [
++            "unsloth/Qwen3.6-35B-A3B-GGUF",
++            "unsloth/gemma-4-31B-it-GGUF",
++            "unsloth/gemma-4-26B-A4B-it-GGUF"
++          ],
++          "observed": [
++            "unsloth/Qwen3.6-35B-A3B-GGUF"
++          ],
++          "operator": "check",
++          "passed": false,
++          "upstream": null
++        }
++      ],
++      "is_gate_block": false,
++      "task_id": "exp6863-tokenizer-aware-semantic-contrast-preregistration",
++      "timestamp": "2026-09-02 01:27 UTC"
++    },
++    {
++      "conductor_detail": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6863-tokenizer-aware",
++      "conductor_status": "GATE_BLOCK",
++      "gate_fields": [
++        {
++          "artifact_field": "semantic_contrast_preregistration_ready_score",
++          "expected": 1,
++          "observed": 0,
++          "operator": "==",
++          "passed": false,
++          "upstream": "exp6863-tokenizer-aware-semantic-contrast-preregistration"
++        }
++      ],
++      "is_gate_block": true,
++      "task_id": "exp6864-three-family-semantic-contrast-scoring-stream",
++      "timestamp": "2026-09-02 01:30 UTC"
++    }
++  ],
++  "duration_s": 6.407686,
++  "experiment_id": 6865,
++  "field_principles": {
++    "arc_context_headroom_contract": "Full headroom fields separate shared-pool truncation from token limits.",
++    "canonical_tokenizer_payload_schema": "One semantic schema makes future tokenizer comparisons valid.",
++    "conductor_gate_rows": "Conductor rows preserve execution state apart from artifact claims.",
++    "duration_s": "Measured wall time makes the local reduction operationally auditable.",
++    "experiment_id": "The fixed identifier binds this contract to its roadmap task.",
++    "field_principles": "One reason per field keeps schema compliance tied to its purpose.",
++    "frozen_contrast_bank_identity_manifest": "Bank identities stop downstream cell filtering from becoming regeneration.",
++    "frozen_semantic_probe_contract": "Frozen probes prevent comparison inputs from changing later.",
++    "gate_check_summary": "Expected and observed values explain every blocked verdict.",
++    "honest_verdict": "A terminal prefix lets the conductor classify the result safely.",
++    "inference_substrate": "The substrate proves that no science or model run occurred.",
++    "memory_observability_contract": "The observability split prevents future outcomes from selecting actions.",
++    "memory_transition_quarantine_contract": "Exact checks stop unsafe writes before admission.",
++    "preconditions_checked": "Exact source checks make a blocked reduction diagnosable.",
++    "random_seed": "The fixed seed freezes any ordered manifest operation.",
++    "reproducibility_checksum": "One checksum binds the deterministic output contract.",
++    "retired_scope_non_reopen_manifest": "Retirement rows stop changed labels from reopening failed mechanisms.",
++    "roadmap_task_rows": "Task rows prevent a V600 task from leaving the evidence denominator.",
++    "run_date": "The operator date distinguishes this reduction from later evidence states.",
++    "schema": "A versioned artifact schema prevents silent consumer drift.",
++    "source_artifact_hashes": "Source hashes bind every frozen statement to exact bytes.",
++    "status": "The status records that the reducer reached a terminal artifact write.",
++    "stored_vs_live_adversarial_rows": "Separate states expose verifier drift and unstamped warnings.",
++    "tokenizer_receipt_schema_diff": "Exact field sets prove why the old hash comparison is invalid.",
++    "v600_branch_dispositions": "Branch rows preserve null and blocked outcomes without promotion.",
++    "v601_evidence_contract_ready_score": "Downstream gates consume this exact readiness field.",
++    "verdict_class": "The closed class states the contract's evidence boundary.",
++    "verifier_is_oracle": "False prevents this evidence reducer from authorizing its own claims."
++  },
++  "frozen_contrast_bank_identity_manifest": {
++    "accepted_group_count": 100,
++    "bank_regeneration_allowed": false,
++    "cell_filtering_allowed": true,
++    "contract_sha256": "sha256:d37dee5ed349179748d3e445efeb83e23518527639876fe3c888abe63500c9ab",
++    "group_identities": [
++      {
++        "contrast_id": "sha256:6ea1d67e8b5f45bdf247d7d62644b4298e2fc126963defee42bc38718de828c2",
++        "family": "exact_energy",
++        "group_id": "sha256:fb8a7b019c076717cef4b213952a98d792e9ce272e9e298f68223c8d07399c70",
++        "semantic_identity": "sha256:8420744dab195de08c28718c3b2bc9ebaf3c96b4eee0506f90904e8d4ea7f950",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:2f9a80b65112155e7d91a93ae63782ac0980c80b95c552fe981ff2abaf134ef3",
++        "family": "exact_energy",
++        "group_id": "sha256:7c0b02625e6f82fcb54274204f63f617e6bdb371c1b47a51ae4cc375dcc66e0e",
++        "semantic_identity": "sha256:a2c3941a721f067c6d3af358caafd43e653faf800cd3a50db489b977bc232862",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:c4af67bd1a81349d170fe1056b6e1cd0881674cfd69134bc24a50cfb419267d6",
++        "family": "exact_energy",
++        "group_id": "sha256:d002f17c86dfe9565086f8a65e7d61f12587a0d2197f66c9c2020bf9dedc7ded",
++        "semantic_identity": "sha256:eb2e6c796745e980c99e11c54e3912f520bbff0817429b1856b458684d851df7",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:4ca33ed9120aee97b5b55155a7a4353f612129318224867d5e60cc9df43521fa",
++        "family": "exact_energy",
++        "group_id": "sha256:93dd60db24a76bf919a86ef538fafdbdcb89ebe77593461f85e92770fd9f09b9",
++        "semantic_identity": "sha256:c38ce64f0bf50e0a03677bca114892985b26d5e214ce25b1d4fb24b26cb21351",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:33e8895cfb2f50f81b37e7bbf8ace311502d12873a00d2be9300ff8b8dd5267a",
++        "family": "exact_energy",
++        "group_id": "sha256:584c5fd8cd624fb91fa8b61287392048093990dfd32e98e3ac9e2177472c3c76",
++        "semantic_identity": "sha256:5142f4170a5e0171057a7d380a8c2a8e6bf3ac67f255aadc2955bc9abef649ed",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:aeb818604fc56c09ed534846b587cca5f8ae15df965b342ae6419d37a740b811",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:fb74048965f1a37dd33a25fd136eb2d41c3cbbc85fbcd68852b4fa652deaf25f",
++        "semantic_identity": "sha256:641cf315dedfc7a5dd4cfb54acfbd65bc19632a4f2301bf3faf63661e9e73d43",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:a931a7deebfd4697a9483c427675e6cfc3b8879e0f4c1b66092afb7738a5ef85",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:56591e427d952b347733399ce41b3aeb7677123eacaec5691f60e6df7ff348b8",
++        "semantic_identity": "sha256:df4994abf920de92889b97aa1f6aa05aa1659e58967bea3b188488a3b9d228fb",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:d109ce0da9348af3517f03925003e1335f30ca8ebeafccda494e152b67da30e9",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:eb5c717d3def9b0204566c94c2297e012acbcd80027163d7a2b0a96080de9436",
++        "semantic_identity": "sha256:5a2e86516efb178a434e28b64f72e1435a948551e30f8a6624de96f275ce4d72",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:c741d0f68cae7e8b89aa1b2e68bd7648e78cd7095121bda43b6b88b5ab431eb1",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:33d1f0af33df4e71e583ff1c9d3d191aecd24b25e55c19209019731479f7e526",
++        "semantic_identity": "sha256:6ff9ba292455da1ed4d9510b9222f6038f47ed969144636499db7410c3b2bcc1",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:38b6e471c6a66853152bb7f25bad19dd1fdc99d617582c547d19fda08be56635",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:40dcc41df4bc45b52013a094cc16b65930e5e408012226d47e4f4fe20c42377c",
++        "semantic_identity": "sha256:eaeb9dd0dfb44f57d85de18e43ba3a41a80c437ac0a3d6723b6381a2543933b7",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:fee488dcaf1044fa244a97f335a29d870213ab64a2c81e58a075d50d579afa02",
++        "family": "memory_guard",
++        "group_id": "sha256:8b49a384d7a067a81907701de6e120fba381fdba92d8ee672f8c471403103134",
++        "semantic_identity": "sha256:4bd050e308b947cd9dafd8b8134509d345fb28f527eb11d6805caf19093e1d8b",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:119ee40d1fb0da2b0db178a8d02ded2f9ae04d8f353d270e53e3b843a3f54fd8",
++        "family": "memory_guard",
++        "group_id": "sha256:6fe2aa003145da747d7078380d511f72ad564c546411b7d5981360edb499ab60",
++        "semantic_identity": "sha256:b2efc9db39299ed9bc1ef27bdfc0e88c7bb1c05d33748b8577e008d4e7891805",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:dde83c7f5cb904281a89d3a325d78e52078c2717160d2cb0d13343ebe4671258",
++        "family": "memory_guard",
++        "group_id": "sha256:95d0bad7145613625a98e8a87b3625dfa51bb084182cc0d849795ae36f0c3e8d",
++        "semantic_identity": "sha256:f939619592cc73e7bb678ba97ff6a6e4f4fb815e8b65646187fd9790af7ffa31",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:1bc6c8531925ff8ba131cdde133055e5d8dea4b798002e2a86d8c6ea94103c8d",
++        "family": "memory_guard",
++        "group_id": "sha256:638acc7bf7662ac6435e7ccf1f20c89c4c623d774901627230cb96cac8bd8187",
++        "semantic_identity": "sha256:cfee1d44ad35e5086b3a950c6b4ceae9de1eb623c7d90cd45e955f84944e9d63",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:865af0dea848ad9dfa826c1e0b435cc0564f6e7265196e6a88a2ea4b8982e6ba",
++        "family": "memory_guard",
++        "group_id": "sha256:23b58aa3faa38bb55a3ef4a59e97bb97b4888526e24350c6d11505988a3f4cd7",
++        "semantic_identity": "sha256:7aa65aebc1bde96db17139108edc7a5d86eb2728a91fd6cb2e39c560ca103cc4",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:1dc265249bdbaff91ce11d63a99170c42b328619f2306c9e0b59b8c699780520",
++        "family": "arc_guard",
++        "group_id": "sha256:2272f72232e846026819b2668be3c442c27007edc38d5434feec32ab12f3c8aa",
++        "semantic_identity": "sha256:28b09416194fda1473a66fc1e34bb1e2c0f81796c9a09f59f0fd08552ddd3759",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:2a8cda262601cac406066ef8847fb6ed7799bba4433da7f3c8cc2297c0134273",
++        "family": "arc_guard",
++        "group_id": "sha256:a1dee72e1a20558bfae03158110046437492959f8b7b49329c9a2d04b830f2ae",
++        "semantic_identity": "sha256:01564d6410024beb3896e8840010911bacb839a3f385e3ef24456ed73dfc72aa",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:e3f23ecf573e52a23ab8e51deda97138dc772fd38fc8b0fb39e9c81b3a024328",
++        "family": "arc_guard",
++        "group_id": "sha256:3e3f890898c7bf7ee2eafaa84910aa9a30f388a5f07601e0df41c4838accffb7",
++        "semantic_identity": "sha256:a8f2a1e5725636992175857da2631ca622a5afdf0e5b7a858eef52d65528260e",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:262ed3c2db3109bc262cf1006b05825d1cb86f1cb50e925a87d4492f27ff0634",
++        "family": "arc_guard",
++        "group_id": "sha256:5a12fb7e54e8608e6c4c1d0faa89d3725f6aebdf0588f163c3046aa9ecda3612",
++        "semantic_identity": "sha256:385d34b0433e8e2a0a63cfe6a84c7c95afb9e15ca6db3a30caef93bd7625c6f6",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:7328d332753c001a0db9f87f651ea4bb7b368b44c525ecc66f65cda4263c6a19",
++        "family": "arc_guard",
++        "group_id": "sha256:2f164a8d5267728b9d6de5ef1ae591b7920f0d66dd1e6889d607b8b98eb7ddef",
++        "semantic_identity": "sha256:7032363cf206d4d074b0ac88b1e3a5255162253d44f55a60b28989a7092f67e0",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:43d8eca818386463ccf60d1571cb6f34c0b857e50f5bdc3c22471fdad35381e4",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:f7053442329b2068fca25220187fd23b1b58f3c4d35cb47849fcc78f9e389da2",
++        "semantic_identity": "sha256:739f7e7362779ddda5b1c97824cf75f62d1d92bc2b05bf56608ce42d25766b33",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:ef1c6f4f0cf6a1007f7f6e21f9cf7688d59412c7d421008c41ed86cdef3bb402",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:e21c10c5eb8a3e537e95c18d2271f169751167907106dc3780a21e8ba74d03c1",
++        "semantic_identity": "sha256:32920d4e7112caaa93a8e67341eb1b62789075d28eabd4000a5cbadf9167d71e",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:495013c4937fca97fb7d27f59213f86e99bb8f7d300e5d8fb0f4dbec5770bfba",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:039c291bc0764ad2af34d1396a0e233499ebfe0d4d8c8913a54cd4ac9611d8c8",
++        "semantic_identity": "sha256:a2ca56ac6da50b299694d60487a6da7cbd8688d6aa701434445a6824a60fceb6",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:43f038a4633407e3292e5c68fc6620bb07bed23fb6133e2b64fedf6059cbf2d5",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:1e1ea884c438072b71dcbf96c1f91beb87a586c77c9ff0f3dd861974cba79539",
++        "semantic_identity": "sha256:d7f22aa96155ddea9558856f2978dc8cbc4dc1aa2d25cc8b3efc0f25f0a7fc01",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:07c841df9e0ddc62dbbb20d1576cd5612325e5808bf081321f5c8a709b924582",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:da04ceeaf057ac4de90223837180513561d88594b104038dfe674a721a32ffa4",
++        "semantic_identity": "sha256:14564a0f907ac1a847d72109aada14715809b4f17cf8442cc0e92b4c5fc08d31",
++        "source_pair_id": "pair-6849-f7a2ec28c8235077b3ff814c"
++      },
++      {
++        "contrast_id": "sha256:66639a81b110eb3c0a2cbf978acab5ba5d7ceff7bd66b8b0fb70f459c2e6755a",
++        "family": "exact_energy",
++        "group_id": "sha256:a1474673c550ceeb97bce985a566e11908146b4bf47053e7fec5a35b8782fd9d",
++        "semantic_identity": "sha256:28b6b904e2c4dffabd8656d2890865a1858e9c82920f63b479ab6520dc8963c9",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:cf4a9ac36dca2aabfa28ec994020e39da0b93e6d6efa7723bbfbf1af0c611f05",
++        "family": "exact_energy",
++        "group_id": "sha256:dabbcda4fb09425deb1276c232515cf762ba5bb83c1b6f7ad8a5a4f18a986998",
++        "semantic_identity": "sha256:6b1bcfabcfebfd5f5885b4f74d317a1f31fdaf219acd28c81cbaced18209feac",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:bd24a1827bb586e4ed4f2d6bc189619a8619a1487f684334b734ca0c773d9739",
++        "family": "exact_energy",
++        "group_id": "sha256:bb470dd49c39b4f43a4f54a765b61b6485fcc516de55582bb29ca1dec0eed763",
++        "semantic_identity": "sha256:8985b553f68de036be6d6dcf24f071065fb1f94381f0d9388b48c0227e0b364e",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:f0ca17ff158a2111970ab5f88cb3654da4c83d0893d24b5cc2a23bda1d638997",
++        "family": "exact_energy",
++        "group_id": "sha256:99a609bcd5e0ba2f0f609bafc6e8261e63ef37fae2a03c1dbf58f3fd49e11679",
++        "semantic_identity": "sha256:f1d1fdf7123bd2ff58c4c516ea90afff9018d54fb73444e414215c10df3cdcdc",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:5cda39d646c55e4eb7b978bc2bad2f5c8415296956b4e83fbeb17704d996f9e3",
++        "family": "exact_energy",
++        "group_id": "sha256:6415283e8d246bd2d5520e2a7f36837563b2ec504d16196456f111a19817aa59",
++        "semantic_identity": "sha256:61a5f992f2057c4c519e3233cd3d7d21fa7e5d118c308351b3269de485cba90d",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:e27bb28674367d396695b071af6f4c975a5b7996dc06b4cb2db1013c0710ec80",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:129821944b4ad9745d459aa5749da0d3026ce661a2642d2e04da151ccd5bac0a",
++        "semantic_identity": "sha256:82717519b82c1053c53096519f783175a3d6e0dbd1db8f3d8af81cfa4f068384",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:05737e3a619745b86dd40b7dcc81dc5c2e4cf9c78fbe004952e5f7a466f85bdb",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:df975e208da2502e865b393f3578a18bd7dca1a69ee6a0fbc9953dd9f9d55bf3",
++        "semantic_identity": "sha256:b2dd3cdfed3e7b25857a2915612bde077da72b5c9f6b73f43f176660b3784507",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:25b9ee707d1535ce4dc673b6f88936635ca9a1512d5c4a436a8aa0cef1e731c5",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:ef9404eee7e947057df2aac3249b70f4104f2ef01dc41991e4830420da9fb6db",
++        "semantic_identity": "sha256:0e2705b43e5fe9e486846fbfa48cfa7dfa48a53d1c0b226c05959a9b29092d8c",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:94709e4287ae2cd30bc52be47a3e58c9c4ec0b4dda27e952866db14e7e0776f7",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:e462a7dbca6a75c5f620015cb5bb94d6f478b7d474c9a2cbec080d737e55867a",
++        "semantic_identity": "sha256:0507c4dab7d57d437966e7a7f57f8c90d19f9a544ea1c968f325f188ecee57db",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:4237773565b2caefc21bfe4d471eaaf43a256fdf82cce717c31895349b5da376",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:1f5191e752611abec45035b75e98503eabf0369a376eee81e7936ea61b2c03f8",
++        "semantic_identity": "sha256:1857d5867afc418113a69affbf322f00ca78d86e6a8854a4d4905e0c3578aa95",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:4ce5caf13f85ff2c0f1d308524cd17915d9d1ef26e55a52b9fb157e4ea39c786",
++        "family": "memory_guard",
++        "group_id": "sha256:d2e3eeec6708513a290820040555d8a3b8e56370dbb6c3493c162cb76b62f3e2",
++        "semantic_identity": "sha256:f478620401ba7832f98ad055dbda962879a2ff665a80e427c94e391b21ce5ff0",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:9971dcc5c63b65a05b3e9fb38f20afc39b2674929b596c1aaf30066a8cd04dc1",
++        "family": "memory_guard",
++        "group_id": "sha256:9e2ea83aeed618d4c69b51cc0f8fbd76fc02534db8b36fc320b7efdf61ac348e",
++        "semantic_identity": "sha256:0abcd347dc7b133e123c107a18f53370e59ffdbf30df16f9b0c952b268ba07b3",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:86248151a10d12d666108af5a92c815948c7a20b552bfff3732562e481391a3a",
++        "family": "memory_guard",
++        "group_id": "sha256:2a23aaad353be434176655d83c90cd0d28e583bc2f9f556c1e856818d850a990",
++        "semantic_identity": "sha256:2a837194e7602eadfd51b7a32322f37faf84bfa1a0e499e5ae50775a84b04a61",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:966424d41be50cc18bca070868ff98854e4343e8555d6d0f1e93a77b0a106332",
++        "family": "memory_guard",
++        "group_id": "sha256:e55031f94452fac6147fd1507802af9c3475f0e96a85b7aea5d78eb729268c25",
++        "semantic_identity": "sha256:6c4d12eda371a53bf89294a8dfc7b7e030b5b5826e2c7b44c307eb12eb5669cb",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:8336078206bf8427fc0cf8eeb80c183cf78c8a8a4f7e0363c165e0fe91691234",
++        "family": "memory_guard",
++        "group_id": "sha256:9fa3e3a733fbd5914957ddde62251dd16e435bfa4e228958b72cc23da793f228",
++        "semantic_identity": "sha256:1a2da249159fb57856a3abdaba09a87d3c7062aa05fa3471b468eb0a94afb563",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:970e619ce6e79adb635ffe2f1371fe47b21c2add15aedd1335fdc03f8b5f4ae2",
++        "family": "arc_guard",
++        "group_id": "sha256:c2bf5090d8a3b4446a964010322364ce9783a49ef489c5e6603557f909ee37bb",
++        "semantic_identity": "sha256:e868e5e36e882a17636d6991179970ace0d92c0a9636439d7697d4cb9f607484",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:d452dbe14de510d11c4178c29e523b2fc0609d7b1d1de4b476e2e720f0b11ec5",
++        "family": "arc_guard",
++        "group_id": "sha256:329d9da41632761d40e8ae6ee2e1a8cfc4972fce1a99d518a7e762ca84fb1b95",
++        "semantic_identity": "sha256:585181b33717069932c84256705ce4facb66b250b16499a06c1f5b6c155b7b95",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:5cb0085fedea20c2b6e2a513c7297c850fe6e21f77e8f63545a9bcc7bbd6d370",
++        "family": "arc_guard",
++        "group_id": "sha256:a2e8edfa5cbe0619ccf4a61dc1b2eb58dc59c3e5aff51ef6182810e5fc1da1fd",
++        "semantic_identity": "sha256:0dfb11c7a424103874eaec40937fbf5494393d30ecf399d08b9d33807390fdcf",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:e816c5a95aa6c0b1e5a198c02fdc21ddbc5613b710a525b0c971248c57478560",
++        "family": "arc_guard",
++        "group_id": "sha256:e737a501c689d49c630e856e9a181357074c7e812d6bfce3d3549a2fe4032282",
++        "semantic_identity": "sha256:351605f48bd562e82c657c11295ae897143ecc342e620b8d7ff9cd8b924a712c",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:399fe62635f903b4976c7f9631703fba7c82e7c9d61d0b71bf3b4489cc9e3423",
++        "family": "arc_guard",
++        "group_id": "sha256:1dc12b58ca4efe37a996726bf9c0d8edabcdf085e23453b9d0a524f84378baa4",
++        "semantic_identity": "sha256:b5d95fc77c3f176648e37fbbec6f67fe80e73dd11ac66303c440d700987f0c72",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:97a2fefd9bd4595312c6b1f53d22e1dc020cf44af118c2ba9558655a811ef55f",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:4edc29cb74961dee5c316f00f1e414fd68424fb61fcd82b7daed62bc0d599628",
++        "semantic_identity": "sha256:86d14e47ead6f113521c313d7de7815073e86b5ba78877a8d2f6414ef669382e",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:34c4a3e23c12e45733278b74520ee401aff6ba0abef12a7e05cd0f51eb87ecbc",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:aebd742ed43631e14992df33391eb70f8d5ce4549b45fea1db2113b833572f05",
++        "semantic_identity": "sha256:acfb99c8c00e3e070909a76a58cdfa6a9c3f993009f8c834293703d9d3a31b57",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:a98f9cde999c23449ccd0b122f8948189660d423bcd8f7f8f9edc2a5b18b37b2",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:ff76397aa1b42caa5818b2037017d1e13489bcc89dff0966d53a22895262db78",
++        "semantic_identity": "sha256:f0e082ac2f61a5e46e910d93c15df53541316fbabe5d2deede824c717f6486aa",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:a4b65b953c6a97af65f4851ac2d0923d7cfd44a1f899dd9afbdbee9677c5192c",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:217679ce86879e8a94a8555b7b1a1cf8896125d1dd08b0270b73d35de88eafbb",
++        "semantic_identity": "sha256:6908835ee0ae22ad1046ad8a8be399871120ef21895cfbbcf8745071e35d3a3a",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:02d7446524efca56271971d7db95ae354a0923989d88f3994f6f3fa1852c514b",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:169e1a171237ead2971dca9c2a2cbecba259a4ee0b5abbf32c6639eb68fe5b5f",
++        "semantic_identity": "sha256:a1b2cc71e3b40e3295cffadf088ce866bc6022964b1f9e05a5bb74480f892609",
++        "source_pair_id": "pair-6849-03aa9dee11362c6c42c6d706"
++      },
++      {
++        "contrast_id": "sha256:ceb4fce3a8b8f002f4a082c7d8c1c0086640ed5b155b7302775bc00a862d3d26",
++        "family": "exact_energy",
++        "group_id": "sha256:741c90e8a96c8250e3079526837f63fd31aca76f0fd220614a5f1098743b40b9",
++        "semantic_identity": "sha256:ff9db10f7095b2ba21347e809768ee04dca4d2a205dfd875a2c5f8cd75b5e044",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:9649f904542e53ac9529cf7400c7f59cf1ecec27402bae72685563d91fc2dc77",
++        "family": "exact_energy",
++        "group_id": "sha256:cd06cf2566e37fcccac035ef08919135341476973c01a6738202bcb74b2d1cbb",
++        "semantic_identity": "sha256:b81ef9512009df162f029592f53cb4d806528b62e74d8073fd25808c75efc210",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:7397c8fef36ca7a356c6d388b06aad6ac78a9d40e76710a6f132017bebc094ce",
++        "family": "exact_energy",
++        "group_id": "sha256:ab628629c05f30a58c92d9e372f406ea5dc1c7f568b68f1526a223bd7ca371b8",
++        "semantic_identity": "sha256:2ea7bae018cd434979a5ec2f111eba29b4eac9132d6090ac7e0b0e4a5b8a9761",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:dc226c92e12efeb2f0e9cfa3e335f6eb5fb2e92069aef04bc4c6ac7fbdad1168",
++        "family": "exact_energy",
++        "group_id": "sha256:9d53bb2e02a5f692f7bf0c44ae5e8e7490a07099ebf2d10eec9deb83959cce21",
++        "semantic_identity": "sha256:662277400ac3e7b679bf73af9e4a0f5f9e329545d9fd79181a85bcff4d5543d0",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:32dd7b46ed5b0a82c9d37e2f6449ffdc2675fb1c09f3f911d8895ae005ec9f2e",
++        "family": "exact_energy",
++        "group_id": "sha256:b13ea91b129d0aa85102cdd57114fbd3290e13a764e1867bbc3857cccf6bce4d",
++        "semantic_identity": "sha256:cb5bfe2ba03e286f60f3e0b97b9396d19fa79a34f8bb5da45efbb03b16368f63",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:d7f76c6e2127bb013267752bc2337f2b340005d834377ed6f9e743097407b3bf",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:eca37184dc24b1adb44c87bef9f9f0bb8e29ebb75bd08c9798c969e7a0152f41",
++        "semantic_identity": "sha256:f85ab4aaca2141390001178c23851036bec7a06d6a174633de341bef1cb8ed65",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:d1bd3fe9bc4cacdb0b9ce7fb70db0a6ce94beca5a10e4a217285c53008ccb84a",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:7adfbdb3fb559790bbabbeafad5d3b92bd9877afa47e9154017234d342d7cd11",
++        "semantic_identity": "sha256:c7fadaff8c9a6df90422518a307e0cd37e66457a38673c894c7ad951ef87c269",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:d55faac9d983fe82b97d58e64a4d9f8d00c5c8a47c77c33188aa80bbd959682f",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:fd80ec6b5be358882840d93b183196d7d7bb08bb4e9d939bad62418359709abc",
++        "semantic_identity": "sha256:a4369e80f17d7d62610d8fa085273732e73169f15e9b193ef568dafec84dd367",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:9de4f0178a783f185aa9ba00ff0d065b66ce3a2c70fa53e5749b0d8d562bc0b9",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:0cd57833bc8c5f87ee56bf952c62953b7ae4f064222b0282bf8b55ac2c5e6674",
++        "semantic_identity": "sha256:9ea6a171c07795a565eea90946c6fa0cad6650c69d34b214514c9cc53c2e88a0",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:6d2f593431b19ba66749729226d48b310d4c5547e793f24def8e848c8f5a918a",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:903b0102f9d437626d4583b7da30ef25bbbce56a46eb63a9c25a2b94fdd6cd31",
++        "semantic_identity": "sha256:3c8559210bdd4395d58163807ebdd4ff40bdc7e318c54bbf2ae763b7966aad7b",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:2130c0c4baaf1ec1d87ea172329a1ea37dc13db2c52ae72f7b041aa1a1a3e39d",
++        "family": "memory_guard",
++        "group_id": "sha256:b13e511b61ebac8764aced10263ad7e445fe978330964451275cd8ee894dce13",
++        "semantic_identity": "sha256:f8f8d99efe974b6d8128ae5b8320fa063ac4f1514d7a29c232b685064ef12869",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:22f3e2505d0adc37cfbea4c1b1c32cbe61a6e063d0ddcbae14f26c5257bf2c6e",
++        "family": "memory_guard",
++        "group_id": "sha256:937619ac74ed97f9b8934febbe6fc1943f66d72d8f2a2f070f3cece616cce9aa",
++        "semantic_identity": "sha256:7dd567ea7f6e9733a085a6ec0df236477d6990ee64979c15d6495b793d8e728d",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:96ace5e99c1bb47bb5a14b9508592458efc4f4fb7e2c945ce46164c22b79edf2",
++        "family": "memory_guard",
++        "group_id": "sha256:a78f31d06052b34454e3f8faf1d5c72a4cbad811c235682453ee918153656276",
++        "semantic_identity": "sha256:f39f49d1c21eef9de7855d2f687633739d5e8f845393e6a5323fa82680f4c656",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:5f4334192714e8e988cc5770297bf3876c69d515d38e53f8ad4206688660ee09",
++        "family": "memory_guard",
++        "group_id": "sha256:baeb7f9cfd2898ad51455920d0c2b8ab2ce3f9b4a9f8620e125dc8c92c2cc12b",
++        "semantic_identity": "sha256:b78da7c19af5feed243e17593a84c078a195471ca2f94e8b166a5c4fc9c6e302",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:1a3e35b733ceacb08f5e202386724fbc3b53cf8e7f824e86a46cbbfe070c2b68",
++        "family": "memory_guard",
++        "group_id": "sha256:bd62e78d05d6f6e148f7e863c83437a41dab5ac42009211fcd71b66c5531bb0f",
++        "semantic_identity": "sha256:fdc10e249e54c26a84e753831d56483404be35dbcf37287cd113a29ca2f3b592",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:3f4b54bbb10622c96f725d0d0c8efbde58fd53d5abda9fee4b599c98784545a3",
++        "family": "arc_guard",
++        "group_id": "sha256:283fb9f6f26f180a887c000bf3e957759f3b03954ddcab1aaebf55dfe6e7c01b",
++        "semantic_identity": "sha256:622e6c6dc21d2391d2ff5fd0bdc2212682ec2991b3c10f882cc3f760731be16c",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:44b18ebdd0140427a4c9387cfd71dacd390c0b8c02762d0f887c31bec76e3250",
++        "family": "arc_guard",
++        "group_id": "sha256:bdf370f10663adf3c6649dd0b1121cb019ba81efa5903949d62497764747c888",
++        "semantic_identity": "sha256:74a9a35c7143a6a348f17d57e1b7840cd94c1f33a1990900bde0fb5525f2b17c",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:d4cfd1ded91d9d9c72bfa84848f8a1d2be3c018561245a07045565a2b2b46d1b",
++        "family": "arc_guard",
++        "group_id": "sha256:c2c47f6d066732968f9bd85dfca31d50b6f1b17da69d230b2dde03ad222856df",
++        "semantic_identity": "sha256:b9a2e4a1924616796fb8f303c5ca673109b605c8b9e3f1a20a4eb2a7139e5945",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:d274e43578b1cf37148e4493f5e29f7f45164edeb9131199769564890c46359a",
++        "family": "arc_guard",
++        "group_id": "sha256:5f1c36facc7ad03ff01a891fcfaeaa3589110ef9ff9f72358f8399424a51ef8b",
++        "semantic_identity": "sha256:1b56f0ed278ffae98fe77fdcbea85dc003c740ca5d9a0f243c750b1ccaa676bd",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:38810a7e78d2a598bec2f4ccc73d5c7b362ae41ea9f233ad9fd5864208f7d196",
++        "family": "arc_guard",
++        "group_id": "sha256:da58283fc0e0882813c3d32880889c601025d2d74bd7a21a14513fb1c121115e",
++        "semantic_identity": "sha256:7522d5a85c064a2fd12c6c8722537bcf2a15f3871b38e811a60d8fa2a691e721",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:822285165105f6aa28f2880bda35649e7057524f5bb433230010d1ef0fdfc786",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:09695f2df5b0b8b2366e62b4643077174991b0b7a244e5ef008cfc81c51c338f",
++        "semantic_identity": "sha256:c4a6119f25d33bc534c4e5a710545eea4a7ca338df3b677c52ab93a3cf338075",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:9eb44a77b02c6bfb87d0ef5110294403d671211627f2ae235e3f7a3e82df98c5",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:4b25d301455ca078f920a1c072881a5275dfaede657934bca4cf72461b0cfed6",
++        "semantic_identity": "sha256:1d80d3cf5bfc3ea5f8b9664653937abab2793393213b74ab438e73e0be074900",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:e551fefc3654cd23752bf4503ae9549d04770da36e6e370e238588024ebdfad4",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:95e7739c92e334723bc485f35e601098f60c80699e9a786804cb8e163535ecf3",
++        "semantic_identity": "sha256:172330636546d1833a7ca73b8ac82bd20d21208a4e7978f499d719a97db53b86",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:4497da2bdc3eb18dde16236e74e272d892a40897e3189644373ecd419a80e9e1",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:b51755a6dd6ccc93814cf79b6d827639fe702f5d60bb70f3a24c5cd99b655f11",
++        "semantic_identity": "sha256:2874fae4df382a8bc1140e39a2253ed4fdc99daee15def09e0cd6f51e6c6cae6",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:652730acbdc9c76c5f3b1d3fee51fe9ca63ac812fa9e8edbc4450f5358a092ba",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:fb38eec628daf9c2c3c9ba060f003551a0ac0675b67415ca69e04f688084991a",
++        "semantic_identity": "sha256:09975695051b0e5571ba87226aed4c448fcc857d36f44a042ca40e75b589a712",
++        "source_pair_id": "pair-6849-16ce675ae6d3e7356ad3cc7e"
++      },
++      {
++        "contrast_id": "sha256:dec03a6a6385418d32b49c5ae74f68ff1dac47197a6b511c3336c964951d46e6",
++        "family": "exact_energy",
++        "group_id": "sha256:c379aa6bc43ed126e14dd6d1284dff3384316f27c777fcd58065451f70627e69",
++        "semantic_identity": "sha256:80195395b1cf1bd04b97a0296803f3caa7aeab2533c1ff1f3bf19c289d5358bf",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:3284a01d1b8a49fa6f79aa55a66e474225894ba29fcaa8455ba5e7f96253767f",
++        "family": "exact_energy",
++        "group_id": "sha256:b7333a486f3dd4e6b3d826a9b7ee2db489a7effa839e16bce3c6a75a7d67e277",
++        "semantic_identity": "sha256:0ee91707a6fa70bc1a52c1fabf778c4fbbbbd1079c2a4c48190acccc88f96e7c",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:f3c6cb12312799d86664c41f10878278323212cb2893fd7170abd8dbc9286e3a",
++        "family": "exact_energy",
++        "group_id": "sha256:d16a5d84eb5be2ed740bb29e9c1d41661030e45e1800766af05e14752b355d24",
++        "semantic_identity": "sha256:fd2ef28846962bfe94c8c8eeb70f3f78e3dae79dd7c1a2bc2cbaa4851b73d22c",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:2e972411dc686a64365d749f36b07ad5d2896cd7c81a3dac2e6bde2e31717e13",
++        "family": "exact_energy",
++        "group_id": "sha256:7646c1b882cb32d9e55a8a12ce18d409b59272a52184ed6db3125e2c51f2d0f8",
++        "semantic_identity": "sha256:b2c93197771928cfdff4a9f513690ee270316cf76239c9c03b6295e97943b0ee",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:fa0a3802d962102f80c56c95da00714b0828f577cd01886344e0178239d4dae9",
++        "family": "exact_energy",
++        "group_id": "sha256:a75f25281e413646532b24a3993788bae39a0ff34843364553d82b2dbdcbac15",
++        "semantic_identity": "sha256:daa54cb76f58d0bcf7db2bbdf7fb94281a7add86e4b3285b09d25e07e138023b",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:b81af6656af91dee1f3a1f519be588bbd08225a5ae79bb9c8363bcbedce325ba",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:b64db4871428bda876a59780f5cb2eaed2fabfdaa73f315735ebc6ebc0731b17",
++        "semantic_identity": "sha256:b934ede36f6c9410287829bf23ecb80a5451c0e428aadfb3f9c5c1e2933288ee",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:a00e0bf5328c6b1bad629ee07931ba56249144becba1df1a73ea99508447f92a",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:7847429cf133f370875eaa19b47a06b23a6ded45381626df643a78733fa956c6",
++        "semantic_identity": "sha256:a79b6e8fe6c3f97bce47e6994ae8f6865305d5f858d287230a732d7d1e3a0596",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:e4f1bbd40748384780a8e518a7c8d976acadefe13cc933b55d10fa08aad6c275",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:3ca438c56ea6a0ae604a852d4e5ce9502ffc57426f17d58196b650b134c689c6",
++        "semantic_identity": "sha256:d83d510bf2fbf97152120ddca10e5d500df6b42ffa3064cfb698fa21a6ed18da",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:c9646817af5b9c37beb6d65bef531380b8f8b907f5ea15c91103df9b74671de8",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:40465d84eb04d2060637eb212e81bf657b719105452e41415399a79c364aa0cf",
++        "semantic_identity": "sha256:ba0631af10669fd7ab6c1190ffb87cd6216a5ad6616e991f0f2040190b64e273",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:d95f86a04074c9a1a0d3a97c9a5daaa6f243e6645e34be160b5f61bb7eae1088",
++        "family": "satisfaction_predicate",
++        "group_id": "sha256:6d252e6f167e67e23be2d9166b888fa9dcc73098a142a336f7f5e6ea0d092686",
++        "semantic_identity": "sha256:1b6a0f0eb044b567ffd2542ef257dbf9b5f8edfe9b90e610dcce751405b75bf6",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:8b140087d60170a56894f31565134b1cb68015ca143db89fa81626239489f97f",
++        "family": "memory_guard",
++        "group_id": "sha256:f655542e91f639f30eb5d09628e56a444fd42f1eff80a4101741deb1f30e47b6",
++        "semantic_identity": "sha256:578ac42c323f263fa5bbf256a676608d0a816655d435b42f7873d0f1e52facd1",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:401d29af8bdfa77bf538415331274b9505975837573a61f016b8a3e426e61027",
++        "family": "memory_guard",
++        "group_id": "sha256:23a573f86e2eedc8689eb37065a18a2fe9d88b35f620f5db65113e3b91afc64f",
++        "semantic_identity": "sha256:f1360ea9c9ef8e78a7c2aaed77cdbba818659f6249857b5644a9a2d12a160eaf",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:8e2612616b197cc409932b209847a55525846167588d126534b65526d43eb59f",
++        "family": "memory_guard",
++        "group_id": "sha256:14872f631cdef859a6a363435156a515d9c5f21595edb4631dbd202e7ee7d528",
++        "semantic_identity": "sha256:4f1d70e3d63ca5be8a65db6ec35066e7123cb2467a936e354605426e4df4a80f",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:4f9573199c306d3b81be2bb3f6b699565607ca76374e1317da719cb92874eabd",
++        "family": "memory_guard",
++        "group_id": "sha256:1d061f7215a5b9516269308ecf963f67054d75ffc8038acdcb6374c1d17a4ab4",
++        "semantic_identity": "sha256:28203ad3d9325c2805a9de8cc7b9975ada8aca7a378ba8184ae33b866a484392",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:1a4b09a13c1961a3cdc726ca22ae183a57630f467821f6590932403d7b458822",
++        "family": "memory_guard",
++        "group_id": "sha256:5027a7a44ae4052ae34f5cbed8dcae327916cac8650019249d8579c30930c582",
++        "semantic_identity": "sha256:68a3e3b4900f4c35d9ba854fa7b31d85eb2786f137cc3d509905243a5f99094f",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:7a4591238ff00cc3eaaba7beac36dc3bab4673d7d38b606eb0873899e806d3d5",
++        "family": "arc_guard",
++        "group_id": "sha256:0874f3ce76a0c862d455701c488c535ed4ab427129c6ecf9749b462197ed5687",
++        "semantic_identity": "sha256:1b9529767ae00a6d46468063c3bf7978817eadb5d97cee61c40d1a2f917198bc",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:ee9fe9d33b7321b7a1896e26d147b7db8c5bd7637fe3e22aac97227735c9bc1c",
++        "family": "arc_guard",
++        "group_id": "sha256:1deb9902514dc60ef39056218cd0b972f8be3352e0c0a1069034de1f3ae694d9",
++        "semantic_identity": "sha256:550c3a3d268f46b9a429c84b6e6bde1bcece766738257e1deeac57e599c297b1",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:8859c130806fee84488402bb32309404356668e287d5d3d02746ce9b75498bd0",
++        "family": "arc_guard",
++        "group_id": "sha256:f38366eedb476eedf50d470dc4c837897b3e8f0a4793144ea0a200a5226103e3",
++        "semantic_identity": "sha256:c4af64d9542ca2879ddd91ea028cc8ea9e607973585e553bc89fae5db8fbf15a",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:6f2e6b4dde746b9330eb8022f93439c24576eb3cebfbb0c7076590d65d7c13dd",
++        "family": "arc_guard",
++        "group_id": "sha256:d1f2df1250df8347f2e10c5e7cf0d54fad51582aa1eeb6bd86944a5b861d4397",
++        "semantic_identity": "sha256:7493b82651465aa4d6b079a5785b8cd852c65224cdee2b1cec94b64dbd207dc9",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:d010d819edf570d5158cbbe461896dc236d57267a786ef049ad90302d1af5348",
++        "family": "arc_guard",
++        "group_id": "sha256:ad45bc406c2b577dea4e882c541961860a8d00a57b38a86e10f3f0a0cb70a7c0",
++        "semantic_identity": "sha256:6d85dcc462df4423f42d3ba8b2eca04a31cc30552e9daa667bb814194ac5b597",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:ff03e090f5efa13c04a9ae5e49abc99ebfbf2905a9ac7b2d1db33986dff76dd0",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:f82f97174b772b8f85e84006aa6c5abe586ae1808c0ff08695d68d8d1cd8c63d",
++        "semantic_identity": "sha256:0afff3aa70a22bdfa4c01c00484c2747159974d89201937602a018f72d6b870d",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:62cdf03537dad5039b83ed717d8664d7dc0ba84bd8f2327fe6b83840cfab7c9f",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:ce499d566777961a42a50cb9e75f7aca55773ee38f8cd9cd0bfde7704d679b6a",
++        "semantic_identity": "sha256:231c7427dfbc05a400a9b4f8e92a146d5beb9599dc34d575843d61521f3613f4",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:6de680c0af2b610cec8e036669a58b1eedbf5cad19bc3232b0c248b95b7787ae",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:891c116154e507aff52a1dd2f0e5f11b5a6e96e70430f01655cbc4c20f41b06c",
++        "semantic_identity": "sha256:11664cd7a174aacb6b12bc105088eb0b8675f5f3b9dc45b9552c46069faacb1a",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:a43b39ef83d251614394358298b2ac655ac44421a26fc6d63ef8d3f6c8a6a39f",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:db029d38479e24ead126388b71c6ecef69d9eb47512f839431aa96c40107d683",
++        "semantic_identity": "sha256:98502a09b1b074ca99fccadd3cb81ccb38eda3593ad1897e5682f7eae855d297",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      },
++      {
++        "contrast_id": "sha256:9777bd3c1c4358b47cd66c24b03b1111669e62e0024f6b2b80a55846f1188843",
++        "family": "diagnostic_obligation",
++        "group_id": "sha256:05c867383786c14e2b4988e22d4937ad566267d963c100db579e67ecc74a7570",
++        "semantic_identity": "sha256:2eb42aa2ce35cccc9c0af4576620d43f9a7bf9c6fa249650477f419b83f740dd",
++        "source_pair_id": "pair-6849-23e13072b2b75a30a299b789"
++      }
++    ],
++    "identity_manifest_sha256": "sha256:6cc37d54fe6c3a03a05aa3c4ee6e1ccb04c7345da6ee41d6e28cc4dae886aed3",
++    "identity_relabeling_allowed": false,
++    "schema": "carnot.frozen_contrast_bank_identity_manifest.v1",
++    "source_artifact": "results/experiment_6862_dual_side_semantic_contrast_bank.json",
++    "source_artifact_sha256": "sha256:dbc2d463153274432dd02bbd188e5e5477a650bcdf4f1fc101f2e6adc5778638"
++  },
++  "frozen_semantic_probe_contract": {
++    "canonical_outputs_must_be_frozen_before_scoring": true,
++    "contract_sha256": "sha256:250a73042e858528c829ac6e718588f9aab9d02ed956ef3e74bf77edd14a73ad",
++    "legacy_output_witnesses": [
++      {
++        "canonical_output": false,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "probe_token_ids": [
++          10993,
++          59610,
++          369,
++          9770,
++          1973,
++          264,
++          11991,
++          2306,
++          13
++        ],
++        "source_experiment": "exp6850",
++        "stored_tokenize_settings": null,
++        "use": "legacy_schema_mismatch_witness_only"
++      },
++      {
++        "canonical_output": false,
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "probe_token_ids": [
++          2,
++          14860,
++          58024,
++          563,
++          15593,
++          2180,
++          496,
++          11639,
++          5346,
++          236761
++        ],
++        "source_experiment": "exp6850",
++        "stored_tokenize_settings": null,
++        "use": "legacy_schema_mismatch_witness_only"
++      },
++      {
++        "canonical_output": false,
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "probe_token_ids": [
++          2,
++          14860,
++          58024,
++          563,
++          15593,
++          2180,
++          496,
++          11639,
++          5346,
++          236761
++        ],
++        "source_experiment": "exp6850",
++        "stored_tokenize_settings": null,
++        "use": "legacy_schema_mismatch_witness_only"
++      },
++      {
++        "canonical_output": false,
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "probe_token_ids": [
++          10993,
++          59610,
++          369,
++          9770,
++          1973,
++          264,
++          11991,
++          2306,
++          13
++        ],
++        "source_experiment": "exp6863",
++        "stored_tokenize_settings": {
++          "add_bos": false,
++          "special": false
++        },
++        "use": "legacy_schema_mismatch_witness_only"
++      },
++      {
++        "canonical_output": false,
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "probe_token_ids": [
++          14860,
++          58024,
++          563,
++          15593,
++          2180,
++          496,
++          11639,
++          5346,
++          236761
++        ],
++        "source_experiment": "exp6863",
++        "stored_tokenize_settings": {
++          "add_bos": false,
++          "special": false
++        },
++        "use": "legacy_schema_mismatch_witness_only"
++      },
++      {
++        "canonical_output": false,
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "probe_token_ids": [
++          14860,
++          58024,
++          563,
++          15593,
++          2180,
++          496,
++          11639,
++          5346,
++          236761
++        ],
++        "source_experiment": "exp6863",
++        "stored_tokenize_settings": {
++          "add_bos": false,
++          "special": false
++        },
++        "use": "legacy_schema_mismatch_witness_only"
++      }
++    ],
++    "probe_text": " execution readiness is checked without a scientific label.",
++    "probe_text_utf8_sha256": "sha256:c5930e62ea5075da50cfdec0e733746cd61ad3be1cf25c3fd90bd97d22094f98",
++    "required_probe_classes": [
++      "whitespace",
++      "newline",
++      "tab",
++      "unicode_nfc",
++      "unicode_nfd",
++      "punctuation",
++      "label_swap",
++      "control_like_text",
++      "literal_special_token_text",
++      "empty_text",
++      "chat_template_boundary",
++      "exp6862_sequence_templates"
++    ],
++    "schema": "carnot.frozen_semantic_probe_contract.v1",
++    "source_hashes": {
++      "exp6850": "sha256:0093104ffb1d4f3f22e7ab9369d56561d8d01fa84406faa89d8f0117ced6977d",
++      "exp6863": "sha256:fa74cb9537c3bb8eeadbd58542900e225e8086c46d6d3d1b896d9af68974197a"
++    }
++  },
++  "gate_check_summary": {
++    "checks": [
++      {
++        "check": "required_source_readability",
++        "expected": "all required sources readable",
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "active_v601_roadmap",
++        "expected": {
++          "deliverable": "results/experiment_6865_v601_evidence_method_change_contract.json",
++          "task_id": "exp6865-v601-evidence-method-change-contract"
++        },
++        "observed": "2026.09.601",
++        "passed": true
++      },
++      {
++        "check": "completed_v600_task_set",
++        "expected": [
++          "exp6861-v600-branch-retirement-evidence-contract",
++          "exp6862-dual-side-semantic-contrast-bank",
++          "exp6863-tokenizer-aware-semantic-contrast-preregistration",
++          "exp6864-three-family-semantic-contrast-scoring-stream"
++        ],
++        "observed": [
++          "exp6861-v600-branch-retirement-evidence-contract",
++          "exp6862-dual-side-semantic-contrast-bank",
++          "exp6863-tokenizer-aware-semantic-contrast-preregistration",
++          "exp6864-three-family-semantic-contrast-scoring-stream"
++        ],
++        "passed": true
++      },
++      {
++        "check": "v600_conductor_record",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "max_token_retirement_record",
++        "expected": "arc-induce-completion-budget-raise",
++        "observed": "arc-induce-completion-budget-raise",
++        "passed": true
++      },
++      {
++        "check": "arc_truncation_note_contract",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "v600_task_reconstruction",
++        "expected": {
++          "deliverables": [
++            "results/experiment_6861_v600_branch_retirement_evidence_contract.json",
++            "results/experiment_6862_dual_side_semantic_contrast_bank.json",
++            "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json",
++            "results/experiment_6864_three_family_semantic_contrast_scoring_stream.json"
++          ],
++          "task_ids": [
++            "exp6861-v600-branch-retirement-evidence-contract",
++            "exp6862-dual-side-semantic-contrast-bank",
++            "exp6863-tokenizer-aware-semantic-contrast-preregistration",
++            "exp6864-three-family-semantic-contrast-scoring-stream"
++          ]
++        },
++        "observed": {
++          "deliverables": [
++            "results/experiment_6861_v600_branch_retirement_evidence_contract.json",
++            "results/experiment_6862_dual_side_semantic_contrast_bank.json",
++            "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json",
++            "results/experiment_6864_three_family_semantic_contrast_scoring_stream.json"
++          ],
++          "task_ids": [
++            "exp6861-v600-branch-retirement-evidence-contract",
++            "exp6862-dual-side-semantic-contrast-bank",
++            "exp6863-tokenizer-aware-semantic-contrast-preregistration",
++            "exp6864-three-family-semantic-contrast-scoring-stream"
++          ]
++        },
++        "passed": true
++      },
++      {
++        "check": "v600_conductor_terminal_rows",
++        "expected": 4,
++        "observed": 4,
++        "passed": true
++      },
++      {
++        "check": "tokenizer_receipt_schema_mismatch_proven",
++        "expected": false,
++        "observed": false,
++        "passed": true
++      },
++      {
++        "check": "frozen_contrast_bank_identities",
++        "expected": {
++          "count": 100,
++          "unique": 100
++        },
++        "observed": {
++          "count": 100,
++          "unique": 100
++        },
++        "passed": true
++      },
++      {
++        "check": "contract_hash_replay",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "contract_source_hashes",
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      {
++        "check": "exclusion_safe_changed_boundaries",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      },
++      {
++        "check": "no_live_critical_v600_source",
++        "expected": [],
++        "observed": [],
++        "passed": true
++      }
++    ],
++    "expected": "all checks pass",
++    "failed_check": null,
++    "failed_checks": [],
++    "observed": "all checks pass",
++    "passed": true
++  },
++  "honest_verdict": "complete_positive_v601_evidence_method_change_contract_ready",
++  "inference_substrate": "deterministic CPU read-only evidence reduction",
++  "memory_observability_contract": {
++    "contract_sha256": "sha256:473642fcfc714eb2720ccd136c24cad76d90a84bd59dc64ac66bcf6da4bf5e4e",
++    "decision_time_observable_fields": [
++      "event_identity",
++      "source_identity",
++      "source_content_sha256",
++      "decision_sequence_index",
++      "available_actions",
++      "pre_action_memory_state_sha256",
++      "prior_reliability_state",
++      "age_at_decision",
++      "capacity_at_decision",
++      "known_correction_status",
++      "exact_pre_action_compatibility",
++      "relevance_at_decision",
++      "uncertainty_at_decision",
++      "action_cost"
++    ],
++    "harmful_write_count_disagreement_preserved": true,
++    "offline_supervision_only_fields": [
++      "later_exact_outcome",
++      "outcome_signed_direction",
++      "feedback_reveal_sequence_index",
++      "memory_effect_class",
++      "counterfactual_benefit",
++      "helpful_or_harmful_label",
++      "audit_verdict",
++      "future_correction",
++      "held_split_label",
++      "task_order_label"
++    ],
++    "preserved_harmful_write_counts": {
++      "exp6856_fresh_reducer": 12,
++      "exp6861_branch_contract": 13
++    },
++    "reliability_update_boundary": {
++      "bounds_frozen_before_replay": true,
++      "entry_delta_bound_field": "max_abs_entry_delta_per_event",
++      "initial_state": "finite symmetric zero matrix over frozen source and action nodes",
++      "same_event_feedback_allowed": false,
++      "spectral_delta_bound_field": "max_spectral_norm_delta_per_event",
++      "state_checksum_before_and_after_required": true,
++      "update_time": "after action close and later exact outcome reveal"
++    },
++    "same_event_outcome_may_select_action": false,
++    "schema": "carnot.memory_observability_contract.v1",
++    "source_hashes": {
++      "active_roadmap": "sha256:b4e8a2c25a1f62e9facc905fb20398a518c944b8c9914409c74d401f3e614633",
++      "exp6856": "sha256:6e6f1856acf0db957ca0427a53422ff8467ba7c04aed296d23eea13e16de7912",
++      "exp6861": "sha256:a2b912600d1fde25f9135bf90c633a7852bc400dccff3f01baeaa3f83b9e8006"
++    },
++    "v599_overall_abstention_rate": 1.0
++  },
++  "memory_transition_quarantine_contract": {
++    "admission_rule": "all exact transition checks must pass before a write is visible",
++    "contract_sha256": "sha256:90e50c8a1bbc28eaad37d447fa20103fda77311afd85f8da1845f36efd7dcbc8",
++    "exact_transition_checks": [
++      {
++        "check_id": "coverage",
++        "condition": "Every affected key and authority is present in the transition receipt.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "preservation",
++        "condition": "Every unrelated key remains byte-identical.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "source_faithfulness",
++        "condition": "The stored value matches the cited exact source bytes.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "provenance",
++        "condition": "Source, event, action, parent, and content identities are complete.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "old_family_retention",
++        "condition": "Every frozen old-family anchor remains exact.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "delayed_invalidation",
++        "condition": "A later exact correction invalidates the affected write.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "tombstone_non_reappearance",
++        "condition": "A tombstoned write cannot return during replay.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "replay_equivalence",
++        "condition": "Fresh replay produces the same state bytes.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "restart_equivalence",
++        "condition": "Restart restores the same state bytes and checksum.",
++        "failure_action": "quarantine"
++      },
++      {
++        "check_id": "rollback_byte_exact",
++        "condition": "Rollback restores the exact parent bytes and checksum.",
++        "failure_action": "quarantine"
++      }
++    ],
++    "quarantined_write_may_influence_decision": false,
++    "schema": "carnot.memory_transition_quarantine_contract.v1",
++    "source_hashes": {
++      "active_roadmap": "sha256:b4e8a2c25a1f62e9facc905fb20398a518c944b8c9914409c74d401f3e614633",
++      "exp6856": "sha256:6e6f1856acf0db957ca0427a53422ff8467ba7c04aed296d23eea13e16de7912",
++      "exp6861": "sha256:a2b912600d1fde25f9135bf90c633a7852bc400dccff3f01baeaa3f83b9e8006"
++    }
++  },
++  "preconditions_checked": {
++    "passed": true,
++    "sources": [
++      {
++        "error": null,
++        "path": "results/experiment_6850_three_family_scoring_admission_canary.json",
++        "readable": true,
++        "sha256": "sha256:0093104ffb1d4f3f22e7ab9369d56561d8d01fa84406faa89d8f0117ced6977d",
++        "source_id": "exp6850"
++      },
++      {
++        "error": null,
++        "path": "results/experiment_6856_sealed_risk_sensitive_learning_audit.json",
++        "readable": true,
++        "sha256": "sha256:6e6f1856acf0db957ca0427a53422ff8467ba7c04aed296d23eea13e16de7912",
++        "source_id": "exp6856"
++      },
++      {
++        "error": null,
++        "path": "results/experiment_6859_first_party_tool_gap_receipt_wiring.json",
++        "readable": true,
++        "sha256": "sha256:74863bdf181a5f8c4d43565a5cc98ca43a0611228f70a093d89b21621d0c4476",
++        "source_id": "exp6859"
++      },
++      {
++        "error": null,
++        "path": "results/experiment_6861_v600_branch_retirement_evidence_contract.json",
++        "readable": true,
++        "sha256": "sha256:a2b912600d1fde25f9135bf90c633a7852bc400dccff3f01baeaa3f83b9e8006",
++        "source_id": "exp6861"
++      },
++      {
++        "error": null,
++        "path": "results/experiment_6862_dual_side_semantic_contrast_bank.json",
++        "readable": true,
++        "sha256": "sha256:dbc2d463153274432dd02bbd188e5e5477a650bcdf4f1fc101f2e6adc5778638",
++        "source_id": "exp6862"
++      },
++      {
++        "error": null,
++        "path": "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json",
++        "readable": true,
++        "sha256": "sha256:fa74cb9537c3bb8eeadbd58542900e225e8086c46d6d3d1b896d9af68974197a",
++        "source_id": "exp6863"
++      },
++      {
++        "error": null,
++        "path": "results/experiment_6864_three_family_semantic_contrast_scoring_stream.json",
++        "readable": true,
++        "sha256": "sha256:a7dac7da1e8a8d018c80a649396e0e7fa3abaf5510ee86b6d729bf9eecc62e23",
++        "source_id": "exp6864"
++      },
++      {
++        "error": null,
++        "path": "research-roadmap.yaml",
++        "readable": true,
++        "sha256": "sha256:b4e8a2c25a1f62e9facc905fb20398a518c944b8c9914409c74d401f3e614633",
++        "source_id": "active_roadmap"
++      },
++      {
++        "error": null,
++        "path": "research-complete.yaml",
++        "readable": true,
++        "sha256": "sha256:0ac70af2c6a5a76a08834bb9ebda9c36fc424686db43c42b5b4adff7bf907556",
++        "source_id": "completed_roadmap"
++      },
++      {
++        "error": null,
++        "path": "ops/conductor-log.md",
++        "readable": true,
++        "sha256": "sha256:0d72ded3e26b32917f440e5c120f375b5801abfc91a1cc963e96d00c9b261579",
++        "source_id": "conductor_log"
++      },
++      {
++        "error": null,
++        "path": "ops/exclusion_manifest.yaml",
++        "readable": true,
++        "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++        "source_id": "exclusion_manifest"
++      },
++      {
++        "error": null,
++        "path": "docs/research-notes/induce-shared-pool-truncation-2026-09-02.md",
++        "readable": true,
++        "sha256": "sha256:9efd63d4e1b69f8e6ef6dd9568d87c4e231d4137f36c1e3fbbc94bfbb4f326d4",
++        "source_id": "arc_truncation_note"
++      },
++      {
++        "error": null,
++        "path": "scripts/adversarial_verify.py",
++        "readable": true,
++        "sha256": "sha256:0637856470f3be5436cec914958244fc45b7851c71d0729c387fed151b6587aa",
++        "source_id": "adversarial_verifier"
++      }
++    ]
++  },
++  "random_seed": 6865,
++  "reproducibility_checksum": "sha256:d0dbb55bfa119b05d03614afa9e9e2d55cff188800eefbdf3de88c201bae5e8c",
++  "retired_scope_non_reopen_manifest": {
++    "contract_sha256": "sha256:ae886b0135b8d8e0f635f36d91abf007cbae4ecb84f61393e534ec6d7ef77ffd",
++    "contrast_bank_regeneration": {
++      "allowed": false,
++      "source": "Exp6862 identity contract"
++    },
++    "max_token_only_arc_remedy": {
++      "allowed": false,
++      "blocked_patterns": [
++        "raising CARNOT_ARC_INDUCE_MAX_TOKENS or _INDUCE_DEFAULT_MAX_TOKENS to fix induction quality",
++        "raising the induce or refactor n_predict budget as a truncation remedy without a sampler change",
++        "treating \"[HIT n_predict OUTPUT LIMIT]\" on an induce/refactor call as a budget shortage"
++      ],
++      "operator_reopen_required": true,
++      "retired_scope_id": "arc-induce-completion-budget-raise"
++    },
++    "proposed_boundary_violations": [],
++    "proposed_changed_boundaries": [
++      "canonical tokenizer payload requalification under one schema",
++      "filter cells from the frozen Exp6862 bank without regeneration",
++      "bounded reliability state updated after later exact outcomes",
++      "measure prompt, slot, n_ctx, VRAM, and shared-pool headroom"
++    ],
++    "schema": "carnot.retired_scope_non_reopen_manifest.v1",
++    "source_hashes": {
++      "active_roadmap": "sha256:b4e8a2c25a1f62e9facc905fb20398a518c944b8c9914409c74d401f3e614633",
++      "exclusion_manifest": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
++      "exp6861": "sha256:a2b912600d1fde25f9135bf90c633a7852bc400dccff3f01baeaa3f83b9e8006"
++    },
++    "v600_retired_mechanisms": [
++      {
++        "mechanism_id": "raw_fixed_sequence_margin_claim",
++        "reason": "Nuisance controls and isomorphic transforms explain margins as large as the semantic effect.",
++        "retired_scope": "scientific compatibility claim from raw fixed-sequence margins",
++        "source_ids": [
++          "exp6851",
++          "exp6852"
++        ]
++      },
++      {
++        "mechanism_id": "unchanged_supervisor_credit_without_headroom",
++        "reason": "No authentic live row had nonzero pre-action supervisor headroom.",
++        "retired_scope": "another unchanged supervisor-credit audit",
++        "source_ids": [
++          "exp6857",
++          "exp6858"
++        ]
++      },
++      {
++        "mechanism_id": "v599_risk_sensitive_memory_policy",
++        "reason": "The sealed policy abstained on every held opportunity and retained harmful writes.",
++        "retired_scope": "the same risk-sensitive memory decision policy",
++        "source_ids": [
++          "exp6855",
++          "exp6856"
++        ]
++      }
++    ]
++  },
++  "roadmap_task_rows": [
++    {
++      "deliverable": "results/experiment_6861_v600_branch_retirement_evidence_contract.json",
++      "gate_fields": [
++        {
++          "artifact_field": "source_preconditions",
++          "expected": true,
++          "observed": true,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "changed_mechanisms_valid",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "primary_references_verified",
++          "expected": 4,
++          "observed": 4,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "downstream_gate_consumers_named",
++          "expected": [
++            "exp6862",
++            "exp6867",
++            "exp6870"
++          ],
++          "observed": [
++            "exp6862",
++            "exp6867",
++            "exp6870"
++          ],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        }
++      ],
++      "honest_verdict": "complete_positive_v600_branch_retirement_evidence_contract_ready",
++      "roadmap_result": "OK",
++      "source_sha256": "sha256:a2b912600d1fde25f9135bf90c633a7852bc400dccff3f01baeaa3f83b9e8006",
++      "stored_flagged_adversarial": null,
++      "task_id": "exp6861-v600-branch-retirement-evidence-contract",
++      "title": "V600 branch retirement and evidence contract",
++      "verdict_class": "positive"
++    },
++    {
++      "deliverable": "results/experiment_6862_dual_side_semantic_contrast_bank.json",
++      "gate_fields": [
++        {
++          "artifact_field": "v600_evidence_contract_ready_score",
++          "expected": 1,
++          "observed": 1,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "exp6849_typed_sources_readable",
++          "expected": {
++            "typed_program_authority_ready_score": 1,
++            "typed_source_count": ">=4"
++          },
++          "observed": {
++            "typed_program_authority_ready_score": 1,
++            "typed_source_count": 4
++          },
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "exp6852_failure_witnesses_present",
++          "expected": {
++            "failed_checks": [
++              "isomorphic_direction_survives",
++              "shortcut_controls_clear"
++            ],
++            "failed_shortcut_count": ">0"
++          },
++          "observed": {
++            "failed_checks": [
++              "isomorphic_direction_survives",
++              "shortcut_controls_clear"
++            ],
++            "failed_shortcut_count": 78
++          },
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "accepted_group_floor",
++          "expected": ">=96",
++          "observed": 100,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "semantic_identities_unique",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "content_identities_unique",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "accepted_authorities_agree",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "nuisance_labels_preserved",
++          "expected": true,
++          "observed": true,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "semantic_mutations_flip",
++          "expected": true,
++          "observed": true,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "negative_controls_rejected",
++          "expected": 7,
++          "observed": 7,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "build_rejection_count",
++          "expected": 0,
++          "observed": 0,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        }
++      ],
++      "honest_verdict": "complete_null_dual_side_semantic_contrast_bank_ready_no_model_scores",
++      "roadmap_result": "OK",
++      "source_sha256": "sha256:dbc2d463153274432dd02bbd188e5e5477a650bcdf4f1fc101f2e6adc5778638",
++      "stored_flagged_adversarial": null,
++      "task_id": "exp6862-dual-side-semantic-contrast-bank",
++      "title": "Dual-side exact semantic contrast bank",
++      "verdict_class": "null"
++    },
++    {
++      "deliverable": "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json",
++      "gate_fields": [
++        {
++          "artifact_field": "exp6862_readiness",
++          "expected": 1,
++          "observed": 1,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "exp6862_model_scores_absent",
++          "expected": false,
++          "observed": false,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "exp6862_semantic_groups",
++          "expected": ">=40",
++          "observed": 100,
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "preexisting_model_scores_for_new_identities",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/Qwen3.6-35B-A3B-GGUF.file_binding",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/gemma-4-31B-it-GGUF.file_binding",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/gemma-4-26B-A4B-it-GGUF.file_binding",
++          "expected": [],
++          "observed": [],
++          "operator": "check",
++          "passed": true,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/gemma-4-31B-it-GGUF.binding",
++          "expected": [],
++          "observed": [
++            "tokenizer_hash_drift"
++          ],
++          "operator": "check",
++          "passed": false,
++          "upstream": null
++        },
++        {
++          "artifact_field": "model.unsloth/gemma-4-26B-A4B-it-GGUF.binding",
++          "expected": [],
++          "observed": [
++            "tokenizer_hash_drift"
++          ],
++          "operator": "check",
++          "passed": false,
++          "upstream": null
++        },
++        {
++          "artifact_field": "all_three_native_tokenizers",
++          "expected": [
++            "unsloth/Qwen3.6-35B-A3B-GGUF",
++            "unsloth/gemma-4-31B-it-GGUF",
++            "unsloth/gemma-4-26B-A4B-it-GGUF"
++          ],
++          "observed": [
++            "unsloth/Qwen3.6-35B-A3B-GGUF"
++          ],
++          "operator": "check",
++          "passed": false,
++          "upstream": null
++        }
++      ],
++      "honest_verdict": "complete_blocked_tokenizer_aware_semantic_contrast_preregistration",
++      "roadmap_result": "OK",
++      "source_sha256": "sha256:fa74cb9537c3bb8eeadbd58542900e225e8086c46d6d3d1b896d9af68974197a",
++      "stored_flagged_adversarial": null,
++      "task_id": "exp6863-tokenizer-aware-semantic-contrast-preregistration",
++      "title": "Tokenizer-aware nuisance and split preregistration",
++      "verdict_class": "blocked"
++    },
++    {
++      "deliverable": "results/experiment_6864_three_family_semantic_contrast_scoring_stream.json",
++      "gate_fields": [
++        {
++          "artifact_field": "semantic_contrast_preregistration_ready_score",
++          "expected": 1,
++          "observed": 0,
++          "operator": "==",
++          "passed": false,
++          "upstream": "exp6863-tokenizer-aware-semantic-contrast-preregistration"
++        }
++      ],
++      "honest_verdict": "blocked_gate_check_failed",
++      "roadmap_result": "OK_DELIVERABLE_ONLY",
++      "source_sha256": "sha256:a7dac7da1e8a8d018c80a649396e0e7fa3abaf5510ee86b6d729bf9eecc62e23",
++      "stored_flagged_adversarial": null,
++      "task_id": "exp6864-three-family-semantic-contrast-scoring-stream",
++      "title": "Three-family semantic contrast scoring stream",
++      "verdict_class": "blocked"
++    }
++  ],
++  "run_date": "20260902",
++  "schema": "carnot.experiment_6865.v601_evidence_method_change_contract.v1",
++  "source_artifact_hashes": {
++    "active_roadmap": {
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:b4e8a2c25a1f62e9facc905fb20398a518c944b8c9914409c74d401f3e614633"
++    },
++    "adversarial_verifier": {
++      "path": "scripts/adversarial_verify.py",
++      "sha256": "sha256:0637856470f3be5436cec914958244fc45b7851c71d0729c387fed151b6587aa"
++    },
++    "arc_truncation_note": {
++      "path": "docs/research-notes/induce-shared-pool-truncation-2026-09-02.md",
++      "sha256": "sha256:9efd63d4e1b69f8e6ef6dd9568d87c4e231d4137f36c1e3fbbc94bfbb4f326d4"
++    },
++    "completed_roadmap": {
++      "path": "research-complete.yaml",
++      "sha256": "sha256:0ac70af2c6a5a76a08834bb9ebda9c36fc424686db43c42b5b4adff7bf907556"
++    },
++    "conductor_log": {
++      "path": "ops/conductor-log.md",
++      "sha256": "sha256:0d72ded3e26b32917f440e5c120f375b5801abfc91a1cc963e96d00c9b261579"
++    },
++    "exclusion_manifest": {
++      "path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
++    },
++    "exp6850": {
++      "path": "results/experiment_6850_three_family_scoring_admission_canary.json",
++      "sha256": "sha256:0093104ffb1d4f3f22e7ab9369d56561d8d01fa84406faa89d8f0117ced6977d"
++    },
++    "exp6856": {
++      "path": "results/experiment_6856_sealed_risk_sensitive_learning_audit.json",
++      "sha256": "sha256:6e6f1856acf0db957ca0427a53422ff8467ba7c04aed296d23eea13e16de7912"
++    },
++    "exp6859": {
++      "path": "results/experiment_6859_first_party_tool_gap_receipt_wiring.json",
++      "sha256": "sha256:74863bdf181a5f8c4d43565a5cc98ca43a0611228f70a093d89b21621d0c4476"
++    },
++    "exp6861": {
++      "path": "results/experiment_6861_v600_branch_retirement_evidence_contract.json",
++      "sha256": "sha256:a2b912600d1fde25f9135bf90c633a7852bc400dccff3f01baeaa3f83b9e8006"
++    },
++    "exp6862": {
++      "path": "results/experiment_6862_dual_side_semantic_contrast_bank.json",
++      "sha256": "sha256:dbc2d463153274432dd02bbd188e5e5477a650bcdf4f1fc101f2e6adc5778638"
++    },
++    "exp6863": {
++      "path": "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json",
++      "sha256": "sha256:fa74cb9537c3bb8eeadbd58542900e225e8086c46d6d3d1b896d9af68974197a"
++    },
++    "exp6864": {
++      "path": "results/experiment_6864_three_family_semantic_contrast_scoring_stream.json",
++      "sha256": "sha256:a7dac7da1e8a8d018c80a649396e0e7fa3abaf5510ee86b6d729bf9eecc62e23"
++    },
++    "focused_tests": {
++      "path": "tests/python/test_experiment_6865_v601_evidence_method_change_contract.py",
++      "sha256": "sha256:ec45664953d70424ab110277a8898fa091b5d6550c9c1b947ea17b3469320d2d"
++    },
++    "module": {
++      "path": "python/carnot/experiment_6865_v601_evidence_method_change_contract.py",
++      "sha256": "sha256:e82f6af01bead80f5569088c75b6400a84bf8daac0a826e9f8040d9130d2c757"
++    },
++    "spec": {
++      "path": "openspec/capabilities/research-reporting/spec.md",
++      "sha256": "sha256:6f3e81ad306033b126ca0360e1c0311f4c725d73016f8fcdcc9520b88c430a7c"
++    },
++    "wrapper": {
++      "path": "scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py",
++      "sha256": "sha256:d7cbdff2eae76ba2aa99d208850a6e0a59e62f6787449b33d80ca7e0f9c206d7"
++    }
++  },
++  "status": "complete",
++  "stored_vs_live_adversarial_rows": [
++    {
++      "disagreement": false,
++      "live_flag_count": 0,
++      "live_flags": [],
++      "live_gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
++      "live_status": "clean",
++      "stored_corrigendum_pending": null,
++      "stored_flagged_adversarial": null,
++      "stored_status": "unstamped",
++      "task_id": "exp6861-v600-branch-retirement-evidence-contract"
++    },
++    {
++      "disagreement": true,
++      "live_flag_count": 1,
++      "live_flags": [
++        {
++          "detail": "inference_substrate='deterministic CPU dual-side exact checking' matches no duration-floor recognizer, so duration_s=0.5757198879728094 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one.",
++          "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
++          "severity": "warn"
++        }
++      ],
++      "live_gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
++      "live_status": "warn",
++      "stored_corrigendum_pending": null,
++      "stored_flagged_adversarial": null,
++      "stored_status": "unstamped",
++      "task_id": "exp6862-dual-side-semantic-contrast-bank"
++    },
++    {
++      "disagreement": false,
++      "live_flag_count": 0,
++      "live_flags": [],
++      "live_gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
++      "live_status": "clean",
++      "stored_corrigendum_pending": null,
++      "stored_flagged_adversarial": null,
++      "stored_status": "unstamped",
++      "task_id": "exp6863-tokenizer-aware-semantic-contrast-preregistration"
++    },
++    {
++      "disagreement": false,
++      "live_flag_count": 0,
++      "live_flags": [],
++      "live_gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
++      "live_status": "clean",
++      "stored_corrigendum_pending": null,
++      "stored_flagged_adversarial": null,
++      "stored_status": "unstamped",
++      "task_id": "exp6864-three-family-semantic-contrast-scoring-stream"
++    }
++  ],
++  "tokenizer_receipt_schema_diff": {
++    "claim_boundary": "Receipt-schema mismatch proves only that the old comparison is invalid.",
++    "exp6850_field_set_sha256": "sha256:f8a97507605d25d37b38c7022fee8e3da6ccc2c84e2ee2c683c4192f81595ab7",
++    "exp6850_receipt_fields": [
++      "detail",
++      "hf_id",
++      "loadable",
++      "metadata_key_count",
++      "metadata_present",
++      "probe_token_ids",
++      "source",
++      "tokenizer_sha256"
++    ],
++    "exp6863_field_set_sha256": "sha256:d105bd650a4fe070f214b26a56fc9f8a24d439d8b17a364a93c2d79bb7400bdc",
++    "exp6863_receipt_fields": [
++      "chat_template_identity",
++      "chat_template_present",
++      "hf_id",
++      "loadable",
++      "metadata_key_count",
++      "metadata_present",
++      "probe_token_ids",
++      "source",
++      "special_tokens",
++      "tokenize_settings",
++      "tokenizer_sha256"
++    ],
++    "gemma_hash_witnesses": [
++      {
++        "comparison_valid": false,
++        "exp6850_tokenizer_sha256": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd",
++        "exp6863_tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "semantic_relation": "undetermined"
++      },
++      {
++        "comparison_valid": false,
++        "exp6850_tokenizer_sha256": "sha256:e7980b28235bd0712e48304be4d3c9b0a31e854c2f9aa2bb296f30c3f01beebd",
++        "exp6863_tokenizer_sha256": "sha256:ac1932bd193236890065453361099ec41b8e7a7e0179e8b05505730336dbce9c",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "semantic_relation": "undetermined"
++      }
++    ],
++    "hash_comparison_valid": false,
++    "only_in_exp6850": [
++      "detail"
++    ],
++    "only_in_exp6863": [
++      "chat_template_identity",
++      "chat_template_present",
++      "special_tokens",
++      "tokenize_settings"
++    ],
++    "per_model_exp6850_field_sets": [
++      {
++        "fields": [
++          "detail",
++          "hf_id",
++          "loadable",
++          "metadata_key_count",
++          "metadata_present",
++          "probe_token_ids",
++          "source",
++          "tokenizer_sha256"
++        ],
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
++      },
++      {
++        "fields": [
++          "detail",
++          "hf_id",
++          "loadable",
++          "metadata_key_count",
++          "metadata_present",
++          "probe_token_ids",
++          "source",
++          "tokenizer_sha256"
++        ],
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF"
++      },
++      {
++        "fields": [
++          "detail",
++          "hf_id",
++          "loadable",
++          "metadata_key_count",
++          "metadata_present",
++          "probe_token_ids",
++          "source",
++          "tokenizer_sha256"
++        ],
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
++      }
++    ],
++    "per_model_exp6863_field_sets": [
++      {
++        "fields": [
++          "chat_template_identity",
++          "chat_template_present",
++          "hf_id",
++          "loadable",
++          "metadata_key_count",
++          "metadata_present",
++          "probe_token_ids",
++          "source",
++          "special_tokens",
++          "tokenize_settings",
++          "tokenizer_sha256"
++        ],
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
++      },
++      {
++        "fields": [
++          "chat_template_identity",
++          "chat_template_present",
++          "hf_id",
++          "loadable",
++          "metadata_key_count",
++          "metadata_present",
++          "probe_token_ids",
++          "source",
++          "special_tokens",
++          "tokenize_settings",
++          "tokenizer_sha256"
++        ],
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF"
++      },
++      {
++        "fields": [
++          "chat_template_identity",
++          "chat_template_present",
++          "hf_id",
++          "loadable",
++          "metadata_key_count",
++          "metadata_present",
++          "probe_token_ids",
++          "source",
++          "special_tokens",
++          "tokenize_settings",
++          "tokenizer_sha256"
++        ],
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
++      }
++    ],
++    "schemas_identical": false,
++    "tokenizer_relation": "undetermined_incomparable_schemas"
++  },
++  "v600_branch_dispositions": [
++    {
++      "branch": "evidence_contract",
++      "disposition": "frozen_infrastructure",
++      "honest_verdict": "complete_positive_v600_branch_retirement_evidence_contract_ready",
++      "roadmap_result": "OK",
++      "scientific_claim_eligible": false,
++      "task_id": "exp6861-v600-branch-retirement-evidence-contract",
++      "verdict_class": "positive"
++    },
++    {
++      "branch": "contrast_bank",
++      "disposition": "frozen_infrastructure",
++      "honest_verdict": "complete_null_dual_side_semantic_contrast_bank_ready_no_model_scores",
++      "roadmap_result": "OK",
++      "scientific_claim_eligible": false,
++      "task_id": "exp6862-dual-side-semantic-contrast-bank",
++      "verdict_class": "null"
++    },
++    {
++      "branch": "tokenizer_preregistration",
++      "disposition": "terminal_blocked",
++      "honest_verdict": "complete_blocked_tokenizer_aware_semantic_contrast_preregistration",
++      "roadmap_result": "OK",
++      "scientific_claim_eligible": false,
++      "task_id": "exp6863-tokenizer-aware-semantic-contrast-preregistration",
++      "verdict_class": "blocked"
++    },
++    {
++      "branch": "scoring_stream",
++      "disposition": "terminal_blocked",
++      "honest_verdict": "blocked_gate_check_failed",
++      "roadmap_result": "OK_DELIVERABLE_ONLY",
++      "scientific_claim_eligible": false,
++      "task_id": "exp6864-three-family-semantic-contrast-scoring-stream",
++      "verdict_class": "blocked"
++    }
++  ],
++  "v601_evidence_contract_ready_score": 1,
++  "verdict_class": "positive",
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py b/scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py
+new file mode 100644
+index 0000000000..caa070a134
+--- /dev/null
++++ b/scripts/experiments/experiment_6865_v601_evidence_method_change_contract.py
+@@ -0,0 +1,22 @@
++#!/usr/bin/env python3
++"""Run the V601 evidence and method-change contract.
++
++Spec ref: REQ-REPORT-6865.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.experiment_6865_v601_evidence_method_change_contract import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6865_v601_evidence_method_change_contract.py b/tests/python/test_experiment_6865_v601_evidence_method_change_contract.py
+new file mode 100644
+index 0000000000..7aaf27bba2
+--- /dev/null
++++ b/tests/python/test_experiment_6865_v601_evidence_method_change_contract.py
+@@ -0,0 +1,458 @@
++"""Tests for the read-only V601 evidence and method-change contract.
++
++Spec refs: REQ-REPORT-6865 and SCENARIO-REPORT-6865-*.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import runpy
++import sys
++
++import pytest
++import yaml
++
++from carnot import experiment_6865_v601_evidence_method_change_contract as mod
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++
++def _read_json(relative: str) -> dict[str, object]:
++    return json.loads((REPO_ROOT / relative).read_text(encoding="utf-8"))
++
++
++def _source_hashes() -> dict[str, str]:
++    return {
++        name: mod.sha256_path(REPO_ROOT / relative)
++        for name, relative in mod.DEFAULT_SOURCE_PATHS.items()
++        if (REPO_ROOT / relative).is_file()
++    }
++
++
++def test_missing_artifact_writes_a_complete_blocked_contract(tmp_path: Path) -> None:
++    # SCENARIO-REPORT-6865-MISSING-ARTIFACT
++    artifact = mod.build_artifact(tmp_path, "20260902", live_reports={})
++
++    assert artifact["v601_evidence_contract_ready_score"] == 0
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["honest_verdict"] == (
++        "complete_blocked_v601_evidence_method_change_contract"
++    )
++    assert artifact["gate_check_summary"]["failed_check"] == "required_source_readability"
++    assert artifact["gate_check_summary"]["expected"] == "all required sources readable"
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_synthetic_gate_artifact_is_terminal_blocked_evidence() -> None:
++    # SCENARIO-REPORT-6865-SYNTHETIC-GATE
++    gate = {
++        "schema": "blocked_gate_check_v1",
++        "status": "blocked",
++        "honest_verdict": "blocked_gate_check_failed",
++        "gates_evaluated": [
++            {
++                "upstream": "exp-upstream",
++                "artifact_field": "ready_score",
++                "op": "==",
++                "expected": 1,
++                "actual": 0,
++                "passed": False,
++            }
++        ],
++    }
++
++    verdict = mod.read_terminal_verdict(gate)
++    gate_rows = mod.normalized_gate_rows(gate)
++
++    assert verdict == ("blocked_gate_check_failed", "blocked")
++    assert gate_rows == [
++        {
++            "upstream": "exp-upstream",
++            "artifact_field": "ready_score",
++            "operator": "==",
++            "expected": 1,
++            "observed": 0,
++            "passed": False,
++        }
++    ]
++    assert mod.normalized_gate_rows({"gates_evaluated": ["not-a-gate"]}) == []
++
++
++def test_adversarial_verifier_loader_fails_closed(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    # REQ-REPORT-6865
++    monkeypatch.setattr(mod.importlib.util, "spec_from_file_location", lambda *_args: None)
++
++    with pytest.raises(RuntimeError, match="adversarial verifier import failed"):
++        mod._load_validator(REPO_ROOT)
++
++
++def test_principle_wrapped_fields_unwrap_without_destroying_dicts() -> None:
++    # SCENARIO-REPORT-6865-WRAPPED-FIELD
++    wrapped = {"principle": "The value stays auditable.", "value": ["a", "b"]}
++    ordinary = {"value": 7, "checks": {"ready": True}}
++
++    assert mod.unwrap_principle(wrapped) == ["a", "b"]
++    assert mod.unwrap_principle(ordinary) is ordinary
++    assert mod.unwrap_principle("plain") == "plain"
++
++
++def test_stale_active_roadmap_blocks_with_exact_milestone() -> None:
++    # SCENARIO-REPORT-6865-STALE-ROADMAP
++    stale = {
++        "milestone": "2026.09.600",
++        "tasks": [
++            {
++                "id": mod.EXP6865_TASK_ID,
++                "deliverable": mod.OUTPUT_PATH.as_posix(),
++            }
++        ],
++    }
++
++    check = mod.active_roadmap_check(stale)
++
++    assert check["passed"] is False
++    assert check["expected"] == mod.EXPECTED_ACTIVE_MILESTONE
++    assert check["observed"] == "2026.09.600"
++
++    current_but_missing = mod.active_roadmap_check(
++        {"milestone": mod.EXPECTED_ACTIVE_MILESTONE, "tasks": []}
++    )
++    assert current_but_missing["observed"] == {
++        "task_id": mod.EXP6865_TASK_ID,
++        "deliverable": None,
++    }
++
++
++def test_source_reader_rejects_empty_and_non_mapping_documents(tmp_path: Path) -> None:
++    # SCENARIO-REPORT-6865-MISSING-ARTIFACT
++    empty = tmp_path / "empty.md"
++    empty.write_text("", encoding="utf-8")
++    json_list = tmp_path / "list.json"
++    json_list.write_text("[]", encoding="utf-8")
++    yaml_list = tmp_path / "list.yaml"
++    yaml_list.write_text("- value", encoding="utf-8")
++
++    assert mod._read_document(empty) == (None, "empty")
++    assert mod._read_document(json_list) == (None, "json_object_required")
++    assert mod._read_document(yaml_list) == (None, "yaml_mapping_required")
++
++
++def test_mismatched_tokenizer_hash_schemas_are_incomparable() -> None:
++    # SCENARIO-REPORT-6865-HASH-SCHEMA
++    exp6850 = {
++        "tokenizer_receipts": [
++            {"hf_id": "gemma", "probe_token_ids": [2, 7], "tokenizer_sha256": "sha256:old"}
++        ]
++    }
++    exp6863 = {
++        "tokenizer_receipts": [
++            {
++                "hf_id": "gemma",
++                "probe_token_ids": [7],
++                "tokenizer_sha256": "sha256:new",
++                "special_tokens": {"bos": 2},
++            }
++        ]
++    }
++
++    diff = mod.tokenizer_receipt_schema_diff(exp6850, exp6863)
++
++    assert diff["schemas_identical"] is False
++    assert diff["only_in_exp6850"] == []
++    assert diff["only_in_exp6863"] == ["special_tokens"]
++    assert diff["hash_comparison_valid"] is False
++    assert diff["tokenizer_relation"] == "undetermined_incomparable_schemas"
++
++
++def test_retired_max_token_only_remedy_is_rejected() -> None:
++    # SCENARIO-REPORT-6865-RETIRED-MAX-TOKEN
++    exclusion = yaml.safe_load(
++        (REPO_ROOT / "ops/exclusion_manifest.yaml").read_text(encoding="utf-8")
++    )
++
++    violations = mod.retired_scope_violations(
++        ["raising CARNOT_ARC_INDUCE_MAX_TOKENS to fix induction quality"], exclusion
++    )
++
++    assert violations[0]["retired_scope_id"] == "arc-induce-completion-budget-raise"
++    assert "CARNOT_ARC_INDUCE_MAX_TOKENS" in violations[0]["blocked_pattern"]
++    assert (
++        mod.retired_scope_violations(
++            ["measure prompt, slot, n_ctx, VRAM, and shared-pool headroom"], exclusion
++        )
++        == []
++    )
++    assert mod.retired_scope_violations([], {"retired_extras": [None]}) == []
++
++
++def test_real_v600_tasks_and_conductor_states_recompute_from_primary_records() -> None:
++    # REQ-REPORT-6865
++    completed = yaml.safe_load((REPO_ROOT / "research-complete.yaml").read_text(encoding="utf-8"))
++    payloads = {
++        task_id: _read_json(relative)
++        for task_id, relative in mod.V600_ARTIFACT_PATHS.items()
++    }
++    conductor = (REPO_ROOT / "ops/conductor-log.md").read_text(encoding="utf-8")
++
++    task_rows = mod.build_roadmap_task_rows(completed, payloads)
++    conductor_rows = mod.build_conductor_gate_rows(conductor, task_rows)
++
++    assert [row["task_id"] for row in task_rows] == list(mod.V600_TASK_IDS)
++    assert task_rows[2]["roadmap_result"] == "OK"
++    assert task_rows[2]["honest_verdict"].startswith("complete_blocked_")
++    assert task_rows[2]["verdict_class"] == "blocked"
++    assert task_rows[3]["roadmap_result"] == "OK_DELIVERABLE_ONLY"
++    assert conductor_rows[3]["conductor_status"] == "GATE_BLOCK"
++    assert conductor_rows[3]["gate_fields"][0]["artifact_field"] == (
++        "semantic_contrast_preregistration_ready_score"
++    )
++
++
++def test_real_receipt_diff_records_exact_field_sets_without_semantic_claim() -> None:
++    # SCENARIO-REPORT-6865-HASH-SCHEMA
++    diff = mod.tokenizer_receipt_schema_diff(
++        _read_json("results/experiment_6850_three_family_scoring_admission_canary.json"),
++        _read_json(
++            "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json"
++        ),
++    )
++
++    assert diff["only_in_exp6850"] == ["detail"]
++    assert diff["only_in_exp6863"] == [
++        "chat_template_identity",
++        "chat_template_present",
++        "special_tokens",
++        "tokenize_settings",
++    ]
++    assert len(diff["gemma_hash_witnesses"]) == 2
++    assert all(row["comparison_valid"] is False for row in diff["gemma_hash_witnesses"])
++    assert all(row["semantic_relation"] == "undetermined" for row in diff["gemma_hash_witnesses"])
++
++
++def test_canonical_tokenizer_schema_and_probe_contract_are_versioned_and_hashed() -> None:
++    # REQ-REPORT-6865
++    hashes = _source_hashes()
++    exp6850 = _read_json("results/experiment_6850_three_family_scoring_admission_canary.json")
++    exp6863 = _read_json(
++        "results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json"
++    )
++
++    schema = mod.canonical_tokenizer_schema(hashes)
++    probes = mod.frozen_semantic_probe_contract(exp6850, exp6863, hashes)
++
++    assert schema["version"] == "v1"
++    assert "semantic_vocabulary_metadata" in schema["required_payload_fields"]
++    assert "special_token_ids" in schema["required_payload_fields"]
++    assert "add_bos_behavior" in schema["required_payload_fields"]
++    assert "paths" in schema["excluded_field_classes"]
++    assert mod.contract_hash_valid(schema)
++    assert probes["probe_text"] == " execution readiness is checked without a scientific label."
++    assert len(probes["legacy_output_witnesses"]) == 6
++    assert all(row["canonical_output"] is False for row in probes["legacy_output_witnesses"])
++    assert mod.contract_hash_valid(probes)
++
++    ignored = mod.frozen_semantic_probe_contract(
++        {"tokenizer_receipts": [None]}, {}, hashes
++    )
++    assert ignored["legacy_output_witnesses"] == []
++
++
++def test_contrast_bank_freezes_all_one_hundred_group_identities() -> None:
++    # REQ-REPORT-6865
++    exp6862 = _read_json("results/experiment_6862_dual_side_semantic_contrast_bank.json")
++    source_sha = mod.sha256_path(
++        REPO_ROOT / "results/experiment_6862_dual_side_semantic_contrast_bank.json"
++    )
++
++    manifest = mod.frozen_contrast_bank_manifest(exp6862, source_sha)
++
++    assert manifest["accepted_group_count"] == 100
++    assert len(manifest["group_identities"]) == 100
++    assert len({row["group_id"] for row in manifest["group_identities"]}) == 100
++    assert manifest["source_artifact_sha256"] == source_sha
++    assert manifest["cell_filtering_allowed"] is True
++    assert manifest["bank_regeneration_allowed"] is False
++    assert mod.contract_hash_valid(manifest)
++
++
++def test_memory_contract_freezes_observability_and_exact_quarantine_boundaries() -> None:
++    # REQ-REPORT-6865
++    hashes = _source_hashes()
++    observability = mod.memory_observability_contract(
++        _read_json("results/experiment_6856_sealed_risk_sensitive_learning_audit.json"),
++        _read_json("results/experiment_6861_v600_branch_retirement_evidence_contract.json"),
++        hashes,
++    )
++    quarantine = mod.memory_transition_quarantine_contract(hashes)
++
++    assert "later_exact_outcome" in observability["offline_supervision_only_fields"]
++    assert "prior_reliability_state" in observability["decision_time_observable_fields"]
++    assert observability["same_event_outcome_may_select_action"] is False
++    assert observability["preserved_harmful_write_counts"] == {
++        "exp6856_fresh_reducer": 12,
++        "exp6861_branch_contract": 13,
++    }
++    assert observability["harmful_write_count_disagreement_preserved"] is True
++    assert mod.contract_hash_valid(observability)
++    assert {row["check_id"] for row in quarantine["exact_transition_checks"]} == {
++        "coverage",
++        "preservation",
++        "source_faithfulness",
++        "provenance",
++        "old_family_retention",
++        "delayed_invalidation",
++        "tombstone_non_reappearance",
++        "replay_equivalence",
++        "restart_equivalence",
++        "rollback_byte_exact",
++    }
++    assert all(row["failure_action"] == "quarantine" for row in quarantine["exact_transition_checks"])
++    assert mod.contract_hash_valid(quarantine)
++
++
++def test_arc_contract_keeps_full_headroom_evidence_and_prohibits_budget_only_fix() -> None:
++    # SCENARIO-REPORT-6865-RETIRED-MAX-TOKEN
++    contract = mod.arc_context_headroom_contract(_source_hashes())
++
++    assert contract["observed_evidence"]["actual_server_n_ctx_tokens"] == 49152
++    assert contract["observed_evidence"]["slot_count"] == 4
++    assert contract["observed_evidence"]["requested_completion_tokens"] == 26800
++    assert contract["observed_evidence"]["generated_reasoning_token_counts"] == [
++        18431,
++        2996,
++        4066,
++    ]
++    assert "full_limit_diagnostic" in contract["required_attempt_fields"]
++    assert "measured_generation_headroom_tokens" in contract["required_attempt_fields"]
++    assert contract["max_token_only_repair_allowed"] is False
++    assert contract["slot_capacity_may_be_inferred_by_division"] is False
++    assert mod.contract_hash_valid(contract)
++
++
++def test_live_adversarial_recheck_preserves_the_exp6862_warn_disagreement() -> None:
++    # REQ-REPORT-6865
++    payloads = {
++        task_id: _read_json(relative)
++        for task_id, relative in mod.V600_ARTIFACT_PATHS.items()
++    }
++    reports = mod.collect_live_adversarial_reports(REPO_ROOT)
++    rows = mod.stored_vs_live_adversarial_rows(payloads, reports)
++    exp6862 = next(row for row in rows if row["task_id"].startswith("exp6862"))
++
++    assert exp6862["stored_status"] == "unstamped"
++    assert exp6862["live_status"] == "warn"
++    assert exp6862["disagreement"] is True
++    assert exp6862["live_flags"][0]["kind"] == "SUBSTRATE_HAS_NO_DURATION_FLOOR"
++
++
++def test_real_artifact_is_ready_complete_and_reproducible() -> None:
++    # REQ-REPORT-6865
++    artifact = mod.build_artifact(REPO_ROOT, "20260902")
++
++    assert artifact["v601_evidence_contract_ready_score"] == 1
++    assert artifact["verdict_class"] == "positive"
++    assert artifact["honest_verdict"] == (
++        "complete_positive_v601_evidence_method_change_contract_ready"
++    )
++    assert artifact["inference_substrate"] == "deterministic CPU read-only evidence reduction"
++    assert artifact["verifier_is_oracle"] is False
++    assert set(artifact["field_principles"]) == set(artifact)
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_validator_reports_contract_hash_and_terminal_errors() -> None:
++    # REQ-REPORT-6865
++    artifact = mod.build_artifact(REPO_ROOT, "20260902")
++    broken = deepcopy(artifact)
++    broken["canonical_tokenizer_payload_schema"]["version"] = "v2"
++    broken["verifier_is_oracle"] = True
++    broken["honest_verdict"] = "blocked"
++    broken["reproducibility_checksum"] = "sha256:bad"
++
++    errors = mod.validate_artifact(broken)
++
++    assert "contract_hash_mismatch:canonical_tokenizer_payload_schema" in errors
++    assert "verifier_is_oracle_must_be_false" in errors
++    assert "honest_verdict_not_terminal" in errors
++    assert "reproducibility_checksum_mismatch" in errors
++
++
++def test_validator_rejects_every_readiness_shape_error() -> None:
++    # REQ-REPORT-6865
++    artifact = mod.build_artifact(REPO_ROOT, "20260902", live_reports={})
++
++    malformed = deepcopy(artifact)
++    del malformed["schema"]
++    malformed["unexpected"] = True
++    malformed["field_principles"] = {}
++    malformed["inference_substrate"] = "model inference"
++    malformed["verdict_class"] = "unknown"
++    malformed["v601_evidence_contract_ready_score"] = 2
++    malformed_errors = mod.validate_artifact(malformed)
++    assert any(error.startswith("missing_required_fields:") for error in malformed_errors)
++    assert any(error.startswith("unexpected_fields:") for error in malformed_errors)
++    assert "field_principles_must_cover_every_field" in malformed_errors
++    assert "invalid_inference_substrate" in malformed_errors
++    assert "invalid_verdict_class" in malformed_errors
++    assert "invalid_ready_score" in malformed_errors
++
++    bad_ready = deepcopy(artifact)
++    bad_ready["frozen_contrast_bank_identity_manifest"]["accepted_group_count"] = 99
++    bad_ready["gate_check_summary"]["passed"] = False
++    bad_ready["verdict_class"] = "partial"
++    ready_errors = mod.validate_artifact(bad_ready)
++    assert "ready_contract_requires_100_bank_groups" in ready_errors
++    assert "ready_contract_has_failed_gate" in ready_errors
++    assert "ready_contract_must_be_positive" in ready_errors
++
++    bad_blocked = deepcopy(artifact)
++    bad_blocked["v601_evidence_contract_ready_score"] = 0
++    bad_blocked["gate_check_summary"] = {}
++    bad_blocked["verdict_class"] = "positive"
++    blocked_errors = mod.validate_artifact(bad_blocked)
++    assert "blocked_contract_requires_exact_failed_check" in blocked_errors
++    assert "blocked_contract_must_use_blocked_class" in blocked_errors
++
++
++def test_atomic_writer_and_cli_use_the_requested_output(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    # REQ-REPORT-6865
++    artifact = mod.build_artifact(REPO_ROOT, "20260902")
++    output = tmp_path / "exp6865.json"
++
++    mod.write_atomic(output, artifact)
++    assert json.loads(output.read_text(encoding="utf-8"))["experiment_id"] == 6865
++
++    monkeypatch.setattr(mod, "build_artifact", lambda _root, _date: artifact)
++    assert mod.main(["--date", "20260902", "--output", str(output)]) == 0
++
++    broken = deepcopy(artifact)
++    broken["honest_verdict"] = "not-terminal"
++    monkeypatch.setattr(mod, "build_artifact", lambda _root, _date: broken)
++    with pytest.raises(ValueError, match="honest_verdict_not_terminal"):
++        mod.main(["--date", "20260902", "--output", str(output)])
++
++
++def test_module_entrypoint_writes_only_the_requested_temp_artifact(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    # REQ-REPORT-6865
++    output = tmp_path / "entrypoint.json"
++    monkeypatch.setattr(
++        sys,
++        "argv",
++        [mod.__file__, "--date", "20260902", "--output", str(output)],
++    )
++
++    with pytest.raises(SystemExit) as stopped:
++        runpy.run_path(mod.__file__, run_name="__main__")
++
++    assert stopped.value.code == 0
++    assert json.loads(output.read_text(encoding="utf-8"))["experiment_id"] == 6865
+-- 
+2.55.0
+

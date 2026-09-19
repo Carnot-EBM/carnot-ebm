@@ -1,0 +1,202 @@
+From c8fdfc1d9438f7ee18798f555a40c037d3a1fcc8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 15 Jul 2026 16:05:56 -0400
+Subject: [PATCH 07194/11362] [outer-loop] CORRIGENDUM: REQ-ARC-FCP-5699-13 --
+ exploration-exhaustion finding was scoped to the smoke test's narrow
+ generator, not production
+
+Operator: "continue there" (investigating whether StepwiseExplorer's
+state-hashing could be aliasing distinct states, following up on
+"look at the explorer's candidate generation code"). Found the
+state-hashing question is a known, pre-existing, documented
+limitation (GAP-ARCH-GRID-ONLY-STATE) unlikely to be sp80's specific
+issue (sp80 isn't in HIDDEN_STATE_GAME_IDS) -- but investigating
+further surfaced something more consequential.
+
+The REQ-ARC-FCP-5699-7/8/9/10 "explorer frontier exhausts at ~25
+transitions regardless of budget" finding was measured entirely
+through outer_loop_sge_smoke_test.py, which passes
+action_prior=generator AND qd_generator=generator where generator =
+ActionDiverseLiveGenerator(max_candidates=8) -- a hard 8-candidate
+cap forced onto every step. Production's SUBMITTED_QD_GENERATION_
+ENABLED=False means qd_generator defaults to None on the real live
+path, so _candidates() never overrides rich_action_candidates()'s own
+output -- up to 48 salience-sorted candidates per frame (that
+function's own docstring documents fixing exactly a naive 12-click
+cap once already).
+
+The REQ-ARC-FCP-5699-12 real live-path A/B (same session, same game)
+directly confirms the two stacks behave differently:
+reset_replay_steps=6 / forward_walk_hit_rate=~0.54 across actions=241
+(near-full budget=250) for both arms -- the signature of an explorer
+riding one mostly-novel branch for most of the budget, not hitting a
+fast repeated exhaustion wall at transition_count=25.
+
+What's unaffected: 5699-12's own headline (SGE vs discriminative
+router, identical outcome, SGE ~3.9x slower) ran on the real stack
+directly. What needs re-scoping: 5699-7's "budget cannot help" and
+5699-8/9/10's "induction is trust-gated by exploration exhaustion"
+were established entirely on the narrow-generator harness; whether
+the same pattern holds on the real ~48-candidate generator is open,
+not yet directly tested. Production's own explorer still never
+leveled up sp80 in 250 actions, so the headline null stands on the
+real stack too -- but the WHY is now genuinely uncertain, not
+explained by the smoke-test's specific mechanism.
+
+Spec: REQ-ARC-FCP-5699-13 with its own scenario + spec-declaration
+test. No code changes -- this is a documentation/analysis correction
+using already-collected data, not a new experimental run.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-human-replay-frame-change/spec.md     | 65 +++++++++++++++++++
+ ops/known-issues.md                           | 32 +++++++++
+ .../python/test_arc_submitted_agent_parity.py | 15 +++++
+ 3 files changed, 112 insertions(+)
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 3413f69a3f..50daf6577c 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -5689,6 +5689,71 @@ enable flag at its default-off value -- integration alone, however clean, never
+ this comparison, and a null result here is exactly as actionable as a positive one (it closes the
+ question rather than leaving it open)
+ 
++### REQ-ARC-FCP-5699-13: CORRIGENDUM -- The "Exploration Exhaustion" Finding Was Scoped To The Smoke-Test's Narrow Generator, Not Production
++
++Operator: "continue there" (state-hashing/dedup investigation, following the recommendation to
++look at whether `StepwiseExplorer`'s state identity could be aliasing distinct states). Reading
++`StepwiseExplorer._hash()` found state identity is `frame_hash(grid_of(frame))` -- a documented,
++pre-existing architectural limitation (`ops/verifier_gaps.md` GAP-ARCH-GRID-ONLY-STATE;
++`HIDDEN_STATE_GAME_IDS`/`select_trusted_world_model` is the partial mitigation), not a new bug.
++sp80 is NOT in `HIDDEN_STATE_GAME_IDS`, making this an unlikely primary explanation for its
++specific wall. Investigating further (comparing `StepwiseExplorer._candidates()` -- the actual
++live click-candidate generator, `arc_graph_explore.rich_action_candidates()`, `max_click=48`,
++salience-sorted, its own docstring documenting a HISTORICAL fix of exactly a naive 12-click cap
++-- against `scripts/outer_loop_sge_smoke_test.py`'s harness config) found something more
++consequential than the original question.
++
++**The REQ-ARC-FCP-5699-7/8/9/10 "explorer frontier exhausts at ~25 transitions regardless of
++budget" finding was measured entirely through `outer_loop_sge_smoke_test.py`, which passes
++`action_prior=generator` AND `qd_generator=generator` where `generator =
++ActionDiverseLiveGenerator(max_candidates=8)` -- an explicit, hard 8-candidate cap forced onto
++EVERY step via the `qd_generator.generate_candidate_pool(...)` override in `_candidates()`.**
++Production's `SUBMITTED_QD_GENERATION_ENABLED = False` means `qd_generator` defaults to `None`
++(`coerce_qd_generator(None) -> None`) on the real live path, so `_candidates()` never overrides
++`rich_action_candidates()`'s own output -- production genuinely uses up to 48 salience-sorted
++candidates per frame, not 8. **The REQ-ARC-FCP-5699-12 real live-path A/B (this same session, run
++on the identical game, sp80) directly confirms the two stacks behave differently**: its
++`navigation_diagnostics` show `reset_replay_steps=6` and `forward_walk_hit_rate=~0.54` across
++`actions=241` (near-full `budget=250` consumption) for BOTH arms -- a small reset count relative
++to 241 actions is the signature of an explorer that found and rode ONE-ish long, mostly-novel
++branch for most of the budget, not one that hit a fast, repeated frontier-exhaustion wall the way
++the 8-candidate-capped smoke-test harness did at transition_count=25.
++
++**What this narrows, and what it does NOT narrow.** REQ-ARC-FCP-5699-12's own headline conclusion
++(SGE vs. the discriminative router: byte-identical outcome, SGE ~3.9x slower) is UNAFFECTED --
++that comparison ran on the real, unstripped production stack directly, so router-choice-doesn't-
++matter still holds as measured. What DOES need re-scoping: REQ-ARC-FCP-5699-7's "budget cannot
++help" and REQ-ARC-FCP-5699-8/9/10's "induction is trust-gated by exploration exhaustion" findings
++were established entirely on the smoke-test's artificially-narrow 8-candidate generator. Whether
++the SAME trust-gate/induction-never-fires pattern holds on the real, ~48-candidate production
++generator is an OPEN, not-yet-directly-tested question -- REQ-ARC-FCP-5699-12's A/B did not
++capture `induction_attempts`/`explorer.explored_out` (unlike the smoke-test script), so this
++corrigendum identifies the gap without yet closing it.
++
++**Honest bottom line.** Production's own explorer, with its real (much richer) candidate
++generator, still never leveled up sp80 within 250 actions (REQ-ARC-FCP-5699-12) -- so the
++headline "sp80 doesn't level up in this budget" finding stands on the real stack too, independent
++of the smoke-test's narrower generator. What's now uncertain is WHY, specifically: the smoke-
++test's "explorer exhausts its frontier at ~25 transitions" mechanism is confirmed specific to that
++harness's 8-candidate cap, not shown (yet) to be what happens on the real 48-candidate stack. A
++genuine next step, if this thread continues, is capturing `policy.explorer.explored_out` and
++`policy.induction_attempts` from a REAL production run (extending `arc_sge_live_path_ab.py` or a
++sibling script) to see whether the real generator's richer candidate pool changes the induction-
++trigger picture, rather than assuming the smoke-test's mechanism transfers unmodified.
++
++#### SCENARIO-ARC-FCP-5699-13-DIAGNOSTIC-HARNESS-FINDINGS-DO-NOT-AUTOMATICALLY-TRANSFER-TO-PRODUCTION
++
++Given a diagnostic harness was built to isolate ONE variable (candidate-router choice) by
++stripping several OTHER production features to fixed, simplified stand-ins (here: a hard
++8-candidate generator replacing production's ~48-candidate salience-sorted one)
++When a finding from that harness (frontier exhaustion at a fixed transition count, independent of
++budget) is used to explain behavior on the REAL production stack
++Then the finding must be re-verified directly on production before being treated as an
++explanation for production's behavior -- a mechanism specific to the harness's simplification
++(here, an artificially narrow candidate pool) can produce a superficially similar symptom (no
++level-up) for a DIFFERENT underlying reason on the real stack, and conflating the two
++misattributes the real stack's failure to a mechanism that was never actually exercised there
++
+ ### REQ-ARC-WMTE-5596: Generator-Size A/B -- Qwen3.6-27B-MTP vs the Frozen Live Generator
+ 
+ `ops/known-issues.md` task 13 (2026-07-12, HIGH PRIORITY) queued a re-verification of the Kaggle
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index f4f8aa482b..485950bedb 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -512,6 +512,38 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
+    up again (though at this point the marginal value of yet another confirmatory null on a
+    different game is genuinely low; a different lever entirely -- one of the other still-disabled
+    production features, or a different game family -- is more likely to be informative).
++
++   **CORRIGENDUM 2026-07-15 (outer-loop, REQ-ARC-FCP-5699-13, operator: "continue there" ->
++   investigating StepwiseExplorer's candidate generation/state-hashing): the "explorer frontier
++   exhausts at ~25 transitions regardless of budget" finding (task 6's 5699-7/8/9/10 entries above)
++   was measured on the SMOKE-TEST harness's artificially-narrow 8-candidate generator, NOT
++   production's real ~48-candidate one.** `scripts/outer_loop_sge_smoke_test.py` passes
++   `action_prior=generator` AND `qd_generator=generator` where `generator =
++   ActionDiverseLiveGenerator(max_candidates=8)` -- a hard cap forced onto every step via
++   `_candidates()`'s `qd_generator.generate_candidate_pool(...)` override. Production's
++   `SUBMITTED_QD_GENERATION_ENABLED = False` means `qd_generator` defaults to `None` on the real
++   live path, so `_candidates()` never overrides `arc_graph_explore.rich_action_candidates()`'s own
++   output -- up to 48 salience-sorted candidates per frame (that function's own docstring documents
++   a HISTORICAL fix of exactly a naive 12-click cap, so it's already been hardened against this
++   class of bug once). The REQ-ARC-FCP-5699-12 real live-path A/B (same session, same game, sp80)
++   directly shows the two stacks behave differently: `reset_replay_steps=6` /
++   `forward_walk_hit_rate=~0.54` across `actions=241` (near-full `budget=250`) for BOTH arms -- the
++   signature of an explorer riding one mostly-novel branch for most of the budget, not one hitting
++   a fast, repeated exhaustion wall at transition_count=25 the way the 8-candidate smoke-test
++   harness did. **What's UNAFFECTED:** REQ-ARC-FCP-5699-12's own headline (SGE vs. discriminative
++   router: identical outcome, SGE ~3.9x slower) ran on the real production stack directly, so
++   router-choice-doesn't-matter still holds as measured. **What NEEDS RE-SCOPING:** REQ-ARC-FCP-
++   5699-7's "budget cannot help" and 5699-8/9/10's "induction is trust-gated by exploration
++   exhaustion" were established entirely on the narrow-generator smoke-test harness; whether the
++   SAME pattern holds on the real ~48-candidate generator is OPEN, not yet directly tested (the
++   5699-12 A/B script did not capture `induction_attempts`/`explorer.explored_out`, unlike the
++   smoke-test script). **Honest bottom line:** production's own explorer, with its real richer
++   generator, still never leveled up sp80 in 250 actions -- so "sp80 doesn't level up in this
++   budget" stands on the real stack too -- but WHY is now genuinely uncertain, not explained by the
++   smoke-test's specific exhaustion mechanism. Concrete next step if picked up again: capture
++   `policy.explorer.explored_out`/`policy.induction_attempts` from a real production run (extend
++   `scripts/arc_sge_live_path_ab.py` or a sibling script) rather than assuming the smoke-test's
++   mechanism transfers unmodified.
+ 7. **(Cheap, DEV-SIDE ONLY, run before task 6) `/think` vs `/no_think` A/B on the frozen live generator.**
+    ARC Prize's GPT-5.6 results (arcprize.org/results/openai-gpt-5-6, 2026-07-10) show reasoning effort scaling
+    ARC-AGI-3 ~26x (Low->Max) versus only ~1.3x on ARC-AGI-1 for the SAME model, and the between-model gap on
+diff --git a/tests/python/test_arc_submitted_agent_parity.py b/tests/python/test_arc_submitted_agent_parity.py
+index 03f2d4d86d..36bdd4b930 100644
+--- a/tests/python/test_arc_submitted_agent_parity.py
++++ b/tests/python/test_arc_submitted_agent_parity.py
+@@ -438,3 +438,18 @@ def test_req_arc_fcp_5699_12_spec_declares_real_live_path_ab() -> None:
+         "3.9x",
+     ):
+         assert marker in section
++
++
++def test_req_arc_fcp_5699_13_spec_declares_generator_scope_corrigendum() -> None:
++    spec_path = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++    spec = spec_path.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-FCP-5699-13") : spec.index("### REQ-ARC-WMTE-5596")]
++
++    for marker in (
++        "REQ-ARC-FCP-5699-13",
++        "SCENARIO-ARC-FCP-5699-13-DIAGNOSTIC-HARNESS-FINDINGS-DO-NOT-AUTOMATICALLY-TRANSFER-TO-PRODUCTION",
++        "ActionDiverseLiveGenerator(max_candidates=8)",
++        "SUBMITTED_QD_GENERATION_ENABLED",
++        "rich_action_candidates",
++    ):
++        assert marker in section
+-- 
+2.55.0
+

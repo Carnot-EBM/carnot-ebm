@@ -1,0 +1,47 @@
+From 9795ee9ef9bc8e169b4e13d19007bfd5c9df923b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 08:12:35 -0400
+Subject: [PATCH 06003/11362] [conductor] Pre-gate block: Exp 5352: Gated
+ constraint-tax and tool/action reachability panel
+
+1 of 1 gate(s) failed; first failure: exp5351-trigger-constrain-structured-protocol-v488.structured_protocol_clean (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...constraint_tax_tool_action_panel_v488.json | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json
+
+diff --git a/results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json b/results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json
+new file mode 100644
+index 0000000000..57592ce29a
+--- /dev/null
++++ b/results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 5352,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-07",
++  "started_at": "2026-07-07T12:12:35.891231+00:00",
++  "finished_at": "2026-07-07T12:12:35.891231+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Exp 5352: Gated constraint-tax and tool/action reachability panel",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5351-trigger-constrain-structured-protocol-v488.structured_protocol_clean (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5351-trigger-constrain-structured-protocol-v488",
++      "artifact_field": "structured_protocol_clean",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

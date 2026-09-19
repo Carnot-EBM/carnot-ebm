@@ -1,0 +1,4545 @@
+From 676aa7eaa86a719a9c43f896bd1ae8b903a31726 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 14:50:57 -0400
+Subject: [PATCH 06467/11362] [conductor] Executor-frozen CSL experience-graph
+ replay fixture
+
+Automated research step by research conductor.
+Task ID: exp5503-csl-experience-graph-replay-v499
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |   91 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...t_5503_csl_experience_graph_replay_v499.py | 1022 ++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |    6 +-
+ .../experiment_1038_milestone_retro_80.json   |    2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |    6 +-
+ .../experiment_1089_milestone_retro_84.json   |    2 +-
+ .../experiment_1103_milestone_retro_85.json   |    2 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_1970_domino_fast_constraints.json |    4 +-
+ results/experiment_2031.json                  |    4 +-
+ results/experiment_2090_crane_humaneval.json  |    6 +-
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...5503_csl_experience_graph_memory_v499.json |  313 +++
+ ..._experience_graph_replay_fixture_v499.json |  356 +++
+ ...5503_csl_experience_graph_replay_v499.json | 2215 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...t_5503_csl_experience_graph_replay_v499.py |  242 ++
+ 21 files changed, 4267 insertions(+), 28 deletions(-)
+ create mode 100644 python/carnot/experiment_5503_csl_experience_graph_replay_v499.py
+ create mode 100644 results/experiment_5503_csl_experience_graph_memory_v499.json
+ create mode 100644 results/experiment_5503_csl_experience_graph_replay_fixture_v499.json
+ create mode 100644 results/experiment_5503_csl_experience_graph_replay_v499.json
+ create mode 100644 tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 89f49a0526..00632f0653 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -20968,3 +20968,94 @@ support
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-5502 | Planned (`python/carnot/experiment_5502_csl_tautology_static_corrigendum_v499.py`, `results/experiment_5502_csl_tautology_static_corrigendum_v499.json`) | Planned (`tests/python/test_experiment_5502_csl_tautology_static_corrigendum_v499.py`) |
++
++---
++
++## REQ-LEARN-5503: CSL Experience-Graph Replay Fixture v499
++
++Experiment 5503 SHALL implement a deterministic executor-frozen
++experience-graph replay fixture for continuous self-learning. The fixture
++SHALL store reusable skills and failure lessons in an external JSON memory
++graph, retrieve them for a chronological task stream with utility-aware
++ranking, update the graph after each interaction, and compare the resulting
++policy against a no-memory baseline on held-out tasks. The implementation SHALL
++NOT depend on Exp5474 being clean, SHALL NOT load live model weights, and SHALL
++set `model_weights_mutated=false` and
++`inference_substrate="verifier_ensemble_against_cached_candidates"`.
++
++Each episode record SHALL include task state, selected action, verifier
++outcome, learned skill or failure node, memory update hash, and the next-task
++retrieval decision. Retrieval SHALL reject stale evidence, resolve conflicts in
++favor of newer verified evidence, and reject negative-transfer candidates before
++they can affect action selection. Held-out delta SHALL be measured with exact
++verifier outcomes over cached candidate actions, and SHALL NOT be the same
++scalar as the utility score used for retrieval ranking.
++
++The result artifact SHALL be
++`results/experiment_5503_csl_experience_graph_replay_v499.json` and SHALL
++include `replay_fixture_path`, `memory_graph_path`, `test_paths`,
++`num_stream_tasks`, `memory_state_hashes`, `no_memory_baseline_score`,
++`graph_memory_score`, `heldout_delta`, `negative_transfer_rate`,
++`stale_evidence_rejection_rate`, `metric_independence_notes`,
++`csl_experience_graph_ready`, `model_weights_mutated`,
++`inference_substrate`, and `honest_verdict`.
++
++### REQ-LEARN-5503 Sub-requirements
++
++- REQ-LEARN-5503-1: The replay fixture SHALL contain a chronological task
++  stream with train and held-out rows, cached candidate actions, exact expected
++  actions, and deterministic lessons to write after each interaction.
++- REQ-LEARN-5503-2: The memory graph SHALL store skill and failure nodes
++  externally, compute deterministic state hashes after every episode update,
++  and expose graph edges for conflict or support relationships.
++- REQ-LEARN-5503-3: Retrieval SHALL rank eligible nodes by a deterministic
++  utility score, while held-out scores SHALL be exact verifier pass rates over
++  selected cached actions rather than the utility score itself.
++- REQ-LEARN-5503-4: Stale-evidence, conflict, and negative-transfer controls
++  SHALL reject unsafe nodes before action selection and SHALL report stale
++  rejection and negative-transfer rates.
++- REQ-LEARN-5503-5: The no-memory baseline SHALL run over the same held-out row
++  IDs as the graph-memory policy and SHALL not observe memory graph nodes.
++- REQ-LEARN-5503-6: `csl_experience_graph_ready` SHALL be true only when tests
++  are recorded, the graph-memory held-out score exceeds the no-memory baseline,
++  stale evidence rejection is complete, negative-transfer rate is zero, and no
++  model weights mutate.
++
++### SCENARIO-LEARN-5503-GRAPH-UPDATE: Episodes Write Auditable Memory Nodes
++
++**Given** a chronological replay task with a verifier-approved skill lesson
++**When** the executor-frozen graph replay processes the task
++**Then** the episode record SHALL include the selected action, verifier
++outcome, learned skill node, memory update hash, and next-task retrieval
++decision.
++
++### SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS: Unsafe Memory Is Rejected
++
++**Given** eligible, stale, conflicting, and negative-transfer memory nodes
++**When** retrieval ranks the candidates for a task
++**Then** stale and negative-transfer nodes SHALL be rejected
++**And** lower-utility conflict losers SHALL be rejected before action selection.
++
++### SCENARIO-LEARN-5503-BASELINE: Held-Out Delta Uses Exact Outcomes
++
++**Given** graph-memory and no-memory policies evaluate the same held-out task
++IDs
++**When** Exp5503 computes scores
++**Then** `heldout_delta` SHALL equal the exact verifier pass-rate difference
++between graph memory and no-memory baseline
++**And** the artifact SHALL explain that retrieval utility is not the held-out
++outcome scalar.
++
++### SCENARIO-LEARN-5503-ARTIFACT: Deliverable JSON Is Stable
++
++**Given** the deterministic replay fixture and external memory graph are
++unchanged
++**When** Exp5503 writes its deliverable JSON
++**Then** all required schema fields SHALL be present and stable under replay
++**And** `model_weights_mutated` SHALL be false.
++
++## Implementation Status (Exp 5503)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-5503 | Planned (`python/carnot/experiment_5503_csl_experience_graph_replay_v499.py`, `results/experiment_5503_csl_experience_graph_replay_v499.json`) | Planned (`tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3f5755abdc..d74e3d4541 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4461,
++  "experiments_checked": 4462,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5503_csl_experience_graph_replay_v499.py b/python/carnot/experiment_5503_csl_experience_graph_replay_v499.py
+new file mode 100644
+index 0000000000..768cf22667
+--- /dev/null
++++ b/python/carnot/experiment_5503_csl_experience_graph_replay_v499.py
+@@ -0,0 +1,1022 @@
++"""Exp5503: executor-frozen experience-graph replay for CSL.
++
++Spec refs: REQ-LEARN-5503, SCENARIO-LEARN-5503-GRAPH-UPDATE,
++SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS, SCENARIO-LEARN-5503-BASELINE,
++SCENARIO-LEARN-5503-ARTIFACT.
++
++This fixture treats memory as an external graph that a frozen executor can
++query and update. The held-out score is an exact verifier pass rate over cached
++candidate actions, so it cannot collapse into the utility scalar used for
++memory retrieval ranking.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import copy
++import hashlib
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5503_csl_experience_graph_replay_v499.json")
++REPLAY_FIXTURE_RELATIVE_PATH = Path(
++    "results/experiment_5503_csl_experience_graph_replay_fixture_v499.json"
++)
++MEMORY_GRAPH_RELATIVE_PATH = Path(
++    "results/experiment_5503_csl_experience_graph_memory_v499.json"
++)
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/self-learning/spec.md")
++MODULE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_5503_csl_experience_graph_replay_v499.py"
++)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py"
++)
++
++EXPERIMENT_ID = "experiment_5503_csl_experience_graph_replay_v499"
++TASK_ID = "exp5503-csl-experience-graph-replay-v499"
++MILESTONE = "2026.07.499"
++RUN_DATE = "2026-07-09"
++RANDOM_SEED = 5503
++SCHEMA = "carnot.experiment_5503.csl_experience_graph_replay.v499"
++FIXTURE_SCHEMA = "carnot.experiment_5503.replay_fixture.v1"
++MEMORY_GRAPH_SCHEMA = "carnot.experiment_5503.memory_graph.v1"
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++EXACT_VERIFIER = "cached_candidate_exact_action_verifier"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++SPEC_REFS = (
++    "REQ-LEARN-5503",
++    "SCENARIO-LEARN-5503-GRAPH-UPDATE",
++    "SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS",
++    "SCENARIO-LEARN-5503-BASELINE",
++    "SCENARIO-LEARN-5503-ARTIFACT",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "replay_fixture_path",
++    "memory_graph_path",
++    "test_paths",
++    "num_stream_tasks",
++    "memory_state_hashes",
++    "no_memory_baseline_score",
++    "graph_memory_score",
++    "heldout_delta",
++    "negative_transfer_rate",
++    "stale_evidence_rejection_rate",
++    "metric_independence_notes",
++    "csl_experience_graph_ready",
++    "model_weights_mutated",
++    "inference_substrate",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES = {
++    "replay_fixture_path": "External chronological stream fixture used for replay.",
++    "memory_graph_path": "External skill and failure graph after all updates.",
++    "test_paths": "Focused tests that anchor REQ-LEARN-5503 behavior.",
++    "num_stream_tasks": "Number of stream interactions processed by the frozen executor.",
++    "memory_state_hashes": "Deterministic graph hashes after each episode update.",
++    "no_memory_baseline_score": "Exact held-out score without memory access.",
++    "graph_memory_score": "Exact held-out score with governed graph-memory retrieval.",
++    "heldout_delta": "Exact graph-memory minus no-memory pass-rate delta.",
++    "negative_transfer_rate": "Accepted negative-transfer candidates divided by candidates seen.",
++    "stale_evidence_rejection_rate": "Rejected stale candidates divided by stale candidates seen.",
++    "metric_independence_notes": "Why retrieval utility is not the held-out score scalar.",
++    "csl_experience_graph_ready": "Terminal readiness gate for executor-frozen memory replay.",
++    "model_weights_mutated": "Frozen model and adapter boundary.",
++    "inference_substrate": "Cached-candidate verifier substrate declaration.",
++    "honest_verdict": "Terminal status beginning with complete: or blocked:.",
++}
++
++
++def build_replay_fixture() -> JsonDict:
++    """Return a tiny stream where memory can be learned before held-out rows.
++
++    The rows use cached action candidates so the executor never calls a model.
++    Train rows create reusable skill or failure nodes; held-out rows check that
++    retrieval uses those nodes while rejecting stale, conflicting, or transferred
++    evidence.
++    """
++
++    stream_tasks = [
++        _task(
++            task_id="5503-train-dock-crate",
++            split="train",
++            domain="logistics",
++            locality="dock-7",
++            version=1,
++            tags=("dock", "crate", "release"),
++            candidates=("crate-red", "crate-blue"),
++            no_memory_action="crate-red",
++            expected_action="crate-blue",
++            lesson_node=_lesson_node(
++                "node5503-failure-dock-crate-red",
++                "failure",
++                "crate-blue",
++                domain="logistics",
++                locality="dock-7",
++                tags=("dock", "crate", "release"),
++                trust_score=0.84,
++                description="The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++            ),
++        ),
++        _task(
++            task_id="5503-heldout-dock-crate",
++            split="heldout",
++            domain="logistics",
++            locality="dock-7",
++            version=1,
++            tags=("dock", "crate", "release"),
++            candidates=("crate-red", "crate-blue"),
++            no_memory_action="crate-red",
++            expected_action="crate-blue",
++            lesson_node=_lesson_node(
++                "node5503-skill-dock-crate-blue",
++                "skill",
++                "crate-blue",
++                domain="logistics",
++                locality="dock-7",
++                tags=("dock", "crate", "release"),
++                trust_score=0.9,
++                description="Dock-7 release routing now prefers the blue crate.",
++            ),
++        ),
++        _task(
++            task_id="5503-train-python-loop",
++            split="train",
++            domain="python-loop",
++            locality="repo-alpha",
++            version=1,
++            tags=("bounds", "iteration", "repair"),
++            candidates=("use-sql-offset", "use-range-len"),
++            no_memory_action="use-range-len",
++            expected_action="use-range-len",
++            lesson_node=_lesson_node(
++                "node5503-skill-python-range-len",
++                "skill",
++                "use-range-len",
++                domain="python-loop",
++                locality="repo-alpha",
++                tags=("bounds", "iteration", "repair"),
++                trust_score=0.88,
++                description="Python loop repairs should use range(len(items)) for bound checks.",
++            ),
++        ),
++        _task(
++            task_id="5503-heldout-python-loop",
++            split="heldout",
++            domain="python-loop",
++            locality="repo-alpha",
++            version=1,
++            tags=("bounds", "iteration", "repair"),
++            candidates=("use-sql-offset", "use-range-len"),
++            no_memory_action="use-sql-offset",
++            expected_action="use-range-len",
++            lesson_node=_lesson_node(
++                "node5503-skill-python-heldout-range-len",
++                "skill",
++                "use-range-len",
++                domain="python-loop",
++                locality="repo-alpha",
++                tags=("bounds", "iteration", "repair"),
++                trust_score=0.9,
++                description="Held-out Python bound repair confirmed the range-len skill.",
++            ),
++        ),
++        _task(
++            task_id="5503-train-rx4-handoff",
++            split="train",
++            domain="incident-routing",
++            locality="rx-4",
++            version=3,
++            tags=("handoff", "rx4", "queue"),
++            candidates=("queue-alpha", "queue-beta"),
++            no_memory_action="queue-beta",
++            expected_action="queue-beta",
++            lesson_node=_lesson_node(
++                "node5503-skill-rx4-beta",
++                "skill",
++                "queue-beta",
++                domain="incident-routing",
++                locality="rx-4",
++                tags=("handoff", "rx4", "queue"),
++                trust_score=0.91,
++                description="RX-4 handoff moved ownership to queue beta.",
++            ),
++        ),
++        _task(
++            task_id="5503-heldout-rx4-handoff",
++            split="heldout",
++            domain="incident-routing",
++            locality="rx-4",
++            version=4,
++            tags=("handoff", "rx4", "queue"),
++            candidates=("queue-alpha", "queue-beta"),
++            no_memory_action="queue-alpha",
++            expected_action="queue-beta",
++            lesson_node=_lesson_node(
++                "node5503-skill-rx4-heldout-beta",
++                "skill",
++                "queue-beta",
++                domain="incident-routing",
++                locality="rx-4",
++                tags=("handoff", "rx4", "queue"),
++                trust_score=0.92,
++                description="Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
++            ),
++        ),
++        _task(
++            task_id="5503-heldout-dock-gate",
++            split="heldout",
++            domain="controller-action",
++            locality="dock-7",
++            version=2,
++            tags=("gate", "amber", "controller"),
++            candidates=("gate-A", "gate-B"),
++            no_memory_action="gate-A",
++            expected_action="gate-B",
++            lesson_node=_lesson_node(
++                "node5503-skill-gate-b-heldout",
++                "skill",
++                "gate-B",
++                domain="controller-action",
++                locality="dock-7",
++                tags=("gate", "amber", "controller"),
++                trust_score=0.9,
++                description="Held-out gate replay confirmed newer gate-B evidence.",
++            ),
++        ),
++    ]
++    return _json_ready(
++        {
++            "schema": FIXTURE_SCHEMA,
++            "fixture_id": "exp5503-csl-experience-graph-stream",
++            "random_seed": RANDOM_SEED,
++            "stream_tasks": stream_tasks,
++            "heldout_task_ids": [
++                task["task_id"] for task in stream_tasks if task["split"] == "heldout"
++            ],
++        }
++    )
++
++
++def initial_memory_graph() -> JsonDict:
++    """Return seed memories that exercise stale, conflict, and transfer gates."""
++
++    graph = {
++        "schema": MEMORY_GRAPH_SCHEMA,
++        "graph_id": "exp5503-experience-graph",
++        "nodes": [
++            _memory_node(
++                "node5503-stale-rx4-alpha",
++                "skill",
++                "queue-alpha",
++                domain="incident-routing",
++                locality="rx-4",
++                tags=("handoff", "rx4", "queue"),
++                trust_score=0.89,
++                version=1,
++                success_count=3,
++                expires_before_version=3,
++                description="Old RX-4 queue-alpha owner before the handoff.",
++            ),
++            _memory_node(
++                "node5503-transfer-sql-offset",
++                "skill",
++                "use-sql-offset",
++                domain="sql-pagination",
++                locality="warehouse-db",
++                tags=("bounds", "iteration", "repair"),
++                trust_score=0.83,
++                version=1,
++                success_count=4,
++                negative_transfer_domains=("python-loop",),
++                description="SQL offset repair that should not transfer to Python loop bounds.",
++            ),
++            _memory_node(
++                "node5503-conflict-gate-old",
++                "skill",
++                "gate-A",
++                domain="controller-action",
++                locality="dock-7",
++                tags=("gate", "amber", "controller"),
++                trust_score=0.61,
++                version=1,
++                success_count=2,
++                conflict_group="dock-7-amber-gate",
++                description="Older dock-7 amber gate action.",
++            ),
++            _memory_node(
++                "node5503-conflict-gate-new",
++                "skill",
++                "gate-B",
++                domain="controller-action",
++                locality="dock-7",
++                tags=("gate", "amber", "controller"),
++                trust_score=0.92,
++                version=2,
++                success_count=3,
++                conflict_group="dock-7-amber-gate",
++                description="Newer verified dock-7 amber gate action.",
++            ),
++        ],
++        "edges": [
++            {
++                "source": "node5503-conflict-gate-new",
++                "target": "node5503-conflict-gate-old",
++                "edge_type": "replaces",
++            }
++        ],
++    }
++    graph["state_hash"] = memory_state_hash(graph)
++    return _json_ready(graph)
++
++
++def retrieve_memory(task: Mapping[str, Any], memory_graph: Mapping[str, Any]) -> JsonDict:
++    """Rank eligible graph nodes and reject unsafe memories before selection."""
++
++    accepted: list[JsonDict] = []
++    rejected: list[JsonDict] = []
++    utility_scores: dict[str, float] = {}
++    for node in _list_of_mappings(memory_graph.get("nodes")):
++        if not _candidate_relevant(task, node):
++            continue
++        scored = copy.deepcopy(dict(node))
++        scored["utility_score"] = utility_score(task, node)
++        utility_scores[str(node["node_id"])] = scored["utility_score"]
++        reason = rejection_reason(task, node)
++        if reason:
++            scored["rejection_reason"] = reason
++            rejected.append(scored)
++        else:
++            accepted.append(scored)
++
++    accepted, conflict_rejections = resolve_conflicts(accepted)
++    rejected.extend(conflict_rejections)
++    ranked = sorted(accepted, key=lambda row: (-float(row["utility_score"]), str(row["node_id"])))
++    selected = ranked[0] if ranked else {}
++    selected_action = str(selected.get("action", task["no_memory_action"]))
++    selected_node_id = selected.get("node_id")
++    return _json_ready(
++        {
++            "task_id": task["task_id"],
++            "ranked_node_ids": [row["node_id"] for row in ranked],
++            "accepted_node_ids": [row["node_id"] for row in ranked],
++            "rejected_node_ids_by_reason": _rejected_by_reason(rejected),
++            "selected_node_id": selected_node_id,
++            "selected_action": selected_action,
++            "utility_scores": utility_scores,
++            "accepted_nodes": ranked,
++            "rejected_nodes": sorted(rejected, key=lambda row: str(row["node_id"])),
++        }
++    )
++
++
++def utility_score(task: Mapping[str, Any], node: Mapping[str, Any]) -> float:
++    """Compute retrieval utility; this is deliberately not the outcome metric."""
++
++    task_tags = set(_string_list(task.get("tags")))
++    node_tags = set(_string_list(node.get("tags")))
++    overlap = len(task_tags & node_tags) / max(1, len(task_tags))
++    domain_bonus = 0.4 if node.get("domain") == task.get("domain") else 0.0
++    locality_bonus = 0.2 if node.get("locality") == task.get("locality") else 0.0
++    failure_bonus = 0.12 if node.get("node_type") == "failure" else 0.0
++    score = (
++        overlap
++        + domain_bonus
++        + locality_bonus
++        + failure_bonus
++        + float(node.get("trust_score", 0.0))
++        + 0.08 * int(node.get("success_count", 0))
++        - 0.04 * int(node.get("failure_count", 0))
++        + 0.03 * int(node.get("version", 1))
++    )
++    return round(score, 6)
++
++
++def rejection_reason(task: Mapping[str, Any], node: Mapping[str, Any]) -> str | None:
++    """Return the first hard-control reason that blocks a candidate node."""
++
++    task_version = int(task.get("version", 0))
++    expires_before = node.get("expires_before_version")
++    if node.get("evidence_status", "active") != "active" or (
++        expires_before is not None and task_version >= int(expires_before)
++    ):
++        return "stale_evidence"
++    if str(task.get("domain")) in _string_list(node.get("negative_transfer_domains")):
++        return "negative_transfer"
++    if str(node.get("action")) not in _string_list(task.get("candidates")):
++        return "action_not_cached"
++    return None
++
++
++def resolve_conflicts(nodes: Sequence[Mapping[str, Any]]) -> tuple[list[JsonDict], list[JsonDict]]:
++    """Keep the highest-utility member of each conflict group."""
++
++    winners: list[JsonDict] = []
++    rejected: list[JsonDict] = []
++    grouped: dict[str, list[JsonDict]] = {}
++    for node in nodes:
++        group = str(node.get("conflict_group") or node["node_id"])
++        grouped.setdefault(group, []).append(copy.deepcopy(dict(node)))
++    for rows in grouped.values():
++        ordered = sorted(rows, key=lambda row: (-float(row["utility_score"]), str(row["node_id"])))
++        winners.append(ordered[0])
++        for loser in ordered[1:]:
++            loser["rejection_reason"] = "conflict_lower_utility"
++            rejected.append(loser)
++    return winners, rejected
++
++
++def exact_verifier(task: Mapping[str, Any], selected_action: str) -> JsonDict:
++    """Score a cached action by exact match against the task's expected action."""
++
++    cached = selected_action in _string_list(task.get("candidates"))
++    accepted = cached and selected_action == str(task["expected_action"])
++    reasons: list[str] = []
++    if not cached:
++        reasons.append("selected_action_not_cached")
++    if cached and not accepted:
++        reasons.append("expected_action_mismatch")
++    return {
++        "authority": EXACT_VERIFIER,
++        "accepted": accepted,
++        "selected_action": selected_action,
++        "expected_action": str(task["expected_action"]),
++        "cached_candidate": cached,
++        "failure_reasons": reasons,
++    }
++
++
++def apply_episode_update(
++    memory_graph: Mapping[str, Any],
++    task: Mapping[str, Any],
++    *,
++    selected_action: str,
++    selected_node_id: Any,
++    verifier_outcome: Mapping[str, Any],
++) -> tuple[JsonDict, JsonDict, str]:
++    """Write the task's deterministic lesson node and return the new graph hash."""
++
++    updated = copy.deepcopy(dict(memory_graph))
++    learned_node = copy.deepcopy(dict(task["lesson_node"]))
++    learned_node["source_task_id"] = str(task["task_id"])
++    learned_node["learned_from_selected_action"] = selected_action
++    learned_node["verifier_accepted"] = bool(verifier_outcome["accepted"])
++    learned_node["success_count"] = 1 if verifier_outcome["accepted"] else 0
++    learned_node["failure_count"] = 0 if verifier_outcome["accepted"] else 1
++    learned_node["evidence_status"] = "active"
++    updated["nodes"] = [
++        node
++        for node in _list_of_mappings(updated.get("nodes"))
++        if node.get("node_id") != learned_node["node_id"]
++    ]
++    updated["nodes"].append(learned_node)
++    updated["edges"] = _list_of_mappings(updated.get("edges"))
++    updated["edges"].append(
++        {
++            "source": str(learned_node["node_id"]),
++            "target": str(selected_node_id or "no-memory-baseline"),
++            "edge_type": "learned_after_action",
++        }
++    )
++    update_hash = memory_state_hash(updated)
++    updated["state_hash"] = update_hash
++    return _json_ready(updated), _json_ready(learned_node), update_hash
++
++
++def run_graph_replay(
++    replay_fixture: Mapping[str, Any] | None = None,
++    memory_graph: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Process the stream once, updating memory after every interaction."""
++
++    fixture = copy.deepcopy(dict(replay_fixture or build_replay_fixture()))
++    graph = copy.deepcopy(dict(memory_graph or initial_memory_graph()))
++    tasks = _list_of_mappings(fixture["stream_tasks"])
++    episode_records: list[JsonDict] = []
++    memory_state_hashes: list[str] = []
++    retrieval_decisions: list[JsonDict] = []
++
++    for index, task in enumerate(tasks):
++        retrieval = retrieve_memory(task, graph)
++        verifier = exact_verifier(task, str(retrieval["selected_action"]))
++        graph, learned_node, update_hash = apply_episode_update(
++            graph,
++            task,
++            selected_action=str(retrieval["selected_action"]),
++            selected_node_id=retrieval.get("selected_node_id"),
++            verifier_outcome=verifier,
++        )
++        memory_state_hashes.append(update_hash)
++        next_task = tasks[index + 1] if index + 1 < len(tasks) else None
++        next_decision = (
++            retrieve_memory(next_task, graph)
++            if next_task is not None
++            else _empty_next_decision()
++        )
++        retrieval_decisions.append(retrieval)
++        episode_records.append(
++            {
++                "episode_id": index + 1,
++                "task_id": task["task_id"],
++                "split": task["split"],
++                "task_state": _task_state(task),
++                "selected_action": retrieval["selected_action"],
++                "selected_memory_node_id": retrieval.get("selected_node_id"),
++                "retrieval_decision": retrieval,
++                "verifier_outcome": verifier,
++                "learned_node": learned_node,
++                "memory_update_hash": update_hash,
++                "next_task_retrieval_decision": next_decision,
++            }
++        )
++
++    heldout_ids = set(_string_list(fixture["heldout_task_ids"]))
++    heldout_results = [
++        {
++            "task_id": episode["task_id"],
++            "selected_action": episode["selected_action"],
++            "accepted": episode["verifier_outcome"]["accepted"],
++        }
++        for episode in episode_records
++        if episode["task_id"] in heldout_ids
++    ]
++    graph_score = _rate(
++        sum(1 for row in heldout_results if row["accepted"] is True),
++        len(heldout_results),
++    )
++    controls = _control_rates(retrieval_decisions)
++    graph["state_hashes"] = memory_state_hashes
++    graph["episode_count"] = len(episode_records)
++    graph["state_hash"] = memory_state_hash(graph)
++    return _json_ready(
++        {
++            "episode_records": episode_records,
++            "memory_graph": graph,
++            "memory_state_hashes": memory_state_hashes,
++            "num_stream_tasks": len(tasks),
++            "heldout_results": heldout_results,
++            "graph_memory_score": graph_score,
++            "negative_transfer_rate": controls["negative_transfer_rate"],
++            "stale_evidence_rejection_rate": controls["stale_evidence_rejection_rate"],
++            "control_counts": controls["control_counts"],
++        }
++    )
++
++
++def score_no_memory(replay_fixture: Mapping[str, Any]) -> JsonDict:
++    """Score the exact same held-out rows with memory retrieval disabled."""
++
++    fixture = copy.deepcopy(dict(replay_fixture))
++    heldout_ids = set(_string_list(fixture["heldout_task_ids"]))
++    row_results = []
++    for task in _list_of_mappings(fixture["stream_tasks"]):
++        if task["task_id"] not in heldout_ids:
++            continue
++        verifier = exact_verifier(task, str(task["no_memory_action"]))
++        row_results.append(
++            {
++                "task_id": task["task_id"],
++                "selected_action": task["no_memory_action"],
++                "accepted": verifier["accepted"],
++                "verifier_outcome": verifier,
++            }
++        )
++    return _json_ready(
++        {
++            "score": _rate(sum(1 for row in row_results if row["accepted"] is True), len(row_results)),
++            "row_results": row_results,
++        }
++    )
++
++
++def build_artifact(
++    *,
++    root: Path | str = REPO_ROOT,
++    replay_fixture_path: Path | str = REPLAY_FIXTURE_RELATIVE_PATH,
++    memory_graph_path: Path | str = MEMORY_GRAPH_RELATIVE_PATH,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++) -> JsonDict:
++    """Build the terminal result payload without writing files."""
++
++    root_path = Path(root)
++    fixture = build_replay_fixture()
++    replay = run_graph_replay(fixture, initial_memory_graph())
++    baseline = score_no_memory(fixture)
++    no_memory_score = float(baseline["score"])
++    graph_score = float(replay["graph_memory_score"])
++    heldout_delta = _round(graph_score - no_memory_score)
++    tests = _normalise_tests_run(tests_run)
++    ready = bool(
++        tests
++        and heldout_delta > 0.0
++        and graph_score > no_memory_score
++        and float(replay["negative_transfer_rate"]) == 0.0
++        and float(replay["stale_evidence_rejection_rate"]) == 1.0
++    )
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "replay_fixture_path": Path(replay_fixture_path).as_posix(),
++        "memory_graph_path": Path(memory_graph_path).as_posix(),
++        "test_paths": [str(TEST_RELATIVE_PATH)],
++        "num_stream_tasks": replay["num_stream_tasks"],
++        "memory_state_hashes": replay["memory_state_hashes"],
++        "no_memory_baseline_score": no_memory_score,
++        "graph_memory_score": graph_score,
++        "heldout_delta": heldout_delta,
++        "negative_transfer_rate": replay["negative_transfer_rate"],
++        "stale_evidence_rejection_rate": replay["stale_evidence_rejection_rate"],
++        "metric_independence_notes": (
++            "Retrieval ranks nodes by utility_score from tag overlap, trust, counts, "
++            "and freshness; heldout_delta is not the retrieval utility and is computed "
++            "only from exact cached-candidate verifier outcomes on held-out task IDs."
++        ),
++        "csl_experience_graph_ready": ready,
++        "model_weights_mutated": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": _honest_verdict(ready, heldout_delta),
++        "replay_fixture": fixture,
++        "memory_graph": replay["memory_graph"],
++        "episode_records": replay["episode_records"],
++        "heldout_task_ids": fixture["heldout_task_ids"],
++        "graph_memory_results": replay["heldout_results"],
++        "no_memory_baseline_results": baseline["row_results"],
++        "control_counts": replay["control_counts"],
++        "tests_run": tests,
++        "source_files": {
++            "module": str(MODULE_RELATIVE_PATH),
++            "spec": str(SPEC_RELATIVE_PATH),
++            "test": str(TEST_RELATIVE_PATH),
++        },
++        "source_file_checksums": source_file_checksums(root_path),
++        "research_conductor_modified": False,
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    artifact = _json_ready(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    result_path: Path | str = RESULT_RELATIVE_PATH,
++    replay_fixture_path: Path | str = REPLAY_FIXTURE_RELATIVE_PATH,
++    memory_graph_path: Path | str = MEMORY_GRAPH_RELATIVE_PATH,
++    tests_run: Sequence[str | Mapping[str, Any]] = (),
++    write: bool = True,
++) -> JsonDict:
++    """Build the artifact and optionally write result, fixture, and graph JSON."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root=root_path,
++        replay_fixture_path=replay_fixture_path,
++        memory_graph_path=memory_graph_path,
++        tests_run=tests_run,
++    )
++    if write:
++        _write_json(_resolve_output_path(root_path, result_path), artifact)
++        _write_json(
++            _resolve_output_path(root_path, replay_fixture_path),
++            artifact["replay_fixture"],
++        )
++        _write_json(
++            _resolve_output_path(root_path, memory_graph_path),
++            artifact["memory_graph"],
++        )
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> bool:
++    """Raise when the artifact cannot support an experience-graph-ready claim."""
++
++    errors = artifact_errors(artifact)
++    if errors:
++        raise ValueError("invalid Exp5503 artifact: " + "; ".join(errors))
++    return True
++
++
++def artifact_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return deliverable validation errors without mutating the artifact."""
++
++    errors: list[str] = []
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        errors.append(f"missing required fields: {missing}")
++    tests_run = _list_of_mappings(artifact.get("tests_run"))
++    if not tests_run:
++        errors.append("tests_run")
++    if artifact.get("model_weights_mutated") is not False:
++        errors.append("model_weights_mutated")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    no_memory = float(artifact.get("no_memory_baseline_score", 0.0))
++    graph_memory = float(artifact.get("graph_memory_score", 0.0))
++    expected_delta = _round(graph_memory - no_memory)
++    if float(artifact.get("heldout_delta", 0.0)) != expected_delta:
++        errors.append("heldout_delta")
++    if float(artifact.get("negative_transfer_rate", 1.0)) != 0.0:
++        errors.append("negative_transfer_rate")
++    if float(artifact.get("stale_evidence_rejection_rate", 0.0)) != 1.0:
++        errors.append("stale_evidence_rejection_rate")
++    if len(_string_list(artifact.get("memory_state_hashes"))) != int(
++        artifact.get("num_stream_tasks", -1)
++    ):
++        errors.append("memory_state_hashes")
++    expected_ready = bool(
++        tests_run
++        and expected_delta > 0.0
++        and graph_memory > no_memory
++        and artifact.get("model_weights_mutated") is False
++        and artifact.get("inference_substrate") == INFERENCE_SUBSTRATE
++        and float(artifact.get("negative_transfer_rate", 1.0)) == 0.0
++        and float(artifact.get("stale_evidence_rejection_rate", 0.0)) == 1.0
++    )
++    if artifact.get("csl_experience_graph_ready") is not expected_ready:
++        errors.append("csl_experience_graph_ready")
++    if not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    if artifact.get("research_conductor_modified") is not False:
++        errors.append("scripts/research_conductor.py")
++    checksum = artifact.get("reproducibility_checksum")
++    if checksum and checksum != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def memory_state_hash(memory_graph: Mapping[str, Any]) -> str:
++    """Hash graph state while excluding self-referential hash fields."""
++
++    payload = {
++        key: value
++        for key, value in memory_graph.items()
++        if key not in {"state_hash", "state_hashes"}
++    }
++    return "sha256:" + _sha256_json(payload)
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the deliverable with its checksum field removed."""
++
++    payload = {key: value for key, value in artifact.items() if key != "reproducibility_checksum"}
++    return "sha256:" + _sha256_json(payload)
++
++
++def source_file_checksums(root: Path) -> JsonDict:
++    """Record source hashes so the replay artifact names the code it used."""
++
++    return {
++        "module": _sha256_file(root / MODULE_RELATIVE_PATH),
++        "spec": _sha256_file(root / SPEC_RELATIVE_PATH),
++        "test": _sha256_file(root / TEST_RELATIVE_PATH),
++    }
++
++
++def _task(
++    *,
++    task_id: str,
++    split: str,
++    domain: str,
++    locality: str,
++    version: int,
++    tags: Sequence[str],
++    candidates: Sequence[str],
++    no_memory_action: str,
++    expected_action: str,
++    lesson_node: Mapping[str, Any],
++) -> JsonDict:
++    return {
++        "task_id": task_id,
++        "split": split,
++        "state": {
++            "domain": domain,
++            "locality": locality,
++            "version": version,
++            "tags": list(tags),
++        },
++        "domain": domain,
++        "locality": locality,
++        "version": version,
++        "tags": list(tags),
++        "candidates": list(candidates),
++        "no_memory_action": no_memory_action,
++        "expected_action": expected_action,
++        "lesson_node": dict(lesson_node),
++    }
++
++
++def _lesson_node(
++    node_id: str,
++    node_type: str,
++    action: str,
++    *,
++    domain: str,
++    locality: str,
++    tags: Sequence[str],
++    trust_score: float,
++    description: str,
++) -> JsonDict:
++    return _memory_node(
++        node_id,
++        node_type,
++        action,
++        domain=domain,
++        locality=locality,
++        tags=tags,
++        trust_score=trust_score,
++        version=1,
++        success_count=0,
++        description=description,
++    )
++
++
++def _memory_node(
++    node_id: str,
++    node_type: str,
++    action: str,
++    *,
++    domain: str,
++    locality: str,
++    tags: Sequence[str],
++    trust_score: float,
++    version: int,
++    success_count: int,
++    description: str,
++    failure_count: int = 0,
++    expires_before_version: int | None = None,
++    conflict_group: str | None = None,
++    negative_transfer_domains: Sequence[str] = (),
++) -> JsonDict:
++    return {
++        "node_id": node_id,
++        "node_type": node_type,
++        "action": action,
++        "domain": domain,
++        "locality": locality,
++        "tags": list(tags),
++        "trust_score": trust_score,
++        "version": version,
++        "success_count": success_count,
++        "failure_count": failure_count,
++        "evidence_status": "active",
++        "expires_before_version": expires_before_version,
++        "conflict_group": conflict_group,
++        "negative_transfer_domains": list(negative_transfer_domains),
++        "description": description,
++    }
++
++
++def _candidate_relevant(task: Mapping[str, Any], node: Mapping[str, Any]) -> bool:
++    task_tags = set(_string_list(task.get("tags")))
++    node_tags = set(_string_list(node.get("tags")))
++    return bool(
++        task_tags & node_tags
++        or task.get("domain") == node.get("domain")
++        or task.get("locality") == node.get("locality")
++    )
++
++
++def _task_state(task: Mapping[str, Any]) -> JsonDict:
++    return {
++        "domain": task["domain"],
++        "locality": task["locality"],
++        "version": task["version"],
++        "tags": list(task["tags"]),
++        "candidate_actions": list(task["candidates"]),
++    }
++
++
++def _control_rates(retrieval_decisions: Sequence[Mapping[str, Any]]) -> JsonDict:
++    stale_seen = 0
++    stale_rejected = 0
++    transfer_seen = 0
++    transfer_accepted = 0
++    for decision in retrieval_decisions:
++        rejected = _mapping(decision.get("rejected_node_ids_by_reason"))
++        stale_rejected += len(_string_list(rejected.get("stale_evidence")))
++        stale_seen += len(_string_list(rejected.get("stale_evidence")))
++        transfer_seen += len(_string_list(rejected.get("negative_transfer")))
++        for node in _list_of_mappings(decision.get("accepted_nodes")):
++            if node.get("negative_transfer_domains"):
++                transfer_accepted += 1
++                transfer_seen += 1
++    return {
++        "negative_transfer_rate": _rate(transfer_accepted, transfer_seen),
++        "stale_evidence_rejection_rate": _rate(stale_rejected, stale_seen),
++        "control_counts": {
++            "stale_candidates_seen": stale_seen,
++            "stale_candidates_rejected": stale_rejected,
++            "negative_transfer_candidates_seen": transfer_seen,
++            "negative_transfer_candidates_accepted": transfer_accepted,
++        },
++    }
++
++
++def _rejected_by_reason(rejected: Sequence[Mapping[str, Any]]) -> JsonDict:
++    by_reason: dict[str, list[str]] = {}
++    for row in rejected:
++        by_reason.setdefault(str(row["rejection_reason"]), []).append(str(row["node_id"]))
++    return {reason: sorted(ids) for reason, ids in sorted(by_reason.items())}
++
++
++def _empty_next_decision() -> JsonDict:
++    return {
++        "task_id": None,
++        "ranked_node_ids": [],
++        "accepted_node_ids": [],
++        "rejected_node_ids_by_reason": {},
++        "selected_node_id": None,
++        "selected_action": None,
++        "utility_scores": {},
++        "accepted_nodes": [],
++        "rejected_nodes": [],
++    }
++
++
++def _normalise_tests_run(tests_run: Sequence[str | Mapping[str, Any]]) -> list[JsonDict]:
++    rows = []
++    for row in tests_run:
++        if isinstance(row, str):
++            rows.append({"command": row, "outcome": "passed"})
++        else:
++            rows.append(dict(row))
++    return rows
++
++
++def _resolve_output_path(root: Path, path: Path | str) -> Path:
++    output = Path(path)
++    if output.is_absolute():
++        return output
++    return root / output
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(_json_ready(payload), indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def _sha256_file(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _sha256_json(payload: Any) -> str:
++    encoded = json.dumps(
++        _json_ready(payload),
++        sort_keys=True,
++        separators=(",", ":"),
++        ensure_ascii=True,
++    ).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _json_ready(value: Any) -> Any:
++    if isinstance(value, Mapping):
++        return {str(key): _json_ready(item) for key, item in sorted(value.items())}
++    if isinstance(value, (list, tuple)):
++        return [_json_ready(item) for item in value]
++    return value
++
++
++def _list_of_mappings(value: Any) -> list[JsonDict]:
++    if not isinstance(value, list):
++        return []
++    return [dict(row) for row in value if isinstance(row, Mapping)]
++
++
++def _mapping(value: Any) -> JsonDict:
++    return dict(value) if isinstance(value, Mapping) else {}
++
++
++def _string_list(value: Any) -> list[str]:
++    if not isinstance(value, list):
++        return []
++    return [str(item) for item in value]
++
++
++def _rate(numerator: int, denominator: int) -> float:
++    return _round(numerator / denominator) if denominator else 0.0
++
++
++def _round(value: float) -> float:
++    return round(float(value), 6)
++
++
++def _honest_verdict(ready: bool, heldout_delta: float) -> str:
++    if ready:
++        return f"complete: experience_graph_replay_ready_delta_{heldout_delta:+.6f}"
++    return "blocked: experience_graph_replay_not_ready"
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 27d9e6fb94..556f581bb4 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:21:58.696044+00:00",
+-  "finished_at": "2026-07-09T18:21:58.722341+00:00",
+-  "duration_s": 0.026,
++  "started_at": "2026-07-09T18:50:18.449684+00:00",
++  "finished_at": "2026-07-09T18:50:18.477524+00:00",
++  "duration_s": 0.028,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index f81fd45d06..1a94a7b697 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-09T18:21:58Z",
++  "run_date": "2026-07-09T18:50:18Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index e1ae12f961..98f2152300 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:22:00Z",
+-  "finished_at": "2026-07-09T18:22:00Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-09T18:50:20Z",
++  "finished_at": "2026-07-09T18:50:20Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 17b384f68e..aa534f2f8a 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-09T18:22:00Z",
++  "run_date": "2026-07-09T18:50:20Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 86bcc3f6ef..cebaeeb5a6 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-09T18:22:00Z",
++  "run_date": "2026-07-09T18:50:20Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index cd8ab72d7d..d16034c799 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.148151397705078,
++  "efficiency_gains_ms": 2.1457672119140625,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 741b960967..6896dc9dd9 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.000199934933334589,
+-  "latency_domino_seconds": 0.0003938088193535805,
++  "latency_legacy_seconds": 0.00014766724780201912,
++  "latency_domino_seconds": 0.0002874503843486309,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 43f7b44ac4..c17118ecbe 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:21:46Z",
+-  "finished_at": "2026-07-09T18:21:46Z",
++  "started_at": "2026-07-09T18:50:01Z",
++  "finished_at": "2026-07-09T18:50:01Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 4c87ec6f11..76a022a97c 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:22:21Z",
+-  "finished_at": "2026-07-09T18:22:21Z",
++  "started_at": "2026-07-09T18:50:36Z",
++  "finished_at": "2026-07-09T18:50:36Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.04506111145019531,
++  "latency_ms": 0.07534027099609375,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index a68f799166..1605f9e947 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5080196857452393,
++  "duration_s": 0.6311790943145752,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 18dc43924a..690cbe762e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.158735439181328e-05,
++  "duration_s": 4.441291093826294e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5503_csl_experience_graph_memory_v499.json b/results/experiment_5503_csl_experience_graph_memory_v499.json
+new file mode 100644
+index 0000000000..611119d20e
+--- /dev/null
++++ b/results/experiment_5503_csl_experience_graph_memory_v499.json
+@@ -0,0 +1,313 @@
++{
++  "edges": [
++    {
++      "edge_type": "replaces",
++      "source": "node5503-conflict-gate-new",
++      "target": "node5503-conflict-gate-old"
++    },
++    {
++      "edge_type": "learned_after_action",
++      "source": "node5503-failure-dock-crate-red",
++      "target": "no-memory-baseline"
++    },
++    {
++      "edge_type": "learned_after_action",
++      "source": "node5503-skill-dock-crate-blue",
++      "target": "node5503-failure-dock-crate-red"
++    },
++    {
++      "edge_type": "learned_after_action",
++      "source": "node5503-skill-python-range-len",
++      "target": "no-memory-baseline"
++    },
++    {
++      "edge_type": "learned_after_action",
++      "source": "node5503-skill-python-heldout-range-len",
++      "target": "node5503-skill-python-range-len"
++    },
++    {
++      "edge_type": "learned_after_action",
++      "source": "node5503-skill-rx4-beta",
++      "target": "no-memory-baseline"
++    },
++    {
++      "edge_type": "learned_after_action",
++      "source": "node5503-skill-rx4-heldout-beta",
++      "target": "node5503-skill-rx4-beta"
++    },
++    {
++      "edge_type": "learned_after_action",
++      "source": "node5503-skill-gate-b-heldout",
++      "target": "node5503-conflict-gate-new"
++    }
++  ],
++  "episode_count": 7,
++  "graph_id": "exp5503-experience-graph",
++  "nodes": [
++    {
++      "action": "queue-alpha",
++      "conflict_group": null,
++      "description": "Old RX-4 queue-alpha owner before the handoff.",
++      "domain": "incident-routing",
++      "evidence_status": "active",
++      "expires_before_version": 3,
++      "failure_count": 0,
++      "locality": "rx-4",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-stale-rx4-alpha",
++      "node_type": "skill",
++      "success_count": 3,
++      "tags": [
++        "handoff",
++        "rx4",
++        "queue"
++      ],
++      "trust_score": 0.89,
++      "version": 1
++    },
++    {
++      "action": "use-sql-offset",
++      "conflict_group": null,
++      "description": "SQL offset repair that should not transfer to Python loop bounds.",
++      "domain": "sql-pagination",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "locality": "warehouse-db",
++      "negative_transfer_domains": [
++        "python-loop"
++      ],
++      "node_id": "node5503-transfer-sql-offset",
++      "node_type": "skill",
++      "success_count": 4,
++      "tags": [
++        "bounds",
++        "iteration",
++        "repair"
++      ],
++      "trust_score": 0.83,
++      "version": 1
++    },
++    {
++      "action": "gate-A",
++      "conflict_group": "dock-7-amber-gate",
++      "description": "Older dock-7 amber gate action.",
++      "domain": "controller-action",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "locality": "dock-7",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-conflict-gate-old",
++      "node_type": "skill",
++      "success_count": 2,
++      "tags": [
++        "gate",
++        "amber",
++        "controller"
++      ],
++      "trust_score": 0.61,
++      "version": 1
++    },
++    {
++      "action": "gate-B",
++      "conflict_group": "dock-7-amber-gate",
++      "description": "Newer verified dock-7 amber gate action.",
++      "domain": "controller-action",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "locality": "dock-7",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-conflict-gate-new",
++      "node_type": "skill",
++      "success_count": 3,
++      "tags": [
++        "gate",
++        "amber",
++        "controller"
++      ],
++      "trust_score": 0.92,
++      "version": 2
++    },
++    {
++      "action": "crate-blue",
++      "conflict_group": null,
++      "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++      "domain": "logistics",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 1,
++      "learned_from_selected_action": "crate-red",
++      "locality": "dock-7",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-failure-dock-crate-red",
++      "node_type": "failure",
++      "source_task_id": "5503-train-dock-crate",
++      "success_count": 0,
++      "tags": [
++        "dock",
++        "crate",
++        "release"
++      ],
++      "trust_score": 0.84,
++      "verifier_accepted": false,
++      "version": 1
++    },
++    {
++      "action": "crate-blue",
++      "conflict_group": null,
++      "description": "Dock-7 release routing now prefers the blue crate.",
++      "domain": "logistics",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "learned_from_selected_action": "crate-blue",
++      "locality": "dock-7",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-skill-dock-crate-blue",
++      "node_type": "skill",
++      "source_task_id": "5503-heldout-dock-crate",
++      "success_count": 1,
++      "tags": [
++        "dock",
++        "crate",
++        "release"
++      ],
++      "trust_score": 0.9,
++      "verifier_accepted": true,
++      "version": 1
++    },
++    {
++      "action": "use-range-len",
++      "conflict_group": null,
++      "description": "Python loop repairs should use range(len(items)) for bound checks.",
++      "domain": "python-loop",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "learned_from_selected_action": "use-range-len",
++      "locality": "repo-alpha",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-skill-python-range-len",
++      "node_type": "skill",
++      "source_task_id": "5503-train-python-loop",
++      "success_count": 1,
++      "tags": [
++        "bounds",
++        "iteration",
++        "repair"
++      ],
++      "trust_score": 0.88,
++      "verifier_accepted": true,
++      "version": 1
++    },
++    {
++      "action": "use-range-len",
++      "conflict_group": null,
++      "description": "Held-out Python bound repair confirmed the range-len skill.",
++      "domain": "python-loop",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "learned_from_selected_action": "use-range-len",
++      "locality": "repo-alpha",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-skill-python-heldout-range-len",
++      "node_type": "skill",
++      "source_task_id": "5503-heldout-python-loop",
++      "success_count": 1,
++      "tags": [
++        "bounds",
++        "iteration",
++        "repair"
++      ],
++      "trust_score": 0.9,
++      "verifier_accepted": true,
++      "version": 1
++    },
++    {
++      "action": "queue-beta",
++      "conflict_group": null,
++      "description": "RX-4 handoff moved ownership to queue beta.",
++      "domain": "incident-routing",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "learned_from_selected_action": "queue-beta",
++      "locality": "rx-4",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-skill-rx4-beta",
++      "node_type": "skill",
++      "source_task_id": "5503-train-rx4-handoff",
++      "success_count": 1,
++      "tags": [
++        "handoff",
++        "rx4",
++        "queue"
++      ],
++      "trust_score": 0.91,
++      "verifier_accepted": true,
++      "version": 1
++    },
++    {
++      "action": "queue-beta",
++      "conflict_group": null,
++      "description": "Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
++      "domain": "incident-routing",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "learned_from_selected_action": "queue-beta",
++      "locality": "rx-4",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-skill-rx4-heldout-beta",
++      "node_type": "skill",
++      "source_task_id": "5503-heldout-rx4-handoff",
++      "success_count": 1,
++      "tags": [
++        "handoff",
++        "rx4",
++        "queue"
++      ],
++      "trust_score": 0.92,
++      "verifier_accepted": true,
++      "version": 1
++    },
++    {
++      "action": "gate-B",
++      "conflict_group": null,
++      "description": "Held-out gate replay confirmed newer gate-B evidence.",
++      "domain": "controller-action",
++      "evidence_status": "active",
++      "expires_before_version": null,
++      "failure_count": 0,
++      "learned_from_selected_action": "gate-B",
++      "locality": "dock-7",
++      "negative_transfer_domains": [],
++      "node_id": "node5503-skill-gate-b-heldout",
++      "node_type": "skill",
++      "source_task_id": "5503-heldout-dock-gate",
++      "success_count": 1,
++      "tags": [
++        "gate",
++        "amber",
++        "controller"
++      ],
++      "trust_score": 0.9,
++      "verifier_accepted": true,
++      "version": 1
++    }
++  ],
++  "schema": "carnot.experiment_5503.memory_graph.v1",
++  "state_hash": "sha256:ffc9c81deac0e75f99d52579c27f17fd7d6699e6fcc19933ab1e1bb1c24876d5",
++  "state_hashes": [
++    "sha256:f08746fe3206ced92dbd0fc6a3de5c0ba43145717367788487d8d914617e333d",
++    "sha256:047f7eb771c18a14eef4a449fe103c06b94276989da70a755ee3a352fc9a9bc5",
++    "sha256:f9e1451f181e7ad8234f6c34042b9d85411f97e2d7f348658cfb77b16652bd8c",
++    "sha256:9d693422189f72cf10176a23e2268f794043d67679c37ae4608c957bc56385b5",
++    "sha256:786f5f16c21cf159a9b33d63c7aa16ad8ca4fe5801a20a103ef0cb5f0a3b7863",
++    "sha256:517e439b88247253318ed5589e23b07346beb94997a84a11dd4cb8b05172fb11",
++    "sha256:fc2dedd5ca5c2b8a055e8289acdec8afed7f9441fe0c1de58514cfddafd95fb9"
++  ]
++}
+diff --git a/results/experiment_5503_csl_experience_graph_replay_fixture_v499.json b/results/experiment_5503_csl_experience_graph_replay_fixture_v499.json
+new file mode 100644
+index 0000000000..c33215340f
+--- /dev/null
++++ b/results/experiment_5503_csl_experience_graph_replay_fixture_v499.json
+@@ -0,0 +1,356 @@
++{
++  "fixture_id": "exp5503-csl-experience-graph-stream",
++  "heldout_task_ids": [
++    "5503-heldout-dock-crate",
++    "5503-heldout-python-loop",
++    "5503-heldout-rx4-handoff",
++    "5503-heldout-dock-gate"
++  ],
++  "random_seed": 5503,
++  "schema": "carnot.experiment_5503.replay_fixture.v1",
++  "stream_tasks": [
++    {
++      "candidates": [
++        "crate-red",
++        "crate-blue"
++      ],
++      "domain": "logistics",
++      "expected_action": "crate-blue",
++      "lesson_node": {
++        "action": "crate-blue",
++        "conflict_group": null,
++        "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++        "domain": "logistics",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-failure-dock-crate-red",
++        "node_type": "failure",
++        "success_count": 0,
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "trust_score": 0.84,
++        "version": 1
++      },
++      "locality": "dock-7",
++      "no_memory_action": "crate-red",
++      "split": "train",
++      "state": {
++        "domain": "logistics",
++        "locality": "dock-7",
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "version": 1
++      },
++      "tags": [
++        "dock",
++        "crate",
++        "release"
++      ],
++      "task_id": "5503-train-dock-crate",
++      "version": 1
++    },
++    {
++      "candidates": [
++        "crate-red",
++        "crate-blue"
++      ],
++      "domain": "logistics",
++      "expected_action": "crate-blue",
++      "lesson_node": {
++        "action": "crate-blue",
++        "conflict_group": null,
++        "description": "Dock-7 release routing now prefers the blue crate.",
++        "domain": "logistics",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-dock-crate-blue",
++        "node_type": "skill",
++        "success_count": 0,
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "trust_score": 0.9,
++        "version": 1
++      },
++      "locality": "dock-7",
++      "no_memory_action": "crate-red",
++      "split": "heldout",
++      "state": {
++        "domain": "logistics",
++        "locality": "dock-7",
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "version": 1
++      },
++      "tags": [
++        "dock",
++        "crate",
++        "release"
++      ],
++      "task_id": "5503-heldout-dock-crate",
++      "version": 1
++    },
++    {
++      "candidates": [
++        "use-sql-offset",
++        "use-range-len"
++      ],
++      "domain": "python-loop",
++      "expected_action": "use-range-len",
++      "lesson_node": {
++        "action": "use-range-len",
++        "conflict_group": null,
++        "description": "Python loop repairs should use range(len(items)) for bound checks.",
++        "domain": "python-loop",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "repo-alpha",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-python-range-len",
++        "node_type": "skill",
++        "success_count": 0,
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "trust_score": 0.88,
++        "version": 1
++      },
++      "locality": "repo-alpha",
++      "no_memory_action": "use-range-len",
++      "split": "train",
++      "state": {
++        "domain": "python-loop",
++        "locality": "repo-alpha",
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "version": 1
++      },
++      "tags": [
++        "bounds",
++        "iteration",
++        "repair"
++      ],
++      "task_id": "5503-train-python-loop",
++      "version": 1
++    },
++    {
++      "candidates": [
++        "use-sql-offset",
++        "use-range-len"
++      ],
++      "domain": "python-loop",
++      "expected_action": "use-range-len",
++      "lesson_node": {
++        "action": "use-range-len",
++        "conflict_group": null,
++        "description": "Held-out Python bound repair confirmed the range-len skill.",
++        "domain": "python-loop",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "repo-alpha",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-python-heldout-range-len",
++        "node_type": "skill",
++        "success_count": 0,
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "trust_score": 0.9,
++        "version": 1
++      },
++      "locality": "repo-alpha",
++      "no_memory_action": "use-sql-offset",
++      "split": "heldout",
++      "state": {
++        "domain": "python-loop",
++        "locality": "repo-alpha",
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "version": 1
++      },
++      "tags": [
++        "bounds",
++        "iteration",
++        "repair"
++      ],
++      "task_id": "5503-heldout-python-loop",
++      "version": 1
++    },
++    {
++      "candidates": [
++        "queue-alpha",
++        "queue-beta"
++      ],
++      "domain": "incident-routing",
++      "expected_action": "queue-beta",
++      "lesson_node": {
++        "action": "queue-beta",
++        "conflict_group": null,
++        "description": "RX-4 handoff moved ownership to queue beta.",
++        "domain": "incident-routing",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "rx-4",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-rx4-beta",
++        "node_type": "skill",
++        "success_count": 0,
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "trust_score": 0.91,
++        "version": 1
++      },
++      "locality": "rx-4",
++      "no_memory_action": "queue-beta",
++      "split": "train",
++      "state": {
++        "domain": "incident-routing",
++        "locality": "rx-4",
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "version": 3
++      },
++      "tags": [
++        "handoff",
++        "rx4",
++        "queue"
++      ],
++      "task_id": "5503-train-rx4-handoff",
++      "version": 3
++    },
++    {
++      "candidates": [
++        "queue-alpha",
++        "queue-beta"
++      ],
++      "domain": "incident-routing",
++      "expected_action": "queue-beta",
++      "lesson_node": {
++        "action": "queue-beta",
++        "conflict_group": null,
++        "description": "Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
++        "domain": "incident-routing",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "rx-4",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-rx4-heldout-beta",
++        "node_type": "skill",
++        "success_count": 0,
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "trust_score": 0.92,
++        "version": 1
++      },
++      "locality": "rx-4",
++      "no_memory_action": "queue-alpha",
++      "split": "heldout",
++      "state": {
++        "domain": "incident-routing",
++        "locality": "rx-4",
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "version": 4
++      },
++      "tags": [
++        "handoff",
++        "rx4",
++        "queue"
++      ],
++      "task_id": "5503-heldout-rx4-handoff",
++      "version": 4
++    },
++    {
++      "candidates": [
++        "gate-A",
++        "gate-B"
++      ],
++      "domain": "controller-action",
++      "expected_action": "gate-B",
++      "lesson_node": {
++        "action": "gate-B",
++        "conflict_group": null,
++        "description": "Held-out gate replay confirmed newer gate-B evidence.",
++        "domain": "controller-action",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-gate-b-heldout",
++        "node_type": "skill",
++        "success_count": 0,
++        "tags": [
++          "gate",
++          "amber",
++          "controller"
++        ],
++        "trust_score": 0.9,
++        "version": 1
++      },
++      "locality": "dock-7",
++      "no_memory_action": "gate-A",
++      "split": "heldout",
++      "state": {
++        "domain": "controller-action",
++        "locality": "dock-7",
++        "tags": [
++          "gate",
++          "amber",
++          "controller"
++        ],
++        "version": 2
++      },
++      "tags": [
++        "gate",
++        "amber",
++        "controller"
++      ],
++      "task_id": "5503-heldout-dock-gate",
++      "version": 2
++    }
++  ]
++}
+diff --git a/results/experiment_5503_csl_experience_graph_replay_v499.json b/results/experiment_5503_csl_experience_graph_replay_v499.json
+new file mode 100644
+index 0000000000..6a689c7f2a
+--- /dev/null
++++ b/results/experiment_5503_csl_experience_graph_replay_v499.json
+@@ -0,0 +1,2215 @@
++{
++  "control_counts": {
++    "negative_transfer_candidates_accepted": 0,
++    "negative_transfer_candidates_seen": 2,
++    "stale_candidates_rejected": 2,
++    "stale_candidates_seen": 2
++  },
++  "csl_experience_graph_ready": true,
++  "episode_records": [
++    {
++      "episode_id": 1,
++      "learned_node": {
++        "action": "crate-blue",
++        "conflict_group": null,
++        "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++        "domain": "logistics",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 1,
++        "learned_from_selected_action": "crate-red",
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-failure-dock-crate-red",
++        "node_type": "failure",
++        "source_task_id": "5503-train-dock-crate",
++        "success_count": 0,
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "trust_score": 0.84,
++        "verifier_accepted": false,
++        "version": 1
++      },
++      "memory_update_hash": "sha256:f08746fe3206ced92dbd0fc6a3de5c0ba43145717367788487d8d914617e333d",
++      "next_task_retrieval_decision": {
++        "accepted_node_ids": [
++          "node5503-failure-dock-crate-red"
++        ],
++        "accepted_nodes": [
++          {
++            "action": "crate-blue",
++            "conflict_group": null,
++            "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++            "domain": "logistics",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 1,
++            "learned_from_selected_action": "crate-red",
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-failure-dock-crate-red",
++            "node_type": "failure",
++            "source_task_id": "5503-train-dock-crate",
++            "success_count": 0,
++            "tags": [
++              "dock",
++              "crate",
++              "release"
++            ],
++            "trust_score": 0.84,
++            "utility_score": 2.55,
++            "verifier_accepted": false,
++            "version": 1
++          }
++        ],
++        "ranked_node_ids": [
++          "node5503-failure-dock-crate-red"
++        ],
++        "rejected_node_ids_by_reason": {
++          "action_not_cached": [
++            "node5503-conflict-gate-new",
++            "node5503-conflict-gate-old"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "gate-B",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Newer verified dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-new",
++            "node_type": "skill",
++            "rejection_reason": "action_not_cached",
++            "success_count": 3,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.92,
++            "utility_score": 1.42,
++            "version": 2
++          },
++          {
++            "action": "gate-A",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Older dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-old",
++            "node_type": "skill",
++            "rejection_reason": "action_not_cached",
++            "success_count": 2,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.61,
++            "utility_score": 1.0,
++            "version": 1
++          }
++        ],
++        "selected_action": "crate-blue",
++        "selected_node_id": "node5503-failure-dock-crate-red",
++        "task_id": "5503-heldout-dock-crate",
++        "utility_scores": {
++          "node5503-conflict-gate-new": 1.42,
++          "node5503-conflict-gate-old": 1.0,
++          "node5503-failure-dock-crate-red": 2.55
++        }
++      },
++      "retrieval_decision": {
++        "accepted_node_ids": [],
++        "accepted_nodes": [],
++        "ranked_node_ids": [],
++        "rejected_node_ids_by_reason": {
++          "action_not_cached": [
++            "node5503-conflict-gate-new",
++            "node5503-conflict-gate-old"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "gate-B",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Newer verified dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-new",
++            "node_type": "skill",
++            "rejection_reason": "action_not_cached",
++            "success_count": 3,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.92,
++            "utility_score": 1.42,
++            "version": 2
++          },
++          {
++            "action": "gate-A",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Older dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-old",
++            "node_type": "skill",
++            "rejection_reason": "action_not_cached",
++            "success_count": 2,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.61,
++            "utility_score": 1.0,
++            "version": 1
++          }
++        ],
++        "selected_action": "crate-red",
++        "selected_node_id": null,
++        "task_id": "5503-train-dock-crate",
++        "utility_scores": {
++          "node5503-conflict-gate-new": 1.42,
++          "node5503-conflict-gate-old": 1.0
++        }
++      },
++      "selected_action": "crate-red",
++      "selected_memory_node_id": null,
++      "split": "train",
++      "task_id": "5503-train-dock-crate",
++      "task_state": {
++        "candidate_actions": [
++          "crate-red",
++          "crate-blue"
++        ],
++        "domain": "logistics",
++        "locality": "dock-7",
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "version": 1
++      },
++      "verifier_outcome": {
++        "accepted": false,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "crate-blue",
++        "failure_reasons": [
++          "expected_action_mismatch"
++        ],
++        "selected_action": "crate-red"
++      }
++    },
++    {
++      "episode_id": 2,
++      "learned_node": {
++        "action": "crate-blue",
++        "conflict_group": null,
++        "description": "Dock-7 release routing now prefers the blue crate.",
++        "domain": "logistics",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "crate-blue",
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-dock-crate-blue",
++        "node_type": "skill",
++        "source_task_id": "5503-heldout-dock-crate",
++        "success_count": 1,
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "trust_score": 0.9,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      "memory_update_hash": "sha256:047f7eb771c18a14eef4a449fe103c06b94276989da70a755ee3a352fc9a9bc5",
++      "next_task_retrieval_decision": {
++        "accepted_node_ids": [],
++        "accepted_nodes": [],
++        "ranked_node_ids": [],
++        "rejected_node_ids_by_reason": {
++          "negative_transfer": [
++            "node5503-transfer-sql-offset"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "use-sql-offset",
++            "conflict_group": null,
++            "description": "SQL offset repair that should not transfer to Python loop bounds.",
++            "domain": "sql-pagination",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "warehouse-db",
++            "negative_transfer_domains": [
++              "python-loop"
++            ],
++            "node_id": "node5503-transfer-sql-offset",
++            "node_type": "skill",
++            "rejection_reason": "negative_transfer",
++            "success_count": 4,
++            "tags": [
++              "bounds",
++              "iteration",
++              "repair"
++            ],
++            "trust_score": 0.83,
++            "utility_score": 2.18,
++            "version": 1
++          }
++        ],
++        "selected_action": "use-range-len",
++        "selected_node_id": null,
++        "task_id": "5503-train-python-loop",
++        "utility_scores": {
++          "node5503-transfer-sql-offset": 2.18
++        }
++      },
++      "retrieval_decision": {
++        "accepted_node_ids": [
++          "node5503-failure-dock-crate-red"
++        ],
++        "accepted_nodes": [
++          {
++            "action": "crate-blue",
++            "conflict_group": null,
++            "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++            "domain": "logistics",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 1,
++            "learned_from_selected_action": "crate-red",
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-failure-dock-crate-red",
++            "node_type": "failure",
++            "source_task_id": "5503-train-dock-crate",
++            "success_count": 0,
++            "tags": [
++              "dock",
++              "crate",
++              "release"
++            ],
++            "trust_score": 0.84,
++            "utility_score": 2.55,
++            "verifier_accepted": false,
++            "version": 1
++          }
++        ],
++        "ranked_node_ids": [
++          "node5503-failure-dock-crate-red"
++        ],
++        "rejected_node_ids_by_reason": {
++          "action_not_cached": [
++            "node5503-conflict-gate-new",
++            "node5503-conflict-gate-old"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "gate-B",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Newer verified dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-new",
++            "node_type": "skill",
++            "rejection_reason": "action_not_cached",
++            "success_count": 3,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.92,
++            "utility_score": 1.42,
++            "version": 2
++          },
++          {
++            "action": "gate-A",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Older dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-old",
++            "node_type": "skill",
++            "rejection_reason": "action_not_cached",
++            "success_count": 2,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.61,
++            "utility_score": 1.0,
++            "version": 1
++          }
++        ],
++        "selected_action": "crate-blue",
++        "selected_node_id": "node5503-failure-dock-crate-red",
++        "task_id": "5503-heldout-dock-crate",
++        "utility_scores": {
++          "node5503-conflict-gate-new": 1.42,
++          "node5503-conflict-gate-old": 1.0,
++          "node5503-failure-dock-crate-red": 2.55
++        }
++      },
++      "selected_action": "crate-blue",
++      "selected_memory_node_id": "node5503-failure-dock-crate-red",
++      "split": "heldout",
++      "task_id": "5503-heldout-dock-crate",
++      "task_state": {
++        "candidate_actions": [
++          "crate-red",
++          "crate-blue"
++        ],
++        "domain": "logistics",
++        "locality": "dock-7",
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "version": 1
++      },
++      "verifier_outcome": {
++        "accepted": true,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "crate-blue",
++        "failure_reasons": [],
++        "selected_action": "crate-blue"
++      }
++    },
++    {
++      "episode_id": 3,
++      "learned_node": {
++        "action": "use-range-len",
++        "conflict_group": null,
++        "description": "Python loop repairs should use range(len(items)) for bound checks.",
++        "domain": "python-loop",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "use-range-len",
++        "locality": "repo-alpha",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-python-range-len",
++        "node_type": "skill",
++        "source_task_id": "5503-train-python-loop",
++        "success_count": 1,
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "trust_score": 0.88,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      "memory_update_hash": "sha256:f9e1451f181e7ad8234f6c34042b9d85411f97e2d7f348658cfb77b16652bd8c",
++      "next_task_retrieval_decision": {
++        "accepted_node_ids": [
++          "node5503-skill-python-range-len"
++        ],
++        "accepted_nodes": [
++          {
++            "action": "use-range-len",
++            "conflict_group": null,
++            "description": "Python loop repairs should use range(len(items)) for bound checks.",
++            "domain": "python-loop",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "learned_from_selected_action": "use-range-len",
++            "locality": "repo-alpha",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-skill-python-range-len",
++            "node_type": "skill",
++            "source_task_id": "5503-train-python-loop",
++            "success_count": 1,
++            "tags": [
++              "bounds",
++              "iteration",
++              "repair"
++            ],
++            "trust_score": 0.88,
++            "utility_score": 2.59,
++            "verifier_accepted": true,
++            "version": 1
++          }
++        ],
++        "ranked_node_ids": [
++          "node5503-skill-python-range-len"
++        ],
++        "rejected_node_ids_by_reason": {
++          "negative_transfer": [
++            "node5503-transfer-sql-offset"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "use-sql-offset",
++            "conflict_group": null,
++            "description": "SQL offset repair that should not transfer to Python loop bounds.",
++            "domain": "sql-pagination",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "warehouse-db",
++            "negative_transfer_domains": [
++              "python-loop"
++            ],
++            "node_id": "node5503-transfer-sql-offset",
++            "node_type": "skill",
++            "rejection_reason": "negative_transfer",
++            "success_count": 4,
++            "tags": [
++              "bounds",
++              "iteration",
++              "repair"
++            ],
++            "trust_score": 0.83,
++            "utility_score": 2.18,
++            "version": 1
++          }
++        ],
++        "selected_action": "use-range-len",
++        "selected_node_id": "node5503-skill-python-range-len",
++        "task_id": "5503-heldout-python-loop",
++        "utility_scores": {
++          "node5503-skill-python-range-len": 2.59,
++          "node5503-transfer-sql-offset": 2.18
++        }
++      },
++      "retrieval_decision": {
++        "accepted_node_ids": [],
++        "accepted_nodes": [],
++        "ranked_node_ids": [],
++        "rejected_node_ids_by_reason": {
++          "negative_transfer": [
++            "node5503-transfer-sql-offset"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "use-sql-offset",
++            "conflict_group": null,
++            "description": "SQL offset repair that should not transfer to Python loop bounds.",
++            "domain": "sql-pagination",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "warehouse-db",
++            "negative_transfer_domains": [
++              "python-loop"
++            ],
++            "node_id": "node5503-transfer-sql-offset",
++            "node_type": "skill",
++            "rejection_reason": "negative_transfer",
++            "success_count": 4,
++            "tags": [
++              "bounds",
++              "iteration",
++              "repair"
++            ],
++            "trust_score": 0.83,
++            "utility_score": 2.18,
++            "version": 1
++          }
++        ],
++        "selected_action": "use-range-len",
++        "selected_node_id": null,
++        "task_id": "5503-train-python-loop",
++        "utility_scores": {
++          "node5503-transfer-sql-offset": 2.18
++        }
++      },
++      "selected_action": "use-range-len",
++      "selected_memory_node_id": null,
++      "split": "train",
++      "task_id": "5503-train-python-loop",
++      "task_state": {
++        "candidate_actions": [
++          "use-sql-offset",
++          "use-range-len"
++        ],
++        "domain": "python-loop",
++        "locality": "repo-alpha",
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "version": 1
++      },
++      "verifier_outcome": {
++        "accepted": true,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "use-range-len",
++        "failure_reasons": [],
++        "selected_action": "use-range-len"
++      }
++    },
++    {
++      "episode_id": 4,
++      "learned_node": {
++        "action": "use-range-len",
++        "conflict_group": null,
++        "description": "Held-out Python bound repair confirmed the range-len skill.",
++        "domain": "python-loop",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "use-range-len",
++        "locality": "repo-alpha",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-python-heldout-range-len",
++        "node_type": "skill",
++        "source_task_id": "5503-heldout-python-loop",
++        "success_count": 1,
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "trust_score": 0.9,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      "memory_update_hash": "sha256:9d693422189f72cf10176a23e2268f794043d67679c37ae4608c957bc56385b5",
++      "next_task_retrieval_decision": {
++        "accepted_node_ids": [],
++        "accepted_nodes": [],
++        "ranked_node_ids": [],
++        "rejected_node_ids_by_reason": {
++          "stale_evidence": [
++            "node5503-stale-rx4-alpha"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "queue-alpha",
++            "conflict_group": null,
++            "description": "Old RX-4 queue-alpha owner before the handoff.",
++            "domain": "incident-routing",
++            "evidence_status": "active",
++            "expires_before_version": 3,
++            "failure_count": 0,
++            "locality": "rx-4",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-stale-rx4-alpha",
++            "node_type": "skill",
++            "rejection_reason": "stale_evidence",
++            "success_count": 3,
++            "tags": [
++              "handoff",
++              "rx4",
++              "queue"
++            ],
++            "trust_score": 0.89,
++            "utility_score": 2.76,
++            "version": 1
++          }
++        ],
++        "selected_action": "queue-beta",
++        "selected_node_id": null,
++        "task_id": "5503-train-rx4-handoff",
++        "utility_scores": {
++          "node5503-stale-rx4-alpha": 2.76
++        }
++      },
++      "retrieval_decision": {
++        "accepted_node_ids": [
++          "node5503-skill-python-range-len"
++        ],
++        "accepted_nodes": [
++          {
++            "action": "use-range-len",
++            "conflict_group": null,
++            "description": "Python loop repairs should use range(len(items)) for bound checks.",
++            "domain": "python-loop",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "learned_from_selected_action": "use-range-len",
++            "locality": "repo-alpha",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-skill-python-range-len",
++            "node_type": "skill",
++            "source_task_id": "5503-train-python-loop",
++            "success_count": 1,
++            "tags": [
++              "bounds",
++              "iteration",
++              "repair"
++            ],
++            "trust_score": 0.88,
++            "utility_score": 2.59,
++            "verifier_accepted": true,
++            "version": 1
++          }
++        ],
++        "ranked_node_ids": [
++          "node5503-skill-python-range-len"
++        ],
++        "rejected_node_ids_by_reason": {
++          "negative_transfer": [
++            "node5503-transfer-sql-offset"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "use-sql-offset",
++            "conflict_group": null,
++            "description": "SQL offset repair that should not transfer to Python loop bounds.",
++            "domain": "sql-pagination",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "warehouse-db",
++            "negative_transfer_domains": [
++              "python-loop"
++            ],
++            "node_id": "node5503-transfer-sql-offset",
++            "node_type": "skill",
++            "rejection_reason": "negative_transfer",
++            "success_count": 4,
++            "tags": [
++              "bounds",
++              "iteration",
++              "repair"
++            ],
++            "trust_score": 0.83,
++            "utility_score": 2.18,
++            "version": 1
++          }
++        ],
++        "selected_action": "use-range-len",
++        "selected_node_id": "node5503-skill-python-range-len",
++        "task_id": "5503-heldout-python-loop",
++        "utility_scores": {
++          "node5503-skill-python-range-len": 2.59,
++          "node5503-transfer-sql-offset": 2.18
++        }
++      },
++      "selected_action": "use-range-len",
++      "selected_memory_node_id": "node5503-skill-python-range-len",
++      "split": "heldout",
++      "task_id": "5503-heldout-python-loop",
++      "task_state": {
++        "candidate_actions": [
++          "use-sql-offset",
++          "use-range-len"
++        ],
++        "domain": "python-loop",
++        "locality": "repo-alpha",
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "version": 1
++      },
++      "verifier_outcome": {
++        "accepted": true,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "use-range-len",
++        "failure_reasons": [],
++        "selected_action": "use-range-len"
++      }
++    },
++    {
++      "episode_id": 5,
++      "learned_node": {
++        "action": "queue-beta",
++        "conflict_group": null,
++        "description": "RX-4 handoff moved ownership to queue beta.",
++        "domain": "incident-routing",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "queue-beta",
++        "locality": "rx-4",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-rx4-beta",
++        "node_type": "skill",
++        "source_task_id": "5503-train-rx4-handoff",
++        "success_count": 1,
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "trust_score": 0.91,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      "memory_update_hash": "sha256:786f5f16c21cf159a9b33d63c7aa16ad8ca4fe5801a20a103ef0cb5f0a3b7863",
++      "next_task_retrieval_decision": {
++        "accepted_node_ids": [
++          "node5503-skill-rx4-beta"
++        ],
++        "accepted_nodes": [
++          {
++            "action": "queue-beta",
++            "conflict_group": null,
++            "description": "RX-4 handoff moved ownership to queue beta.",
++            "domain": "incident-routing",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "learned_from_selected_action": "queue-beta",
++            "locality": "rx-4",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-skill-rx4-beta",
++            "node_type": "skill",
++            "source_task_id": "5503-train-rx4-handoff",
++            "success_count": 1,
++            "tags": [
++              "handoff",
++              "rx4",
++              "queue"
++            ],
++            "trust_score": 0.91,
++            "utility_score": 2.62,
++            "verifier_accepted": true,
++            "version": 1
++          }
++        ],
++        "ranked_node_ids": [
++          "node5503-skill-rx4-beta"
++        ],
++        "rejected_node_ids_by_reason": {
++          "stale_evidence": [
++            "node5503-stale-rx4-alpha"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "queue-alpha",
++            "conflict_group": null,
++            "description": "Old RX-4 queue-alpha owner before the handoff.",
++            "domain": "incident-routing",
++            "evidence_status": "active",
++            "expires_before_version": 3,
++            "failure_count": 0,
++            "locality": "rx-4",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-stale-rx4-alpha",
++            "node_type": "skill",
++            "rejection_reason": "stale_evidence",
++            "success_count": 3,
++            "tags": [
++              "handoff",
++              "rx4",
++              "queue"
++            ],
++            "trust_score": 0.89,
++            "utility_score": 2.76,
++            "version": 1
++          }
++        ],
++        "selected_action": "queue-beta",
++        "selected_node_id": "node5503-skill-rx4-beta",
++        "task_id": "5503-heldout-rx4-handoff",
++        "utility_scores": {
++          "node5503-skill-rx4-beta": 2.62,
++          "node5503-stale-rx4-alpha": 2.76
++        }
++      },
++      "retrieval_decision": {
++        "accepted_node_ids": [],
++        "accepted_nodes": [],
++        "ranked_node_ids": [],
++        "rejected_node_ids_by_reason": {
++          "stale_evidence": [
++            "node5503-stale-rx4-alpha"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "queue-alpha",
++            "conflict_group": null,
++            "description": "Old RX-4 queue-alpha owner before the handoff.",
++            "domain": "incident-routing",
++            "evidence_status": "active",
++            "expires_before_version": 3,
++            "failure_count": 0,
++            "locality": "rx-4",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-stale-rx4-alpha",
++            "node_type": "skill",
++            "rejection_reason": "stale_evidence",
++            "success_count": 3,
++            "tags": [
++              "handoff",
++              "rx4",
++              "queue"
++            ],
++            "trust_score": 0.89,
++            "utility_score": 2.76,
++            "version": 1
++          }
++        ],
++        "selected_action": "queue-beta",
++        "selected_node_id": null,
++        "task_id": "5503-train-rx4-handoff",
++        "utility_scores": {
++          "node5503-stale-rx4-alpha": 2.76
++        }
++      },
++      "selected_action": "queue-beta",
++      "selected_memory_node_id": null,
++      "split": "train",
++      "task_id": "5503-train-rx4-handoff",
++      "task_state": {
++        "candidate_actions": [
++          "queue-alpha",
++          "queue-beta"
++        ],
++        "domain": "incident-routing",
++        "locality": "rx-4",
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "version": 3
++      },
++      "verifier_outcome": {
++        "accepted": true,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "queue-beta",
++        "failure_reasons": [],
++        "selected_action": "queue-beta"
++      }
++    },
++    {
++      "episode_id": 6,
++      "learned_node": {
++        "action": "queue-beta",
++        "conflict_group": null,
++        "description": "Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
++        "domain": "incident-routing",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "queue-beta",
++        "locality": "rx-4",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-rx4-heldout-beta",
++        "node_type": "skill",
++        "source_task_id": "5503-heldout-rx4-handoff",
++        "success_count": 1,
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "trust_score": 0.92,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      "memory_update_hash": "sha256:517e439b88247253318ed5589e23b07346beb94997a84a11dd4cb8b05172fb11",
++      "next_task_retrieval_decision": {
++        "accepted_node_ids": [
++          "node5503-conflict-gate-new"
++        ],
++        "accepted_nodes": [
++          {
++            "action": "gate-B",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Newer verified dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-new",
++            "node_type": "skill",
++            "success_count": 3,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.92,
++            "utility_score": 2.82,
++            "version": 2
++          }
++        ],
++        "ranked_node_ids": [
++          "node5503-conflict-gate-new"
++        ],
++        "rejected_node_ids_by_reason": {
++          "action_not_cached": [
++            "node5503-failure-dock-crate-red",
++            "node5503-skill-dock-crate-blue"
++          ],
++          "conflict_lower_utility": [
++            "node5503-conflict-gate-old"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "gate-A",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Older dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-old",
++            "node_type": "skill",
++            "rejection_reason": "conflict_lower_utility",
++            "success_count": 2,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.61,
++            "utility_score": 2.4,
++            "version": 1
++          },
++          {
++            "action": "crate-blue",
++            "conflict_group": null,
++            "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++            "domain": "logistics",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 1,
++            "learned_from_selected_action": "crate-red",
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-failure-dock-crate-red",
++            "node_type": "failure",
++            "rejection_reason": "action_not_cached",
++            "source_task_id": "5503-train-dock-crate",
++            "success_count": 0,
++            "tags": [
++              "dock",
++              "crate",
++              "release"
++            ],
++            "trust_score": 0.84,
++            "utility_score": 1.15,
++            "verifier_accepted": false,
++            "version": 1
++          },
++          {
++            "action": "crate-blue",
++            "conflict_group": null,
++            "description": "Dock-7 release routing now prefers the blue crate.",
++            "domain": "logistics",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "learned_from_selected_action": "crate-blue",
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-skill-dock-crate-blue",
++            "node_type": "skill",
++            "rejection_reason": "action_not_cached",
++            "source_task_id": "5503-heldout-dock-crate",
++            "success_count": 1,
++            "tags": [
++              "dock",
++              "crate",
++              "release"
++            ],
++            "trust_score": 0.9,
++            "utility_score": 1.21,
++            "verifier_accepted": true,
++            "version": 1
++          }
++        ],
++        "selected_action": "gate-B",
++        "selected_node_id": "node5503-conflict-gate-new",
++        "task_id": "5503-heldout-dock-gate",
++        "utility_scores": {
++          "node5503-conflict-gate-new": 2.82,
++          "node5503-conflict-gate-old": 2.4,
++          "node5503-failure-dock-crate-red": 1.15,
++          "node5503-skill-dock-crate-blue": 1.21
++        }
++      },
++      "retrieval_decision": {
++        "accepted_node_ids": [
++          "node5503-skill-rx4-beta"
++        ],
++        "accepted_nodes": [
++          {
++            "action": "queue-beta",
++            "conflict_group": null,
++            "description": "RX-4 handoff moved ownership to queue beta.",
++            "domain": "incident-routing",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "learned_from_selected_action": "queue-beta",
++            "locality": "rx-4",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-skill-rx4-beta",
++            "node_type": "skill",
++            "source_task_id": "5503-train-rx4-handoff",
++            "success_count": 1,
++            "tags": [
++              "handoff",
++              "rx4",
++              "queue"
++            ],
++            "trust_score": 0.91,
++            "utility_score": 2.62,
++            "verifier_accepted": true,
++            "version": 1
++          }
++        ],
++        "ranked_node_ids": [
++          "node5503-skill-rx4-beta"
++        ],
++        "rejected_node_ids_by_reason": {
++          "stale_evidence": [
++            "node5503-stale-rx4-alpha"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "queue-alpha",
++            "conflict_group": null,
++            "description": "Old RX-4 queue-alpha owner before the handoff.",
++            "domain": "incident-routing",
++            "evidence_status": "active",
++            "expires_before_version": 3,
++            "failure_count": 0,
++            "locality": "rx-4",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-stale-rx4-alpha",
++            "node_type": "skill",
++            "rejection_reason": "stale_evidence",
++            "success_count": 3,
++            "tags": [
++              "handoff",
++              "rx4",
++              "queue"
++            ],
++            "trust_score": 0.89,
++            "utility_score": 2.76,
++            "version": 1
++          }
++        ],
++        "selected_action": "queue-beta",
++        "selected_node_id": "node5503-skill-rx4-beta",
++        "task_id": "5503-heldout-rx4-handoff",
++        "utility_scores": {
++          "node5503-skill-rx4-beta": 2.62,
++          "node5503-stale-rx4-alpha": 2.76
++        }
++      },
++      "selected_action": "queue-beta",
++      "selected_memory_node_id": "node5503-skill-rx4-beta",
++      "split": "heldout",
++      "task_id": "5503-heldout-rx4-handoff",
++      "task_state": {
++        "candidate_actions": [
++          "queue-alpha",
++          "queue-beta"
++        ],
++        "domain": "incident-routing",
++        "locality": "rx-4",
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "version": 4
++      },
++      "verifier_outcome": {
++        "accepted": true,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "queue-beta",
++        "failure_reasons": [],
++        "selected_action": "queue-beta"
++      }
++    },
++    {
++      "episode_id": 7,
++      "learned_node": {
++        "action": "gate-B",
++        "conflict_group": null,
++        "description": "Held-out gate replay confirmed newer gate-B evidence.",
++        "domain": "controller-action",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "gate-B",
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-gate-b-heldout",
++        "node_type": "skill",
++        "source_task_id": "5503-heldout-dock-gate",
++        "success_count": 1,
++        "tags": [
++          "gate",
++          "amber",
++          "controller"
++        ],
++        "trust_score": 0.9,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      "memory_update_hash": "sha256:fc2dedd5ca5c2b8a055e8289acdec8afed7f9441fe0c1de58514cfddafd95fb9",
++      "next_task_retrieval_decision": {
++        "accepted_node_ids": [],
++        "accepted_nodes": [],
++        "ranked_node_ids": [],
++        "rejected_node_ids_by_reason": {},
++        "rejected_nodes": [],
++        "selected_action": null,
++        "selected_node_id": null,
++        "task_id": null,
++        "utility_scores": {}
++      },
++      "retrieval_decision": {
++        "accepted_node_ids": [
++          "node5503-conflict-gate-new"
++        ],
++        "accepted_nodes": [
++          {
++            "action": "gate-B",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Newer verified dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-new",
++            "node_type": "skill",
++            "success_count": 3,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.92,
++            "utility_score": 2.82,
++            "version": 2
++          }
++        ],
++        "ranked_node_ids": [
++          "node5503-conflict-gate-new"
++        ],
++        "rejected_node_ids_by_reason": {
++          "action_not_cached": [
++            "node5503-failure-dock-crate-red",
++            "node5503-skill-dock-crate-blue"
++          ],
++          "conflict_lower_utility": [
++            "node5503-conflict-gate-old"
++          ]
++        },
++        "rejected_nodes": [
++          {
++            "action": "gate-A",
++            "conflict_group": "dock-7-amber-gate",
++            "description": "Older dock-7 amber gate action.",
++            "domain": "controller-action",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-conflict-gate-old",
++            "node_type": "skill",
++            "rejection_reason": "conflict_lower_utility",
++            "success_count": 2,
++            "tags": [
++              "gate",
++              "amber",
++              "controller"
++            ],
++            "trust_score": 0.61,
++            "utility_score": 2.4,
++            "version": 1
++          },
++          {
++            "action": "crate-blue",
++            "conflict_group": null,
++            "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++            "domain": "logistics",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 1,
++            "learned_from_selected_action": "crate-red",
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-failure-dock-crate-red",
++            "node_type": "failure",
++            "rejection_reason": "action_not_cached",
++            "source_task_id": "5503-train-dock-crate",
++            "success_count": 0,
++            "tags": [
++              "dock",
++              "crate",
++              "release"
++            ],
++            "trust_score": 0.84,
++            "utility_score": 1.15,
++            "verifier_accepted": false,
++            "version": 1
++          },
++          {
++            "action": "crate-blue",
++            "conflict_group": null,
++            "description": "Dock-7 release routing now prefers the blue crate.",
++            "domain": "logistics",
++            "evidence_status": "active",
++            "expires_before_version": null,
++            "failure_count": 0,
++            "learned_from_selected_action": "crate-blue",
++            "locality": "dock-7",
++            "negative_transfer_domains": [],
++            "node_id": "node5503-skill-dock-crate-blue",
++            "node_type": "skill",
++            "rejection_reason": "action_not_cached",
++            "source_task_id": "5503-heldout-dock-crate",
++            "success_count": 1,
++            "tags": [
++              "dock",
++              "crate",
++              "release"
++            ],
++            "trust_score": 0.9,
++            "utility_score": 1.21,
++            "verifier_accepted": true,
++            "version": 1
++          }
++        ],
++        "selected_action": "gate-B",
++        "selected_node_id": "node5503-conflict-gate-new",
++        "task_id": "5503-heldout-dock-gate",
++        "utility_scores": {
++          "node5503-conflict-gate-new": 2.82,
++          "node5503-conflict-gate-old": 2.4,
++          "node5503-failure-dock-crate-red": 1.15,
++          "node5503-skill-dock-crate-blue": 1.21
++        }
++      },
++      "selected_action": "gate-B",
++      "selected_memory_node_id": "node5503-conflict-gate-new",
++      "split": "heldout",
++      "task_id": "5503-heldout-dock-gate",
++      "task_state": {
++        "candidate_actions": [
++          "gate-A",
++          "gate-B"
++        ],
++        "domain": "controller-action",
++        "locality": "dock-7",
++        "tags": [
++          "gate",
++          "amber",
++          "controller"
++        ],
++        "version": 2
++      },
++      "verifier_outcome": {
++        "accepted": true,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "gate-B",
++        "failure_reasons": [],
++        "selected_action": "gate-B"
++      }
++    }
++  ],
++  "experiment_id": "experiment_5503_csl_experience_graph_replay_v499",
++  "field_principles": {
++    "csl_experience_graph_ready": "Terminal readiness gate for executor-frozen memory replay.",
++    "graph_memory_score": "Exact held-out score with governed graph-memory retrieval.",
++    "heldout_delta": "Exact graph-memory minus no-memory pass-rate delta.",
++    "honest_verdict": "Terminal status beginning with complete: or blocked:.",
++    "inference_substrate": "Cached-candidate verifier substrate declaration.",
++    "memory_graph_path": "External skill and failure graph after all updates.",
++    "memory_state_hashes": "Deterministic graph hashes after each episode update.",
++    "metric_independence_notes": "Why retrieval utility is not the held-out score scalar.",
++    "model_weights_mutated": "Frozen model and adapter boundary.",
++    "negative_transfer_rate": "Accepted negative-transfer candidates divided by candidates seen.",
++    "no_memory_baseline_score": "Exact held-out score without memory access.",
++    "num_stream_tasks": "Number of stream interactions processed by the frozen executor.",
++    "replay_fixture_path": "External chronological stream fixture used for replay.",
++    "stale_evidence_rejection_rate": "Rejected stale candidates divided by stale candidates seen.",
++    "test_paths": "Focused tests that anchor REQ-LEARN-5503 behavior."
++  },
++  "graph_memory_results": [
++    {
++      "accepted": true,
++      "selected_action": "crate-blue",
++      "task_id": "5503-heldout-dock-crate"
++    },
++    {
++      "accepted": true,
++      "selected_action": "use-range-len",
++      "task_id": "5503-heldout-python-loop"
++    },
++    {
++      "accepted": true,
++      "selected_action": "queue-beta",
++      "task_id": "5503-heldout-rx4-handoff"
++    },
++    {
++      "accepted": true,
++      "selected_action": "gate-B",
++      "task_id": "5503-heldout-dock-gate"
++    }
++  ],
++  "graph_memory_score": 1.0,
++  "heldout_delta": 1.0,
++  "heldout_task_ids": [
++    "5503-heldout-dock-crate",
++    "5503-heldout-python-loop",
++    "5503-heldout-rx4-handoff",
++    "5503-heldout-dock-gate"
++  ],
++  "honest_verdict": "complete: experience_graph_replay_ready_delta_+1.000000",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "memory_graph": {
++    "edges": [
++      {
++        "edge_type": "replaces",
++        "source": "node5503-conflict-gate-new",
++        "target": "node5503-conflict-gate-old"
++      },
++      {
++        "edge_type": "learned_after_action",
++        "source": "node5503-failure-dock-crate-red",
++        "target": "no-memory-baseline"
++      },
++      {
++        "edge_type": "learned_after_action",
++        "source": "node5503-skill-dock-crate-blue",
++        "target": "node5503-failure-dock-crate-red"
++      },
++      {
++        "edge_type": "learned_after_action",
++        "source": "node5503-skill-python-range-len",
++        "target": "no-memory-baseline"
++      },
++      {
++        "edge_type": "learned_after_action",
++        "source": "node5503-skill-python-heldout-range-len",
++        "target": "node5503-skill-python-range-len"
++      },
++      {
++        "edge_type": "learned_after_action",
++        "source": "node5503-skill-rx4-beta",
++        "target": "no-memory-baseline"
++      },
++      {
++        "edge_type": "learned_after_action",
++        "source": "node5503-skill-rx4-heldout-beta",
++        "target": "node5503-skill-rx4-beta"
++      },
++      {
++        "edge_type": "learned_after_action",
++        "source": "node5503-skill-gate-b-heldout",
++        "target": "node5503-conflict-gate-new"
++      }
++    ],
++    "episode_count": 7,
++    "graph_id": "exp5503-experience-graph",
++    "nodes": [
++      {
++        "action": "queue-alpha",
++        "conflict_group": null,
++        "description": "Old RX-4 queue-alpha owner before the handoff.",
++        "domain": "incident-routing",
++        "evidence_status": "active",
++        "expires_before_version": 3,
++        "failure_count": 0,
++        "locality": "rx-4",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-stale-rx4-alpha",
++        "node_type": "skill",
++        "success_count": 3,
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "trust_score": 0.89,
++        "version": 1
++      },
++      {
++        "action": "use-sql-offset",
++        "conflict_group": null,
++        "description": "SQL offset repair that should not transfer to Python loop bounds.",
++        "domain": "sql-pagination",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "warehouse-db",
++        "negative_transfer_domains": [
++          "python-loop"
++        ],
++        "node_id": "node5503-transfer-sql-offset",
++        "node_type": "skill",
++        "success_count": 4,
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "trust_score": 0.83,
++        "version": 1
++      },
++      {
++        "action": "gate-A",
++        "conflict_group": "dock-7-amber-gate",
++        "description": "Older dock-7 amber gate action.",
++        "domain": "controller-action",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-conflict-gate-old",
++        "node_type": "skill",
++        "success_count": 2,
++        "tags": [
++          "gate",
++          "amber",
++          "controller"
++        ],
++        "trust_score": 0.61,
++        "version": 1
++      },
++      {
++        "action": "gate-B",
++        "conflict_group": "dock-7-amber-gate",
++        "description": "Newer verified dock-7 amber gate action.",
++        "domain": "controller-action",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-conflict-gate-new",
++        "node_type": "skill",
++        "success_count": 3,
++        "tags": [
++          "gate",
++          "amber",
++          "controller"
++        ],
++        "trust_score": 0.92,
++        "version": 2
++      },
++      {
++        "action": "crate-blue",
++        "conflict_group": null,
++        "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++        "domain": "logistics",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 1,
++        "learned_from_selected_action": "crate-red",
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-failure-dock-crate-red",
++        "node_type": "failure",
++        "source_task_id": "5503-train-dock-crate",
++        "success_count": 0,
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "trust_score": 0.84,
++        "verifier_accepted": false,
++        "version": 1
++      },
++      {
++        "action": "crate-blue",
++        "conflict_group": null,
++        "description": "Dock-7 release routing now prefers the blue crate.",
++        "domain": "logistics",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "crate-blue",
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-dock-crate-blue",
++        "node_type": "skill",
++        "source_task_id": "5503-heldout-dock-crate",
++        "success_count": 1,
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "trust_score": 0.9,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      {
++        "action": "use-range-len",
++        "conflict_group": null,
++        "description": "Python loop repairs should use range(len(items)) for bound checks.",
++        "domain": "python-loop",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "use-range-len",
++        "locality": "repo-alpha",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-python-range-len",
++        "node_type": "skill",
++        "source_task_id": "5503-train-python-loop",
++        "success_count": 1,
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "trust_score": 0.88,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      {
++        "action": "use-range-len",
++        "conflict_group": null,
++        "description": "Held-out Python bound repair confirmed the range-len skill.",
++        "domain": "python-loop",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "use-range-len",
++        "locality": "repo-alpha",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-python-heldout-range-len",
++        "node_type": "skill",
++        "source_task_id": "5503-heldout-python-loop",
++        "success_count": 1,
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "trust_score": 0.9,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      {
++        "action": "queue-beta",
++        "conflict_group": null,
++        "description": "RX-4 handoff moved ownership to queue beta.",
++        "domain": "incident-routing",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "queue-beta",
++        "locality": "rx-4",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-rx4-beta",
++        "node_type": "skill",
++        "source_task_id": "5503-train-rx4-handoff",
++        "success_count": 1,
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "trust_score": 0.91,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      {
++        "action": "queue-beta",
++        "conflict_group": null,
++        "description": "Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
++        "domain": "incident-routing",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "queue-beta",
++        "locality": "rx-4",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-rx4-heldout-beta",
++        "node_type": "skill",
++        "source_task_id": "5503-heldout-rx4-handoff",
++        "success_count": 1,
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "trust_score": 0.92,
++        "verifier_accepted": true,
++        "version": 1
++      },
++      {
++        "action": "gate-B",
++        "conflict_group": null,
++        "description": "Held-out gate replay confirmed newer gate-B evidence.",
++        "domain": "controller-action",
++        "evidence_status": "active",
++        "expires_before_version": null,
++        "failure_count": 0,
++        "learned_from_selected_action": "gate-B",
++        "locality": "dock-7",
++        "negative_transfer_domains": [],
++        "node_id": "node5503-skill-gate-b-heldout",
++        "node_type": "skill",
++        "source_task_id": "5503-heldout-dock-gate",
++        "success_count": 1,
++        "tags": [
++          "gate",
++          "amber",
++          "controller"
++        ],
++        "trust_score": 0.9,
++        "verifier_accepted": true,
++        "version": 1
++      }
++    ],
++    "schema": "carnot.experiment_5503.memory_graph.v1",
++    "state_hash": "sha256:ffc9c81deac0e75f99d52579c27f17fd7d6699e6fcc19933ab1e1bb1c24876d5",
++    "state_hashes": [
++      "sha256:f08746fe3206ced92dbd0fc6a3de5c0ba43145717367788487d8d914617e333d",
++      "sha256:047f7eb771c18a14eef4a449fe103c06b94276989da70a755ee3a352fc9a9bc5",
++      "sha256:f9e1451f181e7ad8234f6c34042b9d85411f97e2d7f348658cfb77b16652bd8c",
++      "sha256:9d693422189f72cf10176a23e2268f794043d67679c37ae4608c957bc56385b5",
++      "sha256:786f5f16c21cf159a9b33d63c7aa16ad8ca4fe5801a20a103ef0cb5f0a3b7863",
++      "sha256:517e439b88247253318ed5589e23b07346beb94997a84a11dd4cb8b05172fb11",
++      "sha256:fc2dedd5ca5c2b8a055e8289acdec8afed7f9441fe0c1de58514cfddafd95fb9"
++    ]
++  },
++  "memory_graph_path": "results/experiment_5503_csl_experience_graph_memory_v499.json",
++  "memory_state_hashes": [
++    "sha256:f08746fe3206ced92dbd0fc6a3de5c0ba43145717367788487d8d914617e333d",
++    "sha256:047f7eb771c18a14eef4a449fe103c06b94276989da70a755ee3a352fc9a9bc5",
++    "sha256:f9e1451f181e7ad8234f6c34042b9d85411f97e2d7f348658cfb77b16652bd8c",
++    "sha256:9d693422189f72cf10176a23e2268f794043d67679c37ae4608c957bc56385b5",
++    "sha256:786f5f16c21cf159a9b33d63c7aa16ad8ca4fe5801a20a103ef0cb5f0a3b7863",
++    "sha256:517e439b88247253318ed5589e23b07346beb94997a84a11dd4cb8b05172fb11",
++    "sha256:fc2dedd5ca5c2b8a055e8289acdec8afed7f9441fe0c1de58514cfddafd95fb9"
++  ],
++  "metric_independence_notes": "Retrieval ranks nodes by utility_score from tag overlap, trust, counts, and freshness; heldout_delta is not the retrieval utility and is computed only from exact cached-candidate verifier outcomes on held-out task IDs.",
++  "milestone": "2026.07.499",
++  "model_weights_mutated": false,
++  "negative_transfer_rate": 0.0,
++  "no_memory_baseline_results": [
++    {
++      "accepted": false,
++      "selected_action": "crate-red",
++      "task_id": "5503-heldout-dock-crate",
++      "verifier_outcome": {
++        "accepted": false,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "crate-blue",
++        "failure_reasons": [
++          "expected_action_mismatch"
++        ],
++        "selected_action": "crate-red"
++      }
++    },
++    {
++      "accepted": false,
++      "selected_action": "use-sql-offset",
++      "task_id": "5503-heldout-python-loop",
++      "verifier_outcome": {
++        "accepted": false,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "use-range-len",
++        "failure_reasons": [
++          "expected_action_mismatch"
++        ],
++        "selected_action": "use-sql-offset"
++      }
++    },
++    {
++      "accepted": false,
++      "selected_action": "queue-alpha",
++      "task_id": "5503-heldout-rx4-handoff",
++      "verifier_outcome": {
++        "accepted": false,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "queue-beta",
++        "failure_reasons": [
++          "expected_action_mismatch"
++        ],
++        "selected_action": "queue-alpha"
++      }
++    },
++    {
++      "accepted": false,
++      "selected_action": "gate-A",
++      "task_id": "5503-heldout-dock-gate",
++      "verifier_outcome": {
++        "accepted": false,
++        "authority": "cached_candidate_exact_action_verifier",
++        "cached_candidate": true,
++        "expected_action": "gate-B",
++        "failure_reasons": [
++          "expected_action_mismatch"
++        ],
++        "selected_action": "gate-A"
++      }
++    }
++  ],
++  "no_memory_baseline_score": 0.0,
++  "num_stream_tasks": 7,
++  "random_seed": 5503,
++  "replay_fixture": {
++    "fixture_id": "exp5503-csl-experience-graph-stream",
++    "heldout_task_ids": [
++      "5503-heldout-dock-crate",
++      "5503-heldout-python-loop",
++      "5503-heldout-rx4-handoff",
++      "5503-heldout-dock-gate"
++    ],
++    "random_seed": 5503,
++    "schema": "carnot.experiment_5503.replay_fixture.v1",
++    "stream_tasks": [
++      {
++        "candidates": [
++          "crate-red",
++          "crate-blue"
++        ],
++        "domain": "logistics",
++        "expected_action": "crate-blue",
++        "lesson_node": {
++          "action": "crate-blue",
++          "conflict_group": null,
++          "description": "The red-crate shortcut failed; use the blue crate for dock-7 releases.",
++          "domain": "logistics",
++          "evidence_status": "active",
++          "expires_before_version": null,
++          "failure_count": 0,
++          "locality": "dock-7",
++          "negative_transfer_domains": [],
++          "node_id": "node5503-failure-dock-crate-red",
++          "node_type": "failure",
++          "success_count": 0,
++          "tags": [
++            "dock",
++            "crate",
++            "release"
++          ],
++          "trust_score": 0.84,
++          "version": 1
++        },
++        "locality": "dock-7",
++        "no_memory_action": "crate-red",
++        "split": "train",
++        "state": {
++          "domain": "logistics",
++          "locality": "dock-7",
++          "tags": [
++            "dock",
++            "crate",
++            "release"
++          ],
++          "version": 1
++        },
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "task_id": "5503-train-dock-crate",
++        "version": 1
++      },
++      {
++        "candidates": [
++          "crate-red",
++          "crate-blue"
++        ],
++        "domain": "logistics",
++        "expected_action": "crate-blue",
++        "lesson_node": {
++          "action": "crate-blue",
++          "conflict_group": null,
++          "description": "Dock-7 release routing now prefers the blue crate.",
++          "domain": "logistics",
++          "evidence_status": "active",
++          "expires_before_version": null,
++          "failure_count": 0,
++          "locality": "dock-7",
++          "negative_transfer_domains": [],
++          "node_id": "node5503-skill-dock-crate-blue",
++          "node_type": "skill",
++          "success_count": 0,
++          "tags": [
++            "dock",
++            "crate",
++            "release"
++          ],
++          "trust_score": 0.9,
++          "version": 1
++        },
++        "locality": "dock-7",
++        "no_memory_action": "crate-red",
++        "split": "heldout",
++        "state": {
++          "domain": "logistics",
++          "locality": "dock-7",
++          "tags": [
++            "dock",
++            "crate",
++            "release"
++          ],
++          "version": 1
++        },
++        "tags": [
++          "dock",
++          "crate",
++          "release"
++        ],
++        "task_id": "5503-heldout-dock-crate",
++        "version": 1
++      },
++      {
++        "candidates": [
++          "use-sql-offset",
++          "use-range-len"
++        ],
++        "domain": "python-loop",
++        "expected_action": "use-range-len",
++        "lesson_node": {
++          "action": "use-range-len",
++          "conflict_group": null,
++          "description": "Python loop repairs should use range(len(items)) for bound checks.",
++          "domain": "python-loop",
++          "evidence_status": "active",
++          "expires_before_version": null,
++          "failure_count": 0,
++          "locality": "repo-alpha",
++          "negative_transfer_domains": [],
++          "node_id": "node5503-skill-python-range-len",
++          "node_type": "skill",
++          "success_count": 0,
++          "tags": [
++            "bounds",
++            "iteration",
++            "repair"
++          ],
++          "trust_score": 0.88,
++          "version": 1
++        },
++        "locality": "repo-alpha",
++        "no_memory_action": "use-range-len",
++        "split": "train",
++        "state": {
++          "domain": "python-loop",
++          "locality": "repo-alpha",
++          "tags": [
++            "bounds",
++            "iteration",
++            "repair"
++          ],
++          "version": 1
++        },
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "task_id": "5503-train-python-loop",
++        "version": 1
++      },
++      {
++        "candidates": [
++          "use-sql-offset",
++          "use-range-len"
++        ],
++        "domain": "python-loop",
++        "expected_action": "use-range-len",
++        "lesson_node": {
++          "action": "use-range-len",
++          "conflict_group": null,
++          "description": "Held-out Python bound repair confirmed the range-len skill.",
++          "domain": "python-loop",
++          "evidence_status": "active",
++          "expires_before_version": null,
++          "failure_count": 0,
++          "locality": "repo-alpha",
++          "negative_transfer_domains": [],
++          "node_id": "node5503-skill-python-heldout-range-len",
++          "node_type": "skill",
++          "success_count": 0,
++          "tags": [
++            "bounds",
++            "iteration",
++            "repair"
++          ],
++          "trust_score": 0.9,
++          "version": 1
++        },
++        "locality": "repo-alpha",
++        "no_memory_action": "use-sql-offset",
++        "split": "heldout",
++        "state": {
++          "domain": "python-loop",
++          "locality": "repo-alpha",
++          "tags": [
++            "bounds",
++            "iteration",
++            "repair"
++          ],
++          "version": 1
++        },
++        "tags": [
++          "bounds",
++          "iteration",
++          "repair"
++        ],
++        "task_id": "5503-heldout-python-loop",
++        "version": 1
++      },
++      {
++        "candidates": [
++          "queue-alpha",
++          "queue-beta"
++        ],
++        "domain": "incident-routing",
++        "expected_action": "queue-beta",
++        "lesson_node": {
++          "action": "queue-beta",
++          "conflict_group": null,
++          "description": "RX-4 handoff moved ownership to queue beta.",
++          "domain": "incident-routing",
++          "evidence_status": "active",
++          "expires_before_version": null,
++          "failure_count": 0,
++          "locality": "rx-4",
++          "negative_transfer_domains": [],
++          "node_id": "node5503-skill-rx4-beta",
++          "node_type": "skill",
++          "success_count": 0,
++          "tags": [
++            "handoff",
++            "rx4",
++            "queue"
++          ],
++          "trust_score": 0.91,
++          "version": 1
++        },
++        "locality": "rx-4",
++        "no_memory_action": "queue-beta",
++        "split": "train",
++        "state": {
++          "domain": "incident-routing",
++          "locality": "rx-4",
++          "tags": [
++            "handoff",
++            "rx4",
++            "queue"
++          ],
++          "version": 3
++        },
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "task_id": "5503-train-rx4-handoff",
++        "version": 3
++      },
++      {
++        "candidates": [
++          "queue-alpha",
++          "queue-beta"
++        ],
++        "domain": "incident-routing",
++        "expected_action": "queue-beta",
++        "lesson_node": {
++          "action": "queue-beta",
++          "conflict_group": null,
++          "description": "Held-out RX-4 replay confirmed stale alpha evidence must be ignored.",
++          "domain": "incident-routing",
++          "evidence_status": "active",
++          "expires_before_version": null,
++          "failure_count": 0,
++          "locality": "rx-4",
++          "negative_transfer_domains": [],
++          "node_id": "node5503-skill-rx4-heldout-beta",
++          "node_type": "skill",
++          "success_count": 0,
++          "tags": [
++            "handoff",
++            "rx4",
++            "queue"
++          ],
++          "trust_score": 0.92,
++          "version": 1
++        },
++        "locality": "rx-4",
++        "no_memory_action": "queue-alpha",
++        "split": "heldout",
++        "state": {
++          "domain": "incident-routing",
++          "locality": "rx-4",
++          "tags": [
++            "handoff",
++            "rx4",
++            "queue"
++          ],
++          "version": 4
++        },
++        "tags": [
++          "handoff",
++          "rx4",
++          "queue"
++        ],
++        "task_id": "5503-heldout-rx4-handoff",
++        "version": 4
++      },
++      {
++        "candidates": [
++          "gate-A",
++          "gate-B"
++        ],
++        "domain": "controller-action",
++        "expected_action": "gate-B",
++        "lesson_node": {
++          "action": "gate-B",
++          "conflict_group": null,
++          "description": "Held-out gate replay confirmed newer gate-B evidence.",
++          "domain": "controller-action",
++          "evidence_status": "active",
++          "expires_before_version": null,
++          "failure_count": 0,
++          "locality": "dock-7",
++          "negative_transfer_domains": [],
++          "node_id": "node5503-skill-gate-b-heldout",
++          "node_type": "skill",
++          "success_count": 0,
++          "tags": [
++            "gate",
++            "amber",
++            "controller"
++          ],
++          "trust_score": 0.9,
++          "version": 1
++        },
++        "locality": "dock-7",
++        "no_memory_action": "gate-A",
++        "split": "heldout",
++        "state": {
++          "domain": "controller-action",
++          "locality": "dock-7",
++          "tags": [
++            "gate",
++            "amber",
++            "controller"
++          ],
++          "version": 2
++        },
++        "tags": [
++          "gate",
++          "amber",
++          "controller"
++        ],
++        "task_id": "5503-heldout-dock-gate",
++        "version": 2
++      }
++    ]
++  },
++  "replay_fixture_path": "results/experiment_5503_csl_experience_graph_replay_fixture_v499.json",
++  "reproducibility_checksum": "sha256:b0eba8d1fa385bb997350f372f40c7631a6dacf7df1b9e3e9af956a3342f79ab",
++  "research_conductor_modified": false,
++  "run_date": "2026-07-09",
++  "schema": "carnot.experiment_5503.csl_experience_graph_replay.v499",
++  "source_file_checksums": {
++    "module": "sha256:46e7884700db1e16e214a7709ecf9b8b1b7c865655ee938cd157a4151ae656e6",
++    "spec": "sha256:52347e2c7d65c3a29672b9d26c572733e357ca9b6ecf3e0526d4994bac9358bf",
++    "test": "sha256:4438077c3a1bc7902016ca32fa5a7c98a0da48a03e84ee6e274cebff566c3c23"
++  },
++  "source_files": {
++    "module": "python/carnot/experiment_5503_csl_experience_graph_replay_v499.py",
++    "spec": "openspec/capabilities/self-learning/spec.md",
++    "test": "tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py"
++  },
++  "spec_refs": [
++    "REQ-LEARN-5503",
++    "SCENARIO-LEARN-5503-GRAPH-UPDATE",
++    "SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS",
++    "SCENARIO-LEARN-5503-BASELINE",
++    "SCENARIO-LEARN-5503-ARTIFACT"
++  ],
++  "stale_evidence_rejection_rate": 1.0,
++  "task_id": "exp5503-csl-experience-graph-replay-v499",
++  "test_paths": [
++    "tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py"
++  ],
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py -q --no-cov -n 0",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/coverage run --include=python/carnot/experiment_5503_csl_experience_graph_replay_v499.py -m pytest tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5503_csl_experience_graph_replay_v499.py --fail-under=100",
++      "outcome": "passed"
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "outcome": "passed"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e84b196426..35a5471c1e 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:35:50Z",
+-  "finished_at": "2026-07-09T18:35:50Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-09T18:49:26Z",
++  "finished_at": "2026-07-09T18:49:26Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 3fbc60fd77..5f24b87958 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:35:50Z",
+-  "finished_at": "2026-07-09T18:35:50Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-09T18:49:26Z",
++  "finished_at": "2026-07-09T18:49:26Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 67f93c2828..36dc91b839 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260709",
+-  "started_at": "2026-07-09T18:35:50Z",
+-  "finished_at": "2026-07-09T18:35:51Z",
++  "started_at": "2026-07-09T18:49:27Z",
++  "finished_at": "2026-07-09T18:49:27Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py b/tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py
+new file mode 100644
+index 0000000000..9b4abfe79c
+--- /dev/null
++++ b/tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py
+@@ -0,0 +1,242 @@
++"""Tests for Exp5503 executor-frozen CSL experience-graph replay.
++
++Spec refs: REQ-LEARN-5503, SCENARIO-LEARN-5503-GRAPH-UPDATE,
++SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS, SCENARIO-LEARN-5503-BASELINE,
++SCENARIO-LEARN-5503-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5503_csl_experience_graph_replay_v499 as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/self-learning/spec.md"
++RESULT_PATH = REPO / exp.RESULT_RELATIVE_PATH
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run "
++    "--include=python/carnot/experiment_5503_csl_experience_graph_replay_v499.py "
++    "-m pytest tests/python/test_experiment_5503_csl_experience_graph_replay_v499.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report "
++    "--include=python/carnot/experiment_5503_csl_experience_graph_replay_v499.py "
++    "--fail-under=100"
++)
++TESTS_RUN = [TEST_COMMAND, COVERAGE_COMMAND]
++
++
++def _artifact() -> exp.JsonDict:
++    return exp.build_artifact(root=REPO, tests_run=TESTS_RUN)
++
++
++def test_req_learn_5503_spec_declares_experience_graph_contract() -> None:
++    """REQ-LEARN-5503: OpenSpec anchors fixture, controls, and fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("## REQ-LEARN-5503") :]
++
++    for marker in (
++        "REQ-LEARN-5503",
++        "SCENARIO-LEARN-5503-GRAPH-UPDATE",
++        "SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS",
++        "SCENARIO-LEARN-5503-BASELINE",
++        "SCENARIO-LEARN-5503-ARTIFACT",
++        str(exp.RESULT_RELATIVE_PATH),
++        exp.INFERENCE_SUBSTRATE,
++        "stale evidence",
++        "negative-transfer",
++        "utility score",
++        "exact verifier pass rates",
++    ):
++        assert marker in section
++
++    for field in exp.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_learn_5503_graph_update_records_episode_hash_and_next_retrieval() -> None:
++    """SCENARIO-LEARN-5503-GRAPH-UPDATE: every episode writes auditable memory."""
++
++    replay = exp.run_graph_replay(exp.build_replay_fixture(), exp.initial_memory_graph())
++    first_episode = replay["episode_records"][0]
++    first_next = first_episode["next_task_retrieval_decision"]
++
++    assert replay["num_stream_tasks"] == 7
++    assert len(replay["memory_state_hashes"]) == replay["num_stream_tasks"]
++    assert len(set(replay["memory_state_hashes"])) == replay["num_stream_tasks"]
++    assert first_episode["task_id"] == "5503-train-dock-crate"
++    assert first_episode["selected_action"] == "crate-red"
++    assert first_episode["verifier_outcome"]["accepted"] is False
++    assert first_episode["learned_node"]["node_type"] == "failure"
++    assert first_episode["memory_update_hash"] == replay["memory_state_hashes"][0]
++    assert first_next["task_id"] == "5503-heldout-dock-crate"
++    assert first_next["selected_node_id"] == "node5503-failure-dock-crate-red"
++    assert first_next["selected_action"] == "crate-blue"
++
++
++def test_scenario_learn_5503_retrieval_rejects_stale_conflict_and_transfer() -> None:
++    """SCENARIO-LEARN-5503-RETRIEVAL-CONTROLS: unsafe memories do not steer."""
++
++    replay = exp.run_graph_replay(exp.build_replay_fixture(), exp.initial_memory_graph())
++    episodes = {episode["task_id"]: episode for episode in replay["episode_records"]}
++
++    rx4_decision = episodes["5503-heldout-rx4-handoff"]["retrieval_decision"]
++    python_decision = episodes["5503-heldout-python-loop"]["retrieval_decision"]
++    gate_decision = episodes["5503-heldout-dock-gate"]["retrieval_decision"]
++
++    assert rx4_decision["selected_action"] == "queue-beta"
++    assert rx4_decision["rejected_node_ids_by_reason"]["stale_evidence"] == [
++        "node5503-stale-rx4-alpha"
++    ]
++    assert python_decision["selected_action"] == "use-range-len"
++    assert python_decision["rejected_node_ids_by_reason"]["negative_transfer"] == [
++        "node5503-transfer-sql-offset"
++    ]
++    assert gate_decision["selected_node_id"] == "node5503-conflict-gate-new"
++    assert gate_decision["rejected_node_ids_by_reason"]["conflict_lower_utility"] == [
++        "node5503-conflict-gate-old"
++    ]
++    assert replay["negative_transfer_rate"] == pytest.approx(0.0)
++    assert replay["stale_evidence_rejection_rate"] == pytest.approx(1.0)
++
++
++def test_scenario_learn_5503_baseline_delta_uses_exact_heldout_outcomes() -> None:
++    """SCENARIO-LEARN-5503-BASELINE: held-out scores are exact action matches."""
++
++    artifact = _artifact()
++
++    exp.validate_artifact(artifact)
++    assert artifact["num_stream_tasks"] == 7
++    assert artifact["no_memory_baseline_score"] == pytest.approx(0.0)
++    assert artifact["graph_memory_score"] == pytest.approx(1.0)
++    assert artifact["heldout_delta"] == pytest.approx(1.0)
++    assert artifact["negative_transfer_rate"] == pytest.approx(0.0)
++    assert artifact["stale_evidence_rejection_rate"] == pytest.approx(1.0)
++    assert artifact["csl_experience_graph_ready"] is True
++    assert artifact["model_weights_mutated"] is False
++    assert artifact["inference_substrate"] == exp.INFERENCE_SUBSTRATE
++    assert "not the retrieval utility" in artifact["metric_independence_notes"]
++    assert {
++        row["task_id"] for row in artifact["no_memory_baseline_results"]
++    } == set(artifact["heldout_task_ids"])
++
++
++def test_scenario_learn_5503_artifact_write_and_repository_replay_match(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-5503-ARTIFACT: run() writes stable deliverable JSON."""
++
++    result_path = tmp_path / exp.RESULT_RELATIVE_PATH
++    fixture_path = tmp_path / exp.REPLAY_FIXTURE_RELATIVE_PATH
++    graph_path = tmp_path / exp.MEMORY_GRAPH_RELATIVE_PATH
++    artifact = exp.run(
++        root=REPO,
++        result_path=result_path,
++        replay_fixture_path=fixture_path,
++        memory_graph_path=graph_path,
++        tests_run=TESTS_RUN,
++        write=True,
++    )
++    dry_run = exp.run(
++        root=REPO,
++        result_path=tmp_path / "dry-run.json",
++        replay_fixture_path=fixture_path,
++        memory_graph_path=graph_path,
++        tests_run=TESTS_RUN,
++        write=False,
++    )
++    repo_result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    repo_replay = exp.build_artifact(root=REPO, tests_run=repo_result["tests_run"])
++
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert json.loads(fixture_path.read_text(encoding="utf-8")) == artifact["replay_fixture"]
++    assert json.loads(graph_path.read_text(encoding="utf-8")) == artifact["memory_graph"]
++    assert dry_run == artifact
++    assert not (tmp_path / "dry-run.json").exists()
++    assert repo_result == repo_replay
++    assert repo_result["csl_experience_graph_ready"] is True
++    assert repo_result["model_weights_mutated"] is False
++
++
++def test_req_learn_5503_validation_rejects_schema_and_gate_drift() -> None:
++    """REQ-LEARN-5503-6: validation fails closed on artifact drift."""
++
++    artifact = _artifact()
++    exp.validate_artifact(artifact)
++
++    drift_cases = [
++        ("model_weights_mutated", True, "model_weights_mutated"),
++        ("inference_substrate", "deterministic_replay_no_llm", "inference_substrate"),
++        ("csl_experience_graph_ready", False, "csl_experience_graph_ready"),
++        ("graph_memory_score", 0.0, "heldout_delta"),
++        ("negative_transfer_rate", 0.5, "negative_transfer_rate"),
++        ("stale_evidence_rejection_rate", 0.5, "stale_evidence_rejection_rate"),
++        ("honest_verdict", "done", "honest_verdict"),
++        ("research_conductor_modified", True, "scripts/research_conductor.py"),
++    ]
++    for field, value, expected in drift_cases:
++        bad = deepcopy(artifact)
++        bad[field] = value
++        with pytest.raises(ValueError, match=expected):
++            exp.validate_artifact(bad)
++
++    missing = deepcopy(artifact)
++    missing.pop("memory_graph_path")
++    with pytest.raises(ValueError, match="missing required fields"):
++        exp.validate_artifact(missing)
++
++    bad_hashes = deepcopy(artifact)
++    bad_hashes["memory_state_hashes"] = bad_hashes["memory_state_hashes"][:-1]
++    with pytest.raises(ValueError, match="memory_state_hashes"):
++        exp.validate_artifact(bad_hashes)
++
++    bad_tests = deepcopy(artifact)
++    bad_tests["tests_run"] = []
++    bad_tests["csl_experience_graph_ready"] = False
++    bad_tests["honest_verdict"] = "blocked: experience_graph_replay_not_ready"
++    with pytest.raises(ValueError, match="tests_run"):
++        exp.validate_artifact(bad_tests)
++
++    bad_repro = deepcopy(artifact)
++    bad_repro["reproducibility_checksum"] = "sha256:bad"
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        exp.validate_artifact(bad_repro)
++
++
++def test_req_learn_5503_defensive_paths_for_cached_verifier_and_helpers() -> None:
++    """REQ-LEARN-5503-3/4: defensive helpers keep exact metrics explicit."""
++
++    task = exp.build_replay_fixture()["stream_tasks"][0]
++    verifier = exp.exact_verifier(task, "not-a-cached-action")
++    controls = exp._control_rates(
++        [
++            {
++                "rejected_node_ids_by_reason": {},
++                "accepted_nodes": [
++                    {
++                        "node_id": "accepted-transfer",
++                        "negative_transfer_domains": ["other-domain"],
++                    }
++                ],
++            }
++        ]
++    )
++
++    assert verifier["accepted"] is False
++    assert verifier["cached_candidate"] is False
++    assert verifier["failure_reasons"] == ["selected_action_not_cached"]
++    assert controls["negative_transfer_rate"] == pytest.approx(1.0)
++    assert controls["stale_evidence_rejection_rate"] == pytest.approx(0.0)
++    assert exp._resolve_output_path(REPO, exp.RESULT_RELATIVE_PATH) == REPO / exp.RESULT_RELATIVE_PATH
++    assert exp._list_of_mappings(None) == []
++    assert exp._honest_verdict(False, 0.0).startswith("blocked:")
+-- 
+2.55.0
+

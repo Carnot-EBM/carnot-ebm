@@ -1,0 +1,43 @@
+From 8ead92f619172e5ea6b3b101c0e51f8eed911abc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 10 Aug 2026 12:04:52 -0400
+Subject: [PATCH 08726/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8b81cfee6a..a859289e1c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 33, "phase": "iteration_start", "last_beat": "2026-08-10T15:24:08Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 34, "phase": "iteration_start", "last_beat": "2026-08-10T16:04:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 698a85d20d..32c458e1e5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15614,3 +15614,4 @@ Still active  |
+ | 2026-08-10 15:20 UTC | Gated on Exp6278 transfer: default-off certified-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6278-model-family-task-holdout-csl-audi |
+ | 2026-08-10 15:22 UTC | Gated on Exp6277 promotion: model-family and task- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6277-chronological-certified-csl-ab) |
+ | 2026-08-10 15:22 UTC | Gated on Exp6278 transfer: default-off certified-m | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6278-model-family-task-holdout-csl-audi |
++| 2026-08-10 16:02 UTC | Typed variable-cardinality Rust/PyO3 mode-jump bac | OK | 133 passed, 1 warning in 10.95s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index dd935eadd9..08379c3557 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3257284, "iteration": 33, "phase": "iteration_start", "started_at": "2026-08-10T15:24:08Z"}
+\ No newline at end of file
++{"pid": 3257284, "iteration": 34, "phase": "iteration_start", "started_at": "2026-08-10T16:04:49Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

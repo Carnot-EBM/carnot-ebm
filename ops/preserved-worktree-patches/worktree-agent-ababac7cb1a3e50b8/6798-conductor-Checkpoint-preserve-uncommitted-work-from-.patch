@@ -1,0 +1,92 @@
+From 7b1a7cecb30f7eaeb11d3d0c48a899f0f1a1d773 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 11 Jul 2026 11:00:02 -0400
+Subject: [PATCH 06798/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/arc_solve_registry.yaml                    | 15 +++++++++++++++
+ ops/conductor-heartbeat.json                   |  2 +-
+ ops/conductor-log.md                           |  1 +
+ ops/conductor-state.json                       |  2 +-
+ results/outer_loop_gpt56sol_wa30_probe_v6.json | 14 ++++++++++++++
+ 5 files changed, 32 insertions(+), 2 deletions(-)
+ create mode 100644 results/outer_loop_gpt56sol_wa30_probe_v6.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index b7fffcc4b3..922731e7d7 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -845,6 +845,21 @@ games:
+     Manhattan distance (e.g. diagonal movement, or ACTION1-4 do turn-then-step
+     rather than a pure translate). Next attempt should probe (a)/(b) directly
+     rather than re-running route optimization under the same assumed cost model.'
++  - 'v6 (results/outer_loop_gpt56sol_wa30_probe_v6.json): directly, empirically tested
++    both open hypotheses from v5 instead of re-running route math. Multi-carry:
++    picking up a second block while already carrying one silently drops the first
++    (no dual-carry state observed) -- REFUTED. ACTION6 (with and without
++    {"x","y"} data): accepted by the harness but produced zero grid/timer/player
++    delta -- no coordinate-click or alternate-action mechanic exists on wa30.
++    Diagonal movement: steering toward a diagonal target still advanced exactly
++    one cardinal cell per timer tick, never both axes at once -- REFUTED. Net:
++    v5s optimistic 80-move lower bound (vs. the 64-cell budget) is now an
++    EMPIRICALLY CONFIRMED bound, not just an assumed-model one -- under every
++    mechanic tested across 6 attempts, wa30 L2s 5-block placement is infeasible
++    within its own timer via one-block-at-a-time cardinal-move carrying. Remaining
++    unexplored: a push-not-carry interaction, or a genuinely different
++    turn-vs-move cost split (e.g. reorienting costing 0 vs 1 timer cell
++    independent of translating) -- neither tested yet.'
+ - game: s5i5
+   reproducibility: reproduced
+   levels_reproduced: 2
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fa37199837..4fa69bd330 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1896672, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-07-11T14:17:52Z"}
+\ No newline at end of file
++{"pid": 1896672, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-07-11T14:59:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5bb520b848..474d6c7402 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10763,3 +10763,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-11 13:42 UTC | Transition .503 terminal evidence into .504 execut | OK | 87 passed, 1 warning in 9.33s |
+ | 2026-07-11 13:58 UTC | Execution-time V504 source delta and experiment ma | OK | 87 passed, 1 warning in 12.04s |
+ | 2026-07-11 14:15 UTC | Exact ASP FSM solve-versus-verify near-miss corpus | OK | 86 passed, 1 warning in 10.66s |
++| 2026-07-11 14:59 UTC | Gated local SOTA solve-versus-verify asymmetry pan | OK | Deliverable already exists in repo |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d1aae40fa6..343261fb1b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1896672, "iteration": 6, "phase": "iteration_start", "started_at": "2026-07-11T14:17:52Z"}
+\ No newline at end of file
++{"pid": 1896672, "iteration": 7, "phase": "iteration_start", "started_at": "2026-07-11T14:59:57Z"}
+\ No newline at end of file
+diff --git a/results/outer_loop_gpt56sol_wa30_probe_v6.json b/results/outer_loop_gpt56sol_wa30_probe_v6.json
+new file mode 100644
+index 0000000000..667480d763
+--- /dev/null
++++ b/results/outer_loop_gpt56sol_wa30_probe_v6.json
+@@ -0,0 +1,14 @@
++{
++  "game": "wa30",
++  "starting_level": 1,
++  "max_level_reached": 1,
++  "total_env_steps_used": 63,
++  "reproduction_verified": false,
++  "action_sequence": [],
++  "multi_carry_confirmed": false,
++  "action6_effect": "No effect observed: ACTION6 with no data and ACTION6 with data {\"x\": 14, \"y\": 30} each changed zero rendered pixels, moved no player or block, and did not decrement the timer.",
++  "diagonal_or_alt_movement_confirmed": false,
++  "revised_min_cost_route_length": null,
++  "narrative": "I replayed the known 33-action prefix and reached levels_completed=1, then probed only through env.step results and rendered grids. For multi-carry, I picked up the outlined block at (12,8), whose rendered outline changed from color 4 to carried color 5, and transported it beside the separate outlined block at (4,7). Issuing ACTION5 while the first block was still carried never produced two carried blocks: the immediate returned frame still showed only the first carried block and left the second outlined, and the following rendered transition showed the first block dropped at (4,8) while the second remained outlined at (4,7). ACTION6 was accepted both without data and with a click at display coordinate (14,30), the center of bay cell (3,7), but both calls had exactly zero grid delta and no timer, player, block, or level effect. For diagonal movement, I steered the rendered direction indicator to the diagonal corner (6,0); across the resulting movement frames the player advanced only (8,8)->(9,8)->(10,8), one cardinal cell per timer tick, never changing both coordinates in one tick. Thus neither probe reduces movement cost, so v5's optimistic 80-movement lower bound still exceeds the 64-cell timer and was not recomputed under an unchanged model. I stopped at levels_completed=1 without forcing a timer reset or attempting an infeasible solve.",
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

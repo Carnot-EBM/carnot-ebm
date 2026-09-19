@@ -1,0 +1,51 @@
+From b67e64cfa37937ca768059ede723fe90c3a8fe26 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 20 Jun 2026 01:42:08 -0400
+Subject: [PATCH 02982/11362] [outer-loop] STRATEGY: energy-augmented ARC
+ (operator directive) -- objective energy over structural features = the
+ cross-game generalization differentiator
+
+Operator: lean into energy models that AUGMENT the leaderboard winners' approaches. The strategic
+through-line: the field's wall is generalization (all winners <13%; their CNN/value models memorize
+per-game -- and WE hit the same wall, discriminative LOO=0.503=chance). The move no pure-RL/CNN team
+has made = OBJECTIVE energy over GAME-AGNOSTIC structure, the candidate that transfers where
+learned-from-success value cannot. Three grafts (frame-change->energy-progress, value->contrastive
+energy, world-model->trust energy), GATED on GAP-ARCH-FEATURES (.414 A2: structural features so
+energy can transfer -- energy over current frame-marginals is no better than their CNN; prove LOO>0.6,
+don't assume). Reframes the queued frame-change + trust-energy specs as the energy-augmented hybrid.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/known-issues.md | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 4b5cf26e02..33dd2072ea 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -11,6 +11,22 @@
+ - Active index: `ops/active-priorities.md`
+ - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
+ 
++### 2026-06-20 (STRATEGIC DIRECTIVE, operator "lean into energy models that augment others' approaches"): energy-augmented ARC is the research spine
++
++**Operator 2026-06-20:** lean into the ENERGY-MODEL possibilities that AUGMENT the leaderboard winners'
++approaches. The strategy (full: `docs/research-notes/arc-energy-augmented-strategy.md`): the field's wall is
++GENERALIZATION (all winners <13%; their CNN/value models memorize per-game) -- and Carnot hits the SAME wall
++(discriminative LOO-AUROC 0.503 == chance). The differentiated move NO pure-RL/CNN team has made: OBJECTIVE
++ENERGY over GAME-AGNOSTIC STRUCTURE, which can transfer where learned-from-success value cannot. Three grafts:
++(1) frame-change predictor -> energy-scored PROGRESS (rank by P(change)*(-ΔE)); (2) learned value -> energy
++verifier trained CONTRASTIVELY on objective violations over structural features; (3) world-model induction ->
++energy TRUST gate for hidden-state games (the oracle-distinct moat). **GATED on GAP-ARCH-FEATURES (.414 A2):**
++energy over the CURRENT frame-marginal features is no better than their CNN; energy over STRUCTURAL features
++is the differentiator -- prove the transfer (LOO>0.6), do not assume it. This reframes the queued frame-change
++predictor + trust-energy tasks as the energy-augmented hybrid, not pure copies.
++
++---
++
+ ### 2026-06-20 (MANDATORY-NEXT-MILESTONE .415/.416, operator leaderboard dive): CNN FRAME-CHANGE / clickability predictor (action efficiency = the score lever)
+ 
+ **Operator 2026-06-20** asked what the top ARC leaderboard players do; the code says the leader (Tufa
+-- 
+2.55.0
+

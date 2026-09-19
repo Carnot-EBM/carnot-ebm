@@ -1,0 +1,1680 @@
+From 864f4dab73f220bcf7fee1c533ad6c0ad37aeaae Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 02:00:57 -0400
+Subject: [PATCH 01381/11362] [conductor] VERIFIER-AS-REWARD RFT -- TRAIN (THE
+ PIVOT, part 2): LoRA-finetune EACH ladder base (Qwen3.5-0.8B headroom rung
+ first, then MiniCPM5-1B strong rung; optional 3rd) on the THREE arms from
+ exp4077 -- Arm A RFT-CORRECT (verifier-certified demo-perfect), Arm B
+ RFT-ABLATION (verifier-label ablation: NOT-demo-perfect, same generator,
+ N-matched), Arm C gold-SFT (oracle labels) -- with IDENTICAL
+ hyperparameters/seed PER BASE so the ONLY difference within a base is the
+ corpus LABEL. Launch the trains BACKGROUNDED (setsid-detached; checkpoint per
+ epoch to STABLE per-base+arm paths). Per the accumulate rule: if a window
+ does not finish all bases/arms, the checkpoints persist and the next
+ milestone resumes -- report progress, NOT a failure. Do the headroom rung
+ (Qwen3.5-0.8B) FIRST; within a base train Arm A and Arm B FIRST (the
+ load-bearing ablation contrast), Arm C if the window allows.
+
+Automated research step by research conductor.
+Task ID: exp4078-verifier-reward-rft-train-launch
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  71 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...xp4078_verifier_reward_rft_train_launch.py | 625 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  52 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...4078_verifier_reward_rft_train_launch.json |  76 +++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xp4078_verifier_reward_rft_train_launch.py |  63 ++
+ ...t_4078_verifier_reward_rft_train_launch.py | 308 +++++++++
+ 29 files changed, 1205 insertions(+), 62 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py
+ create mode 100644 results/experiment_4078_verifier_reward_rft_train_launch.json
+ create mode 100644 scripts/experiments/exp4078_verifier_reward_rft_train_launch.py
+ create mode 100644 tests/python/test_experiment_4078_verifier_reward_rft_train_launch.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index fc6577cc15..63d2bdbe3c 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -11690,3 +11690,74 @@ manifest contains only disjoint task ids.
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-4077 | Proposed (python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py; scripts/experiments/exp4077_verifier_reward_rft_corpus_build.py, Exp 4077) | Proposed (tests/python/test_experiment_4077_verifier_reward_rft_corpus_build.py) |
++
++---
++
++## REQ-LEARN-4078: Verifier-Reward RFT Detached LoRA Train Launch
++
++**Given** the Exp 4077 three-arm corpora are present and non-empty, HF
++safetensors ladder bases `Qwen/Qwen3.5-0.8B` and `openbmb/MiniCPM5-1B`
++are cached, `trl`/`peft` expose `SFTTrainer` and `GRPOTrainer`, and CUDA is
++available
++**When** the Exp 4078 launcher runs
++**Then** it SHALL launch detached LoRA training workers for the three arms
++`rft_correct`, `rft_ablation`, and `gold_sft` with the same rank, learning
++rate, epoch/step budget, and random seed for each base, differing only by the
++arm corpus and label.
++
++The launcher SHALL write stable checkpoint paths keyed by base and arm under
++`results/checkpoints/experiment_4078_verifier_reward_rft_train/<base>/<arm>`
++so later conductor windows resume accumulated progress rather than restart from
++scratch. It SHALL record `epochs_completed` for every base+arm key from any
++existing trainer checkpoints before launch.
++
++The terminal artifact SHALL write
++`results/experiment_4078_verifier_reward_rft_train_launch.json` with bare
++top-level fields `honest_verdict`, `train_launched`, `checkpoint_paths`,
++`epochs_completed`, and `inference_substrate`. It SHALL also include
++`preconditions_checked`, `launched_workers`, `training_config`, and
++`field_principles` so auditors can distinguish a real detached launch from a
++fabricated training claim.
++
++### REQ-LEARN-4078 Sub-requirements
++
++- REQ-LEARN-4078-1: The launcher SHALL fail closed with
++  `honest_verdict="blocked_<resource>"` and `train_launched=false` when any
++  required base, trainer import, CUDA, or Exp 4077 corpus precondition is
++  missing.
++- REQ-LEARN-4078-2: The launcher SHALL use POSIX session-detached subprocess
++  launch semantics for training workers so training can survive agent exit and
++  conductor iteration boundaries.
++- REQ-LEARN-4078-3: The checkpoint path map SHALL contain one stable
++  base+arm-keyed path per planned training arm, whether this run is blocked,
++  newly launched, or resumed.
++- REQ-LEARN-4078-4: The worker SHALL configure TRL/PEFT LoRA training with
++  `save_strategy="epoch"` and `resume_from_checkpoint` when a stable checkpoint
++  already exists for the base+arm path.
++- REQ-LEARN-4078-5: Arm launch order SHALL prioritize `rft_correct` and
++  `rft_ablation` before `gold_sft`, preserving the ablation contrast when a
++  future launch window cannot fit all arms.
++
++### SCENARIO-LEARN-4078-BLOCKED: Missing Exp 4077 Corpora Block Training
++
++**Given** the Exp 4077 terminal artifact is blocked or any of the three corpus
++JSONL sidecars is absent or empty
++**When** Exp 4078 runs
++**Then** it writes `train_launched=false`, zero launch workers, stable
++checkpoint paths for the planned arms, and
++`honest_verdict="blocked_exp4077_corpora_missing"`.
++
++### SCENARIO-LEARN-4078-LAUNCH: Detached Workers Preserve Stable Checkpoints
++
++**Given** all preconditions pass
++**When** Exp 4078 launches training
++**Then** every launched worker command targets exactly one base+arm stable
++checkpoint path, the launch uses session-detached semantics, and the artifact
++reports `honest_verdict` starting with
++`complete: rft_3arm_train_launched_detached`.
++
++## Implementation Status (REQ-LEARN-4078)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-4078 | Proposed (python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py; scripts/experiments/exp4078_verifier_reward_rft_train_launch.py, Exp 4078) | Proposed (tests/python/test_experiment_4078_verifier_reward_rft_train_launch.py) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 13da23b83d..a4ece440b8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 165,
+   "code_violations": 0,
+-  "experiments_checked": 3104,
++  "experiments_checked": 3105,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py b/python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py
+new file mode 100644
+index 0000000000..0244d985ba
+--- /dev/null
++++ b/python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py
+@@ -0,0 +1,625 @@
++"""Exp 4078 detached LoRA train launcher for verifier-reward RFT arms.
++
++Spec refs: REQ-LEARN-4078, SCENARIO-LEARN-4078-BLOCKED,
++SCENARIO-LEARN-4078-LAUNCH.
++
++This module separates launch accounting from the expensive HF training work.
++The launcher first records every resource it needs, then either writes an
++honest blocked artifact or starts detached workers with stable checkpoint
++directories. The stable directories matter because conductor windows are
++shorter than a full ladder run; progress must accumulate across windows rather
++than vanish when the agent exits.
++"""
++
++from __future__ import annotations
++
++import json
++import subprocess
++import time
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import asdict, dataclass
++from pathlib import Path
++from typing import Any
++
++from carnot.agentic.arc_exp4077_verifier_reward_rft_corpus_build import (
++    RESULT_FILENAME as EXP4077_RESULT_FILENAME,
++    check_cuda_visible,
++    check_hf_safetensors_model,
++    check_trainer_imports,
++)
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++RESULT_FILENAME = "experiment_4078_verifier_reward_rft_train_launch.json"
++CHECKPOINT_ROOT = Path("results/checkpoints/experiment_4078_verifier_reward_rft_train")
++LOG_ROOT = Path("results/logs/experiment_4078_verifier_reward_rft_train")
++INFERENCE_SUBSTRATE = "gpu_hf_trl_peft_lora_sfttrainer_detached"
++TERMINAL_PREFIXES = ("complete:", "blocked_", "failed:")
++ARMS = ("rft_correct", "rft_ablation", "gold_sft")
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "train_launched",
++    "checkpoint_paths",
++    "epochs_completed",
++    "inference_substrate",
++)
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One resource check that decides whether training may launch."""
++
++    resource: str
++    available: bool
++    detail: str
++
++    def to_dict(self) -> dict[str, object]:
++        return asdict(self)
++
++
++@dataclass(frozen=True)
++class BaseModelSpec:
++    """One trainable HF base in the 4078 ladder."""
++
++    key: str
++    model_id: str
++    trust_remote_code: bool
++
++
++@dataclass(frozen=True)
++class TrainingConfig:
++    """Shared LoRA/SFT knobs; every arm uses identical values."""
++
++    lora_rank: int = 8
++    lora_alpha: int = 16
++    learning_rate: float = 2e-5
++    num_train_epochs: int = 1
++    max_steps: int = -1
++    per_device_train_batch_size: int = 1
++    gradient_accumulation_steps: int = 4
++    max_length: int = 1024
++    random_seed: int = 4078
++
++    def to_dict(self) -> dict[str, object]:
++        payload = asdict(self)
++        payload["save_strategy"] = "epoch"
++        return payload
++
++
++@dataclass(frozen=True)
++class WorkerSpec:
++    """Launch-time command and paths for one base+arm training worker."""
++
++    repo_root: Path
++    base: BaseModelSpec
++    arm: str
++    corpus_path: Path
++    checkpoint_path: Path
++    log_path: Path
++    command: list[str]
++    training_config: TrainingConfig
++
++
++@dataclass(frozen=True)
++class LaunchedWorker:
++    """Detached process metadata recorded in the terminal artifact."""
++
++    base_key: str
++    arm: str
++    pid: int
++    command: list[str]
++    checkpoint_path: str
++    log_path: str
++    detached: bool
++    started: bool
++
++    def to_dict(self) -> dict[str, object]:
++        return asdict(self)
++
++
++BASE_MODELS = (
++    BaseModelSpec("qwen35_08b", "Qwen/Qwen3.5-0.8B", False),
++    BaseModelSpec("minicpm5_1b", "openbmb/MiniCPM5-1B", True),
++)
++DEFAULT_TRAINING_CONFIG = TrainingConfig()
++
++
++def _run_key(base_key: str, arm: str) -> str:
++    return f"{base_key}:{arm}"
++
++
++def _corpus_paths(repo_root: str | Path = REPO_ROOT) -> dict[str, Path]:
++    root = Path(repo_root) / "results"
++    return {arm: root / f"experiment_4077_{arm}.jsonl" for arm in ARMS}
++
++
++def _jsonl_count(path: Path) -> int:
++    if not path.exists() or path.stat().st_size == 0:
++        return 0
++    with path.open("r", encoding="utf-8") as handle:
++        return sum(1 for line in handle if line.strip())
++
++
++def check_exp4077_corpora(*, repo_root: str | Path = REPO_ROOT) -> PreconditionCheck:
++    """REQ-LEARN-4078-1: require complete Exp 4077 corpora before training."""
++
++    root = Path(repo_root)
++    artifact_path = root / "results" / EXP4077_RESULT_FILENAME
++    if not artifact_path.exists():
++        return PreconditionCheck("exp4077_corpora_missing", False, f"missing artifact {artifact_path}")
++    try:
++        artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError as exc:
++        return PreconditionCheck("exp4077_corpora_missing", False, f"malformed artifact: {exc}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith("complete:"):
++        return PreconditionCheck("exp4077_corpora_missing", False, f"Exp 4077 not complete: {verdict}")
++
++    counts = {arm: _jsonl_count(path) for arm, path in _corpus_paths(root).items()}
++    missing = [arm for arm, count in counts.items() if count <= 0]
++    if missing:
++        return PreconditionCheck(
++            "exp4077_corpora_missing",
++            False,
++            "missing or empty " + ",".join(missing),
++        )
++    detail = ", ".join(f"{arm}={count}" for arm, count in sorted(counts.items()))
++    return PreconditionCheck("exp4077_corpora", True, detail)
++
++
++def check_preconditions(*, repo_root: str | Path = REPO_ROOT) -> list[PreconditionCheck]:  # pragma: no cover
++    """REQ-LEARN-4078-1: check compute resources before any worker launch."""
++
++    return [
++        PreconditionCheck(**check_hf_safetensors_model("Qwen/Qwen3.5-0.8B").to_dict()),
++        PreconditionCheck(
++            **check_hf_safetensors_model(
++                "openbmb/MiniCPM5-1B",
++                trust_remote_code=True,
++            ).to_dict()
++        ),
++        PreconditionCheck(**check_trainer_imports().to_dict()),
++        PreconditionCheck(**check_cuda_visible().to_dict()),
++        check_exp4077_corpora(repo_root=repo_root),
++    ]
++
++
++def _first_missing(checks: Sequence[PreconditionCheck]) -> PreconditionCheck | None:
++    return next((check for check in checks if not check.available), None)
++
++
++def stable_checkpoint_paths(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    bases: Sequence[BaseModelSpec] = BASE_MODELS,
++    arms: Sequence[str] = ARMS,
++) -> dict[str, Path]:
++    """REQ-LEARN-4078-3: return stable base+arm checkpoint directories."""
++
++    root = Path(repo_root) / CHECKPOINT_ROOT
++    return {
++        _run_key(base.key, arm): root / base.key / arm
++        for base in bases
++        for arm in arms
++    }
++
++
++def _checkpoint_step(path: Path) -> int:
++    try:
++        return int(path.name.split("-", 1)[1])
++    except (IndexError, ValueError):
++        return -1
++
++
++def epochs_completed_from_checkpoint(checkpoint_path: str | Path) -> int:
++    """REQ-LEARN-4078: recover completed epoch progress from HF checkpoints."""
++
++    root = Path(checkpoint_path)
++    checkpoints = sorted(root.glob("checkpoint-*"), key=_checkpoint_step)
++    if not checkpoints:
++        return 0
++    latest = checkpoints[-1]
++    state_path = latest / "trainer_state.json"
++    if not state_path.exists():
++        return len(checkpoints)
++    try:
++        state = json.loads(state_path.read_text(encoding="utf-8"))
++        return max(0, int(float(state.get("epoch", 0))))
++    except (json.JSONDecodeError, TypeError, ValueError):
++        return len(checkpoints)
++
++
++def collect_epochs_completed(paths: Mapping[str, Path]) -> dict[str, int]:
++    return {key: epochs_completed_from_checkpoint(path) for key, path in paths.items()}
++
++
++def _default_python_executable(repo_root: Path) -> Path:
++    candidate = repo_root / ".venv" / "bin" / "python"
++    return candidate if candidate.exists() else Path("python")
++
++
++def build_worker_specs(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    bases: Sequence[BaseModelSpec] = BASE_MODELS,
++    arms: Sequence[str] = ARMS,
++    training_config: TrainingConfig = DEFAULT_TRAINING_CONFIG,
++    python_executable: str | Path | None = None,
++) -> list[WorkerSpec]:
++    """Build one detached worker command per base+arm in priority order."""
++
++    root = Path(repo_root)
++    script = root / "scripts" / "experiments" / "exp4078_verifier_reward_rft_train_launch.py"
++    executable = Path(python_executable) if python_executable is not None else _default_python_executable(root)
++    corpora = _corpus_paths(root)
++    checkpoint_paths = stable_checkpoint_paths(repo_root=root, bases=bases, arms=arms)
++    specs: list[WorkerSpec] = []
++    for base in bases:
++        for arm in arms:
++            checkpoint_path = checkpoint_paths[_run_key(base.key, arm)]
++            log_path = root / LOG_ROOT / base.key / f"{arm}.log"
++            command = [
++                str(executable),
++                str(script),
++                "--worker",
++                "--base-key",
++                base.key,
++                "--base-model",
++                base.model_id,
++                "--arm",
++                arm,
++                "--corpus-path",
++                str(corpora[arm]),
++                "--checkpoint-path",
++                str(checkpoint_path),
++                "--log-path",
++                str(log_path),
++                "--trust-remote-code",
++                "true" if base.trust_remote_code else "false",
++                "--training-config-json",
++                json.dumps(training_config.to_dict(), sort_keys=True),
++            ]
++            specs.append(
++                WorkerSpec(
++                    repo_root=root,
++                    base=base,
++                    arm=arm,
++                    corpus_path=corpora[arm],
++                    checkpoint_path=checkpoint_path,
++                    log_path=log_path,
++                    command=command,
++                    training_config=training_config,
++                )
++            )
++    return specs
++
++
++def launch_worker(spec: WorkerSpec) -> LaunchedWorker:
++    """REQ-LEARN-4078-2: start one worker in a new POSIX session."""
++
++    spec.checkpoint_path.mkdir(parents=True, exist_ok=True)
++    spec.log_path.parent.mkdir(parents=True, exist_ok=True)
++    with spec.log_path.open("ab") as log_handle:
++        process = subprocess.Popen(
++            spec.command,
++            cwd=str(spec.repo_root),
++            stdin=subprocess.DEVNULL,
++            stdout=log_handle,
++            stderr=subprocess.STDOUT,
++            start_new_session=True,
++        )
++    started = process.poll() is None
++    return LaunchedWorker(
++        base_key=spec.base.key,
++        arm=spec.arm,
++        pid=int(process.pid),
++        command=list(spec.command),
++        checkpoint_path=str(spec.checkpoint_path),
++        log_path=str(spec.log_path),
++        detached=True,
++        started=started,
++    )
++
++
++def _preconditions_payload(checks: Sequence[PreconditionCheck]) -> list[dict[str, object]]:
++    return [check.to_dict() for check in checks]
++
++
++def _field_principles() -> dict[str, str]:
++    return {
++        "honest_verdict": "Terminal state prevents a missing resource from becoming a fabricated training claim.",
++        "train_launched": "Separates an actual detached launch from a precondition-only or blocked artifact.",
++        "checkpoint_paths": "Stable base+arm paths let future windows resume accumulated LoRA progress.",
++        "epochs_completed": "Progress is credit even when a later window must resume before final eval.",
++        "inference_substrate": "Declares that this is HF TRL/PEFT GPU training, not an offline proxy.",
++    }
++
++
++def artifact_schema_errors(artifact: Mapping[str, object]) -> list[str]:
++    """Validate the bare Exp 4078 launch artifact contract."""
++
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str):
++        errors.append("honest_verdict must be a string")
++    elif not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++
++    if "train_launched" in artifact and type(artifact["train_launched"]) is not bool:
++        errors.append("train_launched must be a bare bool")
++
++    checkpoint_paths = artifact.get("checkpoint_paths")
++    if not isinstance(checkpoint_paths, dict):
++        errors.append("checkpoint_paths must be a dict")
++    elif any(not isinstance(key, str) or not isinstance(value, str) for key, value in checkpoint_paths.items()):
++        errors.append("checkpoint_paths keys and values must be strings")
++
++    epochs_completed = artifact.get("epochs_completed")
++    if not isinstance(epochs_completed, dict):
++        errors.append("epochs_completed must be a dict")
++    elif any(not isinstance(key, str) or type(value) is not int for key, value in epochs_completed.items()):
++        errors.append("epochs_completed values must be bare ints")
++
++    if isinstance(checkpoint_paths, dict) and isinstance(epochs_completed, dict):
++        if set(checkpoint_paths) != set(epochs_completed):
++            errors.append("checkpoint_paths and epochs_completed keys must match")
++
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must declare the Exp 4078 substrate")
++
++    launched_workers = artifact.get("launched_workers", [])
++    if artifact.get("train_launched") is True and not launched_workers:
++        errors.append("train_launched artifacts must include launched_workers")
++    if isinstance(launched_workers, list):
++        for worker in launched_workers:
++            if not isinstance(worker, Mapping):
++                errors.append("launched_workers entries must be dicts")
++                break
++            if worker.get("detached") is not True:
++                errors.append("launched workers must be detached")
++                break
++    return errors
++
++
++def _base_artifact(
++    *,
++    honest_verdict: str,
++    train_launched: bool,
++    checkpoint_paths: Mapping[str, Path],
++    epochs_completed: Mapping[str, int],
++    preconditions_checked: Sequence[PreconditionCheck],
++    launched_workers: Sequence[LaunchedWorker],
++    training_config: TrainingConfig,
++    duration_s: float,
++) -> dict[str, object]:
++    artifact: dict[str, object] = {
++        "experiment": "experiment_4078_verifier_reward_rft_train_launch",
++        "schema": "carnot.experiment_4078_verifier_reward_rft_train_launch.v1",
++        "honest_verdict": honest_verdict,
++        "train_launched": bool(train_launched),
++        "checkpoint_paths": {key: str(path) for key, path in checkpoint_paths.items()},
++        "epochs_completed": dict(epochs_completed),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": _preconditions_payload(preconditions_checked),
++        "launched_workers": [worker.to_dict() for worker in launched_workers],
++        "training_config": training_config.to_dict(),
++        "field_principles": _field_principles(),
++        "duration_s": float(duration_s),
++        "spec_refs": ["REQ-LEARN-4078", "SCENARIO-LEARN-4078-BLOCKED", "SCENARIO-LEARN-4078-LAUNCH"],
++    }
++    errors = artifact_schema_errors(artifact)
++    if errors:  # pragma: no cover
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    missing: PreconditionCheck,
++    checkpoint_paths: Mapping[str, Path],
++    epochs_completed: Mapping[str, int],
++    preconditions_checked: Sequence[PreconditionCheck],
++    training_config: TrainingConfig,
++    duration_s: float,
++) -> dict[str, object]:
++    """REQ-LEARN-4078-1: write a blocked terminal artifact before launch."""
++
++    return _base_artifact(
++        honest_verdict=f"blocked_{missing.resource}",
++        train_launched=False,
++        checkpoint_paths=checkpoint_paths,
++        epochs_completed=epochs_completed,
++        preconditions_checked=preconditions_checked,
++        launched_workers=(),
++        training_config=training_config,
++        duration_s=duration_s,
++    )
++
++
++def build_launched_artifact(
++    *,
++    checkpoint_paths: Mapping[str, Path],
++    epochs_completed: Mapping[str, int],
++    preconditions_checked: Sequence[PreconditionCheck],
++    launched_workers: Sequence[LaunchedWorker],
++    training_config: TrainingConfig,
++    duration_s: float,
++) -> dict[str, object]:
++    """SCENARIO-LEARN-4078-LAUNCH: summarize detached worker launch."""
++
++    all_started = bool(launched_workers) and all(worker.started and worker.detached for worker in launched_workers)
++    suffix = "" if all_started else "_smoke_pending"
++    return _base_artifact(
++        honest_verdict=f"complete: rft_3arm_train_launched_detached{suffix}",
++        train_launched=bool(launched_workers),
++        checkpoint_paths=checkpoint_paths,
++        epochs_completed=epochs_completed,
++        preconditions_checked=preconditions_checked,
++        launched_workers=launched_workers,
++        training_config=training_config,
++        duration_s=duration_s,
++    )
++
++
++def write_result_artifact(artifact: Mapping[str, object], path: str | Path) -> Path:
++    output = Path(path)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    output_path: str | Path | None = None,
++    preconditions_checker: Callable[..., Sequence[PreconditionCheck]] = check_preconditions,
++    worker_launcher: Callable[[WorkerSpec], LaunchedWorker] = launch_worker,
++    bases: Sequence[BaseModelSpec] = BASE_MODELS,
++    arms: Sequence[str] = ARMS,
++    training_config: TrainingConfig = DEFAULT_TRAINING_CONFIG,
++) -> dict[str, object]:
++    """REQ-LEARN-4078: check resources, launch detached workers, and write JSON."""
++
++    start = time.perf_counter()
++    root = Path(repo_root)
++    output = Path(output_path) if output_path is not None else root / "results" / RESULT_FILENAME
++    checkpoint_paths = stable_checkpoint_paths(repo_root=root, bases=bases, arms=arms)
++    epochs_completed = collect_epochs_completed(checkpoint_paths)
++    checks = list(preconditions_checker(repo_root=root))
++    missing = _first_missing(checks)
++    if missing is not None:
++        artifact = build_blocked_artifact(
++            missing=missing,
++            checkpoint_paths=checkpoint_paths,
++            epochs_completed=epochs_completed,
++            preconditions_checked=checks,
++            training_config=training_config,
++            duration_s=time.perf_counter() - start,
++        )
++        write_result_artifact(artifact, output)
++        return artifact
++
++    specs = build_worker_specs(
++        repo_root=root,
++        bases=bases,
++        arms=arms,
++        training_config=training_config,
++    )
++    launched_workers = [worker_launcher(spec) for spec in specs]
++    artifact = build_launched_artifact(
++        checkpoint_paths=checkpoint_paths,
++        epochs_completed=epochs_completed,
++        preconditions_checked=checks,
++        launched_workers=launched_workers,
++        training_config=training_config,
++        duration_s=time.perf_counter() - start,
++    )
++    write_result_artifact(artifact, output)
++    return artifact
++
++
++def _latest_checkpoint(path: Path) -> str | None:  # pragma: no cover
++    checkpoints = sorted(path.glob("checkpoint-*"), key=_checkpoint_step)
++    return str(checkpoints[-1]) if checkpoints else None
++
++
++def run_worker(  # pragma: no cover
++    *,
++    base_key: str,
++    base_model: str,
++    arm: str,
++    corpus_path: str | Path,
++    checkpoint_path: str | Path,
++    log_path: str | Path,
++    trust_remote_code: bool,
++    training_config_json: str,
++) -> None:
++    """Train one LoRA arm with TRL SFTTrainer and epoch checkpoints."""
++
++    from datasets import Dataset
++    from peft import LoraConfig
++    from transformers import AutoModelForCausalLM, AutoTokenizer, set_seed
++    from trl import SFTConfig, SFTTrainer
++
++    config_payload = json.loads(training_config_json)
++    checkpoint = Path(checkpoint_path)
++    log = Path(log_path)
++    checkpoint.mkdir(parents=True, exist_ok=True)
++    log.parent.mkdir(parents=True, exist_ok=True)
++    launch_manifest = checkpoint / "launch_manifest.json"
++    launch_manifest.write_text(
++        json.dumps(
++            {
++                "base_key": base_key,
++                "base_model": base_model,
++                "arm": arm,
++                "corpus_path": str(corpus_path),
++                "checkpoint_path": str(checkpoint),
++                "save_strategy": "epoch",
++                "training_config": config_payload,
++            },
++            indent=2,
++            sort_keys=True,
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++
++    records = []
++    with Path(corpus_path).open("r", encoding="utf-8") as handle:
++        for line in handle:
++            if line.strip():
++                row = json.loads(line)
++                records.append({"text": f"[{arm}]\n{row['text']}"})
++    if not records:
++        raise RuntimeError(f"empty corpus for {arm}: {corpus_path}")
++
++    set_seed(int(config_payload["random_seed"]))
++    tokenizer = AutoTokenizer.from_pretrained(
++        base_model,
++        local_files_only=True,
++        trust_remote_code=trust_remote_code,
++    )
++    if tokenizer.pad_token is None:
++        tokenizer.pad_token = tokenizer.eos_token
++    model = AutoModelForCausalLM.from_pretrained(
++        base_model,
++        local_files_only=True,
++        trust_remote_code=trust_remote_code,
++        device_map="auto",
++    )
++    peft_config = LoraConfig(
++        r=int(config_payload["lora_rank"]),
++        lora_alpha=int(config_payload["lora_alpha"]),
++        lora_dropout=0.0,
++        bias="none",
++        task_type="CAUSAL_LM",
++        target_modules="all-linear",
++    )
++    args = SFTConfig(
++        output_dir=str(checkpoint),
++        logging_dir=str(log.parent),
++        num_train_epochs=int(config_payload["num_train_epochs"]),
++        max_steps=int(config_payload["max_steps"]),
++        per_device_train_batch_size=int(config_payload["per_device_train_batch_size"]),
++        gradient_accumulation_steps=int(config_payload["gradient_accumulation_steps"]),
++        learning_rate=float(config_payload["learning_rate"]),
++        logging_steps=1,
++        save_strategy="epoch",
++        save_total_limit=3,
++        report_to="none",
++        max_length=int(config_payload["max_length"]),
++    )
++    trainer = SFTTrainer(
++        model=model,
++        args=args,
++        train_dataset=Dataset.from_list(records),
++        processing_class=tokenizer,
++        peft_config=peft_config,
++    )
++    trainer.train(resume_from_checkpoint=_latest_checkpoint(checkpoint))
++    trainer.save_model(str(checkpoint / "final_adapter"))
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 2b13bbad29..8949d3c85e 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:45:27.254312+00:00",
+-  "finished_at": "2026-06-12T05:45:27.278680+00:00",
++  "started_at": "2026-06-12T06:00:25.143821+00:00",
++  "finished_at": "2026-06-12T06:00:25.167430+00:00",
+   "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 29c620186d..c4099e4619 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T05:45:27Z",
++  "run_date": "2026-06-12T06:00:25Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 12017b817e..8fa3c2c9c3 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:45:28Z",
+-  "finished_at": "2026-06-12T05:45:28Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-12T06:00:26Z",
++  "finished_at": "2026-06-12T06:00:26Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index d78203a9a5..03cc08475e 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T05:45:28Z",
++  "run_date": "2026-06-12T06:00:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 834d87791c..dbc17f267d 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-12T05:45:28Z",
++  "run_date": "2026-06-12T06:00:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 397ef7a25f..eb1996b11b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-12T05:44:06.771714Z",
+-  "duration_s": 0.13465046882629395,
++  "run_date": "2026-06-12T05:59:05.361348Z",
++  "duration_s": 0.0967714786529541,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "fbd3cf3aba19cee6d4063c25b44a83a0c5db5f3263ff61cb46ee39d1b8db5023",
++  "reproducibility_checksum": "8362eee07fe8a5fe148f3445d47716304691c58ecc5451294e50fe60b075c266",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "3f64dc4838644c7f7ad23de2d6050de7b88f3c99"
++    "adversarial_verify_version": "486f65d99d5d3cfb917d7a3cad0023aa925c790c"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 583fab955c..a44dc0d26a 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-12T00:58:25.831651Z",
+-  "duration_s": 20.36642026901245,
++  "run_date": "2026-06-12T06:00:45.550222Z",
++  "duration_s": 19.95826816558838,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index c82a1d554b..012ac165ab 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-12T05:44:06.855387Z",
+-  "duration_s": 0.05316901206970215,
++  "run_date": "2026-06-12T05:59:05.521264Z",
++  "duration_s": 0.13225173950195312,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "f9beda4070503378c1b4d7410e72bef597fa566324892ae63ca15fbe3a6213e6",
++  "reproducibility_checksum": "2aedfa2bdedf7b4a59b461d8ffb1234739d6544a9631dc0114cfd2466315ff1d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "3f64dc4838644c7f7ad23de2d6050de7b88f3c99"
++    "adversarial_verify_version": "486f65d99d5d3cfb917d7a3cad0023aa925c790c"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index bbe80996a6..a858511f5b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.111673355102539,
++  "efficiency_gains_ms": 2.1467208862304688,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 0ced8e2ee5..eac88bdd7e 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.025249719619750977,
++  "duration_s": 0.021849870681762695,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 1529c01e9c..8a0f1e60eb 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-12T05:45:08Z",
++  "run_date": "2026-06-12T06:00:07Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 7dc779e2ca..a76311640f 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.00008225440979,
++  "duration_s": 5.000102996826172,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index e90f80ffc3..82a582f438 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000117540359497,
++  "duration_s": 10.000101089477539,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index f71d00cad9..f094d527c2 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2202439308166504,
++  "duration_s": 0.2445681095123291,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 1ab669bdb3..0ff3a560c7 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.05665373301599175,
++  "duration_s": 0.05595462000928819,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index af4eb66042..d0e03db19e 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,15 +1,15 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_specific": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+@@ -23,20 +23,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_low": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,17 +45,17 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_memory": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
+-      },
+-      "MBPP": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
++      "MBPP": {
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
++      },
+       "HumanEval": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+@@ -67,20 +67,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_low": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 5b87392a29..706ef6cb15 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008890628814697266,
++  "duration_s": 0.0008106231689453125,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index d6aea8e9bd..f833e45963 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.1239003874361515e-05,
++  "duration_s": 3.362307325005531e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index e444364045..371bad4cb7 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 4.0105078369379044e-07,
++  "duration_s": 5.009351298213005e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 46b3a6cf1e..ecf3f98963 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 4.38690185546875e-05,
++  "duration_s": 4.1484832763671875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_4078_verifier_reward_rft_train_launch.json b/results/experiment_4078_verifier_reward_rft_train_launch.json
+new file mode 100644
+index 0000000000..0f61f886ca
+--- /dev/null
++++ b/results/experiment_4078_verifier_reward_rft_train_launch.json
+@@ -0,0 +1,76 @@
++{
++  "checkpoint_paths": {
++    "minicpm5_1b:gold_sft": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/minicpm5_1b/gold_sft",
++    "minicpm5_1b:rft_ablation": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/minicpm5_1b/rft_ablation",
++    "minicpm5_1b:rft_correct": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/minicpm5_1b/rft_correct",
++    "qwen35_08b:gold_sft": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/qwen35_08b/gold_sft",
++    "qwen35_08b:rft_ablation": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/qwen35_08b/rft_ablation",
++    "qwen35_08b:rft_correct": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/qwen35_08b/rft_correct"
++  },
++  "duration_s": 5.117831268929876,
++  "epochs_completed": {
++    "minicpm5_1b:gold_sft": 0,
++    "minicpm5_1b:rft_ablation": 0,
++    "minicpm5_1b:rft_correct": 0,
++    "qwen35_08b:gold_sft": 0,
++    "qwen35_08b:rft_ablation": 0,
++    "qwen35_08b:rft_correct": 0
++  },
++  "experiment": "experiment_4078_verifier_reward_rft_train_launch",
++  "field_principles": {
++    "checkpoint_paths": "Stable base+arm paths let future windows resume accumulated LoRA progress.",
++    "epochs_completed": "Progress is credit even when a later window must resume before final eval.",
++    "honest_verdict": "Terminal state prevents a missing resource from becoming a fabricated training claim.",
++    "inference_substrate": "Declares that this is HF TRL/PEFT GPU training, not an offline proxy.",
++    "train_launched": "Separates an actual detached launch from a precondition-only or blocked artifact."
++  },
++  "honest_verdict": "blocked_exp4077_corpora_missing",
++  "inference_substrate": "gpu_hf_trl_peft_lora_sfttrainer_detached",
++  "launched_workers": [],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "1 safetensors shard(s); trust_remote_code=False",
++      "resource": "hf_safetensors_qwen_qwen3_5_0_8b"
++    },
++    {
++      "available": true,
++      "detail": "1 safetensors shard(s); trust_remote_code=True",
++      "resource": "hf_safetensors_openbmb_minicpm5_1b"
++    },
++    {
++      "available": true,
++      "detail": "trl, peft, SFTTrainer, GRPOTrainer import",
++      "resource": "trl_peft_trainers"
++    },
++    {
++      "available": true,
++      "detail": "torch.cuda.is_available() is true",
++      "resource": "cuda_visible"
++    },
++    {
++      "available": false,
++      "detail": "Exp 4077 not complete: blocked_precision_gate_unmet_0.6818_1.0000",
++      "resource": "exp4077_corpora_missing"
++    }
++  ],
++  "schema": "carnot.experiment_4078_verifier_reward_rft_train_launch.v1",
++  "spec_refs": [
++    "REQ-LEARN-4078",
++    "SCENARIO-LEARN-4078-BLOCKED",
++    "SCENARIO-LEARN-4078-LAUNCH"
++  ],
++  "train_launched": false,
++  "training_config": {
++    "gradient_accumulation_steps": 4,
++    "learning_rate": 2e-05,
++    "lora_alpha": 16,
++    "lora_rank": 8,
++    "max_length": 1024,
++    "max_steps": -1,
++    "num_train_epochs": 1,
++    "per_device_train_batch_size": 1,
++    "random_seed": 4078,
++    "save_strategy": "epoch"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ad4beffd4e..e860fafc57 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:43:41Z",
+-  "finished_at": "2026-06-12T05:43:41Z",
++  "started_at": "2026-06-12T05:58:40Z",
++  "finished_at": "2026-06-12T05:58:40Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 2aeeecb92b..9b62ad054b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:43:41Z",
+-  "finished_at": "2026-06-12T05:43:41Z",
++  "started_at": "2026-06-12T05:58:40Z",
++  "finished_at": "2026-06-12T05:58:40Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 2f189c200f..95ddb6d424 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:43:41Z",
+-  "finished_at": "2026-06-12T05:43:41Z",
++  "started_at": "2026-06-12T05:58:40Z",
++  "finished_at": "2026-06-12T05:58:40Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/exp4078_verifier_reward_rft_train_launch.py b/scripts/experiments/exp4078_verifier_reward_rft_train_launch.py
+new file mode 100644
+index 0000000000..c2aab2e699
+--- /dev/null
++++ b/scripts/experiments/exp4078_verifier_reward_rft_train_launch.py
+@@ -0,0 +1,63 @@
++"""CLI entrypoint for Exp 4078 verifier-reward RFT train launch."""
++
++from __future__ import annotations
++
++import argparse
++import json
++import sys
++from pathlib import Path
++
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++from carnot.agentic.arc_exp4078_verifier_reward_rft_train_launch import (  # noqa: E402
++    REPO_ROOT,
++    RESULT_FILENAME,
++    run_experiment,
++    run_worker,
++)
++
++
++def parse_args() -> argparse.Namespace:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument(
++        "--output",
++        type=Path,
++        default=REPO_ROOT / "results" / RESULT_FILENAME,
++        help="Path for the terminal Exp 4078 JSON artifact.",
++    )
++    parser.add_argument("--worker", action="store_true", help="Run one detached base+arm worker.")
++    parser.add_argument("--base-key", default="")
++    parser.add_argument("--base-model", default="")
++    parser.add_argument("--arm", default="")
++    parser.add_argument("--corpus-path", type=Path)
++    parser.add_argument("--checkpoint-path", type=Path)
++    parser.add_argument("--log-path", type=Path)
++    parser.add_argument("--trust-remote-code", choices=("true", "false"), default="false")
++    parser.add_argument("--training-config-json", default="{}")
++    return parser.parse_args()
++
++
++def main() -> int:  # pragma: no cover
++    args = parse_args()
++    if args.worker:
++        run_worker(
++            base_key=args.base_key,
++            base_model=args.base_model,
++            arm=args.arm,
++            corpus_path=args.corpus_path,
++            checkpoint_path=args.checkpoint_path,
++            log_path=args.log_path,
++            trust_remote_code=args.trust_remote_code == "true",
++            training_config_json=args.training_config_json,
++        )
++        return 0
++
++    artifact = run_experiment(output_path=args.output)
++    print(json.dumps(artifact, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_4078_verifier_reward_rft_train_launch.py b/tests/python/test_experiment_4078_verifier_reward_rft_train_launch.py
+new file mode 100644
+index 0000000000..fa20886ccd
+--- /dev/null
++++ b/tests/python/test_experiment_4078_verifier_reward_rft_train_launch.py
+@@ -0,0 +1,308 @@
++"""Tests for Exp 4078 verifier-reward RFT detached train launch.
++
++Spec refs: REQ-LEARN-4078, SCENARIO-LEARN-4078-BLOCKED,
++SCENARIO-LEARN-4078-LAUNCH.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot.agentic import arc_exp4078_verifier_reward_rft_train_launch as exp4078
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++
++
++def _available_checks() -> list[exp4078.PreconditionCheck]:
++    return [
++        exp4078.PreconditionCheck("hf_safetensors_qwen_qwen3_5_0_8b", True, "test"),
++        exp4078.PreconditionCheck("hf_safetensors_openbmb_minicpm5_1b", True, "test"),
++        exp4078.PreconditionCheck("trl_peft_trainers", True, "test"),
++        exp4078.PreconditionCheck("cuda_visible", True, "test"),
++        exp4078.PreconditionCheck("exp4077_corpora", True, "test"),
++    ]
++
++
++def test_req_learn_4078_spec_declares_launch_contract() -> None:
++    """REQ-LEARN-4078: OpenSpec declares resources, launch fields, and paths."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-LEARN-4078" in spec
++    assert "SCENARIO-LEARN-4078-BLOCKED" in spec
++    assert "SCENARIO-LEARN-4078-LAUNCH" in spec
++    assert exp4078.RESULT_FILENAME in spec
++    assert "Qwen/Qwen3.5-0.8B" in spec
++    assert "openbmb/MiniCPM5-1B" in spec
++    for field in exp4078.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_learn_4078_blocked_when_exp4077_corpora_missing(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4078-BLOCKED: missing corpora block before launch."""
++
++    output_path = tmp_path / "artifact.json"
++    artifact = exp4078.run_experiment(
++        repo_root=tmp_path,
++        output_path=output_path,
++        preconditions_checker=lambda **_: [
++            *_available_checks()[:-1],
++            exp4078.PreconditionCheck("exp4077_corpora_missing", False, "missing rft_correct"),
++        ],
++    )
++
++    loaded = json.loads(output_path.read_text(encoding="utf-8"))
++    assert loaded == artifact
++    assert artifact["honest_verdict"] == "blocked_exp4077_corpora_missing"
++    assert artifact["train_launched"] is False
++    assert artifact["launched_workers"] == []
++    assert artifact["checkpoint_paths"]
++    assert set(artifact["checkpoint_paths"]) == set(artifact["epochs_completed"])
++    assert all(value == 0 for value in artifact["epochs_completed"].values())
++    assert exp4078.artifact_schema_errors(artifact) == []
++
++
++def test_req_learn_4078_corpora_precondition_requires_complete_4077_and_jsonl(
++    tmp_path: Path,
++) -> None:
++    """REQ-LEARN-4078-1: Exp 4077 sidecars must exist and be non-empty."""
++
++    results = tmp_path / "results"
++    results.mkdir()
++    blocked = exp4078.check_exp4077_corpora(repo_root=tmp_path)
++    assert blocked.available is False
++    assert "missing artifact" in blocked.detail
++
++    (results / "experiment_4077_verifier_reward_rft_corpus_build.json").write_text(
++        json.dumps({"honest_verdict": "blocked_precision_gate_unmet_0.1_1.0"}),
++        encoding="utf-8",
++    )
++    assert exp4078.check_exp4077_corpora(repo_root=tmp_path).available is False
++    assert "not complete" in exp4078.check_exp4077_corpora(repo_root=tmp_path).detail
++
++    (results / "experiment_4077_verifier_reward_rft_corpus_build.json").write_text(
++        json.dumps({"honest_verdict": "complete: rft_corpus_built"}),
++        encoding="utf-8",
++    )
++    assert exp4078.check_exp4077_corpora(repo_root=tmp_path).available is False
++    assert "missing or empty" in exp4078.check_exp4077_corpora(repo_root=tmp_path).detail
++
++    for arm in ("rft_correct", "rft_ablation", "gold_sft"):
++        (results / f"experiment_4077_{arm}.jsonl").write_text(
++            json.dumps({"text": f"{arm} row"}) + "\n",
++            encoding="utf-8",
++        )
++
++    ready = exp4078.check_exp4077_corpora(repo_root=tmp_path)
++    assert ready.available is True
++    assert "rft_correct=1" in ready.detail
++
++    empty = results / "experiment_4077_rft_correct.jsonl"
++    empty.write_text("", encoding="utf-8")
++    assert exp4078.check_exp4077_corpora(repo_root=tmp_path).available is False
++
++    (results / "experiment_4077_verifier_reward_rft_corpus_build.json").write_text(
++        "{bad json",
++        encoding="utf-8",
++    )
++    malformed = exp4078.check_exp4077_corpora(repo_root=tmp_path)
++    assert malformed.available is False
++    assert "malformed artifact" in malformed.detail
++
++
++def test_scenario_learn_4078_launches_detached_workers_with_stable_paths(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-4078-LAUNCH: workers are base+arm keyed and detached."""
++
++    launched_specs: list[exp4078.WorkerSpec] = []
++
++    def launcher(spec: exp4078.WorkerSpec) -> exp4078.LaunchedWorker:
++        launched_specs.append(spec)
++        spec.checkpoint_path.mkdir(parents=True, exist_ok=True)
++        spec.log_path.parent.mkdir(parents=True, exist_ok=True)
++        spec.log_path.write_text("launch ok\n", encoding="utf-8")
++        return exp4078.LaunchedWorker(
++            base_key=spec.base.key,
++            arm=spec.arm,
++            pid=1000 + len(launched_specs),
++            command=spec.command,
++            checkpoint_path=str(spec.checkpoint_path),
++            log_path=str(spec.log_path),
++            detached=True,
++            started=True,
++        )
++
++    artifact = exp4078.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "launch.json",
++        preconditions_checker=lambda **_: _available_checks(),
++        worker_launcher=launcher,
++        bases=(exp4078.BASE_MODELS[0],),
++    )
++
++    assert artifact["honest_verdict"].startswith("complete: rft_3arm_train_launched_detached")
++    assert artifact["train_launched"] is True
++    assert len(artifact["launched_workers"]) == 3
++    assert [spec.arm for spec in launched_specs] == ["rft_correct", "rft_ablation", "gold_sft"]
++    assert len({spec.checkpoint_path for spec in launched_specs}) == 3
++    assert all(worker["detached"] is True for worker in artifact["launched_workers"])
++    assert all("--checkpoint-path" in worker["command"] for worker in artifact["launched_workers"])
++    assert exp4078.artifact_schema_errors(artifact) == []
++
++    config = artifact["training_config"]
++    assert config["lora_rank"] == exp4078.DEFAULT_TRAINING_CONFIG.lora_rank
++    assert config["learning_rate"] == exp4078.DEFAULT_TRAINING_CONFIG.learning_rate
++    assert config["random_seed"] == exp4078.DEFAULT_TRAINING_CONFIG.random_seed
++
++
++def test_req_learn_4078_epoch_scan_and_schema_validation(tmp_path: Path) -> None:
++    """REQ-LEARN-4078-3: progress accounting and artifact schema are defensive."""
++
++    checkpoint_root = tmp_path / "checkpointed"
++    (checkpoint_root / "checkpoint-2").mkdir(parents=True)
++    (checkpoint_root / "checkpoint-2" / "trainer_state.json").write_text(
++        json.dumps({"epoch": 1.0}),
++        encoding="utf-8",
++    )
++    (checkpoint_root / "checkpoint-7").mkdir()
++    (checkpoint_root / "checkpoint-7" / "trainer_state.json").write_text(
++        json.dumps({"epoch": 2.75}),
++        encoding="utf-8",
++    )
++
++    assert exp4078.epochs_completed_from_checkpoint(checkpoint_root) == 2
++    assert exp4078.epochs_completed_from_checkpoint(tmp_path / "missing") == 0
++
++    no_state = tmp_path / "no-state"
++    (no_state / "checkpoint-abc").mkdir(parents=True)
++    assert exp4078.epochs_completed_from_checkpoint(no_state) == 1
++
++    bad_state = tmp_path / "bad-state"
++    (bad_state / "checkpoint-1").mkdir(parents=True)
++    (bad_state / "checkpoint-1" / "trainer_state.json").write_text(
++        "{not json",
++        encoding="utf-8",
++    )
++    assert exp4078.epochs_completed_from_checkpoint(bad_state) == 1
++
++    paths = exp4078.stable_checkpoint_paths(
++        repo_root=tmp_path,
++        bases=(exp4078.BASE_MODELS[0],),
++        arms=("rft_correct", "rft_ablation"),
++    )
++    assert sorted(paths) == ["qwen35_08b:rft_ablation", "qwen35_08b:rft_correct"]
++    assert all("experiment_4078_verifier_reward_rft_train" in str(path) for path in paths.values())
++
++    bad: dict[str, Any] = {
++        "honest_verdict": "bad",
++        "train_launched": "yes",
++        "checkpoint_paths": [],
++        "epochs_completed": {"x": "0"},
++        "inference_substrate": "wrong",
++    }
++    errors = exp4078.artifact_schema_errors(bad)
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "train_launched must be a bare bool" in errors
++    assert "checkpoint_paths must be a dict" in errors
++    assert "epochs_completed values must be bare ints" in errors
++    assert "inference_substrate must declare the Exp 4078 substrate" in errors
++
++    missing_errors = exp4078.artifact_schema_errors({})
++    assert "missing required field honest_verdict" in missing_errors
++    assert "honest_verdict must be a string" in missing_errors
++    assert "epochs_completed must be a dict" in missing_errors
++
++    path_type_errors = exp4078.artifact_schema_errors(
++        {
++            "honest_verdict": "blocked_test",
++            "train_launched": False,
++            "checkpoint_paths": {"x": 1},
++            "epochs_completed": {"x": 0},
++            "inference_substrate": exp4078.INFERENCE_SUBSTRATE,
++        }
++    )
++    assert "checkpoint_paths keys and values must be strings" in path_type_errors
++
++    mismatch_errors = exp4078.artifact_schema_errors(
++        {
++            "honest_verdict": "blocked_test",
++            "train_launched": False,
++            "checkpoint_paths": {"x": "/tmp/x"},
++            "epochs_completed": {"y": 0},
++            "inference_substrate": exp4078.INFERENCE_SUBSTRATE,
++        }
++    )
++    assert "checkpoint_paths and epochs_completed keys must match" in mismatch_errors
++
++    worker_errors = exp4078.artifact_schema_errors(
++        {
++            "honest_verdict": "complete: test",
++            "train_launched": True,
++            "checkpoint_paths": {},
++            "epochs_completed": {},
++            "inference_substrate": exp4078.INFERENCE_SUBSTRATE,
++            "launched_workers": [],
++        }
++    )
++    assert "train_launched artifacts must include launched_workers" in worker_errors
++    assert "launched_workers entries must be dicts" in exp4078.artifact_schema_errors(
++        {
++            "honest_verdict": "complete: test",
++            "train_launched": True,
++            "checkpoint_paths": {},
++            "epochs_completed": {},
++            "inference_substrate": exp4078.INFERENCE_SUBSTRATE,
++            "launched_workers": ["bad"],
++        }
++    )
++    assert "launched workers must be detached" in exp4078.artifact_schema_errors(
++        {
++            "honest_verdict": "complete: test",
++            "train_launched": True,
++            "checkpoint_paths": {},
++            "epochs_completed": {},
++            "inference_substrate": exp4078.INFERENCE_SUBSTRATE,
++            "launched_workers": [{"detached": False}],
++        }
++    )
++
++
++def test_req_learn_4078_launch_worker_uses_session_detach(
++    tmp_path: Path,
++    monkeypatch,
++) -> None:
++    """REQ-LEARN-4078-2: the real launcher asks Popen for a new POSIX session."""
++
++    calls: list[dict[str, Any]] = []
++
++    class FakeProcess:
++        pid = 4242
++
++        def poll(self) -> None:
++            return None
++
++    def fake_popen(command: list[str], **kwargs: Any) -> FakeProcess:
++        calls.append({"command": command, **kwargs})
++        return FakeProcess()
++
++    monkeypatch.setattr(exp4078.subprocess, "Popen", fake_popen)
++
++    spec = exp4078.build_worker_specs(
++        repo_root=tmp_path,
++        bases=(exp4078.BASE_MODELS[0],),
++        arms=("rft_correct",),
++        python_executable=Path("/venv/bin/python"),
++    )[0]
++    worker = exp4078.launch_worker(spec)
++
++    assert worker.pid == 4242
++    assert worker.detached is True
++    assert worker.started is True
++    assert calls[0]["start_new_session"] is True
++    assert calls[0]["stdin"] is exp4078.subprocess.DEVNULL
++    assert calls[0]["cwd"] == str(tmp_path)
+-- 
+2.55.0
+

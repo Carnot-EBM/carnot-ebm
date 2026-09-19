@@ -1,0 +1,601 @@
+From b162ad5d7c72766d21ee51153fe87ba8578973c6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 19:42:08 -0400
+Subject: [PATCH 03502/11362] [outer-loop] Wire hazard fit into the
+ re-induction loop at the trigger (auto nav->hazard escalation)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Operator: "wire the hazard fit into the re-induction loop at the trigger." Integrated the re-induction
+trigger + hazard-aware model class into ONE self-deepening loop. Adversarial review: SURVIVES.
+Write-up docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md.
+
+- scripts/experiments/experiment_reinduction_hazard_loop.py:escalating_deepen — at each level re-induce a
+  NAV model + plan/execute; on a level-up bank+continue; on the TRIGGER specialised to a hazard (a game-over
+  where the avatar was REMOVED -- the nav engine only translates/blocks so it plans into a hazard) ESCALATE
+  to a hazard-aware re-fit (signal = the trigger's own death) and re-plan the same level; on any other stall
+  (budget/wall) stop. Ladder nav->hazard-aware fires purely on avatar-removal -- no per-level/per-game
+  hand-holding.
+- Result: the loop AUTO-deepens tu93 L1->L2 on 5/5 seeds (chain L1(nav)->L2(hazard_aware)), reproduced L2 on
+  a fresh env, as one loop with no manual step between levels. Stalls at L3 (no_plan_in_model) -- the honest
+  next wall.
+- Adversarial review SURVIVES: escalation generic (avatar-removal trigger, no level==2 branch, no hardcoded
+  hazard colours -- all data-fitted); reproduction genuine (env's own levels_completed counter, model can't
+  set it, verifier_is_oracle false honest); escalation structurally necessary (nav game_over_avatar_removed,
+  hazard-aware level_up on the same L2 transitions). Artifact adversarial-verify clean.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...ction-loop-hazard-escalation-2026-06-22.md |  67 ++++++
+ ops/changelog.md                              |  20 ++
+ ops/known-issues.md                           |  14 ++
+ .../experiment_reinduction_hazard_loop.json   | 219 ++++++++++++++++++
+ .../experiment_reinduction_hazard_loop.py     | 199 ++++++++++++++++
+ 5 files changed, 519 insertions(+)
+ create mode 100644 docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md
+ create mode 100644 results/experiment_reinduction_hazard_loop.json
+ create mode 100644 scripts/experiments/experiment_reinduction_hazard_loop.py
+
+diff --git a/docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md b/docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md
+new file mode 100644
+index 0000000000..ba3cc9f958
+--- /dev/null
++++ b/docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md
+@@ -0,0 +1,67 @@
++# Re-induction loop with hazard escalation — one self-deepening mechanism
++
++Date: 2026-06-22 · Outer-loop (interactive, ultracode) · OFFLINE, zero quota · `verifier_is_oracle: false`
++
++Integrates the two prior pieces into a single loop:
++- the **mechanic-conditioned re-induction trigger** (`mechanic-conditioned-reinduction-trigger-2026-06-22.md`):
++  re-fit the world model at each level; a deterministic, budget-unexhausted game-over after a level-up is the
++  trigger that a mechanic shifted.
++- the **hazard-aware model class** (`hazard-aware-world-model-2026-06-22.md`): learns a line-charger hazard
++  from death transitions and routes around it.
++
++The wiring (`scripts/experiments/experiment_reinduction_hazard_loop.py:escalating_deepen`): at each level the
++loop re-induces a **nav** model from transitions collected there and plans+executes. On a level-up it banks
++and continues. On the **trigger specialised to a hazard** — a game-over where the avatar was **REMOVED** (the
++nav engine only translates/blocks, so it plans straight into a hazard) — it **escalates**: it fits a
++**hazard-aware** model from the level's transitions plus the trigger's own death (the nav suicidal plan's
++death IS the hazard signal), and **re-plans the same level**. On any other stall (move-budget / wall) it
++stops (out of the current model classes' scope). The escalation ladder is **nav → hazard-aware**, fired
++purely by avatar-removal detection — no per-level or per-game hand-holding.
++
++## Result — the loop auto-deepens tu93 L1→L2 with no hand-holding
++
++`results/experiment_reinduction_hazard_loop.json` (5 seeds):
++
++```
++every seed:  deepest L2, reproduced L2   |   chain: L1(nav) -> L2(hazard_aware)
++VERDICT: reinduction loop AUTO-ESCALATES nav -> hazard-aware at the avatar-removal trigger and deepens
++         tu93 to L2, reproduced on every seed
++```
++
++L1 is solved by the **nav** model; the nav re-fit then dies at the L2 charging enemy (avatar removed); the
++loop detects that, escalates to the **hazard-aware** model, and deepens to L2 — banked and **reproduced on a
++fresh env**. The whole thing runs as one loop with no manual step between levels.
++
++## Adversarial review — SURVIVES
++
++A hostile reviewer re-ran it and traced the control flow:
++- **Escalation is generic** — fired by `avatar_removed` detection (`escalating_deepen` line ~118), with no
++  `level==2` / game-name branch and no hardcoded hazard colours (hazard colours/axis/range are all
++  data-fitted; the `8/15` literals appear only in docstrings). The `per_level` chain confirms L1 via the nav
++  model and L2 via the **escalated** hazard-aware model — not both by a pre-supplied hazard model.
++- **Reproduction is genuine** — the gate makes a brand-new env and reads the env's own `levels_completed`
++  (set by the real obfuscated tu93 logic on a sprite-collision win); the world model cannot set that counter,
++  so `verifier_is_oracle: false` is honest, not leaking.
++- **Escalation does real work** — within the loop, the nav model returns `game_over_avatar_removed` and the
++  escalated hazard-aware model returns `level_up`; the escalation is structurally necessary.
++
++## Scope (honest)
++
++Single game (tu93), single hazard mechanic (line-charger), two levels. The loop **stalls at L3**
++(`no_plan_in_model`) — L3 needs the next primitive (a further hazard type or a win-vocabulary extension), not
++captured by nav + line-charger. The hazard signal is self-supplied via the nav suicidal plan (the trigger's
++own death), which is fair but does not test whether unguided exploration alone would surface enough deaths.
++
++## Forward
++
++- The escalation ladder is the extension point: add the next model class (pursuer / proximity / multi-hazard
++  hazards; non-reach-goal win vocab) as a new rung, fired by its own trigger signature, to push past L3.
++- This loop is ready to drop into the standing solver as the level-boundary behaviour: re-induce, and on a
++  hazard-shaped trigger, escalate before re-planning.
++
++## Artifacts
++
++- `scripts/experiments/experiment_reinduction_hazard_loop.py` — the integrated escalating loop
++- `results/experiment_reinduction_hazard_loop.json` (adversarial-verify clean; 5/5 seeds)
++- builds on `arc_nav_world_model.py` (InducedNavWorldModel + HazardAwareNavWorldModel),
++  `experiment_reinduction.py` (reach-L1 + collect-at-level), `experiment_hazard_aware.py` (nav-death signal)
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 907b914c54..4375355ffc 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,25 @@
+ # Carnot — Changelog
+ 
++## 2026-06-22 (Hazard fit WIRED into the re-induction loop at the trigger — outer-loop, ultracode)
++
++Operator: "wire the hazard fit into the re-induction loop at the trigger." Integrated the re-induction
++trigger + the hazard-aware model class into ONE self-deepening loop. Adversarial review: SURVIVES.
++Write-up `docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md`.
++
++- `scripts/experiments/experiment_reinduction_hazard_loop.py:escalating_deepen`: at each level, re-induce a
++  NAV model + plan/execute; on a level-up bank and continue; on the TRIGGER specialised to a hazard (a
++  game-over where the avatar was REMOVED — the nav engine only translates/blocks so it plans into a hazard)
++  ESCALATE to a hazard-aware re-fit (signal = the trigger's own death) and re-plan the same level; on any
++  other stall (budget/wall) stop. The ladder nav→hazard-aware fires purely on avatar-removal detection — no
++  per-level or per-game hand-holding.
++- RESULT: the loop AUTO-deepens tu93 L1→L2 on 5/5 seeds (chain L1(nav)→L2(hazard_aware)), reproduced L2 on a
++  fresh env, as one loop with no manual step between levels. It stalls at L3 (no_plan_in_model — L3 needs the
++  next primitive), the honest next wall.
++- Adversarial review (SURVIVES): escalation is generic (fired by avatar-removal, no level==2 branch, no
++  hardcoded hazard colours — all data-fitted); reproduction genuine (env's own levels_completed counter, the
++  model can't set it); escalation structurally necessary (nav returns game_over_avatar_removed, hazard-aware
++  returns level_up). Artifact adversarial-verify clean. Conductor left STOPPED. Committed `[outer-loop]`.
++
+ ## 2026-06-22 (Hazard-aware world model DEEPENS tu93 L2 + adversarially verified — outer-loop, ultracode)
+ 
+ Operator: "build the hazard-aware model class" (the forward need from the re-induction work — tu93 L2 stalls
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 3c1006bd41..0daa58ec17 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -974,6 +974,20 @@ SURVIVES). Write-up `docs/research-notes/hazard-aware-world-model-2026-06-22.md`
+   multi-hazard) as new games surface them; still need the win-vocabulary extension (reflection/coalescence)
+   for the non-nav L2s.
+ 
++**HAZARD FIT WIRED INTO THE RE-INDUCTION LOOP AT THE TRIGGER (2026-06-22, outer-loop, ultracode — operator:
++"wire the hazard fit into the re-induction loop at the trigger").** DONE. Adversarial review: SURVIVES.
++Write-up `docs/research-notes/reinduction-loop-hazard-escalation-2026-06-22.md`.
++- `experiment_reinduction_hazard_loop.py:escalating_deepen` — ONE loop: re-induce nav per level + plan/exec;
++  on a level-up bank+continue; on the avatar-REMOVAL trigger (the hazard signature) ESCALATE to a hazard-aware
++  re-fit (signal = the trigger's own death) and re-plan the same level; else stop. Ladder nav→hazard-aware,
++  fired purely on avatar-removal — no per-level/per-game hand-holding.
++- RESULT: auto-deepens tu93 L1→L2 on 5/5 seeds (chain L1(nav)→L2(hazard_aware)), reproduced L2 on a fresh env,
++  with no manual step between levels. Stalls at L3 (no_plan_in_model) — the honest next wall.
++- Review SURVIVES: escalation generic (no hardcoding, all data-fitted); reproduction genuine (env counter);
++  escalation structurally necessary (nav dies, hazard-aware solves the same L2 transitions).
++- **Next**: add the next escalation rung (pursuer/proximity/multi-hazard hazard classes; non-reach-goal win
++  vocab) to push past L3; drop the loop into the standing solver as the level-boundary behaviour.
++
+ ### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
+ 
+ **Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")
+diff --git a/results/experiment_reinduction_hazard_loop.json b/results/experiment_reinduction_hazard_loop.json
+new file mode 100644
+index 0000000000..f0f9a9f0b2
+--- /dev/null
++++ b/results/experiment_reinduction_hazard_loop.json
+@@ -0,0 +1,219 @@
++{
++  "experiment": "experiment_reinduction_hazard_loop",
++  "game": "tu93",
++  "honest_verdict": "success: reinduction_loop_AUTO_ESCALATES_nav_to_hazard_aware_at_the_avatar_removal_trigger_and_deepens_tu93_to_L2_reproduced_on_every_seed",
++  "verifier_is_oracle": false,
++  "inference_substrate": "offline_arc_search_plus_induced_world_model",
++  "random_seeds": [
++    7,
++    20260622,
++    3,
++    42,
++    100
++  ],
++  "target_level": 2,
++  "n_seeds_escalate_and_reproduce": 5,
++  "rows": [
++    {
++      "seed": 7,
++      "reached_L1": true,
++      "deepest_level": 2,
++      "reproduced_level": 2,
++      "per_level": [
++        {
++          "level_reached": 1,
++          "model_class": "nav",
++          "via": "reach_level_one"
++        },
++        {
++          "level_reached": 2,
++          "model_class": "hazard_aware",
++          "escalated_from": "nav_avatar_removed",
++          "hazard_fit": {
++            "n_death_transitions": 6,
++            "hazard_colors": [
++              8,
++              15
++            ],
++            "hazard_axis": "row",
++            "charge_range": 6,
++            "axis_votes": {
++              "row": 6
++            },
++            "post_move_distances_at_death": [
++              6.125,
++              6.125,
++              6.125,
++              6.125,
++              6.125,
++              6.125
++            ]
++          },
++          "plan_len": 10
++        }
++      ],
++      "n_banked_actions": 28,
++      "escalated_to_hazard_aware": true
++    },
++    {
++      "seed": 20260622,
++      "reached_L1": true,
++      "deepest_level": 2,
++      "reproduced_level": 2,
++      "per_level": [
++        {
++          "level_reached": 1,
++          "model_class": "nav",
++          "via": "reach_level_one"
++        },
++        {
++          "level_reached": 2,
++          "model_class": "hazard_aware",
++          "escalated_from": "nav_avatar_removed",
++          "hazard_fit": {
++            "n_death_transitions": 5,
++            "hazard_colors": [
++              8,
++              15
++            ],
++            "hazard_axis": "row",
++            "charge_range": 6,
++            "axis_votes": {
++              "row": 5
++            },
++            "post_move_distances_at_death": [
++              6.125,
++              6.125,
++              6.125,
++              6.125,
++              6.125
++            ]
++          },
++          "plan_len": 10
++        }
++      ],
++      "n_banked_actions": 28,
++      "escalated_to_hazard_aware": true
++    },
++    {
++      "seed": 3,
++      "reached_L1": true,
++      "deepest_level": 2,
++      "reproduced_level": 2,
++      "per_level": [
++        {
++          "level_reached": 1,
++          "model_class": "nav",
++          "via": "reach_level_one"
++        },
++        {
++          "level_reached": 2,
++          "model_class": "hazard_aware",
++          "escalated_from": "nav_avatar_removed",
++          "hazard_fit": {
++            "n_death_transitions": 3,
++            "hazard_colors": [
++              8,
++              15
++            ],
++            "hazard_axis": "row",
++            "charge_range": 6,
++            "axis_votes": {
++              "row": 3
++            },
++            "post_move_distances_at_death": [
++              6.125,
++              6.125,
++              6.125
++            ]
++          },
++          "plan_len": 10
++        }
++      ],
++      "n_banked_actions": 28,
++      "escalated_to_hazard_aware": true
++    },
++    {
++      "seed": 42,
++      "reached_L1": true,
++      "deepest_level": 2,
++      "reproduced_level": 2,
++      "per_level": [
++        {
++          "level_reached": 1,
++          "model_class": "nav",
++          "via": "reach_level_one"
++        },
++        {
++          "level_reached": 2,
++          "model_class": "hazard_aware",
++          "escalated_from": "nav_avatar_removed",
++          "hazard_fit": {
++            "n_death_transitions": 6,
++            "hazard_colors": [
++              8,
++              15
++            ],
++            "hazard_axis": "row",
++            "charge_range": 6,
++            "axis_votes": {
++              "row": 6
++            },
++            "post_move_distances_at_death": [
++              6.125,
++              6.125,
++              6.125,
++              6.125,
++              6.125,
++              6.125
++            ]
++          },
++          "plan_len": 10
++        }
++      ],
++      "n_banked_actions": 28,
++      "escalated_to_hazard_aware": true
++    },
++    {
++      "seed": 100,
++      "reached_L1": true,
++      "deepest_level": 2,
++      "reproduced_level": 2,
++      "per_level": [
++        {
++          "level_reached": 1,
++          "model_class": "nav",
++          "via": "reach_level_one"
++        },
++        {
++          "level_reached": 2,
++          "model_class": "hazard_aware",
++          "escalated_from": "nav_avatar_removed",
++          "hazard_fit": {
++            "n_death_transitions": 4,
++            "hazard_colors": [
++              8,
++              15
++            ],
++            "hazard_axis": "row",
++            "charge_range": 6,
++            "axis_votes": {
++              "row": 4
++            },
++            "post_move_distances_at_death": [
++              6.125,
++              6.125,
++              6.125,
++              6.125
++            ]
++          },
++          "plan_len": 10
++        }
++      ],
++      "n_banked_actions": 28,
++      "escalated_to_hazard_aware": true
++    }
++  ],
++  "methodology_note": "One integrated loop: re-induce nav per level; on the TRIGGER (a game-over with the avatar REMOVED = the hazard signature) escalate to a hazard-aware re-fit (its signal is the trigger's own death) and re-plan the same level; continue. No hand-holding between levels. Reproduction-gated on a fresh env. Scope: the hazard class handles the line-charger (tu93 L2); other hazard types are future primitives.",
++  "duration_s": 8.2
++}
+\ No newline at end of file
+diff --git a/scripts/experiments/experiment_reinduction_hazard_loop.py b/scripts/experiments/experiment_reinduction_hazard_loop.py
+new file mode 100644
+index 0000000000..5108c81de4
+--- /dev/null
++++ b/scripts/experiments/experiment_reinduction_hazard_loop.py
+@@ -0,0 +1,199 @@
++#!/usr/bin/env python3
++"""Integrated re-induction loop with HAZARD ESCALATION at the trigger.
++
++This wires the hazard-aware model (docs/research-notes/hazard-aware-world-model-2026-06-22.md) INTO the
++mechanic-conditioned re-induction loop (docs/research-notes/mechanic-conditioned-reinduction-trigger-2026-06-22.md)
++as a single self-deepening mechanism. At each level the loop:
++
++  1. RE-INDUCES a nav world model from transitions collected at the current level (goal colour inherited
++     from L1, which is level-invariant) and plans+executes.
++  2. On a level-up -> bank the actions and continue to the next level.
++  3. On the TRIGGER -- a game-over where the avatar was REMOVED (the hazard signature; the nav engine only
++     translates/blocks so it plans straight into a hazard) -- it ESCALATES: it fits a HAZARD-AWARE model
++     from the level's transitions PLUS the trigger's own death (the nav suicidal plan's death IS the hazard
++     signal), and RE-PLANS the same level. If that deepens, continue; otherwise stop.
++  4. On any other stall (move-budget / wall) -> stop (out of the current model classes' scope).
++
++The escalation ladder is nav -> hazard-aware. The whole banked L1->Lk sequence is reproduction-gated on a
++fresh env. Demonstrated end-to-end on tu93: the loop reaches L1 with the nav model, the nav re-fit stalls at
++the L2 charging enemy (trigger), the loop escalates to the hazard-aware model and deepens to L2 -- with NO
++hand-holding between levels.
++
++OFFLINE, zero quota. verifier_is_oracle: false.
++"""
++from __future__ import annotations
++
++import argparse
++import importlib.util
++import json
++import time
++from pathlib import Path
++
++import numpy as np
++from arcengine import GameAction
++from carnot.agentic import arc_solver_kit as kit
++from carnot.agentic.arc_agi3_world_model import grid_of
++from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed, _game_over
++from carnot.agentic.arc_graph_explore import _warm
++from carnot.agentic.arc_executable_world_model import to_logical, plan_in_model
++from carnot.agentic.arc_nav_world_model import InducedNavWorldModel, HazardAwareNavWorldModel
++
++REPO = Path(__file__).resolve().parents[2]
++OUT = REPO / "results" / "experiment_reinduction_hazard_loop.json"
++
++
++def _load(name, fname):
++    spec = importlib.util.spec_from_file_location(name, str(Path(__file__).resolve().parent / fname))
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++    return mod
++
++
++_ri = _load("exp_reind", "experiment_reinduction.py")
++_ha = _load("exp_haz", "experiment_hazard_aware.py")
++
++
++def _ok(frame):
++    try:
++        return np.asarray(grid_of(frame)).ndim == 2
++    except Exception:
++        return False
++
++
++def execute_from(game, prefix, cell, model, max_plan, max_depth):
++    """Replay `prefix` to reach the current level, plan inside `model`, execute, and report the outcome
++    (level_up / avatar_removed / other stall) + the banked actions for the reproduction gate."""
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    f = _warm(env, False)
++    for a in prefix:
++        f = env.step(_game_action(GameAction, int(a["action"])), data=a.get("data"))
++        if f is None or not _ok(f):
++            return {"planned": False, "level_up": False, "avatar_removed": False, "banked": list(prefix),
++                    "stop": "prefix_replay_failed"}
++    lvl0 = _levels_completed(f)
++    g = to_logical(grid_of(f), cell)
++    plan = plan_in_model(model.engine, model.is_level_complete, g, max_nodes=max_plan, max_depth=max_depth)
++    if not plan:
++        return {"planned": False, "level_up": False, "avatar_removed": False, "banked": list(prefix),
++                "stop": "no_plan_in_model"}
++    banked = list(prefix)
++    stop = "plan_exhausted"
++    avatar_removed = False
++    for s in plan:
++        f = env.step(_game_action(GameAction, int(s["action"])), data=s.get("data"))
++        if f is None or not _ok(f):
++            stop = "env_none"
++            break
++        banked.append({"action": int(s["action"]), "data": s.get("data")})
++        if _levels_completed(f) > lvl0:
++            stop = "level_up"
++            break
++        if _game_over(f):
++            avatar_removed = model._avatar_bbox(to_logical(grid_of(f), cell)) is None
++            stop = "game_over_avatar_removed" if avatar_removed else "game_over_other"
++            break
++    return {"planned": True, "plan_len": len(plan), "level_up": _levels_completed(f) > lvl0,
++            "avatar_removed": bool(avatar_removed), "banked": banked, "stop": stop}
++
++
++def escalating_deepen(game, target_level, n_reinduce, max_plan, max_depth, seed):
++    """The integrated loop: re-induce nav per level, ESCALATE to hazard-aware at the avatar-removal trigger."""
++    model0, l1_prefix, cell, _ = _ri.reach_level_one(game, max_plan, max_depth, seed=seed)
++    if l1_prefix is None:
++        return {"reached_L1": False}
++    goal_color = model0.goal_color
++    banked = list(l1_prefix)
++    level = 1                       # L1 solved by the reach-step
++    per_level = [{"level_reached": 1, "model_class": "nav", "via": "reach_level_one"}]
++    while level < target_level:
++        tr, _ = _ri.collect_at_level(game, banked, n_reinduce, seed=seed + level)
++        nav = InducedNavWorldModel.fit(tr)
++        nav.goal_color = goal_color
++        res = execute_from(game, banked, cell, nav, max_plan, max_depth)
++        if res["level_up"]:
++            banked = res["banked"]; level += 1
++            per_level.append({"level_reached": level, "model_class": "nav", "plan_len": res.get("plan_len")})
++            continue
++        if res["avatar_removed"] or res["stop"] == "game_over_avatar_removed":
++            # ----- TRIGGER: hazard stall -> ESCALATE to a hazard-aware re-fit and re-plan the SAME level ---
++            nav_deaths = _ha.nav_death_transitions(nav, game, banked, cell, max_plan, max_depth)
++            haz = HazardAwareNavWorldModel.fit(list(tr) + nav_deaths, goal_color=goal_color)
++            res2 = execute_from(game, banked, cell, haz, max_plan, max_depth)
++            if res2["level_up"]:
++                banked = res2["banked"]; level += 1
++                per_level.append({"level_reached": level, "model_class": "hazard_aware",
++                                  "escalated_from": "nav_avatar_removed", "hazard_fit": haz.hazard_fit,
++                                  "plan_len": res2.get("plan_len")})
++                continue
++            per_level.append({"level_stalled": level, "model_class": "hazard_aware",
++                              "escalated_from": "nav_avatar_removed", "hazard_fit": haz.hazard_fit,
++                              "stop": res2["stop"]})
++            break
++        per_level.append({"level_stalled": level, "model_class": "nav", "stop": res["stop"]})
++        break
++    # reproduction gate on a fresh env
++    arc = kit.offline_arcade()
++    envr = arc.make(game, scorecard_id=arc.open_scorecard())
++    fr = _warm(envr, False)
++    base = _levels_completed(fr)
++    for a in banked:
++        fr = envr.step(_game_action(GameAction, int(a["action"])), data=a.get("data"))
++        if fr is None or not _ok(fr):
++            break
++    reproduced = _levels_completed(fr) - base
++    return {"reached_L1": True, "deepest_level": int(level), "reproduced_level": int(reproduced),
++            "per_level": per_level, "n_banked_actions": len(banked),
++            "escalated_to_hazard_aware": any(p.get("model_class") == "hazard_aware" for p in per_level)}
++
++
++def main() -> int:
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--game", default="tu93")
++    ap.add_argument("--seeds", default="7,20260622,3")
++    ap.add_argument("--target-level", type=int, default=2)
++    ap.add_argument("--n-reinduce", type=int, default=150)
++    ap.add_argument("--max-plan", type=int, default=120000)
++    ap.add_argument("--max-depth", type=int, default=120)
++    args = ap.parse_args()
++    t0 = time.time()
++    seeds = [int(s) for s in args.seeds.split(",") if s.strip()]
++
++    rows = [{"seed": s, **escalating_deepen(args.game, args.target_level, args.n_reinduce, args.max_plan,
++                                            args.max_depth, s)} for s in seeds]
++    # a clean win = the loop ESCALATED to hazard-aware AND reproduced >= target_level on a fresh env
++    wins = [r for r in rows if r.get("escalated_to_hazard_aware")
++            and r.get("reproduced_level", 0) >= args.target_level]
++    if len(wins) == len(seeds) and seeds:
++        verdict = ("success: reinduction_loop_AUTO_ESCALATES_nav_to_hazard_aware_at_the_avatar_removal_"
++                   f"trigger_and_deepens_{args.game}_to_L{args.target_level}_reproduced_on_every_seed")
++    elif wins:
++        verdict = (f"success: reinduction_loop_escalates_and_deepens_reproduced_on_{len(wins)}_of_{len(seeds)}_seeds")
++    else:
++        verdict = "complete: escalating_loop_did_not_cleanly_deepen_inspect_rows"
++
++    art = {"experiment": "experiment_reinduction_hazard_loop", "game": args.game, "honest_verdict": verdict,
++           "verifier_is_oracle": False, "inference_substrate": "offline_arc_search_plus_induced_world_model",
++           "random_seeds": seeds, "target_level": args.target_level,
++           "n_seeds_escalate_and_reproduce": len(wins), "rows": rows,
++           "methodology_note": ("One integrated loop: re-induce nav per level; on the TRIGGER (a game-over "
++                                "with the avatar REMOVED = the hazard signature) escalate to a hazard-aware "
++                                "re-fit (its signal is the trigger's own death) and re-plan the same level; "
++                                "continue. No hand-holding between levels. Reproduction-gated on a fresh env. "
++                                "Scope: the hazard class handles the line-charger (tu93 L2); other hazard "
++                                "types are future primitives."),
++           "duration_s": round(time.time() - t0, 1)}
++    OUT.write_text(json.dumps(art, indent=2))
++    print(f"\nVERDICT: {verdict}")
++    for r in rows:
++        chain = " -> ".join(f"L{p['level_reached']}({p['model_class']})" for p in r.get("per_level", [])
++                            if "level_reached" in p)
++        stalled = [p for p in r.get("per_level", []) if "level_stalled" in p]
++        print(f"  seed {r['seed']}: deepest L{r.get('deepest_level')} reproduced L{r.get('reproduced_level')} "
++              f"| {chain}" + (f" | STALL {stalled[-1].get('stop')}" if stalled else ""))
++    print(f"  -> {OUT}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

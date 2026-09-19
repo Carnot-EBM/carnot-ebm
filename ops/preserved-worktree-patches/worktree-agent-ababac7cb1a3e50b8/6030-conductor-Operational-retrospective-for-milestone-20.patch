@@ -1,0 +1,133 @@
+From cb6f8473427ced864f4c73b1e6f1a35e96809cda Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 11:22:38 -0400
+Subject: [PATCH 06030/11362] [conductor] Operational retrospective for
+ milestone 2026.07.488
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           |  1 +
+ ops/status.md                              | 18 ++++++-
+ results/operational_retro_2026_07_488.json | 58 ++++++++++++++++++++++
+ 4 files changed, 82 insertions(+), 1 deletion(-)
+ create mode 100644 results/operational_retro_2026_07_488.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index e04378cb92..87de96e4d7 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5793,3 +5793,9 @@ The critical path for milestone .250:
+ - theme: operational retrospective for a synthesis-heavy slowest-run list with compute-bound GPU-idle gated off
+ - key result: 28 experiments completed in 318.2 minutes with 2 compute-bound tasks; the listed slowest rows are synthesis-only, gpu_idle_on_compute_bound_tasks=false, and no 2+ parallel-model DualGPURunner miss is supported by the supplied blocks
+ - acceptance: 4/4 operational questions answered
++
++### Milestone 2026.07.488
++- exp_range: exp5351-exp5361 (bounds from visible timing rows only)
++- theme: operational retrospective for synthesis-heavy throughput with one visible compute-bound slow path
++- key result: 29 experiments completed in 246.4 minutes with 3 compute-bound tasks; Exp 5354 is the only visible compute-bound slow path at 15.6 minutes, gpu_idle_on_compute_bound_tasks=false, and no 2+ parallel-model DualGPURunner miss is supported
++- acceptance: 4/4 operational questions answered
+diff --git a/ops/changelog.md b/ops/changelog.md
+index a16cc97d3d..6dae12754e 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11032,3 +11032,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-07: Exp 5360: ARC live-path perception salience first-contact level-up attempt (✅ Complete) — honest_verdict=complete: no_new_level_banked_re86_residual_bounded_budget_no_levelup; results/experiment_5360_arc_perception_salience_levelup_attempt_v488.json
+ - 2026-07-07: Exp 5361 hardware continuity and authenticated workload receipts with no speedup claim (✅ Complete) — honest_verdict={"principle":"Terminal verdict starts with complete: or blocked_ and states board, public-reference, workload, and no-speedup boundaries.","value":"complete: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_workload_receipt_validated gatemate=blocked_gatemate_physical_jtag_setup_unchanged authenticated_workload_run=true public_refs=context_only speedup_claim=false"}; status.value=complete_hardware_smoke_workload_receipt_no_speedup; inference_substrate.value=hardware_smoke; polarfire_workload_validated=true; authenticated_workload_run=true; kv260_status.value.status=blocked_kv260_ssh_unreachable; polarfire_status.value.status=reachable_workload_receipt_validated; gatemate_status.value.status=blocked_gatemate_physical_jtag_setup_unchanged; workload output_sha256=fb7c59b0a13462b193c325aa8809922a4ffcc904ad7c7bca65ef0d458d2aec13 wall_time_s=0.150005; public_refs_context_only=true; speedup_claim=false; no_host_block_device_evidence=true; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5361_hardware_continuity_workload_v488.json
+ - 2026-07-07: Exp 5362 capstone for 2026.07.488 constraint-tax SOTA, self-learning, projection, ARC, and hardware (⚠️ Partial / Not Viable / Research Finding) — honest_verdict={"principle":"Terminal prefix `complete:` or `blocked_` prevents ambiguous milestone outcome.","value":"complete: .488 synthesized with structured_protocol_clean=False, constraint_tax_panel_ready=False, tokenprob_feature_rows_ready=True, carry_token_energy_signal_ready=False, dependency_safe_self_learning_scaled=True, solver_projection_ready=True, pbit_schedule_signal_ready=True, arc_new_level_banked=False, hardware_speedup_claim=false"}; status.value=complete; structured_protocol_clean=false; constraint_tax_panel_ready=false; tokenprob_feature_rows_ready=true; carry_token_energy_signal_ready=false; dependency_provenance_ready=true; memory_tool_drift_ready=true; self_learning_scaleup_ready=true; solver_projection_ready=true; pbit_schedule_signal_ready=true; arc_new_level_banked=false; hardware_speedup_claim=false; active_roadmap_modified=false; conductor_modified=false; no retro_* flags recorded; no AUC/TP/FP/signed_improvement/violation_rate fields recorded; results/experiment_5362_capstone_v488.json
++- 2026-07-07: Operational retrospective for milestone 2026.07.488 (Complete) -- total_wall_time_minutes=246.4, experiments_completed=29, compute_bound_experiments_count=3. The prefilled slowest rows list Exp 5351 29.0min synthesis_only, Exp 5361 18.0min synthesis_only, Exp 5354 15.6min compute_bound, Exp 5357 15.1min synthesis_only, and Exp 5360 14.8min synthesis_only. gpu_idle_on_compute_bound_tasks=false; the GPU monitor snapshot alone is not treated as a compute-bound idle bug, and no supplied block identifies a 2+ parallel-model DualGPURunner miss. estimated_time_savings_pct=0; results/operational_retro_2026_07_488.json
+diff --git a/ops/status.md b/ops/status.md
+index 33b743437b..c7ffde12ad 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,22 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-07-07 (Milestone 2026.07.488 planning staged)
++**Last Updated:** 2026-07-07 (Milestone 2026.07.488 Operational Retro)
++
++## Session 2026-07-07 - Milestone 2026.07.488 Operational Retro
++
++Filled `results/operational_retro_2026_07_488.json` from the locked timing
++artifact values and appended the corresponding entries to `ops/changelog.md`
++and `docs/research-log.md`. The locked fields record 246.4 wall-time minutes,
++29 completed experiments, 3 compute-bound tasks, and
++`gpu_idle_on_compute_bound_tasks: false`; the visible compute-bound slow path is
++Exp 5354 at 15.6 minutes, while the other bounded slowest rows are
++synthesis-only.
++
++Validation for this documentation/results-only task: JSON parsing, locked-field
++checks, protected-file diff check, and whitespace checks passed. Repo-wide spec
++coverage and reconciliation still fail on pre-existing stale documentation and
++spec-traceability issues outside the touched files; no E2E model-training or
++hardware check applies to this operational retrospective.
+ 
+ ## Session 2026-07-07 - Milestone 2026.07.488 Planning Staged
+ 
+diff --git a/results/operational_retro_2026_07_488.json b/results/operational_retro_2026_07_488.json
+new file mode 100644
+index 0000000000..e87b7d6d93
+--- /dev/null
++++ b/results/operational_retro_2026_07_488.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.488",
++  "generated_at": "2026-07-07T15:17:24Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 246.4,
++  "experiments_completed": 29,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "-0400 [conductor] Exp 5351: Trigger-then-constrain structured-output protocol co",
++      "duration_minutes": 29.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "-0400 [conductor] Exp 5361: Hardware continuity and authenticated workload recei",
++      "duration_minutes": 18.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "-0400 [conductor] Exp 5354: Gated arithmetic carry token-energy diagnostic",
++      "duration_minutes": 15.6,
++      "compute_bound": true
++    },
++    {
++      "experiment": "-0400 [conductor] Exp 5357: Gated dependency-safe self-learning scale-up",
++      "duration_minutes": 15.1,
++      "compute_bound": false
++    },
++    {
++      "experiment": "-0400 [conductor] Exp 5360: ARC live-path perception salience first-contact leve",
++      "duration_minutes": 14.8,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": false,
++  "timing_integrity_mismatch": false,
++  "summary": "Milestone 2026.07.488 completed 29 experiments in 246.4 minutes, including 3 compute-bound tasks. The bounded slowest list is synthesis-heavy; the only visible compute-bound slow path is Exp 5354 at 15.6 minutes, and gpu_idle_on_compute_bound_tasks is false.",
++  "bottlenecks_identified": [
++    "Synthesis-only work dominates the bounded slowest list: Exp 5351 took 29.0 minutes and Exp 5361 took 18.0 minutes without a GPU code path.",
++    "Only one compute-bound experiment appears in the bounded slowest list: Exp 5354 took 15.6 minutes. The supplied data does not include runtime traces that explain why it was slower than the other compute-bound tasks.",
++    "Compute-bound observability is too coarse: the milestone had 3 compute-bound tasks, but the bounded timing block exposes detailed duration context for only the one compute-bound row in the slowest list."
++  ],
++  "improvements_suggested": [
++    "Add per-experiment phase timing for synthesis-only work so long rows can be split into planning, artifact writing, validation, and commit time.",
++    "Capture in-run GPU utilization receipts for each GGUF/CUDA/requires_gpu task so idle-GPU interpretation is tied to the compute-bound execution window.",
++    "Emit an explicit runner-eligibility field for compute-bound tasks that distinguishes single-model runs from 2+ parallel-model runs before suggesting DualGPURunner.",
++    "Auto-fill operational retros from the locked timing skeleton and reject accidental edits to locked timing fields before commit."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Instrument synthesis-only conductor phases before changing GPU policy, because the visible slowest rows are mostly synthesis-only.",
++    "Add in-run GPU receipts to every compute-bound task while keeping GPU-idle alerts gated by compute_bound=true.",
++    "Add a DualGPURunner eligibility receipt that is present only for 2+ parallel-model compute-bound workloads."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The authorized blocks support one visible compute-bound slow path but do not explain its root cause. The next milestone should improve timing and GPU receipts before turning a point-in-time idle GPU snapshot into an operational policy."
++}
+-- 
+2.55.0
+

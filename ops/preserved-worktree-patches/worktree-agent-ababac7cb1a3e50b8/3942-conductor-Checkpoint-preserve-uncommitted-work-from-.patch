@@ -1,0 +1,43 @@
+From 0895e8cfae54291c1ad98ba595e3ec97bee56f42 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 03:54:05 -0400
+Subject: [PATCH 03942/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 29aa1b09e4..23fed660df 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 171, "phase": "iteration_start", "last_beat": "2026-06-25T07:40:29Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 172, "phase": "iteration_start", "last_beat": "2026-06-25T07:54:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8c06ce8d26..5ba5443d6f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9252,3 +9252,4 @@ c |
+ | 2026-06-25 07:33 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.49s |
+ | 2026-06-25 07:36 UTC | PHASE C (HARDWARE continuity -- KV260, the soverei | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.68s |
+ | 2026-06-25 07:38 UTC | PHASE D (SOTA-INGESTION -- the .435 fallback) -- m | SKIP | Pre-tests failing, self-heal failed: 1 failed, 91 passed, 1 warning in 6.38s |
++| 2026-06-25 07:52 UTC | PHASE D (SOTA-INGESTION -- the .435 fallback) -- m | OK | 127 passed, 1 warning in 7.27s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2d98cc9496..76af74b821 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 171, "phase": "iteration_start", "started_at": "2026-06-25T07:40:29Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 172, "phase": "iteration_start", "started_at": "2026-06-25T07:54:03Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,70 @@
+From a13d3337998d9b4893f0b7357f3e6773f8260da9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 21 Aug 2026 10:43:58 -0400
+Subject: [PATCH 09411/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...eration_representation_receipt_contract.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 66e8076260..618eddbb29 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 139, "phase": "iteration_start", "last_beat": "2026-08-21T14:24:15Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 140, "phase": "iteration_start", "last_beat": "2026-08-21T14:43:54Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ca84e4b49d..07e43e050f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16230,3 +16230,4 @@ code |
+ | 2026-08-21 13:59 UTC | Plan milestone 2026.08.559 | OK | 5 tasks proposed |
+ | 2026-08-21 14:01 UTC | Milestone 2026.08.559 activated | OK | 5 tasks queued |
+ | 2026-08-21 14:22 UTC | V559 latent-energy SOTA ingestion and method mappi | OK | 90 passed, 1 warning in 11.42s |
++| 2026-08-21 14:41 UTC | Non-generation representation receipt contract | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e8da4eac0a..004aab1ecb 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1729981, "iteration": 139, "phase": "iteration_start", "started_at": "2026-08-21T14:24:15Z"}
+\ No newline at end of file
++{"pid": 1729981, "iteration": 140, "phase": "iteration_start", "started_at": "2026-08-21T14:43:54Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6484_non_generation_representation_receipt_contract.json b/results/experiment_6484_non_generation_representation_receipt_contract.json
+index bd56f58d38..8ff5c31297 100644
+--- a/results/experiment_6484_non_generation_representation_receipt_contract.json
++++ b/results/experiment_6484_non_generation_representation_receipt_contract.json
+@@ -44706,5 +44706,18 @@
+       }
+     ]
+   },
+-  "verifier_is_oracle": true
+-}
++  "verifier_is_oracle": true,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.3206436187028885 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

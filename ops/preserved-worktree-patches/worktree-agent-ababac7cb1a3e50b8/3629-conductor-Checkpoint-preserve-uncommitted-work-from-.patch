@@ -1,0 +1,43 @@
+From 3d19cf2f6711fbad4b5f729a38ff201a4d4fccda Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 12:39:16 -0400
+Subject: [PATCH 03629/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 464643ae67..884f2bec91 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 43, "phase": "iteration_start", "last_beat": "2026-06-23T16:22:50Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 44, "phase": "iteration_start", "last_beat": "2026-06-23T16:39:14Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a261c3e10f..b576a25934 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9123,3 +9123,4 @@ c |
+ | 2026-06-23 15:53 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- KEEP THE PACKAG | OK | 87 passed, 1 warning in 5.71s |
+ | 2026-06-23 16:07 UTC | PHASE A5 (ARC NORTH STAR; SELF-LEARNING + REUSE; o | OK | 109 passed, 1 warning in 7.50s |
+ | 2026-06-23 16:20 UTC | PHASE A6 (ARC NORTH STAR; operator MANDATORY; INTE | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
++| 2026-06-23 16:37 UTC | PHASE B1 (RESERVED INFRA; co-headline metric) -- a | OK | 87 passed, 1 warning in 5.02s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 44f36493a7..07e97c1dac 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 43, "phase": "iteration_start", "started_at": "2026-06-23T16:22:50Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 44, "phase": "iteration_start", "started_at": "2026-06-23T16:39:14Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,37 @@
+From 52777ea90c5a1706020e144b99014f340c5c7c0d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 04:29:04 -0400
+Subject: [PATCH 11167/11171] docs(arc): seal final reconciliation receipt
+
+---
+ .../local-serving-validation-transcript-2026-09-05.json   | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/docs/research-notes/local-serving-validation-transcript-2026-09-05.json b/docs/research-notes/local-serving-validation-transcript-2026-09-05.json
+index 8fb2801b3a..a19411bee0 100644
+--- a/docs/research-notes/local-serving-validation-transcript-2026-09-05.json
++++ b/docs/research-notes/local-serving-validation-transcript-2026-09-05.json
+@@ -735,9 +735,9 @@
+       "truncated": false
+     },
+     "reconciliation.log": {
+-      "sha256": "dac144923337348157c3617d8f798d70ab5eadb3f86ee690dba0d984afeaded2",
+-      "bytes": 594,
+-      "output": "Checking documentation freshness...\nDocumentation is fresh.\nChecking spec-test traceability...\nRECONCILE: Spec coverage: some tests lack REQ-*/SCENARIO-* references\n  Run: .venv/bin/python scripts/check_spec_coverage.py\nChecking changed files for spec coverage...\nRECONCILE: Source files changed but no documentation updated\n  Per the repository workflow: update ops/changelog.md and ops/status.md after changes\nChecking spec implementation status...\nChecking research roadmap consistency...\n\nReconciliation: 2 issue(s) found.\nFix these before reporting work as done (per repository workflow).\n",
++      "sha256": "d045a995463afff6c9e33210b546f918987b2603a07fc3ee8f457662cc040932",
++      "bytes": 446,
++      "output": "Checking documentation freshness...\nDocumentation is fresh.\nChecking spec-test traceability...\nRECONCILE: Spec coverage: some tests lack REQ-*/SCENARIO-* references\n  Run: .venv/bin/python scripts/check_spec_coverage.py\nChecking changed files for spec coverage...\nChecking spec implementation status...\nChecking research roadmap consistency...\n\nReconciliation: 1 issue(s) found.\nFix these before reporting work as done (per repository workflow).\n",
+       "truncated": false
+     },
+     "environment-smoke.log": {
+@@ -1585,6 +1585,6 @@
+     "spec_global": "PYTHONPATH=/home/ianblenke/carnot-wt-kv/python .venv/bin/python scripts/check_spec_coverage.py",
+     "spec_changed": "PYTHONPATH=/home/ianblenke/carnot-wt-kv/python .venv/bin/python scripts/check_spec_coverage.py tests/python/test_arc_tool_grammar_transport.py",
+     "orphan": "PYTHONPATH=/home/ianblenke/carnot-wt-kv/python .venv/bin/python scripts/arc_orphan_solver_lint.py",
+-    "reconciliation": "bash scripts/validate-reconciliation.sh"
++    "reconciliation": "PYTHONPATH=/home/ianblenke/carnot-wt-kv/python bash scripts/validate-reconciliation.sh"
+   }
+ }
+-- 
+2.55.0
+

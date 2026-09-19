@@ -1,0 +1,41 @@
+From ef94b6773d9dd204873315c092857f594902a7bc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 03:59:14 -0400
+Subject: [PATCH 00787/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20ACCURACY=20axis=20=E2=80=94=20MOAT=20SCISSOR=20on=20the=20?=
+ =?UTF-8?q?ROBUST=20harness=20(north-star=20=C2=A75=20verifier-earns-its-p?=
+ =?UTF-8?q?lace;=20finally=20unblocked):=20route=20the=20exp3894=20TESTED?=
+ =?UTF-8?q?=20reasoner=20self-verify=20through=20the=20exp3915=20robust=20?=
+ =?UTF-8?q?gguf=5Finference=20harness=20(fixes=20the=20blocked=5Fllama=5Fc?=
+ =?UTF-8?q?pp=5Finference=5Ffailed=20that=20blocked=20exp3904=203x);=20reu?=
+ =?UTF-8?q?se=20the=20exp3884=20in-distribution=20corpus;=20DECOUPLE=20the?=
+ =?UTF-8?q?=20harness-validity=20control=20(=3D=20exp3894=20fixture=20AURO?=
+ =?UTF-8?q?C>0.6,=20already=200.917)=20from=20the=20in-distribution=20reas?=
+ =?UTF-8?q?oner=20AUROC=20(a=20reported=20FINDING=20corroborating=20the=20?=
+ =?UTF-8?q?Self-Correction=20Illusion,=20arXiv:2606.05976);=20run=20BOTH?=
+ =?UTF-8?q?=20a=20weak=20and=20a=20STRONG=20self-verify=20arm=20(few-shot?=
+ =?UTF-8?q?=20+=20structured=20per-step,=20arXiv:2602.07594).=20Adjudicate?=
+ =?UTF-8?q?=20MOAT=5FSURVIVES=20on=20residual=5Fcatch=5Fci95.low>0.5=20AND?=
+ =?UTF-8?q?=20overlap<0.6=20across=20BOTH=20arms.=20Disk-reads=20exp3915+e?=
+ =?UTF-8?q?xp3894+exp3884=20(no=20hard=20gate).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index ef0137f207..73c46b3abb 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8702,3 +8702,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-07: ACCURACY axis — MOAT SCISSOR RE-GATED (north-star §5 verifier-earns-its-place): reuse the exp3894 TESTED reasoner harness + the exp3884 in-distribution corpus; DECOUPLE the harness-validity control (= exp3894 fixture AUROC > 0.6, already 0.917) from the in-distribution reasoner AUROC (now a reported FINDING corroborating the Self-Correction Illusion, arXiv:2606.05976); ADD a STRONG self-verify adversarial arm (few-shot + structured per-step, arXiv:2602.07594). Adjudicate MOAT_SURVIVES on residual_catch_ci95.low>0.5 AND overlap<0.6 across BOTH the weak and strong arms. Finally answers the o1-subsumption durability question. Disk-reads exp3894+exp3884 (no hard gate). (⚠️ Blocked) — honest_verdict=blocked_llama_cpp_inference_failed; results/experiment_3904_moat_scissor_regated.json
+ - 2026-06-07: Archive .361 -> activate .362; GREEN-GATE de-risk + BREAK THE .361 POISON-TEST CASCADE: quarantine/fix tests/python/test_cost_instrumented_verification.py (it asserts duration_s>=60 on a 10-ITEM fixture that legitimately runs in ~36s -> it fails the conductor PRE-TEST gate and SKIP-cascaded exp3906..capstone in .361). Move the 60s live-floor off the unit-test fixture (assert it ONLY on the full-corpus science artifact). Assert research-complete.yaml parses (colon-poison guard), the core pretest subset is green AFTER the fix, and the .361-built modules import. Record the .361 wash root causes (poison-test cascade + blocked_llama_cpp_inference_failed). (✅ Complete) — honest_verdict=complete: archived_v361_wash_v362_active_poison_test_quarantined_import_ok_codex_backend_recommended; results/experiment_3914_archive_v361_activate_v362.json
+ - 2026-06-07: BUILD + UNIT-TEST a ROBUST gguf_inference harness (root-cause fix for the recurring blocked_llama_cpp_inference_failed): implement `load_gguf_generator(prefer_order=[...]) -> generator` that (a) probes cached headline-eligible GGUFs in a documented FALLBACK ORDER (gemma-4-26B-A4B-it -> Qwen3.6-35B-A3B -> gemma-4-31B-it), (b) runs a 1-token GENERATE smoke before returning, (c) on OOM/runtime failure RETRIES with reduced n_gpu_layers then the next model, (d) returns the model actually used + its load/smoke timing. SHIP a unit test asserting a generator loads, the smoke generate returns >0 tokens, and the fallback metadata is recorded. ALL .362 live-model tasks import this. Deliverable = the module + a PASSING test. (⚠️ Blocked) — honest_verdict=complete: gguf_inference_harness_READY_modelgemma-4-26B-A4B-it_ngl-1_smoke1_live_path_unblocked; results/experiment_3915_robust_gguf_inference_harness.json
++- 2026-06-07: ACCURACY axis — MOAT SCISSOR on the ROBUST harness (north-star §5 verifier-earns-its-place; finally unblocked): route the exp3894 TESTED reasoner self-verify through the exp3915 robust gguf_inference harness (fixes the blocked_llama_cpp_inference_failed that blocked exp3904 3x); reuse the exp3884 in-distribution corpus; DECOUPLE the harness-validity control (= exp3894 fixture AUROC>0.6, already 0.917) from the in-distribution reasoner AUROC (a reported FINDING corroborating the Self-Correction Illusion, arXiv:2606.05976); run BOTH a weak and a STRONG self-verify arm (few-shot + structured per-step, arXiv:2602.07594). Adjudicate MOAT_SURVIVES on residual_catch_ci95.low>0.5 AND overlap<0.6 across BOTH arms. Disk-reads exp3915+exp3894+exp3884 (no hard gate). (✅ Complete) — honest_verdict=complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70; results/experiment_3916_moat_scissor_accuracy.json
+-- 
+2.55.0
+

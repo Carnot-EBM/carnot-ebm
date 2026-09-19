@@ -1,0 +1,439 @@
+From b78236f4498153135487346cc6566f1b8b0c4039 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 18:05:03 -0400
+Subject: [PATCH 04519/11362] [outer-loop] Build GAP-4890 single-positive
+ goal-energy operator: clears the win-exemplar floor; surfaces the deeper
+ goal-REPRESENTATION ceiling (GAP-4891)
+
+Operator "build it next" -> the GAP-4890 unblock for within-game L2->L3 deepening.
+
+NEW OPERATOR: induce_goal_energy_single_positive(win_grid, non_win_grids) in
+arc_agi3_goal_induction.py. The >=2-win floor in induce_goal_energy was conservatism, not
+necessity (H1/H3/H4 only use the win value + the non-win distribution). The new operator
+fires from ONE win iff it is STRICTLY separated from every negative on a feature (the
+anti-mis-induction guard, just with 1 positive), else returns None. Same energy(grid)->float
+contract, drops into the graph_explore_solve_v2 goal_energy hook. 4 unit tests
+(test_arc_single_positive_goal_energy.py): fires-where-2win-floor-blocks, none-when-no-
+separation, colour-reduction, empty-inputs. All pass; adversarial_verify clean.
+
+REAL-DATA RESULT (the layered finding): the operator CLEARS the win-exemplar floor (it now
+attempts induction from the lone L_k-completion exemplar), but on ALL 4 grid-based stalled
+games (cd82, sk48, sp80, cn04) it returns None -- NO object/colour-COUNT feature separates
+the win from non-wins. These games' goals are SPATIAL/VALUE/ORDER (region-fill, color-reorder,
+placement, alignment), not count. So the binding ceiling on multi-level deepening is NOT the
+win-exemplar floor (now addressed) but the goal-induction REPRESENTATION -> logged as GAP-4891
+(high): a richer goal-feature family (cell-value/mask match, spatial alignment, order) is the
+next unblock; the change-location prior supplies the mask, the gap is the value/spatial
+predicate over it. GAP-4890 status -> building (floor addressed); evidence in
+results/arc_within_game_l3_self_induction_{cd82,sk48,sp80,cn04}_stage1.json.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/verifier_gaps.md                          | 12 ++-
+ .../carnot/agentic/arc_agi3_goal_induction.py | 47 ++++++++++++
+ ...in_game_l3_self_induction_cd82_stage1.json | 12 +--
+ ...in_game_l3_self_induction_cn04_stage1.json | 31 ++++++++
+ ...in_game_l3_self_induction_sk48_stage1.json | 31 ++++++++
+ ...in_game_l3_self_induction_sp80_stage1.json | 31 ++++++++
+ .../arc_within_game_l3_self_induction_cd82.py | 38 ++++++----
+ .../test_arc_single_positive_goal_energy.py   | 74 +++++++++++++++++++
+ 8 files changed, 256 insertions(+), 20 deletions(-)
+ create mode 100644 results/arc_within_game_l3_self_induction_cn04_stage1.json
+ create mode 100644 results/arc_within_game_l3_self_induction_sk48_stage1.json
+ create mode 100644 results/arc_within_game_l3_self_induction_sp80_stage1.json
+ create mode 100644 tests/python/test_arc_single_positive_goal_energy.py
+
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 531811dcaf..800ef5fc29 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -2509,9 +2509,17 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several
+ - EXP4727 active_probe_disambiguation bp35 budget_insufficient: active probing did not bank a new reproduced level. active_level=0, no_probe_level=0, probe_actions=0, posterior_entropy_reduction=0.000000. Needed verifier/probe gap: an oracle-distinct discriminator whose transition buckets separate the true mechanic at logical-grid resolution and still imply a level-completion policy.
+ 
+ ### GAP-4890: within-game L2->L3 goal re-induction from a SINGLE win exemplar
+-- status: open
+-- evidence: results/arc_within_game_l3_self_induction_cd82_stage1.json (2026-06-27, outer-loop). cd82 reached the solved frontier (level sequence over the 20-label adapter trajectory = [0,0,0,0,0,1,1,...,1], exactly ONE level-completion). induce_goal_energy (arc_agi3_goal_induction.py:61) requires >=2 win grids and returned None (n_win=1) -> goal re-induction could not even FIRE at the L2->L3 transition. honest_verdict complete_self_induction_bounded_no_l3_win_exemplar_floor_n_win_1; adversarial_verify clean.
++- status: building (FLOOR ADDRESSED 2026-06-27 -- induce_goal_energy_single_positive shipped + unit-tested: arc_agi3_goal_induction.py + tests/python/test_arc_single_positive_goal_energy.py; fires from ONE win iff strictly separated from negatives, drops into the graph_explore_solve_v2 goal_energy hook. Residual binding ceiling is NOT the floor but the goal-REPRESENTATION -> GAP-4891.)
++- evidence: results/arc_within_game_l3_self_induction_cd82_stage1.json (2026-06-27, outer-loop). cd82 reached the solved frontier (level sequence over the 20-label adapter trajectory = [0,0,0,0,0,1,1,...,1], exactly ONE level-completion). induce_goal_energy (arc_agi3_goal_induction.py:61) requires >=2 win grids and returned None (n_win=1) -> goal re-induction could not even FIRE at the L2->L3 transition. The new single-positive operator clears that floor (it fires from 1 win); see GAP-4891 for why cd82 still does not deepen.
+ - failure mode: 15 of 24 reproduced games stall at exactly L2 NOT because of a search/perception failure but because the goal-induction operator structurally cannot bootstrap: at the solved frontier the live agent has only ONE level-completion exemplar, below induce_goal_energy's >=2 floor. So the next level's goal predicate is never induced, and graph_explore_solve_v2 degrades to blind BFS with no goal bias.
+ - missing discriminator: a goal-induction operator that derives a graded next-level goal-energy from a SINGLE win exemplar + many self-played non-win negatives (or that harvests multiple positives per level: multiple distinct solution paths to the same completion, near-win/sub-goal frames, or cross-game prior pseudo-positives of the same mechanic_class).
+ - candidate design: (a) single-positive energy via contrastive ranking of the one win grid vs the negative distribution (vs the current >=2-positive object/color hypotheses); (b) positive-harvesting wrapper that re-solves a banked level via N distinct paths to collect N completion grids before inducing; (c) mechanic_class-conditioned prior that seeds positives from already-solved same-class games. Reuse the existing graph_explore_solve_v2 goal_energy hook once an energy can be produced.
+ - priority: high (it is the single binding ceiling on multi-level deepening = the only lever that grows reproducible_total_levels via live self-discovery; 15 games gated on it)
++
++### GAP-4891: goal-induction REPRESENTATION beyond object/colour COUNTS (spatial/value/order goals)
++- status: open
++- evidence: results/arc_within_game_l3_self_induction_{cd82,sk48,sp80,cn04}_stage1.json (2026-06-27, outer-loop). With the GAP-4890 win-exemplar floor cleared (induce_goal_energy_single_positive fires from 1 win), ALL 4 grid-based stalled games returned None with verdict complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling: NO object-count / unique-colour-count feature strictly separates the lone level-completion win from the self-played non-win grids. adversarial_verify clean (4/4).
++- failure mode: the goal-induction operator (both the >=2-win and the new single-positive variants) only has object-COUNT and colour-COUNT hypotheses (H1-H5). The stalled games' goals are SPATIAL/VALUE/ORDER, not count: cd82 palette_region_fill (canvas==target under a mask -> same counts), sk48 chain_color_reorder (same colours, reordered), sp80 spill_splitter (placement), cn04 marker_pair_shape_alignment (alignment). So the win and non-win states have identical object/colour counts and the energy reads ~0 on both -> cannot induce a usable goal -> graph_explore degrades to blind BFS -> no L3. This, NOT the win-exemplar floor, is the binding ceiling on multi-level deepening for >=4 of the 15 L2-stalled games.
++- missing discriminator: a richer goal-feature family for goal-energy induction -- cell-VALUE match against an induced target/mask, spatial-pattern / alignment match, set/multiset ORDER match -- so the induced energy is 0 on the win and >0 on non-wins for value/spatial/order goals. The change-LOCATION prior (which transfers) can supply the candidate mask region; the gap is the VALUE/spatial predicate over it.
++- candidate design: extend induce_goal_energy_single_positive with (a) a target-mask-match energy (Hamming distance of changed-cell VALUES vs the win exemplar over the change-location mask), (b) a permutation/order energy for reorder games, (c) an alignment energy (object-centroid relative-position match). Select among these by the same strict-separation contrastive guard already used for the count hypotheses. Then re-run the cd82/sk48/sp80/cn04 stage-1.5 probe; success = the energy separates on real grids -> proceed to the graph_explore L3 search.
++- priority: high (now THE binding ceiling on within-game deepening once the floor is cleared; >=4 of 15 L2-stalled games confirmed gated on it; growing reproducible_total_levels via live self-discovery depends on it)
+diff --git a/python/carnot/agentic/arc_agi3_goal_induction.py b/python/carnot/agentic/arc_agi3_goal_induction.py
+index 5446797d75..25f8a3cbdf 100644
+--- a/python/carnot/agentic/arc_agi3_goal_induction.py
++++ b/python/carnot/agentic/arc_agi3_goal_induction.py
+@@ -101,3 +101,50 @@ def induce_goal_energy(
+             return lambda g: float(len(disappearing.intersection(set(np.unique(g).tolist()))))
+     # H5 fallback (same as the predicate's fallback, graded)
+     return lambda g: float(max(0, len(objects(g)) - max_win_objs))
++
++
++def induce_goal_energy_single_positive(
++    win_grid: Optional[np.ndarray], non_win_grids: List[np.ndarray]
++) -> Optional[Callable[[np.ndarray], float]]:
++    """Single-WIN-exemplar goal-energy (GAP-4890, 2026-06-27 — the within-game L2->L3 deepening unblock).
++
++    WHY: ``induce_goal_energy`` returns None with <2 win grids, but at a game's solved frontier the agent
++    has only ONE level-completion exemplar (verified empirically on cd82:
++    results/arc_within_game_l3_self_induction_cd82_stage1.json). The >=2 floor was a conservatism guard
++    against single-example mis-induction, NOT a mathematical necessity — H1/H3/H4 already use only the win's
++    feature value plus the NON-WIN distribution. This relaxes the floor to ONE win while KEEPING the
++    anti-mis-induction guard a different way: a hypothesis fires ONLY when the lone win is STRICTLY
++    separated from EVERY negative on that feature (so a single accidental win cannot mis-induce a goal that
++    the negatives also satisfy). Returns ``energy(grid) -> float >= 0`` (0 == goal satisfied), or None when
++    no feature separates the win from the negatives — an HONEST "cannot induce", not a fabricated goal.
++
++    Contract matches ``induce_goal_energy`` so it drops into the graph_explore_solve_v2 ``goal_energy`` hook.
++    Per the goal-induction doctrine the CALLER MUST still run the BFS-only ablation: the energy only counts
++    if it reaches the win faster than navigation-only."""
++    if win_grid is None or not non_win_grids:
++        return None
++    w_obj = len(objects(win_grid))
++    n_obj = [len(objects(g)) for g in non_win_grids]
++    # H1: win has strictly FEWER objects than every negative -> goal = reduce objects to the win's count.
++    if w_obj < min(n_obj):
++        return lambda g: float(max(0, len(objects(g)) - w_obj))
++    # H2: win has strictly MORE objects than every negative -> goal = grow objects to the win's count.
++    if w_obj > max(n_obj):
++        return lambda g: float(max(0, w_obj - len(objects(g))))
++    w_col = len(np.unique(win_grid))
++    n_col = [len(np.unique(g)) for g in non_win_grids]
++    # H3: win has strictly FEWER unique colours than every negative -> reduce colours to the win's count.
++    if w_col < min(n_col):
++        return lambda g: float(max(0, len(np.unique(g)) - w_col))
++    # H4: colours present in EVERY negative but ABSENT from the win -> goal = make them disappear.
++    common_non_win = set.intersection(*[set(np.unique(g).tolist()) for g in non_win_grids])
++    win_cols = set(np.unique(win_grid).tolist())
++    disappearing = common_non_win - win_cols
++    if disappearing:
++        return lambda g: float(len(disappearing.intersection(set(np.unique(g).tolist()))))
++    # H5: exact object-count match, but ONLY if the win's count never appears among the negatives
++    # (otherwise the energy would read 0 on a negative -> mis-induction).
++    if w_obj not in n_obj:
++        return lambda g: float(abs(len(objects(g)) - w_obj))
++    # No feature strictly separates the single win from the negatives -> cannot induce honestly.
++    return None
+diff --git a/results/arc_within_game_l3_self_induction_cd82_stage1.json b/results/arc_within_game_l3_self_induction_cd82_stage1.json
+index aaa3e13e27..dfb90f1ed4 100644
+--- a/results/arc_within_game_l3_self_induction_cd82_stage1.json
++++ b/results/arc_within_game_l3_self_induction_cd82_stage1.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
+   "schema": "carnot.arc_within_game_l3_self_induction.v1",
+-  "honest_verdict": "complete_self_induction_bounded_no_l3_win_exemplar_floor_n_win_1",
++  "honest_verdict": "complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling_n_win_1",
+   "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
+   "inference_substrate": "verifier_ensemble_against_cached_candidates",
+   "verifier_is_oracle": false,
+@@ -9,9 +9,11 @@
+   "level_reached": 2,
+   "n_win_grids": 1,
+   "n_nonwin_grids": 20,
+-  "induce_goal_energy_fired": false,
++  "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++  "two_win_floor_blocked_old_operator": true,
++  "single_positive_operator_fired": false,
+   "energy_separation": null,
+-  "stage": 1,
++  "stage": 1.5,
+   "solve_provenance": "live_agent_self_discovery",
+   "used_env_source": false,
+   "read_game_source": false,
+@@ -24,6 +26,6 @@
+     "arc_solve_registry.yaml cd82 dead_end"
+   ],
+   "random_seed": 20260627,
+-  "duration_s": 2.36,
+-  "reproducibility_checksum": "sha256:2f3380c87a6a47ebae060b617fc6500900fea358cc436e9d41c8ff7ea4b16c9e"
++  "duration_s": 2.47,
++  "reproducibility_checksum": "sha256:b3994dc218022f7d9ac403858eee8795570ea33721c4852162520d17d0b1e86b"
+ }
+diff --git a/results/arc_within_game_l3_self_induction_cn04_stage1.json b/results/arc_within_game_l3_self_induction_cn04_stage1.json
+new file mode 100644
+index 0000000000..709fe1962b
+--- /dev/null
++++ b/results/arc_within_game_l3_self_induction_cn04_stage1.json
+@@ -0,0 +1,31 @@
++{
++  "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
++  "schema": "carnot.arc_within_game_l3_self_induction.v1",
++  "honest_verdict": "complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling_n_win_1",
++  "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "verifier_is_oracle": false,
++  "game": "cn04",
++  "level_reached": 2,
++  "n_win_grids": 1,
++  "n_nonwin_grids": 43,
++  "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++  "two_win_floor_blocked_old_operator": true,
++  "single_positive_operator_fired": false,
++  "energy_separation": null,
++  "stage": 1.5,
++  "solve_provenance": "live_agent_self_discovery",
++  "used_env_source": false,
++  "read_game_source": false,
++  "offline_ground_truth_bfs": false,
++  "hand_calibrated_per_game": false,
++  "interpretation": "STAGE 1 gate before the graph_explore L3 search. induce_fired=False -> win-exemplar floor (<2 self-played win grids at the level transition). separates=False -> goal-induction REPRESENTATION ceiling: object/color hypotheses can't express cd82's mask-match goal, OR L1/L2 win exemplars don't determine L3's different target. Either is a NAMED missing-verifier gap (not a fabrication). separates=True -> proceed to STAGE 2 (graph_explore_solve_v2 to L3).",
++  "missing_verifier_gaps": "within-game L2->L3 goal re-induction: induce_goal_energy needs >=2 win grids and only object/color hypotheses; cd82's per-level target-mask-match goal needs a goal-induction operator that (a) works from few win exemplars and (b) expresses canvas==target-under-mask, derived live.",
++  "cites_upstream": [
++    "wf_b77c3b40-f11 design",
++    "arc_solve_registry.yaml cd82 dead_end"
++  ],
++  "random_seed": 20260627,
++  "duration_s": 3.65,
++  "reproducibility_checksum": "sha256:5dd1dfd05edb7fa3981190eba282b546dd4944e48867a26d0b417d2d52f5ba3b"
++}
+diff --git a/results/arc_within_game_l3_self_induction_sk48_stage1.json b/results/arc_within_game_l3_self_induction_sk48_stage1.json
+new file mode 100644
+index 0000000000..063a43104d
+--- /dev/null
++++ b/results/arc_within_game_l3_self_induction_sk48_stage1.json
+@@ -0,0 +1,31 @@
++{
++  "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
++  "schema": "carnot.arc_within_game_l3_self_induction.v1",
++  "honest_verdict": "complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling_n_win_1",
++  "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "verifier_is_oracle": false,
++  "game": "sk48",
++  "level_reached": 2,
++  "n_win_grids": 1,
++  "n_nonwin_grids": 39,
++  "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++  "two_win_floor_blocked_old_operator": true,
++  "single_positive_operator_fired": false,
++  "energy_separation": null,
++  "stage": 1.5,
++  "solve_provenance": "live_agent_self_discovery",
++  "used_env_source": false,
++  "read_game_source": false,
++  "offline_ground_truth_bfs": false,
++  "hand_calibrated_per_game": false,
++  "interpretation": "STAGE 1 gate before the graph_explore L3 search. induce_fired=False -> win-exemplar floor (<2 self-played win grids at the level transition). separates=False -> goal-induction REPRESENTATION ceiling: object/color hypotheses can't express cd82's mask-match goal, OR L1/L2 win exemplars don't determine L3's different target. Either is a NAMED missing-verifier gap (not a fabrication). separates=True -> proceed to STAGE 2 (graph_explore_solve_v2 to L3).",
++  "missing_verifier_gaps": "within-game L2->L3 goal re-induction: induce_goal_energy needs >=2 win grids and only object/color hypotheses; cd82's per-level target-mask-match goal needs a goal-induction operator that (a) works from few win exemplars and (b) expresses canvas==target-under-mask, derived live.",
++  "cites_upstream": [
++    "wf_b77c3b40-f11 design",
++    "arc_solve_registry.yaml cd82 dead_end"
++  ],
++  "random_seed": 20260627,
++  "duration_s": 6.43,
++  "reproducibility_checksum": "sha256:f0c622445e5fdfdf34e900492ae23abd7b25fb173b41d880e476b5ae080b64c3"
++}
+diff --git a/results/arc_within_game_l3_self_induction_sp80_stage1.json b/results/arc_within_game_l3_self_induction_sp80_stage1.json
+new file mode 100644
+index 0000000000..a72399cf75
+--- /dev/null
++++ b/results/arc_within_game_l3_self_induction_sp80_stage1.json
+@@ -0,0 +1,31 @@
++{
++  "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
++  "schema": "carnot.arc_within_game_l3_self_induction.v1",
++  "honest_verdict": "complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling_n_win_1",
++  "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "verifier_is_oracle": false,
++  "game": "sp80",
++  "level_reached": 2,
++  "n_win_grids": 1,
++  "n_nonwin_grids": 33,
++  "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++  "two_win_floor_blocked_old_operator": true,
++  "single_positive_operator_fired": false,
++  "energy_separation": null,
++  "stage": 1.5,
++  "solve_provenance": "live_agent_self_discovery",
++  "used_env_source": false,
++  "read_game_source": false,
++  "offline_ground_truth_bfs": false,
++  "hand_calibrated_per_game": false,
++  "interpretation": "STAGE 1 gate before the graph_explore L3 search. induce_fired=False -> win-exemplar floor (<2 self-played win grids at the level transition). separates=False -> goal-induction REPRESENTATION ceiling: object/color hypotheses can't express cd82's mask-match goal, OR L1/L2 win exemplars don't determine L3's different target. Either is a NAMED missing-verifier gap (not a fabrication). separates=True -> proceed to STAGE 2 (graph_explore_solve_v2 to L3).",
++  "missing_verifier_gaps": "within-game L2->L3 goal re-induction: induce_goal_energy needs >=2 win grids and only object/color hypotheses; cd82's per-level target-mask-match goal needs a goal-induction operator that (a) works from few win exemplars and (b) expresses canvas==target-under-mask, derived live.",
++  "cites_upstream": [
++    "wf_b77c3b40-f11 design",
++    "arc_solve_registry.yaml cd82 dead_end"
++  ],
++  "random_seed": 20260627,
++  "duration_s": 3.29,
++  "reproducibility_checksum": "sha256:096be84b8970a41856a76eadc59fee4ef11452bd41e917f4c4a6b0d29a255ad5"
++}
+diff --git a/scripts/experiments/arc_within_game_l3_self_induction_cd82.py b/scripts/experiments/arc_within_game_l3_self_induction_cd82.py
+index e5689d95b0..7933516291 100644
+--- a/scripts/experiments/arc_within_game_l3_self_induction_cd82.py
++++ b/scripts/experiments/arc_within_game_l3_self_induction_cd82.py
+@@ -34,10 +34,13 @@ sys.path.insert(0, str(REPO / "scripts"))
+ 
+ from carnot.agentic import arc_game_adapters as adapters  # noqa: E402
+ from carnot.agentic import arc_solver_kit as kit  # noqa: E402
+-from carnot.agentic.arc_agi3_goal_induction import induce_goal_energy  # noqa: E402
++from carnot.agentic.arc_agi3_goal_induction import (  # noqa: E402
++    induce_goal_energy,
++    induce_goal_energy_single_positive,
++)
+ from carnot.agentic.arc_agi3_world_model import grid_of  # noqa: E402
+ 
+-GAME = "cd82"
++GAME = sys.argv[1] if len(sys.argv) > 1 else "cd82"
+ SEED = 20260627
+ 
+ 
+@@ -103,9 +106,12 @@ def main() -> int:
+     win_grids = _uniq(win_grids)
+     non_win_grids = _uniq(non_win_grids)
+ 
+-    # STAGE 1 test: does goal induction fire, and does it separate win from non-win?
+-    energy = induce_goal_energy(win_grids, non_win_grids) if len(win_grids) >= 1 else None
++    # STAGE 1.5 (GAP-4890): the OLD operator needs >=2 wins (floor); the NEW single-positive operator
++    # fires from ONE win iff it is strictly separated from the negatives. Test BOTH on cd82's real grids.
++    energy_two_win = induce_goal_energy(win_grids, non_win_grids) if len(win_grids) >= 2 else None
++    energy = induce_goal_energy_single_positive(win_grids[0], non_win_grids) if win_grids else None
+     induce_fired = energy is not None
++    two_win_floor_blocked = energy_two_win is None and len(win_grids) < 2
+     sep = None
+     if induce_fired:
+         we = [float(energy(g)) for g in win_grids]
+@@ -124,13 +130,16 @@ def main() -> int:
+     if level_reached < 2:
+         verdict = f"complete_self_induction_stage1_could_not_reach_l2_reached_{level_reached}"
+     elif not induce_fired:
+-        verdict = f"complete_self_induction_bounded_no_l3_win_exemplar_floor_n_win_{len(win_grids)}"
++        # the single-positive operator clears the win-exemplar FLOOR; None now means the deeper ceiling:
++        # object/colour features cannot separate the lone win from the negatives (representation ceiling).
++        verdict = (f"complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling"
++                   f"_n_win_{len(win_grids)}")
+     elif not sep["separates"]:
+-        verdict = (f"complete_self_induction_bounded_no_l3_goal_representation_ceiling"
++        verdict = (f"complete_self_induction_gap4890_energy_does_not_separate_on_real_grids"
+                    f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}")
+     else:
+-        verdict = (f"complete_self_induction_stage1_goal_energy_separates_proceed_to_stage2_search"
+-                   f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}")
++        verdict = (f"success_gap4890_single_positive_goal_energy_fires_and_separates_from_one_win"
++                   f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}_proceed_to_stage2_search")
+ 
+     art = {
+         "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
+@@ -144,9 +153,11 @@ def main() -> int:
+         "level_reached": level_reached,
+         "n_win_grids": len(win_grids),
+         "n_nonwin_grids": len(non_win_grids),
+-        "induce_goal_energy_fired": induce_fired,
++        "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
++        "two_win_floor_blocked_old_operator": two_win_floor_blocked,
++        "single_positive_operator_fired": induce_fired,
+         "energy_separation": sep,
+-        "stage": 1,
++        "stage": 1.5,
+         "solve_provenance": "live_agent_self_discovery",
+         "used_env_source": False, "read_game_source": False,
+         "offline_ground_truth_bfs": False, "hand_calibrated_per_game": False,
+@@ -169,10 +180,11 @@ def main() -> int:
+     payload = dict(art); payload["reproducibility_checksum"] = ""
+     art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
+         json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
+-    (REPO / "results" / "arc_within_game_l3_self_induction_cd82_stage1.json").write_text(json.dumps(art, indent=2) + "\n")
++    out = REPO / "results" / f"arc_within_game_l3_self_induction_{GAME}_stage1.json"
++    out.write_text(json.dumps(art, indent=2) + "\n")
+     print("\n=== VERDICT:", verdict)
+-    print(f"level_reached={level_reached} n_win={len(win_grids)} n_nonwin={len(non_win_grids)} induce_fired={induce_fired} sep={sep}")
+-    print("-> results/arc_within_game_l3_self_induction_cd82_stage1.json")
++    print(f"[{GAME}] level_reached={level_reached} n_win={len(win_grids)} n_nonwin={len(non_win_grids)} induce_fired={induce_fired} sep={sep}")
++    print(f"-> {out}")
+     return 0
+ 
+ 
+diff --git a/tests/python/test_arc_single_positive_goal_energy.py b/tests/python/test_arc_single_positive_goal_energy.py
+new file mode 100644
+index 0000000000..0a0bd7c3cd
+--- /dev/null
++++ b/tests/python/test_arc_single_positive_goal_energy.py
+@@ -0,0 +1,74 @@
++"""Tests for the single-WIN-exemplar goal-energy operator (GAP-4890).
++
++The within-game L2->L3 deepening unblock: at a game's solved frontier the agent has only ONE
++level-completion exemplar, below induce_goal_energy's >=2 floor. induce_goal_energy_single_positive
++fires from ONE win grid IFF the win is strictly separated from every negative (anti-mis-induction),
++and returns None when nothing separates. Spec coverage: GAP-4890 (ops/verifier_gaps.md).
++"""
++
++from __future__ import annotations
++
++import numpy as np
++
++from carnot.agentic.arc_agi3_goal_induction import (
++    induce_goal_energy,
++    induce_goal_energy_single_positive,
++)
++
++
++def _grid_with_objects(n: int, color: int = 1, size: int = 7) -> np.ndarray:
++    """Background-0 grid with n separated single-cell objects (4-neighbour isolated)."""
++    g = np.zeros((size, size), dtype=int)
++    placed, r, c = 0, 0, 0
++    while placed < n:
++        g[r, c] = color
++        placed += 1
++        c += 2  # gap of 1 keeps cells in separate connected components
++        if c >= size:
++            c = 0
++            r += 2
++            if r >= size:
++                break
++    return g
++
++
++def test_single_positive_fires_where_two_win_floor_blocks():
++    """GAP-4890 core: 1 win grid -> induce_goal_energy returns None, single-positive FIRES and separates."""
++    win = _grid_with_objects(1)            # the lone level-completion exemplar (1 object)
++    negs = [_grid_with_objects(3), _grid_with_objects(4)]  # self-played non-win states (more objects)
++
++    # the existing operator is blocked by the >=2 win floor (the exact stall this closes)
++    assert induce_goal_energy([win], negs) is None
++
++    energy = induce_goal_energy_single_positive(win, negs)
++    assert energy is not None, "single-positive operator must fire from one separated win"
++    # H1: goal = reduce objects to the win's count -> 0 on the win, >0 on every negative
++    assert energy(win) == 0.0
++    assert all(energy(g) > 0.0 for g in negs), "induced energy must separate win from non-wins"
++
++
++def test_single_positive_returns_none_when_no_feature_separates():
++    """Anti-mis-induction guard: if the lone win is indistinguishable from the negatives, return None."""
++    win = _grid_with_objects(3, color=1)
++    negs = [_grid_with_objects(3, color=1)]  # identical object-count AND colours
++    assert induce_goal_energy_single_positive(win, negs) is None
++
++
++def test_single_positive_colour_reduction_hypothesis():
++    """H3: a win with strictly fewer unique colours than every negative fires a colour-reduction energy."""
++    win = np.zeros((5, 5), dtype=int)
++    win[0, 0] = 1  # colours {0,1}
++    neg = np.zeros((5, 5), dtype=int)
++    neg[0, 0] = 1
++    neg[0, 2] = 2
++    neg[2, 0] = 3  # colours {0,1,2,3}, same-ish object structure but more colours
++    energy = induce_goal_energy_single_positive(win, [neg])
++    assert energy is not None
++    assert energy(win) == 0.0
++    assert energy(neg) > 0.0
++
++
++def test_single_positive_handles_empty_inputs():
++    """Defensive: no negatives or no win -> None (cannot contrast)."""
++    assert induce_goal_energy_single_positive(None, [_grid_with_objects(2)]) is None
++    assert induce_goal_energy_single_positive(_grid_with_objects(1), []) is None
+-- 
+2.55.0
+

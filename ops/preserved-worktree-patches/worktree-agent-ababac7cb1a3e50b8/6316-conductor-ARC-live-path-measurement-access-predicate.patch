@@ -1,0 +1,2578 @@
+From aac5d16ef7647031b1b4824543c355de67ef2b50 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 19:50:22 -0400
+Subject: [PATCH 06316/11362] [conductor] ARC live-path measurement-access
+ predicate induction +1 level-up attempt
+
+Automated research step by research conductor.
+Task ID: exp5450-arc-measurement-access-live-levelup-v495
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-human-replay-frame-change/spec.md     |   80 ++
+ .../papers/paper-v6/section-6-limitations.md  |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...rc_measurement_access_live_levelup_v495.py |  671 ++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |    6 +-
+ .../experiment_1038_milestone_retro_80.json   |    2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |    4 +-
+ .../experiment_1089_milestone_retro_84.json   |    2 +-
+ .../experiment_1103_milestone_retro_85.json   |    2 +-
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...riment_1911_phase4_canonical_decision.json |    2 +-
+ ...periment_1970_domino_fast_constraints.json |    4 +-
+ results/experiment_2031.json                  |    4 +-
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ..._measurement_access_live_levelup_v495.json | 1156 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...rc_measurement_access_live_levelup_v495.py |  360 +++++
+ 21 files changed, 2296 insertions(+), 26 deletions(-)
+ create mode 100644 python/carnot/experiment_5450_arc_measurement_access_live_levelup_v495.py
+ create mode 100644 results/experiment_5450_arc_measurement_access_live_levelup_v495.json
+ create mode 100644 tests/python/test_experiment_5450_arc_measurement_access_live_levelup_v495.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 3618b1c5f8..b548944ddf 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -1286,6 +1286,61 @@ Required field principles:
+ - `inference_substrate`: principle "actual live agent"
+ - `honest_verdict`: principle "terminal status; start with complete: or honest_null: or blocked:"
+ 
++### REQ-ARC-FCP-5450: Measurement-Access Live Level-Up Target Rotation
++
++Experiment 5450 SHALL write
++`results/experiment_5450_arc_measurement_access_live_levelup_v495.json` after a
++registry-prechecked bounded ARC live-path +1 level-up attempt. The workflow
++SHALL precheck all public-game frontier depths from
++`ops/arc_solve_registry.yaml` and the current `results/arc_loop_solve*.json`
++artifacts before selecting a target. It SHALL rotate away from stale recent
++no-bank targets including `cn04` L4 and repeated `re86` L3 salience attempts
++unless the selected live mechanism explicitly addresses their recorded residual
++gap. The credited mechanism SHALL use only the live agent's own runtime
++measurement access: frame-level measurements, action-effect observations,
++state-change summaries, and verifier-routed predicates induced from attempted
++transitions. It SHALL NOT read hidden game source, run offline ground-truth BFS
++as the credited path, or credit a hand per-game `GameAdapter` as the solve path.
++
++The result artifact SHALL include `solve_provenance`,
++`registry_precheck_total_levels`, `selected_game`, `selected_target_level`,
++`target_rotation_reason`, `live_attempt_count`,
++`runtime_predicates_induced`, `offline_reproduced`, `reproduced_levels`,
++`new_levels_banked`, `new_level_reproduced`, `no_offline_bfs`,
++`no_source_reading`, `no_per_game_adapter_credited`,
++`arc_new_level_banked`, `inference_substrate`, and `honest_verdict`. A
++credited level-up SHALL require
++`solve_provenance=live_agent_self_discovery`,
++`inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm`,
++`offline_reproduced=true`, `reproduced_levels>=1`,
++`new_levels_banked>=1`, `new_level_reproduced=true`,
++`arc_new_level_banked=true`, `no_offline_bfs=true`,
++`no_source_reading=true`, `no_per_game_adapter_credited=true`, a selected
++target level deeper than the registry precheck, and at least one runtime
++predicate induced from the live attempt. Otherwise the artifact SHALL report
++`honest_null:` with frontier expansions, attempted predicates, and the residual
++wall, or `blocked:` when preconditions prevent a valid attempt.
++
++Required field principles:
++
++- `solve_provenance`: principle "live_agent_self_discovery -- credited path is the live agent's own attempts."
++- `registry_precheck_total_levels`: principle "duplicate-solve prevention."
++- `selected_game`: principle "target audit."
++- `selected_target_level`: principle "target audit."
++- `target_rotation_reason`: principle "no stale rerun."
++- `live_attempt_count`: principle "live effort evidence."
++- `runtime_predicates_induced`: principle "credited mechanism evidence."
++- `offline_reproduced`: principle "official reproduction gate."
++- `reproduced_levels`: principle "level-up acceptance."
++- `new_levels_banked`: principle "north-star movement."
++- `new_level_reproduced`: principle "lint-readable solve gate."
++- `no_offline_bfs`: principle "no outer-loop solve."
++- `no_source_reading`: principle "no hidden source path."
++- `no_per_game_adapter_credited`: principle "live mechanism only."
++- `arc_new_level_banked`: principle "capstone field."
++- `inference_substrate`: principle "explicit runtime path."
++- `honest_verdict`: principle "terminal status; start with complete: or honest_null: or blocked:."
++
+ ## Scenarios
+ 
+ ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
+@@ -1743,3 +1798,28 @@ Then `offline_reproduced=false`, `reproduced_levels=0`,
+ `arc_new_level_banked=false`, and `honest_verdict` starts with `honest_null:`
+ while preserving `registry_precheck=true`, `no_offline_bfs=true`,
+ `no_per_game_adapter=true`, and `inference_substrate=live_arc_agent_runtime`.
++
++### SCENARIO-ARC-FCP-5450: Measurement-Access Rotation Avoids Stale Frontiers
++
++Given the registry records `cn04` L3 and `re86` L2, and recent artifacts record
++no-bank `cn04` L4 and repeated `re86` L3 salience attempts
++When experiment 5450 performs its target precheck
++Then it selects a different eligible next-level frontier, records
++`registry_precheck_total_levels`, `selected_game`, `selected_target_level`, and
++`target_rotation_reason`, and runs the bounded attempt only after duplicate
++solve avoidance.
++
++Given the live attempt gathers frame measurements, action-effect observations,
++state-change summaries, or verifier-routed predicates from its own transitions
++When the artifact is built
++Then `runtime_predicates_induced` records those predicates and
++`live_attempt_count` records the bounded live effort without reading hidden
++source, running offline ground-truth BFS, or crediting a per-game adapter.
++
++Given the bounded measurement-access attempt does not reproduce a level deeper
++than the registry precheck
++When the artifact is validated
++Then `offline_reproduced=false`, `new_level_reproduced=false`,
++`new_levels_banked=0`, `arc_new_level_banked=false`, and `honest_verdict`
++starts with `honest_null:` while preserving the target rotation reason,
++frontier evidence, attempted predicates, and residual wall.
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index ccc8e7551a..0aef4bb8ac 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -742,5 +742,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 34a92818b3..0bb9c17f74 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4416,
++  "experiments_checked": 4417,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5450_arc_measurement_access_live_levelup_v495.py b/python/carnot/experiment_5450_arc_measurement_access_live_levelup_v495.py
+new file mode 100644
+index 0000000000..4a177684fa
+--- /dev/null
++++ b/python/carnot/experiment_5450_arc_measurement_access_live_levelup_v495.py
+@@ -0,0 +1,671 @@
++"""Experiment 5450: ARC measurement-access live level-up attempt.
++
++Spec refs: REQ-ARC-FCP-5450, SCENARIO-ARC-FCP-5450.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import time
++from collections.abc import Mapping, Sequence
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++from carnot.agentic.arc_live_trajectory_frontier import LiveCoExLandmarkFrontierGenerator
++
++
++REPO = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = 5450
++EXPERIMENT = "experiment_5450_arc_measurement_access_live_levelup_v495"
++MILESTONE = "2026.07.495"
++RESULT_RELATIVE_PATH = "results/experiment_5450_arc_measurement_access_live_levelup_v495.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-human-replay-frame-change/spec.md"
++SPEC_REFS = ["REQ-ARC-FCP-5450", "SCENARIO-ARC-FCP-5450"]
++SOLVE_PROVENANCE = "live_agent_self_discovery"
++INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
++DEFAULT_BUDGET = 40
++DEFAULT_RECENT_NO_BANK_TARGETS = ("cn04:L4", "re86:L3")
++DEFAULT_FRONTIER_PRIORITY = (
++    "cn04",
++    "re86",
++    "ka59",
++    "vc33",
++    "bp35",
++    "sb26",
++    "g50t",
++    "r11l",
++    "s5i5",
++    "cd82",
++    "sp80",
++    "su15",
++    "m0r0",
++    "sk48",
++    "lf52",
++    "ar25",
++    "ft09",
++    "dc22",
++    "ls20",
++    "wa30",
++    "lp85",
++    "sc25",
++    "tn36",
++    "tr87",
++    "tu93",
++)
++DEFAULT_TESTS_RUN = [
++    ".venv/bin/pytest tests/python/test_experiment_5450_arc_measurement_access_live_levelup_v495.py -q --no-cov",
++    (
++        ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest "
++        "tests/python/test_experiment_5450_arc_measurement_access_live_levelup_v495.py "
++        "-q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m "
++        "python/carnot/experiment_5450_arc_measurement_access_live_levelup_v495.py"
++    ),
++    ".venv/bin/pytest tests/python -q",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "solve_provenance": {
++        "principle": "live_agent_self_discovery -- credited path is the live agent's own attempts."
++    },
++    "registry_precheck_total_levels": {"principle": "duplicate-solve prevention."},
++    "selected_game": {"principle": "target audit."},
++    "selected_target_level": {"principle": "target audit."},
++    "target_rotation_reason": {"principle": "no stale rerun."},
++    "live_attempt_count": {"principle": "live effort evidence."},
++    "runtime_predicates_induced": {"principle": "credited mechanism evidence."},
++    "offline_reproduced": {"principle": "official reproduction gate."},
++    "reproduced_levels": {"principle": "level-up acceptance."},
++    "new_levels_banked": {"principle": "north-star movement."},
++    "new_level_reproduced": {"principle": "lint-readable solve gate."},
++    "no_offline_bfs": {"principle": "no outer-loop solve."},
++    "no_source_reading": {"principle": "no hidden source path."},
++    "no_per_game_adapter_credited": {"principle": "live mechanism only."},
++    "arc_new_level_banked": {"principle": "capstone field."},
++    "inference_substrate": {"principle": "explicit runtime path."},
++    "honest_verdict": {
++        "principle": "terminal status; start with complete: or honest_null: or blocked:."
++    },
++}
++REQUIRED_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++class _NoOpProposer:  # pragma: no cover - live runtime boundary
++    def induce(self, *_args: Any, **_kwargs: Any) -> tuple[bool, str]:
++        return False, "disabled_exp5450_no_llm"
++
++    def refactor(self, *_args: Any, **_kwargs: Any) -> tuple[bool, str]:
++        return False, "disabled_exp5450_no_llm"
++
++    def world_model_candidates(self, _game: str) -> list[Any]:
++        return []
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return int(default)
++
++
++def _registry_rows(registry: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
++    return {
++        str(row.get("game")): row
++        for row in registry.get("games", []) or []
++        if isinstance(row, Mapping) and row.get("game")
++    }
++
++
++def _level_label(level: int) -> str:
++    return f"L{max(0, int(level))}"
++
++
++def _loop_depth(loop_results: Mapping[str, Mapping[str, Any]], game: str) -> int:
++    row = loop_results.get(str(game)) or {}
++    if row.get("offline_reproduced") is True:
++        return _as_int(row.get("reproduced_levels"))
++    return 0
++
++
++def load_registry(root: Path = REPO) -> dict[str, Any]:  # pragma: no cover - file I/O wrapper
++    path = root / REGISTRY_RELATIVE_PATH
++    if not path.exists():
++        return {"reproducible_total_levels": 0, "games": []}
++    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++
++
++def load_arc_loop_results(root: Path = REPO) -> dict[str, dict[str, Any]]:  # pragma: no cover
++    results: dict[str, dict[str, Any]] = {}
++    for path in sorted((root / "results").glob("arc_loop_solve*.json")):
++        try:
++            data = json.loads(path.read_text(encoding="utf-8"))
++        except (OSError, json.JSONDecodeError):
++            continue
++        game = str(data.get("game") or path.stem.replace("arc_loop_solve_", ""))
++        results[game] = data
++    return results
++
++
++def offline_arcade_available() -> bool:  # pragma: no cover - environment probe
++    try:
++        from carnot.agentic import arc_solver_kit
++
++        arc_solver_kit.offline_arcade()
++    except Exception:
++        return False
++    return True
++
++
++def _dead_end_summary(row: Mapping[str, Any]) -> str:
++    dead = row.get("dead_ends") or []
++    if isinstance(dead, str):
++        return dead[:240]
++    try:
++        return "; ".join(str(item)[:120] for item in dead)[:240]
++    except TypeError:
++        return ""
++
++
++def select_rotated_target(
++    registry: Mapping[str, Any],
++    loop_results: Mapping[str, Mapping[str, Any]],
++    *,
++    recent_no_bank_targets: Sequence[str] = DEFAULT_RECENT_NO_BANK_TARGETS,
++    frontier_priority: Sequence[str] = DEFAULT_FRONTIER_PRIORITY,
++) -> dict[str, Any]:
++    """REQ-ARC-FCP-5450: precheck public-game depths and rotate off stale targets."""
++
++    rows = _registry_rows(registry)
++    recent = {str(item) for item in recent_no_bank_targets}
++    total = _as_int(registry.get("reproducible_total_levels"))
++    frontier_precheck: dict[str, dict[str, Any]] = {}
++    skipped_recent: list[str] = []
++
++    for game in frontier_priority:
++        row = rows.get(str(game))
++        registry_depth = _as_int((row or {}).get("levels_reproduced"))
++        loop_depth = _loop_depth(loop_results, str(game))
++        current_depth = max(registry_depth, loop_depth)
++        target_level = current_depth + 1 if current_depth > 0 else 1
++        marker = f"{game}:{_level_label(target_level)}"
++        frontier_precheck[str(game)] = {
++            "registry_levels": registry_depth,
++            "loop_reproduced_levels": loop_depth,
++            "current_precheck_depth": current_depth,
++            "next_target_level": target_level,
++            "recent_no_bank": marker in recent,
++            "dead_end_summary": _dead_end_summary(row or {}),
++        }
++        if marker in recent:
++            skipped_recent.append(marker)
++            continue
++        if row is None or str(row.get("reproducibility")) != "reproduced" or current_depth < 1:
++            continue
++        reason = (
++            "rotated_away_from_recent_no_bank_targets="
++            f"{','.join(skipped_recent) or 'none'}; selected {game} "
++            f"{_level_label(target_level)} after registry depth {_level_label(current_depth)}"
++        )
++        return {
++            "status": "selected",
++            "registry_precheck_total_levels": total,
++            "selected_game": str(game),
++            "selected_target_level": int(target_level),
++            "selected_target_level_label": _level_label(target_level),
++            "registry_level_before": int(current_depth),
++            "target_rotation_reason": reason,
++            "skipped_recent_no_bank_targets": skipped_recent,
++            "frontier_precheck": frontier_precheck,
++            "duplicate_solve_avoided": True,
++        }
++
++    return {
++        "status": "blocked",
++        "registry_precheck_total_levels": total,
++        "selected_game": "",
++        "selected_target_level": 0,
++        "selected_target_level_label": "",
++        "registry_level_before": 0,
++        "target_rotation_reason": (
++            "no_eligible_frontier_after_rotation; skipped_recent_no_bank_targets="
++            f"{','.join(skipped_recent) or 'none'}"
++        ),
++        "skipped_recent_no_bank_targets": skipped_recent,
++        "frontier_precheck": frontier_precheck,
++        "duplicate_solve_avoided": True,
++    }
++
++
++def _first_mapping(rows: Sequence[Any]) -> Mapping[str, Any] | None:
++    for row in rows:
++        if isinstance(row, Mapping):
++            return row
++    return None
++
++
++def induce_runtime_predicates(attempt: Mapping[str, Any]) -> list[dict[str, Any]]:
++    """SCENARIO-ARC-FCP-5450: summarize runtime measurement-access predicates."""
++
++    predicates: list[dict[str, Any]] = []
++    observation = _first_mapping(list(attempt.get("runtime_observations") or []))
++    if observation is not None:
++        predicates.append(
++            {
++                "predicate": "frame_level_measurement",
++                "level_before": _as_int(observation.get("level_before")),
++                "level_after": _as_int(observation.get("level_after")),
++                "changed_cells": _as_int(observation.get("changed_cells")),
++                "source": "frame_level_runtime_measurement",
++            }
++        )
++
++    receipt_owner = _first_mapping(list(attempt.get("action_sequence_receipts") or []))
++    receipt = None
++    if receipt_owner is not None:
++        receipt = _first_mapping(list(receipt_owner.get("measurement_receipts") or []))
++    if receipt is not None:
++        predicates.append(
++            {
++                "predicate": "action_effect_observation",
++                "receipt_id": str(receipt.get("receipt_id") or ""),
++                "changed_cells": _as_int(receipt.get("changed_cells")),
++                "source": "measurement_access_receipt",
++            }
++        )
++
++    transition = _first_mapping(list(attempt.get("frontier_transitions") or []))
++    if transition is not None:
++        predicates.append(
++            {
++                "predicate": "state_change_summary",
++                "from_hash": str(transition.get("from_hash") or ""),
++                "to_hash": str(transition.get("to_hash") or ""),
++                "action": _as_int(transition.get("action")),
++                "changed_cells": _as_int(transition.get("changed_cells")),
++                "source": "frontier_transition_summary",
++            }
++        )
++
++    route = _first_mapping(list(attempt.get("generic_verifier_routes") or []))
++    induction = _first_mapping(list(attempt.get("induction_attempts") or []))
++    if route is not None or induction is not None:
++        predicates.append(
++            {
++                "predicate": "verifier_routed_predicate",
++                "route": str((route or {}).get("route") or (induction or {}).get("reason") or ""),
++                "accepted": bool((route or {}).get("accepted", (induction or {}).get("planned", False))),
++                "transition_count": _as_int((induction or {}).get("transition_count")),
++                "source": "generic_verifier_route",
++            }
++        )
++    return predicates
++
++
++def _action_label(action: int | str, data: Any) -> str:
++    return json.dumps({"action": int(action), "data": data}, sort_keys=True, separators=(",", ":"))
++
++
++def _apply_action_label(env: Any, label: str, _frame: Any = None) -> Any:  # pragma: no cover
++    from arcengine import GameAction
++    from carnot.agentic.arc_agi3_live_adapter import _game_action
++
++    step = json.loads(label)
++    return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
++
++
++def run_live_measurement_access_attempt(  # pragma: no cover - ARC runtime boundary
++    *,
++    root: Path,
++    selection: Mapping[str, Any],
++    budget: int = DEFAULT_BUDGET,
++) -> dict[str, Any]:
++    from arcengine import GameAction
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_competition_agent import E3AgentPolicy, _level_of
++
++    old_disable = os.environ.get("CARNOT_ARC_DISABLE_INDUCTION")
++    os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = "1"
++    game = str(selection["selected_game"])
++    target_before = _as_int(selection.get("registry_level_before"))
++    target_level = _as_int(selection.get("selected_target_level"))
++    generator = LiveCoExLandmarkFrontierGenerator(min_support=1, max_uncertainty=0.51)
++    labels: list[str] = []
++    frames: list[Any] = []
++    runtime_observations: list[dict[str, Any]] = []
++    reset_count = 0
++    max_level = target_before
++    try:
++        arc = kit.offline_arcade()
++        env = arc.make(game, scorecard_id=arc.open_scorecard())
++        policy = E3AgentPolicy(
++            game,
++            proposer=_NoOpProposer(),
++            explore_budget=max(1, int(budget)),
++            target_levels=max(1, target_level),
++            value_head=None,
++            frame_change_scorer=None,
++            candidate_router=None,
++            action_effect_expansion_prior=False,
++            action_prior=generator,
++            qd_generator=generator,
++            goal_bias=None,
++            goal_candidate_guidance=False,
++            active_probe_controller=False,
++            go_explore_archive=False,
++        )
++        latest = None
++        previous_hash = ""
++        for _index in range(max(1, int(budget))):
++            if policy.is_done(frames, latest):
++                break
++            level_before = int(_level_of(latest))
++            kind, data = policy.next_move(frames, latest)
++            if kind == "RESET":
++                latest = env.reset()
++                reset_count += 1
++                generator.record_reset(level=max_level)
++                previous_hash = "reset"
++            elif kind is None:
++                break
++            else:
++                latest = env.step(getattr(GameAction, f"ACTION{int(kind)}"), data=data)
++                labels.append(_action_label(int(kind), data))
++            level_after = int(_level_of(latest))
++            max_level = max(max_level, level_after)
++            try:
++                from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
++
++                after_hash = frame_hash(grid_of(latest))
++            except Exception:
++                after_hash = ""
++            runtime_observations.append(
++                {
++                    "level_before": level_before,
++                    "level_after": level_after,
++                    "before_hash": previous_hash,
++                    "after_hash": after_hash,
++                    "changed_cells": 0,
++                }
++            )
++            previous_hash = after_hash
++            frames.append(latest)
++            if max_level >= target_level:
++                break
++        gate = {
++            "game": game,
++            "claimed_level": 0,
++            "reached_level": 0,
++            "reproduced": False,
++            "mode": "offline_reproduction_gate_no_new_level_claim",
++        }
++        if max_level >= target_level and labels:
++            gate = dict(kit.reproduce(game, labels, _apply_action_label, claimed_level=max_level))
++        reproduced = (
++            bool(gate.get("reproduced")) and _as_int(gate.get("reached_level")) >= target_level
++        )
++        diagnostics = generator.diagnostics()
++        attempt = {
++            "selected_game": game,
++            "selected_target_level": target_level,
++            "live_attempt_count": len(labels),
++            "reset_count": reset_count,
++            "max_level_reached": max_level,
++            "frontier_expansion_count": _as_int(diagnostics.get("frontier_expansion_count")),
++            "frontier_transitions": list(diagnostics.get("frontier_transitions") or []),
++            "runtime_observations": runtime_observations,
++            "action_sequence_receipts": list(diagnostics.get("action_sequence_receipts") or []),
++            "generic_verifier_routes": [],
++            "induction_attempts": list(policy.induction_attempts),
++            "offline_reproduced": bool(reproduced),
++            "reproduced_levels": max(0, _as_int(gate.get("reached_level")) - target_before)
++            if reproduced
++            else 0,
++            "reproduction_gate": gate,
++            "residual_wall": "" if reproduced else "bounded_budget_no_levelup",
++            "solution_labels": list(labels) if reproduced else [],
++            "runtime_self_discovery": True,
++            "no_offline_bfs": True,
++            "no_source_reading": True,
++            "no_per_game_adapter_credited": True,
++            "root": str(root),
++        }
++        attempt["runtime_predicates_induced"] = induce_runtime_predicates(attempt)
++        return attempt
++    finally:
++        if old_disable is None:
++            os.environ.pop("CARNOT_ARC_DISABLE_INDUCTION", None)
++        else:
++            os.environ["CARNOT_ARC_DISABLE_INDUCTION"] = old_disable
++
++
++def _new_levels_banked(attempt: Mapping[str, Any]) -> int:
++    if attempt.get("offline_reproduced") is not True:
++        return 0
++    return max(0, _as_int(attempt.get("reproduced_levels")))
++
++
++def build_artifact(
++    *,
++    selection: Mapping[str, Any],
++    attempt: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    tests_run: Sequence[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    blocked = bool(attempt.get("blocked")) or selection.get("status") == "blocked"
++    selected_game = str(selection.get("selected_game") or "")
++    selected_target_level = _as_int(selection.get("selected_target_level"))
++    registry_before = _as_int(selection.get("registry_level_before"))
++    predicates = list(attempt.get("runtime_predicates_induced") or induce_runtime_predicates(attempt))
++    new_levels = _new_levels_banked(attempt)
++    target_advanced = selected_target_level > registry_before
++    discipline_flags = (
++        attempt.get("no_offline_bfs", True) is True
++        and attempt.get("no_source_reading", True) is True
++        and attempt.get("no_per_game_adapter_credited", True) is True
++    )
++    can_bank = bool(
++        new_levels >= 1
++        and target_advanced
++        and predicates
++        and attempt.get("runtime_self_discovery") is True
++        and discipline_flags
++    )
++    status = "complete" if can_bank else "blocked" if blocked else "honest_null"
++    residual_wall = str(
++        attempt.get("residual_wall")
++        or ("duplicate_or_precondition_block" if status == "blocked" else "bounded_budget_no_levelup")
++    )
++    artifact = {
++        "experiment_id": EXPERIMENT_ID,
++        "experiment": EXPERIMENT,
++        "milestone": MILESTONE,
++        "schema": "carnot.experiment_5450_arc_measurement_access_live_levelup_v495.v1",
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "status": status,
++        "solve_provenance": SOLVE_PROVENANCE,
++        "registry_precheck_total_levels": _as_int(
++            selection.get("registry_precheck_total_levels")
++        ),
++        "selected_game": selected_game,
++        "selected_target_level": selected_target_level,
++        "selected_target_level_label": str(selection.get("selected_target_level_label") or ""),
++        "registry_level_before": registry_before,
++        "target_rotation_reason": str(selection.get("target_rotation_reason") or ""),
++        "live_attempt_count": _as_int(attempt.get("live_attempt_count")),
++        "runtime_predicates_induced": predicates,
++        "offline_reproduced": bool(can_bank),
++        "reproduced_levels": int(new_levels if can_bank else 0),
++        "new_levels_banked": int(new_levels if can_bank else 0),
++        "new_level_reproduced": bool(can_bank),
++        "no_offline_bfs": attempt.get("no_offline_bfs", True) is True,
++        "no_source_reading": attempt.get("no_source_reading", True) is True,
++        "no_per_game_adapter_credited": attempt.get("no_per_game_adapter_credited", True)
++        is True,
++        "arc_new_level_banked": bool(can_bank),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": (
++            f"complete: {selected_game} L{selected_target_level} measurement-access live level reproduced"
++            if can_bank
++            else f"blocked: {residual_wall}"
++            if status == "blocked"
++            else f"honest_null: {selected_game} L{selected_target_level} {residual_wall}"
++        ),
++        "target_selection": dict(selection),
++        "frontier_expansion_count": _as_int(attempt.get("frontier_expansion_count")),
++        "frontier_transitions": list(attempt.get("frontier_transitions") or []),
++        "runtime_observations": list(attempt.get("runtime_observations") or []),
++        "action_sequence_receipts": list(attempt.get("action_sequence_receipts") or []),
++        "generic_verifier_routes": list(attempt.get("generic_verifier_routes") or []),
++        "induction_attempts": list(attempt.get("induction_attempts") or []),
++        "reproduction_gate": dict(attempt.get("reproduction_gate") or {}),
++        "solution_labels": list(attempt.get("solution_labels") or []),
++        "residual_wall": "" if can_bank else residual_wall,
++        "preconditions_checked": dict(preconditions_checked),
++        "tests_run": list(tests_run),
++        "duration_s": float(duration_s),
++    }
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [
++        f"missing required field: {field}" for field in REQUIRED_FIELDS if field not in artifact
++    ]
++    status = artifact.get("status")
++    if status not in {"complete", "honest_null", "blocked"}:
++        errors.append("status must be complete, honest_null, or blocked")
++    if artifact.get("solve_provenance") != SOLVE_PROVENANCE:
++        errors.append("solve_provenance must be live_agent_self_discovery")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append(f"inference_substrate must be {INFERENCE_SUBSTRATE}")
++    for field in ("registry_precheck_total_levels", "selected_target_level", "live_attempt_count"):
++        if type(artifact.get(field)) is not int:
++            errors.append(f"{field} must be bare int")
++    for field in ("reproduced_levels", "new_levels_banked"):
++        if type(artifact.get(field)) is not int:
++            errors.append(f"{field} must be bare int")
++    for field in (
++        "offline_reproduced",
++        "new_level_reproduced",
++        "no_offline_bfs",
++        "no_source_reading",
++        "no_per_game_adapter_credited",
++        "arc_new_level_banked",
++    ):
++        if type(artifact.get(field)) is not bool:
++            errors.append(f"{field} must be bare bool")
++    for field in ("no_offline_bfs", "no_source_reading", "no_per_game_adapter_credited"):
++        if artifact.get(field) is not True:
++            errors.append(f"{field} must be true")
++    if status != "blocked":
++        if not isinstance(artifact.get("selected_game"), str) or not artifact.get("selected_game"):
++            errors.append("selected_game must be non-empty string")
++        if _as_int(artifact.get("selected_target_level")) < 1:
++            errors.append("selected_target_level must be >= 1")
++        if not isinstance(artifact.get("runtime_predicates_induced"), list) or not artifact.get(
++            "runtime_predicates_induced"
++        ):
++            errors.append("runtime_predicates_induced must be a non-empty list")
++    if not isinstance(artifact.get("target_rotation_reason"), str) or not artifact.get(
++        "target_rotation_reason"
++    ):
++        errors.append("target_rotation_reason must be non-empty string")
++    if type(artifact.get("selected_target_level")) is not int:
++        errors.append("selected_target_level must be bare int")
++    if type(artifact.get("live_attempt_count")) is not int:
++        errors.append("live_attempt_count must be bare int")
++    if status == "complete":
++        if artifact.get("offline_reproduced") is not True:
++            errors.append("complete artifact requires offline_reproduced true")
++        if artifact.get("new_level_reproduced") is not True:
++            errors.append("complete artifact requires new_level_reproduced true")
++        if artifact.get("arc_new_level_banked") is not True:
++            errors.append("complete artifact requires arc_new_level_banked true")
++        if type(artifact.get("reproduced_levels")) is int and artifact["reproduced_levels"] < 1:
++            errors.append("complete artifact requires reproduced_levels >= 1")
++        if type(artifact.get("new_levels_banked")) is int and artifact["new_levels_banked"] < 1:
++            errors.append("complete artifact requires new_levels_banked >= 1")
++    else:
++        if artifact.get("offline_reproduced") is True:
++            errors.append("non-complete artifact cannot set offline_reproduced true")
++        if artifact.get("arc_new_level_banked") is True:
++            errors.append("arc_new_level_banked requires complete status")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(("complete:", "honest_null:", "blocked:")):
++        errors.append("honest_verdict must start with complete:, honest_null:, or blocked:")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def _write_artifact(root: Path, artifact: Mapping[str, Any]) -> None:
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def run_experiment(
++    *,
++    root: Path = REPO,
++    budget: int = DEFAULT_BUDGET,
++    attempt_runner=run_live_measurement_access_attempt,
++    offline_arcade_check=offline_arcade_available,
++    tests_run: Sequence[str] = DEFAULT_TESTS_RUN,
++) -> dict[str, Any]:
++    start = time.perf_counter()
++    registry = load_registry(root)
++    loop_results = load_arc_loop_results(root)
++    selection = select_rotated_target(registry, loop_results)
++    preconditions_checked = {
++        "AGENTS.md": (root / "AGENTS.md").exists(),
++        "CODEX.md": (root / "CODEX.md").exists(),
++        "spec_has_req_5450": "REQ-ARC-FCP-5450"
++        in (root / SPEC_RELATIVE_PATH).read_text(encoding="utf-8"),
++        "registry_present": (root / REGISTRY_RELATIVE_PATH).exists(),
++        "arc_loop_results_checked": bool(loop_results),
++        "offline_arcade_available": bool(offline_arcade_check()),
++        "no_offline_bfs": True,
++        "no_source_reading": True,
++        "no_per_game_adapter_credited": True,
++    }
++    if selection.get("status") == "blocked" or not all(preconditions_checked.values()):
++        attempt = {
++            "blocked": True,
++            "live_attempt_count": 0,
++            "residual_wall": "missing_harness_or_target_precondition",
++            "no_offline_bfs": True,
++            "no_source_reading": True,
++            "no_per_game_adapter_credited": True,
++        }
++    else:
++        attempt = attempt_runner(root=root, selection=selection, budget=budget)
++    artifact = build_artifact(
++        selection=selection,
++        attempt=attempt,
++        preconditions_checked=preconditions_checked,
++        tests_run=tests_run,
++        duration_s=time.perf_counter() - start,
++    )
++    validate_artifact(artifact)
++    _write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    artifact = run_experiment()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 447c11652c..f88dd2cc40 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T23:36:16.399107+00:00",
+-  "finished_at": "2026-07-08T23:36:16.423857+00:00",
+-  "duration_s": 0.025,
++  "started_at": "2026-07-08T23:49:25.035495+00:00",
++  "finished_at": "2026-07-08T23:49:25.063402+00:00",
++  "duration_s": 0.028,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 1cb53c51d3..5bfbec878f 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T23:36:16Z",
++  "run_date": "2026-07-08T23:49:25Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 925e395a97..b541a76a44 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T23:36:18Z",
+-  "finished_at": "2026-07-08T23:36:18Z",
++  "started_at": "2026-07-08T23:49:26Z",
++  "finished_at": "2026-07-08T23:49:26Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index f50a2d549f..362ed19f49 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-08T23:36:18Z",
++  "run_date": "2026-07-08T23:49:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 076f09aa2e..7f5b4fc49b 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-08T23:36:18Z",
++  "run_date": "2026-07-08T23:49:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 8a1e2764fa..db06d0e385 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 3.14s, user: 2.80s, system: 0.25s, MEM: 115.09 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 3.30s, user: 2.98s, system: 0.23s, MEM: 115.27 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 78% 19x read_verilog (2 sec), 8% 1x synth_xilinx (0 sec), ...
++Time spent: 79% 19x read_verilog (2 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index f60c0a0fac..1505404db0 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1064281463623047,
++  "efficiency_gains_ms": 2.1696090698242188,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 45b63712b3..d0805bdb89 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-07-08T23:35:50.960839Z",
++  "run_date": "2026-07-08T23:48:56.804485Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index cda6ccb6df..87b8504589 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00020090676844120026,
+-  "latency_domino_seconds": 0.0004090080037713051,
++  "latency_legacy_seconds": 0.00014667585492134094,
++  "latency_domino_seconds": 0.000295114703476429,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index df6184a7ed..906aaea140 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T23:36:27Z",
+-  "finished_at": "2026-07-08T23:36:27Z",
++  "started_at": "2026-07-08T23:49:32Z",
++  "finished_at": "2026-07-08T23:49:32Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index f880fe6605..15c7a8992c 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.5568296909332275,
++  "duration_s": 0.5548210144042969,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 151d1258ae..13b5e3e002 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.2319373935461044e-05,
++  "duration_s": 4.039611667394638e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5450_arc_measurement_access_live_levelup_v495.json b/results/experiment_5450_arc_measurement_access_live_levelup_v495.json
+new file mode 100644
+index 0000000000..9240097fd7
+--- /dev/null
++++ b/results/experiment_5450_arc_measurement_access_live_levelup_v495.json
+@@ -0,0 +1,1156 @@
++{
++  "action_sequence_receipts": [
++    {
++      "cluster_id": "cluster:d344e4c35052",
++      "measurement_receipts": [
++        {
++          "action": 6,
++          "after_hash": "484924a5d628054a",
++          "before_hash": "4b5c03bf96e9c45a",
++          "changed_cells": 1,
++          "data": {
++            "x": 16,
++            "y": 30
++          },
++          "level_after": 0,
++          "level_before": 0,
++          "path_len_before": 0,
++          "receipt_id": "m0001"
++        }
++      ],
++      "replayable": true,
++      "sequence": [
++        {
++          "action": 6,
++          "data": {
++            "x": 16,
++            "y": 30
++          }
++        },
++        {
++          "action": 6,
++          "data": {
++            "x": 46,
++            "y": 31
++          }
++        }
++      ]
++    },
++    {
++      "cluster_id": "cluster:cc982daafe98",
++      "measurement_receipts": [
++        {
++          "action": 6,
++          "after_hash": "aa035dec77124708",
++          "before_hash": "484924a5d628054a",
++          "changed_cells": 1,
++          "data": {
++            "x": 46,
++            "y": 31
++          },
++          "level_after": 0,
++          "level_before": 0,
++          "path_len_before": 2,
++          "receipt_id": "m0003"
++        }
++      ],
++      "replayable": true,
++      "sequence": [
++        {
++          "action": 6,
++          "data": {
++            "x": 46,
++            "y": 31
++          }
++        },
++        {
++          "action": 6,
++          "data": {
++            "x": 16,
++            "y": 30
++          }
++        }
++      ]
++    },
++    {
++      "cluster_id": "cluster:cc982daafe98",
++      "measurement_receipts": [
++        {
++          "action": 6,
++          "after_hash": "226a5611b6001d57",
++          "before_hash": "aa035dec77124708",
++          "changed_cells": 1,
++          "data": {
++            "x": 46,
++            "y": 31
++          },
++          "level_after": 0,
++          "level_before": 0,
++          "path_len_before": 3,
++          "receipt_id": "m0004"
++        }
++      ],
++      "replayable": true,
++      "sequence": [
++        {
++          "action": 6,
++          "data": {
++            "x": 46,
++            "y": 31
++          }
++        },
++        {
++          "action": 6,
++          "data": {
++            "x": 46,
++            "y": 28
++          }
++        }
++      ]
++    }
++  ],
++  "arc_new_level_banked": false,
++  "duration_s": 5.8846177770756185,
++  "experiment": "experiment_5450_arc_measurement_access_live_levelup_v495",
++  "experiment_id": 5450,
++  "field_principles": {
++    "arc_new_level_banked": {
++      "principle": "capstone field."
++    },
++    "honest_verdict": {
++      "principle": "terminal status; start with complete: or honest_null: or blocked:."
++    },
++    "inference_substrate": {
++      "principle": "explicit runtime path."
++    },
++    "live_attempt_count": {
++      "principle": "live effort evidence."
++    },
++    "new_level_reproduced": {
++      "principle": "lint-readable solve gate."
++    },
++    "new_levels_banked": {
++      "principle": "north-star movement."
++    },
++    "no_offline_bfs": {
++      "principle": "no outer-loop solve."
++    },
++    "no_per_game_adapter_credited": {
++      "principle": "live mechanism only."
++    },
++    "no_source_reading": {
++      "principle": "no hidden source path."
++    },
++    "offline_reproduced": {
++      "principle": "official reproduction gate."
++    },
++    "registry_precheck_total_levels": {
++      "principle": "duplicate-solve prevention."
++    },
++    "reproduced_levels": {
++      "principle": "level-up acceptance."
++    },
++    "runtime_predicates_induced": {
++      "principle": "credited mechanism evidence."
++    },
++    "selected_game": {
++      "principle": "target audit."
++    },
++    "selected_target_level": {
++      "principle": "target audit."
++    },
++    "solve_provenance": {
++      "principle": "live_agent_self_discovery -- credited path is the live agent's own attempts."
++    },
++    "target_rotation_reason": {
++      "principle": "no stale rerun."
++    }
++  },
++  "frontier_expansion_count": 19,
++  "frontier_transitions": [
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "4b5c03bf96e9c45a",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0001",
++      "to_hash": "484924a5d628054a"
++    },
++    {
++      "accepted": false,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "484924a5d628054a",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0002",
++      "to_hash": "484924a5d628054a"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "484924a5d628054a",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0003",
++      "to_hash": "aa035dec77124708"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "aa035dec77124708",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0004",
++      "to_hash": "226a5611b6001d57"
++    },
++    {
++      "accepted": false,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "226a5611b6001d57",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0005",
++      "to_hash": "226a5611b6001d57"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "226a5611b6001d57",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0006",
++      "to_hash": "0d354eb352e5cb68"
++    },
++    {
++      "accepted": false,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:240d041c7738",
++      "data": {
++        "x": 46,
++        "y": 28
++      },
++      "from_hash": "0d354eb352e5cb68",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0007",
++      "to_hash": "0d354eb352e5cb68"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "0d354eb352e5cb68",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0008",
++      "to_hash": "2b64871f8eb0b040"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "2b64871f8eb0b040",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0009",
++      "to_hash": "7d73c527cdcc0280"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "7d73c527cdcc0280",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0010",
++      "to_hash": "7d73c527cdcc0280"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "7d73c527cdcc0280",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0011",
++      "to_hash": "4c8c85d849e9b6a7"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "4c8c85d849e9b6a7",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0012",
++      "to_hash": "bf8081b37673027c"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "bf8081b37673027c",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0013",
++      "to_hash": "bf8081b37673027c"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "bf8081b37673027c",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0014",
++      "to_hash": "0a43029b22867210"
++    },
++    {
++      "accepted": false,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:240d041c7738",
++      "data": {
++        "x": 46,
++        "y": 28
++      },
++      "from_hash": "0a43029b22867210",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0015",
++      "to_hash": "aa6277b3bc7cf3f1"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "aa6277b3bc7cf3f1",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0016",
++      "to_hash": "aa6277b3bc7cf3f1"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "aa6277b3bc7cf3f1",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0017",
++      "to_hash": "f3295eb0e4ea6bd1"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "f3295eb0e4ea6bd1",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0018",
++      "to_hash": "e03c96eec2a84e0a"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "e03c96eec2a84e0a",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0019",
++      "to_hash": "e03c96eec2a84e0a"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "e03c96eec2a84e0a",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0020",
++      "to_hash": "360b62d58132168d"
++    },
++    {
++      "accepted": false,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:240d041c7738",
++      "data": {
++        "x": 46,
++        "y": 28
++      },
++      "from_hash": "360b62d58132168d",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0021",
++      "to_hash": "360b62d58132168d"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "360b62d58132168d",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0022",
++      "to_hash": "a477bb3bbcfabc04"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "a477bb3bbcfabc04",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0023",
++      "to_hash": "a3c6d9cc48872564"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "a3c6d9cc48872564",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0024",
++      "to_hash": "a3c6d9cc48872564"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "a3c6d9cc48872564",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0025",
++      "to_hash": "be4b8d7e19f61502"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "be4b8d7e19f61502",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0026",
++      "to_hash": "ece48818ca01cc11"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "ece48818ca01cc11",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0027",
++      "to_hash": "ece48818ca01cc11"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "ece48818ca01cc11",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0028",
++      "to_hash": "f15f983e374fd924"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:240d041c7738",
++      "data": {
++        "x": 46,
++        "y": 28
++      },
++      "from_hash": "f15f983e374fd924",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0029",
++      "to_hash": "fec8eb6c62a5f06d"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "fec8eb6c62a5f06d",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0030",
++      "to_hash": "fec8eb6c62a5f06d"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "fec8eb6c62a5f06d",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0031",
++      "to_hash": "e28edeeff35abb50"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "e28edeeff35abb50",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0032",
++      "to_hash": "e28edeeff35abb50"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "e28edeeff35abb50",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0033",
++      "to_hash": "1a34315feff39c5b"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "1a34315feff39c5b",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0034",
++      "to_hash": "029f1d2e97ff6b4f"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:d344e4c35052",
++      "data": {
++        "x": 16,
++        "y": 30
++      },
++      "from_hash": "029f1d2e97ff6b4f",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0035",
++      "to_hash": "029f1d2e97ff6b4f"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "029f1d2e97ff6b4f",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0036",
++      "to_hash": "72e5c555819907ab"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 1,
++      "cluster_id": "cluster:240d041c7738",
++      "data": {
++        "x": 46,
++        "y": 28
++      },
++      "from_hash": "72e5c555819907ab",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0037",
++      "to_hash": "0b396850024dd1e5"
++    },
++    {
++      "accepted": true,
++      "action": 6,
++      "changed_cells": 0,
++      "cluster_id": "cluster:cc982daafe98",
++      "data": {
++        "x": 46,
++        "y": 31
++      },
++      "from_hash": "0b396850024dd1e5",
++      "level_after": 0,
++      "level_before": 0,
++      "receipt_id": "m0038",
++      "to_hash": "0b396850024dd1e5"
++    }
++  ],
++  "generic_verifier_routes": [],
++  "honest_verdict": "honest_null: ka59 L2 bounded_budget_no_levelup",
++  "induction_attempts": [
++    {
++      "dsl_transition_count": 25,
++      "goal_level": 1,
++      "model_specs": "offline_dsl_induction_no_llm",
++      "planned": false,
++      "reason": "stall",
++      "skipped": "disabled_by_env",
++      "transition_count": 25
++    }
++  ],
++  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
++  "live_attempt_count": 39,
++  "milestone": "2026.07.495",
++  "new_level_reproduced": false,
++  "new_levels_banked": 0,
++  "no_offline_bfs": true,
++  "no_per_game_adapter_credited": true,
++  "no_source_reading": true,
++  "offline_reproduced": false,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "arc_loop_results_checked": true,
++    "no_offline_bfs": true,
++    "no_per_game_adapter_credited": true,
++    "no_source_reading": true,
++    "offline_arcade_available": true,
++    "registry_present": true,
++    "spec_has_req_5450": true
++  },
++  "registry_level_before": 1,
++  "registry_precheck_total_levels": 69,
++  "reproduced_levels": 0,
++  "reproduction_gate": {
++    "claimed_level": 0,
++    "game": "ka59",
++    "mode": "offline_reproduction_gate_no_new_level_claim",
++    "reached_level": 0,
++    "reproduced": false
++  },
++  "residual_wall": "bounded_budget_no_levelup",
++  "result_path": "results/experiment_5450_arc_measurement_access_live_levelup_v495.json",
++  "runtime_observations": [
++    {
++      "after_hash": "1ae229efae0b3d0d",
++      "before_hash": "reset",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "30cdcb5ea397859e",
++      "before_hash": "1ae229efae0b3d0d",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "30cdcb5ea397859e",
++      "before_hash": "30cdcb5ea397859e",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "6582b773e4314923",
++      "before_hash": "30cdcb5ea397859e",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "111a72cd7f78067d",
++      "before_hash": "6582b773e4314923",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "111a72cd7f78067d",
++      "before_hash": "111a72cd7f78067d",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "a611935b0655f6a2",
++      "before_hash": "111a72cd7f78067d",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "a611935b0655f6a2",
++      "before_hash": "a611935b0655f6a2",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "e0d2d90be42b9af6",
++      "before_hash": "a611935b0655f6a2",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "5968a165a69a6934",
++      "before_hash": "e0d2d90be42b9af6",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "5968a165a69a6934",
++      "before_hash": "5968a165a69a6934",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "c21ee5b01dd189cf",
++      "before_hash": "5968a165a69a6934",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "e8f05c3170ce03e7",
++      "before_hash": "c21ee5b01dd189cf",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "e8f05c3170ce03e7",
++      "before_hash": "e8f05c3170ce03e7",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "d12f6c113236a25b",
++      "before_hash": "e8f05c3170ce03e7",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "dae124ef1ffa3f9e",
++      "before_hash": "d12f6c113236a25b",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "dae124ef1ffa3f9e",
++      "before_hash": "dae124ef1ffa3f9e",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "6177603e47c20e22",
++      "before_hash": "dae124ef1ffa3f9e",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "e253620516a81762",
++      "before_hash": "6177603e47c20e22",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "e253620516a81762",
++      "before_hash": "e253620516a81762",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "72da908331cd2d87",
++      "before_hash": "e253620516a81762",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "72da908331cd2d87",
++      "before_hash": "72da908331cd2d87",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "237db783175c1bc1",
++      "before_hash": "72da908331cd2d87",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "f70a1cc304a5cbd5",
++      "before_hash": "237db783175c1bc1",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "f70a1cc304a5cbd5",
++      "before_hash": "f70a1cc304a5cbd5",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "76b61481ab2aec6d",
++      "before_hash": "f70a1cc304a5cbd5",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "7d55dd801ee1016a",
++      "before_hash": "76b61481ab2aec6d",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "7d55dd801ee1016a",
++      "before_hash": "7d55dd801ee1016a",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "2e1b1602d3ecb0f3",
++      "before_hash": "7d55dd801ee1016a",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "3a789e092bab90f9",
++      "before_hash": "2e1b1602d3ecb0f3",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "3a789e092bab90f9",
++      "before_hash": "3a789e092bab90f9",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "ee683f1a8e3b9172",
++      "before_hash": "3a789e092bab90f9",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "ee683f1a8e3b9172",
++      "before_hash": "ee683f1a8e3b9172",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "8580713eb11f2c27",
++      "before_hash": "ee683f1a8e3b9172",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "f0e18d614d93b2fd",
++      "before_hash": "8580713eb11f2c27",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "f0e18d614d93b2fd",
++      "before_hash": "f0e18d614d93b2fd",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "fce49da0ec614706",
++      "before_hash": "f0e18d614d93b2fd",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "d1df978f7c8a942a",
++      "before_hash": "fce49da0ec614706",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "d1df978f7c8a942a",
++      "before_hash": "d1df978f7c8a942a",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    },
++    {
++      "after_hash": "2d71ebad1d5ab70e",
++      "before_hash": "d1df978f7c8a942a",
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0
++    }
++  ],
++  "runtime_predicates_induced": [
++    {
++      "changed_cells": 0,
++      "level_after": 0,
++      "level_before": 0,
++      "predicate": "frame_level_measurement",
++      "source": "frame_level_runtime_measurement"
++    },
++    {
++      "changed_cells": 1,
++      "predicate": "action_effect_observation",
++      "receipt_id": "m0001",
++      "source": "measurement_access_receipt"
++    },
++    {
++      "action": 6,
++      "changed_cells": 1,
++      "from_hash": "4b5c03bf96e9c45a",
++      "predicate": "state_change_summary",
++      "source": "frontier_transition_summary",
++      "to_hash": "484924a5d628054a"
++    },
++    {
++      "accepted": false,
++      "predicate": "verifier_routed_predicate",
++      "route": "stall",
++      "source": "generic_verifier_route",
++      "transition_count": 25
++    }
++  ],
++  "schema": "carnot.experiment_5450_arc_measurement_access_live_levelup_v495.v1",
++  "selected_game": "ka59",
++  "selected_target_level": 2,
++  "selected_target_level_label": "L2",
++  "solution_labels": [],
++  "solve_provenance": "live_agent_self_discovery",
++  "spec_refs": [
++    "REQ-ARC-FCP-5450",
++    "SCENARIO-ARC-FCP-5450"
++  ],
++  "status": "honest_null",
++  "target_rotation_reason": "rotated_away_from_recent_no_bank_targets=cn04:L4,re86:L3; selected ka59 L2 after registry depth L1",
++  "target_selection": {
++    "duplicate_solve_avoided": true,
++    "frontier_precheck": {
++      "cn04": {
++        "current_precheck_depth": 3,
++        "dead_end_summary": "Pre-adapter arc_loop_solve --game cn04 returned needs_per_game_RE; broad graph exploration preserved L1 but did not deri; Exp5012 cn04 no-bank no_grounded_l4_delta: complete_cn04_no_new_level_residual_no_grounded_l4_delta.",
++        "loop_reproduced_levels": 3,
++        "next_target_level": 4,
++        "recent_no_bank": true,
++        "registry_levels": 3
++      },
++      "ka59": {
++        "current_precheck_depth": 1,
++        "dead_end_summary": "",
++        "loop_reproduced_levels": 1,
++        "next_target_level": 2,
++        "recent_no_bank": false,
++        "registry_levels": 1
++      },
++      "re86": {
++        "current_precheck_depth": 2,
++        "dead_end_summary": "{'bp35': 'no_grounded_next_level_adapter'}; {'lf52': 'recently_deepened_or_operator_skip_list'}; {'sb26': 'recently_deepened_or_operator_skip_list'}; {'dc22': 'recently_deepened_or_operator_skip_list'}; {'vc33': 'recently_deepened_or_operat",
++        "loop_reproduced_levels": 2,
++        "next_target_level": 3,
++        "recent_no_bank": true,
++        "registry_levels": 2
++      }
++    },
++    "registry_level_before": 1,
++    "registry_precheck_total_levels": 69,
++    "selected_game": "ka59",
++    "selected_target_level": 2,
++    "selected_target_level_label": "L2",
++    "skipped_recent_no_bank_targets": [
++      "cn04:L4",
++      "re86:L3"
++    ],
++    "status": "selected",
++    "target_rotation_reason": "rotated_away_from_recent_no_bank_targets=cn04:L4,re86:L3; selected ka59 L2 after registry depth L1"
++  },
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5450_arc_measurement_access_live_levelup_v495.py -q --no-cov",
++    ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest tests/python/test_experiment_5450_arc_measurement_access_live_levelup_v495.py -q -n0 -o addopts= && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5450_arc_measurement_access_live_levelup_v495.py",
++    ".venv/bin/pytest tests/python -q"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ca6117834d..1e0a16a3f9 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T23:35:25Z",
+-  "finished_at": "2026-07-08T23:35:25Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-08T23:48:26Z",
++  "finished_at": "2026-07-08T23:48:26Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index f2bebc210b..3fbf1ad3ce 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T23:35:25Z",
+-  "finished_at": "2026-07-08T23:35:26Z",
++  "started_at": "2026-07-08T23:48:26Z",
++  "finished_at": "2026-07-08T23:48:27Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e8b176a0fd..87e54d6097 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T23:35:26Z",
+-  "finished_at": "2026-07-08T23:35:26Z",
++  "started_at": "2026-07-08T23:48:27Z",
++  "finished_at": "2026-07-08T23:48:27Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5450_arc_measurement_access_live_levelup_v495.py b/tests/python/test_experiment_5450_arc_measurement_access_live_levelup_v495.py
+new file mode 100644
+index 0000000000..1e1a8ec5a6
+--- /dev/null
++++ b/tests/python/test_experiment_5450_arc_measurement_access_live_levelup_v495.py
+@@ -0,0 +1,360 @@
++"""Tests for Exp5450 ARC measurement-access live level-up attempt.
++
++Spec refs: REQ-ARC-FCP-5450,
++SCENARIO-ARC-FCP-5450.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_5450_arc_measurement_access_live_levelup_v495 as exp5450
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++
++
++def _registry(*, include_ka59: bool = True) -> dict[str, Any]:
++    games: list[dict[str, Any]] = [
++        {
++            "game": "cn04",
++            "reproducibility": "reproduced",
++            "levels_reproduced": 3,
++            "dead_ends": ["Exp5012 cn04 no-bank no_grounded_l4_delta"],
++        },
++        {
++            "game": "re86",
++            "reproducibility": "reproduced",
++            "levels_reproduced": 2,
++            "dead_ends": ["sprite overlay L3 salience attempts bounded_budget_no_levelup"],
++        },
++        {"game": "sk48", "reproducibility": "reproduced", "levels_reproduced": 2},
++    ]
++    if include_ka59:
++        games.append({"game": "ka59", "reproducibility": "reproduced", "levels_reproduced": 1})
++    return {"reproducible_total_levels": 69, "games": games}
++
++
++def _loop_results() -> dict[str, dict[str, Any]]:
++    return {
++        "cn04": {"offline_reproduced": True, "reproduced_levels": 3},
++        "re86": {"offline_reproduced": True, "reproduced_levels": 2},
++        "ka59": {"offline_reproduced": True, "reproduced_levels": 1},
++        "sk48": {"offline_reproduced": True, "reproduced_levels": 2},
++    }
++
++
++def _attempt() -> dict[str, Any]:
++    return {
++        "live_attempt_count": 7,
++        "max_level_reached": 1,
++        "frontier_expansion_count": 2,
++        "frontier_transitions": [
++            {
++                "from_hash": "root",
++                "to_hash": "next",
++                "action": 6,
++                "data": {"x": 12, "y": 18},
++                "changed_cells": 5,
++                "accepted": True,
++            }
++        ],
++        "runtime_observations": [
++            {
++                "level_before": 1,
++                "level_after": 1,
++                "before_hash": "root",
++                "after_hash": "next",
++                "changed_cells": 5,
++            }
++        ],
++        "action_sequence_receipts": [
++            {
++                "sequence": [{"action": 6, "data": {"x": 12, "y": 18}}],
++                "measurement_receipts": [{"receipt_id": "m0001", "changed_cells": 5}],
++                "replayable": True,
++            }
++        ],
++        "generic_verifier_routes": [{"route": "runtime_observation_cluster", "accepted": True}],
++        "induction_attempts": [
++            {
++                "reason": "level_up_reinduction",
++                "transition_count": 1,
++                "planned": False,
++                "skipped": "disabled_exp5450_no_llm",
++            }
++        ],
++        "offline_reproduced": False,
++        "reproduced_levels": 0,
++        "residual_wall": "bounded_budget_no_levelup",
++        "runtime_self_discovery": True,
++        "no_offline_bfs": True,
++        "no_source_reading": True,
++        "no_per_game_adapter_credited": True,
++    }
++
++
++def _preconditions() -> dict[str, Any]:
++    return {
++        "AGENTS.md": True,
++        "CODEX.md": True,
++        "spec_has_req_5450": True,
++        "registry_present": True,
++        "arc_loop_results_checked": True,
++        "offline_arcade_available": True,
++        "no_offline_bfs": True,
++        "no_source_reading": True,
++        "no_per_game_adapter_credited": True,
++    }
++
++
++def test_req_arc_fcp_5450_spec_declares_required_artifact_fields() -> None:
++    """REQ-ARC-FCP-5450: OpenSpec anchors the measurement-access artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-FCP-5450" in spec
++    assert "SCENARIO-ARC-FCP-5450" in spec
++    assert exp5450.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp5450.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_fcp_5450_rotation_avoids_recent_no_bank_targets() -> None:
++    """SCENARIO-ARC-FCP-5450: target rotation avoids stale cn04/re86 reruns."""
++
++    selection = exp5450.select_rotated_target(
++        _registry(),
++        _loop_results(),
++        recent_no_bank_targets=("cn04:L4", "re86:L3"),
++        frontier_priority=("cn04", "re86", "ka59", "sk48"),
++    )
++    blocked = exp5450.select_rotated_target(
++        _registry(include_ka59=False),
++        _loop_results(),
++        recent_no_bank_targets=("cn04:L4", "re86:L3", "sk48:L3"),
++        frontier_priority=("cn04", "re86", "sk48"),
++    )
++    skipped_missing_then_selected = exp5450.select_rotated_target(
++        _registry(),
++        _loop_results(),
++        recent_no_bank_targets=("cn04:L4", "re86:L3"),
++        frontier_priority=("missing", "cn04", "re86", "ka59"),
++    )
++
++    assert selection["status"] == "selected"
++    assert selection["registry_precheck_total_levels"] == 69
++    assert selection["selected_game"] == "ka59"
++    assert selection["selected_target_level"] == 2
++    assert selection["registry_level_before"] == 1
++    assert "rotated_away_from_recent_no_bank" in selection["target_rotation_reason"]
++    assert "cn04:L4" in selection["skipped_recent_no_bank_targets"]
++    assert selection["frontier_precheck"]["re86"]["loop_reproduced_levels"] == 2
++    assert blocked["status"] == "blocked"
++    assert blocked["selected_game"] == ""
++    assert blocked["selected_target_level"] == 0
++    assert "no_eligible_frontier_after_rotation" in blocked["target_rotation_reason"]
++    assert skipped_missing_then_selected["selected_game"] == "ka59"
++    assert exp5450._loop_depth({"x": {"offline_reproduced": False}}, "x") == 0  # noqa: SLF001
++    assert exp5450._dead_end_summary({"dead_ends": "string dead end"}) == (  # noqa: SLF001
++        "string dead end"
++    )
++    assert exp5450._dead_end_summary({"dead_ends": object()}) == ""  # noqa: SLF001
++    assert exp5450._action_label(6, {"x": 1, "y": 2}) == (  # noqa: SLF001
++        '{"action":6,"data":{"x":1,"y":2}}'
++    )
++
++
++def test_scenario_arc_fcp_5450_runtime_predicates_capture_measurement_access() -> None:
++    """SCENARIO-ARC-FCP-5450: predicates come from runtime measurement access."""
++
++    predicates = exp5450.induce_runtime_predicates(_attempt())
++    empty = exp5450.induce_runtime_predicates(
++        {
++            "runtime_observations": [object()],
++            "frontier_transitions": [object()],
++            "generic_verifier_routes": [object()],
++            "induction_attempts": [object()],
++        }
++    )
++
++    assert [row["predicate"] for row in predicates] == [
++        "frame_level_measurement",
++        "action_effect_observation",
++        "state_change_summary",
++        "verifier_routed_predicate",
++    ]
++    assert predicates[0]["level_before"] == 1
++    assert predicates[1]["changed_cells"] == 5
++    assert predicates[2]["from_hash"] == "root"
++    assert predicates[3]["source"] == "generic_verifier_route"
++    assert empty == []
++
++
++def test_req_arc_fcp_5450_artifact_schema_gates_reproduction_credit() -> None:
++    """REQ-ARC-FCP-5450: only reproduced +1 live self-discovery banks a level."""
++
++    selection = exp5450.select_rotated_target(_registry(), _loop_results())
++    artifact = exp5450.build_artifact(
++        selection=selection,
++        attempt=_attempt(),
++        preconditions_checked=_preconditions(),
++        tests_run=["unit 5450"],
++        duration_s=0.1,
++    )
++
++    exp5450.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("honest_null:")
++    assert artifact["solve_provenance"] == "live_agent_self_discovery"
++    assert artifact["selected_game"] == "ka59"
++    assert artifact["selected_target_level"] == 2
++    assert artifact["live_attempt_count"] == 7
++    assert artifact["runtime_predicates_induced"]
++    assert artifact["offline_reproduced"] is False
++    assert artifact["new_level_reproduced"] is False
++    assert artifact["new_levels_banked"] == 0
++    assert artifact["arc_new_level_banked"] is False
++    assert artifact["inference_substrate"] == exp5450.INFERENCE_SUBSTRATE
++
++    success = exp5450.build_artifact(
++        selection=selection,
++        attempt={
++            **_attempt(),
++            "offline_reproduced": True,
++            "reproduced_levels": 1,
++            "max_level_reached": 2,
++            "residual_wall": "",
++        },
++        preconditions_checked=_preconditions(),
++        tests_run=["unit 5450"],
++        duration_s=0.1,
++    )
++    exp5450.validate_artifact(success)
++    assert success["honest_verdict"].startswith("complete:")
++    assert success["offline_reproduced"] is True
++    assert success["new_level_reproduced"] is True
++    assert success["new_levels_banked"] == 1
++    assert success["arc_new_level_banked"] is True
++
++    corrupt = {
++        **success,
++        "solve_provenance": "development_proxy",
++        "inference_substrate": "offline_proxy",
++        "registry_precheck_total_levels": "69",
++        "selected_game": "",
++        "selected_target_level": "2",
++        "target_rotation_reason": "",
++        "live_attempt_count": "7",
++        "runtime_predicates_induced": [],
++        "offline_reproduced": "False",
++        "reproduced_levels": "1",
++        "new_levels_banked": "1",
++        "new_level_reproduced": "False",
++        "no_offline_bfs": False,
++        "no_source_reading": False,
++        "no_per_game_adapter_credited": False,
++        "arc_new_level_banked": False,
++        "honest_verdict": "done",
++    }
++    errors = exp5450.artifact_schema_errors(corrupt)
++    assert "solve_provenance must be live_agent_self_discovery" in errors
++    assert f"inference_substrate must be {exp5450.INFERENCE_SUBSTRATE}" in errors
++    assert "registry_precheck_total_levels must be bare int" in errors
++    assert "selected_game must be non-empty string" in errors
++    assert "selected_target_level must be bare int" in errors
++    assert "target_rotation_reason must be non-empty string" in errors
++    assert "live_attempt_count must be bare int" in errors
++    assert "runtime_predicates_induced must be a non-empty list" in errors
++    assert "offline_reproduced must be bare bool" in errors
++    assert "reproduced_levels must be bare int" in errors
++    assert "new_levels_banked must be bare int" in errors
++    assert "new_level_reproduced must be bare bool" in errors
++    assert "no_offline_bfs must be true" in errors
++    assert "no_source_reading must be true" in errors
++    assert "no_per_game_adapter_credited must be true" in errors
++    assert "complete artifact requires offline_reproduced true" in errors
++    assert "complete artifact requires new_level_reproduced true" in errors
++    assert "honest_verdict must start with complete:, honest_null:, or blocked:" in errors
++    with pytest.raises(ValueError):
++        exp5450.validate_artifact(corrupt)
++
++    weird = {**artifact, "status": "weird", "selected_target_level": 0}
++    weird_errors = exp5450.artifact_schema_errors(weird)
++    assert "status must be complete, honest_null, or blocked" in weird_errors
++    assert "selected_target_level must be >= 1" in weird_errors
++
++    zero_level_complete = {**success, "reproduced_levels": 0, "new_levels_banked": 0}
++    zero_level_errors = exp5450.artifact_schema_errors(zero_level_complete)
++    assert "complete artifact requires reproduced_levels >= 1" in zero_level_errors
++    assert "complete artifact requires new_levels_banked >= 1" in zero_level_errors
++
++    invalid_null = {**artifact, "offline_reproduced": True, "arc_new_level_banked": True}
++    invalid_null_errors = exp5450.artifact_schema_errors(invalid_null)
++    assert "non-complete artifact cannot set offline_reproduced true" in invalid_null_errors
++    assert "arc_new_level_banked requires complete status" in invalid_null_errors
++
++    blocked = exp5450.build_artifact(
++        selection={
++            "status": "blocked",
++            "registry_precheck_total_levels": 69,
++            "selected_game": "",
++            "selected_target_level": 0,
++            "target_rotation_reason": "no_eligible_frontier_after_rotation",
++            "registry_level_before": 0,
++        },
++        attempt={"blocked": True},
++        preconditions_checked={**_preconditions(), "offline_arcade_available": False},
++        tests_run=["unit 5450"],
++        duration_s=0.1,
++    )
++    exp5450.validate_artifact(blocked)
++    assert blocked["honest_verdict"].startswith("blocked:")
++
++
++def test_scenario_arc_fcp_5450_run_experiment_writes_deliverable(tmp_path: Path) -> None:
++    """REQ-ARC-FCP-5450: run wrapper writes a validated deliverable JSON."""
++
++    (tmp_path / "AGENTS.md").write_text("repo instructions\n", encoding="utf-8")
++    (tmp_path / "CODEX.md").write_text("codex instructions\n", encoding="utf-8")
++    spec_path = tmp_path / exp5450.SPEC_RELATIVE_PATH
++    spec_path.parent.mkdir(parents=True)
++    spec_path.write_text("REQ-ARC-FCP-5450\nSCENARIO-ARC-FCP-5450\n", encoding="utf-8")
++    registry_path = tmp_path / exp5450.REGISTRY_RELATIVE_PATH
++    registry_path.parent.mkdir(parents=True)
++    registry_path.write_text(yaml.safe_dump(_registry()), encoding="utf-8")
++    results_dir = tmp_path / "results"
++    results_dir.mkdir()
++    for game, row in _loop_results().items():
++        (results_dir / f"arc_loop_solve_{game}.json").write_text(
++            json.dumps({"game": game, **row}),
++            encoding="utf-8",
++        )
++
++    artifact = exp5450.run_experiment(
++        root=tmp_path,
++        attempt_runner=lambda **_kwargs: _attempt(),
++        offline_arcade_check=lambda: True,
++        tests_run=["unit 5450"],
++    )
++    written = json.loads((tmp_path / exp5450.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert written == artifact
++    assert artifact["registry_precheck_total_levels"] == 69
++    assert artifact["preconditions_checked"]["arc_loop_results_checked"] is True
++    assert artifact["status"] == "honest_null"
++
++    blocked = exp5450.run_experiment(
++        root=tmp_path,
++        attempt_runner=lambda **_kwargs: _attempt(),
++        offline_arcade_check=lambda: False,
++        tests_run=["unit 5450"],
++    )
++    assert blocked["status"] == "blocked"
++    assert blocked["honest_verdict"].startswith("blocked:")
+-- 
+2.55.0
+

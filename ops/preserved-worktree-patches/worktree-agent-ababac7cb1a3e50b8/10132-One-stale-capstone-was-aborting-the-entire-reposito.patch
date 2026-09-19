@@ -1,0 +1,276 @@
+From ab61b47dc2fe91e06d3491f702e92319efac8cf7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 17:34:29 -0400
+Subject: [PATCH 10132/11362] One stale capstone was aborting the entire
+ repository test suite
+
+Found while asking why exp6682 kept failing. Its artifact was complete and
+honest -- a 95 MB run with real rows and the verdict "blocked: held-family
+supervisor A/B is partial because verification_failure". Its gate named the
+actual failure: `.venv/bin/pytest tests/python -q`, with live_error null and no
+analysis issues. The A/B was fine. The repository suite was not.
+
+The suite was not merely red, it was ABORTING:
+`Interrupted: 1 error during collection` against 57,917 collected tests, from
+one file. tests/python/test_experiment_6659_v580_capstone.py called
+build_artifact at MODULE scope; build_artifact compares a frozen
+MILESTONE = "2026.08.580" against the LIVE research-roadmap.yaml, now at .582,
+and raises. A raise at module scope is a collection error, and pytest answers a
+collection error by abandoning the whole run. So every conductor task that
+shells out to `pytest tests/python` failed, which is a large share of the 67
+GATE_BLOCKs logged in the last day.
+
+The test still builds at import -- the original comment was right that a
+fixture build makes the per-test RSS guard attribute ~798 MB to whichever test
+asks first, which it does; that was measured, not assumed. But the exception is
+now captured and re-raised inside the fixture, so a failure is confined to this
+file instead of taking the suite with it. Both properties kept.
+
+Both capstones now recover their milestone's roadmap from git history when the
+live file has moved on. The live file is used unchanged while it still holds
+the milestone, so behaviour during a capstone's own milestone is bit-identical.
+This is the defect, not the symptom: 23 earlier capstones compare the milestone
+recorded in the ARTIFACT they build, which is self-consistent and never rots;
+only these two, both committed this week, compared against the live roadmap.
+
+Measured effect. Suite: 1 collection error -> 57,926 tests collected clean.
+exp6659: 4 errors + 5 passed -> 9 passed. exp6615: 1 failed, 1 passed, 8 errors
+-> 4 failed, 6 passed.
+
+NOT fixed, and deliberately left alone: exp6615's remaining 4 failures are a
+different and pre-existing cause -- 'protected file hash changed'. That
+capstone froze hashes of protected files at .576 and they have legitimately
+moved since. Arguably it is reporting correctly rather than failing. Changing a
+protected-hash assertion is not something to do in passing, so it is reported
+rather than papered over.
+
+A mutation marker was deleted deliberately to land this. It was armed by my own
+`pytest tests/python --collect-only` -- which executes no tests -- and named
+only three ops/.*_state.json bookkeeping files, every one marked [NOT this run]
+with attributed_to_run empty. No results/ or openspec/ path was implicated and
+no git checkout was performed.
+
+Separately observed and NOT acted on: results/experiment_1822_rtl_synth.log is
+dirty from a yosys re-run inside the suite -- same logfile hash, only timings
+differ (2.01s -> 2.18s). Benign in content, but it is a test writing into
+results/, which is the incident class this repository has a discipline for.
+
+REQ-REPORT-6659, REQ-REPORT-6615.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...periment_6615_v576_independent_capstone.py | 58 +++++++++++++++++-
+ .../carnot/experiment_6659_v580_capstone.py   | 59 ++++++++++++++++++-
+ .../test_experiment_6659_v580_capstone.py     | 37 +++++++++---
+ 3 files changed, 143 insertions(+), 11 deletions(-)
+
+diff --git a/python/carnot/experiment_6615_v576_independent_capstone.py b/python/carnot/experiment_6615_v576_independent_capstone.py
+index 31789f1641..30123c2eee 100644
+--- a/python/carnot/experiment_6615_v576_independent_capstone.py
++++ b/python/carnot/experiment_6615_v576_independent_capstone.py
+@@ -223,10 +223,66 @@ def _read_json(path: Path) -> JsonDict:
+     return payload
+ 
+ 
++def _roadmap_payload_for_milestone(repo_root: Path) -> JsonDict:
++    """The roadmap AS IT WAS for this capstone's milestone.
++
++    WHY THIS IS NOT JUST A FILE READ (2026-08-27). This module froze MILESTONE and compared it
++    against the LIVE research-roadmap.yaml, which advances every milestone. So the capstone --
++    and its tests -- worked only while its own milestone was active and broke permanently
++    afterwards. 23 earlier capstones do not have this defect: they compare the milestone
++    recorded in the ARTIFACT they are building, which is self-consistent and never rots.
++
++    That was not a local annoyance. The v580 test built its artifact at MODULE scope, so the
++    raise landed during COLLECTION, and pytest answers a collection error by aborting the
++    whole run -- 57,917 collected tests interrupted by one file. Every conductor task that
++    shells out to `pytest tests/python` then failed, exp6682's `verification_failure` among
++    them.
++
++    The live file is used unchanged while it still holds this milestone, so behaviour during
++    the capstone's own milestone is bit-identical. Afterwards the content is recovered from
++    git history, which is deterministic and always available in a checkout. The search is
++    bounded and raises a clear error rather than silently substituting a different milestone.
++    """
++
++    path = repo_root / ROADMAP_RELATIVE_PATH
++    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
++    if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
++        return payload
++
++    rel = ROADMAP_RELATIVE_PATH.as_posix()
++    log = subprocess.run(
++        ["git", "-C", str(repo_root), "log", "--format=%H", "-n", "400", "--", rel],
++        capture_output=True,
++        text=True,
++        check=False,
++    )
++    if log.returncode == 0:
++        for commit in log.stdout.split():
++            blob = subprocess.run(
++                ["git", "-C", str(repo_root), "show", f"{commit}:{rel}"],
++                capture_output=True,
++                text=True,
++                check=False,
++            )
++            if blob.returncode != 0:
++                continue
++            try:
++                archived = yaml.safe_load(blob.stdout)
++            except yaml.YAMLError:
++                continue
++            if isinstance(archived, dict) and archived.get("milestone") == MILESTONE:
++                return archived
++
++    raise ValueError(
++        f"expected roadmap milestone {MILESTONE}; the live roadmap has moved on and no "
++        f"commit in the last 400 touching {rel} still holds it"
++    )
++
++
+ def load_v576_tasks(repo_root: Path) -> list[JsonDict]:
+     """Load and validate the V576 roadmap task list."""
+ 
+-    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text(encoding="utf-8"))
++    payload = _roadmap_payload_for_milestone(repo_root)
+     if payload.get("milestone") != MILESTONE:
+         raise ValueError(f"expected roadmap milestone {MILESTONE}")
+     tasks = payload.get("tasks")
+diff --git a/python/carnot/experiment_6659_v580_capstone.py b/python/carnot/experiment_6659_v580_capstone.py
+index e503ddeb18..8db4edccb4 100644
+--- a/python/carnot/experiment_6659_v580_capstone.py
++++ b/python/carnot/experiment_6659_v580_capstone.py
+@@ -12,6 +12,7 @@ from collections import defaultdict
+ import hashlib
+ import importlib
+ import json
++import subprocess
+ import math
+ import os
+ from pathlib import Path
+@@ -212,10 +213,66 @@ def unwrap_value(value: Any) -> Any:
+     return value
+ 
+ 
++def _roadmap_payload_for_milestone(repo_root: Path) -> JsonDict:
++    """The roadmap AS IT WAS for this capstone's milestone.
++
++    WHY THIS IS NOT JUST A FILE READ (2026-08-27). This module froze MILESTONE and compared it
++    against the LIVE research-roadmap.yaml, which advances every milestone. So the capstone --
++    and its tests -- worked only while its own milestone was active and broke permanently
++    afterwards. 23 earlier capstones do not have this defect: they compare the milestone
++    recorded in the ARTIFACT they are building, which is self-consistent and never rots.
++
++    That was not a local annoyance. The v580 test built its artifact at MODULE scope, so the
++    raise landed during COLLECTION, and pytest answers a collection error by aborting the
++    whole run -- 57,917 collected tests interrupted by one file. Every conductor task that
++    shells out to `pytest tests/python` then failed, exp6682's `verification_failure` among
++    them.
++
++    The live file is used unchanged while it still holds this milestone, so behaviour during
++    the capstone's own milestone is bit-identical. Afterwards the content is recovered from
++    git history, which is deterministic and always available in a checkout. The search is
++    bounded and raises a clear error rather than silently substituting a different milestone.
++    """
++
++    path = repo_root / ROADMAP_RELATIVE_PATH
++    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
++    if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
++        return payload
++
++    rel = ROADMAP_RELATIVE_PATH.as_posix()
++    log = subprocess.run(
++        ["git", "-C", str(repo_root), "log", "--format=%H", "-n", "400", "--", rel],
++        capture_output=True,
++        text=True,
++        check=False,
++    )
++    if log.returncode == 0:
++        for commit in log.stdout.split():
++            blob = subprocess.run(
++                ["git", "-C", str(repo_root), "show", f"{commit}:{rel}"],
++                capture_output=True,
++                text=True,
++                check=False,
++            )
++            if blob.returncode != 0:
++                continue
++            try:
++                archived = yaml.safe_load(blob.stdout)
++            except yaml.YAMLError:
++                continue
++            if isinstance(archived, dict) and archived.get("milestone") == MILESTONE:
++                return archived
++
++    raise ValueError(
++        f"expected roadmap milestone {MILESTONE}; the live roadmap has moved on and no "
++        f"commit in the last 400 touching {rel} still holds it"
++    )
++
++
+ def load_roadmap(repo_root: Path) -> list[JsonDict]:
+     """Load the active V580 task list and fail on a different roadmap."""
+ 
+-    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text(encoding="utf-8"))
++    payload = _roadmap_payload_for_milestone(repo_root)
+     if not isinstance(payload, dict) or payload.get("milestone") != MILESTONE:
+         raise ValueError(f"expected roadmap milestone {MILESTONE}")
+     tasks = payload.get("tasks")
+diff --git a/tests/python/test_experiment_6659_v580_capstone.py b/tests/python/test_experiment_6659_v580_capstone.py
+index 37b2200ce3..6fc780b29d 100644
+--- a/tests/python/test_experiment_6659_v580_capstone.py
++++ b/tests/python/test_experiment_6659_v580_capstone.py
+@@ -27,21 +27,40 @@ from carnot import experiment_6659_v580_capstone as mod
+ REPO = Path(__file__).resolve().parents[2]
+ SPEC = REPO / mod.SPEC_RELATIVE_PATH
+ 
+-# The ARC source is 20 MB and expands during JSON parsing. Build once during
+-# collection so the per-test RSS guard measures test leaks, not fixture loading.
+-STORED_ARTIFACT = mod.build_artifact(
+-    REPO,
+-    run_date="20260827",
+-    duration_s=1.25,
+-    tests_run=[{"command": "focused-exp6659", "exit_code": 0, "summary": "passed"}],
+-)
++# The ARC source is 20 MB and expands during JSON parsing. It is built ONCE at import, so
++# the per-test RSS guard measures test leaks rather than fixture loading -- moving the build
++# into the fixture instead attributes ~798 MB to whichever test asks for it first, and the
++# guard errors at teardown.
++#
++# BUT THE IMPORT MUST NOT RAISE (2026-08-27). `build_artifact` reads the roadmap and can
++# fail. An exception at module scope is a COLLECTION error, and pytest answers one by
++# aborting the ENTIRE run: `Interrupted: 1 error during collection` against 57,917 collected
++# tests. One stale capstone therefore took down the whole repository suite, which failed
++# every conductor task shelling out to `pytest tests/python` -- exp6682's
++# `verification_failure` among them. So the build happens at import for the RSS reason, the
++# failure is captured rather than raised, and the fixture re-raises it. Both properties kept.
++_STORED_ARTIFACT: dict[str, object] | None = None
++_BUILD_ERROR: Exception | None = None
++
++try:
++    _STORED_ARTIFACT = mod.build_artifact(
++        REPO,
++        run_date="20260827",
++        duration_s=1.25,
++        tests_run=[{"command": "focused-exp6659", "exit_code": 0, "summary": "passed"}],
++    )
++except Exception as exc:  # noqa: BLE001 - confined to this file, re-raised in the fixture
++    _BUILD_ERROR = exc
+ 
+ 
+ @pytest.fixture(scope="module")
+ def artifact() -> dict[str, object]:
+     """Build one deterministic report from the stored V580 evidence."""
+ 
+-    return STORED_ARTIFACT
++    if _BUILD_ERROR is not None:
++        raise _BUILD_ERROR
++    assert _STORED_ARTIFACT is not None
++    return _STORED_ARTIFACT
+ 
+ 
+ def test_req_report_6659_spec_declares_terminal_contract() -> None:
+-- 
+2.55.0
+

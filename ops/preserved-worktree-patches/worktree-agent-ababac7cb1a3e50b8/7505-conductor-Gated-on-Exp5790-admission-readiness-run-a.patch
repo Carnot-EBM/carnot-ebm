@@ -1,0 +1,72 @@
+From 2e212a4d1e26810d9fb08b9688ca4eeda5d66946 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 08:48:01 -0400
+Subject: [PATCH 07505/11362] [conductor] Gated on Exp5790 admission readiness:
+ run a matched three-family independent single-shot ARC hypothesis panel
+
+Automated research step by research conductor.
+Task ID: exp5791-arc-sota-independent-hypothesis-panel
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                                |  2 +-
+ ...ent_5791_arc_sota_independent_hypothesis_panel.json | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 73e896f664..a5c486a50c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4633,
++  "experiments_checked": 4634,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_5791_arc_sota_independent_hypothesis_panel.json b/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+index 5a8ee0766c..412056ef28 100644
+--- a/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
++++ b/results/experiment_5791_arc_sota_independent_hypothesis_panel.json
+@@ -161,7 +161,7 @@
+         "gpu": 1,
+         "name": "NVIDIA GeForce RTX 3090",
+         "memory_total_mib": 24576,
+-        "memory_used_mib": 4,
++        "memory_used_mib": 21444,
+         "offload_ok": true,
+         "headline_load_verified": false,
+         "vram_delta_mib": 0
+@@ -184,8 +184,8 @@
+     },
+     "disk_ram": {
+       "ok": true,
+-      "disk_free_mb": 1171259,
+-      "ram_free_mb": 86556,
++      "disk_free_mb": 1171256,
++      "ram_free_mb": 85368,
+       "min_disk_free_mb": 4096,
+       "min_ram_free_mb": 4096
+     },
+@@ -342,7 +342,7 @@
+       "gpu": 1,
+       "name": "NVIDIA GeForce RTX 3090",
+       "memory_total_mib": 24576,
+-      "memory_used_mib": 4,
++      "memory_used_mib": 21444,
+       "offload_ok": true,
+       "headline_load_verified": false,
+       "vram_delta_mib": 0
+@@ -516,6 +516,6 @@
+     ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+     ".venv/bin/ruff check python/carnot/experiment_5791_arc_sota_independent_hypothesis_panel.py tests/python/test_experiment_5791_arc_sota_independent_hypothesis_panel.py scripts/experiments/experiment_5791_arc_sota_independent_hypothesis_panel.py": 0
+   },
+-  "reproducibility_checksum": "sha256:26cf7b53888c2c7310ed75ae49303e7ae869b7805d93e9d043656005007a8f5d",
++  "reproducibility_checksum": "sha256:e9361b13891e5c1726267e30d53615f63cae977313deb93e8a7755f3ff64f546",
+   "honest_verdict": "blocked: headline_gpu_offload_receipts_present"
+ }
+-- 
+2.55.0
+

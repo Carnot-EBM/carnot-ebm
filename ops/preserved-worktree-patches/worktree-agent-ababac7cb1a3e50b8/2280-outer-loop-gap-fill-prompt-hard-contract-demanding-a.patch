@@ -1,0 +1,36 @@
+From e0df6d34a7e9522536cf3fa1c6703f4e902af32f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 05:40:51 -0400
+Subject: [PATCH 02280/11362] [outer-loop] gap-fill prompt: hard contract
+ demanding an unconditional float return (all models fell through to None)
+
+---
+ scripts/arc_gap_fill.py | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/arc_gap_fill.py b/scripts/arc_gap_fill.py
+index e412fe3cff..5766144328 100644
+--- a/scripts/arc_gap_fill.py
++++ b/scripts/arc_gap_fill.py
+@@ -64,8 +64,16 @@ state. `grid` is a {h}x{w} numpy int array (colors {colors}).
+ Below are observed transitions (compact: one full grid + per-action deltas) and the full WIN
+ STATE. INFER what makes a state close to the win (pieces aligned to targets, a region filled,
+ the player adjacent to an exit, etc.) and score it so goal_distance(win_state)≈0 and
+-far-from-win states score higher. Use only numpy. Output ONLY one ```python code block
+-containing `import numpy as np` and the complete function `def goal_distance(grid):`.
++far-from-win states score higher. Use only numpy.
++
++CRITICAL CONTRACT: goal_distance MUST `return` a single float for ANY input grid — it must
++NEVER return None or fall off the end. Make the LAST line of the function an unconditional
++`return float(<value>)`. Do not use early returns inside branches without a final fallback
++return. A simple, robust choice: return the count of cells where `grid` differs from the
++fixed win pattern. Keep it short.
++
++Output ONLY one ```python code block containing `import numpy as np` and the complete
++function `def goal_distance(grid):` that ends in an unconditional float return.
+ 
+ {e3._transitions_block(trans)}
+ ```python
+-- 
+2.55.0
+

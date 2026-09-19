@@ -1,0 +1,1653 @@
+From 40ead1aeace0e730a988547714d4d4c91f281b7d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 02:34:15 -0400
+Subject: [PATCH 03174/11362] [conductor] PHASE 0 (TRANSITION) -- archive .418
+ -> activate .419; assert YAML parses + smart-subset pre-test gate green;
+ RECORD the TRUE .418 close-state (nav/trim is a dead score lever; A2
+ diagnosed the L1->L2 barrier as per-level goal re-induction; A3 banked cd82
+ L2; reproducible_total_levels=50; efficiency_moved=false).
+
+Automated research step by research conductor.
+Task ID: exp4532-phase0
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   3 +
+ ops/dogfood-memory.json                       |   4 +-
+ ...xperiment_4532_archive_418_activate_419.py | 680 ++++++++++++++++++
+ research-roadmap.yaml                         |  38 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...eriment_4532_archive_418_activate_419.json | 211 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xperiment_4532_archive_418_activate_419.py | 414 +++++++++++
+ 13 files changed, 1346 insertions(+), 38 deletions(-)
+ create mode 100644 python/carnot/experiment_4532_archive_418_activate_419.py
+ create mode 100644 results/experiment_4532_archive_418_activate_419.json
+ create mode 100644 tests/python/test_experiment_4532_archive_418_activate_419.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index ff5ec9caa5..a0ba036d95 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -163,3 +163,6 @@
+ - REQ-CAPSTONE-4531: The .418 capstone must aggregate existing upstream artifacts exp4523, exp4524 reach-deeper-levels, exp4524 stop-after-levelup, exp4525, and exp4526 through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` or live-critical before importing headline metrics, read `ops/arc_solve_registry.yaml` for the authoritative `reproducible_total_levels`, answer whether `core_efficiency` rose above the fixed `arc_agi.scorecard` baseline `2.0074`, treat median-action trimming as retired score-lever context rather than a submitted-score win, record any failed acceptance gate as overriding a celebratory verdict, make no leaderboard submission, and write `results/experiment_4531_capstone_v418.json`.
+ - SCENARIO-CAPSTONE-4531: The capstone artifact `results/experiment_4531_capstone_v418.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, bare boolean `efficiency_moved`, `reproducible_total_levels_delta`, `flagged_artifacts_skipped`, `cited_upstream_artifacts`, bare boolean `ready_for_operator_submit`, `preconditions_checked`, `scorecard`, `a2_l1_l2_barrier_diagnosis`, `duration_s`, `random_seed`, and `reproducibility_checksum`; the default .418 read must report A1 forward-walk navigation as nulled/excluded when flagged, A2 L1->L2 diagnosis as not cleanly aggregatable when reach-deeper-levels is flagged, stop-after-levelup as clean retired action-trimming context only, A3 reproducible level growth only from clean offline reproduction plus registry evidence, and A4 integration as not improving the submitted CORE per-level metric when exp4526 is flagged or does not raise `core_efficiency` above `2.0074`.
+ - SCENARIO-CAPSTONE-4531-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: nav_fix_core_actions_<n>_below_7760 OR complete: nav_fix_null_efficiency_unmoved."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `efficiency_moved` = "the bottom line -- did CORE median actions drop STRICTLY below 7760 (the IMPROVED tag, not merely non-inferior within the 10% slack) at preserved solve-rate (the thing .417 did not achieve)."; `reproducible_total_levels_delta` = "did solve CAPABILITY grow this milestone (A3 level-up)."; `flagged_artifacts_skipped` = "names any flagged_adversarial artifact excluded from aggregation -- the fabrication-gate compliance."; `cited_upstream_artifacts` = "every headline number traces to a real upstream measurement (the audit trail)."; `ready_for_operator_submit` = "True only if the integrated config is a CORE-preserved efficiency improvement worth a 1/day slot; never submits."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4532: The .418 to .419 transition workflow must write `results/experiment_4532_archive_418_activate_419.json` as a record-only artifact, must not modify `scripts/research_conductor.py`, must use `inference_substrate=aggregation_from_upstream_artifacts`, and must confirm the active roadmap is milestone `2026.06.419`. If `research-roadmap-next.yaml` has already been consumed by conductor-level activation, the workflow shall treat `research-roadmap.yaml` being parseable and active at `2026.06.419` as the no-op activation state while recording the missing literal next-roadmap probe in `preconditions_checked`; it shall not fabricate a replacement next roadmap. The workflow must read `results/experiment_4531_capstone_v418.json`, `results/experiment_4524_reach_deeper_levels.json`, and `ops/arc_solve_registry.yaml`, carry forward the true .418 close-state, assert the smart-subset pre-test gate is green, and write a terminal-prefixed `honest_verdict`.
++- SCENARIO-CAPSTONE-4532: The transition artifact must emit top-level fields for `honest_verdict`, `inference_substrate`, `preconditions_checked`, `transition`, `close_state_418`, `cited_upstream_artifacts`, `field_provenance`, `duration_s`, `random_seed`, and `reproducibility_checksum`; it must record navigation/action-trimming as a dead score lever with A1 forward-walk `7761.5==control` under fixed transition-budget termination, A2's L1->L2 barrier as per-level goal re-induction with `l2_win_condition_differs_from_l1`, induction once on stall, and `target_levels=1`, A3 cd82 L2 banked, registry `reproducible_total_levels=50`, and `.418` `efficiency_moved=false` because no lever raised `core_efficiency` above `2.0074`.
++- SCENARIO-CAPSTONE-4532-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."; `inference_substrate` = "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."; `preconditions_checked` = "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."; `close_state_418` = "the honest .418 numbers (nav-is-dead; A2 barrier=per-level goal re-induction; A3 cd82 L2; reproducible_total_levels; efficiency_moved=false) carried forward so the record does not drift."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 51f68c79af..b8059aa9e6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -1,8 +1,8 @@
+ {
+   "patterns": {},
+-  "brace_fixes": 183,
++  "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3549,
++  "experiments_checked": 3550,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4532_archive_418_activate_419.py b/python/carnot/experiment_4532_archive_418_activate_419.py
+new file mode 100644
+index 0000000000..9257f4b441
+--- /dev/null
++++ b/python/carnot/experiment_4532_archive_418_activate_419.py
+@@ -0,0 +1,680 @@
++"""Experiment 4532: archive `.418`, activate `.419`, and record the `.418` close-state.
++
++Spec refs: REQ-CAPSTONE-4532, SCENARIO-CAPSTONE-4532,
++SCENARIO-CAPSTONE-4532-FIELD-PRINCIPLES.
++
++This is a record-only transition. The conductor may already have consumed
++`research-roadmap-next.yaml`; in that case a parseable active `.419` roadmap is
++the activation evidence, and the missing literal next-roadmap probe is recorded
++instead of reconstructed.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import json
++from pathlib import Path
++from typing import Any
++
++import yaml
++
++from carnot.reporting.archive_v391_activate_v392_4230 import (
++    CommandResult,
++    duration_from,
++    file_sha256,
++    is_sha256,
++    payload_checksum,
++    run_smart_subset,
++)
++
++
++JsonDict = dict[str, Any]
++OfflineArcadeChecker = Callable[[], bool]
++SmartSubsetChecker = Callable[[Path], CommandResult]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4532_archive_418_activate_419.json"
++OUTPUT_REL_PATH = Path(RESULT_RELATIVE_PATH)
++RESEARCH_ROADMAP_REL_PATH = Path("research-roadmap.yaml")
++RESEARCH_ROADMAP_NEXT_REL_PATH = Path("research-roadmap-next.yaml")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++REGISTRY_REL_PATH = Path("ops/arc_solve_registry.yaml")
++CAPSTONE_REL_PATH = Path("results/experiment_4531_capstone_v418.json")
++A1_FORWARD_WALK_REL_PATH = Path("results/experiment_4523_forward_walk_navigation.json")
++A2_REACH_DEEPER_REL_PATH = Path("results/experiment_4524_reach_deeper_levels.json")
++A3_LEVELUP_REL_PATH = Path("results/experiment_4525_levelup_attempt.json")
++
++EXPERIMENT_ID = 4532
++ARCHIVED_MILESTONE = "2026.06.418"
++ACTIVATED_MILESTONE = "2026.06.419"
++RANDOM_SEED = 4532
++SCHEMA = "carnot.archive_activation.v418_to_v419_4532.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++CORE_EFFICIENCY_BASELINE = 2.0074
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++
++FIELD_PROVENANCE = {
++    "honest_verdict": {
++        "principle": (
++            "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/"
++            "passed_/shipped:/shipped_ so the reconciler classifies it terminal."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us "
++            "floor, not the 60s live-model floor."
++        )
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
++        )
++    },
++    "close_state_418": {
++        "principle": (
++            "the honest .418 numbers (nav-is-dead; A2 barrier=per-level goal re-induction; "
++            "A3 cd82 L2; reproducible_total_levels; efficiency_moved=false) carried forward so "
++            "the record does not drift."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "preconditions_checked",
++    "transition",
++    "close_state_418",
++    "cited_upstream_artifacts",
++    "field_provenance",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++)
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _list(value: Any) -> list[Any]:
++    return value if isinstance(value, list) else []
++
++
++def _float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return float(value)
++    return default
++
++
++def _int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return int(value)
++    return default
++
++
++def _read_text(path: Path) -> str | None:
++    return path.read_text(encoding="utf-8") if path.exists() else None
++
++
++def _yaml_info(path: Path) -> JsonDict:
++    text = _read_text(path)
++    if text is None:
++        return {"path": str(path), "available": False, "parses": False, "milestone": None}
++    try:
++        loaded = yaml.safe_load(text)
++    except yaml.YAMLError as exc:
++        return {
++            "path": str(path),
++            "available": True,
++            "parses": False,
++            "milestone": None,
++            "error": str(exc),
++        }
++    milestone = loaded.get("milestone") if isinstance(loaded, Mapping) else None
++    return {
++        "path": str(path),
++        "available": True,
++        "parses": True,
++        "milestone": milestone,
++    }
++
++
++def _read_json(path: Path) -> JsonDict:
++    with path.open("r", encoding="utf-8") as handle:
++        loaded = json.load(handle)
++    if not isinstance(loaded, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return loaded
++
++
++def _registry_total_levels(path: Path) -> int | None:
++    if not path.exists():
++        return None
++    loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    if not isinstance(loaded, Mapping):
++        return None
++    value = loaded.get("reproducible_total_levels")
++    return None if isinstance(value, bool) or not isinstance(value, int | float) else int(value)
++
++
++def _command_check(result: CommandResult) -> JsonDict:
++    return {
++        "command": result.command,
++        "exit_code": result.exit_code,
++        "stdout_tail": result.stdout[-500:],
++        "stderr_tail": result.stderr[-500:],
++        "passed": result.exit_code == 0,
++    }
++
++
++def _default_offline_arcade_checker() -> bool:  # pragma: no cover - integration smoke wrapper
++    from carnot.agentic import arc_solver_kit as kit
++
++    kit.offline_arcade()
++    return True
++
++
++def _default_smart_subset_checker(root: Path) -> CommandResult:  # pragma: no cover - subprocess wrapper
++    return run_smart_subset(root)
++
++
++def _preconditions(
++    root: Path,
++    *,
++    offline_arcade_checker: OfflineArcadeChecker,
++    smart_subset_checker: SmartSubsetChecker,
++) -> JsonDict:
++    next_info = _yaml_info(root / RESEARCH_ROADMAP_NEXT_REL_PATH)
++    active_info = _yaml_info(root / RESEARCH_ROADMAP_REL_PATH)
++    complete_text = _read_text(root / RESEARCH_COMPLETE_REL_PATH)
++    registry_levels = _registry_total_levels(root / REGISTRY_REL_PATH)
++
++    try:
++        offline_ok = bool(offline_arcade_checker())
++        offline_error = ""
++    except Exception as exc:  # pragma: no cover - defensive integration reporting
++        offline_ok = False
++        offline_error = str(exc)
++
++    smart_subset = smart_subset_checker(root)
++
++    return {
++        "research_roadmap_next_yaml": {
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "available": next_info["available"],
++            "parses": next_info["parses"],
++            "milestone": next_info["milestone"],
++            "note": (
++                "literal precondition failed; accepted only when active research-roadmap.yaml "
++                "is parseable at 2026.06.419"
++            )
++            if not next_info["available"]
++            else "",
++        },
++        "active_research_roadmap_yaml": {
++            "path": str(RESEARCH_ROADMAP_REL_PATH),
++            "available": active_info["available"],
++            "parses": active_info["parses"],
++            "milestone": active_info["milestone"],
++        },
++        "research_complete_yaml": {
++            "path": str(RESEARCH_COMPLETE_REL_PATH),
++            "available": complete_text is not None,
++            "parses": _yaml_info(root / RESEARCH_COMPLETE_REL_PATH)["parses"],
++            "contains_2026_06_418": bool(complete_text and ARCHIVED_MILESTONE in complete_text),
++        },
++        "offline_arcade": {
++            "available": offline_ok,
++            "command": (
++                ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; "
++                "k.offline_arcade()\""
++            ),
++            "error": offline_error,
++        },
++        "smart_subset_pretest_gate": _command_check(smart_subset),
++        "registry": {
++            "path": str(REGISTRY_REL_PATH),
++            "available": registry_levels is not None,
++            "reproducible_total_levels": registry_levels,
++        },
++        "capstone_4531": {
++            "path": str(CAPSTONE_REL_PATH),
++            "available": (root / CAPSTONE_REL_PATH).exists(),
++        },
++        "a1_forward_walk_navigation": {
++            "path": str(A1_FORWARD_WALK_REL_PATH),
++            "available": (root / A1_FORWARD_WALK_REL_PATH).exists(),
++        },
++        "a2_reach_deeper_levels": {
++            "path": str(A2_REACH_DEEPER_REL_PATH),
++            "available": (root / A2_REACH_DEEPER_REL_PATH).exists(),
++        },
++        "a3_levelup_attempt": {
++            "path": str(A3_LEVELUP_REL_PATH),
++            "available": (root / A3_LEVELUP_REL_PATH).exists(),
++        },
++    }
++
++
++def _roadmap_target_levels_one(roadmap_text: str | None) -> bool:
++    if not roadmap_text:
++        return False
++    normalized = roadmap_text.replace(" ", "")
++    return "target_levels=1" in normalized or "TARGET_LEVELS=1" in normalized
++
++
++def _diagnosis_evidence(a2: Mapping[str, Any]) -> list[Mapping[str, Any]]:
++    diagnosis = _mapping(a2.get("barrier_diagnosis"))
++    return [
++        row
++        for row in _list(diagnosis.get("evidence"))
++        if isinstance(row, Mapping)
++    ]
++
++
++def _has_l2_win_condition_change(a2: Mapping[str, Any]) -> bool:
++    diagnosis = _mapping(a2.get("barrier_diagnosis"))
++    return bool(
++        diagnosis.get("new_win_condition_likely") is True
++        or any(row.get("l2_win_condition_differs_from_l1") is True for row in _diagnosis_evidence(a2))
++    )
++
++
++def _known_l2_salience(a2: Mapping[str, Any]) -> Any:
++    diagnosis = _mapping(a2.get("barrier_diagnosis"))
++    for row in _diagnosis_evidence(a2):
++        if "known_l2_transition_in_salience" in row:
++            return row.get("known_l2_transition_in_salience")
++    return diagnosis.get("known_l2_transition_in_salience")
++
++
++def _close_state_418(
++    *,
++    capstone: Mapping[str, Any],
++    a1_forward_walk: Mapping[str, Any],
++    a2_reach_deeper: Mapping[str, Any],
++    a3_levelup: Mapping[str, Any],
++    registry_total_levels: int,
++    roadmap_text: str | None,
++) -> JsonDict:
++    scorecard = _mapping(capstone.get("scorecard"))
++    core_efficiency = _mapping(scorecard.get("core_efficiency"))
++    stop_after_levelup = _mapping(scorecard.get("stop_after_levelup_delta"))
++    a3_scorecard = _mapping(scorecard.get("a3_levelup"))
++    a2_diagnosis = _mapping(a2_reach_deeper.get("barrier_diagnosis"))
++
++    a1_control = _float(a1_forward_walk.get("median_actions_on_core_control"))
++    a1_best = _float(a1_forward_walk.get("median_actions_on_core_best"))
++    target_levels_one = _roadmap_target_levels_one(roadmap_text)
++    l2_changed = _has_l2_win_condition_change(a2_reach_deeper)
++    induction_once_on_stall = bool(
++        a2_diagnosis.get("induction_not_engaged") is True
++        or any(row.get("world_model_induction_invoked") is False for row in _diagnosis_evidence(a2_reach_deeper))
++    )
++
++    return {
++        "source_capstone_honest_verdict": capstone.get("honest_verdict"),
++        "capstone_reported_efficiency_moved": capstone.get("efficiency_moved"),
++        "efficiency_moved": False,
++        "core_efficiency_baseline": _float(
++            core_efficiency.get("baseline"), CORE_EFFICIENCY_BASELINE
++        ),
++        "core_efficiency_integrated": core_efficiency.get("integrated"),
++        "reproducible_total_levels": registry_total_levels,
++        "capstone_reported_reproducible_total_levels_delta": dict(
++            _mapping(capstone.get("reproducible_total_levels_delta"))
++        ),
++        "nav_action_trimming_dead_score_lever": bool(
++            a1_control == a1_best
++            and stop_after_levelup.get("moves_score") is False
++            and capstone.get("efficiency_moved") is False
++        ),
++        "a1_forward_walk": {
++            "honest_verdict": a1_forward_walk.get("honest_verdict"),
++            "median_actions_on_core_control": a1_control,
++            "median_actions_on_core_best": a1_best,
++            "control_equals_best": a1_control == a1_best,
++            "fixed_transition_budget": _int(a1_forward_walk.get("local_gate_budget"), 8000),
++            "chosen_submitted_config": a1_forward_walk.get("chosen_submitted_config", "unchanged"),
++            "score_lever_dead": a1_control == a1_best,
++            "flagged_on_false_positive_null_delta_tautology": (
++                a1_forward_walk.get("flagged_adversarial") is True
++            ),
++        },
++        "action_trimming_context": {
++            "status": stop_after_levelup.get("status"),
++            "median_actions_control": stop_after_levelup.get("median_actions_control"),
++            "median_actions_best": stop_after_levelup.get("median_actions_best"),
++            "moves_score": stop_after_levelup.get("moves_score") is True,
++            "reason": "median_actions_retired_as_score_lever",
++        },
++        "a2_barrier_diagnosis": {
++            "source_honest_verdict": a2_reach_deeper.get("honest_verdict"),
++            "barrier": "per_level_goal_reinduction",
++            "root_cause_reported_by_source": a2_diagnosis.get("root_cause"),
++            "l2_win_condition_differs_from_l1": l2_changed,
++            "known_l2_transition_in_salience": _known_l2_salience(a2_reach_deeper),
++            "induction_once_on_stall": induction_once_on_stall,
++            "target_levels": 1 if target_levels_one else None,
++            "actionable_next_step": a2_diagnosis.get("actionable_next_step"),
++            "flagged_on_false_positive_null_delta_tautology": (
++                a2_reach_deeper.get("flagged_adversarial") is True
++            ),
++        },
++        "a3_levelup": {
++            "source_honest_verdict": a3_levelup.get("honest_verdict")
++            or a3_scorecard.get("honest_verdict"),
++            "target_game": a3_levelup.get("target_game", a3_scorecard.get("target_game")),
++            "target_level": _int(a3_levelup.get("target_level"), _int(a3_scorecard.get("target_level"), 2)),
++            "banked_levels": _int(
++                _mapping(a3_levelup.get("registry_update")).get("banked_levels"),
++                _int(a3_scorecard.get("banked_levels"), 1),
++            ),
++            "banked": a3_levelup.get("offline_reproduced") is True
++            or a3_scorecard.get("level_up_banked") is True,
++            "offline_reproduced": a3_levelup.get("offline_reproduced") is True,
++        },
++        "net_418": {
++            "solve_capability_grew": registry_total_levels >= 50,
++            "action_efficiency_moved": False,
++            "efficiency_reason": "no lever raised core_efficiency above 2.0074",
++            "submitted_config": "unchanged",
++            "score_lever_to_build_next": "per_level_goal_reinduction",
++        },
++    }
++
++
++def _transition(preconditions: Mapping[str, Any], *, complete: bool) -> JsonDict:
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    research_complete = _mapping(preconditions.get("research_complete_yaml"))
++    if complete and next_info.get("available") is False:
++        activation_state = "already_active_roadmap_next_consumed"
++    elif complete:
++        activation_state = "activated_from_research_roadmap_next"
++    else:
++        activation_state = "blocked_missing_or_failed_precondition"
++    return {
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": bool(
++            complete
++            and active.get("parses") is True
++            and active.get("milestone") == ACTIVATED_MILESTONE
++        ),
++        "activation_state": activation_state,
++        "archive_state": (
++            "research_complete_contains_2026.06.418"
++            if research_complete.get("contains_2026_06_418") is True
++            else "archive_record_not_observed"
++        ),
++    }
++
++
++def _cited_upstream(root: Path) -> list[JsonDict]:
++    return [
++        {
++            "source": "experiment_4531_capstone_v418",
++            "path": str(CAPSTONE_REL_PATH),
++            "fields_imported": [
++                "honest_verdict",
++                "efficiency_moved",
++                "scorecard",
++                "reproducible_total_levels_delta",
++            ],
++            "sha256": file_sha256(root / CAPSTONE_REL_PATH),
++        },
++        {
++            "source": "experiment_4523_forward_walk_navigation",
++            "path": str(A1_FORWARD_WALK_REL_PATH),
++            "fields_imported": [
++                "median_actions_on_core_control",
++                "median_actions_on_core_best",
++                "local_gate_budget",
++                "chosen_submitted_config",
++            ],
++            "sha256": file_sha256(root / A1_FORWARD_WALK_REL_PATH),
++        },
++        {
++            "source": "experiment_4524_reach_deeper_levels",
++            "path": str(A2_REACH_DEEPER_REL_PATH),
++            "fields_imported": [
++                "barrier_diagnosis.l2_win_condition_differs_from_l1",
++                "barrier_diagnosis.induction_not_engaged",
++                "barrier_diagnosis.actionable_next_step",
++            ],
++            "sha256": file_sha256(root / A2_REACH_DEEPER_REL_PATH),
++        },
++        {
++            "source": "experiment_4525_levelup_attempt",
++            "path": str(A3_LEVELUP_REL_PATH),
++            "fields_imported": [
++                "honest_verdict",
++                "offline_reproduced",
++                "target_game",
++                "target_level",
++                "registry_update",
++            ],
++            "sha256": file_sha256(root / A3_LEVELUP_REL_PATH),
++        },
++        {
++            "source": "arc_solve_registry",
++            "path": str(REGISTRY_REL_PATH),
++            "fields_imported": ["reproducible_total_levels"],
++            "sha256": file_sha256(root / REGISTRY_REL_PATH),
++        },
++    ]
++
++
++def _blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    cited_upstream_artifacts: list[JsonDict],
++) -> JsonDict:
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": "experiment_4532_archive_418_activate_419",
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": f"blocked_{reason}",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": dict(preconditions_checked),
++        "transition": _transition(preconditions_checked, complete=False),
++        "close_state_418": {},
++        "cited_upstream_artifacts": cited_upstream_artifacts,
++        "field_provenance": FIELD_PROVENANCE,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def _first_blocker(preconditions: Mapping[str, Any]) -> str | None:
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    offline = _mapping(preconditions.get("offline_arcade"))
++    smart = _mapping(preconditions.get("smart_subset_pretest_gate"))
++    registry = _mapping(preconditions.get("registry"))
++    capstone = _mapping(preconditions.get("capstone_4531"))
++    a1 = _mapping(preconditions.get("a1_forward_walk_navigation"))
++    a2 = _mapping(preconditions.get("a2_reach_deeper_levels"))
++    a3 = _mapping(preconditions.get("a3_levelup_attempt"))
++
++    active_419 = active.get("parses") is True and active.get("milestone") == ACTIVATED_MILESTONE
++    next_419 = next_info.get("parses") is True and next_info.get("milestone") == ACTIVATED_MILESTONE
++    if not (active_419 or next_419):
++        return "research_roadmap_419_unavailable"
++    if offline.get("available") is not True:
++        return "offline_arcade"
++    if smart.get("passed") is not True:
++        return "smart_subset_pretest_gate"
++    if registry.get("available") is not True:
++        return "arc_solve_registry"
++    if capstone.get("available") is not True:
++        return "missing_experiment_4531_capstone_v418"
++    if a1.get("available") is not True:
++        return "missing_experiment_4523_forward_walk_navigation"
++    if a2.get("available") is not True:
++        return "missing_experiment_4524_reach_deeper_levels"
++    if a3.get("available") is not True:
++        return "missing_experiment_4525_levelup_attempt"
++    return None
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    root_path = Path(root)
++    duration_s = duration_from(started_s, now_s)
++    preconditions = _preconditions(
++        root_path,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    cited = _cited_upstream(root_path)
++    blocker = _first_blocker(preconditions)
++    if blocker is not None:
++        artifact = _blocked_artifact(
++            reason=blocker,
++            preconditions_checked=preconditions,
++            duration_s=duration_s,
++            cited_upstream_artifacts=cited,
++        )
++        validate_artifact(artifact)
++        return artifact
++
++    capstone = _read_json(root_path / CAPSTONE_REL_PATH)
++    a1 = _read_json(root_path / A1_FORWARD_WALK_REL_PATH)
++    a2 = _read_json(root_path / A2_REACH_DEEPER_REL_PATH)
++    a3 = _read_json(root_path / A3_LEVELUP_REL_PATH)
++    registry_total_levels = int(_mapping(preconditions["registry"])["reproducible_total_levels"])
++    close_state = _close_state_418(
++        capstone=capstone,
++        a1_forward_walk=a1,
++        a2_reach_deeper=a2,
++        a3_levelup=a3,
++        registry_total_levels=registry_total_levels,
++        roadmap_text=_read_text(root_path / RESEARCH_ROADMAP_REL_PATH),
++    )
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": "experiment_4532_archive_418_activate_419",
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": "complete: archive_418_activate_419_true_close_state_recorded",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "preconditions_checked": preconditions,
++        "transition": _transition(preconditions, complete=True),
++        "close_state_418": close_state,
++        "cited_upstream_artifacts": cited,
++        "field_provenance": FIELD_PROVENANCE,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must start with a terminal or blocked prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    if artifact.get("field_provenance") != FIELD_PROVENANCE:
++        raise ValueError("field_provenance must preserve the required principles")
++    close_state = _mapping(artifact.get("close_state_418"))
++    if verdict.startswith("blocked_"):
++        if close_state:
++            raise ValueError("blocked artifacts must not fabricate close_state_418")
++    else:
++        transition = _mapping(artifact.get("transition"))
++        if transition.get("active_milestone_confirmed") is not True:
++            raise ValueError("complete artifacts must confirm active .419")
++        a2 = _mapping(close_state.get("a2_barrier_diagnosis"))
++        a3 = _mapping(close_state.get("a3_levelup"))
++        net = _mapping(close_state.get("net_418"))
++        if (
++            close_state.get("reproducible_total_levels") != 50
++            or close_state.get("efficiency_moved") is not False
++            or close_state.get("nav_action_trimming_dead_score_lever") is not True
++            or a3.get("target_game") != "cd82"
++            or a3.get("target_level") != 2
++            or a3.get("banked") is not True
++        ):
++            raise ValueError("complete artifacts must carry the true .418 close-state")
++        if (
++            a2.get("barrier") != "per_level_goal_reinduction"
++            or a2.get("l2_win_condition_differs_from_l1") is not True
++            or a2.get("induction_once_on_stall") is not True
++            or a2.get("target_levels") != 1
++        ):
++            raise ValueError("close_state_418 must record per-level goal re-induction")
++        if net.get("action_efficiency_moved") is not False:
++            raise ValueError("net_418 must preserve efficiency_moved=false")
++    checksum = str(artifact.get("reproducibility_checksum", ""))
++    if not checksum.startswith("sha256:") or not is_sha256(checksum.removeprefix("sha256:")):
++        raise ValueError("reproducibility_checksum must be sha256-prefixed")
++    expected = "sha256:" + payload_checksum(artifact)
++    if checksum != expected:
++        raise ValueError("reproducibility_checksum does not match artifact content")
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    artifact = build_artifact(
++        root,
++        started_s=started_s,
++        now_s=now_s,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    if write:
++        path = Path(root) / OUTPUT_REL_PATH
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper
++    artifact = run()
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    main()
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index bb378a8804..ad33c615db 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -12,7 +12,7 @@ theme: >-
+   7761.5 under a fixed transition-budget termination). The .418 A2 diagnosis -- after clearing L1
+   the agent never re-induces the (different) L2 win-predicate -- l2_win_condition_differs_from_l1=true,
+   known_l2_transition_in_salience=null, induction engages only on stall-and-not-won, and
+-  SUBMITTED_TARGET_LEVELS=1 halts the agent. .419 builds -- re-induce the L_{n+1} predicate after a
++  SUBMITTED_TARGET_LEVELS=1 halts the agent. .419 builds -- re-induce the L_{{n+1}} predicate after a
+   level-up + route the frontier toward it + raise target_levels + persist the primitive as reusable
+   scaffolding + the oracle-distinct world-model trust energy as a next-level-distance heuristic.
+ sprint_forcing_function: "ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC;
+@@ -78,7 +78,7 @@ tasks:
+   - id: exp4533-a1
+     milestone: 2026.06.419
+     title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE) -- BUILD per-level GOAL
+-      RE-INDUCTION: on a level-up, re-induce the L_{n+1} win-predicate from post-transition frames +
++      RE-INDUCTION: on a level-up, re-induce the L_{{n+1}} win-predicate from post-transition frames +
+       route the frontier toward it + raise target_levels past 1. Gate: a CORE game reaches L2
+       (core_efficiency STRICTLY > 2.0074) at preserved CORE solves, OR a measured actionable barrier
+       refinement.'
+@@ -97,7 +97,7 @@ tasks:
+           barrier is NOT depth (cap 45->90 just exhausted budget, still L1) but per-level GOAL
+           RE-INDUCTION: l2_win_condition_differs_from_l1=true, known_l2_transition_in_salience=null,
+           induction engages only on stall-and-not-won, SUBMITTED_TARGET_LEVELS=1 halts the agent. This
+-          task BUILDS the mechanism A2 prescribed (detect the level boundary -> re-induce the L_{n+1}
++          task BUILDS the mechanism A2 prescribed (detect the level boundary -> re-induce the L_{{n+1}}
+           predicate -> route the frontier toward it -> raise target_levels), NOT another depth raise.
+           Different mechanism, falsifiable gate, and it emits model_specs/inference_substrate/
+           efficiency_delta + a null-delta methodology note so a genuine null is not lost to the
+@@ -124,13 +124,13 @@ tasks:
+         1. DETECT the level boundary: when levels_completed bumps (the explorer wins a level), treat it
+            as a NEW goal-acquisition episode rather than terminating. (level = frame.levels_completed;
+            see registry general_gotcha level_on_frame_not_game.)
+-        2. RE-INDUCE the L_{n+1} win-predicate from the post-transition frames (the new level presents a
++        2. RE-INDUCE the L_{{n+1}} win-predicate from the post-transition frames (the new level presents a
+            DIFFERENT goal). Reuse the Family-B executable-world-model / DSL induction
+            (arc_world_model_dsl, arc_executable_world_model) but TRIGGER it on the level-up, not only on
+-           stall. The induced L_{n+1} predicate is the new search target.
+-        3. ROUTE the frontier toward states satisfying the re-induced L_{n+1} predicate (level-conditioned
++           stall. The induced L_{{n+1}} predicate is the new search target.
++        3. ROUTE the frontier toward states satisfying the re-induced L_{{n+1}} predicate (level-conditioned
+            goal). Keep depth as the no-regression primary key; the re-induced predicate is the goal bias.
+-        4. RAISE target_levels past 1 (sweep target_levels in {1(control),2,3,8}) so the agent keeps going.
++        4. RAISE target_levels past 1 (sweep target_levels in {{1(control),2,3,8}}) so the agent keeps going.
+       CAUTION: the run terminates on a FIXED explore_budget (transition count). Raising target_levels +
+       re-routing changes WHICH states are explored before budget is spent -- it CAN drop a knife-edge CORE
+       solve (the order-perturbation mechanism). So core_solves_preserved on {{lp85,m0r0,sp80,vc33}} is a
+@@ -145,7 +145,7 @@ tasks:
+         - {project_root}/scripts/arc_leaderboard_eval.py (the eval that drives the real scorer; eff= is per-level)
+         - {project_root}/tests/python/test_arc_submitted_agent_parity.py (keep parity green if SUBMITTED config changes)
+ 
+-      TASK: implement per-level goal re-induction (detect level-up -> re-induce L_{n+1} predicate ->
++      TASK: implement per-level goal re-induction (detect level-up -> re-induce L_{{n+1}} predicate ->
+       route -> raise target_levels); measure core_efficiency + deepest level per CORE game WITH vs
+       WITHOUT on lp85 + m0r0; wire into SUBMITTED_AGENT_CONFIG only if a CORE game reaches L2 with no
+       CORE solve lost.
+@@ -205,7 +205,7 @@ tasks:
+     milestone: 2026.06.419
+     title: 'PHASE A2 (ARC NORTH STAR; PRIMARY; operator MANDATORY; HEADLINE; ORACLE-DISTINCT MOAT) --
+       ENERGY-VERIFIER next-level-distance routing: use the world-model TRUST ENERGY (verifier_is_oracle:
+-      false) to route the frontier toward predicted-deeper states satisfying the re-induced L_{n+1}
++      false) to route the frontier toward predicted-deeper states satisfying the re-induced L_{{n+1}}
+       predicate. Test lp85 + sp80 with a matched no-energy control. Gate: an energy-routed config reaches
+       a deeper level OR a measured null with the energy signal characterized.'
+     priority: high
+@@ -221,7 +221,7 @@ tasks:
+         addressed_by: 'A2 tried energy_verifier_frontier_routing as ONE of several levers and it stayed
+           at L1 (and even dropped m0r0 to 0) because it routed in the SAME L1-goal frame with NO
+           re-induced L2 predicate to aim at. This task pairs the energy routing with the A1 re-induced
+-          L_{n+1} predicate as the TARGET (route toward states the energy says are closer to the NEW
++          L_{{n+1}} predicate as the TARGET (route toward states the energy says are closer to the NEW
+           goal), adds a MATCHED no-energy control + FALSE_NEGATIVE_RISK guard, and sets
+           verifier_is_oracle:false per the Circularity discipline. Different mechanism (energy as a
+           next-LEVEL-distance heuristic toward a re-induced goal, not a within-L1 tie-break), falsifiable
+@@ -233,26 +233,26 @@ tasks:
+       models that AUGMENT others' approaches"). The oracle-distinct EBM slot on the ARC critical path is
+       the world-model TRUST ENERGY (energy = 1 - dynamics_accuracy; ALREADY live in the submitted agent).
+       This task uses it as a NEXT-LEVEL-DISTANCE heuristic: route the frontier toward states the energy
+-      predicts are closer to the re-induced L_{n+1} goal (from A1), so the search crosses into deeper
++      predicts are closer to the re-induced L_{{n+1}} goal (from A1), so the search crosses into deeper
+       levels. verifier_is_oracle MUST be false (a circular win does not count; CLAUDE.md Circularity /
+       Oracle-Distinctness Discipline).
+ 
+       EXISTING CODE TO READ FIRST:
+         - {project_root}/python/carnot/agentic/arc_world_model_trust_energy.py (select_trusted_world_model, the trust energy)
+         - {project_root}/python/carnot/agentic/arc_competition_agent.py (_frontier, _induce_and_plan, world_model_trust_selection, HIDDEN_STATE_GAME_IDS)
+-        - {project_root}/results/experiment_4533_per_level_goal_reinduction.json (A1: the re-induced L_{n+1} predicate + any winning config -- the TARGET this routes toward; degrade gracefully if A1 nulled)
++        - {project_root}/results/experiment_4533_per_level_goal_reinduction.json (A1: the re-induced L_{{n+1}} predicate + any winning config -- the TARGET this routes toward; degrade gracefully if A1 nulled)
+         - {project_root}/results/experiment_4524_reach_deeper_levels.json (A2 .418: the energy_verifier_frontier_routing lever that stayed L1 -- the prior failure this addresses)
+         - {project_root}/scripts/kaggle/arc_local_submission_gate.py (per-level efficiency gate, baseline 2.0074)
+ 
+       TASK: route the frontier toward predicted-deeper states using the world-model trust energy as a
+-      next-level-distance heuristic toward the re-induced L_{n+1} predicate; measure on lp85 + sp80 with
++      next-level-distance heuristic toward the re-induced L_{{n+1}} predicate; measure on lp85 + sp80 with
+       a MATCHED no-energy control. verifier_is_oracle:false. If A1 produced a re-induced predicate, route
+       toward it; if A1 nulled, characterize the energy signal independently (does the trust energy
+       separate deeper-progress states from L1-stuck states at all?).
+ 
+       CONCRETE STEPS:
+         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+-        1. Read the A1 artifact for the re-induced L_{n+1} predicate + winning config (if any). Implement energy-routed frontier selection: among eligible frontier nodes, bias toward those the trust energy ranks closer to the re-induced goal. Depth stays the no-regression primary key; energy is the goal bias.
++        1. Read the A1 artifact for the re-induced L_{{n+1}} predicate + winning config (if any). Implement energy-routed frontier selection: among eligible frontier nodes, bias toward those the trust energy ranks closer to the re-induced goal. Depth stays the no-regression primary key; energy is the goal bias.
+         2. Measure WITH energy routing vs a MATCHED no-energy control on lp85 + sp80: core_efficiency, deepest_level_reached, core_solves_preserved. The WIN: an energy-routed config reaches a deeper level (deepest_level_reached >= 2 on a CORE game) the no-energy control does not, core_solves_preserved=True, verifier_is_oracle:false.
+         3. POSITIVE CONTROL + FALSE_NEGATIVE_RISK: a state set where the trust energy SHOULD separate deeper-progress from stuck (e.g. a game with a known L2 the energy was trained on) must register separation; a null is valid only if this control passed. Characterize the energy signal (AUROC of energy separating deeper-progress vs L1-stuck states) even when no solve.
+         4. HONEST NULL is acceptable IF it characterizes the energy signal + states why it does not yet cross levels (the actionable input to .420). Do NOT claim a circular win (verifier_is_oracle stays false).
+@@ -455,23 +455,23 @@ tasks:
+       reusable scaffolding, verified by transfer, compounding across games.
+ 
+       EXISTING CODE TO READ FIRST:
+-        - {project_root}/results/experiment_4533_per_level_goal_reinduction.json (A1: the re-induction primitive built; the L_{n+1} predicate + routing recipe to persist)
++        - {project_root}/results/experiment_4533_per_level_goal_reinduction.json (A1: the re-induction primitive built; the L_{{n+1}} predicate + routing recipe to persist)
+         - {project_root}/python/carnot/agentic/arc_solver_kit.py (reusable primitives + reproduce gate -- where the primitive is persisted)
+         - {project_root}/ops/arc_solve_registry.yaml (general_gotchas + per-game entries -- where the recipe + gotchas are recorded)
+         - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach -- the routing this primitive feeds)
+ 
+-      TASK: (1) PERSIST the per-level re-induction primitive (detect level-up -> re-induce L_{n+1}
++      TASK: (1) PERSIST the per-level re-induction primitive (detect level-up -> re-induce L_{{n+1}}
+       predicate -> route) into arc_solver_kit as a generic operator + a general_gotcha in
+       arc_solve_registry (so it is a reusable asset, not buried in the A1 experiment). (2) Measure
+       CROSS-GAME TRANSFER: apply the persisted primitive to 2-3 deeper games it was NOT tuned on
+       (tn36 L7+, tr87 L6+, tu93 L5+, or sc25 L5+) -- does it reach a deeper level, or at least re-induce a
+-      DIFFERENT (representation-correct) L_{n+1} predicate? Degrade gracefully: if A1 nulled, persist the
++      DIFFERENT (representation-correct) L_{{n+1}} predicate? Degrade gracefully: if A1 nulled, persist the
+       primitive-as-built and report the transfer null + what the primitive would need to cross levels.
+ 
+       CONCRETE STEPS:
+         0. PRECONDITIONS: `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0. Missing -> blocked_<resource>, EXIT.
+         1. Read the A1 artifact for the re-induction primitive + recipe. Persist it: add a generic operator/helper to arc_solver_kit (the detect-level-up -> re-induce -> route loop) + a general_gotcha entry to ops/arc_solve_registry.yaml documenting it.
+-        2. Measure transfer on 2-3 deeper games NOT tuned in A1: run the persisted primitive; report deepest_level_reached + whether a DIFFERENT L_{n+1} predicate was re-induced (representation transfer) even when no solve. Offline-reproduce any new level (arc_solver_kit.reproduce); only reproduced levels count.
++        2. Measure transfer on 2-3 deeper games NOT tuned in A1: run the persisted primitive; report deepest_level_reached + whether a DIFFERENT L_{{n+1}} predicate was re-induced (representation transfer) even when no solve. Offline-reproduce any new level (arc_solver_kit.reproduce); only reproduced levels count.
+         3. Record the transfer result + dead-ends in the registry. If a new deeper level was banked, bump reproducible_total_levels.
+ 
+       REQUIRED ARTIFACT FIELDS (principle-annotated):
+@@ -486,7 +486,7 @@ tasks:
+         transfer_deepest_level_per_game:
+           principle: "best_level reached per transfer game -- the cross-game evidence the primitive generalizes."
+         representation_transfer:
+-          principle: "whether the primitive re-induced a DIFFERENT (correct) L_{n+1} predicate even without a full solve -- a representation win short of a bank."
++          principle: "whether the primitive re-induced a DIFFERENT (correct) L_{{n+1}} predicate even without a full solve -- a representation win short of a bank."
+         offline_reproduced:
+           principle: "only offline-reproduced new levels count toward reproducible_total_levels."
+         registry_updated:
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 11e1b03088..b4766dc9c4 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-21T05:25:23.023779Z",
+-  "duration_s": 0.03135943412780762,
++  "run_date": "2026-06-21T06:32:41.260681Z",
++  "duration_s": 0.021728038787841797,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "b61fc1fbd18b653f6b4152b45c293063c97b0231226b4047a7c1f5819e7ef4dc",
++  "reproducibility_checksum": "cc365acbeeb8a9a244b9dfb62a23dd696dfdc8e5326dca1d9fc8dd6d946e76ef",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "46cbb657e3e68951eaaeb70b164b28eff92dab6c"
++    "adversarial_verify_version": "b2b05801ce98693de4a853e7df72a2032c4bab52"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 4abfe05f79..4560d61d2a 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-21T05:25:23.063002Z",
+-  "duration_s": 0.031316280364990234,
++  "run_date": "2026-06-21T06:32:41.285563Z",
++  "duration_s": 0.020839691162109375,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e7b407cb248d2d986693c3ca56e6f319067f1485c9947d47e9565f1c8368866d",
++  "reproducibility_checksum": "b8ae41f2c2f8d8ad6ad5daedb8236edc7fdeda825dd7270259d9ce4169084728",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "46cbb657e3e68951eaaeb70b164b28eff92dab6c"
++    "adversarial_verify_version": "b2b05801ce98693de4a853e7df72a2032c4bab52"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index bbe80996a6..89edc1a707 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.111673355102539,
++  "efficiency_gains_ms": 2.108335494995117,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index e910c7b8ab..b48ab462ba 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.0486960895359516e-05,
++  "duration_s": 2.7041067369282246e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4532_archive_418_activate_419.json b/results/experiment_4532_archive_418_activate_419.json
+new file mode 100644
+index 0000000000..89a3bb677e
+--- /dev/null
++++ b/results/experiment_4532_archive_418_activate_419.json
+@@ -0,0 +1,211 @@
++{
++  "cited_upstream_artifacts": [
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "efficiency_moved",
++        "scorecard",
++        "reproducible_total_levels_delta"
++      ],
++      "path": "results/experiment_4531_capstone_v418.json",
++      "sha256": "ffd9abf81dd3c6a2a438ce822a01ebc4cdca22080de4664a49d08f674dfe2f98",
++      "source": "experiment_4531_capstone_v418"
++    },
++    {
++      "fields_imported": [
++        "median_actions_on_core_control",
++        "median_actions_on_core_best",
++        "local_gate_budget",
++        "chosen_submitted_config"
++      ],
++      "path": "results/experiment_4523_forward_walk_navigation.json",
++      "sha256": "2706415488d6539c92b727ba8f6fe0f4e224859a9ed6c82ecf5ca6684c719a9b",
++      "source": "experiment_4523_forward_walk_navigation"
++    },
++    {
++      "fields_imported": [
++        "barrier_diagnosis.l2_win_condition_differs_from_l1",
++        "barrier_diagnosis.induction_not_engaged",
++        "barrier_diagnosis.actionable_next_step"
++      ],
++      "path": "results/experiment_4524_reach_deeper_levels.json",
++      "sha256": "28aaf8e0266e6a938aec7dd02090cd52e1c3b080b3d02d4ba47bbdaf74c8473f",
++      "source": "experiment_4524_reach_deeper_levels"
++    },
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "offline_reproduced",
++        "target_game",
++        "target_level",
++        "registry_update"
++      ],
++      "path": "results/experiment_4525_levelup_attempt.json",
++      "sha256": "4688690173042d0beaf27ce7c7630411eec1b42db7168a300155556df4776b83",
++      "source": "experiment_4525_levelup_attempt"
++    },
++    {
++      "fields_imported": [
++        "reproducible_total_levels"
++      ],
++      "path": "ops/arc_solve_registry.yaml",
++      "sha256": "0cc95248910cc7c1a7d1d31bffb259a6bc8fc9694dfad5e346b74694a8a73ac2",
++      "source": "arc_solve_registry"
++    }
++  ],
++  "close_state_418": {
++    "a1_forward_walk": {
++      "chosen_submitted_config": "unchanged",
++      "control_equals_best": true,
++      "fixed_transition_budget": 8000,
++      "flagged_on_false_positive_null_delta_tautology": true,
++      "honest_verdict": "complete: forward_walk_no_reduction_honest_null",
++      "median_actions_on_core_best": 7761.5,
++      "median_actions_on_core_control": 7761.5,
++      "score_lever_dead": true
++    },
++    "a2_barrier_diagnosis": {
++      "actionable_next_step": "force post-L1 DSL/goal-predicate induction and route lp85 frontier states toward the level-conditioned L2 predicate.",
++      "barrier": "per_level_goal_reinduction",
++      "flagged_on_false_positive_null_delta_tautology": true,
++      "induction_once_on_stall": true,
++      "known_l2_transition_in_salience": null,
++      "l2_win_condition_differs_from_l1": true,
++      "root_cause_reported_by_source": "depth_cap",
++      "source_honest_verdict": "complete: l1_l2_barrier_diagnosed_depth_cap_honest_null",
++      "target_levels": 1
++    },
++    "a3_levelup": {
++      "banked": true,
++      "banked_levels": 1,
++      "offline_reproduced": true,
++      "source_honest_verdict": "success: cd82_L2_offline_reproduced",
++      "target_game": "cd82",
++      "target_level": 2
++    },
++    "action_trimming_context": {
++      "median_actions_best": 2825.5,
++      "median_actions_control": 7761.5,
++      "moves_score": false,
++      "reason": "median_actions_retired_as_score_lever",
++      "status": "retired_action_trimming_context"
++    },
++    "capstone_reported_efficiency_moved": false,
++    "capstone_reported_reproducible_total_levels_delta": {
++      "banked_levels": 1,
++      "capability_grew": true,
++      "current_total": 50,
++      "delta": 2,
++      "prior_total": 48,
++      "source": "A3_levelup_attempt+ops/arc_solve_registry.yaml"
++    },
++    "core_efficiency_baseline": 2.0074,
++    "core_efficiency_integrated": null,
++    "efficiency_moved": false,
++    "nav_action_trimming_dead_score_lever": true,
++    "net_418": {
++      "action_efficiency_moved": false,
++      "efficiency_reason": "no lever raised core_efficiency above 2.0074",
++      "score_lever_to_build_next": "per_level_goal_reinduction",
++      "solve_capability_grew": true,
++      "submitted_config": "unchanged"
++    },
++    "reproducible_total_levels": 50,
++    "source_capstone_honest_verdict": "complete: nav_fix_null_efficiency_unmoved"
++  },
++  "duration_s": 0.0001,
++  "experiment": "experiment_4532_archive_418_activate_419",
++  "experiment_id": 4532,
++  "field_provenance": {
++    "close_state_418": {
++      "principle": "the honest .418 numbers (nav-is-dead; A2 barrier=per-level goal re-induction; A3 cd82 L2; reproducible_total_levels; efficiency_moved=false) carried forward so the record does not drift."
++    },
++    "honest_verdict": {
++      "principle": "MUST start with terminal prefix complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ so the reconciler classifies it terminal."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts so adversarial_verify applies the 100us floor, not the 60s live-model floor."
++    },
++    "preconditions_checked": {
++      "principle": "records WHICH resources were verified; pre-empts silent-missing-resource fabrication."
++    }
++  },
++  "honest_verdict": "complete: archive_418_activate_419_true_close_state_recorded",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "preconditions_checked": {
++    "a1_forward_walk_navigation": {
++      "available": true,
++      "path": "results/experiment_4523_forward_walk_navigation.json"
++    },
++    "a2_reach_deeper_levels": {
++      "available": true,
++      "path": "results/experiment_4524_reach_deeper_levels.json"
++    },
++    "a3_levelup_attempt": {
++      "available": true,
++      "path": "results/experiment_4525_levelup_attempt.json"
++    },
++    "active_research_roadmap_yaml": {
++      "available": true,
++      "milestone": "2026.06.419",
++      "parses": true,
++      "path": "research-roadmap.yaml"
++    },
++    "capstone_4531": {
++      "available": true,
++      "path": "results/experiment_4531_capstone_v418.json"
++    },
++    "offline_arcade": {
++      "available": true,
++      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
++      "error": ""
++    },
++    "registry": {
++      "available": true,
++      "path": "ops/arc_solve_registry.yaml",
++      "reproducible_total_levels": 50
++    },
++    "research_complete_yaml": {
++      "available": true,
++      "contains_2026_06_418": true,
++      "parses": true,
++      "path": "research-complete.yaml"
++    },
++    "research_roadmap_next_yaml": {
++      "available": false,
++      "milestone": null,
++      "note": "literal precondition failed; accepted only when active research-roadmap.yaml is parseable at 2026.06.419",
++      "parses": false,
++      "path": "research-roadmap-next.yaml"
++    },
++    "smart_subset_pretest_gate": {
++      "command": [
++        ".venv/bin/pytest",
++        "tests/python/test_pipeline_extract.py",
++        "tests/python/test_docs.py",
++        "tests/python/test_experiment_4532_archive_418_activate_419.py",
++        "-q",
++        "--no-header",
++        "-n",
++        "0",
++        "--no-cov",
++        "-o",
++        "addopts="
++      ],
++      "exit_code": 0,
++      "passed": true,
++      "stderr_tail": "",
++      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n88 passed, 1 warning in 5.76s\n"
++    }
++  },
++  "random_seed": 4532,
++  "reproducibility_checksum": "sha256:c0fab06711abe4ed882a48754dd3631b5a07bbd45c9b718a4ef0247bcdb9b892",
++  "schema": "carnot.archive_activation.v418_to_v419_4532.v1",
++  "transition": {
++    "activated_milestone": "2026.06.419",
++    "activation_state": "already_active_roadmap_next_consumed",
++    "active_milestone_confirmed": true,
++    "archive_state": "research_complete_contains_2026.06.418",
++    "archived_milestone": "2026.06.418"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e18a4fb52a..266b7fcc5a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T05:25:11Z",
+-  "finished_at": "2026-06-21T05:25:11Z",
++  "started_at": "2026-06-21T06:32:30Z",
++  "finished_at": "2026-06-21T06:32:31Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ea946da33a..1fc09988ca 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T05:25:11Z",
+-  "finished_at": "2026-06-21T05:25:11Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-21T06:32:31Z",
++  "finished_at": "2026-06-21T06:32:31Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d356c752ef..05f22d265b 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260621",
+-  "started_at": "2026-06-21T05:25:11Z",
+-  "finished_at": "2026-06-21T05:25:11Z",
++  "started_at": "2026-06-21T06:32:31Z",
++  "finished_at": "2026-06-21T06:32:31Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4532_archive_418_activate_419.py b/tests/python/test_experiment_4532_archive_418_activate_419.py
+new file mode 100644
+index 0000000000..3233c0f955
+--- /dev/null
++++ b/tests/python/test_experiment_4532_archive_418_activate_419.py
+@@ -0,0 +1,414 @@
++"""Tests for Exp 4532 `.418` archive / `.419` activation.
++
++Spec refs: REQ-CAPSTONE-4532, SCENARIO-CAPSTONE-4532,
++SCENARIO-CAPSTONE-4532-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4532_archive_418_activate_419 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _green_smart_subset(_root: Path) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=["pytest", "smart-subset"],
++        exit_code=0,
++        stdout="green",
++        stderr="",
++    )
++
++
++def _capstone() -> JsonDict:
++    return {
++        "honest_verdict": "complete: nav_fix_null_efficiency_unmoved",
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++        "efficiency_moved": False,
++        "reproducible_total_levels_delta": {
++            "prior_total": 48,
++            "current_total": 50,
++            "delta": 2,
++            "banked_levels": 1,
++            "capability_grew": True,
++        },
++        "scorecard": {
++            "core_efficiency": {
++                "baseline": 2.0074,
++                "integrated": None,
++                "moved": False,
++                "reason": "integration_excluded_flagged_or_live_critical",
++            },
++            "stop_after_levelup_delta": {
++                "status": "retired_action_trimming_context",
++                "median_actions_control": 7761.5,
++                "median_actions_best": 2825.5,
++                "moves_score": False,
++            },
++            "a3_levelup": {
++                "status": "level_up_banked",
++                "target_game": "cd82",
++                "target_level": 2,
++                "banked_levels": 1,
++                "level_up_banked": True,
++            },
++        },
++        "a2_l1_l2_barrier_diagnosis": {
++            "status": "excluded_flagged_adversarial",
++            "cleanly_reportable": False,
++            "what_blocks_deeper_levels": None,
++            "what_to_build_next": "not_cleanly_reportable_from_flagged_artifact",
++        },
++    }
++
++
++def _a1_forward_walk() -> JsonDict:
++    return {
++        "honest_verdict": "complete: forward_walk_no_reduction_honest_null",
++        "median_actions_on_core_control": 7761.5,
++        "median_actions_on_core_best": 7761.5,
++        "core_solves_preserved": True,
++        "local_gate_budget": 8000,
++        "chosen_submitted_config": "unchanged",
++        "nav_diagnostics_before_after": {
++            "before": {"reset_replay_steps": 4576, "forward_walk_hits": 26},
++            "after": {"reset_replay_steps": 4533, "forward_walk_hits": 34},
++        },
++        "flagged_adversarial": True,
++    }
++
++
++def _a2_reach_deeper_levels() -> JsonDict:
++    return {
++        "honest_verdict": "complete: l1_l2_barrier_diagnosed_depth_cap_honest_null",
++        "core_efficiency_baseline": 2.0074,
++        "core_efficiency_best": 2.0074,
++        "barrier_diagnosis": {
++            "root_cause": "depth_cap",
++            "new_win_condition_likely": True,
++            "induction_not_engaged": True,
++            "target_game": "lp85",
++            "evidence": [
++                {
++                    "l2_win_condition_differs_from_l1": True,
++                    "known_l2_transition_in_salience": None,
++                    "world_model_induction_invoked": False,
++                    "stopped_reason": "depth_cap",
++                }
++            ],
++            "actionable_next_step": (
++                "force post-L1 DSL/goal-predicate induction and route lp85 frontier states "
++                "toward the level-conditioned L2 predicate."
++            ),
++        },
++        "flagged_adversarial": True,
++    }
++
++
++def _a3_levelup() -> JsonDict:
++    return {
++        "honest_verdict": "success: cd82_L2_offline_reproduced",
++        "offline_reproduced": True,
++        "reproduced_levels": 1,
++        "target_game": "cd82",
++        "target_level": 2,
++        "registry_update": {
++            "prior_total_declared": 48,
++            "new_total_declared": 50,
++            "reconciled_total_delta": 2,
++            "banked_levels": 1,
++        },
++    }
++
++
++def _write_repo_fixture(root: Path) -> None:
++    (root / "research-roadmap.yaml").write_text(
++        "milestone: 2026.06.419\n"
++        "tasks:\n"
++        "  - id: exp4532-phase0\n"
++        "    deliverable: results/experiment_4532_archive_418_activate_419.json\n"
++        "    prompt: target_levels=1 and induction once on stall-and-not-won\n",
++        encoding="utf-8",
++    )
++    (root / "research-complete.yaml").write_text(
++        "milestones:\n"
++        "- id: 2026.06.418\n"
++        "  finding: prior roadmap archived by conductor\n",
++        encoding="utf-8",
++    )
++    registry = root / "ops" / "arc_solve_registry.yaml"
++    registry.parent.mkdir(parents=True, exist_ok=True)
++    registry.write_text(
++        "schema_version: 1\n"
++        "updated: '2026-06-21'\n"
++        "reproducible_total_levels: 50\n",
++        encoding="utf-8",
++    )
++    _write_json(root / "results" / "experiment_4531_capstone_v418.json", _capstone())
++    _write_json(root / "results" / "experiment_4523_forward_walk_navigation.json", _a1_forward_walk())
++    _write_json(root / "results" / "experiment_4524_reach_deeper_levels.json", _a2_reach_deeper_levels())
++    _write_json(root / "results" / "experiment_4525_levelup_attempt.json", _a3_levelup())
++
++
++def _artifact(root: Path) -> JsonDict:
++    _write_repo_fixture(root)
++    return mod.build_artifact(
++        root,
++        started_s=1.0,
++        now_s=1.25,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++
++def test_req_capstone_4532_spec_anchor_declares_transition_contract() -> None:
++    """REQ-CAPSTONE-4532: OpenSpec declares the transition contract first."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4532" in spec
++    assert "SCENARIO-CAPSTONE-4532" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    assert "reproducible_total_levels=50" in spec
++    assert "A3 cd82 L2 banked" in spec
++    for field, provenance in mod.FIELD_PROVENANCE.items():
++        assert field in spec
++        assert provenance["principle"] in spec
++
++
++def test_scenario_capstone_4532_records_true_close_state_when_already_activated(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4532: already-activated `.419` still writes the close-state."""
++
++    _write_repo_fixture(tmp_path)
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=True,
++        started_s=1.0,
++        now_s=1.25,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    written = json.loads((tmp_path / mod.OUTPUT_REL_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    assert artifact["honest_verdict"] == "complete: archive_418_activate_419_true_close_state_recorded"
++    assert artifact["transition"] == {
++        "archived_milestone": "2026.06.418",
++        "activated_milestone": "2026.06.419",
++        "active_milestone_confirmed": True,
++        "activation_state": "already_active_roadmap_next_consumed",
++        "archive_state": "research_complete_contains_2026.06.418",
++    }
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"]["available"] is False
++    assert artifact["preconditions_checked"]["active_research_roadmap_yaml"]["milestone"] == "2026.06.419"
++    assert artifact["preconditions_checked"]["smart_subset_pretest_gate"]["passed"] is True
++
++    close = artifact["close_state_418"]
++    assert close["reproducible_total_levels"] == 50
++    assert close["efficiency_moved"] is False
++    assert close["nav_action_trimming_dead_score_lever"] is True
++    assert close["a1_forward_walk"]["median_actions_on_core_control"] == 7761.5
++    assert close["a1_forward_walk"]["median_actions_on_core_best"] == 7761.5
++    assert close["a1_forward_walk"]["fixed_transition_budget"] == 8000
++    assert close["a2_barrier_diagnosis"]["barrier"] == "per_level_goal_reinduction"
++    assert close["a2_barrier_diagnosis"]["l2_win_condition_differs_from_l1"] is True
++    assert close["a2_barrier_diagnosis"]["induction_once_on_stall"] is True
++    assert close["a2_barrier_diagnosis"]["target_levels"] == 1
++    assert close["a3_levelup"]["target_game"] == "cd82"
++    assert close["a3_levelup"]["target_level"] == 2
++    assert close["a3_levelup"]["banked"] is True
++    assert close["net_418"]["submitted_config"] == "unchanged"
++    assert close["net_418"]["score_lever_to_build_next"] == "per_level_goal_reinduction"
++    assert mod.validate_artifact(artifact) is None
++
++
++def test_scenario_capstone_4532_blocks_without_fabricating_missing_capstone(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4532: missing required close-state input blocks honestly."""
++
++    _write_repo_fixture(tmp_path)
++    (tmp_path / "results" / "experiment_4531_capstone_v418.json").unlink()
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=False,
++        started_s=2.0,
++        now_s=2.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_missing_experiment_4531_capstone_v418"
++    assert artifact["preconditions_checked"]["capstone_4531"]["available"] is False
++    assert artifact["close_state_418"] == {}
++    assert artifact["transition"]["active_milestone_confirmed"] is False
++    assert mod.validate_artifact(artifact) is None
++
++
++def test_scenario_capstone_4532_records_next_roadmap_activation_state(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4532: an extant next roadmap is recorded as activation input."""
++
++    _write_repo_fixture(tmp_path)
++    (tmp_path / "research-roadmap-next.yaml").write_text(
++        "milestone: 2026.06.419\ntasks: []\n",
++        encoding="utf-8",
++    )
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        started_s=3.0,
++        now_s=3.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert artifact["transition"]["activation_state"] == "activated_from_research_roadmap_next"
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"]["parses"] is True
++
++
++def test_scenario_capstone_4532_precondition_blockers_are_classified(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4532: each required precondition has an honest blocked reason."""
++
++    preconditions = _artifact(tmp_path)["preconditions_checked"]
++
++    active_bad = copy.deepcopy(preconditions)
++    active_bad["active_research_roadmap_yaml"]["milestone"] = "2026.06.418"
++    active_bad["research_roadmap_next_yaml"]["available"] = False
++    active_bad["research_roadmap_next_yaml"]["parses"] = False
++    assert mod._first_blocker(active_bad) == "research_roadmap_419_unavailable"
++
++    offline_bad = copy.deepcopy(preconditions)
++    offline_bad["offline_arcade"]["available"] = False
++    assert mod._first_blocker(offline_bad) == "offline_arcade"
++
++    smart_bad = copy.deepcopy(preconditions)
++    smart_bad["smart_subset_pretest_gate"]["passed"] = False
++    assert mod._first_blocker(smart_bad) == "smart_subset_pretest_gate"
++
++    registry_bad = copy.deepcopy(preconditions)
++    registry_bad["registry"]["available"] = False
++    assert mod._first_blocker(registry_bad) == "arc_solve_registry"
++
++    a1_bad = copy.deepcopy(preconditions)
++    a1_bad["a1_forward_walk_navigation"]["available"] = False
++    assert mod._first_blocker(a1_bad) == "missing_experiment_4523_forward_walk_navigation"
++
++    a2_bad = copy.deepcopy(preconditions)
++    a2_bad["a2_reach_deeper_levels"]["available"] = False
++    assert mod._first_blocker(a2_bad) == "missing_experiment_4524_reach_deeper_levels"
++
++    a3_bad = copy.deepcopy(preconditions)
++    a3_bad["a3_levelup_attempt"]["available"] = False
++    assert mod._first_blocker(a3_bad) == "missing_experiment_4525_levelup_attempt"
++
++
++def test_scenario_capstone_4532_parse_helpers_are_defensive(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4532: malformed inputs are detected instead of fabricated."""
++
++    assert mod._float(True, 7.0) == 7.0
++    assert mod._float("bad", 9.0) == 9.0
++    assert mod._int(False, 2) == 2
++    assert mod._int("bad", 3) == 3
++    assert mod._registry_total_levels(tmp_path / "missing.yaml") is None
++    assert mod._roadmap_target_levels_one(None) is False
++    assert mod._known_l2_salience({"barrier_diagnosis": {"known_l2_transition_in_salience": "fallback"}}) == (
++        "fallback"
++    )
++
++    bad_yaml = tmp_path / "bad.yaml"
++    bad_yaml.write_text("milestone: [\n", encoding="utf-8")
++    assert mod._yaml_info(bad_yaml)["parses"] is False
++
++    list_yaml = tmp_path / "list.yaml"
++    list_yaml.write_text("- not-a-map\n", encoding="utf-8")
++    assert mod._registry_total_levels(list_yaml) is None
++
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[1]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="must contain a JSON object"):
++        mod._read_json(list_json)
++
++
++def test_scenario_capstone_4532_validation_rejects_schema_drift(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4532-FIELD-PRINCIPLES: schema drift fails loudly."""
++
++    valid = _artifact(tmp_path)
++
++    missing = copy.deepcopy(valid)
++    del missing["honest_verdict"]
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    bad_verdict = copy.deepcopy(valid)
++    bad_verdict["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(bad_verdict)
++
++    bad_substrate = copy.deepcopy(valid)
++    bad_substrate["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    bad_provenance = copy.deepcopy(valid)
++    bad_provenance["field_provenance"] = {}
++    with pytest.raises(ValueError, match="field_provenance"):
++        mod.validate_artifact(bad_provenance)
++
++    blocked = mod._blocked_artifact(
++        reason="unit_test",
++        preconditions_checked=valid["preconditions_checked"],
++        duration_s=0.1,
++        cited_upstream_artifacts=valid["cited_upstream_artifacts"],
++    )
++    blocked["close_state_418"] = {"fabricated": True}
++    with pytest.raises(ValueError, match="blocked artifacts"):
++        mod.validate_artifact(blocked)
++
++    inactive = copy.deepcopy(valid)
++    inactive["transition"]["active_milestone_confirmed"] = False
++    with pytest.raises(ValueError, match="active .419"):
++        mod.validate_artifact(inactive)
++
++    wrong_close = copy.deepcopy(valid)
++    wrong_close["close_state_418"]["efficiency_moved"] = True
++    with pytest.raises(ValueError, match="true .418 close-state"):
++        mod.validate_artifact(wrong_close)
++
++    wrong_a2 = copy.deepcopy(valid)
++    wrong_a2["close_state_418"]["a2_barrier_diagnosis"]["barrier"] = "depth_cap"
++    with pytest.raises(ValueError, match="per-level goal re-induction"):
++        mod.validate_artifact(wrong_a2)
++
++    wrong_net = copy.deepcopy(valid)
++    wrong_net["close_state_418"]["net_418"]["action_efficiency_moved"] = True
++    with pytest.raises(ValueError, match="net_418"):
++        mod.validate_artifact(wrong_net)
++
++    bad_checksum_prefix = copy.deepcopy(valid)
++    bad_checksum_prefix["reproducibility_checksum"] = "not-a-checksum"
++    with pytest.raises(ValueError, match="sha256-prefixed"):
++        mod.validate_artifact(bad_checksum_prefix)
++
++    bad_checksum_value = copy.deepcopy(valid)
++    bad_checksum_value["reproducibility_checksum"] = "sha256:" + ("0" * 64)
++    with pytest.raises(ValueError, match="does not match"):
++        mod.validate_artifact(bad_checksum_value)
+-- 
+2.55.0
+

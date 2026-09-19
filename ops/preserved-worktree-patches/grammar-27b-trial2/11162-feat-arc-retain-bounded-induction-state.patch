@@ -1,0 +1,2999 @@
+From a690639becd54b23b3517ac932c27697a7f7eae8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 02:36:05 -0400
+Subject: [PATCH 11162/11171] feat(arc): retain bounded induction state
+
+Reuse prior candidate failures without unbounded prompt growth.
+REQ-ARC-WMTE-7040 through 7042; local-only and default off.
+
+155 CPU tests and 64 assertion mutations pass with cmp restores.
+Whole-tree collection exposes eight unrelated import errors;
+no GPU efficacy claim or historical evidence rewrite.
+
+The collection interlock flagged concurrent authored flag-ledger
+and E2E-plan edits, with no writes attributed to tests. Both diffs
+were reviewed and its marker retired by the documented intended-
+edit procedure. Preserve those edits in this commit.
+
+The first commit hook refused missing ignored eval artifacts in
+this worktree. Expose its existing runs-dir option through the
+environment, retaining failure checks and local source inspection.
+The retry reads existing main-checkout evidence without copying it.
+---
+ _bmad/traceability.md                         |   13 +
+ ...-induction-state-persistence-2026-09-05.md |  190 +++
+ ...tate-persistence-mutations-2026-09-05.json | 1272 +++++++++++++++++
+ .../arc-induction-state-persistence.md        |   24 +
+ .../arc-world-model-trust-energy/spec.md      |   97 ++
+ ops/arc_flag_ledger.yaml                      |   19 +
+ ops/changelog.md                              |   20 +
+ ops/e2e-test-plan.md                          |   17 +-
+ ops/metrics.md                                |    5 +
+ ops/status.md                                 |   20 +
+ .../carnot/agentic/arc_competition_agent.py   |   11 +
+ .../agentic/arc_executable_world_model.py     |   56 +-
+ python/carnot/agentic/arc_induction_memory.py |  183 +++
+ python/carnot/agentic/arc_llm_reinduction.py  |   11 +-
+ scripts/arc_leaderboard_eval.py               |    3 +
+ scripts/arc_loop_solve.py                     |   24 +-
+ scripts/eval_run_consumer_field_lint.py       |    9 +-
+ .../test_arc_induction_state_persistence.py   |  540 +++++++
+ .../test_eval_run_consumer_field_lint.py      |   48 +-
+ 19 files changed, 2547 insertions(+), 15 deletions(-)
+ create mode 100644 docs/research-notes/astra-induction-state-persistence-2026-09-05.md
+ create mode 100644 docs/research-notes/astra-induction-state-persistence-mutations-2026-09-05.json
+ create mode 100644 epics/stories/arc-induction-state-persistence.md
+ create mode 100644 python/carnot/agentic/arc_induction_memory.py
+ create mode 100644 tests/python/test_arc_induction_state_persistence.py
+
+diff --git a/_bmad/traceability.md b/_bmad/traceability.md
+index 6fadecb930..bf678033f1 100644
+--- a/_bmad/traceability.md
++++ b/_bmad/traceability.md
+@@ -2,6 +2,13 @@
+ 
+ **Last Updated:** 2026-09-05
+ 
++**Operational Note:** REQ-ARC-WMTE-7040/7041/7042 maps to
++`epics/stories/arc-induction-state-persistence.md`, the policy-owned
++`arc_induction_memory.py`, both live induction branches and the offline `e3`
++entrypoint. Tests: `tests/python/test_arc_induction_state_persistence.py`.
++The dated research note and mutation manifest record CPU proof; the action
++A/B remains pending and the flag stays off.
++
+ **Operational Note:** 2026-09-05 REQ-ARC-7010 regression repair made the
+ atomic Exp7010 evidence writer create its `results/` directory before
+ publishing through a temporary file. The exact conductor-equivalent shard is
+@@ -2608,3 +2615,9 @@ legacy tests.
+ | REQ-ARC-FCP-5699-43 | The bounded inert-engine child uses dependency-free transition payloads, launches the validator file directly, and caps BLAS/OpenMP fanout so package startup and parallel workers cannot consume the generated-code deadline; mechanical defects retain precedence | Implemented (`python/carnot/agentic/arc_engine_static_validation.py:_run_isolated_job`; `LocalGGUFProposer._engine_defects` ordering unchanged) | `tests/python/test_arc_inert_engine_rejection_2026_08_01.py`; the mixed inert/raising regression reduced from 56.32s to 1.41s in isolation; focused ARC/Exp6605 set: 79 passed |
+ | REQ-REPORT-6605 | Qwen3.6 direct-plan headroom preserves the experiment contract and a reproducibility checksum that covers the complete test receipt | Implemented (`python/carnot/experiment_6605_qwen36_direct_headroom.py`) | `tests/python/test_experiment_6605_qwen36_direct_headroom.py`: 21 passed; 374/374 statements covered (100%); explicit `tests_run=[{"command":"changed","outcome":"failed"}]` mutation rejected |
+ | REQ-CL-6798 | Byte-grounded CSL causal and safety cold audit independently replays canonical state bytes, exact actions and utilities, factor ablations, attacks, restart, and rollback without producer imports | Implemented (`python/carnot/experiment_6798_csl_causal_safety_byte_audit.py`; `scripts/experiments/experiment_6798_csl_causal_safety_byte_audit.py`) | `tests/python/test_experiment_6798_csl_causal_safety_byte_audit.py`: 17 passed; 658/658 statements covered (100%); artifact has 4,808 rows, 116 credited factors, zero admitted or influential poison, and `complete_positive` verdict |
++
++2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
++`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
++existing main-checkout corpus. Source checks stay local; missing evidence and
++absent fields still refuse. Seven new tests and six assertion mutations prove
++the input selection without evidence writes or a hook bypass.
+diff --git a/docs/research-notes/astra-induction-state-persistence-2026-09-05.md b/docs/research-notes/astra-induction-state-persistence-2026-09-05.md
+new file mode 100644
+index 0000000000..729c54b633
+--- /dev/null
++++ b/docs/research-notes/astra-induction-state-persistence-2026-09-05.md
+@@ -0,0 +1,190 @@
++# Bounded induction state, 2026-09-05
++
++The mechanism is implemented on the existing live induction path and remains off.
++No local-model efficacy claim, measured null, token saving, speedup, or score gain
++has been established. No GPU run was started and no `results/**` file was written.
++
++The ranked plan was: (1) retain candidate-specific failures grounded in observed
++transitions; (2) retain whole prior source when it fits and compact deterministically;
++(3) expose delivery receipts and the same policy in the offline twin; (4) run a
++paired action-efficiency experiment only after operator authorization. Steps 1–3
++are implemented. Step 4 is proposed below.
++
++REQ-ARC-WMTE-7040 owns state in each E3 policy. It carries one generated candidate
++and four distinct counterexamples across standard induce calls. Each failure
++names the source SHA-256, transition SHA-256, action, wrong-cell count and up to
++four predicted/observed cell pairs. These are refutations of that candidate on
++that observation, not semantic proofs against a whole hypothesis family. Up to
++eight current proposal rows are probed under the existing execution timeout guard.
++Input grids and action data are copied. Malformed predictions become errors.
++Game, level, grid shape and cell scale changes clear the state.
++
++REQ-ARC-WMTE-7041 caps stored source at 32768 UTF-8 bytes and the added prompt
++block at 4096 UTF-8 bytes. These are chosen design limits, not measured optimal
++budgets. A long program is omitted whole, with its byte count and hash retained;
++JSON records are never cut. Source omission loses the rule text, so the usefulness
++of large-engine counterexamples to a 27B model is an open question. No model call
++performs compaction. Raw, chat and optional vLLM generation reserve the added byte
++count from the existing completion budget; insufficient space refuses locally.
++This is a conservative byte-token assumption for the local tokenizer, not a
++measurement of tokens or a cure for existing base-prompt truncation.
++
++REQ-ARC-WMTE-7042 connects both plain and bounded policy induction, including the
++level-up helper. The offline twin's explicit `--mechanism e3` delegates to
++`E3AgentPolicy` and the existing eval runner. Scored liveness and eval diagnostics
++record prepared calls, returned HTTP deliveries, added bytes, stored state,
++compactions, resets, probe count and unsupported tool-loop successes. Chat
++continuations count every returned request. Transport failures before a parsed
++response are not counted as returned deliveries, even if a server received them.
++
++The flag is `CARNOT_ARC_INDUCE_STATE_PERSISTENCE=1`; unset, zero and `true` remain
++inactive. Its ledger entry is unevaluated and not promotable. An enabled run with
++zero deliveries is an unexercised mechanism, not a measured null.
++
++Evidence boundaries: memory reads the same proposal rows as the existing induce
++prompt. It never loads a stored engine or holdout corpus. Plain induction already
++exposes acceptance-tail rows unless `CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1`; this work does
++not repair that existing leak. Both proposed A/B arms must enable that flag.
++Tool-loop state, refactor outputs, model-written summaries, disk restart recovery,
++opaque reasoning and KV-cache continuation were skipped. They require different
++interfaces or evidence. Refactor-produced source does not replace remembered
++standard-induce source. Neither the planner nor the scored action budget changed.
++
++The visible-state mechanism runs with the existing local Qwen3.8-27B proposer.
++No Astra request or frontier dependency was added. Text and executable feedback
++transfer mechanically to 27B; the ability to use them to save actions remains
++unmeasured. Opaque provider reasoning state and provider-managed compaction do not
++transfer through the present local completion API. This implementation does not
++pretend that visible source is hidden reasoning state.
++
++ARC Prize's [Astra article](https://arcprize.org/blog/astra) is dated 3 September
++2026. It reports 62.7% for standard/max and 99.9% for provider/high; provider/max
++is 98.6%. Its standard harness already passes visible notes. Its 3.66× and 49%
++figures concern 167 matched game/reasoning pairs solved by both harnesses, across
++public and semi-private tasks and reasoning levels. These are publisher-reported
++measurements, not Carnot measurements. The comparison does not isolate compaction
++from opaque reasoning-state preservation, and the headline scores use different
++reasoning efforts.
++
++Measured on CPU, with populations named:
++
++- 40 new request-test cases passed. The regression selection contains those 40
++  plus 101 existing cases in nine adjacent test modules: 141 passed total.
++- 58 distinct final call-site mutations produced pytest exit 1 with a real
++  assertion failure, then `cmp` exit 0 and restored pytest exit 0. No final
++  mutant survived. The [mutation manifest](astra-induction-state-persistence-mutations-2026-09-05.json)
++  records exact replacements, selectors, source hashes and assertion excerpts.
++- One initial offline-dispatch mutation raised `KeyError`, so it did not qualify
++  as assertion proof. An explicit consumer assertion replaced that accidental
++  exception and the same deletion was rerun RED/restore/GREEN. An earlier empty-
++  proposal trial was invalid because its restored baseline also failed: the
++  existing prompt rejects empty evidence before memory is reached. That unused
++  memory guard and its invalid test were removed. Neither trial is counted among
++  the 58 accepted proofs. A redundant final record-pop compactor was also removed
++  during review; four records with bounded palette values already fit after
++  source omission. It was not claimed as a proven rule.
++- One four-case scripted transport batch made 18 HTTP-shaped requests, including
++  14 with prior state. No model ran. Each case reused ten synthetic transitions
++  per attempt; eight eligible rows were probed on calls with retained source.
++  The largest observed addition among those 14 blocks was 1699 UTF-8 bytes.
++- One real offline `r11l` smoke used a 12-action budget, took 11 actions, completed
++  zero levels and made zero generator calls. Induction was disabled. This is
++  environment/entrypoint evidence, not a memory result.
++- Final `pytest tests/ --collect-only` collected 61,776 cases but exited 2 on
++  eight import errors. Four tests require unavailable `carnot._rust`; three import
++  absent experiment modules 6814, 6819 and 6828; a quarantine test imports absent
++  `exp4058_decentralization_moe_resume_build`. These tests are unchanged. No new
++  skips or collection exclusions were added, and the whole suite is not green.
++- Changed-file Ruff, formatting and spec coverage pass. The full spec audit
++  reports 1,178 unreferenced tests across Rust/Python. The orphan-solver lint
++  passes with 85 modules in its live closure. Whole-package mypy passes across 4,469 source files. The installed commit
++  hooks are required for publication of this branch commit.
++
++| Scripted case | Attempts / HTTP requests | Source UTF-8 bytes | State deliveries | Bytes per delivered addition | Stored refutations |
++|---|---:|---:|---:|---:|---:|
++| Small source, 2×2 grids | 2 | 119 | 1 | 1687 | 4 |
++| Long source, 2×2 grids | 12 | 6121 | 11 | 1569 | 4 |
++| Source over storage cap | 2 | 40121 | 1 | 407 | 0 |
++| Small source, 64×64 grids | 2 | 119 | 1 | 1699 | 4 |
++
++The 40,121-byte source leaves only omission metadata in this fresh memory; it
++produces no new counterexamples. This is a limitation, not evidence of reuse.
++The twelve-attempt case invoked 88 probes of a repeated window, not 88 distinct
++observations. Requested output fell from 75,952 to 74,265 / 74,383 / 75,545 /
++74,253 tokens respectively. Those numbers are request limits read from scripted
++payloads, not generated or saved tokens.
++
++Proof map: REQ-7040 covers exact opt-in, policy ownership, four scope keys and
++both reset operations, first-call behavior, source storage/hash, guarded compile
++and engine calls, eligible row limits, input copying, malformed output/metadata,
++truthful failures, deduplication and publication. REQ-7041 covers sample/history
++caps, whole-source compaction, prompt insertion, combined/split transport budgets,
++completion reservation and refusal when output space is too small. REQ-7042
++covers both policy bindings, default-off calls, legacy signatures, both bounded
++helper variants, raw/chat/vLLM receipt accounting, chat continuations, tool-loop
++exclusion receipts, scored/eval diagnostics and offline dispatch/budget/output.
++
++The operator has not authorized the local-model A/B. It remains unfinished,
++as do opaque reasoning, KV-cache reuse, tool/refactor integration and restart
++persistence. No token/speed/action-efficiency benefit is inferred from CPU tests.
++Session token usage is unavailable: the contract's `scripts/session-metrics.py`
++is absent from this checkout, so no count was invented.
++
++Reproduction uses the worktree interpreter and explicit paths:
++
++```bash
++PYTHONPATH=/home/ianblenke/carnot-wt-astra/python JAX_PLATFORMS=cpu CUDA_VISIBLE_DEVICES='' .venv/bin/python -m pytest tests/python/test_arc_induction_state_persistence.py --no-cov --basetemp=/tmp/carnot-astra-state-persistence/reproduce -n 0 -q
++PYTHONPATH=/home/ianblenke/carnot-wt-astra/python JAX_PLATFORMS=cpu CUDA_VISIBLE_DEVICES='' .venv/bin/python -m pytest tests/ --collect-only --no-cov --basetemp=/tmp/carnot-astra-state-persistence/collect-reproduce -n 0 -q
++```
++
++Logs for this session are under `/tmp/carnot-astra-state-persistence/`. The
++worktree needed an ignored `.venv` symlink to the shared environment. The CPU
++smoke briefly used a local `environment_files` symlink, removed afterward.
++The collection interlock flagged flag-ledger/E2E-plan edits authored while its
++first run was active. Its marker had no attributed test writes. Both diffs were
++reviewed and the marker retired by its documented intended-edit procedure; the
++commit message records that decision. Final collection created no such marker.
++
++
++Proposed operator decision: authorize a paired local Qwen3.8-27B A/B on `r11l`, `sb26` and `lp85`,
++with generator seeds 0, 1 and 2 per game (nine pairs, eighteen runs), a 400-action
++budget per run, `n_ctx=98304`, identical model hash, server settings and acceptance
++splitting. Verify matching initial-frame hashes; the existing runner exposes no
++environment-seed argument. Only the persistence flag varies; tool
++induction stays off. Report all eighteen outcomes, including failures and zero-
++delivery runs; use paired levels completed and actions to matched milestones as
++primary endpoints. Secondary measures are returned deliveries, actual tokenizer
++usage, wall time, prompt truncation and engine acceptance. Never count the designed
++byte budget as saved tokens. The first r11l pair should verify
++nonzero memory deliveries before the remaining predeclared pairs run. Keep the
++flag off unless this controlled experiment supplies evidence. An operator must
++authorize the GPU budget before this experiment starts.
++
++The first commit attempt was refused by `eval-run-consumer-field-lint`: this
++worktree lacks the ignored run-artifact directory. REQ-ARC-WMTE-6642 now exposes
++the existing `--runs-dir` argument through `CARNOT_ARC_EVAL_RUNS_DIR`, for explicit
++read-only selection of existing evidence. CLI selection wins; an empty environment
++retains the default. The selected path prints, while source checks stay in this
++worktree. Missing/empty corpora and un-emitted fields still fail. No applicable hook was
++bypassed or weakened, and nothing was created under `results/`.
++
++Seven new input-selection test cases plus seven existing lint cases pass (14
++cases). Six additional call-site mutations prove environment delivery, empty-value
++fallback, CLI precedence, evidence-path reporting, rejection on failure and
++worktree source selection. All six produced assertion RED, `cmp` restoration and
++GREEN; none survived. They are separate from the 58 induction mutations in the
++manifest. The real-repository test now exercises the hook's CLI entrypoint with
++the configured corpus. This is the sole addition to the original implementation
++scope, needed to complete the requested commit without copying evidence.
++
++Final evidence-path check read 15 JSON artifacts across the selected main-checkout
++runs and the worktree flat eval artifact. It joined 476 distinct keys against
++seven consumers and 184 producer files in this worktree and passed. Its selected
++path was printed. Hook-input Ruff/format/spec checks and focused mypy pass.
++The final full-tree collection still reports eight unchanged import errors,
++now with 61,776 collected tests after the seven new hook-input cases.
++
++The commit retry passed all applicable installed hooks. Post-commit reconciliation
++confirmed fresh docs and reported one remaining issue: the existing global
++spec-reference backlog (1,178 tests). That backlog and the eight whole-tree import
++errors remain unresolved; the changed tests all carry requirement references.
+diff --git a/docs/research-notes/astra-induction-state-persistence-mutations-2026-09-05.json b/docs/research-notes/astra-induction-state-persistence-mutations-2026-09-05.json
+new file mode 100644
+index 0000000000..adf6a4f70f
+--- /dev/null
++++ b/docs/research-notes/astra-induction-state-persistence-mutations-2026-09-05.json
+@@ -0,0 +1,1272 @@
++{
++  "requirements": [
++    "REQ-ARC-WMTE-7040",
++    "REQ-ARC-WMTE-7041",
++    "REQ-ARC-WMTE-7042"
++  ],
++  "test_file": "tests/python/test_arc_induction_state_persistence.py",
++  "pythonpath": "/home/ianblenke/carnot-wt-astra/python",
++  "distinct_final_mutants": 58,
++  "surviving_final_mutants": 0,
++  "method": "Each trial replaced the named call-site rule, ran selected pytest cases --no-cov -n 0 with a private --basetemp, observed assertion RED, restored the original bytes, ran cmp, then observed GREEN. Sources and real HTTP construction use the worktree; HTTP replies are scripted. No GPU.",
++  "mutants": [
++    {
++      "name": "flag_exact_opt_in",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "2a258688b31150314085a97aa22532a6f22ff07023ecb22b17f93ffb8c35f3f4",
++      "remove_or_replace": "os.environ.get(\"CARNOT_ARC_INDUCE_STATE_PERSISTENCE\") == \"1\"",
++      "replacement": "os.environ.get(\"CARNOT_ARC_INDUCE_STATE_PERSISTENCE\") != \"0\"",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           AssertionError: assert {'cache_promp..._n': 256, ...} == {'cache_promp..._n': 256, ...}",
++        "E             ",
++        "E             Omitting 5 identical items, use -vv to show",
++        "E             Differing items:"
++      ]
++    },
++    {
++      "name": "disabled_source_guard",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "b9a063d849f56d3170b0246a8a9808981161aaf3ba7b4a787552db4d8f9e3945",
++      "remove_or_replace": "if not self.enabled:",
++      "replacement": "if False:",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           assert 119 == 0",
++        "E           assert 119 == 0",
++        "E           assert 119 == 0",
++        "E           assert 119 == 0"
++      ]
++    },
++    {
++      "name": "disabled_prepare_guard",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "28bf160d2f5748548308e52f0ff30134757790777f8ffc706e716905f3c06888",
++      "remove_or_replace": "if not self.enabled:",
++      "replacement": "if False:",
++      "occurrence": 2,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           assert 2 == 0",
++        "E           assert 2 == 0",
++        "E           assert 2 == 0",
++        "E           assert 2 == 0"
++      ]
++    },
++    {
++      "name": "source_storage_cap",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "compaction",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "14074d59599f5673da4699c16c81416dde625b4a980c72fb814154fa91c96751",
++      "remove_or_replace": "source if len(encoded) <= SOURCE_BYTES else \"\"",
++      "replacement": "source",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 40121 == 0"
++      ]
++    },
++    {
++      "name": "source_hash_update",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request or duplicate",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "d89138f4ee7a15abc0968ffe10a9fa514309d7cb546621559b73fcd955f645d3",
++      "remove_or_replace": "self.source_sha = _sha(encoded)",
++      "replacement": "self.source_sha = \"\"",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'PRIOR INDUCTION STATE\\n' in '/no_think\\nCRITICAL OUTPUT RULES -- obey EXACTLY:\\n1. Output ONLY one ```python code block. NOTHING before it. NOTHIN...ition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\\n```python\\n\\n```python\\n'",
++        "E       assert 'PRIOR INDUCTION STATE\\n' in \"You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'g'.\\n\\nThe game state is a 2x2 integer grid (logic...k objects across the transition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\"",
++        "E       AssertionError: assert 'PRIOR INDUCTION STATE\\n' in '/no_think\\nCRITICAL OUTPUT RULES -- obey EXACTLY:\\n1. Output ONLY one ```python code block. NOTHING before it. NOTHIN...ition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\\n```python\\n\\n```python\\n'"
++      ]
++    },
++    {
++      "name": "scope_game",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "scope_change",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "54fae36a991a0dcb216d4a45660304e26bd2028f8d26ee7151af3b26783a502b",
++      "remove_or_replace": "(game, last.level_before, tuple(last.grid.shape), cell)",
++      "replacement": "(\"g\", last.level_before, tuple(last.grid.shape), cell)",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 'PRIOR INDUCTION STATE' not in '/no_think\\n...n```python\\n'",
++        "E         ",
++        "E         'PRIOR INDUCTION STATE' is contained here:",
++        "E           s above."
++      ]
++    },
++    {
++      "name": "scope_level",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "scope_change",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "a4caccedb3ef754c6f8688e2bc7282b89b6887887ee7ba9659a71021a16d2620",
++      "remove_or_replace": "(game, last.level_before, tuple(last.grid.shape), cell)",
++      "replacement": "(game, 0, tuple(last.grid.shape), cell)",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 'PRIOR INDUCTION STATE' not in '/no_think\\n...n```python\\n'",
++        "E         ",
++        "E         'PRIOR INDUCTION STATE' is contained here:",
++        "E           s above."
++      ]
++    },
++    {
++      "name": "scope_shape",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "scope_change",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "4c559e1e6a9dafe7458eaf1fce03660766f510ac0b43fb4523b828b1faf016c1",
++      "remove_or_replace": "(game, last.level_before, tuple(last.grid.shape), cell)",
++      "replacement": "(game, last.level_before, (), cell)",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 'PRIOR INDUCTION STATE' not in '/no_think\\n...n```python\\n'",
++        "E         ",
++        "E         'PRIOR INDUCTION STATE' is contained here:",
++        "E           s above."
++      ]
++    },
++    {
++      "name": "scope_cell",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "scope_change",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "1b5066d85019a2ca10da69a4fd86d9493a1cc1eaa5b75619d9672a76868cadbc",
++      "remove_or_replace": "(game, last.level_before, tuple(last.grid.shape), cell)",
++      "replacement": "(game, last.level_before, tuple(last.grid.shape), 1)",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 'PRIOR INDUCTION STATE' not in '/no_think\\n...n```python\\n'",
++        "E         ",
++        "E         'PRIOR INDUCTION STATE' is contained here:",
++        "E           s above."
++      ]
++    },
++    {
++      "name": "scope_source_reset",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "scope_change",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "c0e95942e8135c960741189350c619e49f1ec74fe88b42b736b8fe851d5a5e70",
++      "remove_or_replace": "self.source, self.source_sha, self.source_bytes = \"\", \"\", 0",
++      "replacement": "pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 'PRIOR INDUCTION STATE' not in '/no_think\\n...n```python\\n'",
++        "E         ",
++        "E         'PRIOR INDUCTION STATE' is contained here:",
++        "E           s above."
++      ]
++    },
++    {
++      "name": "scope_refutation_reset",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "scope_change",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "d231d3bf7d3a1d2a5103a02a2104e931a32bbbe4fa1c634f891b86a3c135bace",
++      "remove_or_replace": "self.refutations.clear()",
++      "replacement": "pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert [{'action': 1...8a2ae7', ...}] == []",
++        "E         ",
++        "E         Left contains 4 more items, first extra item: {'action': 1, 'data': {}, 'source_sha256': '578c64930f6d7457f007b6217c39477d27be04ea8440a8d47d3e9baeeaec941e', 'transition_sha256': '603ce0085bf50a92ae2c3ea28fb0d508928d7be3b161913b6c388b00bd1147f9', ...}",
++        "E         Use -v to get more diff"
++      ]
++    },
++    {
++      "name": "first_call_without_history",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "0781e05e9043a053dff625230c231be0e332a83868f21b1667af2fe6c571948c",
++      "remove_or_replace": "if not self.source_sha:",
++      "replacement": "if False:",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           assert 2026 == 1348",
++        "E           assert 2026 == 1348"
++      ]
++    },
++    {
++      "name": "omitted_source_not_executed",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "compaction",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "79ce38110bfdd3562fb80ae3b31e3ba1cb60b20407bd4ad663984cf3b86cbd35",
++      "remove_or_replace": "if self.source:",
++      "replacement": "if True:",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'KeyError' is None"
++      ]
++    },
++    {
++      "name": "compile_guard",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "execution_error",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "d6b2db52813d5682f925fce998474b7e72951f735bba1533343d0c883c77c0a2",
++      "remove_or_replace": "guarded_call(compile_source, timeout_s=0.25)",
++      "replacement": "compile_source()",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert None == 'EngineCallTimeout'"
++      ]
++    },
++    {
++      "name": "engine_guard",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "execution_error",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "4b3d0ba1b7e13d337c1b0375b0fcd510eb4230825bab4a2e80c338ce8e141bd8",
++      "remove_or_replace": "guarded_call\\(\\s*ns\\[\"engine\"\\],\\s*t.grid.copy\\(\\),\\s*t.action,\\s*copy.deepcopy\\(t.data\\),\\s*timeout_s=0.25,\\s*\\)",
++      "replacement": "ns[\"engine\"](t.grid.copy(), t.action, copy.deepcopy(t.data))",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       AssertionError: assert None == 'EngineCallTimeout'"
++      ]
++    },
++    {
++      "name": "probe_row_cap",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "probe_population",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "f3bfead99cc552f3bd2da39a4227d814a9f070443e0237481b607403917640d4",
++      "remove_or_replace": "][-PROBE_ROWS:]",
++      "replacement": "]",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 17 == 8"
++      ]
++    },
++    {
++      "name": "probe_boundary",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "probe_population",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "bf8ed07b6218cab596a6076fcf1a115eb206e648591337a056895eae6eacf787",
++      "remove_or_replace": "t.level_before == t.level_after == last.level_before",
++      "replacement": "t.level_before == last.level_before",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_probe_population_and_boundary_exclusion.<locals>.<genexpr> at 0x7f8968d6cee0>)"
++      ]
++    },
++    {
++      "name": "probe_level",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "probe_population",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "da391ee6e795fb6b0d5060ac89bbf1d88546578d8dce5dd5d594e3bb22245b7d",
++      "remove_or_replace": "t.level_before == t.level_after == last.level_before",
++      "replacement": "t.level_before == t.level_after",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_probe_population_and_boundary_exclusion.<locals>.<genexpr> at 0x7f66f8d8cee0>)"
++      ]
++    },
++    {
++      "name": "probe_shape",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "probe_population",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "ad78c1295b742027c70447db6704f8a5c3d791471d22c8c7b810ce13874be9ea",
++      "remove_or_replace": "and tuple(t.grid.shape) == tuple(last.grid.shape)",
++      "replacement": "and True",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_probe_population_and_boundary_exclusion.<locals>.<genexpr> at 0x7fc4bef74ee0>)"
++      ]
++    },
++    {
++      "name": "grid_copy",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "does_not_mutate",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "06f3727f4f0bf7a01d8b179decc8d79ef8035dd700f5ca318ede4ab0e3fec3fe",
++      "remove_or_replace": "t.grid.copy(),",
++      "replacement": "t.grid,",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert [[8, 8], [8, 8]] == [[0, 0], [0, 0]]",
++        "E         ",
++        "E         At index 0 diff: [8, 8] != [0, 0]",
++        "E         Use -v to get more diff"
++      ]
++    },
++    {
++      "name": "data_deepcopy",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "does_not_mutate",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "55566530377ae9267ff04c3036ba76de658b1fdb39bf723f19a7e2b0a82cd555",
++      "remove_or_replace": "copy.deepcopy(t.data),",
++      "replacement": "t.data,",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert {'nested': [99], 'x': 1} == {'nested': [2], 'x': 1}",
++        "E         ",
++        "E         Omitting 1 identical items, use -vv to show",
++        "E         Differing items:"
++      ]
++    },
++    {
++      "name": "prediction_validation",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "malformed_predictions",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "73483c9101999254cfb0962c254a16bf74ba83f3ef95ccbce1ac797739d3aa96",
++      "remove_or_replace": "                    if not np.issubdtype\\(pred.dtype, np.integer\\).*?raise ValueError\\(\"unsupported predicted palette\"\\)\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       AssertionError: assert None == 'ValueError'",
++        "E       AssertionError: {'escaped': 'ValueError'}",
++        "E       assert False",
++        "E       AssertionError: assert None == 'ValueError'"
++      ]
++    },
++    {
++      "name": "correct_prediction_not_refuted",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "duplicate_and_correct",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "ee37bc737d42bc90ddeda40a0458d1fc90a8315265be45772dbaabebeff6c2b9",
++      "remove_or_replace": "                    if pred.shape == observed.shape and len\\(wrong\\) == 0:\\n                        continue\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 2 == 1",
++        "E        +  where 2 = len([{'action': 1, 'data': {}, 'source_sha256': '578c64930f6d7457f007b6217c39477d27be04ea8440a8d47d3e9baeeaec941e', 'trans...916aced7e26207a953b789', 'transition_sha256': '718e3403cad4cd600e249551a20195341f07dee12723ae6e5a639b1ec6a306da', ...}])"
++      ]
++    },
++    {
++      "name": "metadata_filter",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "does_not_mutate",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "005510dda6b3f5d1f2c88ca1bfb410b83fdf8d7246cfc868daec6c205edd4bb9",
++      "remove_or_replace": " if k in (\"x\", \"y\")",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert []"
++      ]
++    },
++    {
++      "name": "coordinate_bound",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "action_coordinate",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "90ab5e7322f298ff93898b93bae2ff73236210c5f45aaae405949e8c1029ad00",
++      "remove_or_replace": "                    if any\\(abs\\(v\\) > 2\\*\\*31 - 1 for v in data.values\\(\\)\\):\\n                        raise ValueError\\(\"unsupported action coordinate\"\\)\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       AssertionError: assert None == 'ValueError'"
++      ]
++    },
++    {
++      "name": "sample_cap",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "large_grid_feedback",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "542be2d75b66ba76bc6e0c35d40931223d5037e7397a5ea3b0e1010c5d26081f",
++      "remove_or_replace": "for r, c in wrong[:4]",
++      "replacement": "for r, c in wrong",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           assert False"
++      ]
++    },
++    {
++      "name": "deduplicate_refutations",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "duplicate_and_correct",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "b0f6d6da9b1437196a8c7f91b3312858c81134462a3cb8187eb405c3e7127047",
++      "remove_or_replace": "                    self.refutations = \\[\\n.*?\\n                    \\]\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 3 == 1",
++        "E        +  where 3 = len([{'action': 1, 'data': {}, 'source_sha256': '578c64930f6d7457f007b6217c39477d27be04ea8440a8d47d3e9baeeaec941e', 'trans...40a8d47d3e9baeeaec941e', 'transition_sha256': '718e3403cad4cd600e249551a20195341f07dee12723ae6e5a639b1ec6a306da', ...}])"
++      ]
++    },
++    {
++      "name": "history_cap",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "compaction",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "2e24e21d0f4a2f2f496a18d6c10167fe3962d2224fcec661a3975c410339cd61",
++      "remove_or_replace": "del self.refutations[:-REFUTATIONS]",
++      "replacement": "pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 8 == 4",
++        "E        +  where 8 = len([{'action': 1, 'data': {}, 'source_sha256': 'a2279b9098f30e2b9c25b8ad7fd693889cdefa5c781b12e77b6a3410c70649c5', 'trans...77b6a3410c70649c5', 'transition_sha256': '8ae407962bb59efc6e15eebcdc128c394901fe79acb971d5b4c81bbce52d72ec', ...}, ...])"
++      ]
++    },
++    {
++      "name": "probe_exception_containment",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "malformed_predictions",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "3090f81794eee0e768a1c87c9d4ae26b017f9420cd0b5aa7eef096cc871e6874",
++      "remove_or_replace": "execution_error = type(exc).__name__",
++      "replacement": "raise",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: {'escaped': 'ValueError'}",
++        "E       assert False",
++        "E       AssertionError: {'escaped': 'ValueError'}",
++        "E       assert False"
++      ]
++    },
++    {
++      "name": "source_prompt_compaction",
++      "path": "python/carnot/agentic/arc_induction_memory.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "compaction",
++      "original_sha256": "c9e8e14e28cadefd41e34d09d1ae955d050587606ca85d14b3ded627eaa695ba",
++      "mutant_sha256": "ad3ed27be831ff9ed3519e67477a432984f1cc86298af02d60d4fd40d7566f06",
++      "remove_or_replace": "        if len\\(block.encode\\(\"utf-8\"\\)\\) > STATE_BYTES:\\n.*?            block = render\\(\\)\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'import numpy as np\\ndef engine(grid, action, data):\\n    return grid.copy()\\ndef is_level_complete(grid):\\n    return...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' is None"
++      ]
++    },
++    {
++      "name": "state_bound_to_prompt",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "0914b8b0ac009447c7d69e689161b51ba16aab0afd5214620461fddfd3458660",
++      "remove_or_replace": "        base += state\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'PRIOR INDUCTION STATE\\n' in '/no_think\\nCRITICAL OUTPUT RULES -- obey EXACTLY:\\n1. Output ONLY one ```python code block. NOTHING before it. NOTHIN...ition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\\n```python\\n\\n```python\\n'",
++        "E       assert 'PRIOR INDUCTION STATE\\n' in \"You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'g'.\\n\\nThe game state is a 2x2 integer grid (logic...k objects across the transition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\""
++      ]
++    },
++    {
++      "name": "remember_published_engine",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request or split_fallback",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "23bea14aba6eefa666477c329465f44ea5cbc3caabf39b2b48a6bd40a14ae2f3",
++      "remove_or_replace": "                induction_memory.remember(code)",
++      "replacement": "                pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'PRIOR INDUCTION STATE\\n' in '/no_think\\nCRITICAL OUTPUT RULES -- obey EXACTLY:\\n1. Output ONLY one ```python code block. NOTHING before it. NOTHIN...ition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\\n```python\\n\\n```python\\n'",
++        "E       assert 'PRIOR INDUCTION STATE\\n' in \"You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'g'.\\n\\nThe game state is a 2x2 integer grid (logic...k objects across the transition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\"",
++        "E       AssertionError: assert 'PRIOR INDUCTION STATE\\n' in '/no_think\\nCRITICAL OUTPUT RULES -- obey EXACTLY:\\n1. Output ONLY one ```python code block. NOTHING before it. NOTHIN...ition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\\n```python\\n\\n```python\\n'",
++        "E       AssertionError: assert 'PRIOR INDUCTION STATE\\n' in '/no_think\\nCRITICAL OUTPUT RULES -- obey EXACTLY:\\n1. Output ONLY one ```python code block. NOTHING before it. NOTHIN...ition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\\n```python\\n\\n```python\\n'"
++      ]
++    },
++    {
++      "name": "publication_guard",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "failed_publication",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "529f6e1d51fe94f1a8ced7bbad74420844411c3d4a31a19d7044306eab71e925",
++      "remove_or_replace": "if result[0] and induction_memory is not None:",
++      "replacement": "if induction_memory is not None:",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'import numpy... return False' == 'import numpy... return False'",
++        "E         ",
++        "E         Skipping 56 identical leading characters in diff, use -v to show",
++        "E         - eturn grid.copy()"
++      ]
++    },
++    {
++      "name": "combined_request_budget",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "faa704affd269e85e323ea157b8e8acbf65fbca13ca67d76dbebbb8e21b22c42",
++      "remove_or_replace": "            **memory_budget,\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           assert 75952 == (75952 - 1687)",
++        "E           assert 75952 == (75952 - 1687)"
++      ]
++    },
++    {
++      "name": "split_request_budget",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "split_fallback",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "d825aaf8fe8cd3fe4517e603e6b0c7c693e3027c9263ff254c30493f126f604f",
++      "remove_or_replace": "            **memory_budget,\n",
++      "replacement": "",
++      "occurrence": 2,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           AssertionError: assert 75952 == (75952 - 813)",
++        "E            +  where 813 = InductionMemory(enabled=True, source='import numpy as np\\n\\nimport numpy as np\\ndef engine(grid, action, data):\\n    r..., added_bytes=813, last_added_bytes=813, compactions=0, scope_resets=0, probed_transitions=1, unsupported_tool_calls=0).last_added_bytes",
++        "E           AssertionError: assert 75952 == (75952 - 813)",
++        "E            +  where 813 = InductionMemory(enabled=True, source='import numpy as np\\n\\nimport numpy as np\\ndef engine(grid, action, data):\\n    r..., added_bytes=813, last_added_bytes=813, compactions=0, scope_resets=0, probed_transitions=1, unsupported_tool_calls=0).last_added_bytes"
++      ]
++    },
++    {
++      "name": "reserve_actual_output",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "6473e5f011c3d260712c1c00e2c961abd2edad6349c58470d81d2869e14577ac",
++      "remove_or_replace": "_n_predict = room - prompt_extra_tokens",
++      "replacement": "_n_predict = room",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           assert 75952 == (75952 - 1687)",
++        "E           assert 75952 == (75952 - 1687)"
++      ]
++    },
++    {
++      "name": "configured_output_cap",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "insufficient_room",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "4740f007732640345d702b3590458ccc21022f2f51d6d19412adbff67a4fba9a",
++      "remove_or_replace": "room = min(int(self.max_tokens), pool - _INDUCE_WORST_CASE_PROMPT_TOKENS)",
++      "replacement": "room = pool - _INDUCE_WORST_CASE_PROMPT_TOKENS",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert (not True)"
++      ]
++    },
++    {
++      "name": "minimum_output_guard",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "insufficient_room",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "2efe133c7e8badd941a443f5fc53120f5c30a0af45d27fcfe4932904b60c6278",
++      "remove_or_replace": "            if room - prompt_extra_tokens < 1024:\\n                return False, \"induction memory leaves insufficient completion space\"\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       assert (not True)"
++      ]
++    },
++    {
++      "name": "chat_delivery_counter",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "chat_continuation or second_request",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "083147edaae411d30e44f4d6bcdf9bb33b5d4504354cca7e5a20e4f8b910d327",
++      "remove_or_replace": "            memory_receipt.delivered(memory_bytes)",
++      "replacement": "            pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           assert 0 == 1687",
++        "E       assert 0 == 2"
++      ]
++    },
++    {
++      "name": "vllm_delivery_counter",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "vllm_completion",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "a7f97224ce85f4bf10f24e4799cb9bab6ca31ed8d74b327bd90cc1bbbba475cc",
++      "remove_or_replace": "                        memory_receipt.delivered(prompt_extra_tokens)",
++      "replacement": "                        pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 0 == 1",
++        "E        +  where 0 = InductionMemory(enabled=True, source='import numpy as np\\ndef engine(grid, action, data):\\n    return grid.copy()\\ndef...=0, added_bytes=0, last_added_bytes=813, compactions=0, scope_resets=0, probed_transitions=1, unsupported_tool_calls=0).deliveries"
++      ]
++    },
++    {
++      "name": "raw_delivery_counter",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "second_request",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "1e3cd43e781ce374bce26fdb59870d5b83ec224a3c0a55ead50afbc8b93577ce",
++      "remove_or_replace": "                        memory_receipt.delivered(prompt_extra_tokens)",
++      "replacement": "                        pass",
++      "occurrence": 2,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E           assert 0 == 1687"
++      ]
++    },
++    {
++      "name": "chat_continuation_receipt_forward",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "chat_continuation",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "5378d6d5b3f67b9c53a998f8f6aa5d5bc4619ad9e6b9aab031db4bf3e5af70c5",
++      "remove_or_replace": "                \\*\\*\\(\\n                    \\{\"memory_receipt\": memory_receipt, \"memory_bytes\": memory_bytes\\}.*?                \\),\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       assert 1 == 2"
++      ]
++    },
++    {
++      "name": "tool_exclusion_counter",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "successful_tool_loop",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "352333d0d8c4ec24b4abe1376accd1ab2f90e57876260452043a3a72129236c3",
++      "remove_or_replace": "                    induction_memory.unsupported_tool_calls += 1",
++      "replacement": "                    pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 0 == 1"
++      ]
++    },
++    {
++      "name": "policy_bounded_binding",
++      "path": "python/carnot/agentic/arc_competition_agent.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "live_policy_branches",
++      "original_sha256": "9f4783ea5242fd4e51a5e7a6c2af0c09f36e6d72e3852d3513ade1e442057fa0",
++      "mutant_sha256": "b6a635f912de782fd4b418ab964c8860e64dc347e8efd99feb2bcb92af728dae",
++      "remove_or_replace": "kwargs[\"induction_memory\"] = self._induction_memory",
++      "replacement": "pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_live_policy_branches_deliver_memory.<locals>.<genexpr> at 0x7f2bf9b77c60>)"
++      ]
++    },
++    {
++      "name": "policy_plain_binding",
++      "path": "python/carnot/agentic/arc_competition_agent.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "live_policy_branches",
++      "original_sha256": "9f4783ea5242fd4e51a5e7a6c2af0c09f36e6d72e3852d3513ade1e442057fa0",
++      "mutant_sha256": "4eae52c7c0cc446b43db82d7337107241fa2ccf13d6c89fcbe5f23661ea85d56",
++      "remove_or_replace": "_induce_kwargs[\"induction_memory\"] = self._induction_memory",
++      "replacement": "pass",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_live_policy_branches_deliver_memory.<locals>.<genexpr> at 0x7f3d93b36a80>)",
++        "E       assert False",
++        "E        +  where False = all(<generator object test_live_policy_branches_deliver_memory.<locals>.<genexpr> at 0x7f3d87f7f6b0>)"
++      ]
++    },
++    {
++      "name": "policy_bounded_default_off",
++      "path": "python/carnot/agentic/arc_competition_agent.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "live_policy_branches",
++      "original_sha256": "9f4783ea5242fd4e51a5e7a6c2af0c09f36e6d72e3852d3513ade1e442057fa0",
++      "mutant_sha256": "801ab47401b5a038d981e2c35ff4dc12e6bb0e4fcabd143d065269826883f7ff",
++      "remove_or_replace": "if self._induction_memory.enabled:\n            kwargs",
++      "replacement": "if True:\n            kwargs",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_live_policy_branches_deliver_memory.<locals>.<genexpr> at 0x7f1416c59d80>)"
++      ]
++    },
++    {
++      "name": "policy_plain_default_off",
++      "path": "python/carnot/agentic/arc_competition_agent.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "live_policy_branches",
++      "original_sha256": "9f4783ea5242fd4e51a5e7a6c2af0c09f36e6d72e3852d3513ade1e442057fa0",
++      "mutant_sha256": "c13fe79334c0ea43608b602717436aff5f5269a9fba52ffef261f24f8828acdc",
++      "remove_or_replace": "if self._induction_memory.enabled and _supports_kwarg(",
++      "replacement": "if _supports_kwarg(",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_live_policy_branches_deliver_memory.<locals>.<genexpr> at 0x7f9186c31970>)",
++        "E       assert False",
++        "E        +  where False = all(<generator object test_live_policy_branches_deliver_memory.<locals>.<genexpr> at 0x7f9186b87780>)"
++      ]
++    },
++    {
++      "name": "bounded_execute_forward",
++      "path": "python/carnot/agentic/arc_llm_reinduction.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "live_policy_branches",
++      "original_sha256": "ec148c01268e2a67089f9862d83f84b8647823f8ce87024147605e2b0951c84c",
++      "mutant_sha256": "e3e45d9b6ea1934141e0c6ce67bfa21da8b9952e0a60a21cca0f7b1b99ce7217",
++      "remove_or_replace": "                induction_memory,\n",
++      "replacement": "                None,\n",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_live_policy_branches_deliver_memory.<locals>.<genexpr> at 0x7f926a783c60>)"
++      ]
++    },
++    {
++      "name": "legacy_signature_guard",
++      "path": "python/carnot/agentic/arc_llm_reinduction.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "legacy_proposer",
++      "original_sha256": "ec148c01268e2a67089f9862d83f84b8647823f8ce87024147605e2b0951c84c",
++      "mutant_sha256": "c9b3299f30e53417f0669483949a7eb806e44c1a5bfed8b1b1be01028781c318",
++      "remove_or_replace": "induction_memory is not None and _supports_kwarg(proposer.induce, \"induction_memory\")",
++      "replacement": "induction_memory is not None",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'TypeError' == (True, 'legacy')"
++      ]
++    },
++    {
++      "name": "scored_receipt",
++      "path": "python/carnot/agentic/arc_competition_agent.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "live_policy_branches",
++      "original_sha256": "9f4783ea5242fd4e51a5e7a6c2af0c09f36e6d72e3852d3513ade1e442057fa0",
++      "mutant_sha256": "75c7520904f5aae76145a991a2bbd4f452a409ae138933dce1d8b1fee6bad05f",
++      "remove_or_replace": "            \"induction_memory\": self._induction_memory.receipt(),",
++      "replacement": "            \"induction_memory\": {},",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert {} == {'added_bytes...ries': 1, ...}",
++        "E         ",
++        "E         Right contains 11 more items:",
++        "E         {'added_bytes': 1687,"
++      ]
++    },
++    {
++      "name": "offline_receipt",
++      "path": "scripts/arc_leaderboard_eval.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "live_policy_branches",
++      "original_sha256": "03989e56a347e00d398936a3f2ef43163e5899c9f9072adb1b773b6027476322",
++      "mutant_sha256": "b54cf47bf1f4644727f458e14c08e84e0b078ff872898e8c3de586322aa364e3",
++      "remove_or_replace": "        \"induction_memory\": \\(.*?\\n        \\),",
++      "replacement": "        \"induction_memory\": {},",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       assert {}",
++        "E       assert {}"
++      ]
++    },
++    {
++      "name": "offline_action_budget",
++      "path": "scripts/arc_loop_solve.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "offline_twin_dispatch",
++      "original_sha256": "c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca",
++      "mutant_sha256": "e16b4692c87012688142a9c461de33169a2e4fa2aad0225c380606c504290fbf",
++      "remove_or_replace": "budget=args.max_actions",
++      "replacement": "budget=400",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert ('r11l' == 'r11l'",
++        "E         ",
++        "E           r11l and True and 400 == 7)",
++        "E        +  where True = isinstance(<carnot.agentic.arc_competition_agent.E3AgentPolicy object at 0x7f8eb3073ec0>, <class 'carnot.agentic.arc_competition_agent.E3AgentPolicy'>)"
++      ]
++    },
++    {
++      "name": "offline_output_guard",
++      "path": "scripts/arc_loop_solve.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "offline_twin_requires",
++      "original_sha256": "c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca",
++      "mutant_sha256": "54755f98ef2646825567ad9aa8effe839e821aabf62d5eced6e1ba4b7a78bef4",
++      "remove_or_replace": "        if args.output is None or args.output.resolve\\(\\).is_relative_to\\(.*?            ap.error\\(\"e3 requires --output outside results/ \\(immutable evidence\\)\"\\)\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'returned' == 2",
++        "E       AssertionError: assert 'AttributeError' == 2"
++      ]
++    },
++    {
++      "name": "previous_grid_memory_forward",
++      "path": "python/carnot/agentic/arc_llm_reinduction.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "bounded_helper_with_previous_grid",
++      "original_sha256": "ec148c01268e2a67089f9862d83f84b8647823f8ce87024147605e2b0951c84c",
++      "mutant_sha256": "9ae947852d56528f714659fa7f66502f2b8b4b5b22608b0f9a8c7237f7837edd",
++      "remove_or_replace": "            **memory_kwargs,\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       AssertionError: assert 'PRIOR INDUCTION STATE\\n' in '/no_think\\nCRITICAL OUTPUT RULES -- obey EXACTLY:\\n1. Output ONLY one ```python code block. NOTHING before it. NOTHIN...ition deltas above.\\n\\nReturn ONLY one ```python code block with engine + is_level_complete.\\n```python\\n\\n```python\\n'"
++      ]
++    },
++    {
++      "name": "plain_helper_memory_forward",
++      "path": "python/carnot/agentic/arc_llm_reinduction.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "live_policy_branches",
++      "original_sha256": "ec148c01268e2a67089f9862d83f84b8647823f8ce87024147605e2b0951c84c",
++      "mutant_sha256": "7b5f4139a37c79f51f49232b927ac7d1c409f8f6a2044e66600262c01e08238b",
++      "remove_or_replace": "int(cell), **memory_kwargs)",
++      "replacement": "int(cell))",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert False",
++        "E        +  where False = all(<generator object test_live_policy_branches_deliver_memory.<locals>.<genexpr> at 0x7ff6d9c7bc60>)"
++      ]
++    },
++    {
++      "name": "offline_dispatch_call",
++      "path": "scripts/arc_loop_solve.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "offline_twin_dispatch",
++      "original_sha256": "c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca",
++      "mutant_sha256": "f4d0c23e8cf8ea2f657726120e2ffbbed7654b83aca122ffb0890a7a729f0c13",
++      "remove_or_replace": "        out = run_game\\(\\n.*?\\n        \\)\\n",
++      "replacement": "        out = {}\n",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       AssertionError: assert None == 0",
++        "E        +  where None = <built-in method get of dict object at 0x7f01e5f5c840>('deliveries')",
++        "E        +    where <built-in method get of dict object at 0x7f01e5f5c840> = {}.get",
++        "E        +      where {} = <built-in method get of dict object at 0x7f01e6113700>('induction_memory', {})"
++      ]
++    },
++    {
++      "name": "policy_owns_state",
++      "path": "python/carnot/agentic/arc_competition_agent.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "two_policy_instances",
++      "original_sha256": "9f4783ea5242fd4e51a5e7a6c2af0c09f36e6d72e3852d3513ade1e442057fa0",
++      "mutant_sha256": "dc1681b2dc3032731c07ec9b23f460b7a8bcddfebf831e4e4a2afa125097ec79",
++      "remove_or_replace": "self._induction_memory = InductionMemory()",
++      "replacement": "self._induction_memory = getattr(self.proposer, \"_shared_induction_memory\", None) or InductionMemory(); self.proposer._shared_induction_memory = self._induction_memory",
++      "occurrence": 1,
++      "match_is_regex": false,
++      "assertion_excerpt": [
++        "E       assert 'PRIOR INDUCTION STATE' not in '/no_think\\n...n```python\\n'",
++        "E         ",
++        "E         'PRIOR INDUCTION STATE' is contained here:",
++        "E           s above."
++      ]
++    },
++    {
++      "name": "generate_chat_receipt_forward",
++      "path": "python/carnot/agentic/arc_executable_world_model.py",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "selector": "chat_continuation",
++      "original_sha256": "6a08003725bfa59e54a8a74ca2afc867d7ca8035d28884c97fcaf2d8c1c260ef",
++      "mutant_sha256": "0a4319c1b274cea0b96d5738a1ce558d477ecf8f9e8e32afb541dedcef93b690",
++      "remove_or_replace": "                        \\*\\*\\(\\n                            \\{\"memory_receipt\": memory_receipt, \"memory_bytes\": prompt_extra_tokens\\}.*?                        \\),\\n",
++      "replacement": "",
++      "occurrence": 1,
++      "match_is_regex": true,
++      "assertion_excerpt": [
++        "E       assert 0 == 2"
++      ]
++    }
++  ],
++  "hook_input_mutants": [
++    {
++      "name": "environment_reaches_argument",
++      "path": "scripts/eval_run_consumer_field_lint.py",
++      "requirement": "REQ-ARC-WMTE-6642",
++      "remove_or_replace": "default=os.environ.get(\"CARNOT_ARC_EVAL_RUNS_DIR\") or None,",
++      "replacement": "default=None,",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "original_sha256": "98e3be506278984c3e762f2560fe7e3313085ada82afe16e61b86d8ed2d363c1",
++      "mutant_sha256": "d46e5e9ec6cdd9f0da92e3f5d4f2f379e94b793804c6572e034873e172cef069",
++      "test_file": "tests/python/test_eval_run_consumer_field_lint.py",
++      "selector": "worktree_evidence",
++      "assertion_excerpt": [
++        "E       AssertionError: assert 1 == 0",
++        "E        +  where 1 = <function main at 0x7fa7145e6200>(['--repo-root', '/tmp/carnot-astra-state-persistence/hook-mutations/environment_reaches_argument-temp/test_worktree_evidence_selecti0/repo'])",
++        "E        +    where <function main at 0x7fa7145e6200> = lint.main",
++        "E       AssertionError: assert '/tmp/carnot-astra-state-persistence/hook-mutations/environment_reaches_argument-temp/test_worktree_evidence_selecti1/external' in 'NOTE: eval-run evidence: /tmp/carnot-astra-state-persistence/hook-mutations/environment_reaches_argument-temp/test_wo...onment_reaches_argument-temp/test_worktree_evidence_selecti1/repo/results/arc_leaderboard_eval_runs; join cannot run\\n'"
++      ]
++    },
++    {
++      "name": "empty_environment_uses_default",
++      "path": "scripts/eval_run_consumer_field_lint.py",
++      "requirement": "REQ-ARC-WMTE-6642",
++      "remove_or_replace": "default=os.environ.get(\"CARNOT_ARC_EVAL_RUNS_DIR\") or None,",
++      "replacement": "default=os.environ.get(\"CARNOT_ARC_EVAL_RUNS_DIR\"),",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "original_sha256": "98e3be506278984c3e762f2560fe7e3313085ada82afe16e61b86d8ed2d363c1",
++      "mutant_sha256": "ba7bbde62fa0af934edb1027150f3198818054a0a5cfc52ac6f7a48b2ea472a0",
++      "test_file": "tests/python/test_eval_run_consumer_field_lint.py",
++      "selector": "worktree_evidence",
++      "assertion_excerpt": [
++        "E       AssertionError: assert 1 == 0",
++        "E        +  where 1 = <function main at 0x7f3d85bfe340>(['--repo-root', '/tmp/carnot-astra-state-persistence/hook-mutations/empty_environment_uses_default-temp/test_worktree_evidence_selecti0/repo'])",
++        "E        +    where <function main at 0x7f3d85bfe340> = lint.main"
++      ]
++    },
++    {
++      "name": "explicit_cli_precedes_environment",
++      "path": "scripts/eval_run_consumer_field_lint.py",
++      "requirement": "REQ-ARC-WMTE-6642",
++      "remove_or_replace": "runs_dir = args.runs_dir or (repo_root / \"results\" / \"arc_leaderboard_eval_runs\")",
++      "replacement": "runs_dir = Path(os.environ[\"CARNOT_ARC_EVAL_RUNS_DIR\"]) if os.environ.get(\"CARNOT_ARC_EVAL_RUNS_DIR\") else args.runs_dir or (repo_root / \"results\" / \"arc_leaderboard_eval_runs\")",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "original_sha256": "98e3be506278984c3e762f2560fe7e3313085ada82afe16e61b86d8ed2d363c1",
++      "mutant_sha256": "22ad45f977b40aa90907c014b7ae66e98d10a804f196aa58e631c304e8eec835",
++      "test_file": "tests/python/test_eval_run_consumer_field_lint.py",
++      "selector": "worktree_evidence",
++      "assertion_excerpt": [
++        "E       AssertionError: assert 1 == 0",
++        "E        +  where 1 = <function main at 0x7f8c00226340>(['--repo-root', '/tmp/carnot-astra-state-persistence/hook-mutations/explicit_cli_precedes_environment-temp/test_worktr...stra-state-persistence/hook-mutations/explicit_cli_precedes_environment-temp/test_worktree_evidence_selecti0/external'])",
++        "E        +    where <function main at 0x7f8c00226340> = lint.main"
++      ]
++    },
++    {
++      "name": "selected_evidence_is_named",
++      "path": "scripts/eval_run_consumer_field_lint.py",
++      "requirement": "REQ-ARC-WMTE-6642",
++      "remove_or_replace": "    print(f\"NOTE: eval-run evidence: {runs_dir.resolve()}\")\n",
++      "replacement": "",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "original_sha256": "98e3be506278984c3e762f2560fe7e3313085ada82afe16e61b86d8ed2d363c1",
++      "mutant_sha256": "468f4e91a56defb2ebb701735cc9a9cbed53c3a76c7155bdd428bacf76ab3634",
++      "test_file": "tests/python/test_eval_run_consumer_field_lint.py",
++      "selector": "worktree_evidence",
++      "assertion_excerpt": [
++        "E       AssertionError: assert '/tmp/carnot-astra-state-persistence/hook-mutations/selected_evidence_is_named-temp/test_worktree_evidence_selecti0/external' in 'NOTE: population: 1 consumer(s), 1 artifact(s), 2 distinct artifact keys, 2 producer file(s)\\nOK: every declared eval-run consumer field is emitted somewhere real.\\n'",
++        "E        +  where '/tmp/carnot-astra-state-persistence/hook-mutations/selected_evidence_is_named-temp/test_worktree_evidence_selecti0/external' = str(PosixPath('/tmp/carnot-astra-state-persistence/hook-mutations/selected_evidence_is_named-temp/test_worktree_evidence_selecti0/external'))",
++        "E       AssertionError: assert '/tmp/carnot-astra-state-persistence/hook-mutations/selected_evidence_is_named-temp/test_worktree_evidence_selecti1/external' in 'NOTE: population: 1 consumer(s), 1 artifact(s), 2 distinct artifact keys, 2 producer file(s)\\nOK: every declared eval-run consumer field is emitted somewhere real.\\n'",
++        "E        +  where '/tmp/carnot-astra-state-persistence/hook-mutations/selected_evidence_is_named-temp/test_worktree_evidence_selecti1/external' = str(PosixPath('/tmp/carnot-astra-state-persistence/hook-mutations/selected_evidence_is_named-temp/test_worktree_evidence_selecti1/external'))"
++      ]
++    },
++    {
++      "name": "failure_still_refuses",
++      "path": "scripts/eval_run_consumer_field_lint.py",
++      "requirement": "REQ-ARC-WMTE-6642",
++      "remove_or_replace": "    if failures:\n        return 1",
++      "replacement": "    if False:\n        return 1",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "original_sha256": "98e3be506278984c3e762f2560fe7e3313085ada82afe16e61b86d8ed2d363c1",
++      "mutant_sha256": "48cb5fd9fd7feaaa0574c95103b4038184ac8b316bd0ded7d35e80ef2f87fa93",
++      "test_file": "tests/python/test_eval_run_consumer_field_lint.py",
++      "selector": "worktree_evidence",
++      "assertion_excerpt": [
++        "E       AssertionError: assert 0 == 1",
++        "E        +  where 0 = <function main at 0x7fbe145d2340>(['--repo-root', '/tmp/carnot-astra-state-persistence/hook-mutations/failure_still_refuses-temp/test_worktree_evidence_selecti0/repo'])",
++        "E        +    where <function main at 0x7fbe145d2340> = lint.main",
++        "E       AssertionError: assert 0 == 1"
++      ]
++    },
++    {
++      "name": "worktree_source_is_checked",
++      "path": "scripts/eval_run_consumer_field_lint.py",
++      "requirement": "REQ-ARC-WMTE-6642",
++      "remove_or_replace": "run_lint(repo_root, runs_dir, flat, surface)",
++      "replacement": "run_lint(REPO_ROOT, runs_dir, FLAT_EVAL, PRODUCER_SURFACE)",
++      "red_exit": 1,
++      "assertion_red": true,
++      "cmp_identical": true,
++      "green_exit": 0,
++      "original_sha256": "98e3be506278984c3e762f2560fe7e3313085ada82afe16e61b86d8ed2d363c1",
++      "mutant_sha256": "bd56032bab66e8fd63f01abbcb6de39984a291afe2360e6736629bc32599bcbf",
++      "test_file": "tests/python/test_eval_run_consumer_field_lint.py",
++      "selector": "worktree_evidence",
++      "assertion_excerpt": [
++        "E       AssertionError: assert 0 == 1",
++        "E        +  where 0 = <function main at 0x7f3bb81de200>(['--repo-root', '/tmp/carnot-astra-state-persistence/hook-mutations/worktree_source_is_checked-temp/test_worktree_evidence_selecti0/repo'])",
++        "E        +    where <function main at 0x7f3bb81de200> = lint.main",
++        "E       AssertionError: assert 0 == 1"
++      ]
++    }
++  ],
++  "hook_input_distinct_final_mutants": 6,
++  "hook_input_survivors": 0
++}
+diff --git a/epics/stories/arc-induction-state-persistence.md b/epics/stories/arc-induction-state-persistence.md
+new file mode 100644
+index 0000000000..e41bd7a47d
+--- /dev/null
++++ b/epics/stories/arc-induction-state-persistence.md
+@@ -0,0 +1,24 @@
++# Cross-call induction memory
++
++Status: implemented; local-model A/B deferred pending operator authorization.
++
++Implement REQ-ARC-WMTE-7040 through REQ-ARC-WMTE-7042 on the scored induction
++path. Rank refutation reuse first, bounded source reuse second, measurement
++plumbing third. Use deterministic compaction. Keep the feature off by default.
++Do not run a GPU experiment. Prove each new behavior with call-site mutations.
++
++Defer opaque provider state, tool-loop integration, disk restart recovery, and
++model-written hypothesis summaries. These need separate evidence or interfaces.
++
++Decentralization: the mechanism uses the existing local open-weight generator.
++It adds no external service or model dependency.
++
++Validation: 40 CPU request tests; 58 distinct call-site mutations produced assertion RED,
++byte-identical `cmp` restores and GREEN. See the dated research note for final
++regression/collection results, limitations, and the proposed A/B population.
++
++2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
++`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
++existing main-checkout corpus. Source checks stay local; missing evidence and
++absent fields still refuse. Seven new tests and six assertion mutations prove
++the input selection without evidence writes or a hook bypass.
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index bc23f41c6f..b2160e29e4 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -29674,6 +29674,18 @@ after the GPU-hours were spent. The join below fails at commit time instead.
+ invisible to the join. The declaration-presence rule bounds that gap to fields
+ within a known consumer, not to whole consumers.
+ 
++### SCENARIO-ARC-WMTE-6642-WORKTREE: Hooks read an explicitly selected evidence corpus
++
++- GIVEN an isolated worktree without ignored eval-run artifacts
++- WHEN `CARNOT_ARC_EVAL_RUNS_DIR` selects an existing corpus
++- THEN the CLI SHALL use that path as the default for `--runs-dir`
++- AND explicit `--runs-dir` SHALL take precedence over the environment
++- AND unset or empty environment values SHALL retain the worktree default
++- AND the selected evidence path SHALL be printed
++- AND consumer, producer and flat-artifact roots SHALL remain in the selected repository
++- AND a missing or empty selected corpus, or an un-emitted required field, SHALL fail
++- AND the check SHALL never copy or write evidence
++
+ ## Implementation Status (REQ-ARC-WMTE-6642)
+ 
+ | Requirement | Implementation | Tests |
+@@ -29990,3 +30002,88 @@ Implementation status: implemented 2026-09-04
+ (`python/carnot/agentic/arc_trajectory_supervisor.py`, `arc_competition_agent.py` shadow
+ transform, `arc_supervisor_refinement.py`;
+ `tests/python/test_arc_supervisor_co_credit_20260904.py`, 6 tests).
++## REQ-ARC-WMTE-7040: Carry induction work within a live episode
++
++The scored policy SHALL own optional induction memory. Only
++`CARNOT_ARC_INDUCE_STATE_PERSISTENCE=1` enables it. The default prompt stays
++byte-identical. Memory SHALL be private to one policy, game, level, grid shape,
++and cell scale. A scope change clears prior content.
++
++The standard local induce path SHALL retain its last generated engine and up to
++four distinct refutation records. Before the next induce call, it SHALL check
++that engine against at most eight current proposal transitions. It SHALL use
++guarded execution and record measured failures, not model-written conclusions.
++It SHALL exclude level-boundary transitions and preserve input grids and action data.
++Non-integer or out-of-palette predictions SHALL be reported as execution errors,
++never as measured dynamics failures. It SHALL never read a held-out
++corpus or a saved engine from another run. A failure names the source hash,
++action, transition hash, and sampled wrong cells. A refutation applies to that
++candidate on that observation, not to a whole class of rules.
++
++### SCENARIO-ARC-WMTE-7040-A: A second attempt sees the first attempt's failure
++- GIVEN a local generator emits an identity engine on a changing grid
++- WHEN a second induction runs with the flag enabled
++- THEN its actual request includes the prior source and the observed mismatch
++- AND with the flag unset or zero the request stays unchanged
++
++### SCENARIO-ARC-WMTE-7040-B: Scope and evidence remain separate
++- GIVEN repeated calls and two policy instances sharing a generator
++- THEN each policy retains only its own work
++- AND a different game, level, shape, or cell scale clears prior content
++- AND level-boundary rows provide no refutation
++- AND reserved acceptance rows provide no refutation when `CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1`
++
++The existing plain prompt exposes all active rows unless acceptance splitting is
++enabled. This feature consumes the same proposal rows; it does not repair that
++pre-existing leak. Both proposed A/B arms must enable acceptance splitting.
++
++## REQ-ARC-WMTE-7041: Bound state and its request cost
++
++Memory SHALL retain at most 32768 UTF-8 source bytes and four refutations.
++Each prompt addition SHALL fit 4096 UTF-8 bytes, including its labels.
++Compaction SHALL keep complete JSON records and either a whole source or an
++explicit source-omitted marker. It SHALL never paste a truncated program.
++No additional model call performs compaction. Extra bytes SHALL reserve the
++same number of completion tokens at the generation call site. This conservative
++bound uses the local byte tokenizer contract; bytes are not measured tokens.
++The existing base-prompt context limit still applies.
++
++### SCENARIO-ARC-WMTE-7041-A: Long histories and sources stay bounded
++- GIVEN many attempts and oversized sources
++- THEN stored history and every delivered addition obey their byte caps
++- AND duplicate failures replace records rather than grow history
++- AND source omission preserves complete, parseable failure records
++
++### SCENARIO-ARC-WMTE-7041-B: The transport pays for added context
++- GIVEN a bounded state addition and a known context pool
++- WHEN the real generator builds the completion request
++- THEN its requested output budget reserves space for the added bytes
++
++## REQ-ARC-WMTE-7042: Expose the live mechanism for measurement
++
++The bounded reinduction branch and the plain induction branch SHALL pass the
++policy's memory to the local generator. Existing proposer implementations that
++do not accept memory SHALL remain usable. Policy diagnostics SHALL expose the
++enabled state, calls, deliveries, added bytes, refutations, and compactions.
++The flag ledger SHALL mark this feature unevaluated and off by default.
++The offline twin SHALL offer an explicit `e3` mechanism that runs the same scored
++policy through the existing offline eval runner. It SHALL accept an output path.
++
++Tool-loop induction, refactor prompts, opaque reasoning state, KV-cache reuse,
++and disk restart persistence are outside this first implementation. Tool-loop
++success SHALL be reported as unsupported for this memory feature.
++
++### SCENARIO-ARC-WMTE-7042-A: Both live induction branches deliver memory
++- GIVEN a scored policy with memory enabled
++- WHEN plain or bounded induction calls the local generator
++- THEN the actual generation request contains prior work on the second attempt
++- AND its diagnostics report the delivered bytes
++
++### SCENARIO-ARC-WMTE-7042-B: The offline twin reaches the scored policy
++- WHEN `arc_loop_solve.py --mechanism e3` runs
++- THEN it uses `E3AgentPolicy` and the existing offline eval runner
++- AND it writes its receipt only to the selected output path
++
++Implementation status: implemented 2026-09-05; CPU-verified, action efficiency
++unevaluated. Tests: `tests/python/test_arc_induction_state_persistence.py`.
++Proof: `docs/research-notes/astra-induction-state-persistence-mutations-2026-09-05.json`.
+diff --git a/ops/arc_flag_ledger.yaml b/ops/arc_flag_ledger.yaml
+index 259cdac20c..9af9864876 100644
+--- a/ops/arc_flag_ledger.yaml
++++ b/ops/arc_flag_ledger.yaml
+@@ -1,4 +1,23 @@
+ flags:
++  CARNOT_ARC_EVAL_RUNS_DIR:
++    discovered: '2026-09-05'
++    evidence: []
++    state: unevaluated
++    benchmark_reachable: false
++    promotable: false
++    kind: path
++    requirement: REQ-ARC-WMTE-6642
++    measurement_note: Read-only evidence-path configuration for worktree hooks; not an A/B switch.
++  CARNOT_ARC_INDUCE_STATE_PERSISTENCE:
++    discovered: '2026-09-05'
++    default: '0'
++    state: unevaluated
++    benchmark_reachable: true
++    promotable: false
++    evidence: []
++    mechanism: bounded per-policy prior engine and observed refutations in standard local induction
++    requirement: REQ-ARC-WMTE-7040
++    measurement_note: CPU wiring checks are not an action-efficiency A/B. No GPU run authorized.
+   CARNOT_ARC_ACTION_PROVENANCE:
+     discovered: '2026-08-14'
+     evidence: []
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 8439b2ff67..3c4611bb2f 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,19 @@
+ # Carnot — Changelog
+ 
++## 2026-09-05 — Bounded induction memory, default off
++
++REQ-ARC-WMTE-7040–7042 adds policy-owned prior source and measured candidate
++counterexamples to standard local induction. Added context is capped at 4096
++UTF-8 bytes; deterministic compaction makes no model calls. Both live branches
++and `arc_loop_solve.py --mechanism e3` reach the same mechanism. Scored/eval
++receipts count delivered state. The flag remains unevaluated and off.
++
++Forty new CPU tests pass. Fifty-eight distinct call-site deletions/replacements
++produce assertion RED, byte-identical restores and GREEN. No GPU or evidence
++writes. Global collection and regression results are recorded in
++`docs/research-notes/astra-induction-state-persistence-2026-09-05.md`.
++
++
+ ## 2026-09-05 — ARC evaluation provenance artifact repair
+ 
+ - Fixed REQ-ARC-7010 artifact publication on fresh output roots by creating
+@@ -18890,3 +18904,9 @@ record model count and runner selection. No measured alternative supports a
+ time-savings estimate, so the estimate is 0%.
+ - 2026-09-05: V614 source delta and task-contract preflight (⚠️ Research Finding) — honest_verdict=disqualified_v614_markdown_yaml_contract_mismatch; results/experiment_7009_v614_source_contract_preflight.json
+ - 2026-09-05: ARC evaluation hardware and context provenance contract (✅ Complete) — honest_verdict=positive_arc_eval_provenance_contract_ready; results/experiment_7010_arc_eval_provenance_contract.json
++
++2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
++`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
++existing main-checkout corpus. Source checks stay local; missing evidence and
++absent fields still refuse. Seven new tests and six assertion mutations prove
++the input selection without evidence writes or a hook bypass.
+diff --git a/ops/e2e-test-plan.md b/ops/e2e-test-plan.md
+index 409902c6e3..40a2bcb7d6 100644
+--- a/ops/e2e-test-plan.md
++++ b/ops/e2e-test-plan.md
+@@ -1,6 +1,6 @@
+ # Carnot — E2E Test Plan
+ 
+-**Last Updated:** 2026-05-10
++**Last Updated:** 2026-09-05
+ 
+ ## E2E Test Strategy
+ 
+@@ -133,3 +133,18 @@ weights.
+ 4. Ensure ContinuousLatentState can project using the DouglasRachfordPiNetLayer.
+ 
+ **Pass criteria:** ContinuousLatentState initialization succeeds, energy is evaluated correctly using ContinuousEBM, PiNet projection runs without error, and output coordinates represent the applied constraints.
++### E2E-009: Cross-call ARC induction memory (CPU)
++
++Spec refs: REQ-ARC-WMTE-7040, REQ-ARC-WMTE-7041, REQ-ARC-WMTE-7042.
++
++Run `tests/python/test_arc_induction_state_persistence.py` with the worktree
++PYTHONPATH, `--no-cov`, and a private `--basetemp`. Its scripted HTTP transport
++drives the real scored policy, local generator, prompt builder, and engine writer.
++Both induction branches must deliver prior work on their second attempt. The
++default arm must keep identical payloads. The offline twin must dispatch `e3`
++to the same scored policy and eval runner, writing its receipt to a temporary path.
++
++Also run the offline twin with `--mechanism e3 --game r11l --max-actions 12`
++and an output path in `/tmp`. Set `CARNOT_ARC_DISABLE_INDUCTION=1` for this
++CPU environment smoke. This confirms environment plumbing, not memory efficacy.
++Any action-efficiency claim requires a separately authorized local-model A/B.
+diff --git a/ops/metrics.md b/ops/metrics.md
+index d1733521f2..846c4e45f1 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3340,3 +3340,8 @@ improvements reachable from the two live entrypoints; prove every guard by mutat
+ | Turn | Start | End | Description | Tokens (est) |
+ |------|-------|-----|-------------|------|
+ | 1 | 2026-09-04T21:08:46Z | 2026-09-04T21:59:55Z | Baseline on four axes (LLM-off timing run, offline engine scoring, ledger audit); REQ-ARC-WMTE-7010..7013 spec, code, 28 tests, 11 mutation proofs; adversarial review applied; commits 47689d162f + the ops commit. Sub-agent review: 451,656 tokens, 874 s, 59 tool uses. | see session JSONL |
++## Session: 2026-09-05 induction state persistence
++
++| Turn | Start | End | Description | Tokens |
++|---|---|---|---|---|
++| 1 | 2026-09-05T05:33:29Z | 2026-09-05T06:36:05+00:00 | REQ-ARC-WMTE-7040–7042 and REQ-6642 hook-input repair. 141 ARC and 14 hook CPU tests pass; 58 induction plus 6 hook assertion mutations restored with cmp. Whole collection: 61,776 tests and eight import errors. No GPU, evidence writes, or bypassed hooks. | Unavailable: scripts/session-metrics.py absent; no count inferred |
+diff --git a/ops/status.md b/ops/status.md
+index 1afadf3ad9..13651be49f 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,5 +1,19 @@
+ # Carnot — Operational Status
+ 
++## 2026-09-05 — Bounded induction memory, default off
++
++REQ-ARC-WMTE-7040–7042 adds policy-owned prior source and measured candidate
++counterexamples to standard local induction. Added context is capped at 4096
++UTF-8 bytes; deterministic compaction makes no model calls. Both live branches
++and `arc_loop_solve.py --mechanism e3` reach the same mechanism. Scored/eval
++receipts count delivered state. The flag remains unevaluated and off.
++
++Forty new CPU tests pass. Fifty-eight distinct call-site deletions/replacements
++produce assertion RED, byte-identical restores and GREEN. No GPU or evidence
++writes. Global collection and regression results are recorded in
++`docs/research-notes/astra-induction-state-persistence-2026-09-05.md`.
++
++
+ **Last Updated:** 2026-09-05
+ 
+ ## 2026-09-05 — REQ-ARC-7010 provenance contract regression repaired
+@@ -10695,3 +10709,9 @@ until merged; content commit `47689d162f`. Full baseline with populations:
+   tests driving the real `run_game` loop, not by a live generator call.
+ - No `--record-null` for the two tool flags; no cap on induce transitions; no thinking budget;
+   no shadow-control estimator (no window-120 shadow receipt with a firing exists yet).
++
++2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
++`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
++existing main-checkout corpus. Source checks stay local; missing evidence and
++absent fields still refuse. Seven new tests and six assertion mutations prove
++the input selection without evidence writes or a hook bypass.
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 51b1b9088d..c5bf779e1b 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -117,6 +117,7 @@ from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
+ from carnot.agentic.arc_llm_reinduction import (
+     MAX_REFINEMENT_ROUNDS,
+     _goal_satisfiability_check,
++    _supports_kwarg,
+     execute_bounded_llm_reinduction,
+     plan_hierarchical_subgoals,
+     propose_hierarchical_subgoals,
+@@ -5452,6 +5453,9 @@ class E3AgentPolicy:
+             else _route_explore_budget(self.strategy_route)
+         )
+         self.proposer = proposer  # default set lazily to LocalGGUFProposer
++        from carnot.agentic.arc_induction_memory import InductionMemory
++
++        self._induction_memory = InductionMemory()
+         self.transition_cycle_verifier = transition_cycle_verifier
+         # PER-ACTION PROVENANCE. `None` -- the inert state -- unless
+         # CARNOT_ARC_ACTION_PROVENANCE=1 is set, so the shipped agent is unchanged and the
+@@ -7542,6 +7546,8 @@ class E3AgentPolicy:
+             kwargs.get("proposer"),
+             list(kwargs.get("transitions") or ()),
+         )
++        if self._induction_memory.enabled:
++            kwargs["induction_memory"] = self._induction_memory
+         outcome = execute_bounded_llm_reinduction(**kwargs)
+         if not self.think_arm_fallback_enabled:
+             attempt["think_arm_fallback"] = {"enabled": False}
+@@ -8400,6 +8406,10 @@ class E3AgentPolicy:
+             # the pre-change call actually did, and "reproduces the old behaviour" should mean
+             # the old CALL, not a call that happens to compute the same thing.
+             _induce_kwargs: dict[str, Any] = {}
++            if self._induction_memory.enabled and _supports_kwarg(
++                self._proposer().induce, "induction_memory"
++            ):
++                _induce_kwargs["induction_memory"] = self._induction_memory
+             if _supply_win_transition_enabled():
+                 _induce_kwargs["win_transition"] = self._win_transition
+             # REQ-ARC-WMTE-6090 (default OFF): THIS is the induce-prompt half of the CEGIS
+@@ -9055,6 +9065,7 @@ class E3AgentPolicy:
+             # is the structural fact to key on instead.
+             "llm_enabled": bool(enabled),
+             "induction_attempts_n": len(self.induction_attempts),
++            "induction_memory": self._induction_memory.receipt(),
+             # THE MINIMUM FIX for 2026-08-08 adversarial review, Gaps finding 2 (`self.induced`
+             # is a one-shot latch per level -- see `_should_enter_induction`). Recorded
+             # UNCONDITIONALLY so an artifact from a normal run and one from a genuinely-stuck
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 136270be41..8a9b855f38 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -6736,6 +6736,8 @@ class LocalGGUFProposer:
+         repeat_penalty: Optional[float] = None,
+         repeat_last_n: Optional[int] = None,
+         _continuation_prefix: Optional[str] = None,
++        memory_receipt: Any = None,
++        memory_bytes: int = 0,
+     ) -> tuple[dict, str]:
+         """POST one user turn to the OpenAI-compatible /v1/chat/completions endpoint (the server
+         applies the GGUF's OWN embedded chat template -- the turn delimiters Qwen3.6/ThinkingCap
+@@ -6825,6 +6827,8 @@ class LocalGGUFProposer:
+         )
+         with urllib.request.urlopen(req, timeout=self.timeout) as r:
+             raw = _json.load(r)
++        if memory_receipt is not None:
++            memory_receipt.delivered(memory_bytes)
+         choice = (raw.get("choices") or [{}])[0]
+         msg = choice.get("message") or {}
+         final = str(msg.get("content") or "")
+@@ -6904,6 +6908,11 @@ class LocalGGUFProposer:
+                 repeat_penalty=repeat_penalty,
+                 repeat_last_n=repeat_last_n,
+                 _continuation_prefix=_prefix,
++                **(
++                    {"memory_receipt": memory_receipt, "memory_bytes": memory_bytes}
++                    if memory_receipt is not None
++                    else {}
++                ),
+             )
+             # DEFENSIVE, NOT ASSUMED: whether this llama.cpp build echoes the supplied prefix
+             # back in its response, or returns only the newly-generated continuation tokens, is
+@@ -7805,6 +7814,8 @@ class LocalGGUFProposer:
+         *,
+         codeonly_eligible: bool = False,
+         engine_transitions: Optional[Sequence[Any]] = None,
++        prompt_extra_tokens: int = 0,
++        memory_receipt: Any = None,
+     ) -> tuple[bool, str]:
+         """Generic GPU-server completion: returns (True, code) where `code` contains every
+         `def <name>` in `required`, PARSES, and (if `validate` is given) passes the
+@@ -7918,6 +7929,14 @@ class LocalGGUFProposer:
+         # per generate() call (one /props round-trip on a server _ensure_server just proved
+         # up); clamp only when the pool is real and smaller than the configured budget.
+         _n_predict = _pool_clamped_n_predict(int(self.max_tokens), self.observed_n_ctx())
++        if prompt_extra_tokens:
++            # UTF-8 bytes bound the added Qwen text tokens without a tokenizer load.
++            # Reserve this space even when the server does not expose /props.
++            pool = self.observed_n_ctx() or self.observed_server_n_ctx or self.n_ctx
++            room = min(int(self.max_tokens), pool - _INDUCE_WORST_CASE_PROMPT_TOKENS)
++            if room - prompt_extra_tokens < 1024:
++                return False, "induction memory leaves insufficient completion space"
++            _n_predict = room - prompt_extra_tokens
+         self.last_requested_n_predict = int(_n_predict)
+         attempt = -1
+         while True:
+@@ -8009,6 +8028,11 @@ class LocalGGUFProposer:
+                         attempt=attempt,
+                         repeat_penalty=_payload.get("repeat_penalty"),
+                         repeat_last_n=_payload.get("repeat_last_n"),
++                        **(
++                            {"memory_receipt": memory_receipt, "memory_bytes": prompt_extra_tokens}
++                            if memory_receipt is not None
++                            else {}
++                        ),
+                     )
+                 elif _vllm_backend_active():
+                     # THE INDUCE PATH under the vLLM backend. Same translation as the
+@@ -8016,6 +8040,8 @@ class LocalGGUFProposer:
+                     # `_record_completion_diagnostics` and the truncation/limit diagnostics that
+                     # gate every induction keep reading the fields they were written against.
+                     _response = self._vllm_raw_completion(_payload)
++                    if memory_receipt is not None:
++                        memory_receipt.delivered(prompt_extra_tokens)
+                     text = _response.get("content", "")
+                 else:
+                     req = urllib.request.Request(
+@@ -8025,6 +8051,8 @@ class LocalGGUFProposer:
+                     )
+                     with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                         _response = _json.load(r)
++                    if memory_receipt is not None:
++                        memory_receipt.delivered(prompt_extra_tokens)
+                     text = _response.get("content", "")
+             except Exception as e:
+                 msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
+@@ -8522,6 +8550,7 @@ class LocalGGUFProposer:
+         *,
+         previous_level_complete_grid: Optional[np.ndarray] = None,
+         win_transition: Optional[Transition] = None,
++        induction_memory: Any = None,
+     ) -> tuple[bool, str]:
+         # OPT-IN TOOL-CALLING LOOP (REQ-ARC-WMTE-6460, 2026-08-17, DEFAULT OFF). Unset ->
+         # this block is dead and induction is byte-identical to the shipped single-shot.
+@@ -8550,6 +8579,8 @@ class LocalGGUFProposer:
+                 ),
+             )
+             if ok_tool:
++                if induction_memory is not None and induction_memory.enabled:
++                    induction_memory.unsupported_tool_calls += 1
+                 return ok_tool, note_tool
+         base = induce_prompt(
+             game,
+@@ -8560,6 +8591,20 @@ class LocalGGUFProposer:
+             k=_induce_transitions_k(),
+             include_playbook_exemplars=self.include_playbook_exemplars,
+         )
++        state = induction_memory.prepare(game, trans, cell) if induction_memory is not None else ""
++        base += state
++        memory_budget = (
++            {"prompt_extra_tokens": len(state.encode("utf-8")), "memory_receipt": induction_memory}
++            if state
++            else {}
++        )
++
++        def write(code: str, note: str = "") -> tuple[bool, str]:
++            result = self._write_world_model(game, code, note=note)
++            if result[0] and induction_memory is not None:
++                induction_memory.remember(code)
++            return result
++
+         # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
+         # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).
+         #
+@@ -8603,9 +8648,10 @@ class LocalGGUFProposer:
+             # not scored as one: it is the dry run that catches an `engine()` which raises or
+             # returns None on evidence the model was literally shown.
+             engine_transitions=trans,
++            **memory_budget,
+         )
+         if ok:
+-            return self._write_world_model(game, code)
++            return write(code)
+         # FALLBACK (proto_l2_fix_finder, 2026-06-25): on complex real L2 prompts the combined call
+         # commonly fails because the model rambles its analysis INTO engine() comments, exhausts the
+         # token budget, and never writes is_level_complete. Induce each function in its OWN focused
+@@ -8633,6 +8679,7 @@ class LocalGGUFProposer:
+             tries=self.tries,
+             codeonly_eligible=True,
+             engine_transitions=trans,
++            **memory_budget,
+         )
+         if not ok_e:
+             # Clip wide enough for the pool-truncation diagnostic's tail (REQ-ARC-WMTE-6860):
+@@ -8667,8 +8714,7 @@ class LocalGGUFProposer:
+             # because "the corpus happens not to exercise it" is a reason to keep an invariant
+             # cheaply, not a reason to drop it. A duplicate import is valid Python and is
+             # exactly what the shipped path already produces.
+-            return self._write_world_model(
+-                game,
++            return write(
+                 "import numpy as np\n\n" + eng.strip() + "\n",
+                 note="split induce: engine half supplied is_level_complete (dedup)",
+             )
+@@ -8687,8 +8733,8 @@ class LocalGGUFProposer:
+         )
+         if not ok_g:
+             return False, f"split induce: goal failed: {str(goal)[:INDUCE_FAILURE_NOTE_CLIP]}"
+-        return self._write_world_model(
+-            game, self._combine_world_model(eng, goal), note="split induce: engine + focused goal"
++        return write(
++            self._combine_world_model(eng, goal), note="split induce: engine + focused goal"
+         )
+ 
+     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
+diff --git a/python/carnot/agentic/arc_induction_memory.py b/python/carnot/agentic/arc_induction_memory.py
+new file mode 100644
+index 0000000000..ff2a1f1727
+--- /dev/null
++++ b/python/carnot/agentic/arc_induction_memory.py
+@@ -0,0 +1,183 @@
++"""Bounded visible induction work, without model-written summaries (REQ-ARC-WMTE-7040)."""
++
++from __future__ import annotations
++
++import copy
++import hashlib
++import json
++import os
++from dataclasses import dataclass, field
++from typing import Any
++
++import numpy as np
++
++from carnot.agentic.arc_engine_call_guard import guarded_call
++
++STATE_BYTES = 4096
++SOURCE_BYTES = 32768
++REFUTATIONS = 4
++PROBE_ROWS = 8
++
++
++def _sha(text: bytes) -> str:
++    return hashlib.sha256(text).hexdigest()
++
++
++@dataclass
++class InductionMemory:
++    """One policy owns this state; sharing a generator must not share evidence."""
++
++    enabled: bool = field(
++        default_factory=lambda: os.environ.get("CARNOT_ARC_INDUCE_STATE_PERSISTENCE") == "1"
++    )
++    source: str = ""
++    source_sha: str = ""
++    source_bytes: int = 0
++    scope: tuple[Any, ...] | None = None
++    refutations: list[dict[str, Any]] = field(default_factory=list)
++    calls: int = 0
++    deliveries: int = 0
++    added_bytes: int = 0
++    last_added_bytes: int = 0
++    compactions: int = 0
++    scope_resets: int = 0
++    probed_transitions: int = 0
++    unsupported_tool_calls: int = 0
++
++    def remember(self, source: str) -> None:
++        """Keep complete source only; a cut program would suggest invalid repairs."""
++        if not self.enabled:
++            return
++        encoded = source.encode("utf-8")
++        self.source_sha = _sha(encoded)
++        self.source_bytes = len(encoded)
++        self.source = source if len(encoded) <= SOURCE_BYTES else ""
++
++    def prepare(self, game: str, transitions: list[Any], cell: int) -> str:
++        """Probe only this call's proposal rows. The caller controls the holdout split."""
++        self.last_added_bytes = 0
++        if not self.enabled:
++            return ""
++        self.calls += 1
++        last = transitions[-1]
++        scope = (game, last.level_before, tuple(last.grid.shape), cell)
++        if self.scope != scope:
++            self.scope_resets += int(self.scope is not None)
++            self.source, self.source_sha, self.source_bytes = "", "", 0
++            self.refutations.clear()
++            self.scope = scope
++        if not self.source_sha:
++            return ""
++
++        execution_error = None
++        if self.source:
++            ns: dict[str, Any] = {}
++
++            def compile_source() -> None:
++                exec(compile(self.source, "<prior_induction>", "exec"), ns)  # noqa: S102
++
++            try:
++                guarded_call(compile_source, timeout_s=0.25)
++                eligible = [
++                    t
++                    for t in transitions
++                    if t.level_before == t.level_after == last.level_before
++                    and tuple(t.grid.shape) == tuple(last.grid.shape)
++                ][-PROBE_ROWS:]
++                for t in eligible:
++                    self.probed_transitions += 1
++                    pred = np.asarray(
++                        guarded_call(
++                            ns["engine"],
++                            t.grid.copy(),
++                            t.action,
++                            copy.deepcopy(t.data),
++                            timeout_s=0.25,
++                        )
++                    )
++                    if not np.issubdtype(pred.dtype, np.integer) or np.any(
++                        (pred < 0) | (pred > 255)
++                    ):
++                        raise ValueError("unsupported predicted palette")
++                    observed = np.asarray(t.next_grid)
++                    wrong = np.argwhere(pred != observed) if pred.shape == observed.shape else []
++                    if pred.shape == observed.shape and len(wrong) == 0:
++                        continue
++                    data = {k: int(v) for k, v in (t.data or {}).items() if k in ("x", "y")}
++                    if any(abs(v) > 2**31 - 1 for v in data.values()):
++                        raise ValueError("unsupported action coordinate")
++                    key = _sha(
++                        np.asarray(t.grid).tobytes()
++                        + observed.tobytes()
++                        + json.dumps([int(t.action), data], sort_keys=True).encode()
++                    )
++                    record = {
++                        "source_sha256": self.source_sha,
++                        "transition_sha256": key,
++                        "action": int(t.action),
++                        "data": data,
++                        "wrong_cell_count": len(wrong) if pred.shape == observed.shape else None,
++                        "wrong_cells": [
++                            [int(r), int(c), int(pred[r, c]), int(observed[r, c])]
++                            for r, c in wrong[:4]
++                        ],
++                        "wrong_shape": pred.shape != observed.shape,
++                    }
++                    self.refutations = [
++                        r
++                        for r in self.refutations
++                        if (r["source_sha256"], r["transition_sha256"]) != (self.source_sha, key)
++                    ]
++                    self.refutations.append(record)
++                    if len(self.refutations) > REFUTATIONS:
++                        self.compactions += 1
++                        del self.refutations[:-REFUTATIONS]
++            except Exception as exc:  # noqa: BLE001 - a failed probe is not a prediction.
++                execution_error = type(exc).__name__
++
++        state = {
++            "note": "Prior candidate, not trusted. Each refutation applies only to its source and observation. "
++            "Wrong cells are [row,column,predicted,observed] samples. Repair the rule; do not memorize the cells.",
++            "source_sha256": self.source_sha,
++            "source": self.source or None,
++            "source_omitted_bytes": self.source_bytes if not self.source else 0,
++            "refutations": list(self.refutations),
++            "execution_error": execution_error,
++        }
++
++        def render() -> str:
++            return (
++                "\n\nPRIOR INDUCTION STATE\n"
++                + json.dumps(state, ensure_ascii=False, separators=(",", ":"))
++                + "\nEND PRIOR STATE"
++            )
++
++        block = render()
++        if len(block.encode("utf-8")) > STATE_BYTES:
++            state["source"] = None
++            state["source_omitted_bytes"] = self.source_bytes
++            self.compactions += 1
++            block = render()
++        self.last_added_bytes = len(block.encode("utf-8"))
++        return block
++
++    def delivered(self, added_bytes: int) -> None:
++        """Count only requests that returned from the transport, including unusable replies."""
++        self.added_bytes += added_bytes
++        self.deliveries += 1
++
++    def receipt(self) -> dict[str, Any]:
++        """Expose counts with their units so a zero-delivery run cannot claim a null."""
++        return {
++            "enabled": self.enabled,
++            "calls": self.calls,
++            "deliveries": self.deliveries,
++            "added_bytes": self.added_bytes,
++            "last_added_bytes": self.last_added_bytes,
++            "stored_source_bytes": len(self.source.encode("utf-8")),
++            "stored_refutations": len(self.refutations),
++            "compactions": self.compactions,
++            "scope_resets": self.scope_resets,
++            "probed_transitions": self.probed_transitions,
++            "unsupported_tool_calls": self.unsupported_tool_calls,
++        }
+diff --git a/python/carnot/agentic/arc_llm_reinduction.py b/python/carnot/agentic/arc_llm_reinduction.py
+index d6b7e9b52d..22a5bf6043 100644
+--- a/python/carnot/agentic/arc_llm_reinduction.py
++++ b/python/carnot/agentic/arc_llm_reinduction.py
+@@ -257,7 +257,13 @@ def _call_induce(
+     transitions: Sequence[Any],
+     cell: int,
+     previous_level_complete_grid: np.ndarray | None,
++    induction_memory: Any = None,
+ ) -> tuple[bool, str]:
++    memory_kwargs = (
++        {"induction_memory": induction_memory}
++        if induction_memory is not None and _supports_kwarg(proposer.induce, "induction_memory")
++        else {}
++    )
+     if previous_level_complete_grid is not None and _supports_kwarg(
+         proposer.induce,
+         "previous_level_complete_grid",
+@@ -267,8 +273,9 @@ def _call_induce(
+             list(transitions),
+             int(cell),
+             previous_level_complete_grid=np.asarray(previous_level_complete_grid),
++            **memory_kwargs,
+         )
+-    return proposer.induce(game, list(transitions), int(cell))
++    return proposer.induce(game, list(transitions), int(cell), **memory_kwargs)
+ 
+ 
+ def _proposal_prefix(transitions: Sequence[Any]) -> list[Any]:
+@@ -1599,6 +1606,7 @@ def execute_bounded_llm_reinduction(
+     # REQ-ARC-WMTE-6010: LOGICAL-coordinate HUD mask, threaded from the caller's explorer.
+     # Default None keeps every existing caller byte-identical.
+     hud_mask: Any = None,
++    induction_memory: Any = None,
+ ) -> LlmReinductionResult:
+     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
+ 
+@@ -1716,6 +1724,7 @@ def execute_bounded_llm_reinduction(
+                 induction_evidence,
+                 int(cell),
+                 previous_level_complete_grid,
++                induction_memory,
+             )
+             action = "induce"
+         else:
+diff --git a/scripts/arc_leaderboard_eval.py b/scripts/arc_leaderboard_eval.py
+index a8b97fc0c6..eedec4dd57 100644
+--- a/scripts/arc_leaderboard_eval.py
++++ b/scripts/arc_leaderboard_eval.py
+@@ -310,6 +310,9 @@ def _policy_diagnostics(policy) -> dict:
+         "feature_router": getattr(policy, "feature_router", None),
+         "level_induction_events": getattr(policy, "level_induction_events", []),
+         "induction_attempts": getattr(policy, "induction_attempts", []),
++        "induction_memory": (
++            policy._induction_memory.receipt() if hasattr(policy, "_induction_memory") else None
++        ),
+         "proposer": {
+             "instantiated": proposer is not None,
+             "repo_substr": getattr(proposer, "repo_substr", None),
+diff --git a/scripts/arc_loop_solve.py b/scripts/arc_loop_solve.py
+index b61e4a987c..5e70d7de00 100644
+--- a/scripts/arc_loop_solve.py
++++ b/scripts/arc_loop_solve.py
+@@ -27,6 +27,7 @@ from pathlib import Path
+ 
+ REPO = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(REPO / "python"))
++sys.path.insert(0, str(REPO))
+ 
+ from carnot.agentic import arc_solver_kit as kit
+ from carnot.agentic import arc_game_adapters as adapters
+@@ -498,10 +499,10 @@ def main(argv) -> int:
+     ap.set_defaults(hazard_prune=True)
+     ap.add_argument(
+         "--mechanism",
+-        choices=["graph_explore", "tool_loop_lookahead"],
++        choices=["graph_explore", "tool_loop_lookahead", "e3"],
+         default="graph_explore",
+-        help="adapter-free first-contact strategy (only used when --game has no registered "
+-        "adapter, or with --ignore-adapter). graph_explore is the cheap default (blind BFS, "
++        help="e3 always runs the scored policy. Other strategies apply when --game has no registered "
++        "adapter, or with --ignore-adapter. graph_explore is the cheap default (blind BFS, "
+         "max_expansions=6000). tool_loop_lookahead (REQ-ARC-WMTE-5828) is substantially more "
+         "expensive per node (up to 12 real LLM completions each) but goal-directed via the "
+         "LLM's own confidence judgment instead of blind search.",
+@@ -520,10 +521,27 @@ def main(argv) -> int:
+         "--depth-cap", type=int, default=25, help="tool_loop_lookahead: max search-path depth"
+     )
+     ap.add_argument("--seed", type=int, default=None, help="tool_loop_lookahead: LLM sampling seed")
++    ap.add_argument("--max-actions", type=int, default=400, help="e3: scored policy action budget")
++    ap.add_argument("--output", type=Path, help="e3 requires a receipt path outside results/")
+     args = ap.parse_args(argv)
+     game = args.game or (pick_target() if args.auto else None)
+     if not game:
+         ap.error("specify --game X or --auto")
++    if args.mechanism == "e3":
++        if args.output is None or args.output.resolve().is_relative_to(
++            (REPO / "results").resolve()
++        ):
++            ap.error("e3 requires --output outside results/ (immutable evidence)")
++        from carnot.agentic.arc_competition_agent import E3AgentPolicy
++        from scripts.arc_leaderboard_eval import run_game
++
++        out = run_game(
++            game, E3AgentPolicy(game, target_levels=args.target_level), budget=args.max_actions
++        )
++        args.output.parent.mkdir(parents=True, exist_ok=True)
++        args.output.write_text(json.dumps(out, indent=2))
++        print(f"  wrote {args.output}")
++        return 0
+ 
+     print(f"== standing ARC loop: game={game} mechanism={args.mechanism} ==")
+     if adapters.get_adapter(game) and not args.ignore_adapter:
+diff --git a/scripts/eval_run_consumer_field_lint.py b/scripts/eval_run_consumer_field_lint.py
+index 4cc7e69c14..2c0495eee2 100644
+--- a/scripts/eval_run_consumer_field_lint.py
++++ b/scripts/eval_run_consumer_field_lint.py
+@@ -42,6 +42,7 @@ from __future__ import annotations
+ import argparse
+ import ast
+ import json
++import os
+ import sys
+ from pathlib import Path
+ 
+@@ -222,10 +223,16 @@ def run_lint(
+ def main(argv: list[str] | None = None) -> int:
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
+-    parser.add_argument("--runs-dir", type=Path, default=None)
++    parser.add_argument(
++        "--runs-dir",
++        type=Path,
++        default=os.environ.get("CARNOT_ARC_EVAL_RUNS_DIR") or None,
++        help="read-only evidence corpus (default: CARNOT_ARC_EVAL_RUNS_DIR or repository runs)",
++    )
+     args = parser.parse_args(argv)
+     repo_root = args.repo_root.resolve()
+     runs_dir = args.runs_dir or (repo_root / "results" / "arc_leaderboard_eval_runs")
++    print(f"NOTE: eval-run evidence: {runs_dir.resolve()}")
+     flat = repo_root / "results" / "arc_leaderboard_eval.json"
+     surface = (
+         repo_root / "scripts" / "arc_leaderboard_eval.py",
+diff --git a/tests/python/test_arc_induction_state_persistence.py b/tests/python/test_arc_induction_state_persistence.py
+new file mode 100644
+index 0000000000..9eefd679e3
+--- /dev/null
++++ b/tests/python/test_arc_induction_state_persistence.py
+@@ -0,0 +1,540 @@
++"""REQ-ARC-WMTE-7040/7041/7042: CPU request tests, with no live model."""
++
++from __future__ import annotations
++
++import io
++import json
++import urllib.request
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_executable_world_model as e3
++from carnot.agentic.arc_induction_memory import InductionMemory
++
++pytestmark = pytest.mark.memory_watchdog_skip
++
++CODE = """import numpy as np
++def engine(grid, action, data):
++    return grid.copy()
++def is_level_complete(grid):
++    return False
++"""
++
++
++def rows(n=10, *, level=0, shape=(2, 2)):
++    return [
++        e3.Transition(
++            np.full(shape, i, dtype=np.int16),
++            1,
++            None,
++            np.full(shape, i + 1, dtype=np.int16),
++            level,
++            level,
++        )
++        for i in range(n)
++    ]
++
++
++@pytest.fixture
++def transport(monkeypatch, tmp_path):
++    monkeypatch.setattr(e3, "E3_DIR", tmp_path / "engines")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
++    monkeypatch.delenv("CARNOT_ARC_INDUCE_TOOL_LOOP", raising=False)
++    p = e3.LocalGGUFProposer(
++        model_path="/unused.gguf",
++        ffn_cpu_layers=0,
++        mtp=False,
++        n_ctx=98304,
++        max_tokens=131072,
++        tries=1,
++    )
++    monkeypatch.setattr(p, "_ensure_server", lambda: True)
++    monkeypatch.setattr(p, "observed_n_ctx", lambda: 98304)
++    payloads = []
++    replies = [CODE]
++
++    def request(req, timeout=None):
++        payloads.append(json.loads(req.data))
++        code = replies.pop(0) if len(replies) > 1 else replies[0]
++        response = (
++            {
++                "choices": [
++                    {"message": {"content": f"```python\n{code}```"}, "finish_reason": "stop"}
++                ]
++            }
++            if "/chat/completions" in req.full_url
++            else {"content": f"```python\n{code}```", "stop_type": "eos"}
++        )
++        return io.BytesIO(json.dumps(response).encode())
++
++    monkeypatch.setattr(urllib.request, "urlopen", request)
++    return p, payloads, replies
++
++
++def state_in(prompt):
++    assert "PRIOR INDUCTION STATE\n" in prompt
++    return json.loads(
++        prompt.split("PRIOR INDUCTION STATE\n", 1)[1].split("\nEND PRIOR STATE", 1)[0]
++    )
++
++
++@pytest.mark.parametrize("flag", [None, "0", "true", "1"])
++@pytest.mark.parametrize("think", [False, True])
++def test_second_request_and_output_reserve(monkeypatch, transport, flag, think):
++    """SCENARIO-ARC-WMTE-7040-A / 7041-B: inspect the actual HTTP body."""
++    if flag is None:
++        monkeypatch.delenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", raising=False)
++    else:
++        monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", flag)
++    p, sent, _ = transport
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1" if think else "0")
++    memory = InductionMemory()
++    for _ in range(2):
++        assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    assert len(sent) == 2
++    if flag != "1":
++        assert sent[0] == sent[1]
++        assert memory.receipt()["deliveries"] == 0
++        assert memory.receipt()["stored_source_bytes"] == 0
++        assert memory.receipt()["calls"] == 0
++    else:
++        prompts = [s["messages"][0]["content"] if think else s["prompt"] for s in sent]
++        state = state_in(prompts[1])
++        assert state["source"] == CODE.strip()
++        assert state["refutations"][-1]["wrong_cells"][-1][-2:] == [9, 10]
++        assert state["refutations"][-1]["action"] == 1
++        added = len(prompts[1].encode()) - len(prompts[0].encode())
++        assert 0 < added <= 4096
++        budget = "max_tokens" if think else "n_predict"
++        assert sent[1][budget] == sent[0][budget] - added
++        assert memory.receipt()["added_bytes"] == added
++
++
++@pytest.mark.parametrize("change", ["game", "level", "shape", "cell"])
++def test_scope_change_clears_source_and_refutations(monkeypatch, transport, change):
++    """SCENARIO-ARC-WMTE-7040-B: similar games and levels must not share claims."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, replies = transport
++    memory = InductionMemory()
++    assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    args = (
++        "other" if change == "game" else "g",
++        rows(level=1 if change == "level" else 0, shape=(3, 3) if change == "shape" else (2, 2)),
++        2 if change == "cell" else 1,
++    )
++    replies[:] = [CODE.replace("grid.copy()", "grid + 1")]
++    assert p.induce(*args, induction_memory=memory)[0]
++    assert "PRIOR INDUCTION STATE" not in sent[-1]["prompt"]
++    assert memory.receipt()["scope_resets"] == 1
++
++    assert p.induce(*args, induction_memory=memory)[0]
++    assert state_in(sent[-1]["prompt"])["refutations"] == []
++
++
++def test_compaction_and_dedup_at_request_site(monkeypatch, transport):
++    """SCENARIO-ARC-WMTE-7041-A: history, JSON, and complete source stay bounded."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, replies = transport
++    memory = InductionMemory()
++    replies[:] = [CODE + "#" + "x" * 6000]
++    for _ in range(12):
++        assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    state = state_in(sent[-1]["prompt"])
++    assert state["source"] is None
++    assert state["source_omitted_bytes"] > 6000
++    assert len(state["refutations"]) == 4
++    assert memory.receipt()["stored_refutations"] == 4
++    assert memory.receipt()["last_added_bytes"] <= 4096
++    assert memory.receipt()["compactions"] > 0
++    replies[:] = [CODE + "#" + "é" * 20000]
++    assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    assert memory.receipt()["stored_source_bytes"] == 0
++    assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    assert state_in(sent[-1]["prompt"])["source_omitted_bytes"] > 32768
++    assert state_in(sent[-1]["prompt"])["execution_error"] is None
++
++
++def test_probe_population_and_boundary_exclusion(monkeypatch, transport):
++    """SCENARIO-ARC-WMTE-7040-B: only eight non-boundary proposal rows are probed."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    current = rows(20)
++    current[-1].level_after = 1
++    current[-2].level_before = current[-2].level_after = 7
++    current[-3].grid = np.full((3, 3), 17, dtype=np.int16)
++    current[-3].next_grid = np.full((3, 3), 18, dtype=np.int16)
++    assert p.induce("g", current, 1, induction_memory=memory)[0]
++    assert memory.receipt()["probed_transitions"] == 8
++    assert all(r["wrong_cells"][0][-1] < 18 for r in state_in(sent[-1]["prompt"])["refutations"])
++
++
++@pytest.mark.parametrize("where", ["compile", "engine"])
++def test_execution_error_is_not_a_refuted_dynamics_claim(monkeypatch, transport, where):
++    """REQ-ARC-WMTE-7040: a timed-out engine has no measured predictions."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    slow = (
++        "import time\ntime.sleep(0.4)\n" + CODE
++        if where == "compile"
++        else CODE.replace("return grid.copy()", "__import__('time').sleep(0.4); return grid.copy()")
++    )
++    memory.remember(slow)
++    assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    state = state_in(sent[-1]["prompt"])
++    assert state["execution_error"] == "EngineCallTimeout"
++    assert state["refutations"] == []
++
++
++def test_two_policy_instances_do_not_share_state(monkeypatch, transport):
++    """SCENARIO-ARC-WMTE-7040-B: the server may be shared; memory may not."""
++    from carnot.agentic.arc_competition_agent import E3AgentPolicy
++
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    a = E3AgentPolicy("g", proposer=p, value_head=None)
++    b = E3AgentPolicy("g", proposer=p, value_head=None)
++    for owner in (a, a, b):
++        assert p.induce("g", rows(), 1, induction_memory=owner._induction_memory)[0]
++    assert "PRIOR INDUCTION STATE" in sent[1]["prompt"]
++    assert "PRIOR INDUCTION STATE" not in sent[2]["prompt"]
++
++
++@pytest.mark.parametrize("bounded", [False, True])
++@pytest.mark.parametrize("enabled", [False, True])
++def test_live_policy_branches_deliver_memory(monkeypatch, transport, bounded, enabled):
++    """SCENARIO-ARC-WMTE-7042-A: start at the scored policy, inspect HTTP requests."""
++    from carnot.agentic import arc_competition_agent as agent
++    from carnot.agentic import arc_llm_reinduction as reinduce
++    from scripts.arc_leaderboard_eval import _policy_diagnostics
++
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1" if enabled else "0")
++    monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "1" if bounded else "0")
++    monkeypatch.setenv("CARNOT_ARC_CEGIS_ACCEPT_SPLIT", "1")
++    monkeypatch.delenv("CARNOT_ARC_DISABLE_INDUCTION", raising=False)
++    p, sent, _ = transport
++    received = []
++    induce = p.induce
++
++    def recording(*args, **kwargs):
++        received.append(kwargs)
++        return induce(*args, **kwargs)
++
++    monkeypatch.setattr(p, "induce", recording)
++    policy = agent.E3AgentPolicy("g", proposer=p, value_head=None)
++    policy.transitions = rows(12)
++    policy.root_grid = policy.transitions[0].grid
++    policy.cell = 1
++    policy._episode_transition_start = 0
++    policy.program_synthesis_filter_enabled = False
++    policy.active_probe_controller_enabled = False
++    policy.think_arm_fallback_enabled = False
++    policy.max_refinement_rounds = 1
++    # Other model tiers are independent of the induction interface under test.
++    monkeypatch.setenv("CARNOT_ARC_STRUCTURED_NAV", "0")
++    monkeypatch.setenv("CARNOT_ARC_LIVE_TTT", "0")
++    monkeypatch.setattr(reinduce, "MAX_REFINEMENT_ROUNDS", 1)
++    for _ in range(2):
++        policy._induce_and_plan()
++    assert sent, policy.induction_attempts
++    with_state = [s for s in sent if "PRIOR INDUCTION STATE" in s.get("prompt", "")]
++    assert all(("induction_memory" in kw) == enabled for kw in received)
++    if not enabled:
++        assert not with_state
++        return
++    assert with_state, policy.induction_attempts
++    state = state_in(with_state[-1]["prompt"])
++    assert state["source"] == CODE.strip()
++    # The acceptance tail's values 11 and 12 must never become mismatch evidence.
++    assert all(r["wrong_cells"][0][-1] < 11 for r in state["refutations"])
++    assert policy.induction_attempts[0].get("stall_refactor_loop_used", False) is bounded
++    assert _policy_diagnostics(policy)["induction_memory"]
++    assert _policy_diagnostics(policy)["induction_memory"]["deliveries"] > 0
++    assert (
++        policy.generator_liveness_witness()["induction_memory"]
++        == _policy_diagnostics(policy)["induction_memory"]
++    )
++
++
++def test_legacy_proposer_accepts_memory_enabled_policy(monkeypatch):
++    """REQ-ARC-WMTE-7042: older proposer signatures still receive their normal arguments."""
++    from carnot.agentic.arc_llm_reinduction import _call_induce
++
++    class Legacy:
++        def induce(self, game, transitions, cell):
++            assert game == "g" and len(transitions) == 2 and cell == 1
++            return True, "legacy"
++
++    try:
++        outcome = _call_induce(Legacy(), "g", rows(2), 1, None, InductionMemory())
++    except Exception as exc:
++        outcome = type(exc).__name__
++    assert outcome == (True, "legacy")
++
++
++def test_insufficient_room_never_sends_memory(monkeypatch, transport):
++    """REQ-ARC-WMTE-7041: refuse locally when extra context leaves no usable output budget."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    assert p.induce("g", rows(), 1, induction_memory=memory)[0]
++    p.max_tokens = 1024
++    ok, note = p.induce("g", rows(), 1, induction_memory=memory)
++    assert not ok and "insufficient completion space" in note
++    assert len(sent) == 1
++    assert memory.receipt()["deliveries"] == 0
++
++
++def test_offline_twin_dispatch_and_output(monkeypatch, tmp_path):
++    """SCENARIO-ARC-WMTE-7042-B: the actual CLI branch calls the scored runner."""
++    from scripts import arc_leaderboard_eval as evaluate
++    from scripts import arc_loop_solve as twin
++    from carnot.agentic.arc_competition_agent import E3AgentPolicy
++
++    def run(game, policy, *, budget):
++        assert game == "r11l" and isinstance(policy, E3AgentPolicy) and budget == 7
++        return {"game": game, "policy_diagnostics": evaluate._policy_diagnostics(policy)}
++
++    monkeypatch.setattr(evaluate, "run_game", run)
++    output = tmp_path / "eval.json"
++    assert (
++        twin.main(
++            ["--game", "r11l", "--mechanism", "e3", "--max-actions", "7", "--output", str(output)]
++        )
++        == 0
++    )
++    receipt = json.loads(output.read_text())
++    assert receipt.get("policy_diagnostics", {}).get("induction_memory", {}).get("deliveries") == 0
++
++
++@pytest.mark.parametrize("missing", [False, True])
++def test_offline_twin_requires_output_outside_evidence(monkeypatch, tmp_path, missing):
++    """REQ-ARC-WMTE-7042: use only disposable paths, including during mutation."""
++    from scripts import arc_loop_solve as twin
++    from scripts import arc_leaderboard_eval as evaluate
++
++    monkeypatch.setattr(twin, "REPO", tmp_path)
++    monkeypatch.setattr(evaluate, "run_game", lambda *a, **kw: {})
++    args = ["--game", "r11l", "--mechanism", "e3"]
++    if not missing:
++        args += ["--output", str(tmp_path / "results" / "forbidden.json")]
++    try:
++        twin.main(args)
++        status = "returned"
++    except SystemExit as exc:
++        status = exc.code
++    except Exception as exc:
++        status = type(exc).__name__
++    assert status == 2
++    assert not (tmp_path / "results").exists()
++
++
++def test_duplicate_and_correct_predictions(monkeypatch, transport):
++    """REQ-ARC-WMTE-7040: reuse one refutation; exact predictions add none."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    for _ in range(4):
++        assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    state = state_in(sent[-1]["prompt"])
++    assert len(state["refutations"]) == 1
++    old_sha = state["source_sha256"]
++    memory.remember(CODE.replace("return grid.copy()", "return grid + 1"))
++    assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    state = state_in(sent[-1]["prompt"])
++    assert state["source_sha256"] != old_sha
++    assert len(state["refutations"]) == 1
++    assert state["refutations"][0]["source_sha256"] == old_sha
++
++
++@pytest.mark.parametrize(
++    "prediction", ["grid + 0.1", "np.full(grid.shape, 10**5000, dtype=object)", "grid + 256"]
++)
++def test_malformed_predictions_are_errors(monkeypatch, transport, prediction):
++    """REQ-ARC-WMTE-7040: malformed values cannot falsify or crash feedback."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    memory.remember(CODE.replace("grid.copy()", prediction))
++    try:
++        ok, _ = p.induce("g", rows(1), 1, induction_memory=memory)
++        state = state_in(sent[-1]["prompt"])
++    except Exception as exc:
++        ok, state = False, {"escaped": type(exc).__name__}
++    assert ok, state
++    assert state["execution_error"] == "ValueError"
++    assert state["refutations"] == []
++
++
++def test_probe_does_not_mutate_inputs(monkeypatch, transport):
++    """REQ-ARC-WMTE-7040: generated code cannot alter subsequent evidence."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    evidence = rows(1)
++    evidence[0].data = {"x": 1, "nested": [2]}
++    assert p.induce("g", evidence, 1, induction_memory=memory)[0]
++    memory.remember(
++        CODE.replace("return grid.copy()", "grid[:] = 8; data['nested'][0] = 99; return grid")
++    )
++    assert p.induce("g", evidence, 1, induction_memory=memory)[0]
++    assert evidence[0].grid.tolist() == [[0, 0], [0, 0]]
++    assert evidence[0].data == {"x": 1, "nested": [2]}
++    assert state_in(sent[-1]["prompt"])["refutations"]
++    assert state_in(sent[-1]["prompt"])["refutations"][0]["data"] == {"x": 1}
++
++
++def test_action_coordinate_bound(monkeypatch, transport):
++    """REQ-ARC-WMTE-7041: malformed metadata cannot create unbounded JSON."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    evidence = rows(1)
++    assert p.induce("g", evidence, 1, induction_memory=memory)[0]
++    evidence[0].data = {"x": 10**100}
++    assert p.induce("g", evidence, 1, induction_memory=memory)[0]
++    state = state_in(sent[-1]["prompt"])
++    assert state["execution_error"] == "ValueError"
++    assert state["refutations"] == []
++
++
++def test_chat_continuation_counts_each_response(monkeypatch, transport):
++    """REQ-ARC-WMTE-7042: continuation repeats memory and pays twice."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "1")
++    monkeypatch.setenv("CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION", "1")
++    p, _, _ = transport
++    sent = []
++
++    def request(req, timeout=None):
++        sent.append(json.loads(req.data))
++        msg = {"content": f"```python\n{CODE}```"}
++        if len(sent) == 2:
++            msg = {"content": "", "reasoning_content": "The prior identity rule missed a change."}
++        return io.BytesIO(
++            json.dumps({"choices": [{"message": msg, "finish_reason": "stop"}]}).encode()
++        )
++
++    monkeypatch.setattr(urllib.request, "urlopen", request)
++    memory = InductionMemory()
++    for _ in range(2):
++        assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    assert len(sent) == 3
++    assert len(sent[-1]["messages"]) == 2
++    assert memory.receipt()["deliveries"] == 2
++    assert memory.receipt()["added_bytes"] == 2 * memory.receipt()["last_added_bytes"]
++    assert state_in(sent[-1]["messages"][0]["content"])["refutations"]
++
++
++@pytest.mark.parametrize("full_engine_reply", [False, True])
++def test_split_fallback_delivers_and_retains_state(monkeypatch, transport, full_engine_reply):
++    """REQ-ARC-WMTE-7040/7041: engine retries share state; focused goals do not."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, replies = transport
++    memory = InductionMemory()
++    assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    monkeypatch.setenv("CARNOT_ARC_GOAL_DEDUP", "1")
++    engine = (
++        CODE.replace("return False", "return bool(np.all(grid == 1))")
++        if full_engine_reply
++        else CODE.split("def is_level_complete")[0]
++    )
++    replies[:] = ["pass", engine, "def is_level_complete(grid):\n    return False\n"]
++    assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    assert len(sent) == (3 if full_engine_reply else 4)
++    for s in sent[1:3]:
++        assert state_in(s["prompt"])["source"] == CODE.strip()
++        assert s["n_predict"] == sent[0]["n_predict"] - memory.last_added_bytes
++    if not full_engine_reply:
++        assert "PRIOR INDUCTION STATE" not in sent[-1]["prompt"]
++    assert memory.deliveries == 2
++    assert "def engine" in memory.source and "def is_level_complete" in memory.source
++    memory.remember("")
++    replies[:] = ["pass", engine, "def is_level_complete(grid):\n    return False\n"]
++    assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    assert "def engine" in memory.source and "def is_level_complete" in memory.source
++
++
++def test_failed_publication_does_not_replace_source(monkeypatch, transport):
++    """REQ-ARC-WMTE-7040: only published candidates become the prior source."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, _, replies = transport
++    memory = InductionMemory()
++    assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    replies[:] = [CODE.replace("grid.copy()", "grid + 1")]
++    monkeypatch.setattr(p, "_write_world_model", lambda *a, **kw: (False, "failed write"))
++    assert not p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    assert memory.source == CODE.strip()
++
++
++def test_successful_tool_loop_reports_unsupported(monkeypatch, transport):
++    """REQ-ARC-WMTE-7042: an excluded transport must not appear as a measured null."""
++    from carnot.agentic import arc_induction_tool_loop as loop
++
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "1")
++    monkeypatch.setattr(loop, "induce_with_tool_loop", lambda *a, **kw: (True, "tool success"))
++    p, sent, _ = transport
++    memory = InductionMemory()
++    assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    assert memory.receipt()["unsupported_tool_calls"] == 1
++    assert memory.receipt()["deliveries"] == 0
++    assert sent == []
++
++
++def test_vllm_completion_counts_memory(monkeypatch, transport):
++    """REQ-ARC-WMTE-7041/7042: the optional raw backend pays and records the same addition."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    monkeypatch.setattr(e3, "_vllm_backend_active", lambda: True)
++    p, _, _ = transport
++    sent = []
++
++    def request(req, timeout=None):
++        sent.append(json.loads(req.data))
++        assert req.full_url.endswith("/v1/completions")
++        return io.BytesIO(
++            json.dumps(
++                {"choices": [{"text": f"```python\n{CODE}```", "finish_reason": "stop"}]}
++            ).encode()
++        )
++
++    monkeypatch.setattr(urllib.request, "urlopen", request)
++    memory = InductionMemory()
++    for _ in range(2):
++        assert p.induce("g", rows(1), 1, induction_memory=memory)[0]
++    assert state_in(sent[1]["prompt"])["source"] == CODE.strip()
++    assert sent[1]["max_tokens"] == sent[0]["max_tokens"] - memory.last_added_bytes
++    assert memory.deliveries == 1
++    assert memory.added_bytes == memory.last_added_bytes
++
++
++def test_large_grid_feedback_samples_stay_bounded(monkeypatch, transport):
++    """REQ-ARC-WMTE-7041: 4096 wrong cells still produce four samples per record."""
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    for _ in range(2):
++        assert p.induce("g", rows(10, shape=(64, 64)), 1, induction_memory=memory)[0]
++    state = state_in(sent[-1]["prompt"])
++    assert all(
++        r["wrong_cell_count"] == 4096 and len(r["wrong_cells"]) == 4 for r in state["refutations"]
++    )
++    assert memory.last_added_bytes <= 4096
++
++
++def test_bounded_helper_with_previous_grid(monkeypatch, transport):
++    """REQ-ARC-WMTE-7042: level-up induction forwards both the grid and memory."""
++    from carnot.agentic.arc_llm_reinduction import _call_induce
++
++    monkeypatch.setenv("CARNOT_ARC_INDUCE_STATE_PERSISTENCE", "1")
++    p, sent, _ = transport
++    memory = InductionMemory()
++    for _ in range(2):
++        assert _call_induce(p, "g", rows(1), 1, np.zeros((2, 2), dtype=np.int16), memory)[0]
++    assert state_in(sent[-1]["prompt"])["source"] == CODE.strip()
+diff --git a/tests/python/test_eval_run_consumer_field_lint.py b/tests/python/test_eval_run_consumer_field_lint.py
+index 8501b54a39..ab8616de9a 100644
+--- a/tests/python/test_eval_run_consumer_field_lint.py
++++ b/tests/python/test_eval_run_consumer_field_lint.py
+@@ -13,6 +13,8 @@ from __future__ import annotations
+ import importlib.util
+ import json
+ import sys
++
++import pytest
+ from pathlib import Path
+ 
+ _SPEC = importlib.util.spec_from_file_location(
+@@ -133,13 +135,51 @@ def test_a_heartbeat_key_does_not_count_as_observed(tmp_path: Path) -> None:
+     assert any("induction_in_flight" in f for f in failures)
+ 
+ 
+-def test_real_repo_contract_holds() -> None:
++def test_real_repo_contract_holds(capsys) -> None:
+     """The live checkout passes: every seeded declaration is emitted somewhere real.
+ 
+     This is the wiring test — if a consumer is added without a declaration, or a
+     declared field stops being emitted, this test goes RED with the suite.
+     """
+ 
+-    failures, notices = lint.run_lint()
+-    assert failures == [], failures
+-    assert any("population:" in n for n in notices)
++    assert lint.main([]) == 0
++    assert "population:" in capsys.readouterr().out
++
++
++@pytest.mark.parametrize("mode", ["env", "cli", "missing", "empty", "ghost", "unset", "empty_env"])
++def test_worktree_evidence_selection(monkeypatch, tmp_path, capsys, mode):
++    """SCENARIO-ARC-WMTE-6642-WORKTREE: exercise the same CLI the commit hook runs."""
++    required = "ghost_field" if mode == "ghost" else "observed_field"
++    root = _fake_repo(
++        tmp_path,
++        consumer_body=f'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("{required}",)\n',
++        artifact={"observed_field": 1} if mode in ("unset", "empty_env") else None,
++    )
++    external = tmp_path / "external"
++    if mode != "missing":
++        external.mkdir()
++        if mode != "empty":
++            (external / "real-shape.json").write_text(
++                json.dumps({"per_game": [{"observed_field": 1}]})
++            )
++    args = ["--repo-root", str(root)]
++    monkeypatch.setenv("CARNOT_ARC_EVAL_RUNS_DIR", str(external))
++    if mode == "cli":
++        monkeypatch.setenv("CARNOT_ARC_EVAL_RUNS_DIR", str(tmp_path / "missing-env"))
++        args += ["--runs-dir", str(external)]
++    elif mode == "unset":
++        monkeypatch.delenv("CARNOT_ARC_EVAL_RUNS_DIR")
++    elif mode == "empty_env":
++        monkeypatch.setenv("CARNOT_ARC_EVAL_RUNS_DIR", "")
++    selected = (
++        root / "results" / "arc_leaderboard_eval_runs"
++        if mode in ("unset", "empty_env")
++        else external
++    )
++    before = {p: p.read_bytes() for p in tmp_path.rglob("*.json")}
++    assert lint.main(args) == (1 if mode in ("missing", "empty", "ghost") else 0)
++    output = capsys.readouterr().out
++    assert str(selected) in output
++    if mode == "ghost":
++        assert "NO producer source" in output
++    assert before == {p: p.read_bytes() for p in tmp_path.rglob("*.json")}
+-- 
+2.55.0
+

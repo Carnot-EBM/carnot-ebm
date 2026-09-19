@@ -1,0 +1,1349 @@
+From 57be213af6b9c06c6129c172a03b2b34ea2d3996 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 19:59:59 -0400
+Subject: [PATCH 11339/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json |    2 +-
+ ops/conductor-log.md         |    2 +
+ ops/conductor-state.json     |    2 +-
+ research-roadmap-next.yaml   | 1297 ----------------------------------
+ 4 files changed, 4 insertions(+), 1299 deletions(-)
+ delete mode 100644 research-roadmap-next.yaml
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3b36e490d2..d4305389b2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-09-05T22:38:40Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-09-05T23:59:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 0744e0923a..23d9b74e31 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17366,3 +17366,5 @@ code |
+ +
+ +d |
+ | 2026-09-05 22:36 UTC | Repaired provenance-complete live belief shadow tr | OK | cache hit: 97 passed, 1 warning in 8.63s |
++| 2026-09-05 23:54 UTC | Plan milestone 2026.09.617 | OK | 12 tasks proposed |
++| 2026-09-05 23:57 UTC | Milestone 2026.09.617 activated | OK | 12 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cd925a09be..f3d31d48d9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4053754, "iteration": 21, "phase": "iteration_start", "started_at": "2026-09-05T22:38:40Z"}
+\ No newline at end of file
++{"pid": 4053754, "iteration": 23, "phase": "iteration_start", "started_at": "2026-09-05T23:59:50Z"}
+\ No newline at end of file
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+deleted file mode 100644
+index 8d55519cac..0000000000
+--- a/research-roadmap-next.yaml
++++ /dev/null
+@@ -1,1297 +0,0 @@
+-milestone: 2026.09.617
+-milestone_title: Typed ARC evidence, causal belief value, and selective self-learning
+-milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+-tasks:
+-- id: exp7038-v617-active-contract-preflight
+-  title: V617 active-roadmap and design-document contract preflight
+-  track: infrastructure
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: false
+-  max_turns: 100
+-  estimated_wall_time_min: 90
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7038_v617_active_contract_preflight.json
+-  prior_failures:
+-    - experiment_id: exp7028-v616-active-contract-preflight
+-      verdict: complete_disqualified_v616_markdown_yaml_contract_mismatch
+-      addressed_by: "V617 starts from a planner-verified 12-row document and YAML contract, reserves the stale V616 IDs, and tests the activated file instead of trusting the document count."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    V616 executed five tasks, exp7028 through exp7032, while its design document
+-    still promised ten tasks through exp7037. Exp7028 correctly disqualified
+-    that contract. IDs exp7033 through exp7037 also remain embedded in active
+-    specifications and audit fixtures, so V617 does not reuse them. V617 has
+-    exactly 12 tasks, exp7038 through exp7049, in one order in the activated
+-    YAML and this design document. This task is advisory. It must not gate the
+-    science chain.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md
+-    - {project_root}/research-references.md section "V617 Planner Refresh"
+-    - {project_root}/research-roadmap.yaml
+-    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+-    - {project_root}/results/experiment_7028_v616_active_contract_preflight.json
+-    - {project_root}/results/experiment_7032_repaired_belief_shadow_live_trace.json
+-    - {project_root}/ops/exclusion_manifest.yaml
+-    - {project_root}/scripts/conductor_gates.py
+-    - {project_root}/scripts/audit_roadmap_gates.py
+-    - {project_root}/scripts/validate_prior_failures.py
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Build and run an independent V617 active-YAML versus Markdown contract
+-    preflight. Check the exact count, order, IDs, titles, deliverables, gates,
+-    producer fields, prior-failure records, model declarations, prompt tails,
+-    and reserved-ID rule. Do not activate or rewrite a roadmap.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require readable `research-roadmap.yaml`, the V617 design
+-       document, Exp7028 evidence, the exclusion manifest, and a writable
+-       artifact path. The execution-time parser must not require the staging
+-       file. On failure write a terminal blocked artifact. Put the failed
+-       check, expected value, and observed value in gate_check_summary.
+-    1. Add REQ-REPORT-7038 and RED tests before implementation. Cover exactly
+-       12 tasks, ordered IDs exp7038-exp7049, one missing row, one reordered
+-       row, one changed gate field, one missing prompt tail, and attempted
+-       reuse of exp7033-exp7037.
+-    2. Parse Markdown and active YAML independently. Do not build both views
+-       from one shared task object.
+-    3. Require exact milestone, count, order, full ID, title, deliverable,
+-       structured gate, and task-field parity. Confirm the 12 IDs are unique
+-       and absent from completed or retired experiment ID sets.
+-    4. Require every gate producer to occur earlier in this YAML. Require the
+-       exact bare top-level artifact field in the producer's own REQUIRED
+-       ARTIFACT FIELDS block.
+-    5. Require all four prior_failures sub-fields, every comparative task's
+-       per_unit_rows flag, the closed verdict_class enum, gate diagnostics,
+-       legal inference substrates, and an ungated final capstone.
+-    6. Require every live-model task to name a mandated SOTA GGUF through the
+-       cached_sota_pair() pattern. Reject a legacy-small headline fallback.
+-    7. Set v617_task_contract_conforms_score=1 only when all 12 independent
+-       task rows agree. A contract mismatch is disqualified. A missing
+-       execution prerequisite is blocked. Neither is partial.
+-    8. Run focused tests, YAML parsing, prior-failure validation, roadmap gate
+-       audit, exclusion-manifest lint, artifact validation, adversarial
+-       verification, row-consistency lint, spec coverage, and root-clutter
+-       checks.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (aggregation_from_upstream_artifacts); duration_s;
+-       source_artifact_hashes; rows; markdown_task_rows; yaml_task_rows;
+-       task_contract_rows; title_parity_rows; deliverable_parity_rows;
+-       gate_contract_rows; gate_producer_rows; prior_failure_rows;
+-       reserved_id_rows; retired_id_rows; model_compliance_rows;
+-       substrate_compliance_rows; artifact_field_rows; prompt_tail_rows;
+-       expected_task_count (12); observed_task_count; expected_id_order;
+-       observed_id_order; active_roadmap_path;
+-       staging_file_required_at_execution (false);
+-       v617_task_contract_conforms_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7038_v617_active_contract_preflight.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7039-live-model-report-channel-forensics
+-  title: Official-live llama.cpp model report-channel forensic capture
+-  track: arc-infrastructure
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: true
+-  max_turns: 100
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7039_v617_model_report_forensics.json
+-  prior_failures:
+-    - experiment_id: exp7032-repaired-belief-shadow-live-trace
+-      verdict: "blocked_belief_shadow_live_trace:live_trace_execution"
+-      addressed_by: "Exp7039 stops before ARC action selection and records the live launch argument plus every raw /props identity field so the alias contract is measured before another validator change."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7032 passed its cache, GPU, ownership, CUDA, context, and official-access
+-    checks. It then failed because `/props` returned a model path that resolved
+-    to the right content blob but was itself an alias. Exp7030 and Exp7031 had
+-    tested the opposite assumption. V617 must capture the real report channel
+-    before it changes the identity contract. arXiv:2609.03147 shows why a
+-    constraint system must test report-channel consistency separately.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-references.md section "V617 Planner Refresh"
+-    - {project_root}/results/experiment_7030_arc_gguf_model_identity_bridge.json
+-    - {project_root}/results/experiment_7031_arc_model_identity_cold_audit.json
+-    - {project_root}/results/experiment_7032_repaired_belief_shadow_live_trace.json
+-    - {project_root}/python/carnot/agentic/arc_eval_provenance.py
+-    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+-    - {project_root}/python/carnot/inference/sota_models.py
+-    - {project_root}/scripts/experiment_template.py cached_sota_pair() pattern
+-    - {project_root}/openspec/capabilities/arc-agi/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Capture one owned live llama.cpp model identity report without taking an
+-    ARC action. Record the selected model specification, exact launch argument,
+-    complete raw `/props` payload, raw identity candidates, and separately
+-    resolved paths. Classify the report shape without changing the production
+-    validator or normalizing the raw report in place.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require an idle supported RTX 3090, enough VRAM, owned
+-       GPU and port leases, CUDA llama.cpp binary and library, clean stop
+-       authority, cached mandated GGUF, readable Exp7032 evidence, and writable
+-       result/checkpoint paths. On failure write a terminal blocked artifact
+-       with exact gate_check_summary. Do not use CPU or a small-model fallback.
+-    1. Add REQ-ARC-7039 and RED tests before implementation. Tests must keep a
+-       raw path and its resolved path distinct and must cover missing, relative,
+-       alias, canonical blob, direct file, and conflicting report fields.
+-    2. MODEL_SPECS must resolve through cached_sota_pair() and execute
+-       `unsloth/Qwen3.6-35B-A3B-GGUF`. Record the hub ID, revision, snapshot
+-       filename, quantization, exact file hash, GPU UUID, and server build.
+-    3. Start one owned CUDA server with the selected snapshot path. Send one
+-       fixed one-token diagnostic request so live_llm_inference is genuine.
+-       Do not open or act in an ARC game.
+-    4. Preserve the full raw `/props` JSON. Record `model_path`, `model`, and
+-       `model_alias` as separate raw fields. Record the launch `-m` argument
+-       and process command line independently.
+-    5. Resolve each absolute path in a separate derived field. Do not replace
+-       a raw field. Hash every reachable file and compare it with the selected
+-       model hash. Record missing and contradictory values as unknown or
+-       contradicted, not as inferred passes.
+-    6. Classify the observed report as snapshot_alias, resolved_blob,
+-       direct_file, conflicting, or unknown. Set
+-       arc_report_channel_forensics_ready_score=1 when the capture is complete,
+-       owned, reproducible, and safely cleaned up. The score describes evidence
+-       completeness, not validator correctness or belief value.
+-    7. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, ARC floor lint, spec coverage, and applicable
+-       live-path checks from ops/e2e-test-plan.md.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (live_llm_inference); duration_s;
+-       source_artifact_hashes; rows; MODEL_SPECS; model_specs; models_used;
+-       selected_model_spec; requested_model_path; requested_model_filename;
+-       requested_hf_id; requested_revision; launch_model_argument;
+-       process_command_rows; raw_server_props; raw_identity_field_rows;
+-       resolved_identity_field_rows; file_hash_rows; consistency_rows;
+-       report_channel_classification; one_token_probe_rows;
+-       server_process_rows; port_lease_rows; gpu_lease_rows; gpu_sample_rows;
+-       cuda_layer_offload_confirmed (true); cleanup_rows;
+-       generation_request_count (1); arc_action_count (0);
+-       game_level_solve_claim (false); arc_report_channel_forensics_ready_score;
+-       random_seed; reproducibility_checksum; gate_check_summary with failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7039_v617_model_report_forensics.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7040-typed-model-identity-report-bridge
+-  title: Typed raw-to-canonical ARC model identity report bridge
+-  track: arc-infrastructure
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: false
+-  max_turns: 100
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7040_v617_typed_identity_bridge.json
+-  gated_on:
+-    - upstream: exp7039-live-model-report-channel-forensics
+-      artifact_field: arc_report_channel_forensics_ready_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7032-repaired-belief-shadow-live-trace
+-      verdict: "blocked_belief_shadow_live_trace:live_trace_execution"
+-      addressed_by: "Exp7040 uses Exp7039's measured live report shape and adds a raw observation plus a separate canonical resolution instead of requiring the raw server field itself to be canonical."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7039 measures the actual llama.cpp report contract. The current shared
+-    builder rejects an observed alias before it can compare the alias target
+-    with the requested snapshot and content blob. arXiv:2609.03153 suggests a
+-    safer form: typed obligations with supported, contradicted, or unknown
+-    states and explicit provenance. This task changes the shared identity
+-    representation. It must not weaken hub, revision, hash, or reachability
+-    checks.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-references.md section "V617 Planner Refresh"
+-    - {project_root}/results/experiment_7039_v617_model_report_forensics.json
+-    - {project_root}/results/experiment_7030_arc_gguf_model_identity_bridge.json
+-    - {project_root}/results/experiment_7031_arc_model_identity_cold_audit.json
+-    - {project_root}/results/experiment_7032_repaired_belief_shadow_live_trace.json
+-    - {project_root}/python/carnot/agentic/arc_eval_provenance.py
+-    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+-    - {project_root}/python/carnot/experiment_7032_repaired_belief_shadow_live_trace.py
+-    - {project_root}/tests/python/test_arc_eval_provenance_contract_20260905.py
+-    - {project_root}/tests/python/test_arc_model_identity_bridge_20260905.py
+-    - {project_root}/openspec/capabilities/arc-agi/spec.md
+-
+-    TASK:
+-    Extend the shared ARC model identity receipt with a typed raw-report to
+-    canonical-resolution bridge. Preserve the server's raw path exactly. Add a
+-    separate resolved path and obligation rows. Accept identity only when the
+-    selected snapshot, launch argument, raw report resolution, content blob,
+-    hub, revision, filename, and hash all agree.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require a valid Exp7039 artifact with
+-       arc_report_channel_forensics_ready_score=1, unchanged cited sources,
+-       importable production modules, and writable code/test/artifact paths.
+-       On failure write a terminal blocked artifact with gate_check_summary.
+-    1. Add REQ-ARC-7040 and RED tests before implementation. Reproduce the
+-       exact raw report shape from Exp7039 with temporary files. Do not import
+-       mutable fixture values from the artifact at test execution time.
+-    2. Extend the current schema. Keep requested_model_path,
+-       requested_model_filename, requested_hf_id, requested_revision,
+-       launch_model_argument, observed_server_model_path,
+-       observed_server_resolved_path, resolved_model_path, and model_file_hash
+-       as separate fields.
+-    3. Emit typed obligation rows for absolute raw report, path resolution,
+-       selected snapshot relation, launch/report agreement, content hash, hub,
+-       revision, requested filename, and unique-file identity. Each row is
+-       supported, contradicted, or unknown and carries its evidence source.
+-    4. Accept a raw snapshot alias only when it resolves to the exact selected
+-       blob and every other obligation is supported. Accept a canonical blob
+-       report and a direct regular GGUF file under their explicit branches.
+-    5. Reject relative aliases, broken links, wrong snapshots, same-size
+-       different content, changed hub or revision, conflicting `/props`
+-       fields, hard-link ambiguity, and missing required evidence. Unknown is
+-       a block. It is never silently converted to supported.
+-    6. Wire the shared builder and validator into the canonical submitted ARC
+-       evaluator, reusable-server check, and belief-shadow consumer. Keep an
+-       explicit reader for complete legacy rows. Do not rewrite old artifacts.
+-    7. Set arc_typed_identity_bridge_ready_score=1 only when all positive
+-       branches pass, all negative branches fail closed, Exp7039's shape
+-       passes, legacy compatibility remains explicit, and every consumer uses
+-       the shared implementation.
+-    8. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, ARC floor lint, spec coverage, and applicable E2E
+-       checks from ops/e2e-test-plan.md.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (aggregation_from_upstream_artifacts); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       rows; identity_schema_version; raw_report_reproduction_rows;
+-       identity_obligation_rows; positive_fixture_rows; negative_fixture_rows;
+-       unknown_evidence_rows; legacy_compatibility_rows; producer_wiring_rows;
+-       consumer_wiring_rows; requested_model_path; requested_model_filename;
+-       requested_hf_id; requested_revision; launch_model_argument;
+-       observed_server_model_path; observed_server_resolved_path;
+-       resolved_model_path; model_file_hash; arc_typed_identity_bridge_ready_score;
+-       random_seed; reproducibility_checksum; gate_check_summary with failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7040_v617_typed_identity_bridge.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7041-identity-report-channel-cold-audit
+-  title: Fresh-process ARC identity report-channel attack audit
+-  track: arc-infrastructure
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 120
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7041_v617_identity_attack_audit.json
+-  gated_on:
+-    - upstream: exp7040-typed-model-identity-report-bridge
+-      artifact_field: arc_typed_identity_bridge_ready_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7032-repaired-belief-shadow-live-trace
+-      verdict: "blocked_belief_shadow_live_trace:live_trace_execution"
+-      addressed_by: "Exp7041 independently attacks the new typed raw/resolved contract in a fresh process before the live trace can reuse it."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7040 changes a security-sensitive evidence boundary after two fixture
+-    suites missed the live alias shape. The new bridge needs an independent
+-    report-channel attack audit. The audit follows arXiv:2609.03147: feasibility
+-    projection is not enough when the constraint inputs can be misreported.
+-    It also follows arXiv:2609.03153 by preserving typed evidence and unknown.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_7039_v617_model_report_forensics.json
+-    - {project_root}/results/experiment_7040_v617_typed_identity_bridge.json
+-    - {project_root}/python/carnot/agentic/arc_eval_provenance.py
+-    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+-    - {project_root}/python/carnot/agentic/arc_belief_shadow_live_trace.py
+-    - {project_root}/tests/python/test_arc_model_identity_bridge_20260905.py
+-    - {project_root}/openspec/capabilities/arc-agi/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Build and run a fresh-process mutation audit of the typed ARC identity
+-    bridge. Generate fixtures independently from Exp7040. Confirm all valid
+-    raw-report forms pass and one-factor report-channel attacks fail closed
+-    with exact reasons.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require a readable valid Exp7040 artifact with
+-       arc_typed_identity_bridge_ready_score=1, unchanged source hashes,
+-       importable shared production code, and writable temporary/artifact
+-       paths. On failure write a terminal blocked artifact. An upstream block
+-       is blocked, not partial, and names the check in gate_check_summary.
+-    1. Add REQ-ARC-7041 and RED tests first. Use a private temporary directory,
+-       minimal environment, and isolated Python process. Do not import
+-       Exp7040's fixture constructors or expected rows.
+-    2. Create positive rows for raw snapshot alias, canonical blob, and direct
+-       regular GGUF reports. Require serialized round-trip validation and one
+-       supported row for every required obligation.
+-    3. Mutate one factor per attack row: relative raw path, wrong alias target,
+-       broken alias, same-size wrong bytes, changed hash, wrong hub, wrong
+-       revision, changed launch `-m`, conflicting `/props` fields, stale file,
+-       directory, hard link, and unreadable target.
+-    4. Require every attack to yield contradicted or unknown with the expected
+-       exact rejection reason. No attack may receive a positive receipt.
+-    5. Recompute Exp7040's artifact and cited source hashes. Prove the canonical
+-       evaluator, reusable-server path, and belief consumer import the audited
+-       shared functions rather than local copies.
+-    6. Set arc_identity_report_attack_audit_ready_score=1 only when all
+-       positive rows pass, all attack rows fail closed, all source hashes
+-       agree, all required unknowns block, and consumer reachability passes.
+-    7. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, ARC floor lint, spec coverage, and root-clutter
+-       checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (aggregation_from_upstream_artifacts); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       rows; positive_identity_rows; report_channel_attack_rows;
+-       alias_attack_rows; hash_attack_rows; hub_revision_attack_rows;
+-       conflict_attack_rows; unknown_evidence_rows; exact_rejection_rows;
+-       fresh_process_rows; source_drift_rows; consumer_reachability_rows;
+-       arc_identity_report_attack_audit_ready_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7041_v617_identity_attack_audit.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7042-typed-identity-belief-shadow-trace
+-  title: Typed-identity official-live belief shadow trace
+-  track: arc-generalization
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: true
+-  max_turns: 100
+-  estimated_wall_time_min: 240
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7042_v617_belief_shadow_trace.json
+-  gated_on:
+-    - upstream: exp7040-typed-model-identity-report-bridge
+-      artifact_field: arc_typed_identity_bridge_ready_score
+-      op: ==
+-      value: 1
+-    - upstream: exp7041-identity-report-channel-cold-audit
+-      artifact_field: arc_identity_report_attack_audit_ready_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7025-belief-shadow-live-trace
+-      verdict: "blocked_belief_shadow_live_trace:live_trace_execution"
+-      addressed_by: "Exp7042 uses one requested filename plus raw and resolved observed paths through the shared typed bridge, rather than sending a blob basename through the GGUF filename field."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp7032-repaired-belief-shadow-live-trace
+-      verdict: "blocked_belief_shadow_live_trace:live_trace_execution"
+-      addressed_by: "Exp7042 runs only after a real /props capture and an independent fresh-process attack audit validate the exact alias form that Exp7032 rejected."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7025 and Exp7032 both reached healthy owned CUDA servers but failed at
+-    different model-identity schema assumptions. Exp7039 measures the live
+-    report. Exp7040 and Exp7041 implement and attack-test the typed bridge.
+-    This task repeats the shadow-only transport test. Belief may change scores
+-    but must not change the selected action, as suggested by arXiv:2609.01072.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/scripts/experiment_template.py cached_sota_pair() pattern
+-    - {project_root}/results/experiment_7017_task_linked_compute_receipts.json
+-    - {project_root}/results/experiment_7024_belief_aware_e3_selector.json
+-    - {project_root}/results/experiment_7025_belief_shadow_live_trace.json
+-    - {project_root}/results/experiment_7032_repaired_belief_shadow_live_trace.json
+-    - {project_root}/results/experiment_7040_v617_typed_identity_bridge.json
+-    - {project_root}/results/experiment_7041_v617_identity_attack_audit.json
+-    - {project_root}/ops/arc_solve_registry.yaml
+-    - {project_root}/python/carnot/agentic/arc_belief_shadow_live_trace.py
+-    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+-    - {project_root}/python/carnot/agentic/arc_eval_provenance.py
+-    - {project_root}/openspec/capabilities/arc-belief-shadow-live-trace/spec.md
+-
+-    TASK:
+-    Run one bounded official-live ARC shadow trace through the canonical agent
+-    factory and E3AgentPolicy using the typed identity bridge. Prove belief
+-    query telemetry fires, the emitted action equals the flag-off control, the
+-    raw server report stays intact, and every compute and cleanup receipt is
+-    complete. Make no game-level solve headline.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require valid Exp7040 and Exp7041 artifacts and hashes;
+-       readable Exp7017 and Exp7024 evidence; registry-prechecked eligible live
+-       access; idle supported RTX 3090; sufficient VRAM; owned GPU and port
+-       leases; CUDA llama.cpp; writable result/checkpoint paths; and clean stop
+-       authority. On failure write a terminal blocked artifact with exact
+-       gate_check_summary. Do not fall back.
+-    1. Add REQ-ARC-7042 and RED tests before implementation. Cover raw and
+-       resolved identity propagation, action parity, nonempty query telemetry,
+-       checkpoint resume, cleanup, and repeated prior-verdict retirement.
+-    2. MODEL_SPECS must resolve through cached_sota_pair() and execute
+-       `unsloth/Qwen3.6-35B-A3B-GGUF`. No AutoTokenizer, CPU inference, or
+-       legacy-small headline model is allowed.
+-    3. Start one owned CUDA server. Validate the requested snapshot, launch
+-       argument, raw `/props` report, resolved blob, hash, hub, and revision
+-       before the first action.
+-    4. Freeze one eligible episode and action budget. At each selected
+-       pre-action state, run flag-off and belief-shadow decisions on the same
+-       candidate set. Shadow mode may query and rescore but returns the control
+-       action byte-for-byte.
+-    5. Record prompt and candidate hashes, evidence IDs, belief query result,
+-       base and shadow rankings, actions, observations, tokens, model calls,
+-       phase times, GPU samples, server identity, and owned cleanup per unit.
+-    6. Registry-precheck before execution. If an incidental level completion
+-       occurs, record solve_provenance=live_agent_self_discovery and keep it
+-       outside the headline. Never inspect game source, offline BFS, or a
+-       per-game adapter.
+-    7. Set belief_shadow_transport_ready_score=1 only when identity, CUDA,
+-       live-path, query-firing, action-parity, task-linked compute, and cleanup
+-       gates all pass. A repeated identity failure must use the same prior
+-       honest verdict so retirement can act.
+-    8. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, ARC floor lint, spec coverage, and applicable
+-       live-path E2E checks from ops/e2e-test-plan.md.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (live_llm_inference); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       MODEL_SPECS; model_specs; models_used; requested_model_path;
+-       requested_model_filename; requested_hf_id; requested_revision;
+-       launch_model_argument; observed_server_model_path;
+-       observed_server_resolved_path; resolved_model_path; model_file_hashes;
+-       identity_obligation_rows; tokenizer_receipt; no_autotokenizer_used
+-       (true); server_process_rows; port_lease_rows; gpu_lease_rows;
+-       gpu_sample_rows; cuda_layer_offload_confirmed (true);
+-       context_receipt_rows; phase_receipt_rows; rows; per_decision_rows;
+-       action_parity_rows; belief_query_rows; observation_rows; progress_rows;
+-       cleanup_rows; solve_registry_precheck_rows; solve_provenance
+-       (live_agent_self_discovery | development_proxy | outer_loop_re);
+-       game_level_solve_claim (false); live_model_invoked (true);
+-       belief_shadow_transport_ready_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7042_v617_belief_shadow_trace.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7043-belief-shadow-trace-cold-audit
+-  title: Fresh-process official-live belief shadow trace audit
+-  track: arc-generalization
+-  priority: high
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 90
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7043_v617_belief_shadow_cold_audit.json
+-  gated_on:
+-    - upstream: exp7042-typed-identity-belief-shadow-trace
+-      artifact_field: belief_shadow_transport_ready_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7032-repaired-belief-shadow-live-trace
+-      verdict: "blocked_belief_shadow_live_trace:live_trace_execution"
+-      addressed_by: "Exp7043 audits a completed Exp7042 trace from a fresh process and recomputes identity, action parity, query firing, timing, and cleanup instead of trusting the live runner's self-report."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7042 can only prove transport, not value. Its own positive self-report
+-    also cannot authorize the next live intervention. This task independently
+-    recomputes every transport claim from rows and source receipts. It must
+-    preserve a valid negative result and must reject a cache-only or
+-    self-certified artifact.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_7040_v617_typed_identity_bridge.json
+-    - {project_root}/results/experiment_7041_v617_identity_attack_audit.json
+-    - {project_root}/results/experiment_7042_v617_belief_shadow_trace.json
+-    - {project_root}/results/experiment_7017_task_linked_compute_receipts.json
+-    - {project_root}/python/carnot/agentic/arc_eval_provenance.py
+-    - {project_root}/scripts/adversarial_verify.py
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/ops/arc_solve_registry.yaml
+-    - {project_root}/openspec/capabilities/arc-belief-shadow-live-trace/spec.md
+-
+-    TASK:
+-    Audit the Exp7042 live shadow artifact in a fresh restricted process.
+-    Recompute source hashes, typed identity obligations, action parity, query
+-    firing, model invocation, CUDA evidence, duration, task-linked timing, and
+-    cleanup from raw rows. Decide only whether the trace is fit to support a
+-    later value experiment.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require Exp7042 with belief_shadow_transport_ready_score=1,
+-       its exact artifact and cited sources, the solve registry, and writable
+-       audit paths. On failure write terminal blocked with gate_check_summary.
+-    1. Add REQ-ARC-7043 and RED tests first. Cover a valid trace and mutations
+-       of raw path, resolved path, hash, model family, action parity, query
+-       count, duration, phase clock, PID linkage, CUDA flag, and cleanup.
+-    2. Run in a minimal fresh process. Recompute all hashes and the identity
+-       graph using the shared production validator. Do not import Exp7042 test
+-       fixture expectations.
+-    3. Derive action equality, candidate-set equality, query firing, and model
+-       request counts from per-decision rows. A headline field cannot override
+-       contradictory rows.
+-    4. Recompute phase durations, process and lease linkage, GPU samples,
+-       context, and owned cleanup. Reject a cache hit presented as a live run.
+-    5. Confirm no action influence and no game-level solve claim. Cross-check
+-       any incidental progress against registry and solve provenance.
+-    6. Set belief_shadow_trace_audit_ready_score=1 only when every recomputed
+-       transport claim passes. This score does not assert belief utility.
+-    7. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, ARC floor lint, spec coverage, and root-clutter
+-       checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (aggregation_from_upstream_artifacts); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       rows; source_drift_rows; typed_identity_replay_rows;
+-       action_parity_replay_rows; query_firing_replay_rows;
+-       model_invocation_replay_rows; compute_receipt_replay_rows;
+-       duration_replay_rows; cleanup_replay_rows; solve_registry_rows;
+-       no_value_claim_confirmed (true); game_level_solve_claim (false);
+-       belief_shadow_trace_audit_ready_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7043_v617_belief_shadow_cold_audit.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7044-uniform-belief-two-model-live-ab
+-  title: Two-model uniform belief influence live A/B
+-  track: arc-generalization
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: true
+-  max_turns: 100
+-  estimated_wall_time_min: 480
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7044_v617_uniform_belief_live_ab.json
+-  gated_on:
+-    - upstream: exp7042-typed-identity-belief-shadow-trace
+-      artifact_field: belief_shadow_transport_ready_score
+-      op: ==
+-      value: 1
+-    - upstream: exp7043-belief-shadow-trace-cold-audit
+-      artifact_field: belief_shadow_trace_audit_ready_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7021-prospective-belief-utility
+-      verdict: complete_null_prospective_belief_utility_not_demonstrated
+-      addressed_by: "Exp7044 replaces deterministic replay utility with randomized official-live intervention rows from mandated SOTA GGUFs and exact later environment outcomes."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp7026-held-mechanic-belief-ab
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "Exp7044 runs only after the typed live transport and independent cold audit exist, so the held-mechanic comparison no longer depends on the failed Exp7025 trace."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    The explicit belief ledger is safe, but Exp7021 found no prospective value
+-    in deterministic replay. Exp7026 never ran because the live transport gate
+-    failed. Exp7042 and Exp7043 provide a valid shadow-only path. This task
+-    gives uniform belief influence one terminal live value test. It compares
+-    actual later environment outcomes and matched controls, not confidence or
+-    a self-report.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md section "Continuous Self-Learning"
+-    - {project_root}/results/experiment_7021_prospective_belief_utility.json
+-    - {project_root}/results/experiment_7026_held_mechanic_belief_ab.json
+-    - {project_root}/results/experiment_7042_v617_belief_shadow_trace.json
+-    - {project_root}/results/experiment_7043_v617_belief_shadow_cold_audit.json
+-    - {project_root}/python/carnot/agentic/arc_belief_ledger.py
+-    - {project_root}/python/carnot/agentic/arc_belief_query.py
+-    - {project_root}/python/carnot/agentic/arc_belief_aware_e3_selector.py
+-    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+-    - {project_root}/ops/arc_solve_registry.yaml
+-    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+-
+-    TASK:
+-    Run a preregistered official-live A/B test of uniform belief influence on
+-    later ARC decisions. Compare always-off, always-on, and a repeated-off cost
+-    control on frozen mechanic strata with matched proposal, model, action, and
+-    wall budgets. Use exact environment observations as the only value label.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require valid Exp7042 and Exp7043 artifacts and hashes;
+-       registry-prechecked eligible live episodes; at least two held mechanic
+-       strata with headroom; cached models; idle supported GPUs; owned GPU and
+-       port leases; CUDA llama.cpp; clean stop authority; and writable
+-       checkpoints. On failure write terminal blocked with gate_check_summary.
+-    1. Add REQ-ARC-7044 and RED tests first. Freeze the episode roster, strata,
+-       seeds, arm order, candidate budget, action budget, model budget, outcome
+-       metric, confidence intervals, and success rule before opening outcomes.
+-    2. MODEL_SPECS must resolve through cached_sota_pair() and execute
+-       `unsloth/Qwen3.6-35B-A3B-GGUF` as primary plus
+-       `unsloth/gemma-4-26B-A4B-it-GGUF` as the family canary. No legacy-small,
+-       CPU, or AutoTokenizer headline path is allowed.
+-    3. Run always-off, repeated-off, and uniform-on cells under the same
+-       candidate, model-call, token, action, and wall budgets. Randomize arm
+-       order within frozen strata. Never use game ID or future outcome as a
+-       selector feature.
+-    4. Record each decision's pre-action observation hash, mechanic stratum,
+-       model, seed, candidates, base/simulation/belief scores, query evidence,
+-       chosen action, later exact observation, progress, cost, and harm flag.
+-    5. Compute paired row-derived deltas. Report helpful, harmful, unchanged,
+-       and no-headroom interventions. The repeated-off arm must distinguish
+-       belief value from another base attempt or extra wall time.
+-    6. Set uniform_belief_live_ab_complete_score=1 when all preregistered cells
+-       and receipts are complete. Set uniform_belief_value_positive_score=1
+-       only when Qwen has positive exact utility over both controls, the Gemma
+-       canary is non-negative, at least two mechanic strata are non-negative,
+-       no protected-case regression occurs, and the interval rule passes.
+-       Otherwise emit null or disqualified honestly. A repeated null retires
+-       this uniform-influence scope.
+-    7. Registry-precheck every episode. Record solve_provenance for incidental
+-       level completion, but make no game-level solve headline and never use
+-       game source, offline BFS, or a hand GameAdapter.
+-    8. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, ARC floor lint, spec coverage, and applicable
+-       live-path E2E checks from ops/e2e-test-plan.md.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (live_llm_inference); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       preregistration_hash; frozen_roster_rows; frozen_stratum_rows;
+-       MODEL_SPECS; model_specs; models_used; model_identity_rows;
+-       server_process_rows; port_lease_rows; gpu_lease_rows; gpu_sample_rows;
+-       phase_receipt_rows; task_compute_receipt; rows; per_game_results;
+-       per_decision_rows; arm_budget_rows; arm_order_rows; outcome_rows;
+-       helpful_intervention_rows; harmful_intervention_rows;
+-       no_headroom_rows; protected_case_rows; family_result_rows;
+-       paired_delta_rows; interval_rows; exact_utility_delta_vs_off;
+-       exact_utility_delta_vs_repeated_off; harmful_intervention_count;
+-       uniform_belief_live_ab_complete_score;
+-       uniform_belief_value_positive_score; solve_registry_precheck_rows;
+-       solve_provenance
+-       (live_agent_self_discovery | development_proxy | outer_loop_re);
+-       game_level_solve_claim (false); random_seed; reproducibility_checksum;
+-       gate_check_summary with failed check, expected value, and observed value
+-       for any blocked verdict; verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7044_v617_uniform_belief_live_ab.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7045-uniform-belief-value-cold-audit
+-  title: Independent uniform belief live-value cold audit
+-  track: evaluation
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 120
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7045_v617_uniform_belief_cold_audit.json
+-  gated_on:
+-    - upstream: exp7044-uniform-belief-two-model-live-ab
+-      artifact_field: uniform_belief_live_ab_complete_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7021-prospective-belief-utility
+-      verdict: complete_null_prospective_belief_utility_not_demonstrated
+-      addressed_by: "Exp7045 independently reduces fresh official-live rows, matched controls, model-family separation, and exact later outcomes instead of accepting Exp7044's pooled value claim."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp7026-held-mechanic-belief-ab
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "Exp7045 consumes a completed typed-identity live comparison and can now audit the value question that Exp7026 never reached."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7044 makes the milestone's first live belief-value claim. Its own
+-    headline cannot be trusted without independent row reduction. This task
+-    audits complete positive, null, and disqualified outcomes. It must not turn
+-    transport safety, a pooled win, or one family's result into general value.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/results/experiment_7042_v617_belief_shadow_trace.json
+-    - {project_root}/results/experiment_7043_v617_belief_shadow_cold_audit.json
+-    - {project_root}/results/experiment_7044_v617_uniform_belief_live_ab.json
+-    - {project_root}/results/experiment_7021_prospective_belief_utility.json
+-    - {project_root}/scripts/adversarial_verify.py
+-    - {project_root}/scripts/verdict_row_consistency_lint.py
+-    - {project_root}/ops/arc_solve_registry.yaml
+-    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+-
+-    TASK:
+-    Recompute the Exp7044 live A/B result from immutable per-decision rows in a
+-    fresh process. Audit preregistration, chronology, arm budgets, repeated-off
+-    control, model families, mechanic strata, headroom, exact outcomes,
+-    confidence intervals, provenance, and solve exclusions.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require Exp7044 with
+-       uniform_belief_live_ab_complete_score=1, all cited artifacts and source
+-       hashes, a readable solve registry, and writable audit paths. On failure
+-       write terminal blocked with exact gate_check_summary.
+-    1. Add REQ-LEARN-7045 and RED tests first. Cover positive, null,
+-       single-family-only, pooled-only, unequal-budget, no-headroom, chronology
+-       leakage, duplicated-row, contradicted-headline, and missing-provenance
+-       cases.
+-    2. Run in a fresh restricted process. Recompute artifact/source hashes,
+-       preregistration hash, unique unit keys, arm assignment, and all metrics.
+-    3. Recompute exact utility deltas, helpful and harmful counts, protected
+-       cases, strata results, family results, and intervals from rows. Reject
+-       any aggregate that its rows do not reproduce.
+-    4. Verify equal proposal, model-call, token, action, and wall budgets. Check
+-       repeated-off headroom. Confirm model identities through the typed bridge.
+-    5. Cross-check chronology and solve registry. Exclude any row with game
+-       source, offline BFS, hand adapter, future label access, or invalid solve
+-       provenance from credited evidence.
+-    6. Set uniform_belief_value_audit_complete_score=1 after every audit check
+-       has a terminal result. Set uniform_belief_value_audit_positive_score=1
+-       only when the preregistered Exp7044 positive rule is independently
+-       reproduced. A valid null keeps complete=1 and positive=0.
+-    7. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, ARC floor lint, spec coverage, and root-clutter
+-       checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (aggregation_from_upstream_artifacts); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       rows; source_drift_rows; preregistration_replay_rows;
+-       unique_unit_rows; chronology_audit_rows; arm_budget_audit_rows;
+-       repeated_off_audit_rows; headroom_audit_rows; family_audit_rows;
+-       stratum_audit_rows; outcome_reduction_rows; paired_delta_audit_rows;
+-       harmful_intervention_audit_rows; protected_case_audit_rows;
+-       interval_audit_rows; identity_audit_rows; solve_registry_audit_rows;
+-       solve_provenance_audit_rows; headline_consistency_rows;
+-       uniform_belief_value_audit_complete_score;
+-       uniform_belief_value_audit_positive_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7045_v617_uniform_belief_cold_audit.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7046-frontier-stratified-exact-outcome-curriculum
+-  title: Frozen frontier-stratified exact-outcome curriculum
+-  track: learning-infrastructure
+-  priority: high
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 120
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7046_v617_frontier_stratified_curriculum.json
+-  gated_on:
+-    - upstream: exp7045-uniform-belief-value-cold-audit
+-      artifact_field: uniform_belief_value_audit_complete_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7021-prospective-belief-utility
+-      verdict: complete_null_prospective_belief_utility_not_demonstrated
+-      addressed_by: "Exp7046 does not fit another belief scorer; it freezes exact live intervention rows into chronological support and difficulty strata so later learning cannot be dominated by easy repeated units."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    A selective learner needs an immutable, leakage-safe sequence of actual
+-    interventions and later outcomes. arXiv:2609.04128 motivates keeping
+-    learning signal near a changing frontier. Carnot must not synthesize,
+-    evolve, inspect, or adapt hidden ARC games. It can stratify already valid
+-    live rows by serving-visible pre-action difficulty and belief support.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-references.md section "V617 Planner Refresh"
+-    - {project_root}/results/experiment_7044_v617_uniform_belief_live_ab.json
+-    - {project_root}/results/experiment_7045_v617_uniform_belief_cold_audit.json
+-    - {project_root}/results/experiment_7019_arc_belief_stream_fixture.json
+-    - {project_root}/python/carnot/agentic/arc_belief_ledger.py
+-    - {project_root}/python/carnot/agentic/arc_belief_query.py
+-    - {project_root}/python/carnot/agentic/arc_prospective_belief_utility.py
+-    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+-    - {project_root}/openspec/capabilities/research-reporting/spec.md
+-
+-    TASK:
+-    Build one immutable curriculum from audited Exp7044 decision rows. Freeze
+-    chronological development and holdout partitions. Within each partition,
+-    assign support and difficulty strata using only serving-visible pre-action
+-    facts. Preserve exact later outcomes as labels that become visible only
+-    after each action.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require Exp7045 with
+-       uniform_belief_value_audit_complete_score=1, readable Exp7044 rows,
+-       unchanged hashes, unique unit keys, and writable artifact paths. A valid
+-       null is an allowed input. On failure write terminal blocked with exact
+-       gate_check_summary.
+-    1. Add REQ-LEARN-7046 and RED tests first. Cover timestamp ties, duplicate
+-       units, future-label leakage, game-ID leakage, hidden-state leakage,
+-       missing outcomes, degenerate strata, and deterministic reconstruction.
+-    2. Define a closed feature schema before reading outcome labels. Allowed
+-       fields may include belief support, contradiction count, evidence age,
+-       candidate count, base/simulation score gap, prior action count, and
+-       remaining budget. Forbid game ID, source code, adapter identity, future
+-       observation, outcome, reward, and solve label.
+-    3. Sort by monotonic decision time and freeze development and disjoint
+-       chronological holdout hashes. Reveal each exact outcome only after its
+-       action row. Keep source decision hashes for full reconstruction.
+-    4. Build support strata and bounded difficulty strata from allowed fields.
+-       Record counts, label balance, mechanic coverage, headroom, and model
+-       family per stratum. Do not upsample or fabricate rows.
+-    5. Include baseline, intervention, harmful, helpful, unchanged, and
+-       no-preference labels. A uniform null must remain visible rather than be
+-       filtered out.
+-    6. Set belief_frontier_curriculum_ready_score=1 only when partitions are
+-       immutable, disjoint, reconstructable, label timing is valid, every row
+-       has a terminal stratum, and no prohibited field enters the learner view.
+-       This score makes no value claim.
+-    7. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, spec coverage, and root-clutter checks.
+-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (aggregation_from_upstream_artifacts); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       rows; source_decision_rows; allowed_feature_schema;
+-       prohibited_feature_schema; feature_access_audit_rows;
+-       chronological_order_rows; label_reveal_rows; duplicate_audit_rows;
+-       development_rows; holdout_rows; partition_hashes;
+-       support_stratum_rows; difficulty_stratum_rows; mechanic_coverage_rows;
+-       family_coverage_rows; headroom_rows; label_balance_rows;
+-       reconstruction_rows; synthetic_environment_count (0);
+-       hidden_game_source_access_count (0); belief_frontier_curriculum_ready_score;
+-       random_seed; reproducibility_checksum; gate_check_summary with failed
+-       check, expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7046_v617_frontier_stratified_curriculum.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7047-selective-belief-exact-advantage-csl
+-  title: Exact-advantage selective belief continuous self-learning
+-  track: continuous-learning
+-  priority: critical
+-  agent_type: codex
+-  model: gpt-5.6-sol
+-  requires_gpu: false
+-  max_turns: 50
+-  estimated_wall_time_min: 180
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7047_v617_selective_belief_csl.json
+-  gated_on:
+-    - upstream: exp7046-frontier-stratified-exact-outcome-curriculum
+-      artifact_field: belief_frontier_curriculum_ready_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7021-prospective-belief-utility
+-      verdict: complete_null_prospective_belief_utility_not_demonstrated
+-      addressed_by: "Exp7047 changes the mechanism from uniform deterministic belief use to a bounded online abstention policy updated only by exact later intervention advantage across frozen frontier strata."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    This is V617's required continuous self-learning experiment. Uniform belief
+-    use can be null or harmful on some decisions. FlowBalance keeps guidance
+-    only for positive verifier advantage and abstains on no preference.
+-    Environment Evolution motivates balanced frontier strata. Carnot has a
+-    stronger update authority than either self-guidance or rubrics: the later
+-    exact ARC observation. The GGUF weights remain frozen.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md section "Continuous Self-Learning"
+-    - {project_root}/research-references.md section "V617 Planner Refresh"
+-    - {project_root}/results/experiment_7045_v617_uniform_belief_cold_audit.json
+-    - {project_root}/results/experiment_7046_v617_frontier_stratified_curriculum.json
+-    - {project_root}/python/carnot/agentic/arc_belief_ledger.py
+-    - {project_root}/python/carnot/agentic/arc_belief_query.py
+-    - {project_root}/python/carnot/agentic/arc_belief_aware_e3_selector.py
+-    - {project_root}/python/carnot/pipeline/constraint_generator.py
+-    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+-
+-    TASK:
+-    Implement and evaluate a bounded online belief-use policy. On each
+-    development decision, choose use or abstain from serving-visible features,
+-    then update only after the later exact outcome reveals signed intervention
+-    advantage. Freeze the policy and evaluate it on the disjoint chronological
+-    holdout against always-off, always-on, and matched-rate shuffled controls.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require Exp7046 with
+-       belief_frontier_curriculum_ready_score=1, exact partition hashes,
+-       complete allowed/prohibited schemas, and writable code/test/artifact
+-       paths. A uniform null is valid input. On failure write terminal blocked
+-       with exact gate_check_summary.
+-    1. Add REQ-LEARN-7047 and RED tests before implementation. Cover delayed
+-       labels, no-preference abstention, harmful reversal, rollback, restart,
+-       bounded memory, poison rows, deterministic replay, protected retention,
+-       and frozen holdout evaluation.
+-    2. Implement a small hardware-friendly policy sidecar. Use a bounded table,
+-       sparse linear head, or contextual bandit over the allowed features. Do
+-       not update GGUF weights. Record no_model_weight_mutation=true.
+-    3. For each development row, log the pre-update decision and policy hash.
+-       Reveal the exact later outcome. Update toward use only for positive
+-       advantage, away from use for harmful advantage, and abstain for zero or
+-       unknown preference. Never update from model confidence or a rubric.
+-    4. Retain protected earlier cases and all soundness failures in bounded
+-       replay. Prove restart determinism, rollback, capacity bounds, and
+-       nonforgetting by support and difficulty stratum.
+-    5. Freeze one final policy hash before opening holdout labels. Compare
+-       frozen selective, always-off, always-on, and matched-rate shuffled
+-       controls on every holdout unit. Recompute exact advantage from rows.
+-    6. Set selective_belief_policy_safety_score=1 only when there are zero
+-       protected-case regressions, zero future-label accesses, bounded state,
+-       stable replay, and no weight mutation. Set
+-       selective_belief_policy_nontrivial_score=1 only when the frozen policy
+-       makes at least one use and one abstain decision, reduces harmful
+-       interventions versus always-on, has positive exact advantage over
+-       always-off, and beats the matched-rate shuffled control. An all-abstain
+-       safe result is terminal null, not positive or partial.
+-    7. Set continuous_self_learning_task=true. Report soundness mistakes,
+-       completeness mistakes, abstentions, helpful uses, harmful uses, and
+-       retention per unit and per stratum.
+-    8. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, spec coverage, and applicable continuous-learning
+-       E2E checks from ops/e2e-test-plan.md.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (aggregation_from_upstream_artifacts); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       rows; per_game_results; development_decision_rows; delayed_label_rows;
+-       update_rows; rollback_rows; restart_rows; poison_rows;
+-       bounded_state_rows; replay_retention_rows; protected_case_rows;
+-       nonforgetting_rows; holdout_rows; policy_arm_rows;
+-       stratum_result_rows; matched_rate_control_rows; soundness_mistakes;
+-       completeness_mistakes; abstention_count; helpful_use_count;
+-       harmful_use_count; exact_advantage_over_off;
+-       exact_advantage_over_always_on; final_policy_hash;
+-       no_model_weight_mutation (true); continuous_self_learning_task (true);
+-       selective_belief_policy_safety_score;
+-       selective_belief_policy_nontrivial_score; random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7047_v617_selective_belief_csl.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7048-selective-belief-two-model-live-ab
+-  title: Two-model selective belief policy live A/B
+-  track: arc-generalization
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: true
+-  max_turns: 100
+-  estimated_wall_time_min: 480
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7048_v617_selective_belief_live_ab.json
+-  gated_on:
+-    - upstream: exp7047-selective-belief-exact-advantage-csl
+-      artifact_field: selective_belief_policy_safety_score
+-      op: ==
+-      value: 1
+-    - upstream: exp7047-selective-belief-exact-advantage-csl
+-      artifact_field: selective_belief_policy_nontrivial_score
+-      op: ==
+-      value: 1
+-  prior_failures:
+-    - experiment_id: exp7021-prospective-belief-utility
+-      verdict: complete_null_prospective_belief_utility_not_demonstrated
+-      addressed_by: "Exp7048 uses the frozen nontrivial exact-advantage abstention policy from Exp7047 on a disjoint official-live roster instead of applying belief uniformly."
+-      retire_if_same_verdict: true
+-    - experiment_id: exp7026-held-mechanic-belief-ab
+-      verdict: blocked_gate_check_failed
+-      addressed_by: "Exp7048 is pre-gated on a valid typed live path and a safe nontrivial selector, which were absent when Exp7026 cascade-blocked."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    Exp7047 may produce a safe but trivial all-abstain policy. The conductor
+-    skips this expensive live task unless that policy is both safe and
+-    nontrivial. If both gates pass, this task measures whether the frozen
+-    selective mechanism transfers to new official-live units and a dense model
+-    family. Exact later observations remain the only value authority.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/scripts/experiment_template.py cached_sota_pair() pattern
+-    - {project_root}/results/experiment_7045_v617_uniform_belief_cold_audit.json
+-    - {project_root}/results/experiment_7046_v617_frontier_stratified_curriculum.json
+-    - {project_root}/results/experiment_7047_v617_selective_belief_csl.json
+-    - {project_root}/python/carnot/agentic/arc_belief_ledger.py
+-    - {project_root}/python/carnot/agentic/arc_belief_aware_e3_selector.py
+-    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+-    - {project_root}/python/carnot/agentic/arc_eval_provenance.py
+-    - {project_root}/ops/arc_solve_registry.yaml
+-    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+-
+-    TASK:
+-    Run a preregistered official-live comparison of the frozen selective belief
+-    policy against always-off, always-on, and matched-rate shuffled controls on
+-    a new chronological roster. Match all budgets. Do not update the policy,
+-    ledger rules, thresholds, or GGUF weights after holdout outcomes open.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require Exp7047 safety=1 and nontrivial=1, an immutable
+-       final policy hash, registry-prechecked new live episodes, headroom,
+-       cached models, idle supported GPUs, CUDA llama.cpp, owned leases, clean
+-       stop authority, and writable checkpoints. On failure write terminal
+-       blocked with gate_check_summary. Do not fall back.
+-    1. Add REQ-ARC-7048 and RED tests first. Freeze the new roster, strata,
+-       seeds, arm order, budgets, policy hash, outcome metric, interval rule,
+-       and success rule before opening outcomes.
+-    2. MODEL_SPECS must resolve through cached_sota_pair() and execute
+-       `unsloth/Qwen3.6-35B-A3B-GGUF` as primary plus
+-       `unsloth/gemma-4-31B-it-GGUF` as the dense canary. No legacy-small,
+-       CPU, AutoTokenizer, or unrecorded fallback is allowed.
+-    3. Run always-off, always-on, frozen-selective, and matched-rate shuffled
+-       cells under equal proposal, model-call, token, action, and wall budgets.
+-       Randomize arm order within the preregistered strata.
+-    4. Record policy inputs, pre-action policy decision, policy hash, belief
+-       evidence, candidates, scores, action, later exact observation, utility,
+-       cost, and harm per decision. Never reveal a future outcome before action.
+-    5. Verify the selector remains frozen. Record every use and abstention.
+-       Compare exact utility, harmful interventions, retained protected cases,
+-       and cost with all controls by model family and stratum.
+-    6. Set selective_belief_live_ab_complete_score=1 when every planned cell
+-       and receipt is complete. Set selective_belief_live_value_positive_score=1
+-       only when selective beats always-off and shuffled on Qwen, is
+-       non-negative on dense Gemma, reduces harm versus always-on, retains all
+-       protected cases, and passes the interval rule. Otherwise report null or
+-       disqualified honestly.
+-    7. Registry-precheck every episode. Any incidental completion carries
+-       solve_provenance=live_agent_self_discovery and stays outside the
+-       headline. Do not inspect game source, run offline ground-truth BFS, or
+-       use a per-game adapter.
+-    8. Run focused tests, artifact validation, adversarial verification,
+-       row-consistency lint, ARC floor lint, spec coverage, and applicable
+-       live-path E2E checks from ops/e2e-test-plan.md.
+-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-       principle for every field below; preconditions_checked;
+-       inference_substrate (live_llm_inference); duration_s;
+-       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+-       preregistration_hash; final_policy_hash; policy_immutability_rows;
+-       MODEL_SPECS; model_specs; models_used; model_identity_rows;
+-       server_process_rows; port_lease_rows; gpu_lease_rows; gpu_sample_rows;
+-       phase_receipt_rows; task_compute_receipt; rows; per_game_results;
+-       per_decision_rows; policy_decision_rows; use_rows; abstention_rows;
+-       arm_budget_rows; arm_order_rows; outcome_rows;
+-       matched_rate_control_rows; harmful_intervention_rows;
+-       protected_case_rows; family_result_rows; stratum_result_rows;
+-       interval_rows; exact_utility_delta_vs_off;
+-       exact_utility_delta_vs_shuffled; harm_delta_vs_always_on;
+-       selective_belief_live_ab_complete_score;
+-       selective_belief_live_value_positive_score;
+-       solve_registry_precheck_rows; solve_provenance
+-       (live_agent_self_discovery | development_proxy | outer_loop_re);
+-       game_level_solve_claim (false); no_model_weight_mutation (true);
+-       continuous_self_learning_task (true); random_seed;
+-       reproducibility_checksum; gate_check_summary with failed check,
+-       expected value, and observed value for any blocked verdict;
+-       verifier_is_oracle (false); verdict_class
+-       (positive | circular_positive | null | blocked | disqualified | partial);
+-       honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7048_v617_selective_belief_live_ab.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-
+-- id: exp7049-v617-evidence-disposition-capstone
+-  title: V617 evidence synthesis and release-or-retire disposition
+-  track: synthesis
+-  priority: critical
+-  agent_type: claude
+-  model: opus
+-  requires_gpu: false
+-  max_turns: 100
+-  estimated_wall_time_min: 120
+-  per_unit_rows: true
+-  milestone: 2026.09.617
+-  deliverable: results/experiment_7049_v617_capstone_disposition.json
+-  prior_failures:
+-    - experiment_id: exp7027-v615-capstone
+-      verdict: complete_blocked_v615_capstone_required_live_evidence_absent
+-      addressed_by: "Exp7049 is deliberately ungated and treats missing, blocked, null, disqualified, trivial-abstention, and positive branches as terminal inputs, so absent live evidence cannot trigger partial retries."
+-      retire_if_same_verdict: true
+-  prompt: |
+-    CONTEXT:
+-    V617 can end with a repaired identity path, a uniform belief positive or
+-    null, a safe all-abstain learner, a nontrivial selective policy, a gated
+-    live transfer, or an external block. The capstone must preserve each state.
+-    It is ungated so missing upstream evidence is summarized once as blocked
+-    evidence, not retried as partial work. It may release only a default-off
+-    canary and may retire only the exact repeated scope supported by artifacts.
+-
+-    Work at {project_root}. The execution date is {date}.
+-
+-    EXISTING CODE TO READ FIRST:
+-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+-    - {project_root}/research-program.md
+-    - {project_root}/_bmad/prd.md
+-    - {project_root}/_bmad/architecture.md
+-    - {project_root}/research-roadmap.yaml
+-    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+-    - {project_root}/results/experiment_7038_v617_active_contract_preflight.json
+-    - {project_root}/results/experiment_7039_v617_model_report_forensics.json
+-    - {project_root}/results/experiment_7040_v617_typed_identity_bridge.json
+-    - {project_root}/results/experiment_7041_v617_identity_attack_audit.json
+-    - {project_root}/results/experiment_7042_v617_belief_shadow_trace.json
+-    - {project_root}/results/experiment_7043_v617_belief_shadow_cold_audit.json
+-    - {project_root}/results/experiment_7044_v617_uniform_belief_live_ab.json
+-    - {project_root}/results/experiment_7045_v617_uniform_belief_cold_audit.json
+-    - {project_root}/results/experiment_7046_v617_frontier_stratified_curriculum.json
+-    - {project_root}/results/experiment_7047_v617_selective_belief_csl.json
+-    - {project_root}/results/experiment_7048_v617_selective_belief_live_ab.json
+-    - {project_root}/ops/exclusion_manifest.yaml
+-    - {project_root}/openspec/capabilities/capstone/spec.md
+-
+-    TASK:
+-    Reconcile all 12 V617 task rows and issue one deterministic release,
+-    hold, repair, or retirement disposition for the identity, uniform-belief,
+-    and selective-learning branches. Update aligned specs and operations docs
+-    only from terminal evidence. Keep production belief influence default-off.
+-
+-    CONCRETE STEPS:
+-    0. PRECONDITIONS: require the activated V617 roadmap and design document,
+-       readable results directory, exclusion manifest, and writable artifact
+-       and documentation paths. Missing upstream task artifacts are valid
+-       terminal inputs to this ungated capstone. Only missing capstone inputs
+-       themselves cause blocked. Never use partial for an external upstream
+-       block.
+-    1. Add REQ-CAP-7049 and RED tests before implementation. Cover all-positive,
+-       identity-blocked, uniform-null, uniform-disqualified, safe-all-abstain,
+-       selective-gate-blocked, selective-positive, missing-artifact, and
+-       document/YAML-mismatch branches.
+-    2. Parse the activated YAML and Markdown independently. Require exactly 12
+-       ordered IDs exp7038-exp7049. Recompute each artifact hash, source hashes,
+-       verdict_class, honest_verdict prefix, required gate fields, and row-to-
+-       headline consistency.
+-    3. Keep identity transport, uniform value, learning safety, nontriviality,
+-       live transfer, solve evidence, and hardware evidence as separate claim
+-       rows. Do not infer a downstream claim from an upstream readiness score.
+-    4. If Exp7045 reproduces the uniform null, record retirement of the exact
+-       uniform belief-influence scope through the existing exclusion-manifest
+-       workflow. Do not retire the safe belief ledger, query API, or exact
+-       outcome memory substrate.
+-    5. If Exp7047 is safe but all-abstain, retain it as a null safety result and
+-       keep Exp7048 blocked. If Exp7048 is independently positive, permit only
+-       a default-off canary with rollback and frozen policy hash. Do not change
+-       the ordinary production default.
+-    6. Reconcile relevant OpenSpec requirements, _bmad/traceability.md,
+-       ops/status.md, and ops/changelog.md with terminal evidence. Do not edit
+-       research-roadmap.yaml or scripts/research_conductor.py.
+-    7. Name exactly one bounded next handoff. Do not reopen pair-centered
+-       latent scoring, external text scorers, KAN compression, generated-answer
+-       grammar/search, retired hardware lines, or a repeated null belief scope.
+-    8. Set v617_capstone_complete_score=1 when all 12 roadmap rows have a
+-       terminal evidence classification and every disposition follows the
+-       deterministic table. The capstone can have verdict_class=blocked while
+-       complete_score=1 when it accurately preserves external blocked inputs.
+-    9. Run focused tests, YAML parsing, prior-failure validation, roadmap gate
+-       audit, exclusion-manifest lint, artifact validation, adversarial
+-       verification, row-consistency lint, ARC floor lint, spec coverage,
+-       root-clutter checks, and applicable E2E checks from ops/e2e-test-plan.md.
+-    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+-        principle for every field below; preconditions_checked;
+-        inference_substrate (aggregation_from_upstream_artifacts); duration_s;
+-        source_artifact_hashes; rows; roadmap_contract_rows;
+-        task_artifact_rows; artifact_hash_rows; verdict_consistency_rows;
+-        gate_replay_rows; row_consistency_rows; identity_claim_rows;
+-        uniform_value_claim_rows; continuous_learning_claim_rows;
+-        selective_transfer_claim_rows; solve_claim_rows; hardware_claim_rows;
+-        blocked_input_rows; null_input_rows; disqualified_input_rows;
+-        release_hold_repair_retire_rows; exclusion_manifest_rows;
+-        documentation_reconciliation_rows; production_default_unchanged
+-        (true); next_handoff; expected_task_count (12); observed_task_count;
+-        expected_id_order; observed_id_order; v617_capstone_complete_score;
+-        random_seed; reproducibility_checksum; gate_check_summary with failed
+-        check, expected value, and observed value for any blocked verdict;
+-        verifier_is_oracle (false); verdict_class
+-        (positive | circular_positive | null | blocked | disqualified | partial);
+-        honest_verdict with a terminal prefix consistent with verdict_class.
+-
+-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7049_v617_capstone_disposition.py --date {date}
+-    Do NOT push. Do NOT modify scripts/research_conductor.py.
+-- 
+2.55.0
+

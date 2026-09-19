@@ -1,0 +1,142 @@
+From 67d40719b4f99911e5594f7f0ba9fe5b25c9cc85 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 21:56:48 -0400
+Subject: [PATCH 02682/11362] [outer-loop] Repeated-seed grounding rate settles
+ it: base Qwen3.5-9B-MTP 62.5% vs DeepSeek-Flash 25% -- base wins, raise cap
+ to >=2048
+
+Operator: run base vs DeepSeek-Flash 3-5x each + raise the token cap (truncation check). Ran 4 seeds x
+ka59+tn36, MTP on, n_predict 2560:
+  base Qwen3.5-9B-MTP:    ka59 3/4 + tn36 2/4 = 5/8 (62.5%)
+  DeepSeek-V4-Flash-MTP:  ka59 1/4 + tn36 1/4 = 2/8 (25%)
+Base grounds 2.5x more often -- DeepSeek-Flash distill is faster (90% MTP accept, 17.8 tok/s) but clearly
+LESS accurate, writing wrong/verbose rules more often (hit the 2560 cap on 3/8 runs -> not just truncation).
+Cap finding confirmed: base went 1/2 -> 3/4 on ka59 with 2 grounding runs needing >1100 tokens, so the old
+1100 cap WAS truncating real solves -> deploy with n_predict >= ~2048. Final stack: base Qwen3.5-9B-MTP +
+8-bit KV + n_predict>=2048. New driver arc3_layerb_repeat_bench.py (grounding-rate over seeds).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../arc-16gb-model-alternatives-2026-06-18.md | 16 ++++
+ ...b_repeat_bench_deepseek-flash-mtp_mtp.json | 81 +++++++++++++++++++
+ 2 files changed, 97 insertions(+)
+ create mode 100644 results/arc3_layerb_repeat_bench_deepseek-flash-mtp_mtp.json
+
+diff --git a/docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md b/docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md
+index 8e696b60bd..00031c7cf8 100644
+--- a/docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md
++++ b/docs/research-notes/arc-16gb-model-alternatives-2026-06-18.md
+@@ -145,6 +145,22 @@ leaving ~5 GB KV on a 16 GB card (≈78k tokens at q8 KV — still ample). MTP O
+ So MTP costs ~4 GB VRAM for ~1.4–2× speed; with q8 KV both modes leave plenty of context. Keep MTP a deploy
+ flag: on by default (speed), off if a single call needs a very long context.
+ 
++### Repeated-seed confirmation: base beats the DeepSeek-V4-Flash distill 2.5×
++
++Operator asked to (a) test the `Jackrong/Qwen3.5-9B-DeepSeek-V4-Flash-MTP-GGUF` distill for better accuracy
++and (b) raise the token cap in case of truncation. Ran both 4 seeds × ka59+tn36, MTP on, **n_predict 2560**:
++
++| Model (MTP) | ka59 | tn36 | grounding rate | speed |
++|---|---|---|---|---|
++| **base Qwen3.5-9B-MTP** | 3/4 | 2/4 | **5/8 = 62.5%** | 11.5–13 tok/s |
++| DeepSeek-V4-Flash-MTP | 1/4 | 1/4 | **2/8 = 25%** | 17.8 tok/s, 90% MTP-accept |
++
++**Decision holds: base Qwen3.5-9B-MTP.** The DeepSeek-V4-Flash distill is faster (higher MTP acceptance) but
++grounds **2.5× less often** — it writes wrong/verbose rules more frequently (hit the 2560 cap on 3 of 8 runs
++even with the raised cap, so it's not just truncation). The cap finding is real, though: base went 1/2 → 3/4
++on ka59 and **2 grounding runs needed >1100 tokens** — so **set n_predict ≥ ~2048 at deploy** (the earlier
++1100 cap was truncating real solves). Net: base Qwen3.5-9B-MTP + 8-bit KV + n_predict≥2048.
++
+ ## Recommendation
+ 
+ Download and benchmark **Qwen3.5-9B (or Qwen3-14B), Qwen2.5-Coder-14B, and Phi-4** on the exact Layer-B
+diff --git a/results/arc3_layerb_repeat_bench_deepseek-flash-mtp_mtp.json b/results/arc3_layerb_repeat_bench_deepseek-flash-mtp_mtp.json
+new file mode 100644
+index 0000000000..1136696b7a
+--- /dev/null
++++ b/results/arc3_layerb_repeat_bench_deepseek-flash-mtp_mtp.json
+@@ -0,0 +1,81 @@
++{
++  "experiment": "arc3_layerb_repeat_bench",
++  "model_key": "deepseek-flash-mtp",
++  "mtp": true,
++  "repeat": 4,
++  "n_predict": 2560,
++  "per_game": {
++    "ka59": {
++      "grounded_rate": "1/4",
++      "n_grounded": 1,
++      "n_capped": 2,
++      "runs": [
++        {
++          "seed": 0,
++          "grounded": true,
++          "tokens": 352,
++          "capped": false,
++          "tok_per_s": 7.13
++        },
++        {
++          "seed": 1,
++          "grounded": false,
++          "tokens": 2560,
++          "capped": true,
++          "tok_per_s": 9.13
++        },
++        {
++          "seed": 2,
++          "grounded": false,
++          "tokens": 259,
++          "capped": false,
++          "tok_per_s": 5.25
++        },
++        {
++          "seed": 3,
++          "grounded": false,
++          "tokens": 2560,
++          "capped": true,
++          "tok_per_s": 9.8
++        }
++      ]
++    },
++    "tn36": {
++      "grounded_rate": "1/4",
++      "n_grounded": 1,
++      "n_capped": 1,
++      "runs": [
++        {
++          "seed": 0,
++          "grounded": false,
++          "tokens": 200,
++          "capped": false,
++          "tok_per_s": 5.54
++        },
++        {
++          "seed": 1,
++          "grounded": false,
++          "tokens": 2560,
++          "capped": true,
++          "tok_per_s": 9.94
++        },
++        {
++          "seed": 2,
++          "grounded": true,
++          "tokens": 183,
++          "capped": false,
++          "tok_per_s": 7.53
++        },
++        {
++          "seed": 3,
++          "grounded": false,
++          "tokens": 135,
++          "capped": false,
++          "tok_per_s": 7.93
++        }
++      ]
++    }
++  },
++  "honest_verdict": "complete_repeatbench_deepseek_flash_mtp_mtp_True",
++  "inference_substrate": "offline_arc_agi3_deepseek-flash-mtp_mtp_iGPU_repeat4"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

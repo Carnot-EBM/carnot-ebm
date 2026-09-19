@@ -1,0 +1,104 @@
+From e6d38474e66377c0209c1c5608824e1f9a854b51 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 21 Jul 2026 11:46:51 -0400
+Subject: [PATCH 07444/11362] [conductor] Operational retrospective for
+ milestone 2026.07.514
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_514.json | 58 ++++++++++++++++++++++
+ 3 files changed, 65 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_514.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 10b03c410a..0c75059270 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5955,3 +5955,9 @@ The critical path for milestone .250:
+ - theme: synthesis-heavy closeout with bounded compute-runtime attribution
+ - key result: honest operational result -- the 81.7-minute synthesis reconciliation was the longest recorded path, while the only compute-bound top-five entry was the 21.23-minute dual-receipt benchmark; task-conditioned GPU idle is false, and no concurrent multi-model runner miss is established
+ - acceptance: no data available this milestone
++
++### Milestone 2026.07.514
++- exp_range: no data available this milestone
++- theme: synthesis-heavy execution with missing compute-phase attribution
++- key result: bounded operational negative -- the visible runtime leader is the 118.15-minute synthesis-only transition task; because no compute-tagged job appears in the slowest list, compute ordering and causal timing are unavailable, the task-conditioned idle value remains false, and runner selection cannot be evaluated without concurrent-model evidence
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 659c34e91b..79caf33a70 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11637,3 +11637,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-21: Gated on Exp5764 parity: run the final matched Rust/Python 10x-or-retire crossover (✅ Complete) — honest_verdict=complete: final matched-quality CPU release benchmark did not prove the consecutive larger-size 10x lower-bound rule; this allocation-free one-axis PyO3 technique is retired, not future Rust or hardware work; results/experiment_5765_one_axis_final_10x_crossover.json
+ - 2026-07-21: Measure ARC leave-one-game-out generalization and causal interactions on the reachable live path (✅ Complete) — honest_verdict=complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions; results/experiment_5766_arc_loo_component_interaction_audit.json
+ - 2026-07-21: Reconcile .514 gate, proposal, constraint-learning, Rust, ARC, specification, and operations evidence (⚠️ Blocked) — honest_verdict=complete: V514 reconciled: bridges ready, proposal utility not ready, CA credited, Rust 10x retired, ARC composition gate blocked; results/experiment_5768_v514_capstone_reconciliation.json
++- 2026-07-21: Operational retrospective for milestone 2026.07.514 (Complete) -- Work spanned 314.1 minutes for 14 completions, of which 4 were compute-bound. Every member of the bounded slowest list is synthesis-only, with the transition entry at 118.15 minutes; compute-runtime ordering and causal phases therefore remain unobserved. The locked false task-conditioned idle value prevents attributing the monitor snapshot to GPU work, while absent concurrency evidence prevents a runner-selection finding. Priorities are cached and resumable synthesis, embedded phase and GPU event receipts, and manifest-declared model concurrency; estimated_time_savings_pct=0 because the data contains no observed alternative to quantify; results/operational_retro_2026_07_514.json
+diff --git a/results/operational_retro_2026_07_514.json b/results/operational_retro_2026_07_514.json
+new file mode 100644
+index 0000000000..8ab68f6717
+--- /dev/null
++++ b/results/operational_retro_2026_07_514.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.514",
++  "generated_at": "2026-07-21T15:43:01Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 314.1,
++  "experiments_completed": 14,
++  "compute_bound_experiments_count": 4,
++  "slowest_experiments": [
++    {
++      "experiment": "Transition terminal .513 evidence, preserve blocked-versus-null verdicts, and al",
++      "duration_minutes": 118.15,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Ingest post-V514 source deltas with bounded bibliographic receipts",
++      "duration_minutes": 49.82,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5758 scalar parity: profile and optimize the production one-axis Rus",
++      "duration_minutes": 45.27,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Build an exact MPMMine-shaped benchmark for typed constraint acquisition",
++      "duration_minutes": 30.4,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5761 exact corpus: learn typed constraints by solver-certified query",
++      "duration_minutes": 22.63,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Work completed 14 experiments in 314.1 minutes, with 4 classified as compute-bound. The bounded slowest list contains only synthesis work, so it cannot rank the compute-bound experiments or explain their runtime; the locked task-conditioned GPU-idle value is false.",
++  "bottlenecks_identified": [
++    "The bounded slowest set is entirely synthesis-only and is led by the transition-evidence task; the supplied data does not isolate the slow phase within that work.",
++    "Disk-mtime reconstruction supplies aggregate durations but not phase-level timing, leaving the compute-bound ranking and causal attribution unavailable.",
++    "The supplied evidence does not correlate model concurrency, runner selection, or GPU telemetry with individual compute-bound tasks."
++  ],
++  "improvements_suggested": [
++    "Add resumable, content-addressed checkpoints to long synthesis workflows so unchanged transition, ingestion, and reconciliation inputs can be reused.",
++    "Emit per-phase start and stop receipts plus task-correlated GPU utilization in each experiment artifact.",
++    "Declare model concurrency in the task manifest and select DualGPURunner only for concurrent multi-model execution.",
++    "Use dependency-aware scheduling to start ready independent tasks without waiting for unrelated synthesis work."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Make long synthesis workflows incremental and resumable.",
++    "Replace reconstruction-only timing with per-phase, task-correlated timing and GPU receipts.",
++    "Add manifest-driven concurrency and runner selection, with DualGPURunner reserved for concurrent multi-model tasks."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The visible long tail belongs to synthesis-only work, while the bounded evidence omits the compute-bound names, durations, and phase causes needed for a hardware diagnosis. Improving synthesis reuse and task-level observability is justified; stronger GPU or runner claims are not."
++}
+-- 
+2.55.0
+

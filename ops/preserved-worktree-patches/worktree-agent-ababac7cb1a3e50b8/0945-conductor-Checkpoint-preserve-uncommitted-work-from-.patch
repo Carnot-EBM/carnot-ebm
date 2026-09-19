@@ -1,0 +1,43 @@
+From a9b5e57fdfa1426b7d8e291af9d80f8cfeb2a4cf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 8 Jun 2026 22:19:11 -0400
+Subject: [PATCH 00945/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index cc8fb3ce6d..77db30603d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1459021, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-09T02:10:52Z"}
+\ No newline at end of file
++{"pid": 1459021, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-09T02:19:09Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 039bbcb84f..03072108c2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8025,3 +8025,4 @@ c |
+ | 2026-06-08 00:57 UTC | Capstone .363 — the HARDENED verifier scorecard (e | OK | 86 passed in 4.14s |
+ | 2026-06-08 06:20 UTC | Plan milestone 2026.06.364 | OK | 11 tasks proposed |
+ | 2026-06-08 06:23 UTC | Milestone 2026.06.364 activated | OK | 11 tasks queued |
++| 2026-06-09 02:17 UTC | Archive .363 -> activate .364; GREEN-GATE de-risk  | OK | cache hit: 112 passed in 4.91s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4c68df4e63..8f102329c5 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1459021, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-09T02:10:52Z"}
+\ No newline at end of file
++{"pid": 1459021, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-09T02:19:09Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

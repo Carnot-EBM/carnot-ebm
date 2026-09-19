@@ -1,0 +1,84 @@
+From e07fe91da1b3cc666164b51917da49b238df1df6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 09:47:05 -0400
+Subject: [PATCH 07815/11362] [conductor] In-process docs for Exact
+ terminal-boundary handoff from .523 into .524
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md                   |  1 +
+ results/arc_e3/tu93/world_model.py | 52 ------------------------------
+ 2 files changed, 1 insertion(+), 52 deletions(-)
+ delete mode 100644 results/arc_e3/tu93/world_model.py
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 8701cbac19..519511524d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11783,3 +11783,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-24: Changed-taxonomy audit of nuisance controls versus oracle-derived solver telemetry (⚠️ Blocked) — honest_verdict=blocked: science_ready_but_unrelated_global_suite_debt; results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json
+ - 2026-07-24: Operational retrospective for milestone 2026.07.523 — 4 experiments completed in 5.8 minutes, all synthesis-only. The 5.42-minute dated evidence refresh was the sole observed optimization target; with 0 compute-bound tasks, compute-task GPU efficiency and concurrent multi-model DualGPURunner engagement were not applicable. The next tooling focus is incremental source-hash refresh plus phase and fallback-provenance telemetry; estimated_time_savings_pct=0 because the bounded data contains no measured faster-path comparison; results/operational_retro_2026_07_523.json
+ - 2026-07-24: Exact terminal-boundary handoff from .523 into .524 (⚠️ Blocked) — honest_verdict=blocked: exp5890 transition preconditions failed: required_test_command_failed; results/experiment_5890_transition_v524.json
++- 2026-07-24: Exact terminal-boundary handoff from .523 into .524 (✅ Complete) — honest_verdict=complete: archived terminal .523 identities by exact declared deliverables into .524; Exp5879 retirement and science-ready scalar, Exp5880/Exp5882 missing deliverables, Exp5881 gate block, no-delta, and verifier-warn outcomes preserved; next_range_collision_count=0; results/experiment_5890_transition_v524.json
+diff --git a/results/arc_e3/tu93/world_model.py b/results/arc_e3/tu93/world_model.py
+deleted file mode 100644
+index b5de223cdd..0000000000
+--- a/results/arc_e3/tu93/world_model.py
++++ /dev/null
+@@ -1,52 +0,0 @@
+-import numpy as np
+-
+-def engine(grid, action, data):
+-    h, w = grid.shape
+-    new_grid = grid.copy()
+-    
+-    if action == 1:
+-        # Action 1: Move Up
+-        for c in range(w):
+-            for r in range(h - 1, -1, -1):
+-                if new_grid[r, c] == 5:
+-                    new_grid[r, c] = 0
+-                    new_grid[r - 1, c] = 5
+-                    break
+-    elif action == 2:
+-        # Action 2: Move Down
+-        for c in range(w):
+-            for r in range(h):
+-                if new_grid[r, c] == 5:
+-                    new_grid[r, c] = 0
+-                    new_grid[r + 1, c] = 5
+-                    break
+-    elif action == 3:
+-        # Action 3: Move Left
+-        for r in range(h):
+-            for c in range(w - 1, -1, -1):
+-                if new_grid[r, c] == 5:
+-                    new_grid[r, c] = 0
+-                    new_grid[r, c - 1] = 5
+-                    break
+-    elif action == 4:
+-        # Action 4: Move Right
+-        for r in range(h):
+-            for c in range(w):
+-                if new_grid[r, c] == 5:
+-                    new_grid[r, c] = 0
+-                    new_grid[r, c + 1] = 5
+-                    break
+-    elif action == 6:
+-        # Action 6: Click (toggle)
+-        if data:
+-            px, py = data['x'], data['y']
+-            if 0 <= py < h and 0 <= px < w:
+-                new_grid[py, px] = 1 - new_grid[py, px]
+-    elif action == 7:
+-        # Action 7: Toggle all 5s to 0
+-        new_grid[new_grid == 5] = 0
+-    
+-    return new_grid
+-
+-def is_level_complete(grid):
+-    return np.all(grid == 0)
+\ No newline at end of file
+-- 
+2.55.0
+

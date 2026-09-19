@@ -1,0 +1,46 @@
+From 53d9241ff828a7e18bf20a4714c799d3ac24993a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 08:45:02 -0400
+Subject: [PATCH 01126/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20ArcMemo=20SOLVE-transfer=20v3=20(self-learning=20MANDATE;?=
+ =?UTF-8?q?=20extends=20the=20exp3994=202668->17=20win=20to=20NEW=20conten?=
+ =?UTF-8?q?t):=20exp3994=20showed=20concept-memory-seeded=20solving=20cut?=
+ =?UTF-8?q?=20actions=202668->17=20on=20a=20held-out=20solved=20game.=20Th?=
+ =?UTF-8?q?is=20tests=20whether=20the=20SAME=20concept=20memory=20makes=20?=
+ =?UTF-8?q?the=20NEW=20content=20from=20this=20milestone=20cheaper:=20the?=
+ =?UTF-8?q?=20higher=20level=20r11l=20reached=20in=20exp4003=20(e.g.=20L4)?=
+ =?UTF-8?q?=20OR=20the=204th=20game=20from=20exp4004=20(or=20sc25=20re-hel?=
+ =?UTF-8?q?d-out=20if=20neither=20advanced).=20Two=20arms=20at=20equal=20p?=
+ =?UTF-8?q?erception:=20(A)=20cold-start=20(no=20memory),=20(B)=20concept-?=
+ =?UTF-8?q?memory-seeded=20(retrieve+try=20the=20banked=20concepts:=20'sel?=
+ =?UTF-8?q?ect-then-place'=20r11l,=20'permute-set'=20lp85,=20'pattern-matc?=
+ =?UTF-8?q?h-then-navigate'=20sc25=20+=20any=20new=20concept).=20Does=20re?=
+ =?UTF-8?q?trieving=20banked=20concepts=20reduce=20ACTIONS/ATTEMPTS=20to?=
+ =?UTF-8?q?=20solve=20genuinely=20NEW=20content=20vs=20cold-start=3F=20Thi?=
+ =?UTF-8?q?s=20is=20Tier-2=20constraint=20memory=20(research-program.md)?=
+ =?UTF-8?q?=20compounding=20across=20the=20milestone's=20own=20progress=20?=
+ =?UTF-8?q?=E2=80=94=20the=20self-learning=20datum.=20POSITIVE=20CONTROL:?=
+ =?UTF-8?q?=20the=20target=20must=20share=20structure=20with=20>=3D2=20ban?=
+ =?UTF-8?q?ked=20concepts=20(else=20transfer=20is=20impossible=20by=20cons?=
+ =?UTF-8?q?truction;=20FALSE=5FNEGATIVE=5FRISK).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 3042eb35a5..7b4b1b9c54 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8891,3 +8891,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - **Every gemini surface flipped:** (1) systemd drop-in `30-codex-fallback-20260610.conf` reframed as standing default (AGENT_TYPE=codex/gpt-5.5, CODEX_FORCE_EXPERIMENTS=1, GEMINI_FORCE_EXPERIMENTS=0; gemini re-enable now requires explicit operator directive + smoke verification, not auto-recovery); (2) the conductor's planner-prompt AGENT ROUTING section rewritten GEMINI-DEFAULT → CODEX-DEFAULT (emit `agent_type: codex`/`gpt-5.5`; never emit gemini); (3) **routing hole closed**: the CODEX_FORCE coercion now ignores the planner-abused `requires_claude` flag (mirroring the 2026-05-31 GEMINI_FORCE anti-abuse fix — only operator-only `requires_claude_verified`/`requires_gemini_verified` bypass), preventing whole milestones from silently leaking back to claude; (4) standalone audit scripts (`verifier_authenticity_audit.py`, `pages_adversarial_audit.py`) default flipped gemini → claude (Opus is the established audit agent per 2026-06-08; they have no codex caller); (5) CLAUDE.md: new "Codex-Default for Experiments v2 (MANDATORY — 2026-06-10)" supersedes Gemini-Default (preserved as historical per never-prune; Rule Index updated); (6) memory: `feedback_codex_default_v2` supersedes the 2026-05-08 gemini-switch entry.
+ - Planner/retro/adversarial audits stay Claude Opus 4.8 (2026-05-30 + 2026-06-08 directives, unchanged). Known codex risk (2026-05-29 long-prompt hangs) acknowledged in the rule: codex-cli 0.137.0 ran ~150 GAP-4 calls + the full post-flip `.370` stream clean; if hangs recur the fallback is claude for the affected class, never gemini. Conductor restarted with the patched code; process env verified (AGENT_TYPE=codex, CODEX_FORCE=1, GEMINI_FORCE=0).
+ - 2026-06-10: FOURTH ARC-AGI-3 game first-solve via ACTIVE DYNAMICS EXPLORATION (the exp3993 pruner-rejected-unseen-dynamics fix; raises games-solved 3->4): exp3993's verifier-pruner rejected EVERY action because it pruned a dynamics model that was never induced (induced_mechanic=none). FIX THE ORDER: (1) a dedicated ACTIVE-EXPLORATION phase that probes the env with a budget of exploratory actions to OBSERVE transitions; (2) induce the mechanic + goal predicate from the OBSERVED transitions; (3) THEN apply the GAP-4 verifier as an action-pruner on the now-grounded model. Solve level-1 of the next-easiest NON-SPATIAL game (tn36-ef4dde99 / su15-1944f8ab / dc22 — picked empirically by smallest L0 baseline_actions + inducibility). A 4th distinct solved game raises generalization 3->4. Real-env-confirmed; AVOID vc33's PSPACE spatial trap. Report first_solve_at_action + actions_vs_baseline + exploration_actions_used. (⚠️ Research Finding) — honest_verdict=success: fourth_game_solved_su15-1944f8ab_at_action14; results/experiment_4004_fourth_game_explore_first.json
++- 2026-06-10: ArcMemo SOLVE-transfer v3 (self-learning MANDATE; extends the exp3994 2668->17 win to NEW content): exp3994 showed concept-memory-seeded solving cut actions 2668->17 on a held-out solved game. This tests whether the SAME concept memory makes the NEW content from this milestone cheaper: the higher level r11l reached in exp4003 (e.g. L4) OR the 4th game from exp4004 (or sc25 re-held-out if neither advanced). Two arms at equal perception: (A) cold-start (no memory), (B) concept-memory-seeded (retrieve+try the banked concepts: 'select-then-place' r11l, 'permute-set' lp85, 'pattern-match-then-navigate' sc25 + any new concept). Does retrieving banked concepts reduce ACTIONS/ATTEMPTS to solve genuinely NEW content vs cold-start? This is Tier-2 constraint memory (research-program.md) compounding across the milestone's own progress — the self-learning datum. POSITIVE CONTROL: the target must share structure with >=2 banked concepts (else transfer is impossible by construction; FALSE_NEGATIVE_RISK). (⚠️ Research Finding) — honest_verdict=success: arcmemo_solve_transfer_v3_14to10_actions; results/experiment_4005_arcmemo_solve_transfer_v3.json
+-- 
+2.55.0
+

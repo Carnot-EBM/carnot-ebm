@@ -1,0 +1,142 @@
+From ea7b208e083bdf48608d594d75fb1c64b76b43d6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 24 Jul 2026 02:55:53 -0400
+Subject: [PATCH 07766/11362] [conductor] Constraint headroom, surface leakage,
+ and oracle-distinctness audit
+
+Automated research step by research conductor.
+Task ID: exp5869-hardness-surface-headroom-audit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md     |  2 +-
+ ops/dogfood-memory.json                        |  2 +-
+ ...ent_5869_hardness_surface_headroom_audit.py |  3 ++-
+ ...t_5869_hardness_surface_headroom_audit.json | 18 +++++++++---------
+ ...ent_5869_hardness_surface_headroom_audit.py |  5 ++++-
+ 5 files changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 3ade0f71d4..ae999e9612 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -35838,4 +35838,4 @@ separately from exact solver release authority.
+ 
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+-| REQ-VERIFY-5869 | Planned (`python/carnot/experiment_5869_hardness_surface_headroom_audit.py`, `results/experiment_5869_hardness_surface_headroom_audit.json`) | Planned (`tests/python/test_experiment_5869_hardness_surface_headroom_audit.py`) |
++| REQ-VERIFY-5869 | Implemented (`python/carnot/experiment_5869_hardness_surface_headroom_audit.py`, `results/experiment_5869_hardness_surface_headroom_audit.json`) | Implemented (`tests/python/test_experiment_5869_hardness_surface_headroom_audit.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ff44b61b67..b341befa38 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4684,
++  "experiments_checked": 4685,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5869_hardness_surface_headroom_audit.py b/python/carnot/experiment_5869_hardness_surface_headroom_audit.py
+index eb82df3d5c..f8f5e262d3 100644
+--- a/python/carnot/experiment_5869_hardness_surface_headroom_audit.py
++++ b/python/carnot/experiment_5869_hardness_surface_headroom_audit.py
+@@ -134,7 +134,8 @@ DEFAULT_TEST_COMMANDS = (
+     "experiment_5869_hardness_surface_headroom_audit as m; "
+     "assert m.upstream_gate_receipt()['upstream_ready'] is True\"",
+     ".venv/bin/pytest tests/python -q",
+-    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py",
+     ".venv/bin/python scripts/adversarial_verify.py "
+     "results/experiment_5869_hardness_surface_headroom_audit.json",
+     ".venv/bin/python scripts/root_clutter_sweep.py",
+diff --git a/results/experiment_5869_hardness_surface_headroom_audit.json b/results/experiment_5869_hardness_surface_headroom_audit.json
+index 96411fd7ce..1a67e91b81 100644
+--- a/results/experiment_5869_hardness_surface_headroom_audit.json
++++ b/results/experiment_5869_hardness_surface_headroom_audit.json
+@@ -188,7 +188,7 @@
+     "saturation_ceiling_auroc": 0.85,
+     "schema": "carnot.experiment_5869.hardness_surface_headroom_audit.v1.density_length_width_name_and_order_controls"
+   },
+-  "duration_s": 0.124511,
++  "duration_s": 0.131158,
+   "experiment": 5869,
+   "experiment_id": "experiment_5869_hardness_surface_headroom_audit",
+   "field_provenance": {
+@@ -744,9 +744,9 @@
+   "preconditions_checked": {
+     "blocked_reasons": [],
+     "code_hashes": {
+-      "module": "sha256:01dc3577cf90e7d6f4632d8eaf6ec532678c1fcc890afdca715781021a6875e3",
+-      "test": "sha256:8d136d67af92bba440f9744d7b79ad0ca5b9b7672034e43c5c5f139160089a50",
+-      "verification_spec": "sha256:fcee0f800e72e2a3b1fac58aba78c134eadb88c6e3ee2fa108a24c7ebef97ada"
++      "module": "sha256:7caae24983f8f198dfde3a59782944fa1ffb49db40c5e11d36dc6ab6bddc0acd",
++      "test": "sha256:3693a6c433e4feb2637d20a6a2467cc1b353ce2f61d2d2b0814753406c02ce98",
++      "verification_spec": "sha256:33c90809c1ab63a23b3b6d9e360479f5dc1eec8769a2a69c7a177aaec684464c"
+     },
+     "current_verifier_registry_config": {
+       "ok": true,
+@@ -791,12 +791,12 @@
+     },
+     "resources": {
+       "disk": {
+-        "available_mb": 1169309,
++        "available_mb": 1168939,
+         "ok": true,
+         "required_mb": 512
+       },
+       "memory": {
+-        "available_mb": 76604,
++        "available_mb": 76534,
+         "ok": true,
+         "required_mb": 1024
+       }
+@@ -945,7 +945,7 @@
+     },
+     "schema": "carnot.experiment_5869.hardness_surface_headroom_audit.v1.relabel_and_certificate_group_controls"
+   },
+-  "reproducibility_checksum": "sha256:5495db7bdc1cecbafd3d7d884fb9a5d7b8bd48c05dd2b08c59686b474773a381",
++  "reproducibility_checksum": "sha256:6bb872dc1e0ac0635c3e1820ab2a6a4c83016b6bffb2feddf4a741acc742f3f2",
+   "run_date": "20260724",
+   "saturation_and_skip_decision": {
+     "hardness_surface_headroom_ready_score": 0.0,
+@@ -997,7 +997,7 @@
+     ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5869_hardness_surface_headroom_audit.py -m pytest tests/python/test_experiment_5869_hardness_surface_headroom_audit.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5869_hardness_surface_headroom_audit.py --fail-under=100",
+     ".venv/bin/python -c \"from carnot import experiment_5869_hardness_surface_headroom_audit as m; assert m.upstream_gate_receipt()['upstream_ready'] is True\"",
+     ".venv/bin/pytest tests/python -q",
+-    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5869_hardness_surface_headroom_audit.py",
+     ".venv/bin/python scripts/adversarial_verify.py results/experiment_5869_hardness_surface_headroom_audit.json",
+     ".venv/bin/python scripts/root_clutter_sweep.py",
+     ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+@@ -1009,7 +1009,7 @@
+     ".venv/bin/python -c \"from carnot import experiment_5869_hardness_surface_headroom_audit as m; assert m.upstream_gate_receipt()['upstream_ready'] is True\"": 0,
+     ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+     ".venv/bin/python scripts/adversarial_verify.py results/experiment_5869_hardness_surface_headroom_audit.json": 0,
+-    ".venv/bin/python scripts/check_spec_coverage.py": 1,
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5869_hardness_surface_headroom_audit.py": 0,
+     ".venv/bin/python scripts/root_clutter_sweep.py": 0
+   },
+   "upstream_gate_receipt": {
+diff --git a/tests/python/test_experiment_5869_hardness_surface_headroom_audit.py b/tests/python/test_experiment_5869_hardness_surface_headroom_audit.py
+index aea963f2b2..3af5f99f06 100644
+--- a/tests/python/test_experiment_5869_hardness_surface_headroom_audit.py
++++ b/tests/python/test_experiment_5869_hardness_surface_headroom_audit.py
+@@ -38,7 +38,10 @@ GATE_REPLAY_COMMAND = (
+     "assert m.upstream_gate_receipt()['upstream_ready'] is True\""
+ )
+ FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
+-SPEC_COMMAND = ".venv/bin/python scripts/check_spec_coverage.py"
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_5869_hardness_surface_headroom_audit.py"
++)
+ ADVERSARIAL_COMMAND = (
+     ".venv/bin/python scripts/adversarial_verify.py "
+     "results/experiment_5869_hardness_surface_headroom_audit.json"
+-- 
+2.55.0
+

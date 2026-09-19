@@ -1,0 +1,1732 @@
+From 55bc43f609481d931069a87b8496329be4cbe5a0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 13:41:53 -0400
+Subject: [PATCH 01655/11362] [conductor] SOTA-INGESTION SLOT (reserved;
+ bleeding-edge track). Ingest the NEW verifier-vs-self-consistency +
+ reward-guided-generation + ARC-AGI-3 literature mapped onto the .385 moat
+ headline: ARBITER 2605.26172 (present-but-out-voted; internal verifiers
+ measure SC not correctness), ThinkPRM 2504.16828 (generative PRM beats SC, 1%
+ labels), Optimal LLM+PRM Aggregation 2510.13918, RLV 2505.04842 (verification
+ head, 32x efficiency), EntRGi 2602.05000 (entropy-aware reward guidance for
+ discrete diffusion -- the DiffusionGemma template), Executable World Models
+ 2605.05138 (GPT-5.5 15/25 ARC-AGI-3, RHAE efficiency). Emit a
+ SOTA->experiment mapping note; flag the strongest for .386. Cite real arXiv
+ IDs.
+
+Automated research step by research conductor.
+Task ID: exp4162-sota-ingestion-verifier-moat-guidance
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...stion-verifier-moat-guidance-2026-06-13.md | 185 +++++
+ .../capabilities/research-reporting/spec.md   |  73 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...2_sota_ingestion_verifier_moat_guidance.py | 641 ++++++++++++++++++
+ research-references.md                        |  32 +
+ research-studying.md                          |  30 +
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...sota_ingestion_verifier_moat_guidance.json |  67 ++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...2_sota_ingestion_verifier_moat_guidance.py | 470 +++++++++++++
+ 15 files changed, 1515 insertions(+), 17 deletions(-)
+ create mode 100644 docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md
+ create mode 100644 python/carnot/experiment_4162_sota_ingestion_verifier_moat_guidance.py
+ create mode 100644 results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
+ create mode 100644 tests/python/test_experiment_4162_sota_ingestion_verifier_moat_guidance.py
+
+diff --git a/docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md b/docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md
+new file mode 100644
+index 0000000000..4ae65c5d76
+--- /dev/null
++++ b/docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md
+@@ -0,0 +1,185 @@
++# SOTA ingestion 2026-06-13: verifier moat and DiffusionGemma guidance map
++
++**Artifact fields**
++- honest_verdict: `complete: sota_ingestion_verifier_moat_guidance_mapped`
++  - principle: Terminal-prefixed. Records ingestion completed with verifiable citations.
++- methods_mapped:
++  - {name: `ARBITER reasoning-basin verifier-moat anchor`, arxiv_id_or_url: `2605.26172`, url: `https://arxiv.org/abs/2605.26172`}
++  - {name: `ThinkPRM data-efficient process verifier`, arxiv_id_or_url: `2504.16828`, url: `https://arxiv.org/abs/2504.16828`}
++  - {name: `Optimal LLM+PRM aggregation`, arxiv_id_or_url: `2510.13918`, url: `https://arxiv.org/abs/2510.13918`}
++  - {name: `RLV unified reasoner-verifier value head`, arxiv_id_or_url: `2505.04842`, url: `https://arxiv.org/abs/2505.04842`}
++  - {name: `EntRGi entropy-aware reward guidance`, arxiv_id_or_url: `2602.05000`, url: `https://arxiv.org/abs/2602.05000`}
++  - {name: `Executable World Models for ARC-AGI-3`, arxiv_id_or_url: `2605.05138`, url: `https://arxiv.org/abs/2605.05138`}
++  - {name: `ARC-AGI-3 technical report`, arxiv_id_or_url: `2603.24621`, url: `https://arxiv.org/abs/2603.24621`}
++  - principle: Each method/source MUST carry a real arXiv ID/URL (verified); an ingestion note without verifiable citations is treated as fabrication.
++- flagged_for_v386: `entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`
++  - principle: Closes the discover->ingest->plan loop: names the strongest method for the next planner.
++
++## Fresh-pass provenance
++
++Read `research-studying.md` and `research-references.md` filtered to
++verifier-vs-self-consistency, reward-guided-generation, and ARC-AGI-3, plus
++`results/experiment_4152_sota_ingestion_recursive_reasoner_verifier.json` for
++the DiffusionGemma gate provenance. The prior TRM/TTA-TRM/V-STaR/SEDD/CFG
++milestone ingestion is treated as already banked and is not duplicated here.
++
++Reliable-channel helper pass, not `/deep-research`:
++- `python3 scripts/sweep_clusters.py 0 --max-results 8`
++- `python3 scripts/sweep_clusters.py 1 --max-results 8`
++- `python3 scripts/sweep_clusters.py 3 --max-results 8`
++- `python3 scripts/sweep_semscholar.py "verifier self consistency process reward aggregation LLM PRM" --limit 8`
++- `python3 scripts/sweep_semscholar.py "reward guided generation diffusion language model energy guidance" --limit 8`
++- `python3 scripts/sweep_semscholar.py "ARC-AGI-3 executable world models tech report" --limit 8`
++
++The cluster helper emitted the broadened verifier, energy, and world-model
++arXiv API URLs. Semantic Scholar returned `2510.13918` among eight IDs for the
++verifier/self-consistency query and HTTP 429 for the reward-guidance and
++ARC-AGI-3 queries. Low-concurrency WebSearch/WebFetch verified all seven
++requested arXiv anchors: arXiv:2605.26172, arXiv:2504.16828, arXiv:2510.13918,
++arXiv:2505.04842, arXiv:2602.05000, arXiv:2605.05138, and arXiv:2603.24621.
++
++## SOTA -> experiment mapping
++
++## ARBITER reasoning-basin verifier-moat anchor
++
++**Method/source:** ARBITER, arXiv:2605.26172
++(https://arxiv.org/abs/2605.26172), shows sampled reasoning trajectories
++cluster into basins and that majority vote can pick a stable wrong basin even
++when the correct answer is present in the candidate pool.
++
++**Carnot moat implication:** This is the .385 rerank-recovery design anchor:
++the external Carnot verifier must recover correct minority candidates that
++self-consistency misses. The verifier should aggregate with the vote, because
++vote mass is still useful evidence; it should not replace the vote blindly.
++
++**Efficiency implication:** The relevant metric is recovered oracle headroom per
++unit cost. A cheap executable verifier earns its place only if it recovers
++wrong-majority cases at lower cost than LLM-judge rescoring.
++
++**DiffusionGemma guidance implication:** Do not launch guidance just because a
++diffusion substrate exists. First require a positive discrimination gate showing
++the verifier can separate correct minority basins from stable wrong basins.
++
++## ThinkPRM data-efficient process verifier
++
++**Method/source:** Process Reward Models That Think, arXiv:2504.16828
++(https://arxiv.org/abs/2504.16828), trains generative process verifiers with far
++fewer process labels than ordinary discriminative PRMs and reports wins against
++LLM-as-judge and other verifier baselines.
++
++**Carnot moat implication:** It is the positive existence proof that a verifier
++can beat self-consistency when it checks the process instead of only final
++answer agreement. Carnot should score verifier-plus-vote against vote-only,
++LLM-judge, and post-hoc verifier-only baselines.
++
++**Efficiency implication:** ThinkPRM makes the LLM-judge efficiency comparison
++load-bearing: if a verifier is more expensive than judge rescoring, it is not
++the Carnot moat.
++
++**DiffusionGemma guidance implication:** Process-style partial scores are the
++right shape for denoising-time guidance, where the sampler needs intermediate
++signals before a final candidate exists.
++
++## Optimal LLM+PRM aggregation
++
++**Method/source:** Optimal Aggregation of LLM and PRM Signals for Efficient
++Test-Time Scaling, arXiv:2510.13918 (https://arxiv.org/abs/2510.13918), argues
++for calibrated weighted aggregation of LLM and PRM signals and reports better
++test-time scaling efficiency than vanilla weighted vote.
++
++**Carnot moat implication:** The verifier should be a calibrated term in the
++selector, not an unconditional replacement for the vote. The .385 artifact
++should therefore report vote-only, verifier-only, and calibrated
++vote-plus-verifier arms.
++
++**Efficiency implication:** Precomputed aggregation weights are the cheap path:
++spend compute once to calibrate the selector rather than repeatedly increasing
++candidate K or sending each candidate to a large judge.
++
++**DiffusionGemma guidance implication:** The same calibration lesson applies to
++guidance weights. Carnot energy should be swept and mixed with the base
++denoising confidence, with no-guidance and base-guidance controls.
++
++## RLV unified reasoner-verifier value head
++
++**Method/source:** Putting the Value Back in RL, arXiv:2505.04842
++(https://arxiv.org/abs/2505.04842), co-trains LLM reasoners with a generative
++verifier/value capability and reports efficient parallel test-time scaling.
++
++**Carnot moat implication:** RLV supports the reward-graft thesis: a value or
++verifier head can make parallel samples more selectable. The Carnot claim still
++needs the external-verifier-vs-self-consistency head-to-head and a
++vote-plus-verifier aggregation arm.
++
++**Efficiency implication:** The strongest .386 efficiency test is a cheap
++verifier/value head versus LLM-judge rescoring under matched candidate pools
++and matched parallel sampling.
++
++**DiffusionGemma guidance implication:** A learned value head is a plausible
++reward for token-level or trace-level guidance, but only after executable
++labels confirm it tracks validity rather than model preference artifacts.
++
++## EntRGi entropy-aware reward guidance
++
++**Method/source:** EntRGi, arXiv:2602.05000
++(https://arxiv.org/abs/2602.05000), studies reward guidance for discrete
++diffusion language models by interpolating between continuous token relaxations
++and hard tokens according to predictive entropy.
++
++**Carnot moat implication:** EntRGi is not evidence that Carnot has a moat. It
++is the implementation template to use after the moat gate is positive.
++
++**Efficiency implication:** Guidance spends verifier/reward calls during
++denoising rather than after generation. The next run must report cost per
++reward call and compare it to post-hoc rerank and LLM-judge baselines.
++
++**DiffusionGemma guidance implication:** This is the strongest .386 method:
++apply Carnot verifier energy through entropy-aware soft/hard token
++interpolation during DiffusionGemma denoising, gated on positive verifier
++discrimination.
++
++## Executable World Models for ARC-AGI-3
++
++**Method/source:** Executable World Models for ARC-AGI-3, arXiv:2605.05138
++(https://arxiv.org/abs/2605.05138), evaluates coding agents that maintain,
++verify, refactor, and plan through executable Python world models for ARC-AGI-3.
++
++**Carnot moat implication:** The moat can be transition verification and action
++selection, not only answer reranking. Carnot should keep executable validation
++as the external signal that self-consistency lacks.
++
++**Efficiency implication:** Use action efficiency and RHAE-style metrics. A
++verifier that reduces actions-to-progress is valuable even before it increases
++the headline solve count.
++
++**DiffusionGemma guidance implication:** Guided generation can target compact
++world-model edits, transition hypotheses, and plans. The verifier energy should
++favor executable hypotheses that survive held-out transition checks.
++
++## ARC-AGI-3 technical report
++
++**Method/source:** ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence,
++arXiv:2603.24621 (https://arxiv.org/abs/2603.24621), defines an interactive
++benchmark centered on exploration, goal inference, world-model building, and
++human-action-normalized adaptive efficiency.
++
++**Carnot moat implication:** The verifier moat must show up as better adaptive
++progress under real rules, not only as a better static answer selector.
++
++**Efficiency implication:** The official benchmark framing makes efficiency
++load-bearing. Report actions, RHAE-style ratios, and solve progress rather than
++letting more compute masquerade as better intelligence.
++
++**DiffusionGemma guidance implication:** Diffusion guidance should be aimed at
++executable hypotheses and action plans that reduce exploration cost, not just
++more fluent reasoning text.
++
++## Flagged for .386
++
++`entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`
++is the strongest follow-on. It should run only after .385 verifier
++discrimination is positive. If the verifier does not beat or complement
++self-consistency under calibrated vote aggregation, the next planner should
++choose the RLV-style energy-verifier-vs-LLM-judge efficiency head-to-head
++instead of spending on DiffusionGemma guidance.
++
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 44b2682a7a..39ac0f6780 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -20227,6 +20227,79 @@ untouched.
+ |---|---|---|
+ | REQ-REPORT-4152 | Implemented (`python/carnot/experiment_4152_sota_ingestion_recursive_reasoner_verifier.py`, `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-energy-guidance-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4152_sota_ingestion_recursive_reasoner_verifier.py`) |
+ 
++### REQ-REPORT-4162: SOTA Ingestion Mapping For Verifier Moat And Diffusion Guidance
++
++The Exp 4162 workflow SHALL emit a dated SOTA-to-experiment mapping note for
++the `.385` verifier-moat and queued `.386` DiffusionGemma energy-guidance
++handoff. The note SHALL map ARBITER as the verifier-moat/rerank-recovery
++anchor, ThinkPRM and Optimal LLM+PRM Aggregation as process-verifier and
++vote-aggregation anchors, RL^V as the verifier-efficiency and learned-value
++anchor, EntRGi as the discrete diffusion reward-guidance anchor, and the
++ARC-AGI-3 papers as the executable-world-model/action-efficiency anchors. The
++markdown note SHALL be written to
++`docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md` and
++the machine-checkable mapping artifact SHALL be written to
++`results/experiment_4162_sota_ingestion_verifier_moat_guidance.json`.
++
++Before writing the note, the workflow SHALL read the verifier-vs-self-
++consistency, reward-guided-generation, and ARC-AGI-3 sections of
++`research-studying.md` and `research-references.md`, plus the prior
++DiffusionGemma gate provenance in
++`results/experiment_4152_sota_ingestion_recursive_reasoner_verifier.json`.
++The workflow SHALL run `scripts/sweep_clusters.py` and
++`scripts/sweep_semscholar.py` with focused reliable-channel queries, verify the
++seven supplied arXiv anchors with low-concurrency WebSearch/WebFetch, and SHALL
++NOT invoke `/deep-research`.
++
++For each mapped method or source, the note SHALL state the implication for
++three experiment axes: (a) the Carnot moat, including whether an external
++verifier should beat self-consistency and how it aggregates with the vote
++rather than replacing it; (b) the efficiency axis, including cheap verifier
++versus LLM-judge consequences; and (c) the DiffusionGemma energy-guidance
++design. The mapped method set SHALL include at least five verified anchors
++from real arXiv IDs, including ARBITER (`arXiv:2605.26172`), ThinkPRM
++(`arXiv:2504.16828`), Optimal LLM+PRM Aggregation (`arXiv:2510.13918`),
++RL^V (`arXiv:2505.04842`), EntRGi (`arXiv:2602.05000`), Executable World
++Models for ARC-AGI-3 (`arXiv:2605.05138`), and the ARC-AGI-3 tech report
++(`arXiv:2603.24621`). Every method claim SHALL carry a real arXiv ID and URL.
++The workflow SHALL update `research-studying.md` to mark the `.386` candidate
++set as ingested, SHALL update `research-references.md` idempotently without
++duplicating the prior TRM/TTA-TRM/V-STaR/SEDD/CFG milestone ingestion, SHALL
++include `flagged_for_v386`, and SHALL NOT update `ops/changelog.md`,
++`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
++
++The JSON artifact SHALL contain the top-level fields `honest_verdict`,
++`methods_mapped`, `flagged_for_v386`, and `field_principles`.
++`field_principles` SHALL contain exactly the principle annotations for
++`honest_verdict`, `methods_mapped`, and `flagged_for_v386`. `honest_verdict`
++SHALL use a terminal prefix and, on the complete path, start with
++`complete: sota_ingestion_verifier_moat_guidance_mapped`.
++`methods_mapped` SHALL be a list of at least five dicts with exactly `name`,
++`arxiv_id_or_url`, `url`, `carnot_moat_implication`, `efficiency_implication`,
++and `diffusiongemma_guidance_implication`; each `arxiv_id_or_url` SHALL be one
++of the WebFetch-verified arXiv IDs, preventing fabricated or uncited method
++rows. `flagged_for_v386` SHALL be a non-empty concrete roadmap slug naming the
++strongest method for the next planner, with the EntRGi-style
++DiffusionGemma guidance template gated on positive verifier discrimination.
++
++#### SCENARIO-REPORT-4162: Verifier-Moat Mapping Closes The Discover-To-Plan Loop
++
++**Given** `.385` is testing rerank recovery and reward grafts while the
++DiffusionGemma energy-guidance gate remains queued behind positive verifier
++discrimination
++**When** the Exp 4162 SOTA-ingestion workflow runs
++**Then** it writes the required markdown note and JSON mapping artifact, maps
++verified method papers to Carnot-moat, efficiency, and DiffusionGemma-guidance
++implications, updates `research-studying.md` and `research-references.md`
++idempotently, flags the single strongest `.386` follow-up, and leaves conductor
++and reconciliation files untouched.
++
++## Implementation Status (REQ-REPORT-4162)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4162 | Implemented (`python/carnot/experiment_4162_sota_ingestion_verifier_moat_guidance.py`, `docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4162_sota_ingestion_verifier_moat_guidance.py`) |
++
+ ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
+ 
+ The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3b6474df2e..4dae67c352 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 173,
+   "code_violations": 0,
+-  "experiments_checked": 3184,
++  "experiments_checked": 3185,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4162_sota_ingestion_verifier_moat_guidance.py b/python/carnot/experiment_4162_sota_ingestion_verifier_moat_guidance.py
+new file mode 100644
+index 0000000000..aee2460f43
+--- /dev/null
++++ b/python/carnot/experiment_4162_sota_ingestion_verifier_moat_guidance.py
+@@ -0,0 +1,641 @@
++"""Exp 4162 SOTA ingestion for verifier moat and diffusion guidance.
++
++Spec refs: REQ-REPORT-4162, SCENARIO-REPORT-4162.
++
++This module writes a planning artifact, not a benchmark result. It keeps the
++.385 verifier moat separate from the queued DiffusionGemma generator work:
++external verifier evidence must first beat or complement self-consistency under
++matched compute, and only then should the next planner spend on reward guidance
++during discrete diffusion denoising.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++from typing import Any
++
++
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "methods_mapped",
++        "flagged_for_v386",
++        "field_principles",
++    }
++)
++REQUIRED_METHOD_FIELDS = frozenset(
++    {
++        "name",
++        "arxiv_id_or_url",
++        "url",
++        "carnot_moat_implication",
++        "efficiency_implication",
++        "diffusiongemma_guidance_implication",
++    }
++)
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:", "blocked_")
++DEFAULT_HONEST_VERDICT = "complete: sota_ingestion_verifier_moat_guidance_mapped"
++DEFAULT_FLAGGED_FOR_V386 = (
++    "entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386"
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
++    "methods_mapped": (
++        "Each method/source MUST carry a real arXiv ID/URL (verified); "
++        "an ingestion note without verifiable citations is treated as fabrication."
++    ),
++    "flagged_for_v386": (
++        "Closes the discover->ingest->plan loop: names the strongest method "
++        "for the next planner."
++    ),
++}
++
++VERIFIED_ARXIV_IDS = frozenset(
++    {
++        "2605.26172",
++        "2504.16828",
++        "2510.13918",
++        "2505.04842",
++        "2602.05000",
++        "2605.05138",
++        "2603.24621",
++    }
++)
++NOTE_REQUIRED_SOURCE_CITATIONS = frozenset(
++    f"arXiv:{arxiv_id}" for arxiv_id in VERIFIED_ARXIV_IDS
++)
++
++DEFAULT_METHODS_MAPPED = [
++    {
++        "name": "ARBITER reasoning-basin verifier-moat anchor",
++        "arxiv_id_or_url": "2605.26172",
++        "url": "https://arxiv.org/abs/2605.26172",
++        "carnot_moat_implication": (
++            "Majority vote can choose the largest wrong basin, so Carnot should "
++            "measure external verifier recovery as an additive vote-orthogonal "
++            "rerank signal, not as a vote replacement."
++        ),
++        "efficiency_implication": (
++            "Keep the cheap verifier between fixed vote and LLM-judge: recover "
++            "oracle headroom only when it improves accuracy per unit compute."
++        ),
++        "diffusiongemma_guidance_implication": (
++            "Only guide DiffusionGemma after the verifier distinguishes correct "
++            "minority basins from stable wrong basins on the current stack."
++        ),
++    },
++    {
++        "name": "ThinkPRM data-efficient process verifier",
++        "arxiv_id_or_url": "2504.16828",
++        "url": "https://arxiv.org/abs/2504.16828",
++        "carnot_moat_implication": (
++            "Process verification can beat self-consistency when it checks the "
++            "reasoning path; Carnot should compare verifier-plus-vote selection "
++            "against vote and judge baselines."
++        ),
++        "efficiency_implication": (
++            "ThinkPRM sets the LLM-judge comparison bar: verifier compute must "
++            "scale better than asking a large judge to rescore every candidate."
++        ),
++        "diffusiongemma_guidance_implication": (
++            "Use process-style scores as intermediate guidance signals rather "
++            "than waiting until the denoised candidate is complete."
++        ),
++    },
++    {
++        "name": "Optimal LLM+PRM aggregation",
++        "arxiv_id_or_url": "2510.13918",
++        "url": "https://arxiv.org/abs/2510.13918",
++        "carnot_moat_implication": (
++            "The verifier should be calibrated as a weighted aggregation term "
++            "with vote evidence; replacing the vote can throw away useful LLM "
++            "prior information."
++        ),
++        "efficiency_implication": (
++            "Precompute aggregation weights so the verifier improves test-time "
++            "scaling without multiplying candidate-generation cost."
++        ),
++        "diffusiongemma_guidance_implication": (
++            "Expose guidance weights as an ablation knob for mixing base "
++            "denoising confidence with Carnot verifier energy."
++        ),
++    },
++    {
++        "name": "RLV unified reasoner-verifier value head",
++        "arxiv_id_or_url": "2505.04842",
++        "url": "https://arxiv.org/abs/2505.04842",
++        "carnot_moat_implication": (
++            "Training a verifier/value capability alongside reasoning supports "
++            "an external-value rerank arm, but the moat claim still requires a "
++            "vote-plus-verifier head-to-head."
++        ),
++        "efficiency_implication": (
++            "The next efficiency gate should compare a cheap verifier/value head "
++            "against LLM-judge rescoring under matched parallel sampling."
++        ),
++        "diffusiongemma_guidance_implication": (
++            "A learned value head is a plausible reward source for guidance, but "
++            "it must be checked against executable verifier labels before use."
++        ),
++    },
++    {
++        "name": "EntRGi entropy-aware reward guidance",
++        "arxiv_id_or_url": "2602.05000",
++        "url": "https://arxiv.org/abs/2602.05000",
++        "carnot_moat_implication": (
++            "EntRGi is not moat evidence by itself; it becomes relevant only "
++            "after Carnot proves the external reward/verifier is discriminative."
++        ),
++        "efficiency_implication": (
++            "Guidance can spend verifier calls during denoising, so the .386 "
++            "gate must report reward-call cost versus post-hoc judge rescoring."
++        ),
++        "diffusiongemma_guidance_implication": (
++            "Use entropy-aware interpolation between soft token relaxations and "
++            "hard tokens as the template for Carnot energy over DiffusionGemma."
++        ),
++    },
++    {
++        "name": "Executable World Models for ARC-AGI-3",
++        "arxiv_id_or_url": "2605.05138",
++        "url": "https://arxiv.org/abs/2605.05138",
++        "carnot_moat_implication": (
++            "Executable world models make verifier-grounded transitions the "
++            "selection primitive; the moat is action recovery, not just answer "
++            "selection."
++        ),
++        "efficiency_implication": (
++            "Use RHAE/action efficiency as the cost axis when verifier-pruned "
++            "planning replaces brute-force exploration."
++        ),
++        "diffusiongemma_guidance_implication": (
++            "Treat generated world-model edits as candidates that can be guided "
++            "or pruned by executable transition energy before acting."
++        ),
++    },
++    {
++        "name": "ARC-AGI-3 technical report",
++        "arxiv_id_or_url": "2603.24621",
++        "url": "https://arxiv.org/abs/2603.24621",
++        "carnot_moat_implication": (
++            "ARC-AGI-3 makes adaptive efficiency the benchmark target, so the "
++            "verifier moat must improve actions-to-progress under real rules."
++        ),
++        "efficiency_implication": (
++            "Report human-action-normalized efficiency and avoid claims that "
++            "only improve raw solve count by spending more actions."
++        ),
++        "diffusiongemma_guidance_implication": (
++            "Guided generation should target compact executable hypotheses and "
++            "plans, not only fluent natural-language reasoning traces."
++        ),
++    },
++]
++
++NOTE_MARKDOWN = """# SOTA ingestion 2026-06-13: verifier moat and DiffusionGemma guidance map
++
++**Artifact fields**
++- honest_verdict: `complete: sota_ingestion_verifier_moat_guidance_mapped`
++  - principle: Terminal-prefixed. Records ingestion completed with verifiable citations.
++- methods_mapped:
++  - {name: `ARBITER reasoning-basin verifier-moat anchor`, arxiv_id_or_url: `2605.26172`, url: `https://arxiv.org/abs/2605.26172`}
++  - {name: `ThinkPRM data-efficient process verifier`, arxiv_id_or_url: `2504.16828`, url: `https://arxiv.org/abs/2504.16828`}
++  - {name: `Optimal LLM+PRM aggregation`, arxiv_id_or_url: `2510.13918`, url: `https://arxiv.org/abs/2510.13918`}
++  - {name: `RLV unified reasoner-verifier value head`, arxiv_id_or_url: `2505.04842`, url: `https://arxiv.org/abs/2505.04842`}
++  - {name: `EntRGi entropy-aware reward guidance`, arxiv_id_or_url: `2602.05000`, url: `https://arxiv.org/abs/2602.05000`}
++  - {name: `Executable World Models for ARC-AGI-3`, arxiv_id_or_url: `2605.05138`, url: `https://arxiv.org/abs/2605.05138`}
++  - {name: `ARC-AGI-3 technical report`, arxiv_id_or_url: `2603.24621`, url: `https://arxiv.org/abs/2603.24621`}
++  - principle: Each method/source MUST carry a real arXiv ID/URL (verified); an ingestion note without verifiable citations is treated as fabrication.
++- flagged_for_v386: `entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`
++  - principle: Closes the discover->ingest->plan loop: names the strongest method for the next planner.
++
++## Fresh-pass provenance
++
++Read `research-studying.md` and `research-references.md` filtered to
++verifier-vs-self-consistency, reward-guided-generation, and ARC-AGI-3, plus
++`results/experiment_4152_sota_ingestion_recursive_reasoner_verifier.json` for
++the DiffusionGemma gate provenance. The prior TRM/TTA-TRM/V-STaR/SEDD/CFG
++milestone ingestion is treated as already banked and is not duplicated here.
++
++Reliable-channel helper pass, not `/deep-research`:
++- `python3 scripts/sweep_clusters.py 0 --max-results 8`
++- `python3 scripts/sweep_clusters.py 1 --max-results 8`
++- `python3 scripts/sweep_clusters.py 3 --max-results 8`
++- `python3 scripts/sweep_semscholar.py "verifier self consistency process reward aggregation LLM PRM" --limit 8`
++- `python3 scripts/sweep_semscholar.py "reward guided generation diffusion language model energy guidance" --limit 8`
++- `python3 scripts/sweep_semscholar.py "ARC-AGI-3 executable world models tech report" --limit 8`
++
++The cluster helper emitted the broadened verifier, energy, and world-model
++arXiv API URLs. Semantic Scholar returned `2510.13918` among eight IDs for the
++verifier/self-consistency query and HTTP 429 for the reward-guidance and
++ARC-AGI-3 queries. Low-concurrency WebSearch/WebFetch verified all seven
++requested arXiv anchors: arXiv:2605.26172, arXiv:2504.16828, arXiv:2510.13918,
++arXiv:2505.04842, arXiv:2602.05000, arXiv:2605.05138, and arXiv:2603.24621.
++
++## SOTA -> experiment mapping
++
++## ARBITER reasoning-basin verifier-moat anchor
++
++**Method/source:** ARBITER, arXiv:2605.26172
++(https://arxiv.org/abs/2605.26172), shows sampled reasoning trajectories
++cluster into basins and that majority vote can pick a stable wrong basin even
++when the correct answer is present in the candidate pool.
++
++**Carnot moat implication:** This is the .385 rerank-recovery design anchor:
++the external Carnot verifier must recover correct minority candidates that
++self-consistency misses. The verifier should aggregate with the vote, because
++vote mass is still useful evidence; it should not replace the vote blindly.
++
++**Efficiency implication:** The relevant metric is recovered oracle headroom per
++unit cost. A cheap executable verifier earns its place only if it recovers
++wrong-majority cases at lower cost than LLM-judge rescoring.
++
++**DiffusionGemma guidance implication:** Do not launch guidance just because a
++diffusion substrate exists. First require a positive discrimination gate showing
++the verifier can separate correct minority basins from stable wrong basins.
++
++## ThinkPRM data-efficient process verifier
++
++**Method/source:** Process Reward Models That Think, arXiv:2504.16828
++(https://arxiv.org/abs/2504.16828), trains generative process verifiers with far
++fewer process labels than ordinary discriminative PRMs and reports wins against
++LLM-as-judge and other verifier baselines.
++
++**Carnot moat implication:** It is the positive existence proof that a verifier
++can beat self-consistency when it checks the process instead of only final
++answer agreement. Carnot should score verifier-plus-vote against vote-only,
++LLM-judge, and post-hoc verifier-only baselines.
++
++**Efficiency implication:** ThinkPRM makes the LLM-judge efficiency comparison
++load-bearing: if a verifier is more expensive than judge rescoring, it is not
++the Carnot moat.
++
++**DiffusionGemma guidance implication:** Process-style partial scores are the
++right shape for denoising-time guidance, where the sampler needs intermediate
++signals before a final candidate exists.
++
++## Optimal LLM+PRM aggregation
++
++**Method/source:** Optimal Aggregation of LLM and PRM Signals for Efficient
++Test-Time Scaling, arXiv:2510.13918 (https://arxiv.org/abs/2510.13918), argues
++for calibrated weighted aggregation of LLM and PRM signals and reports better
++test-time scaling efficiency than vanilla weighted vote.
++
++**Carnot moat implication:** The verifier should be a calibrated term in the
++selector, not an unconditional replacement for the vote. The .385 artifact
++should therefore report vote-only, verifier-only, and calibrated
++vote-plus-verifier arms.
++
++**Efficiency implication:** Precomputed aggregation weights are the cheap path:
++spend compute once to calibrate the selector rather than repeatedly increasing
++candidate K or sending each candidate to a large judge.
++
++**DiffusionGemma guidance implication:** The same calibration lesson applies to
++guidance weights. Carnot energy should be swept and mixed with the base
++denoising confidence, with no-guidance and base-guidance controls.
++
++## RLV unified reasoner-verifier value head
++
++**Method/source:** Putting the Value Back in RL, arXiv:2505.04842
++(https://arxiv.org/abs/2505.04842), co-trains LLM reasoners with a generative
++verifier/value capability and reports efficient parallel test-time scaling.
++
++**Carnot moat implication:** RLV supports the reward-graft thesis: a value or
++verifier head can make parallel samples more selectable. The Carnot claim still
++needs the external-verifier-vs-self-consistency head-to-head and a
++vote-plus-verifier aggregation arm.
++
++**Efficiency implication:** The strongest .386 efficiency test is a cheap
++verifier/value head versus LLM-judge rescoring under matched candidate pools
++and matched parallel sampling.
++
++**DiffusionGemma guidance implication:** A learned value head is a plausible
++reward for token-level or trace-level guidance, but only after executable
++labels confirm it tracks validity rather than model preference artifacts.
++
++## EntRGi entropy-aware reward guidance
++
++**Method/source:** EntRGi, arXiv:2602.05000
++(https://arxiv.org/abs/2602.05000), studies reward guidance for discrete
++diffusion language models by interpolating between continuous token relaxations
++and hard tokens according to predictive entropy.
++
++**Carnot moat implication:** EntRGi is not evidence that Carnot has a moat. It
++is the implementation template to use after the moat gate is positive.
++
++**Efficiency implication:** Guidance spends verifier/reward calls during
++denoising rather than after generation. The next run must report cost per
++reward call and compare it to post-hoc rerank and LLM-judge baselines.
++
++**DiffusionGemma guidance implication:** This is the strongest .386 method:
++apply Carnot verifier energy through entropy-aware soft/hard token
++interpolation during DiffusionGemma denoising, gated on positive verifier
++discrimination.
++
++## Executable World Models for ARC-AGI-3
++
++**Method/source:** Executable World Models for ARC-AGI-3, arXiv:2605.05138
++(https://arxiv.org/abs/2605.05138), evaluates coding agents that maintain,
++verify, refactor, and plan through executable Python world models for ARC-AGI-3.
++
++**Carnot moat implication:** The moat can be transition verification and action
++selection, not only answer reranking. Carnot should keep executable validation
++as the external signal that self-consistency lacks.
++
++**Efficiency implication:** Use action efficiency and RHAE-style metrics. A
++verifier that reduces actions-to-progress is valuable even before it increases
++the headline solve count.
++
++**DiffusionGemma guidance implication:** Guided generation can target compact
++world-model edits, transition hypotheses, and plans. The verifier energy should
++favor executable hypotheses that survive held-out transition checks.
++
++## ARC-AGI-3 technical report
++
++**Method/source:** ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence,
++arXiv:2603.24621 (https://arxiv.org/abs/2603.24621), defines an interactive
++benchmark centered on exploration, goal inference, world-model building, and
++human-action-normalized adaptive efficiency.
++
++**Carnot moat implication:** The verifier moat must show up as better adaptive
++progress under real rules, not only as a better static answer selector.
++
++**Efficiency implication:** The official benchmark framing makes efficiency
++load-bearing. Report actions, RHAE-style ratios, and solve progress rather than
++letting more compute masquerade as better intelligence.
++
++**DiffusionGemma guidance implication:** Diffusion guidance should be aimed at
++executable hypotheses and action plans that reduce exploration cost, not just
++more fluent reasoning text.
++
++## Flagged for .386
++
++`entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`
++is the strongest follow-on. It should run only after .385 verifier
++discrimination is positive. If the verifier does not beat or complement
++self-consistency under calibrated vote aggregation, the next planner should
++choose the RLV-style energy-verifier-vs-LLM-judge efficiency head-to-head
++instead of spending on DiffusionGemma guidance.
++"""
++
++STUDYING_SECTION = """## 2026-06-13 Exp 4162 - .386 verifier-moat guidance SOTA ingestion ingested
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`.
++
++**Filtered track:** verifier-vs-self-consistency, reward-guided generation,
++and ARC-AGI-3 action efficiency for the `.386` handoff. This ingestion extends
++the `.385` verifier moat and queued DiffusionGemma gate without duplicating the
++prior TRM/TTA-TRM/V-STaR/SEDD/CFG milestone ingestion.
++
++**Seed and fresh-pass candidates marked ingested:**
++- ARBITER, arXiv:2605.26172 - mapped as the wrong-majority/rerank-recovery
++  moat anchor and the reason to aggregate an external verifier with vote.
++- ThinkPRM, arXiv:2504.16828 - mapped as the data-efficient process-verifier
++  existence proof and LLM-judge comparison bar.
++- Optimal LLM+PRM Aggregation, arXiv:2510.13918 - mapped as the calibrated
++  vote-plus-verifier aggregation recipe.
++- RLV, arXiv:2505.04842 - mapped as the cheap verifier/value-head efficiency
++  head-to-head template.
++- EntRGi, arXiv:2602.05000 - mapped as the discrete diffusion reward-guidance
++  template for DiffusionGemma after a positive discrimination gate.
++- Executable World Models for ARC-AGI-3, arXiv:2605.05138, and ARC-AGI-3 tech
++  report, arXiv:2603.24621 - mapped as executable transition verification and
++  action-efficiency anchors.
++
++Flagged for .386: `entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`.
++
++**Bottom line for the .386 roadmap:** run the EntRGi-style DiffusionGemma
++energy-guidance template only after the verifier-discrimination gate is
++positive. If the gate is not positive, run the RLV-style cheap
++energy-verifier-vs-LLM-judge efficiency head-to-head first.
++"""
++
++REFERENCES_SECTION = """## 2026-06-13 Exp 4162 - verifier-moat guidance ingestion note
++
++**Status:** INGESTED. Full note:
++`docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`.
++Artifact: `results/experiment_4162_sota_ingestion_verifier_moat_guidance.json`.
++
++**Scope:** .385 verifier moat plus .386 DiffusionGemma guidance gate. This
++section intentionally does not duplicate the prior TRM/TTA-TRM/V-STaR/SEDD/CFG
++ingestion; those remain banked in Exp 4152.
++
++**Verified sources and mapping summary:**
++- ARBITER, arXiv:2605.26172, https://arxiv.org/abs/2605.26172 - wrong-majority
++  basins justify an external verifier that aggregates with vote rather than
++  replacing it.
++- ThinkPRM, arXiv:2504.16828, https://arxiv.org/abs/2504.16828 - process
++  verification is the data-efficient alternative to LLM-judge rescoring.
++- Optimal LLM+PRM Aggregation, arXiv:2510.13918,
++  https://arxiv.org/abs/2510.13918 - calibrate verifier scores with vote
++  evidence instead of selecting by raw PRM score alone.
++- RLV, arXiv:2505.04842, https://arxiv.org/abs/2505.04842 - use a cheap
++  verifier/value head as the efficiency head-to-head against LLM judges.
++- EntRGi, arXiv:2602.05000, https://arxiv.org/abs/2602.05000 - strongest
++  DiffusionGemma guidance template after positive verifier discrimination.
++- Executable World Models for ARC-AGI-3, arXiv:2605.05138,
++  https://arxiv.org/abs/2605.05138 - executable transition verification maps
++  the moat to action recovery.
++- ARC-AGI-3 technical report, arXiv:2603.24621,
++  https://arxiv.org/abs/2603.24621 - action efficiency and RHAE-style scoring
++  define the ARC-AGI-3 north-star metric.
++
++flagged_for_v386:
++`entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`.
++"""
++
++STUDYING_MARKER = (
++    "## 2026-06-13 Exp 4162 - .386 verifier-moat guidance SOTA ingestion ingested"
++)
++REFERENCES_MARKER = (
++    "## 2026-06-13 Exp 4162 - verifier-moat guidance ingestion note"
++)
++
++
++def build_artifact(
++    *,
++    methods_mapped: Sequence[Mapping[str, str]],
++    flagged_for_v386: str,
++    honest_verdict: str = DEFAULT_HONEST_VERDICT,
++) -> dict[str, object]:
++    """Build and validate the REQ-REPORT-4162 mapping artifact."""
++
++    artifact: dict[str, object] = {
++        "honest_verdict": honest_verdict,
++        "methods_mapped": [dict(method) for method in methods_mapped],
++        "flagged_for_v386": flagged_for_v386,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the exact JSON contract so uncited method rows fail closed."""
++
++    missing = REQUIRED_ARTIFACT_FIELDS.difference(artifact)
++    extra = set(artifact).difference(REQUIRED_ARTIFACT_FIELDS)
++    if missing:
++        raise ValueError(f"artifact missing required fields: {sorted(missing)}")
++    if extra:
++        raise ValueError(f"artifact has unexpected fields: {sorted(extra)}")
++
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must use a terminal prefix")
++
++    field_principles = artifact["field_principles"]
++    if field_principles != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required annotations")
++
++    methods_mapped = artifact["methods_mapped"]
++    if not isinstance(methods_mapped, list) or len(methods_mapped) < 5:
++        raise ValueError("methods_mapped must contain at least five methods")
++
++    seen: set[str] = set()
++    for method in methods_mapped:
++        if not isinstance(method, dict) or set(method) != REQUIRED_METHOD_FIELDS:
++            raise ValueError(
++                "each method must contain exactly name, arxiv_id_or_url, url, "
++                "carnot_moat_implication, efficiency_implication, and "
++                "diffusiongemma_guidance_implication"
++            )
++        source = method["arxiv_id_or_url"]
++        if source not in VERIFIED_ARXIV_IDS:
++            raise ValueError(f"method arxiv_id_or_url must be a verified arxiv ID: {source}")
++        if source in seen:
++            raise ValueError(f"duplicate source: {source}")
++        seen.add(source)
++        expected_url = f"https://arxiv.org/abs/{source}"
++        if method["url"] != expected_url:
++            raise ValueError(f"method url must be {expected_url!r}")
++        for field in REQUIRED_METHOD_FIELDS - {"arxiv_id_or_url", "url"}:
++            value = method[field]
++            if not isinstance(value, str) or not value.strip():
++                raise ValueError(f"method {field} must be a non-empty string")
++
++    flagged = artifact["flagged_for_v386"]
++    if not isinstance(flagged, str) or not flagged.strip():
++        raise ValueError("flagged_for_v386 must be a non-empty string")
++
++
++def validate_markdown_note(markdown: str) -> None:
++    """Check that the paired note maps verified sources to the three axes."""
++
++    required_phrases = (
++        "Fresh-pass provenance",
++        "SOTA -> experiment mapping",
++        "ARBITER reasoning-basin verifier-moat anchor",
++        "ThinkPRM data-efficient process verifier",
++        "Optimal LLM+PRM aggregation",
++        "RLV unified reasoner-verifier value head",
++        "EntRGi entropy-aware reward guidance",
++        "Executable World Models for ARC-AGI-3",
++        "ARC-AGI-3 technical report",
++        "Carnot moat implication",
++        "Efficiency implication",
++        "DiffusionGemma guidance implication",
++        "Flagged for .386",
++    )
++    missing_phrases = [phrase for phrase in required_phrases if phrase not in markdown]
++    if missing_phrases:
++        raise ValueError(f"markdown note missing required sections: {missing_phrases}")
++
++    missing_sources = [
++        source for source in NOTE_REQUIRED_SOURCE_CITATIONS if source not in markdown
++    ]
++    if missing_sources:
++        raise ValueError(
++            f"markdown note missing verified source citations: {missing_sources}"
++        )
++
++
++def write_outputs(
++    *,
++    note_path: Path,
++    artifact_path: Path,
++    studying_path: Path,
++    references_path: Path,
++) -> dict[str, object]:
++    """Write the note, JSON artifact, and idempotent research-file updates."""
++
++    artifact = build_artifact(
++        methods_mapped=DEFAULT_METHODS_MAPPED,
++        flagged_for_v386=DEFAULT_FLAGGED_FOR_V386,
++    )
++    validate_markdown_note(NOTE_MARKDOWN)
++
++    note_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    note_path.write_text(NOTE_MARKDOWN + "\n", encoding="utf-8")
++    artifact_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++    studying_path.write_text(
++        _with_studying_section(studying_path.read_text(encoding="utf-8")),
++        encoding="utf-8",
++    )
++    references_path.write_text(
++        _with_references_section(references_path.read_text(encoding="utf-8")),
++        encoding="utf-8",
++    )
++    return artifact
++
++
++def _replace_or_insert_section(
++    existing: str,
++    *,
++    marker: str,
++    section: str,
++) -> str:
++    if marker not in existing:
++        if existing.startswith("## "):
++            return section + "\n" + existing
++        if "\n## " not in existing:
++            return existing.rstrip() + "\n\n" + section
++        return existing.replace("\n## ", "\n" + section + "\n## ", 1)
++
++    before, after_marker = existing.split(marker, 1)
++    next_section = after_marker.find("\n## ")
++    if next_section == -1:
++        return before + section.rstrip() + "\n"
++    return before + section + after_marker[next_section + 1 :]
++
++
++def _with_studying_section(existing: str) -> str:
++    return _replace_or_insert_section(
++        existing,
++        marker=STUDYING_MARKER,
++        section=STUDYING_SECTION,
++    )
++
++
++def _with_references_section(existing: str) -> str:
++    return _replace_or_insert_section(
++        existing,
++        marker=REFERENCES_MARKER,
++        section=REFERENCES_SECTION,
++    )
++
++
++def main() -> int:
++    repo_root = Path(__file__).resolve().parents[2]
++    artifact = write_outputs(
++        note_path=repo_root
++        / "docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md",
++        artifact_path=repo_root
++        / "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json",
++        studying_path=repo_root / "research-studying.md",
++        references_path=repo_root / "research-references.md",
++    )
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/research-references.md b/research-references.md
+index 9898b1c114..70c51693fd 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -1,3 +1,35 @@
++## 2026-06-13 Exp 4162 - verifier-moat guidance ingestion note
++
++**Status:** INGESTED. Full note:
++`docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`.
++Artifact: `results/experiment_4162_sota_ingestion_verifier_moat_guidance.json`.
++
++**Scope:** .385 verifier moat plus .386 DiffusionGemma guidance gate. This
++section intentionally does not duplicate the prior TRM/TTA-TRM/V-STaR/SEDD/CFG
++ingestion; those remain banked in Exp 4152.
++
++**Verified sources and mapping summary:**
++- ARBITER, arXiv:2605.26172, https://arxiv.org/abs/2605.26172 - wrong-majority
++  basins justify an external verifier that aggregates with vote rather than
++  replacing it.
++- ThinkPRM, arXiv:2504.16828, https://arxiv.org/abs/2504.16828 - process
++  verification is the data-efficient alternative to LLM-judge rescoring.
++- Optimal LLM+PRM Aggregation, arXiv:2510.13918,
++  https://arxiv.org/abs/2510.13918 - calibrate verifier scores with vote
++  evidence instead of selecting by raw PRM score alone.
++- RLV, arXiv:2505.04842, https://arxiv.org/abs/2505.04842 - use a cheap
++  verifier/value head as the efficiency head-to-head against LLM judges.
++- EntRGi, arXiv:2602.05000, https://arxiv.org/abs/2602.05000 - strongest
++  DiffusionGemma guidance template after positive verifier discrimination.
++- Executable World Models for ARC-AGI-3, arXiv:2605.05138,
++  https://arxiv.org/abs/2605.05138 - executable transition verification maps
++  the moat to action recovery.
++- ARC-AGI-3 technical report, arXiv:2603.24621,
++  https://arxiv.org/abs/2603.24621 - action efficiency and RHAE-style scoring
++  define the ARC-AGI-3 north-star metric.
++
++flagged_for_v386:
++`entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`.
+ ## 2026-06-13 Planner (.385) — the verifier-moat literature, framed for the rerank-recovery design
+ 
+ Re-confirmed during .385 planning (all WebFetch-verified, IDs real). Most are already filed below;
+diff --git a/research-studying.md b/research-studying.md
+index a5e3f66314..3d77cdc58e 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -8,6 +8,36 @@ loop) executes the current experiments.
+ **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
+ **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+ 
++## 2026-06-13 Exp 4162 - .386 verifier-moat guidance SOTA ingestion ingested
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`.
++
++**Filtered track:** verifier-vs-self-consistency, reward-guided generation,
++and ARC-AGI-3 action efficiency for the `.386` handoff. This ingestion extends
++the `.385` verifier moat and queued DiffusionGemma gate without duplicating the
++prior TRM/TTA-TRM/V-STaR/SEDD/CFG milestone ingestion.
++
++**Seed and fresh-pass candidates marked ingested:**
++- ARBITER, arXiv:2605.26172 - mapped as the wrong-majority/rerank-recovery
++  moat anchor and the reason to aggregate an external verifier with vote.
++- ThinkPRM, arXiv:2504.16828 - mapped as the data-efficient process-verifier
++  existence proof and LLM-judge comparison bar.
++- Optimal LLM+PRM Aggregation, arXiv:2510.13918 - mapped as the calibrated
++  vote-plus-verifier aggregation recipe.
++- RLV, arXiv:2505.04842 - mapped as the cheap verifier/value-head efficiency
++  head-to-head template.
++- EntRGi, arXiv:2602.05000 - mapped as the discrete diffusion reward-guidance
++  template for DiffusionGemma after a positive discrimination gate.
++- Executable World Models for ARC-AGI-3, arXiv:2605.05138, and ARC-AGI-3 tech
++  report, arXiv:2603.24621 - mapped as executable transition verification and
++  action-efficiency anchors.
++
++Flagged for .386: `entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`.
++
++**Bottom line for the .386 roadmap:** run the EntRGi-style DiffusionGemma
++energy-guidance template only after the verifier-discrimination gate is
++positive. If the gate is not positive, run the RLV-style cheap
++energy-verifier-vs-LLM-judge efficiency head-to-head first.
+ ## 2026-06-13 Exp 4152 - .385 recursive-reasoner/verifier energy-guidance SOTA ingestion ingested
+ 
+ **Status:** INGESTED into `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-energy-guidance-2026-06-13.md`.
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 76e1e2c2ac..a3d41dfafd 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-13T17:24:05.705344Z",
+-  "duration_s": 0.023688077926635742,
++  "run_date": "2026-06-13T17:40:12.661165Z",
++  "duration_s": 0.023886442184448242,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ccf708bbb18e6ebf0b92cb20a6749873b788a37ca36f17005f74456e29bb42c7",
++  "reproducibility_checksum": "129e72d5c96a60cc928e85b53ec7b761690397ab14452c4947ac3aa00caff8b0",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "4b9158a789639c3b85a80fcfe9902208d721c9c6"
++    "adversarial_verify_version": "1bb576eb8d4161a491835c71dae5ccbe7b8ee81c"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index a9687bf66d..b02c6ab615 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-13T17:24:05.736716Z",
+-  "duration_s": 0.025624990463256836,
++  "run_date": "2026-06-13T17:40:12.685855Z",
++  "duration_s": 0.020383119583129883,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "00e0f45d658d9a58628b84b804494156746742952bc14f418f74f9a4097d5506",
++  "reproducibility_checksum": "f41cea4acc07d4a52003d25a1a28393fe893ecab22212ea93f4a92df9f7aff99",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "4b9158a789639c3b85a80fcfe9902208d721c9c6"
++    "adversarial_verify_version": "1bb576eb8d4161a491835c71dae5ccbe7b8ee81c"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 9a64a96c8c..f282b58852 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1419525146484375,
++  "efficiency_gains_ms": 2.122640609741211,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 4580e0d80a..f66b9b652c 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.7902002329938114e-05,
++  "duration_s": 2.8965005185455084e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json b/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
+new file mode 100644
+index 0000000000..6c5d648e8a
+--- /dev/null
++++ b/results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
+@@ -0,0 +1,67 @@
++{
++  "field_principles": {
++    "flagged_for_v386": "Closes the discover->ingest->plan loop: names the strongest method for the next planner.",
++    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
++    "methods_mapped": "Each method/source MUST carry a real arXiv ID/URL (verified); an ingestion note without verifiable citations is treated as fabrication."
++  },
++  "flagged_for_v386": "entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386",
++  "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped",
++  "methods_mapped": [
++    {
++      "arxiv_id_or_url": "2605.26172",
++      "carnot_moat_implication": "Majority vote can choose the largest wrong basin, so Carnot should measure external verifier recovery as an additive vote-orthogonal rerank signal, not as a vote replacement.",
++      "diffusiongemma_guidance_implication": "Only guide DiffusionGemma after the verifier distinguishes correct minority basins from stable wrong basins on the current stack.",
++      "efficiency_implication": "Keep the cheap verifier between fixed vote and LLM-judge: recover oracle headroom only when it improves accuracy per unit compute.",
++      "name": "ARBITER reasoning-basin verifier-moat anchor",
++      "url": "https://arxiv.org/abs/2605.26172"
++    },
++    {
++      "arxiv_id_or_url": "2504.16828",
++      "carnot_moat_implication": "Process verification can beat self-consistency when it checks the reasoning path; Carnot should compare verifier-plus-vote selection against vote and judge baselines.",
++      "diffusiongemma_guidance_implication": "Use process-style scores as intermediate guidance signals rather than waiting until the denoised candidate is complete.",
++      "efficiency_implication": "ThinkPRM sets the LLM-judge comparison bar: verifier compute must scale better than asking a large judge to rescore every candidate.",
++      "name": "ThinkPRM data-efficient process verifier",
++      "url": "https://arxiv.org/abs/2504.16828"
++    },
++    {
++      "arxiv_id_or_url": "2510.13918",
++      "carnot_moat_implication": "The verifier should be calibrated as a weighted aggregation term with vote evidence; replacing the vote can throw away useful LLM prior information.",
++      "diffusiongemma_guidance_implication": "Expose guidance weights as an ablation knob for mixing base denoising confidence with Carnot verifier energy.",
++      "efficiency_implication": "Precompute aggregation weights so the verifier improves test-time scaling without multiplying candidate-generation cost.",
++      "name": "Optimal LLM+PRM aggregation",
++      "url": "https://arxiv.org/abs/2510.13918"
++    },
++    {
++      "arxiv_id_or_url": "2505.04842",
++      "carnot_moat_implication": "Training a verifier/value capability alongside reasoning supports an external-value rerank arm, but the moat claim still requires a vote-plus-verifier head-to-head.",
++      "diffusiongemma_guidance_implication": "A learned value head is a plausible reward source for guidance, but it must be checked against executable verifier labels before use.",
++      "efficiency_implication": "The next efficiency gate should compare a cheap verifier/value head against LLM-judge rescoring under matched parallel sampling.",
++      "name": "RLV unified reasoner-verifier value head",
++      "url": "https://arxiv.org/abs/2505.04842"
++    },
++    {
++      "arxiv_id_or_url": "2602.05000",
++      "carnot_moat_implication": "EntRGi is not moat evidence by itself; it becomes relevant only after Carnot proves the external reward/verifier is discriminative.",
++      "diffusiongemma_guidance_implication": "Use entropy-aware interpolation between soft token relaxations and hard tokens as the template for Carnot energy over DiffusionGemma.",
++      "efficiency_implication": "Guidance can spend verifier calls during denoising, so the .386 gate must report reward-call cost versus post-hoc judge rescoring.",
++      "name": "EntRGi entropy-aware reward guidance",
++      "url": "https://arxiv.org/abs/2602.05000"
++    },
++    {
++      "arxiv_id_or_url": "2605.05138",
++      "carnot_moat_implication": "Executable world models make verifier-grounded transitions the selection primitive; the moat is action recovery, not just answer selection.",
++      "diffusiongemma_guidance_implication": "Treat generated world-model edits as candidates that can be guided or pruned by executable transition energy before acting.",
++      "efficiency_implication": "Use RHAE/action efficiency as the cost axis when verifier-pruned planning replaces brute-force exploration.",
++      "name": "Executable World Models for ARC-AGI-3",
++      "url": "https://arxiv.org/abs/2605.05138"
++    },
++    {
++      "arxiv_id_or_url": "2603.24621",
++      "carnot_moat_implication": "ARC-AGI-3 makes adaptive efficiency the benchmark target, so the verifier moat must improve actions-to-progress under real rules.",
++      "diffusiongemma_guidance_implication": "Guided generation should target compact executable hypotheses and plans, not only fluent natural-language reasoning traces.",
++      "efficiency_implication": "Report human-action-normalized efficiency and avoid claims that only improve raw solve count by spending more actions.",
++      "name": "ARC-AGI-3 technical report",
++      "url": "https://arxiv.org/abs/2603.24621"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 74d2e5f766..f68fc51149 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T17:23:56Z",
+-  "finished_at": "2026-06-13T17:23:56Z",
++  "started_at": "2026-06-13T17:40:03Z",
++  "finished_at": "2026-06-13T17:40:03Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 2653c21da7..9748c8376d 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T17:23:56Z",
+-  "finished_at": "2026-06-13T17:23:56Z",
++  "started_at": "2026-06-13T17:40:03Z",
++  "finished_at": "2026-06-13T17:40:03Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index a0de234504..509c7f3714 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T17:23:56Z",
+-  "finished_at": "2026-06-13T17:23:57Z",
++  "started_at": "2026-06-13T17:40:03Z",
++  "finished_at": "2026-06-13T17:40:03Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4162_sota_ingestion_verifier_moat_guidance.py b/tests/python/test_experiment_4162_sota_ingestion_verifier_moat_guidance.py
+new file mode 100644
+index 0000000000..8d6ce21c42
+--- /dev/null
++++ b/tests/python/test_experiment_4162_sota_ingestion_verifier_moat_guidance.py
+@@ -0,0 +1,470 @@
++"""Tests for REQ-REPORT-4162 / SCENARIO-REPORT-4162."""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4162_sota_ingestion_verifier_moat_guidance as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++NOTE_PATH = Path(
++    "docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md"
++)
++ARTIFACT_PATH = Path(
++    "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json"
++)
++STUDYING_PATH = Path("research-studying.md")
++REFERENCES_PATH = Path("research-references.md")
++
++
++def _valid_methods() -> list[dict[str, str]]:
++    return [
++        {
++            "name": "ARBITER reasoning-basin verifier-moat anchor",
++            "arxiv_id_or_url": "2605.26172",
++            "url": "https://arxiv.org/abs/2605.26172",
++            "carnot_moat_implication": (
++                "Majority vote can choose the largest wrong basin, so Carnot should "
++                "measure external verifier recovery as an additive vote-orthogonal "
++                "rerank signal, not as a vote replacement."
++            ),
++            "efficiency_implication": (
++                "Keep the cheap verifier between fixed vote and LLM-judge: recover "
++                "oracle headroom only when it improves accuracy per unit compute."
++            ),
++            "diffusiongemma_guidance_implication": (
++                "Only guide DiffusionGemma after the verifier distinguishes correct "
++                "minority basins from stable wrong basins on the current stack."
++            ),
++        },
++        {
++            "name": "ThinkPRM data-efficient process verifier",
++            "arxiv_id_or_url": "2504.16828",
++            "url": "https://arxiv.org/abs/2504.16828",
++            "carnot_moat_implication": (
++                "Process verification can beat self-consistency when it checks the "
++                "reasoning path; Carnot should compare verifier-plus-vote selection "
++                "against vote and judge baselines."
++            ),
++            "efficiency_implication": (
++                "ThinkPRM sets the LLM-judge comparison bar: verifier compute must "
++                "scale better than asking a large judge to rescore every candidate."
++            ),
++            "diffusiongemma_guidance_implication": (
++                "Use process-style scores as intermediate guidance signals rather "
++                "than waiting until the denoised candidate is complete."
++            ),
++        },
++        {
++            "name": "Optimal LLM+PRM aggregation",
++            "arxiv_id_or_url": "2510.13918",
++            "url": "https://arxiv.org/abs/2510.13918",
++            "carnot_moat_implication": (
++                "The verifier should be calibrated as a weighted aggregation term "
++                "with vote evidence; replacing the vote can throw away useful LLM "
++                "prior information."
++            ),
++            "efficiency_implication": (
++                "Precompute aggregation weights so the verifier improves test-time "
++                "scaling without multiplying candidate-generation cost."
++            ),
++            "diffusiongemma_guidance_implication": (
++                "Expose guidance weights as an ablation knob for mixing base "
++                "denoising confidence with Carnot verifier energy."
++            ),
++        },
++        {
++            "name": "RLV unified reasoner-verifier value head",
++            "arxiv_id_or_url": "2505.04842",
++            "url": "https://arxiv.org/abs/2505.04842",
++            "carnot_moat_implication": (
++                "Training a verifier/value capability alongside reasoning supports "
++                "an external-value rerank arm, but the moat claim still requires a "
++                "vote-plus-verifier head-to-head."
++            ),
++            "efficiency_implication": (
++                "The next efficiency gate should compare a cheap verifier/value head "
++                "against LLM-judge rescoring under matched parallel sampling."
++            ),
++            "diffusiongemma_guidance_implication": (
++                "A learned value head is a plausible reward source for guidance, but "
++                "it must be checked against executable verifier labels before use."
++            ),
++        },
++        {
++            "name": "EntRGi entropy-aware reward guidance",
++            "arxiv_id_or_url": "2602.05000",
++            "url": "https://arxiv.org/abs/2602.05000",
++            "carnot_moat_implication": (
++                "EntRGi is not moat evidence by itself; it becomes relevant only "
++                "after Carnot proves the external reward/verifier is discriminative."
++            ),
++            "efficiency_implication": (
++                "Guidance can spend verifier calls during denoising, so the .386 "
++                "gate must report reward-call cost versus post-hoc judge rescoring."
++            ),
++            "diffusiongemma_guidance_implication": (
++                "Use entropy-aware interpolation between soft token relaxations and "
++                "hard tokens as the template for Carnot energy over DiffusionGemma."
++            ),
++        },
++        {
++            "name": "Executable World Models for ARC-AGI-3",
++            "arxiv_id_or_url": "2605.05138",
++            "url": "https://arxiv.org/abs/2605.05138",
++            "carnot_moat_implication": (
++                "Executable world models make verifier-grounded transitions the "
++                "selection primitive; the moat is action recovery, not just answer "
++                "selection."
++            ),
++            "efficiency_implication": (
++                "Use RHAE/action efficiency as the cost axis when verifier-pruned "
++                "planning replaces brute-force exploration."
++            ),
++            "diffusiongemma_guidance_implication": (
++                "Treat generated world-model edits as candidates that can be guided "
++                "or pruned by executable transition energy before acting."
++            ),
++        },
++        {
++            "name": "ARC-AGI-3 technical report",
++            "arxiv_id_or_url": "2603.24621",
++            "url": "https://arxiv.org/abs/2603.24621",
++            "carnot_moat_implication": (
++                "ARC-AGI-3 makes adaptive efficiency the benchmark target, so the "
++                "verifier moat must improve actions-to-progress under real rules."
++            ),
++            "efficiency_implication": (
++                "Report human-action-normalized efficiency and avoid claims that "
++                "only improve raw solve count by spending more actions."
++            ),
++            "diffusiongemma_guidance_implication": (
++                "Guided generation should target compact executable hypotheses and "
++                "plans, not only fluent natural-language reasoning traces."
++            ),
++        },
++    ]
++
++
++def _valid_artifact() -> dict[str, object]:
++    return mod.build_artifact(
++        methods_mapped=_valid_methods(),
++        flagged_for_v386="entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386",
++    )
++
++
++def test_req_report_4162_spec_anchor_exists() -> None:
++    """REQ-REPORT-4162: OpenSpec declares verifier-moat guidance ingestion."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4162" in spec
++    assert "SCENARIO-REPORT-4162" in spec
++    assert NOTE_PATH.as_posix() in spec
++    assert ARTIFACT_PATH.as_posix() in spec
++    assert "research-references.md" in spec
++    assert "flagged_for_v386" in spec
++    for arxiv_id in mod.VERIFIED_ARXIV_IDS:
++        assert f"arXiv:{arxiv_id}" in spec
++
++
++def test_build_artifact_has_required_schema_fields_for_req_report_4162() -> None:
++    """REQ-REPORT-4162: artifact exposes the required principle fields."""
++
++    artifact = _valid_artifact()
++
++    assert artifact == {
++        "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped",
++        "methods_mapped": _valid_methods(),
++        "flagged_for_v386": (
++            "entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386"
++        ),
++        "field_principles": {
++            "honest_verdict": (
++                "Terminal-prefixed. Records ingestion completed with verifiable citations."
++            ),
++            "methods_mapped": (
++                "Each method/source MUST carry a real arXiv ID/URL (verified); "
++                "an ingestion note without verifiable citations is treated as fabrication."
++            ),
++            "flagged_for_v386": (
++                "Closes the discover->ingest->plan loop: names the strongest method "
++                "for the next planner."
++            ),
++        },
++    }
++
++
++@pytest.mark.parametrize(
++    ("bad_artifact", "message"),
++    [
++        (_valid_artifact() | {"honest_verdict": "draft"}, "terminal prefix"),
++        (_valid_artifact() | {"field_principles": {"honest_verdict": "loose"}}, "field_principles"),
++        (_valid_artifact() | {"methods_mapped": _valid_methods()[:4]}, "at least five"),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    {
++                        "name": "fake",
++                        "arxiv_id_or_url": "9999.99999",
++                        "url": "https://arxiv.org/abs/9999.99999",
++                        "carnot_moat_implication": "fake",
++                        "efficiency_implication": "fake",
++                        "diffusiongemma_guidance_implication": "fake",
++                    }
++                ]
++                + _valid_methods()[1:]
++            },
++            "verified arxiv ID",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    _valid_methods()[0] | {"url": "https://example.com/2605.26172"}
++                ]
++                + _valid_methods()[1:]
++            },
++            "url",
++        ),
++        (
++            _valid_artifact()
++            | {"methods_mapped": [{"name": "ARBITER", "arxiv_id_or_url": "2605.26172"}] + _valid_methods()[1:]},
++            "exactly",
++        ),
++        (
++            _valid_artifact()
++            | {"methods_mapped": [_valid_methods()[0]] + _valid_methods()[:-1]},
++            "duplicate source",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    _valid_methods()[0] | {"efficiency_implication": ""}
++                ]
++                + _valid_methods()[1:]
++            },
++            "non-empty string",
++        ),
++        (_valid_artifact() | {"flagged_for_v386": ""}, "flagged_for_v386"),
++    ],
++)
++def test_validate_artifact_rejects_schema_violations_for_scenario_report_4162(
++    bad_artifact: dict[str, object], message: str
++) -> None:
++    """SCENARIO-REPORT-4162: invalid mapping artifacts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_validate_artifact_rejects_missing_extra_and_bad_method_rows() -> None:
++    """SCENARIO-REPORT-4162: artifact and method fields are exact."""
++
++    missing_artifact = _valid_artifact()
++    missing_artifact.pop("methods_mapped")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing_artifact)
++
++    extra_artifact = _valid_artifact()
++    extra_artifact["inference_substrate"] = "manual_ingestion"
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_artifact(extra_artifact)
++
++    malformed_methods = _valid_artifact() | {
++        "methods_mapped": ["not-a-dict"] + _valid_methods()[1:]
++    }
++    with pytest.raises(ValueError, match="exactly"):
++        mod.validate_artifact(malformed_methods)
++
++
++def test_validate_markdown_note_checks_scenario_report_4162_sections() -> None:
++    """SCENARIO-REPORT-4162: note maps each source to the three required axes."""
++
++    note = """
++    ## Fresh-pass provenance
++    reliable-channel sweeps and WebFetch verified the sources.
++    ## SOTA -> experiment mapping
++    ## ARBITER reasoning-basin verifier-moat anchor
++    arXiv:2605.26172. Carnot moat implication. Efficiency implication.
++    DiffusionGemma guidance implication.
++    ## ThinkPRM data-efficient process verifier
++    arXiv:2504.16828. Carnot moat implication. Efficiency implication.
++    DiffusionGemma guidance implication.
++    ## Optimal LLM+PRM aggregation
++    arXiv:2510.13918. Carnot moat implication. Efficiency implication.
++    DiffusionGemma guidance implication.
++    ## RLV unified reasoner-verifier value head
++    arXiv:2505.04842. Carnot moat implication. Efficiency implication.
++    DiffusionGemma guidance implication.
++    ## EntRGi entropy-aware reward guidance
++    arXiv:2602.05000. Carnot moat implication. Efficiency implication.
++    DiffusionGemma guidance implication.
++    ## Executable World Models for ARC-AGI-3
++    arXiv:2605.05138. Carnot moat implication. Efficiency implication.
++    DiffusionGemma guidance implication.
++    ## ARC-AGI-3 technical report
++    arXiv:2603.24621. Carnot moat implication. Efficiency implication.
++    DiffusionGemma guidance implication.
++    ## Flagged for .386
++    entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386
++    """
++
++    mod.validate_markdown_note(note)
++
++
++def test_validate_markdown_note_rejects_missing_sources_or_flag() -> None:
++    """SCENARIO-REPORT-4162: note must cite each source and close the loop."""
++
++    with pytest.raises(ValueError, match="Flagged for .386"):
++        mod.validate_markdown_note("## Fresh-pass provenance\narXiv:2605.26172\n")
++
++    with pytest.raises(ValueError, match="verified source citations"):
++        mod.validate_markdown_note(
++            mod.NOTE_MARKDOWN.replace("arXiv:2602.05000", "EntRGi")
++        )
++
++
++def test_write_outputs_updates_files_idempotently_for_req_report_4162(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-4162: writer emits note, artifact, studying, and references."""
++
++    note_path = tmp_path / "note.md"
++    artifact_path = tmp_path / "artifact.json"
++    studying_path = tmp_path / "research-studying.md"
++    references_path = tmp_path / "research-references.md"
++    studying_path.write_text("# Research Studying\n\n## Existing\nBody.\n", encoding="utf-8")
++    references_path.write_text("# Research References\n\n## Existing\nBody.\n", encoding="utf-8")
++
++    artifact = mod.write_outputs(
++        note_path=note_path,
++        artifact_path=artifact_path,
++        studying_path=studying_path,
++        references_path=references_path,
++    )
++    second_artifact = mod.write_outputs(
++        note_path=note_path,
++        artifact_path=artifact_path,
++        studying_path=studying_path,
++        references_path=references_path,
++    )
++
++    mod.validate_artifact(artifact)
++    mod.validate_artifact(second_artifact)
++    mod.validate_markdown_note(note_path.read_text(encoding="utf-8"))
++    saved_artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    studying = studying_path.read_text(encoding="utf-8")
++    references = references_path.read_text(encoding="utf-8")
++
++    assert saved_artifact == artifact
++    assert studying.count("2026-06-13 Exp 4162") == 1
++    assert references.count("2026-06-13 Exp 4162") == 1
++    assert "flagged_for_v386" in references
++    assert "Flagged for .386" in studying
++
++
++def test_section_updates_handle_heading_layouts_for_req_report_4162() -> None:
++    """REQ-REPORT-4162: markdown updates work before or between sections."""
++
++    without_marker = "# Doc\n\n## Existing\nBody.\n"
++    studying_once = mod._with_studying_section(without_marker)
++    references_once = mod._with_references_section(without_marker)
++    starts_with_heading = mod._with_references_section("## Existing\nBody.\n")
++    studying_refreshed = mod._with_studying_section(studying_once)
++    references_refreshed = mod._with_references_section(references_once)
++    marker_at_end = mod._with_references_section(
++        references_once.split("\n## Existing")[0]
++    )
++    no_heading = mod._with_studying_section("# Doc\nOnly body.\n")
++
++    assert studying_once.index("2026-06-13 Exp 4162") < studying_once.index("## Existing")
++    assert references_once.index("2026-06-13 Exp 4162") < references_once.index("## Existing")
++    assert starts_with_heading.startswith("## 2026-06-13 Exp 4162")
++    assert studying_refreshed.count("2026-06-13 Exp 4162") == 1
++    assert references_refreshed.count("2026-06-13 Exp 4162") == 1
++    assert marker_at_end.count("2026-06-13 Exp 4162") == 1
++    assert "## Existing\nBody." in studying_refreshed
++    assert "## Existing\nBody." in references_refreshed
++    assert no_heading.rstrip().endswith(
++        "energy-verifier-vs-LLM-judge efficiency head-to-head first."
++    )
++
++
++def test_main_prints_terminal_verdict_for_req_report_4162(
++    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-REPORT-4162: CLI entry point writes default repo-root outputs."""
++
++    calls: dict[str, Path] = {}
++
++    def fake_write_outputs(
++        *,
++        note_path: Path,
++        artifact_path: Path,
++        studying_path: Path,
++        references_path: Path,
++    ) -> dict[str, object]:
++        calls["note_path"] = note_path
++        calls["artifact_path"] = artifact_path
++        calls["studying_path"] = studying_path
++        calls["references_path"] = references_path
++        return {"honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped"}
++
++    monkeypatch.setattr(mod, "write_outputs", fake_write_outputs)
++
++    assert mod.main() == 0
++
++    captured = capsys.readouterr()
++    assert captured.out.strip() == "complete: sota_ingestion_verifier_moat_guidance_mapped"
++    assert calls["note_path"].as_posix().endswith(NOTE_PATH.as_posix())
++    assert calls["artifact_path"].as_posix().endswith(ARTIFACT_PATH.as_posix())
++    assert calls["studying_path"].as_posix().endswith(STUDYING_PATH.as_posix())
++    assert calls["references_path"].as_posix().endswith(REFERENCES_PATH.as_posix())
++
++
++def test_module_main_guard_exits_zero_for_req_report_4162(
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-4162: direct script execution exits after writing outputs."""
++
++    with pytest.raises(SystemExit) as exc_info:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++
++    assert exc_info.value.code == 0
++    assert capsys.readouterr().out.strip() == (
++        "complete: sota_ingestion_verifier_moat_guidance_mapped"
++    )
++
++
++def test_deliverable_files_validate_against_req_report_4162() -> None:
++    """REQ-REPORT-4162: committed note and JSON artifact satisfy the contract."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++    note = NOTE_PATH.read_text(encoding="utf-8")
++    studying = STUDYING_PATH.read_text(encoding="utf-8")
++    references = REFERENCES_PATH.read_text(encoding="utf-8")
++
++    mod.validate_artifact(artifact)
++    mod.validate_markdown_note(note)
++    assert len(artifact["methods_mapped"]) >= 5
++    assert artifact["flagged_for_v386"] == (
++        "entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386"
++    )
++    assert (
++        "2026-06-13 Exp 4162 - .386 verifier-moat guidance SOTA ingestion ingested"
++        in studying
++    )
++    assert (
++        "Flagged for .386: "
++        "`entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`"
++    ) in studying
++    assert "2026-06-13 Exp 4162" in references
++    assert "flagged_for_v386" in references
+-- 
+2.55.0
+

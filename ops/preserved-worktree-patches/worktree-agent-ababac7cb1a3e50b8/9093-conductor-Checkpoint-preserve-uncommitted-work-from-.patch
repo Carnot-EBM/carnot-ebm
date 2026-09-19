@@ -1,0 +1,70 @@
+From 32cc0ef32df4c25fdbe1c6997bc95088762878cb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 13 Aug 2026 18:54:00 -0400
+Subject: [PATCH 09093/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...rovenance_tiered_factor_memory_protocol.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 27c0218311..bb9d09c2ea 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2053890, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-08-13T22:37:20Z"}
+\ No newline at end of file
++{"pid": 2053890, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-13T22:53:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a1b4dcb805..598fb47bc5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15794,3 +15794,4 @@ code |
+ | 2026-08-13 21:56 UTC | V550 terminal evidence handoff and V551 queue pref | OK | 87 passed, 1 warning in 49.54s |
+ | 2026-08-13 22:16 UTC | V551 dated source delta and executable scope freez | OK | 87 passed, 1 warning in 7.89s |
+ | 2026-08-13 22:35 UTC | Clean V550-only factor evidence boundary and claim | OK | 89 passed, 1 warning in 10.08s |
++| 2026-08-13 22:51 UTC | Provenance-linked typed factor memory and contamin | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f1bf617653..b8bf87d00a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2053890, "iteration": 6, "phase": "iteration_start", "started_at": "2026-08-13T22:37:20Z"}
+\ No newline at end of file
++{"pid": 2053890, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-13T22:53:57Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6407_provenance_tiered_factor_memory_protocol.json b/results/experiment_6407_provenance_tiered_factor_memory_protocol.json
+index 7f05009a19..27c89fc8d1 100644
+--- a/results/experiment_6407_provenance_tiered_factor_memory_protocol.json
++++ b/results/experiment_6407_provenance_tiered_factor_memory_protocol.json
+@@ -8760,5 +8760,18 @@
+     },
+     "schema": "carnot.experiment_6407.provenance_tiered_factor_memory_protocol.v1.upstream_hashes"
+   },
+-  "verifier_is_oracle": true
+-}
++  "verifier_is_oracle": true,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.036034676014 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

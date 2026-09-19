@@ -1,0 +1,86 @@
+From 468ee54a1048bebda5b17481745ff92fc69a1788 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 9 Jul 2026 21:03:19 -0400
+Subject: [PATCH 06503/11362] [conductor] Pre-gate block: Gated logits-energy
+ sidecar on parsed SOTA rows
+
+1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.sota_structured_panel_ready (actual=False == expected=True)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ..._5514_energy_spill_sidecar_diagnostic.json | 33 +++++++++++++++++++
+ 4 files changed, 36 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_5514_energy_spill_sidecar_diagnostic.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 328076ef1c..ab8e5d070e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 421, "phase": "iteration_start", "last_beat": "2026-07-10T00:44:59Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 422, "phase": "iteration_start", "last_beat": "2026-07-10T01:03:19Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 82069bc187..8c11dc2abf 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10683,3 +10683,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-10 00:06 UTC | Transition .499 outcomes into .500 execution conte | OK | 87 passed, 1 warning in 11.04s |
+ | 2026-07-10 00:22 UTC | Execution-time V500 source delta and experiment ma | OK | 124 passed, 1 warning in 9.28s |
+ | 2026-07-10 00:42 UTC | Structured-output positive control for SOTA hard/s | OK | 91 passed, 1 warning in 9.75s |
++| 2026-07-10 01:01 UTC | Gated SOTA GGUF hard/soft structured evidence pane | OK | 87 passed, 1 warning in 8.41s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1dba45b579..3fc0bbf273 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3793580, "iteration": 421, "phase": "iteration_start", "started_at": "2026-07-10T00:44:59Z"}
+\ No newline at end of file
++{"pid": 3793580, "iteration": 422, "phase": "iteration_start", "started_at": "2026-07-10T01:03:19Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5514_energy_spill_sidecar_diagnostic.json b/results/experiment_5514_energy_spill_sidecar_diagnostic.json
+new file mode 100644
+index 0000000000..688eb4c21b
+--- /dev/null
++++ b/results/experiment_5514_energy_spill_sidecar_diagnostic.json
+@@ -0,0 +1,33 @@
++{
++  "experiment": 5514,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-07-10",
++  "started_at": "2026-07-10T01:03:19.393470+00:00",
++  "finished_at": "2026-07-10T01:03:19.393470+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated logits-energy sidecar on parsed SOTA rows",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5513-sota-hard-soft-structured-panel.sota_structured_panel_ready (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp5513-sota-hard-soft-structured-panel",
++      "artifact_field": "sota_structured_panel_ready",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    },
++    {
++      "upstream": "exp5513-sota-hard-soft-structured-panel",
++      "artifact_field": "sota_rows_emitted",
++      "op": ">",
++      "expected": 0,
++      "actual": 1,
++      "passed": true,
++      "reason": "actual=1 > expected=0"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

@@ -1,0 +1,84 @@
+From b17c64b59baf655bdd9cb2f9769f067cd151024c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 16:51:00 -0400
+Subject: [PATCH 03495/11362] [outer-loop] L2-findability diagnostic: L2 is
+ GRADIENT-bound not budget-bound (self-play loop blocked)
+
+Tested whether the value's efficiency (which frees budget) could let exploration find L2. At budget
+12000 from L1-complete on lp85, NEITHER value NOR blind reaches L2. So L2 is gradient-bound, not
+budget-bound -- freeing budget does not help find it. Also: the value's discrimination is WEAK on
+lp85 (on 19.9 ~= far 20.4) -- a matching game (not positional) with only ~6 L1 positives; the
+spatial net's strength was navigation.
+
+CONCLUSION: the self-play deepening loop CANNOT bootstrap -- there is no findable L2 seed win (so no
+L2 data to train an L2 value), and the L1 value does not transfer across the level boundary. The
+verifier-as-Q-head is a strong PER-LEVEL efficiency tool (7.6x routing where the value discriminates
++ has data) but NOT a deepener; the deep/hard levels remain a gradient+data wall. The shippable win
+is per-level routing: upgrade the conductor's linear LearnedVerifier (cannot route) with the
+position-aware SpatialValueNet + tuned weight.
+
+verdict: complete: value_q_head_no_L2_deepening_gradient_bound_not_budget_bound
+---
+ results/experiment_value_q_head_v5.json | 27 ++++---------------------
+ 1 file changed, 4 insertions(+), 23 deletions(-)
+
+diff --git a/results/experiment_value_q_head_v5.json b/results/experiment_value_q_head_v5.json
+index a5949cf453..7a2615f09f 100644
+--- a/results/experiment_value_q_head_v5.json
++++ b/results/experiment_value_q_head_v5.json
+@@ -6,47 +6,28 @@
+   "random_seed": 20260622,
+   "weight": 10.0,
+   "games": [
+-    "ls20",
+     "lp85"
+   ],
+   "n_games_value_cracks_L2": 0,
+   "rows": [
+-    {
+-      "game": "ls20",
+-      "l1_actions": 13,
+-      "discrimination": 40.97,
+-      "value_L2": {
+-        "reached_L2": false,
+-        "level": 1,
+-        "reproduced": false,
+-        "exp": 4000
+-      },
+-      "blind_L2": {
+-        "reached_L2": false,
+-        "level": 1,
+-        "reproduced": false,
+-        "exp": 4000
+-      },
+-      "value_cracks_L2_where_blind_fails": false
+-    },
+     {
+       "game": "lp85",
+       "l1_actions": 5,
+-      "discrimination": 41.54,
++      "discrimination": 0.46,
+       "value_L2": {
+         "reached_L2": false,
+         "level": 1,
+         "reproduced": false,
+-        "exp": 4000
++        "exp": 12000
+       },
+       "blind_L2": {
+         "reached_L2": false,
+         "level": 1,
+         "reproduced": false,
+-        "exp": 4000
++        "exp": 12000
+       },
+       "value_cracks_L2_where_blind_fails": false
+     }
+   ],
+-  "duration_s": 218.2
++  "duration_s": 104.5
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

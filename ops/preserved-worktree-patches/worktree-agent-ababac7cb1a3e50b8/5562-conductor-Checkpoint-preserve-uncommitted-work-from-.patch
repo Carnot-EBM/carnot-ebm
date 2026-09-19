@@ -1,0 +1,43 @@
+From 220eb7de16305f2d7dc4dac9b19c89718c806228 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 3 Jul 2026 13:41:03 -0400
+Subject: [PATCH 05562/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a948e53fb5..b83c0aa66d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3678205, "iteration": 73, "phase": "iteration_start", "last_beat": "2026-07-03T17:08:42Z"}
+\ No newline at end of file
++{"pid": 3678205, "iteration": 74, "phase": "iteration_start", "last_beat": "2026-07-03T17:41:01Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1f1980bbac..5556d3682e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -10234,3 +10234,4 @@ web search: |
+ | 2026-07-03 16:31 UTC | PHASE 0 transition -- archive .475 truth (poison-t | OK | 85 passed, 1 warning in 10.77s |
+ | 2026-07-03 16:58 UTC | PHASE INFRA-CRITICAL 1/2 -- build a standalone pre | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+ | 2026-07-03 17:06 UTC | PHASE INFRA-CRITICAL 1/2 -- build a standalone pre | OK | cache hit: 113 passed, 1 warning in 7.57s |
++| 2026-07-03 17:39 UTC | PHASE INFRA-CRITICAL 2/2 -- MANDATORY overdue prio | OK | 84 passed, 1 warning in 7.60s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 021d14f0ab..9f31b618a4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3678205, "iteration": 73, "phase": "iteration_start", "started_at": "2026-07-03T17:08:42Z"}
+\ No newline at end of file
++{"pid": 3678205, "iteration": 74, "phase": "iteration_start", "started_at": "2026-07-03T17:41:01Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

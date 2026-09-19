@@ -1,0 +1,1280 @@
+From bd641ffe77a00be3f4f8542b9784248f39dd9920 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 14 Jun 2026 04:24:25 -0400
+Subject: [PATCH 01720/11362] =?UTF-8?q?[conductor]=20PHASE=20D2=20?=
+ =?UTF-8?q?=E2=80=94=20VERIFIER-REGISTRY=20+=20GAPS=20HYGIENE=20(reserved?=
+ =?UTF-8?q?=20infra=20slot;=20regression=20guard).=20Bit-exact=20OFFLINE?=
+ =?UTF-8?q?=20re-eval=20reproducing=20the=20canonical=20GAP-4=20ARC-1=20nu?=
+ =?UTF-8?q?mbers=20(vote=200.4516=20->=20gated=200.5806)=20from=20cached?=
+ =?UTF-8?q?=20candidates=20(zero=20codex/GGUF/GPU).=20RECORD=20the=20.387?=
+ =?UTF-8?q?=20state=20into=20ops/verifier=5Fgaps.md:=20the=20headroom-cont?=
+ =?UTF-8?q?rolled=20moat=20verdict=20(exp4177)=20+=20the=20GAP-3=20Stage-1?=
+ =?UTF-8?q?=20result=20(exp4178).=20Keep=20ops/verifier=5Fregistry.yaml=20?=
+ =?UTF-8?q?+=20ops/verifier=5Fgaps.md=20the=20honest=20source=20of=20truth?=
+ =?UTF-8?q?=20(never-prune).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4181-verifier-registry-gaps-hygiene
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  65 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ops/verifier_gaps.md                          |  20 +
+ ops/verifier_registry.yaml                    |  33 ++
+ ...ent_4181_verifier_registry_gaps_hygiene.py |  11 +
+ .../verifier_registry_gaps_hygiene_4181.py    | 496 ++++++++++++++++++
+ ...t_4181_verifier_registry_gaps_hygiene.json | 240 +++++++++
+ ...ent_4181_verifier_registry_gaps_hygiene.py |  21 +
+ ...ent_4181_verifier_registry_gaps_hygiene.py | 275 ++++++++++
+ 9 files changed, 1162 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4181_verifier_registry_gaps_hygiene.py
+ create mode 100644 python/carnot/reporting/verifier_registry_gaps_hygiene_4181.py
+ create mode 100644 results/experiment_4181_verifier_registry_gaps_hygiene.json
+ create mode 100644 results/experiment_4181_verifier_registry_gaps_hygiene.py
+ create mode 100644 tests/python/test_experiment_4181_verifier_registry_gaps_hygiene.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index adfa9a8f56..6831f91f4b 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -13894,6 +13894,71 @@ write path.
+ If the Stage-1 latent dump is absent, then Exp 4178 SHALL write the blocked
+ artifact and stop without attempting to regenerate activations.
+ 
++### REQ-VERIFY-4181: Verifier Registry And Gaps Hygiene For .387 Outcomes
++
++The repository SHALL provide Exp 4181 at
++`python/carnot/experiment_4181_verifier_registry_gaps_hygiene.py` and
++`results/experiment_4181_verifier_registry_gaps_hygiene.py` to replay the
++canonical GAP-4 ARC-1 regression guard from cached candidates and saved
++induced-program outputs, then reconcile `ops/verifier_registry.yaml` and
++`ops/verifier_gaps.md` with the `.387` verifier-relevant truth from
++`results/experiment_4177_decisive_headroom_controlled_moat_test.json`,
++`results/experiment_4178_gap3_stage1_model_native_arc_energy.json`, and the
++headroom-domain source
++`results/experiment_4175_headroom_gate_executable_census.json`. Before running
++the replay, the runner SHALL verify that the cached GAP-4 fixtures, those three
++upstream artifacts, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`
++exist and parse. If any precondition fails, the runner SHALL write a terminal
++artifact with `honest_verdict=blocked_<resource>` and SHALL NOT fabricate
++replay, registry, or gaps updates.
++
++The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
++`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
++including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
++Codex calls, GGUF loading, GPU use, live TRM inference, stable-checkpoint
++writes, or TRM training changes. `regression_guard_passed` SHALL be a bare bool
++and SHALL be true only when those canonical GAP-4 numbers match exactly.
++
++The gaps ledger SHALL append or refresh marked entries for the `.387`
++headroom-controlled moat verdict and GAP-3 Stage-1 result without pruning prior
++history. The moat entry SHALL record `verifier_value_added=true`,
++`headroom_present_domain=code`, `moat_delta_vs_vote.delta=0.18`,
++`moat_delta_vs_vote.ci95=[0.08, 0.3]`, `positive_control_confirmed=true`, and
++that Exp 4177 used deterministic verifier plus replay. The GAP-3 entry SHALL
++record Exp 4178's `pass2_energy_vs_vote=0.0`,
++`headroom_capture_fraction=0.0`, `candidate_auroc=0.893651`,
++`coverage_fraction=1.0`, `all_four_gates_pass=false`, and SHALL state that
++GAP-3 does not advance toward `filled` from Stage 1.
++
++The registry SHALL annotate the `gap4_program_induction_stack` entry with an
++Exp 4181 replay marker and a `.387` moat/GAP-3 hygiene role. The role SHALL
++record that the code-domain headroom-controlled moat was positive while GAP-3
++Stage 1 remained an honest non-advancing negative; it SHALL NOT promote GAP-3
++toward filled.
++
++The terminal artifact SHALL write
++`results/experiment_4181_verifier_registry_gaps_hygiene.json` with
++`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
++bare bool `registry_updated`, `moat_verdict`, `gap3_stage1_result`, and
++`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
++`field_principles` SHALL include:
++`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .387 truth.`;
++`regression_guard_passed` = `Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
++`gaps_updated` = `Lists the verifier_gaps entries touched (moat verdict + GAP-3 Stage-1).`
++
++### SCENARIO-VERIFY-4181: Cached Replay Records .387 Moat And GAP-3 Truth
++
++Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4175,
++Exp 4177, Exp 4178, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`
++are readable, when Exp 4181 runs, then it writes the terminal artifact with
++`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`,
++records the moat verdict as `verifier_value_added=true` on
++`headroom_present_domain=code`, records the GAP-3 Stage-1 result as
++`pass2_energy_vs_vote=0.0` with no advance toward `filled`, annotates the
++registry with the Exp 4181 replay plus `.387` moat/GAP-3 role, writes
++`gaps_updated` containing the moat and GAP-3 gap entries touched, and uses no
++inference substrate other than cached GAP-4 replay and ledger reconciliation.
++
+ ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
+ 
+ The repository SHALL provide Exp 4033 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3c8cde14c9..f4a131ea4b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 174,
+   "code_violations": 0,
+-  "experiments_checked": 3203,
++  "experiments_checked": 3204,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index aa3c84d64f..1116c1906d 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -789,3 +789,23 @@ registry version that closed them when a new verifier captures a previously-open
+ - candidate design: keep DiffusionGemma gated until rerank or RFT A-vs-B label contrast shows value on a faithful stable baseline copy.
+ - priority: high
+ <!-- exp4171-sudoku-decisive-graft:end -->
++
++<!-- exp4181-headroom-controlled-moat:start -->
++### GAP-MOAT-HEADROOM-CONTROLLED-4177: Exp 4181 .387 headroom-controlled moat verdict
++- status: filled_headroom_controlled_verifier_value_added
++- evidence: `results/experiment_4177_decisive_headroom_controlled_moat_test.json` with headroom census `results/experiment_4175_headroom_gate_executable_census.json`; headroom_present_domain=code; verifier_value_added=true; positive_control_confirmed=true; moat_delta_vs_vote_delta=0.18; moat_delta_vs_vote_ci95=[0.08, 0.3]; moat_vs_matched_control_delta=0.18; max_selectable_headroom=0.18; inference_substrate=deterministic_verifier_plus_replay.
++- failure mode: closed for this headroom-controlled code-domain moat test; the verifier-plus-selector arm beats self-consistency vote with a positive CI.
++- missing discriminator: none for the measured .387 code-domain moat verdict; continue to require headroom-positive domains before interpreting moat nulls.
++- candidate design: preserve the objective headroom gate and matched-control arm for future verifier-value tests.
++- priority: medium
++<!-- exp4181-headroom-controlled-moat:end -->
++
++<!-- exp4181-gap3-stage1:start -->
++### GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178: Exp 4181 .387 GAP-3 Stage-1 latent-energy result
++- status: open_stage1_honest_negative_does_not_advance
++- evidence: `results/experiment_4178_gap3_stage1_model_native_arc_energy.json`; selected_energy=model_native_basis_pca_gold_mahalanobis; pass2_energy_vs_vote=0.0; energy_pass2=0.451613; vote_pass2=0.451613; oracle_pass2=0.612903; bootstrap_ci95=[-0.096774, 0.096774]; headroom_capture_fraction=0.0; oracle_minus_vote=0.16129; candidate_auroc=0.893651; coverage_fraction=1.0; all_four_gates_pass=false; advances_toward_filled=false.
++- failure mode: the model-native latent energy ties vote at pass@2 and captures none of the oracle-minus-vote headroom, so Stage 1 is an honest negative rather than a filled GAP-3 discriminator.
++- missing discriminator: a model-native ARC energy that improves pass@2 over vote and captures real headroom without oracle leakage.
++- candidate design: keep GAP-3 open for a stronger generator-independent content energy; do not promote Stage 1 toward filled from this result.
++- priority: high
++<!-- exp4181-gap3-stage1:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index 00d98e217c..d6dfe335d8 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -266,6 +266,12 @@ verifiers:
+     exp4171_arc1_rule_exec_gated_pass2: 0.5806
+     exp4171_arc1_headroom_recovered: 4
+     exp4171_arc1_vote_wins_lost: 0
++    eval_exp_4181: results/experiment_4181_verifier_registry_gaps_hygiene.json
++    exp4181_regression_guard_passed: true
++    exp4181_arc1_rule_exec_vote_pass2: 0.4516
++    exp4181_arc1_rule_exec_gated_pass2: 0.5806
++    exp4181_arc1_headroom_recovered: 4
++    exp4181_arc1_vote_wins_lost: 0
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+@@ -3705,3 +3711,30 @@ verifiers:
+     diffusiongemma_gate_state: *id002
+     flagged_adversarial: true
+     eval_exp_4163: results/experiment_4163_verifier_registry_gaps_hygiene.json
++  registry_roles:
++  - role_id: verifier_moat_gap3_hygiene_4181
++    experiment: results/experiment_4181_verifier_registry_gaps_hygiene.json
++    role: registry_gap_ledger_hygiene_v387
++    status: moat_positive_gap3_stage1_nonadvancing
++    moat_gap_id: GAP-MOAT-HEADROOM-CONTROLLED-4177
++    moat_status: filled_headroom_controlled_verifier_value_added
++    moat_artifact: results/experiment_4177_decisive_headroom_controlled_moat_test.json
++    moat_verifier_value_added: true
++    headroom_present_domain: code
++    moat_delta_vs_vote:
++      arm_a_pass1: 0.84
++      arm_b_sc_vote_pass1: 0.66
++      bootstrap_resamples: 2000
++      ci95:
++      - 0.08
++      - 0.3
++      delta: 0.18
++      n: 50
++      status: measured
++    gap3_gap_id: GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178
++    gap3_stage1_status: open_stage1_honest_negative_does_not_advance
++    gap3_stage1_artifact: results/experiment_4178_gap3_stage1_model_native_arc_energy.json
++    gap3_stage1_pass2_energy_vs_vote: 0.0
++    gap3_stage1_headroom_capture_fraction: 0.0
++    gap3_stage1_advances_toward_filled: false
++    eval_exp_4181: results/experiment_4181_verifier_registry_gaps_hygiene.json
+diff --git a/python/carnot/experiment_4181_verifier_registry_gaps_hygiene.py b/python/carnot/experiment_4181_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..e7f0742af6
+--- /dev/null
++++ b/python/carnot/experiment_4181_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,11 @@
++"""Run Exp 4181 verifier registry/gaps hygiene.
++
++Spec refs: REQ-VERIFY-4181, SCENARIO-VERIFY-4181.
++"""
++
++from __future__ import annotations
++
++from carnot.reporting.verifier_registry_gaps_hygiene_4181 import main
++
++
++__all__ = ["main"]
+diff --git a/python/carnot/reporting/verifier_registry_gaps_hygiene_4181.py b/python/carnot/reporting/verifier_registry_gaps_hygiene_4181.py
+new file mode 100644
+index 0000000000..9e85fa99b4
+--- /dev/null
++++ b/python/carnot/reporting/verifier_registry_gaps_hygiene_4181.py
+@@ -0,0 +1,496 @@
++"""Exp 4181 registry/gaps hygiene for .387 verifier-relevant outcomes.
++
++Spec refs: REQ-VERIFY-4181, SCENARIO-VERIFY-4181.
++
++This runner is a read-only reconciler for model state. It replays the frozen
++GAP-4 ARC-1 guard from cached artifacts and records the .387 moat and GAP-3
++Stage-1 outcomes from already-written result JSON. It does not run Codex, load
++GGUF models, use a GPU, launch TRM training, stop TRM training, or write the
++stable TRM checkpoint.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot.reporting import verifier_registry_and_gaps_hygiene_4051 as base
++from carnot.reporting import verifier_registry_gaps_hygiene_4153 as exp4153
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++INFERENCE_SUBSTRATE = "cached_gap4_replay_and_ledger_reconciliation"
++
++EXP4181_ARTIFACT_PATH = "results/experiment_4181_verifier_registry_gaps_hygiene.json"
++REGISTRY_PATH = base.REGISTRY_PATH
++GAPS_PATH = base.GAPS_PATH
++
++ARC1_POOL_PATH = exp4153.ARC1_POOL_PATH
++ARC1_PROGRAMS_PATH = exp4153.ARC1_PROGRAMS_PATH
++EXP4175_PATH = "results/experiment_4175_headroom_gate_executable_census.json"
++EXP4177_PATH = "results/experiment_4177_decisive_headroom_controlled_moat_test.json"
++EXP4178_PATH = "results/experiment_4178_gap3_stage1_model_native_arc_energy.json"
++
++GAP4_VERIFIER_ID = base.GAP4_VERIFIER_ID
++MOAT_GAP_ID = "GAP-MOAT-HEADROOM-CONTROLLED-4177"
++GAP3_STAGE1_GAP_ID = "GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178"
++V387_ROLE_ID = "verifier_moat_gap3_hygiene_4181"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "regression_guard_passed",
++    "gaps_updated",
++    "registry_updated",
++    "moat_verdict",
++    "gap3_stage1_result",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .387 truth.",
++    "regression_guard_passed": (
++        "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent "
++        "verifier regression."
++    ),
++    "gaps_updated": "Lists the verifier_gaps entries touched (moat verdict + GAP-3 Stage-1).",
++}
++
++
++def _numeric_or_none(value: Any) -> float | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, (int, float)):
++        return float(value)
++    return None
++
++
++def _round4(value: float | None) -> float | None:
++    if value is None:
++        return None
++    return round(float(value), 4)
++
++
++def _check_json_resource(repo_root: Path, resource: str, rel_path: str) -> dict[str, Any]:
++    path = repo_root / rel_path
++    if not path.exists():
++        return {"resource": resource, "available": False, "detail": f"missing: {rel_path}"}
++    try:
++        loaded = base._load_json(path)
++    except Exception as exc:  # pragma: no cover - parse exception type varies by Python version.
++        return {"resource": resource, "available": False, "detail": f"parse_error: {exc}"}
++    if not isinstance(loaded, dict):  # pragma: no cover - guards corrupted upstream artifacts.
++        return {"resource": resource, "available": False, "detail": "not_json_object"}
++    return {"resource": resource, "available": True, "detail": rel_path}
++
++
++def check_preconditions(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4181: verify cached fixtures, upstream artifacts, and ledgers."""
++    base_preflight = exp4153.check_preconditions(repo_root)
++    checks = list(base_preflight["checks"]) + [
++        _check_json_resource(repo_root, "exp4175_headroom_census", EXP4175_PATH),
++        _check_json_resource(repo_root, "exp4177_headroom_controlled_moat", EXP4177_PATH),
++        _check_json_resource(repo_root, "exp4178_gap3_stage1", EXP4178_PATH),
++    ]
++    blocked = next((check["resource"] for check in checks if not check["available"]), None)
++    return {"ok": blocked is None, "blocked_resource": blocked, "checks": checks}
++
++
++def replay_gap4_arc1(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """SCENARIO-VERIFY-4181: replay GAP-4 ARC-1 from cached artifacts only."""
++    return exp4153.replay_gap4_arc1(repo_root)
++
++
++def _moat_status(outcome: dict[str, Any]) -> str:
++    if bool(outcome.get("verifier_value_added")):
++        return "filled_headroom_controlled_verifier_value_added"
++    return "open_headroom_controlled_no_value_added"
++
++
++def classify_moat_verdict(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4181: summarize the Exp 4177 headroom-controlled moat verdict."""
++    census = base._load_json(repo_root / EXP4175_PATH)
++    artifact = base._load_json(repo_root / EXP4177_PATH)
++    headroom_domain = str(census.get("headroom_present_domain") or artifact.get("domain") or "")
++    per_domain = census.get("per_domain_headroom", {})
++    domain_headroom = per_domain.get(headroom_domain, {}) if isinstance(per_domain, dict) else {}
++    max_headroom = _numeric_or_none(census.get("max_selectable_headroom"))
++    outcome = {
++        "gap_id": MOAT_GAP_ID,
++        "status": _moat_status(artifact),
++        "artifact_path": EXP4177_PATH,
++        "headroom_census_path": EXP4175_PATH,
++        "source_artifacts": [EXP4175_PATH, EXP4177_PATH],
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++        "headroom_present_domain": headroom_domain,
++        "domain": str(artifact.get("domain", headroom_domain)),
++        "verifier_value_added": artifact.get("verifier_value_added") is True,
++        "positive_control_confirmed": artifact.get("positive_control_confirmed") is True,
++        "moat_delta_vs_vote": dict(artifact.get("moat_delta_vs_vote", {})),
++        "moat_vs_matched_control": dict(artifact.get("moat_vs_matched_control", {})),
++        "accuracy_cost_pareto": dict(artifact.get("accuracy_cost_pareto", {})),
++        "positive_control": dict(artifact.get("positive_control", {})),
++        "max_selectable_headroom": max_headroom,
++        "max_selectable_headroom_rounded": _round4(max_headroom),
++        "domain_headroom": dict(domain_headroom) if isinstance(domain_headroom, dict) else {},
++        "inference_substrate": str(artifact.get("inference_substrate", "")),
++        "candidate_pool_source": str(artifact.get("candidate_pool_source", "")),
++        "reproducibility_checksum": str(artifact.get("reproducibility_checksum", "")),
++        "missing_discriminator": "headroom_controlled_verifier_value_added_moat",
++    }
++    outcome["status"] = _moat_status(outcome)
++    return outcome
++
++
++def _gap3_stage1_status(outcome: dict[str, Any]) -> str:
++    if bool(outcome.get("advances_toward_filled")):
++        return "building_stage1_advances_toward_filled"
++    return "open_stage1_honest_negative_does_not_advance"
++
++
++def classify_gap3_stage1_result(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """REQ-VERIFY-4181: summarize Exp 4178 without promoting an honest negative."""
++    artifact = base._load_json(repo_root / EXP4178_PATH)
++    pass2_delta = _numeric_or_none(artifact.get("pass2_energy_vs_vote"))
++    headroom_capture = _numeric_or_none(artifact.get("headroom_capture_fraction"))
++    advances = (
++        artifact.get("all_four_gates_pass") is True
++        and pass2_delta is not None
++        and pass2_delta > 0.0
++        and headroom_capture is not None
++        and headroom_capture > 0.0
++    )
++    outcome = {
++        "gap_id": GAP3_STAGE1_GAP_ID,
++        "status": "building_stage1_advances_toward_filled" if advances else "open_stage1_honest_negative_does_not_advance",
++        "artifact_path": EXP4178_PATH,
++        "source_artifacts": [EXP4178_PATH],
++        "honest_verdict": str(artifact.get("honest_verdict", "")),
++        "selected_energy": str(artifact.get("selected_energy", "")),
++        "pass2_energy_vs_vote": pass2_delta,
++        "pass2_energy_vs_vote_detail": dict(artifact.get("pass2_energy_vs_vote_detail", {})),
++        "headroom_capture_fraction": headroom_capture,
++        "headroom_capture_detail": dict(artifact.get("headroom_capture_detail", {})),
++        "candidate_auroc": _numeric_or_none(artifact.get("candidate_auroc")),
++        "candidate_auroc_detail": dict(artifact.get("candidate_auroc_detail", {})),
++        "coverage_fraction": _numeric_or_none(artifact.get("coverage_fraction")),
++        "all_four_gates_pass": artifact.get("all_four_gates_pass") is True,
++        "gates": dict(artifact.get("gates", {})),
++        "adversarial_checks": dict(artifact.get("adversarial_checks", {})),
++        "advances_toward_filled": advances,
++        "inference_substrate": str(artifact.get("inference_substrate", "")),
++        "n_tasks": artifact.get("n_tasks"),
++        "n_candidates": artifact.get("n_candidates"),
++        "reproducibility_checksum": str(artifact.get("reproducibility_checksum", "")),
++        "missing_discriminator": "gap3_model_native_energy_beyond_vote",
++    }
++    outcome["status"] = _gap3_stage1_status(outcome)
++    return outcome
++
++
++def ensure_ledgers_record_outcomes(
++    registry: dict[str, Any],
++    gaps_text: str,
++    offline_replay: dict[str, Any],
++    moat_verdict: dict[str, Any],
++    gap3_stage1_result: dict[str, Any],
++) -> tuple[dict[str, Any], str, dict[str, Any]]:
++    """Return registry and gaps text with the .387 outcomes represented."""
++    updated_registry = deepcopy(registry)
++    _ensure_gap4_eval(updated_registry, offline_replay)
++    _ensure_v387_role(updated_registry, moat_verdict, gap3_stage1_result)
++
++    updated_gaps = base._replace_marked_block(
++        gaps_text,
++        "exp4181-headroom-controlled-moat",
++        _moat_gap_block(moat_verdict),
++    )
++    updated_gaps = base._replace_marked_block(
++        updated_gaps,
++        "exp4181-gap3-stage1",
++        _gap3_stage1_gap_block(gap3_stage1_result),
++    )
++    touched = [gap_id for gap_id in (MOAT_GAP_ID, GAP3_STAGE1_GAP_ID) if gap_id in updated_gaps]
++    return (
++        updated_registry,
++        updated_gaps,
++        {
++            "registry_updated": _registry_contains_outcomes(updated_registry),
++            "gaps_updated": touched,
++            "moat_recorded": MOAT_GAP_ID in touched,
++            "gap3_stage1_recorded": GAP3_STAGE1_GAP_ID in touched,
++        },
++    )
++
++
++def _ensure_gap4_eval(registry: dict[str, Any], offline_replay: dict[str, Any]) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:  # pragma: no cover - real/minimal registries include the GAP-4 entry.
++        entry = {"verifier_id": GAP4_VERIFIER_ID, "domain": "arc_agi2_grid", "eval": {}}
++        registry.setdefault("verifiers", []).append(entry)
++    arc1 = offline_replay.get("arc1_rule_exec", {})
++    entry.setdefault("eval", {}).update(
++        {
++            "eval_exp_4181": EXP4181_ARTIFACT_PATH,
++            "exp4181_regression_guard_passed": bool(
++                offline_replay.get("regression_guard_passed")
++            ),
++            "exp4181_arc1_rule_exec_vote_pass2": arc1.get("vote_pass2"),
++            "exp4181_arc1_rule_exec_gated_pass2": arc1.get("gated_pass2"),
++            "exp4181_arc1_headroom_recovered": arc1.get("headroom_recovered"),
++            "exp4181_arc1_vote_wins_lost": arc1.get("vote_wins_lost"),
++        }
++    )
++
++
++def _ensure_v387_role(
++    registry: dict[str, Any],
++    moat_verdict: dict[str, Any],
++    gap3_stage1_result: dict[str, Any],
++) -> None:
++    entry = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    if entry is None:  # pragma: no cover - guarded by _ensure_gap4_eval.
++        return
++    role = {
++        "role_id": V387_ROLE_ID,
++        "experiment": EXP4181_ARTIFACT_PATH,
++        "role": "registry_gap_ledger_hygiene_v387",
++        "status": "moat_positive_gap3_stage1_nonadvancing",
++        "moat_gap_id": moat_verdict.get("gap_id"),
++        "moat_status": moat_verdict.get("status"),
++        "moat_artifact": EXP4177_PATH,
++        "moat_verifier_value_added": bool(moat_verdict.get("verifier_value_added")),
++        "headroom_present_domain": moat_verdict.get("headroom_present_domain"),
++        "moat_delta_vs_vote": moat_verdict.get("moat_delta_vs_vote", {}),
++        "gap3_gap_id": gap3_stage1_result.get("gap_id"),
++        "gap3_stage1_status": gap3_stage1_result.get("status"),
++        "gap3_stage1_artifact": EXP4178_PATH,
++        "gap3_stage1_pass2_energy_vs_vote": gap3_stage1_result.get(
++            "pass2_energy_vs_vote"
++        ),
++        "gap3_stage1_headroom_capture_fraction": gap3_stage1_result.get(
++            "headroom_capture_fraction"
++        ),
++        "gap3_stage1_advances_toward_filled": bool(
++            gap3_stage1_result.get("advances_toward_filled")
++        ),
++        "eval_exp_4181": EXP4181_ARTIFACT_PATH,
++    }
++    old_roles = list(entry.get("registry_roles", []))
++    entry["registry_roles"] = [
++        old for old in old_roles if old.get("role_id") != V387_ROLE_ID
++    ] + [role]
++
++
++def _moat_gap_block(outcome: dict[str, Any]) -> str:
++    delta = outcome.get("moat_delta_vs_vote", {})
++    control = outcome.get("moat_vs_matched_control", {})
++    return (
++        f"### {MOAT_GAP_ID}: Exp 4181 .387 headroom-controlled moat verdict\n"
++        f"- status: {outcome['status']}\n"
++        f"- evidence: `{EXP4177_PATH}` with headroom census `{EXP4175_PATH}`; "
++        f"headroom_present_domain={outcome.get('headroom_present_domain')}; "
++        f"verifier_value_added={str(bool(outcome.get('verifier_value_added'))).lower()}; "
++        f"positive_control_confirmed={str(bool(outcome.get('positive_control_confirmed'))).lower()}; "
++        f"moat_delta_vs_vote_delta={delta.get('delta')}; "
++        f"moat_delta_vs_vote_ci95={delta.get('ci95')}; "
++        f"moat_vs_matched_control_delta={control.get('delta')}; "
++        f"max_selectable_headroom={outcome.get('max_selectable_headroom_rounded')}; "
++        f"inference_substrate={outcome.get('inference_substrate')}.\n"
++        "- failure mode: closed for this headroom-controlled code-domain moat test; "
++        "the verifier-plus-selector arm beats self-consistency vote with a positive CI.\n"
++        "- missing discriminator: none for the measured .387 code-domain moat verdict; "
++        "continue to require headroom-positive domains before interpreting moat nulls.\n"
++        "- candidate design: preserve the objective headroom gate and matched-control arm "
++        "for future verifier-value tests.\n"
++        "- priority: medium\n"
++    )
++
++
++def _gap3_stage1_gap_block(outcome: dict[str, Any]) -> str:
++    pass2 = outcome.get("pass2_energy_vs_vote_detail", {})
++    headroom = outcome.get("headroom_capture_detail", {})
++    return (
++        f"### {GAP3_STAGE1_GAP_ID}: Exp 4181 .387 GAP-3 Stage-1 latent-energy result\n"
++        f"- status: {outcome['status']}\n"
++        f"- evidence: `{EXP4178_PATH}`; "
++        f"selected_energy={outcome.get('selected_energy')}; "
++        f"pass2_energy_vs_vote={outcome.get('pass2_energy_vs_vote')}; "
++        f"energy_pass2={pass2.get('energy_pass2')}; "
++        f"vote_pass2={pass2.get('vote_pass2')}; "
++        f"oracle_pass2={pass2.get('oracle_pass2')}; "
++        f"bootstrap_ci95={pass2.get('bootstrap_ci95')}; "
++        f"headroom_capture_fraction={outcome.get('headroom_capture_fraction')}; "
++        f"oracle_minus_vote={headroom.get('oracle_minus_vote')}; "
++        f"candidate_auroc={outcome.get('candidate_auroc')}; "
++        f"coverage_fraction={outcome.get('coverage_fraction')}; "
++        f"all_four_gates_pass={str(bool(outcome.get('all_four_gates_pass'))).lower()}; "
++        f"advances_toward_filled={str(bool(outcome.get('advances_toward_filled'))).lower()}.\n"
++        "- failure mode: the model-native latent energy ties vote at pass@2 and captures "
++        "none of the oracle-minus-vote headroom, so Stage 1 is an honest negative rather "
++        "than a filled GAP-3 discriminator.\n"
++        "- missing discriminator: a model-native ARC energy that improves pass@2 over vote "
++        "and captures real headroom without oracle leakage.\n"
++        "- candidate design: keep GAP-3 open for a stronger generator-independent content "
++        "energy; do not promote Stage 1 toward filled from this result.\n"
++        "- priority: high\n"
++    )
++
++
++def _registry_contains_outcomes(registry: dict[str, Any]) -> bool:
++    gap4 = base._find_verifier(registry, GAP4_VERIFIER_ID)
++    return bool(
++        gap4
++        and gap4.get("eval", {}).get("eval_exp_4181") == EXP4181_ARTIFACT_PATH
++        and any(role.get("role_id") == V387_ROLE_ID for role in gap4.get("registry_roles", []))
++    )
++
++
++def build_artifact(
++    *,
++    offline_replay: dict[str, Any],
++    moat_verdict: dict[str, Any],
++    gap3_stage1_result: dict[str, Any],
++    registry_updated: bool,
++    gaps_updated: list[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    """Build the Exp 4181 terminal JSON payload."""
++    guard_ok = bool(offline_replay.get("regression_guard_passed"))
++    needed = {MOAT_GAP_ID, GAP3_STAGE1_GAP_ID}
++    gaps_complete = needed.issubset(set(gaps_updated))
++    prefix = "complete:" if guard_ok and gaps_complete and registry_updated else "blocked_"
++    separator = " " if prefix.endswith(":") else ""
++    artifact = {
++        "experiment": "experiment_4181_verifier_registry_gaps_hygiene",
++        "schema": "carnot.experiment_4181_verifier_registry_gaps_hygiene.v1",
++        "honest_verdict": (
++            f"{prefix}{separator}registry_gaps_reconciled_to_v387_truth_"
++            f"regression_guard_passed_{guard_ok}_"
++            f"moat_{moat_verdict['status']}_"
++            f"gap3_{gap3_stage1_result['status']}"
++        ),
++        "regression_guard_passed": guard_ok,
++        "gaps_updated": list(gaps_updated),
++        "registry_updated": bool(registry_updated),
++        "moat_verdict": moat_verdict,
++        "gap3_stage1_result": gap3_stage1_result,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 3),
++        "offline_replay": offline_replay,
++        "registry_path": REGISTRY_PATH,
++        "gaps_path": GAPS_PATH,
++        "field_principles": FIELD_PRINCIPLES,
++        "cited_upstream_artifacts": [
++            ARC1_POOL_PATH,
++            ARC1_PROGRAMS_PATH,
++            EXP4175_PATH,
++            EXP4177_PATH,
++            EXP4178_PATH,
++        ],
++        "spec_refs": ["REQ-VERIFY-4181", "SCENARIO-VERIFY-4181"],
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _blocked_artifact(preflight: dict[str, Any], duration_s: float) -> dict[str, Any]:  # pragma: no cover
++    blocked = str(preflight.get("blocked_resource") or "unknown_resource")
++    artifact = {
++        "experiment": "experiment_4181_verifier_registry_gaps_hygiene",
++        "schema": "carnot.experiment_4181_verifier_registry_gaps_hygiene.v1",
++        "honest_verdict": f"blocked_{blocked}",
++        "regression_guard_passed": False,
++        "gaps_updated": [],
++        "registry_updated": False,
++        "moat_verdict": {"status": "blocked_precondition", "gap_id": MOAT_GAP_ID},
++        "gap3_stage1_result": {
++            "status": "blocked_precondition",
++            "gap_id": GAP3_STAGE1_GAP_ID,
++            "advances_toward_filled": False,
++        },
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 3),
++        "preconditions": preflight,
++        "field_principles": FIELD_PRINCIPLES,
++        "cited_upstream_artifacts": [
++            ARC1_POOL_PATH,
++            ARC1_PROGRAMS_PATH,
++            EXP4175_PATH,
++            EXP4177_PATH,
++            EXP4178_PATH,
++        ],
++        "spec_refs": ["REQ-VERIFY-4181", "SCENARIO-VERIFY-4181"],
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    """Validate required Exp 4181 fields before writing the artifact."""
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required artifact field: {field}")
++    if not str(artifact["honest_verdict"]).startswith(("complete:", "blocked_", "success:")):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if not isinstance(artifact["regression_guard_passed"], bool):
++        raise ValueError("regression_guard_passed must be a bare bool")
++    if not isinstance(artifact["registry_updated"], bool):
++        raise ValueError("registry_updated must be a bare bool")
++    if not isinstance(artifact["gaps_updated"], list):
++        raise ValueError("gaps_updated must be a list")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required Exp 4181 principles")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError(f"inference_substrate must be {INFERENCE_SUBSTRATE}")
++
++
++def run_hygiene(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
++    """Run Exp 4181 and write the terminal artifact plus registry/gaps ledgers."""
++    started = time.time()
++    preflight = check_preconditions(repo_root)
++    out_path = repo_root / EXP4181_ARTIFACT_PATH
++    if not preflight["ok"]:  # pragma: no cover - success path is the required artifact path.
++        artifact = _blocked_artifact(preflight, time.time() - started)
++        base._write_json(out_path, artifact)
++        return artifact
++
++    registry_path = repo_root / REGISTRY_PATH
++    gaps_path = repo_root / GAPS_PATH
++    registry = base._load_registry(registry_path)
++    gaps_text = gaps_path.read_text(encoding="utf-8")
++    offline_replay = replay_gap4_arc1(repo_root)
++    moat_verdict = classify_moat_verdict(repo_root)
++    gap3_stage1_result = classify_gap3_stage1_result(repo_root)
++
++    registry, gaps_text, ledger_summary = ensure_ledgers_record_outcomes(
++        registry,
++        gaps_text,
++        offline_replay,
++        moat_verdict,
++        gap3_stage1_result,
++    )
++    base._write_registry(registry_path, registry)
++    gaps_path.write_text(gaps_text, encoding="utf-8")
++
++    artifact = build_artifact(
++        offline_replay=offline_replay,
++        moat_verdict=moat_verdict,
++        gap3_stage1_result=gap3_stage1_result,
++        registry_updated=bool(ledger_summary["registry_updated"]),
++        gaps_updated=list(ledger_summary["gaps_updated"]),
++        duration_s=time.time() - started,
++    )
++    base._write_json(out_path, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised through the experiment command.
++    artifact = run_hygiene(REPO_ROOT)
++    print(f"Wrote {REPO_ROOT / EXP4181_ARTIFACT_PATH}")
++    print(f"honest_verdict={artifact['honest_verdict']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_4181_verifier_registry_gaps_hygiene.json b/results/experiment_4181_verifier_registry_gaps_hygiene.json
+new file mode 100644
+index 0000000000..85aec9ef0b
+--- /dev/null
++++ b/results/experiment_4181_verifier_registry_gaps_hygiene.json
+@@ -0,0 +1,240 @@
++{
++  "cited_upstream_artifacts": [
++    "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "results/arc3_gap4_induced_programs.json",
++    "results/experiment_4175_headroom_gate_executable_census.json",
++    "results/experiment_4177_decisive_headroom_controlled_moat_test.json",
++    "results/experiment_4178_gap3_stage1_model_native_arc_energy.json"
++  ],
++  "duration_s": 0.483,
++  "experiment": "experiment_4181_verifier_registry_gaps_hygiene",
++  "field_principles": {
++    "gaps_updated": "Lists the verifier_gaps entries touched (moat verdict + GAP-3 Stage-1).",
++    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .387 truth.",
++    "regression_guard_passed": "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
++  },
++  "gap3_stage1_result": {
++    "advances_toward_filled": false,
++    "adversarial_checks": {
++      "A1_permutation_control": {
++        "augmentation_strata_note": "The exported NPZ is already candidate-pooled and has no augmentation-id column; this preserves one shuffled label within each task that originally contains gold.",
++        "candidate_auroc_collapsed_to_chance": false,
++        "chance_pass2_against_true_labels": 0.143218,
++        "label_shuffle": "within_task_candidate_permutation",
++        "mean_candidate_auroc_against_true_labels": 0.826984,
++        "mean_pass2_against_true_labels": 0.193548,
++        "pass2_collapsed_to_chance": false,
++        "passed": false,
++        "resamples": 8
++      },
++      "A2_strict_oof": {
++        "disjoint_fit_eval_task_sets": true,
++        "folding": "leave_one_task_out",
++        "in_fold_candidate_auroc": 0.909524,
++        "in_fold_pass2": 0.483871,
++        "in_minus_oof_candidate_auroc": 0.015873,
++        "in_minus_oof_pass2": 0.032258,
++        "oof_candidate_auroc": 0.893651,
++        "oof_pass2": 0.451613,
++        "passed": true,
++        "selected_energy": "model_native_basis_pca_gold_mahalanobis"
++      },
++      "A3_oracle_leak_audit": {
++        "audit": "For each LOTO fold, held-out correctness labels were scrubbed before scoring; energies stayed identical.",
++        "external_gold_file_opened": false,
++        "held_out_label_scrub_max_abs_diff": 0.0,
++        "passed": true
++      },
++      "A4_bootstrap_ci95": {
++        "ci95": [
++          -0.096774,
++          0.096774
++        ],
++        "full_400_task_reconfirm_owed": true,
++        "n_tasks": 31,
++        "passed": true,
++        "point": 0.0,
++        "resamples": 2000
++      }
++    },
++    "all_four_gates_pass": false,
++    "artifact_path": "results/experiment_4178_gap3_stage1_model_native_arc_energy.json",
++    "candidate_auroc": 0.893651,
++    "candidate_auroc_detail": {
++      "gate_threshold": 0.7,
++      "hand_feature_always_on_floor": 0.67,
++      "pooled": 0.94563,
++      "selected_energy": "model_native_basis_pca_gold_mahalanobis",
++      "within_task_macro": 0.861209,
++      "within_task_pair_weighted": 0.893651
++    },
++    "coverage_fraction": 1.0,
++    "gap_id": "GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178",
++    "gates": {
++      "candidate_auroc_gt_0p70": true,
++      "coverage_ge_0p80": true,
++      "headroom_capture_ge_0p30": false,
++      "selection_pass2_beats_vote": false
++    },
++    "headroom_capture_detail": {
++      "capture_fraction": 0.0,
++      "energy_pass2": 0.451613,
++      "oracle_minus_vote": 0.16129,
++      "oracle_pass2": 0.612903,
++      "vote_pass2": 0.451613
++    },
++    "headroom_capture_fraction": 0.0,
++    "honest_verdict": "complete: gap3_stage1_model_native_latent_honest_negative_model_native_basis_pca_gold_mahalanobis_delta_0.0000_energy_0.4516_vote_0.4516",
++    "inference_substrate": "offline_gap3_stage1_latent_npz_cpu",
++    "missing_discriminator": "gap3_model_native_energy_beyond_vote",
++    "n_candidates": 8041,
++    "n_tasks": 31,
++    "pass2_energy_vs_vote": 0.0,
++    "pass2_energy_vs_vote_detail": {
++      "bootstrap_ci95": [
++        -0.096774,
++        0.096774
++      ],
++      "bootstrap_resamples": 2000,
++      "delta": 0.0,
++      "energy_pass2": 0.451613,
++      "oracle_pass2": 0.612903,
++      "vote_pass2": 0.451613
++    },
++    "reproducibility_checksum": "ffc5b5b47ce44eb771780fb7eb08cf5d962c62e63e7325d0ae4730d8e34f259a",
++    "selected_energy": "model_native_basis_pca_gold_mahalanobis",
++    "source_artifacts": [
++      "results/experiment_4178_gap3_stage1_model_native_arc_energy.json"
++    ],
++    "status": "open_stage1_honest_negative_does_not_advance"
++  },
++  "gaps_path": "ops/verifier_gaps.md",
++  "gaps_updated": [
++    "GAP-MOAT-HEADROOM-CONTROLLED-4177",
++    "GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178"
++  ],
++  "honest_verdict": "complete: registry_gaps_reconciled_to_v387_truth_regression_guard_passed_True_moat_filled_headroom_controlled_verifier_value_added_gap3_open_stage1_honest_negative_does_not_advance",
++  "inference_substrate": "cached_gap4_replay_and_ledger_reconciliation",
++  "moat_verdict": {
++    "accuracy_cost_pareto": {
++      "arm_a_over_arm_b_selection_cost_ratio": 2.0,
++      "arm_a_over_arm_c_selection_cost_ratio": 4.0,
++      "arm_a_total_selection_cost_units": 200,
++      "arm_a_total_selector_evals": 100,
++      "arm_a_total_verifier_evals": 100,
++      "arm_b_total_vote_weight_reads": 100,
++      "arm_c_total_first_candidate_reads": 50,
++      "cost_unit": "candidate_level_selection_operation_generation_budget_held_constant",
++      "efficiency_parity": false,
++      "latency_s": {
++        "arm_a_verifier_selector_selection": 0.000210074,
++        "arm_b_sc_vote_selection": 2.3615e-05,
++        "arm_c_no_verifier_selection": 1.904e-06
++      },
++      "parity_at_n_times_cheaper": null,
++      "same_candidate_budget": true,
++      "status": "measured",
++      "value_added_basis": "accuracy_lift_ci95_excludes_zero"
++    },
++    "artifact_path": "results/experiment_4177_decisive_headroom_controlled_moat_test.json",
++    "candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
++    "domain": "code",
++    "domain_headroom": {
++      "artifact_flags": {
++        "artifact_inflation_flagged": 0,
++        "candidate_pool_detected": true,
++        "census_incomplete": false,
++        "domain": "code",
++        "excluded_reasons": {},
++        "incomplete_reason": null,
++        "llm_judge_used": false,
++        "n_multicandidate_tasks": 50,
++        "n_tasks_evaluated": 50,
++        "n_tasks_raw": 50,
++        "objective_oracle": "unit_test_pass_flags",
++        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json"
++      },
++      "baseline_pass1": 0.66,
++      "n": 50,
++      "oracle_at_k": 0.84,
++      "sc_vote_pass1": 0.66,
++      "selectable_headroom": 0.18
++    },
++    "gap_id": "GAP-MOAT-HEADROOM-CONTROLLED-4177",
++    "headroom_census_path": "results/experiment_4175_headroom_gate_executable_census.json",
++    "headroom_present_domain": "code",
++    "honest_verdict": "complete: verifier_value_added_true_delta_0.1800_ci95_0.0800_0.3000",
++    "inference_substrate": "deterministic_verifier_plus_replay",
++    "max_selectable_headroom": 0.18,
++    "max_selectable_headroom_rounded": 0.18,
++    "missing_discriminator": "headroom_controlled_verifier_value_added_moat",
++    "moat_delta_vs_vote": {
++      "arm_a_pass1": 0.84,
++      "arm_b_sc_vote_pass1": 0.66,
++      "bootstrap_resamples": 2000,
++      "ci95": [
++        0.08,
++        0.3
++      ],
++      "delta": 0.18,
++      "n": 50,
++      "status": "measured"
++    },
++    "moat_vs_matched_control": {
++      "arm_a_pass1": 0.84,
++      "arm_c_no_verifier_pass1": 0.66,
++      "control_policy": "deterministic_first_of_k_no_verifier",
++      "delta": 0.18,
++      "n": 50,
++      "status": "measured"
++    },
++    "positive_control": {
++      "oracle_at_k": 0.84,
++      "oracle_minus_sc_vote": 0.18,
++      "sc_vote_pass1": 0.66,
++      "selection_flips_vs_vote": 50,
++      "status": "headroom_present",
++      "verifier_recovers_outvoted": 9
++    },
++    "positive_control_confirmed": true,
++    "reproducibility_checksum": "e3b3f38b88a1daa95505f5ee2d7de86d7440a3d91a8cc3acaf1738e032ed7c2f",
++    "source_artifacts": [
++      "results/experiment_4175_headroom_gate_executable_census.json",
++      "results/experiment_4177_decisive_headroom_controlled_moat_test.json"
++    ],
++    "status": "filled_headroom_controlled_verifier_value_added",
++    "verifier_value_added": true
++  },
++  "offline_replay": {
++    "arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
++    "expected": {
++      "arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      }
++    },
++    "gap4_arc1_reproduced": true,
++    "no_codex_calls": true,
++    "no_gguf_inference": true,
++    "regression_guard_passed": true
++  },
++  "registry_path": "ops/verifier_registry.yaml",
++  "registry_updated": true,
++  "regression_guard_passed": true,
++  "schema": "carnot.experiment_4181_verifier_registry_gaps_hygiene.v1",
++  "spec_refs": [
++    "REQ-VERIFY-4181",
++    "SCENARIO-VERIFY-4181"
++  ]
++}
+diff --git a/results/experiment_4181_verifier_registry_gaps_hygiene.py b/results/experiment_4181_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..7541190b5d
+--- /dev/null
++++ b/results/experiment_4181_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,21 @@
++"""Run Exp 4181 verifier registry/gaps hygiene from the results entrypoint.
++
++Spec refs: REQ-VERIFY-4181, SCENARIO-VERIFY-4181.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting import verifier_registry_gaps_hygiene_4181 as exp4181  # noqa: E402
++
++
++if __name__ == "__main__":  # pragma: no cover
++    exp4181.main()
+diff --git a/tests/python/test_experiment_4181_verifier_registry_gaps_hygiene.py b/tests/python/test_experiment_4181_verifier_registry_gaps_hygiene.py
+new file mode 100644
+index 0000000000..6ed0d5be1d
+--- /dev/null
++++ b/tests/python/test_experiment_4181_verifier_registry_gaps_hygiene.py
+@@ -0,0 +1,275 @@
++"""Tests for Exp 4181 verifier registry/gaps hygiene.
++
++Spec refs: REQ-VERIFY-4181, SCENARIO-VERIFY-4181.
++"""
++
++from __future__ import annotations
++
++import json
++import runpy
++import shutil
++from pathlib import Path
++from typing import Any
++
++import pytest
++import yaml
++
++from carnot import experiment_4181_verifier_registry_gaps_hygiene as exp4181_wrapper
++from carnot.reporting import verifier_registry_gaps_hygiene_4181 as exp4181
++
++
++REPO_ROOT = Path(__file__).parents[2]
++SPEC_PATH = Path("openspec/capabilities/verification/spec.md")
++RESULTS_WRAPPER_PATH = Path("results/experiment_4181_verifier_registry_gaps_hygiene.py")
++
++
++def _minimal_registry() -> dict[str, Any]:
++    return {
++        "verifiers": [
++            {
++                "verifier_id": exp4181.GAP4_VERIFIER_ID,
++                "domain": "arc_agi2_grid",
++                "version": 1,
++                "kind": "process_verifier",
++                "code_path": "python/carnot/agentic/gap4_program_induction_stack.py",
++                "eval": {"metric": "pass_at_1"},
++                "registry_roles": [],
++            }
++        ]
++    }
++
++
++def _write_minimal_repo(tmp_path: Path) -> None:
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "ops" / "verifier_registry.yaml").write_text(
++        yaml.safe_dump(_minimal_registry(), sort_keys=False),
++        encoding="utf-8",
++    )
++    (tmp_path / "ops" / "verifier_gaps.md").write_text("# Verifier Gaps\n", encoding="utf-8")
++    for name in (
++        "arc3_gap3_stage2_eval_pool.json.gz",
++        "arc3_gap4_induced_programs.json",
++        "experiment_4175_headroom_gate_executable_census.json",
++        "experiment_4177_decisive_headroom_controlled_moat_test.json",
++        "experiment_4178_gap3_stage1_model_native_arc_energy.json",
++    ):
++        shutil.copy2(REPO_ROOT / "results" / name, tmp_path / "results" / name)
++
++
++def test_req_4181_spec_declared() -> None:
++    """REQ-VERIFY-4181: OpenSpec declares the .387 hygiene artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-VERIFY-4181",
++        "SCENARIO-VERIFY-4181",
++        "python/carnot/experiment_4181_verifier_registry_gaps_hygiene.py",
++        RESULTS_WRAPPER_PATH.as_posix(),
++        "experiment_4181_verifier_registry_gaps_hygiene.json",
++        "experiment_4177_decisive_headroom_controlled_moat_test.json",
++        "experiment_4178_gap3_stage1_model_native_arc_energy.json",
++        "headroom_present_domain=code",
++        "verifier_value_added=true",
++        "pass2_energy_vs_vote=0.0",
++        "does not advance toward `filled`",
++        "0.4516",
++        "0.5806",
++    ):
++        assert marker in spec
++    assert exp4181.FIELD_PRINCIPLES["honest_verdict"] in spec
++    assert exp4181.FIELD_PRINCIPLES["regression_guard_passed"] in spec
++    assert exp4181.FIELD_PRINCIPLES["gaps_updated"] in spec
++    assert exp4181_wrapper.main is exp4181.main
++
++
++def test_scenario_4181_preconditions_and_replay_are_bitexact() -> None:
++    """SCENARIO-VERIFY-4181: cached GAP-4 replay reproduces exactly."""
++
++    preflight = exp4181.check_preconditions(REPO_ROOT)
++    assert preflight["ok"] is True
++    assert preflight["blocked_resource"] is None
++    assert {check["resource"] for check in preflight["checks"]} == {
++        "gap4_arc1_candidate_fixtures",
++        "verifier_registry",
++        "verifier_gaps",
++        "exp4175_headroom_census",
++        "exp4177_headroom_controlled_moat",
++        "exp4178_gap3_stage1",
++    }
++
++    replay = exp4181.replay_gap4_arc1(REPO_ROOT)
++    assert replay["regression_guard_passed"] is True
++    assert replay["arc1_rule_exec"] == {
++        "n": 31,
++        "vote_pass2": pytest.approx(0.4516),
++        "gated_pass2": pytest.approx(0.5806),
++        "headroom_recovered": 4,
++        "vote_wins_lost": 0,
++    }
++    assert replay["no_codex_calls"] is True
++    assert replay["no_gguf_inference"] is True
++
++
++def test_req_4181_classifies_moat_and_gap3_stage1() -> None:
++    """REQ-VERIFY-4181: .387 moat and GAP-3 outcomes are classified honestly."""
++
++    moat = exp4181.classify_moat_verdict(REPO_ROOT)
++    assert moat["gap_id"] == exp4181.MOAT_GAP_ID
++    assert moat["status"] == "filled_headroom_controlled_verifier_value_added"
++    assert moat["verifier_value_added"] is True
++    assert moat["headroom_present_domain"] == "code"
++    assert moat["positive_control_confirmed"] is True
++    assert moat["moat_delta_vs_vote"]["delta"] == pytest.approx(0.18)
++    assert moat["moat_delta_vs_vote"]["ci95"] == [0.08, 0.3]
++    assert moat["moat_vs_matched_control"]["delta"] == pytest.approx(0.18)
++
++    gap3 = exp4181.classify_gap3_stage1_result(REPO_ROOT)
++    assert gap3["gap_id"] == exp4181.GAP3_STAGE1_GAP_ID
++    assert gap3["status"] == "open_stage1_honest_negative_does_not_advance"
++    assert gap3["advances_toward_filled"] is False
++    assert gap3["pass2_energy_vs_vote"] == pytest.approx(0.0)
++    assert gap3["headroom_capture_fraction"] == pytest.approx(0.0)
++    assert gap3["all_four_gates_pass"] is False
++    assert gap3["candidate_auroc"] == pytest.approx(0.893651)
++    assert gap3["coverage_fraction"] == pytest.approx(1.0)
++
++
++def test_scenario_4181_ensure_ledgers_record_moat_gap3_and_registry_role() -> None:
++    """SCENARIO-VERIFY-4181: registry and gaps carry the .387 truth."""
++
++    replay = exp4181.replay_gap4_arc1(REPO_ROOT)
++    moat = exp4181.classify_moat_verdict(REPO_ROOT)
++    gap3 = exp4181.classify_gap3_stage1_result(REPO_ROOT)
++
++    registry, gaps, summary = exp4181.ensure_ledgers_record_outcomes(
++        _minimal_registry(),
++        "# Verifier Gaps\n",
++        replay,
++        moat,
++        gap3,
++    )
++
++    assert summary == {
++        "registry_updated": True,
++        "gaps_updated": [exp4181.MOAT_GAP_ID, exp4181.GAP3_STAGE1_GAP_ID],
++        "moat_recorded": True,
++        "gap3_stage1_recorded": True,
++    }
++    gap4 = registry["verifiers"][0]
++    assert gap4["eval"]["eval_exp_4181"] == exp4181.EXP4181_ARTIFACT_PATH
++    assert gap4["eval"]["exp4181_regression_guard_passed"] is True
++    role = next(role for role in gap4["registry_roles"] if role["role_id"] == exp4181.V387_ROLE_ID)
++    assert role["moat_verifier_value_added"] is True
++    assert role["headroom_present_domain"] == "code"
++    assert role["gap3_stage1_advances_toward_filled"] is False
++    assert exp4181._registry_contains_outcomes(registry) is True
++    assert exp4181._registry_contains_outcomes({}) is False
++
++    assert exp4181.MOAT_GAP_ID in gaps
++    assert "verifier_value_added=true" in gaps
++    assert "headroom_present_domain=code" in gaps
++    assert "moat_delta_vs_vote_delta=0.18" in gaps
++    assert exp4181.GAP3_STAGE1_GAP_ID in gaps
++    assert "pass2_energy_vs_vote=0.0" in gaps
++    assert "advances_toward_filled=false" in gaps
++    assert "all_four_gates_pass=false" in gaps
++
++
++def test_req_4181_build_artifact_validates_required_fields() -> None:
++    """REQ-VERIFY-4181: terminal artifact exposes required schema fields."""
++
++    replay = exp4181.replay_gap4_arc1(REPO_ROOT)
++    moat = exp4181.classify_moat_verdict(REPO_ROOT)
++    gap3 = exp4181.classify_gap3_stage1_result(REPO_ROOT)
++    artifact = exp4181.build_artifact(
++        offline_replay=replay,
++        moat_verdict=moat,
++        gap3_stage1_result=gap3,
++        registry_updated=True,
++        gaps_updated=[exp4181.MOAT_GAP_ID, exp4181.GAP3_STAGE1_GAP_ID],
++        duration_s=0.012,
++    )
++
++    exp4181.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["regression_guard_passed"] is True
++    assert artifact["gaps_updated"] == [exp4181.MOAT_GAP_ID, exp4181.GAP3_STAGE1_GAP_ID]
++    assert artifact["field_principles"] == exp4181.FIELD_PRINCIPLES
++    assert artifact["moat_verdict"]["verifier_value_added"] is True
++    assert artifact["gap3_stage1_result"]["advances_toward_filled"] is False
++    assert artifact["cited_upstream_artifacts"] == [
++        exp4181.ARC1_POOL_PATH,
++        exp4181.ARC1_PROGRAMS_PATH,
++        exp4181.EXP4175_PATH,
++        exp4181.EXP4177_PATH,
++        exp4181.EXP4178_PATH,
++    ]
++
++    for field in exp4181.REQUIRED_ARTIFACT_FIELDS:
++        malformed = dict(artifact)
++        malformed.pop(field)
++        with pytest.raises(ValueError, match=field):
++            exp4181.validate_artifact(malformed)
++    with pytest.raises(ValueError, match="terminal prefix"):
++        exp4181.validate_artifact({**artifact, "honest_verdict": "not terminal"})
++    with pytest.raises(ValueError, match="bare bool"):
++        exp4181.validate_artifact({**artifact, "regression_guard_passed": "yes"})
++    with pytest.raises(ValueError, match="bare bool"):
++        exp4181.validate_artifact({**artifact, "registry_updated": "yes"})
++    with pytest.raises(ValueError, match="gaps_updated"):
++        exp4181.validate_artifact({**artifact, "gaps_updated": "GAP"})
++    with pytest.raises(ValueError, match="field_principles"):
++        exp4181.validate_artifact({**artifact, "field_principles": {}})
++
++
++def test_req_4181_helper_edges_are_explicit(tmp_path: Path) -> None:
++    """REQ-VERIFY-4181: schema helpers fail closed without hidden inference."""
++
++    assert exp4181._numeric_or_none(True) is None
++    assert exp4181._numeric_or_none("bad") is None
++    assert exp4181._round4(None) is None
++    assert exp4181._check_json_resource(tmp_path, "missing", "missing.json") == {
++        "resource": "missing",
++        "available": False,
++        "detail": "missing: missing.json",
++    }
++    assert (
++        exp4181._moat_status({"verifier_value_added": False})
++        == "open_headroom_controlled_no_value_added"
++    )
++    assert (
++        exp4181._gap3_stage1_status({"advances_toward_filled": True})
++        == "building_stage1_advances_toward_filled"
++    )
++
++
++def test_scenario_4181_run_hygiene_writes_artifact_and_ledgers(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-4181: run writes the deliverable JSON and ledger entries."""
++
++    _write_minimal_repo(tmp_path)
++    artifact = exp4181.run_hygiene(tmp_path)
++    exp4181.validate_artifact(artifact)
++
++    assert artifact["regression_guard_passed"] is True
++    assert artifact["gaps_updated"] == [exp4181.MOAT_GAP_ID, exp4181.GAP3_STAGE1_GAP_ID]
++    assert artifact["registry_updated"] is True
++    written = json.loads((tmp_path / exp4181.EXP4181_ARTIFACT_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    registry = yaml.safe_load((tmp_path / "ops" / "verifier_registry.yaml").read_text(encoding="utf-8"))
++    assert exp4181._registry_contains_outcomes(registry) is True
++    gaps = (tmp_path / "ops" / "verifier_gaps.md").read_text(encoding="utf-8")
++    assert exp4181.MOAT_GAP_ID in gaps
++    assert exp4181.GAP3_STAGE1_GAP_ID in gaps
++
++
++def test_scenario_4181_results_entrypoint_runs_with_monkeypatched_main(monkeypatch: pytest.MonkeyPatch) -> None:
++    """SCENARIO-VERIFY-4181: required results entrypoint delegates to Exp 4181."""
++
++    called: list[bool] = []
++    monkeypatch.setattr(exp4181, "main", lambda: called.append(True))
++
++    runpy.run_path(RESULTS_WRAPPER_PATH.as_posix(), run_name="__main__")
++
++    assert called == [True]
+-- 
+2.55.0
+

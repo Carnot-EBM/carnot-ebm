@@ -1,0 +1,696 @@
+From b20a148002cb66e423979f3d1ae64b450c19fe31 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 11:31:30 -0400
+Subject: [PATCH 08905/11362] exp6258: the goal veto admits 21 of 26 useless
+ predicates; my false-reject claim was wrong
+
+Puts a number on the previous entry's code-path analysis using only data already
+on disk -- exp6256's 8 freshly induced predicates plus exp6257's 21 measurable
+stored ones, 29 with both axes. No GPU: re-inducing would have regenerated numbers
+that already existed.
+
+At the live threshold of 1.0: 21 FALSE ACCEPTS, 5 true accepts, 3 true rejects,
+and 0 false rejects. Acceptance precision 0.1923 -- of the 26 predicates the veto
+admits, only 5 fire on a real win, and each becomes plan_in_model's termination
+condition.
+
+CORRECTION TO WHAT I WROTE BEFORE MEASURING. That entry claimed the inversion had
+two arms: the veto admits constant-False predicates AND rejects discriminating
+ones that fire once too often. The first arm is strongly supported, 21 of 29. The
+second has ZERO support -- there were no false rejects at all. Every discriminating
+predicate in this population also had perfect specificity, so the veto never had
+to choose between them. That arm is arithmetically possible, was not observed, and
+should not be repeated as a finding.
+
+The defect is therefore ONE-SIDED: the veto over-admits, it does not over-reject.
+That changes the fix. Lowering the threshold would make it strictly worse, since
+it only ever admits more. What is needed is an ADDITIONAL condition, not a relaxed
+one.
+
+Fresh inductions are worse than stored: 7 of 8 freshly induced predicates are
+false accepts with 0 true accepts, against 14 of 21 and 5 true accepts for stored.
+
+Does not observe the live agent -- it shows what the live threshold would do to
+predicates of the kind this project produces, on public games with
+development-proxy win grids, not hidden-game level 1. n=29.
+
+The live threshold is still deliberately unchanged. Wiring the veto to also
+require sensitivity would have rejected 21 of the 26 it admits, but at level 1 no
+win grid exists, so the honest options there are narrower and it remains an
+operator decision.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ ops/known-issues.md                           |  47 +++
+ ...iment_6258_goal_veto_confusion_matrix.json | 323 ++++++++++++++++++
+ ...nt_6337_v546_bounded_terminal_handoff.json |  17 +-
+ ...eriment_6258_goal_veto_confusion_matrix.py | 195 +++++++++++
+ 7 files changed, 583 insertions(+), 4 deletions(-)
+ create mode 100644 results/experiment_6258_goal_veto_confusion_matrix.json
+ create mode 100644 scripts/experiments/experiment_6258_goal_veto_confusion_matrix.py
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a0b6b84899..d6e97593da 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-12T14:58:41Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-08-12T15:30:33Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5fa11bc8ea..a1a8258399 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15708,3 +15708,4 @@ code |
+ | 2026-08-12 13:58 UTC | Prospective held-family guarded-policy A/B gated o | OK | 87 passed, 1 warning in 8.99s |
+ | 2026-08-12 14:54 UTC | Plan milestone 2026.08.546 | OK | 13 tasks proposed |
+ | 2026-08-12 14:56 UTC | Milestone 2026.08.546 activated | OK | 13 tasks queued |
++| 2026-08-12 15:28 UTC | Bounded V545 terminal evidence handoff into V546 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 414355cabd..3140f23c10 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-12T14:58:41Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 8, "phase": "iteration_start", "started_at": "2026-08-12T15:30:33Z"}
+\ No newline at end of file
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 011085732c..0322d6aa42 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -17487,3 +17487,50 @@ constant-True opposite degeneracy and a backward-compatibility case.
+ from 1.0, or rewiring the veto to consult the new flag, is a live-path behaviour change on
+ the scored agent. It should be a measured A/B and an operator decision, not a quiet edit at
+ the end of an unattended session. The analysis above is the case for running that A/B.
++
++## 2026-08-12 REQ-ARC-WMTE-6258: the veto admits 21 of 26 useless predicates -- and my false-reject claim was wrong
++
++Puts a number on the code-path analysis above, using only data already on disk (exp6256's 8
++freshly induced predicates + exp6257's 21 measurable stored ones, 29 with both axes).
++`honest_verdict: complete_goal_veto_confusion_21_false_accepts_0_false_rejects_of_29_acceptance_precision_0.1923`.
++
++| outcome at the live threshold of 1.0 | count |
++|---|---|
++| FALSE ACCEPT -- degenerate predicate admitted | **21** |
++| true accept -- fires on a real win | 5 |
++| true reject | 3 |
++| FALSE REJECT -- discriminating predicate discarded | **0** |
++
++**Acceptance precision 0.1923.** Of the 26 predicates the veto admits, only 5 actually fire
++on a real win. Roughly four in five things it passes are useless, and each becomes
++`plan_in_model`'s termination condition.
++
++**CORRECTION to the entry above, which I wrote before measuring.** That entry stated the
++inversion had two arms: the veto "ACCEPTS a constant-False predicate" AND "REJECTS a
++genuinely discriminating predicate that fires even once too often". The first arm is
++strongly supported -- 21 of 29. **The second arm has ZERO support: there were no false
++rejects at all.** Every discriminating predicate in this population also happened to have
++perfect specificity, so the veto never had to choose between them. The false-reject arm is
++arithmetically possible and was not observed; it should not be repeated as a finding.
++
++So the defect is ONE-SIDED: the veto over-admits, it does not over-reject. That is a
++materially different problem from the one I described, and it changes the fix. Lowering the
++threshold would make it worse, not better -- it only ever admits more. What is needed is an
++ADDITIONAL condition (sensitivity), not a relaxed one.
++
++**Fresh inductions are worse than the stored ones.** Freshly induced: 7 of 8 false accepts,
++0 true accepts. Stored: 14 of 21 false accepts, 5 true accepts. Every predicate the current
++generator produced in exp6256 that the veto would admit is degenerate. The five that work
++are all older stored ones (cd82, r11l, sk48, sp80, and one cn04 arm).
++
++**What this cannot show.** It does not observe the live agent. It shows what the live
++threshold WOULD do to predicates of the kind this project actually produces, on public games
++with development-proxy win grids -- not hidden-game level 1. n=29.
++
++**The operator decision this informs.** The metric now supports a sensitivity term
++(REQ-ARC-WMTE-6257). Wiring the live veto to require it -- accept only if specificity is high
++AND the predicate fires on a known win, where one exists -- would have rejected 21 of the 26
++it currently admits. At level 1 no win grid exists, so the honest options there are narrower:
++accept that the predicate is unverifiable and stop gating on a metric that cannot fail, or
++find a different signal. That is a live-path behaviour change and remains an operator
++decision, not an unattended edit.
+diff --git a/results/experiment_6258_goal_veto_confusion_matrix.json b/results/experiment_6258_goal_veto_confusion_matrix.json
+new file mode 100644
+index 0000000000..9eb71a604c
+--- /dev/null
++++ b/results/experiment_6258_goal_veto_confusion_matrix.json
+@@ -0,0 +1,323 @@
++{
++  "experiment": "experiment_6258_goal_veto_confusion_matrix",
++  "title": "What the live goal-predicate veto accepts and rejects, against ground truth",
++  "run_date": "2026-08-12T15:30:00Z",
++  "live_threshold": 1.0,
++  "per_predicate": [
++    {
++      "source": "stored",
++      "game": "ar25",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "bp35",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "cd82",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": true,
++      "veto_accepts": true,
++      "outcome": "true_accept"
++    },
++    {
++      "source": "stored",
++      "game": "cn04",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": true,
++      "veto_accepts": true,
++      "outcome": "true_accept"
++    },
++    {
++      "source": "stored",
++      "game": "dc22",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "ft09",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "g50t",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "ka59",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "lf52",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "lp85",
++      "arm": "stored",
++      "specificity": 0.0,
++      "fires_on_real_win": false,
++      "veto_accepts": false,
++      "outcome": "true_reject"
++    },
++    {
++      "source": "stored",
++      "game": "ls20",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "m0r0",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "r11l",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": true,
++      "veto_accepts": true,
++      "outcome": "true_accept"
++    },
++    {
++      "source": "stored",
++      "game": "re86",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "s5i5",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "sb26",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "sk48",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": true,
++      "veto_accepts": true,
++      "outcome": "true_accept"
++    },
++    {
++      "source": "stored",
++      "game": "sp80",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": true,
++      "veto_accepts": true,
++      "outcome": "true_accept"
++    },
++    {
++      "source": "stored",
++      "game": "tr87",
++      "arm": "stored",
++      "specificity": 0.0,
++      "fires_on_real_win": false,
++      "veto_accepts": false,
++      "outcome": "true_reject"
++    },
++    {
++      "source": "stored",
++      "game": "tu93",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "stored",
++      "game": "vc33",
++      "arm": "stored",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "freshly_induced",
++      "game": "dc22",
++      "arm": "control",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "freshly_induced",
++      "game": "dc22",
++      "arm": "treatment",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "freshly_induced",
++      "game": "cn04",
++      "arm": "control",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "freshly_induced",
++      "game": "cn04",
++      "arm": "treatment",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "freshly_induced",
++      "game": "ls20",
++      "arm": "control",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "freshly_induced",
++      "game": "ls20",
++      "arm": "treatment",
++      "specificity": 0.0,
++      "fires_on_real_win": false,
++      "veto_accepts": false,
++      "outcome": "true_reject"
++    },
++    {
++      "source": "freshly_induced",
++      "game": "s5i5",
++      "arm": "control",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    },
++    {
++      "source": "freshly_induced",
++      "game": "s5i5",
++      "arm": "treatment",
++      "specificity": 1.0,
++      "fires_on_real_win": false,
++      "veto_accepts": true,
++      "outcome": "FALSE_ACCEPT_degenerate_admitted"
++    }
++  ],
++  "n_predicates": 29,
++  "n_true_accept": 5,
++  "n_false_accept_degenerate_admitted": 21,
++  "n_false_reject_discriminating_discarded": 0,
++  "n_true_reject": 3,
++  "acceptance_precision": 0.1923,
++  "acceptance_precision_meaning": "of every predicate the veto ADMITS, the fraction that actually fires on a real win. The rest are admitted and then used as plan_in_model's termination condition.",
++  "false_accept_games": [
++    "ar25",
++    "bp35",
++    "cn04",
++    "dc22",
++    "ft09",
++    "g50t",
++    "ka59",
++    "lf52",
++    "ls20",
++    "m0r0",
++    "re86",
++    "s5i5",
++    "sb26",
++    "tu93",
++    "vc33"
++  ],
++  "false_reject_games": [],
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": "exp6257",
++      "path": "results/experiment_6257_stored_goal_predicate_sweep.json",
++      "fields_imported": [
++        "specificity_accuracy",
++        "fires_on_real_win"
++      ]
++    },
++    {
++      "experiment_id": "exp6256",
++      "path": "results/experiment_6256_win_exemplar_goal_predicate_ab.json",
++      "fields_imported": [
++        "goal_specificity_accuracy",
++        "goal_fires_on_real_win"
++      ]
++    }
++  ],
++  "what_this_cannot_show": "this does not observe the live agent. It shows what the live threshold WOULD do to predicates of the kind the project actually produces. The population is public games with development-proxy win grids, not hidden-game level 1.",
++  "why_no_new_measurement": "both axes already existed in exp6256 and exp6257. Re-inducing would have spent GPU hours regenerating numbers already on disk.",
++  "solve_provenance": "development_proxy",
++  "arc_solve_claim": false,
++  "verifier_is_oracle": false,
++  "verifier_is_oracle_principle": "this audits a gate against recorded level-up ground truth; it is not the executable win oracle driving a solve, and no level is claimed",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "random_seed": 6258,
++  "honest_verdict": "complete_goal_veto_confusion_21_false_accepts_0_false_rejects_of_29_acceptance_precision_0.1923",
++  "duration_s": 0.0003,
++  "reproducibility_checksum": "6c818e0051e39b122f9bb6c85acd8d774b31e9c08133b2d37632e0e97fd98222"
++}
+diff --git a/results/experiment_6337_v546_bounded_terminal_handoff.json b/results/experiment_6337_v546_bounded_terminal_handoff.json
+index 580423699e..8a9ec89cde 100644
+--- a/results/experiment_6337_v546_bounded_terminal_handoff.json
++++ b/results/experiment_6337_v546_bounded_terminal_handoff.json
+@@ -2631,5 +2631,18 @@
+     "exp6348-arc-default-off-action-influence-ab",
+     "exp6349-v546-adversarial-capstone"
+   ],
+-  "verifier_is_oracle": false
+-}
++  "verifier_is_oracle": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=11.627612999174744 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/scripts/experiments/experiment_6258_goal_veto_confusion_matrix.py b/scripts/experiments/experiment_6258_goal_veto_confusion_matrix.py
+new file mode 100644
+index 0000000000..5b63f38645
+--- /dev/null
++++ b/scripts/experiments/experiment_6258_goal_veto_confusion_matrix.py
+@@ -0,0 +1,195 @@
++#!/usr/bin/env python3
++"""REQ-ARC-WMTE-6258: what does the live goal-predicate veto actually accept and reject?
++
++THE QUESTION. A code-path analysis (ops/known-issues.md 2026-08-12) argued the live veto is
++inverted at level 1: `arc_competition_agent` sets `min_goal_predicate_consistency=1.0`,
++`arc_llm_reinduction` rejects anything scoring below that, the scored window is the agent's
++own transitions, and before its first level-up that window contains no level-ups -- on which
++a constant-False predicate scores exactly 1.0. The argument is sound by construction. This
++puts a NUMBER on it.
++
++WHAT IS COMPUTED. For every goal predicate whose two axes are already measured, build the
++veto's confusion matrix against ground truth:
++
++  * what the veto SEES: specificity accuracy, and whether `accuracy >= 1.0` accepts it.
++  * GROUND TRUTH: does the predicate fire on a grid where a level-up really happened?
++
++  FALSE ACCEPT = the veto admits a predicate that never fires on a real win. Those reach
++  `plan_in_model` as its termination condition, so the planner cannot terminate or
++  terminates on an in-model false win.
++  FALSE REJECT = the veto discards a predicate that DOES fire on a real win, because it had
++  at least one false positive and so scored below 1.0.
++
++NO NEW MEASUREMENT, NO GPU. Both axes already exist: exp6257 swept the 25 stored engines and
++exp6256 induced 8 fresh predicates (control and treatment across 4 games). This is
++arithmetic over those artifacts. Re-inducing to answer it would have cost GPU hours for
++numbers already on disk.
++
++WHAT THIS CANNOT SHOW. It does not observe the live agent. It shows what the live threshold
++WOULD do to predicates of the kind the project actually produces. The population is public
++games with development-proxy win grids, not hidden-game level 1.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++OUT = REPO / "results" / "experiment_6258_goal_veto_confusion_matrix.json"
++SWEEP = REPO / "results" / "experiment_6257_stored_goal_predicate_sweep.json"
++FRESH = REPO / "results" / "experiment_6256_win_exemplar_goal_predicate_ab.json"
++# The live value, read off both call sites in arc_competition_agent.py (7164, 7309).
++LIVE_THRESHOLD = 1.0
++
++
++def _collect() -> list[dict]:
++    """One row per predicate with BOTH axes present. A predicate missing either axis is
++    dropped rather than guessed -- an unmeasurable sensitivity must never read as a pass."""
++    rows: list[dict] = []
++
++    if SWEEP.exists():
++        for r in json.loads(SWEEP.read_text()).get("per_game_results", []):
++            spec, fires = r.get("specificity_accuracy"), r.get("fires_on_real_win")
++            if spec is None or fires is None:
++                continue
++            rows.append(
++                {
++                    "source": "stored",
++                    "game": r["game"],
++                    "arm": "stored",
++                    "specificity": float(spec),
++                    "fires_on_real_win": bool(fires),
++                }
++            )
++
++    if FRESH.exists():
++        for r in json.loads(FRESH.read_text()).get("per_game_results", []):
++            for arm in ("control", "treatment"):
++                a = r.get(arm)
++                if not a:
++                    continue
++                spec, fires = a.get("goal_specificity_accuracy"), a.get("goal_fires_on_real_win")
++                if spec is None or fires is None:
++                    continue
++                rows.append(
++                    {
++                        "source": "freshly_induced",
++                        "game": r["game"],
++                        "arm": arm,
++                        "specificity": float(spec),
++                        "fires_on_real_win": bool(fires),
++                    }
++                )
++    return rows
++
++
++def build_artifact() -> dict:
++    t0 = time.time()
++    rows = _collect()
++    for r in rows:
++        r["veto_accepts"] = bool(r["specificity"] >= LIVE_THRESHOLD)
++        if r["veto_accepts"] and not r["fires_on_real_win"]:
++            r["outcome"] = "FALSE_ACCEPT_degenerate_admitted"
++        elif not r["veto_accepts"] and r["fires_on_real_win"]:
++            r["outcome"] = "FALSE_REJECT_discriminating_discarded"
++        elif r["veto_accepts"] and r["fires_on_real_win"]:
++            r["outcome"] = "true_accept"
++        else:
++            r["outcome"] = "true_reject"
++
++    n = len(rows)
++    fa = [r for r in rows if r["outcome"] == "FALSE_ACCEPT_degenerate_admitted"]
++    fr = [r for r in rows if r["outcome"] == "FALSE_REJECT_discriminating_discarded"]
++    ta = [r for r in rows if r["outcome"] == "true_accept"]
++    tr = [r for r in rows if r["outcome"] == "true_reject"]
++    accepted = fa + ta
++
++    # The number that decides whether the veto is working: of everything it lets through,
++    # how much is useless?
++    precision = round(len(ta) / len(accepted), 4) if accepted else None
++
++    art = {
++        "experiment": "experiment_6258_goal_veto_confusion_matrix",
++        "title": "What the live goal-predicate veto accepts and rejects, against ground truth",
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "live_threshold": LIVE_THRESHOLD,
++        "per_predicate": rows,
++        "n_predicates": n,
++        "n_true_accept": len(ta),
++        "n_false_accept_degenerate_admitted": len(fa),
++        "n_false_reject_discriminating_discarded": len(fr),
++        "n_true_reject": len(tr),
++        "acceptance_precision": precision,
++        "acceptance_precision_meaning": (
++            "of every predicate the veto ADMITS, the fraction that actually fires on a real "
++            "win. The rest are admitted and then used as plan_in_model's termination condition."
++        ),
++        "false_accept_games": sorted({r["game"] for r in fa}),
++        "false_reject_games": sorted({r["game"] for r in fr}),
++        "cited_upstream_artifacts": [
++            {
++                "experiment_id": "exp6257",
++                "path": str(SWEEP.relative_to(REPO)),
++                "fields_imported": ["specificity_accuracy", "fires_on_real_win"],
++            },
++            {
++                "experiment_id": "exp6256",
++                "path": str(FRESH.relative_to(REPO)),
++                "fields_imported": ["goal_specificity_accuracy", "goal_fires_on_real_win"],
++            },
++        ],
++        "what_this_cannot_show": (
++            "this does not observe the live agent. It shows what the live threshold WOULD do "
++            "to predicates of the kind the project actually produces. The population is public "
++            "games with development-proxy win grids, not hidden-game level 1."
++        ),
++        "why_no_new_measurement": (
++            "both axes already existed in exp6256 and exp6257. Re-inducing would have spent GPU "
++            "hours regenerating numbers already on disk."
++        ),
++        "solve_provenance": "development_proxy",
++        "arc_solve_claim": False,
++        "verifier_is_oracle": False,
++        "verifier_is_oracle_principle": (
++            "this audits a gate against recorded level-up ground truth; it is not the "
++            "executable win oracle driving a solve, and no level is claimed"
++        ),
++        "inference_substrate": "aggregation_from_upstream_artifacts",
++        "random_seed": 6258,
++    }
++    if n == 0:
++        art["honest_verdict"] = "complete_blocked_no_predicate_had_both_axes_measured"
++    else:
++        art["honest_verdict"] = (
++            f"complete_goal_veto_confusion_{len(fa)}_false_accepts_{len(fr)}_false_rejects_of_{n}_"
++            f"acceptance_precision_{precision}"
++        )
++    art["duration_s"] = round(time.time() - t0, 4)
++    payload = {k: v for k, v in art.items() if k != "duration_s"}
++    art["reproducibility_checksum"] = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, default=str).encode()
++    ).hexdigest()
++    return art
++
++
++def main() -> int:
++    art = build_artifact()
++    OUT.write_text(json.dumps(art, indent=2, default=str) + "\n", encoding="utf-8")
++    print("verdict:", art.get("honest_verdict"))
++    print(
++        f"  true_accept={art['n_true_accept']} FALSE_ACCEPT={art['n_false_accept_degenerate_admitted']} "
++        f"FALSE_REJECT={art['n_false_reject_discriminating_discarded']} true_reject={art['n_true_reject']}"
++    )
++    print("  acceptance precision:", art["acceptance_precision"])
++    print("wrote", OUT)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

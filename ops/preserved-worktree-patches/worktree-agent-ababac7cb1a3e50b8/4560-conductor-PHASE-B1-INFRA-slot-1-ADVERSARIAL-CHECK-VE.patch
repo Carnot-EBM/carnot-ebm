@@ -1,0 +1,2526 @@
+From ec24ead5b2b24651b286be43a872dc9b1a7fe4b0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 27 Jun 2026 23:33:32 -0400
+Subject: [PATCH 04560/11362] [conductor] PHASE B1 (INFRA slot 1; ADVERSARIAL
+ CHECK) -- VERIFY the A1 decision-need value-gap result is GENUINELY
+ DIAGNOSTIC (graded positive control NON-DEGENERATE cell_recall>0;
+ value-accuracy delta on a held-out split DISJOINT from the representation's
+ authoring set; planner-blind; live-path-reachable; ran live on GPU0; numbers
+ match the fork verdict; oracle-distinct). ALSO verify A1b GENUINELY RAN LIVE
+ (duration_s>60, NOT DURATION_TOO_SHORT -- the explicit .450 A1b failure mode)
+ on the SAME held-out split, oracle-distinct -- or record it gate-skipped.
+
+Automated research step by research conductor.
+Task ID: exp4897-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |   77 ++
+ ops/arc_null_silent_bug_audit.md              |   28 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...ent_4897_value_gap_representation_audit.py | 1191 +++++++++++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...t_4897_value_gap_representation_audit.json |  294 ++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    4 +-
+ ...ent_4897_value_gap_representation_audit.py |  721 ++++++++++
+ 13 files changed, 2330 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/experiment_4897_value_gap_representation_audit.py
+ create mode 100644 results/experiment_4897_value_gap_representation_audit.json
+ create mode 100644 tests/python/test_experiment_4897_value_gap_representation_audit.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 96b8a69cc6..cf8a00f4f2 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -11984,6 +11984,83 @@ When Experiment 4893 computes the median delta and bootstrap CI95
+ Then it emits `REPRESENTATION_MATTERS` only when the CI95 excludes zero, and
+ otherwise emits `VALUE_GAP_REPRESENTATION_INVARIANT_HARD`.
+ 
++### REQ-ARC-WMTE-4897: Value-Gap Representation Adversarial Audit
++
++Experiment 4897 SHALL audit the Experiment 4892 A1 decision-need value-gap
++probe and the optional Experiment 4893 A1b action-prefix latent adapter before
++any capstone trusts the `.451` representation fork. If the A1 artifact or
++source script is missing, Experiment 4897 SHALL write
++`results/experiment_4897_value_gap_representation_audit.json` with
++`honest_verdict=blocked_a1_artifact_missing` and SHALL not fabricate any A1 or
++A1b pass.
++
++The audit SHALL run `scripts/summarize_artifact.py` and
++`scripts/adversarial_verify.py` on the A1 artifact, SHALL run
++`scripts/adversarial_verify.py` on A1b when A1b exists, SHALL inspect the A1
++source path so the banked winning answer is used only after planning for
++classification, and SHALL require `arc_orphan_solver_lint` to pass before
++declaring the live path reachable. A1 is genuinely diagnostic only when the
++graded `tu93` positive control is non-degenerate (`cell_recall > 0`), the
++reported value delta is scored on a split disjoint from the decision-need
++authoring set, the planner is blind to the banked answer, per-game
++`cell_recall`/value-accuracy/delta numbers support the reported
++`fork_verdict`, the live path is reachable, and the A1 run used GPU-0 CUDA or
++iGPU HIP for at least the live-model duration floor without an adversarial
++flag. A1b is genuinely live only when it was gate-skipped because A1 closed the
++value gap or blocked, or when it cleared the 60s live floor without a
++`DURATION_TOO_SHORT` flag, scored the same held-out games and split as A1,
++remained oracle-distinct, and used a reachable live path.
++
++Experiment 4897 SHALL write
++`results/experiment_4897_value_gap_representation_audit.json` with required
++top-level fields `honest_verdict`, `a1_genuinely_diagnostic`,
++`a1_positive_control_non_degenerate_confirmed`,
++`a1_delta_on_heldout_disjoint_confirmed`, `planner_blind_confirmed`,
++`numbers_match_fork`, `a1b_ran_genuinely_live`, `inference_substrate`,
++`checks`, `a1_failure_reasons`, `a1b_failure_reasons`,
++`a1_summarizer_result`, `a1_adversarial_result`,
++`a1b_adversarial_result`, `live_lint_result`, `preconditions_checked`,
++`field_principles`, `duration_s`, and `reproducibility_checksum`. The workflow
++SHALL append an idempotent Experiment 4897 section to
++`ops/arc_null_silent_bug_audit.md`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; audit complete is complete_a1_a1b_audited."
++- `a1_genuinely_diagnostic`: principle "the load-bearing check -- non-degenerate-graded-control AND held-out-disjoint-delta AND planner-blind AND numbers-match-fork AND live-path-reachable AND ran-live-on-GPU0; else A1's fork verdict is void."
++- `a1_positive_control_non_degenerate_confirmed`: principle "true iff the GRADED tu93 positive control really had cell_recall > 0 -- carries forward the .450 degenerate-metric fix."
++- `a1_delta_on_heldout_disjoint_confirmed`: principle "true iff A1's value-accuracy delta was scored on a split DISJOINT from the representation's authoring set (not a tautology)."
++- `planner_blind_confirmed`: principle "true iff the banked winner was used only to classify, never to seed authoring/fitting/planning."
++- `numbers_match_fork`: principle "true iff the per-game (cell_recall, value-accuracy, delta) numbers support the claimed fork_verdict."
++- `a1b_ran_genuinely_live`: principle "true iff A1b cleared the 60s live floor (duration_s>60, NOT DURATION_TOO_SHORT -- the explicit .450 A1b non-test fix) on the same held-out split (or A1b was gate-skipped)."
++- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
++
++#### SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT
++
++Given checked-in A1 and optional A1b artifacts plus the A1 source script
++When Experiment 4897 runs the hostile audit
++Then it writes a schema-valid `complete_a1_a1b_audited` artifact whose A1 and
++A1b booleans are true only when all load-bearing checks pass, and whose failure
++reasons make any degenerate graded control, held-out split tautology,
++banked-answer injection, fork-number mismatch, unreachable live path,
++wrong/too-short substrate, circular verifier, or unfair A1b split explicit.
++
++#### SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED
++
++Given Experiment 4893 exists or A1 makes it unnecessary
++When Experiment 4897 evaluates A1b
++Then `a1b_ran_genuinely_live=true` only when A1b is gate-skipped because A1
++closed the value gap or blocked, or when A1b reports `duration_s > 60`,
++`ran_genuinely_live=true`, no `DURATION_TOO_SHORT` adversarial flag, the same
++A1 held-out game split, oracle-distinct scoring, and a reachable live path.
++
++#### SCENARIO-ARC-WMTE-4897-BLOCKED-A1-ARTIFACT
++
++Given the A1 artifact or A1 source script is missing
++When Experiment 4897 runs
++Then it writes `blocked_a1_artifact_missing`, marks every trust boolean false,
++records the missing precondition, and does not claim A1 or A1b audit success.
++
+ ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
+ 
+ Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
+diff --git a/ops/arc_null_silent_bug_audit.md b/ops/arc_null_silent_bug_audit.md
+index fde4809116..972e237732 100644
+--- a/ops/arc_null_silent_bug_audit.md
++++ b/ops/arc_null_silent_bug_audit.md
+@@ -279,3 +279,31 @@
+ - A1 artifact checksum: `sha256:6a0f5e5552d56b267cb79f1b9414289514ae65bd3f6ff5653a98237b1b3c6333`
+ - A1 script checksum: `sha256:b678bbb29a94dca56189acfe144ddf9a69968784e7d4969a1fd90749b2d52e27`
+ - A1b artifact checksum: `sha256:e7b2a79e8d5e0393574b641be54e50ee9d3ab6491096cf18ce822e8286febb21`
++## Experiment 4897 A1/A1b Audit
++
++- Verdict: `complete_a1_a1b_audited`
++- a1_genuinely_diagnostic: `True`
++- a1_positive_control_non_degenerate_confirmed: `True`
++- a1_delta_on_heldout_disjoint_confirmed: `True`
++- planner_blind_confirmed: `True`
++- numbers_match_fork: `True`
++- a1b_ran_genuinely_live: `True`
++- A1 reasons: `-`
++- A1b reasons: `-`
++- Inference substrate: `aggregation_from_upstream_artifacts`
++
++| Check | Passed | Detail |
++|---|---:|---|
++| `a1_live_gpu` | `True` | `{"duration_floor_s": 60.0, "duration_s": 276.93438816070557, "flagged_adversarial": false, "generator_backend": "gpu0_cuda", "inference_substrate": "live_llm_inference"}` |
++| `a1_positive_control` | `True` | `{"artifact_positive_control_non_degenerate": true, "cell_recall": 0.177143, "positive_control_game": "tu93", "row_game": "tu93"}` |
++| `a1_heldout_disjoint_delta` | `True` | `{"artifact_delta_on_truly_heldout_split": true, "bad_games": [], "checked_games": ["cd82", "cn04", "ls20", "m0r0", "r11l", "sk48", "sp80", "su15", "tu93_positive_control", "wa30"]}` |
++| `a1_planner_blind_to_banked_answer` | `True` | `{"allowed_only_in_classify_planned_pool": true, "artifact_flag": true, "disallowed_refs": [], "function_present": true, "winning_prefix_refs": 1}` |
++| `a1_numbers_match_fork` | `True` | `{"computed_ci95": [-0.227708, 0.025266], "computed_coverage_migration_count": 0, "computed_engine_cell_recall_median": 0.727273, "computed_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT", "computed_median_delta": -0.101866, "invalid_games": [], "never_enumerated_games": 9, "per_game_count": 9, "reported_ci95": [-0.227708, 0.025266], "reported_coverage_migration_count": 0, "reported_engine_cell_recall_median": 0.727273, "reported_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT", "reported_median_delta": -0.101866, "reported_n_games_measured": 9}` |
++| `a1_summarizer_and_adversarial_verify` | `True` | `{"adversarial_flag_count": 0, "adversarial_loaded": true, "summarizer_returncode": 0}` |
++| `a1_oracle_distinct` | `True` | `{"circular_moat_flagged": false, "verifier_is_oracle": false}` |
++| `a1_live_path` | `True` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": true, "solve_provenance": "development_proxy", "source_live_path": {"calls": ["a1._collect_cold_policy_transitions", "list", "cold.get", "_author_llm_targets", "DecisionNeedTargetTable.author", "e3.collect_transitions", "list", "score_decision_need_table", "_a1_value", "_a1_value", "float", "float", "a1.classify_planned_pool", "classification.update", "int", "sum", "np.asarray", "_plan_with_decision_need_table", "int", "max", "cold.get", "list", "int", "a1._execute_plan_reaches_l1", "round", "round", "round", "round", "round", "_transition_ids", "_transition_ids", "list", "len", "len", "len", "len", "table.target_kinds", "table.summary", "ord", "np.asarray", "float", "float", "str", "int", "llm_authoring.get", "a1_baseline_row.get", "a1_baseline_row.get", "_transition_ids"], "classification_path_called": true, "decision_need_target_table_authored": true, "function_present": true, "passed": true, "plan_path_called": true}, "source_live_path_called": true}` |
++| `a1b_live_and_split` | `True` | `{"a1_games": ["cd82", "cn04", "ls20", "m0r0", "r11l", "sk48", "sp80", "su15", "wa30"], "a1b_games": ["cd82", "cn04", "ls20", "m0r0", "r11l", "sk48", "sp80", "su15", "wa30"], "adversarial_flag_kinds": ["IMPLAUSIBLE_PERFECT"], "bad_delta_games": [], "bad_split_games": [], "duration_floor_s": 60.0, "duration_s": 218.924402, "duration_too_short_flagged": false, "live_path_reachable": true, "missing_live_methods": [], "oracle_distinct": true, "ran_genuinely_live": true, "same_games_as_a1": true, "same_split_as_a1": true, "status": "ran", "verifier_is_oracle": false}` |
++
++- A1 artifact checksum: `sha256:8104e5b8a16fb7d59bf98b459b2d5322d31a221df143c02f66a9764690e4d422`
++- A1 script checksum: `sha256:377b55ab71d70d2f91e40b94bd9ca8997f40d0e32a30e05e42f780d799b80255`
++- A1b artifact checksum: `sha256:9c2fff54149794603fea9a458af0d2d46721889417dd0c6e596b160a4675b732`
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0041bb6a2d..c7d5a25819 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 201,
+   "code_violations": 0,
+-  "experiments_checked": 3904,
++  "experiments_checked": 3905,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4897_value_gap_representation_audit.py b/python/carnot/experiment_4897_value_gap_representation_audit.py
+new file mode 100644
+index 0000000000..8f517f915e
+--- /dev/null
++++ b/python/carnot/experiment_4897_value_gap_representation_audit.py
+@@ -0,0 +1,1191 @@
++"""Experiment 4897: adversarial audit of Exp 4892 A1 and Exp 4893 A1b.
++
++Spec refs: REQ-ARC-WMTE-4897,
++SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT,
++SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED,
++SCENARIO-ARC-WMTE-4897-BLOCKED-A1-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++import ast
++from contextlib import redirect_stdout
++import hashlib
++import io
++import json
++import math
++from pathlib import Path
++import subprocess
++import sys
++import time
++from statistics import median
++from typing import Any, Callable, Mapping, Sequence
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++for import_root in (REPO_ROOT, PYTHON_ROOT):  # pragma: no cover - direct script guard.
++    if str(import_root) not in sys.path:
++        sys.path.insert(0, str(import_root))
++
++
++EXPERIMENT = "experiment_4897_value_gap_representation_audit"
++EXPERIMENT_ID = 4897
++SCHEMA = "carnot.arc.value_gap_representation_audit_4897.v1"
++A1_ARTIFACT_RELATIVE_PATH = "results/experiment_4892_decision_need_targets_value_gap.json"
++A1_SCRIPT_RELATIVE_PATH = "python/carnot/experiment_4892_decision_need_targets_value_gap.py"
++A1B_ARTIFACT_RELATIVE_PATH = "results/experiment_4893_action_prefix_latent_adapter.json"
++RESULT_RELATIVE_PATH = "results/experiment_4897_value_gap_representation_audit.json"
++AUDIT_REPORT_RELATIVE_PATH = "ops/arc_null_silent_bug_audit.md"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++DURATION_FLOOR_S = 0.0001
++LIVE_LLM_DURATION_FLOOR_S = 60.0
++RANDOM_SEED = 4897
++GENERATOR_BACKENDS = ("gpu0_cuda", "igpu_hip")
++BUCKETS = ("COVERED", "ENUMERATED_BUT_LOST", "NEVER_ENUMERATED")
++FORK_VERDICTS = (
++    "REPRESENTATION_UNLOCKS_VALUE",
++    "PLANNER_GAP",
++    "VALUE_GAP_REPRESENTATION_INVARIANT",
++)
++TERMINAL_PREFIXES = ("complete_", "blocked_", "success_")
++
++SPEC_REFS = [
++    "REQ-ARC-WMTE-4897",
++    "SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT",
++    "SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED",
++    "SCENARIO-ARC-WMTE-4897-BLOCKED-A1-ARTIFACT",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; audit complete is complete_a1_a1b_audited."
++    },
++    "a1_genuinely_diagnostic": {
++        "principle": (
++            "the load-bearing check -- non-degenerate-graded-control AND "
++            "held-out-disjoint-delta AND planner-blind AND numbers-match-fork AND "
++            "live-path-reachable AND ran-live-on-GPU0; else A1's fork verdict is void."
++        )
++    },
++    "a1_positive_control_non_degenerate_confirmed": {
++        "principle": (
++            "true iff the GRADED tu93 positive control really had cell_recall > 0 -- "
++            "carries forward the .450 degenerate-metric fix."
++        )
++    },
++    "a1_delta_on_heldout_disjoint_confirmed": {
++        "principle": (
++            "true iff A1's value-accuracy delta was scored on a split DISJOINT from "
++            "the representation's authoring set (not a tautology)."
++        )
++    },
++    "planner_blind_confirmed": {
++        "principle": (
++            "true iff the banked winner was used only to classify, never to seed "
++            "authoring/fitting/planning."
++        )
++    },
++    "numbers_match_fork": {
++        "principle": (
++            "true iff the per-game (cell_recall, value-accuracy, delta) numbers "
++            "support the claimed fork_verdict."
++        )
++    },
++    "a1b_ran_genuinely_live": {
++        "principle": (
++            "true iff A1b cleared the 60s live floor (duration_s>60, NOT "
++            "DURATION_TOO_SHORT -- the explicit .450 A1b non-test fix) on the same "
++            "held-out split (or A1b was gate-skipped)."
++        )
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "experiment_id",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "a1_artifact_path",
++    "a1_script_path",
++    "a1b_artifact_path",
++    "a1_artifact_checksum",
++    "a1_script_checksum",
++    "a1b_artifact_checksum",
++    "a1_source_honest_verdict",
++    "a1_source_fork_verdict",
++    "a1_source_n_games_measured",
++    "a1b_source_honest_verdict",
++    "a1b_source_fork_verdict",
++    "a1_ran_live_on_gpu0",
++    "a1_live_path_reachable_confirmed",
++    "field_principles",
++    "checks",
++    "a1_failure_reasons",
++    "a1b_failure_reasons",
++    "a1_summarizer_result",
++    "a1_adversarial_result",
++    "a1b_adversarial_result",
++    "live_lint_result",
++    "preconditions_checked",
++    "audit_report_path",
++    "random_seed",
++    "duration_s",
++    "reproducibility_checksum",
++)
++
++JsonDict = dict[str, Any]
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _finite_float(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    try:
++        parsed = float(value)
++    except (TypeError, ValueError):
++        return None
++    return parsed if math.isfinite(parsed) else None
++
++
++def _unit(value: Any) -> float | None:
++    parsed = _finite_float(value)
++    return parsed if parsed is not None and 0.0 <= parsed <= 1.0 else None
++
++
++def _read_json(path: Path) -> JsonDict:
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(loaded, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return loaded
++
++
++def _stable_json(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def file_checksum(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _tail(text: str, limit: int = 2000) -> str:
++    return text[-limit:] if len(text) > limit else text
++
++
++def run_summarizer(path: Path) -> JsonDict:
++    from scripts import summarize_artifact
++
++    buffer = io.StringIO()
++    with redirect_stdout(buffer):
++        returncode = summarize_artifact.summarize(path)
++    return {"returncode": int(returncode), "stdout": buffer.getvalue(), "stderr": ""}
++
++
++def run_adversarial_verify(path: Path) -> JsonDict:
++    from scripts import adversarial_verify
++
++    try:
++        return dict(adversarial_verify.verify_artifact(path))
++    except Exception as exc:
++        command = [sys.executable, "scripts/adversarial_verify.py", str(path)]
++        proc = subprocess.run(
++            command,
++            cwd=REPO_ROOT,
++            capture_output=True,
++            text=True,
++            timeout=90,
++            check=False,
++        )
++        return {
++            "loaded": True,
++            "flag_count": 0 if proc.returncode == 0 else 1,
++            "flags": [],
++            "returncode": int(proc.returncode),
++            "stdout_tail": _tail(proc.stdout),
++            "stderr_tail": _tail(proc.stderr),
++            "fallback_error": repr(exc),
++        }
++
++
++def run_arc_orphan_solver_lint(root: Path | str) -> JsonDict:
++    command = [sys.executable, "scripts/arc_orphan_solver_lint.py"]
++    proc = subprocess.run(
++        command,
++        cwd=Path(root),
++        capture_output=True,
++        text=True,
++        timeout=90,
++        check=False,
++    )
++    return {
++        "command": " ".join(command),
++        "passed": proc.returncode == 0,
++        "returncode": int(proc.returncode),
++        "stdout_tail": _tail(proc.stdout),
++        "stderr_tail": _tail(proc.stderr),
++    }
++
++
++def _full_call_name(callable_node: ast.AST) -> str:
++    if isinstance(callable_node, ast.Name):
++        return callable_node.id
++    if isinstance(callable_node, ast.Attribute):
++        prefix = _full_call_name(callable_node.value)
++        return f"{prefix}.{callable_node.attr}" if prefix else callable_node.attr
++    return ""
++
++
++def _call_name(callable_node: ast.AST | None) -> str:
++    if callable_node is None:
++        return ""
++    if isinstance(callable_node, ast.Name):
++        return callable_node.id
++    if isinstance(callable_node, ast.Attribute):
++        return callable_node.attr
++    return ""
++
++
++def _attach_ast_parents(tree: ast.AST) -> None:
++    for parent in ast.walk(tree):
++        for child in ast.iter_child_nodes(parent):
++            child.__dict__["_parent"] = parent
++
++
++def _find_function(tree: ast.AST, name: str) -> ast.FunctionDef | None:
++    for node in ast.walk(tree):
++        if isinstance(node, ast.FunctionDef) and node.name == name:
++            return node
++    return None
++
++
++def _first_parent_call(node: ast.AST) -> ast.Call | None:
++    parent = getattr(node, "_parent", None)
++    while parent is not None:
++        if isinstance(parent, ast.Call):
++            return parent
++        parent = getattr(parent, "_parent", None)
++    return None
++
++
++def _source_checks(source_text: str, artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str], JsonDict, list[str]]:
++    planner_reasons: list[str] = []
++    live_reasons: list[str] = []
++    if artifact.get("planner_blind_to_banked_answer") is not True:
++        planner_reasons.append("artifact_planner_blind_flag_false")
++    try:
++        tree = ast.parse(source_text)
++    except SyntaxError as exc:
++        return (
++            {"passed": False, "parse_error": str(exc), "disallowed_refs": []},
++            planner_reasons + ["a1_source_not_parseable"],
++            {"passed": False, "parse_error": str(exc), "calls": []},
++            ["source_live_path_uninspectable"],
++        )
++
++    _attach_ast_parents(tree)
++    function = _find_function(tree, "measure_game_with_decision_need_targets")
++    if function is None:
++        return (
++            {"passed": False, "function_present": False, "disallowed_refs": []},
++            planner_reasons + ["measure_game_with_decision_need_targets_missing"],
++            {"passed": False, "function_present": False, "calls": []},
++            ["measure_game_with_decision_need_targets_missing"],
++        )
++
++    winning_prefix_refs: list[JsonDict] = []
++    disallowed_refs: list[JsonDict] = []
++    calls: list[str] = []
++    for node in ast.walk(function):
++        if isinstance(node, ast.Call):
++            calls.append(_full_call_name(node.func))
++        if isinstance(node, ast.Name) and node.id == "winning_prefix":
++            call = _first_parent_call(node)
++            call_name = _call_name(call.func if call is not None else None)
++            record = {"line": int(getattr(node, "lineno", 0)), "call": call_name or None}
++            winning_prefix_refs.append(record)
++            if call_name != "classify_planned_pool":
++                disallowed_refs.append(record)
++
++    if not winning_prefix_refs:
++        planner_reasons.append("winning_prefix_not_used_for_classification")
++    if disallowed_refs:
++        planner_reasons.append("banked_answer_used_before_classification")
++
++    has_table = any(name.endswith("DecisionNeedTargetTable.author") for name in calls)
++    has_plan = any(name.endswith("_plan_with_decision_need_table") or name.endswith(".plan_in_model") for name in calls)
++    has_classify = any(name.endswith("classify_planned_pool") for name in calls)
++    if not has_table:
++        live_reasons.append("decision_need_target_table_not_authored")
++    if not has_plan:
++        live_reasons.append("plan_in_model_path_not_called")
++    if not has_classify:
++        live_reasons.append("classification_path_not_called")
++
++    return (
++        {
++            "passed": not planner_reasons,
++            "artifact_flag": artifact.get("planner_blind_to_banked_answer"),
++            "function_present": True,
++            "winning_prefix_refs": len(winning_prefix_refs),
++            "disallowed_refs": disallowed_refs,
++            "allowed_only_in_classify_planned_pool": not disallowed_refs and bool(winning_prefix_refs),
++        },
++        list(dict.fromkeys(planner_reasons)),
++        {
++            "passed": not live_reasons,
++            "function_present": True,
++            "calls": calls,
++            "decision_need_target_table_authored": has_table,
++            "plan_path_called": has_plan,
++            "classification_path_called": has_classify,
++        },
++        list(dict.fromkeys(live_reasons)),
++    )
++
++
++def _generator_backend(artifact: Mapping[str, Any]) -> str | None:
++    if artifact.get("generator_backend") in GENERATOR_BACKENDS:
++        return str(artifact.get("generator_backend"))
++    model_specs = _mapping(artifact.get("model_specs"))
++    if model_specs.get("backend") in GENERATOR_BACKENDS:
++        return str(model_specs.get("backend"))
++    generator = _mapping(_mapping(artifact.get("preconditions_checked")).get("generator"))
++    backend = generator.get("generator_backend") or generator.get("backend")
++    return str(backend) if backend in GENERATOR_BACKENDS else None
++
++
++def _a1_live_gpu_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str], bool]:
++    backend = _generator_backend(artifact)
++    duration = _finite_float(artifact.get("duration_s"))
++    flagged = artifact.get("flagged_adversarial") is True
++    substrate_live = artifact.get("inference_substrate") == "live_llm_inference"
++    reasons: list[str] = []
++    if backend not in GENERATOR_BACKENDS or duration is None or duration <= LIVE_LLM_DURATION_FLOOR_S or flagged:
++        reasons.append("a1_not_live_on_gpu0")
++    if backend not in GENERATOR_BACKENDS:
++        reasons.append("a1_generator_backend_not_gpu0_or_igpu")
++    if duration is None or duration <= LIVE_LLM_DURATION_FLOOR_S:
++        reasons.append("a1_duration_below_live_floor")
++    if flagged:
++        reasons.append("a1_flagged_adversarial")
++    if not substrate_live:
++        reasons.append("a1_inference_substrate_not_live_llm")
++    return (
++        {
++            "passed": not reasons,
++            "generator_backend": backend,
++            "duration_s": artifact.get("duration_s"),
++            "duration_floor_s": LIVE_LLM_DURATION_FLOOR_S,
++            "flagged_adversarial": flagged,
++            "inference_substrate": artifact.get("inference_substrate"),
++        },
++        list(dict.fromkeys(reasons)),
++        not reasons,
++    )
++
++
++def _id_list(row: Mapping[str, Any], key: str) -> list[str]:
++    return [str(item) for item in row.get(key) or []]
++
++
++def _id_set(row: Mapping[str, Any], key: str) -> set[str]:
++    return set(_id_list(row, key))
++
++
++def _same_ids(left: Any, right: Any) -> bool:
++    return [str(item) for item in (left or [])] == [str(item) for item in (right or [])]
++
++
++def _split_is_disjoint(row: Mapping[str, Any], *, fit_key: str, heldout_key: str) -> bool:
++    fit = _id_set(row, fit_key)
++    heldout = _id_set(row, heldout_key)
++    return bool(fit) and bool(heldout) and fit.isdisjoint(heldout)
++
++
++def _positive_control_recall(row: Mapping[str, Any]) -> float | None:
++    for key in ("cell_recall", "cell_recall_decision_need", "cell_recall_baseline"):
++        value = _unit(row.get(key))
++        if value is not None:
++            return value
++    return None
++
++
++def _positive_control_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    row = _mapping(artifact.get("positive_control_value_gap"))
++    recall = _positive_control_recall(row)
++    reasons: list[str] = []
++    if artifact.get("positive_control_game") != "tu93" or row.get("game") != "tu93":
++        reasons.append("a1_positive_control_not_tu93")
++    if artifact.get("positive_control_non_degenerate") is not True:
++        reasons.append("a1_positive_control_degenerate")
++    if not row:
++        reasons.append("a1_positive_control_row_missing")
++    if recall is None or recall <= 0.0:
++        reasons.append("a1_positive_control_degenerate")
++    return (
++        {
++            "passed": not reasons,
++            "positive_control_game": artifact.get("positive_control_game"),
++            "artifact_positive_control_non_degenerate": artifact.get("positive_control_non_degenerate"),
++            "row_game": row.get("game"),
++            "cell_recall": recall,
++        },
++        list(dict.fromkeys(reasons)),
++    )
++
++
++def _delta_values(per_game: Mapping[str, Any]) -> list[float]:
++    values: list[float] = []
++    for row_value in per_game.values():
++        value = _finite_float(_mapping(row_value).get("value_delta"))
++        if value is not None:
++            values.append(round(float(value), 6))
++    return values
++
++
++def _bootstrap_ci95(values: Sequence[float], *, iterations: int, seed: int) -> list[float | None]:
++    from carnot import experiment_4892_decision_need_targets_value_gap as a1_mod
++
++    return a1_mod.bootstrap_ci95(values, iterations=iterations, seed=seed)
++
++
++def _coverage_migration_count(per_game: Mapping[str, Any]) -> int:
++    return sum(1 for row in per_game.values() if _mapping(row).get("migrated") is True)
++
++
++def _median_delta(per_game: Mapping[str, Any]) -> float | None:
++    values = _delta_values(per_game)
++    return round(float(median(values)), 6) if values else None
++
++
++def _median_cell_recall(per_game: Mapping[str, Any]) -> float | None:
++    values: list[float] = []
++    for row_value in per_game.values():
++        value = _unit(_mapping(row_value).get("cell_recall"))
++        if value is not None:
++            values.append(value)
++    return round(float(median(values)), 6) if values else None
++
++
++def _computed_fork_verdict(per_game: Mapping[str, Any], positive_control: Mapping[str, Any], ci95: Sequence[Any]) -> str | None:
++    if len(per_game) < 3 or (_positive_control_recall(positive_control) or 0.0) <= 0.0:
++        return None
++    med = _median_delta(per_game)
++    lo = _finite_float(ci95[0]) if len(ci95) >= 1 else None
++    hi = _finite_float(ci95[1]) if len(ci95) >= 2 else None
++    real_lift = med is not None and med > 0.0 and lo is not None and hi is not None and lo > 0.0
++    if not real_lift:
++        return "VALUE_GAP_REPRESENTATION_INVARIANT"
++    if _coverage_migration_count(per_game) >= 1:
++        return "REPRESENTATION_UNLOCKS_VALUE"
++    return "PLANNER_GAP"
++
++
++def _delta_split_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    rows: dict[str, Mapping[str, Any]] = {
++        str(game): _mapping(row) for game, row in _mapping(artifact.get("per_game_value_gap")).items()
++    }
++    positive = _mapping(artifact.get("positive_control_value_gap"))
++    if positive:
++        rows["tu93_positive_control"] = positive
++    bad_games = sorted(
++        game
++        for game, row in rows.items()
++        if not _split_is_disjoint(row, fit_key="author_transition_ids", heldout_key="heldout_transition_ids")
++    )
++    artifact_flag = artifact.get("delta_on_truly_heldout_split") is True
++    reasons: list[str] = []
++    if bad_games or not artifact_flag:
++        reasons.append("a1_delta_split_not_disjoint")
++    return (
++        {
++            "passed": not reasons,
++            "artifact_delta_on_truly_heldout_split": artifact_flag,
++            "bad_games": bad_games,
++            "checked_games": sorted(rows),
++        },
++        reasons,
++    )
++
++
++def _numbers_match_fork_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    per_game = _mapping(artifact.get("per_game_value_gap"))
++    reasons: list[str] = []
++    invalid_games: list[str] = []
++    never_enumerated_games = 0
++    for game, row_value in per_game.items():
++        row = _mapping(row_value)
++        bucket = row.get("planned_bucket")
++        baseline = _unit(row.get("value_acc_code_baseline"))
++        decision_need = _unit(row.get("value_acc_decision_need"))
++        delta = _finite_float(row.get("value_delta"))
++        recall = _unit(row.get("cell_recall"))
++        if bucket not in BUCKETS:
++            reasons.append("invalid_planned_bucket")
++            invalid_games.append(str(game))
++        if bucket == "NEVER_ENUMERATED":
++            never_enumerated_games += 1
++        if baseline is None or decision_need is None or delta is None:
++            reasons.append("invalid_value_metric")
++            invalid_games.append(str(game))
++        elif round(decision_need - baseline, 6) != round(delta, 6):
++            reasons.append("value_delta_mismatch")
++            invalid_games.append(str(game))
++        if recall is None:
++            reasons.append("invalid_cell_recall")
++            invalid_games.append(str(game))
++        migrated = row.get("migrated")
++        if not isinstance(migrated, bool):
++            reasons.append("invalid_migrated_flag")
++            invalid_games.append(str(game))
++        elif bucket in BUCKETS and migrated != (bucket == "COVERED"):
++            reasons.append("row_migrated_mismatch")
++            invalid_games.append(str(game))
++
++    if len(per_game) < 3:
++        reasons.append("n_games_measured_below_3")
++    if never_enumerated_games < 3:
++        reasons.append("never_enumerated_games_below_3")
++    try:
++        reported_n = int(artifact.get("n_games_measured"))
++    except (TypeError, ValueError):
++        reported_n = -1
++        reasons.append("n_games_measured_not_integer")
++    if reported_n != len(per_game):
++        reasons.append("n_games_measured_mismatch")
++
++    computed_median = _median_delta(per_game)
++    reported_median = _finite_float(artifact.get("decision_need_value_accuracy_delta_median"))
++    if computed_median is None or reported_median is None or abs(reported_median - computed_median) > 1e-9:
++        reasons.append("decision_need_delta_median_mismatch")
++
++    iterations = int(_mapping(artifact.get("decision_need_config")).get("bootstrap_iterations") or 1000)
++    seed = int(artifact.get("random_seed") or 20260628)
++    computed_ci95 = _bootstrap_ci95(_delta_values(per_game), iterations=iterations, seed=seed)
++    reported_ci95 = artifact.get("decision_need_value_accuracy_delta_ci95")
++    if not isinstance(reported_ci95, list) or list(reported_ci95) != computed_ci95:
++        reasons.append("decision_need_delta_ci95_mismatch")
++
++    computed_recall = _median_cell_recall(per_game)
++    reported_recall = _finite_float(artifact.get("engine_cell_recall_median"))
++    if computed_recall is None or reported_recall is None or abs(reported_recall - computed_recall) > 1e-9:
++        reasons.append("engine_cell_recall_median_mismatch")
++
++    computed_migrations = _coverage_migration_count(per_game)
++    if artifact.get("coverage_migration_count") != computed_migrations:
++        reasons.append("coverage_migration_count_mismatch")
++
++    computed_fork = _computed_fork_verdict(
++        per_game, _mapping(artifact.get("positive_control_value_gap")), computed_ci95
++    )
++    reported_fork = artifact.get("fork_verdict")
++    if reported_fork not in FORK_VERDICTS:
++        reasons.append("invalid_fork_verdict")
++    elif computed_fork != reported_fork:
++        reasons.append("fork_verdict_mismatch")
++
++    unique = list(dict.fromkeys(reasons))
++    return (
++        {
++            "passed": not unique,
++            "reported_fork_verdict": reported_fork,
++            "computed_fork_verdict": computed_fork,
++            "reported_n_games_measured": artifact.get("n_games_measured"),
++            "per_game_count": len(per_game),
++            "never_enumerated_games": never_enumerated_games,
++            "reported_median_delta": artifact.get("decision_need_value_accuracy_delta_median"),
++            "computed_median_delta": computed_median,
++            "reported_ci95": reported_ci95,
++            "computed_ci95": computed_ci95,
++            "reported_engine_cell_recall_median": artifact.get("engine_cell_recall_median"),
++            "computed_engine_cell_recall_median": computed_recall,
++            "reported_coverage_migration_count": artifact.get("coverage_migration_count"),
++            "computed_coverage_migration_count": computed_migrations,
++            "invalid_games": sorted(set(invalid_games)),
++        },
++        unique,
++    )
++
++
++def _tool_cleanliness_check(
++    summarizer_result: Mapping[str, Any], adversarial_result: Mapping[str, Any]
++) -> tuple[JsonDict, list[str]]:
++    summarizer_clean = summarizer_result.get("returncode") == 0
++    adversarial_clean = (
++        adversarial_result.get("loaded") is not False
++        and int(adversarial_result.get("flag_count") or 0) == 0
++    )
++    reasons: list[str] = []
++    if not summarizer_clean:
++        reasons.append("a1_summarizer_failed")
++    if not adversarial_clean:
++        reasons.append("a1_adversarial_verify_flagged")
++    return (
++        {
++            "passed": summarizer_clean and adversarial_clean,
++            "summarizer_returncode": summarizer_result.get("returncode"),
++            "adversarial_flag_count": adversarial_result.get("flag_count"),
++            "adversarial_loaded": adversarial_result.get("loaded"),
++        },
++        reasons,
++    )
++
++
++def _flag_kinds(adversarial_result: Mapping[str, Any] | None) -> list[str]:
++    flags = (adversarial_result or {}).get("flags", [])
++    return [str(flag.get("kind")) for flag in flags if isinstance(flag, Mapping)]
++
++
++def _a1_oracle_check(artifact: Mapping[str, Any], adversarial_result: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    flag_kinds = _flag_kinds(adversarial_result)
++    reasons: list[str] = []
++    if artifact.get("verifier_is_oracle") is True:
++        reasons.append("a1_verifier_is_oracle")
++    if "CIRCULAR_MOAT_OVERCLAIM" in flag_kinds:
++        reasons.append("a1_circular_moat_overclaim")
++    return (
++        {
++            "passed": not reasons,
++            "verifier_is_oracle": artifact.get("verifier_is_oracle"),
++            "circular_moat_flagged": "CIRCULAR_MOAT_OVERCLAIM" in flag_kinds,
++        },
++        reasons,
++    )
++
++
++def _live_path_check(
++    artifact: Mapping[str, Any],
++    live_lint_result: Mapping[str, Any],
++    source_live_check: Mapping[str, Any],
++    source_live_reasons: list[str],
++) -> tuple[JsonDict, list[str], bool]:
++    lint_passed = live_lint_result.get("passed") is True
++    artifact_live = artifact.get("live_path_reachable") is True
++    source_live = source_live_check.get("passed") is True
++    reasons: list[str] = []
++    if not (lint_passed and artifact_live and source_live):
++        reasons.append("live_path_unreachable")
++    if artifact.get("solve_provenance") != "development_proxy":
++        reasons.append("solve_provenance_not_development_proxy")
++    reasons.extend(source_live_reasons)
++    return (
++        {
++            "passed": not reasons,
++            "arc_orphan_solver_lint_passed": lint_passed,
++            "artifact_live_path_reachable": artifact_live,
++            "source_live_path_called": source_live,
++            "source_live_path": dict(source_live_check),
++            "solve_provenance": artifact.get("solve_provenance"),
++        },
++        list(dict.fromkeys(reasons)),
++        lint_passed and artifact_live and source_live,
++    )
++
++
++def _a1b_gate_skipped(a1_artifact: Mapping[str, Any]) -> bool:
++    verdict = str(a1_artifact.get("honest_verdict") or "")
++    fork = str(a1_artifact.get("fork_verdict") or "")
++    median_delta = _finite_float(a1_artifact.get("decision_need_value_accuracy_delta_median"))
++    return verdict.startswith("blocked_") or fork in {"REPRESENTATION_UNLOCKS_VALUE", "PLANNER_GAP"} or (
++        median_delta is not None and median_delta >= 0.1
++    )
++
++
++def _a1b_live_and_split_check(
++    *,
++    a1_artifact: Mapping[str, Any],
++    a1b_artifact: Mapping[str, Any] | None,
++    a1b_adversarial_result: Mapping[str, Any] | None,
++    live_lint_result: Mapping[str, Any],
++) -> tuple[JsonDict, list[str], bool]:
++    if a1b_artifact is None:
++        skipped = _a1b_gate_skipped(a1_artifact)
++        return (
++            {
++                "passed": skipped,
++                "status": "gate_skipped" if skipped else "missing",
++                "reason": "a1_closed_value_gap_or_blocked" if skipped else "a1b_missing_after_low_value_a1",
++            },
++            [] if skipped else ["a1b_artifact_missing_after_low_value_a1"],
++            skipped,
++        )
++
++    a1_rows = _mapping(a1_artifact.get("per_game_value_gap"))
++    a1b_rows = _mapping(a1b_artifact.get("per_game_value_gap"))
++    a1_games = set(str(game) for game in a1_rows)
++    a1b_games = set(str(game) for game in a1b_rows)
++    same_games = bool(a1_games) and a1b_games == a1_games
++    bad_split_games: list[str] = []
++    bad_delta_games: list[str] = []
++    missing_live_methods: list[str] = []
++    for game in sorted(a1_games):
++        a1_row = _mapping(a1_rows.get(game))
++        a1b_row = _mapping(a1b_rows.get(game))
++        expected_ids = list(a1_row.get("heldout_transition_ids") or [])
++        if not a1b_row or not _same_ids(a1b_row.get("heldout_transition_ids"), expected_ids):
++            bad_split_games.append(f"{game}:heldout")
++        if not _same_ids(a1b_row.get("baseline_transition_ids"), expected_ids):
++            bad_split_games.append(f"{game}:baseline")
++        if a1b_row and not _split_is_disjoint(a1b_row, fit_key="fit_transition_ids", heldout_key="heldout_transition_ids"):
++            bad_split_games.append(f"{game}:fit_overlap")
++        baseline = _unit(a1_row.get("value_acc_code_baseline"))
++        row_baseline = _unit(a1b_row.get("value_acc_code_baseline"))
++        latent = _unit(a1b_row.get("value_acc_latent"))
++        delta = _finite_float(a1b_row.get("delta"))
++        if (
++            baseline is None
++            or row_baseline is None
++            or latent is None
++            or delta is None
++            or abs(row_baseline - baseline) > 1e-9
++            or round(latent - baseline, 6) != round(delta, 6)
++        ):
++            bad_delta_games.append(game)
++        methods = {str(item) for item in a1b_row.get("live_path_methods_called") or []}
++        if "arc_executable_world_model.load_engine" not in methods:
++            missing_live_methods.append(game)
++
++    flag_kinds = _flag_kinds(a1b_adversarial_result)
++    duration = _finite_float(a1b_artifact.get("duration_s"))
++    duration_too_short_flagged = "DURATION_TOO_SHORT" in flag_kinds
++    circular_flagged = "CIRCULAR_MOAT_OVERCLAIM" in flag_kinds
++    reasons: list[str] = []
++    if not same_games or bad_split_games or a1b_artifact.get("delta_on_truly_heldout_split") is not True:
++        reasons.append("a1b_not_same_heldout_split_as_a1")
++    if bad_delta_games:
++        reasons.append("a1b_delta_vs_baseline_mismatch")
++    if duration is None or duration <= LIVE_LLM_DURATION_FLOOR_S:
++        reasons.append("a1b_duration_below_live_floor")
++    if a1b_artifact.get("ran_genuinely_live") is not True:
++        reasons.append("a1b_ran_genuinely_live_flag_false")
++    if duration_too_short_flagged:
++        reasons.append("a1b_duration_too_short_flagged")
++    if a1b_artifact.get("verifier_is_oracle") is True:
++        reasons.append("a1b_verifier_is_oracle")
++    if circular_flagged:
++        reasons.append("a1b_circular_moat_overclaim")
++    if a1b_artifact.get("live_path_reachable") is not True or live_lint_result.get("passed") is not True:
++        reasons.append("a1b_live_path_unreachable")
++    if missing_live_methods:
++        reasons.append("a1b_live_path_methods_missing")
++    if a1b_artifact.get("solve_provenance") != "development_proxy":
++        reasons.append("a1b_solve_provenance_not_development_proxy")
++    if a1b_artifact.get("flagged_adversarial") is True:
++        reasons.append("a1b_flagged_adversarial_stamp")
++
++    unique = list(dict.fromkeys(reasons))
++    return (
++        {
++            "passed": not unique,
++            "status": "ran",
++            "same_games_as_a1": same_games,
++            "same_split_as_a1": not bad_split_games and a1b_artifact.get("delta_on_truly_heldout_split") is True,
++            "bad_split_games": bad_split_games,
++            "bad_delta_games": bad_delta_games,
++            "a1_games": sorted(a1_games),
++            "a1b_games": sorted(a1b_games),
++            "duration_s": a1b_artifact.get("duration_s"),
++            "duration_floor_s": LIVE_LLM_DURATION_FLOOR_S,
++            "ran_genuinely_live": a1b_artifact.get("ran_genuinely_live"),
++            "duration_too_short_flagged": duration_too_short_flagged,
++            "oracle_distinct": a1b_artifact.get("verifier_is_oracle") is not True and not circular_flagged,
++            "verifier_is_oracle": a1b_artifact.get("verifier_is_oracle"),
++            "live_path_reachable": a1b_artifact.get("live_path_reachable"),
++            "adversarial_flag_kinds": flag_kinds,
++            "missing_live_methods": missing_live_methods,
++        },
++        unique,
++        not unique,
++    )
++
++
++def audit_sources(
++    *,
++    a1_artifact: Mapping[str, Any],
++    a1_source_text: str,
++    a1_summarizer_result: Mapping[str, Any],
++    a1_adversarial_result: Mapping[str, Any],
++    a1b_artifact: Mapping[str, Any] | None,
++    a1b_adversarial_result: Mapping[str, Any] | None,
++    live_lint_result: Mapping[str, Any],
++) -> JsonDict:
++    source_check, planner_reasons, source_live_check, source_live_reasons = _source_checks(
++        a1_source_text, a1_artifact
++    )
++    live_gpu_check, live_gpu_reasons, ran_live = _a1_live_gpu_check(a1_artifact)
++    positive_check, positive_reasons = _positive_control_check(a1_artifact)
++    split_check, split_reasons = _delta_split_check(a1_artifact)
++    numbers_check, number_reasons = _numbers_match_fork_check(a1_artifact)
++    tool_check, tool_reasons = _tool_cleanliness_check(a1_summarizer_result, a1_adversarial_result)
++    oracle_check, oracle_reasons = _a1_oracle_check(a1_artifact, a1_adversarial_result)
++    live_path_check, live_path_reasons, live_path_confirmed = _live_path_check(
++        a1_artifact, live_lint_result, source_live_check, source_live_reasons
++    )
++    a1b_check, a1b_reasons, a1b_live = _a1b_live_and_split_check(
++        a1_artifact=a1_artifact,
++        a1b_artifact=dict(a1b_artifact) if a1b_artifact is not None else None,
++        a1b_adversarial_result=a1b_adversarial_result,
++        live_lint_result=live_lint_result,
++    )
++
++    a1_reasons = list(
++        dict.fromkeys(
++            live_gpu_reasons
++            + positive_reasons
++            + split_reasons
++            + planner_reasons
++            + number_reasons
++            + tool_reasons
++            + oracle_reasons
++            + live_path_reasons
++        )
++    )
++    positive_control = not positive_reasons
++    heldout_disjoint = not split_reasons
++    planner_blind = not planner_reasons
++    numbers_match = not number_reasons
++    diagnostic = (
++        ran_live
++        and positive_control
++        and heldout_disjoint
++        and planner_blind
++        and numbers_match
++        and live_path_confirmed
++        and not tool_reasons
++        and not oracle_reasons
++    )
++    return {
++        "honest_verdict": "complete_a1_a1b_audited",
++        "a1_genuinely_diagnostic": diagnostic,
++        "a1_ran_live_on_gpu0": ran_live,
++        "a1_live_path_reachable_confirmed": live_path_confirmed,
++        "a1_positive_control_non_degenerate_confirmed": positive_control,
++        "a1_delta_on_heldout_disjoint_confirmed": heldout_disjoint,
++        "planner_blind_confirmed": planner_blind,
++        "numbers_match_fork": numbers_match,
++        "a1b_ran_genuinely_live": a1b_live,
++        "a1_failure_reasons": a1_reasons,
++        "a1b_failure_reasons": a1b_reasons,
++        "checks": {
++            "a1_live_gpu": live_gpu_check,
++            "a1_positive_control": positive_check,
++            "a1_heldout_disjoint_delta": split_check,
++            "a1_planner_blind_to_banked_answer": source_check,
++            "a1_numbers_match_fork": numbers_check,
++            "a1_summarizer_and_adversarial_verify": tool_check,
++            "a1_oracle_distinct": oracle_check,
++            "a1_live_path": live_path_check,
++            "a1b_live_and_split": a1b_check,
++        },
++    }
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:
++    repo = Path(root)
++    spec_text = (repo / SPEC_RELATIVE_PATH).read_text(encoding="utf-8") if (repo / SPEC_RELATIVE_PATH).exists() else ""
++    return {
++        "ok": (
++            (repo / A1_ARTIFACT_RELATIVE_PATH).exists()
++            and (repo / A1_SCRIPT_RELATIVE_PATH).exists()
++            and "REQ-ARC-WMTE-4897" in spec_text
++            and (repo / "scripts/summarize_artifact.py").exists()
++            and (repo / "scripts/adversarial_verify.py").exists()
++            and (repo / "scripts/arc_orphan_solver_lint.py").exists()
++        ),
++        "a1_artifact_present": (repo / A1_ARTIFACT_RELATIVE_PATH).exists(),
++        "a1_script_present": (repo / A1_SCRIPT_RELATIVE_PATH).exists(),
++        "a1b_artifact_present": (repo / A1B_ARTIFACT_RELATIVE_PATH).exists(),
++        "spec_has_req_4897": "REQ-ARC-WMTE-4897" in spec_text,
++        "summarizer_script_present": (repo / "scripts/summarize_artifact.py").exists(),
++        "adversarial_verify_script_present": (repo / "scripts/adversarial_verify.py").exists(),
++        "arc_orphan_solver_lint_present": (repo / "scripts/arc_orphan_solver_lint.py").exists(),
++    }
++
++
++def blocked_artifact(preconditions_checked: Mapping[str, Any], *, duration_s: float) -> JsonDict:
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "a1_artifact_path": A1_ARTIFACT_RELATIVE_PATH,
++        "a1_script_path": A1_SCRIPT_RELATIVE_PATH,
++        "a1b_artifact_path": A1B_ARTIFACT_RELATIVE_PATH,
++        "a1_artifact_checksum": None,
++        "a1_script_checksum": None,
++        "a1b_artifact_checksum": None,
++        "a1_source_honest_verdict": None,
++        "a1_source_fork_verdict": None,
++        "a1_source_n_games_measured": None,
++        "a1b_source_honest_verdict": None,
++        "a1b_source_fork_verdict": None,
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_verdict": "blocked_a1_artifact_missing",
++        "a1_genuinely_diagnostic": False,
++        "a1_ran_live_on_gpu0": False,
++        "a1_live_path_reachable_confirmed": False,
++        "a1_positive_control_non_degenerate_confirmed": False,
++        "a1_delta_on_heldout_disjoint_confirmed": False,
++        "planner_blind_confirmed": False,
++        "numbers_match_fork": False,
++        "a1b_ran_genuinely_live": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "checks": {},
++        "a1_failure_reasons": ["missing_a1_artifact_or_script"],
++        "a1b_failure_reasons": ["not_audited_without_a1"],
++        "a1_summarizer_result": {},
++        "a1_adversarial_result": {},
++        "a1b_adversarial_result": {},
++        "live_lint_result": {},
++        "preconditions_checked": dict(preconditions_checked),
++        "audit_report_path": AUDIT_REPORT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(DURATION_FLOOR_S, duration_s), 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    root: Path | str,
++    a1_artifact: Mapping[str, Any],
++    a1b_artifact: Mapping[str, Any] | None,
++    audit: Mapping[str, Any],
++    a1_summarizer_result: Mapping[str, Any],
++    a1_adversarial_result: Mapping[str, Any],
++    a1b_adversarial_result: Mapping[str, Any] | None,
++    live_lint_result: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++) -> JsonDict:
++    repo = Path(root)
++    a1_path = repo / A1_ARTIFACT_RELATIVE_PATH
++    a1_script = repo / A1_SCRIPT_RELATIVE_PATH
++    a1b_path = repo / A1B_ARTIFACT_RELATIVE_PATH
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "a1_artifact_path": A1_ARTIFACT_RELATIVE_PATH,
++        "a1_script_path": A1_SCRIPT_RELATIVE_PATH,
++        "a1b_artifact_path": A1B_ARTIFACT_RELATIVE_PATH,
++        "a1_artifact_checksum": file_checksum(a1_path),
++        "a1_script_checksum": file_checksum(a1_script),
++        "a1b_artifact_checksum": file_checksum(a1b_path) if a1b_path.exists() else None,
++        "a1_source_honest_verdict": a1_artifact.get("honest_verdict"),
++        "a1_source_fork_verdict": a1_artifact.get("fork_verdict"),
++        "a1_source_n_games_measured": a1_artifact.get("n_games_measured"),
++        "a1b_source_honest_verdict": None if a1b_artifact is None else a1b_artifact.get("honest_verdict"),
++        "a1b_source_fork_verdict": None if a1b_artifact is None else a1b_artifact.get("fork_verdict"),
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_verdict": audit.get("honest_verdict"),
++        "a1_genuinely_diagnostic": audit.get("a1_genuinely_diagnostic"),
++        "a1_ran_live_on_gpu0": audit.get("a1_ran_live_on_gpu0"),
++        "a1_live_path_reachable_confirmed": audit.get("a1_live_path_reachable_confirmed"),
++        "a1_positive_control_non_degenerate_confirmed": audit.get("a1_positive_control_non_degenerate_confirmed"),
++        "a1_delta_on_heldout_disjoint_confirmed": audit.get("a1_delta_on_heldout_disjoint_confirmed"),
++        "planner_blind_confirmed": audit.get("planner_blind_confirmed"),
++        "numbers_match_fork": audit.get("numbers_match_fork"),
++        "a1b_ran_genuinely_live": audit.get("a1b_ran_genuinely_live"),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "checks": dict(_mapping(audit.get("checks"))),
++        "a1_failure_reasons": list(audit.get("a1_failure_reasons") or []),
++        "a1b_failure_reasons": list(audit.get("a1b_failure_reasons") or []),
++        "a1_summarizer_result": dict(a1_summarizer_result),
++        "a1_adversarial_result": dict(a1_adversarial_result),
++        "a1b_adversarial_result": dict(a1b_adversarial_result or {}),
++        "live_lint_result": dict(live_lint_result),
++        "preconditions_checked": dict(preconditions_checked),
++        "audit_report_path": AUDIT_REPORT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(DURATION_FLOOR_S, duration_s), 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing:{field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_missing_terminal_prefix")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles_mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_mismatch")
++    for field in (
++        "a1_genuinely_diagnostic",
++        "a1_positive_control_non_degenerate_confirmed",
++        "a1_delta_on_heldout_disjoint_confirmed",
++        "planner_blind_confirmed",
++        "numbers_match_fork",
++        "a1b_ran_genuinely_live",
++        "a1_ran_live_on_gpu0",
++        "a1_live_path_reachable_confirmed",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            errors.append(f"{field}_must_be_bool")
++    if not isinstance(artifact.get("checks"), dict):
++        errors.append("checks_must_be_dict")
++    for field in ("a1_failure_reasons", "a1b_failure_reasons"):
++        if not isinstance(artifact.get(field), list):
++            errors.append(f"{field}_must_be_list")
++    if artifact.get("a1_genuinely_diagnostic") is True and artifact.get("a1_failure_reasons"):
++        errors.append("diagnostic_artifact_has_a1_failure_reasons")
++    if artifact.get("a1b_ran_genuinely_live") is True and artifact.get("a1b_failure_reasons"):
++        errors.append("genuine_a1b_has_failure_reasons")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed_mismatch")
++    duration = _finite_float(artifact.get("duration_s"))
++    if duration is None or duration < DURATION_FLOOR_S:
++        errors.append("duration_below_aggregation_floor")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    tmp.replace(path)
++    return path
++
++
++def render_markdown_section(artifact: Mapping[str, Any]) -> str:
++    rows = [
++        "",
++        "## Experiment 4897 A1/A1b Audit",
++        "",
++        f"- Verdict: `{artifact.get('honest_verdict')}`",
++        f"- a1_genuinely_diagnostic: `{artifact.get('a1_genuinely_diagnostic')}`",
++        f"- a1_positive_control_non_degenerate_confirmed: `{artifact.get('a1_positive_control_non_degenerate_confirmed')}`",
++        f"- a1_delta_on_heldout_disjoint_confirmed: `{artifact.get('a1_delta_on_heldout_disjoint_confirmed')}`",
++        f"- planner_blind_confirmed: `{artifact.get('planner_blind_confirmed')}`",
++        f"- numbers_match_fork: `{artifact.get('numbers_match_fork')}`",
++        f"- a1b_ran_genuinely_live: `{artifact.get('a1b_ran_genuinely_live')}`",
++        f"- A1 reasons: `{', '.join(artifact.get('a1_failure_reasons') or []) or '-'}`",
++        f"- A1b reasons: `{', '.join(artifact.get('a1b_failure_reasons') or []) or '-'}`",
++        f"- Inference substrate: `{artifact.get('inference_substrate')}`",
++        "",
++        "| Check | Passed | Detail |",
++        "|---|---:|---|",
++    ]
++    for name, check in _mapping(artifact.get("checks")).items():
++        if isinstance(check, Mapping):
++            detail = {key: value for key, value in check.items() if key != "passed"}
++            rows.append(f"| `{name}` | `{check.get('passed')}` | `{json.dumps(detail, sort_keys=True)}` |")
++    rows.extend(
++        [
++            "",
++            f"- A1 artifact checksum: `{artifact.get('a1_artifact_checksum')}`",
++            f"- A1 script checksum: `{artifact.get('a1_script_checksum')}`",
++            f"- A1b artifact checksum: `{artifact.get('a1b_artifact_checksum')}`",
++            "",
++        ]
++    )
++    return "\n".join(rows)
++
++
++def append_markdown_report(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    report_path = Path(root) / AUDIT_REPORT_RELATIVE_PATH
++    marker = "## Experiment 4897 A1/A1b Audit"
++    if report_path.exists():
++        current = report_path.read_text(encoding="utf-8")
++        if marker in current:
++            return report_path
++    else:
++        report_path.parent.mkdir(parents=True, exist_ok=True)
++        current = "# ARC Null Silent-Bug Audit\n"
++    report_path.write_text(current.rstrip() + render_markdown_section(artifact), encoding="utf-8")
++    return report_path
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    now: Callable[[], float] | None = None,
++) -> JsonDict:
++    repo = Path(root)
++    clock = now or time.monotonic
++    start = clock()
++    preconditions = check_preconditions(repo)
++    if not preconditions["ok"]:
++        artifact = blocked_artifact(preconditions, duration_s=clock() - start)
++        if write:
++            write_artifact(artifact, root=repo)
++            append_markdown_report(artifact, root=repo)
++        return artifact
++
++    a1_path = repo / A1_ARTIFACT_RELATIVE_PATH
++    a1_script = repo / A1_SCRIPT_RELATIVE_PATH
++    a1b_path = repo / A1B_ARTIFACT_RELATIVE_PATH
++    a1_artifact = _read_json(a1_path)
++    a1_source_text = a1_script.read_text(encoding="utf-8")
++    a1b_artifact = _read_json(a1b_path) if a1b_path.exists() else None
++
++    a1_summary = run_summarizer(a1_path)
++    a1_adversarial = run_adversarial_verify(a1_path)
++    a1b_adversarial = run_adversarial_verify(a1b_path) if a1b_artifact is not None else None
++    live_lint = run_arc_orphan_solver_lint(repo)
++    audit = audit_sources(
++        a1_artifact=a1_artifact,
++        a1_source_text=a1_source_text,
++        a1_summarizer_result=a1_summary,
++        a1_adversarial_result=a1_adversarial,
++        a1b_artifact=a1b_artifact,
++        a1b_adversarial_result=a1b_adversarial,
++        live_lint_result=live_lint,
++    )
++    artifact = build_artifact(
++        root=repo,
++        a1_artifact=a1_artifact,
++        a1b_artifact=a1b_artifact,
++        audit=audit,
++        a1_summarizer_result=a1_summary,
++        a1_adversarial_result=a1_adversarial,
++        a1b_adversarial_result=a1b_adversarial,
++        live_lint_result=live_lint,
++        preconditions_checked=preconditions,
++        duration_s=clock() - start,
++    )
++    if write:
++        write_artifact(artifact, root=repo)
++        append_markdown_report(artifact, root=repo)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    _ = argv
++    artifact = run(write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0 if not artifact_schema_errors(artifact) else 1
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 975c6d67d8..15106e8824 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-28T02:02:48.710337Z",
+-  "duration_s": 0.054547786712646484,
++  "run_date": "2026-06-28T03:31:49.999413Z",
++  "duration_s": 0.07362079620361328,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "1fcf60f7fc82a39e8a41f4863f7a2974ffe399a534743e9264aacca3559609a7",
++  "reproducibility_checksum": "dac5ee90962162f2281b943e3711464217e9669e1638c03f33c9c916a577c6a3",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "6ccebf48e14a5ce0d5e9d2b88e66fb096e2800f2"
++    "adversarial_verify_version": "4971f9b1974c28d7d705bf9b4ec2f91f4f369e3f"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 826caa8237..0c0290c9fb 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-28T02:02:48.801811Z",
+-  "duration_s": 0.08432698249816895,
++  "run_date": "2026-06-28T03:31:50.113060Z",
++  "duration_s": 0.1031332015991211,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "13fdfcd97692daf006a60c5bb192bd9419774dfbc8107ccd980e2de3152eddc2",
++  "reproducibility_checksum": "258aac7baf670bf68fa9c757deadf482cb2823d4230d43320f17d69bd8630e91",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "6ccebf48e14a5ce0d5e9d2b88e66fb096e2800f2"
++    "adversarial_verify_version": "4971f9b1974c28d7d705bf9b4ec2f91f4f369e3f"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 1d0e71f4a0..0f68d234d2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1610260009765625,
++  "efficiency_gains_ms": 2.1750926971435547,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a217ce4170..4fb2169565 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.216803401708603e-05,
++  "duration_s": 3.2210955396294594e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4897_value_gap_representation_audit.json b/results/experiment_4897_value_gap_representation_audit.json
+new file mode 100644
+index 0000000000..6b69bae709
+--- /dev/null
++++ b/results/experiment_4897_value_gap_representation_audit.json
+@@ -0,0 +1,294 @@
++{
++  "a1_adversarial_result": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4892_decision_need_targets_value_gap.json",
++    "exp_id": 4892,
++    "flag_count": 0,
++    "flags": [],
++    "honest_verdict": "complete_decision_need_no_value_lift_VALUE_GAP_REPRESENTATION_INVARIANT",
++    "loaded": true,
++    "max_severity": -1,
++    "title": ""
++  },
++  "a1_artifact_checksum": "sha256:8104e5b8a16fb7d59bf98b459b2d5322d31a221df143c02f66a9764690e4d422",
++  "a1_artifact_path": "results/experiment_4892_decision_need_targets_value_gap.json",
++  "a1_delta_on_heldout_disjoint_confirmed": true,
++  "a1_failure_reasons": [],
++  "a1_genuinely_diagnostic": true,
++  "a1_live_path_reachable_confirmed": true,
++  "a1_positive_control_non_degenerate_confirmed": true,
++  "a1_ran_live_on_gpu0": true,
++  "a1_script_checksum": "sha256:377b55ab71d70d2f91e40b94bd9ca8997f40d0e32a30e05e42f780d799b80255",
++  "a1_script_path": "python/carnot/experiment_4892_decision_need_targets_value_gap.py",
++  "a1_source_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
++  "a1_source_honest_verdict": "complete_decision_need_no_value_lift_VALUE_GAP_REPRESENTATION_INVARIANT",
++  "a1_source_n_games_measured": 9,
++  "a1_summarizer_result": {
++    "returncode": 0,
++    "stderr": "",
++    "stdout": "==============================================================================\nARTIFACT  experiment_4892_decision_need_targets_value_gap.json\n------------------------------------------------------------------------------\n  verdict          : complete_decision_need_no_value_lift_VALUE_GAP_REPRESENTATION_INVARIANT\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 276.93438816070557   substrate: live_llm_inference\n  duration floor   : live_llm_inference >=60.0s (live_model)\n  headline metrics :\n      decision_need_value_accuracy_delta_median = -0.101866\n      engine_cell_recall_median = 0.727273\n  adversarial flags: none\n"
++  },
++  "a1b_adversarial_result": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4893_action_prefix_latent_adapter.json",
++    "exp_id": 4893,
++    "flag_count": 1,
++    "flags": [
++      {
++        "detail": "action_prefix_value_accuracy_delta_median=0.0 (exactly zero). Confirm this is not a stub default.",
++        "kind": "IMPLAUSIBLE_PERFECT",
++        "severity": "info"
++      }
++    ],
++    "honest_verdict": "complete_action_prefix_latent_no_value_lift_representation_invariant_hard",
++    "loaded": true,
++    "max_severity": 0,
++    "title": ""
++  },
++  "a1b_artifact_checksum": "sha256:9c2fff54149794603fea9a458af0d2d46721889417dd0c6e596b160a4675b732",
++  "a1b_artifact_path": "results/experiment_4893_action_prefix_latent_adapter.json",
++  "a1b_failure_reasons": [],
++  "a1b_ran_genuinely_live": true,
++  "a1b_source_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_HARD",
++  "a1b_source_honest_verdict": "complete_action_prefix_latent_no_value_lift_representation_invariant_hard",
++  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
++  "checks": {
++    "a1_heldout_disjoint_delta": {
++      "artifact_delta_on_truly_heldout_split": true,
++      "bad_games": [],
++      "checked_games": [
++        "cd82",
++        "cn04",
++        "ls20",
++        "m0r0",
++        "r11l",
++        "sk48",
++        "sp80",
++        "su15",
++        "tu93_positive_control",
++        "wa30"
++      ],
++      "passed": true
++    },
++    "a1_live_gpu": {
++      "duration_floor_s": 60.0,
++      "duration_s": 276.93438816070557,
++      "flagged_adversarial": false,
++      "generator_backend": "gpu0_cuda",
++      "inference_substrate": "live_llm_inference",
++      "passed": true
++    },
++    "a1_live_path": {
++      "arc_orphan_solver_lint_passed": true,
++      "artifact_live_path_reachable": true,
++      "passed": true,
++      "solve_provenance": "development_proxy",
++      "source_live_path": {
++        "calls": [
++          "a1._collect_cold_policy_transitions",
++          "list",
++          "cold.get",
++          "_author_llm_targets",
++          "DecisionNeedTargetTable.author",
++          "e3.collect_transitions",
++          "list",
++          "score_decision_need_table",
++          "_a1_value",
++          "_a1_value",
++          "float",
++          "float",
++          "a1.classify_planned_pool",
++          "classification.update",
++          "int",
++          "sum",
++          "np.asarray",
++          "_plan_with_decision_need_table",
++          "int",
++          "max",
++          "cold.get",
++          "list",
++          "int",
++          "a1._execute_plan_reaches_l1",
++          "round",
++          "round",
++          "round",
++          "round",
++          "round",
++          "_transition_ids",
++          "_transition_ids",
++          "list",
++          "len",
++          "len",
++          "len",
++          "len",
++          "table.target_kinds",
++          "table.summary",
++          "ord",
++          "np.asarray",
++          "float",
++          "float",
++          "str",
++          "int",
++          "llm_authoring.get",
++          "a1_baseline_row.get",
++          "a1_baseline_row.get",
++          "_transition_ids"
++        ],
++        "classification_path_called": true,
++        "decision_need_target_table_authored": true,
++        "function_present": true,
++        "passed": true,
++        "plan_path_called": true
++      },
++      "source_live_path_called": true
++    },
++    "a1_numbers_match_fork": {
++      "computed_ci95": [
++        -0.227708,
++        0.025266
++      ],
++      "computed_coverage_migration_count": 0,
++      "computed_engine_cell_recall_median": 0.727273,
++      "computed_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
++      "computed_median_delta": -0.101866,
++      "invalid_games": [],
++      "never_enumerated_games": 9,
++      "passed": true,
++      "per_game_count": 9,
++      "reported_ci95": [
++        -0.227708,
++        0.025266
++      ],
++      "reported_coverage_migration_count": 0,
++      "reported_engine_cell_recall_median": 0.727273,
++      "reported_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
++      "reported_median_delta": -0.101866,
++      "reported_n_games_measured": 9
++    },
++    "a1_oracle_distinct": {
++      "circular_moat_flagged": false,
++      "passed": true,
++      "verifier_is_oracle": false
++    },
++    "a1_planner_blind_to_banked_answer": {
++      "allowed_only_in_classify_planned_pool": true,
++      "artifact_flag": true,
++      "disallowed_refs": [],
++      "function_present": true,
++      "passed": true,
++      "winning_prefix_refs": 1
++    },
++    "a1_positive_control": {
++      "artifact_positive_control_non_degenerate": true,
++      "cell_recall": 0.177143,
++      "passed": true,
++      "positive_control_game": "tu93",
++      "row_game": "tu93"
++    },
++    "a1_summarizer_and_adversarial_verify": {
++      "adversarial_flag_count": 0,
++      "adversarial_loaded": true,
++      "passed": true,
++      "summarizer_returncode": 0
++    },
++    "a1b_live_and_split": {
++      "a1_games": [
++        "cd82",
++        "cn04",
++        "ls20",
++        "m0r0",
++        "r11l",
++        "sk48",
++        "sp80",
++        "su15",
++        "wa30"
++      ],
++      "a1b_games": [
++        "cd82",
++        "cn04",
++        "ls20",
++        "m0r0",
++        "r11l",
++        "sk48",
++        "sp80",
++        "su15",
++        "wa30"
++      ],
++      "adversarial_flag_kinds": [
++        "IMPLAUSIBLE_PERFECT"
++      ],
++      "bad_delta_games": [],
++      "bad_split_games": [],
++      "duration_floor_s": 60.0,
++      "duration_s": 218.924402,
++      "duration_too_short_flagged": false,
++      "live_path_reachable": true,
++      "missing_live_methods": [],
++      "oracle_distinct": true,
++      "passed": true,
++      "ran_genuinely_live": true,
++      "same_games_as_a1": true,
++      "same_split_as_a1": true,
++      "status": "ran",
++      "verifier_is_oracle": false
++    }
++  },
++  "duration_s": 1.52928,
++  "experiment": "experiment_4897_value_gap_representation_audit",
++  "experiment_id": 4897,
++  "field_principles": {
++    "a1_delta_on_heldout_disjoint_confirmed": {
++      "principle": "true iff A1's value-accuracy delta was scored on a split DISJOINT from the representation's authoring set (not a tautology)."
++    },
++    "a1_genuinely_diagnostic": {
++      "principle": "the load-bearing check -- non-degenerate-graded-control AND held-out-disjoint-delta AND planner-blind AND numbers-match-fork AND live-path-reachable AND ran-live-on-GPU0; else A1's fork verdict is void."
++    },
++    "a1_positive_control_non_degenerate_confirmed": {
++      "principle": "true iff the GRADED tu93 positive control really had cell_recall > 0 -- carries forward the .450 degenerate-metric fix."
++    },
++    "a1b_ran_genuinely_live": {
++      "principle": "true iff A1b cleared the 60s live floor (duration_s>60, NOT DURATION_TOO_SHORT -- the explicit .450 A1b non-test fix) on the same held-out split (or A1b was gate-skipped)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; audit complete is complete_a1_a1b_audited."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
++    },
++    "numbers_match_fork": {
++      "principle": "true iff the per-game (cell_recall, value-accuracy, delta) numbers support the claimed fork_verdict."
++    },
++    "planner_blind_confirmed": {
++      "principle": "true iff the banked winner was used only to classify, never to seed authoring/fitting/planning."
++    }
++  },
++  "honest_verdict": "complete_a1_a1b_audited",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "live_lint_result": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (42 modules in the live closure).\n"
++  },
++  "numbers_match_fork": true,
++  "planner_blind_confirmed": true,
++  "preconditions_checked": {
++    "a1_artifact_present": true,
++    "a1_script_present": true,
++    "a1b_artifact_present": true,
++    "adversarial_verify_script_present": true,
++    "arc_orphan_solver_lint_present": true,
++    "ok": true,
++    "spec_has_req_4897": true,
++    "summarizer_script_present": true
++  },
++  "random_seed": 4897,
++  "reproducibility_checksum": "sha256:c081b469495cafc4c708c7d1ca7c5dbf8714c2590adcb39ea694aa474a853f2d",
++  "result_path": "results/experiment_4897_value_gap_representation_audit.json",
++  "schema": "carnot.arc.value_gap_representation_audit_4897.v1",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4897",
++    "SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT",
++    "SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED",
++    "SCENARIO-ARC-WMTE-4897-BLOCKED-A1-ARTIFACT"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 4779cddf1f..fd889e7980 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T03:12:08Z",
+-  "finished_at": "2026-06-28T03:12:08Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-28T03:31:32Z",
++  "finished_at": "2026-06-28T03:31:32Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 0e8d986bb4..50bb4c41da 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T03:12:08Z",
+-  "finished_at": "2026-06-28T03:12:08Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-28T03:31:33Z",
++  "finished_at": "2026-06-28T03:31:33Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index c8e9f3fc56..fd5218054f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T03:12:09Z",
+-  "finished_at": "2026-06-28T03:12:09Z",
++  "started_at": "2026-06-28T03:31:33Z",
++  "finished_at": "2026-06-28T03:31:33Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4897_value_gap_representation_audit.py b/tests/python/test_experiment_4897_value_gap_representation_audit.py
+new file mode 100644
+index 0000000000..23023edb3b
+--- /dev/null
++++ b/tests/python/test_experiment_4897_value_gap_representation_audit.py
+@@ -0,0 +1,721 @@
++"""Tests for Exp 4897 value-gap representation adversarial audit.
++
++Spec refs: REQ-ARC-WMTE-4897,
++SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT,
++SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED,
++SCENARIO-ARC-WMTE-4897-BLOCKED-A1-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++import ast
++
++import pytest
++
++from carnot import experiment_4897_value_gap_representation_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++
++def _a1_row(
++    game: str,
++    *,
++    baseline: float,
++    decision_need: float,
++    recall: float = 0.5,
++    bucket: str = "NEVER_ENUMERATED",
++    author_ids: list[str] | None = None,
++    heldout_ids: list[str] | None = None,
++) -> dict[str, Any]:
++    delta = round(decision_need - baseline, 6)
++    return {
++        "game": game,
++        "cell_recall": recall,
++        "value_acc_code_baseline": round(baseline, 6),
++        "value_acc_decision_need": round(decision_need, 6),
++        "value_delta": delta,
++        "planned_bucket": bucket,
++        "migrated": bucket == "COVERED",
++        "author_transition_ids": author_ids if author_ids is not None else ["author:0", "author:1"],
++        "heldout_transition_ids": heldout_ids if heldout_ids is not None else ["heldout:0", "heldout:1"],
++        "baseline_transition_ids": ["heldout:0", "heldout:1"],
++        "author_transition_count": 2,
++        "heldout_transition_count": 2,
++        "cold_transition_count": 2,
++        "target_table_row_count": 2,
++        "decision_need_target_kinds": ["action_effect"],
++        "live_path_methods_called": [
++            "DecisionNeedTargetTable",
++            "arc_executable_world_model.load_engine",
++            "arc_executable_world_model.plan_in_model",
++        ],
++    }
++
++
++def _a1_artifact(*, fork: str = "VALUE_GAP_REPRESENTATION_INVARIANT") -> dict[str, Any]:
++    if fork == "REPRESENTATION_UNLOCKS_VALUE":
++        rows = {
++            "cd82": _a1_row("cd82", baseline=0.2, decision_need=0.5, bucket="COVERED"),
++            "cn04": _a1_row("cn04", baseline=0.2, decision_need=0.5),
++            "ls20": _a1_row("ls20", baseline=0.2, decision_need=0.5),
++        }
++        median_delta = 0.3
++        ci95 = [0.3, 0.3]
++        migrations = 1
++    else:
++        rows = {
++            "cd82": _a1_row("cd82", baseline=0.2, decision_need=0.2),
++            "cn04": _a1_row("cn04", baseline=0.3, decision_need=0.3),
++            "ls20": _a1_row("ls20", baseline=0.4, decision_need=0.4),
++        }
++        median_delta = 0.0
++        ci95 = [0.0, 0.0]
++        migrations = 0
++    return {
++        "experiment_id": 4892,
++        "honest_verdict": f"complete_decision_need_no_value_lift_{fork}",
++        "fork_verdict": fork,
++        "generator_backend": "gpu0_cuda",
++        "duration_s": 75.0,
++        "flagged_adversarial": False,
++        "inference_substrate": "live_llm_inference",
++        "per_game_value_gap": rows,
++        "positive_control_game": "tu93",
++        "positive_control_non_degenerate": True,
++        "positive_control_value_gap": _a1_row(
++            "tu93", baseline=0.2, decision_need=0.4, recall=0.2
++        ),
++        "delta_on_truly_heldout_split": True,
++        "planner_blind_to_banked_answer": True,
++        "verifier_is_oracle": False,
++        "live_path_reachable": True,
++        "solve_provenance": "development_proxy",
++        "n_games_measured": len(rows),
++        "coverage_migration_count": migrations,
++        "engine_cell_recall_median": 0.5,
++        "decision_need_value_accuracy_delta_median": median_delta,
++        "decision_need_value_accuracy_delta_ci95": ci95,
++        "decision_need_config": {"bootstrap_iterations": 25},
++        "random_seed": 20260628,
++        "model_specs": {"backend": "gpu0_cuda", "name": "Qwen3.5-9B-MTP"},
++    }
++
++
++def _a1_source(*, injected: bool = False) -> str:
++    if injected:
++        return """
++def measure_game_with_decision_need_targets(game, winning_prefix, proposer):
++    cold_transitions = a1._collect_cold_policy_transitions(game=game, proposer=proposer)
++    table = DecisionNeedTargetTable.author(winning_prefix, game=game)
++    planned, plan_error = _plan_with_decision_need_table(game=game, table=table)
++    return a1.classify_planned_pool(game, winning_prefix, planned)
++"""
++    return """
++def measure_game_with_decision_need_targets(game, winning_prefix, proposer):
++    cold_transitions = a1._collect_cold_policy_transitions(game=game, proposer=proposer)
++    table = DecisionNeedTargetTable.author(cold_transitions, game=game)
++    planned, plan_error = _plan_with_decision_need_table(game=game, table=table)
++    return a1.classify_planned_pool(game, winning_prefix, planned)
++"""
++
++
++def _a1b_artifact(a1: dict[str, Any] | None = None) -> dict[str, Any]:
++    source = a1 or _a1_artifact()
++    rows = {
++        game: {
++            "game": game,
++            "cell_recall": row["cell_recall"],
++            "value_acc_code_baseline": row["value_acc_code_baseline"],
++            "value_acc_latent": row["value_acc_code_baseline"],
++            "delta": 0.0,
++            "ci95": [0.0, 0.0],
++            "fit_transition_ids": ["fit:0", "fit:1"],
++            "heldout_transition_ids": list(row["heldout_transition_ids"]),
++            "baseline_transition_ids": list(row["heldout_transition_ids"]),
++            "fit_transition_count": 2,
++            "heldout_transition_count": len(row["heldout_transition_ids"]),
++            "latent_delta_count": 2,
++            "accepted_delta_count": 2,
++            "live_path_methods_called": [
++                "ActionPrefixLatentAdapter",
++                "arc_executable_world_model.load_engine",
++            ],
++        }
++        for game, row in source["per_game_value_gap"].items()
++    }
++    return {
++        "experiment_id": 4893,
++        "honest_verdict": "complete_action_prefix_latent_no_value_lift_representation_invariant_hard",
++        "fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_HARD",
++        "generator_backend": "gpu0_cuda",
++        "duration_s": 75.0,
++        "flagged_adversarial": False,
++        "ran_genuinely_live": True,
++        "delta_on_truly_heldout_split": True,
++        "verifier_is_oracle": False,
++        "live_path_reachable": True,
++        "solve_provenance": "development_proxy",
++        "inference_substrate": "live_llm_inference",
++        "per_game_value_gap": rows,
++        "n_games_measured": len(rows),
++        "action_prefix_value_accuracy_delta_median": 0.0,
++        "action_prefix_value_accuracy_delta_ci95": [0.0, 0.0],
++        "model_specs": {"backend": "gpu0_cuda", "name": "Qwen3.5-9B-MTP"},
++    }
++
++
++def _tool_results() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
++    return (
++        {"returncode": 0, "stdout": "LIVE re-check: clean", "stderr": ""},
++        {"loaded": True, "flag_count": 0, "flags": []},
++        {
++            "loaded": True,
++            "flag_count": 1,
++            "flags": [{"kind": "IMPLAUSIBLE_PERFECT", "severity": "INFO"}],
++        },
++        {"passed": True, "returncode": 0, "stdout_tail": "OK", "stderr_tail": ""},
++    )
++
++
++def test_req_arc_wmte_4897_spec_declares_audit_contract() -> None:
++    """REQ-ARC-WMTE-4897: OpenSpec anchors fields, scenarios, and result path."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-ARC-WMTE-4897",
++        "SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT",
++        "SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED",
++        "SCENARIO-ARC-WMTE-4897-BLOCKED-A1-ARTIFACT",
++        mod.RESULT_RELATIVE_PATH,
++        mod.AUDIT_REPORT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4897_good_a1_and_a1b_pass_gates() -> None:
++    """SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT: all load-bearing gates pass."""
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++    a1 = _a1_artifact()
++    audit = mod.audit_sources(
++        a1_artifact=a1,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(a1),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )
++
++    assert audit["honest_verdict"] == "complete_a1_a1b_audited"
++    assert audit["a1_genuinely_diagnostic"] is True
++    assert audit["a1_positive_control_non_degenerate_confirmed"] is True
++    assert audit["a1_delta_on_heldout_disjoint_confirmed"] is True
++    assert audit["planner_blind_confirmed"] is True
++    assert audit["numbers_match_fork"] is True
++    assert audit["a1b_ran_genuinely_live"] is True
++    assert audit["a1_failure_reasons"] == []
++    assert audit["a1b_failure_reasons"] == []
++    assert audit["checks"]["a1_numbers_match_fork"]["computed_fork_verdict"] == (
++        "VALUE_GAP_REPRESENTATION_INVARIANT"
++    )
++    assert audit["checks"]["a1b_live_and_split"]["duration_too_short_flagged"] is False
++
++
++def test_scenario_arc_wmte_4897_hostile_variants_fail_closed() -> None:
++    """SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT: adversarial variants are explicit non-tests."""
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++    cases: list[tuple[dict[str, Any], str, dict[str, Any] | None, dict[str, Any], str]] = []
++
++    too_short = _a1_artifact()
++    too_short["duration_s"] = 59.0
++    too_short["generator_backend"] = "cpu"
++    cases.append((too_short, _a1_source(), _a1b_artifact(too_short), a1b_adv, "a1_not_live_on_gpu0"))
++
++    degenerate = _a1_artifact()
++    degenerate["positive_control_non_degenerate"] = False
++    degenerate["positive_control_value_gap"]["cell_recall"] = 0.0
++    cases.append((degenerate, _a1_source(), _a1b_artifact(degenerate), a1b_adv, "a1_positive_control_degenerate"))
++
++    overlapping = _a1_artifact()
++    overlapping["per_game_value_gap"]["cd82"]["author_transition_ids"] = ["heldout:0"]
++    overlapping["delta_on_truly_heldout_split"] = False
++    cases.append((overlapping, _a1_source(), _a1b_artifact(overlapping), a1b_adv, "a1_delta_split_not_disjoint"))
++
++    wrong_fork = _a1_artifact()
++    wrong_fork["fork_verdict"] = "PLANNER_GAP"
++    cases.append((wrong_fork, _a1_source(), _a1b_artifact(wrong_fork), a1b_adv, "fork_verdict_mismatch"))
++
++    injected = _a1_artifact()
++    cases.append((injected, _a1_source(injected=True), _a1b_artifact(injected), a1b_adv, "banked_answer_used_before_classification"))
++
++    unfair_a1b = _a1b_artifact()
++    unfair_a1b["per_game_value_gap"]["cd82"]["heldout_transition_ids"] = ["other:0"]
++    cases.append((_a1_artifact(), _a1_source(), unfair_a1b, a1b_adv, "a1b_not_same_heldout_split_as_a1"))
++
++    oracle_a1b = _a1b_artifact()
++    oracle_a1b["verifier_is_oracle"] = True
++    cases.append((_a1_artifact(), _a1_source(), oracle_a1b, a1b_adv, "a1b_verifier_is_oracle"))
++
++    short_a1b = _a1b_artifact()
++    short_a1b["duration_s"] = 13.7
++    short_a1b["ran_genuinely_live"] = False
++    cases.append(
++        (
++            _a1_artifact(),
++            _a1_source(),
++            short_a1b,
++            {"loaded": True, "flag_count": 1, "flags": [{"kind": "DURATION_TOO_SHORT"}]},
++            "a1b_duration_too_short_flagged",
++        )
++    )
++
++    for a1, source, a1b, a1b_result, reason in cases:
++        audit = mod.audit_sources(
++            a1_artifact=a1,
++            a1_source_text=source,
++            a1_summarizer_result=summary,
++            a1_adversarial_result=a1_adv,
++            a1b_artifact=a1b,
++            a1b_adversarial_result=a1b_result,
++            live_lint_result=lint,
++        )
++        all_reasons = audit["a1_failure_reasons"] + audit["a1b_failure_reasons"]
++        assert reason in all_reasons
++        if reason.startswith("a1b_"):
++            assert audit["a1b_ran_genuinely_live"] is False
++        else:
++            assert audit["a1_genuinely_diagnostic"] is False
++
++    flagged = mod.audit_sources(
++        a1_artifact={**_a1_artifact(), "verifier_is_oracle": True},
++        a1_source_text="def measure_game_with_decision_need_targets(",
++        a1_summarizer_result={"returncode": 2},
++        a1_adversarial_result={"loaded": True, "flag_count": 1, "flags": [{"kind": "CIRCULAR_MOAT_OVERCLAIM"}]},
++        a1b_artifact=None,
++        a1b_adversarial_result=None,
++        live_lint_result={"passed": False},
++    )
++    for reason in (
++        "a1_source_not_parseable",
++        "a1_summarizer_failed",
++        "a1_adversarial_verify_flagged",
++        "a1_verifier_is_oracle",
++        "a1_circular_moat_overclaim",
++        "live_path_unreachable",
++    ):
++        assert reason in flagged["a1_failure_reasons"]
++
++
++def test_req_arc_wmte_4897_a1b_gate_skip_and_missing_artifact() -> None:
++    """SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED: skipped A1b is explicit."""
++
++    summary, a1_adv, _a1b_adv, lint = _tool_results()
++    closed = _a1_artifact(fork="REPRESENTATION_UNLOCKS_VALUE")
++
++    skipped = mod.audit_sources(
++        a1_artifact=closed,
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=None,
++        a1b_adversarial_result=None,
++        live_lint_result=lint,
++    )
++    missing = mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=None,
++        a1b_adversarial_result=None,
++        live_lint_result=lint,
++    )
++
++    assert skipped["a1b_ran_genuinely_live"] is True
++    assert skipped["checks"]["a1b_live_and_split"]["status"] == "gate_skipped"
++    assert missing["a1b_ran_genuinely_live"] is False
++    assert "a1b_artifact_missing_after_low_value_a1" in missing["a1b_failure_reasons"]
++
++
++def test_req_arc_wmte_4897_build_schema_write_and_report(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4897: artifacts are checksum-stable and report appends are idempotent."""
++
++    a1_path = tmp_path / mod.A1_ARTIFACT_RELATIVE_PATH
++    script_path = tmp_path / mod.A1_SCRIPT_RELATIVE_PATH
++    a1b_path = tmp_path / mod.A1B_ARTIFACT_RELATIVE_PATH
++    a1_path.parent.mkdir(parents=True)
++    script_path.parent.mkdir(parents=True)
++    a1b_path.parent.mkdir(parents=True, exist_ok=True)
++    a1_path.write_text(json.dumps(_a1_artifact()), encoding="utf-8")
++    script_path.write_text(_a1_source(), encoding="utf-8")
++    a1b_path.write_text(json.dumps(_a1b_artifact()), encoding="utf-8")
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++    audit = mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text=_a1_source(),
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++    )
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        a1_artifact=_a1_artifact(),
++        a1b_artifact=_a1b_artifact(),
++        audit=audit,
++        a1_summarizer_result=summary,
++        a1_adversarial_result=a1_adv,
++        a1b_adversarial_result=a1b_adv,
++        live_lint_result=lint,
++        preconditions_checked={"ok": True},
++        duration_s=0.0,
++    )
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["duration_s"] == mod.DURATION_FLOOR_S
++    assert artifact["a1_artifact_checksum"] == mod.file_checksum(a1_path)
++    assert artifact["a1_script_checksum"] == mod.file_checksum(script_path)
++    assert artifact["a1b_artifact_checksum"] == mod.file_checksum(a1b_path)
++
++    result_path = mod.write_artifact(artifact, root=tmp_path)
++    report_path = mod.append_markdown_report(artifact, root=tmp_path)
++    mod.append_markdown_report(artifact, root=tmp_path)
++    assert json.loads(result_path.read_text(encoding="utf-8")) == artifact
++    assert report_path.read_text(encoding="utf-8").count("## Experiment 4897 A1/A1b Audit") == 1
++
++    blocked = mod.blocked_artifact({"ok": False}, duration_s=0.0)
++    assert blocked["honest_verdict"] == "blocked_a1_artifact_missing"
++    assert mod.artifact_schema_errors(blocked) == []
++
++    broken = dict(artifact)
++    broken.update(
++        {
++            "field_principles": {},
++            "honest_verdict": "bad",
++            "a1_genuinely_diagnostic": "yes",
++            "a1_positive_control_non_degenerate_confirmed": "yes",
++            "a1_delta_on_heldout_disjoint_confirmed": "yes",
++            "planner_blind_confirmed": "yes",
++            "numbers_match_fork": "yes",
++            "a1b_ran_genuinely_live": "yes",
++            "inference_substrate": "live_llm_inference",
++            "checks": [],
++            "a1_failure_reasons": "none",
++            "a1b_failure_reasons": "none",
++            "random_seed": 0,
++            "duration_s": 0.0,
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++    errors = mod.artifact_schema_errors(broken)
++    for expected in (
++        "field_principles_mismatch",
++        "honest_verdict_missing_terminal_prefix",
++        "a1_genuinely_diagnostic_must_be_bool",
++        "a1_positive_control_non_degenerate_confirmed_must_be_bool",
++        "a1_delta_on_heldout_disjoint_confirmed_must_be_bool",
++        "planner_blind_confirmed_must_be_bool",
++        "numbers_match_fork_must_be_bool",
++        "a1b_ran_genuinely_live_must_be_bool",
++        "inference_substrate_mismatch",
++        "checks_must_be_dict",
++        "a1_failure_reasons_must_be_list",
++        "a1b_failure_reasons_must_be_list",
++        "random_seed_mismatch",
++        "duration_below_aggregation_floor",
++        "reproducibility_checksum_mismatch",
++    ):
++        assert expected in errors
++    with pytest.raises(ValueError):
++        mod.write_artifact(broken, root=tmp_path)
++
++
++def test_req_arc_wmte_4897_run_paths(tmp_path: Path, monkeypatch: Any) -> None:
++    """REQ-ARC-WMTE-4897: run writes blocked and complete artifacts without fabrication."""
++
++    blocked = mod.run(root=tmp_path, write=True, now=iter([1.0, 1.1]).__next__)
++    assert blocked["honest_verdict"] == "blocked_a1_artifact_missing"
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++    for path, content in (
++        (tmp_path / mod.A1_ARTIFACT_RELATIVE_PATH, json.dumps(_a1_artifact())),
++        (tmp_path / mod.A1_SCRIPT_RELATIVE_PATH, _a1_source()),
++        (tmp_path / mod.A1B_ARTIFACT_RELATIVE_PATH, json.dumps(_a1b_artifact())),
++        (tmp_path / mod.SPEC_RELATIVE_PATH, "REQ-ARC-WMTE-4897"),
++        (tmp_path / "scripts/summarize_artifact.py", ""),
++        (tmp_path / "scripts/adversarial_verify.py", ""),
++        (tmp_path / "scripts/arc_orphan_solver_lint.py", ""),
++    ):
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(content, encoding="utf-8")
++
++    summary, a1_adv, a1b_adv, lint = _tool_results()
++    monkeypatch.setattr(mod, "run_summarizer", lambda _path: summary)
++    monkeypatch.setattr(mod, "run_adversarial_verify", lambda _path: a1_adv if "4892" in str(_path) else a1b_adv)
++    monkeypatch.setattr(mod, "run_arc_orphan_solver_lint", lambda _root: lint)
++
++    complete = mod.run(root=tmp_path, write=True, now=iter([2.0, 2.1]).__next__)
++    assert complete["honest_verdict"] == "complete_a1_a1b_audited"
++    assert complete["a1_genuinely_diagnostic"] is True
++    assert complete["a1b_ran_genuinely_live"] is True
++
++
++def test_req_arc_wmte_4897_checked_in_artifacts_match_audit() -> None:
++    """REQ-ARC-WMTE-4897: checked-in A1/A1b artifacts produce the requested audit."""
++
++    artifact = mod.run(root=REPO, write=False)
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "complete_a1_a1b_audited"
++    assert artifact["a1_genuinely_diagnostic"] is True
++    assert artifact["a1_positive_control_non_degenerate_confirmed"] is True
++    assert artifact["a1_delta_on_heldout_disjoint_confirmed"] is True
++    assert artifact["planner_blind_confirmed"] is True
++    assert artifact["numbers_match_fork"] is True
++    assert artifact["a1b_ran_genuinely_live"] is True
++    assert artifact["checks"]["a1_live_gpu"]["generator_backend"] == "gpu0_cuda"
++    assert artifact["checks"]["a1b_live_and_split"]["duration_too_short_flagged"] is False
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++
++
++def test_req_arc_wmte_4897_defensive_branches(tmp_path: Path, monkeypatch: Any) -> None:
++    """REQ-ARC-WMTE-4897: malformed inputs fail closed without fabricated passes."""
++
++    assert mod._finite_float(True) is None
++    assert mod._finite_float("not-a-number") is None
++    non_object = tmp_path / "not_object.json"
++    non_object.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError):
++        mod._read_json(non_object)
++
++    assert mod._full_call_name(ast.Constant(value=1)) == ""
++    assert mod._call_name(None) == ""
++    assert mod._call_name(ast.Name(id="f")) == "f"
++    assert mod._call_name(ast.Attribute(value=ast.Name(id="obj"), attr="method")) == "method"
++    assert mod._call_name(ast.Constant(value=1)) == ""
++    assert mod._find_function(ast.parse("x = 1"), "missing") is None
++    assert mod._first_parent_call(ast.Name(id="winning_prefix")) is None
++    expr = ast.parse("winning_prefix + 1")
++    mod._attach_ast_parents(expr)
++    assert mod._first_parent_call(next(n for n in ast.walk(expr) if isinstance(n, ast.Name))) is None
++
++    from scripts import adversarial_verify
++
++    class _Proc:
++        returncode = 1
++        stdout = "flagged"
++        stderr = "stderr"
++
++    monkeypatch.setattr(
++        adversarial_verify,
++        "verify_artifact",
++        lambda _path: (_ for _ in ()).throw(NameError("broken direct verifier")),
++    )
++    monkeypatch.setattr(mod.subprocess, "run", lambda *_args, **_kwargs: _Proc())
++    fallback = mod.run_adversarial_verify(Path("artifact.json"))
++    assert fallback["flag_count"] == 1
++    assert "broken direct verifier" in fallback["fallback_error"]
++    assert fallback["stdout_tail"] == "flagged"
++
++    missing_fn = mod.audit_sources(
++        a1_artifact={**_a1_artifact(), "planner_blind_to_banked_answer": False},
++        a1_source_text="def not_the_path():\n    return None\n",
++        a1_summarizer_result={"returncode": 0},
++        a1_adversarial_result={"loaded": True, "flag_count": 0, "flags": []},
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result={"loaded": True, "flag_count": 0, "flags": []},
++        live_lint_result={"passed": True},
++    )
++    assert "artifact_planner_blind_flag_false" in missing_fn["a1_failure_reasons"]
++    assert "measure_game_with_decision_need_targets_missing" in missing_fn["a1_failure_reasons"]
++
++    missing_calls = mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text="def measure_game_with_decision_need_targets(game, winning_prefix, proposer):\n    return []\n",
++        a1_summarizer_result={"returncode": 0},
++        a1_adversarial_result={"loaded": True, "flag_count": 0, "flags": []},
++        a1b_artifact=_a1b_artifact(),
++        a1b_adversarial_result={"loaded": True, "flag_count": 0, "flags": []},
++        live_lint_result={"passed": True},
++    )
++    for reason in (
++        "winning_prefix_not_used_for_classification",
++        "decision_need_target_table_not_authored",
++        "plan_in_model_path_not_called",
++        "classification_path_not_called",
++    ):
++        assert reason in missing_calls["a1_failure_reasons"]
++
++    backend_from_model = _a1_artifact()
++    backend_from_model.pop("generator_backend")
++    assert mod._generator_backend(backend_from_model) == "gpu0_cuda"
++    backend_from_preconditions = _a1_artifact()
++    backend_from_preconditions.pop("generator_backend")
++    backend_from_preconditions.pop("model_specs")
++    backend_from_preconditions["preconditions_checked"] = {"generator": {"backend": "igpu_hip"}}
++    assert mod._generator_backend(backend_from_preconditions) == "igpu_hip"
++    assert mod._generator_backend({"preconditions_checked": {"generator": {"backend": "cpu"}}}) is None
++
++    bad_live = _a1_artifact()
++    bad_live["flagged_adversarial"] = True
++    bad_live["inference_substrate"] = "aggregation_from_upstream_artifacts"
++    assert "a1_flagged_adversarial" in mod._a1_live_gpu_check(bad_live)[1]
++    assert "a1_inference_substrate_not_live_llm" in mod._a1_live_gpu_check(bad_live)[1]
++    cpu_live = _a1_artifact()
++    cpu_live["generator_backend"] = "cpu"
++    cpu_live.pop("model_specs")
++    cpu_live.pop("preconditions_checked", None)
++    assert "a1_generator_backend_not_gpu0_or_igpu" in mod._a1_live_gpu_check(cpu_live)[1]
++
++    assert mod._positive_control_recall({"cell_recall_decision_need": 0.3}) == 0.3
++    assert mod._positive_control_recall({"cell_recall_baseline": 0.4}) == 0.4
++    assert mod._positive_control_recall({}) is None
++    missing_control = _a1_artifact()
++    missing_control["positive_control_game"] = "not_tu93"
++    missing_control["positive_control_value_gap"] = {}
++    pc_reasons = mod._positive_control_check(missing_control)[1]
++    assert "a1_positive_control_not_tu93" in pc_reasons
++    assert "a1_positive_control_row_missing" in pc_reasons
++
++    malformed_numbers = _a1_artifact()
++    malformed_numbers["per_game_value_gap"] = {
++        "bad1": {
++            "planned_bucket": "BAD",
++            "value_acc_code_baseline": "x",
++            "value_acc_decision_need": None,
++            "value_delta": None,
++            "cell_recall": None,
++            "migrated": "yes",
++        },
++        "bad2": {
++            "planned_bucket": "COVERED",
++            "value_acc_code_baseline": 0.1,
++            "value_acc_decision_need": 0.2,
++            "value_delta": 0.0,
++            "cell_recall": 0.1,
++            "migrated": False,
++        },
++        "bad3": {
++            "planned_bucket": "ENUMERATED_BUT_LOST",
++            "value_acc_code_baseline": 0.1,
++            "value_acc_decision_need": 0.1,
++            "value_delta": 0.0,
++            "cell_recall": 0.1,
++            "migrated": False,
++        },
++    }
++    malformed_numbers.update(
++        {
++            "n_games_measured": "bad",
++            "decision_need_value_accuracy_delta_median": 9.0,
++            "decision_need_value_accuracy_delta_ci95": [9.0, 9.0],
++            "engine_cell_recall_median": 9.0,
++            "coverage_migration_count": 9,
++            "fork_verdict": "NOPE",
++        }
++    )
++    number_reasons = mod._numbers_match_fork_check(malformed_numbers)[1]
++    for reason in (
++        "invalid_planned_bucket",
++        "invalid_value_metric",
++        "value_delta_mismatch",
++        "invalid_cell_recall",
++        "invalid_migrated_flag",
++        "row_migrated_mismatch",
++        "never_enumerated_games_below_3",
++        "n_games_measured_not_integer",
++        "n_games_measured_mismatch",
++        "decision_need_delta_median_mismatch",
++        "decision_need_delta_ci95_mismatch",
++        "engine_cell_recall_median_mismatch",
++        "coverage_migration_count_mismatch",
++        "invalid_fork_verdict",
++    ):
++        assert reason in number_reasons
++    two_game_numbers = _a1_artifact()
++    two_game_numbers["per_game_value_gap"].pop("ls20")
++    two_game_numbers["n_games_measured"] = 2
++    assert "n_games_measured_below_3" in mod._numbers_match_fork_check(two_game_numbers)[1]
++
++    assert mod._computed_fork_verdict({}, {}, []) is None
++    planner_gap_rows = {
++        "a": _a1_row("a", baseline=0.0, decision_need=0.5),
++        "b": _a1_row("b", baseline=0.0, decision_need=0.5),
++        "c": _a1_row("c", baseline=0.0, decision_need=0.5),
++    }
++    assert (
++        mod._computed_fork_verdict(planner_gap_rows, _a1_artifact()["positive_control_value_gap"], [0.5, 0.5])
++        == "PLANNER_GAP"
++    )
++    assert "solve_provenance_not_development_proxy" in mod._live_path_check(
++        {**_a1_artifact(), "solve_provenance": "other"},
++        {"passed": True},
++        {"passed": True},
++        [],
++    )[1]
++
++    a1b_bad = _a1b_artifact()
++    a1b_bad["per_game_value_gap"]["cd82"]["baseline_transition_ids"] = ["other:0"]
++    a1b_bad["per_game_value_gap"]["cd82"]["fit_transition_ids"] = ["heldout:0"]
++    a1b_bad["per_game_value_gap"]["cd82"]["value_acc_latent"] = 0.5
++    a1b_bad["per_game_value_gap"]["cd82"]["live_path_methods_called"] = []
++    a1b_bad["live_path_reachable"] = False
++    a1b_bad["solve_provenance"] = "live_agent_self_discovery"
++    a1b_bad["flagged_adversarial"] = True
++    a1b_reasons = mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text=_a1_source(),
++        a1_summarizer_result={"returncode": 0},
++        a1_adversarial_result={"loaded": True, "flag_count": 0, "flags": []},
++        a1b_artifact=a1b_bad,
++        a1b_adversarial_result={
++            "loaded": True,
++            "flag_count": 1,
++            "flags": [{"kind": "CIRCULAR_MOAT_OVERCLAIM"}],
++        },
++        live_lint_result={"passed": False},
++    )["a1b_failure_reasons"]
++    for reason in (
++        "a1b_not_same_heldout_split_as_a1",
++        "a1b_delta_vs_baseline_mismatch",
++        "a1b_circular_moat_overclaim",
++        "a1b_live_path_unreachable",
++        "a1b_live_path_methods_missing",
++        "a1b_solve_provenance_not_development_proxy",
++        "a1b_flagged_adversarial_stamp",
++    ):
++        assert reason in a1b_reasons
++
++    a1b_missing_row = _a1b_artifact()
++    a1b_missing_row["per_game_value_gap"].pop("cd82")
++    assert "a1b_not_same_heldout_split_as_a1" in mod.audit_sources(
++        a1_artifact=_a1_artifact(),
++        a1_source_text=_a1_source(),
++        a1_summarizer_result={"returncode": 0},
++        a1_adversarial_result={"loaded": True, "flag_count": 0, "flags": []},
++        a1b_artifact=a1b_missing_row,
++        a1b_adversarial_result={"loaded": True, "flag_count": 0, "flags": []},
++        live_lint_result={"passed": True},
++    )["a1b_failure_reasons"]
++
++    artifact = mod.blocked_artifact({"ok": False}, duration_s=1.0)
++    artifact["a1_genuinely_diagnostic"] = True
++    artifact["a1_failure_reasons"] = ["x"]
++    artifact["a1b_ran_genuinely_live"] = True
++    artifact["a1b_failure_reasons"] = ["y"]
++    errors = mod.artifact_schema_errors(artifact)
++    assert "diagnostic_artifact_has_a1_failure_reasons" in errors
++    assert "genuine_a1b_has_failure_reasons" in errors
+-- 
+2.55.0
+

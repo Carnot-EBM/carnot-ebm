@@ -1,0 +1,43 @@
+From 781e78c4bb547c43bc7bef3075536ea6e6c32997 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 20 Jul 2026 03:53:10 -0400
+Subject: [PATCH 07360/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 246aeb56b2..95eb4f7f16 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2370382, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-07-20T07:31:04Z"}
+\ No newline at end of file
++{"pid": 2370382, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-07-20T07:53:07Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3a79b53830..a52fb5e3ad 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -13825,3 +13825,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-20 06:48 UTC | Milestone 2026.07.513 activated | OK | 12 tasks queued |
+ | 2026-07-20 07:06 UTC | Transition terminal .512 evidence, preserve mixed  | OK | 87 passed, 1 warning in 6.57s |
+ | 2026-07-20 07:29 UTC | Ingest post-V513 source deltas with honest bibliog | OK | 88 passed, 2 warnings in 8.78s |
++| 2026-07-20 07:51 UTC | Normalize the Exp5740 ARC causal gate without chan | OK | 89 passed, 1 warning in 9.55s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index ab794381ea..8f082bc98b 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2370382, "iteration": 11, "phase": "iteration_start", "started_at": "2026-07-20T07:31:04Z"}
+\ No newline at end of file
++{"pid": 2370382, "iteration": 12, "phase": "iteration_start", "started_at": "2026-07-20T07:53:07Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

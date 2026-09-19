@@ -1,0 +1,586 @@
+From 4e8340777005890b853324e5a54fcc6268d3043e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 9 Aug 2026 06:06:18 -0400
+Subject: [PATCH 08608/11362] Correct exp6221: 3 think-arm cells were reaper
+ crashes, not real failures
+
+Operator asked whether the think crashes were context exhaustion / VRAM.
+Read the server's own stderr log directly: zero OOM/CUDA-error/abort, steady
+29.6 tok/s decode, then two SIGINTs back-to-back -- this project's
+pre-existing, unsolved llama-server "reaper" issue, not a think-mode or
+memory problem. KV cache is already q8_0.
+
+Isolation test per operator directive: stopped carnot-conductor.service +
+carnot-orphan-cleanup.timer, reran the 3 crash-corrupted cells (sk48/ls20/
+cd82 think-arm). All 3 succeeded on the first attempt (vs 4/4 crashes while
+those units were running) -- suggestive correlation, small-n, not proof.
+orphan-cleanup.sh independently ruled out by reading its code: it only kills
+comm=python3/pytest via SIGKILL, matching neither llama-server's name nor
+the observed SIGINT signal. Recorded honestly in known-issues.md without
+overclaiming causation; conductor mechanism (if any) remains unidentified.
+
+Corrected data: all 3 cells now measure a genuine heldout_accuracy=0.0 floor
+tie with no_think, not the "think fails outright" asymmetry the crash reads
+implied. Original crashed rows preserved (never deleted, per Test-Run Record
+Integrity Discipline); 3 new rows appended with rerun_of_infra_crash=true.
+comparison_summary recomputed via the module's own _summarize_pair(). The
+admission-rate sign test is UNCHANGED (1/0/12, p=1.0, gate not met) -- 0.0
+never crossed the 1.0 bar regardless of which side crashed.
+
+REQ-ARC-WMTE-6242/6243 correction addenda added (never-prune: original prose
+preserved, correction appended). REQ-6243's "mirror failure" motivating claim
+is retracted -- sp80 is the only genuine total-induction-failure case in this
+corpus; the lever's design is unaffected, its evidence base narrows to n=1.
+
+determination_preservation_lint + adversarial_verify + artifact_freshness_lint
+all clean.
+---
+ ...-live-agent-improvement-plan-2026-08-08.md |  14 ++
+ .../arc-world-model-trust-energy/spec.md      |  46 ++++++
+ ops/known-issues.md                           |  56 ++++++++
+ ...lysis_exp6221_admission_rate_20260809.json |  24 ++--
+ ...1_gemma_think_mode_ab_expanded_roster.json |  72 ++++++++--
+ ..._exp6221_infra_crashed_cells_20260809.json |  55 +++++++
+ scripts/rerun_exp6221_infra_crashed_cells.py  | 134 ++++++++++++++++++
+ 7 files changed, 379 insertions(+), 22 deletions(-)
+ create mode 100644 results/rerun_exp6221_infra_crashed_cells_20260809.json
+ create mode 100644 scripts/rerun_exp6221_infra_crashed_cells.py
+
+diff --git a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+index 75554ae031..e7781e7ead 100644
+--- a/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
++++ b/docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md
+@@ -263,6 +263,20 @@ the sequential single-retry design pays no teardown cost on this model already,
+ dual-preload idea that prompted asking about it is better scoped as a SEPARATE, not-yet-built
+ lever (concurrent arm racing to cut wall-clock, not to avoid setup cost).
+ 
++**CORRECTION (2026-08-09, same day, later).** The "cd82/ls20/sk48 mirror shape" claim above is
++retracted. Operator asked whether the think crashes were context exhaustion; reading the server's
++own stderr log showed zero tokens generated and two back-to-back SIGINTs mid-generation (this
++project's pre-existing "reaper" issue, not context exhaustion, not VRAM — KV cache is already
++q8_0, no OOM/CUDA-error anywhere in the log). Reran all three cleanly after stopping
++`carnot-conductor.service` + `carnot-orphan-cleanup.timer` as an isolation test (3/3 succeeded on
++the first attempt, vs 4/4 crashes while those units were running — suggestive, small-n, see
++known-issues.md). All three now measure a genuine `heldout_accuracy=0.0` floor tie with no_think.
++sp80 is the ONLY real total-induction-failure case in this corpus; the lever's design is
++unaffected, but its evidence base narrows from "two complementary failure shapes" to one clean
++example. The admission-rate sign test result itself is unchanged (still 1/0/12, p=1.0, gate not
++met) — `0.0` was never going to cross the `1.0` bar regardless of which side crashed. Full detail
++in REQ-ARC-WMTE-6242/6243's own corrections in spec.md.
++
+ **2b. (Conditional on 2a or 1a moving the distribution) Best-of-N engine sampling.**
+ NOT UNLOCKED — 2a's gate was not met (see above).
+ Selection is measured NOT to be our bottleneck, and the held-out gate is an oracle-distinct
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index bef2e1e771..0dbc8078e8 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22615,6 +22615,32 @@ a code-review-time inference).
+ |---|---|---|
+ | REQ-ARC-WMTE-6242 | `scripts/analyze_exp6221_admission_rate.py` (analysis-only; no production default flipped). | `results/analysis_exp6221_admission_rate_20260809.json` (the artifact IS the check — exact sign test, reproducibility_checksum pinned, cites `results/experiment_6221_gemma_think_mode_ab_expanded_roster.json` by hash). Cross-run confound confirmation verified by direct read of `results/experiment_6199_gemma_think_mode_ab.json`'s vc33 row (no new test file — a one-shot historical comparison, not a regression to guard going forward). |
+ 
++**CORRECTION (2026-08-09, same day, later): 3 of the 13 games' "think fails outright" reads were
++a llama-server crash, not a real measurement.** Operator question ("is the think confound due to
++running out of context / a thinking loop?") prompted reading the server's own stderr log for
++sk48/ls20/cd82's think-arm failures. Finding: `max_raw_completion_len=0, n_generate_calls=0` on
++all three, and the server's own log shows two SIGINTs back-to-back mid-generation, zero
++OOM/CUDA-error/abort, steady ~29.6 tok/s decode right up to death — this project's pre-existing,
++long-standing "reaper" issue (see the ops/known-issues.md 2026-08-09 isolation-test entry), NOT a
++think-mode capability signal. Not context exhaustion either — that would show a LARGE completion
++length near the token cap with real reasoning text, not exactly zero.
++
++Reran all three cleanly (`scripts/rerun_exp6221_infra_crashed_cells.py`, retry-on-reaper logic,
++succeeded on the FIRST attempt for all three once `carnot-conductor.service` and
++`carnot-orphan-cleanup.timer` were stopped as an isolation test — see known-issues.md; 3/3 clean
++vs 4/4 crashed while those units were running is suggestive but small-n, not proof of causation).
++All three now show `heldout_accuracy=0.0` with real reasoning engaged (16-20k char completions) —
++a genuine FLOOR TIE with no_think, not a think-specific failure. Original crashed rows preserved
++in place (never deleted, per Test-Run Record Integrity Discipline); 3 new rows appended with
++`rerun_of_infra_crash: true`. `comparison_summary` recomputed via the module's own
++`_summarize_pair()` (the `induction_ok` filter naturally excludes the stale crashed rows — no
++manual de-duplication needed). **The admission-rate sign test result is UNCHANGED** (1 favor
++think / 0 favor no_think / 12 tie / p=1.0, gate still NOT MET) — `0.0` never crossed the `1.0`
++admission bar either way, so these three were already correctly classified as ties; what changed
++is that they are now a CONFIRMED tie instead of an unmeasured crash. **What DOES change: REQ-6242's
++own "mirror failure" framing was wrong** (see REQ-6243's correction below, which retracts the
++claim built on this).
++
+ ### REQ-ARC-WMTE-6243: Conditional Think-Arm Fallback On Total Induction Failure (Default OFF, Awaiting Live-Path A/B)
+ 
+ **Origin:** operator directive, 2026-08-09, reading REQ-ARC-WMTE-6242's per-game breakdown:
+@@ -22712,6 +22738,26 @@ exactly once and returns its outcome unmodified, regardless of what that outcome
+ |---|---|---|
+ | REQ-ARC-WMTE-6243 | `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_THINK_ARM_FALLBACK_ENABLED`, `E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback`, wired at both `_induce_and_plan` call sites (level_up_reinduction and stall-path). | `tests/python/test_arc_think_arm_fallback_20260809.py` (8 tests). |
+ 
++**CORRECTION (2026-08-09, same day, later) — the "mirror failure" motivating claim is RETRACTED.**
++This REQ's own rationale above states: "cd82/ls20/sk48 show the mirror shape (think fails
++outright, no_think at least scores something)." That is now known to be FALSE — see
++REQ-ARC-WMTE-6242's correction above. All three games' think arm was re-measured cleanly (the
++original reads were a llama-server crash, zero tokens generated) and all three now show
++`heldout_accuracy=0.0`, a genuine FLOOR TIE with no_think on every one of them. There is no
++"mirror" — sp80 (no_think fails to parse code at all, think succeeds at 1.0) is the ONLY genuine
++total-induction-failure case anywhere in this corpus.
++
++**What survives, and what narrows.** The lever's DESIGN is unaffected: retry-on-`heldout_accuracy
++is None`, direction read from `induce_think_on()` at call time, env restored in a `finally`
++block — none of that depended on the retracted claim, and it is still exactly what sp80's shape
++calls for. What narrows is the EVIDENCE BASE: this is now a single-game finding, not a
++two-directional pattern across four games. A single clean, well-verified case (real generation,
++real parse failure after 3 tries on one arm, real 1.0 admission on the other) is still enough to
++justify building a low-cost, no-downside, default-OFF safety net — but it is a narrower
++justification than originally written, and the eventual live-path A/B gating this lever's
++promotion to default-ON should be read with that in mind: this correction does not itself change
++whether the lever ships, but it changes how much prior evidence should be assumed going in.
++
+ ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
+ 
+ **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 6c5395380b..6bb53189a9 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -16261,3 +16261,59 @@ genuine think win across both runs -- the one concrete lead left standing.
+ 
+ See openspec/capabilities/arc-world-model-trust-energy/spec.md REQ-ARC-WMTE-6242 for full
+ writeup. results/analysis_exp6221_admission_rate_20260809.json is the artifact.
++
++## 2026-08-09 llama-server reaper: isolation test rules out orphan-cleanup by code, correlates with conductor by timing (inconclusive, small-n)
++
++Operator asked (1) whether the think-arm crashes were context exhaustion / VRAM, and (2) to stop
++the conductor + orphan-cleanup timer and retry, to test whether either is the sender of the
++SIGINTs that keep killing llama-server mid-think-generation (see the two prior reaper-recurrence
++entries above, same day).
++
++**Not context exhaustion, not VRAM.** Read the crashed server's own stderr log directly
++(`/tmp/carnot_llama_server_logs/llama_server_p8940_*.log`). KV cache is already q8_0
++(`--cache-type-k q8_0 --cache-type-v q8_0` in the launch args). Zero OOM / CUDA-error / ggml_abort
++/ assert anywhere. Decode throughput was flat at ~29.6 tok/s right up to the last log line:
++
++```
++1.18.968.064 I slot print_timing: id  3 | task 0 | n_decoded = 1439, tg = 29.59 t/s
++1.20.474.436 I srv    operator(): operator(): cleaning up before exit...
++Received second interrupt, terminating immediately.
++```
++
++Two SIGINTs, back-to-back, mid-healthy-generation. External signal, not a self-detected resource
++fault -- matches the pre-existing "SIGINT signature, zero OOM/abort, sender unidentified" finding
++already on record in ops/status.md.
++
++**orphan-cleanup.sh ruled out on code-reading grounds, not just by re-running.** Read
++`/home/ianblenke/.carnot/orphan-cleanup.sh` directly: its kill loop only matches processes whose
++`comm` is exactly `python3` or `pytest` (`case "$comm" in python3|pytest) ;; *) continue ;; esac`),
++and it uses `kill -9` (SIGKILL), not SIGINT. `llama-server` matches neither the process-name filter
++nor the signal type. Even indirectly (killing the PYTHON DRIVER that owns the llama-server child)
++doesn't fit: this session's driver runs were always under the script's 120-minute threshold, and a
++killed parent doesn't itself deliver a signal to an already-forked, session-detached child.
++
++**Isolation test result: 3/3 clean with both units stopped, vs 4/4 crashed while they were
++running.** `systemctl --user stop carnot-conductor.service carnot-orphan-cleanup.timer` (confirmed
++inactive, conductor PID 2311437 confirmed gone, GPUs at 2 MiB before relaunch), then reran the
++same 3 previously-crashed cells (sk48/ls20/cd82 think-arm induction, 200-900s each). All three
++succeeded on the FIRST attempt this time -- no crash, real generation, real completions.
++
++**Read this honestly, not as proof.** n=4 crashes (all while the conductor was running) vs n=3
++clean (all while it was stopped) is a real correlation worth recording, but it is not statistical
++proof at this sample size, and NO mechanism has been found for how `research_conductor.py` (a
++separate process, on GPU 0, with no code path that touches GPU 1's llama-server) would send SIGINT
++to an unrelated process on a different GPU. orphan-cleanup.sh is ruled out on code grounds
++regardless of this correlation. Two live possibilities this leaves open: (a) the conductor process
++itself, through some mechanism not yet identified in `research_conductor.py` (needs a code-level
++investigation, not assumed from correlation alone), or (b) a confound unrelated to either unit that
++happened to coincide with the stop (e.g., system load, another process, plain non-determinism in
++the crash's true trigger). Both units were restarted after the test per the operator's own framing
++("for the time being") -- this was a diagnostic pause, not a permanent stop. If the crash recurs
++with the conductor running again, that would meaningfully strengthen the correlation; if it also
++recurs occasionally with the conductor stopped in a future session, that would weaken it. Do not
++treat this entry as "solved" -- it narrows the hypothesis space, it does not close it.
++
++**Corrected data recovered from this test:** the 3 re-run cells all measure a genuine
++`heldout_accuracy=0.0` (real floor tie with no_think, not a crash) -- see the
++REQ-ARC-WMTE-6242/6243 corrections in `openspec/capabilities/arc-world-model-trust-energy/spec.md`
++and the matching correction in `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`.
+diff --git a/results/analysis_exp6221_admission_rate_20260809.json b/results/analysis_exp6221_admission_rate_20260809.json
+index 4a8bca230f..8a08eedafe 100644
+--- a/results/analysis_exp6221_admission_rate_20260809.json
++++ b/results/analysis_exp6221_admission_rate_20260809.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "analysis_exp6221_admission_rate",
+   "title": "Phase 2a follow-up: the pre-registered admission-rate primary metric for the expanded gemma think-mode A/B",
+-  "run_date": "2026-08-09T07:37:03Z",
++  "run_date": "2026-08-09T10:03:29Z",
+   "question": "On the held-out exact-accuracy admission bar (>=1.0, the live agent's own trust threshold), does think beat no_think on >=6 discordant games at p<0.05 (exact two-sided sign test)?",
+   "admission_bar": 1.0,
+   "per_game": [
+@@ -22,9 +22,9 @@
+       "no_think_admitted": false,
+       "think_admitted": false,
+       "no_think_heldout_accuracy": 0.0,
+-      "think_heldout_accuracy": null,
++      "think_heldout_accuracy": 0.0,
+       "no_think_induction_ok": true,
+-      "think_induction_ok": false,
++      "think_induction_ok": true,
+       "outcome": "tie_neither_admits"
+     },
+     {
+@@ -66,9 +66,9 @@
+       "no_think_admitted": false,
+       "think_admitted": false,
+       "no_think_heldout_accuracy": 0.0,
+-      "think_heldout_accuracy": null,
++      "think_heldout_accuracy": 0.0,
+       "no_think_induction_ok": true,
+-      "think_induction_ok": false,
++      "think_induction_ok": true,
+       "outcome": "tie_neither_admits"
+     },
+     {
+@@ -110,9 +110,9 @@
+       "no_think_admitted": false,
+       "think_admitted": false,
+       "no_think_heldout_accuracy": 0.0,
+-      "think_heldout_accuracy": null,
++      "think_heldout_accuracy": 0.0,
+       "no_think_induction_ok": true,
+-      "think_induction_ok": false,
++      "think_induction_ok": true,
+       "outcome": "tie_neither_admits"
+     },
+     {
+@@ -174,9 +174,9 @@
+   "random_seed": 6221,
+   "honest_verdict": "complete_admission_rate_analysis_1_favor_think_0_favor_no_think_12_tie_p_1.0000_gate_not_met_0_of_13_games_incomplete_at_analysis_time",
+   "honest_verdict_principle": "terminal `complete_` prefix; states the full discordant breakdown, the p-value, the gate outcome, and the completeness caveat all in one string so none can be read in isolation.",
+-  "git_head": "864b03ce4f7ecdc5dcd5ee3b51a483ced428088f",
++  "git_head": "7396dd46d823f03837a94ec8b23d9a04d904520d",
+   "provenance": {
+-    "git_head": "864b03ce4f7ecdc5dcd5ee3b51a483ced428088f",
++    "git_head": "7396dd46d823f03837a94ec8b23d9a04d904520d",
+     "code": [
+       {
+         "path": "scripts/analyze_exp6221_admission_rate.py",
+@@ -187,13 +187,13 @@
+       "cited_artifacts": [
+         {
+           "path": "results/experiment_6221_gemma_think_mode_ab_expanded_roster.json",
+-          "sha256": "dad3bf4e058da69348f5122e5b40fdbe52858b269c35fed2cfca736c7bcf525b"
++          "sha256": "fcbac633e64f4b35fd6f98b52f83b2c88ba056b146dbe8af4c629957fddbc798"
+         }
+       ]
+     }
+   },
+-  "duration_s": 0.001,
++  "duration_s": 0.002,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+   "inference_substrate_principle": "reads already-persisted rows from the exp6221 artifact and recomputes a different primary metric; invokes no model and reruns no induction.",
+-  "reproducibility_checksum": "51e1b041289cb92ea5c6f3a5a7b8e36eb298e3e9d87759d1dc2d62cba888d3d5"
++  "reproducibility_checksum": "5f041cee55f41523945cc698de3bf7fce6f01b8f7b66a0dfd0d36b5b8b83630d"
+ }
+diff --git a/results/experiment_6221_gemma_think_mode_ab_expanded_roster.json b/results/experiment_6221_gemma_think_mode_ab_expanded_roster.json
+index 0b6d127ba5..c13ef093ac 100644
+--- a/results/experiment_6221_gemma_think_mode_ab_expanded_roster.json
++++ b/results/experiment_6221_gemma_think_mode_ab_expanded_roster.json
+@@ -435,29 +435,80 @@
+       "goal_predicate_accuracy": 0.8,
+       "n_real_levelups": 1,
+       "levelup_positive_recall": 0.0
++    },
++    {
++      "game": "sk48",
++      "arm": "think",
++      "induce_s": 219.7,
++      "induction_ok": true,
++      "reason_engaged": true,
++      "max_raw_completion_len": 19037,
++      "n_generate_calls": 1,
++      "heldout_accuracy": 0.0,
++      "cell_recall": 0.1251,
++      "goal_predicate_accuracy": 1.0,
++      "n_real_levelups": 1,
++      "levelup_positive_recall": 1.0,
++      "rerun_of_infra_crash": true,
++      "rerun_timestamp": "2026-08-09T09:50:11Z",
++      "rerun_attempts_used": 1
++    },
++    {
++      "game": "ls20",
++      "arm": "think",
++      "induce_s": 208.2,
++      "induction_ok": true,
++      "reason_engaged": true,
++      "max_raw_completion_len": 16440,
++      "n_generate_calls": 1,
++      "heldout_accuracy": 0.0,
++      "cell_recall": 0.9438,
++      "goal_predicate_accuracy": 0.9167,
++      "n_real_levelups": 1,
++      "levelup_positive_recall": 0.0,
++      "rerun_of_infra_crash": true,
++      "rerun_timestamp": "2026-08-09T09:53:40Z",
++      "rerun_attempts_used": 1
++    },
++    {
++      "game": "cd82",
++      "arm": "think",
++      "induce_s": 212.8,
++      "induction_ok": true,
++      "reason_engaged": true,
++      "max_raw_completion_len": 20217,
++      "n_generate_calls": 1,
++      "heldout_accuracy": 0.0,
++      "cell_recall": 0.1046,
++      "goal_predicate_accuracy": 1.0,
++      "n_real_levelups": 1,
++      "levelup_positive_recall": 1.0,
++      "rerun_of_infra_crash": true,
++      "rerun_timestamp": "2026-08-09T09:57:13Z",
++      "rerun_attempts_used": 1
+     }
+   ],
+   "comparison_summary": {
+-    "n_games_both_induced": 9,
++    "n_games_both_induced": 12,
+     "no_think_induction_success": 12,
+-    "think_induction_success": 10,
++    "think_induction_success": 13,
+     "no_think_reason_engaged_frac": 0.0,
+     "think_reason_engaged_frac": 1.0,
+     "mean_heldout_no_think": 0.0833,
+-    "mean_heldout_think": 0.2545,
++    "mean_heldout_think": 0.1958,
+     "mean_goal_predicate_no_think": 0.618,
+-    "mean_goal_predicate_think": 0.855,
++    "mean_goal_predicate_think": 0.8821,
+     "mean_levelup_recall_no_think": 0.3333,
+-    "mean_levelup_recall_think": 0.3,
++    "mean_levelup_recall_think": 0.3846,
+     "per_game_headtohead_think_tie_nothink": {
+       "goal_predicate_accuracy": [
+-        4,
++        7,
+         2,
+         3
+       ],
+       "levelup_positive_recall": [
+-        2,
+-        4,
++        3,
++        6,
+         3
+       ]
+     }
+@@ -473,5 +524,6 @@
+     "cuda_server_up_or_gpu1_headroom": true,
+     "ok": true
+   },
+-  "reproducibility_checksum": "86ae64b945a068c7315f3e67c11bd4f0e49663c7375f9a9ada426a09b654c10b"
+-}
+\ No newline at end of file
++  "reproducibility_checksum": "1bc061f6f3f0772e248543a9ea6f6c857d275f0630aeb4eecd866bf21bbbb83a",
++  "corrigendum_note": "2026-08-09 (REQ-ARC-WMTE-6242/6243 correction): the original per_game_results rows for sk48/ls20/cd82's 'think' arm (induction_ok=False, induction_failure_detail citing RemoteDisconnected) were llama-server crashes -- the server's own stderr log shows two SIGINTs back-to-back mid-generation, zero OOM/CUDA-error/abort, steady ~29.6 tok/s decode right up to death. That is this project's pre-existing, long-standing 'reaper' issue (ops/known-issues.md), NOT a think-mode capability signal -- NOT deleted or overwritten (Test-Run Record Integrity Discipline), preserved in place. Three NEW rows for the SAME (game, 'think') pairs were appended below (rerun_of_infra_crash=true,rerun_timestamp set), collected 2026-08-09 with carnot-conductor.service and carnot-orphan-cleanup.timer both STOPPED as an isolation test (see ops/known-issues.md for the isolation-test finding: 3/3 clean vs 4/4 crashed while those units were running, small-n, not fully conclusive). All three succeeded on the FIRST attempt with real reasoning engaged and real completions (16-20k chars), landing at heldout_accuracy=0.0 -- a genuine floor TIE with no_think on all three games, not the 'think fails outright' asymmetry the crash-corrupted reads implied. comparison_summary was recomputed via _summarize_pair() over the corrected row set (it naturally prefers the successful new rows: the filter is induction_ok truthy, and the original crashed rows have induction_ok=False, so they never entered the by-arm dicts to begin with -- no manual de-duplication needed). The admission-rate SIGN TEST result itself (scripts/analyze_exp6221_admission_rate.py) is UNCHANGED by this correction: 0.0 does not cross the 1.0 admission bar either way, so these three games were already correctly classified as ties for that specific metric; what changes is that they are now a CONFIRMED tie rather than an unmeasured crash. REQ-ARC-WMTE-6243's motivating 'mirror failure' claim (think fails outright on cd82/ls20/sk48, mirroring sp80's no_think failure) is RETRACTED -- sp80 remains the only genuine total-induction-failure case in this corpus."
++}
+diff --git a/results/rerun_exp6221_infra_crashed_cells_20260809.json b/results/rerun_exp6221_infra_crashed_cells_20260809.json
+new file mode 100644
+index 0000000000..46c4217686
+--- /dev/null
++++ b/results/rerun_exp6221_infra_crashed_cells_20260809.json
+@@ -0,0 +1,55 @@
++{
++  "new_rows": [
++    {
++      "game": "sk48",
++      "arm": "think",
++      "induce_s": 219.7,
++      "induction_ok": true,
++      "reason_engaged": true,
++      "max_raw_completion_len": 19037,
++      "n_generate_calls": 1,
++      "heldout_accuracy": 0.0,
++      "cell_recall": 0.1251,
++      "goal_predicate_accuracy": 1.0,
++      "n_real_levelups": 1,
++      "levelup_positive_recall": 1.0,
++      "rerun_of_infra_crash": true,
++      "rerun_timestamp": "2026-08-09T09:50:11Z",
++      "rerun_attempts_used": 1
++    },
++    {
++      "game": "ls20",
++      "arm": "think",
++      "induce_s": 208.2,
++      "induction_ok": true,
++      "reason_engaged": true,
++      "max_raw_completion_len": 16440,
++      "n_generate_calls": 1,
++      "heldout_accuracy": 0.0,
++      "cell_recall": 0.9438,
++      "goal_predicate_accuracy": 0.9167,
++      "n_real_levelups": 1,
++      "levelup_positive_recall": 0.0,
++      "rerun_of_infra_crash": true,
++      "rerun_timestamp": "2026-08-09T09:53:40Z",
++      "rerun_attempts_used": 1
++    },
++    {
++      "game": "cd82",
++      "arm": "think",
++      "induce_s": 212.8,
++      "induction_ok": true,
++      "reason_engaged": true,
++      "max_raw_completion_len": 20217,
++      "n_generate_calls": 1,
++      "heldout_accuracy": 0.0,
++      "cell_recall": 0.1046,
++      "goal_predicate_accuracy": 1.0,
++      "n_real_levelups": 1,
++      "levelup_positive_recall": 1.0,
++      "rerun_of_infra_crash": true,
++      "rerun_timestamp": "2026-08-09T09:57:13Z",
++      "rerun_attempts_used": 1
++    }
++  ]
++}
+diff --git a/scripts/rerun_exp6221_infra_crashed_cells.py b/scripts/rerun_exp6221_infra_crashed_cells.py
+new file mode 100644
+index 0000000000..dcca1d8809
+--- /dev/null
++++ b/scripts/rerun_exp6221_infra_crashed_cells.py
+@@ -0,0 +1,134 @@
++#!/usr/bin/env python3
++"""Correction re-run for REQ-ARC-WMTE-6242/6243: three (game, "think") cells in
++`results/experiment_6221_gemma_think_mode_ab_expanded_roster.json` recorded a
++`RemoteDisconnected('Remote end closed connection without response')` failure with
++`max_raw_completion_len=0, n_generate_calls=0` -- zero tokens generated. That is the project's own
++long-standing, unsolved llama-server "reaper" crash signature (see ops/known-issues.md), NOT a
++think-mode capability signal. The checkpoint marks a (game, arm) cell done on any result including
++a hard failure, so these three were never retried by the original run.
++
++Reruns ONLY sk48/ls20/cd82's "think" arm, on an otherwise-idle GPU. Reuses
++`experiment_6199_gemma_think_mode_ab`'s own `build_levelup_window` / `run_arm` /
++`_configure_arm` unmodified -- this is a targeted recollection of specific cells, not a new
++measurement methodology.
++
++RETRY-ON-REAPER (added after the first attempt hit the SAME crash mid-run, 2026-08-09): every
++crash observed this session landed on a THINK-mode call specifically (200-900s duration; 0
++crashes on the much-shorter no_think calls) -- consistent with, but not proof of, a
++connection/watchdog timeout tied to request duration rather than pure randomness. Each game gets
++up to MAX_ATTEMPTS tries; a RemoteDisconnected result calls `prop._ensure_server()` again before
++retrying (it health-checks and relaunches a dead server; a live, reusable server is a no-op) --
++matches `_ensure_server`'s own documented reuse-or-relaunch contract. Per-game checkpointing
++(write the output file after EVERY game, not just at the end) so a process kill mid-run does not
++lose already-completed cells, mirroring the parent experiment's own checkpoint discipline.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import sys
++import time
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parent.parent
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++TARGET_GAMES = ("sk48", "ls20", "cd82")
++ARTIFACT_PATH = REPO_ROOT / "results/experiment_6221_gemma_think_mode_ab_expanded_roster.json"
++OUT_PATH = REPO_ROOT / "results/rerun_exp6221_infra_crashed_cells_20260809.json"
++MAX_ATTEMPTS = 4
++
++
++def _load_done() -> dict:
++    if not OUT_PATH.exists():
++        return {}
++    data = json.loads(OUT_PATH.read_text())
++    return {row["game"]: row for row in data.get("new_rows", []) if row.get("game")}
++
++
++def _save(done: dict) -> None:
++    OUT_PATH.write_text(json.dumps({"new_rows": list(done.values())}, indent=2, default=str) + "\n")
++
++
++def main() -> int:
++    if os.environ.get("CARNOT_ARC_INDUCE_N_CTX") != "32768":
++        raise SystemExit("set CARNOT_ARC_INDUCE_N_CTX=32768 before running this script")
++    if not ARTIFACT_PATH.exists():
++        raise SystemExit(f"missing {ARTIFACT_PATH}")
++
++    from carnot import experiment_6199_gemma_think_mode_ab as exp6199
++
++    os.environ["CARNOT_ARC_GENERATOR_CUDA_GPU"] = exp6199.CUDA_GPU_INDEX
++    os.environ["CARNOT_ARC_GENERATOR_REQUIRE_CUDA"] = "1"
++
++    from carnot.agentic.arc_executable_world_model import (
++        GeneratorCudaRequiredError,
++        LocalGGUFProposer,
++    )
++
++    prop = LocalGGUFProposer(
++        repo_substr=exp6199.GGUF_REPO_SUBSTR,
++        port=exp6199.SERVER_PORT,
++        mtp=False,
++        kv_quant="q8_0",
++        max_tokens=exp6199.SHARED_MAX_TOKENS,
++        no_think_prefix="",
++        timeout=exp6199.INDUCE_TIMEOUT_S,
++    )
++
++    def _ensure(label: str) -> None:
++        try:
++            up = prop._ensure_server()
++        except GeneratorCudaRequiredError as exc:
++            raise SystemExit(f"blocked_cuda_unavailable ({label}): {exc}") from exc
++        if not up:
++            raise SystemExit(f"blocked_cuda_server_failed_to_start ({label})")
++
++    _ensure("initial")
++
++    done = _load_done()
++    for game in TARGET_GAMES:
++        if game in done and not done[game].get("induction_failure_detail", "").startswith(
++            "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected"
++        ):
++            print(f"[rerun] {game} already done (checkpoint), skipping", flush=True)
++            continue
++        built = exp6199.build_levelup_window(game)
++        if built is None:
++            done[game] = {"game": game, "arm": "think", "rerun_window_error": "no_levelup_window"}
++            _save(done)
++            continue
++        window, cell = built
++        print(f"[rerun] {game}: window n={len(window)} cell={cell}", flush=True)
++
++        row = None
++        for attempt in range(1, MAX_ATTEMPTS + 1):
++            row = exp6199.run_arm(prop, game, "think", window, cell)
++            detail = str(row.get("induction_failure_detail", ""))
++            is_reaper_crash = "RemoteDisconnected" in detail
++            print(
++                f"[rerun] {game} think attempt {attempt}/{MAX_ATTEMPTS}: "
++                f"ok={row.get('induction_ok')} reaper_crash={is_reaper_crash} "
++                f"detail={detail[:120]}",
++                flush=True,
++            )
++            if not is_reaper_crash:
++                break  # success, or a genuine (non-infra) failure -- either way, stop retrying
++            if attempt < MAX_ATTEMPTS:
++                print(f"[rerun] {game}: reaper crash, re-ensuring server before retry", flush=True)
++                _ensure(f"{game} retry {attempt + 1}")
++
++        row["rerun_of_infra_crash"] = True
++        row["rerun_timestamp"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
++        row["rerun_attempts_used"] = attempt
++        done[game] = row
++        _save(done)
++        print(f"[rerun] {game} think FINAL: {row}", flush=True)
++
++    print(f"wrote {OUT_PATH}")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

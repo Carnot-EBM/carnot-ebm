@@ -1,0 +1,62 @@
+From f85678de4d7204fd8d41c6aeb9dd9c79b9e2332f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 17 Jun 2026 05:46:42 -0400
+Subject: [PATCH 02281/11362] [outer-loop] gap-fill findings: loop is sound,
+ but a heuristic needs the RIGHT engine (v3 can't solve cn04 regardless)
+
+Validated with a PERFECT deterministic diff-from-win heuristic: graph_explore_solve_v3
+does NOT solve cn04 with OR without it (novelty-only also fails), while v2 solves cn04.
+So cn04-in-v3 was the wrong test -- the heuristic was doomed by the engine, not the LLM.
+A goal-distance heuristic's value is EFFICIENCY in a search that already reaches the win
+(lp85 OfflineSolver+hand_verifier = 10.75x). Next: target lp85 / make v2 heuristic-guided.
+Autolearning capture-and-reuse + the runtime validator are built and correct (they refused
+every broken heuristic). Local models (12B AND 35B) write None-falling heuristics -> hard
+float-return contract is the prompt fix (size-independent).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...llm-as-gap-filler-not-solver-2026-06-17.md | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/docs/research-notes/arc-llm-as-gap-filler-not-solver-2026-06-17.md b/docs/research-notes/arc-llm-as-gap-filler-not-solver-2026-06-17.md
+index 83f4e68175..2899c8e112 100644
+--- a/docs/research-notes/arc-llm-as-gap-filler-not-solver-2026-06-17.md
++++ b/docs/research-notes/arc-llm-as-gap-filler-not-solver-2026-06-17.md
+@@ -75,6 +75,34 @@ repurposed for gap-filling. The next build is the **gap-characterizer → adapte
+ loop, targeting the games the explorer stalls on (wa30, cn04, sk48) and the tn36 click-schema
+ delta, with the LLM writing the small per-game piece, not the solver.
+ 
++## FINDINGS from the first gap-fill runs (2026-06-17) — what actually blocks it
++
++1. **Autolearning capture-and-reuse: BUILT + correct.** `gap_fills/` (save/load),
++   reuse-first (skip LLM if captured), save-on-success (reproduction-gated), and a runtime
++   `validate` callback that retries on buggy code. It correctly REFUSED to capture every
++   broken heuristic — which is the point.
++2. **Local models write buggy heuristics (prompt-tunable, not size-bound).** gemma-4-12B AND
++   Qwen3.6-35B-A3B both wrote `goal_distance` functions that fall through to `None`;
++   token-capping to avoid that truncated the code instead. A hard "must end in an
++   unconditional float return" contract + a right-sized token budget is the fix; this is
++   prompt-adherence, not model capability (the 35B failed the same way as the 12B).
++   gemma-4-31B DENSE is too slow on the iGPU (timeout) — use a MoE (Qwen-35B-A3B / gemma-26B-A4B).
++3. **THE REAL BLOCKER (architectural): a heuristic needs the RIGHT search engine.** The
++   gap-fill plugged the heuristic into `graph_explore_solve_v3` (value-guided). But v3 does
++   NOT solve cn04 even with a PERFECT deterministic diff-from-win heuristic (nor does
++   novelty-only v3) — whereas `graph_explore_solve_v2` (systematic BFS-frontier) DOES solve
++   cn04. So on cn04 the heuristic was doomed regardless of the LLM: v3 is the wrong engine.
++   **A goal-distance heuristic's value is EFFICIENCY (fewer actions) in a search that already
++   reaches the win** — the proven lp85 pattern (`OfflineSolver` + `hand_verifier` → 10.75x
++   fewer states), NOT making v3 solve-from-scratch a game it structurally can't.
++
++**Correction to the next build:** the gap-fill must target where a heuristic provably helps:
++(a) plug it into the verifier-routed `OfflineSolver` (needs the per-game adapter the LLM also
++writes), or (b) make the STRONG explorer `graph_explore_solve_v2` heuristic-GUIDED (prioritize
++its frontier by the heuristic) so it keeps its solving power AND gains efficiency. Validate on
++a game where a heuristic demonstrably helps (lp85), then generalize. cn04-in-v3 was the wrong
++test combo; the loop machinery is sound.
++
+ Cross-refs: CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse" (RE only the delta) +
+ "Missing-Verifier Gap Logging"; `python/carnot/agentic/arc_game_adapters.py`,
+ `arc_solve_learning.py` (recommend_approach), `ops/verifier_gaps.md`;
+-- 
+2.55.0
+

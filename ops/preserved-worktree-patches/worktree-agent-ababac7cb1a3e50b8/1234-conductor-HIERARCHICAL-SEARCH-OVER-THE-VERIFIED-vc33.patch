@@ -1,0 +1,1783 @@
+From 1e2a24127a60ec2635ac6dc4c113e5f7b625bf20 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 05:50:30 -0400
+Subject: [PATCH 01234/11362] [conductor] HIERARCHICAL SEARCH OVER THE VERIFIED
+ vc33 WORLD MODEL (the G2 DEPTH TEST -- is the .372 search layer a general
+ planner or an r11l trick?): build a planning search over the vc33 verified WM
+ (reuse exp4034's goal predicate + the saved WM program as the forward
+ simulator) with (a) SUBGOAL/LANDMARK decomposition (HWM arXiv:2604.03208 /
+ Subgoal-PHS arXiv:2506.07255 -- the lever for long-horizon where flat search
+ blows up), (b) a NON-bespoke coded heuristic over the goal predicate (unmet
+ goal components / manhattan-to-target / progress-delta -- NOT game-specific
+ hardcoded macros like exp4021's r11l_safe_composite_path_macro), (c) a REAL
+ bounded best-first/A* search (report nodes_expanded + branching honestly --
+ exp4021 expanded only 3). REAL-ENV-CONFIRM any solve via level_completed.
+ Honest no-solve is a COMPLETE verdict. The diagnostic: did the search break
+ vc33's wall (where the 99%-WM single-step approach failed), and did it do so
+ with a GENERAL heuristic or did it need vc33-specific macros?
+
+Automated research step by research conductor.
+Task ID: exp4035-hierarchical-search-over-vc33-wm
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../phase4_active_inference/spec.md           |   6 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../agentic/arc_vc33_hierarchical_search.py   | 641 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...4035_hierarchical_search_over_vc33_wm.json | 381 +++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xp4035_hierarchical_search_over_vc33_wm.py |  39 ++
+ ...xp4035_hierarchical_search_over_vc33_wm.py | 339 +++++++++
+ 24 files changed, 1439 insertions(+), 33 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_vc33_hierarchical_search.py
+ create mode 100644 results/experiment_4035_hierarchical_search_over_vc33_wm.json
+ create mode 100644 scripts/experiments/exp4035_hierarchical_search_over_vc33_wm.py
+ create mode 100644 tests/python/test_exp4035_hierarchical_search_over_vc33_wm.py
+
+diff --git a/openspec/capabilities/phase4_active_inference/spec.md b/openspec/capabilities/phase4_active_inference/spec.md
+index a8df6386f8..b7f0e6b1c9 100644
+--- a/openspec/capabilities/phase4_active_inference/spec.md
++++ b/openspec/capabilities/phase4_active_inference/spec.md
+@@ -216,3 +216,9 @@
+ 
+ ### SCENARIO-PHASE4-036
+ **Description:** Running Exp 4034 either writes `complete: vc33_goal_predicate_induced_heldout_precision_<p>` when the predicate fires on every held-out solved state and on no held-out early/late state, writes `complete: vc33_goal_predicate_not_separable_<reason>` when the observed labels do not separate in the restricted predicate language, or writes `blocked_vc33_world_model_missing` when the verified vc33 world model or saved transition store is unavailable. A valid artifact MUST identify `game="vc33"`, set `inference_substrate="offline_arc_agi3_goal_predicate_induction_no_oracle"`, report `goal_predicate_heldout_precision` and `goal_predicate_heldout_recall` as bare floats, and preserve the exact predicate code for Exp 4035.
++
++### REQ-PHASE4-037: ARC-AGI-3 vc33 Hierarchical Search Over Verified World Model
++**Description:** The system SHALL run Exp 4035 as a bounded hierarchical planning search over the verified vc33 world-model simulator and the Exp 4034 goal predicate. It MUST first load `results/experiment_4034_vc33_goal_predicate_induction.json` and require `goal_predicate_heldout_precision >= 0.5`, then load `results/arc3_vc33_world_model_program.py`; if either precondition is missing or invalid it MUST write `results/experiment_4035_hierarchical_search_over_vc33_wm.json` with `honest_verdict=blocked_vc33_goal_predicate_or_wm_missing` and stop. The planner MUST decompose the goal predicate into ordered subgoal or landmark predicates, rank verifier-expanded states with a non-bespoke coded heuristic over unmet goal-predicate components, Manhattan alignment distance, and progress-bar delta, and run a real bounded best-first/A*-style search with `nodes_expanded <= 50000`. The terminal artifact MUST include bare top-level fields `honest_verdict`, `new_levels_solved_this_task`, `search_layer_generalizes`, `heuristic_was_non_bespoke`, `nodes_expanded`, `branching_factor`, `subgoal_decomposition_used`, `real_env_confirmed`, and `inference_substrate`.
++
++### SCENARIO-PHASE4-037
++**Description:** Running Exp 4035 either writes `complete: search_layer_solved_vc33_L<k>_real_env_confirmed` only when a verifier-planned action sequence advances the real offline ARC environment's `levels_completed` counter, writes `complete: search_layer_no_solve_vc33_<bottleneck>` when the bounded hierarchical search does not produce a real-env-confirmed solve, or writes `blocked_vc33_goal_predicate_or_wm_missing` when the Exp 4034 predicate or verified world model cannot be used. A valid complete artifact MUST set `heuristic_was_non_bespoke=true`, report the exact `nodes_expanded` and mean `branching_factor`, set `subgoal_decomposition_used=true`, set `search_layer_generalizes=true` only for a real-env-confirmed vc33 solve with the general heuristic, and set `inference_substrate="offline_arc_agi3_planning_search_over_verified_world_model"`.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e5db2b7e9b..971a7c0c3e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 163,
+   "code_violations": 0,
+-  "experiments_checked": 3065,
++  "experiments_checked": 3066,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_vc33_hierarchical_search.py b/python/carnot/agentic/arc_vc33_hierarchical_search.py
+new file mode 100644
+index 0000000000..ca49e32c6c
+--- /dev/null
++++ b/python/carnot/agentic/arc_vc33_hierarchical_search.py
+@@ -0,0 +1,641 @@
++"""Exp 4035 hierarchical search over the verified vc33 world model.
++
++Spec refs: REQ-PHASE4-037, SCENARIO-PHASE4-037.
++
++The module keeps the Exp 4035 claim narrow: the verified `predict(grid, action)`
++program is the simulator, the Exp 4034 predicate is the terminal goal, and the
++planner uses grid-derived landmarks plus a coded distance heuristic.  It does
++not replay known vc33 coordinate traces or install per-level macros; a solve
++only counts after the same action list advances the offline environment's
++`levels_completed` counter.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import time
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any, Callable, Iterable
++
++import numpy as np
++
++from carnot.agentic.arc_goal_predicate_separation import compile_goal_predicate
++from carnot.agentic.arc_heuristic_search_over_verified_wm import (
++    SearchResult,
++    best_first_search,
++)
++from carnot.agentic.arc_vc33_goal_predicate_induction import (
++    TARGET_COLORS,
++    _component_bboxes,
++    vc33_grid_state_features,
++)
++
++
++RESULT_NAME = "experiment_4035_hierarchical_search_over_vc33_wm.json"
++INFERENCE_SUBSTRATE = "offline_arc_agi3_planning_search_over_verified_world_model"
++DEFAULT_MAX_EXPANSIONS = 4096
++DEFAULT_MAX_BRANCHING = 96
++TARGET_GAME = "vc33"
++TARGET_LEVEL = 1
++PRIOR_WALL_LEVEL = 0
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "new_levels_solved_this_task",
++    "search_layer_generalizes",
++    "heuristic_was_non_bespoke",
++    "nodes_expanded",
++    "branching_factor",
++    "subgoal_decomposition_used",
++    "real_env_confirmed",
++    "inference_substrate",
++)
++TERMINAL_PREFIXES = ("complete:", "success:", "blocked_")
++PredictFn = Callable[[np.ndarray, tuple[int, ...]], np.ndarray]
++GoalPredicate = Callable[[dict[str, Any]], bool]
++
++
++@dataclass(frozen=True)
++class Subgoal:
++    """One ordered landmark predicate for the hierarchical planner."""
++
++    name: str
++    predicate: GoalPredicate
++
++
++@dataclass(frozen=True)
++class Exp4035Preconditions:
++    """Loaded Exp 4034 predicate plus verified vc33 simulator, or errors."""
++
++    ok: bool
++    predict: PredictFn | None
++    is_goal: GoalPredicate | None
++    goal_predicate_precision: float
++    goal_predicate_code: str
++    errors: list[str]
++
++
++@dataclass(frozen=True)
++class GridSearchOutcome:
++    """Aggregated hierarchical search evidence for artifact construction."""
++
++    search: SearchResult
++    nodes_expanded: int
++    branching_factor: float
++    subgoals_attempted: int
++    subgoals_reached: int
++
++
++def _grid_key(grid: np.ndarray) -> str:
++    arr = np.ascontiguousarray(np.asarray(grid, dtype=np.int16))
++    shape = ",".join(str(dim) for dim in arr.shape).encode("ascii")
++    return hashlib.sha1(arr.tobytes() + shape).hexdigest()[:16]
++
++
++def progress_bar_gap(grid: np.ndarray) -> int:
++    """Estimate remaining progress from a rasterized top-row bar, when present."""
++
++    arr = np.asarray(grid)
++    if arr.ndim != 2 or arr.shape[0] == 0 or arr.shape[1] == 0:
++        return 0
++    width = int(arr.shape[1])
++    top = arr[0]
++    old = top[0]
++    consumed = 0
++    for col in range(width - 1, -1, -1):
++        if top[col] == old:
++            break
++        consumed += 1
++    steps_total = max(1, int(np.floor(width * 25.0 / 32.0 + 0.5)))
++    step = int(np.floor(consumed * steps_total / float(width) + 0.5))
++    return max(0, steps_total - step)
++
++
++def _target_alignment_distance(grid: np.ndarray) -> int:
++    total = 0
++    for color in TARGET_COLORS:
++        boxes = _component_bboxes(np.asarray(grid), int(color))
++        if len(boxes) < 2:
++            continue
++        centers = [(x0 + x1, y0 + y1) for x0, y0, x1, y1, _ in boxes]
++        best = None
++        for idx, (cx, cy) in enumerate(centers):
++            for other_cx, other_cy in centers[idx + 1 :]:
++                distance = min(abs(cx - other_cx), abs(cy - other_cy))
++                best = distance if best is None else min(best, distance)
++        total += int(best or 0)
++    return int(total)
++
++
++def grid_state_features(grid: np.ndarray) -> dict[str, Any]:
++    """Build the feature dictionary consumed by Exp 4034's goal predicate."""
++
++    features = dict(vc33_grid_state_features(np.asarray(grid)))
++    missing_pair = 0 if bool(features.get("has_target_pair")) else 1
++    misaligned = int(features.get("misaligned_target_pairs", 0) or 0)
++    unsatisfied = missing_pair + misaligned
++    features["unsatisfied_targets"] = int(unsatisfied)
++    features["unmet_goal_components"] = int(unsatisfied)
++    features["manhattan_to_target"] = _target_alignment_distance(np.asarray(grid))
++    features["progress_bar_delta_to_goal"] = progress_bar_gap(np.asarray(grid))
++    return features
++
++
++def vc33_goal_distance_heuristic(state: dict[str, Any]) -> float:
++    """Rank states by unmet predicate components, then distance and progress."""
++
++    unmet = float(state.get("unmet_goal_components", state.get("unsatisfied_targets", 0)) or 0)
++    manhattan = float(state.get("manhattan_to_target", 0) or 0)
++    progress_gap_value = float(state.get("progress_bar_delta_to_goal", 0) or 0)
++    return unmet * 1000.0 + manhattan + 0.01 * max(0.0, progress_gap_value)
++
++
++def _component_points(box: tuple[int, int, int, int, int]) -> list[tuple[int, int]]:
++    x0, y0, x1, y1, size = box
++    cx = (x0 + x1) // 2
++    cy = (y0 + y1) // 2
++    points = [
++        (x0, y0),
++        (x1, y0),
++        (x0, y1),
++        (x1, y1),
++        (cx, cy),
++        (x0, cy),
++        (x1, cy),
++        (cx, y0),
++        (cx, y1),
++    ]
++    if size > 32:
++        xs = sorted({x0, (2 * x0 + x1) // 3, cx, (x0 + 2 * x1) // 3, x1})
++        ys = sorted({y0, (2 * y0 + y1) // 3, cy, (y0 + 2 * y1) // 3, y1})
++        points.extend((x, y) for x in xs for y in ys)
++    return points
++
++
++def component_landmark_click_actions(grid: np.ndarray, *, max_actions: int = DEFAULT_MAX_BRANCHING) -> list[tuple[int, int, int]]:
++    """Return deterministic click landmarks from visible grid components."""
++
++    arr = np.asarray(grid)
++    values, counts = np.unique(arr, return_counts=True)
++    count_by_value = {int(value): int(count) for value, count in zip(values, counts)}
++    target_set = {int(color) for color in TARGET_COLORS}
++    ordered_values = sorted(
++        (int(value) for value in values),
++        key=lambda value: (0 if value in target_set else 1, count_by_value[value], value),
++    )
++    actions: list[tuple[int, int, int]] = []
++    seen: set[tuple[int, int, int]] = set()
++    height, width = arr.shape
++    for color in ordered_values:
++        boxes = sorted(_component_bboxes(arr, color), key=lambda box: (box[4], box[1], box[0]))
++        for box in boxes:
++            for x, y in _component_points(box):
++                if not (0 <= x < width and 0 <= y < height) or y == 0:
++                    continue
++                action = (6, int(x), int(y))
++                if action in seen:
++                    continue
++                seen.add(action)
++                actions.append(action)
++                if len(actions) >= max_actions:
++                    return actions
++    return actions
++
++
++def decompose_goal_predicate(start_features: dict[str, Any]) -> list[Subgoal]:
++    """Create ordered landmarks from the visible components of the goal predicate."""
++
++    misaligned = int(start_features.get("misaligned_target_pairs", 0) or 0)
++    subgoals: list[Subgoal] = []
++    for target in range(max(0, misaligned - 1), -1, -1):
++        subgoals.append(
++            Subgoal(
++                name=f"reduce_misaligned_target_pairs_to_{target}",
++                predicate=lambda state, target=target: int(
++                    state.get("misaligned_target_pairs", 0) or 0
++                )
++                <= target,
++            )
++        )
++    subgoals.append(
++        Subgoal(
++            name="full_goal_predicate",
++            predicate=lambda state: int(state.get("unsatisfied_targets", 0) or 0) == 0,
++        )
++    )
++    return subgoals
++
++
++class VC33VerifiedWorldModel:
++    """Adapter that lets generic best-first search expand vc33 grid states."""
++
++    def __init__(
++        self,
++        start_grid: np.ndarray,
++        predict: PredictFn,
++        *,
++        max_branching: int = DEFAULT_MAX_BRANCHING,
++    ) -> None:
++        self.predict = predict
++        self.max_branching = int(max(1, max_branching))
++        self._grids: dict[str, np.ndarray] = {}
++        self._states: dict[str, dict[str, Any]] = {}
++        self.branch_counts: list[int] = []
++        self.start_state = self._register(np.asarray(start_grid))
++
++    def _register(self, grid: np.ndarray) -> dict[str, Any]:
++        arr = np.asarray(grid, dtype=np.int16)
++        key = _grid_key(arr)
++        if key not in self._states:
++            state = grid_state_features(arr)
++            state["state_id"] = key
++            state["grid_key"] = key
++            self._grids[key] = arr.copy()
++            self._states[key] = state
++        return self._states[key]
++
++    def grid_for(self, state: dict[str, Any]) -> np.ndarray:
++        return self._grids[str(state["grid_key"])]
++
++    def next_states(self, state: dict[str, Any]) -> list[tuple[tuple[int, int, int], dict[str, Any]]]:
++        grid = self.grid_for(state)
++        children: list[tuple[tuple[int, int, int], dict[str, Any]]] = []
++        for action in component_landmark_click_actions(grid, max_actions=self.max_branching):
++            try:
++                predicted = np.asarray(self.predict(grid.copy(), action), dtype=np.int16)
++            except Exception:
++                continue
++            if predicted.shape != grid.shape or np.array_equal(predicted, grid):
++                continue
++            children.append((action, self._register(predicted)))
++        self.branch_counts.append(len(children))
++        return children
++
++    def branching_factor(self) -> float:
++        if not self.branch_counts:
++            return 0.0
++        return float(sum(self.branch_counts) / len(self.branch_counts))
++
++
++def hierarchical_best_first_search(
++    model: VC33VerifiedWorldModel,
++    subgoals: list[Subgoal],
++    *,
++    is_goal: GoalPredicate,
++    max_expansions: int = DEFAULT_MAX_EXPANSIONS,
++) -> GridSearchOutcome:
++    """Plan to each subgoal in order with bounded best-first search."""
++
++    hard_bound = min(50000, max(0, int(max_expansions)))
++    current = model.start_state
++    actions: list[Any] = []
++    nodes_expanded = 0
++    reached = 0
++    for subgoal in subgoals:
++        if subgoal.predicate(current):
++            reached += 1
++            continue
++        remaining = max(0, hard_bound - nodes_expanded)
++        result = best_first_search(
++            current,
++            next_states=model.next_states,
++            is_goal=subgoal.predicate,
++            heuristic=vc33_goal_distance_heuristic,
++            max_expansions=remaining,
++        )
++        nodes_expanded += result.nodes_expanded
++        if not result.solved:
++            search = SearchResult(
++                solved=False,
++                actions=actions,
++                nodes_expanded=nodes_expanded,
++                final_state=result.final_state,
++                bottleneck=result.bottleneck or "subgoal_unreachable",
++                max_expansions=hard_bound,
++            )
++            return GridSearchOutcome(
++                search=search,
++                nodes_expanded=nodes_expanded,
++                branching_factor=model.branching_factor(),
++                subgoals_attempted=len(subgoals),
++                subgoals_reached=reached,
++            )
++        actions.extend(result.actions)
++        current = result.final_state
++        reached += 1
++
++    solved = bool(is_goal(current))
++    search = SearchResult(
++        solved=solved,
++        actions=actions,
++        nodes_expanded=nodes_expanded,
++        final_state=current,
++        bottleneck="" if solved else "final_goal_unreached_after_subgoals",
++        max_expansions=hard_bound,
++    )
++    return GridSearchOutcome(
++        search=search,
++        nodes_expanded=nodes_expanded,
++        branching_factor=model.branching_factor(),
++        subgoals_attempted=len(subgoals),
++        subgoals_reached=reached,
++    )
++
++
++def _load_json_object(path: Path) -> dict[str, Any]:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} did not contain a JSON object")
++    return payload
++
++
++def _load_predict(path: Path) -> PredictFn:
++    namespace: dict[str, Any] = {
++        "np": np,
++        "__builtins__": {
++            "abs": abs,
++            "bool": bool,
++            "float": float,
++            "int": int,
++            "len": len,
++            "list": list,
++            "max": max,
++            "min": min,
++            "range": range,
++            "set": set,
++            "sum": sum,
++            "zip": zip,
++        },
++    }
++    exec(path.read_text(encoding="utf-8"), namespace)
++    predict = namespace.get("predict")
++    if not callable(predict):
++        raise ValueError("world-model program did not define predict")
++    return predict
++
++
++def load_exp4035_preconditions(repo_root: Path) -> Exp4035Preconditions:
++    """Load Exp 4034's predicate and the vc33 verified world-model program."""
++
++    results = repo_root / "results"
++    errors: list[str] = []
++    predicate_code = ""
++    precision = 0.0
++    is_goal: GoalPredicate | None = None
++    predict: PredictFn | None = None
++
++    try:
++        goal_payload = _load_json_object(results / "experiment_4034_vc33_goal_predicate_induction.json")
++        precision = float(goal_payload.get("goal_predicate_heldout_precision", 0.0) or 0.0)
++        predicate_code = str(goal_payload.get("goal_predicate_code") or "")
++        if precision < 0.5:
++            errors.append(f"exp4034 goal predicate precision below gate: {precision:.3f}")
++        if not predicate_code:
++            errors.append("exp4034 goal_predicate_code is empty")
++        else:
++            is_goal = compile_goal_predicate(predicate_code)
++    except (OSError, ValueError, json.JSONDecodeError) as exc:
++        errors.append(f"could not load exp4034 goal predicate: {type(exc).__name__}")
++
++    try:
++        predict = _load_predict(results / "arc3_vc33_world_model_program.py")
++    except (OSError, ValueError, SyntaxError, NameError) as exc:
++        errors.append(f"could not load vc33 world model: {type(exc).__name__}")
++
++    return Exp4035Preconditions(
++        ok=not errors,
++        predict=predict if not errors else None,
++        is_goal=is_goal if not errors else None,
++        goal_predicate_precision=precision,
++        goal_predicate_code=predicate_code,
++        errors=errors,
++    )
++
++
++def _actions_as_json(actions: Iterable[Any]) -> list[Any]:
++    out: list[Any] = []
++    for action in actions:
++        if isinstance(action, tuple):
++            out.append(list(action))
++        else:
++            out.append(action)
++    return out
++
++
++def build_exp4035_artifact(
++    outcome: GridSearchOutcome,
++    *,
++    real_env_confirmed: bool,
++    levels_completed_after: int,
++    duration_s: float,
++    goal_predicate_precision: float,
++    action_plan: list[Any],
++) -> dict[str, Any]:
++    """Normalize hierarchical search evidence into the required artifact."""
++
++    confirmed = bool(outcome.search.solved and real_env_confirmed)
++    if confirmed:
++        verdict = f"complete: search_layer_solved_vc33_L{TARGET_LEVEL}_real_env_confirmed"
++        bottleneck = ""
++        new_levels = max(1, int(levels_completed_after) - PRIOR_WALL_LEVEL)
++    else:
++        bottleneck = outcome.search.bottleneck or "real_env_confirmation_failed"
++        if outcome.search.solved and not real_env_confirmed:
++            bottleneck = "real_env_confirmation_failed"
++        verdict = f"complete: search_layer_no_solve_vc33_{bottleneck}"
++        new_levels = 0
++
++    return {
++        "experiment": "experiment_4035_hierarchical_search_over_vc33_wm",
++        "schema": "carnot.experiment_4035_hierarchical_search_over_vc33_wm.v1",
++        "game": TARGET_GAME,
++        "target_level": TARGET_LEVEL,
++        "prior_wall_level": PRIOR_WALL_LEVEL,
++        "honest_verdict": verdict,
++        "new_levels_solved_this_task": int(new_levels),
++        "search_layer_generalizes": bool(confirmed),
++        "heuristic_was_non_bespoke": True,
++        "nodes_expanded": int(outcome.nodes_expanded),
++        "branching_factor": round(float(outcome.branching_factor), 6),
++        "subgoal_decomposition_used": bool(outcome.subgoals_attempted > 0),
++        "real_env_confirmed": bool(real_env_confirmed),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "max_expansions": int(outcome.search.max_expansions),
++        "max_branching": DEFAULT_MAX_BRANCHING,
++        "subgoals_attempted": int(outcome.subgoals_attempted),
++        "subgoals_reached": int(outcome.subgoals_reached),
++        "search_found_plan": bool(outcome.search.solved),
++        "action_plan": _actions_as_json(action_plan),
++        "action_count": len(action_plan),
++        "levels_completed_after": int(levels_completed_after),
++        "goal_predicate_heldout_precision": float(goal_predicate_precision),
++        "heuristic_used": "coded_unmet_goal_components_plus_manhattan_alignment_plus_progress_bar_delta",
++        "bottleneck": bottleneck,
++        "duration_s": round(float(duration_s), 3),
++        "generality_verdict": (
++            "general_heuristic_solved_second_game"
++            if confirmed
++            else "general_heuristic_did_not_break_vc33_wall"
++        ),
++        "diagnosis": (
++            "The same bounded search architecture reached a real-env-confirmed vc33 solve without "
++            "a vc33 coordinate macro."
++            if confirmed
++            else "The non-bespoke hierarchical heuristic did not produce a real-env-confirmed vc33 "
++            "solve under the verified world model; this does not support generalization beyond r11l."
++        ),
++    }
++
++
++def blocked_artifact(duration_s: float, errors: list[str] | None = None) -> dict[str, Any]:
++    """Return the required blocked Exp 4035 artifact without running search."""
++
++    return {
++        "experiment": "experiment_4035_hierarchical_search_over_vc33_wm",
++        "schema": "carnot.experiment_4035_hierarchical_search_over_vc33_wm.v1",
++        "honest_verdict": "blocked_vc33_goal_predicate_or_wm_missing",
++        "new_levels_solved_this_task": 0,
++        "search_layer_generalizes": False,
++        "heuristic_was_non_bespoke": True,
++        "nodes_expanded": 0,
++        "branching_factor": 0.0,
++        "subgoal_decomposition_used": False,
++        "real_env_confirmed": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "max_expansions": 0,
++        "precondition_errors": list(errors or []),
++        "duration_s": round(float(duration_s), 3),
++    }
++
++
++def artifact_schema_errors(artifact: dict[str, Any]) -> list[str]:
++    """Return human-readable schema errors for Exp 4035 artifacts."""
++
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be a terminal-prefix string")
++    for field in ("new_levels_solved_this_task", "nodes_expanded"):
++        if field in artifact and type(artifact[field]) is not int:
++            errors.append(f"{field} must be a bare int")
++    for field in (
++        "search_layer_generalizes",
++        "heuristic_was_non_bespoke",
++        "subgoal_decomposition_used",
++        "real_env_confirmed",
++    ):
++        if field in artifact and type(artifact[field]) is not bool:
++            errors.append(f"{field} must be a bare bool")
++    if "branching_factor" in artifact and type(artifact["branching_factor"]) is not float:
++        errors.append("branching_factor must be a bare float")
++    if "inference_substrate" in artifact and type(artifact["inference_substrate"]) is not str:
++        errors.append("inference_substrate must be a bare string")
++    if (
++        isinstance(artifact.get("nodes_expanded"), int)
++        and isinstance(artifact.get("max_expansions"), int)
++        and artifact["nodes_expanded"] > artifact["max_expansions"]
++    ):
++        errors.append("nodes_expanded must not exceed max_expansions")
++    return errors
++
++
++def write_artifact(artifact: dict[str, Any], path: Path) -> Path:
++    """Write stable JSON for downstream conductor reconciliation."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _initial_vc33_grid(repo_root: Path) -> np.ndarray:  # pragma: no cover - exercised by experiment command
++    from arc_agi import Arcade
++    from arc_agi.base import OperationMode
++
++    from carnot.agentic.arc_agi3_world_model import grid_of
++
++    arc = Arcade(
++        arc_api_key="",
++        operation_mode=OperationMode.OFFLINE,
++        environments_dir=str(repo_root / "environment_files"),
++    )
++    env = arc.make("vc33-5430563c")
++    return grid_of(env.reset())
++
++
++def _execute_plan_in_real_env(
++    repo_root: Path,
++    actions: list[Any],
++) -> tuple[bool, int]:  # pragma: no cover - exercised by experiment command
++    from arc_agi import Arcade
++    from arc_agi.base import OperationMode
++    from arcengine.enums import GameAction
++
++    arc = Arcade(
++        arc_api_key="",
++        operation_mode=OperationMode.OFFLINE,
++        environments_dir=str(repo_root / "environment_files"),
++    )
++    env = arc.make("vc33-5430563c")
++    frame = env.reset()
++    best_level = int(getattr(frame, "levels_completed", 0) or 0)
++    for action in actions:
++        if not action or int(action[0]) != 6:
++            continue
++        frame = env.step(GameAction.ACTION6, data={"x": int(action[1]), "y": int(action[2])})
++        best_level = max(best_level, int(getattr(frame, "levels_completed", 0) or 0))
++    return best_level > PRIOR_WALL_LEVEL, best_level
++
++
++def run(
++    *,
++    repo_root: Path | None = None,
++    write: bool = True,
++    max_expansions: int = DEFAULT_MAX_EXPANSIONS,
++    max_branching: int = DEFAULT_MAX_BRANCHING,
++) -> dict[str, Any]:
++    """Run Exp 4035 and optionally write its terminal artifact."""
++
++    started = time.time()
++    root = repo_root or Path(__file__).resolve().parents[3]
++    preconditions = load_exp4035_preconditions(root)
++    if not preconditions.ok or preconditions.predict is None or preconditions.is_goal is None:
++        artifact = blocked_artifact(time.time() - started, preconditions.errors)
++        if write:
++            write_artifact(artifact, root / "results" / RESULT_NAME)
++        return artifact
++
++    start_grid = _initial_vc33_grid(root)
++    model = VC33VerifiedWorldModel(start_grid, preconditions.predict, max_branching=max_branching)
++    subgoals = decompose_goal_predicate(model.start_state)
++    outcome = hierarchical_best_first_search(
++        model,
++        subgoals,
++        is_goal=preconditions.is_goal,
++        max_expansions=max_expansions,
++    )
++    real_env_confirmed = False
++    levels_completed_after = PRIOR_WALL_LEVEL
++    if outcome.search.solved:
++        real_env_confirmed, levels_completed_after = _execute_plan_in_real_env(
++            root,
++            list(outcome.search.actions),
++        )
++    artifact = build_exp4035_artifact(
++        outcome,
++        real_env_confirmed=real_env_confirmed,
++        levels_completed_after=levels_completed_after,
++        duration_s=time.time() - started,
++        goal_predicate_precision=preconditions.goal_predicate_precision,
++        action_plan=list(outcome.search.actions),
++    )
++    artifact["max_branching"] = int(max_branching)
++    schema_errors = artifact_schema_errors(artifact)
++    if schema_errors:  # pragma: no cover - defensive contract guard
++        raise ValueError("; ".join(schema_errors))
++    if write:
++        write_artifact(artifact, root / "results" / RESULT_NAME)
++    return artifact
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 02635902ab..681f08e91c 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T09:33:55.734145+00:00",
+-  "finished_at": "2026-06-11T09:33:55.757493+00:00",
+-  "duration_s": 0.023,
++  "started_at": "2026-06-11T09:50:19.259627+00:00",
++  "finished_at": "2026-06-11T09:50:19.283800+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index db59bfae78..94e7249564 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-11T09:33:55Z",
++  "run_date": "2026-06-11T09:50:19Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 73db5404be..2ad1419ca3 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T09:33:56Z",
+-  "finished_at": "2026-06-11T09:33:56Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-11T09:50:20Z",
++  "finished_at": "2026-06-11T09:50:20Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index b65f0b4343..bb1ad834b8 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-11T09:33:56Z",
++  "run_date": "2026-06-11T09:50:20Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index be294467d8..855d416450 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-11T09:33:56Z",
++  "run_date": "2026-06-11T09:50:20Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 96818a79f7..c335e9213c 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-11T09:32:32.798741Z",
+-  "duration_s": 0.07236814498901367,
++  "run_date": "2026-06-11T09:48:57.544960Z",
++  "duration_s": 0.0699777603149414,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "9eccb333b9cddb02c2ccda9630cc68e725afe4e4f4a99171daac48c626c3a127",
++  "reproducibility_checksum": "27355df712755dee567a5a1997263e06e21dcaccda2f66e9ca146aa61770af17",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "df5b74fb27ab529a51c416b931194cc7251db162"
++    "adversarial_verify_version": "ae85c3473d5a0de5a9af09c8ce7e825176de929d"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 90dc90545e..8796b19937 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-11T09:32:32.975509Z",
+-  "duration_s": 0.15025544166564941,
++  "run_date": "2026-06-11T09:48:57.680109Z",
++  "duration_s": 0.11387753486633301,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "96f1ef214e5af5e200cd09dd20d802b298a893708b18ef5f7abd17ce4256217f",
++  "reproducibility_checksum": "434604fc93f9ab6e3a014b6ff57593db3e1c172495c3ef2f4069f72387d97fb3",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "df5b74fb27ab529a51c416b931194cc7251db162"
++    "adversarial_verify_version": "ae85c3473d5a0de5a9af09c8ce7e825176de929d"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 7a50a8c44a..babf72795b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1429061889648438,
++  "efficiency_gains_ms": 2.115011215209961,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index cafe14197f..f823babe53 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.022450685501098633,
++  "duration_s": 0.02360391616821289,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 4c2c5766b8..c9e1b24ab8 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-11T09:33:37Z",
++  "run_date": "2026-06-11T09:50:00Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index ce2a040760..cd86fdfe24 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000096797943115,
++  "duration_s": 5.000090837478638,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index b8a1efe226..3164d04ebb 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000094175338745,
++  "duration_s": 10.00008225440979,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index ddd30e80ee..489f9e246f 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2788090705871582,
++  "duration_s": 0.25881433486938477,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index ae579d63e1..d257894970 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.05308709398377687,
++  "duration_s": 0.05991857196204364,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f8635fb6b6..e930fce667 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.7631991542875767e-05,
++  "duration_s": 3.228103742003441e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4035_hierarchical_search_over_vc33_wm.json b/results/experiment_4035_hierarchical_search_over_vc33_wm.json
+new file mode 100644
+index 0000000000..238f8466ef
+--- /dev/null
++++ b/results/experiment_4035_hierarchical_search_over_vc33_wm.json
+@@ -0,0 +1,381 @@
++{
++  "action_count": 70,
++  "action_plan": [
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ],
++    [
++      6,
++      38,
++      28
++    ]
++  ],
++  "bottleneck": "real_env_confirmation_failed",
++  "branching_factor": 96.0,
++  "diagnosis": "The non-bespoke hierarchical heuristic did not produce a real-env-confirmed vc33 solve under the verified world model; this does not support generalization beyond r11l.",
++  "duration_s": 8.293,
++  "experiment": "experiment_4035_hierarchical_search_over_vc33_wm",
++  "game": "vc33",
++  "generality_verdict": "general_heuristic_did_not_break_vc33_wall",
++  "goal_predicate_heldout_precision": 1.0,
++  "heuristic_used": "coded_unmet_goal_components_plus_manhattan_alignment_plus_progress_bar_delta",
++  "heuristic_was_non_bespoke": true,
++  "honest_verdict": "complete: search_layer_no_solve_vc33_real_env_confirmation_failed",
++  "inference_substrate": "offline_arc_agi3_planning_search_over_verified_world_model",
++  "levels_completed_after": 0,
++  "max_branching": 96,
++  "max_expansions": 4096,
++  "new_levels_solved_this_task": 0,
++  "nodes_expanded": 169,
++  "prior_wall_level": 0,
++  "real_env_confirmed": false,
++  "schema": "carnot.experiment_4035_hierarchical_search_over_vc33_wm.v1",
++  "search_found_plan": true,
++  "search_layer_generalizes": false,
++  "subgoal_decomposition_used": true,
++  "subgoals_attempted": 2,
++  "subgoals_reached": 2,
++  "target_level": 1
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 7d5a3e5589..b27a8a1b49 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T09:32:08Z",
+-  "finished_at": "2026-06-11T09:32:08Z",
++  "started_at": "2026-06-11T09:48:32Z",
++  "finished_at": "2026-06-11T09:48:32Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 1661efc7a4..19a71ddf37 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T09:32:08Z",
+-  "finished_at": "2026-06-11T09:32:08Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-11T09:48:32Z",
++  "finished_at": "2026-06-11T09:48:32Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index fac1a704c6..494c198006 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T09:32:08Z",
+-  "finished_at": "2026-06-11T09:32:08Z",
++  "started_at": "2026-06-11T09:48:32Z",
++  "finished_at": "2026-06-11T09:48:32Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/exp4035_hierarchical_search_over_vc33_wm.py b/scripts/experiments/exp4035_hierarchical_search_over_vc33_wm.py
+new file mode 100644
+index 0000000000..22279fb9d1
+--- /dev/null
++++ b/scripts/experiments/exp4035_hierarchical_search_over_vc33_wm.py
+@@ -0,0 +1,39 @@
++"""Exp 4035: hierarchical search over the vc33 verified world model.
++
++Spec refs: REQ-PHASE4-037, SCENARIO-PHASE4-037.
++"""
++
++from __future__ import annotations
++
++import argparse
++import sys
++from pathlib import Path
++
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++from carnot.agentic.arc_vc33_hierarchical_search import (  # noqa: E402
++    DEFAULT_MAX_BRANCHING,
++    DEFAULT_MAX_EXPANSIONS,
++    run,
++)
++
++
++def main() -> None:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--max-expansions", type=int, default=DEFAULT_MAX_EXPANSIONS)
++    parser.add_argument("--max-branching", type=int, default=DEFAULT_MAX_BRANCHING)
++    parser.add_argument("--no-write", action="store_true")
++    args = parser.parse_args()
++    artifact = run(
++        repo_root=REPO,
++        write=not args.no_write,
++        max_expansions=args.max_expansions,
++        max_branching=args.max_branching,
++    )
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover - exercised by the required experiment command
++    main()
+diff --git a/tests/python/test_exp4035_hierarchical_search_over_vc33_wm.py b/tests/python/test_exp4035_hierarchical_search_over_vc33_wm.py
+new file mode 100644
+index 0000000000..433ea04fb5
+--- /dev/null
++++ b/tests/python/test_exp4035_hierarchical_search_over_vc33_wm.py
+@@ -0,0 +1,339 @@
++"""Tests for Exp 4035 hierarchical search over the vc33 verified world model.
++
++Spec refs: REQ-PHASE4-037, SCENARIO-PHASE4-037.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import numpy as np
++
++import carnot.agentic.arc_vc33_hierarchical_search as mod
++from carnot.agentic.arc_heuristic_search_over_verified_wm import SearchResult
++from carnot.agentic.arc_vc33_hierarchical_search import (
++    INFERENCE_SUBSTRATE,
++    REQUIRED_ARTIFACT_FIELDS,
++    GridSearchOutcome,
++    Subgoal,
++    VC33VerifiedWorldModel,
++    artifact_schema_errors,
++    blocked_artifact,
++    build_exp4035_artifact,
++    component_landmark_click_actions,
++    decompose_goal_predicate,
++    grid_state_features,
++    hierarchical_best_first_search,
++    load_exp4035_preconditions,
++    progress_bar_gap,
++    run,
++    vc33_goal_distance_heuristic,
++    write_artifact,
++)
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "phase4_active_inference" / "spec.md"
++
++
++def _aligned_grid() -> np.ndarray:
++    grid = np.full((16, 16), 3, dtype=np.int16)
++    grid[1, :] = 7
++    grid[3:5, 4:6] = 11
++    grid[10:12, 4:6] = 11
++    return grid
++
++
++def _misaligned_grid() -> np.ndarray:
++    grid = _aligned_grid()
++    grid[10:12, 4:6] = 3
++    grid[10:12, 9:11] = 11
++    grid[1, 12:] = 5
++    return grid
++
++
++def _write_preconditions(root: Path, *, precision: float = 1.0, code: str | None = None) -> None:
++    results = root / "results"
++    results.mkdir(parents=True, exist_ok=True)
++    predicate_code = (
++        "def is_goal(state):\n"
++        '    return state["target_color_pairs"] > 0 and state["misaligned_target_pairs"] == 0\n'
++        if code is None
++        else code
++    )
++    (results / "experiment_4034_vc33_goal_predicate_induction.json").write_text(
++        json.dumps(
++            {
++                "honest_verdict": "complete: vc33_goal_predicate_induced_heldout_precision_1.000",
++                "goal_predicate_heldout_precision": precision,
++                "goal_predicate_code": predicate_code,
++                "game": "vc33",
++                "inference_substrate": "offline_arc_agi3_goal_predicate_induction_no_oracle",
++            }
++        )
++    )
++    (results / "arc3_vc33_world_model_program.py").write_text(
++        "def predict(grid, action):\n"
++        "    g = grid.copy()\n"
++        "    if action[0] == 6 and int(action[1]) == 9 and int(action[2]) == 10:\n"
++        "        g[10:12, 9:11] = 3\n"
++        "        g[10:12, 4:6] = 11\n"
++        "    elif action[0] == 6:\n"
++        "        g[int(action[2]), int(action[1])] = 3\n"
++        "    return g\n"
++    )
++
++
++def test_req_phase4_037_spec_declares_exp4035_contract() -> None:
++    """REQ-PHASE4-037: OpenSpec declares Exp 4035 schema and search constraints."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-PHASE4-037" in spec
++    assert "SCENARIO-PHASE4-037" in spec
++    assert "experiment_4035_hierarchical_search_over_vc33_wm.json" in spec
++    assert "blocked_vc33_goal_predicate_or_wm_missing" in spec
++    assert "nodes_expanded <= 50000" in spec
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_phase4_037_features_heuristic_and_landmarks_are_goal_grounded() -> None:
++    """SCENARIO-PHASE4-037: heuristic uses predicate components, distance, and progress."""
++
++    misaligned = grid_state_features(_misaligned_grid())
++    aligned = grid_state_features(_aligned_grid())
++    actions = component_landmark_click_actions(_misaligned_grid(), max_actions=64)
++    subgoals = decompose_goal_predicate(misaligned)
++
++    assert misaligned["unsatisfied_targets"] == 1
++    assert aligned["unsatisfied_targets"] == 0
++    assert misaligned["manhattan_to_target"] > aligned["manhattan_to_target"]
++    assert progress_bar_gap(_misaligned_grid()) > 0
++    assert progress_bar_gap(np.zeros((1, 2, 3), dtype=np.int16)) == 0
++    assert progress_bar_gap(np.array([[7, 7, 5, 5], [3, 3, 3, 3]], dtype=np.int16)) > 0
++    assert vc33_goal_distance_heuristic(misaligned) > vc33_goal_distance_heuristic(aligned)
++    assert (6, 4, 3) in actions
++    assert len(actions) <= 64
++    assert [subgoal.name for subgoal in subgoals] == ["reduce_misaligned_target_pairs_to_0", "full_goal_predicate"]
++
++
++def test_scenario_phase4_037_hierarchical_search_plans_to_ordered_subgoals() -> None:
++    """SCENARIO-PHASE4-037: subgoal search composes low-level best-first plans."""
++
++    start = _misaligned_grid()
++    aligned = _aligned_grid()
++    calls: list[tuple[int, int]] = []
++
++    def predict(grid: np.ndarray, action: tuple[int, int, int]) -> np.ndarray:
++        calls.append(action)
++        return aligned if action == (6, 9, 10) else grid.copy()
++
++    model = VC33VerifiedWorldModel(start, predict, max_branching=16)
++    subgoals = [
++        Subgoal("reduce_misaligned_target_pairs_to_0", lambda state: state["misaligned_target_pairs"] == 0),
++        Subgoal("full_goal_predicate", lambda state: state["unsatisfied_targets"] == 0),
++    ]
++    outcome = hierarchical_best_first_search(
++        model,
++        subgoals,
++        is_goal=lambda state: state["unsatisfied_targets"] == 0,
++        max_expansions=50,
++    )
++
++    assert outcome.search.solved is True
++    assert outcome.search.actions == [(6, 9, 10)]
++    assert outcome.nodes_expanded > 0
++    assert outcome.subgoals_attempted == 2
++    assert outcome.subgoals_reached == 2
++    assert calls
++    assert model.branching_factor() > 0.0
++
++
++def test_scenario_phase4_037_search_reports_unreachable_subgoal_and_predict_errors() -> None:
++    """SCENARIO-PHASE4-037: failed low-level searches preserve the bottleneck."""
++
++    quiet_model = VC33VerifiedWorldModel(_misaligned_grid(), lambda grid, action: grid.copy(), max_branching=4)
++    outcome = hierarchical_best_first_search(
++        quiet_model,
++        [Subgoal("impossible", lambda state: False)],
++        is_goal=lambda state: False,
++        max_expansions=3,
++    )
++
++    assert outcome.search.solved is False
++    assert outcome.nodes_expanded == 1
++    assert outcome.search.bottleneck == "frontier_exhausted"
++    assert VC33VerifiedWorldModel(_aligned_grid(), lambda grid, action: grid).branching_factor() == 0.0
++
++    def broken_predict(grid: np.ndarray, action: tuple[int, int, int]) -> np.ndarray:
++        raise RuntimeError("predict failed")
++
++    broken_model = VC33VerifiedWorldModel(_misaligned_grid(), broken_predict, max_branching=4)
++
++    assert broken_model.next_states(broken_model.start_state) == []
++    assert broken_model.branching_factor() == 0.0
++
++
++def test_req_phase4_037_artifact_schema_and_no_solve_verdict_are_bare() -> None:
++    """REQ-PHASE4-037: Exp 4035 artifacts preserve required bare fields."""
++
++    outcome = GridSearchOutcome(
++        search=SearchResult(
++            solved=False,
++            actions=[],
++            nodes_expanded=12,
++            final_state={"unsatisfied_targets": 1},
++            bottleneck="frontier_exhausted",
++            max_expansions=50,
++        ),
++        nodes_expanded=12,
++        branching_factor=5.5,
++        subgoals_attempted=1,
++        subgoals_reached=0,
++    )
++    artifact = build_exp4035_artifact(
++        outcome,
++        real_env_confirmed=False,
++        levels_completed_after=0,
++        duration_s=0.25,
++        goal_predicate_precision=1.0,
++        action_plan=[],
++    )
++    output = write_artifact(artifact, Path("/tmp/exp4035_test_artifact.json"))
++
++    assert artifact["honest_verdict"] == "complete: search_layer_no_solve_vc33_frontier_exhausted"
++    assert artifact["new_levels_solved_this_task"] == 0
++    assert artifact["search_layer_generalizes"] is False
++    assert artifact["heuristic_was_non_bespoke"] is True
++    assert artifact["nodes_expanded"] == 12
++    assert artifact["branching_factor"] == 5.5
++    assert artifact["subgoal_decomposition_used"] is True
++    assert artifact["real_env_confirmed"] is False
++    assert artifact["inference_substrate"] == INFERENCE_SUBSTRATE
++    assert artifact_schema_errors(artifact) == []
++    assert json.loads(output.read_text(encoding="utf-8")) == artifact
++
++    bad = dict(artifact)
++    bad["honest_verdict"] = "done"
++    bad["new_levels_solved_this_task"] = True
++    bad["search_layer_generalizes"] = 0
++    bad["heuristic_was_non_bespoke"] = 1
++    bad["nodes_expanded"] = 51
++    bad["branching_factor"] = "5.5"
++    bad["subgoal_decomposition_used"] = 1
++    bad["real_env_confirmed"] = 1
++    bad["inference_substrate"] = None
++    bad["max_expansions"] = 50
++
++    errors = artifact_schema_errors(bad)
++    missing = artifact_schema_errors({})
++
++    assert any("honest_verdict" in err for err in errors)
++    assert any("new_levels_solved_this_task" in err for err in errors)
++    assert any("search_layer_generalizes" in err for err in errors)
++    assert any("heuristic_was_non_bespoke" in err for err in errors)
++    assert any("nodes_expanded" in err for err in errors)
++    assert any("branching_factor" in err for err in errors)
++    assert any("subgoal_decomposition_used" in err for err in errors)
++    assert any("real_env_confirmed" in err for err in errors)
++    assert any("inference_substrate" in err for err in errors)
++    assert any("nodes_expanded must not exceed" in err for err in errors)
++    assert any("missing required field honest_verdict" in err for err in missing)
++
++    unconfirmed = build_exp4035_artifact(
++        GridSearchOutcome(
++            search=SearchResult(
++                solved=True,
++                actions=["symbolic_action"],
++                nodes_expanded=2,
++                final_state={"unsatisfied_targets": 0},
++                bottleneck="",
++                max_expansions=10,
++            ),
++            nodes_expanded=2,
++            branching_factor=1.0,
++            subgoals_attempted=1,
++            subgoals_reached=1,
++        ),
++        real_env_confirmed=False,
++        levels_completed_after=0,
++        duration_s=0.1,
++        goal_predicate_precision=1.0,
++        action_plan=["symbolic_action"],
++    )
++
++    assert unconfirmed["honest_verdict"] == "complete: search_layer_no_solve_vc33_real_env_confirmation_failed"
++    assert unconfirmed["action_plan"] == ["symbolic_action"]
++
++
++def test_scenario_phase4_037_preconditions_block_without_valid_predicate_or_wm(tmp_path: Path) -> None:
++    """SCENARIO-PHASE4-037: invalid Exp 4034 or world model stops honestly."""
++
++    missing = load_exp4035_preconditions(tmp_path)
++    artifact = blocked_artifact(0.0, missing.errors)
++
++    assert missing.ok is False
++    assert missing.predict is None
++    assert artifact["honest_verdict"] == "blocked_vc33_goal_predicate_or_wm_missing"
++    assert artifact_schema_errors(artifact) == []
++
++    _write_preconditions(tmp_path, precision=0.49)
++    low_precision = load_exp4035_preconditions(tmp_path)
++
++    assert low_precision.ok is False
++    assert any("precision" in error for error in low_precision.errors)
++
++    _write_preconditions(tmp_path, precision=1.0, code="")
++    empty_code = load_exp4035_preconditions(tmp_path)
++
++    assert empty_code.ok is False
++    assert any("goal_predicate_code is empty" in error for error in empty_code.errors)
++
++    list_path = tmp_path / "list.json"
++    list_path.write_text("[]")
++    bad_predict = tmp_path / "bad_predict.py"
++    bad_predict.write_text("VALUE = 1\n")
++
++    try:
++        mod._load_json_object(list_path)
++    except ValueError as exc:
++        assert "JSON object" in str(exc)
++    else:  # pragma: no cover - assertion guard
++        raise AssertionError("non-object JSON must fail precondition loading")
++
++    try:
++        mod._load_predict(bad_predict)
++    except ValueError as exc:
++        assert "predict" in str(exc)
++    else:  # pragma: no cover - assertion guard
++        raise AssertionError("world-model code without predict must fail")
++
++
++def test_scenario_phase4_037_run_writes_blocked_and_mocked_confirmed_artifacts(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-PHASE4-037: runner writes blocked paths and real-confirmed solve paths."""
++
++    blocked = run(repo_root=tmp_path, write=True)
++    blocked_output = tmp_path / "results" / "experiment_4035_hierarchical_search_over_vc33_wm.json"
++
++    assert blocked["honest_verdict"] == "blocked_vc33_goal_predicate_or_wm_missing"
++    assert blocked_output.exists()
++
++    _write_preconditions(tmp_path)
++    monkeypatch.setattr(
++        "carnot.agentic.arc_vc33_hierarchical_search._initial_vc33_grid",
++        lambda root: _misaligned_grid(),
++    )
++    monkeypatch.setattr(
++        "carnot.agentic.arc_vc33_hierarchical_search._execute_plan_in_real_env",
++        lambda root, actions: (True, 1),
++    )
++
++    confirmed = run(repo_root=tmp_path, write=True, max_expansions=50)
++
++    assert confirmed["honest_verdict"] == "complete: search_layer_solved_vc33_L1_real_env_confirmed"
++    assert confirmed["new_levels_solved_this_task"] == 1
++    assert confirmed["search_layer_generalizes"] is True
++    assert confirmed["real_env_confirmed"] is True
++    assert artifact_schema_errors(confirmed) == []
+-- 
+2.55.0
+

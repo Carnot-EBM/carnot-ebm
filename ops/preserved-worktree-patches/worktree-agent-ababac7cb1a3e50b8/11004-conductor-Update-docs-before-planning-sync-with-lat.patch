@@ -1,0 +1,62 @@
+From 163469369b8d7e557d21551ea56c16a90bca1720 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 04:07:41 -0400
+Subject: [PATCH 11004/11362] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/index.html              | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 3 +++
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index a42e06c9c7..537abbe8cc 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">6,006</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">6,011</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 13267a1267..38a6905967 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-09-04T08:02:54Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 20, "phase": "iteration_start", "last_beat": "2026-09-04T08:05:27Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 953f93ffac..69ac95f99a 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17230,3 +17230,6 @@ code |
+ | 2026-09-04 07:57 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 2491594 (port 8919) reparented to init, no live process references its |
+ | 2026-09-04 07:58 UTC | Three-family error-structured prompt candidate ban | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6966-gguf-load-envelope-canary.gguf_run |
+ | 2026-09-04 08:00 UTC | Three-family error-structured prompt candidate ban | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6966-gguf-load-envelope-canary.gguf_run |
++| 2026-09-04 08:03 UTC | Three-family error-structured prompt candidate ban | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6966-gguf-load-envelope-canary.gguf_run |
++| 2026-09-04 08:05 UTC | Bootstrap-stable prompt policy selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6969-error-structured-prompt-bank) |
++| 2026-09-04 08:05 UTC | Three-family held-out prompt-policy causal A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6970-bootstrap-prompt-policy-selection) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b98a6a6875..ed0ab04f4e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 19, "phase": "iteration_start", "started_at": "2026-09-04T08:02:54Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 20, "phase": "iteration_start", "started_at": "2026-09-04T08:05:27Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

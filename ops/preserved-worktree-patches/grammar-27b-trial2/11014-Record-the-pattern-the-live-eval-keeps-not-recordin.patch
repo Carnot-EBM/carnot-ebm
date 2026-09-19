@@ -1,0 +1,91 @@
+From 9975deb7bd9ad0b62eaa23a289ab204e46ab6659 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 06:09:59 -0400
+Subject: [PATCH 11014/11171] Record the pattern: the live eval keeps not
+ recording what consumers need
+
+Three instances in three days -- trajectory_supervisor, generator_channels, and
+now induction_attempts -- each discovered the same way, by a consumer running,
+failing, and only then revealing the field was never emitted. The first two are
+fixed; the third is deliberately left, because adding it as a third one-off is
+the fourth instance waiting to happen.
+
+The shape does not vary. The runtime object has the data, exactly one consumer
+reads it, that consumer is frozen or shadow-mode or otherwise unusable, and the
+live path records nothing. Nobody learns this until something downstream comes
+back empty. arc_scored_path_lever_harness.py, frozen on a retired model pin, was
+the sole reader for both of the first two.
+
+Prose will not hold this. The mechanical form is a join with no model in it: for
+each field a consumer reads from a run artifact, assert that some artifact in
+results/arc_leaderboard_eval_runs/ actually contains it. It fails the day a
+consumer is written against a field nobody emits, which is when fixing it is
+free, rather than months later at the cost of seven GPU-hours.
+
+The generalisable half is the sentence worth keeping: a diagnostic with exactly
+one reader is one frozen harness away from being unrecorded, and that state is
+invisible until it costs something.
+
+Also closes a standing caveat. The conductor re-exec'd onto 1be84f6514e7, which
+matches disk and HEAD, so REQ-CONDUCTOR-VERDICT-3 and -4 are live rather than
+merely committed, and every earlier report saying "live at the next iteration
+boundary" can now be read as live.
+
+Written because the pattern had been stated in a commit message and then walked
+past, which is the failure mode the never-forget rule exists to catch.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index f8507da19c..95babccfef 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -21314,3 +21314,41 @@ pid 2491594: ppid=1, non-service cgroup, port 8919 referenced by no live process
+ Every reap condition and its value:
+ ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 476 min.
+ Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.
++
++## 2026-09-04 — the live eval keeps discovering it never recorded the thing a consumer needs
++
++Three instances in three days, each found the same way: a consumer ran, failed, and only then did
++anyone learn the field was absent.
++
++| Field | Consumer that needed it | How it surfaced | Cost |
++|---|---|---|---|
++| `trajectory_supervisor` | the refinement ledger | 13.8h run returned rows with the field absent | ledger could not move however long the loop ran |
++| `generator_channels` | "did the induce tier emit anything after the n_ctx fix" | all 11 eval artifacts had zero rows with it | nearly spent 7 GPU-hours on a run that could not answer the question |
++| `induction_attempts` | `exp6968` held-out engine scoring | audit blocked in 0.097s with zero engine candidates | four complete engines on disk that the tool built to score them cannot find |
++
++The first two are fixed (REQ-ARC-WMTE-6640, REQ-ARC-WMTE-6641). The third is not, deliberately —
++adding it as a third one-off would be the fourth instance waiting to happen.
++
++**The shape is always the same.** The runtime object HAS the data. One consumer reads it. That
++consumer is frozen, shadow-mode, or otherwise unusable. The live path — the only path that matters
++— records nothing, and nobody knows until something downstream needs it and comes back empty. Note
++that `arc_scored_path_lever_harness.py`, frozen on a retired model pin, was the sole reader for BOTH
++of the first two.
++
++**Why prose here is not enough, and what the check would be.** A rule saying "emit your diagnostics"
++is a rule someone must remember. The mechanical version is cheap: for each field a consumer reads
++out of a run artifact, assert some artifact in `results/arc_leaderboard_eval_runs/` actually
++contains it. That is a join over consumers and artifacts, no model involved, and it fails loudly the
++day a consumer is written against a field the producer does not emit — which is exactly when it is
++cheap to fix, rather than months later when someone spends seven GPU-hours finding out.
++
++**The generalisable half, which is the part worth keeping.** A diagnostic with exactly one reader is
++one frozen harness away from being unrecorded, and nothing about that state is visible until it
++costs something. When adding a diagnostic, the question is not "does it work" but "which live path
++writes it down, and what happens to it when that path's only reader stops running."
++
++**Also recorded because it closes an open caveat:** the conductor re-exec'd at some point before
++09:35Z today, `48f45c9cced2 -> 1be84f6514e7`, and that hash matches disk and HEAD. So
++REQ-CONDUCTOR-VERDICT-3 (the FAIL message that names the real path) and REQ-CONDUCTOR-VERDICT-4 (the
++verdict_class retry guidance) are LIVE, not merely committed. Every report before this one that said
++"committed, live at the next iteration boundary" can now be read as live.
+-- 
+2.55.0
+

@@ -1,0 +1,1143 @@
+From 1ada7da8c018ca60b7ecfaa82b3b778369b0f60c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 12:23:29 -0400
+Subject: [PATCH 03978/11362] [conductor] PHASE B2 (INFRA reserved slot 2;
+ operator MANDATORY 2026-06-25; CARRIED FORWARD -- SKIPPED in .434) --
+ adversarial_verify LEVER-EXERCISE-EVIDENCE guard. Mechanize the
+ silent-dead-code catch the operator found manually (Go-Explore (1,64,64);
+ exp4710 CNN dict-candidate; the .434 A4 byte-identical all-arms-0.04): an ARC
+ generation/exploration-lever artifact that declares a mechanism exercised
+ (coverage / archive / candidate-pool / A/B-arms claim) but shows DEGENERATE
+ exercise evidence (zero injections, empty/unchanged pool, wrong-shape tensor,
+ zero archive cells, BYTE-IDENTICAL arms) is flagged. Pinned by a new
+ test_adversarial_verify_*. Do NOT weaken any existing check.
+
+Automated research step by research conductor.
+Task ID: exp4732-b2
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  56 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...ersarial_verify_exercise_evidence_guard.py | 341 ++++++++++++++++++
+ ...sarial_verify_exercise_evidence_guard.json | 116 ++++++
+ scripts/adversarial_verify.py                 | 337 +++++++++++++++++
+ ...ersarial_verify_lever_exercise_evidence.py | 186 ++++++++++
+ 6 files changed, 1037 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4732_adversarial_verify_exercise_evidence_guard.py
+ create mode 100644 results/experiment_4732_adversarial_verify_exercise_evidence_guard.json
+ create mode 100644 tests/python/test_adversarial_verify_lever_exercise_evidence.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index d04ae98046..1c563c7489 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -1951,6 +1951,62 @@ empty generated pools, and the `.434` all-arms `0.04` online-driver tautology as
+ `trustworthy_null`, and writes a prioritized reopen list without claiming a new
+ solve.
+ 
++### REQ-ARC-WMTE-4732: Adversarial Verify Lever Exercise-Evidence Guard
++
++The `scripts/adversarial_verify.py` reader SHALL mechanize the Experiment 4725
++silent-bug audit as a standing check named
++`LEVER_EXERCISE_EVIDENCE_DEGENERATE`. For ARC generation or exploration-lever
++artifacts that declare `candidate_generation_coverage`, Go-Explore/archive
++diagnostics, proposal/candidate pools, online-driver arms, or an
++`inference_substrate` naming a generation/exploration lever, the reader SHALL
++flag exercise evidence as degenerate when an archive records zero injections or
++zero cells during a non-trivial run, a candidate/proposal pool is empty or
++unchanged before and after a transform, a grid tensor reports a leading
++singleton shape where a 2-D grid is expected, online-driver arms are
++byte-identical to more than five significant figures, or coverage/delta remains
++zero with no non-degenerate mechanism evidence.
++
++The guard SHALL default to WARN and SHALL escalate to CRITICAL when the
++degenerate artifact also headlines a solve, flips a gate, is submitted, or is
++already quarantined as adversarial. The guard SHALL NOT flag a genuine flat
++generation/exploration null that emits non-degenerate exercise evidence such as
++positive archive injections/cells, a non-empty changed candidate/proposal pool,
++a correct 2-D grid shape, distinct arm distributions, positive online training
++counters without scorer errors, or explicit `arms_non_degenerate=true`.
++
++Experiment 4732 SHALL write
++`results/experiment_4732_adversarial_verify_exercise_evidence_guard.json` with
++principle-annotated top-level fields for `honest_verdict`,
++`inference_substrate`, `check_added`, `dead_code_exemplars_flagged`,
++`trustworthy_null_not_flagged`, `existing_suite_green`, `pinning_test_path`,
++`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`, and
++`preconditions_checked`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; success: lever_exercise_evidence_guard_shipped_pinned."
++- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor)."
++- `check_added`: principle "LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the new guard name; mechanizes the operator's manual silent-dead-code catch."
++- `dead_code_exemplars_flagged`: principle "the three dead-code nulls (Go-Explore (1,64,64); exp4710 CNN dict-candidate; .434 A4 byte-identical arms) are flagged in retrospect -- the guard works."
++- `trustworthy_null_not_flagged`: principle "a genuine non-degenerate null is NOT flagged -- the false-positive carve-out works (a real null must survive)."
++- `existing_suite_green`: principle "the existing adversarial_verify tests stay green -- no existing check weakened (the never-weaken-the-linter rule)."
++- `pinning_test_path`: principle "tests/python/test_adversarial_verify_lever_exercise_evidence.py -- the standing pin."
++- `verifier_is_oracle`: principle "false -- a linter check invokes no oracle."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "content-addressed hash catches silent drift."
++- `preconditions_checked`: principle "records resources verified (adversarial_verify importable, exemplars present); pre-empts missing-resource fabrication."
++
++#### SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE
++
++Given an ARC generation/exploration artifact declares a lever mechanism and its
++exercise evidence is a dead archive, dropped/errored candidate pool, degenerate
++grid shape, or byte-identical online-driver arms
++When `adversarial_verify.py` checks the artifact
++Then it emits `LEVER_EXERCISE_EVIDENCE_DEGENERATE`, catches the historical
++Go-Explore `(1,64,64)`, Exp 4710 CNN dict-candidate, and `.434` A4 all-arms
++`0.04` signatures, and does not flag a flat null that explicitly reports
++non-degenerate exercise evidence such as `arms_non_degenerate=true`.
++
+ ### REQ-ARC-WMTE-4692: Persist Directed-Exploration Primitive And Transfer Null
+ 
+ Experiment 4692 SHALL persist the strongest reusable `.433` A1/A2
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index fb187a43e4..e864a567ba 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 189,
+   "code_violations": 0,
+-  "experiments_checked": 3740,
++  "experiments_checked": 3741,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4732_adversarial_verify_exercise_evidence_guard.py b/python/carnot/experiment_4732_adversarial_verify_exercise_evidence_guard.py
+new file mode 100644
+index 0000000000..e0697b60e8
+--- /dev/null
++++ b/python/carnot/experiment_4732_adversarial_verify_exercise_evidence_guard.py
+@@ -0,0 +1,341 @@
++"""Experiment 4732: adversarial_verify lever exercise-evidence guard receipt.
++
++Spec refs: REQ-ARC-WMTE-4732, SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any, Mapping
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from scripts import adversarial_verify as av  # noqa: E402
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT = "experiment_4732_adversarial_verify_exercise_evidence_guard"
++SCHEMA = "carnot.exp4732.adversarial_verify_exercise_evidence_guard.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4732_adversarial_verify_exercise_evidence_guard.json"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++PINNING_TEST_PATH = "tests/python/test_adversarial_verify_lever_exercise_evidence.py"
++RANDOM_SEED = 4732
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load "
++    "(100us floor)."
++)
++SUCCESS_VERDICT = "success: lever_exercise_evidence_guard_shipped_pinned."
++TERMINAL_PREFIXES = ("success:", "complete:", "passed:", "shipped:", "blocked_")
++REQUIRED_FIXTURES = {
++    "go_explore_dead_archive": (
++        "results/experiment_4701_amortized_exploration_prior_go_explore_live.json"
++    ),
++    "exp4710_cnn_dict_candidate_bug": (
++        "results/experiment_4710_online_action_learning_arms_online_scratch.json"
++    ),
++    "a4_byte_identical_all_arms": (
++        "results/experiment_4715_online_action_learning_driver_corrected.json"
++    ),
++    "trustworthy_nondegenerate_null": (
++        "results/experiment_4726_online_action_learning_driver_valid_test.json"
++    ),
++}
++PROMPT_EXP4710_ALIAS = "results/experiment_4710_online_action_learning_arms_summary.json"
++ADVERSARIAL_VERIFY_TESTS = (
++    "tests/python/test_adversarial_verify_guards.py",
++    "tests/python/test_adversarial_verify_degenerate_controls.py",
++    "tests/python/test_adversarial_verify_degenerate_separation.py",
++    "tests/python/test_adversarial_verify_lever_exercise_evidence.py",
++    "tests/python/test_adversarial_verify_hardening_4695.py",
++    "tests/python/test_adversarial_verify_hardening_4683.py",
++    "tests/python/test_adversarial_verify_hardening_4671.py",
++    "tests/python/test_adversarial_verify_hardening_4659.py",
++    "tests/python/test_adversarial_verify_hardening_4647.py",
++    "tests/python/test_adversarial_verify_hardening_4635.py",
++    "tests/python/test_adversarial_verify_hardening_4623.py",
++    "tests/python/test_adversarial_verify_hardening_4611.py",
++    "tests/python/test_adversarial_verify_arc_self_solve.py",
++    "tests/python/test_adversarial_verify_baseline_identity_tautology.py",
++    "tests/python/test_adversarial_verify_hardening_4707.py",
++    "tests/python/test_adversarial_verify_control_treatment_null.py",
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": "terminal prefix; success: lever_exercise_evidence_guard_shipped_pinned."
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts -- guard dev + a pytest run, "
++            "no model load (100us floor)."
++        )
++    },
++    "check_added": {
++        "principle": (
++            "LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the new guard name; mechanizes "
++            "the operator's manual silent-dead-code catch."
++        )
++    },
++    "dead_code_exemplars_flagged": {
++        "principle": (
++            "the three dead-code nulls (Go-Explore (1,64,64); exp4710 CNN "
++            "dict-candidate; .434 A4 byte-identical arms) are flagged in retrospect -- "
++            "the guard works."
++        )
++    },
++    "trustworthy_null_not_flagged": {
++        "principle": (
++            "a genuine non-degenerate null is NOT flagged -- the false-positive "
++            "carve-out works (a real null must survive)."
++        )
++    },
++    "existing_suite_green": {
++        "principle": (
++            "the existing adversarial_verify tests stay green -- no existing check "
++            "weakened (the never-weaken-the-linter rule)."
++        )
++    },
++    "pinning_test_path": {
++        "principle": (
++            "tests/python/test_adversarial_verify_lever_exercise_evidence.py -- "
++            "the standing pin."
++        )
++    },
++    "verifier_is_oracle": {"principle": "false -- a linter check invokes no oracle."},
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {
++        "principle": "content-addressed hash catches silent drift."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records resources verified (adversarial_verify importable, exemplars present); "
++            "pre-empts missing-resource fabrication."
++        )
++    },
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"duration_s", "reproducibility_checksum"}
++    }
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _run_command(root: Path, args: list[str], timeout_s: int = 120) -> JsonDict:
++    start = time.perf_counter()
++    completed = subprocess.run(
++        args,
++        cwd=root,
++        capture_output=True,
++        text=True,
++        check=False,
++        timeout=timeout_s,
++    )
++    return {
++        "command": " ".join(args),
++        "passed": completed.returncode == 0,
++        "returncode": completed.returncode,
++        "duration_s": max(0.0001, time.perf_counter() - start),
++        "stdout_tail": completed.stdout[-2000:],
++        "stderr_tail": completed.stderr[-2000:],
++    }
++
++
++def _lever_flags(path: Path) -> list[JsonDict]:
++    report = av.verify_artifact(path)
++    return [
++        flag
++        for flag in report.get("flags", [])
++        if flag.get("kind") == av.LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND
++    ]
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:
++    root_path = Path(root)
++    spec_text = (root_path / SPEC_RELATIVE_PATH).read_text(encoding="utf-8")
++    fixtures_present = {
++        name: (root_path / relative).exists() for name, relative in REQUIRED_FIXTURES.items()
++    }
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_or_opencode_md_read": (root_path / "CODEX.md").exists()
++        or (root_path / "OPENCODE.md").exists(),
++        "adversarial_verify_importable": hasattr(
++            av, "check_lever_exercise_evidence"
++        ),
++        "guard_constant_present": getattr(
++            av, "LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND", ""
++        )
++        == "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
++        "fixtures_present": fixtures_present,
++        "prompt_exp4710_alias_present": (root_path / PROMPT_EXP4710_ALIAS).exists(),
++        "prompt_exp4710_alias_resolved_to": REQUIRED_FIXTURES[
++            "exp4710_cnn_dict_candidate_bug"
++        ],
++        "pinning_test_present": (root_path / PINNING_TEST_PATH).exists(),
++        "spec_has_req_4732": "REQ-ARC-WMTE-4732" in spec_text,
++        "network_required": False,
++    }
++    checks["ok"] = (
++        checks["agents_md_read"]
++        and checks["codex_or_opencode_md_read"]
++        and checks["adversarial_verify_importable"]
++        and checks["guard_constant_present"]
++        and all(fixtures_present.values())
++        and checks["pinning_test_present"]
++        and checks["spec_has_req_4732"]
++    )
++    return checks
++
++
++def build_artifact(root: Path | str = REPO_ROOT) -> JsonDict:
++    start = time.perf_counter()
++    root_path = Path(root)
++    checks = check_preconditions(root_path)
++    dead_code_reports = {
++        name: _lever_flags(root_path / relative)
++        for name, relative in REQUIRED_FIXTURES.items()
++        if name != "trustworthy_nondegenerate_null"
++    }
++    trustworthy_flags = _lever_flags(
++        root_path / REQUIRED_FIXTURES["trustworthy_nondegenerate_null"]
++    )
++    pinning_test = _run_command(
++        root_path,
++        [sys.executable, "-m", "pytest", PINNING_TEST_PATH, "-q", "--no-cov"],
++        timeout_s=120,
++    )
++    existing_suite = _run_command(
++        root_path,
++        [sys.executable, "-m", "pytest", *ADVERSARIAL_VERIFY_TESTS, "-q", "--no-cov"],
++        timeout_s=180,
++    )
++    dead_code_exemplars_flagged = {
++        "passed": all(bool(flags) for flags in dead_code_reports.values()),
++        "reports": dead_code_reports,
++    }
++    trustworthy_null_not_flagged = {
++        "passed": trustworthy_flags == [],
++        "artifact": REQUIRED_FIXTURES["trustworthy_nondegenerate_null"],
++        "flags": trustworthy_flags,
++    }
++    success = (
++        checks.get("ok") is True
++        and dead_code_exemplars_flagged["passed"] is True
++        and trustworthy_null_not_flagged["passed"] is True
++        and pinning_test["passed"] is True
++        and existing_suite["passed"] is True
++    )
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": ["REQ-ARC-WMTE-4732", "SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE"],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": SUCCESS_VERDICT if success else "complete: lever_guard_partial",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "check_added": av.LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND,
++        "dead_code_exemplars_flagged": dead_code_exemplars_flagged,
++        "trustworthy_null_not_flagged": trustworthy_null_not_flagged,
++        "existing_suite_green": {
++            "passed": existing_suite["passed"],
++            "command": existing_suite["command"],
++            "returncode": existing_suite["returncode"],
++            "stdout_tail": existing_suite["stdout_tail"],
++            "stderr_tail": existing_suite["stderr_tail"],
++        },
++        "pinning_test_path": PINNING_TEST_PATH,
++        "pinning_test_green": pinning_test,
++        "verifier_is_oracle": False,
++        "random_seed": RANDOM_SEED,
++        "preconditions_checked": checks,
++        "duration_s": max(0.0001, time.perf_counter() - start),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [
++        f"missing:{field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact
++    ]
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_terminal_prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if artifact.get("check_added") != "LEVER_EXERCISE_EVIDENCE_DEGENERATE":
++        errors.append("check_added")
++    if artifact.get("dead_code_exemplars_flagged", {}).get("passed") is not True:
++        errors.append("dead_code_exemplars_flagged")
++    if artifact.get("trustworthy_null_not_flagged", {}).get("passed") is not True:
++        errors.append("trustworthy_null_not_flagged")
++    if artifact.get("existing_suite_green", {}).get("passed") is not True:
++        errors.append("existing_suite_green")
++    if artifact.get("pinning_test_path") != PINNING_TEST_PATH:
++        errors.append("pinning_test_path")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed")
++    if artifact.get("preconditions_checked", {}).get("ok") is not True:
++        errors.append("preconditions_checked")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles")
++    else:
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            if field not in principles:
++                errors.append(f"field_principles.{field}")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def write_artifact(root: Path | str = REPO_ROOT, artifact: Mapping[str, Any] | None = None) -> Path:
++    root_path = Path(root)
++    payload = dict(artifact or build_artifact(root_path))
++    errors = validate_artifact(payload)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root_path / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(root: Path | str = REPO_ROOT, *, write: bool = True) -> JsonDict:
++    artifact = build_artifact(root)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - requested command boundary
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - requested command boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_4732_adversarial_verify_exercise_evidence_guard.json b/results/experiment_4732_adversarial_verify_exercise_evidence_guard.json
+new file mode 100644
+index 0000000000..199f4e13dc
+--- /dev/null
++++ b/results/experiment_4732_adversarial_verify_exercise_evidence_guard.json
+@@ -0,0 +1,116 @@
++{
++  "check_added": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
++  "dead_code_exemplars_flagged": {
++    "passed": true,
++    "reports": {
++      "a4_byte_identical_all_arms": [
++        {
++          "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: byte-identical online-driver arms to >5 sig figs (frozen_first_win=0.04, online_scratch_first_win=0.04, online_warm_first_win=0.04)",
++          "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
++          "severity": "critical"
++        }
++      ],
++      "exp4710_cnn_dict_candidate_bug": [
++        {
++          "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: scorer_diagnostics.errors=88101, observed=4737, fits=936",
++          "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
++          "severity": "warn"
++        }
++      ],
++      "go_explore_dead_archive": [
++        {
++          "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: target_arm_results.no_prior.[0].go_explore_archive_diagnostics.actions_injected=0; target_arm_results.no_prior.[0].go_explore_archive_diagnostics.prefixes_injected=0; target_arm_results.no_prior.[0].go_explore_archive_diagnostics.stored_cells=0; target_arm_results.with_prior.[0].go_explore_archive_diagnostics.actions_injected=0; target_arm_results.with_prior.[0].go_explore_archive_diagnostics.prefixes_injected=0; target_arm_results.with_prior.[0].go_explore_archive_diagnostics.stored_cells=0",
++          "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
++          "severity": "warn"
++        }
++      ]
++    }
++  },
++  "duration_s": 22.792153066024184,
++  "existing_suite_green": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_adversarial_verify_guards.py tests/python/test_adversarial_verify_degenerate_controls.py tests/python/test_adversarial_verify_degenerate_separation.py tests/python/test_adversarial_verify_lever_exercise_evidence.py tests/python/test_adversarial_verify_hardening_4695.py tests/python/test_adversarial_verify_hardening_4683.py tests/python/test_adversarial_verify_hardening_4671.py tests/python/test_adversarial_verify_hardening_4659.py tests/python/test_adversarial_verify_hardening_4647.py tests/python/test_adversarial_verify_hardening_4635.py tests/python/test_adversarial_verify_hardening_4623.py tests/python/test_adversarial_verify_hardening_4611.py tests/python/test_adversarial_verify_arc_self_solve.py tests/python/test_adversarial_verify_baseline_identity_tautology.py tests/python/test_adversarial_verify_hardening_4707.py tests/python/test_adversarial_verify_control_treatment_null.py -q --no-cov",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [169 items]\n\n........................................................................ [ 42%]\n........................................................................ [ 85%]\n.........................                                                [100%]\n============================= 169 passed in 17.24s =============================\n"
++  },
++  "experiment": "experiment_4732_adversarial_verify_exercise_evidence_guard",
++  "field_principles": {
++    "check_added": {
++      "principle": "LEVER_EXERCISE_EVIDENCE_DEGENERATE -- the new guard name; mechanizes the operator's manual silent-dead-code catch."
++    },
++    "dead_code_exemplars_flagged": {
++      "principle": "the three dead-code nulls (Go-Explore (1,64,64); exp4710 CNN dict-candidate; .434 A4 byte-identical arms) are flagged in retrospect -- the guard works."
++    },
++    "existing_suite_green": {
++      "principle": "the existing adversarial_verify tests stay green -- no existing check weakened (the never-weaken-the-linter rule)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: lever_exercise_evidence_guard_shipped_pinned."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor)."
++    },
++    "pinning_test_path": {
++      "principle": "tests/python/test_adversarial_verify_lever_exercise_evidence.py -- the standing pin."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified (adversarial_verify importable, exemplars present); pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash catches silent drift."
++    },
++    "trustworthy_null_not_flagged": {
++      "principle": "a genuine non-degenerate null is NOT flagged -- the false-positive carve-out works (a real null must survive)."
++    },
++    "verifier_is_oracle": {
++      "principle": "false -- a linter check invokes no oracle."
++    }
++  },
++  "honest_verdict": "success: lever_exercise_evidence_guard_shipped_pinned.",
++  "inference_substrate": "aggregation_from_upstream_artifacts -- guard dev + a pytest run, no model load (100us floor).",
++  "pinning_test_green": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_adversarial_verify_lever_exercise_evidence.py -q --no-cov",
++    "duration_s": 4.134381967131048,
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [8 items]\n\n........                                                                 [100%]\n============================== 8 passed in 2.81s ===============================\n"
++  },
++  "pinning_test_path": "tests/python/test_adversarial_verify_lever_exercise_evidence.py",
++  "preconditions_checked": {
++    "adversarial_verify_importable": true,
++    "agents_md_read": true,
++    "codex_or_opencode_md_read": true,
++    "fixtures_present": {
++      "a4_byte_identical_all_arms": true,
++      "exp4710_cnn_dict_candidate_bug": true,
++      "go_explore_dead_archive": true,
++      "trustworthy_nondegenerate_null": true
++    },
++    "guard_constant_present": true,
++    "network_required": false,
++    "ok": true,
++    "pinning_test_present": true,
++    "prompt_exp4710_alias_present": false,
++    "prompt_exp4710_alias_resolved_to": "results/experiment_4710_online_action_learning_arms_online_scratch.json",
++    "spec_has_req_4732": true
++  },
++  "random_seed": 4732,
++  "reproducibility_checksum": "sha256:d642473d99cec530d52c378db980507e447b67180b5ac1d101d8d72d730b1327",
++  "result_path": "results/experiment_4732_adversarial_verify_exercise_evidence_guard.json",
++  "schema": "carnot.exp4732.adversarial_verify_exercise_evidence_guard.v1",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4732",
++    "SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE"
++  ],
++  "trustworthy_null_not_flagged": {
++    "artifact": "results/experiment_4726_online_action_learning_driver_valid_test.json",
++    "flags": [],
++    "passed": true
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index b03acaa3eb..9d9e0c2f1b 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -2396,6 +2396,7 @@ PROPOSAL_FILTER_HELDOUT_REJECTION_OMITTED_KIND = (
+ )
+ PERCEPTION_OVERCLAIM_KIND = "perception-overclaim"
+ PERCEPTION_OVERCLAIM_OMITTED_KIND = "perception-overclaim-omitted"
++LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND = "LEVER_EXERCISE_EVIDENCE_DEGENERATE"
+ _INTRINSIC_REWARD_CONTEXT_MARKERS = (
+     "curiosity",
+     "exploration",
+@@ -3185,6 +3186,57 @@ _PERCEPTION_REQUIRED_EVIDENCE_KEYS = (
+     "order1_ablation_reached_level",
+     "offline_reproduced",
+ )
++_LEVER_EXERCISE_CONTEXT_MARKERS = (
++    "candidate_generation_coverage",
++    "candidate-generation coverage",
++    "candidate generation coverage",
++    "go_explore",
++    "go-explore",
++    "archive_injections",
++    "archive cells",
++    "archive_cells",
++    "actions_injected",
++    "prefixes_injected",
++    "proposal_pool",
++    "proposal pool",
++    "candidate_pool",
++    "candidate pool",
++    "online_action_learning",
++    "online action learning",
++    "online-driver-arms",
++    "online_driver_arms",
++    "online_warm_first_win",
++    "online_scratch_first_win",
++)
++_LEVER_ZERO_DELTA_KEY_MARKERS = (
++    "coverage_delta",
++    "candidate_generation_coverage",
++    "first_win_rate_delta",
++    "first_win_delta",
++    "online_warm_vs_frozen_delta",
++    "best_online_delta",
++)
++_LEVER_POOL_KEY_MARKERS = (
++    "candidate_pool",
++    "proposal_pool",
++    "candidate_generation_pool",
++    "generated_pool",
++)
++_LEVER_ARCHIVE_PATH_MARKERS = ("archive", "go_explore", "go-explore")
++_LEVER_ARCHIVE_ZERO_KEYS = (
++    "actions_injected",
++    "archive_injections",
++    "prefixes_injected",
++    "stored_cells",
++    "archive_cells",
++)
++_LEVER_ONLINE_ARM_MARKERS = ("frozen", "scratch", "warm")
++_LEVER_ONLINE_METRIC_MARKERS = (
++    "first_win",
++    "first_win_rate",
++    "solve_rate",
++    "live_solve_rate",
++)
+ 
+ 
+ def _claim_text(d: dict[str, Any], keys: tuple[str, ...]) -> str:
+@@ -3234,6 +3286,290 @@ def _real_field_values(value: Any, wanted_key: str) -> list[Any]:
+     return values
+ 
+ 
++def _iter_real_fields(value: Any, path: tuple[str, ...] = ()) -> list[tuple[tuple[str, ...], Any]]:
++    """Walk artifact fields while skipping metadata principle prose."""
++    rows: list[tuple[tuple[str, ...], Any]] = []
++    if isinstance(value, dict):
++        for key, nested in value.items():
++            key_text = str(key)
++            if key_text in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
++                continue
++            nested_path = path + (key_text,)
++            rows.append((nested_path, nested))
++            rows.extend(_iter_real_fields(nested, nested_path))
++    elif isinstance(value, list):
++        for index, item in enumerate(value):
++            nested_path = path + (f"[{index}]",)
++            rows.append((nested_path, item))
++            rows.extend(_iter_real_fields(item, nested_path))
++    return rows
++
++
++def _path_text(path: tuple[str, ...]) -> str:
++    return ".".join(path)
++
++
++def _path_has_marker(path: tuple[str, ...], markers: tuple[str, ...]) -> bool:
++    text = _path_text(path).lower()
++    return any(marker in text for marker in markers)
++
++
++def _is_arc_generation_or_exploration_artifact(d: dict[str, Any]) -> bool:
++    text = (
++        f"{d.get('experiment', '')} {d.get('schema', '')} "
++        f"{d.get('honest_verdict', '')} {d.get('inference_substrate', '')} "
++        f"{d.get('solve_provenance', '')} {_field_name_text(d)}"
++    ).lower()
++    arc_context = _is_arc_artifact(d) or "arc" in text or "online_action_learning" in text
++    return arc_context and any(marker in text for marker in _LEVER_EXERCISE_CONTEXT_MARKERS)
++
++
++def _max_positive_real_field(d: dict[str, Any], wanted_key: str) -> float | None:
++    positives = [
++        float(number)
++        for value in _real_field_values(d, wanted_key)
++        for number in _numeric_leaf_values(value)
++        if number > 0.0
++    ]
++    return max(positives, default=None)
++
++
++def _has_nontrivial_lever_run(d: dict[str, Any]) -> bool:
++    for wanted_key in ("actions", "budget", "duration_s", "iterations", "attempts", "observed"):
++        if _max_positive_real_field(d, wanted_key) is not None:
++            return True
++    return any(value is True for value in _real_field_values(d, "attempted"))
++
++
++def _archive_zero_reasons(d: dict[str, Any]) -> list[str]:
++    if not _has_nontrivial_lever_run(d):
++        return []
++    reasons: list[str] = []
++    for path, value in _iter_real_fields(d):
++        leaf = path[-1].lower()
++        if leaf not in _LEVER_ARCHIVE_ZERO_KEYS:
++            continue
++        if not _path_has_marker(path[:-1], _LEVER_ARCHIVE_PATH_MARKERS):
++            continue
++        if _is_finite_number(value) and float(value) == 0.0:
++            reasons.append(f"{_path_text(path)}=0")
++    return reasons
++
++
++def _pool_degenerate_reasons(d: dict[str, Any]) -> list[str]:
++    reasons: list[str] = []
++    for path, value in _iter_real_fields(d):
++        leaf = path[-1].lower()
++        if not any(marker in leaf for marker in _LEVER_POOL_KEY_MARKERS):
++            continue
++        if value in (None, "", [], {}):
++            reasons.append(f"{_path_text(path)} is empty")
++        elif isinstance(value, dict):
++            keys = {str(key).lower(): nested for key, nested in value.items()}
++            left = keys.get("pre") or keys.get("before") or keys.get("input")
++            right = keys.get("post") or keys.get("after") or keys.get("output")
++            if left not in (None, "", [], {}) and left == right:
++                reasons.append(f"{_path_text(path)} is byte-identical before/after transform")
++    return reasons
++
++
++def _shape_dims(value: Any) -> list[int]:
++    if isinstance(value, str):
++        return [int(part) for part in re.findall(r"\d+", value)]
++    if isinstance(value, (list, tuple)):
++        dims: list[int] = []
++        for item in value:
++            if isinstance(item, bool):
++                return []
++            if isinstance(item, int):
++                dims.append(item)
++            elif isinstance(item, float) and item.is_integer():
++                dims.append(int(item))
++            else:
++                return []
++        return dims
++    return []
++
++
++def _grid_shape_degenerate_reasons(d: dict[str, Any]) -> list[str]:
++    reasons: list[str] = []
++    for path, value in _iter_real_fields(d):
++        leaf = path[-1].lower()
++        if "shape" not in leaf and "grid_tensor" not in leaf:
++            continue
++        dims = _shape_dims(value)
++        if len(dims) >= 3 and dims[0] == 1 and dims[-2] > 1 and dims[-1] > 1:
++            reasons.append(f"{_path_text(path)}={tuple(dims)} has leading singleton grid axis")
++    return reasons
++
++
++def _scorer_diagnostics_error_reasons(d: dict[str, Any]) -> list[str]:
++    reasons: list[str] = []
++    for path, value in _iter_real_fields(d):
++        if not isinstance(value, dict) or path[-1].lower() != "scorer_diagnostics":
++            continue
++        errors = value.get("errors")
++        if not (_is_finite_number(errors) and float(errors) > 0.0):
++            continue
++        observed = value.get("observed")
++        fits = value.get("fits")
++        detail = f"{_path_text(path)}.errors={errors}"
++        if _is_finite_number(observed):
++            detail += f", observed={observed}"
++        if _is_finite_number(fits):
++            detail += f", fits={fits}"
++        reasons.append(detail)
++    return reasons
++
++
++def _has_positive_online_training_evidence(d: dict[str, Any]) -> bool:
++    for path, value in _iter_real_fields(d):
++        if not isinstance(value, dict) or path[-1].lower() != "scorer_diagnostics":
++            continue
++        observed = value.get("observed")
++        fits = value.get("fits")
++        errors = value.get("errors", 0)
++        if (
++            _is_finite_number(observed)
++            and _is_finite_number(fits)
++            and _is_finite_number(errors)
++            and float(observed) > 0.0
++            and float(fits) > 0.0
++            and float(errors) == 0.0
++        ):
++            return True
++    return False
++
++
++def _has_distinct_arm_evidence(d: dict[str, Any]) -> bool:
++    return (
++        _real_field_has_true(d, "arms_non_degenerate")
++        or _real_field_has_true(d, "per_arm_action_distribution_distinct")
++        or _has_positive_online_training_evidence(d)
++    )
++
++
++def _online_arm_metric_items(d: dict[str, Any]) -> list[tuple[str, float]]:
++    items: list[tuple[str, float]] = []
++    for key, value in d.items():
++        kl = str(key).lower()
++        if not _is_finite_number(value):
++            continue
++        if not any(marker in kl for marker in _LEVER_ONLINE_ARM_MARKERS):
++            continue
++        if not any(marker in kl for marker in _LEVER_ONLINE_METRIC_MARKERS):
++            continue
++        items.append((str(key), float(value)))
++    arms = d.get("arms")
++    if isinstance(arms, list):
++        for index, row in enumerate(arms):
++            if not isinstance(row, dict):
++                continue
++            arm = str(row.get("arm", f"arm_{index}"))
++            value = row.get("first_win_rate")
++            if _is_finite_number(value):
++                items.append((f"arms.{arm}.first_win_rate", float(value)))
++    return items
++
++
++def _byte_identical_online_arm_reason(d: dict[str, Any]) -> str | None:
++    items = _online_arm_metric_items(d)
++    labels = " ".join(label.lower() for label, _ in items)
++    if len(items) < 3 or not all(marker in labels for marker in _LEVER_ONLINE_ARM_MARKERS):
++        return None
++    first_value = items[0][1]
++    if not all(_significant_digits_match(first_value, value, TAUTOLOGY_DIGITS) for _, value in items[1:]):
++        return None
++    formatted = ", ".join(f"{label}={value:.6g}" for label, value in items)
++    return f"byte-identical online-driver arms to >{TAUTOLOGY_DIGITS} sig figs ({formatted})"
++
++
++def _has_nondegenerate_lever_evidence(d: dict[str, Any]) -> bool:
++    if _has_distinct_arm_evidence(d):
++        return True
++    for key in (
++        "actions_injected",
++        "archive_injections",
++        "prefixes_injected",
++        "stored_cells",
++        "archive_cells",
++        "heldout_programs_rejected",
++        "candidate_scores",
++        "observed_effects",
++        "augmented_candidates",
++        "candidate_group_count",
++    ):
++        if _max_positive_real_field(d, key) is not None:
++            return True
++    for path, value in _iter_real_fields(d):
++        leaf = path[-1].lower()
++        if any(marker in leaf for marker in _LEVER_POOL_KEY_MARKERS):
++            if isinstance(value, (list, dict, str)) and len(value) > 0:
++                return True
++        if "shape" in leaf:
++            dims = _shape_dims(value)
++            if len(dims) == 2 and dims[0] > 1 and dims[1] > 1:
++                return True
++    return False
++
++
++def _zero_lever_delta_reasons(d: dict[str, Any]) -> list[str]:
++    reasons: list[str] = []
++    for path, value in _iter_real_fields(d):
++        leaf = path[-1].lower()
++        if not any(marker in leaf for marker in _LEVER_ZERO_DELTA_KEY_MARKERS):
++            continue
++        if _is_finite_number(value) and float(value) == 0.0:
++            reasons.append(f"{_path_text(path)}=0.0 with no non-degenerate exercise evidence")
++    return reasons
++
++
++def _lever_exercise_severity(d: dict[str, Any]) -> str:
++    verdict = str(d.get("honest_verdict", "")).lower()
++    if d.get("flagged_adversarial") is True or d.get("submitted_to_leaderboard") is True:
++        return "critical"
++    if _flips_gate(d) or _claims_arc_live_search_win(d) or _is_arc_solve_claim(d):
++        return "critical"
++    if verdict.startswith(("success:", "success_", "shipped:", "shipped_", "passed:", "passed_")):
++        return "critical"
++    return "warn"
++
++
++def check_lever_exercise_evidence(d: dict[str, Any], flags: list[Flag]) -> None:
++    """Flag generation/exploration artifacts whose declared lever did not really exercise."""
++    if not _is_arc_generation_or_exploration_artifact(d):
++        return
++
++    reasons: list[str] = []
++    reasons.extend(_archive_zero_reasons(d))
++    reasons.extend(_pool_degenerate_reasons(d))
++    reasons.extend(_grid_shape_degenerate_reasons(d))
++    reasons.extend(_scorer_diagnostics_error_reasons(d))
++
++    arm_reason = _byte_identical_online_arm_reason(d)
++    if arm_reason is not None and not _has_distinct_arm_evidence(d):
++        reasons.append(arm_reason)
++
++    if not reasons and not _has_nondegenerate_lever_evidence(d):
++        reasons.extend(_zero_lever_delta_reasons(d))
++
++    if not reasons:
++        return
++
++    unique_reasons = list(dict.fromkeys(reasons))
++    flags.append(
++        Flag(
++            kind=LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND,
++            severity=_lever_exercise_severity(d),
++            detail=(
++                "lever-exercise-evidence-degenerate: artifact declares a generation/exploration "
++                "lever, but its exercise evidence is degenerate: "
++                + "; ".join(unique_reasons[:6])
++            ),
++        )
++    )
++
++
+ def _has_positive_top_level_metric(d: dict[str, Any], keys: tuple[str, ...]) -> bool:
+     for key, value in d.items():
+         if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+@@ -4355,6 +4691,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
+     check_multilevel_nondegenerate_metric_overclaim(d, flags)
+     check_subgoal_search_decomposition_overclaim(d, flags)
+     check_generation_coverage_baseline_overclaim(d, flags)
++    check_lever_exercise_evidence(d, flags)
+     check_novelty_proposal_ablation_overclaim(d, flags)
+     check_proposal_filter_heldout_rejection_overclaim(d, flags)
+     check_perception_overclaim(d, flags)
+diff --git a/tests/python/test_adversarial_verify_lever_exercise_evidence.py b/tests/python/test_adversarial_verify_lever_exercise_evidence.py
+new file mode 100644
+index 0000000000..189e3491c5
+--- /dev/null
++++ b/tests/python/test_adversarial_verify_lever_exercise_evidence.py
+@@ -0,0 +1,186 @@
++"""Pin REQ-ARC-WMTE-4732 lever exercise-evidence degeneracy guard.
++
++Spec refs: REQ-ARC-WMTE-4732, SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++import scripts.adversarial_verify as av
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++GO_EXPLORE_DEAD_ARCHIVE = (
++    REPO / "results" / "experiment_4701_amortized_exploration_prior_go_explore_live.json"
++)
++EXP4710_DROPPED_CANDIDATES = (
++    REPO / "results" / "experiment_4710_online_action_learning_arms_online_scratch.json"
++)
++A4_BYTE_IDENTICAL_ARMS = (
++    REPO / "results" / "experiment_4715_online_action_learning_driver_corrected.json"
++)
++TRUSTWORTHY_NONDEGENERATE_NULL = (
++    REPO / "results" / "experiment_4726_online_action_learning_driver_valid_test.json"
++)
++
++
++def _lever_flags(path: Path) -> list[dict[str, str]]:
++    report = av.verify_artifact(path)
++    assert report["loaded"] is True
++    return [
++        flag
++        for flag in report["flags"]
++        if flag["kind"] == av.LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND
++    ]
++
++
++def _payload_flags(payload: dict) -> list[dict[str, str]]:
++    flags: list[av.Flag] = []
++    av.check_lever_exercise_evidence(payload, flags)
++    return [flag.to_dict() for flag in flags]
++
++
++def _lever_payload(**overrides: object) -> dict:
++    payload = {
++        "experiment": "arc_synthetic_generation_lever",
++        "schema": "carnot.arc.synthetic_generation_lever.v1",
++        "honest_verdict": "complete: synthetic_no_coverage_gain_null",
++        "inference_substrate": "exploration lever exercise replay",
++        "duration_s": 1.0,
++        "random_seed": 4732,
++        "reproducibility_checksum": "sha256:" + "4" * 64,
++    }
++    payload.update(overrides)
++    return payload
++
++
++def test_req_arc_wmte_4732_spec_declares_guard() -> None:
++    """REQ-ARC-WMTE-4732: OpenSpec declares the standing verifier guard."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-WMTE-4732" in spec
++    assert "SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE" in spec
++    assert "LEVER_EXERCISE_EVIDENCE_DEGENERATE" in spec
++    assert "results/experiment_4732_adversarial_verify_exercise_evidence_guard.json" in spec
++
++
++def test_scenario_arc_wmte_4732_go_explore_dead_archive_is_flagged() -> None:
++    """SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE: Go-Explore (1,64,64) archive is flagged."""
++
++    flags = _lever_flags(GO_EXPLORE_DEAD_ARCHIVE)
++
++    assert flags
++    assert any("archive" in flag["detail"] for flag in flags)
++    assert any("stored_cells=0" in flag["detail"] for flag in flags)
++
++
++def test_scenario_arc_wmte_4732_exp4710_dropped_dict_candidates_are_flagged() -> None:
++    """SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE: exp4710 CNN dict-candidate failure is flagged."""
++
++    flags = _lever_flags(EXP4710_DROPPED_CANDIDATES)
++
++    assert flags
++    assert any("scorer_diagnostics.errors" in flag["detail"] for flag in flags)
++
++
++def test_scenario_arc_wmte_4732_a4_byte_identical_online_driver_arms_are_flagged() -> None:
++    """SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE: .434 A4 all-arms 0.04 signature is flagged."""
++
++    flags = _lever_flags(A4_BYTE_IDENTICAL_ARMS)
++
++    assert flags
++    assert any("byte-identical" in flag["detail"] for flag in flags)
++    assert any(flag["severity"] == "critical" for flag in flags)
++
++
++def test_scenario_arc_wmte_4732_nondegenerate_null_is_not_false_flagged() -> None:
++    """SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE: arms_non_degenerate=True survives."""
++
++    flags = _lever_flags(TRUSTWORTHY_NONDEGENERATE_NULL)
++
++    assert flags == []
++
++
++def test_scenario_arc_wmte_4732_pool_shape_and_zero_delta_edges() -> None:
++    """SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE: pool, shape, and catch-all edges are pinned."""
++
++    assert _payload_flags({"experiment": "not_arc", "coverage_delta": 0.0}) == []
++    assert av._archive_zero_reasons(  # direct helper pin for no-run archive diagnostics
++        {"go_explore_archive_diagnostics": {"stored_cells": 0}}
++    ) == []
++
++    empty_pool = _payload_flags(_lever_payload(proposal_pool=[]))
++    assert empty_pool
++    assert "proposal_pool is empty" in empty_pool[0]["detail"]
++
++    unchanged_pool = _payload_flags(
++        _lever_payload(candidate_pool={"pre": [{"x": 1}], "post": [{"x": 1}]})
++    )
++    assert unchanged_pool
++    assert "byte-identical before/after transform" in unchanged_pool[0]["detail"]
++
++    singleton_grid = _payload_flags(
++        _lever_payload(candidate_generation_coverage=0.0, grid_shape="(1,64,64)")
++    )
++    assert singleton_grid
++    assert "leading singleton grid axis" in singleton_grid[0]["detail"]
++
++    catchall_zero = _payload_flags(
++        _lever_payload(candidate_generation_coverage=0.0, coverage_delta=0.0)
++    )
++    assert catchall_zero
++    assert "no non-degenerate exercise evidence" in catchall_zero[0]["detail"]
++
++    assert _payload_flags(_lever_payload(coverage_delta=0.0, archive_cells=4)) == []
++    assert _payload_flags(_lever_payload(coverage_delta=0.0, proposal_pool=[{"x": 1}])) == []
++    assert _payload_flags(
++        _lever_payload(candidate_generation_coverage=0.0, coverage_delta=0.0, grid_shape=[64, 64])
++    ) == []
++
++    assert av._shape_dims("(1,64,64)") == [1, 64, 64]
++    assert av._shape_dims([1.0, 64, 64]) == [1, 64, 64]
++    assert av._shape_dims([1, True]) == []
++    assert av._shape_dims([1, object()]) == []
++    assert av._shape_dims(None) == []
++
++
++def test_scenario_arc_wmte_4732_distinct_training_and_nonidentical_arms_are_clean() -> None:
++    """SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE: exercised arms survive flat metrics."""
++
++    assert _lever_flags(REPO / "results" / "experiment_4710_arms_summary.json") == []
++
++    nonidentical = _lever_payload(
++        frozen_first_win=0.04,
++        online_scratch_first_win=0.05,
++        online_warm_first_win=0.06,
++    )
++    assert _payload_flags(nonidentical) == []
++
++    items = av._online_arm_metric_items(
++        {
++            "arms": [
++                "not-a-dict",
++                {"arm": "frozen", "first_win_rate": 0.04},
++                {"arm": "online-scratch", "first_win_rate": 0.05},
++                {"arm": "online-warm", "first_win_rate": 0.06},
++            ]
++        }
++    )
++    assert len(items) == 3
++
++
++def test_scenario_arc_wmte_4732_severity_escalation_edges() -> None:
++    """SCENARIO-ARC-WMTE-4732-LEVER-EVIDENCE: gates and success headlines are critical."""
++
++    gate_flags = _payload_flags(
++        _lever_payload(proposal_pool=[], diffusiongemma_gate_status="MET")
++    )
++    assert gate_flags[0]["severity"] == "critical"
++
++    success_flags = _payload_flags(
++        _lever_payload(honest_verdict="success: generation_lever_headline", proposal_pool=[])
++    )
++    assert success_flags[0]["severity"] == "critical"
+-- 
+2.55.0
+

@@ -1,0 +1,56 @@
+From 0e31eeadc8a040a1169bb632538e2a1ee42b213e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 27 Aug 2026 08:07:34 -0400
+Subject: [PATCH 10089/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 6a19a5334c..a7ecc724aa 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-27T11:00:30Z"
++ "last_scan_utc": "2026-08-27T12:07:31Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 81dedaf91e..d2cb675bf7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 74, "phase": "iteration_start", "last_beat": "2026-08-27T11:00:30Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 75, "phase": "iteration_start", "last_beat": "2026-08-27T12:07:30Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a6d88c3928..9f4260d5b0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16618,3 +16618,4 @@ code |
+ | 2026-08-27 09:38 UTC | Structured-tail independent row audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6662-triggered-structured-tail-ab) |
+ | 2026-08-27 09:38 UTC | Milestone 2026.08.582 activated | OK | 14 tasks queued |
+ | 2026-08-27 10:58 UTC | V582 document-to-manifest parity contract | OK | 91 passed, 1 warning in 47.59s |
++| 2026-08-27 12:05 UTC | Triggered-tail task-owned verification receipt | OK | 130 passed, 1 warning in 10.85s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 6945f746f4..c792161ffd 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 74, "phase": "iteration_start", "started_at": "2026-08-27T11:00:30Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 75, "phase": "iteration_start", "started_at": "2026-08-27T12:07:30Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

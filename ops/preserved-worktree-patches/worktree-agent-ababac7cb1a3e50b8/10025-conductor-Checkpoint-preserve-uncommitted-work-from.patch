@@ -1,0 +1,96 @@
+From d4d621c8ffd36a9f953808c9ea47fca289ec4165 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 15:42:52 -0400
+Subject: [PATCH 10025/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.audit_findings_ledger_state.json | 2 +-
+ ops/.run_sentinel_state.json          | 2 +-
+ ops/.stop_authority_state.json        | 2 +-
+ ops/conductor-heartbeat.json          | 2 +-
+ ops/conductor-log.md                  | 1 +
+ ops/conductor-state.json              | 2 +-
+ results/experiment_1822_rtl_synth.log | 2 +-
+ 7 files changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/ops/.audit_findings_ledger_state.json b/ops/.audit_findings_ledger_state.json
+index 1b4f619c31..d1bf94e328 100644
+--- a/ops/.audit_findings_ledger_state.json
++++ b/ops/.audit_findings_ledger_state.json
+@@ -17,5 +17,5 @@
+   "AUDIT_FINDING_UNTRIAGED|scripts/test_suite_mutation_check.py age-week 0|": "2026-08-26T00:17:17Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T18:02:49Z"
++ "last_scan_utc": "2026-08-26T19:34:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index aa6ae9cc1f..008440bfef 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T18:19:28Z"
++ "last_scan_utc": "2026-08-26T19:42:49Z"
+ }
+\ No newline at end of file
+diff --git a/ops/.stop_authority_state.json b/ops/.stop_authority_state.json
+index 7008e9e00a..2687d0b586 100644
+--- a/ops/.stop_authority_state.json
++++ b/ops/.stop_authority_state.json
+@@ -1,6 +1,6 @@
+ {
+  "candidates": {},
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T18:02:49Z",
++ "last_scan_utc": "2026-08-26T19:34:49Z",
+  "written": {}
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 05148fc1a2..c8f070bea6 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 42, "phase": "iteration_start", "last_beat": "2026-08-26T18:19:28Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 43, "phase": "iteration_start", "last_beat": "2026-08-26T19:42:48Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 47d12eeb8f..3993450dda 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16568,3 +16568,4 @@ code |
+ | 2026-08-26 16:51 UTC | Plan milestone 2026.08.580 | OK | 13 tasks proposed |
+ | 2026-08-26 16:54 UTC | Milestone 2026.08.580 activated | OK | 13 tasks queued |
+ | 2026-08-26 18:17 UTC | Receipt-scoped model admission boundary | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:     assert pre |
++| 2026-08-26 19:40 UTC | Receipt-scoped model admission boundary | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: receipt and wi |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 556d6e81bd..3cc8c94694 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 42, "phase": "iteration_start", "started_at": "2026-08-26T18:19:28Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 43, "phase": "iteration_start", "started_at": "2026-08-26T19:42:48Z"}
+\ No newline at end of file
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index c762ae8755..9b09beb467 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 1.98s, user: 1.79s, system: 0.15s, MEM: 116.36 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.05s, user: 1.83s, system: 0.17s, MEM: 116.18 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+ Time spent: 77% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
+-- 
+2.55.0
+

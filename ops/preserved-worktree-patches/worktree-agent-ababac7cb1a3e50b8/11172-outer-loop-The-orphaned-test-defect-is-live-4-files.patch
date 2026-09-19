@@ -1,0 +1,98 @@
+From 0b51ec173b0cecb6afb2f0221ff04b4b5c8da024 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 02:16:52 -0400
+Subject: [PATCH 11172/11362] [outer-loop] The orphaned-test defect is live: 4
+ files, one landed today
+
+Measured by parsing each test's actual carnot import rather than guessing from
+a path convention: 4 of 3,905 test files import an experiment module that does
+not exist. This supersedes my earlier figure of 1776, which measured a
+convention and was wrong by three orders of magnitude.
+
+The fourth file is the finding. At 04:25Z I recorded three and called them five
+days stale. A fourth appeared in the current milestone, so the conductor is
+still writing tests for modules it does not commit, roughly four in five days.
+Each is un-collectable from the day it lands and the sharded test phase cannot
+see it.
+
+A separate older class also exists: two verifier-diversity tests from
+2026-05-29 collect fine and fail on an arity error. They are not in the orphan
+count because they import by another route.
+
+Checked before blaming my own change. I altered diversity_active, a field the
+supervisor consumes, so I ran the consumers rather than only my own file: 212
+passed, 4 failed, and the 4 have zero references to anything I touched. They
+matched because -k diversity is broader than my change. The real consumers, the
+trajectory-supervisor tests, all pass.
+
+Filed as an operator decision rather than built: a pre-commit check refusing a
+test that imports a non-existent carnot module would be cheap and exact, but it
+would refuse conductor commits, and blocking the conductor is not my call.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index 77b481af5d..33bc8b774e 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -89,6 +89,53 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
+ would manufacture a record, which is worse than the gap it hides.
+ 
+ 
++## 2026-09-05 06:20Z — the orphaned-test defect is LIVE, not historical: 4 files, one landed today
++
++Measured properly this time, by parsing each test's actual `from carnot import experiment_*`
++line rather than guessing from a path convention. **4 of 3,905** test files import a carnot
++experiment module that does not exist:
++
++```
++test_experiment_6814_selective_priority_arbiter_cold_audit.py   landed 2026-08-31
++test_experiment_6819_arc_stepwise_strategy_accrual.py           landed 2026-08-31
++test_experiment_6828_residual_pressure_verified_memory_ab.py    landed 2026-08-31
++test_experiment_7013_three_family_intervention_surface.py       landed TODAY, milestone .614
++```
++
++**This supersedes my 06:25Z figure of 1776**, which measured a path convention rather than
++breakage and was wrong by three orders of magnitude. The honest number is 4.
++
++**The fourth one is the finding.** At 04:25Z I recorded three such files and called them five days
++stale. A fourth appeared in the CURRENT milestone. So the conductor is still writing tests for
++experiment modules it does not commit — roughly four in five days, not a historical batch that
++stopped. Every one is un-collectable from the day it lands, and the conductor's own sharded test
++phase cannot see it.
++
++### A separate, older class: tests that collect and then fail
++
++`test_experiment_3343_verifier_diversity_reaudit_after_axis_v3` and
++`test_experiment_3329_verifier_ensemble_diversity_audit_v2` contribute 4 failures with
++`ValueError: not enough values to unpack (expected 3, got 2)` — an arity mismatch, not a missing
++import. Their test files landed **2026-05-29**, about 99 days ago. These are NOT in the orphan
++count above because they import by a different route and fail at run time rather than collection.
++
++So there are at least two distinct decay classes, and only the first is now measured.
++
++### Checked before blaming myself, and it was not mine
++
++I changed `diversity_active`, a field the supervisor consumes, so I ran the consumer tests rather
++than only my own file. 212 passed, 4 failed. The 4 are the 3343/3329 pair above: **zero**
++references to `arc_competition_agent`, `arc_arm_eligibility`, `TrajectorySnapshot`,
++`diversity_active` or `_hybrid_diversity` in either file, and the failure is an arity error in the
++experiment's own code. They matched only because `-k diversity` is broader than my change.
++
++The trajectory-supervisor tests, which ARE the real consumers, all pass.
++
++**OPERATOR DECISION 12:** the orphaned-test defect recurs each milestone and nothing catches it.
++A pre-commit check that refuses a test importing a non-existent carnot module would be cheap and
++would fire exactly once per occurrence. It is not built here because it would refuse conductor
++commits, and deciding that the conductor should be blocked on this is an operator call, not mine.
++
+ ## 2026-09-05 06:15Z — energy review: no new opportunity, and a prohibition with no enforcer
+ 
+ An independent read-only review asked where a Carnot energy approach could give the LIVE agent
+-- 
+2.55.0
+

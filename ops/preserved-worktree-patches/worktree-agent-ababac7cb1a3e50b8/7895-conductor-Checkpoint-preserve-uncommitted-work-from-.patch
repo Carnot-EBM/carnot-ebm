@@ -1,0 +1,44 @@
+From cdea68f416e281ad8b44a554c8da92a6a8d83883 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 06:28:58 -0400
+Subject: [PATCH 07895/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f6edc9f1ee..982d4bfb73 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 127403, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-07-25T10:26:34Z"}
+\ No newline at end of file
++{"pid": 127403, "iteration": 24, "phase": "iteration_start", "last_beat": "2026-07-25T10:28:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a2300236fb..8f3494f9f1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14277,3 +14277,5 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-25 10:19 UTC | Frozen-science requalification of Exp5895 continuo | OK | 85 passed, 1 warning in 5.74s |
+ | 2026-07-25 10:22 UTC | Gated on Exp5912 and Exp5909: transactional read-b | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5912-csl-exact-slot-requalification.csl |
+ | 2026-07-25 10:24 UTC | Gated on Exp5912 and Exp5909: transactional read-b | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5912-csl-exact-slot-requalification.csl |
++| 2026-07-25 10:26 UTC | Gated on Exp5912 and Exp5909: transactional read-b | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5912-csl-exact-slot-requalification.csl |
++| 2026-07-25 10:28 UTC | Gated on Exp5913 mechanism: prospective SOTA trans | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5913-transactional-constraint-memory-fixt |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e30c6fe27e..82b183d8fa 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 127403, "iteration": 23, "phase": "iteration_start", "started_at": "2026-07-25T10:26:34Z"}
+\ No newline at end of file
++{"pid": 127403, "iteration": 24, "phase": "iteration_start", "started_at": "2026-07-25T10:28:55Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

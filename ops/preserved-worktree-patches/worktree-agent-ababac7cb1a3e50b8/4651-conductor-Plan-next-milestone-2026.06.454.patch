@@ -1,0 +1,1405 @@
+From fc32c0c87adc4c71f314e14099a3a3858319ab17 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 28 Jun 2026 11:12:17 -0400
+Subject: [PATCH 04651/11362] [conductor] Plan next milestone: 2026.06.454
+
+Planning agent proposed 11 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../change-proposals/research-roadmap-v454.md | 182 ++++
+ ops/arc_self_solve_audit_report.md            |  63 +-
+ ops/docs_audit_report.md                      |  78 +-
+ research-references.md                        |  17 +
+ research-roadmap-next.yaml                    | 935 ++++++++++++++++++
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ 7 files changed, 1229 insertions(+), 68 deletions(-)
+ create mode 100644 openspec/change-proposals/research-roadmap-v454.md
+ create mode 100644 research-roadmap-next.yaml
+
+diff --git a/openspec/change-proposals/research-roadmap-v454.md b/openspec/change-proposals/research-roadmap-v454.md
+new file mode 100644
+index 0000000000..7b3154355d
+--- /dev/null
++++ b/openspec/change-proposals/research-roadmap-v454.md
+@@ -0,0 +1,182 @@
++# Research Roadmap v454 — Post-ARC-Closure Submission Maximization (final pre-deadline milestone)
++
++**Milestone:** 2026.06.454
++**Planned by:** outer-loop (Claude Opus 4.8 planner), 2026-06-28
++**Predecessor:** 2026.06.453 (FINAL ARC CLOSURE DIAGNOSTIC — reached `WALL_IS_HIDDEN_STATE`)
++**Sprint:** ARC-AGI-3 submission sprint, ACTIVE through 2026-06-30 (CLAUDE.md forcing function)
++
++---
++
++## 1. What `.453` proved (the strategic inflection)
++
++`.453` ran the FINAL ARC closure diagnostic and **mechanistically closed the ARC first-win
++question** as a B1-trusted result:
++
++- **A1 (exp4914, causal-state-abstraction wall diagnostic, arXiv:2401.12497, live 60.0s):**
++  verdict `complete_causal_abstraction_hidden_state_representation_invariant_closure` →
++  **`WALL_IS_HIDDEN_STATE`**. The minimal causal abstraction needed to predict changed-cell
++  value + progress-to-goal on the failed first-win games **requires a hidden variable**
++  (winning-prefix-order state) that the ARC interface cannot expose. The solved-game positive
++  control classified OBSERVABLE (non-degenerate).
++- **B1 (exp4918) audited it trustworthy:** all six trust gates true (real transitions, not a
++  value table, observable claims verified readable, positive control observable, oracle-distinct
++  + planner-blind, numbers match the fork).
++- **Capstone (exp4923):** `complete_capstone_v453_wall_is_hidden_state_arc_closure`.
++
++**Consequence:** the live first-win wall is **representation-invariant by construction**. No
++offline representation over observable inputs recovers the discriminating variable — this closes
++the multi-milestone world-model fork (.431→.453). **The deliverable LOCKS to the current ~0.05
++first-win agent + the publishable FoVer verifier-ensemble paper (paper_ready=true).** Per the
++capstone and the operator handoff: **do NOT queue representation #5; do NOT reopen any nulled
++generation/perception/selection/energy lever.**
++
++`.453` also delivered, on the scored lanes:
++
++| Lane | Result |
++|---|---|
++| A2 level-up | **cn04 L2→L3 banked** (`live_agent_self_discovery`, reproduction-gated) → `reproducible_total_levels` **68 → 69** (first bank in 4 milestones) |
++| A3 self-play | bp35 checkpoint refreshed (FR-11 continuous self-learning) |
++| A4 held-out go/no-go | genuine-live PARTIAL (21/25 games, 84 attempts, 3627 s, soft-budget stop) — **NOT flagged_adversarial** (the .452→.453 stamping fix resolved the 3-milestone recurring flag); 4 games remain |
++| B2 submission package | `success_submission_package_ready_final_pre_deadline` (15.146 GB < 16 GB, frozen Qwen3.5-9B-MTP iGPU stack) |
++| B3 retro infra | shipped the mtime-fallback + runtime-stamping modules + wiring proposal (operator wire pending — the autonomous loop cannot edit the conductor) |
++| C KV260 | reachable (graduated terminal, SSH-only) |
++| D SOTA | distributional-energy-verifier pivot scaffold built (arXiv:2605.18871) |
++
++---
++
++## 2. The three biggest gaps between current state and the PRD vision
++
++1. **The locked deliverable is not yet maximized for the 6/30 submission.** ARC is closed, but the
++   *scored* submission can still improve along the two axes that remain open: **deepening**
++   (more reproduced levels → more games the agent can score) and **action efficiency** (the
++   leaderboard squares `(human_actions/agent_actions)` → a fewer-actions improvement is squared
++   in the score). Neither is at its ceiling.
++2. **The held-out go/no-go number is incomplete.** `.453` A4 finished only 21/25 games before its
++   soft-budget stop. The operator's 6/30 decision needs the CLEAN full-25-game rate + CI — a
++   resume-to-finish, not a fresh run.
++3. **The verifier-moat (Carnot's core value-add) has no executed post-sprint experiment yet.**
++   ARC closure makes the FoVer/verifier-moat program the next headline. `.453` D scaffolded the
++   distributional-energy-verifier harness (arXiv:2605.18871 — which independently lands the exact
++   Carnot thesis: learned quality scorer + deterministic constraint penalties + uncertainty). `.454`
++   keeps it a scaffold (majority-ARC governs through 6/30) but readies it to execute the instant
++   the sprint retires.
++
++---
++
++## 3. `.454` design — execute the locked deliverable, do not chase the closed wall
++
++`.454` is the **last (or second-to-last) milestone before the 6/30 deadline.** Its honest headline
++is **submission-score maximization for the locked deliverable**, NOT a new research fork. The
++majority-ARC allocation shifts from first-win-wall work (closed) to the two open scored axes:
++
++```
++                       reproducible_total_levels = 69 (post cn04)
++                                     |
++        +----------------------------+----------------------------+
++        |  DEEPEN (more scored games)       EFFICIENCY (squared)  |
++        |  A1 sp80 L2->L3  (headline)       D  MATM similarity-    |
++        |  A2 su15 L2->L3  (guarantee)         keyed retrieval     |
++        +----------------------------+----------------------------+
++                                     |
++              A3 self-play (FR-11 learned verifier, every milestone)
++              A4 held-out RESUME 21/25 -> 25/25 (CLEAN 6/30 go/no-go)
++                                     |
++   B2 FINAL submission package harden + operator checklist (the deadline deliverable)
++   B1 audit (banks real + efficiency oracle-distinct)   B3 stamping backfill/readiness
++   C KV260 SSH continuity        D scaffold the post-6/30 distributional-energy-verifier pivot
++                                     |
++                          E capstone — submission readiness scorecard + post-6/30 handoff
++```
++
++### Allocation (mirrors the `.453` reserved-slot contract: 3 infra + 1 hardware + 1 SOTA/efficiency)
++
++| Phase | Task | Track | Agent | Why |
++|---|---|---|---|---|
++| 0 | exp4924 archive .453 → activate .454 | transition | codex | record the closure close-state |
++| A1 | exp4925 DEEPEN sp80 L2→L3 (HEADLINE level-bank) | arc-north-star | codex | majority-ARC level-growth (no rep #5) |
++| A2 | exp4926 DEEPEN su15 L2→L3 (Level-Up Guarantee) | arc-north-star | codex | ≥1 banking attempt; maximize monotonic growth before deadline |
++| A3 | exp4927 self-play (rotated banked game) | arc-north-star | codex | FR-11 continuous self-learning, every milestone |
++| A4 | exp4928 held-out RESUME 21/25 → 25/25 | arc-north-star | codex | CLEAN 6/30 go/no-go (deadline lane) |
++| B1 | exp4929 audit banks + efficiency | infra | codex | banks real/non-duplicate; D oracle-distinct |
++| B2 | exp4930 FINAL submission package harden | infra | codex | the deadline deliverable; submits=false |
++| B3 | exp4931 stamping backfill + wiring readiness | infra | codex | retro top-3; closes duration_s=None for .454 arms |
++| C | exp4932 KV260 SSH continuity | hardware | codex | Hardware-Task Continuity (SSH-only) |
++| D | exp4933 MATM similarity-keyed retrieval (efficiency) + DEV pivot scaffold | sota-ingestion | codex | the squared-scored efficiency lever (operator-flagged) |
++| E | exp4934 capstone .454 | capstone | codex | submission-readiness scorecard + post-6/30 handoff |
++
++**Continuous self-learning (research-program.md requirement):** A3 is the explicit Tier-3 / FR-11
++experiment — the learned ARC verifier trains on the self-play traces and checkpoints, improving
++across runs. D's MATM retrieval is a second self-learning surface (the agent reuses its own
++within-game rollouts).
++
++### Disciplines honored
++
++- **ARC Live-Path Reachability:** every ARC task improves a LIVE-reachable mechanism
++  (`arc_loop_solve` / `GameAdapter` / `StepwiseExplorer` / `E3AgentPolicy`); `arc_orphan_solver_lint`
++  must pass. No parallel solver the live agent cannot reach. `solve_provenance` declared on every
++  solve task (`live_agent_self_discovery` for A1/A2/A3; `development_proxy` for A4/D measurements).
++- **ARC Solve Reproducibility:** banks count only through `arc_solver_kit.reproduce`; registry-precheck
++  before any solve (no re-solving an already-reproduced level → duplicate is CRITICAL).
++- **ARC Incremental-Progress Scoping:** +1 level per game; rotated targets; no "FULL solve."
++- **ARC Level-Up Attempt Guarantee:** A1 + A2 are two banking attempts (≥1 floor).
++- **Circularity / Oracle-Distinctness:** D's MATM retrieval scores candidates via the verifier
++  router (`verifier_is_oracle: false`, oracle-distinct) — energy-as-router, not oracle.
++- **Operator-Only External Publication:** B2 prepares the package + checklist; `submits=false`.
++- **Pre-Launch Preconditions:** every compute-bound task gates on arcade/generator/SSH; GPU fix
++  (2026-06-27) — offline induction accepts the conductor's GPU-0 CUDA generator, NOT iGPU-pinned;
++  the LIVE submission stack (B2) stays frozen Qwen3.5-9B-MTP on the iGPU.
++- **Codex-Default v2:** all experiments `agent_type: codex`/`gpt-5.5`; planner + retro stay Opus
++  (operator's sprint quality choice).
++- **Verdict Terminal-Prefix + Principle-Annotated fields:** every task.
++
++### What `.454` does NOT do (closed/retired — do not re-propose)
++
++Representation #5 / any new world-model fork; energy-as-ARC-lever (CONCLUDED negative 2026-06-26);
++macro/horizon-collapse, click-heatmap generator, trust-gate flip (all empirically retired); the
++TTT-on-code engine; stronger local code inducers; decision-need targets; action-prefix latents;
++coverage/exploration/selection/perception-from-grid. First-win-wall chasing is closed.
++
++---
++
++## 4. Dependency graph
++
++```
++exp4924 (transition)
++   ├─> exp4925 A1 deepen sp80 ─┐
++   ├─> exp4926 A2 deepen su15 ─┤
++   ├─> exp4927 A3 self-play    ├─> exp4929 B1 audit ─┐
++   ├─> exp4928 A4 held-out     │                      │
++   ├─> exp4933 D  MATM eff ────┘                      │
++   ├─> exp4930 B2 package ────────────────────────────┤
++   ├─> exp4931 B3 stamping ───────────────────────────┤
++   └─> exp4932 C  KV260 ──────────────────────────────┤
++                                                       v
++                                            exp4934 E capstone .454
++```
++
++A1/A2/A3/D feed B1 (the audit gates trust in the headline numbers). All arms feed the capstone,
++which skips any `flagged_adversarial` upstream per the fabrication gate.
++
++---
++
++## 5. Hardware requirements
++
++- **Offline ARC induction (A1/A2/A3/A4/D):** conductor's dedicated **GPU-0 CUDA llama-server**
++  (`CARNOT_ARC_GENERATOR_CUDA_GPU=0`, card ≥13 GB free) OR the iGPU HIP server; health-check via
++  `_ensure_server()`. Per the 2026-06-27 GPU-allocation directive, offline induction is NOT
++  iGPU-pinned. Do NOT block merely because `CUDA_VISIBLE_DEVICES` is set.
++- **LIVE submission stack (B2):** FROZEN — Qwen3.5-9B-MTP on the **iGPU** (Kaggle ~16 GB parity);
++  never the 3090s for the live stack.
++- **KV260 (C):** SSH-reachability only (`ssh kria 'true'`); NEVER a host SD-card / block-device
++  precondition.
++
++---
++
++## 6. Post-6/30 handoff (stated now so the loop pivots cleanly)
++
++The sprint retires 2026-06-30. The locked deliverable (~0.05 agent + FoVer paper) is the ARC
++outcome. The **post-sprint headline is the verifier-moat**: execute the distributional-energy-verifier
++experiment (arXiv:2605.18871) on a non-saturated structured-reasoning domain (MuSR / TravelPlanner /
++TACO / Knights&Knaves) where self-consistency is NOT near-ceiling — the validation gate is
++"distributional energy verifier beats self-consistency, CI95 excluding zero, no model-identity
++shortcut, oracle-distinct." `.454` D readies (does not start) this; the capstone states the handoff.
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index f658ac85a9..8c8e48918d 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -16,34 +16,47 @@ OK: all solver-like ARC modules are reachable from the live agent path (42 modul
+ 
+ ## Hostile LLM review
+ 
+-## TL;DR — VERDICT: 22/22 DUPLICATE. Zero live self-discovery. Zero new levels. Zero scored-path touches.
++## TL;DR
+ 
+-Every one of the 22 "solves" is a `development_proxy` re-gate of an **already-registered** level, produced by the standing offline loop (`standing_arc_loop_offline_no_quota`) replaying a **hand-registered per-game `GameAdapter`** through the offline simulator. Grounded check: for all 22, `artifact_level ≤ registry_level` (two are *below* registry depth — lp85 L4 vs reg L5, tu93 L4 vs reg L5). `reproducible_total_levels` stays 68 — this batch added **nothing**. None ran the scored `E3AgentPolicy`/Kaggle path. None are adapter-free. So against the one principle — *the live agent discovers hidden-game solves on its own* — **none qualify**.
++**VERDICT: 22/22 DUPLICATE — zero live self-discovery in the window.** Every one of the 22 recent artifacts is the standing offline loop (`standing_arc_loop_offline_no_quota`) re-confirming a level the registry **already records** (each artifact `level` ≤ registry `levels_reproduced`; `reproducible_total_levels` stays **69**, unmoved). All carry `solve_provenance: development_proxy` — i.e. `arc_loop_solve.py` + a **hand-registered per-game `GameAdapter`** (confirmed: `_tu93`, `_r11l`, `_ls20`, `_s5i5`, `_cd82`, … all 22 games have an adapter in `arc_game_adapters.py`). **Not one artifact is `live_agent_self_discovery`.** Reachability lint is clean (not OFF_PATH); no declared outer-loop inputs (not freshly OUTER_LOOP_RE) — but the mechanism that produced these solves *is* outer-loop RE banked in prior milestones, and the dev-twin replays it. This is a green reproducibility dashboard, not evidence the scored agent discovers hidden games on its own.
+ 
+-This is honest, reachable, non-fabricated reproduction-maintenance (the labeling half of the discipline is working: all stamped `development_proxy`, not falsely `live_agent_self_discovery`; orphan-lint green). But it is **not progress on the deliverable**, and with the 2026-06-30 deadline 2 days out, a capstone that reads these as "22 games solved this week" would be misleading.
++## Per-artifact verdicts
+ 
+-## Per-artifact (homogeneous — table form)
++Evidence column = artifact `level` vs registry `levels_reproduced`. All: provenance `development_proxy`, mode `standing_arc_loop_offline_no_quota`, adapter present.
+ 
+-| games | art lvl | reg lvl | verdict | evidence |
++| Game | Lvl | Registry max | Verdict | Evidence |
+ |---|---|---|---|---|
+-| **lp85** | 4 | **5** | DUPLICATE | re-gates the L4 checkpoint; registry already deeper (Exp4372 L5). dev_proxy, `_lp85` adapter |
+-| **tu93** | 4 | **5** | DUPLICATE | below registry depth; `_tu93` adapter deep-solve replay, offline, no-quota |
+-| tr87 | 6 | 6 | DUPLICATE | re-gate at registry ceiling; `_tr87` adapter |
+-| ft09, ar25 | 3 | 3 | DUPLICATE | re-gate at registry ceiling; hand adapters |
+-| r11l, ls20, dc22, vc33, g50t, s5i5, cd82, sp80, su15, sk48, m0r0, cn04, lf52, bp35, re86, sb26 | 2 | 2 | DUPLICATE | re-gate at registry ceiling; each has a `_<game>` adapter |
+-| ka59 | 1 | 1 | DUPLICATE | re-gate at registry ceiling; `_ka59` adapter |
+-
+-**Evidence common to all 22:** `solve_provenance: development_proxy`; `mode: standing_arc_loop_offline_no_quota`; `outer_loop_inputs_declared: []` (no declared source-read/BFS/calibration → not a CRITICAL `outer_loop_re` flag); all 22 games carry a hand-registered `_<game>` adapter in `arc_game_adapters.py`; real search (`states_expanded` 24–4346) so not fabricated.
+-
+-**Recommended action (all 22):** Do **not** count toward `reproducible_total_levels`; do **not** surface in any capstone/headline as new ARC progress. Keep as CI reproduction snapshots only. lp85 and tu93 specifically should not be reported at L4 when the registry banks L5 — that reads as a regression.
+-
+-## Pattern watch — drift toward dev-twin maintenance, away from the deliverable
+-
+-1. **A full-corpus re-gate sweep is masquerading as a solve batch.** 22 artifacts, 22 adaptered games, 0 new levels, 0 scored-path runs. The standing loop re-confirming hand-built adapters is legitimate CI, but it is structurally incapable of demonstrating live self-discovery — the exact "different mechanism" the operator flagged on 2026-06-22. None of these makes the live agent better at a *hidden* game.
+-
+-2. **The hand-adapter corpus produces ~zero transfer — and that's the whole point.** The registry's own primitive-persist rows are wall-to-wall nulls: every `latest_exp*_transfer` shows `live_solve_rate_delta: 0.0`, `first_win_rate_delta: 0.0`, `offline_reproduced_new_level: false` across bp35/cd82/dc22/g50t. So 22 per-game adapters → near-zero cross-game lift. Banking dev-proxy re-gates risks burying the unsolved core (the L1 first-contact wall, generic first-win ≈0.04) under a green-looking registry.
+-
+-3. **Two days to deadline, the scored lane is untouched here.** Not one artifact exercised `E3AgentPolicy`. If the sprint's remaining slots keep going to `standing_arc_loop_offline_no_quota` re-gates, the submission will rest on adapters that, by the project's own transfer evidence, do not generalize to the hidden Kaggle games. Redirect remaining effort to **adapter-free live first-contact** (held-out first-win) and at least one scored-path dry run — not another corpus re-gate.
+-
+-**Bottom line:** no violations to quarantine, but no deliverable progress either. This batch is reproduction-maintenance correctly labeled `development_proxy` — treat it as such, and don't let its volume read as live self-discovery.
++| lp85 | 4 | **5** | DUPLICATE | re-confirms gate **below** banked max (registry: "arc_loop_solve_lp85.json remains the L4 gate"; L5 banked via Exp4372) |
++| tu93 | 4 | **5** | DUPLICATE | re-confirms **below** banked max (registry L5); `verifier_src: hand_verifier_cold_start` |
++| tr87 | 6 | 6 | DUPLICATE | equals recorded depth |
++| ar25 | 3 | 3 | DUPLICATE | equals recorded depth |
++| cn04 | 3 | 3 | DUPLICATE | equals recorded depth |
++| ft09 | 3 | 3 | DUPLICATE | equals recorded depth |
++| r11l | 2 | 2 | DUPLICATE | equals; registry already cites this exact artifact (Exp4862) |
++| ls20 | 2 | 2 | DUPLICATE | equals; registry cites this artifact (Exp4630) |
++| s5i5 | 2 | 2 | DUPLICATE | equals; registry cites this artifact (Exp4873) |
++| cd82 | 2 | 2 | DUPLICATE | equals recorded depth |
++| sp80 | 2 | 2 | DUPLICATE | equals recorded depth |
++| su15 | 2 | 2 | DUPLICATE | equals recorded depth |
++| sk48 | 2 | 2 | DUPLICATE | equals recorded depth |
++| m0r0 | 2 | 2 | DUPLICATE | equals recorded depth |
++| vc33 | 2 | 2 | DUPLICATE | equals recorded depth |
++| g50t | 2 | 2 | DUPLICATE | equals recorded depth |
++| dc22 | 2 | 2 | DUPLICATE | equals recorded depth |
++| sb26 | 2 | 2 | DUPLICATE | equals recorded depth |
++| re86 | 2 | 2 | DUPLICATE | equals recorded depth |
++| bp35 | 2 | 2 | DUPLICATE | equals recorded depth |
++| lf52 | 2 | 2 | DUPLICATE | equals recorded depth |
++| ka59 | 1 | 1 | DUPLICATE | equals recorded depth (`n_deaths:0`, hazard model unfitted — pruner inert) |
++
++**Recommended action (shared):** Keep the standing loop — but treat it as a **reproducibility/regression CI gate**, not as solving progress, and stop letting 22 green re-confirmations read as a productive 7-day window. Do **not** escalate these to CRITICAL: `development_proxy` is contract-permitted, inputs are undeclared-clean, and re-confirming gates legitimately catches drift. Two specifics: (1) lp85 and tu93 reproduce **shallower** than their banked max (L4 vs registry L5, via a different artifact) — the standing-loop `reached_level` is not the banked depth, so don't cite these artifacts as the depth proof. (2) The audit's "recent ARC solve artifacts" feed should distinguish *new-bank* runs from *re-confirmation* runs so a window of pure re-confirmation isn't miscounted as solves.
++
++## Pattern watch — drift toward dev-proxy as a stand-in for the deliverable
++
++- **The real signal: 0 `live_agent_self_discovery` artifacts in 7 days.** The deliverable is the scored `E3AgentPolicy` advancing a *hidden* game from its **own** attempts + runtime RE. Nothing in this window touches that path — it's 100% the offline dev twin replaying human-built adapters. A wall of `development_proxy` "solves" is exactly the failure mode the operator's principle names: the dev proxy looks like continuous progress while the actual deliverable gets **zero** new evidence.
++- **Even the recent genuine +1 banks are dev-proxy.** The registry's fresh banks (r11l L2/Exp4862, s5i5 L2/Exp4873, ls20 L2/Exp4630) all came from hand-registered `GameAdapter` RE, not the live agent. So the *entire* recent solve cadence — re-confirmations and new banks alike — is outer-loop-built-then-replayed. That's allowed, but it is **not** progress on "discovers on its own."
++- **North-star §1 churn risk.** 22 artifacts, 0 movement in `reproducible_total_levels` (69), 0 self-discovery. If the milestone narrative cites these as solving activity, it's miscounting reproducibility maintenance as capability gain.
++- **Mechanically clean, semantically hollow.** Layer-1 lints pass (reachable, no declared outer-loop inputs) — this is precisely the residual the CLAUDE.md rule warns about: a green Layer 1 is **not** proof the live agent self-discovered anything. The provenance stamp here is honest (`development_proxy`, not mislabeled `live_agent_self_discovery`), which is good — the drift is in how the window gets *read*, not in a forged stamp.
++
++**Bottom line:** No anti-pattern violation to quarantine, but the headline finding is a hollow window — surface to the operator that the next milestone needs at least one true `live_agent_self_discovery` artifact and at least one genuinely-new banked level, or the ARC sprint is maintaining a dashboard rather than advancing the deliverable.
+ 
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index e3f059b595..883b4dd41b 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,64 +4,60 @@
+ # docs_audit_report — 2026-06-28
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero pitch and the "47 + 28 = 76" example are genuinely good — I understand what Carnot does in 10 seconds. But then the headline stat bar looks broken (a "Recent progress" card is wedged in among the numbers), the license says two different things, and the Evidence section degenerates into a wall of undefined acronyms with one number ("FoVer") that contradicts itself. A skeptical stranger keeps reading the hero, then bounces at the first sign that the project can't keep its own claims straight.
++The hero is genuinely strong — I'd understand in 10 seconds that Carnot catches LLM reasoning errors and is `pip install`-able, which is more than most landing pages manage. But the moment I scroll, two things make me hesitate to share or trust it: (1) the page **contradicts itself on its own license** (MIT-0 in the badge, Apache 2.0 in the footer) — embarrassing for a project whose whole pitch is "we catch inconsistencies," and (2) the Evidence section is a **wall of 12 insider-acronym cards** (FoVer, SVAMP, CCTU, CRANE, VeriCoT, KV260, HalluGuard v3, PRM-BiasBench) that I'd skim and absorb nothing from. I'd probably keep the GitHub tab open but not read further on the page.
+ 
+ ## TOP 3 PROBLEMS
+-1. **Broken/insider hero stat bar** — a full "Recent progress" result card is rendered inside the numeric `stats-bar` flex row, and the stats themselves ("382 Completed milestones", "4,300 Experiment runs") read like an internal research log, not a product. First impression = unfinished.
+-2. **License contradiction** — hero badge + `<meta>` say "MIT-0", footer says "Apache 2.0 License". A developer evaluating adoption cannot tell what they're agreeing to; instant trust hit.
+-3. **"FoVer" number-soup** — the same term means the headline benchmark (Carnot = 0.9131 AUROC) *and* a "baseline" scoring 0.125 AUC; the page also parades 0.9131 / 0.8947 / 0.9857 ("Repinned from v2") internal-audit drama on the front door. A stranger can't tell which number is the claim.
++1. **License self-contradiction** — hero badge + `<meta>` say "MIT-0"; footer says "Apache 2.0 License." A stranger can't answer "can I use this?" and the irony undercuts the credibility pitch.
++2. **Results section is an undefined-acronym wall** — 12 cards leaning on FoVer / SVAMP / GSM8K / CCTU / CRANE / VeriCoT / EstimationVerifier / HalluGuard v3 / PRM-BiasBench / "publication gate" with zero glosses; a stranger skims none of them.
++3. **The page advertises its own walked-back/too-perfect numbers** — the hero card foregrounds "Repinned from v2 0.9857" (i.e., "we downgraded a headline number"), and results show 0.5→1.0, 60/60, and a 0.90-vs-**0.125** (below-random) baseline. Combined with 5-of-7 blog posts about catching their own fabrications, a skeptic reads "this project keeps producing numbers it has to retract."
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- **Hero `stats-bar`** — overloaded/structurally broken: 4 numeric stats + 1 nested ~50-word `r-card` ("Recent progress") + a stray `</div>`. A result card does not belong inside a flex row of headline numbers — suggested fix: move it out, cap the hero at 3–4 numeric stats.
+-- **Capabilities `bento-grid`** — 7 cards, but 3 of them ("Research operations", "APIs & portable memory", "TTC & PREM") describe how Carnot is *built/integrated*, not what a user can *check*, under a header that promises "What you can check." Suggested cap: 4 user-facing capability cards.
+-- **Results `results-grid`** — 12 cards. Under the 20 hard cap, but several carry no before/after data, just a decorative bar of arbitrary width (e.g. "+3.0 points" → 14.6%-wide bar; "+4.9 points" → 66.7%-wide bar). The bars don't encode the numbers, so a sharp reader reads them as padding.
+-- **Preprint `section-desc`** — ~70 words and dense with internal role-speak ("non-operator environment", "operator-initiated upload"). Trim to the externally-meaningful claim.
++- **Hero "Recent progress" card** (lines 309–313) — ~65 words — exceeds the 60-word r-card cap, AND it spends prime hero real estate on AUROC-versioning methodology ("5-seed dual-condition; architecture-only 0.8947… Repinned from v2 0.9857"). Cut to one sentence + the install line.
++- **Results grid** (lines 517–578) — **12 result cards** — under the 20 hard cap but far past what a stranger skims; the cards are dense and undifferentiated. Recommend trimming to the ~5 strongest, most self-explanatory results.
++- **Nav bar** (lines 264–277) — **12 nav links** + 2 buttons — too many entry points; a stranger doesn't know where to click. Trim to ~5 (Get Started, Results, Paper, GitHub, HuggingFace).
++- **Preprint paragraph** (lines 585–595) — ~90 words — under 100 but dense with internal terms; could lose a third.
+ 
+ ### Internal jargon
+-- **Results cards** — `CCTU`, `FoVer`, `CRANE`, `VeriCoT`, `HalluGuard v3`, `PRM-BiasBench-style`, `EstimationVerifier`, `SVAMP` — none defined. A stranger has no idea what benchmark or method any of these is. "(publication gate)" on the prompt-injection card is internal process language.
+-- **Capabilities** — `VerdictRecord`, `SessionMemory` (code object names on a landing page), `PREM (Process-Reward Energy Model)`, `TTC` with "intrinsic motivation for continuous self-learning" (vague hype).
+-- **Hero stats** — "382 Completed milestones", "4,300 Experiment runs" — "milestone" is an internal unit; signals research diary, not shipping product.
+-- **Recent-progress card** — "Repinned from v2 0.9857", "architecture-only 0.8947", "5-seed dual-condition" — methodology shorthand a stranger can't parse.
+-- **`pp` shorthand** — "+18pp", "+15pp", "0.0pp accuracy delta" — mild, but undefined for non-ML readers.
++- **Hero stat "382 Completed milestones"** (line 306) — "milestones" is an internal dev concept; a stranger has no idea what one is or why 382 matters. Reads like an internal dashboard.
++- **Hero stat + Recent-progress + Results "FoVer"** (lines 308, 312, 550) — appears 3× attached to the *headline* number and is **never defined**. Most-repeated undefined acronym on the page.
++- **Results cards** (lines 518–577) — `SVAMP`, `GSM8K`, `CCTU`, `CRANE`, `VeriCoT`, `EstimationVerifier`, `HalluGuard v3`, `PRM-BiasBench-style`, `KV260 FPGA`, `Ising-guided fuzzing`, `k=5 ensemble`, `TP rate`, `(publication gate)`, `0.0pp` — these are component names, benchmark acronyms, and flag/metric syntax with no plain-English gloss. A stranger doesn't know any of them.
++- **Features "Test-Time Compute (TTC) & PREM" card** (lines 495–501) — "Process-Reward Energy Model (PREM) variance… intrinsic motivation for continuous self-learning" — reads like a research-note abstract; says almost nothing a user can act on. Worst jargon density on the page per word.
++- **Features "Research operations" card** (lines 467–479) — describes the project's *internal autonomous dev loop* ("a planner generates experiment proposals…"), which isn't a capability a *user* checks. Section is labeled "What you can check" — this card doesn't fit.
++- **Preprint** (lines 584, 591–594) — title `(paper-v6)`, plus "non-operator environment" and "operator-initiated upload" — "operator" / "paper-v6" are internal terms.
+ 
+ ### Per-milestone narrative
+-- **Preprint header** — "Carnot position paper (paper-v6)" — `paper-v6` is internal versioning; a stranger reads it as "they've rewritten this six times."
+-- **Recent-progress card** — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — airs internal audit history on the front door; reads like a changelog entry, not landing copy.
++- Largely **absent** — no ".120 archived…" style copy-paste, so the discipline is mostly holding. The closest leakage: **"382 Completed milestones"** (line 306), **"paper-v6"** (line 584), **"HalluGuard v3"** (line 569), **"(publication gate)"** (line 530), and **"Repinned from v2 0.9857"** (line 312) — all internal-process vocabulary surfaced on the public page.
+ 
+ ### Inconsistencies
+-- **License:** "MIT-0" (hero badge + meta description) vs "Apache 2.0 License" (footer copyright). Direct contradiction.
+-- **"FoVer":** headline = Carnot scores 0.9131 AUROC *on FoVer*; Results card = "0.125 FoVer baseline" (below-chance AUC). Same name, opposite meanings; the 0.125 also looks like a typo/damning number without context.
+-- **AUROC vs AUC:** FoVer/Safety cards say "AUROC"; the SVAMP card says "AUC". Mixed metric labels read as sloppiness.
+-- **HumanEval pass-rate lift appears as three different numbers** — "+3.0 points" (Code/Verify-repair), "66% → 84% (+18pp)" (Ising-guided fuzzing, HumanEval-50), "70% → 85% (+15pp)" (CRANE, HumanEval-50) — with no framing telling the stranger why HumanEval improves by 3, 15, or 18 points depending on the card.
+-- **Two ~0.91 AUROCs** (FoVer 0.9131 and prompt-injection 0.91) sit near each other with no distinction.
++- **License: "MIT-0"** (line 7 `<meta>`, line 291 badge) **vs "Apache 2.0 License"** (line 766 footer) — direct contradiction.
++- **Many near-identical AUROC/AUC numbers** with different meanings: 0.9131 (FoVer, hero), 0.8947 (architecture-only), 0.9857 (retracted v2), 0.91 (prompt-injection, line 530), 0.90 AUC (SVAMP, line 550). A stranger can't tell which is "the" number or whether they're the same metric.
++- **Wrong-answer example differs**: one card says committed to **"47 + 28 = 7"** (line 338), the adjacent card and the problem text use **"= 76"** (lines 329, 343). Minor, but sloppy on a page about precision.
++- **Activity signal mismatch**: stats imply intense activity (4,312 runs / 382 milestones) but the **newest blog post is 2026-05-23** (line 683) — ~5 weeks stale as of today.
+ 
+ ### Missing essentials
+-- **License** — present but contradictory (see above); effectively missing a single trustworthy answer.
+-- **Who maintains it** — only "© 2026 Ian Blenke" in the footer; a single-author project with "382 milestones / 4,300 experiments" may raise "is this one person?" doubt that nothing on the page addresses.
+-- **One-sentence "what it does"** — actually present and good (hero). No gap here.
+-- **Install / how to trust numbers** — present (pip line; "every number backed by a checked-in artifact").
++- **License is unanswerable** due to the MIT-0/Apache-2.0 contradiction (see above).
++- **"Why trust the numbers?"** is *attempted* (provenance labels, "checked-in artifact") but undercut by undefined benchmarks and too-perfect figures — net effect is doubt, not confidence.
++- Present and good: one-sentence "what it does" (hero), install command, maintainer (Ian Blenke, footer).
+ 
+ ### Fabrication signals
+-- "k=5 ensemble catches **60/60** attacks" — perfect score, small sample, no credibility anchor.
+-- "GSM8K extraction TP rate: **0.5 → 1.0**" — perfect 1.0, no sample size.
+-- "2.0× speedup, **identical losses**" — suspiciously clean.
+-- "**0.0pp** accuracy delta with 4.4% cost savings" — exactly zero.
+-- Blog card: "639 experiments self-verified … **Zero false positives**" — perfect, on the landing page's skim path.
+-- "**99.3%** of wrong code flagged" — high, but at least anchored to "164-problem HumanEval," so lower concern than the above.
++- **VeriCoT "GSM8K extraction TP rate: 0.5 → 1.0"** (line 560) — a perfect 1.0 with no sample size or FPR.
++- **"k=5 ensemble catches 60/60 attacks"** (line 565) — 100% on n=60, no misses, no false-positive rate.
++- **"EstimationVerifier SVAMP… 0.90 AUC (vs 0.125 FoVer baseline)"** (line 550) — a 0.125 AUC baseline is *below random chance* (0.5); pairing a strong number against a broken-looking baseline reads as cherry-picked or misconfigured.
++- **"99.3% of wrong code flagged"** (line 431) — very high recall stated with no companion false-positive rate, so "99.3%" looks one-sided.
++- **"Repinned from v2 0.9857"** (line 312) — not fabrication, but voluntarily advertising a downgraded headline number invites the question "what else got walked back?"
+ 
+ ## WHAT'S WORKING
+-- The hero is clear and concrete: the "Ask an LLM for 47 + 28 … it might say 76 with total confidence" example communicates the value proposition faster than any amount of EBM theory would.
+-- The "Extract → Check → Repair" three-step explanation is well-paced and mostly jargon-light, with a sensible "no fine-tuning, works with any LLM" hook.
++- **The hero and "How it works" sections are excellent**: the `47 + 28 = 76` example, "second pair of eyes," and Extract→Check→Repair are concrete, jargon-light, and would land for a non-specialist in seconds. The plain-English "Why Energy-Based?" card is a model for how the rest of the page *should* read.
++- **Install path is front-and-center and real** (`pip install carnot-ebm`, copy-pasteable quickstart, Python+Rust tabs) — the single most important conversion element is present and clear.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. Fix the hero `stats-bar`: remove the nested "Recent progress" `r-card` and the stray `</div>`; relocate that content to a normal section. Replace "382 Completed milestones / 4,300 Experiment runs" with product-facing numbers (or drop them).
+-2. Resolve the license contradiction — pick MIT-0 or Apache 2.0 and make the badge, meta tag, and footer agree.
+-3. Disambiguate "FoVer": define it once in plain words, and either reframe or remove the "0.125 FoVer baseline" card so the term doesn't mean two opposite things. Standardize on AUROC vs AUC.
+-4. Strip the audit-history shorthand from the front door ("Repinned from v2 0.9857", "architecture-only 0.8947", "paper-v6", "publication gate") — link to the blog post instead of inlining it.
+-5. Define or remove undefined acronyms in Results/Capabilities (CCTU, CRANE, VeriCoT, HalluGuard v3, PRM, PREM); cut or move the dev-process cards ("Research operations") out of the user-facing "What you can check" grid.
+-6. Add a one-line sample-size/credibility anchor to the perfect-score cards (60/60, 0.5→1.0, 0.0pp, "identical losses"), or move them below the headline rows.
+-7. Make the result-card meter bars encode their actual numbers, or remove the bars where no before/after value is shown.
+-
+-*Advisory only — no edits made to `docs/index.html`. Per Public Documentation Discipline, the operator owns this page.*
+\ No newline at end of file
++1. **Fix the license contradiction now** — pick MIT-0 or Apache-2.0 and make the `<meta>`, hero badge, and footer agree. This is a 1-line, high-credibility fix.
++2. **Gut the Results section to ~5 self-explanatory cards.** Keep the ones a stranger can parse (HumanEval +3.0, typed-constraints +4.9, KV260 FPGA, 2× GPU speedup). Drop or gloss FoVer/SVAMP/CCTU/CRANE/VeriCoT/HalluGuard/PRM-BiasBench. Define "FoVer" the first time it appears.
++3. **Remove the walked-back/too-perfect numbers from the front page.** Move "Repinned from 0.9857," the 0.125 baseline, the 0.5→1.0, and the 60/60 into the report/blog where they can be contextualized. Replace the hero "Recent progress" card with a single clean sentence.
++4. **Replace the "382 Completed milestones" stat** with something a stranger values (e.g., "supports Claude/GPT/Qwen/Gemma", "Python · CLI · MCP · REST", or a GitHub-stars/downloads figure).
++5. **Rewrite or cut the "TTC & PREM" and "Research operations" cards** — they're insider research notes, not user capabilities. The section is titled "What you can check"; keep only things a user checks.
++6. **Trim the nav to ~5 links** and consider whether 5-of-7 "we caught ourselves cheating" blog teasers belong on the front page (great for transparency, risky as a stranger's first impression — maybe surface 2–3, lead with the Verifier Accuracy Paradox / theory pieces).
++
++*(Advisory only — no edits made to `docs/index.html`, which is operator-curated.)*
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index 6515ff1438..81127f5334 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -24914,3 +24914,20 @@ Reliable-channel source set for `success_sota_ingestion_v453_frontier_mapped`:
+ - arXiv:2605.18871 - Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning - https://arxiv.org/abs/2605.18871 - HTTP 200
+ - arXiv:2606.04579 - SCI-PRM: A Tool Aware Process Reward Model for Scientific Reasoning Verification - https://arxiv.org/abs/2606.04579 - HTTP 200
+ <!-- EXP4911-V453-FRONTIER-REFERENCES-END -->
++
++<!-- V454-PLANNER-REFERENCES-START -->
++## V454 planner source set (2026-06-28) — post-ARC-closure: action-efficiency + post-sprint verifier-moat
++
++`.453` reached **B1-trusted ARC closure** (the live first-win wall is `WALL_IS_HIDDEN_STATE` —
++representation-invariant by construction; the hidden variable is winning-prefix-order state). The
++deliverable is LOCKED to the ~0.05 first-win agent + the publishable FoVer paper. `.454` (2 days
++before the 2026-06-30 sprint deadline) does NOT propose representation #5. The remaining open ARC
++value is **action efficiency** — the ARC-AGI-3 leaderboard scores `(human_actions/agent_actions)^2`,
++so a fewer-actions improvement is squared in the score (research-studying.md). The `.454` efficiency
++headline is the operator-flagged MATM similarity-keyed partial-trajectory retrieval; the two papers
++below corroborate trajectory-retrieval as the SOTA action-efficiency lever:
++
++- arXiv:2603.10600 - Trajectory-Informed Memory Generation for Self-Improving Agent Systems - https://arxiv.org/abs/2603.10600 - corroborates the MATM within-game partial-trajectory retrieval lever (extract actionable learnings from a game's own rollouts; retrieve to ground future action prediction). Verified via WebSearch 2026-06-28.
++- arXiv:2510.10304 - Sample-Efficient Online Learning in LM Agents via Hindsight Trajectory Rewriting - https://arxiv.org/abs/2510.10304 - sample-efficient exploration via relabeled past trajectories; adjacent to the self-play/FR-11 learned-verifier loop. Verified via WebSearch 2026-06-28.
++- arXiv:2605.18871 - Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning - https://arxiv.org/abs/2605.18871 - the POST-SPRINT pivot (already filed by exp4911). Decomposed energy = learned quality scorer (LoRA ensemble on one frozen encoder, 3% params) + deterministic constraint penalties + ensemble-std epistemic uncertainty -> two-pass regenerate/abstain. A 149M verifier orchestrating 7-26B open generators beats single-shot Qwen-72B on GSM8K/MuSR/TravelPlanner/TACO/Knights&Knaves. This IS the Carnot verifier thesis and the concrete method the `.454` D scaffold builds toward.
++<!-- V454-PLANNER-REFERENCES-END -->
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..5c0c881a9e
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,935 @@
++# Pre-staged .454 roadmap (Pre-Staged Roadmap Convention).
++# Planner: outer-loop Claude Opus 4.8, 2026-06-28.
++# STRATEGIC READ (.453 -> .454): .453 reached B1-TRUSTED ARC CLOSURE. A1 (exp4914) causal-state-abstraction
++# wall diagnostic (arXiv:2401.12497) concluded WALL_IS_HIDDEN_STATE -- the live first-win wall is
++# representation-invariant by construction (hidden variable = winning-prefix-order state); the solved-game
++# positive control classified observable (non-degenerate). B1 (exp4918) confirmed a1_diagnostic_trustworthy
++# (all six gates). Capstone (exp4923) = complete_capstone_v453_wall_is_hidden_state_arc_closure. The
++# multi-milestone world-model fork (.431->.453) is CLOSED. THE DELIVERABLE LOCKS to the ~0.05 first-win agent
++# + the publishable FoVer paper. .453 also banked cn04 L2->L3 (reproducible_total_levels 68->69), refreshed
++# bp35 self-play, produced a genuine-live NOT-FLAGGED held-out PARTIAL (21/25 games -- the stamping fix
++# resolved the 3-milestone recurring flag; 4 games remain), and the submission package is READY (15.146GB).
++# .454 (2 days before the 6/30 deadline) does NOT propose representation #5 or reopen any nulled lever. It
++# EXECUTES THE LOCKED DELIVERABLE: majority-ARC = SUBMISSION-SCORE MAXIMIZATION on the two open scored axes --
++# DEEPENING (more reproduced levels -> more scored games; A1 sp80 + A2 su15) and ACTION EFFICIENCY (the
++# leaderboard squares human/agent action ratio -> the operator-flagged MATM similarity-keyed retrieval; D) --
++# plus A3 self-play (FR-11), A4 held-out RESUME 21/25->25/25 (CLEAN 6/30 go/no-go), B2 FINAL package harden,
++# 3 reserved infra (B1 audit, B2 package, B3 stamping), 1 hardware (C KV260 SSH-only), 1 SOTA/efficiency (D).
++# Do NOT re-propose: representation #5, energy-as-ARC-lever (CONCLUDED), macro/horizon-collapse, click-heatmap
++# generator, trust-gate flip, TTA-on-code-engine, stronger local code inducers, decision-need targets,
++# action-prefix latents, coverage/exploration/selection/perception-from-grid (all nulled/retired).
++milestone: 2026.06.454
++planned_by: 'outer-loop (Claude Opus 4.8 planner, 2026-06-28). .453 reached B1-trusted ARC CLOSURE
++  (WALL_IS_HIDDEN_STATE -- the live first-win wall is representation-invariant by construction; hidden
++  variable = winning-prefix-order state). The world-model fork (.431->.453) is closed; the deliverable LOCKS
++  to the ~0.05 first-win agent + the publishable FoVer paper. .454 (2 days before the 6/30 sprint deadline)
++  does NOT propose representation #5. It executes the locked deliverable: majority-ARC = submission-score
++  maximization on the two open scored axes (DEEPENING for more scored games + ACTION EFFICIENCY, which the
++  leaderboard squares) + A3 self-play (FR-11) + A4 held-out resume-to-finish for a CLEAN 6/30 go/no-go + B2
++  FINAL package harden, with 3 reserved infra + 1 hardware + 1 SOTA/efficiency. Post-6/30 pivot =
++  distributional-energy-verifier / verifier-moat (arXiv:2605.18871), readied (not started) by D.'
++milestone_title: 'POST-ARC-CLOSURE SUBMISSION MAXIMIZATION (final pre-deadline milestone; no representation
++  #5). .453 reached B1-trusted ARC closure (WALL_IS_HIDDEN_STATE -- the live first-win wall is
++  representation-invariant by construction) and banked cn04 (reproducible_total_levels 68->69). The deliverable
++  is LOCKED: the ~0.05 first-win agent + the publishable FoVer paper. .454 executes that locked deliverable for
++  the 6/30 deadline: majority-ARC = DEEPENING (A1 sp80 L2->L3 + A2 su15 L2->L3 -> more scored games) + ACTION
++  EFFICIENCY (D, the operator-flagged MATM similarity-keyed retrieval -- the leaderboard squares the
++  human/agent action ratio so a fewer-actions win is squared in the score) + A3 self-play (FR-11) + A4 held-out
++  RESUME 21/25->25/25 (CLEAN 6/30 go/no-go) + B2 FINAL submission-package harden. 3 reserved infra (B1 audit,
++  B2 package, B3 stamping), 1 hardware (C KV260 SSH-only), 1 SOTA/efficiency (D). Post-6/30 pivot =
++  distributional-energy-verifier verifier-moat (arXiv:2605.18871).'
++milestone_doc: openspec/change-proposals/research-roadmap-v454.md
++theme: '.453 closed the ARC first-win question (B1-trusted WALL_IS_HIDDEN_STATE, representation-invariant by
++  construction). .454 does NOT chase the closed wall and does NOT propose representation #5. It MAXIMIZES THE
++  LOCKED 6/30 SUBMISSION on the two open scored axes: DEEPENING already-banked games (more reproduced levels ->
++  more games the agent can score) and ACTION EFFICIENCY (the ARC-AGI-3 leaderboard scores
++  (human_actions/agent_actions)^2, so a fewer-actions improvement is squared). A1/A2 are two deepening banks
++  (rotated, reproduction-gated, live_agent_self_discovery); A3 is the FR-11 self-play learned-verifier loop; A4
++  RESUMES the held-out readiness to a CLEAN full-25 go/no-go; D is the operator-flagged MATM similarity-keyed
++  partial-trajectory retrieval (verifier-routed, oracle-distinct). Offline induction (A1/A2/A3/A4/D) runs on the
++  conductor''s dedicated GPU-0 CUDA generator (2026-06-27 directive), NOT iGPU-pinned. The LIVE submission stack
++  (B2) stays FROZEN to Qwen3.5-9B-MTP on the iGPU. D also DEV-scaffolds the post-6/30 distributional-energy-
++  verifier pivot (arXiv:2605.18871). Do NOT re-propose any nulled/retired lever (energy, macro, click-heatmap,
++  trust-gate, TTA-code-engine, local code inducers, decision-need targets, action-prefix latents,
++  coverage/exploration/selection/perception-from-grid).'
++sprint_forcing_function: 'ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1 deepen +
++  A2 deepen + A3 self-play + A4 held-out go/no-go + D action-efficiency + B2 deadline package); >=1 level-up
++  attempt (Level-Up Attempt Guarantee -- A1 sp80 + A2 su15, rotated OFF .453 cn04 / .452 m0r0 / .451 dc22 /
++  .450 g50t / .449 s5i5); self-play EVERY milestone (A3, trains + checkpoints the learned verifier = continuous
++  self-learning / FR-11, rotated OFF .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86); 3 reserved
++  infra (B1 bank+efficiency adversarial audit, B2 final submission harden, B3 runtime-stamping backfill +
++  wiring readiness); 1 hardware continuity (C KV260, SSH-only, always-write-blocked-artifact); 1 SOTA/efficiency
++  (D MATM similarity-keyed retrieval -- the squared-scored action-efficiency lever -- + a DEV scaffold of the
++  post-6/30 distributional-energy-verifier pivot). Live SUBMISSION stack FROZEN to Qwen3.5-9B-MTP on the iGPU;
++  OFFLINE induction (A1/A2/A3/A4/D) runs on the conductor''s dedicated GPU-0 CUDA generator per the 2026-06-27
++  operator GPU-allocation directive.'
++tasks:
++- id: exp4924-phase0
++  title: PHASE 0 (TRANSITION) -- archive .453 -> activate .454; assert YAML parses + pre-test gate green;
++    RESOLVE any poison pre-test. RECORD the .453 close-state (A1 exp4914 WALL_IS_HIDDEN_STATE B1-trusted ARC
++    closure; capstone exp4923 = the live first-win wall is representation-invariant by construction; A2 exp4915
++    banked cn04 L2->L3 -> reproducible_total_levels 68->69; A3 exp4916 bp35 checkpoint refreshed; A4 exp4917
++    genuine-live NOT-FLAGGED partial 21/25 games -- 4 remain; B2 exp4919 package ready 15.146GB; deliverable
++    LOCKED = ~0.05 agent + FoVer paper).
++  priority: critical
++  track: transition
++  max_turns: 40
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4924_archive_453_activate_454.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation /
++    reserved-slot task -- false-positive scope-match vs prior same-class transition tasks; structurally never a
++    doomed rerun. (archive-v453-activate-v454).'
++  prompt: |
++    CONTEXT ({date}). Milestone 2026.06.453 completed. Mechanically transition to 2026.06.454,
++    resolve any poison pre-test, and RECORD the true .453 close-state. Routine mechanical task
++    (codex). The conductor may have already archived (no-op) -- you MUST still WRITE the deliverable.
++
++    KEY .453 CLOSE-STATE to record:
++      - A1 (exp4914 causal-state-abstraction wall diagnostic, arXiv:2401.12497, live 60.0s) reached CLOSURE:
++        honest_verdict complete_causal_abstraction_hidden_state_representation_invariant_closure ->
++        fork_verdict WALL_IS_HIDDEN_STATE (the live first-win wall is representation-invariant by construction;
++        the minimal causal abstraction needs a HIDDEN variable = winning-prefix-order state the interface
++        cannot expose; the solved-game positive control classified OBSERVABLE = non-degenerate).
++      - B1 (exp4918) confirmed a1_diagnostic_trustworthy=true (all six gates: real transitions, not-a-value-
++        table, observable claims verified readable, positive control observable, oracle-distinct/planner-blind,
++        numbers-match-fork).
++      - Capstone (exp4923) = complete_capstone_v453_wall_is_hidden_state_arc_closure. The world-model fork
++        (.431->.453) is CLOSED. Do NOT queue representation #5.
++      - A2 (exp4915) BANKED: cn04 L2->L3, live_agent_self_discovery, offline_reproduced ->
++        reproducible_total_levels 68->69 (first bank in 4 milestones).
++      - A3 (exp4916) PASS: bp35 self-play checkpoint refreshed (models/arc_verifier_bp35.json).
++      - A4 (exp4917) genuine-live PARTIAL: complete: heldout_first_win_soft_budget_stop_partial_21_of_25_games
++        (duration 3627s, NOT flagged_adversarial -- the stamping fix resolved the 3-milestone recurring flag);
++        4 games remain -> .454 A4 RESUMES to finish 25/25.
++      - B2 (exp4919) package READY (15.146GB < 16GB), operator-only, submits=false.
++      - C (exp4921) KV260 REACHABLE, graduated terminal. D (exp4922) distributional-energy-verifier scaffold built.
++      - Deliverable LOCKED = the ~0.05 first-win agent + the publishable FoVer paper. Energy-as-ARC-lever
++        CONCLUDED. Macro/click-heatmap/trust-gate/TTA-code/local-code-inducers/decision-need/action-prefix/
++        coverage/exploration/selection/perception-from-grid all RETIRED. Do NOT re-propose them or rep #5.
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/ops/arc_solve_registry.yaml (the reproducible_total_levels source of truth = 69)
++      - {project_root}/research-roadmap-next.yaml (this file; must yaml.safe_load)
++      - {project_root}/results/operational_retro_2026_06_453.json (the .453 conductor retro)
++      - {project_root}/results/experiment_4923_capstone_v453.json (the closure capstone)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS (BEFORE any other step):
++         a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('ok')"` exits 0.
++         b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
++         If either fails -> honest_verdict blocked_<resource>, write the deliverable, EXIT.
++      1. Archive .453 -> activate .454 (no-op if already done). Record the close-state flags below.
++      2. Run the pre-test gate; if a poison test fails against this script's own honest verdict,
++         quarantine it to unblock (note which test). WRITE the deliverable.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; clean transition is complete_453_archived_454_activated_<state>."
++      inference_substrate:
++        principle: "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
++      arc_first_win_wall_closed_hidden_state:
++        principle: "true -- .453 reached B1-trusted WALL_IS_HIDDEN_STATE closure; .454 executes the locked deliverable, NOT representation #5."
++      deliverable_locked_agent_plus_fover_paper:
++        principle: "true -- the deliverable is the ~0.05 first-win agent + the publishable FoVer paper; do NOT chase the closed first-win wall."
++      v454_is_submission_maximization_not_new_fork:
++        principle: "true -- .454 maximizes the 6/30 submission via deepening + action-efficiency; it does NOT open a new world-model fork."
++      reproducible_total_levels:
++        principle: "the authoritative ARC progress metric carried from the registry (69 after cn04)."
++
++    Run: `.venv/bin/python python/carnot/experiment_4924_archive_453_activate_454.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4925-a1
++  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; LEVEL-BANK -- the majority-ARC level-growth headline post-closure)
++    -- DEEPEN a shallow L2 game by one level (prefer sp80 L2->L3; the strongest grounded shallow-deepen
++    candidate per the .453 A2 note, alongside su15/cd82). Rotate OFF .453 cn04 / .452 m0r0 / .451 dc22 / .450
++    g50t / .449 s5i5; AVOID ka59/wa30 (hidden-state-bound) and any recorded dead-end. Bank >=1 NEW reproducible
++    level; offline_reproduced gated; solve_provenance=live_agent_self_discovery. Target MUST differ from A2/A3.'
++  priority: critical
++  track: arc-north-star
++  max_turns: 160
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4925_levelup_attempt.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): the post-closure majority-ARC is
++    level-GROWTH (deepening), the productive ARC value now that the first-win wall is B1-trusted closed. Level
++    bank on a grounded shallow-deepen target; false-positive scope-match vs prior deepen/level-up tasks;
++    structurally never a doomed rerun. Offline induction runs on the conductor''s GPU-0 generator (NOT
++    iGPU-pinned). Rotate off cn04/m0r0/dc22/g50t/s5i5.'
++  prompt: |
++    CONTEXT ({date}). PRIMARY ARC north-star task. .453 reached B1-trusted ARC CLOSURE (the live first-win wall
++    is representation-invariant by construction -- WALL_IS_HIDDEN_STATE). Do NOT chase first-contact and do NOT
++    propose representation #5. The productive majority-ARC value now is DEEPENING already-banked games: each new
++    reproduced level is a game the live agent can score on the 6/30 submission. Bank +1 level on a grounded
++    shallow-deepen target.
++
++    TARGET SELECTION: prefer sp80 L2->L3 (the strongest grounded shallow-deepen candidate per the .453 A2
++    note); su15 L2->L3 and cd82 L2->L3 are the alternates. Confirm via recommend_approach + the registry's
++    dead_ends. Rotate OFF .453 cn04 (just banked L3), .452 m0r0, .451 dc22, .450 g50t, .449 s5i5. AVOID
++    ka59/wa30 (registry rows hidden-state-bound) and any recorded dead-end. Pick a target that DIFFERS from
++    A2's (su15) and A3's self-play target so the ARC lanes do not collide. If the chosen target has no grounded
++    next-level delta, record the rotation dead-end honestly (no-bank) -- do NOT fabricate a bank.
++
++    THE GPU FIX (2026-06-27 GPU-allocation directive): if induction runs, accept the conductor's GPU-0 CUDA
++    llama-server (CUDA_VISIBLE_DEVICES=0, CARNOT_ARC_GENERATOR_CUDA_GPU=0, card >=13GB free) OR the iGPU HIP
++    server; do NOT iGPU-pin or hard-reject CUDA_VISIBLE_DEVICES. Most deepens are offline search + reproduction
++    gate (no LLM) -- record the honest substrate.
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/ops/arc_solve_registry.yaml (levels_reproduced, dead_ends; sp80/su15/cd82 are L2)
++      - {project_root}/scripts/arc_loop_solve.py (the standing solve loop)
++      - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach)
++      - {project_root}/python/carnot/agentic/arc_game_adapters.py (register/extend a GameAdapter for the L2->L3 DELTA if needed)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: `arc_solver_kit.offline_arcade()` exits 0; the generator (GPU-0 CUDA or iGPU; do NOT
++         iGPU-pin) is healthy IF induction is needed; a missing env -> honest_verdict
++         blocked_<game>_offline_env_missing, write deliverable, EXIT.
++      1. Read the registry; pick the rotated grounded target; recommend_approach(game). Registry-precheck: do
++         NOT re-solve an already-reproduced level (duplicate = adversarial_verify CRITICAL).
++      2. `.venv/bin/python scripts/arc_loop_solve.py --game <target>`; extend/register the GameAdapter for the
++         L2->L3 DELTA if needed (reverse-engineer only the delta; reuse arc_solver_kit + general_gotchas).
++      3. Reproduction gate (arc_solver_kit.reproduce); update ops/arc_solve_registry.yaml; record DEAD-ENDS.
++         WRITE results/experiment_4925_levelup_attempt.json.
++
++    FALSIFIABLE GATE: >=1 NEW level offline-reproduced (offline_reproduced=true, reproduced_levels>=prior+1) for
++    a PASS; solve_provenance=live_agent_self_discovery. A no-bank records the rotation dead-end honestly.
++    retire_if_same_verdict: true -- rotate again next milestone if no bank.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
++      solve_provenance:
++        principle: "live_agent_self_discovery -- the agent advanced via its own attempts/runtime RE; NOT outer_loop_re (CRITICAL) and NOT a re-solve of an already-banked level (duplicate CRITICAL)."
++      target_game:
++        principle: "the rotated grounded deepen target (differs from .453 cn04 / .452 m0r0 / .451 dc22 / .450 g50t / .449 s5i5 AND from A2's su15 AND from A3's target)."
++      offline_reproduced:
++        principle: "only reproduced levels count toward reproducible_total_levels."
++      reproduced_levels:
++        principle: "the new reproducible depth; the monotonic ARC progress metric."
++      new_levels_banked:
++        principle: ">=1 for a PASS; 0 records the rotation dead-end for the next planner."
++      live_path_reachable:
++        principle: "true -- the deepen runs through arc_loop_solve + a live GameAdapter (arc_orphan_solver_lint passes), not a parallel solver."
++      verifier_is_oracle:
++        principle: "the reproduction gate is the executable oracle (circularity discipline)."
++      inference_substrate:
++        principle: "live_llm_inference if induction runs (60s floor); else the honest offline arcade substrate."
++      preconditions_checked:
++        principle: "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
++      random_seed:
++        principle: "determinism for the offline search."
++      reproducibility_checksum:
++        principle: "content hash of (game, plan, claimed level) so a replication catches drift."
++
++    Run: `.venv/bin/python python/carnot/experiment_4925_levelup_attempt.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4926-a2
++  title: 'PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE -- the >=1 banking-attempt floor) -- a SECOND
++    deepen on a DIFFERENT grounded shallow-deepen target (prefer su15 L2->L3; cd82 L2->L3 alternate). Rotate OFF
++    .453 cn04 / .452 m0r0 / .451 dc22 / .450 g50t / .449 s5i5 AND off A1''s sp80 AND A3''s target; AVOID
++    ka59/wa30. Bank >=1 NEW reproducible level; offline_reproduced gated. Two banks maximize monotonic growth
++    before the deadline.'
++  priority: critical
++  track: arc-north-star
++  max_turns: 160
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4926_levelup_attempt.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): Level-Up Attempt Guarantee reserved
++    slot (the >=1 banking-attempt floor per arc_levelup_guarantee_lint) -- false-positive scope-match vs prior
++    level-up tasks; structurally never a doomed rerun. Rotate off cn04/m0r0/dc22/g50t/s5i5 and off A1''s target.'
++  prompt: |
++    CONTEXT ({date}). Level-Up Attempt Guarantee: this is the >=1-banking-attempt floor (the milestone already
++    has A1 as a deepen, but a SECOND attempt on a different game hedges the grounded-delta uncertainty and
++    maximizes monotonic reproducible_total_levels growth before the 6/30 deadline). Prefer su15 L2->L3; cd82
++    L2->L3 is the alternate. Confirm via recommend_approach + dead_ends. Rotate OFF .453 cn04 / .452 m0r0 / .451
++    dc22 / .450 g50t / .449 s5i5, OFF A1's sp80, and OFF A3's self-play target. AVOID ka59/wa30 (hidden-state-
++    bound) and any recorded dead-end. (All 25 public games are at L1+, so this is a deepening attempt.)
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/ops/arc_solve_registry.yaml (levels_reproduced, dead_ends, recommend_approach inputs)
++      - {project_root}/scripts/arc_loop_solve.py (the standing solve loop)
++      - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach)
++      - {project_root}/python/carnot/agentic/arc_game_adapters.py (register a GameAdapter for the DELTA if needed)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: `arc_solver_kit.offline_arcade()` exits 0; the generator (GPU-0 CUDA or iGPU; do NOT
++         iGPU-pin) is healthy IF induction is needed; a missing env -> honest_verdict
++         blocked_<game>_offline_env_missing, write deliverable, EXIT.
++      1. Read the registry; pick the ROTATED target (differs from A1/A3); recommend_approach(game).
++         Registry-precheck: do NOT re-solve an already-reproduced level (duplicate = adversarial_verify CRITICAL).
++      2. `.venv/bin/python scripts/arc_loop_solve.py --game <target>`; register a GameAdapter for the DELTA if needed.
++      3. Reproduction gate (arc_solver_kit.reproduce); update ops/arc_solve_registry.yaml; record DEAD-ENDS.
++
++    FALSIFIABLE GATE: >=1 NEW level offline-reproduced (offline_reproduced=true, reproduced_levels>=prior+1),
++    solve_provenance=live_agent_self_discovery. retire_if_same_verdict: true -- rotate again next milestone if no bank.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
++      solve_provenance:
++        principle: "live_agent_self_discovery -- NOT outer_loop_re (CRITICAL); NOT a duplicate re-solve (CRITICAL)."
++      target_game:
++        principle: "the rotated target (must differ from A1's sp80, A3's target, and the recent level-up rotation)."
++      offline_reproduced:
++        principle: "only reproduced levels count toward reproducible_total_levels."
++      reproduced_levels:
++        principle: "the new reproducible depth; the monotonic ARC progress metric."
++      new_levels_banked:
++        principle: ">=1 for a PASS; 0 records the rotation dead-end for the next planner."
++      verifier_is_oracle:
++        principle: "the reproduction gate is the executable oracle (circularity discipline)."
++      live_path_reachable:
++        principle: "true -- arc_loop_solve + a live GameAdapter (arc_orphan_solver_lint passes)."
++      inference_substrate:
++        principle: "live_llm_inference if induction runs (60s floor); else the honest offline arcade substrate."
++      preconditions_checked:
++        principle: "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
++
++    Run: `.venv/bin/python python/carnot/experiment_4926_levelup_attempt.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4927-a3
++  title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing
++    arc_loop_solve loop on a banked game with an existing checkpoint, ROTATED OFF .453 bp35 / .452 vc33 / .451
++    sk48 / .450 ls20 / .449 re86 (pick another banked game with a models/arc_verifier_<game>.json checkpoint --
++    e.g. cd82 / lf52 / sb26 / lp85 / ar25, DIFFERENT from A1''s sp80 and A2''s su15): warm-started verifier-
++    routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
++  priority: high
++  track: arc-north-star
++  max_turns: 140
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4927_self_play_verifier_checkpoint.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): self-play-every-milestone reserved
++    slot (continuous self-learning / FR-11) -- false-positive scope-match vs prior self-play tasks; structurally
++    never a doomed rerun. Rotate off bp35/vc33/sk48/ls20/re86.'
++  prompt: |
++    CONTEXT ({date}). Self-play EVERY milestone -- this is the CONTINUOUS SELF-LEARNING experiment
++    (research-program.md "Continuous Self-Learning" Tier 3; FR-11 relay): the learned verifier improves across
++    runs by training on the self-play traces and checkpointing. Run arc_loop_solve on a banked game (warm-
++    started from the saved checkpoint) to advance/confirm a level AND refresh the checkpoint. ROTATE OFF .453
++    bp35, .452 vc33, .451 sk48, .450 ls20, .449 re86 -- pick another banked game that HAS an existing
++    models/arc_verifier_<game>.json checkpoint to warm-start (e.g. cd82, lf52, sb26, lp85, ar25; the requirement
++    is warm-start + train + checkpoint). Pick a target that DIFFERS from A1's sp80 and A2's su15.
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/scripts/arc_loop_solve.py (warm-start + train + checkpoint)
++      - {project_root}/ops/arc_solve_registry.yaml (banked targets + learned_verifier_checkpoint paths)
++      - {project_root}/models/ (arc_verifier_<game>.json checkpoints -- pick one NOT bp35/vc33/sk48/ls20/re86)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: `arc_solver_kit.offline_arcade()` exits 0; the target has a banked level + an
++         existing checkpoint to warm-start. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
++      1. `.venv/bin/python scripts/arc_loop_solve.py --game <banked-target>` (or --auto): warm-start,
++         verifier-routed search + reproduction gate, then TRAIN + CHECKPOINT the learned verifier.
++      2. Confirm the checkpoint mtime advanced (the self-improvement signal).
++
++    FALSIFIABLE GATE: checkpoint refreshed (mtime advances) AND reproduction gate passes on >=1 level.
++    A failed run records the residual; does NOT fabricate.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
++      verifier_checkpoint_refreshed:
++        principle: "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
++      checkpoint_path:
++        principle: "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
++      offline_reproduced:
++        principle: "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
++      reproduced_levels:
++        principle: "the depth confirmed this run."
++      target_game:
++        principle: "the rotated self-play target (differs from .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86 AND from A1/A2)."
++      inference_substrate:
++        principle: "live_llm_inference (60s floor)."
++      solve_provenance:
++        principle: "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
++      preconditions_checked:
++        principle: "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
++
++    Run: `.venv/bin/python scripts/arc_loop_solve.py --game <banked-target>`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4928-a4
++  title: 'PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERABLE-FIRST, max_turns<=50) -- RESUME the held-out
++    first-win readiness from the .453 21/25-game checkpoint to FINISH the last ~4 games -> a CLEAN full-25-game
++    rate + CI for the operator''s 6/30 go/no-go. .453 already FIXED the 3-milestone recurring flagged_adversarial
++    (the genuine-live partial was NOT flagged); .454 produces the COMPLETE countable number, carrying full
++    methodology (model_specs + random_seed + inference_substrate + null markers) so the full-25 null stays
++    countable (NOT flagged).'
++  priority: high
++  track: arc-north-star
++  max_turns: 50
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4928_heldout_first_win_readiness.json
++  operator_override: '2026-06-27 GPU directive + 2026-06-25 A4 wall-clock directive + 2026-06-19 ARC sprint
++    (standing): held-out first-win readiness lane on the conductor''s GPU-0 generator (offline measurement, NOT
++    iGPU-pinned); DELIVERABLE-FIRST + max_turns<=50; RESUMES the .453 genuine-live NOT-flagged partial (21/25)
++    to a CLEAN full-25 number. False-positive scope-match vs prior readiness tasks. FINAL pre-deadline (6/30)
++    go/no-go signal.'
++  prompt: |
++    CONTEXT ({date}). Measure the live E3 agent's held-out first-win rate on the experiment_4605 variant
++    harness -- the FINAL pre-deadline generalization signal feeding the operator's 6/30 go/no-go. .453 (exp4917)
++    ran a genuine-live PARTIAL (21/25 games, 84 attempts, 3627s soft-budget stop) that was NOT flagged
++    (the .452->.453 stamping fix resolved the 3-milestone recurring flagged_adversarial). .454 A4 RESUMES from
++    that 21/25 checkpoint to finish the remaining ~4 games and produce the CLEAN full-25-game rate + CI -- the
++    countable number the operator needs for the deadline decision.
++
++    MANDATORY SCOPE (DELIVERABLE-FIRST):
++      - STEP 1 MUST run the held-out readiness driver LIVE (resuming from the .453 21/25 checkpoint) and WRITE
++        results/experiment_4928_heldout_first_win_readiness.json BEFORE any spec/test authoring, so a rescuable
++        artifact always exists.
++      - CARRY FULL METHODOLOGY in the artifact (the stamps that keep the null COUNTABLE, not flagged):
++        model_specs (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) + random_seed +
++        inference_substrate=live_llm_inference + duration_s + (for a flat null) null_delta_methodology_note (why
++        the ~0.04-agreement is genuine no-improvement, not a TAUTOLOGY bug) + positive_control_passed=true.
++      - REUSE the EXISTING experiment_4729 tests. Do NOT author a new capstone-scale test suite.
++      - The driver already checkpoints the attempt ledger per game + honors a soft ELAPSED budget (~3500s),
++        emits a schema-valid partial on a budget stop, and resumes; the full-25 SCORE is byte-identical to an
++        uncapped run. If 25/25 does not fit one budget, emit the partial and record games_remaining.
++      - After writing, run adversarial_verify / summarize_artifact on the fresh artifact; record flag_resolved=true
++        if NOT flagged (expected, given the .453 stamps); if flagged, record the exact triggering rule + the
++        minimal documented source fix (prefer the stamp fix over weakening the gate; adversarial_verify.py /
++        summarize_artifact.py are NOT research_conductor.py, so editing them is allowed).
++
++    THE GPU FIX: run on the conductor's GPU-0 generator (accept the GPU-0 CUDA server, do NOT iGPU-pin; offline
++    measurement uses GPU 0/1 per the 2026-06-27 directive).
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/python/carnot/experiment_4729_held_out_first_win_readiness.py (the checkpoint/resume readiness driver -- resume from the .453 ledger)
++      - {project_root}/results/experiment_4917_heldout_first_win_readiness.json + .partial.json (the .453 21/25 checkpoint to resume from)
++      - {project_root}/scripts/adversarial_verify.py + {project_root}/scripts/summarize_artifact.py (the live-recheck rules)
++      - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy -- the scored live agent)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: arcade + variant harness present; the .453 21/25 ledger present to resume from; the
++         generator healthy (GPU-0 CUDA or iGPU; do NOT block on CUDA_VISIBLE_DEVICES). A missing resource ->
++         honest_verdict blocked_<resource>, write deliverable, EXIT.
++      1. DELIVERABLE-FIRST: RESUME the readiness driver LIVE (live_agent_ran=true) from the 21/25 ledger,
++         finish the remaining games, and WRITE the artifact carrying FULL methodology. On a soft-budget stop emit
++         the partial. Do this BEFORE any test/spec work.
++      2. Run adversarial_verify/summarize_artifact on the fresh artifact; record flag_resolved + (if still flagged)
++         the exact triggering rule + the minimal documented fix.
++      3. Report the full-25 rate + CI vs the 0.04 baseline and vs prior-best. For a flat null add null_delta_methodology_note.
++
++    FALSIFIABLE GATE: a non-fabricated full-25-game (or honest partial with games_remaining) rate with CI from a
++    LIVE resume (live_agent_ran=true) carrying model_specs + random_seed + the null markers, NOT flagged
++    true_live_recheck=critical (flag_resolved=true); OR an exact-rule diagnosis + minimal documented source fix
++    if it still flags.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; a clean countable null is complete_heldout_first_win_<rate>_full25_live_flag_resolved; a lift is success_heldout_first_win_<rate>."
++      heldout_first_win_rate:
++        principle: "the live held-out first-win rate (full 25 games if complete) -- the 6/30 go/no-go number."
++      heldout_first_win_ci:
++        principle: "bootstrap CI of the rate; a CI-lower-0 result is an honest null, not a failure."
++      games_evaluated:
++        principle: "the count of games scored (target 25); a partial records games_remaining for the next resume."
++      live_agent_ran:
++        principle: "true -- a LIVE resume (not resume-from-cache-only), the precondition for a countable readiness number."
++      flag_resolved:
++        principle: "true iff the fresh fully-stamped artifact is NOT flagged true_live_recheck=critical -- the recurring-flag fix holds at full-25."
++      null_delta_methodology_note:
++        principle: "for a flat null, why the ~0.04-agreement is genuine no-improvement, not a TAUTOLOGY/fabrication (what the live-recheck needs)."
++      positive_control_passed:
++        principle: "true -- a non-degenerate positive control distinguishes a real null from a broken harness."
++      model_specs:
++        principle: "Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server -- the methodology stamp whose absence caused the historical flag."
++      random_seed:
++        principle: "determinism + part of the methodology stamp the live-recheck requires."
++      generator_backend:
++        principle: "gpu0_cuda | igpu_hip -- proves the GPU fix and a genuine live run."
++      inference_substrate:
++        principle: "live_llm_inference (60s floor)."
++      solve_provenance:
++        principle: "development_proxy -- a readiness measurement on the variant harness, NOT a registry bank."
++      preconditions_checked:
++        principle: "records arcade/variant-harness/.453-ledger/generator checks; a missing resource emits blocked_."
++
++    Run: `.venv/bin/python python/carnot/experiment_4928_held_out_first_win_readiness.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4929-b1
++  title: 'PHASE B1 (RESERVED INFRA 1) -- ADVERSARIAL AUDIT of the .454 ARC arms BEFORE the capstone trusts
++    them: (a) A1/A2 banks are REAL reproduced levels (reproduction gate genuinely passed, not fabricated, not a
++    duplicate of an already-reproduced level, solve_provenance=live_agent_self_discovery), and (b) D''s MATM
++    efficiency claim is ORACLE-DISTINCT (verifier_is_oracle=false) and the A/B is honest (forward_walk_hit_rate
++    + actions-to-first-levelup measured against the SUBMITTED exact-hash baseline with ZERO reached_level
++    regression, no leak). Emits banks_trustworthy + efficiency_trustworthy for the capstone.'
++  priority: high
++  track: infra
++  max_turns: 60
++  inference_substrate: verifier_ensemble_against_cached_candidates
++  deliverable: results/experiment_4929_bank_and_efficiency_audit.json
++  operator_override: '2026-06-19 operator directive (ARC sprint, standing): reserved infra adversarial-audit
++    slot (the .453 B1 analog, retargeted from the closed diagnostic to the .454 banks + efficiency) --
++    false-positive scope-match vs prior audit tasks; structurally never a doomed rerun. Gates whether the
++    capstone trusts the .454 ARC numbers.'
++  prompt: |
++    CONTEXT ({date}). Before the capstone (exp4934) trusts the .454 ARC numbers, adversarially AUDIT them --
++    the same discipline the .453 B1 (exp4918) applied to the A1 diagnostic, now retargeted to the .454 banks
++    (A1 exp4925, A2 exp4926) and the D efficiency claim (exp4933). The audit NEVER edits the arms; it reads
++    their artifacts + scripts and emits per-check booleans + overall trustworthy flags.
++
++    THE CHECKS:
++      BANKS (A1 exp4925, A2 exp4926):
++        1. REPRODUCTION GENUINE: each claimed bank's reproduction gate (arc_solver_kit.reproduce) actually
++           passed offline (offline_reproduced=true, reached_level matches the claim), cross-checked against the
++           loop artifact -- not a fabricated/placeholder pass.
++        2. NOT A DUPLICATE: each banked level is strictly NEW vs the registry's prior levels_reproduced for that
++           game (re-solving an already-reproduced level is an adversarial_verify CRITICAL).
++        3. SELF-DISCOVERY PROVENANCE: solve_provenance=live_agent_self_discovery (NOT outer_loop_re; no
++           offline-ground-truth-BFS / per-game calibration inputs declared).
++        4. LIVE-PATH-REACHABLE: the bank ran through arc_loop_solve + a live GameAdapter (arc_orphan_solver_lint
++           passes), not a parallel solver.
++      EFFICIENCY (D exp4933):
++        5. ORACLE-DISTINCT: verifier_is_oracle=false -- the similarity-keyed retrieval is scored by the verifier
++           router, NOT by the env's level-up oracle (must pass check_circular_moat_overclaim).
++        6. HONEST A/B: the action-efficiency claim is measured vs the SUBMITTED exact-hash baseline over the
++           reproduced games with ZERO reached_level regression and the parity test green; no leak / no
++           same-state-target shortcut. A null is reported honestly (the retire disposition), not inflated.
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/results/experiment_4925_levelup_attempt.json + experiment_4926_levelup_attempt.json (the banks)
++      - {project_root}/results/experiment_4933_matm_similarity_retrieval_efficiency.json (the efficiency A/B)
++      - {project_root}/ops/arc_solve_registry.yaml (prior levels_reproduced to verify non-duplicate banks)
++      - {project_root}/scripts/adversarial_verify.py + {project_root}/scripts/summarize_artifact.py
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: the A1/A2/D artifacts present; the registry loadable. Missing -> honest_verdict
++         blocked_<artifact>_missing, write deliverable, EXIT (audit only what is present; record which were absent).
++      1. Run the bank checks (1-4) and the efficiency checks (5-6) with evidence; cross-check against the registry
++         + loop artifacts + arc_orphan_solver_lint.
++      2. Emit per-check booleans + banks_trustworthy (AND of 1-4) + efficiency_trustworthy (AND of 5-6) +
++         failure reasons. WRITE the deliverable.
++
++    FALSIFIABLE GATE: all checks evaluated with evidence; banks_trustworthy + efficiency_trustworthy emitted
++    (true only if their checks pass). A failing check is recorded with its reason -- the audit reports honestly,
++    it does not rubber-stamp.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; complete_v454_banks_and_efficiency_audited (trusted or with named failures)."
++      banks_trustworthy:
++        principle: "AND of the bank checks -- the capstone counts A1/A2 toward reproducible_total_levels ONLY if true."
++      efficiency_trustworthy:
++        principle: "AND of the efficiency checks -- the capstone reports D's action-efficiency lift ONLY if true (oracle-distinct + honest A/B)."
++      checks:
++        principle: "per-check booleans {reproduction_genuine, not_duplicate, self_discovery_provenance, live_path_reachable, oracle_distinct, honest_ab}."
++      audit_failure_reasons:
++        principle: "list of named failures (empty if all trusted) -- the audit reports honestly, no rubber-stamp."
++      inference_substrate:
++        principle: "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor)."
++      preconditions_checked:
++        principle: "records A1/A2/D artifact presence; a missing input is recorded, not fabricated."
++
++    Run: `.venv/bin/python python/carnot/experiment_4929_bank_and_efficiency_audit.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4930-b2
++  title: 'PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- submission-package FINAL pre-deadline (6/30) harden +
++    operator submission checklist. The package is READY from .453 (15.146GB < 16GB, frozen Qwen3.5-9B-MTP iGPU
++    stack, operator-only). Re-confirm it builds + loads + the frozen stack resolves + the agent config resolves,
++    run the ready-package regression check, and produce the operator submission checklist. submits=false
++    (operator-only external publication).'
++  priority: high
++  track: infra
++  max_turns: 50
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4930_submission_package_harden.json
++  operator_override: '2026-06-19 ARC sprint (standing) + Operator-Only External Publication: the FINAL
++    pre-deadline (6/30) submission-package harden + operator checklist; the task NEVER submits (operator-only).
++    False-positive scope-match vs prior package-harden tasks; reserved deadline-infra slot.'
++  prompt: |
++    CONTEXT ({date}). FINAL pre-deadline (2026-06-30) submission-package harden. The package is READY from .453
++    (exp4919: peak_vram 15.146GB < 16GB Kaggle limit, frozen Qwen3.5-9B-MTP iGPU stack, builds, operator-only,
++    submits=false). .454 re-confirms it is still green the day before the deadline and produces the operator
++    submission checklist. CRITICAL: this task NEVER submits to the leaderboard -- external publication is
++    operator-only (CLAUDE.md). It prepares the package + checklist; the operator submits.
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/results/experiment_4919_submission_package_harden.json (the .453 ready package + its checks)
++      - {project_root}/python/carnot/agentic/arc_competition_agent.py (the agent config + model-path resolution)
++      - {project_root}/docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md (packaging requirements)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: the frozen submission stack (Qwen3.5-9B-MTP GGUF) is cached/resolvable; the package
++         build inputs present. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
++      1. Dry-build the package; confirm peak_vram < 16GB, frozen stack loads, agent config + model path resolve,
++         packaging requirements cross-check passes, ready-package regression check passes.
++      2. Produce the operator submission checklist (steps the OPERATOR performs; the task ends before submission).
++         WRITE the deliverable with submits=false, operator_only=true.
++
++    FALSIFIABLE GATE: submission_package_ready=true with peak_vram_gb < 16 AND frozen_stack_loads=true AND
++    package_builds=true AND submits=false AND operator_only=true. A regression (vram >=16 / stack fails) is
++    recorded honestly with submission_package_ready=false.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; ready is success_submission_package_ready_final_pre_deadline."
++      submission_package_ready:
++        principle: "True iff ready for the OPERATOR to submit; the task itself NEVER submits (operator-only)."
++      submits:
++        principle: "false -- external publication is operator-only; the task prepares, never submits."
++      operator_only:
++        principle: "true -- the submission step is reserved for the operator (defense in depth: no leaderboard token used)."
++      peak_vram_gb:
++        principle: "must be < 16 (Kaggle validation env limit); 15.146 in .453."
++      frozen_stack_loads:
++        principle: "the frozen Qwen3.5-9B-MTP iGPU stack loads (Kaggle parity)."
++      package_builds:
++        principle: "the package dry-build succeeds."
++      ready_package_regression_ok:
++        principle: "the ready package still passes its regression check the day before the deadline."
++      operator_submission_checklist:
++        principle: "the operator-facing steps to submit (the task ends before submission)."
++      inference_substrate:
++        principle: "aggregation_from_upstream_artifacts (reads the package + upstream; 0.0001s floor)."
++      preconditions_checked:
++        principle: "records frozen-stack + build-input checks; a missing resource emits blocked_."
++
++    Run: `.venv/bin/python python/carnot/experiment_4930_submission_package_harden.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4931-b3
++  title: 'PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- the .453 retro top-3 actions) -- APPLY the .453-shipped
++    runtime-stamping helper to the .454 arms (backfill duration_s/inference_substrate/compute_bound on any arm
++    missing them), re-run the results/-mtime FALLBACK over .454 to confirm a NON-zero window, and emit a final
++    wiring-readiness confirmation. Standalone modules + audit + proposal only; do NOT modify
++    scripts/research_conductor.py (the operator wires the conductor).'
++  priority: high
++  track: infra
++  max_turns: 50
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4931_stamping_backfill_and_wiring_readiness.json
++  operator_override: '2026-06-19 ARC sprint (standing) + .453 operational retro top-3 actions: reserved
++    operational-infra slot -- the ~80-milestone recurring detector false-zero + the duration_s=None gap. The
++    .453 B3 SHIPPED the modules; .454 B3 APPLIES the stamping helper to the .454 arms + reconfirms readiness.
++    False-positive scope-match vs prior infra/retro-fix tasks; standalone module + proposal, no conductor edit.'
++  prompt: |
++    CONTEXT ({date}). The .453 operational retro's top-3 actions are operational: (1) operator wires the
++    mtime-fallback + runtime-stamping modules into the conductor's retro prompt-assembly (operator action --
++    the autonomous loop CANNOT edit research_conductor.py); (2) turn on write-time
++    duration_s/inference_substrate/compute_bound stamping for every arm. The .453 B3 (exp4920) SHIPPED the
++    standalone modules (mtime_fallback + runtime_stamping) + the wiring proposal. .454 B3 APPLIES the stamping
++    helper to the .454 arms and reconfirms the modules are ready for the operator wire -- still WITHOUT touching
++    scripts/research_conductor.py.
++
++    MANDATORY SCOPE (standalone application + audit + readiness; NO conductor edit):
++      - BACKFILL: scan the .454 arms (results/experiment_492{4..9}_*.json + experiment_493{0..4}_*.json present
++        so far) for any missing duration_s / inference_substrate / compute_bound, and apply the .453-shipped
++        runtime_stamping helper to backfill them at the artifact level (deterministic, idempotent).
++      - MTIME FALLBACK: re-run the .453-shipped results/-mtime fallback over the .454 milestone; confirm it
++        reconstructs a NON-zero {n_arms, window_start, window_end, wall_minutes, compute_bound_count} window
++        from the .454 arms' mtimes (the verifiable fix for the ~80-milestone false-zero).
++      - READINESS: reconfirm the wiring-proposal doc (the conductor retro prompt-assembly call site) is present
++        and current; the operator wires it. Record research_conductor_modified=false.
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/results/experiment_4920_retro_timing_and_stamping_fix.json (the .453-shipped modules + paths)
++      - {project_root}/docs/retro_timing_mtime_fallback_wiring_proposal_4920.md (the wiring proposal to reconfirm)
++      - {project_root}/results/operational_retro_2026_06_453.json (the false-zero retro + its top-3 actions)
++      - {project_root}/scripts/summarize_artifact.py (the artifact-reading convention to match)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: the .453-shipped modules (mtime_fallback + runtime_stamping) + the .454 arm artifacts
++         present. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
++      1. Backfill duration_s/inference_substrate/compute_bound on any .454 arm missing them via the stamping
++         helper; record the backfilled list.
++      2. Re-run the mtime-fallback over .454; assert a NON-zero window (n_arms>=10, wall_minutes>0,
++         compute_bound_count>=3 matching the live arms).
++      3. Reconfirm the wiring proposal is present/current. Do NOT edit the conductor. WRITE the deliverable.
++
++    FALSIFIABLE GATE: the mtime-fallback reconstructs a NON-zero .454 window AND the stamping backfill list is
++    emitted (arms newly stamped, or "none missing") AND the wiring proposal is reconfirmed.
++    research_conductor_modified=false.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; success_v454_stamping_backfilled_and_mtime_window_confirmed."
++      mtime_fallback_window:
++        principle: "the .454 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} from results/ mtimes -- the verifiable fix for the false-zero."
++      stamping_backfilled_arms:
++        principle: "the list of .454 arms newly stamped with duration_s/inference_substrate/compute_bound (or 'none missing') -- closes the duration_s=None gap."
++      wiring_proposal_reconfirmed:
++        principle: "true -- the conductor retro-prompt-assembly call site doc is present/current for the operator wire."
++      research_conductor_modified:
++        principle: "false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited."
++      inference_substrate:
++        principle: "aggregation_from_upstream_artifacts (reads arm artifacts + mtimes; 0.0001s floor)."
++      preconditions_checked:
++        principle: "records module + arm-artifact presence; a missing input emits blocked_."
++
++    Run: `.venv/bin/python python/carnot/experiment_4931_stamping_backfill_and_wiring_readiness.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4932-c
++  title: 'PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only continuity check (graduated terminal; stays in the
++    rotation). SSH-reachability precondition ONLY (NEVER a host SD-card / block-device precondition); always WRITE
++    a deliverable (blocked artifact if unreachable).'
++  priority: medium
++  track: hardware
++  max_turns: 40
++  inference_substrate: hardware_smoke
++  deliverable: results/experiment_4932_kv260_continuity.json
++  operator_override: '2026-06-19 ARC sprint (standing) + Hardware-Task Continuity: KV260 is the one
++    sovereignty board kept in the per-milestone continuity rotation (graduated terminal). False-positive
++    scope-match vs prior KV260 continuity tasks; structurally never a doomed rerun.'
++  prompt: |
++    CONTEXT ({date}). KV260 hardware-continuity check (the one board kept in the per-milestone rotation;
++    graduated terminal per north-star §3). SSH-only per CLAUDE.md "KV260 SSH-Not-SD-Card Discipline": the
++    precondition is SSH-reachability of the board, NEVER a host SD-card / block-device check. Always WRITE a
++    deliverable (a blocked artifact if unreachable -- never fabricate).
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/results/experiment_4921_kv260_continuity.json (the .453 continuity result -- reachable, terminal)
++      - {project_root}/ops/known-issues.md (KV260 SSH-only discipline + the kria alias)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS (SSH ONLY -- NEVER host SD card):
++         `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0 -> reachable; proceed.
++         Non-zero -> honest_verdict blocked_kv260_ssh_unreachable, WRITE the deliverable, EXIT (do NOT fabricate).
++         If the prompt ever referenced a host SD-card / block-device check -> blocked_kv260_wrong_mechanism_sd_card_precondition.
++      1. If reachable: `ssh kria 'xmutil listapps'` to confirm the board state; record kv260_ssh_reachable + loaded_overlay.
++      2. WRITE the deliverable.
++
++    FALSIFIABLE GATE: a deliverable is written either way -- kv260_ssh_reachable true (reachable, overlay listed)
++    or a blocked artifact (unreachable). Never a fabricated hardware result.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; reachable is success_kv260_continuity_ok; unreachable is blocked_kv260_ssh_unreachable."
++      kv260_ssh_reachable:
++        principle: "true iff `ssh kria true` exits 0 -- the ONLY correct KV260 precondition (NEVER a host SD-card / block-device check)."
++      loaded_overlay:
++        principle: "the current board overlay state (xmutil listapps) if reachable."
++      inference_substrate:
++        principle: "hardware_smoke (SSH-attached board; per-board floor)."
++      preconditions_checked:
++        principle: "records the SSH-reachability check; a host SD-card precondition is the retired wrong mechanism."
++
++    Run: `.venv/bin/python python/carnot/experiment_4932_kv260_continuity.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4933-d
++  title: 'PHASE D (SOTA-INGESTION / EFFICIENCY slot; the squared-scored action-efficiency lever) -- the
++    operator-flagged MATM SIMILARITY-KEYED PARTIAL-TRAJECTORY RETRIEVAL in StepwiseExplorer (verifier-routed,
++    oracle-distinct). Flag-gated coarse/LSH state-descriptor index on StepwiseExplorer.adj so _shortest_path can
++    return a sub-sequence from a SIMILAR (not bit-identical) prior state; A/B vs the SUBMITTED exact-hash
++    baseline over reproduced games (tu93/lp85/sp80/cn04/m0r0) via arc3_replay_scorecard_metaharness.py. Also a
++    light DEV scaffold of the post-6/30 distributional-energy-verifier pivot (arXiv:2605.18871). Action-
++    efficiency metric (does NOT move reproducible_total_levels). verifier_is_oracle=false.'
++  priority: high
++  track: sota-ingestion
++  max_turns: 160
++  inference_substrate: live_llm_inference
++  deliverable: results/experiment_4933_matm_similarity_retrieval_efficiency.json
++  operator_override: '2026-06-23 operator flag (MATM ingestion, the ONE un-subsumed survivor) + 2026-06-19 ARC
++    sprint (standing): the SOTA-ingestion/efficiency slot picks up the MATM similarity-keyed retrieval lever --
++    the squared-scored action-efficiency lever (leaderboard scores (human/agent actions)^2). False-positive
++    scope-match vs prior SOTA-ingestion/efficiency tasks; structurally never a doomed rerun. NEW lever (never
++    run); scoped within-game; must NOT displace the Level-Up Attempt Guarantee (A1/A2 carry that).'
++  prompt: |
++    CONTEXT ({date}). The ARC-AGI-3 leaderboard scores (human_actions/agent_actions)^2, so a fewer-actions
++    improvement is SQUARED in the score (research-studying.md). Post-closure, action efficiency is the highest-
++    leverage open submission lever. The live ARC agent ALREADY does within-game self-populated trajectory
++    retrieval (StepwiseExplorer.adj + _shortest_path / _partial_forward_path, scored by
++    navigation_diagnostics.forward_walk_hit_rate) but keys it by EXACT frame-hash. The operator-flagged MATM
++    survivor (arXiv:2606.19911; corroborated by arXiv:2603.10600 Trajectory-Informed Memory Generation): key by
++    a coarse/LSH SIMILARITY state descriptor so a NEAR-match state inherits a useful action prefix across that
++    hidden game's OWN rollouts -- a strict generalization of the existing hud_mask exact-hash relaxation. This
++    is within-game (NOT cross-game), verifier-routed (energy as router-not-generator -> verifier_is_oracle=false,
++    oracle-distinct per the Circularity discipline).
++
++    THE INTERVENTION (live-path-reachable; flag-gated; A/B vs the SUBMITTED baseline):
++      - Add a FLAG-GATED coarse/LSH state-descriptor index to StepwiseExplorer.adj so _shortest_path can return
++        a sub-sequence from a SIMILAR (not bit-identical) prior state. Quantize cross_game_features_v2 (already
++        imported) for the bucket key. Score each retrieved prefix through the existing
++        value_head / goal_bias / WorldModelVerifier router BEFORE commit.
++      - A/B vs the SUBMITTED exact-hash baseline over the reproduced games tu93, lp85, sp80, cn04, m0r0 via
++        scripts/arc3_replay_scorecard_metaharness.py. Keep the flag OFF by default (no submitted-config change
++        unless the gate passes).
++      - LIGHT DEV scaffold of the post-6/30 pivot: note (do NOT build) the distributional-energy-verifier
++        validation gate (arXiv:2605.18871: beats self-consistency CI95-excl-0, no model-identity shortcut,
++        oracle-distinct) so the capstone can hand it off. Do NOT start that experiment (majority-ARC governs
++        through 6/30).
++
++    GUARDRAILS: do NOT over-claim -- MATM's theta-filter is success-not-verification and ran no k-ablation; its
++    step-reductions are not evidence for the Carnot verifier moat. Scope to within-game action-efficiency. This
++    does NOT move reproducible_total_levels unless a banked sub-sequence reaches a strictly NEW offline-reproduced
++    level (expect "efficiency, not new level").
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/python/carnot/agentic/ (StepwiseExplorer: .adj, _shortest_path, _partial_forward_path; cross_game_features_v2; the value_head/goal_bias/WorldModelVerifier router)
++      - {project_root}/scripts/arc3_replay_scorecard_metaharness.py (the A/B harness over reproduced games)
++      - {project_root}/docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md (the surviving-graft spec)
++      - {project_root}/tests/ (test_arc_submitted_agent_parity.py -- must stay green)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: arcade + the replay scorecard metaharness + the reproduced-game fixtures present; the
++         generator healthy IF induction is needed (GPU-0 CUDA or iGPU; do NOT iGPU-pin). Missing -> honest_verdict
++         blocked_<resource>, write deliverable, EXIT.
++      1. Add the flag-gated coarse/LSH similarity index to StepwiseExplorer.adj; route retrieved prefixes through
++         the existing verifier router before commit (verifier_is_oracle=false).
++      2. A/B vs the SUBMITTED exact-hash baseline over tu93/lp85/sp80/cn04/m0r0; record forward_walk_hit_rate +
++         actions-to-first-levelup per game + reached_level (regression check).
++      3. Run test_arc_submitted_agent_parity.py; confirm in-budget (lazy_value_top_k). Note the post-6/30 pivot
++         validation gate. WRITE the deliverable.
++
++    FALSIFIABLE GATE (the operator-flagged disposition; retire_if_same_verdict): forward_walk_hit_rate STRICTLY
++    up vs exact-hash AND actions-to-first-levelup down >=1 on >=2 games AND ZERO reached_level regression AND
++    test_arc_submitted_agent_parity.py green AND in-budget -> PASS (efficiency lever lands, flag eligible to
++    default on); ELSE RETIRE the similarity-retrieval lever (the value_weight=5 disposition,
++    retire_if_same_verdict: true) and report the honest null. NO solve claim; this is action-efficiency only.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; a landed efficiency lever is success_matm_similarity_retrieval_action_efficiency_up; a null is complete_matm_similarity_retrieval_no_efficiency_gain_retired."
++      verifier_is_oracle:
++        principle: "false -- the retrieved prefix is scored by the verifier router, NOT the env oracle (oracle-distinct; passes check_circular_moat_overclaim)."
++      forward_walk_hit_rate_delta:
++        principle: "per-game forward_walk_hit_rate vs the SUBMITTED exact-hash baseline -- the retrieval-quality signal (strictly up to PASS)."
++      actions_to_first_levelup_delta:
++        principle: "per-game actions-to-first-levelup vs baseline -- the squared-scored efficiency metric (down >=1 on >=2 games to PASS)."
++      reached_level_regression:
++        principle: "must be ZERO -- an efficiency lever may not regress any reproduced level."
++      submitted_parity_test_green:
++        principle: "test_arc_submitted_agent_parity.py green -- the flag does not break the submitted agent."
++      flag_eligible_to_default_on:
++        principle: "true only if the full gate passes; otherwise the lever RETIRES (retire_if_same_verdict)."
++      live_path_reachable:
++        principle: "true -- the index lives in the live StepwiseExplorer (arc_orphan_solver_lint passes), reachable by E3AgentPolicy."
++      moves_reproducible_total_levels:
++        principle: "false (expected) -- this is action-efficiency; it moves reproducible_total_levels only if a retrieved sub-sequence banks a strictly new level."
++      post_sprint_pivot_gate_noted:
++        principle: "the distributional-energy-verifier validation gate (arXiv:2605.18871) noted for the post-6/30 handoff -- NOT started here."
++      arxiv_ids_cited:
++        principle: "2606.19911 (MATM) + 2603.10600 (Trajectory-Informed Memory) + 2605.18871 (post-sprint pivot) -- no fabrication."
++      inference_substrate:
++        principle: "live_llm_inference if induction runs (60s floor); else the honest replay/scorecard substrate."
++      preconditions_checked:
++        principle: "records arcade/metaharness/fixture/generator checks; a missing resource emits blocked_."
++      random_seed:
++        principle: "determinism for the LSH bucketing + the A/B replay."
++      reproducibility_checksum:
++        principle: "content hash of (games, baseline config, similarity-index config) so a replication catches drift."
++
++    Run: `.venv/bin/python python/carnot/experiment_4933_matm_similarity_retrieval_efficiency.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
++- id: exp4934-capstone
++  title: 'PHASE E (CAPSTONE .454) -- aggregate the SUBMISSION-READINESS scorecard for the 6/30 deadline.
++    HEADLINE = the locked deliverable maximized: reproducible_total_levels growth (A1 sp80 + A2 su15 banks,
++    counted ONLY if B1 banks_trustworthy), action-efficiency lift (D MATM, reported ONLY if B1
++    efficiency_trustworthy), CLEAN held-out go/no-go (A4 full-25 rate + flag_resolved), submission package ready
++    (B2). State the post-6/30 distributional-energy-verifier verifier-moat pivot handoff (D scaffold,
++    arXiv:2605.18871). Skip any flagged_adversarial upstream.'
++  priority: critical
++  track: capstone
++  max_turns: 60
++  inference_substrate: aggregation_from_upstream_artifacts
++  deliverable: results/experiment_4934_capstone_v454.json
++  operator_override: '2026-06-19 ARC sprint (standing): routine milestone capstone -- false-positive
++    scope-match vs prior capstone tasks; structurally never a doomed rerun. (capstone-v454).'
++  prompt: |
++    CONTEXT ({date}). CAPSTONE for 2026.06.454. Aggregate the SUBMISSION-READINESS scorecard for the 2026-06-30
++    deadline. .453 reached B1-trusted ARC closure (WALL_IS_HIDDEN_STATE); .454 executes the LOCKED deliverable
++    (~0.05 agent + FoVer paper) by maximizing the 6/30 submission. Read EVERY upstream artifact via
++    scripts/summarize_artifact.py (Reading-Results Discipline); skip any carrying flagged_adversarial (the
++    fabrication gate).
++
++    THE HEADLINE LOGIC (submission readiness, NOT a new research claim):
++      - reproducible_total_levels: carry from the registry (69 after .453 cn04); ADD A1 (exp4925 sp80) + A2
++        (exp4926 su15) banks ONLY if B1 (exp4929) banks_trustworthy=true (reproduction genuine, non-duplicate,
++        live_agent_self_discovery, live-path-reachable). Report the new total + which games banked.
++      - action efficiency: report D's (exp4933) MATM similarity-keyed retrieval lift ONLY if B1
++        efficiency_trustworthy=true (oracle-distinct + honest A/B, zero reached_level regression, parity green).
++        If D nulled/retired, report the honest null -- do NOT inflate.
++      - held-out go/no-go: A4 (exp4928) full-25 (or honest partial) first-win rate + CI, with flag_resolved
++        status -- the operator's 6/30 number.
++      - submission package: B2 (exp4930) submission_package_ready + peak_vram_gb -- the deadline deliverable.
++      - the ARC first-win wall stays CLOSED (B1-trusted WALL_IS_HIDDEN_STATE from .453); do NOT reopen it or
++        queue representation #5.
++    Report the reserved lanes: B3 (exp4931 stamping backfill + mtime window), C (exp4932 KV260). State the
++    POST-6/30 handoff plainly: the verifier-moat pivot = the distributional-energy-verifier experiment
++    (arXiv:2605.18871) on a non-saturated structured-reasoning domain (D scaffold), to execute the instant the
++    sprint retires 6/30; the deliverable remains the ~0.05 agent + the publishable FoVer paper.
++
++    EXISTING CODE TO READ FIRST:
++      - {project_root}/scripts/summarize_artifact.py (read EVERY upstream artifact via this -- Reading-Results Discipline)
++      - {project_root}/results/experiment_4929_bank_and_efficiency_audit.json (B1 -- the trust gate)
++      - {project_root}/results/experiment_4925_levelup_attempt.json + _4926_*.json (A1/A2 banks)
++      - {project_root}/results/experiment_4928_heldout_first_win_readiness.json (A4 go/no-go) + _4933_*.json (D efficiency)
++      - {project_root}/results/experiment_4927_*.json + _4930_*.json + _4931_*.json + _4932_*.json
++      - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels) + {project_root}/ops/north-star.md (§1/§2/§5)
++
++    CONCRETE STEPS:
++      0. PRECONDITIONS: all upstream .454 arm artifacts present (summarize_artifact exit code recorded);
++         registry loadable. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
++      1. Read every upstream via summarize_artifact; record cited_upstream_artifacts {id, fields_imported, sha256}.
++      2. Apply the headline logic (count banks only if B1 banks_trustworthy; report D only if B1
++         efficiency_trustworthy); skip flagged_adversarial upstream (list them).
++      3. Build the milestone_scorecard + the post_sprint_pivot handoff. WRITE the deliverable.
++
++    FALSIFIABLE GATE: capstone_ready=true with reproducible_total_levels carried (+ trusted banks), the held-out
++    go/no-go number, the submission package state, the action-efficiency result (or honest null), skipped_flagged
++    _adversarial listed, and the post-6/30 pivot handoff stated. cited_upstream_artifacts has sha256 per source.
++
++    REQUIRED ARTIFACT FIELDS (principle-annotated):
++      honest_verdict:
++        principle: "terminal prefix; complete_capstone_v454_submission_maximized_<state> (e.g. _levels_<N>_heldout_<rate>_package_ready)."
++      headline:
++        principle: "the one-line .454 headline -- the locked deliverable maximized for 6/30 (levels growth + efficiency + clean go/no-go + package ready)."
++      reproducible_total_levels:
++        principle: "the monotonic ARC progress metric from the registry (69 + A1/A2 banks counted ONLY if B1 banks_trustworthy)."
++      banks_counted:
++        principle: "the A1/A2 games whose banks were counted (gated on B1 banks_trustworthy) -- no un-audited bank inflates the total."
++      action_efficiency_result:
++        principle: "D's MATM efficiency lift if B1 efficiency_trustworthy, else the honest null -- the squared-scored submission lever."
++      heldout_first_win_rate:
++        principle: "A4's full-25 (or partial) go/no-go number + flag_resolved -- the operator's 6/30 decision input."
++      submission_package_ready:
++        principle: "B2's terminal gate + peak_vram_gb -- the deadline deliverable for the operator."
++      arc_first_win_wall_closed:
++        principle: "true -- the .453 B1-trusted WALL_IS_HIDDEN_STATE closure stands; .454 did not reopen it or queue representation #5."
++      post_sprint_pivot:
++        principle: "the post-6/30 verifier-moat handoff: D's distributional-energy-verifier scaffold (arXiv:2605.18871) + the deliverable (~0.05 agent + FoVer paper)."
++      skipped_flagged_adversarial:
++        principle: "the list of upstream artifacts skipped per the fabrication gate."
++      cited_upstream_artifacts:
++        principle: "{experiment_id, fields_imported, sha256} per source -- the audit trail (no synthesized numbers)."
++      inference_substrate:
++        principle: "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
++      preconditions_checked:
++        principle: "records upstream-artifact presence + registry loadability; a missing input emits blocked_."
++      random_seed:
++        principle: "determinism for any tie-break in the scorecard aggregation."
++      reproducibility_checksum:
++        principle: "content hash of (cited upstream sha256s + scorecard) so a replication catches drift."
++
++    Run: `.venv/bin/python python/carnot/experiment_4934_capstone_v454.py`
++    Do NOT push. Do NOT modify scripts/research_conductor.py.
++  milestone: 2026.06.454
++  agent_type: codex
++  model: gpt-5.5
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index 70012f9f3c..69d52690ec 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,14 @@
+     0.6748974323272705
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757108
++  "gradient_stability_ratio": 0.9999999989757108,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

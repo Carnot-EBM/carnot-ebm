@@ -1,0 +1,105 @@
+From 736a986f79f2ef60026145a54e70f970d3099630 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 15 Aug 2026 01:20:15 -0400
+Subject: [PATCH 09219/11362] [conductor] Operational retrospective for
+ milestone 2026.08.554
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_554.json | 58 ++++++++++++++++++++++
+ 3 files changed, 66 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_554.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 8d0ab69c3e..76e91a034e 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6199,3 +6199,10 @@ The critical path for milestone .250:
+ - theme: wall time concentrated in a synthesis-only reachability and roster pass rather than accelerator work
+ - key result: the first compute row was readiness-dependent; neither in-task accelerator duty cycle nor eligibility for the dual-GPU runner is observable
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.554
++
++- exp_range: exp6436-exp6441 (visible label-reference bounds only; the complete milestone range is not available)
++- theme: readiness-labelled compute work tied at reconstructed timing resolution while task-level accelerator attribution remained absent
++- key result: no compute-bound task was measurably slower, and the evidence does not establish compute-period GPU inefficiency or a missed parallel multi-model runner dispatch
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 61db56cfa3..74e675352d 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -16764,3 +16764,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-14: Operational retrospective for 2026.08.553: execution accounting covers 12 completions across 86 minutes, divided into 6 compute-bound and 6 synthesis-only experiments. The readiness-dependent constraint-saturation factor task heads the shown compute rows at 1 minute, but its internal timing is unavailable. The idle device snapshot does not override the locked false task-idle indicator, so compute-period utilization cannot be scored; loaded-model concurrency is also absent, preventing a DualGPURunner determination. The highest-leverage tooling change is deterministic CPU sharding with phase checkpoints for the long synthesis workflow, accompanied by task-linked device and dispatch receipts. Estimated savings is 0% without a measured alternate run. Artifact: results/operational_retro_2026_08_553.json.
+ - 2026-08-15: V553 terminal handoff and V554 queue preflight (⚠️ Blocked) — honest_verdict=complete_blocked_v554_queue_incomplete: V553 terminal facts are preserved but the activated V554 queue contains 9 of 12 required tasks; results/experiment_6436_v554_terminal_handoff_and_queue_preflight.json
+ - 2026-08-15: Independent continuous self-learning lifecycle row-recomputation audit (⚠️ Blocked) — honest_verdict=complete_blocked: V554 CSL lifecycle recomputation audit blocked by missing or failed upstream evidence; results/experiment_6444_csl_lifecycle_recomputation_audit.json
++- 2026-08-15: Operational retrospective for 2026.08.554: All 5 recorded experiments resolve to 0.0 minutes, including 3 compute-bound entries, so the compute rows tie and no duration cause is measurable. The locked compute-task idle field is false; the uncorrelated idle GPU snapshot therefore does not establish a utilization fault. The data also provides no concurrent-model or runner receipt, so no DualGPURunner miss can be found. The next milestone should use readiness-aware dispatch plus task-linked phase, GPU, model-count, and runner receipts. Estimated savings: 0%, because the data contains no measured counterfactual. Artifact: results/operational_retro_2026_08_554.json.
+diff --git a/results/operational_retro_2026_08_554.json b/results/operational_retro_2026_08_554.json
+new file mode 100644
+index 0000000000..de32da761d
+--- /dev/null
++++ b/results/operational_retro_2026_08_554.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.554",
++  "generated_at": "2026-08-15T05:16:00Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.0,
++  "experiments_completed": 5,
++  "compute_bound_experiments_count": 3,
++  "slowest_experiments": [
++    {
++      "experiment": "V553 terminal handoff and V554 queue preflight",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Gated on Exp6436 readiness: generation-to-verdict receipt and replay contract",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp6439 influence: held factor revocation and binding-shift A/B",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Gated on Exp6441 CSL readiness: malicious-success quarantine and rollback A/B",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Independent continuous self-learning lifecycle row-recomputation audit",
++      "duration_minutes": 0.0,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Execution accounting records 5 experiments in 0.0 minutes, including 3 compute-bound tasks. All 5 entries tie at 0.0 minutes, so no compute-bound task is measurably slower and no phase-level cause can be assigned. The locked task attribution does not identify GPU idle on compute-bound work.",
++  "bottlenecks_identified": [
++    "Disk-mtime reconstruction has zero-minute resolution for all 5 entries, so the compute-bound leaders are tied and phase-level causes are not observable.",
++    "The point-in-time GPU snapshot is not linked to experiment execution windows, so compute-period utilization cannot be graded; the locked compute-task idle indicator remains false.",
++    "No task record declares concurrent model count or runner selection, so DualGPURunner eligibility and engagement cannot be audited."
++  ],
++  "improvements_suggested": [
++    "Capture monotonic task start, task end, phase duration, and gate-wait receipts instead of relying only on disk modification times.",
++    "Link GPU samples to active task IDs and compute-bound declarations, and alert only when an active compute-bound task remains idle.",
++    "Persist loaded-model count and runner selection in each compute-task receipt; select DualGPURunner only when at least 2 models are loaded in parallel.",
++    "Add readiness-aware queue dispatch so work with satisfied prerequisites can proceed while unresolved gated work remains pending."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add readiness-aware dispatch with explicit prerequisite and gate-wait receipts.",
++    "Record task-scoped monotonic phase timing and task-correlated GPU samples.",
++    "Record loaded-model count and runner selection, with DualGPURunner chosen only for at least 2 parallel models."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The reconstructed timing supports a duration tie, not a claim that execution was instantaneous. The idle GPU snapshot cannot be attributed to a running compute task, and no data available this milestone establishes parallel multi-model execution or DualGPURunner engagement."
++}
+-- 
+2.55.0
+

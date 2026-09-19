@@ -1,0 +1,153 @@
+From c8aa4d28d8ab8103d5d78654c0bd014946b1e857 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 08:15:42 -0400
+Subject: [PATCH 07060/11362] [outer-loop] Tasks 10+11: sp80 regression
+ diagnosis + dynamics-gate pass-rate survey
+
+Task 10 (why bare_control beat full_stack on sp80 in exp5701): instrumented
+all three "richer stack" mechanisms (candidate_router, goal_bias,
+goal_candidate_guidance) during a real sp80 replay. All three confirmed
+structurally inert -- goal_bias (arc_goal_energy_live.GoalSatisfactionEnergy,
+Exp4020) scored EXACTLY 1.0 on all 771 real frontier-node invocations (zero
+variance, mathematically incapable of influencing search order);
+goal_candidate_guidance self-detected its own degeneracy and correctly
+no-op'd by existing design; candidate_router was invoked 33 times but never
+changed the candidate ordering. Honest conclusion: the regression is not
+caused by a bad learned signal, it is structurally impossible for these
+mechanisms to be the cause -- the real cause is one of the other differing
+knobs (value_weight/DAgger value head, navigation_cost_tiebreak,
+action_effect_expansion_prior), not further isolated here. Separately
+surfaced GoalSatisfactionEnergy's blindness on sp80's placement mechanic,
+corroborating ops/verifier_gaps.md GAP-4891's independent finding via a
+completely different code path -- logged as GAP-5703 per the
+Missing-Verifier Gap Logging discipline with a concrete fix recommendation.
+
+Task 11 (is the min_heldout_accuracy=1.0 dynamics gate over-strict): surveyed
+95 real round-level heldout_accuracy values across 12 real live_llm_inference
+artifacts. pass_rate_at_live_threshold=0.1263 (only 12.6% of real induction
+rounds ever reach 1.0); exact_zero_rate=0.4737. Corroborates task 8's
+single-attempt dynamics-gate-dominance finding with corpus-scale evidence.
+Honest limitation disclosed: this is per-row, not the bounded 3-round retry
+loop's eventual success rate (insufficient multi-round traces in the corpus
+to reconstruct that statistic).
+
+Adds experiment_5702_dynamics_gate_pass_rate_survey.py,
+experiment_5703_sp80_candidate_stack_mechanism_trace.py, their real result
+artifacts (both adversarial_verify clean), 16 tests, REQ-ARC-FCP-5703 +
+REQ-ARC-WMTE-5593-4 spec.md sections, GAP-5703 in ops/verifier_gaps.md, and
+ops/known-issues.md closure notes. The substantive script/artifact/spec.md
+content landed via a concurrent conductor checkpoint commit (5d10f4320,
+byte-identical, verified via git diff) before this commit -- this commit adds
+the two spec/gap-declaration test assertions still outstanding plus the
+known-issues.md write-up.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                           | 40 +++++++++++++++++++
+ ...03_sp80_candidate_stack_mechanism_trace.py | 35 ++++++++++++++++
+ 2 files changed, 75 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 3168b89252..0264e31f0b 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -606,6 +606,46 @@ retired scope**." The two priority tasks below sit in that explicitly-open lane.
+     > `adversarial_verify.py` clean. Full write-up:
+     > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-FCP-5701-HEADROOM-RESCOPE.
+     > Task 12 is now fully closed.
++
++    > **DONE 2026-07-14 (outer-loop, exp5703, follow-up investigation into the one regression
++    > exp5701 found):** instrumented all three "richer stack" mechanisms (`candidate_router`,
++    > `goal_bias`, `goal_candidate_guidance`) during a real replay of the sp80 regression and found
++    > **all three were structurally inert** — `goal_bias`
++    > (`arc_goal_energy_live.GoalSatisfactionEnergy`, source `exp4020_graded_goal_satisfaction_
++    > energy`) scored EXACTLY `1.0` on all 771 real frontier-node invocations (zero variance,
++    > mathematically incapable of influencing search order); `goal_candidate_guidance` (same
++    > source) also scored uniformly and correctly self-detected its own degeneracy
++    > (`arms_non_degenerate=False`) and no-op'd by existing design; `candidate_router` was
++    > genuinely invoked 33 times but never once changed the candidate ordering
++    > (`changed_order_count=0`). **Honest conclusion: the sp80 regression is NOT caused by a bad
++    > learned signal actively misleading search — it is structurally impossible for these three
++    > mechanisms to be the cause here.** The real cause traces to one of the other differing knobs
++    > (`value_weight`/DAgger value head, `navigation_cost_tiebreak`, `action_effect_expansion_
++    > prior`) — not further isolated in this investigation. Separately surfaced a genuine, useful
++    > finding: `GoalSatisfactionEnergy` is structurally blind on sp80's placement mechanic,
++    > corroborating `ops/verifier_gaps.md` GAP-4891's independent finding (a different code path —
++    > the offline self-induction operator, not the live goal-bias stack) that sp80's goal is
++    > spatial/placement and not discriminable by count/generic-fraction features. Logged as
++    > `ops/verifier_gaps.md` GAP-5703 per the Missing-Verifier Gap Logging discipline, with a
++    > concrete fix recommendation (give `goal_bias` the same degenerate-score self-audit
++    > `goal_candidate_guidance` already has). `adversarial_verify.py` clean. Full write-up:
++    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-FCP-5703.
++
++    > **DONE 2026-07-14 (outer-loop, exp5702, follow-up to task 8's dynamics-gate-dominance
++    > finding):** aggregated 95 real round-level `heldout_accuracy` values across 12 real
++    > `live_llm_inference` artifacts (excluding exp5700, which deliberately bypassed the gate).
++    > **`pass_rate_at_live_threshold=0.1263`** (only 12.6% of real induction rounds ever reach the
++    > exact `1.0` bar the live pipeline enforces); `exact_zero_rate=0.4737` (47.4% score a complete
++    > `0.0`); `mean=0.3069`, `median=0.12` — a strongly right-skewed, mostly-poor distribution.
++    > **Honest limitation:** this measures the PER-ROW pass rate, not the bounded 3-round retry
++    > loop's eventual within-budget success rate — the checked-in corpus lacks enough same-attempt
++    > multi-round traces to reconstruct that distinct statistic. Still, corpus-scale evidence that
++    > the dynamics gate is genuinely strict in practice, corroborating task 8's single-attempt
++    > observation. Raises (but does not resolve) a calibration question: whether a graduated-trust
++    > tier, mirroring `GoalEnergyCandidateGuidance`'s own degenerate-score self-audit pattern
++    > (see the exp5703 entry above), could safely use a "good but imperfect" induced model instead
++    > of an all-or-nothing accept/reject at `1.0`. `adversarial_verify.py` clean. Full write-up:
++    > `openspec/capabilities/arc-human-replay-frame-change/spec.md` REQ-ARC-WMTE-5593-4.
+ 13. **(New 2026-07-12, HIGH PRIORITY — the frozen live generator's sizing constraint appears to be
+     stale, not just conservative) Re-verify the Kaggle VRAM budget and A/B a larger generator before
+     trusting the current 9B choice.** Operator question: "are we still using qwen-3.5-9B when the
+diff --git a/tests/python/test_experiment_5703_sp80_candidate_stack_mechanism_trace.py b/tests/python/test_experiment_5703_sp80_candidate_stack_mechanism_trace.py
+index c9d1ce128f..5adf3635bc 100644
+--- a/tests/python/test_experiment_5703_sp80_candidate_stack_mechanism_trace.py
++++ b/tests/python/test_experiment_5703_sp80_candidate_stack_mechanism_trace.py
+@@ -11,9 +11,44 @@ from carnot import experiment_5703_sp80_candidate_stack_mechanism_trace as mod
+ 
+ 
+ REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-human-replay-frame-change" / "spec.md"
++GAPS_PATH = REPO / "ops" / "verifier_gaps.md"
+ RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
+ 
+ 
++def test_req_arc_fcp_5703_spec_declares_mechanism_trace() -> None:
++    """REQ-ARC-FCP-5703: OpenSpec declares the mechanism-level diagnosis, including the
++    honest finding that all three learned mechanisms were confirmed inert this run."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-ARC-FCP-5703") :]
++    section = section[: section.index("### REQ-ARC-WMTE-5593-4")]
++
++    for marker in (
++        "SCENARIO-ARC-FCP-5703-MECHANISM-INERT-OR-IMPLICATED",
++        "goal_bias_score_variance=0.0",
++        "structurally impossible for",
++    ):
++        assert marker in section
++
++
++def test_gap_5703_logged_in_verifier_gaps() -> None:
++    """CLAUDE.md Missing-Verifier Gap Logging: the present-but-uninformative
++    GoalSatisfactionEnergy finding is logged with a real diagnosed cause and a
++    concrete candidate design, cross-referenced to the corroborating GAP-4891."""
++
++    gaps = GAPS_PATH.read_text(encoding="utf-8")
++    section = gaps[gaps.index("### GAP-5703") :]
++
++    for marker in (
++        "GAP-4891",
++        "missing discriminator",
++        "candidate design",
++        "does NOT explain the sp80 regression",
++    ):
++        assert marker in section
++
++
+ def test_first_precondition_miss_reports_failing_key() -> None:
+     assert mod._first_precondition_miss({"ok": False, "a": True, "b": False}) == "b"
+     assert mod._first_precondition_miss({"ok": True}) is None
+-- 
+2.55.0
+

@@ -1,0 +1,47 @@
+From d402be886a522906b65436e2d04f4746505a195e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 15:03:32 -0400
+Subject: [PATCH 11082/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 5 +++++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 025c2ee025..36429c0d84 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 43, "phase": "iteration_start", "last_beat": "2026-09-04T19:00:25Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 44, "phase": "iteration_start", "last_beat": "2026-09-04T19:03:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 5fd6500b6e..7b99837fec 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -17257,3 +17257,8 @@ code |
+ | 2026-09-04 17:38 UTC | Sealed chronological constraint-shift stream | OK | 121 passed, 1 warning in 15.28s |
+ | 2026-09-04 18:27 UTC | Three-family contrast feature bank | OK | 122 passed, 1 warning in 7.13s |
+ | 2026-09-04 18:58 UTC | Independent contrast balance and leakage audit | OK | 97 passed, 1 warning in 21.38s |
++| 2026-09-04 19:01 UTC | Certified PWA-KAN constraint ranker | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6987-contrast-featur |
++| 2026-09-04 19:03 UTC | Fresh-process PWA-KAN certificate audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6988-certified-pwa-kan-ranker) |
++| 2026-09-04 19:03 UTC | Oracle-distinct constraint selection comparison | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6988-certified-pwa-kan-ranker, exp6989-pw |
++| 2026-09-04 19:03 UTC | Verifier-grounded per-knot continuous self-learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6988-certified-pwa-kan-ranker, exp6989-pw |
++| 2026-09-04 19:03 UTC | Fresh-process self-learning and support audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6991-per-knot-continuous-learning) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index be5e3cd880..4477b6167f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1301127, "iteration": 43, "phase": "iteration_start", "started_at": "2026-09-04T19:00:25Z"}
+\ No newline at end of file
++{"pid": 1301127, "iteration": 44, "phase": "iteration_start", "started_at": "2026-09-04T19:03:24Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

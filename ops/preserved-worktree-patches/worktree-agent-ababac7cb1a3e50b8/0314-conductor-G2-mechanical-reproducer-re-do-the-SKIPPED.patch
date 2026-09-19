@@ -1,0 +1,1442 @@
+From 7844a8a78241eaba3d15cb8647870b9f87d5c65b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 12:31:04 -0400
+Subject: [PATCH 00314/11362] [conductor] G2 mechanical reproducer (re-do the
+ SKIPPED .344 exp3756): commit a standalone, dependency-light script that
+ reproduces the FoVer headline AUROC 0.9131 WITHIN CI95 [0.9027, 0.9235] in
+ the current .venv. The GitHub Actions reproducer already closed G2 externally
+ (run 26725185125, 2026-05-31); this hardens the LOCAL ship-gate path and
+ emits auroc_in_ci95 (BARE bool) as the gate for the certified abstention
+ point. Does NOT move the frozen headline.
+
+Automated research step by research conductor.
+Task ID: exp3767-g2-mechanical-reproducer
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/publication/spec.md     |  55 ++
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...eriment_3767_g2_mechanical_reproducer.json | 108 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xperiment_3767_g2_mechanical_reproducer.py | 568 ++++++++++++++++++
+ ...xperiment_3767_g2_mechanical_reproducer.py | 355 +++++++++++
+ 22 files changed, 1117 insertions(+), 31 deletions(-)
+ create mode 100644 results/experiment_3767_g2_mechanical_reproducer.json
+ create mode 100644 scripts/experiment_3767_g2_mechanical_reproducer.py
+ create mode 100644 tests/python/test_experiment_3767_g2_mechanical_reproducer.py
+
+diff --git a/openspec/capabilities/publication/spec.md b/openspec/capabilities/publication/spec.md
+index 8ce7d6fc72..87d0c6635c 100644
+--- a/openspec/capabilities/publication/spec.md
++++ b/openspec/capabilities/publication/spec.md
+@@ -2021,6 +2021,60 @@ sub-results recorded as `not_measured`, flagged or live-critical upstream
+ artifacts excluded from citations, and the frozen FoVer headline left
+ unchanged.
+ 
++### REQ-PUBLISH-3767: G2 Local Mechanical FoVer Headline Reproducer
++
++The Exp 3767 local ship-gate runner MUST provide a single committed script at
++`scripts/experiment_3767_g2_mechanical_reproducer.py` that a Phase-1 integrator
++can run with `.venv/bin/python` to recompute the frozen FoVer 0.9131 headline
++using the existing `scripts/reproduce_fover_headline.py` path.
++
++Before scoring, the runner MUST verify that it is running under the repository
++`.venv/bin/python`, that `yaml`, `numpy`, and `sklearn` import, that the local
++FoVer labeled corpus exists at `data/fover_corpus.jsonl` with enough rows for
++the 1,000-example protocol, and that the four scoring verifier paths for
++`fr11_session_memory`, `tier0r_curry_howard`, `tier0s_arithmetic_gap`, and
++`tier0u_logical_consistency` import. If any precondition is missing, it MUST
++write a blocked artifact with a terminal `blocked_<resource>` verdict, null
++reproduction metrics, and `auroc_in_ci95 == false`; it MUST NOT infer or
++fabricate AUROC values.
++
++When preconditions pass, the runner MUST call the existing FoVer headline
++reproducer to score the four-verifier ensemble against the cached FoVer
++candidate corpus for seeds `[42, 137, 271, 314, 1729]` under the dual-condition
++protocol. It MUST NOT load or invoke a live LLM. It MUST compute the
++condition-A mean AUROC and a seed-level 95% CI, emit the five per-seed AUROCs,
++and set the bare downstream gate `auroc_in_ci95` to true only when the
++reproduced mean falls inside the frozen `[0.9027, 0.9235]` CI. A reproduced
++mean outside that CI MUST be recorded as a discrepancy with
++`auroc_in_ci95 == false`; it MUST NOT move or re-version the frozen headline.
++
++The runner MUST write
++`results/experiment_3767_g2_mechanical_reproducer.json` with `honest_verdict`,
++`inference_substrate="verifier_ensemble_against_cached_candidates"`,
++`reproduced_auroc_mean`, `reproduced_auroc_ci95`, `auroc_in_ci95`,
++`per_seed_aurocs`, `frozen_headline_unchanged`, `preconditions_checked`,
++`model_specs`, `random_seeds_used`, `reproducibility_checksum`, and
++`duration_s`.
++
++### SCENARIO-PUBLISH-3767: Local Reproducer Confirms Frozen Headline
++
++**Given** the repository `.venv/bin/python`, FoVer corpus, required Python
++dependencies, and four verifier scoring paths are available
++**When** `scripts/experiment_3767_g2_mechanical_reproducer.py` runs
++**Then** it writes
++`results/experiment_3767_g2_mechanical_reproducer.json` with a `complete:`
++verdict, `inference_substrate == "verifier_ensemble_against_cached_candidates"`,
++five per-seed AUROCs, `auroc_in_ci95 == true`, and
++`frozen_headline_unchanged == true`.
++
++### SCENARIO-PUBLISH-3767B: Missing Local Resource Blocks Without Fabrication
++
++**Given** the interpreter, corpus, dependencies, or verifier imports are missing
++**When** the Exp 3767 local reproducer starts
++**Then** it writes the same artifact path with a terminal `blocked_<resource>`
++verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
++`auroc_in_ci95 == false`.
++
+ 
+ ## Implementation Status
+ 
+@@ -2063,6 +2117,7 @@ unchanged.
+ | REQ-PUBLISH-039 | Implemented | Exp 3488 FoVer G2 clean-room regression verify + lowest-friction external ask |
+ | REQ-PUBLISH-040 | Proposed | Exp 3681 G2 reproducer prep for operator re-freeze |
+ | REQ-PUBLISH-041 | Proposed | Exp 3689 v337 dependency-aware capstone and G-gate |
++| REQ-PUBLISH-3767 | Planned | Exp 3767 G2 local mechanical FoVer headline reproducer |
+ | REQ-PUBLISH-3701 | Implemented | Exp 3701 v338 re-freeze capstone and publication gate recheck |
+ | REQ-PUBLISH-3712 | Proposed | Exp 3712 v339 re-freeze winner capstone and publication gate recheck |
+ | REQ-PUBLISH-3716 | Implemented | Exp 3716 standalone Paper-v6 narrowing lint |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 327c5f1a2c..3977fa72e6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2871,
++  "experiments_checked": 2872,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 64ae292f54..21ba159257 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T15:04:17.598202+00:00",
+-  "finished_at": "2026-06-03T15:04:17.624954+00:00",
+-  "duration_s": 0.027,
++  "started_at": "2026-06-03T16:30:35.327576+00:00",
++  "finished_at": "2026-06-03T16:30:35.351894+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index bd0be160bb..cffaf30244 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-03T15:04:17Z",
++  "run_date": "2026-06-03T16:30:35Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 47dcf26ba8..ca7dc648ba 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T15:04:19Z",
+-  "finished_at": "2026-06-03T15:04:19Z",
++  "started_at": "2026-06-03T16:30:36Z",
++  "finished_at": "2026-06-03T16:30:36Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 03b474aad7..c5627d6afa 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-03T15:04:19Z",
++  "run_date": "2026-06-03T16:30:36Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 50bad32d50..988df42d0b 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-03T15:04:19Z",
++  "run_date": "2026-06-03T16:30:36Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 17bf71d734..d9abad3507 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-03T16:12:58.916437Z",
+-  "duration_s": 0.007908105850219727,
++  "run_date": "2026-06-03T16:28:55.645443Z",
++  "duration_s": 0.010463237762451172,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "82ae427a98a25b85e69a47e8624ffaa459e04dad113289f77a27a71e2786cb03",
++  "reproducibility_checksum": "2f4d9a8ed9067370d537de37979412fc7791fe4ea0fe2fb220c3e73567d86c0b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "3b4265f80d9ecbcf48fd01d039a97e579ed3f6cc"
++    "adversarial_verify_version": "1bf0e1afa01d3bb40fc519ea4baea07c7801a972"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 6d4c30f6fc..7004d7834c 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-03T15:04:37.873632Z",
+-  "duration_s": 22.542470455169678,
++  "run_date": "2026-06-03T16:30:57.048175Z",
++  "duration_s": 21.083613872528076,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index a578bdfcf1..ea95909d33 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-03T16:12:58.926392Z",
+-  "duration_s": 0.00748896598815918,
++  "run_date": "2026-06-03T16:28:55.658177Z",
++  "duration_s": 0.009413719177246094,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "729fe9c9dd0ad82fd4b52d448f30c588520a36e1c875987668229e25c35c2888",
++  "reproducibility_checksum": "1664cbe94f7224269f2156c5fa20c7c2c3217c79648fc4dc68e19a1281e880f7",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "3b4265f80d9ecbcf48fd01d039a97e579ed3f6cc"
++    "adversarial_verify_version": "1bf0e1afa01d3bb40fc519ea4baea07c7801a972"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 9e752c9127..1fb4135d07 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.109527587890625,
++  "efficiency_gains_ms": 2.110719680786133,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 1c4f2314d6..bf6f8b4465 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.27958178520202637,
++  "duration_s": 0.2694988250732422,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index dbc26dd39d..5a0feaf719 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008738040924072266,
++  "duration_s": 0.0008113384246826172,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a51fe40370..915903117e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.908499664044939e-05,
++  "duration_s": 2.6589001208776608e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 336c799262..b45fb8c3f9 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.509973561856896e-07,
++  "duration_s": 7.609996828250587e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 891dc6aa53..33a6064644 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.818771362304688e-05,
++  "duration_s": 6.0558319091796875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3767_g2_mechanical_reproducer.json b/results/experiment_3767_g2_mechanical_reproducer.json
+new file mode 100644
+index 0000000000..d7b02eb97d
+--- /dev/null
++++ b/results/experiment_3767_g2_mechanical_reproducer.json
+@@ -0,0 +1,108 @@
++{
++  "artifact": "experiment_3767_g2_mechanical_reproducer",
++  "auroc_in_ci95": true,
++  "condition_b_architecture_only_auroc_mean": 0.8946624,
++  "corpus_sha256": "585a4b8099fae140b850e10d36f121e0a25e645c8d0d264936d5efa0a62b330f",
++  "discrepancy": null,
++  "duration_s": 2.3678126335144043,
++  "experiment": 3767,
++  "field_principles": {
++    "auroc_in_ci95": "BARE bool; true iff reproduced mean is within the frozen CI95. Downstream G2-local gate.",
++    "duration_s": "Wall-clock plausibility floor; seconds for verifier scoring.",
++    "frozen_headline_unchanged": "Confirms this reproduces rather than re-versioning the frozen 0.9131 headline.",
++    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
++    "inference_substrate": "Bare verifier-scoring substrate; scores cached triples on CPU, no live LLM; 1s floor.",
++    "model_specs": "Names the FoVer corpus and four scoring verifiers; explicitly not a live LLM.",
++    "per_seed_aurocs": "The five per-seed AUROCs; sample-size and reproducibility evidence, not a single point estimate.",
++    "preconditions_checked": "Interpreter, dependencies, corpus, and verifier imports checked before scoring; anti-fabrication gate.",
++    "random_seeds_used": "The five seeds; determinism and reproducibility precondition.",
++    "reproduced_auroc_ci95": "The reproduced 95% CI across seeds; the spread that must overlap the frozen [0.9027, 0.9235].",
++    "reproduced_auroc_mean": "The locally-reproduced mean AUROC; confirms the frozen headline still computes in the current environment.",
++    "reproducibility_checksum": "Content hash catches silent corpus/protocol drift."
++  },
++  "frozen_headline_unchanged": true,
++  "honest_verdict": "complete: g2_local_reproducer_committed_auroc_0.913134_in_ci95_true_frozen_headline_confirmed_unchanged",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "learning_contribution_ci95": {
++    "high": 0.024480839704138033,
++    "low": 0.012461560295861967,
++    "mean": 0.0184712
++  },
++  "live_model_invoked": false,
++  "methodology_note": "Verifier ensemble against cached FoVer candidates on CPU; no live LLM loaded or invoked. This confirms the frozen 0.9131 headline rather than moving it.",
++  "model_specs": {
++    "candidate_source": "cached_fover_candidate_triples",
++    "corpus": "FoVer step-error corpus",
++    "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
++    "dual_condition_protocol": true,
++    "live_model": null,
++    "live_model_invoked": false,
++    "n_examples": 1000,
++    "scoring_verifiers": [
++      "fr11_session_memory",
++      "tier0r_curry_howard",
++      "tier0s_arithmetic_gap",
++      "tier0u_logical_consistency"
++    ],
++    "source_headline_artifact": "results/experiment_2837_fover_memory_leakage_v3.json",
++    "verifier_imports": {
++      "fr11_session_memory": "carnot.eval.fover_memory_leakage_v3",
++      "tier0r_curry_howard": "carnot.verify.tier0r_curry_howard",
++      "tier0s_arithmetic_gap": "carnot.verify.tier0s_halluguard",
++      "tier0u_logical_consistency": "carnot.verify.tier0u_logical_consistency"
++    }
++  },
++  "n_examples": 1000,
++  "n_seeds": 5,
++  "per_seed_aurocs": [
++    0.914952,
++    0.908738,
++    0.90145,
++    0.917102,
++    0.923426
++  ],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "actual=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python; expected=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "resource": "interpreter"
++    },
++    {
++      "available": true,
++      "detail": "ok",
++      "resource": "python_dependencies"
++    },
++    {
++      "available": true,
++      "detail": "path=/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl; line_count=8829; required>=1000",
++      "resource": "fover_corpus"
++    },
++    {
++      "available": true,
++      "detail": "ok",
++      "resource": "verifier_modules"
++    }
++  ],
++  "random_seeds_used": [
++    42,
++    137,
++    271,
++    314,
++    1729
++  ],
++  "reproduced_auroc_ci95": {
++    "high": 0.923536,
++    "low": 0.902732,
++    "mean": 0.913134
++  },
++  "reproduced_auroc_mean": 0.913134,
++  "reproducibility_checksum": "f3be5c145b65b5219794d8bd996118995edd1d2e1fff5edfe1d41fdd8984345f",
++  "schema": "carnot.g2_mechanical_reproducer.v1",
++  "source_headline": {
++    "condition_a_production_auroc_mean": 0.9131335999999999,
++    "headline_matches_frozen_0_9131": true,
++    "path": "results/experiment_2837_fover_memory_leakage_v3.json",
++    "present": true
++  },
++  "upstream_reproducer_checksum": "748a695343d105129585d0114f1f8d5e6255fea3fd5519a03d9cc927524901e3"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 7679f9ac40..8763eaa6eb 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T16:12:50Z",
+-  "finished_at": "2026-06-03T16:12:50Z",
++  "started_at": "2026-06-03T16:30:55Z",
++  "finished_at": "2026-06-03T16:30:55Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 659bc16ff1..d107e738f1 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T16:12:50Z",
+-  "finished_at": "2026-06-03T16:12:50Z",
++  "started_at": "2026-06-03T16:30:56Z",
++  "finished_at": "2026-06-03T16:30:56Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 362192be84..46df22d151 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T16:12:50Z",
+-  "finished_at": "2026-06-03T16:12:50Z",
++  "started_at": "2026-06-03T16:30:56Z",
++  "finished_at": "2026-06-03T16:30:56Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_3767_g2_mechanical_reproducer.py b/scripts/experiment_3767_g2_mechanical_reproducer.py
+new file mode 100644
+index 0000000000..4141b1f1d6
+--- /dev/null
++++ b/scripts/experiment_3767_g2_mechanical_reproducer.py
+@@ -0,0 +1,568 @@
++#!/usr/bin/env python3
++"""Exp 3767: local mechanical FoVer headline reproducer.
++
++Spec: REQ-PUBLISH-3767,
++      SCENARIO-PUBLISH-3767,
++      SCENARIO-PUBLISH-3767B.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import importlib
++import json
++import math
++import sys
++import time
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any, Callable, Mapping, Sequence
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++for _path in (REPO_ROOT, PYTHON_ROOT):
++    if str(_path) not in sys.path:  # pragma: no cover - direct script execution guard.
++        sys.path.insert(0, str(_path))
++
++from scripts import reproduce_fover_headline as reproducer  # noqa: E402
++
++
++EXPERIMENT_ID = 3767
++ARTIFACT_NAME = "experiment_3767_g2_mechanical_reproducer"
++OUTPUT_REL_PATH = Path("results/experiment_3767_g2_mechanical_reproducer.json")
++FROZEN_SOURCE_REL_PATH = Path("results/experiment_2837_fover_memory_leakage_v3.json")
++FROZEN_AUROC_CI95 = (0.9027, 0.9235)
++RANDOM_SEEDS = (42, 137, 271, 314, 1729)
++N_EXAMPLES = 1000
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++DEPENDENCY_IMPORTS = ("yaml", "numpy", "sklearn")
++VERIFIER_IMPORTS = {
++    "fr11_session_memory": "carnot.eval.fover_memory_leakage_v3",
++    "tier0r_curry_howard": "carnot.verify.tier0r_curry_howard",
++    "tier0s_arithmetic_gap": "carnot.verify.tier0s_halluguard",
++    "tier0u_logical_consistency": "carnot.verify.tier0u_logical_consistency",
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "reproduced_auroc_mean",
++    "reproduced_auroc_ci95",
++    "auroc_in_ci95",
++    "per_seed_aurocs",
++    "frozen_headline_unchanged",
++    "preconditions_checked",
++    "model_specs",
++    "random_seeds_used",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
++    "inference_substrate": (
++        "Bare verifier-scoring substrate; scores cached triples on CPU, no live LLM; "
++        "1s floor."
++    ),
++    "reproduced_auroc_mean": (
++        "The locally-reproduced mean AUROC; confirms the frozen headline still "
++        "computes in the current environment."
++    ),
++    "reproduced_auroc_ci95": (
++        "The reproduced 95% CI across seeds; the spread that must overlap the "
++        "frozen [0.9027, 0.9235]."
++    ),
++    "auroc_in_ci95": (
++        "BARE bool; true iff reproduced mean is within the frozen CI95. "
++        "Downstream G2-local gate."
++    ),
++    "per_seed_aurocs": (
++        "The five per-seed AUROCs; sample-size and reproducibility evidence, not "
++        "a single point estimate."
++    ),
++    "frozen_headline_unchanged": (
++        "Confirms this reproduces rather than re-versioning the frozen 0.9131 "
++        "headline."
++    ),
++    "preconditions_checked": (
++        "Interpreter, dependencies, corpus, and verifier imports checked before "
++        "scoring; anti-fabrication gate."
++    ),
++    "model_specs": (
++        "Names the FoVer corpus and four scoring verifiers; explicitly not a live "
++        "LLM."
++    ),
++    "random_seeds_used": "The five seeds; determinism and reproducibility precondition.",
++    "reproducibility_checksum": "Content hash catches silent corpus/protocol drift.",
++    "duration_s": "Wall-clock plausibility floor; seconds for verifier scoring.",
++}
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One local resource checked before any scoring is allowed."""
++
++    resource: str
++    available: bool
++    detail: str
++
++    def as_dict(self) -> dict[str, object]:
++        return {
++            "resource": self.resource,
++            "available": self.available,
++            "detail": self.detail,
++        }
++
++
++Importer = Callable[[str], object]
++Clock = Callable[[], float]
++ReproductionRunner = Callable[[Path, tuple[int, ...], int], Mapping[str, Any]]
++
++
++def _round_metric(value: float | int, digits: int = 6) -> float:
++    return round(float(value), digits)
++
++
++def _line_count(path: Path) -> int:
++    with path.open("rb") as handle:
++        return sum(1 for _line in handle)
++
++
++def _sha256_file(path: Path) -> str | None:
++    if not path.is_file():
++        return None
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return digest.hexdigest()
++
++
++def _json_checksum(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _seed_ci95(values: Sequence[float]) -> dict[str, float] | None:
++    if not values:
++        return None
++    numeric = [float(value) for value in values]
++    mean = sum(numeric) / len(numeric)
++    if len(numeric) < 2:
++        return {
++            "mean": _round_metric(mean),
++            "low": _round_metric(mean),
++            "high": _round_metric(mean),
++        }
++    t_crit_by_n = {2: 12.706, 3: 4.303, 4: 3.182, 5: 2.776}
++    t_crit = t_crit_by_n.get(len(numeric), 1.96)
++    sample_std = math.sqrt(sum((value - mean) ** 2 for value in numeric) / (len(numeric) - 1))
++    half_width = t_crit * sample_std / math.sqrt(len(numeric))
++    return {
++        "mean": _round_metric(mean),
++        "low": _round_metric(mean - half_width),
++        "high": _round_metric(mean + half_width),
++    }
++
++
++def _venv_python(repo_root: Path) -> Path:
++    return Path(repo_root) / ".venv" / "bin" / "python"
++
++
++def _uses_repo_venv(python_executable: str, repo_root: Path) -> bool:
++    return Path(python_executable) == _venv_python(repo_root)
++
++
++def _missing_imports(names: Sequence[str], importer: Importer) -> list[str]:
++    missing: list[str] = []
++    for name in names:
++        try:
++            importer(name)
++        except ImportError:
++            missing.append(name)
++    return missing
++
++
++def check_preconditions(
++    repo_root: Path = REPO_ROOT,
++    *,
++    python_executable: str = sys.executable,
++    importer: Importer = importlib.import_module,
++    n_examples: int = N_EXAMPLES,
++) -> list[PreconditionCheck]:
++    """Check every anti-fabrication precondition before scoring."""
++
++    root = Path(repo_root)
++    expected_python = _venv_python(root)
++    interpreter_ok = _uses_repo_venv(python_executable, root)
++    checks = [
++        PreconditionCheck(
++            "interpreter",
++            interpreter_ok,
++            f"actual={python_executable}; expected={expected_python}",
++        )
++    ]
++
++    missing_dependencies = _missing_imports(DEPENDENCY_IMPORTS, importer)
++    checks.append(
++        PreconditionCheck(
++            "python_dependencies",
++            not missing_dependencies,
++            "ok" if not missing_dependencies else "missing=" + ",".join(missing_dependencies),
++        )
++    )
++
++    corpus_path = root / "data" / "fover_corpus.jsonl"
++    if corpus_path.is_file():
++        n_rows = _line_count(corpus_path)
++        corpus_ok = n_rows >= n_examples
++        detail = f"path={corpus_path}; line_count={n_rows}; required>={n_examples}"
++    else:
++        corpus_ok = False
++        detail = f"path={corpus_path}; missing"
++    checks.append(PreconditionCheck("fover_corpus", corpus_ok, detail))
++
++    missing_verifiers = [
++        verifier
++        for verifier, module_name in VERIFIER_IMPORTS.items()
++        if module_name in _missing_imports((module_name,), importer)
++    ]
++    checks.append(
++        PreconditionCheck(
++            "verifier_modules",
++            not missing_verifiers,
++            "ok" if not missing_verifiers else "missing=" + ",".join(missing_verifiers),
++        )
++    )
++    return checks
++
++
++def first_blocked_verdict(preconditions: Sequence[PreconditionCheck]) -> str | None:
++    verdict_by_resource = {
++        "interpreter": "blocked_interpreter_not_venv",
++        "python_dependencies": "blocked_python_dependencies_missing",
++        "fover_corpus": "blocked_fover_corpus_missing",
++        "verifier_modules": "blocked_verifier_modules_unavailable",
++        "reproducer_scoring": "blocked_reproducer_scoring_failed",
++        "reproducer_execution": "blocked_reproducer_execution_failed",
++    }
++    for check in preconditions:
++        if not check.available:
++            return verdict_by_resource.get(check.resource, f"blocked_{check.resource}")
++    return None
++
++
++def _per_seed_aurocs(reproduction_result: Mapping[str, Any]) -> list[float]:
++    rows = list(reproduction_result.get("per_seed_results") or [])
++    return [
++        _round_metric(float(dict(row)["condition_a_production_auroc"]))
++        for row in rows
++        if "condition_a_production_auroc" in dict(row)
++    ]
++
++
++def _reproduced_mean(
++    reproduction_result: Mapping[str, Any],
++    per_seed_aurocs: Sequence[float],
++) -> float | None:
++    raw = reproduction_result.get("condition_a_production_auroc_mean")
++    if raw is not None:
++        return _round_metric(float(raw))
++    if per_seed_aurocs:
++        return _round_metric(sum(per_seed_aurocs) / len(per_seed_aurocs))
++    return None
++
++
++def _reproduced_ci95(
++    reproduction_result: Mapping[str, Any],
++    per_seed_aurocs: Sequence[float],
++) -> dict[str, float] | None:
++    raw = reproduction_result.get("condition_a_production_auroc_ci95")
++    if isinstance(raw, Mapping) and {"mean", "low", "high"} <= set(raw):
++        return {
++            "mean": _round_metric(float(raw["mean"])),
++            "low": _round_metric(float(raw["low"])),
++            "high": _round_metric(float(raw["high"])),
++        }
++    return _seed_ci95(per_seed_aurocs)
++
++
++def _frozen_headline_source(repo_root: Path) -> dict[str, Any]:
++    source_path = Path(repo_root) / FROZEN_SOURCE_REL_PATH
++    if not source_path.is_file():
++        return {
++            "path": FROZEN_SOURCE_REL_PATH.as_posix(),
++            "present": False,
++            "headline_matches_frozen_0_9131": False,
++        }
++    payload = json.loads(source_path.read_text(encoding="utf-8"))
++    source_mean = payload.get("condition_a_production_auroc_mean")
++    rounded = None if source_mean is None else round(float(source_mean), 4)
++    return {
++        "path": FROZEN_SOURCE_REL_PATH.as_posix(),
++        "present": True,
++        "condition_a_production_auroc_mean": source_mean,
++        "headline_matches_frozen_0_9131": rounded == 0.9131,
++    }
++
++
++def _model_specs(repo_root: Path, n_examples: int) -> dict[str, Any]:
++    return {
++        "corpus": "FoVer step-error corpus",
++        "corpus_path": str(Path(repo_root) / "data" / "fover_corpus.jsonl"),
++        "candidate_source": "cached_fover_candidate_triples",
++        "n_examples": n_examples,
++        "dual_condition_protocol": True,
++        "scoring_verifiers": list(VERIFIER_IMPORTS),
++        "verifier_imports": dict(VERIFIER_IMPORTS),
++        "live_model": None,
++        "live_model_invoked": False,
++        "source_headline_artifact": FROZEN_SOURCE_REL_PATH.as_posix(),
++    }
++
++
++def _reproducibility_checksum(
++    *,
++    repo_root: Path,
++    seeds: Sequence[int],
++    n_examples: int,
++    upstream_checksum: str | None,
++) -> str:
++    corpus_path = Path(repo_root) / "data" / "fover_corpus.jsonl"
++    payload = {
++        "corpus_sha256": _sha256_file(corpus_path) or "missing",
++        "random_seeds_used": list(seeds),
++        "n_examples": n_examples,
++        "scoring_verifiers": list(VERIFIER_IMPORTS),
++        "frozen_source_artifact": FROZEN_SOURCE_REL_PATH.as_posix(),
++        "upstream_reproducer_checksum": upstream_checksum,
++    }
++    return _json_checksum(payload)
++
++
++def _base_artifact(
++    *,
++    repo_root: Path,
++    preconditions: Sequence[PreconditionCheck],
++    duration_s: float,
++    seeds: Sequence[int],
++    n_examples: int,
++    upstream_checksum: str | None,
++) -> dict[str, Any]:
++    corpus_path = Path(repo_root) / "data" / "fover_corpus.jsonl"
++    return {
++        "experiment": EXPERIMENT_ID,
++        "artifact": ARTIFACT_NAME,
++        "schema": "carnot.g2_mechanical_reproducer.v1",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "live_model_invoked": False,
++        "n_examples": n_examples,
++        "n_seeds": len(seeds),
++        "random_seeds_used": list(seeds),
++        "preconditions_checked": [check.as_dict() for check in preconditions],
++        "model_specs": _model_specs(repo_root, n_examples),
++        "corpus_sha256": _sha256_file(corpus_path),
++        "source_headline": _frozen_headline_source(repo_root),
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": duration_s,
++        "reproducibility_checksum": _reproducibility_checksum(
++            repo_root=repo_root,
++            seeds=seeds,
++            n_examples=n_examples,
++            upstream_checksum=upstream_checksum,
++        ),
++        "methodology_note": (
++            "Verifier ensemble against cached FoVer candidates on CPU; no live "
++            "LLM loaded or invoked. This confirms the frozen 0.9131 headline "
++            "rather than moving it."
++        ),
++    }
++
++
++def blocked_artifact(
++    *,
++    repo_root: Path,
++    preconditions: Sequence[PreconditionCheck],
++    duration_s: float,
++    seeds: Sequence[int],
++    n_examples: int,
++    verdict_override: str | None = None,
++) -> dict[str, Any]:
++    verdict = verdict_override or first_blocked_verdict(preconditions) or "blocked_unknown_resource"
++    failed = [check.resource for check in preconditions if not check.available]
++    artifact = _base_artifact(
++        repo_root=repo_root,
++        preconditions=preconditions,
++        duration_s=duration_s,
++        seeds=seeds,
++        n_examples=n_examples,
++        upstream_checksum=None,
++    )
++    artifact.update(
++        {
++            "honest_verdict": verdict,
++            "blocked_resources": failed,
++            "reproduced_auroc_mean": None,
++            "reproduced_auroc_ci95": None,
++            "auroc_in_ci95": False,
++            "per_seed_aurocs": [],
++            "frozen_headline_unchanged": False,
++            "discrepancy": None,
++        }
++    )
++    return artifact
++
++
++def artifact_from_reproduction(
++    *,
++    repo_root: Path,
++    reproduction_result: Mapping[str, Any],
++    preconditions: Sequence[PreconditionCheck],
++    duration_s: float,
++    seeds: Sequence[int],
++    n_examples: int,
++) -> dict[str, Any]:
++    per_seed_aurocs = _per_seed_aurocs(reproduction_result)
++    reproduced_mean = _reproduced_mean(reproduction_result, per_seed_aurocs)
++    reproduced_ci95 = _reproduced_ci95(reproduction_result, per_seed_aurocs)
++    auroc_in_ci95 = bool(
++        reproduced_mean is not None
++        and FROZEN_AUROC_CI95[0] <= reproduced_mean <= FROZEN_AUROC_CI95[1]
++    )
++    source = _frozen_headline_source(repo_root)
++    frozen_headline_unchanged = bool(source.get("headline_matches_frozen_0_9131"))
++    mean_token = "none" if reproduced_mean is None else f"{reproduced_mean:.6f}"
++    bool_token = str(auroc_in_ci95).lower()
++    verdict_suffix = (
++        "frozen_headline_confirmed_unchanged"
++        if auroc_in_ci95
++        else "discrepancy_recorded_frozen_headline_unchanged"
++    )
++    artifact = _base_artifact(
++        repo_root=repo_root,
++        preconditions=preconditions,
++        duration_s=duration_s,
++        seeds=seeds,
++        n_examples=n_examples,
++        upstream_checksum=str(reproduction_result.get("reproducibility_checksum") or ""),
++    )
++    artifact.update(
++        {
++            "honest_verdict": (
++                "complete: g2_local_reproducer_committed_auroc_"
++                f"{mean_token}_in_ci95_{bool_token}_{verdict_suffix}"
++            ),
++            "reproduced_auroc_mean": reproduced_mean,
++            "reproduced_auroc_ci95": reproduced_ci95,
++            "auroc_in_ci95": auroc_in_ci95,
++            "per_seed_aurocs": per_seed_aurocs,
++            "frozen_headline_unchanged": frozen_headline_unchanged,
++            "discrepancy": None
++            if auroc_in_ci95
++            else {
++                "frozen_ci95": list(FROZEN_AUROC_CI95),
++                "reproduced_auroc_mean": reproduced_mean,
++            },
++            "upstream_reproducer_checksum": reproduction_result.get(
++                "reproducibility_checksum"
++            ),
++            "condition_b_architecture_only_auroc_mean": reproduction_result.get(
++                "condition_b_architecture_only_auroc_mean"
++            ),
++            "learning_contribution_ci95": reproduction_result.get(
++                "learning_contribution_ci95"
++            ),
++        }
++    )
++    return artifact
++
++
++def _default_reproduction_runner(
++    repo_root: Path,
++    seeds: tuple[int, ...],
++    n_examples: int,
++) -> Mapping[str, Any]:
++    return reproducer.run_reproduction(repo_root, seeds, n_examples)
++
++
++def write_artifact(path: Path, artifact: Mapping[str, Any]) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run_experiment(
++    *,
++    repo_root: Path = REPO_ROOT,
++    output_path: Path | None = None,
++    python_executable: str = sys.executable,
++    importer: Importer = importlib.import_module,
++    clock: Clock = time.time,
++    reproduction_runner: ReproductionRunner = _default_reproduction_runner,
++) -> Path:
++    started_s = clock()
++    root = Path(repo_root)
++    target = Path(output_path) if output_path is not None else root / OUTPUT_REL_PATH
++    checks = check_preconditions(root, python_executable=python_executable, importer=importer)
++    blocked = first_blocked_verdict(checks)
++    if blocked is not None:
++        artifact = blocked_artifact(
++            repo_root=root,
++            preconditions=checks,
++            duration_s=clock() - started_s,
++            seeds=RANDOM_SEEDS,
++            n_examples=N_EXAMPLES,
++            verdict_override=blocked,
++        )
++        return write_artifact(target, artifact)
++
++    try:
++        result = reproduction_runner(root, RANDOM_SEEDS, N_EXAMPLES)
++    except Exception as exc:
++        failed_checks = [
++            *checks,
++            PreconditionCheck("reproducer_execution", False, f"{type(exc).__name__}: {exc}"),
++        ]
++        artifact = blocked_artifact(
++            repo_root=root,
++            preconditions=failed_checks,
++            duration_s=clock() - started_s,
++            seeds=RANDOM_SEEDS,
++            n_examples=N_EXAMPLES,
++        )
++        return write_artifact(target, artifact)
++
++    verdict = str(result.get("honest_verdict") or "")
++    if verdict.startswith("blocked"):
++        failed_checks = [*checks, PreconditionCheck("reproducer_scoring", False, verdict)]
++        artifact = blocked_artifact(
++            repo_root=root,
++            preconditions=failed_checks,
++            duration_s=clock() - started_s,
++            seeds=RANDOM_SEEDS,
++            n_examples=N_EXAMPLES,
++            verdict_override=verdict,
++        )
++        return write_artifact(target, artifact)
++
++    artifact = artifact_from_reproduction(
++        repo_root=root,
++        reproduction_result=result,
++        preconditions=checks,
++        duration_s=clock() - started_s,
++        seeds=RANDOM_SEEDS,
++        n_examples=N_EXAMPLES,
++    )
++    return write_artifact(target, artifact)
++
++
++def main() -> int:
++    path = run_experiment()
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0 if artifact.get("auroc_in_ci95") is True else 1
++
++
++if __name__ == "__main__":  # pragma: no cover - script entry point.
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3767_g2_mechanical_reproducer.py b/tests/python/test_experiment_3767_g2_mechanical_reproducer.py
+new file mode 100644
+index 0000000000..5889f925d6
+--- /dev/null
++++ b/tests/python/test_experiment_3767_g2_mechanical_reproducer.py
+@@ -0,0 +1,355 @@
++"""Tests for Exp 3767 G2 local mechanical FoVer headline reproducer.
++
++Spec: REQ-PUBLISH-3767,
++      SCENARIO-PUBLISH-3767,
++      SCENARIO-PUBLISH-3767B.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from scripts import experiment_3767_g2_mechanical_reproducer as exp3767
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++
++
++_SEED_AUROCS = [0.914952, 0.908738, 0.90145, 0.917102, 0.923426]
++
++
++def _good_reproducer_result(*, aurocs: list[float] | None = None) -> dict[str, Any]:
++    seed_aurocs = aurocs if aurocs is not None else list(_SEED_AUROCS)
++    return {
++        "honest_verdict": "complete: FoVer memory-leakage v3 measured",
++        "condition_a_production_auroc_mean": sum(seed_aurocs) / len(seed_aurocs),
++        "condition_a_production_auroc_ci95": {
++            "mean": sum(seed_aurocs) / len(seed_aurocs),
++            "low": min(seed_aurocs),
++            "high": max(seed_aurocs),
++        },
++        "condition_b_architecture_only_auroc_mean": 0.8946624,
++        "learning_contribution_ci95": {
++            "mean": 0.0184712,
++            "low": 0.0124615,
++            "high": 0.0244808,
++        },
++        "per_seed_results": [
++            {
++                "seed": seed,
++                "condition_a_production_auroc": auroc,
++                "condition_b_architecture_only_auroc": 0.89,
++            }
++            for seed, auroc in zip(exp3767.RANDOM_SEEDS, seed_aurocs, strict=True)
++        ],
++        "reproducibility_checksum": "upstream-checksum",
++    }
++
++
++def _ok_importer(_name: str) -> object:
++    return object()
++
++
++def _make_repo(tmp_path: Path, *, with_corpus: bool = True) -> Path:
++    (tmp_path / ".venv" / "bin").mkdir(parents=True)
++    (tmp_path / ".venv" / "bin" / "python").write_text("# python\n", encoding="utf-8")
++    if with_corpus:
++        corpus = tmp_path / "data" / "fover_corpus.jsonl"
++        corpus.parent.mkdir()
++        row = json.dumps({"label": "correct", "step_text": "x"})
++        corpus.write_text("\n".join([row] * exp3767.N_EXAMPLES) + "\n", encoding="utf-8")
++    source = tmp_path / exp3767.FROZEN_SOURCE_REL_PATH
++    source.parent.mkdir(parents=True, exist_ok=True)
++    source.write_text(
++        json.dumps({"condition_a_production_auroc_mean": 0.9131336}),
++        encoding="utf-8",
++    )
++    return tmp_path
++
++
++def test_req_publish_3767_preconditions_pass_in_repo() -> None:
++    """REQ-PUBLISH-3767: the local repo has the required interpreter/corpus/imports."""
++
++    checks = exp3767.check_preconditions(REPO_ROOT)
++
++    availability = {check.resource: check.available for check in checks}
++    assert availability["interpreter"] is True
++    assert availability["python_dependencies"] is True
++    assert availability["fover_corpus"] is True
++    assert availability["verifier_modules"] is True
++    assert exp3767.first_blocked_verdict(checks) is None
++
++
++def test_req_publish_3767_dependency_precondition_fails_closed(tmp_path: Path) -> None:
++    """REQ-PUBLISH-3767: missing yaml/numpy/sklearn blocks before scoring."""
++
++    repo = _make_repo(tmp_path)
++
++    def importer(name: str) -> object:
++        if name == "sklearn":
++            raise ImportError("missing sklearn")
++        return object()
++
++    checks = exp3767.check_preconditions(
++        repo,
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=importer,
++    )
++
++    assert exp3767.first_blocked_verdict(checks) == "blocked_python_dependencies_missing"
++    dependency_check = next(check for check in checks if check.resource == "python_dependencies")
++    assert dependency_check.available is False
++    assert "sklearn" in dependency_check.detail
++
++
++def test_req_publish_3767_verifier_precondition_fails_closed(tmp_path: Path) -> None:
++    """REQ-PUBLISH-3767: missing verifier imports block before scoring."""
++
++    repo = _make_repo(tmp_path)
++
++    def importer(name: str) -> object:
++        if name == exp3767.VERIFIER_IMPORTS["tier0u_logical_consistency"]:
++            raise ImportError("missing tier0u")
++        return object()
++
++    checks = exp3767.check_preconditions(
++        repo,
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=importer,
++    )
++
++    assert exp3767.first_blocked_verdict(checks) == "blocked_verifier_modules_unavailable"
++    verifier_check = next(check for check in checks if check.resource == "verifier_modules")
++    assert verifier_check.available is False
++    assert "tier0u_logical_consistency" in verifier_check.detail
++
++
++def test_scenario_publish_3767_builds_complete_artifact_in_ci(tmp_path: Path) -> None:
++    """SCENARIO-PUBLISH-3767: complete artifact carries the downstream AUROC gate."""
++
++    repo = _make_repo(tmp_path)
++    checks = exp3767.check_preconditions(
++        repo,
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=_ok_importer,
++    )
++
++    artifact = exp3767.artifact_from_reproduction(
++        repo_root=repo,
++        reproduction_result=_good_reproducer_result(),
++        preconditions=checks,
++        duration_s=16.0,
++        seeds=exp3767.RANDOM_SEEDS,
++        n_examples=exp3767.N_EXAMPLES,
++    )
++
++    missing = [field for field in exp3767.REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    assert missing == []
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["inference_substrate"] == "verifier_ensemble_against_cached_candidates"
++    assert artifact["reproduced_auroc_mean"] == pytest.approx(0.9131336)
++    assert artifact["auroc_in_ci95"] is True
++    assert artifact["per_seed_aurocs"] == _SEED_AUROCS
++    assert artifact["frozen_headline_unchanged"] is True
++    assert artifact["model_specs"]["live_model"] is None
++    assert artifact["live_model_invoked"] is False
++
++
++def test_scenario_publish_3767_out_of_ci_records_discrepancy(tmp_path: Path) -> None:
++    """REQ-PUBLISH-3767: out-of-CI means fail the bare gate, not move the headline."""
++
++    repo = _make_repo(tmp_path)
++    checks = exp3767.check_preconditions(
++        repo,
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=_ok_importer,
++    )
++
++    artifact = exp3767.artifact_from_reproduction(
++        repo_root=repo,
++        reproduction_result=_good_reproducer_result(aurocs=[0.80, 0.81, 0.82, 0.83, 0.84]),
++        preconditions=checks,
++        duration_s=16.0,
++        seeds=exp3767.RANDOM_SEEDS,
++        n_examples=exp3767.N_EXAMPLES,
++    )
++
++    assert artifact["auroc_in_ci95"] is False
++    assert artifact["frozen_headline_unchanged"] is True
++    assert artifact["discrepancy"] == {
++        "frozen_ci95": [0.9027, 0.9235],
++        "reproduced_auroc_mean": 0.82,
++    }
++    assert "in_ci95_false" in artifact["honest_verdict"]
++
++
++def test_req_publish_3767_ci_and_mean_fallback_helpers(tmp_path: Path) -> None:
++    """REQ-PUBLISH-3767: seed CI/mean fallbacks are defined for edge cases."""
++
++    assert exp3767._seed_ci95([]) is None
++    assert exp3767._seed_ci95([0.5]) == {"mean": 0.5, "low": 0.5, "high": 0.5}
++    assert exp3767._seed_ci95([0.1, 0.2, 0.3]) == pytest.approx(
++        {"mean": 0.2, "low": -0.048434, "high": 0.448434}
++    )
++    assert exp3767._reproduced_mean({}, [0.1, 0.2]) == 0.15
++    assert exp3767._reproduced_mean({}, []) is None
++    assert exp3767._reproduced_ci95({}, [0.1, 0.2]) == pytest.approx(
++        {"mean": 0.15, "low": -0.4853, "high": 0.7853}
++    )
++    assert exp3767._frozen_headline_source(tmp_path) == {
++        "path": exp3767.FROZEN_SOURCE_REL_PATH.as_posix(),
++        "present": False,
++        "headline_matches_frozen_0_9131": False,
++    }
++
++
++def test_scenario_publish_3767_blocked_artifact_has_no_fabricated_metrics(tmp_path: Path) -> None:
++    """SCENARIO-PUBLISH-3767B: blocked resources write null metrics and false gate."""
++
++    repo = _make_repo(tmp_path, with_corpus=False)
++    checks = exp3767.check_preconditions(
++        repo,
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=_ok_importer,
++    )
++
++    artifact = exp3767.blocked_artifact(
++        repo_root=repo,
++        preconditions=checks,
++        duration_s=0.25,
++        seeds=exp3767.RANDOM_SEEDS,
++        n_examples=exp3767.N_EXAMPLES,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_fover_corpus_missing"
++    assert artifact["reproduced_auroc_mean"] is None
++    assert artifact["reproduced_auroc_ci95"] is None
++    assert artifact["per_seed_aurocs"] == []
++    assert artifact["auroc_in_ci95"] is False
++    assert artifact["frozen_headline_unchanged"] is False
++
++
++def test_scenario_publish_3767_run_blocks_before_scoring_on_missing_corpus(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-PUBLISH-3767B: run_experiment writes blocked artifact before scoring."""
++
++    repo = _make_repo(tmp_path, with_corpus=False)
++
++    def should_not_run(_repo_root: Path, _seeds: tuple[int, ...], _n_examples: int) -> dict[str, Any]:
++        raise AssertionError("scoring should not run")
++
++    times = iter([10.0, 10.5])
++    path = exp3767.run_experiment(
++        repo_root=repo,
++        output_path=tmp_path / "blocked.json",
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=_ok_importer,
++        clock=lambda: next(times),
++        reproduction_runner=should_not_run,
++    )
++
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"] == "blocked_fover_corpus_missing"
++    assert artifact["auroc_in_ci95"] is False
++
++
++def test_scenario_publish_3767_run_records_reproducer_execution_failure(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-PUBLISH-3767B: reproducer exceptions become blocked artifacts."""
++
++    repo = _make_repo(tmp_path)
++
++    def failing_runner(_repo_root: Path, _seeds: tuple[int, ...], _n_examples: int) -> dict[str, Any]:
++        raise RuntimeError("boom")
++
++    times = iter([20.0, 21.0])
++    path = exp3767.run_experiment(
++        repo_root=repo,
++        output_path=tmp_path / "execution_failed.json",
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=_ok_importer,
++        clock=lambda: next(times),
++        reproduction_runner=failing_runner,
++    )
++
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"] == "blocked_reproducer_execution_failed"
++    assert "reproducer_execution" in artifact["blocked_resources"]
++
++
++def test_scenario_publish_3767_run_preserves_reproducer_blocked_verdict(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-PUBLISH-3767B: blocked reproducer verdicts are propagated."""
++
++    repo = _make_repo(tmp_path)
++
++    def blocked_runner(_repo_root: Path, _seeds: tuple[int, ...], _n_examples: int) -> dict[str, Any]:
++        return {"honest_verdict": "blocked_fr11_state_files"}
++
++    times = iter([30.0, 31.0])
++    path = exp3767.run_experiment(
++        repo_root=repo,
++        output_path=tmp_path / "reproducer_blocked.json",
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=_ok_importer,
++        clock=lambda: next(times),
++        reproduction_runner=blocked_runner,
++    )
++
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"] == "blocked_fr11_state_files"
++    assert "reproducer_scoring" in artifact["blocked_resources"]
++
++
++def test_req_publish_3767_run_writes_artifact_with_default_reproducer(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-PUBLISH-3767: run_experiment writes the requested JSON artifact path."""
++
++    repo = _make_repo(tmp_path)
++    output_path = tmp_path / "results" / "experiment_3767_g2_mechanical_reproducer.json"
++    seen: dict[str, Any] = {}
++
++    def fake_run_reproduction(repo_root: Path, seeds: tuple[int, ...], n_examples: int) -> dict[str, Any]:
++        seen["args"] = (repo_root, seeds, n_examples)
++        return _good_reproducer_result()
++
++    times = iter([100.0, 117.0])
++    monkeypatch.setattr(exp3767.reproducer, "run_reproduction", fake_run_reproduction)
++
++    path = exp3767.run_experiment(
++        repo_root=repo,
++        output_path=output_path,
++        python_executable=str(repo / ".venv" / "bin" / "python"),
++        importer=_ok_importer,
++        clock=lambda: next(times),
++    )
++
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    assert path == output_path
++    assert seen["args"] == (repo, exp3767.RANDOM_SEEDS, exp3767.N_EXAMPLES)
++    assert artifact["duration_s"] == 17.0
++    assert artifact["auroc_in_ci95"] is True
++
++
++def test_req_publish_3767_main_returns_gate_status(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-PUBLISH-3767: main exits non-zero when the downstream gate is false."""
++
++    output_path = tmp_path / "artifact.json"
++    output_path.write_text(json.dumps({"auroc_in_ci95": False}), encoding="utf-8")
++    monkeypatch.setattr(exp3767, "run_experiment", lambda: output_path)
++
++    assert exp3767.main() == 1
++    assert '"auroc_in_ci95": false' in capsys.readouterr().out
+-- 
+2.55.0
+

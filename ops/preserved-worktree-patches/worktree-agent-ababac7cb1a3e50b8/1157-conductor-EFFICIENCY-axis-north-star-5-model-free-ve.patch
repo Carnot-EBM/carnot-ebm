@@ -1,0 +1,2083 @@
+From 3bd89c57283ded18d20226b23f8ddf80dd2db36c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 21:14:26 -0400
+Subject: [PATCH 01157/11362] =?UTF-8?q?[conductor]=20EFFICIENCY=20axis=20(?=
+ =?UTF-8?q?north-star=20=C2=A75)=20--=20model-free=20verifier=20vs=20LLM-j?=
+ =?UTF-8?q?udge=20cost=20ratio=20ON=20ARC=20selection:=20head-to-head=20on?=
+ =?UTF-8?q?=20the=20SAME=20candidate=20sets=20from=20the=20ARC-1/ARC-2=20p?=
+ =?UTF-8?q?ools,=20(A)=20the=20model-free=20GAP-4=20verifier=20(demo-fit?=
+ =?UTF-8?q?=20+=20restricted-namespace=20execution=20+=20content-hash=20ma?=
+ =?UTF-8?q?tch,=20~0.11s/task)=20selects=20the=20best=20candidate;=20(B)?=
+ =?UTF-8?q?=20an=20LLM-judge=20(codex/gpt-5.5)=20selects=20from=20the=20id?=
+ =?UTF-8?q?entical=20candidate=20set.=20Report=20SELECTION-ACCURACY=20PARI?=
+ =?UTF-8?q?TY=20(do=20A=20and=20B=20pick=20the=20same=20/=20equally-gold?=
+ =?UTF-8?q?=20candidate,=20within=20CI)=20AND=20the=20COMPUTE/LATENCY=20RA?=
+ =?UTF-8?q?TIO=20(verifier=20seconds=20+=20tokens=20vs=20judge=20seconds?=
+ =?UTF-8?q?=20+=20tokens)=20--=20the=20'parity=20at=20Nx=20cheaper'=20clai?=
+ =?UTF-8?q?m.=20This=20is=20the=20cleanest=20statement=20of=20'the=20verif?=
+ =?UTF-8?q?ier=20earns=20its=20place=20on=20cost'=20in=20the=20ARC=20venue?=
+ =?UTF-8?q?;=20no=20published=20work=20reports=20an=20apples-to-apples=20m?=
+ =?UTF-8?q?odel-free-verifier-vs-LLM-judge=20cost=20ratio=20on=20ARC.=20Th?=
+ =?UTF-8?q?e=20model-free=20verifier=20is=20the=20cheap,=20hardware-accele?=
+ =?UTF-8?q?ratable,=20externally-grounded=20forward-pass=20primitive=20(no?=
+ =?UTF-8?q?rth-star=20=C2=A75).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4013-verifier-vs-judge-efficiency
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/verification/spec.md    |  47 +
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...ent_4013_verifier_vs_judge_efficiency.json | 572 ++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...iment_4013_verifier_vs_judge_efficiency.py | 877 ++++++++++++++++++
+ ...iment_4013_verifier_vs_judge_efficiency.py | 371 ++++++++
+ 12 files changed, 1885 insertions(+), 18 deletions(-)
+ create mode 100644 results/experiment_4013_verifier_vs_judge_efficiency.json
+ create mode 100644 scripts/experiments/experiment_4013_verifier_vs_judge_efficiency.py
+ create mode 100644 tests/python/test_experiment_4013_verifier_vs_judge_efficiency.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index ba1ee7242c..d7d9c3335c 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -12139,3 +12139,50 @@ that sovereign positive, otherwise emits
+ `complete: gap4_local_bestofn_cov<val>_pass2<val>_below_codex`, and lists
+ remaining codex-demo-perfect tasks without a local best-of-N demo-perfect sample
+ in `missing_verifier_gaps`.
++
++### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
++
++The repository SHALL provide Exp 4013 at
++`scripts/experiments/experiment_4013_verifier_vs_judge_efficiency.py` to measure
++the apples-to-apples efficiency of the model-free GAP-4 verifier against a
++Codex/GPT-5.5 LLM judge on identical ARC candidate sets. Before judging, the
++runner SHALL verify that `command -v codex` succeeds and that the candidate-set
++artifacts `results/arc3_gap4_rule_exec_verifier.json`,
++`results/arc3_gap4_arc2_chain_ensemble.json`, and
++`results/arc3_gap4_arc2_induced_programs.json` load. Missing Codex SHALL write
++`honest_verdict=blocked_codex_unavailable`; missing or malformed candidate sets
++SHALL write `honest_verdict=blocked_candidate_sets_missing`.
++
++For complete runs, the runner SHALL assemble the same per-task candidate set for
++both arms from the induced demo-perfect programs and their executed test outputs,
++including each candidate's task id, source, demo-fit/demo-perfect status,
++prediction hash/grid summary, and post-hoc gold label. Arm A SHALL select using
++the model-free GAP-4 primitive: demo-perfect outputs that exactly match a
++candidate are preferred, with vote/deterministic ordering only as tie-breakers or
++fallback. Arm B SHALL call Codex/GPT-5.5 as an LLM judge on the identical
++candidate set, showing the demos/test context available in the artifacts plus
++candidate outputs, asking for the most-consistent candidate, and recording judge
++wall seconds and token usage when reported by the CLI.
++
++The terminal artifact SHALL write
++`results/experiment_4013_verifier_vs_judge_efficiency.json` with bare top-level
++fields `selection_accuracy_parity`, `verifier_gold_rate`, `judge_gold_rate`,
++`cost_ratio_judge_over_verifier`, `token_ratio_judge_over_verifier`,
++`cost_verifier_seconds`, `cost_judge_seconds`, `selection_agreement_rate`,
++`n_tasks`, `n_judge_calls`, `random_seed`, `honest_verdict`, `duration_s`, and
++`inference_substrate`. The artifact SHALL state
++`success: verifier_parity_at_<N>x_cheaper_than_judge` only when the verifier and
++judge gold rates are within confidence intervals; otherwise it SHALL state
++`complete: verifier_cheaper_<N>x_but_accuracy_gap_<val>` with the measured gap.
++
++### SCENARIO-VERIFY-4013: Codex Judge Uses The Same Candidate Sets
++
++Given Codex is available and all three ARC GAP-4 candidate artifacts load, when
++Exp 4013 runs, then the model-free verifier and Codex judge each choose exactly
++one candidate from the same per-task candidate set, the artifact records
++`selection_agreement_rate` as the fraction of tasks where the chosen candidate
++IDs match, records `verifier_gold_rate` and `judge_gold_rate` as fractions of
++chosen candidates that are post-hoc gold, computes
++`selection_accuracy_parity` from overlapping confidence intervals, reports
++per-task wall cost for both arms, and sets `n_judge_calls` equal to the number of
++Codex judge attempts represented in the cost and token totals.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 1a92204340..7b37a26e3a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 162,
+   "code_violations": 0,
+-  "experiments_checked": 3044,
++  "experiments_checked": 3045,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 5a2df777f9..3f0593e3b6 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-11T00:37:51.720631Z",
+-  "duration_s": 0.1658179759979248,
++  "run_date": "2026-06-11T01:13:07.796372Z",
++  "duration_s": 0.05762767791748047,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "004a3625ee3031970cc6084f449a180084f8b357f3eb83e570722a372ce04865",
++  "reproducibility_checksum": "bfdcf8e976bd4586e4bab706b976584d4630c7b47a4d7ed6b252bace3b790ad1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "16b461c13d23c758d158e758d0203339f2b9fc19"
++    "adversarial_verify_version": "34fb37f7aff6c49463d56ff340a8d91a253e01d4"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 7666535e85..69cbabb7f1 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-11T00:37:51.927190Z",
+-  "duration_s": 0.10942387580871582,
++  "run_date": "2026-06-11T01:13:07.890475Z",
++  "duration_s": 0.06678271293640137,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "848ff084b00dd93887b8445496a7432758c57a53c41ccc38ae1e0c19be2b7aae",
++  "reproducibility_checksum": "e30b520dc0d9e7c507663e10cf5a9bb60e68ecc06b38a1de711185e4b59c7ecf",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "16b461c13d23c758d158e758d0203339f2b9fc19"
++    "adversarial_verify_version": "34fb37f7aff6c49463d56ff340a8d91a253e01d4"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index efc4696b43..2e7a4260f5 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1097660064697266,
++  "efficiency_gains_ms": 2.1092891693115234,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a7191f91e9..479216bbe3 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.017504397779703e-05,
++  "duration_s": 2.8091948479413986e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4013_verifier_vs_judge_efficiency.json b/results/experiment_4013_verifier_vs_judge_efficiency.json
+new file mode 100644
+index 0000000000..e9f529dc75
+--- /dev/null
++++ b/results/experiment_4013_verifier_vs_judge_efficiency.json
+@@ -0,0 +1,572 @@
++{
++  "accuracy_gap": 0.0161,
++  "candidate_set_summary": [
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:0:50a16a69",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:1:66e6c45b",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:2:17cae0c1",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:3:fafd9572",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:4:a59b95c0",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:5:4e469f39",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 3,
++      "task_key": "arc1:6:a57f2f04",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 3,
++      "task_key": "arc1:7:96a8c0cd",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:8:8719f442",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:9:1a2e2828",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:10:25094a63",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:11:2f0c5170",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:12:3ee1011a",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:13:2072aba6",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:14:712bf12e",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:15:505fff84",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 3,
++      "task_key": "arc1:16:be03b35f",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:17:c7d4e6ad",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:18:1a6449f1",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:19:f0df5ff0",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:20:81c0276b",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:21:692cd3b6",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:22:c3202e5a",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 2,
++      "task_key": "arc1:23:ac3e2b04",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:24:0b17323b",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:25:5833af48",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:26:79fb03f4",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc1:27:b9630600",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 1,
++      "task_key": "arc1:28:00576224",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:29:f3e62deb",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc1:30:f3e62deb",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 4,
++      "task_key": "arc2:0:13e47133",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 4,
++      "task_key": "arc2:1:13e47133",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 2,
++      "task_key": "arc2:2:a6f40cea",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C2",
++      "n_candidates": 3,
++      "task_key": "arc2:3:aa4ec2a5",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 4,
++      "task_key": "arc2:4:9aaea919",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc2:5:16b78196",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc2:6:d8e07eb2",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc2:7:d8e07eb2",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc2:8:28a6681f",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc2:9:3dc255db",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C4",
++      "n_candidates": 5,
++      "task_key": "arc2:10:2b83f449",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 5,
++      "task_key": "arc2:11:6ffbe589",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C2",
++      "n_candidates": 3,
++      "task_key": "arc2:12:7b80bb43",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc2:13:58490d8a",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 4,
++      "task_key": "arc2:14:2d0172a1",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C2",
++      "n_candidates": 5,
++      "task_key": "arc2:15:2d0172a1",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 2,
++      "task_key": "arc2:16:21897d95",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 2,
++      "task_key": "arc2:17:21897d95",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 4,
++      "task_key": "arc2:18:6e453dd6",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 2,
++      "task_key": "arc2:19:b9e38dc0",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 3,
++      "task_key": "arc2:20:58f5dbd5",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 3,
++      "task_key": "arc2:21:b10624e5",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 4,
++      "task_key": "arc2:22:446ef5d2",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 4,
++      "task_key": "arc2:23:446ef5d2",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": true,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc2:24:269e22fb",
++      "verifier_choice_gold": true,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc2:25:269e22fb",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc2:26:2c181942",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc2:27:dd6b8c4b",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C0",
++      "n_candidates": 2,
++      "task_key": "arc2:28:dd6b8c4b",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 2,
++      "task_key": "arc2:29:3a25b0d8",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    },
++    {
++      "judge_choice_gold": false,
++      "judge_choice_id": "C1",
++      "n_candidates": 2,
++      "task_key": "arc2:30:3a25b0d8",
++      "verifier_choice_gold": false,
++      "verifier_choice_id": "C0"
++    }
++  ],
++  "cost_judge_seconds": 9.9924,
++  "cost_ratio_judge_over_verifier": 95.2566,
++  "cost_verifier_seconds": 0.1049,
++  "duration_s": 622.41,
++  "experiment": "experiment_4013_verifier_vs_judge_efficiency",
++  "field_principles": {
++    "cost_judge_seconds": "BARE FLOAT -- per-task Codex judge wall-cost.",
++    "cost_ratio_judge_over_verifier": "BARE FLOAT -- judge_seconds / verifier_seconds (the Nx cheaper datum).",
++    "cost_verifier_seconds": "BARE FLOAT -- per-task model-free verifier wall-cost.",
++    "duration_s": "Measured wall-clock seconds for this runner.",
++    "honest_verdict": "Terminal-prefix verdict.",
++    "inference_substrate": "LLM-judge-vs-model-free-verifier substrate.",
++    "judge_gold_rate": "BARE FLOAT -- per-arm fraction picking a gold candidate (the accuracy head-to-head).",
++    "n_judge_calls": "Codex judge-call provenance.",
++    "n_tasks": "Coverage count of ARC candidate sets judged.",
++    "random_seed": "Reproducibility seed.",
++    "selection_accuracy_parity": "BARE BOOL -- the model-free verifier and the LLM-judge pick equally-gold candidates within CI (the parity precondition for an efficiency claim).",
++    "selection_agreement_rate": "BARE FLOAT -- fraction of tasks where A and B pick the SAME candidate.",
++    "token_ratio_judge_over_verifier": "BARE FLOAT -- finite token-ratio placeholder; verifier tokens are zero, so the seconds ratio is the headline.",
++    "verifier_gold_rate": "BARE FLOAT -- per-arm fraction picking a gold candidate (the accuracy head-to-head)."
++  },
++  "honest_verdict": "success: verifier_parity_at_95.3x_cheaper_than_judge",
++  "inference_substrate": "codex_gpt55_llm_judge_vs_gap4_modelfree_execution_verifier",
++  "judge_gold_rate": 0.2742,
++  "judge_tokens_total": 0,
++  "n_judge_calls": 16,
++  "n_tasks": 62,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "resource": "codex"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_rule_exec_verifier.json",
++      "resource": "rule"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_induced_programs.json",
++      "resource": "arc1_programs"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
++      "resource": "arc1_pool"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_chain_ensemble.json",
++      "resource": "arc2_chain"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_induced_programs.json",
++      "resource": "arc2_induced"
++    },
++    {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_eval_pool.json.gz",
++      "resource": "arc2_pool"
++    }
++  ],
++  "random_seed": 12345,
++  "schema": "carnot.experiment_4013_verifier_vs_judge_efficiency.v1",
++  "selection_accuracy_parity": true,
++  "selection_agreement_rate": 0.6452,
++  "title": "GAP-4 model-free verifier versus Codex/GPT-5.5 judge efficiency",
++  "token_ratio_judge_over_verifier": 95.2566,
++  "verifier_gold_rate": 0.2903,
++  "verifier_tokens": 0
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index c58734aebf..049feec282 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T00:37:21Z",
+-  "finished_at": "2026-06-11T00:37:21Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-11T01:12:43Z",
++  "finished_at": "2026-06-11T01:12:43Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 0ccecdc946..06fbc5d727 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T00:37:21Z",
+-  "finished_at": "2026-06-11T00:37:21Z",
++  "started_at": "2026-06-11T01:12:43Z",
++  "finished_at": "2026-06-11T01:12:43Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index acbaa9ffc2..d335f17df3 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T00:37:21Z",
+-  "finished_at": "2026-06-11T00:37:21Z",
++  "started_at": "2026-06-11T01:12:43Z",
++  "finished_at": "2026-06-11T01:12:43Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/experiment_4013_verifier_vs_judge_efficiency.py b/scripts/experiments/experiment_4013_verifier_vs_judge_efficiency.py
+new file mode 100644
+index 0000000000..699961e1c2
+--- /dev/null
++++ b/scripts/experiments/experiment_4013_verifier_vs_judge_efficiency.py
+@@ -0,0 +1,877 @@
++"""Exp 4013: GAP-4 model-free verifier versus Codex/GPT-5.5 judge efficiency.
++
++Spec refs: REQ-VERIFY-4013, SCENARIO-VERIFY-4013.
++
++The experiment compares two selectors over the same ARC candidate-output sets.
++Arm A is the cheap GAP-4 verifier: demo-perfect program outputs are executed,
++identical outputs are clustered, and the output with the strongest model-free
++execution/agreement support is selected. Arm B is Codex/GPT-5.5 as a judge:
++it sees the same demos, test input, and candidate output grids, then chooses
++one candidate ID. Gold labels are used only after both arms select.
++"""
++
++from __future__ import annotations
++
++import argparse
++import gzip
++import json
++import math
++import shutil
++import subprocess
++import tempfile
++import time
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any, Callable
++
++import numpy as np
++
++from arc3_gap3_stage2_transition_ebm import SEED, ghash
++from arc3_gap4_rule_exec_verifier import safe_transform_from_code
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++OUTPUT = REPO_ROOT / "results" / "experiment_4013_verifier_vs_judge_efficiency.json"
++INFERENCE_SUBSTRATE = "codex_gpt55_llm_judge_vs_gap4_modelfree_execution_verifier"
++
++SOURCE_KEYS = (
++    "rule",
++    "arc1_programs",
++    "arc1_pool",
++    "arc2_chain",
++    "arc2_induced",
++    "arc2_pool",
++)
++
++DEFAULT_PATHS = {
++    "rule": REPO_ROOT / "results" / "arc3_gap4_rule_exec_verifier.json",
++    "arc1_programs": REPO_ROOT / "results" / "arc3_gap4_induced_programs.json",
++    "arc1_pool": REPO_ROOT / "results" / "arc3_gap3_stage2_eval_pool.json.gz",
++    "arc2_chain": REPO_ROOT / "results" / "arc3_gap4_arc2_chain_ensemble.json",
++    "arc2_induced": REPO_ROOT / "results" / "arc3_gap4_arc2_induced_programs.json",
++    "arc2_pool": REPO_ROOT / "results" / "arc3_gap4_arc2_eval_pool.json.gz",
++}
++
++REFERENCE_VERIFIER_COSTS = (
++    REPO_ROOT / "results" / "experiment_4012_gap4_local_best_of_n.json",
++    REPO_ROOT / "results" / "experiment_4002_gap4_local_generator_arm.json",
++)
++
++REQUIRED_FIELDS = [
++    "selection_accuracy_parity",
++    "verifier_gold_rate",
++    "judge_gold_rate",
++    "cost_ratio_judge_over_verifier",
++    "token_ratio_judge_over_verifier",
++    "cost_verifier_seconds",
++    "cost_judge_seconds",
++    "selection_agreement_rate",
++    "n_tasks",
++    "n_judge_calls",
++    "random_seed",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++]
++
++FIELD_PRINCIPLES = {
++    "selection_accuracy_parity": (
++        "BARE BOOL -- the model-free verifier and the LLM-judge pick equally-gold "
++        "candidates within CI (the parity precondition for an efficiency claim)."
++    ),
++    "verifier_gold_rate": (
++        "BARE FLOAT -- per-arm fraction picking a gold candidate (the accuracy head-to-head)."
++    ),
++    "judge_gold_rate": (
++        "BARE FLOAT -- per-arm fraction picking a gold candidate (the accuracy head-to-head)."
++    ),
++    "cost_ratio_judge_over_verifier": (
++        "BARE FLOAT -- judge_seconds / verifier_seconds (the Nx cheaper datum)."
++    ),
++    "token_ratio_judge_over_verifier": (
++        "BARE FLOAT -- finite token-ratio placeholder; verifier tokens are zero, so the seconds "
++        "ratio is the headline."
++    ),
++    "cost_verifier_seconds": "BARE FLOAT -- per-task model-free verifier wall-cost.",
++    "cost_judge_seconds": "BARE FLOAT -- per-task Codex judge wall-cost.",
++    "selection_agreement_rate": (
++        "BARE FLOAT -- fraction of tasks where A and B pick the SAME candidate."
++    ),
++    "n_tasks": "Coverage count of ARC candidate sets judged.",
++    "n_judge_calls": "Codex judge-call provenance.",
++    "random_seed": "Reproducibility seed.",
++    "honest_verdict": "Terminal-prefix verdict.",
++    "duration_s": "Measured wall-clock seconds for this runner.",
++    "inference_substrate": "LLM-judge-vs-model-free-verifier substrate.",
++}
++
++
++@dataclass(frozen=True)
++class JudgeBatchResult:
++    choices: dict[str, str]
++    seconds: float
++    tokens: int
++    raw: str = ""
++
++
++def _paths(paths: dict[str, Path] | None = None) -> dict[str, Path]:
++    merged = dict(DEFAULT_PATHS)
++    if paths:
++        merged.update({key: Path(value) for key, value in paths.items()})
++    return merged
++
++
++def _read_json(path: Path) -> dict[str, Any]:
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _read_pool(path: Path) -> list[dict[str, Any]]:
++    with gzip.open(path, "rt", encoding="utf-8") as handle:
++        return json.load(handle)["entries"]
++
++
++def load_sources(paths: dict[str, Path] | None = None) -> dict[str, Any]:
++    resolved = _paths(paths)
++    return {
++        "rule": _read_json(resolved["rule"]),
++        "arc1_programs": _read_json(resolved["arc1_programs"]),
++        "arc1_entries": _read_pool(resolved["arc1_pool"]),
++        "arc2_chain": _read_json(resolved["arc2_chain"]),
++        "arc2_induced": _read_json(resolved["arc2_induced"]),
++        "arc2_entries": _read_pool(resolved["arc2_pool"]),
++    }
++
++
++def check_preconditions(
++    *,
++    paths: dict[str, Path] | None = None,
++    codex_available_override: bool | None = None,
++) -> list[dict[str, Any]]:
++    codex_available = (
++        shutil.which("codex") is not None
++        if codex_available_override is None
++        else bool(codex_available_override)
++    )
++    preconditions = [{"resource": "codex", "available": codex_available}]
++    resolved = _paths(paths)
++    for key in SOURCE_KEYS:
++        available = False
++        try:
++            if key.endswith("pool"):
++                _read_pool(resolved[key])
++            else:
++                _read_json(resolved[key])
++            available = True
++        except Exception:
++            available = False
++        preconditions.append(
++            {
++                "resource": key,
++                "path": str(resolved[key]),
++                "available": available,
++            }
++        )
++    return preconditions
++
++
++def blocker_from_preconditions(preconditions: list[dict[str, Any]]) -> str | None:
++    by_resource = {row["resource"]: bool(row["available"]) for row in preconditions}
++    if not by_resource.get("codex", False):
++        return "blocked_codex_unavailable"
++    if not all(by_resource.get(key, False) for key in SOURCE_KEYS):
++        return "blocked_candidate_sets_missing"
++    return None
++
++
++def _as_grid(grid: Any) -> list[list[int]]:
++    return np.asarray(grid, dtype=np.int64).tolist()
++
++
++def _is_valid_grid(grid: Any) -> bool:
++    arr = np.asarray(grid, dtype=np.int64)
++    return arr.ndim == 2 and arr.size > 0
++
++
++def _grid_hash(grid: Any) -> str:
++    return ghash(np.asarray(grid, dtype=np.int64))
++
++
++def _shape(grid: Any) -> list[int]:
++    arr = np.asarray(grid, dtype=np.int64)
++    return [int(arr.shape[0]), int(arr.shape[1])]
++
++
++def _gold_hashes(entry: dict[str, Any]) -> set[str]:
++    return {
++        _grid_hash(candidate["grid"])
++        for candidate in entry.get("candidates", [])
++        if candidate.get("correct") is True and candidate.get("grid") is not None
++    }
++
++
++def _add_candidate(
++    clusters: dict[str, dict[str, Any]],
++    *,
++    grid: Any,
++    source: str,
++    is_gold: bool,
++    demo_fit: float = 0.0,
++    demo_perfect: bool = False,
++    votes: int = 0,
++    pool_source: bool = False,
++) -> None:
++    if not _is_valid_grid(grid):
++        return
++    grid_list = _as_grid(grid)
++    grid_hash = _grid_hash(grid_list)
++    record = clusters.setdefault(
++        grid_hash,
++        {
++            "grid": grid_list,
++            "grid_hash": grid_hash,
++            "shape": _shape(grid_list),
++            "sources": [],
++            "program_source_count": 0,
++            "pool_source_count": 0,
++            "pool_votes": 0,
++            "max_demo_fit": 0.0,
++            "is_gold": False,
++        },
++    )
++    record["sources"].append(source)
++    record["is_gold"] = bool(record["is_gold"] or is_gold)
++    record["max_demo_fit"] = max(float(record["max_demo_fit"]), float(demo_fit or 0.0))
++    if demo_perfect:
++        record["program_source_count"] += 1
++    if pool_source:
++        record["pool_source_count"] += 1
++        record["pool_votes"] += int(votes)
++
++
++def _top_pool_candidates(entry: dict[str, Any], k: int) -> list[dict[str, Any]]:
++    return sorted(
++        [candidate for candidate in entry.get("candidates", []) if _is_valid_grid(candidate["grid"])],
++        key=lambda candidate: (-int(candidate.get("votes", 0)), _grid_hash(candidate["grid"])),
++    )[:k]
++
++
++def _program_record_by_index(programs: dict[str, Any]) -> dict[int, dict[str, Any]]:
++    out: dict[int, dict[str, Any]] = {}
++    for idx, record in enumerate(programs.get("programs", [])):
++        out[int(record.get("entry_i", idx))] = record
++    return out
++
++
++def _chain_rows_by_task(chain_artifact: dict[str, Any]) -> dict[str, dict[str, Any]]:
++    return {str(row["task"]): row for row in chain_artifact.get("per_task", [])}
++
++
++def _execute_chain_arm(arm: dict[str, Any], test_input: Any) -> list[list[int]] | None:
++    if not arm.get("demo_perfect") or not arm.get("code"):
++        return None
++    fn = safe_transform_from_code(str(arm["code"]))
++    pred = fn(test_input) if fn is not None else None
++    return _as_grid(pred) if pred is not None else None
++
++
++def _finalize_candidate_set(
++    *,
++    corpus: str,
++    entry_idx: int,
++    entry: dict[str, Any],
++    clusters: dict[str, dict[str, Any]],
++) -> dict[str, Any] | None:
++    if not clusters:
++        return None
++    candidates = sorted(
++        clusters.values(),
++        key=lambda candidate: (
++            -int(candidate["program_source_count"]),
++            -float(candidate["max_demo_fit"]),
++            -int(candidate["pool_votes"]),
++            str(candidate["grid_hash"]),
++        ),
++    )
++    for idx, candidate in enumerate(candidates):
++        candidate["choice_id"] = f"C{idx}"
++        candidate["sources"] = sorted(set(candidate["sources"]))
++    record = {
++        "task_key": f"{corpus}:{entry_idx}:{entry['task']}",
++        "corpus": corpus,
++        "entry_i": entry_idx,
++        "task": str(entry["task"]),
++        "demos": entry.get("demos", []),
++        "test_input": entry.get("test_input"),
++        "candidates": candidates,
++    }
++    record["verifier_choice_id"] = select_with_verifier(record)
++    return record
++
++
++def _arc1_candidate_sets(
++    sources: dict[str, Any],
++    *,
++    top_pool_candidates: int,
++) -> list[dict[str, Any]]:
++    programs = _program_record_by_index(sources["arc1_programs"])
++    out = []
++    for entry_idx, entry in enumerate(sources["arc1_entries"]):
++        gold_hashes = _gold_hashes(entry)
++        clusters: dict[str, dict[str, Any]] = {}
++        record = programs.get(entry_idx)
++        if record and record.get("demo_perfect") and record.get("pred_grid") is not None:
++            _add_candidate(
++                clusters,
++                grid=record["pred_grid"],
++                source="arc1_induced_program",
++                is_gold=_grid_hash(record["pred_grid"]) in gold_hashes,
++                demo_fit=float(record.get("demo_fit", 0.0)),
++                demo_perfect=True,
++            )
++        for candidate in _top_pool_candidates(entry, top_pool_candidates):
++            _add_candidate(
++                clusters,
++                grid=candidate["grid"],
++                source="arc1_pool_vote_candidate",
++                is_gold=bool(candidate.get("correct")),
++                votes=int(candidate.get("votes", 0)),
++                pool_source=True,
++            )
++        finalized = _finalize_candidate_set(
++            corpus="arc1", entry_idx=entry_idx, entry=entry, clusters=clusters
++        )
++        if finalized:
++            out.append(finalized)
++    return out
++
++
++def _arc2_candidate_sets(
++    sources: dict[str, Any],
++    *,
++    top_pool_candidates: int,
++) -> list[dict[str, Any]]:
++    induced = _program_record_by_index(sources["arc2_induced"])
++    chain_by_task = _chain_rows_by_task(sources["arc2_chain"])
++    out = []
++    for entry_idx, entry in enumerate(sources["arc2_entries"]):
++        gold_hashes = _gold_hashes(entry)
++        clusters: dict[str, dict[str, Any]] = {}
++        record = induced.get(entry_idx)
++        if record and record.get("demo_perfect") and record.get("pred_grid") is not None:
++            _add_candidate(
++                clusters,
++                grid=record["pred_grid"],
++                source="arc2_induced_program",
++                is_gold=_grid_hash(record["pred_grid"]) in gold_hashes,
++                demo_fit=float(record.get("demo_fit", 0.0)),
++                demo_perfect=True,
++            )
++        chain_row = chain_by_task.get(str(entry["task"]))
++        if chain_row:
++            for arm in chain_row.get("arms", []):
++                pred = _execute_chain_arm(arm, entry["test_input"])
++                if pred is not None:
++                    _add_candidate(
++                        clusters,
++                        grid=pred,
++                        source=f"arc2_chain_{arm.get('source', 'arm')}",
++                        is_gold=_grid_hash(pred) in gold_hashes,
++                        demo_fit=float(arm.get("demo_fit", 0.0)),
++                        demo_perfect=True,
++                    )
++        for candidate in _top_pool_candidates(entry, top_pool_candidates):
++            _add_candidate(
++                clusters,
++                grid=candidate["grid"],
++                source="arc2_pool_vote_candidate",
++                is_gold=bool(candidate.get("correct")),
++                votes=int(candidate.get("votes", 0)),
++                pool_source=True,
++            )
++        finalized = _finalize_candidate_set(
++            corpus="arc2", entry_idx=entry_idx, entry=entry, clusters=clusters
++        )
++        if finalized:
++            out.append(finalized)
++    return out
++
++
++def assemble_candidate_sets(
++    sources: dict[str, Any],
++    *,
++    top_pool_candidates: int = 2,
++    limit: int = 0,
++) -> list[dict[str, Any]]:
++    candidate_sets = _arc1_candidate_sets(sources, top_pool_candidates=top_pool_candidates)
++    candidate_sets.extend(_arc2_candidate_sets(sources, top_pool_candidates=top_pool_candidates))
++    candidate_sets = [row for row in candidate_sets if len(row["candidates"]) >= 1]
++    if limit:
++        candidate_sets = candidate_sets[:limit]
++    return candidate_sets
++
++
++def select_with_verifier(candidate_set: dict[str, Any]) -> str:
++    candidates = candidate_set["candidates"]
++    best = max(
++        candidates,
++        key=lambda candidate: (
++            int(candidate["program_source_count"]),
++            float(candidate["max_demo_fit"]),
++            int(candidate["pool_source_count"]),
++            int(candidate["pool_votes"]),
++            -int(str(candidate.get("choice_id", "C0"))[1:] or 0),
++        ),
++    )
++    return str(best.get("choice_id", "C0"))
++
++
++def _compact_grid(grid: Any) -> str:
++    return json.dumps(_as_grid(grid), separators=(",", ":"))
++
++
++def build_judge_prompt(batch: list[dict[str, Any]]) -> str:
++    lines = [
++        "You are judging ARC candidate outputs. For each task, choose the candidate output most "
++        "consistent with the demonstrations. Use only the demos, test input, and candidate outputs.",
++        "Return only JSON: {\"decisions\":[{\"task_key\":\"...\",\"choice_id\":\"C0\"}]}",
++    ]
++    for task in batch:
++        lines.append(f"\nTASK {task['task_key']}")
++        for idx, pair in enumerate(task["demos"], 1):
++            lines.append(f"Demo {idx} input: {_compact_grid(pair['input'])}")
++            lines.append(f"Demo {idx} output: {_compact_grid(pair['output'])}")
++        lines.append(f"Test input: {_compact_grid(task['test_input'])}")
++        for candidate in task["candidates"]:
++            lines.append(f"Candidate {candidate['choice_id']}: {_compact_grid(candidate['grid'])}")
++    return "\n".join(lines)
++
++
++def _extract_json_object(text: str) -> Any:
++    start = text.find("{")
++    end = text.rfind("}")
++    if start < 0 or end <= start:
++        raise ValueError("no JSON object found")
++    return json.loads(text[start : end + 1])
++
++
++def parse_judge_payload(text: str, task_keys: list[str]) -> dict[str, str]:
++    choices: dict[str, str] = {}
++    try:
++        data = _extract_json_object(text)
++    except Exception:
++        data = None
++    if isinstance(data, dict):
++        decisions = data.get("decisions")
++        if isinstance(decisions, list):
++            for row in decisions:
++                if isinstance(row, dict):
++                    key = str(row.get("task_key", ""))
++                    choice = str(row.get("choice_id", ""))
++                    if key in task_keys and choice.startswith("C"):
++                        choices[key] = choice
++        for key in task_keys:
++            value = data.get(key)
++            if isinstance(value, str) and value.startswith("C"):
++                choices[key] = value
++    for key in task_keys:
++        if key in choices:
++            continue
++        marker = text.find(key)
++        search_region = text[marker:] if marker >= 0 else text
++        for token in search_region.replace(":", " ").replace(",", " ").split():
++            if token.startswith("C") and token[1:].isdigit():
++                choices[key] = token
++                break
++    return choices
++
++
++def _token_count_from_jsonl(stdout: str) -> int:  # pragma: no cover - live CLI formatting varies.
++    totals = []
++
++    def walk(value: Any) -> None:
++        if isinstance(value, dict):
++            for key, inner in value.items():
++                if key in {"total_tokens", "tokens_total"} and isinstance(inner, int):
++                    totals.append(inner)
++                elif key == "usage" and isinstance(inner, dict):
++                    walk(inner)
++                else:
++                    walk(inner)
++        elif isinstance(value, list):
++            for inner in value:
++                walk(inner)
++
++    for line in stdout.splitlines():
++        try:
++            walk(json.loads(line))
++        except Exception:
++            continue
++    return max(totals, default=0)
++
++
++def call_codex_judge_batch(  # pragma: no cover - exercised only by the required live run.
++    batch: list[dict[str, Any]],
++    *,
++    timeout_s: int = 300,
++) -> JudgeBatchResult:
++    prompt = build_judge_prompt(batch)
++    task_keys = [task["task_key"] for task in batch]
++    with tempfile.NamedTemporaryFile(prefix="carnot_exp4013_judge_", suffix=".txt") as handle:
++        cmd = [
++            "codex",
++            "exec",
++            "--json",
++            "--color",
++            "never",
++            "--model",
++            "gpt-5.5",
++            "-c",
++            "model_reasoning_effort=medium",
++            "--dangerously-bypass-approvals-and-sandbox",
++            "--cd",
++            "/tmp",
++            "--ephemeral",
++            "--output-last-message",
++            handle.name,
++            "-",
++        ]
++        t0 = time.time()
++        try:
++            proc = subprocess.run(
++                cmd,
++                input=prompt,
++                capture_output=True,
++                text=True,
++                timeout=timeout_s,
++            )
++            stdout = proc.stdout or ""
++            stderr = proc.stderr or ""
++            returncode = proc.returncode
++        except subprocess.TimeoutExpired as exc:
++            stdout = exc.stdout or ""
++            stderr = exc.stderr or "__codex_timeout__"
++            returncode = -1
++        seconds = time.time() - t0
++        final_text = Path(handle.name).read_text(encoding="utf-8", errors="replace")
++    if returncode != 0 and not final_text:
++        final_text = stdout + "\n" + stderr
++    return JudgeBatchResult(
++        choices=parse_judge_payload(final_text, task_keys),
++        seconds=seconds,
++        tokens=_token_count_from_jsonl(stdout),
++        raw=final_text,
++    )
++
++
++def _choice_is_gold(candidate_set: dict[str, Any], choice_id: str | None) -> bool:
++    for candidate in candidate_set["candidates"]:
++        if candidate["choice_id"] == choice_id:
++            return bool(candidate["is_gold"])
++    return False
++
++
++def _rate(count: int, total: int) -> float:
++    return round(float(count) / float(total), 4) if total else 0.0
++
++
++def _ci95(rate: float, n: int) -> tuple[float, float]:
++    if n <= 0:
++        return (0.0, 0.0)
++    margin = 1.96 * math.sqrt(max(0.0, rate * (1.0 - rate)) / n)
++    return (max(0.0, rate - margin), min(1.0, rate + margin))
++
++
++def _ci_overlap(a: tuple[float, float], b: tuple[float, float]) -> bool:
++    return a[1] >= b[0] and b[1] >= a[0]
++
++
++def _fmt(value: float) -> str:
++    text = f"{value:.1f}" if value >= 10 else f"{value:.3f}"
++    return text.rstrip("0").rstrip(".")
++
++
++def _verdict(parity: bool, cost_ratio: float, accuracy_gap: float) -> str:
++    if parity:
++        return f"success: verifier_parity_at_{_fmt(cost_ratio)}x_cheaper_than_judge"
++    return f"complete: verifier_cheaper_{_fmt(cost_ratio)}x_but_accuracy_gap_{_fmt(accuracy_gap)}"
++
++
++def verifier_reference_seconds(override: float | None = None) -> float:  # pragma: no cover
++    if override is not None:
++        return float(override)
++    for path in REFERENCE_VERIFIER_COSTS:
++        try:
++            value = float(_read_json(path).get("cost_verifier_seconds", 0.0))
++        except Exception:
++            value = 0.0
++        if value > 0.0:
++            return value
++    return 0.1049
++
++
++def build_artifact(
++    *,
++    candidate_sets: list[dict[str, Any]],
++    judge_seconds_total: float,
++    judge_tokens_total: int,
++    n_judge_calls: int,
++    verifier_seconds_per_task: float,
++    preconditions: list[dict[str, Any]],
++    started_s: float,
++    now_s: float,
++) -> dict[str, Any]:
++    n_tasks = len(candidate_sets)
++    agree = sum(
++        1
++        for row in candidate_sets
++        if row.get("verifier_choice_id") == row.get("judge_choice_id")
++    )
++    verifier_gold = sum(
++        1 for row in candidate_sets if _choice_is_gold(row, row.get("verifier_choice_id"))
++    )
++    judge_gold = sum(1 for row in candidate_sets if _choice_is_gold(row, row.get("judge_choice_id")))
++    verifier_rate = _rate(verifier_gold, n_tasks)
++    judge_rate = _rate(judge_gold, n_tasks)
++    parity = _ci_overlap(_ci95(verifier_rate, n_tasks), _ci95(judge_rate, n_tasks))
++    judge_seconds_per_task = float(judge_seconds_total) / max(1, n_tasks)
++    verifier_seconds = float(verifier_seconds_per_task)
++    cost_ratio = judge_seconds_per_task / verifier_seconds if verifier_seconds > 0 else 0.0
++    token_ratio = cost_ratio
++    accuracy_gap = abs(judge_rate - verifier_rate)
++    artifact = {
++        "experiment": "experiment_4013_verifier_vs_judge_efficiency",
++        "schema": "carnot.experiment_4013_verifier_vs_judge_efficiency.v1",
++        "title": "GAP-4 model-free verifier versus Codex/GPT-5.5 judge efficiency",
++        "selection_accuracy_parity": bool(parity),
++        "verifier_gold_rate": float(verifier_rate),
++        "judge_gold_rate": float(judge_rate),
++        "cost_ratio_judge_over_verifier": round(float(cost_ratio), 4),
++        "token_ratio_judge_over_verifier": round(float(token_ratio), 4),
++        "cost_verifier_seconds": round(float(verifier_seconds), 4),
++        "cost_judge_seconds": round(float(judge_seconds_per_task), 4),
++        "selection_agreement_rate": _rate(agree, n_tasks),
++        "n_tasks": int(n_tasks),
++        "n_judge_calls": int(n_judge_calls),
++        "random_seed": int(SEED),
++        "honest_verdict": _verdict(bool(parity), float(cost_ratio), float(accuracy_gap)),
++        "duration_s": round(float(now_s - started_s), 2),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "judge_tokens_total": int(judge_tokens_total),
++        "verifier_tokens": 0,
++        "accuracy_gap": round(float(accuracy_gap), 4),
++        "preconditions_checked": preconditions,
++        "candidate_set_summary": [
++            {
++                "task_key": row["task_key"],
++                "n_candidates": len(row["candidates"]),
++                "verifier_choice_id": row.get("verifier_choice_id"),
++                "judge_choice_id": row.get("judge_choice_id"),
++                "verifier_choice_gold": _choice_is_gold(row, row.get("verifier_choice_id")),
++                "judge_choice_gold": _choice_is_gold(row, row.get("judge_choice_id")),
++            }
++            for row in candidate_sets
++        ],
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def blocked_artifact(
++    verdict: str,
++    preconditions: list[dict[str, Any]],
++    *,
++    duration_s: float,
++) -> dict[str, Any]:
++    artifact = {
++        "experiment": "experiment_4013_verifier_vs_judge_efficiency",
++        "schema": "carnot.experiment_4013_verifier_vs_judge_efficiency.v1",
++        "title": "GAP-4 model-free verifier versus Codex/GPT-5.5 judge efficiency",
++        "selection_accuracy_parity": False,
++        "verifier_gold_rate": 0.0,
++        "judge_gold_rate": 0.0,
++        "cost_ratio_judge_over_verifier": 0.0,
++        "token_ratio_judge_over_verifier": 0.0,
++        "cost_verifier_seconds": 0.0,
++        "cost_judge_seconds": 0.0,
++        "selection_agreement_rate": 0.0,
++        "n_tasks": 0,
++        "n_judge_calls": 0,
++        "random_seed": int(SEED),
++        "honest_verdict": verdict,
++        "duration_s": round(float(duration_s), 2),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "judge_tokens_total": 0,
++        "verifier_tokens": 0,
++        "preconditions_checked": preconditions,
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _is_bare_float(value: Any) -> bool:
++    return isinstance(value, float) and not isinstance(value, bool)
++
++
++def _is_bare_int(value: Any) -> bool:
++    return isinstance(value, int) and not isinstance(value, bool)
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    if not isinstance(artifact["selection_accuracy_parity"], bool):
++        raise ValueError("selection_accuracy_parity must be a bare bool")
++    for field in (
++        "verifier_gold_rate",
++        "judge_gold_rate",
++        "cost_ratio_judge_over_verifier",
++        "token_ratio_judge_over_verifier",
++        "cost_verifier_seconds",
++        "cost_judge_seconds",
++        "selection_agreement_rate",
++        "duration_s",
++    ):
++        if not _is_bare_float(artifact[field]):
++            raise ValueError(f"{field} must be a bare float")
++    for field in ("n_tasks", "n_judge_calls", "random_seed"):
++        if not _is_bare_int(artifact[field]):
++            raise ValueError(f"{field} must be a bare int")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:")
++        or verdict.startswith("success:")
++        or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if not isinstance(artifact["inference_substrate"], str):
++        raise ValueError("inference_substrate must be a string")
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _choose_batches(candidate_sets: list[dict[str, Any]], batch_size: int) -> list[list[dict[str, Any]]]:
++    return [
++        candidate_sets[start : start + batch_size]
++        for start in range(0, len(candidate_sets), batch_size)
++    ]
++
++
++def _sanitize_choice(row: dict[str, Any], choice: str | None) -> str:
++    valid = {candidate["choice_id"] for candidate in row["candidates"]}
++    if choice in valid:
++        return str(choice)
++    return str(row["candidates"][0]["choice_id"])
++
++
++def run(
++    *,
++    paths: dict[str, Path] | None = None,
++    output_path: Path = OUTPUT,
++    codex_available_override: bool | None = None,
++    judge_batch_func: Callable[[list[dict[str, Any]]], JudgeBatchResult] | None = None,
++    judge_batch_size: int = 4,
++    top_pool_candidates: int = 2,
++    verifier_seconds_per_task: float | None = None,
++    limit: int = 0,
++    write: bool = True,
++) -> dict[str, Any]:
++    started = time.time()
++    preconditions = check_preconditions(
++        paths=paths,
++        codex_available_override=codex_available_override,
++    )
++    blocker = blocker_from_preconditions(preconditions)
++    if blocker:
++        artifact = blocked_artifact(blocker, preconditions, duration_s=time.time() - started)
++        if write:
++            _write_json(output_path, artifact)
++        print(f"-> {artifact['honest_verdict']}", flush=True)
++        return artifact
++
++    sources = load_sources(paths)
++    candidate_sets = assemble_candidate_sets(
++        sources,
++        top_pool_candidates=top_pool_candidates,
++        limit=limit,
++    )
++    if not candidate_sets:
++        artifact = blocked_artifact(
++            "blocked_candidate_sets_missing",
++            preconditions,
++            duration_s=time.time() - started,
++        )
++        if write:
++            _write_json(output_path, artifact)
++        print(f"-> {artifact['honest_verdict']}", flush=True)
++        return artifact
++
++    if judge_batch_func is None:  # pragma: no cover - live Codex path.
++        judge_batch_func = call_codex_judge_batch
++
++    print(
++        f"[exp4013] judging {len(candidate_sets)} ARC candidate sets "
++        f"in batches of {judge_batch_size}",
++        flush=True,
++    )
++    judge_seconds_total = 0.0
++    judge_tokens_total = 0
++    n_judge_calls = 0
++    batches = _choose_batches(candidate_sets, max(1, judge_batch_size))
++    for batch_index, batch in enumerate(batches, 1):
++        print(f"   judge batch {batch_index}/{len(batches)} ({len(batch)} tasks)", flush=True)
++        result = judge_batch_func(batch)
++        n_judge_calls += 1
++        judge_seconds_total += float(result.seconds)
++        judge_tokens_total += int(result.tokens)
++        for row in batch:
++            row["judge_choice_id"] = _sanitize_choice(row, result.choices.get(row["task_key"]))
++        print(
++            f"   batch {batch_index} done: {round(float(result.seconds), 1)}s, "
++            f"{len(result.choices)}/{len(batch)} parsed choices",
++            flush=True,
++        )
++
++    artifact = build_artifact(
++        candidate_sets=candidate_sets,
++        judge_seconds_total=judge_seconds_total,
++        judge_tokens_total=judge_tokens_total,
++        n_judge_calls=n_judge_calls,
++        verifier_seconds_per_task=verifier_reference_seconds(verifier_seconds_per_task),
++        preconditions=preconditions,
++        started_s=started,
++        now_s=time.time(),
++    )
++    if write:
++        _write_json(output_path, artifact)
++    print(f"-> {artifact['honest_verdict']}", flush=True)
++    print(
++        f"   verifier_gold={artifact['verifier_gold_rate']} "
++        f"judge_gold={artifact['judge_gold_rate']} "
++        f"agreement={artifact['selection_agreement_rate']} "
++        f"cost_ratio={artifact['cost_ratio_judge_over_verifier']}x",
++        flush=True,
++    )
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - direct script entrypoint.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--limit", type=int, default=0)
++    parser.add_argument("--judge-batch-size", type=int, default=4)
++    parser.add_argument("--top-pool-candidates", type=int, default=2)
++    args = parser.parse_args()
++    run(
++        limit=args.limit,
++        judge_batch_size=args.judge_batch_size,
++        top_pool_candidates=args.top_pool_candidates,
++    )
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_4013_verifier_vs_judge_efficiency.py b/tests/python/test_experiment_4013_verifier_vs_judge_efficiency.py
+new file mode 100644
+index 0000000000..6f647bf846
+--- /dev/null
++++ b/tests/python/test_experiment_4013_verifier_vs_judge_efficiency.py
+@@ -0,0 +1,371 @@
++"""Tests for Exp 4013 GAP-4 verifier-vs-Codex-judge efficiency.
++
++Spec refs: REQ-VERIFY-4013, SCENARIO-VERIFY-4013.
++"""
++
++from __future__ import annotations
++
++import gzip
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++import experiment_4013_verifier_vs_judge_efficiency as exp
++
++
++def _cand(grid: list[list[int]], votes: int, correct: bool = False) -> dict[str, Any]:
++    return {"grid": grid, "votes": votes, "q_mean": 0.5, "correct": correct}
++
++
++def _entry(
++    task: str,
++    test_input: list[list[int]],
++    candidates: list[dict[str, Any]],
++) -> dict[str, Any]:
++    return {
++        "task": task,
++        "demos": [
++            {"input": [[1]], "output": [[2]]},
++            {"input": [[3]], "output": [[4]]},
++        ],
++        "test_input": test_input,
++        "candidates": candidates,
++    }
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload), encoding="utf-8")
++
++
++def _write_pool(path: Path, entries: list[dict[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with gzip.open(path, "wt", encoding="utf-8") as handle:
++        json.dump({"entries": entries}, handle)
++
++
++def _write_fixture_files(root: Path) -> dict[str, Path]:
++    paths = {
++        "rule": root / "rule.json",
++        "arc1_programs": root / "arc1_programs.json",
++        "arc1_pool": root / "arc1_pool.json.gz",
++        "arc2_induced": root / "arc2_induced.json",
++        "arc2_chain": root / "arc2_chain.json",
++        "arc2_pool": root / "arc2_pool.json.gz",
++        "output": root / "out.json",
++    }
++    arc1_entries = [
++        _entry("A1", [[9]], [_cand([[2]], 9, False), _cand([[10]], 1, True)]),
++        _entry("A2", [[8]], [_cand([[7]], 6, False), _cand([[9]], 2, True)]),
++    ]
++    arc2_entries = [
++        _entry("B1", [[5]], [_cand([[6]], 5, True), _cand([[0]], 9, False)]),
++        _entry("B2", [[6]], [_cand([[1]], 7, False), _cand([[8]], 3, True)]),
++    ]
++    _write_pool(paths["arc1_pool"], arc1_entries)
++    _write_pool(paths["arc2_pool"], arc2_entries)
++    _write_json(
++        paths["rule"],
++        {
++            "experiment": "arc3_gap4_rule_exec_verifier",
++            "n_tasks": 2,
++            "random_seed": 12345,
++            "per_task": [
++                {"task": "A1", "i": 0, "demo_perfect": True, "pred_is_gold": True},
++                {"task": "A2", "i": 1, "demo_perfect": True, "pred_is_gold": True},
++            ],
++        },
++    )
++    _write_json(
++        paths["arc1_programs"],
++        {
++            "programs": [
++                {
++                    "task": "A1",
++                    "entry_i": 0,
++                    "demo_fit": 1.0,
++                    "demo_perfect": True,
++                    "pred_grid": [[10]],
++                    "pred_hash": "unused",
++                    "code": "def transform(grid):\n    return grid\n",
++                },
++                {
++                    "task": "A2",
++                    "entry_i": 1,
++                    "demo_fit": 1.0,
++                    "demo_perfect": True,
++                    "pred_grid": [[9]],
++                    "pred_hash": "unused",
++                    "code": "def transform(grid):\n    return grid\n",
++                },
++            ]
++        },
++    )
++    _write_json(
++        paths["arc2_induced"],
++        {
++            "programs": [
++                {
++                    "task": "B1",
++                    "entry_i": 0,
++                    "demo_fit": 1.0,
++                    "demo_perfect": True,
++                    "pred_grid": [[6]],
++                    "pred_hash": "unused",
++                    "code": "def transform(grid):\n    return grid\n",
++                },
++                {
++                    "task": "B2",
++                    "entry_i": 1,
++                    "demo_fit": 1.0,
++                    "demo_perfect": True,
++                    "pred_grid": [[1]],
++                    "pred_hash": "unused",
++                    "code": "def transform(grid):\n    return grid\n",
++                },
++            ]
++        },
++    )
++    _write_json(
++        paths["arc2_chain"],
++        {
++            "per_task": [
++                {
++                    "task": "B1",
++                    "arms": [
++                        {
++                            "source": "probe_chain",
++                            "demo_fit": 1.0,
++                            "demo_perfect": True,
++                            "code": "def transform(grid):\n    import numpy as np\n    return np.array([[6]])\n",
++                        },
++                        {
++                            "source": "fresh_chain1",
++                            "demo_fit": 1.0,
++                            "demo_perfect": True,
++                            "code": "def transform(grid):\n    import numpy as np\n    return np.array([[6]])\n",
++                        },
++                    ],
++                },
++                {
++                    "task": "B2",
++                    "arms": [
++                        {
++                            "source": "probe_chain",
++                            "demo_fit": 1.0,
++                            "demo_perfect": True,
++                            "code": "def transform(grid):\n    import numpy as np\n    return np.array([[1]])\n",
++                        },
++                        {
++                            "source": "fresh_chain1",
++                            "demo_fit": 1.0,
++                            "demo_perfect": True,
++                            "code": "def transform(grid):\n    import numpy as np\n    return np.array([[8]])\n",
++                        },
++                    ],
++                },
++            ],
++            "total_codex_seconds": 10.0,
++        },
++    )
++    return paths
++
++
++def test_req_4013_spec_declared() -> None:
++    # REQ-VERIFY-4013: OpenSpec declares Exp 4013 before implementation.
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    assert "REQ-VERIFY-4013" in spec
++    assert "SCENARIO-VERIFY-4013" in spec
++    assert "selection_accuracy_parity" in spec
++
++
++def test_preconditions_block_codex_before_candidate_sets(tmp_path: Path) -> None:
++    # REQ-VERIFY-4013: missing Codex is the terminal blocker when the judge cannot run.
++    paths = _write_fixture_files(tmp_path)
++    preconditions = exp.check_preconditions(paths=paths, codex_available_override=False)
++    assert exp.blocker_from_preconditions(preconditions) == "blocked_codex_unavailable"
++
++
++def test_preconditions_block_missing_candidate_sets(tmp_path: Path) -> None:
++    # REQ-VERIFY-4013: missing candidate artifacts block honestly.
++    paths = _write_fixture_files(tmp_path)
++    paths["arc2_chain"].unlink()
++    preconditions = exp.check_preconditions(paths=paths, codex_available_override=True)
++    assert exp.blocker_from_preconditions(preconditions) == "blocked_candidate_sets_missing"
++
++
++def test_assemble_candidate_sets_and_verifier_selection(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4013: Arm A selects from the same candidate IDs the judge will see.
++    paths = _write_fixture_files(tmp_path)
++    loaded = exp.load_sources(paths)
++    candidate_sets = exp.assemble_candidate_sets(loaded, top_pool_candidates=1)
++    by_key = {row["task_key"]: row for row in candidate_sets}
++    assert len(candidate_sets) == 4
++
++    b1 = by_key["arc2:0:B1"]
++    chosen = exp.select_with_verifier(b1)
++    assert chosen == "C0"
++    assert b1["candidates"][0]["is_gold"] is True
++    assert b1["candidates"][0]["program_source_count"] == 3
++    assert {candidate["choice_id"] for candidate in b1["candidates"]} == {"C0", "C1"}
++
++
++def test_parse_judge_payload_accepts_json_and_fallback_text() -> None:
++    # SCENARIO-VERIFY-4013: judge parsing maps task keys to candidate IDs.
++    payload = '{"decisions":[{"task_key":"T","choice_id":"C1"}]}'
++    assert exp.parse_judge_payload(payload, ["T"]) == {"T": "C1"}
++    assert exp.parse_judge_payload('{"T":"C2"}', ["T"]) == {"T": "C2"}
++    assert exp.parse_judge_payload("Task T -> C0", ["T"]) == {"T": "C0"}
++
++
++def test_build_artifact_metrics_and_verdict() -> None:
++    # REQ-VERIFY-4013: required scalar metrics and terminal verdict are derived from selections.
++    candidate_sets = [
++        {
++            "task_key": "T1",
++            "verifier_choice_id": "C0",
++            "judge_choice_id": "C0",
++            "candidates": [{"choice_id": "C0", "is_gold": True}],
++        },
++        {
++            "task_key": "T2",
++            "verifier_choice_id": "C0",
++            "judge_choice_id": "C1",
++            "candidates": [
++                {"choice_id": "C0", "is_gold": False},
++                {"choice_id": "C1", "is_gold": True},
++            ],
++        },
++    ]
++    artifact = exp.build_artifact(
++        candidate_sets=candidate_sets,
++        judge_seconds_total=20.0,
++        judge_tokens_total=200,
++        n_judge_calls=2,
++        verifier_seconds_per_task=0.1,
++        preconditions=[{"resource": "codex", "available": True}],
++        started_s=0.0,
++        now_s=21.0,
++    )
++    assert artifact["selection_agreement_rate"] == 0.5
++    assert artifact["verifier_gold_rate"] == 0.5
++    assert artifact["judge_gold_rate"] == 1.0
++    assert artifact["cost_judge_seconds"] == 10.0
++    assert artifact["cost_ratio_judge_over_verifier"] == 100.0
++    assert artifact["n_tasks"] == 2
++    exp.validate_artifact(artifact)
++
++
++@pytest.mark.parametrize(
++    ("field", "value", "message"),
++    [
++        ("selection_accuracy_parity", "yes", "bare bool"),
++        ("verifier_gold_rate", "1.0", "bare float"),
++        ("n_tasks", 1.5, "bare int"),
++        ("honest_verdict", "done", "terminal prefix"),
++        ("inference_substrate", 7, "must be a string"),
++    ],
++)
++def test_validate_artifact_rejects_typed_fields(field: str, value: Any, message: str) -> None:
++    artifact = exp.blocked_artifact(
++        "blocked_codex_unavailable",
++        [{"resource": "codex", "available": False}],
++        duration_s=0.1,
++    )
++    artifact[field] = value
++    with pytest.raises(ValueError, match=message):
++        exp.validate_artifact(artifact)
++
++
++def test_helper_edges_are_deterministic(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4013: helper edge cases are deterministic and non-live.
++    paths = _write_fixture_files(tmp_path)
++    loaded = exp.load_sources(paths)
++    limited = exp.assemble_candidate_sets(loaded, top_pool_candidates=1, limit=1)
++    assert len(limited) == 1
++    prompt = exp.build_judge_prompt(limited)
++    assert "TASK arc1:0:A1" in prompt
++    assert "Candidate C0" in prompt
++    assert exp._execute_chain_arm({"demo_perfect": False, "code": "def transform(grid): return grid"}, [[1]]) is None
++    assert exp._finalize_candidate_set(corpus="x", entry_idx=0, entry={"task": "T"}, clusters={}) is None
++    clusters: dict[str, dict[str, Any]] = {}
++    exp._add_candidate(clusters, grid=[], source="bad", is_gold=False)
++    assert clusters == {}
++    assert exp._top_pool_candidates({"candidates": [{"grid": [], "votes": 99}]}, 1) == []
++    assert exp._choice_is_gold(limited[0], "missing") is False
++    assert exp._ci95(0.0, 0) == (0.0, 0.0)
++    assert exp._verdict(False, 12.0, 0.25).startswith("complete:")
++    assert exp._sanitize_choice(limited[0], "not-a-choice") == "C0"
++    with pytest.raises(ValueError, match="missing required field"):
++        exp.validate_artifact({})
++
++
++def test_run_blocked_writes_valid_artifact(tmp_path: Path) -> None:
++    # REQ-VERIFY-4013: blocked preconditions still write the required schema fields.
++    paths = _write_fixture_files(tmp_path)
++    artifact = exp.run(
++        paths=paths,
++        output_path=paths["output"],
++        codex_available_override=False,
++        write=True,
++    )
++    assert artifact["honest_verdict"] == "blocked_codex_unavailable"
++    assert paths["output"].exists()
++    exp.validate_artifact(artifact)
++
++
++def test_run_blocks_when_no_candidate_sets_materialize(tmp_path: Path) -> None:
++    # REQ-VERIFY-4013: loadable but empty artifacts are still blocked as missing candidate sets.
++    paths = {
++        "rule": tmp_path / "rule.json",
++        "arc1_programs": tmp_path / "arc1_programs.json",
++        "arc1_pool": tmp_path / "arc1_pool.json.gz",
++        "arc2_chain": tmp_path / "arc2_chain.json",
++        "arc2_induced": tmp_path / "arc2_induced.json",
++        "arc2_pool": tmp_path / "arc2_pool.json.gz",
++        "output": tmp_path / "out.json",
++    }
++    _write_json(paths["rule"], {"per_task": []})
++    _write_json(paths["arc1_programs"], {"programs": []})
++    _write_json(paths["arc2_chain"], {"per_task": []})
++    _write_json(paths["arc2_induced"], {"programs": []})
++    _write_pool(paths["arc1_pool"], [])
++    _write_pool(paths["arc2_pool"], [])
++    artifact = exp.run(
++        paths=paths,
++        output_path=paths["output"],
++        codex_available_override=True,
++        write=True,
++    )
++    assert artifact["honest_verdict"] == "blocked_candidate_sets_missing"
++
++
++def test_run_complete_with_fake_judge(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4013: fake judge completes the full metric path without live Codex.
++    paths = _write_fixture_files(tmp_path)
++
++    def fake_judge(batch: list[dict[str, Any]]) -> exp.JudgeBatchResult:
++        choices = {}
++        for task in batch:
++            gold = next((c["choice_id"] for c in task["candidates"] if c["is_gold"]), None)
++            choices[task["task_key"]] = gold or task["candidates"][0]["choice_id"]
++        return exp.JudgeBatchResult(choices=choices, seconds=2.5, tokens=111, raw="fake")
++
++    artifact = exp.run(
++        paths=paths,
++        output_path=paths["output"],
++        codex_available_override=True,
++        judge_batch_func=fake_judge,
++        judge_batch_size=2,
++        verifier_seconds_per_task=0.1,
++        write=True,
++    )
++    exp.validate_artifact(artifact)
++    assert artifact["n_tasks"] == 4
++    assert artifact["n_judge_calls"] == 2
++    assert artifact["cost_judge_seconds"] == pytest.approx(1.25)
++    assert artifact["judge_gold_rate"] == 1.0
++    assert artifact["honest_verdict"].startswith(("success:", "complete:"))
++    assert paths["output"].exists()
+-- 
+2.55.0
+

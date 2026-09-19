@@ -1,0 +1,74 @@
+From bfec6f3ee54299dc599285d033b861fa3c7aec32 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 07:09:03 -0400
+Subject: [PATCH 10011/11362] [conductor] Pre-gate block: Independent admission
+ of all mandated GGUF families
+
+1 of 1 gate(s) failed; first failure: exp6633-gpu-lease-phase-journal.gpu_lease_scheduler_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                          | 2 +-
+ ops/conductor-heartbeat.json                          | 2 +-
+ ops/conductor-log.md                                  | 1 +
+ ops/conductor-state.json                              | 2 +-
+ results/experiment_6634_mandated_model_admission.json | 4 ++--
+ 5 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 594a54e09c..8ab1b35963 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T11:06:59Z"
++ "last_scan_utc": "2026-08-26T11:09:02Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6fd3cdd189..6d694581f8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-08-26T11:06:59Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 31, "phase": "iteration_start", "last_beat": "2026-08-26T11:09:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6f6aeb37a2..b51967b7f5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16547,3 +16547,4 @@ code |
+ | 2026-08-26 08:41 UTC | Milestone 2026.08.579 activated | OK | 7 tasks queued |
+ | 2026-08-26 10:04 UTC | Task-scoped GPU lease and phase journal | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: ss_identity()[ |
+ | 2026-08-26 11:04 UTC | Task-scoped GPU lease and phase journal | OK | 99 passed, 1 warning in 29.11s |
++| 2026-08-26 11:07 UTC | Independent admission of all mandated GGUF familie | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6633-gpu-lease-phase-journal.gpu_lease_ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a08605ff03..9630016693 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 30, "phase": "iteration_start", "started_at": "2026-08-26T11:06:59Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 31, "phase": "iteration_start", "started_at": "2026-08-26T11:09:02Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6634_mandated_model_admission.json b/results/experiment_6634_mandated_model_admission.json
+index bf550af757..f3f1b6c092 100644
+--- a/results/experiment_6634_mandated_model_admission.json
++++ b/results/experiment_6634_mandated_model_admission.json
+@@ -2,8 +2,8 @@
+   "experiment": 6634,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-26",
+-  "started_at": "2026-08-26T11:06:59.811032+00:00",
+-  "finished_at": "2026-08-26T11:06:59.811032+00:00",
++  "started_at": "2026-08-26T11:09:02.920246+00:00",
++  "finished_at": "2026-08-26T11:09:02.920246+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Independent admission of all mandated GGUF families",
+-- 
+2.55.0
+

@@ -1,0 +1,659 @@
+From de1d41abe72d5e8e017c8d8fb8804a4e9361bcaf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 18 Aug 2026 01:26:48 -0400
+Subject: [PATCH 09291/11362] Seed an OKF knowledge bundle with the claims that
+ were withdrawn tonight
+
+Retractions are the seed content on purpose. They are the hardest thing to
+reconstruct later and the most expensive to get wrong, because the natural
+failure is that someone re-proposes a refuted lever. Five claims were withdrawn
+on 2026-08-17 and each survived only in a commit body, discoverable by someone
+who already knew to look.
+
+Open Knowledge Format v0.2: plain .md, YAML frontmatter, git-native, no central
+authority and no required tooling. Chosen because three of its optional field
+families already match disciplines this project enforces by hand -- sources for
+provenance, generated/verified for the fabrication gate, and status/stale_after
+for never-prune and the freshness lint. status: deprecated with a superseded_by
+link is exactly the shape a retraction wants, and it keeps the record rather
+than deleting it.
+
+The five: the marginal-band null (every confirmation shared one broken nudge);
+the cross-level carry null (the lever never fired, so the A/B measured nothing);
+the +0.054 delta (true on its own cell, too narrow to describe the lever --
+superseded, not retracted); the seed-anchoring mechanism (refuted 6/6 paired,
+and its counterexample was in the table that proposed it); and budget pooling
+(impossible -- action_counter is per-instance, there is no pool).
+
+Three standing claims are included so the retractions point somewhere: the
+goal predicate never firing on a real win, seeded repair's conversion rate, and
+that carried engines do not transfer. Both scored submissions are recorded, and
+the 2026-06-30 entry states plainly that its configuration is NOT recoverable --
+that gap is the argument for the config fingerprint.
+
+Known gaps are written into the index rather than left implied: OKF links are
+untyped so superseded_by is a local convention; the spec is deliberately
+permissive about broken links where we would want a lint that fails; n=2 on
+scored submissions cannot support attribution; and nothing yet checks that a
+claim's numbers match the artifacts it cites.
+
+11 documents, all conformant, no dangling internal links.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ okf/claims/budget-pooling.md                  | 40 +++++++++++
+ okf/claims/carried-engines-do-not-transfer.md | 37 ++++++++++
+ okf/claims/cross-level-carry-null.md          | 44 ++++++++++++
+ okf/claims/goal-predicate-never-fires.md      | 58 ++++++++++++++++
+ okf/claims/marginal-band-null.md              | 48 +++++++++++++
+ okf/claims/repair-delta-0054.md               | 40 +++++++++++
+ okf/claims/seed-anchoring-mechanism.md        | 46 +++++++++++++
+ okf/claims/seeded-repair-converts.md          | 57 +++++++++++++++
+ okf/index.md                                  | 69 +++++++++++++++++++
+ okf/submissions/2026-06-30.md                 | 37 ++++++++++
+ okf/submissions/2026-07-15-kernel-v9.md       | 46 +++++++++++++
+ 11 files changed, 522 insertions(+)
+ create mode 100644 okf/claims/budget-pooling.md
+ create mode 100644 okf/claims/carried-engines-do-not-transfer.md
+ create mode 100644 okf/claims/cross-level-carry-null.md
+ create mode 100644 okf/claims/goal-predicate-never-fires.md
+ create mode 100644 okf/claims/marginal-band-null.md
+ create mode 100644 okf/claims/repair-delta-0054.md
+ create mode 100644 okf/claims/seed-anchoring-mechanism.md
+ create mode 100644 okf/claims/seeded-repair-converts.md
+ create mode 100644 okf/index.md
+ create mode 100644 okf/submissions/2026-06-30.md
+ create mode 100644 okf/submissions/2026-07-15-kernel-v9.md
+
+diff --git a/okf/claims/budget-pooling.md b/okf/claims/budget-pooling.md
+new file mode 100644
+index 0000000000..da9f2a21dc
+--- /dev/null
++++ b/okf/claims/budget-pooling.md
+@@ -0,0 +1,40 @@
++---
++type: Retracted Claim
++title: Pooling the action budget across games recovers ~56% of wasted actions
++description: Withdrawn 2026-08-18 -- actions are per-game and non-transferable; there is no pool.
++tags: [arc-agi-3, budget, retracted, impossible]
++status: deprecated
++superseded_by: /okf/claims/goal-predicate-never-fires.md
++sources:
++  - id: agent-counter
++    resource: /home/ianblenke/arc-sota-refs/ARC-AGI-3-Agents/agents/agent.py
++    author: carryover-plan
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++verified:
++  - { by: outer-loop/claude-opus-5, at: 2026-08-18T04:05:00Z }
++---
++
++# The claim, as it stood
++
++14 of 25 games complete zero levels while consuming ~56% of all actions, because the grace
++early-stop only arms after a level-up. Pooling that budget -- strictly additively, so no game is
++cut short -- was ranked the single highest-value lever available.
++
++# Why it was withdrawn
++
++**There is no pool to reclaim.** `action_counter` is a per-instance attribute on `Agent`
++(`agents/agent.py:25`) and the swarm constructs one instance per game.[^agent-counter] Actions
++are per-game and non-transferable. Reclaiming what the zero-level games spend gives it to
++nobody; cutting `tu93`'s 1,244 reset-replay actions returns them to `tu93`, which already levels.
++
++Worse, actions after the last level-up are charged to an incomplete level and score 0.0
++regardless, so freed actions only pay when they sit inside a level that is later completed.
++
++# What survives
++
++A stagnation stop is still worth building, but for **wall clock and RAM only**. Selling it as a
++score fix would repeat this error. Wall clock is the currency that is actually short: roughly 100
++induce calls at ~1053s each against an 11.5h cap, where a fired timeout degrades that game to
++LLM-off silently.
++
++[^agent-counter]: `agents/agent.py:25`, `action_counter: int = 0` as a class attribute.
+diff --git a/okf/claims/carried-engines-do-not-transfer.md b/okf/claims/carried-engines-do-not-transfer.md
+new file mode 100644
+index 0000000000..2969f73fcc
+--- /dev/null
++++ b/okf/claims/carried-engines-do-not-transfer.md
+@@ -0,0 +1,37 @@
++---
++type: Claim
++title: Carried engines do not transfer across a level boundary
++description: Carried engines score 0.25-0.5 accuracy on the next level; the boundary is not where the loss is.
++tags: [arc-agi-3, cross-level-carry, transfer]
++status: stable
++sources:
++  - id: carry-ab
++    resource: /results/arc_cross_level_retention_20260817/carry_ab_full.json
++    author: level-retention
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++verified:
++  - { by: levelwin-ideas2, at: 2026-08-18T00:50:00Z }
++---
++
++# The claim
++
++Engines carried across a level boundary score `verify_accuracy` 0.25-0.5 on the new level,
++against a guard bar of 1.0.[^carry-ab] They do not transfer.
++
++This is what the carry A/B actually established -- **not** that carrying knowledge is worthless,
++which is the [vacuous null that was withdrawn](/okf/claims/cross-level-carry-null.md).
++
++# Do not tune the bar
++
++A perfection-level bar looks like the obvious culprit. It is not. Any defensible lower value
++still rejects a 0.25-accuracy engine, and admitting one is worse than carrying nothing.
++
++# What else might survive a boundary
++
++Weak, on current evidence. The HUD mask already persists per-game. The hazard model is real but
++small (-88 actions on `tu93`). Verified sub-paths and the go-explore archive die to the
++no-teleport constraint: the live environment cannot restore archived states, so every navigation
++costs charged actions. The recommendation on 2026-08-18 was not to spend effort here -- the
++boundary is not where the loss is.
++
++[^carry-ab]: `carry_ab_full.json`, ON-arm `carry_attempt_rows`.
+diff --git a/okf/claims/cross-level-carry-null.md b/okf/claims/cross-level-carry-null.md
+new file mode 100644
+index 0000000000..764b4f2758
+--- /dev/null
++++ b/okf/claims/cross-level-carry-null.md
+@@ -0,0 +1,44 @@
++---
++type: Retracted Claim
++title: Carrying a verified engine across a level boundary buys nothing
++description: Withdrawn 2026-08-17 -- the lever never fired, so the A/B measured nothing.
++tags: [arc-agi-3, cross-level-carry, retracted, vacuous-null]
++status: deprecated
++superseded_by: /okf/claims/carried-engines-do-not-transfer.md
++sources:
++  - id: carry-ab
++    resource: /results/arc_cross_level_retention_20260817/carry_ab_full.json
++    author: level-retention
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++verified:
++  - { by: levelwin-ideas2, at: 2026-08-18T00:50:00Z }
++---
++
++# The claim, as it stood
++
++A paired A/B of cross-level engine carry measured a mean of -0.6 actions out of ~1450 (0.04%)
++with zero cells reaching a different level, and was reported as a clean null: carrying a
++verified dynamics engine across a level boundary buys nothing.
++
++# Why it was withdrawn
++
++`carry_fires` is **0 in all 9 paired cells**.[^carry-ab] The lever engaged and never once fired.
++The -0.6 action delta is RNG-consumption noise, not an effect. The A/B did not measure whether
++carrying an engine helps; it measured a guard that never opened.
++
++This is the **vacuous null** class: a headline number that looks like evidence of absence and is
++actually absence of evidence. Nothing in the artifact's summary fields distinguishes the two.
++
++# What the attempt rows actually show
++
++The ON-arm rows do carry a real finding, which the retracted claim obscured: the guard requires
++`min_accuracy_bar` 1.0 on the new level, carried engines scored `verify_accuracy` 0.25-0.5, and
++each attempt logged `carried_engine_failed_new_level_verification` after three deferrals for
++`insufficient_new_level_evidence`.
++
++# Do not
++
++Lower the 1.0 accuracy bar. Any defensible lower value still rejects a 0.25-accuracy engine, and
++admitting one would be worse than carrying nothing. Transfer is the blocker, not the bar.
++
++[^carry-ab]: `carry_ab_full.json`, field `carry_fires`, all 9 cells.
+diff --git a/okf/claims/goal-predicate-never-fires.md b/okf/claims/goal-predicate-never-fires.md
+new file mode 100644
+index 0000000000..f64b9f11ec
+--- /dev/null
++++ b/okf/claims/goal-predicate-never-fires.md
+@@ -0,0 +1,58 @@
++---
++type: Claim
++title: The induced goal predicate has never fired on a real win state
++description: 0 of 31 win states across 49 engine evaluations; levels are won by exploration, not planning.
++tags: [arc-agi-3, goal-predicate, binding-constraint]
++status: stable
++resource: /python/carnot/agentic/arc_executable_world_model.py
++sources:
++  - id: captures
++    resource: /results/arc_cross_level_retention_20260817/capture_b4000_part1.json
++    author: level-retention
++  - id: gate-anatomy
++    resource: /results/outer_loop_arc_induce_gate_anatomy_20260802.json
++  - id: trust-gate-hole
++    resource: /results/experiment_6012_hidden_state_trust_gate_hole.json
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++verified:
++  - { by: outer-loop/claude-opus-5, at: 2026-08-18T00:45:00Z }
++  - { by: repair-extend, at: 2026-08-18T04:14:00Z }
++---
++
++# The claim
++
++The induced goal predicate has never fired on a real win state: **0 of 31 across 49 engine
++evaluations**.[^captures] Corroborated by `n_planned` 0 of 136 induction attempts[^gate-anatomy]
++and 33 of 33 on-disk goal predicates being constant.[^trust-gate-hole]
++
++`plan_in_model` terminates ONLY on `is_level_complete`, so a constant-False predicate guarantees
++`None` at any budget.
++
++# Why this null is interpretable
++
++CLAUDE.md names an `n_win_states=0` corpus artifact where a zero denominator makes a null
++meaningless. **This is not that**: the captures contain 31 genuine level-up transitions. State
++the positive-example count before interpreting any ARC null.
++
++Note also that `goal_fired_on_win_states` is a STRING of the form `"0/1"`. An integer cast reads
++0/0 silently and produces a spurious clean result.
++
++# Two scope corrections, both load-bearing
++
++**Live path only.** The 0-of-136 characterises the LIVE default configuration. The offline
++seeded-window harness plans on roughly half its rows and occasionally reaches real level-ups.
++"The planner never returns a plan" is false as a general statement.
++
++**A plan is not a recognised win.** In the offline corpus, 4 of 7 plans terminate on states the
++predicate wrongly accepts, and `sp80 t0` reached a REAL level-up with `levelup_positive_recall`
++0.0. So `n_planned > 0` alone can be satisfied by a hallucinated win.
++
++# Consequence
++
++Engine-quality levers are not levels levers. The measured exception is
++`CARNOT_ARC_STRUCTURED_NAV=1` (opt-in), which took `tu93` L0 -> L1 with a correct-by-construction
++model -- the only configuration measured to make the planner return a plan.
++
++[^captures]: `capture_b4000_part{1,2}.json`, field `goal_fired_on_win_states`.
++[^gate-anatomy]: `outer_loop_arc_induce_gate_anatomy_20260802.json`, `n_planned`.
++[^trust-gate-hole]: `experiment_6012_hidden_state_trust_gate_hole.json`.
+diff --git a/okf/claims/marginal-band-null.md b/okf/claims/marginal-band-null.md
+new file mode 100644
+index 0000000000..a4db864444
+--- /dev/null
++++ b/okf/claims/marginal-band-null.md
+@@ -0,0 +1,48 @@
++---
++type: Retracted Claim
++title: Seeded repair gains nothing in the 0.6-0.95 marginal band
++description: Withdrawn 2026-08-17 -- every confirming measurement shared one broken submission nudge.
++tags: [arc-agi-3, repair, retracted, confounded]
++status: deprecated
++superseded_by: /okf/claims/seeded-repair-converts.md
++sources:
++  - id: nudge-fix
++    resource: /python/carnot/agentic/arc_induction_tool_loop.py
++    author: repair-extend
++  - id: attribution
++    resource: 51df5d093f
++    author: outer-loop/claude-opus-5
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++verified:
++  - { by: repair-extend, at: 2026-08-17T22:00:00Z }
++---
++
++# The claim, as it stood
++
++Seeded tool-loop repair produced no gain on cells whose pre-repair recall was between 0.6 and
++0.95. Three seeded marginal-band repairs gained exactly zero. This was reported as
++**independently confirmed three times** and used to justify the shipped `<0.6` recall gate.
++
++# Why it was withdrawn
++
++Every one of those measurements ran on an arm with a broken submission nudge.[^nudge-fix] With
++the nudge fixed, the same band gives 4 of 4 repairs to zero visible mismatches; the broken arm
++had produced 0 of 3.
++
++The lesson generalises past this claim: **a repeated finding is not a replicated one when every
++repeat shares a defect.** Three confirmations of a confounded arm are one confounded result.
++
++# What replaces it
++
++The gate's `<0.6` threshold still stands, but on different and narrower grounds — reachability,
++not absence of gain. Of the three marginal cells that did gain once the nudge was fixed, only
++one is reachable live: `sk48 t2` is trust-ACCEPTED so repair never fires on it, and `vc33 t0`
++fails the evidence floor at `n_changing` 2.
++
++# Do not
++
++Re-derive this claim from the pre-fix artifacts. They are still on disk and still say zero.
++Check the commit range of any arm before treating its result as evidence.[^attribution]
++
++[^nudge-fix]: Tool-loop nudge fix, `arc_induction_tool_loop.py`.
++[^attribution]: Commit `51df5d093f`, which records the fix's attribution.
+diff --git a/okf/claims/repair-delta-0054.md b/okf/claims/repair-delta-0054.md
+new file mode 100644
+index 0000000000..8252eaee14
+--- /dev/null
++++ b/okf/claims/repair-delta-0054.md
+@@ -0,0 +1,40 @@
++---
++type: Retracted Claim
++title: Tool-assisted induction repair is worth +0.054
++description: Superseded 2026-08-17 -- true on its own single cell, too narrow to describe the lever.
++tags: [arc-agi-3, repair, superseded, scope-error]
++status: deprecated
++superseded_by: /okf/claims/seeded-repair-converts.md
++sources:
++  - id: original
++    resource: 651f157fcc
++    author: outer-loop/claude-opus-5
++  - id: seeded-wave
++    resource: /home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen
++    author: repair-extend
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++verified:
++  - { by: repair-extend, at: 2026-08-18T01:45:00Z }
++---
++
++# The claim, as it stood
++
++Tool-assisted induction works as repair rather than replacement, worth +0.054 for one extra
++pass.[^original]
++
++# Why it was superseded
++
++The number was measured UNSEEDED while the shipped path SEEDS -- `arc_competition_agent.py`
++passes `seed_engine_code=old_code`, the failed engine the recall gate just measured. So the
++figure did not describe the configuration that ships.
++
++Note the distinction: this is **not a retraction**. The number survives on its own corpus -- it
++was one cell, `sp80 t1`, and the seeded path reproduces that cell's conversion exactly. It is
++withdrawn for being too narrow to characterise the lever, not for being wrong.
++
++# What replaces it
++
++A conversion rate, not a mean. See [seeded repair converts catastrophic cells](/okf/claims/seeded-repair-converts.md).
++The arithmetic mean across the four seeded catastrophic cells is about +0.44 and **describes no
++cell in the set** -- the distribution is bimodal, two convert outright and two move essentially
++not at all. Reporting the mean would have been the more flattering and less true option.
+diff --git a/okf/claims/seed-anchoring-mechanism.md b/okf/claims/seed-anchoring-mechanism.md
+new file mode 100644
+index 0000000000..01468a7396
+--- /dev/null
++++ b/okf/claims/seed-anchoring-mechanism.md
+@@ -0,0 +1,46 @@
++---
++type: Retracted Claim
++title: A near-noise seed anchors induction to a dead approach
++description: Withdrawn 2026-08-17 -- refuted 6/6 paired; its counterexample was in the same table that proposed it.
++tags: [arc-agi-3, repair, retracted, single-cell-anomaly]
++status: deprecated
++superseded_by: /okf/claims/seeded-repair-converts.md
++sources:
++  - id: skip-wave
++    resource: 86a9ef38f2
++    author: repair-extend
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++verified:
++  - { by: repair-extend, at: 2026-08-18T00:05:00Z }
++---
++
++# The claim, as it stood
++
++The seed helps when it is nearly right and hurts when it is nearly noise. Motivating evidence:
++`tu93 t0` reached recall 1.0 / accuracy 0.727 unseeded, and 0.0656 seeded on the identical cell.
++A proposed lever followed: skip the seed when its visible mismatches equal the visible row count.
++
++# Why it was withdrawn
++
++Two independent reasons, and the first should have been caught before the claim was made.
++
++**The counterexample was already in the table that proposed it.** `sb26 t0`'s seed also had
++recall 0.0, and it converted to 1.0. The record on near-noise seeds is 1 of 2, not a mechanism.
++
++**Six paired cells then refuted it outright.**[^skip-wave] Seeded to skip: `tu93 t0`
++0.0656 -> 1.0 (skip), `sp80 t1` tie, `sb26 t0` 1.0 -> 0.9906 (seed), `ar25 t2` **1.0 -> 0.0**
++(seed, catastrophically), `vc33 t0` 1.0 -> 0.9549 (seed), `tr87 t0` marginal. The broad trigger
++would forfeit `ar25 t2` entirely -- and that seed is 93% cell-right while wrong somewhere on
++every row, so "mismatches equal visible rows" was never a signal for noise at all.
++
++# What survives
++
++`tu93 t0` is recorded as a **single-cell anomaly**, not a lever. Its skip win is real and fully
++out-of-sample -- tail recall 1.0, tail accuracy 1.0, memorisation scan clean. It is a genuine
++engine that no statable trigger can reach.
++
++A secondary finding outlived the claim and strengthens the shipped default: seeding is also
++**2.6x cheaper** -- 52.5 minutes against 134.1 across the same six cells, because blank-page runs
++grind the turn cap where seeded runs converge by turn seven.
++
++[^skip-wave]: Commit `86a9ef38f2`, six paired cells, same code state and pinned seeds.
+diff --git a/okf/claims/seeded-repair-converts.md b/okf/claims/seeded-repair-converts.md
+new file mode 100644
+index 0000000000..a7c4ff841f
+--- /dev/null
++++ b/okf/claims/seeded-repair-converts.md
+@@ -0,0 +1,57 @@
++---
++type: Claim
++title: Seeded repair converts about half of catastrophic-recall cells
++description: 2 of 4 seeded catastrophic cells convert outright to recall 1.0; the other 2 return their seed unchanged.
++tags: [arc-agi-3, repair, engine-quality, shipped]
++status: stable
++resource: /python/carnot/agentic/arc_recall_gated_resample.py
++sources:
++  - id: wave
++    resource: /home/ianblenke/.claude/jobs/ad0c053d/tmp/repair_widen
++    author: repair-extend
++  - id: enable
++    resource: ec6f09b71a
++    author: outer-loop/claude-opus-5
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++verified:
++  - { by: repair-extend, at: 2026-08-18T01:45:00Z }
++---
++
++# The claim
++
++With the nudge fixed, seeded tool-loop repair on catastrophic-recall cells (n=4) converts 2 of 4
++outright to recall 1.0 / accuracy 1.0, flipping the trust layer from reject to accept. The other
++2 return their seed unchanged.
++
++- `sb26 t0` 0.0 -> 1.0, tail 1.0, memorisation scan clean -- fully out-of-sample verified
++- `sp80 t1` 0.294 -> 1.0, scan clean, **no scoreable tail exists** on that window (its single
++  tail row IS the excluded level-up row -- checked against the instrument, not assumed)
++- `tu93 t0` +0.066, accuracy still 0.0
++- `tr87 t0` +0.0 exactly
++
++Reported as a conversion rate on purpose. The arithmetic mean of +0.44 describes no cell.
++
++# Cost of a miss, accepted
++
++~9-11 minutes and one of two per-game slots, because the counter increments when the repair
++FIRES, before the outcome exists. Bounded by the turn cap, which shipped at 8.
++
++# Safety, confirmed empirically at 7 of 7
++
++The loop is seeded with the failed engine and cannot return a candidate with more visible
++mismatches, so no run regressed below its seed. A trust-ACCEPTED engine is never re-rolled --
++`decide_resample` returns `downstream_accepted_engine` first -- so this can only act on engines
++the pipeline was going to discard.
++
++# Scope: engine quality, NOT levels
++
++Per [the goal-predicate claim](/okf/claims/goal-predicate-never-fires.md), levels are won by
++exploration, not planning. Expect better engines. Do not expect the score to move on this alone.
++
++# Shipped
++
++Enabled on the scored path at the 0.6 gate with turn cap 8,[^enable] set in the submission
++kernel rather than as a code default: the evidence is scored-path evidence, and the conductor's
++trade-off at ~10 minutes per miss is unmeasured.
++
++[^enable]: Commit `ec6f09b71a`.
+diff --git a/okf/index.md b/okf/index.md
+new file mode 100644
+index 0000000000..614ca064c1
+--- /dev/null
++++ b/okf/index.md
+@@ -0,0 +1,69 @@
++---
++type: Bundle Index
++title: Carnot Knowledge Bundle
++description: Curated claims and submission records for the ARC-AGI-3 track, in Open Knowledge Format.
++tags: [okf, provenance, arc-agi-3]
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++status: draft
++---
++
++# What this bundle is for
++
++`results/**` holds machine-generated evidence and is read-only. `ops/changelog.md` holds a
++chronological narrative. Neither answers the question that kept coming up on 2026-08-17:
++**which claims are still standing, and what does each one rest on?**
++
++Six stores currently hold pieces of that answer with no join key between them —
++`ops/arc_flag_ledger.yaml`, `ops/exclusion_manifest.yaml`, the doomed-rerun ledger,
++`research-complete.yaml`, `results/**`, and `ops/*.md`. Reconstructing "did the configuration
++that scored 0.12 differ from the one that scored 0.08, and in which flags" is archaeology.
++This bundle is the curated layer above those stores.
++
++Format: [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
++v0.2 — plain `.md`, YAML frontmatter, git-native, no central authority and no required tooling.
++Chosen because three of its optional field families already match disciplines this project
++enforces by hand: `sources` (provenance), `generated`/`verified` (the fabrication gate), and
++`status`/`stale_after` (never-prune and the artifact-freshness lint).
++
++## Why retractions are the seed content
++
++A retracted claim is the hardest thing to reconstruct later and the most expensive to get
++wrong, because the natural failure is that someone re-proposes a refuted lever. Four claims
++were withdrawn on 2026-08-17 and each currently survives only in a commit body. `status:
++deprecated` plus a link to what superseded it is exactly the shape that record wants.
++
++**These documents are DEPRECATED ON PURPOSE.** They are kept, not deleted, per the project's
++never-prune rule. Read the `superseded_by` field before acting on anything here.
++
++## Claims
++
++| Document | Status |
++|---|---|
++| [Marginal-band repair gains nothing](/okf/claims/marginal-band-null.md) | deprecated |
++| [Cross-level engine carry is a null](/okf/claims/cross-level-carry-null.md) | deprecated |
++| [Tool-assisted repair is worth +0.054](/okf/claims/repair-delta-0054.md) | deprecated |
++| [A near-noise seed anchors induction](/okf/claims/seed-anchoring-mechanism.md) | deprecated |
++| [Action budget can be pooled across games](/okf/claims/budget-pooling.md) | deprecated |
++| [The goal predicate never fires on a real win](/okf/claims/goal-predicate-never-fires.md) | stable |
++| [Seeded repair converts catastrophic cells](/okf/claims/seeded-repair-converts.md) | stable |
++| [Carried engines do not transfer](/okf/claims/carried-engines-do-not-transfer.md) | stable |
++
++## Submissions
++
++| Document | Score |
++|---|---|
++| [2026-06-30 submission](/okf/submissions/2026-06-30.md) | 0.08 |
++| [2026-07-15 submission, kernel v9](/okf/submissions/2026-07-15-kernel-v9.md) | 0.12 |
++
++## Known gaps in this bundle
++
++Stated plainly so nobody mistakes the seed for the system:
++
++- OKF links are **untyped** — the spec puts relationship semantics in prose. `superseded_by`
++  here is a local convention, not something the format validates.
++- The spec is deliberately permissive and says consumers must tolerate broken cross-links.
++  A lint that FAILS on a dangling link would be this project being stricter than OKF, which
++  is allowed but is ours to build and does not exist yet.
++- Only two submissions have ever been scored, so the configuration-to-score record this
++  bundle wants to support has n=2 and cannot yet support attribution of any kind.
++- No lint enforces that a claim document's numbers match the artifacts it cites.
+diff --git a/okf/submissions/2026-06-30.md b/okf/submissions/2026-06-30.md
+new file mode 100644
+index 0000000000..ff06c7833f
+--- /dev/null
++++ b/okf/submissions/2026-06-30.md
+@@ -0,0 +1,37 @@
++---
++type: Submission
++title: ARC-AGI-3 submission 2026-06-30
++description: First scored submission. 0.08.
++tags: [arc-agi-3, submission, scored]
++resource: https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3
++status: stable
++score: 0.08
++submitted_at: 2026-06-30
++sources:
++  - id: prep-status
++    resource: /ops/arc-daily-prep-status.json
++  - id: runbook
++    resource: /docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++---
++
++# Score
++
++**0.08**, from `prior_submission_scores`.[^prep-status]
++
++# Configuration
++
++RECORD INCOMPLETE. This is the gap the bundle exists to close: the configuration that produced
++0.08 was not captured in a form that can be compared against the 0.12 run. What is known is the
++date and the CUDA submission runbook written the same day.[^runbook] The generator, flag set and
++agent-code commit are not recorded anywhere with a join key.
++
++Anyone reconstructing this will need git archaeology against the 2026-06-30 tree. That cost is
++the argument for the config fingerprint proposed in the self-improvement plan.
++
++# Context at the time
++
++The score was described as bounded at ~0.08 by the generation wall.
++
++[^prep-status]: `ops/arc-daily-prep-status.json`, `prior_submission_scores`.
++[^runbook]: `docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md`.
+diff --git a/okf/submissions/2026-07-15-kernel-v9.md b/okf/submissions/2026-07-15-kernel-v9.md
+new file mode 100644
+index 0000000000..3583333a6f
+--- /dev/null
++++ b/okf/submissions/2026-07-15-kernel-v9.md
+@@ -0,0 +1,46 @@
++---
++type: Submission
++title: ARC-AGI-3 submission 2026-07-15, kernel v9
++description: Second and best scored submission. 0.12, a 1.5x improvement on 0.08.
++tags: [arc-agi-3, submission, scored, best]
++resource: https://www.kaggle.com/code/iancblenke/carnot-arc-agi3-submission
++status: stable
++score: 0.12
++kernel_version: 9
++submission_ref: 54768046
++submitted_at: 2026-07-16T19:37:35Z
++sources:
++  - id: prep-status
++    resource: /ops/arc-daily-prep-status.json
++generated: { by: outer-loop/claude-opus-5, at: 2026-08-18T05:25:00Z }
++---
++
++# Score
++
++**0.12** -- the current best, and the baseline any future submission must beat.[^prep-status]
++
++# Configuration, as recorded
++
++Kernel v9, bundling REQ-ARC-FCP-5699-35's graduated fixes: default-on stall-refactor-loop,
++`max_tokens`/timeout at 4096/600, and a structural reminder, via a re-versioned
++`iancblenke/carnot-agent-code` dataset.
++
++Local gate at submit: PASS (IMPROVED) -- core per-level efficiency 2.412 against a baseline of
++2.412, 7 of 8 core games solved, matching baseline; bonus solves on cd82/ft09/su15 not counted in
++the strict core comparison.
++
++# What is NOT recorded, and matters
++
++The generator pin, the promoted flag set, and the agent-code commit are absent. So the question
++"which of v9's changes bought the 0.08 -> 0.12 improvement" cannot be answered from the record,
++and neither can "what has drifted since." With only two scored submissions in the project's
++history, per-lever attribution has near-zero power regardless -- but the configuration itself
++should at least be reconstructible, and it is not.
++
++# A note on the status file
++
++`ops/arc-daily-prep-status.json` reports `kernel_version` 21 while Kaggle has since had v22, v23
++and v24. The prep script appears not to write the file when it exits `READY: NO`, which the
++short-poll artifact causes routinely. Treat Kaggle's own version list as authoritative.
++
++[^prep-status]: `ops/arc-daily-prep-status.json`, `submission_history[0]`.
+-- 
+2.55.0
+

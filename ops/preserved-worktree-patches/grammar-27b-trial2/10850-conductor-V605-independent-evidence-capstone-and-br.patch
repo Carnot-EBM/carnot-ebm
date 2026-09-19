@@ -1,0 +1,173 @@
+From da7d96be335f6527cb3586b8918324a0eb01f348 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 3 Sep 2026 01:53:12 -0400
+Subject: [PATCH 10850/11171] [conductor] V605 independent evidence capstone
+ and branch disposition
+
+Automated research step by research conductor.
+Task ID: exp6922-v605-independent-capstone
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |  2 +-
+ ...riment_6922_v605_independent_capstone.json |  8 +-
+ ...periment_6922_v605_independent_capstone.py | 90 +++++++++++++++++++
+ 3 files changed, 95 insertions(+), 5 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5a343aa71f..5b0805eb92 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5274,
++  "experiments_checked": 5275,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_6922_v605_independent_capstone.json b/results/experiment_6922_v605_independent_capstone.json
+index 5f71e4d6ec..2b5cf63730 100644
+--- a/results/experiment_6922_v605_independent_capstone.json
++++ b/results/experiment_6922_v605_independent_capstone.json
+@@ -995,7 +995,7 @@
+       }
+     }
+   ],
+-  "duration_s": 14.917419,
++  "duration_s": 14.812682,
+   "exact_guidance_branch_rows": [
+     {
+       "branch": "exact_guidance",
+@@ -1351,7 +1351,7 @@
+       {
+         "check": "conductor_log",
+         "expected": "readable_file",
+-        "observed": "sha256:832b5d6db74a9f3a43b3f117c5ca26564261bfe4ea1a7b4d53bcde23453a5f98",
++        "observed": "sha256:3e5eab60f42f1ec4551b04789721f65c679e1f37ae7143013d40697b0e8c062d",
+         "passed": true
+       },
+       {
+@@ -1731,7 +1731,7 @@
+       "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+     }
+   ],
+-  "reproducibility_checksum": "sha256:347a82984c8c62234b4a8947c205be3153ba61c52929a62801b2f0eb77787e73",
++  "reproducibility_checksum": "sha256:1be192bbab437e26feda368dade391dae502d771f0943d1e97608eb98376caa3",
+   "retirement_action_rows": [
+     {
+       "action": "retire_exact_repeated_scope",
+@@ -3376,7 +3376,7 @@
+     },
+     "conductor_log": {
+       "path": "ops/conductor-log.md",
+-      "sha256": "sha256:832b5d6db74a9f3a43b3f117c5ca26564261bfe4ea1a7b4d53bcde23453a5f98"
++      "sha256": "sha256:3e5eab60f42f1ec4551b04789721f65c679e1f37ae7143013d40697b0e8c062d"
+     },
+     "exclusion_manifest": {
+       "path": "ops/exclusion_manifest.yaml",
+diff --git a/tests/python/test_experiment_6922_v605_independent_capstone.py b/tests/python/test_experiment_6922_v605_independent_capstone.py
+index d452493262..976ee9db8b 100644
+--- a/tests/python/test_experiment_6922_v605_independent_capstone.py
++++ b/tests/python/test_experiment_6922_v605_independent_capstone.py
+@@ -346,6 +346,96 @@ def test_req_report_6922_blocked_preconditions_and_validation(tmp_path: Path) ->
+     broken["reproducibility_checksum"] = exp.reproducibility_checksum(broken)
+     assert "false_promotion_count must be zero" in exp.validate_artifact(broken)
+ 
++    broken_gate = deepcopy(artifact)
++    broken_gate["gate_check_summary"] = {}
++    broken_gate["reproducibility_checksum"] = exp.reproducibility_checksum(broken_gate)
++    assert "blocked verdict requires an exact failed gate check" in exp.validate_artifact(
++        broken_gate
++    )
++
++
++def test_req_report_6922_defensive_inputs_fail_closed(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-6922 rejects malformed sources and checker failures."""
++
++    non_mapping_yaml = tmp_path / "list.yaml"
++    non_mapping_yaml.write_text("- not-a-mapping\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="YAML root is not a mapping"):
++        exp.load_yaml(non_mapping_yaml)
++
++    assert exp._roadmap_tasks({"tasks": {}}) == []
++    assert exp._roadmap_tasks({"tasks": [None, {"id": "exp1"}]})[0]["number"] == 1
++
++    malformed_log = "\n".join(
++        [
++            "| not-a-date | Milestone 2026.09.605 activated | OK | active |",
++            "| too-short |",
++            "| 2026-09-03 00:30 UTC | Synthetic 6912 | FLAGGED | fresh flag |",
++        ]
++    )
++    activation, states = exp.parse_conductor_states(malformed_log, [_task()])
++    assert activation is None
++    assert states["exp6912-synthetic"]["state"] == "flagged"
++
++    assert exp._scalar({"value": 4, "principle": "kept"}) == 4
++    assert exp._expected_verdict({"verdict_class": "wrong"}) == "partial"
++    assert exp._checks_pass({}) is None
++    assert exp._gate_pass(1, "!=", 1) is False
++
++    task = _task()
++    task["prior_failures"] = ["malformed"]
++    assert exp.compare_prior_verdicts([task], [])[0] == []
++
++    assert exp._read_json(tmp_path / "missing.json") is None
++    malformed_json = tmp_path / "malformed.json"
++    malformed_json.write_text("{", encoding="utf-8")
++    assert exp._read_json(malformed_json) is None
++
++    checker = tmp_path / "checker.py"
++    checker.write_text("VALUE = 1\n", encoding="utf-8")
++    monkeypatch.setattr(exp.importlib.util, "spec_from_file_location", lambda *_: None)
++    with pytest.raises(RuntimeError, match="cannot load verifier"):
++        exp._load_checker(checker, "missing_checker")
++
++    evidence = tmp_path / "evidence.json"
++    evidence.write_text("{}\n", encoding="utf-8")
++    exp._AUDIT_CACHE.clear()
++    monkeypatch.setattr(
++        exp, "_load_checker", lambda *_: (_ for _ in ()).throw(RuntimeError("broken"))
++    )
++    adversarial, row_check = exp._audit_artifact(tmp_path, evidence)
++    assert adversarial["flags"][0]["kind"] == "VERIFIER_ERROR"
++    assert row_check[0] == "unreadable"
++    assert exp._audit_artifact(tmp_path, evidence) == (adversarial, row_check)
++
++
++def test_scenario_report_6922_invalid_artifact_and_gate_are_classified(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-6922-STATE keeps malformed evidence visible."""
++
++    for relative in exp.GLOBAL_SOURCES.values():
++        target = tmp_path / relative
++        target.parent.mkdir(parents=True, exist_ok=True)
++        source = REPO / relative
++        target.write_bytes(source.read_bytes())
++
++    roadmap = exp.load_yaml(tmp_path / exp.ROADMAP_PATH)
++    roadmap["tasks"][2]["gated_on"].append("malformed-gate")
++    (tmp_path / exp.ROADMAP_PATH).write_text(
++        exp.yaml.safe_dump(roadmap, sort_keys=False), encoding="utf-8"
++    )
++    invalid_path = tmp_path / exp.EXPECTED_TASKS[1]["deliverable"]
++    invalid_path.parent.mkdir(parents=True, exist_ok=True)
++    invalid_path.write_text("{", encoding="utf-8")
++
++    artifact = exp.build_artifact(tmp_path, "20260903")
++    row = next(row for row in artifact["task_state_rows"] if row["number"] == 6912)
++
++    assert row["artifact_state"] == "invalid"
++    assert row["verdict_class"] == "disqualified"
++
+ 
+ def test_req_report_6922_cli_writes_and_validates(tmp_path: Path) -> None:
+     """REQ-REPORT-6922 exposes the required command-line writer."""
+-- 
+2.55.0
+

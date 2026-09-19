@@ -1,0 +1,112 @@
+From 1aac4c96f0630ccd9249b27294f3b6e4a8d9e156 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 17:36:21 -0400
+Subject: [PATCH 10555/11362] Record that the 9-game adapter-free run is
+ uninterpretable
+
+A 22-hour run of arc_leaderboard_eval --policy e3 over the CLAIMED set produced
+per-game numbers that cannot be read as an e3 result: nothing in the artifact
+records whether each game actually had a generator.
+
+One llama-server fit at first launch and then held ~18.4 GB for the whole run, so
+every later game logged "even 12 CPU-FFN layers cannot fit the generator" and
+failed to load its own. Of 23 server logs from the run, exactly ONE has any
+print_timing lines (32,833); the other 22 have zero. Whether later games reached
+the surviving server over HTTP was confirmed exactly once, by direct socket
+inspection.
+
+The per-game rows carry no llm, induction, generator or proposer field, so
+"levels=2, eff=0.1025" is indistinguishable between the e3 cascade solving it and
+the explorer floor solving it with no model at all. tu93 wrote no per-run file;
+sp80/su15 wrote two conflicting ones.
+
+Two of my own earlier conclusions are corrected in the entry rather than dropped.
+I read ppid 1 as abandonment and nearly killed the server mid-run; then, having
+confirmed a live socket, I concluded the reuse was harmless. It was both
+load-bearing and harmful at different times, and each single observation
+supported only half of that.
+
+Defensible result: two games. cd82 (2 levels, 0.0267) and r11l (2 levels, 0.6890)
+had a verified generator; r11l is the outlier that made the whole set look
+encouraging. The entry says explicitly not to cite "7 levels across 9 games", and
+notes the dashboard's generaliz. line is currently reporting exactly that.
+
+The fix is small and is the task: record per-game generator provenance -- resolved
+backend, whether a load succeeded, completions consumed. Without it no multi-game
+run of this script is interpretable, and these 22 hours bought two games.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md | 55 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index cb2a6bdc3e..4798be71ab 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7221,6 +7221,61 @@ tasks are not.
+ 
+ ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
+ 
++### NEW 2026-08-31 (outer-loop, MEASURED) — THE ADAPTER-FREE EVAL RECORDS NO PER-GAME GENERATOR PROVENANCE, SO A 9-GAME RUN IS UNINTERPRETABLE
++
++A 22-hour adapter-free run of `scripts/arc_leaderboard_eval.py --policy e3` over the CLAIMED set
++produced per-game numbers that CANNOT be read as an e3 result, because nothing records whether
++each game actually had a generator.
++
++**What the run reported** (`results/arc_leaderboard_eval_runs/*.json`):
++
++| game | levels | efficiency | generator verified? |
++|---|---|---|---|
++| cd82 | 2 | 0.0267 | YES — fit with FFN_CPU_LAYERS=1 |
++| r11l | 2 | 0.6890 | YES — same launch |
++| lp85 | 1 | 0.0039 | unknown |
++| ls20 | 0 | 0.0 | partly — a live socket to the shared server was observed once |
++| wa30 | 0 | 0.0 | unknown |
++| sp80 | 1 | 0.0661 | unknown (TWO conflicting files exist) |
++| su15 | 1 | 0.0042/0.0050 | unknown (differs between the two files) |
++| tu93 | 2 | 0.1025 | unknown — and NO per-run file was written |
++| cn04 | — | — | no line at all |
++| m0r0 | 0 | 0.0008 | unknown |
++| sk48 | 0 | 0.0 | unknown |
++
++**The mechanism.** One `llama-server` fit at first launch (23,579 MiB free, auto-selecting one
++CPU-FFN layer). It then held ~18.4 GB for the whole run, so every later game logged
++
++    CUDA gpu1 has 5155 MiB free; even 12 CPU-FFN layers cannot fit the generator
++
++and failed to load its own. **Of 23 server logs from this run, exactly ONE has any
++`print_timing` lines (32,833); the other 22 have zero** — they are failed starts that spawned a
++log and died. Whether a later game then reached the surviving server over HTTP is the crux, and
++it was directly confirmed exactly once (an ESTABLISHED socket from batch 2 to port 8919 on
++08-31 ~09:57Z).
++
++**Why the artifacts cannot settle it.** The per-game rows carry NO llm, induction, generator or
++proposer field of any kind. A row showing `levels=2, eff=0.1025` is indistinguishable between
++"the e3 cascade solved it" and "the explorer floor solved it with no model at all".
++
++**Two corrections to my own earlier reasoning, recorded because both were confidently stated.**
++On 08-31 ~09:57Z I concluded the reused server was harmless because a live socket proved a batch
++was using it — true, and it missed that the same reuse denied every LATER batch its own
++generator. Earlier still I read `ppid 1` as abandonment and nearly killed it mid-run. The reused
++server was both load-bearing AND harmful, at different times, and each single observation
++supported only half of that.
++
++**Task: record per-game generator provenance in the eval artifact.** Minimum: the resolved
++backend (in-process vs shared-server URL), whether a model load succeeded, and a count of
++completions actually consumed. Without it no multi-game run of this script is interpretable, and
++the 22 hours above bought two trustworthy games.
++
++**Do NOT cite `7 levels across 9 games` as an adapter-free e3 result.** The dashboard's
++`generaliz.` line currently reports it and is unreliable for the same reason; only cd82 (2 levels,
++0.0267) and r11l (2 levels, 0.6890) are defensible, and r11l is the outlier that made the set look
++encouraging.
++
++
+ ### NEW 2026-08-30 (outer-loop, ROOT-CAUSED) — THE AGENT COERCION REWRITES agent_type AND NOT model, SO A COERCED TASK GETS THE OLD AGENT'S MODEL
+ 
+ **Symptom:** `Codex CLI error: Model metadata for 'gemini-3.1-pro-preview' not found`. The task
+-- 
+2.55.0
+

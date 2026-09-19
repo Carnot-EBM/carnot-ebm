@@ -1,0 +1,570 @@
+From ef254fb1216d75599f06316bf0540f873e868386 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 07:32:49 -0400
+Subject: [PATCH 06848/11362] ARC round-3 (codex): ka59 L5 -> L6 (+1), sk48
+ honest null
+
+Continuation of round-3. ka59 solved the "isolated chamber" mystery left
+open in round 2: the lower cycling stack transport is not a fixed
+one-way trap, it is itself ballistic -- launching it left twice
+relocates the elevator and opens a route to the sealed plus chamber
+(solved via the existing backtrack-clamped flight-physics rules);
+launching it right twice afterward restores the original route. L7 was
+explored (block-aspect-ratio generalization of the transport) but not
+solved.
+
+Independently re-verified per project discipline: 5x fresh env.reset() +
+replay via the fixed resolver, all 5 confirmed reached_level=6.
+
+sk48: honest null again on L3, but found a new mechanic -- a
+brown-headed vertically-connected chain exhibits physical coupling
+(touching it at one segment couples the whole chain, so a downward move
+drags the entire chain down one lattice row).
+
+reproducible_total_levels: 141 -> 142 (verified against a fresh sum).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                   |  36 +-
+ ...experiment_4460_submission_package_prep.py |  18 +
+ results/outer_loop_codex_ka59_probe.json      | 387 +++++++++++++++++-
+ results/outer_loop_codex_sk48_probe.json      |  16 +-
+ 4 files changed, 433 insertions(+), 24 deletions(-)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 9754ec8148..17facfb579 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -2651,6 +2651,18 @@ games:
+     sort before stopping (chose not to claim an unobserved level-up). No new
+     level banked; this is a genuine two-arm-transfer mechanism, not yet
+     solved end-to-end.'
++  - 'L3 progress round 3, still HONEST NULL (2026-07-12, gpt-5.6-sol via codex):
++    tested retained-segment color visitation in the bottom reference order and
++    in the connected-chain reverse order from fresh prefix replays -- neither
++    leveled up. New finding: a brown-headed, vertically-connected colored
++    chain (present in L3, absent in L2) exhibits PHYSICAL COUPLING -- touching
++    the connected chain at its E segment couples the objects, so a subsequent
++    downward move drags the entire brown-headed chain down one lattice row.
++    ACTION1/2 move the left head one 6px lattice row; ACTION3/4
++    retract/retain horizontal chain segments. Direct ACTION6 clicks on the
++    brown head and bottom reference head produced no visible effect. No new
++    level banked; stopped at the verified L2 ceiling with budget remaining
++    for analysis but not for another fresh L3 candidate plus its gate.'
+   latest_exp4751_levelup_selfplay:
+     artifact: results/experiment_4751_levelup_selfplay.json
+     loop_artifact: results/arc_loop_solve_sk48.json
+@@ -2750,7 +2762,7 @@ games:
+     reproducibility_checksum: 80c3407496706b32fd1eaa057b1da9f5ef8b56c0be32ccc59cf80b08872a5a43
+ - game: ka59
+   reproducibility: reproduced
+-  levels_reproduced: 5
++  levels_reproduced: 6
+   win_condition: 'E3 executable-world-model L1: use the selected 3x3 block to push
+     the second block through the central wall, place the left block on the left target,
+     then place the pushed block on the right target. L2-L4 (2026-07-11,
+@@ -2819,6 +2831,26 @@ games:
+     the outer loop: 5x fresh env.reset() + replay via the fixed resolver, all 5
+     confirmed reached_level=5, state=GameState.NOT_FINISHED. No L6 win banked
+     this session.'
++  - 'L6 SOLVED round 3 (2026-07-12, gpt-5.6-sol via codex): the escape from the
++    "isolated" chamber above was found -- the lower cycling stack transport is
++    NOT a fixed one-way trap, it is itself BALLISTIC. Launching the stack left
++    TWICE relocates the elevator from x=42 to x=12; phase-0 alignment then
++    sends the selected 3x3 block into the upper-left chamber, where the plus
++    is solved via backtrack-clamped left/up launches (the same flight-physics
++    rules from L2-L4). Launching the stack RIGHT twice afterward restores the
++    route to the upper-right square socket -- the chamber was never actually
++    one-way, the stack itself needed to be repositioned first. L7 was explored
++    for 100 further actions (not solved): it generalizes the transport to
++    different block aspect ratios (a 3x6 and a 6x3 selectable block, distinct
++    sockets, both can ride the lower stack across the lower barrier, only the
++    narrow block fits the central three-cell gap) -- both rectangular objects
++    were socketed and the lower transport/central gap mapped, but the sealed
++    plus chamber for L7 was not cracked this session. The source agent
++    honestly flagged the L6 win as reproduction_verified=false (two required
++    234-step prefix replays left no budget for a dedicated gate) despite the
++    live win. Independently re-verified by the outer loop: 5x fresh
++    env.reset() + replay via the fixed resolver, all 5 confirmed
++    reached_level=6, state=GameState.NOT_FINISHED.'
+   - 'L5 (scouted in a PRIOR session, unsolved at the time, not banked then --
+     confirmed correct by the entry above): a genuinely new timing/extraction
+     mechanic -- a vertical channel holds a 6-row two-color (c/d) stack whose
+@@ -3588,7 +3620,7 @@ games:
+     solve_provenance: live_agent_self_discovery
+     target_rotation: rotated_off_recent_levelups_m0r0_a1_a3_and_hidden_state_bound
+     reproducibility_checksum: da76133fd38129f415717cf591cccfe7d81e3448aea02951040a7233c094e1f1
+-reproducible_total_levels: 141
++reproducible_total_levels: 142
+ reproducible_total_games: 24
+ provisional_total_levels: 1
+ live_submissions:
+diff --git a/python/carnot/experiment_4460_submission_package_prep.py b/python/carnot/experiment_4460_submission_package_prep.py
+index 122d5dfc97..c9dd6cdadc 100644
+--- a/python/carnot/experiment_4460_submission_package_prep.py
++++ b/python/carnot/experiment_4460_submission_package_prep.py
+@@ -312,6 +312,24 @@ def resolve_replay_plan(
+             "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py",
+             _apply_ar25_label,
+         )
++    if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 6:
++        from arcengine import GameAction
++        from carnot.agentic.arc_agi3_live_adapter import _game_action
++        from carnot.experiment_4340_e3_explore_verify_plan_ka59 import _label_to_action_data
++
++        rel_path = "results/outer_loop_codex_ka59_probe.json"
++        artifact = _load_json(root / rel_path)
++        labels = [str(label) for label in artifact.get("action_sequence") or []]
++
++        def _apply_ka59_extended_label_v3(env: Any, label: str, _frame: Any) -> Any:
++            if label.startswith("6:"):
++                _, x_str, y_str = label.split(":")
++                action, data = 6, {"x": int(x_str), "y": int(y_str)}
++            else:
++                action, data = _label_to_action_data(env, label)
++            return env.step(_game_action(GameAction, action), data=data)
++
++        return ReplayPlan(game, labels, rel_path, _apply_ka59_extended_label_v3)
+     if game == "ka59" and _as_int(entry.get("levels_reproduced")) >= 5:
+         from arcengine import GameAction
+         from carnot.agentic.arc_agi3_live_adapter import _game_action
+diff --git a/results/outer_loop_codex_ka59_probe.json b/results/outer_loop_codex_ka59_probe.json
+index fa104204d3..0afa7cd7ac 100644
+--- a/results/outer_loop_codex_ka59_probe.json
++++ b/results/outer_loop_codex_ka59_probe.json
+@@ -1,23 +1,382 @@
+ {
+   "game": "ka59",
+   "model": "gpt-5.6-sol",
+-  "starting_level": 4,
+-  "max_level_reached": 5,
+-  "total_env_steps_used": 527,
+-  "reproduction_verified": true,
++  "starting_level": 5,
++  "max_level_reached": 6,
++  "total_env_steps_used": 692,
++  "reproduction_verified": false,
+   "action_sequence": [
+-    "4", "4", "4", "3", "2", "3", "3", "3", "C:1", "1", "4", "1", "1", "1", "1", "3", "6:19:44", "1", "1", "1", "6:44:47", "3", "3", "3", "3", "6:37:43", "2", "3", "6:17:47", "1", "1", "1", "6:19:20", "1", "1", "1", "3", "3", "3", "6:17:41", "2", "3", "3", "3", "6:41:34", "4", "4", "4", "4", "4", "2", "2", "6:37:46", "2", "2", "4", "4", "4", "4", "4", "3", "3", "3", "3", "3", "3", "3", "3", "3", "2", "2", "2", "2", "2", "2", "2", "2", "4", "1", "1", "1", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "1", "3", "3", "3", "3", "3", "3", "3", "2", "3", "3", "3", "2", "2", "6:30:33", "3", "3", "3", "3", "2", "6:18:51", "2", "2", "4", "1", "6:24:33", "6:18:33", "1", "1", "4", "4", "2", "6:21:57", "3", "1", "1", "1", "4", "6:24:27", "4", "4", "4", "4", "4", "2", "2", "6:18:48", "2", "4", "4", "4", "4", "4", "4", "1", "5", "3", "3", "2", "2", "2", "4", "1", "6:39:27", "2", "6:33:54", "1", "1", "1", "4", "2", "1", "2", "1", "2", "3", "2", "2", "2", "4", "1", "6:39:27", "3", "3", "2", "2", "2", "4", "1", "1", "1", "1", "1", "1", "1", "6:36:57", "1", "4", "6:36:21", "2", "2", "2", "4", "4", "4", "4", "4", "5", "3", "4", "3", "4", "3", "4", "3", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "4", "4", "4", "4", "4", "4", "4", "4", "4", "4", "2", "3", "3", "3"
++    "4",
++    "4",
++    "4",
++    "3",
++    "2",
++    "3",
++    "3",
++    "3",
++    "C:1",
++    "1",
++    "4",
++    "1",
++    "1",
++    "1",
++    "1",
++    "3",
++    "6:19:44",
++    "1",
++    "1",
++    "1",
++    "6:44:47",
++    "3",
++    "3",
++    "3",
++    "3",
++    "6:37:43",
++    "2",
++    "3",
++    "6:17:47",
++    "1",
++    "1",
++    "1",
++    "6:19:20",
++    "1",
++    "1",
++    "1",
++    "3",
++    "3",
++    "3",
++    "6:17:41",
++    "2",
++    "3",
++    "3",
++    "3",
++    "6:41:34",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "2",
++    "2",
++    "6:37:46",
++    "2",
++    "2",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "2",
++    "2",
++    "2",
++    "2",
++    "2",
++    "2",
++    "2",
++    "2",
++    "4",
++    "1",
++    "1",
++    "1",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "1",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "2",
++    "3",
++    "3",
++    "3",
++    "2",
++    "2",
++    "6:30:33",
++    "3",
++    "3",
++    "3",
++    "3",
++    "2",
++    "6:18:51",
++    "2",
++    "2",
++    "4",
++    "1",
++    "6:24:33",
++    "6:18:33",
++    "1",
++    "1",
++    "4",
++    "4",
++    "2",
++    "6:21:57",
++    "3",
++    "1",
++    "1",
++    "1",
++    "4",
++    "6:24:27",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "2",
++    "2",
++    "6:18:48",
++    "2",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "1",
++    "5",
++    "3",
++    "3",
++    "2",
++    "2",
++    "2",
++    "4",
++    "1",
++    "6:39:27",
++    "2",
++    "6:33:54",
++    "1",
++    "1",
++    "1",
++    "4",
++    "2",
++    "1",
++    "2",
++    "1",
++    "2",
++    "3",
++    "2",
++    "2",
++    "2",
++    "4",
++    "1",
++    "6:39:27",
++    "3",
++    "3",
++    "2",
++    "2",
++    "2",
++    "4",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "6:36:57",
++    "1",
++    "4",
++    "6:36:21",
++    "2",
++    "2",
++    "2",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "5",
++    "3",
++    "4",
++    "3",
++    "4",
++    "3",
++    "4",
++    "3",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "2",
++    "3",
++    "3",
++    "3",
++    "4",
++    "3",
++    "1",
++    "1",
++    "3",
++    "3",
++    "3",
++    "3",
++    "2",
++    "1",
++    "1",
++    "1",
++    "3",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "2",
++    "2",
++    "4",
++    "4",
++    "3",
++    "1",
++    "1",
++    "3",
++    "1",
++    "1",
++    "2",
++    "2",
++    "4",
++    "4",
++    "4",
++    "4",
++    "2",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "1",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "3",
++    "4",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "2",
++    "2",
++    "3",
++    "1",
++    "1",
++    "3",
++    "4",
++    "1",
++    "3",
++    "2",
++    "2",
++    "3",
++    "3",
++    "3",
++    "1",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "2",
++    "2",
++    "3",
++    "3",
++    "1",
++    "1",
++    "1",
++    "2",
++    "2",
++    "3",
++    "3",
++    "3",
++    "2",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "1",
++    "4",
++    "4",
++    "4",
++    "4",
++    "4",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "1",
++    "2",
++    "2",
++    "4",
++    "4",
++    "4",
++    "1",
++    "1"
+   ],
+-  "levels_won_this_session": [5],
+-  "novel_mechanics_found": "L5 begins behind a completed-level transition frame: one further action is required to reveal it. Its 6x6 c/d stack cycles through one additional c-row on each directional action (period 6); approaching the stack at the correct spacing freezes a phase, and the next push launches the six-row object over the ceiling. A dynamic 3x3 modulo glyph beside the socket encodes the stack's c-row count modulo 3. The glyph itself is ballistic: push it left to clear the socket, then move the selected e-framed 3x3 block left into the vacated socket to win. L6 adds phase-dependent transport: striking the lower cycling stack can route the selected block through a six-row wall into an isolated upper chamber while leaving the stack behind.",
+-  "narrative": "Replayed the resolver's 201-action prefix from a fresh reset and confirmed frame.levels_completed == 4. After probing the six stack phases, I froze and extracted the L5 stack, navigated the selected block around the ceiling, launched the derived glyph left, and moved the block into its socket; the live frame advanced to 5 at action 234. I continued through action 293 on L6. The chosen lower-stack phase routed the block into the upper-right chamber, where I filled the square socket, but the three-pixel void strips made that chamber one-way and left the plus-shaped object isolated in the upper-left chamber. With no observable escape from that branch, I stopped and ran reproduce() on the 234-action prefix; it reached level 5 with reproduced=true.",
++  "levels_won_this_session": [
++    6
++  ],
++  "novel_mechanics_found": "L6 lower-stack transport is not a fixed one-way trap: the six-row cycling stack is itself ballistic. Launching it left twice relocates the elevator from x=42 to x=12; phase-0 alignment then sends the selected 3x3 block into the upper-left chamber. After the plus is solved, launching the stack right twice restores the route to the upper-right square socket. L7 generalizes the transport to different block aspect ratios: a 3x6 and a 6x3 selectable block have distinct sockets, both can ride the lower stack across the lower barrier, and only the narrow block fits the central three-cell gap.",
++  "narrative": "The resolver prefix was independently replayed from a fresh reset and confirmed at levels_completed == 5 after 234 steps. A second persistent replay reached the same state, after which I discovered that relocating the L6 lower stack left opens the supposedly isolated plus chamber; I solved the plus with backtrack-clamped left/up launches, moved the stack back right, and placed the selected square to observe levels_completed advance live to 6 at exploratory action 124. I continued for 100 actions on L7, socketing both rectangular objects and mapping its lower transport and central gap, but did not solve the sealed plus chamber. A fresh level-6 reproduction gate could not fit after the two required 234-step replays without exceeding the 700-step cap, so the live win is reported honestly as unverified.",
+   "gotchas": [
+-    "The frame returned by the L4 winning action is still the completed L4 board even though levels_completed is already 4; one additional action reveals L5.",
+-    "Directional actions advance L5/L6 color phases, but ineffective ACTION6 clicks do not; clicks can therefore hold a phase while consuming an env.step call.",
+-    "A first contact with the cycling L5 stack freezes/arms it and a subsequent push performs the long extraction; apparent blocked approaches can be phase-sensitive.",
+-    "In L5 the 3x3 c/d glyph begins immediately beside and partly over the socket border. Launch it left first; the selected e block then needs only the final leftward move into the cleared socket.",
+-    "L6 contains three-pixel color-2 void strips, not walkable corridors. The selected 3x3 block cannot cross them or contact the upper cycling stacks through them.",
+-    "L6 lower-stack transport is phase/direction sensitive and can be one-way. The phase used in this run sent the block to the upper-right chamber before the left plus target was solved, which appears to be an unrecoverable ordering trap."
++    "This session used 234 steps for the mandatory independent prefix confirmation and another 234 to establish a persistent exploratory environment; only 232 calls remained, making a 358-step fresh reproduction gate impossible within the 700-call cap.",
++    "In L6 the lower cycling stack can be launched horizontally in 15-pixel flights. Its x-position determines which upper chamber a phase-0 alignment reaches; leave the square target until after the plus is solved.",
++    "A selected block aligned above a cycling stack transports across the barrier when the stack reaches its all-d phase (phase 0); blocked directional moves still advance phase, while ineffective ACTION6 clicks do not.",
++    "For L6, launch the plus left first so backtrack-clamp places it at x=3, then launch it upward into the target; solve order matters because the square socket is in the other chamber.",
++    "L7 has two selectable e-framed blocks. ACTION6 at their rendered centers switches selection and restores the previously selected block interior to its underlying target color.",
++    "L7 shape width is load-bearing: the 6x3 block cannot use the three-column central gap, whereas the 3x6 block can. The color-15 strips enclosing the plus chamber remained unexplained at stop time."
+   ],
+   "solve_provenance": "live_agent_self_discovery"
+ }
+diff --git a/results/outer_loop_codex_sk48_probe.json b/results/outer_loop_codex_sk48_probe.json
+index 1d6c7680ee..f545d3f876 100644
+--- a/results/outer_loop_codex_sk48_probe.json
++++ b/results/outer_loop_codex_sk48_probe.json
+@@ -3,7 +3,7 @@
+   "model": "gpt-5.6-sol",
+   "starting_level": 2,
+   "max_level_reached": 2,
+-  "total_env_steps_used": 547,
++  "total_env_steps_used": 580,
+   "reproduction_verified": true,
+   "action_sequence": [
+     {"action": 1},
+@@ -52,14 +52,14 @@
+     {"action": 4}
+   ],
+   "levels_won_this_session": [],
+-  "novel_mechanics_found": "Level 2 introduces a second, dark-headed vertical manipulator holding a red/green segmented column of colored blocks. Blocks on that helper cannot be pulled horizontally in the ordinary way. A horizontal contact followed by perpendicular vertical motion detaches and carries the contacted block; a carried block pushed into the anchored column can displace lower blocks, so solving requires two-arm transfer, collision clearance, and removal of the cyan decoy before delivering gray-maroon-white.",
+-  "narrative": "The 44-action banked prefix replayed from reset and reached level 2, and the final reproduce() gate independently passed for claimed level 2. I explored the next level through rendered frames only. Earlier levels use a sticky telescoping horizontal arm to sort blocks into the bottom-strip order, but level 2 adds an anchored vertical helper and a cyan decoy; I established how to detach gray and how carried blocks displace the helper's column, but did not complete the required gray-maroon-white sort. I stopped after the reserved reproduction gate rather than claim an unobserved level-up.",
++  "novel_mechanics_found": "Level 3 adds a brown-headed, vertically connected colored chain that is absent from level 2. ACTION1/2 move the left head by one six-pixel lattice row, while ACTION3/4 retract or retain horizontal chain segments. Touching the connected chain at E couples the objects: a subsequent downward move drags the entire brown-headed colored chain down one lattice row. Direct ACTION6 clicks on the brown head and bottom reference head produced no visible effect.",
++  "narrative": "The verified 44-action prefix reached levels_completed=2 both live and through the mandatory fresh-reset reproduction gate. I explored level 3 by comparing its rendered layout with the known L1/L2 routes, testing retained-segment color visitation in the bottom reference order and in the connected-chain reverse order from fresh prefix replays. Those candidates did not level up; the important new behavior was physical coupling and whole-chain dragging after contact with the previously unexplained brown-headed chain. I stopped at the verified L2 ceiling with 20 steps remaining because another fresh L3 candidate plus its reproduction gate could not fit within the 600-step budget.",
+   "gotchas": [
+-    "Rendered action results may contain a stack of animation frames; use the final 64x64 frame for the current visual state.",
+-    "ACTION1/ACTION2 move the magenta horizontal manipulator vertically; ACTION4 extends its arm and ACTION3 retracts it. ACTION5 and ACTION6 were observed no-ops on level 2.",
+-    "An extension stops immediately before a block; retraction pulls only when contact has actually been established, and required extension count depends on the block's horizontal distance.",
+-    "On level 2, the tiny dark cap and red/green vertical segments are active mechanics, not decoration: they form a second manipulator that anchors the colored column.",
+-    "A block anchored to the vertical helper can be detached by contacting it horizontally and then moving the horizontal manipulator perpendicular to the helper; collision with intervening anchored blocks can block vertical motion or displace the lower column."
++    "A horizontal color contact is not enough by itself: retracting all the way discards the useful retained-chain configuration; L1/L2 retain one or more segments between row changes.",
++    "Level 3's brown 2x2 head and its 2/3 connector glyphs are functional: contact can couple the movable chain to the whole vertical colored chain, which then moves as a unit.",
++    "Calling env.reset() after reaching level 3 returned a frame still reporting levels_completed=2, but the next action could drop the run to level 0; use a fresh environment plus the full verified prefix for trustworthy L3 trials.",
++    "ACTION6 clicks at visible head coordinates were frame-identical no-ops in the tested states.",
++    "The stable rendered grid is the last item of frame.frame; individual actions can contain multiple animation frames."
+   ],
+   "solve_provenance": "live_agent_self_discovery"
+ }
+-- 
+2.55.0
+

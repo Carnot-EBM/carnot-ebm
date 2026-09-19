@@ -1,0 +1,2437 @@
+From 04e08f215843d2e1466457aca6dffdec9511117d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 22:10:57 -0400
+Subject: [PATCH 06104/11362] [conductor] Hash-chained hardware workload
+ receipts for active boards
+
+Automated research step by research conductor.
+Task ID: exp5386-v490-hardware-hashchain-receipts
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  87 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...t_5386_hardware_hashchain_receipts_v490.py | 804 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   8 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...5386_hardware_hashchain_receipts_v490.json | 665 +++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...t_5386_hardware_hashchain_receipts_v490.py | 573 +++++++++++++
+ 19 files changed, 2160 insertions(+), 31 deletions(-)
+ create mode 100644 python/carnot/experiment_5386_hardware_hashchain_receipts_v490.py
+ create mode 100644 results/experiment_5386_hardware_hashchain_receipts_v490.json
+ create mode 100644 tests/python/test_experiment_5386_hardware_hashchain_receipts_v490.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index 62c4db31c5..a3349ad4db 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -16227,6 +16227,93 @@ no-speedup status.
+ 
+ ---
+ 
++### REQ-HW-5386
++
++**Title:** Hardware-continuity v490 MUST hash-chain safe board receipts without speedup claims
++
++**Description:**
++Experiment 5386 MUST produce
++`results/experiment_5386_hardware_hashchain_receipts_v490.json` as a v490
++hash-chained receipt for the active hardware board lanes. The artifact MUST
++record KV260, PolarFire, and GateMate status using only safe reachable paths,
++MUST chain each safe action over command, input hash, output hash, timestamp,
++board identity, exit status, and the prior chain hash, and MUST NOT claim
++sampler acceleration or hardware speedup.
++
++KV260 MUST be checked only with the non-destructive SSH reachability command
++`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. If KV260 is reachable,
++board-local receipt evidence may be recorded only from bounded non-destructive
++commands over SSH. KV260 evidence MUST NOT use host `/dev/mmcblk*`, `/dev/disk`,
++removable storage, or SD-card paths.
++
++PolarFire MUST reuse the authenticated reachable workload path when SSH is
++available. The PolarFire workload receipt MUST include command, input, and
++output hashes and become part of `workload_hash_chain` only when the receipt
++validates.
++
++GateMate MUST record DirtyJTAG USB, toolchain, and physical/JTAG path status.
++It may run only safe detect or workload steps when the physical path is present.
++The artifact MUST preserve `no_destructive_flash=true` and MUST NOT flash,
++program, or perform destructive writes.
++
++The artifact MUST include fields `status`,
++`hardware_hash_chained_receipt_ready`, `hardware_speedup_claim`,
++`boards_checked`, `kv260_status`, `polar_fire_status`, `gatemate_status`,
++`workload_hash_chain`, `commands_run`, `no_host_mmcblk_kv260_evidence`,
++`no_destructive_flash`, `repeatability_evidence_present`,
++`receipt_contract_version`, and `honest_verdict`. `status` MUST be `complete`
++with per-board statuses when at least one safe board interaction was recorded,
++or `honest_blocked` when no safe board interaction is possible.
++`hardware_hash_chained_receipt_ready` MUST be true only if at least one safe
++board workload has a valid hash chain and blocked boards are honestly
++represented. `hardware_speedup_claim` MUST be false unless repeatable board
++timing evidence exists.
++
++**Acceptance criteria:**
++- `.venv/bin/python -m carnot.experiment_5386_hardware_hashchain_receipts_v490 --date 20260708`
++  writes `results/experiment_5386_hardware_hashchain_receipts_v490.json`.
++- The artifact includes `spec_refs` containing `REQ-HW-5386` and
++  `SCENARIO-HW-5386`, `random_seed=5386`, and a stable
++  `reproducibility_checksum`.
++- `boards_checked` includes `KV260`, `PolarFire`, and `GateMate`.
++- `workload_hash_chain` is an ordered list whose records verify against the
++  previous hash and include command, input, and output hashes, timestamp, board
++  identity, and exit-status evidence.
++- `hardware_speedup_claim=false`,
++  `no_host_mmcblk_kv260_evidence=true`, `no_destructive_flash=true`, and
++  `repeatability_evidence_present=false` unless authenticated repeat timing
++  evidence is present.
++
++**Implementation status:** Planned (Exp 5386)
++
++---
++
++### SCENARIO-HW-5386
++
++**Scenario:** Exp 5386 writes v490 hash-chained hardware receipts without speedup claims.
++
++**Given:** Exp 5374 recorded KV260 SSH status, a PolarFire authenticated
++workload receipt when reachable, GateMate physical/JTAG status, and no speedup
++claim.
++**When:** Experiment 5386 attempts the exact KV260 BatchMode SSH reachability
++command, checks PolarFire authenticated SSH and runs the established tiny
++board-local hash workload only when reachable, checks GateMate only through
++current safe toolchain/detect paths when the physical/JTAG path is available,
++and constructs an ordered hash chain over safe board actions.
++**Then:** It writes
++`results/experiment_5386_hardware_hashchain_receipts_v490.json` with the
++required fields, KV260 SSH-only evidence, PolarFire command/input/output hashes
++when the workload validates, GateMate DirtyJTAG/toolchain/physical status,
++`hardware_hash_chained_receipt_ready=true` only for a valid workload chain,
++`hardware_speedup_claim=false`, `no_host_mmcblk_kv260_evidence=true`,
++`no_destructive_flash=true`, `repeatability_evidence_present=false` unless
++authenticated repeat timing exists, and a one-line verdict that states receipt
++discipline rather than speedup.
++
++**Implementation status:** Planned (Exp 5386)
++
++---
++
+ ### SCENARIO-HW-4910
+ 
+ **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b86406045a..c06457466b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4352,
++  "experiments_checked": 4353,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5386_hardware_hashchain_receipts_v490.py b/python/carnot/experiment_5386_hardware_hashchain_receipts_v490.py
+new file mode 100644
+index 0000000000..ef8ed02eb3
+--- /dev/null
++++ b/python/carnot/experiment_5386_hardware_hashchain_receipts_v490.py
+@@ -0,0 +1,804 @@
++#!/usr/bin/env python3
++"""Exp 5386: hash-chained hardware receipts for safe board actions.
++
++Spec refs: REQ-HW-5386, SCENARIO-HW-5386.
++
++This module records continuity receipts, not acceleration evidence. The hash
++chain makes later audit cheaper: each board action is bound to the previous
++action, the command string, the input and output hashes, the timestamp, the
++board identity, and the exit status. That structure makes it harder for a later
++summary to cherry-pick a successful workload while silently dropping an
++unreachable board or an unsafe command.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_5293_hardware_continuity_reachability_v483 as base
++from carnot import experiment_5374_hardware_continuity_receipts_v489 as prev
++
++
++JsonDict = dict[str, Any]
++Clock = prev.Clock
++CommandProbe = prev.CommandProbe
++CommandRunner = prev.CommandRunner
++
++RUN_DATE = "20260708"
++EXPERIMENT_ID = "exp5386-hardware-hashchain-receipts-v490"
++EXPERIMENT_NAME = "experiment_5386_hardware_hashchain_receipts"
++MILESTONE = "2026.07.490"
++SCHEMA = "carnot.experiment_5386.hardware_hashchain_receipts.v490"
++SPEC_REFS = ("REQ-HW-5386", "SCENARIO-HW-5386")
++RANDOM_SEED = 5386
++RECEIPT_CONTRACT_VERSION = "carnot.hardware.hashchain_receipt.v1"
++INFERENCE_SUBSTRATE = "hardware_hashchain_receipts_no_speedup"
++HARDWARE_EVIDENCE_LEVEL = "hash_chained_board_workload_receipts_no_speedup"
++GENESIS_CHAIN_HASH = "0" * 64
++
++RESULT_RELATIVE_PATH = Path("results/experiment_5386_hardware_hashchain_receipts_v490.json")
++PRIOR_RESULT_RELATIVE_PATH = Path("results/experiment_5374_hardware_continuity_receipts_v489.json")
++PRIOR_WORKLOAD_RELATIVE_PATH = Path(
++    "results/experiment_5361_hardware_continuity_workload_v488.json"
++)
++
++HOST_DATE_COMMAND = prev.HOST_DATE_COMMAND
++HARDWARE_ENV_COMMAND = prev.HARDWARE_ENV_COMMAND
++TOOL_VERSION_COMMAND = prev.TOOL_VERSION_COMMAND
++GATEMATE_USB_COMMAND = prev.GATEMATE_USB_COMMAND
++POLARFIRE_USB_COMMAND = prev.POLARFIRE_USB_COMMAND
++GPU_CONTEXT_COMMAND = prev.GPU_CONTEXT_COMMAND
++KV260_SSH_TRUE_COMMAND = prev.KV260_SSH_TRUE_COMMAND
++KV260_REQUIRED_COMMAND_FORM = prev.KV260_REQUIRED_COMMAND_FORM
++POLARFIRE_STATUS_COMMAND = prev.POLARFIRE_STATUS_COMMAND
++GATEMATE_DETECT_COMMAND = prev.GATEMATE_DETECT_COMMAND
++
++LOCAL_TIMEOUT_S = prev.LOCAL_TIMEOUT_S
++SSH_TIMEOUT_S = prev.SSH_TIMEOUT_S
++GATEMATE_TIMEOUT_S = prev.GATEMATE_TIMEOUT_S
++TERMINAL_PREFIXES = ("complete:", "honest_blocked")
++BOARDS_CHECKED = ("KV260", "PolarFire", "GateMate")
++
++POLARFIRE_WORKLOAD_INPUT = b"carnot-exp5386-polarfire-workload-v490\n"
++POLARFIRE_WORKLOAD_OUTPUT_SUFFIX = b"|polarfire-v490-output"
++POLARFIRE_EXPECTED_INPUT_SHA256 = hashlib.sha256(POLARFIRE_WORKLOAD_INPUT).hexdigest()
++POLARFIRE_EXPECTED_OUTPUT_SHA256 = hashlib.sha256(
++    POLARFIRE_WORKLOAD_INPUT + POLARFIRE_WORKLOAD_OUTPUT_SUFFIX
++).hexdigest()
++POLARFIRE_WORKLOAD_PYTHON = (
++    "import hashlib,json,platform,socket,time;"
++    "started=time.perf_counter();"
++    'payload=b"carnot-exp5386-polarfire-workload-v490\\n";'
++    'out=hashlib.sha256(payload+b"|polarfire-v490-output").hexdigest();'
++    "receipt={"
++    '"hostname":socket.gethostname(),'
++    '"uname":" ".join(platform.uname()),'
++    '"python_version":platform.python_version(),'
++    '"input_sha256":hashlib.sha256(payload).hexdigest(),'
++    '"output_sha256":out,'
++    '"wall_time_s":round(time.perf_counter()-started,6)'
++    "};"
++    "print(json.dumps(receipt,sort_keys=True))"
++)
++POLARFIRE_WORKLOAD_COMMAND = (
++    "ssh",
++    "-o",
++    "ConnectTimeout=5",
++    "-o",
++    "BatchMode=yes",
++    "polarfire",
++    f"python3 -c '{POLARFIRE_WORKLOAD_PYTHON}'",
++)
++
++REQUIRED_WRAPPED_FIELDS = (
++    "status",
++    "hardware_hash_chained_receipt_ready",
++    "hardware_speedup_claim",
++    "boards_checked",
++    "kv260_status",
++    "polar_fire_status",
++    "gatemate_status",
++    "workload_hash_chain",
++    "commands_run",
++    "no_host_mmcblk_kv260_evidence",
++    "no_destructive_flash",
++    "repeatability_evidence_present",
++    "receipt_contract_version",
++    "honest_verdict",
++)
++METADATA_WRAPPED_FIELDS = (
++    "experiment_id",
++    "milestone",
++    "inference_substrate",
++    "preconditions_checked",
++    "tests_run",
++)
++FIELD_PRINCIPLES: dict[str, str] = {
++    "experiment_id": "Identifies the v490 hash-chain receipt artifact.",
++    "milestone": "Pins this receipt to milestone 2026.07.490 rather than a floating board state.",
++    "status": "Complete means safe board actions were recorded; honest_blocked means no safe board interaction was possible.",
++    "hardware_hash_chained_receipt_ready": (
++        "True only when at least one safe board workload validates inside the hash chain "
++        "and blocked boards are represented honestly."
++    ),
++    "hardware_speedup_claim": "False unless repeatable board timing evidence exists.",
++    "boards_checked": "Lists the active hardware lanes that this receipt classified.",
++    "kv260_status": (
++        "Records KV260 SSH reachability and workload status without host block-device evidence."
++    ),
++    "polar_fire_status": (
++        "Records PolarFire SSH reachability and the board-local workload receipt when valid."
++    ),
++    "gatemate_status": "Records GateMate DirtyJTAG, toolchain, and physical/JTAG status.",
++    "workload_hash_chain": (
++        "Ordered records chaining command, input, output, timestamp, board identity, "
++        "exit status, and previous hash for each safe board action."
++    ),
++    "commands_run": "Records every safe command executed with exit code and output hashes.",
++    "no_host_mmcblk_kv260_evidence": (
++        "True because KV260 evidence is SSH-only and not derived from host removable storage."
++    ),
++    "no_destructive_flash": "True because no flashing, programming, or destructive write command was run.",
++    "repeatability_evidence_present": (
++        "States whether authenticated repeated board timing evidence exists."
++    ),
++    "receipt_contract_version": "Names the hash-chain receipt schema used by this artifact.",
++    "honest_verdict": "One-line outcome that reports receipt discipline rather than speedup.",
++    "inference_substrate": (
++        "hardware_hashchain_receipts_no_speedup means these are continuity receipts, "
++        "not sampler acceleration measurements."
++    ),
++    "preconditions_checked": (
++        "Records date, sanitized environment, local toolchain, USB visibility, and SSH targets."
++    ),
++    "tests_run": "Records verification commands without treating them as hardware evidence.",
++}
++
++
++def require(condition: bool, message: str) -> None:
++    if not condition:
++        raise AssertionError(message)
++
++
++def wrap_field(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def sha256_text(text: str) -> str:
++    return prev.sha256_text(text)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return base.sha256_json(stable)
++
++
++def receipt_timestamp(run_date: str, index: int) -> str:
++    if len(run_date) != 8 or not run_date.isdigit():
++        raise ValueError("run_date must be YYYYMMDD")
++    year, month, day = run_date[:4], run_date[4:6], run_date[6:8]
++    minute_total, second = divmod(int(index), 60)
++    hour, minute = divmod(minute_total, 60)
++    return f"{year}-{month}-{day}T{hour:02d}:{minute:02d}:{second:02d}Z"
++
++
++def combined_output_sha256(command: Mapping[str, Any]) -> str:
++    stdout_hash = str(command.get("stdout_sha256", ""))
++    stderr_hash = str(command.get("stderr_sha256", ""))
++    return sha256_text(f"stdout={stdout_hash}\nstderr={stderr_hash}")
++
++
++def parse_polarfire_workload_stdout(stdout: str) -> tuple[JsonDict | None, str | None]:
++    parsed: Any | None = None
++    for line in stdout.splitlines():
++        candidate = line.strip()
++        if not candidate:
++            continue
++        try:
++            parsed = json.loads(candidate)
++        except json.JSONDecodeError:
++            continue
++        if isinstance(parsed, Mapping):
++            break
++    if not isinstance(parsed, Mapping):
++        return None, "workload stdout is not valid JSON"
++
++    receipt: JsonDict = {
++        "hostname": parsed.get("hostname"),
++        "uname": parsed.get("uname"),
++        "python_version": parsed.get("python_version"),
++        "input_sha256": parsed.get("input_sha256"),
++        "output_sha256": parsed.get("output_sha256"),
++        "wall_time_s": parsed.get("wall_time_s"),
++        "workload_class": "deterministic_sha256_transform",
++        "board_local": True,
++        "speedup_claimed": False,
++    }
++    errors: list[str] = []
++    for key in ("hostname", "uname", "input_sha256", "output_sha256"):
++        if not isinstance(receipt.get(key), str) or not receipt[key]:
++            errors.append(f"{key} missing")
++    if receipt.get("input_sha256") != POLARFIRE_EXPECTED_INPUT_SHA256:
++        errors.append("input_sha256 mismatch")
++    if receipt.get("output_sha256") != POLARFIRE_EXPECTED_OUTPUT_SHA256:
++        errors.append("output_sha256 mismatch")
++    if not isinstance(receipt.get("wall_time_s"), int | float) or receipt["wall_time_s"] < 0:
++        errors.append("wall_time_s invalid")
++    python_version = receipt.get("python_version")
++    if python_version is not None and not isinstance(python_version, str):
++        errors.append("python_version invalid")
++    return receipt, "; ".join(errors) if errors else None
++
++
++def polarfire_status_with_workload(
++    *, command_runner: CommandRunner
++) -> tuple[str, str | None, JsonDict, JsonDict | None, list[JsonDict]]:
++    status_probe = command_runner(POLARFIRE_STATUS_COMMAND, SSH_TIMEOUT_S)
++    ssh_reachable = status_probe.exit_code == 0
++    status_detail: JsonDict = {
++        "board": "PolarFire",
++        "ssh_reachable": ssh_reachable,
++        "probe_exit_code": int(status_probe.exit_code),
++        "remote_identifier": base.remote_identifier(status_probe.combined_output)
++        if ssh_reachable
++        else None,
++        "workload_attempted": False,
++        "workload_validated": False,
++        "workload_receipt": None,
++        "speedup_claimed": False,
++    }
++    commands = [
++        prev.command_receipt(
++            probe=status_probe,
++            timeout_s=SSH_TIMEOUT_S,
++            kind="polarfire_authenticated_status_probe",
++            outcome="reachable" if ssh_reachable else "unreachable",
++        )
++    ]
++    if not ssh_reachable:
++        status_detail["status"] = "unreachable"
++        return (
++            "unreachable",
++            None,
++            status_detail,
++            prev.blocker_from_probe("unreachable", status_probe, SSH_TIMEOUT_S),
++            commands,
++        )
++
++    workload_probe = command_runner(POLARFIRE_WORKLOAD_COMMAND, SSH_TIMEOUT_S)
++    receipt, parse_error = parse_polarfire_workload_stdout(workload_probe.stdout)
++    exit_ok = workload_probe.exit_code == 0
++    validated = bool(exit_ok and receipt is not None and parse_error is None)
++    if validated:
++        status = "reachable/workload_receipt"
++        workload_hash = str(receipt["output_sha256"])
++        blocker = None
++        workload_error = None
++    else:
++        status = "skipped: workload receipt invalid"
++        workload_hash = None
++        workload_error = parse_error or workload_probe.stderr.strip() or "workload command failed"
++        blocker = prev.blocker_from_probe(workload_error, workload_probe, SSH_TIMEOUT_S)
++
++    status_detail.update(
++        {
++            "status": status,
++            "workload_attempted": True,
++            "workload_validated": validated,
++            "workload_receipt": receipt,
++            "workload_error": workload_error,
++        }
++    )
++    commands.append(
++        prev.command_receipt(
++            probe=workload_probe,
++            timeout_s=SSH_TIMEOUT_S,
++            kind="polarfire_board_local_workload_receipt",
++            outcome=status,
++        )
++    )
++    return status, workload_hash, status_detail, blocker, commands
++
++
++def board_identity(board: str, detail: Mapping[str, Any]) -> str:
++    remote_identifier = detail.get("remote_identifier")
++    if isinstance(remote_identifier, str) and remote_identifier:
++        return remote_identifier
++    if board == "GateMate":
++        detect_identifier = detail.get("detect_output_identifier")
++        if isinstance(detect_identifier, str) and detect_identifier:
++            return detect_identifier
++        usb = detail.get("dirtyjtag_usb", {})
++        if isinstance(usb, Mapping) and usb.get("visible") is True:
++            return "DirtyJTAG 1209:c0ca visible"
++        return "GateMate physical/JTAG path unavailable"
++    if board == "KV260":
++        return "ssh target kria"
++    if board == "PolarFire":
++        return "ssh target polarfire"
++    return board
++
++
++def hash_chain_record(record: Mapping[str, Any]) -> str:
++    stable = dict(record)
++    stable["record_hash"] = ""
++    return base.sha256_json(stable)
++
++
++def chain_action_for_receipt(
++    *,
++    receipt: Mapping[str, Any],
++    board: str,
++    action: str,
++    detail: Mapping[str, Any],
++    run_date: str,
++    index: int,
++    previous_hash: str,
++) -> JsonDict:
++    input_sha256 = sha256_text("")
++    output_sha256 = combined_output_sha256(receipt)
++    workload_validated = False
++    if receipt.get("kind") == "polarfire_board_local_workload_receipt":
++        workload = detail.get("workload_receipt")
++        if isinstance(workload, Mapping):
++            workload_input = workload.get("input_sha256")
++            workload_output = workload.get("output_sha256")
++            if isinstance(workload_input, str) and len(workload_input) == 64:
++                input_sha256 = workload_input
++            if isinstance(workload_output, str) and len(workload_output) == 64:
++                output_sha256 = workload_output
++        workload_validated = detail.get("workload_validated") is True
++
++    record: JsonDict = {
++        "index": index,
++        "board": board,
++        "action": action,
++        "kind": receipt.get("kind"),
++        "command": receipt.get("command"),
++        "command_sha256": sha256_text(str(receipt.get("command", ""))),
++        "input_sha256": input_sha256,
++        "output_sha256": output_sha256,
++        "stdout_sha256": receipt.get("stdout_sha256"),
++        "stderr_sha256": receipt.get("stderr_sha256"),
++        "timestamp_utc": receipt_timestamp(run_date, index),
++        "board_identity": board_identity(board, detail),
++        "exit_status": int(receipt.get("exit_code", -1)),
++        "exit_code": int(receipt.get("exit_code", -1)),
++        "status": receipt.get("outcome"),
++        "workload_receipt_validated": workload_validated,
++        "previous_hash": previous_hash,
++        "record_hash": "",
++    }
++    record["record_hash"] = hash_chain_record(record)
++    return record
++
++
++def build_workload_hash_chain(
++    *,
++    board_receipts: Sequence[tuple[str, str, Mapping[str, Any], Mapping[str, Any]]],
++    run_date: str,
++) -> list[JsonDict]:
++    chain: list[JsonDict] = []
++    previous_hash = GENESIS_CHAIN_HASH
++    for index, (board, action, detail, receipt) in enumerate(board_receipts):
++        record = chain_action_for_receipt(
++            receipt=receipt,
++            board=board,
++            action=action,
++            detail=detail,
++            run_date=run_date,
++            index=index,
++            previous_hash=previous_hash,
++        )
++        previous_hash = str(record["record_hash"])
++        chain.append(record)
++    return chain
++
++
++def default_tests_run() -> list[JsonDict]:
++    return [
++        {
++            "command": "verification not yet attached at artifact generation",
++            "outcome": "pending_external_test_run",
++        }
++    ]
++
++
++def honest_verdict(
++    *,
++    status: str,
++    receipt_ready: bool,
++    kv260_status: str,
++    polar_fire_status: str,
++    gatemate_status: str,
++) -> str:
++    prefix = "complete:" if status == "complete" else "honest_blocked"
++    ready = str(bool(receipt_ready)).lower()
++    return (
++        f"{prefix} "
++        f"receipt_ready={ready} "
++        f"kv260={kv260_status} "
++        f"polar_fire={polar_fire_status} "
++        f"gatemate={gatemate_status} "
++        "speedup_claim=false"
++    )
++
++
++def build_artifact(
++    *,
++    command_runner: CommandRunner = base.run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str = "unknown",
++    gatemate_physical_path_available: bool | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    started = clock()
++    context, commands_run = prev.collect_preconditions(command_runner)
++    context["prior_receipts"] = [str(PRIOR_RESULT_RELATIVE_PATH), str(PRIOR_WORKLOAD_RELATIVE_PATH)]
++    gate_path_available = prev.gatemate_path_available_from_context(
++        context, gatemate_physical_path_available
++    )
++    context["operator_visible_hardware_assumptions"]["gatemate_physical_jtag_path_available"] = (
++        gate_path_available
++    )
++
++    kv260_probe = command_runner(KV260_SSH_TRUE_COMMAND, SSH_TIMEOUT_S)
++    kv260_status, kv260_detail, kv260_blocker, kv260_receipt = prev.kv260_status_from_probe(
++        kv260_probe
++    )
++    commands_run.append(kv260_receipt)
++
++    polar_fire_status, _, polar_fire_detail, polar_fire_blocker, polar_fire_commands = (
++        polarfire_status_with_workload(command_runner=command_runner)
++    )
++    commands_run.extend(polar_fire_commands)
++
++    gatemate_status, gatemate_detail, gatemate_blocker, gatemate_commands = (
++        prev.gatemate_status_from_context(
++            command_runner=command_runner,
++            context=context,
++            physical_path_available=gate_path_available,
++        )
++    )
++    commands_run.extend(gatemate_commands)
++
++    board_receipts: list[tuple[str, str, Mapping[str, Any], Mapping[str, Any]]] = [
++        ("KV260", "ssh_reachability", kv260_detail, kv260_receipt),
++    ]
++    for command in polar_fire_commands:
++        action = (
++            "board_local_workload"
++            if command.get("kind") == "polarfire_board_local_workload_receipt"
++            else "ssh_status"
++        )
++        board_receipts.append(("PolarFire", action, polar_fire_detail, command))
++    for command in gatemate_commands:
++        board_receipts.append(("GateMate", "safe_detect", gatemate_detail, command))
++
++    hash_chain = build_workload_hash_chain(board_receipts=board_receipts, run_date=run_date)
++    receipt_ready = any(record["workload_receipt_validated"] is True for record in hash_chain)
++    status = "complete" if hash_chain else "honest_blocked"
++    tests = [dict(item) for item in (tests_run if tests_run is not None else default_tests_run())]
++
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": wrap_field("experiment_id", EXPERIMENT_ID),
++        "milestone": wrap_field("milestone", MILESTONE),
++        "spec_refs": list(SPEC_REFS),
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "duration_s": base.round_duration(clock() - started),
++        "commit": commit,
++        "status": wrap_field("status", status),
++        "hardware_hash_chained_receipt_ready": wrap_field(
++            "hardware_hash_chained_receipt_ready", receipt_ready
++        ),
++        "hardware_speedup_claim": wrap_field("hardware_speedup_claim", False),
++        "boards_checked": wrap_field("boards_checked", list(BOARDS_CHECKED)),
++        "kv260_status": wrap_field("kv260_status", kv260_detail),
++        "polar_fire_status": wrap_field("polar_fire_status", polar_fire_detail),
++        "gatemate_status": wrap_field("gatemate_status", gatemate_detail),
++        "workload_hash_chain": wrap_field("workload_hash_chain", hash_chain),
++        "commands_run": wrap_field("commands_run", commands_run),
++        "no_host_mmcblk_kv260_evidence": wrap_field("no_host_mmcblk_kv260_evidence", True),
++        "no_destructive_flash": wrap_field("no_destructive_flash", True),
++        "repeatability_evidence_present": wrap_field("repeatability_evidence_present", False),
++        "receipt_contract_version": wrap_field(
++            "receipt_contract_version", RECEIPT_CONTRACT_VERSION
++        ),
++        "honest_verdict": wrap_field(
++            "honest_verdict",
++            honest_verdict(
++                status=status,
++                receipt_ready=receipt_ready,
++                kv260_status=kv260_status,
++                polar_fire_status=polar_fire_status,
++                gatemate_status=gatemate_status,
++            ),
++        ),
++        "inference_substrate": wrap_field("inference_substrate", INFERENCE_SUBSTRATE),
++        "preconditions_checked": wrap_field("preconditions_checked", context),
++        "tests_run": wrap_field("tests_run", tests),
++        "hardware_evidence_level": HARDWARE_EVIDENCE_LEVEL,
++        "board_details": {
++            "KV260": kv260_detail,
++            "PolarFire": polar_fire_detail,
++            "GateMate": gatemate_detail,
++        },
++        "blocked_reason": {
++            "KV260": kv260_blocker,
++            "PolarFire": polar_fire_blocker,
++            "GateMate": gatemate_blocker,
++        },
++        "reviewed_inputs": [
++            "AGENTS.md",
++            "CODEX.md",
++            "CLAUDE.md",
++            "research-hardware-wishlist.md",
++            str(PRIOR_RESULT_RELATIVE_PATH),
++            str(PRIOR_WORKLOAD_RELATIVE_PATH),
++            "ops/exclusion_manifest.yaml",
++            "openspec/capabilities/fpga/spec.md",
++            "tests/python/",
++            "scripts/",
++        ],
++        "docs_update_decision": {
++            "ops_changelog_updated": False,
++            "ops_status_updated": False,
++            "reason": "task stop rule delegates docs/status reconciliation to the conductor",
++        },
++        "conductor_modified": False,
++        "reproducibility_checksum": "",
++    }
++    artifact["no_host_mmcblk_kv260_evidence"]["value"] = prev.no_host_mmcblk_kv260_evidence(
++        artifact
++    )
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_wrapped_field(artifact: Mapping[str, Any], field: str) -> Any:
++    wrapped = artifact.get(field)
++    require(isinstance(wrapped, Mapping), f"{field} must be principle-wrapped")
++    require(wrapped.get("principle") == FIELD_PRINCIPLES[field], f"{field} principle mismatch")
++    require("value" in wrapped, f"{field} missing value")
++    return wrapped["value"]
++
++
++def validate_commands(commands: Any) -> None:
++    require(isinstance(commands, list) and commands, "commands_run must be a non-empty list")
++    for index, command in enumerate(commands):
++        require(isinstance(command, Mapping), f"commands_run[{index}] must be a mapping")
++        for key in (
++            "kind",
++            "command",
++            "outcome",
++            "exit_code",
++            "timeout_s",
++            "duration_s",
++            "stdout_sha256",
++            "stderr_sha256",
++        ):
++            require(key in command, f"commands_run[{index}] missing {key}")
++        require(
++            not prev.command_is_destructive(str(command["command"])),
++            f"destructive command recorded at commands_run[{index}]",
++        )
++    require(
++        any(command.get("command") == KV260_REQUIRED_COMMAND_FORM for command in commands),
++        "commands_run missing exact KV260 SSH command",
++    )
++
++
++def validate_tests_run(tests_run: Any) -> None:
++    require(isinstance(tests_run, list) and tests_run, "tests_run must be a non-empty list")
++    for index, item in enumerate(tests_run):
++        require(isinstance(item, Mapping), f"tests_run[{index}] must be a mapping")
++        require(
++            isinstance(item.get("command"), str) and item["command"], "tests_run command missing"
++        )
++        require(
++            isinstance(item.get("outcome"), str) and item["outcome"], "tests_run outcome missing"
++        )
++
++
++def validate_status_detail(label: str, detail: Any) -> str:
++    require(isinstance(detail, Mapping), f"{label} must be a mapping")
++    status = detail.get("status")
++    require(isinstance(status, str) and prev._status_is_allowed(status), f"{label} status invalid")
++    require(detail.get("speedup_claimed") is False, f"{label} speedup_claimed must be false")
++    return status
++
++
++def validate_hash_chain(chain: Any, *, status: str) -> bool:
++    require(isinstance(chain, list), "workload_hash_chain must be a list")
++    if status == "complete":
++        require(chain, "complete status requires a non-empty workload_hash_chain")
++    previous_hash = GENESIS_CHAIN_HASH
++    valid_workload = False
++    for index, record in enumerate(chain):
++        require(isinstance(record, Mapping), f"workload_hash_chain[{index}] must be a mapping")
++        for key in (
++            "index",
++            "board",
++            "action",
++            "kind",
++            "command",
++            "command_sha256",
++            "input_sha256",
++            "output_sha256",
++            "timestamp_utc",
++            "board_identity",
++            "exit_status",
++            "status",
++            "workload_receipt_validated",
++            "previous_hash",
++            "record_hash",
++        ):
++            require(key in record, f"workload_hash_chain[{index}] missing {key}")
++        require(record["index"] == index, f"workload_hash_chain[{index}] index mismatch")
++        require(
++            record["previous_hash"] == previous_hash,
++            f"workload_hash_chain[{index}] previous_hash mismatch",
++        )
++        require(
++            record["record_hash"] == hash_chain_record(record),
++            f"workload_hash_chain[{index}] record_hash mismatch",
++        )
++        for key in ("command_sha256", "input_sha256", "output_sha256", "previous_hash"):
++            value = record[key]
++            require(isinstance(value, str) and len(value) == 64, f"{key} must be sha256")
++        require(
++            isinstance(record["timestamp_utc"], str) and record["timestamp_utc"].endswith("Z"),
++            "bad timestamp",
++        )
++        require(
++            not prev.command_is_destructive(str(record["command"])),
++            "destructive command in hash chain",
++        )
++        valid_workload = valid_workload or record["workload_receipt_validated"] is True
++        previous_hash = str(record["record_hash"])
++    return valid_workload
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    for field in (*METADATA_WRAPPED_FIELDS, *REQUIRED_WRAPPED_FIELDS):
++        validate_wrapped_field(artifact, field)
++    require(artifact.get("schema") == SCHEMA, "schema mismatch")
++    require(
++        validate_wrapped_field(artifact, "experiment_id") == EXPERIMENT_ID,
++        "experiment_id mismatch",
++    )
++    require(validate_wrapped_field(artifact, "milestone") == MILESTONE, "milestone mismatch")
++    require(artifact.get("spec_refs") == list(SPEC_REFS), "spec_refs mismatch")
++    require(artifact.get("random_seed") == RANDOM_SEED, "random_seed mismatch")
++
++    status = validate_wrapped_field(artifact, "status")
++    require(status in {"complete", "honest_blocked"}, "status invalid")
++    require(
++        validate_wrapped_field(artifact, "boards_checked") == list(BOARDS_CHECKED),
++        "boards_checked mismatch",
++    )
++    kv260_status = validate_status_detail(
++        "kv260_status", validate_wrapped_field(artifact, "kv260_status")
++    )
++    polar_fire_status = validate_status_detail(
++        "polar_fire_status", validate_wrapped_field(artifact, "polar_fire_status")
++    )
++    gatemate_status = validate_status_detail(
++        "gatemate_status", validate_wrapped_field(artifact, "gatemate_status")
++    )
++    valid_workload = validate_hash_chain(
++        validate_wrapped_field(artifact, "workload_hash_chain"), status=str(status)
++    )
++    require(
++        validate_wrapped_field(artifact, "hardware_hash_chained_receipt_ready") is valid_workload,
++        "hardware_hash_chained_receipt_ready mismatch",
++    )
++    require(
++        validate_wrapped_field(artifact, "hardware_speedup_claim") is False,
++        "hardware_speedup_claim must be false",
++    )
++    require(
++        validate_wrapped_field(artifact, "no_host_mmcblk_kv260_evidence") is True,
++        "no_host_mmcblk_kv260_evidence must be true",
++    )
++    require(
++        validate_wrapped_field(artifact, "no_destructive_flash") is True,
++        "no_destructive_flash must be true",
++    )
++    require(
++        validate_wrapped_field(artifact, "repeatability_evidence_present") is False,
++        "repeatability_evidence_present must be false",
++    )
++    require(
++        validate_wrapped_field(artifact, "receipt_contract_version") == RECEIPT_CONTRACT_VERSION,
++        "receipt_contract_version mismatch",
++    )
++    verdict = validate_wrapped_field(artifact, "honest_verdict")
++    require(isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES), "bad verdict")
++    for token in (
++        f"kv260={kv260_status}",
++        f"polar_fire={polar_fire_status}",
++        f"gatemate={gatemate_status}",
++        "speedup_claim=false",
++    ):
++        require(token in verdict, f"honest_verdict missing {token}")
++    require(
++        validate_wrapped_field(artifact, "inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate mismatch",
++    )
++    validate_commands(validate_wrapped_field(artifact, "commands_run"))
++    validate_tests_run(validate_wrapped_field(artifact, "tests_run"))
++    require(
++        prev.no_host_mmcblk_kv260_evidence(artifact), "host KV260 block-device evidence present"
++    )
++    require(artifact.get("conductor_modified") is False, "conductor_modified mismatch")
++    require(
++        artifact.get("reproducibility_checksum") == payload_checksum(artifact),
++        "checksum mismatch",
++    )
++
++
++def write_artifact(repo_root: str | Path, artifact: Mapping[str, Any]) -> Path:
++    validate_artifact(artifact)
++    out_path = Path(repo_root) / RESULT_RELATIVE_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(
++        json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8"
++    )
++    return out_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = base.run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str | None = None,
++    gatemate_physical_path_available: bool | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> Path:
++    artifact = build_artifact(
++        command_runner=command_runner,
++        clock=clock,
++        run_date=run_date,
++        commit=commit or base.get_git_commit(repo_root),
++        gatemate_physical_path_available=gatemate_physical_path_available,
++        tests_run=tests_run,
++    )
++    return write_artifact(repo_root, artifact)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument(
++        "--gatemate-physical-path-available",
++        action="store_true",
++        help="Run bounded GateMate detect because the current physical/JTAG path is available.",
++    )
++    args = parser.parse_args(argv)
++    print(
++        run_experiment(
++            repo_root=Path("."),
++            run_date=args.date,
++            gatemate_physical_path_available=args.gatemate_physical_path_available or None,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 46cc56cc29..308f9d2ff8 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+-  "run_date": "20260707",
+-  "started_at": "2026-07-07T21:42:06.135326+00:00",
+-  "finished_at": "2026-07-07T21:42:06.162231+00:00",
+-  "duration_s": 0.027,
++  "run_date": "20260708",
++  "started_at": "2026-07-08T02:10:37.836217+00:00",
++  "finished_at": "2026-07-08T02:10:37.863861+00:00",
++  "duration_s": 0.028,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 6c9375b8d4..19d34d3354 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-07T21:42:06Z",
++  "run_date": "2026-07-08T02:10:38Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 3b1a3a3399..5034ee8a09 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+-  "run_date": "20260707",
+-  "started_at": "2026-07-07T21:42:07Z",
+-  "finished_at": "2026-07-07T21:42:07Z",
++  "run_date": "20260708",
++  "started_at": "2026-07-08T02:10:39Z",
++  "finished_at": "2026-07-08T02:10:39Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index b7ac9ed334..ead12061c1 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-07T21:42:07Z",
++  "run_date": "2026-07-08T02:10:39Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index befd28049d..b4481c504d 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-07T21:42:07Z",
++  "run_date": "2026-07-08T02:10:39Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index df92ef50be..32d6300ab5 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-08T01:14:21.353600Z",
+-  "duration_s": 0.06780791282653809,
++  "run_date": "2026-07-08T02:09:40.472779Z",
++  "duration_s": 0.06714630126953125,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "289bc05d4b790fd99823015e6af9c66447c29596e7335ee40228976c3ddb2a71",
++  "reproducibility_checksum": "f07053344c428f2450b7ec8179a3e72ae5fbc121ba41a1795255d567f569652e",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "14c2b6aabbe2da9626b4c9e127d56c08252e00b5"
++    "adversarial_verify_version": "726e64e3a633ab0f2f23b710e78571376326411e"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 33419c7e2f..cdc560387c 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-07-08T00:47:26.103447Z",
+-  "duration_s": 14.332616090774536,
++  "run_date": "2026-07-08T02:10:37.716777Z",
++  "duration_s": 14.515962362289429,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 6f51c2a2fe..eebc4b825c 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-08T01:14:21.462176Z",
+-  "duration_s": 0.09900164604187012,
++  "run_date": "2026-07-08T02:09:40.556385Z",
++  "duration_s": 0.07634425163269043,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e8549f3c5bd3d08b649a04a1da359d78af560b3233a8fce4fe30dda8bebf00c1",
++  "reproducibility_checksum": "61711fe97eb06dc68674ef498de5262ee99c7853944802c2456d9567b3bb9d79",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "14c2b6aabbe2da9626b4c9e127d56c08252e00b5"
++    "adversarial_verify_version": "726e64e3a633ab0f2f23b710e78571376326411e"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 86296f934e..957174b69f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.160310745239258,
++  "efficiency_gains_ms": 2.1147727966308594,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index a8102b5e30..f60d0fadf3 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.749035120010376,
++  "duration_s": 0.6582934856414795,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 550a9b10bc..bdcf36c078 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.2339321225881577e-05,
++  "duration_s": 4.284968599677086e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5386_hardware_hashchain_receipts_v490.json b/results/experiment_5386_hardware_hashchain_receipts_v490.json
+new file mode 100644
+index 0000000000..cf3390fa68
+--- /dev/null
++++ b/results/experiment_5386_hardware_hashchain_receipts_v490.json
+@@ -0,0 +1,665 @@
++{
++  "blocked_reason": {
++    "GateMate": {
++      "prior_evidence": "results/experiment_5361_hardware_continuity_workload_v488.json",
++      "reason": "physical_or_jtag_path_not_available_or_unchanged"
++    },
++    "KV260": {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "exit_code": 255,
++      "reason": "unreachable",
++      "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++      "stdout_excerpt": "",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 10.0
++    },
++    "PolarFire": null
++  },
++  "board_details": {
++    "GateMate": {
++      "board": "GateMate",
++      "dirtyjtag_usb": {
++        "device_identifier": "1209:c0ca",
++        "stderr": "",
++        "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++        "visible": true
++      },
++      "jtag_detect_attempted": false,
++      "physical_or_jtag_path_available": false,
++      "reason": "physical_or_jtag_path_not_available_or_unchanged",
++      "speedup_claimed": false,
++      "status": "blocked_physical_or_jtag",
++      "tool_versions": {
++        "gmpack": {
++          "path": "/opt/oss-cad-suite/bin/gmpack",
++          "present": true,
++          "version": "Error: unrecognised option '-V'"
++        },
++        "lsusb": {
++          "path": "/opt/oss-cad-suite/bin/lsusb",
++          "present": true,
++          "version": "1d6b:0003 (bus 8, device 1)"
++        },
++        "nextpnr-himbaechel": {
++          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++          "present": true,
++          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++        },
++        "openFPGALoader": {
++          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++          "present": true,
++          "version": "openFPGALoader v1.1.1"
++        },
++        "ssh": {
++          "path": "/usr/bin/ssh",
++          "present": true,
++          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++        },
++        "yosys": {
++          "path": "/opt/oss-cad-suite/bin/yosys",
++          "present": true,
++          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++        }
++      }
++    },
++    "KV260": {
++      "board": "KV260",
++      "check_method": "ssh_batchmode_true_only",
++      "command_form": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "probe_exit_code": 255,
++      "remote_identifier": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "speedup_claimed": false,
++      "ssh_reachable": false,
++      "status": "unreachable"
++    },
++    "PolarFire": {
++      "board": "PolarFire",
++      "probe_exit_code": 0,
++      "remote_identifier": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
++      "speedup_claimed": false,
++      "ssh_reachable": true,
++      "status": "reachable/workload_receipt",
++      "workload_attempted": true,
++      "workload_error": null,
++      "workload_receipt": {
++        "board_local": true,
++        "hostname": "mpfs-disco-kit",
++        "input_sha256": "3123c3a687e26e0fac7413100a2b9b5303e88819668c78fce5d358c8839381dc",
++        "output_sha256": "79ed15fb44882dd5cdbf67166780329e27a6c8905d3d856d28eeb2cb92b4fbf3",
++        "python_version": "3.12.12",
++        "speedup_claimed": false,
++        "uname": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 ",
++        "wall_time_s": 0.148176,
++        "workload_class": "deterministic_sha256_transform"
++      },
++      "workload_validated": true
++    }
++  },
++  "boards_checked": {
++    "principle": "Lists the active hardware lanes that this receipt classified.",
++    "value": [
++      "KV260",
++      "PolarFire",
++      "GateMate"
++    ]
++  },
++  "commands_run": {
++    "principle": "Records every safe command executed with exit code and output hashes.",
++    "value": [
++      {
++        "command": "sh -lc 'printf '\"'\"'host='\"'\"'; hostname; printf '\"'\"'date_utc='\"'\"'; date -u +%Y-%m-%dT%H:%M:%SZ; printf '\"'\"'date_local='\"'\"'; date +%Y-%m-%dT%H:%M:%S%z'",
++        "duration_s": 0.099173,
++        "exit_code": 0,
++        "kind": "step0_host_date_context",
++        "outcome": "recorded",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "host=icbfl1\ndate_utc=2026-07-08T02:08:18Z\ndate_local=2026-07-07T22:08:18-0400",
++        "stdout_line_count": 3,
++        "stdout_sha256": "678b58d064d995b94f6aca910bb5f6007d5badf5d68b74dccc28dbb2c21ff545",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "env",
++        "duration_s": 0.001965,
++        "exit_code": 0,
++        "kind": "local_hardware_environment",
++        "outcome": "recorded",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "CARNOT_ARC_GENERATOR_CUDA_GPU\nCARNOT_FORCE_LIVE\nCARNOT_MODE",
++        "stdout_line_count": 3,
++        "stdout_sha256": "1d3a16353d033868c0a1085d8750bc5753b21dd3180d0ec988a3898ec677e3b7",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "sh -lc 'for tool in ssh openFPGALoader yosys nextpnr-himbaechel gmpack lsusb; do if command -v \"$tool\" >/dev/null 2>&1; then printf '\"'\"'%s_path=%s\\n'\"'\"' \"$tool\" \"$(command -v \"$tool\")\"; version=\"$($tool -V 2>&1 | head -n 1)\"; if [ -z \"$version\" ]; then version=\"$($tool --version 2>&1 | head -n 1)\"; fi; printf '\"'\"'%s_version=%s\\n'\"'\"' \"$tool\" \"$version\"; else printf '\"'\"'%s_path=\\n%s_version=\\n'\"'\"' \"$tool\" \"$tool\"; fi; done'",
++        "duration_s": 0.323258,
++        "exit_code": 0,
++        "kind": "local_tool_versions",
++        "outcome": "recorded",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "ssh_path=/usr/bin/ssh\nssh_version=OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026\nopenFPGALoader_path=/opt/oss-cad-suite/bin/openFPGALoader\nopenFPGALoader_version=openFPGALoader v1.1.1\nyosys_path=/opt/oss-cad-suite/bin/yosys\nyosys_version=Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nnextpnr-himbaechel_path=/opt/oss-cad-suite/bin/nextpnr-himbaechel\nnextpnr-himbaechel_version=\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version next...<truncated 169 chars>",
++        "stdout_line_count": 12,
++        "stdout_sha256": "69c79691cea28be468665b9d83b6a4f9a010357e1dd93ccaf7241eeea67d6137",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1209:c0ca; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
++        "duration_s": 0.091183,
++        "exit_code": 0,
++        "kind": "local_usb_gatemate_dirtyjtag",
++        "outcome": "visible",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus...<truncated 193 chars>",
++        "stdout_line_count": 20,
++        "stdout_sha256": "48e36b30212b695efce3eb571efb737460c860ccaa741a48f95c9e7965e35d0c",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1514:2008; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
++        "duration_s": 0.081433,
++        "exit_code": 0,
++        "kind": "local_usb_polarfire_flashpro",
++        "outcome": "visible",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus...<truncated 193 chars>",
++        "stdout_line_count": 20,
++        "stdout_sha256": "48e36b30212b695efce3eb571efb737460c860ccaa741a48f95c9e7965e35d0c",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "sh -lc 'if command -v nvidia-smi >/dev/null 2>&1; then nvidia-smi --query-gpu=name,memory.total --format=csv,noheader; else echo '\"'\"'nvidia-smi_not_found'\"'\"' >&2; exit 127; fi'",
++        "duration_s": 0.113609,
++        "exit_code": 0,
++        "kind": "local_dual_rtx3090_runtime_context",
++        "outcome": "dual_rtx3090_context",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "NVIDIA GeForce RTX 3090, 24576 MiB\nNVIDIA GeForce RTX 3090, 24576 MiB",
++        "stdout_line_count": 2,
++        "stdout_sha256": "21b3e5755f235b5513acd0d2253aae577c553c90a037d4ef2a82b052f7d3c20a",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++        "duration_s": 5.053211,
++        "exit_code": 255,
++        "kind": "kv260_ssh_true_reachability_probe",
++        "outcome": "unreachable",
++        "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++        "stderr_line_count": 1,
++        "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++        "stdout_excerpt": "",
++        "stdout_line_count": 0,
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "timeout_s": 10.0
++      },
++      {
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'python='\"'\"'; (python3 --version 2>&1 || true)'",
++        "duration_s": 0.942037,
++        "exit_code": 0,
++        "kind": "polarfire_authenticated_status_probe",
++        "outcome": "reachable",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
++        "stdout_line_count": 3,
++        "stdout_sha256": "204a891ce1db88a5b60b518d3fdf4fe25972a823078dfa18f4f3db008fedabbf",
++        "timeout_s": 10.0
++      },
++      {
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 -c '\"'\"'import hashlib,json,platform,socket,time;started=time.perf_counter();payload=b\"carnot-exp5386-polarfire-workload-v490\\n\";out=hashlib.sha256(payload+b\"|polarfire-v490-output\").hexdigest();receipt={\"hostname\":socket.gethostname(),\"uname\":\" \".join(platform.uname()),\"python_version\":platform.python_version(),\"input_sha256\":hashlib.sha256(payload).hexdigest(),\"output_sha256\":out,\"wall_time_s\":round(time.perf_counter()-started,6)};print(json.dumps(receipt,sort_keys=True))'\"'\"''",
++        "duration_s": 1.573112,
++        "exit_code": 0,
++        "kind": "polarfire_board_local_workload_receipt",
++        "outcome": "reachable/workload_receipt",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "{\"hostname\": \"mpfs-disco-kit\", \"input_sha256\": \"3123c3a687e26e0fac7413100a2b9b5303e88819668c78fce5d358c8839381dc\", \"output_sha256\": \"79ed15fb44882dd5cdbf67166780329e27a6c8905d3d856d28eeb2cb92b4fbf3\", \"python_version\": \"3.12.12\", \"uname\": \"Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 \", \"wall_time_s\": 0.148176}",
++        "stdout_line_count": 1,
++        "stdout_sha256": "e0d25b05045521e30c1361e6ab600a4b8d41af82cc219399c587cc1640a68f4f",
++        "timeout_s": 10.0
++      }
++    ]
++  },
++  "commit": "726e64e3a633ab0f2f23b710e78571376326411e",
++  "conductor_modified": false,
++  "docs_update_decision": {
++    "ops_changelog_updated": false,
++    "ops_status_updated": false,
++    "reason": "task stop rule delegates docs/status reconciliation to the conductor"
++  },
++  "duration_s": 8.280202,
++  "experiment": "experiment_5386_hardware_hashchain_receipts",
++  "experiment_id": {
++    "principle": "Identifies the v490 hash-chain receipt artifact.",
++    "value": "exp5386-hardware-hashchain-receipts-v490"
++  },
++  "gatemate_status": {
++    "principle": "Records GateMate DirtyJTAG, toolchain, and physical/JTAG status.",
++    "value": {
++      "board": "GateMate",
++      "dirtyjtag_usb": {
++        "device_identifier": "1209:c0ca",
++        "stderr": "",
++        "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++        "visible": true
++      },
++      "jtag_detect_attempted": false,
++      "physical_or_jtag_path_available": false,
++      "reason": "physical_or_jtag_path_not_available_or_unchanged",
++      "speedup_claimed": false,
++      "status": "blocked_physical_or_jtag",
++      "tool_versions": {
++        "gmpack": {
++          "path": "/opt/oss-cad-suite/bin/gmpack",
++          "present": true,
++          "version": "Error: unrecognised option '-V'"
++        },
++        "lsusb": {
++          "path": "/opt/oss-cad-suite/bin/lsusb",
++          "present": true,
++          "version": "1d6b:0003 (bus 8, device 1)"
++        },
++        "nextpnr-himbaechel": {
++          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++          "present": true,
++          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++        },
++        "openFPGALoader": {
++          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++          "present": true,
++          "version": "openFPGALoader v1.1.1"
++        },
++        "ssh": {
++          "path": "/usr/bin/ssh",
++          "present": true,
++          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++        },
++        "yosys": {
++          "path": "/opt/oss-cad-suite/bin/yosys",
++          "present": true,
++          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++        }
++      }
++    }
++  },
++  "hardware_evidence_level": "hash_chained_board_workload_receipts_no_speedup",
++  "hardware_hash_chained_receipt_ready": {
++    "principle": "True only when at least one safe board workload validates inside the hash chain and blocked boards are represented honestly.",
++    "value": true
++  },
++  "hardware_speedup_claim": {
++    "principle": "False unless repeatable board timing evidence exists.",
++    "value": false
++  },
++  "honest_verdict": {
++    "principle": "One-line outcome that reports receipt discipline rather than speedup.",
++    "value": "complete: receipt_ready=true kv260=unreachable polar_fire=reachable/workload_receipt gatemate=blocked_physical_or_jtag speedup_claim=false"
++  },
++  "inference_substrate": {
++    "principle": "hardware_hashchain_receipts_no_speedup means these are continuity receipts, not sampler acceleration measurements.",
++    "value": "hardware_hashchain_receipts_no_speedup"
++  },
++  "kv260_status": {
++    "principle": "Records KV260 SSH reachability and workload status without host block-device evidence.",
++    "value": {
++      "board": "KV260",
++      "check_method": "ssh_batchmode_true_only",
++      "command_form": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "probe_exit_code": 255,
++      "remote_identifier": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "speedup_claimed": false,
++      "ssh_reachable": false,
++      "status": "unreachable"
++    }
++  },
++  "milestone": {
++    "principle": "Pins this receipt to milestone 2026.07.490 rather than a floating board state.",
++    "value": "2026.07.490"
++  },
++  "no_destructive_flash": {
++    "principle": "True because no flashing, programming, or destructive write command was run.",
++    "value": true
++  },
++  "no_host_mmcblk_kv260_evidence": {
++    "principle": "True because KV260 evidence is SSH-only and not derived from host removable storage.",
++    "value": true
++  },
++  "polar_fire_status": {
++    "principle": "Records PolarFire SSH reachability and the board-local workload receipt when valid.",
++    "value": {
++      "board": "PolarFire",
++      "probe_exit_code": 0,
++      "remote_identifier": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
++      "speedup_claimed": false,
++      "ssh_reachable": true,
++      "status": "reachable/workload_receipt",
++      "workload_attempted": true,
++      "workload_error": null,
++      "workload_receipt": {
++        "board_local": true,
++        "hostname": "mpfs-disco-kit",
++        "input_sha256": "3123c3a687e26e0fac7413100a2b9b5303e88819668c78fce5d358c8839381dc",
++        "output_sha256": "79ed15fb44882dd5cdbf67166780329e27a6c8905d3d856d28eeb2cb92b4fbf3",
++        "python_version": "3.12.12",
++        "speedup_claimed": false,
++        "uname": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 ",
++        "wall_time_s": 0.148176,
++        "workload_class": "deterministic_sha256_transform"
++      },
++      "workload_validated": true
++    }
++  },
++  "preconditions_checked": {
++    "principle": "Records date, sanitized environment, local toolchain, USB visibility, and SSH targets.",
++    "value": {
++      "gpu_runtime_context": {
++        "command_exit_code": 0,
++        "detected_gpu_lines": [
++          "NVIDIA GeForce RTX 3090, 24576 MiB",
++          "NVIDIA GeForce RTX 3090, 24576 MiB"
++        ],
++        "dual_rtx3090_present": true,
++        "nvidia_smi_available": true,
++        "rtx3090_count": 2,
++        "runtime_relevance": "local SOTA model-runtime context only",
++        "sampler_hardware_acceleration_claimed": false,
++        "speedup_claimed": false
++      },
++      "hardware_environment": {
++        "CARNOT_ARC_GENERATOR_CUDA_GPU": {
++          "present": true,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_FORCE_LIVE": {
++          "present": true,
++          "truthy": true,
++          "value_recorded": false
++        },
++        "CARNOT_GATEMATE_SETUP_CHANGED": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_KV260_HOST": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_KV260_USER": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_MODE": {
++          "present": true,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_POLARFIRE_HOST": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_POLARFIRE_USER": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "EXTROPIC_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "EXTROPIC_TOKEN": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "GATEMATE_PHYSICAL_SETUP_CHANGED": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "KONA_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "LOGICAL_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "LOGICAL_KONA_TOKEN": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "THRML_HOME": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "TSU_SDK": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "XTR0_SDK": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        }
++      },
++      "host_date": {
++        "date_local": "2026-07-07T22:08:18-0400",
++        "date_utc": "2026-07-08T02:08:18Z",
++        "exit_code": 0,
++        "host": "icbfl1",
++        "stderr": ""
++      },
++      "kv260_check_method": "ssh_batchmode_true_only",
++      "operator_visible_hardware_assumptions": {
++        "gatemate_physical_jtag_path_available": false,
++        "hardware_speedup_claim": false,
++        "kv260_checked_by_ssh_only": true,
++        "kv260_host_storage_precondition_retired": true,
++        "no_destructive_flash": true
++      },
++      "prior_receipts": [
++        "results/experiment_5374_hardware_continuity_receipts_v489.json",
++        "results/experiment_5361_hardware_continuity_workload_v488.json"
++      ],
++      "public_reference_boundaries": {
++        "extropic_tsu": {
++          "boundary": "public THRML/Extropic TSU/XTR context only; no local authenticated TSU run",
++          "context_only": true,
++          "credential_or_sdk_marker_present": false,
++          "execution_claimed": false,
++          "local_authenticated_access": false,
++          "speedup_claimed": false
++        },
++        "logical_kona": {
++          "boundary": "public Logical/Kona context only; no local authenticated Kona run",
++          "context_only": true,
++          "credential_or_sdk_marker_present": false,
++          "execution_claimed": false,
++          "local_authenticated_access": false,
++          "speedup_claimed": false
++        }
++      },
++      "ssh_targets": {
++        "KV260": "kria",
++        "PolarFire": "polarfire"
++      },
++      "tool_versions": {
++        "gmpack": {
++          "path": "/opt/oss-cad-suite/bin/gmpack",
++          "present": true,
++          "version": "Error: unrecognised option '-V'"
++        },
++        "lsusb": {
++          "path": "/opt/oss-cad-suite/bin/lsusb",
++          "present": true,
++          "version": "1d6b:0003 (bus 8, device 1)"
++        },
++        "nextpnr-himbaechel": {
++          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++          "present": true,
++          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++        },
++        "openFPGALoader": {
++          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++          "present": true,
++          "version": "openFPGALoader v1.1.1"
++        },
++        "ssh": {
++          "path": "/usr/bin/ssh",
++          "present": true,
++          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++        },
++        "yosys": {
++          "path": "/opt/oss-cad-suite/bin/yosys",
++          "present": true,
++          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++        }
++      },
++      "usb_visibility": {
++        "GateMate": {
++          "device_identifier": "1209:c0ca",
++          "stderr": "",
++          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++          "visible": true
++        },
++        "PolarFire": {
++          "device_identifier": "1514:2008",
++          "stderr": "",
++          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++          "visible": true
++        }
++      }
++    }
++  },
++  "random_seed": 5386,
++  "receipt_contract_version": {
++    "principle": "Names the hash-chain receipt schema used by this artifact.",
++    "value": "carnot.hardware.hashchain_receipt.v1"
++  },
++  "repeatability_evidence_present": {
++    "principle": "States whether authenticated repeated board timing evidence exists.",
++    "value": false
++  },
++  "reproducibility_checksum": "131680eeb938771f4cc2e7d591994a2653aa404328a969952f1caa0b4dfa70c4",
++  "reviewed_inputs": [
++    "AGENTS.md",
++    "CODEX.md",
++    "CLAUDE.md",
++    "research-hardware-wishlist.md",
++    "results/experiment_5374_hardware_continuity_receipts_v489.json",
++    "results/experiment_5361_hardware_continuity_workload_v488.json",
++    "ops/exclusion_manifest.yaml",
++    "openspec/capabilities/fpga/spec.md",
++    "tests/python/",
++    "scripts/"
++  ],
++  "run_date": "20260708",
++  "schema": "carnot.experiment_5386.hardware_hashchain_receipts.v490",
++  "spec_refs": [
++    "REQ-HW-5386",
++    "SCENARIO-HW-5386"
++  ],
++  "status": {
++    "principle": "Complete means safe board actions were recorded; honest_blocked means no safe board interaction was possible.",
++    "value": "complete"
++  },
++  "tests_run": {
++    "principle": "Records verification commands without treating them as hardware evidence.",
++    "value": [
++      {
++        "command": "verification not yet attached at artifact generation",
++        "outcome": "pending_external_test_run"
++      }
++    ]
++  },
++  "workload_hash_chain": {
++    "principle": "Ordered records chaining command, input, output, timestamp, board identity, exit status, and previous hash for each safe board action.",
++    "value": [
++      {
++        "action": "ssh_reachability",
++        "board": "KV260",
++        "board_identity": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++        "command_sha256": "b97534bd69bdfd6cbb6b83460bd0cfbc9a67de01519e5d29279e028f8fb3c872",
++        "exit_code": 255,
++        "exit_status": 255,
++        "index": 0,
++        "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "kind": "kv260_ssh_true_reachability_probe",
++        "output_sha256": "cc6b6d12a057c7303de209b5b9c233c66e83103ac727151e9a0d06d31063a219",
++        "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
++        "record_hash": "55b9a75afc9d408c1d9cdc288e05894c869e53bbcf0f476c3fd7941c42e702b3",
++        "status": "unreachable",
++        "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "timestamp_utc": "2026-07-08T00:00:00Z",
++        "workload_receipt_validated": false
++      },
++      {
++        "action": "ssh_status",
++        "board": "PolarFire",
++        "board_identity": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'python='\"'\"'; (python3 --version 2>&1 || true)'",
++        "command_sha256": "3d2c1f9d6b8a4fd5fcef61d5c7524964c60c4108fa793dd3fa26edc1edacc1b4",
++        "exit_code": 0,
++        "exit_status": 0,
++        "index": 1,
++        "input_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "kind": "polarfire_authenticated_status_probe",
++        "output_sha256": "90e2ceee8e5fea9ce609c7130fcda00a9e7a917fcccb72f65bb834206d58ec47",
++        "previous_hash": "55b9a75afc9d408c1d9cdc288e05894c869e53bbcf0f476c3fd7941c42e702b3",
++        "record_hash": "c4a100c119b36ee7e34c4aa59010404d3a99023d4f693f54e5c3c498e534e102",
++        "status": "reachable",
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_sha256": "204a891ce1db88a5b60b518d3fdf4fe25972a823078dfa18f4f3db008fedabbf",
++        "timestamp_utc": "2026-07-08T00:00:01Z",
++        "workload_receipt_validated": false
++      },
++      {
++        "action": "board_local_workload",
++        "board": "PolarFire",
++        "board_identity": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 -c '\"'\"'import hashlib,json,platform,socket,time;started=time.perf_counter();payload=b\"carnot-exp5386-polarfire-workload-v490\\n\";out=hashlib.sha256(payload+b\"|polarfire-v490-output\").hexdigest();receipt={\"hostname\":socket.gethostname(),\"uname\":\" \".join(platform.uname()),\"python_version\":platform.python_version(),\"input_sha256\":hashlib.sha256(payload).hexdigest(),\"output_sha256\":out,\"wall_time_s\":round(time.perf_counter()-started,6)};print(json.dumps(receipt,sort_keys=True))'\"'\"''",
++        "command_sha256": "db9a79662d9f0be0f8359e1f2297a61e0978cb5304d504d726fef457a4118617",
++        "exit_code": 0,
++        "exit_status": 0,
++        "index": 2,
++        "input_sha256": "3123c3a687e26e0fac7413100a2b9b5303e88819668c78fce5d358c8839381dc",
++        "kind": "polarfire_board_local_workload_receipt",
++        "output_sha256": "79ed15fb44882dd5cdbf67166780329e27a6c8905d3d856d28eeb2cb92b4fbf3",
++        "previous_hash": "c4a100c119b36ee7e34c4aa59010404d3a99023d4f693f54e5c3c498e534e102",
++        "record_hash": "19c6c41fcf07a09d9456d87c2e69a6786d3c9549b3debca5c1048e7cb7bbd304",
++        "status": "reachable/workload_receipt",
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_sha256": "e0d25b05045521e30c1361e6ab600a4b8d41af82cc219399c587cc1640a68f4f",
++        "timestamp_utc": "2026-07-08T00:00:02Z",
++        "workload_receipt_validated": true
++      }
++    ]
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 116ddf65e4..e60645c901 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T01:14:07Z",
+-  "finished_at": "2026-07-08T01:14:07Z",
++  "started_at": "2026-07-08T02:09:27Z",
++  "finished_at": "2026-07-08T02:09:27Z",
+   "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 324bb6a5bf..b7d1d21132 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T01:14:07Z",
+-  "finished_at": "2026-07-08T01:14:07Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-08T02:09:28Z",
++  "finished_at": "2026-07-08T02:09:28Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 5df3ca661d..11210315a2 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260708",
+-  "started_at": "2026-07-08T01:14:07Z",
+-  "finished_at": "2026-07-08T01:14:07Z",
++  "started_at": "2026-07-08T02:09:28Z",
++  "finished_at": "2026-07-08T02:09:28Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5386_hardware_hashchain_receipts_v490.py b/tests/python/test_experiment_5386_hardware_hashchain_receipts_v490.py
+new file mode 100644
+index 0000000000..5044eef638
+--- /dev/null
++++ b/tests/python/test_experiment_5386_hardware_hashchain_receipts_v490.py
+@@ -0,0 +1,573 @@
++"""Tests for Exp 5386 hardware hash-chained receipts.
++
++Spec refs: REQ-HW-5386, SCENARIO-HW-5386.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5386_hardware_hashchain_receipts_v490 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/fpga/spec.md"
++
++
++class RecordingRunner:
++    """SCENARIO-HW-5386 runner with exact non-destructive command receipts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        assert timeout_s > 0.0
++        command = tuple(command)
++        self.commands.append(command)
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++class StepClock:
++    """Deterministic clock for REQ-HW-5386 duration and checksum assertions."""
++
++    def __init__(self) -> None:
++        self.value = 5386.0
++
++    def __call__(self) -> float:
++        self.value += 0.125
++        return self.value
++
++
++def _probe(
++    command: tuple[str, ...],
++    *,
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _workload_stdout(
++    *,
++    input_sha256: str | None = None,
++    output_sha256: str | None = None,
++    wall_time_s: float = 0.0025,
++) -> str:
++    return (
++        json.dumps(
++            {
++                "hostname": "mpfs-disco-kit",
++                "input_sha256": input_sha256 or mod.POLARFIRE_EXPECTED_INPUT_SHA256,
++                "output_sha256": output_sha256 or mod.POLARFIRE_EXPECTED_OUTPUT_SHA256,
++                "python_version": "3.12.12",
++                "uname": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1 riscv64",
++                "wall_time_s": wall_time_s,
++            },
++            sort_keys=True,
++        )
++        + "\n"
++    )
++
++
++def _base_probes(*, openfpga_present: bool = True) -> dict[tuple[str, ...], list[mod.CommandProbe]]:
++    openfpga_path = "/opt/oss-cad-suite/bin/openFPGALoader" if openfpga_present else ""
++    openfpga_version = "openFPGALoader v1.1.1" if openfpga_present else ""
++    return {
++        mod.HOST_DATE_COMMAND: [
++            _probe(
++                mod.HOST_DATE_COMMAND,
++                stdout=(
++                    "host=carnot-host\n"
++                    "date_utc=2026-07-08T14:00:00Z\n"
++                    "date_local=2026-07-08T10:00:00-0400\n"
++                ),
++            )
++        ],
++        mod.HARDWARE_ENV_COMMAND: [
++            _probe(
++                mod.HARDWARE_ENV_COMMAND,
++                stdout=(
++                    "CARNOT_MODE=live\n"
++                    "EXTROPIC_API_KEY=do-not-record\n"
++                    "KONA_API_KEY=also-hidden\n"
++                    "PRIVATE_TOKEN=hidden\n"
++                ),
++            )
++        ],
++        mod.TOOL_VERSION_COMMAND: [
++            _probe(
++                mod.TOOL_VERSION_COMMAND,
++                stdout=(
++                    "ssh_path=/usr/bin/ssh\nssh_version=OpenSSH_10.0p1\n"
++                    f"openFPGALoader_path={openfpga_path}\n"
++                    f"openFPGALoader_version={openfpga_version}\n"
++                    "yosys_path=/opt/oss-cad-suite/bin/yosys\n"
++                    "yosys_version=Yosys 0.64\n"
++                    "nextpnr-himbaechel_path=/opt/oss-cad-suite/bin/nextpnr-himbaechel\n"
++                    "nextpnr-himbaechel_version=nextpnr-himbaechel 0.8\n"
++                    "gmpack_path=/opt/oss-cad-suite/bin/gmpack\n"
++                    "gmpack_version=gmpack 2026.04\n"
++                    "lsusb_path=/usr/bin/lsusb\nlsusb_version=lsusb (usbutils) 018\n"
++                ),
++            )
++        ],
++        mod.GATEMATE_USB_COMMAND: [
++            _probe(mod.GATEMATE_USB_COMMAND, stdout="1209:c0ca DirtyJTAG\n")
++        ],
++        mod.POLARFIRE_USB_COMMAND: [
++            _probe(mod.POLARFIRE_USB_COMMAND, stdout="1514:2008 FlashPro5\n")
++        ],
++        mod.GPU_CONTEXT_COMMAND: [
++            _probe(
++                mod.GPU_CONTEXT_COMMAND,
++                stdout=("NVIDIA GeForce RTX 3090, 24576 MiB\nNVIDIA GeForce RTX 3090, 24576 MiB\n"),
++            )
++        ],
++    }
++
++
++def _runner(
++    *,
++    kv260_exit: int = 255,
++    kv260_stdout: str = "",
++    kv260_stderr: str = "ssh: connect to host kria port 22: No route to host\n",
++    polarfire_status_exit: int = 0,
++    polarfire_status_stdout: str = (
++        "hostname=mpfs-disco-kit\n"
++        "uname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1 riscv64\n"
++        "python=Python 3.12.12\n"
++    ),
++    polarfire_status_stderr: str = "",
++    polarfire_workload_exit: int = 0,
++    polarfire_workload_stdout: str | None = None,
++    gatemate_path_available: bool = False,
++    gatemate_detect_exit: int = 0,
++    gatemate_detect_stdout: str = "Jtag frequency : requested 6.00MHz -> real 6.00MHz\nIDCode : 0x20000001\n",
++    openfpga_present: bool = True,
++) -> RecordingRunner:
++    probes = _base_probes(openfpga_present=openfpga_present)
++    probes[mod.KV260_SSH_TRUE_COMMAND] = [
++        _probe(
++            mod.KV260_SSH_TRUE_COMMAND,
++            exit_code=kv260_exit,
++            stdout=kv260_stdout,
++            stderr=kv260_stderr,
++        )
++    ]
++    probes[mod.POLARFIRE_STATUS_COMMAND] = [
++        _probe(
++            mod.POLARFIRE_STATUS_COMMAND,
++            exit_code=polarfire_status_exit,
++            stdout=polarfire_status_stdout,
++            stderr=polarfire_status_stderr,
++        )
++    ]
++    if polarfire_status_exit == 0:
++        probes[mod.POLARFIRE_WORKLOAD_COMMAND] = [
++            _probe(
++                mod.POLARFIRE_WORKLOAD_COMMAND,
++                exit_code=polarfire_workload_exit,
++                stdout=polarfire_workload_stdout
++                if polarfire_workload_stdout is not None
++                else _workload_stdout(),
++                stderr="" if polarfire_workload_exit == 0 else "workload failed\n",
++            )
++        ]
++    if gatemate_path_available and openfpga_present:
++        probes[mod.GATEMATE_DETECT_COMMAND] = [
++            _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                exit_code=gatemate_detect_exit,
++                stdout=gatemate_detect_stdout,
++                stderr="" if gatemate_detect_exit == 0 else "dirtyJtag open failed\n",
++            )
++        ]
++    return RecordingRunner(probes)
++
++
++def _value(artifact: dict[str, object], field: str) -> object:
++    wrapped = artifact[field]
++    assert isinstance(wrapped, dict)
++    return wrapped["value"]
++
++
++def _tests_run() -> list[dict[str, object]]:
++    return [
++        {
++            "command": ".venv/bin/pytest tests/python/test_experiment_5386_hardware_hashchain_receipts_v490.py -q",
++            "outcome": "passed in test fixture",
++        }
++    ]
++
++
++def _assert_chain_valid(chain: list[dict[str, object]]) -> None:
++    previous = mod.GENESIS_CHAIN_HASH
++    for index, record in enumerate(chain):
++        assert record["index"] == index
++        assert record["previous_hash"] == previous
++        assert record["record_hash"] == mod.hash_chain_record(record)
++        assert len(record["command_sha256"]) == 64
++        assert len(record["input_sha256"]) == 64
++        assert len(record["output_sha256"]) == 64
++        previous = str(record["record_hash"])
++
++
++def test_req_hw_5386_spec_declares_hashchain_contract() -> None:
++    """REQ-HW-5386: OpenSpec anchors the v490 hash-chain receipt contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-HW-5386") : spec.index("### SCENARIO-HW-4910")]
++
++    for marker in (
++        "REQ-HW-5386",
++        "SCENARIO-HW-5386",
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.KV260_REQUIRED_COMMAND_FORM,
++        "hardware_hash_chained_receipt_ready",
++        "hardware_speedup_claim",
++        "boards_checked",
++        "kv260_status",
++        "polar_fire_status",
++        "gatemate_status",
++        "workload_hash_chain",
++        "commands_run",
++        "no_host_mmcblk_kv260_evidence",
++        "no_destructive_flash",
++        "repeatability_evidence_present",
++        "receipt_contract_version",
++        "honest_verdict",
++        "command, input, and output hashes",
++    ):
++        assert marker in section
++
++
++def test_scenario_hw_5386_records_hashchain_workload_receipt_without_speedup() -> None:
++    """SCENARIO-HW-5386: a reachable PolarFire workload makes a valid chain."""
++
++    runner = _runner()
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert runner.commands == [
++        mod.HOST_DATE_COMMAND,
++        mod.HARDWARE_ENV_COMMAND,
++        mod.TOOL_VERSION_COMMAND,
++        mod.GATEMATE_USB_COMMAND,
++        mod.POLARFIRE_USB_COMMAND,
++        mod.GPU_CONTEXT_COMMAND,
++        mod.KV260_SSH_TRUE_COMMAND,
++        mod.POLARFIRE_STATUS_COMMAND,
++        mod.POLARFIRE_WORKLOAD_COMMAND,
++    ]
++    assert mod.GATEMATE_DETECT_COMMAND not in runner.commands
++    assert _value(artifact, "status") == "complete"
++    assert _value(artifact, "hardware_hash_chained_receipt_ready") is True
++    assert _value(artifact, "hardware_speedup_claim") is False
++    assert _value(artifact, "boards_checked") == ["KV260", "PolarFire", "GateMate"]
++    assert _value(artifact, "no_host_mmcblk_kv260_evidence") is True
++    assert _value(artifact, "no_destructive_flash") is True
++    assert _value(artifact, "repeatability_evidence_present") is False
++    assert _value(artifact, "receipt_contract_version") == mod.RECEIPT_CONTRACT_VERSION
++    assert "speedup_claim=false" in _value(artifact, "honest_verdict")
++    assert "receipt_ready=true" in _value(artifact, "honest_verdict")
++
++    kv260 = _value(artifact, "kv260_status")
++    polar_fire = _value(artifact, "polar_fire_status")
++    gatemate = _value(artifact, "gatemate_status")
++    chain = _value(artifact, "workload_hash_chain")
++    commands = _value(artifact, "commands_run")
++    assert isinstance(kv260, dict)
++    assert isinstance(polar_fire, dict)
++    assert isinstance(gatemate, dict)
++    assert isinstance(chain, list)
++    assert isinstance(commands, list)
++    assert kv260["status"] == "unreachable"
++    assert kv260["check_method"] == "ssh_batchmode_true_only"
++    assert polar_fire["status"] == "reachable/workload_receipt"
++    assert polar_fire["workload_receipt"]["input_sha256"] == mod.POLARFIRE_EXPECTED_INPUT_SHA256
++    assert polar_fire["workload_receipt"]["output_sha256"] == mod.POLARFIRE_EXPECTED_OUTPUT_SHA256
++    assert gatemate["status"] == "blocked_physical_or_jtag"
++    assert any(command["command"] == mod.KV260_REQUIRED_COMMAND_FORM for command in commands)
++    assert [record["board"] for record in chain] == ["KV260", "PolarFire", "PolarFire"]
++    assert chain[-1]["workload_receipt_validated"] is True
++    assert chain[-1]["input_sha256"] == mod.POLARFIRE_EXPECTED_INPUT_SHA256
++    assert chain[-1]["output_sha256"] == mod.POLARFIRE_EXPECTED_OUTPUT_SHA256
++    _assert_chain_valid(chain)
++    assert "do-not-record" not in json.dumps(artifact)
++    assert "also-hidden" not in json.dumps(artifact)
++    assert "PRIVATE_TOKEN" not in json.dumps(artifact)
++    assert "/dev/mmcblk" not in json.dumps(artifact).lower()
++    mod.validate_artifact(artifact)
++
++
++def test_polarfire_unreachable_leaves_receipt_not_ready() -> None:
++    """REQ-HW-5386: no valid board workload means the hash-chain is not ready."""
++
++    runner = _runner(
++        polarfire_status_exit=255,
++        polarfire_status_stdout="",
++        polarfire_status_stderr="ssh: connect to host polarfire port 22: No route to host\n",
++    )
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert mod.POLARFIRE_WORKLOAD_COMMAND not in runner.commands
++    assert _value(artifact, "status") == "complete"
++    assert _value(artifact, "hardware_hash_chained_receipt_ready") is False
++    assert _value(artifact, "hardware_speedup_claim") is False
++    assert _value(artifact, "polar_fire_status")["status"] == "unreachable"
++    assert artifact["blocked_reason"]["PolarFire"]["reason"] == "unreachable"
++    chain = _value(artifact, "workload_hash_chain")
++    assert isinstance(chain, list)
++    assert [record["board"] for record in chain] == ["KV260", "PolarFire"]
++    assert all(record["workload_receipt_validated"] is False for record in chain)
++    _assert_chain_valid(chain)
++    mod.validate_artifact(artifact)
++
++
++def test_invalid_polarfire_workload_hash_is_chained_but_not_ready() -> None:
++    """REQ-HW-5386: mismatched workload hashes cannot authenticate readiness."""
++
++    runner = _runner(polarfire_workload_stdout=_workload_stdout(output_sha256="0" * 64))
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert _value(artifact, "hardware_hash_chained_receipt_ready") is False
++    assert _value(artifact, "polar_fire_status")["status"] == "skipped: workload receipt invalid"
++    assert "output_sha256 mismatch" in artifact["blocked_reason"]["PolarFire"]["reason"]
++    chain = _value(artifact, "workload_hash_chain")
++    assert isinstance(chain, list)
++    assert chain[-1]["workload_receipt_validated"] is False
++    assert chain[-1]["output_sha256"] != mod.POLARFIRE_EXPECTED_OUTPUT_SHA256
++    _assert_chain_valid(chain)
++    mod.validate_artifact(artifact)
++
++
++def test_gatemate_detect_when_physical_path_available() -> None:
++    """SCENARIO-HW-5386: GateMate detect is chained only when the path is present."""
++
++    runner = _runner(kv260_exit=0, kv260_stderr="", gatemate_path_available=True)
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        gatemate_physical_path_available=True,
++        tests_run=_tests_run(),
++    )
++
++    assert mod.GATEMATE_DETECT_COMMAND in runner.commands
++    assert _value(artifact, "kv260_status")["status"] == "reachable"
++    assert _value(artifact, "gatemate_status")["status"] == "detected"
++    chain = _value(artifact, "workload_hash_chain")
++    assert isinstance(chain, list)
++    assert chain[-1]["board"] == "GateMate"
++    assert chain[-1]["action"] == "safe_detect"
++    assert _value(artifact, "hardware_speedup_claim") is False
++    assert _value(artifact, "no_destructive_flash") is True
++    _assert_chain_valid(chain)
++    mod.validate_artifact(artifact)
++
++
++def test_gatemate_detect_failure_and_missing_toolchain_are_honest() -> None:
++    """REQ-HW-5386: GateMate unavailable paths report blockers, not speedups."""
++
++    failed_runner = _runner(
++        gatemate_path_available=True,
++        gatemate_detect_exit=1,
++        gatemate_detect_stdout="",
++    )
++    failed = mod.build_artifact(
++        command_runner=failed_runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        gatemate_physical_path_available=True,
++        tests_run=_tests_run(),
++    )
++    assert _value(failed, "gatemate_status")["status"] == "unreachable"
++    assert failed["blocked_reason"]["GateMate"]["reason"] == "detect_failed"
++    mod.validate_artifact(failed)
++
++    missing_tool_runner = _runner(
++        gatemate_path_available=True,
++        openfpga_present=False,
++    )
++    missing_tool = mod.build_artifact(
++        command_runner=missing_tool_runner,
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        gatemate_physical_path_available=True,
++        tests_run=_tests_run(),
++    )
++    assert mod.GATEMATE_DETECT_COMMAND not in missing_tool_runner.commands
++    assert (
++        _value(missing_tool, "gatemate_status")["status"] == "skipped: openFPGALoader unavailable"
++    )
++    mod.validate_artifact(missing_tool)
++
++
++def test_parser_chain_and_timestamp_helpers_cover_edge_cases() -> None:
++    """REQ-HW-5386: helper paths preserve malformed output and chain rules."""
++
++    receipt, error = mod.parse_polarfire_workload_stdout("not json\n")
++    assert receipt is None
++    assert error == "workload stdout is not valid JSON"
++
++    receipt, error = mod.parse_polarfire_workload_stdout(
++        "\n"
++        + json.dumps(
++            {
++                "hostname": "",
++                "input_sha256": "1" * 64,
++                "output_sha256": mod.POLARFIRE_EXPECTED_OUTPUT_SHA256,
++                "python_version": 312,
++                "uname": "Linux mpfs-disco-kit riscv64",
++                "wall_time_s": -1.0,
++            },
++            sort_keys=True,
++        )
++    )
++    assert isinstance(receipt, dict)
++    assert error is not None
++    assert "hostname missing" in error
++    assert "input_sha256 mismatch" in error
++    assert "wall_time_s invalid" in error
++    assert "python_version invalid" in error
++
++    assert mod.receipt_timestamp("20260708", 0) == "2026-07-08T00:00:00Z"
++    assert mod.receipt_timestamp("20260708", 61) == "2026-07-08T00:01:01Z"
++    assert mod.board_identity("GateMate", {"dirtyjtag_usb": {"visible": True}}) == (
++        "DirtyJTAG 1209:c0ca visible"
++    )
++    assert mod.board_identity("GateMate", {}) == "GateMate physical/JTAG path unavailable"
++    assert mod.board_identity("OtherBoard", {}) == "OtherBoard"
++    with pytest.raises(ValueError, match="run_date"):
++        mod.receipt_timestamp("2026-07-08", 0)
++
++
++def test_validator_rejects_broken_chain_speedup_destructive_and_host_storage() -> None:
++    """REQ-HW-5386: validator fails closed on chain, speedup, and unsafe drift."""
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact["workload_hash_chain"]["value"][1]["previous_hash"] = "f" * 64
++    with pytest.raises(AssertionError, match="previous_hash"):
++        mod.validate_artifact(artifact)
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact["hardware_speedup_claim"]["value"] = True
++    with pytest.raises(AssertionError, match="hardware_speedup_claim must be false"):
++        mod.validate_artifact(artifact)
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact["commands_run"]["value"].append(
++        {
++            "kind": "bad",
++            "command": "openFPGALoader --write flash.bit",
++            "timeout_s": 1.0,
++            "exit_code": 0,
++            "duration_s": 0.001,
++            "outcome": "bad",
++            "stdout_excerpt": "",
++            "stderr_excerpt": "",
++            "stdout_sha256": mod.sha256_text(""),
++            "stderr_sha256": mod.sha256_text(""),
++        }
++    )
++    with pytest.raises(AssertionError, match="destructive command"):
++        mod.validate_artifact(artifact)
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact["commands_run"]["value"][0]["stdout_excerpt"] = "host path /dev/mmcblk0"
++    with pytest.raises(AssertionError, match="host KV260 block-device evidence"):
++        mod.validate_artifact(artifact)
++
++
++def test_run_experiment_writes_stable_result(tmp_path: Path) -> None:
++    """SCENARIO-HW-5386: run_experiment writes the requested v490 JSON artifact."""
++
++    out_path = mod.run_experiment(
++        repo_root=tmp_path,
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert _value(artifact, "receipt_contract_version") == mod.RECEIPT_CONTRACT_VERSION
++    assert artifact["spec_refs"] == list(mod.SPEC_REFS)
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert _value(artifact, "hardware_speedup_claim") is False
++    mod.validate_artifact(artifact)
++
++
++def test_default_tests_run_keeps_cli_artifacts_valid() -> None:
++    """REQ-HW-5386: CLI-style artifacts still carry verification provenance."""
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260708",
++        commit="abc123",
++    )
++
++    tests_run = _value(artifact, "tests_run")
++    assert tests_run == [
++        {
++            "command": "verification not yet attached at artifact generation",
++            "outcome": "pending_external_test_run",
++        }
++    ]
++    mod.validate_artifact(artifact)
+-- 
+2.55.0
+

@@ -1,0 +1,85 @@
+From dd05c49668c77ff43e4e050c57d86ff1ee752d75 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 18:14:27 -0400
+Subject: [PATCH 11328/11362] Two orphaned xdist workers on GPU 0, owner
+ unidentified; 83-minute quiet measured
+
+pids 537896 and 537899 started 21:14:42Z, reparented to systemd, running the
+execnet gateway command xdist uses for workers; 537896 holds 308 MiB on GPU 0,
+which has read 4 MiB all session. Not conductor children.
+
+The owner is unidentified and the entry says so. Three candidates all run pytest
+-n: this session, the sibling agents, and the conductor's pre-test path. The start
+time is near my own commit, which is suggestive and not evidence -- I ran no
+pytest then. No receipt ties the pids to any candidate, so the window and the
+candidate list are recorded instead of a story.
+
+Not killed: 308 MiB of 24 GiB blocks nothing, ppid 1 is not abandonment here, and
+killing an unattributed process is what the three-reaper rule exists to prevent.
+
+Separately, 83 minutes without a completion. Measured against the day's own gaps
+-- 30 28 3 3 2 36 73 3 24 28 23 39 22 minutes -- a 73-minute gap already happened,
+so this is the top of an existing range rather than a new kind of event. Not
+escalated; the base rate is recorded so the next check does not re-derive it and
+so a real stall is timed from 20:50Z rather than from when someone notices.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/status.md | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+diff --git a/ops/status.md b/ops/status.md
+index c0335b2333..e67cb5d757 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -2,6 +2,46 @@
+ 
+ **Last Updated:** 2026-09-05
+ 
++## 2026-09-05 22:15Z — two orphaned xdist workers on GPU 0, owner UNIDENTIFIED; 83-minute quiet
++
++**Two pytest-xdist workers have outlived their parent by an hour and one holds GPU 0.**
++pids `537896` and `537899`, both started 2026-09-05T21:14:42Z, both reparented to systemd
++(`ppid 1232`), command `python -u -c import sys;exec(eval(sys.stdin.readline()))` — the execnet
++gateway pattern xdist uses for workers. `nvidia-smi` shows 537896 holding 308 MiB on GPU 0, the
++conductor's card, which has read 4 MiB all session.
++
++They are NOT conductor children: the conductor is `4053754` and the dashboard reports
++`children 0`.
++
++**The owner is UNIDENTIFIED and I am not naming one.** Three candidate sources all invoke
++`pytest -n` — this outer-loop session, the several sibling agents active today, and the
++conductor's own smart-subset pre-test path. The start time is close to my own commit of the
++previous status entry, which is suggestive and is not evidence; I ran no pytest in that window.
++No receipt ties these pids to any of the three. Recording the window and the candidates rather
++than picking whichever story fits best, because that is how a guess becomes a recorded fact.
++
++**Not killed, deliberately.** 308 MiB on a 24 GiB card blocks nothing measurable. `ppid 1` is
++explicitly not abandonment in this project. Killing an unattributed process is the failure mode
++the three-reaper rule exists to prevent. If they are still present at the next check and the card
++is needed, that is the moment to escalate — with the pids, the start time, and the same honest
++"owner unknown".
++
++## 83 minutes without a completion, measured against the day rather than felt
++
++No task has completed since 20:50Z and all five outcome counts are flat. Before reporting that as
++a stall I measured the day's gaps between completions, in minutes:
++
++    30  28  3  3  2  36  73  3  24  28  23  39  22
++
++A 73-minute gap already occurred today. The current 83 minutes is the longest so far and is at the
++top of an existing range, not outside it. `children 0` with no dispatch is equally consistent with
++a long planning step and with a stall, and nothing available distinguishes them right now.
++
++**Deliberately not escalated.** One more quiet hour would make it the clear outlier; today's own
++distribution says wait. Recorded so the next check has the base rate to hand instead of
++re-deriving it, and so a stall that does develop is measured from 20:50Z rather than from whenever
++it is noticed.
++
+ ## 2026-09-05 21:20Z — the class gate's deployment test PASSED; and BLOCK counts guards succeeding
+ 
+ **CLOSED: the substrate-class gate has now run in deployment.** The 20:15Z entry recorded it as
+-- 
+2.55.0
+

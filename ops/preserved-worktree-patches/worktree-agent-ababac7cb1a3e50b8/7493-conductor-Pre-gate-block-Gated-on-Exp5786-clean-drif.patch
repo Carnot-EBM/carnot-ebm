@@ -1,0 +1,61 @@
+From 01a0e3a79b12bb7ec5809c4ebf4fa5579c2e6082 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 22 Jul 2026 07:10:25 -0400
+Subject: [PATCH 07493/11362] [conductor] Pre-gate block: Gated on Exp5786
+ clean drift headroom: run continuous typed-constraint skill learning A/B
+
+2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constraint-stream.stream_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ .../experiment_5787_validation_gated_constraint_skill_ab.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index cb691922ca..80342cd565 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 223, "phase": "iteration_start", "last_beat": "2026-07-22T11:08:22Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 224, "phase": "iteration_start", "last_beat": "2026-07-22T11:10:24Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index bd11771526..6c663a371e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14087,3 +14087,4 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-22 09:30 UTC | Qualify the existing exact-deliverable index with  | OK | 93 passed, 1 warning in 35.64s |
+ | 2026-07-22 10:15 UTC | Gated on Exp5784 readiness: build a sealed hardnes | OK | 87 passed, 1 warning in 20.73s |
+ | 2026-07-22 11:06 UTC | Gated on Exp5785 fixture readiness: run the three- | OK | 85 passed, 1 warning in 18.78s |
++| 2026-07-22 11:08 UTC | Gated on Exp5786 clean drift headroom: run continu | GATE_BLOCK | 2 of 5 gate(s) failed; first failure: exp5786-sota-hardness-controlled-constrain |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b30aa1e247..bb6df051c5 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2765696, "iteration": 223, "phase": "iteration_start", "started_at": "2026-07-22T11:08:22Z"}
+\ No newline at end of file
++{"pid": 2765696, "iteration": 224, "phase": "iteration_start", "started_at": "2026-07-22T11:10:24Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5787_validation_gated_constraint_skill_ab.json b/results/experiment_5787_validation_gated_constraint_skill_ab.json
+index 90361b0594..a111360804 100644
+--- a/results/experiment_5787_validation_gated_constraint_skill_ab.json
++++ b/results/experiment_5787_validation_gated_constraint_skill_ab.json
+@@ -2,8 +2,8 @@
+   "experiment": 5787,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-07-22",
+-  "started_at": "2026-07-22T11:08:22.261782+00:00",
+-  "finished_at": "2026-07-22T11:08:22.261782+00:00",
++  "started_at": "2026-07-22T11:10:24.803044+00:00",
++  "finished_at": "2026-07-22T11:10:24.803044+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp5786 clean drift headroom: run continuous typed-constraint skill learning A/B",
+-- 
+2.55.0
+

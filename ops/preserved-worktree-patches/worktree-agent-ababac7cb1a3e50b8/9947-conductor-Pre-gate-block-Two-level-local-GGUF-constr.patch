@@ -1,0 +1,74 @@
+From 875caf65deaa5dead2fcd453c92a9851a1917fb8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 25 Aug 2026 16:03:34 -0400
+Subject: [PATCH 09947/11362] [conductor] Pre-gate block: Two-level local GGUF
+ constrained decoding, gated on Exp6608 headroom
+
+1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_benchmark_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                                | 2 +-
+ ops/conductor-heartbeat.json                                | 2 +-
+ ops/conductor-log.md                                        | 1 +
+ ops/conductor-state.json                                    | 2 +-
+ results/experiment_6609_two_level_constrained_decoding.json | 4 ++--
+ 5 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 4934a60836..d3402a6ee1 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -8,5 +8,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-25T20:01:30Z"
++ "last_scan_utc": "2026-08-25T20:03:34Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 97d2eee03f..54d5632ecc 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 4062753, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-08-25T20:01:30Z"}
+\ No newline at end of file
++{"pid": 4062753, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-08-25T20:03:33Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a160b7015f..9454dd49b3 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16476,3 +16476,4 @@ code |
+ | 2026-08-25 19:35 UTC | Gemma 4 26B-A4B direct baseline headroom qualifica | OK | 102 passed, 1 warning in 16.24s |
+ | 2026-08-25 19:57 UTC | Independent three-family headroom reducer | OK | 117 passed, 1 warning in 14.03s |
+ | 2026-08-25 19:59 UTC | Two-level local GGUF constrained decoding, gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_b |
++| 2026-08-25 20:01 UTC | Two-level local GGUF constrained decoding, gated o | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6608-family-headroom-reducer.headroom_b |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bd04283d34..a960a189b7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 4062753, "iteration": 11, "phase": "iteration_start", "started_at": "2026-08-25T20:01:30Z"}
+\ No newline at end of file
++{"pid": 4062753, "iteration": 12, "phase": "iteration_start", "started_at": "2026-08-25T20:03:33Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6609_two_level_constrained_decoding.json b/results/experiment_6609_two_level_constrained_decoding.json
+index df1c3024e9..368777a3aa 100644
+--- a/results/experiment_6609_two_level_constrained_decoding.json
++++ b/results/experiment_6609_two_level_constrained_decoding.json
+@@ -2,8 +2,8 @@
+   "experiment": 6609,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-25",
+-  "started_at": "2026-08-25T20:01:31.147540+00:00",
+-  "finished_at": "2026-08-25T20:01:31.147540+00:00",
++  "started_at": "2026-08-25T20:03:34.735700+00:00",
++  "finished_at": "2026-08-25T20:03:34.735700+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Two-level local GGUF constrained decoding, gated on Exp6608 headroom",
+-- 
+2.55.0
+

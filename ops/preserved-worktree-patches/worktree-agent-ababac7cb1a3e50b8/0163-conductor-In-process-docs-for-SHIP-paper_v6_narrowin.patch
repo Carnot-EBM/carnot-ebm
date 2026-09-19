@@ -1,0 +1,36 @@
+From b4a0cf4a29ac037d893e9e359ada6e1bd1008733 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 11:31:54 -0400
+Subject: [PATCH 00163/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20SHIP=20paper=5Fv6=5Fnarrowing=5Flint.py=20=E2=80=94=20conv?=
+ =?UTF-8?q?ert=20the=20G3=20(prose=20narrowing-clean)=20gate=20from=20hono?=
+ =?UTF-8?q?r-discipline=20+=20an=20inline=20publication=5Fgate.py=20phrasi?=
+ =?UTF-8?q?ng=20scan=20to=20a=20STANDALONE=20pre-commit-style=20lint=20tha?=
+ =?UTF-8?q?t=20scans=20docs/arxiv-paper/main.tex=20+=20docs/technical-repo?=
+ =?UTF-8?q?rt.md=20+=20any=20paper=5Fv6=5F*=20artifact=20for=20the=20Paper?=
+ =?UTF-8?q?-v6=20Narrowing=20Discipline=20forbidden=20phrasings=20AND=20re?=
+ =?UTF-8?q?tracted=20numerical=20values=20(FoVer=200.9857,=2011680x,=20etc?=
+ =?UTF-8?q?.).=20CLAUDE.md=20says=20this=20lint=20SHOULD=20exist=20and=20d?=
+ =?UTF-8?q?oes=20not.=20Mechanical=20G3=20enforcement,=20additive=20(does?=
+ =?UTF-8?q?=20not=20modify=20research=5Fconductor.py)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index e5e1d598ea..f043fae8ca 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8300,3 +8300,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-02: Archive milestone .339 honestly (CONVERGENCE milestone: re-freeze CLOSED-NEGATIVE — no reweighting candidate beats frozen 0.9131 under dual-condition rigor, but exp3704 carries a benign TAUTOLOGY flag; code AUROC=1.0 was a LEAK -> detector narrowed to math-only-with-abstain; selection diagnosis FORMALLY CLOSED; KV260 TERMINAL; FR-11 v13 positive; paper_ready stayed TRUE; frozen 0.9131 unchanged) and activate .340 (⚠️ Research Finding) — honest_verdict=complete: archived_v339_convergence_refreeze_closed_negative_code_leak_narrowed_selection_closed_kv260_terminal_v340_active_paper_ready_true_frozen_headline_unchanged; results/experiment_3713_archive_v339_activate_v340.json
+ - 2026-06-02: Backend-state diagnostic v6 — sixth probe of gemini quota/crash stability (exp3653/3666/3679/3691/3703 all showed probe-OK-but-real-workload-crash); record the probe-vs-real-workload divergence; recommend whether .341 may flip to gemini-default; .340 stays on codex (documentation-only) (❌ Failed) — honest_verdict=complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing; results/experiment_3714_backend_state_diagnostic_v6.json
+ - 2026-06-02: CLEAN corrigendum of the re-freeze disambiguation — exp3704 reached the correct conservative conclusion (no candidate beats frozen 0.9131 under dual-condition rigor) but carries a BENIGN TAUTOLOGY flagged_adversarial (strongest_candidate_auroc == external_comparator_auroc BY CONSTRUCTION). Re-emit the disambiguation on a CLEAN, non-flagged artifact (preserve exp3704's numbers + add the correction note, exp1850 pattern), storing strongest_candidate as a STRING label so the de-tautology linter does not false-fire. Headline stays frozen; no record carries a flagged headline-adjacent artifact (✅ Complete) — honest_verdict=complete: refreeze_disambiguation_corrigendum_clean_no_candidate_beats_frozen_headline_stays_0_9131; results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json
++- 2026-06-02: SHIP paper_v6_narrowing_lint.py — convert the G3 (prose narrowing-clean) gate from honor-discipline + an inline publication_gate.py phrasing scan to a STANDALONE pre-commit-style lint that scans docs/arxiv-paper/main.tex + docs/technical-report.md + any paper_v6_* artifact for the Paper-v6 Narrowing Discipline forbidden phrasings AND retracted numerical values (FoVer 0.9857, 11680x, etc.). CLAUDE.md says this lint SHOULD exist and does not. Mechanical G3 enforcement, additive (does not modify research_conductor.py) (✅ Complete) — honest_verdict=complete: paper_v6_narrowing_lint_shipped_g3_mechanically_enforced_current_paper_clean; results/experiment_3716_ship_paper_v6_narrowing_lint.json
+-- 
+2.55.0
+

@@ -1,0 +1,1694 @@
+From e7db5c6503792b4851030776ca5bf39fb9842ab0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 19 Jun 2026 08:05:46 -0400
+Subject: [PATCH 02776/11362] [conductor] PHASE A5 (ARC NORTH STAR;
+ MULTI-LEVEL) -- take an already-solved game +1 DEEPER level AND consolidate
+ the per-game solver primitives into composable generic operators in
+ arc_solver_kit.
+
+Automated research step by research conductor.
+Task ID: exp4436-deepen-plus-primitive-consolidation
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  51 +++
+ ops/arc_solve_registry.yaml                   |  45 +++
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/agentic/arc_game_adapters.py    |  45 +--
+ python/carnot/agentic/arc_graph_explore.py    |  28 +-
+ python/carnot/agentic/arc_solve_learning.py   |  19 +
+ python/carnot/agentic/arc_solver_kit.py       | 269 ++++++++++++-
+ ...xperiment_4421_config_rule_solve_unseen.py |  28 +-
+ ...436_deepen_plus_primitive_consolidation.py | 361 ++++++++++++++++++
+ ...6_deepen_plus_primitive_consolidation.json | 259 +++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ scripts/arc_loop_solve.py                     |   8 +
+ ...436_deepen_plus_primitive_consolidation.py | 284 ++++++++++++++
+ 15 files changed, 1331 insertions(+), 82 deletions(-)
+ create mode 100644 python/carnot/experiment_4436_deepen_plus_primitive_consolidation.py
+ create mode 100644 results/experiment_4436_deepen_plus_primitive_consolidation.json
+ create mode 100644 tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 620b97c5a4..3ae816de61 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -25127,6 +25127,57 @@ is true for the reproduction gate, and no `partial:` verdict is accepted.
+ |---|---|---|
+ | REQ-REPORT-4435 | Planned (`python/carnot/experiment_4435_generic_first_contact_fixed.py`, `results/experiment_4435_generic_first_contact_fixed.json`) | Planned (`tests/python/test_experiment_4435_generic_first_contact_fixed.py`) |
+ 
++### REQ-REPORT-4436: Deepen One Reproduced ARC Game And Consolidate Solver Primitives
++
++The Exp 4436 workflow SHALL take exactly one already reproduced ARC-AGI-3 game
++one level deeper under the offline reproduction gate while preserving every
++pre-existing reproduced solve. It SHALL consolidate recurring per-game solver
++ideas into additive, composable generic operators in
++`python/carnot/agentic/arc_solver_kit.py`: a greedy glyph/rewrite matcher
++derived from tr87, a config-rule grounding helper, a graph-explore A* priority helper
++with the standing learned action-cost term, an object-centric digest helper, and an
++active-data collection planner. The standing loop SHALL expose the selected
++generic operators for a target so future solves compose these primitives before
++falling back to per-game reverse engineering.
++
++Before claiming success, the workflow SHALL confirm local `environment_files/`
++are present, SHALL replay the newly deepened game through
++`arc_solver_kit.reproduce()`, and SHALL replay every prior reproducible solve
++through the same reproduction gate or an injected equivalent. Missing offline
++resources SHALL stop with a terminal `blocked_` verdict rather than a fabricated
++solve. The workflow SHALL NOT use 3090 inference and SHALL NOT submit to a
++leaderboard.
++
++The workflow SHALL write
++`results/experiment_4436_deepen_plus_primitive_consolidation.json` with required
++top-level fields `honest_verdict`, bare int `reproduced_levels`, bare bool
++`offline_reproduced`, `primitives_consolidated`, bare bool `no_regression`,
++bare int `random_seed`, `reproducibility_checksum`, and
++`verifier_is_oracle=true`. `primitives_consolidated` SHALL be a list of
++`{operator, derived_from_games}` rows matching the generic operators now exposed
++by `arc_solver_kit`, and the ARC solve registry `general_gotchas` SHALL document
++each consolidated primitive and its source games.
++
++#### SCENARIO-REPORT-4436: Deepened Solve And Primitive Consolidation Are Reproduction-Gated
++
++**Given** offline ARC environment files, an already reproduced target game, prior
++reproducible solve rows, and importable ARC solver-kit primitives
++**When** the Exp 4436 workflow deepens the selected game, consolidates the
++primitive operators, records them in the registry gotchas, and runs the
++reproduction gates
++**Then** the artifact records `reproduced_levels>=1` for the +1 deeper level,
++`offline_reproduced=true`, `no_regression=true` for all prior reproduced solves,
++the required primitive operator rows with their derived-from games,
++`verifier_is_oracle=true`, no 3090 inference, no leaderboard submission, and a
++terminal honest verdict starting with `complete:`, `success:`, `passed:`, or
++`shipped:`.
++
++## Implementation Status (REQ-REPORT-4436)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4436 | Planned (`python/carnot/experiment_4436_deepen_plus_primitive_consolidation.py`, `results/experiment_4436_deepen_plus_primitive_consolidation.json`) | Planned (`tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py`) |
++
+ ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+ 
+ The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 005cd23ac7..2096b9fa93 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -28,6 +28,51 @@ general_gotchas:
+     the winning arrangement, so the returned frame is already the next level and the
+     pre-win grid is not externally observable. Ground the win predicate on execution
+     state immediately before next_level, then count only the reproduce() level advance.
++- id: primitive_glyph_rewrite_matcher
++  operator: glyph_rewrite_matcher
++  derived_from_games:
++  - tr87
++  note: Generic greedy multi-glyph LHS->RHS rewrite matcher in arc_solver_kit;
++    handles one-to-one, one-to-many, many-to-many, and repeated-pass config chains.
++- id: primitive_config_rule_grounding
++  operator: config_rule_grounding
++  derived_from_games:
++  - s5i5
++  - ft09
++  - tr87
++  note: Generic helper for grounding config/toggle rules against predicted object
++    or register coverage before the offline reproduce gate counts a solve.
++- id: primitive_graph_astar_action_cost
++  operator: graph_astar_action_cost
++  derived_from_games:
++  - tu93
++  - lp85
++  - cd82
++  - sp80
++  - cn04
++  - m0r0
++  - sk48
++  - su15
++  note: Generic A* priority operator that composes path cost with verifier/action-cost
++    heuristic; OfflineSolver uses it as the standing best-first priority.
++- id: primitive_object_centric_digest
++  operator: object_centric_digest
++  derived_from_games:
++  - g50t
++  - lp85
++  - tn36
++  - ka59
++  note: Generic connected-component object summary used for routing, candidate
++    generation, active-data signatures, and config grounding.
++- id: primitive_active_data_collection
++  operator: active_data_collection
++  derived_from_games:
++  - ar25
++  - ka59
++  - ft09
++  - sc25
++  note: Generic balanced action/object coverage planner for offline transition
++    collection before world-model induction or per-mechanic repair.
+ games:
+ - game: r11l
+   reproducibility: reproduced
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 8189f31228..a38e9f844a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 182,
+   "code_violations": 0,
+-  "experiments_checked": 3454,
++  "experiments_checked": 3455,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_game_adapters.py b/python/carnot/agentic/arc_game_adapters.py
+index e7f4b6b5d9..0faae6b7c3 100644
+--- a/python/carnot/agentic/arc_game_adapters.py
++++ b/python/carnot/agentic/arc_game_adapters.py
+@@ -174,6 +174,7 @@ def _tr87():
+     win-animation frames stay distinct (the search reaches the level-up)."""
+     from itertools import product as _product
+ 
++    from carnot.agentic import arc_solver_kit as kit
+     from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
+     from carnot.agentic.arc_agi3_live_adapter import _game_action
+ 
+@@ -183,7 +184,7 @@ def _tr87():
+         return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
+ 
+     def _cyc(a, b):
+-        return min((b - a) % 7, (a - b) % 7)            # cyclic distance over the 7-value wheel
++        return kit.cyclic_distance(a, b, modulus=7)     # cyclic distance over the 7-value wheel
+ 
+     def _level_flag(game, name):
+         try:
+@@ -206,25 +207,12 @@ def _tr87():
+         # false claim). Returns None if any pass cannot match a position.
+         rules = [([s.name for s in lhs], [s.name for s in rhs]) for lhs, rhs in game.cifzvbcuwqe]
+ 
+-        def _rewrite(seq):
+-            out, pos = [], 0
+-            while pos < len(seq):
+-                for lhs_names, rhs_names in rules:
+-                    if seq[pos:pos + len(lhs_names)] == lhs_names:
+-                        out.extend(rhs_names)
+-                        pos += len(lhs_names)
+-                        break
+-                else:
+-                    return None
+-            return out
+-
+         seq = [s.name for s in game.zvojhrjxxm]
+         passes = 2 if (_level_flag(game, "tree_translation") or _level_flag(game, "double_translation")) else 1
+-        for _ in range(passes):
+-            seq = _rewrite(seq)
+-            if seq is None:
+-                return None
+-        return [int(n[-1]) for n in seq]
++        rewritten = kit.greedy_rewrite(seq, rules, passes=passes)
++        if rewritten is None:
++            return None
++        return [int(n[-1]) for n in rewritten]
+ 
+     def _solve_rule_parse(structs, target, editable):
+         # ALTER_RULES inverse puzzle: the RULES are editable, target+editable are FIXED. Find rule values
+@@ -299,30 +287,17 @@ def _tr87():
+             rhs = tuple((rser, ((rf - 1 + o) % 7) + 1) for o in roff)
+             return lhs, rhs
+ 
+-        def _greedy(rules, seq):
+-            out: list = []
+-            pos = 0
+-            while pos < len(seq):
+-                for lhs, rhs in rules:
+-                    if seq[pos:pos + len(lhs)] == list(lhs):
+-                        out.extend(rhs)
+-                        pos += len(lhs)
+-                        break
+-                else:
+-                    return None
+-            return out
+-
+         first_map: dict = {}
+         for fv in _product(range(1, 8), repeat=2 * len(first)):
+             rules = [_build(first[k], fv[2 * k], fv[2 * k + 1]) for k in range(len(first))]
+-            bint = _greedy(rules, list(target))
++            bint = kit.greedy_rewrite(list(target), rules)
+             if bint is not None:
+                 first_map.setdefault(tuple(bint), fv)
+         result = None
+         for sv in _product(range(1, 8), repeat=2 * len(second)):
+             srules = [_build(second[k], sv[2 * k], sv[2 * k + 1]) for k in range(len(second))]
+             for bint, fv in first_map.items():
+-                if _greedy(srules, list(bint)) == list(editable):
++                if kit.greedy_rewrite(list(bint), srules) == tuple(editable):
+                     req = [(0, 0)] * len(meta)
+                     for k, i in enumerate(first):
+                         req[i] = (fv[2 * k], fv[2 * k + 1])
+@@ -384,7 +359,7 @@ def _tr87():
+         # smooth gradient -- every ACTION1/2 toward target drops the score by 1, so the search walks
+         # straight to the win (mismatch-count gave no gradient and exploded at L2's 7 glyphs). The 7x
+         # length-gap term bounds the unmodelled-twist case so the search stops with no false claim.
+-        return float(sum(_cyc(cur[i], req[i]) for i in range(n)) + 7 * abs(len(cur) - len(req)))
++        return kit.sequence_cyclic_distance(cur[:n], req[:n], modulus=7) + 7 * abs(len(cur) - len(req))
+ 
+     def action_labels(env, frame=None, path=None):
+         return [json.dumps({"action": a}) for a in (1, 2, 3, 4)]
+@@ -409,7 +384,7 @@ def _tr87():
+     return GameAdapter(
+         game="tr87", action_labels=action_labels, apply=apply, state_key=state_key,
+         featurize=None, hand_verifier=hand_verifier, warmup_label=None,
+-        depth_caps={1: 40, 2: 90, 3: 90, 4: 90, 5: 90}, branch_mode="fresh_env",
++        depth_caps={1: 40, 2: 90, 3: 90, 4: 90, 5: 90, 6: 90, 7: 90}, branch_mode="fresh_env",
+     )
+ 
+ 
+diff --git a/python/carnot/agentic/arc_graph_explore.py b/python/carnot/agentic/arc_graph_explore.py
+index 3aba5046fa..612f7a40fb 100644
+--- a/python/carnot/agentic/arc_graph_explore.py
++++ b/python/carnot/agentic/arc_graph_explore.py
+@@ -32,30 +32,12 @@ def _components_detailed(grid) -> list:
+     the key ingredient from the graph-explore SOTA (arXiv:2512.24156) that lets the
+     search try the most salient interactive elements first instead of treating all
+     objects uniformly."""
+-    import numpy as np
+-    vals, counts = np.unique(grid, return_counts=True)
+-    bg = int(vals[counts.argmax()])
+-    mask = grid != bg
+-    h, w = grid.shape
+-    seen = np.zeros_like(mask, dtype=bool)
++    from carnot.agentic.arc_solver_kit import object_centric_digest
++
+     comps = []
+-    for i in range(h):
+-        for j in range(w):
+-            if mask[i, j] and not seen[i, j]:
+-                stack = [(i, j)]
+-                seen[i, j] = True
+-                cells = []
+-                while stack:
+-                    y, x = stack.pop()
+-                    cells.append((y, x))
+-                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+-                        ny, nx = y + dy, x + dx
+-                        if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
+-                            seen[ny, nx] = True
+-                            stack.append((ny, nx))
+-                cy = sum(c[0] for c in cells) // len(cells)
+-                cx = sum(c[1] for c in cells) // len(cells)
+-                comps.append((cy, cx, len(cells), int(grid[i, j])))
++    for comp in object_centric_digest(grid)["components"]:
++        cx, cy = comp["centroid"]
++        comps.append((int(cy), int(cx), int(comp["area"]), int(comp["color"])))
+     return comps
+ 
+ 
+diff --git a/python/carnot/agentic/arc_solve_learning.py b/python/carnot/agentic/arc_solve_learning.py
+index 3e77dc501d..7c5e344b45 100644
+--- a/python/carnot/agentic/arc_solve_learning.py
++++ b/python/carnot/agentic/arc_solve_learning.py
+@@ -128,12 +128,30 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
+     reg = _registry()
+     strategy = strat.route_for_game(target_game, mechanic=mechanic, reg=reg)
+     if target_game not in feats:
++        from . import arc_solver_kit as kit
++
+         return {
+             "error": f"{target_game} not in survey",
+             "strategy": strategy,
++            "selected_generic_operators": [
++                op.as_dict()
++                for op in kit.select_primitive_operators(
++                    mechanic_class=strategy.get("routed_mechanic", ""), game=target_game
++                )
++            ],
+             "general_gotchas": reg.get("general_gotchas", []),
+         }
+     tf = feats[target_game]
++    from . import arc_solver_kit as kit
++
++    selected_generic_operators = [
++        op.as_dict()
++        for op in kit.select_primitive_operators(
++            mechanic_class=strategy.get("routed_mechanic", ""),
++            action_model=str(tf.get("action_type", "")),
++            game=target_game,
++        )
++    ]
+     by_game = {g["game"]: g for g in reg.get("games", [])}
+     ranked = []
+     for solved in _solved_games(reg):
+@@ -172,6 +190,7 @@ def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> d
+         "target_game": target_game,
+         "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
+         "strategy": strategy,
++        "selected_generic_operators": selected_generic_operators,
+         "recommended": ranked[:3],
+         "heuristic_policy": policy,
+         "general_gotchas": reg.get("general_gotchas", []),
+diff --git a/python/carnot/agentic/arc_solver_kit.py b/python/carnot/agentic/arc_solver_kit.py
+index 2286127ae2..49842ef63b 100644
+--- a/python/carnot/agentic/arc_solver_kit.py
++++ b/python/carnot/agentic/arc_solver_kit.py
+@@ -44,6 +44,7 @@ from __future__ import annotations
+ import copy
+ import heapq
+ import itertools
++from dataclasses import dataclass
+ from pathlib import Path
+ from typing import Any, Callable, Hashable, Optional, Sequence
+ 
+@@ -53,6 +54,268 @@ ARC_STANDING_PATH_COST_WEIGHT = 1.0
+ ARC_BASELINE_PATH_COST_WEIGHT = 0.0
+ 
+ 
++@dataclass(frozen=True)
++class PrimitiveOperator:
++    """A reusable ARC solve operator learned from one or more reproduced games."""
++
++    operator: str
++    derived_from_games: tuple[str, ...]
++    purpose: str
++    selector_tags: tuple[str, ...] = ()
++
++    def as_dict(self) -> dict[str, Any]:
++        return {
++            "operator": self.operator,
++            "derived_from_games": list(self.derived_from_games),
++            "purpose": self.purpose,
++            "selector_tags": list(self.selector_tags),
++        }
++
++
++def primitive_operator_registry() -> tuple[PrimitiveOperator, ...]:
++    """REQ-REPORT-4436: consolidated generic operators available to the standing loop."""
++
++    return (
++        PrimitiveOperator(
++            operator="glyph_rewrite_matcher",
++            derived_from_games=("tr87",),
++            purpose="Greedy multi-glyph LHS->RHS rewrite, including repeated passes.",
++            selector_tags=("config_substitution", "glyph", "rewrite", "tr87"),
++        ),
++        PrimitiveOperator(
++            operator="config_rule_grounding",
++            derived_from_games=("s5i5", "ft09", "tr87"),
++            purpose="Ground a proposed config rule against predicted object/register coverage.",
++            selector_tags=("config_toggle", "marker_coverage", "local_constraint", "rule"),
++        ),
++        PrimitiveOperator(
++            operator="graph_astar_action_cost",
++            derived_from_games=("tu93", "lp85", "cd82", "sp80", "cn04", "m0r0", "sk48", "su15"),
++            purpose="A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
++            selector_tags=("graph_explore", "astar", "action_cost", "keyboard", "click"),
++        ),
++        PrimitiveOperator(
++            operator="object_centric_digest",
++            derived_from_games=("g50t", "lp85", "tn36", "ka59"),
++            purpose="Connected-component object summary for routing, grounding, and active data.",
++            selector_tags=("object", "digest", "program_editor", "world_model"),
++        ),
++        PrimitiveOperator(
++            operator="active_data_collection",
++            derived_from_games=("ar25", "ka59", "ft09", "sc25"),
++            purpose="Balanced action/object coverage plan for offline transition collection.",
++            selector_tags=("active_data", "world_model", "e3", "transition"),
++        ),
++    )
++
++
++def select_primitive_operators(
++    *, mechanic_class: Optional[str] = None, action_model: str = "", game: str = ""
++) -> tuple[PrimitiveOperator, ...]:
++    """Select generic operators before per-game reverse engineering.
++
++    This is intentionally conservative: it exposes reusable operators for the standing
++    loop without removing any per-game adapter path.
++    """
++
++    registry = {op.operator: op for op in primitive_operator_registry()}
++    mechanic = (mechanic_class or "").lower()
++    action = (action_model or "").lower()
++    gid = (game or "").lower()
++
++    if "config_substitution" in mechanic or "glyph" in mechanic or gid == "tr87":
++        names = ("glyph_rewrite_matcher", "graph_astar_action_cost", "object_centric_digest")
++    elif "config" in mechanic or "toggle" in mechanic or "constraint" in mechanic:
++        names = ("config_rule_grounding", "object_centric_digest", "graph_astar_action_cost")
++    elif "program_editor" in mechanic:
++        names = ("object_centric_digest", "active_data_collection", "graph_astar_action_cost")
++    elif "world_model" in mechanic or "e3" in mechanic:
++        names = ("active_data_collection", "object_centric_digest", "graph_astar_action_cost")
++    elif "keyboard" in action or "click" in action or "graph" in mechanic:
++        names = ("graph_astar_action_cost", "object_centric_digest")
++    else:
++        names = ("object_centric_digest", "active_data_collection", "graph_astar_action_cost")
++    return tuple(registry[name] for name in names)
++
++
++def cyclic_distance(current: int, target: int, *, modulus: int = 7) -> int:
++    """Shortest cyclic distance on an integer wheel, used by config/glyph solvers."""
++
++    if modulus <= 0:
++        raise ValueError("modulus must be positive")
++    return min((int(target) - int(current)) % modulus, (int(current) - int(target)) % modulus)
++
++
++def sequence_cyclic_distance(
++    current: Sequence[int],
++    required: Sequence[int],
++    *,
++    modulus: int = 7,
++    gap_cost: Optional[float] = None,
++) -> float:
++    """Sum cyclic distance over aligned values, with a bounded length-gap penalty."""
++
++    n = min(len(current), len(required))
++    gap = float(modulus if gap_cost is None else gap_cost)
++    return float(
++        sum(cyclic_distance(current[i], required[i], modulus=modulus) for i in range(n))
++        + gap * abs(len(current) - len(required))
++    )
++
++
++def greedy_rewrite(
++    sequence: Sequence[Hashable],
++    rules: Sequence[tuple[Sequence[Hashable], Sequence[Hashable]]],
++    *,
++    passes: int = 1,
++) -> tuple[Hashable, ...] | None:
++    """Greedy first-prefix LHS->RHS rewrite, repeated for tr87-style chains."""
++
++    normalized = [(tuple(lhs), tuple(rhs)) for lhs, rhs in rules]
++    out: tuple[Hashable, ...] = tuple(sequence)
++    for _ in range(max(0, int(passes))):
++        pos = 0
++        rewritten: list[Hashable] = []
++        while pos < len(out):
++            for lhs, rhs in normalized:
++                if out[pos:pos + len(lhs)] == lhs:
++                    rewritten.extend(rhs)
++                    pos += len(lhs)
++                    break
++            else:
++                return None
++        out = tuple(rewritten)
++    return out
++
++
++def ground_marker_coverage_rule(
++    *,
++    controlled_markers: Sequence[tuple[int, int]],
++    target_markers: Sequence[tuple[int, int]],
++    step: int,
++    horizontal_label: str,
++    vertical_label: str,
++) -> dict[str, Any]:
++    """Derive a config-toggle path from a grounded marker-coverage predicate."""
++
++    predicted = [tuple(marker) for marker in controlled_markers]
++    path: list[str] = []
++    for target_x, target_y in target_markers:
++        candidates = [(i, x, y) for i, (x, y) in enumerate(predicted) if y == target_y and x < target_x]
++        if candidates:
++            index, x, _ = candidates[0]
++            moves = (target_x - x) // int(step)
++            path.extend([horizontal_label] * moves)
++            predicted[index] = (target_x, target_y)
++    for target_x, target_y in target_markers:
++        candidates = [(i, x, y) for i, (x, y) in enumerate(predicted) if x == target_x and y < target_y]
++        if candidates:
++            index, _, y = candidates[0]
++            moves = (target_y - y) // int(step)
++            path.extend([vertical_label] * moves)
++            predicted[index] = (target_x, target_y)
++    satisfied = all(tuple(target) in predicted for target in target_markers)
++    return {
++        "operator": "config_rule_grounding",
++        "solution": path,
++        "predicted_markers": [tuple(marker) for marker in predicted],
++        "target_markers": [tuple(marker) for marker in target_markers],
++        "predicate_satisfied": satisfied,
++    }
++
++
++def object_centric_digest(grid: Any) -> dict[str, Any]:
++    """Connected-component digest for ARC frames or grids."""
++
++    import numpy as np
++
++    arr = np.asarray(grid)
++    if arr.ndim != 2:
++        raise ValueError("object_centric_digest expects a 2-D grid")
++    vals, counts = np.unique(arr, return_counts=True)
++    background = int(vals[counts.argmax()]) if len(vals) else 0
++    mask = arr != background
++    seen = np.zeros_like(mask, dtype=bool)
++    components: list[dict[str, Any]] = []
++    h, w = arr.shape
++    for y0 in range(h):
++        for x0 in range(w):
++            if not mask[y0, x0] or seen[y0, x0]:
++                continue
++            color = int(arr[y0, x0])
++            stack = [(y0, x0)]
++            seen[y0, x0] = True
++            cells: list[tuple[int, int]] = []
++            while stack:
++                y, x = stack.pop()
++                cells.append((y, x))
++                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
++                    ny, nx = y + dy, x + dx
++                    if (
++                        0 <= ny < h
++                        and 0 <= nx < w
++                        and mask[ny, nx]
++                        and not seen[ny, nx]
++                        and int(arr[ny, nx]) == color
++                    ):
++                        seen[ny, nx] = True
++                        stack.append((ny, nx))
++            ys = [y for y, _ in cells]
++            xs = [x for _, x in cells]
++            bbox = [min(ys), min(xs), max(ys), max(xs)]
++            area = len(cells)
++            signature = f"c{color}:a{area}:bbox{bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]}"
++            components.append(
++                {
++                    "color": color,
++                    "area": area,
++                    "bbox": bbox,
++                    "centroid": [sum(xs) / area, sum(ys) / area],
++                    "signature": signature,
++                }
++            )
++    components.sort(key=lambda row: (-int(row["area"]), int(row["color"]), row["bbox"]))
++    return {
++        "operator": "object_centric_digest",
++        "shape": [int(arr.shape[0]), int(arr.shape[1])],
++        "background_color": background,
++        "component_count": len(components),
++        "components": components,
++    }
++
++
++def active_data_collection_plan(
++    *,
++    action_labels: Sequence[str],
++    object_signatures: Sequence[str],
++    max_cases_per_action: int = 3,
++) -> list[dict[str, Any]]:
++    """Balanced action/object coverage rows for offline transition collection."""
++
++    signatures = list(object_signatures) or ["none"]
++    rows: list[dict[str, Any]] = []
++    for action in action_labels:
++        for case_index in range(max(0, int(max_cases_per_action))):
++            rows.append(
++                {
++                    "operator": "active_data_collection",
++                    "action": str(action),
++                    "object_signature": signatures[case_index % len(signatures)],
++                    "case_index": case_index,
++                    "selection_policy": "balanced_action_object_coverage",
++                }
++            )
++    return rows
++
++
++def astar_frontier_priority(
++    *, depth: int, heuristic: float, path_cost_weight: Optional[float] = None
++) -> float:
++    """Standing graph/A* priority shared by OfflineSolver and graph-explore users."""
++
++    return float(standing_path_cost_weight(path_cost_weight) * int(depth) + float(heuristic))
++
++
+ def standing_path_cost_weight(path_cost_weight: Optional[float]) -> float:
+     """REQ-LEARN-4364: default ARC planning to additive A* cost; keep 0.0 as baseline."""
+     if path_cost_weight is None:
+@@ -149,7 +412,11 @@ class OfflineSolver:
+ 
+     def _priority(self, env: Any, path: Sequence[str]) -> float:
+         """Verifier score plus standing path cost. Pass 0.0 for legacy greedy routing."""
+-        return float(self.path_cost_weight * len(path) + self._call_verifier(env))
++        return astar_frontier_priority(
++            depth=len(path),
++            heuristic=self._call_verifier(env),
++            path_cost_weight=self.path_cost_weight,
++        )
+ 
+     def _call_action_labels(self, env: Any, path: Sequence[str]) -> Sequence[str]:
+         try:
+diff --git a/python/carnot/experiment_4421_config_rule_solve_unseen.py b/python/carnot/experiment_4421_config_rule_solve_unseen.py
+index a3259c66f0..7caad1d726 100644
+--- a/python/carnot/experiment_4421_config_rule_solve_unseen.py
++++ b/python/carnot/experiment_4421_config_rule_solve_unseen.py
+@@ -91,6 +91,8 @@ def predicted_markers_after_path(
+     controlled_markers: Sequence[tuple[int, int]],
+     path: Sequence[str],
+ ) -> list[tuple[int, int]]:
++    """Project marker positions through the generic config-rule path labels."""
++
+     predicted = [tuple(marker) for marker in controlled_markers]
+     for label in path:
+         if label == H_EXTEND:
+@@ -112,21 +114,17 @@ def derive_s5i5_l1_path(
+ ) -> list[str]:
+     """Derive the L1 click path by using the marker-coverage predicate as win-check."""
+ 
+-    predicted = [tuple(marker) for marker in controlled_markers]
+-    path: list[str] = []
+-    for target_x, target_y in target_markers:
+-        if any(y == target_y and x < target_x for x, y in predicted):
+-            index = next(i for i, (x, y) in enumerate(predicted) if y == target_y and x < target_x)
+-            steps = (target_x - predicted[index][0]) // 3
+-            path.extend([H_EXTEND] * steps)
+-            predicted[index] = (target_x, target_y)
+-    for target_x, target_y in target_markers:
+-        if any(x == target_x and y < target_y for x, y in predicted):
+-            index = next(i for i, (x, y) in enumerate(predicted) if x == target_x and y < target_y)
+-            steps = (target_y - predicted[index][1]) // 3
+-            path.extend([V_EXTEND] * steps)
+-            predicted[index] = (target_x, target_y)
+-    if not is_win(predicted, target_markers):
++    from carnot.agentic import arc_solver_kit as kit
++
++    grounded = kit.ground_marker_coverage_rule(
++        controlled_markers=controlled_markers,
++        target_markers=target_markers,
++        step=3,
++        horizontal_label=H_EXTEND,
++        vertical_label=V_EXTEND,
++    )
++    path = list(grounded["solution"])
++    if not grounded["predicate_satisfied"]:
+         raise ValueError("derived s5i5 path does not satisfy grounded predicate")
+     return path
+ 
+diff --git a/python/carnot/experiment_4436_deepen_plus_primitive_consolidation.py b/python/carnot/experiment_4436_deepen_plus_primitive_consolidation.py
+new file mode 100644
+index 0000000000..bfcab87eb1
+--- /dev/null
++++ b/python/carnot/experiment_4436_deepen_plus_primitive_consolidation.py
+@@ -0,0 +1,361 @@
++"""Exp 4436: deepen one reproduced ARC game and consolidate solver primitives.
++
++Spec refs: REQ-REPORT-4436, SCENARIO-REPORT-4436.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++from typing import Any, Mapping, Sequence
++
++import yaml
++
++from carnot.agentic import arc_solver_kit as kit
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = "results/experiment_4436_deepen_plus_primitive_consolidation.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++DEEPENED_GAME = "tu93"
++RANDOM_SEED = 4436
++SPEC_REFS = ("REQ-REPORT-4436", "SCENARIO-REPORT-4436")
++TU93_L4_SOURCE_RELATIVE_PATH = "results/experiment_4361_e3_deeper_high_headroom_games.json"
++TU93_L5_SUFFIX_ACTIONS = (3, 3, 3, 4, 3, 3, 3, 3, 3, 2, 2, 2, 1, 1, 2, 2, 4, 2, 2, 4, 4, 4, 1, 2, 1, 1, 2, 1, 3)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "reproduced_levels",
++    "offline_reproduced",
++    "primitives_consolidated",
++    "no_regression",
++    "random_seed",
++    "reproducibility_checksum",
++    "verifier_is_oracle",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "terminal-prefixed",
++    "reproduced_levels": "bare int; the +1 deeper level, reproduction-gated",
++    "offline_reproduced": "the gate",
++    "primitives_consolidated": (
++        "list of {operator, derived_from_games} -- the reusable generic "
++        "operators the live solver now composes"
++    ),
++    "no_regression": (
++        "bare bool: every prior reproducible solve still reproduces after the "
++        "refactor -- additive-only guarantee"
++    ),
++    "random_seed": "determinism",
++    "reproducibility_checksum": "content hash",
++}
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _sha256(value: Any) -> str:
++    return hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def _load_json(path: Path) -> dict[str, Any]:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _load_registry(root: Path) -> dict[str, Any]:
++    try:
++        loaded = yaml.safe_load((root / REGISTRY_RELATIVE_PATH).read_text(encoding="utf-8"))
++    except (OSError, yaml.YAMLError):
++        return {"games": []}
++    return loaded if isinstance(loaded, dict) else {"games": []}
++
++
++def _as_int(value: Any) -> int:
++    try:
++        return int(value or 0)
++    except (TypeError, ValueError):
++        return 0
++
++
++def _terminal_prefixed(value: Any) -> bool:
++    return isinstance(value, str) and value.startswith(("complete:", "success:", "passed:", "shipped:", "blocked_"))
++
++
++def _checksum_is_hex(value: Any) -> bool:
++    return isinstance(value, str) and len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
++
++
++def primitives_as_rows(primitives: Sequence[Any]) -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for primitive in primitives:
++        if hasattr(primitive, "as_dict"):
++            raw = primitive.as_dict()
++        elif isinstance(primitive, Mapping):
++            raw = dict(primitive)
++        else:
++            raw = {"operator": str(primitive), "derived_from_games": []}
++        rows.append(
++            {
++                "operator": str(raw.get("operator", "")),
++                "derived_from_games": [str(game) for game in raw.get("derived_from_games", [])],
++            }
++        )
++    return rows
++
++
++def _no_regression(prior_reproductions: Sequence[Mapping[str, Any]]) -> bool:
++    return all(
++        bool(row.get("reproduced")) and _as_int(row.get("reached_level")) >= _as_int(row.get("claimed_level"))
++        for row in prior_reproductions
++    )
++
++
++def _verdict(
++    *,
++    deepened_game: str,
++    target_level: int,
++    offline_reproduced: bool,
++    new_levels: int,
++    no_regression: bool,
++    preconditions_checked: Mapping[str, Any],
++) -> str:
++    if preconditions_checked.get("offline_env_files_present") is not True:
++        return "blocked_offline_env_files_missing"
++    if offline_reproduced and new_levels >= 1 and no_regression:
++        return f"success: {deepened_game}_L{target_level}_deepened_primitives_consolidated"
++    if offline_reproduced and new_levels >= 1:
++        return f"complete: {deepened_game}_L{target_level}_deepened_but_regression_detected"
++    return f"complete: {deepened_game}_no_deeper_level_primitives_consolidated"
++
++
++def compute_reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    return _sha256(
++        {
++            "deepened_game": artifact.get("deepened_game"),
++            "prior_reproduced_levels": artifact.get("prior_reproduced_levels"),
++            "target_level": artifact.get("target_level"),
++            "deepened_reproduction": artifact.get("deepened_reproduction"),
++            "prior_reproductions": artifact.get("prior_reproductions"),
++            "primitives_consolidated": artifact.get("primitives_consolidated"),
++            "no_regression": artifact.get("no_regression"),
++            "random_seed": artifact.get("random_seed"),
++        }
++    )
++
++
++def preconditions(root: Path = REPO_ROOT) -> dict[str, Any]:
++    env_dir = root / "environment_files"
++    return {
++        "offline_env_files_present": env_dir.is_dir() and any(env_dir.iterdir()),
++        "offline_env_files_path": str(env_dir),
++        "registry_path": REGISTRY_RELATIVE_PATH,
++        "no_3090_inference": True,
++        "leaderboard_submission": False,
++    }
++
++
++def prior_best_level(root: Path = REPO_ROOT, game: str = DEEPENED_GAME) -> int:
++    registry = _load_registry(root)
++    for entry in registry.get("games", []) if isinstance(registry.get("games"), list) else []:
++        if isinstance(entry, Mapping) and entry.get("game") == game:
++            return _as_int(entry.get("levels_reproduced"))
++    return 0
++
++
++def build_artifact(
++    *,
++    deepened_game: str,
++    prior_reproduced_levels: int,
++    target_level: int,
++    deepened_reproduction: Mapping[str, Any],
++    prior_reproductions: Sequence[Mapping[str, Any]],
++    primitives: Sequence[Any],
++    preconditions_checked: Mapping[str, Any],
++) -> dict[str, Any]:
++    reached = _as_int(deepened_reproduction.get("reached_level"))
++    offline_reproduced = bool(deepened_reproduction.get("reproduced")) and reached >= int(target_level)
++    new_levels = max(0, reached - int(prior_reproduced_levels)) if offline_reproduced else 0
++    no_regression = _no_regression(prior_reproductions)
++    artifact: dict[str, Any] = {
++        "experiment": "experiment_4436_deepen_plus_primitive_consolidation",
++        "schema": "carnot.exp4436.deepen_plus_primitive_consolidation.v1",
++        "deepened_game": deepened_game,
++        "prior_reproduced_levels": int(prior_reproduced_levels),
++        "target_level": int(target_level),
++        "honest_verdict": _verdict(
++            deepened_game=deepened_game,
++            target_level=int(target_level),
++            offline_reproduced=offline_reproduced,
++            new_levels=new_levels,
++            no_regression=no_regression,
++            preconditions_checked=preconditions_checked,
++        ),
++        "reproduced_levels": reached if offline_reproduced else int(prior_reproduced_levels),
++        "new_levels_reproduced": new_levels,
++        "offline_reproduced": offline_reproduced,
++        "deepened_reproduction": dict(deepened_reproduction),
++        "prior_reproductions": [dict(row) for row in prior_reproductions],
++        "primitives_consolidated": primitives_as_rows(primitives),
++        "no_regression": no_regression,
++        "verifier_is_oracle": True,
++        "random_seed": RANDOM_SEED,
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "spec_refs": list(SPEC_REFS),
++        "submitted_to_leaderboard": False,
++        "no_3090_inference": True,
++        "result_path": RESULT_RELATIVE_PATH,
++    }
++    artifact["reproducibility_checksum"] = compute_reproducibility_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing {field}")
++    if not _terminal_prefixed(artifact.get("honest_verdict")):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if type(artifact.get("reproduced_levels")) is not int:
++        errors.append("reproduced_levels must be bare int")
++    if type(artifact.get("offline_reproduced")) is not bool:
++        errors.append("offline_reproduced must be bare bool")
++    if type(artifact.get("no_regression")) is not bool:
++        errors.append("no_regression must be bare bool")
++    if type(artifact.get("random_seed")) is not int:
++        errors.append("random_seed must be bare int")
++    if artifact.get("verifier_is_oracle") is not True:
++        errors.append("verifier_is_oracle must be true")
++    rows = artifact.get("primitives_consolidated")
++    if not isinstance(rows, list) or not rows:
++        errors.append("primitives_consolidated must be non-empty list")
++    elif any(
++        not isinstance(row, Mapping) or not row.get("operator") or not row.get("derived_from_games")
++        for row in rows
++    ):
++        errors.append("primitives_consolidated rows require derived_from_games")
++    if not _checksum_is_hex(artifact.get("reproducibility_checksum")):
++        errors.append("reproducibility_checksum must be 64-char sha256 hex")
++    verdict = artifact.get("honest_verdict")
++    if isinstance(verdict, str) and verdict.startswith("success:"):
++        if artifact.get("offline_reproduced") is not True:
++            errors.append("success verdict requires offline_reproduced true")
++        if artifact.get("no_regression") is not True:
++            errors.append("success verdict requires no_regression true")
++    return errors
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
++    return path
++
++
++def deepened_solution_labels(root: Path = REPO_ROOT) -> list[str]:
++    """Prior tu93 L4 replay plus the reproduction-gated L5 maze suffix."""
++
++    source = _load_json(root / TU93_L4_SOURCE_RELATIVE_PATH)
++    prefix: list[str] = []
++    for row in source.get("per_target_scorecard", []):
++        if isinstance(row, Mapping) and row.get("game") == DEEPENED_GAME:
++            raw_plan = row.get("plan") or []
++            prefix = [str(label) for label in raw_plan]
++            break
++    suffix = [json.dumps({"action": action}) for action in TU93_L5_SUFFIX_ACTIONS]
++    return prefix + suffix
++
++
++def reproduce_deepened_tu93(root: Path = REPO_ROOT, *, claimed_level: int | None = None) -> dict[str, Any]:
++    """Replay the deepened tu93 solution through arc_solver_kit.reproduce."""
++
++    from carnot.agentic.arc_game_adapters import get_adapter
++
++    adapter = get_adapter(DEEPENED_GAME)
++    solution = deepened_solution_labels(root)
++    if adapter is None or not solution:
++        return {
++            "game": DEEPENED_GAME,
++            "claimed_level": claimed_level,
++            "reached_level": 0,
++            "reproduced": False,
++            "source": TU93_L4_SOURCE_RELATIVE_PATH,
++            "mode": "missing_tu93_adapter_or_solution",
++        }
++    result = dict(
++        kit.reproduce(
++            DEEPENED_GAME,
++            [str(label) for label in solution],
++            adapter.apply,
++            warmup_label=adapter.warmup_label,
++            claimed_level=claimed_level,
++        )
++    )
++    result["source"] = TU93_L4_SOURCE_RELATIVE_PATH
++    result["solution_action_count"] = len(solution)
++    result["deepened_suffix_action_count"] = len(TU93_L5_SUFFIX_ACTIONS)
++    return result
++
++
++def prior_reproduction_gate_results(root: Path = REPO_ROOT) -> list[dict[str, Any]]:  # pragma: no cover
++    """Replay every prior counted registry solve through the existing audit gate."""
++
++    from carnot import experiment_4426_arc_registry_repro_audit as audit
++
++    rows: list[dict[str, Any]] = []
++    registry = _load_registry(root)
++    for entry in registry.get("games", []) if isinstance(registry.get("games"), list) else []:
++        if not isinstance(entry, Mapping):
++            continue
++        claimed = _as_int(entry.get("levels_reproduced"))
++        if entry.get("reproducibility") != "reproduced" or claimed <= 0:
++            continue
++        result = dict(audit.reproduce_registry_entry(entry, root))
++        result.setdefault("game", entry.get("game"))
++        result.setdefault("claimed_level", claimed)
++        rows.append(result)
++    return rows
++
++
++def run(root: Path = REPO_ROOT, *, write: bool = True) -> dict[str, Any]:  # pragma: no cover
++    checked = preconditions(root)
++    prior = prior_best_level(root, DEEPENED_GAME)
++    target = prior + 1
++    if checked["offline_env_files_present"]:
++        deepened = reproduce_deepened_tu93(root, claimed_level=target)
++        prior_results = prior_reproduction_gate_results(root)
++    else:
++        deepened = {"game": DEEPENED_GAME, "claimed_level": target, "reached_level": prior, "reproduced": False}
++        prior_results = []
++    artifact = build_artifact(
++        deepened_game=DEEPENED_GAME,
++        prior_reproduced_levels=prior,
++        target_level=target,
++        deepened_reproduction=deepened,
++        prior_reproductions=prior_results,
++        primitives=kit.primitive_operator_registry(),
++        preconditions_checked=checked,
++    )
++    if write:
++        write_artifact(root, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover
++    artifact = run(REPO_ROOT, write=True)
++    print(f"{artifact['honest_verdict']} wrote {RESULT_RELATIVE_PATH}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_4436_deepen_plus_primitive_consolidation.json b/results/experiment_4436_deepen_plus_primitive_consolidation.json
+new file mode 100644
+index 0000000000..c4ee239881
+--- /dev/null
++++ b/results/experiment_4436_deepen_plus_primitive_consolidation.json
+@@ -0,0 +1,259 @@
++{
++  "deepened_game": "tu93",
++  "deepened_reproduction": {
++    "claimed_level": 5,
++    "deepened_suffix_action_count": 29,
++    "game": "tu93",
++    "mode": "offline_reproduction_gate_no_quota",
++    "reached_level": 5,
++    "reproduced": true,
++    "solution_action_count": 93,
++    "source": "results/experiment_4361_e3_deeper_high_headroom_games.json"
++  },
++  "experiment": "experiment_4436_deepen_plus_primitive_consolidation",
++  "field_principles": {
++    "honest_verdict": "terminal-prefixed",
++    "no_regression": "bare bool: every prior reproducible solve still reproduces after the refactor -- additive-only guarantee",
++    "offline_reproduced": "the gate",
++    "primitives_consolidated": "list of {operator, derived_from_games} -- the reusable generic operators the live solver now composes",
++    "random_seed": "determinism",
++    "reproduced_levels": "bare int; the +1 deeper level, reproduction-gated",
++    "reproducibility_checksum": "content hash"
++  },
++  "honest_verdict": "success: tu93_L5_deepened_primitives_consolidated",
++  "new_levels_reproduced": 1,
++  "no_3090_inference": true,
++  "no_regression": true,
++  "offline_reproduced": true,
++  "preconditions_checked": {
++    "leaderboard_submission": false,
++    "no_3090_inference": true,
++    "offline_env_files_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files",
++    "offline_env_files_present": true,
++    "registry_path": "ops/arc_solve_registry.yaml"
++  },
++  "primitives_consolidated": [
++    {
++      "derived_from_games": [
++        "tr87"
++      ],
++      "operator": "glyph_rewrite_matcher"
++    },
++    {
++      "derived_from_games": [
++        "s5i5",
++        "ft09",
++        "tr87"
++      ],
++      "operator": "config_rule_grounding"
++    },
++    {
++      "derived_from_games": [
++        "tu93",
++        "lp85",
++        "cd82",
++        "sp80",
++        "cn04",
++        "m0r0",
++        "sk48",
++        "su15"
++      ],
++      "operator": "graph_astar_action_cost"
++    },
++    {
++      "derived_from_games": [
++        "g50t",
++        "lp85",
++        "tn36",
++        "ka59"
++      ],
++      "operator": "object_centric_digest"
++    },
++    {
++      "derived_from_games": [
++        "ar25",
++        "ka59",
++        "ft09",
++        "sc25"
++      ],
++      "operator": "active_data_collection"
++    }
++  ],
++  "prior_reproduced_levels": 4,
++  "prior_reproductions": [
++    {
++      "claimed_level": 1,
++      "game": "r11l",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/experiment_4296_arc_incremental_progress_new_game.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "ls20",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/experiment_4285_arc_incremental_progress_new_game.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "wa30",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/experiment_4275_arc_incremental_progress_new_game.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "s5i5",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/experiment_4421_config_rule_solve_unseen.json"
++    },
++    {
++      "claimed_level": 5,
++      "game": "lp85",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 5,
++      "reproduced": true,
++      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "sc25",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "python/carnot/experiment_4341_e3_sc25_reproduction.py"
++    },
++    {
++      "claimed_level": 1,
++      "game": "cd82",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/arc_explore_trajectory_cd82.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "sp80",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/arc_explore_trajectory_sp80.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "su15",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/arc_explore_trajectory_su15.json"
++    },
++    {
++      "claimed_level": 4,
++      "game": "tu93",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 4,
++      "reproduced": true,
++      "source": "results/experiment_4361_e3_deeper_high_headroom_games.json"
++    },
++    {
++      "claimed_level": 7,
++      "game": "tn36",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 7,
++      "reproduced": true,
++      "source": "results/experiment_4372_e3_deeper_high_headroom_games.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "cn04",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/arc_explore_trajectory_cn04.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "m0r0",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/arc_explore_trajectory_m0r0.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "sk48",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/arc_explore_trajectory_sk48.json"
++    },
++    {
++      "claimed_level": 1,
++      "game": "ar25",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "python/carnot/experiment_4339_e3_explore_verify_plan_ar25.py"
++    },
++    {
++      "claimed_level": 1,
++      "game": "ka59",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "python/carnot/experiment_4350_e3_explore_verify_plan_ka59.py"
++    },
++    {
++      "claimed_level": 1,
++      "game": "ft09",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 1,
++      "reproduced": true,
++      "source": "results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json"
++    },
++    {
++      "claimed_level": 6,
++      "game": "tr87",
++      "gate": "arc_solver_kit.reproduce",
++      "mode": "offline_reproduction_gate_no_quota",
++      "reached_level": 6,
++      "reproduced": true,
++      "source": "results/arc_loop_solve_tr87.json"
++    }
++  ],
++  "random_seed": 4436,
++  "reproduced_levels": 5,
++  "reproducibility_checksum": "fef16a89aa8f7d0f24d60e457c8cbaa9f8b0b845cc8c3aabcb2a3c90a637f5ca",
++  "result_path": "results/experiment_4436_deepen_plus_primitive_consolidation.json",
++  "schema": "carnot.exp4436.deepen_plus_primitive_consolidation.v1",
++  "spec_refs": [
++    "REQ-REPORT-4436",
++    "SCENARIO-REPORT-4436"
++  ],
++  "submitted_to_leaderboard": false,
++  "target_level": 5,
++  "verifier_is_oracle": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 3484438468..6ce631a222 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T11:30:01Z",
+-  "finished_at": "2026-06-19T11:30:01Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-19T12:00:02Z",
++  "finished_at": "2026-06-19T12:00:02Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 606d5a040f..cc56534679 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T11:30:01Z",
+-  "finished_at": "2026-06-19T11:30:01Z",
++  "started_at": "2026-06-19T12:00:02Z",
++  "finished_at": "2026-06-19T12:00:02Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 22f73dec53..4bbae31ee4 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260619",
+-  "started_at": "2026-06-19T11:30:01Z",
+-  "finished_at": "2026-06-19T11:30:01Z",
++  "started_at": "2026-06-19T12:00:02Z",
++  "finished_at": "2026-06-19T12:00:02Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/arc_loop_solve.py b/scripts/arc_loop_solve.py
+index 7f26a8131f..72e324e805 100644
+--- a/scripts/arc_loop_solve.py
++++ b/scripts/arc_loop_solve.py
+@@ -56,6 +56,12 @@ def solve_adaptered(game: str, target_level: int) -> dict:
+     ad = adapters.get_adapter(game)
+     arc = kit.offline_arcade()
+     env = arc.make(game, scorecard_id=arc.open_scorecard())
++    selected_generic_operators = [
++        op.as_dict()
++        for op in kit.select_primitive_operators(
++            mechanic_class=getattr(ad, "game", game), game=game
++        )
++    ]
+ 
+     # warm-start the search with a saved LEARNED verifier if present, else hand verifier
+     ckpt = _ckpt_path(game)
+@@ -100,6 +106,7 @@ def solve_adaptered(game: str, target_level: int) -> dict:
+         "states_expanded": total_states, "verifier_src": verifier_src,
+         "offline_reproduced": bool(gate["reproduced"]), "reproduced_levels": cur,
+         "learned_verifier_checkpoint": ckpt_written,
++        "selected_generic_operators": selected_generic_operators,
+         "reproduction_gate": gate,
+         # PERSIST the winning action path (not just the verdict) so it is replay-gateable by the
+         # offline metaharness / a third party -- per the ARC Solve Reproducibility discipline
+@@ -199,6 +206,7 @@ def needs_re(game: str) -> dict:
+     return {
+         "game": game, "status": "needs_per_game_RE",
+         "transfer_recommendation": rec.get("recommended"),
++        "selected_generic_operators": rec.get("selected_generic_operators"),
+         "general_gotchas": rec.get("general_gotchas"),
+         "guidance": rec.get("guidance"),
+         "instruction": ("Reverse-engineer this game's win/action/state DELTA reusing the routed "
+diff --git a/tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py b/tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py
+new file mode 100644
+index 0000000000..dae8de2f25
+--- /dev/null
++++ b/tests/python/test_experiment_4436_deepen_plus_primitive_consolidation.py
+@@ -0,0 +1,284 @@
++"""Tests for Exp 4436 deepen + primitive consolidation.
++
++Spec refs: REQ-REPORT-4436, SCENARIO-REPORT-4436.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import numpy as np
++
++from carnot import experiment_4436_deepen_plus_primitive_consolidation as mod
++from carnot.agentic import arc_solver_kit as kit
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
++
++
++def test_req_report_4436_spec_declares_gate_and_operator_contract() -> None:
++    """REQ-REPORT-4436: OpenSpec names the artifact gate and generic operators."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-REPORT-4436",
++        "SCENARIO-REPORT-4436",
++        "experiment_4436_deepen_plus_primitive_consolidation.json",
++        "greedy glyph/rewrite matcher",
++        "config-rule grounding helper",
++        "graph-explore A* priority helper",
++        "object-centric digest helper",
++        "active-data collection planner",
++        "no_regression",
++    ):
++        assert marker in spec
++
++
++def test_req_report_4436_glyph_rewrite_operator_covers_tr87_patterns() -> None:
++    """REQ-REPORT-4436: the tr87 rewrite matcher is a generic solver-kit operator."""
++
++    rules = [
++        (("A4",), ("B3",)),
++        (("B3",), ("C1", "C5", "C1")),
++        (("C3", "C3"), ("A6", "A1")),
++    ]
++
++    assert kit.greedy_rewrite(("A4",), rules) == ("B3",)
++    assert kit.greedy_rewrite(("B3",), rules) == ("C1", "C5", "C1")
++    assert kit.greedy_rewrite(("C3", "C3"), rules) == ("A6", "A1")
++    assert kit.greedy_rewrite(("Z9",), rules) is None
++
++    two_pass = kit.greedy_rewrite(("A4",), rules, passes=2)
++    assert two_pass == ("C1", "C5", "C1")
++    assert kit.sequence_cyclic_distance([1, 7, 3], [7, 1, 3], modulus=7) == 2.0
++
++
++def test_req_report_4436_generic_config_digest_active_data_helpers() -> None:
++    """REQ-REPORT-4436: config grounding, object digest, and active-data helpers compose."""
++
++    grounded = kit.ground_marker_coverage_rule(
++        controlled_markers=[(9, 33), (30, 9)],
++        target_markers=[(9, 51), (51, 9)],
++        step=3,
++        horizontal_label="h_extend",
++        vertical_label="v_extend",
++    )
++    assert grounded["solution"] == ["h_extend"] * 7 + ["v_extend"] * 6
++    assert grounded["predicate_satisfied"] is True
++
++    grid = np.array(
++        [
++            [0, 0, 0, 2],
++            [0, 1, 1, 2],
++            [0, 0, 1, 0],
++            [3, 0, 0, 0],
++        ],
++        dtype=np.int16,
++    )
++    digest = kit.object_centric_digest(grid)
++    assert digest["shape"] == [4, 4]
++    assert digest["background_color"] == 0
++    assert digest["component_count"] == 3
++    assert digest["components"][0]["area"] == 3
++
++    plan = kit.active_data_collection_plan(
++        action_labels=["left", "right"],
++        object_signatures=[c["signature"] for c in digest["components"]],
++        max_cases_per_action=2,
++    )
++    assert [row["action"] for row in plan] == ["left", "left", "right", "right"]
++    assert {row["selection_policy"] for row in plan} == {"balanced_action_object_coverage"}
++
++
++def test_req_report_4436_operator_registry_and_selector_are_standing_loop_ready() -> None:
++    """SCENARIO-REPORT-4436: the standing loop can select consolidated operators."""
++
++    operators = {row.operator: row for row in kit.primitive_operator_registry()}
++
++    assert set(operators) >= {
++        "glyph_rewrite_matcher",
++        "config_rule_grounding",
++        "graph_astar_action_cost",
++        "object_centric_digest",
++        "active_data_collection",
++    }
++    assert operators["glyph_rewrite_matcher"].derived_from_games == ("tr87",)
++    assert "s5i5" in operators["config_rule_grounding"].derived_from_games
++
++    selected = kit.select_primitive_operators(mechanic_class="config_substitution")
++    assert [row.operator for row in selected][:2] == [
++        "glyph_rewrite_matcher",
++        "graph_astar_action_cost",
++    ]
++
++
++def test_req_report_4436_artifact_schema_requires_deepen_and_no_regression(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4436: artifacts count only deepened and non-regressed reproductions."""
++
++    artifact = mod.build_artifact(
++        deepened_game="tu93",
++        prior_reproduced_levels=4,
++        target_level=5,
++        deepened_reproduction={
++            "game": "tu93",
++            "claimed_level": 5,
++            "reached_level": 5,
++            "reproduced": True,
++        },
++        prior_reproductions=[
++            {"game": "tr87", "claimed_level": 6, "reached_level": 7, "reproduced": True},
++            {"game": "s5i5", "claimed_level": 1, "reached_level": 1, "reproduced": True},
++        ],
++        primitives=kit.primitive_operator_registry(),
++        preconditions_checked={"offline_env_files_present": True},
++    )
++
++    assert artifact["honest_verdict"] == "success: tu93_L5_deepened_primitives_consolidated"
++    assert artifact["reproduced_levels"] == 5
++    assert artifact["offline_reproduced"] is True
++    assert artifact["no_regression"] is True
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert len(artifact["reproducibility_checksum"]) == 64
++    assert mod.artifact_schema_errors(artifact) == []
++
++    out = mod.write_artifact(tmp_path, artifact)
++    assert json.loads(out.read_text(encoding="utf-8"))["primitives_consolidated"][0]["operator"]
++
++
++def test_req_report_4436_tu93_solution_labels_append_replayed_l5_suffix() -> None:
++    """SCENARIO-REPORT-4436: tu93 deepening is rooted in the reproduced L4 prefix."""
++
++    labels = mod.deepened_solution_labels(REPO)
++
++    assert len(labels) == 93
++    assert labels[-len(mod.TU93_L5_SUFFIX_ACTIONS) :] == [
++        json.dumps({"action": action}) for action in mod.TU93_L5_SUFFIX_ACTIONS
++    ]
++
++
++def test_req_report_4436_artifact_utility_branches(tmp_path: Path, monkeypatch) -> None:
++    """REQ-REPORT-4436: schema/load helpers reject bad inputs deterministically."""
++
++    assert mod._load_json(tmp_path / "missing.json") == {}
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    assert mod._load_json(list_json) == {}
++    registry_path = tmp_path / "ops" / "arc_solve_registry.yaml"
++    registry_path.parent.mkdir()
++    registry_path.write_text("[]\n", encoding="utf-8")
++    assert mod._load_registry(tmp_path) == {"games": []}
++    registry_path.write_text("games: [\n", encoding="utf-8")
++    assert mod._load_registry(tmp_path) == {"games": []}
++    assert mod._as_int("not-int") == 0
++
++    assert mod.primitives_as_rows([{"operator": "x", "derived_from_games": ["g"]}, "raw"]) == [
++        {"operator": "x", "derived_from_games": ["g"]},
++        {"operator": "raw", "derived_from_games": []},
++    ]
++
++    env_dir = tmp_path / "environment_files"
++    env_dir.mkdir()
++    (env_dir / "sentinel").write_text("x", encoding="utf-8")
++    registry_path.write_text("games:\n- game: tu93\n  levels_reproduced: '4'\n", encoding="utf-8")
++    assert mod.preconditions(tmp_path)["offline_env_files_present"] is True
++    assert mod.prior_best_level(tmp_path, "tu93") == 4
++    assert mod.prior_best_level(tmp_path, "missing") == 0
++
++    blocked = mod.build_artifact(
++        deepened_game="tu93",
++        prior_reproduced_levels=4,
++        target_level=5,
++        deepened_reproduction={"game": "tu93", "reached_level": 4, "reproduced": False},
++        prior_reproductions=[],
++        primitives=[],
++        preconditions_checked={"offline_env_files_present": False},
++    )
++    assert blocked["honest_verdict"] == "blocked_offline_env_files_missing"
++
++    regressed = mod.build_artifact(
++        deepened_game="tu93",
++        prior_reproduced_levels=4,
++        target_level=5,
++        deepened_reproduction={"game": "tu93", "reached_level": 5, "reproduced": True},
++        prior_reproductions=[{"game": "x", "claimed_level": 1, "reached_level": 0, "reproduced": False}],
++        primitives=kit.primitive_operator_registry(),
++        preconditions_checked={"offline_env_files_present": True},
++    )
++    assert regressed["honest_verdict"] == "complete: tu93_L5_deepened_but_regression_detected"
++
++    no_deeper = mod.build_artifact(
++        deepened_game="tu93",
++        prior_reproduced_levels=4,
++        target_level=5,
++        deepened_reproduction={"game": "tu93", "reached_level": 4, "reproduced": True},
++        prior_reproductions=[],
++        primitives=kit.primitive_operator_registry(),
++        preconditions_checked={"offline_env_files_present": True},
++    )
++    assert no_deeper["honest_verdict"] == "complete: tu93_no_deeper_level_primitives_consolidated"
++
++    invalid = {
++        "honest_verdict": "not-terminal",
++        "reproduced_levels": 0,
++        "offline_reproduced": "false",
++        "primitives_consolidated": [],
++        "no_regression": "false",
++        "random_seed": 4436,
++        "reproducibility_checksum": "0" * 64,
++        "verifier_is_oracle": True,
++    }
++    errors = mod.artifact_schema_errors(invalid)
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "offline_reproduced must be bare bool" in errors
++    assert "no_regression must be bare bool" in errors
++    assert "primitives_consolidated must be non-empty list" in errors
++
++    missing_errors = mod.artifact_schema_errors({})
++    assert "missing honest_verdict" in missing_errors
++    with np.testing.assert_raises(ValueError):
++        mod.write_artifact(tmp_path, blocked)
++
++    import carnot.agentic.arc_game_adapters as adapters
++
++    monkeypatch.setattr(adapters, "get_adapter", lambda _game: None)
++    missing = mod.reproduce_deepened_tu93(tmp_path, claimed_level=5)
++    assert missing["mode"] == "missing_tu93_adapter_or_solution"
++
++
++def test_req_report_4436_tu93_deepened_path_reproduces_level_5() -> None:
++    """SCENARIO-REPORT-4436: tu93 L5 is confirmed by the offline reproduction gate."""
++
++    result = mod.reproduce_deepened_tu93(REPO, claimed_level=5)
++
++    assert result["reproduced"] is True
++    assert result["reached_level"] == 5
++    assert result["solution_action_count"] == 93
++    assert result["deepened_suffix_action_count"] == len(mod.TU93_L5_SUFFIX_ACTIONS)
++
++
++def test_req_report_4436_schema_rejects_fabricated_success() -> None:
++    """REQ-REPORT-4436: malformed or ungated success artifacts fail validation."""
++
++    artifact = {
++        "honest_verdict": "success: tr87_L7_deepened_primitives_consolidated",
++        "reproduced_levels": "7",
++        "offline_reproduced": False,
++        "primitives_consolidated": [{"operator": "glyph_rewrite_matcher"}],
++        "no_regression": False,
++        "random_seed": "4436",
++        "reproducibility_checksum": "x",
++        "verifier_is_oracle": False,
++    }
++
++    errors = mod.artifact_schema_errors(artifact)
++
++    assert "reproduced_levels must be bare int" in errors
++    assert "success verdict requires offline_reproduced true" in errors
++    assert "success verdict requires no_regression true" in errors
++    assert "primitives_consolidated rows require derived_from_games" in errors
++    assert "random_seed must be bare int" in errors
++    assert "reproducibility_checksum must be 64-char sha256 hex" in errors
++    assert "verifier_is_oracle must be true" in errors
+-- 
+2.55.0
+

@@ -1,0 +1,1997 @@
+From 757024e95eac8a78e0343d783f69deb3497d80ce Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 04:00:29 -0400
+Subject: [PATCH 07020/11362] [conductor] Plan next milestone: 2026.07.507
+
+Planning agent proposed 12 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../research-roadmap-vNEXT.md                 | 467 ++++++-------
+ ops/arc_self_solve_audit_report.md            |  16 +-
+ ops/docs_audit_report.md                      | 119 ++--
+ ops/verifier_authenticity_audit_report.md     | 173 ++---
+ research-references.md                        |  94 +++
+ research-roadmap-next.yaml                    | 614 ++++++++++++++++++
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ 7 files changed, 1119 insertions(+), 375 deletions(-)
+ create mode 100644 research-roadmap-next.yaml
+
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index 4ed958df64..b524757bdd 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,265 +1,290 @@
+-# Research Roadmap vNEXT — Milestone 2026.07.506
++# Research Roadmap vNEXT — Milestone 2026.07.507
+ 
+-**Title:** Evidence-Preserving Local Verification, Longitudinal KAN Self-Learning, Live ARC Filter Adjudication, and Hybrid Sampling
++**Title:** Native Local-SOTA Runtime Certification, Drift-Aware KAN Self-Learning, Forward-Inverse ARC Verification, and Exact cDLS
+ **Status:** Proposed
+-**Task range:** Exp5603–Exp5612
++**Task range:** Exp5613–Exp5624
+ **Execution manifest:** `research-roadmap-next.yaml`
+ 
+ ## Milestone thesis
+ 
+-Milestone `.505` closed two tempting but invalid continuations. Hash-only cached records made
+-the 648 local-SOTA parser failures unrecoverable, so no solve-versus-verify claim survived.
+-The causal-memory corrigendum reconstructed independent metrics, but forward transfer stayed
+-zero and the policy lane failed promotion; the gated PACE continuation therefore did not run.
+-The exact verifier extension was also correctly skipped because it had no clean residual set.
+-The ordinary ARC floor reproduced known levels but added none. Subsequent outer-loop evidence
+-retired PTRM as a generator, found no full-stack scoring advantage, kept the 9B frozen ARC
+-generator after the larger candidate lost on the actual reinduction path, and showed that the
+-new inert-click pruner was a no-op at the measured `m0r0` budget.
+-
+-`.506` does not retry those chains unchanged. It repairs evidence preservation before making
+-new local-SOTA calls, replaces the retired memory-policy chain with a KAN-only longitudinal
+-FR-11 test, measures the already-wired ARC filters at downstream intermediates with a positive
+-control, and keeps the mandatory live-agent level-up attempt unconditional. A new cDLS-inspired
+-sampler lane asks whether hybrid proposals improve quality-adjusted mixing or CPU/CUDA crossover
+-without inheriting a workshop paper's claims.
+-
+-## What milestone `.505` and the immediate outer loop proved
+-
+-| Evidence | Terminal fact | Consequence for `.506` |
++Milestone `.506` produced two promotable assets and three bounded negative results. The
++lossless response envelope preserved eight model calls with perfect replay and zero semantic
++false accepts. The exact-gated active-spline KAN learner improved held-out behavior, retained
++earlier constraints, rejected poison, and passed rollback and delayed-regression controls. In
++contrast, the three-family local-SOTA panel never established CUDA offload, every family
++collapsed at parsing, and the panel shape was retired. The ARC inert-click and object-history
++filters were reachable but repeated their no-op and were retired; the unconditional `sk48` L8
++attempt added no reproducible level. The cDLS run exercised CPU and CUDA code, but used only
++one seed and produced zero quality-matched pairs, so neither exact-target equivalence nor a
++crossover claim survived.
++
++`.507` follows those boundaries. It certifies a changed native llama.cpp CUDA substrate without
++reopening the retired solve-versus-verify panel. It advances the clean KAN component from one
++bounded sequence to controlled nonstationary streams, using Average Lifelong Error and Critical
++Task Duration to decide when retention becomes harmful. It adapts World Action Verifier's
++forward/inverse asymmetry to the ARC live path using only the agent's own actions and
++observations, then runs the standing unconditional level attempt. Finally, it repairs cDLS at
++the Markov-kernel level before spending another multi-seed CPU/CUDA benchmark.
++
++## What milestone `.506` proved
++
++| Evidence | Terminal fact | Consequence for `.507` |
+ |---|---|---|
+-| Exp5578 transition | `.504` boundaries were preserved: 648 parser failures, flagged memory evidence, clean KAN, zero ARC registry delta. | Start from terminal artifacts, not the superseded 14-task draft. |
+-| Exp5579 source refresh | Property templates and entity-attribution failures were actionable exact-verifier ideas. | Apply them only after a clean, preserved residual panel exists. |
+-| Exp5580 parser forensics | 648 hash-only records split into 468 truncations and 180 other failures; raw responses were unavailable. Synthetic controls passed, but `parser_repair_ready=false`. | A response envelope and lossless replay positive control must precede new model calls. |
+-| Exp5581/5582 gates | Remeasurement was gate-blocked; exact extension was preemptively skipped. | Run a new panel only after the evidence envelope passes. No cached-row resurrection. |
+-| Exp5583 metric corrigendum | Independent metrics were reconstructed, but forward transfer was `0`, forgetting was positive, and `policy_ready=false`. | Retire the causal-memory/two-timescale policy chain. |
+-| Exp5584 gate | PACE-style controller was gate-blocked three times. | Continuous self-learning must use the clean KAN substrate without the failed policy prerequisite. |
+-| Exp5585 ARC floor | `lf52` L2 and prior known L6 were reproduced through a development proxy; no new level was banked. | Rotate the target and improve the reachable live path; do not re-solve `lf52`. |
+-| Exp5600 PTRM LOO | Only one of five held-out games passed; PTRM-as-generator was retired. | No PTRM generator continuation. |
+-| Exp5592/5599 scoring and generator A/Bs | The full scoring stack had no level/efficiency advantage; the 27B candidate lost to the frozen 9B on actual reinduction and cost about seven times more. | Keep the current frozen live generator; this milestone targets classical reachable filters. |
+-| Exp5601/5602 ARC filters | Object history saw two real change-positive hashes, but no same-base divergence; inert-click pruning observed no signatures and changed no expansions at the measured budget. | Require a reachable positive control and downstream intermediate ledger; repeat null retires the filters. |
++| Exp5603 transition | `.505` and the post-milestone outer loop were archived with parser, causal-memory, PTRM, and ARC boundaries intact. | Allocate a non-colliding Exp5613–Exp5624 range and do not revive retired chains. |
++| Exp5604 source refresh | One KAN lazy-identity diagnostic was actionable; the artifact was later flagged because its source-only substrate looked compute-bound. | Keep a source-ingestion slot, use an aggregation provenance category, and treat no-op discovery as valid. |
++| Exp5605 response envelope | Eight rows replayed losslessly; truncation and corruption controls passed; semantic false accepts were zero. | Reuse the envelope as runtime evidence infrastructure. Do not rerun its schema. |
++| Exp5606 local-SOTA panel | All three mandated GGUFs were cached, but `gpu_offload_authenticated=false`; parser failure was total and Gemma-26B truncation was high. `panel_complete=false`. | Retire this panel shape. Build a native-runtime certificate only; make no verifier-quality claim in `.507`. |
++| Exp5607 gate | Exact residual extension did not run because the panel supplied no clean residuals. | Do not propose another residual extension until a future milestone has a clean, independently justified corpus. |
++| Exp5608 KAN longitudinal learner | Exact-gated active splines passed the benefit and safety gates, with positive held-out and backward-retention deltas, poison rollback, and no LLM-weight mutation. Forward transfer remained zero. | Preserve this as the sole FR-11 learning substrate and test it under drift, duration, and family shift. |
++| Exp5609 ARC filter A/B | Both filters were reachable but produced the same downstream no-op; both were retired. | No more candidate-pruning or salience-filter variants. Improve transition-model trust instead. |
++| Exp5610 ARC live attempt | The live agent attempted `sk48` L8 from its own observations but banked no new level. | Rotate target/game, change the reachable model-update branch, and retain an unconditional baseline fallback. |
++| Exp5611 cDLS benchmark | CPU/CUDA execution rows existed, but one seed and zero quality-matched pairs made the timing result inadmissible. | Prove detailed balance and exact small-state target parity first; then use at least three seeds and preregistered quality gates. |
++| Exp5612 capstone | Response preservation and KAN promoted; local-SOTA asymmetry, exact extension, ARC filters/level-up, and cDLS crossover did not. | The next milestone centers on runtime readiness, nonstationary FR-11, ARC transition verification, and sampler correctness. |
+ 
+ ## The three largest gaps to the PRD vision
+ 
+-### Gap 1 — local-SOTA verification still lacks an admissible evidence chain
+-
+-Carnot has exact ASP/FSM labels but no valid local-SOTA solve-versus-verify result. The last
+-panel discarded the raw material needed to distinguish malformed output, truncation, and parser
+-bugs. FR-12 needs replayable evidence from prompt through exact verdict. `.506` therefore ships
+-an append-only response envelope with raw or losslessly compressed bytes, content hashes,
+-runtime/model receipts, parser version, and exact-validator outcome before spending a full panel.
+-
+-**Implication:** a clean null is publishable evidence; another hash-only aggregate is not.
+-
+-### Gap 2 — FR-11 has a component, not a longitudinal self-learning system
+-
+-The active-spline KAN updater passed exact-energy tests, but the causal-memory policy did not
+-show forward transfer and its dependent controller never ran. FR-11 requires persistent online
+-adaptation, held-out improvement, non-forgetting, rollback, and immutable decisions. `.506`
+-tests the clean KAN alone across ordered sessions with delayed replay, shuffled-order and frozen
+-controls, drift/poison injection, checkpoints, and rollback.
+-
+-**Implication:** success means bounded, exact-gated online weights on a non-LLM component; it
+-does not imply autonomous LLM fine-tuning or general continual intelligence.
+-
+-### Gap 3 — the live ARC agent still does not discover new levels reliably
+-
+-The registry remains at 69 reproducible levels across 24 games. PTRM, richer candidate scoring,
+-and a larger generator did not promote. Two cheaper live-path mechanisms now exist, but neither
+-has a downstream benefit measurement with a reachable mechanism positive control. `.506` first
+-adjudicates those filters under matched budgets, then runs a separate live-agent self-discovery
+-attempt even if the filters fail.
+-
+-**Implication:** candidate or state reduction is not solve credit; only the live agent's own
+-attempt plus offline reproduction and registry banking can increase the north-star metric.
++### Gap 1 — local-SOTA execution is preserved but not operationally trustworthy
++
++FR-12 ultimately needs local proposals whose exact verification path is replayable. Carnot now
++has the replay contract, but its Python llama.cpp route could not authenticate GPU offload and
++the retired panel produced no usable structured responses. Repeating that panel would violate
++the failure ledger. `.507` instead asks a narrower infrastructure question: can the native
++llama.cpp binary or server load, offload, generate, terminate, and replay a minimal structured
++response for each mandated GGUF with device/process evidence? A certificate unlocks later
++science; it is not itself evidence that an LLM verifies better than it solves.
++
++### Gap 2 — continuous self-learning has no policy for nonstationary constraints
++
++Exp5608 showed that a spline-local KAN component can update safely in one ordered sequence, but
++forward transfer was zero and the task did not distinguish transient shifts from persistent rule
++changes. FR-11 needs a controller that decides whether to retain, smooth, reset, or adapt as the
++constraint distribution changes. `.507` builds an exact stream with domain-space and temporal
++drift axes, estimates the empirical Critical Task Duration, and gates a predictive-window KAN
++controller on a nondegenerate switch signal. Exact validation, poison rollback, delayed
++regression, and immutable decisions remain authoritative.
++
++### Gap 3 — the ARC live agent lacks a trustworthy self-updating transition model
++
++The north-star registry did not move in `.506`, and the filter, PTRM, scoring, larger-generator,
++and exploration-signal families are closed. A different weakness remains: an online planner can
++poison itself when a learned forward effect attributes the wrong action or successor state.
++World Action Verifier suggests a distinct mechanism—verify state plausibility and inverse action
++reachability separately, then demand forward/inverse cycle consistency. `.507` implements that
++contract from the live agent's own action/observation history, measures whether verified updates
++improve model fidelity on already reproduced levels, and only then exposes the promoted branch
++to a registry-prechecked live level attempt.
+ 
+ ## 2025–2026 research incorporated
+ 
+-The `V506 Planner Refresh - 20260714` block was appended to `research-references.md` before this
++The `V507 Planner Refresh - 20260714` block was appended to `research-references.md` before this
+ roadmap was designed.
+ 
+-| Source | Executable use in `.506` |
++| Source | Executable use in `.507` |
+ |---|---|
+-| ScientistOne / Chain-of-Evidence, arXiv:2605.26340 | Lossless local response envelope and claim-to-row provenance before remeasurement. |
+-| Aggregate invariants for continuous subgraph matching, arXiv:2606.24421 | Intermediate-invariance ledger for ARC pruning: candidates, actions, states, expansions, level gains, and wall time. |
+-| cDLS, OpenReview ProbML 2026 | Bounded hybrid continuous/discrete proposal benchmark against the existing exact-target discrete sampler. |
+-| Agentic property templates, arXiv:2607.09072 | Human-auditable exact predicate templates for clean residuals. |
+-| Deceptive Grounding, arXiv:2607.09349 | Wrong-variable/entity attribution stress class when real residuals support it. |
+-| Temporal-difference visual representations, arXiv:2606.15956 | Watch-only; no reopened replay or representation-pretraining lane in `.506`. |
+-
+-Direct Semantic Scholar citation queries for EBT (`2507.02092`) and ARM-EBM
+-(`2512.15605`) added no stronger executable dependency. Extropic still exposes no authenticated
+-local TSU route; Logical Intelligence's Kona remains proprietary architecture context; GitHub
+-and Hugging Face discovery produced no replacement for Carnot's exact validators or local
+-llama.cpp path.
++| To Retain or to Adapt?, arXiv:2607.05609 | Define ALE, instability, transient error, and an empirical Critical Task Duration over exact constraint streams. |
++| When Does Continual Learning Require Learning, arXiv:2607.07847 | Cross domain-space shifts with temporal drift and compare external/frozen control with spline-local learning under one protocol. |
++| Loss Smoothing for Continual Adaptation, ICLR 2026 CAO Workshop | Add a bounded loss-smoothed adaptation arm; exact validators decide whether smoothing helps or merely delays necessary change. |
++| World Action Verifier, arXiv:2604.01985 | Build a generic forward/inverse action-effect cycle verifier from ARC live observations, with no external video or game-specific adapter. |
++| cDLS, OpenReview ProbML 2026 | Retain only the continuous-intermediate proposal hypothesis; require local exactness and mixing evidence before timing claims. |
++
++The direct Semantic Scholar EBT (`2507.02092`) and ARM-EBM (`2512.15605`) citation trails added
++no stronger executable dependency. Hugging Face Papers and GitHub searches repeated indexed
++verifier and constrained-decoding work. Extropic still exposes no authenticated local TSU route,
++and Logical Intelligence publishes no local Kona artifact. Those systems remain context, not
++evidence.
+ 
+ ## Target architecture
+ 
+ ```text
+-          EXACT ASP/FSM CORPUS + DETERMINISTIC VALIDATORS
+-                              |
+-              +---------------v----------------+
+-              | append-only response envelope  |
+-              | raw bytes + hashes + receipts  |
+-              | prompt + parser + exact result |
+-              +---------------+----------------+
+-                              |
+-         +--------------------v---------------------+
+-         | local SOTA solve-vs-verify panel         |
+-         | Qwen3.6-35B-A3B + Gemma-4-31B/26B-A4B   |
+-         | llama.cpp CUDA, paired exact labels      |
+-         +--------------------+---------------------+
+-                              |
+-                   clean held-out residuals
+-                              |
+-              +---------------v----------------+
+-              | property-template exact        |
+-              | verifier extension             |
+-              | entity/variable attribution    |
+-              +--------------------------------+
+-
+-     +--------------------------+       +---------------------------+
+-     | FR-11 KAN-only learner   |       | live ARC reachable path   |
+-     | ordered sessions         |       | inert + object-history A/B|
+-     | held-out + delayed replay|       | intermediate ledger       |
+-     | poison -> rollback       |       +-------------+-------------+
+-     +--------------------------+                     |
+-                                           unconditional live-agent
+-                                           self-discovery +1 attempt
+-                                                       |
+-                                           reproduce -> registry bank
+-
+-     +--------------------------------------------------------------+
+-     | exact Ising descriptors -> discrete DLS vs cDLS              |
+-     | identical targets/seeds/samples -> CPU/CUDA quality + timing |
+-     +--------------------------------------------------------------+
++  CACHED LOCAL GGUFs + LOSSLESS RESPONSE ENVELOPE
++                 |
++                 v
++  +----------------------------------------------+
++  | native llama.cpp CUDA runtime certificate    |
++  | Qwen3.6-35B-A3B + Gemma-4-31B + 26B-A4B     |
++  | model hash + offload + PID/GPU + replay      |
++  +----------------------------------------------+
++                 (readiness only; no verifier claim)
++
++  EXACT CONSTRAINT-DRIFT STREAM
++  space shift x temporal drift x task duration
++                 |
++                 v
++  +--------------------------+     +----------------------------+
++  | KAN duration map         |---->| predictive-window KAN      |
++  | ALE / instability /      |gate | retain / smooth / reset /  |
++  | transient error / switch |     | adapt + exact rollback     |
++  +--------------------------+     +----------------------------+
++
++  ARC LIVE ACTIONS + OBSERVATIONS ONLY
++                 |
++                 v
++  +----------------------------------------------+
++  | forward/inverse transition-cycle verifier    |
++  | plausible successor + reachable action       |
++  | + cycle consistency + corruption controls    |
++  +----------------------+-----------------------+
++                         |
++                         v
++  matched known-level integration A/B --promotion advisory--> live +1 attempt
++                                                               |
++                                                       reproduce -> registry
++
++  EXISTING cDLS KERNEL
++          |
++          v
++  exact small-state stationary/detailed-balance audit
++          |
++          +--quality gate--> multi-seed matched CPU/CUDA crossover
+ ```
+ 
+-## Phase 0 — continuity, freshness, and evidence infrastructure (Exp5603–Exp5605)
+-
+-**Exp5603 — `.505` to `.506` transition.** Archive the eight conductor tasks plus the relevant
+-post-milestone outer-loop artifacts, allocate the non-colliding range Exp5603–Exp5612, and emit
+-the dependency/gate map. This is infrastructure slot one.
+-
+-**Exp5604 — execution-time source delta.** Search all mandated current sources after the V506
+-planner marker, deduplicate against the full references ledger and exclusion manifest, and map
+-only executable deltas to remaining tasks. An honest no-op is valid. This is the SOTA-ingestion
+-slot.
+-
+-**Exp5605 — response evidence envelope.** Implement the missing provenance contract and prove
+-byte-for-byte replay, truncation visibility, parser-version replay, and semantic fail-closed
+-behavior on small cached local-SOTA calls. This is infrastructure slot two and the only task
+-allowed to create the gate for expensive inference.
+-
+-## Phase 1 — evidence-preserving verifier co-evolution (Exp5606–Exp5607)
+-
+-**Exp5606 — clean local-SOTA solve-versus-verify panel.** Gate on the envelope's lossless replay
+-and semantic positive control. Use all three mandated headline GGUF families where cached and
+-runtime-feasible: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+-`unsloth/gemma-4-26B-A4B-it-GGUF`. Exact labels remain authoritative, raw outputs remain
+-replayable, and per-family parser ceilings prevent averaging away failure. This is one final
+-remeasurement shape; another evidence collapse retires it.
+-
+-**Exp5607 — property-template exact residual extension.** Gate on a clean panel, split residuals
+-by constraint family, and propose only deterministic human-auditable predicates. Include
+-wrong-entity/wrong-variable attribution only when the clean residual ledger contains it. Require
+-zero unsafe false accepts, no valid-row rejection regression, held-out residual reduction, and
+-bounded overhead. No LLM judge or generated-text energy scorer is introduced.
+-
+-## Phase 2 — longitudinal self-learning and live ARC (Exp5608–Exp5610)
+-
+-**Exp5608 — KAN-only longitudinal continuous self-learning.** Reuse Exp5570's active-spline
+-updater without the retired memory policy. Compare frozen, shuffled-order, always-update, and
+-exact-gated arms over at least four ordered sessions and held-out families. Require independent
+-forward transfer, delayed backward retention, zero unsafe false accepts, immutable checkpoints,
+-poison rejection, and successful rollback. This is the milestone's required continuous
+-self-learning experiment.
+-
+-**Exp5609 — ARC filter intermediate-invariance A/B.** Measure the already-wired inert-click and
+-object-history mechanisms independently and together under matched seeds, rosters, and action
+-budgets. First prove each mechanism is reachable on a non-source-aware trace; then report
+-candidates, actions, states, expansions, level gains, wall time, and reproduction. If no
+-downstream intermediate changes or the same null repeats, retire the affected filter.
+-
+-**Exp5610 — unconditional live-agent `+1` level attempt.** Registry-precheck the 25-game roster,
+-exclude already-reproduced target levels, and choose a rotated target with reachable headroom.
+-Use promoted filters only if Exp5609 passed; otherwise use the current live baseline. Credit only
+-`solve_provenance=live_agent_self_discovery`, then offline reproduce and bank a genuinely new
+-level. No source reads, exhaustive BFS, per-game adapter, or development-proxy headline is
+-admissible.
+-
+-## Phase 3 — sampling systems evidence and reconciliation (Exp5611–Exp5612)
+-
+-**Exp5611 — cDLS matched CPU/CUDA benchmark.** Implement a bounded continuous-intermediate
+-proposal beside the existing discrete Langevin sampler. Run identical exact Ising targets,
+-seeds, warmup, retained samples, and schedules at `n=128,256,512,1024` where resources permit.
+-Report ESS, autocorrelation, energy/constraint quality, acceptance, wall time, and authenticated
+-device receipts. Claim crossover only on successful quality-matched pairs.
+-
+-**Exp5612 — capstone reconciliation.** Aggregate all nine upstream artifacts, run adversarial,
+-spec-coverage, roadmap, and ARC integrity checks, update the completion ledger and operational
+-docs, and issue narrow promotion/retirement decisions. This planning/infrastructure slot cannot
+-upgrade blocked or skipped evidence.
++## Phase 0 — continuity, freshness, and native runtime readiness (Exp5613–Exp5615)
++
++**Exp5613 — `.506` to `.507` transition.** Lock every `.506` terminal artifact, record the two
++promotions and the retired/blocked branches, allocate Exp5613–Exp5624, and emit the new gate map.
++This is infrastructure slot one.
++
++**Exp5614 — execution-time source delta.** Search all mandated sources after the V507 planner
++marker, deduplicate against the complete reference and failure ledgers, and map only genuinely
++new executable deltas. A clean no-op is terminal success. This is the SOTA-ingestion slot.
++
++**Exp5615 — native llama.cpp CUDA runtime certificate.** Use all three mandated GGUF families,
++the Exp5605 envelope, and a changed native CLI/server substrate. Authenticate build capability,
++offloaded layers, process/GPU memory, stop behavior, and response replay. Run only small
++structured positive/truncation controls. Do not calculate solve-versus-verify accuracy or reopen
++Exp5606. This is infrastructure slot two and is routed to Opus because it is hardware/runtime
++integration with multiple failure modes.
++
++## Phase 1 — drift-aware continuous self-learning (Exp5616–Exp5618)
++
++**Exp5616 — exact nonstationary constraint-stream fixture.** Generate a deterministic,
++machine-checkable stream crossing spatial constraint-family shifts with temporal predicate drift,
++shared versus conflicting rules, and controlled durations. Include no-drift, reversible-drift,
++and persistent-drift controls; publish exact labels and checksums before learner evaluation.
++
++**Exp5617 — KAN Critical Task Duration map.** Reuse the clean active-spline KAN substrate and
++compare retain/replay, reset/adapt, loss-smoothed, and frozen arms over preregistered duration
++cells. Measure ALE, instability, transient error, backward retention, unsafe accepts, and the
++empirical switch point with uncertainty. This experiment identifies the policy boundary; it does
++not choose adaptively.
++
++**Exp5618 — predictive-window KAN continuous self-learning.** Gate on a nondegenerate and safe
++Exp5617 duration map. Let a causal controller use only past exact-energy/residual history to
++choose retain, smooth, reset, or adapt. Compare against the best fixed arm and an oracle selector
++that is reported but cannot headline. Promotion requires lower held-out ALE, bounded regret,
++positive transfer or faster valid adaptation, backward safety, poison rejection, rollback, and a
++lazy-identity guard. This is the milestone's required continuous self-learning experiment.
++
++## Phase 2 — forward/inverse ARC transition verification and level attempt (Exp5619–Exp5621)
++
++**Exp5619 — ARC transition-cycle verifier prototype.** On agent-owned live traces from already
++reproduced levels, learn generic action-effect signatures and verify each transition by inverse
++action recovery plus forward replay. Hold out episodes within each game; do not claim cross-game
++transfer. Permuted actions and successors provide corruption controls. The task receives
++`solve_provenance=development_proxy` and no new-level credit.
++
++**Exp5620 — gated live-path transition-update A/B.** Gate on the prototype's clean positive and
++negative controls. Wire verified transition updates into the generic live planner, then compare
++baseline versus cycle-guarded updating on at least three already reproduced games under matched
++seeds and budgets. Promotion requires actual verifier reachability, lower held-out forward error
++or invalid-plan rate, no known-level regression, and a downstream action/search improvement.
++This changes transition-model updates, not proposal pruning, salience filtering, or an intrinsic
++reward.
++
++**Exp5621 — unconditional live-agent `+1` attempt.** Registry-precheck every candidate level,
++exclude `sk48` L8 and all already reproduced targets, and rotate toward authenticated headroom.
++Use Exp5620 only if it promoted cleanly; otherwise run the unchanged no-new-LLM live baseline.
++The attempt is not conductor-gated. Only the live agent's own discovery followed by independent
++generic reproduction and registry banking counts.
++
++## Phase 3 — corrected cDLS and reconciliation (Exp5622–Exp5624)
++
++**Exp5622 — exact cDLS kernel audit.** Enumerate small Ising state spaces, construct or estimate
++the transition kernel, and test normalization, support, detailed balance, stationary-distribution
++total variation, and deterministic replay. Add a Metropolis-Hastings or otherwise proven
++correction if the continuous projection is biased. Predeclare the large-n quality-equivalence
++gate before timing.
++
++**Exp5623 — gated multi-seed CPU/CUDA crossover.** Run only if Exp5622 passes exactness. Compare
++corrected cDLS with the unchanged discrete Langevin baseline on identical targets, schedules,
++sample counts, and at least three seeds across `n=128,256,512,1024` where memory permits. Report
++acceptance, ESS, autocorrelation, energy distribution, constraint satisfaction, raw timing, and
++authenticated devices. Only successful quality-matched pairs enter a speedup or crossover claim.
++
++**Exp5624 — `.507` capstone reconciliation.** Aggregate all eleven upstream tasks, apply every
++retirement rule, run adversarial/spec/roadmap/ARC checks and applicable end-to-end tests, and
++reconcile OpenSpec, traceability, completion, status, changelog, exclusions, references, and the
++ARC registry. It cannot upgrade a blocked, skipped, development-proxy, or unmatched result.
+ 
+ ## Dependency graph
+ 
+ ```text
+-Exp5603 transition ------------------------------+
+-Exp5604 source delta ----------------------------+----> Exp5612 capstone
++Exp5613 transition ----------------------------------------------+
++Exp5614 source delta --------------------------------------------+----> Exp5624 capstone
+ 
+-Exp5605 response envelope
+-    └──[lossless_replay && semantic_controls]──> Exp5606 clean SOTA panel
+-                                                    └──[panel clean]──> Exp5607 exact extension
++Exp5605 envelope + changed native CUDA substrate ---------------> Exp5615 runtime certificate
++                                                                    (no downstream panel in .507)
+ 
+-Exp5570 clean KAN evidence ---------------------> Exp5608 KAN longitudinal CSL
++Exp5616 exact drift fixture
++    └──[fixture/oracle clean]──> Exp5617 KAN duration map
++                                  └──[switch fit + safe]──> Exp5618 predictive KAN CSL
+ 
+-Exp5601 signal + Exp5602 null ------------------> Exp5609 filter A/B
+-                                                    └── advisory only ─┐
+-current live baseline + registry precheck -----------------------------> Exp5610 +1 attempt
++Exp5619 forward/inverse cycle verifier
++    └──[positive + corruption controls]──> Exp5620 live update A/B
++                                             └── advisory only ─┐
++current live baseline + registry precheck -----------------------> Exp5621 +1 attempt
+ 
+-Exp5573 matched sampler evidence + cDLS source --> Exp5611 hybrid crossover
++Exp5622 exact cDLS kernel audit
++    └──[detailed balance + target parity]──> Exp5623 matched CPU/CUDA benchmark
+ 
+-Exp5603–Exp5611 --------------------------------> Exp5612 reconciliation
++Exp5613–Exp5623 -----------------------------------------------> Exp5624 reconciliation
+ ```
+ 
+-Exp5610 is intentionally not conductor-gated on Exp5609: the standing ARC floor requires a real
+-attempt even when the candidate mechanism fails. The task branches internally to the unchanged
+-live baseline when filter promotion is false.
++Exp5621 is intentionally not structured-gated on Exp5620. The standing ARC floor requires a real
++attempt even when the new mechanism fails. Exp5615 likewise has no scientific panel downstream
++in this milestone: its purpose is to close the runtime precondition without laundering a minimal
++smoke test into verifier evidence.
+ 
+ ## Hardware and model requirements
+ 
+ | Resource | Tasks | Requirement and claim boundary |
+ |---|---|---|
+-| Local GGUF cache | Exp5605–5606 | Headline inference uses at least one mandated model per task; Exp5606 targets all three mandated families. Legacy 0.8B/E4B models are smoke-only and excluded from headline metrics. |
+-| NVIDIA CUDA GPUs | Exp5605–5606, Exp5611 | Authenticate GPU identity, PID/process, offloaded layers or kernel device, free memory, and runtime. CPU fallback blocks a CUDA headline but may produce a labeled diagnostic. |
+-| System RAM / NVMe | Exp5605–5606 | Preserve raw or losslessly compressed response envelopes locally; record size and content hash. Never retain only hashes. |
+-| CPU | Exp5608–5611 | Exact validators, KAN sessions, ARC environment, and matched sampler baseline. Record processor/runtime and wall time. |
+-| KV260 / PolarFire / GateMate | none required | Prior board lanes are terminal or status-only. `.506` makes no board speedup claim and does not reopen physical bring-up. |
+-| Network | Exp5604 only | Research discovery. All model inference and verification remain local-first. |
++| Local GGUF cache | Exp5615 | `MODEL_SPECS` contains `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy Qwen3.5-0.8B and Gemma-E4B are smoke-only and cannot satisfy the certificate. |
++| Native llama.cpp CUDA build | Exp5615 | Native CLI/server capability, version, build flags, `--single-turn` behavior, offloaded layers, PID, and GPU memory must be authenticated. CPU fallback is diagnostic only. |
++| NVIDIA GPUs | Exp5615, Exp5623 | Record device/driver/runtime/free memory and process or kernel evidence. Exp5623 may use CUDA only after the exact CPU kernel audit passes. |
++| System RAM / NVMe | Exp5615–Exp5618 | Cached 26–35B GGUFs, lossless response rows, exact drift fixtures, checkpoints, and immutable decision ledgers. |
++| CPU | Exp5616–Exp5623 | Exact validators, KAN stream runs, ARC environment, small-state enumeration, and the matched sampler baseline. Record identity and wall time. |
++| KV260 / PolarFire / GateMate / TSU | none required | No board or proprietary-hardware speedup claim is in scope. Existing wishlist entries remain unchanged. |
++| Network | Exp5614 only | Literature discovery. All model inference, learning, ARC execution, and sampler work remain local-first. |
+ 
+ ## Promotion and retirement rules
+ 
+-- **Verification:** promote only with lossless replay, exact-oracle agreement, per-model parser
+-  failure at or below the preregistered ceiling, and uncertainty-aware paired effects. Repeated
+-  evidence collapse retires this panel shape.
+-- **Exact extension:** promote only with zero unsafe false accepts, held-out residual reduction,
+-  no valid-row regression, and bounded runtime overhead.
+-- **Self-learning:** promote only with positive held-out longitudinal utility, independent
+-  forward/backward metrics, poison rejection, rollback success, and no LLM-weight mutation.
+-- **ARC filters:** a candidate-count reduction alone is insufficient. A repeat no-op with a
+-  reachable positive control retires the corresponding mechanism.
+-- **ARC solve:** only live-agent self-discovery followed by offline reproduction and a new registry
+-  entry counts. Development proxies and outer-loop RE remain diagnostics.
+-- **Sampling:** speedup or crossover requires identical targets/schedules, successful matched
+-  pairs, and non-inferior quality/mixing. Workshop claims and unmatched timing support no result.
++- **Native runtime:** certify only if every mandated model has a real cached file/hash, native
++  CUDA capability, nonzero offload evidence, lossless envelope replay, correct termination, and
++  zero semantic false accepts. The same no-offload verdict retires this native-certificate attempt.
++- **Duration map:** accept a switch boundary only when multiple duration/family cells contain
++  both retention-favorable and adaptation-favorable regimes, the fit and intervals are reported,
++  and unsafe false accepts remain zero.
++- **Continuous self-learning:** promote only when the causal predictive controller beats the best
++  fixed non-oracle baseline on held-out ALE without backward safety loss, passes poison/rollback
++  and delayed-regression controls, and demonstrably changes the active spline state.
++- **ARC transition verifier:** corruption rejection and inverse/forward cycle controls must pass
++  before live wiring. Promotion requires reachable transition decisions and downstream model or
++  planning improvement; another reachable no-op retires the mechanism.
++- **ARC solve:** only `solve_provenance=live_agent_self_discovery`, independent generic replay,
++  and a new registry entry count. Development proxies, source reads, per-game adapters, and
++  outer-loop reverse engineering receive no solve credit.
++- **cDLS:** detailed balance and exact small-state target parity precede timing. Speedup/crossover
++  requires at least three seeds, identical targets/schedules, successful quality-matched pairs,
++  and intervals excluding parity in the favorable direction.
+ 
+ ## Expected milestone outputs
+ 
+-1. A reusable evidence-preserving response contract for local GGUF research.
+-2. The first admissible clean result—or bounded retirement—on local-SOTA solving versus verifying.
+-3. A safe exact predicate extension decision grounded in real residuals.
+-4. A longitudinal, rollback-tested verdict on spline-local KAN continuous self-learning.
+-5. A decision-grade retirement/promotion verdict for the two live ARC filters.
+-6. At least one real rotated live-agent attempt to bank `+1` reproducible ARC level.
+-7. A quality-matched CPU/CUDA verdict on continuous-intermediate discrete sampling.
+-8. Reconciled OpenSpec, traceability, status, changelog, completion, and exclusion records.
++1. A reusable three-model native llama.cpp CUDA runtime certificate or terminal retirement.
++2. An exact, checksummed nonstationary constraint-stream benchmark.
++3. A measured KAN retention/adaptation duration boundary.
++4. A safe predictive-window continuous self-learning verdict under spatial and temporal drift.
++5. A generic ARC forward/inverse transition-cycle verifier and live-path promotion decision.
++6. At least one real registry-prechecked live-agent attempt to bank `+1` reproducible ARC level.
++7. An exactness-first verdict on cDLS and, only if justified, a multi-seed CPU/CUDA crossover.
++8. Reconciled OpenSpec, traceability, status, changelog, completion, exclusion, reference, and ARC records.
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index b9077b448f..b9063639eb 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -16,17 +16,17 @@ OK: all solver-like ARC modules are reachable from the live agent path (51 modul
+ 
+ ## Hostile LLM review
+ 
+-**TL;DR: 0 self-discovery advances; 2 DUPLICATES. Both are offline development-proxy replays, not evidence of autonomous live discovery.**
++**TL;DR: 0 `SELF_DISCOVERY_ADVANCE`; 2 `DUPLICATE`. Both are hand-adapter offline replays and would otherwise be `OUTER_LOOP_RE`.**
+ 
+-- `results/arc_loop_solve_ar25.json`
++- [arc_loop_solve_ar25.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json)
+   - **Verdict:** `DUPLICATE`
+-  - **Evidence:** Claims level 3, while the registry already records level 8/full clear ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json:3), [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). It explicitly declares `development_proxy` and offline/no-quota mode, with no live attempt or runtime-RE trace.
+-  - **Recommended action:** Do not count or bank. Retain only as a replay/regression fixture; require registry precheck before emitting solve artifacts.
++  - **Evidence:** Reaches L3 while the registry already has L8/full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:3670)). Declares `development_proxy` and offline reproduction mode; contains a finished 66-action sequence, no live runtime-RE trace, and an unfitted hazard model. The registry explicitly attributes L1–L3 to the hand-built `_ar25` `GameAdapter`.
++  - **Recommended action:** No solve credit. Keep only as a regression replay; suppress from “recent solves.”
+ 
+-- `results/arc_loop_solve_lf52.json`
++- [arc_loop_solve_lf52.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json)
+   - **Verdict:** `DUPLICATE`
+-  - **Evidence:** Claims level 2, while the registry already records level 6 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:3), [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). Again, provenance is `development_proxy`, execution is offline, and the artifact shows a finished action sequence—not autonomous discovery evidence.
+-  - **Recommended action:** Do not count or bank. Classify as reproduction-only and suppress it from “recent solves.”
++  - **Evidence:** Reaches L2 while the registry already has L6 ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:2236)). Again `development_proxy`, offline reproduction, and a completed 42-action sequence without attempt→observation→induction evidence. The registry explicitly says L1–L2 use the hand-built `_lf52` `GameAdapter`.
++  - **Recommended action:** No solve credit. Mark reproduction-only and require registry precheck before artifact emission.
+ 
+-**Pattern watch:** Reachability is being confused with autonomy. A live-reachable wrapper replaying per-game adapter knowledge or precomputed paths is still outer-loop-shaped capability. Require `live_agent_self_discovery` plus an auditable attempt→observation→hypothesis/model-update→new-level trace; offline replay success alone proves nothing about hidden-game solving.
++**Pattern watch:** Reachability is laundering hand-built per-game adapters into “live-path” optics. A callable offline replay is not autonomous discovery. Empty outer-loop declarations and names like `learned_verifier_live_checkpoint` do not overcome explicit `development_proxy` provenance. Require a genuinely new registry level plus an auditable live attempt→observation→hypothesis/model-update→solve trace.
+ 
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index a1fb70c5ad..f41dead36d 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -1,94 +1,95 @@
+-<!-- generated by scripts/pages_adversarial_audit.py — 2026-07-13 -->
++<!-- generated by scripts/pages_adversarial_audit.py — 2026-07-14 -->
+ <!-- per CLAUDE.md 'Adversarial Landing-Page Discipline' — this report is advisory; operator decides what to act on -->
+ 
+-# docs_audit_report — 2026-07-13
++# docs_audit_report — 2026-07-14
+ 
+ ## TL;DR (stranger's 30-second take)
+ 
+-I would close the tab. The hero briefly explains Carnot, but credibility collapses under vanity statistics, unexplained benchmark jargon, suspiciously perfect results, and a direct license contradiction.
++I would close the tab. Carnot’s purpose is understandable, but the page rapidly turns into an internal research dashboard packed with unexplained metrics, suspiciously perfect results, and a license contradiction.
+ 
+ ## TOP 3 PROBLEMS
+ 
+-1. Evidence without inspectable evidence — “What we measured” presents 12 disconnected metrics without sample sizes, uncertainty, model versions, or artifact links.
+-2. Contradictory license — the hero and metadata say MIT-0; the footer says Apache 2.0.
+-3. Internal project diary masquerading as product copy — “Recent progress,” “Research operations,” and “Preprint” read like status reports for insiders.
++1. Credibility failure — the hero says MIT-0 while the footer says Apache 2.0.
++2. Metric confetti — “Evidence” presents 12 unrelated results without models, sample sizes, uncertainty, or direct artifact links.
++3. Internal status reporting — “Recent progress,” “382 completed milestones,” “paper-v6,” and “operator-initiated upload” do not belong on a stranger-facing landing page.
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+ 
+-- Entire page — at least 37 card/stat/blog tiles — reduce the first-pass story to roughly 10–12 items and link to details.
+-- Navigation — 14 destinations including the two right-side buttons — cap at approximately 5–7 primary choices.
+-- “What we measured” — 12 result cards from unrelated domains — cap at 3–5 comparable, decision-relevant results.
+-- “What you can check” — 7 cards, but only about four describe things users can check — cap this section to actual verifier capabilities.
+-- “From the blog” — 7 article cards — show at most three recent or foundational posts.
+-- Hero statistics — 4 counters plus a dense “Recent progress” card — keep one credible product result; experiment, milestone, and test counts are internal vanity metrics.
+-- Hard word-count thresholds — no individual bento body appears to exceed 120 words, no result card clearly exceeds 60, and the footer is well below 100 — the bloat problem is cumulative rather than one grotesquely long card.
++- Entire page — approximately 1,656 visible words and 33 card-like tiles — suggested cap: 700–900 words and 12–15 tiles.
++- Navigation — 12 menu links plus two external buttons, or 15 anchors including the logo — suggested cap: 5–7 primary destinations.
++- Recent progress — 66 words including tag/title, with a 55-word paragraph — suggested cap: 60 words maximum, preferably 30 in the hero.
++- Evidence — 12 cards spanning code, safety, hardware, training, math, routing, and tool use — suggested cap: 3–5 comparable headline results.
++- Writing — 7 blog cards and 313 section words — suggested cap: 3 posts.
++- Individual bento bodies — none exceeds 120 words; the longest is “Why Energy-Based?” at 72 words.
++- Footer paragraph — 9 words — no bloat problem.
+ 
+ ### Internal jargon
+ 
+-- Hero statistics and “Recent progress” — `AUROC`, `FoVer`, `5-seed dual-condition`, `architecture-only`, `v2`, and “repinned” — none is explained before being used as headline evidence.
+-- “Why Energy-Based?” — `gradient`, `FPGA Ising machines`, and `thermodynamic samplers` — this abruptly switches from product explanation to research and hardware terminology.
+-- “Multi-step reasoning” — `chain-of-thought`, `symbolic`, and `AND-composed` — insider language obscures what failures are actually detected.
+-- “APIs & portable memory” — `MCP`, `VerdictRecord`, and `SessionMemory` — implementation identifiers mean nothing to a first-time visitor.
+-- “Test-Time Compute (TTC) & PREM” — `TTC`, `Process-Reward Energy Model`, `PREM variance`, and “intrinsic motivation for continuous self-learning” — expansion does not make the claim intelligible.
+-- “What we measured” — `HumanEval`, `KV260`, `Ising`, `EstimationVerifier`, `SVAMP`, `AUC`, `CRANE`, `VeriCoT`, `GSM8K`, `TP`, `CoT`, `PRM-BiasBench`, `k=5`, `HalluGuard v3`, `CCTU`, and `pp` — this is benchmark alphabet soup.
+-- Preprint — `paper-v6`, `FoVer`, `AUROC`, “clean continuous-integration checkout,” and “non-operator environment” — process language replaces a plain credibility statement.
++- Hero statistics — `AUROC`, `FoVer`, `5-seed`, `dual-condition`, `architecture-only`, `repinned from v2 0.9857` — reads like a lab notebook without explaining the benchmark or metric.
++- Why “Energy-Based”? — `gradient`, `FPGA Ising machines`, `thermodynamic samplers` — assumes specialist hardware and optimization knowledge.
++- Typed constraints — `CCTU constrained tool-use micro-benchmark` — CCTU is never explained.
++- Multi-step reasoning — `verified-fact memory` and `AND-composed` — implementation terminology, not user value.
++- APIs & portable memory — `MCP`, `VerdictRecord`, `SessionMemory`, reranking, diff, and merge — product internals dumped on a first-time visitor.
++- Test-Time Compute & PREM — `TTC`, `Process-Reward Energy Model`, `variance`, and “intrinsic motivation for continuous self-learning” — technically expanded but still meaningless without an example.
++- Evidence cards — `KV260 FPGA`, `SVAMP AUC`, `CRANE`, `VeriCoT`, `CoT`, `GSM8K TP rate`, `PRM-BiasBench`, `k=5`, `HalluGuard v3`, and `pp` — nearly every card requires insider knowledge.
++- Safety result — “publication gate” — internal closeout language rather than an explanation of what 0.91 means for a user.
+ 
+ ### Per-milestone narrative
+ 
+-- Hero statistics — “382 Completed milestones” — strangers cannot infer product maturity, quality, or usefulness from a private milestone count.
+-- “Recent progress” — “Repinned from v2 0.9857 after pre-submission adversarial audit” — reads like a changelog entry and introduces an alarming retired number without enough context.
+-- “Research operations” — planner proposals, an “inner agent,” `adversarial-verify`, and structured experiment artifacts — describes the project’s internal workflow, not a user capability.
+-- Preprint — “paper-v6,” “current draft,” “clean continuous-integration checkout,” and “pending operator-initiated upload” — this is release-closeout narration.
+-- Blog cards — “the three-layer defense we shipped” and “the seven-rule detector we shipped” — repeated retrospective language makes the landing page feel like an operations archive.
++- Hero — “5,015 Experiment runs” and “382 Completed milestones” are vanity status counters, not reasons to use Carnot.
++- Recent progress — “Repinned from v2 0.9857 after pre-submission adversarial audit” reads like a release-note correction.
++- Preprint — `paper-v6`, “checked-in experiment artifacts,” “clean continuous-integration checkout,” “non-operator environment,” and “pending operator-initiated upload” read like an internal handoff.
++- Research operations — planner, inner agent, adversarial-verify pass, and structured experiment records describe project management rather than a user capability.
++- Blog cards — “three-layer defense we shipped,” “seven-rule detector we shipped,” and “26 days” of dogfooding continue the retrospective/status-report tone.
++- No raw `Exp 1688`-style IDs, decimal milestone identifiers, or `X/Y criteria met` cards were found.
+ 
+ ### Inconsistencies
+ 
+ - “MIT-0 · Open Source” and the MIT-0 metadata vs “Apache 2.0 License” in the footer.
+-- “Seven capabilities” under “What you can check” vs cards for research operations, APIs, and compute budgeting, none of which is a checkable output category.
+-- “Install and verify in five lines” vs no installation command in the quick-start code and roughly nine executable physical lines in the complete Python example.
+-- A quick start promising verification and repair vs the Rust tab, which only constructs an Ising model and sampler and never verifies an LLM answer.
+-- A focused “internally consistent answer” product in the hero vs later claims spanning prompt-injection classification, FPGA prototypes, retraining speed, autonomous research, and self-learning.
+-- `0.9131` FoVer AUROC, `0.91` prompt-injection AUROC, and `0.90` SVAMP AUC are displayed together without enough labeling to stop strangers from treating unrelated measurements as comparable.
+-- `0.90 AUC` on SVAMP is explicitly compared with a `0.125 FoVer baseline`, apparently crossing benchmarks without explaining why that comparison is valid.
+-- “Independently re-computed” and “externally reproducible” vs the weaker evidence that it ran in a “non-operator environment”; no independent person or organization is identified.
++- “Install and verify in five lines” vs no installation command in the quick-start code and substantially more than five Python lines.
++- The Python tab verifies an LLM answer vs the Rust tab merely constructs an Ising model and sampler; it does not demonstrate the same product workflow.
++- Code repair is reported as `+3.0 points` on HumanEval vs `+18pp` on HumanEval-50 and `+15pp` on another HumanEval-50 card. These may be different systems, but the page never reconciles their scope.
++- “No model fine-tuning required” vs a headline result for a “Two-GPU parallel retrain,” without explaining what is being trained.
++- Carnot claims to extract “cited facts” vs no described mechanism or capability for checking factual claims against sources.
++- `0.9131 FoVer AUROC` vs `0.90 AUC (vs 0.125 FoVer baseline)` uses FoVer in two apparently different roles without explaining the relationship.
++- The result meters have no consistent scale: `+3 points` maps to 14.6%, `+4.9 points` maps to 66.7%, hardware status maps to 100%, and a 2× speedup also maps to 100%.
++- The HTML structure is inconsistent: an extra closing container places the TTC/PREM card outside its intended bento grid, while the Results section is not closed before Preprint begins.
+ 
+ ### Missing essentials
+ 
+-- Trust anchors are missing: the result cards provide no direct artifact links, sample sizes, confidence intervals, dataset splits, model versions, hardware conditions, or reproduction commands.
+-- Installation is mentioned inline as `pip install carnot-ebm`, but the section titled “Install” does not actually show that command or state Python, GPU, model-download, or runtime requirements.
+-- The license is not merely unclear; it is contradictory.
+-- Ian Blenke appears only in the copyright line. The page does not clearly identify the maintainer, team, affiliation, governance, support channel, or security contact.
+-- The hero does provide a reasonable one-sentence description, but later scope expansion makes it unclear whether Carnot is an answer checker, benchmark suite, research agent, training system, or FPGA project.
+-- Limitations are absent: supported claim types, expected failure modes, false-positive rate, external-fact handling, and whether “works with any LLM” has actually been tested are not stated.
++- What Carnot does — present and reasonably clear in the hero: it checks an answer for internal consistency and suggests repairs.
++- Why the numbers should be trusted — missing in usable form. “Checked-in artifact” and “independently re-computed” are assertions, not evidence links, named replication, sample sizes, confidence intervals, or methods.
++- Installation — partially present as `pip install carnot-ebm` in prose, but absent from the alleged install quick start; Rust installation is missing entirely.
++- License — present but contradictory, which is worse than omitting it.
++- Maintainer — “Ian Blenke” appears in a copyright line, but the page never explicitly identifies the maintainer, team, governance, or contact route.
+ 
+ ### Fabrication signals
+ 
+-- “GSM8K extraction TP rate: 0.5 → 1.0” — a perfect result with no denominator or evaluation protocol.
+-- “k=5 ensemble catches 60/60 attacks” — perfect performance on a small, potentially hand-selected set without an artifact link.
+-- “2.0× speedup, identical losses” — suspiciously exact on both speed and equivalence without error tolerances or repeated-run data.
+-- “0.0pp accuracy delta with 4.4% cost savings” — exact zero degradation needs sample size and confidence bounds.
+-- “99.3% of wrong code flagged” on a 164-problem benchmark — high precision without stating how many wrong programs formed the denominator or the false-positive rate.
+-- “Zero false positives” in “Carnot Dogfooding by the Numbers” — a perfect operational claim with no labeling methodology.
+-- Two 100%-filled meters represent “live on silicon” and “identical losses,” neither of which is a 100% performance metric; the visual falsely implies perfection.
+-- “30,658 automated tests,” “5,000 experiment runs,” and “382 completed milestones” — enormous exact counts presented as quality evidence without explaining what they cover or whether they are meaningful.
+-- The preprint’s “externally reproducible” claim lacks the identity, report, logs, or artifact of the external reproduction.
++- `GSM8K extraction TP rate: 0.5 → 1.0` — perfect endpoint with no sample count or confidence interval.
++- `k=5 ensemble catches 60/60 attacks` — perfect result with no held-out protocol or direct artifact link.
++- `2.0× speedup, identical losses` — suspicious exactness without tolerances or run variance.
++- `0.0pp accuracy delta` — perfect no-loss claim without uncertainty.
++- `Zero false positives` in “Carnot Dogfooding by the Numbers” — no denominator or adjudication method.
++- `99.3% of wrong code flagged` — near-perfect result without the number of wrong samples, model, threshold, or confidence interval.
++- `0.9131` to four decimal places from five seeds, after being “repinned” from `0.9857` — overprecision plus a substantial revision demands a direct methodological anchor.
++- Multiple 100%-filled meters visually imply perfection even when the associated claim is merely “live on silicon” or “2.0× speedup.”
+ 
+ ## WHAT'S WORKING
+ 
+-- The hero and arithmetic example explain the core verify-and-repair idea in approachable language.
+-- Installation text, tutorial links, source code, paper, and HuggingFace links are prominent and easy to find.
++- The hero eventually gives a plain-language description and a concrete arithmetic example.
++- The page openly acknowledges audits, retractions, and a revised AUROC; that transparency instinct is valuable, even though it currently overwhelms the product story.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+ 
+-1. Resolve the MIT-0 versus Apache 2.0 contradiction everywhere before making any other credibility claim.
+-2. Replace the hero’s milestone/test/experiment counters with one user-relevant result and a direct methodology link.
+-3. Reduce “What we measured” to 3–5 comparable results, each with dataset, denominator, baseline, model version, uncertainty, and artifact link.
+-4. Remove version history, operator-upload status, autonomous-loop narration, and other internal closeout language from the landing page.
+-5. Restrict “What you can check” to genuine verification categories; move APIs, research operations, hardware, and TTC to separate technical pages.
+-6. Remove or define every acronym and benchmark name at first use.
+-7. Make the quick start truthful: show the installation command and one minimal working verification example; either demonstrate equivalent Rust verification or relabel that tab as low-level internals.
+-8. Add an explicit maintainer/team block, support or contact route, and a concise limitations statement.
+-9. Qualify all perfect-looking metrics with denominators and uncertainty, and stop using 100%-filled bars for binary engineering milestones.
+-10. Cut the navigation and blog grid so a stranger sees the product, proof, installation path, and maintainer before the project diary.
+\ No newline at end of file
++1. Resolve the MIT-0/Apache 2.0 contradiction before making any other credibility claim.
++2. Reduce the hero to one value proposition, one install command, one primary CTA, and at most one defensible result.
++3. Remove experiment-run and milestone counters; they measure activity, not usefulness.
++4. Replace the 12-card evidence wall with 3–5 comparable results showing model, dataset, sample size, baseline, uncertainty, and a direct artifact or report link.
++5. Move research-loop operations, preprint upload status, audit chronology, and project retrospectives off the landing page.
++6. Reconcile the `+3`, `+18pp`, and `+15pp` code results by naming the distinct methods and evaluation conditions.
++7. Make Python and Rust quick starts demonstrate the same verify-and-repair task, including actual installation commands.
++8. Remove or explain specialist acronyms at first use; delete names that do not help a user decide whether Carnot solves their problem.
++9. Add credibility anchors to every perfect or near-perfect result—or remove those results from the landing page.
++10. Explicitly identify the maintainer and validate the malformed section/grid markup.
+\ No newline at end of file
+diff --git a/ops/verifier_authenticity_audit_report.md b/ops/verifier_authenticity_audit_report.md
+index d418becd4f..60eee0bfb4 100644
+--- a/ops/verifier_authenticity_audit_report.md
++++ b/ops/verifier_authenticity_audit_report.md
+@@ -1,25 +1,26 @@
+-<!-- generated by scripts/verifier_authenticity_audit.py — 2026-07-13 -->
++<!-- generated by scripts/verifier_authenticity_audit.py — 2026-07-14 -->
+ <!-- per CLAUDE.md 'Verifier Authenticity Discipline' — advisory only -->
+ 
+-# verifier_authenticity_audit_report — 2026-07-13
++# verifier_authenticity_audit_report — 2026-07-14
+ 
+ ## Summary
+ 
+ | Verdict | Count |
+ |---|---|
+-| `AUTHENTIC` | 11 |
+-| `HONEST_HEURISTIC` | 4 |
+-| `DISHONEST_NAMING` | 2 |
+-| `ADVERSARIAL_GAMING` | 2 |
++| `AUTHENTIC` | 13 |
++| `HONEST_HEURISTIC` | 5 |
++| `DISHONEST_NAMING` | 1 |
++| `ADVERSARIAL_GAMING` | 0 |
+ | `CANNOT_DETERMINE` | 1 |
+ | `UNKNOWN` | 0 |
+ | `OUTRIGHT_FAKE` | 0 |
+ 
+ ### FLAGGED — operator action recommended
+-- `python/carnot/verify/arc_gap1_registry_promotion_decision.py` — **DISHONEST_NAMING**
+-- `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — **ADVERSARIAL_GAMING**
+ - `python/carnot/verify/beaver_lite.py` — **DISHONEST_NAMING**
+-- `python/carnot/verify/beaver_prefix_bound_contracts.py` — **ADVERSARIAL_GAMING**
++
++### AUDIT-INTEGRITY GUARD — flags voided (auditor hallucinated its evidence)
++These verdicts were FLAGGED by the LLM reviewer but cited concrete code/path strings that do NOT exist in the source. Auto-downgraded to `CANNOT_DETERMINE`; **do NOT act on them.** They indicate the audit RUN was partly unreliable, not that the verifier is fake.
++- `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — was **DISHONEST_NAMING**; absent evidence: `0.0/1.0`
+ 
+ ---
+ 
+@@ -27,16 +28,16 @@ Scanned 20 verifier file(s) with codex as the hostile reviewer.
+ 
+ ## python/carnot/verify/__init__.py
+ 
+-**Verdict:** `CANNOT_DETERMINE`
++**Verdict:** `AUTHENTIC`
+ 
+ ## VERDICT
+-CANNOT_DETERMINE
++AUTHENTIC
+ 
+ ## CLAIMS
+-No paper, model, or compute-substrate claim. The closest methodological claim is: “Verifiable reasoning: constraints as energy terms + landscape certification.”
++No paper, model, or compute-substrate claim. The only methodological description is: “Verifiable reasoning: constraints as energy terms + landscape certification.”
+ 
+ ## IMPLEMENTATION_REALITY
+-This is a package initializer that imports and re-exports verifier classes and utilities. It contains no scoring logic, model invocation, text-statistical proxy, or certification implementation to audit.
++This is a package initializer that imports and re-exports constraint, energy, certification, and verifier components. It performs no verification or model inference itself.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -48,7 +49,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This file cannot establish whether any imported verifier is authentic because it implements nothing. The repeated `ConformalCalibrationVerifier` imports are sloppy, and exporting the already-suspect `Tier0sVerifier` may expose bad machinery, but neither proves dishonest naming or adversarial gaming in this initializer.
++The docstring describes the package API rather than claiming that this file implements a paper or invokes a model. The repeated `ConformalCalibrationVerifier` imports are sloppy, but they are neither deceptive nor adversarial gaming.
+ 
+ 
+ ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
+@@ -59,10 +60,10 @@ This file cannot establish whether any imported verifier is authentic because it
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“The v14 rerun proved the local GGUF path was real” and “the raw model text did not honor the strict verifier-output contract.” The module also claims it “keeps that conservative parser” and applies an “abstention-calibrated” policy.
++“The v14 rerun proved the local GGUF path was real” and “the raw model text did not honor the strict verifier-output contract.” The docstring further claims this module applies “the Exp 3286 calibrated policy” and requires “non-trivial” coverage with “zero false accepts.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The implementation performs real local inference through `llama_cpp.Llama`, loads a resolved GGUF with `n_gpu_layers=-1`, and calls `create_chat_completion` for every evaluation row using grammar-constrained decoding. It also probes CUDA, llama.cpp GPU-offload support, model files, and NVIDIA memory usage.
++The default runner performs real local inference through `llama_cpp.Llama`, loads a GGUF model, requests full GPU offload, and uses grammar-constrained chat completions. It also probes CUDA, llama.cpp GPU-offload support, model-cache presence, and observed GPU memory before declaring the artifact ready.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -74,7 +75,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not regex masquerading as a model method: the default execution path loads and invokes an actual GGUF model. The parser and scoring code operate on genuine model outputs, and readiness requires nonzero coverage, zero false accepts, recorded models, and GPU-memory evidence. Injectable runners, probes, and timestamps support testing; they do not replace the production inference path.
++This is not regex dressed up as a model verifier: it contains an actual llama.cpp model invocation and parses the resulting model output. The readiness gate enforces the claimed coverage, false-accept, hardware, and model-presence conditions; dependency injection permits testing but does not replace the real default inference path.
+ 
+ 
+ ## python/carnot/verify/adaptive_conformal_calibration.py
+@@ -88,7 +89,7 @@ HONEST_HEURISTIC
+ “Compute a lightweight ACSE-style semantic entropy proxy.” The docstring explicitly states: “ACSE uses semantic dispersion over multiple generations,” but also says this implementation instead uses “the variance of the top-k token logprob alternatives and the variance across verifier scores.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic lexical prompt classification, NumPy variance calculations, scikit-learn train/test splitting and AUROC scoring, and calibration of precomputed verifier scores. It invokes no model and merely consumes externally supplied token logprobs and scores.
++The code performs deterministic lexical prompt classification, NumPy variance calculations over supplied logprobs and verifier scores, and sklearn-based train/test calibration and AUROC evaluation. It invokes no model and generates no fresh samples; all model-derived information must be supplied by the caller.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -100,7 +101,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not an ACSE implementation, but it does not falsely pretend to be one: the semantic-entropy substitution is explicitly labeled a lightweight proxy and its crude mechanics are disclosed. There is no model invocation, random feature fabrication, sleep-padding, score-capping, or adversarial-check token dodging.
++This is not the full ACSE method, but the docstring plainly admits that and identifies the exact statistical proxy being substituted. The naming consistently includes “lightweight,” “style,” and “proxy,” so it is not fraudulently presenting variance arithmetic as live semantic-entropy inference.
+ 
+ 
+ ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
+@@ -111,10 +112,10 @@ This is not an ACSE implementation, but it does not falsely pretend to be one: t
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“The policy is a deterministic scheduler over evidence that already exists in the repo.” It “decides how much checking a future verifier pass should spend per row” and “never lets an EBM score, LLM response, or receipt become answer authority.”
++“The policy is a deterministic scheduler over evidence that already exists in the repo.” It explicitly disclaims model authority: “it never lets an EBM score, LLM response, or receipt become answer authority.” No paper, learned-model, GPU, or live-inference claim is made.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads checked-in JSON artifacts, extracts explicit features, and applies a deterministic rule table to simulate routing and estimate call counts. It performs no model inference and explicitly records zero live model, verifier-scoring, and repair calls.
++The code reads checked-in JSON artifacts, extracts deterministic features, applies a fixed rule table, computes accounting statistics, and writes a policy artifact. It imports no ML framework or model client and makes no model invocation, exactly as its offline-simulation description states.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -126,7 +127,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly what the docstring claims: it builds an offline scheduling-policy artifact from existing evidence without pretending to invoke an EBM or LLM. There is no paper attribution, learned-method claim, hidden model pretense, sleep-padding, score-capping, randomness, or adversarial-check token dodging.
++The implementation matches the narrow claim: this is an offline scheduling-policy simulation, not a model-backed verifier. It explicitly records zero live model and verifier-scoring calls and disables promotion, so it is honest—but it must not be presented as a verifier contributing predictive AUROC to the production ensemble.
+ 
+ 
+ ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
+@@ -137,10 +138,10 @@ The implementation does exactly what the docstring claims: it builds an offline
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“Exp 3643 additive second-pair-of-eyes remeasurement.” No paper, model, learned-feature, live-inference, GPU, or other compute-substrate claim appears in the module docstring.
++No paper, model, or compute-substrate claim appears in the module docstring. It only says: “Exp 3643 additive second-pair-of-eyes remeasurement” and cites internal requirements “REQ-VERIFY-3643, SCENARIO-VERIFY-3643.” The code separately discloses: “scores cached corpora; no LLM load.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code loads cached Exp 3642 results and corpus rows, obtains scores through the Exp 3642 scoring functions, and computes fixed-FPR recall, McNemar significance, calibration, fusion, and AUROC metrics. It performs no live model invocation, but it never claims to.
++The code loads cached experiment artifacts and corpora, obtains detector scores through the Exp 3642 scoring functions, and computes fixed-FPR recall, McNemar significance, Wilson intervals, calibration, fusion AUROC, and reproducibility metadata. It performs no live model invocation and does not claim to.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -152,7 +153,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is plainly a remeasurement and aggregation module, not a falsely branded model-based verifier. Duration is measured from actual elapsed time, scores are not capped to dodge perfection checks, and no random synthetic features or adversarial-check tokens appear.
++This is an evaluation and remeasurement module, not a counterfeit model-backed verifier. Its cached-data substrate is explicitly disclosed, its duration is genuinely measured without sleep-padding, and there is no score-capping, random-feature fabrication, or adversarial-check token dodging.
+ 
+ 
+ ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
+@@ -163,22 +164,22 @@ This is plainly a remeasurement and aggregation module, not a falsely branded mo
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“This module is a gate audit, not a verifier rerun.” It “reads the checked-in .292 evidence chain” and distinguishes exact-replay evidence from “live-inference claims whose authenticity evidence is incomplete.”
++“This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain...” It explicitly distinguishes its aggregation work from “live-inference claims whose authenticity evidence is incomplete.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs local JSON/Markdown artifact aggregation, checksum generation, provenance auditing, and deterministic gate classification. It invokes no model and imports no ML or inference framework, exactly as disclosed.
++The code reads and hashes local artifacts, audits their evidence fields, and emits a corrigendum JSON. It imports no ML framework or model client and invokes no model, exactly as disclosed.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+ 
+ ## GAMING_PATTERNS
+-none
++none; it recognizes historical duration-too-short flags for auditing, but performs no sleep-padding, score-capping, random classification, or token-dodging.
+ 
+ ## RECOMMENDATION
+ KEEP
+ 
+ ## RATIONALE
+-The module truthfully identifies itself as an evidence audit rather than a verifier or live-inference implementation. Its duration measurement has no sleep-padding, and it does not cap scores, synthesize random features, or contribute fabricated model metrics; it should remain excluded from verifier-ensemble AUROC because it does not produce verification scores.
++The module makes no paper, learned-model, GPU, or live-inference claim; it explicitly declares itself an artifact audit. Its implementation matches that scope and actively blocks unsubstantiated live metrics, though it is not itself a verifier and must not contribute verifier AUROC scores.
+ 
+ 
+ ## python/carnot/verify/and_composition_verifier.py
+@@ -189,10 +190,10 @@ The module truthfully identifies itself as an evidence audit rather than a verif
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“SemEnergy uses its proxy scorer.” “SOSKANEnergyV3; uses text-feature extraction to produce energy.” “This helper is headline-ineligible until a real trained/live verification substrate replaces the current advisory defaults.”
++“This module keeps the historical AND-composition API used by pipeline certificates, but the default surface is not a production headline verifier.” It explicitly states: “The default SOSKAN adapter is neutral until trained, SemEnergy uses its proxy scorer,” and “A future headline verifier must wire real trained/live verification substrates.” The adapter also claims that trained SOSKAN scoring uses “text-feature extraction to produce energy.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The harness invokes imported Carnot verifier classes, and SOSKAN can call a real trainable model through `.fit()` and `.energy()`, but its inputs are only three hand-engineered text statistics; untrained SOSKAN returns 0.5 and SemEnergy explicitly uses proxy scoring. Adapter exceptions are silently converted to passing energy 0.0.
++The module invokes internal Carnot verifier and model classes, including `SOSKANEnergyV3.fit()` and `.energy()`, but its default SOSKAN path always returns `0.5`; its inputs are three crude text statistics. It delegates the other signals to imported Carnot verifiers, uses a thresholded SemEnergy proxy, and silently converts every adapter failure into a passing `0.0`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -204,7 +205,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The module bluntly labels itself advisory, sets `HEADLINE_ELIGIBLE = False`, and discloses the proxy, untrained-model, and fail-open behavior. It must remain excluded from headline AUROC: moreover, the claimed “neutral” SOSKAN score of 0.5 actually fails the default strict `energy < 0.5` threshold, while exceptions receive a free pass.
++The weak defaults, proxy features, untrained-model neutrality, and fail-open exception handling are disclosed with unusual clarity. This is not suitable for headline AUROC or a production ensemble, but it is honestly quarantined through `HEADLINE_ELIGIBLE = False` and can remain as diagnostic compatibility machinery.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_autopyverifier_pilot.py
+@@ -215,10 +216,10 @@ The module bluntly labels itself advisory, sets `HEADLINE_ELIGIBLE = False`, and
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-“AutoPyVerifier-inspired GAP-1 set search for ARC orientation.” The docstring explicitly limits that claim: “It does not synthesize verifier code with an LLM. Instead, a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool.”
++“This module deliberately borrows only the cheap set-search idea from AutoPyVerifier. It does not synthesize verifier code with an LLM.” It claims “a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic, pure-Python grid-feature scoring and exhaustive subset search over hand-authored discriminators. It invokes no model and imports no ML framework, exactly as disclosed.
++The code computes handcrafted grid statistics—adjacency counts, histograms, centroids, borders, and run profiles—and exhaustively searches discriminator subsets against ARC candidate pools. It invokes no model and imports no ML framework or model client.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -230,33 +231,33 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The AutoPyVerifier association is narrowly and honestly qualified; the module explicitly disclaims LLM synthesis and identifies the deterministic substitute. Randomness only constructs seeded distractors and splits—not fake learned features—and there is no sleep-padding, score-capping, or adversarial-check token dodging.
++The implementation matches its deliberately limited claim and explicitly discloses that AutoPyVerifier’s LLM synthesis is replaced by deterministic, hand-authored discriminators. Randomness is seeded and used for distractor construction and dataset splitting, not to fabricate classified features or evade adversarial checks.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_registry_promotion_decision.py
+ 
+-**Verdict:** `DISHONEST_NAMING`
++**Verdict:** `AUTHENTIC`
+ 
+ ## VERDICT
+-DISHONEST_NAMING
++AUTHENTIC
+ 
+ ## CLAIMS
+-No paper, model, or live-compute claim. The docstring claims: “This module is intentionally evidence-only” and that it “decides whether the GAP-1 set verifier is ready to become a frozen registry entry.”
++“This module is intentionally evidence-only. It reads the existing Exp 5209 hardening artifact” and “decides whether the GAP-1 set verifier is ready to become a frozen registry entry.” It makes no paper, learned-model, GPU, live-inference, embedding, or kernel claim.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code only reads JSON/YAML-like text, performs dictionary lookups, regex extraction, and Boolean checks; it imports no ML framework and invokes no model. Worse, `_decision()` returns `blocked_missing_evidence` even when every promotion condition passes, making the `promoted` path unreachable.
++The code reads a JSON artifact and registry text, applies deterministic field checks and regex parsing, writes a promotion-decision artifact, and updates an operations document. It invokes no model and does not pretend to.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-OUTRIGHT_FAKE
++NONE
+ 
+ ## GAMING_PATTERNS
+ none
+ 
+ ## RECOMMENDATION
+-REIMPLEMENT_PROPERLY
++KEEP
+ 
+ ## RATIONALE
+-The evidence-only description is honest, but the advertised promotion decision is functionally bogus because the implementation can never promote anything. This is not an LLM-output verifier, produces no score, and must not contribute to production-ensemble or headline AUROC results.
++The evidence-only implementation matches the explicit evidence-only description. However, this is registry-governance machinery, not an LLM-output scorer, and must not contribute to ensemble AUROC; additionally, `_decision()` can never return `"promoted"`, so its promotion path is dead and should be reviewed as a logic defect.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_set_search_holdout_hardening.py
+@@ -267,10 +268,10 @@ The evidence-only description is honest, but the advertised promotion decision i
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library.” It explicitly states the compute boundary: “no live LLM inference.”
++“This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library.” It also claims grouped train/held-out selection “so held-out rows only measure the chosen subset; they never choose it.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic discriminator scoring, exhaustive subset selection, grouped train/held-out evaluation, confidence-interval calculation, leakage checks, and artifact generation over cached ARC candidates. It invokes no neural model, and none is claimed.
++The code loads cached artifacts and ARC candidate pools through the Exp 5205 pilot module, computes deterministic discriminator scores, selects subsets using training groups, and evaluates them on disjoint held-out groups. It performs no live model inference and explicitly declares that limitation.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -282,7 +283,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation matches the docstring’s narrow claim: this is a holdout-hardening experiment over cached candidates and deterministic discriminators, not a purported learned verifier. `random.Random` is used only for reproducible grouped splitting; there is no sleep-padding, score-capping, random feature fabrication, or named adversarial-check dodging.
++The implementation does what the docstring claims: deterministic set search and grouped holdout evaluation over cached candidates. Randomness is confined to seeded split construction, not fabricated features or scores; there is no sleep-padding, score-capping, or adversarial-check token dodging. The artifact also explicitly says “no live LLM inference” and “do not promote to registry here,” so it is not masquerading as a learned production verifier.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
+@@ -293,10 +294,10 @@ The implementation matches the docstring’s narrow claim: this is a holdout-har
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“This module makes the final stability decision for the current GAP-1 registry promotion path.” It claims only to read existing evidence, apply “a predeclared stability rule,” and write a terminal artifact. It makes no paper, model, learned-feature, GPU, or live-inference claim.
++No paper, model, or compute-substrate claim. The docstring accurately says: “It reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads two JSON artifacts, deterministically evaluates subset stability and leakage conditions, then writes a decision artifact and optionally updates an operations document. It invokes no model and does not claim to.
++The code reads two JSON artifacts, deterministically evaluates explicit stability and leakage rules, audits the registry, and writes a decision artifact plus an ops-document update. It invokes no model and imports no ML framework because it claims no model-based inference.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -308,7 +309,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly what the docstring says. It is an experiment-governance decision module, not an LLM-output scorer, so it should not itself contribute predictions or headline AUROC numbers.
++The implementation does exactly what the docstring claims and makes no fraudulent association with a paper or learned model. This is decision and registry tooling, not an LLM-output scorer, so it should not itself contribute an AUROC value to the production ensemble.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
+@@ -319,12 +320,11 @@ The implementation does exactly what the docstring says. It is an experiment-gov
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“The adapter ... repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.”  
+-“Token logprobs and top-k alternatives are treated as research diagnostics only.”  
+-The code also declares three specific GGUF model specifications.
++“The adapter keeps the Exp 1542 authority boundary but repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.”  
++“Token logprobs and top-k alternatives are treated as research diagnostics only.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The default runtime delegates to `build_telemetry_artifact(..., generation_source="live_sota_llamacpp")`, then parses actual token-logprob and top-k telemetry from its manifest. It blocks readiness unless the delegated runner reports live inference and supplies both telemetry types.
++The implementation invokes Carnot’s `build_telemetry_artifact` with `generation_source="live_sota_llamacpp"`, then reads and analyzes actual token logprobs and top-k alternatives. It explicitly refuses readiness unless the delegated runner reports live model inference and the required telemetry is present.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -336,35 +336,36 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is an orchestration and diagnostic adapter, not regex masquerading as inference: it explicitly invokes the repository’s live llama.cpp telemetry runner. It also honestly restricts logprobs to diagnostic routing analysis and prevents them from overriding deterministic validator decisions.
++This is a genuine telemetry adapter with a delegated llama.cpp model invocation, not regex masquerading as model inference. It accurately limits the telemetry to diagnostic routing metrics and preserves deterministic validators as final authority; no sleep-padding, score-capping, random features, or adversarial-check token dodges appear.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
+ 
+-**Verdict:** `ADVERSARIAL_GAMING`
++**Verdict:** `CANNOT_DETERMINE`
+ 
+ ## VERDICT
+-ADVERSARIAL_GAMING
++DISHONEST_NAMING
+ 
+ ## CLAIMS
+ “The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The module invokes no model and imports no ML framework; it aggregates numbers from existing JSON artifacts. Worse, for runtime-contract and BEAVER cases it fabricates `carnot_energy_score` directly from the ground-truth decision: `0.0 if deterministic_accept else 1.0`.
++The module invokes no model and merely aggregates fields from existing JSON/JSONL artifacts. Worse, for runtime-contract and BEAVER cases it fabricates `carnot_energy_score` directly from the ground-truth decision—`0.0` for accept and `1.0` for reject—then uses that label-derived score to calculate correlations and routing AUC.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ OUTRIGHT_FAKE
+ 
+ ## GAMING_PATTERNS
+-- Direct label leakage: the alleged energy score is constructed from the evaluation label, making correlation and routing AUROC circular.
+-- `live_sota_model_inference_used` can become true merely because a row contains a matching `model_hf_id`; no inference is demonstrated.
+-- No sleep-padding, score-capping, random features, or named adversarial-check token dodges.
++No sleep-padding, random features, named-check dodges, or suspicious 0.99 capping. However, direct label leakage into `carnot_energy_score` manufactures perfect predictive performance; `live_sota_model_inference_used` can also become true from a matching `model_hf_id` string without proving any inference occurred here.
+ 
+ ## RECOMMENDATION
+ REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-Calling a deterministic label encoded as `0.0` or `1.0` “explicit Carnot energy” is false, and evaluating that value against the same label manufactures performance. This module must not contribute to headline AUROC numbers until it consumes independently computed energy and logprob signals with auditable inference provenance.
++Calling a deterministic label recoded as `0.0/1.0` “explicit Carnot energy” is false, and evaluating that value against the same label makes the reported metrics circular. The module may consume genuine upstream energies or logprobs for some rows, but it silently mixes them with fabricated scores and must not contribute to headline AUROC numbers.
++
++> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `DISHONEST_NAMING` verdict cited high-specificity evidence (file paths / extensions / arXiv ids / sleep-calls) that does NOT appear in the source file (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun (cf. the 2026-06-03 ast_structure_verifier false positive). Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT retire on this basis. Absent evidence: `0.0/1.0`
++
+ 
+ 
+ ## python/carnot/verify/ast_structure_verifier.py
+@@ -375,10 +376,10 @@ Calling a deterministic label encoded as `0.0` or `1.0` “explicit Carnot energ
+ AUTHENTIC
+ 
+ ## CLAIMS
+-none
++“AST and bracket-structure verifier for diverse verifier ensembles.” “Python-looking text is checked with `ast.parse` plus bracket balance.” “General prose is checked with cheap structural heuristics such as balanced brackets and sentence boundaries.” “The kernel is syntactic structure, not token-level statistical fluency.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code uses Python’s real `ast.parse` for Python-looking input, supplemented by deterministic bracket-balance and prose-structure heuristics. It imports only `ast` and `re`, exactly consistent with its explicitly syntactic scope.
++The code uses `ast.parse` for Python-like input and explicit regex, bracket-balance, punctuation, sentence-boundary, and capitalization heuristics for other text. It invokes no learned model, and it does not claim to.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -390,7 +391,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring accurately describes the implementation and makes no claims about a paper, learned model, or compute substrate. The score bounds are ordinary clamping to the documented `[0, 1]` range, not adversarial perfect-score avoidance.
++The implementation does exactly what the docstring advertises, including openly labeling its non-AST prose checks as cheap heuristics. There are no fabricated paper, model, embedding, inference, or compute claims and no adversarial-check gaming patterns.
+ 
+ 
+ ## python/carnot/verify/beaver_epr_bounded_probe.py
+@@ -402,11 +403,12 @@ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+ “Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints.”  
+-“This module does not implement that frontier proof. It implements a bounded-prefix feasibility probe…”  
+-“Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features.”
++“This module does not implement that frontier proof.”  
++“It implements a bounded-prefix feasibility probe.”  
++“Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code uses regex extraction plus AST/Decimal arithmetic evaluation to detect false equalities in text prefixes. It performs no model invocation; its EPR-style features are computed only from previously recorded top-k logprobs loaded from JSON/JSONL telemetry.
++The code uses regex extraction plus AST/Decimal arithmetic to detect false equalities, and computes entropy statistics from previously recorded top-k logprobs. It invokes no model and imports no ML framework or inference client.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -418,7 +420,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation is merely a text-statistical arithmetic probe, but the docstring explicitly admits that it is not exact BEAVER and lacks the required frontier proof. It also truthfully reports missing logprob telemetry as unavailable, measures actual wall time, and neither fabricates model inference nor manipulates scores to evade adversarial checks.
++This is a narrow text-statistical heuristic, but the docstring bluntly admits that it is not exact BEAVER and lacks the required frontier proof. It does not fabricate missing logits, pad runtime, cap scores, or manufacture random features; its results must remain labeled as proxy measurements rather than BEAVER performance.
+ 
+ 
+ ## python/carnot/verify/beaver_exact_tiny_frontier.py
+@@ -429,10 +431,11 @@ The implementation is merely a text-statistical arithmetic probe, but the docstr
+ AUTHENTIC
+ 
+ ## CLAIMS
+-“Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset.” The docstring explicitly disclaims full BEAVER: “It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model.”
++“Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset.”  
++“This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code extracts completed arithmetic equalities with regex, parses them into a restricted AST, converts them to Z3 expressions, and invokes `z3.Solver().check()`. It uses seeded randomness only to select a balanced evaluation subset, not to fabricate scores or features.
++The code genuinely invokes `z3.Solver()` and checks parsed ground arithmetic equalities for satisfiability. Regex only extracts candidate equalities; the deterministic RNG merely samples examples and does not fabricate classifier features.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -444,7 +447,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The claimed compute substrate is real: this module imports and invokes Z3 for exact ground-arithmetic satisfiability checks. Its narrow scope and failure modes are stated aggressively and enforced in artifact fields, so it does not impersonate full BEAVER or conceal its regex-based claim extraction.
++The implementation does exactly what its narrowly scoped docstring claims: local arithmetic verification using Z3. It explicitly and repeatedly disclaims full BEAVER, token-trie construction, and language-model probability analysis, with no sleep-padding, score-capping, random-feature classification, or named-check evasion.
+ 
+ 
+ ## python/carnot/verify/beaver_lite.py
+@@ -460,10 +463,10 @@ DISHONEST_NAMING
+ “Enumerate prefixes and bound unsafe probability mass for final answers.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The optional GGUF path performs real `llama_cpp.Llama` inference and reads logits, while the default path uses deterministic, fabricated equal-mass completions. The alleged upper bound merely sums unsafe mass found in a truncated beam frontier, ignoring pruned and unenumerated probability mass.
++A configured GGUF path triggers real `llama_cpp.Llama` inference and token-logit beam search; otherwise it uses fabricated equal-mass completions and discloses that through `mock_logprobs_used`. The alleged upper bound merely sums violating candidates found in a truncated top-K search, ignoring all unexplored probability mass.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-UNDISCLOSED_PROXY
++OUTRIGHT_FAKE
+ 
+ ## GAMING_PATTERNS
+ none
+@@ -472,7 +475,7 @@ none
+ REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-The mock fallback is honestly disclosed, and the live path genuinely invokes a model. However, truncated unsafe mass is not an upper bound on total unsafe mass; omitted probability must be accounted for, and duplicated finished beams further corrupt the calculation. Calling this a probability-mass certificate is false, so it must not contribute to headline results.
++The model integration is real, but the certificate is not: partial unsafe mass from top-K enumeration is generally a lower bound on total unsafe mass, not an upper bound. The code also compares probability mass against an unweighted completion count, made to agree in mock mode by manufacturing equal logprobs; this must not contribute to headline AUROC or safety claims.
+ 
+ 
+ ## python/carnot/verify/beaver_lite_live.py
+@@ -488,7 +491,7 @@ AUTHENTIC
+ “Select a live llama.cpp bounder or the honest Zipf fallback.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The live path imports `llama_cpp.Llama`, loads a GGUF model with `logits_all=True`, invokes it for completions, and sums returned token logprobs. When live inference is unavailable or fails, it uses an explicitly labeled deterministic Zipf mock provider.
++The live path imports `llama_cpp.Llama`, loads a GGUF model with `logits_all=True`, invokes it for completions, and sums returned token logprobs. When llama.cpp or a model is unavailable—or live initialization fails—the code explicitly substitutes a deterministic Zipf mock provider and records that fallback in artifact provenance.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -500,35 +503,33 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not regex wearing a model’s name: it contains a genuine llama.cpp model invocation and consumes actual generated-token logprobs. The synthetic fallback is repeatedly and unambiguously disclosed through class names, provenance fields, logprob-source metadata, and explicit mock verdicts; mock-backed results must remain excluded from headline production metrics.
++This is not regex masquerading as model inference: it contains a real llama.cpp model invocation and consumes actual generated-token logprobs. The synthetic fallback is conspicuously named, tagged through `mock_logprobs_used`, `zipf_mock_used`, and `logprobs_source`, and reflected in `honest_verdict`, so it does not silently impersonate live inference.
+ 
+ 
+ ## python/carnot/verify/beaver_prefix_bound_contracts.py
+ 
+-**Verdict:** `ADVERSARIAL_GAMING`
++**Verdict:** `HONEST_HEURISTIC`
+ 
+ ## VERDICT
+-ADVERSARIAL_GAMING
++HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-No paper, model-execution, or compute-substrate claim. The docstring accurately describes a “bounded prefix frontier over the canonical contract JSON” producing “structural risk signals.”
++“BEAVER-lite prefix-bound audit for runtime-contract decoder rows.” The docstring explicitly limits the method to “a bounded prefix frontier over the canonical contract JSON” producing “structural risk signals,” and says that “every false-accept number still comes from the Exp 1520 validator ledger.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic JSON parsing, string-prefix comparison, length arithmetic, trie traversal, and ledger aggregation. It invokes no model and imports no ML framework; model IDs and live-inference flags are merely copied from upstream artifacts.
++The code performs deterministic JSON parsing, character-prefix trie checks, string-length arithmetic, and ledger aggregation over previously generated decoder rows. It invokes no model and imports no ML framework; model IDs and prior live-inference status are only artifact metadata.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+ 
+ ## GAMING_PATTERNS
+-- Explicit terminal-verdict prefix allowlist in `_TERMINAL_VERDICT_PREFIXES`.
+-- `honest_verdict` is forced to begin with `"complete:"` even when status is `"in_progress"` or `"blocked"`.
+-- A guard rejects verdicts without an approved prefix, constituting a token-dodge pattern.
++none
+ 
+ ## RECOMMENDATION
+-RETIRE
++KEEP
+ 
+ ## RATIONALE
+-The prefix-bound computation matches the narrow structural audit described, but the artifact verdict logic is adversarially dishonest: incomplete and blocked runs are labeled `"complete:"`. This module must not contribute to headline AUROC or production-ensemble claims while it manufactures check-passing terminal language.
++The docstring accurately describes a lightweight structural audit and does not pretend to implement live inference, learned BEAVER features, token-probability modeling, or a cited paper. The code also marks missing logprobs as structural simulation and preserves the deterministic validator as final authority, so this heuristic must not be misrepresented as an independent model verifier or source of headline AUROC.
+ 
+ 
+ ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
+@@ -543,7 +544,7 @@ AUTHENTIC
+ “No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence.”
+ 
+ ## IMPLEMENTATION_REALITY
+-The code deterministically replays checked-in JSON artifacts using canonicalization, exact comparisons, ledger extraction, checksums, and validation. It invokes no model or solver and imports no ML framework or model client.
++The code deterministically replays checked-in JSON artifacts, canonicalizes answers, compares ledger and certificate fields, and emits provenance hashes. It invokes no model, solver, API, GPU substrate, or ML library.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -555,5 +556,5 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The implementation does exactly what the docstring claims and explicitly disclaims live inference and production-verifier status. Keep it as an artifact-replay pilot, but do not treat it as a model-backed verifier or include it as an AUROC-contributing ensemble member.
++The implementation matches its deliberately narrow compute claim and explicitly disclaims production-verifier status. Keep it as a regression-replay pilot, but exclude it from the production ensemble and all headline AUROC numbers because it performs no live verification or inference.
+ 
+diff --git a/research-references.md b/research-references.md
+index 375148a32c..8c60d0ba6c 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -29519,3 +29519,97 @@ Execution-time sweep after the `.506` planner marker checked arXiv primary pages
+ - **Watch-only/excluded:** Energy-guided Recursive Model, FlashTrie, constrained KAN IDE kernel discovery, TreeThink, matched-FP16 speedup attribution, Extropic, and Logical Intelligence were checked but not promoted as executable `.506` dependencies.
+ 
+ <!-- V506-EXECUTION-REFRESH-20260714-END -->
++
++## V507 Planner Refresh - 20260714
++
++Planning-time sweep for milestone `.507` after all `.506` experiments completed. The
++search covered 2025-2026 arXiv work on energy-based reasoning, neural constraint
++satisfaction, Ising/sampling systems, hallucination verification, KANs, constrained
++generation, accelerated probabilistic hardware, and continual learning; OpenReview;
++direct Semantic Scholar citation queries for EBT `2507.02092` and ARM-EBM
++`2512.15605`; Hugging Face Papers; GitHub discovery; Extropic writing; and Logical
++Intelligence public pages. Existing Carnot entries already cover the dominant verifier,
++grammar, EBT/ARM-EBM, KAN, p-bit, cDLS, PTRM, SGE, and memory-agent lines. The entries
++below are the non-duplicate deltas that change the executable plan.
++
++### New actionable deltas
++
++- **To Retain or to Adapt? Generalizing Continual Learning** - arXiv:2607.05609,
++  https://arxiv.org/abs/2607.05609. The paper replaces retention-only evaluation with
++  Average Lifelong Error (ALE), decomposes transfer into inherited instability and
++  transient relearning error, and derives a Critical Task Duration beyond which old
++  knowledge can become an adaptation liability. Carnot hook: extend the clean `.506`
++  spline-local KAN learner onto exact constraint streams whose drift duration and shared
++  versus conflicting predicates are controlled. Measure ALE, instability, transient
++  error, backward retention, and the empirical switch point between replay/retention and
++  reset/adaptation; do not assume that retaining every prior rule is always correct.
++- **When Does Continual Learning Require Learning** - arXiv:2607.07847,
++  https://arxiv.org/abs/2607.07847; code:
++  https://github.com/anneharrington/studying-cl. The mechanism-agnostic protocol separates
++  change across task/domain space from temporal drift within a fixed task and compares
++  external scaffolding with weight updates under one sequential evaluation. Carnot hook:
++  cross the KAN drift-duration fixture with spatial constraint-family shifts and temporal
++  predicate drift, then compare a frozen exact-controller baseline, a spline-local update,
++  and a predictive window controller. This is a bounded KAN/controller experiment; it
++  does not authorize LLM fine-tuning, GRPO, external teachers, or retired memory-policy
++  work.
++- **Loss Smoothing for Continual Adaptation** - ICLR 2026 CAO Workshop,
++  https://openreview.net/forum?id=pUqcOkV69j. The paper gradually transitions replay mass
++  from the old objective to the new one so task-shared features stay stable while
++  conflicting features adapt. Carnot hook: include a loss-smoothed spline-update arm in
++  the drift controller, with the exact validator deciding whether stability helps ALE or
++  merely delays a necessary rule update. Workshop status motivates a local ablation only;
++  it is not performance authority.
++- **World Action Verifier: Self-Improving World Models via Forward-Inverse Asymmetry** -
++  arXiv:2604.01985, https://arxiv.org/abs/2604.01985; project/code:
++  https://world-action-verifier.github.io/. WAV decomposes an action-conditioned
++  transition into state plausibility and inverse action reachability, then uses cycle
++  consistency to detect forward-model errors in under-explored regimes. Carnot hook:
++  build an ARC live-path transition-cycle verifier using only the agent's own observations
++  and actions. A generic, game-agnostic inverse signature must reconstruct the executed
++  action from changed object features, and the learned forward effect must replay to the
++  observed successor before the transition can update online planning. No game source,
++  external video, hand GameAdapter, offline ground-truth BFS, or cross-game value transfer
++  is admissible.
++
++### Citation-trail and secondary-source status
++
++- **Semantic Scholar:** direct EBT and ARM-EBM citation endpoints were reachable. EBT
++  still returns Fixed-Point Reasoners, temporal-difference visual representations,
++  LoopUS, causal-energy parameterization, and EBM workload characterization. ARM-EBM
++  still returns Path-Measure Dynamics, Constitutional On-Policy Safe Distillation,
++  Distributional EBMs, LoopUS, ontology constraints, Graph Energy Matching, and
++  false-first-step planning. No newly visible citation displaces Carnot's exact validators
++  or creates a stronger `.507` dependency.
++- **OpenReview:** the new plan uses the bounded loss-smoothing ablation and the already
++  indexed cDLS proposal only as hypotheses to test. Workshop and rejected-paper claims are
++  not treated as demonstrated Carnot speedups.
++- **Hugging Face Papers and GitHub:** current verification discovery repeated
++  LLM-as-a-Verifier, CoVe, self-verification, constrained decoding, and already-indexed
++  repositories. GitHub trending/topic checks exposed no local EBM/KAN/constraint engine
++  that supersedes Carnot's exact-validator or llama.cpp paths.
++- **Extropic:** the writing index still tops out at the October 2025 X0/XTR-0 and TSU
++  launch material. There is no authenticated Carnot-accessible TSU route, so no `.507`
++  experiment may claim TSU execution or speedup.
++- **Logical Intelligence:** public Kona 1.0 pages continue to frame the EBM as a
++  constraint layer beneath LLM interfaces, but publish no local weights, exact benchmark
++  artifact, or authenticated execution route. Kona remains architecture context only.
++
++### V507 planning impact
++
++- Do not rerun the retired `.506` solve-versus-verify panel. First establish a changed
++  native llama.cpp CUDA substrate and a reusable three-model runtime certificate with
++  lossless response receipts; this is execution readiness, not verifier evidence.
++- Advance FR-11 from one bounded KAN sequence to nonstationary constraint streams. Use
++  ALE and Critical Task Duration to decide when retention, loss-smoothed adaptation, or a
++  predictive window is appropriate, while keeping exact rollback and delayed-regression
++  gates authoritative.
++- Replace retired ARC filter/PTRM/exploration-signal families with a forward/inverse
++  transition-cycle verifier that learns only from the live agent's own attempts. Run the
++  milestone's unconditional registry-prechecked level-up attempt through the reachable
++  live branch when safe, otherwise through the unchanged baseline.
++- Repair cDLS methodology before any crossover claim: prove exact small-state target
++  parity and quality diagnostics first, then require multiple seeds, matched CPU/CUDA
++  schedules, successful quality-matched pairs, and authenticated timing.
++
++<!-- V507-PLANNER-REFRESH-20260714-END -->
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..6ac382aa18
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,614 @@
++milestone: "2026.07.507"
++milestone_title: "Native Local-SOTA Runtime Certification, Drift-Aware KAN Self-Learning, Forward-Inverse ARC Verification, and Exact cDLS"
++milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
++tasks:
++  - id: exp5613-transition-v507
++    milestone: "2026.07.507"
++    title: "Transition .506 terminal evidence into the .507 dependency and retirement map"
++    priority: critical
++    track: infrastructure
++    deliverable: results/experiment_5613_transition_v507.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 30
++    estimated_wall_time_min: 30
++    operator_override: "Standing 2026-05-29 versioned-continuation authorization permits one evidence-lock transition per milestone without reopening prior scopes."
++    prior_failures:
++      - experiment_id: exp5603-transition-v506
++        verdict: "complete: archived .505 terminal evidence and exp5592-exp5602 outer-loop findings into .506 dependency map; current_task_range=exp5603-exp5612; hash_only_parser_evidence=unrecoverable; causal_memory_pace_retired=True; kan_fr11_substrate_clean=True; arc_registry_delta=0; ptrm_generator_retired=True."
++        addressed_by: "This transition consumes the now-terminal .506 artifacts, allocates the new exp5613-exp5624 range, and preserves the additional panel, ARC-filter, and cDLS retirement decisions; it does not rerun .506."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Milestone 2026.07.506 completed ten conductor tasks. Exp5605 promoted the lossless response envelope; Exp5606 did not authenticate CUDA offload and its solve-versus-verify panel shape retired; Exp5608 promoted exact-gated spline-local KAN learning; Exp5609 retired both ARC filters after a reachable repeat no-op; Exp5610 added no ARC level; Exp5611 had one seed and zero quality-matched cDLS pairs; Exp5612 recorded the final promotion and retirement ledger. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-roadmap.yaml
++      - {project_root}/research-roadmap-next.yaml
++      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/results/experiment_5603_transition_v506.json
++      - {project_root}/results/experiment_5605_raw_response_evidence_envelope.json
++      - {project_root}/results/experiment_5606_clean_sota_solve_verify_evidence_panel.json
++      - {project_root}/results/experiment_5608_kan_longitudinal_self_learning.json
++      - {project_root}/results/experiment_5609_arc_filter_intermediate_invariance_ab.json
++      - {project_root}/results/experiment_5610_arc_live_self_discovery_levelup_v506.json
++      - {project_root}/results/experiment_5611_cdls_matched_sampler_crossover.json
++      - {project_root}/results/experiment_5612_v506_capstone_reconciliation.json
++      - {project_root}/ops/conductor-log.md
++
++      TASK:
++      Emit results/experiment_5613_transition_v507.json as an exact evidence-lock receipt and dependency map for exp5613-exp5624.
++
++      CONCRETE STEPS:
++      1. Read every terminal .506 artifact directly and distinguish complete, blocked, gate-skipped, promoted, retired, and adversarially flagged evidence.
++      2. Preserve the response envelope and active-spline KAN as clean substrates. Preserve the solve-versus-verify panel, exact residual extension chain, ARC filters, and unmatched cDLS crossover as closed or blocked scopes.
++      3. Record previous_milestone=2026.07.506, current_milestone=2026.07.507, current_task_range=exp5613-exp5624, and a collision check against all completed IDs.
++      4. Emit dependency chains for native-runtime certification, exact drift fixture to duration map to predictive KAN, ARC transition-cycle prototype to live A/B with an unconditional level attempt, and cDLS exactness to gated crossover.
++      5. REQUIRED ARTIFACT FIELDS: with `field_principles`, `artifacts_read` — claims trace to files; `terminal_findings` — only observed outcomes cross milestones; `promoted_substrates` — clean prerequisites are explicit; `retired_scopes` — failed chains stay closed; `adversarial_flags_preserved` — flagged artifacts are not upgraded; `current_task_range` — IDs do not collide; `dependency_map` — gates are auditable; `inference_substrate=aggregation_from_upstream_artifacts` — no new inference occurred; `reproducibility_checksum` — the transition is stable; `honest_verdict` — terminal status starts `complete:` or `blocked:`.
++      6. Run targeted transition/schema checks and confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5614-v507-source-delta-ingestion
++    milestone: "2026.07.507"
++    title: "Execution-time V507 source delta, citation-trail refresh, and scope deduplication"
++    priority: high
++    track: literature
++    deliverable: results/experiment_5614_v507_source_delta_ingestion.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 30
++    estimated_wall_time_min: 45
++    prior_failures:
++      - experiment_id: exp5604-v506-source-delta-ingestion
++        verdict: "complete: accepted 1 non-duplicate actionable V506 source delta and kept retired scopes closed"
++        addressed_by: "This sweep starts after the V507 planner marker, searches a later execution window, uses a recognized aggregation provenance category, and treats a fully deduplicated no-op as terminal success."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      The planner appended `V507 Planner Refresh - 20260714` to research-references.md before designing this milestone. The execution-time freshness slot must search after that marker, suppress duplicates, and avoid remapping papers merely to create work. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/research-program.md
++      - {project_root}/research-references.md
++      - {project_root}/research-complete.yaml
++      - {project_root}/research-roadmap-next.yaml
++      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/ops/known-issues.md
++      - {project_root}/results/experiment_5613_transition_v507.json
++
++      TASK:
++      Search the mandated current sources, append only genuinely new actionable findings after the V507 marker, and emit results/experiment_5614_v507_source_delta_ingestion.json.
++
++      CONCRETE STEPS:
++      1. Search arXiv for EBM verification/reasoning, neural constraint satisfaction, Ising ML, LLM hallucination detection/mitigation, KANs, energy-guided decoding, hardware-accelerated sampling, and continual/online constraint learning.
++      2. Check OpenReview, Extropic writing, direct Semantic Scholar citation routes for EBT 2507.02092 and ARM-EBM 2512.15605, Hugging Face Papers, GitHub discovery/trending, and Logical Intelligence public updates.
++      3. Dedupe against the complete references ledger, research-complete.yaml, prior roadmap proposals, conductor results, known issues, and the exclusion manifest. No paper is actionable without a local, exact, non-retired experiment hook.
++      4. Map accepted findings only to exp5615-exp5623 without changing the dependency graph. Mark proprietary, unavailable, withdrawn, workshop-only, or externally hosted systems with their evidence boundary.
++      5. REQUIRED ARTIFACT FIELDS: with `field_principles`, `planner_marker_found` — the window is explicit; `sources_checked` — coverage is auditable; `search_timestamp_utc` — recency is reproducible; `new_references_added` — duplicates do not count; `duplicates_suppressed` — repeated ideas create no work; `experiment_mappings` — sources need executable hooks; `watch_only_items` — unavailable systems support no claim; `closed_scopes_reopened=false` — retirement requires authority; `inference_substrate=aggregation_from_upstream_artifacts` — this is source/repository synthesis, not model inference; `reproducibility_checksum` — the source set is stable; `honest_verdict` — no-op is terminal.
++      6. Run link, marker, and duplicate checks. Never modify research-roadmap-next.yaml merely to force a source delta.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5615-native-llamacpp-cuda-runtime-certificate
++    milestone: "2026.07.507"
++    title: "Native llama.cpp three-GGUF CUDA offload and response-runtime certificate"
++    priority: critical
++    track: infrastructure
++    deliverable: results/experiment_5615_native_llamacpp_cuda_runtime_certificate.json
++    agent_type: claude
++    model: "opus"
++    max_turns: 100
++    estimated_wall_time_min: 240
++    requires_gpu: true
++    prior_failures:
++      - experiment_id: exp5606-clean-sota-solve-verify-evidence-panel
++        verdict: "blocked_no_cuda_offload_authenticated_cpu_fallback_rejected"
++        addressed_by: "This task changes the substrate from the non-offloading Python path to an authenticated native llama.cpp CLI/server path, uses only small transport controls, and makes no solve-versus-verify claim."
++        retire_if_same_verdict: true
++      - experiment_id: exp5284-sota-runtime-offload-receipt-repair-v483
++        verdict: "blocked_preconditions: sota_offload_ready=false flagship_moe:blocked_no_gpu_offload_evidence:offload=False"
++        addressed_by: "The retry requires a fresh native build-capability receipt, native process/GPU memory evidence, all three current mandated GGUFs, and lossless Exp5605 envelope replay instead of the retired CPU-only llama-cpp-python route."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5605 shipped a clean lossless response envelope. Exp5606 found all three mandated GGUF files but could not authenticate GPU offload through llama-cpp-python, so the scientific panel retired. This experiment is a changed native-runtime certificate only. It must not rerun, summarize, or infer solve-versus-verify accuracy. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/scripts/experiment_template.py
++      - {project_root}/python/carnot/inference/sota_models.py
++      - {project_root}/results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json
++      - {project_root}/results/experiment_5605_raw_response_evidence_envelope.json
++      - {project_root}/results/experiment_5606_clean_sota_solve_verify_evidence_panel.json
++      - {project_root}/openspec/capabilities
++      - {project_root}/tests/python
++
++      TASK:
++      Establish a native llama.cpp CUDA execution and response-transport certificate for all three mandated local GGUF models, then emit results/experiment_5615_native_llamacpp_cuda_runtime_certificate.json.
++
++      CONCRETE STEPS:
++      1. Run preconditions before implementation or model loading: locate cached GGUFs, native llama.cpp binaries, `--help`/build metadata, CUDA support, GPU identity/driver/free memory, and existing response-envelope APIs. Do not mutate global packages; if no authenticated native CUDA path exists, emit a terminal blocked artifact with the exact missing precondition.
++      2. Reuse the existing response envelope and add only the smallest required native-process adapter under the relevant OpenSpec REQ-* requirement. Native CLI calls must use `--single-turn`; server calls must bind locally, record port/PID, and shut down cleanly.
++      3. `MODEL_SPECS` must include `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`, with cached path and hash for each. Legacy Qwen3.5-0.8B and Gemma-E4B may be labeled CPU smoke tests only and cannot satisfy any certificate field.
++      4. For each mandated model run one deterministic short structured positive control and one deliberately truncated/stop control. Preserve prompt and raw response bytes, sampling parameters, token/stop metadata, parser result, and exact control outcome through the Exp5605 envelope.
++      5. Authenticate the native binary version/build flags, requested and observed offloaded layers, GPU PID/process memory before/during/after, nonzero GPU delta, exit status, and wall time. CPU fallback is diagnostic and sets the model's certificate false.
++      6. Prove lossless replay and content hashes for every row, zero semantic false accepts, correct stop/truncation classification, no orphan server process, and repeatable native arguments. Do not compute task accuracy or compare solving with verifying.
++      7. REQUIRED ARTIFACT FIELDS: with `field_principles`, `model_specs` — all mandated identities and caches are explicit; `native_binary_receipt` — the changed substrate is authenticated; `cuda_build_capability` — compiled offload support is real; `gpu_device_receipts` — device/process evidence is preserved; `offload_layers_by_model` — requested and observed layers stay separate; `gpu_memory_delta_by_model` — CPU fallback cannot masquerade as offload; `response_envelope_path` — raw evidence is replayable; `lossless_replay_rate` — preservation is exact; `stop_control_pass_rate` — termination behavior is bounded; `semantic_false_accept_count` — parsing fails closed; `orphan_process_count` — the runtime cleans up; `models_certified_count` — denominator is three; `runtime_certificate_ready_score` — exactly 1.0 only when all models and controls pass; `inference_substrate=live_llm_inference` — real local generation occurred; `random_seed` and `reproducibility_checksum` — methodology is repeatable; `honest_verdict` — the same no-offload result is terminal retirement evidence.
++      8. Run targeted unit/spec tests and adversarial verification. Confirm research-roadmap.yaml and scripts/research_conductor.py are unchanged.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5616-exact-nonstationary-constraint-stream
++    milestone: "2026.07.507"
++    title: "Exact space-time constraint-drift stream with duration and conflict controls"
++    priority: critical
++    track: continuous-learning
++    deliverable: results/experiment_5616_exact_nonstationary_constraint_stream.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 50
++    estimated_wall_time_min: 120
++    prior_failures:
++      - experiment_id: exp5608-kan-longitudinal-self-learning
++        verdict: "complete: exact_gated_active_spline_kan_longitudinal_ready"
++        addressed_by: "Exp5608 established one clean learner sequence; this task creates a new exact benchmark that independently varies domain-space shift, temporal predicate drift, conflict, and duration before any learner is evaluated."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5608 proved bounded active-spline KAN adaptation but had zero forward transfer and no controlled nonstationarity. The V507 literature refresh separates domain-space change from temporal drift and requires duration-aware evaluation. Build the exact fixture before fitting a policy. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-program.md
++      - {project_root}/research-references.md
++      - {project_root}/results/experiment_5608_kan_longitudinal_self_learning.json
++      - {project_root}/python/carnot
++      - {project_root}/tests/python
++      - {project_root}/openspec/capabilities
++
++      TASK:
++      Specify and generate a deterministic exact nonstationary constraint-stream benchmark, then emit results/experiment_5616_exact_nonstationary_constraint_stream.json and its referenced dataset under data/research/.
++
++      CONCRETE STEPS:
++      1. Add or extend the relevant OpenSpec REQ-* requirement before implementation. Define two independent axes: constraint-family/domain-space shifts and temporal predicate drift within a fixed family.
++      2. Generate shared-rule, conflicting-rule, no-drift, reversible-drift, and persistent-drift cases at preregistered durations such as 1,2,4,8,16,32. Include at least 32 independent stream instances per condition with deterministic seeds and disjoint train/calibration/held-out splits.
++      3. Label every state and update with an exact validator. Include explicit old-rule, current-rule, and future-rule labels so retention, adaptation, and leakage can be measured without circular model labels.
++      4. Add corruption controls for wrong predicate, wrong variable/entity binding, delayed label, and poison update. Prove the exact validator rejects each injected violation and accepts every known-valid control.
++      5. Publish a stable schema, stream ordering, seed list, family/duration counts, content hashes, and a replay loader. Do not run an LLM or claim self-learning benefit in this fixture task.
++      6. REQUIRED ARTIFACT FIELDS: with `field_principles`, `dataset_path` — the fixture is durable; `schema_version` — rows have a stable contract; `space_shift_families` — domain changes are explicit; `temporal_drift_types` — time changes are explicit; `task_durations` — the duration axis is preregistered; `instances_per_condition` — denominators meet the evidence floor; `split_receipts` — leakage is excluded; `exact_oracle_label_count` — authority is deterministic; `oracle_label_error_count` — corrupted and valid controls are exact; `corruption_controls` — unsafe cases are represented; `fixture_ready_score` — exactly 1.0 only when schema, counts, splits, oracle, and replay pass; `inference_substrate=deterministic_verifier` — no LLM participated; `random_seeds` and `reproducibility_checksum` — generation replays exactly; `honest_verdict` — a deficient fixture blocks learners.
++      7. Run targeted unit, spec-coverage, schema, replay, and adversarial artifact tests.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5617-kan-critical-task-duration-map
++    milestone: "2026.07.507"
++    title: "Gated on Exp5616 exact fixture: KAN retention-adaptation Critical Task Duration map"
++    priority: critical
++    track: continuous-learning
++    deliverable: results/experiment_5617_kan_critical_task_duration_map.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 50
++    estimated_wall_time_min: 180
++    gated_on:
++      - upstream: exp5616-exact-nonstationary-constraint-stream
++        artifact_field: fixture_ready_score
++        op: ">="
++        value: 1.0
++        principle: "Learner comparisons require a complete exact stream contract."
++      - upstream: exp5616-exact-nonstationary-constraint-stream
++        artifact_field: oracle_label_error_count
++        op: "=="
++        value: 0
++        principle: "A noisy or circular oracle cannot define retention or adaptation."
++    prior_failures:
++      - experiment_id: exp5608-kan-longitudinal-self-learning
++        verdict: "complete: exact_gated_active_spline_kan_longitudinal_ready"
++        addressed_by: "This experiment preserves the clean spline-local substrate but changes the question to a multi-duration nonstationary map with frozen, retain/replay, reset/adapt, and loss-smoothed arms and independent ALE components."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      The exact Exp5616 fixture makes it possible to test the central V507 hypothesis from arXiv:2607.05609: retained knowledge can be a warm-start advantage for short shifts and a stationary bias for long conflicting tasks. Exp5608 is the clean KAN prerequisite, not a result to assume. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-references.md
++      - {project_root}/results/experiment_5608_kan_longitudinal_self_learning.json
++      - {project_root}/results/experiment_5616_exact_nonstationary_constraint_stream.json
++      - {project_root}/python/carnot
++      - {project_root}/tests/python
++      - {project_root}/openspec/capabilities
++
++      TASK:
++      Measure the active-spline KAN retention/adaptation boundary across exact drift durations and emit results/experiment_5617_kan_critical_task_duration_map.json.
++
++      CONCRETE STEPS:
++      1. Enforce the structured gates before loading the fixture. Freeze the Exp5616 splits, duration cells, metrics, and promotion rules before inspecting outcomes.
++      2. Compare at least four arms: frozen/no-update, retain with exact replay, reset/adapt, and loss-smoothed adaptation. Reuse Exp5608's active-spline update and exact gate without causal-memory, PACE, LLM-weight, or external-teacher components.
++      3. Run at least five independent seeds and at least 32 held-out stream instances per duration/shift condition. Keep sample order, optimization budgets, and exact-validation calls matched across arms.
++      4. Compute Average Lifelong Error, inherited instability, transient relearning error, backward retention, forward transfer, time-to-valid-adaptation, update/rollback counts, and unsafe false accepts separately by space shift, temporal drift, conflict class, and duration.
++      5. Estimate the empirical arm crossing and confidence interval without using future held-out labels for selection. Report a fit score and at least two nondegenerate switch cases before declaring a Critical Task Duration. A no-crossing null is valid.
++      6. Run update-substitution and frozen-spline controls so a bypassed learner receives no adaptation credit. Preserve checkpoints and an immutable per-update ledger.
++      7. REQUIRED ARTIFACT FIELDS: with `field_principles`, `fixture_hash` — the upstream dataset is fixed; `models_tested` — every KAN/control arm is named; `duration_cells` — the independent variable is explicit; `seeds` and `instances_per_condition` — evidence is replicated; `ale_by_arm_and_cell` — lifelong error is disaggregated; `instability_by_arm_and_cell` — inherited bias is measured; `transient_error_by_arm_and_cell` — relearning cost is measured; `backward_retention_by_arm` and `forward_transfer_by_arm` — transfer directions stay independent; `unsafe_false_accept_count` — exact safety is non-negotiable; `empirical_switch_durations` — crossings are data-backed; `critical_duration_fit_r2` — downstream gating uses a numeric fit; `nondegenerate_switch_cases` — one accidental crossing is insufficient; `lazy_identity_guard_passed` — the KAN update is active; `inference_substrate=exact_constraint_stream_active_spline_kan_no_llm` — only the KAN component adapts and no LLM participates; `random_seeds` and `reproducibility_checksum` — the run is repeatable; `honest_verdict` — a bounded null is terminal.
++      8. Run targeted unit/spec tests, metric recomputation, and adversarial verification.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5618-predictive-window-kan-self-learning
++    milestone: "2026.07.507"
++    title: "Gated on Exp5617 nondegenerate duration map: predictive-window KAN continuous self-learning"
++    priority: critical
++    track: continuous-learning
++    deliverable: results/experiment_5618_predictive_window_kan_self_learning.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 50
++    estimated_wall_time_min: 210
++    gated_on:
++      - upstream: exp5617-kan-critical-task-duration-map
++        artifact_field: critical_duration_fit_r2
++        op: ">="
++        value: 0.5
++        principle: "An adaptive controller requires a minimally predictive duration boundary."
++      - upstream: exp5617-kan-critical-task-duration-map
++        artifact_field: nondegenerate_switch_cases
++        op: ">="
++        value: 2
++        principle: "The policy must face more than one real retention-versus-adaptation choice."
++      - upstream: exp5617-kan-critical-task-duration-map
++        artifact_field: unsafe_false_accept_count
++        op: "=="
++        value: 0
++        principle: "Only an exact-safe substrate can be promoted into online control."
++    prior_failures:
++      - experiment_id: exp5584-two-timescale-exact-self-learning
++        verdict: "blocked_gate_check_failed"
++        addressed_by: "This task removes the retired causal-memory/PACE prerequisite and gates only on a newly measured KAN duration boundary over exact nonstationary streams."
++        retire_if_same_verdict: true
++      - experiment_id: exp5583-causal-memory-metric-corrigendum
++        verdict: "complete: exp5569_policy_lane_retired_metric_corrigendum_from_cached_rows"
++        addressed_by: "The predictive controller observes independent exact-energy and duration-history features, mutates only active KAN splines, and contains no causal-memory write/manage/read policy."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Carnot's required continuous self-learning lane now has a clean component and, if the gates pass, an empirical regime boundary. The controller must choose among retention and adaptation actions causally from past evidence; an oracle selector may bound regret but cannot headline. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-program.md
++      - {project_root}/research-references.md
++      - {project_root}/results/experiment_5608_kan_longitudinal_self_learning.json
++      - {project_root}/results/experiment_5616_exact_nonstationary_constraint_stream.json
++      - {project_root}/results/experiment_5617_kan_critical_task_duration_map.json
++      - {project_root}/python/carnot
++      - {project_root}/tests/python
++      - {project_root}/openspec/capabilities
++
++      TASK:
++      Implement and evaluate a predictive-window controller for continuous spline-local KAN self-learning, then emit results/experiment_5618_predictive_window_kan_self_learning.json.
++
++      CONCRETE STEPS:
++      1. Enforce every structured gate before implementation. Freeze a held-out stream roster and controller features before outcomes; features may use only past/current exact energies, residual classes, duration estimates, and update history.
++      2. Let the controller choose retain/replay, loss-smoothed update, reset/adapt, or no-update. It must never see future labels, held-out outcomes, or an external teacher. Only active KAN spline state may change; LLM weights remain absent and frozen.
++      3. Compare the causal controller with every fixed Exp5617 arm and a clearly labeled future-aware oracle selector. Use at least five seeds and 32 held-out streams per condition under matched compute and exact-validator budgets.
++      4. Report ALE, regret to oracle, delta versus the best fixed non-oracle arm, valid-adaptation latency, forward transfer, backward retention, forgetting, update frequency, rollback burden, and compute/memory cost with intervals.
++      5. Inject poison, transient drift, recurrence of an old rule, and delayed regression. Require zero unsafe false accepts, rejected or rolled-back poison, independent rollback positive control, and recovery of a recurring valid rule.
++      6. Run active-component substitution, frozen-controller, shuffled-order, and no-update controls. Preserve immutable decision/checkpoint ledgers and verify exact replay from each checkpoint.
++      7. REQUIRED ARTIFACT FIELDS: with `field_principles`, `upstream_gate_receipt` — prerequisite values are exact; `controller_feature_contract` — future leakage is excluded; `models_tested` — controller and controls are explicit; `seeds` and `instances_per_condition` — evidence is replicated; `ale_by_arm` — the objective is direct; `delta_ale_vs_best_fixed` — adaptive benefit is not cherry-picked; `regret_to_oracle` — the unattainable ceiling is labeled; `valid_adaptation_latency` — speed of learning is measured; `forward_transfer_delta`, `backward_retention_delta`, and `forgetting_delta` — outcomes are independent; `unsafe_false_accept_count` — safety is exact; `poison_update_disposition` — bad changes cannot persist; `rollback_positive_control` — governance is real; `delayed_regression_passed` — immediate gains survive; `lazy_identity_guard_passed` — active splines are causal; `no_model_weight_mutation` — no LLM weights changed; `continuous_self_learning_ready` — every benefit and safety gate is conjunctive; `inference_substrate=exact_constraint_stream_active_spline_kan_no_llm` — only the KAN component adapts and no LLM participates; `random_seeds` and `reproducibility_checksum` — results replay; `honest_verdict` — a null or blocked gate is terminal.
++      8. Run targeted unit/spec tests, exact metric recomputation, checkpoint replay, and adversarial verification.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5619-arc-forward-inverse-transition-cycle
++    milestone: "2026.07.507"
++    title: "ARC own-observation forward-inverse transition-cycle verifier prototype"
++    priority: critical
++    track: arc-agi3
++    deliverable: results/experiment_5619_arc_forward_inverse_transition_cycle.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 50
++    estimated_wall_time_min: 150
++    prior_failures:
++      - experiment_id: exp5609-arc-filter-intermediate-invariance-ab
++        verdict: "complete: arc_filter_ab_reachable_repeat_noop_filters_retired"
++        addressed_by: "This prototype does not prune or rerank action candidates; it validates whether an executed action and observed successor form a consistent generic transition before the online world model may learn from it."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      The prior ARC mechanisms were reachable but did not change downstream work. World Action Verifier suggests a different failure boundary: verify successor plausibility and inverse action reachability, then require cycle consistency before an observed transition updates the world model. Use only the agent's own runtime actions and observations. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-references.md
++      - {project_root}/ops/arc_solve_registry.yaml
++      - {project_root}/results/experiment_5609_arc_filter_intermediate_invariance_ab.json
++      - {project_root}/results/experiment_5610_arc_live_self_discovery_levelup_v506.json
++      - {project_root}/python/carnot/agentic/arc_competition_agent.py
++      - {project_root}/scripts/arc_loop_solve.py
++      - {project_root}/tests/python
++      - {project_root}/openspec/capabilities/arc-human-replay-frame-change/spec.md
++
++      TASK:
++      Implement and positively control a generic ARC forward-inverse transition-cycle verifier, then emit results/experiment_5619_arc_forward_inverse_transition_cycle.json.
++
++      CONCRETE STEPS:
++      1. Registry-precheck the trace roster and use only already reproduced public levels for this development measurement. Do not read game source, run exhaustive ground-truth BFS, create a hand GameAdapter, or claim a new level.
++      2. Before behavior changes, add an OpenSpec REQ-* requirement for agent-owned transition provenance, generic action-effect features, inverse action recovery, forward replay, corruption rejection, and fail-closed update admission.
++      3. Build game-agnostic changed-object/action features from the live agent's own `(state, action, successor)` observations. Fit or update within each live session; hold out episodes within each game and make no cross-game transfer claim.
++      4. Verify two independent factors: whether the successor is plausible under observed generic state change and whether a sparse inverse signature recovers the executed action. Admit a world-model update only when forward replay and inverse recovery form a consistent cycle.
++      5. Use at least three games and at least 32 held-out transitions per corruption/valid condition. Inject permuted actions, mismatched successors, no-op substitutions, and wrong-object changes; freeze thresholds before the held-out evaluation.
++      6. Report coverage, abstention, valid-transition acceptance, corrupted-transition rejection, inverse action accuracy, forward replay error, per-game heterogeneity, runtime overhead, and immutable update receipts. An abstaining verifier may be safe but is not useful.
++      7. REQUIRED ARTIFACT FIELDS: with `field_principles`, `registry_precheck` — only known levels are used; `trace_roster` — provenance is auditable; `source_files_read=false` — outer-loop knowledge is excluded; `per_game_adapter_used=false` — the verifier is generic; `transition_feature_contract` — inputs are agent-owned; `heldout_transitions_by_condition` — sample sizes are explicit; `inverse_action_accuracy` — reachability is measured; `forward_replay_error` — effect consistency is measured; `valid_transition_accept_rate` — coverage is visible; `corruption_reject_rate` — negative controls are real; `unsafe_transition_accept_count` — bad updates fail closed; `cycle_verifier_positive_control_rate` — downstream gate uses a numeric value; `runtime_overhead` — cost is bounded; `solve_provenance=development_proxy` — this task receives no level credit; `inference_substrate=offline_arcade_live_agent_runtime_filters_no_new_llm` — no LLM was invoked; `random_seeds` and `reproducibility_checksum` — evaluation replays; `honest_verdict` — a no-op or over-abstaining verifier is terminal.
++      8. Run ARC artifact/orphan-solver lint, targeted unit/spec tests, and adversarial verification.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5620-arc-cycle-guarded-live-update-ab
++    milestone: "2026.07.507"
++    title: "Gated on Exp5619 transition controls: ARC cycle-guarded live world-model update A/B"
++    priority: critical
++    track: arc-agi3
++    deliverable: results/experiment_5620_arc_cycle_guarded_live_update_ab.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 50
++    estimated_wall_time_min: 180
++    gated_on:
++      - upstream: exp5619-arc-forward-inverse-transition-cycle
++        artifact_field: cycle_verifier_positive_control_rate
++        op: ">="
++        value: 0.9
++        principle: "The verifier must accept known-valid transitions before live wiring."
++      - upstream: exp5619-arc-forward-inverse-transition-cycle
++        artifact_field: unsafe_transition_accept_count
++        op: "=="
++        value: 0
++        principle: "A verifier that admits corrupted updates cannot guard online learning."
++    prior_failures:
++      - experiment_id: exp5609-arc-filter-intermediate-invariance-ab
++        verdict: "complete: arc_filter_ab_reachable_repeat_noop_filters_retired"
++        addressed_by: "This A/B changes world-model update admission after executed transitions rather than screening proposed actions, and it requires lower held-out model error plus a downstream planning effect."
++        retire_if_same_verdict: true
++      - experiment_id: exp5253-arc-live-patch-clean-receipts-v480
++        verdict: "complete: level_delta=0 patch_decision=retire_current_provenance_patch solve_provenance=live_agent_self_discovery; clean_zero_delta_no_level_banked."
++        addressed_by: "The prior routing patch is not reused; the new branch is an exact forward-inverse transition-consistency gate with corruption controls and matched known-level reproduction."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5619 must first show that the forward-inverse verifier accepts real transitions and rejects corruption. This task measures whether gating online transition-model updates improves the reachable generic planner. It does not add an intrinsic reward, alter action proposal counts, or claim a new solve. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/ops/arc_solve_registry.yaml
++      - {project_root}/results/experiment_5619_arc_forward_inverse_transition_cycle.json
++      - {project_root}/python/carnot/agentic/arc_competition_agent.py
++      - {project_root}/scripts/arc_loop_solve.py
++      - {project_root}/scripts/arc_solver_kit.py
++      - {project_root}/tests/python
++      - {project_root}/openspec/capabilities/arc-human-replay-frame-change/spec.md
++
++      TASK:
++      Wire the verified transition-update contract into the live generic planner, run a matched-budget A/B on known levels, and emit results/experiment_5620_arc_cycle_guarded_live_update_ab.json.
++
++      CONCRETE STEPS:
++      1. Enforce the structured gates before implementation. Registry-precheck at least three games with already reproduced levels and action/change diversity; this A/B cannot target or bank an unsolved level.
++      2. Wire one narrow branch: baseline accepts current observed transition updates, while treatment admits an update only after the Exp5619 forward-inverse cycle passes. Keep the action proposer, scoring, budgets, stopping rules, and seeds identical.
++      3. Prove live reachability before outcome comparison by recording proposed transition updates, accepted/rejected updates, inverse decisions, forward replay residuals, and at least one deliberately corrupted update rejected in the live code path.
++      4. Run at least five seeds and matched action budgets per game. Measure held-out forward prediction error, invalid-plan rate, environment actions, distinct states, nodes expanded, known-level reproduction, actions-to-level, and wall time.
++      5. Promote only with zero known-level regression, zero unsafe accepts, a preregistered improvement in held-out model error or invalid-plan rate, and an improvement in at least one downstream action/search metric whose interval is reported. A model-only cosmetic change is insufficient.
++      6. If the guarded branch is unreachable, over-abstains, or repeats a reachable downstream no-op, set promotion false and retire this mechanism rather than tuning on the held-out outcomes.
++      7. REQUIRED ARTIFACT FIELDS: with `field_principles`, `upstream_gate_receipt` — prerequisites are exact; `registry_precheck` — targets are non-duplicate known levels; `roster` — scope is auditable; `arm_configs` — only update admission differs; `matched_budget_receipt` — comparison is fair; `live_reachability_counts` — the mechanism actually fires; `corruption_positive_control` — the live branch fails closed; `forward_error_by_arm` — model fidelity is direct; `invalid_plan_rate_by_arm` — planning errors are visible; `environment_actions_by_arm`, `distinct_states_by_arm`, and `nodes_expanded_by_arm` — downstream work is measured; `known_levels_reproduced_by_arm` — safety does not regress; `paired_effects_and_intervals` — uncertainty bounds promotion; `unsafe_transition_accept_count` — bad updates are excluded; `live_branch_promotion_score` — exactly 1.0 only when every benefit/safety gate passes; `solve_provenance=development_proxy` — no new-level credit; `source_files_read=false` and `per_game_adapter_used=false` — hidden solvers are excluded; `inference_substrate=offline_arcade_live_agent_runtime_filters_no_new_llm` — no LLM was invoked; `random_seeds` and `reproducibility_checksum` — A/B replays; `honest_verdict` — a reachable no-op is terminal retirement evidence.
++      8. Run ARC lint, registry integrity, targeted unit/spec tests, and adversarial verification.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5621-arc-live-self-discovery-levelup-v507
++    milestone: "2026.07.507"
++    title: "ARC-AGI-3 unconditional rotated live-agent plus-one reproducible level attempt"
++    priority: critical
++    track: arc-agi3
++    deliverable: results/experiment_5621_arc_live_self_discovery_levelup_v507.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 50
++    estimated_wall_time_min: 180
++    operator_override: "Standing 2026-06-19 ARC Level-Up Attempt Guarantee requires one real live-agent attempt each roadmap; the target rotates after exp5610's no-new-level result."
++    prior_failures:
++      - experiment_id: exp5610-arc-live-self-discovery-levelup-v506
++        verdict: "complete: no_new_arc_level_banked_sk48_L8_bounded_live_attempt"
++        addressed_by: "This attempt excludes sk48 L8 and every registered level, rotates to fresh authenticated headroom, and may use only a cleanly promoted forward-inverse update branch; otherwise it executes the unchanged baseline unconditionally."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5610 executed a credited live-agent self-discovery attempt but added no level. The standing roadmap floor requires another genuine attempt. Exp5620 is advisory: a blocked or negative A/B must not skip this task. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/ops/north-star.md
++      - {project_root}/ops/arc_solve_registry.yaml
++      - {project_root}/ops/known-issues.md
++      - {project_root}/results/experiment_5610_arc_live_self_discovery_levelup_v506.json
++      - {project_root}/results/experiment_5620_arc_cycle_guarded_live_update_ab.json
++      - {project_root}/python/carnot/agentic/arc_competition_agent.py
++      - {project_root}/scripts/arc_loop_solve.py
++      - {project_root}/scripts/arc_solver_kit.py
++      - {project_root}/tests/python
++      - {project_root}/openspec/capabilities/arc-human-replay-frame-change/spec.md
++
++      TASK:
++      Run one unconditional live-agent self-discovery attempt to bank a genuinely new ARC level and emit results/experiment_5621_arc_live_self_discovery_levelup_v507.json.
++
++      CONCRETE STEPS:
++      1. Registry-precheck all public games before selecting a target. Exclude every level already reproduced by arc_loop_solve, ops/arc_solve_registry.yaml, or prior artifacts, explicitly exclude Exp5610's attempted target, and rotate to authenticated next-level headroom not attempted elsewhere in `.507`.
++      2. If Exp5620 emitted `live_branch_promotion_score=1.0` with no safety regression, enable exactly that configuration. Otherwise run the unchanged current no-new-LLM live baseline. Never structured-gate, preemptively skip, or substitute a development proxy for this attempt.
++      3. The live agent must discover from its own runtime observations, actions, state transitions, and runtime reverse engineering. Do not inspect game source, run exhaustive offline ground-truth BFS, inject a hand-built per-game model/adapter, or replay a hidden solution recipe.
++      4. Fix target, action budget, seeds, stopping rules, and mechanism configuration before the attempt. Prefer the existing no-LLM path. If an LLM call is genuinely required, `MODEL_SPECS` must include at least `unsloth/Qwen3.6-35B-A3B-GGUF` or another mandated V507 model via the cached SOTA helper; legacy small models cannot headline.
++      5. If the live agent reaches a candidate level, reproduce it independently through the generic offline reproduction path. Bank only when the target exceeds the registry precheck, the action trace/checksum replays, and `offline_reproduced=true`.
++      6. Acceptance target is `+1 reproducible level` with `offline_reproduced=true`. Failure remains an honest complete null and cannot authorize source reading, outer-loop reverse engineering, or a per-game development adapter.
++      7. REQUIRED ARTIFACT FIELDS: with `field_principles`, `registry_precheck` — duplicate levels receive no credit; `target_selection_receipt` — rotation and headroom are explicit; `live_attempt_executed=true` — the standing floor is real; `live_branch_configuration` — advisory promotion use is auditable; `action_budget` — search cost is bounded; `attempt_trace_path` — discovery evidence replays; `levels_before` and `levels_after` — north-star delta is exact; `new_reproducible_levels` — only newly banked levels count; `offline_reproduced` — a live reach needs independent replay; `registry_updated` — successful evidence is durable; `solve_provenance=live_agent_self_discovery` — only the credited path can headline; `source_files_read=false` — outer-loop knowledge is excluded; `per_game_adapter_used=false` — no hidden solver is smuggled in; `model_specs` — empty only when no LLM is invoked, otherwise contains a mandated cached model with invocation receipt; `inference_substrate=offline_arcade_live_agent_runtime_self_discovery_no_llm` when no LLM fires, otherwise the authenticated local GGUF substrate; `random_seeds` and `reproducibility_checksum` — the attempt is auditable; `honest_verdict` — no-new-level is terminal.
++      8. Run ARC artifact/count/orphan-solver lints, targeted tests, registry integrity, and adversarial verification.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5622-cdls-exact-kernel-audit
++    milestone: "2026.07.507"
++    title: "cDLS exact small-state target, detailed-balance, and quality-gate audit"
++    priority: critical
++    track: hardware-sampling
++    deliverable: results/experiment_5622_cdls_exact_kernel_audit.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 50
++    estimated_wall_time_min: 150
++    prior_failures:
++      - experiment_id: exp5611-cdls-matched-sampler-crossover
++        verdict: "blocked: cDLS matched CPU/CUDA comparison unavailable; blocked_reasons=0; board_speedup_claimed=false"
++        addressed_by: "This task does not repeat the large-n timing run; it first enumerates small targets, audits the Markov kernel, adds an exact correction when required, and freezes measurable large-n quality gates."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5611 ran cDLS code on CPU/CUDA but one seed and zero quality-matched pairs left the scientific cause unresolved. Before another performance run, prove that the continuous-intermediate projection samples the intended discrete target and define why a pair qualifies. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-references.md
++      - {project_root}/results/experiment_5573_matched_sampler_hardware_continuity.json
++      - {project_root}/results/experiment_5611_cdls_matched_sampler_crossover.json
++      - {project_root}/python/carnot
++      - {project_root}/tests/python
++      - {project_root}/openspec/capabilities
++
++      TASK:
++      Audit and, if necessary, correct the cDLS transition kernel against exact small Ising targets, then emit results/experiment_5622_cdls_exact_kernel_audit.json.
++
++      CONCRETE STEPS:
++      1. Add or extend the relevant OpenSpec REQ-* requirement before implementation. Preserve the existing discrete Langevin baseline and the uncorrected cDLS kernel as named controls.
++      2. Use exactly enumerable Ising systems at several sizes/topologies with finite temperature and nontrivial couplings. Enumerate normalized target probabilities and construct the exact transition matrix when feasible; otherwise use a separately verified high-precision estimate.
++      3. Test row normalization, nonnegative probabilities, support/irreducibility, reversibility or the declared nonreversible invariant condition, detailed-balance residual, stationary distribution, energy histogram, and deterministic seed replay.
++      4. If projection introduces bias, implement a Metropolis-Hastings or mathematically justified correction and rerun the entire audit. Do not tune the correction on the later large-n timing set.
++      5. Use at least five independent seeds for empirical checks and report exact-versus-empirical total variation with uncertainty. Include deliberately biased and broken-proposal positive controls that the audit must reject.
++      6. Predeclare at least three large-n quality-equivalence requirements covering target/energy behavior, mixing, and constraint validity. These fields, not a manually set success boolean, gate Exp5623.
++      7. REQUIRED ARTIFACT FIELDS: with `field_principles`, `target_descriptors` — exact systems are explicit; `models_tested` — discrete, uncorrected cDLS, and corrected cDLS kernels are separately named; `state_space_sizes` — enumeration limits are visible; `transition_row_sum_error_max` — normalization is exact; `detailed_balance_residual_max` — invariance is measured; `exact_distribution_tv_max` — target parity is numeric; `empirical_distribution_intervals` — finite-sample error is bounded; `broken_kernel_controls_rejected` — the audit has positive controls; `correction_applied` and `correction_spec` — the final kernel is auditable; `quality_gate_specification` — later equivalence is preregistered; `quality_gate_specified_count` — downstream gating is numeric; `kernel_audit_ready_score` — exactly 1.0 only if all exactness and control gates pass; `inference_substrate=deterministic_verifier` — no LLM participated; `random_seeds` and `reproducibility_checksum` — the kernel audit replays; `honest_verdict` — a biased kernel blocks timing.
++      8. Run targeted unit/spec tests, distributional regression, exact recomputation, and adversarial verification.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5623-cdls-multiseed-cpu-cuda-crossover
++    milestone: "2026.07.507"
++    title: "Gated on Exp5622 exactness: corrected cDLS multi-seed matched CPU-CUDA crossover"
++    priority: high
++    track: hardware-sampling
++    deliverable: results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json
++    agent_type: codex
++    model: "gpt-5.5"
++    max_turns: 50
++    estimated_wall_time_min: 240
++    requires_gpu: true
++    gated_on:
++      - upstream: exp5622-cdls-exact-kernel-audit
++        artifact_field: kernel_audit_ready_score
++        op: ">="
++        value: 1.0
++        principle: "Only a target-correct kernel may enter performance benchmarking."
++      - upstream: exp5622-cdls-exact-kernel-audit
++        artifact_field: exact_distribution_tv_max
++        op: "<="
++        value: 0.02
++        principle: "Small-state stationary distribution must match the exact target."
++      - upstream: exp5622-cdls-exact-kernel-audit
++        artifact_field: detailed_balance_residual_max
++        op: "<="
++        value: 0.000001
++        principle: "The corrected reversible kernel must satisfy the preregistered residual ceiling."
++      - upstream: exp5622-cdls-exact-kernel-audit
++        artifact_field: quality_gate_specified_count
++        op: ">="
++        value: 3
++        principle: "Timing is uninterpretable until target, mixing, and validity equivalence are fixed."
++    prior_failures:
++      - experiment_id: exp5611-cdls-matched-sampler-crossover
++        verdict: "blocked: cDLS matched CPU/CUDA comparison unavailable; blocked_reasons=0; board_speedup_claimed=false"
++        addressed_by: "This benchmark consumes an exact-audited corrected kernel, uses five paired seeds, preregistered quality equivalence, explicit successful-pair reasons, and authenticated raw CPU/CUDA timing rows."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      The workshop cDLS claim is only a hypothesis. Exp5611 produced no admissible matched pair. Exp5622 must establish target correctness and freeze quality equivalence before this multi-seed timing task can run. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-references.md
++      - {project_root}/results/experiment_5573_matched_sampler_hardware_continuity.json
++      - {project_root}/results/experiment_5611_cdls_matched_sampler_crossover.json
++      - {project_root}/results/experiment_5622_cdls_exact_kernel_audit.json
++      - {project_root}/python/carnot
++      - {project_root}/tests/python
++      - {project_root}/openspec/capabilities
++
++      TASK:
++      Run a preregistered, quality-matched, multi-seed corrected-cDLS CPU/CUDA crossover benchmark and emit results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json.
++
++      CONCRETE STEPS:
++      1. Enforce every structured gate before allocating GPU work. Use the corrected Exp5622 kernel and unchanged discrete Langevin baseline; never substitute the biased control kernel.
++      2. Run identical exact Ising targets at n=128,256,512,1024 where memory permits, with the same five or more paired seeds, temperatures, warmup, retained sample count of at least 10000, schedules, and measurement boundaries across methods and devices.
++      3. Authenticate CPU identity, GPU identity, driver/runtime, free memory, kernel/device path, seeds, compile/warmup time, sampling time, end-to-end time, and raw timing rows. Record OOM, timeout, and failed-quality rows rather than dropping them.
++      4. Apply Exp5622's preregistered equivalence rules to acceptance, ESS, integrated autocorrelation, energy distribution, best/mean energy, exact constraint satisfaction, and uncertainty. Explain every pair's inclusion or exclusion.
++      5. Compute paired CPU/CUDA and corrected-cDLS/discrete-DLS ratios with intervals. `crossover_claim_allowed=true` only when a successful quality-matched pair's timing interval excludes 1.0 in the favorable direction; never claim a board or TSU result.
++      6. Preserve raw samples or stable sufficient-statistic/checksum files so ESS, autocorrelation, energy, and timing summaries can be recomputed independently.
++      7. REQUIRED ARTIFACT FIELDS: with `field_principles`, `upstream_gate_receipt` — exactness prerequisites are fixed; `target_descriptors` — methods sample identical problems; `instance_sizes` — crossover range is explicit; `models_tested` — sampler methods are named and no LLM is implied; `seeds` — at least five paired runs are reproducible; `samples_per_pair` — mixing estimates meet the floor; `cpu_device_receipt` and `cuda_device_receipt` — hardware is authenticated; `timing_rows` — raw matched evidence precedes summaries; `energy_quality_metrics` — speed cannot hide wrong samples; `mixing_metrics` — ESS/autocorrelation test the mechanism; `quality_gate_results_by_pair` — exclusions are explained; `successful_matched_pairs` — failed rows do not enter speedups; `speedup_by_pair` — only matched ratios are reported; `crossover_size` — a null is allowed; `crossover_claim_allowed` — quality and timing gates are conjunctive; `board_speedup_claimed=false` — physical-board scope stays closed; `inference_substrate=matched_cpu_cuda_exact_ising_sampling` — the compute substrate is explicit; `random_seeds` and `reproducibility_checksum` — methodology is complete; `honest_verdict` — no crossover is terminal evidence.
++      8. Run targeted unit/spec tests, independent metric recomputation, and adversarial verification.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5624-v507-capstone-reconciliation
++    milestone: "2026.07.507"
++    title: "V507 capstone, promotion-retirement ledger, and spec-ops reconciliation"
++    priority: critical
++    track: infrastructure
++    deliverable: results/experiment_5624_v507_capstone_reconciliation.json
++    agent_type: claude
++    model: "opus"
++    max_turns: 100
++    estimated_wall_time_min: 120
++    operator_override: "Standing 2026-05-29 versioned-continuation authorization permits one capstone reconciliation per milestone after terminal artifacts exist."
++    prior_failures:
++      - experiment_id: exp5612-v506-capstone-reconciliation
++        verdict: "complete: .506 capstone aggregated 10 readable artifact files across Exp5603-Exp5611; response envelope promoted=True; solve_verify_asymmetry=false; exact_extension=false; kan_longitudinal_ready=True; arc_registry_delta=0; cDLS_crossover=false"
++        addressed_by: "This capstone aggregates a different twelve-task milestone and must decide native runtime readiness, duration-aware KAN learning, ARC transition-cycle/live-level evidence, and corrected cDLS without upgrading blocked or development-proxy results."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5613-exp5623 form milestone 2026.07.507. The capstone must preserve honest nulls, apply retirement mechanics, and keep OpenSpec, traceability, completion, status, changelog, references, exclusions, ARC registry, and conductor evidence aligned. Today is {date}.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-roadmap.yaml
++      - {project_root}/research-roadmap-next.yaml
++      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/research-complete.yaml
++      - {project_root}/research-references.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/ops/arc_solve_registry.yaml
++      - {project_root}/ops/status.md
++      - {project_root}/ops/changelog.md
++      - {project_root}/ops/conductor-log.md
++      - {project_root}/_bmad/traceability.md
++      - {project_root}/results/experiment_5613_transition_v507.json through {project_root}/results/experiment_5623_cdls_multiseed_cpu_cuda_crossover.json
++      - {project_root}/ops/e2e-test-plan.md
++
++      TASK:
++      Aggregate terminal V507 evidence, reconcile specifications and operations documents, and emit results/experiment_5624_v507_capstone_reconciliation.json.
++
++      CONCRETE STEPS:
++      1. Read every available upstream artifact directly. Record missing, blocked, gate-skipped, malformed, flagged, complete, promoted, and retired tasks separately; never infer success from titles or prompts.
++      2. Decide narrow claims for the native three-model runtime certificate, exact drift fixture, Critical Task Duration map, predictive KAN self-learning, ARC transition-cycle verifier and live branch, new ARC registry levels, cDLS exactness, and CPU/CUDA crossover.
++      3. Apply every `retire_if_same_verdict` rule. Update ops/exclusion_manifest.yaml when a repeated failure meets retirement criteria; do not retire a new scientific null merely because it is negative.
++      4. Reconcile relevant openspec/capabilities specs, _bmad/traceability.md, research-complete.yaml, research-references.md, ops/status.md, ops/changelog.md, ARC registry/audit docs, and any hardware status touched by actual evidence. Preserve existing content and append evidence-backed updates.
++      5. Run roadmap schema/gate/exclusion/harness-fit checks, adversarial verification, spec coverage, relevant unit/lint suites, root clutter sweep, and applicable end-to-end checks from ops/e2e-test-plan.md. Record commands, exit codes, counts, warnings, and skips.
++      6. REQUIRED ARTIFACT FIELDS: with `field_principles`, `expected_task_ids` — the milestone denominator is fixed; `artifacts_found` — only files support claims; `terminal_status_by_task` — blocked/skipped/complete stay distinct; `headline_claims` — conclusions are narrow; `promotion_decisions` — mechanisms promote only through preregistered gates; `retirement_decisions` — repeated failures stop reruns; `native_runtime_verdict` — smoke evidence is not verifier quality; `continuous_self_learning_verdict` — FR-11 outcome is explicit; `arc_transition_verdict` — development evidence is bounded; `arc_registry_delta` — north-star movement is exact; `hardware_sampling_verdict` — exactness and quality bound timing; `documents_reconciled` — specs and ops match code; `tests_run` — verification is reproducible; `unresolved_gaps` — negative evidence becomes planning input; `inference_substrate=aggregation_from_upstream_artifacts` — capstone makes no new inference; `reproducibility_checksum` — aggregation is stable; `honest_verdict` — terminal summary starts `complete:` or `blocked:`.
++      7. Confirm research-roadmap.yaml and scripts/research_conductor.py remain unchanged and do not activate the next milestone.
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

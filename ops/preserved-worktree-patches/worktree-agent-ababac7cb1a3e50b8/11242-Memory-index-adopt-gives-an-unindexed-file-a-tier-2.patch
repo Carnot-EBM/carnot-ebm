@@ -1,0 +1,248 @@
+From 45b299fb9f603d52c25417ebaf6259842927752c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 08:54:36 -0400
+Subject: [PATCH 11242/11362] Memory index: --adopt gives an unindexed file a
+ tier-2 line from its own frontmatter (REQ-INFRA-6976 F)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Operator decision (relayed): index the 51 memory files that have no line,
+and keep _DEMOTE_ORDER as proposed. adopt() builds `- [Title](file) — hook`
+from the file's name: and description:, appends it to _index_<group>.md,
+and refuses an already-indexed name, an index file, or a missing file.
+The tier-2 placement is factored out of demote() into _place_in_tier2()
+and shared. _DEMOTE_ORDER is now marked operator-confirmed in code and
+spec. 74 tests pass. The live adoption and its numbers follow in the next
+commit's record.
+
+Staging note: the paths were staged before a3804b477a1-era commit by another
+agent; its pre-commit stash/restore left them unstaged (the working tree
+kept every byte). Re-staged by explicit path and committed.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   | 20 ++++-
+ scripts/memory_index_drift.py                 | 79 +++++++++++++++++++
+ .../test_memory_index_capacity_20260905.py    | 58 ++++++++++++++
+ 3 files changed, 156 insertions(+), 1 deletion(-)
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index 5fe933873f..74a361544d 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -10348,6 +10348,23 @@ an `additionalContext` reminder when the state is OVER_CAP, OVER_BUDGET, MISPLAC
+ naming the fix. A clean index SHALL produce nothing. The hook stays read-only and exits 0 on any
+ error.
+ 
++**SCENARIO-INFRA-6976-F: `--adopt` gives an unindexed file a line in its tier-2 file, built from
++its own frontmatter.**
++
++`python3 scripts/memory_index_drift.py --adopt <file.md> [<file.md> ...]` SHALL build a pointer
++line `- [Title](file.md) — hook` from the file's `name:` (separators become spaces; a name that
++is already a sentence is kept) and its unquoted `description:`, and SHALL append it to
++`_index_<group>.md`, never to `MEMORY.md` beyond the group line. It SHALL refuse a name that
++already has a line anywhere (a DUPLICATE), an index file, and a file that does not exist, with
++one message per name, and SHALL be idempotent. The tier-2 placement (append, create the file,
++insert or re-count the group line) is one helper shared with `--demote`. Origin: 2026-09-05
++operator decision to index the 51 files that had no line; 40 were adopted and 11 left out with
++written reasons (`ops/changelog.md`, same date). Promotion of a line to tier 1 stays a hand
++edit, because the loaded surface is budgeted.
++
++**`_DEMOTE_ORDER` is operator-confirmed (2026-09-05, relayed by the team lead):** `reference`,
++`project`, `incident`, `feedback`, `user`. It is not provisional. Do not re-litigate it.
++
+ **Options considered and rejected.**
+ 
+ 1. Shorten the remaining long lines. 33 lines are over 200 units. Shortening them all to 150
+@@ -10372,7 +10389,8 @@ auto-memory, that would load the whole catalogue past a cap the harness set on p
+ Implementation status: implemented 2026-09-05 (`scripts/memory_index_drift.py:index_capacity`,
+ `:harness_cut`, `:index_lines`, `:index_locations`, `:resolved_index_file`, `:demote`,
+ `:hook_reminder`;
+-`tests/python/test_memory_index_capacity_20260905.py`, 32 tests). Mutation proofs: 24 of 24
++`tests/python/test_memory_index_capacity_20260905.py`, 37 tests; `:adopt`,
++`:pointer_line_from_file`, `:_place_in_tier2` added the same day). Mutation proofs: 24 of 24
+ rules RED with byte-identical restores, including the dashboard call site
+ (`outer_loop_dashboard.py:render`, `L.extend`), the `main()` exit-code site, and the hook's
+ file-location site. One first-form mutation survived (`kept = lines` with `dropped` intact); it
+diff --git a/scripts/memory_index_drift.py b/scripts/memory_index_drift.py
+index 7e096d66eb..8da3035ef6 100755
+--- a/scripts/memory_index_drift.py
++++ b/scripts/memory_index_drift.py
+@@ -78,6 +78,7 @@ BUDGET_LINES = 190
+ # Name-prefix groups whose pointers live in a tier-2 index file, not in MEMORY.md.
+ TIER2_GROUPS = ("reference",)
+ # Demotion candidates are named in this group order, oldest file first inside a group.
++# Operator-confirmed 2026-09-05 (relayed by the team lead); not provisional. Do not re-litigate.
+ _DEMOTE_ORDER = ("reference", "project", "incident", "feedback", "user")
+ _DEMOTE_CMD = "python3 scripts/memory_index_drift.py --demote"
+ 
+@@ -425,6 +426,19 @@ def demote(mem: Path, names: list[str]) -> list[str]:
+             continue
+         moves.setdefault(group_of(name), []).append(lines.pop(pos))
+         msgs.append(f"{name}: demoted to _index_{group_of(name)}.md")
++    _place_in_tier2(mem, lines, moves)
++    if moves:
++        _atomic_write(idx, "\n".join(lines) + ("\n" if trailing or lines else ""))
++    return msgs
++
++
++def _place_in_tier2(mem: Path, lines: list[str], moves: dict[str, list[str]]) -> None:
++    """Append each group's lines to its tier-2 file and keep the tier-1 group line current.
++
++    `lines` is the caller's in-memory `MEMORY.md`; the caller writes it. Shared by `demote`
++    (a line moving out of tier 1) and `adopt` (a line that never had a home).
++    """
++
+     for group, moved in moves.items():
+         gpath = mem / f"_index_{group}.md"
+         existing = (
+@@ -464,6 +478,66 @@ def demote(mem: Path, names: list[str]) -> list[str]:
+             lines.insert(last_group + 1, _group_line(group, count))
+         else:
+             lines[gpos] = _GROUP_COUNT_RE.sub(f"({count} entries)", lines[gpos], count=1)
++
++
++_NAME_RE = re.compile(r"^name:\s*(.*)$", re.M)
++
++
++def pointer_line_from_file(mem: Path, name: str) -> str:
++    """Build `- [Title](name) — hook` from the file's own frontmatter.
++
++    Title is the `name:` field with `_`/`-` turned into spaces (a name that is already a
++    sentence is kept as it is); the hook is the unquoted `description:`. Both are the file
++    author's summary, which is the half of the record REQ-INFRA-6975 holds the index line to.
++    """
++
++    text = (mem / name).read_text(errors="replace")
++    desc, _ = split_memory_file(text)
++    head = ""
++    fm = text.splitlines()
++    if fm and fm[0].strip() == "---":
++        for i in range(1, len(fm)):
++            if fm[i].strip() == "---":
++                head = "\n".join(fm[1:i])
++                break
++    m = _NAME_RE.search(head)
++    title = normalize_description(m.group(1)) if m else name[:-3]
++    if " " not in title:
++        title = title.replace("_", " ").replace("-", " ")
++    hook = normalize_description(desc) or "(no description)"
++    return f"- [{title}]({name}) \u2014 {hook}"
++
++
++def adopt(mem: Path, names: list[str]) -> list[str]:
++    """Give an unindexed memory file a pointer line in its tier-2 `_index_<group>.md`.
++
++    Never writes into `MEMORY.md` beyond the group line: the loaded surface is budgeted, and a
++    person promotes a line to tier 1 by hand. Refuses a name that already has a line anywhere
++    (that would be a DUPLICATE), an index file, or a file that does not exist. One message per
++    name. Idempotent: a second run reports and changes nothing.
++    """
++
++    idx = mem / INDEX_FILE
++    text = idx.read_text(errors="replace") if idx.exists() else ""
++    trailing = text.endswith("\n")
++    lines = text.rstrip("\n").split("\n") if text.strip() else []
++    where = index_locations(mem)
++    msgs: list[str] = []
++    moves: dict[str, list[str]] = {}
++    for name in names:
++        if is_index_file(name):
++            msgs.append(f"{name}: refused, it is an index file")
++            continue
++        if not (mem / name).is_file():
++            msgs.append(f"{name}: refused, no such memory file")
++            continue
++        if name in where:
++            msgs.append(f"{name}: already indexed in {where[name]}")
++            continue
++        moves.setdefault(group_of(name), []).append(pointer_line_from_file(mem, name))
++        where[name] = f"_index_{group_of(name)}.md"
++        msgs.append(f"{name}: indexed in _index_{group_of(name)}.md")
++    _place_in_tier2(mem, lines, moves)
+     if moves:
+         _atomic_write(idx, "\n".join(lines) + ("\n" if trailing or lines else ""))
+     return msgs
+@@ -729,6 +803,11 @@ def main(argv: list[str]) -> int:
+         for msg in demote(mem or memory_dir(), names):
+             print(msg)
+         return 0
++    if "--adopt" in argv:
++        names = [a for a in argv[argv.index("--adopt") + 1 :] if not a.startswith("--")]
++        for msg in adopt(mem or memory_dir(), names):
++            print(msg)
++        return 0
+     lines = memory_lines(mem, write="--dry-run" not in argv)
+     print("\n".join(lines))
+     bad = (
+diff --git a/tests/python/test_memory_index_capacity_20260905.py b/tests/python/test_memory_index_capacity_20260905.py
+index 9d7a2ce62c..50c97b58d0 100644
+--- a/tests/python/test_memory_index_capacity_20260905.py
++++ b/tests/python/test_memory_index_capacity_20260905.py
+@@ -389,3 +389,61 @@ def test_an_unindexed_tier2_group_file_is_told_where_its_line_belongs(mem: Path)
+     assert mid.resolved_index_file(mem, "feedback_a.md") == "MEMORY.md"
+     text = mid.hook_reminder(_grow(mem, "feedback_a.md"), mem)
+     assert "`MEMORY.md` line" in text and "`_index_" not in text
++
++
++# --- SCENARIO-F: --adopt gives an unindexed file a line in its tier-2 file, from its own frontmatter ---
++
++
++def _adoptable(mem: Path, name: str, title: str, desc: str) -> None:
++    (mem / name).write_text(
++        f"---\nname: {title}\ndescription: {desc}\nmetadata:\n  type: x\n---\n\nBody.\n"
++    )
++
++
++def test_adopt_builds_the_line_from_name_and_description_into_the_tier2_file(mem: Path) -> None:
++    _adoptable(mem, "project_new_thing.md", "new-thing_here", '"quoted \\"hook\\" text"')
++    assert mid.adopt(mem, ["project_new_thing.md"]) == [
++        "project_new_thing.md: indexed in _index_project.md"
++    ]
++    line = mid.index_lines(mem)["project_new_thing.md"]
++    assert line == '- [new thing here](project_new_thing.md) \u2014 quoted "hook" text'
++    assert mid.index_locations(mem)["project_new_thing.md"] == "_index_project.md"
++    assert "project_new_thing.md" not in (mem / "MEMORY.md").read_text()
++    assert "(_index_project.md)" in (mem / "MEMORY.md").read_text().splitlines()[0]
++    assert mid.capacity_problems(mid.index_capacity(mem)) == []
++
++
++def test_adopt_keeps_a_sentence_name_as_the_title(mem: Path) -> None:
++    _adoptable(mem, "project_s.md", "KV260 lives on SSH", "a hook")
++    mid.adopt(mem, ["project_s.md"])
++    assert mid.index_lines(mem)["project_s.md"].startswith("- [KV260 lives on SSH](project_s.md)")
++
++
++def test_adopt_refuses_an_indexed_file_an_index_file_and_a_missing_file(mem: Path) -> None:
++    msgs = mid.adopt(mem, ["feedback_a.md", "MEMORY.md", "project_gone.md"])
++    assert msgs == [
++        "feedback_a.md: already indexed in MEMORY.md",
++        "MEMORY.md: refused, it is an index file",
++        "project_gone.md: refused, no such memory file",
++    ]
++    assert mid.index_capacity(mem)["duplicates"] == [] and not (mem / "_index_feedback.md").exists()
++
++
++def test_adopt_is_idempotent_and_recounts_the_group_line(mem: Path) -> None:
++    _adoptable(mem, "project_p1.md", "p1", "h1")
++    _adoptable(mem, "project_p2.md", "p2", "h2")
++    mid.adopt(mem, ["project_p1.md"])
++    mid.adopt(mem, ["project_p2.md", "project_p1.md"])
++    text = (mem / "MEMORY.md").read_text()
++    assert text.count("(_index_project.md)") == 1 and "(2 entries)" in text
++    assert (mem / "_index_project.md").read_text().count("(project_p1.md)") == 1
++    assert mid.capacity_problems(mid.index_capacity(mem)) == []
++
++
++def test_the_adopt_entrypoint_indexes_the_file(
++    mem: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    _adoptable(mem, "incident_i.md", "an incident", "what happened")
++    assert mid.main(["--memory-dir", str(mem), "--adopt", "incident_i.md"]) == 0
++    assert "indexed in _index_incident.md" in capsys.readouterr().out
++    assert "incident_i.md" in mid.index_lines(mem)
+-- 
+2.55.0
+

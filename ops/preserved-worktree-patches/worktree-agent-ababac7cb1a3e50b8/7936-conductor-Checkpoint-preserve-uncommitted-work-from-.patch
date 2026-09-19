@@ -1,0 +1,44 @@
+From 7ccd9e17d4abb6fe6ed05eb41407218611641b88 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 25 Jul 2026 18:55:37 -0400
+Subject: [PATCH 07936/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 31d6192c2b..c087eeea07 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 127403, "iteration": 40, "phase": "iteration_start", "last_beat": "2026-07-25T22:31:44Z"}
+\ No newline at end of file
++{"pid": 127403, "iteration": 41, "phase": "iteration_start", "last_beat": "2026-07-25T22:55:34Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 248aab16d4..58196a7f53 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -14297,3 +14297,5 @@ web search: site:extropic.ai/writing XT |
+ | 2026-07-25 20:39 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
+ | 2026-07-25 21:31 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
+ | 2026-07-25 22:29 UTC | Gated on Exp5922 ready: all-three-model schema-sup | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5923_sota_sc |
++| 2026-07-25 22:53 UTC | Gated on Exp5920 ready: transactional constraint-m | OK | 88 passed, 1 warning in 8.10s |
++| 2026-07-25 22:55 UTC | Gated on Exp5923 stream and Exp5924 fixture: prosp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5923-sota-schema-supported-constraintir-a |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index df00537ceb..cf983bc0e6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 127403, "iteration": 40, "phase": "iteration_start", "started_at": "2026-07-25T22:31:44Z"}
+\ No newline at end of file
++{"pid": 127403, "iteration": 41, "phase": "iteration_start", "started_at": "2026-07-25T22:55:34Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

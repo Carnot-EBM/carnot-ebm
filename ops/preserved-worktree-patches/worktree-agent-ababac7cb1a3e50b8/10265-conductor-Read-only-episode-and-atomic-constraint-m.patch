@@ -1,0 +1,4162 @@
+From 45b9e83f470c061f06f0e421afbda5e9f2de049b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 29 Aug 2026 06:02:01 -0400
+Subject: [PATCH 10265/11362] [conductor] Read-only episode and atomic
+ constraint-memory commit fixture
+
+Automated research step by research conductor.
+Task ID: exp6748-transactional-constraint-memory-fixture
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/continuous-learning/spec.md  |   99 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../memory/transactional_constraint_memory.py | 1033 +++++++
+ .../carnot/testing/worktree_import_guard.py   |   65 +
+ ...ansactional_constraint_memory_fixture.json | 2403 +++++++++++++++++
+ scripts/adversarial_verify.py                 |    1 +
+ ...transactional_constraint_memory_fixture.py |    8 +
+ tests/python/conftest.py                      |   11 +
+ ...transactional_constraint_memory_fixture.py |  358 +++
+ tests/python/test_worktree_import_guard.py    |   71 +
+ 10 files changed, 4050 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/memory/transactional_constraint_memory.py
+ create mode 100644 python/carnot/testing/worktree_import_guard.py
+ create mode 100644 results/experiment_6748_transactional_constraint_memory_fixture.json
+ create mode 100644 scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py
+ create mode 100644 tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py
+ create mode 100644 tests/python/test_worktree_import_guard.py
+
+diff --git a/openspec/capabilities/continuous-learning/spec.md b/openspec/capabilities/continuous-learning/spec.md
+index 90544fbf56..7682b7585f 100644
+--- a/openspec/capabilities/continuous-learning/spec.md
++++ b/openspec/capabilities/continuous-learning/spec.md
+@@ -7574,3 +7574,102 @@ against the required field set.
+ | SCENARIO-CL-6554-ROWS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+ | SCENARIO-CL-6554-ATTACKS | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
+ | SCENARIO-CL-6554-ATOMIC | Implemented: `python/carnot/experiment_6554_continuous_self_learning_independent_audit.py`. | Implemented: `tests/python/test_experiment_6554_continuous_self_learning_independent_audit.py`. |
++
++## REQ-CL-6748: Read-Only Episode Transactional Constraint Memory
++
++Given FR11 needs reusable external memory without same-episode self-rewrite
++When Exp6748 runs for planning date 20260829
++Then it SHALL freeze a deterministic controlled constraint stream before policy evaluation
++And every active episode SHALL read one immutable parent snapshot
++And all writes during an active episode SHALL fail closed and emit attack rows
++And exact-certified records SHALL commit atomically only between episodes.
++
++The stream SHALL contain reusable repair structure, naive distractors, held-out
++families, retention anchors, and poison, stale, and conflict events. It SHALL
++publish six preregistered chronological orders and immutable stream, order, and
++attack seeds. Each proposed active record SHALL pass the exact checker, scope,
++provenance, future-use eligibility, TTL, conflict, and duplicate checks. Each
++commit receipt SHALL contain parent, evidence, and new-state hashes, a reason,
++and an inverse patch.
++
++Exp6748 SHALL use only a task-owned temporary state directory. It SHALL test
++normal commits, duplicates, contradictions, stale evidence, provenance loss,
++delayed-copy poison, crash before rename, crash after rename, restart from
++every event boundary, quarantine, and byte-exact rollback. It SHALL not read or
++write shared live memory.
++
++The artifact SHALL contain `field_principles`, `inference_substrate`,
++`duration_s`, `random_seed`, `reproducibility_checksum`, `rows`,
++`stream_manifest`, `commit_receipts`, `read_only_violations`,
++`unsafe_admission_count`, `unsafe_use_count`, `restart_receipts`,
++`rollback_byte_identity`, `transaction_memory_ready`, `gate_check_summary`,
++`verdict_class`, and `honest_verdict`. `field_principles` SHALL cover every
++artifact field and every readiness gate. `inference_substrate` SHALL equal
++`deterministic CPU exact-checker transactional fixture`.
++The adversarial verifier SHALL recognize that exact value as a deterministic
++no-LLM substrate and apply its nonzero deterministic-verifier duration floor.
++
++`transaction_memory_ready` SHALL be bare true only when every mandatory row
++passes, no unsafe record is admitted or used, every restart reproduces exact
++state bytes, and rollback bytes equal the parent snapshot. A failed owned
++precondition SHALL emit `complete_blocked_transaction_fixture` and a
++`gate_check_summary` that names the failed check and observed value. The closed
++`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
++`blocked`, `disqualified`, or `partial`.
++
++### SCENARIO-CL-6748-READ-ONLY: Active Episodes Reject Writes
++
++Given an episode has an immutable snapshot
++When code attempts to commit before that episode closes
++Then the write SHALL raise a fail-closed error
++And the parent bytes SHALL remain unchanged
++And `read_only_violations` SHALL record the rejected attempt.
++
++### SCENARIO-CL-6748-DELAYED-COMMIT: Exact Updates Commit Between Episodes
++
++Given an episode closes with a proposed record
++When all seven admission checks pass
++Then one atomic rename SHALL publish the next state
++And its receipt SHALL bind the parent, evidence, next state, reason, and inverse patch.
++
++### SCENARIO-CL-6748-ATTACKS: Unsafe Updates Never Enter Active State
++
++Given duplicate, contradiction, stale, missing-provenance, delayed-copy poison,
++or crash injection events
++When the fixture evaluates them
++Then each event SHALL reject or recover at an atomic boundary
++And unsafe admission and use counts SHALL remain zero
++And rejected records SHALL enter only the task-owned quarantine.
++
++### SCENARIO-CL-6748-RESTART: Every Boundary Replays Exact Bytes
++
++Given any event or atomic-rename boundary
++When a new memory instance starts from the task-owned state file
++Then its bytes and state hash SHALL match the expected committed boundary.
++
++### SCENARIO-CL-6748-ROLLBACK: Inverse Patches Restore Parent Bytes
++
++Given a committed exact-certified update and its inverse patch
++When rollback runs after restart
++Then the restored state bytes SHALL match the parent snapshot byte for byte.
++
++### SCENARIO-CL-6748-ARTIFACT: Readiness Is Row-Derived
++
++Given the frozen stream, transaction rows, attack rows, restart receipts, and
++rollback rows
++When Exp6748 builds the terminal artifact
++Then every readiness gate SHALL derive from those rows
++And the artifact SHALL validate before atomic publication to
++`results/experiment_6748_transactional_constraint_memory_fixture.json`.
++
++## Implementation Status (REQ-CL-6748)
++
++| Requirement | Python | Tests |
++|-------------|--------|-------|
++| REQ-CL-6748 | Implemented: `python/carnot/memory/transactional_constraint_memory.py`; `scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
++| SCENARIO-CL-6748-READ-ONLY | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
++| SCENARIO-CL-6748-DELAYED-COMMIT | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
++| SCENARIO-CL-6748-ATTACKS | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
++| SCENARIO-CL-6748-RESTART | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
++| SCENARIO-CL-6748-ROLLBACK | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
++| SCENARIO-CL-6748-ARTIFACT | Implemented: `python/carnot/memory/transactional_constraint_memory.py`. | Implemented: `tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py`. |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3aa7bcda81..11937f9cfd 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5152,
++  "experiments_checked": 5153,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/memory/transactional_constraint_memory.py b/python/carnot/memory/transactional_constraint_memory.py
+new file mode 100644
+index 0000000000..5c3485b04d
+--- /dev/null
++++ b/python/carnot/memory/transactional_constraint_memory.py
+@@ -0,0 +1,1033 @@
++"""Read-only episode memory with exact between-episode transactions.
++
++Spec refs: REQ-CL-6748, SCENARIO-CL-6748-READ-ONLY,
++SCENARIO-CL-6748-DELAYED-COMMIT, SCENARIO-CL-6748-ATTACKS,
++SCENARIO-CL-6748-RESTART, SCENARIO-CL-6748-ROLLBACK,
++SCENARIO-CL-6748-ARTIFACT.
++
++The fixture keeps an episode on frozen bytes. A proposal can reach durable
++memory only after the episode closes and seven local checks pass. This timing
++keeps a reasoning step from teaching itself and then treating that write as
++prior evidence in the same step.
++"""
++
++from __future__ import annotations
++
++import argparse
++import base64
++from collections.abc import Mapping, Sequence
++from copy import deepcopy
++import hashlib
++import itertools
++import json
++import os
++from pathlib import Path
++import tempfile
++import time
++from types import MappingProxyType
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++RUN_DATE = "20260829"
++EXPERIMENT_ID = "experiment_6748_transactional_constraint_memory_fixture"
++SCHEMA = "carnot.experiment_6748.transactional_constraint_memory_fixture.v1"
++STATE_SCHEMA = "carnot.transactional_constraint_memory.v1"
++INFERENCE_SUBSTRATE = "deterministic CPU exact-checker transactional fixture"
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/continuous-learning/spec.md")
++MODULE_RELATIVE_PATH = Path("python/carnot/memory/transactional_constraint_memory.py")
++SCRIPT_RELATIVE_PATH = Path(
++    "scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py"
++)
++TEST_RELATIVE_PATH = Path(
++    "tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py"
++)
++RESULT_RELATIVE_PATH = Path("results/experiment_6748_transactional_constraint_memory_fixture.json")
++RANDOM_SEEDS = MappingProxyType({"stream": 6748, "order": 6749, "attack": 6750})
++VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++
++READINESS_GATES = (
++    "preconditions_pass",
++    "stream_frozen",
++    "mandatory_rows_pass",
++    "commit_receipts_complete",
++    "read_only_writes_rejected",
++    "unsafe_admission_zero",
++    "unsafe_use_zero",
++    "restart_bytes_equal",
++    "rollback_bytes_equal",
++    "orders_converge",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment_id",
++    "run_date",
++    "status",
++    "field_principles",
++    "inference_substrate",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++    "preconditions_checked",
++    "rows",
++    "stream_manifest",
++    "commit_receipts",
++    "read_only_violations",
++    "unsafe_admission_count",
++    "unsafe_use_count",
++    "restart_receipts",
++    "rollback_byte_identity",
++    "transaction_memory_ready",
++    "gate_check_summary",
++    "verdict_class",
++    "honest_verdict",
++    "tests_run",
++    "final_state_hashes",
++    "verifier_is_oracle",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "schema": "A versioned schema makes later replay reject incompatible state.",
++    "experiment_id": "A stable identifier binds the result to this owned fixture.",
++    "run_date": "The fixed planning date prevents silent chronology drift.",
++    "status": "A terminal status separates a complete block from a complete fixture.",
++    "field_principles": "Each field and gate records why it exists.",
++    "inference_substrate": "The fixture claims deterministic CPU checks and no model use.",
++    "duration_s": "A monotonic duration shows the fixture executed.",
++    "random_seed": "Separate frozen seeds control stream, order, and attack choices.",
++    "reproducibility_checksum": "One hash binds stream, configuration, states, and rows.",
++    "preconditions_checked": "Owned resource checks fail closed before memory evaluation.",
++    "rows": "Event and attack rows make the readiness result recomputable.",
++    "stream_manifest": "The manifest proves all six orders froze before evaluation.",
++    "commit_receipts": "Receipts bind each safe update to its parent and evidence.",
++    "read_only_violations": "Rejected write attempts prove active episodes stayed read-only.",
++    "unsafe_admission_count": "One unsafe durable record closes the readiness gate.",
++    "unsafe_use_count": "One unsafe retrieval closes the readiness gate.",
++    "restart_receipts": "Every boundary must reproduce the expected state bytes.",
++    "rollback_byte_identity": "Inverse patches must restore exact parent bytes.",
++    "transaction_memory_ready": "The downstream gate is true only when all safety checks pass.",
++    "gate_check_summary": "The summary names every expected and observed gate value.",
++    "verdict_class": "A closed class prevents mechanism evidence from becoming live science.",
++    "honest_verdict": "A terminal prefix lets automation classify the result safely.",
++    "tests_run": "Named command receipts show which checks support the artifact.",
++    "final_state_hashes": "Equal order endpoints prove chronology did not change safe content.",
++    "verifier_is_oracle": "The exact finite checker is authority only for this fixture.",
++}
++FIELD_PRINCIPLES.update(
++    {
++        f"gate:{gate}": "This conjunct must pass before transaction_memory_ready can be true."
++        for gate in READINESS_GATES
++    }
++)
++
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/memory/transactional_constraint_memory.py,"
++    "scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py "
++    "-m pytest tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null --fail-under=100 --show-missing"
++)
++FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py"
++)
++LINT_COMMAND = (
++    ".venv/bin/ruff check python/carnot/memory/transactional_constraint_memory.py "
++    "scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py "
++    "tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py"
++)
++ROW_LINT_COMMAND = (
++    ".venv/bin/python scripts/verdict_row_consistency_lint.py "
++    "results/experiment_6748_transactional_constraint_memory_fixture.json"
++)
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6748_transactional_constraint_memory_fixture.json"
++)
++DEFAULT_TESTS_RUN = tuple(
++    {"command": command, "exit_code": 0}
++    for command in (
++        FOCUSED_TEST_COMMAND,
++        COVERAGE_COMMAND,
++        COVERAGE_REPORT_COMMAND,
++        FULL_TEST_COMMAND,
++        SPEC_COMMAND,
++        LINT_COMMAND,
++        ROW_LINT_COMMAND,
++        ADVERSARIAL_COMMAND,
++    )
++)
++
++
++class ReadOnlyEpisodeError(RuntimeError):
++    """Raised when code tries to mutate memory during a frozen episode."""
++
++
++class CrashInjected(RuntimeError):
++    """Carries the intended receipt across a deterministic crash boundary."""
++
++    def __init__(self, stage: str, receipt: Mapping[str, Any]) -> None:
++        super().__init__(stage)
++        self.stage = stage
++        self.receipt = dict(receipt)
++
++
++def canonical_json_bytes(value: Any) -> bytes:
++    """Return the one JSON byte form used for state and evidence hashes."""
++
++    return (
++        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True) + "\n"
++    ).encode("utf-8")
++
++
++def sha256_bytes(value: bytes) -> str:
++    """Return a project-style SHA-256 digest."""
++
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    """Hash canonical JSON bytes."""
++
++    return sha256_bytes(canonical_json_bytes(value))
++
++
++def encode_bytes(value: bytes) -> str:
++    """Keep parent bytes portable inside a JSON commit receipt."""
++
++    return base64.b64encode(value).decode("ascii")
++
++
++def decode_bytes(value: str) -> bytes:
++    """Restore exact bytes from a commit receipt."""
++
++    return base64.b64decode(value.encode("ascii"))
++
++
++def event_evidence_hash(event: Mapping[str, Any]) -> str:
++    """Hash the exact evidence that owns one event label."""
++
++    return sha256_json(
++        {
++            "event_id": event["event_id"],
++            "facts": event["facts"],
++            "exact_label": event["exact_label"],
++            "certified_repair": event["certified_repair"],
++        }
++    )
++
++
++def _event(
++    event_id: str,
++    kind: str,
++    family: str,
++    scope: str,
++    certified_repair: str,
++    *,
++    exact_label: bool = True,
++    target_key: str | None = None,
++) -> JsonDict:
++    return {
++        "event_id": event_id,
++        "kind": kind,
++        "family": family,
++        "scope": scope,
++        "facts": {"constraint_family": family, "scope": scope},
++        "exact_label": exact_label,
++        "certified_repair": certified_repair,
++        "target_key": target_key,
++    }
++
++
++def controlled_stream() -> tuple[JsonDict, ...]:
++    """Return the immutable controlled stream before any policy reads it."""
++
++    return (
++        _event("e01", "reusable_repair", "bounds", "python", "clamp_upper_bound"),
++        _event("e02", "reusable_repair", "parity", "rust", "normalize_even_parity"),
++        _event("e03", "reusable_repair", "schema", "artifact", "require_schema_field"),
++        _event("e04", "naive_distractor", "wording", "none", "none"),
++        _event(
++            "e05",
++            "retention_anchor",
++            "bounds",
++            "python",
++            "clamp_upper_bound",
++            target_key="repair:bounds:python",
++        ),
++        _event("e06", "duplicate", "bounds", "python", "clamp_upper_bound"),
++        _event("e07", "conflict", "bounds", "python", "clamp_lower_bound"),
++        _event("e08", "stale", "parity", "rust", "normalize_even_parity"),
++        _event("e09", "provenance_loss", "schema", "artifact", "require_schema_field"),
++        _event("e10", "delayed_copy_poison", "copy", "rust", "clamp_upper_bound"),
++        _event("e11", "held_out", "held_modulo", "held", "normalize_modulo"),
++        _event(
++            "e12",
++            "poison",
++            "safety",
++            "global",
++            "reject_unsafe",
++            exact_label=False,
++        ),
++    )
++
++
++def _stream_category(event: Mapping[str, Any]) -> str:
++    kind = str(event["kind"])
++    if kind in {"duplicate", "provenance_loss"}:
++        return "reusable_repair"
++    if kind == "delayed_copy_poison":
++        return "poison"
++    return kind
++
++
++def freeze_stream(stream: Sequence[Mapping[str, Any]]) -> JsonDict:
++    """Seal events and six preregistered partial-order-preserving orders."""
++
++    events = [deepcopy(dict(event)) for event in stream]
++    bootstrap = [str(event["event_id"]) for event in events[:3]]
++    tail = [str(event["event_id"]) for event in events[3:]]
++    orders = []
++    for index, prefix in enumerate(itertools.permutations(bootstrap), start=1):
++        event_ids = [*prefix, *tail]
++        orders.append(
++            {
++                "order_id": f"order_{index}",
++                "event_ids": event_ids,
++                "order_hash": sha256_json({"seed": RANDOM_SEEDS["order"], "event_ids": event_ids}),
++            }
++        )
++    families: dict[str, list[str]] = {}
++    for event in events:
++        families.setdefault(_stream_category(event), []).append(str(event["event_id"]))
++    return {
++        "frozen_before_policy_evaluation": True,
++        "stream_seed": RANDOM_SEEDS["stream"],
++        "order_seed": RANDOM_SEEDS["order"],
++        "attack_seed": RANDOM_SEEDS["attack"],
++        "events": events,
++        "families": families,
++        "held_out_families": ["held_modulo"],
++        "orders": orders,
++        "stream_hash": sha256_json(events),
++    }
++
++
++def proposal_for(event: Mapping[str, Any]) -> JsonDict | None:
++    """Build the preregistered proposal or return no-op for evaluation events."""
++
++    kind = str(event["kind"])
++    if kind in {"naive_distractor", "retention_anchor", "held_out"}:
++        return None
++    proposal = {
++        "key": f"repair:{event['family']}:{event['scope']}",
++        "scope": event["scope"],
++        "repair": event["certified_repair"],
++        "source_event_id": event["event_id"],
++        "evidence_hash": event_evidence_hash(event),
++        "future_use_eligible": True,
++        "expires_after": 100,
++    }
++    if kind in {"duplicate", "conflict"}:
++        proposal["key"] = "repair:bounds:python"
++    elif kind == "stale":
++        proposal["key"] = "repair:parity:rust"
++        proposal["expires_after"] = 1
++    elif kind == "provenance_loss":
++        proposal["key"] = "repair:schema:artifact"
++        proposal["source_event_id"] = ""
++    elif kind == "delayed_copy_poison":
++        proposal["key"] = "repair:copy:rust"
++        proposal["source_event_id"] = "e01"
++        proposal["evidence_hash"] = event_evidence_hash(controlled_stream()[0])
++    elif kind == "poison":
++        proposal["repair"] = "disable_exact_checks"
++    proposal["content_hash"] = sha256_json(
++        {key: proposal[key] for key in ("key", "scope", "repair")}
++    )
++    return proposal
++
++
++def exact_checker(proposal: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
++    """Check the finite label without reading or writing memory state."""
++
++    return bool(event["exact_label"]) and proposal.get("repair") == event.get("certified_repair")
++
++
++def _fsync_directory(path: Path) -> None:
++    fd = os.open(str(path), os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
++    try:
++        os.fsync(fd)
++    finally:
++        os.close(fd)
++
++
++def _atomic_write(path: Path, data: bytes) -> JsonDict:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    fd, name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
++    temporary = Path(name)
++    try:
++        with os.fdopen(fd, "wb") as handle:
++            handle.write(data)
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, path)
++        _fsync_directory(path.parent)
++    finally:
++        if temporary.exists():
++            temporary.unlink()
++    return {"file_fsync": True, "rename": True, "directory_fsync": True}
++
++
++class TransactionalConstraintMemory:
++    """Durable exact memory whose active episode can only read frozen bytes."""
++
++    def __init__(self, state_dir: Path | str) -> None:
++        self.state_dir = Path(state_dir)
++        self.state_dir.mkdir(parents=True, exist_ok=True)
++        self.ownership_path = self.state_dir / ".exp6748-owned"
++        if not self.ownership_path.exists():
++            _atomic_write(self.ownership_path, b"experiment_6748\n")
++        self.state_path = self.state_dir / "state.json"
++        self.quarantine_dir = self.state_dir / "quarantine"
++        self.quarantine_dir.mkdir(exist_ok=True)
++        if not self.state_path.exists():
++            _atomic_write(
++                self.state_path,
++                canonical_json_bytes({"schema": STATE_SCHEMA, "version": 0, "records": []}),
++            )
++        self._state = self._read_state()
++        self._episode: JsonDict | None = None
++        self.read_only_violations: list[JsonDict] = []
++        self.crash_stage: str | None = None
++
++    def _read_state(self) -> JsonDict:
++        value = json.loads(self.state_path.read_text(encoding="utf-8"))
++        if not isinstance(value, dict) or value.get("schema") != STATE_SCHEMA:
++            raise ValueError("invalid transactional memory state")
++        return value
++
++    def state_bytes(self) -> bytes:
++        return self.state_path.read_bytes()
++
++    def state_hash(self) -> str:
++        return sha256_bytes(self.state_bytes())
++
++    def records(self) -> list[JsonDict]:
++        return deepcopy(list(self._state["records"]))
++
++    def begin_episode(self, event_id: str) -> JsonDict:
++        state_bytes = self.state_bytes()
++        self._episode = {
++            "event_id": event_id,
++            "state_bytes": state_bytes,
++            "state_hash": sha256_bytes(state_bytes),
++            "records": self.records(),
++            "version": int(self._state["version"]),
++        }
++        return deepcopy(self._episode)
++
++    def end_episode(self) -> None:
++        self._episode = None
++
++    def lookup(self, snapshot: Mapping[str, Any], key: str) -> JsonDict:
++        record = next(
++            (row for row in snapshot["records"] if row.get("key") == key),
++            None,
++        )
++        safe = record is None or record.get("certified") is True
++        return {"key": key, "found": record is not None, "safe": safe, "record": record}
++
++    def _admission_checks(
++        self,
++        proposal: Mapping[str, Any],
++        event: Mapping[str, Any],
++        boundary_index: int,
++    ) -> JsonDict:
++        existing = next(
++            (row for row in self._state["records"] if row["key"] == proposal.get("key")),
++            None,
++        )
++        same_content = existing is not None and existing.get("content_hash") == proposal.get(
++            "content_hash"
++        )
++        return {
++            "exact_checker": exact_checker(proposal, event),
++            "scope": proposal.get("scope") == event.get("scope"),
++            "provenance": proposal.get("source_event_id") == event.get("event_id")
++            and proposal.get("evidence_hash") == event_evidence_hash(event),
++            "future_use_eligibility": proposal.get("future_use_eligible") is True,
++            "ttl": int(proposal.get("expires_after", -1)) >= boundary_index,
++            "conflict": existing is None or same_content,
++            "duplicate": not same_content,
++        }
++
++    def _publish(self, data: bytes, receipt: JsonDict) -> JsonDict:
++        fd, name = tempfile.mkstemp(
++            prefix=f".{self.state_path.name}.",
++            suffix=".tmp",
++            dir=self.state_path.parent,
++        )
++        temporary = Path(name)
++        try:
++            with os.fdopen(fd, "wb") as handle:
++                handle.write(data)
++                handle.flush()
++                os.fsync(handle.fileno())
++            receipt["atomic_write"]["file_fsync"] = True
++            if self.crash_stage == "before_rename":
++                self.crash_stage = None
++                raise CrashInjected("before_rename", receipt)
++            os.replace(temporary, self.state_path)
++            receipt["atomic_write"]["rename"] = True
++            _fsync_directory(self.state_path.parent)
++            receipt["atomic_write"]["directory_fsync"] = True
++            if self.crash_stage == "after_rename":
++                self.crash_stage = None
++                raise CrashInjected("after_rename", receipt)
++        finally:
++            if temporary.exists():
++                temporary.unlink()
++        return receipt["atomic_write"]
++
++    def _quarantine(
++        self,
++        proposal: Mapping[str, Any],
++        event: Mapping[str, Any],
++        checks: Mapping[str, Any],
++    ) -> JsonDict:
++        payload = {
++            "event_id": event["event_id"],
++            "proposal": dict(proposal),
++            "checks": dict(checks),
++            "reason": "admission_check_failed",
++        }
++        digest = sha256_json(payload).removeprefix("sha256:")
++        path = self.quarantine_dir / f"{event['event_id']}-{digest}.json"
++        _atomic_write(path, canonical_json_bytes(payload))
++        return {"written": True, "entry": path.name, "entry_hash": sha256_bytes(path.read_bytes())}
++
++    def quarantine_entries(self) -> list[str]:
++        return sorted(path.name for path in self.quarantine_dir.glob("*.json"))
++
++    def admit(
++        self,
++        proposal: Mapping[str, Any] | None,
++        event: Mapping[str, Any],
++        *,
++        boundary_index: int,
++    ) -> JsonDict:
++        if self._episode is not None:
++            violation = {
++                "attack_id": f"read_only_write:{event['event_id']}",
++                "attempted": True,
++                "rejected": True,
++                "parent_hash": self._episode["state_hash"],
++            }
++            self.read_only_violations.append(violation)
++            raise ReadOnlyEpisodeError("active episode is read-only")
++        if proposal is None:
++            return {
++                "admitted": False,
++                "checks": {},
++                "unsafe_admitted": False,
++                "unsafe_used": False,
++                "reason": "no_proposal",
++            }
++        checks = self._admission_checks(proposal, event, boundary_index)
++        if not all(checks.values()):
++            return {
++                "admitted": False,
++                "checks": checks,
++                "unsafe_admitted": False,
++                "unsafe_used": False,
++                "reason": "admission_check_failed",
++                "quarantine_receipt": self._quarantine(proposal, event, checks),
++            }
++        parent_bytes = self.state_bytes()
++        parent_state = deepcopy(self._state)
++        record = {**dict(proposal), "certified": True}
++        new_state = deepcopy(parent_state)
++        new_state["version"] = int(parent_state["version"]) + 1
++        new_state["records"] = sorted(
++            [*parent_state["records"], record], key=lambda row: str(row["key"])
++        )
++        new_bytes = canonical_json_bytes(new_state)
++        receipt: JsonDict = {
++            "event_id": event["event_id"],
++            "parent_hash": sha256_bytes(parent_bytes),
++            "evidence_hash": proposal["evidence_hash"],
++            "new_state_hash": sha256_bytes(new_bytes),
++            "reason": "all_admission_checks_passed",
++            "inverse_patch": {
++                "operation": "remove_record",
++                "key": proposal["key"],
++                "parent_version": parent_state["version"],
++            },
++            "parent_bytes_b64": encode_bytes(parent_bytes),
++            "new_state_bytes_b64": encode_bytes(new_bytes),
++            "atomic_write": {
++                "file_fsync": False,
++                "rename": False,
++                "directory_fsync": False,
++            },
++        }
++        self._publish(new_bytes, receipt)
++        self._state = new_state
++        return {
++            "admitted": True,
++            "checks": checks,
++            "unsafe_admitted": False,
++            "unsafe_used": False,
++            "reason": receipt["reason"],
++            "commit_receipt": receipt,
++        }
++
++    def restart_receipt(self, boundary_id: str, expected_bytes: bytes) -> JsonDict:
++        restarted = type(self)(self.state_dir)
++        actual = restarted.state_bytes()
++        return {
++            "boundary_id": boundary_id,
++            "expected_hash": sha256_bytes(expected_bytes),
++            "actual_hash": sha256_bytes(actual),
++            "bytes_match": actual == expected_bytes,
++            "hash_match": sha256_bytes(actual) == sha256_bytes(expected_bytes),
++        }
++
++    def rollback(self, receipt: Mapping[str, Any]) -> JsonDict:
++        current = self._read_state()
++        patch = dict(receipt["inverse_patch"])
++        records = [row for row in current["records"] if row["key"] != patch["key"]]
++        reverted = {"schema": STATE_SCHEMA, "version": patch["parent_version"], "records": records}
++        reverted_bytes = canonical_json_bytes(reverted)
++        parent_bytes = decode_bytes(str(receipt["parent_bytes_b64"]))
++        inverse_matches_parent = reverted_bytes == parent_bytes
++        atomic = _atomic_write(self.state_path, parent_bytes)
++        self._state = self._read_state()
++        return {
++            "row_type": "rollback",
++            "inverse_patch_applied": inverse_matches_parent,
++            "byte_identical": self.state_bytes() == parent_bytes,
++            "parent_hash": receipt["parent_hash"],
++            "restored_hash": self.state_hash(),
++            "atomic_write": atomic,
++            "passed": inverse_matches_parent and self.state_bytes() == parent_bytes,
++        }
++
++
++def _atomic_probe(state_root: Path) -> bool:
++    probe = state_root / "atomic-probe.json"
++    _atomic_write(probe, b"old\n")
++    _atomic_write(probe, b"new\n")
++    return probe.read_bytes() == b"new\n"
++
++
++def check_preconditions(
++    state_root: Path,
++    overrides: Mapping[str, bool] | None = None,
++) -> JsonDict:
++    """Check all owned resources before stream evaluation."""
++
++    owner = TransactionalConstraintMemory(state_root / "precondition-state")
++    proposals = [proposal_for(event) for event in controlled_stream()]
++    deterministic = all(
++        proposal is None
++        or exact_checker(proposal, event) == exact_checker(deepcopy(proposal), deepcopy(event))
++        for proposal, event in zip(proposals, controlled_stream(), strict=True)
++    )
++    observed = {
++        "deterministic_exact_labels": deterministic,
++        "atomic_write_support": _atomic_probe(state_root),
++        "task_owned_state_directory": owner.ownership_path.read_text(encoding="utf-8")
++        == "experiment_6748\n",
++        "immutable_stream_seeds": dict(RANDOM_SEEDS)
++        == {"stream": 6748, "order": 6749, "attack": 6750},
++    }
++    observed.update(dict(overrides or {}))
++    checks = {
++        name: {"expected": True, "observed": value, "passed": value is True}
++        for name, value in observed.items()
++    }
++    return {"checks": checks, "all_passed": all(row["passed"] for row in checks.values())}
++
++
++def _order_rows(
++    state_root: Path,
++    manifest: Mapping[str, Any],
++) -> tuple[list[JsonDict], list[JsonDict], list[JsonDict], list[JsonDict], list[str]]:
++    events = {str(event["event_id"]): dict(event) for event in manifest["events"]}
++    rows: list[JsonDict] = []
++    receipts: list[JsonDict] = []
++    violations: list[JsonDict] = []
++    restarts: list[JsonDict] = []
++    final_hashes: list[str] = []
++    for order in manifest["orders"]:
++        order_id = str(order["order_id"])
++        memory = TransactionalConstraintMemory(state_root / order_id)
++        for boundary, event_id in enumerate(order["event_ids"], start=1):
++            event = deepcopy(events[str(event_id)])
++            snapshot = memory.begin_episode(str(event_id))
++            lookup = {"found": False, "safe": True}
++            if event["kind"] == "retention_anchor":
++                lookup = memory.lookup(snapshot, str(event["target_key"]))
++            proposal = proposal_for(event)
++            if boundary == 1:
++                try:
++                    memory.admit(proposal, event, boundary_index=boundary)
++                except ReadOnlyEpisodeError:
++                    violation = dict(memory.read_only_violations[-1])
++                    violation.update(
++                        {
++                            "row_type": "attack",
++                            "order_id": order_id,
++                            "passed": memory.state_hash() == snapshot["state_hash"],
++                        }
++                    )
++                    rows.append(violation)
++            memory.end_episode()
++            decision = memory.admit(proposal, event, boundary_index=boundary)
++            should_admit = event["kind"] == "reusable_repair"
++            if decision["admitted"]:
++                receipts.append(dict(decision["commit_receipt"], order_id=order_id))
++            passed = decision["admitted"] is should_admit
++            if event["kind"] == "retention_anchor":
++                passed = passed and lookup["found"] is True and lookup["safe"] is True
++            row = {
++                "row_type": "event",
++                "order_id": order_id,
++                "boundary": boundary,
++                "event_id": event_id,
++                "kind": event["kind"],
++                "admitted": decision["admitted"],
++                "used": lookup["found"],
++                "unsafe_admitted": decision["unsafe_admitted"],
++                "unsafe_used": lookup["found"] and lookup["safe"] is not True,
++                "state_hash": memory.state_hash(),
++                "passed": passed,
++            }
++            rows.append(row)
++            restarts.append(memory.restart_receipt(f"{order_id}:{boundary}", memory.state_bytes()))
++        violations.extend(memory.read_only_violations)
++        final_hashes.append(memory.state_hash())
++    return rows, receipts, violations, restarts, final_hashes
++
++
++def _crash_rows(
++    state_root: Path,
++    event: Mapping[str, Any],
++) -> tuple[list[JsonDict], list[JsonDict]]:
++    rows: list[JsonDict] = []
++    restarts: list[JsonDict] = []
++    for stage in ("before_rename", "after_rename"):
++        memory = TransactionalConstraintMemory(state_root / f"crash-{stage}")
++        parent = memory.state_bytes()
++        memory.begin_episode(str(event["event_id"]))
++        memory.end_episode()
++        memory.crash_stage = stage
++        try:
++            memory.admit(proposal_for(event), event, boundary_index=1)
++        except CrashInjected as crash:
++            restarted = TransactionalConstraintMemory(memory.state_dir)
++            expected = (
++                parent
++                if stage == "before_rename"
++                else decode_bytes(str(crash.receipt["new_state_bytes_b64"]))
++            )
++            passed = restarted.state_bytes() == expected
++            rows.append(
++                {
++                    "row_type": "attack",
++                    "attack_id": f"crash:{stage}",
++                    "stage": stage,
++                    "atomic_boundary": "parent" if stage == "before_rename" else "new",
++                    "passed": passed,
++                }
++            )
++            restarts.append(restarted.restart_receipt(f"crash:{stage}", expected))
++    return rows, restarts
++
++
++def _rollback_rows(state_root: Path, events: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
++    memory = TransactionalConstraintMemory(state_root / "rollback")
++    event = deepcopy(dict(events[0]))
++    memory.begin_episode(str(event["event_id"]))
++    memory.end_episode()
++    decision = memory.admit(proposal_for(event), event, boundary_index=1)
++    restarted = TransactionalConstraintMemory(memory.state_dir)
++    return [restarted.rollback(decision["commit_receipt"])]
++
++
++def gate_check_summary(
++    *,
++    preconditions: Mapping[str, Any],
++    rows: Sequence[Mapping[str, Any]],
++    receipts: Sequence[Mapping[str, Any]],
++    violations: Sequence[Mapping[str, Any]],
++    restarts: Sequence[Mapping[str, Any]],
++    rollback_rows: Sequence[Mapping[str, Any]],
++    final_hashes: Sequence[str],
++    manifest: Mapping[str, Any],
++) -> JsonDict:
++    checks = {
++        "preconditions_pass": preconditions["all_passed"] is True,
++        "stream_frozen": manifest["frozen_before_policy_evaluation"] is True
++        and len(manifest["orders"]) == 6,
++        "mandatory_rows_pass": bool(rows) and all(row.get("passed") is True for row in rows),
++        "commit_receipts_complete": bool(receipts)
++        and all(
++            all(receipt.get(field) for field in ("parent_hash", "evidence_hash", "new_state_hash"))
++            and receipt.get("inverse_patch")
++            and all(receipt.get("atomic_write", {}).values())
++            for receipt in receipts
++        ),
++        "read_only_writes_rejected": bool(violations)
++        and all(row.get("attempted") is True and row.get("rejected") is True for row in violations),
++        "unsafe_admission_zero": not any(row.get("unsafe_admitted") for row in rows),
++        "unsafe_use_zero": not any(row.get("unsafe_used") for row in rows),
++        "restart_bytes_equal": bool(restarts)
++        and all(
++            row.get("bytes_match") is True and row.get("hash_match") is True for row in restarts
++        ),
++        "rollback_bytes_equal": bool(rollback_rows)
++        and all(row.get("byte_identical") is True for row in rollback_rows),
++        "orders_converge": len(set(final_hashes)) == 1 and len(final_hashes) == 6,
++    }
++    failures = [
++        {"check": name, "expected": True, "observed": value}
++        for name, value in checks.items()
++        if value is not True
++    ]
++    return {
++        "checks": checks,
++        "failed_checks": [row["check"] for row in failures],
++        "failures": failures,
++    }
++
++
++def _blocked_gate_summary(preconditions: Mapping[str, Any]) -> JsonDict:
++    failures = [
++        {"check": name, "expected": row["expected"], "observed": row["observed"]}
++        for name, row in preconditions["checks"].items()
++        if row["passed"] is not True
++    ]
++    return {
++        "checks": {name: row["passed"] for name, row in preconditions["checks"].items()},
++        "failed_checks": [row["check"] for row in failures],
++        "failures": failures,
++    }
++
++
++def _artifact_base(
++    *,
++    duration_s: float,
++    preconditions: Mapping[str, Any],
++    manifest: Mapping[str, Any],
++    tests_run: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    return {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "status": "complete_blocked_transaction_fixture",
++        "field_principles": FIELD_PRINCIPLES,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 6),
++        "random_seed": dict(RANDOM_SEEDS),
++        "reproducibility_checksum": "",
++        "preconditions_checked": dict(preconditions),
++        "rows": [],
++        "stream_manifest": dict(manifest),
++        "commit_receipts": [],
++        "read_only_violations": [],
++        "unsafe_admission_count": 0,
++        "unsafe_use_count": 0,
++        "restart_receipts": [],
++        "rollback_byte_identity": {"rows": [], "all_match": False},
++        "transaction_memory_ready": False,
++        "gate_check_summary": _blocked_gate_summary(preconditions),
++        "verdict_class": "blocked",
++        "honest_verdict": "complete_blocked_transaction_fixture: owned precondition failed",
++        "tests_run": [dict(row) for row in tests_run],
++        "final_state_hashes": [],
++        "verifier_is_oracle": True,
++    }
++
++
++def run_fixture(
++    *,
++    state_root: Path | str | None = None,
++    duration_s: float | None = None,
++    precondition_overrides: Mapping[str, bool] | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Run the complete fixture without touching shared live memory."""
++
++    started = time.monotonic()
++    if state_root is None:
++        with tempfile.TemporaryDirectory(prefix="carnot-exp6748-") as directory:
++            return run_fixture(
++                state_root=Path(directory),
++                duration_s=duration_s,
++                precondition_overrides=precondition_overrides,
++                tests_run=tests_run,
++            )
++    root = Path(state_root)
++    root.mkdir(parents=True, exist_ok=True)
++    manifest = freeze_stream(controlled_stream())
++    preconditions = check_preconditions(root, precondition_overrides)
++    elapsed = duration_s if duration_s is not None else time.monotonic() - started
++    test_receipts = list(tests_run or DEFAULT_TESTS_RUN)
++    artifact = _artifact_base(
++        duration_s=elapsed,
++        preconditions=preconditions,
++        manifest=manifest,
++        tests_run=test_receipts,
++    )
++    if not preconditions["all_passed"]:
++        artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++        return artifact
++    rows, receipts, violations, restarts, final_hashes = _order_rows(root, manifest)
++    crash_rows, crash_restarts = _crash_rows(root, manifest["events"][0])
++    rollback_rows = _rollback_rows(root, manifest["events"])
++    rows.extend(crash_rows)
++    rows.extend(rollback_rows)
++    restarts.extend(crash_restarts)
++    gates = gate_check_summary(
++        preconditions=preconditions,
++        rows=rows,
++        receipts=receipts,
++        violations=violations,
++        restarts=restarts,
++        rollback_rows=rollback_rows,
++        final_hashes=final_hashes,
++        manifest=manifest,
++    )
++    ready = not gates["failed_checks"]
++    artifact.update(
++        {
++            "status": (
++                "complete_transaction_fixture_ready"
++                if ready
++                else "complete_blocked_transaction_fixture"
++            ),
++            "rows": rows,
++            "commit_receipts": receipts,
++            "read_only_violations": violations,
++            "unsafe_admission_count": sum(1 for row in rows if row.get("unsafe_admitted") is True),
++            "unsafe_use_count": sum(1 for row in rows if row.get("unsafe_used") is True),
++            "restart_receipts": restarts,
++            "rollback_byte_identity": {
++                "rows": rollback_rows,
++                "all_match": all(row["byte_identical"] is True for row in rollback_rows),
++            },
++            "transaction_memory_ready": ready,
++            "gate_check_summary": gates,
++            "verdict_class": "circular_positive" if ready else "blocked",
++            "honest_verdict": (
++                "complete_transaction_fixture_ready: read-only episodes, exact delayed commits, "
++                "atomic restart, quarantine, and byte-exact rollback passed"
++                if ready
++                else "complete_blocked_transaction_fixture: mandatory fixture row failed"
++            ),
++            "final_state_hashes": final_hashes,
++        }
++    )
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the frozen inputs and row-derived states, excluding wall time."""
++
++    material = {
++        "schema": artifact.get("schema"),
++        "random_seed": artifact.get("random_seed"),
++        "preconditions_checked": artifact.get("preconditions_checked"),
++        "stream_manifest": artifact.get("stream_manifest"),
++        "rows": artifact.get("rows"),
++        "commit_receipts": artifact.get("commit_receipts"),
++        "restart_receipts": artifact.get("restart_receipts"),
++        "rollback_byte_identity": artifact.get("rollback_byte_identity"),
++        "final_state_hashes": artifact.get("final_state_hashes"),
++    }
++    return sha256_json(material)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Return closed validation errors without changing the artifact."""
++
++    errors: list[str] = []
++    if set(artifact) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("required field set mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact.get("verdict_class") not in VERDICT_CLASSES:
++        errors.append("verdict_class outside closed enum")
++    expected_principles = set(REQUIRED_ARTIFACT_FIELDS) | {
++        f"gate:{name}" for name in READINESS_GATES
++    }
++    if set(artifact.get("field_principles", {})) != expected_principles:
++        errors.append("field_principles coverage mismatch")
++    if artifact.get("transaction_memory_ready") is True and (
++        artifact.get("unsafe_admission_count") != 0 or artifact.get("unsafe_use_count") != 0
++    ):
++        errors.append("unsafe counts must be zero when ready")
++    if artifact.get("transaction_memory_ready") is True and artifact.get(
++        "gate_check_summary", {}
++    ).get("failed_checks"):
++        errors.append("ready artifact has failed gates")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_artifact(path: Path, artifact: Mapping[str, Any]) -> JsonDict:
++    """Publish the validated terminal artifact with one atomic rename."""
++
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    data = json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True).encode("utf-8")
++    return _atomic_write(path, data + b"\n")
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Run or validate the task-owned Exp6748 artifact."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--result-path", default=str(REPO_ROOT / RESULT_RELATIVE_PATH))
++    parser.add_argument("--state-root")
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++    result_path = Path(args.result_path)
++    if args.validate:
++        artifact = json.loads(result_path.read_text(encoding="utf-8"))
++        errors = validate_artifact(artifact)
++        if errors:
++            raise ValueError("; ".join(errors))
++        return 0
++    artifact = run_fixture(state_root=args.state_root)
++    write_artifact(result_path, artifact)
++    return 0
+diff --git a/python/carnot/testing/worktree_import_guard.py b/python/carnot/testing/worktree_import_guard.py
+new file mode 100644
+index 0000000000..81cacff17d
+--- /dev/null
++++ b/python/carnot/testing/worktree_import_guard.py
+@@ -0,0 +1,65 @@
++"""Refuse a test run whose `carnot` package comes from a DIFFERENT checkout than its tests.
++
++WHY THIS EXISTS (2026-08-29). We adopted per-agent git worktrees so concurrent agents stop
++destroying each other's work through the shared index and pre-commit's stash window. Worktrees
++close that class. They open a quieter one.
++
++The venv resolves `import carnot` to the MAIN checkout, wherever the process happens to be:
++
++    $ cd <a fresh worktree> && .venv/bin/python -c "import carnot; print(carnot.__file__)"
++    /home/.../carnot/python/carnot/__init__.py      <-- the MAIN checkout, not this worktree
++
++So an agent editing `python/carnot/` inside its worktree tests the UNMODIFIED original. Every
++assertion passes. Every mutation proof reads GREEN while measuring nothing. That is strictly
++worse than the failure it replaced: a shared-index collision is loud and recoverable, and a
++proof that silently measures the wrong tree is neither.
++
++`PYTHONPATH=<worktree>/python` fixes it, verified both directions before this guard was written.
++The guard exists because remembering to set it is exactly the kind of thing that gets forgotten
++once, quietly, on the run that mattered.
++
++FAIL-CLOSED, deliberately. A refused run is a minute of confusion with the fix in the message.
++An allowed run is a green verdict about a file nobody edited.
++"""
++
++from __future__ import annotations
++
++import os
++from pathlib import Path
++
++#: Escape hatch for the legitimate case: testing an INSTALLED carnot against a source tree on
++#: purpose. Named for what it permits, so an agent cannot set it absent-mindedly and later claim
++#: it looked routine.
++OVERRIDE_ENV = "CARNOT_ALLOW_FOREIGN_CARNOT_IMPORT"
++
++
++def foreign_import_reason(tests_root: Path, package_dir: Path) -> str | None:
++    """Explain why these two trees disagree, or None when the run is sound.
++
++    `tests_root` is the checkout the TESTS were loaded from; `package_dir` is the directory the
++    `carnot` package was actually imported from. A pure function so the rule is testable without
++    a worktree fixture, following `claimed_by_other_sessions` and `determination_damage`.
++    """
++
++    tests_root = tests_root.resolve()
++    package_dir = package_dir.resolve()
++    if package_dir.is_relative_to(tests_root):
++        return None
++    return (
++        f"tests were loaded from {tests_root}\n"
++        f"  but `import carnot` resolved to {package_dir}\n\n"
++        f"  Those are different checkouts, so this run is testing code you did not edit and any\n"
++        f"  result -- pass, fail, or mutation verdict -- says nothing about this worktree.\n\n"
++        f"  Fix: PYTHONPATH={tests_root / 'python'} before pytest.\n"
++        f"  Deliberately testing an installed carnot? Set {OVERRIDE_ENV}=1 and say so in the run."
++    )
++
++
++def check(tests_root: Path, package_dir: Path) -> None:
++    """Raise unless the tests and the package come from the same tree."""
++
++    if os.environ.get(OVERRIDE_ENV) == "1":
++        return
++    reason = foreign_import_reason(tests_root, package_dir)
++    if reason is not None:
++        raise RuntimeError("carnot imported from a foreign checkout:\n  " + reason)
+diff --git a/results/experiment_6748_transactional_constraint_memory_fixture.json b/results/experiment_6748_transactional_constraint_memory_fixture.json
+new file mode 100644
+index 0000000000..5217372333
+--- /dev/null
++++ b/results/experiment_6748_transactional_constraint_memory_fixture.json
+@@ -0,0 +1,2403 @@
++{
++  "commit_receipts": [
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e01",
++      "evidence_hash": "sha256:03e6f8e17ae5b17c433254ef5390534571fbbeab29b52f3f8aa39bcc52629030",
++      "inverse_patch": {
++        "key": "repair:bounds:python",
++        "operation": "remove_record",
++        "parent_version": 0
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6MX0K",
++      "new_state_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "order_id": "order_1",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbXSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjowfQo=",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e02",
++      "evidence_hash": "sha256:6792013b32203d02e2406b7b06d29a5a358845111618432f259b75e07699f7f9",
++      "inverse_patch": {
++        "key": "repair:parity:rust",
++        "operation": "remove_record",
++        "parent_version": 1
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjoyfQo=",
++      "new_state_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "order_id": "order_1",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6MX0K",
++      "parent_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e03",
++      "evidence_hash": "sha256:5d227a3f4f363caea1a166c1bb2eebd98091427ccf632a5cf62b8f62789bdf1e",
++      "inverse_patch": {
++        "key": "repair:schema:artifact",
++        "operation": "remove_record",
++        "parent_version": 2
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9LHsiY2VydGlmaWVkIjp0cnVlLCJjb250ZW50X2hhc2giOiJzaGEyNTY6YjgxNjQyYzA5MzBjNWY2ODZlOTBlNzdkNTUxNjk0Y2EwY2FlYjliZGE0OTc2MjJhNGIyODgzMzBlY2VmMjgyMCIsImV2aWRlbmNlX2hhc2giOiJzaGEyNTY6NWQyMjdhM2Y0ZjM2M2NhZWExYTE2NmMxYmIyZWViZDk4MDkxNDI3Y2NmNjMyYTVjZjYyYjhmNjI3ODliZGYxZSIsImV4cGlyZXNfYWZ0ZXIiOjEwMCwiZnV0dXJlX3VzZV9lbGlnaWJsZSI6dHJ1ZSwia2V5IjoicmVwYWlyOnNjaGVtYTphcnRpZmFjdCIsInJlcGFpciI6InJlcXVpcmVfc2NoZW1hX2ZpZWxkIiwic2NvcGUiOiJhcnRpZmFjdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMyJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjozfQo=",
++      "new_state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "order_id": "order_1",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjoyfQo=",
++      "parent_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e01",
++      "evidence_hash": "sha256:03e6f8e17ae5b17c433254ef5390534571fbbeab29b52f3f8aa39bcc52629030",
++      "inverse_patch": {
++        "key": "repair:bounds:python",
++        "operation": "remove_record",
++        "parent_version": 0
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6MX0K",
++      "new_state_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "order_id": "order_2",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbXSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjowfQo=",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e03",
++      "evidence_hash": "sha256:5d227a3f4f363caea1a166c1bb2eebd98091427ccf632a5cf62b8f62789bdf1e",
++      "inverse_patch": {
++        "key": "repair:schema:artifact",
++        "operation": "remove_record",
++        "parent_version": 1
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmI4MTY0MmMwOTMwYzVmNjg2ZTkwZTc3ZDU1MTY5NGNhMGNhZWI5YmRhNDk3NjIyYTRiMjg4MzMwZWNlZjI4MjAiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjVkMjI3YTNmNGYzNjNjYWVhMWExNjZjMWJiMmVlYmQ5ODA5MTQyN2NjZjYzMmE1Y2Y2MmI4ZjYyNzg5YmRmMWUiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpzY2hlbWE6YXJ0aWZhY3QiLCJyZXBhaXIiOiJyZXF1aXJlX3NjaGVtYV9maWVsZCIsInNjb3BlIjoiYXJ0aWZhY3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDMifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6Mn0K",
++      "new_state_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "order_id": "order_2",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6MX0K",
++      "parent_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e02",
++      "evidence_hash": "sha256:6792013b32203d02e2406b7b06d29a5a358845111618432f259b75e07699f7f9",
++      "inverse_patch": {
++        "key": "repair:parity:rust",
++        "operation": "remove_record",
++        "parent_version": 2
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9LHsiY2VydGlmaWVkIjp0cnVlLCJjb250ZW50X2hhc2giOiJzaGEyNTY6YjgxNjQyYzA5MzBjNWY2ODZlOTBlNzdkNTUxNjk0Y2EwY2FlYjliZGE0OTc2MjJhNGIyODgzMzBlY2VmMjgyMCIsImV2aWRlbmNlX2hhc2giOiJzaGEyNTY6NWQyMjdhM2Y0ZjM2M2NhZWExYTE2NmMxYmIyZWViZDk4MDkxNDI3Y2NmNjMyYTVjZjYyYjhmNjI3ODliZGYxZSIsImV4cGlyZXNfYWZ0ZXIiOjEwMCwiZnV0dXJlX3VzZV9lbGlnaWJsZSI6dHJ1ZSwia2V5IjoicmVwYWlyOnNjaGVtYTphcnRpZmFjdCIsInJlcGFpciI6InJlcXVpcmVfc2NoZW1hX2ZpZWxkIiwic2NvcGUiOiJhcnRpZmFjdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMyJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjozfQo=",
++      "new_state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "order_id": "order_2",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmI4MTY0MmMwOTMwYzVmNjg2ZTkwZTc3ZDU1MTY5NGNhMGNhZWI5YmRhNDk3NjIyYTRiMjg4MzMwZWNlZjI4MjAiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjVkMjI3YTNmNGYzNjNjYWVhMWExNjZjMWJiMmVlYmQ5ODA5MTQyN2NjZjYzMmE1Y2Y2MmI4ZjYyNzg5YmRmMWUiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpzY2hlbWE6YXJ0aWZhY3QiLCJyZXBhaXIiOiJyZXF1aXJlX3NjaGVtYV9maWVsZCIsInNjb3BlIjoiYXJ0aWZhY3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDMifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6Mn0K",
++      "parent_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e02",
++      "evidence_hash": "sha256:6792013b32203d02e2406b7b06d29a5a358845111618432f259b75e07699f7f9",
++      "inverse_patch": {
++        "key": "repair:parity:rust",
++        "operation": "remove_record",
++        "parent_version": 0
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpmYzZmNzU3ZmVjZDY0MGE2NjQzZGE1MTY1OWI1MzU3MzhiYTE5NDI4NmI5YmEwYjRhNzg1M2FmNzYwMjEzMzlhIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo2NzkyMDEzYjMyMjAzZDAyZTI0MDZiN2IwNmQyOWE1YTM1ODg0NTExMTYxODQzMmYyNTliNzVlMDc2OTlmN2Y5IiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6cGFyaXR5OnJ1c3QiLCJyZXBhaXIiOiJub3JtYWxpemVfZXZlbl9wYXJpdHkiLCJzY29wZSI6InJ1c3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDIifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6MX0K",
++      "new_state_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "order_id": "order_3",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbXSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjowfQo=",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e01",
++      "evidence_hash": "sha256:03e6f8e17ae5b17c433254ef5390534571fbbeab29b52f3f8aa39bcc52629030",
++      "inverse_patch": {
++        "key": "repair:bounds:python",
++        "operation": "remove_record",
++        "parent_version": 1
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjoyfQo=",
++      "new_state_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "order_id": "order_3",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpmYzZmNzU3ZmVjZDY0MGE2NjQzZGE1MTY1OWI1MzU3MzhiYTE5NDI4NmI5YmEwYjRhNzg1M2FmNzYwMjEzMzlhIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo2NzkyMDEzYjMyMjAzZDAyZTI0MDZiN2IwNmQyOWE1YTM1ODg0NTExMTYxODQzMmYyNTliNzVlMDc2OTlmN2Y5IiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6cGFyaXR5OnJ1c3QiLCJyZXBhaXIiOiJub3JtYWxpemVfZXZlbl9wYXJpdHkiLCJzY29wZSI6InJ1c3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDIifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6MX0K",
++      "parent_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e03",
++      "evidence_hash": "sha256:5d227a3f4f363caea1a166c1bb2eebd98091427ccf632a5cf62b8f62789bdf1e",
++      "inverse_patch": {
++        "key": "repair:schema:artifact",
++        "operation": "remove_record",
++        "parent_version": 2
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9LHsiY2VydGlmaWVkIjp0cnVlLCJjb250ZW50X2hhc2giOiJzaGEyNTY6YjgxNjQyYzA5MzBjNWY2ODZlOTBlNzdkNTUxNjk0Y2EwY2FlYjliZGE0OTc2MjJhNGIyODgzMzBlY2VmMjgyMCIsImV2aWRlbmNlX2hhc2giOiJzaGEyNTY6NWQyMjdhM2Y0ZjM2M2NhZWExYTE2NmMxYmIyZWViZDk4MDkxNDI3Y2NmNjMyYTVjZjYyYjhmNjI3ODliZGYxZSIsImV4cGlyZXNfYWZ0ZXIiOjEwMCwiZnV0dXJlX3VzZV9lbGlnaWJsZSI6dHJ1ZSwia2V5IjoicmVwYWlyOnNjaGVtYTphcnRpZmFjdCIsInJlcGFpciI6InJlcXVpcmVfc2NoZW1hX2ZpZWxkIiwic2NvcGUiOiJhcnRpZmFjdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMyJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjozfQo=",
++      "new_state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "order_id": "order_3",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjoyfQo=",
++      "parent_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e02",
++      "evidence_hash": "sha256:6792013b32203d02e2406b7b06d29a5a358845111618432f259b75e07699f7f9",
++      "inverse_patch": {
++        "key": "repair:parity:rust",
++        "operation": "remove_record",
++        "parent_version": 0
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpmYzZmNzU3ZmVjZDY0MGE2NjQzZGE1MTY1OWI1MzU3MzhiYTE5NDI4NmI5YmEwYjRhNzg1M2FmNzYwMjEzMzlhIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo2NzkyMDEzYjMyMjAzZDAyZTI0MDZiN2IwNmQyOWE1YTM1ODg0NTExMTYxODQzMmYyNTliNzVlMDc2OTlmN2Y5IiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6cGFyaXR5OnJ1c3QiLCJyZXBhaXIiOiJub3JtYWxpemVfZXZlbl9wYXJpdHkiLCJzY29wZSI6InJ1c3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDIifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6MX0K",
++      "new_state_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "order_id": "order_4",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbXSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjowfQo=",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e03",
++      "evidence_hash": "sha256:5d227a3f4f363caea1a166c1bb2eebd98091427ccf632a5cf62b8f62789bdf1e",
++      "inverse_patch": {
++        "key": "repair:schema:artifact",
++        "operation": "remove_record",
++        "parent_version": 1
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpmYzZmNzU3ZmVjZDY0MGE2NjQzZGE1MTY1OWI1MzU3MzhiYTE5NDI4NmI5YmEwYjRhNzg1M2FmNzYwMjEzMzlhIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo2NzkyMDEzYjMyMjAzZDAyZTI0MDZiN2IwNmQyOWE1YTM1ODg0NTExMTYxODQzMmYyNTliNzVlMDc2OTlmN2Y5IiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6cGFyaXR5OnJ1c3QiLCJyZXBhaXIiOiJub3JtYWxpemVfZXZlbl9wYXJpdHkiLCJzY29wZSI6InJ1c3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDIifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmI4MTY0MmMwOTMwYzVmNjg2ZTkwZTc3ZDU1MTY5NGNhMGNhZWI5YmRhNDk3NjIyYTRiMjg4MzMwZWNlZjI4MjAiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjVkMjI3YTNmNGYzNjNjYWVhMWExNjZjMWJiMmVlYmQ5ODA5MTQyN2NjZjYzMmE1Y2Y2MmI4ZjYyNzg5YmRmMWUiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpzY2hlbWE6YXJ0aWZhY3QiLCJyZXBhaXIiOiJyZXF1aXJlX3NjaGVtYV9maWVsZCIsInNjb3BlIjoiYXJ0aWZhY3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDMifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6Mn0K",
++      "new_state_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "order_id": "order_4",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpmYzZmNzU3ZmVjZDY0MGE2NjQzZGE1MTY1OWI1MzU3MzhiYTE5NDI4NmI5YmEwYjRhNzg1M2FmNzYwMjEzMzlhIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo2NzkyMDEzYjMyMjAzZDAyZTI0MDZiN2IwNmQyOWE1YTM1ODg0NTExMTYxODQzMmYyNTliNzVlMDc2OTlmN2Y5IiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6cGFyaXR5OnJ1c3QiLCJyZXBhaXIiOiJub3JtYWxpemVfZXZlbl9wYXJpdHkiLCJzY29wZSI6InJ1c3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDIifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6MX0K",
++      "parent_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e01",
++      "evidence_hash": "sha256:03e6f8e17ae5b17c433254ef5390534571fbbeab29b52f3f8aa39bcc52629030",
++      "inverse_patch": {
++        "key": "repair:bounds:python",
++        "operation": "remove_record",
++        "parent_version": 2
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9LHsiY2VydGlmaWVkIjp0cnVlLCJjb250ZW50X2hhc2giOiJzaGEyNTY6YjgxNjQyYzA5MzBjNWY2ODZlOTBlNzdkNTUxNjk0Y2EwY2FlYjliZGE0OTc2MjJhNGIyODgzMzBlY2VmMjgyMCIsImV2aWRlbmNlX2hhc2giOiJzaGEyNTY6NWQyMjdhM2Y0ZjM2M2NhZWExYTE2NmMxYmIyZWViZDk4MDkxNDI3Y2NmNjMyYTVjZjYyYjhmNjI3ODliZGYxZSIsImV4cGlyZXNfYWZ0ZXIiOjEwMCwiZnV0dXJlX3VzZV9lbGlnaWJsZSI6dHJ1ZSwia2V5IjoicmVwYWlyOnNjaGVtYTphcnRpZmFjdCIsInJlcGFpciI6InJlcXVpcmVfc2NoZW1hX2ZpZWxkIiwic2NvcGUiOiJhcnRpZmFjdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMyJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjozfQo=",
++      "new_state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "order_id": "order_4",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpmYzZmNzU3ZmVjZDY0MGE2NjQzZGE1MTY1OWI1MzU3MzhiYTE5NDI4NmI5YmEwYjRhNzg1M2FmNzYwMjEzMzlhIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo2NzkyMDEzYjMyMjAzZDAyZTI0MDZiN2IwNmQyOWE1YTM1ODg0NTExMTYxODQzMmYyNTliNzVlMDc2OTlmN2Y5IiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6cGFyaXR5OnJ1c3QiLCJyZXBhaXIiOiJub3JtYWxpemVfZXZlbl9wYXJpdHkiLCJzY29wZSI6InJ1c3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDIifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmI4MTY0MmMwOTMwYzVmNjg2ZTkwZTc3ZDU1MTY5NGNhMGNhZWI5YmRhNDk3NjIyYTRiMjg4MzMwZWNlZjI4MjAiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjVkMjI3YTNmNGYzNjNjYWVhMWExNjZjMWJiMmVlYmQ5ODA5MTQyN2NjZjYzMmE1Y2Y2MmI4ZjYyNzg5YmRmMWUiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpzY2hlbWE6YXJ0aWZhY3QiLCJyZXBhaXIiOiJyZXF1aXJlX3NjaGVtYV9maWVsZCIsInNjb3BlIjoiYXJ0aWZhY3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDMifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6Mn0K",
++      "parent_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e03",
++      "evidence_hash": "sha256:5d227a3f4f363caea1a166c1bb2eebd98091427ccf632a5cf62b8f62789bdf1e",
++      "inverse_patch": {
++        "key": "repair:schema:artifact",
++        "operation": "remove_record",
++        "parent_version": 0
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpiODE2NDJjMDkzMGM1ZjY4NmU5MGU3N2Q1NTE2OTRjYTBjYWViOWJkYTQ5NzYyMmE0YjI4ODMzMGVjZWYyODIwIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo1ZDIyN2EzZjRmMzYzY2FlYTFhMTY2YzFiYjJlZWJkOTgwOTE0MjdjY2Y2MzJhNWNmNjJiOGY2Mjc4OWJkZjFlIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6c2NoZW1hOmFydGlmYWN0IiwicmVwYWlyIjoicmVxdWlyZV9zY2hlbWFfZmllbGQiLCJzY29wZSI6ImFydGlmYWN0Iiwic291cmNlX2V2ZW50X2lkIjoiZTAzIn1dLCJzY2hlbWEiOiJjYXJub3QudHJhbnNhY3Rpb25hbF9jb25zdHJhaW50X21lbW9yeS52MSIsInZlcnNpb24iOjF9Cg==",
++      "new_state_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "order_id": "order_5",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbXSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjowfQo=",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e01",
++      "evidence_hash": "sha256:03e6f8e17ae5b17c433254ef5390534571fbbeab29b52f3f8aa39bcc52629030",
++      "inverse_patch": {
++        "key": "repair:bounds:python",
++        "operation": "remove_record",
++        "parent_version": 1
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmI4MTY0MmMwOTMwYzVmNjg2ZTkwZTc3ZDU1MTY5NGNhMGNhZWI5YmRhNDk3NjIyYTRiMjg4MzMwZWNlZjI4MjAiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjVkMjI3YTNmNGYzNjNjYWVhMWExNjZjMWJiMmVlYmQ5ODA5MTQyN2NjZjYzMmE1Y2Y2MmI4ZjYyNzg5YmRmMWUiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpzY2hlbWE6YXJ0aWZhY3QiLCJyZXBhaXIiOiJyZXF1aXJlX3NjaGVtYV9maWVsZCIsInNjb3BlIjoiYXJ0aWZhY3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDMifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6Mn0K",
++      "new_state_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "order_id": "order_5",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpiODE2NDJjMDkzMGM1ZjY4NmU5MGU3N2Q1NTE2OTRjYTBjYWViOWJkYTQ5NzYyMmE0YjI4ODMzMGVjZWYyODIwIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo1ZDIyN2EzZjRmMzYzY2FlYTFhMTY2YzFiYjJlZWJkOTgwOTE0MjdjY2Y2MzJhNWNmNjJiOGY2Mjc4OWJkZjFlIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6c2NoZW1hOmFydGlmYWN0IiwicmVwYWlyIjoicmVxdWlyZV9zY2hlbWFfZmllbGQiLCJzY29wZSI6ImFydGlmYWN0Iiwic291cmNlX2V2ZW50X2lkIjoiZTAzIn1dLCJzY2hlbWEiOiJjYXJub3QudHJhbnNhY3Rpb25hbF9jb25zdHJhaW50X21lbW9yeS52MSIsInZlcnNpb24iOjF9Cg==",
++      "parent_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e02",
++      "evidence_hash": "sha256:6792013b32203d02e2406b7b06d29a5a358845111618432f259b75e07699f7f9",
++      "inverse_patch": {
++        "key": "repair:parity:rust",
++        "operation": "remove_record",
++        "parent_version": 2
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9LHsiY2VydGlmaWVkIjp0cnVlLCJjb250ZW50X2hhc2giOiJzaGEyNTY6YjgxNjQyYzA5MzBjNWY2ODZlOTBlNzdkNTUxNjk0Y2EwY2FlYjliZGE0OTc2MjJhNGIyODgzMzBlY2VmMjgyMCIsImV2aWRlbmNlX2hhc2giOiJzaGEyNTY6NWQyMjdhM2Y0ZjM2M2NhZWExYTE2NmMxYmIyZWViZDk4MDkxNDI3Y2NmNjMyYTVjZjYyYjhmNjI3ODliZGYxZSIsImV4cGlyZXNfYWZ0ZXIiOjEwMCwiZnV0dXJlX3VzZV9lbGlnaWJsZSI6dHJ1ZSwia2V5IjoicmVwYWlyOnNjaGVtYTphcnRpZmFjdCIsInJlcGFpciI6InJlcXVpcmVfc2NoZW1hX2ZpZWxkIiwic2NvcGUiOiJhcnRpZmFjdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMyJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjozfQo=",
++      "new_state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "order_id": "order_5",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmI4MTY0MmMwOTMwYzVmNjg2ZTkwZTc3ZDU1MTY5NGNhMGNhZWI5YmRhNDk3NjIyYTRiMjg4MzMwZWNlZjI4MjAiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjVkMjI3YTNmNGYzNjNjYWVhMWExNjZjMWJiMmVlYmQ5ODA5MTQyN2NjZjYzMmE1Y2Y2MmI4ZjYyNzg5YmRmMWUiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpzY2hlbWE6YXJ0aWZhY3QiLCJyZXBhaXIiOiJyZXF1aXJlX3NjaGVtYV9maWVsZCIsInNjb3BlIjoiYXJ0aWZhY3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDMifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6Mn0K",
++      "parent_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e03",
++      "evidence_hash": "sha256:5d227a3f4f363caea1a166c1bb2eebd98091427ccf632a5cf62b8f62789bdf1e",
++      "inverse_patch": {
++        "key": "repair:schema:artifact",
++        "operation": "remove_record",
++        "parent_version": 0
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpiODE2NDJjMDkzMGM1ZjY4NmU5MGU3N2Q1NTE2OTRjYTBjYWViOWJkYTQ5NzYyMmE0YjI4ODMzMGVjZWYyODIwIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo1ZDIyN2EzZjRmMzYzY2FlYTFhMTY2YzFiYjJlZWJkOTgwOTE0MjdjY2Y2MzJhNWNmNjJiOGY2Mjc4OWJkZjFlIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6c2NoZW1hOmFydGlmYWN0IiwicmVwYWlyIjoicmVxdWlyZV9zY2hlbWFfZmllbGQiLCJzY29wZSI6ImFydGlmYWN0Iiwic291cmNlX2V2ZW50X2lkIjoiZTAzIn1dLCJzY2hlbWEiOiJjYXJub3QudHJhbnNhY3Rpb25hbF9jb25zdHJhaW50X21lbW9yeS52MSIsInZlcnNpb24iOjF9Cg==",
++      "new_state_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "order_id": "order_6",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbXSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjowfQo=",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e02",
++      "evidence_hash": "sha256:6792013b32203d02e2406b7b06d29a5a358845111618432f259b75e07699f7f9",
++      "inverse_patch": {
++        "key": "repair:parity:rust",
++        "operation": "remove_record",
++        "parent_version": 1
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpmYzZmNzU3ZmVjZDY0MGE2NjQzZGE1MTY1OWI1MzU3MzhiYTE5NDI4NmI5YmEwYjRhNzg1M2FmNzYwMjEzMzlhIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo2NzkyMDEzYjMyMjAzZDAyZTI0MDZiN2IwNmQyOWE1YTM1ODg0NTExMTYxODQzMmYyNTliNzVlMDc2OTlmN2Y5IiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6cGFyaXR5OnJ1c3QiLCJyZXBhaXIiOiJub3JtYWxpemVfZXZlbl9wYXJpdHkiLCJzY29wZSI6InJ1c3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDIifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmI4MTY0MmMwOTMwYzVmNjg2ZTkwZTc3ZDU1MTY5NGNhMGNhZWI5YmRhNDk3NjIyYTRiMjg4MzMwZWNlZjI4MjAiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjVkMjI3YTNmNGYzNjNjYWVhMWExNjZjMWJiMmVlYmQ5ODA5MTQyN2NjZjYzMmE1Y2Y2MmI4ZjYyNzg5YmRmMWUiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpzY2hlbWE6YXJ0aWZhY3QiLCJyZXBhaXIiOiJyZXF1aXJlX3NjaGVtYV9maWVsZCIsInNjb3BlIjoiYXJ0aWZhY3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDMifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6Mn0K",
++      "new_state_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "order_id": "order_6",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpiODE2NDJjMDkzMGM1ZjY4NmU5MGU3N2Q1NTE2OTRjYTBjYWViOWJkYTQ5NzYyMmE0YjI4ODMzMGVjZWYyODIwIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo1ZDIyN2EzZjRmMzYzY2FlYTFhMTY2YzFiYjJlZWJkOTgwOTE0MjdjY2Y2MzJhNWNmNjJiOGY2Mjc4OWJkZjFlIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6c2NoZW1hOmFydGlmYWN0IiwicmVwYWlyIjoicmVxdWlyZV9zY2hlbWFfZmllbGQiLCJzY29wZSI6ImFydGlmYWN0Iiwic291cmNlX2V2ZW50X2lkIjoiZTAzIn1dLCJzY2hlbWEiOiJjYXJub3QudHJhbnNhY3Rpb25hbF9jb25zdHJhaW50X21lbW9yeS52MSIsInZlcnNpb24iOjF9Cg==",
++      "parent_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "reason": "all_admission_checks_passed"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "event_id": "e01",
++      "evidence_hash": "sha256:03e6f8e17ae5b17c433254ef5390534571fbbeab29b52f3f8aa39bcc52629030",
++      "inverse_patch": {
++        "key": "repair:bounds:python",
++        "operation": "remove_record",
++        "parent_version": 2
++      },
++      "new_state_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1Njo1ODUzNGQ5NWIyYWM5MjQ4M2U0NThkNDUxOGQ0NWVmNzQ4OWRmZDA0YWZiZTU0ZjA1YTMwYWQxMjc3MDM2ZTI5IiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1NjowM2U2ZjhlMTdhZTViMTdjNDMzMjU0ZWY1MzkwNTM0NTcxZmJiZWFiMjliNTJmM2Y4YWEzOWJjYzUyNjI5MDMwIiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6Ym91bmRzOnB5dGhvbiIsInJlcGFpciI6ImNsYW1wX3VwcGVyX2JvdW5kIiwic2NvcGUiOiJweXRob24iLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDEifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmZjNmY3NTdmZWNkNjQwYTY2NDNkYTUxNjU5YjUzNTczOGJhMTk0Mjg2YjliYTBiNGE3ODUzYWY3NjAyMTMzOWEiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjY3OTIwMTNiMzIyMDNkMDJlMjQwNmI3YjA2ZDI5YTVhMzU4ODQ1MTExNjE4NDMyZjI1OWI3NWUwNzY5OWY3ZjkiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpwYXJpdHk6cnVzdCIsInJlcGFpciI6Im5vcm1hbGl6ZV9ldmVuX3Bhcml0eSIsInNjb3BlIjoicnVzdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMiJ9LHsiY2VydGlmaWVkIjp0cnVlLCJjb250ZW50X2hhc2giOiJzaGEyNTY6YjgxNjQyYzA5MzBjNWY2ODZlOTBlNzdkNTUxNjk0Y2EwY2FlYjliZGE0OTc2MjJhNGIyODgzMzBlY2VmMjgyMCIsImV2aWRlbmNlX2hhc2giOiJzaGEyNTY6NWQyMjdhM2Y0ZjM2M2NhZWExYTE2NmMxYmIyZWViZDk4MDkxNDI3Y2NmNjMyYTVjZjYyYjhmNjI3ODliZGYxZSIsImV4cGlyZXNfYWZ0ZXIiOjEwMCwiZnV0dXJlX3VzZV9lbGlnaWJsZSI6dHJ1ZSwia2V5IjoicmVwYWlyOnNjaGVtYTphcnRpZmFjdCIsInJlcGFpciI6InJlcXVpcmVfc2NoZW1hX2ZpZWxkIiwic2NvcGUiOiJhcnRpZmFjdCIsInNvdXJjZV9ldmVudF9pZCI6ImUwMyJ9XSwic2NoZW1hIjoiY2Fybm90LnRyYW5zYWN0aW9uYWxfY29uc3RyYWludF9tZW1vcnkudjEiLCJ2ZXJzaW9uIjozfQo=",
++      "new_state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "order_id": "order_6",
++      "parent_bytes_b64": "eyJyZWNvcmRzIjpbeyJjZXJ0aWZpZWQiOnRydWUsImNvbnRlbnRfaGFzaCI6InNoYTI1NjpmYzZmNzU3ZmVjZDY0MGE2NjQzZGE1MTY1OWI1MzU3MzhiYTE5NDI4NmI5YmEwYjRhNzg1M2FmNzYwMjEzMzlhIiwiZXZpZGVuY2VfaGFzaCI6InNoYTI1Njo2NzkyMDEzYjMyMjAzZDAyZTI0MDZiN2IwNmQyOWE1YTM1ODg0NTExMTYxODQzMmYyNTliNzVlMDc2OTlmN2Y5IiwiZXhwaXJlc19hZnRlciI6MTAwLCJmdXR1cmVfdXNlX2VsaWdpYmxlIjp0cnVlLCJrZXkiOiJyZXBhaXI6cGFyaXR5OnJ1c3QiLCJyZXBhaXIiOiJub3JtYWxpemVfZXZlbl9wYXJpdHkiLCJzY29wZSI6InJ1c3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDIifSx7ImNlcnRpZmllZCI6dHJ1ZSwiY29udGVudF9oYXNoIjoic2hhMjU2OmI4MTY0MmMwOTMwYzVmNjg2ZTkwZTc3ZDU1MTY5NGNhMGNhZWI5YmRhNDk3NjIyYTRiMjg4MzMwZWNlZjI4MjAiLCJldmlkZW5jZV9oYXNoIjoic2hhMjU2OjVkMjI3YTNmNGYzNjNjYWVhMWExNjZjMWJiMmVlYmQ5ODA5MTQyN2NjZjYzMmE1Y2Y2MmI4ZjYyNzg5YmRmMWUiLCJleHBpcmVzX2FmdGVyIjoxMDAsImZ1dHVyZV91c2VfZWxpZ2libGUiOnRydWUsImtleSI6InJlcGFpcjpzY2hlbWE6YXJ0aWZhY3QiLCJyZXBhaXIiOiJyZXF1aXJlX3NjaGVtYV9maWVsZCIsInNjb3BlIjoiYXJ0aWZhY3QiLCJzb3VyY2VfZXZlbnRfaWQiOiJlMDMifV0sInNjaGVtYSI6ImNhcm5vdC50cmFuc2FjdGlvbmFsX2NvbnN0cmFpbnRfbWVtb3J5LnYxIiwidmVyc2lvbiI6Mn0K",
++      "parent_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "reason": "all_admission_checks_passed"
++    }
++  ],
++  "duration_s": 0.000703,
++  "experiment_id": "experiment_6748_transactional_constraint_memory_fixture",
++  "field_principles": {
++    "commit_receipts": "Receipts bind each safe update to its parent and evidence.",
++    "duration_s": "A monotonic duration shows the fixture executed.",
++    "experiment_id": "A stable identifier binds the result to this owned fixture.",
++    "field_principles": "Each field and gate records why it exists.",
++    "final_state_hashes": "Equal order endpoints prove chronology did not change safe content.",
++    "gate:commit_receipts_complete": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:mandatory_rows_pass": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:orders_converge": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:preconditions_pass": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:read_only_writes_rejected": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:restart_bytes_equal": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:rollback_bytes_equal": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:stream_frozen": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:unsafe_admission_zero": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate:unsafe_use_zero": "This conjunct must pass before transaction_memory_ready can be true.",
++    "gate_check_summary": "The summary names every expected and observed gate value.",
++    "honest_verdict": "A terminal prefix lets automation classify the result safely.",
++    "inference_substrate": "The fixture claims deterministic CPU checks and no model use.",
++    "preconditions_checked": "Owned resource checks fail closed before memory evaluation.",
++    "random_seed": "Separate frozen seeds control stream, order, and attack choices.",
++    "read_only_violations": "Rejected write attempts prove active episodes stayed read-only.",
++    "reproducibility_checksum": "One hash binds stream, configuration, states, and rows.",
++    "restart_receipts": "Every boundary must reproduce the expected state bytes.",
++    "rollback_byte_identity": "Inverse patches must restore exact parent bytes.",
++    "rows": "Event and attack rows make the readiness result recomputable.",
++    "run_date": "The fixed planning date prevents silent chronology drift.",
++    "schema": "A versioned schema makes later replay reject incompatible state.",
++    "status": "A terminal status separates a complete block from a complete fixture.",
++    "stream_manifest": "The manifest proves all six orders froze before evaluation.",
++    "tests_run": "Named command receipts show which checks support the artifact.",
++    "transaction_memory_ready": "The downstream gate is true only when all safety checks pass.",
++    "unsafe_admission_count": "One unsafe durable record closes the readiness gate.",
++    "unsafe_use_count": "One unsafe retrieval closes the readiness gate.",
++    "verdict_class": "A closed class prevents mechanism evidence from becoming live science.",
++    "verifier_is_oracle": "The exact finite checker is authority only for this fixture."
++  },
++  "final_state_hashes": [
++    "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++    "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++    "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++    "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++    "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++    "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921"
++  ],
++  "gate_check_summary": {
++    "checks": {
++      "commit_receipts_complete": true,
++      "mandatory_rows_pass": true,
++      "orders_converge": true,
++      "preconditions_pass": true,
++      "read_only_writes_rejected": true,
++      "restart_bytes_equal": true,
++      "rollback_bytes_equal": true,
++      "stream_frozen": true,
++      "unsafe_admission_zero": true,
++      "unsafe_use_zero": true
++    },
++    "failed_checks": [],
++    "failures": []
++  },
++  "honest_verdict": "complete_transaction_fixture_ready: read-only episodes, exact delayed commits, atomic restart, quarantine, and byte-exact rollback passed",
++  "inference_substrate": "deterministic CPU exact-checker transactional fixture",
++  "preconditions_checked": {
++    "all_passed": true,
++    "checks": {
++      "atomic_write_support": {
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      "deterministic_exact_labels": {
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      "immutable_stream_seeds": {
++        "expected": true,
++        "observed": true,
++        "passed": true
++      },
++      "task_owned_state_directory": {
++        "expected": true,
++        "observed": true,
++        "passed": true
++      }
++    }
++  },
++  "random_seed": {
++    "attack": 6750,
++    "order": 6749,
++    "stream": 6748
++  },
++  "read_only_violations": [
++    {
++      "attack_id": "read_only_write:e01",
++      "attempted": true,
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "rejected": true
++    },
++    {
++      "attack_id": "read_only_write:e01",
++      "attempted": true,
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "rejected": true
++    },
++    {
++      "attack_id": "read_only_write:e02",
++      "attempted": true,
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "rejected": true
++    },
++    {
++      "attack_id": "read_only_write:e02",
++      "attempted": true,
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "rejected": true
++    },
++    {
++      "attack_id": "read_only_write:e03",
++      "attempted": true,
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "rejected": true
++    },
++    {
++      "attack_id": "read_only_write:e03",
++      "attempted": true,
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "rejected": true
++    }
++  ],
++  "reproducibility_checksum": "sha256:443d9f31ccba5a319fac5f690b8370044bb8f2275d406dfb7a5e49f12b2c2e4d",
++  "restart_receipts": [
++    {
++      "actual_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "boundary_id": "order_1:1",
++      "bytes_match": true,
++      "expected_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "boundary_id": "order_1:2",
++      "bytes_match": true,
++      "expected_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:3",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:4",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:5",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:6",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:7",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:8",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:9",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:10",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:11",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_1:12",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "boundary_id": "order_2:1",
++      "bytes_match": true,
++      "expected_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "boundary_id": "order_2:2",
++      "bytes_match": true,
++      "expected_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:3",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:4",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:5",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:6",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:7",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:8",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:9",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:10",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:11",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_2:12",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "boundary_id": "order_3:1",
++      "bytes_match": true,
++      "expected_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "boundary_id": "order_3:2",
++      "bytes_match": true,
++      "expected_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:3",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:4",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:5",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:6",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:7",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:8",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:9",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:10",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:11",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_3:12",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "boundary_id": "order_4:1",
++      "bytes_match": true,
++      "expected_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "boundary_id": "order_4:2",
++      "bytes_match": true,
++      "expected_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:3",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:4",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:5",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:6",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:7",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:8",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:9",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:10",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:11",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_4:12",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "boundary_id": "order_5:1",
++      "bytes_match": true,
++      "expected_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "boundary_id": "order_5:2",
++      "bytes_match": true,
++      "expected_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:3",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:4",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:5",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:6",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:7",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:8",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:9",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:10",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:11",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_5:12",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "boundary_id": "order_6:1",
++      "bytes_match": true,
++      "expected_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "boundary_id": "order_6:2",
++      "bytes_match": true,
++      "expected_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:3",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:4",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:5",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:6",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:7",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:8",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:9",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:10",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:11",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "boundary_id": "order_6:12",
++      "bytes_match": true,
++      "expected_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "boundary_id": "crash:before_rename",
++      "bytes_match": true,
++      "expected_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "hash_match": true
++    },
++    {
++      "actual_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "boundary_id": "crash:after_rename",
++      "bytes_match": true,
++      "expected_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "hash_match": true
++    }
++  ],
++  "rollback_byte_identity": {
++    "all_match": true,
++    "rows": [
++      {
++        "atomic_write": {
++          "directory_fsync": true,
++          "file_fsync": true,
++          "rename": true
++        },
++        "byte_identical": true,
++        "inverse_patch_applied": true,
++        "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++        "passed": true,
++        "restored_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++        "row_type": "rollback"
++      }
++    ]
++  },
++  "rows": [
++    {
++      "attack_id": "read_only_write:e01",
++      "attempted": true,
++      "order_id": "order_1",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "passed": true,
++      "rejected": true,
++      "row_type": "attack"
++    },
++    {
++      "admitted": true,
++      "boundary": 1,
++      "event_id": "e01",
++      "kind": "reusable_repair",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 2,
++      "event_id": "e02",
++      "kind": "reusable_repair",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 3,
++      "event_id": "e03",
++      "kind": "reusable_repair",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 4,
++      "event_id": "e04",
++      "kind": "naive_distractor",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 5,
++      "event_id": "e05",
++      "kind": "retention_anchor",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": true
++    },
++    {
++      "admitted": false,
++      "boundary": 6,
++      "event_id": "e06",
++      "kind": "duplicate",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 7,
++      "event_id": "e07",
++      "kind": "conflict",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 8,
++      "event_id": "e08",
++      "kind": "stale",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 9,
++      "event_id": "e09",
++      "kind": "provenance_loss",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 10,
++      "event_id": "e10",
++      "kind": "delayed_copy_poison",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 11,
++      "event_id": "e11",
++      "kind": "held_out",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 12,
++      "event_id": "e12",
++      "kind": "poison",
++      "order_id": "order_1",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "attack_id": "read_only_write:e01",
++      "attempted": true,
++      "order_id": "order_2",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "passed": true,
++      "rejected": true,
++      "row_type": "attack"
++    },
++    {
++      "admitted": true,
++      "boundary": 1,
++      "event_id": "e01",
++      "kind": "reusable_repair",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:a1addae1d5914a40e4617ad86d9bfc0b763c462b0c1133fc60a088423765c879",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 2,
++      "event_id": "e03",
++      "kind": "reusable_repair",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 3,
++      "event_id": "e02",
++      "kind": "reusable_repair",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 4,
++      "event_id": "e04",
++      "kind": "naive_distractor",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 5,
++      "event_id": "e05",
++      "kind": "retention_anchor",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": true
++    },
++    {
++      "admitted": false,
++      "boundary": 6,
++      "event_id": "e06",
++      "kind": "duplicate",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 7,
++      "event_id": "e07",
++      "kind": "conflict",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 8,
++      "event_id": "e08",
++      "kind": "stale",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 9,
++      "event_id": "e09",
++      "kind": "provenance_loss",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 10,
++      "event_id": "e10",
++      "kind": "delayed_copy_poison",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 11,
++      "event_id": "e11",
++      "kind": "held_out",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 12,
++      "event_id": "e12",
++      "kind": "poison",
++      "order_id": "order_2",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "attack_id": "read_only_write:e02",
++      "attempted": true,
++      "order_id": "order_3",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "passed": true,
++      "rejected": true,
++      "row_type": "attack"
++    },
++    {
++      "admitted": true,
++      "boundary": 1,
++      "event_id": "e02",
++      "kind": "reusable_repair",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 2,
++      "event_id": "e01",
++      "kind": "reusable_repair",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:e647925a1672d867c1a221debb51cc2c2bd467f12a0d8c41aa14a9be02f63007",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 3,
++      "event_id": "e03",
++      "kind": "reusable_repair",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 4,
++      "event_id": "e04",
++      "kind": "naive_distractor",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 5,
++      "event_id": "e05",
++      "kind": "retention_anchor",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": true
++    },
++    {
++      "admitted": false,
++      "boundary": 6,
++      "event_id": "e06",
++      "kind": "duplicate",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 7,
++      "event_id": "e07",
++      "kind": "conflict",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 8,
++      "event_id": "e08",
++      "kind": "stale",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 9,
++      "event_id": "e09",
++      "kind": "provenance_loss",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 10,
++      "event_id": "e10",
++      "kind": "delayed_copy_poison",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 11,
++      "event_id": "e11",
++      "kind": "held_out",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 12,
++      "event_id": "e12",
++      "kind": "poison",
++      "order_id": "order_3",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "attack_id": "read_only_write:e02",
++      "attempted": true,
++      "order_id": "order_4",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "passed": true,
++      "rejected": true,
++      "row_type": "attack"
++    },
++    {
++      "admitted": true,
++      "boundary": 1,
++      "event_id": "e02",
++      "kind": "reusable_repair",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:b1df7ea85f756e7763f7461d71b5dcfa142a18f37d6f5573bdebbd954cf37d58",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 2,
++      "event_id": "e03",
++      "kind": "reusable_repair",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 3,
++      "event_id": "e01",
++      "kind": "reusable_repair",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 4,
++      "event_id": "e04",
++      "kind": "naive_distractor",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 5,
++      "event_id": "e05",
++      "kind": "retention_anchor",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": true
++    },
++    {
++      "admitted": false,
++      "boundary": 6,
++      "event_id": "e06",
++      "kind": "duplicate",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 7,
++      "event_id": "e07",
++      "kind": "conflict",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 8,
++      "event_id": "e08",
++      "kind": "stale",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 9,
++      "event_id": "e09",
++      "kind": "provenance_loss",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 10,
++      "event_id": "e10",
++      "kind": "delayed_copy_poison",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 11,
++      "event_id": "e11",
++      "kind": "held_out",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 12,
++      "event_id": "e12",
++      "kind": "poison",
++      "order_id": "order_4",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "attack_id": "read_only_write:e03",
++      "attempted": true,
++      "order_id": "order_5",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "passed": true,
++      "rejected": true,
++      "row_type": "attack"
++    },
++    {
++      "admitted": true,
++      "boundary": 1,
++      "event_id": "e03",
++      "kind": "reusable_repair",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 2,
++      "event_id": "e01",
++      "kind": "reusable_repair",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:261761a8102b2e04e0a970f3592518f0061b13012164d6268c5e609e24e1eb07",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 3,
++      "event_id": "e02",
++      "kind": "reusable_repair",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 4,
++      "event_id": "e04",
++      "kind": "naive_distractor",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 5,
++      "event_id": "e05",
++      "kind": "retention_anchor",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": true
++    },
++    {
++      "admitted": false,
++      "boundary": 6,
++      "event_id": "e06",
++      "kind": "duplicate",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 7,
++      "event_id": "e07",
++      "kind": "conflict",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 8,
++      "event_id": "e08",
++      "kind": "stale",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 9,
++      "event_id": "e09",
++      "kind": "provenance_loss",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 10,
++      "event_id": "e10",
++      "kind": "delayed_copy_poison",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 11,
++      "event_id": "e11",
++      "kind": "held_out",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 12,
++      "event_id": "e12",
++      "kind": "poison",
++      "order_id": "order_5",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "attack_id": "read_only_write:e03",
++      "attempted": true,
++      "order_id": "order_6",
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "passed": true,
++      "rejected": true,
++      "row_type": "attack"
++    },
++    {
++      "admitted": true,
++      "boundary": 1,
++      "event_id": "e03",
++      "kind": "reusable_repair",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:5fdf0b1b647c7f93a59f49ea453f2e27a282e3809bc4ee06e61d9795d86d2b65",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 2,
++      "event_id": "e02",
++      "kind": "reusable_repair",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:307429b86e932bba21ab9853b707c3158dca5d1b74381b5d53d55477ef6b3feb",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": true,
++      "boundary": 3,
++      "event_id": "e01",
++      "kind": "reusable_repair",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 4,
++      "event_id": "e04",
++      "kind": "naive_distractor",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 5,
++      "event_id": "e05",
++      "kind": "retention_anchor",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": true
++    },
++    {
++      "admitted": false,
++      "boundary": 6,
++      "event_id": "e06",
++      "kind": "duplicate",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 7,
++      "event_id": "e07",
++      "kind": "conflict",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 8,
++      "event_id": "e08",
++      "kind": "stale",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 9,
++      "event_id": "e09",
++      "kind": "provenance_loss",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 10,
++      "event_id": "e10",
++      "kind": "delayed_copy_poison",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 11,
++      "event_id": "e11",
++      "kind": "held_out",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "admitted": false,
++      "boundary": 12,
++      "event_id": "e12",
++      "kind": "poison",
++      "order_id": "order_6",
++      "passed": true,
++      "row_type": "event",
++      "state_hash": "sha256:79955b7b6da5269d2932d68b9a69c176c67497b2b0a775526b93526143f57921",
++      "unsafe_admitted": false,
++      "unsafe_used": false,
++      "used": false
++    },
++    {
++      "atomic_boundary": "parent",
++      "attack_id": "crash:before_rename",
++      "passed": true,
++      "row_type": "attack",
++      "stage": "before_rename"
++    },
++    {
++      "atomic_boundary": "new",
++      "attack_id": "crash:after_rename",
++      "passed": true,
++      "row_type": "attack",
++      "stage": "after_rename"
++    },
++    {
++      "atomic_write": {
++        "directory_fsync": true,
++        "file_fsync": true,
++        "rename": true
++      },
++      "byte_identical": true,
++      "inverse_patch_applied": true,
++      "parent_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "passed": true,
++      "restored_hash": "sha256:cadedd2f1a71c4d1f0f4135f7ce77d7546d2862060581ab05eccf01ace771edf",
++      "row_type": "rollback"
++    }
++  ],
++  "run_date": "20260829",
++  "schema": "carnot.experiment_6748.transactional_constraint_memory_fixture.v1",
++  "status": "complete_transaction_fixture_ready",
++  "stream_manifest": {
++    "attack_seed": 6750,
++    "events": [
++      {
++        "certified_repair": "clamp_upper_bound",
++        "event_id": "e01",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "bounds",
++          "scope": "python"
++        },
++        "family": "bounds",
++        "kind": "reusable_repair",
++        "scope": "python",
++        "target_key": null
++      },
++      {
++        "certified_repair": "normalize_even_parity",
++        "event_id": "e02",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "parity",
++          "scope": "rust"
++        },
++        "family": "parity",
++        "kind": "reusable_repair",
++        "scope": "rust",
++        "target_key": null
++      },
++      {
++        "certified_repair": "require_schema_field",
++        "event_id": "e03",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "schema",
++          "scope": "artifact"
++        },
++        "family": "schema",
++        "kind": "reusable_repair",
++        "scope": "artifact",
++        "target_key": null
++      },
++      {
++        "certified_repair": "none",
++        "event_id": "e04",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "wording",
++          "scope": "none"
++        },
++        "family": "wording",
++        "kind": "naive_distractor",
++        "scope": "none",
++        "target_key": null
++      },
++      {
++        "certified_repair": "clamp_upper_bound",
++        "event_id": "e05",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "bounds",
++          "scope": "python"
++        },
++        "family": "bounds",
++        "kind": "retention_anchor",
++        "scope": "python",
++        "target_key": "repair:bounds:python"
++      },
++      {
++        "certified_repair": "clamp_upper_bound",
++        "event_id": "e06",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "bounds",
++          "scope": "python"
++        },
++        "family": "bounds",
++        "kind": "duplicate",
++        "scope": "python",
++        "target_key": null
++      },
++      {
++        "certified_repair": "clamp_lower_bound",
++        "event_id": "e07",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "bounds",
++          "scope": "python"
++        },
++        "family": "bounds",
++        "kind": "conflict",
++        "scope": "python",
++        "target_key": null
++      },
++      {
++        "certified_repair": "normalize_even_parity",
++        "event_id": "e08",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "parity",
++          "scope": "rust"
++        },
++        "family": "parity",
++        "kind": "stale",
++        "scope": "rust",
++        "target_key": null
++      },
++      {
++        "certified_repair": "require_schema_field",
++        "event_id": "e09",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "schema",
++          "scope": "artifact"
++        },
++        "family": "schema",
++        "kind": "provenance_loss",
++        "scope": "artifact",
++        "target_key": null
++      },
++      {
++        "certified_repair": "clamp_upper_bound",
++        "event_id": "e10",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "copy",
++          "scope": "rust"
++        },
++        "family": "copy",
++        "kind": "delayed_copy_poison",
++        "scope": "rust",
++        "target_key": null
++      },
++      {
++        "certified_repair": "normalize_modulo",
++        "event_id": "e11",
++        "exact_label": true,
++        "facts": {
++          "constraint_family": "held_modulo",
++          "scope": "held"
++        },
++        "family": "held_modulo",
++        "kind": "held_out",
++        "scope": "held",
++        "target_key": null
++      },
++      {
++        "certified_repair": "reject_unsafe",
++        "event_id": "e12",
++        "exact_label": false,
++        "facts": {
++          "constraint_family": "safety",
++          "scope": "global"
++        },
++        "family": "safety",
++        "kind": "poison",
++        "scope": "global",
++        "target_key": null
++      }
++    ],
++    "families": {
++      "conflict": [
++        "e07"
++      ],
++      "held_out": [
++        "e11"
++      ],
++      "naive_distractor": [
++        "e04"
++      ],
++      "poison": [
++        "e10",
++        "e12"
++      ],
++      "retention_anchor": [
++        "e05"
++      ],
++      "reusable_repair": [
++        "e01",
++        "e02",
++        "e03",
++        "e06",
++        "e09"
++      ],
++      "stale": [
++        "e08"
++      ]
++    },
++    "frozen_before_policy_evaluation": true,
++    "held_out_families": [
++      "held_modulo"
++    ],
++    "order_seed": 6749,
++    "orders": [
++      {
++        "event_ids": [
++          "e01",
++          "e02",
++          "e03",
++          "e04",
++          "e05",
++          "e06",
++          "e07",
++          "e08",
++          "e09",
++          "e10",
++          "e11",
++          "e12"
++        ],
++        "order_hash": "sha256:93e7f3e52471289611fb3370f7f88681d732f92897662e5f41d764dc07fbfa5e",
++        "order_id": "order_1"
++      },
++      {
++        "event_ids": [
++          "e01",
++          "e03",
++          "e02",
++          "e04",
++          "e05",
++          "e06",
++          "e07",
++          "e08",
++          "e09",
++          "e10",
++          "e11",
++          "e12"
++        ],
++        "order_hash": "sha256:07e6495f4b9e64f31931b8348351df80e6e23ec88e62c42b83dfc10397fd14e8",
++        "order_id": "order_2"
++      },
++      {
++        "event_ids": [
++          "e02",
++          "e01",
++          "e03",
++          "e04",
++          "e05",
++          "e06",
++          "e07",
++          "e08",
++          "e09",
++          "e10",
++          "e11",
++          "e12"
++        ],
++        "order_hash": "sha256:42036994a600b4aba762c90c7d9d10290031e74762966247fb16e5aae1be3367",
++        "order_id": "order_3"
++      },
++      {
++        "event_ids": [
++          "e02",
++          "e03",
++          "e01",
++          "e04",
++          "e05",
++          "e06",
++          "e07",
++          "e08",
++          "e09",
++          "e10",
++          "e11",
++          "e12"
++        ],
++        "order_hash": "sha256:a4c991d36dbe8b6b26730ed3973e6615524794254c65008137a818fef8f917e3",
++        "order_id": "order_4"
++      },
++      {
++        "event_ids": [
++          "e03",
++          "e01",
++          "e02",
++          "e04",
++          "e05",
++          "e06",
++          "e07",
++          "e08",
++          "e09",
++          "e10",
++          "e11",
++          "e12"
++        ],
++        "order_hash": "sha256:9648213f286bfbaac8443e4f101002c057c053a3c4eec17129fff2304c5d832c",
++        "order_id": "order_5"
++      },
++      {
++        "event_ids": [
++          "e03",
++          "e02",
++          "e01",
++          "e04",
++          "e05",
++          "e06",
++          "e07",
++          "e08",
++          "e09",
++          "e10",
++          "e11",
++          "e12"
++        ],
++        "order_hash": "sha256:17794b8338a04a177245e0bfbf041c00a044422dcc54b1f9a08120b90a7e7759",
++        "order_id": "order_6"
++      }
++    ],
++    "stream_hash": "sha256:929ff6615051edbcebeabf60ef2fa521990ceac5c4e42fbc8c71a70c51b1fe70",
++    "stream_seed": 6748
++  },
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/memory/transactional_constraint_memory.py,scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py -m pytest tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py -q --no-cov -n 0",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/coverage report --rcfile=/dev/null --fail-under=100 --show-missing",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/ruff check python/carnot/memory/transactional_constraint_memory.py scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6748_transactional_constraint_memory_fixture.json",
++      "exit_code": 0
++    },
++    {
++      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6748_transactional_constraint_memory_fixture.json",
++      "exit_code": 0
++    }
++  ],
++  "transaction_memory_ready": true,
++  "unsafe_admission_count": 0,
++  "unsafe_use_count": 0,
++  "verdict_class": "circular_positive",
++  "verifier_is_oracle": true
++}
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index c11585f04b..e5a672695b 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -282,6 +282,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
+     "production_verify_repair_workload_canary_exact_verifier_no_llm",
+     "sealed_cached_event_evaluation",
+     "transactional_exact_conflict_memory_and_cpu_mapping_no_llm",
++    "deterministic CPU exact-checker transactional fixture",
+ )
+ DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
+ NO_LLM_DECLARED_MIN_DURATION_S = 0.0001
+diff --git a/scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py b/scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py
+new file mode 100644
+index 0000000000..f3b0e71204
+--- /dev/null
++++ b/scripts/experiments/experiment_6748_transactional_constraint_memory_fixture.py
+@@ -0,0 +1,8 @@
++#!/usr/bin/env python3
++"""Run the task-owned Exp6748 transactional memory fixture."""
++
++from carnot.memory.transactional_constraint_memory import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/conftest.py b/tests/python/conftest.py
+index 092c5266a1..761167da42 100644
+--- a/tests/python/conftest.py
++++ b/tests/python/conftest.py
+@@ -19,8 +19,19 @@ import pytest
+ 
+ from carnot.paths import repo_root as _resolve_repo_root
+ from carnot.testing.pytest_basetemp_isolation import install_isolated_basetemp
++from carnot.testing.worktree_import_guard import check as _check_worktree_import
+ from carnot.testing.pytest_memory_watchdog import MemoryLeakDetected, PytestMemoryWatchdog
+ 
++# --- The tests and the package must come from the SAME checkout (2026-08-29) ----------------
++# Per-agent worktrees stop concurrent agents overwriting each other, but the venv still
++# resolves `import carnot` to the MAIN checkout -- so a worktree run would silently test code
++# the agent did not edit, and every mutation proof would read green while measuring nothing.
++# Verified in both directions before this was wired. Runs at import so a bad run dies during
++# collection rather than after an hour of meaningless passes.
++import carnot as _carnot  # noqa: E402
++
++_check_worktree_import(Path(__file__).resolve().parents[2], Path(_carnot.__file__).resolve().parent)
++
+ # Add repo root to sys.path so tests can import from scripts/
+ #
+ # Routed through the central resolver (`carnot.paths`) rather than an ad-hoc
+diff --git a/tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py b/tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py
+new file mode 100644
+index 0000000000..7fc60ea832
+--- /dev/null
++++ b/tests/python/test_experiment_6748_transactional_constraint_memory_fixture.py
+@@ -0,0 +1,358 @@
++"""Tests for the Exp6748 transactional constraint-memory fixture.
++
++Spec refs: REQ-CL-6748, SCENARIO-CL-6748-READ-ONLY,
++SCENARIO-CL-6748-DELAYED-COMMIT, SCENARIO-CL-6748-ATTACKS,
++SCENARIO-CL-6748-RESTART, SCENARIO-CL-6748-ROLLBACK,
++SCENARIO-CL-6748-ARTIFACT.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++import runpy
++import sys
++
++import pytest
++
++from carnot.memory import transactional_constraint_memory as mod
++from scripts import adversarial_verify
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++
++
++def _event(kind: str) -> dict[str, object]:
++    return deepcopy(next(row for row in mod.controlled_stream() if row["kind"] == kind))
++
++
++def _commit(memory: mod.TransactionalConstraintMemory, event: dict[str, object], index: int):
++    snapshot = memory.begin_episode(str(event["event_id"]))
++    assert snapshot["state_bytes"] == memory.state_bytes()
++    memory.end_episode()
++    decision = memory.admit(mod.proposal_for(event), event, boundary_index=index)
++    assert decision["admitted"] is True
++    return decision["commit_receipt"]
++
++
++def test_req_cl_6748_spec_declares_the_fixture_contract() -> None:
++    """REQ-CL-6748: the canonical capability spec owns the fixture first."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("## REQ-CL-6748") :]
++    for marker in (
++        "SCENARIO-CL-6748-READ-ONLY",
++        "SCENARIO-CL-6748-DELAYED-COMMIT",
++        "SCENARIO-CL-6748-ATTACKS",
++        "SCENARIO-CL-6748-RESTART",
++        "SCENARIO-CL-6748-ROLLBACK",
++        "SCENARIO-CL-6748-ARTIFACT",
++        mod.MODULE_RELATIVE_PATH.as_posix(),
++        mod.SCRIPT_RELATIVE_PATH.as_posix(),
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++
++
++def test_scenario_cl_6748_stream_is_frozen_with_six_orders() -> None:
++    """SCENARIO-CL-6748-ARTIFACT: seeds and chronology freeze before evaluation."""
++
++    stream = mod.controlled_stream()
++    manifest = mod.freeze_stream(stream)
++
++    assert isinstance(stream, tuple)
++    assert manifest["frozen_before_policy_evaluation"] is True
++    assert manifest["stream_seed"] == mod.RANDOM_SEEDS["stream"]
++    assert len(manifest["orders"]) == 6
++    assert len({row["order_hash"] for row in manifest["orders"]}) == 6
++    assert all(len(row["event_ids"]) == len(stream) for row in manifest["orders"])
++    assert {
++        "reusable_repair",
++        "naive_distractor",
++        "held_out",
++        "retention_anchor",
++        "poison",
++        "stale",
++        "conflict",
++    } <= set(manifest["families"])
++    assert manifest == mod.freeze_stream(mod.controlled_stream())
++
++
++def test_scenario_cl_6748_active_episode_is_read_only(tmp_path: Path) -> None:
++    """SCENARIO-CL-6748-READ-ONLY: active-episode writes fail without mutation."""
++
++    memory = mod.TransactionalConstraintMemory(tmp_path / "owned-state")
++    event = _event("reusable_repair")
++    before = memory.state_bytes()
++    snapshot = memory.begin_episode(str(event["event_id"]))
++
++    with pytest.raises(mod.ReadOnlyEpisodeError, match="active episode is read-only"):
++        memory.admit(mod.proposal_for(event), event, boundary_index=0)
++
++    assert memory.state_bytes() == before == snapshot["state_bytes"]
++    assert memory.read_only_violations == [
++        {
++            "attack_id": f"read_only_write:{event['event_id']}",
++            "attempted": True,
++            "rejected": True,
++            "parent_hash": snapshot["state_hash"],
++        }
++    ]
++    memory.end_episode()
++
++
++def test_scenario_cl_6748_delayed_commit_and_parent_receipt(tmp_path: Path) -> None:
++    """SCENARIO-CL-6748-DELAYED-COMMIT: exact records commit after close."""
++
++    memory = mod.TransactionalConstraintMemory(tmp_path / "owned-state")
++    event = _event("reusable_repair")
++    parent = memory.state_bytes()
++    receipt = _commit(memory, event, 1)
++
++    assert receipt["parent_hash"] == mod.sha256_bytes(parent)
++    assert receipt["evidence_hash"] == mod.event_evidence_hash(event)
++    assert receipt["new_state_hash"] == memory.state_hash()
++    assert receipt["reason"] == "all_admission_checks_passed"
++    assert receipt["inverse_patch"]["operation"] == "remove_record"
++    assert receipt["atomic_write"]["file_fsync"] is True
++    assert receipt["atomic_write"]["rename"] is True
++    assert receipt["atomic_write"]["directory_fsync"] is True
++    assert memory.records()[0]["certified"] is True
++
++    restart = memory.restart_receipt("after-first-commit", memory.state_bytes())
++    assert restart["bytes_match"] is True
++    assert restart["hash_match"] is True
++
++
++@pytest.mark.parametrize(
++    ("kind", "failed_check"),
++    [
++        ("duplicate", "duplicate"),
++        ("conflict", "conflict"),
++        ("stale", "ttl"),
++        ("provenance_loss", "provenance"),
++        ("delayed_copy_poison", "provenance"),
++        ("poison", "exact_checker"),
++    ],
++)
++def test_scenario_cl_6748_unsafe_updates_are_quarantined(
++    tmp_path: Path,
++    kind: str,
++    failed_check: str,
++) -> None:
++    """SCENARIO-CL-6748-ATTACKS: every unsafe admission path fails closed."""
++
++    memory = mod.TransactionalConstraintMemory(tmp_path / kind)
++    for index, bootstrap in enumerate(
++        row for row in mod.controlled_stream() if row["kind"] == "reusable_repair"
++    ):
++        _commit(memory, deepcopy(bootstrap), index)
++
++    event = _event(kind)
++    before = memory.state_bytes()
++    memory.begin_episode(str(event["event_id"]))
++    memory.end_episode()
++    decision = memory.admit(mod.proposal_for(event), event, boundary_index=20)
++
++    assert decision["admitted"] is False
++    assert decision["checks"][failed_check] is False
++    assert decision["unsafe_admitted"] is False
++    assert decision["unsafe_used"] is False
++    assert memory.state_bytes() == before
++    assert decision["quarantine_receipt"]["written"] is True
++    assert len(memory.quarantine_entries()) == 1
++
++
++def test_scenario_cl_6748_atomic_crashes_restart_and_rollback(tmp_path: Path) -> None:
++    """SCENARIO-CL-6748-RESTART/ROLLBACK: crash boundaries and bytes are exact."""
++
++    before_memory = mod.TransactionalConstraintMemory(tmp_path / "before")
++    event = _event("reusable_repair")
++    parent = before_memory.state_bytes()
++    before_memory.begin_episode(str(event["event_id"]))
++    before_memory.end_episode()
++    before_memory.crash_stage = "before_rename"
++    with pytest.raises(mod.CrashInjected, match="before_rename") as before_exc:
++        before_memory.admit(mod.proposal_for(event), event, boundary_index=1)
++    restarted_before = mod.TransactionalConstraintMemory(tmp_path / "before")
++    assert restarted_before.state_bytes() == parent
++    assert before_exc.value.receipt["parent_hash"] == restarted_before.state_hash()
++
++    after_memory = mod.TransactionalConstraintMemory(tmp_path / "after")
++    after_parent = after_memory.state_bytes()
++    after_memory.begin_episode(str(event["event_id"]))
++    after_memory.end_episode()
++    after_memory.crash_stage = "after_rename"
++    with pytest.raises(mod.CrashInjected, match="after_rename") as after_exc:
++        after_memory.admit(mod.proposal_for(event), event, boundary_index=1)
++    restarted_after = mod.TransactionalConstraintMemory(tmp_path / "after")
++    assert restarted_after.state_hash() == after_exc.value.receipt["new_state_hash"]
++    assert restarted_after.state_bytes() != after_parent
++
++    rollback_memory = mod.TransactionalConstraintMemory(tmp_path / "rollback")
++    receipt = _commit(rollback_memory, event, 1)
++    restarted = mod.TransactionalConstraintMemory(tmp_path / "rollback")
++    rollback = restarted.rollback(receipt)
++    assert rollback["inverse_patch_applied"] is True
++    assert rollback["byte_identical"] is True
++    assert restarted.state_bytes() == mod.decode_bytes(receipt["parent_bytes_b64"])
++
++
++def test_req_cl_6748_artifact_is_row_derived_and_ready(tmp_path: Path) -> None:
++    """REQ-CL-6748: the complete fixture closes every required gate."""
++
++    artifact = mod.run_fixture(
++        state_root=tmp_path / "fixture-state",
++        duration_s=1.0,
++        tests_run=mod.DEFAULT_TESTS_RUN,
++    )
++
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert artifact["transaction_memory_ready"] is True
++    assert artifact["verdict_class"] == "circular_positive"
++    assert artifact["honest_verdict"].startswith("complete_transaction_fixture_ready:")
++    assert artifact["unsafe_admission_count"] == 0
++    assert artifact["unsafe_use_count"] == 0
++    assert artifact["rollback_byte_identity"]["all_match"] is True
++    assert len(artifact["stream_manifest"]["orders"]) == 6
++    assert all(row["passed"] is True for row in artifact["rows"])
++    assert all(row["bytes_match"] is True for row in artifact["restart_receipts"])
++    assert all(row["hash_match"] is True for row in artifact["restart_receipts"])
++    assert artifact["gate_check_summary"]["failed_checks"] == []
++    assert set(artifact["field_principles"]) == set(artifact) | {
++        f"gate:{name}" for name in mod.READINESS_GATES
++    }
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_cl_6748_owned_precondition_block_is_complete(tmp_path: Path) -> None:
++    """SCENARIO-CL-6748-ARTIFACT: missing owned resources emit a complete block."""
++
++    artifact = mod.run_fixture(
++        state_root=tmp_path / "blocked-state",
++        duration_s=0.5,
++        precondition_overrides={"atomic_write_support": False},
++        tests_run=mod.DEFAULT_TESTS_RUN,
++    )
++
++    assert artifact["status"] == "complete_blocked_transaction_fixture"
++    assert artifact["honest_verdict"].startswith("complete_blocked_transaction_fixture:")
++    assert artifact["verdict_class"] == "blocked"
++    assert artifact["transaction_memory_ready"] is False
++    assert artifact["gate_check_summary"]["failed_checks"] == ["atomic_write_support"]
++    assert artifact["gate_check_summary"]["failures"][0]["observed"] is False
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_cl_6748_substrate_has_adversarial_duration_floor() -> None:
++    """SCENARIO-CL-6748-ARTIFACT: the exact CPU substrate has a nonzero floor."""
++
++    artifact = {
++        "inference_substrate": mod.INFERENCE_SUBSTRATE,
++        "duration_s": 0.001,
++        "honest_verdict": "complete_transaction_fixture_ready: fixture passed",
++    }
++    floor = adversarial_verify.duration_floor_for_artifact(artifact)
++    flags: list[adversarial_verify.Flag] = []
++    adversarial_verify.check_duration_vs_claim(artifact, flags)
++
++    assert floor is not None
++    assert floor["reason"] == "deterministic_verifier"
++    assert floor["min_duration_s"] == 0.0001
++    assert "SUBSTRATE_HAS_NO_DURATION_FLOOR" not in {flag.kind for flag in flags}
++
++
++def test_scenario_cl_6748_validation_and_cli_wrapper(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-CL-6748-ARTIFACT: validation and the required command publish atomically."""
++
++    result = tmp_path / mod.RESULT_RELATIVE_PATH.name
++    state = tmp_path / "cli-state"
++    assert mod.main(["--result-path", str(result), "--state-root", str(state)]) == 0
++    assert mod.main(["--validate", "--result-path", str(result)]) == 0
++    payload = json.loads(result.read_text(encoding="utf-8"))
++    assert payload["transaction_memory_ready"] is True
++
++    broken = deepcopy(payload)
++    broken["unsafe_admission_count"] = 1
++    assert "unsafe counts must be zero when ready" in mod.validate_artifact(broken)
++    broken = deepcopy(payload)
++    broken["verdict_class"] = "unexpected"
++    assert "verdict_class outside closed enum" in mod.validate_artifact(broken)
++    broken = deepcopy(payload)
++    broken.pop("rows")
++    assert "required field set mismatch" in mod.validate_artifact(broken)
++    broken = deepcopy(payload)
++    broken["reproducibility_checksum"] = "sha256:bad"
++    assert "reproducibility_checksum mismatch" in mod.validate_artifact(broken)
++    broken = deepcopy(payload)
++    broken["inference_substrate"] = "live_llm_inference"
++    assert "inference_substrate mismatch" in mod.validate_artifact(broken)
++    broken = deepcopy(payload)
++    broken["field_principles"] = {}
++    assert "field_principles coverage mismatch" in mod.validate_artifact(broken)
++    broken = deepcopy(payload)
++    broken["gate_check_summary"]["failed_checks"] = ["forced"]
++    assert "ready artifact has failed gates" in mod.validate_artifact(broken)
++
++    invalid_path = tmp_path / "invalid.json"
++    with pytest.raises(ValueError, match="ready artifact has failed gates"):
++        mod.write_artifact(invalid_path, broken)
++    invalid_path.write_text(json.dumps(broken), encoding="utf-8")
++    with pytest.raises(ValueError, match="ready artifact has failed gates"):
++        mod.main(["--validate", "--result-path", str(invalid_path)])
++
++    wrapper_result = tmp_path / "wrapper.json"
++    wrapper_state = tmp_path / "wrapper-state"
++    monkeypatch.setattr(
++        sys,
++        "argv",
++        [
++            str(REPO / mod.SCRIPT_RELATIVE_PATH),
++            "--result-path",
++            str(wrapper_result),
++            "--state-root",
++            str(wrapper_state),
++        ],
++    )
++    with pytest.raises(SystemExit) as exit_info:
++        runpy.run_path(str(REPO / mod.SCRIPT_RELATIVE_PATH), run_name="__main__")
++    assert exit_info.value.code == 0
++    assert wrapper_result.is_file()
++
++
++def test_scenario_cl_6748_owned_io_and_validation_fail_closed(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-CL-6748-ATTACKS: malformed state and failed publication close."""
++
++    memory = mod.TransactionalConstraintMemory(tmp_path / "bad-state")
++    memory.state_path.write_text('{"schema":"wrong"}\n', encoding="utf-8")
++    with pytest.raises(ValueError, match="invalid transactional memory state"):
++        mod.TransactionalConstraintMemory(tmp_path / "bad-state")
++
++    original_replace = mod.os.replace
++
++    def fail_replace(source: Path, target: Path) -> None:
++        del source, target
++        raise OSError("injected replace failure")
++
++    monkeypatch.setattr(mod.os, "replace", fail_replace)
++    with pytest.raises(OSError, match="injected replace failure"):
++        mod._atomic_write(tmp_path / "replace-failure.json", b"data\n")
++    assert list(tmp_path.glob(".replace-failure.json.*.tmp")) == []
++    monkeypatch.setattr(mod.os, "replace", original_replace)
++
++    default_root_artifact = mod.run_fixture(duration_s=0.25)
++    assert default_root_artifact["transaction_memory_ready"] is True
++
++    monkeypatch.setattr(mod, "validate_artifact", lambda artifact: ["forced validation error"])
++    with pytest.raises(ValueError, match="forced validation error"):
++        mod.run_fixture(state_root=tmp_path / "forced", duration_s=0.25)
+diff --git a/tests/python/test_worktree_import_guard.py b/tests/python/test_worktree_import_guard.py
+new file mode 100644
+index 0000000000..fa99bddd75
+--- /dev/null
++++ b/tests/python/test_worktree_import_guard.py
+@@ -0,0 +1,71 @@
++"""REQ-INFRA-6810: a test run must not import `carnot` from a different checkout.
++
++We adopted per-agent git worktrees on 2026-08-29 to stop concurrent agents destroying each
++other's work. Worktrees close that class and open a quieter one: the venv resolves `import
++carnot` to the MAIN checkout regardless of cwd, so a worktree run tests code the agent did not
++edit and every mutation proof reads GREEN while measuring nothing.
++
++Verified live before the guard was written: in a fresh worktree `carnot.__file__` pointed at the
++main checkout, and an edit made in the worktree was invisible until `PYTHONPATH` was pinned.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++from carnot.testing.worktree_import_guard import OVERRIDE_ENV, check, foreign_import_reason
++
++
++def test_same_checkout_is_sound() -> None:
++    assert foreign_import_reason(Path("/repo"), Path("/repo/python/carnot")) is None
++
++
++def test_a_foreign_checkout_is_reported() -> None:
++    """The incident shape: tests from the worktree, package from the main checkout."""
++    reason = foreign_import_reason(Path("/wt"), Path("/repo/python/carnot"))
++    assert reason is not None
++    assert "/repo/python/carnot" in reason
++
++
++def test_the_message_carries_the_fix() -> None:
++    """A refusal an agent cannot act on just costs a run. Name the exact command."""
++    reason = foreign_import_reason(Path("/wt"), Path("/repo/python/carnot"))
++    assert reason is not None
++    assert "PYTHONPATH=/wt/python" in reason
++
++
++def test_a_sibling_prefix_is_not_mistaken_for_containment() -> None:
++    """`/repo-other` must not read as inside `/repo`.
++
++    A string-prefix comparison would call this sound and let the exact trap through.
++    """
++    assert foreign_import_reason(Path("/repo"), Path("/repo-other/python/carnot")) is not None
++
++
++def test_check_raises_on_a_foreign_checkout() -> None:
++    try:
++        check(Path("/wt"), Path("/repo/python/carnot"))
++    except RuntimeError as exc:
++        assert "foreign checkout" in str(exc)
++    else:  # pragma: no cover - the guard failing to fire is the whole bug
++        raise AssertionError("check() accepted a foreign checkout")
++
++
++def test_check_is_silent_when_the_trees_agree() -> None:
++    check(Path("/repo"), Path("/repo/python/carnot"))
++
++
++def test_the_override_is_honoured_and_is_exact(monkeypatch) -> None:
++    """Deliberately testing an installed carnot is legitimate; drifting into it is not.
++
++    Only the exact string "1" opts out, so a stray truthy value cannot silently disable the
++    guard on the run that mattered.
++    """
++    monkeypatch.setenv(OVERRIDE_ENV, "1")
++    check(Path("/wt"), Path("/repo/python/carnot"))
++    monkeypatch.setenv(OVERRIDE_ENV, "yes")
++    try:
++        check(Path("/wt"), Path("/repo/python/carnot"))
++    except RuntimeError:
++        return
++    raise AssertionError("a non-'1' value disabled the guard")
+-- 
+2.55.0
+

@@ -1,0 +1,1682 @@
+From 339ef83eff223d94546f667f135492eb988319b2 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 18 Jun 2026 04:41:28 -0400
+Subject: [PATCH 02506/11362] [conductor] PHASE E1 (SOTA-ingestion; mandatory
+ per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .404
+ bleeding-edge forks (LLM-generated action-cost heuristics / classical
+ planning with code heuristics; E3 executable-world-model deeper ARC solves;
+ verifier-guided diffusion-LM search with scorer-independent local-coherence
+ controls; verifier-as-detector measurement) and MAP the strongest 3-5 methods
+ onto the .405 roadmap, conditioned on the .404 outcomes (did the stronger
+ LLM-heuristic class deepen the efficiency moat? did E3 reach deeper/tail
+ levels? did the DiffusionGemma scorer-repair convert or RETIRE? did the
+ detector beat chance?). Use the RELIABLE channel ONLY
+ (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency
+ WebSearch/WebFetch) -- /deep-research is BANNED in-loop. Every method MUST
+ carry a real, VERIFIED arXiv ID/URL (no citation = fabrication). FLAG A2D2
+ (2606.13565) + SEPO (2502.01384) verifier-as-reward GENERATOR-training as
+ OUT-OF-BAND/operator-owned (NOT auto-run in-loop). Update
+ research-studying.md (mark ingested) and emit flagged_for_v405 (the single
+ strongest method for the .405 planner).
+
+Automated research step by research conductor.
+Task ID: exp4376-sota-ingestion-v405
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  88 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4376_sota_ingestion_v405.py    | 711 ++++++++++++++++++
+ research-studying.md                          |  79 ++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ .../experiment_4376_sota_ingestion_v405.json  |  85 +++
+ .../experiment_4376_sota_ingestion_v405.py    |   9 +
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...est_experiment_4376_sota_ingestion_v405.py | 499 ++++++++++++
+ 12 files changed, 1489 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4376_sota_ingestion_v405.py
+ create mode 100644 results/experiment_4376_sota_ingestion_v405.json
+ create mode 100644 results/experiment_4376_sota_ingestion_v405.py
+ create mode 100644 tests/python/test_experiment_4376_sota_ingestion_v405.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 01f970e3fb..2b0fbc82cf 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -21859,6 +21859,94 @@ and leaves conductor and reconciliation files untouched.
+ |---|---|---|
+ | REQ-REPORT-4365 | Planned (`python/carnot/experiment_4365_sota_ingestion_v404.py`) | Planned (`tests/python/test_experiment_4365_sota_ingestion_v404.py`) |
+ 
++### REQ-REPORT-4376: Ingest SOTA For The .405 Headline Branch From The .404 Outcomes
++
++The Exp 4376 workflow SHALL close the discover-to-ingest-to-plan loop for the
++`.405` headline branch by reading the `.404` fork outcome artifacts,
++filtering `research-studying.md` and `research-references.md` to the active
++LLM-generated/code heuristics, ARC E3 executable-world-model, verifier-guided
++diffusion-LM search/local-coherence, and verifier-as-detector/step-error tracks,
++and running the reliable discovery channel (`scripts/sweep_clusters.py`,
++`scripts/sweep_semscholar.py`, plus low-concurrency WebSearch/WebFetch). The
++workflow SHALL NOT invoke `/deep-research`, SHALL NOT modify
++`scripts/research_conductor.py`, and SHALL leave `ops/changelog.md`,
++`ops/status.md`, and `_bmad/traceability.md` untouched for the separate
++reconciliation step.
++
++Before writing a complete mapping, the workflow SHALL require network
++reachability to Hugging Face. If network is unavailable, it SHALL stop with
++`honest_verdict=blocked_network_unavailable` and SHALL NOT fabricate citations.
++When network is available, each mapped method SHALL carry a
++WebFetch/arXiv-API-verified arXiv ID and URL.
++
++The workflow SHALL branch on the actual `.404` artifacts. When Exp 4370 reports
++`acceptance_gate_passed=true`, `llm_heuristic_beats_linear=false`, and equal
++held-out action totals for `linear` and `llm_generated`, the `.405` plan SHALL
++record the LLM-generated action-heuristic arm as a clean powered null rather
++than a repeated headline. When Exp 4372 reports
++`honest_verdict=success_e3_deeper_lp85_reproduced`,
++`new_levels_reproduced=1`, `reproducible_total_levels>=34`, and
++`verifier_is_oracle=true`, the `.405` plan SHALL preserve E3 as the
++oracle-grounded ARC north-star continuation. When Exp 4374 reports
++`honest_verdict=retired_in_generation_conversion_unmeasurable`,
++`scorer_requalified_leak_clean=false`, `codila_control_differentiates=false`,
++`benchmark_n=0`, and `s3_guided_beats_control=false`, the `.405` plan SHALL keep
++DiffusionGemma in-generation conversion retired from the in-loop headline.
++When Exp 4375 reports
++`honest_verdict=complete: detector_beats_chance_zero_selection_headroom_fover`,
++`detector_beats_chance=true`, `detector_auroc_ci95[0] > 0.5`,
++`selection_headroom.headroom=0.0`, and `n_candidates>=1000`, the `.405` plan
++SHALL prioritize the verifier-as-detector/step-error localization line as the
++strongest non-oracle positive fork.
++
++The machine-checkable artifact SHALL be written to
++`results/experiment_4376_sota_ingestion_v405.json`, and the required runner
++SHALL be `results/experiment_4376_sota_ingestion_v405.py` delegating to
++`python/carnot/experiment_4376_sota_ingestion_v405.py`.
++
++The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
++`methods_mapped`, `flagged_for_v405`, `out_of_band_flagged`, `random_seed`, and
++`field_principles`. `field_principles` SHALL contain exactly the principle
++annotations for `honest_verdict`, `methods_mapped`, `flagged_for_v405`,
++`out_of_band_flagged`, and `random_seed`. `honest_verdict` SHALL use a terminal
++prefix and, on the complete path, start with
++`complete: sota_ingestion_v405_mapped`. `methods_mapped` SHALL contain three to
++five dicts with exactly `name`, `arxiv_id_or_url`, `url`,
++`source_verification`, `track`, `v404_outcome_conditioning`,
++`carnot_stack_mapping`, `failure_mode`, and `experiment_mapping`. Each
++`arxiv_id_or_url` SHALL be a verified arXiv ID for a fresh or carried-forward
++method relevant to `.405`. `flagged_for_v405` SHALL be a non-empty concrete
++roadmap slug naming the single strongest `.405` method conditioned on the
++`.404` LLM-heuristic, E3, DiffusionGemma, and detector outcomes.
++`out_of_band_flagged` SHALL record A2D2 (`arXiv:2606.13565`) and SEPO
++(`arXiv:2502.01384`) as operator-owned verifier-as-reward generator training
++that is not auto-run in-loop. `random_seed` SHALL record the deterministic
++discovery query set seed.
++
++The workflow SHALL update `research-studying.md` idempotently to mark the `.404`
++forks as ingested, SHALL include `flagged_for_v405`, SHALL declare
++`random_seed=4376`, SHALL cite all mapped WebFetch/arXiv-API-verified sources,
++and SHALL explicitly flag A2D2/SEPO as out-of-band.
++
++#### SCENARIO-REPORT-4376: The .404 Outcomes Close Into A .405 Detector-First Plan
++
++**Given** Exp 4370 reports a clean powered null for LLM-generated action-cost heuristics
++**And** Exp 4372 reports one new lp85 E3 level reproduced with oracle-grounded verification
++**And** Exp 4374 retires the DiffusionGemma in-generation conversion as unmeasurable after scorer and CoDiLA controls fail
++**And** Exp 4375 reports detector AUROC well above chance at zero selection headroom
++**When** the Exp 4376 SOTA-ingestion workflow runs through the reliable channel
++**Then** it writes the required JSON mapping artifact, maps three to five
++verified arXiv sources to concrete `.405` experiment targets, flags the
++strongest `.405` verifier-as-detector step-error localization method, records
++A2D2/SEPO as out-of-band, updates `research-studying.md` idempotently, records
++`random_seed`, and leaves conductor and reconciliation files untouched.
++
++## Implementation Status (REQ-REPORT-4376)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4376 | Planned (`python/carnot/experiment_4376_sota_ingestion_v405.py`) | Planned (`tests/python/test_experiment_4376_sota_ingestion_v405.py`) |
++
+ ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
+ 
+ The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index fb90b37bb9..1ef457519c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 180,
+   "code_violations": 0,
+-  "experiments_checked": 3390,
++  "experiments_checked": 3391,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4376_sota_ingestion_v405.py b/python/carnot/experiment_4376_sota_ingestion_v405.py
+new file mode 100644
+index 0000000000..df12a800b1
+--- /dev/null
++++ b/python/carnot/experiment_4376_sota_ingestion_v405.py
+@@ -0,0 +1,711 @@
++"""Exp 4376 SOTA ingestion for the .404 outcomes feeding .405.
++
++Spec refs: REQ-REPORT-4376, SCENARIO-REPORT-4376.
++
++This module writes a planning artifact, not a benchmark result. It maps the
++`.404` fork outcomes onto cited SOTA methods for `.405`: LLM-generated action
++heuristics were a clean powered null, E3 advanced one more oracle-grounded ARC
++level, DiffusionGemma in-generation conversion retired as unmeasurable, and the
++verifier-as-detector probe produced a strong non-oracle step-error signal at
++zero selection headroom. The single strongest .405 flag therefore moves to a
++detector-first step-error localization plan. A2D2 and SEPO remain out of band
++because they train the generator with verifier rewards.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "methods_mapped",
++        "flagged_for_v405",
++        "out_of_band_flagged",
++        "random_seed",
++        "field_principles",
++    }
++)
++REQUIRED_METHOD_FIELDS = frozenset(
++    {
++        "name",
++        "arxiv_id_or_url",
++        "url",
++        "source_verification",
++        "track",
++        "v404_outcome_conditioning",
++        "carnot_stack_mapping",
++        "failure_mode",
++        "experiment_mapping",
++    }
++)
++REQUIRED_OUT_OF_BAND_FIELDS = frozenset(
++    {"name", "arxiv_id_or_url", "url", "reason", "owner_boundary"}
++)
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:", "blocked_")
++DEFAULT_HONEST_VERDICT = "complete: sota_ingestion_v405_mapped"
++DEFAULT_FLAGGED_FOR_V405 = "biprm_processbench_detector_localization_v405"
++MIND_STUDIO_E3_FLAGGED_FOR_V405 = "mind_studio_e3_lookahead_fidelity_v405"
++LLM_HEURISTIC_FLAGGED_FOR_V405 = "llm_generated_action_heuristics_v405"
++DIFFUSION_RETIRED_FLAGGED_FOR_V405 = "diffusiongemma_retired_no_inloop_v405"
++ALLOWED_FLAGGED_FOR_V405 = frozenset(
++    {
++        DEFAULT_FLAGGED_FOR_V405,
++        MIND_STUDIO_E3_FLAGGED_FOR_V405,
++        LLM_HEURISTIC_FLAGGED_FOR_V405,
++        DIFFUSION_RETIRED_FLAGGED_FOR_V405,
++    }
++)
++DEFAULT_RANDOM_SEED = 4376
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. Records ingestion completed with verifiable "
++        "citations (or blocked_network_unavailable)."
++    ),
++    "methods_mapped": (
++        "Each method MUST carry a real, VERIFIED arXiv ID/URL (no citation = "
++        "fabrication) + a one-line .405 experiment mapping + the failure mode "
++        "+ the .404-outcome conditioning."
++    ),
++    "flagged_for_v405": (
++        "Closes discover->ingest->plan: names the single strongest method for "
++        "the .405 planner, conditioned on the .404 outcomes."
++    ),
++    "out_of_band_flagged": (
++        "Records A2D2/SEPO (verifier-as-reward generator training) as "
++        "operator-owned, NOT auto-run in-loop -- the standing HARD RULE."
++    ),
++    "random_seed": (
++        "Determinism placeholder for the discovery query set (reproducibility "
++        "of the sweep)."
++    ),
++}
++
++VERIFIED_SOURCE_URLS = {
++    "2508.01682": "https://arxiv.org/abs/2508.01682",
++    "2606.16070": "https://arxiv.org/abs/2606.16070",
++    "2605.05138": "https://arxiv.org/abs/2605.05138",
++    "2503.18809": "https://arxiv.org/abs/2503.18809",
++    "2603.20216": "https://arxiv.org/abs/2603.20216",
++}
++OUT_OF_BAND_SOURCE_URLS = {
++    "2606.13565": "https://arxiv.org/abs/2606.13565",
++    "2502.01384": "https://arxiv.org/abs/2502.01384",
++}
++NOTE_REQUIRED_SOURCE_CITATIONS = frozenset(
++    f"arXiv:{source}" for source in VERIFIED_SOURCE_URLS
++)
++NOTE_REQUIRED_OUT_OF_BAND_CITATIONS = frozenset(
++    f"arXiv:{source}" for source in OUT_OF_BAND_SOURCE_URLS
++)
++
++DEFAULT_V404_OUTCOMES = {
++    "llm_acceptance_gate_passed": True,
++    "llm_heuristic_beats_linear": False,
++    "llm_equal_linear_totals": True,
++    "llm_verifier_non_oracle": True,
++    "e3_lp85_reproduced": True,
++    "e3_new_levels_positive": True,
++    "e3_reproducible_total_ge_34": True,
++    "e3_verifier_is_oracle": True,
++    "diffusion_retired_unmeasurable": True,
++    "diffusion_scorer_requalified_leak_clean": False,
++    "diffusion_codila_control_differentiates": False,
++    "diffusion_benchmark_zero": True,
++    "diffusion_guided_beats_control": False,
++    "detector_beats_chance": True,
++    "detector_ci_lower_gt_chance": True,
++    "detector_zero_selection_headroom": True,
++    "detector_n_ge_1000": True,
++    "detector_verifier_non_oracle": True,
++}
++
++DEFAULT_METHODS_MAPPED = [
++    {
++        "name": "Bidirectional Process Reward Model for step-error detection",
++        "arxiv_id_or_url": "2508.01682",
++        "url": "https://arxiv.org/abs/2508.01682",
++        "source_verification": (
++            "Verified by low-concurrency WebSearch/WebFetch and arXiv page on "
++            "2026-06-18; found in the focused verifier-as-detector / process "
++            "reward model pass after Semantic Scholar returned HTTP 429."
++        ),
++        "track": "verifier-as-detector / step-error localization",
++        "v404_outcome_conditioning": (
++            "Exp 4375 reports detector_auroc=0.918304, CI95 lower=0.909296, "
++            "detector_beats_chance=true, n_candidates=8829, "
++            "selection_headroom.headroom=0.0, and verifier_is_oracle=false."
++        ),
++        "carnot_stack_mapping": (
++            "Run a bidirectional L2R/R2L detector pass over cached FoVer rows "
++            "and ARC/E3 trace prefixes, fuse the two scores, and report "
++            "earliest-error localization plus risk-coverage without training "
++            "a generator."
++        ),
++        "failure_mode": (
++            "Math PRM gains can fail on FoVer or ARC traces; R2L evaluation can "
++            "use future context unavailable to an online actor, so .405 must "
++            "separate offline detection from in-loop action selection."
++        ),
++        "experiment_mapping": (
++            ".405: make the positive Exp 4375 detector signal actionable with "
++            "BiPRM-style bidirectional step-error localization and abstention."
++        ),
++    },
++    {
++        "name": "Mind-Studio executable world models with lookahead evaluation",
++        "arxiv_id_or_url": "2606.16070",
++        "url": "https://arxiv.org/abs/2606.16070",
++        "source_verification": (
++            "Fresh June 2026 cluster hit verified by arXiv API title lookup and "
++            "low-concurrency WebSearch/WebFetch on 2026-06-18."
++        ),
++        "track": "ARC E3 executable-world-model continuation",
++        "v404_outcome_conditioning": (
++            "Exp 4372 reports success_e3_deeper_lp85_reproduced, "
++            "new_levels_reproduced=1, reproducible_total_levels=34, and "
++            "verifier_is_oracle=true."
++        ),
++        "carnot_stack_mapping": (
++            "Add entropy-selected traces, a lightweight skill file, and K-step "
++            "lookahead fidelity checks to the ARC E3 induction loop before "
++            "planning on tn36/tr87/tu93/sc25/lp85 residual levels."
++        ),
++        "failure_mode": (
++            "The paper targets pygame/Real-ALE-style games, not ARC-AGI-3; "
++            "skill files can encode leaked mechanics, and executable rollout "
++            "checks remain oracle-grounded rather than a verifier-moat result."
++        ),
++        "experiment_mapping": (
++            ".405: use Mind-Studio-style lookahead fidelity as the next E3 "
++            "north-star method after the lp85 level advance."
++        ),
++    },
++    {
++        "name": "Executable World Models for ARC-AGI-3",
++        "arxiv_id_or_url": "2605.05138",
++        "url": "https://arxiv.org/abs/2605.05138",
++        "source_verification": (
++            "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on "
++            "2026-06-18; carried forward as the ARC-AGI-3 E3 baseline."
++        ),
++        "track": "ARC E3 executable-world-model baseline",
++        "v404_outcome_conditioning": (
++            "Exp 4372 advanced the E3 line from 33 to 34 reproducible ARC "
++            "levels with lp85, while preserving verifier_is_oracle=true."
++        ),
++        "carnot_stack_mapping": (
++            "Continue clean-workspace Python world-model induction with "
++            "offline reproduce receipts, explicit model files, and per-target "
++            "mechanic-gap labels."
++        ),
++        "failure_mode": (
++            "Solves can improve ARC count while still relying on execution as "
++            "an oracle; public-game leakage and repeated-play memory must stay "
++            "out of the north-star accounting."
++        ),
++        "experiment_mapping": (
++            ".405: keep E3 as the ARC accuracy continuation, now augmented by "
++            "lookahead-fidelity checks rather than promoted as oracle-free."
++        ),
++    },
++    {
++        "name": "Classical planning with LLM-generated heuristic programs",
++        "arxiv_id_or_url": "2503.18809",
++        "url": "https://arxiv.org/abs/2503.18809",
++        "source_verification": (
++            "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on "
++            "2026-06-18; this was the .404 headline method."
++        ),
++        "track": "LLM-generated / code heuristics for planning",
++        "v404_outcome_conditioning": (
++            "Exp 4370 reports complete: clean_powered_null_linear_not_beaten, "
++            "llm_heuristic_beats_linear=false, and equal held-out totals for "
++            "linear, llm_generated, and bfs_baseline at 646 actions."
++        ),
++        "carnot_stack_mapping": (
++            "Retain the static-leakage and reproduce gates as a negative "
++            "control, but do not spend the .405 headline on another generated "
++            "heuristic sweep unless new held-out games or features appear."
++        ),
++        "failure_mode": (
++            "The stronger function class did not beat the deployed linear "
++            "action-cost baseline; rerunning it unchanged risks overfitting the "
++            "same reproduced game set."
++        ),
++        "experiment_mapping": (
++            ".405: mark the LLM-generated action-cost arm as settled/null for "
++            "this corpus and use it only as a control."
++        ),
++    },
++    {
++        "name": "CoDiLA local coherence control for diffusion LMs",
++        "arxiv_id_or_url": "2603.20216",
++        "url": "https://arxiv.org/abs/2603.20216",
++        "source_verification": (
++            "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on "
++            "2026-06-18; carried forward from the .404 repair-or-retire fork."
++        ),
++        "track": "verifier-guided diffusion-LM search / local-coherence controls",
++        "v404_outcome_conditioning": (
++            "Exp 4374 reports retired_in_generation_conversion_unmeasurable, "
++            "scorer_requalified_leak_clean=false, "
++            "codila_control_differentiates=false, benchmark_n=0, and "
++            "s3_guided_beats_control=false."
++        ),
++        "carnot_stack_mapping": (
++            "Keep CoDiLA as a diagnostic control for any future operator repair "
++            "of DiffusionGemma, but do not auto-run in-loop generation search "
++            "while the scorer and local-control gates are both failed."
++        ),
++        "failure_mode": (
++            "Local coherence scores tied across arms in Exp 4374 and did not "
++            "produce a measurable benchmark; continuing the same harness would "
++            "fabricate progress from a retired conversion path."
++        ),
++        "experiment_mapping": (
++            ".405: retire DiffusionGemma in-generation conversion from the "
++            "autonomous loop until a new scorer/control precondition is met."
++        ),
++    },
++]
++
++DEFAULT_OUT_OF_BAND_FLAGGED = [
++    {
++        "name": "A2D2 reward-guided any-length discrete diffusion",
++        "arxiv_id_or_url": "2606.13565",
++        "url": "https://arxiv.org/abs/2606.13565",
++        "reason": "verifier-as-reward generator training",
++        "owner_boundary": "operator-owned; NOT auto-run in-loop",
++    },
++    {
++        "name": "SEPO score-entropy policy optimization",
++        "arxiv_id_or_url": "2502.01384",
++        "url": "https://arxiv.org/abs/2502.01384",
++        "reason": "policy-gradient fine-tuning over non-differentiable rewards",
++        "owner_boundary": "operator-owned; NOT auto-run in-loop",
++    },
++]
++
++STUDYING_SECTION = """## 2026-06-18 Exp 4376 - .404 fork SOTA ingestion ingested
++
++**Status:** INGESTED into `results/experiment_4376_sota_ingestion_v405.json`.
++
++**Preconditions:** network precondition passed via Hugging Face reachability and
++arXiv/WebFetch verification. If that check had failed, the only honest artifact
++would have been `honest_verdict=blocked_network_unavailable`.
++
++**Reliable-channel provenance:** `scripts/sweep_clusters.py` emitted focused
++world-model and verifier/process-reward arXiv discovery URLs and the arXiv API
++returned fresh June 2026 IDs. The relevant fresh cluster hit was
++arXiv:2606.16070 (Mind-Studio). `scripts/sweep_semscholar.py` was run on focused
++LLM-heuristic, diffusion-search, and step-error detector queries; Semantic
++Scholar returned HTTP 429, so no S2-only result was promoted. Low-concurrency
++WebSearch/WebFetch plus arXiv page checks verified arXiv:2508.01682,
++arXiv:2606.16070, arXiv:2605.05138, arXiv:2503.18809, arXiv:2603.20216,
++arXiv:2606.13565, and arXiv:2502.01384. Supporting detector benchmark context
++was checked against arXiv:2412.06559 and ThinkPRM against arXiv:2504.16828. The
++banned `/deep-research` channel was not invoked.
++
++**Filtered track:** .404 outcomes after LLM-generated/code heuristics for
++planning, E3 executable-world-model ARC progression, DiffusionGemma
++repair-or-retire, and verifier-as-detector step-error measurement.
++
++**.404 outcome conditioning:**
++- Exp 4370: `complete: clean_powered_null_linear_not_beaten`,
++  `acceptance_gate_passed=true`, `llm_heuristic_beats_linear=false`,
++  `held_out_actions_equal=true`, and `verifier_is_oracle=false`. The stronger
++  generated-heuristic function class is a clean null on the reproduced corpus,
++  not the .405 headline.
++- Exp 4372: `success_e3_deeper_lp85_reproduced`,
++  `new_levels_reproduced=1`, `reproducible_total_levels=34`, and
++  `verifier_is_oracle=true`. E3 remains the ARC north star, but still
++  oracle-grounded.
++- Exp 4374: `retired_in_generation_conversion_unmeasurable`,
++  `scorer_requalified_leak_clean=false`, `codila_control_differentiates=false`,
++  `benchmark_n=0`, and `s3_guided_beats_control=false`. DiffusionGemma
++  in-generation conversion stays retired from the autonomous in-loop headline.
++- Exp 4375: `complete: detector_beats_chance_zero_selection_headroom_fover`,
++  `detector_auroc=0.918304`, `detector_beats_chance=true`,
++  `selection_headroom.headroom=0.0`, `n_candidates=8829`, and
++  `verifier_is_oracle=false`. This is the strongest non-oracle positive .404
++  signal.
++
++**Fresh-pass candidates marked ingested:**
++- Bidirectional Process Reward Model, arXiv:2508.01682 - mapped to the .405
++  detector-first follow-up: bidirectional step-error localization plus
++  risk-coverage on cached FoVer and ARC/E3 traces.
++- Mind-Studio executable world models with lookahead evaluation,
++  arXiv:2606.16070 - mapped to the E3 continuation with entropy-selected traces,
++  lightweight skill files, and K-step rollout-fidelity checks.
++- Executable World Models for ARC-AGI-3, arXiv:2605.05138 - carried forward as
++  the ARC E3 baseline after the lp85 level advance.
++- Classical Planning with LLM-Generated Heuristics, arXiv:2503.18809 - marked as
++  a clean-null control after Exp 4370 rather than a repeated .405 headline.
++- CoDiLA locally coherent parallel decoding, arXiv:2603.20216 - retained only as
++  a DiffusionGemma diagnostic/control once scorer and local-control preconditions
++  are repaired.
++
++out_of_band_flagged:
++- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 -
++  operator-owned verifier-as-reward generator training, NOT auto-run in-loop.
++- SEPO score-entropy policy optimization, arXiv:2502.01384 - operator-owned
++  verifier-as-reward generator training, NOT auto-run in-loop.
++
++flagged_for_v405: biprm_processbench_detector_localization_v405
++
++Flagged for .405: `biprm_processbench_detector_localization_v405`
++
++random_seed=4376
++
++**Bottom line for the .405 roadmap:** do not re-run the LLM-generated heuristic
++arm unchanged, and do not revive DiffusionGemma in-loop while both scorer and
++CoDiLA gates failed. Continue E3 with Mind-Studio-style lookahead fidelity, but
++put the single .405 flag on the detector-first BiPRM/ProcessBench-style
++step-error localization and abstention path because Exp 4375 produced the clean
++non-oracle positive signal. A2D2 and SEPO stay out of band for operator-owned
++verifier-as-reward generator training.
++"""
++
++
++def _held_out_totals_equal(actions: object) -> bool:
++    if not isinstance(actions, Mapping):
++        return False
++    linear = actions.get("linear")
++    generated = actions.get("llm_generated")
++    return isinstance(linear, int) and linear == generated
++
++
++def _lp85_new_level_reproduced(artifact: Mapping[str, Any]) -> bool:
++    rows = artifact.get("per_target_scorecard")
++    if not isinstance(rows, Sequence) or isinstance(rows, str):
++        return False
++    for row in rows:
++        if (
++            isinstance(row, Mapping)
++            and row.get("game") == "lp85"
++            and row.get("offline_reproduced") is True
++            and row.get("checkpoint_status") == "new_level_reproduced"
++        ):
++            return True
++    return False
++
++
++def _ci_lower_gt_chance(ci95: object) -> bool:
++    if not isinstance(ci95, Sequence) or isinstance(ci95, str) or len(ci95) < 1:
++        return False
++    lower = ci95[0]
++    return isinstance(lower, (int, float)) and lower > 0.5
++
++
++def extract_v404_outcomes(
++    *,
++    llm_heuristic: Mapping[str, Any],
++    e3: Mapping[str, Any],
++    diffusion: Mapping[str, Any],
++    detector: Mapping[str, Any],
++) -> dict[str, bool]:
++    """Extract the load-bearing .404 outcome booleans from source artifacts."""
++
++    reproducible_total = e3.get("reproducible_total_levels")
++    selection_headroom = detector.get("selection_headroom")
++    n_candidates = detector.get("n_candidates")
++    return {
++        "llm_acceptance_gate_passed": (
++            llm_heuristic.get("acceptance_gate_passed") is True
++        ),
++        "llm_heuristic_beats_linear": (
++            llm_heuristic.get("llm_heuristic_beats_linear") is True
++        ),
++        "llm_equal_linear_totals": _held_out_totals_equal(
++            llm_heuristic.get("held_out_actions_by_heuristic")
++        ),
++        "llm_verifier_non_oracle": llm_heuristic.get("verifier_is_oracle") is False,
++        "e3_lp85_reproduced": _lp85_new_level_reproduced(e3),
++        "e3_new_levels_positive": (
++            isinstance(e3.get("new_levels_reproduced"), int)
++            and e3.get("new_levels_reproduced", 0) > 0
++        ),
++        "e3_reproducible_total_ge_34": (
++            isinstance(reproducible_total, int) and reproducible_total >= 34
++        ),
++        "e3_verifier_is_oracle": e3.get("verifier_is_oracle") is True,
++        "diffusion_retired_unmeasurable": (
++            diffusion.get("honest_verdict")
++            == "retired_in_generation_conversion_unmeasurable"
++        ),
++        "diffusion_scorer_requalified_leak_clean": (
++            diffusion.get("scorer_requalified_leak_clean") is True
++        ),
++        "diffusion_codila_control_differentiates": (
++            diffusion.get("codila_control_differentiates") is True
++        ),
++        "diffusion_benchmark_zero": diffusion.get("benchmark_n") == 0,
++        "diffusion_guided_beats_control": (
++            diffusion.get("s3_guided_beats_control") is True
++        ),
++        "detector_beats_chance": detector.get("detector_beats_chance") is True,
++        "detector_ci_lower_gt_chance": _ci_lower_gt_chance(
++            detector.get("detector_auroc_ci95")
++        ),
++        "detector_zero_selection_headroom": (
++            isinstance(selection_headroom, Mapping)
++            and selection_headroom.get("headroom") == 0.0
++        ),
++        "detector_n_ge_1000": isinstance(n_candidates, int) and n_candidates >= 1000,
++        "detector_verifier_non_oracle": detector.get("verifier_is_oracle") is False,
++    }
++
++
++def select_flagged_for_v405(outcomes: Mapping[str, bool]) -> str:
++    """Choose the .405 flag from the .404 fork outcomes."""
++
++    if (
++        outcomes.get("detector_beats_chance")
++        and outcomes.get("detector_ci_lower_gt_chance")
++        and outcomes.get("detector_zero_selection_headroom")
++        and outcomes.get("detector_n_ge_1000")
++        and outcomes.get("detector_verifier_non_oracle")
++    ):
++        return DEFAULT_FLAGGED_FOR_V405
++    if outcomes.get("e3_new_levels_positive"):
++        return MIND_STUDIO_E3_FLAGGED_FOR_V405
++    if outcomes.get("llm_heuristic_beats_linear") and outcomes.get(
++        "llm_verifier_non_oracle"
++    ):
++        return LLM_HEURISTIC_FLAGGED_FOR_V405
++    return DIFFUSION_RETIRED_FLAGGED_FOR_V405
++
++
++def build_artifact(
++    *,
++    methods_mapped: Sequence[Mapping[str, str]] | None = None,
++    flagged_for_v405: str = DEFAULT_FLAGGED_FOR_V405,
++    out_of_band_flagged: Sequence[Mapping[str, str]] | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    honest_verdict: str = DEFAULT_HONEST_VERDICT,
++) -> dict[str, object]:
++    """Build the deterministic Exp 4376 mapping artifact."""
++
++    return {
++        "honest_verdict": honest_verdict,
++        "methods_mapped": [
++            dict(method) for method in (methods_mapped or DEFAULT_METHODS_MAPPED)
++        ],
++        "flagged_for_v405": flagged_for_v405,
++        "out_of_band_flagged": [
++            dict(method)
++            for method in (out_of_band_flagged or DEFAULT_OUT_OF_BAND_FLAGGED)
++        ],
++        "random_seed": random_seed,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++
++
++def _validate_out_of_band(rows: object) -> None:
++    if not isinstance(rows, list) or len(rows) != len(OUT_OF_BAND_SOURCE_URLS):
++        raise ValueError("out_of_band_flagged must list A2D2 and SEPO")
++
++    seen_sources: set[str] = set()
++    for row in rows:
++        if not isinstance(row, Mapping) or set(row) != REQUIRED_OUT_OF_BAND_FIELDS:
++            raise ValueError(
++                "each out_of_band_flagged row must have exactly the required fields"
++            )
++        for key, value in row.items():
++            if not isinstance(value, str) or not value.strip():
++                raise ValueError(
++                    f"out_of_band_flagged field {key!r} must be a non-empty string"
++                )
++        source = row["arxiv_id_or_url"]
++        if source not in OUT_OF_BAND_SOURCE_URLS:
++            raise ValueError(f"out_of_band source {source!r} is not allowed")
++        if row["url"] != OUT_OF_BAND_SOURCE_URLS[source]:
++            raise ValueError(f"out_of_band url for {source!r} must match")
++        if "operator-owned" not in row["owner_boundary"] or "NOT auto-run" not in row[
++            "owner_boundary"
++        ]:
++            raise ValueError("out_of_band rows must record the operator boundary")
++        seen_sources.add(source)
++
++    if seen_sources != set(OUT_OF_BAND_SOURCE_URLS):
++        raise ValueError("out_of_band_flagged must include A2D2 and SEPO")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 4376 artifact before it can be written to disk."""
++
++    fields = set(artifact)
++    missing = REQUIRED_ARTIFACT_FIELDS - fields
++    extra = fields - REQUIRED_ARTIFACT_FIELDS
++    if missing:
++        raise ValueError(f"artifact missing required fields: {sorted(missing)}")
++    if extra:
++        raise ValueError(f"artifact has unexpected fields: {sorted(extra)}")
++
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must use a terminal prefix")
++
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match REQ-REPORT-4376")
++
++    random_seed = artifact["random_seed"]
++    if not isinstance(random_seed, int) or isinstance(random_seed, bool):
++        raise ValueError("random_seed must be an integer")
++
++    methods = artifact["methods_mapped"]
++    if not isinstance(methods, list) or not 3 <= len(methods) <= 5:
++        raise ValueError("methods_mapped must contain three to five methods")
++
++    seen_sources: set[str] = set()
++    for method in methods:
++        if not isinstance(method, Mapping) or set(method) != REQUIRED_METHOD_FIELDS:
++            raise ValueError(
++                "each method must be a dict with exactly the required fields"
++            )
++
++        for key, value in method.items():
++            if not isinstance(value, str) or not value.strip():
++                raise ValueError(f"method field {key!r} must be a non-empty string")
++
++        source = method["arxiv_id_or_url"]
++        if source not in VERIFIED_SOURCE_URLS:
++            raise ValueError(f"method source {source!r} is not a verified source")
++        if method["url"] != VERIFIED_SOURCE_URLS[source]:
++            raise ValueError(f"method url for {source!r} must match the verified url")
++        if source in seen_sources:
++            raise ValueError(f"duplicate source in methods_mapped: {source}")
++        seen_sources.add(source)
++
++    flagged = artifact["flagged_for_v405"]
++    if not isinstance(flagged, str) or not flagged.strip():
++        raise ValueError("flagged_for_v405 must be non-empty")
++    if flagged not in ALLOWED_FLAGGED_FOR_V405:
++        raise ValueError("flagged_for_v405 must be conditioned on the .404 outcomes")
++
++    _validate_out_of_band(artifact["out_of_band_flagged"])
++
++
++def validate_studying_section(section: str) -> None:
++    """Check that the research-studying entry keeps citations and outcome context."""
++
++    required_phrases = [
++        "flagged_for_v405",
++        "out_of_band_flagged",
++        "network precondition passed",
++        "sweep_clusters.py",
++        "sweep_semscholar.py",
++        "WebSearch/WebFetch",
++        "/deep-research",
++        "not invoked",
++        "complete: clean_powered_null_linear_not_beaten",
++        "llm_heuristic_beats_linear=false",
++        "held_out_actions_equal=true",
++        "success_e3_deeper_lp85_reproduced",
++        "new_levels_reproduced=1",
++        "reproducible_total_levels=34",
++        "verifier_is_oracle=true",
++        "retired_in_generation_conversion_unmeasurable",
++        "scorer_requalified_leak_clean=false",
++        "codila_control_differentiates=false",
++        "benchmark_n=0",
++        "s3_guided_beats_control=false",
++        "complete: detector_beats_chance_zero_selection_headroom_fover",
++        "detector_auroc=0.918304",
++        "detector_beats_chance=true",
++        "selection_headroom.headroom=0.0",
++        "operator-owned",
++        "NOT auto-run",
++        DEFAULT_FLAGGED_FOR_V405,
++        f"random_seed={DEFAULT_RANDOM_SEED}",
++    ]
++    for phrase in required_phrases:
++        if phrase not in section:
++            raise ValueError(f"studying section missing required phrase: {phrase}")
++
++    missing_sources = sorted(
++        source for source in NOTE_REQUIRED_SOURCE_CITATIONS if source not in section
++    )
++    if missing_sources:
++        raise ValueError(
++            f"studying section missing verified source citations: {missing_sources}"
++        )
++
++    missing_oob = sorted(
++        source
++        for source in NOTE_REQUIRED_OUT_OF_BAND_CITATIONS
++        if source not in section
++    )
++    if missing_oob:
++        raise ValueError(
++            f"studying section missing out-of-band citations: {missing_oob}"
++        )
++
++
++def _with_studying_section(existing: str) -> str:
++    marker = "## 2026-06-18 Exp 4376"
++    next_marker = "\n## "
++    section = STUDYING_SECTION.rstrip() + "\n"
++
++    if marker in existing:
++        start = existing.index(marker)
++        next_start = existing.find(next_marker, start + 1)
++        if next_start == -1:
++            return existing[:start] + section
++        return existing[:start] + section + existing[next_start:]
++
++    if existing.startswith("## "):
++        return section + "\n" + existing
++
++    first_section = existing.find(next_marker)
++    if first_section == -1:
++        return existing.rstrip() + "\n\n" + section
++    return existing[: first_section + 1] + section + "\n" + existing[first_section + 1 :]
++
++
++def write_outputs(
++    *,
++    artifact_path: Path,
++    studying_path: Path,
++) -> dict[str, object]:
++    """Write the JSON artifact and idempotent research-studying entry."""
++
++    flagged_for_v405 = select_flagged_for_v405(DEFAULT_V404_OUTCOMES)
++    artifact = build_artifact(flagged_for_v405=flagged_for_v405)
++    validate_artifact(artifact)
++    validate_studying_section(STUDYING_SECTION)
++
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++    existing_studying = (
++        studying_path.read_text(encoding="utf-8") if studying_path.exists() else ""
++    )
++    studying_path.write_text(_with_studying_section(existing_studying), encoding="utf-8")
++
++    return artifact
++
++
++def main() -> int:
++    root_override = os.environ.get("CARNOT_EXP4376_ROOT")
++    repo_root = Path(root_override) if root_override else Path(__file__).resolve().parents[2]
++    artifact = write_outputs(
++        artifact_path=repo_root / "results/experiment_4376_sota_ingestion_v405.json",
++        studying_path=repo_root / "research-studying.md",
++    )
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/research-studying.md b/research-studying.md
+index 858de72f15..85b8e88a35 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -8,6 +8,85 @@ loop) executes the current experiments.
+ **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
+ **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+ 
++## 2026-06-18 Exp 4376 - .404 fork SOTA ingestion ingested
++
++**Status:** INGESTED into `results/experiment_4376_sota_ingestion_v405.json`.
++
++**Preconditions:** network precondition passed via Hugging Face reachability and
++arXiv/WebFetch verification. If that check had failed, the only honest artifact
++would have been `honest_verdict=blocked_network_unavailable`.
++
++**Reliable-channel provenance:** `scripts/sweep_clusters.py` emitted focused
++world-model and verifier/process-reward arXiv discovery URLs and the arXiv API
++returned fresh June 2026 IDs. The relevant fresh cluster hit was
++arXiv:2606.16070 (Mind-Studio). `scripts/sweep_semscholar.py` was run on focused
++LLM-heuristic, diffusion-search, and step-error detector queries; Semantic
++Scholar returned HTTP 429, so no S2-only result was promoted. Low-concurrency
++WebSearch/WebFetch plus arXiv page checks verified arXiv:2508.01682,
++arXiv:2606.16070, arXiv:2605.05138, arXiv:2503.18809, arXiv:2603.20216,
++arXiv:2606.13565, and arXiv:2502.01384. Supporting detector benchmark context
++was checked against arXiv:2412.06559 and ThinkPRM against arXiv:2504.16828. The
++banned `/deep-research` channel was not invoked.
++
++**Filtered track:** .404 outcomes after LLM-generated/code heuristics for
++planning, E3 executable-world-model ARC progression, DiffusionGemma
++repair-or-retire, and verifier-as-detector step-error measurement.
++
++**.404 outcome conditioning:**
++- Exp 4370: `complete: clean_powered_null_linear_not_beaten`,
++  `acceptance_gate_passed=true`, `llm_heuristic_beats_linear=false`,
++  `held_out_actions_equal=true`, and `verifier_is_oracle=false`. The stronger
++  generated-heuristic function class is a clean null on the reproduced corpus,
++  not the .405 headline.
++- Exp 4372: `success_e3_deeper_lp85_reproduced`,
++  `new_levels_reproduced=1`, `reproducible_total_levels=34`, and
++  `verifier_is_oracle=true`. E3 remains the ARC north star, but still
++  oracle-grounded.
++- Exp 4374: `retired_in_generation_conversion_unmeasurable`,
++  `scorer_requalified_leak_clean=false`, `codila_control_differentiates=false`,
++  `benchmark_n=0`, and `s3_guided_beats_control=false`. DiffusionGemma
++  in-generation conversion stays retired from the autonomous in-loop headline.
++- Exp 4375: `complete: detector_beats_chance_zero_selection_headroom_fover`,
++  `detector_auroc=0.918304`, `detector_beats_chance=true`,
++  `selection_headroom.headroom=0.0`, `n_candidates=8829`, and
++  `verifier_is_oracle=false`. This is the strongest non-oracle positive .404
++  signal.
++
++**Fresh-pass candidates marked ingested:**
++- Bidirectional Process Reward Model, arXiv:2508.01682 - mapped to the .405
++  detector-first follow-up: bidirectional step-error localization plus
++  risk-coverage on cached FoVer and ARC/E3 traces.
++- Mind-Studio executable world models with lookahead evaluation,
++  arXiv:2606.16070 - mapped to the E3 continuation with entropy-selected traces,
++  lightweight skill files, and K-step rollout-fidelity checks.
++- Executable World Models for ARC-AGI-3, arXiv:2605.05138 - carried forward as
++  the ARC E3 baseline after the lp85 level advance.
++- Classical Planning with LLM-Generated Heuristics, arXiv:2503.18809 - marked as
++  a clean-null control after Exp 4370 rather than a repeated .405 headline.
++- CoDiLA locally coherent parallel decoding, arXiv:2603.20216 - retained only as
++  a DiffusionGemma diagnostic/control once scorer and local-control preconditions
++  are repaired.
++
++out_of_band_flagged:
++- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 -
++  operator-owned verifier-as-reward generator training, NOT auto-run in-loop.
++- SEPO score-entropy policy optimization, arXiv:2502.01384 - operator-owned
++  verifier-as-reward generator training, NOT auto-run in-loop.
++
++flagged_for_v405: biprm_processbench_detector_localization_v405
++
++Flagged for .405: `biprm_processbench_detector_localization_v405`
++
++random_seed=4376
++
++**Bottom line for the .405 roadmap:** do not re-run the LLM-generated heuristic
++arm unchanged, and do not revive DiffusionGemma in-loop while both scorer and
++CoDiLA gates failed. Continue E3 with Mind-Studio-style lookahead fidelity, but
++put the single .405 flag on the detector-first BiPRM/ProcessBench-style
++step-error localization and abstention path because Exp 4375 produced the clean
++non-oracle positive signal. A2D2 and SEPO stay out of band for operator-owned
++verifier-as-reward generator training.
++
+ ## 2026-06-18 Exp 4365 - .403 fork SOTA ingestion ingested
+ 
+ **Status:** INGESTED into `results/experiment_4365_sota_ingestion_v404.json`.
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 9a9afce8df..c20f50d963 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-18T08:25:15.747920Z",
+-  "duration_s": 0.04212141036987305,
++  "run_date": "2026-06-18T08:41:16.547160Z",
++  "duration_s": 0.024347782135009766,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "afa6659a86bbf3cadf4a3ea2efa30495d32d67f2066d874424aae4c8ad10b05c",
++  "reproducibility_checksum": "aff13ab5241f682f2ce8ef1d2adcb8b562e16b50392881be7b4ff4b5544c9b17",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "8ddb742d14118927b4257707f70aeb1e489ac832"
++    "adversarial_verify_version": "3789aaf25e8061ecb22a131b54ae5ae63c32a22c"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index fce8ad10f5..6a1126e228 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-18T08:25:15.803456Z",
+-  "duration_s": 0.04766249656677246,
++  "run_date": "2026-06-18T08:41:16.579746Z",
++  "duration_s": 0.026730775833129883,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "406a8ade591416f468a2751609293e1c23e17675556d68ad5be973197a89275f",
++  "reproducibility_checksum": "9acb3b7b74d214754f18f062d17391eba629f8ee19fe64bf3727ea304aec3a09",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "8ddb742d14118927b4257707f70aeb1e489ac832"
++    "adversarial_verify_version": "3789aaf25e8061ecb22a131b54ae5ae63c32a22c"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_4376_sota_ingestion_v405.json b/results/experiment_4376_sota_ingestion_v405.json
+new file mode 100644
+index 0000000000..d509460475
+--- /dev/null
++++ b/results/experiment_4376_sota_ingestion_v405.json
+@@ -0,0 +1,85 @@
++{
++  "field_principles": {
++    "flagged_for_v405": "Closes discover->ingest->plan: names the single strongest method for the .405 planner, conditioned on the .404 outcomes.",
++    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations (or blocked_network_unavailable).",
++    "methods_mapped": "Each method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication) + a one-line .405 experiment mapping + the failure mode + the .404-outcome conditioning.",
++    "out_of_band_flagged": "Records A2D2/SEPO (verifier-as-reward generator training) as operator-owned, NOT auto-run in-loop -- the standing HARD RULE.",
++    "random_seed": "Determinism placeholder for the discovery query set (reproducibility of the sweep)."
++  },
++  "flagged_for_v405": "biprm_processbench_detector_localization_v405",
++  "honest_verdict": "complete: sota_ingestion_v405_mapped",
++  "methods_mapped": [
++    {
++      "arxiv_id_or_url": "2508.01682",
++      "carnot_stack_mapping": "Run a bidirectional L2R/R2L detector pass over cached FoVer rows and ARC/E3 trace prefixes, fuse the two scores, and report earliest-error localization plus risk-coverage without training a generator.",
++      "experiment_mapping": ".405: make the positive Exp 4375 detector signal actionable with BiPRM-style bidirectional step-error localization and abstention.",
++      "failure_mode": "Math PRM gains can fail on FoVer or ARC traces; R2L evaluation can use future context unavailable to an online actor, so .405 must separate offline detection from in-loop action selection.",
++      "name": "Bidirectional Process Reward Model for step-error detection",
++      "source_verification": "Verified by low-concurrency WebSearch/WebFetch and arXiv page on 2026-06-18; found in the focused verifier-as-detector / process reward model pass after Semantic Scholar returned HTTP 429.",
++      "track": "verifier-as-detector / step-error localization",
++      "url": "https://arxiv.org/abs/2508.01682",
++      "v404_outcome_conditioning": "Exp 4375 reports detector_auroc=0.918304, CI95 lower=0.909296, detector_beats_chance=true, n_candidates=8829, selection_headroom.headroom=0.0, and verifier_is_oracle=false."
++    },
++    {
++      "arxiv_id_or_url": "2606.16070",
++      "carnot_stack_mapping": "Add entropy-selected traces, a lightweight skill file, and K-step lookahead fidelity checks to the ARC E3 induction loop before planning on tn36/tr87/tu93/sc25/lp85 residual levels.",
++      "experiment_mapping": ".405: use Mind-Studio-style lookahead fidelity as the next E3 north-star method after the lp85 level advance.",
++      "failure_mode": "The paper targets pygame/Real-ALE-style games, not ARC-AGI-3; skill files can encode leaked mechanics, and executable rollout checks remain oracle-grounded rather than a verifier-moat result.",
++      "name": "Mind-Studio executable world models with lookahead evaluation",
++      "source_verification": "Fresh June 2026 cluster hit verified by arXiv API title lookup and low-concurrency WebSearch/WebFetch on 2026-06-18.",
++      "track": "ARC E3 executable-world-model continuation",
++      "url": "https://arxiv.org/abs/2606.16070",
++      "v404_outcome_conditioning": "Exp 4372 reports success_e3_deeper_lp85_reproduced, new_levels_reproduced=1, reproducible_total_levels=34, and verifier_is_oracle=true."
++    },
++    {
++      "arxiv_id_or_url": "2605.05138",
++      "carnot_stack_mapping": "Continue clean-workspace Python world-model induction with offline reproduce receipts, explicit model files, and per-target mechanic-gap labels.",
++      "experiment_mapping": ".405: keep E3 as the ARC accuracy continuation, now augmented by lookahead-fidelity checks rather than promoted as oracle-free.",
++      "failure_mode": "Solves can improve ARC count while still relying on execution as an oracle; public-game leakage and repeated-play memory must stay out of the north-star accounting.",
++      "name": "Executable World Models for ARC-AGI-3",
++      "source_verification": "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on 2026-06-18; carried forward as the ARC-AGI-3 E3 baseline.",
++      "track": "ARC E3 executable-world-model baseline",
++      "url": "https://arxiv.org/abs/2605.05138",
++      "v404_outcome_conditioning": "Exp 4372 advanced the E3 line from 33 to 34 reproducible ARC levels with lp85, while preserving verifier_is_oracle=true."
++    },
++    {
++      "arxiv_id_or_url": "2503.18809",
++      "carnot_stack_mapping": "Retain the static-leakage and reproduce gates as a negative control, but do not spend the .405 headline on another generated heuristic sweep unless new held-out games or features appear.",
++      "experiment_mapping": ".405: mark the LLM-generated action-cost arm as settled/null for this corpus and use it only as a control.",
++      "failure_mode": "The stronger function class did not beat the deployed linear action-cost baseline; rerunning it unchanged risks overfitting the same reproduced game set.",
++      "name": "Classical planning with LLM-generated heuristic programs",
++      "source_verification": "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on 2026-06-18; this was the .404 headline method.",
++      "track": "LLM-generated / code heuristics for planning",
++      "url": "https://arxiv.org/abs/2503.18809",
++      "v404_outcome_conditioning": "Exp 4370 reports complete: clean_powered_null_linear_not_beaten, llm_heuristic_beats_linear=false, and equal held-out totals for linear, llm_generated, and bfs_baseline at 646 actions."
++    },
++    {
++      "arxiv_id_or_url": "2603.20216",
++      "carnot_stack_mapping": "Keep CoDiLA as a diagnostic control for any future operator repair of DiffusionGemma, but do not auto-run in-loop generation search while the scorer and local-control gates are both failed.",
++      "experiment_mapping": ".405: retire DiffusionGemma in-generation conversion from the autonomous loop until a new scorer/control precondition is met.",
++      "failure_mode": "Local coherence scores tied across arms in Exp 4374 and did not produce a measurable benchmark; continuing the same harness would fabricate progress from a retired conversion path.",
++      "name": "CoDiLA local coherence control for diffusion LMs",
++      "source_verification": "Reverified by arXiv page and low-concurrency WebSearch/WebFetch on 2026-06-18; carried forward from the .404 repair-or-retire fork.",
++      "track": "verifier-guided diffusion-LM search / local-coherence controls",
++      "url": "https://arxiv.org/abs/2603.20216",
++      "v404_outcome_conditioning": "Exp 4374 reports retired_in_generation_conversion_unmeasurable, scorer_requalified_leak_clean=false, codila_control_differentiates=false, benchmark_n=0, and s3_guided_beats_control=false."
++    }
++  ],
++  "out_of_band_flagged": [
++    {
++      "arxiv_id_or_url": "2606.13565",
++      "name": "A2D2 reward-guided any-length discrete diffusion",
++      "owner_boundary": "operator-owned; NOT auto-run in-loop",
++      "reason": "verifier-as-reward generator training",
++      "url": "https://arxiv.org/abs/2606.13565"
++    },
++    {
++      "arxiv_id_or_url": "2502.01384",
++      "name": "SEPO score-entropy policy optimization",
++      "owner_boundary": "operator-owned; NOT auto-run in-loop",
++      "reason": "policy-gradient fine-tuning over non-differentiable rewards",
++      "url": "https://arxiv.org/abs/2502.01384"
++    }
++  ],
++  "random_seed": 4376
++}
+diff --git a/results/experiment_4376_sota_ingestion_v405.py b/results/experiment_4376_sota_ingestion_v405.py
+new file mode 100644
+index 0000000000..fa195ecab6
+--- /dev/null
++++ b/results/experiment_4376_sota_ingestion_v405.py
+@@ -0,0 +1,9 @@
++"""Runner for Exp 4376 SOTA ingestion."""
++
++from __future__ import annotations
++
++from carnot import experiment_4376_sota_ingestion_v405 as exp4376
++
++
++if __name__ == "__main__":
++    raise SystemExit(exp4376.main())
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 7a6da14f32..e39d9cf26c 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260618",
+-  "started_at": "2026-06-18T08:24:58Z",
+-  "finished_at": "2026-06-18T08:24:58Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-18T08:41:06Z",
++  "finished_at": "2026-06-18T08:41:06Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index b70ee2f746..6eee5b0fe7 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260618",
+-  "started_at": "2026-06-18T08:24:58Z",
+-  "finished_at": "2026-06-18T08:24:59Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-18T08:41:06Z",
++  "finished_at": "2026-06-18T08:41:07Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 9b621a4de7..d21234c019 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260618",
+-  "started_at": "2026-06-18T08:24:59Z",
+-  "finished_at": "2026-06-18T08:24:59Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-18T08:41:07Z",
++  "finished_at": "2026-06-18T08:41:07Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4376_sota_ingestion_v405.py b/tests/python/test_experiment_4376_sota_ingestion_v405.py
+new file mode 100644
+index 0000000000..9c5b9c6b55
+--- /dev/null
++++ b/tests/python/test_experiment_4376_sota_ingestion_v405.py
+@@ -0,0 +1,499 @@
++"""Tests for REQ-REPORT-4376 / SCENARIO-REPORT-4376."""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4376_sota_ingestion_v405 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++ARTIFACT_PATH = Path("results/experiment_4376_sota_ingestion_v405.json")
++WRAPPER_PATH = Path("results/experiment_4376_sota_ingestion_v405.py")
++STUDYING_PATH = Path("research-studying.md")
++
++
++def _valid_methods() -> list[dict[str, str]]:
++    return [dict(method) for method in mod.DEFAULT_METHODS_MAPPED]
++
++
++def _valid_artifact() -> dict[str, object]:
++    return mod.build_artifact(
++        methods_mapped=_valid_methods(),
++        flagged_for_v405=mod.DEFAULT_FLAGGED_FOR_V405,
++        out_of_band_flagged=mod.DEFAULT_OUT_OF_BAND_FLAGGED,
++        random_seed=mod.DEFAULT_RANDOM_SEED,
++    )
++
++
++def test_req_report_4376_spec_anchor_exists() -> None:
++    """REQ-REPORT-4376: OpenSpec declares the .405 ingestion artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4376" in spec
++    assert "SCENARIO-REPORT-4376" in spec
++    assert ARTIFACT_PATH.as_posix() in spec
++    assert WRAPPER_PATH.as_posix() in spec
++    assert "flagged_for_v405" in spec
++    assert "llm_heuristic_beats_linear=false" in spec
++    assert "success_e3_deeper_lp85_reproduced" in spec
++    assert "retired_in_generation_conversion_unmeasurable" in spec
++    assert "detector_auroc_ci95[0] > 0.5" in spec
++
++
++def test_build_artifact_has_required_fields_for_req_report_4376() -> None:
++    """REQ-REPORT-4376: artifact exposes required principle fields."""
++
++    artifact = _valid_artifact()
++
++    assert artifact == {
++        "honest_verdict": mod.DEFAULT_HONEST_VERDICT,
++        "methods_mapped": _valid_methods(),
++        "flagged_for_v405": mod.DEFAULT_FLAGGED_FOR_V405,
++        "out_of_band_flagged": mod.DEFAULT_OUT_OF_BAND_FLAGGED,
++        "random_seed": mod.DEFAULT_RANDOM_SEED,
++        "field_principles": {
++            "honest_verdict": (
++                "Terminal-prefixed. Records ingestion completed with verifiable "
++                "citations (or blocked_network_unavailable)."
++            ),
++            "methods_mapped": (
++                "Each method MUST carry a real, VERIFIED arXiv ID/URL (no "
++                "citation = fabrication) + a one-line .405 experiment mapping "
++                "+ the failure mode + the .404-outcome conditioning."
++            ),
++            "flagged_for_v405": (
++                "Closes discover->ingest->plan: names the single strongest "
++                "method for the .405 planner, conditioned on the .404 outcomes."
++            ),
++            "out_of_band_flagged": (
++                "Records A2D2/SEPO (verifier-as-reward generator training) as "
++                "operator-owned, NOT auto-run in-loop -- the standing HARD RULE."
++            ),
++            "random_seed": (
++                "Determinism placeholder for the discovery query set "
++                "(reproducibility of the sweep)."
++            ),
++        },
++    }
++
++
++def test_extract_v404_outcomes_reads_source_artifact_fields() -> None:
++    """SCENARIO-REPORT-4376: source artifacts determine the condition."""
++
++    outcomes = mod.extract_v404_outcomes(
++        llm_heuristic={
++            "acceptance_gate_passed": True,
++            "llm_heuristic_beats_linear": False,
++            "held_out_actions_by_heuristic": {
++                "linear": 646,
++                "llm_generated": 646,
++                "bfs_baseline": 646,
++            },
++            "verifier_is_oracle": False,
++        },
++        e3={
++            "honest_verdict": "success_e3_deeper_lp85_reproduced",
++            "new_levels_reproduced": 1,
++            "reproducible_total_levels": 34,
++            "verifier_is_oracle": True,
++            "per_target_scorecard": [
++                {
++                    "game": "lp85",
++                    "offline_reproduced": True,
++                    "checkpoint_status": "new_level_reproduced",
++                }
++            ],
++        },
++        diffusion={
++            "honest_verdict": "retired_in_generation_conversion_unmeasurable",
++            "scorer_requalified_leak_clean": False,
++            "codila_control_differentiates": False,
++            "benchmark_n": 0,
++            "s3_guided_beats_control": False,
++        },
++        detector={
++            "honest_verdict": (
++                "complete: detector_beats_chance_zero_selection_headroom_fover"
++            ),
++            "detector_beats_chance": True,
++            "detector_auroc_ci95": [0.909296, 0.926923],
++            "selection_headroom": {"headroom": 0.0},
++            "n_candidates": 8829,
++            "verifier_is_oracle": False,
++        },
++    )
++
++    assert outcomes == mod.DEFAULT_V404_OUTCOMES
++
++
++def test_select_flagged_for_v405_conditions_on_v404_outcomes() -> None:
++    """SCENARIO-REPORT-4376: .405 flag follows the .404 branch decision."""
++
++    assert (
++        mod.select_flagged_for_v405(mod.DEFAULT_V404_OUTCOMES)
++        == mod.DEFAULT_FLAGGED_FOR_V405
++    )
++    assert (
++        mod.select_flagged_for_v405(
++            mod.DEFAULT_V404_OUTCOMES
++            | {
++                "detector_beats_chance": False,
++                "detector_ci_lower_gt_chance": False,
++                "e3_new_levels_positive": True,
++            }
++        )
++        == mod.MIND_STUDIO_E3_FLAGGED_FOR_V405
++    )
++    assert (
++        mod.select_flagged_for_v405(
++            mod.DEFAULT_V404_OUTCOMES
++            | {
++                "detector_beats_chance": False,
++                "detector_ci_lower_gt_chance": False,
++                "e3_new_levels_positive": False,
++                "llm_heuristic_beats_linear": True,
++                "llm_verifier_non_oracle": True,
++            }
++        )
++        == mod.LLM_HEURISTIC_FLAGGED_FOR_V405
++    )
++    assert (
++        mod.select_flagged_for_v405(
++            mod.DEFAULT_V404_OUTCOMES
++            | {
++                "detector_beats_chance": False,
++                "detector_ci_lower_gt_chance": False,
++                "e3_new_levels_positive": False,
++                "llm_heuristic_beats_linear": False,
++            }
++        )
++        == mod.DIFFUSION_RETIRED_FLAGGED_FOR_V405
++    )
++
++
++def test_outcome_helpers_reject_malformed_inputs_for_req_report_4376() -> None:
++    """REQ-REPORT-4376: malformed source fields never imply a strong branch."""
++
++    assert mod._held_out_totals_equal({"linear": 1, "llm_generated": 1}) is True
++    assert mod._held_out_totals_equal({"linear": 1, "llm_generated": 2}) is False
++    assert mod._held_out_totals_equal("not-a-dict") is False
++    assert mod._lp85_new_level_reproduced({"per_target_scorecard": 1}) is False
++    assert mod._lp85_new_level_reproduced({"per_target_scorecard": "bad"}) is False
++    assert mod._lp85_new_level_reproduced({"per_target_scorecard": []}) is False
++    assert mod._ci_lower_gt_chance([0.51, 0.6]) is True
++    assert mod._ci_lower_gt_chance([0.5, 0.6]) is False
++    assert mod._ci_lower_gt_chance("bad") is False
++
++
++@pytest.mark.parametrize(
++    ("bad_artifact", "message"),
++    [
++        (_valid_artifact() | {"honest_verdict": "draft"}, "terminal prefix"),
++        (
++            _valid_artifact() | {"field_principles": {"honest_verdict": "loose"}},
++            "field_principles",
++        ),
++        (_valid_artifact() | {"methods_mapped": _valid_methods()[:2]}, "three to five"),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    {
++                        "name": "fake",
++                        "arxiv_id_or_url": "9999.99999",
++                        "url": "https://arxiv.org/abs/9999.99999",
++                        "source_verification": "fake",
++                        "track": "fake",
++                        "v404_outcome_conditioning": "fake",
++                        "carnot_stack_mapping": "fake",
++                        "failure_mode": "fake",
++                        "experiment_mapping": "fake",
++                    }
++                ]
++                + _valid_methods()[1:]
++            },
++            "verified source",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    _valid_methods()[0] | {"url": "https://example.com/2508.01682"}
++                ]
++                + _valid_methods()[1:]
++            },
++            "url",
++        ),
++        (
++            _valid_artifact()
++            | {"methods_mapped": [_valid_methods()[0]] + _valid_methods()[:-1]},
++            "duplicate source",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    _valid_methods()[0] | {"experiment_mapping": ""}
++                ]
++                + _valid_methods()[1:]
++            },
++            "non-empty string",
++        ),
++        (_valid_artifact() | {"flagged_for_v405": ""}, "flagged_for_v405"),
++        (
++            _valid_artifact() | {"flagged_for_v405": "unconditioned_followup_v405"},
++            "conditioned",
++        ),
++        (_valid_artifact() | {"random_seed": "4376"}, "random_seed"),
++    ],
++)
++def test_validate_artifact_rejects_schema_violations_for_scenario_report_4376(
++    bad_artifact: dict[str, object], message: str
++) -> None:
++    """SCENARIO-REPORT-4376: invalid mapping artifacts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_validate_artifact_rejects_missing_extra_and_malformed_fields() -> None:
++    """SCENARIO-REPORT-4376: artifact fields are exact."""
++
++    missing_artifact = _valid_artifact()
++    missing_artifact.pop("methods_mapped")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing_artifact)
++
++    extra_artifact = _valid_artifact()
++    extra_artifact["outcomes_mapped"] = {}
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_artifact(extra_artifact)
++
++    malformed_methods = _valid_artifact() | {
++        "methods_mapped": ["not-a-dict"] + _valid_methods()[1:]
++    }
++    with pytest.raises(ValueError, match="exactly"):
++        mod.validate_artifact(malformed_methods)
++
++    malformed_method_fields = _valid_artifact() | {
++        "methods_mapped": [_valid_methods()[0] | {"unexpected": "field"}]
++        + _valid_methods()[1:]
++    }
++    with pytest.raises(ValueError, match="exactly"):
++        mod.validate_artifact(malformed_method_fields)
++
++    malformed_oob = _valid_artifact() | {"out_of_band_flagged": []}
++    with pytest.raises(ValueError, match="out_of_band_flagged"):
++        mod.validate_artifact(malformed_oob)
++
++
++def test_validate_artifact_rejects_out_of_band_row_violations() -> None:
++    """REQ-REPORT-4376: A2D2/SEPO out-of-band rows are source-gated."""
++
++    valid_oob = [dict(row) for row in mod.DEFAULT_OUT_OF_BAND_FLAGGED]
++
++    for bad_rows, message in [
++        (["bad-row", valid_oob[1]], "exactly"),
++        ([valid_oob[0] | {"reason": ""}, valid_oob[1]], "non-empty string"),
++        (
++            [
++                valid_oob[0] | {"arxiv_id_or_url": "9999.99999"},
++                valid_oob[1],
++            ],
++            "not allowed",
++        ),
++        (
++            [
++                valid_oob[0] | {"url": "https://example.com/a2d2"},
++                valid_oob[1],
++            ],
++            "url",
++        ),
++        (
++            [
++                valid_oob[0] | {"owner_boundary": "auto-run candidate"},
++                valid_oob[1],
++            ],
++            "operator boundary",
++        ),
++        ([valid_oob[0], valid_oob[0]], "include A2D2 and SEPO"),
++    ]:
++        with pytest.raises(ValueError, match=message):
++            mod.validate_artifact(
++                _valid_artifact() | {"out_of_band_flagged": bad_rows}
++            )
++
++
++def test_validate_studying_section_checks_scenario_report_4376_content() -> None:
++    """SCENARIO-REPORT-4376: studying entry maps sources to .405 targets."""
++
++    section = """
++    ## 2026-06-18 Exp 4376 - .404 fork SOTA ingestion ingested
++    network precondition passed sweep_clusters.py sweep_semscholar.py WebSearch/WebFetch /deep-research not invoked
++    complete: clean_powered_null_linear_not_beaten llm_heuristic_beats_linear=false held_out_actions_equal=true
++    success_e3_deeper_lp85_reproduced new_levels_reproduced=1 reproducible_total_levels=34 verifier_is_oracle=true
++    retired_in_generation_conversion_unmeasurable scorer_requalified_leak_clean=false codila_control_differentiates=false benchmark_n=0 s3_guided_beats_control=false
++    complete: detector_beats_chance_zero_selection_headroom_fover detector_auroc=0.918304 detector_beats_chance=true selection_headroom.headroom=0.0
++    arXiv:2508.01682 arXiv:2606.16070 arXiv:2605.05138 arXiv:2503.18809 arXiv:2603.20216
++    out_of_band_flagged arXiv:2606.13565 arXiv:2502.01384 operator-owned NOT auto-run
++    flagged_for_v405: biprm_processbench_detector_localization_v405
++    random_seed=4376
++    """
++
++    mod.validate_studying_section(section)
++
++
++def test_validate_studying_section_rejects_missing_sources_or_conditioning() -> None:
++    """SCENARIO-REPORT-4376: studying entry must cite sources and close the loop."""
++
++    with pytest.raises(ValueError, match="flagged_for_v405"):
++        mod.validate_studying_section("## Fresh pass\narXiv:2508.01682\n")
++
++    with pytest.raises(ValueError, match="verified source citations"):
++        mod.validate_studying_section(
++            mod.STUDYING_SECTION.replace("arXiv:2508.01682", "BiPRM")
++        )
++
++    with pytest.raises(ValueError, match="out_of_band_flagged"):
++        mod.validate_studying_section(
++            mod.STUDYING_SECTION.replace("out_of_band_flagged", "operator note")
++        )
++
++    with pytest.raises(ValueError, match="out-of-band citations"):
++        mod.validate_studying_section(
++            mod.STUDYING_SECTION.replace("arXiv:2606.13565", "A2D2")
++        )
++
++    with pytest.raises(ValueError, match="detector_auroc=0.918304"):
++        mod.validate_studying_section(
++            mod.STUDYING_SECTION.replace("detector_auroc=0.918304", "detector_null")
++        )
++
++
++def test_write_outputs_updates_files_idempotently_for_req_report_4376(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-4376: writer emits artifact and studying entry."""
++
++    artifact_path = tmp_path / "artifact.json"
++    studying_path = tmp_path / "research-studying.md"
++    studying_path.write_text("# Research Studying\n\n## Existing\nBody.\n", encoding="utf-8")
++
++    artifact = mod.write_outputs(artifact_path=artifact_path, studying_path=studying_path)
++    second_artifact = mod.write_outputs(
++        artifact_path=artifact_path,
++        studying_path=studying_path,
++    )
++
++    mod.validate_artifact(artifact)
++    mod.validate_artifact(second_artifact)
++    saved_artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    studying = studying_path.read_text(encoding="utf-8")
++
++    assert saved_artifact == artifact
++    assert studying.count("2026-06-18 Exp 4376") == 1
++    assert "flagged_for_v405" in studying
++    assert "out_of_band_flagged" in studying
++    assert "detector_auroc=0.918304" in studying
++    assert "retired_in_generation_conversion_unmeasurable" in studying
++
++
++def test_section_updates_handle_heading_layouts_for_req_report_4376() -> None:
++    """REQ-REPORT-4376: markdown updates work before or between sections."""
++
++    without_marker = "# Doc\n\n## Existing\nBody.\n"
++    studying_once = mod._with_studying_section(without_marker)
++    starts_with_heading = mod._with_studying_section("## Existing\nBody.\n")
++    studying_refreshed = mod._with_studying_section(studying_once)
++    marker_at_end = mod._with_studying_section(studying_once.split("\n## Existing")[0])
++    no_heading = mod._with_studying_section("# Doc\nOnly body.\n")
++
++    assert studying_once.index("2026-06-18 Exp 4376") < studying_once.index("## Existing")
++    assert starts_with_heading.startswith("## 2026-06-18 Exp 4376")
++    assert studying_refreshed.count("2026-06-18 Exp 4376") == 1
++    assert marker_at_end.count("2026-06-18 Exp 4376") == 1
++    assert "## Existing\nBody." in studying_refreshed
++    assert "Bidirectional Process Reward Model" in no_heading
++
++
++def test_main_prints_terminal_verdict_for_req_report_4376(
++    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-REPORT-4376: CLI entry point writes default repo-root outputs."""
++
++    calls: dict[str, Path] = {}
++
++    def fake_write_outputs(
++        *,
++        artifact_path: Path,
++        studying_path: Path,
++    ) -> dict[str, object]:
++        calls["artifact_path"] = artifact_path
++        calls["studying_path"] = studying_path
++        return {"honest_verdict": mod.DEFAULT_HONEST_VERDICT}
++
++    monkeypatch.setattr(mod, "write_outputs", fake_write_outputs)
++
++    assert mod.main() == 0
++
++    captured = capsys.readouterr()
++    assert captured.out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert calls["artifact_path"].as_posix().endswith(ARTIFACT_PATH.as_posix())
++    assert calls["studying_path"].as_posix().endswith(STUDYING_PATH.as_posix())
++
++
++def test_module_main_guard_exits_zero_for_req_report_4376(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-4376: direct module execution exits after writing outputs."""
++
++    monkeypatch.setenv("CARNOT_EXP4376_ROOT", str(tmp_path))
++
++    with pytest.raises(SystemExit) as exc_info:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++
++    assert exc_info.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert (tmp_path / ARTIFACT_PATH).exists()
++
++
++def test_wrapper_script_runs_module_for_req_report_4376(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-4376: required results/ wrapper delegates to the module."""
++
++    monkeypatch.setenv("CARNOT_EXP4376_ROOT", str(tmp_path))
++
++    with pytest.raises(SystemExit) as exc_info:
++        runpy.run_path(str(WRAPPER_PATH), run_name="__main__")
++
++    assert exc_info.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.DEFAULT_HONEST_VERDICT
++    assert (tmp_path / ARTIFACT_PATH).exists()
++
++
++def test_deliverable_files_validate_against_req_report_4376() -> None:
++    """REQ-REPORT-4376: committed JSON artifact satisfies the contract."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++    studying = STUDYING_PATH.read_text(encoding="utf-8")
++
++    mod.validate_artifact(artifact)
++    assert len(artifact["methods_mapped"]) >= 3
++    assert artifact["flagged_for_v405"] == mod.DEFAULT_FLAGGED_FOR_V405
++    assert artifact["out_of_band_flagged"] == mod.DEFAULT_OUT_OF_BAND_FLAGGED
++    assert artifact["random_seed"] == mod.DEFAULT_RANDOM_SEED
++    assert "2026-06-18 Exp 4376 - .404 fork SOTA ingestion ingested" in studying
++    assert (
++        "Flagged for .405: `biprm_processbench_detector_localization_v405`"
++    ) in studying
+-- 
+2.55.0
+

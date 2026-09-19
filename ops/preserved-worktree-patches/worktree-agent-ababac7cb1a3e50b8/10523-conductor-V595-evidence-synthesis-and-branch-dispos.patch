@@ -1,0 +1,3111 @@
+From 8d40e11d4ce762d193ffe5ea6d7c4772a6805797 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 09:52:31 -0400
+Subject: [PATCH 10523/11362] [conductor] V595 evidence synthesis and branch
+ disposition
+
+Automated research step by research conductor.
+Task ID: exp6823-v595-branch-disposition
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-agi3-leaderboard-technique-watch.md   |    4 +
+ .../capabilities/research-reporting/spec.md   |   82 +
+ ops/anomaly-escalations.md                    |    5 +
+ ops/arc-daily-prep-status.json                |    6 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...experiment_6823_v595_branch_disposition.py | 1040 ++++++++++++
+ ...periment_6823_v595_branch_disposition.json | 1395 +++++++++++++++++
+ ...experiment_6823_v595_branch_disposition.py |   10 +
+ ...experiment_6823_v595_branch_disposition.py |  463 ++++++
+ 9 files changed, 3003 insertions(+), 4 deletions(-)
+ create mode 100644 python/carnot/experiment_6823_v595_branch_disposition.py
+ create mode 100644 results/experiment_6823_v595_branch_disposition.json
+ create mode 100644 scripts/experiments/experiment_6823_v595_branch_disposition.py
+ create mode 100644 tests/python/test_experiment_6823_v595_branch_disposition.py
+
+diff --git a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+index 5d7c707e1c..afae105bfa 100644
+--- a/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
++++ b/docs/research-notes/arc-agi3-leaderboard-technique-watch.md
+@@ -224,3 +224,7 @@ CHECK_TIMED_OUT
+ 
+ ## 2026-08-30 13:37 UTC -- checked, nothing new
+ 
++## 2026-08-31 13:43 UTC -- check failed
++
++CHECK_TIMED_OUT
++
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 7f900f4275..90323791ec 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -59878,3 +59878,85 @@ models used, live invocation, gate summary, rows, and checksum
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-6782 and SCENARIO-REPORT-6782-* | Planned (`python/carnot/experiment_6782_sequential_sota_runtime_admission.py`, `scripts/experiments/experiment_6782_sequential_sota_runtime_admission.py`) | Planned (`tests/python/test_experiment_6782_sequential_sota_runtime_admission.py`) |
++
++### REQ-REPORT-6823: V595 Branch Disposition SHALL Preserve Every Planned State
++
++Exp6823 SHALL synthesize milestone `2026.08.595` without running an
++experiment or invoking an LLM. It SHALL compare the four-phase design with the
++executed roadmap. It SHALL preserve exactly fourteen task identities from
++Exp6810 through Exp6823. Each identity SHALL have one task row. A missing,
++malformed, blocked, disqualified, partial, or adversarially flagged artifact
++SHALL remain explicit. Such evidence SHALL not support a positive claim.
++
++The synthesis SHALL hash the design, roadmap, four owned specifications, both
++validator sources, and every exact expected artifact path from Exp6810 through
++Exp6822. A missing path SHALL have a null hash and an explicit state. The
++manifest comparison SHALL record differences in phases, task IDs, gates,
++deliverables, models, and the owned requirement map.
++
++The synthesis SHALL recompute eligible hard-safety, utility, transport,
++memory-causality, portability, and live-progress headlines from source rows.
++It SHALL keep these evidence classes separate. It SHALL emit one branch row
++for the selective arbiter, verified route memory, and live ARC. It SHALL not
++average, vote, or pool branch metrics.
++
++Each branch SHALL receive one disposition from `adopt`, `narrow`, `retire`, or
++`blocked`. Adoption SHALL require eligible positive producer evidence and its
++independent cold audit. A clean null SHALL narrow or retire the branch. A
++missing audit, resource block, invalid artifact, or excluded flagged result
++SHALL block the affected branch.
++
++The artifact SHALL be written atomically to
++`results/experiment_6823_v595_branch_disposition.json`. It SHALL include
++`field_principles`, `inference_substrate`, `duration_s`, `random_seed`,
++`reproducibility_checksum`, `source_artifact_hashes`, `roadmap_identity`,
++`contract_owner_map`, `rows`, `task_count`, `terminal_class_counts`,
++`gate_check_summary`, `adversarial_findings`, `row_recomputed_claims`,
++`manifest_comparison`, `selective_arbiter_disposition`,
++`verified_route_memory_disposition`, `live_arc_disposition`,
++`disposition_enum`, `solve_claim`, `verifier_is_oracle`, `verdict_class`, and
++`honest_verdict`. The checksum SHALL bind inputs, rows, commands, and output.
++It SHALL exclude measured duration and its own value. `task_count` SHALL equal
++fourteen. `solve_claim` and `verifier_is_oracle` SHALL be false.
++
++#### SCENARIO-REPORT-6823-IDENTITY: Fourteen Tasks Stay Visible
++
++**Given** the V595 design and executed roadmap
++**When** Exp6823 builds task rows
++**Then** Exp6810 through Exp6823 each appear once
++**And** every missing or invalid exact path keeps its own state and hash.
++
++**Spec traces:** REQ-REPORT-6823, REQ-HARNESS-008
++
++#### SCENARIO-REPORT-6823-ELIGIBILITY: Excluded Evidence Cannot Become Positive
++
++**Given** blocked, disqualified, partial, or flagged source evidence
++**When** Exp6823 recomputes claims from rows
++**Then** the evidence remains in its task row and validator findings
++**And** it does not enter a positive branch reducer.
++
++**Spec traces:** REQ-REPORT-6823
++
++#### SCENARIO-REPORT-6823-MANIFEST: Design Differences Stay Explicit
++
++**Given** the four design phases and the executed task manifest
++**When** Exp6823 compares IDs, gates, deliverables, models, and owners
++**Then** each mismatch records its expected and observed value
++**And** no mismatch prevents the ungated synthesis artifact.
++
++**Spec traces:** REQ-REPORT-6823
++
++#### SCENARIO-REPORT-6823-DISPOSITION: Every Branch Closes Independently
++
++**Given** each branch has producer and cold-audit evidence requirements
++**When** Exp6823 issues the final decisions
++**Then** each branch receives one closed disposition
++**And** absent independent evidence produces `blocked` only for that branch.
++
++**Spec traces:** REQ-REPORT-6823
++
++## Implementation Status (REQ-REPORT-6823)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-6823 and SCENARIO-REPORT-6823-* | Implemented (`python/carnot/experiment_6823_v595_branch_disposition.py`, `scripts/experiments/experiment_6823_v595_branch_disposition.py`, `results/experiment_6823_v595_branch_disposition.json`) | Implemented (`tests/python/test_experiment_6823_v595_branch_disposition.py`; 100% scoped statement coverage) |
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index ae85370797..57872e69f9 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -1647,3 +1647,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+ - artifact: results/experiment_6810_v595_contract_manifest_preflight.json
++
++## experiment_6823_v595_branch_disposition.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
++- artifact: results/experiment_6823_v595_branch_disposition.json
+diff --git a/ops/arc-daily-prep-status.json b/ops/arc-daily-prep-status.json
+index f3a8a082d5..807bc05c3f 100644
+--- a/ops/arc-daily-prep-status.json
++++ b/ops/arc-daily-prep-status.json
+@@ -1,8 +1,8 @@
+ {
+-  "kernel_version": "50",
++  "kernel_version": "51",
+   "note": "v37 verified by hand after the prep script's own short poll exited with save_run='?' and parquet=MISSING -- the same false alarm seen on v9/v22/v27, where the script's wait is shorter than the kernel's runtime. Ground truth from `kaggle kernels status` (COMPLETE) and `kaggle kernels output` (submission.parquet present, 2648 bytes, 1x4, columns row_id/game_id/end_of_game/score). Stack validated in the same run: vLLM server up in 425s, admission exact at max_model_len 155472, 8/8 concurrent requests round-tripped through the llama.cpp response translation, server config max_num_seqs=8, flashinfer AOT cache staged, CUDA 13 toolchain resolved. Prepared only -- submission is operator-only per CLAUDE.md Operator-Only External Publication.",
+   "parquet_ok": false,
+-  "prepped_at": "2026-08-30T13:37Z",
++  "prepped_at": "2026-08-31T13:37Z",
+   "prior_submission_scores": {
+     "2026-06-30": 0.08,
+     "2026-07-15": 0.12,
+@@ -55,5 +55,5 @@
+       "what_changed_vs_prior_submission": "One fix, commit 1086c7e7cc: the scored kernel now sets CARNOT_ARC_E3_DIR to a writable path. E3_DIR defaulted to REPO/results/arc_e3 with REPO derived from __file__, which on Kaggle resolves inside the read-only dataset mount, so EVERY induction raised OSError(30, 'Read-only file system') at the persist step -- AFTER the LLM had generated the full world model (310k-485k tokens per game, 99.8% of wall clock). The engine was discarded and each game played on with no world model. Measured on the Blackwell card over ar25/tr87/tu93, all three games, every attempt."
+     }
+   ],
+-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 50"
++  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 51"
+ }
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index f40c139eb1..41eecff68e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 214,
+   "code_violations": 0,
+-  "experiments_checked": 5204,
++  "experiments_checked": 5205,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6823_v595_branch_disposition.py b/python/carnot/experiment_6823_v595_branch_disposition.py
+new file mode 100644
+index 0000000000..238897d502
+--- /dev/null
++++ b/python/carnot/experiment_6823_v595_branch_disposition.py
+@@ -0,0 +1,1040 @@
++"""Build the V595 evidence disposition from checked-in terminal artifacts.
++
++This module does not run research code. It reads exact artifact paths and
++recomputes small summaries from their rows. Missing or unsafe evidence stays
++visible so a later reader can tell a resource block from a measured null.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter, defaultdict
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import re
++import sys
++import time
++from typing import Any, Callable, Mapping, Sequence
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++REPO_ROOT = Path(__file__).resolve().parents[2]
++MILESTONE = "2026.08.595"
++INFERENCE_SUBSTRATE = "CPU aggregation from upstream artifacts, no LLM"
++RANDOM_SEED = 6823
++DESIGN_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++ROADMAP_PATH = Path("research-roadmap.yaml")
++REPORT_SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++RESULT_PATH = Path("results/experiment_6823_v595_branch_disposition.json")
++ADVERSARIAL_PATH = Path("scripts/adversarial_verify.py")
++ROW_LINT_PATH = Path("scripts/verdict_row_consistency_lint.py")
++TASK_IDS = tuple(f"exp{number}" for number in range(6810, 6824))
++SOURCE_TASK_IDS = TASK_IDS[:-1]
++DISPOSITION_ENUM = ("adopt", "narrow", "retire", "blocked")
++CLOSED_VERDICT_CLASSES = {
++    "positive",
++    "circular_positive",
++    "null",
++    "blocked",
++    "disqualified",
++    "partial",
++}
++
++TASK_PATHS = {
++    "exp6810": Path("results/experiment_6810_v595_contract_manifest_preflight.json"),
++    "exp6811": Path("results/experiment_6811_operational_obligation_automaton_v3.json"),
++    "exp6812": Path("results/experiment_6812_sota_operational_handoff_corpus_v2.json"),
++    "exp6813": Path("results/experiment_6813_selective_priority_arbiter_ab.json"),
++    "exp6814": Path("results/experiment_6814_selective_priority_arbiter_cold_audit.json"),
++    "exp6815": Path("results/experiment_6815_verified_memory_operation_stream.json"),
++    "exp6816": Path("results/experiment_6816_residual_pressure_route_learning_ab.json"),
++    "exp6817": Path("results/experiment_6817_route_memory_portability.json"),
++    "exp6818": Path("results/experiment_6818_route_memory_global_cold_audit.json"),
++    "exp6819": Path("results/experiment_6819_arc_stepwise_strategy_accrual.json"),
++    "exp6820": Path("results/experiment_6820_arc_tool_gap_obligation_transport_v2.json"),
++    "exp6821": Path("results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json"),
++    "exp6822": Path("results/experiment_6822_arc_causal_adoption_audit.json"),
++    "exp6823": RESULT_PATH,
++}
++
++OWNED_INPUT_PATHS = (
++    DESIGN_PATH,
++    ROADMAP_PATH,
++    Path("openspec/capabilities/agentic-harness/spec.md"),
++    Path("openspec/capabilities/constraint-verification/spec.md"),
++    Path("openspec/capabilities/continuous-learning/spec.md"),
++    REPORT_SPEC_PATH,
++    ADVERSARIAL_PATH,
++    ROW_LINT_PATH,
++)
++
++CONTRACT_OWNER_MAP = {
++    "operational-obligation interface": {
++        "spec_path": "openspec/capabilities/agentic-harness/spec.md",
++        "requirement": "REQ-AGENTIC-6810-1",
++        "implementing_task": "exp6811-operational-obligation-automaton-v3",
++        "gate_field": "operational_automaton_fixture_ready",
++    },
++    "exact priority arbiter": {
++        "spec_path": "openspec/capabilities/constraint-verification/spec.md",
++        "requirement": "REQ-CONSTRAINT-6810",
++        "implementing_task": "exp6813-selective-priority-arbiter-ab",
++        "gate_field": "selective_arbiter_ab_completed",
++    },
++    "transactional verified memory": {
++        "spec_path": "openspec/capabilities/continuous-learning/spec.md",
++        "requirement": "REQ-CL-6810",
++        "implementing_task": "exp6816-residual-pressure-route-learning-ab",
++        "gate_field": "residual_route_learning_completed",
++    },
++    "live stepwise strategy path": {
++        "spec_path": "openspec/capabilities/agentic-harness/spec.md",
++        "requirement": "REQ-AGENTIC-6810-2",
++        "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
++        "gate_field": "stepwise_strategy_accrual_ready",
++    },
++}
++
++EXPECTED_GATES = {
++    "exp6810": [],
++    "exp6811": [("exp6810", "v595_contract_map_ready")],
++    "exp6812": [("exp6811", "operational_automaton_fixture_ready")],
++    "exp6813": [("exp6812", "operational_handoff_corpus_ready")],
++    "exp6814": [("exp6813", "selective_arbiter_ab_completed")],
++    "exp6815": [
++        ("exp6812", "operational_handoff_corpus_ready"),
++        ("exp6814", "selective_arbiter_audit_completed"),
++    ],
++    "exp6816": [("exp6815", "verified_memory_stream_ready")],
++    "exp6817": [("exp6816", "residual_route_learning_completed")],
++    "exp6818": [
++        ("exp6816", "residual_route_learning_completed"),
++        ("exp6817", "route_memory_portability_completed"),
++    ],
++    "exp6819": [("exp6811", "operational_automaton_fixture_ready")],
++    "exp6820": [("exp6819", "stepwise_strategy_accrual_ready")],
++    "exp6821": [
++        ("exp6820", "tool_gap_obligation_transport_ready"),
++        ("exp6814", "selective_arbiter_audit_completed"),
++    ],
++    "exp6822": [
++        ("exp6819", "stepwise_strategy_accrual_ready"),
++        ("exp6820", "tool_gap_obligation_transport_ready"),
++        ("exp6821", "actions_to_progress_ab_completed"),
++    ],
++    "exp6823": [],
++}
++
++QWEN = "unsloth/Qwen3.6-35B-A3B-GGUF"
++GEMMA_31 = "unsloth/gemma-4-31B-it-GGUF"
++GEMMA_26 = "unsloth/gemma-4-26B-A4B-it-GGUF"
++EXPECTED_RESEARCH_MODELS = {
++    **{task_id: [] for task_id in TASK_IDS},
++    "exp6812": [QWEN, GEMMA_26, GEMMA_31],
++    "exp6819": [QWEN],
++    "exp6820": [QWEN],
++    "exp6821": [QWEN],
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "field_principles",
++    "inference_substrate",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++    "source_artifact_hashes",
++    "roadmap_identity",
++    "contract_owner_map",
++    "rows",
++    "task_count",
++    "terminal_class_counts",
++    "gate_check_summary",
++    "adversarial_findings",
++    "row_recomputed_claims",
++    "manifest_comparison",
++    "selective_arbiter_disposition",
++    "verified_route_memory_disposition",
++    "live_arc_disposition",
++    "disposition_enum",
++    "solve_claim",
++    "verifier_is_oracle",
++    "verdict_class",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES = {
++    "field_principles": "Each field explains why it exists, so schema compliance remains meaningful.",
++    "inference_substrate": "The substrate proves that this task only aggregates checked-in evidence.",
++    "duration_s": "Measured wall time distinguishes a real audit from an invented duration.",
++    "random_seed": "A fixed audit seed makes any ordered reduction repeatable.",
++    "reproducibility_checksum": "One checksum binds the inputs, rows, commands, and output.",
++    "source_artifact_hashes": "Exact hashes stop later file changes from silently changing this disposition.",
++    "roadmap_identity": "The milestone and range prevent evidence from another plan entering this audit.",
++    "contract_owner_map": "Existing specifications keep authority with the contract that owns it.",
++    "rows": "Task and branch rows let a reader audit every inclusion and decision.",
++    "task_count": "The fixed count prevents a missing task from disappearing from the denominator.",
++    "terminal_class_counts": "Separate counts prevent blocked or flagged work from becoming success.",
++    "gate_check_summary": "Expected and observed values make incomplete evidence diagnosable.",
++    "adversarial_findings": "Validator findings remain visible and cannot be laundered away.",
++    "row_recomputed_claims": "Headlines come from eligible source rows instead of copied prose.",
++    "manifest_comparison": "Design differences remain explicit even though this synthesis is ungated.",
++    "selective_arbiter_disposition": "The arbiter receives a decision independent of memory and ARC.",
++    "verified_route_memory_disposition": "Memory causality and portability receive their own decision.",
++    "live_arc_disposition": "Live progress receives a decision independent of transport readiness.",
++    "disposition_enum": "A closed decision set prevents an ambiguous branch outcome.",
++    "solve_claim": "False prevents this synthesis from becoming a game-level solve claim.",
++    "verifier_is_oracle": "False keeps exact environment outcomes as the correctness authority.",
++    "verdict_class": "The closed class states the evidence limit of the synthesis itself.",
++    "honest_verdict": "A terminal and bounded sentence states what the available evidence supports.",
++}
++
++VERIFICATION_COMMANDS = (
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/ruff check python/carnot/experiment_6823_v595_branch_disposition.py tests/python/test_experiment_6823_v595_branch_disposition.py",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6823_v595_branch_disposition.json",
++    ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6823_v595_branch_disposition.json",
++)
++
++
++def canonical_json(value: Any) -> bytes:
++    """Return stable JSON bytes so hashes do not depend on formatting."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
++
++
++def sha256_file(path: Path) -> str | None:
++    """Hash one exact path, or retain absence as a null value."""
++
++    if not path.is_file():
++        return None
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return f"sha256:{digest.hexdigest()}"
++
++
++def _short_task_id(value: str) -> str:
++    match = re.match(r"exp(\d+)", value)
++    if not match:
++        raise ValueError(f"invalid task id: {value}")
++    return f"exp{match.group(1)}"
++
++
++def parse_design(text: str) -> JsonDict:
++    """Parse the four phase headings and exact deliverables from the design."""
++
++    milestone_match = re.search(r"\*\*Milestone:\*\*\s*`?([0-9]{4}\.[0-9]{2}\.[0-9]+)`?", text)
++    milestone = milestone_match.group(1) if milestone_match else None
++    phase = 0
++    tasks: list[JsonDict] = []
++    lines = text.splitlines()
++    for index, line in enumerate(lines):
++        phase_match = re.match(r"## Phase (\d+):", line)
++        if phase_match:
++            phase = int(phase_match.group(1))
++            continue
++        task_match = re.match(r"### Exp(\d+):\s*(.+)", line)
++        if not task_match:
++            continue
++        deliverable = None
++        for later in lines[index + 1 :]:
++            found = re.match(r"\*\*Deliverable:\*\*\s*`([^`]+)`", later)
++            if found:
++                deliverable = found.group(1)
++                break
++            if later.startswith("### Exp") or later.startswith("## Phase"):
++                break
++        if deliverable is None:
++            raise ValueError(f"design deliverable missing for Exp{task_match.group(1)}")
++        tasks.append(
++            {
++                "task_id": f"exp{task_match.group(1)}",
++                "title": task_match.group(2),
++                "phase": phase,
++                "deliverable": deliverable,
++            }
++        )
++    return {
++        "milestone": milestone,
++        "phase_count": len(set(row["phase"] for row in tasks)),
++        "tasks": tasks,
++    }
++
++
++def _research_models(prompt: str) -> list[str]:
++    return sorted(model for model in (QWEN, GEMMA_26, GEMMA_31) if model in prompt)
++
++
++def load_manifest(root: Path) -> list[JsonDict]:
++    """Load the executed YAML while retaining gates, models, and deliverables."""
++
++    payload = yaml.safe_load((root / ROADMAP_PATH).read_text(encoding="utf-8"))
++    if not isinstance(payload, dict) or not isinstance(payload.get("tasks"), list):
++        raise ValueError("executed roadmap must contain a task list")
++    rows = []
++    for task in payload["tasks"]:
++        if not isinstance(task, dict):
++            continue
++        task_id = _short_task_id(str(task.get("id", "")))
++        gates = []
++        for gate in task.get("gated_on") or []:
++            gates.append(
++                (_short_task_id(str(gate.get("upstream", ""))), gate.get("artifact_field"))
++            )
++        rows.append(
++            {
++                "task_id": task_id,
++                "manifest_task_id": task.get("id"),
++                "title": task.get("title"),
++                "milestone": task.get("milestone"),
++                "deliverable": task.get("deliverable"),
++                "gates": gates,
++                "agent_model": task.get("model"),
++                "research_models": _research_models(str(task.get("prompt", ""))),
++            }
++        )
++    return rows
++
++
++def compare_manifest(
++    design: Mapping[str, Any],
++    manifest: Sequence[Mapping[str, Any]],
++    observed_owner_map: Mapping[str, Any],
++) -> JsonDict:
++    """Compare every design surface without turning a mismatch into a gate."""
++
++    differences: list[JsonDict] = []
++
++    def check(field: str, expected: Any, observed: Any) -> None:
++        if expected != observed:
++            differences.append({"field": field, "expected": expected, "observed": observed})
++
++    check("milestone", MILESTONE, design.get("milestone"))
++    check("phase_count", 4, design.get("phase_count"))
++    check(
++        "design_task_ids", list(TASK_IDS), [row.get("task_id") for row in design.get("tasks", [])]
++    )
++    check("manifest_task_ids", list(TASK_IDS), [row.get("task_id") for row in manifest])
++    design_by_id = {row["task_id"]: row for row in design.get("tasks", [])}
++    manifest_by_id = {row["task_id"]: row for row in manifest}
++    deliverables = []
++    gates = []
++    models = []
++    for task_id in TASK_IDS:
++        expected_path = TASK_PATHS[task_id].as_posix()
++        design_path = design_by_id.get(task_id, {}).get("deliverable")
++        manifest_path = manifest_by_id.get(task_id, {}).get("deliverable")
++        deliverables.append(
++            {
++                "task_id": task_id,
++                "expected": expected_path,
++                "design": design_path,
++                "executed": manifest_path,
++                "matches": expected_path == design_path == manifest_path,
++            }
++        )
++        check(f"{task_id}.deliverable", expected_path, manifest_path)
++        observed_gates = manifest_by_id.get(task_id, {}).get("gates")
++        gates.append(
++            {
++                "task_id": task_id,
++                "expected": EXPECTED_GATES[task_id],
++                "executed": observed_gates,
++                "matches": EXPECTED_GATES[task_id] == observed_gates,
++            }
++        )
++        check(f"{task_id}.gates", EXPECTED_GATES[task_id], observed_gates)
++        observed_models = manifest_by_id.get(task_id, {}).get("research_models")
++        expected_models = sorted(EXPECTED_RESEARCH_MODELS[task_id])
++        models.append(
++            {
++                "task_id": task_id,
++                "expected_research_models": expected_models,
++                "executed_prompt_models": observed_models,
++                "agent_model": manifest_by_id.get(task_id, {}).get("agent_model"),
++                "matches": expected_models == observed_models,
++            }
++        )
++        check(f"{task_id}.research_models", expected_models, observed_models)
++    observed_owner_core = {
++        contract: {field: observed_owner_map.get(contract, {}).get(field) for field in expected}
++        for contract, expected in CONTRACT_OWNER_MAP.items()
++    }
++    check("contract_owner_map", CONTRACT_OWNER_MAP, observed_owner_core)
++    return {
++        "design_phase_count": design.get("phase_count"),
++        "design_task_count": len(design.get("tasks", [])),
++        "executed_task_count": len(manifest),
++        "deliverables": deliverables,
++        "gates": gates,
++        "models": models,
++        "owned_req_map_expected": CONTRACT_OWNER_MAP,
++        "owned_req_map_observed": observed_owner_map,
++        "differences": differences,
++        "matches": not differences,
++    }
++
++
++def _missing_record(task_id: str, state: str, error: str) -> JsonDict:
++    path = TASK_PATHS[task_id]
++    return {
++        "artifact_state": state,
++        "path": path.as_posix(),
++        "sha256": None,
++        "payload": None,
++        "source_verdict_class": state,
++        "terminal_class": state,
++        "eligible": False,
++        "adversarial_report": None,
++        "row_lint": None,
++        "gate_check_summary": [
++            {
++                "check": f"{task_id}.exact_terminal_artifact",
++                "expected": path.as_posix(),
++                "observed": error,
++            }
++        ],
++        "error": error,
++    }
++
++
++def load_source_artifacts(root: Path) -> dict[str, JsonDict]:
++    """Load all exact paths and preserve every absent or malformed input."""
++
++    records: dict[str, JsonDict] = {}
++    for task_id in SOURCE_TASK_IDS:
++        relative = TASK_PATHS[task_id]
++        path = root / relative
++        if not path.is_file():
++            records[task_id] = _missing_record(task_id, "missing", "file_missing")
++            continue
++        file_hash = sha256_file(path)
++        try:
++            payload = json.loads(path.read_text(encoding="utf-8"))
++        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
++            record = _missing_record(task_id, "malformed", f"{type(exc).__name__}: {exc}")
++            record["sha256"] = file_hash
++            records[task_id] = record
++            continue
++        verdict_class = payload.get("verdict_class") if isinstance(payload, dict) else None
++        if not isinstance(payload, dict) or verdict_class not in CLOSED_VERDICT_CLASSES:
++            record = _missing_record(task_id, "malformed", "top_level_or_verdict_class_invalid")
++            record["sha256"] = file_hash
++            records[task_id] = record
++            continue
++        declared_flagged = bool(payload.get("flagged_adversarial"))
++        terminal_class = "flagged" if declared_flagged else verdict_class
++        gate_summary = payload.get("gate_check_summary")
++        records[task_id] = {
++            "artifact_state": "present",
++            "path": relative.as_posix(),
++            "sha256": file_hash,
++            "payload": payload,
++            "source_verdict_class": verdict_class,
++            "terminal_class": terminal_class,
++            "eligible": verdict_class in {"positive", "null"} and not declared_flagged,
++            "adversarial_report": None,
++            "row_lint": None,
++            "gate_check_summary": gate_summary if isinstance(gate_summary, list) else [],
++            "error": None,
++        }
++    records["exp6823"] = {
++        "artifact_state": "current_synthesis",
++        "path": RESULT_PATH.as_posix(),
++        "sha256": None,
++        "payload": None,
++        "source_verdict_class": "partial",
++        "terminal_class": "current_synthesis",
++        "eligible": False,
++        "adversarial_report": None,
++        "row_lint": None,
++        "gate_check_summary": [],
++        "error": None,
++    }
++    return records
++
++
++def collect_source_hashes(root: Path) -> dict[str, str | None]:
++    """Hash owned inputs and all thirteen upstream evidence paths."""
++
++    paths = (*OWNED_INPUT_PATHS, *(TASK_PATHS[task] for task in SOURCE_TASK_IDS))
++    return {path.as_posix(): sha256_file(root / path) for path in paths}
++
++
++def apply_validators(
++    root: Path,
++    records: Mapping[str, JsonDict],
++    adversarial: Callable[[Path], Mapping[str, Any]],
++    row_lint: Callable[[Path], tuple[str, list[str]]],
++) -> list[JsonDict]:
++    """Run both validators and exclude any evidence with a reported concern."""
++
++    findings: list[JsonDict] = []
++    for task_id in SOURCE_TASK_IDS:
++        record = records[task_id]
++        if record["artifact_state"] != "present":
++            continue
++        path = root / record["path"]
++        report = dict(adversarial(path))
++        record["adversarial_report"] = report
++        for flag in report.get("flags") or []:
++            findings.append({"task_id": task_id, "validator": "adversarial", **flag})
++        status, row_findings = row_lint(path)
++        record["row_lint"] = {"status": status, "findings": row_findings}
++        findings.extend(
++            {"task_id": task_id, "validator": "row_verdict", "detail": detail}
++            for detail in row_findings
++        )
++        if report.get("flag_count", 0) or status in {"findings", "unreadable"}:
++            record["terminal_class"] = "flagged"
++            record["eligible"] = False
++    return findings
++
++
++def _eligible_rows(records: Mapping[str, Mapping[str, Any]], task_id: str) -> list[JsonDict]:
++    record = records.get(task_id, {})
++    payload = record.get("payload")
++    if not record.get("eligible") or not isinstance(payload, dict):
++        return []
++    rows = payload.get("rows")
++    return [row for row in rows if isinstance(row, dict)] if isinstance(rows, list) else []
++
++
++def _arm_rate(rows: Sequence[Mapping[str, Any]], field: str) -> dict[str, JsonDict]:
++    values: dict[str, list[bool]] = defaultdict(list)
++    for row in rows:
++        if isinstance(row.get("arm"), str) and isinstance(row.get(field), bool):
++            values[row["arm"]].append(row[field])
++    return {
++        arm: {"numerator": sum(items), "denominator": len(items), "rate": sum(items) / len(items)}
++        for arm, items in values.items()
++    }
++
++
++def _arm_mean(rows: Sequence[Mapping[str, Any]], field: str) -> dict[str, float]:
++    values: dict[str, list[float]] = defaultdict(list)
++    for row in rows:
++        value = row.get(field)
++        if (
++            isinstance(row.get("arm"), str)
++            and isinstance(value, (int, float))
++            and not isinstance(value, bool)
++        ):
++            values[row["arm"]].append(float(value))
++    return {arm: sum(items) / len(items) for arm, items in values.items()}
++
++
++def _paired_delta(
++    rows: Sequence[Mapping[str, Any]],
++    left_arm: str,
++    right_arm: str,
++    field: str,
++) -> JsonDict:
++    pairs: dict[str, dict[str, float]] = defaultdict(dict)
++    for row in rows:
++        value = row.get(field)
++        if (
++            isinstance(row.get("pair_id"), str)
++            and row.get("arm") in {left_arm, right_arm}
++            and isinstance(value, (int, float))
++            and not isinstance(value, bool)
++        ):
++            pairs[row["pair_id"]][row["arm"]] = float(value)
++    deltas = [pair[left_arm] - pair[right_arm] for pair in pairs.values() if len(pair) == 2]
++    if not deltas:
++        return {"mean": None, "pair_count": 0, "cause": "no_eligible_paired_rows"}
++    return {"mean": sum(deltas) / len(deltas), "pair_count": len(deltas), "cause": None}
++
++
++def recompute_selective(records: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    """Reduce held arbiter rows while separating safety from utility."""
++
++    source_rows = _eligible_rows(records, "exp6813")
++    rows = [row for row in source_rows if row.get("split") == "held"]
++    if not rows and source_rows and all("split" not in row for row in source_rows):
++        rows = source_rows
++    progress = _paired_delta(rows, "selective_priority", "flat_reject_retry", "accepted_progress")
++    retries = _paired_delta(rows, "flat_reject_retry", "selective_priority", "retry_count")
++    safety = _arm_rate(rows, "accepted_hard_violation")
++    false_intervention = _arm_rate(
++        [row for row in rows if row.get("base_already_valid") is True], "false_intervention"
++    )
++    harmful = _arm_rate(rows, "harmful_selection")
++    return {
++        "eligible_row_count": len(rows),
++        "hard_safety": safety,
++        "utility": {
++            "accepted_progress_by_arm": _arm_mean(rows, "accepted_progress"),
++            "retry_cost_by_arm": _arm_mean(rows, "retry_count"),
++            "paired_progress_delta": progress,
++            "flat_minus_selective_retry_delta": retries,
++        },
++        "false_intervention": false_intervention,
++        "harmful_selection": harmful,
++        "positive_gate": bool(
++            rows
++            and safety.get("selective_priority", {}).get("numerator") == 0
++            and harmful.get("selective_priority", {}).get("numerator") == 0
++            and (
++                (progress["mean"] is not None and progress["mean"] > 0)
++                or (retries["mean"] is not None and retries["mean"] > 0)
++            )
++        ),
++    }
++
++
++def _named_difference(means: Mapping[str, float], left: str, right: str) -> float | None:
++    if left not in means or right not in means:
++        return None
++    return means[left] - means[right]
++
++
++def recompute_memory(records: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    """Reduce local utility, causal writes, safety, and portability separately."""
++
++    rows = _eligible_rows(records, "exp6816")
++    portability_rows = _eligible_rows(records, "exp6817")
++    means = _arm_mean(rows, "exact_utility")
++    portability_means = _arm_mean(portability_rows, "exact_utility")
++    credited = sum(row.get("credited_write") is True for row in rows)
++    harm_fields = ("support_harm", "retention_harm", "hard_case_harm")
++    harm_count = sum(row.get(field) is True for row in rows for field in harm_fields)
++    utility_delta = _named_difference(means, "residual_pressure", "frozen_memory")
++    portability_delta = _named_difference(portability_means, "residual_pressure", "frozen_memory")
++    return {
++        "eligible_row_count": len(rows),
++        "utility": {"mean_by_arm": means, "residual_minus_frozen": utility_delta},
++        "causality": {"credited_writes": credited},
++        "safety": {"harm_count": harm_count, "fields": list(harm_fields)},
++        "portability": {
++            "eligible_row_count": len(portability_rows),
++            "mean_by_arm": portability_means,
++            "residual_minus_frozen": portability_delta,
++        },
++        "positive_gate": bool(
++            utility_delta is not None
++            and utility_delta > 0
++            and portability_delta is not None
++            and portability_delta > 0
++            and credited > 0
++            and harm_count == 0
++        ),
++    }
++
++
++def recompute_live_arc(records: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    """Keep transport readiness separate from measured live progress."""
++
++    transport_record = records.get("exp6820", {})
++    transport_payload = transport_record.get("payload")
++    transport_ready = (
++        transport_payload.get("tool_gap_obligation_transport_ready")
++        if transport_record.get("eligible") and isinstance(transport_payload, dict)
++        else None
++    )
++    rows = _eligible_rows(records, "exp6821")
++    actions_delta = _paired_delta(rows, "control_unset", "obligation_routed", "actions_to_progress")
++    hard_count = sum(
++        row.get("hard_violation") is True or row.get("accepted_hard_violation") is True
++        for row in rows
++    )
++    false_interventions = sum(row.get("false_intervention") is True for row in rows)
++    return {
++        "transport": {
++            "ready": transport_ready,
++            "eligible_row_count": len(_eligible_rows(records, "exp6820")),
++        },
++        "progress": {
++            "eligible_row_count": len(rows),
++            "control_minus_treatment_actions": actions_delta["mean"],
++            "pair_count": actions_delta["pair_count"],
++            "cause": actions_delta["cause"],
++        },
++        "hard_safety": {
++            "hard_violation_count": hard_count,
++            "false_intervention_count": false_interventions,
++        },
++        "solve_claim": False,
++        "positive_gate": bool(
++            transport_ready is True
++            and actions_delta["mean"] is not None
++            and actions_delta["mean"] > 0
++            and hard_count == 0
++        ),
++    }
++
++
++def recompute_claims(records: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    """Return the three independent branch reductions without pooling."""
++
++    return {
++        "selective_arbiter": recompute_selective(records),
++        "verified_route_memory": recompute_memory(records),
++        "live_arc": recompute_live_arc(records),
++    }
++
++
++def decide_disposition(
++    branch: str,
++    records: Mapping[str, Mapping[str, Any]],
++    required_tasks: Sequence[str],
++    *,
++    positive_gate: bool,
++) -> JsonDict:
++    """Close one branch only after all required evidence is independently eligible."""
++
++    failed = []
++    classes = []
++    for task_id in required_tasks:
++        record = records.get(task_id, {})
++        terminal = record.get("terminal_class", "missing")
++        source_class = record.get("source_verdict_class", terminal)
++        classes.append(source_class)
++        if not record.get("eligible"):
++            failed.append(
++                {
++                    "check": f"{branch}.{task_id}.eligible_terminal_evidence",
++                    "expected": "eligible positive or null terminal evidence",
++                    "observed": terminal,
++                }
++            )
++    if failed:
++        disposition = "blocked"
++    elif positive_gate and all(value == "positive" for value in classes):
++        disposition = "adopt"
++    elif classes and all(value == "null" for value in classes):
++        disposition = "retire"
++    else:
++        disposition = "narrow"
++    return {
++        "branch": branch,
++        "disposition": disposition,
++        "required_tasks": list(required_tasks),
++        "source_verdict_classes": classes,
++        "positive_gate_recomputed": positive_gate,
++        "independent_cold_audit_required": True,
++        "failed_checks": failed,
++        "next_action": {
++            "adopt": "Adopt only the audited branch behavior and keep exact authorities unchanged.",
++            "narrow": "Keep the supported boundary and remove the unsupported positive claim.",
++            "retire": "Retire the tested mechanism after its complete clean null.",
++            "blocked": "Keep the branch blocked until the named terminal evidence exists.",
++        }[disposition],
++    }
++
++
++def build_dispositions(
++    records: Mapping[str, Mapping[str, Any]], claims: Mapping[str, Mapping[str, Any]]
++) -> dict[str, JsonDict]:
++    """Issue the three branch decisions with their own producer and cold audit."""
++
++    return {
++        "selective_arbiter": decide_disposition(
++            "selective_arbiter",
++            records,
++            ("exp6813", "exp6814"),
++            positive_gate=bool(claims["selective_arbiter"]["positive_gate"]),
++        ),
++        "verified_route_memory": decide_disposition(
++            "verified_route_memory",
++            records,
++            ("exp6816", "exp6817", "exp6818"),
++            positive_gate=bool(claims["verified_route_memory"]["positive_gate"]),
++        ),
++        "live_arc": decide_disposition(
++            "live_arc",
++            records,
++            ("exp6819", "exp6820", "exp6821", "exp6822"),
++            positive_gate=bool(claims["live_arc"]["positive_gate"]),
++        ),
++    }
++
++
++def _task_rows(
++    manifest: Sequence[Mapping[str, Any]], records: Mapping[str, Mapping[str, Any]]
++) -> list[JsonDict]:
++    manifest_by_id = {row["task_id"]: row for row in manifest}
++    rows = []
++    for task_id in TASK_IDS:
++        record = records.get(task_id)
++        if record is None and task_id == "exp6823":
++            record = {
++                "artifact_state": "current_synthesis",
++                "sha256": None,
++                "payload": None,
++                "source_verdict_class": "partial",
++                "terminal_class": "current_synthesis",
++                "eligible": False,
++                "gate_check_summary": [],
++                "adversarial_report": None,
++                "row_lint": None,
++            }
++        if record is None:
++            raise ValueError(f"source record missing for {task_id}")
++        payload = record.get("payload")
++        source_rows = payload.get("rows") if isinstance(payload, dict) else None
++        terminal = record["terminal_class"]
++        rows.append(
++            {
++                "row_type": "task",
++                "task_id": task_id,
++                "manifest_task_id": manifest_by_id.get(task_id, {}).get("manifest_task_id"),
++                "path": TASK_PATHS[task_id].as_posix(),
++                "source_sha256": record.get("sha256"),
++                "artifact_state": record["artifact_state"],
++                "source_verdict_class": record["source_verdict_class"],
++                "terminal_class": terminal,
++                "eligible_for_positive_claim": bool(record.get("eligible")),
++                "exclusion_reason": None
++                if record.get("eligible")
++                else f"terminal_class={terminal}",
++                "source_row_count": len(source_rows) if isinstance(source_rows, list) else 0,
++                "gate_check_summary": record.get("gate_check_summary") or [],
++                "adversarial_report": record.get("adversarial_report"),
++                "row_verdict_report": record.get("row_lint"),
++            }
++        )
++    return rows
++
++
++def _gate_summary(
++    task_rows: Sequence[Mapping[str, Any]], manifest_comparison: Mapping[str, Any]
++) -> list[JsonDict]:
++    failures = []
++    for row in task_rows:
++        if row.get("terminal_class") in {
++            "missing",
++            "malformed",
++            "blocked",
++            "disqualified",
++            "partial",
++            "flagged",
++        }:
++            source_gates = row.get("gate_check_summary") or []
++            if source_gates:
++                failures.extend({"task_id": row["task_id"], **gate} for gate in source_gates)
++            else:
++                failures.append(
++                    {
++                        "task_id": row["task_id"],
++                        "check": "eligible_terminal_evidence",
++                        "expected": "positive or null clean terminal evidence",
++                        "observed": row.get("terminal_class"),
++                    }
++                )
++    failures.extend(
++        {
++            "task_id": "manifest",
++            "check": difference["field"],
++            "expected": difference["expected"],
++            "observed": difference["observed"],
++        }
++        for difference in manifest_comparison["differences"]
++    )
++    return failures
++
++
++def _checksum_view(artifact: Mapping[str, Any]) -> JsonDict:
++    view = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"duration_s", "reproducibility_checksum"}
++    }
++    view["verification_commands"] = list(VERIFICATION_COMMANDS)
++    return view
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Bind all stable output and the commands used to verify it."""
++
++    return f"sha256:{hashlib.sha256(canonical_json(_checksum_view(artifact))).hexdigest()}"
++
++
++def assemble_artifact(
++    *,
++    run_date: str,
++    duration_s: float,
++    manifest: Sequence[Mapping[str, Any]],
++    design: Mapping[str, Any],
++    records: Mapping[str, Mapping[str, Any]],
++    source_hashes: Mapping[str, str | None],
++    adversarial_findings: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    """Assemble one stable artifact from already loaded and checked evidence."""
++
++    owner_payload = records.get("exp6810", {}).get("payload")
++    observed_owners = (
++        owner_payload.get("contract_owner_map")
++        if isinstance(owner_payload, dict)
++        and isinstance(owner_payload.get("contract_owner_map"), dict)
++        else CONTRACT_OWNER_MAP
++    )
++    manifest_comparison = compare_manifest(design, manifest, observed_owners)
++    claims = recompute_claims(records)
++    decisions = build_dispositions(records, claims)
++    task_rows = _task_rows(manifest, records)
++    branch_rows = [
++        {"row_type": "branch", **decisions[name]}
++        for name in (
++            "selective_arbiter",
++            "verified_route_memory",
++            "live_arc",
++        )
++    ]
++    counts = dict(sorted(Counter(row["terminal_class"] for row in task_rows).items()))
++    blocked = any(row["disposition"] == "blocked" for row in decisions.values())
++    artifact: JsonDict = {
++        "field_principles": FIELD_PRINCIPLES,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "source_artifact_hashes": dict(source_hashes),
++        "roadmap_identity": {
++            "milestone": MILESTONE,
++            "first_experiment": 6810,
++            "last_experiment": 6823,
++            "execution_date": run_date,
++            "design_sha256": source_hashes.get(DESIGN_PATH.as_posix()),
++            "executed_roadmap_sha256": source_hashes.get(ROADMAP_PATH.as_posix()),
++        },
++        "contract_owner_map": observed_owners,
++        "rows": [*task_rows, *branch_rows],
++        "task_count": len(task_rows),
++        "terminal_class_counts": counts,
++        "gate_check_summary": _gate_summary(task_rows, manifest_comparison),
++        "adversarial_findings": list(adversarial_findings),
++        "row_recomputed_claims": claims,
++        "manifest_comparison": manifest_comparison,
++        "selective_arbiter_disposition": decisions["selective_arbiter"],
++        "verified_route_memory_disposition": decisions["verified_route_memory"],
++        "live_arc_disposition": decisions["live_arc"],
++        "disposition_enum": list(DISPOSITION_ENUM),
++        "solve_claim": False,
++        "verifier_is_oracle": False,
++        "verdict_class": "partial" if blocked else "null",
++        "honest_verdict": (
++            "complete_partial: V595 preserved every available terminal row; one or more "
++            "branches remain blocked by named missing or excluded independent evidence."
++            if blocked
++            else "complete: V595 branch decisions are closed and no new scientific claim is made."
++        ),
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Replay the compact output contract before the atomic write."""
++
++    errors = []
++    if set(artifact) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("artifact fields do not match the required schema")
++    if artifact.get("task_count") != 14:
++        errors.append("task_count must equal fourteen")
++    rows = artifact.get("rows") if isinstance(artifact.get("rows"), list) else []
++    task_rows = [row for row in rows if isinstance(row, dict) and row.get("row_type") == "task"]
++    replayed = dict(sorted(Counter(row.get("terminal_class") for row in task_rows).items()))
++    if replayed != artifact.get("terminal_class_counts"):
++        errors.append("terminal class counts do not replay")
++    if any(
++        row.get("eligible_for_positive_claim") is True
++        and row.get("terminal_class") not in {"positive", "null"}
++        for row in task_rows
++    ):
++        errors.append("excluded task row is positive-eligible")
++    for field in (
++        "selective_arbiter_disposition",
++        "verified_route_memory_disposition",
++        "live_arc_disposition",
++    ):
++        value = artifact.get(field)
++        if not isinstance(value, dict) or value.get("disposition") not in DISPOSITION_ENUM:
++            errors.append(f"{field} has an invalid decision")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(artifact):
++        errors.append("reproducibility checksum mismatch")
++    return errors
++
++
++def atomic_write_json(path: Path, artifact: Mapping[str, Any]) -> None:
++    """Replace the result only after a complete JSON document exists."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    temporary = path.with_suffix(path.suffix + ".tmp")
++    temporary.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    temporary.replace(path)
++
++
++def _load_validator(root: Path, relative: Path, function_name: str) -> Callable[..., Any]:
++    """Load a repository validator from the exact source path that was hashed."""
++
++    module_name = f"_exp6823_{relative.stem}"
++    spec = importlib.util.spec_from_file_location(module_name, root / relative)
++    assert spec is not None and spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    sys.modules[module_name] = module
++    spec.loader.exec_module(module)
++    return getattr(module, function_name)
++
++
++def run(root: Path, run_date: str) -> JsonDict:
++    """Read, validate, reduce, and publish the V595 disposition."""
++
++    started = time.perf_counter()
++    design = parse_design((root / DESIGN_PATH).read_text(encoding="utf-8"))
++    manifest = load_manifest(root)
++    records = load_source_artifacts(root)
++    verify_artifact = _load_validator(root, ADVERSARIAL_PATH, "verify_artifact")
++    check_artifact = _load_validator(root, ROW_LINT_PATH, "check_artifact")
++
++    findings = apply_validators(root, records, verify_artifact, check_artifact)
++    artifact = assemble_artifact(
++        run_date=run_date,
++        duration_s=time.perf_counter() - started,
++        manifest=manifest,
++        design=design,
++        records=records,
++        source_hashes=collect_source_hashes(root),
++        adversarial_findings=findings,
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    atomic_write_json(root / RESULT_PATH, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    """Parse the required date and run the deterministic local synthesis."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", required=True)
++    args = parser.parse_args(argv)
++    artifact = run(REPO_ROOT, args.date)
++    print(
++        json.dumps(
++            {
++                "result": RESULT_PATH.as_posix(),
++                "verdict_class": artifact["verdict_class"],
++                "dispositions": {
++                    "selective_arbiter": artifact["selective_arbiter_disposition"]["disposition"],
++                    "verified_route_memory": artifact["verified_route_memory_disposition"][
++                        "disposition"
++                    ],
++                    "live_arc": artifact["live_arc_disposition"]["disposition"],
++                },
++            },
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6823_v595_branch_disposition.json b/results/experiment_6823_v595_branch_disposition.json
+new file mode 100644
+index 0000000000..836e3f7c07
+--- /dev/null
++++ b/results/experiment_6823_v595_branch_disposition.json
+@@ -0,0 +1,1395 @@
++{
++  "adversarial_findings": [
++    {
++      "detail": "duration_s=0.02710077300434932 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "task_id": "exp6810",
++      "validator": "adversarial"
++    },
++    {
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "task_id": "exp6810",
++      "validator": "adversarial"
++    },
++    {
++      "detail": "inference_substrate='deterministic CPU automaton, no LLM' matches no duration-floor recognizer, so duration_s=1.480705920024775 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one.",
++      "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
++      "severity": "warn",
++      "task_id": "exp6811",
++      "validator": "adversarial"
++    }
++  ],
++  "contract_owner_map": {
++    "exact priority arbiter": {
++      "artifact_path": "results/experiment_6813_selective_priority_arbiter_ab.json",
++      "authority_boundary": "transition evaluator remains authoritative.",
++      "failure_behavior": "complete_blocked_selective_priority_arbiter_ab",
++      "gate_field": "selective_arbiter_ab_completed",
++      "implementing_task": "exp6813-selective-priority-arbiter-ab",
++      "requirement": "REQ-CONSTRAINT-6810",
++      "spec_path": "openspec/capabilities/constraint-verification/spec.md"
++    },
++    "live stepwise strategy path": {
++      "artifact_path": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++      "authority_boundary": "Exact next-action outcomes",
++      "failure_behavior": "complete_blocked_arc_stepwise_strategy_accrual",
++      "gate_field": "stepwise_strategy_accrual_ready",
++      "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
++      "requirement": "REQ-AGENTIC-6810-2",
++      "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++    },
++    "operational-obligation interface": {
++      "artifact_path": "results/experiment_6811_operational_obligation_automaton_v3.json",
++      "authority_boundary": "The exact post-action receipts remain",
++      "failure_behavior": "complete_blocked_operational_obligation_automaton_v3",
++      "gate_field": "operational_automaton_fixture_ready",
++      "implementing_task": "exp6811-operational-obligation-automaton-v3",
++      "requirement": "REQ-AGENTIC-6810-1",
++      "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++    },
++    "transactional verified memory": {
++      "artifact_path": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++      "authority_boundary": "The exact local receipt remains authoritative.",
++      "failure_behavior": "complete_blocked_residual_pressure_route_learning_ab",
++      "gate_field": "residual_route_learning_completed",
++      "implementing_task": "exp6816-residual-pressure-route-learning-ab",
++      "requirement": "REQ-CL-6810",
++      "spec_path": "openspec/capabilities/continuous-learning/spec.md"
++    }
++  },
++  "disposition_enum": [
++    "adopt",
++    "narrow",
++    "retire",
++    "blocked"
++  ],
++  "duration_s": 0.947960504970979,
++  "field_principles": {
++    "adversarial_findings": "Validator findings remain visible and cannot be laundered away.",
++    "contract_owner_map": "Existing specifications keep authority with the contract that owns it.",
++    "disposition_enum": "A closed decision set prevents an ambiguous branch outcome.",
++    "duration_s": "Measured wall time distinguishes a real audit from an invented duration.",
++    "field_principles": "Each field explains why it exists, so schema compliance remains meaningful.",
++    "gate_check_summary": "Expected and observed values make incomplete evidence diagnosable.",
++    "honest_verdict": "A terminal and bounded sentence states what the available evidence supports.",
++    "inference_substrate": "The substrate proves that this task only aggregates checked-in evidence.",
++    "live_arc_disposition": "Live progress receives a decision independent of transport readiness.",
++    "manifest_comparison": "Design differences remain explicit even though this synthesis is ungated.",
++    "random_seed": "A fixed audit seed makes any ordered reduction repeatable.",
++    "reproducibility_checksum": "One checksum binds the inputs, rows, commands, and output.",
++    "roadmap_identity": "The milestone and range prevent evidence from another plan entering this audit.",
++    "row_recomputed_claims": "Headlines come from eligible source rows instead of copied prose.",
++    "rows": "Task and branch rows let a reader audit every inclusion and decision.",
++    "selective_arbiter_disposition": "The arbiter receives a decision independent of memory and ARC.",
++    "solve_claim": "False prevents this synthesis from becoming a game-level solve claim.",
++    "source_artifact_hashes": "Exact hashes stop later file changes from silently changing this disposition.",
++    "task_count": "The fixed count prevents a missing task from disappearing from the denominator.",
++    "terminal_class_counts": "Separate counts prevent blocked or flagged work from becoming success.",
++    "verdict_class": "The closed class states the evidence limit of the synthesis itself.",
++    "verified_route_memory_disposition": "Memory causality and portability receive their own decision.",
++    "verifier_is_oracle": "False keeps exact environment outcomes as the correctness authority."
++  },
++  "gate_check_summary": [
++    {
++      "check": "eligible_terminal_evidence",
++      "expected": "positive or null clean terminal evidence",
++      "observed": "flagged",
++      "task_id": "exp6810"
++    },
++    {
++      "check": "eligible_terminal_evidence",
++      "expected": "positive or null clean terminal evidence",
++      "observed": "flagged",
++      "task_id": "exp6811"
++    },
++    {
++      "check": "exp6814.exact_terminal_artifact",
++      "expected": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
++      "observed": "file_missing",
++      "task_id": "exp6814"
++    },
++    {
++      "check": "exp6815.exact_terminal_artifact",
++      "expected": "results/experiment_6815_verified_memory_operation_stream.json",
++      "observed": "file_missing",
++      "task_id": "exp6815"
++    },
++    {
++      "check": "exp6816.exact_terminal_artifact",
++      "expected": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++      "observed": "file_missing",
++      "task_id": "exp6816"
++    },
++    {
++      "check": "exp6817.exact_terminal_artifact",
++      "expected": "results/experiment_6817_route_memory_portability.json",
++      "observed": "file_missing",
++      "task_id": "exp6817"
++    },
++    {
++      "check": "exp6818.exact_terminal_artifact",
++      "expected": "results/experiment_6818_route_memory_global_cold_audit.json",
++      "observed": "file_missing",
++      "task_id": "exp6818"
++    },
++    {
++      "check": "exp6819.exact_terminal_artifact",
++      "expected": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++      "observed": "file_missing",
++      "task_id": "exp6819"
++    },
++    {
++      "check": "exp6820.exact_terminal_artifact",
++      "expected": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++      "observed": "file_missing",
++      "task_id": "exp6820"
++    },
++    {
++      "check": "exp6821.exact_terminal_artifact",
++      "expected": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
++      "observed": "file_missing",
++      "task_id": "exp6821"
++    },
++    {
++      "check": "exp6822.exact_terminal_artifact",
++      "expected": "results/experiment_6822_arc_causal_adoption_audit.json",
++      "observed": "file_missing",
++      "task_id": "exp6822"
++    }
++  ],
++  "honest_verdict": "complete_partial: V595 preserved every available terminal row; one or more branches remain blocked by named missing or excluded independent evidence.",
++  "inference_substrate": "CPU aggregation from upstream artifacts, no LLM",
++  "live_arc_disposition": {
++    "branch": "live_arc",
++    "disposition": "blocked",
++    "failed_checks": [
++      {
++        "check": "live_arc.exp6819.eligible_terminal_evidence",
++        "expected": "eligible positive or null terminal evidence",
++        "observed": "missing"
++      },
++      {
++        "check": "live_arc.exp6820.eligible_terminal_evidence",
++        "expected": "eligible positive or null terminal evidence",
++        "observed": "missing"
++      },
++      {
++        "check": "live_arc.exp6821.eligible_terminal_evidence",
++        "expected": "eligible positive or null terminal evidence",
++        "observed": "missing"
++      },
++      {
++        "check": "live_arc.exp6822.eligible_terminal_evidence",
++        "expected": "eligible positive or null terminal evidence",
++        "observed": "missing"
++      }
++    ],
++    "independent_cold_audit_required": true,
++    "next_action": "Keep the branch blocked until the named terminal evidence exists.",
++    "positive_gate_recomputed": false,
++    "required_tasks": [
++      "exp6819",
++      "exp6820",
++      "exp6821",
++      "exp6822"
++    ],
++    "source_verdict_classes": [
++      "missing",
++      "missing",
++      "missing",
++      "missing"
++    ]
++  },
++  "manifest_comparison": {
++    "deliverables": [
++      {
++        "design": "results/experiment_6810_v595_contract_manifest_preflight.json",
++        "executed": "results/experiment_6810_v595_contract_manifest_preflight.json",
++        "expected": "results/experiment_6810_v595_contract_manifest_preflight.json",
++        "matches": true,
++        "task_id": "exp6810"
++      },
++      {
++        "design": "results/experiment_6811_operational_obligation_automaton_v3.json",
++        "executed": "results/experiment_6811_operational_obligation_automaton_v3.json",
++        "expected": "results/experiment_6811_operational_obligation_automaton_v3.json",
++        "matches": true,
++        "task_id": "exp6811"
++      },
++      {
++        "design": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
++        "executed": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
++        "expected": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
++        "matches": true,
++        "task_id": "exp6812"
++      },
++      {
++        "design": "results/experiment_6813_selective_priority_arbiter_ab.json",
++        "executed": "results/experiment_6813_selective_priority_arbiter_ab.json",
++        "expected": "results/experiment_6813_selective_priority_arbiter_ab.json",
++        "matches": true,
++        "task_id": "exp6813"
++      },
++      {
++        "design": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
++        "executed": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
++        "expected": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
++        "matches": true,
++        "task_id": "exp6814"
++      },
++      {
++        "design": "results/experiment_6815_verified_memory_operation_stream.json",
++        "executed": "results/experiment_6815_verified_memory_operation_stream.json",
++        "expected": "results/experiment_6815_verified_memory_operation_stream.json",
++        "matches": true,
++        "task_id": "exp6815"
++      },
++      {
++        "design": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++        "executed": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++        "expected": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++        "matches": true,
++        "task_id": "exp6816"
++      },
++      {
++        "design": "results/experiment_6817_route_memory_portability.json",
++        "executed": "results/experiment_6817_route_memory_portability.json",
++        "expected": "results/experiment_6817_route_memory_portability.json",
++        "matches": true,
++        "task_id": "exp6817"
++      },
++      {
++        "design": "results/experiment_6818_route_memory_global_cold_audit.json",
++        "executed": "results/experiment_6818_route_memory_global_cold_audit.json",
++        "expected": "results/experiment_6818_route_memory_global_cold_audit.json",
++        "matches": true,
++        "task_id": "exp6818"
++      },
++      {
++        "design": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++        "executed": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++        "expected": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++        "matches": true,
++        "task_id": "exp6819"
++      },
++      {
++        "design": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++        "executed": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++        "expected": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++        "matches": true,
++        "task_id": "exp6820"
++      },
++      {
++        "design": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
++        "executed": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
++        "expected": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
++        "matches": true,
++        "task_id": "exp6821"
++      },
++      {
++        "design": "results/experiment_6822_arc_causal_adoption_audit.json",
++        "executed": "results/experiment_6822_arc_causal_adoption_audit.json",
++        "expected": "results/experiment_6822_arc_causal_adoption_audit.json",
++        "matches": true,
++        "task_id": "exp6822"
++      },
++      {
++        "design": "results/experiment_6823_v595_branch_disposition.json",
++        "executed": "results/experiment_6823_v595_branch_disposition.json",
++        "expected": "results/experiment_6823_v595_branch_disposition.json",
++        "matches": true,
++        "task_id": "exp6823"
++      }
++    ],
++    "design_phase_count": 4,
++    "design_task_count": 14,
++    "differences": [],
++    "executed_task_count": 14,
++    "gates": [
++      {
++        "executed": [],
++        "expected": [],
++        "matches": true,
++        "task_id": "exp6810"
++      },
++      {
++        "executed": [
++          [
++            "exp6810",
++            "v595_contract_map_ready"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6810",
++            "v595_contract_map_ready"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6811"
++      },
++      {
++        "executed": [
++          [
++            "exp6811",
++            "operational_automaton_fixture_ready"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6811",
++            "operational_automaton_fixture_ready"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6812"
++      },
++      {
++        "executed": [
++          [
++            "exp6812",
++            "operational_handoff_corpus_ready"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6812",
++            "operational_handoff_corpus_ready"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6813"
++      },
++      {
++        "executed": [
++          [
++            "exp6813",
++            "selective_arbiter_ab_completed"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6813",
++            "selective_arbiter_ab_completed"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6814"
++      },
++      {
++        "executed": [
++          [
++            "exp6812",
++            "operational_handoff_corpus_ready"
++          ],
++          [
++            "exp6814",
++            "selective_arbiter_audit_completed"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6812",
++            "operational_handoff_corpus_ready"
++          ],
++          [
++            "exp6814",
++            "selective_arbiter_audit_completed"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6815"
++      },
++      {
++        "executed": [
++          [
++            "exp6815",
++            "verified_memory_stream_ready"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6815",
++            "verified_memory_stream_ready"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6816"
++      },
++      {
++        "executed": [
++          [
++            "exp6816",
++            "residual_route_learning_completed"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6816",
++            "residual_route_learning_completed"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6817"
++      },
++      {
++        "executed": [
++          [
++            "exp6816",
++            "residual_route_learning_completed"
++          ],
++          [
++            "exp6817",
++            "route_memory_portability_completed"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6816",
++            "residual_route_learning_completed"
++          ],
++          [
++            "exp6817",
++            "route_memory_portability_completed"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6818"
++      },
++      {
++        "executed": [
++          [
++            "exp6811",
++            "operational_automaton_fixture_ready"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6811",
++            "operational_automaton_fixture_ready"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6819"
++      },
++      {
++        "executed": [
++          [
++            "exp6819",
++            "stepwise_strategy_accrual_ready"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6819",
++            "stepwise_strategy_accrual_ready"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6820"
++      },
++      {
++        "executed": [
++          [
++            "exp6820",
++            "tool_gap_obligation_transport_ready"
++          ],
++          [
++            "exp6814",
++            "selective_arbiter_audit_completed"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6820",
++            "tool_gap_obligation_transport_ready"
++          ],
++          [
++            "exp6814",
++            "selective_arbiter_audit_completed"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6821"
++      },
++      {
++        "executed": [
++          [
++            "exp6819",
++            "stepwise_strategy_accrual_ready"
++          ],
++          [
++            "exp6820",
++            "tool_gap_obligation_transport_ready"
++          ],
++          [
++            "exp6821",
++            "actions_to_progress_ab_completed"
++          ]
++        ],
++        "expected": [
++          [
++            "exp6819",
++            "stepwise_strategy_accrual_ready"
++          ],
++          [
++            "exp6820",
++            "tool_gap_obligation_transport_ready"
++          ],
++          [
++            "exp6821",
++            "actions_to_progress_ab_completed"
++          ]
++        ],
++        "matches": true,
++        "task_id": "exp6822"
++      },
++      {
++        "executed": [],
++        "expected": [],
++        "matches": true,
++        "task_id": "exp6823"
++      }
++    ],
++    "matches": true,
++    "models": [
++      {
++        "agent_model": "opus",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6810"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6811"
++      },
++      {
++        "agent_model": "opus",
++        "executed_prompt_models": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF"
++        ],
++        "expected_research_models": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF",
++          "unsloth/gemma-4-26B-A4B-it-GGUF",
++          "unsloth/gemma-4-31B-it-GGUF"
++        ],
++        "matches": true,
++        "task_id": "exp6812"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6813"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6814"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6815"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6816"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6817"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6818"
++      },
++      {
++        "agent_model": "opus",
++        "executed_prompt_models": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "expected_research_models": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "matches": true,
++        "task_id": "exp6819"
++      },
++      {
++        "agent_model": "opus",
++        "executed_prompt_models": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "expected_research_models": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "matches": true,
++        "task_id": "exp6820"
++      },
++      {
++        "agent_model": "opus",
++        "executed_prompt_models": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "expected_research_models": [
++          "unsloth/Qwen3.6-35B-A3B-GGUF"
++        ],
++        "matches": true,
++        "task_id": "exp6821"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6822"
++      },
++      {
++        "agent_model": "gpt-5.6-sol",
++        "executed_prompt_models": [],
++        "expected_research_models": [],
++        "matches": true,
++        "task_id": "exp6823"
++      }
++    ],
++    "owned_req_map_expected": {
++      "exact priority arbiter": {
++        "gate_field": "selective_arbiter_ab_completed",
++        "implementing_task": "exp6813-selective-priority-arbiter-ab",
++        "requirement": "REQ-CONSTRAINT-6810",
++        "spec_path": "openspec/capabilities/constraint-verification/spec.md"
++      },
++      "live stepwise strategy path": {
++        "gate_field": "stepwise_strategy_accrual_ready",
++        "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
++        "requirement": "REQ-AGENTIC-6810-2",
++        "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++      },
++      "operational-obligation interface": {
++        "gate_field": "operational_automaton_fixture_ready",
++        "implementing_task": "exp6811-operational-obligation-automaton-v3",
++        "requirement": "REQ-AGENTIC-6810-1",
++        "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++      },
++      "transactional verified memory": {
++        "gate_field": "residual_route_learning_completed",
++        "implementing_task": "exp6816-residual-pressure-route-learning-ab",
++        "requirement": "REQ-CL-6810",
++        "spec_path": "openspec/capabilities/continuous-learning/spec.md"
++      }
++    },
++    "owned_req_map_observed": {
++      "exact priority arbiter": {
++        "artifact_path": "results/experiment_6813_selective_priority_arbiter_ab.json",
++        "authority_boundary": "transition evaluator remains authoritative.",
++        "failure_behavior": "complete_blocked_selective_priority_arbiter_ab",
++        "gate_field": "selective_arbiter_ab_completed",
++        "implementing_task": "exp6813-selective-priority-arbiter-ab",
++        "requirement": "REQ-CONSTRAINT-6810",
++        "spec_path": "openspec/capabilities/constraint-verification/spec.md"
++      },
++      "live stepwise strategy path": {
++        "artifact_path": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++        "authority_boundary": "Exact next-action outcomes",
++        "failure_behavior": "complete_blocked_arc_stepwise_strategy_accrual",
++        "gate_field": "stepwise_strategy_accrual_ready",
++        "implementing_task": "exp6819-arc-stepwise-strategy-accrual",
++        "requirement": "REQ-AGENTIC-6810-2",
++        "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++      },
++      "operational-obligation interface": {
++        "artifact_path": "results/experiment_6811_operational_obligation_automaton_v3.json",
++        "authority_boundary": "The exact post-action receipts remain",
++        "failure_behavior": "complete_blocked_operational_obligation_automaton_v3",
++        "gate_field": "operational_automaton_fixture_ready",
++        "implementing_task": "exp6811-operational-obligation-automaton-v3",
++        "requirement": "REQ-AGENTIC-6810-1",
++        "spec_path": "openspec/capabilities/agentic-harness/spec.md"
++      },
++      "transactional verified memory": {
++        "artifact_path": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++        "authority_boundary": "The exact local receipt remains authoritative.",
++        "failure_behavior": "complete_blocked_residual_pressure_route_learning_ab",
++        "gate_field": "residual_route_learning_completed",
++        "implementing_task": "exp6816-residual-pressure-route-learning-ab",
++        "requirement": "REQ-CL-6810",
++        "spec_path": "openspec/capabilities/continuous-learning/spec.md"
++      }
++    }
++  },
++  "random_seed": 6823,
++  "reproducibility_checksum": "sha256:f00095ee5c6d8b5aef5890fea9c5bd2aa9c7419b5a23d528a68817e4ee71d832",
++  "roadmap_identity": {
++    "design_sha256": "sha256:4cf6f23dc1b36689122515835d8af69be80653430b6f2144db1071f6cb2c4f62",
++    "executed_roadmap_sha256": "sha256:cc0f206d5f367e49d1cca2b2282c3d8194968e03cb6341c35cb62e44a72b9ba8",
++    "execution_date": "20260831",
++    "first_experiment": 6810,
++    "last_experiment": 6823,
++    "milestone": "2026.08.595"
++  },
++  "row_recomputed_claims": {
++    "live_arc": {
++      "hard_safety": {
++        "false_intervention_count": 0,
++        "hard_violation_count": 0
++      },
++      "positive_gate": false,
++      "progress": {
++        "cause": "no_eligible_paired_rows",
++        "control_minus_treatment_actions": null,
++        "eligible_row_count": 0,
++        "pair_count": 0
++      },
++      "solve_claim": false,
++      "transport": {
++        "eligible_row_count": 0,
++        "ready": null
++      }
++    },
++    "selective_arbiter": {
++      "eligible_row_count": 288,
++      "false_intervention": {
++        "flat_reject_retry": {
++          "denominator": 28,
++          "numerator": 18,
++          "rate": 0.6428571428571429
++        },
++        "selective_priority": {
++          "denominator": 28,
++          "numerator": 0,
++          "rate": 0.0
++        }
++      },
++      "hard_safety": {
++        "flat_reject_retry": {
++          "denominator": 144,
++          "numerator": 0,
++          "rate": 0.0
++        },
++        "selective_priority": {
++          "denominator": 144,
++          "numerator": 0,
++          "rate": 0.0
++        }
++      },
++      "harmful_selection": {
++        "flat_reject_retry": {
++          "denominator": 144,
++          "numerator": 0,
++          "rate": 0.0
++        },
++        "selective_priority": {
++          "denominator": 144,
++          "numerator": 0,
++          "rate": 0.0
++        }
++      },
++      "positive_gate": true,
++      "utility": {
++        "accepted_progress_by_arm": {
++          "flat_reject_retry": 0.06944444444444445,
++          "selective_priority": 0.19444444444444445
++        },
++        "flat_minus_selective_retry_delta": {
++          "cause": null,
++          "mean": 0.125,
++          "pair_count": 144
++        },
++        "paired_progress_delta": {
++          "cause": null,
++          "mean": 0.125,
++          "pair_count": 144
++        },
++        "retry_cost_by_arm": {
++          "flat_reject_retry": 0.9305555555555556,
++          "selective_priority": 0.8055555555555556
++        }
++      }
++    },
++    "verified_route_memory": {
++      "causality": {
++        "credited_writes": 0
++      },
++      "eligible_row_count": 0,
++      "portability": {
++        "eligible_row_count": 0,
++        "mean_by_arm": {},
++        "residual_minus_frozen": null
++      },
++      "positive_gate": false,
++      "safety": {
++        "fields": [
++          "support_harm",
++          "retention_harm",
++          "hard_case_harm"
++        ],
++        "harm_count": 0
++      },
++      "utility": {
++        "mean_by_arm": {},
++        "residual_minus_frozen": null
++      }
++    }
++  },
++  "rows": [
++    {
++      "adversarial_report": {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6810_v595_contract_manifest_preflight.json",
++        "exp_id": "experiment_6810_v595_contract_manifest_preflight",
++        "flag_count": 2,
++        "flags": [
++          {
++            "detail": "duration_s=0.02710077300434932 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++            "kind": "DURATION_TOO_SHORT",
++            "severity": "critical"
++          },
++          {
++            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
++            "kind": "METHODOLOGY_MISSING",
++            "severity": "warn"
++          }
++        ],
++        "gate_version": "43342df44fda3e22fbbfe67a9098637ae35dcfc98308d2d1834cc37754212541",
++        "honest_verdict": "complete: V595 owned contracts and active execution manifest agree",
++        "loaded": true,
++        "max_severity": 2,
++        "title": ""
++      },
++      "artifact_state": "present",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=flagged",
++      "gate_check_summary": [],
++      "manifest_task_id": "exp6810-v595-contract-manifest-preflight",
++      "path": "results/experiment_6810_v595_contract_manifest_preflight.json",
++      "row_type": "task",
++      "row_verdict_report": {
++        "findings": [],
++        "status": "ok"
++      },
++      "source_row_count": 18,
++      "source_sha256": "sha256:f3a6b52a526123ad59d69eb9398fbe11278fd7e6798bed06f71e33887ea19687",
++      "source_verdict_class": "null",
++      "task_id": "exp6810",
++      "terminal_class": "flagged"
++    },
++    {
++      "adversarial_report": {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6811_operational_obligation_automaton_v3.json",
++        "exp_id": "experiment_6811_operational_obligation_automaton_v3",
++        "flag_count": 1,
++        "flags": [
++          {
++            "detail": "inference_substrate='deterministic CPU automaton, no LLM' matches no duration-floor recognizer, so duration_s=1.480705920024775 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one.",
++            "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
++            "severity": "warn"
++          }
++        ],
++        "gate_version": "43342df44fda3e22fbbfe67a9098637ae35dcfc98308d2d1834cc37754212541",
++        "honest_verdict": "complete: deterministic source-free operational-obligation fixture ready; no liv",
++        "loaded": true,
++        "max_severity": 1,
++        "title": ""
++      },
++      "artifact_state": "present",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=flagged",
++      "gate_check_summary": [],
++      "manifest_task_id": "exp6811-operational-obligation-automaton-v3",
++      "path": "results/experiment_6811_operational_obligation_automaton_v3.json",
++      "row_type": "task",
++      "row_verdict_report": {
++        "findings": [],
++        "status": "ok"
++      },
++      "source_row_count": 1289,
++      "source_sha256": "sha256:8e776a3eb887cb0565af6ba0970c84ab54e2a196f4d1b738515071f8e7b3922f",
++      "source_verdict_class": "null",
++      "task_id": "exp6811",
++      "terminal_class": "flagged"
++    },
++    {
++      "adversarial_report": {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6812_sota_operational_handoff_corpus_v2.json",
++        "exp_id": "6812",
++        "flag_count": 0,
++        "flags": [],
++        "gate_version": "43342df44fda3e22fbbfe67a9098637ae35dcfc98308d2d1834cc37754212541",
++        "honest_verdict": "complete: all 576 authentic rows are ready; direct typed preservation exceeds co",
++        "loaded": true,
++        "max_severity": -1,
++        "title": "SOTA operational handoff corpus v2"
++      },
++      "artifact_state": "present",
++      "eligible_for_positive_claim": true,
++      "exclusion_reason": null,
++      "gate_check_summary": [],
++      "manifest_task_id": "exp6812-sota-operational-handoff-corpus-v2",
++      "path": "results/experiment_6812_sota_operational_handoff_corpus_v2.json",
++      "row_type": "task",
++      "row_verdict_report": {
++        "findings": [],
++        "status": "ok"
++      },
++      "source_row_count": 576,
++      "source_sha256": "sha256:a830b416ef9243d7175a634effa8dd7b742642c90c3c2b89081d677a9b82d6ea",
++      "source_verdict_class": "positive",
++      "task_id": "exp6812",
++      "terminal_class": "positive"
++    },
++    {
++      "adversarial_report": {
++        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6813_selective_priority_arbiter_ab.json",
++        "exp_id": "6813",
++        "flag_count": 0,
++        "flags": [],
++        "gate_version": "43342df44fda3e22fbbfe67a9098637ae35dcfc98308d2d1834cc37754212541",
++        "honest_verdict": "complete: selective priority positive gate passed on held exact replay",
++        "loaded": true,
++        "max_severity": -1,
++        "title": "Selective priority arbiter A/B"
++      },
++      "artifact_state": "present",
++      "eligible_for_positive_claim": true,
++      "exclusion_reason": null,
++      "gate_check_summary": [],
++      "manifest_task_id": "exp6813-selective-priority-arbiter-ab",
++      "path": "results/experiment_6813_selective_priority_arbiter_ab.json",
++      "row_type": "task",
++      "row_verdict_report": {
++        "findings": [],
++        "status": "ok"
++      },
++      "source_row_count": 576,
++      "source_sha256": "sha256:57428383446edd81252cb04e02620d4ddf5451cf85bc69d31ab0ce789d8804cf",
++      "source_verdict_class": "positive",
++      "task_id": "exp6813",
++      "terminal_class": "positive"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6814.exact_terminal_artifact",
++          "expected": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6814-selective-priority-arbiter-cold-audit",
++      "path": "results/experiment_6814_selective_priority_arbiter_cold_audit.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6814",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6815.exact_terminal_artifact",
++          "expected": "results/experiment_6815_verified_memory_operation_stream.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6815-verified-memory-operation-stream",
++      "path": "results/experiment_6815_verified_memory_operation_stream.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6815",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6816.exact_terminal_artifact",
++          "expected": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6816-residual-pressure-route-learning-ab",
++      "path": "results/experiment_6816_residual_pressure_route_learning_ab.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6816",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6817.exact_terminal_artifact",
++          "expected": "results/experiment_6817_route_memory_portability.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6817-route-memory-portability",
++      "path": "results/experiment_6817_route_memory_portability.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6817",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6818.exact_terminal_artifact",
++          "expected": "results/experiment_6818_route_memory_global_cold_audit.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6818-route-memory-global-cold-audit",
++      "path": "results/experiment_6818_route_memory_global_cold_audit.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6818",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6819.exact_terminal_artifact",
++          "expected": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6819-arc-stepwise-strategy-accrual",
++      "path": "results/experiment_6819_arc_stepwise_strategy_accrual.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6819",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6820.exact_terminal_artifact",
++          "expected": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6820-arc-tool-gap-obligation-transport-v2",
++      "path": "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6820",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6821.exact_terminal_artifact",
++          "expected": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6821-arc-obligation-actions-to-progress-ab-v2",
++      "path": "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6821",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "missing",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=missing",
++      "gate_check_summary": [
++        {
++          "check": "exp6822.exact_terminal_artifact",
++          "expected": "results/experiment_6822_arc_causal_adoption_audit.json",
++          "observed": "file_missing"
++        }
++      ],
++      "manifest_task_id": "exp6822-arc-causal-adoption-audit",
++      "path": "results/experiment_6822_arc_causal_adoption_audit.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "missing",
++      "task_id": "exp6822",
++      "terminal_class": "missing"
++    },
++    {
++      "adversarial_report": null,
++      "artifact_state": "current_synthesis",
++      "eligible_for_positive_claim": false,
++      "exclusion_reason": "terminal_class=current_synthesis",
++      "gate_check_summary": [],
++      "manifest_task_id": "exp6823-v595-branch-disposition",
++      "path": "results/experiment_6823_v595_branch_disposition.json",
++      "row_type": "task",
++      "row_verdict_report": null,
++      "source_row_count": 0,
++      "source_sha256": null,
++      "source_verdict_class": "partial",
++      "task_id": "exp6823",
++      "terminal_class": "current_synthesis"
++    },
++    {
++      "branch": "selective_arbiter",
++      "disposition": "blocked",
++      "failed_checks": [
++        {
++          "check": "selective_arbiter.exp6814.eligible_terminal_evidence",
++          "expected": "eligible positive or null terminal evidence",
++          "observed": "missing"
++        }
++      ],
++      "independent_cold_audit_required": true,
++      "next_action": "Keep the branch blocked until the named terminal evidence exists.",
++      "positive_gate_recomputed": true,
++      "required_tasks": [
++        "exp6813",
++        "exp6814"
++      ],
++      "row_type": "branch",
++      "source_verdict_classes": [
++        "positive",
++        "missing"
++      ]
++    },
++    {
++      "branch": "verified_route_memory",
++      "disposition": "blocked",
++      "failed_checks": [
++        {
++          "check": "verified_route_memory.exp6816.eligible_terminal_evidence",
++          "expected": "eligible positive or null terminal evidence",
++          "observed": "missing"
++        },
++        {
++          "check": "verified_route_memory.exp6817.eligible_terminal_evidence",
++          "expected": "eligible positive or null terminal evidence",
++          "observed": "missing"
++        },
++        {
++          "check": "verified_route_memory.exp6818.eligible_terminal_evidence",
++          "expected": "eligible positive or null terminal evidence",
++          "observed": "missing"
++        }
++      ],
++      "independent_cold_audit_required": true,
++      "next_action": "Keep the branch blocked until the named terminal evidence exists.",
++      "positive_gate_recomputed": false,
++      "required_tasks": [
++        "exp6816",
++        "exp6817",
++        "exp6818"
++      ],
++      "row_type": "branch",
++      "source_verdict_classes": [
++        "missing",
++        "missing",
++        "missing"
++      ]
++    },
++    {
++      "branch": "live_arc",
++      "disposition": "blocked",
++      "failed_checks": [
++        {
++          "check": "live_arc.exp6819.eligible_terminal_evidence",
++          "expected": "eligible positive or null terminal evidence",
++          "observed": "missing"
++        },
++        {
++          "check": "live_arc.exp6820.eligible_terminal_evidence",
++          "expected": "eligible positive or null terminal evidence",
++          "observed": "missing"
++        },
++        {
++          "check": "live_arc.exp6821.eligible_terminal_evidence",
++          "expected": "eligible positive or null terminal evidence",
++          "observed": "missing"
++        },
++        {
++          "check": "live_arc.exp6822.eligible_terminal_evidence",
++          "expected": "eligible positive or null terminal evidence",
++          "observed": "missing"
++        }
++      ],
++      "independent_cold_audit_required": true,
++      "next_action": "Keep the branch blocked until the named terminal evidence exists.",
++      "positive_gate_recomputed": false,
++      "required_tasks": [
++        "exp6819",
++        "exp6820",
++        "exp6821",
++        "exp6822"
++      ],
++      "row_type": "branch",
++      "source_verdict_classes": [
++        "missing",
++        "missing",
++        "missing",
++        "missing"
++      ]
++    }
++  ],
++  "selective_arbiter_disposition": {
++    "branch": "selective_arbiter",
++    "disposition": "blocked",
++    "failed_checks": [
++      {
++        "check": "selective_arbiter.exp6814.eligible_terminal_evidence",
++        "expected": "eligible positive or null terminal evidence",
++        "observed": "missing"
++      }
++    ],
++    "independent_cold_audit_required": true,
++    "next_action": "Keep the branch blocked until the named terminal evidence exists.",
++    "positive_gate_recomputed": true,
++    "required_tasks": [
++      "exp6813",
++      "exp6814"
++    ],
++    "source_verdict_classes": [
++      "positive",
++      "missing"
++    ]
++  },
++  "solve_claim": false,
++  "source_artifact_hashes": {
++    "openspec/capabilities/agentic-harness/spec.md": "sha256:e4106b44b0f2303395178f14df7a5fc50b4161415e283d21b9ef2413fbb33953",
++    "openspec/capabilities/constraint-verification/spec.md": "sha256:f0e234aeef0b11f3aed7b80163aa3788500b09b393fb6793de62f9ab63421dff",
++    "openspec/capabilities/continuous-learning/spec.md": "sha256:558b466726118d520da97cedbb22051e3e695421df301cf99eb235d813074b42",
++    "openspec/capabilities/research-reporting/spec.md": "sha256:c2d18102e2e95130c35e391ef297983eaaf3d7442d73957d2eef7d95efa98266",
++    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:4cf6f23dc1b36689122515835d8af69be80653430b6f2144db1071f6cb2c4f62",
++    "research-roadmap.yaml": "sha256:cc0f206d5f367e49d1cca2b2282c3d8194968e03cb6341c35cb62e44a72b9ba8",
++    "results/experiment_6810_v595_contract_manifest_preflight.json": "sha256:f3a6b52a526123ad59d69eb9398fbe11278fd7e6798bed06f71e33887ea19687",
++    "results/experiment_6811_operational_obligation_automaton_v3.json": "sha256:8e776a3eb887cb0565af6ba0970c84ab54e2a196f4d1b738515071f8e7b3922f",
++    "results/experiment_6812_sota_operational_handoff_corpus_v2.json": "sha256:a830b416ef9243d7175a634effa8dd7b742642c90c3c2b89081d677a9b82d6ea",
++    "results/experiment_6813_selective_priority_arbiter_ab.json": "sha256:57428383446edd81252cb04e02620d4ddf5451cf85bc69d31ab0ce789d8804cf",
++    "results/experiment_6814_selective_priority_arbiter_cold_audit.json": null,
++    "results/experiment_6815_verified_memory_operation_stream.json": null,
++    "results/experiment_6816_residual_pressure_route_learning_ab.json": null,
++    "results/experiment_6817_route_memory_portability.json": null,
++    "results/experiment_6818_route_memory_global_cold_audit.json": null,
++    "results/experiment_6819_arc_stepwise_strategy_accrual.json": null,
++    "results/experiment_6820_arc_tool_gap_obligation_transport_v2.json": null,
++    "results/experiment_6821_arc_obligation_actions_to_progress_ab_v2.json": null,
++    "results/experiment_6822_arc_causal_adoption_audit.json": null,
++    "scripts/adversarial_verify.py": "sha256:0ad8258770e60f0173e9cdd1438ebb04a406cabdcc69ad1c971992241ebca6b1",
++    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
++  },
++  "task_count": 14,
++  "terminal_class_counts": {
++    "current_synthesis": 1,
++    "flagged": 2,
++    "missing": 9,
++    "positive": 2
++  },
++  "verdict_class": "partial",
++  "verified_route_memory_disposition": {
++    "branch": "verified_route_memory",
++    "disposition": "blocked",
++    "failed_checks": [
++      {
++        "check": "verified_route_memory.exp6816.eligible_terminal_evidence",
++        "expected": "eligible positive or null terminal evidence",
++        "observed": "missing"
++      },
++      {
++        "check": "verified_route_memory.exp6817.eligible_terminal_evidence",
++        "expected": "eligible positive or null terminal evidence",
++        "observed": "missing"
++      },
++      {
++        "check": "verified_route_memory.exp6818.eligible_terminal_evidence",
++        "expected": "eligible positive or null terminal evidence",
++        "observed": "missing"
++      }
++    ],
++    "independent_cold_audit_required": true,
++    "next_action": "Keep the branch blocked until the named terminal evidence exists.",
++    "positive_gate_recomputed": false,
++    "required_tasks": [
++      "exp6816",
++      "exp6817",
++      "exp6818"
++    ],
++    "source_verdict_classes": [
++      "missing",
++      "missing",
++      "missing"
++    ]
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/scripts/experiments/experiment_6823_v595_branch_disposition.py b/scripts/experiments/experiment_6823_v595_branch_disposition.py
+new file mode 100644
+index 0000000000..a6aed35a02
+--- /dev/null
++++ b/scripts/experiments/experiment_6823_v595_branch_disposition.py
+@@ -0,0 +1,10 @@
++#!/usr/bin/env python3
++"""Run the deterministic V595 branch disposition."""
++
++from __future__ import annotations
++
++from carnot.experiment_6823_v595_branch_disposition import main
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_6823_v595_branch_disposition.py b/tests/python/test_experiment_6823_v595_branch_disposition.py
+new file mode 100644
+index 0000000000..5e80e29cc4
+--- /dev/null
++++ b/tests/python/test_experiment_6823_v595_branch_disposition.py
+@@ -0,0 +1,463 @@
++"""Tests for the V595 terminal branch disposition.
++
++Spec refs: REQ-REPORT-6823 and SCENARIO-REPORT-6823-*.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_6823_v595_branch_disposition as exp
++
++
++REPO = Path(__file__).resolve().parents[2]
++
++
++def _record(
++    verdict: str = "positive",
++    rows: list[dict] | None = None,
++    *,
++    state: str = "present",
++    flagged: bool = False,
++    payload: dict | None = None,
++) -> dict:
++    body = {"verdict_class": verdict, "honest_verdict": f"complete: {verdict}"}
++    body["rows"] = rows or []
++    if payload:
++        body.update(payload)
++    return {
++        "artifact_state": state,
++        "path": "results/source.json",
++        "sha256": "sha256:" + "a" * 64 if state == "present" else None,
++        "payload": body if state == "present" else None,
++        "source_verdict_class": verdict if state == "present" else state,
++        "terminal_class": "flagged" if flagged else verdict if state == "present" else state,
++        "eligible": state == "present" and verdict in {"positive", "null"} and not flagged,
++        "adversarial_report": {"flag_count": 1 if flagged else 0, "flags": []},
++        "row_lint": {"status": "ok", "findings": []},
++        "error": None,
++    }
++
++
++def _records() -> dict[str, dict]:
++    return {task_id: _record(state="missing") for task_id in exp.SOURCE_TASK_IDS}
++
++
++def test_spec_anchor_design_and_manifest_have_fourteen_exact_tasks() -> None:
++    """SCENARIO-REPORT-6823-IDENTITY: design, spec, and roadmap retain all IDs."""
++
++    spec = (REPO / exp.REPORT_SPEC_PATH).read_text(encoding="utf-8")
++    section = spec.split("REQ-REPORT-6823", 1)[1]
++    assert set(exp.REQUIRED_ARTIFACT_FIELDS).issubset(set(section.split("`")))
++    for name in (
++        "SCENARIO-REPORT-6823-IDENTITY",
++        "SCENARIO-REPORT-6823-ELIGIBILITY",
++        "SCENARIO-REPORT-6823-MANIFEST",
++        "SCENARIO-REPORT-6823-DISPOSITION",
++    ):
++        assert name in section
++
++    design = exp.parse_design((REPO / exp.DESIGN_PATH).read_text(encoding="utf-8"))
++    manifest = exp.load_manifest(REPO)
++    assert design["phase_count"] == 4
++    assert [row["task_id"] for row in design["tasks"]] == list(exp.TASK_IDS)
++    assert [row["task_id"] for row in manifest] == list(exp.TASK_IDS)
++    assert exp.compare_manifest(design, manifest, exp.CONTRACT_OWNER_MAP)["differences"] == []
++
++
++def test_source_loader_preserves_terminal_missing_malformed_and_current(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6823-IDENTITY: each exact path keeps its source state."""
++
++    (tmp_path / "results").mkdir()
++    good = tmp_path / exp.TASK_PATHS["exp6810"]
++    good.write_text(
++        json.dumps({"verdict_class": "null", "honest_verdict": "complete: fixture", "rows": []}),
++        encoding="utf-8",
++    )
++    (tmp_path / exp.TASK_PATHS["exp6811"]).write_text("[]", encoding="utf-8")
++    blocked = tmp_path / exp.TASK_PATHS["exp6813"]
++    blocked.write_text(
++        json.dumps(
++            {
++                "verdict_class": "blocked",
++                "honest_verdict": "complete_blocked: fixture",
++                "gate_check_summary": [
++                    {"check": "resource", "expected": "ready", "observed": "missing"}
++                ],
++                "rows": [],
++            }
++        ),
++        encoding="utf-8",
++    )
++    loaded = exp.load_source_artifacts(tmp_path)
++    assert loaded["exp6810"]["terminal_class"] == "null"
++    assert loaded["exp6811"]["terminal_class"] == "malformed"
++    assert loaded["exp6812"]["terminal_class"] == "missing"
++    assert loaded["exp6813"]["terminal_class"] == "blocked"
++    assert loaded["exp6823"]["terminal_class"] == "current_synthesis"
++    assert loaded["exp6813"]["gate_check_summary"][0]["observed"] == "missing"
++
++
++def test_source_hashes_cover_design_roadmap_specs_validators_and_artifacts(tmp_path: Path) -> None:
++    """REQ-REPORT-6823: every owned input path has a hash or explicit absence."""
++
++    for relative in (*exp.OWNED_INPUT_PATHS, exp.TASK_PATHS["exp6810"]):
++        path = tmp_path / relative
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(relative.as_posix(), encoding="utf-8")
++    hashes = exp.collect_source_hashes(tmp_path)
++    expected = {path.as_posix() for path in exp.OWNED_INPUT_PATHS}
++    expected.update(exp.TASK_PATHS[task].as_posix() for task in exp.SOURCE_TASK_IDS)
++    assert set(hashes) == expected
++    assert hashes[exp.TASK_PATHS["exp6810"].as_posix()].startswith("sha256:")
++    assert hashes[exp.TASK_PATHS["exp6812"].as_posix()] is None
++
++
++def test_validators_flag_and_exclude_evidence_without_erasing_it(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6823-ELIGIBILITY: flagged evidence stays visible and excluded."""
++
++    records = _records()
++    source = tmp_path / "results/source.json"
++    source.parent.mkdir()
++    source.write_text("{}", encoding="utf-8")
++    records["exp6813"] = _record(rows=[{"arm": "selective_priority"}])
++    records["exp6813"]["path"] = "results/source.json"
++
++    def adversarial(_path: Path) -> dict:
++        return {"flag_count": 1, "flags": [{"kind": "TEST_FLAG", "severity": "warn"}]}
++
++    def row_lint(_path: Path) -> tuple[str, list[str]]:
++        return "findings", ["TEST_ROW_FINDING"]
++
++    findings = exp.apply_validators(tmp_path, records, adversarial, row_lint)
++    assert records["exp6813"]["terminal_class"] == "flagged"
++    assert records["exp6813"]["eligible"] is False
++    assert {row["validator"] for row in findings} == {"adversarial", "row_verdict"}
++    assert records["exp6813"]["payload"]["rows"] == [{"arm": "selective_priority"}]
++
++
++def test_selective_reducer_uses_held_rows_and_keeps_safety_separate() -> None:
++    """SCENARIO-REPORT-6823-ELIGIBILITY: hard safety and utility reduce separately."""
++
++    records = _records()
++    rows = [
++        {
++            "split": "held",
++            "pair_id": "a",
++            "arm": "flat_reject_retry",
++            "accepted_hard_violation": False,
++            "accepted_progress": 0,
++            "retry_count": 1,
++            "false_intervention": True,
++            "base_already_valid": True,
++            "harmful_selection": False,
++        },
++        {
++            "split": "held",
++            "pair_id": "a",
++            "arm": "selective_priority",
++            "accepted_hard_violation": False,
++            "accepted_progress": 1,
++            "retry_count": 0,
++            "false_intervention": False,
++            "base_already_valid": True,
++            "harmful_selection": False,
++        },
++        {
++            "split": "development",
++            "pair_id": "ignored",
++            "arm": "selective_priority",
++            "accepted_hard_violation": True,
++            "accepted_progress": 99,
++            "retry_count": 99,
++        },
++    ]
++    records["exp6813"] = _record(rows=rows)
++    claim = exp.recompute_selective(records)
++    assert claim["eligible_row_count"] == 2
++    assert claim["hard_safety"]["selective_priority"]["rate"] == 0.0
++    assert claim["utility"]["paired_progress_delta"]["mean"] == 1.0
++    assert claim["utility"]["flat_minus_selective_retry_delta"]["mean"] == 1.0
++    assert claim["false_intervention"]["selective_priority"]["rate"] == 0.0
++
++
++def test_memory_and_live_reducers_keep_causality_portability_transport_and_progress_separate() -> (
++    None
++):
++    """REQ-REPORT-6823: memory and live evidence classes do not pool."""
++
++    records = _records()
++    records["exp6816"] = _record(
++        rows=[
++            {
++                "arm": "frozen_memory",
++                "exact_utility": 0.2,
++                "credited_write": False,
++                "support_harm": False,
++                "retention_harm": False,
++                "hard_case_harm": False,
++            },
++            {
++                "arm": "residual_pressure",
++                "exact_utility": 0.6,
++                "credited_write": True,
++                "support_harm": False,
++                "retention_harm": False,
++                "hard_case_harm": False,
++            },
++        ]
++    )
++    records["exp6817"] = _record(
++        rows=[
++            {"arm": "frozen_memory", "exact_utility": 0.1, "rotation": "qwen"},
++            {"arm": "residual_pressure", "exact_utility": 0.3, "rotation": "qwen"},
++        ]
++    )
++    records["exp6820"] = _record(
++        rows=[{"typed_canary_passed": True}],
++        payload={"tool_gap_obligation_transport_ready": True},
++    )
++    records["exp6821"] = _record(
++        rows=[
++            {
++                "pair_id": "g",
++                "arm": "control_unset",
++                "actions_to_progress": 10,
++                "hard_violation": False,
++                "false_intervention": False,
++            },
++            {
++                "pair_id": "g",
++                "arm": "obligation_routed",
++                "actions_to_progress": 7,
++                "hard_violation": False,
++                "false_intervention": False,
++            },
++        ]
++    )
++    memory = exp.recompute_memory(records)
++    live = exp.recompute_live_arc(records)
++    assert memory["causality"]["credited_writes"] == 1
++    assert memory["utility"]["residual_minus_frozen"] == pytest.approx(0.4)
++    assert memory["portability"]["residual_minus_frozen"] == pytest.approx(0.2)
++    assert memory["safety"]["harm_count"] == 0
++    assert live["transport"]["ready"] is True
++    assert live["progress"]["control_minus_treatment_actions"] == 3.0
++    assert live["hard_safety"]["hard_violation_count"] == 0
++
++
++def test_missing_or_flagged_inputs_make_only_the_affected_branch_blocked() -> None:
++    """SCENARIO-REPORT-6823-DISPOSITION: missing audits fail closed by branch."""
++
++    records = _records()
++    records["exp6813"] = _record()
++    records["exp6814"] = _record(flagged=True)
++    decisions = exp.build_dispositions(records, exp.recompute_claims(records))
++    assert decisions["selective_arbiter"]["disposition"] == "blocked"
++    assert decisions["verified_route_memory"]["disposition"] == "blocked"
++    assert decisions["live_arc"]["disposition"] == "blocked"
++    assert decisions["selective_arbiter"]["failed_checks"][0]["observed"] == "flagged"
++
++
++@pytest.mark.parametrize(
++    ("producer", "audit", "positive_gate", "expected"),
++    [
++        ("positive", "positive", True, "adopt"),
++        ("positive", "null", True, "narrow"),
++        ("null", "null", False, "retire"),
++        ("blocked", "positive", True, "blocked"),
++    ],
++)
++def test_closed_decision_enum(
++    producer: str, audit: str, positive_gate: bool, expected: str
++) -> None:
++    """SCENARIO-REPORT-6823-DISPOSITION: all evidence patterns close."""
++
++    records = {"producer": _record(producer), "audit": _record(audit)}
++    decision = exp.decide_disposition(
++        "branch", records, ("producer", "audit"), positive_gate=positive_gate
++    )
++    assert decision["disposition"] == expected
++    assert decision["disposition"] in exp.DISPOSITION_ENUM
++
++
++def test_artifact_has_task_and_branch_rows_counts_principles_and_stable_checksum() -> None:
++    """REQ-REPORT-6823: the complete synthesis schema validates and replays."""
++
++    records = _records()
++    records["exp6810"] = _record("null")
++    records["exp6811"] = _record("null")
++    records["exp6812"] = _record("positive")
++    records["exp6813"] = _record("positive")
++    artifact = exp.assemble_artifact(
++        run_date="20260831",
++        duration_s=0.125,
++        manifest=exp.load_manifest(REPO),
++        design=exp.parse_design((REPO / exp.DESIGN_PATH).read_text(encoding="utf-8")),
++        records=records,
++        source_hashes=exp.collect_source_hashes(REPO),
++        adversarial_findings=[],
++    )
++    assert artifact["task_count"] == 14
++    assert len([row for row in artifact["rows"] if row["row_type"] == "task"]) == 14
++    assert len([row for row in artifact["rows"] if row["row_type"] == "branch"]) == 3
++    assert artifact["terminal_class_counts"] == {
++        "current_synthesis": 1,
++        "missing": 9,
++        "null": 2,
++        "positive": 2,
++    }
++    assert set(artifact) == set(exp.REQUIRED_ARTIFACT_FIELDS)
++    assert set(artifact["field_principles"]) == set(artifact)
++    assert exp.validate_artifact(artifact) == []
++    assert exp.reproducibility_checksum(artifact) == artifact["reproducibility_checksum"]
++
++    broken = copy.deepcopy(artifact)
++    broken["task_count"] = 13
++    broken["rows"][0]["eligible_for_positive_claim"] = True
++    broken["rows"][0]["terminal_class"] = "blocked"
++    broken["selective_arbiter_disposition"]["disposition"] = "invented"
++    assert set(exp.validate_artifact(broken)) == {
++        "task_count must equal fourteen",
++        "terminal class counts do not replay",
++        "excluded task row is positive-eligible",
++        "selective_arbiter_disposition has an invalid decision",
++        "reproducibility checksum mismatch",
++    }
++
++
++def test_fail_closed_parsers_and_manifest_difference_receipts(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6823-MANIFEST: malformed design and roadmap inputs stay errors."""
++
++    with pytest.raises(ValueError, match="invalid task id"):
++        exp._short_task_id("not-a-task")
++    with pytest.raises(ValueError, match="deliverable missing"):
++        exp.parse_design("### Exp6810: missing deliverable\n### Exp6811: next")
++    no_milestone = exp.parse_design("")
++    assert no_milestone == {"milestone": None, "phase_count": 0, "tasks": []}
++
++    (tmp_path / exp.ROADMAP_PATH).write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="task list"):
++        exp.load_manifest(tmp_path)
++    (tmp_path / exp.ROADMAP_PATH).write_text(
++        "tasks:\n  - ignored\n  - id: exp6810-test\n    prompt: ''\n", encoding="utf-8"
++    )
++    assert exp.load_manifest(tmp_path)[0]["task_id"] == "exp6810"
++
++    design = exp.parse_design((REPO / exp.DESIGN_PATH).read_text(encoding="utf-8"))
++    manifest = exp.load_manifest(REPO)
++    changed = copy.deepcopy(manifest)
++    changed[0]["deliverable"] = "results/wrong.json"
++    comparison = exp.compare_manifest(design, changed, {})
++    assert comparison["matches"] is False
++    assert {row["field"] for row in comparison["differences"]} >= {
++        "exp6810.deliverable",
++        "contract_owner_map",
++    }
++
++
++def test_malformed_json_no_split_rows_and_gate_receipts_are_covered(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-6823-ELIGIBILITY: alternate source shapes still fail closed."""
++
++    (tmp_path / "results").mkdir()
++    (tmp_path / exp.TASK_PATHS["exp6810"]).write_text("{", encoding="utf-8")
++    loaded = exp.load_source_artifacts(tmp_path)
++    assert loaded["exp6810"]["terminal_class"] == "malformed"
++    assert "JSONDecodeError" in loaded["exp6810"]["error"]
++
++    records = _records()
++    records["exp6813"] = _record(
++        rows=[
++            {
++                "pair_id": "p",
++                "arm": "flat_reject_retry",
++                "accepted_progress": 0,
++                "retry_count": 1,
++                "accepted_hard_violation": False,
++                "harmful_selection": False,
++            },
++            {
++                "pair_id": "p",
++                "arm": "selective_priority",
++                "accepted_progress": 1,
++                "retry_count": 0,
++                "accepted_hard_violation": False,
++                "harmful_selection": False,
++            },
++        ]
++    )
++    assert exp.recompute_selective(records)["eligible_row_count"] == 2
++
++    records["exp6814"]["gate_check_summary"] = [
++        {"check": "audit", "expected": True, "observed": None}
++    ]
++    task_rows = exp._task_rows(exp.load_manifest(REPO), records)
++    gates = exp._gate_summary(task_rows, {"differences": []})
++    assert any(row.get("check") == "audit" for row in gates)
++    records.pop("exp6810")
++    with pytest.raises(ValueError, match="source record missing"):
++        exp._task_rows(exp.load_manifest(REPO), records)
++
++
++def test_atomic_write_and_schema_error(tmp_path: Path) -> None:
++    """REQ-REPORT-6823: publication is atomic and schema drift is rejected."""
++
++    target = tmp_path / "nested/result.json"
++    exp.atomic_write_json(target, {"value": 1})
++    assert json.loads(target.read_text(encoding="utf-8")) == {"value": 1}
++    assert not target.with_suffix(".json.tmp").exists()
++    assert "artifact fields do not match the required schema" in exp.validate_artifact({})
++    assert callable(exp._load_validator(REPO, exp.ROW_LINT_PATH, "check_artifact"))
++
++
++def test_run_success_and_validation_failure_use_the_same_pipeline(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-6823: the command validates before it writes."""
++
++    design_path = tmp_path / exp.DESIGN_PATH
++    design_path.parent.mkdir(parents=True)
++    design_path.write_text("design", encoding="utf-8")
++    calls: list[object] = []
++    monkeypatch.setattr(exp, "parse_design", lambda _text: {"tasks": []})
++    monkeypatch.setattr(exp, "load_manifest", lambda _root: [])
++    monkeypatch.setattr(exp, "load_source_artifacts", lambda _root: {})
++    monkeypatch.setattr(exp, "_load_validator", lambda *_args: lambda _path: {})
++    monkeypatch.setattr(exp, "apply_validators", lambda *_args: [])
++    monkeypatch.setattr(exp, "collect_source_hashes", lambda _root: {})
++    monkeypatch.setattr(exp, "assemble_artifact", lambda **_kwargs: {"ok": True})
++    monkeypatch.setattr(exp, "validate_artifact", lambda _artifact: [])
++    monkeypatch.setattr(
++        exp, "atomic_write_json", lambda path, artifact: calls.append((path, artifact))
++    )
++    assert exp.run(tmp_path, "20260831") == {"ok": True}
++    assert calls == [(tmp_path / exp.RESULT_PATH, {"ok": True})]
++
++    monkeypatch.setattr(exp, "validate_artifact", lambda _artifact: ["bad"])
++    with pytest.raises(ValueError, match="bad"):
++        exp.run(tmp_path, "20260831")
++
++
++def test_main_prints_closed_branch_summary(
++    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """SCENARIO-REPORT-6823-DISPOSITION: the wrapper reports all three decisions."""
++
++    artifact = {
++        "verdict_class": "partial",
++        "selective_arbiter_disposition": {"disposition": "blocked"},
++        "verified_route_memory_disposition": {"disposition": "retire"},
++        "live_arc_disposition": {"disposition": "narrow"},
++    }
++    monkeypatch.setattr(exp, "run", lambda root, date: artifact)
++    assert exp.main(["--date", "20260831"]) == 0
++    output = json.loads(capsys.readouterr().out)
++    assert output["dispositions"] == {
++        "selective_arbiter": "blocked",
++        "verified_route_memory": "retire",
++        "live_arc": "narrow",
++    }
+-- 
+2.55.0
+

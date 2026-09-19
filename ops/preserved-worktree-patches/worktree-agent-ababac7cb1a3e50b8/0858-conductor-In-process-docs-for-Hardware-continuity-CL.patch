@@ -1,0 +1,36 @@
+From a033a2f8baee49a7ae616506fce7a5fcc8a5cf14 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 20:29:08 -0400
+Subject: [PATCH 00858/11362] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Hardware=20continuity=20CLEAN=20re-run=20(fixes=20the=20ex?=
+ =?UTF-8?q?p3922=20flag)=20=E2=80=94=20GateMate=20terminal-state=20re-conf?=
+ =?UTF-8?q?irmation=20(n=3D16=20Carnot=20Ising=20tile,=20DISTINCT=20wall-c?=
+ =?UTF-8?q?lock=20timers,=20JTAG=20readback=20attempt)=20+=20PolarFire/KV2?=
+ =?UTF-8?q?60=20opportunistic=20SSH=20continuity=20(PolarFire=20terminal?=
+ =?UTF-8?q?=20hash-verified=20soft-CPU=20dispatch,=20NO=20fabric-accelerat?=
+ =?UTF-8?q?ion=20claim;=20KV260=20loaded-overlay=20via=20xmutil,=20toward?=
+ =?UTF-8?q?=20terminal).=20NO=20GGUF/CUDA=20markers=20(hardware=5Fsmoke=20?=
+ =?UTF-8?q?substrate);=20HONEST=20distinct=20timers=20(the=20exp3866=20TAU?=
+ =?UTF-8?q?TOLOGY=20corrigendum).=20Per-board=20preconditions:=20record=20?=
+ =?UTF-8?q?blocked=5F<board>=5Funreachable=20per=20board=20and=20continue.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 1ad7349cd2..e2035555f5 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8725,3 +8725,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-07: MOAT SCISSOR replication on an INDEPENDENT corpus (defeats the in-distribution-tuning critique): re-run the exp3916 scissor (strong boosted self-verify arm via the exp3915 robust harness + bootstrap CI residual-catch + error-overlap Jaccard) on a SECOND held-out corpus — a ProcessBench math slice (HuggingFace Qwen/ProcessBench), FALLBACK the local held-out data/fover_test_v4.json — that neither the energy ensemble nor the FoVer-tuned probe was trained on. Confirm MOAT_SURVIVES (residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30) replicates off the original corpus. Disk-reads exp3915 (no hard gate). (⚠️ Blocked) — honest_verdict=blocked_all_gguf_inference_failed; results/experiment_3928_moat_scissor_replication.json
+ - 2026-06-07: ARC-AGI-3 first realistic agentic run — verifier-as-router ACTION-EFFICIENCY WITH vs WITHOUT the pruner (north-star §5, sequenced after the offline proof; GPU-free): extend the exp3919 scaffold to a richer non-toy synthetic ARC-AGI-3-style env (multi-step, larger action space, known goal); measure actions-to-solve WITH the verifier-as-action-pruner (energy-scored action selection) vs a no-verifier baseline (random/greedy), reporting the action-efficiency ratio (the Exp1165 ~4x shape, now with a real baseline). ALSO a real ARC-AGI-3 benchmark access preflight (arXiv:2603.24621). HONEST: synthetic env, NO real-benchmark performance claim. (✅ Complete) — honest_verdict=complete: arc_agi3_verifier_router_HELPS_ratio1.959_ci1.742-2.194_synthetic_first_agentic_step_real_benchmark_reachabletrue; results/experiment_3929_arc_agi3_action_efficiency.json
+ - 2026-06-08: FR-11 continuous self-learning v26 (research-program.md MANDATE) — load the persisted v25 independence-reweighting state (exp3921), continue Tier-1 ONLINE reweighting on a FRESH verification-corpus slice (arXiv:2604.07650), AND additionally learn the exp3927 cascade escalation band ONLINE (Tier-1 self-learning tied to the deployable cascade artifact). Confirm the learned weighting STILL holds the +0.0185 memory-ablation contribution + frozen 0.9131 across the v25->v26 iteration. CPU counter updates (<1us/update, the Tier-1 hardware path). (✅ Complete) — honest_verdict=complete: fr11_v26_INVARIANT_HELD_auroc0.908_memcontrib0.0185_cascade_band_learnedtrue_state_persisted; results/experiment_3930_fr11_v26_cascade_band_online_learning.json
++- 2026-06-08: Hardware continuity CLEAN re-run (fixes the exp3922 flag) — GateMate terminal-state re-confirmation (n=16 Carnot Ising tile, DISTINCT wall-clock timers, JTAG readback attempt) + PolarFire/KV260 opportunistic SSH continuity (PolarFire terminal hash-verified soft-CPU dispatch, NO fabric-acceleration claim; KV260 loaded-overlay via xmutil, toward terminal). NO GGUF/CUDA markers (hardware_smoke substrate); HONEST distinct timers (the exp3866 TAUTOLOGY corrigendum). Per-board preconditions: record blocked_<board>_unreachable per board and continue. (⚠️ Blocked) — honest_verdict=success: hardware_continuity_clean_gatemateblocked_gatemate_board_unreachable_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_distinct_timers_no_fabric_claim; results/experiment_3931_hardware_continuity_clean_rerun.json
+-- 
+2.55.0
+

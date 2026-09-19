@@ -1,0 +1,79 @@
+From 63637f804e528a50444660664f7b202ae484b6e6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 12 Jul 2026 09:31:28 -0400
+Subject: [PATCH 06876/11362] [outer-loop] ARC sk48 round-5: honest null,
+ reconfirms level-3 wall
+
+Round-5 claude-fable-5 attempt on sk48 reconfirms the level-3 wall without
+new insight beyond rounds 3-4: tried clean resets, HUD-order/reverse-order
+encounters, edge/boundary extensions, full retractions, and direct
+interaction with the maroon/connector glyph -- none advanced past level 2.
+Reproduction gate passed for level 2. No registry count change.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml               | 11 +++++++++++
+ results/outer_loop_fable5_sk48_probe.json | 16 ++++++++--------
+ 2 files changed, 19 insertions(+), 8 deletions(-)
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 91de8b4007..fb7fe21358 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -3005,6 +3005,17 @@ games:
+     to preserve budget for the reproduction gate (passed for level 2)
+     rather than risk an unverified level-3 claim. No new level banked;
+     frontier stays at level 2.'
++  - 'L3 progress round 5, still HONEST NULL (2026-07-12, claude-fable-5,
++    first fable-5 leg of the campaign, results/outer_loop_fable5_sk48_probe.json):
++    reconfirms the level-3 wall without new insight beyond what rounds 3-4
++    already documented -- tried clean resets, HUD-order and reverse-order
++    encounters, exact-edge and full-boundary extensions, full retractions,
++    direct interaction with the maroon/connector glyph, and ACTION5/
++    ACTION6 coordinate probes; none advanced past level 2. The vertically
++    connected color stack plus maroon node matches the previously-noted
++    color-11 B glyph obstacle; the earlier horizontal/independent-target
++    strategy does not carry over. Reproduction gate passed for level 2. No
++    new level banked; frontier stays at level 2.'
+   latest_exp4751_levelup_selfplay:
+     artifact: results/experiment_4751_levelup_selfplay.json
+     loop_artifact: results/arc_loop_solve_sk48.json
+diff --git a/results/outer_loop_fable5_sk48_probe.json b/results/outer_loop_fable5_sk48_probe.json
+index 4e87e68923..dc04346554 100644
+--- a/results/outer_loop_fable5_sk48_probe.json
++++ b/results/outer_loop_fable5_sk48_probe.json
+@@ -3,7 +3,7 @@
+   "model": "claude-fable-5",
+   "starting_level": 2,
+   "max_level_reached": 2,
+-  "total_env_steps_used": 565,
++  "total_env_steps_used": 540,
+   "reproduction_verified": true,
+   "action_sequence": [
+     {"action": 1},
+@@ -52,14 +52,14 @@
+     {"action": 4}
+   ],
+   "levels_won_this_session": [],
+-  "novel_mechanics_found": "Level 3 introduces a previously absent color-11 B glyph at the top of a vertically anchored E-9-8-C chain. Actions 1/2 move the color-6 patterned actuator vertically and actions 4/3 extend or retract its patterned horizontal body. In the earlier banked levels, colored blocks can ride vertically on the body and contiguous rows shift together; the level-3 B-anchored column resisted the same pull, lift, merge, and row-reversal constructions. Direct ACTION6 clicks on both glyphs and ACTION5 produced no visible selection or release effect at the tested rendered coordinates.",
+-  "narrative": "The 44-action resolver prefix was replayed first and reached levels_completed=2. I reconstructed the prior transition mechanics from rendered frames, then tried direct probes, the prior level's 30-action construction, several scaled row-reversal plans, and explicit interaction with the unexplained B glyph. None advanced level 3; multiple superficially analogous plans ended with the anchored vertical column unchanged. I stopped with 35 steps unspent because no candidate win had been observed and retained enough budget to run the mandatory fresh-reset reproduction gate, which passed for level 2.",
++  "novel_mechanics_found": "ACTION1/ACTION2 move the anchored arm vertically and ACTION4/ACTION3 extend/retract it. The two banked levels register colored encounters through arm positioning, but level 2 introduces a vertically connected color stack plus a maroon node; the earlier horizontal/independent-target strategy does not carry over directly.",
++  "narrative": "The 44-action banked prefix was recovered through the resolver and repeatedly confirmed at frame.levels_completed == 2. I traced the prefix frame by frame to infer the arm controls, then explored the vertical connected layout using clean resets, HUD-order and reverse-order encounters, exact-edge and full-boundary extensions, full retractions, direct interaction with the maroon/connector glyph, and ACTION5/ACTION6 coordinate probes. None advanced frame.levels_completed beyond 2, so I stopped at the genuine level-2 mechanic wall with budget reserved for verification. A fresh-reset reproduce() gate replayed the stored 44-action sequence and passed claimed_level=2.",
+   "gotchas": [
+-    "frame.frame is an animation stack for this game; inspect its final 64x64 slice rather than treating the full stack as one grid.",
+-    "The color-6 actuator begins one grid cell farther left on level 3 than on the first banked level, so horizontal action counts do not transfer literally.",
+-    "A horizontal body may visually overlap a colored 4x4 block without moving it; color-count changes caused by overlay are not evidence that the block was detached or collected.",
+-    "The first two levels contain no visible B glyph, while level 3 does; treating the new vertical column as an ordinary unanchored block row led to repeatable no-progress loops.",
+-    "ACTION6 clicks at the rendered centers/corners of B and the color-6 glyph, and an ACTION5 probe, caused no visible mode change in this session."
++    "An extended arm can block vertical movement when it intersects a colored object, so apparent no-op moves are collision-dependent.",
++    "Crossing a colored sprite transiently changes its matching HUD icon pixels, but that visual overlap is not evidence that the level accepted the interaction.",
++    "The long 2-to-3 bar is action-budget/timing-like UI state and changes on otherwise harmless actions.",
++    "ACTION5 and ACTION6 were no-ops both without data and with coordinates on the maroon node and HUD objects.",
++    "The maroon 2x2 node and the 2/3 connector beneath it are new at level 2; direct clicking and attempted arm alignment did not reveal their role."
+   ],
+   "solve_provenance": "live_agent_self_discovery"
+ }
+-- 
+2.55.0
+

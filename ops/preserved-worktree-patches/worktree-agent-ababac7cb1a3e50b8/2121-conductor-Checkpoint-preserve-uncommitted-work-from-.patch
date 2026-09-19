@@ -1,0 +1,43 @@
+From 523bd520c84a20ead9d66aefc1e5d9cd890bf060 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 16 Jun 2026 10:48:23 -0400
+Subject: [PATCH 02121/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 05a6923710..6e101a8a12 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 107, "phase": "iteration_start", "last_beat": "2026-06-16T14:29:48Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 108, "phase": "iteration_start", "last_beat": "2026-06-16T14:48:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e09b9faaf3..039a431233 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8607,3 +8607,4 @@ c |
+ | 2026-06-16 11:51 UTC | PHASE C1 (HARDEN the §5 efficiency headline; oracl | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:              " |
+ | 2026-06-16 13:04 UTC | PHASE C1 (HARDEN the §5 efficiency headline; oracl | FAIL | Codex CLI error: trong_judge.py' in /home/ianblenke/github.com/ianblenke/carn |
+ | 2026-06-16 14:27 UTC | PHASE C1 (HARDEN the §5 efficiency headline; oracl | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: No new progres |
++| 2026-06-16 14:46 UTC | PHASE D1 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 86 passed, 1 warning in 7.42s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f42708615a..7f8357feb2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 935238, "iteration": 107, "phase": "iteration_start", "started_at": "2026-06-16T14:29:48Z"}
+\ No newline at end of file
++{"pid": 935238, "iteration": 108, "phase": "iteration_start", "started_at": "2026-06-16T14:48:21Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

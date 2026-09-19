@@ -1,0 +1,43 @@
+From 3617a3c49a7a74d9deb7af787d26481e1408049a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 04:04:17 -0400
+Subject: [PATCH 03398/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f5f4d393b4..c13da7f973 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1035110, "iteration": 14, "phase": "iteration_start", "last_beat": "2026-06-22T07:41:37Z"}
+\ No newline at end of file
++{"pid": 1035110, "iteration": 15, "phase": "iteration_start", "last_beat": "2026-06-22T08:04:15Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 650ed0bc42..664203b54f 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9054,3 +9054,4 @@ c |
+ | 2026-06-22 07:23 UTC | Plan milestone 2026.06.423 | OK | 12 tasks proposed |
+ | 2026-06-22 07:25 UTC | Milestone 2026.06.423 activated | OK | 12 tasks queued |
+ | 2026-06-22 07:39 UTC | PHASE 0 (TRANSITION) -- archive .422 -> activate . | OK | 86 passed, 1 warning in 5.57s |
++| 2026-06-22 08:02 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; operator MANDAT | OK | 94 passed, 1 warning in 6.29s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 6bd9d89411..6e901d62fc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1035110, "iteration": 14, "phase": "iteration_start", "started_at": "2026-06-22T07:41:37Z"}
+\ No newline at end of file
++{"pid": 1035110, "iteration": 15, "phase": "iteration_start", "started_at": "2026-06-22T08:04:15Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

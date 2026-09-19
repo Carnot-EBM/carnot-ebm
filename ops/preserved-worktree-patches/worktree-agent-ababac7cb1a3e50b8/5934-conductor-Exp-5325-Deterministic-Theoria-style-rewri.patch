@@ -1,0 +1,1732 @@
+From f4511e9a62f8bd9516186847ebaf4e22163774fd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 19:16:58 -0400
+Subject: [PATCH 05934/11362] [conductor] Exp 5325: Deterministic Theoria-style
+ rewrite-state verifier fixture
+
+Automated research step by research conductor.
+Task ID: exp5325-theoria-rewrite-state-fixture-v486
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ data/rewrite_state_fixture_v486.json          | 353 +++++++++++
+ openspec/capabilities/verification/spec.md    |  79 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ...5325_theoria_rewrite_state_fixture_v486.py | 570 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...25_theoria_rewrite_state_fixture_v486.json | 276 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...5325_theoria_rewrite_state_fixture_v486.py | 246 ++++++++
+ 13 files changed, 1543 insertions(+), 19 deletions(-)
+ create mode 100644 data/rewrite_state_fixture_v486.json
+ create mode 100644 python/carnot/experiment_5325_theoria_rewrite_state_fixture_v486.py
+ create mode 100644 results/experiment_5325_theoria_rewrite_state_fixture_v486.json
+ create mode 100644 tests/python/test_experiment_5325_theoria_rewrite_state_fixture_v486.py
+
+diff --git a/data/rewrite_state_fixture_v486.json b/data/rewrite_state_fixture_v486.json
+new file mode 100644
+index 0000000000..8a7438cd9c
+--- /dev/null
++++ b/data/rewrite_state_fixture_v486.json
+@@ -0,0 +1,353 @@
++{
++  "schema": "carnot.fixture.rewrite_state.v486",
++  "label_source": "curated_deterministic_rewrite_state_fixture_v486",
++  "cases": [
++    {
++      "case_id": "rsf-001-safe-paraphrase",
++      "case_type": "safe_paraphrase",
++      "description": "Safe paraphrase preserves the factual state while changing only the wording attribute.",
++      "evidence_facts": {
++        "duration_minutes": "47",
++        "subject": "aster-9 battery",
++        "test": "amber-load"
++      },
++      "allowed_citations": [
++        "battery-log-47"
++      ],
++      "source": {
++        "text": "The Aster-9 battery ran 47 minutes under the amber-load test.",
++        "premise_valid": true,
++        "facts": {
++          "duration_minutes": "47",
++          "subject": "aster-9 battery",
++          "test": "amber-load"
++        },
++        "attributes": {
++          "wording": "ran"
++        },
++        "citations": [
++          "battery-log-47"
++        ],
++        "expected_label": "supported"
++      },
++      "target": {
++        "text": "Under the amber-load test, the Aster-9 battery lasted 47 minutes.",
++        "premise_valid": true,
++        "facts": {
++          "duration_minutes": "47",
++          "subject": "aster-9 battery",
++          "test": "amber-load"
++        },
++        "attributes": {
++          "wording": "lasted"
++        },
++        "citations": [
++          "battery-log-47"
++        ],
++        "expected_label": "supported"
++      },
++      "change_obligations": [
++        {
++          "obligation_id": "rsf-001-obligation-wording",
++          "change_type": "lexical_paraphrase",
++          "field": "attributes.wording",
++          "source_value": "ran",
++          "target_value": "lasted"
++        }
++      ],
++      "expected_label_preservation": true,
++      "expected_complete_change_coverage": true,
++      "expected_accept": true,
++      "expected_unsafe_rejected": false
++    },
++    {
++      "case_id": "rsf-002-contradiction-introduction",
++      "case_type": "contradiction_introduction",
++      "description": "A rewrite changes a supported duration into a contradicted duration.",
++      "evidence_facts": {
++        "duration_minutes": "47",
++        "subject": "aster-9 battery",
++        "test": "amber-load"
++      },
++      "allowed_citations": [
++        "battery-log-47"
++      ],
++      "source": {
++        "text": "The Aster-9 battery ran 47 minutes under the amber-load test.",
++        "premise_valid": true,
++        "facts": {
++          "duration_minutes": "47",
++          "subject": "aster-9 battery",
++          "test": "amber-load"
++        },
++        "attributes": {
++          "wording": "ran"
++        },
++        "citations": [
++          "battery-log-47"
++        ],
++        "expected_label": "supported"
++      },
++      "target": {
++        "text": "Under the amber-load test, the Aster-9 battery lasted 74 minutes.",
++        "premise_valid": true,
++        "facts": {
++          "duration_minutes": "74",
++          "subject": "aster-9 battery",
++          "test": "amber-load"
++        },
++        "attributes": {
++          "wording": "lasted"
++        },
++        "citations": [
++          "battery-log-47"
++        ],
++        "expected_label": "contradictory"
++      },
++      "change_obligations": [
++        {
++          "obligation_id": "rsf-002-obligation-wording",
++          "change_type": "lexical_paraphrase",
++          "field": "attributes.wording",
++          "source_value": "ran",
++          "target_value": "lasted"
++        }
++      ],
++      "expected_label_preservation": true,
++      "expected_complete_change_coverage": true,
++      "expected_accept": false,
++      "expected_unsafe_rejected": true
++    },
++    {
++      "case_id": "rsf-003-missing-required-change",
++      "case_type": "missing_required_change",
++      "description": "A rewrite preserves the label but misses the required review-state transition.",
++      "evidence_facts": {
++        "finding": "temperature drift",
++        "severity": "minor",
++        "subject": "delta audit"
++      },
++      "allowed_citations": [
++        "delta-audit-note"
++      ],
++      "source": {
++        "text": "The delta audit found a minor temperature drift.",
++        "premise_valid": true,
++        "facts": {
++          "finding": "temperature drift",
++          "severity": "minor",
++          "subject": "delta audit"
++        },
++        "attributes": {
++          "review_state": "draft"
++        },
++        "citations": [
++          "delta-audit-note"
++        ],
++        "expected_label": "supported"
++      },
++      "target": {
++        "text": "The delta audit recorded a minor temperature drift.",
++        "premise_valid": true,
++        "facts": {
++          "finding": "temperature drift",
++          "severity": "minor",
++          "subject": "delta audit"
++        },
++        "attributes": {
++          "review_state": "draft"
++        },
++        "citations": [
++          "delta-audit-note"
++        ],
++        "expected_label": "supported"
++      },
++      "change_obligations": [
++        {
++          "obligation_id": "rsf-003-obligation-review-state",
++          "change_type": "required_status_update",
++          "field": "attributes.review_state",
++          "source_value": "draft",
++          "target_value": "approved"
++        }
++      ],
++      "expected_label_preservation": true,
++      "expected_complete_change_coverage": false,
++      "expected_accept": false,
++      "expected_unsafe_rejected": true
++    },
++    {
++      "case_id": "rsf-004-fabricated-premise-citation",
++      "case_type": "fabricated_premise_citation",
++      "description": "A rewrite adds an unsupported premise and a citation that is not in the allowed evidence.",
++      "evidence_facts": {
++        "calibration": "passed",
++        "subject": "hollow sensor"
++      },
++      "allowed_citations": [
++        "sensor-log-12"
++      ],
++      "source": {
++        "text": "The Hollow sensor calibration passed.",
++        "premise_valid": true,
++        "facts": {
++          "calibration": "passed",
++          "subject": "hollow sensor"
++        },
++        "attributes": {
++          "wording": "reported"
++        },
++        "citations": [
++          "sensor-log-12"
++        ],
++        "expected_label": "supported"
++      },
++      "target": {
++        "text": "The Hollow sensor calibration passed according to external report 77.",
++        "premise_valid": true,
++        "facts": {
++          "calibration": "passed",
++          "external_report_claim": "verified-by-report-77",
++          "subject": "hollow sensor"
++        },
++        "attributes": {
++          "wording": "summarized"
++        },
++        "citations": [
++          "sensor-log-12",
++          "phantom-report-77"
++        ],
++        "expected_label": "unsupported"
++      },
++      "change_obligations": [
++        {
++          "obligation_id": "rsf-004-obligation-wording",
++          "change_type": "lexical_summary",
++          "field": "attributes.wording",
++          "source_value": "reported",
++          "target_value": "summarized"
++        }
++      ],
++      "expected_label_preservation": true,
++      "expected_complete_change_coverage": true,
++      "expected_accept": false,
++      "expected_unsafe_rejected": true
++    },
++    {
++      "case_id": "rsf-005-invalid-premise-preserved",
++      "case_type": "invalid_premise_preserved",
++      "description": "A rewrite was supposed to repair an invalid premise but preserves the invalid premise state.",
++      "evidence_facts": {
++        "current_stop": "pear gate",
++        "service_status": "stops",
++        "subject": "route-6"
++      },
++      "allowed_citations": [
++        "route-table-6"
++      ],
++      "source": {
++        "text": "Because Route 6 never served Pear Gate, Route 6 skips Pear Gate today.",
++        "premise_valid": false,
++        "facts": {
++          "current_stop": "pear gate",
++          "service_status": "skips",
++          "subject": "route-6"
++        },
++        "attributes": {
++          "repair_mode": "required"
++        },
++        "citations": [
++          "route-table-6"
++        ],
++        "expected_label": "premise-invalid"
++      },
++      "target": {
++        "text": "Since Pear Gate was supposedly never on Route 6, the route still skips Pear Gate today.",
++        "premise_valid": false,
++        "facts": {
++          "current_stop": "pear gate",
++          "service_status": "skips",
++          "subject": "route-6"
++        },
++        "attributes": {
++          "repair_mode": "required"
++        },
++        "citations": [
++          "route-table-6"
++        ],
++        "expected_label": "premise-invalid"
++      },
++      "change_obligations": [
++        {
++          "obligation_id": "rsf-005-obligation-premise-repair",
++          "change_type": "premise_repair",
++          "field": "premise_valid",
++          "source_value": false,
++          "target_value": true
++        }
++      ],
++      "expected_label_preservation": false,
++      "expected_complete_change_coverage": false,
++      "expected_accept": false,
++      "expected_unsafe_rejected": true
++    },
++    {
++      "case_id": "rsf-006-overbroad-rewrite",
++      "case_type": "overbroad_rewrite",
++      "description": "A rewrite performs the requested audience change but broadens the factual scope.",
++      "evidence_facts": {
++        "scope": "module-a",
++        "status": "requires manual reset",
++        "subject": "relay-2"
++      },
++      "allowed_citations": [
++        "relay-note-2"
++      ],
++      "source": {
++        "text": "Relay-2 in module A requires a manual reset.",
++        "premise_valid": true,
++        "facts": {
++          "scope": "module-a",
++          "status": "requires manual reset",
++          "subject": "relay-2"
++        },
++        "attributes": {
++          "audience": "operator"
++        },
++        "citations": [
++          "relay-note-2"
++        ],
++        "expected_label": "supported"
++      },
++      "target": {
++        "text": "For maintainers, Relay-2 requires a manual reset across all modules.",
++        "premise_valid": true,
++        "facts": {
++          "scope": "all-modules",
++          "status": "requires manual reset",
++          "subject": "relay-2"
++        },
++        "attributes": {
++          "audience": "maintainer"
++        },
++        "citations": [
++          "relay-note-2"
++        ],
++        "expected_label": "contradictory"
++      },
++      "change_obligations": [
++        {
++          "obligation_id": "rsf-006-obligation-audience",
++          "change_type": "audience_rewrite",
++          "field": "attributes.audience",
++          "source_value": "operator",
++          "target_value": "maintainer"
++        }
++      ],
++      "expected_label_preservation": true,
++      "expected_complete_change_coverage": true,
++      "expected_accept": false,
++      "expected_unsafe_rejected": true
++    }
++  ]
++}
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index c32ad8cfb7..6dc2d26891 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -25882,6 +25882,85 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
+ |---|---|---|
+ | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
+ 
++### REQ-VERIFY-5325: Theoria Deterministic Rewrite-State Fixture V486
++
++The repository SHALL provide Exp 5325 at
++`python/carnot/experiment_5325_theoria_rewrite_state_fixture_v486.py`, store
++the deterministic fixture at `data/rewrite_state_fixture_v486.json`, and write
++`results/experiment_5325_theoria_rewrite_state_fixture_v486.json` without
++invoking a live LLM, local GGUF model, external API judge, generated-text
++judge, or retired text-verifier path, and without modifying
++`scripts/research_conductor.py`. Exp 5325 SHALL extend the Exp 5310
++paraphrase-consistency pattern from claim labels into typed rewrite-state
++transitions so Exp 5326 can consume a deterministic accept/reject gate before
++any SOTA rewrite-quality measurement.
++
++The fixture SHALL include exactly the requested tiny typed rewrite case set:
++safe paraphrase, contradiction introduction, missing required change,
++fabricated premise/citation, invalid premise preserved, and overbroad rewrite.
++Each case SHALL carry source state, target state, evidence facts, allowed
++citations, typed change obligations, expected label-preservation behavior,
++expected complete-change coverage behavior, and expected acceptability. Free
++text MAY be present for human auditability, but the verifier SHALL decide from
++typed state fields, evidence facts, citations, and obligations only.
++
++The runner SHALL implement deterministic checks for rewrite acceptability,
++complete-change coverage, label preservation, and unsafe-change rejection. A
++rewrite SHALL be acceptable only when all typed obligations are covered, label
++preservation matches the case contract, no contradiction is introduced, no
++fabricated premise or citation is added, invalid premises are not preserved
++when repair is required, and no semantic fact changes beyond the typed
++obligations occur. The runner SHALL compute `false_accept_count` over unsafe
++cases and SHALL keep the downstream fixture gate closed if any unsafe case is
++accepted.
++
++The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
++`status`, `honest_verdict`, `inference_substrate`, and `tests_run`, plus bare
++`rewrite_case_count`, `rewrite_acceptability_rate`,
++`complete_change_coverage_rate`, `unsafe_rewrite_rejection_rate`,
++`false_accept_count`, and `rewrite_state_fixture_ready`. `honest_verdict.value`
++SHALL start with `complete:` or `blocked_`. `inference_substrate.value` SHALL
++be `deterministic_rewrite_state_fixture`. `rewrite_state_fixture_ready` SHALL
++be true only when all required case types are present, acceptability decisions
++match the fixture contract, complete-change coverage is classified correctly,
++unsafe rewrites are rejected, `false_accept_count=0`, and the artifact exposes
++the required Exp 5326 consumer contract.
++
++Required field principles:
++
++- `experiment_id`: principle "Traceability for the Exp5325 deterministic Theoria rewrite-state fixture."
++- `milestone`: principle "Milestone accountability for the V486 rewrite-state fixture gate."
++- `status`: principle "Machine-readable terminal state for downstream rewrite-quality gates."
++- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether Exp5326 can consume the deterministic rewrite-state fixture."
++- `inference_substrate`: principle "Declares deterministic_rewrite_state_fixture so the artifact is read as typed offline rewrite-state checks, not live model quality."
++- `fixture_path`: principle "Points downstream gates to the exact deterministic rewrite-state fixture used to compute the reported metrics."
++- `tests_run`: principle "Commands run to validate the rewrite-state module, artifact schema, new-code coverage, and repository tests."
++
++### SCENARIO-VERIFY-5325: Typed Rewrite Transitions Accept Safe Rewrites And Reject Unsafe Ones
++
++Given the checked-in deterministic rewrite-state fixture, when Exp 5325 runs,
++then it loads the six typed rewrite cases, scores source and target states from
++structured facts and citations, checks every typed change obligation, evaluates
++label preservation against the case contract, rejects unsafe contradictions,
++fabrications, invalid-premise preservation, missing required changes, and
++overbroad fact changes, writes the required artifact, keeps
++`inference_substrate.value=deterministic_rewrite_state_fixture`, and sets
++`rewrite_state_fixture_ready=true` only when Exp 5326 can consume the fixture.
++
++If a required case type is missing, an unsafe rewrite is accepted, an expected
++safe paraphrase is rejected, a required change is missed without being detected,
++a fabricated premise or citation is not rejected, an invalid premise is
++preserved when repair is required, an overbroad fact change is not rejected, or
++the fixture would require any LLM call, then the same runner writes a terminal
++`blocked_` artifact with `rewrite_state_fixture_ready=false`, exact blocker
++metrics, and no SOTA model-quality claim.
++
++## Implementation Status (REQ-VERIFY-5325)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-5325 | Planned (`python/carnot/experiment_5325_theoria_rewrite_state_fixture_v486.py`, `data/rewrite_state_fixture_v486.json`, `results/experiment_5325_theoria_rewrite_state_fixture_v486.json`) | Planned (`tests/python/test_experiment_5325_theoria_rewrite_state_fixture_v486.py`) |
++
+ ### REQ-VERIFY-5324: Local Native GGUF Runtime Receipt Stabilization V486
+ 
+ The repository SHALL provide Exp 5324 at
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4acef52169..d3cf68718a 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4293,
++  "experiments_checked": 4294,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5325_theoria_rewrite_state_fixture_v486.py b/python/carnot/experiment_5325_theoria_rewrite_state_fixture_v486.py
+new file mode 100644
+index 0000000000..afb0050fc7
+--- /dev/null
++++ b/python/carnot/experiment_5325_theoria_rewrite_state_fixture_v486.py
+@@ -0,0 +1,570 @@
++"""Exp 5325: deterministic Theoria rewrite-state verifier fixture.
++
++Spec refs: REQ-VERIFY-5325, SCENARIO-VERIFY-5325.
++
++This module treats a rewrite as a typed transition between two small structured
++states. The free-form sentence is kept for human auditability, but the verifier
++decides from typed facts, citations, premise validity, and explicit change
++obligations. That makes the fixture useful as a deterministic gate before Exp
++5326 spends SOTA model runtime on rewrite quality.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++from dataclasses import dataclass
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT_NAME = "experiment_5325_theoria_rewrite_state_fixture_v486"
++EXPERIMENT_NUMBER = 5325
++MILESTONE = "2026.07.486"
++RUN_DATE = "20260706"
++SCHEMA = "carnot.experiment_5325.theoria_rewrite_state_fixture.v486"
++FIXTURE_RELATIVE_PATH = Path("data/rewrite_state_fixture_v486.json")
++RESULT_RELATIVE_PATH = Path("results/experiment_5325_theoria_rewrite_state_fixture_v486.json")
++SPEC_REFS = ("REQ-VERIFY-5325", "SCENARIO-VERIFY-5325")
++INFERENCE_SUBSTRATE = "deterministic_rewrite_state_fixture"
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++SEMANTIC_LABELS = ("supported", "contradictory", "premise-invalid", "unsupported")
++REQUIRED_CASE_TYPES = (
++    "safe_paraphrase",
++    "contradiction_introduction",
++    "missing_required_change",
++    "fabricated_premise_citation",
++    "invalid_premise_preserved",
++    "overbroad_rewrite",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "experiment_id": "Traceability for the Exp5325 deterministic Theoria rewrite-state fixture.",
++    "milestone": "Milestone accountability for the V486 rewrite-state fixture gate.",
++    "status": "Machine-readable terminal state for downstream rewrite-quality gates.",
++    "honest_verdict": (
++        "Terminal verdict must start with complete: or blocked_ and state whether Exp5326 "
++        "can consume the deterministic rewrite-state fixture."
++    ),
++    "inference_substrate": (
++        "Declares deterministic_rewrite_state_fixture so the artifact is read as typed "
++        "offline rewrite-state checks, not live model quality."
++    ),
++    "fixture_path": (
++        "Points downstream gates to the exact deterministic rewrite-state fixture used to "
++        "compute the reported metrics."
++    ),
++    "tests_run": (
++        "Commands run to validate the rewrite-state module, artifact schema, new-code "
++        "coverage, and repository tests."
++    ),
++}
++
++WRAPPED_FIELDS = (
++    "experiment_id",
++    "milestone",
++    "status",
++    "honest_verdict",
++    "inference_substrate",
++    "fixture_path",
++    "tests_run",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "experiment_id",
++    "milestone",
++    "status",
++    "honest_verdict",
++    "inference_substrate",
++    "rewrite_case_count",
++    "rewrite_acceptability_rate",
++    "complete_change_coverage_rate",
++    "unsafe_rewrite_rejection_rate",
++    "false_accept_count",
++    "rewrite_state_fixture_ready",
++    "tests_run",
++)
++
++
++@dataclass(frozen=True)
++class RewriteState:
++    """One side of a rewrite transition, represented as typed verifier state."""
++
++    text: str
++    premise_valid: bool
++    facts: dict[str, str]
++    attributes: dict[str, str]
++    citations: tuple[str, ...]
++    expected_label: str
++
++
++@dataclass(frozen=True)
++class ChangeObligation:
++    """A required typed transition that the target state must complete."""
++
++    obligation_id: str
++    change_type: str
++    field: str
++    source_value: Any
++    target_value: Any
++
++
++@dataclass(frozen=True)
++class RewriteCase:
++    """A source-to-target rewrite with evidence and expected gate outcomes."""
++
++    case_id: str
++    case_type: str
++    description: str
++    evidence_facts: dict[str, str]
++    allowed_citations: tuple[str, ...]
++    source: RewriteState
++    target: RewriteState
++    change_obligations: tuple[ChangeObligation, ...]
++    expected_label_preservation: bool
++    expected_complete_change_coverage: bool
++    expected_accept: bool
++    expected_unsafe_rejected: bool
++    label_source: str
++
++
++@dataclass(frozen=True)
++class StateScore:
++    """Deterministic semantic label plus structured evidence failure reasons."""
++
++    label: str
++    conflict_keys: tuple[str, ...]
++    fabricated_fact_keys: tuple[str, ...]
++    fabricated_citations: tuple[str, ...]
++
++
++def _wrap(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def _stable_json(payload: Any) -> str:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _string_map(payload: JsonDict) -> dict[str, str]:
++    return {str(key): str(value) for key, value in payload.items()}
++
++
++def _state_from_payload(payload: JsonDict) -> RewriteState:
++    return RewriteState(
++        text=str(payload["text"]),
++        premise_valid=bool(payload["premise_valid"]),
++        facts=_string_map(payload["facts"]),
++        attributes=_string_map(payload["attributes"]),
++        citations=tuple(str(citation) for citation in payload["citations"]),
++        expected_label=str(payload["expected_label"]),
++    )
++
++
++def _obligation_from_payload(payload: JsonDict) -> ChangeObligation:
++    return ChangeObligation(
++        obligation_id=str(payload["obligation_id"]),
++        change_type=str(payload["change_type"]),
++        field=str(payload["field"]),
++        source_value=payload["source_value"],
++        target_value=payload["target_value"],
++    )
++
++
++def _case_from_payload(payload: JsonDict, label_source: str) -> RewriteCase:
++    return RewriteCase(
++        case_id=str(payload["case_id"]),
++        case_type=str(payload["case_type"]),
++        description=str(payload["description"]),
++        evidence_facts=_string_map(payload["evidence_facts"]),
++        allowed_citations=tuple(str(citation) for citation in payload["allowed_citations"]),
++        source=_state_from_payload(payload["source"]),
++        target=_state_from_payload(payload["target"]),
++        change_obligations=tuple(
++            _obligation_from_payload(item) for item in payload["change_obligations"]
++        ),
++        expected_label_preservation=bool(payload["expected_label_preservation"]),
++        expected_complete_change_coverage=bool(payload["expected_complete_change_coverage"]),
++        expected_accept=bool(payload["expected_accept"]),
++        expected_unsafe_rejected=bool(payload["expected_unsafe_rejected"]),
++        label_source=label_source,
++    )
++
++
++def load_fixture(path: Path | None = None) -> tuple[RewriteCase, ...]:
++    """Load the checked-in no-LLM rewrite-state fixture."""
++
++    fixture_path = REPO_ROOT / FIXTURE_RELATIVE_PATH if path is None else path
++    payload = json.loads(fixture_path.read_text(encoding="utf-8"))
++    label_source = str(payload["label_source"])
++    return tuple(_case_from_payload(case, label_source) for case in payload["cases"])
++
++
++def case_by_id(cases: tuple[RewriteCase, ...], case_id: str) -> RewriteCase:
++    """Return one rewrite case by its stable fixture ID."""
++
++    return next(case for case in cases if case.case_id == case_id)
++
++
++def rewrite_case_type_counts(cases: tuple[RewriteCase, ...]) -> dict[str, int]:
++    """Count each required rewrite case type, including absent types as zero."""
++
++    counts = Counter(case.case_type for case in cases)
++    return {case_type: counts.get(case_type, 0) for case_type in REQUIRED_CASE_TYPES}
++
++
++def score_state(
++    state: RewriteState,
++    *,
++    evidence_facts: dict[str, str],
++    allowed_citations: tuple[str, ...],
++) -> StateScore:
++    """Score one typed state without consulting the free-form rewrite text."""
++
++    if not state.premise_valid:
++        return StateScore(
++            label="premise-invalid",
++            conflict_keys=(),
++            fabricated_fact_keys=(),
++            fabricated_citations=(),
++        )
++
++    conflict_keys = tuple(
++        sorted(
++            key
++            for key, value in state.facts.items()
++            if key in evidence_facts and evidence_facts[key] != value
++        )
++    )
++    fabricated_fact_keys = tuple(sorted(key for key in state.facts if key not in evidence_facts))
++    fabricated_citations = tuple(
++        sorted(citation for citation in state.citations if citation not in allowed_citations)
++    )
++    label = (
++        "contradictory"
++        if conflict_keys
++        else "unsupported"
++        if fabricated_fact_keys or fabricated_citations
++        else "supported"
++    )
++    return StateScore(
++        label=label,
++        conflict_keys=conflict_keys,
++        fabricated_fact_keys=fabricated_fact_keys,
++        fabricated_citations=fabricated_citations,
++    )
++
++
++def _state_value(state: RewriteState, field: str) -> Any:
++    if field == "premise_valid":
++        return state.premise_valid
++    namespace, _, key = field.partition(".")
++    return {"facts": state.facts, "attributes": state.attributes}.get(namespace, {}).get(key)
++
++
++def _obligation_coverage(case: RewriteCase) -> tuple[bool, tuple[str, ...]]:
++    missing = []
++    for obligation in case.change_obligations:
++        source_matches = _state_value(case.source, obligation.field) == obligation.source_value
++        target_matches = _state_value(case.target, obligation.field) == obligation.target_value
++        if not (source_matches and target_matches):
++            missing.append(obligation.obligation_id)
++    return not missing, tuple(missing)
++
++
++def _changed_fact_keys(source: RewriteState, target: RewriteState) -> tuple[str, ...]:
++    fact_keys = set(source.facts) | set(target.facts)
++    return tuple(sorted(key for key in fact_keys if source.facts.get(key) != target.facts.get(key)))
++
++
++def _required_fact_change_keys(case: RewriteCase) -> set[str]:
++    return {
++        obligation.field.partition(".")[2]
++        for obligation in case.change_obligations
++        if obligation.field.startswith("facts.")
++        and obligation.source_value != obligation.target_value
++    }
++
++
++def _case_result(case: RewriteCase) -> JsonDict:
++    source_score = score_state(
++        case.source,
++        evidence_facts=case.evidence_facts,
++        allowed_citations=case.allowed_citations,
++    )
++    target_score = score_state(
++        case.target,
++        evidence_facts=case.evidence_facts,
++        allowed_citations=case.allowed_citations,
++    )
++    complete_change_coverage, missing_obligations = _obligation_coverage(case)
++    label_preserved = source_score.label == target_score.label
++    label_preservation_matches_expected = (
++        label_preserved == case.expected_label_preservation
++    )
++    source_label_matches_expected = source_score.label == case.source.expected_label
++    target_label_matches_expected = target_score.label == case.target.expected_label
++    changed_fact_keys = _changed_fact_keys(case.source, case.target)
++    overbroad_fact_keys = tuple(
++        key for key in changed_fact_keys if key not in _required_fact_change_keys(case)
++    )
++
++    rejection_reasons = []
++    if not complete_change_coverage:
++        rejection_reasons.append("missing_required_change")
++    if case.expected_label_preservation and not label_preserved:
++        rejection_reasons.append("label_preservation_failed")
++    if not case.expected_label_preservation and label_preserved:
++        rejection_reasons.append("expected_label_change_missing")
++    if source_score.label != "contradictory" and target_score.label == "contradictory":
++        rejection_reasons.append("contradiction_introduced")
++    if target_score.fabricated_fact_keys:
++        rejection_reasons.append("fabricated_fact")
++    if target_score.fabricated_citations:
++        rejection_reasons.append("fabricated_citation")
++    if not case.source.premise_valid and not case.target.premise_valid:
++        rejection_reasons.append("invalid_premise_preserved")
++    if overbroad_fact_keys:
++        rejection_reasons.append("overbroad_fact_change")
++
++    accepted = (
++        not rejection_reasons
++        and source_label_matches_expected
++        and target_label_matches_expected
++    )
++    return {
++        "case_id": case.case_id,
++        "case_type": case.case_type,
++        "source_label": source_score.label,
++        "target_label": target_score.label,
++        "source_label_matches_expected": source_label_matches_expected,
++        "target_label_matches_expected": target_label_matches_expected,
++        "expected_label_preservation": case.expected_label_preservation,
++        "label_preserved": label_preserved,
++        "label_preservation_matches_expected": label_preservation_matches_expected,
++        "complete_change_coverage": complete_change_coverage,
++        "expected_complete_change_coverage": case.expected_complete_change_coverage,
++        "complete_change_coverage_matches_expected": (
++            complete_change_coverage == case.expected_complete_change_coverage
++        ),
++        "expected_accept": case.expected_accept,
++        "accepted": accepted,
++        "acceptability_matches_expected": accepted == case.expected_accept,
++        "expected_unsafe_rejected": case.expected_unsafe_rejected,
++        "unsafe_rewrite_rejected": (
++            case.expected_unsafe_rejected and not accepted and bool(rejection_reasons)
++        ),
++        "missing_obligations": list(missing_obligations),
++        "rejection_reasons": rejection_reasons,
++        "conflict_keys": list(target_score.conflict_keys),
++        "fabricated_fact_keys": list(target_score.fabricated_fact_keys),
++        "fabricated_citations": list(target_score.fabricated_citations),
++        "changed_fact_keys": list(changed_fact_keys),
++        "overbroad_fact_keys": list(overbroad_fact_keys),
++    }
++
++
++def _rate(passed: int, total: int) -> float:
++    return 1.0 if total == 0 else passed / total
++
++
++def evaluate_fixture(cases: tuple[RewriteCase, ...]) -> JsonDict:
++    """Evaluate acceptability, obligation coverage, and unsafe rejection gates."""
++
++    case_results = [_case_result(case) for case in cases]
++    case_type_counts = rewrite_case_type_counts(cases)
++    missing_case_types = [
++        case_type for case_type, count in case_type_counts.items() if count == 0
++    ]
++    unsafe_rows = [row for row in case_results if row["expected_unsafe_rejected"] is True]
++    false_accept_ids = [
++        row["case_id"]
++        for row in case_results
++        if row["expected_accept"] is False and row["accepted"] is True
++    ]
++    label_mismatch_ids = [
++        row["case_id"]
++        for row in case_results
++        if not row["source_label_matches_expected"] or not row["target_label_matches_expected"]
++    ]
++    rewrite_acceptability_rate = _rate(
++        sum(1 for row in case_results if row["acceptability_matches_expected"]),
++        len(case_results),
++    )
++    complete_change_coverage_rate = _rate(
++        sum(1 for row in case_results if row["complete_change_coverage_matches_expected"]),
++        len(case_results),
++    )
++    unsafe_rewrite_rejection_rate = _rate(
++        sum(1 for row in unsafe_rows if row["unsafe_rewrite_rejected"]),
++        len(unsafe_rows),
++    )
++    ready = (
++        len(case_results) == len(REQUIRED_CASE_TYPES)
++        and not missing_case_types
++        and not false_accept_ids
++        and not label_mismatch_ids
++        and rewrite_acceptability_rate == 1.0
++        and complete_change_coverage_rate == 1.0
++        and unsafe_rewrite_rejection_rate == 1.0
++    )
++    return {
++        "ready": ready,
++        "case_results": case_results,
++        "case_type_counts": case_type_counts,
++        "missing_case_types": missing_case_types,
++        "false_accept_ids": false_accept_ids,
++        "label_mismatch_ids": label_mismatch_ids,
++        "rewrite_case_count": len(case_results),
++        "rewrite_acceptability_rate": rewrite_acceptability_rate,
++        "complete_change_coverage_rate": complete_change_coverage_rate,
++        "unsafe_rewrite_rejection_rate": unsafe_rewrite_rejection_rate,
++        "false_accept_count": len(false_accept_ids),
++    }
++
++
++def _consumer_contract() -> JsonDict:
++    return {
++        "next_experiment": "Exp5326",
++        "fixture_path": str(FIXTURE_RELATIVE_PATH),
++        "ready_field": "rewrite_state_fixture_ready",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "required_metrics": [
++            "rewrite_case_count",
++            "rewrite_acceptability_rate",
++            "complete_change_coverage_rate",
++            "unsafe_rewrite_rejection_rate",
++            "false_accept_count",
++        ],
++    }
++
++
++def _readiness_blockers(evaluation: JsonDict) -> list[str]:
++    blockers = []
++    if evaluation["missing_case_types"]:
++        blockers.append("missing case types: " + ", ".join(evaluation["missing_case_types"]))
++    if evaluation["false_accept_ids"]:
++        blockers.append("false accepts: " + ", ".join(evaluation["false_accept_ids"]))
++    if evaluation["label_mismatch_ids"]:
++        blockers.append("label mismatches: " + ", ".join(evaluation["label_mismatch_ids"]))
++    if evaluation["rewrite_acceptability_rate"] != 1.0:
++        blockers.append("rewrite acceptability mismatch")
++    if evaluation["complete_change_coverage_rate"] != 1.0:
++        blockers.append("complete-change coverage mismatch")
++    if evaluation["unsafe_rewrite_rejection_rate"] != 1.0:
++        blockers.append("unsafe rewrite rejection mismatch")
++    return blockers
++
++
++def build_artifact(
++    cases: tuple[RewriteCase, ...],
++    *,
++    tests_run: list[JsonDict],
++) -> JsonDict:
++    """Build the Exp 5325 result artifact from deterministic rewrite states."""
++
++    evaluation = evaluate_fixture(cases)
++    consumer_contract = _consumer_contract()
++    ready = bool(evaluation["ready"] and consumer_contract["next_experiment"] == "Exp5326")
++    status = "complete" if ready else "blocked"
++    verdict = (
++        "complete: deterministic rewrite-state fixture usable by Exp5326"
++        if ready
++        else "blocked_rewrite_state_fixture_not_ready"
++    )
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NUMBER,
++        "experiment_id": _wrap("experiment_id", EXPERIMENT_NAME),
++        "milestone": _wrap("milestone", MILESTONE),
++        "status": _wrap("status", status),
++        "honest_verdict": _wrap("honest_verdict", verdict),
++        "inference_substrate": _wrap("inference_substrate", INFERENCE_SUBSTRATE),
++        "fixture_path": _wrap("fixture_path", str(FIXTURE_RELATIVE_PATH)),
++        "rewrite_case_count": evaluation["rewrite_case_count"],
++        "rewrite_acceptability_rate": evaluation["rewrite_acceptability_rate"],
++        "complete_change_coverage_rate": evaluation["complete_change_coverage_rate"],
++        "unsafe_rewrite_rejection_rate": evaluation["unsafe_rewrite_rejection_rate"],
++        "false_accept_count": evaluation["false_accept_count"],
++        "rewrite_state_fixture_ready": ready,
++        "readiness_blockers": _readiness_blockers(evaluation),
++        "case_type_counts": evaluation["case_type_counts"],
++        "case_results": evaluation["case_results"],
++        "consumer_contract": consumer_contract,
++        "fixture_checksum": _stable_json(evaluation["case_results"]),
++        "field_principles": FIELD_PRINCIPLES,
++        "run_date": RUN_DATE,
++        "spec_refs": list(SPEC_REFS),
++        "tests_run": _wrap("tests_run", tests_run),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: JsonDict) -> None:
++    """Assert the schema fields that Exp 5326 and conductor gates depend on."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++    for field in WRAPPED_FIELDS:
++        assert artifact[field]["principle"] == FIELD_PRINCIPLES[field]
++        assert "value" in artifact[field]
++    assert artifact["honest_verdict"]["value"].startswith(TERMINAL_PREFIXES)
++    assert artifact["inference_substrate"]["value"] == INFERENCE_SUBSTRATE
++    assert type(artifact["rewrite_case_count"]) is int
++    assert isinstance(artifact["rewrite_acceptability_rate"], int | float)
++    assert isinstance(artifact["complete_change_coverage_rate"], int | float)
++    assert isinstance(artifact["unsafe_rewrite_rejection_rate"], int | float)
++    assert 0.0 <= artifact["rewrite_acceptability_rate"] <= 1.0
++    assert 0.0 <= artifact["complete_change_coverage_rate"] <= 1.0
++    assert 0.0 <= artifact["unsafe_rewrite_rejection_rate"] <= 1.0
++    assert type(artifact["false_accept_count"]) is int
++    assert type(artifact["rewrite_state_fixture_ready"]) is bool
++    assert artifact["fixture_path"]["value"] == str(FIXTURE_RELATIVE_PATH)
++    assert artifact["consumer_contract"]["next_experiment"] == "Exp5326"
++    assert artifact["consumer_contract"]["inference_substrate"] == INFERENCE_SUBSTRATE
++    assert set(REQUIRED_CASE_TYPES) <= set(artifact["case_type_counts"])
++    assert isinstance(artifact["tests_run"]["value"], list)
++    if artifact["rewrite_state_fixture_ready"]:
++        assert artifact["status"]["value"] == "complete"
++        assert artifact["false_accept_count"] == 0
++        assert artifact["rewrite_acceptability_rate"] == 1.0
++        assert artifact["complete_change_coverage_rate"] == 1.0
++        assert artifact["unsafe_rewrite_rejection_rate"] == 1.0
++    else:
++        assert artifact["status"]["value"] == "blocked"
++
++
++def run(
++    *,
++    result_path: Path = REPO_ROOT / RESULT_RELATIVE_PATH,
++    cases: tuple[RewriteCase, ...] | list[RewriteCase] | None = None,
++    tests_run: list[JsonDict] | None = None,
++) -> JsonDict:
++    """Run the offline rewrite-state evaluation and write the result artifact."""
++
++    fixture_cases = load_fixture() if cases is None else tuple(cases)
++    artifact = build_artifact(fixture_cases, tests_run=[] if tests_run is None else tests_run)
++    write_json(result_path, artifact)
++    return artifact
++
++
++def main(argv: list[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--result-path", type=Path, default=REPO_ROOT / RESULT_RELATIVE_PATH)
++    args = parser.parse_args(argv)
++    artifact = run(result_path=args.result_path)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index f5784c6fa2..ae2f946ac0 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-06T22:58:48.421083Z",
+-  "duration_s": 0.06697726249694824,
++  "run_date": "2026-07-06T23:16:24.654590Z",
++  "duration_s": 0.07095956802368164,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ff23979ef3e97ab630df996ad612f2a0886a34b79cee073587afe29609f75425",
++  "reproducibility_checksum": "13929b2fb38688b5eed9d19d709681fc0617358aa57fbd5d204a6f49b2077ae6",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "3eb2311f466371222ba0ceee5fa09bb5832aba8b"
++    "adversarial_verify_version": "43a5e7804e5e5187d7770df55296e1161fd8c7d0"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index fa8052dc3a..da610d95b5 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-06T22:58:48.529402Z",
+-  "duration_s": 0.0996694564819336,
++  "run_date": "2026-07-06T23:16:24.743851Z",
++  "duration_s": 0.08203601837158203,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "dd79c3051bb44c49733f8409325ba56e5dba01bd7ca209a1316925c3596be4ad",
++  "reproducibility_checksum": "1065fcfed57ac3cca9f214314b8f3234db48bbf208332168c8754a92d1b0164e",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "3eb2311f466371222ba0ceee5fa09bb5832aba8b"
++    "adversarial_verify_version": "43a5e7804e5e5187d7770df55296e1161fd8c7d0"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index a21d1945d5..09a67cffbe 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1598339080810547,
++  "efficiency_gains_ms": 2.0813941955566406,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 524d4d35d2..74a5612622 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.9032893255352974e-05,
++  "duration_s": 3.765011206269264e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5325_theoria_rewrite_state_fixture_v486.json b/results/experiment_5325_theoria_rewrite_state_fixture_v486.json
+new file mode 100644
+index 0000000000..404c5459d9
+--- /dev/null
++++ b/results/experiment_5325_theoria_rewrite_state_fixture_v486.json
+@@ -0,0 +1,276 @@
++{
++  "case_results": [
++    {
++      "acceptability_matches_expected": true,
++      "accepted": true,
++      "case_id": "rsf-001-safe-paraphrase",
++      "case_type": "safe_paraphrase",
++      "changed_fact_keys": [],
++      "complete_change_coverage": true,
++      "complete_change_coverage_matches_expected": true,
++      "conflict_keys": [],
++      "expected_accept": true,
++      "expected_complete_change_coverage": true,
++      "expected_label_preservation": true,
++      "expected_unsafe_rejected": false,
++      "fabricated_citations": [],
++      "fabricated_fact_keys": [],
++      "label_preservation_matches_expected": true,
++      "label_preserved": true,
++      "missing_obligations": [],
++      "overbroad_fact_keys": [],
++      "rejection_reasons": [],
++      "source_label": "supported",
++      "source_label_matches_expected": true,
++      "target_label": "supported",
++      "target_label_matches_expected": true,
++      "unsafe_rewrite_rejected": false
++    },
++    {
++      "acceptability_matches_expected": true,
++      "accepted": false,
++      "case_id": "rsf-002-contradiction-introduction",
++      "case_type": "contradiction_introduction",
++      "changed_fact_keys": [
++        "duration_minutes"
++      ],
++      "complete_change_coverage": true,
++      "complete_change_coverage_matches_expected": true,
++      "conflict_keys": [
++        "duration_minutes"
++      ],
++      "expected_accept": false,
++      "expected_complete_change_coverage": true,
++      "expected_label_preservation": true,
++      "expected_unsafe_rejected": true,
++      "fabricated_citations": [],
++      "fabricated_fact_keys": [],
++      "label_preservation_matches_expected": false,
++      "label_preserved": false,
++      "missing_obligations": [],
++      "overbroad_fact_keys": [
++        "duration_minutes"
++      ],
++      "rejection_reasons": [
++        "label_preservation_failed",
++        "contradiction_introduced",
++        "overbroad_fact_change"
++      ],
++      "source_label": "supported",
++      "source_label_matches_expected": true,
++      "target_label": "contradictory",
++      "target_label_matches_expected": true,
++      "unsafe_rewrite_rejected": true
++    },
++    {
++      "acceptability_matches_expected": true,
++      "accepted": false,
++      "case_id": "rsf-003-missing-required-change",
++      "case_type": "missing_required_change",
++      "changed_fact_keys": [],
++      "complete_change_coverage": false,
++      "complete_change_coverage_matches_expected": true,
++      "conflict_keys": [],
++      "expected_accept": false,
++      "expected_complete_change_coverage": false,
++      "expected_label_preservation": true,
++      "expected_unsafe_rejected": true,
++      "fabricated_citations": [],
++      "fabricated_fact_keys": [],
++      "label_preservation_matches_expected": true,
++      "label_preserved": true,
++      "missing_obligations": [
++        "rsf-003-obligation-review-state"
++      ],
++      "overbroad_fact_keys": [],
++      "rejection_reasons": [
++        "missing_required_change"
++      ],
++      "source_label": "supported",
++      "source_label_matches_expected": true,
++      "target_label": "supported",
++      "target_label_matches_expected": true,
++      "unsafe_rewrite_rejected": true
++    },
++    {
++      "acceptability_matches_expected": true,
++      "accepted": false,
++      "case_id": "rsf-004-fabricated-premise-citation",
++      "case_type": "fabricated_premise_citation",
++      "changed_fact_keys": [
++        "external_report_claim"
++      ],
++      "complete_change_coverage": true,
++      "complete_change_coverage_matches_expected": true,
++      "conflict_keys": [],
++      "expected_accept": false,
++      "expected_complete_change_coverage": true,
++      "expected_label_preservation": true,
++      "expected_unsafe_rejected": true,
++      "fabricated_citations": [
++        "phantom-report-77"
++      ],
++      "fabricated_fact_keys": [
++        "external_report_claim"
++      ],
++      "label_preservation_matches_expected": false,
++      "label_preserved": false,
++      "missing_obligations": [],
++      "overbroad_fact_keys": [
++        "external_report_claim"
++      ],
++      "rejection_reasons": [
++        "label_preservation_failed",
++        "fabricated_fact",
++        "fabricated_citation",
++        "overbroad_fact_change"
++      ],
++      "source_label": "supported",
++      "source_label_matches_expected": true,
++      "target_label": "unsupported",
++      "target_label_matches_expected": true,
++      "unsafe_rewrite_rejected": true
++    },
++    {
++      "acceptability_matches_expected": true,
++      "accepted": false,
++      "case_id": "rsf-005-invalid-premise-preserved",
++      "case_type": "invalid_premise_preserved",
++      "changed_fact_keys": [],
++      "complete_change_coverage": false,
++      "complete_change_coverage_matches_expected": true,
++      "conflict_keys": [],
++      "expected_accept": false,
++      "expected_complete_change_coverage": false,
++      "expected_label_preservation": false,
++      "expected_unsafe_rejected": true,
++      "fabricated_citations": [],
++      "fabricated_fact_keys": [],
++      "label_preservation_matches_expected": false,
++      "label_preserved": true,
++      "missing_obligations": [
++        "rsf-005-obligation-premise-repair"
++      ],
++      "overbroad_fact_keys": [],
++      "rejection_reasons": [
++        "missing_required_change",
++        "expected_label_change_missing",
++        "invalid_premise_preserved"
++      ],
++      "source_label": "premise-invalid",
++      "source_label_matches_expected": true,
++      "target_label": "premise-invalid",
++      "target_label_matches_expected": true,
++      "unsafe_rewrite_rejected": true
++    },
++    {
++      "acceptability_matches_expected": true,
++      "accepted": false,
++      "case_id": "rsf-006-overbroad-rewrite",
++      "case_type": "overbroad_rewrite",
++      "changed_fact_keys": [
++        "scope"
++      ],
++      "complete_change_coverage": true,
++      "complete_change_coverage_matches_expected": true,
++      "conflict_keys": [
++        "scope"
++      ],
++      "expected_accept": false,
++      "expected_complete_change_coverage": true,
++      "expected_label_preservation": true,
++      "expected_unsafe_rejected": true,
++      "fabricated_citations": [],
++      "fabricated_fact_keys": [],
++      "label_preservation_matches_expected": false,
++      "label_preserved": false,
++      "missing_obligations": [],
++      "overbroad_fact_keys": [
++        "scope"
++      ],
++      "rejection_reasons": [
++        "label_preservation_failed",
++        "contradiction_introduced",
++        "overbroad_fact_change"
++      ],
++      "source_label": "supported",
++      "source_label_matches_expected": true,
++      "target_label": "contradictory",
++      "target_label_matches_expected": true,
++      "unsafe_rewrite_rejected": true
++    }
++  ],
++  "case_type_counts": {
++    "contradiction_introduction": 1,
++    "fabricated_premise_citation": 1,
++    "invalid_premise_preserved": 1,
++    "missing_required_change": 1,
++    "overbroad_rewrite": 1,
++    "safe_paraphrase": 1
++  },
++  "complete_change_coverage_rate": 1.0,
++  "consumer_contract": {
++    "fixture_path": "data/rewrite_state_fixture_v486.json",
++    "inference_substrate": "deterministic_rewrite_state_fixture",
++    "next_experiment": "Exp5326",
++    "ready_field": "rewrite_state_fixture_ready",
++    "required_metrics": [
++      "rewrite_case_count",
++      "rewrite_acceptability_rate",
++      "complete_change_coverage_rate",
++      "unsafe_rewrite_rejection_rate",
++      "false_accept_count"
++    ]
++  },
++  "experiment": 5325,
++  "experiment_id": {
++    "principle": "Traceability for the Exp5325 deterministic Theoria rewrite-state fixture.",
++    "value": "experiment_5325_theoria_rewrite_state_fixture_v486"
++  },
++  "false_accept_count": 0,
++  "field_principles": {
++    "experiment_id": "Traceability for the Exp5325 deterministic Theoria rewrite-state fixture.",
++    "fixture_path": "Points downstream gates to the exact deterministic rewrite-state fixture used to compute the reported metrics.",
++    "honest_verdict": "Terminal verdict must start with complete: or blocked_ and state whether Exp5326 can consume the deterministic rewrite-state fixture.",
++    "inference_substrate": "Declares deterministic_rewrite_state_fixture so the artifact is read as typed offline rewrite-state checks, not live model quality.",
++    "milestone": "Milestone accountability for the V486 rewrite-state fixture gate.",
++    "status": "Machine-readable terminal state for downstream rewrite-quality gates.",
++    "tests_run": "Commands run to validate the rewrite-state module, artifact schema, new-code coverage, and repository tests."
++  },
++  "fixture_checksum": "[{\"acceptability_matches_expected\":true,\"accepted\":true,\"case_id\":\"rsf-001-safe-paraphrase\",\"case_type\":\"safe_paraphrase\",\"changed_fact_keys\":[],\"complete_change_coverage\":true,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[],\"expected_accept\":true,\"expected_complete_change_coverage\":true,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":false,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":true,\"label_preserved\":true,\"missing_obligations\":[],\"overbroad_fact_keys\":[],\"rejection_reasons\":[],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"supported\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":false},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-002-contradiction-introduction\",\"case_type\":\"contradiction_introduction\",\"changed_fact_keys\":[\"duration_minutes\"],\"complete_change_coverage\":true,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[\"duration_minutes\"],\"expected_accept\":false,\"expected_complete_change_coverage\":true,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":false,\"label_preserved\":false,\"missing_obligations\":[],\"overbroad_fact_keys\":[\"duration_minutes\"],\"rejection_reasons\":[\"label_preservation_failed\",\"contradiction_introduced\",\"overbroad_fact_change\"],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"contradictory\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-003-missing-required-change\",\"case_type\":\"missing_required_change\",\"changed_fact_keys\":[],\"complete_change_coverage\":false,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[],\"expected_accept\":false,\"expected_complete_change_coverage\":false,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":true,\"label_preserved\":true,\"missing_obligations\":[\"rsf-003-obligation-review-state\"],\"overbroad_fact_keys\":[],\"rejection_reasons\":[\"missing_required_change\"],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"supported\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-004-fabricated-premise-citation\",\"case_type\":\"fabricated_premise_citation\",\"changed_fact_keys\":[\"external_report_claim\"],\"complete_change_coverage\":true,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[],\"expected_accept\":false,\"expected_complete_change_coverage\":true,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[\"phantom-report-77\"],\"fabricated_fact_keys\":[\"external_report_claim\"],\"label_preservation_matches_expected\":false,\"label_preserved\":false,\"missing_obligations\":[],\"overbroad_fact_keys\":[\"external_report_claim\"],\"rejection_reasons\":[\"label_preservation_failed\",\"fabricated_fact\",\"fabricated_citation\",\"overbroad_fact_change\"],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"unsupported\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-005-invalid-premise-preserved\",\"case_type\":\"invalid_premise_preserved\",\"changed_fact_keys\":[],\"complete_change_coverage\":false,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[],\"expected_accept\":false,\"expected_complete_change_coverage\":false,\"expected_label_preservation\":false,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":false,\"label_preserved\":true,\"missing_obligations\":[\"rsf-005-obligation-premise-repair\"],\"overbroad_fact_keys\":[],\"rejection_reasons\":[\"missing_required_change\",\"expected_label_change_missing\",\"invalid_premise_preserved\"],\"source_label\":\"premise-invalid\",\"source_label_matches_expected\":true,\"target_label\":\"premise-invalid\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-006-overbroad-rewrite\",\"case_type\":\"overbroad_rewrite\",\"changed_fact_keys\":[\"scope\"],\"complete_change_coverage\":true,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[\"scope\"],\"expected_accept\":false,\"expected_complete_change_coverage\":true,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":false,\"label_preserved\":false,\"missing_obligations\":[],\"overbroad_fact_keys\":[\"scope\"],\"rejection_reasons\":[\"label_preservation_failed\",\"contradiction_introduced\",\"overbroad_fact_change\"],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"contradictory\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true}]",
++  "fixture_path": {
++    "principle": "Points downstream gates to the exact deterministic rewrite-state fixture used to compute the reported metrics.",
++    "value": "data/rewrite_state_fixture_v486.json"
++  },
++  "honest_verdict": {
++    "principle": "Terminal verdict must start with complete: or blocked_ and state whether Exp5326 can consume the deterministic rewrite-state fixture.",
++    "value": "complete: deterministic rewrite-state fixture usable by Exp5326"
++  },
++  "inference_substrate": {
++    "principle": "Declares deterministic_rewrite_state_fixture so the artifact is read as typed offline rewrite-state checks, not live model quality.",
++    "value": "deterministic_rewrite_state_fixture"
++  },
++  "milestone": {
++    "principle": "Milestone accountability for the V486 rewrite-state fixture gate.",
++    "value": "2026.07.486"
++  },
++  "readiness_blockers": [],
++  "rewrite_acceptability_rate": 1.0,
++  "rewrite_case_count": 6,
++  "rewrite_state_fixture_ready": true,
++  "run_date": "20260706",
++  "schema": "carnot.experiment_5325.theoria_rewrite_state_fixture.v486",
++  "spec_refs": [
++    "REQ-VERIFY-5325",
++    "SCENARIO-VERIFY-5325"
++  ],
++  "status": {
++    "principle": "Machine-readable terminal state for downstream rewrite-quality gates.",
++    "value": "complete"
++  },
++  "tests_run": {
++    "principle": "Commands run to validate the rewrite-state module, artifact schema, new-code coverage, and repository tests.",
++    "value": []
++  },
++  "unsafe_rewrite_rejection_rate": 1.0
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ea1de80e64..a0620d6de3 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260706",
+-  "started_at": "2026-07-06T22:58:31Z",
+-  "finished_at": "2026-07-06T22:58:31Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-06T23:16:10Z",
++  "finished_at": "2026-07-06T23:16:10Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 03e2ad30d2..4af4ecdf9e 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260706",
+-  "started_at": "2026-07-06T22:58:31Z",
+-  "finished_at": "2026-07-06T22:58:31Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-06T23:16:10Z",
++  "finished_at": "2026-07-06T23:16:10Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 3fca6ddf32..edc574fc16 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260706",
+-  "started_at": "2026-07-06T22:58:31Z",
+-  "finished_at": "2026-07-06T22:58:31Z",
++  "started_at": "2026-07-06T23:16:10Z",
++  "finished_at": "2026-07-06T23:16:10Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5325_theoria_rewrite_state_fixture_v486.py b/tests/python/test_experiment_5325_theoria_rewrite_state_fixture_v486.py
+new file mode 100644
+index 0000000000..eadbf439ba
+--- /dev/null
++++ b/tests/python/test_experiment_5325_theoria_rewrite_state_fixture_v486.py
+@@ -0,0 +1,246 @@
++"""Tests for Exp 5325 deterministic rewrite-state fixture.
++
++Spec refs: REQ-VERIFY-5325, SCENARIO-VERIFY-5325.
++"""
++
++from __future__ import annotations
++
++from dataclasses import replace
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5325_theoria_rewrite_state_fixture_v486 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "verification" / "spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def _rows_by_case(evaluation: mod.JsonDict) -> dict[str, mod.JsonDict]:
++    return {row["case_id"]: row for row in evaluation["case_results"]}
++
++
++def test_req_verify_5325_spec_declares_rewrite_state_contract() -> None:
++    """REQ-VERIFY-5325: OpenSpec anchors the deterministic rewrite-state gate."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-VERIFY-5325") : spec.index("### REQ-VERIFY-5324")]
++    normalized_section = " ".join(section.split())
++
++    for marker in (
++        "REQ-VERIFY-5325",
++        "SCENARIO-VERIFY-5325",
++        str(mod.FIXTURE_RELATIVE_PATH),
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.INFERENCE_SUBSTRATE,
++        "rewrite_case_count",
++        "rewrite_acceptability_rate",
++        "complete_change_coverage_rate",
++        "unsafe_rewrite_rejection_rate",
++        "false_accept_count",
++        "rewrite_state_fixture_ready",
++        "safe paraphrase",
++        "contradiction introduction",
++        "missing required change",
++        "fabricated premise/citation",
++        "invalid premise preserved",
++        "overbroad rewrite",
++        "Exp 5326",
++        "scripts/research_conductor.py",
++    ):
++        assert marker in section
++
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized_section
++
++
++def test_req_verify_5325_fixture_has_required_typed_cases() -> None:
++    """REQ-VERIFY-5325: fixture contains the six typed rewrite transition cases."""
++
++    cases = mod.load_fixture()
++    counts = mod.rewrite_case_type_counts(cases)
++
++    assert (REPO / mod.FIXTURE_RELATIVE_PATH).exists()
++    assert counts == {
++        "safe_paraphrase": 1,
++        "contradiction_introduction": 1,
++        "missing_required_change": 1,
++        "fabricated_premise_citation": 1,
++        "invalid_premise_preserved": 1,
++        "overbroad_rewrite": 1,
++    }
++    assert len(cases) == 6
++    assert mod.case_by_id(cases, "rsf-001-safe-paraphrase").expected_accept is True
++    assert [
++        case.case_type for case in cases if case.expected_accept is False
++    ] == [
++        "contradiction_introduction",
++        "missing_required_change",
++        "fabricated_premise_citation",
++        "invalid_premise_preserved",
++        "overbroad_rewrite",
++    ]
++
++    for case in cases:
++        assert case.label_source == "curated_deterministic_rewrite_state_fixture_v486"
++        assert case.change_obligations
++        assert case.source.expected_label in mod.SEMANTIC_LABELS
++        assert case.target.expected_label in mod.SEMANTIC_LABELS
++
++
++def test_scenario_verify_5325_accepts_only_safe_paraphrase() -> None:
++    """SCENARIO-VERIFY-5325: safe rewrite accepts and every unsafe case rejects."""
++
++    evaluation = mod.evaluate_fixture(mod.load_fixture())
++    rows = _rows_by_case(evaluation)
++
++    assert evaluation["rewrite_acceptability_rate"] == pytest.approx(1.0)
++    assert evaluation["complete_change_coverage_rate"] == pytest.approx(1.0)
++    assert evaluation["unsafe_rewrite_rejection_rate"] == pytest.approx(1.0)
++    assert evaluation["false_accept_count"] == 0
++    assert evaluation["ready"] is True
++
++    safe = rows["rsf-001-safe-paraphrase"]
++    assert safe["accepted"] is True
++    assert safe["expected_accept"] is True
++    assert safe["complete_change_coverage"] is True
++    assert safe["label_preserved"] is True
++    assert safe["target_label"] == "supported"
++    assert safe["rejection_reasons"] == []
++
++    rejected = [row for row in rows.values() if row["expected_accept"] is False]
++    assert len(rejected) == 5
++    assert all(row["accepted"] is False for row in rejected)
++    assert all(row["unsafe_rewrite_rejected"] is True for row in rejected)
++
++
++def test_scenario_verify_5325_detects_each_unsafe_transition() -> None:
++    """SCENARIO-VERIFY-5325: each negative rewrite class has a deterministic blocker."""
++
++    rows = _rows_by_case(mod.evaluate_fixture(mod.load_fixture()))
++
++    contradiction = rows["rsf-002-contradiction-introduction"]
++    assert contradiction["target_label"] == "contradictory"
++    assert contradiction["conflict_keys"] == ["duration_minutes"]
++    assert "contradiction_introduced" in contradiction["rejection_reasons"]
++    assert "label_preservation_failed" in contradiction["rejection_reasons"]
++
++    missing = rows["rsf-003-missing-required-change"]
++    assert missing["complete_change_coverage"] is False
++    assert missing["missing_obligations"] == ["rsf-003-obligation-review-state"]
++    assert "missing_required_change" in missing["rejection_reasons"]
++
++    fabricated = rows["rsf-004-fabricated-premise-citation"]
++    assert fabricated["target_label"] == "unsupported"
++    assert fabricated["fabricated_fact_keys"] == ["external_report_claim"]
++    assert fabricated["fabricated_citations"] == ["phantom-report-77"]
++    assert "fabricated_fact" in fabricated["rejection_reasons"]
++    assert "fabricated_citation" in fabricated["rejection_reasons"]
++
++    invalid = rows["rsf-005-invalid-premise-preserved"]
++    assert invalid["source_label"] == "premise-invalid"
++    assert invalid["target_label"] == "premise-invalid"
++    assert invalid["label_preserved"] is True
++    assert "invalid_premise_preserved" in invalid["rejection_reasons"]
++    assert "expected_label_change_missing" in invalid["rejection_reasons"]
++
++    overbroad = rows["rsf-006-overbroad-rewrite"]
++    assert overbroad["target_label"] == "contradictory"
++    assert overbroad["overbroad_fact_keys"] == ["scope"]
++    assert "overbroad_fact_change" in overbroad["rejection_reasons"]
++
++
++def test_req_verify_5325_run_writes_required_artifact_schema(tmp_path: Path) -> None:
++    """REQ-VERIFY-5325: run() writes principle fields and bare downstream gates."""
++
++    tests_run = [{"command": "unit rewrite-state fixture", "outcome": "passed"}]
++    artifact = mod.run(result_path=tmp_path / "experiment_5325.json", tests_run=tests_run)
++
++    assert json.loads((tmp_path / "experiment_5325.json").read_text(encoding="utf-8")) == artifact
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"]["value"] == mod.EXPERIMENT_NAME
++    assert artifact["milestone"]["value"] == "2026.07.486"
++    assert artifact["status"]["value"] == "complete"
++    assert artifact["honest_verdict"]["value"].startswith("complete:")
++    assert artifact["inference_substrate"]["value"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["rewrite_case_count"] == 6
++    assert artifact["rewrite_acceptability_rate"] == pytest.approx(1.0)
++    assert artifact["complete_change_coverage_rate"] == pytest.approx(1.0)
++    assert artifact["unsafe_rewrite_rejection_rate"] == pytest.approx(1.0)
++    assert artifact["false_accept_count"] == 0
++    assert artifact["rewrite_state_fixture_ready"] is True
++    assert artifact["consumer_contract"]["next_experiment"] == "Exp5326"
++    assert artifact["tests_run"]["value"] == tests_run
++
++
++def test_scenario_verify_5325_blocks_missing_case_type_and_false_accept(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-5325: missing cases and false accepts close the fixture gate."""
++
++    cases = mod.load_fixture()
++    incomplete_cases = [
++        case for case in cases if case.case_type != "fabricated_premise_citation"
++    ]
++    incomplete = mod.run(
++        result_path=tmp_path / "missing-case.json",
++        cases=incomplete_cases,
++        tests_run=[{"command": "unit missing case", "outcome": "passed"}],
++    )
++
++    mod.validate_artifact(incomplete)
++    assert incomplete["status"]["value"] == "blocked"
++    assert incomplete["honest_verdict"]["value"].startswith("blocked_")
++    assert incomplete["rewrite_state_fixture_ready"] is False
++    assert "missing case types: fabricated_premise_citation" in incomplete["readiness_blockers"]
++
++    missing_case = mod.case_by_id(cases, "rsf-003-missing-required-change")
++    repaired_target = replace(
++        missing_case.target,
++        attributes={**missing_case.target.attributes, "review_state": "approved"},
++    )
++    false_accept_case = replace(missing_case, target=repaired_target)
++    false_accept_cases = tuple(
++        false_accept_case if case.case_id == missing_case.case_id else case for case in cases
++    )
++    false_accept = mod.build_artifact(
++        false_accept_cases,
++        tests_run=[{"command": "unit false accept", "outcome": "passed"}],
++    )
++
++    mod.validate_artifact(false_accept)
++    assert false_accept["status"]["value"] == "blocked"
++    assert false_accept["rewrite_state_fixture_ready"] is False
++    assert false_accept["false_accept_count"] == 1
++    assert false_accept["unsafe_rewrite_rejection_rate"] < 1.0
++    assert "false accepts: rsf-003-missing-required-change" in false_accept[
++        "readiness_blockers"
++    ]
++
++    synthetic_blockers = mod._readiness_blockers(
++        {
++            "missing_case_types": [],
++            "false_accept_ids": [],
++            "label_mismatch_ids": ["label-x"],
++            "rewrite_acceptability_rate": 1.0,
++            "complete_change_coverage_rate": 1.0,
++            "unsafe_rewrite_rejection_rate": 1.0,
++        }
++    )
++    assert "label mismatches: label-x" in synthetic_blockers
++
++
++def test_req_verify_5325_repository_artifact_matches_deterministic_replay() -> None:
++    """REQ-VERIFY-5325: checked-in artifact is stable under deterministic replay."""
++
++    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    replay = mod.build_artifact(mod.load_fixture(), tests_run=result["tests_run"]["value"])
++
++    assert result == replay
++    assert result["honest_verdict"]["value"].startswith("complete:")
++    assert result["rewrite_state_fixture_ready"] is True
++    assert result["inference_substrate"]["value"] == "deterministic_rewrite_state_fixture"
++    assert result["false_accept_count"] == 0
++    mod.validate_artifact(result)
+-- 
+2.55.0
+

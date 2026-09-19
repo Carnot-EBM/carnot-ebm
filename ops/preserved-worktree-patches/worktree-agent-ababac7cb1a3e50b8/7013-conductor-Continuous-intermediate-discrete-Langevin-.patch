@@ -1,0 +1,2752 @@
+From 43d3b369851e8a71f86f33661513401504dac1ec Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 02:29:58 -0400
+Subject: [PATCH 07013/11362] [conductor] Continuous-intermediate discrete
+ Langevin matched-quality CPU/CUDA crossover
+
+Automated research step by research conductor.
+Task ID: exp5611-cdls-matched-sampler-crossover
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/samplers/spec.md        |   89 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...ent_5611_cdls_matched_sampler_crossover.py |  987 +++++++++++++++
+ ...t_5611_cdls_matched_sampler_crossover.json | 1102 +++++++++++++++++
+ ...ent_5611_cdls_matched_sampler_crossover.py |  508 ++++++++
+ 5 files changed, 2687 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5611_cdls_matched_sampler_crossover.py
+ create mode 100644 results/experiment_5611_cdls_matched_sampler_crossover.json
+ create mode 100644 tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py
+
+diff --git a/openspec/capabilities/samplers/spec.md b/openspec/capabilities/samplers/spec.md
+index 173638a3f6..af6bf5ca44 100644
+--- a/openspec/capabilities/samplers/spec.md
++++ b/openspec/capabilities/samplers/spec.md
+@@ -82,6 +82,95 @@ target state
+ device metadata, and a backend verdict
+ **And** it records GPU latency and parity only when a GPU backend is available.
+ 
++### REQ-SAMPLE-5611: Bounded cDLS Matched CPU/CUDA Crossover Benchmark
++
++Carnot MUST provide Exp 5611 at
++`python/carnot/experiment_5611_cdls_matched_sampler_crossover.py` and write
++`results/experiment_5611_cdls_matched_sampler_crossover.json` without modifying
++`scripts/research_conductor.py`. The experiment SHALL preserve the existing
++discrete Langevin/heat-bath baseline from Exp 5573 unchanged and add a separately
++identified bounded continuous-intermediate discrete Langevin sampler (cDLS).
++
++The cDLS proposal SHALL use deterministic seeds, form a bounded continuous
++intermediate for each discrete Ising state, project that intermediate back to
++`{-1, +1}` spins, and apply a documented Metropolis-Hastings correction using
++the exact discrete Ising energy and proposal probability so the projection does
++not replace the exact discrete target distribution.
++
++Exp 5611 SHALL use descriptor-derived Ising instances already available in
++Carnot, with target descriptors recorded for `n=128,256,512,1024` where memory
++and the bounded runtime permit execution. Discrete DLS and cDLS SHALL share the
++same target energies, descriptor checksums, seeds, warm-up count, retained sample
++count, temperature, thinning, precision, and timing boundaries across CPU and
++CUDA. Successful matched rows SHALL retain at least 10000 post-warmup samples.
++OOM, timeout, CUDA-blocked, descriptor-blocked, or runtime-budget-blocked rows
++SHALL remain explicit and SHALL NOT enter speedup summaries.
++
++The artifact SHALL define quality equivalence before inspecting timing. A
++crossover claim SHALL be allowed only when successful matched cDLS/DLS CPU/CUDA
++pairs pass the quality non-inferiority gate and the relevant timing interval
++excludes 1.0 in the favorable direction. `crossover_size` MAY be null, and
++`crossover_claim_allowed` SHALL be false when the quality or timing gate is not
++conjunctively satisfied. No KV260, PolarFire, GateMate, or TSU speedup claim is
++in scope, and `board_speedup_claimed` SHALL be false.
++
++The terminal artifact SHALL include at minimum these top-level fields:
++`field_principles`, `target_descriptors`, `instance_sizes`, `methods`, `seeds`,
++`samples_per_pair`, `cpu_device_receipt`, `cuda_device_receipt`, `timing_rows`,
++`energy_quality_metrics`, `mixing_metrics`, `successful_matched_pairs`,
++`speedup_by_pair`, `crossover_size`, `crossover_claim_allowed`,
++`board_speedup_claimed`, `inference_substrate`, and `honest_verdict`.
++`inference_substrate` SHALL equal `matched_cpu_cuda_exact_ising_sampling`.
++
++Required field principles:
++
++- `field_principles`: principle "Explains why every headline and gate field exists before a reviewer trusts the JSON shape."
++- `target_descriptors`: principle "Proves both methods sample identical descriptor-derived Ising problems."
++- `instance_sizes`: principle "Makes the tested crossover range explicit instead of implying unmeasured scale."
++- `methods`: principle "Keeps the unchanged discrete DLS baseline and bounded cDLS proposal separately identifiable."
++- `seeds`: principle "Records paired seeds so every CPU/CUDA and method comparison is reproducible."
++- `samples_per_pair`: principle "Guards the >=10000 retained-sample floor required for mixing estimates."
++- `cpu_device_receipt`: principle "Authenticates CPU identity, runtime, and free memory for the local benchmark."
++- `cuda_device_receipt`: principle "Authenticates CUDA identity, driver/runtime, and free memory or records a precise blocker."
++- `timing_rows`: principle "Preserves raw matched timing evidence, including failed rows, before any summary ratio."
++- `energy_quality_metrics`: principle "Prevents speed from hiding wrong samples by reporting energy and exact constraint quality."
++- `mixing_metrics`: principle "Reports ESS and autocorrelation to test whether the cDLS mechanism actually mixes."
++- `successful_matched_pairs`: principle "Counts only complete method/device rows that satisfy the same schedule; quality gates are recorded before claims."
++- `speedup_by_pair`: principle "Reports only matched ratios; failed or quality-inferior rows cannot enter speedups."
++- `crossover_size`: principle "Records the smallest gated crossover size, or null when no crossover is proven."
++- `crossover_claim_allowed`: principle "Requires quality and timing gates to pass together before any crossover claim."
++- `board_speedup_claimed`: principle "Bare false prevents this CPU/CUDA sampler study from reopening board continuity."
++- `inference_substrate`: principle "Declares matched CPU/CUDA exact Ising sampling, not LLM inference or board timing."
++- `honest_verdict`: principle "Terminal complete: or blocked: verdict states whether no-crossover evidence is final."
++
++### SCENARIO-SAMPLE-5611: cDLS Benchmark Emits Matched Evidence Or Blockers
++
++**Given** the Exp 5556 descriptor output is available
++**When** Exp 5611 runs on a host with CPU and CUDA available
++**Then** it builds descriptor-derived Ising targets for the requested sizes,
++runs unchanged discrete DLS and bounded cDLS under the same schedule and seeds,
++writes raw timing rows for CPU and CUDA, reports acceptance, ESS, integrated
++autocorrelation, energy distribution, best/mean energy, exact constraint
++satisfaction, memory, compile/warmup time, sampling time, end-to-end wall time,
++matched speedups, and a terminal artifact at
++`results/experiment_5611_cdls_matched_sampler_crossover.json`
++**And** sets `crossover_claim_allowed=true` only when the quality and timing
++gates both pass, otherwise preserving the evidence with `crossover_size=null`
++or a false crossover claim.
++
++**If** CUDA, descriptors, memory, or bounded runtime are unavailable
++**Then** Exp 5611 SHALL still write the same result path with explicit blocker
++rows, `successful_matched_pairs` excluding failed rows,
++`crossover_claim_allowed=false`, `board_speedup_claimed=false`, and an
++`honest_verdict` starting with `blocked:` or `complete:` as appropriate for the
++available matched evidence.
++
++## Implementation Status (REQ-SAMPLE-5611)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-SAMPLE-5611 | Planned (`python/carnot/experiment_5611_cdls_matched_sampler_crossover.py`, `results/experiment_5611_cdls_matched_sampler_crossover.json`) | Planned (`tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py`) |
++
+ ### REQ-SAMPLE-1746: EqM Sampler Profiling Experiment
+ 
+ Carnot MUST provide an experiment script `scripts/experiment_1746_eqm_profile.py`
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 6031ebe0f6..56d3be165c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4540,
++  "experiments_checked": 4541,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5611_cdls_matched_sampler_crossover.py b/python/carnot/experiment_5611_cdls_matched_sampler_crossover.py
+new file mode 100644
+index 0000000000..8903ca3f86
+--- /dev/null
++++ b/python/carnot/experiment_5611_cdls_matched_sampler_crossover.py
+@@ -0,0 +1,987 @@
++"""Exp5611 bounded cDLS matched CPU/CUDA crossover benchmark.
++
++Spec refs: REQ-SAMPLE-5611, SCENARIO-SAMPLE-5611.
++
++This experiment treats continuous-intermediate discrete Langevin sampling as a
++local hypothesis, not as a performance authority. The existing Exp5573
++discrete heat-bath baseline is called unchanged. The new cDLS method proposes a
++bounded continuous intermediate, projects it back to Ising spins, then applies a
++Metropolis-Hastings correction using the exact discrete Ising energy and the
++proposal probability for that projected spin state.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import json
++from math import sqrt
++from pathlib import Path
++import time
++from typing import Any
++
++import numpy as np
++
++from carnot import experiment_5573_matched_sampler_hardware_continuity as exp5573
++
++
++JsonDict = dict[str, Any]
++Clock = Callable[[], float]
++SamplerRunner = Callable[
++    [list[exp5573.IsingInstance], tuple[int, ...], int, JsonDict, Any, Clock],
++    list[JsonDict],
++]
++
++IsingInstance = exp5573.IsingInstance
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5611_cdls_matched_sampler_crossover.json")
++DESCRIPTOR_SOURCE_RELATIVE_PATH = exp5573.DESCRIPTOR_SOURCE_RELATIVE_PATH
++
++EXPERIMENT = 5611
++EXPERIMENT_ID = "exp5611-cdls-matched-sampler-crossover"
++MILESTONE = "2026.07.506"
++RUN_DATE = "2026-07-14"
++SCHEMA = "carnot.experiment_5611.cdls_matched_sampler_crossover.v1"
++SPEC_REFS = ("REQ-SAMPLE-5611", "SCENARIO-SAMPLE-5611")
++INFERENCE_SUBSTRATE = "matched_cpu_cuda_exact_ising_sampling"
++
++DEFAULT_INSTANCE_SIZES = (128, 256, 512, 1024)
++DEFAULT_SEEDS = (5611,)
++DEFAULT_SAMPLES_PER_PAIR = 10_000
++DEFAULT_WARMUP_STEPS = exp5573.DEFAULT_WARMUP_STEPS
++DEFAULT_THINNING = exp5573.DEFAULT_THINNING
++DEFAULT_TEMPERATURE = exp5573.DEFAULT_TEMPERATURE
++DEFAULT_PRECISION = exp5573.DEFAULT_PRECISION
++DEFAULT_STOPPING_RULE = exp5573.DEFAULT_STOPPING_RULE
++DEFAULT_CDLS_CONTINUOUS_BOUND = 3.0
++DEFAULT_CDLS_PROPOSAL_STD = 0.35
++DEFAULT_CDLS_DRIFT_SCALE = 0.08
++MIN_SAMPLES_PER_SUCCESS = 10_000
++MIN_SEEDS_FOR_TIMING_INTERVAL = 3
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++METHODS: tuple[JsonDict, ...] = (
++    {
++        "method_id": "discrete_dls",
++        "label": "Exp5573 discrete DLS heat-bath baseline",
++        "baseline_preserved": True,
++        "projection_correction": "not_applicable_discrete_baseline",
++    },
++    {
++        "method_id": "bounded_cdls",
++        "label": "Bounded cDLS continuous-intermediate proposal",
++        "baseline_preserved": False,
++        "projection_correction": "metropolis_hastings_exact_discrete_target",
++    },
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "field_principles": "Explains why every headline and gate field exists before a reviewer trusts the JSON shape.",
++    "target_descriptors": "Proves both methods sample identical descriptor-derived Ising problems.",
++    "instance_sizes": "Makes the tested crossover range explicit instead of implying unmeasured scale.",
++    "methods": "Keeps the unchanged discrete DLS baseline and bounded cDLS proposal separately identifiable.",
++    "seeds": "Records paired seeds so every CPU/CUDA and method comparison is reproducible.",
++    "samples_per_pair": "Guards the >=10000 retained-sample floor required for mixing estimates.",
++    "cpu_device_receipt": "Authenticates CPU identity, runtime, and free memory for the local benchmark.",
++    "cuda_device_receipt": "Authenticates CUDA identity, driver/runtime, and free memory or records a precise blocker.",
++    "timing_rows": "Preserves raw matched timing evidence, including failed rows, before any summary ratio.",
++    "energy_quality_metrics": "Prevents speed from hiding wrong samples by reporting energy and exact constraint quality.",
++    "mixing_metrics": "Reports ESS and autocorrelation to test whether the cDLS mechanism actually mixes.",
++    "successful_matched_pairs": "Counts only complete method/device rows that satisfy the same schedule; quality gates are recorded before claims.",
++    "speedup_by_pair": "Reports only matched ratios; failed or quality-inferior rows cannot enter speedups.",
++    "crossover_size": "Records the smallest gated crossover size, or null when no crossover is proven.",
++    "crossover_claim_allowed": "Requires quality and timing gates to pass together before any crossover claim.",
++    "board_speedup_claimed": "Bare false prevents this CPU/CUDA sampler study from reopening board continuity.",
++    "inference_substrate": "Declares matched CPU/CUDA exact Ising sampling, not LLM inference or board timing.",
++    "honest_verdict": "Terminal complete: or blocked: verdict states whether no-crossover evidence is final.",
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def canonical_json(value: Any) -> str:
++    """Serialize JSON deterministically for content-addressed benchmark evidence."""
++
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
++
++
++def sha256_text(text: str) -> str:
++    """Hash text with SHA-256 using the repository's standard hex digest."""
++
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    """Hash JSON-compatible content after canonical serialization."""
++
++    return sha256_text(canonical_json(value))
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Hash an artifact while blanking its self-referential checksum field."""
++
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return sha256_json(stable)
++
++
++def build_ising_instances(
++    descriptor_payload: Mapping[str, Any],
++    instance_sizes: Sequence[int] = DEFAULT_INSTANCE_SIZES,
++) -> list[IsingInstance]:
++    """Build descriptor-derived Ising instances through the existing Exp5573 path."""
++
++    return exp5573.build_ising_instances(descriptor_payload, instance_sizes)
++
++
++def matched_schedule_for_instances(instances: Sequence[IsingInstance]) -> JsonDict:
++    """Return the shared DLS/cDLS schedule and exact target checksums."""
++
++    return {
++        "temperature": DEFAULT_TEMPERATURE,
++        "warmup_steps": DEFAULT_WARMUP_STEPS,
++        "thinning": DEFAULT_THINNING,
++        "precision": DEFAULT_PRECISION,
++        "stopping_rule": DEFAULT_STOPPING_RULE,
++        "couplings_biases_shared": True,
++        "measurement_boundaries_shared": True,
++        "cdls_continuous_bound": DEFAULT_CDLS_CONTINUOUS_BOUND,
++        "cdls_proposal_std": DEFAULT_CDLS_PROPOSAL_STD,
++        "cdls_drift_scale": DEFAULT_CDLS_DRIFT_SCALE,
++        "instance_checksums": {instance.instance_id: instance.checksum for instance in instances},
++    }
++
++
++def target_descriptors_for_instances(instances: Sequence[IsingInstance]) -> list[JsonDict]:
++    """Describe the exact Ising targets shared by both sampler methods."""
++
++    descriptors: list[JsonDict] = []
++    for instance in instances:
++        descriptors.append(
++            {
++                "instance_id": instance.instance_id,
++                "size": int(instance.size),
++                "descriptor_ids": list(instance.descriptor_ids),
++                "descriptor_checksum": instance.checksum,
++                "couplings_checksum": sha256_json(np.round(instance.couplings, 6).tolist()),
++                "biases_checksum": sha256_json(np.round(instance.biases, 6).tolist()),
++                "target_spins_checksum": sha256_json(instance.target_spins.astype(int).tolist()),
++                "constraint_count": len(instance.constraint_indices),
++            }
++        )
++    return descriptors
++
++
++def quality_equivalence_gate() -> JsonDict:
++    """Define non-inferiority thresholds before timing summaries are built."""
++
++    return {
++        "defined_before_timing": True,
++        "energy_mean_tolerance_abs": 0.5,
++        "energy_mean_tolerance_rel": 0.05,
++        "best_energy_tolerance_abs": 0.5,
++        "constraint_satisfaction_tolerance_abs": 0.03,
++        "min_effective_sample_size": 100.0,
++        "min_seeds_for_timing_interval": MIN_SEEDS_FOR_TIMING_INTERVAL,
++        "timing_interval": "observed_seed_min_max",
++    }
++
++
++def run_matched_sampler_rows(
++    instances: list[IsingInstance],
++    seeds: tuple[int, ...],
++    samples_per_pair: int,
++    matched_schedule: JsonDict,
++    torch_module: Any,
++    clock: Clock = time.perf_counter,
++) -> list[JsonDict]:  # pragma: no cover - exercised by the live experiment command.
++    """Run DLS and cDLS on CPU/CUDA while preserving failed rows explicitly."""
++
++    rows: list[JsonDict] = []
++    for instance in instances:
++        for seed in seeds:
++            for backend in ("cpu", "cuda"):
++                for method in ("discrete_dls", "bounded_cdls"):
++                    try:
++                        if method == "discrete_dls":
++                            row = run_discrete_baseline_row(
++                                instance=instance,
++                                backend=backend,
++                                seed=seed,
++                                samples_per_pair=samples_per_pair,
++                                matched_schedule=matched_schedule,
++                                torch_module=torch_module,
++                                clock=clock,
++                            )
++                        else:
++                            row = run_cdls_sampler_row(
++                                instance=instance,
++                                backend=backend,
++                                seed=seed,
++                                samples_per_pair=samples_per_pair,
++                                matched_schedule=matched_schedule,
++                                torch_module=torch_module,
++                                clock=clock,
++                            )
++                    except RuntimeError as exc:
++                        if _is_oom_error(exc):
++                            row = blocked_timing_row(instance, seed, backend, method, "oom")
++                        else:
++                            row = blocked_timing_row(
++                                instance,
++                                seed,
++                                backend,
++                                method,
++                                f"runtime_error:{type(exc).__name__}",
++                            )
++                    except Exception as exc:  # noqa: BLE001 - benchmark rows preserve blockers.
++                        row = blocked_timing_row(
++                            instance,
++                            seed,
++                            backend,
++                            method,
++                            f"failed:{type(exc).__name__}",
++                        )
++                    rows.append(row)
++    return rows
++
++
++def run_discrete_baseline_row(
++    *,
++    instance: IsingInstance,
++    backend: str,
++    seed: int,
++    samples_per_pair: int,
++    matched_schedule: Mapping[str, Any],
++    torch_module: Any,
++    clock: Clock = time.perf_counter,
++) -> JsonDict:  # pragma: no cover - the unchanged baseline is covered by Exp5573 tests.
++    """Call the Exp5573 baseline unchanged and annotate the method boundary."""
++
++    memory_before = memory_snapshot(torch_module, backend)
++    row = exp5573.run_one_sampler_row(
++        instance=instance,
++        backend=backend,
++        seed=seed,
++        samples_per_pair=samples_per_pair,
++        matched_schedule=matched_schedule,
++        torch_module=torch_module,
++        clock=clock,
++    )
++    row.update(
++        {
++            "method": "discrete_dls",
++            "device": backend,
++            "acceptance_rate": 1.0,
++            "exact_constraint_satisfaction_rate": row["constraint_satisfaction_rate"],
++            "compile_time_s": 0.0,
++            "end_to_end_wall_time_s": row["wall_time_s"],
++            "memory_before": memory_before,
++            "memory_after": memory_snapshot(torch_module, backend),
++            "kernel_device_path": f"torch_{backend}_exp5573_heat_bath",
++            "projection_correction": "not_applicable_discrete_baseline",
++        }
++    )
++    return row
++
++
++def run_cdls_sampler_row(
++    *,
++    instance: IsingInstance,
++    backend: str,
++    seed: int,
++    samples_per_pair: int,
++    matched_schedule: Mapping[str, Any],
++    torch_module: Any,
++    clock: Clock = time.perf_counter,
++) -> JsonDict:
++    """Run one bounded cDLS row with exact projection correction.
++
++    The proposal distribution is Gaussian in a continuous intermediate. Because
++    only the projected sign state is retained, the Metropolis-Hastings ratio is
++    computed from the probability that the Gaussian intermediate lands on the
++    projected side for each spin. That correction is what keeps the accepted
++    chain targeted at the exact discrete Ising distribution instead of the
++    relaxed continuous proposal.
++    """
++
++    torch = torch_module
++    device = torch.device("cuda:0" if backend == "cuda" else "cpu")
++    dtype = torch.float32
++    generator = torch.Generator(device=device)
++    generator.manual_seed(int(seed))
++    couplings = torch.tensor(instance.couplings, device=device, dtype=dtype)
++    biases = torch.tensor(instance.biases, device=device, dtype=dtype)
++    target = torch.tensor(instance.target_spins, device=device, dtype=dtype)
++    constraint_indices = torch.tensor(instance.constraint_indices, device=device, dtype=torch.long)
++    beta = float(1.0 / float(matched_schedule["temperature"]))
++    continuous_bound = float(matched_schedule["cdls_continuous_bound"])
++    proposal_std = float(matched_schedule["cdls_proposal_std"])
++    drift_scale = float(matched_schedule["cdls_drift_scale"])
++
++    spins = torch.where(
++        torch.rand(instance.size, device=device, generator=generator) < 0.5,
++        torch.tensor(-1.0, device=device, dtype=dtype),
++        torch.tensor(1.0, device=device, dtype=dtype),
++    )
++
++    _sync_if_cuda(torch, backend)
++    memory_before = memory_snapshot(torch, backend)
++    compile_time_s = 0.0
++    accepted = 0
++    rejected = 0
++    max_abs_continuous = 0.0
++
++    warmup_start = clock()
++    for _ in range(int(matched_schedule["warmup_steps"])):
++        spins, step_accepted, step_abs = _cdls_step(
++            torch,
++            spins,
++            couplings,
++            biases,
++            beta,
++            generator,
++            continuous_bound,
++            proposal_std,
++            drift_scale,
++        )
++        accepted += int(step_accepted)
++        rejected += int(not step_accepted)
++        max_abs_continuous = max(max_abs_continuous, step_abs)
++    _sync_if_cuda(torch, backend)
++    warmup_time_s = max(clock() - warmup_start, 0.0)
++
++    energies: list[float] = []
++    satisfaction: list[float] = []
++    sample_start = clock()
++    thinning = int(matched_schedule["thinning"])
++    total_steps = int(samples_per_pair) * thinning
++    for step in range(total_steps):
++        spins, step_accepted, step_abs = _cdls_step(
++            torch,
++            spins,
++            couplings,
++            biases,
++            beta,
++            generator,
++            continuous_bound,
++            proposal_std,
++            drift_scale,
++        )
++        accepted += int(step_accepted)
++        rejected += int(not step_accepted)
++        max_abs_continuous = max(max_abs_continuous, step_abs)
++        if (step + 1) % thinning == 0:
++            energy = exp5573._ising_energy(torch, spins, couplings, biases)
++            energies.append(float(energy.detach().cpu().item()))
++            satisfied = (spins[constraint_indices] == target[constraint_indices]).to(dtype).mean()
++            satisfaction.append(float(satisfied.detach().cpu().item()))
++    _sync_if_cuda(torch, backend)
++    sample_time_s = max(clock() - sample_start, 0.0)
++
++    energy_arr = np.asarray(energies, dtype=np.float64)
++    satisfaction_arr = np.asarray(satisfaction, dtype=np.float64)
++    tau = exp5573.integrated_autocorrelation_time(energy_arr)
++    ess = float(samples_per_pair / tau) if tau > 0 else float(samples_per_pair)
++    proposals = accepted + rejected
++    wall_time_s = float(compile_time_s + warmup_time_s + sample_time_s)
++    return {
++        "status": "success",
++        "pair_id": f"{instance.instance_id}:seed{seed}",
++        "method": "bounded_cdls",
++        "backend": backend,
++        "device": backend,
++        "instance_id": instance.instance_id,
++        "size": instance.size,
++        "seed": int(seed),
++        "samples": int(samples_per_pair),
++        "temperature": float(matched_schedule["temperature"]),
++        "warmup_steps": int(matched_schedule["warmup_steps"]),
++        "thinning": thinning,
++        "precision": str(matched_schedule["precision"]),
++        "best_energy": round(float(np.min(energy_arr)), 8),
++        "energy_mean": round(float(np.mean(energy_arr)), 8),
++        "energy_std": round(float(np.std(energy_arr)), 8),
++        "energy_min": round(float(np.min(energy_arr)), 8),
++        "energy_max": round(float(np.max(energy_arr)), 8),
++        "energy_quantiles": {
++            "p05": round(float(np.quantile(energy_arr, 0.05)), 8),
++            "p50": round(float(np.quantile(energy_arr, 0.50)), 8),
++            "p95": round(float(np.quantile(energy_arr, 0.95)), 8),
++        },
++        "constraint_satisfaction_rate": round(float(np.mean(satisfaction_arr)), 8),
++        "exact_constraint_satisfaction_rate": round(float(np.mean(satisfaction_arr)), 8),
++        "acceptance_rate": round(float(accepted / proposals), 8) if proposals else 0.0,
++        "mh_accept_count": accepted,
++        "mh_reject_count": rejected,
++        "proposal_count": proposals,
++        "continuous_bound": continuous_bound,
++        "continuous_bound_observed_abs_max": round(float(max_abs_continuous), 8),
++        "cdls_proposal_std": proposal_std,
++        "cdls_drift_scale": drift_scale,
++        "autocorrelation_time": round(float(tau), 8),
++        "effective_sample_size": round(float(ess), 8),
++        "compile_time_s": round(float(compile_time_s), 8),
++        "wall_time_s": round(wall_time_s, 8),
++        "end_to_end_wall_time_s": round(wall_time_s, 8),
++        "warmup_time_s": round(float(warmup_time_s), 8),
++        "sample_time_s": round(float(sample_time_s), 8),
++        "memory_before": memory_before,
++        "memory_after": memory_snapshot(torch, backend),
++        "kernel_device_path": f"torch_{backend}_bounded_cdls_dense_matvec_mh",
++        "projection_correction": "metropolis_hastings_exact_discrete_target",
++        "result_hash": sha256_json(
++            {
++                "instance_id": instance.instance_id,
++                "backend": backend,
++                "method": "bounded_cdls",
++                "seed": seed,
++                "energies": [round(float(value), 6) for value in energy_arr.tolist()],
++                "satisfaction": [round(float(value), 6) for value in satisfaction_arr.tolist()],
++                "accepted": accepted,
++                "rejected": rejected,
++            }
++        ),
++    }
++
++
++def _cdls_step(
++    torch: Any,
++    spins: Any,
++    couplings: Any,
++    biases: Any,
++    beta: float,
++    generator: Any,
++    continuous_bound: float,
++    proposal_std: float,
++    drift_scale: float,
++) -> tuple[Any, bool, float]:
++    field = torch.matmul(couplings, spins) + biases
++    mean = spins + float(drift_scale) * float(beta) * field
++    noise = torch.randn(spins.shape, device=spins.device, generator=generator, dtype=spins.dtype)
++    continuous = torch.clamp(mean + float(proposal_std) * noise, -continuous_bound, continuous_bound)
++    proposed = torch.where(continuous >= 0.0, torch.ones_like(spins), -torch.ones_like(spins))
++
++    current_energy = exp5573._ising_energy(torch, spins, couplings, biases)
++    proposed_energy = exp5573._ising_energy(torch, proposed, couplings, biases)
++    log_forward = _log_projected_proposal_probability(
++        torch,
++        projected=proposed,
++        source=spins,
++        couplings=couplings,
++        biases=biases,
++        beta=beta,
++        proposal_std=proposal_std,
++        drift_scale=drift_scale,
++    )
++    log_reverse = _log_projected_proposal_probability(
++        torch,
++        projected=spins,
++        source=proposed,
++        couplings=couplings,
++        biases=biases,
++        beta=beta,
++        proposal_std=proposal_std,
++        drift_scale=drift_scale,
++    )
++    log_accept = -float(beta) * (proposed_energy - current_energy) + log_reverse - log_forward
++    uniform = torch.rand((), device=spins.device, generator=generator, dtype=spins.dtype)
++    accepted = bool((torch.log(uniform.clamp_min(1e-12)) < torch.minimum(log_accept, torch.zeros_like(log_accept))).item())
++    next_spins = proposed if accepted else spins
++    return next_spins, accepted, float(torch.max(torch.abs(continuous)).detach().cpu().item())
++
++
++def _log_projected_proposal_probability(
++    torch: Any,
++    *,
++    projected: Any,
++    source: Any,
++    couplings: Any,
++    biases: Any,
++    beta: float,
++    proposal_std: float,
++    drift_scale: float,
++) -> Any:
++    field = torch.matmul(couplings, source) + biases
++    mean = source + float(drift_scale) * float(beta) * field
++    z = projected * mean / (float(proposal_std) * sqrt(2.0))
++    probabilities = 0.5 * torch.erfc(-z)
++    return torch.log(probabilities.clamp_min(1e-12)).sum()
++
++
++def _sync_if_cuda(torch: Any, backend: str) -> None:
++    if backend == "cuda":
++        cuda = getattr(torch, "cuda", None)
++        if cuda is not None and bool(cuda.is_available()):
++            cuda.synchronize()
++
++
++def memory_snapshot(torch_module: Any, backend: str) -> JsonDict:
++    """Return a compact free-memory snapshot for CPU or CUDA timing rows."""
++
++    if backend == "cuda":
++        cuda = getattr(torch_module, "cuda", None)
++        if cuda is None or not bool(cuda.is_available()):
++            return {"status": "blocked", "blocked_reason": "cuda_unavailable"}
++        try:
++            free_bytes, total_bytes = cuda.mem_get_info(0)
++            return {
++                "status": "reachable",
++                "free_mib": int(free_bytes) // (1024 * 1024),
++                "total_mib": int(total_bytes) // (1024 * 1024),
++            }
++        except Exception as exc:  # noqa: BLE001 - memory APIs vary across fakes.
++            return {"status": "blocked", "blocked_reason": type(exc).__name__}
++    memory = exp5573.parse_meminfo(exp5573._read_meminfo())
++    return {"status": "reachable", **memory}
++
++
++def blocked_timing_row(
++    instance: IsingInstance,
++    seed: int,
++    backend: str,
++    method: str,
++    reason: str,
++) -> JsonDict:
++    """Create an explicit failed row that cannot enter speedup summaries."""
++
++    return {
++        "status": "blocked",
++        "blocked_reason": reason,
++        "pair_id": f"{instance.instance_id}:seed{seed}",
++        "method": method,
++        "backend": backend,
++        "device": backend,
++        "instance_id": instance.instance_id,
++        "size": int(instance.size),
++        "seed": int(seed),
++        "samples": 0,
++        "wall_time_s": None,
++        "warmup_time_s": None,
++        "sample_time_s": None,
++        "compile_time_s": None,
++        "end_to_end_wall_time_s": None,
++        "kernel_device_path": f"torch_{backend}_{method}",
++    }
++
++
++def _is_oom_error(exc: RuntimeError) -> bool:
++    return "out of memory" in str(exc).lower() or "cuda error: out of memory" in str(exc).lower()
++
++
++def summarize_rows(raw_rows: Sequence[Mapping[str, Any]]) -> tuple[list[JsonDict], list[JsonDict], list[JsonDict], list[JsonDict]]:
++    """Summarize matched quality, mixing, timing, and speedup rows."""
++
++    grouped: dict[str, dict[tuple[str, str], Mapping[str, Any]]] = {}
++    for row in raw_rows:
++        pair_id = str(row.get("pair_id", ""))
++        method = str(row.get("method", ""))
++        backend = str(row.get("backend", ""))
++        grouped.setdefault(pair_id, {})[(method, backend)] = row
++
++    energy_metrics: list[JsonDict] = []
++    mixing_metrics: list[JsonDict] = []
++    timing_rows: list[JsonDict] = []
++    speedups: list[JsonDict] = []
++    for pair_id, rows in sorted(grouped.items()):
++        for row in rows.values():
++            timing_rows.append(_timing_summary(row))
++        required_keys = {
++            ("discrete_dls", "cpu"),
++            ("discrete_dls", "cuda"),
++            ("bounded_cdls", "cpu"),
++            ("bounded_cdls", "cuda"),
++        }
++        if not required_keys.issubset(rows):
++            continue
++        if any(rows[key].get("status", "success") != "success" for key in required_keys):
++            continue
++        if not _all_rows_match([rows[key] for key in required_keys]):
++            continue
++
++        dls_cpu = rows[("discrete_dls", "cpu")]
++        dls_cuda = rows[("discrete_dls", "cuda")]
++        cdls_cpu = rows[("bounded_cdls", "cpu")]
++        cdls_cuda = rows[("bounded_cdls", "cuda")]
++        quality_by_device = {
++            "cpu": _quality_noninferior(dls_cpu, cdls_cpu),
++            "cuda": _quality_noninferior(dls_cuda, cdls_cuda),
++        }
++        quality_noninferior = all(quality_by_device.values())
++        energy_metrics.append(
++            {
++                "pair_id": pair_id,
++                "instance_id": dls_cpu["instance_id"],
++                "size": int(dls_cpu["size"]),
++                "seed": int(dls_cpu["seed"]),
++                "quality_noninferior": quality_noninferior,
++                "quality_by_device": quality_by_device,
++                "cpu": {
++                    "discrete_dls": _energy_summary(dls_cpu),
++                    "bounded_cdls": _energy_summary(cdls_cpu),
++                },
++                "cuda": {
++                    "discrete_dls": _energy_summary(dls_cuda),
++                    "bounded_cdls": _energy_summary(cdls_cuda),
++                },
++            }
++        )
++        mixing_metrics.append(
++            {
++                "pair_id": pair_id,
++                "instance_id": dls_cpu["instance_id"],
++                "size": int(dls_cpu["size"]),
++                "seed": int(dls_cpu["seed"]),
++                "cpu": {
++                    "discrete_dls": _mixing_summary(dls_cpu),
++                    "bounded_cdls": _mixing_summary(cdls_cpu),
++                },
++                "cuda": {
++                    "discrete_dls": _mixing_summary(dls_cuda),
++                    "bounded_cdls": _mixing_summary(cdls_cuda),
++                },
++            }
++        )
++        speedups.append(
++            {
++                "pair_id": pair_id,
++                "instance_id": dls_cpu["instance_id"],
++                "size": int(dls_cpu["size"]),
++                "seed": int(dls_cpu["seed"]),
++                "quality_noninferior": quality_noninferior,
++                "quality_by_device": quality_by_device,
++                "discrete_dls_cuda_vs_cpu_speedup": _ratio(dls_cpu, dls_cuda),
++                "bounded_cdls_cuda_vs_cpu_speedup": _ratio(cdls_cpu, cdls_cuda),
++                "bounded_cdls_vs_discrete_dls_cpu_speedup": _ratio(dls_cpu, cdls_cpu),
++                "bounded_cdls_vs_discrete_dls_cuda_speedup": _ratio(dls_cuda, cdls_cuda),
++                "wall_time_s": {
++                    "cpu_discrete_dls": float(dls_cpu["wall_time_s"]),
++                    "cpu_bounded_cdls": float(cdls_cpu["wall_time_s"]),
++                    "cuda_discrete_dls": float(dls_cuda["wall_time_s"]),
++                    "cuda_bounded_cdls": float(cdls_cuda["wall_time_s"]),
++                },
++            }
++        )
++    return energy_metrics, mixing_metrics, timing_rows, speedups
++
++
++def _all_rows_match(rows: Sequence[Mapping[str, Any]]) -> bool:
++    keys = ("instance_id", "size", "seed", "samples", "temperature", "warmup_steps", "thinning", "precision")
++    first = rows[0]
++    return all(row.get(key) == first.get(key) for row in rows for key in keys)
++
++
++def _quality_noninferior(baseline: Mapping[str, Any], candidate: Mapping[str, Any]) -> bool:
++    gate = quality_equivalence_gate()
++    energy_tol = max(
++        float(gate["energy_mean_tolerance_abs"]),
++        float(gate["energy_mean_tolerance_rel"]) * abs(float(baseline["energy_mean"])),
++    )
++    best_tol = float(gate["best_energy_tolerance_abs"])
++    constraint_tol = float(gate["constraint_satisfaction_tolerance_abs"])
++    return bool(
++        float(candidate["energy_mean"]) <= float(baseline["energy_mean"]) + energy_tol
++        and float(candidate["best_energy"]) <= float(baseline["best_energy"]) + best_tol
++        and float(candidate["exact_constraint_satisfaction_rate"])
++        >= float(baseline["exact_constraint_satisfaction_rate"]) - constraint_tol
++        and float(candidate["effective_sample_size"]) >= float(gate["min_effective_sample_size"])
++    )
++
++
++def _ratio(numerator_row: Mapping[str, Any], denominator_row: Mapping[str, Any]) -> float | None:
++    denominator = float(denominator_row["wall_time_s"])
++    if denominator <= 0.0:
++        return None
++    return round(float(numerator_row["wall_time_s"]) / denominator, 8)
++
++
++def _energy_summary(row: Mapping[str, Any]) -> JsonDict:
++    return {
++        "best_energy": float(row["best_energy"]),
++        "mean_energy": float(row["energy_mean"]),
++        "energy_std": float(row["energy_std"]),
++        "energy_min": float(row["energy_min"]),
++        "energy_max": float(row["energy_max"]),
++        "energy_quantiles": dict(row["energy_quantiles"]),
++        "acceptance_rate": float(row["acceptance_rate"]),
++        "exact_constraint_satisfaction_rate": float(row["exact_constraint_satisfaction_rate"]),
++    }
++
++
++def _mixing_summary(row: Mapping[str, Any]) -> JsonDict:
++    return {
++        "integrated_autocorrelation_time": float(row["autocorrelation_time"]),
++        "effective_sample_size": float(row["effective_sample_size"]),
++    }
++
++
++def _timing_summary(row: Mapping[str, Any]) -> JsonDict:
++    return {
++        "status": row.get("status", "success"),
++        "blocked_reason": row.get("blocked_reason"),
++        "pair_id": row["pair_id"],
++        "method": row["method"],
++        "backend": row["backend"],
++        "device": row.get("device", row["backend"]),
++        "instance_id": row["instance_id"],
++        "size": int(row["size"]),
++        "seed": int(row["seed"]),
++        "samples": int(row.get("samples", 0)),
++        "wall_time_s": row.get("wall_time_s"),
++        "end_to_end_wall_time_s": row.get("end_to_end_wall_time_s"),
++        "compile_time_s": row.get("compile_time_s"),
++        "warmup_time_s": row.get("warmup_time_s"),
++        "sample_time_s": row.get("sample_time_s"),
++        "memory_before": row.get("memory_before"),
++        "memory_after": row.get("memory_after"),
++        "kernel_device_path": row.get("kernel_device_path"),
++        "result_hash": row.get("result_hash"),
++    }
++
++
++def crossover_from_speedups(speedups: Sequence[Mapping[str, Any]]) -> tuple[int | None, bool, list[JsonDict]]:
++    """Return the smallest cDLS CUDA-vs-CPU crossover size allowed by gates."""
++
++    intervals: list[JsonDict] = []
++    by_size: dict[int, list[float]] = {}
++    for row in speedups:
++        if row.get("quality_noninferior") is not True:
++            continue
++        value = row.get("bounded_cdls_cuda_vs_cpu_speedup")
++        if value is None:
++            continue
++        by_size.setdefault(int(row["size"]), []).append(float(value))
++    for size in sorted(by_size):
++        values = by_size[size]
++        interval = {
++            "size": size,
++            "n_seed_pairs": len(values),
++            "speedup_min": round(min(values), 8),
++            "speedup_max": round(max(values), 8),
++            "excludes_1_favorable": len(values) >= MIN_SEEDS_FOR_TIMING_INTERVAL and min(values) > 1.0,
++        }
++        intervals.append(interval)
++        if interval["excludes_1_favorable"]:
++            return size, True, intervals
++    return None, False, intervals
++
++
++def build_artifact(
++    *,
++    root: str | Path = REPO_ROOT,
++    torch_module: Any | None = None,
++    sampler_runner: SamplerRunner = run_matched_sampler_rows,
++    clock: Clock = time.perf_counter,
++    instance_sizes: Sequence[int] = DEFAULT_INSTANCE_SIZES,
++    seeds: Sequence[int] = DEFAULT_SEEDS,
++    samples_per_pair: int = DEFAULT_SAMPLES_PER_PAIR,
++    tests_added_or_reused: Sequence[str] | None = None,
++) -> JsonDict:
++    """Build the Exp5611 terminal artifact."""
++
++    started = clock()
++    descriptor_source = exp5573.load_descriptor_source(root)
++    torch_obj = torch_module
++    if torch_obj is None:
++        try:
++            torch_obj = exp5573._import_torch()
++        except Exception:
++            torch_obj = None
++    cpu_receipt = exp5573.cpu_device_receipt(torch_obj)
++    cuda_receipt = exp5573.cuda_device_receipt(torch_obj)
++    preconditions: JsonDict = {
++        "cpu_available": cpu_receipt["status"] == "reachable",
++        "cuda_available": cuda_receipt["status"] == "reachable",
++        "descriptor_available": descriptor_source["available"],
++        "blocked_reasons": [],
++    }
++    if not descriptor_source["available"]:
++        preconditions["blocked_reasons"].append(descriptor_source["blocked_reason"])
++    if cuda_receipt["status"] != "reachable":
++        preconditions["blocked_reasons"].append(cuda_receipt.get("blocked_reason", "cuda_blocked"))
++
++    instances: list[IsingInstance] = []
++    raw_rows: list[JsonDict] = []
++    matched_schedule: JsonDict = {
++        "temperature": DEFAULT_TEMPERATURE,
++        "warmup_steps": DEFAULT_WARMUP_STEPS,
++        "thinning": DEFAULT_THINNING,
++        "precision": DEFAULT_PRECISION,
++        "stopping_rule": DEFAULT_STOPPING_RULE,
++        "couplings_biases_shared": False,
++        "measurement_boundaries_shared": False,
++        "instance_checksums": {},
++    }
++    if descriptor_source["available"]:
++        try:
++            instances = build_ising_instances(descriptor_source["payload"], instance_sizes)
++            matched_schedule = matched_schedule_for_instances(instances)
++        except Exception as exc:  # noqa: BLE001 - artifact records descriptor build blockers.
++            preconditions["descriptor_available"] = False
++            preconditions["blocked_reasons"].append(f"descriptor_instance_build_failed:{type(exc).__name__}")
++
++    if (
++        preconditions["cpu_available"]
++        and preconditions["cuda_available"]
++        and preconditions["descriptor_available"]
++        and torch_obj is not None
++    ):
++        try:
++            raw_rows = sampler_runner(
++                instances,
++                tuple(int(seed) for seed in seeds),
++                int(samples_per_pair),
++                matched_schedule,
++                torch_obj,
++                clock,
++            )
++        except Exception as exc:  # noqa: BLE001 - block instead of synthesizing rows.
++            preconditions["blocked_reasons"].append(f"sampler_run_failed:{type(exc).__name__}:{exc}")
++            raw_rows = []
++
++    energy_metrics, mixing_metrics, timing_rows, speedups = summarize_rows(raw_rows)
++    crossover_size, crossover_allowed, timing_intervals = crossover_from_speedups(speedups)
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "run_date": RUN_DATE,
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions": preconditions,
++        "descriptor_source": {
++            "path": descriptor_source["path"],
++            "available": descriptor_source["available"],
++            "sha256": descriptor_source["sha256"],
++            "descriptor_count": descriptor_source["descriptor_count"],
++            "blocked_reason": descriptor_source["blocked_reason"],
++        },
++        "target_descriptors": target_descriptors_for_instances(instances),
++        "instance_sizes": [int(size) for size in instance_sizes],
++        "methods": [dict(method) for method in METHODS],
++        "seeds": [int(seed) for seed in seeds],
++        "samples_per_pair": int(samples_per_pair),
++        "matched_schedule": matched_schedule,
++        "quality_equivalence_gate": quality_equivalence_gate(),
++        "cpu_device_receipt": cpu_receipt,
++        "cuda_device_receipt": cuda_receipt,
++        "timing_rows": timing_rows,
++        "energy_quality_metrics": energy_metrics,
++        "mixing_metrics": mixing_metrics,
++        "successful_matched_pairs": len(speedups),
++        "speedup_by_pair": speedups,
++        "timing_intervals_by_size": timing_intervals,
++        "crossover_size": crossover_size,
++        "crossover_claim_allowed": crossover_allowed,
++        "board_speedup_claimed": False,
++        "tests_added_or_reused": _normalize_tests(tests_added_or_reused),
++        "duration_s": round(max(clock() - started, 0.0), 8),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "honest_verdict": "",
++        "reproducibility_checksum": "",
++    }
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def _normalize_tests(tests_added_or_reused: Sequence[str] | None) -> list[str]:
++    if tests_added_or_reused:
++        return [str(item) for item in tests_added_or_reused]
++    return [
++        "tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py",
++        ".venv/bin/pytest tests/python -q",
++    ]
++
++
++def honest_verdict(payload: Mapping[str, Any]) -> str:
++    """Return a terminal verdict without implying a board or crossover win."""
++
++    blockers = list(payload.get("preconditions", {}).get("blocked_reasons", []))
++    successful = int(payload.get("successful_matched_pairs", 0))
++    if successful > 0:
++        if payload.get("crossover_claim_allowed") is True:
++            return (
++                "complete: cDLS matched CPU/CUDA evidence recorded; "
++                f"crossover_size={payload.get('crossover_size')}; board_speedup_claimed=false"
++            )
++        return (
++            "complete: cDLS matched CPU/CUDA evidence recorded with no gated crossover; "
++            f"successful_matched_pairs={successful}; board_speedup_claimed=false"
++        )
++    return (
++        "blocked: cDLS matched CPU/CUDA comparison unavailable; "
++        f"blocked_reasons={len(blockers)}; board_speedup_claimed=false"
++    )
++
++
++def validate_artifact(payload: Mapping[str, Any]) -> None:
++    """Validate required fields and no-overclaim boundaries for Exp5611."""
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in payload:
++            raise ValueError(f"missing required field: {field}")  # pragma: no cover
++    if payload.get("field_principles") != FIELD_PRINCIPLES:
++        raise ValueError("field_principles mismatch")  # pragma: no cover
++    if int(payload.get("samples_per_pair", 0)) < MIN_SAMPLES_PER_SUCCESS:
++        raise ValueError("samples_per_pair must be at least 10000")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate mismatch")  # pragma: no cover
++    if payload.get("board_speedup_claimed") is not False:
++        raise ValueError("board_speedup_claimed must be false")
++    speedups = payload.get("speedup_by_pair")
++    if not isinstance(speedups, list):
++        raise ValueError("speedup_by_pair must be a list")  # pragma: no cover
++    if int(payload.get("successful_matched_pairs", -1)) != len(speedups):
++        raise ValueError("successful_matched_pairs must match speedup_by_pair length")  # pragma: no cover
++    if payload.get("crossover_claim_allowed") is True:
++        if payload.get("crossover_size") is None:
++            raise ValueError("crossover_claim_allowed requires crossover_size")
++        if not speedups or any(row.get("quality_noninferior") is not True for row in speedups):
++            raise ValueError("crossover_claim_allowed requires quality_noninferior speedups")
++        intervals = payload.get("timing_intervals_by_size")
++        if not isinstance(intervals, list) or not any(
++            row.get("size") == payload.get("crossover_size") and row.get("excludes_1_favorable") is True
++            for row in intervals
++            if isinstance(row, Mapping)
++        ):
++            raise ValueError("crossover_claim_allowed requires favorable timing interval")
++    verdict = str(payload.get("honest_verdict", ""))
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must be terminal-prefixed")  # pragma: no cover
++    if payload.get("reproducibility_checksum") != payload_checksum(payload):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def write_output(root: str | Path, artifact: Mapping[str, Any]) -> Path:
++    """Write the terminal artifact with stable formatting."""
++
++    output_path = Path(root) / RESULT_RELATIVE_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(
++        json.dumps(dict(artifact), indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++    return output_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    tests_added_or_reused: Sequence[str] | None = None,
++) -> Path:  # pragma: no cover - thin live runner.
++    """Build, validate, and write Exp5611 outputs."""
++
++    artifact = build_artifact(root=repo_root, tests_added_or_reused=tests_added_or_reused)
++    return write_output(repo_root, artifact)
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper.
++    run_experiment()
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_5611_cdls_matched_sampler_crossover.json b/results/experiment_5611_cdls_matched_sampler_crossover.json
+new file mode 100644
+index 0000000000..c58d23dafd
+--- /dev/null
++++ b/results/experiment_5611_cdls_matched_sampler_crossover.json
+@@ -0,0 +1,1102 @@
++{
++  "board_speedup_claimed": false,
++  "cpu_device_receipt": {
++    "device_identities": [
++      "AMD Ryzen AI 9 HX 370 w/ Radeon 890M"
++    ],
++    "driver_versions": {},
++    "memory": {
++      "mem_available_kib": 71805524,
++      "mem_total_kib": 131157064
++    },
++    "metadata": {
++      "platform": "Linux-7.1.3-2-cachyos-x86_64-with-glibc2.43",
++      "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
++    },
++    "runtime_versions": {
++      "numpy": "2.5.1",
++      "python": "3.12.13",
++      "torch": "2.11.0+cu128"
++    },
++    "status": "reachable"
++  },
++  "crossover_claim_allowed": false,
++  "crossover_size": null,
++  "cuda_device_receipt": {
++    "blocked_reason": null,
++    "device_identities": [
++      "NVIDIA GeForce RTX 3090",
++      "NVIDIA GeForce RTX 3090"
++    ],
++    "driver_versions": {
++      "nvidia_driver": "610.43.03"
++    },
++    "memory": {
++      "device_memory": [
++        {
++          "free_mib": 23858,
++          "index": 0,
++          "reserved_mib": 0,
++          "total_mib": 24123
++        },
++        {
++          "free_mib": 23858,
++          "index": 1,
++          "reserved_mib": 0,
++          "total_mib": 24123
++        }
++      ],
++      "nvidia_smi": [
++        {
++          "free_mib": 23859,
++          "index": 0,
++          "name": "NVIDIA GeForce RTX 3090",
++          "total_mib": 24576
++        },
++        {
++          "free_mib": 23859,
++          "index": 1,
++          "name": "NVIDIA GeForce RTX 3090",
++          "total_mib": 24576
++        }
++      ]
++    },
++    "metadata": {
++      "device_count": 2
++    },
++    "runtime_versions": {
++      "cuda": "12.8",
++      "torch": "2.11.0+cu128"
++    },
++    "status": "reachable"
++  },
++  "descriptor_source": {
++    "available": true,
++    "blocked_reason": null,
++    "descriptor_count": 5,
++    "path": "results/experiment_5556_asp_fsm_sparse_repair_scale.json",
++    "sha256": "22b3ebf354b733650a0535d6e3214887f09481c9ee04614eee496bebb2adcaf2"
++  },
++  "duration_s": 38.4810986,
++  "energy_quality_metrics": [
++    {
++      "cpu": {
++        "bounded_cdls": {
++          "acceptance_rate": 0.82429604,
++          "best_energy": -338.58007812,
++          "energy_max": -173.97999573,
++          "energy_min": -338.58007812,
++          "energy_quantiles": {
++            "p05": -320.34008789,
++            "p50": -286.24005127,
++            "p95": -232.14002838
++          },
++          "energy_std": 27.22824924,
++          "exact_constraint_satisfaction_rate": 0.7628419,
++          "mean_energy": -282.09018173
++        },
++        "discrete_dls": {
++          "acceptance_rate": 1.0,
++          "best_energy": -333.40008545,
++          "energy_max": -181.09999084,
++          "energy_min": -333.40008545,
++          "energy_quantiles": {
++            "p05": -288.56105804,
++            "p50": -258.62005615,
++            "p95": -228.76003952
++          },
++          "energy_std": 18.02682163,
++          "exact_constraint_satisfaction_rate": 0.76262748,
++          "mean_energy": -258.73871315
++        }
++      },
++      "cuda": {
++        "bounded_cdls": {
++          "acceptance_rate": 0.83266743,
++          "best_energy": -334.79998779,
++          "energy_max": -192.95999146,
++          "energy_min": -334.79998779,
++          "energy_quantiles": {
++            "p05": -313.61999512,
++            "p50": -285.3999939,
++            "p95": -249.67999268
++          },
++          "energy_std": 19.46962573,
++          "exact_constraint_satisfaction_rate": 0.76313921,
++          "mean_energy": -284.84568548
++        },
++        "discrete_dls": {
++          "acceptance_rate": 1.0,
++          "best_energy": -324.09997559,
++          "energy_max": -196.98001099,
++          "energy_min": -324.09997559,
++          "energy_quantiles": {
++            "p05": -288.72097168,
++            "p50": -259.11999512,
++            "p95": -228.91999741
++          },
++          "energy_std": 18.20368672,
++          "exact_constraint_satisfaction_rate": 0.76259236,
++          "mean_energy": -258.97111742
++        }
++      },
++      "instance_id": "asp_fsm_desc_n1024_45951d269c",
++      "pair_id": "asp_fsm_desc_n1024_45951d269c:seed5611",
++      "quality_by_device": {
++        "cpu": false,
++        "cuda": false
++      },
++      "quality_noninferior": false,
++      "seed": 5611,
++      "size": 1024
++    },
++    {
++      "cpu": {
++        "bounded_cdls": {
++          "acceptance_rate": 0.96480213,
++          "best_energy": -52.75999832,
++          "energy_max": -20.02000046,
++          "energy_min": -52.75999832,
++          "energy_quantiles": {
++            "p05": -48.93999863,
++            "p50": -35.68000031,
++            "p95": -25.23999977
++          },
++          "energy_std": 7.35861861,
++          "exact_constraint_satisfaction_rate": 0.75111111,
++          "mean_energy": -36.14565087
++        },
++        "discrete_dls": {
++          "acceptance_rate": 1.0,
++          "best_energy": -56.27999878,
++          "energy_max": -6.33999825,
++          "energy_min": -56.27999878,
++          "energy_quantiles": {
++            "p05": -42.68000031,
++            "p50": -32.23999786,
++            "p95": -21.73999968
++          },
++          "energy_std": 6.42183816,
++          "exact_constraint_satisfaction_rate": 0.76191111,
++          "mean_energy": -32.27547286
++        }
++      },
++      "cuda": {
++        "bounded_cdls": {
++          "acceptance_rate": 0.96870244,
++          "best_energy": -53.45999908,
++          "energy_max": -22.0,
++          "energy_min": -53.45999908,
++          "energy_quantiles": {
++            "p05": -45.58000183,
++            "p50": -36.22000122,
++            "p95": -26.15999985
++          },
++          "energy_std": 5.79949157,
++          "exact_constraint_satisfaction_rate": 0.74667408,
++          "mean_energy": -36.10174541
++        },
++        "discrete_dls": {
++          "acceptance_rate": 1.0,
++          "best_energy": -58.37999725,
++          "energy_max": -8.17999935,
++          "energy_min": -58.37999725,
++          "energy_quantiles": {
++            "p05": -43.11999893,
++            "p50": -32.47999954,
++            "p95": -22.02000046
++          },
++          "energy_std": 6.448599,
++          "exact_constraint_satisfaction_rate": 0.76312594,
++          "mean_energy": -32.4729874
++        }
++      },
++      "instance_id": "asp_fsm_desc_n128_82afb28c16",
++      "pair_id": "asp_fsm_desc_n128_82afb28c16:seed5611",
++      "quality_by_device": {
++        "cpu": false,
++        "cuda": false
++      },
++      "quality_noninferior": false,
++      "seed": 5611,
++      "size": 128
++    },
++    {
++      "cpu": {
++        "bounded_cdls": {
++          "acceptance_rate": 0.9423516,
++          "best_energy": -87.69999695,
++          "energy_max": -37.3599968,
++          "energy_min": -87.69999695,
++          "energy_quantiles": {
++            "p05": -81.63999176,
++            "p50": -66.96999359,
++            "p95": -50.79999542
++          },
++          "energy_std": 9.05573159,
++          "exact_constraint_satisfaction_rate": 0.72657273,
++          "mean_energy": -66.37101099
++        },
++        "discrete_dls": {
++          "acceptance_rate": 1.0,
++          "best_energy": -96.39998627,
++          "energy_max": -28.1799984,
++          "energy_min": -96.39998627,
++          "energy_quantiles": {
++            "p05": -79.46099167,
++            "p50": -64.43999481,
++            "p95": -49.65999603
++          },
++          "energy_std": 9.10169844,
++          "exact_constraint_satisfaction_rate": 0.76187091,
++          "mean_energy": -64.45179448
++        }
++      },
++      "cuda": {
++        "bounded_cdls": {
++          "acceptance_rate": 0.94206621,
++          "best_energy": -96.65999603,
++          "energy_max": -46.99999619,
++          "energy_min": -96.65999603,
++          "energy_quantiles": {
++            "p05": -90.11999512,
++            "p50": -76.18000031,
++            "p95": -59.89999771
++          },
++          "energy_std": 9.48718901,
++          "exact_constraint_satisfaction_rate": 0.78651816,
++          "mean_energy": -75.42403457
++        },
++        "discrete_dls": {
++          "acceptance_rate": 1.0,
++          "best_energy": -96.29999542,
++          "energy_max": -33.84000015,
++          "energy_min": -96.29999542,
++          "energy_quantiles": {
++            "p05": -79.87999763,
++            "p50": -65.05999756,
++            "p95": -50.20000057
++          },
++          "energy_std": 9.05013353,
++          "exact_constraint_satisfaction_rate": 0.76403452,
++          "mean_energy": -65.00680481
++        }
++      },
++      "instance_id": "asp_fsm_desc_n256_aefaab32a5",
++      "pair_id": "asp_fsm_desc_n256_aefaab32a5:seed5611",
++      "quality_by_device": {
++        "cpu": false,
++        "cuda": false
++      },
++      "quality_noninferior": false,
++      "seed": 5611,
++      "size": 256
++    },
++    {
++      "cpu": {
++        "bounded_cdls": {
++          "acceptance_rate": 0.89649924,
++          "best_energy": -165.51998901,
++          "energy_max": -82.83999634,
++          "energy_min": -165.51998901,
++          "energy_quantiles": {
++            "p05": -155.5599823,
++            "p50": -135.91999054,
++            "p95": -111.81898422
++          },
++          "energy_std": 13.37328761,
++          "exact_constraint_satisfaction_rate": 0.77343063,
++          "mean_energy": -134.74437718
++        },
++        "discrete_dls": {
++          "acceptance_rate": 1.0,
++          "best_energy": -186.01998901,
++          "energy_max": -77.29999542,
++          "energy_min": -186.01998901,
++          "energy_quantiles": {
++            "p05": -150.37997437,
++            "p50": -129.33999634,
++            "p95": -108.1599884
++          },
++          "energy_std": 12.89305926,
++          "exact_constraint_satisfaction_rate": 0.76141802,
++          "mean_energy": -129.25985012
++        }
++      },
++      "cuda": {
++        "bounded_cdls": {
++          "acceptance_rate": 0.89488204,
++          "best_energy": -201.88000488,
++          "energy_max": -105.18000031,
++          "energy_min": -201.88000488,
++          "energy_quantiles": {
++            "p05": -176.91999817,
++            "p50": -147.21998596,
++            "p95": -124.62000275
++          },
++          "energy_std": 14.7872416,
++          "exact_constraint_satisfaction_rate": 0.77792434,
++          "mean_energy": -147.55479173
++        },
++        "discrete_dls": {
++          "acceptance_rate": 1.0,
++          "best_energy": -176.1599884,
++          "energy_max": -79.40000153,
++          "energy_min": -176.1599884,
++          "energy_quantiles": {
++            "p05": -150.72200089,
++            "p50": -129.55999756,
++            "p95": -108.04000053
++          },
++          "energy_std": 12.89705487,
++          "exact_constraint_satisfaction_rate": 0.76337029,
++          "mean_energy": -129.59241363
++        }
++      },
++      "instance_id": "asp_fsm_desc_n512_85e62b1750",
++      "pair_id": "asp_fsm_desc_n512_85e62b1750:seed5611",
++      "quality_by_device": {
++        "cpu": false,
++        "cuda": false
++      },
++      "quality_noninferior": false,
++      "seed": 5611,
++      "size": 512
++    }
++  ],
++  "experiment": 5611,
++  "experiment_id": "exp5611-cdls-matched-sampler-crossover",
++  "field_principles": {
++    "board_speedup_claimed": "Bare false prevents this CPU/CUDA sampler study from reopening board continuity.",
++    "cpu_device_receipt": "Authenticates CPU identity, runtime, and free memory for the local benchmark.",
++    "crossover_claim_allowed": "Requires quality and timing gates to pass together before any crossover claim.",
++    "crossover_size": "Records the smallest gated crossover size, or null when no crossover is proven.",
++    "cuda_device_receipt": "Authenticates CUDA identity, driver/runtime, and free memory or records a precise blocker.",
++    "energy_quality_metrics": "Prevents speed from hiding wrong samples by reporting energy and exact constraint quality.",
++    "field_principles": "Explains why every headline and gate field exists before a reviewer trusts the JSON shape.",
++    "honest_verdict": "Terminal complete: or blocked: verdict states whether no-crossover evidence is final.",
++    "inference_substrate": "Declares matched CPU/CUDA exact Ising sampling, not LLM inference or board timing.",
++    "instance_sizes": "Makes the tested crossover range explicit instead of implying unmeasured scale.",
++    "methods": "Keeps the unchanged discrete DLS baseline and bounded cDLS proposal separately identifiable.",
++    "mixing_metrics": "Reports ESS and autocorrelation to test whether the cDLS mechanism actually mixes.",
++    "samples_per_pair": "Guards the >=10000 retained-sample floor required for mixing estimates.",
++    "seeds": "Records paired seeds so every CPU/CUDA and method comparison is reproducible.",
++    "speedup_by_pair": "Reports only matched ratios; failed or quality-inferior rows cannot enter speedups.",
++    "successful_matched_pairs": "Counts only complete method/device rows that satisfy the same schedule and quality gate.",
++    "target_descriptors": "Proves both methods sample identical descriptor-derived Ising problems.",
++    "timing_rows": "Preserves raw matched timing evidence, including failed rows, before any summary ratio."
++  },
++  "honest_verdict": "blocked: cDLS matched CPU/CUDA comparison unavailable; blocked_reasons=0; board_speedup_claimed=false",
++  "inference_substrate": "matched_cpu_cuda_exact_ising_sampling",
++  "instance_sizes": [
++    128,
++    256,
++    512,
++    1024
++  ],
++  "matched_schedule": {
++    "cdls_continuous_bound": 3.0,
++    "cdls_drift_scale": 0.08,
++    "cdls_proposal_std": 0.35,
++    "couplings_biases_shared": true,
++    "instance_checksums": {
++      "asp_fsm_desc_n1024_45951d269c": "45951d269c846f901fc5037bf93d1846a4531358a143fc17d7fa91e2798a7d0c",
++      "asp_fsm_desc_n128_82afb28c16": "82afb28c166f611a9ad12290d761e65d2b41010b7de51be7beb9f7e909910eda",
++      "asp_fsm_desc_n256_aefaab32a5": "aefaab32a5c15bf61f0ade33ff22b9d9e113648a628176bc77c26177b78a1df7",
++      "asp_fsm_desc_n512_85e62b1750": "85e62b17503acfda85dc2eaa08e6724bf341928543ff653eadc46c8e5c4bd9e9"
++    },
++    "measurement_boundaries_shared": true,
++    "precision": "float32",
++    "stopping_rule": "fixed_post_warmup_sample_count",
++    "temperature": 1.0,
++    "thinning": 1,
++    "warmup_steps": 512
++  },
++  "methods": [
++    {
++      "baseline_preserved": true,
++      "label": "Exp5573 discrete DLS heat-bath baseline",
++      "method_id": "discrete_dls",
++      "projection_correction": "not_applicable_discrete_baseline"
++    },
++    {
++      "baseline_preserved": false,
++      "label": "Bounded cDLS continuous-intermediate proposal",
++      "method_id": "bounded_cdls",
++      "projection_correction": "metropolis_hastings_exact_discrete_target"
++    }
++  ],
++  "milestone": "2026.07.506",
++  "mixing_metrics": [
++    {
++      "cpu": {
++        "bounded_cdls": {
++          "effective_sample_size": 19.27790131,
++          "integrated_autocorrelation_time": 518.72866444
++        },
++        "discrete_dls": {
++          "effective_sample_size": 4735.75710061,
++          "integrated_autocorrelation_time": 2.11159479
++        }
++      },
++      "cuda": {
++        "bounded_cdls": {
++          "effective_sample_size": 24.66834143,
++          "integrated_autocorrelation_time": 405.37788201
++        },
++        "discrete_dls": {
++          "effective_sample_size": 4583.8922118,
++          "integrated_autocorrelation_time": 2.18155217
++        }
++      },
++      "instance_id": "asp_fsm_desc_n1024_45951d269c",
++      "pair_id": "asp_fsm_desc_n1024_45951d269c:seed5611",
++      "seed": 5611,
++      "size": 1024
++    },
++    {
++      "cpu": {
++        "bounded_cdls": {
++          "effective_sample_size": 13.92302085,
++          "integrated_autocorrelation_time": 718.23493696
++        },
++        "discrete_dls": {
++          "effective_sample_size": 4751.06708029,
++          "integrated_autocorrelation_time": 2.10479032
++        }
++      },
++      "cuda": {
++        "bounded_cdls": {
++          "effective_sample_size": 19.45827111,
++          "integrated_autocorrelation_time": 513.92027293
++        },
++        "discrete_dls": {
++          "effective_sample_size": 4804.20170346,
++          "integrated_autocorrelation_time": 2.08151127
++        }
++      },
++      "instance_id": "asp_fsm_desc_n128_82afb28c16",
++      "pair_id": "asp_fsm_desc_n128_82afb28c16:seed5611",
++      "seed": 5611,
++      "size": 128
++    },
++    {
++      "cpu": {
++        "bounded_cdls": {
++          "effective_sample_size": 27.50879853,
++          "integrated_autocorrelation_time": 363.52005669
++        },
++        "discrete_dls": {
++          "effective_sample_size": 4683.1286562,
++          "integrated_autocorrelation_time": 2.13532464
++        }
++      },
++      "cuda": {
++        "bounded_cdls": {
++          "effective_sample_size": 15.41884582,
++          "integrated_autocorrelation_time": 648.55697495
++        },
++        "discrete_dls": {
++          "effective_sample_size": 4919.37512664,
++          "integrated_autocorrelation_time": 2.0327785
++        }
++      },
++      "instance_id": "asp_fsm_desc_n256_aefaab32a5",
++      "pair_id": "asp_fsm_desc_n256_aefaab32a5:seed5611",
++      "seed": 5611,
++      "size": 256
++    },
++    {
++      "cpu": {
++        "bounded_cdls": {
++          "effective_sample_size": 16.03637623,
++          "integrated_autocorrelation_time": 623.58227656
++        },
++        "discrete_dls": {
++          "effective_sample_size": 4690.6266818,
++          "integrated_autocorrelation_time": 2.13191129
++        }
++      },
++      "cuda": {
++        "bounded_cdls": {
++          "effective_sample_size": 16.4213992,
++          "integrated_autocorrelation_time": 608.96150669
++        },
++        "discrete_dls": {
++          "effective_sample_size": 4887.65866533,
++          "integrated_autocorrelation_time": 2.04596939
++        }
++      },
++      "instance_id": "asp_fsm_desc_n512_85e62b1750",
++      "pair_id": "asp_fsm_desc_n512_85e62b1750:seed5611",
++      "seed": 5611,
++      "size": 512
++    }
++  ],
++  "preconditions": {
++    "blocked_reasons": [],
++    "cpu_available": true,
++    "cuda_available": true,
++    "descriptor_available": true
++  },
++  "quality_equivalence_gate": {
++    "best_energy_tolerance_abs": 0.5,
++    "constraint_satisfaction_tolerance_abs": 0.03,
++    "defined_before_timing": true,
++    "energy_mean_tolerance_abs": 0.5,
++    "energy_mean_tolerance_rel": 0.05,
++    "min_effective_sample_size": 100.0,
++    "min_seeds_for_timing_interval": 3,
++    "timing_interval": "observed_seed_min_max"
++  },
++  "reproducibility_checksum": "7db626921fef9ec38bc757f67b8abbedc6b61c5a721396973dcce26563f98516",
++  "run_date": "2026-07-14",
++  "samples_per_pair": 10000,
++  "schema": "carnot.experiment_5611.cdls_matched_sampler_crossover.v1",
++  "seeds": [
++    5611
++  ],
++  "spec_refs": [
++    "REQ-SAMPLE-5611",
++    "SCENARIO-SAMPLE-5611"
++  ],
++  "speedup_by_pair": [],
++  "successful_matched_pairs": 0,
++  "target_descriptors": [
++    {
++      "biases_checksum": "e19815664e5ff96abeb08471caf92bca12052e6efc0cb7c0372e3355c4a8716d",
++      "constraint_count": 27,
++      "couplings_checksum": "07bda3b7ce806aed13ea4b84bcf447b9f3282e5aef5361f14e97d984d9ea1f27",
++      "descriptor_checksum": "82afb28c166f611a9ad12290d761e65d2b41010b7de51be7beb9f7e909910eda",
++      "descriptor_ids": [
++        "asp-fsm-sparse-repair:asp_sat_fsm_acceptance_default_guard",
++        "asp-fsm-sparse-repair:asp_unsat_fsm_forbidden_error",
++        "asp-fsm-sparse-repair:asp_ambiguous_fsm_default_repair_choice",
++        "asp-fsm-sparse-repair:asp_default_negation_no_exception",
++        "asp-fsm-sparse-repair:asp_contradiction_fact_constraint"
++      ],
++      "instance_id": "asp_fsm_desc_n128_82afb28c16",
++      "size": 128,
++      "target_spins_checksum": "755f87ed489805533c889b250516b4351c6a7e76ccf868257d750c4be634ad48"
++    },
++    {
++      "biases_checksum": "ed47486f614beb40b9fccc1b35cc894dbc9478a9531b38e90542417c215534e7",
++      "constraint_count": 55,
++      "couplings_checksum": "4a2794a718f67471911329b123bc21caa3a063ecb88831215c95619a2764d683",
++      "descriptor_checksum": "aefaab32a5c15bf61f0ade33ff22b9d9e113648a628176bc77c26177b78a1df7",
++      "descriptor_ids": [
++        "asp-fsm-sparse-repair:asp_sat_fsm_acceptance_default_guard",
++        "asp-fsm-sparse-repair:asp_unsat_fsm_forbidden_error",
++        "asp-fsm-sparse-repair:asp_ambiguous_fsm_default_repair_choice",
++        "asp-fsm-sparse-repair:asp_default_negation_no_exception",
++        "asp-fsm-sparse-repair:asp_contradiction_fact_constraint"
++      ],
++      "instance_id": "asp_fsm_desc_n256_aefaab32a5",
++      "size": 256,
++      "target_spins_checksum": "08634a16c9593af3a6825eb5837eb8006ba77058eff51cfe677841447ea2ca8e"
++    },
++    {
++      "biases_checksum": "3c4548f28ba1ed232292f1efdd71f052764ca57510d285c72e4cc43d61e93758",
++      "constraint_count": 111,
++      "couplings_checksum": "2411ec2f74b9af0fff5313c209abb4d8bc4550504729613d5d5d820111e9e82f",
++      "descriptor_checksum": "85e62b17503acfda85dc2eaa08e6724bf341928543ff653eadc46c8e5c4bd9e9",
++      "descriptor_ids": [
++        "asp-fsm-sparse-repair:asp_sat_fsm_acceptance_default_guard",
++        "asp-fsm-sparse-repair:asp_unsat_fsm_forbidden_error",
++        "asp-fsm-sparse-repair:asp_ambiguous_fsm_default_repair_choice",
++        "asp-fsm-sparse-repair:asp_default_negation_no_exception",
++        "asp-fsm-sparse-repair:asp_contradiction_fact_constraint"
++      ],
++      "instance_id": "asp_fsm_desc_n512_85e62b1750",
++      "size": 512,
++      "target_spins_checksum": "084a95dd5ad161f2ce8d251a6caaa4a1fcba9057a38d7da584332109ade63771"
++    },
++    {
++      "biases_checksum": "6c7398f8b1a358309ad237f88d67b782a4ff46e73768f892cc3bdf5cda6a7d4b",
++      "constraint_count": 222,
++      "couplings_checksum": "33f9161b6cb233ff9f0651303d08112b259cd7df6975a6795f8e9d4bbcc6a939",
++      "descriptor_checksum": "45951d269c846f901fc5037bf93d1846a4531358a143fc17d7fa91e2798a7d0c",
++      "descriptor_ids": [
++        "asp-fsm-sparse-repair:asp_sat_fsm_acceptance_default_guard",
++        "asp-fsm-sparse-repair:asp_unsat_fsm_forbidden_error",
++        "asp-fsm-sparse-repair:asp_ambiguous_fsm_default_repair_choice",
++        "asp-fsm-sparse-repair:asp_default_negation_no_exception",
++        "asp-fsm-sparse-repair:asp_contradiction_fact_constraint"
++      ],
++      "instance_id": "asp_fsm_desc_n1024_45951d269c",
++      "size": 1024,
++      "target_spins_checksum": "2c3df257edb8b59aa450234f0f4ba7e2841f89bb0cbfb7b8c29e5520be4e801d"
++    }
++  ],
++  "tests_added_or_reused": [
++    "tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "timing_intervals_by_size": [],
++  "timing_rows": [
++    {
++      "backend": "cpu",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cpu",
++      "end_to_end_wall_time_s": 2.16226909,
++      "instance_id": "asp_fsm_desc_n1024_45951d269c",
++      "kernel_device_path": "torch_cpu_exp5573_heat_bath",
++      "memory_after": {
++        "mem_available_kib": 71222916,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "memory_before": {
++        "mem_available_kib": 71223036,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "method": "discrete_dls",
++      "pair_id": "asp_fsm_desc_n1024_45951d269c:seed5611",
++      "result_hash": "593102496c454e7846b7dba893450db441b9c720eefb3fce93dc3f610036b9e2",
++      "sample_time_s": 2.12424549,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 1024,
++      "status": "success",
++      "wall_time_s": 2.16226909,
++      "warmup_time_s": 0.03802359
++    },
++    {
++      "backend": "cpu",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cpu",
++      "end_to_end_wall_time_s": 6.17217838,
++      "instance_id": "asp_fsm_desc_n1024_45951d269c",
++      "kernel_device_path": "torch_cpu_bounded_cdls_dense_matvec_mh",
++      "memory_after": {
++        "mem_available_kib": 71227268,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "memory_before": {
++        "mem_available_kib": 71222916,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "method": "bounded_cdls",
++      "pair_id": "asp_fsm_desc_n1024_45951d269c:seed5611",
++      "result_hash": "bc95ac572baa283c3655f0859f1d3d9fcadd0603bb4ebeefe78d21c6ebb2f3fe",
++      "sample_time_s": 5.86281135,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 1024,
++      "status": "success",
++      "wall_time_s": 6.17217838,
++      "warmup_time_s": 0.30936703
++    },
++    {
++      "backend": "cuda",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cuda",
++      "end_to_end_wall_time_s": 1.35581718,
++      "instance_id": "asp_fsm_desc_n1024_45951d269c",
++      "kernel_device_path": "torch_cuda_exp5573_heat_bath",
++      "memory_after": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "memory_before": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "method": "discrete_dls",
++      "pair_id": "asp_fsm_desc_n1024_45951d269c:seed5611",
++      "result_hash": "301f98bb406fdb86e191fb77376a72f9b53b35166b7aab01b4dfc7370ccf1550",
++      "sample_time_s": 1.28075644,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 1024,
++      "status": "success",
++      "wall_time_s": 1.35581718,
++      "warmup_time_s": 0.07506074
++    },
++    {
++      "backend": "cuda",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cuda",
++      "end_to_end_wall_time_s": 3.89295316,
++      "instance_id": "asp_fsm_desc_n1024_45951d269c",
++      "kernel_device_path": "torch_cuda_bounded_cdls_dense_matvec_mh",
++      "memory_after": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "memory_before": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "method": "bounded_cdls",
++      "pair_id": "asp_fsm_desc_n1024_45951d269c:seed5611",
++      "result_hash": "0cf0366715a598ff67e2ee43d24f09da35af1fff950b03b2d10ead84ff3a768a",
++      "sample_time_s": 3.74036573,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 1024,
++      "status": "success",
++      "wall_time_s": 3.89295316,
++      "warmup_time_s": 0.15258743
++    },
++    {
++      "backend": "cpu",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cpu",
++      "end_to_end_wall_time_s": 0.44519853,
++      "instance_id": "asp_fsm_desc_n128_82afb28c16",
++      "kernel_device_path": "torch_cpu_exp5573_heat_bath",
++      "memory_after": {
++        "mem_available_kib": 71566492,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "memory_before": {
++        "mem_available_kib": 71566720,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "method": "discrete_dls",
++      "pair_id": "asp_fsm_desc_n128_82afb28c16:seed5611",
++      "result_hash": "6b1bda5703d0cb3f8bcd2847bae24fb15d20b7159d0d2cd6e62cb24be47a89a5",
++      "sample_time_s": 0.434527,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 128,
++      "status": "success",
++      "wall_time_s": 0.44519853,
++      "warmup_time_s": 0.01067153
++    },
++    {
++      "backend": "cpu",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cpu",
++      "end_to_end_wall_time_s": 1.19649065,
++      "instance_id": "asp_fsm_desc_n128_82afb28c16",
++      "kernel_device_path": "torch_cpu_bounded_cdls_dense_matvec_mh",
++      "memory_after": {
++        "mem_available_kib": 71566492,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "memory_before": {
++        "mem_available_kib": 71566492,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "method": "bounded_cdls",
++      "pair_id": "asp_fsm_desc_n128_82afb28c16:seed5611",
++      "result_hash": "e255d5273614470fdba6950653ab1ec2454ee7b2dcc5d239833705ff6d4701d1",
++      "sample_time_s": 1.13990726,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 128,
++      "status": "success",
++      "wall_time_s": 1.19649065,
++      "warmup_time_s": 0.05658339
++    },
++    {
++      "backend": "cuda",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cuda",
++      "end_to_end_wall_time_s": 1.37469271,
++      "instance_id": "asp_fsm_desc_n128_82afb28c16",
++      "kernel_device_path": "torch_cuda_exp5573_heat_bath",
++      "memory_after": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "memory_before": {
++        "free_mib": 23858,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "method": "discrete_dls",
++      "pair_id": "asp_fsm_desc_n128_82afb28c16:seed5611",
++      "result_hash": "a01b264c62edefb0fc93ec5666cd10076cad70339f99d396b97428217a937750",
++      "sample_time_s": 1.2352401,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 128,
++      "status": "success",
++      "wall_time_s": 1.37469271,
++      "warmup_time_s": 0.13945262
++    },
++    {
++      "backend": "cuda",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cuda",
++      "end_to_end_wall_time_s": 3.85013852,
++      "instance_id": "asp_fsm_desc_n128_82afb28c16",
++      "kernel_device_path": "torch_cuda_bounded_cdls_dense_matvec_mh",
++      "memory_after": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "memory_before": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "method": "bounded_cdls",
++      "pair_id": "asp_fsm_desc_n128_82afb28c16:seed5611",
++      "result_hash": "cfe82186352fb0107904295d5a64706be0302b365f5f3c5404ef673f98fbbeae",
++      "sample_time_s": 3.55054794,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 128,
++      "status": "success",
++      "wall_time_s": 3.85013852,
++      "warmup_time_s": 0.29959058
++    },
++    {
++      "backend": "cpu",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cpu",
++      "end_to_end_wall_time_s": 0.32075923,
++      "instance_id": "asp_fsm_desc_n256_aefaab32a5",
++      "kernel_device_path": "torch_cpu_exp5573_heat_bath",
++      "memory_after": {
++        "mem_available_kib": 71229116,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "memory_before": {
++        "mem_available_kib": 71229244,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "method": "discrete_dls",
++      "pair_id": "asp_fsm_desc_n256_aefaab32a5:seed5611",
++      "result_hash": "baeafc8d5170d38577cba60794d890452ba53c1ba5dfeb23a280faa223c6b615",
++      "sample_time_s": 0.31295048,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 256,
++      "status": "success",
++      "wall_time_s": 0.32075923,
++      "warmup_time_s": 0.00780876
++    },
++    {
++      "backend": "cpu",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cpu",
++      "end_to_end_wall_time_s": 1.68489494,
++      "instance_id": "asp_fsm_desc_n256_aefaab32a5",
++      "kernel_device_path": "torch_cpu_bounded_cdls_dense_matvec_mh",
++      "memory_after": {
++        "mem_available_kib": 71229116,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "memory_before": {
++        "mem_available_kib": 71229116,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "method": "bounded_cdls",
++      "pair_id": "asp_fsm_desc_n256_aefaab32a5:seed5611",
++      "result_hash": "a7219bdc47b53c7943207de8ad63a4dfc0530af8094c3113aaaa26e9a310ce3a",
++      "sample_time_s": 1.60498835,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 256,
++      "status": "success",
++      "wall_time_s": 1.68489494,
++      "warmup_time_s": 0.07990659
++    },
++    {
++      "backend": "cuda",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cuda",
++      "end_to_end_wall_time_s": 1.21336497,
++      "instance_id": "asp_fsm_desc_n256_aefaab32a5",
++      "kernel_device_path": "torch_cuda_exp5573_heat_bath",
++      "memory_after": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "memory_before": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "method": "discrete_dls",
++      "pair_id": "asp_fsm_desc_n256_aefaab32a5:seed5611",
++      "result_hash": "746e4bf65384c8b707f1919d82fcd8c738b37fb02ac8e6ff01b9bc487d9ed108",
++      "sample_time_s": 1.18606088,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 256,
++      "status": "success",
++      "wall_time_s": 1.21336497,
++      "warmup_time_s": 0.02730409
++    },
++    {
++      "backend": "cuda",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cuda",
++      "end_to_end_wall_time_s": 3.82143163,
++      "instance_id": "asp_fsm_desc_n256_aefaab32a5",
++      "kernel_device_path": "torch_cuda_bounded_cdls_dense_matvec_mh",
++      "memory_after": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "memory_before": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "method": "bounded_cdls",
++      "pair_id": "asp_fsm_desc_n256_aefaab32a5:seed5611",
++      "result_hash": "f2b73cf90bb72621761cade377565f41538434228b3436f481b199c04c308710",
++      "sample_time_s": 3.67576987,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 256,
++      "status": "success",
++      "wall_time_s": 3.82143163,
++      "warmup_time_s": 0.14566175
++    },
++    {
++      "backend": "cpu",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cpu",
++      "end_to_end_wall_time_s": 0.69443171,
++      "instance_id": "asp_fsm_desc_n512_85e62b1750",
++      "kernel_device_path": "torch_cpu_exp5573_heat_bath",
++      "memory_after": {
++        "mem_available_kib": 71229180,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "memory_before": {
++        "mem_available_kib": 71229180,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "method": "discrete_dls",
++      "pair_id": "asp_fsm_desc_n512_85e62b1750:seed5611",
++      "result_hash": "525e6030451f185998406a85325672744d2944928a0a8f64000b99f78529d905",
++      "sample_time_s": 0.67677499,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 512,
++      "status": "success",
++      "wall_time_s": 0.69443171,
++      "warmup_time_s": 0.01765672
++    },
++    {
++      "backend": "cpu",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cpu",
++      "end_to_end_wall_time_s": 2.16479937,
++      "instance_id": "asp_fsm_desc_n512_85e62b1750",
++      "kernel_device_path": "torch_cpu_bounded_cdls_dense_matvec_mh",
++      "memory_after": {
++        "mem_available_kib": 71229180,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "memory_before": {
++        "mem_available_kib": 71229180,
++        "mem_total_kib": 131157064,
++        "status": "reachable"
++      },
++      "method": "bounded_cdls",
++      "pair_id": "asp_fsm_desc_n512_85e62b1750:seed5611",
++      "result_hash": "dabe4a88d8b4ad9ff33dcbebbd7ba988e2d722f8e37f052a2828889856566af3",
++      "sample_time_s": 2.08885408,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 512,
++      "status": "success",
++      "wall_time_s": 2.16479937,
++      "warmup_time_s": 0.07594528
++    },
++    {
++      "backend": "cuda",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cuda",
++      "end_to_end_wall_time_s": 1.9763023,
++      "instance_id": "asp_fsm_desc_n512_85e62b1750",
++      "kernel_device_path": "torch_cuda_exp5573_heat_bath",
++      "memory_after": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "memory_before": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "method": "discrete_dls",
++      "pair_id": "asp_fsm_desc_n512_85e62b1750:seed5611",
++      "result_hash": "2670b8649b6f5c4898729da43e3073d9f25c5726178017cd9d9f919e63048a85",
++      "sample_time_s": 1.92528402,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 512,
++      "status": "success",
++      "wall_time_s": 1.9763023,
++      "warmup_time_s": 0.05101828
++    },
++    {
++      "backend": "cuda",
++      "blocked_reason": null,
++      "compile_time_s": 0.0,
++      "device": "cuda",
++      "end_to_end_wall_time_s": 4.02750134,
++      "instance_id": "asp_fsm_desc_n512_85e62b1750",
++      "kernel_device_path": "torch_cuda_bounded_cdls_dense_matvec_mh",
++      "memory_after": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "memory_before": {
++        "free_mib": 23782,
++        "status": "reachable",
++        "total_mib": 24123
++      },
++      "method": "bounded_cdls",
++      "pair_id": "asp_fsm_desc_n512_85e62b1750:seed5611",
++      "result_hash": "9b5fa42d4069ebce03a496477fb41a2d99412b948112d6e88dc8872a239656e3",
++      "sample_time_s": 3.85370499,
++      "samples": 10000,
++      "seed": 5611,
++      "size": 512,
++      "status": "success",
++      "wall_time_s": 4.02750134,
++      "warmup_time_s": 0.17379635
++    }
++  ]
++}
+diff --git a/tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py b/tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py
+new file mode 100644
+index 0000000000..afb9c7855e
+--- /dev/null
++++ b/tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py
+@@ -0,0 +1,508 @@
++"""Tests for Exp 5611 bounded cDLS matched sampler crossover.
++
++Spec refs: REQ-SAMPLE-5611, SCENARIO-SAMPLE-5611.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++import pytest
++
++from carnot import experiment_5611_cdls_matched_sampler_crossover as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/samplers/spec.md"
++TEST_PATH = Path("tests/python/test_experiment_5611_cdls_matched_sampler_crossover.py")
++
++
++class StepClock:
++    """Deterministic clock that makes sampler timing stable in tests."""
++
++    def __init__(self) -> None:
++        self.value = 5611.0
++
++    def __call__(self) -> float:
++        self.value += 0.125
++        return self.value
++
++
++class FakeCuda:
++    """Small CUDA facade used for receipt and blocked-path tests."""
++
++    def __init__(self, *, available: bool) -> None:
++        self.available = available
++        self.sync_calls = 0
++
++    def is_available(self) -> bool:
++        return self.available
++
++    def device_count(self) -> int:
++        return 1 if self.available else 0
++
++    def get_device_name(self, index: int) -> str:
++        assert index == 0
++        return "Fake RTX 3090"
++
++    def mem_get_info(self, index: int) -> tuple[int, int]:
++        assert index == 0
++        return (16 * 1024**3, 24 * 1024**3)
++
++    def memory_reserved(self, index: int) -> int:
++        assert index == 0
++        return 256 * 1024**2
++
++    def synchronize(self) -> None:
++        self.sync_calls += 1
++
++
++class FakeTorch:
++    """Torch-shaped object exposing CUDA metadata without running CUDA kernels."""
++
++    __version__ = "2.11.0+cu128"
++
++    def __init__(self, *, cuda_available: bool = True) -> None:
++        self.cuda = FakeCuda(available=cuda_available)
++        self.version = type("Version", (), {"cuda": "12.8"})()
++
++
++class RaisingCuda(FakeCuda):
++    """CUDA facade whose memory probe fails."""
++
++    def mem_get_info(self, index: int) -> tuple[int, int]:
++        assert index == 0
++        raise RuntimeError("memory probe failed")
++
++
++class RaisingTorch(FakeTorch):
++    """Torch facade with reachable CUDA but failing memory APIs."""
++
++    def __init__(self) -> None:
++        self.cuda = RaisingCuda(available=True)
++        self.version = type("Version", (), {"cuda": "12.8"})()
++
++
++def _descriptor_payload() -> dict[str, object]:
++    descriptors: list[dict[str, object]] = []
++    for row_index, row_id in enumerate(("row_a", "row_b", "row_c", "row_d")):
++        variables = [f"fact:{row_id}:v{i}" for i in range(12)]
++        target = {
++            variables[row_index]: "present",
++            variables[(row_index + 5) % len(variables)]: "absent",
++        }
++        descriptors.append(
++            {
++                "descriptor_id": f"desc:{row_id}",
++                "row_id": row_id,
++                "all_repair_variables": variables,
++                "repair_block_variables": list(target),
++                "target_repair_assignment": target,
++                "active_constraints": [
++                    {"kind": "unit", "repair_variable": variable, "target": value}
++                    for variable, value in target.items()
++                ],
++            }
++        )
++    return {"schema": "unit.descriptor.bundle", "asp_repair_descriptors": descriptors}
++
++
++def _write_descriptor(root: Path, payload: dict[str, object] | None = None) -> None:
++    path = root / mod.DESCRIPTOR_SOURCE_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload or _descriptor_payload(), sort_keys=True), encoding="utf-8")
++
++
++def _small_instance() -> mod.IsingInstance:
++    couplings = np.array(
++        [
++            [0.0, 0.12, -0.04, 0.03],
++            [0.12, 0.0, 0.08, -0.02],
++            [-0.04, 0.08, 0.0, 0.10],
++            [0.03, -0.02, 0.10, 0.0],
++        ],
++        dtype=np.float32,
++    )
++    biases = np.array([0.15, -0.10, 0.05, 0.20], dtype=np.float32)
++    target = np.array([1.0, -1.0, 1.0, 1.0], dtype=np.float32)
++    return mod.IsingInstance(
++        instance_id="unit_n4_cdls",
++        size=4,
++        descriptor_ids=("unit",),
++        couplings=couplings,
++        biases=biases,
++        target_spins=target,
++        constraint_indices=(0, 1, 2, 3),
++        checksum="unit-checksum",
++    )
++
++
++def _fake_sampler_rows(
++    instances: list[mod.IsingInstance],
++    seeds: tuple[int, ...],
++    samples_per_pair: int,
++    matched_schedule: dict[str, object],
++    torch_module: object,
++    clock: object,
++) -> list[dict[str, object]]:
++    del torch_module, clock
++    rows: list[dict[str, object]] = []
++    for instance in instances:
++        for seed in seeds:
++            for device in ("cpu", "cuda"):
++                for method in ("discrete_dls", "bounded_cdls"):
++                    method_offset = 0.0 if method == "discrete_dls" else -0.02
++                    base = -0.25 * float(instance.size) - float(seed % 5)
++                    wall_base = 6.0 + float(instance.size) / (64.0 if device == "cpu" else 140.0)
++                    wall_scale = 1.0 if method == "discrete_dls" else 0.55
++                    wall_time = wall_base * wall_scale
++                    rows.append(
++                        {
++                            "status": "success",
++                            "pair_id": f"{instance.instance_id}:seed{seed}",
++                            "method": method,
++                            "backend": device,
++                            "device": device,
++                            "instance_id": instance.instance_id,
++                            "size": instance.size,
++                            "seed": seed,
++                            "samples": samples_per_pair,
++                            "temperature": matched_schedule["temperature"],
++                            "warmup_steps": matched_schedule["warmup_steps"],
++                            "thinning": matched_schedule["thinning"],
++                            "precision": matched_schedule["precision"],
++                            "best_energy": base - 1.0 + method_offset,
++                            "energy_mean": base + method_offset,
++                            "energy_std": 0.75,
++                            "energy_min": base - 1.0 + method_offset,
++                            "energy_max": base + 2.0 + method_offset,
++                            "energy_quantiles": {
++                                "p05": base - 0.5 + method_offset,
++                                "p50": base + method_offset,
++                                "p95": base + 0.5 + method_offset,
++                            },
++                            "constraint_satisfaction_rate": 0.93,
++                            "exact_constraint_satisfaction_rate": 0.93,
++                            "acceptance_rate": 1.0 if method == "discrete_dls" else 0.82,
++                            "autocorrelation_time": 2.0,
++                            "effective_sample_size": samples_per_pair / 2.0,
++                            "compile_time_s": 0.0,
++                            "warmup_time_s": wall_time * 0.10,
++                            "sample_time_s": wall_time * 0.90,
++                            "wall_time_s": wall_time,
++                            "end_to_end_wall_time_s": wall_time,
++                            "memory_before": {"free_mib": 1000},
++                            "memory_after": {"free_mib": 990},
++                            "kernel_device_path": f"torch_{device}_{method}",
++                            "projection_correction": (
++                                "not_applicable_discrete_baseline"
++                                if method == "discrete_dls"
++                                else "metropolis_hastings_exact_discrete_target"
++                            ),
++                            "result_hash": f"{method}-{device}-{instance.instance_id}-{seed}",
++                        }
++                    )
++    return rows
++
++
++def test_req_sample_5611_spec_declares_cdls_artifact_contract() -> None:
++    """REQ-SAMPLE-5611: OpenSpec anchors cDLS, quality, and artifact fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-SAMPLE-5611") : spec.index("### REQ-SAMPLE-1746")]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "SCENARIO-SAMPLE-5611",
++        str(mod.RESULT_RELATIVE_PATH),
++        "Metropolis-Hastings correction",
++        "exact discrete Ising energy",
++        mod.INFERENCE_SUBSTRATE,
++        "n=128,256,512,1024",
++        "at least 10000 post-warmup samples",
++        "`crossover_claim_allowed=true`",
++        "`board_speedup_claimed` SHALL be false",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert " ".join(principle.split()) in normalized
++
++
++@pytest.mark.memory_watchdog_skip
++def test_req_sample_5611_cdls_projection_and_mh_correction_are_deterministic() -> None:
++    """REQ-SAMPLE-5611: cDLS projects through a bounded exact-target correction."""
++
++    import torch
++
++    instance = _small_instance()
++    schedule = mod.matched_schedule_for_instances([instance])
++    kwargs = {
++        "instance": instance,
++        "backend": "cpu",
++        "seed": 5611,
++        "samples_per_pair": 32,
++        "matched_schedule": schedule,
++        "torch_module": torch,
++    }
++
++    first = mod.run_cdls_sampler_row(clock=StepClock(), **kwargs)
++    second = mod.run_cdls_sampler_row(clock=StepClock(), **kwargs)
++
++    comparable_keys = set(first) - {"memory_before", "memory_after"}
++    assert {key: first[key] for key in comparable_keys} == {key: second[key] for key in comparable_keys}
++    assert first["status"] == "success"
++    assert first["method"] == "bounded_cdls"
++    assert first["backend"] == "cpu"
++    assert first["samples"] == 32
++    assert first["projection_correction"] == "metropolis_hastings_exact_discrete_target"
++    assert first["continuous_bound_observed_abs_max"] <= first["continuous_bound"]
++    assert 0.0 <= first["acceptance_rate"] <= 1.0
++    assert first["mh_accept_count"] + first["mh_reject_count"] == first["proposal_count"]
++    assert np.isfinite(first["energy_mean"])
++    assert first["result_hash"] == second["result_hash"]
++
++
++def test_scenario_sample_5611_builds_matched_artifact_and_crossover(tmp_path: Path) -> None:
++    """SCENARIO-SAMPLE-5611: matched fake rows summarize only gated pairs."""
++
++    _write_descriptor(tmp_path)
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        torch_module=FakeTorch(cuda_available=True),
++        sampler_runner=_fake_sampler_rows,
++        clock=StepClock(),
++        instance_sizes=(128, 256),
++        seeds=(5611, 5612, 5613),
++        samples_per_pair=10_000,
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++    saved_path = mod.write_output(tmp_path, artifact)
++    saved = json.loads(saved_path.read_text(encoding="utf-8"))
++
++    assert saved == artifact
++    assert saved["target_descriptors"]
++    assert saved["instance_sizes"] == [128, 256]
++    assert saved["methods"][0]["method_id"] == "discrete_dls"
++    assert saved["methods"][1]["method_id"] == "bounded_cdls"
++    assert saved["seeds"] == [5611, 5612, 5613]
++    assert saved["samples_per_pair"] == 10_000
++    assert saved["cpu_device_receipt"]["status"] == "reachable"
++    assert saved["cuda_device_receipt"]["status"] == "reachable"
++    assert len(saved["timing_rows"]) == 24
++    assert saved["successful_matched_pairs"] == 6
++    assert len(saved["speedup_by_pair"]) == 6
++    assert all(row["quality_noninferior"] is True for row in saved["speedup_by_pair"])
++    assert saved["crossover_size"] == 128
++    assert saved["crossover_claim_allowed"] is True
++    assert saved["board_speedup_claimed"] is False
++    assert saved["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert saved["honest_verdict"].startswith("complete:")
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    mod.validate_artifact(saved)
++
++
++def test_scenario_sample_5611_blocks_cuda_absence_without_cpu_fallback(tmp_path: Path) -> None:
++    """SCENARIO-SAMPLE-5611: absent CUDA blocks comparison instead of fabricating rows."""
++
++    _write_descriptor(tmp_path)
++
++    def forbidden_sampler(*args: Any, **kwargs: Any) -> list[dict[str, object]]:
++        raise AssertionError("sampler must not run when CUDA is unavailable")
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        torch_module=FakeTorch(cuda_available=False),
++        sampler_runner=forbidden_sampler,
++        clock=StepClock(),
++        instance_sizes=(128,),
++        seeds=(5611,),
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++
++    assert artifact["preconditions"]["cuda_available"] is False
++    assert artifact["cuda_device_receipt"]["status"] == "blocked"
++    assert artifact["timing_rows"] == []
++    assert artifact["successful_matched_pairs"] == 0
++    assert artifact["speedup_by_pair"] == []
++    assert artifact["crossover_claim_allowed"] is False
++    assert artifact["crossover_size"] is None
++    assert artifact["board_speedup_claimed"] is False
++    assert artifact["honest_verdict"].startswith("blocked:")
++    mod.validate_artifact(artifact)
++
++
++def test_req_sample_5611_validation_rejects_overclaims_and_bad_rows(tmp_path: Path) -> None:
++    """REQ-SAMPLE-5611: validation fails closed on unsupported crossover claims."""
++
++    _write_descriptor(tmp_path)
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        torch_module=FakeTorch(cuda_available=True),
++        sampler_runner=_fake_sampler_rows,
++        clock=StepClock(),
++        instance_sizes=(128,),
++        seeds=(5611, 5612, 5613),
++        samples_per_pair=10_000,
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++
++    bad_board = deepcopy(artifact)
++    bad_board["board_speedup_claimed"] = True
++    bad_board["reproducibility_checksum"] = mod.payload_checksum(bad_board)
++    try:
++        mod.validate_artifact(bad_board)
++    except ValueError as exc:
++        assert "board_speedup_claimed" in str(exc)
++    else:  # pragma: no cover - defensive assertion branch.
++        raise AssertionError("board_speedup_claimed overclaim accepted")
++
++    bad_samples = deepcopy(artifact)
++    bad_samples["samples_per_pair"] = 9999
++    bad_samples["reproducibility_checksum"] = mod.payload_checksum(bad_samples)
++    try:
++        mod.validate_artifact(bad_samples)
++    except ValueError as exc:
++        assert "samples_per_pair" in str(exc)
++    else:  # pragma: no cover - defensive assertion branch.
++        raise AssertionError("undersized samples accepted")
++
++    bad_crossover = deepcopy(artifact)
++    bad_crossover["speedup_by_pair"][0]["quality_noninferior"] = False
++    bad_crossover["crossover_claim_allowed"] = True
++    bad_crossover["reproducibility_checksum"] = mod.payload_checksum(bad_crossover)
++    try:
++        mod.validate_artifact(bad_crossover)
++    except ValueError as exc:
++        assert "crossover_claim_allowed" in str(exc)
++    else:  # pragma: no cover - defensive assertion branch.
++        raise AssertionError("unsupported crossover accepted")
++
++    bad_checksum = deepcopy(artifact)
++    bad_checksum["reproducibility_checksum"] = "bad"
++    try:
++        mod.validate_artifact(bad_checksum)
++    except ValueError as exc:
++        assert "reproducibility_checksum" in str(exc)
++    else:  # pragma: no cover - defensive assertion branch.
++        raise AssertionError("bad checksum accepted")
++
++
++def test_req_sample_5611_helper_blockers_and_no_crossover_paths(tmp_path: Path) -> None:
++    """REQ-SAMPLE-5611: blocker helpers keep failed evidence out of speedups."""
++
++    instance = _small_instance()
++    assert mod.memory_snapshot(FakeTorch(cuda_available=False), "cuda")["status"] == "blocked"
++    assert mod.memory_snapshot(FakeTorch(cuda_available=True), "cuda")["free_mib"] == 16384
++    assert mod.memory_snapshot(RaisingTorch(), "cuda")["blocked_reason"] == "RuntimeError"
++    mod._sync_if_cuda(FakeTorch(cuda_available=True), "cuda")
++    assert mod._is_oom_error(RuntimeError("CUDA error: out of memory"))
++    assert mod._ratio({"wall_time_s": 1.0}, {"wall_time_s": 0.0}) is None
++    assert mod.crossover_from_speedups(
++        [{"quality_noninferior": True, "size": 128, "bounded_cdls_cuda_vs_cpu_speedup": None}]
++    ) == (None, False, [])
++    assert mod.crossover_from_speedups(
++        [{"quality_noninferior": False, "size": 128, "bounded_cdls_cuda_vs_cpu_speedup": 2.0}]
++    ) == (None, False, [])
++    assert mod._normalize_tests(None)[0].endswith("test_experiment_5611_cdls_matched_sampler_crossover.py")
++
++    blocked = mod.blocked_timing_row(instance, 5611, "cuda", "bounded_cdls", "timeout")
++    energy, mixing, timing, speedups = mod.summarize_rows([blocked])
++    assert energy == []
++    assert mixing == []
++    assert timing[0]["blocked_reason"] == "timeout"
++    assert speedups == []
++
++    schedule = mod.matched_schedule_for_instances([instance])
++    rows = _fake_sampler_rows([instance], (5611,), 10_000, schedule, object(), object())
++    blocked_rows = deepcopy(rows)
++    blocked_rows[0]["status"] = "blocked"
++    assert mod.summarize_rows(blocked_rows)[3] == []
++    mismatched_rows = deepcopy(rows)
++    mismatched_rows[0]["samples"] = 9999
++    assert mod.summarize_rows(mismatched_rows)[3] == []
++
++    missing_descriptor = mod.build_artifact(
++        root=tmp_path,
++        torch_module=FakeTorch(cuda_available=False),
++        sampler_runner=_fake_sampler_rows,
++        instance_sizes=(128,),
++        seeds=(5611,),
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++    assert missing_descriptor["descriptor_source"]["available"] is False
++    assert missing_descriptor["honest_verdict"].startswith("blocked:")
++
++    original_import = mod.exp5573._import_torch
++    mod.exp5573._import_torch = lambda: (_ for _ in ()).throw(RuntimeError("torch unavailable"))
++    try:
++        import_blocked = mod.build_artifact(
++            root=tmp_path,
++            torch_module=None,
++            sampler_runner=_fake_sampler_rows,
++            instance_sizes=(128,),
++            seeds=(5611,),
++            tests_added_or_reused=[TEST_PATH.as_posix()],
++        )
++    finally:
++        mod.exp5573._import_torch = original_import
++    assert import_blocked["cuda_device_receipt"]["status"] == "blocked"
++
++    _write_descriptor(tmp_path)
++    descriptor_build_blocked = mod.build_artifact(
++        root=tmp_path,
++        torch_module=FakeTorch(cuda_available=False),
++        sampler_runner=_fake_sampler_rows,
++        instance_sizes=(8,),
++        seeds=(5611,),
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++    assert "descriptor_instance_build_failed:ValueError" in descriptor_build_blocked["preconditions"][
++        "blocked_reasons"
++    ]
++
++    def raising_sampler(*args: Any, **kwargs: Any) -> list[dict[str, object]]:
++        raise RuntimeError("synthetic sampler failure")
++
++    sampler_blocked = mod.build_artifact(
++        root=tmp_path,
++        torch_module=FakeTorch(cuda_available=True),
++        sampler_runner=raising_sampler,
++        instance_sizes=(128,),
++        seeds=(5611,),
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++    assert sampler_blocked["timing_rows"] == []
++    assert any("sampler_run_failed:RuntimeError" in item for item in sampler_blocked["preconditions"]["blocked_reasons"])
++
++    no_crossover = mod.build_artifact(
++        root=tmp_path,
++        torch_module=FakeTorch(cuda_available=True),
++        sampler_runner=_fake_sampler_rows,
++        instance_sizes=(128,),
++        seeds=(5611,),
++        samples_per_pair=10_000,
++        tests_added_or_reused=[TEST_PATH.as_posix()],
++    )
++    assert no_crossover["successful_matched_pairs"] == 1
++    assert no_crossover["crossover_claim_allowed"] is False
++    assert "no gated crossover" in no_crossover["honest_verdict"]
++
++    bad_missing_size = deepcopy(no_crossover)
++    bad_missing_size["crossover_claim_allowed"] = True
++    bad_missing_size["crossover_size"] = None
++    bad_missing_size["reproducibility_checksum"] = mod.payload_checksum(bad_missing_size)
++    with pytest.raises(ValueError, match="crossover_size"):
++        mod.validate_artifact(bad_missing_size)
++
++    bad_interval = deepcopy(no_crossover)
++    bad_interval["crossover_claim_allowed"] = True
++    bad_interval["crossover_size"] = 128
++    bad_interval["timing_intervals_by_size"] = [{"size": 128, "excludes_1_favorable": False}]
++    bad_interval["reproducibility_checksum"] = mod.payload_checksum(bad_interval)
++    with pytest.raises(ValueError, match="favorable timing interval"):
++        mod.validate_artifact(bad_interval)
+-- 
+2.55.0
+

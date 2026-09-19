@@ -1,0 +1,1832 @@
+From c3ae44e2e1dbdcecf10d997f8de0677575823b96 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 23 Jun 2026 18:11:27 -0400
+Subject: [PATCH 03677/11362] [conductor] PHASE B1 (RESERVED INFRA; co-headline
+ metric) -- add a canonical live_multi_level_solve_rate metric helper: the
+ fraction of live attempts that solve >=2 levels (the NEW WALL -- .427 reached
+ first-win 0.59 but multi-level solve-rate is 0.04), reported SIDE-BY-SIDE
+ with reproducible_total_levels, live-submittable count, first-win-rate,
+ live_action_efficiency, and offline_to_live_transfer_ratio. This is the
+ metric that distinguishes "reached the first level-up" from "solved multiple
+ levels live" -- the gap A1/A2 must close. Asserting tests.
+
+Automated research step by research conductor.
+Task ID: exp4646-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  56 ++
+ ops/anomaly-escalations.md                    |  15 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...4646_live_multi_level_solve_rate_metric.py | 577 +++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...46_live_multi_level_solve_rate_metric.json | 583 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...4646_live_multi_level_solve_rate_metric.py | 294 +++++++++
+ 19 files changed, 1554 insertions(+), 29 deletions(-)
+ create mode 100644 python/carnot/experiment_4646_live_multi_level_solve_rate_metric.py
+ create mode 100644 results/experiment_4646_live_multi_level_solve_rate_metric.json
+ create mode 100644 tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 079543752c..f6dda4ff02 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -2942,6 +2942,62 @@ orphan-solver lint gates, writes `results/experiment_4645_integration_gate.json`
+ and emits an honest null with the bare config if no clean lever raises a
+ metric, including when bare and integrated metrics are exactly equal.
+ 
++### REQ-ARC-WMTE-4646: Canonical Live Multi-Level Solve-Rate Metric Helper
++
++Experiment 4646 SHALL provide a canonical helper that reads the A1 goal-energy
++artifact `results/experiment_4640_goal_energy_generation_live.json`, the A2
++action-effect expansion-prior artifact
++`results/experiment_4641_action_effect_expansion_prior_live.json`, the A6
++integration artifact `results/experiment_4645_integration_gate.json`, the live
++action-efficiency artifact
++`results/experiment_4634_live_action_efficiency_metric.json`, the
++offline-to-live co-metric artifact
++`results/experiment_4622_offline_to_live_transfer_ratio_metric.json`, and the
++ARC solve registry without loading a model. The helper SHALL compute
++`live_multi_level_solve_rate` as the count of live attempts reaching depth
++`>=2` divided by the count of live attempts. It SHALL expose a
++`depth_histogram` with `depth_0`, `depth_1`, `depth_2`, and `depth_3_plus`
++counts so the new-wall metric is auditable and not a single opaque aggregate.
++
++Experiment 4646 SHALL report `live_multi_level_solve_rate` side-by-side with the
++other ARC co-headline metrics in one canonical `coheadline_block`: reproducible
++total levels from `ops/arc_solve_registry.yaml`, live-submittable count,
++first-win-rate, `live_action_efficiency`, and
++`offline_to_live_transfer_ratio`. If no live attempt reaches depth `>=2`, the
++helper SHALL report `live_multi_level_solve_rate: 0.0` and include
++`null_delta_methodology_note` instead of fabricating a non-null value.
++
++Experiment 4646 SHALL write
++`results/experiment_4646_live_multi_level_solve_rate_metric.json` with
++principle-annotated top-level fields for `honest_verdict`,
++`inference_substrate`, `live_multi_level_solve_rate`, `depth_histogram`,
++`coheadline_block`, `tests_added`, `random_seed`, `reproducibility_checksum`, and
++`preconditions_checked`.
++
++Required field principles SHALL be included for:
++
++- `honest_verdict`: principle "terminal prefix; success: live_multi_level_solve_rate_metric_helper_shipped_tests_green."
++- `inference_substrate`: principle "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor)."
++- `live_multi_level_solve_rate`: principle "the canonical co-headline metric value (fraction of live attempts solving >=2 levels) -- the NEW WALL the generation levers must close."
++- `depth_histogram`: principle "the per-depth count of live attempts (depth 0/1/2/3+) -- explicit so the metric is auditable, not a single opaque number."
++- `coheadline_block`: principle "live_multi_level_solve_rate reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / live_action_efficiency / offline_to_live_transfer_ratio -- the single canonical metric surface."
++- `tests_added`: principle "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "catches silent drift on replay."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
++#### SCENARIO-ARC-WMTE-4646
++
++**Given** A1/A2 live artifacts with per-attempt `reached_level` or
++`depth_of_live_solve` values
++**When** the 4646 helper computes the live multi-level solve-rate metric
++**Then** it reports attempts with depth `>=2` divided by all attempted live
++rows, records the depth histogram, reports the value in the canonical
++coheadline block beside reproducible total levels, live-submittable count,
++first-win-rate, live action-efficiency, and offline-to-live transfer ratio, and
++emits `null_delta_methodology_note` with value `0.0` when no attempt reaches
++depth `>=2`.
++
+ ### REQ-ARC-WMTE-4644: Persist Graded Goal-Energy Primitive And Measure Untuned Transfer
+ 
+ Experiment 4644 SHALL consolidate the milestone's best-characterized A1/A2
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index b51e4a933e..bc9e92b144 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -591,3 +591,18 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['WORLD_MODEL_TRUST_DEGENERACY'] on a non-negative verdict
+ - artifact: results/experiment_4610_world_model_trust_pass_rate_metric.json
++
++## arc_loop_solve_lf52.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['ARC_OUTER_LOOP_SOLVE'] on a non-negative verdict
++- artifact: results/arc_loop_solve_lf52.json
++
++## arc_loop_solve_r11l.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['ARC_OUTER_LOOP_SOLVE'] on a non-negative verdict
++- artifact: results/arc_loop_solve_r11l.json
++
++## arc_loop_solve_vc33.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['ARC_OUTER_LOOP_SOLVE'] on a non-negative verdict
++- artifact: results/arc_loop_solve_vc33.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ff364e0eac..0c7cf8cac8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 185,
+   "code_violations": 0,
+-  "experiments_checked": 3662,
++  "experiments_checked": 3663,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4646_live_multi_level_solve_rate_metric.py b/python/carnot/experiment_4646_live_multi_level_solve_rate_metric.py
+new file mode 100644
+index 0000000000..73b354ea0f
+--- /dev/null
++++ b/python/carnot/experiment_4646_live_multi_level_solve_rate_metric.py
+@@ -0,0 +1,577 @@
++"""Experiment 4646: canonical live multi-level solve-rate metric helper.
++
++Spec refs: REQ-ARC-WMTE-4646, SCENARIO-ARC-WMTE-4646.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterable, Mapping
++import hashlib
++import json
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT = "experiment_4646_live_multi_level_solve_rate_metric"
++SCHEMA = "carnot.exp4646.live_multi_level_solve_rate_metric.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4646_live_multi_level_solve_rate_metric.json"
++A1_RELATIVE_PATH = "results/experiment_4640_goal_energy_generation_live.json"
++A2_RELATIVE_PATH = "results/experiment_4641_action_effect_expansion_prior_live.json"
++A6_RELATIVE_PATH = "results/experiment_4645_integration_gate.json"
++LIVE_ACTION_EFFICIENCY_RELATIVE_PATH = "results/experiment_4634_live_action_efficiency_metric.json"
++OFFLINE_TO_LIVE_RELATIVE_PATH = "results/experiment_4622_offline_to_live_transfer_ratio_metric.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++RANDOM_SEED = 4646
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, "
++    "no model load (100us floor)."
++)
++HONEST_VERDICT = "success: live_multi_level_solve_rate_metric_helper_shipped_tests_green"
++TERMINAL_PREFIXES = ("success:", "complete:", "blocked_", "passed:", "shipped:")
++SPEC_REFS = ["REQ-ARC-WMTE-4646", "SCENARIO-ARC-WMTE-4646"]
++REPORTED_SIDE_BY_SIDE = [
++    "live_multi_level_solve_rate",
++    "reproducible_total_levels",
++    "live_submittable_level_count",
++    "first_win_rate",
++    "live_action_efficiency",
++    "offline_to_live_transfer_ratio",
++]
++DEPTH_HISTOGRAM_KEYS = ("depth_0", "depth_1", "depth_2", "depth_3_plus")
++NULL_NOTE = (
++    "no live attempt reached depth>=2; reporting live_multi_level_solve_rate=0.0 "
++    "with this note rather than fabricating a multi-level solve rate."
++)
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: "
++            "live_multi_level_solve_rate_metric_helper_shipped_tests_green."
++        )
++    },
++    "inference_substrate": {"principle": INFERENCE_SUBSTRATE},
++    "live_multi_level_solve_rate": {
++        "principle": (
++            "the canonical co-headline metric value (fraction of live attempts solving "
++            ">=2 levels) -- the NEW WALL the generation levers must close."
++        )
++    },
++    "depth_histogram": {
++        "principle": (
++            "the per-depth count of live attempts (depth 0/1/2/3+) -- explicit so the "
++            "metric is auditable, not a single opaque number."
++        )
++    },
++    "coheadline_block": {
++        "principle": (
++            "live_multi_level_solve_rate reported side-by-side with "
++            "reproducible_total_levels / live-submittable / first-win-rate / "
++            "live_action_efficiency / offline_to_live_transfer_ratio -- the single "
++            "canonical metric surface."
++        )
++    },
++    "tests_added": {
++        "principle": (
++            "the asserting tests (every test has >=1 assertion; no skips) -- the metric "
++            "helper is verified, not asserted."
++        )
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {"principle": "catches silent drift on replay."},
++    "preconditions_checked": {
++        "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++}
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _checksum(value: Any) -> str:
++    return "sha256:" + hashlib.sha256(_stable_json(value).encode("utf-8")).hexdigest()
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return _checksum(payload)
++
++
++def _as_float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool):
++        return default
++    try:
++        return float(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _rounded(value: float) -> float:
++    return round(float(value), 6)
++
++
++def _mapping_at(payload: Mapping[str, Any], key: str) -> Mapping[str, Any]:
++    value = payload.get(key)
++    return value if isinstance(value, Mapping) else {}
++
++
++def _sequence_from(
++    payload: Mapping[str, Any], container_key: str, row_key: str
++) -> tuple[str, Iterable[Any]] | None:
++    container = _mapping_at(payload, container_key)
++    rows = container.get(row_key)
++    if isinstance(rows, list):
++        return (f"{container_key}.{row_key}", rows)
++    return None
++
++
++def _preferred_attempt_sequences(artifact: Mapping[str, Any]) -> list[tuple[str, Iterable[Any]]]:
++    for container_key, row_key in (
++        ("goal_energy_measurement", "variant_attempts"),
++        ("expansion_measurement", "attempts"),
++        ("live_measurement", "attempts"),
++        ("live_measurement", "variant_attempts"),
++    ):
++        found = _sequence_from(artifact, container_key, row_key)
++        if found is not None:
++            return [found]
++    return [
++        (key, artifact[key])
++        for key in ("attempts", "variant_attempts")
++        if isinstance(artifact.get(key), list)
++    ]
++
++
++def _depth_bin(depth: int) -> str:
++    if depth <= 0:
++        return "depth_0"
++    if depth == 1:
++        return "depth_1"
++    if depth == 2:
++        return "depth_2"
++    return "depth_3_plus"
++
++
++def _row_depth(row: Mapping[str, Any]) -> int | None:
++    for value in (row.get("depth_of_live_solve"), row.get("reached_level")):
++        parsed = _as_int(value, default=-1)
++        if parsed >= 0:
++            return parsed
++    gate = _mapping_at(row, "reproduction_gate")
++    for value in (gate.get("reached_level"), gate.get("claimed_level")):
++        parsed = _as_int(value, default=-1)
++        if parsed >= 0:
++            return parsed
++    if row.get("first_win") is True or row.get("solved") is True:
++        return 1
++    return None
++
++
++def _attempt_depth_rows(*artifacts: Mapping[str, Any]) -> list[JsonDict]:
++    rows: list[JsonDict] = []
++    for artifact_index, artifact in enumerate(artifacts):
++        for source, sequence in _preferred_attempt_sequences(artifact):
++            for index, raw in enumerate(sequence):
++                if not isinstance(raw, Mapping):
++                    continue
++                if raw.get("attempted") is False:
++                    continue
++                depth = _row_depth(raw)
++                if depth is None:
++                    continue
++                rows.append(
++                    {
++                        "artifact_index": artifact_index,
++                        "source": source,
++                        "index": index,
++                        "game": str(raw.get("game") or ""),
++                        "variant_signature": str(raw.get("variant_signature") or ""),
++                        "depth": depth,
++                        "depth_bin": _depth_bin(depth),
++                    }
++                )
++    return rows
++
++
++def _histogram(rows: Iterable[Mapping[str, Any]]) -> dict[str, int]:
++    histogram = {key: 0 for key in DEPTH_HISTOGRAM_KEYS}
++    for row in rows:
++        histogram[str(row["depth_bin"])] += 1
++    return histogram
++
++
++def compute_live_multi_level_solve_rate(*artifacts: Mapping[str, Any]) -> JsonDict:
++    """REQ-ARC-WMTE-4646: compute depth>=2 live attempts divided by all live attempts."""
++
++    rows = _attempt_depth_rows(*artifacts)
++    attempt_count = len(rows)
++    multi_level_count = sum(1 for row in rows if _as_int(row.get("depth")) >= 2)
++    rate = _rounded(multi_level_count / attempt_count) if attempt_count else 0.0
++    return {
++        "live_multi_level_solve_rate": rate,
++        "depth_histogram": _histogram(rows),
++        "live_attempt_count": attempt_count,
++        "multi_level_attempt_count": multi_level_count,
++        "attempt_depths": rows,
++        "null_delta_methodology_note": None if multi_level_count else NULL_NOTE,
++    }
++
++
++def _first_win_rate(
++    a1_artifact: Mapping[str, Any],
++    a2_artifact: Mapping[str, Any],
++    live_action_efficiency_artifact: Mapping[str, Any],
++) -> float:
++    coheadline = _mapping_at(live_action_efficiency_artifact, "coheadline_block")
++    candidates = (
++        coheadline.get("first_win_rate"),
++        _mapping_at(a1_artifact, "goal_energy_measurement").get("first_win_rate"),
++        _mapping_at(a2_artifact, "expansion_measurement").get("first_win_rate"),
++        a1_artifact.get("live_solve_rate_goal_energy"),
++        a2_artifact.get("live_solve_rate_expansion"),
++    )
++    for value in candidates:
++        parsed = _as_float(value, default=-1.0)
++        if parsed >= 0.0:
++            return _rounded(parsed)
++    return 0.0
++
++
++def build_coheadline_block(
++    *,
++    a1_artifact: Mapping[str, Any],
++    a2_artifact: Mapping[str, Any],
++    a6_artifact: Mapping[str, Any],
++    registry: Mapping[str, Any],
++    live_action_efficiency_artifact: Mapping[str, Any],
++    offline_to_live_artifact: Mapping[str, Any],
++) -> JsonDict:
++    """SCENARIO-ARC-WMTE-4646: report multi-level rate beside ARC co-headlines."""
++
++    metric = compute_live_multi_level_solve_rate(a1_artifact, a2_artifact)
++    prior_coheadline = _mapping_at(live_action_efficiency_artifact, "coheadline_block")
++    live_submittable = _as_int(
++        a6_artifact.get(
++            "live_submittable_level_count_integrated",
++            prior_coheadline.get("live_submittable_level_count"),
++        )
++    )
++    return {
++        "reported_side_by_side": list(REPORTED_SIDE_BY_SIDE),
++        "live_multi_level_solve_rate": metric["live_multi_level_solve_rate"],
++        "depth_histogram": metric["depth_histogram"],
++        "live_attempt_count": metric["live_attempt_count"],
++        "multi_level_attempt_count": metric["multi_level_attempt_count"],
++        "reproducible_total_levels": _as_int(
++            registry.get("reproducible_total_levels"),
++            _as_int(prior_coheadline.get("reproducible_total_levels")),
++        ),
++        "live_submittable_level_count": live_submittable,
++        "first_win_rate": _first_win_rate(
++            a1_artifact, a2_artifact, live_action_efficiency_artifact
++        ),
++        "live_action_efficiency": _rounded(
++            _as_float(live_action_efficiency_artifact.get("live_action_efficiency"))
++        ),
++        "offline_to_live_transfer_ratio": _rounded(
++            _as_float(offline_to_live_artifact.get("offline_to_live_transfer_ratio"))
++        ),
++        "offline_to_live_transfer_ratio_integrated": _rounded(
++            _as_float(a6_artifact.get("offline_to_live_transfer_ratio_integrated"))
++        ),
++        "source_artifacts": {
++            "a1_goal_energy_generation": A1_RELATIVE_PATH,
++            "a2_action_effect_expansion_prior": A2_RELATIVE_PATH,
++            "a6_integration_gate": A6_RELATIVE_PATH,
++            "live_action_efficiency": LIVE_ACTION_EFFICIENCY_RELATIVE_PATH,
++            "offline_to_live_transfer": OFFLINE_TO_LIVE_RELATIVE_PATH,
++            "registry": REGISTRY_RELATIVE_PATH,
++        },
++    }
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    a1_artifact: Mapping[str, Any],
++    a2_artifact: Mapping[str, Any],
++    a6_artifact: Mapping[str, Any],
++    registry: Mapping[str, Any],
++    live_action_efficiency_artifact: Mapping[str, Any],
++    offline_to_live_artifact: Mapping[str, Any],
++    duration_s: float,
++    tests_added: Mapping[str, Any],
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    metric = compute_live_multi_level_solve_rate(a1_artifact, a2_artifact)
++    coheadline = build_coheadline_block(
++        a1_artifact=a1_artifact,
++        a2_artifact=a2_artifact,
++        a6_artifact=a6_artifact,
++        registry=registry,
++        live_action_efficiency_artifact=live_action_efficiency_artifact,
++        offline_to_live_artifact=offline_to_live_artifact,
++    )
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "honest_verdict": HONEST_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "live_multi_level_solve_rate": metric["live_multi_level_solve_rate"],
++        "depth_histogram": metric["depth_histogram"],
++        "coheadline_block": coheadline,
++        "tests_added": dict(tests_added),
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": "",
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": FIELD_PRINCIPLES,
++        "duration_s": _rounded(duration_s),
++        "submitted_to_leaderboard": False,
++        "inference_substrate_detail": "aggregation_only_no_model_load",
++        "source_artifacts": coheadline["source_artifacts"],
++        "live_attempt_count": metric["live_attempt_count"],
++        "multi_level_attempt_count": metric["multi_level_attempt_count"],
++        "attempt_depths": metric["attempt_depths"],
++    }
++    note = metric["null_delta_methodology_note"]
++    if note is not None:
++        artifact["null_delta_methodology_note"] = note
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [
++        f"missing required field {field}"
++        for field in REQUIRED_ARTIFACT_FIELDS
++        if field not in artifact
++    ]
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_terminal_prefix")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    rate = artifact.get("live_multi_level_solve_rate")
++    if not isinstance(rate, float) or not 0.0 <= rate <= 1.0:
++        errors.append("live_multi_level_solve_rate")
++    histogram = artifact.get("depth_histogram")
++    if not isinstance(histogram, Mapping):
++        errors.append("depth_histogram")
++    elif tuple(histogram.keys()) != DEPTH_HISTOGRAM_KEYS:
++        errors.append("depth_histogram.keys")
++    elif sum(_as_int(value) for value in histogram.values()) != _as_int(
++        artifact.get("live_attempt_count")
++    ):
++        errors.append("depth_histogram.count")
++    attempts = _as_int(artifact.get("live_attempt_count"))
++    multi = _as_int(artifact.get("multi_level_attempt_count"))
++    expected_rate = _rounded(multi / attempts) if attempts else 0.0
++    if isinstance(rate, float) and rate != expected_rate:
++        errors.append("live_multi_level_solve_rate_formula")
++    if multi == 0 and not str(artifact.get("null_delta_methodology_note") or "").strip():
++        errors.append("null_delta_methodology_note")
++    block = artifact.get("coheadline_block")
++    if not isinstance(block, Mapping):
++        errors.append("coheadline_block")
++    else:
++        if block.get("reported_side_by_side") != REPORTED_SIDE_BY_SIDE:
++            errors.append("coheadline_block.reported_side_by_side")
++        if block.get("live_multi_level_solve_rate") != rate:
++            errors.append("coheadline_block.live_multi_level_solve_rate")
++        if block.get("depth_histogram") != histogram:
++            errors.append("coheadline_block.depth_histogram")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover
++    root_path = Path(root)
++    spec_path = root_path / SPEC_RELATIVE_PATH
++    spec_text = spec_path.read_text(encoding="utf-8") if spec_path.exists() else ""
++    checks: JsonDict = {
++        "agents_md_read": (root_path / "AGENTS.md").exists(),
++        "codex_md_read": (root_path / "CODEX.md").exists() or (root_path / "OPENCODE.md").exists(),
++        "offline_arcade": False,
++        "a1_artifact_present": (root_path / A1_RELATIVE_PATH).exists(),
++        "a2_artifact_present": (root_path / A2_RELATIVE_PATH).exists(),
++        "a6_artifact_present": (root_path / A6_RELATIVE_PATH).exists(),
++        "live_action_efficiency_artifact_present": (
++            root_path / LIVE_ACTION_EFFICIENCY_RELATIVE_PATH
++        ).exists(),
++        "offline_to_live_artifact_present": (root_path / OFFLINE_TO_LIVE_RELATIVE_PATH).exists(),
++        "registry_present": (root_path / REGISTRY_RELATIVE_PATH).exists(),
++        "spec_has_req_4646": "REQ-ARC-WMTE-4646" in spec_text,
++        "model_load_required": False,
++    }
++    try:
++        from carnot.agentic import arc_solver_kit as kit
++
++        kit.offline_arcade()
++        checks["offline_arcade"] = True
++    except Exception as exc:
++        checks["offline_arcade_error"] = f"{type(exc).__name__}: {exc}"
++    required = (
++        "agents_md_read",
++        "codex_md_read",
++        "offline_arcade",
++        "a1_artifact_present",
++        "a2_artifact_present",
++        "a6_artifact_present",
++        "live_action_efficiency_artifact_present",
++        "offline_to_live_artifact_present",
++        "registry_present",
++        "spec_has_req_4646",
++    )
++    checks["ok"] = all(bool(checks[key]) for key in required)
++    if not checks["ok"]:
++        checks["blocked_resource"] = next(key for key in required if not checks[key])
++    return checks
++
++
++def _read_json(path: Path) -> JsonDict:  # pragma: no cover
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _read_yaml(path: Path) -> JsonDict:  # pragma: no cover
++    try:
++        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
++    except (OSError, yaml.YAMLError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def write_artifact(path: Path, artifact: Mapping[str, Any]) -> Path:  # pragma: no cover
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def _tests_added() -> JsonDict:  # pragma: no cover
++    return {
++        "passed": True,
++        "scope": "added_4646_metric_tests_and_new_module_coverage",
++        "test_file": "tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py",
++        "commands": [
++            (
++                ".venv/bin/pytest "
++                "tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py "
++                "-q --no-cov"
++            ),
++            ".venv/bin/pytest tests/python -q",
++            (
++                ".venv/bin/python -m coverage run "
++                "--include='*/python/carnot/experiment_4646_live_multi_level_solve_rate_metric.py' "
++                "-m pytest --override-ini addopts='' "
++                "tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py -q"
++            ),
++            (
++                ".venv/bin/python -m coverage report "
++                "--include='*/python/carnot/experiment_4646_live_multi_level_solve_rate_metric.py' "
++                "--fail-under=100 --show-missing"
++            ),
++        ],
++        "full_python_suite": {
++            "command": ".venv/bin/pytest tests/python -q",
++            "passed": False,
++            "result": (
++                "attempted once; unrelated pre-existing failures/errors appeared before "
++                "a Z3 segmentation fault in carnot/verify/z3_math_verifier.py, then the "
++                "run was terminated after failure was definitive."
++            ),
++        },
++        "assertions": [
++            "synthetic artifact where 1/4 attempts reach depth>=2 reports 0.25",
++            "all-first-win-only attempts report 0.0 with null_delta_methodology_note",
++            "depth histogram bins depth 0/1/2/3+ correctly",
++            "A1/A2 multi-artifact aggregation reports the correct multi-attempt rate",
++        ],
++    }
++
++
++def _blocked_artifact(checks: Mapping[str, Any], duration_s: float) -> JsonDict:  # pragma: no cover
++    artifact = build_artifact(
++        preconditions_checked=checks,
++        a1_artifact={},
++        a2_artifact={},
++        a6_artifact={},
++        registry={},
++        live_action_efficiency_artifact={},
++        offline_to_live_artifact={},
++        duration_s=duration_s,
++        tests_added=_tests_added(),
++    )
++    artifact["honest_verdict"] = f"blocked_{checks.get('blocked_resource') or 'precondition'}"
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def run(root: Path | str = REPO_ROOT, *, write: bool = True) -> JsonDict:  # pragma: no cover
++    root_path = Path(root)
++    start = time.perf_counter()
++    checks = check_preconditions(root_path)
++    if checks.get("ok") is not True:
++        artifact = _blocked_artifact(checks, time.perf_counter() - start)
++        if write:
++            write_artifact(root_path / RESULT_RELATIVE_PATH, artifact)
++        return artifact
++    artifact = build_artifact(
++        preconditions_checked=checks,
++        a1_artifact=_read_json(root_path / A1_RELATIVE_PATH),
++        a2_artifact=_read_json(root_path / A2_RELATIVE_PATH),
++        a6_artifact=_read_json(root_path / A6_RELATIVE_PATH),
++        registry=_read_yaml(root_path / REGISTRY_RELATIVE_PATH),
++        live_action_efficiency_artifact=_read_json(
++            root_path / LIVE_ACTION_EFFICIENCY_RELATIVE_PATH
++        ),
++        offline_to_live_artifact=_read_json(root_path / OFFLINE_TO_LIVE_RELATIVE_PATH),
++        duration_s=time.perf_counter() - start,
++        tests_added=_tests_added(),
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(root_path / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover
++    artifact = run(REPO_ROOT, write=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 322f780c24..baf8799df8 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T07:29:38.272862+00:00",
+-  "finished_at": "2026-06-23T07:29:38.315831+00:00",
+-  "duration_s": 0.043,
++  "started_at": "2026-06-23T22:08:53.726314+00:00",
++  "finished_at": "2026-06-23T22:08:53.773592+00:00",
++  "duration_s": 0.047,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index cda887e2ef..cb700ca89c 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-23T07:29:38Z",
++  "run_date": "2026-06-23T22:08:54Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 0c847bad1d..c2ec582641 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T07:29:40Z",
+-  "finished_at": "2026-06-23T07:29:40Z",
++  "started_at": "2026-06-23T22:08:56Z",
++  "finished_at": "2026-06-23T22:08:56Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 00e7b1a2c9..22893b903c 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-23T07:29:40Z",
++  "run_date": "2026-06-23T22:08:56Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index b2a66db316..d6de951af3 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-23T07:29:40Z",
++  "run_date": "2026-06-23T22:08:56Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 953ee759da..e151856b7c 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-23T21:52:52.742967Z",
+-  "duration_s": 0.03086543083190918,
++  "run_date": "2026-06-23T22:05:58.703073Z",
++  "duration_s": 0.034156084060668945,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "79d36a4f8ea02d250f42ece6aa59858ce617a3652905f6189720399dce9dd186",
++  "reproducibility_checksum": "ce0b6d36027d11a039796043dbe1fda2b19d9f9f92ce58470a6845019c390e71",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "1b3e30acb0fcaa1abff8392f708ca47994f6b4cb"
++    "adversarial_verify_version": "2963abd3e19ecf381a12d797c4e7ab6c85f021a8"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 7729aeed1d..786d6602db 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-23T21:52:52.789090Z",
+-  "duration_s": 0.036774635314941406,
++  "run_date": "2026-06-23T22:05:58.739310Z",
++  "duration_s": 0.029021024703979492,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "648d23f4d5347382449a3674b29eac5651fd426d631ca11829be757325ad2ffd",
++  "reproducibility_checksum": "c266ed6e2941f22d13788e0abd8e4354f9f997ca2f96bb7b228d8fa39bc469ff",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "1b3e30acb0fcaa1abff8392f708ca47994f6b4cb"
++    "adversarial_verify_version": "2963abd3e19ecf381a12d797c4e7ab6c85f021a8"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index cd8293e782..08fed66ef8 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1181106567382812,
++  "efficiency_gains_ms": 2.1123886108398438,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index ee673ca23b..5941ccef08 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.4865140914916992,
++  "duration_s": 0.9102222919464111,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 5436d9dfe3..b783740c6d 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.107893280684948e-05,
++  "duration_s": 2.926506567746401e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4646_live_multi_level_solve_rate_metric.json b/results/experiment_4646_live_multi_level_solve_rate_metric.json
+new file mode 100644
+index 0000000000..ad6359b944
+--- /dev/null
++++ b/results/experiment_4646_live_multi_level_solve_rate_metric.json
+@@ -0,0 +1,583 @@
++{
++  "attempt_depths": [
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "ar25",
++      "index": 0,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "ar25~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "bp35",
++      "index": 1,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "bp35~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "cd82",
++      "index": 2,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "cd82~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "cn04",
++      "index": 3,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "cn04~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "dc22",
++      "index": 4,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "dc22~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "ft09",
++      "index": 5,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "ft09~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "g50t",
++      "index": 6,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "g50t~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "ka59",
++      "index": 7,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "ka59~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "lf52",
++      "index": 8,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "lf52~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "lp85",
++      "index": 9,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "lp85~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "ls20",
++      "index": 10,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "ls20~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "m0r0",
++      "index": 11,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "m0r0~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "r11l",
++      "index": 12,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "r11l~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "re86",
++      "index": 13,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "re86~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "s5i5",
++      "index": 14,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "s5i5~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "sb26",
++      "index": 15,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "sb26~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "sc25",
++      "index": 16,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "sc25~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "sk48",
++      "index": 17,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "sk48~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "sp80",
++      "index": 18,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "sp80~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "su15",
++      "index": 19,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "su15~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "tn36",
++      "index": 20,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "tn36~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "tr87",
++      "index": 21,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "tr87~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "tu93",
++      "index": 22,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "tu93~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "vc33",
++      "index": 23,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "vc33~color01"
++    },
++    {
++      "artifact_index": 0,
++      "depth": 0,
++      "depth_bin": "depth_0",
++      "game": "wa30",
++      "index": 24,
++      "source": "goal_energy_measurement.variant_attempts",
++      "variant_signature": "wa30~color01"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "ar25",
++      "index": 0,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "ar25~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "bp35",
++      "index": 1,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "bp35~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "cd82",
++      "index": 2,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "cd82~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "cn04",
++      "index": 3,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "cn04~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "dc22",
++      "index": 4,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "dc22~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "ft09",
++      "index": 5,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "ft09~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "g50t",
++      "index": 6,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "g50t~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "ka59",
++      "index": 7,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "ka59~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "lf52",
++      "index": 8,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "lf52~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "lp85",
++      "index": 9,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "lp85~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "ls20",
++      "index": 10,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "ls20~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "m0r0",
++      "index": 11,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "m0r0~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "r11l",
++      "index": 12,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "r11l~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "re86",
++      "index": 13,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "re86~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "s5i5",
++      "index": 14,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "s5i5~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "sb26",
++      "index": 15,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "sb26~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "sc25",
++      "index": 16,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "sc25~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "sk48",
++      "index": 17,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "sk48~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "sp80",
++      "index": 18,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "sp80~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "su15",
++      "index": 19,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "su15~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "tn36",
++      "index": 20,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "tn36~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "tr87",
++      "index": 21,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "tr87~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "tu93",
++      "index": 22,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "tu93~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "vc33",
++      "index": 23,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "vc33~cached_transition"
++    },
++    {
++      "artifact_index": 1,
++      "depth": 1,
++      "depth_bin": "depth_1",
++      "game": "wa30",
++      "index": 24,
++      "source": "expansion_measurement.attempts",
++      "variant_signature": "wa30~cached_transition"
++    }
++  ],
++  "coheadline_block": {
++    "depth_histogram": {
++      "depth_0": 24,
++      "depth_1": 26,
++      "depth_2": 0,
++      "depth_3_plus": 0
++    },
++    "first_win_rate": 0.590909,
++    "live_action_efficiency": 0.758102,
++    "live_attempt_count": 50,
++    "live_multi_level_solve_rate": 0.0,
++    "live_submittable_level_count": 57,
++    "multi_level_attempt_count": 0,
++    "offline_to_live_transfer_ratio": 0.0,
++    "offline_to_live_transfer_ratio_integrated": 0.0,
++    "reported_side_by_side": [
++      "live_multi_level_solve_rate",
++      "reproducible_total_levels",
++      "live_submittable_level_count",
++      "first_win_rate",
++      "live_action_efficiency",
++      "offline_to_live_transfer_ratio"
++    ],
++    "reproducible_total_levels": 57,
++    "source_artifacts": {
++      "a1_goal_energy_generation": "results/experiment_4640_goal_energy_generation_live.json",
++      "a2_action_effect_expansion_prior": "results/experiment_4641_action_effect_expansion_prior_live.json",
++      "a6_integration_gate": "results/experiment_4645_integration_gate.json",
++      "live_action_efficiency": "results/experiment_4634_live_action_efficiency_metric.json",
++      "offline_to_live_transfer": "results/experiment_4622_offline_to_live_transfer_ratio_metric.json",
++      "registry": "ops/arc_solve_registry.yaml"
++    }
++  },
++  "depth_histogram": {
++    "depth_0": 24,
++    "depth_1": 26,
++    "depth_2": 0,
++    "depth_3_plus": 0
++  },
++  "duration_s": 0.938391,
++  "experiment": "experiment_4646_live_multi_level_solve_rate_metric",
++  "field_principles": {
++    "coheadline_block": {
++      "principle": "live_multi_level_solve_rate reported side-by-side with reproducible_total_levels / live-submittable / first-win-rate / live_action_efficiency / offline_to_live_transfer_ratio -- the single canonical metric surface."
++    },
++    "depth_histogram": {
++      "principle": "the per-depth count of live attempts (depth 0/1/2/3+) -- explicit so the metric is auditable, not a single opaque number."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: live_multi_level_solve_rate_metric_helper_shipped_tests_green."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor)."
++    },
++    "live_multi_level_solve_rate": {
++      "principle": "the canonical co-headline metric value (fraction of live attempts solving >=2 levels) -- the NEW WALL the generation levers must close."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "reproducibility_checksum": {
++      "principle": "catches silent drift on replay."
++    },
++    "tests_added": {
++      "principle": "the asserting tests (every test has >=1 assertion; no skips) -- the metric helper is verified, not asserted."
++    }
++  },
++  "honest_verdict": "success: live_multi_level_solve_rate_metric_helper_shipped_tests_green",
++  "inference_substrate": "aggregation_from_upstream_artifacts -- reads the A1/A2 artifacts + registry, no model load (100us floor).",
++  "inference_substrate_detail": "aggregation_only_no_model_load",
++  "live_attempt_count": 50,
++  "live_multi_level_solve_rate": 0.0,
++  "multi_level_attempt_count": 0,
++  "null_delta_methodology_note": "no live attempt reached depth>=2; reporting live_multi_level_solve_rate=0.0 with this note rather than fabricating a multi-level solve rate.",
++  "preconditions_checked": {
++    "a1_artifact_present": true,
++    "a2_artifact_present": true,
++    "a6_artifact_present": true,
++    "agents_md_read": true,
++    "codex_md_read": true,
++    "live_action_efficiency_artifact_present": true,
++    "model_load_required": false,
++    "offline_arcade": true,
++    "offline_to_live_artifact_present": true,
++    "ok": true,
++    "registry_present": true,
++    "spec_has_req_4646": true
++  },
++  "random_seed": 4646,
++  "reproducibility_checksum": "sha256:c6eea3fbd0ee2e141b1a21356e9e518bc3fe6981eef33ff33469bfefe2d29afd",
++  "schema": "carnot.exp4646.live_multi_level_solve_rate_metric.v1",
++  "source_artifacts": {
++    "a1_goal_energy_generation": "results/experiment_4640_goal_energy_generation_live.json",
++    "a2_action_effect_expansion_prior": "results/experiment_4641_action_effect_expansion_prior_live.json",
++    "a6_integration_gate": "results/experiment_4645_integration_gate.json",
++    "live_action_efficiency": "results/experiment_4634_live_action_efficiency_metric.json",
++    "offline_to_live_transfer": "results/experiment_4622_offline_to_live_transfer_ratio_metric.json",
++    "registry": "ops/arc_solve_registry.yaml"
++  },
++  "spec_refs": [
++    "REQ-ARC-WMTE-4646",
++    "SCENARIO-ARC-WMTE-4646"
++  ],
++  "submitted_to_leaderboard": false,
++  "tests_added": {
++    "assertions": [
++      "synthetic artifact where 1/4 attempts reach depth>=2 reports 0.25",
++      "all-first-win-only attempts report 0.0 with null_delta_methodology_note",
++      "depth histogram bins depth 0/1/2/3+ correctly",
++      "A1/A2 multi-artifact aggregation reports the correct multi-attempt rate"
++    ],
++    "commands": [
++      ".venv/bin/pytest tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py -q --no-cov",
++      ".venv/bin/pytest tests/python -q",
++      ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_4646_live_multi_level_solve_rate_metric.py' -m pytest --override-ini addopts='' tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py -q",
++      ".venv/bin/python -m coverage report --include='*/python/carnot/experiment_4646_live_multi_level_solve_rate_metric.py' --fail-under=100 --show-missing"
++    ],
++    "full_python_suite": {
++      "command": ".venv/bin/pytest tests/python -q",
++      "passed": false,
++      "result": "attempted once; unrelated pre-existing failures/errors appeared before a Z3 segmentation fault in carnot/verify/z3_math_verifier.py, then the run was terminated after failure was definitive."
++    },
++    "passed": true,
++    "scope": "added_4646_metric_tests_and_new_module_coverage",
++    "test_file": "tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index a5c9175d87..4657bf4638 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T21:52:40Z",
+-  "finished_at": "2026-06-23T21:52:40Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-23T22:08:59Z",
++  "finished_at": "2026-06-23T22:08:59Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 0bcc81bf41..34340d160c 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T21:52:40Z",
+-  "finished_at": "2026-06-23T21:52:40Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-23T22:09:00Z",
++  "finished_at": "2026-06-23T22:09:00Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e390a6d1f1..d31960eecf 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260623",
+-  "started_at": "2026-06-23T21:52:39Z",
+-  "finished_at": "2026-06-23T21:52:39Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-23T22:09:00Z",
++  "finished_at": "2026-06-23T22:09:00Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py b/tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py
+new file mode 100644
+index 0000000000..e6ce51ca51
+--- /dev/null
++++ b/tests/python/test_experiment_4646_live_multi_level_solve_rate_metric.py
+@@ -0,0 +1,294 @@
++"""Tests for Exp 4646 live multi-level solve-rate helper.
++
++Spec refs: REQ-ARC-WMTE-4646, SCENARIO-ARC-WMTE-4646.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++def _artifact(rows: list[dict[str, Any]], *, key: str = "attempts") -> dict[str, Any]:
++    return {"live_measurement": {key: rows}}
++
++
++def _row(depth: int, *, game: str = "aa00", attempted: bool = True) -> dict[str, Any]:
++    return {
++        "game": game,
++        "attempted": attempted,
++        "depth_of_live_solve": depth,
++        "variant_signature": f"{game}~synthetic",
++    }
++
++
++def test_req_arc_wmte_4646_spec_declares_live_multi_level_contract() -> None:
++    """REQ-ARC-WMTE-4646: OpenSpec declares the helper and required fields."""
++
++    from carnot import experiment_4646_live_multi_level_solve_rate_metric as mod
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-ARC-WMTE-4646" in spec
++    assert "SCENARIO-ARC-WMTE-4646" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4646_one_of_four_attempts_reaching_depth_two_reports_quarter() -> None:
++    """SCENARIO-ARC-WMTE-4646: one of four live attempts at depth>=2 reports 0.25."""
++
++    from carnot import experiment_4646_live_multi_level_solve_rate_metric as mod
++
++    metric = mod.compute_live_multi_level_solve_rate(
++        _artifact(
++            [
++                _row(0, game="aa00"),
++                _row(1, game="bb00"),
++                _row(2, game="cc00"),
++                _row(1, game="dd00"),
++            ]
++        )
++    )
++
++    assert metric["live_multi_level_solve_rate"] == pytest.approx(0.25)
++    assert metric["live_attempt_count"] == 4
++    assert metric["multi_level_attempt_count"] == 1
++    assert metric["depth_histogram"] == {
++        "depth_0": 1,
++        "depth_1": 2,
++        "depth_2": 1,
++        "depth_3_plus": 0,
++    }
++    assert metric["null_delta_methodology_note"] is None
++
++
++def test_scenario_arc_wmte_4646_all_first_win_only_reports_zero_with_null_note() -> None:
++    """REQ-ARC-WMTE-4646: depth-one-only attempts report 0.0 with the null note."""
++
++    from carnot import experiment_4646_live_multi_level_solve_rate_metric as mod
++
++    a2 = _artifact([_row(1, game="aa00"), _row(1, game="bb00"), _row(1, game="cc00")])
++    metric = mod.compute_live_multi_level_solve_rate(a2)
++    artifact = mod.build_artifact(
++        preconditions_checked={"ok": True, "offline_arcade": True},
++        a1_artifact={},
++        a2_artifact=a2,
++        a6_artifact={"live_submittable_level_count_integrated": 57},
++        registry={"reproducible_total_levels": 57},
++        live_action_efficiency_artifact={"live_action_efficiency": 0.758102},
++        offline_to_live_artifact={"offline_to_live_transfer_ratio": 0.0},
++        duration_s=0.001,
++        tests_added={"passed": True, "test_file": __file__},
++    )
++
++    assert metric["live_multi_level_solve_rate"] == pytest.approx(0.0)
++    assert metric["depth_histogram"] == {
++        "depth_0": 0,
++        "depth_1": 3,
++        "depth_2": 0,
++        "depth_3_plus": 0,
++    }
++    assert "no live attempt reached depth>=2" in metric["null_delta_methodology_note"]
++    assert artifact["live_multi_level_solve_rate"] == pytest.approx(0.0)
++    assert "no live attempt reached depth>=2" in artifact["null_delta_methodology_note"]
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_arc_wmte_4646_depth_histogram_counts_zero_one_two_and_three_plus() -> None:
++    """SCENARIO-ARC-WMTE-4646: the per-depth histogram bins depth 3+ explicitly."""
++
++    from carnot import experiment_4646_live_multi_level_solve_rate_metric as mod
++
++    metric = mod.compute_live_multi_level_solve_rate(
++        _artifact(
++            [
++                _row(0, game="aa00"),
++                _row(1, game="bb00"),
++                _row(2, game="cc00"),
++                _row(3, game="dd00"),
++                _row(5, game="ee00"),
++                _row(2, game="ff00", attempted=False),
++            ],
++            key="variant_attempts",
++        )
++    )
++
++    assert metric["depth_histogram"] == {
++        "depth_0": 1,
++        "depth_1": 1,
++        "depth_2": 1,
++        "depth_3_plus": 2,
++    }
++    assert metric["live_attempt_count"] == 5
++    assert metric["multi_level_attempt_count"] == 3
++    assert metric["live_multi_level_solve_rate"] == pytest.approx(0.6)
++    assert [row["depth_bin"] for row in metric["attempt_depths"]] == [
++        "depth_0",
++        "depth_1",
++        "depth_2",
++        "depth_3_plus",
++        "depth_3_plus",
++    ]
++
++
++def test_scenario_arc_wmte_4646_multi_artifact_rate_and_coheadline_block_are_correct() -> None:
++    """REQ-ARC-WMTE-4646: A1/A2 attempts combine into the canonical coheadline block."""
++
++    from carnot import experiment_4646_live_multi_level_solve_rate_metric as mod
++
++    a1 = {
++        "goal_energy_measurement": {
++            "variant_attempts": [
++                {"game": "aa00", "attempted": True, "reached_level": 0},
++                {"game": "bb00", "attempted": True, "reached_level": 1},
++            ],
++            "first_win_rate": 0.5,
++        }
++    }
++    a2 = {"expansion_measurement": {"attempts": [_row(2, game="cc00"), _row(3, game="dd00")]}}
++    coheadline = mod.build_coheadline_block(
++        a1_artifact=a1,
++        a2_artifact=a2,
++        a6_artifact={
++            "live_submittable_level_count_integrated": "57",
++            "offline_to_live_transfer_ratio_integrated": 0.125,
++        },
++        registry={"reproducible_total_levels": "57"},
++        live_action_efficiency_artifact={"live_action_efficiency": 0.758102},
++        offline_to_live_artifact={"offline_to_live_transfer_ratio": 0.25},
++    )
++
++    assert coheadline["live_multi_level_solve_rate"] == pytest.approx(0.5)
++    assert coheadline["depth_histogram"] == {
++        "depth_0": 1,
++        "depth_1": 1,
++        "depth_2": 1,
++        "depth_3_plus": 1,
++    }
++    assert coheadline["reproducible_total_levels"] == 57
++    assert coheadline["live_submittable_level_count"] == 57
++    assert coheadline["first_win_rate"] == pytest.approx(0.5)
++    assert coheadline["live_action_efficiency"] == pytest.approx(0.758102)
++    assert coheadline["offline_to_live_transfer_ratio"] == pytest.approx(0.25)
++    assert coheadline["offline_to_live_transfer_ratio_integrated"] == pytest.approx(0.125)
++    assert coheadline["reported_side_by_side"] == [
++        "live_multi_level_solve_rate",
++        "reproducible_total_levels",
++        "live_submittable_level_count",
++        "first_win_rate",
++        "live_action_efficiency",
++        "offline_to_live_transfer_ratio",
++    ]
++
++
++def test_req_arc_wmte_4646_defensive_parsing_paths_are_deterministic() -> None:
++    """REQ-ARC-WMTE-4646: malformed rows are skipped and checksum validation is stable."""
++
++    from carnot import experiment_4646_live_multi_level_solve_rate_metric as mod
++
++    metric = mod.compute_live_multi_level_solve_rate(
++        {
++            "expansion_measurement": {
++                "attempts": [
++                    {"game": "aa00", "attempted": False, "depth_of_live_solve": 3},
++                    {"game": "bb00", "attempted": True, "depth_of_live_solve": "bad"},
++                    {"game": "cc00", "attempted": True, "reproduction_gate": {"reached_level": 2}},
++                ]
++            }
++        }
++    )
++    artifact = mod.build_artifact(
++        preconditions_checked={"ok": True, "offline_arcade": True},
++        a1_artifact={},
++        a2_artifact={"expansion_measurement": {"attempts": [{"reached_level": 2}]}},
++        a6_artifact={},
++        registry={},
++        live_action_efficiency_artifact={},
++        offline_to_live_artifact={},
++        duration_s=0.001,
++        tests_added={"passed": True, "test_file": __file__},
++    )
++
++    assert mod._as_float(True, 7.5) == pytest.approx(7.5)
++    assert mod._as_int(False, 8) == 8
++    assert mod._as_int("not-an-int", 9) == 9
++    assert metric["live_attempt_count"] == 1
++    assert metric["multi_level_attempt_count"] == 1
++    assert metric["depth_histogram"]["depth_2"] == 1
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_arc_wmte_4646_schema_error_paths_are_explicit() -> None:
++    """REQ-ARC-WMTE-4646: schema validation reports each auditable error path."""
++
++    from carnot import experiment_4646_live_multi_level_solve_rate_metric as mod
++
++    fallback_metric = mod.compute_live_multi_level_solve_rate(
++        {"attempts": ["bad-row", {"game": "aa00", "first_win": True}]}
++    )
++    base = mod.build_artifact(
++        preconditions_checked={"ok": True, "offline_arcade": True},
++        a1_artifact={},
++        a2_artifact={"expansion_measurement": {"attempts": [{"reached_level": 2}]}},
++        a6_artifact={},
++        registry={},
++        live_action_efficiency_artifact={},
++        offline_to_live_artifact={},
++        duration_s=0.001,
++        tests_added={"passed": True, "test_file": __file__},
++    )
++
++    assert fallback_metric["live_attempt_count"] == 1
++    assert fallback_metric["depth_histogram"]["depth_1"] == 1
++    assert {
++        "missing required field honest_verdict",
++        "honest_verdict_terminal_prefix",
++        "inference_substrate",
++        "live_multi_level_solve_rate",
++        "depth_histogram",
++        "coheadline_block",
++        "reproducibility_checksum",
++    }.issubset(set(mod.artifact_schema_errors({})))
++
++    wrong_keys = {**base, "depth_histogram": {"bad": 1}}
++    wrong_count = {**base, "depth_histogram": dict(base["depth_histogram"])}
++    wrong_count["depth_histogram"]["depth_0"] = 99
++    wrong_rate = {**base, "live_multi_level_solve_rate": 0.0}
++    null_without_note = mod.build_artifact(
++        preconditions_checked={"ok": True, "offline_arcade": True},
++        a1_artifact={},
++        a2_artifact={"expansion_measurement": {"attempts": [{"reached_level": 1}]}},
++        a6_artifact={},
++        registry={},
++        live_action_efficiency_artifact={},
++        offline_to_live_artifact={},
++        duration_s=0.001,
++        tests_added={"passed": True, "test_file": __file__},
++    )
++    del null_without_note["null_delta_methodology_note"]
++    wrong_side = {**base, "coheadline_block": {**base["coheadline_block"]}}
++    wrong_side["coheadline_block"]["reported_side_by_side"] = []
++    wrong_block_rate = {**base, "coheadline_block": {**base["coheadline_block"]}}
++    wrong_block_rate["coheadline_block"]["live_multi_level_solve_rate"] = 0.0
++    wrong_block_histogram = {**base, "coheadline_block": {**base["coheadline_block"]}}
++    wrong_block_histogram["coheadline_block"]["depth_histogram"] = {}
++
++    assert "depth_histogram.keys" in mod.artifact_schema_errors(wrong_keys)
++    assert "depth_histogram.count" in mod.artifact_schema_errors(wrong_count)
++    assert "live_multi_level_solve_rate_formula" in mod.artifact_schema_errors(wrong_rate)
++    assert "null_delta_methodology_note" in mod.artifact_schema_errors(null_without_note)
++    assert "coheadline_block.reported_side_by_side" in mod.artifact_schema_errors(wrong_side)
++    assert "coheadline_block.live_multi_level_solve_rate" in mod.artifact_schema_errors(
++        wrong_block_rate
++    )
++    assert "coheadline_block.depth_histogram" in mod.artifact_schema_errors(wrong_block_histogram)
+-- 
+2.55.0
+

@@ -1,0 +1,2097 @@
+From d46686ae2cfd8d893718447694720d0e19bebc23 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 12:02:15 -0400
+Subject: [PATCH 06031/11362] [conductor] Plan next milestone: 2026.07.489
+
+Planning agent proposed 13 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../research-roadmap-vNEXT.md                 | 303 ++++---
+ ops/arc_self_solve_audit_report.md            |  12 +-
+ ops/changelog.md                              |  17 +
+ ops/docs_audit_report.md                      |  96 +-
+ ops/status.md                                 |  25 +-
+ ops/verifier_authenticity_audit_report.md     | 196 ++--
+ research-references.md                        |  30 +
+ research-roadmap-next.yaml                    | 836 ++++++++++++++++++
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ 10 files changed, 1246 insertions(+), 291 deletions(-)
+ create mode 100644 research-roadmap-next.yaml
+
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index 74a5790367..fc6305de99 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,10 +1,10 @@
+-# Research Roadmap vNEXT - Milestone 2026.07.488
++# Research Roadmap vNEXT - Milestone 2026.07.489
+ 
+-**Milestone title:** Constraint-Tax Structured SOTA, Dependency-Safe Self-Learning, and Solver-Projected Energy Certificates
++**Milestone title:** Grammar-Budgeted SOTA, Budget-Curated Self-Learning, and Overwrite-Capable Solver Guidance
+ 
+ **Planner date:** 2026-07-07
+-**Previous milestone:** 2026.07.487
+-**Task range:** Exp 5349-5362
++**Previous milestone:** 2026.07.488
++**Task range:** Exp 5363-5375
+ **Pre-staged roadmap:** `research-roadmap-next.yaml`
+ 
+ ## Inputs Read
+@@ -28,192 +28,237 @@ Additional guardrails checked before writing the roadmap:
+ - `CLAUDE.md`
+ - `CODEX.md`
+ - `ops/exclusion_manifest.yaml`
+-- `ops/known-issues.md`
++- `ops/arc_solve_registry.yaml`
+ - `scripts/roadmap_schema.py`
+-- `scripts/exclusion_manifest_lint.py`
+ - `scripts/audit_roadmap_gates.py`
+ - `scripts/arc_levelup_guarantee_lint.py`
+-- `results/experiment_5348_capstone_v487.json`
++- `scripts/exclusion_manifest_lint.py`
++- `results/experiment_5351_trigger_constrain_structured_protocol_v488.json`
++- `results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json`
++- `results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json`
++- `results/experiment_5354_arithmetic_carry_token_energy_v488.json`
++- `results/experiment_5355_dependency_provenance_self_learning_v488.json`
++- `results/experiment_5356_memory_tool_drift_harness_v488.json`
++- `results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json`
++- `results/experiment_5358_solver_projection_cut_bridge_v488.json`
++- `results/experiment_5359_pbit_schedule_diagnostic_v488.json`
++- `results/experiment_5360_arc_perception_salience_levelup_attempt_v488.json`
++- `results/experiment_5361_hardware_continuity_workload_v488.json`
++- `results/experiment_5362_capstone_v488.json`
+ 
+ ## Literature Refresh Incorporated
+ 
+-The planner performed a 2025-2026 source refresh and appended the actionable findings to `research-references.md` under `### V488 Planner Refresh - 2026-07-07` before designing experiments.
++The planner performed a 2025-2026 source refresh and appended the actionable findings to `research-references.md` under `### V489 Planner Refresh - 2026-07-07` before designing experiments.
+ 
+ Promoted sources and planning consequences:
+ 
+-- **Thinking Before Constraining** (`arXiv:2601.07525`): repair structured local SOTA output with a trigger-token/free-reasoning-then-constrain protocol, not a one-pass JSON-only prompt.
+-- **The Constraint Tax** (`arXiv:2605.26128`) and **Tool Calling Suppression** (`arXiv:2606.25605`): separate syntactic validity, semantic correctness, wrong-valid-output rate, and tool/action reachability; do not collapse all failures into parse rate.
+-- **Memory-Induced Tool-Drift** (`arXiv:2605.24941`): add a self-learning lane that measures whether remembered context biases future verifier/tool/action selection.
+-- **ContextWeaver** (`arXiv:2604.23069`): repair the `.487` self-learning TAUTOLOGY by tracking dependency-edge provenance and execution feedback, not duplicate aggregate deltas.
+-- **NSGGM** (`arXiv:2602.16954`) and OpenReview hard-constrained graph generation with discrete-projection diffusion (`cbtykHVWX9`): test solver-authoritative projection/cuts with fallback completeness.
+-- **The Shape of Addition** (`arXiv:2606.03645`): watch residual/token features for arithmetic carry slippage only if the local backend exposes real token-probability rows.
+-- **p-bit schedule papers** (`arXiv:2601.15561`, `arXiv:2604.01564`, `arXiv:2604.17109`): run CPU schedule diagnostics before any hardware speedup claim.
++- **G-RRM** (`arXiv:2607.02491`): neural full-solution proposals help when the solver can overwrite bad hints. `.489` adds an overwrite-capable solver-guidance matrix rather than a forced-hint speedup claim.
++- **Budget-Curated Memory** (`arXiv:2606.25115`): self-learning should score memory by value-minus-harm per byte under RAM/energy/uplink budgets. `.489` extends the clean `.488` dependency/drift artifacts into budgeted continuous self-learning.
++- **ALMA** (`arXiv:2602.07755`): memory-design search is useful context but remains too open-ended for Carnot without deterministic safety gates. `.489` keeps memory governance bounded and verifier-scored.
++- **CFGzip** (`arXiv:2605.29986`) and **TruncProof** (`arXiv:2605.13076`): structured local SOTA should compile grammar/token reachability and completion slack before live generation. `.489` gates the live protocol on this preflight.
++- **FLaG** (`arXiv:2606.00301`) and **Thermodynamic Signatures of Reasoning** (`arXiv:2606.19404`): hidden-state/attention families are promising, but `.489` treats token/internal energy as a precondition/corrigendum lane unless the runtime exposes the needed tensors.
++- **Programmable Probabilistic Computer with 1,000,000 p-bits** (`arXiv:2606.25313`): boundary exchange and communication-to-p-bit timing ratio are the next p-bit diagnostic, still CPU simulation-only.
+ 
+ Secondary-source status:
+ 
+-- Semantic Scholar API returned HTTP 429 for citation lookups on EBT `2507.02092` and ARM-EBM `2512.15605`; no citation delta is claimed.
+-- Extropic writing remains useful as TSU/probabilistic-hardware context only; there is no local TSU hardware path.
+-- Logical Intelligence/Kona public material is architecture context only; no reproducible local Kona baseline is claimed.
+-- GitHub/HuggingFace/OpenReview yielded watch items, but none supersedes local deterministic fixtures or the mandated GGUF runtime.
++- Semantic Scholar rate-limited EBT `2507.02092`; ARM-EBM `2512.15605` had eight citations and two influential citations. Citation-trail ideas are watch items, not a reopened external text-scorer lane.
++- OpenReview, HuggingFace Papers, and GitHub yielded implementation references for constrained decoding and solver guidance, but none replaces local GGUF, deterministic solvers, or live ARC requirements.
++- Extropic TSU/XTR writing remains hardware architecture context only; no Carnot-accessible TSU execution path exists.
++- Logical Intelligence Kona/Aleph pages support the architecture bias toward verifier/prover authority; no reproducible Kona baseline is claimed.
+ 
+-## What 2026.07.487 Proved
++## What 2026.07.488 Proved
+ 
+-The `.487` capstone reports:
++The `.488` capstone reported a mixed but useful milestone:
+ 
+-- `runtime_clean=true`: at least one mandated local SOTA GGUF runtime path is now usable.
+-- `structured_output_protocol_ready=false`: the structured protocol was flagged for duration/methodology and is not decision-grade.
+-- `bounded_sota_quality_usable=false`: the quality panel stayed blocked by the structured protocol.
+-- `utility_memory_ready=true` and `bounded_compressor_ready=true`: deterministic self-learning components are useful.
+-- `self_learning_scaleup_ready=false`: the scale-up artifact was quarantined for TAUTOLOGY, so no scaled self-learning claim stands.
+-- `qstr_fixture_ready=true`, `solver_guidance_ready=true`, and `kan_constraint_bridge_ready=true`: deterministic solver/KAN bridge components are ready for a projection/cuts follow-up.
+-- `internal_energy_corrigendum_clean=false`: token-probability energy remains blocked/flagged and must not be promoted.
+-- `hardware_speedup_claim=false`: hardware remains continuity-only; PolarFire produced a workload receipt without a speedup, KV260 was unreachable, and GateMate setup did not change.
++- `structured_protocol_clean=false`: live local SOTA JSON generation still failed schema cleanliness despite real GGUF execution. Exp5351 reached parse success on some prompts but only `schema_success_rate=0.25`.
++- `constraint_tax_panel_ready=false`: the downstream panel was correctly gate-blocked because the structured protocol did not satisfy the clean gate.
++- `tokenprob_feature_rows_ready=true` but token/internal-energy work remained adversarially flagged. Exp5353 had usable logprob row shape, while Exp5354 found no carry-token energy margin and was flagged for tautology/methodology.
++- `dependency_provenance_ready=true`, `memory_tool_drift_ready=true`, and `self_learning_scaleup_ready=true`: the dependency/drift self-learning lane is now clean, with no weight mutation, rollback recovery, and measurable context/verifier savings.
++- `solver_projection_ready=true`: the solver-authoritative projection/cuts bridge is clean and ready for overwrite-aware guidance.
++- `pbit_schedule_signal_ready=true`: CPU p-bit schedule diagnostics produced useful class-level harm/signal data, but no hardware speedup.
++- `arc_new_level_banked=false`: the required live ARC slot ran honestly but did not bank re86 L3; the salience/status-bar error classes are now concrete.
++- `hardware_speedup_claim=false`: PolarFire produced a workload receipt, KV260 remained unreachable by SSH, GateMate remained physically/JTAG blocked, and no board speedup was claimed.
+ 
+ ## Three Biggest Gaps
+ 
+-1. **Local SOTA generation is runtime-clean but not protocol-clean.** The PRD needs verifiable reasoning outputs from local open models. `.487` proved runtime viability, but structured output, semantic correctness under constraints, and action/tool reachability are still not separated cleanly.
++1. **Local SOTA is real but not yet structurally reliable.** The PRD requires verifiable reasoning outputs from local open models. `.488` proved live inference can run but not that JSON/schema/tool-action outputs are clean enough for downstream scoring.
+ 
+-2. **Continuous self-learning has safe parts but no clean scaled loop.** The PRD's FR-11 vision requires durable self-learning under rollback and verifier control. `.487` utility/compressor pieces were ready, but the scale-up duplicated metrics and failed adversarial scrutiny.
++2. **Continuous self-learning is clean but not budget-governed.** FR-11 needs a durable self-learning loop that can retain useful constraints while rejecting stale, poisoned, or over-expensive memory. `.488` cleaned dependency/drift mechanics; `.489` must add memory budget, provenance, and trust decisions.
+ 
+-3. **Energy/certificate substrates are not yet solver-authoritative end-to-end.** QSTR, solver telemetry, and KAN localization are promising, but token-probability energy is blocked and hardware has no speedup. The next step is solver projection/cuts and p-bit schedule diagnostics, not headline hardware or external text-scoring claims.
++3. **Energy guidance is promising but must stay solver-authoritative.** Solver projection and p-bit diagnostics are ready, but token/internal energy is not. `.489` should use overwrite-capable symbolic solvers and boundary-exchange diagnostics while treating neural signals as hints and preserving fallback completeness.
+ 
+ ## Target Architecture
+ 
+ ```text
+-                 +-------------------------------+
+-                 |  Mandatory Local SOTA GGUFs   |
+-                 |  Qwen3.6-35B-A3B / Gemma 31B  |
+-                 |  Gemma 26B-A4B                |
+-                 +---------------+---------------+
+-                                 |
+-                         trigger-then-constrain
+-                                 |
+-                 +---------------v---------------+
+-                 | Structured Protocol + Tax      |
+-                 | parse / semantic / wrong-valid |
+-                 | tool-action reachability       |
+-                 +---------------+---------------+
+-                                 |
+-              +------------------+------------------+
+-              |                                     |
+- +------------v------------+           +------------v------------+
+- | Dependency Self-Learning |           | Token/Internal Signals  |
+- | utility memory           |           | receipt-clean only      |
+- | bounded compressor       |           | no external scorer      |
+- | memory-tool drift        |           +------------+------------+
+- +------------+------------+                        |
+-              |                                     |
+-              +------------------+------------------+
+-                                 |
+-                 +---------------v---------------+
+-                 | Solver-Authoritative Energy    |
+-                 | QSTR + projection + cuts        |
+-                 | KAN counterexamples             |
+-                 | p-bit schedule diagnostics      |
+-                 +---------------+---------------+
+-                                 |
+-                 +---------------v---------------+
+-                 | Certificates, Hardware Context  |
+-                 | ARC live-path slot, board       |
+-                 | receipts, no speedup claim      |
+-                 +-------------------------------+
++                 +---------------------------------------+
++                 | Mandatory Local SOTA GGUF Substrate   |
++                 | Qwen3.6-35B-A3B / Gemma 31B /         |
++                 | Gemma 26B-A4B via llama.cpp/GGUF      |
++                 +-------------------+-------------------+
++                                     |
++                         grammar budget + JSON slack
++                                     |
++                 +-------------------v-------------------+
++                 | Structured Protocol Repair             |
++                 | schema reachability / token budget     |
++                 | parse, schema, semantic, wrong-valid   |
++                 | tool-action reachability               |
++                 +-------------------+-------------------+
++                                     |
++              +----------------------+----------------------+
++              |                                             |
++ +------------v-------------+                 +-------------v------------+
++ | Budget-Curated Memory    |                 | Internal Feature Ledger  |
++ | dependency provenance     |                 | logprob/logit/hidden/    |
++ | KEEP/SHARE/TRUST          |                 | attention availability   |
++ | rollback + no mutation    |                 | no text-only energy      |
++ +------------+-------------+                 +-------------+------------+
++              |                                             |
++              +----------------------+----------------------+
++                                     |
++                 +-------------------v-------------------+
++                 | Solver-Authoritative Energy Guidance   |
++                 | overwrite-capable hints / projection   |
++                 | cuts / p-bit boundary timing           |
++                 +-------------------+-------------------+
++                                     |
++                 +-------------------v-------------------+
++                 | Live Verification Surface              |
++                 | ARC self-discovery slot / board        |
++                 | receipts / capstone gates              |
++                 +---------------------------------------+
+ ```
+ 
+ ## Phase Plan
+ 
+-### Phase 0 - Transition and Source Control
++### Phase 0 - Transition and Fresh Source Delta
+ 
+-- **Exp 5349:** Archive `.487`, activate `.488`, and record the capstone truth without modifying the active roadmap or conductor.
+-- **Exp 5350:** Execution-time SOTA/source delta check. Append only genuinely new actionable findings.
++**Exp5363-Exp5364**
+ 
+-### Phase 1 - Structured Local SOTA Under Constraint Tax
++Archive the completed `.488` state into the `.489` execution context, then perform an execution-time source delta check so the conductor can catch anything discovered after the planner sweep.
+ 
+-- **Exp 5351:** Repair structured output with trigger-then-constrain and a duration/methodology-clean local GGUF receipt.
+-- **Exp 5352:** If Exp 5351 passes, run a bounded constraint-tax panel that separates schema validity, semantic correctness, wrong-valid outputs, and tool/action reachability.
+-- **Exp 5353:** Clean the token-probability/internal-energy receipt without reopening the retired external text-scorer scope.
+-- **Exp 5354:** If Exp 5353 exposes real rows, test a tiny arithmetic carry/token-energy diagnostic.
++Deliverables:
+ 
+-### Phase 2 - Dependency-Safe Continuous Self-Learning
++- `results/experiment_5363_transition_v489.json`
++- `results/experiment_5364_sota_source_delta_v489.json`
+ 
+-- **Exp 5355:** Build dependency-edge provenance and execution feedback for context self-learning, repairing the `.487` TAUTOLOGY.
+-- **Exp 5356:** Add memory-induced tool/action drift detection.
+-- **Exp 5357:** If both fixtures pass, run the gated self-learning scale-up with separate metrics and rollback.
++### Phase 1 - Grammar-Budgeted Structured SOTA
+ 
+-### Phase 3 - Solver Projection, Schedules, ARC Floor, and Hardware
++**Exp5365-Exp5367**
+ 
+-- **Exp 5358:** Add solver-authoritative projection/cuts and fallback completeness metrics.
+-- **Exp 5359:** Run CPU p-bit schedule diagnostics for partial deactivation, inertia, and cost landscapes.
+-- **Exp 5360:** Reserve the mandatory ARC-AGI-3 live-path slot: perception grounding plus classical color-blob salience, with a first-contact level-up attempt and registry discipline.
+-- **Exp 5361:** Run hardware continuity: KV260 SSH-only precondition, PolarFire workload receipt if reachable, GateMate unchanged blocker, no speedup claim.
++Repair the failed structured local SOTA lane in two steps: first build a deterministic grammar/token-budget preflight from CFGzip/TruncProof ideas, then run a live mandated-GGUF protocol only if the preflight is ready. The constraint-tax panel remains gated on `structured_protocol_clean=true`.
+ 
+-### Phase 4 - Capstone
++Deliverables:
+ 
+-- **Exp 5362:** Synthesize the milestone, update ops docs if required, and select the next decisive gate.
++- `results/experiment_5365_grammar_budget_protocol_preflight_v489.json`
++- `results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json`
++- `results/experiment_5367_constraint_tax_tool_action_panel_v2_v489.json`
+ 
+-## Dependency Graph
++### Phase 2 - Budget-Curated Continuous Self-Learning
+ 
+-```text
+-exp5349 --> exp5362
+-exp5350 --> exp5362
++**Exp5368-Exp5369**
+ 
+-exp5351 --> exp5352 --> exp5362
+-exp5353 --> exp5354 --> exp5362
++Extend the clean `.488` dependency-provenance and memory-drift work into budgeted self-learning: memory must prove value-minus-harm per byte, no weight mutation, rollback recovery, stale/poison deflection, and quality retention under larger traces.
+ 
+-exp5355 --> exp5357 --> exp5362
+-exp5356 --> exp5357 --> exp5362
++Deliverables:
+ 
+-exp5358 --> exp5362
+-exp5359 --> exp5362
+-exp5360 --> exp5362
+-exp5361 --> exp5362
+-```
++- `results/experiment_5368_budget_curated_memory_governance_v489.json`
++- `results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json`
+ 
+-Structured gates in `research-roadmap-next.yaml`:
++### Phase 3 - Solver Guidance, Internal-Feature Preconditions, ARC, and Hardware
+ 
+-- Exp 5352 runs only if `exp5351.structured_protocol_clean == true`.
+-- Exp 5354 runs only if `exp5353.tokenprob_feature_rows_ready == true`.
+-- Exp 5357 runs only if `exp5355.dependency_provenance_ready == true` and `exp5356.memory_tool_drift_ready == true`.
++**Exp5370-Exp5374**
++
++Convert the clean solver projection and p-bit schedule results into the next bounded tests: overwrite-capable solver guidance, boundary-exchange p-bit timing, and a token/internal-feature continuation gate that prevents text-only energy overclaims. The milestone also includes the required ARC live-path level-up slot and hardware continuity receipt.
++
++Deliverables:
++
++- `results/experiment_5370_overwrite_solver_guidance_matrix_v489.json`
++- `results/experiment_5371_pbit_boundary_exchange_schedule_v489.json`
++- `results/experiment_5372_token_feature_precondition_gate_v489.json`
++- `results/experiment_5373_arc_salience_re86_levelup_v489.json`
++- `results/experiment_5374_hardware_continuity_receipts_v489.json`
++
++### Phase 4 - Capstone
++
++**Exp5375**
++
++Synthesize the phase results into milestone gates and next-step decisions.
++
++Deliverable:
++
++- `results/experiment_5375_capstone_v489.json`
++
++## Dependency Graph
++
++```text
++Exp5363 transition
++  |
++  +--> Exp5364 source delta
++  |
++  +--> Exp5365 grammar-budget preflight
++          |
++          +-- gated_on grammar_budget_protocol_ready == true
++              Exp5366 live grammar-budgeted SOTA protocol
++                  |
++                  +-- gated_on structured_protocol_clean == true
++                      Exp5367 constraint-tax tool/action panel v2
++
++Exp5368 budget-curated memory governance
++  |
++  +-- gated_on budget_curated_memory_ready == true
++      Exp5369 budgeted continuous self-learning scale-up
++
++Exp5358/Exp5359 prior clean artifacts
++  |
++  +--> Exp5370 overwrite-capable solver guidance
++  +--> Exp5371 p-bit boundary-exchange schedule
++
++Exp5353/Exp5354 flagged artifacts
++  |
++  +--> Exp5372 token/internal-feature precondition gate
++
++Exp5360 ARC honest-null artifact
++  |
++  +--> Exp5373 live ARC salience repair and re86 +1 attempt
++
++Exp5361 hardware receipt
++  |
++  +--> Exp5374 hardware continuity receipts
++
++Exp5363-Exp5374
++  |
++  +--> Exp5375 capstone
++```
+ 
+ ## Model and Inference Requirements
+ 
+-Every task that needs an LLM must define `MODEL_SPECS` containing the mandated local SOTA GGUF models:
++Any task that calls an LLM must declare and use the mandated local GGUF SOTA model specs:
+ 
+ - `unsloth/Qwen3.6-35B-A3B-GGUF`
+ - `unsloth/gemma-4-31B-it-GGUF`
+ - `unsloth/gemma-4-26B-A4B-it-GGUF`
+ 
+-The legacy small models may appear only as CPU smoke tests, never as headline-result models. Tasks must not use HuggingFace `AutoTokenizer` on GGUF repositories; they must use llama.cpp/cached GGUF paths as established by `scripts/experiment_template.py`.
++The legacy small models may be used only as CPU smoke tests and cannot supply headline results. GGUF repositories must run through llama.cpp-compatible GGUF loading paths; AutoTokenizer/AutoModel loading against a `-GGUF` repository is forbidden. Each live LLM artifact must record `MODEL_SPECS`, selected model, inference substrate, GPU/offload receipt, parser/schema metrics, unsafe false accepts, and no-autotokenizer evidence.
+ 
+ ## Hardware Requirements
+ 
+-| Substrate | Required in .488 | Claim boundary |
+-|---|---:|---|
+-| Dual RTX 3090 CUDA | Required for local GGUF structured-output/token-prob tasks | Runtime/protocol receipts only unless quality gates pass |
+-| KV260 | SSH reachability check only: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` | No host `/dev/mmcblk*` evidence; no speedup claim |
+-| PolarFire | Board-local hash-verified workload only if reachable | Workload receipt only; no speedup claim |
+-| GateMate | Only record changed setup or unchanged blocker | No repeated unchanged detect loop |
+-| Extropic TSU / Kona | Public context only | No local execution or speedup claim |
++- **Dual RTX 3090 CUDA:** required for live SOTA protocol tasks unless the task writes an honest blocked artifact. CPU-only SOTA headline reruns are retired and must not be revived.
++- **KV260:** check only by SSH, for example `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Do not inspect host `/dev/mmcblk*` devices as board evidence.
++- **PolarFire:** if reachable, run the established workload receipt path and record output hashes/timing as receipts only.
++- **GateMate:** perform current detect/toolchain checks only if the board/JTAG path is available; do not rerun unchanged blocked loops.
++- **Extropic TSU / Kona:** architecture references only. No execution, speedup, or baseline claim is allowed.
+ 
+ ## No-Go Rules
+ 
+ - Do not modify `research-roadmap.yaml`.
+ - Do not modify `scripts/research_conductor.py`.
+ - Do not push.
+-- Do not reopen the retired Phase D external generated-text/logprob scorer scope.
+-- Do not claim SOTA quality from parse-only protocol work.
+-- Do not claim token-probability or internal-energy discrimination unless real backend features are present and the receipt is methodology-clean.
+-- Do not claim hardware acceleration without authenticated local hardware workload and a valid comparison.
+-- Do not solve ARC with outer-loop reverse engineering, per-game adapters, or offline ground-truth BFS. The `.488` ARC task must be live-path reachable and must declare `solve_provenance`.
++- Do not reopen retired external text-scorer, CPU-only GGUF offload, or ARC candidate-exploration-signal scopes.
++- Do not claim ARC solves from offline ground-truth BFS, hand-built per-game adapters, or outer-loop reverse engineering. The credited ARC path is live-agent self-discovery.
++- Do not claim hardware speedup without authenticated board timing, baseline timing, workload hash, and repeatability evidence.
++- Do not promote token/internal-energy signals from text-only completions or incomplete logprob rows.
+ 
+ ## Expected End State
+ 
+-By the end of `.488`, Carnot should know whether:
+-
+-- trigger-then-constrain makes local SOTA structured outputs clean enough for constrained verification;
+-- constraint-tax metrics expose a real gap between valid-looking and semantically correct outputs;
+-- token-probability energy has sufficient local backend features to continue;
+-- continuous self-learning can scale with dependency provenance and memory-tool drift controls without TAUTOLOGY;
+-- solver projection/cuts produce safer certificates than neural hints alone;
+-- p-bit schedule variants merit hardware work;
+-- the ARC live path gains or honestly fails a perception/salience level-up attempt; and
+-- hardware remains continuity-only or has new authenticated board receipts.
++At the end of `.489`, Carnot should know whether the structured local SOTA lane can be repaired by grammar-budget preflight and completion slack, whether continuous self-learning remains clean under budget-curated memory governance, whether solver hints help only under overwrite-capable symbolic authority, and whether ARC/hardware continuity progressed without overclaiming. A clean milestone would unlock a later quality panel and broader solver-guided verification experiments; a blocked milestone should retire or narrow the failed lanes with explicit preconditions.
+diff --git a/ops/arc_self_solve_audit_report.md b/ops/arc_self_solve_audit_report.md
+index c4f34d71b8..e0dd0deb55 100644
+--- a/ops/arc_self_solve_audit_report.md
++++ b/ops/arc_self_solve_audit_report.md
+@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
+ ### Live-path reachability
+ ```
+ (exit 0)
+-OK: all solver-like ARC modules are reachable from the live agent path (47 modules in the live closure).
++OK: all solver-like ARC modules are reachable from the live agent path (48 modules in the live closure).
+ ```
+ 
+ ### Recent solve artifacts -- mechanical findings
+@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (47 modul
+ 
+ ## Hostile LLM review
+ 
+-TL;DR: `results/arc_loop_solve_ls20.json` is **UNCLEAR**, leaning **not acceptable as a live self-discovery advance** until provenance is tightened.
++TL;DR: **Do not count this as a live self-discovery advance. Verdict: `OUTER_LOOP_RE`, with a secondary duplicate warning.**
+ 
+ Artifact: `results/arc_loop_solve_ls20.json`
+ 
+-- **Verdict:** `UNCLEAR`
+-- **Evidence:** It is on a reachable live path via `scripts/arc_loop_solve.py`, so this is not `OFF_PATH`. But the declared provenance is `development_proxy`, `honest_verdict` is empty, and mode is `standing_arc_loop_offline_no_quota`. Nothing here clearly proves the live agent discovered the level 2 solve from its own attempts and runtime reverse-engineering. No outer-loop inputs are declared, but absence of declaration is not positive evidence.
+-- **Recommended action:** Do not count this as a new live capability yet. Require the artifact to record live attempt traces, observations used, runtime hypotheses/actions, and an explicit `SELF_DISCOVERY_ADVANCE` provenance verdict. If `development_proxy` involved a human-built model, source inspection, offline ground-truth search, or per-game adapter logic, reclassify as `OUTER_LOOP_RE`.
++- **Verdict:** `OUTER_LOOP_RE`
++- **Evidence:** Artifact declares `solve_provenance="development_proxy"` and `mode="standing_arc_loop_offline_no_quota"`, with no `honest_verdict` and no declared live attempt trace. The OpenSpec entry for Exp4630 explicitly describes this as an “offline dev twin” using `arc_loop_solve + a hand GameAdapter`, “not live-agent self-discovery on a hidden game.” Registry already records `ls20` reproduced to level 2 using this same artifact, so any fresh claim is also non-novel.
++- **Recommended action:** Do not credit it toward ARC-AGI-3 live capability. Keep it as dev/registry evidence only, or quarantine it from “self-discovery” counts. Require future artifacts to include live attempt history, runtime hypotheses, observations used, no source/adapter leakage, and explicit `solve_provenance=live_agent_self_discovery`.
+ 
+-**Pattern Watch:** The drift risk is provenance laundering: reachable entrypoint plus “offline/no quota” artifact is being treated like a solve without showing the agent’s own discovery chain. Reachability is necessary, not sufficient. Count only artifacts that expose the live agent’s attempt-to-solve path, not development proxy outputs.
++**Pattern Watch:** This is provenance laundering risk: a reachable entrypoint plus an offline reproduced artifact is being made to look like agent progress. Reachability is necessary, not sufficient. `development_proxy`, hand adapters, registry win-condition notes, and offline reproduction gates are outer-loop scaffolding unless the artifact proves the live agent discovered the solve from its own attempts.
+ 
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 6dae12754e..bf09de2660 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,22 @@
+ # Carnot — Changelog
+ 
++## 2026-07-07 (Milestone 2026.07.489 planning staged -- codex)
++
++- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
++  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
++  `scripts/research_conductor.py`.
++- Appended the V489 planner refresh to `research-references.md`, incorporating recent
++  grammar-budgeted constrained decoding, JSON truncation guard, budget-curated memory,
++  overwrite-capable solver guidance, latent-feature hallucination detection, and p-bit
++  boundary-exchange findings.
++- The `.489` plan contains 13 conductor tasks across transition/source refresh,
++  structured SOTA repair, budgeted continuous self-learning, solver and p-bit diagnostics,
++  token/internal-feature gating, one ARC live-path level-up slot, hardware continuity, and
++  capstone synthesis.
++- Validation passed for roadmap schema parsing, gate audit, ARC level-up guarantee lint,
++  and exclusion-manifest lint. Repo-wide spec coverage remains blocked by the pre-existing
++  traceability backlog.
++
+ ## 2026-07-07 (Milestone 2026.07.488 planning staged -- codex)
+ 
+ - Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 976e5a68c0..4ddfd1c3c9 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,74 +4,68 @@
+ # docs_audit_report — 2026-07-07
+ 
+ ## TL;DR (stranger's 30-second take)
+-I would probably close the tab after the first results block. The page starts with a clear promise, then buries it under internal counters, acronym-heavy benchmarks, conflicting license claims, and too many perfect-looking numbers without nearby evidence.
++I would probably close the tab after the hero/results area. The page starts clear, then floods me with insider metrics, unexplained acronyms, too many benchmark cards, and contradictory license claims.
+ 
+ ## TOP 3 PROBLEMS
+-1. License contradiction — MIT-0 in metadata/hero vs Apache 2.0 in footer.
+-2. Evidence section — 12 dense metric cards full of unexplained acronyms and suspiciously clean results.
+-3. Hero/stats area — internal progress counters and a “recent progress” card crowd out the simple product story.
++1. Contradictory license — hero/meta says MIT-0, footer says Apache 2.0.
++2. Results section feels like an experiment dump — 12 dense benchmark cards with unexplained acronyms and suspiciously perfect metrics.
++3. The page overclaims trust — “total confidence,” “externally reproducible,” “30,658 tests,” and 100% bars appear without enough public credibility context.
+ 
+ ## DETAILED FINDINGS
+ ### Bloat
+-- Hero stats area — 4 stat blocks + 1 result-style card before context — cap to 1 trust metric or remove internal counters.
+-- Nav — 12 links + 2 external buttons — cap to 5-6 primary paths.
+-- Evidence section — 12 result cards — cap to 4-6 headline results with direct evidence links.
+-- Writing section — 7 blog cards, roughly 250+ body words plus tags — cap to 3 posts or move the full list to `/blog/`.
+-- Features section — 7 bento cards — cap to 4-5 user-facing capabilities; “Research operations” and “TTC & PREM” do not belong on first-pass landing copy.
+-- Quickstart — Python verify-repair plus unrelated Rust Ising sampler — cap to one install path that proves the landing-page promise.
++- Hero stats/results block — 4 stats plus an embedded result card — too much before the visitor understands the product; cap at 3 proof points.
++- Recent progress card — ~76 words — result-style card exceeds 60-word cap; cap at 40-50 words.
++- Results section — 12 cards — too many for a stranger; cap at 4-6 headline results.
++- Writing section — 7 blog cards — starts to feel like an archive, not a landing page; cap at 3 featured posts.
++- “Why Energy-Based?” card — ~87 words — not over 120, but too long for a concept card this early; cap at ~55 words.
++- “APIs & portable memory” card — ~67 words — not over 120, but overloaded with integration nouns; cap at ~45 words.
+ 
+ ### Internal jargon
+-- Hero stats — “FoVer math step-errors,” “5-seed,” “Verifier AUROC” — assumes benchmark literacy before explaining the product.
+-- Recent progress card — “5-seed dual-condition,” “architecture-only,” “Repinned from v2 0.9857,” “pre-submission adversarial audit” — reads like lab-notebook status.
+-- How it works / Energy-Based card — “gradient,” “FPGA Ising machines,” “thermodynamic samplers” — unexplained research hardware language.
+-- Typed constraints card — “CCTU constrained tool-use micro-benchmark” — meaningless to a stranger.
+-- Multi-step reasoning card — “chain-of-thought,” “verified-fact memory,” “AND-composed” — internal method terms without payoff.
+-- APIs card — “MCP,” “VerdictRecord,” “SessionMemory,” “candidate-level reranking” — integration jargon before a basic user knows what to install.
+-- TTC & PREM card — “Test-Time Compute,” “Process-Reward Energy Model,” “intrinsic motivation for continuous self-learning” — almost entirely insider language.
+-- Results cards — “KV260,” “CRANE,” “VeriCoT,” “HalluGuard v3,” “PRM-BiasBench,” “SVAMP,” “FoVer” — acronym wall.
+-- Preprint — “paper-v6,” “non-operator environment,” “operator-initiated upload” — internal process terms.
+-- Blog cards — “NTK,” “Deep Think Rounds,” “30B,” “dogfooding” — insider drama before product clarity.
++- Hero stats — “Verifier AUROC,” “FoVer math step-errors,” “5-seed” — a conference stranger may know AUROC, but not FoVer or why 5-seed matters.
++- Recent progress — “5-seed dual-condition,” “architecture-only,” “Repinned from v2,” “pre-submission adversarial audit” — reads like internal methodology notes.
++- Features / Typed constraints — “CCTU constrained tool-use micro-benchmark” — unexplained benchmark acronym.
++- Features / Multi-step reasoning — “AND-composed” — implementation jargon.
++- Features / APIs & portable memory — “MCP server,” “VerdictRecord,” “SessionMemory packs” — insider API names before the user knows why they matter.
++- Features / Test-Time Compute — “TTC,” “PREM,” “Process-Reward Energy Model variance,” “intrinsic motivation” — dense research jargon with no plain-language payoff.
++- Results — “KV260 FPGA,” “Ising sampler,” “HumanEval-50,” “EstimationVerifier,” “SVAMP,” “FoVer,” “VeriCoT,” “PRM-BiasBench,” “HalluGuard v3,” “CCTU” — acronym soup.
+ 
+ ### Per-milestone narrative
+-- Hero stats — “382 Completed milestones” — internal throughput, not user value.
+-- Recent progress — “Repinned from v2 0.9857 after pre-submission adversarial audit” — copy-pasted release/status narrative.
+-- Preprint — “paper-v6” and “pending operator-initiated upload” — sounds like project management residue.
+-- Writing section — retractions, rescue measurements, audit rounds, detector rules — dominates the public page with retrospective operations content.
++- Recent progress — “Repinned from v2 0.9857 after pre-submission adversarial audit” — internal paper-history narrative, not landing-page copy.
++- Preprint — “paper-v6,” “pending operator-initiated upload” — draft workflow language that belongs in release notes.
++- Blog cards — “seven-rule detector we shipped,” “three-layer defense we shipped,” “two retractions” — compelling, but collectively makes the project sound like a postmortem archive.
++- Hero stats — “382 completed milestones” — milestone counting is internal status reporting, not visitor value.
+ 
+ ### Inconsistencies
+ - “MIT-0 · Open Source” and meta description “MIT-0” vs footer “Apache 2.0 License.”
+-- Hero/preprint “FoVer verification AUROC 0.9131” vs results “0.125 FoVer baseline” — may be different setups, but it reads contradictory.
+-- Title/meta promise “Rust + Python/JAX” vs quickstart: Python verifies LLM output, Rust only shows Ising energy/sampling.
+-- “Works with any LLM you can call” vs quickstart saying examples use a Qwen checkpoint on a single GPU — confusing dependency signal.
+-- “HuggingFace” vs “Hugging Face” branding inconsistency.
++- Hero says “total confidence” vs results/preprint discuss repinned AUROCs, audits, confidence intervals, and retractions.
++- HumanEval code claim says “99.3% of wrong code flagged” and “repair pushes pass-rate up by 3 points” vs results also claim HumanEval-50 “66% → 84% pass rate (+18pp)” and CRANE “70% → 85% pass rate (+15pp)” without clear separation.
++- FoVer appears as 0.9131 AUROC in hero/preprint, but results include “0.90 AUC vs 0.125 FoVer baseline,” making FoVer look both like the benchmark and a weak baseline.
+ 
+ ### Missing essentials
+-- What Carnot does is present, but the crisp sentence is buried in the hero paragraph instead of being the page’s organizing claim.
+-- Trust anchors are weak: metrics lack direct artifact links, sample sizes, confidence intervals, dataset versions, and evaluation dates beside the claims.
+-- Install path is incomplete: `pip install carnot-ebm` appears, but no supported Python versions, CLI command, Rust install command, or minimal copy-paste terminal block.
+-- License is not trustworthy because it contradicts itself.
+-- Maintainer info is thin: footer names Ian Blenke, but there is no maintainer role, support channel, security contact, governance, or release ownership.
++- Maintainer identity is too thin: footer names Ian Blenke, but there is no maintainer/governance/support statement.
++- License is not reliably stated because MIT-0 and Apache 2.0 both appear.
++- Trust path is incomplete: “checked-in artifacts” is asserted, but cards do not link directly to the artifact for each number.
++- Install is partially present, but the quickstart code omits `pip install carnot-ebm`; Rust install/crate status is unclear.
++- “What does it do?” is present in the hero, but gets buried quickly under research-ops and benchmark machinery.
+ 
+ ### Fabrication signals
+-- “30,658 Automated tests” — huge precise number with no nearby explanation.
+-- “4,740 Experiment runs” and “382 Completed milestones” — inflated process counters, not trustable product evidence.
+-- “0.9131 AUROC” — four decimals without visible CI/sample size on the landing page.
+-- “99.3% of wrong code flagged” on HumanEval — suspicious precision on a small benchmark.
+-- “2.0× speedup, identical losses” — perfect equivalence claim needs logs immediately adjacent.
+-- “GSM8K extraction TP rate: 0.5 → 1.0” — perfect 1.0 result without sample size screams cherry-pick.
+-- “k=5 ensemble catches 60/60 attacks” — perfect adversarial result needs attack definitions and held-out status.
+-- “0.0pp accuracy delta with 4.4% cost savings” — exact zero delta is a credibility risk without error bars.
+-- Blog card “Zero false positives” — absolute claim, no denominator in the card.
++- “0.0pp accuracy delta with 4.4% cost savings” — suspiciously exact, no sample size or link.
++- “GSM8K extraction TP rate: 0.5 → 1.0” — perfect 1.0 result, no denominator in the card.
++- “k=5 ensemble catches 60/60 attacks” — perfect result on a small fixed count, needs attack construction details.
++- “2.0× speedup, identical losses” — perfect scaling and identical losses reads too clean without hardware/run details.
++- “30,658 automated tests” — huge precision number in hero, but no context on what counts as a test.
++- “639 experiments self-verified… Zero false positives” in blog card — perfect zero claim without sample framing.
+ 
+ ## WHAT'S WORKING
+-- The hero paragraph has a plain-English product promise and includes `pip install carnot-ebm`.
+-- The arithmetic example is accessible and quickly explains the problem Carnot is trying to solve.
++- The hero’s plain-language explanation of checking and repairing LLM answers is understandable.
++- The quickstart example demonstrates the product’s intended user workflow better than most of the benchmark copy.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. Fix the license everywhere before anything else.
+-2. Replace hero counters with one user-facing claim, one install command, and one trust link.
+-3. Cut Evidence to 4-6 externally meaningful metrics; add sample size, baseline, date, CI/error bars, and artifact/report links on each.
+-4. Remove or demote Research operations, TTC/PREM, and hardware sampler material from the landing page.
+-5. Rewrite acronym-heavy titles/tags into plain English, defining unavoidable terms once.
+-6. Make Quickstart a single copy-paste path for verifying an LLM answer; move Rust sampler code elsewhere unless it directly verifies output.
+-7. Add a compact maintainer/license/support block with maintainer name, repo, issue tracker, security contact, and license.
+\ No newline at end of file
++- Fix the license contradiction immediately.
++- Cut the results section to 4-6 strongest public-facing claims, each with sample size, benchmark, model, and artifact link.
++- Remove milestone counts, “paper-v6,” “repinned from v2,” and “operator-initiated upload” from the landing page.
++- Replace acronym-heavy cards with plain-language labels or one-line definitions.
++- Move research-operations/autonomous-loop content below the product story or off the landing page.
++- Add a concise maintainer/governance line near the footer.
++- Put `pip install carnot-ebm` in the quickstart code block.
++- Downgrade “total confidence” to a defensible claim like “catch many reasoning and constraint errors.”
+\ No newline at end of file
+diff --git a/ops/status.md b/ops/status.md
+index c7ffde12ad..b95a3fff52 100644
+--- a/ops/status.md
++++ b/ops/status.md
+@@ -1,6 +1,29 @@
+ # Carnot — Operational Status
+ 
+-**Last Updated:** 2026-07-07 (Milestone 2026.07.488 Operational Retro)
++**Last Updated:** 2026-07-07 (Milestone 2026.07.489 Planning Staged)
++
++## Session 2026-07-07 - Milestone 2026.07.489 Planning Staged
++
++Planned the next research milestone after `.488` completed. The staged `.489`
++roadmap focuses on grammar-budgeted local SOTA structured output repair,
++constraint-tax reachability, budget-curated continuous self-learning,
++overwrite-capable solver guidance, p-bit boundary-exchange diagnostics, a
++token/internal-feature precondition gate, the required ARC live-path level-up
++slot, and hardware continuity without any speedup claim.
++
++Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
++`research-roadmap-next.yaml`. The planner refresh appended the actionable
++2025-2026 source findings to `research-references.md`.
++
++Validation for this planning task: roadmap schema validation,
++`scripts/audit_roadmap_gates.py`, `scripts/arc_levelup_guarantee_lint.py --min
++1`, and `scripts/exclusion_manifest_lint.py` passed for
++`research-roadmap-next.yaml`. Protected-file diff confirmed
++`research-roadmap.yaml` and `scripts/research_conductor.py` were not modified.
++Repo-wide `scripts/check_spec_coverage.py` still fails on the pre-existing
++traceability backlog (`1262 test(s) missing spec traceability`). No
++implementation code, active roadmap, conductor, model-training run, or hardware
++workload was changed.
+ 
+ ## Session 2026-07-07 - Milestone 2026.07.488 Operational Retro
+ 
+diff --git a/ops/verifier_authenticity_audit_report.md b/ops/verifier_authenticity_audit_report.md
+index d7f69ca425..941c4593b9 100644
+--- a/ops/verifier_authenticity_audit_report.md
++++ b/ops/verifier_authenticity_audit_report.md
+@@ -7,33 +7,30 @@
+ 
+ | Verdict | Count |
+ |---|---|
+-| `AUTHENTIC` | 13 |
+-| `HONEST_HEURISTIC` | 6 |
+-| `DISHONEST_NAMING` | 1 |
++| `AUTHENTIC` | 12 |
++| `HONEST_HEURISTIC` | 7 |
++| `DISHONEST_NAMING` | 0 |
+ | `ADVERSARIAL_GAMING` | 0 |
+-| `CANNOT_DETERMINE` | 0 |
++| `CANNOT_DETERMINE` | 1 |
+ | `UNKNOWN` | 0 |
+ | `OUTRIGHT_FAKE` | 0 |
+ 
+-### FLAGGED — operator action recommended
+-- `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — **DISHONEST_NAMING**
+-
+ ---
+ 
+ Scanned 20 verifier file(s) with codex as the hostile reviewer.
+ 
+ ## python/carnot/verify/__init__.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `CANNOT_DETERMINE`
+ 
+ ## VERDICT
+-AUTHENTIC
++CANNOT_DETERMINE
+ 
+ ## CLAIMS
+ "Verifiable reasoning: constraints as energy terms + landscape certification."
+ 
+ ## IMPLEMENTATION_REALITY
+-This is a package export/barrel module, not a verifier implementation. It imports and re-exports constraint, landscape, SAT, code, and tier verifier classes; it does not perform scoring, model inference, or text-statistical verification itself.
++This file is an import/export barrel for `carnot.verify`, not a verifier implementation. It imports verifier classes and constraint/certification utilities, appends exports, and redundantly imports `ConformalCalibrationVerifier` multiple times.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -45,7 +42,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-There is no fake paper/model/compute claim here. The file is sloppy due to repeated `ConformalCalibrationVerifier` imports, but that is import clutter, not adversarial verifier fraud. It should not be judged as a production verifier because it does not verify anything directly.
++There is no paper/model/compute-substrate claim like NTK, logits, GPU inference, learned embeddings, or live model execution here. There is also no scoring logic to audit, so this file cannot be accused of fake verifier behavior from the provided source alone. The duplicate imports are sloppy, but not adversarial verifier fraud.
+ 
+ 
+ ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
+@@ -56,10 +53,10 @@ There is no fake paper/model/compute claim here. The file is sloppy due to repea
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"local GGUF path was real"; "raw model text"; "Exp 3286 calibrated policy"; "coverage is non-trivial and exact-authority scoring still finds zero false accepts"; "Run llama.cpp with grammar-constrained verifier decisions"; "Check that this Python can see CUDA and llama.cpp GPU offload."
++"The v14 rerun proved the local GGUF path was real"; "raw model text"; "Run llama.cpp with grammar-constrained verifier decisions."; "Check that this Python can see CUDA and llama.cpp GPU offload."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code actually resolves cached GGUF model paths, probes CUDA/llama.cpp GPU offload, instantiates `llama_cpp.Llama`, builds a `LlamaGrammar`, and calls `llm.create_chat_completion(...)` per row. It also samples `nvidia-smi` GPU memory and gates readiness on nontrivial coverage, zero false accepts, and GPU memory use.
++The code really invokes `llama_cpp.Llama` with a local `model_path`, `n_gpu_layers=-1`, and `LlamaGrammar`, then calls `create_chat_completion`. It also probes CUDA, `torch`, `llama_cpp` GPU offload, cached GGUF availability, and NVIDIA memory telemetry.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -71,7 +68,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not regex pretending to be a paper implementation. The claimed substrate is local GGUF inference through llama.cpp with grammar-constrained output, and the implementation actually invokes `llama_cpp.Llama` against resolved model files. The optional `model_runner` injection is testability plumbing, not evidence that production execution is fake.
++This is not regex fraud pretending to be a model verifier. The module has a real llama.cpp execution path, grammar-constrained decoding, local GGUF inventory checks, CUDA/GPU-offload probes, and readiness gates that fail closed when prerequisites are missing. The parser is text-based, but the docstring openly says it keeps a conservative parser around raw model output, so that gap is disclosed rather than hidden.
+ 
+ 
+ ## python/carnot/verify/adaptive_conformal_calibration.py
+@@ -82,14 +79,14 @@ This is not regex pretending to be a paper implementation. The claimed substrate
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"Classify a prompt into the four calibration buckets used by Exp 2547."
+-
+ "Compute a lightweight ACSE-style semantic entropy proxy."
+ 
+-"ACSE uses semantic dispersion over multiple generations."
++"ACSE uses semantic dispersion over multiple generations. The exp2547 corpus has fixed verifier rows rather than fresh generations, so this proxy uses two local uncertainty signals available for every row..."
++
++"Run prompt-adaptive conformal calibration and return AUROC statistics."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code is calibration/statistics glue: lexical prompt bucketing, variance over provided top-logprob dictionaries, variance over provided verifier scores, sklearn train/test splitting, AUROC, and Carnot calibration helpers. It does not invoke a model; there is no torch, transformers, llama_cpp, OpenAI call, or learned embedding.
++The code performs lexical prompt bucketing, sklearn train/test splits, calibration over precomputed verifier scores, Fisher combination, and a variance-based entropy proxy from supplied top-logprobs and verifier scores. There is no model invocation, no torch/transformers/jax/llama/openai import, and no live inference.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -101,7 +98,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not pretending to run ACSE or live semantic generation; it explicitly says the corpus lacks fresh generations and that it implements a "lightweight" proxy using available local uncertainty signals. The implementation is heuristic, but the docstrings admit that instead of laundering regex/statistics as a paper-faithful verifier. No adversarial check-gaming patterns are visible.
++This is not an ACSE implementation; it is a text/statistical calibration wrapper over already-available scores and logprob dictionaries. The important difference is that the docstring admits the gap: it explicitly says the corpus lacks fresh generations and calls the ACSE component a lightweight proxy. No adversarial timing, score-capping, random-feature fabrication, or named-check dodging is visible.
+ 
+ 
+ ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
+@@ -112,12 +109,10 @@ This is not pretending to run ACSE or live semantic generation; it explicitly sa
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"The policy is a deterministic scheduler over evidence that already exists in the repo."  
+-"it never lets an EBM score, LLM response, or receipt become answer authority."  
+-"State that the artifact is an offline policy simulation."
++No paper/model claim. The relevant compute claim is: "The policy is a deterministic scheduler over evidence that already exists in the repo" and "it never lets an EBM score, LLM response, or receipt become answer authority." Also: "State that the artifact is an offline policy simulation."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads checked-in JSON artifacts, hashes/cites source files, extracts deterministic feature fields, applies a fixed routing table, and writes a JSON policy artifact. It imports only standard-library modules and makes no model, GPU, API, torch, transformer, sklearn, llama, or Carnot model invocation.
++The code reads checked-in JSON/text/python artifacts, hashes sources, extracts fields, and applies deterministic routing rules. It imports only stdlib modules; there is no torch, transformers, sklearn, llama_cpp, OpenAI client, Carnot model module, or live inference path.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -129,21 +124,23 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This docstring does not pretend to implement a paper, learned verifier, EBM, NTK, logits method, or live inference stack. It explicitly says it is a deterministic offline scheduler over existing evidence, and the implementation is exactly that. It is not a fake model verifier; it is boring policy plumbing, and it says so.
++This file does not pretend to implement a paper, trained verifier, neural model, or live compute substrate. It openly says it is an offline deterministic policy simulation, and the implementation is exactly that. There is no sleep-padding, score-capping, random feature generation, or named adversarial-check dodging.
+ 
+ 
+ ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
+ 
+-**Verdict:** `HONEST_HEURISTIC`
++**Verdict:** `AUTHENTIC`
+ 
+ ## VERDICT
+-HONEST_HEURISTIC
++AUTHENTIC
+ 
+ ## CLAIMS
+-No paper or live-model claim. The source explicitly claims the opposite: `"Scores cached corpora through the corrected Exp 3642 substrate; no live LLM load."` Also: `"verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."`
++"Exp 3643 additive second-pair-of-eyes remeasurement."  
++"verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."  
++"Scores cached corpora through the corrected Exp 3642 substrate; no live LLM load."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads cached Exp 3642 artifacts/JSONL rows, calls Exp 3642 scoring helpers, computes fixed-FPR thresholds, AUROC, McNemar p-values, and writes a measurement artifact. It imports no torch, transformers, jax, sklearn, llama_cpp, openai, or live Carnot model loader.
++The code reads cached Exp 3642/3640/3641 artifacts and JSONL corpora, delegates scoring to `corrected_cross_domain_remeasurement_v4`, then computes fixed-FPR thresholds, conditional catch rates, McNemar p-values, AUROC deltas, and a reproducibility checksum. It imports no torch/transformers/jax/sklearn/llama/openai stack and makes no direct model call, which matches the stated "no LLM load" substrate.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -155,7 +152,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This file does not pretend to be a paper implementation or live verifier substrate. It is explicitly a cached-corpus remeasurement/fusion analysis and repeatedly says there is no LLM load. The implementation matches that claim: deterministic artifact loading, score aggregation, thresholding, and statistical comparison.
++This module does not pretend to implement a paper method, neural model, live inference path, NTK, logits, embeddings, or GPU-backed verifier. It explicitly says it scores cached corpora with no LLM load, and the implementation is exactly a cached-artifact remeasurement plus statistical comparison layer. No sleep-padding, score-capping, random feature generation, or adversarial-check keyword dodging is present.
+ 
+ 
+ ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
+@@ -168,10 +165,10 @@ AUTHENTIC
+ ## CLAIMS
+ "This module is a gate audit, not a verifier rerun."  
+ "It reads the checked-in .292 evidence chain..."  
+-"live-inference claims whose authenticity evidence is incomplete"
++"refusing to unlock repair from live metrics that lack transcripts, seeds, checksums, or coherent model-load evidence."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads checked-in JSON/Markdown/Python artifacts, computes file checksums, classifies evidence gaps, and emits an audit artifact. It imports no model stack and performs no live inference.
++The code reads checked-in JSON/metadata files, computes checksums, classifies evidence gaps, and emits a corrigendum artifact. It does not invoke a model, and it explicitly declares `executes_models: False` and `no_live_llm_inference: True`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -183,7 +180,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This docstring is unusually explicit that the module is not a verifier rerun and does not execute models. The implementation matches that: it is pure artifact aggregation and authenticity linting, with no fake paper branding, no model-substrate claims, and no regex pretending to be neural inference.
++This is not pretending to be a model-backed verifier. The docstring says it is an evidence audit over existing artifacts, and the implementation is exactly that: deterministic file inspection and gate classification. No sleep-padding, random feature fabrication, score-capping, or adversarial-check token dodging is present.
+ 
+ 
+ ## python/carnot/verify/and_composition_verifier.py
+@@ -194,26 +191,22 @@ This docstring is unusually explicit that the module is not a verifier rerun and
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"Advisory k=5 verifier-adapter harness."  
+-"the default surface is not a production headline verifier."  
+-"The default SOSKAN adapter is neutral until trained, SemEnergy uses its proxy scorer"  
+-"Use this output as diagnostic certificate data only."  
+-"A future headline verifier must wire real trained/live verification substrates, calibrated thresholds, and fail-closed behavior before removing the headline-ineligible flag below."
++"Advisory k=5 verifier-adapter harness." "the default surface is not a production headline verifier." "SemEnergy uses its proxy scorer." "Use this output as diagnostic certificate data only." "A future headline verifier must wire real trained/live verification substrates, calibrated thresholds, and fail-closed behavior before removing the headline-ineligible flag below."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code is an adapter harness that wraps several Carnot verifier classes, uses text-statistical features for SOSKAN, returns neutral `0.5` when SOSKAN is untrained, and maps SemEnergy proxy output to a binary score. It imports a Carnot model module for `SOSKANEnergyV3`, but the default path is explicitly advisory and headline-ineligible.
++The code is an adapter harness: it imports existing Carnot verifier/model classes, extracts three simple text features for SOSKAN, returns neutral 0.5 when SOSKAN is untrained, calls SemEnergy's proxy scorer, and fail-opens adapter exceptions to 0.0. It is mostly orchestration plus lightweight text statistics, not a live trained verifier ensemble.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+ 
+ ## GAMING_PATTERNS
+-none
++none; there is no sleep-padding, random feature fabrication, named adversarial-check dodge, or perfect-score avoidance. The `min(raw / 2.0, 1.0)` cap is normalization to 1.0, not a `0.99` perfect-dodge.
+ 
+ ## RECOMMENDATION
+ KEEP
+ 
+ ## RATIONALE
+-This file does not silently pretend to be a real production verifier. It repeatedly admits the default ensemble is advisory, proxy-based, untrained/non-blocking in places, and not eligible for headline AUROC. The exception handling is weak for production because verifier failures become `0.0` pass energy, but the docstring confesses that instead of hiding it.
++This file loudly admits it is advisory, headline-ineligible, proxy-based, partially neutral, and fail-open. That is not production-grade verification, but it is not pretending to be one. The dangerous behavior is operational, not dishonest: nobody should include this in headline AUROC numbers unless the explicit `HEADLINE_ELIGIBLE = False` quarantine is ignored.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_autopyverifier_pilot.py
+@@ -226,11 +219,10 @@ HONEST_HEURISTIC
+ ## CLAIMS
+ "AutoPyVerifier-inspired GAP-1 set search for ARC orientation."  
+ "This module deliberately borrows only the cheap set-search idea from AutoPyVerifier."  
+-"It does not synthesize verifier code with an LLM."  
+-"Instead, a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool."
++"It does not synthesize verifier code with an LLM."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code is pure Python ARC grid feature engineering: counters over objects, palettes, edges, diagonals, borders, centroids, and run profiles, followed by deterministic subset search and pass@2 evaluation. It imports no torch, transformers, jax, sklearn, llama_cpp, openai, or Carnot model module, and performs no model invocation.
++The code is deterministic Python feature engineering over ARC grids: counters, histograms, adjacency features, subset search, and cached candidate ranking. It imports no torch, transformers, jax, sklearn, llama_cpp, openai, or Carnot model module, and makes no model/API invocation.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -242,7 +234,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not pretending to be AutoPyVerifier proper: the docstring explicitly says it does not use LLM synthesis and only borrows the cheap set-search idea. The implementation matches that claim exactly: deterministic hand-authored discriminators over cached ARC candidates. It should not be sold as learned inference, but the naming and docstring are honest about the limitation.
++This is a cheap heuristic verifier, but it says that plainly. The docstring explicitly disclaims AutoPyVerifier’s LLM synthesis and describes the actual substitute: hand-authored spatial discriminators searched over cached ARC distractors. No sleep-padding, score-capping, random feature fabrication, or named adversarial-check dodging is present.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_registry_promotion_decision.py
+@@ -256,7 +248,7 @@ AUTHENTIC
+ "This module is intentionally evidence-only. It reads the existing Exp 5209 hardening artifact, parses the upstream gate from ``gap1_hardened_positive.value``, and decides whether the GAP-1 set verifier is ready to become a frozen registry entry."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads JSON artifacts and ops registry text, parses fields, checks deterministic stability/leakage conditions, writes a decision artifact, and optionally updates an ops doc. It imports no model stack and performs no inference.
++The code reads JSON artifacts and ops registry text, checks deterministic fields, builds a decision artifact, and optionally updates an ops doc. It imports no torch, transformers, jax, sklearn, llama_cpp, openai, or Carnot model module.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -268,7 +260,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring does not pretend to implement a paper, neural method, model-backed verifier, GPU path, embeddings, logits, or live inference. It explicitly says it is evidence-only, and the implementation is exactly that: deterministic artifact and registry bookkeeping. This should not be counted as a scientific verifier producing headline AUROC, but it is not dishonest about what it is.
++The docstring does not claim a paper method, neural model, live inference, GPU substrate, embeddings, logits, or learned features. The implementation matches the stated evidence-only registry decision behavior: filesystem reads, schema checks, deterministic gate parsing, and artifact generation. This should not be presented as a scientific verifier, but the file itself does not pretend to be one.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_set_search_holdout_hardening.py
+@@ -279,11 +271,11 @@ The docstring does not pretend to implement a paper, neural method, model-backed
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library."  
+-"held-out rows only measure the chosen subset; they never choose it."
++"This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library."  
++"It repeats grouped train/held-out subset selection by task id so held-out rows only measure the chosen subset; they never choose it."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reconstructs a cached candidate/discriminator score matrix, performs deterministic grouped train/held-out subset selection by task id, computes pass@2/baseline deltas, leakage checks, CIs, and writes an artifact. It does not claim or perform live model inference.
++The code reconstructs a cached candidate/discriminator score matrix, performs deterministic subset selection on grouped train splits, and evaluates pass@2 on held-out groups. It imports no torch/transformers/jax/sklearn/llama_cpp/openai stack and makes no live model call.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -295,7 +287,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This docstring is not pretending to be an NTK, embedding, SAE, logits, GPU, or paper-backed verifier. It openly describes a cached-candidate hardening/evaluation pass, and the implementation does that. The `random.Random` usage is for deterministic grouped splits, not fake feature generation, and there is no sleep-padding, score-capping, or adversarial-check name dodging.
++This file does not pretend to implement a paper, learned model, NTK method, logits method, or GPU/live inference. It explicitly frames itself as cached-candidate hardening with deterministic discriminators, and the implementation is exactly that. No sleep-padding, score-capping, random feature fabrication, or adversarial-check name dodging is present.
+ 
+ 
+ ## python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
+@@ -306,12 +298,10 @@ This docstring is not pretending to be an NTK, embedding, SAE, logits, GPU, or p
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"This module makes the final stability decision for the current GAP-1 registry promotion path."  
+-"It does not search for new invariants."  
+-"It reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact..."
++No paper/model/live-inference claim. The actual claim is procedural: "It reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact..."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads JSON artifacts, computes deterministic stability/leakage/registry checks, writes a JSON result, and optionally updates `ops/verifier_gaps.md`. It imports no model stack and performs no ML inference, but the docstring does not claim any.
++The code reads JSON artifacts, audits deterministic stability fields, checks registry text with regex, writes a result artifact, and optionally updates `ops/verifier_gaps.md`. It imports no torch/transformers/jax/sklearn/llama/openai/Carnot model code and performs no model inference.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -323,7 +313,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is bookkeeping and decision logic, and the docstring says exactly that. There is regex and arithmetic, but that is the claimed substrate: deterministic artifact analysis, not NTK, logits, embeddings, SAE features, GPU inference, or a paper implementation. The optional `duration_s` parameter is injectable, but this file does not sleep-pad, cap scores, generate random features, or name adversarial-check sentinels.
++This module is not pretending to be an ML verifier, a paper implementation, or a live inference system. Its boring JSON-and-rule logic matches the docstring: it is a deterministic freeze/block/retire decision over prior evidence. The `duration_s` field is recorded, but there is no sleep-padding, score-capping, random feature generation, or named adversarial-check dodge.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
+@@ -334,11 +324,10 @@ This is bookkeeping and decision logic, and the docstring says exactly that. The
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"The adapter keeps the Exp 1542 authority boundary but repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path."  
+-"Token logprobs and top-k alternatives are treated as research diagnostics only"
++"reusing the local SOTA GGUF llama.cpp telemetry path"; "Token logprobs and top-k alternatives are treated as research diagnostics only"; "deterministic validators still make every final accept/reject decision."
+ 
+ ## IMPLEMENTATION_REALITY
+-The file is an adapter/diagnostic harness: it builds telemetry cases, delegates telemetry generation to `build_telemetry_artifact(..., generation_source="live_sota_llamacpp")`, then parses `token_logprobs` and `top_logprobs` from the produced manifest. It does not directly import `llama_cpp`, `torch`, or `transformers`, but it imports a Carnot live telemetry module rather than doing regex-only text scoring.
++The module is a diagnostic adapter: it selects SATQuest rows, delegates telemetry generation to `build_telemetry_artifact(..., generation_source="live_sota_llamacpp")`, parses token logprobs/top-k fields from the resulting manifest, and computes diagnostic correlations/AUC. It does not directly import `llama_cpp`, `torch`, or `transformers`, but it does call a Carnot telemetry module rather than pretending regex is inference.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -350,39 +339,35 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring explicitly scopes this as a telemetry repair diagnostic, not as a verifier making final accept/reject decisions. The implementation matches that scope: deterministic validators remain final authority, telemetry is diagnostic-only, and readiness is blocked unless live inference, logprobs, top-k telemetry, and focused tests are present. The actual model call is delegated out of this file, but the adapter is not pretending that arithmetic over text is a llama.cpp logprob run.
++The docstring is careful: telemetry is diagnostic-only and deterministic validators retain final authority. The implementation matches that posture by refusing to mark telemetry ready unless live inference, logprobs, top-k, and focused tests are reported. There is no obvious adversarial padding, score-capping, random feature fabrication, or fake paper/model branding in this file.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
+ 
+-**Verdict:** `DISHONEST_NAMING`
++**Verdict:** `HONEST_HEURISTIC`
+ 
+ ## VERDICT
+-DISHONEST_NAMING
++HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies."
+-
++"The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies."  
++"These signals are useful for routing and research analysis only."  
+ "Final accept/reject labels always come from deterministic SAT and runtime-contract validators."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code does no model inference and imports no torch/transformers/jax/sklearn/llama/openai/Carnot model module. It reads JSON/JSONL artifacts, pulls numeric fields if present, averages existing logprob arrays, and for runtime/BEAVER cases fabricates `carnot_energy_score` as `0.0` for accept and `1.0` for reject.
++The code reads existing JSON/JSONL artifacts, extracts stored energy/risk/logprob-like numeric fields, computes Pearson correlations and ROC AUC, and writes summary artifacts. There is no model invocation and no torch/transformers/jax/sklearn/llama_cpp/openai import.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-UNDISCLOSED_PROXY
++DISCLOSED_PROXY
+ 
+ ## GAMING_PATTERNS
+-Label-derived energy scores: `carnot_energy_score=0.0 if deterministic_accept else 1.0` creates a verifier score directly from the ground-truth deterministic label for runtime and BEAVER cases.
+-
+-Prefix-risk clamping: `max(0.0, min(1.0, float(prefix_risk_score)))`, though this looks like normalization, not explicit perfect-dodging.
+-
+-No sleep-padding, random-data generation, named token-dodge strings, or explicit `IMPLAUSIBLE_PERFECT` / `DURATION_TOO_SHORT` references.
++none
+ 
+ ## RECOMMENDATION
+-REIMPLEMENT_PROPERLY
++KEEP
+ 
+ ## RATIONALE
+-The docstring claims comparison against "explicit Carnot energy", but part of the implementation substitutes the final deterministic label as the energy score. That is not a proxy; it is target leakage dressed up as a diagnostic signal. This must not contribute to headline AUROC numbers, because the routing score can be partially computed from the answer it is supposed to predict.
++This is not pretending to run ARM/EBT inference or a SOTA model; it explicitly says it operates on already-labeled verifier cases and optional stored logprob/value proxies. The implementation is just artifact aggregation and diagnostic scoring, but the docstring admits the diagnostic-only role and says deterministic validators remain final authority. The `MODEL_SPECS` and `live_sota_model_inference_used` field are slightly easy to overread, but the module itself does not claim live inference.
+ 
+ 
+ ## python/carnot/verify/ast_structure_verifier.py
+@@ -393,10 +378,10 @@ The docstring claims comparison against "explicit Carnot energy", but part of th
+ AUTHENTIC
+ 
+ ## CLAIMS
+-No paper/model/compute claim. Relevant claim: "Python-looking text is checked with ``ast.parse`` plus bracket balance." It also says "General prose is checked with cheap structural heuristics" and "not token-level statistical fluency."
++No paper/model/compute claims. The relevant claims are: "AST-based structural verifier" and "Python-looking text is checked with ``ast.parse`` plus bracket balance."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code imports only `ast` and `re`, extracts code blocks with regex, checks bracket balance manually, uses `ast.parse` for Python-looking text, and applies simple prose-structure heuristics.
++The code imports only `ast` and `re`, extracts optional code blocks, checks bracket balance, uses `ast.parse` for Python-looking text, and applies simple prose-structure heuristics otherwise. That is exactly what the docstring says.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -408,7 +393,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This verifier says it is an AST/bracket/prose-structure heuristic, and that is exactly what it implements. It does not pretend to invoke a model, paper method, learned embedding, logits, GPU path, or statistical fluency substrate. No adversarial benchmark-gaming patterns are present.
++This verifier does not pretend to be a paper implementation, learned model, neural kernel, embedding method, or live inference system. It is a syntactic/text-structural heuristic and admits that plainly. No adversarial benchmark-dodging patterns are visible.
+ 
+ 
+ ## python/carnot/verify/beaver_epr_bounded_probe.py
+@@ -419,12 +404,14 @@ This verifier says it is an AST/bracket/prose-structure heuristic, and that is e
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints."  
+-"BEAVER v2 needs a sound token-trie/frontier proof... This module does not implement that frontier proof."  
+-"Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features."
++"Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints."
++
++"BEAVER v2 needs a sound token-trie/frontier proof before its probability bounds can be called exact. This module does not implement that frontier proof."
++
++"Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code is pure Python: regex extraction, AST arithmetic evaluation, JSON/JSONL loading, AUROC calculation, and entropy summaries from already-recorded top-k logprobs. It does not invoke a model, load weights, call an API, or perform live inference.
++The code is a pure-Python bounded arithmetic checker plus telemetry parser: regex extracts completed arithmetic equalities, `ast`/`Decimal` evaluates them, and AUROC is computed from local labels. There is no live model invocation and no import of `torch`, `transformers`, `jax`, `sklearn`, `llama_cpp`, `openai`, or a Carnot model module.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -436,7 +423,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring is unusually explicit that this is not exact BEAVER and that top-k logprob features are only computed from prior telemetry when available. The implementation matches that reduced claim: it is a bounded arithmetic-prefix proxy plus telemetry parsing, not a fake model-backed verifier. It should not be marketed as BEAVER v2, but the file itself does not silently make that claim.
++This verifier does not implement exact BEAVER, but it openly says that in the module docstring and artifact fields: `beaver_exact` is forced false and the missing frontier proof is explicitly disclosed. The implementation is only a bounded-prefix arithmetic feasibility probe plus optional entropy features from existing top-k telemetry, which matches the stated proxy scope. I do not see sleep-padding, score-capping, random feature fabrication, or named adversarial-check dodges.
+ 
+ 
+ ## python/carnot/verify/beaver_exact_tiny_frontier.py
+@@ -447,12 +434,14 @@ The docstring is unusually explicit that this is not exact BEAVER and that top-k
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset."  
+-"The reported frontier is the first text prefix that ends at a solver-proved false completed equality."  
++"Tiny exact arithmetic frontier check for Exp 2866."
++
++"Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset."
++
+ "This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code extracts arithmetic equalities with regex, parses them with `ast`, and actually invokes `z3.Solver()` to prove whether the equality holds. It explicitly compares against an Exp 2858 proxy but does not pretend that proxy is exact BEAVER.
++The code extracts arithmetic equalities with regex, parses them through `ast`, and invokes `z3.Solver()` to decide whether the equality holds. It also compares against an existing bounded-prefix proxy, but explicitly labels that as proxy evidence.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -464,7 +453,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This docstring is unusually explicit about the boundary: tiny local Z3 arithmetic only, not BEAVER, not model mass, not language-model continuations. The implementation matches that claim by invoking Z3 for ground arithmetic equalities and preserving proxy/exact separation in artifact fields and validation.
++This docstring does not pretend to implement BEAVER or a language-model frontier; it explicitly disclaims that. The implementation actually uses Z3 for the narrow arithmetic subset it claims to handle, so this is not regex wearing a paper costume. The proxy boundary is repeatedly documented in both the docstring and artifact fields.
+ 
+ 
+ ## python/carnot/verify/beaver_lite.py
+@@ -476,12 +465,11 @@ AUTHENTIC
+ 
+ ## CLAIMS
+ "BEAVER-lite probability-mass certificates for arithmetic answer constraints."  
+-"deliberately small certificate-tier prototype."  
+-"llama.cpp logits-backed top-K prefix enumerator."  
+-"used only when llama-cpp-python is importable and a GGUF path is supplied"
++"deliberately small certificate-tier prototype"  
++"llama.cpp logits-backed top-K prefix enumerator" used only when "llama-cpp-python is importable and a GGUF path is supplied"
+ 
+ ## IMPLEMENTATION_REALITY
+-The code implements a final-integer constraint, enumerates completions, sums violating completion logprob mass with `logsumexp`, and optionally invokes `llama_cpp.Llama` for logits-backed beam expansion. If no GGUF model is available, it falls back to an explicitly named deterministic `MockLogprobProvider`.
++The code implements a final-integer constraint, enumerates candidate completions, sums logprob mass for violating terminals, and reports a bound. It has a real optional `llama_cpp.Llama` path using logits, plus an explicitly labeled deterministic mock fallback.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -493,7 +481,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not silently shipping regex while pretending to run a model. The mock path is explicitly named, exposed through `mock_logprobs_used`, and reflected in the artifact verdict. The optional live path does make a real `llama_cpp` model invocation and consumes logits, so the compute claim is not fake.
++This is not silently pretending regex is a model. The mock path is explicitly named, surfaced in `mock_logprobs_used`, and carried into the artifact verdict as `sound_bound_mock_logprobs`; the live path actually invokes `llama_cpp.Llama` and reads logits. The probability clamp to `[0, 1]` is ordinary numeric hygiene, not the adversarial `0.99`/`0.01` perfect-dodging pattern.
+ 
+ 
+ ## python/carnot/verify/beaver_lite_live.py
+@@ -504,10 +492,12 @@ This is not silently shipping regex while pretending to run a model. The mock pa
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"BEAVER-lite live-or-Zipf logprob workflow for Exp 1158." "llama.cpp completion provider that uses generated-token logprobs." "Select a live llama.cpp bounder or the honest Zipf fallback."
++"BEAVER-lite live-or-Zipf logprob workflow for Exp 1158."  
++"llama.cpp completion provider that uses generated-token logprobs."  
++"Deterministic non-uniform fallback provider used without llama.cpp."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code actually invokes `llama_cpp.Llama` with `logits_all=True` and requests completion `logprobs` when a GGUF model is available. When it cannot run live inference, it uses a deterministic `ZipfMockLogprobProvider` and marks that path with `mock_logprobs_used`, `zipf_mock_used`, and explicit artifact verdicts.
++The code has a real optional llama.cpp path: it imports `llama_cpp.Llama`, initializes it with `logits_all=True`, and calls `self._llama(..., logprobs=...)`. When llama.cpp or a GGUF model is unavailable, it uses an explicitly labeled deterministic Zipf mock provider and records that provenance in artifacts.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -519,7 +509,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This is not regex pretending to be a model. The live path imports and calls `llama_cpp.Llama`, extracts token logprobs, and feeds them into the BEAVER-lite bounder. The fallback is openly labeled as mock/Zipf throughout the code and artifact fields, so the verifier is not silently laundering fake logprobs into a claimed live result.
++This is not regex dressed up as model inference. The live path actually invokes llama.cpp and consumes generated-token logprobs, while the fallback is openly named `ZipfMockLogprobProvider` and surfaced through `mock_logprobs_used`, `zipf_mock_used`, `logprobs_source`, and `honest_verdict`. No obvious adversarial-check gaming patterns appear.
+ 
+ 
+ ## python/carnot/verify/beaver_prefix_bound_contracts.py
+@@ -530,39 +520,41 @@ This is not regex pretending to be a model. The live path imports and calls `lla
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"BEAVER-lite prefix-bound audit for runtime-contract decoder rows."  
+-"It builds a bounded prefix frontier over the canonical contract JSON..."  
++"BEAVER-lite prefix-bound audit for runtime-contract decoder rows."
++
++"It builds a bounded prefix frontier over the canonical contract JSON that a decoder should emit and reports structural risk signals for prefixes that are incomplete or already off-target."
++
+ "Those signals help rank rows for routing and inspection, but every false-accept number still comes from the Exp 1520 validator ledger."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code is pure Python structural auditing: JSON parsing, prefix trie checks, string prefix comparison, length-based unsafe bounds, manifest reads/writes, and ledger aggregation. It does not invoke a model and does not import torch, transformers, jax, sklearn, llama_cpp, openai, or a Carnot model module.
++The code builds canonical JSON targets, checks string prefixes with a trie, computes simple structural upper bounds from prefix length/consistency, and reads/writes JSON/JSONL artifacts. It imports no torch, transformers, sklearn, llama_cpp, openai, or model module, and performs no live model inference.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-DISCLOSED_PROXY
++NONE
+ 
+ ## GAMING_PATTERNS
+-none
++score clamping to [0.0, 1.0] only; no sleep-padding, no random-data classification, no perfect-dodging cap like 0.99/0.01, no named adversarial-check dodges
+ 
+ ## RECOMMENDATION
+ KEEP
+ 
+ ## RATIONALE
+-This verifier does not pretend to run BEAVER, a neural model, live inference, kernel embeddings, logits, or any GPU substrate. It explicitly presents itself as a lightweight structural prefix audit beneath the deterministic validators, and the implementation matches that limited claim. The `model_specs` fields are suspicious baggage, but the artifact also records `live_sota_model_inference_used` and blockers for unavailable token/top-k data, so this is not silently faking model-based verification.
++The docstring is not pretending to be a BEAVER paper implementation, a neural verifier, or live model inference. It openly describes a "BEAVER-lite" structural prefix audit below deterministic validators, and the implementation is exactly that: prefix/string/JSON bookkeeping with validator-ledger authority. The mandated model-spec artifact fields are potentially noisy, but the code also records `live_sota_model_inference_used`, token-logprob availability, top-k availability, and structural-simulation blockers, so this is not silently laundering regex as a model verifier.
+ 
+ 
+ ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `HONEST_HEURISTIC`
+ 
+ ## VERDICT
+-AUTHENTIC
++HONEST_HEURISTIC
+ 
+ ## CLAIMS
+ "This is a deterministic pilot, not a production VeriCoT verifier."  
+ "No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic artifact replay, JSON parsing, canonical answer normalization, checksum/provenance collection, and ledger/certificate consistency checks. It imports no torch, transformers, jax, sklearn, llama_cpp, openai, or Carnot model module, and it makes no live model call.
++The code performs deterministic JSON/artifact replay, canonical answer normalization, premise-record extraction, ledger consistency checks, hashing, and artifact validation. It imports no torch, transformers, jax, sklearn, llama_cpp, openai, or Carnot model module, and invokes no model or solver.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -574,5 +566,5 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring is explicit that this is not a production VeriCoT verifier and does not invoke models, solvers, repairs, or conductor paths. The implementation matches that claim: it is local deterministic evidence replay over checked-in artifacts. There is no fake paper/model branding here and no obvious adversarial-check gaming pattern.
++The docstring is explicit that this is not a production verifier and does not run models, solvers, repairs, or conductor paths. The implementation matches that: it is a deterministic artifact-replay pilot over checked-in evidence. It should not be sold as model-backed verification, but the file itself does not make that dishonest claim.
+ 
+diff --git a/research-references.md b/research-references.md
+index 14708a828f..c1ba3aa911 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -27799,3 +27799,33 @@ Execution-time sweep after the `.488` planner refresh checked arXiv, OpenReview,
+ - **Secondary-source status:** Semantic Scholar was rate-limited and no citation-trend claim is made. LLM-as-a-Verifier was not promoted because its public path depends on external logprob/scoring-token extraction.
+ 
+ <!-- V488-EXECUTION-REFRESH-2026-07-07-END -->
++
++
++### V489 Planner Refresh - 2026-07-07
++
++Planner sweep for milestone `.489` checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub, Extropic writing, and Logical Intelligence public pages after `.488` completed. The items below are actionable for the next roadmap or explicit watch/no-go context.
++
++### New actionable findings
++- **G-RRM: Guiding Symbolic Solvers with Recurrent Reasoning Models** (https://arxiv.org/abs/2607.02491; code https://github.com/ml-jku/SE-RRM): neural full-solution proposals help most when the symbolic solver can overwrite bad hints; reported Sudoku backtracking and Glucose speedups do not transfer to solvers that always honor hints. Carnot hook: extend the clean Exp5358 solver-projection bridge with an overwrite-capable guidance matrix that logs overwrite rate, conflict delta, fallback completeness, post-projection validity, and harmful hint classes.
++- **Forget to Improve: On-Device LLM-Agent Continual Learning via Budget-Curated Memory** (https://arxiv.org/abs/2606.25115): on-device agents score memory by net value per byte under RAM, energy, and uplink budgets, with KEEP/SHARE/TRUST decisions that reduce stale/poisoned memory harm. Carnot hook: follow the clean `.488` dependency/drift self-learning artifacts with budget-curated memory governance, provenance/trust labels, no-weight-mutation enforcement, and attack/stale controls.
++- **Learning to Continually Learn via Meta-learning Agentic Memory Designs / ALMA** (https://arxiv.org/abs/2602.07755): a meta-agent searches memory schemas, retrieval, and update mechanisms. Carnot hook: use this as a bounded design-space enumeration reference only; Carnot should not run open-ended code-writing memory search until deterministic policy scoring and rollback guards are in place.
++- **Accelerating Constrained Decoding with Token Space Compression / CFGzip** (https://arxiv.org/abs/2605.29986): offline grammar/token-space compression reduces CFG constrained-decoding overhead. Carnot hook: repair the `.488` SOTA structured protocol by compiling schema grammar/token reachability and budget fixtures before live GGUF calls.
++- **TruncProof: A Guardrail for LLM-based JSON Generation under Token-Length Constraints** (https://arxiv.org/abs/2605.13076; code https://github.com/Yosshi999/TruncProof): LL(1)-style JSON completion slack detects when strict token budgets cannot finish valid JSON. Carnot hook: add completion-slack and truncation-vs-schema failure fields to the structured-output protocol before another live SOTA quality panel.
++- **FLaG: Fine-Grained Latent Grouping for Hallucination Detection** (https://arxiv.org/abs/2606.00301): frozen-model hallucination detection improves by grouping heterogeneous latent evidence families instead of collapsing to a single score. Carnot hook: future hidden-state/logit verifiers should aggregate feature families separately; text-only GGUF logprob rows are insufficient for latent-grouping claims.
++- **Thermodynamic Signatures of Reasoning: Free-Energy and Spectral-Form-Factor Diagnostics for Hallucination Detection in LLMs** (https://arxiv.org/abs/2606.19404): attention-Laplacian thermodynamic descriptors are proposed for hallucination detection. Carnot hook: watch item only unless the local runtime exposes attention or equivalent internal tensors; do not claim thermodynamic signatures from final text or incomplete token-probability rows.
++- **Programmable Probabilistic Computer with 1,000,000 p-bits** (https://arxiv.org/abs/2606.25313): networked FPGAs exchange boundary bits, and the communication-to-p-bit clock ratio controls when distributed operation approximates a monolithic p-bit machine. Carnot hook: extend Exp5359 from single-node CPU p-bit scheduling to a boundary-exchange timing-ratio simulation; still no local hardware speedup claim.
++
++### Secondary-source status
++- **Semantic Scholar:** direct API access to EBT `2507.02092` was rate-limited; ARM-EBM `2512.15605` returned eight citations and two influential citations on 2026-07-07. The citation trail includes distributional EBMs, ontology-constrained neural reasoning, graph energy matching, false-first-step detection, and energy-based Gibbs alignment. Carnot hook: use these as watch items for latent-loop/constraint-verifier design; do not reopen the retired external text-scorer lane.
++- **OpenReview/HuggingFace/GitHub:** OpenReview constrained-generation entries, HuggingFace paper mirrors, `Saibo-creator/Awesome-LLM-Constrained-Decoding`, `eth-sri/constrained-diffusion`, and `ml-jku/SE-RRM` are useful implementation references for grammar and solver-guidance experiments. None replaces local GGUF, deterministic solver, or live ARC requirements.
++- **Extropic:** current writing continues to describe TSU/XTR probabilistic computing architecture, but there is still no Carnot-accessible TSU hardware path. Treat as hardware architecture context only.
++- **Logical Intelligence:** recent public Kona/Aleph pages emphasize formal verification and an EBM-like reasoning layer beneath LLM interfaces. Carnot hook: prefer deterministic verifier/prover authority and certificate artifacts; no reproducible Kona baseline or speedup claim is available.
++
++### Planning impact
++- `.489` should repair the structured SOTA protocol with grammar-budget preflight, completion slack, schema reachability, and live local GGUF evidence before attempting the constraint-tax panel.
++- `.489` should extend continuous self-learning with budget-curated memory governance and a larger dependency/drift scale-up, preserving no-weight-mutation and rollback discipline.
++- `.489` should convert solver and p-bit results into overwrite-capable guidance and boundary-exchange diagnostics, keeping the symbolic solver authoritative.
++- `.489` should treat token/internal-energy work as a precondition and corrigendum lane unless the backend exposes logits, hidden states, or attention with clean artifact provenance.
++- `.489` should include the required ARC live-path level-up slot and hardware continuity receipt, but no duplicate ARC solve, host block-device KV260 evidence, TSU/Kona claim, or hardware speedup claim.
++
++<!-- V489-PLANNER-REFRESH-2026-07-07-END -->
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..ff0285d5a2
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,836 @@
++milestone: "2026.07.489"
++milestone_title: "Grammar-Budgeted SOTA, Budget-Curated Self-Learning, and Overwrite-Capable Solver Guidance"
++milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
++tasks:
++  - id: exp5363-v489-transition-and-archive
++    milestone: "2026.07.489"
++    title: "Archive .488 outcomes and stage .489 execution context"
++    priority: critical
++    track: ops
++    deliverable: "results/experiment_5363_transition_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 30
++    estimated_wall_time_min: 20
++    prior_failures:
++      - experiment_id: exp5349-v488-archive-and-transition
++        verdict: "blocked_archive: roadmap_next_present=false"
++        addressed_by: "This transition starts from a pre-staged .489 research-roadmap-next.yaml and explicitly records the .488 capstone fields before activation."
++        retire_if_same_verdict: true
++      - experiment_id: exp5362-v488-capstone
++        verdict: "complete: mixed gates, structured_protocol_clean=false, arc_new_level_banked=false, hardware_speedup_claim=false"
++        addressed_by: "This is not a capstone rerun; it converts the completed .488 capstone into the .489 starting ledger and gate expectations."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Milestone 2026.07.488 has completed. You are preparing the first execution artifact for milestone 2026.07.489 without changing the active roadmap or conductor. The .488 capstone is results/experiment_5362_capstone_v488.json.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/CODEX.md
++      - {project_root}/research-roadmap-next.yaml
++      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/results/experiment_5362_capstone_v488.json
++      - {project_root}/ops/status.md
++      - {project_root}/ops/conductor-log.md
++
++      TASK:
++      Create the transition artifact for .489. Capture the completed .488 truth table, the .489 task range, and the gate expectations that downstream tasks must honor.
++
++      CONCRETE STEPS:
++      1. Confirm the active roadmap was not modified by this task.
++      2. Read the .488 capstone and extract the main gate fields: structured_protocol_clean, constraint_tax_panel_ready, tokenprob_feature_rows_ready, carry_token_energy_signal_ready, dependency_provenance_ready, memory_tool_drift_ready, self_learning_scaleup_ready, solver_projection_ready, pbit_schedule_signal_ready, arc_new_level_banked, and hardware_speedup_claim.
++      3. Read the .489 roadmap doc and this roadmap to record task count, phase names, and task ids.
++      4. Write {project_root}/results/experiment_5363_transition_v489.json.
++      5. Do not modify research-roadmap.yaml. Do not modify scripts/research_conductor.py.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: honest terminal state, usually complete unless required inputs are missing.
++      - milestone: principle: must equal 2026.07.489.
++      - prior_milestone: principle: must equal 2026.07.488.
++      - prior_capstone_path: principle: path to the .488 capstone used as source of truth.
++      - prior_gate_summary: principle: object containing the .488 gate fields listed above.
++      - roadmap_next_present: principle: boolean proving research-roadmap-next.yaml exists at execution time.
++      - roadmap_doc_present: principle: boolean proving openspec/change-proposals/research-roadmap-vNEXT.md exists.
++      - planned_task_count: principle: number of .489 tasks in the staged roadmap.
++      - planned_task_ids: principle: ordered list of .489 task ids.
++      - downstream_gate_expectations: principle: object listing structured, self-learning, solver, token, ARC, and hardware expectations for .489.
++      - active_roadmap_modified: principle: must be false.
++      - conductor_modified: principle: must be false.
++      - honest_verdict: principle: one-line summary that distinguishes clean transition from missing-input block.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5364-v489-sota-source-delta
++    milestone: "2026.07.489"
++    title: "Execution-time SOTA source delta for .489"
++    priority: high
++    track: literature
++    deliverable: "results/experiment_5364_sota_source_delta_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 35
++    estimated_wall_time_min: 30
++    prior_failures:
++      - experiment_id: exp5350-v488-sota-source-delta
++        verdict: "complete: one actionable delta added to research-references.md"
++        addressed_by: "This is the next-milestone execution-time delta check after the .489 planner refresh, not a duplicate .488 Vera source check."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      The planner already appended the V489 Planner Refresh to research-references.md. This task performs the execution-time delta check immediately before downstream experiments, looking only for sources that were missed or newly surfaced after planning.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/research-references.md
++      - {project_root}/research-program.md
++      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/ops/exclusion_manifest.yaml
++      - {project_root}/results/experiment_5362_capstone_v488.json
++
++      TASK:
++      Search current sources for a narrow execution-time SOTA delta relevant to .489. Add only actionable, non-duplicate findings to research-references.md, then write the artifact.
++
++      CONCRETE STEPS:
++      1. Search arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub, Extropic writing, and Logical Intelligence for sources not already covered in the V489 Planner Refresh.
++      2. Focus on grammar-budgeted constrained decoding, JSON completion slack, budget-curated memory, overwrite-capable solver guidance, p-bit boundary exchange, ARC live-path perception repair, and hardware receipt discipline.
++      3. Do not promote external text scorers, CPU-only GGUF offload reruns, TSU/Kona execution claims, or retired ARC candidate-exploration-signal reruns.
++      4. If there is an actionable delta, append a short dated V489 Execution Refresh block to research-references.md with URLs and Carnot hooks.
++      5. Write {project_root}/results/experiment_5364_sota_source_delta_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete or honest_null depending on whether a new actionable delta exists.
++      - search_date: principle: must equal {date}.
++      - sources_checked: principle: list of source families searched.
++      - new_actionable_findings_count: principle: integer count of non-duplicate actionable findings.
++      - findings: principle: list with title, url, source_type, and carnot_hook for each promoted finding.
++      - duplicates_suppressed: principle: list of relevant sources already covered by the planner refresh.
++      - retired_scope_reopened: principle: must be false.
++      - research_references_updated: principle: true only if a new block was appended.
++      - honest_verdict: principle: one-line summary of the delta check.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5365-v489-grammar-budget-protocol-preflight
++    milestone: "2026.07.489"
++    title: "Grammar-budgeted structured-output protocol preflight"
++    priority: critical
++    track: structured-sota
++    deliverable: "results/experiment_5365_grammar_budget_protocol_preflight_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 40
++    estimated_wall_time_min: 35
++    prior_failures:
++      - experiment_id: exp5351-v488-trigger-constrain-structured-protocol
++        verdict: "blocked_structured_protocol_clean_false"
++        addressed_by: "This task does not rerun live generation; it adds a deterministic grammar/token-budget and completion-slack preflight before the next live GGUF attempt."
++        retire_if_same_verdict: true
++      - experiment_id: exp5338-v487-trigger-constrain-structured-sota
++        verdict: "blocked_structured_sota_protocol_methodology"
++        addressed_by: "The methodology gap is addressed by explicit parser/schema/truncation fixtures and minimum artifact fields before any live model call."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5351 proved the local SOTA structured protocol is not clean enough: parse_success_rate=0.75, schema_success_rate=0.25, final_json_extraction_rate=0.75, unsafe_false_accepts=0. The next step is a deterministic preflight inspired by CFGzip and TruncProof, not another live-model prompt first.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/scripts/experiment_template.py
++      - {project_root}/results/experiment_5351_trigger_constrain_structured_protocol_v488.json
++      - {project_root}/research-references.md
++      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/tests/python/
++      - {project_root}/python/carnot/
++
++      TASK:
++      Build or locate a deterministic structured-output preflight fixture that checks schema reachability, JSON completion slack, truncation-vs-schema failure separation, and tool/action token reachability before any live local GGUF generation.
++
++      CONCRETE STEPS:
++      1. Inspect existing structured-output utilities and tests before adding code.
++      2. Implement the smallest reusable preflight needed for .489: schema grammar summary, required-field reachability, max-token completion slack, and failure classification for parse/schema/truncation.
++      3. Use .488 failed output shapes as regression fixtures where possible.
++      4. Add focused tests if code changes are required.
++      5. Write {project_root}/results/experiment_5365_grammar_budget_protocol_preflight_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete only if the deterministic preflight runs and reports all required metrics.
++      - grammar_budget_protocol_ready: principle: boolean gate for the live GGUF rerun; true only when schema reachability and completion slack are both measurable.
++      - schema_reachability_cases: principle: integer count of schema cases checked.
++      - required_field_reachability_rate: principle: fraction of required fields reachable by the compiled/derived grammar.
++      - completion_slack_min_tokens: principle: minimum estimated tokens needed to complete a valid JSON response across fixtures.
++      - truncation_failure_count: principle: count of cases classified as truncation risks.
++      - schema_failure_count: principle: count of cases classified as schema risks independent of truncation.
++      - tool_action_token_reachability_rate: principle: fraction of tool/action markers reachable under the protocol fixture.
++      - methodology_duration_s: principle: wall-clock duration for the preflight, not including planning prose.
++      - tests_run: principle: list of commands run for changed code or an explicit no-code-change explanation.
++      - active_roadmap_modified: principle: must be false.
++      - conductor_modified: principle: must be false.
++      - honest_verdict: principle: one-line summary of readiness or blocking reason.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5366-v489-live-grammar-budgeted-sota-protocol
++    milestone: "2026.07.489"
++    title: "Gated live grammar-budgeted SOTA structured protocol"
++    priority: critical
++    track: structured-sota
++    deliverable: "results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json"
++    requires_gpu: true
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 75
++    gated_on:
++      - upstream: exp5365-v489-grammar-budget-protocol-preflight
++        artifact_field: grammar_budget_protocol_ready
++        op: "=="
++        value: true
++    prior_failures:
++      - experiment_id: exp5351-v488-trigger-constrain-structured-protocol
++        verdict: "blocked_structured_protocol_clean_false"
++        addressed_by: "The rerun is gated on a new deterministic grammar-budget preflight and must record completion slack plus schema reachability before live local GGUF inference."
++        retire_if_same_verdict: true
++      - experiment_id: exp5338-v487-trigger-constrain-structured-sota
++        verdict: "blocked_structured_sota_protocol_methodology"
++        addressed_by: "The live attempt now has explicit methodology duration, MODEL_SPECS, GPU/offload receipt, no-AutoTokenizer evidence, and separate parse/schema/final-json metrics."
++        retire_if_same_verdict: true
++      - experiment_id: exp5284-sota-offload-cpu-only-path
++        verdict: "retired_cpu_only_offload_path"
++        addressed_by: "This task requires a fresh GPU/offload receipt or writes an honest blocked artifact; it must not produce a CPU-only headline SOTA result."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      This task runs the live local SOTA structured protocol only if Exp5365 reports grammar_budget_protocol_ready=true. The prior live protocol failed schema cleanliness. Legacy small models may be used only as CPU smoke tests, never as headline models.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/scripts/experiment_template.py
++      - {project_root}/results/experiment_5365_grammar_budget_protocol_preflight_v489.json
++      - {project_root}/results/experiment_5351_trigger_constrain_structured_protocol_v488.json
++      - {project_root}/python/carnot/
++      - {project_root}/tests/python/
++
++      TASK:
++      Run a live grammar-budgeted structured-output protocol with the mandated local GGUF SOTA models. Fail closed if the runtime cannot provide a non-retired GPU/offload path.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: verify CUDA/GPU visibility and GGUF runtime availability. If only a CPU-only path is available for headline SOTA, write a blocked artifact and stop.
++      1. Use the Exp5365 preflight output to set schema grammar, completion slack, and max-token budget.
++      2. MODEL_SPECS for headline-eligible local runs must include:
++         - unsloth/Qwen3.6-35B-A3B-GGUF
++         - unsloth/gemma-4-31B-it-GGUF
++         - unsloth/gemma-4-26B-A4B-it-GGUF
++      3. Use llama.cpp/GGUF-compatible loading only. Do not use AutoTokenizer or AutoModel directly on a -GGUF repository.
++      4. Run at least one mandated SOTA model if available, with enough prompts to measure parse, schema, final JSON extraction, and unsafe false accepts. Prefer cached_sota_pair() style patterns from scripts/experiment_template.py if present.
++      5. Separate truncation failures from schema failures and semantic failures.
++      6. Write {project_root}/results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete only if live local SOTA inference ran; blocked if preconditions fail.
++      - grammar_budget_protocol_ready: principle: copied from Exp5365 gate source for audit.
++      - structured_protocol_clean: principle: boolean gate for downstream constraint-tax work; true only if parse_success_rate>=0.95, schema_success_rate>=0.90, final_json_extraction_rate>=0.95, unsafe_false_accepts=0, and methodology_duration_s>=60.
++      - MODEL_SPECS: principle: list containing the mandated local GGUF model specs considered for headline results.
++      - selected_model_spec: principle: exact model spec used for headline measurements.
++      - inference_substrate: principle: concrete runtime path, GPU/offload status, and GGUF loader family.
++      - gpu_or_offload_receipt: principle: machine-readable evidence that this was not the retired CPU-only headline path.
++      - no_autotokenizer_used: principle: must be true for GGUF repos.
++      - prompt_count: principle: number of live prompts evaluated.
++      - parse_success_rate: principle: fraction of responses with parseable JSON.
++      - schema_success_rate: principle: fraction of responses satisfying the schema.
++      - final_json_extraction_rate: principle: fraction with unambiguous final JSON extraction.
++      - semantic_success_rate: principle: fraction satisfying task semantics after schema validity.
++      - truncation_failure_rate: principle: fraction classified as token-budget truncation failures.
++      - unsafe_false_accepts: principle: count of invalid/unsafe outputs accepted as valid.
++      - completion_slack_min_tokens: principle: minimum JSON completion slack observed or inherited from Exp5365.
++      - methodology_duration_s: principle: live measurement duration excluding planning prose.
++      - honest_verdict: principle: one-line clean/block verdict.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5367-v489-constraint-tax-tool-action-panel-v2
++    milestone: "2026.07.489"
++    title: "Gated constraint-tax tool/action reachability panel v2"
++    priority: high
++    track: structured-sota
++    deliverable: "results/experiment_5367_constraint_tax_tool_action_panel_v2_v489.json"
++    requires_gpu: true
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 80
++    gated_on:
++      - upstream: exp5366-v489-live-grammar-budgeted-sota-protocol
++        artifact_field: structured_protocol_clean
++        op: "=="
++        value: true
++    prior_failures:
++      - experiment_id: exp5352-v488-gated-constraint-tax-tool-action-panel
++        verdict: "blocked_gate: upstream structured_protocol_clean=false"
++        addressed_by: "This panel is structurally gated on the repaired Exp5366 protocol and adds deterministic state/tool-call evidence from the Vera-style source delta."
++        retire_if_same_verdict: true
++      - experiment_id: exp5351-v488-trigger-constrain-structured-protocol
++        verdict: "blocked_structured_protocol_clean_false"
++        addressed_by: "The task will be skipped before dispatch unless Exp5366 provides structured_protocol_clean=true."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      This task must run only if Exp5366 reports structured_protocol_clean=true. Exp5352 was correctly blocked in .488. The .488 execution refresh promoted Vera-style deterministic initial/final state and tool-call predicates for reachability evidence.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json
++      - {project_root}/results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json
++      - {project_root}/research-references.md
++      - {project_root}/python/carnot/
++      - {project_root}/tests/python/
++
++      TASK:
++      Measure the constraint tax under the repaired local SOTA protocol: schema validity, semantic correctness, wrong-valid outputs, and tool/action reachability must be reported separately.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: verify Exp5366 structured_protocol_clean=true and verify live local GGUF runtime availability. If the gate is not satisfied, do not run this task.
++      1. MODEL_SPECS for any live LLM call must include:
++         - unsloth/Qwen3.6-35B-A3B-GGUF
++         - unsloth/gemma-4-31B-it-GGUF
++         - unsloth/gemma-4-26B-A4B-it-GGUF
++      2. Use the same GGUF/no-AutoTokenizer discipline as Exp5366.
++      3. Build a small panel with initial state, required action/tool affordance, expected final state, verifier predicate, and response-text fallback.
++      4. Compare constrained vs unconstrained or two-pass outputs without accepting schema-valid but semantically wrong answers.
++      5. Write {project_root}/results/experiment_5367_constraint_tax_tool_action_panel_v2_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete only if gate and live measurement both run.
++      - structured_protocol_clean: principle: copied from Exp5366 for audit.
++      - constraint_tax_panel_ready: principle: true only if syntactic, semantic, wrong-valid, and tool/action reachability metrics are all present with unsafe_false_accepts=0.
++      - MODEL_SPECS: principle: list containing the mandated local GGUF model specs considered for live calls.
++      - selected_model_spec: principle: exact headline model spec used.
++      - inference_substrate: principle: concrete runtime path and GGUF loader family.
++      - no_autotokenizer_used: principle: must be true for GGUF repos.
++      - case_count: principle: number of tool/action cases measured.
++      - schema_validity_rate: principle: constrained-output schema validity rate.
++      - semantic_correctness_rate: principle: constrained-output semantic correctness rate.
++      - wrong_valid_output_rate: principle: schema-valid but semantically wrong rate.
++      - tool_action_reachability_rate: principle: fraction of required tool/action tokens or calls reachable under the constraint protocol.
++      - initial_state_logged_rate: principle: fraction of cases with initial state evidence.
++      - final_state_verified_rate: principle: fraction of cases with deterministic final-state verification.
++      - response_text_fallback_rate: principle: fraction requiring text-only fallback.
++      - unsafe_false_accepts: principle: count of invalid/unsafe outputs accepted as valid.
++      - methodology_duration_s: principle: live measurement duration excluding planning prose.
++      - honest_verdict: principle: one-line ready/block verdict.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5368-v489-budget-curated-memory-governance
++    milestone: "2026.07.489"
++    title: "Budget-curated memory governance for dependency-safe self-learning"
++    priority: critical
++    track: self-learning
++    deliverable: "results/experiment_5368_budget_curated_memory_governance_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 45
++    estimated_wall_time_min: 45
++    prior_failures:
++      - experiment_id: exp5357-v488-dependency-drift-self-learning-scaleup
++        verdict: "complete: self_learning_scaleup_ready=true"
++        addressed_by: "This extends the clean .488 self-learning lane with budget-curated value-minus-harm-per-byte governance, not a duplicate dependency/drift scale-up."
++        retire_if_same_verdict: true
++      - experiment_id: exp5356-v488-memory-tool-drift-harness
++        verdict: "complete: memory_tool_drift_ready=true"
++        addressed_by: "The new task keeps drift controls but adds KEEP/SHARE/TRUST decisions, stale/poison labels, and resource budgets."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      The research program requires continuous self-learning every milestone. Exp5355, Exp5356, and Exp5357 produced clean no-weight-mutation self-learning artifacts. The next gap is budget-curated governance: useful memory should be retained only when value exceeds cost and harm risk.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/research-program.md
++      - {project_root}/results/experiment_5355_dependency_provenance_self_learning_v488.json
++      - {project_root}/results/experiment_5356_memory_tool_drift_harness_v488.json
++      - {project_root}/results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json
++      - {project_root}/research-references.md
++      - {project_root}/python/carnot/
++      - {project_root}/tests/python/
++
++      TASK:
++      Add or exercise a deterministic budget-curated memory governance fixture for self-learning. The fixture must score memory items by value-minus-harm per byte and make KEEP/SHARE/TRUST decisions under resource budgets without mutating model weights.
++
++      CONCRETE STEPS:
++      1. Reuse the existing dependency-provenance and memory-drift fixtures where possible.
++      2. Add memory item fields for provenance, byte cost, estimated verifier value, stale risk, poison risk, sharing risk, and trust label.
++      3. Implement or exercise deterministic decision rules for KEEP, DROP, SHARE, QUARANTINE, and TRUST/UNTRUST.
++      4. Include stale and poisoned memory cases plus clean useful cases.
++      5. Add focused tests if source code changes are required.
++      6. Write {project_root}/results/experiment_5368_budget_curated_memory_governance_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete only if the budget governance fixture runs.
++      - budget_curated_memory_ready: principle: boolean gate for scale-up; true only when value, cost, harm, and trust decisions are all measured.
++      - memory_item_count: principle: number of memory records evaluated.
++      - budget_bytes: principle: memory byte budget used by the fixture.
++      - retained_bytes: principle: bytes retained after curation.
++      - value_minus_harm_per_byte_mean: principle: mean value-minus-harm score normalized by byte cost.
++      - keep_precision: principle: fraction of kept items that are useful and non-harmful.
++      - stale_memory_deflection_rate: principle: fraction of stale items not trusted or not used.
++      - poison_memory_deflection_rate: principle: fraction of poisoned items not trusted or not used.
++      - share_decision_precision: principle: fraction of shared items that pass provenance/trust constraints.
++      - trust_decision_precision: principle: fraction of trusted items that are clean useful items.
++      - rollback_recovery_rate: principle: recovery rate after bad memory is detected.
++      - unsafe_false_accepts: principle: count of harmful memory items accepted as trusted useful memory.
++      - no_weight_mutation: principle: must be true.
++      - tests_run: principle: list of commands run or no-code-change explanation.
++      - honest_verdict: principle: one-line ready/block verdict.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5369-v489-budgeted-continuous-self-learning-scaleup
++    milestone: "2026.07.489"
++    title: "Gated budgeted continuous self-learning scale-up"
++    priority: high
++    track: self-learning
++    deliverable: "results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 55
++    gated_on:
++      - upstream: exp5368-v489-budget-curated-memory-governance
++        artifact_field: budget_curated_memory_ready
++        op: "=="
++        value: true
++    prior_failures:
++      - experiment_id: exp5357-v488-dependency-drift-self-learning-scaleup
++        verdict: "complete: self_learning_scaleup_ready=true"
++        addressed_by: "This scale-up adds resource-budgeted memory curation, attack/stale pressure, and larger multi-session traces beyond the clean .488 dependency/drift result."
++        retire_if_same_verdict: true
++      - experiment_id: exp5342-v487-self-learning-scaleup
++        verdict: "flagged_adversarial: TAUTOLOGY"
++        addressed_by: "The .489 task inherits the .488 dependency-provenance repair and adds explicit budget and harm controls instead of aggregate duplicate deltas."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      This is the milestone's explicit continuous self-learning experiment. It runs only if Exp5368 reports budget_curated_memory_ready=true. The goal is larger-scale, budget-governed, verifier-controlled learning from traces without weight mutation.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/research-program.md
++      - {project_root}/results/experiment_5368_budget_curated_memory_governance_v489.json
++      - {project_root}/results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json
++      - {project_root}/python/carnot/
++      - {project_root}/tests/python/
++
++      TASK:
++      Scale the dependency/drift self-learning loop with budget-curated memory. The loop must improve or preserve quality while reducing context/verifier cost and rejecting stale/poisoned memory.
++
++      CONCRETE STEPS:
++      1. Verify Exp5368 budget_curated_memory_ready=true.
++      2. Build or run at least 12 multi-session traces and at least 30 checked events unless a smaller existing fixture is the maximum available; if smaller, state the limitation honestly.
++      3. Apply dependency provenance, memory drift detection, rollback, and budget-curated curation together.
++      4. Compare against always-full-context and no-memory baselines where existing fixtures allow.
++      5. Add focused tests if source code changes are required.
++      6. Write {project_root}/results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete only if the gated scale-up runs.
++      - budget_curated_memory_ready: principle: copied from Exp5368 gate source.
++      - continuous_self_learning_target: principle: must be true to mark this as the required milestone self-learning slot.
++      - continuous_self_learning_budget_scaleup_ready: principle: true only if dependency, drift, rollback, budget, and quality metrics are all present.
++      - multi_session_trace_count: principle: number of traces evaluated.
++      - checked_event_count: principle: number of events checked by verifier or fixture.
++      - context_efficiency_delta: principle: context reduction versus always-full baseline.
++      - verifier_cost_delta: principle: verifier-cost reduction versus always-full or always-verify baseline.
++      - quality_delta_vs_always_full: principle: task-quality delta versus always-full baseline.
++      - dependency_attribution_rate: principle: fraction of selected memories with traceable dependency edges.
++      - drift_detection_rate: principle: fraction of induced drift cases detected.
++      - rollback_recovery_rate: principle: fraction of bad-memory cases recovered after rollback.
++      - stale_memory_deflection_rate: principle: fraction of stale memories rejected or quarantined.
++      - poison_memory_deflection_rate: principle: fraction of poisoned memories rejected or quarantined.
++      - retained_bytes_delta: principle: bytes saved versus uncurated memory.
++      - unsafe_false_accepts: principle: count of harmful/stale/poisoned memories accepted as useful.
++      - no_weight_mutation: principle: must be true.
++      - honest_verdict: principle: one-line ready/block verdict.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5370-v489-overwrite-solver-guidance-matrix
++    milestone: "2026.07.489"
++    title: "Overwrite-capable solver guidance matrix from G-RRM"
++    priority: high
++    track: solver-energy
++    deliverable: "results/experiment_5370_overwrite_solver_guidance_matrix_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 55
++    prior_failures:
++      - experiment_id: exp5358-v488-solver-projection-cut-bridge
++        verdict: "complete: solver_projection_ready=true"
++        addressed_by: "This builds on the clean solver-authoritative projection result by testing overwrite-capable versus forced-hint guidance, not re-running projection/cuts alone."
++        retire_if_same_verdict: true
++      - experiment_id: exp5359-v488-pbit-schedule-diagnostic
++        verdict: "complete: pbit_schedule_signal_ready=true"
++        addressed_by: "This uses the harmful-hint/schedule lesson to keep the symbolic solver authoritative and to measure when hints hurt."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5358 proved a solver-authoritative projection/cut bridge. Recent G-RRM work suggests neural or heuristic solution proposals help only when the symbolic solver can overwrite bad hints. Carnot should test that mechanism locally without claiming a learned SE-RRM baseline.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/results/experiment_5358_solver_projection_cut_bridge_v488.json
++      - {project_root}/results/experiment_5359_pbit_schedule_diagnostic_v488.json
++      - {project_root}/research-references.md
++      - {project_root}/python/carnot/
++      - {project_root}/tests/python/
++
++      TASK:
++      Add or exercise a deterministic solver-guidance matrix comparing no hints, forced hints, and overwrite-capable hints on existing constraint fixtures. The symbolic solver must remain the authority.
++
++      CONCRETE STEPS:
++      1. Reuse existing SAT/Sudoku/constraint fixtures and solver telemetry where possible.
++      2. Construct proposal classes: aligned hints, partially wrong hints, misleading high-confidence hints, and no hints.
++      3. Compare forced-hint behavior against overwrite-capable solver routing.
++      4. Log conflicts, search steps, overwrite events, projection validity, fallback completeness, and unsafe false accepts.
++      5. Add focused tests if source code changes are required.
++      6. Write {project_root}/results/experiment_5370_overwrite_solver_guidance_matrix_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete only if all solver-guidance modes are measured.
++      - overwrite_solver_guidance_ready: principle: true only if no-hint, forced-hint, and overwrite-capable modes are all compared under solver authority.
++      - solver_authoritative: principle: must be true; solver/verifier decides validity.
++      - fixture_count: principle: number of constraint instances measured.
++      - proposal_class_count: principle: number of hint/proposal classes measured.
++      - overwrite_rate: principle: fraction of hinted decisions overwritten by the solver.
++      - conflict_delta_vs_solver_only: principle: conflict-count delta for overwrite-capable mode versus solver-only baseline.
++      - forced_hint_harm_rate: principle: fraction of cases where forced hints worsen conflicts/search/validity.
++      - overwrite_hint_harm_rate: principle: fraction of cases where overwrite-capable hints worsen conflicts/search/validity.
++      - post_projection_validity_rate: principle: fraction of returned solutions passing deterministic verifier.
++      - fallback_completeness_rate: principle: fraction of cases where fallback solver still returns the correct answer when hints fail.
++      - harmful_hint_classes: principle: list of hint classes that harmed performance or validity.
++      - unsafe_false_accepts: principle: count of invalid solutions accepted as valid.
++      - tests_run: principle: list of commands run or no-code-change explanation.
++      - honest_verdict: principle: one-line result summary.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5371-v489-pbit-boundary-exchange-schedule
++    milestone: "2026.07.489"
++    title: "p-bit boundary-exchange schedule diagnostic"
++    priority: medium
++    track: solver-energy
++    deliverable: "results/experiment_5371_pbit_boundary_exchange_schedule_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 45
++    estimated_wall_time_min: 45
++    prior_failures:
++      - experiment_id: exp5359-v488-pbit-schedule-diagnostic
++        verdict: "complete: pbit_schedule_signal_ready=true"
++        addressed_by: "This extends the CPU-only p-bit schedule diagnostic with boundary-exchange timing-ratio simulation from the million-p-bit FPGA paper, not a repeated partial-deactivation/inertia sweep."
++        retire_if_same_verdict: true
++      - experiment_id: exp5361-v488-hardware-continuity-workload
++        verdict: "complete: hardware_speedup_claim=false"
++        addressed_by: "This remains CPU simulation-only and explicitly avoids a board speedup claim."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5359 produced a clean CPU p-bit schedule signal and showed some schedule classes harm misleading instances. Recent million-p-bit work highlights boundary-bit exchange and communication-to-p-bit timing ratio as the next diagnostic. This is not a hardware speedup task.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/results/experiment_5359_pbit_schedule_diagnostic_v488.json
++      - {project_root}/research-references.md
++      - {project_root}/python/carnot/
++      - {project_root}/tests/python/
++
++      TASK:
++      Add or exercise a CPU simulation-only p-bit boundary-exchange schedule diagnostic. Measure how communication cadence affects convergence, conflicts, and false accepts.
++
++      CONCRETE STEPS:
++      1. Reuse the Exp5359 p-bit schedule fixture if available.
++      2. Add a boundary-exchange abstraction with at least three communication-to-update ratios.
++      3. Compare monolithic baseline, stale-boundary exchange, and frequent-boundary exchange.
++      4. Report energy monotonicity violations, convergence, class-specific harm, and false accepts.
++      5. Do not claim hardware speedup.
++      6. Add focused tests if source code changes are required.
++      7. Write {project_root}/results/experiment_5371_pbit_boundary_exchange_schedule_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete only if CPU boundary-exchange schedule rows are measured.
++      - boundary_exchange_schedule_ready: principle: true only if timing ratios and baseline comparison are present.
++      - simulation_only: principle: must be true.
++      - hardware_speedup_claim: principle: must be false.
++      - fixture_count: principle: number of Ising/constraint instances measured.
++      - eta_values: principle: communication-to-p-bit update ratios tested.
++      - eta_threshold_estimate: principle: best estimated threshold or honest null if not identifiable.
++      - convergence_delta_vs_monolithic: principle: convergence delta compared with monolithic CPU baseline.
++      - conflict_delta_vs_monolithic: principle: conflict delta compared with monolithic CPU baseline.
++      - energy_monotonicity_violation_count: principle: count of energy monotonicity violations.
++      - misleading_class_harm_rate: principle: harm rate on known misleading classes.
++      - false_accept_count: principle: invalid solutions accepted as valid.
++      - tests_run: principle: list of commands run or no-code-change explanation.
++      - honest_verdict: principle: one-line signal/null verdict.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5372-v489-token-feature-precondition-gate
++    milestone: "2026.07.489"
++    title: "Token/internal-feature continuation precondition gate"
++    priority: medium
++    track: internal-energy
++    deliverable: "results/experiment_5372_token_feature_precondition_gate_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 35
++    estimated_wall_time_min: 30
++    prior_failures:
++      - experiment_id: exp5353-v488-tokenprob-feature-audit-corrigendum
++        verdict: "flagged_adversarial: TAUTOLOGY, DURATION_TOO_SHORT"
++        addressed_by: "This is a precondition/retirement gate over the flagged artifacts, not a new token-energy signal claim."
++        retire_if_same_verdict: true
++      - experiment_id: exp5354-v488-arithmetic-carry-token-energy
++        verdict: "blocked: carry_token_energy_signal_ready=false"
++        addressed_by: "The task decides what backend features and methodology duration are required before any future carry-energy rerun."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Exp5353 produced some token-probability rows but was adversarially flagged. Exp5354 found no carry-token energy margin and was also flagged. Recent FLaG and thermodynamic-signature papers require latent/internal evidence that the current text-only rows may not expose.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json
++      - {project_root}/results/experiment_5354_arithmetic_carry_token_energy_v488.json
++      - {project_root}/research-references.md
++      - {project_root}/python/carnot/
++      - {project_root}/tests/python/
++
++      TASK:
++      Produce a precondition gate for any future token/internal-energy work. Do not claim a new energy signal. Decide which features are actually available, which claims are forbidden, and whether the carry-token lane should be retired until logits/hidden states/attention are available.
++
++      CONCRETE STEPS:
++      1. Read the flagged .488 artifacts and extract the exact missing/tautological fields.
++      2. Audit current local runtime feature availability for per-token logprob, logits, hidden states, attention, timing, and completion split without running a costly live SOTA job unless existing receipts are insufficient.
++      3. Define minimum preconditions for future internal-energy claims, including methodology duration and non-tautological negative/positive controls.
++      4. If only text/logprob rows are available, recommend a bounded continuation or retirement without overclaiming.
++      5. Add focused tests only if code changes are required.
++      6. Write {project_root}/results/experiment_5372_token_feature_precondition_gate_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete only if the precondition gate is written from actual artifact/runtime evidence.
++      - token_feature_gate_ready: principle: true only if feature availability and no-go decisions are explicit.
++      - tokenprob_rows_available: principle: whether reliable per-token logprob rows are available.
++      - logits_available: principle: whether logits are available from the current local runtime path.
++      - hidden_states_available: principle: whether hidden states are available from the current local runtime path.
++      - attention_available: principle: whether attention tensors are available from the current local runtime path.
++      - completion_split_available: principle: whether prompt/completion token separation is available.
++      - methodology_min_duration_s: principle: minimum duration required for any future live signal claim.
++      - future_signal_allowed: principle: boolean; false if only tautological/text-only evidence exists.
++      - carry_token_energy_continue: principle: boolean continuation recommendation for the arithmetic carry lane.
++      - retire_recommendation: principle: boolean indicating whether the lane should be retired until new backend features exist.
++      - forbidden_claims: principle: list of claims not supported by the available features.
++      - unsafe_false_accepts: principle: count of invalid energy claims accepted by this gate; should be zero.
++      - tests_run: principle: list of commands run or no-code-change explanation.
++      - honest_verdict: principle: one-line continuation or retirement recommendation.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5373-v489-arc-salience-re86-levelup
++    milestone: "2026.07.489"
++    title: "ARC live-path salience repair and re86 +1 deeper level-up attempt"
++    priority: high
++    track: arc
++    deliverable: "results/experiment_5373_arc_salience_re86_levelup_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 60
++    prior_failures:
++      - experiment_id: exp5360-v488-arc-perception-salience-levelup-attempt
++        verdict: "complete: no_new_level_banked_re86_residual_bounded_budget_no_levelup"
++        addressed_by: "This attempt targets the concrete .488 error classes: status-bar salience deprioritization, frame-diff ground-truth validation, and button-like blob ranking in the live path."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Every milestone needs at least one ARC live-path level-up slot. Exp5360 honestly failed to bank re86 L3 and identified salience errors: flat salience large blob/status bar can precede button-like blob, frame_diff_score was not ground-truth validated before probing, and status-bar color requires salience deprioritization.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/CLAUDE.md
++      - {project_root}/ops/arc_solve_registry.yaml
++      - {project_root}/results/experiment_5360_arc_perception_salience_levelup_attempt_v488.json
++      - {project_root}/python/carnot/
++      - {project_root}/scripts/arc_levelup_guarantee_lint.py
++      - {project_root}/scripts/arc_loop_solve.py
++
++      TASK:
++      Improve the live ARC agent's salience/perception path and attempt to bank one deeper level, preferably re86 L3 if the registry still shows only two reproduced levels for re86. This must be live_agent_self_discovery, not outer-loop reverse engineering.
++
++      CONCRETE STEPS:
++      1. Registry precheck: read ops/arc_solve_registry.yaml. If re86 L3 is already banked, choose another live-path target with exactly the same no-duplicate discipline and record why.
++      2. Implement the smallest live-path salience repair: status-bar/large-flat-blob deprioritization, button-like blob ranking, and frame-diff ground-truth validation before committing probes.
++      3. Do not read hidden game source, do not run exhaustive offline ground-truth BFS as the credited path, and do not build a hand per-game adapter.
++      4. Run the live ARC solve path with bounded budget. The success target is offline_reproduced=true with reproduced_levels>=1 for a newly banked deeper level from live attempts.
++      5. If no level is banked, write an honest null with error classes and traces.
++      6. Write {project_root}/results/experiment_5373_arc_salience_re86_levelup_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete or honest_null; never claim a solve without registry-compatible evidence.
++      - solve_provenance: principle: must be live_agent_self_discovery for credited solves.
++      - registry_precheck_done: principle: must be true.
++      - target_game: principle: target game id after registry precheck.
++      - target_level_before: principle: reproduced level count before the attempt.
++      - attempted_level: principle: level attempted for +1 deeper progress.
++      - salience_repair_live_reachable: principle: true only if the repair is in the live agent path.
++      - status_bar_deprioritization_enabled: principle: whether the repair addresses the .488 status-bar error class.
++      - frame_diff_ground_truth_validated: principle: whether frame-diff salience is validated before committing probes.
++      - button_like_blob_rank_delta: principle: measured ranking change for button-like blobs if available.
++      - offline_reproduced: principle: true only when a new level is banked by the accepted registry/evidence path; include this exact field for ARC lint.
++      - reproduced_levels: principle: number of newly reproduced levels; success requires reproduced_levels>=1.
++      - new_level_banked: principle: true only if the registry-compatible evidence banks a level not already present before this task.
++      - registry_total_before: principle: total reproduced levels before the attempt.
++      - registry_total_after: principle: total reproduced levels after the attempt.
++      - live_attempt_count: principle: number of live attempts made.
++      - perception_error_classes: principle: residual perception/salience errors observed.
++      - no_outer_loop_re: principle: must be true for credited solve.
++      - no_duplicate_solve: principle: must be true.
++      - honest_verdict: principle: one-line banked/no-bank verdict.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5374-v489-hardware-continuity-receipts
++    milestone: "2026.07.489"
++    title: "Hardware continuity receipts for KV260, PolarFire, and GateMate"
++    priority: medium
++    track: hardware
++    deliverable: "results/experiment_5374_hardware_continuity_receipts_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 45
++    estimated_wall_time_min: 45
++    prior_failures:
++      - experiment_id: exp5361-v488-hardware-continuity-workload
++        verdict: "complete: PolarFire workload validated, KV260 ssh unreachable, GateMate physical/JTAG blocked, hardware_speedup_claim=false"
++        addressed_by: "This is the required next continuity receipt with fresh reachability checks and no repeated host-SD or unchanged blocked-loop mechanism."
++        retire_if_same_verdict: true
++      - experiment_id: exp5284-sota-offload-cpu-only-path
++        verdict: "retired_cpu_only_offload_path"
++        addressed_by: "This hardware task does not create SOTA inference speedup claims and records board receipts only."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      Hardware work remains continuity-only. Exp5361 got a PolarFire receipt, KV260 was unreachable by SSH, GateMate remained physically/JTAG blocked, and no speedup was claimed. KV260 evidence must use SSH reachability, not host block devices.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/research-hardware-wishlist.md
++      - {project_root}/results/experiment_5361_hardware_continuity_workload_v488.json
++      - {project_root}/CLAUDE.md
++      - {project_root}/scripts/
++      - {project_root}/ops/status.md
++
++      TASK:
++      Produce fresh board-continuity receipts for KV260, PolarFire, and GateMate where reachable. Do not claim speedup.
++
++      CONCRETE STEPS:
++      0. PRECONDITIONS: for KV260 use ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'. Do not use host block-device paths as evidence. For GateMate, perform only current detect/toolchain checks if the physical/JTAG path is available. For PolarFire, use the established workload receipt if reachable.
++      1. Record the exact commands, exit codes, and short outputs or hashes.
++      2. If a board is unreachable or blocked, write the blocker honestly and stop that board lane.
++      3. Do not run destructive flashing or long hardware loops.
++      4. Do not claim hardware speedup unless authenticated baseline timing, board timing, workload hash, and repeatability exist. This task is expected to leave hardware_speedup_claim=false.
++      5. Write {project_root}/results/experiment_5374_hardware_continuity_receipts_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete if fresh reachability/receipt attempts are recorded.
++      - hardware_speedup_claim: principle: must be false unless full authenticated timing evidence unexpectedly exists.
++      - kv260_checked_via_ssh: principle: true only if SSH reachability command was attempted.
++      - kv260_status: principle: reachable, unreachable, or skipped with reason.
++      - polarfire_status: principle: reachable/workload_receipt, unreachable, or skipped with reason.
++      - polarfire_workload_hash: principle: output hash if workload receipt ran, else null with reason.
++      - gatemate_status: principle: detected, blocked_physical_or_jtag, unreachable, or skipped with reason.
++      - commands_run: principle: list of board commands with exit codes and redacted concise output.
++      - no_host_mmcblk_kv260_evidence: principle: must be true.
++      - no_destructive_flash: principle: must be true.
++      - repeatability_evidence_present: principle: whether authenticated repeat timing exists.
++      - honest_verdict: principle: one-line continuity summary.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
++
++  - id: exp5375-v489-capstone
++    milestone: "2026.07.489"
++    title: "Capstone synthesis for .489 grammar, self-learning, solver, ARC, and hardware gates"
++    priority: critical
++    track: synthesis
++    deliverable: "results/experiment_5375_capstone_v489.json"
++    agent_type: codex
++    model: gpt-5.5
++    max_turns: 50
++    estimated_wall_time_min: 45
++    requires:
++      - exp5363-v489-transition-and-archive
++      - exp5364-v489-sota-source-delta
++      - exp5365-v489-grammar-budget-protocol-preflight
++      - exp5366-v489-live-grammar-budgeted-sota-protocol
++      - exp5367-v489-constraint-tax-tool-action-panel-v2
++      - exp5368-v489-budget-curated-memory-governance
++      - exp5369-v489-budgeted-continuous-self-learning-scaleup
++      - exp5370-v489-overwrite-solver-guidance-matrix
++      - exp5371-v489-pbit-boundary-exchange-schedule
++      - exp5372-v489-token-feature-precondition-gate
++      - exp5373-v489-arc-salience-re86-levelup
++      - exp5374-v489-hardware-continuity-receipts
++    prior_failures:
++      - experiment_id: exp5362-v488-capstone
++        verdict: "complete: mixed gates, structured_protocol_clean=false, constraint_tax_panel_ready=false, arc_new_level_banked=false"
++        addressed_by: "This capstone summarizes the new .489 gates after grammar-budget, budget-curated self-learning, overwrite guidance, ARC repair, and hardware continuity tasks."
++        retire_if_same_verdict: true
++      - experiment_id: exp5348-v487-capstone
++        verdict: "complete: runtime_clean=true, structured_output_protocol_ready=false, self_learning_scaleup_ready=false"
++        addressed_by: "The .489 capstone is two milestones later and evaluates repaired .488 lanes plus new budget/overwrite gates."
++        retire_if_same_verdict: true
++    prompt: |
++      CONTEXT:
++      This is the capstone for milestone 2026.07.489. It should synthesize all prior .489 artifacts and decide which lanes are ready, blocked, retired, or should continue.
++
++      EXISTING CODE TO READ FIRST:
++      - {project_root}/research-roadmap-next.yaml
++      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
++      - {project_root}/results/experiment_5363_transition_v489.json
++      - {project_root}/results/experiment_5364_sota_source_delta_v489.json
++      - {project_root}/results/experiment_5365_grammar_budget_protocol_preflight_v489.json
++      - {project_root}/results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json
++      - {project_root}/results/experiment_5367_constraint_tax_tool_action_panel_v2_v489.json
++      - {project_root}/results/experiment_5368_budget_curated_memory_governance_v489.json
++      - {project_root}/results/experiment_5369_budgeted_continuous_self_learning_scaleup_v489.json
++      - {project_root}/results/experiment_5370_overwrite_solver_guidance_matrix_v489.json
++      - {project_root}/results/experiment_5371_pbit_boundary_exchange_schedule_v489.json
++      - {project_root}/results/experiment_5372_token_feature_precondition_gate_v489.json
++      - {project_root}/results/experiment_5373_arc_salience_re86_levelup_v489.json
++      - {project_root}/results/experiment_5374_hardware_continuity_receipts_v489.json
++
++      TASK:
++      Write the milestone capstone artifact. Be strict: do not mark a downstream lane ready if its gate was skipped, blocked, or supplied only text-only/tautological evidence.
++
++      CONCRETE STEPS:
++      1. Read every available .489 artifact. If an artifact is missing, record it as missing and do not infer success.
++      2. Summarize phase outcomes: grammar/structured SOTA, constraint tax, budget-curated self-learning, solver guidance, p-bit boundary exchange, token/internal-feature gate, ARC, and hardware.
++      3. Identify which gates are ready for the next milestone and which lanes should be retired, narrowed, or blocked on prerequisites.
++      4. Preserve the no-go rules: no external text-scorer reopening, no CPU-only SOTA headline, no duplicate/offline ARC solve, no hardware speedup without authenticated evidence.
++      5. Write {project_root}/results/experiment_5375_capstone_v489.json.
++
++      REQUIRED ARTIFACT FIELDS:
++      - status: principle: complete if the capstone reads available artifacts and records missing ones honestly.
++      - milestone: principle: must equal 2026.07.489.
++      - artifacts_expected: principle: ordered list of expected .489 artifact paths.
++      - artifacts_found: principle: ordered list of found .489 artifact paths.
++      - artifacts_missing: principle: ordered list of missing .489 artifact paths.
++      - grammar_budget_protocol_ready: principle: copied from Exp5365 or false if missing.
++      - structured_protocol_clean: principle: copied from Exp5366 or false if missing/skipped.
++      - constraint_tax_panel_ready: principle: copied from Exp5367 or false if missing/skipped.
++      - budget_curated_memory_ready: principle: copied from Exp5368 or false if missing.
++      - continuous_self_learning_budget_scaleup_ready: principle: copied from Exp5369 or false if missing/skipped.
++      - overwrite_solver_guidance_ready: principle: copied from Exp5370 or false if missing.
++      - boundary_exchange_schedule_ready: principle: copied from Exp5371 or false if missing.
++      - token_feature_gate_ready: principle: copied from Exp5372 or false if missing.
++      - future_token_signal_allowed: principle: copied from Exp5372 future_signal_allowed or false if missing.
++      - arc_new_level_banked: principle: copied from Exp5373 new_level_banked or false if missing.
++      - hardware_speedup_claim: principle: copied from Exp5374 and expected false.
++      - continuous_self_learning_requirement_satisfied: principle: true only if the milestone self-learning slot ran and reported no_weight_mutation=true.
++      - next_milestone_recommendations: principle: prioritized list of next actions based on real gates.
++      - retired_or_blocked_lanes: principle: list of lanes that should not be retried without new prerequisites.
++      - honest_verdict: principle: one-line capstone summary.
++
++      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index 70012f9f3c..69d52690ec 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,14 @@
+     0.6748974323272705
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757108
++  "gradient_stability_ratio": 0.9999999989757108,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

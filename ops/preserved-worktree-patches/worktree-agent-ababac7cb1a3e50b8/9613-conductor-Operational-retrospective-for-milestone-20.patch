@@ -1,0 +1,102 @@
+From a0cf949e99baa1b16cb939869bbe8c2777fb29da Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 00:38:17 -0400
+Subject: [PATCH 09613/11362] [conductor] Operational retrospective for
+ milestone 2026.08.564
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_08_564.json | 55 ++++++++++++++++++++++
+ 3 files changed, 63 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_564.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 2cc430f378..f1654a4665 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6269,3 +6269,10 @@ The critical path for milestone .250:
+ - theme: synthesis-only evidence work completed while fallback timing limited operational diagnosis
+ - key result: honest operational limitation -- no compute-bound task existed for GPU or parallel-runner analysis, and the reconstructed timing did not expose task-phase costs
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.564
++
++- exp_range: no data available this milestone
++- theme: brief synthesis-only closeout exposed a timing-provenance gap without an accelerator bottleneck
++- key result: no compute-bound work ran, so idle GPUs were correct and no concurrent-model runner requirement arose
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 830b4f5726..6b0da82368 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -17315,3 +17315,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
+ - 2026-08-23: GateMate post-receipt changed-state continuity closure (⚠️ Blocked) — honest_verdict=blocked_missing_new_physical_receipt: no operator-authored dated GateMate physical-state receipt newer than Exp6325 exists; zero hardware commands run and Exp3866 remains excluded; results/experiment_6525_gatemate_changed_state_continuity.json
+ - 2026-08-23: Independent V564 evidence capstone and next-state decision (⚠️ Research Finding) — honest_verdict=complete_partial_v564_evidence_graph: row-supported structural, router, CSL, and adaptive validation claims coexist with blocked ARC and GateMate lineages; results/experiment_6526_v564_independent_capstone.json
+ - 2026-08-23: Independent V564 evidence capstone and next-state decision (⚠️ Research Finding) — honest_verdict=complete_partial_v564_evidence_graph: row-supported structural, router, CSL, and adaptive validation claims coexist with blocked ARC and GateMate lineages; results/experiment_6526_v564_independent_capstone.json
++- 2026-08-23: Operational retrospective for 2026.08.564: 14 synthesis-only experiments completed in 0.6 reconstructed minutes, with no compute-bound work. GPU efficiency and concurrent-model runner behavior have no data available this milestone. Disk-mtime fallback after the live git-log path found no commits limits timing diagnosis; capture monotonic per-task phase timings and task-window dispatch telemetry next. Estimated savings: 0% because the supplied data has no measured counterfactual. Artifact: results/operational_retro_2026_08_564.json.
+diff --git a/results/operational_retro_2026_08_564.json b/results/operational_retro_2026_08_564.json
+new file mode 100644
+index 0000000000..31d310da33
+--- /dev/null
++++ b/results/operational_retro_2026_08_564.json
+@@ -0,0 +1,55 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.564",
++  "generated_at": "2026-08-23T04:35:09Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0.6,
++  "experiments_completed": 14,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [
++    {
++      "experiment": "V564 terminal evidence handoff and retired-lineage contract",
++      "duration_minutes": 0.16,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Execution-time literature delta for adaptive validation and exact guidance",
++      "duration_minutes": 0.16,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Bounded exact branch-counterfactual pilot with transactional shards",
++      "duration_minutes": 0.12,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Crash-safe shard journal and atomic artifact finalization",
++      "duration_minutes": 0.06,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Chronological refinement-valid conflict self-learning comparison",
++      "duration_minutes": 0.05,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 14 synthesis-only experiments in 0.6 minutes. No compute-bound experiments ran, so the GPU snapshot cannot support a compute-task utilization or DualGPURunner finding.",
++  "bottlenecks_identified": [
++    "No runtime bottleneck is established. Timing used disk-mtime reconstruction because the live git-log path found no commits, which prevents task-phase attribution."
++  ],
++  "improvements_suggested": [
++    "Record monotonic start, phase, and finish timestamps in each experiment artifact so future retrospectives can use live timings instead of disk-mtime reconstruction.",
++    "Persist task classification and model-concurrency metadata with each timing record so compute-bound status and parallel-model eligibility are auditable.",
++    "When compute-bound work runs, attach task-window GPU samples and runner-dispatch metadata to its record so GPU efficiency and DualGPURunner engagement can be evaluated."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add monotonic per-task and per-phase timestamps to experiment artifacts.",
++    "Store task classification and model-concurrency metadata beside timing data.",
++    "Capture task-window GPU samples and runner-dispatch metadata for compute-bound work."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The evidence supports a process diagnosis, not a compute diagnosis: all 14 runs were synthesis-only and total wall time was 0.6 minutes. A nonzero savings estimate would not be supported, so estimated time savings is 0% until direct timing identifies avoidable work."
++}
+-- 
+2.55.0
+

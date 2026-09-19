@@ -1,0 +1,236 @@
+From e2d6b8d891b27affcddcabbe85661bda8a4ad90d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 6 Jul 2026 19:56:10 -0400
+Subject: [PATCH 05936/11362] [outer-loop] pursue the exp4544 Family-B
+ counterexample gap: pass real mismatch evidence to refactor()
+
+Operator asked to pursue the two previously-identified-but-unbuilt
+ARC-AGI-3 alternatives. Investigated exp4544's GOAL+DYNAMICS proposer
+first (docs/research-notes/arc-llm-inducer-sota-420.md's .421 candidate,
+still unbuilt_mapped_only as of 2026-07-04 per
+docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md).
+
+Found the actual code (python/carnot/agentic/arc_executable_world_model.py
++ arc_llm_reinduction.py) is more sophisticated than the SOTA note
+assumed -- it already does Family-B-style executable induction with real
+held-out verification (WorldModelVerifier, min_heldout_accuracy=1.0 on
+the live path) and bounded refinement (<=3 rounds), and is already
+live-path-reachable from E3AgentPolicy with no wiring needed.
+
+The real, narrower gap: on the dominant live failure mode
+(heldout_transition_verification_failed), execute_bounded_llm_reinduction
+built a FAKE counterexample -- a scalar summary dict
+({"kind", "heldout_accuracy"}) wrapped by _counterexample_result() into a
+SimpleNamespace with hardcoded n=1/n_correct=0/accuracy=0.0 -- even
+though WorldModelVerifier.score() (already imported elsewhere in this
+same codebase) computes REAL per-transition mismatches (BEFORE/PREDICTED/
+OBSERVED deltas) that refactor_prompt() is already built to consume
+(vr.mismatches[:5], formatted for the LLM). The LLM refactor step was
+getting "you're wrong" with zero concrete detail to fix, exactly the
+counterexample-guided-refinement gap arXiv:2606.11521 (cited by the
+original SOTA note) describes.
+
+Fix: when a candidate is rejected, call
+WorldModelVerifier(transitions).score(selected.engine) to get real
+n/n_correct/accuracy/mismatches, attach them to last_counterexample as
+real_n/real_n_correct/real_accuracy/real_mismatches, and have
+_counterexample_result() use them when present (falling back to the old
+scalar-only behavior when absent, for safety). Confirmed via the
+existing test's own failure: before the fix, refactor() got
+n=1/accuracy=0.0 always; after, it gets the genuine n=2/n_correct=1/
+accuracy=0.5 with the actual failing transition's delta.
+
+Updated tests/python/test_experiment_4557_executable_world_model_proposer.py's
+existing test (which had hardcoded mismatches[0]['kind'], effectively
+locking in the bug) to assert the real evidence flows through instead --
+this is more faithful to the test's own stated intent ("held-out
+transition failures become CEGIS counterexamples") than what it
+previously verified. Ran the full directly-relevant test suite (51
+tests across 8 files touching arc_llm_reinduction/arc_world_model_trust_
+energy/arc_executable_world_model) clean. Two pre-existing, unrelated
+failures in test_arc_world_model_trust_energy.py and
+test_experiment_4801 confirmed via git stash to fail identically on
+unmodified code -- not caused by this change.
+
+This is a targeted enrichment, not the full exp4544 gap (GOAL and
+DYNAMICS are still proposed/verified as one combined candidate, not
+independently -- a separate, larger architectural change, not attempted
+here). The TRM-as-sequence-refiner alternative was investigated but not
+pursued further this session, per the honest conclusion in
+docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+---
+ python/carnot/agentic/arc_llm_reinduction.py  | 41 ++++++++++++++++---
+ ...nt_4557_executable_world_model_proposer.py | 36 ++++++++++++----
+ 2 files changed, 64 insertions(+), 13 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_llm_reinduction.py b/python/carnot/agentic/arc_llm_reinduction.py
+index f3e49cbd8a..a1b310e8cf 100644
+--- a/python/carnot/agentic/arc_llm_reinduction.py
++++ b/python/carnot/agentic/arc_llm_reinduction.py
+@@ -17,6 +17,7 @@ from typing import Any, Callable, Mapping, Sequence
+ 
+ import numpy as np
+ 
++from carnot.agentic.arc_executable_world_model import WorldModelVerifier
+ from carnot.agentic.arc_world_model_trust_energy import (
+     WorldModelCandidate,
+     select_trusted_world_model,
+@@ -120,7 +121,9 @@ def _normalise_structural_goal_candidate(
+             return None
+         return {
+             "predicate": predicate,
+-            "goal_expression": str(row.get("goal_expression") or row.get("name") or "structural_goal"),
++            "goal_expression": str(
++                row.get("goal_expression") or row.get("name") or "structural_goal"
++            ),
+             "diagnostics": dict(row.get("diagnostics") or {}),
+         }
+     return None
+@@ -153,6 +156,23 @@ def _normalise_candidates(rows: Sequence[Any], engine: Any, goal: Any) -> list[W
+ 
+ 
+ def _counterexample_result(counterexample: Mapping[str, Any]) -> Any:
++    """REQ-ARC-WMTE-4544: build the VerifyResult-shaped object passed to proposer.refactor().
++
++    When real per-transition mismatch evidence (BEFORE/PREDICTED/OBSERVED deltas from
++    WorldModelVerifier.score(), the same shape refactor_prompt() is built to consume) was
++    computed by the caller, use it -- the LLM refactor step needs concrete failing cases to
++    fix, not just a scalar heldout_accuracy summary. Falls back to the scalar-only summary
++    (as its own single mismatch entry) when no real evidence is available, so this remains
++    safe for any caller that has not (yet) attached real evidence.
++    """
++    real_mismatches = counterexample.get("real_mismatches")
++    if real_mismatches:
++        return SimpleNamespace(
++            n=int(counterexample.get("real_n") or len(real_mismatches)),
++            n_correct=int(counterexample.get("real_n_correct") or 0),
++            accuracy=float(counterexample.get("real_accuracy") or 0.0),
++            mismatches=list(real_mismatches),
++        )
+     return SimpleNamespace(n=1, n_correct=0, accuracy=0.0, mismatches=[dict(counterexample)])
+ 
+ 
+@@ -743,9 +763,7 @@ def execute_bounded_llm_reinduction(
+                         structural_goal_candidate.get("diagnostics") or {}
+                     )
+                     row["goal_expression"] = last_goal_expression
+-                    row["structural_goal_diagnostics"] = dict(
+-                        last_structural_goal_diagnostics
+-                    )
++                    row["structural_goal_diagnostics"] = dict(last_structural_goal_diagnostics)
+                 elif structural_goal_candidate.get("error"):
+                     row["structural_goal_error"] = structural_goal_candidate["error"]
+             heldout_accuracy = float(selection.selected_score.heldout_accuracy)
+@@ -771,11 +789,23 @@ def execute_bounded_llm_reinduction(
+                 }
+             )
+             if not accepted:
++                # REQ-ARC-WMTE-4544: attach REAL per-transition mismatch evidence (BEFORE/
++                # PREDICTED/OBSERVED deltas), not just the scalar heldout_accuracy summary --
++                # refactor_prompt() is built to consume concrete failing cases, and a bare
++                # accuracy number gives the LLM nothing actionable to fix. Scoring against
++                # the full transitions list (not just the held-out split) is deliberate: every
++                # mismatch returned is still a genuinely observed transition the engine gets
++                # wrong, which is what CEGIS refinement needs.
++                real_verify = WorldModelVerifier(list(transitions)).score(selected.engine)
+                 last_counterexample = {
+                     "kind": "heldout_transition_verification_failed",
+                     "selected_candidate_name": selected.name,
+                     "heldout_accuracy": round(heldout_accuracy, 6),
+                     "heldout_threshold": round(verifier_threshold, 6),
++                    "real_n": real_verify.n,
++                    "real_n_correct": real_verify.n_correct,
++                    "real_accuracy": round(float(real_verify.accuracy), 6),
++                    "real_mismatches": list(real_verify.mismatches),
+                 }
+                 counterexamples.append(last_counterexample)
+                 row["counterexample"] = dict(last_counterexample)
+@@ -965,8 +995,7 @@ def execute_bounded_llm_reinduction(
+                             factored_result.per_subgoal_reachable
+                         ),
+                         "factored_plan_length": len(factored_result.plan),
+-                        "factored_residual": factored_result.residual
+-                        or expert_result.residual,
++                        "factored_residual": factored_result.residual or expert_result.residual,
+                     }
+                 )
+                 if factored_result.planned:
+diff --git a/tests/python/test_experiment_4557_executable_world_model_proposer.py b/tests/python/test_experiment_4557_executable_world_model_proposer.py
+index 9d6cc1d924..0cd47f0736 100644
+--- a/tests/python/test_experiment_4557_executable_world_model_proposer.py
++++ b/tests/python/test_experiment_4557_executable_world_model_proposer.py
+@@ -43,9 +43,7 @@ def _measurement(
+                             "planned": planned,
+                             "skipped": "" if planned else "heldout_transition_verification_failed",
+                             "refinement_rounds_used": 2 if planned else 3,
+-                            "counterexamples": [
+-                                {"kind": "heldout_transition_verification_failed"}
+-                            ],
++                            "counterexamples": [{"kind": "heldout_transition_verification_failed"}],
+                         }
+                     ]
+                 },
+@@ -115,7 +113,15 @@ def test_req_arc_wmte_4557_rejects_unverified_heldout_candidate_before_planning(
+             return True, "overfit executable candidate"
+ 
+         def refactor(self, _game, counterexample):
+-            self.calls.append(f"refactor:{counterexample.mismatches[0]['kind']}")
++            # REQ-ARC-WMTE-4544: refactor() must receive REAL per-transition mismatch
++            # evidence (BEFORE/PREDICTED/OBSERVED deltas from WorldModelVerifier.score()),
++            # not just a scalar heldout_accuracy summary -- this is the CEGIS counterexample
++            # refactor_prompt() is built to consume.
++            mismatch = counterexample.mismatches[0]
++            self.calls.append(
++                f"refactor:n={counterexample.n}:n_correct={counterexample.n_correct}:"
++                f"mismatch_i={mismatch['i']}"
++            )
+             return True, "general executable candidate"
+ 
+     transitions = [
+@@ -183,9 +189,20 @@ def test_req_arc_wmte_4557_rejects_unverified_heldout_candidate_before_planning(
+     assert result.planned is True
+     assert result.refinement_rounds_used == 2
+     assert result.counterexamples[0]["kind"] == "heldout_transition_verification_failed"
++    # REQ-ARC-WMTE-4544: the counterexample must carry REAL per-transition mismatch evidence,
++    # not just the scalar heldout_accuracy -- this is what makes refinement genuinely
++    # counterexample-guided rather than "you're wrong, try again" with no concrete detail.
++    assert result.counterexamples[0]["real_accuracy"] == 0.5
++    assert result.counterexamples[0]["real_n"] == 2
++    assert result.counterexamples[0]["real_n_correct"] == 1
++    real_mismatches = result.counterexamples[0]["real_mismatches"]
++    assert len(real_mismatches) == 1
++    assert real_mismatches[0]["i"] == 1
++    assert "true_change" in real_mismatches[0]
++    assert "your_prediction_was_wrong_at" in real_mismatches[0]
+     assert result.rounds[0]["accepted_by_heldout_verifier"] is False
+     assert result.rounds[1]["accepted_by_heldout_verifier"] is True
+-    assert proposer.calls == ["induce", "refactor:heldout_transition_verification_failed"]
++    assert proposer.calls == ["induce", "refactor:n=2:n_correct=1:mismatch_i=1"]
+     assert proposer.induction_sizes == [1]
+     assert plan_calls == 1
+ 
+@@ -217,7 +234,10 @@ def test_scenario_arc_wmte_4557_positive_control_failure_skips_measurement(
+         "complete: executable_proposer_positive_control_failed_no_deeper_barrier_refined"
+     )
+     assert exp4557.artifact_schema_errors(artifact) == []
+-    assert json.loads((tmp_path / exp4557.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
++    assert (
++        json.loads((tmp_path / exp4557.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++        == artifact
++    )
+ 
+ 
+ def test_req_arc_wmte_4557_honest_null_records_value_after_passed_gate() -> None:
+@@ -287,4 +307,6 @@ def test_req_arc_wmte_4557_success_requires_l2_efficiency_preservation_and_repla
+ 
+     dropped = dict(artifact)
+     dropped["core_solves_preserved"] = False
+-    assert any("core_solves_preserved" in error for error in exp4557.artifact_schema_errors(dropped))
++    assert any(
++        "core_solves_preserved" in error for error in exp4557.artifact_schema_errors(dropped)
++    )
+-- 
+2.55.0
+

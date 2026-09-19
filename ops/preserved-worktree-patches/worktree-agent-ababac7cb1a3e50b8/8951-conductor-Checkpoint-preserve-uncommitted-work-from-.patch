@@ -1,0 +1,43 @@
+From 54128a8278683310d6187b3b0ae3fae8d51484b6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 18:10:40 -0400
+Subject: [PATCH 08951/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 857c5f23a6..f052672bec 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-08-12T21:51:12Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 27, "phase": "iteration_start", "last_beat": "2026-08-12T22:10:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6458d43568..83486cd698 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15727,3 +15727,4 @@ code |
+ | 2026-08-12 21:28 UTC | Plan milestone 2026.08.547 | OK | 7 tasks proposed |
+ | 2026-08-12 21:30 UTC | Milestone 2026.08.547 activated | OK | 7 tasks queued |
+ | 2026-08-12 21:49 UTC | Bounded V546 terminal evidence handoff into V547 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-08-12 22:08 UTC | V547 dated source window and two-lane scope freeze | OK | 88 passed, 1 warning in 10.65s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a2452d2449..0f87b27441 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 920825, "iteration": 26, "phase": "iteration_start", "started_at": "2026-08-12T21:51:12Z"}
+\ No newline at end of file
++{"pid": 920825, "iteration": 27, "phase": "iteration_start", "started_at": "2026-08-12T22:10:37Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

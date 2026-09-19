@@ -1,0 +1,1483 @@
+From e498b1e026be69d87e23b4fd07e8bef44f488c59 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 8 Jul 2026 21:53:41 -0400
+Subject: [PATCH 06335/11362] [conductor] Execution-time 2025-2026 source delta
+ for .496
+
+Automated research step by research conductor.
+Task ID: exp5455-source-delta-v496
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  87 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_5455_source_delta_v496.py      | 687 ++++++++++++++++++
+ research-references.md                        |  19 +
+ .../experiment_5455_source_delta_v496.json    | 260 +++++++
+ .../test_experiment_5455_source_delta_v496.py | 358 +++++++++
+ 6 files changed, 1412 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_5455_source_delta_v496.py
+ create mode 100644 results/experiment_5455_source_delta_v496.json
+ create mode 100644 tests/python/test_experiment_5455_source_delta_v496.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 62b4eedd07..4914bb560a 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -38243,3 +38243,90 @@ does not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-5454 | Planned (`python/carnot/experiment_5454_transition_v496.py`, `results/experiment_5454_transition_v496.json`) | Planned (`tests/python/test_experiment_5454_transition_v496.py`) |
++
++### REQ-REPORT-5455: V496 Execution-Time Source Delta Refresh
++
++The Exp5455 workflow SHALL search arXiv and secondary sources for 2025-2026
++work relevant to Carnot after the `V496 Planner Refresh - 20260709` marker in
++`research-references.md`. It SHALL check arXiv for Energy-Based Models for
++verification/reasoning, neural constraint satisfaction, Ising applications in
++ML, hallucination mitigation, Kolmogorov-Arnold Networks, energy-guided
++decoding, hardware-accelerated sampling, and continual/online learning for
++constraint systems. It SHALL also check OpenReview, Extropic writing,
++Semantic Scholar routes for EBT `2507.02092` and ARM-EBM `2512.15605`,
++HuggingFace Papers, GitHub, Logical Intelligence public pages, local
++V490/V491/V492/V493/V494/V495/V496 duplicate history, and
++`ops/exclusion_manifest.yaml`.
++
++The workflow SHALL append a short `### V496 Execution Refresh - 20260709`
++block to `research-references.md` only when genuinely new, non-duplicate, and
++Carnot-actionable deltas exist. If the V496 planner marker is absent, it SHALL
++write a blocked artifact and SHALL NOT append references. If no new actionable
++delta exists, it SHALL write a complete no-op artifact and SHALL NOT append
++references. Duplicate, watch-only, or retired-scope items SHALL be recorded in
++the JSON receipt rather than re-added as reference churn.
++
++The workflow SHALL write
++`results/experiment_5455_source_delta_v496.json`, SHALL declare
++`inference_substrate="aggregation_from_upstream_artifacts"`, SHALL NOT modify
++`scripts/research_conductor.py`, SHALL NOT push, SHALL NOT modify
++`ops/changelog.md`, SHALL NOT modify `ops/status.md`, and SHALL NOT modify
++`_bmad/traceability.md`.
++
++The artifact SHALL include the required fields `sources_checked`,
++`new_references_added`, `duplicates_suppressed`, `retired_scopes_reopened`,
++`research_references_updated`, `prior_refresh_marker_found`,
++`inference_substrate`, and `honest_verdict`. It SHOULD also include
++`experiment_id`, `task_id`, `milestone`, `status`, `search_date`,
++`searched_source_details`, `watch_only_or_excluded`, `spec_refs`,
++`field_principles`, `methodology_duration_s`, `tests_run`,
++`research_conductor_modified`, `ops_docs_modified`, `traceability_modified`,
++and `roadmap_files_modified` so the source-delta receipt is reproducible
++without rerunning network search.
++
++Required field principles:
++
++- `sources_checked`: principle "reproducible literature sweep"
++- `new_references_added`: principle "current-knowledge delta"
++- `duplicates_suppressed`: principle "no reference churn"
++- `retired_scopes_reopened`: principle "exclusion-manifest compliance"
++- `research_references_updated`: principle "doc alignment"
++- `prior_refresh_marker_found`: principle "dedupe against planner work"
++- `inference_substrate`: principle "source aggregation only"
++- `honest_verdict`: principle "terminal status; start with complete: or blocked:"
++
++#### SCENARIO-REPORT-5455-APPEND-DELTAS: New Findings Append A V496 Refresh
++
++**Given** `research-references.md` contains the V496 planner marker
++**And** one or more searched sources are absent from the V490-V496 duplicate
++history and add bounded Carnot-local hooks
++**When** the Exp5455 workflow runs
++**Then** it appends exactly one `V496 Execution Refresh - 20260709` block,
++writes the source-delta JSON, records the required source families, lists the
++new references, records duplicate suppression and watch-only/excluded
++classifications, keeps `retired_scopes_reopened=false`, and starts
++`honest_verdict` with `complete:`.
++
++#### SCENARIO-REPORT-5455-NO-NEW-DELTA: No New Findings Leave References Unchanged
++
++**Given** `research-references.md` contains the V496 planner marker
++**And** every searched candidate is duplicate, watch-only, or excluded by the
++exclusion manifest
++**When** the Exp5455 workflow runs
++**Then** it writes a complete no-op artifact, sets
++`research_references_updated=false`, leaves `new_references_added=[]`, records
++the duplicate and watch-only decisions, and does not append a references block.
++
++#### SCENARIO-REPORT-5455-BLOCKED-MISSING-PLANNER: Missing Planner Marker Fails Closed
++
++**Given** `research-references.md` lacks `V496 Planner Refresh - 20260709`
++**When** the Exp5455 workflow runs
++**Then** it writes a terminal blocked artifact, sets
++`prior_refresh_marker_found=false`, sets `research_references_updated=false`,
++keeps `new_references_added=[]`, and does not append a references block.
++
++## Implementation Status (REQ-REPORT-5455)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5455 | Planned (`python/carnot/experiment_5455_source_delta_v496.py`, `results/experiment_5455_source_delta_v496.json`) | Planned (`tests/python/test_experiment_5455_source_delta_v496.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 8ebbc46b34..2eacd580b8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4421,
++  "experiments_checked": 4422,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5455_source_delta_v496.py b/python/carnot/experiment_5455_source_delta_v496.py
+new file mode 100644
+index 0000000000..e1aaad97f8
+--- /dev/null
++++ b/python/carnot/experiment_5455_source_delta_v496.py
+@@ -0,0 +1,687 @@
++"""Exp5455: execution-time source delta refresh for V496.
++
++Spec refs: REQ-REPORT-5455, SCENARIO-REPORT-5455-APPEND-DELTAS,
++SCENARIO-REPORT-5455-NO-NEW-DELTA,
++SCENARIO-REPORT-5455-BLOCKED-MISSING-PLANNER.
++
++This module turns a literature sweep into an auditable receipt. It promotes a
++source only when it adds a concrete Carnot-local experiment hook that is absent
++from the V496 planner block and nearby V490-V496 source-delta history. Sources
++that merely reinforce old ideas stay in duplicates, watch-only, or excluded
++lists, so the execution refresh does not reopen retired lanes or create
++reference churn.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT_ID = "experiment_5455_source_delta_v496"
++TASK_ID = "exp5455-source-delta-v496"
++MILESTONE = "2026.07.496"
++SEARCH_DATE = "20260709"
++RESULT_RELATIVE_PATH = Path("results/experiment_5455_source_delta_v496.json")
++REFERENCES_RELATIVE_PATH = Path("research-references.md")
++PLANNER_MARKER = "### V496 Planner Refresh - 20260709"
++REFRESH_HEADING = "### V496 Execution Refresh - 20260709"
++REFRESH_END_MARKER = "<!-- V496-EXECUTION-REFRESH-20260709-END -->"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++
++SPEC_REFS = [
++    "REQ-REPORT-5455",
++    "SCENARIO-REPORT-5455-APPEND-DELTAS",
++    "SCENARIO-REPORT-5455-NO-NEW-DELTA",
++    "SCENARIO-REPORT-5455-BLOCKED-MISSING-PLANNER",
++]
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "sources_checked": "reproducible literature sweep",
++    "new_references_added": "current-knowledge delta",
++    "duplicates_suppressed": "no reference churn",
++    "retired_scopes_reopened": "exclusion-manifest compliance",
++    "research_references_updated": "doc alignment",
++    "prior_refresh_marker_found": "dedupe against planner work",
++    "inference_substrate": "source aggregation only",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++}
++
++REQUIRED_SOURCE_FAMILIES = (
++    "arxiv",
++    "openreview",
++    "huggingface_papers",
++    "semantic_scholar",
++    "github",
++    "extropic_writing",
++    "logical_intelligence",
++    "local_v490_v496_duplicate_history",
++    "ops_exclusion_manifest",
++)
++
++REQUIRED_TOP_LEVEL_FIELDS = frozenset(
++    {
++        "experiment_id",
++        "task_id",
++        "milestone",
++        "status",
++        "search_date",
++        "sources_checked",
++        "new_actionable_findings_count",
++        "new_references_added",
++        "duplicates_suppressed",
++        "retired_scopes_reopened",
++        "research_references_updated",
++        "prior_refresh_marker_found",
++        "honest_verdict",
++        "inference_substrate",
++        "searched_source_details",
++        "watch_only_or_excluded",
++        "spec_refs",
++        "field_principles",
++        "methodology_duration_s",
++        "tests_run",
++        "no_deep_research_used",
++        "research_conductor_modified",
++        "ops_docs_modified",
++        "traceability_modified",
++        "roadmap_files_modified",
++    }
++)
++
++REQUIRED_REFERENCE_FIELDS = frozenset({"title", "url", "source_type", "carnot_hook"})
++ALLOWED_SOURCE_STATUSES = frozenset({"ok", "partial", "rate_limited", "challenge_blocked"})
++
++NEW_REFERENCES_ADDED: list[JsonDict] = [
++    {
++        "title": "Projectional Decoding: Towards Semantic-Aware LLM Generation",
++        "url": "https://arxiv.org/abs/2605.30054",
++        "source_type": "arXiv preprint / FSE 2026 IVR track paper",
++        "carnot_hook": (
++            "For Exp5459 and guided-decoding distortion guards, keep a partial "
++            "semantic artifact graph beside token text, attach uncertainty and "
++            "error nodes, and run incremental semantic validators before "
++            "accepting locally valid but semantically wrong continuations. Exact "
++            "final verifiers and solvers remain authority."
++        ),
++    },
++    {
++        "title": "Guiding Human Validation of LLM-Generated Code via Verifiable Literate Programming",
++        "url": "https://arxiv.org/abs/2607.02333",
++        "source_type": "arXiv preprint",
++        "carnot_hook": (
++            "For Exp5458 and AST/KB witness rows, add a doc-to-code trace-link "
++            "fixture where unambiguous semantic documentation yields API-usage "
++            "checks, formal-property checks, and suspicious documentation line "
++            "IDs. Treat human validation as optional annotation, not a headline "
++            "automation claim."
++        ),
++    },
++    {
++        "title": "Safe and Adaptive Cloud Healing: Verifying LLM-Generated Recovery Plans with a Neural-Symbolic World Model",
++        "url": "https://arxiv.org/abs/2607.01595",
++        "source_type": "arXiv preprint",
++        "carnot_hook": (
++            "For Exp5460 action/memory policy and tool-state validity, model "
++            "recovery or tool plans as semantic primitive sequences, simulate "
++            "feasibility in a deterministic world model before execution, and "
++            "log failed primitive or precondition IDs. Do not import the DRL "
++            "meta-prompt optimizer into V496."
++        ),
++    },
++    {
++        "title": "Beyond Perplexity: A Behavioral Evaluation Framework for Deployment-Memory Claims in LLM Test-Time Training",
++        "url": "https://arxiv.org/abs/2607.00368",
++        "source_type": "arXiv preprint",
++        "carnot_hook": (
++            "For Exp5460 and Exp5461 continuous self-learning, require a "
++            "behavioral memory evidence ladder: recall after support removal, "
++            "paraphrase robustness, locality, conflict handling, downstream "
++            "action use, and matched explicit-memory/no-memory baselines before "
++            "crediting online learning. Do not reopen LoRA or broad TTT fine-tuning."
++        ),
++    },
++]
++
++DUPLICATES_SUPPRESSED = [
++    "V496 planner sources: Chance-Constrained Inference, CoCoA, DAVinCI, OLIVIA, CL-Bench, LCAD, strict-constraint distortion, tractable locally constrained decoding, KAN PWA/MILP, STATIC trie decoding, million-p-bit sampling, governed evolving memory, and minimal-core repair were already added - https://arxiv.org/abs/2602.01637",
++    "AgentLTL trace verification was promoted in V491/V492 history and remains the deterministic procedural-compliance reference - https://arxiv.org/abs/2607.02599",
++    "LLM-as-a-Verifier was already suppressed because its public path depends on external scoring-token/logprob extraction and GRPO/RL feedback, not Carnot-local exact verifiers - https://arxiv.org/abs/2607.05391",
++    "Harnessing Code Agents for Automatic Software Verification remains watch-only until deterministic proof artifacts exist; it was already classified in the V492 source-delta artifact - https://arxiv.org/abs/2607.06341",
++    "Formal Disco is not promoted because open-ended synthetic verified-program generation and iterative fine-tuning are outside V496 execution scope - https://arxiv.org/abs/2607.04631",
++    "HCRC predicate-gated execution reinforces verifier-before-state-transition design but lacks a stronger local hook than existing verifier-potential, AgentLTL, and row-independent metric work - https://arxiv.org/abs/2607.04562",
++    "Benchmarking Continual Agent Memory for Online Learning, Transfer, and Forgetting already appears in local memory sweeps and is not re-added - https://openreview.net/forum?id=MSXbrNExax",
++    "DCCD, structural-equivalence grammar-constrained decoding, STATIC, llguidance, and constrained-decoding lists already cover syntax/prefix control boundaries - https://arxiv.org/abs/2603.03305",
++    "PIM inertia, million-p-bit, p-dit, p-bit guided CDCL, p-dit QAP, and Potts mean-field sources already cover hardware sampling context; no hardware speedup claim is reopened - https://arxiv.org/abs/2606.25313",
++    "EBT, ARM-EBM, NRGPT, EBT-Policy, and HuggingFace/OpenReview EBT surfaces remain architecture context already covered by V490-V496 history - https://arxiv.org/abs/2507.02092",
++    "Automating Quality Assessment with NLP of LLM-Generated Defeaters is watch-only because it relies on learned meta-classifiers over subjective expert labels rather than exact verifier authority - https://arxiv.org/abs/2607.06039",
++    "Extropic TSU/XTR-0/THRML writing remains non-local hardware context without authenticated Carnot TSU execution - https://extropic.ai/writing",
++    "Logical Intelligence Aleph/Kona public pages remain non-local architecture context without reproducible local Aleph or Kona baselines - https://logicalintelligence.com/",
++]
++
++WATCH_ONLY_OR_EXCLUDED: list[JsonDict] = [
++    {
++        "title": "LLM-as-a-Verifier logit-expectation scorer and RL feedback",
++        "url": "https://arxiv.org/abs/2607.05391",
++        "classification": "excluded",
++        "reason": (
++            "The paper is relevant verification context, but its public scoring "
++            "path depends on scoring-token logit expectations, repeated LLM "
++            "evaluation, and SAC/GRPO feedback. External generated-text/logprob "
++            "scorers and broad GRPO/RL lanes stay closed for V496."
++        ),
++    },
++    {
++        "title": "PASE DRL meta-prompt optimizer",
++        "url": "https://arxiv.org/abs/2607.01595",
++        "classification": "excluded",
++        "reason": (
++            "The semantic primitive and deterministic world-model verification "
++            "pattern is promoted, but DRL prompt optimization is excluded from "
++            "V496. Exact simulation, tool-state checks, and final verifiers keep "
++            "exact final authority."
++        ),
++    },
++    {
++        "title": "Beyond Perplexity LoRA and broad test-time training path",
++        "url": "https://arxiv.org/abs/2607.00368",
++        "classification": "excluded",
++        "reason": (
++            "The behavioral evidence ladder is promoted for CSL evaluation, but "
++            "LoRA and broad TTT/fine-tuning remain outside this source-delta task."
++        ),
++    },
++    {
++        "title": "Extropic TSU, XTR-0, and THRML writing",
++        "url": "https://extropic.ai/writing",
++        "classification": "watch-only",
++        "reason": (
++            "Extropic remains EBM sampler architecture context, but Carnot has no "
++            "local TSU SDK, board receipt path, or authenticated TSU execution. "
++            "Keep it as non-local TSU context only."
++        ),
++    },
++    {
++        "title": "Logical Intelligence Aleph and Kona public pages",
++        "url": "https://logicalintelligence.com/",
++        "classification": "watch-only",
++        "reason": (
++            "Aleph and Kona reinforce formal-verifier and EBM reasoning direction, "
++            "but no reproducible local Kona or Aleph baseline exists for Carnot "
++            "comparison."
++        ),
++    },
++    {
++        "title": "OpenReview EBT, ARM-EBM, and continual-memory surfaces",
++        "url": "https://openreview.net/",
++        "classification": "watch-only",
++        "reason": (
++            "OpenReview searches surfaced EBT, Benchmarking Continual Agent "
++            "Memory, LCAD, and constrained-decoding material, but browser "
++            "challenges blocked full forum reads and no surfaced item replaces "
++            "Carnot's local exact solver or verifier authority."
++        ),
++    },
++    {
++        "title": "external generated-text/logprob scorers, token/internal features, duplicate ARC lanes, and unsupported hardware speedups",
++        "url": "ops/exclusion_manifest.yaml",
++        "classification": "excluded",
++        "reason": (
++            "external generated-text scorers, token/internal-feature claims without "
++            "backend receipts, duplicate ARC lanes, broad GRPO/fine-tuning or "
++            "LoRA reruns, non-local TSU/Kona/Aleph execution claims, and hardware "
++            "speedup claims without matched board timing remain closed."
++        ),
++    },
++]
++
++SEARCHED_SOURCE_DETAILS: JsonDict = {
++    "arxiv": {
++        "status": "ok",
++        "queries": [
++            "2025-2026 energy-based models verification reasoning LLM constraints",
++            "2025-2026 neural constraint satisfaction LLM verifier constraint systems",
++            "2025-2026 Ising applications in ML and p-bit or p-dit sampling",
++            "2025-2026 hallucination mitigation and energy-guided decoding",
++            "2025-2026 Kolmogorov-Arnold Networks verification constraints",
++            "2025-2026 hardware-accelerated sampling p-bit Ising",
++            "2025-2026 continual online learning for constraint systems",
++            "site:arxiv.org/abs/2607 constraint LLM verification model checking",
++        ],
++        "promoted": [
++            "2605.30054 Projectional Decoding",
++            "2607.02333 Verifiable Literate Programming",
++            "2607.01595 PASE neural-symbolic world-model verification",
++            "2607.00368 behavioral memory-claim evaluation",
++        ],
++        "not_promoted": [
++            "2607.05391 LLM-as-a-Verifier uses scoring-token logits and RL feedback.",
++            "2607.02599 AgentLTL is duplicate-covered in V491/V492.",
++            "2607.06341 code-agent verification was already watch-only in Exp5403.",
++            "2607.04631 Formal Disco depends on synthetic-data generation and fine-tuning scope.",
++            "2607.04562 HCRC duplicates predicate-gated verification architecture context.",
++            "2607.06039 defeater assessment uses learned meta-classifiers and subjective labels.",
++            "2606.25313 million-p-bit and 2506.00269 p-dit hardware references are duplicate-covered.",
++            "2602.06737 KAN PWA/MILP verification was already indexed repeatedly.",
++        ],
++    },
++    "openreview": {
++        "status": "challenge_blocked",
++        "queries": [
++            "OpenReview Energy-Based Transformers 2507.02092",
++            "OpenReview ARM-EBM 2512.15605",
++            "OpenReview neural constraint satisfaction certified correctness",
++            "OpenReview Benchmarking Continual Agent Memory MSXbrNExax",
++            "OpenReview LCAD rbl8fHjLuF",
++        ],
++        "result": (
++            "OpenReview forum pages redirected to browser verification challenges. "
++            "Search metadata surfaced EBT, Benchmarking Continual Agent Memory, "
++            "LCAD, constrained decoding, and neural-CSP material, all already "
++            "duplicate-covered or watch-only for V496."
++        ),
++    },
++    "huggingface_papers": {
++        "status": "ok",
++        "queries": [
++            "HuggingFace Papers EBT 2507.02092",
++            "HuggingFace Papers ARM-EBM 2512.15605",
++            "HuggingFace Papers Projectional Decoding 2605.30054",
++            "HuggingFace Papers Verifiable Literate Programming 2607.02333",
++            "HuggingFace Papers LLM-as-a-Verifier 2607.05391",
++        ],
++        "result": (
++            "HuggingFace Papers confirmed EBT metadata and community discussion as "
++            "duplicate context. Searches for the newly promoted V496 execution "
++            "items primarily routed to arXiv or generic paper search surfaces; no "
++            "HuggingFace page displaced the primary arXiv hooks or local runtime "
++            "requirements."
++        ),
++    },
++    "semantic_scholar": {
++        "status": "partial",
++        "queries": [
++            "Semantic Scholar public route for EBT 2507.02092",
++            "Semantic Scholar public route for ARM-EBM 2512.15605",
++            "Semantic Scholar links on arXiv pages for 2605.30054, 2607.02333, 2607.01595, and 2607.00368",
++        ],
++        "result": (
++            "Public routes remained citation/metadata context and did not surface "
++            "a stronger Carnot-local V496 dependency than the source papers. EBT "
++            "and ARM-EBM stay duplicate-covered architecture context."
++        ),
++    },
++    "github": {
++        "status": "partial",
++        "queries": [
++            "GitHub Projectional Decoding 2605.30054",
++            "GitHub Verifiable Literate Programming 2607.02333",
++            "GitHub PASE neural-symbolic world model 2607.01595",
++            "GitHub Beyond Perplexity deployment memory claims 2607.00368",
++            "GitHub EBT 2507.02092 and ARM-EBM 2512.15605",
++            "GitHub Extropic THRML and constrained-decoding watch lists",
++        ],
++        "watch_only_links": [
++            "https://github.com/alexiglad/EBT",
++            "https://github.com/extropic-ai/thrml",
++            "https://github.com/FrontisAI/Awesome-Self-Improving-Agents",
++        ],
++        "result": (
++            "GitHub search did not reveal official implementations for the four "
++            "promoted source deltas. Existing EBT, THRML, constrained-decoding, "
++            "and self-improving-agent lists remain watch-only implementation "
++            "context and do not replace Carnot exact verifiers or receipts."
++        ),
++    },
++    "extropic_writing": {
++        "status": "ok",
++        "queries": [
++            "Extropic writing page",
++            "Extropic TSU 101",
++            "Extropic inside X0 and XTR-0",
++            "Extropic THRML repository",
++        ],
++        "result": (
++            "Extropic still provides TSU and thermodynamic-computing context, but "
++            "no local Carnot TSU SDK, execution receipt, or speedup basis was found."
++        ),
++    },
++    "logical_intelligence": {
++        "status": "ok",
++        "queries": [
++            "Logical Intelligence homepage",
++            "Logical Intelligence automatic formal verification for code generation",
++            "Logical Intelligence Aleph leading benchmarks",
++            "Logical Intelligence Kona energy-based model",
++        ],
++        "result": (
++            "Logical Intelligence pages reinforce formal verification plus EBM "
++            "reasoning, but remain non-local architecture context with no "
++            "reproducible Aleph/Kona baseline for Carnot."
++        ),
++    },
++    "local_v490_v496_duplicate_history": {
++        "status": "ok",
++        "queries": [
++            "research-references.md V490 Planner and Execution Refresh",
++            "research-references.md V491 Planner and Execution Refresh",
++            "research-references.md V492 Planner and Execution Refresh",
++            "research-references.md V493 Planner and Execution Refresh",
++            "research-references.md V494 Planner and Execution Refresh",
++            "research-references.md V495 Planner and Execution Refresh",
++            "research-references.md V496 Planner Refresh",
++            "repo-wide search for promoted arXiv ids and titles",
++        ],
++        "result": (
++            "Exact searches found no local entries for Projectional Decoding "
++            "2605.30054, Verifiable Literate Programming 2607.02333, PASE "
++            "2607.01595, or Beyond Perplexity 2607.00368. AgentLTL, LLM-as-a-"
++            "Verifier, Benchmarking Continual Agent Memory, hardware p-bit/p-dit "
++            "sources, EBT, ARM-EBM, DCCD, STATIC, and KAN verification material "
++            "were suppressed as duplicate or watch-only."
++        ),
++    },
++    "ops_exclusion_manifest": {
++        "status": "ok",
++        "queries": [
++            "external generated-text/logprob scorer lanes",
++            "broad fine-tuning, GRPO, RL, TTT, and LoRA reruns",
++            "CPU-only SOTA headline/offload reruns",
++            "token/internal feature claims without backend receipts",
++            "non-local TSU/Kona/Aleph execution claims",
++            "duplicate ARC solve or first-contact exploration lanes",
++            "hardware speedup claims without matched board timing",
++        ],
++        "result": (
++            "Retired and non-local lanes stayed closed. New deltas are constrained "
++            "to semantic graph fixtures, doc/code trace-link witnesses, deterministic "
++            "world-model feasibility checks, and behavioral CSL evidence accounting."
++        ),
++    },
++}
++
++
++def _verified_url(value: str) -> bool:
++    return value.startswith("https://") or value == "ops/exclusion_manifest.yaml"
++
++
++def build_artifact(
++    *,
++    new_references_added: Sequence[Mapping[str, Any]] = NEW_REFERENCES_ADDED,
++    methodology_duration_s: float = 0.0,
++    tests_run: Sequence[str] = (),
++    research_references_updated: bool | None = None,
++    prior_refresh_marker_found: bool = True,
++) -> JsonDict:
++    """Build the Exp5455 source-delta artifact.
++
++    The receipt is intentionally about source aggregation. It records what was
++    checked and how dedupe decisions were made, but it does not claim model
++    quality, verifier accuracy, citation influence, hardware speedup, or a
++    reopened retired scope.
++    """
++
++    references = [dict(row) for row in new_references_added] if prior_refresh_marker_found else []
++    count = len(references)
++    updated = (count > 0) if research_references_updated is None else research_references_updated
++    if not prior_refresh_marker_found:
++        status = "blocked"
++        updated = False
++        verdict = "blocked: V496 planner refresh marker missing; references unchanged."
++    else:
++        status = "complete"
++        verdict_detail = (
++            f"{count} new actionable V496 execution-time source deltas appended; retired scopes remained closed"
++            if count
++            else "no new actionable V496 execution-time source deltas; references unchanged"
++        )
++        verdict = f"complete: {verdict_detail}."
++
++    artifact: JsonDict = {
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "milestone": MILESTONE,
++        "status": status,
++        "search_date": SEARCH_DATE,
++        "sources_checked": list(REQUIRED_SOURCE_FAMILIES),
++        "new_actionable_findings_count": count,
++        "new_references_added": references,
++        "duplicates_suppressed": list(DUPLICATES_SUPPRESSED),
++        "retired_scopes_reopened": False,
++        "research_references_updated": updated,
++        "prior_refresh_marker_found": prior_refresh_marker_found,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "searched_source_details": dict(SEARCHED_SOURCE_DETAILS),
++        "watch_only_or_excluded": [dict(row) for row in WATCH_ONLY_OR_EXCLUDED],
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "methodology_duration_s": round(float(methodology_duration_s), 6),
++        "tests_run": list(tests_run)
++        or ["tests/python/test_experiment_5455_source_delta_v496.py"],
++        "no_deep_research_used": True,
++        "research_conductor_modified": False,
++        "ops_docs_modified": False,
++        "traceability_modified": False,
++        "roadmap_files_modified": False,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _validate_sources(sources: Any, details: Any) -> None:
++    if not isinstance(sources, list) or not set(REQUIRED_SOURCE_FAMILIES).issubset(sources):
++        raise ValueError("sources_checked must include every required source family")
++    if len(sources) != len(set(sources)):
++        raise ValueError("sources_checked must not contain duplicate source families")
++    if not isinstance(details, Mapping):
++        raise ValueError("searched_source_details must be a mapping")
++    for family in REQUIRED_SOURCE_FAMILIES:
++        family_entry = details.get(family)
++        family_status = family_entry.get("status") if isinstance(family_entry, Mapping) else None
++        if family_status not in ALLOWED_SOURCE_STATUSES:
++            raise ValueError(f"searched_source_details {family} must record a valid status")
++
++
++def _validate_references(references: Any) -> None:
++    if not isinstance(references, list):
++        raise ValueError("new_references_added must be a list")
++    for row in references:
++        if not isinstance(row, Mapping) or set(row) != REQUIRED_REFERENCE_FIELDS:
++            raise ValueError(
++                f"new_references_added rows must include exactly {sorted(REQUIRED_REFERENCE_FIELDS)}"
++            )
++        if not _verified_url(str(row["url"])):
++            raise ValueError("new_references_added rows must use a verified URL")
++        if not str(row["carnot_hook"]).strip():
++            raise ValueError("new_references_added rows must include a Carnot hook")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = REQUIRED_TOP_LEVEL_FIELDS.difference(artifact)
++    if missing:
++        raise ValueError(f"missing required fields: {sorted(missing)}")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match REQ-REPORT-5455")
++    if artifact["experiment_id"] != EXPERIMENT_ID:
++        raise ValueError("experiment_id must match Exp5455")
++    if artifact["task_id"] != TASK_ID:
++        raise ValueError("task_id must match exp5455")
++    if artifact["milestone"] != MILESTONE:
++        raise ValueError("milestone must match 2026.07.496")
++    if artifact["status"] not in {"complete", "blocked"}:
++        raise ValueError("status must be complete or blocked")
++    if artifact["search_date"] != SEARCH_DATE:
++        raise ValueError("search_date must equal 20260709")
++
++    references = artifact["new_references_added"]
++    _validate_references(references)
++    count = artifact["new_actionable_findings_count"]
++    if not isinstance(count, int) or count != len(references):
++        raise ValueError("references count must equal new_references_added length")
++    _validate_sources(artifact["sources_checked"], artifact["searched_source_details"])
++
++    duplicates = artifact["duplicates_suppressed"]
++    if not isinstance(duplicates, list) or not duplicates:
++        raise ValueError("duplicates_suppressed must be a non-empty list")
++    if len(duplicates) != len(set(duplicates)):
++        raise ValueError("duplicates_suppressed must not contain duplicate suppressed entries")
++    if artifact["retired_scopes_reopened"] is not False:
++        raise ValueError("retired_scopes_reopened must remain false")
++
++    prior_marker = artifact["prior_refresh_marker_found"]
++    if artifact["status"] == "complete" and prior_marker is not True:
++        raise ValueError("prior_refresh_marker_found must be true for complete artifacts")
++    if artifact["status"] == "blocked" and prior_marker is not False:
++        raise ValueError("prior_refresh_marker_found must be false for blocked artifacts")
++
++    updated = artifact["research_references_updated"]
++    if prior_marker is False:
++        if updated is not False or references:
++            raise ValueError("research_references_updated must be false when planner marker is missing")
++    elif updated is not (count > 0):
++        raise ValueError("research_references_updated must match whether references were added")
++
++    verdict = artifact["honest_verdict"]
++    if (
++        not isinstance(verdict, str)
++        or "\n" in verdict
++        or not verdict.startswith(("complete:", "blocked:"))
++    ):
++        raise ValueError("honest_verdict must be a one-line complete: or blocked: summary")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    watch_only = artifact["watch_only_or_excluded"]
++    if not isinstance(watch_only, list) or not watch_only:
++        raise ValueError("watch_only_or_excluded must be a non-empty list")
++    duration = artifact["methodology_duration_s"]
++    if not isinstance(duration, int | float) or duration < 0:
++        raise ValueError("methodology_duration_s must be a non-negative number")
++    if artifact["no_deep_research_used"] is not True:
++        raise ValueError("deep-research must not be used")
++    if artifact["research_conductor_modified"] is not False:
++        raise ValueError("research_conductor.py must not be modified")
++    if artifact["ops_docs_modified"] is not False:
++        raise ValueError("ops docs must not be modified")
++    if artifact["traceability_modified"] is not False:
++        raise ValueError("traceability must not be modified")
++    if artifact["roadmap_files_modified"] is not False:
++        raise ValueError("roadmap files must not be modified")
++    if not artifact["tests_run"]:
++        raise ValueError("tests_run must record at least one test")
++
++
++def _render_reference(row: Mapping[str, Any]) -> str:
++    return f"- **{row['title']}** ({row['url']}): {row['carnot_hook']}"
++
++
++def render_refresh_section(artifact: Mapping[str, Any]) -> str:
++    validate_artifact(artifact)
++    references = artifact["new_references_added"]
++    if artifact["status"] != "complete" or not references:
++        return ""
++    lines = [
++        REFRESH_HEADING,
++        "",
++        (
++            "Execution-time sweep after the `.496` planner refresh checked arXiv, "
++            "OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and "
++            "ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, "
++            "V490/V491/V492/V493/V494/V495/V496 duplicate history, and the exclusion "
++            "manifest. The findings below were absent from those blocks and add "
++            "Carnot-local hooks without changing the active roadmap."
++        ),
++        "",
++        "### New actionable deltas",
++        *(_render_reference(row) for row in references),
++        "",
++        "### Execution impact",
++        (
++            "- **Plan impact:** No active `.496` roadmap edit is required. The deltas "
++            "sharpen Exp5458/Exp5459 semantic graph, doc/code witness, and "
++            "distortion-guard receipts; Exp5460/Exp5461 tool-state and CSL "
++            "behavioral-memory evidence; and later guided-decoding acceptance "
++            "checks without expanding scope."
++        ),
++        (
++            "- **Duplicates suppressed:** V496 planner sources, AgentLTL, "
++            "LLM-as-a-Verifier, Harnessing Code Agents, Formal Disco, HCRC, "
++            "Benchmarking Continual Agent Memory, DCCD, STATIC, llguidance, "
++            "million-p-bit, p-dit, p-bit guided CDCL, KAN PWA/MILP, EBT, ARM-EBM, "
++            "NRGPT, LCAD, and prior Extropic/Logical Intelligence context were "
++            "already covered or stayed watch-only and are not re-added."
++        ),
++        (
++            "- **Retired scope:** No retired scope was reopened. LLM-as-a-Verifier "
++            "logit scorers, PASE DRL optimization, LoRA/TTT fine-tuning, broad "
++            "GRPO/RL reruns, external generated-text/logprob scorers, token/internal "
++            "feature claims without backend receipts, non-local TSU/Kona/Aleph "
++            "execution claims, duplicate ARC lanes, and hardware speedup claims "
++            "without matched board timing remain closed."
++        ),
++        (
++            "- **Watch-only/excluded:** Extropic TSU/XTR-0/THRML writing, Logical "
++            "Intelligence Aleph/Kona pages, OpenReview EBT/LCAD/continual-memory "
++            "surfaces, Formal Disco fine-tuning, HCRC, defeater-quality "
++            "meta-classifiers, and Semantic Scholar citation-route material were "
++            "checked but not promoted as executable `.496` dependencies."
++        ),
++        "",
++        REFRESH_END_MARKER,
++        "",
++    ]
++    return "\n".join(lines)
++
++
++def append_refresh_section(references_text: str, artifact: Mapping[str, Any]) -> str:
++    if REFRESH_END_MARKER in references_text or REFRESH_HEADING in references_text:
++        return references_text
++    section = render_refresh_section(artifact)
++    if not section:
++        return references_text
++    separator = "\n\n" if references_text and not references_text.endswith("\n\n") else ""
++    return f"{references_text}{separator}{section}"
++
++
++def write_outputs(
++    *,
++    root: Path = REPO_ROOT,
++    references_path: Path | None = None,
++    result_path: Path | None = None,
++    methodology_duration_s: float = 0.0,
++    tests_run: Sequence[str] = (),
++) -> JsonDict:
++    references = references_path or root / REFERENCES_RELATIVE_PATH
++    result = result_path or root / RESULT_RELATIVE_PATH
++
++    references_text = references.read_text(encoding="utf-8")
++    prior_marker = PLANNER_MARKER in references_text
++    artifact = build_artifact(
++        methodology_duration_s=methodology_duration_s,
++        tests_run=tests_run,
++        prior_refresh_marker_found=prior_marker,
++    )
++
++    updated_references = append_refresh_section(references_text, artifact)
++    if updated_references != references_text:
++        references.write_text(updated_references, encoding="utf-8")
++
++    result.parent.mkdir(parents=True, exist_ok=True)
++    result.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main() -> None:  # pragma: no cover
++    write_outputs(
++        methodology_duration_s=0.0,
++        tests_run=["tests/python/test_experiment_5455_source_delta_v496.py"],
++    )
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/research-references.md b/research-references.md
+index 1593d0aec0..3d9486dde7 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -28540,3 +28540,22 @@ additional executable hooks for `.496`.
+   retired exploration-signal or off-path solve lane.
+ 
+ <!-- V496-PLANNER-REFRESH-20260709-END -->
++
++
++### V496 Execution Refresh - 20260709
++
++Execution-time sweep after the `.496` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar routes for EBT and ARM-EBM, GitHub, Extropic writing, Logical Intelligence public pages, V490/V491/V492/V493/V494/V495/V496 duplicate history, and the exclusion manifest. The findings below were absent from those blocks and add Carnot-local hooks without changing the active roadmap.
++
++### New actionable deltas
++- **Projectional Decoding: Towards Semantic-Aware LLM Generation** (https://arxiv.org/abs/2605.30054): For Exp5459 and guided-decoding distortion guards, keep a partial semantic artifact graph beside token text, attach uncertainty and error nodes, and run incremental semantic validators before accepting locally valid but semantically wrong continuations. Exact final verifiers and solvers remain authority.
++- **Guiding Human Validation of LLM-Generated Code via Verifiable Literate Programming** (https://arxiv.org/abs/2607.02333): For Exp5458 and AST/KB witness rows, add a doc-to-code trace-link fixture where unambiguous semantic documentation yields API-usage checks, formal-property checks, and suspicious documentation line IDs. Treat human validation as optional annotation, not a headline automation claim.
++- **Safe and Adaptive Cloud Healing: Verifying LLM-Generated Recovery Plans with a Neural-Symbolic World Model** (https://arxiv.org/abs/2607.01595): For Exp5460 action/memory policy and tool-state validity, model recovery or tool plans as semantic primitive sequences, simulate feasibility in a deterministic world model before execution, and log failed primitive or precondition IDs. Do not import the DRL meta-prompt optimizer into V496.
++- **Beyond Perplexity: A Behavioral Evaluation Framework for Deployment-Memory Claims in LLM Test-Time Training** (https://arxiv.org/abs/2607.00368): For Exp5460 and Exp5461 continuous self-learning, require a behavioral memory evidence ladder: recall after support removal, paraphrase robustness, locality, conflict handling, downstream action use, and matched explicit-memory/no-memory baselines before crediting online learning. Do not reopen LoRA or broad TTT fine-tuning.
++
++### Execution impact
++- **Plan impact:** No active `.496` roadmap edit is required. The deltas sharpen Exp5458/Exp5459 semantic graph, doc/code witness, and distortion-guard receipts; Exp5460/Exp5461 tool-state and CSL behavioral-memory evidence; and later guided-decoding acceptance checks without expanding scope.
++- **Duplicates suppressed:** V496 planner sources, AgentLTL, LLM-as-a-Verifier, Harnessing Code Agents, Formal Disco, HCRC, Benchmarking Continual Agent Memory, DCCD, STATIC, llguidance, million-p-bit, p-dit, p-bit guided CDCL, KAN PWA/MILP, EBT, ARM-EBM, NRGPT, LCAD, and prior Extropic/Logical Intelligence context were already covered or stayed watch-only and are not re-added.
++- **Retired scope:** No retired scope was reopened. LLM-as-a-Verifier logit scorers, PASE DRL optimization, LoRA/TTT fine-tuning, broad GRPO/RL reruns, external generated-text/logprob scorers, token/internal feature claims without backend receipts, non-local TSU/Kona/Aleph execution claims, duplicate ARC lanes, and hardware speedup claims without matched board timing remain closed.
++- **Watch-only/excluded:** Extropic TSU/XTR-0/THRML writing, Logical Intelligence Aleph/Kona pages, OpenReview EBT/LCAD/continual-memory surfaces, Formal Disco fine-tuning, HCRC, defeater-quality meta-classifiers, and Semantic Scholar citation-route material were checked but not promoted as executable `.496` dependencies.
++
++<!-- V496-EXECUTION-REFRESH-20260709-END -->
+diff --git a/results/experiment_5455_source_delta_v496.json b/results/experiment_5455_source_delta_v496.json
+new file mode 100644
+index 0000000000..4451623242
+--- /dev/null
++++ b/results/experiment_5455_source_delta_v496.json
+@@ -0,0 +1,260 @@
++{
++  "duplicates_suppressed": [
++    "V496 planner sources: Chance-Constrained Inference, CoCoA, DAVinCI, OLIVIA, CL-Bench, LCAD, strict-constraint distortion, tractable locally constrained decoding, KAN PWA/MILP, STATIC trie decoding, million-p-bit sampling, governed evolving memory, and minimal-core repair were already added - https://arxiv.org/abs/2602.01637",
++    "AgentLTL trace verification was promoted in V491/V492 history and remains the deterministic procedural-compliance reference - https://arxiv.org/abs/2607.02599",
++    "LLM-as-a-Verifier was already suppressed because its public path depends on external scoring-token/logprob extraction and GRPO/RL feedback, not Carnot-local exact verifiers - https://arxiv.org/abs/2607.05391",
++    "Harnessing Code Agents for Automatic Software Verification remains watch-only until deterministic proof artifacts exist; it was already classified in the V492 source-delta artifact - https://arxiv.org/abs/2607.06341",
++    "Formal Disco is not promoted because open-ended synthetic verified-program generation and iterative fine-tuning are outside V496 execution scope - https://arxiv.org/abs/2607.04631",
++    "HCRC predicate-gated execution reinforces verifier-before-state-transition design but lacks a stronger local hook than existing verifier-potential, AgentLTL, and row-independent metric work - https://arxiv.org/abs/2607.04562",
++    "Benchmarking Continual Agent Memory for Online Learning, Transfer, and Forgetting already appears in local memory sweeps and is not re-added - https://openreview.net/forum?id=MSXbrNExax",
++    "DCCD, structural-equivalence grammar-constrained decoding, STATIC, llguidance, and constrained-decoding lists already cover syntax/prefix control boundaries - https://arxiv.org/abs/2603.03305",
++    "PIM inertia, million-p-bit, p-dit, p-bit guided CDCL, p-dit QAP, and Potts mean-field sources already cover hardware sampling context; no hardware speedup claim is reopened - https://arxiv.org/abs/2606.25313",
++    "EBT, ARM-EBM, NRGPT, EBT-Policy, and HuggingFace/OpenReview EBT surfaces remain architecture context already covered by V490-V496 history - https://arxiv.org/abs/2507.02092",
++    "Automating Quality Assessment with NLP of LLM-Generated Defeaters is watch-only because it relies on learned meta-classifiers over subjective expert labels rather than exact verifier authority - https://arxiv.org/abs/2607.06039",
++    "Extropic TSU/XTR-0/THRML writing remains non-local hardware context without authenticated Carnot TSU execution - https://extropic.ai/writing",
++    "Logical Intelligence Aleph/Kona public pages remain non-local architecture context without reproducible local Aleph or Kona baselines - https://logicalintelligence.com/"
++  ],
++  "experiment_id": "experiment_5455_source_delta_v496",
++  "field_principles": {
++    "duplicates_suppressed": "no reference churn",
++    "honest_verdict": "terminal status; start with complete: or blocked:",
++    "inference_substrate": "source aggregation only",
++    "new_references_added": "current-knowledge delta",
++    "prior_refresh_marker_found": "dedupe against planner work",
++    "research_references_updated": "doc alignment",
++    "retired_scopes_reopened": "exclusion-manifest compliance",
++    "sources_checked": "reproducible literature sweep"
++  },
++  "honest_verdict": "complete: 4 new actionable V496 execution-time source deltas appended; retired scopes remained closed.",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "methodology_duration_s": 0.0,
++  "milestone": "2026.07.496",
++  "new_actionable_findings_count": 4,
++  "new_references_added": [
++    {
++      "carnot_hook": "For Exp5459 and guided-decoding distortion guards, keep a partial semantic artifact graph beside token text, attach uncertainty and error nodes, and run incremental semantic validators before accepting locally valid but semantically wrong continuations. Exact final verifiers and solvers remain authority.",
++      "source_type": "arXiv preprint / FSE 2026 IVR track paper",
++      "title": "Projectional Decoding: Towards Semantic-Aware LLM Generation",
++      "url": "https://arxiv.org/abs/2605.30054"
++    },
++    {
++      "carnot_hook": "For Exp5458 and AST/KB witness rows, add a doc-to-code trace-link fixture where unambiguous semantic documentation yields API-usage checks, formal-property checks, and suspicious documentation line IDs. Treat human validation as optional annotation, not a headline automation claim.",
++      "source_type": "arXiv preprint",
++      "title": "Guiding Human Validation of LLM-Generated Code via Verifiable Literate Programming",
++      "url": "https://arxiv.org/abs/2607.02333"
++    },
++    {
++      "carnot_hook": "For Exp5460 action/memory policy and tool-state validity, model recovery or tool plans as semantic primitive sequences, simulate feasibility in a deterministic world model before execution, and log failed primitive or precondition IDs. Do not import the DRL meta-prompt optimizer into V496.",
++      "source_type": "arXiv preprint",
++      "title": "Safe and Adaptive Cloud Healing: Verifying LLM-Generated Recovery Plans with a Neural-Symbolic World Model",
++      "url": "https://arxiv.org/abs/2607.01595"
++    },
++    {
++      "carnot_hook": "For Exp5460 and Exp5461 continuous self-learning, require a behavioral memory evidence ladder: recall after support removal, paraphrase robustness, locality, conflict handling, downstream action use, and matched explicit-memory/no-memory baselines before crediting online learning. Do not reopen LoRA or broad TTT fine-tuning.",
++      "source_type": "arXiv preprint",
++      "title": "Beyond Perplexity: A Behavioral Evaluation Framework for Deployment-Memory Claims in LLM Test-Time Training",
++      "url": "https://arxiv.org/abs/2607.00368"
++    }
++  ],
++  "no_deep_research_used": true,
++  "ops_docs_modified": false,
++  "prior_refresh_marker_found": true,
++  "research_conductor_modified": false,
++  "research_references_updated": true,
++  "retired_scopes_reopened": false,
++  "roadmap_files_modified": false,
++  "search_date": "20260709",
++  "searched_source_details": {
++    "arxiv": {
++      "not_promoted": [
++        "2607.05391 LLM-as-a-Verifier uses scoring-token logits and RL feedback.",
++        "2607.02599 AgentLTL is duplicate-covered in V491/V492.",
++        "2607.06341 code-agent verification was already watch-only in Exp5403.",
++        "2607.04631 Formal Disco depends on synthetic-data generation and fine-tuning scope.",
++        "2607.04562 HCRC duplicates predicate-gated verification architecture context.",
++        "2607.06039 defeater assessment uses learned meta-classifiers and subjective labels.",
++        "2606.25313 million-p-bit and 2506.00269 p-dit hardware references are duplicate-covered.",
++        "2602.06737 KAN PWA/MILP verification was already indexed repeatedly."
++      ],
++      "promoted": [
++        "2605.30054 Projectional Decoding",
++        "2607.02333 Verifiable Literate Programming",
++        "2607.01595 PASE neural-symbolic world-model verification",
++        "2607.00368 behavioral memory-claim evaluation"
++      ],
++      "queries": [
++        "2025-2026 energy-based models verification reasoning LLM constraints",
++        "2025-2026 neural constraint satisfaction LLM verifier constraint systems",
++        "2025-2026 Ising applications in ML and p-bit or p-dit sampling",
++        "2025-2026 hallucination mitigation and energy-guided decoding",
++        "2025-2026 Kolmogorov-Arnold Networks verification constraints",
++        "2025-2026 hardware-accelerated sampling p-bit Ising",
++        "2025-2026 continual online learning for constraint systems",
++        "site:arxiv.org/abs/2607 constraint LLM verification model checking"
++      ],
++      "status": "ok"
++    },
++    "extropic_writing": {
++      "queries": [
++        "Extropic writing page",
++        "Extropic TSU 101",
++        "Extropic inside X0 and XTR-0",
++        "Extropic THRML repository"
++      ],
++      "result": "Extropic still provides TSU and thermodynamic-computing context, but no local Carnot TSU SDK, execution receipt, or speedup basis was found.",
++      "status": "ok"
++    },
++    "github": {
++      "queries": [
++        "GitHub Projectional Decoding 2605.30054",
++        "GitHub Verifiable Literate Programming 2607.02333",
++        "GitHub PASE neural-symbolic world model 2607.01595",
++        "GitHub Beyond Perplexity deployment memory claims 2607.00368",
++        "GitHub EBT 2507.02092 and ARM-EBM 2512.15605",
++        "GitHub Extropic THRML and constrained-decoding watch lists"
++      ],
++      "result": "GitHub search did not reveal official implementations for the four promoted source deltas. Existing EBT, THRML, constrained-decoding, and self-improving-agent lists remain watch-only implementation context and do not replace Carnot exact verifiers or receipts.",
++      "status": "partial",
++      "watch_only_links": [
++        "https://github.com/alexiglad/EBT",
++        "https://github.com/extropic-ai/thrml",
++        "https://github.com/FrontisAI/Awesome-Self-Improving-Agents"
++      ]
++    },
++    "huggingface_papers": {
++      "queries": [
++        "HuggingFace Papers EBT 2507.02092",
++        "HuggingFace Papers ARM-EBM 2512.15605",
++        "HuggingFace Papers Projectional Decoding 2605.30054",
++        "HuggingFace Papers Verifiable Literate Programming 2607.02333",
++        "HuggingFace Papers LLM-as-a-Verifier 2607.05391"
++      ],
++      "result": "HuggingFace Papers confirmed EBT metadata and community discussion as duplicate context. Searches for the newly promoted V496 execution items primarily routed to arXiv or generic paper search surfaces; no HuggingFace page displaced the primary arXiv hooks or local runtime requirements.",
++      "status": "ok"
++    },
++    "local_v490_v496_duplicate_history": {
++      "queries": [
++        "research-references.md V490 Planner and Execution Refresh",
++        "research-references.md V491 Planner and Execution Refresh",
++        "research-references.md V492 Planner and Execution Refresh",
++        "research-references.md V493 Planner and Execution Refresh",
++        "research-references.md V494 Planner and Execution Refresh",
++        "research-references.md V495 Planner and Execution Refresh",
++        "research-references.md V496 Planner Refresh",
++        "repo-wide search for promoted arXiv ids and titles"
++      ],
++      "result": "Exact searches found no local entries for Projectional Decoding 2605.30054, Verifiable Literate Programming 2607.02333, PASE 2607.01595, or Beyond Perplexity 2607.00368. AgentLTL, LLM-as-a-Verifier, Benchmarking Continual Agent Memory, hardware p-bit/p-dit sources, EBT, ARM-EBM, DCCD, STATIC, and KAN verification material were suppressed as duplicate or watch-only.",
++      "status": "ok"
++    },
++    "logical_intelligence": {
++      "queries": [
++        "Logical Intelligence homepage",
++        "Logical Intelligence automatic formal verification for code generation",
++        "Logical Intelligence Aleph leading benchmarks",
++        "Logical Intelligence Kona energy-based model"
++      ],
++      "result": "Logical Intelligence pages reinforce formal verification plus EBM reasoning, but remain non-local architecture context with no reproducible Aleph/Kona baseline for Carnot.",
++      "status": "ok"
++    },
++    "openreview": {
++      "queries": [
++        "OpenReview Energy-Based Transformers 2507.02092",
++        "OpenReview ARM-EBM 2512.15605",
++        "OpenReview neural constraint satisfaction certified correctness",
++        "OpenReview Benchmarking Continual Agent Memory MSXbrNExax",
++        "OpenReview LCAD rbl8fHjLuF"
++      ],
++      "result": "OpenReview forum pages redirected to browser verification challenges. Search metadata surfaced EBT, Benchmarking Continual Agent Memory, LCAD, constrained decoding, and neural-CSP material, all already duplicate-covered or watch-only for V496.",
++      "status": "challenge_blocked"
++    },
++    "ops_exclusion_manifest": {
++      "queries": [
++        "external generated-text/logprob scorer lanes",
++        "broad fine-tuning, GRPO, RL, TTT, and LoRA reruns",
++        "CPU-only SOTA headline/offload reruns",
++        "token/internal feature claims without backend receipts",
++        "non-local TSU/Kona/Aleph execution claims",
++        "duplicate ARC solve or first-contact exploration lanes",
++        "hardware speedup claims without matched board timing"
++      ],
++      "result": "Retired and non-local lanes stayed closed. New deltas are constrained to semantic graph fixtures, doc/code trace-link witnesses, deterministic world-model feasibility checks, and behavioral CSL evidence accounting.",
++      "status": "ok"
++    },
++    "semantic_scholar": {
++      "queries": [
++        "Semantic Scholar public route for EBT 2507.02092",
++        "Semantic Scholar public route for ARM-EBM 2512.15605",
++        "Semantic Scholar links on arXiv pages for 2605.30054, 2607.02333, 2607.01595, and 2607.00368"
++      ],
++      "result": "Public routes remained citation/metadata context and did not surface a stronger Carnot-local V496 dependency than the source papers. EBT and ARM-EBM stay duplicate-covered architecture context.",
++      "status": "partial"
++    }
++  },
++  "sources_checked": [
++    "arxiv",
++    "openreview",
++    "huggingface_papers",
++    "semantic_scholar",
++    "github",
++    "extropic_writing",
++    "logical_intelligence",
++    "local_v490_v496_duplicate_history",
++    "ops_exclusion_manifest"
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5455",
++    "SCENARIO-REPORT-5455-APPEND-DELTAS",
++    "SCENARIO-REPORT-5455-NO-NEW-DELTA",
++    "SCENARIO-REPORT-5455-BLOCKED-MISSING-PLANNER"
++  ],
++  "status": "complete",
++  "task_id": "exp5455-source-delta-v496",
++  "tests_run": [
++    "tests/python/test_experiment_5455_source_delta_v496.py"
++  ],
++  "traceability_modified": false,
++  "watch_only_or_excluded": [
++    {
++      "classification": "excluded",
++      "reason": "The paper is relevant verification context, but its public scoring path depends on scoring-token logit expectations, repeated LLM evaluation, and SAC/GRPO feedback. External generated-text/logprob scorers and broad GRPO/RL lanes stay closed for V496.",
++      "title": "LLM-as-a-Verifier logit-expectation scorer and RL feedback",
++      "url": "https://arxiv.org/abs/2607.05391"
++    },
++    {
++      "classification": "excluded",
++      "reason": "The semantic primitive and deterministic world-model verification pattern is promoted, but DRL prompt optimization is excluded from V496. Exact simulation, tool-state checks, and final verifiers keep exact final authority.",
++      "title": "PASE DRL meta-prompt optimizer",
++      "url": "https://arxiv.org/abs/2607.01595"
++    },
++    {
++      "classification": "excluded",
++      "reason": "The behavioral evidence ladder is promoted for CSL evaluation, but LoRA and broad TTT/fine-tuning remain outside this source-delta task.",
++      "title": "Beyond Perplexity LoRA and broad test-time training path",
++      "url": "https://arxiv.org/abs/2607.00368"
++    },
++    {
++      "classification": "watch-only",
++      "reason": "Extropic remains EBM sampler architecture context, but Carnot has no local TSU SDK, board receipt path, or authenticated TSU execution. Keep it as non-local TSU context only.",
++      "title": "Extropic TSU, XTR-0, and THRML writing",
++      "url": "https://extropic.ai/writing"
++    },
++    {
++      "classification": "watch-only",
++      "reason": "Aleph and Kona reinforce formal-verifier and EBM reasoning direction, but no reproducible local Kona or Aleph baseline exists for Carnot comparison.",
++      "title": "Logical Intelligence Aleph and Kona public pages",
++      "url": "https://logicalintelligence.com/"
++    },
++    {
++      "classification": "watch-only",
++      "reason": "OpenReview searches surfaced EBT, Benchmarking Continual Agent Memory, LCAD, and constrained-decoding material, but browser challenges blocked full forum reads and no surfaced item replaces Carnot's local exact solver or verifier authority.",
++      "title": "OpenReview EBT, ARM-EBM, and continual-memory surfaces",
++      "url": "https://openreview.net/"
++    },
++    {
++      "classification": "excluded",
++      "reason": "external generated-text scorers, token/internal-feature claims without backend receipts, duplicate ARC lanes, broad GRPO/fine-tuning or LoRA reruns, non-local TSU/Kona/Aleph execution claims, and hardware speedup claims without matched board timing remain closed.",
++      "title": "external generated-text/logprob scorers, token/internal features, duplicate ARC lanes, and unsupported hardware speedups",
++      "url": "ops/exclusion_manifest.yaml"
++    }
++  ]
++}
+diff --git a/tests/python/test_experiment_5455_source_delta_v496.py b/tests/python/test_experiment_5455_source_delta_v496.py
+new file mode 100644
+index 0000000000..e965d03dd3
+--- /dev/null
++++ b/tests/python/test_experiment_5455_source_delta_v496.py
+@@ -0,0 +1,358 @@
++"""Tests for Exp5455 V496 execution-time source delta refresh.
++
++Spec refs: REQ-REPORT-5455, SCENARIO-REPORT-5455-APPEND-DELTAS,
++SCENARIO-REPORT-5455-NO-NEW-DELTA,
++SCENARIO-REPORT-5455-BLOCKED-MISSING-PLANNER.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5455_source_delta_v496 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++
++
++def test_req_report_5455_spec_declares_v496_source_delta_contract() -> None:
++    """REQ-REPORT-5455: OpenSpec anchors the V496 source-delta refresh."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[
++        spec.index("### REQ-REPORT-5455") : spec.index("## Implementation Status (REQ-REPORT-5455)")
++    ]
++    normalized = " ".join(section.split())
++
++    for marker in (
++        "REQ-REPORT-5455",
++        "SCENARIO-REPORT-5455-APPEND-DELTAS",
++        "SCENARIO-REPORT-5455-NO-NEW-DELTA",
++        "SCENARIO-REPORT-5455-BLOCKED-MISSING-PLANNER",
++        str(mod.RESULT_RELATIVE_PATH),
++        "arXiv",
++        "OpenReview",
++        "HuggingFace Papers",
++        "Semantic Scholar routes for EBT `2507.02092`",
++        "ARM-EBM `2512.15605`",
++        "GitHub",
++        "Extropic",
++        "Logical Intelligence",
++        "V490/V491/V492/V493/V494/V495/V496 duplicate history",
++        "ops/exclusion_manifest.yaml",
++        "scripts/research_conductor.py",
++        "ops/changelog.md",
++        "ops/status.md",
++        "_bmad/traceability.md",
++    ):
++        assert marker in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert f'principle "{principle}"' in normalized
++
++
++def test_build_artifact_records_required_fields_and_v496_deltas() -> None:
++    """REQ-REPORT-5455: artifact records source-verified actionable deltas."""
++
++    artifact = mod.build_artifact(
++        methodology_duration_s=73.5,
++        tests_run=["tests/python/test_experiment_5455_source_delta_v496.py"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
++    assert artifact["task_id"] == mod.TASK_ID
++    assert artifact["milestone"] == "2026.07.496"
++    assert artifact["status"] == "complete"
++    assert artifact["new_actionable_findings_count"] == len(mod.NEW_REFERENCES_ADDED)
++    assert artifact["new_references_added"] == mod.NEW_REFERENCES_ADDED
++    assert artifact["retired_scopes_reopened"] is False
++    assert artifact["retired_scopes_reopened"] is artifact["retired_scopes_reopened"] is False
++    assert artifact["research_references_updated"] is True
++    assert artifact["prior_refresh_marker_found"] is True
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert artifact["methodology_duration_s"] == 73.5
++    assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
++
++    assert set(mod.REQUIRED_SOURCE_FAMILIES).issubset(artifact["sources_checked"])
++    details = artifact["searched_source_details"]
++    assert details["arxiv"]["status"] == "ok"
++    assert details["openreview"]["status"] == "challenge_blocked"
++    assert details["huggingface_papers"]["status"] == "ok"
++    assert details["semantic_scholar"]["status"] == "partial"
++    assert details["github"]["status"] == "partial"
++    assert details["extropic_writing"]["status"] == "ok"
++    assert details["logical_intelligence"]["status"] == "ok"
++    assert "2507.02092" in details["semantic_scholar"]["queries"][0]
++
++    duplicate_text = " ".join(artifact["duplicates_suppressed"])
++    for already_covered in (
++        "V496 planner sources",
++        "Chance-Constrained Inference",
++        "CoCoA",
++        "DAVinCI",
++        "OLIVIA",
++        "CL-Bench",
++        "LCAD",
++        "AgentLTL",
++        "LLM-as-a-Verifier",
++        "million-p-bit",
++        "p-dit",
++        "EBT",
++        "ARM-EBM",
++    ):
++        assert already_covered in duplicate_text
++
++    titles = [row["title"] for row in artifact["new_references_added"]]
++    assert titles == [
++        "Projectional Decoding: Towards Semantic-Aware LLM Generation",
++        "Guiding Human Validation of LLM-Generated Code via Verifiable Literate Programming",
++        "Safe and Adaptive Cloud Healing: Verifying LLM-Generated Recovery Plans with a Neural-Symbolic World Model",
++        "Beyond Perplexity: A Behavioral Evaluation Framework for Deployment-Memory Claims in LLM Test-Time Training",
++    ]
++    assert artifact["new_references_added"][0]["url"] == "https://arxiv.org/abs/2605.30054"
++    assert "partial semantic artifact graph" in artifact["new_references_added"][0]["carnot_hook"]
++    assert artifact["new_references_added"][1]["url"] == "https://arxiv.org/abs/2607.02333"
++    assert "doc-to-code trace-link fixture" in artifact["new_references_added"][1]["carnot_hook"]
++    assert artifact["new_references_added"][2]["url"] == "https://arxiv.org/abs/2607.01595"
++    assert "deterministic world model" in artifact["new_references_added"][2]["carnot_hook"]
++    assert artifact["new_references_added"][3]["url"] == "https://arxiv.org/abs/2607.00368"
++    assert "behavioral memory evidence ladder" in artifact["new_references_added"][3]["carnot_hook"]
++
++    watch_text = " ".join(row["reason"] for row in artifact["watch_only_or_excluded"])
++    assert "external generated-text" in watch_text
++    assert "non-local TSU" in watch_text
++    assert "Kona or Aleph" in watch_text
++    assert "GRPO" in watch_text
++    assert "LoRA" in watch_text
++    assert "exact final authority" in watch_text
++
++
++def test_scenario_report_5455_appends_refresh_section_idempotently() -> None:
++    """SCENARIO-REPORT-5455-APPEND-DELTAS: references append once."""
++
++    artifact = mod.build_artifact()
++    original = "# Research References\n\n### V496 Planner Refresh - 20260709\nOld V496 section.\n"
++
++    updated = mod.append_refresh_section(original, artifact)
++    second = mod.append_refresh_section(updated, artifact)
++
++    assert updated == second
++    assert updated.startswith(original)
++    assert updated.count(mod.REFRESH_HEADING) == 1
++    assert "Projectional Decoding" in updated
++    assert "Verifiable Literate Programming" in updated
++    assert "Neural-Symbolic World Model" in updated
++    assert "Beyond Perplexity" in updated
++    assert "No active `.496` roadmap edit is required" in updated
++    assert "No retired scope was reopened" in updated
++    assert mod.REFRESH_END_MARKER in updated
++
++
++def test_scenario_report_5455_no_new_delta_leaves_references_unchanged() -> None:
++    """SCENARIO-REPORT-5455-NO-NEW-DELTA: zero-new refresh does not churn references."""
++
++    artifact = mod.build_artifact(new_references_added=[])
++    original = "# Research References\n\n### V496 Planner Refresh - 20260709\nOld V496 section.\n"
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "complete"
++    assert artifact["new_actionable_findings_count"] == 0
++    assert artifact["new_references_added"] == []
++    assert artifact["research_references_updated"] is False
++    assert "no new actionable" in artifact["honest_verdict"]
++    assert mod.render_refresh_section(artifact) == ""
++    assert mod.append_refresh_section(original, artifact) == original
++
++
++def test_scenario_report_5455_missing_planner_marker_blocks() -> None:
++    """SCENARIO-REPORT-5455-BLOCKED-MISSING-PLANNER: no marker means no append."""
++
++    artifact = mod.build_artifact(prior_refresh_marker_found=False)
++    original = "# Research References\n\n### V495 Execution Refresh - 20260708\nOld section.\n"
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "blocked"
++    assert artifact["prior_refresh_marker_found"] is False
++    assert artifact["research_references_updated"] is False
++    assert artifact["new_references_added"] == []
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert mod.render_refresh_section(artifact) == ""
++    assert mod.append_refresh_section(original, artifact) == original
++
++
++def test_blocked_artifact_consistency_checks_fail_closed() -> None:
++    """REQ-REPORT-5455: blocked artifacts cannot carry contradictory planner facts."""
++
++    artifact = mod.build_artifact(prior_refresh_marker_found=False)
++
++    with pytest.raises(ValueError, match="prior_refresh_marker_found"):
++        mod.validate_artifact(artifact | {"prior_refresh_marker_found": True})
++
++    with pytest.raises(ValueError, match="research_references_updated"):
++        mod.validate_artifact(
++            artifact
++            | {
++                "new_actionable_findings_count": 1,
++                "new_references_added": [mod.NEW_REFERENCES_ADDED[0]],
++            }
++        )
++
++
++def test_write_outputs_writes_artifact_and_reference_append(tmp_path: Path) -> None:
++    """REQ-REPORT-5455: writer emits the JSON result and one references append."""
++
++    references = tmp_path / mod.REFERENCES_RELATIVE_PATH
++    result = tmp_path / mod.RESULT_RELATIVE_PATH
++    references.write_text(
++        "# Research References\n\n### V496 Planner Refresh - 20260709\nOld V496 section.\n",
++        encoding="utf-8",
++    )
++
++    artifact = mod.write_outputs(
++        root=tmp_path,
++        references_path=references,
++        result_path=result,
++        methodology_duration_s=9.25,
++        tests_run=["tests/python/test_experiment_5455_source_delta_v496.py"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert result.exists()
++    assert json.loads(result.read_text(encoding="utf-8")) == artifact
++    updated = references.read_text(encoding="utf-8")
++    assert updated.count(mod.REFRESH_HEADING) == 1
++    assert updated.startswith("# Research References")
++
++
++def test_write_outputs_blocks_without_planner_marker(tmp_path: Path) -> None:
++    """REQ-REPORT-5455: writer fails closed when the planner marker is absent."""
++
++    references = tmp_path / mod.REFERENCES_RELATIVE_PATH
++    result = tmp_path / mod.RESULT_RELATIVE_PATH
++    original = "# Research References\n\n### V495 Planner Refresh - 2026-07-08\nOld section.\n"
++    references.write_text(original, encoding="utf-8")
++
++    artifact = mod.write_outputs(
++        root=tmp_path,
++        references_path=references,
++        result_path=result,
++        methodology_duration_s=1.0,
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["status"] == "blocked"
++    assert json.loads(result.read_text(encoding="utf-8")) == artifact
++    assert references.read_text(encoding="utf-8") == original
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (
++            lambda artifact: {k: v for k, v in artifact.items() if k != "sources_checked"},
++            "missing required",
++        ),
++        (lambda artifact: artifact | {"experiment_id": "wrong"}, "experiment_id"),
++        (lambda artifact: artifact | {"task_id": "wrong"}, "task_id"),
++        (lambda artifact: artifact | {"milestone": "2026.07.495"}, "milestone"),
++        (lambda artifact: artifact | {"status": "honest_null"}, "status"),
++        (lambda artifact: artifact | {"search_date": "2026-07-08"}, "search_date"),
++        (lambda artifact: artifact | {"sources_checked": ["arxiv"]}, "sources_checked"),
++        (
++            lambda artifact: (
++                artifact
++                | {"sources_checked": artifact["sources_checked"] + [artifact["sources_checked"][0]]}
++            ),
++            "duplicate source families",
++        ),
++        (lambda artifact: artifact | {"searched_source_details": []}, "searched_source_details"),
++        (
++            lambda artifact: (
++                artifact
++                | {
++                    "searched_source_details": artifact["searched_source_details"]
++                    | {"github": {"status": "skipped"}}
++                }
++            ),
++            "valid status",
++        ),
++        (lambda artifact: artifact | {"new_actionable_findings_count": 99}, "references count"),
++        (
++            lambda artifact: artifact | {"new_references_added": {"not": "a list"}},
++            "new_references_added must be a list",
++        ),
++        (
++            lambda artifact: artifact | {"new_references_added": [{"title": "missing fields"}]},
++            "new_references_added rows must include",
++        ),
++        (
++            lambda artifact: (
++                artifact
++                | {"new_references_added": [artifact["new_references_added"][0] | {"url": "arxiv:bad"}]}
++            ),
++            "verified URL",
++        ),
++        (
++            lambda artifact: (
++                artifact
++                | {"new_references_added": [artifact["new_references_added"][0] | {"carnot_hook": ""}]}
++            ),
++            "Carnot hook",
++        ),
++        (lambda artifact: artifact | {"duplicates_suppressed": []}, "duplicates_suppressed"),
++        (
++            lambda artifact: (
++                artifact
++                | {
++                    "duplicates_suppressed": artifact["duplicates_suppressed"]
++                    + [artifact["duplicates_suppressed"][0]]
++                }
++            ),
++            "duplicate suppressed entries",
++        ),
++        (lambda artifact: artifact | {"retired_scopes_reopened": True}, "retired_scopes_reopened"),
++        (
++            lambda artifact: artifact | {"research_references_updated": False},
++            "research_references_updated",
++        ),
++        (
++            lambda artifact: artifact | {"prior_refresh_marker_found": False},
++            "prior_refresh_marker_found",
++        ),
++        (lambda artifact: artifact | {"honest_verdict": "done"}, "honest_verdict"),
++        (lambda artifact: artifact | {"inference_substrate": "wrong"}, "inference_substrate"),
++        (lambda artifact: artifact | {"watch_only_or_excluded": []}, "watch_only_or_excluded"),
++        (lambda artifact: artifact | {"methodology_duration_s": -1.0}, "methodology_duration_s"),
++        (lambda artifact: artifact | {"field_principles": {"status": "wrong"}}, "field_principles"),
++        (lambda artifact: artifact | {"no_deep_research_used": False}, "deep-research"),
++        (lambda artifact: artifact | {"research_conductor_modified": True}, "research_conductor"),
++        (lambda artifact: artifact | {"ops_docs_modified": True}, "ops docs"),
++        (lambda artifact: artifact | {"traceability_modified": True}, "traceability"),
++        (lambda artifact: artifact | {"roadmap_files_modified": True}, "roadmap files"),
++        (lambda artifact: artifact | {"tests_run": []}, "tests_run"),
++    ],
++)
++def test_validate_artifact_rejects_contract_drift(mutate, message: str) -> None:
++    """REQ-REPORT-5455: schema drift fails closed before artifact write."""
++
++    artifact = mod.build_artifact()
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(mutate(artifact))
++
++
++def test_deliverable_json_matches_required_schema() -> None:
++    """REQ-REPORT-5455: committed deliverable uses the tested schema."""
++
++    payload = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
++    mod.validate_artifact(payload)
++    assert payload["experiment_id"] == mod.EXPERIMENT_ID
++    assert payload["status"] == "complete"
++    assert payload["milestone"] == "2026.07.496"
++    assert payload["prior_refresh_marker_found"] is True
++    assert payload["inference_substrate"] == "aggregation_from_upstream_artifacts"
+-- 
+2.55.0
+

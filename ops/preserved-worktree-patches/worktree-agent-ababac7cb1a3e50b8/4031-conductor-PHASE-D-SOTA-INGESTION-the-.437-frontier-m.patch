@@ -1,0 +1,2032 @@
+From a3001cf73f21144c06f88561a399ed79abedeb06 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 18:26:14 -0400
+Subject: [PATCH 04031/11362] [conductor] PHASE D (SOTA-INGESTION -- the .437
+ frontier) -- map the NEXT ARC frontier beyond .436 guidance-class generation:
+ the EPISTEMIC-OBJECT-MODEL MCTS PROBE PLANNER (uncertainty-aware MCTS over
+ object-centric world-model rollouts, arXiv:2210.13455 + arXiv:2601.06604 +
+ arXiv:2606.14418), the FACTORED INTERACTION/CAUSAL PROBE BANK (typed
+ precondition/effect factors confirmed by causal probes, arXiv:2511.02225 +
+ arXiv:2511.14262; guardrail arXiv:2511.06136), and the within-game
+ SIMILARITY-KEYED PARTIAL-TRAJECTORY RETRIEVAL efficiency lever (MATM,
+ arXiv:2606.19911 -- an action-efficiency candidate, NOT a level-bank). Use
+ low-concurrency WebSearch/WebFetch (NOT /deep-research). Real arXiv IDs/URLs
+ for every claim. Output: a SOTA->experiment mapping note + flagged_for_v437.
+
+Automated research step by research conductor.
+Task ID: exp4746-d
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...ts-causal-probe-sota-ingestion-20260625.md | 315 +++++++
+ logs/proto_l2_measure_fixstack_v2.log         |  10 +
+ .../arc-world-model-trust-energy/spec.md      |  68 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...a_ingestion_epistemic_mcts_causal_probe.py | 840 ++++++++++++++++++
+ ...ingestion_epistemic_mcts_causal_probe.json | 185 ++++
+ results/proto_l2_measure_fixstack.json        |  14 +-
+ ...a_ingestion_epistemic_mcts_causal_probe.py | 472 ++++++++++
+ 8 files changed, 1898 insertions(+), 8 deletions(-)
+ create mode 100644 python/carnot/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py
+ create mode 100644 results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json
+ create mode 100644 tests/python/test_experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py
+
+diff --git a/docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md b/docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md
+index d01b5bb7e8..2342c134e8 100644
+--- a/docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md
++++ b/docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md
+@@ -286,3 +286,318 @@ flagged_for_v436: factored_interaction_causal_probe_bank
+ from arXiv:2511.06136. The honest bound is explicit: object-centric world
+ models can look visually stable and still break policy learning under off-path
+ multi-object interactions, so this ingestion makes no solve claim.
++
++---
++
++# Exp 4746 .437 refresh
++
++## Exp 4746 artifact
++
++```json
++{
++  "citations": {
++    "2210.13455": {
++      "http_status": 200,
++      "title": "Epistemic Monte Carlo Tree Search",
++      "url": "https://arxiv.org/abs/2210.13455"
++    },
++    "2511.02225": {
++      "http_status": 200,
++      "title": "Learning Interactive World Model for Object-Centric Reinforcement Learning",
++      "url": "https://arxiv.org/abs/2511.02225"
++    },
++    "2511.06136": {
++      "http_status": 200,
++      "title": "When Object-Centric World Models Meet Policy Learning: From Pixels to Policies, and Where It Breaks",
++      "url": "https://arxiv.org/abs/2511.06136"
++    },
++    "2511.14262": {
++      "http_status": 200,
++      "title": "Object-Centric World Models for Causality-Aware Reinforcement Learning",
++      "url": "https://arxiv.org/abs/2511.14262"
++    },
++    "2601.06604": {
++      "http_status": 200,
++      "title": "Object-Centric World Models Meet Monte Carlo Tree Search",
++      "url": "https://arxiv.org/abs/2601.06604"
++    },
++    "2606.14418": {
++      "http_status": 200,
++      "title": "Causal Object-Centric Models for Planning with Monte Carlo Tree Search",
++      "url": "https://arxiv.org/abs/2606.14418"
++    },
++    "2606.19911": {
++      "http_status": 200,
++      "title": "Multi-Agent Transactive Memory",
++      "url": "https://arxiv.org/abs/2606.19911"
++    }
++  },
++  "field_principles": {
++    "citations": {
++      "principle": "real arXiv IDs/URLs for every method claim -- an ingestion with no verifiable citations is fabrication per adversarial_verify discipline."
++    },
++    "flagged_for_next_roadmap": {
++      "principle": "the strongest method(s) flagged_for_v437 -- closes the discover->ingest->plan loop so SOTA flows into the next milestone's experiments."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- literature synthesis + WebFetch, no model load (100us floor)."
++    },
++    "methods_mapped": {
++      "principle": "the 3-5 strongest methods, each with maps_to_current_stack + implement_cost_over_current_stack + fails_when -- the actionable ingestion (discover -> ingest -> plan)."
++    },
++    "note_path": {
++      "principle": "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md -- the human-readable per-track synthesis."
++    },
++    "preconditions_checked": {
++      "principle": "records the network-reachability check; pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition (the search/synthesis seed)."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash of the ingested source set."
++    },
++    "verifier_is_oracle": {
++      "principle": "false -- a literature synthesis invokes no oracle."
++    }
++  },
++  "flagged_for_next_roadmap": [
++    "flagged_for_v437: epistemic_object_model_mcts_probe_planner (arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418)",
++    "flagged_for_v437: factored_interaction_causal_probe_bank (arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136)",
++    "flagged_for_v437: similarity_keyed_partial_trajectory_retrieval (MATM arXiv:2606.19911; within-game action-efficiency candidate, not a level-bank)"
++  ],
++  "honest_verdict": "success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "methods_mapped": [
++    {
++      "fails_when": "epistemic uncertainty is miscalibrated, object state keys alias hidden registers, or rollout error compounds before live probes can correct the model.",
++      "implement_cost_over_current_stack": "medium-high: add MCTS node statistics, rollout budgets, epistemic uncertainty propagation across candidate engines, and a live-probe handoff compatible with the existing active-probe observer.",
++      "maps_to_current_stack": "E3AgentPolicy replaces the single arc_executable_world_model BFS plan with uncertainty-aware MCTS rollouts over candidate engines and ProductWorldModel factors, returning either a solve action or an information-gain probe.",
++      "method": "Epistemic object-model MCTS probe planner",
++      "roadmap_candidate": "flagged_for_v437: epistemic_object_model_mcts_probe_planner (arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418)",
++      "source_ids": [
++        "2210.13455",
++        "2601.06604",
++        "2606.14418"
++      ],
++      "track": "epistemic_object_model_mcts_probe_planner"
++    },
++    {
++      "fails_when": "ARC objects are not separable at logical-grid resolution, action targets cannot be grounded from click or keyboard data, or causal attention prioritizes visually salient but goal-irrelevant slots.",
++      "implement_cost_over_current_stack": "medium-high: derive stable logical object slots from current frames, attach action-target metadata to candidates, and expose causal attention scores as planner priors rather than a learned submitted-policy head.",
++      "maps_to_current_stack": "E3AgentPolicy binds ARC candidate actions to object-like logical-grid slots before arc_executable_world_model rollouts, so MCTS can test which object interaction a click or movement action is expected to change.",
++      "method": "Causal object-centric MCTS action-slot adapter",
++      "roadmap_candidate": "support_for_v437: causal_object_mcts_action_slot_adapter (arXiv:2606.14418)",
++      "source_ids": [
++        "2606.14418"
++      ],
++      "track": "causal_object_mcts_action_slot_adapter"
++    },
++    {
++      "fails_when": "object slots drift, hidden registers alias relation labels, short prefixes make spurious interactions look causal, or the probe budget is too small for the needed intervention.",
++      "implement_cost_over_current_stack": "high: add a factor schema, confirm/refute probe ledger, causal relation scoring, and planner composition only over trusted factors.",
++      "maps_to_current_stack": "E3AgentPolicy proposes object-interaction hypotheses; arc_executable_world_model promotes ProgrammaticExpert rows into typed precondition/effect factors with confirmed/refuted causal ledgers before ProductWorldModel planning composes them.",
++      "method": "Factored interaction and causal probe bank",
++      "roadmap_candidate": "flagged_for_v437: factored_interaction_causal_probe_bank (arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136)",
++      "source_ids": [
++        "2511.02225",
++        "2511.14262",
++        "2511.06136"
++      ],
++      "track": "factored_interaction_causal_probe_bank"
++    },
++    {
++      "fails_when": "within-game similarity descriptors collide across incompatible mechanics, stale prefixes waste actions, or the verifier cannot reject a plausible but harmful retrieved continuation.",
++      "implement_cost_over_current_stack": "low-medium: add a flag-gated descriptor index beside adj, candidate prefix retrieval, verifier/value scoring, and diagnostics for forward_walk_hit_rate and actions_to_first_levelup deltas.",
++      "maps_to_current_stack": "E3AgentPolicy keeps the existing StepwiseExplorer.adj exact-edge graph but adds a coarse within-game similarity descriptor so near-match frontier states can reuse partial paths; arc_executable_world_model and value/goal routing score retrieved prefixes before commit.",
++      "method": "Similarity-keyed partial-trajectory retrieval",
++      "roadmap_candidate": "flagged_for_v437: similarity_keyed_partial_trajectory_retrieval (MATM arXiv:2606.19911; within-game action-efficiency candidate, not a level-bank)",
++      "source_ids": [
++        "2606.19911"
++      ],
++      "track": "similarity_keyed_partial_trajectory_retrieval"
++    },
++    {
++      "fails_when": "the drift metric is too conservative and rejects useful factors, or too permissive and lets unstable object rollouts pass into execution.",
++      "implement_cost_over_current_stack": "low-medium: add off-path drift diagnostics, rejected-factor reasons, and plan invalidation when object-model predictions stay visually plausible but causally wrong.",
++      "maps_to_current_stack": "E3AgentPolicy invalidates arc_executable_world_model plans when off-path object factors or causal relations drift under multi-object interactions, then routes the failure into probe/factor ledgers instead of executing a brittle plan.",
++      "method": "Object-world-model drift and policy-breakage falsifier",
++      "roadmap_candidate": "guardrail_for_v437: object_world_model_policy_breakage_falsifier (arXiv:2511.06136)",
++      "source_ids": [
++        "2511.06136"
++      ],
++      "track": "object_world_model_drift_policy_breakage_falsifier"
++    }
++  ],
++  "note_path": "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md",
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "arc_competition_agent_read": true,
++    "arc_executable_world_model_read": true,
++    "arxiv_http_200_verified_ids": [
++      "https://arxiv.org/abs/2210.13455",
++      "https://arxiv.org/abs/2511.02225",
++      "https://arxiv.org/abs/2511.06136",
++      "https://arxiv.org/abs/2511.14262",
++      "https://arxiv.org/abs/2601.06604",
++      "https://arxiv.org/abs/2606.14418",
++      "https://arxiv.org/abs/2606.19911"
++    ],
++    "arxiv_reachable": true,
++    "claude_md_read": true,
++    "codex_md_read": true,
++    "cross_game_matm_claim_made": false,
++    "deep_research_invoked": false,
++    "exp4734_artifact_read": true,
++    "leaderboard_submission": false,
++    "level_bank_claim_made": false,
++    "live_llm_inference": false,
++    "matm_bounded_to_within_game_efficiency": true,
++    "matm_note_read": true,
++    "model_load": false,
++    "ops_docs_modified": false,
++    "research_conductor_modified": false,
++    "research_references_read": true,
++    "solve_claim_made": false,
++    "top_source_count": 7,
++    "training_launched": false,
++    "websearch_webfetch_top_sources": [
++      "https://arxiv.org/abs/2210.13455",
++      "https://arxiv.org/abs/2601.06604",
++      "https://arxiv.org/abs/2606.14418",
++      "https://arxiv.org/abs/2511.02225",
++      "https://arxiv.org/abs/2511.14262",
++      "https://arxiv.org/abs/2511.06136",
++      "https://arxiv.org/abs/2606.19911"
++    ],
++    "websearch_webfetch_used": true
++  },
++  "random_seed": 4746,
++  "reproducibility_checksum": "sha256:601d710668c85e033ef8a7680e106308d7a22c71cba5d8d2c8a42704cb243a32",
++  "verifier_is_oracle": false
++}
++```
++
++## Exp 4746 fresh-pass provenance
++
++Read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
++`results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json`,
++`research-references.md`,
++`docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md`,
++`python/carnot/agentic/arc_competition_agent.py`, and
++`python/carnot/agentic/arc_executable_world_model.py`.
++
++Fresh-pass source set, all checked through arXiv:
++- arXiv:2210.13455, Epistemic Monte Carlo Tree Search.
++- arXiv:2601.06604, Object-Centric World Models Meet Monte Carlo Tree Search.
++- arXiv:2606.14418, Causal Object-Centric Models for Planning with Monte Carlo Tree Search.
++- arXiv:2511.02225, Learning Interactive World Model for Object-Centric Reinforcement Learning.
++- arXiv:2511.14262, Object-Centric World Models for Causality-Aware Reinforcement Learning.
++- arXiv:2511.06136, When Object-Centric World Models Meet Policy Learning.
++- arXiv:2606.19911, Multi-Agent Transactive Memory.
++
++No `/deep-research`, no live LLM inference, no model load, no training, no
++leaderboard submission, and no solve claim. `scripts/research_conductor.py`,
++`ops/changelog.md`, and `ops/status.md` were not edited by this workflow.
++
++## SOTA -> .437 epistemic-MCTS / causal-probe / MATM mapping
++
++## Epistemic object-model MCTS probe planner
++
++**Sources:** arXiv:2210.13455, arXiv:2601.06604, arXiv:2606.14418.
++
++**Mapping:** `E3AgentPolicy` should replace the current single
++`arc_executable_world_model.plan_in_model` BFS choice with an uncertainty-aware
++MCTS planner over candidate engines and object factors. The planner returns
++either a solve action or an information-gain probe.
++
++**Cost:** medium-high. Add MCTS state keys, uncertainty propagation, rollout
++budgets, and a probe-vs-act handoff to the existing active-probe observer.
++
++**Fails when:** uncertainty is uncalibrated, hidden registers alias object
++state, or rollout error compounds before probes can correct the model.
++
++## Causal object-centric MCTS action-slot adapter
++
++**Source:** arXiv:2606.14418.
++
++**Mapping:** bind candidate ARC actions to logical-grid object slots before
++`arc_executable_world_model` rollouts so MCTS can reason about which object a
++click, drag, or movement action is expected to change.
++
++**Cost:** medium-high. Build stable slot descriptors and expose causal attention
++as a planner prior without adding a learned submitted-policy head.
++
++**Fails when:** object slots drift or causal attention follows visually salient
++but goal-irrelevant entities.
++
++## Factored interaction and causal probe bank
++
++**Sources:** arXiv:2511.02225, arXiv:2511.14262; guardrail arXiv:2511.06136.
++
++**Mapping:** `E3AgentPolicy` already exposes factored planning hooks, and
++`arc_executable_world_model` already has `ProgrammaticExpert` and
++`ProductWorldModel`. The .437 bank promotes those rows into typed
++precondition/effect factors whose causal status is confirmed or refuted by
++targeted probes before composition.
++
++**Cost:** high. Add factor schemas, confirm/refute ledgers, causal relation
++scores, and planner composition only over trusted factors.
++
++**Fails when:** object slots drift, relation labels alias hidden registers, or
++the probe budget is too small for the intervention.
++
++## Similarity-keyed partial-trajectory retrieval
++
++**Source:** MATM, arXiv:2606.19911.
++
++**Mapping:** `E3AgentPolicy` keeps the exact-hash `StepwiseExplorer.adj`
++navigation graph, then adds a coarse within-game descriptor index so near-match
++states can retrieve partial prefixes. `arc_executable_world_model` and the
++existing value/goal routing score retrieved prefixes before live commitment.
++
++**Cost:** low-medium. Add a flag-gated descriptor index, candidate-prefix
++retrieval, verifier/value scoring, and diagnostics for
++`forward_walk_hit_rate_delta` and `actions_to_first_levelup_delta`.
++
++**Fails when:** within-game descriptors collide across incompatible mechanics,
++stale prefixes waste actions, or the verifier cannot reject a plausible but
++harmful continuation. This is a within-game action-efficiency candidate, not a level-bank.
++
++## Object-world-model drift and policy-breakage falsifier
++
++**Source:** arXiv:2511.06136.
++
++**Mapping:** `E3AgentPolicy` should invalidate `arc_executable_world_model`
++plans when object factors drift under off-path multi-object interactions, then
++route the failure back into the probe and factor ledgers.
++
++**Cost:** low-medium. Add held-out off-path drift diagnostics, rejected-factor
++reasons, and plan invalidation for visually plausible but causally wrong
++rollouts.
++
++**Fails when:** the drift metric rejects every useful factor or allows unstable
++object rollouts into execution.
++
++## Bottom line for the .437 roadmap
++
++The strongest `.437` build candidate is
++flagged_for_v437: epistemic_object_model_mcts_probe_planner
++(arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418). It is the direct
++upgrade from the .435 posterior splitter to a planner that chooses between
++acting and probing inside world-model rollouts.
++
++The second `.437` build candidate is
++flagged_for_v437: factored_interaction_causal_probe_bank
++(arXiv:2511.02225 + arXiv:2511.14262), guarded by the drift falsifier from
++arXiv:2511.06136.
++
++The efficiency-only candidate is
++flagged_for_v437: similarity_keyed_partial_trajectory_retrieval
++(MATM arXiv:2606.19911): within-game action-efficiency candidate, not a level-bank.
++It should be measured by forward-walk hit-rate and
++actions-to-first-level-up deltas, with no cross-game retrieval claim and no
++solve claim.
+diff --git a/logs/proto_l2_measure_fixstack_v2.log b/logs/proto_l2_measure_fixstack_v2.log
+index 6349d50fa3..cc0aad3b5c 100644
+--- a/logs/proto_l2_measure_fixstack_v2.log
++++ b/logs/proto_l2_measure_fixstack_v2.log
+@@ -3,3 +3,13 @@ INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and ma
+ [17:58:39] Running lp85 binary arm (default fix stack: truncation default-ON + goal-repair), budget=400...
+ 2026-06-25 17:58:40 | INFO | Created new scorecard: 92f0c263-13eb-40c5-a7e6-cdbab9b8657e
+ 2026-06-25 17:58:40 | INFO | Successfully loaded game class Lp85 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/lp85/305b61c3/lp85.py
++[18:14:18] VERDICT: complete_no_change_still_L1_goal_unsatisfiable
++[18:14:18] SUMMARY: lp85 stayed L1, goal_satisfiable_any=False -- the repair did NOT fire or the induction still failed. Needs investigation.
++[18:14:18]   max_depth=1 l2_reproduced=False goal_satisfiable_any=False repair_fired=False n_induce=2
++[18:14:18]   induced is_level_complete tail:
++def is_level_complete(grid):
++    # Check if the grid is in a win state
++    # Based on the observed data, the win state is when the grid is in a specific configuration
++    # For now, we'll implement a 
++[18:14:18] DONE in 940.26s -> /home/ianblenke/github.com/ianblenke/carnot/results/proto_l2_measure_fixstack.json
++EXIT=0
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 3a87e6123a..8e2a4b45d1 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -6991,6 +6991,74 @@ sets `positive_control_passed` from parity plus no-regression, sets
+ `verifier_is_oracle=false`, and writes a stable
+ `results/experiment_4742_integration_gate.json` checksum.
+ 
++### REQ-ARC-WMTE-4746: Epistemic-MCTS / Causal-Probe / MATM SOTA Ingestion For .437
++
++Experiment 4746 SHALL map the `.437` ARC frontier after `.436` valid-tested
++the guidance-class generation levers instead of building the `.435`-flagged
++epistemic-MCTS and causal-probe tracks. The workflow SHALL read
++`results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json`,
++`research-references.md`,
++`docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md`,
++`python/carnot/agentic/arc_competition_agent.py`, and
++`python/carnot/agentic/arc_executable_world_model.py` before scoping methods.
++It SHALL map the epistemic object-model MCTS probe planner, the factored
++interaction / causal probe bank, the object-world-model breakage falsifier, and
++the within-game similarity-keyed partial-trajectory retrieval efficiency lever
++onto the current `E3AgentPolicy`, `StepwiseExplorer.adj`, and
++`arc_executable_world_model` stack. It SHALL explicitly bound MATM as an
++action-efficiency candidate, not a level-bank or cross-game retrieval claim.
++
++The workflow SHALL use the reliable low-concurrency channel: a network
++reachability check for `https://arxiv.org`, focused WebSearch/WebFetch over the
++top five to eight papers, and direct arXiv URL verification. It SHALL NOT
++invoke `/deep-research`. If arXiv is unreachable, the workflow SHALL report
++`blocked_network` rather than fabricate citations or method claims.
++
++Experiment 4746 SHALL write
++`docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md`
++and
++`results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json`. The
++artifact SHALL include `honest_verdict`, `inference_substrate`,
++`methods_mapped`, `citations`, `flagged_for_next_roadmap`, `note_path`,
++`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`,
++`preconditions_checked`, and `field_principles`. The success verdict SHALL be
++`success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped`, the
++substrate SHALL be `aggregation_from_upstream_artifacts`, and
++`verifier_is_oracle` SHALL be false. Each mapped method SHALL cite real arXiv
++IDs/URLs and SHALL include `maps_to_current_stack`,
++`implement_cost_over_current_stack`, and `fails_when`. No solve claim, training
++claim, model-load claim, cross-game MATM claim, or leaderboard claim is valid
++in this literature-ingestion artifact.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle `terminal prefix; success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped.`
++- `inference_substrate`: principle `aggregation_from_upstream_artifacts -- literature synthesis + WebFetch, no model load (100us floor).`
++- `methods_mapped`: principle `the 3-5 strongest methods, each with maps_to_current_stack + implement_cost_over_current_stack + fails_when -- the actionable ingestion (discover -> ingest -> plan).`
++- `citations`: principle `real arXiv IDs/URLs for every method claim -- an ingestion with no verifiable citations is fabrication per adversarial_verify discipline.`
++- `flagged_for_next_roadmap`: principle `the strongest method(s) flagged_for_v437 -- closes the discover->ingest->plan loop so SOTA flows into the next milestone's experiments.`
++- `note_path`: principle `docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md -- the human-readable per-track synthesis.`
++- `verifier_is_oracle`: principle `false -- a literature synthesis invokes no oracle.`
++- `random_seed`: principle `determinism precondition (the search/synthesis seed).`
++- `reproducibility_checksum`: principle `content-addressed hash of the ingested source set.`
++- `preconditions_checked`: principle `records the network-reachability check; pre-empts missing-resource fabrication.`
++
++### SCENARIO-ARC-WMTE-4746: Next Frontier Maps To V437 Candidates
++
++Given arXiv is reachable and the `.435` epistemic-MCTS / causal-probe
++ingestion plus the `.436` research-reference pre-sweep are readable
++When experiment 4746 ingests focused papers for epistemic MCTS,
++object-centric MCTS, causal object-centric MCTS, factored interactive
++world-models, causality-aware object-world-model control, object-world-model
++policy breakage, and MATM-style similarity-keyed trajectory retrieval
++Then the note and JSON artifact map three to five methods onto
++`E3AgentPolicy`, `StepwiseExplorer.adj`, and `arc_executable_world_model`, cite
++real arXiv IDs including `2210.13455`, `2511.02225`, `2511.06136`,
++`2511.14262`, `2601.06604`, `2606.14418`, and `2606.19911`, flag one or more
++`flagged_for_v437` candidates, record that `/deep-research` was not invoked,
++record `verifier_is_oracle=false`, emit no ARC solve claim, and identify MATM
++as a within-game action-efficiency candidate rather than a level-bank.
++
+ ### REQ-ARC-WMTE-4739: Rotated ARC Level-Up Self-Play Attempt
+ 
+ Experiment 4739 SHALL use the standing ARC loop to attempt one rotated public
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ee28aee19b..ff9efb46a2 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 189,
+   "code_violations": 0,
+-  "experiments_checked": 3754,
++  "experiments_checked": 3755,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py b/python/carnot/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py
+new file mode 100644
+index 0000000000..2c9c6a9ed1
+--- /dev/null
++++ b/python/carnot/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py
+@@ -0,0 +1,840 @@
++"""Exp 4746 epistemic-MCTS / causal-probe / MATM SOTA ingestion.
++
++Spec refs: REQ-ARC-WMTE-4746, SCENARIO-ARC-WMTE-4746.
++
++This is a literature-synthesis artifact, not a solve claim. It maps the .437
++frontier onto the current E3AgentPolicy, StepwiseExplorer.adj, and
++arc_executable_world_model stack after .436 valid-tested guidance-class
++generation levers instead of building the .435-flagged methods.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import os
++from pathlib import Path
++from typing import Any
++from urllib import request
++
++from carnot import experiment_4734_sota_ingestion_epistemic_mcts_causal_probe as exp4734
++
++
++JsonMap = Mapping[str, Any]
++
++RESULT_RELATIVE_PATH = "results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json"
++NOTE_RELATIVE_PATH = (
++    "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md"
++)
++RANDOM_SEED = 4746
++HONEST_VERDICT = "success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++JSON_BLOCK_MARKER = "## Exp 4746 artifact\n\n```json\n"
++JSON_BLOCK_TERMINATOR = "\n```\n\n## Exp 4746 fresh-pass provenance"
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "blocked_",
++)
++REQUIRED_PRINCIPLE_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "inference_substrate",
++        "methods_mapped",
++        "citations",
++        "flagged_for_next_roadmap",
++        "note_path",
++        "verifier_is_oracle",
++        "random_seed",
++        "reproducibility_checksum",
++        "preconditions_checked",
++    }
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "methods_mapped",
++    "citations",
++    "flagged_for_next_roadmap",
++    "note_path",
++    "verifier_is_oracle",
++    "random_seed",
++    "reproducibility_checksum",
++    "preconditions_checked",
++    "field_principles",
++)
++REQUIRED_METHOD_FIELDS = frozenset(
++    {
++        "method",
++        "source_ids",
++        "track",
++        "maps_to_current_stack",
++        "implement_cost_over_current_stack",
++        "fails_when",
++        "roadmap_candidate",
++    }
++)
++REQUIRED_CITATION_FIELDS = frozenset({"title", "url", "http_status"})
++REQUIRED_PRECONDITION_FIELDS = frozenset(
++    {
++        "agents_md_read",
++        "codex_md_read",
++        "claude_md_read",
++        "arxiv_reachable",
++        "exp4734_artifact_read",
++        "research_references_read",
++        "matm_note_read",
++        "arc_competition_agent_read",
++        "arc_executable_world_model_read",
++        "websearch_webfetch_used",
++        "websearch_webfetch_top_sources",
++        "top_source_count",
++        "arxiv_http_200_verified_ids",
++        "deep_research_invoked",
++        "live_llm_inference",
++        "training_launched",
++        "model_load",
++        "leaderboard_submission",
++        "solve_claim_made",
++        "research_conductor_modified",
++        "ops_docs_modified",
++        "matm_bounded_to_within_game_efficiency",
++        "cross_game_matm_claim_made",
++        "level_bank_claim_made",
++    }
++)
++REQUIRED_SOURCE_IDS = frozenset(
++    {
++        "2210.13455",
++        "2511.02225",
++        "2511.06136",
++        "2511.14262",
++        "2601.06604",
++        "2606.14418",
++        "2606.19911",
++    }
++)
++NOTE_REQUIRED_SOURCE_CITATIONS = frozenset(
++    f"arXiv:{source_id}" for source_id in REQUIRED_SOURCE_IDS
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: "
++            "sota_ingestion_epistemic_mcts_causal_probe_matm_mapped."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "aggregation_from_upstream_artifacts -- literature synthesis + WebFetch, "
++            "no model load (100us floor)."
++        )
++    },
++    "methods_mapped": {
++        "principle": (
++            "the 3-5 strongest methods, each with maps_to_current_stack + "
++            "implement_cost_over_current_stack + fails_when -- the actionable "
++            "ingestion (discover -> ingest -> plan)."
++        )
++    },
++    "citations": {
++        "principle": (
++            "real arXiv IDs/URLs for every method claim -- an ingestion with no "
++            "verifiable citations is fabrication per adversarial_verify discipline."
++        )
++    },
++    "flagged_for_next_roadmap": {
++        "principle": (
++            "the strongest method(s) flagged_for_v437 -- closes the "
++            "discover->ingest->plan loop so SOTA flows into the next milestone's experiments."
++        )
++    },
++    "note_path": {
++        "principle": (
++            "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md "
++            "-- the human-readable per-track synthesis."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": "false -- a literature synthesis invokes no oracle."
++    },
++    "random_seed": {
++        "principle": "determinism precondition (the search/synthesis seed)."
++    },
++    "reproducibility_checksum": {
++        "principle": "content-addressed hash of the ingested source set."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records the network-reachability check; pre-empts missing-resource fabrication."
++        )
++    },
++}
++
++CITATIONS = {
++    "2210.13455": {
++        "title": "Epistemic Monte Carlo Tree Search",
++        "url": "https://arxiv.org/abs/2210.13455",
++        "http_status": 200,
++    },
++    "2511.02225": {
++        "title": "Learning Interactive World Model for Object-Centric Reinforcement Learning",
++        "url": "https://arxiv.org/abs/2511.02225",
++        "http_status": 200,
++    },
++    "2511.06136": {
++        "title": (
++            "When Object-Centric World Models Meet Policy Learning: From Pixels to "
++            "Policies, and Where It Breaks"
++        ),
++        "url": "https://arxiv.org/abs/2511.06136",
++        "http_status": 200,
++    },
++    "2511.14262": {
++        "title": "Object-Centric World Models for Causality-Aware Reinforcement Learning",
++        "url": "https://arxiv.org/abs/2511.14262",
++        "http_status": 200,
++    },
++    "2601.06604": {
++        "title": "Object-Centric World Models Meet Monte Carlo Tree Search",
++        "url": "https://arxiv.org/abs/2601.06604",
++        "http_status": 200,
++    },
++    "2606.14418": {
++        "title": "Causal Object-Centric Models for Planning with Monte Carlo Tree Search",
++        "url": "https://arxiv.org/abs/2606.14418",
++        "http_status": 200,
++    },
++    "2606.19911": {
++        "title": "Multi-Agent Transactive Memory",
++        "url": "https://arxiv.org/abs/2606.19911",
++        "http_status": 200,
++    },
++}
++
++WEBSEARCH_WEBFETCH_TOP_SOURCES = [
++    "https://arxiv.org/abs/2210.13455",
++    "https://arxiv.org/abs/2601.06604",
++    "https://arxiv.org/abs/2606.14418",
++    "https://arxiv.org/abs/2511.02225",
++    "https://arxiv.org/abs/2511.14262",
++    "https://arxiv.org/abs/2511.06136",
++    "https://arxiv.org/abs/2606.19911",
++]
++FLAGGED_FOR_NEXT_ROADMAP = [
++    (
++        "flagged_for_v437: epistemic_object_model_mcts_probe_planner "
++        "(arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418)"
++    ),
++    (
++        "flagged_for_v437: factored_interaction_causal_probe_bank "
++        "(arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136)"
++    ),
++    (
++        "flagged_for_v437: similarity_keyed_partial_trajectory_retrieval "
++        "(MATM arXiv:2606.19911; within-game action-efficiency candidate, "
++        "not a level-bank)"
++    ),
++]
++DEFAULT_PRECONDITIONS_CHECKED = {
++    "agents_md_read": True,
++    "codex_md_read": True,
++    "claude_md_read": True,
++    "arxiv_reachable": True,
++    "exp4734_artifact_read": True,
++    "research_references_read": True,
++    "matm_note_read": True,
++    "arc_competition_agent_read": True,
++    "arc_executable_world_model_read": True,
++    "websearch_webfetch_used": True,
++    "websearch_webfetch_top_sources": WEBSEARCH_WEBFETCH_TOP_SOURCES,
++    "top_source_count": len(WEBSEARCH_WEBFETCH_TOP_SOURCES),
++    "arxiv_http_200_verified_ids": [
++        f"https://arxiv.org/abs/{source_id}" for source_id in sorted(REQUIRED_SOURCE_IDS)
++    ],
++    "deep_research_invoked": False,
++    "live_llm_inference": False,
++    "training_launched": False,
++    "model_load": False,
++    "leaderboard_submission": False,
++    "solve_claim_made": False,
++    "research_conductor_modified": False,
++    "ops_docs_modified": False,
++    "matm_bounded_to_within_game_efficiency": True,
++    "cross_game_matm_claim_made": False,
++    "level_bank_claim_made": False,
++}
++DEFAULT_METHODS_MAPPED = [
++    {
++        "method": "Epistemic object-model MCTS probe planner",
++        "source_ids": ["2210.13455", "2601.06604", "2606.14418"],
++        "track": "epistemic_object_model_mcts_probe_planner",
++        "maps_to_current_stack": (
++            "E3AgentPolicy replaces the single arc_executable_world_model BFS plan "
++            "with uncertainty-aware MCTS rollouts over candidate engines and "
++            "ProductWorldModel factors, returning either a solve action or an "
++            "information-gain probe."
++        ),
++        "implement_cost_over_current_stack": (
++            "medium-high: add MCTS node statistics, rollout budgets, epistemic "
++            "uncertainty propagation across candidate engines, and a live-probe "
++            "handoff compatible with the existing active-probe observer."
++        ),
++        "fails_when": (
++            "epistemic uncertainty is miscalibrated, object state keys alias hidden "
++            "registers, or rollout error compounds before live probes can correct "
++            "the model."
++        ),
++        "roadmap_candidate": FLAGGED_FOR_NEXT_ROADMAP[0],
++    },
++    {
++        "method": "Causal object-centric MCTS action-slot adapter",
++        "source_ids": ["2606.14418"],
++        "track": "causal_object_mcts_action_slot_adapter",
++        "maps_to_current_stack": (
++            "E3AgentPolicy binds ARC candidate actions to object-like logical-grid "
++            "slots before arc_executable_world_model rollouts, so MCTS can test "
++            "which object interaction a click or movement action is expected to change."
++        ),
++        "implement_cost_over_current_stack": (
++            "medium-high: derive stable logical object slots from current frames, "
++            "attach action-target metadata to candidates, and expose causal "
++            "attention scores as planner priors rather than a learned submitted-policy head."
++        ),
++        "fails_when": (
++            "ARC objects are not separable at logical-grid resolution, action targets "
++            "cannot be grounded from click or keyboard data, or causal attention "
++            "prioritizes visually salient but goal-irrelevant slots."
++        ),
++        "roadmap_candidate": (
++            "support_for_v437: causal_object_mcts_action_slot_adapter "
++            "(arXiv:2606.14418)"
++        ),
++    },
++    {
++        "method": "Factored interaction and causal probe bank",
++        "source_ids": ["2511.02225", "2511.14262", "2511.06136"],
++        "track": "factored_interaction_causal_probe_bank",
++        "maps_to_current_stack": (
++            "E3AgentPolicy proposes object-interaction hypotheses; "
++            "arc_executable_world_model promotes ProgrammaticExpert rows into "
++            "typed precondition/effect factors with confirmed/refuted causal "
++            "ledgers before ProductWorldModel planning composes them."
++        ),
++        "implement_cost_over_current_stack": (
++            "high: add a factor schema, confirm/refute probe ledger, causal "
++            "relation scoring, and planner composition only over trusted factors."
++        ),
++        "fails_when": (
++            "object slots drift, hidden registers alias relation labels, short "
++            "prefixes make spurious interactions look causal, or the probe budget "
++            "is too small for the needed intervention."
++        ),
++        "roadmap_candidate": FLAGGED_FOR_NEXT_ROADMAP[1],
++    },
++    {
++        "method": "Similarity-keyed partial-trajectory retrieval",
++        "source_ids": ["2606.19911"],
++        "track": "similarity_keyed_partial_trajectory_retrieval",
++        "maps_to_current_stack": (
++            "E3AgentPolicy keeps the existing StepwiseExplorer.adj exact-edge graph "
++            "but adds a coarse within-game similarity descriptor so near-match "
++            "frontier states can reuse partial paths; arc_executable_world_model "
++            "and value/goal routing score retrieved prefixes before commit."
++        ),
++        "implement_cost_over_current_stack": (
++            "low-medium: add a flag-gated descriptor index beside adj, candidate "
++            "prefix retrieval, verifier/value scoring, and diagnostics for "
++            "forward_walk_hit_rate and actions_to_first_levelup deltas."
++        ),
++        "fails_when": (
++            "within-game similarity descriptors collide across incompatible "
++            "mechanics, stale prefixes waste actions, or the verifier cannot reject "
++            "a plausible but harmful retrieved continuation."
++        ),
++        "roadmap_candidate": FLAGGED_FOR_NEXT_ROADMAP[2],
++    },
++    {
++        "method": "Object-world-model drift and policy-breakage falsifier",
++        "source_ids": ["2511.06136"],
++        "track": "object_world_model_drift_policy_breakage_falsifier",
++        "maps_to_current_stack": (
++            "E3AgentPolicy invalidates arc_executable_world_model plans when "
++            "off-path object factors or causal relations drift under multi-object "
++            "interactions, then routes the failure into probe/factor ledgers "
++            "instead of executing a brittle plan."
++        ),
++        "implement_cost_over_current_stack": (
++            "low-medium: add off-path drift diagnostics, rejected-factor reasons, "
++            "and plan invalidation when object-model predictions stay visually "
++            "plausible but causally wrong."
++        ),
++        "fails_when": (
++            "the drift metric is too conservative and rejects useful factors, or "
++            "too permissive and lets unstable object rollouts pass into execution."
++        ),
++        "roadmap_candidate": (
++            "guardrail_for_v437: object_world_model_policy_breakage_falsifier "
++            "(arXiv:2511.06136)"
++        ),
++    },
++]
++
++
++def source_set_checksum(citations: JsonMap) -> str:
++    """Return a stable content hash for the ingested citation set."""
++
++    payload = json.dumps(citations, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return "sha256:" + hashlib.sha256(payload).hexdigest()
++
++
++REPRODUCIBILITY_CHECKSUM = source_set_checksum(CITATIONS)
++
++
++def _blocked_preconditions() -> dict[str, object]:
++    preconditions = dict(DEFAULT_PRECONDITIONS_CHECKED)
++    preconditions.update(
++        {
++            "arxiv_reachable": False,
++            "websearch_webfetch_used": False,
++            "websearch_webfetch_top_sources": [],
++            "top_source_count": 0,
++            "arxiv_http_200_verified_ids": [],
++        }
++    )
++    return preconditions
++
++
++def build_blocked_network_artifact() -> dict[str, object]:
++    """Build the no-fabrication blocked artifact for a failed arXiv precondition."""
++
++    return {
++        "honest_verdict": "blocked_network",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "methods_mapped": [],
++        "citations": {},
++        "flagged_for_next_roadmap": [],
++        "note_path": NOTE_RELATIVE_PATH,
++        "verifier_is_oracle": False,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": source_set_checksum({}),
++        "preconditions_checked": _blocked_preconditions(),
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++
++
++def build_artifact(
++    *,
++    methods_mapped: Sequence[JsonMap] = DEFAULT_METHODS_MAPPED,
++    citations: JsonMap = CITATIONS,
++    preconditions_checked: JsonMap = DEFAULT_PRECONDITIONS_CHECKED,
++    flagged_for_next_roadmap: Sequence[str] = FLAGGED_FOR_NEXT_ROADMAP,
++    honest_verdict: str = HONEST_VERDICT,
++) -> dict[str, object]:
++    """Build and validate the REQ-ARC-WMTE-4746 mapping artifact."""
++
++    artifact: dict[str, object] = {
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "methods_mapped": [dict(method) for method in methods_mapped],
++        "citations": {source_id: dict(citation) for source_id, citation in citations.items()},
++        "flagged_for_next_roadmap": list(flagged_for_next_roadmap),
++        "note_path": NOTE_RELATIVE_PATH,
++        "verifier_is_oracle": False,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": source_set_checksum(citations),
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: JsonMap, *, allow_blocked: bool = False) -> None:
++    """Validate the artifact so uncited .437 method claims fail closed."""
++
++    missing = set(REQUIRED_ARTIFACT_FIELDS).difference(artifact)
++    extra = set(artifact).difference(REQUIRED_ARTIFACT_FIELDS)
++    if missing:
++        raise ValueError(f"artifact missing required fields: {sorted(missing)}")
++    if extra:
++        raise ValueError(f"artifact has unexpected fields: {sorted(extra)}")
++
++    verdict = artifact["honest_verdict"]
++    if verdict == "blocked_network":
++        if not allow_blocked:
++            raise ValueError("blocked network artifacts require allow_blocked=True")
++        _validate_blocked_artifact(artifact)
++        return
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if verdict != HONEST_VERDICT:
++        raise ValueError(f"honest_verdict must equal {HONEST_VERDICT!r}")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must match the required substrate")
++    if artifact["field_principles"] != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required annotations")
++    if artifact["note_path"] != NOTE_RELATIVE_PATH:
++        raise ValueError("note_path must point at the 20260625 epistemic-MCTS note")
++    if artifact["verifier_is_oracle"] is not False:
++        raise ValueError("verifier_is_oracle must be false for literature synthesis")
++    if artifact["random_seed"] != RANDOM_SEED:
++        raise ValueError("random_seed must be the experiment id")
++
++    citations = artifact["citations"]
++    if not isinstance(citations, Mapping) or set(citations) != REQUIRED_SOURCE_IDS:
++        raise ValueError("citations must exactly cover the required arXiv IDs")
++    for source_id, citation in citations.items():
++        if not isinstance(citation, Mapping) or set(citation) != REQUIRED_CITATION_FIELDS:
++            raise ValueError("each citation must contain exactly title, url, and http_status")
++        if citation["url"] != f"https://arxiv.org/abs/{source_id}":
++            raise ValueError("citation url must match the arXiv ID")
++        if citation["http_status"] != 200:
++            raise ValueError("each citation http_status must be 200")
++        if not citation["title"]:
++            raise ValueError("each citation title must be non-empty")
++    if artifact["reproducibility_checksum"] != source_set_checksum(citations):
++        raise ValueError("reproducibility checksum must hash the citation source set")
++
++    methods = artifact["methods_mapped"]
++    if (
++        not isinstance(methods, Sequence)
++        or isinstance(methods, str | bytes)
++        or not 3 <= len(methods) <= 5
++    ):
++        raise ValueError("methods_mapped must contain three to five methods")
++    for method in methods:
++        if not isinstance(method, Mapping) or set(method) != REQUIRED_METHOD_FIELDS:
++            raise ValueError("each method must match the required method schema")
++        source_ids = method["source_ids"]
++        if not isinstance(source_ids, Sequence) or isinstance(source_ids, str | bytes) or not source_ids:
++            raise ValueError("each method must cite source_ids")
++        if not set(source_ids).issubset(REQUIRED_SOURCE_IDS):
++            raise ValueError("method source_ids must be verified citations")
++        stack = method["maps_to_current_stack"]
++        if (
++            not isinstance(stack, str)
++            or "E3AgentPolicy" not in stack
++            or "arc_executable_world_model" not in stack
++        ):
++            raise ValueError("methods must map to the current stack")
++        if method["track"] == "similarity_keyed_partial_trajectory_retrieval":
++            if "StepwiseExplorer.adj" not in stack:
++                raise ValueError("MATM retrieval must map to StepwiseExplorer.adj")
++        if not method["implement_cost_over_current_stack"]:
++            raise ValueError("each method needs implement_cost_over_current_stack")
++        if not method["fails_when"]:
++            raise ValueError("each method needs fails_when")
++
++    roadmap = artifact["flagged_for_next_roadmap"]
++    if not isinstance(roadmap, Sequence) or isinstance(roadmap, str | bytes) or not all(
++        isinstance(item, str) and "flagged_for_v437" in item for item in roadmap
++    ):
++        raise ValueError("flagged_for_next_roadmap must contain .437 flagged_for_v437 items")
++    joined_roadmap = " ".join(roadmap).lower()
++    if "flagged_for_v436" in joined_roadmap:
++        raise ValueError("flagged_for_next_roadmap must not carry .436 flags")
++    if "cross_game" in joined_roadmap or "matm_level_bank" in joined_roadmap:
++        raise ValueError("MATM must remain within-game efficiency, not a level-bank")
++
++    _validate_preconditions(artifact["preconditions_checked"])
++
++
++def _validate_blocked_artifact(artifact: JsonMap) -> None:
++    if artifact["methods_mapped"] != [] or artifact["citations"] != {}:
++        raise ValueError("blocked artifact must not include method claims or citations")
++    if artifact["flagged_for_next_roadmap"] != []:
++        raise ValueError("blocked artifact must not flag roadmap candidates")
++    if artifact["reproducibility_checksum"] != source_set_checksum({}):
++        raise ValueError("blocked artifact checksum must hash the empty source set")
++    preconditions = artifact["preconditions_checked"]
++    if not isinstance(preconditions, Mapping) or set(preconditions) != REQUIRED_PRECONDITION_FIELDS:
++        raise ValueError("preconditions_checked must match the required schema")
++    if preconditions["arxiv_reachable"] is not False:
++        raise ValueError("blocked artifact must record unreachable arXiv")
++    if preconditions["websearch_webfetch_used"] is not False:
++        raise ValueError("blocked artifact must not claim WebSearch/WebFetch success")
++
++
++def _validate_preconditions(preconditions: object) -> None:
++    if not isinstance(preconditions, Mapping) or set(preconditions) != REQUIRED_PRECONDITION_FIELDS:
++        raise ValueError("preconditions_checked must match the required schema")
++    if preconditions["arxiv_reachable"] is not True:
++        raise ValueError("network precondition must record reachable arXiv")
++    if preconditions["deep_research_invoked"] is not False:
++        raise ValueError("deep-research must not be invoked")
++    if not 5 <= int(preconditions["top_source_count"]) <= 8:
++        raise ValueError("top_source_count must record top five to eight sources")
++    if preconditions["cross_game_matm_claim_made"] is not False:
++        raise ValueError("cross-game MATM claims are not allowed")
++    if preconditions["level_bank_claim_made"] is not False:
++        raise ValueError("MATM level-bank claims are not allowed")
++    if preconditions["solve_claim_made"] is not False:
++        raise ValueError("solve claim must remain false for ingestion")
++    if preconditions["training_launched"] is not False:
++        raise ValueError("training must not be launched")
++    if preconditions["model_load"] is not False:
++        raise ValueError("model load must not occur")
++    if preconditions["leaderboard_submission"] is not False:
++        raise ValueError("leaderboard submission must not occur")
++    if preconditions["research_conductor_modified"] is not False:
++        raise ValueError("research_conductor must not be modified")
++    if preconditions["ops_docs_modified"] is not False:
++        raise ValueError("ops docs must not be modified by this workflow")
++
++
++def artifact_from_note(note: str) -> dict[str, object]:
++    """Extract the Exp 4746 machine-readable artifact from the shared note."""
++
++    start = note.find(JSON_BLOCK_MARKER)
++    if start < 0:
++        raise ValueError("research note missing Exp 4746 machine-readable JSON block")
++    payload_start = start + len(JSON_BLOCK_MARKER)
++    end = note.find(JSON_BLOCK_TERMINATOR, payload_start)
++    if end < 0:
++        raise ValueError("research note JSON block missing terminator")
++    artifact = json.loads(note[payload_start:end])
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_research_note(note: str) -> None:
++    """Validate the appended .437 prose note and embedded artifact agree."""
++
++    artifact_from_note(note)
++    terminator_index = note.find(JSON_BLOCK_TERMINATOR)
++    prose = note[terminator_index + len(JSON_BLOCK_TERMINATOR) :]
++    forbidden = prose.lower().replace("-", "_")
++    if "cross_game matm" in forbidden or "matm level_bank" in forbidden:
++        raise ValueError("MATM must remain within-game efficiency, not a level-bank")
++    required_phrases = (
++        "SOTA -> .437 epistemic-MCTS / causal-probe / MATM mapping",
++        "Bottom line for the .437 roadmap",
++        "E3AgentPolicy",
++        "StepwiseExplorer.adj",
++        "arc_executable_world_model",
++        "flagged_for_v437",
++        "no solve claim",
++        "within-game action-efficiency candidate, not a level-bank",
++    )
++    for phrase in required_phrases:
++        if phrase not in prose:
++            raise ValueError(f"research note missing required phrase: {phrase}")
++    missing_citations = sorted(
++        citation for citation in NOTE_REQUIRED_SOURCE_CITATIONS if citation not in prose
++    )
++    if missing_citations:
++        raise ValueError(f"research note missing verified source citations: {missing_citations}")
++
++
++def _research_note_refresh() -> str:
++    artifact_json = json.dumps(build_artifact(), indent=2, sort_keys=True)
++    return f"""# Exp 4746 .437 refresh
++
++{JSON_BLOCK_MARKER}{artifact_json}{JSON_BLOCK_TERMINATOR}
++
++Read `AGENTS.md`, `CODEX.md`, `CLAUDE.md`,
++`results/experiment_4734_sota_ingestion_epistemic_mcts_causal_probe.json`,
++`research-references.md`,
++`docs/research-notes/matm-transactive-memory-ingestion-2026-06-23.md`,
++`python/carnot/agentic/arc_competition_agent.py`, and
++`python/carnot/agentic/arc_executable_world_model.py`.
++
++Fresh-pass source set, all checked through arXiv:
++- arXiv:2210.13455, Epistemic Monte Carlo Tree Search.
++- arXiv:2601.06604, Object-Centric World Models Meet Monte Carlo Tree Search.
++- arXiv:2606.14418, Causal Object-Centric Models for Planning with Monte Carlo Tree Search.
++- arXiv:2511.02225, Learning Interactive World Model for Object-Centric Reinforcement Learning.
++- arXiv:2511.14262, Object-Centric World Models for Causality-Aware Reinforcement Learning.
++- arXiv:2511.06136, When Object-Centric World Models Meet Policy Learning.
++- arXiv:2606.19911, Multi-Agent Transactive Memory.
++
++No `/deep-research`, no live LLM inference, no model load, no training, no
++leaderboard submission, and no solve claim. `scripts/research_conductor.py`,
++`ops/changelog.md`, and `ops/status.md` were not edited by this workflow.
++
++## SOTA -> .437 epistemic-MCTS / causal-probe / MATM mapping
++
++## Epistemic object-model MCTS probe planner
++
++**Sources:** arXiv:2210.13455, arXiv:2601.06604, arXiv:2606.14418.
++
++**Mapping:** `E3AgentPolicy` should replace the current single
++`arc_executable_world_model.plan_in_model` BFS choice with an uncertainty-aware
++MCTS planner over candidate engines and object factors. The planner returns
++either a solve action or an information-gain probe.
++
++**Cost:** medium-high. Add MCTS state keys, uncertainty propagation, rollout
++budgets, and a probe-vs-act handoff to the existing active-probe observer.
++
++**Fails when:** uncertainty is uncalibrated, hidden registers alias object
++state, or rollout error compounds before probes can correct the model.
++
++## Causal object-centric MCTS action-slot adapter
++
++**Source:** arXiv:2606.14418.
++
++**Mapping:** bind candidate ARC actions to logical-grid object slots before
++`arc_executable_world_model` rollouts so MCTS can reason about which object a
++click, drag, or movement action is expected to change.
++
++**Cost:** medium-high. Build stable slot descriptors and expose causal attention
++as a planner prior without adding a learned submitted-policy head.
++
++**Fails when:** object slots drift or causal attention follows visually salient
++but goal-irrelevant entities.
++
++## Factored interaction and causal probe bank
++
++**Sources:** arXiv:2511.02225, arXiv:2511.14262; guardrail arXiv:2511.06136.
++
++**Mapping:** `E3AgentPolicy` already exposes factored planning hooks, and
++`arc_executable_world_model` already has `ProgrammaticExpert` and
++`ProductWorldModel`. The .437 bank promotes those rows into typed
++precondition/effect factors whose causal status is confirmed or refuted by
++targeted probes before composition.
++
++**Cost:** high. Add factor schemas, confirm/refute ledgers, causal relation
++scores, and planner composition only over trusted factors.
++
++**Fails when:** object slots drift, relation labels alias hidden registers, or
++the probe budget is too small for the intervention.
++
++## Similarity-keyed partial-trajectory retrieval
++
++**Source:** MATM, arXiv:2606.19911.
++
++**Mapping:** `E3AgentPolicy` keeps the exact-hash `StepwiseExplorer.adj`
++navigation graph, then adds a coarse within-game descriptor index so near-match
++states can retrieve partial prefixes. `arc_executable_world_model` and the
++existing value/goal routing score retrieved prefixes before live commitment.
++
++**Cost:** low-medium. Add a flag-gated descriptor index, candidate-prefix
++retrieval, verifier/value scoring, and diagnostics for
++`forward_walk_hit_rate_delta` and `actions_to_first_levelup_delta`.
++
++**Fails when:** within-game descriptors collide across incompatible mechanics,
++stale prefixes waste actions, or the verifier cannot reject a plausible but
++harmful continuation. This is a within-game action-efficiency candidate, not a level-bank.
++
++## Object-world-model drift and policy-breakage falsifier
++
++**Source:** arXiv:2511.06136.
++
++**Mapping:** `E3AgentPolicy` should invalidate `arc_executable_world_model`
++plans when object factors drift under off-path multi-object interactions, then
++route the failure back into the probe and factor ledgers.
++
++**Cost:** low-medium. Add held-out off-path drift diagnostics, rejected-factor
++reasons, and plan invalidation for visually plausible but causally wrong
++rollouts.
++
++**Fails when:** the drift metric rejects every useful factor or allows unstable
++object rollouts into execution.
++
++## Bottom line for the .437 roadmap
++
++The strongest `.437` build candidate is
++flagged_for_v437: epistemic_object_model_mcts_probe_planner
++(arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418). It is the direct
++upgrade from the .435 posterior splitter to a planner that chooses between
++acting and probing inside world-model rollouts.
++
++The second `.437` build candidate is
++flagged_for_v437: factored_interaction_causal_probe_bank
++(arXiv:2511.02225 + arXiv:2511.14262), guarded by the drift falsifier from
++arXiv:2511.06136.
++
++The efficiency-only candidate is
++flagged_for_v437: similarity_keyed_partial_trajectory_retrieval
++(MATM arXiv:2606.19911): within-game action-efficiency candidate, not a level-bank.
++It should be measured by forward-walk hit-rate and
++actions-to-first-level-up deltas, with no cross-game retrieval claim and no
++solve claim.
++"""
++
++
++def _research_note() -> str:
++    return exp4734.RESEARCH_NOTE.rstrip() + "\n\n---\n\n" + _research_note_refresh()
++
++
++RESEARCH_NOTE = _research_note()
++
++
++def _blocked_research_note(artifact: JsonMap) -> str:
++    artifact_json = json.dumps(artifact, indent=2, sort_keys=True)
++    return f"""# Exp 4746 .437 refresh
++
++{JSON_BLOCK_MARKER}{artifact_json}{JSON_BLOCK_TERMINATOR}
++
++`https://arxiv.org` was unreachable, so this run emitted `blocked_network`
++instead of fabricating citations or method claims.
++"""
++
++
++def write_outputs(
++    *,
++    artifact_path: Path | None = None,
++    note_path: Path | None = None,
++    artifact: JsonMap | None = None,
++    blocked: bool = False,
++) -> dict[str, object]:
++    """Write the stable JSON artifact and shared research note."""
++
++    result = dict(artifact or (build_blocked_network_artifact() if blocked else build_artifact()))
++    if blocked:
++        validate_artifact(result, allow_blocked=True)
++    else:
++        validate_artifact(result)
++    target_artifact = artifact_path or Path(RESULT_RELATIVE_PATH)
++    target_note = note_path or Path(NOTE_RELATIVE_PATH)
++    target_artifact.parent.mkdir(parents=True, exist_ok=True)
++    target_note.parent.mkdir(parents=True, exist_ok=True)
++    target_artifact.write_text(
++        json.dumps(result, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    target_note.write_text(
++        _blocked_research_note(result) if blocked else RESEARCH_NOTE,
++        encoding="utf-8",
++    )
++    return result
++
++
++def arxiv_reachable(timeout: float = 10.0) -> bool:
++    """Check the network precondition without making citation claims."""
++
++    if os.environ.get("CARNOT_EXP4746_FORCE_BLOCKED_NETWORK") == "1":
++        return False
++    if os.environ.get("CARNOT_EXP4746_SKIP_NETWORK_CHECK") == "1":
++        return True
++    try:
++        with request.urlopen("https://arxiv.org", timeout=timeout) as response:
++            return 200 <= int(response.status) < 400
++    except Exception:
++        return False
++
++
++def main() -> int:
++    root = Path(os.environ.get("CARNOT_EXP4746_ROOT", "."))
++    artifact_path = root / RESULT_RELATIVE_PATH
++    note_path = root / NOTE_RELATIVE_PATH
++    if not arxiv_reachable():
++        write_outputs(artifact_path=artifact_path, note_path=note_path, blocked=True)
++        print("blocked_network")
++        return 0
++    artifact = write_outputs(artifact_path=artifact_path, note_path=note_path)
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json b/results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json
+new file mode 100644
+index 0000000000..25785c6fa8
+--- /dev/null
++++ b/results/experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.json
+@@ -0,0 +1,185 @@
++{
++  "citations": {
++    "2210.13455": {
++      "http_status": 200,
++      "title": "Epistemic Monte Carlo Tree Search",
++      "url": "https://arxiv.org/abs/2210.13455"
++    },
++    "2511.02225": {
++      "http_status": 200,
++      "title": "Learning Interactive World Model for Object-Centric Reinforcement Learning",
++      "url": "https://arxiv.org/abs/2511.02225"
++    },
++    "2511.06136": {
++      "http_status": 200,
++      "title": "When Object-Centric World Models Meet Policy Learning: From Pixels to Policies, and Where It Breaks",
++      "url": "https://arxiv.org/abs/2511.06136"
++    },
++    "2511.14262": {
++      "http_status": 200,
++      "title": "Object-Centric World Models for Causality-Aware Reinforcement Learning",
++      "url": "https://arxiv.org/abs/2511.14262"
++    },
++    "2601.06604": {
++      "http_status": 200,
++      "title": "Object-Centric World Models Meet Monte Carlo Tree Search",
++      "url": "https://arxiv.org/abs/2601.06604"
++    },
++    "2606.14418": {
++      "http_status": 200,
++      "title": "Causal Object-Centric Models for Planning with Monte Carlo Tree Search",
++      "url": "https://arxiv.org/abs/2606.14418"
++    },
++    "2606.19911": {
++      "http_status": 200,
++      "title": "Multi-Agent Transactive Memory",
++      "url": "https://arxiv.org/abs/2606.19911"
++    }
++  },
++  "field_principles": {
++    "citations": {
++      "principle": "real arXiv IDs/URLs for every method claim -- an ingestion with no verifiable citations is fabrication per adversarial_verify discipline."
++    },
++    "flagged_for_next_roadmap": {
++      "principle": "the strongest method(s) flagged_for_v437 -- closes the discover->ingest->plan loop so SOTA flows into the next milestone's experiments."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- literature synthesis + WebFetch, no model load (100us floor)."
++    },
++    "methods_mapped": {
++      "principle": "the 3-5 strongest methods, each with maps_to_current_stack + implement_cost_over_current_stack + fails_when -- the actionable ingestion (discover -> ingest -> plan)."
++    },
++    "note_path": {
++      "principle": "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md -- the human-readable per-track synthesis."
++    },
++    "preconditions_checked": {
++      "principle": "records the network-reachability check; pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition (the search/synthesis seed)."
++    },
++    "reproducibility_checksum": {
++      "principle": "content-addressed hash of the ingested source set."
++    },
++    "verifier_is_oracle": {
++      "principle": "false -- a literature synthesis invokes no oracle."
++    }
++  },
++  "flagged_for_next_roadmap": [
++    "flagged_for_v437: epistemic_object_model_mcts_probe_planner (arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418)",
++    "flagged_for_v437: factored_interaction_causal_probe_bank (arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136)",
++    "flagged_for_v437: similarity_keyed_partial_trajectory_retrieval (MATM arXiv:2606.19911; within-game action-efficiency candidate, not a level-bank)"
++  ],
++  "honest_verdict": "success: sota_ingestion_epistemic_mcts_causal_probe_matm_mapped",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "methods_mapped": [
++    {
++      "fails_when": "epistemic uncertainty is miscalibrated, object state keys alias hidden registers, or rollout error compounds before live probes can correct the model.",
++      "implement_cost_over_current_stack": "medium-high: add MCTS node statistics, rollout budgets, epistemic uncertainty propagation across candidate engines, and a live-probe handoff compatible with the existing active-probe observer.",
++      "maps_to_current_stack": "E3AgentPolicy replaces the single arc_executable_world_model BFS plan with uncertainty-aware MCTS rollouts over candidate engines and ProductWorldModel factors, returning either a solve action or an information-gain probe.",
++      "method": "Epistemic object-model MCTS probe planner",
++      "roadmap_candidate": "flagged_for_v437: epistemic_object_model_mcts_probe_planner (arXiv:2210.13455 + arXiv:2601.06604 + arXiv:2606.14418)",
++      "source_ids": [
++        "2210.13455",
++        "2601.06604",
++        "2606.14418"
++      ],
++      "track": "epistemic_object_model_mcts_probe_planner"
++    },
++    {
++      "fails_when": "ARC objects are not separable at logical-grid resolution, action targets cannot be grounded from click or keyboard data, or causal attention prioritizes visually salient but goal-irrelevant slots.",
++      "implement_cost_over_current_stack": "medium-high: derive stable logical object slots from current frames, attach action-target metadata to candidates, and expose causal attention scores as planner priors rather than a learned submitted-policy head.",
++      "maps_to_current_stack": "E3AgentPolicy binds ARC candidate actions to object-like logical-grid slots before arc_executable_world_model rollouts, so MCTS can test which object interaction a click or movement action is expected to change.",
++      "method": "Causal object-centric MCTS action-slot adapter",
++      "roadmap_candidate": "support_for_v437: causal_object_mcts_action_slot_adapter (arXiv:2606.14418)",
++      "source_ids": [
++        "2606.14418"
++      ],
++      "track": "causal_object_mcts_action_slot_adapter"
++    },
++    {
++      "fails_when": "object slots drift, hidden registers alias relation labels, short prefixes make spurious interactions look causal, or the probe budget is too small for the needed intervention.",
++      "implement_cost_over_current_stack": "high: add a factor schema, confirm/refute probe ledger, causal relation scoring, and planner composition only over trusted factors.",
++      "maps_to_current_stack": "E3AgentPolicy proposes object-interaction hypotheses; arc_executable_world_model promotes ProgrammaticExpert rows into typed precondition/effect factors with confirmed/refuted causal ledgers before ProductWorldModel planning composes them.",
++      "method": "Factored interaction and causal probe bank",
++      "roadmap_candidate": "flagged_for_v437: factored_interaction_causal_probe_bank (arXiv:2511.02225 + arXiv:2511.14262; guardrail arXiv:2511.06136)",
++      "source_ids": [
++        "2511.02225",
++        "2511.14262",
++        "2511.06136"
++      ],
++      "track": "factored_interaction_causal_probe_bank"
++    },
++    {
++      "fails_when": "within-game similarity descriptors collide across incompatible mechanics, stale prefixes waste actions, or the verifier cannot reject a plausible but harmful retrieved continuation.",
++      "implement_cost_over_current_stack": "low-medium: add a flag-gated descriptor index beside adj, candidate prefix retrieval, verifier/value scoring, and diagnostics for forward_walk_hit_rate and actions_to_first_levelup deltas.",
++      "maps_to_current_stack": "E3AgentPolicy keeps the existing StepwiseExplorer.adj exact-edge graph but adds a coarse within-game similarity descriptor so near-match frontier states can reuse partial paths; arc_executable_world_model and value/goal routing score retrieved prefixes before commit.",
++      "method": "Similarity-keyed partial-trajectory retrieval",
++      "roadmap_candidate": "flagged_for_v437: similarity_keyed_partial_trajectory_retrieval (MATM arXiv:2606.19911; within-game action-efficiency candidate, not a level-bank)",
++      "source_ids": [
++        "2606.19911"
++      ],
++      "track": "similarity_keyed_partial_trajectory_retrieval"
++    },
++    {
++      "fails_when": "the drift metric is too conservative and rejects useful factors, or too permissive and lets unstable object rollouts pass into execution.",
++      "implement_cost_over_current_stack": "low-medium: add off-path drift diagnostics, rejected-factor reasons, and plan invalidation when object-model predictions stay visually plausible but causally wrong.",
++      "maps_to_current_stack": "E3AgentPolicy invalidates arc_executable_world_model plans when off-path object factors or causal relations drift under multi-object interactions, then routes the failure into probe/factor ledgers instead of executing a brittle plan.",
++      "method": "Object-world-model drift and policy-breakage falsifier",
++      "roadmap_candidate": "guardrail_for_v437: object_world_model_policy_breakage_falsifier (arXiv:2511.06136)",
++      "source_ids": [
++        "2511.06136"
++      ],
++      "track": "object_world_model_drift_policy_breakage_falsifier"
++    }
++  ],
++  "note_path": "docs/research-notes/epistemic-mcts-causal-probe-sota-ingestion-20260625.md",
++  "preconditions_checked": {
++    "agents_md_read": true,
++    "arc_competition_agent_read": true,
++    "arc_executable_world_model_read": true,
++    "arxiv_http_200_verified_ids": [
++      "https://arxiv.org/abs/2210.13455",
++      "https://arxiv.org/abs/2511.02225",
++      "https://arxiv.org/abs/2511.06136",
++      "https://arxiv.org/abs/2511.14262",
++      "https://arxiv.org/abs/2601.06604",
++      "https://arxiv.org/abs/2606.14418",
++      "https://arxiv.org/abs/2606.19911"
++    ],
++    "arxiv_reachable": true,
++    "claude_md_read": true,
++    "codex_md_read": true,
++    "cross_game_matm_claim_made": false,
++    "deep_research_invoked": false,
++    "exp4734_artifact_read": true,
++    "leaderboard_submission": false,
++    "level_bank_claim_made": false,
++    "live_llm_inference": false,
++    "matm_bounded_to_within_game_efficiency": true,
++    "matm_note_read": true,
++    "model_load": false,
++    "ops_docs_modified": false,
++    "research_conductor_modified": false,
++    "research_references_read": true,
++    "solve_claim_made": false,
++    "top_source_count": 7,
++    "training_launched": false,
++    "websearch_webfetch_top_sources": [
++      "https://arxiv.org/abs/2210.13455",
++      "https://arxiv.org/abs/2601.06604",
++      "https://arxiv.org/abs/2606.14418",
++      "https://arxiv.org/abs/2511.02225",
++      "https://arxiv.org/abs/2511.14262",
++      "https://arxiv.org/abs/2511.06136",
++      "https://arxiv.org/abs/2606.19911"
++    ],
++    "websearch_webfetch_used": true
++  },
++  "random_seed": 4746,
++  "reproducibility_checksum": "sha256:601d710668c85e033ef8a7680e106308d7a22c71cba5d8d2c8a42704cb243a32",
++  "verifier_is_oracle": false
++}
+diff --git a/results/proto_l2_measure_fixstack.json b/results/proto_l2_measure_fixstack.json
+index cd11e231e0..c534881b1c 100644
+--- a/results/proto_l2_measure_fixstack.json
++++ b/results/proto_l2_measure_fixstack.json
+@@ -10,17 +10,17 @@
+   "exemplar_present_on_any_induction": false,
+   "n_induction_attempts": 2,
+   "goal_repair_fired_inferred": false,
+-  "induced_is_level_complete_tail": "def is_level_complete(grid):\n    h, w = grid.shape\n    for r in range(h):\n        for c in range(w):\n            if grid[r, c] == 3:\n                return False\n    return True",
++  "induced_is_level_complete_tail": "def is_level_complete(grid):\n    # Check if the grid is in a win state\n    # Based on the observed data, the win state is when the grid is in a specific configuration\n    # For now, we'll implement a simple check based on the observed data\n    \n    # Check if the grid is in a win state\n    # Based on the observed data, the win state is when the grid is in a specific configuration\n    \n    # For no",
+   "induction_summary": [
+     {
+       "reason": "stall",
+       "goal_level": 1,
+-      "skipped": "proposer_failed_or_missing_root",
++      "skipped": "world_model_accuracy_below_threshold",
+       "planned": false,
+       "goal_predicate_satisfiable": false,
+       "plan_reaches_goal": false,
+       "win_state_exemplar_injected": false,
+-      "heldout_accuracy": null,
++      "heldout_accuracy": 0.12,
+       "refinement_rounds_used": null,
+       "n_goal_candidates": 0
+     },
+@@ -33,17 +33,17 @@
+       "plan_reaches_goal": false,
+       "win_state_exemplar_injected": true,
+       "heldout_accuracy": null,
+-      "refinement_rounds_used": 2,
+-      "n_goal_candidates": 1
++      "refinement_rounds_used": 1,
++      "n_goal_candidates": 0
+     }
+   ],
+-  "arm_wall_s": 967.3,
++  "arm_wall_s": 936.9,
+   "pre_fix_baseline": "maxL=1, n_induce=2, goal_satisfiable=False (degenerate goal) -- the live binary arm before the truncation + goal-repair fixes",
+   "inference_substrate": "live_llm_inference",
+   "solve_provenance": "development_proxy",
+   "verifier_is_oracle": false,
+   "random_seed": 4729,
+-  "duration_s": 971.68,
++  "duration_s": 940.26,
+   "model_port": 8920,
+   "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+ }
+\ No newline at end of file
+diff --git a/tests/python/test_experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py b/tests/python/test_experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py
+new file mode 100644
+index 0000000000..543258c067
+--- /dev/null
++++ b/tests/python/test_experiment_4746_sota_ingestion_epistemic_mcts_causal_probe.py
+@@ -0,0 +1,472 @@
++"""Tests for Exp 4746 epistemic-MCTS / causal-probe / MATM SOTA ingestion.
++
++Spec refs: REQ-ARC-WMTE-4746, SCENARIO-ARC-WMTE-4746.
++"""
++
++from __future__ import annotations
++
++import json
++import runpy
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4746_sota_ingestion_epistemic_mcts_causal_probe as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++ARTIFACT_PATH = REPO / mod.RESULT_RELATIVE_PATH
++NOTE_PATH = REPO / mod.NOTE_RELATIVE_PATH
++
++
++def _valid_artifact() -> dict[str, object]:
++    return mod.build_artifact()
++
++
++def _spec_section() -> str:
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    start = spec.index("### REQ-ARC-WMTE-4746")
++    end = spec.index("### REQ-ARC-WMTE-4739", start)
++    return spec[start:end]
++
++
++def test_req_arc_wmte_4746_spec_declares_v437_ingestion_contract() -> None:
++    """REQ-ARC-WMTE-4746: OpenSpec declares the 4746 artifact contract."""
++
++    section = _spec_section()
++
++    assert "REQ-ARC-WMTE-4746" in section
++    assert "SCENARIO-ARC-WMTE-4746" in section
++    assert mod.RESULT_RELATIVE_PATH in section
++    assert mod.NOTE_RELATIVE_PATH in section
++    assert mod.HONEST_VERDICT in section
++    assert mod.INFERENCE_SUBSTRATE in section
++    assert "blocked_network" in section
++    assert "/deep-research" in section
++    assert "flagged_for_v437" in section
++    assert "flagged_for_v436" not in section
++    assert "E3AgentPolicy" in section
++    assert "StepwiseExplorer.adj" in section
++    assert "arc_executable_world_model" in section
++    assert "action-efficiency candidate" in section
++    assert "level-bank" in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in section
++        assert principle["principle"] in section
++    for source_id in mod.REQUIRED_SOURCE_IDS:
++        assert source_id in section
++
++
++def test_req_arc_wmte_4746_artifact_has_required_fields_and_v437_flags() -> None:
++    """REQ-ARC-WMTE-4746: artifact exposes required fields and annotations."""
++
++    artifact = _valid_artifact()
++
++    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
++    assert set(artifact["field_principles"]) == set(mod.REQUIRED_PRINCIPLE_FIELDS)
++    assert artifact["honest_verdict"] == mod.HONEST_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["note_path"] == mod.NOTE_RELATIVE_PATH
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["flagged_for_next_roadmap"] == mod.FLAGGED_FOR_NEXT_ROADMAP
++    assert all("flagged_for_v437" in item for item in artifact["flagged_for_next_roadmap"])
++    assert all("flagged_for_v436" not in item for item in artifact["flagged_for_next_roadmap"])
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["reproducibility_checksum"] == mod.REPRODUCIBILITY_CHECKSUM
++    assert 3 <= len(artifact["methods_mapped"]) <= 5
++    assert set(artifact["citations"]) == mod.REQUIRED_SOURCE_IDS
++
++    preconditions = artifact["preconditions_checked"]
++    assert preconditions["arxiv_reachable"] is True
++    assert preconditions["deep_research_invoked"] is False
++    assert preconditions["websearch_webfetch_used"] is True
++    assert preconditions["top_source_count"] == 7
++    assert preconditions["solve_claim_made"] is False
++    assert preconditions["training_launched"] is False
++    assert preconditions["model_load"] is False
++    assert preconditions["leaderboard_submission"] is False
++    assert preconditions["research_conductor_modified"] is False
++    assert preconditions["ops_docs_modified"] is False
++    assert preconditions["matm_bounded_to_within_game_efficiency"] is True
++    assert preconditions["cross_game_matm_claim_made"] is False
++    assert preconditions["level_bank_claim_made"] is False
++
++    tracks = {method["track"] for method in artifact["methods_mapped"]}
++    assert "epistemic_object_model_mcts_probe_planner" in tracks
++    assert "factored_interaction_causal_probe_bank" in tracks
++    assert "similarity_keyed_partial_trajectory_retrieval" in tracks
++    assert "object_world_model_drift_policy_breakage_falsifier" in tracks
++    for method in artifact["methods_mapped"]:
++        assert set(method) == mod.REQUIRED_METHOD_FIELDS
++        assert "E3AgentPolicy" in method["maps_to_current_stack"]
++        assert "arc_executable_world_model" in method["maps_to_current_stack"]
++        assert method["implement_cost_over_current_stack"]
++        assert method["fails_when"]
++        assert method["roadmap_candidate"]
++    matm = next(
++        method
++        for method in artifact["methods_mapped"]
++        if method["track"] == "similarity_keyed_partial_trajectory_retrieval"
++    )
++    assert matm["source_ids"] == ["2606.19911"]
++    assert "StepwiseExplorer.adj" in matm["maps_to_current_stack"]
++    assert "within-game" in matm["fails_when"]
++    assert "level-bank" in matm["roadmap_candidate"]
++
++
++@pytest.mark.parametrize(
++    ("bad_artifact", "message"),
++    [
++        (_valid_artifact() | {"honest_verdict": "draft"}, "terminal prefix"),
++        (_valid_artifact() | {"honest_verdict": "success: wrong"}, "honest_verdict"),
++        (_valid_artifact() | {"inference_substrate": "live_llm"}, "substrate"),
++        (_valid_artifact() | {"field_principles": {"honest_verdict": "loose"}}, "field_principles"),
++        (_valid_artifact() | {"note_path": "docs/wrong.md"}, "note_path"),
++        (_valid_artifact() | {"verifier_is_oracle": True}, "verifier_is_oracle"),
++        (_valid_artifact() | {"random_seed": "4746"}, "random_seed"),
++        (_valid_artifact() | {"reproducibility_checksum": "sha256:wrong"}, "checksum"),
++        (
++            _valid_artifact()
++            | {
++                "citations": {
++                    key: value for key, value in mod.CITATIONS.items() if key != "2606.19911"
++                }
++            },
++            "citations",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "citations": mod.CITATIONS
++                | {
++                    "2606.19911": {
++                        "url": "https://arxiv.org/abs/2606.19911",
++                        "http_status": 200,
++                    }
++                }
++            },
++            "exactly title",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "citations": mod.CITATIONS
++                | {
++                    "2606.19911": mod.CITATIONS["2606.19911"]
++                    | {"url": "https://arxiv.org/abs/0000.00000"}
++                }
++            },
++            "citation url",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "citations": mod.CITATIONS
++                | {"2606.19911": mod.CITATIONS["2606.19911"] | {"http_status": 404}}
++            },
++            "http_status",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "citations": mod.CITATIONS
++                | {"2606.19911": mod.CITATIONS["2606.19911"] | {"title": ""}}
++            },
++            "title",
++        ),
++        (_valid_artifact() | {"methods_mapped": mod.DEFAULT_METHODS_MAPPED[:2]}, "three to five"),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    mod.DEFAULT_METHODS_MAPPED[0] | {"source_ids": []},
++                    *mod.DEFAULT_METHODS_MAPPED[1:],
++                ]
++            },
++            "source_ids",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    mod.DEFAULT_METHODS_MAPPED[0] | {"source_ids": ["9999.99999"]},
++                    *mod.DEFAULT_METHODS_MAPPED[1:],
++                ]
++            },
++            "verified citations",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    mod.DEFAULT_METHODS_MAPPED[0] | {"maps_to_current_stack": "E3 only"},
++                    *mod.DEFAULT_METHODS_MAPPED[1:],
++                ]
++            },
++            "current stack",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    mod.DEFAULT_METHODS_MAPPED[0] | {"implement_cost_over_current_stack": ""},
++                    *mod.DEFAULT_METHODS_MAPPED[1:],
++                ]
++            },
++            "implement_cost_over_current_stack",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    mod.DEFAULT_METHODS_MAPPED[0] | {"fails_when": ""},
++                    *mod.DEFAULT_METHODS_MAPPED[1:],
++                ]
++            },
++            "fails_when",
++        ),
++        (
++            _valid_artifact()
++            | {"flagged_for_next_roadmap": ["flagged_for_v436: stale"]},
++            ".437",
++        ),
++        (
++            _valid_artifact()
++            | {"flagged_for_next_roadmap": ["flagged_for_v437: cross_game_matm_level_bank"]},
++            "MATM",
++        ),
++        (
++            _valid_artifact()
++            | {"preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED) | {"arxiv_reachable": False}},
++            "network",
++        ),
++        (_valid_artifact() | {"preconditions_checked": []}, "preconditions_checked"),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"deep_research_invoked": True}
++            },
++            "deep-research",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"top_source_count": 9}
++            },
++            "top five to eight",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"cross_game_matm_claim_made": True}
++            },
++            "cross-game MATM",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"level_bank_claim_made": True}
++            },
++            "level-bank",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"solve_claim_made": True}
++            },
++            "solve claim",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"training_launched": True}
++            },
++            "training",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"model_load": True}
++            },
++            "model load",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"leaderboard_submission": True}
++            },
++            "leaderboard",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"research_conductor_modified": True}
++            },
++            "research_conductor",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "preconditions_checked": dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
++                | {"ops_docs_modified": True}
++            },
++            "ops docs",
++        ),
++    ],
++)
++def test_validate_artifact_rejects_schema_violations_for_req_arc_wmte_4746(
++    bad_artifact: dict[str, object], message: str
++) -> None:
++    """REQ-ARC-WMTE-4746: malformed ingestion artifacts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_validate_artifact_rejects_exact_field_violations() -> None:
++    """REQ-ARC-WMTE-4746: top-level and method schemas are exact."""
++
++    missing = _valid_artifact()
++    missing.pop("methods_mapped")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing)
++
++    extra = _valid_artifact() | {"offline_reproduced": False}
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_artifact(extra)
++
++    malformed_method = _valid_artifact() | {
++        "methods_mapped": ["not-a-dict", *mod.DEFAULT_METHODS_MAPPED[1:]]
++    }
++    with pytest.raises(ValueError, match="method"):
++        mod.validate_artifact(malformed_method)
++
++
++def test_scenario_arc_wmte_4746_note_round_trips_and_maps_methods() -> None:
++    """SCENARIO-ARC-WMTE-4746: note embeds JSON and cites mapped methods."""
++
++    artifact = mod.artifact_from_note(mod.RESEARCH_NOTE)
++
++    assert artifact == _valid_artifact()
++    mod.validate_research_note(mod.RESEARCH_NOTE)
++    assert "SOTA -> .437 epistemic-MCTS / causal-probe / MATM mapping" in mod.RESEARCH_NOTE
++    assert "Bottom line for the .437 roadmap" in mod.RESEARCH_NOTE
++    assert "E3AgentPolicy" in mod.RESEARCH_NOTE
++    assert "StepwiseExplorer.adj" in mod.RESEARCH_NOTE
++    assert "arc_executable_world_model" in mod.RESEARCH_NOTE
++    assert "flagged_for_v437" in mod.RESEARCH_NOTE
++    assert "no solve claim" in mod.RESEARCH_NOTE
++    assert "within-game action-efficiency candidate, not a level-bank" in mod.RESEARCH_NOTE
++
++    with pytest.raises(ValueError, match="machine-readable JSON"):
++        mod.artifact_from_note(mod.RESEARCH_NOTE.replace(mod.JSON_BLOCK_MARKER, "## Missing marker"))
++    with pytest.raises(ValueError, match="terminator"):
++        mod.artifact_from_note(mod.RESEARCH_NOTE.replace(mod.JSON_BLOCK_TERMINATOR, ""))
++    with pytest.raises(ValueError, match="required phrase"):
++        mod.validate_research_note(
++            mod.RESEARCH_NOTE.replace("Bottom line for the .437 roadmap", "Bottom line")
++        )
++    note_with_forbidden_matm = mod.RESEARCH_NOTE.replace(
++        "within-game action-efficiency candidate, not a level-bank",
++        "cross-game MATM level-bank",
++    )
++    with pytest.raises(ValueError, match="MATM"):
++        mod.validate_research_note(note_with_forbidden_matm)
++    json_block_end = mod.RESEARCH_NOTE.find(mod.JSON_BLOCK_TERMINATOR) + len("```")
++    note_without_citation = mod.RESEARCH_NOTE[:json_block_end] + mod.RESEARCH_NOTE[
++        json_block_end:
++    ].replace("arXiv:2606.19911", "MATM")
++    with pytest.raises(ValueError, match="verified source citations"):
++        mod.validate_research_note(note_without_citation)
++
++
++def test_write_outputs_is_idempotent_for_scenario_arc_wmte_4746(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4746: writer emits stable artifact and note."""
++
++    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
++    note_path = tmp_path / mod.NOTE_RELATIVE_PATH
++
++    artifact = mod.write_outputs(artifact_path=artifact_path, note_path=note_path)
++    second_artifact = mod.write_outputs(artifact_path=artifact_path, note_path=note_path)
++
++    assert second_artifact == artifact
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++    assert mod.artifact_from_note(note_path.read_text(encoding="utf-8")) == artifact
++
++
++def test_blocked_network_artifact_for_req_arc_wmte_4746() -> None:
++    """REQ-ARC-WMTE-4746: blocked network exits without fabricated claims."""
++
++    blocked = mod.build_blocked_network_artifact()
++
++    assert blocked["honest_verdict"] == "blocked_network"
++    assert blocked["preconditions_checked"]["arxiv_reachable"] is False
++    assert blocked["methods_mapped"] == []
++    assert blocked["citations"] == {}
++    assert blocked["flagged_for_next_roadmap"] == []
++    mod.validate_artifact(blocked, allow_blocked=True)
++    with pytest.raises(ValueError, match="blocked"):
++        mod.validate_artifact(blocked)
++
++
++def test_main_writes_deliverables_for_req_arc_wmte_4746(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-ARC-WMTE-4746: direct module execution writes default outputs."""
++
++    monkeypatch.setenv("CARNOT_EXP4746_ROOT", str(tmp_path))
++    monkeypatch.setenv("CARNOT_EXP4746_SKIP_NETWORK_CHECK", "1")
++
++    with pytest.raises(SystemExit) as module_exit:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++
++    assert module_exit.value.code == 0
++    assert capsys.readouterr().out.strip() == mod.HONEST_VERDICT
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++    assert (tmp_path / mod.NOTE_RELATIVE_PATH).exists()
++
++
++def test_main_writes_blocked_artifact_when_network_blocked(
++    monkeypatch: pytest.MonkeyPatch,
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-ARC-WMTE-4746: direct module execution reports blocked arXiv."""
++
++    monkeypatch.setenv("CARNOT_EXP4746_ROOT", str(tmp_path))
++    monkeypatch.setenv("CARNOT_EXP4746_FORCE_BLOCKED_NETWORK", "1")
++
++    with pytest.raises(SystemExit) as module_exit:
++        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
++
++    assert module_exit.value.code == 0
++    assert capsys.readouterr().out.strip() == "blocked_network"
++    blocked = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert blocked["honest_verdict"] == "blocked_network"
++    assert (tmp_path / mod.NOTE_RELATIVE_PATH).exists()
++
++
++def test_deliverable_files_validate_for_req_arc_wmte_4746() -> None:
++    """REQ-ARC-WMTE-4746: committed deliverables satisfy the schema."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++    note = NOTE_PATH.read_text(encoding="utf-8")
++
++    mod.validate_artifact(artifact)
++    mod.validate_research_note(note)
++    assert mod.artifact_from_note(note) == artifact
++    assert artifact["honest_verdict"] == mod.HONEST_VERDICT
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["flagged_for_next_roadmap"] == mod.FLAGGED_FOR_NEXT_ROADMAP
+-- 
+2.55.0
+

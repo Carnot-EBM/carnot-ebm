@@ -1,0 +1,75 @@
+From 4a59ac69d97e846f3eb7a1e50486cd0459336ed7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 07:15:12 -0400
+Subject: [PATCH 10014/11362] [conductor] Pre-gate block: Delayed two-level
+ constrained decoding
+
+1 of 1 gate(s) failed; first failure: exp6635-matched-direct-headroom.headroom_ready_score (upstream artifact not found for task id 'exp6635-matched-direct-headroom')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                            | 2 +-
+ ops/conductor-heartbeat.json                            | 2 +-
+ ops/conductor-log.md                                    | 2 ++
+ ops/conductor-state.json                                | 2 +-
+ results/experiment_6636_delayed_two_level_decoding.json | 4 ++--
+ 5 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 1308ec09ac..f80deff07f 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -9,5 +9,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-26T11:13:09Z"
++ "last_scan_utc": "2026-08-26T11:15:12Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d82a80e534..c984e3465a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 33, "phase": "iteration_start", "last_beat": "2026-08-26T11:13:08Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 34, "phase": "iteration_start", "last_beat": "2026-08-26T11:15:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c250b592aa..90c5476d0b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16551,3 +16551,5 @@ code |
+ | 2026-08-26 11:09 UTC | Independent admission of all mandated GGUF familie | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6633-gpu-lease-phase-journal.gpu_lease_ |
+ | 2026-08-26 11:11 UTC | Independent admission of all mandated GGUF familie | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6633-gpu-lease-phase-journal.gpu_lease_ |
+ | 2026-08-26 11:13 UTC | Matched direct-headroom baselines | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
++| 2026-08-26 11:13 UTC | Delayed two-level constrained decoding | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6635-matched-direct-headroom.headroom_r |
++| 2026-08-26 11:15 UTC | Matched direct-headroom baselines | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6634-mandated-model-admission, exp6634-ma |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1cc7a6f7a0..067deee6b3 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 33, "phase": "iteration_start", "started_at": "2026-08-26T11:13:08Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 34, "phase": "iteration_start", "started_at": "2026-08-26T11:15:11Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6636_delayed_two_level_decoding.json b/results/experiment_6636_delayed_two_level_decoding.json
+index dda1ec85af..dc807adcf9 100644
+--- a/results/experiment_6636_delayed_two_level_decoding.json
++++ b/results/experiment_6636_delayed_two_level_decoding.json
+@@ -2,8 +2,8 @@
+   "experiment": 6636,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-26",
+-  "started_at": "2026-08-26T11:13:09.387645+00:00",
+-  "finished_at": "2026-08-26T11:13:09.387645+00:00",
++  "started_at": "2026-08-26T11:15:12.634023+00:00",
++  "finished_at": "2026-08-26T11:15:12.634023+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Delayed two-level constrained decoding",
+-- 
+2.55.0
+

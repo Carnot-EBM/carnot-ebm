@@ -1,0 +1,68 @@
+From 03b34134d5e50ca0e82260c28f405fc993245e30 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 16:58:57 -0400
+Subject: [PATCH 09736/11362] [outer-loop] Attempt manifest names the loaded
+ model, not the frozen pin (REQ-ARC-WMTE-6690)
+
+Found while verifying per-attempt retention on a live tu93 run. The archive
+manifest recorded "model": "Qwen3.5-9B-MTP" while the run had actually loaded
+Qwen3.8-27B-Q4_K_M.gguf via CARNOT_ARC_GGUF_PATH.
+
+Both archive sites passed `str(self.repo_substr)` -- the harness's frozen pin,
+which is our INTENT, not what loaded. `_effective_model_label()` already exists
+for exactly this and is used by `generator_model_declared`; it prefers
+`model_path` when the override is set. The archive sites simply bypassed it.
+
+This matters more here than in a log line: the manifest is the durable
+provenance record for retained attempts, so a wrong label misattributes every
+archived model to a model that never ran. REQ-ARC-WMTE-6670 exists because that
+same mislabel "misdirected a whole investigation" during the supab5 A/B.
+
+Evidence: 2 tests (SCENARIO-ARC-WMTE-6690-7) covering the override and the
+no-override fallback. Mutation-proved -- reverting both sites to `repo_substr`
+turns the override test RED with the exact live-observed
+['Qwen3.5-9B-MTP', 'Qwen3.5-9B-MTP'], then GREEN on restore. 16 pass, ruff clean.
+
+The tests reached HEAD ahead of this fix: conductor checkpoint d5425c44b2 swept
+the in-flight test file at 16:56:58, leaving HEAD momentarily RED. This commit
+closes that window. Canonical world_model.py write path untouched.
+
+Two test-suite-mutation markers deleted deliberately, per the guard's own
+instruction for an intended change. Both were armed by CONCURRENT agents' pytest
+runs at 20:57:00Z and 20:57:01Z, both named only this file, and both listed it
+`unattributed` -- i.e. neither run was observed writing it. The content is this
+authored 2-line edit, confirmed by diffing against HEAD before deleting. This is
+the documented over-report, not test damage; `git checkout --` here would have
+destroyed authored work.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ python/carnot/agentic/arc_executable_world_model.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 52bd4873d5..2956df7cfd 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -7989,7 +7989,7 @@ class LocalGGUFProposer:
+             (E3_DIR / game / "world_model.py").write_text(code)
+             # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
+             self.last_attempt_archive = _archive_engine_attempt(
+-                game, code, writer="gen_to_file", model=str(self.repo_substr)
++                game, code, writer="gen_to_file", model=self._effective_model_label()
+             )
+             return True, "local gguf (GPU server) wrote world_model.py"
+         return False, code
+@@ -8005,7 +8005,7 @@ class LocalGGUFProposer:
+         (E3_DIR / game / "world_model.py").write_text(code)
+         # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
+         self.last_attempt_archive = _archive_engine_attempt(
+-            game, code, writer="write_world_model", model=str(self.repo_substr), note=note
++            game, code, writer="write_world_model", model=self._effective_model_label(), note=note
+         )
+         msg = "local gguf (GPU server) wrote world_model.py"
+         return True, (f"{msg} ({note})" if note else msg)
+-- 
+2.55.0
+

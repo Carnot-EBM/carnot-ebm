@@ -1,0 +1,111 @@
+From f5f2db5c33c588314d10336d12bce62b10707981 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 2 Sep 2026 19:19:58 -0400
+Subject: [PATCH 10813/11362] [conductor] Operational retrospective for
+ milestone 2026.09.604
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 12 +++++
+ results/operational_retro_2026_09_604.json | 53 ++++++++++++++++++++++
+ 3 files changed, 72 insertions(+)
+ create mode 100644 results/operational_retro_2026_09_604.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 287cbf73d7..fbeeaed527 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6549,3 +6549,10 @@ The critical path for milestone .250:
+ - theme: anchored relation execution exposed missing task-level timing and accelerator attribution
+ - key result: honest operational negative — the critical path is known, but its cause, GPU efficiency, and multi-model runner eligibility are not established
+ - acceptance: no data available this milestone
++
++### Milestone 2026.09.604
++
++- exp_range: no data available this milestone
++- theme: compute-only relation work exposed a dominant critical path and weak task-level observability
++- key result: honest operational negative — accelerator engagement was present, but phase-level cause, whole-task GPU efficiency, and parallel multi-model runner applicability remain unverified
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 5c6c31834a..236a115e93 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18578,3 +18578,15 @@ re-run chars_final gate; the supervisor's new-arm question stays gated on the to
+ - 2026-09-02: Authentic three-family anchored relation proposal corpus (✅ Complete) — honest_verdict=complete_positive_authentic_anchored_relation_corpus; results/experiment_6900_authentic_anchored_relation_corpus.json
+ - 2026-09-02: Independent held qualification of model-produced relations (⚠️ Blocked) — honest_verdict=complete_blocked_independent_model_relation_qualification; results/experiment_6901_independent_model_relation_qualification.json
+ - 2026-09-02: Independent held qualification of model-produced relations (⚠️ Blocked) — honest_verdict=complete_blocked_independent_model_relation_qualification; results/experiment_6901_independent_model_relation_qualification.json
++
++## 2026-09-02 — Milestone 2026.09.604 operational retrospective
++
++The reconstructed window contains 4 compute-bound experiments and spans 13.1
++minutes. Authentic three-family anchored relation proposal corpus accounts for
++11.1 minutes, but the available clock does not isolate the slow phase. The
++compute-task idle indicator is false. The GPU snapshot confirms accelerator
++activity, but it cannot measure utilization across each task. No supplied
++record identifies a parallel multi-model launch, so it cannot show a missed
++DualGPURunner dispatch. Add task-owned phase and GPU traces, a launch receipt
++for model concurrency and runner choice, and configurable question batching.
++The savings estimate is 0% because no timed comparison is available.
+diff --git a/results/operational_retro_2026_09_604.json b/results/operational_retro_2026_09_604.json
+new file mode 100644
+index 0000000000..6716456f23
+--- /dev/null
++++ b/results/operational_retro_2026_09_604.json
+@@ -0,0 +1,53 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.09.604",
++  "generated_at": "2026-09-02T23:17:15Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 13.1,
++  "experiments_completed": 4,
++  "compute_bound_experiments_count": 4,
++  "slowest_experiments": [
++    {
++      "experiment": "Authentic three-family anchored relation proposal corpus",
++      "duration_minutes": 11.1,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Three-family live relation acquisition authenticity canary",
++      "duration_minutes": 1.99,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Independent held qualification of model-produced relations",
++      "duration_minutes": 0.03,
++      "compute_bound": true
++    },
++    {
++      "experiment": "V604 executable manifest and evidence admissibility contract",
++      "duration_minutes": 0.01,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "The milestone completed 4 compute-bound experiments in 13.1 minutes. Authentic three-family anchored relation proposal corpus set the critical path at 11.1 minutes, followed by Three-family live relation acquisition authenticity canary at 1.99 minutes; the timing record has no phase detail that explains the difference.",
++  "bottlenecks_identified": [
++    "Authentic three-family anchored relation proposal corpus dominated the wall clock, but disk-modification-time reconstruction does not identify which phase caused its 11.1-minute duration.",
++    "The GPU report is a point-in-time host snapshot rather than task-scoped telemetry, so it cannot establish end-to-end utilization for each compute-bound experiment.",
++    "The launch evidence does not record simultaneous model count or runner selection, so DualGPURunner applicability cannot be audited."
++  ],
++  "improvements_suggested": [
++    "Write task-scoped phase timers and interval GPU samples into every compute experiment artifact.",
++    "Emit simultaneous model count and selected runner in a launch receipt, and select DualGPURunner only for parallel multi-model work.",
++    "Add configurable batches of 8-16 questions per forward pass when the workload supports batching.",
++    "Let the scheduler place an eligible second model on the other GPU when independent multi-model work is ready."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add task-scoped phase and GPU telemetry to the compute harness.",
++    "Batch compatible questions before model inference.",
++    "Record model concurrency and route eligible parallel multi-model launches across both GPUs."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The evidence confirms accelerator engagement but does not connect process activity to experiment windows. The savings estimate stays conservative because the milestone contains no timed comparison for the proposed tooling changes."
++}
+-- 
+2.55.0
+

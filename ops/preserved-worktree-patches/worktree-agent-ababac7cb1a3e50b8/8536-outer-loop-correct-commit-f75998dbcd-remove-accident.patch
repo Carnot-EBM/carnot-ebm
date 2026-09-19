@@ -1,0 +1,225 @@
+From 3f6a3411616cc23937e69a584bb1f6712ba57d17 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 16:37:02 -0400
+Subject: [PATCH 08536/11362] [outer-loop] correct commit f75998dbcd: remove
+ accidentally-included conductor in-flight work
+
+The previous commit (f75998dbcd, REQ-ARC-WMTE-6227) staged
+arc_executable_world_model.py with `git add <path>`, which picked up the
+WHOLE working-tree diff for that file -- not just this session's own edit.
+The conductor's own separate, uncommitted REQ-ARC-WMTE-6213 work
+(_object_delta_perception_block and its one-line call site in
+induce_prompt) was mixed into that commit as a result, breaking this
+session's own established discipline (documented repeatedly in earlier
+commit messages today) of verifying `git diff -U0 | grep '^@@'` shows only
+this session's own hunks before staging a file the conductor is also
+actively editing.
+
+This commit removes exactly those two hunks (verified via a hunk-level
+diff reconstruction: this session's hunks + the conductor's hunks applied
+together to the pre-f75998dbcd base reproduce f75998dbcd's committed
+content byte-for-byte, so this correction removes precisely and only the
+conductor's contribution). REQ-ARC-WMTE-6227's own fix
+(_INDUCE_WORST_CASE_PROMPT_TOKENS + the _default_induce_n_ctx docstring
+correction) is untouched. The conductor's work is not lost -- it is
+restored as an uncommitted working-tree diff right after this commit,
+exactly as it stood before the mistake, so the conductor can commit it
+normally under its own message when it resumes.
+
+No functional regression either way: _object_delta_perception_block is
+gated behind CARNOT_ARC_OBJECT_DELTA_PERCEPTION (default off) and the
+whole call site degrades to a no-op via try/except if the module is
+absent, so its presence or absence in this commit was never a behavior
+change for the shipped default -- this is a provenance/attribution
+correction, not a functional fix.
+
+Also acknowledges 7 results/ artifacts flagged stale by the artifact-
+freshness-lint, since this correction changes the file's hash again; the
+reachability argument is unchanged from the immediately-prior
+acknowledgement pass on these same 7 artifacts for REQ-ARC-WMTE-6227.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../agentic/arc_executable_world_model.py      | 18 +-----------------
+ ..._6011_world_model_change_gate_four_arm.json |  8 ++++++++
+ ...ment_6012_hidden_state_trust_gate_hole.json |  8 ++++++++
+ ..._6013_hidden_state_change_gate_closure.json |  8 ++++++++
+ ...ducer_head_to_head_qwen27b_vs_gemma31b.json |  8 ++++++++
+ ...t_win_llm_on_eval_concurrency_20260727.json |  8 ++++++++
+ ...arc_generator_concurrency_fix_20260727.json |  8 ++++++++
+ ...arc_llm_on_wallclock_envelope_20260726.json |  8 ++++++++
+ 8 files changed, 57 insertions(+), 17 deletions(-)
+
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index d986bc7bb4..d4f0a35878 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -2939,22 +2939,6 @@ def _object_perception_on() -> bool:
+     return os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION", "1") != "0"
+ 
+ 
+-def _object_delta_perception_block(trans: list[Transition]) -> str:
+-    """REQ-ARC-WMTE-6213: append transition object deltas only for the explicit arm."""
+-
+-    try:
+-        from carnot.agentic import arc_object_delta_perception
+-    except Exception:
+-        return ""
+-    if not arc_object_delta_perception.object_delta_perception_on():
+-        return ""
+-    try:
+-        block = arc_object_delta_perception.object_delta_block(trans)
+-    except Exception:
+-        return ""
+-    return ("\n" + block) if block else ""
+-
+-
+ # REQ-ARC-WMTE-5717: DEV-ONLY playbook methodology exemplars for the STALL re-induction
+ # path. Default OFF (env CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED unset -> byte-identical
+ # prompt, exactly like the CARNOT_ARC_CODEONLY_INDUCE / _REFACTOR_STRUCTURE_REMINDER
+@@ -3060,7 +3044,7 @@ deterministic. Write ONLY that one file.
+ 
+ OBSERVED TRANSITIONS:
+ {_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled, win_transition=win_transition)}
+-{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}{_object_delta_perception_block(trans)}"""
++{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}"""
+ 
+ 
+ _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH = 8
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index 61da5e99d1..3c4bed04de 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52812,6 +52812,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. This script's only e3 symbols are change_gate_decision, collect_transitions, E3_DIR, load_engine, logical_hud_mask, WorldModelVerifier -- none of which read _INDUCE_WORST_CASE_PROMPT_TOKENS or call _default_induce_n_ctx.",
+         "evidence": "Grep: `grep -oE 'e3\\.[A-Za-z_]+' scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py | sort -u` -> change_gate_decision, collect_transitions, E3_DIR, load_engine, logical_hud_mask, WorldModelVerifier. None touch prompt/n_ctx sizing."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
++        "sha256_now": "27806115d0dfb5650f36d92828f653824dff337b9c3ccfbe2d7ef632fff47001",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
++        "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 78c278b231..95ada40d10 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -296,6 +296,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. This script's only e3/_e3prov symbols are change_gate_decision, collect_transitions, load_engine, logical_hud_mask, WorldModelVerifier, E3_DIR -- none touch prompt/n_ctx sizing.",
+         "evidence": "Grep: `grep -oE 'e3\\.[A-Za-z_]+|_e3prov\\.[A-Za-z_]+' scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py | sort -u` -> the six symbols above, none of them _INDUCE_WORST_CASE_PROMPT_TOKENS or _default_induce_n_ctx."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
++        "sha256_now": "27806115d0dfb5650f36d92828f653824dff337b9c3ccfbe2d7ef632fff47001",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
++        "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 91fe18635c..534d4bd98b 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8838,6 +8838,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. This script's only e3/_e3prov symbols are collect_transitions, load_engine, logical_hud_mask, E3_DIR, and three SUBMITTED_WORLD_MODEL_*_ENABLED constants -- none touch prompt/n_ctx sizing.",
+         "evidence": "Grep: `grep -oE 'e3\\.[A-Za-z_]+|_e3prov\\.[A-Za-z_]+' scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py | sort -u` -> the symbols above, none of them _INDUCE_WORST_CASE_PROMPT_TOKENS or _default_induce_n_ctx."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
++        "sha256_now": "27806115d0dfb5650f36d92828f653824dff337b9c3ccfbe2d7ef632fff47001",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
++        "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
+       }
+     ]
+   },
+diff --git a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+index 305e287c53..a8d1a3f380 100644
+--- a/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
++++ b/results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json
+@@ -1470,6 +1470,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. Same standing pattern this artifact's own provenance already carries 17 times over for prior arc_executable_world_model.py edits (e.g. the REQ-ARC-WMTE-6221 server-leak fix, the REQ-ARC-WMTE-6198 think-mode default flip): every recorded number in this head-to-head is from COMPLETED historical runs, unaffected by a change to how a FUTURE server launch sizes its context pool. The h2h harness scripts (h2h_arm_runner.py.frozen, h2h_reason_tag_probe.py.frozen, build_artifact_6021.py) read completed run transcripts; they do not re-launch a server against the current n_ctx sizing for already-recorded cells.",
+         "evidence": "This artifact's own provenance.freshness_acknowledgements already contains 17 prior entries for this exact path, each using the identical standing argument ('affects FUTURE induce() calls only; cannot retroactively alter any already-recorded artifact') -- most recently for the REQ-ARC-WMTE-6198 think-mode default flip and the REQ-ARC-WMTE-6221 server-leak fix, both landed in this same 2026-08-08 session."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
++        "sha256_now": "27806115d0dfb5650f36d92828f653824dff337b9c3ccfbe2d7ef632fff47001",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
++        "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
+       }
+     ],
+     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 68d45062cb..259c96dbc5 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3596,6 +3596,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. Already established inert to arc_competition_agent.py edits in this same session (REQ-ARC-WMTE-6223/6224/6225/6226 acknowledgements on this artifact): its own recorded data shows treatment_application[<every arm>].induction_attempts_planned_total == 0 across all cells of all arms, so _default_induce_n_ctx() -- reachable only from a live server launch, itself gated behind an induction attempt -- was never invoked in this artifact's own measured cells.",
+         "evidence": "Same self-measured-zero-reachability evidence as the prior acknowledgement pass on this artifact for arc_competition_agent.py: d['treatment_application'][<arm>]['induction_attempts_planned_total'] == 0 for every arm, matching honest_verdict 'complete_UNFALSIFIABLE_treatment_not_applied_llm_output_never_reached_policy'."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
++        "sha256_now": "27806115d0dfb5650f36d92828f653824dff337b9c3ccfbe2d7ef632fff47001",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
++        "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index b0627a9d0c..b4a036a332 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1245,6 +1245,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. Already established inert to arc_competition_agent.py edits in this same session: its three code-dependency scripts (build_fix_artifact.py, fixverify.py, mutate.py) never construct E3AgentPolicy or call next_move/_induce_and_plan, so the live server-launch path that consumes _default_induce_n_ctx() is not reachable from this artifact's rebuild either.",
+         "evidence": "Grep: `grep -n 'E3AgentPolicy(\\|\\.next_move(\\|_induce_and_plan(' results/generator_concurrency_fix_20260727/build_fix_artifact.py results/generator_concurrency_fix_20260727/fixverify.py results/generator_concurrency_fix_20260727/mutate.py` -> zero matches across all three files (same grep already run for the prior arc_competition_agent.py acknowledgement pass on this artifact)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
++        "sha256_now": "27806115d0dfb5650f36d92828f653824dff337b9c3ccfbe2d7ef632fff47001",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
++        "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index 5fdfbb41c1..a701bf010f 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -472,6 +472,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. Already established inert to arc_competition_agent.py edits in this same session: its rebuild target, analyze_arc_llm_on_wallclock_envelope.py, is pure aggregation over an already-captured rows_source file (inference_substrate: aggregation_from_upstream_artifacts) and never constructs E3AgentPolicy or calls next_move/_induce_and_plan.",
+         "evidence": "Grep: `grep -n 'E3AgentPolicy(\\|\\.next_move(\\|_induce_and_plan(' scripts/analyze_arc_llm_on_wallclock_envelope.py` -> zero matches (same grep already run for the prior arc_competition_agent.py acknowledgement pass on this artifact)."
++      },
++      {
++        "path": "python/carnot/agentic/arc_executable_world_model.py",
++        "sha256_was": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
++        "sha256_now": "27806115d0dfb5650f36d92828f653824dff337b9c3ccfbe2d7ef632fff47001",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
++        "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+-- 
+2.55.0
+

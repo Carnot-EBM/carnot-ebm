@@ -1,0 +1,2009 @@
+From 1d38b809174d7bc94eee473fdba5c1a446b62b7e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 10 Jul 2026 21:38:27 -0400
+Subject: [PATCH 06658/11362] [conductor] V503 capstone reconciliation and
+ claim ledger
+
+Automated research step by research conductor.
+Task ID: exp5563-v503-capstone-reconciliation
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   | 103 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/experiment_5563_capstone_v503.py   | 718 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   8 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_5563_capstone_v503.json    | 441 +++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ results/outer_loop_gpt56sol_wa30_probe.json   |  10 +
+ .../test_experiment_5563_capstone_v503.py     | 451 +++++++++++
+ 19 files changed, 1749 insertions(+), 26 deletions(-)
+ create mode 100644 python/carnot/experiment_5563_capstone_v503.py
+ create mode 100644 results/experiment_5563_capstone_v503.json
+ create mode 100644 results/outer_loop_gpt56sol_wa30_probe.json
+ create mode 100644 tests/python/test_experiment_5563_capstone_v503.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index cce8186eac..54d3e527ec 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -40095,3 +40095,106 @@ emits a complete no-op artifact.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-5551 | Implemented (`python/carnot/experiment_5551_v503_source_delta_ingestion.py`, `results/experiment_5551_v503_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5551_v503_source_delta_ingestion.py`) |
++
++### REQ-REPORT-5563: V503 Capstone Reconciliation Preserves Claim Boundaries
++
++The Exp5563 workflow SHALL write
++`results/experiment_5563_capstone_v503.json` after reading every existing
++`.503` result artifact from Exp5550 through Exp5562, including the
++`results/experiment_5562_arc_fsm_live_levelup_trajectory.json` sidecar, and
++after accounting for the conductor-gated Exp5554 hard/soft panel skip from
++`ops/conductor-log.md`. It SHALL read, but SHALL NOT update,
++`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when the
++operator delegates final docs/status reconciliation to a separate conductor
++step. It SHALL NOT modify `research-roadmap.yaml` or
++`scripts/research_conductor.py`.
++
++The workflow SHALL record clean, flagged, blocked, skipped-by-gate, and
++honest-null outcomes separately. It SHALL keep structured SOTA and SOTA
++hard/soft claims false when row completion failed in Exp5552, the GBNF row
++smoke was conductor-gated in Exp5553, or the Exp5554 panel was skipped. It
++SHALL preserve the repaired five-arm and causal write-manage-read CSL evidence
++from clean Exp5557 and Exp5558, but SHALL keep broad CSL and cross-model CSL
++claims false when Exp5559 is flagged or has zero cross-family delta. It SHALL
++allow only the bounded ASP/FSM sparse-repair claim from clean Exp5556 and SHALL
++not convert that evidence into timing or hardware speedup. It SHALL keep
++hardware speedup false without matched timing from Exp5560. It SHALL keep ARC
++live level-up false when Exp5562 has `registry_delta=0` or lacks offline
++reproduction, even if the live-path provenance is otherwise clean.
++
++The artifact SHALL include required fields `milestone`, `task_range`,
++`artifacts_expected`, `artifacts_read`, `missing_artifacts`,
++`flagged_artifacts`, `blocked_artifacts`, `skipped_by_gates`, `honest_nulls`,
++`structured_sota_claim_allowed`, `sota_hard_soft_claim_allowed`,
++`continuous_self_learning_evidence`, `csl_claim_allowed`,
++`cross_model_csl_claim_allowed`, `asp_sparse_repair_claim_allowed`,
++`hardware_speedup_claim`, `arc_registry_delta`,
++`arc_live_levelup_claim_allowed`, `docs_updated`, `roadmap_yaml_unchanged`,
++`conductor_unchanged`, `field_principles`, `inference_substrate`, and
++`honest_verdict`.
++
++Required field principles:
++
++- `milestone`: principle "Route key for the `.503` capstone."
++- `task_range`: principle "Closed conductor boundary from transition through this capstone."
++- `artifacts_expected`: principle "Count of expected upstream `.503` artifacts and sidecars before claim aggregation."
++- `artifacts_read`: principle "Count of expected upstream JSON artifacts actually parsed."
++- `missing_artifacts`: principle "Unaccounted absent or unreadable evidence stays visible and never becomes success."
++- `flagged_artifacts`: principle "Adversarial or methodology-flagged artifacts cannot support headline claims."
++- `blocked_artifacts`: principle "Terminal blocked artifacts remain blockers even when useful diagnostics exist."
++- `skipped_by_gates`: principle "Conductor gate skips stay separate from missing files and clean nulls."
++- `honest_nulls`: principle "Executed clean nulls are recorded without treating them as failures or wins."
++- `clean_artifacts`: principle "Readable unflagged nonblocked nonnull artifacts available for bounded aggregation."
++- `structured_sota_claim_allowed`: principle "False unless row completion, grammar-forced rows, and schema/exact validation all pass."
++- `sota_hard_soft_claim_allowed`: principle "False unless a clean hard/soft panel explicitly allows the claim."
++- `continuous_self_learning_evidence`: principle "True only for clean five-arm plus causal memory evidence, separate from transfer claims."
++- `csl_claim_allowed`: principle "Broad CSL claim gate; false when cross-model transfer is flagged, skipped, or zero-delta."
++- `cross_model_csl_claim_allowed`: principle "False unless clean cross-family transfer beats shuffled/no-memory controls without negative-transfer spikes."
++- `asp_sparse_repair_claim_allowed`: principle "Bounded exact-checked ASP/FSM repair evidence only, not a speedup claim."
++- `hardware_speedup_claim`: principle "Must remain false without matched hardware-vs-baseline timing receipts."
++- `arc_registry_delta`: principle "Counts only offline-reproduced live-agent registry increments."
++- `arc_live_levelup_claim_allowed`: principle "False unless live_agent_self_discovery, offline reproduction, and positive registry delta all hold."
++- `docs_updated`: principle "Files updated by this workflow; ops/status, ops/changelog, and traceability remain delegated."
++- `roadmap_yaml_unchanged`: principle "Protected-file discipline; true only when `research-roadmap.yaml` is unchanged."
++- `conductor_unchanged`: principle "Protected-file discipline; true only when `scripts/research_conductor.py` is unchanged."
++- `field_principles`: principle "One-line annotations for every headline and gate field."
++- `inference_substrate`: principle "Must equal aggregation_from_upstream_artifacts because Exp5563 is synthesis only."
++- `honest_verdict`: principle "Terminal summary starting with complete: or blocked: that names the `.503` claim boundary."
++
++#### SCENARIO-REPORT-5563: Capstone Aggregates V503 Without Laundering Flags
++
++**Given** the existing Exp5550 through Exp5562 `.503` artifacts are readable
++**And** Exp5552 is blocked, Exp5553 is a conductor pre-gate skip, Exp5554 is
++conductor-skipped, Exp5559 is adversarial-flagged and zero-delta, and Exp5562
++is an honest ARC no-bank null
++**When** the Exp5563 capstone workflow runs
++**Then** it writes `results/experiment_5563_capstone_v503.json`, records the
++flagged, blocked, skipped, and honest-null rows separately, keeps structured
++SOTA, SOTA hard/soft, broad CSL, cross-model CSL, hardware speedup, and ARC
++live level-up claims false, preserves clean causal CSL evidence, preserves the
++bounded ASP/FSM sparse-repair claim, declares
++`inference_substrate=aggregation_from_upstream_artifacts`, and keeps protected
++files unchanged.
++
++#### SCENARIO-REPORT-5563-MISSING-INPUT: Unaccounted Missing Inputs Fail Closed
++
++**Given** one or more expected non-gated Exp5550 through Exp5562 artifacts is
++missing or unreadable
++**When** the Exp5563 capstone workflow runs
++**Then** it emits a terminal `blocked:` artifact, records the path in
++`missing_artifacts`, keeps headline claim booleans false except independently
++clean bounded evidence, and does not modify protected files.
++
++#### SCENARIO-REPORT-5563-FIELD-PRINCIPLES: Required Fields Stay Annotated
++
++**Given** the Exp5563 artifact is emitted
++**When** the artifact schema is validated
++**Then** every required headline and gate field has a one-line
++`field_principles` entry, no speedup or ARC level-up claim is allowed without
++its required receipts, and `honest_verdict` has a terminal prefix.
++
++## Implementation Status (REQ-REPORT-5563)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5563 | Implemented (`python/carnot/experiment_5563_capstone_v503.py`, `results/experiment_5563_capstone_v503.json`) | Implemented (`tests/python/test_experiment_5563_capstone_v503.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5d3fd1994c..6e98337d7d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4515,
++  "experiments_checked": 4516,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5563_capstone_v503.py b/python/carnot/experiment_5563_capstone_v503.py
+new file mode 100644
+index 0000000000..e87cbee18b
+--- /dev/null
++++ b/python/carnot/experiment_5563_capstone_v503.py
+@@ -0,0 +1,718 @@
++"""Exp5563 capstone reconciliation for milestone 2026.07.503.
++
++Spec refs: REQ-REPORT-5563, SCENARIO-REPORT-5563,
++SCENARIO-REPORT-5563-MISSING-INPUT, SCENARIO-REPORT-5563-FIELD-PRINCIPLES.
++
++This module is a synthesis-only claim ledger. It reads the `.503` artifacts
++that already landed, records the conductor-gated panel skip, and emits the
++claim boundaries that those receipts actually support. The important boundary
++is that a blocked row-completion receipt, a flagged cross-model transfer, an
++unmatched timing receipt, or an ARC no-bank attempt cannot become a headline
++claim merely because other lanes were clean.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++from pathlib import Path
++from typing import Any
++
++from carnot.experiment_5415_transition_v493 import (
++    JsonDict,
++    JsonMap,
++    _modification_status,
++    path_sha256,
++    payload_checksum,
++    read_json_mapping,
++    write_json,
++)
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5563_capstone_v503.json")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++
++EXPERIMENT = "experiment_5563_capstone_v503"
++EXPERIMENT_ID = "exp5563-capstone-v503"
++MILESTONE = "2026.07.503"
++TASK_RANGE = "exp5550-exp5563"
++RUN_DATE = "2026-07-11"
++RANDOM_SEED = 5563
++SCHEMA = "carnot.experiment_5563.capstone_v503.v1"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_PREFIXES = ("complete:", "blocked:")
++
++SPEC_REFS = (
++    "REQ-REPORT-5563",
++    "SCENARIO-REPORT-5563",
++    "SCENARIO-REPORT-5563-MISSING-INPUT",
++    "SCENARIO-REPORT-5563-FIELD-PRINCIPLES",
++)
++
++EXPECTED_ARTIFACT_PATHS = (
++    Path("results/experiment_5550_transition_v503.json"),
++    Path("results/experiment_5551_v503_source_delta_ingestion.json"),
++    Path("results/experiment_5552_automaton_schema_row_completion_receipt.json"),
++    Path("results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json"),
++    Path("results/experiment_5554_sota_hard_soft_panel_v4.json"),
++    Path("results/experiment_5555_asp_fsm_nonmonotonic_fixture.json"),
++    Path("results/experiment_5556_asp_fsm_sparse_repair_scale.json"),
++    Path("results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json"),
++    Path("results/experiment_5558_causal_write_manage_read_csl_memory.json"),
++    Path("results/experiment_5559_cross_model_sota_csl_transfer_v2.json"),
++    Path("results/experiment_5560_hardware_and_timing_receipt_hygiene.json"),
++    Path("results/experiment_5561_arc_fsm_target_rotation_precheck.json"),
++    Path("results/experiment_5562_arc_fsm_live_levelup.json"),
++    Path("results/experiment_5562_arc_fsm_live_levelup_trajectory.json"),
++)
++
++CONDUCTOR_GATED_ARTIFACTS: dict[Path, JsonDict] = {
++    Path("results/experiment_5554_sota_hard_soft_panel_v4.json"): {
++        "task_id": "exp5554-sota-hard-soft-panel-v4",
++        "title": "Gated SOTA hard-soft panel v4",
++        "blocked_at_layer": "conductor_pre_gate",
++        "honest_verdict": "blocked_gate_check_failed",
++    }
++}
++
++SOURCE_CONTEXT_PATHS = (
++    Path("AGENTS.md"),
++    Path("CLAUDE.md"),
++    Path("CODEX.md"),
++    Path("research-roadmap.yaml"),
++    Path("research-roadmap-next.yaml"),
++    Path("research-complete.yaml"),
++    Path("openspec/change-proposals/research-roadmap-vNEXT.md"),
++    Path("openspec/capabilities/research-reporting/spec.md"),
++    Path("ops/status.md"),
++    Path("ops/changelog.md"),
++    CONDUCTOR_LOG_RELATIVE_PATH,
++    CONDUCTOR_RELATIVE_PATH,
++)
++
++DEFAULT_DOCS_UPDATED = ("openspec/capabilities/research-reporting/spec.md",)
++DEFAULT_CHECKS_RUN = (
++    ".venv/bin/pytest tests/python/test_experiment_5563_capstone_v503.py -q --no-cov",
++    (
++        ".venv/bin/coverage run "
++        "--include=python/carnot/experiment_5563_capstone_v503.py "
++        "-m pytest tests/python/test_experiment_5563_capstone_v503.py -q --no-cov -n 0"
++    ),
++    (
++        ".venv/bin/coverage report "
++        "--include=python/carnot/experiment_5563_capstone_v503.py --fail-under=100"
++    ),
++    ".venv/bin/pytest tests/python -q",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "milestone": "Route key for the `.503` capstone.",
++    "task_range": "Closed conductor boundary from transition through this capstone.",
++    "artifacts_expected": "Count of expected upstream `.503` artifacts and sidecars before claim aggregation.",
++    "artifacts_read": "Count of expected upstream JSON artifacts actually parsed.",
++    "missing_artifacts": "Unaccounted absent or unreadable evidence stays visible and never becomes success.",
++    "flagged_artifacts": "Adversarial or methodology-flagged artifacts cannot support headline claims.",
++    "blocked_artifacts": "Terminal blocked artifacts remain blockers even when useful diagnostics exist.",
++    "skipped_by_gates": "Conductor gate skips stay separate from missing files and clean nulls.",
++    "honest_nulls": "Executed clean nulls are recorded without treating them as failures or wins.",
++    "clean_artifacts": "Readable unflagged nonblocked nonnull artifacts available for bounded aggregation.",
++    "structured_sota_claim_allowed": "False unless row completion, grammar-forced rows, and schema/exact validation all pass.",
++    "sota_hard_soft_claim_allowed": "False unless a clean hard/soft panel explicitly allows the claim.",
++    "continuous_self_learning_evidence": "True only for clean five-arm plus causal memory evidence, separate from transfer claims.",
++    "csl_claim_allowed": "Broad CSL claim gate; false when cross-model transfer is flagged, skipped, or zero-delta.",
++    "cross_model_csl_claim_allowed": "False unless clean cross-family transfer beats shuffled/no-memory controls without negative-transfer spikes.",
++    "asp_sparse_repair_claim_allowed": "Bounded exact-checked ASP/FSM repair evidence only, not a speedup claim.",
++    "hardware_speedup_claim": "Must remain false without matched hardware-vs-baseline timing receipts.",
++    "arc_registry_delta": "Counts only offline-reproduced live-agent registry increments.",
++    "arc_live_levelup_claim_allowed": "False unless live_agent_self_discovery, offline reproduction, and positive registry delta all hold.",
++    "docs_updated": "Files updated by this workflow; ops/status, ops/changelog, and traceability remain delegated.",
++    "roadmap_yaml_unchanged": "Protected-file discipline; true only when `research-roadmap.yaml` is unchanged.",
++    "conductor_unchanged": "Protected-file discipline; true only when `scripts/research_conductor.py` is unchanged.",
++    "field_principles": "One-line annotations for every headline and gate field.",
++    "inference_substrate": "Must equal aggregation_from_upstream_artifacts because Exp5563 is synthesis only.",
++    "honest_verdict": "Terminal summary starting with complete: or blocked: that names the `.503` claim boundary.",
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES)
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "run_date",
++    "random_seed",
++    "spec_refs",
++    "result_path",
++    "source_context",
++    "source_context_missing",
++    "artifact_metadata",
++    "artifact_paths_read",
++    "failed_artifacts",
++    "claim_boundaries",
++    "checks_run",
++    "reproducibility_checksum",
++    *REQUIRED_ARTIFACT_FIELDS,
++)
++
++BOOL_FIELDS = (
++    "structured_sota_claim_allowed",
++    "sota_hard_soft_claim_allowed",
++    "continuous_self_learning_evidence",
++    "csl_claim_allowed",
++    "cross_model_csl_claim_allowed",
++    "asp_sparse_repair_claim_allowed",
++    "hardware_speedup_claim",
++    "arc_live_levelup_claim_allowed",
++    "roadmap_yaml_unchanged",
++    "conductor_unchanged",
++)
++INT_FIELDS = ("artifacts_expected", "artifacts_read", "arc_registry_delta")
++LIST_FIELDS = (
++    "artifact_paths_read",
++    "missing_artifacts",
++    "flagged_artifacts",
++    "blocked_artifacts",
++    "failed_artifacts",
++    "skipped_by_gates",
++    "honest_nulls",
++    "clean_artifacts",
++    "docs_updated",
++    "checks_run",
++)
++
++
++def _read_artifacts(root: Path) -> tuple[dict[str, JsonDict], JsonDict, list[str], list[str]]:
++    artifacts: dict[str, JsonDict] = {}
++    metadata: JsonDict = {}
++    paths_read: list[str] = []
++    missing: list[str] = []
++    for rel_path in EXPECTED_ARTIFACT_PATHS:
++        payload, meta = read_json_mapping(root / rel_path)
++        rel = rel_path.as_posix()
++        artifacts[rel] = payload
++        metadata[rel] = meta
++        if meta.get("exists") and meta.get("loadable"):
++            paths_read.append(rel)
++        else:
++            missing.append(rel)
++    return artifacts, metadata, paths_read, missing
++
++
++def _read_source_context(root: Path) -> tuple[list[JsonDict], list[str]]:
++    records: list[JsonDict] = []
++    missing: list[str] = []
++    for rel_path in SOURCE_CONTEXT_PATHS:
++        path = root / rel_path
++        exists = path.exists()
++        records.append(
++            {
++                "path": rel_path.as_posix(),
++                "exists": exists,
++                "read_only": True,
++                "sha256": path_sha256(path),
++            }
++        )
++        if not exists:
++            missing.append(rel_path.as_posix())
++    return records, missing
++
++
++def _payload(artifacts: Mapping[str, JsonMap], rel_path: Path) -> JsonMap:
++    return artifacts.get(rel_path.as_posix(), {})
++
++
++def _verdict(payload: JsonMap) -> str:
++    verdict = payload.get("honest_verdict")
++    return str(verdict) if verdict is not None else ""
++
++
++def _status_label(payload: JsonMap) -> str:
++    status = payload.get("status")
++    if status is not None:
++        return str(status).lower()
++    verdict = _verdict(payload).lower()
++    if verdict.startswith("blocked:") or verdict.startswith("blocked_"):
++        return "blocked"
++    if verdict.startswith("honest_null:") or "honest_null" in verdict:
++        return "honest_null"
++    if verdict.startswith("failed:"):
++        return "failed"
++    if verdict.startswith("complete:"):
++        return "complete"
++    return "unknown"
++
++
++def _is_flagged(payload: JsonMap) -> bool:
++    return bool(payload.get("flagged_adversarial"))
++
++
++def _is_gate_skip(payload: JsonMap) -> bool:
++    verdict = _verdict(payload)
++    blocked_at_layer = str(payload.get("blocked_at_layer") or "").lower()
++    return bool(
++        payload.get("schema") == "blocked_gate_check_v1"
++        or verdict.startswith("blocked_gate")
++        or ("gate" in blocked_at_layer and _status_label(payload) == "blocked")
++        or (payload.get("gate_check_summary") and _status_label(payload) == "blocked")
++    )
++
++
++def _is_blocked(payload: JsonMap) -> bool:
++    return _status_label(payload) == "blocked" or _verdict(payload).lower().startswith("blocked:")
++
++
++def _is_failed(payload: JsonMap) -> bool:
++    return _status_label(payload) in {"failed", "error"}
++
++
++def _is_honest_null(payload: JsonMap) -> bool:
++    return _status_label(payload) == "honest_null"
++
++
++def _clean_for_claim(payload: JsonMap) -> bool:
++    return bool(payload) and not (
++        _is_flagged(payload)
++        or _is_gate_skip(payload)
++        or _is_blocked(payload)
++        or _is_failed(payload)
++        or _is_honest_null(payload)
++    )
++
++
++def _artifact_row(rel_path: str, payload: JsonMap, metadata: JsonMap) -> JsonDict:
++    return {
++        "artifact_path": rel_path,
++        "status": payload.get("status", _status_label(payload)),
++        "honest_verdict": payload.get("honest_verdict"),
++        "flagged_adversarial": bool(payload.get("flagged_adversarial")),
++        "inference_substrate": payload.get("inference_substrate"),
++        "sha256": metadata.get(rel_path, {}).get("sha256") if isinstance(metadata, Mapping) else None,
++    }
++
++
++def classify_artifacts(
++    artifacts: Mapping[str, JsonMap], metadata: JsonMap
++) -> tuple[list[JsonDict], list[JsonDict], list[JsonDict], list[JsonDict], list[JsonDict], list[JsonDict]]:
++    flagged: list[JsonDict] = []
++    blocked: list[JsonDict] = []
++    failed: list[JsonDict] = []
++    skipped: list[JsonDict] = []
++    honest_nulls: list[JsonDict] = []
++    clean: list[JsonDict] = []
++    for rel_path in EXPECTED_ARTIFACT_PATHS:
++        rel = rel_path.as_posix()
++        payload = artifacts.get(rel, {})
++        if not payload:
++            continue
++        row = _artifact_row(rel, payload, metadata)
++        row_is_flagged = _is_flagged(payload)
++        row_is_gate_skip = _is_gate_skip(payload)
++        row_is_blocked = _is_blocked(payload) and not row_is_gate_skip
++        row_is_failed = _is_failed(payload)
++        row_is_honest_null = _is_honest_null(payload)
++        if row_is_flagged:
++            flagged_row = dict(row)
++            flagged_row["skip_reason"] = "flagged_adversarial"
++            flagged_row["corrigendum_pending"] = payload.get("corrigendum_pending", [])
++            flagged.append(flagged_row)
++        if row_is_blocked:
++            blocked_row = dict(row)
++            blocked_row["block_reason"] = payload.get("gate_check_summary") or _verdict(payload)
++            blocked.append(blocked_row)
++        if row_is_failed:
++            failed_row = dict(row)
++            failed_row["failure_reason"] = "failed_terminal_status"
++            failed.append(failed_row)
++        if row_is_gate_skip:
++            skipped_row = dict(row)
++            skipped_row["skip_reason"] = "conductor_gate_skip"
++            skipped_row["blocked_at_layer"] = payload.get("blocked_at_layer")
++            skipped_row["gate_check_summary"] = payload.get("gate_check_summary")
++            skipped.append(skipped_row)
++        if row_is_honest_null:
++            null_row = dict(row)
++            null_row["null_reason"] = payload.get("failure_mode") or "clean_honest_null"
++            honest_nulls.append(null_row)
++        if not (
++            row_is_flagged or row_is_blocked or row_is_failed or row_is_gate_skip or row_is_honest_null
++        ):
++            clean.append(row)
++    return flagged, blocked, failed, skipped, honest_nulls, clean
++
++
++def _conductor_gate_skips(root: Path, metadata: JsonMap) -> tuple[list[JsonDict], set[str]]:
++    log_path = root / CONDUCTOR_LOG_RELATIVE_PATH
++    log_text = log_path.read_text(encoding="utf-8") if log_path.exists() else ""
++    rows: list[JsonDict] = []
++    skipped_paths: set[str] = set()
++    for rel_path, spec in CONDUCTOR_GATED_ARTIFACTS.items():
++        rel = rel_path.as_posix()
++        meta = metadata.get(rel, {}) if isinstance(metadata, Mapping) else {}
++        if meta.get("exists"):
++            continue
++        title = str(spec["title"])
++        matching_lines = [
++            line.strip()
++            for line in log_text.splitlines()
++            if title in line and "GATE_BLOCK" in line
++        ]
++        if not matching_lines:
++            continue
++        skipped_paths.add(rel)
++        rows.append(
++            {
++                "artifact_path": rel,
++                "status": "blocked",
++                "honest_verdict": spec["honest_verdict"],
++                "flagged_adversarial": False,
++                "inference_substrate": None,
++                "sha256": None,
++                "skip_reason": "conductor_gate_skip_no_artifact_written",
++                "blocked_at_layer": spec["blocked_at_layer"],
++                "gate_check_summary": matching_lines[-1],
++                "source_path": CONDUCTOR_LOG_RELATIVE_PATH.as_posix(),
++            }
++        )
++    return rows, skipped_paths
++
++
++def _int(payload: JsonMap, field: str) -> int:
++    value = payload.get(field)
++    if isinstance(value, bool):
++        return int(value)
++    if isinstance(value, int | float):
++        return int(value)
++    if isinstance(value, str) and value.lstrip("-").isdigit():
++        return int(value)
++    return 0
++
++
++def _float(payload: JsonMap, field: str) -> float:
++    value = payload.get(field)
++    if isinstance(value, int | float):
++        return float(value)
++    if isinstance(value, str):
++        try:
++            return float(value)
++        except ValueError:
++            return 0.0
++    return 0.0
++
++
++def _rows_complete(payload: JsonMap) -> bool:
++    rows_requested = _int(payload, "rows_requested")
++    return bool(
++        payload.get("grammar_forced_rows_complete")
++        or payload.get("all_rows_completed")
++        or (
++            rows_requested > 0
++            and _int(payload, "rows_emitted") == rows_requested
++            and _int(payload, "schema_valid_rows") == rows_requested
++            and _int(payload, "missing_candidate_rows") == 0
++        )
++    )
++
++
++def _structured_sota_claim_allowed(artifacts: Mapping[str, JsonMap]) -> bool:
++    exp5552 = _payload(
++        artifacts, Path("results/experiment_5552_automaton_schema_row_completion_receipt.json")
++    )
++    exp5553 = _payload(artifacts, Path("results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json"))
++    exp5554 = _payload(artifacts, Path("results/experiment_5554_sota_hard_soft_panel_v4.json"))
++    return bool(
++        _clean_for_claim(exp5552)
++        and exp5552.get("automaton_row_completion_ready")
++        and _clean_for_claim(exp5553)
++        and _rows_complete(exp5553)
++        and _clean_for_claim(exp5554)
++        and exp5554.get("gates_clean")
++        and exp5554.get("adversarial_clean")
++        and _rows_complete(exp5554)
++        and _float(exp5554, "exact_validator_accuracy") >= 1.0
++    )
++
++
++def _continuous_self_learning_evidence(artifacts: Mapping[str, JsonMap]) -> bool:
++    exp5557 = _payload(
++        artifacts, Path("results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json")
++    )
++    exp5558 = _payload(artifacts, Path("results/experiment_5558_causal_write_manage_read_csl_memory.json"))
++    duplicated = exp5557.get("duplicated_metric_pairs")
++    return bool(
++        _clean_for_claim(exp5557)
++        and exp5557.get("csl_five_arm_clean")
++        and exp5557.get("adversarial_clean")
++        and exp5557.get("tautology_resolved")
++        and (not isinstance(duplicated, list) or len(duplicated) == 0)
++        and _float(exp5557, "aligned_delta_over_shuffled") > 0.0
++        and _clean_for_claim(exp5558)
++        and exp5558.get("csl_memory_ready")
++        and exp5558.get("csl_claim_allowed")
++        and exp5558.get("no_weight_mutation")
++        and _float(exp5558, "quality_delta_vs_shuffled_memory") > 0.0
++        and _float(exp5558, "action_impact_delta_vs_no_memory") > 0.0
++        and _int(exp5558, "action_selection_changed_count") > 0
++    )
++
++
++def _cross_model_csl_claim_allowed(
++    artifacts: Mapping[str, JsonMap], continuous_self_learning_evidence: bool
++) -> bool:
++    exp5559 = _payload(artifacts, Path("results/experiment_5559_cross_model_sota_csl_transfer_v2.json"))
++    return bool(
++        continuous_self_learning_evidence
++        and _clean_for_claim(exp5559)
++        and exp5559.get("csl_claim_allowed")
++        and exp5559.get("no_weight_mutation")
++        and _float(exp5559, "cross_family_delta_over_shuffled") > 0.0
++        and _float(exp5559, "negative_transfer_rate") <= 0.0
++    )
++
++
++def _claim_booleans(artifacts: Mapping[str, JsonMap]) -> JsonDict:
++    exp5554 = _payload(artifacts, Path("results/experiment_5554_sota_hard_soft_panel_v4.json"))
++    exp5556 = _payload(artifacts, Path("results/experiment_5556_asp_fsm_sparse_repair_scale.json"))
++    exp5560 = _payload(artifacts, Path("results/experiment_5560_hardware_and_timing_receipt_hygiene.json"))
++
++    structured = _structured_sota_claim_allowed(artifacts)
++    continuous = _continuous_self_learning_evidence(artifacts)
++    cross_model = _cross_model_csl_claim_allowed(artifacts, continuous)
++    return {
++        "structured_sota_claim_allowed": structured,
++        "sota_hard_soft_claim_allowed": bool(
++            structured and _clean_for_claim(exp5554) and exp5554.get("sota_hard_soft_claim_allowed")
++        ),
++        "continuous_self_learning_evidence": continuous,
++        "csl_claim_allowed": cross_model,
++        "cross_model_csl_claim_allowed": cross_model,
++        "asp_sparse_repair_claim_allowed": bool(
++            _clean_for_claim(exp5556)
++            and exp5556.get("asp_sparse_repair_claim_allowed")
++            and exp5556.get("exact_asp_validator_ready")
++            and _float(exp5556, "stable_model_checked_rate") >= 1.0
++            and _int(exp5556, "unchecked_repair_count") == 0
++        ),
++        "hardware_speedup_claim": bool(
++            _clean_for_claim(exp5560)
++            and exp5560.get("hardware_speedup_claim")
++            and exp5560.get("matched_timing_available")
++        ),
++    }
++
++
++def _arc_claims(artifacts: Mapping[str, JsonMap]) -> JsonDict:
++    exp5562 = _payload(artifacts, Path("results/experiment_5562_arc_fsm_live_levelup.json"))
++    live_success = bool(
++        _clean_for_claim(exp5562)
++        and exp5562.get("solve_provenance") == "live_agent_self_discovery"
++        and exp5562.get("offline_reproduced")
++        and _int(exp5562, "registry_delta") > 0
++        and _int(exp5562, "reproduced_levels") > 0
++    )
++    return {
++        "arc_live_levelup_claim_allowed": live_success,
++        "arc_registry_delta": _int(exp5562, "registry_delta") if live_success else 0,
++        "arc_audit": {
++            "source_artifact": "results/experiment_5562_arc_fsm_live_levelup.json",
++            "solve_provenance": exp5562.get("solve_provenance"),
++            "offline_reproduced": bool(exp5562.get("offline_reproduced")),
++            "registry_delta_raw": _int(exp5562, "registry_delta"),
++            "reproduced_levels_raw": _int(exp5562, "reproduced_levels"),
++            "capstone_counted_as_levelup_attempt": False,
++        },
++    }
++
++
++def build_artifact(
++    artifacts: Mapping[str, JsonMap],
++    artifact_metadata: JsonMap,
++    artifact_paths_read: Sequence[str],
++    missing_artifacts: Sequence[str],
++    source_context: Sequence[JsonMap],
++    source_context_missing: Sequence[str],
++    *,
++    checks_run: Sequence[str],
++    docs_updated: Sequence[str],
++    roadmap_modified: bool,
++    conductor_modified: bool,
++    conductor_gate_skips: Sequence[JsonMap],
++    conductor_gate_skip_paths: set[str],
++) -> JsonDict:
++    flagged, blocked, failed, skipped, honest_nulls, clean = classify_artifacts(
++        artifacts, artifact_metadata
++    )
++    all_skipped = skipped + [dict(row) for row in conductor_gate_skips]
++    unaccounted_missing = [
++        path for path in missing_artifacts if path not in conductor_gate_skip_paths
++    ]
++    booleans = _claim_booleans(artifacts)
++    arc = _arc_claims(artifacts)
++    status_prefix = "blocked:" if unaccounted_missing else "complete:"
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "run_date": RUN_DATE,
++        "random_seed": RANDOM_SEED,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH.as_posix(),
++        "source_context": [dict(row) for row in source_context],
++        "source_context_missing": list(source_context_missing),
++        "artifact_metadata": dict(artifact_metadata),
++        "artifact_paths_read": list(artifact_paths_read),
++        "failed_artifacts": failed,
++        "claim_boundaries": [
++            "No structured or hard/soft SOTA claim: Exp5552 row completion blocked Exp5553 and Exp5554.",
++            "Continuous self-learning fixture evidence exists, but broad CSL waits on clean cross-model transfer.",
++            "Cross-model CSL is false because Exp5559 is flagged with zero cross-family delta.",
++            "ASP/FSM sparse repair is bounded exact-checked repair evidence, not timing evidence.",
++            "Hardware speedup is false because Exp5560 has no matched timing pairs.",
++            "ARC live level-up is false because Exp5562 registry_delta remains zero.",
++        ],
++        "checks_run": list(checks_run),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "milestone": MILESTONE,
++        "task_range": TASK_RANGE,
++        "artifacts_expected": len(EXPECTED_ARTIFACT_PATHS),
++        "artifacts_read": len(artifact_paths_read),
++        "missing_artifacts": unaccounted_missing,
++        "flagged_artifacts": flagged,
++        "blocked_artifacts": blocked,
++        "skipped_by_gates": all_skipped,
++        "honest_nulls": honest_nulls,
++        "clean_artifacts": clean,
++        "docs_updated": list(docs_updated),
++        "roadmap_yaml_unchanged": not roadmap_modified,
++        "conductor_unchanged": not conductor_modified,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        **booleans,
++        "arc_registry_delta": arc["arc_registry_delta"],
++        "arc_live_levelup_claim_allowed": arc["arc_live_levelup_claim_allowed"],
++        "arc_audit": arc["arc_audit"],
++    }
++    payload["honest_verdict"] = (
++        f"{status_prefix} .503 capstone read {payload['artifacts_read']}/"
++        f"{payload['artifacts_expected']} expected artifacts; "
++        f"missing={len(payload['missing_artifacts'])}; flagged={len(flagged)}; "
++        f"blocked={len(blocked)}; skipped_by_gates={len(all_skipped)}; "
++        f"honest_nulls={len(honest_nulls)}; "
++        f"structured_sota_claim_allowed={payload['structured_sota_claim_allowed']}; "
++        f"sota_hard_soft_claim_allowed={payload['sota_hard_soft_claim_allowed']}; "
++        f"continuous_self_learning_evidence={payload['continuous_self_learning_evidence']}; "
++        f"csl_claim_allowed={payload['csl_claim_allowed']}; "
++        f"cross_model_csl_claim_allowed={payload['cross_model_csl_claim_allowed']}; "
++        f"asp_sparse_repair_claim_allowed={payload['asp_sparse_repair_claim_allowed']}; "
++        f"hardware_speedup_claim={payload['hardware_speedup_claim']}; "
++        f"arc_registry_delta={payload['arc_registry_delta']}"
++    )
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def run_capstone(
++    root: Path = REPO_ROOT,
++    *,
++    checks_run: Sequence[str] = DEFAULT_CHECKS_RUN,
++    docs_updated: Sequence[str] = DEFAULT_DOCS_UPDATED,
++    modification_overrides: Mapping[Path | str, bool] | None = None,
++) -> JsonDict:
++    artifacts, metadata, paths_read, missing_artifacts = _read_artifacts(root)
++    source_context, source_missing = _read_source_context(root)
++    conductor_gate_skips, conductor_gate_skip_paths = _conductor_gate_skips(root, metadata)
++    roadmap_modified = _modification_status(root, ROADMAP_RELATIVE_PATH, modification_overrides)
++    conductor_modified = _modification_status(root, CONDUCTOR_RELATIVE_PATH, modification_overrides)
++    return build_artifact(
++        artifacts,
++        metadata,
++        paths_read,
++        missing_artifacts,
++        source_context,
++        source_missing,
++        checks_run=checks_run,
++        docs_updated=docs_updated,
++        roadmap_modified=roadmap_modified,
++        conductor_modified=conductor_modified,
++        conductor_gate_skips=conductor_gate_skips,
++        conductor_gate_skip_paths=conductor_gate_skip_paths,
++    )
++
++
++def validate_artifact(payload: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in payload:
++            errors.append(field)
++    for field in BOOL_FIELDS:
++        if field in payload and not isinstance(payload[field], bool):
++            errors.append(field)
++    for field in INT_FIELDS:
++        if field in payload and not isinstance(payload[field], int):
++            errors.append(field)
++    for field in LIST_FIELDS:
++        if field in payload and not isinstance(payload[field], list):
++            errors.append(field)
++    principles = payload.get("field_principles")
++    if not isinstance(principles, Mapping) or set(REQUIRED_ARTIFACT_FIELDS) - set(principles):
++        errors.append("field_principles")
++    if payload.get("hardware_speedup_claim") is not False:
++        errors.append("hardware_speedup_claim")
++    if payload.get("arc_live_levelup_claim_allowed") and _int(payload, "arc_registry_delta") <= 0:
++        errors.append("arc_live_levelup_claim_allowed")
++    if payload.get("sota_hard_soft_claim_allowed") and not payload.get("structured_sota_claim_allowed"):
++        errors.append("sota_hard_soft_claim_allowed")
++    if payload.get("csl_claim_allowed") and not payload.get("cross_model_csl_claim_allowed"):
++        errors.append("csl_claim_allowed")
++    if payload.get("roadmap_yaml_unchanged") is not True:
++        errors.append("roadmap_yaml_unchanged")
++    if payload.get("conductor_unchanged") is not True:
++        errors.append("conductor_unchanged")
++    expected = payload.get("artifacts_expected")
++    read = payload.get("artifacts_read")
++    if isinstance(expected, int) and isinstance(read, int) and read > expected:
++        errors.append("artifacts_read")
++    if payload.get("milestone") != MILESTONE:
++        errors.append("milestone")
++    if payload.get("task_range") != TASK_RANGE:
++        errors.append("task_range")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    honest_verdict = payload.get("honest_verdict")
++    if not isinstance(honest_verdict, str) or not honest_verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict")
++    return sorted(set(errors))
++
++
++def write_capstone(
++    root: Path = REPO_ROOT,
++    *,
++    checks_run: Sequence[str] = DEFAULT_CHECKS_RUN,
++    docs_updated: Sequence[str] = DEFAULT_DOCS_UPDATED,
++    modification_overrides: Mapping[Path | str, bool] | None = None,
++) -> JsonDict:
++    artifact = run_capstone(
++        root=root,
++        checks_run=checks_run,
++        docs_updated=docs_updated,
++        modification_overrides=modification_overrides,
++    )
++    errors = validate_artifact(artifact)
++    if errors:  # pragma: no cover - unit tests exercise validate_artifact directly
++        raise ValueError(f"invalid Exp5563 artifact fields: {', '.join(errors)}")
++    write_json(root / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--write", action="store_true", help="write the Exp5563 artifact")
++    args = parser.parse_args(argv)
++    artifact = write_capstone() if args.write else run_capstone()
++    if not args.write:
++        write_json(Path("/dev/stdout"), artifact)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper
++    raise SystemExit(main())
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 55f969cc25..c074e2b526 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,14 +2,14 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260711",
+-  "started_at": "2026-07-11T00:52:03.045357+00:00",
+-  "finished_at": "2026-07-11T00:52:03.072001+00:00",
+-  "duration_s": 0.027,
++  "started_at": "2026-07-11T01:37:26.495563+00:00",
++  "finished_at": "2026-07-11T01:37:26.521147+00:00",
++  "duration_s": 0.026,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+   "torch_cuda_count": 2,
+-  "nvidia_smi_count": 2,
++  "nvidia_smi_count": 0,
+   "gpu_count_detected": 2,
+   "detection_source": "experiment_template",
+   "torch_build": {
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 6815d0bc12..f1504bcdca 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-11T00:52:03Z",
++  "run_date": "2026-07-11T01:37:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 4cc887d567..45b7ff0773 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260711",
+-  "started_at": "2026-07-11T00:52:04Z",
+-  "finished_at": "2026-07-11T00:52:04Z",
++  "started_at": "2026-07-11T01:37:27Z",
++  "finished_at": "2026-07-11T01:37:27Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 59973c1c5e..97d70ccd1d 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-07-11T00:52:04Z",
++  "run_date": "2026-07-11T01:37:27Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 9371437bcc..e68d8e8dbc 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-07-11T00:52:04Z",
++  "run_date": "2026-07-11T01:37:27Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 43fef5a7f7..7a50a8c44a 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.14385986328125,
++  "efficiency_gains_ms": 2.1429061889648438,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 75a2fdd601..a5f358e915 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260711",
+-  "started_at": "2026-07-11T00:51:28Z",
+-  "finished_at": "2026-07-11T00:51:28Z",
++  "started_at": "2026-07-11T01:36:51Z",
++  "finished_at": "2026-07-11T01:36:51Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index d407f02ddb..8f68a7a033 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260711",
+-  "started_at": "2026-07-11T00:52:05Z",
+-  "finished_at": "2026-07-11T00:52:05Z",
++  "started_at": "2026-07-11T01:37:27Z",
++  "finished_at": "2026-07-11T01:37:27Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.07367134094238281,
++  "latency_ms": 0.0762939453125,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 4e51c9e0c5..7b81a806e7 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008943939208984375,
+-  "avg_eqm_time": 0.07464540004730225,
++  "avg_pem_time": 0.0009277486801147461,
++  "avg_eqm_time": 0.07580700874328614,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 1b61c62891..1fb9cf241e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.207769572734833e-05,
++  "duration_s": 4.127807915210724e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5563_capstone_v503.json b/results/experiment_5563_capstone_v503.json
+new file mode 100644
+index 0000000000..9de4d90d23
+--- /dev/null
++++ b/results/experiment_5563_capstone_v503.json
+@@ -0,0 +1,441 @@
++{
++  "arc_audit": {
++    "capstone_counted_as_levelup_attempt": false,
++    "offline_reproduced": false,
++    "registry_delta_raw": 0,
++    "reproduced_levels_raw": 0,
++    "solve_provenance": "live_agent_self_discovery",
++    "source_artifact": "results/experiment_5562_arc_fsm_live_levelup.json"
++  },
++  "arc_live_levelup_claim_allowed": false,
++  "arc_registry_delta": 0,
++  "artifact_metadata": {
++    "results/experiment_5550_transition_v503.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:5dabb9b0db256e22868cc9e429aaa3c0fbe3fb966f6cb86bf6d79f7c83a76e62"
++    },
++    "results/experiment_5551_v503_source_delta_ingestion.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:313753507c390e026ecd03696df4f74805c7780370492489ece351765b583f56"
++    },
++    "results/experiment_5552_automaton_schema_row_completion_receipt.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:3cdc0c425c8247ee1287f2fd553564fb90e8f6ffa75b63ecf8819b625eb8bc63"
++    },
++    "results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:8d13347f8b6767df615bcefa03ad29930e0d7436c66809531e74aed48c51acef"
++    },
++    "results/experiment_5554_sota_hard_soft_panel_v4.json": {
++      "error": "missing",
++      "exists": false,
++      "loadable": false
++    },
++    "results/experiment_5555_asp_fsm_nonmonotonic_fixture.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:e1edbf1d570e43baf06fefcc366000c9c251edb42e608d093f8582afea9fffeb"
++    },
++    "results/experiment_5556_asp_fsm_sparse_repair_scale.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:22b3ebf354b733650a0535d6e3214887f09481c9ee04614eee496bebb2adcaf2"
++    },
++    "results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:7b78e40021d580da20aff3a3e9777ab3e97042b0cf5db57820bc407d76674d78"
++    },
++    "results/experiment_5558_causal_write_manage_read_csl_memory.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:28bbcace6e9237af1dd8287fdad028b78c81e38ceb9a641a2ae69ec214577930"
++    },
++    "results/experiment_5559_cross_model_sota_csl_transfer_v2.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:32710bbf667559accc5108a60c2986459d03c58f577399aea0eceff988869699"
++    },
++    "results/experiment_5560_hardware_and_timing_receipt_hygiene.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:343740628e5f4639aed73b652fdb9dcd9533dc620f29cabde087f3df7c9d47e4"
++    },
++    "results/experiment_5561_arc_fsm_target_rotation_precheck.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:c4336e2885262234d53cd1dcd613a23a857f2bd5482be05827da78c7ca9b06f5"
++    },
++    "results/experiment_5562_arc_fsm_live_levelup.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:f0fb2be33ce32d3302886b2cb041b7895af9e3a5243a4f83a22267b901b6c281"
++    },
++    "results/experiment_5562_arc_fsm_live_levelup_trajectory.json": {
++      "error": null,
++      "exists": true,
++      "loadable": true,
++      "sha256": "sha256:bb37608b079b5834151264aacec8523d4c9a583a8f5a1758bb02b4842830d307"
++    }
++  },
++  "artifact_paths_read": [
++    "results/experiment_5550_transition_v503.json",
++    "results/experiment_5551_v503_source_delta_ingestion.json",
++    "results/experiment_5552_automaton_schema_row_completion_receipt.json",
++    "results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json",
++    "results/experiment_5555_asp_fsm_nonmonotonic_fixture.json",
++    "results/experiment_5556_asp_fsm_sparse_repair_scale.json",
++    "results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json",
++    "results/experiment_5558_causal_write_manage_read_csl_memory.json",
++    "results/experiment_5559_cross_model_sota_csl_transfer_v2.json",
++    "results/experiment_5560_hardware_and_timing_receipt_hygiene.json",
++    "results/experiment_5561_arc_fsm_target_rotation_precheck.json",
++    "results/experiment_5562_arc_fsm_live_levelup.json",
++    "results/experiment_5562_arc_fsm_live_levelup_trajectory.json"
++  ],
++  "artifacts_expected": 14,
++  "artifacts_read": 13,
++  "asp_sparse_repair_claim_allowed": true,
++  "blocked_artifacts": [
++    {
++      "artifact_path": "results/experiment_5552_automaton_schema_row_completion_receipt.json",
++      "block_reason": "blocked: automaton_row_completion_not_ready_proposal_path_missing_required_rows",
++      "flagged_adversarial": false,
++      "honest_verdict": "blocked: automaton_row_completion_not_ready_proposal_path_missing_required_rows",
++      "inference_substrate": "deterministic_automaton_no_llm",
++      "sha256": "sha256:3cdc0c425c8247ee1287f2fd553564fb90e8f6ffa75b63ecf8819b625eb8bc63",
++      "status": "blocked"
++    },
++    {
++      "artifact_path": "results/experiment_5559_cross_model_sota_csl_transfer_v2.json",
++      "block_reason": "blocked: causal_cross_model_sota_csl_transfer_v2_claim_not_allowed",
++      "flagged_adversarial": true,
++      "honest_verdict": "blocked: causal_cross_model_sota_csl_transfer_v2_claim_not_allowed",
++      "inference_substrate": "live_local_sota_gguf_cross_model_csl_transfer_or_gate_skip",
++      "sha256": "sha256:32710bbf667559accc5108a60c2986459d03c58f577399aea0eceff988869699",
++      "status": "blocked"
++    }
++  ],
++  "checks_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5563_capstone_v503.py -q --no-cov",
++    ".venv/bin/coverage run --include=python/carnot/experiment_5563_capstone_v503.py -m pytest tests/python/test_experiment_5563_capstone_v503.py -q --no-cov -n 0",
++    ".venv/bin/coverage report --include=python/carnot/experiment_5563_capstone_v503.py --fail-under=100",
++    ".venv/bin/pytest tests/python -q"
++  ],
++  "claim_boundaries": [
++    "No structured or hard/soft SOTA claim: Exp5552 row completion blocked Exp5553 and Exp5554.",
++    "Continuous self-learning fixture evidence exists, but broad CSL waits on clean cross-model transfer.",
++    "Cross-model CSL is false because Exp5559 is flagged with zero cross-family delta.",
++    "ASP/FSM sparse repair is bounded exact-checked repair evidence, not timing evidence.",
++    "Hardware speedup is false because Exp5560 has no matched timing pairs.",
++    "ARC live level-up is false because Exp5562 registry_delta remains zero."
++  ],
++  "clean_artifacts": [
++    {
++      "artifact_path": "results/experiment_5550_transition_v503.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: archived .502 terminal evidence into .503 transition receipt; clean lanes are duration/substrate corrigendum, grammar preflight, exact FSM, CSL residue independence, sparse FSM repair, hardware receipt hygiene, and ARC clean precheck; blocked or flagged lanes are Exp5540 no hard/soft claim, Exp5543 CSL TAUTOLOGY, Exp5544 gated transfer skip, Exp5548 ARC honest null, hardware_speedup_claim=false, and arc_registry_delta=0; next_task_range=exp5550-exp5563.",
++      "inference_substrate": "aggregation_from_upstream_artifacts",
++      "sha256": "sha256:5dabb9b0db256e22868cc9e429aaa3c0fbe3fb966f6cb86bf6d79f7c83a76e62",
++      "status": "complete"
++    },
++    {
++      "artifact_path": "results/experiment_5551_v503_source_delta_ingestion.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: accepted 1 non-duplicate actionable V503 source delta and kept closed scopes closed",
++      "inference_substrate": "aggregation_from_upstream_artifacts",
++      "sha256": "sha256:313753507c390e026ecd03696df4f74805c7780370492489ece351765b583f56",
++      "status": "complete"
++    },
++    {
++      "artifact_path": "results/experiment_5555_asp_fsm_nonmonotonic_fixture.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: exact ASP/FSM stable-model fixture ready with no LLM",
++      "inference_substrate": "deterministic_asp_fsm_exact_fixture_no_llm",
++      "sha256": "sha256:e1edbf1d570e43baf06fefcc366000c9c251edb42e608d093f8582afea9fffeb",
++      "status": "complete"
++    },
++    {
++      "artifact_path": "results/experiment_5556_asp_fsm_sparse_repair_scale.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: asp_fsm_sparse_repair_descriptor_signal_ready_no_speedup_claim",
++      "inference_substrate": "deterministic_asp_fsm_sparse_repair_no_llm",
++      "sha256": "sha256:22b3ebf354b733650a0535d6e3214887f09481c9ee04614eee496bebb2adcaf2",
++      "status": "complete"
++    },
++    {
++      "artifact_path": "results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: csl_five_arm_tautology_corrigendum_v2_clean",
++      "inference_substrate": "deterministic_csl_ablation_no_llm",
++      "sha256": "sha256:7b78e40021d580da20aff3a3e9777ab3e97042b0cf5db57820bc407d76674d78",
++      "status": "complete"
++    },
++    {
++      "artifact_path": "results/experiment_5558_causal_write_manage_read_csl_memory.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: causal_write_manage_read_csl_memory_ready",
++      "inference_substrate": "deterministic_online_memory_fixture_no_llm",
++      "sha256": "sha256:28bbcace6e9237af1dd8287fdad028b78c81e38ceb9a641a2ae69ec214577930",
++      "status": "complete"
++    },
++    {
++      "artifact_path": "results/experiment_5560_hardware_and_timing_receipt_hygiene.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: hardware and timing receipt hygiene clean; matched_timing_available=false; repeated_timing_pairs=0; hardware_speedup_claim=false",
++      "inference_substrate": "hardware_receipt_and_timing_hygiene_no_llm",
++      "sha256": "sha256:343740628e5f4639aed73b652fdb9dcd9533dc620f29cabde087f3df7c9d47e4",
++      "status": "complete"
++    },
++    {
++      "artifact_path": "results/experiment_5561_arc_fsm_target_rotation_precheck.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: r11l L3 FSM ARC precheck ready; no solve claimed",
++      "inference_substrate": "arc_live_path_precheck_no_llm",
++      "sha256": "sha256:c4336e2885262234d53cd1dcd613a23a857f2bd5482be05827da78c7ca9b06f5",
++      "status": "complete"
++    },
++    {
++      "artifact_path": "results/experiment_5562_arc_fsm_live_levelup_trajectory.json",
++      "flagged_adversarial": false,
++      "honest_verdict": null,
++      "inference_substrate": null,
++      "sha256": "sha256:bb37608b079b5834151264aacec8523d4c9a583a8f5a1758bb02b4842830d307",
++      "status": "unknown"
++    }
++  ],
++  "conductor_unchanged": true,
++  "continuous_self_learning_evidence": true,
++  "cross_model_csl_claim_allowed": false,
++  "csl_claim_allowed": false,
++  "docs_updated": [
++    "openspec/capabilities/research-reporting/spec.md"
++  ],
++  "experiment": "experiment_5563_capstone_v503",
++  "experiment_id": "exp5563-capstone-v503",
++  "failed_artifacts": [],
++  "field_principles": {
++    "arc_live_levelup_claim_allowed": "False unless live_agent_self_discovery, offline reproduction, and positive registry delta all hold.",
++    "arc_registry_delta": "Counts only offline-reproduced live-agent registry increments.",
++    "artifacts_expected": "Count of expected upstream `.503` artifacts and sidecars before claim aggregation.",
++    "artifacts_read": "Count of expected upstream JSON artifacts actually parsed.",
++    "asp_sparse_repair_claim_allowed": "Bounded exact-checked ASP/FSM repair evidence only, not a speedup claim.",
++    "blocked_artifacts": "Terminal blocked artifacts remain blockers even when useful diagnostics exist.",
++    "clean_artifacts": "Readable unflagged nonblocked nonnull artifacts available for bounded aggregation.",
++    "conductor_unchanged": "Protected-file discipline; true only when `scripts/research_conductor.py` is unchanged.",
++    "continuous_self_learning_evidence": "True only for clean five-arm plus causal memory evidence, separate from transfer claims.",
++    "cross_model_csl_claim_allowed": "False unless clean cross-family transfer beats shuffled/no-memory controls without negative-transfer spikes.",
++    "csl_claim_allowed": "Broad CSL claim gate; false when cross-model transfer is flagged, skipped, or zero-delta.",
++    "docs_updated": "Files updated by this workflow; ops/status, ops/changelog, and traceability remain delegated.",
++    "field_principles": "One-line annotations for every headline and gate field.",
++    "flagged_artifacts": "Adversarial or methodology-flagged artifacts cannot support headline claims.",
++    "hardware_speedup_claim": "Must remain false without matched hardware-vs-baseline timing receipts.",
++    "honest_nulls": "Executed clean nulls are recorded without treating them as failures or wins.",
++    "honest_verdict": "Terminal summary starting with complete: or blocked: that names the `.503` claim boundary.",
++    "inference_substrate": "Must equal aggregation_from_upstream_artifacts because Exp5563 is synthesis only.",
++    "milestone": "Route key for the `.503` capstone.",
++    "missing_artifacts": "Unaccounted absent or unreadable evidence stays visible and never becomes success.",
++    "roadmap_yaml_unchanged": "Protected-file discipline; true only when `research-roadmap.yaml` is unchanged.",
++    "skipped_by_gates": "Conductor gate skips stay separate from missing files and clean nulls.",
++    "sota_hard_soft_claim_allowed": "False unless a clean hard/soft panel explicitly allows the claim.",
++    "structured_sota_claim_allowed": "False unless row completion, grammar-forced rows, and schema/exact validation all pass.",
++    "task_range": "Closed conductor boundary from transition through this capstone."
++  },
++  "flagged_artifacts": [
++    {
++      "artifact_path": "results/experiment_5559_cross_model_sota_csl_transfer_v2.json",
++      "corrigendum_pending": [
++        {
++          "detail": "aligned_memory_score=0.1666666667 and no_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "aligned_memory_score=0.1666666667 and shuffled_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "aligned_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "no_memory_score=0.1666666667 and shuffled_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "no_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "shuffled_memory_score=0.1666666667 and stale_memory_score=0.1666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
++          "kind": "TAUTOLOGY",
++          "severity": "critical"
++        },
++        {
++          "detail": "cross_family_delta_over_shuffled=0.0 (exactly zero). Confirm this is not a stub default.",
++          "kind": "IMPLAUSIBLE_PERFECT",
++          "severity": "info"
++        }
++      ],
++      "flagged_adversarial": true,
++      "honest_verdict": "blocked: causal_cross_model_sota_csl_transfer_v2_claim_not_allowed",
++      "inference_substrate": "live_local_sota_gguf_cross_model_csl_transfer_or_gate_skip",
++      "sha256": "sha256:32710bbf667559accc5108a60c2986459d03c58f577399aea0eceff988869699",
++      "skip_reason": "flagged_adversarial",
++      "status": "blocked"
++    }
++  ],
++  "hardware_speedup_claim": false,
++  "honest_nulls": [
++    {
++      "artifact_path": "results/experiment_5562_arc_fsm_live_levelup.json",
++      "flagged_adversarial": false,
++      "honest_verdict": "honest_null: r11l L3 bounded_budget_no_target_level_reproduction; entropy=3.218; repeat_rate=0.500; registry_delta=0",
++      "inference_substrate": "arc_live_agent_self_discovery_no_llm",
++      "null_reason": "clean_honest_null",
++      "sha256": "sha256:f0fb2be33ce32d3302886b2cb041b7895af9e3a5243a4f83a22267b901b6c281",
++      "status": "honest_null"
++    }
++  ],
++  "honest_verdict": "complete: .503 capstone read 13/14 expected artifacts; missing=0; flagged=1; blocked=2; skipped_by_gates=2; honest_nulls=1; structured_sota_claim_allowed=False; sota_hard_soft_claim_allowed=False; continuous_self_learning_evidence=True; csl_claim_allowed=False; cross_model_csl_claim_allowed=False; asp_sparse_repair_claim_allowed=True; hardware_speedup_claim=False; arc_registry_delta=0",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone": "2026.07.503",
++  "missing_artifacts": [],
++  "random_seed": 5563,
++  "reproducibility_checksum": "sha256:586485249a02c753e5d5a145c681b6df7235ad6a5042f0895dcbfd3d84758405",
++  "result_path": "results/experiment_5563_capstone_v503.json",
++  "roadmap_yaml_unchanged": true,
++  "run_date": "2026-07-11",
++  "schema": "carnot.experiment_5563.capstone_v503.v1",
++  "skipped_by_gates": [
++    {
++      "artifact_path": "results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json",
++      "blocked_at_layer": "conductor_pre_gate",
++      "flagged_adversarial": false,
++      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5552-automaton-schema-row-completion-receipt.automaton_row_completion_ready (actual=False == expected=True)",
++      "honest_verdict": "blocked_gate_check_failed",
++      "inference_substrate": null,
++      "sha256": "sha256:8d13347f8b6767df615bcefa03ad29930e0d7436c66809531e74aed48c51acef",
++      "skip_reason": "conductor_gate_skip",
++      "status": "blocked"
++    },
++    {
++      "artifact_path": "results/experiment_5554_sota_hard_soft_panel_v4.json",
++      "blocked_at_layer": "conductor_pre_gate",
++      "flagged_adversarial": false,
++      "gate_check_summary": "| 2026-07-10 23:28 UTC | Gated SOTA hard-soft panel v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5553-gated-gbnf-forced-sota-row-smoke) |",
++      "honest_verdict": "blocked_gate_check_failed",
++      "inference_substrate": null,
++      "sha256": null,
++      "skip_reason": "conductor_gate_skip_no_artifact_written",
++      "source_path": "ops/conductor-log.md",
++      "status": "blocked"
++    }
++  ],
++  "sota_hard_soft_claim_allowed": false,
++  "source_context": [
++    {
++      "exists": true,
++      "path": "AGENTS.md",
++      "read_only": true,
++      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
++    },
++    {
++      "exists": true,
++      "path": "CLAUDE.md",
++      "read_only": true,
++      "sha256": "sha256:e7295dd6d8a4a674ead8122b51bfdace03b1e7194db5bc12a31e703bdd4953df"
++    },
++    {
++      "exists": true,
++      "path": "CODEX.md",
++      "read_only": true,
++      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
++    },
++    {
++      "exists": true,
++      "path": "research-roadmap.yaml",
++      "read_only": true,
++      "sha256": "sha256:433a50d1fb1d4ac5de7f93e000c67901ebc2aa52dc065d8b71dabd2089fdea01"
++    },
++    {
++      "exists": false,
++      "path": "research-roadmap-next.yaml",
++      "read_only": true,
++      "sha256": null
++    },
++    {
++      "exists": true,
++      "path": "research-complete.yaml",
++      "read_only": true,
++      "sha256": "sha256:0782cb926de59878fa7dc7c7c696a28d35f962044553a8a39d1449316604b463"
++    },
++    {
++      "exists": true,
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "read_only": true,
++      "sha256": "sha256:851e9cf31e9f73ebbd56b923e27148b3c63014dfe79684c22d4aadd79d3b8b35"
++    },
++    {
++      "exists": true,
++      "path": "openspec/capabilities/research-reporting/spec.md",
++      "read_only": true,
++      "sha256": "sha256:2b0a04f38704ef5fedf5ad99b500d063b95dee8ea3aa9069e4ee400b28cb3aa3"
++    },
++    {
++      "exists": true,
++      "path": "ops/status.md",
++      "read_only": true,
++      "sha256": "sha256:ebe3125a7afe439b46402bbd81808f9778c98cdfcf254f1f1288a83cb32893c5"
++    },
++    {
++      "exists": true,
++      "path": "ops/changelog.md",
++      "read_only": true,
++      "sha256": "sha256:b28a241a16a27a64fbb6e6a3191c326bac0535d5b8758e57488b94d00136b237"
++    },
++    {
++      "exists": true,
++      "path": "ops/conductor-log.md",
++      "read_only": true,
++      "sha256": "sha256:99a7aedd1a43cf7f322bd88aa338d3aa32934be08b47743711b442ec91821003"
++    },
++    {
++      "exists": true,
++      "path": "scripts/research_conductor.py",
++      "read_only": true,
++      "sha256": "sha256:e2a831704d64dab2440de0113668044d7de2ff905f0bbed63d24be5455bcbec7"
++    }
++  ],
++  "source_context_missing": [
++    "research-roadmap-next.yaml"
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5563",
++    "SCENARIO-REPORT-5563",
++    "SCENARIO-REPORT-5563-MISSING-INPUT",
++    "SCENARIO-REPORT-5563-FIELD-PRINCIPLES"
++  ],
++  "structured_sota_claim_allowed": false,
++  "task_range": "exp5550-exp5563"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 2e235d0ce9..fb3ebb9eae 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260711",
+-  "started_at": "2026-07-11T00:51:14Z",
+-  "finished_at": "2026-07-11T00:51:15Z",
++  "started_at": "2026-07-11T01:36:37Z",
++  "finished_at": "2026-07-11T01:36:37Z",
+   "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 489b8ca78a..28d72c6a93 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260711",
+-  "started_at": "2026-07-11T00:51:15Z",
+-  "finished_at": "2026-07-11T00:51:15Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-07-11T01:36:37Z",
++  "finished_at": "2026-07-11T01:36:37Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index b915d3eaf8..728fbc6635 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260711",
+-  "started_at": "2026-07-11T00:51:15Z",
+-  "finished_at": "2026-07-11T00:51:15Z",
++  "started_at": "2026-07-11T01:36:37Z",
++  "finished_at": "2026-07-11T01:36:37Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/outer_loop_gpt56sol_wa30_probe.json b/results/outer_loop_gpt56sol_wa30_probe.json
+new file mode 100644
+index 0000000000..7ef99b622f
+--- /dev/null
++++ b/results/outer_loop_gpt56sol_wa30_probe.json
+@@ -0,0 +1,10 @@
++{
++  "game": "wa30",
++  "starting_level": 1,
++  "max_level_reached": 0,
++  "total_env_steps_used": 80,
++  "reproduction_verified": false,
++  "action_sequence": [],
++  "narrative": "I explored only through reset frames, rendered grids, completion counters, and action outcomes. ACTION1-ACTION4 move and orient the player, while ACTION5 contextually grabs or drops a highlighted block; a carried block can overlap the long three-segment target. I initially mistook that temporary overlap for a completed insertion and spent the remaining budget on a route that omitted the required drop actions. No explored frame advanced levels_completed above 0, the 80-step budget was exhausted, and no reproduction gate was run.",
++  "solve_provenance": "live_agent_self_discovery"
++}
+diff --git a/tests/python/test_experiment_5563_capstone_v503.py b/tests/python/test_experiment_5563_capstone_v503.py
+new file mode 100644
+index 0000000000..b485a42478
+--- /dev/null
++++ b/tests/python/test_experiment_5563_capstone_v503.py
+@@ -0,0 +1,451 @@
++"""Tests for Exp5563 V503 capstone reconciliation.
++
++Spec refs: REQ-REPORT-5563, SCENARIO-REPORT-5563,
++SCENARIO-REPORT-5563-MISSING-INPUT, SCENARIO-REPORT-5563-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_5563_capstone_v503 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/research-reporting/spec.md"
++
++
++def _write_json(root: Path, rel_path: Path | str, payload: JsonDict) -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _write_text(root: Path, rel_path: Path | str, text: str = "context\n") -> None:
++    path = root / rel_path
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++
++
++def _artifact_payloads(*, include_panel: bool = False) -> dict[Path, JsonDict]:
++    payloads: dict[Path, JsonDict] = {
++        Path("results/experiment_5550_transition_v503.json"): {
++            "milestone": mod.MILESTONE,
++            "status": "complete",
++            "honest_verdict": "complete: transition",
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++            "roadmap_yaml_unchanged": True,
++            "conductor_unchanged": True,
++        },
++        Path("results/experiment_5551_v503_source_delta_ingestion.json"): {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "complete: source delta",
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++        },
++        Path("results/experiment_5552_automaton_schema_row_completion_receipt.json"): {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "blocked: automaton row completion failed",
++            "inference_substrate": "deterministic_automaton_no_llm",
++            "automaton_row_completion_ready": False,
++        },
++        Path("results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json"): {
++            "status": "blocked",
++            "honest_verdict": "blocked_gate_check_failed",
++            "schema": "blocked_gate_check_v1",
++            "blocked_at_layer": "conductor_pre_gate",
++            "gate_check_summary": "exp5552 automaton_row_completion_ready failed",
++            "gates_evaluated": [{"passed": False}],
++        },
++        Path("results/experiment_5555_asp_fsm_nonmonotonic_fixture.json"): {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "complete: exact ASP/FSM fixture ready",
++            "inference_substrate": "deterministic_asp_fsm_exact_fixture_no_llm",
++            "exact_asp_validator_ready": True,
++            "exact_fsm_fixture_extended_ready": True,
++        },
++        Path("results/experiment_5556_asp_fsm_sparse_repair_scale.json"): {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "complete: asp sparse repair ready no speedup",
++            "inference_substrate": "deterministic_asp_fsm_sparse_repair_no_llm",
++            "asp_sparse_repair_claim_allowed": True,
++            "exact_asp_validator_ready": True,
++            "stable_model_checked_rate": 1.0,
++            "unchecked_repair_count": 0,
++            "matched_timing_available": False,
++            "speedup_claim_allowed": False,
++        },
++        Path("results/experiment_5557_csl_five_arm_tautology_corrigendum_v2.json"): {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "complete: csl five arm clean",
++            "inference_substrate": "deterministic_csl_ablation_no_llm",
++            "csl_five_arm_clean": True,
++            "adversarial_clean": True,
++            "tautology_resolved": True,
++            "aligned_delta_over_shuffled": 0.5,
++            "duplicated_metric_pairs": [],
++        },
++        Path("results/experiment_5558_causal_write_manage_read_csl_memory.json"): {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "complete: causal csl memory ready",
++            "inference_substrate": "deterministic_online_memory_fixture_no_llm",
++            "csl_memory_ready": True,
++            "csl_claim_allowed": True,
++            "no_weight_mutation": True,
++            "quality_delta_vs_shuffled_memory": 1.0,
++            "action_impact_delta_vs_no_memory": 0.5,
++            "action_selection_changed_count": 3,
++        },
++        Path("results/experiment_5559_cross_model_sota_csl_transfer_v2.json"): {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "blocked: cross model transfer zero delta",
++            "inference_substrate": "live_local_sota_gguf_cross_model_csl_transfer_or_gate_skip",
++            "flagged_adversarial": True,
++            "csl_claim_allowed": False,
++            "cross_family_delta_over_shuffled": 0.0,
++            "negative_transfer_rate": 0.8,
++            "no_weight_mutation": True,
++            "corrigendum_pending": [{"kind": "TAUTOLOGY"}],
++        },
++        Path("results/experiment_5560_hardware_and_timing_receipt_hygiene.json"): {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "complete: hardware hygiene no speedup",
++            "inference_substrate": "hardware_receipt_and_timing_hygiene_no_llm",
++            "hardware_speedup_claim": False,
++            "matched_timing_available": False,
++            "conductor_modified": False,
++            "roadmap_yaml_unchanged": True,
++        },
++        Path("results/experiment_5561_arc_fsm_target_rotation_precheck.json"): {
++            "milestone": mod.MILESTONE,
++            "status": "complete",
++            "honest_verdict": "complete: arc target ready",
++            "inference_substrate": "arc_live_path_precheck_no_llm",
++            "solve_provenance": "live_agent_self_discovery",
++            "selected_game": "r11l",
++            "selected_level": "L3",
++        },
++        Path("results/experiment_5562_arc_fsm_live_levelup.json"): {
++            "milestone": mod.MILESTONE,
++            "status": "honest_null",
++            "honest_verdict": "honest_null: no target level reproduction",
++            "inference_substrate": "arc_live_agent_self_discovery_no_llm",
++            "solve_provenance": "live_agent_self_discovery",
++            "offline_reproduced": False,
++            "registry_delta": 0,
++            "reproduced_levels": 0,
++        },
++        Path("results/experiment_5562_arc_fsm_live_levelup_trajectory.json"): {
++            "experiment": "experiment_5562_arc_fsm_live_levelup",
++            "schema": "trajectory",
++            "selected_game": "r11l",
++            "selected_level": "L3",
++        },
++    }
++    if include_panel:
++        payloads[Path("results/experiment_5554_sota_hard_soft_panel_v4.json")] = {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "complete: hard soft panel v4 claim allowed",
++            "inference_substrate": "live_local_sota_gguf_exact_validated_panel",
++            "gates_clean": True,
++            "adversarial_clean": True,
++            "rows_requested": 6,
++            "rows_emitted": 6,
++            "schema_valid_rows": 6,
++            "missing_candidate_rows": 0,
++            "exact_validator_accuracy": 1.0,
++            "sota_hard_soft_claim_allowed": True,
++        }
++    return payloads
++
++
++def _context(root: Path) -> None:
++    for rel_path in mod.SOURCE_CONTEXT_PATHS:
++        if rel_path == mod.CONDUCTOR_LOG_RELATIVE_PATH:
++            continue
++        _write_text(root, rel_path)
++    _write_text(
++        root,
++        mod.CONDUCTOR_LOG_RELATIVE_PATH,
++        "| 2026-07-10 23:28 UTC | Gated SOTA hard-soft panel v4 | GATE_BLOCK | "
++        "Pre-emptive skip: upstream retired (exp5553-gated-gbnf-forced-sota-row-smoke) |\n",
++    )
++
++
++def _make_root(root: Path, *, omit: Path | None = None, include_panel: bool = False) -> None:
++    _context(root)
++    for rel_path, payload in _artifact_payloads(include_panel=include_panel).items():
++        if rel_path != omit:
++            _write_json(root, rel_path, payload)
++
++
++def test_req_report_5563_spec_declares_capstone_contract() -> None:
++    """REQ-REPORT-5563: OpenSpec anchors the V503 capstone contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("REQ-REPORT-5563") :]
++
++    for ref in mod.SPEC_REFS:
++        assert ref in section
++    assert mod.RESULT_RELATIVE_PATH.as_posix() in section
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in section
++        assert principle in section
++
++
++def test_scenario_report_5563_classifies_and_bounds_live_repo_artifacts() -> None:
++    """SCENARIO-REPORT-5563: actual V503 flags and nulls are not promoted."""
++
++    artifact = mod.run_capstone(
++        root=REPO,
++        checks_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["milestone"] == mod.MILESTONE
++    assert artifact["task_range"] == mod.TASK_RANGE
++    assert artifact["artifacts_expected"] == len(mod.EXPECTED_ARTIFACT_PATHS)
++    assert artifact["artifacts_read"] == len(mod.EXPECTED_ARTIFACT_PATHS) - 1
++    assert artifact["missing_artifacts"] == []
++    assert [row["artifact_path"] for row in artifact["flagged_artifacts"]] == [
++        "results/experiment_5559_cross_model_sota_csl_transfer_v2.json"
++    ]
++    assert {
++        row["artifact_path"] for row in artifact["blocked_artifacts"]
++    } == {
++        "results/experiment_5552_automaton_schema_row_completion_receipt.json",
++        "results/experiment_5559_cross_model_sota_csl_transfer_v2.json",
++    }
++    assert [row["artifact_path"] for row in artifact["skipped_by_gates"]] == [
++        "results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json",
++        "results/experiment_5554_sota_hard_soft_panel_v4.json",
++    ]
++    assert [row["artifact_path"] for row in artifact["honest_nulls"]] == [
++        "results/experiment_5562_arc_fsm_live_levelup.json"
++    ]
++    assert "results/experiment_5556_asp_fsm_sparse_repair_scale.json" in (
++        row["artifact_path"] for row in artifact["clean_artifacts"]
++    )
++    assert artifact["structured_sota_claim_allowed"] is False
++    assert artifact["sota_hard_soft_claim_allowed"] is False
++    assert artifact["continuous_self_learning_evidence"] is True
++    assert artifact["csl_claim_allowed"] is False
++    assert artifact["cross_model_csl_claim_allowed"] is False
++    assert artifact["asp_sparse_repair_claim_allowed"] is True
++    assert artifact["hardware_speedup_claim"] is False
++    assert artifact["arc_live_levelup_claim_allowed"] is False
++    assert artifact["arc_registry_delta"] == 0
++    assert artifact["docs_updated"] == ["openspec/capabilities/research-reporting/spec.md"]
++    assert artifact["roadmap_yaml_unchanged"] is True
++    assert artifact["conductor_unchanged"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_report_5563_missing_primary_blocks_without_fabrication(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-5563-MISSING-INPUT: missing inputs fail closed."""
++
++    missing = Path("results/experiment_5558_causal_write_manage_read_csl_memory.json")
++    _make_root(tmp_path, omit=missing)
++
++    artifact = mod.run_capstone(
++        root=tmp_path,
++        checks_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert artifact["missing_artifacts"] == [missing.as_posix()]
++    assert artifact["artifacts_read"] == len(mod.EXPECTED_ARTIFACT_PATHS) - 2
++    assert artifact["continuous_self_learning_evidence"] is False
++    assert artifact["csl_claim_allowed"] is False
++    assert artifact["cross_model_csl_claim_allowed"] is False
++    assert artifact["hardware_speedup_claim"] is False
++
++
++def test_scenario_report_5563_clean_positive_claims_require_all_gates(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5563: clean upstream positives can become bounded claims."""
++
++    _make_root(tmp_path, include_panel=True)
++    row_completion = _artifact_payloads()[Path("results/experiment_5552_automaton_schema_row_completion_receipt.json")]
++    row_completion.update(
++        {
++            "honest_verdict": "complete: automaton row completion ready",
++            "automaton_row_completion_ready": True,
++            "row_completion_support_rate": 1.0,
++        }
++    )
++    _write_json(tmp_path, "results/experiment_5552_automaton_schema_row_completion_receipt.json", row_completion)
++    _write_json(
++        tmp_path,
++        "results/experiment_5553_gated_gbnf_forced_sota_row_smoke.json",
++        {
++            "milestone": mod.MILESTONE,
++            "honest_verdict": "complete: grammar forced rows complete",
++            "inference_substrate": "live_local_sota_gguf_row_smoke",
++            "grammar_forced_rows_complete": True,
++            "rows_requested": 6,
++            "rows_emitted": 6,
++            "schema_valid_rows": 6,
++        },
++    )
++    transfer = _artifact_payloads()[Path("results/experiment_5559_cross_model_sota_csl_transfer_v2.json")]
++    transfer.pop("flagged_adversarial")
++    transfer.pop("corrigendum_pending")
++    transfer.update(
++        {
++            "honest_verdict": "complete: cross model transfer positive",
++            "csl_claim_allowed": True,
++            "cross_family_delta_over_shuffled": 0.25,
++            "negative_transfer_rate": 0.0,
++        }
++    )
++    _write_json(tmp_path, "results/experiment_5559_cross_model_sota_csl_transfer_v2.json", transfer)
++    arc = _artifact_payloads()[Path("results/experiment_5562_arc_fsm_live_levelup.json")]
++    arc.update(
++        {
++            "status": "complete",
++            "honest_verdict": "complete: arc level reproduced",
++            "offline_reproduced": True,
++            "registry_delta": 1,
++            "reproduced_levels": 1,
++        }
++    )
++    _write_json(tmp_path, "results/experiment_5562_arc_fsm_live_levelup.json", arc)
++
++    artifact = mod.run_capstone(
++        root=tmp_path,
++        checks_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert artifact["artifacts_read"] == len(mod.EXPECTED_ARTIFACT_PATHS)
++    assert artifact["structured_sota_claim_allowed"] is True
++    assert artifact["sota_hard_soft_claim_allowed"] is True
++    assert artifact["continuous_self_learning_evidence"] is True
++    assert artifact["csl_claim_allowed"] is True
++    assert artifact["cross_model_csl_claim_allowed"] is True
++    assert artifact["asp_sparse_repair_claim_allowed"] is True
++    assert artifact["arc_live_levelup_claim_allowed"] is True
++    assert artifact["arc_registry_delta"] == 1
++    assert artifact["skipped_by_gates"] == []
++    assert artifact["flagged_artifacts"] == []
++    assert artifact["blocked_artifacts"] == []
++    assert artifact["honest_nulls"] == []
++
++
++def test_scenario_report_5563_validation_rejects_schema_drift(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5563-FIELD-PRINCIPLES: malformed capstones fail validation."""
++
++    _make_root(tmp_path)
++    artifact = mod.run_capstone(
++        root=tmp_path,
++        checks_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    assert "structured_sota_claim_allowed" in mod.validate_artifact(
++        {**artifact, "structured_sota_claim_allowed": "false"}
++    )
++    assert "artifacts_expected" in mod.validate_artifact({**artifact, "artifacts_expected": "14"})
++    assert "flagged_artifacts" in mod.validate_artifact({**artifact, "flagged_artifacts": "none"})
++    assert "field_principles" in mod.validate_artifact(
++        {**artifact, "field_principles": {"milestone": mod.FIELD_PRINCIPLES["milestone"]}}
++    )
++    assert "hardware_speedup_claim" in mod.validate_artifact(
++        {**artifact, "hardware_speedup_claim": True}
++    )
++    assert "arc_live_levelup_claim_allowed" in mod.validate_artifact(
++        {**artifact, "arc_live_levelup_claim_allowed": True, "arc_registry_delta": 0}
++    )
++    assert "csl_claim_allowed" in mod.validate_artifact(
++        {**artifact, "csl_claim_allowed": True, "cross_model_csl_claim_allowed": False}
++    )
++    assert "sota_hard_soft_claim_allowed" in mod.validate_artifact(
++        {**artifact, "sota_hard_soft_claim_allowed": True, "structured_sota_claim_allowed": False}
++    )
++    assert "roadmap_yaml_unchanged" in mod.validate_artifact({**artifact, "roadmap_yaml_unchanged": False})
++    assert "conductor_unchanged" in mod.validate_artifact({**artifact, "conductor_unchanged": False})
++    assert "milestone" in mod.validate_artifact({**artifact, "milestone": "2026.07.502"})
++    assert "task_range" in mod.validate_artifact({**artifact, "task_range": "exp5550-exp5562"})
++    assert "inference_substrate" in mod.validate_artifact(
++        {**artifact, "inference_substrate": "live_llm_inference"}
++    )
++    assert "honest_verdict" in mod.validate_artifact({**artifact, "honest_verdict": "maybe"})
++    assert "schema" in mod.validate_artifact({k: v for k, v in artifact.items() if k != "schema"})
++    assert "artifacts_read" in mod.validate_artifact(
++        {
++            **artifact,
++            "artifacts_expected": 1,
++            "artifacts_read": 2,
++        }
++    )
++
++    first_path = mod.EXPECTED_ARTIFACT_PATHS[0].as_posix()
++    flagged, blocked, failed, skipped, honest_nulls, clean = mod.classify_artifacts(
++        {first_path: {"honest_verdict": "failed: synthetic failure"}},
++        {},
++    )
++    assert flagged == []
++    assert blocked == []
++    assert failed == [
++        {
++            "artifact_path": first_path,
++            "status": "failed",
++            "honest_verdict": "failed: synthetic failure",
++            "flagged_adversarial": False,
++            "inference_substrate": None,
++            "sha256": None,
++            "failure_reason": "failed_terminal_status",
++        }
++    ]
++    assert skipped == []
++    assert honest_nulls == []
++    assert clean == []
++    assert mod.classify_artifacts(
++        {first_path: {"honest_verdict": "honest_null: synthetic null"}},
++        {},
++    )[4][0]["null_reason"] == "clean_honest_null"
++    assert mod._int({"value": True}, "value") == 1
++    assert mod._int({"value": "7"}, "value") == 7
++    assert mod._int({"value": "not-an-int"}, "value") == 0
++    assert mod._float({"value": "1.25"}, "value") == 1.25
++    assert mod._float({"value": "not-a-float"}, "value") == 0.0
++    assert mod._float({"value": None}, "value") == 0.0
++    assert mod._conductor_gate_skips(tmp_path / "missing-log-root", {}) == ([], set())
++
++
++def test_scenario_report_5563_write_helper_emits_valid_artifact(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-5563: writer persists the validated deliverable."""
++
++    _make_root(tmp_path)
++
++    artifact = mod.write_capstone(
++        root=tmp_path,
++        checks_run=["unit"],
++        modification_overrides={
++            mod.ROADMAP_RELATIVE_PATH: False,
++            mod.CONDUCTOR_RELATIVE_PATH: False,
++        },
++    )
++
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    assert written == artifact
++    assert mod.validate_artifact(written) == []
+-- 
+2.55.0
+

@@ -1,0 +1,128 @@
+From 20e882d8e6c0923c0c4f08da32121344c210b645 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 21:57:19 -0400
+Subject: [PATCH 01682/11362] [outer-loop] lower decisive-graft gate 0.85->0.82
+ per 2026-06-13 operator directive
+
+The contiguous TRM Sudoku-Extreme run plateaued at val~0.82 (banked 0.8227),
+converged within ~5pp of the published ~0.87. Operator decided 0.82 is a
+faithful-enough baseline for the verifier-as-reward graft. exp4168 v1 already
+ran+deferred at val~0.50; renamed to v2 (re-runs since pick_next_task matches by
+title), gate 0.82, fresh-recompute preconditions from last.ckpt.bestval, new
+deliverable path.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ research-roadmap.yaml                         | 20 ++++++++++++-------
+ results/trm_runs/contiguous_run.log           |  2 ++
+ .../csv/version_11/metrics.csv                |  5 +++++
+ .../trm_runs/contiguous_run_hydra/train.log   |  1 +
+ 7 files changed, 24 insertions(+), 9 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e2ae11b769..8622f1444d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 491300, "iteration": 9, "phase": "iteration_start", "last_beat": "2026-06-13T19:45:05Z"}
+\ No newline at end of file
++{"pid": 491300, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-06-13T20:01:28Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ec56941006..915557f94e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8446,3 +8446,4 @@ c |
+ | 2026-06-13 19:13 UTC | OUTER-LOOP TRAINING MONITOR (READ-ONLY; the conduc | OK | 88 passed, 1 warning in 9.53s |
+ | 2026-06-13 19:29 UTC | THE DECISIVE verifier graft — DEFENSIVE, gated on  | OK | 85 passed, 1 warning in 6.62s |
+ | 2026-06-13 19:43 UTC | ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVE | FLAGGED | adversarial_verify CRITICAL: GATE_PASSED_WITHOUT_DATA — result quarantined, not  |
++| 2026-06-13 19:59 UTC | SOTA-INGESTION SLOT (reserved; bleeding-edge track | OK | 100 passed, 1 warning in 6.37s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 11de5f960b..6807a1a5d3 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 491300, "iteration": 9, "phase": "iteration_start", "started_at": "2026-06-13T19:45:05Z"}
+\ No newline at end of file
++{"pid": 491300, "iteration": 10, "phase": "iteration_start", "started_at": "2026-06-13T20:01:28Z"}
+\ No newline at end of file
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index 4bdda90d72..9bf2d0fd0a 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -89,24 +89,30 @@ tasks:
+ 
+   - id: exp4168-decisive-verifier-graft-defensive
+     milestone: 2026.06.386
+-    title: "THE DECISIVE verifier graft — DEFENSIVE, gated on (val>=0.85 AND outer-loop train STOPPED). Reads (never writes/trains) the stable checkpoint. IF faithful+stable: rerank (verifier vs TRM-vote, pass@1 lift CI) + verifier-cert-vs-vote-cert RFT de-confound on a COPY of the checkpoint. IF not: DEFER honestly (outer-loop still training / not yet 0.85). Resolves the moat question + the DiffusionGemma gate when it fires."
++    title: "THE DECISIVE verifier graft v2 (gate lowered to 0.82 per 2026-06-13 operator directive) — DEFENSIVE, gated on (val>=0.82 AND outer-loop train STOPPED). Reads (never writes/trains) the stable checkpoint. IF faithful+stable: rerank (verifier vs TRM-vote, pass@1 lift CI) + verifier-cert-vs-vote-cert RFT de-confound on a COPY of the checkpoint. IF not: DEFER honestly. Resolves the moat question + the DiffusionGemma gate when it fires."
+     priority: high
+     track: verifier-as-reward
+     max_turns: 110
+     agent_type: codex
+     model: gpt-5.5
+-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: decisive verifier graft on the outer-loop-trained faithful baseline — false-positive scope-match vs prior graft attempts; forward difference = gated on (val>=0.85 AND train STOPPED) so it never collides with or reads-during-write the outer-loop run; operates on a COPY."
++    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: decisive verifier graft v2 on the outer-loop-trained faithful baseline, gate LOWERED 0.85->0.82 per explicit 2026-06-13 operator directive (contiguous run plateaued at ~0.82, converged within ~5pp of published 0.87) — false-positive scope-match vs the deferred v1 attempt; forward difference = gate 0.82 + fresh-recompute preconditions; operates on a COPY, never collides with the (now stopped) outer-loop run."
+     inference_substrate: verifier_ensemble_against_cached_candidates
+-    deliverable: results/experiment_4168_decisive_verifier_graft_defensive.json
++    deliverable: results/experiment_4168_decisive_verifier_graft_v2_gate082.json
+     prompt: |
+       CONTEXT: The decisive verifier-as-reward test on the OUTER-LOOP-trained baseline. To avoid the
+       .385 collision and read-during-write races, this task is DEFENSIVE and NON-DESTRUCTIVE.
+ 
+       CONCRETE STEPS:
+-        0. PRECONDITIONS: read results/experiment_4167_*.json (or recompute): require baseline_faithful
+-           == True, i.e. val>=0.85 AND the outer-loop train PID is NOT alive. If NOT -> honest_verdict
+-           `graft_deferred_outerloop_training` + current val, and STOP (do NOT train, do NOT pkill the
+-           outer-loop run).
++        0. PRECONDITIONS (RECOMPUTE FRESH — do NOT trust the stale exp4167 v1 monitor artifact, which
++           recorded val~0.50 mid-training):
++           a. BASELINE FAITHFUL: read results/trm_runs/sudoku_extreme_baseline/last.ckpt.bestval and
++              require value >= 0.82 (gate lowered 0.85->0.82 per the 2026-06-13 operator directive: the
++              contiguous run plateaued at ~0.82, a converged faithful baseline within ~5pp of the
++              published ~0.87).
++           b. TRAIN STOPPED: the PID in results/trm_runs/contiguous_run.pid is NOT alive (ps -p) AND
++              `nvidia-smi --query-compute-apps=pid` shows no train.py process.
++           If EITHER fails -> honest_verdict `graft_deferred_outerloop_training` + current val, and STOP
++           (do NOT train, do NOT pkill anything).
+         1. COPY the stable checkpoint to a task-local path (never train/write the stable dir).
+         2. RERANK arm: sample K candidate solutions per held-out puzzle from the copied checkpoint;
+            rerank by the executable Sudoku verifier; pass@1 lift vs TRM-vote + vs oracle, bootstrap CI.
+diff --git a/results/trm_runs/contiguous_run.log b/results/trm_runs/contiguous_run.log
+index 81edad2e74..6046f6c782 100644
+--- a/results/trm_runs/contiguous_run.log
++++ b/results/trm_runs/contiguous_run.log
+@@ -229,3 +229,5 @@ Restored all states from the checkpoint at /home/ianblenke/github.com/ianblenke/
+ [[36m2026-06-13 15:57:23,781[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4711 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt[0m
+ `weights_only` was not set, defaulting to `False`.
+ [[36m2026-06-13 15:58:46,881[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4810 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt[0m
++`weights_only` was not set, defaulting to `False`.
++[[36m2026-06-13 16:00:09,082[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4867 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt[0m
+diff --git a/results/trm_runs/contiguous_run_hydra/csv/version_11/metrics.csv b/results/trm_runs/contiguous_run_hydra/csv/version_11/metrics.csv
+index ef306e569f..18573aa9e2 100644
+--- a/results/trm_runs/contiguous_run_hydra/csv/version_11/metrics.csv
++++ b/results/trm_runs/contiguous_run_hydra/csv/version_11/metrics.csv
+@@ -59,3 +59,8 @@ epoch,grad/last_mlp,grad/lm_head,grad/q_head,grad/total_norm,step,train/accuracy
+ 8344,0.09013083577156067,0.005939221475273371,0.015824148431420326,0.4690665602684021,20949,0.8574160933494568,1.0,0.591549277305603,0.690077835531639,6.656455661868677e-05,1.0,0.010862944647669792,8.535211563110352,,,,,,,
+ 8394,0.13713467121124268,0.007084306795150042,0.018520575016736984,0.8770586252212524,20999,0.8567901849746704,1.0,0.5571428537368774,0.6895464271543871,6.641125219175592e-05,1.0,0.011461595073342323,9.528571128845215,,,,,,,
+ 8399,,,,,21004,,,,,,,,,0.826086699962616,0.48098957538604736,0.4443177580833435,0.4473723769187927,0.9997395873069763,0.0061092497780919075,16.0
++8444,0.11682946979999542,0.00692135700955987,0.0164770670235157,0.5140132904052734,21049,0.859227180480957,1.0,0.5584415793418884,0.6779498089275204,6.625778041779995e-05,1.0,0.005110902711749077,10.272727012634277,,,,,,,
++8494,0.09682540595531464,0.005063042975962162,0.014039477333426476,0.5702090263366699,21099,0.8414481282234192,1.0,0.516853928565979,0.6960777991061968,6.610413402086124e-05,1.0,0.0049651372246444225,10.460674285888672,,,,,,,
++8499,,,,,21104,,,,,,,,,0.828745424747467,0.4867187440395355,0.44004496932029724,0.44349658489227295,0.9994791746139526,0.006903364323079586,16.0
++8544,0.14406423270702362,0.0059583066031336784,0.030610011890530586,0.8567325472831726,21149,0.835185170173645,1.0,0.512499988079071,0.6866503286034416,6.59503202768974e-05,1.0,0.024944303557276726,10.199999809265137,,,,,,,
++8594,0.11617163568735123,0.009643091820180416,0.01128451805561781,0.48232415318489075,21199,0.7976096868515015,1.0,0.40425533056259155,0.6923555218625174,6.579633918590844e-05,1.0,0.005381234921514988,11.797872543334961,,,,,,,
+diff --git a/results/trm_runs/contiguous_run_hydra/train.log b/results/trm_runs/contiguous_run_hydra/train.log
+index 663e871ac8..bcf31805b5 100644
+--- a/results/trm_runs/contiguous_run_hydra/train.log
++++ b/results/trm_runs/contiguous_run_hydra/train.log
+@@ -764,3 +764,4 @@ torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0
+ [2026-06-13 15:56:01,055][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4620 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+ [2026-06-13 15:57:23,781][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4711 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+ [2026-06-13 15:58:46,881][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4810 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
++[2026-06-13 16:00:09,082][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4867 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+-- 
+2.55.0
+

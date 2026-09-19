@@ -1,0 +1,70 @@
+From 7103d7964f5e8748f249987fa80231b1edabc1c5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 30 Jun 2026 17:50:41 -0400
+Subject: [PATCH 05110/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...iment_5051_verifier_trace_self_learning.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7c02f1976a..ff1f85ab7a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-06-30T21:30:58Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 24, "phase": "iteration_start", "last_beat": "2026-06-30T21:50:39Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e3e1bb1e0c..1a252bd6b0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9678,3 +9678,4 @@ The contro |
+ | 2026-06-30 20:54 UTC | PHASE D6 cross-model cascade -- gated on Exp 5043  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5043-b1.sota_judge_ready (actual=False  |
+ | 2026-06-30 21:11 UTC | PHASE D4 second-corpus confirmation -- gated on Ex | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
+ | 2026-06-30 21:28 UTC | PHASE D5 gate resolution -- aggregate powered D1,  | OK | 87 passed, 1 warning in 9.02s |
++| 2026-06-30 21:48 UTC | PHASE E1 continuous self-learning -- REVES/VSI-sty | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 91794e4db3..7caf20196c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2019592, "iteration": 23, "phase": "iteration_start", "started_at": "2026-06-30T21:30:58Z"}
+\ No newline at end of file
++{"pid": 2019592, "iteration": 24, "phase": "iteration_start", "started_at": "2026-06-30T21:50:39Z"}
+\ No newline at end of file
+diff --git a/results/experiment_5051_verifier_trace_self_learning.json b/results/experiment_5051_verifier_trace_self_learning.json
+index 0a7c4ab717..347104a9ba 100644
+--- a/results/experiment_5051_verifier_trace_self_learning.json
++++ b/results/experiment_5051_verifier_trace_self_learning.json
+@@ -1561,5 +1561,18 @@
+     "verified_trace_count": 225
+   },
+   "update_type": "replay_memory_insertion",
+-  "verified_trace_count": 225
+-}
++  "verified_trace_count": 225,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.028344 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

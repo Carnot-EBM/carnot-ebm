@@ -1,0 +1,104 @@
+From 451d8507f58c791ae9d76354aa138fc96762200a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 12:38:47 -0400
+Subject: [PATCH 07098/11362] [conductor] Operational retrospective for
+ milestone 2026.07.508
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_508.json | 58 ++++++++++++++++++++++
+ 3 files changed, 65 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_508.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 023af62640..213ea60e9e 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5919,3 +5919,9 @@ The critical path for milestone .250:
+ - theme: CUDA certification and closeout reconciliation led the recorded operational runtime
+ - key result: honest operational result -- the supplied evidence identifies the longest compute-bound paths but does not establish an idle-GPU bottleneck, a causal phase breakdown, or a concurrent multi-model DualGPURunner miss
+ - acceptance: no data available this milestone
++
++### Milestone 2026.07.508
++- exp_range: no data available this milestone
++- theme: bounded operational attribution for a synthesis-heavy slowest-path set
++- key result: honest operational result -- the slowest-five list contains one compute-bound entry, and the task-conditioned GPU-idle indicator is false; runtime causes and any concurrent multi-model runner miss are not established
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b811706baa..e91d165af5 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11533,3 +11533,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-14: Exact temperature-label exchange audit around the corrected cDLS kernel (✅ Complete) — honest_verdict=complete: exact temperature-label exchange cDLS audit ready; invariant gates permit later quality trials; results/experiment_5633_temperature_exchange_cdls_exact_audit.json
+ - 2026-07-14: Gated on Exp5633 exact parity: hard-instance replica-exchange cDLS quality trial (✅ Complete) — honest_verdict=complete: quality_mixing_ready true under paired exact corrected cDLS quality gate; results/experiment_5634_temperature_exchange_cdls_quality.json
+ - 2026-07-14: Milestone .508 capstone, promotion ledger, retirement enforcement, and documentation reconciliation (✅ Complete) — honest_verdict=complete: v508 capstone reconciled; fr11_promoted=False; arc_registry_delta=0; replica_exchange_quality_promoted=True; hardware_speedup_claimed=false; timing_claimed=false; results/experiment_5635_v508_capstone_reconciliation.json
++- 2026-07-14: Operational retrospective for milestone 2026.07.508 (Complete) -- 11 experiments used 127.1 minutes. The bounded slowest-five list contains one compute-bound entry, the 16.97-minute transition run; the supplied timing evidence does not explain its duration or identify the other compute-bound task. The task-conditioned GPU-idle indicator is false, and no parallel multi-model task is identified, so neither idle compute nor a DualGPURunner miss is claimed. Recommended tooling: phase-level timing receipts, dependency-aware parallel dispatch, and task-correlated GPU/model-concurrency telemetry; estimated_time_savings_pct=0 because no measured counterfactual is available; results/operational_retro_2026_07_508.json
+diff --git a/results/operational_retro_2026_07_508.json b/results/operational_retro_2026_07_508.json
+new file mode 100644
+index 0000000000..1d8fde88a6
+--- /dev/null
++++ b/results/operational_retro_2026_07_508.json
+@@ -0,0 +1,58 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.508",
++  "generated_at": "2026-07-14T16:32:17Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 127.1,
++  "experiments_completed": 11,
++  "compute_bound_experiments_count": 2,
++  "slowest_experiments": [
++    {
++      "experiment": "Milestone .508 capstone, promotion ledger, retirement enforcement, and documenta",
++      "duration_minutes": 27.85,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Parameter-free group-conditional online conformal qualification for KAN actions",
++      "duration_minutes": 25.97,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5627 coverage and safety: conformal active-spline KAN continuous sel",
++      "duration_minutes": 23.27,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Gated on Exp5633 exact parity: hard-instance replica-exchange cDLS quality trial",
++      "duration_minutes": 18.07,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Transition .507 terminal evidence into the .508 dependency and retirement map",
++      "duration_minutes": 16.97,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Across 127.1 minutes and 11 completed experiments, the bounded slowest-five list contains four synthesis-only entries and one compute-bound entry. The recorded compute-task idle indicator is false, so the report-time idle GPU snapshot is not treated as compute-task waste.",
++  "bottlenecks_identified": [
++    "The bounded timing evidence identifies only one of the two compute-bound experiments in the slowest-five list, so a complete compute-bound ranking and the cause of the 16.97-minute transition run cannot be established.",
++    "Experiment-level durations have no phase breakdown, leaving the cause of the longest recorded paths unresolved.",
++    "No task-correlated model-concurrency record is present, so DualGPURunner selection cannot be audited."
++  ],
++  "improvements_suggested": [
++    "Emit phase-level timing receipts for planning, synthesis, validation, artifact writing, and closeout so slow stages can be targeted.",
++    "Add dependency-aware parallel dispatch for independent synthesis-only work after timing receipts confirm safe overlap.",
++    "Record GPU utilization against each compute-bound task instead of relying on a report-time snapshot.",
++    "Record concurrent model count and runner choice, selecting DualGPURunner only when at least two models are loaded in parallel."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add phase-level timing receipts to every experiment.",
++    "Dispatch dependency-independent synthesis-only work concurrently.",
++    "Capture task-correlated GPU and model-concurrency telemetry, with DualGPURunner selected only for parallel multi-model work."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The available data supports a bounded wall-time ranking but not causal attribution: the only named compute-bound entry in the slowest-five list is the 16.97-minute transition run, while the other compute-bound experiment is outside that list. Without task-correlated concurrency telemetry or a measured counterfactual, neither a DualGPURunner miss nor savings above 0 percent can be justified."
++}
+-- 
+2.55.0
+

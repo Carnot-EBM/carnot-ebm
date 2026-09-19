@@ -1,0 +1,114 @@
+From 09df279fe0d2a78924361117f89d3933acc49349 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 4 Sep 2026 22:08:23 -0400
+Subject: [PATCH 11132/11171] [outer-loop] Record two measured nulls and
+ correct three mis-stated flag states
+
+Operator-authorized. The ledger read 136 unevaluated and 0 off_measured, so no
+measured null had ever been recorded and the dashboard reported flags as
+shipped-but-untested that had in fact been tested.
+
+Two external nulls recorded with evidence paths and sha256, from the paired
+cd82/r11l runs: CARNOT_ARC_INDUCE_TOOL_LOOP and CARNOT_ARC_SUPERVISOR_TOOL_ARM.
+Both arms fire and change nothing measurable. The supervisor arm carries a note
+that the window defaulting to the action budget is a separate defect and does
+not turn its null into a positive.
+
+Three entries carried state: unevaluated alongside last_measured 2026-08-14 and
+a full REFUSED verdict naming the games each flag regressed. That state was
+simply wrong: they were measured, and they lost. Migrated to off_measured with
+every verdict preserved, so the distinction between 'no benefit' and 'broke
+bp35 and cd82' stays readable in the record.
+
+Rejected: the aggressive rule that would migrate 15 entries. Only the three
+with an explicit measured verdict were touched.
+
+Dashboard now reads 2/4 shipped-but-untested rather than 4/4.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_flag_ledger.yaml | 39 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 7 deletions(-)
+
+diff --git a/ops/arc_flag_ledger.yaml b/ops/arc_flag_ledger.yaml
+index 2e526415ca..259cdac20c 100644
+--- a/ops/arc_flag_ledger.yaml
++++ b/ops/arc_flag_ledger.yaml
+@@ -59,7 +59,7 @@ flags:
+     last_measured: '2026-08-14'
+     measured_on_engine: scored
+     promotable: false
+-    state: unevaluated
++    state: off_measured
+   CARNOT_ARC_BUDGET_AWARE_SEARCH:
+     discovered: '2026-08-14'
+     evidence: []
+@@ -342,7 +342,7 @@ flags:
+     last_measured: '2026-08-14'
+     measured_on_engine: scored
+     promotable: false
+-    state: unevaluated
++    state: off_measured
+   CARNOT_ARC_HAZARD_MOVE_PRUNER:
+     discovered: '2026-08-14'
+     evidence: []
+@@ -437,8 +437,20 @@ flags:
+     state: unevaluated
+   CARNOT_ARC_INDUCE_TOOL_LOOP:
+     discovered: '2026-08-19'
+-    evidence: []
+-    state: unevaluated
++    evidence:
++    - date: '2026-09-05'
++      evidence_paths:
++      - path: results/arc_leaderboard_eval_runs/cd82-r11l-727651.json
++        sha256: c037c836d40d3b850c83e9a3ade2cee7ca9e8f3424b4e78215fe5bc1e065527b
++      - path: results/arc_leaderboard_eval_runs/r11l-1594772.json
++        sha256: 4d75372a7e093d43a8eb374e3d7ce4be454f204659a01ee4b8d0c8b58b56025c
++      source: external
++      verdict: 'EXTERNAL_MEASURED_NULL: Tool arm fires and changes nothing measurable: across the paired
++        cd82/r11l runs the tool-loop arm was exercised and produced no level or action-count difference
++        against the same games without it. Recorded from runs made outside this tool.'
++    last_measured: '2026-09-05'
++    promotable: false
++    state: off_measured
+   CARNOT_ARC_INDUCE_TOOL_STALL_TURNS:
+     discovered: '2026-08-19'
+     evidence: []
+@@ -768,7 +780,7 @@ flags:
+         whatever the aggregate says.'
+     last_measured: '2026-08-14'
+     promotable: false
+-    state: unevaluated
++    state: off_measured
+   CARNOT_ARC_STALL_REFACTOR_LOOP:
+     discovered: '2026-08-14'
+     evidence: []
+@@ -787,8 +799,21 @@ flags:
+     state: unevaluated
+   CARNOT_ARC_SUPERVISOR_TOOL_ARM:
+     discovered: '2026-08-29'
+-    evidence: []
+-    state: unevaluated
++    evidence:
++    - date: '2026-09-05'
++      evidence_paths:
++      - path: results/arc_leaderboard_eval_runs/cd82-r11l-727651.json
++        sha256: c037c836d40d3b850c83e9a3ade2cee7ca9e8f3424b4e78215fe5bc1e065527b
++      - path: results/arc_leaderboard_eval_runs/r11l-1594772.json
++        sha256: 4d75372a7e093d43a8eb374e3d7ce4be454f204659a01ee4b8d0c8b58b56025c
++      source: external
++      verdict: 'EXTERNAL_MEASURED_NULL: Supervisor tool arm measured null on the same paired cd82/r11l
++        runs: the arm was reachable and its firing was not followed by a level or efficiency change. Separately,
++        the supervisor window defaulted to the action budget so firings were rare; that is a distinct
++        defect and does not make this a positive.'
++    last_measured: '2026-09-05'
++    promotable: false
++    state: off_measured
+   CARNOT_ARC_SUPPLY_WIN_TRANSITION:
+     discovered: '2026-08-14'
+     evidence: []
+-- 
+2.55.0
+

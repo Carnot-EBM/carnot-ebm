@@ -1,0 +1,110 @@
+From 655939f41a414ef8978edb864fbb61adad694eeb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 11 Jul 2026 08:27:38 -0400
+Subject: [PATCH 06782/11362] [conductor] Operational retrospective for
+ milestone 2026.07.503
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ ops/conductor-heartbeat.json               |  2 +-
+ ops/conductor-state.json                   |  2 +-
+ results/operational_retro_2026_07_503.json | 29 ++++++++++++++++++++++
+ scripts/research_conductor.py              |  2 +-
+ 6 files changed, 39 insertions(+), 3 deletions(-)
+ create mode 100644 results/operational_retro_2026_07_503.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 32e9a33e6a..59fad8ffa6 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5889,3 +5889,9 @@ The critical path for milestone .250:
+ - theme: operational closeout constrained by a timing-integrity mismatch
+ - key result: honest negative -- no data available this milestone; the timing assembler produced 0 experiment commits even though milestone changelog references exist, so compute-bound duration ranking, GPU-efficiency assessment, and DualGPURunner evaluation are unsupported
+ - acceptance: 0/0 criteria met -- no authoritative timing rows were available for milestone-scoped operational scoring
++
++### Milestone 2026.07.503
++- exp_range: no data available this milestone
++- theme: contradictory closeout evidence exposes a new timing-assembly failure
++- key result: honest negative -- no data available this milestone; both reconstruction routes returned 0 experiment commits despite changelog evidence for the milestone, leaving compute-bound duration, GPU efficiency, and parallel-runner engagement unmeasured
++- acceptance: 0/0 criteria met -- no authoritative milestone-scoped timing entries were available to score
+diff --git a/ops/changelog.md b/ops/changelog.md
+index eb23b08d52..97495373e6 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11427,3 +11427,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-11: ARC FSM target rotation precheck (✅ Complete) — honest_verdict=complete: r11l L3 FSM ARC precheck ready; no solve claimed; results/experiment_5561_arc_fsm_target_rotation_precheck.json
+ - 2026-07-11: Gated ARC FSM live level-up attempt (⚠️ Research Finding) — honest_verdict=honest_null: r11l L3 bounded_budget_no_target_level_reproduction; entropy=3.218; repeat_rate=0.500; registry_delta=0; results/experiment_5562_arc_fsm_live_levelup.json
+ - 2026-07-11: V503 capstone reconciliation and claim ledger (⚠️ Blocked) — honest_verdict=complete: .503 capstone read 13/14 expected artifacts; missing=0; flagged=1; blocked=2; skipped_by_gates=2; honest_nulls=1; structured_sota_claim_allowed=False; sota_hard_soft_claim_allowed=False; continuous_self_learning_evidence=True; csl_claim_allowed=False; cross_model_csl_claim_allowed=False; asp_sparse_repair_claim_allowed=True; hardware_speedup_claim=False; arc_registry_delta=0; results/experiment_5563_capstone_v503.json
++- 2026-07-11: Operational retrospective for milestone 2026.07.503 (Complete) -- no data available this milestone for run-level timing. A timing-integrity defect left both the git-log route and the disk-mtime route with 0 experiment commits even though the changelog references this milestone; the locked artifact therefore records total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0, slowest_experiments=[], and gpu_idle_on_compute_bound_tasks=null. Compute-bound runtimes, GPU efficiency, and DualGPURunner use are unassessable. Recommended next step: emit milestone-keyed start/finish receipts and stop closeout on changelog/timing inconsistency. estimated_time_savings_pct=0; results/operational_retro_2026_07_503.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7b5abca9a5..ea147ffe7c 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1641795, "iteration": 123, "phase": "iteration_start", "last_beat": "2026-07-11T12:08:28Z"}
+\ No newline at end of file
++{"pid": 1896672, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-07-11T12:19:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index dd13d93d5f..68aa7985a4 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1641795, "iteration": 123, "phase": "iteration_start", "started_at": "2026-07-11T12:08:28Z"}
+\ No newline at end of file
++{"pid": 1896672, "iteration": 1, "phase": "iteration_start", "started_at": "2026-07-11T12:19:49Z"}
+\ No newline at end of file
+diff --git a/results/operational_retro_2026_07_503.json b/results/operational_retro_2026_07_503.json
+new file mode 100644
+index 0000000000..480f23a32f
+--- /dev/null
++++ b/results/operational_retro_2026_07_503.json
+@@ -0,0 +1,29 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.503",
++  "generated_at": "2026-07-11T12:24:15.073Z",
++  "retro_type": "operational_in_progress",
++  "summary": "no data available this milestone \u2014 the authoritative timing record contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Both timing assembly paths returned no experiment commits despite milestone references in the changelog, so execution efficiency cannot be quantified.",
++  "slowest_experiments": [],
++  "bottlenecks_identified": [
++    "Timing integrity mismatch: both milestone timing assembly paths found no experiment commits even though ops/changelog.md contains milestone references, preventing operational runtime analysis."
++  ],
++  "improvements_suggested": [
++    "Record a milestone-keyed timing receipt when each experiment starts and finishes so closeout does not depend on git-log or disk-mtime reconstruction.",
++    "Make closeout reject timing assembly when milestone changelog references exist but neither timing path returns experiment rows.",
++    "Add a regression fixture for this zero-row mismatch and retain diagnostics from both assembly paths."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Instrument experiment launch and completion with durable milestone-keyed timestamps.",
++    "Block retrospective finalization when changelog evidence and assembled timing rows disagree.",
++    "Regression-test the newly observed dual-path zero-row failure mode."
++  ],
++  "compute_bound_experiments_count": 0,
++  "gpu_idle_on_compute_bound_tasks": null,
++  "meta_reflection": "The milestone cannot support conclusions about the longest compute-bound work, GPU utilization efficiency, or multi-model runner engagement. Trustworthy timing capture must be restored before operational retrospectives can guide execution optimization.",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "estimated_time_savings_pct": 0,
++  "reconstructed_from_disk_mtime": false,
++  "timing_integrity_mismatch": true
++}
+\ No newline at end of file
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 44bd13179a..9409a712a8 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -3134,7 +3134,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
+     skeleton: dict = {
+         "schema": "carnot.operational_retro.v64",
+         "milestone": current,
+-        "generated_at": _dt_now.now(_tz_now.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
++        "generated_at": _dt_now.now(_tz_now.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),  # noqa: UP017 -- _tz_now is `timezone` (aliased import), not the `datetime` module; ruff's suggested `datetime.UTC` does not exist on `timezone` and crashes (AttributeError, see 2026-07-11 incident)
+         "retro_type": "operational_full",
+         "total_wall_time_minutes": round(pre_total_min, 1),
+         "experiments_completed": len(experiment_times),
+-- 
+2.55.0
+

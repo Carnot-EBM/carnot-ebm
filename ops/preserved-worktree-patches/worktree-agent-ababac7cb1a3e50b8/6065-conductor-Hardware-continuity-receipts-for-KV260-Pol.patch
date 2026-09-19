@@ -1,0 +1,2130 @@
+From fb66d59058e8ba08776bcbc6357b938e739ea6ca Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 7 Jul 2026 16:08:30 -0400
+Subject: [PATCH 06065/11362] [conductor] Hardware continuity receipts for
+ KV260, PolarFire, and GateMate
+
+Automated research step by research conductor.
+Task ID: exp5374-v489-hardware-continuity-receipts
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  93 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ..._5374_hardware_continuity_receipts_v489.py | 885 ++++++++++++++++++
+ ...374_hardware_continuity_receipts_v489.json | 513 ++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ..._5374_hardware_continuity_receipts_v489.py | 521 +++++++++++
+ 8 files changed, 2021 insertions(+), 9 deletions(-)
+ create mode 100644 python/carnot/experiment_5374_hardware_continuity_receipts_v489.py
+ create mode 100644 results/experiment_5374_hardware_continuity_receipts_v489.json
+ create mode 100644 tests/python/test_experiment_5374_hardware_continuity_receipts_v489.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index a638c307f3..62c4db31c5 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -16134,6 +16134,99 @@ authenticated-workload status, and no-speedup status.
+ 
+ ---
+ 
++### REQ-HW-5374
++
++**Title:** Hardware-continuity v489 MUST record fresh KV260, PolarFire, and GateMate receipts without speedup claims
++
++**Description:**
++Experiment 5374 MUST produce
++`results/experiment_5374_hardware_continuity_receipts_v489.json` as a v489
++continuity-only board receipt. The artifact MUST record fresh command attempts
++for reachable board lanes, bounded blockers for unreachable lanes, and MUST NOT
++claim sampler acceleration or hardware speedup.
++
++KV260 MUST be checked by attempting exactly
++`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. KV260 evidence MUST NOT
++use host `/dev/mmcblk*`, `/dev/disk`, removable storage, or SD-card paths.
++`kv260_checked_via_ssh.value` MUST be true only when that SSH reachability
++command was attempted, and `kv260_status.value` MUST be `reachable`,
++`unreachable`, or `skipped: <reason>`.
++
++PolarFire MUST first use the authenticated SSH status path. If reachable, it
++MUST run the established tiny deterministic board-local workload and record the
++workload output hash as continuity evidence only. `polarfire_status.value` MUST
++be `reachable/workload_receipt`, `unreachable`, or `skipped: <reason>`.
++`polarfire_workload_hash.value` MUST be the output hash when the workload
++receipt ran and validated, otherwise null with a blocker reason recorded
++elsewhere in the artifact.
++
++GateMate MUST use only current non-destructive toolchain and detect checks when
++the physical/JTAG path is available. If the physical/JTAG path is unavailable or
++unchanged from the blocked prior lane, the artifact MUST record
++`gatemate_status.value="blocked_physical_or_jtag"` or an honest skipped reason.
++No destructive flashing or long hardware loops are permitted.
++
++The artifact MUST include principle-wrapped fields `status`,
++`hardware_speedup_claim`, `kv260_checked_via_ssh`, `kv260_status`,
++`polarfire_status`, `polarfire_workload_hash`, `gatemate_status`,
++`commands_run`, `no_host_mmcblk_kv260_evidence`, `no_destructive_flash`,
++`repeatability_evidence_present`, and `honest_verdict`. `status.value` MUST be
++`complete` when fresh reachability or receipt attempts are recorded for the
++board lanes. `hardware_speedup_claim.value` MUST be false unless full
++authenticated baseline timing, board timing, workload hash, and repeatability
++evidence unexpectedly exist. `commands_run.value` MUST record exact command
++strings, exit codes, and redacted concise stdout/stderr excerpts or hashes.
++`no_host_mmcblk_kv260_evidence.value` and `no_destructive_flash.value` MUST be
++true. `repeatability_evidence_present.value` MUST state whether authenticated
++repeat timing evidence exists. `honest_verdict.value` MUST be a one-line
++continuity summary that names KV260, PolarFire, GateMate, and no-speedup status.
++
++**Acceptance criteria:**
++- `.venv/bin/python -m carnot.experiment_5374_hardware_continuity_receipts_v489 --date 20260707`
++  writes `results/experiment_5374_hardware_continuity_receipts_v489.json`.
++- The artifact includes
++  `experiment_id.value="exp5374-hardware-continuity-receipts-v489"`,
++  `milestone.value="2026.07.489"`, `spec_refs` containing `REQ-HW-5374` and
++  `SCENARIO-HW-5374`, `random_seed=5374`, and a stable
++  `reproducibility_checksum`.
++- `commands_run.value` includes the exact KV260 SSH command and every
++  PolarFire or GateMate command actually attempted, with exit codes and concise
++  redacted output excerpts or hashes.
++- `hardware_speedup_claim.value=false`,
++  `no_host_mmcblk_kv260_evidence.value=true`,
++  `no_destructive_flash.value=true`, and
++  `repeatability_evidence_present.value=false` unless authenticated repeat
++  hardware timing evidence is present.
++
++**Implementation status:** Planned (Exp 5374)
++
++---
++
++### SCENARIO-HW-5374
++
++**Scenario:** Exp 5374 writes v489 hardware-continuity receipts without speedup claims.
++
++**Given:** Exp 5361 recorded KV260 SSH unreachable, a PolarFire authenticated
++workload receipt, GateMate physical/JTAG blocked, and no speedup claim.
++**When:** Experiment 5374 attempts the exact KV260 BatchMode SSH reachability
++command, checks PolarFire authenticated SSH and runs the established tiny
++board-local hash workload only when reachable, checks GateMate only through
++current safe toolchain/detect paths when the physical/JTAG path is available,
++and avoids destructive flashing and long loops.
++**Then:** It writes
++`results/experiment_5374_hardware_continuity_receipts_v489.json` with all
++required principle-wrapped fields, command receipts, KV260 SSH-only evidence,
++PolarFire workload hash when validated, an honest GateMate detected or blocked
++status, `hardware_speedup_claim.value=false`,
++`no_host_mmcblk_kv260_evidence.value=true`, `no_destructive_flash.value=true`,
++`repeatability_evidence_present.value=false` unless authenticated repeat timing
++exists, and a one-line verdict that states KV260, PolarFire, GateMate, and
++no-speedup status.
++
++**Implementation status:** Planned (Exp 5374)
++
++---
++
+ ### SCENARIO-HW-4910
+ 
+ **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 030e6e25bc..7d74b5b9b0 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 211,
+   "code_violations": 0,
+-  "experiments_checked": 4340,
++  "experiments_checked": 4341,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_5374_hardware_continuity_receipts_v489.py b/python/carnot/experiment_5374_hardware_continuity_receipts_v489.py
+new file mode 100644
+index 0000000000..9687ff8505
+--- /dev/null
++++ b/python/carnot/experiment_5374_hardware_continuity_receipts_v489.py
+@@ -0,0 +1,885 @@
++#!/usr/bin/env python3
++"""Exp 5374: hardware continuity receipts for reachable boards.
++
++Spec refs: REQ-HW-5374, SCENARIO-HW-5374.
++
++This module records board-continuity evidence, not performance evidence. KV260
++is checked only through the required SSH reachability command, PolarFire gets a
++tiny hash-checked board-local workload when SSH is reachable, and GateMate uses
++only safe toolchain or detect checks when the physical/JTAG path is available.
++Those receipts show whether board lanes are still alive; they do not include
++baseline timing, repeat timing, or a sampler workload comparison, so they cannot
++support a hardware speedup claim.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_5293_hardware_continuity_reachability_v483 as base
++from carnot import experiment_5319_hardware_continuity_no_speedup_v485 as context_prev
++from carnot import experiment_5361_hardware_continuity_workload_v488 as prev
++
++
++JsonDict = dict[str, Any]
++Clock = context_prev.Clock
++CommandProbe = base.CommandProbe
++CommandRunner = base.CommandRunner
++
++RUN_DATE = "20260707"
++EXPERIMENT_ID = "exp5374-hardware-continuity-receipts-v489"
++EXPERIMENT_NAME = "experiment_5374_hardware_continuity_receipts"
++MILESTONE = "2026.07.489"
++SCHEMA = "carnot.experiment_5374.hardware_continuity_receipts.v489"
++SPEC_REFS = ("REQ-HW-5374", "SCENARIO-HW-5374")
++RANDOM_SEED = 5374
++INFERENCE_SUBSTRATE = "hardware_continuity_receipts_no_speedup"
++HARDWARE_EVIDENCE_LEVEL = "board_continuity_receipts_no_speedup"
++
++RESULT_RELATIVE_PATH = Path("results/experiment_5374_hardware_continuity_receipts_v489.json")
++PRIOR_RESULT_RELATIVE_PATH = Path("results/experiment_5361_hardware_continuity_workload_v488.json")
++
++HOST_DATE_COMMAND = prev.HOST_DATE_COMMAND
++HARDWARE_ENV_COMMAND = prev.HARDWARE_ENV_COMMAND
++TOOL_VERSION_COMMAND = prev.TOOL_VERSION_COMMAND
++GATEMATE_USB_COMMAND = prev.GATEMATE_USB_COMMAND
++POLARFIRE_USB_COMMAND = prev.POLARFIRE_USB_COMMAND
++GPU_CONTEXT_COMMAND = prev.GPU_CONTEXT_COMMAND
++KV260_SSH_TRUE_COMMAND = prev.KV260_SSH_TRUE_COMMAND
++KV260_REQUIRED_COMMAND_FORM = "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'"
++POLARFIRE_STATUS_COMMAND = prev.POLARFIRE_STATUS_COMMAND
++GATEMATE_DETECT_COMMAND = prev.GATEMATE_DETECT_COMMAND
++
++LOCAL_TIMEOUT_S = prev.LOCAL_TIMEOUT_S
++SSH_TIMEOUT_S = prev.SSH_TIMEOUT_S
++GATEMATE_TIMEOUT_S = prev.GATEMATE_TIMEOUT_S
++MAX_OUTPUT_EXCERPT_CHARS = 480
++TERMINAL_PREFIXES = ("complete:", "blocked_")
++
++POLARFIRE_WORKLOAD_INPUT = b"carnot-exp5374-polarfire-workload-v489\n"
++POLARFIRE_WORKLOAD_OUTPUT_SUFFIX = b"|polarfire-v489-output"
++POLARFIRE_EXPECTED_INPUT_SHA256 = hashlib.sha256(POLARFIRE_WORKLOAD_INPUT).hexdigest()
++POLARFIRE_EXPECTED_OUTPUT_SHA256 = hashlib.sha256(
++    POLARFIRE_WORKLOAD_INPUT + POLARFIRE_WORKLOAD_OUTPUT_SUFFIX
++).hexdigest()
++POLARFIRE_WORKLOAD_PYTHON = (
++    "import hashlib,json,platform,socket,time;"
++    "started=time.perf_counter();"
++    'payload=b"carnot-exp5374-polarfire-workload-v489\\n";'
++    'out=hashlib.sha256(payload+b"|polarfire-v489-output").hexdigest();'
++    "receipt={"
++    '"hostname":socket.gethostname(),'
++    '"uname":" ".join(platform.uname()),'
++    '"python_version":platform.python_version(),'
++    '"input_sha256":hashlib.sha256(payload).hexdigest(),'
++    '"output_sha256":out,'
++    '"wall_time_s":round(time.perf_counter()-started,6)'
++    "};"
++    "print(json.dumps(receipt,sort_keys=True))"
++)
++POLARFIRE_WORKLOAD_COMMAND = (
++    "ssh",
++    "-o",
++    "ConnectTimeout=5",
++    "-o",
++    "BatchMode=yes",
++    "polarfire",
++    f"python3 -c '{POLARFIRE_WORKLOAD_PYTHON}'",
++)
++
++REQUIRED_WRAPPED_FIELDS = (
++    "status",
++    "hardware_speedup_claim",
++    "kv260_checked_via_ssh",
++    "kv260_status",
++    "polarfire_status",
++    "polarfire_workload_hash",
++    "gatemate_status",
++    "commands_run",
++    "no_host_mmcblk_kv260_evidence",
++    "no_destructive_flash",
++    "repeatability_evidence_present",
++    "honest_verdict",
++)
++METADATA_WRAPPED_FIELDS = (
++    "experiment_id",
++    "milestone",
++    "inference_substrate",
++    "preconditions_checked",
++    "tests_run",
++)
++FIELD_PRINCIPLES: dict[str, str] = {
++    "experiment_id": "Identifies the v489 continuity receipt so reconciliation can cite one exact artifact.",
++    "milestone": "Pins this receipt to milestone 2026.07.489 rather than a floating board state.",
++    "status": "Complete means fresh reachability or receipt attempts were recorded for the requested board lanes.",
++    "hardware_speedup_claim": (
++        "False unless authenticated baseline timing, board timing, workload hash, "
++        "and repeatability evidence are all present."
++    ),
++    "kv260_checked_via_ssh": (
++        "True only when the required BatchMode SSH true command was attempted for KV260."
++    ),
++    "kv260_status": "KV260 is classified as reachable, unreachable, or skipped with an honest reason.",
++    "polarfire_status": (
++        "PolarFire is classified as reachable/workload_receipt, unreachable, "
++        "or skipped with an honest reason."
++    ),
++    "polarfire_workload_hash": (
++        "The value is the board-local workload output hash only when that receipt validates."
++    ),
++    "gatemate_status": (
++        "GateMate is detected, blocked on physical/JTAG availability, unreachable, "
++        "or skipped with an honest reason."
++    ),
++    "commands_run": (
++        "Records exact command strings, exit codes, and concise redacted output excerpts "
++        "or hashes for every attempted status or workload command."
++    ),
++    "no_host_mmcblk_kv260_evidence": (
++        "True because KV260 evidence is SSH-only and not derived from host removable storage."
++    ),
++    "no_destructive_flash": "True because no flashing, programming, or destructive write command was run.",
++    "repeatability_evidence_present": (
++        "States whether authenticated repeat timing evidence exists for a hardware speedup claim."
++    ),
++    "honest_verdict": "One-line continuity summary naming KV260, PolarFire, GateMate, and no-speedup status.",
++    "inference_substrate": (
++        "hardware_continuity_receipts_no_speedup means these are board continuity receipts, "
++        "not sampler acceleration measurements."
++    ),
++    "preconditions_checked": (
++        "Records date, sanitized environment, local toolchain, USB visibility, and SSH targets before board classification."
++    ),
++    "tests_run": "Records verification commands without treating them as hardware evidence.",
++}
++
++HOST_BLOCK_DEVICE_MARKERS = ("/dev/mmcblk", "/dev/disk", "/dev/sd")
++DESTRUCTIVE_COMMAND_MARKERS = (
++    "--write",
++    "--flash",
++    " flash ",
++    "flashcp",
++    "dd if=",
++    " dd ",
++    "program_hw_devices",
++)
++
++
++def require(condition: bool, message: str) -> None:
++    if not condition:
++        raise AssertionError(message)
++
++
++def wrap_field(field: str, value: Any) -> JsonDict:
++    return {"principle": FIELD_PRINCIPLES[field], "value": value}
++
++
++def sha256_text(text: str) -> str:
++    return hashlib.sha256(text.encode("utf-8", errors="replace")).hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    stable = dict(payload)
++    stable["reproducibility_checksum"] = ""
++    return base.sha256_json(stable)
++
++
++def short_excerpt(text: str, *, max_chars: int = MAX_OUTPUT_EXCERPT_CHARS) -> str:
++    clean = text.replace("\x00", "").strip()
++    if len(clean) <= max_chars:
++        return clean
++    suffix = f"...<truncated {len(clean) - max_chars} chars>"
++    return clean[: max(0, max_chars - len(suffix))] + suffix
++
++
++def command_receipt(
++    *,
++    probe: CommandProbe,
++    timeout_s: float,
++    kind: str,
++    outcome: str,
++    command_override: str | None = None,
++    stdout_override: str | None = None,
++) -> JsonDict:
++    stdout = probe.stdout if stdout_override is None else stdout_override
++    return {
++        "kind": kind,
++        "command": command_override or base.command_to_string(probe.command),
++        "timeout_s": float(timeout_s),
++        "exit_code": int(probe.exit_code),
++        "duration_s": base.round_duration(probe.duration_s),
++        "outcome": outcome,
++        "stdout_excerpt": short_excerpt(stdout),
++        "stderr_excerpt": short_excerpt(probe.stderr),
++        "stdout_sha256": sha256_text(stdout),
++        "stderr_sha256": sha256_text(probe.stderr),
++        "stdout_line_count": len(stdout.splitlines()),
++        "stderr_line_count": len(probe.stderr.splitlines()),
++    }
++
++
++def collect_preconditions(command_runner: CommandRunner) -> tuple[JsonDict, list[JsonDict]]:
++    host_probe = command_runner(HOST_DATE_COMMAND, LOCAL_TIMEOUT_S)
++    env_probe = command_runner(HARDWARE_ENV_COMMAND, LOCAL_TIMEOUT_S)
++    tool_probe = command_runner(TOOL_VERSION_COMMAND, LOCAL_TIMEOUT_S)
++    gatemate_usb_probe = command_runner(GATEMATE_USB_COMMAND, LOCAL_TIMEOUT_S)
++    polarfire_usb_probe = command_runner(POLARFIRE_USB_COMMAND, LOCAL_TIMEOUT_S)
++    gpu_probe = command_runner(GPU_CONTEXT_COMMAND, LOCAL_TIMEOUT_S)
++
++    env_summary = context_prev.parse_hardware_environment(env_probe)
++    gpu_context = context_prev.parse_gpu_context(gpu_probe)
++    context = {
++        "host_date": context_prev.parse_host_date(host_probe),
++        "hardware_environment": env_summary,
++        "tool_versions": base.parse_tool_versions(tool_probe),
++        "usb_visibility": {
++            "GateMate": base.parse_usb_visible(gatemate_usb_probe, "1209:c0ca"),
++            "PolarFire": base.parse_usb_visible(polarfire_usb_probe, "1514:2008"),
++        },
++        "gpu_runtime_context": gpu_context,
++        "public_reference_boundaries": context_prev.public_reference_boundaries(env_summary),
++        "ssh_targets": {"KV260": "kria", "PolarFire": "polarfire"},
++        "kv260_check_method": "ssh_batchmode_true_only",
++        "operator_visible_hardware_assumptions": {
++            "kv260_checked_by_ssh_only": True,
++            "kv260_host_storage_precondition_retired": True,
++            "gatemate_physical_jtag_path_available": None,
++            "no_destructive_flash": True,
++            "hardware_speedup_claim": False,
++        },
++        "prior_receipts": [str(PRIOR_RESULT_RELATIVE_PATH)],
++    }
++    commands = [
++        command_receipt(
++            probe=host_probe,
++            timeout_s=LOCAL_TIMEOUT_S,
++            kind="step0_host_date_context",
++            outcome="recorded" if host_probe.exit_code == 0 else "host_date_unavailable",
++        ),
++        command_receipt(
++            probe=env_probe,
++            timeout_s=LOCAL_TIMEOUT_S,
++            kind="local_hardware_environment",
++            outcome="recorded" if env_probe.exit_code == 0 else "env_unavailable",
++            stdout_override=base.sanitized_env_stdout(env_summary),
++        ),
++        command_receipt(
++            probe=tool_probe,
++            timeout_s=LOCAL_TIMEOUT_S,
++            kind="local_tool_versions",
++            outcome="recorded" if tool_probe.exit_code == 0 else "tool_version_probe_failed",
++        ),
++        command_receipt(
++            probe=gatemate_usb_probe,
++            timeout_s=LOCAL_TIMEOUT_S,
++            kind="local_usb_gatemate_dirtyjtag",
++            outcome="visible" if context["usb_visibility"]["GateMate"]["visible"] else "not_visible",
++        ),
++        command_receipt(
++            probe=polarfire_usb_probe,
++            timeout_s=LOCAL_TIMEOUT_S,
++            kind="local_usb_polarfire_flashpro",
++            outcome="visible" if context["usb_visibility"]["PolarFire"]["visible"] else "not_visible",
++        ),
++        command_receipt(
++            probe=gpu_probe,
++            timeout_s=LOCAL_TIMEOUT_S,
++            kind="local_dual_rtx3090_runtime_context",
++            outcome="dual_rtx3090_context"
++            if gpu_context["dual_rtx3090_present"]
++            else "gpu_context_not_dual_rtx3090",
++        ),
++    ]
++    return context, commands
++
++
++def blocker_from_probe(
++    reason: str,
++    probe: CommandProbe,
++    timeout_s: float,
++    *,
++    command_override: str | None = None,
++) -> JsonDict:
++    return {
++        "reason": reason,
++        "command": command_override or base.command_to_string(probe.command),
++        "exit_code": int(probe.exit_code),
++        "timeout_s": float(timeout_s),
++        "stdout_excerpt": short_excerpt(probe.stdout),
++        "stderr_excerpt": short_excerpt(probe.stderr),
++        "stdout_sha256": sha256_text(probe.stdout),
++        "stderr_sha256": sha256_text(probe.stderr),
++    }
++
++
++def kv260_status_from_probe(probe: CommandProbe) -> tuple[str, JsonDict, JsonDict | None, JsonDict]:
++    reachable = probe.exit_code == 0
++    status = "reachable" if reachable else "unreachable"
++    detail = {
++        "board": "KV260",
++        "status": status,
++        "ssh_reachable": reachable,
++        "check_method": "ssh_batchmode_true_only",
++        "command_form": KV260_REQUIRED_COMMAND_FORM,
++        "probe_exit_code": int(probe.exit_code),
++        "remote_identifier": base.remote_identifier(probe.combined_output)
++        if probe.combined_output
++        else None,
++        "speedup_claimed": False,
++    }
++    blocker = None
++    if not reachable:
++        blocker = blocker_from_probe(
++            "unreachable",
++            probe,
++            SSH_TIMEOUT_S,
++            command_override=KV260_REQUIRED_COMMAND_FORM,
++        )
++    receipt = command_receipt(
++        probe=probe,
++        timeout_s=SSH_TIMEOUT_S,
++        kind="kv260_ssh_true_reachability_probe",
++        outcome=status,
++        command_override=KV260_REQUIRED_COMMAND_FORM,
++    )
++    return status, detail, blocker, receipt
++
++
++def parse_polarfire_workload_stdout(stdout: str) -> tuple[JsonDict | None, str | None]:
++    parsed: Any | None = None
++    for line in stdout.splitlines():
++        candidate = line.strip()
++        if not candidate:
++            continue
++        try:
++            parsed = json.loads(candidate)
++        except json.JSONDecodeError:
++            continue
++        if isinstance(parsed, Mapping):
++            break
++    if not isinstance(parsed, Mapping):
++        return None, "workload stdout is not valid JSON"
++
++    receipt: JsonDict = {
++        "hostname": parsed.get("hostname"),
++        "uname": parsed.get("uname"),
++        "python_version": parsed.get("python_version"),
++        "input_sha256": parsed.get("input_sha256"),
++        "output_sha256": parsed.get("output_sha256"),
++        "wall_time_s": parsed.get("wall_time_s"),
++        "workload_class": "deterministic_sha256_transform",
++        "board_local": True,
++        "speedup_claimed": False,
++    }
++    errors: list[str] = []
++    for key in ("hostname", "uname", "input_sha256", "output_sha256"):
++        if not isinstance(receipt.get(key), str) or not receipt[key]:
++            errors.append(f"{key} missing")
++    if receipt.get("input_sha256") != POLARFIRE_EXPECTED_INPUT_SHA256:
++        errors.append("input_sha256 mismatch")
++    if receipt.get("output_sha256") != POLARFIRE_EXPECTED_OUTPUT_SHA256:
++        errors.append("output_sha256 mismatch")
++    if not isinstance(receipt.get("wall_time_s"), int | float) or receipt["wall_time_s"] < 0:
++        errors.append("wall_time_s invalid")
++    python_version = receipt.get("python_version")
++    if python_version is not None and not isinstance(python_version, str):
++        errors.append("python_version invalid")
++    return receipt, "; ".join(errors) if errors else None
++
++
++def polarfire_status_with_workload(
++    *, command_runner: CommandRunner
++) -> tuple[str, str | None, JsonDict, JsonDict | None, list[JsonDict]]:
++    status_probe = command_runner(POLARFIRE_STATUS_COMMAND, SSH_TIMEOUT_S)
++    ssh_reachable = status_probe.exit_code == 0
++    status_detail: JsonDict = {
++        "board": "PolarFire",
++        "ssh_reachable": ssh_reachable,
++        "probe_exit_code": int(status_probe.exit_code),
++        "remote_identifier": base.remote_identifier(status_probe.combined_output)
++        if ssh_reachable
++        else None,
++        "workload_attempted": False,
++        "workload_validated": False,
++        "workload_receipt": None,
++        "speedup_claimed": False,
++    }
++    commands = [
++        command_receipt(
++            probe=status_probe,
++            timeout_s=SSH_TIMEOUT_S,
++            kind="polarfire_authenticated_status_probe",
++            outcome="reachable" if ssh_reachable else "unreachable",
++        )
++    ]
++    if not ssh_reachable:
++        status_detail["status"] = "unreachable"
++        return (
++            "unreachable",
++            None,
++            status_detail,
++            blocker_from_probe("unreachable", status_probe, SSH_TIMEOUT_S),
++            commands,
++        )
++
++    workload_probe = command_runner(POLARFIRE_WORKLOAD_COMMAND, SSH_TIMEOUT_S)
++    receipt, parse_error = parse_polarfire_workload_stdout(workload_probe.stdout)
++    exit_ok = workload_probe.exit_code == 0
++    validated = bool(exit_ok and receipt is not None and parse_error is None)
++    if validated:
++        status = "reachable/workload_receipt"
++        workload_hash = str(receipt["output_sha256"])
++        blocker = None
++        workload_error = None
++    else:
++        status = "skipped: workload receipt invalid"
++        workload_hash = None
++        workload_error = parse_error or workload_probe.stderr.strip() or "workload command failed"
++        blocker = blocker_from_probe(
++            workload_error,
++            workload_probe,
++            SSH_TIMEOUT_S,
++        )
++
++    status_detail.update(
++        {
++            "status": status,
++            "workload_attempted": True,
++            "workload_validated": validated,
++            "workload_receipt": receipt,
++            "workload_error": workload_error,
++        }
++    )
++    commands.append(
++        command_receipt(
++            probe=workload_probe,
++            timeout_s=SSH_TIMEOUT_S,
++            kind="polarfire_board_local_workload_receipt",
++            outcome=status,
++        )
++    )
++    return status, workload_hash, status_detail, blocker, commands
++
++
++def gatemate_path_available_from_context(
++    context: Mapping[str, Any], explicit: bool | None
++) -> bool:
++    if explicit is not None:
++        return bool(explicit)
++    env_summary = context.get("hardware_environment", {})
++    if isinstance(env_summary, Mapping):
++        return base.gatemate_setup_changed_from_env(env_summary)
++    return False
++
++
++def openfpgaloader_present(context: Mapping[str, Any]) -> bool:
++    tool_versions = context.get("tool_versions", {})
++    if not isinstance(tool_versions, Mapping):
++        return False
++    loader = tool_versions.get("openFPGALoader", {})
++    return isinstance(loader, Mapping) and loader.get("present") is True
++
++
++def gatemate_status_from_context(
++    *,
++    command_runner: CommandRunner,
++    context: Mapping[str, Any],
++    physical_path_available: bool,
++) -> tuple[str, JsonDict, JsonDict | None, list[JsonDict]]:
++    tool_versions = context.get("tool_versions", {})
++    usb_visibility = context.get("usb_visibility", {}).get("GateMate", {})
++    base_detail = {
++        "board": "GateMate",
++        "physical_or_jtag_path_available": bool(physical_path_available),
++        "dirtyjtag_usb": usb_visibility,
++        "tool_versions": tool_versions,
++        "speedup_claimed": False,
++    }
++    if not physical_path_available:
++        detail = {
++            **base_detail,
++            "status": "blocked_physical_or_jtag",
++            "jtag_detect_attempted": False,
++            "reason": "physical_or_jtag_path_not_available_or_unchanged",
++        }
++        blocker = {
++            "reason": "physical_or_jtag_path_not_available_or_unchanged",
++            "prior_evidence": str(PRIOR_RESULT_RELATIVE_PATH),
++        }
++        return "blocked_physical_or_jtag", detail, blocker, []
++
++    if not openfpgaloader_present(context):
++        detail = {
++            **base_detail,
++            "status": "skipped: openFPGALoader unavailable",
++            "jtag_detect_attempted": False,
++            "reason": "openFPGALoader unavailable",
++        }
++        return (
++            "skipped: openFPGALoader unavailable",
++            detail,
++            {"reason": "openFPGALoader unavailable"},
++            [],
++        )
++
++    detect_probe = command_runner(GATEMATE_DETECT_COMMAND, GATEMATE_TIMEOUT_S)
++    detected = base.gate_detect_ok(detect_probe)
++    status = "detected" if detected else "unreachable"
++    detail = {
++        **base_detail,
++        "status": status,
++        "jtag_detect_attempted": True,
++        "detect_exit_code": int(detect_probe.exit_code),
++        "detect_output_identifier": base.remote_identifier(detect_probe.combined_output)
++        if detect_probe.combined_output
++        else None,
++    }
++    blocker = None if detected else blocker_from_probe("detect_failed", detect_probe, GATEMATE_TIMEOUT_S)
++    commands = [
++        command_receipt(
++            probe=detect_probe,
++            timeout_s=GATEMATE_TIMEOUT_S,
++            kind="gatemate_dirtyjtag_detect",
++            outcome=status,
++        )
++    ]
++    return status, detail, blocker, commands
++
++
++def honest_verdict(
++    *,
++    kv260_status: str,
++    polarfire_status: str,
++    gatemate_status: str,
++    hardware_speedup_claim: bool,
++    repeatability_evidence_present: bool,
++) -> str:
++    speedup = str(bool(hardware_speedup_claim)).lower()
++    repeatability = str(bool(repeatability_evidence_present)).lower()
++    return (
++        "complete: "
++        f"kv260={kv260_status} "
++        f"polarfire={polarfire_status} "
++        f"gatemate={gatemate_status} "
++        f"hardware_speedup_claim={speedup} "
++        f"repeatability_evidence_present={repeatability}"
++    )
++
++
++def no_host_mmcblk_kv260_evidence(artifact: Mapping[str, Any]) -> bool:
++    encoded = json.dumps(artifact, sort_keys=True, default=str).lower()
++    return not any(marker in encoded for marker in HOST_BLOCK_DEVICE_MARKERS)
++
++
++def command_is_destructive(command: str) -> bool:
++    lowered = f" {command.lower()} "
++    return any(marker in lowered for marker in DESTRUCTIVE_COMMAND_MARKERS)
++
++
++def _status_is_allowed(status: str) -> bool:
++    return bool(status) and (
++        status
++        in {
++            "reachable",
++            "unreachable",
++            "reachable/workload_receipt",
++            "detected",
++            "blocked_physical_or_jtag",
++        }
++        or status.startswith("skipped: ")
++    )
++
++
++def default_tests_run() -> list[JsonDict]:
++    return [
++        {
++            "command": "verification not yet attached at artifact generation",
++            "outcome": "pending_external_test_run",
++        }
++    ]
++
++
++def build_artifact(
++    *,
++    command_runner: CommandRunner = base.run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str = "unknown",
++    gatemate_physical_path_available: bool | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    started = clock()
++    context, commands_run = collect_preconditions(command_runner)
++    gate_path_available = gatemate_path_available_from_context(
++        context, gatemate_physical_path_available
++    )
++    context["operator_visible_hardware_assumptions"]["gatemate_physical_jtag_path_available"] = (
++        gate_path_available
++    )
++
++    kv260_probe = command_runner(KV260_SSH_TRUE_COMMAND, SSH_TIMEOUT_S)
++    kv260_status, kv260_detail, kv260_blocker, kv260_receipt = kv260_status_from_probe(kv260_probe)
++    commands_run.append(kv260_receipt)
++
++    polarfire_status, polarfire_hash, polarfire_detail, polarfire_blocker, polarfire_commands = (
++        polarfire_status_with_workload(command_runner=command_runner)
++    )
++    commands_run.extend(polarfire_commands)
++
++    gatemate_status, gatemate_detail, gatemate_blocker, gatemate_commands = (
++        gatemate_status_from_context(
++            command_runner=command_runner,
++            context=context,
++            physical_path_available=gate_path_available,
++        )
++    )
++    commands_run.extend(gatemate_commands)
++
++    tests = [dict(item) for item in (tests_run if tests_run is not None else default_tests_run())]
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_NAME,
++        "experiment_id": wrap_field("experiment_id", EXPERIMENT_ID),
++        "milestone": wrap_field("milestone", MILESTONE),
++        "spec_refs": list(SPEC_REFS),
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "duration_s": base.round_duration(clock() - started),
++        "commit": commit,
++        "status": wrap_field("status", "complete"),
++        "hardware_speedup_claim": wrap_field("hardware_speedup_claim", False),
++        "kv260_checked_via_ssh": wrap_field("kv260_checked_via_ssh", True),
++        "kv260_status": wrap_field("kv260_status", kv260_status),
++        "polarfire_status": wrap_field("polarfire_status", polarfire_status),
++        "polarfire_workload_hash": wrap_field("polarfire_workload_hash", polarfire_hash),
++        "gatemate_status": wrap_field("gatemate_status", gatemate_status),
++        "commands_run": wrap_field("commands_run", commands_run),
++        "no_host_mmcblk_kv260_evidence": wrap_field(
++            "no_host_mmcblk_kv260_evidence", True
++        ),
++        "no_destructive_flash": wrap_field("no_destructive_flash", True),
++        "repeatability_evidence_present": wrap_field("repeatability_evidence_present", False),
++        "honest_verdict": wrap_field(
++            "honest_verdict",
++            honest_verdict(
++                kv260_status=kv260_status,
++                polarfire_status=polarfire_status,
++                gatemate_status=gatemate_status,
++                hardware_speedup_claim=False,
++                repeatability_evidence_present=False,
++            ),
++        ),
++        "inference_substrate": wrap_field("inference_substrate", INFERENCE_SUBSTRATE),
++        "preconditions_checked": wrap_field("preconditions_checked", context),
++        "tests_run": wrap_field("tests_run", tests),
++        "hardware_evidence_level": HARDWARE_EVIDENCE_LEVEL,
++        "board_details": {
++            "KV260": kv260_detail,
++            "PolarFire": polarfire_detail,
++            "GateMate": gatemate_detail,
++        },
++        "blocked_reason": {
++            "KV260": kv260_blocker,
++            "PolarFire": polarfire_blocker,
++            "GateMate": gatemate_blocker,
++        },
++        "reviewed_inputs": [
++            "AGENTS.md",
++            "CODEX.md",
++            "CLAUDE.md",
++            "research-hardware-wishlist.md",
++            str(PRIOR_RESULT_RELATIVE_PATH),
++            "ops/status.md",
++            "openspec/capabilities/fpga/spec.md",
++        ],
++        "docs_update_decision": {
++            "ops_changelog_updated": False,
++            "ops_status_updated": False,
++            "reason": "task stop rule delegates docs/status reconciliation to the conductor",
++        },
++        "conductor_modified": False,
++        "reproducibility_checksum": "",
++    }
++    artifact["no_host_mmcblk_kv260_evidence"]["value"] = no_host_mmcblk_kv260_evidence(artifact)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_wrapped_field(artifact: Mapping[str, Any], field: str) -> Any:
++    wrapped = artifact.get(field)
++    require(isinstance(wrapped, Mapping), f"{field} must be principle-wrapped")
++    require(wrapped.get("principle") == FIELD_PRINCIPLES[field], f"{field} principle mismatch")
++    require("value" in wrapped, f"{field} missing value")
++    return wrapped["value"]
++
++
++def validate_commands(commands: Any) -> None:
++    require(isinstance(commands, list) and commands, "commands_run must be a non-empty list")
++    for index, command in enumerate(commands):
++        require(isinstance(command, Mapping), f"commands_run[{index}] must be a mapping")
++        for key in (
++            "kind",
++            "command",
++            "outcome",
++            "exit_code",
++            "timeout_s",
++            "duration_s",
++            "stdout_excerpt",
++            "stderr_excerpt",
++            "stdout_sha256",
++            "stderr_sha256",
++        ):
++            require(key in command, f"commands_run[{index}] missing {key}")
++        require(
++            not command_is_destructive(str(command["command"])),
++            f"destructive command recorded at commands_run[{index}]",
++        )
++    require(
++        any(command.get("command") == KV260_REQUIRED_COMMAND_FORM for command in commands),
++        "commands_run missing exact KV260 SSH command",
++    )
++
++
++def validate_tests_run(tests_run: Any) -> None:
++    require(isinstance(tests_run, list) and tests_run, "tests_run must be a non-empty list")
++    for index, item in enumerate(tests_run):
++        require(isinstance(item, Mapping), f"tests_run[{index}] must be a mapping")
++        require(isinstance(item.get("command"), str) and item["command"], "tests_run command missing")
++        require(isinstance(item.get("outcome"), str) and item["outcome"], "tests_run outcome missing")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    for field in (*METADATA_WRAPPED_FIELDS, *REQUIRED_WRAPPED_FIELDS):
++        validate_wrapped_field(artifact, field)
++    require(artifact.get("schema") == SCHEMA, "schema mismatch")
++    require(
++        validate_wrapped_field(artifact, "experiment_id") == EXPERIMENT_ID,
++        "experiment_id mismatch",
++    )
++    require(validate_wrapped_field(artifact, "milestone") == MILESTONE, "milestone mismatch")
++    require(artifact.get("spec_refs") == list(SPEC_REFS), "spec_refs mismatch")
++    require(artifact.get("random_seed") == RANDOM_SEED, "random_seed mismatch")
++    require(validate_wrapped_field(artifact, "status") == "complete", "status must be complete")
++    require(
++        validate_wrapped_field(artifact, "hardware_speedup_claim") is False,
++        "hardware_speedup_claim must be false",
++    )
++    require(
++        validate_wrapped_field(artifact, "kv260_checked_via_ssh") is True,
++        "kv260_checked_via_ssh must be true",
++    )
++    kv260_status = validate_wrapped_field(artifact, "kv260_status")
++    polarfire_status = validate_wrapped_field(artifact, "polarfire_status")
++    gatemate_status = validate_wrapped_field(artifact, "gatemate_status")
++    for label, value in (
++        ("kv260_status", kv260_status),
++        ("polarfire_status", polarfire_status),
++        ("gatemate_status", gatemate_status),
++    ):
++        require(isinstance(value, str) and _status_is_allowed(value), f"{label} invalid")
++    workload_hash = validate_wrapped_field(artifact, "polarfire_workload_hash")
++    if polarfire_status == "reachable/workload_receipt":
++        require(
++            isinstance(workload_hash, str) and len(workload_hash) == 64,
++            "polarfire_workload_hash must be a sha256 string",
++        )
++        require(
++            workload_hash == POLARFIRE_EXPECTED_OUTPUT_SHA256,
++            "polarfire_workload_hash mismatch",
++        )
++    else:
++        require(workload_hash is None, "polarfire_workload_hash must be null without receipt")
++    require(
++        validate_wrapped_field(artifact, "no_host_mmcblk_kv260_evidence") is True,
++        "no_host_mmcblk_kv260_evidence must be true",
++    )
++    require(
++        validate_wrapped_field(artifact, "no_destructive_flash") is True,
++        "no_destructive_flash must be true",
++    )
++    require(
++        validate_wrapped_field(artifact, "repeatability_evidence_present") is False,
++        "repeatability_evidence_present must be false",
++    )
++    verdict = validate_wrapped_field(artifact, "honest_verdict")
++    require(isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES), "bad verdict")
++    for token in (
++        f"kv260={kv260_status}",
++        f"polarfire={polarfire_status}",
++        f"gatemate={gatemate_status}",
++        "hardware_speedup_claim=false",
++    ):
++        require(token in verdict, f"honest_verdict missing {token}")
++    require(
++        validate_wrapped_field(artifact, "inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate mismatch",
++    )
++    validate_commands(validate_wrapped_field(artifact, "commands_run"))
++    validate_tests_run(validate_wrapped_field(artifact, "tests_run"))
++    require(no_host_mmcblk_kv260_evidence(artifact), "host KV260 block-device evidence present")
++    require(artifact.get("conductor_modified") is False, "conductor_modified mismatch")
++    require(
++        artifact.get("reproducibility_checksum") == payload_checksum(artifact),
++        "checksum mismatch",
++    )
++
++
++def write_artifact(repo_root: str | Path, artifact: Mapping[str, Any]) -> Path:
++    validate_artifact(artifact)
++    out_path = Path(repo_root) / RESULT_RELATIVE_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(
++        json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8"
++    )
++    return out_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = base.run_command,
++    clock: Clock = time.perf_counter,
++    run_date: str = RUN_DATE,
++    commit: str | None = None,
++    gatemate_physical_path_available: bool | None = None,
++    tests_run: Sequence[Mapping[str, Any]] | None = None,
++) -> Path:
++    artifact = build_artifact(
++        command_runner=command_runner,
++        clock=clock,
++        run_date=run_date,
++        commit=commit or base.get_git_commit(repo_root),
++        gatemate_physical_path_available=gatemate_physical_path_available,
++        tests_run=tests_run,
++    )
++    return write_artifact(repo_root, artifact)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument(
++        "--gatemate-physical-path-available",
++        action="store_true",
++        help="Run bounded GateMate detect because the current physical/JTAG path is available.",
++    )
++    args = parser.parse_args(argv)
++    print(
++        run_experiment(
++            repo_root=Path("."),
++            run_date=args.date,
++            gatemate_physical_path_available=args.gatemate_physical_path_available or None,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_5374_hardware_continuity_receipts_v489.json b/results/experiment_5374_hardware_continuity_receipts_v489.json
+new file mode 100644
+index 0000000000..dbff1e48f8
+--- /dev/null
++++ b/results/experiment_5374_hardware_continuity_receipts_v489.json
+@@ -0,0 +1,513 @@
++{
++  "blocked_reason": {
++    "GateMate": {
++      "prior_evidence": "results/experiment_5361_hardware_continuity_workload_v488.json",
++      "reason": "physical_or_jtag_path_not_available_or_unchanged"
++    },
++    "KV260": {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "exit_code": 255,
++      "reason": "unreachable",
++      "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++      "stdout_excerpt": "",
++      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++      "timeout_s": 10.0
++    },
++    "PolarFire": null
++  },
++  "board_details": {
++    "GateMate": {
++      "board": "GateMate",
++      "dirtyjtag_usb": {
++        "device_identifier": "1209:c0ca",
++        "stderr": "",
++        "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++        "visible": true
++      },
++      "jtag_detect_attempted": false,
++      "physical_or_jtag_path_available": false,
++      "reason": "physical_or_jtag_path_not_available_or_unchanged",
++      "speedup_claimed": false,
++      "status": "blocked_physical_or_jtag",
++      "tool_versions": {
++        "gmpack": {
++          "path": "/opt/oss-cad-suite/bin/gmpack",
++          "present": true,
++          "version": "Error: unrecognised option '-V'"
++        },
++        "lsusb": {
++          "path": "/opt/oss-cad-suite/bin/lsusb",
++          "present": true,
++          "version": "1d6b:0003 (bus 8, device 1)"
++        },
++        "nextpnr-himbaechel": {
++          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++          "present": true,
++          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++        },
++        "openFPGALoader": {
++          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++          "present": true,
++          "version": "openFPGALoader v1.1.1"
++        },
++        "ssh": {
++          "path": "/usr/bin/ssh",
++          "present": true,
++          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++        },
++        "yosys": {
++          "path": "/opt/oss-cad-suite/bin/yosys",
++          "present": true,
++          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++        }
++      }
++    },
++    "KV260": {
++      "board": "KV260",
++      "check_method": "ssh_batchmode_true_only",
++      "command_form": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++      "probe_exit_code": 255,
++      "remote_identifier": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++      "speedup_claimed": false,
++      "ssh_reachable": false,
++      "status": "unreachable"
++    },
++    "PolarFire": {
++      "board": "PolarFire",
++      "probe_exit_code": 0,
++      "remote_identifier": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
++      "speedup_claimed": false,
++      "ssh_reachable": true,
++      "status": "reachable/workload_receipt",
++      "workload_attempted": true,
++      "workload_error": null,
++      "workload_receipt": {
++        "board_local": true,
++        "hostname": "mpfs-disco-kit",
++        "input_sha256": "ebaf0f7b697bea2dfb1407268bad8fe5aae98ef331fb985f27ee0f15072ceaa5",
++        "output_sha256": "82fc092ab159c3e4778fbbf17cd452c6cbcef1919347984d2edf2e56339a156b",
++        "python_version": "3.12.12",
++        "speedup_claimed": false,
++        "uname": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 ",
++        "wall_time_s": 0.148112,
++        "workload_class": "deterministic_sha256_transform"
++      },
++      "workload_validated": true
++    }
++  },
++  "commands_run": {
++    "principle": "Records exact command strings, exit codes, and concise redacted output excerpts or hashes for every attempted status or workload command.",
++    "value": [
++      {
++        "command": "sh -lc 'printf '\"'\"'host='\"'\"'; hostname; printf '\"'\"'date_utc='\"'\"'; date -u +%Y-%m-%dT%H:%M:%SZ; printf '\"'\"'date_local='\"'\"'; date +%Y-%m-%dT%H:%M:%S%z'",
++        "duration_s": 0.078668,
++        "exit_code": 0,
++        "kind": "step0_host_date_context",
++        "outcome": "recorded",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "host=icbfl1\ndate_utc=2026-07-07T20:05:43Z\ndate_local=2026-07-07T16:05:43-0400",
++        "stdout_line_count": 3,
++        "stdout_sha256": "44fd7de7cdd4d081190b1c640f81f6fb9777f51e8b425cb3cfad3b9f35066ccd",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "env",
++        "duration_s": 0.000855,
++        "exit_code": 0,
++        "kind": "local_hardware_environment",
++        "outcome": "recorded",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "CARNOT_ARC_GENERATOR_CUDA_GPU\nCARNOT_FORCE_LIVE\nCARNOT_MODE",
++        "stdout_line_count": 3,
++        "stdout_sha256": "1d3a16353d033868c0a1085d8750bc5753b21dd3180d0ec988a3898ec677e3b7",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "sh -lc 'for tool in ssh openFPGALoader yosys nextpnr-himbaechel gmpack lsusb; do if command -v \"$tool\" >/dev/null 2>&1; then printf '\"'\"'%s_path=%s\\n'\"'\"' \"$tool\" \"$(command -v \"$tool\")\"; version=\"$($tool -V 2>&1 | head -n 1)\"; if [ -z \"$version\" ]; then version=\"$($tool --version 2>&1 | head -n 1)\"; fi; printf '\"'\"'%s_version=%s\\n'\"'\"' \"$tool\" \"$version\"; else printf '\"'\"'%s_path=\\n%s_version=\\n'\"'\"' \"$tool\" \"$tool\"; fi; done'",
++        "duration_s": 0.303152,
++        "exit_code": 0,
++        "kind": "local_tool_versions",
++        "outcome": "recorded",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "ssh_path=/usr/bin/ssh\nssh_version=OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026\nopenFPGALoader_path=/opt/oss-cad-suite/bin/openFPGALoader\nopenFPGALoader_version=openFPGALoader v1.1.1\nyosys_path=/opt/oss-cad-suite/bin/yosys\nyosys_version=Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nnextpnr-himbaechel_path=/opt/oss-cad-suite/bin/nextpnr-himbaechel\nnextpnr-himbaechel_version=\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version next...<truncated 169 chars>",
++        "stdout_line_count": 12,
++        "stdout_sha256": "69c79691cea28be468665b9d83b6a4f9a010357e1dd93ccaf7241eeea67d6137",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1209:c0ca; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
++        "duration_s": 0.113624,
++        "exit_code": 0,
++        "kind": "local_usb_gatemate_dirtyjtag",
++        "outcome": "visible",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus...<truncated 193 chars>",
++        "stdout_line_count": 20,
++        "stdout_sha256": "48e36b30212b695efce3eb571efb737460c860ccaa741a48f95c9e7965e35d0c",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1514:2008; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
++        "duration_s": 0.099863,
++        "exit_code": 0,
++        "kind": "local_usb_polarfire_flashpro",
++        "outcome": "visible",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus...<truncated 193 chars>",
++        "stdout_line_count": 20,
++        "stdout_sha256": "48e36b30212b695efce3eb571efb737460c860ccaa741a48f95c9e7965e35d0c",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "sh -lc 'if command -v nvidia-smi >/dev/null 2>&1; then nvidia-smi --query-gpu=name,memory.total --format=csv,noheader; else echo '\"'\"'nvidia-smi_not_found'\"'\"' >&2; exit 127; fi'",
++        "duration_s": 0.133513,
++        "exit_code": 0,
++        "kind": "local_dual_rtx3090_runtime_context",
++        "outcome": "dual_rtx3090_context",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "NVIDIA GeForce RTX 3090, 24576 MiB\nNVIDIA GeForce RTX 3090, 24576 MiB",
++        "stdout_line_count": 2,
++        "stdout_sha256": "21b3e5755f235b5513acd0d2253aae577c553c90a037d4ef2a82b052f7d3c20a",
++        "timeout_s": 5.0
++      },
++      {
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
++        "duration_s": 5.054246,
++        "exit_code": 255,
++        "kind": "kv260_ssh_true_reachability_probe",
++        "outcome": "unreachable",
++        "stderr_excerpt": "ssh: Could not resolve hostname kv260.local: Name or service not known",
++        "stderr_line_count": 1,
++        "stderr_sha256": "33947faf560e72edbb38857f427377fe8c9eff72642fad5967de4e170a69016a",
++        "stdout_excerpt": "",
++        "stdout_line_count": 0,
++        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "timeout_s": 10.0
++      },
++      {
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'python='\"'\"'; (python3 --version 2>&1 || true)'",
++        "duration_s": 0.934268,
++        "exit_code": 0,
++        "kind": "polarfire_authenticated_status_probe",
++        "outcome": "reachable",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
++        "stdout_line_count": 3,
++        "stdout_sha256": "204a891ce1db88a5b60b518d3fdf4fe25972a823078dfa18f4f3db008fedabbf",
++        "timeout_s": 10.0
++      },
++      {
++        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 -c '\"'\"'import hashlib,json,platform,socket,time;started=time.perf_counter();payload=b\"carnot-exp5374-polarfire-workload-v489\\n\";out=hashlib.sha256(payload+b\"|polarfire-v489-output\").hexdigest();receipt={\"hostname\":socket.gethostname(),\"uname\":\" \".join(platform.uname()),\"python_version\":platform.python_version(),\"input_sha256\":hashlib.sha256(payload).hexdigest(),\"output_sha256\":out,\"wall_time_s\":round(time.perf_counter()-started,6)};print(json.dumps(receipt,sort_keys=True))'\"'\"''",
++        "duration_s": 1.580976,
++        "exit_code": 0,
++        "kind": "polarfire_board_local_workload_receipt",
++        "outcome": "reachable/workload_receipt",
++        "stderr_excerpt": "",
++        "stderr_line_count": 0,
++        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
++        "stdout_excerpt": "{\"hostname\": \"mpfs-disco-kit\", \"input_sha256\": \"ebaf0f7b697bea2dfb1407268bad8fe5aae98ef331fb985f27ee0f15072ceaa5\", \"output_sha256\": \"82fc092ab159c3e4778fbbf17cd452c6cbcef1919347984d2edf2e56339a156b\", \"python_version\": \"3.12.12\", \"uname\": \"Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 \", \"wall_time_s\": 0.148112}",
++        "stdout_line_count": 1,
++        "stdout_sha256": "2911d8a7812e3dc8db44a8ed174bab08976d5e19bf41c2cd757817d0f6f6e2d9",
++        "timeout_s": 10.0
++      }
++    ]
++  },
++  "commit": "7671b9b1b65bad28fa53a650d219cef6bf728ccd",
++  "conductor_modified": false,
++  "docs_update_decision": {
++    "ops_changelog_updated": false,
++    "ops_status_updated": false,
++    "reason": "task stop rule delegates docs/status reconciliation to the conductor"
++  },
++  "duration_s": 8.3,
++  "experiment": "experiment_5374_hardware_continuity_receipts",
++  "experiment_id": {
++    "principle": "Identifies the v489 continuity receipt so reconciliation can cite one exact artifact.",
++    "value": "exp5374-hardware-continuity-receipts-v489"
++  },
++  "gatemate_status": {
++    "principle": "GateMate is detected, blocked on physical/JTAG availability, unreachable, or skipped with an honest reason.",
++    "value": "blocked_physical_or_jtag"
++  },
++  "hardware_evidence_level": "board_continuity_receipts_no_speedup",
++  "hardware_speedup_claim": {
++    "principle": "False unless authenticated baseline timing, board timing, workload hash, and repeatability evidence are all present.",
++    "value": false
++  },
++  "honest_verdict": {
++    "principle": "One-line continuity summary naming KV260, PolarFire, GateMate, and no-speedup status.",
++    "value": "complete: kv260=unreachable polarfire=reachable/workload_receipt gatemate=blocked_physical_or_jtag hardware_speedup_claim=false repeatability_evidence_present=false"
++  },
++  "inference_substrate": {
++    "principle": "hardware_continuity_receipts_no_speedup means these are board continuity receipts, not sampler acceleration measurements.",
++    "value": "hardware_continuity_receipts_no_speedup"
++  },
++  "kv260_checked_via_ssh": {
++    "principle": "True only when the required BatchMode SSH true command was attempted for KV260.",
++    "value": true
++  },
++  "kv260_status": {
++    "principle": "KV260 is classified as reachable, unreachable, or skipped with an honest reason.",
++    "value": "unreachable"
++  },
++  "milestone": {
++    "principle": "Pins this receipt to milestone 2026.07.489 rather than a floating board state.",
++    "value": "2026.07.489"
++  },
++  "no_destructive_flash": {
++    "principle": "True because no flashing, programming, or destructive write command was run.",
++    "value": true
++  },
++  "no_host_mmcblk_kv260_evidence": {
++    "principle": "True because KV260 evidence is SSH-only and not derived from host removable storage.",
++    "value": true
++  },
++  "polarfire_status": {
++    "principle": "PolarFire is classified as reachable/workload_receipt, unreachable, or skipped with an honest reason.",
++    "value": "reachable/workload_receipt"
++  },
++  "polarfire_workload_hash": {
++    "principle": "The value is the board-local workload output hash only when that receipt validates.",
++    "value": "82fc092ab159c3e4778fbbf17cd452c6cbcef1919347984d2edf2e56339a156b"
++  },
++  "preconditions_checked": {
++    "principle": "Records date, sanitized environment, local toolchain, USB visibility, and SSH targets before board classification.",
++    "value": {
++      "gpu_runtime_context": {
++        "command_exit_code": 0,
++        "detected_gpu_lines": [
++          "NVIDIA GeForce RTX 3090, 24576 MiB",
++          "NVIDIA GeForce RTX 3090, 24576 MiB"
++        ],
++        "dual_rtx3090_present": true,
++        "nvidia_smi_available": true,
++        "rtx3090_count": 2,
++        "runtime_relevance": "local SOTA model-runtime context only",
++        "sampler_hardware_acceleration_claimed": false,
++        "speedup_claimed": false
++      },
++      "hardware_environment": {
++        "CARNOT_ARC_GENERATOR_CUDA_GPU": {
++          "present": true,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_FORCE_LIVE": {
++          "present": true,
++          "truthy": true,
++          "value_recorded": false
++        },
++        "CARNOT_GATEMATE_SETUP_CHANGED": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_KV260_HOST": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_KV260_USER": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_MODE": {
++          "present": true,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_POLARFIRE_HOST": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "CARNOT_POLARFIRE_USER": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "EXTROPIC_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "EXTROPIC_TOKEN": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "GATEMATE_PHYSICAL_SETUP_CHANGED": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "KONA_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "LOGICAL_API_KEY": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "LOGICAL_KONA_TOKEN": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "THRML_HOME": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "TSU_SDK": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        },
++        "XTR0_SDK": {
++          "present": false,
++          "truthy": false,
++          "value_recorded": false
++        }
++      },
++      "host_date": {
++        "date_local": "2026-07-07T16:05:43-0400",
++        "date_utc": "2026-07-07T20:05:43Z",
++        "exit_code": 0,
++        "host": "icbfl1",
++        "stderr": ""
++      },
++      "kv260_check_method": "ssh_batchmode_true_only",
++      "operator_visible_hardware_assumptions": {
++        "gatemate_physical_jtag_path_available": false,
++        "hardware_speedup_claim": false,
++        "kv260_checked_by_ssh_only": true,
++        "kv260_host_storage_precondition_retired": true,
++        "no_destructive_flash": true
++      },
++      "prior_receipts": [
++        "results/experiment_5361_hardware_continuity_workload_v488.json"
++      ],
++      "public_reference_boundaries": {
++        "extropic_tsu": {
++          "boundary": "public THRML/Extropic TSU/XTR context only; no local authenticated TSU run",
++          "context_only": true,
++          "credential_or_sdk_marker_present": false,
++          "execution_claimed": false,
++          "local_authenticated_access": false,
++          "speedup_claimed": false
++        },
++        "logical_kona": {
++          "boundary": "public Logical/Kona context only; no local authenticated Kona run",
++          "context_only": true,
++          "credential_or_sdk_marker_present": false,
++          "execution_claimed": false,
++          "local_authenticated_access": false,
++          "speedup_claimed": false
++        }
++      },
++      "ssh_targets": {
++        "KV260": "kria",
++        "PolarFire": "polarfire"
++      },
++      "tool_versions": {
++        "gmpack": {
++          "path": "/opt/oss-cad-suite/bin/gmpack",
++          "present": true,
++          "version": "Error: unrecognised option '-V'"
++        },
++        "lsusb": {
++          "path": "/opt/oss-cad-suite/bin/lsusb",
++          "present": true,
++          "version": "1d6b:0003 (bus 8, device 1)"
++        },
++        "nextpnr-himbaechel": {
++          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
++          "present": true,
++          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
++        },
++        "openFPGALoader": {
++          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
++          "present": true,
++          "version": "openFPGALoader v1.1.1"
++        },
++        "ssh": {
++          "path": "/usr/bin/ssh",
++          "present": true,
++          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
++        },
++        "yosys": {
++          "path": "/opt/oss-cad-suite/bin/yosys",
++          "present": true,
++          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
++        }
++      },
++      "usb_visibility": {
++        "GateMate": {
++          "device_identifier": "1209:c0ca",
++          "stderr": "",
++          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++          "visible": true
++        },
++        "PolarFire": {
++          "device_identifier": "1514:2008",
++          "stderr": "",
++          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
++          "visible": true
++        }
++      }
++    }
++  },
++  "random_seed": 5374,
++  "repeatability_evidence_present": {
++    "principle": "States whether authenticated repeat timing evidence exists for a hardware speedup claim.",
++    "value": false
++  },
++  "reproducibility_checksum": "5a77ad2d0a233f40becd93957bc9d056d4024cd3f0f1a44bd728913428350364",
++  "reviewed_inputs": [
++    "AGENTS.md",
++    "CODEX.md",
++    "CLAUDE.md",
++    "research-hardware-wishlist.md",
++    "results/experiment_5361_hardware_continuity_workload_v488.json",
++    "ops/status.md",
++    "openspec/capabilities/fpga/spec.md"
++  ],
++  "run_date": "20260707",
++  "schema": "carnot.experiment_5374.hardware_continuity_receipts.v489",
++  "spec_refs": [
++    "REQ-HW-5374",
++    "SCENARIO-HW-5374"
++  ],
++  "status": {
++    "principle": "Complete means fresh reachability or receipt attempts were recorded for the requested board lanes.",
++    "value": "complete"
++  },
++  "tests_run": {
++    "principle": "Records verification commands without treating them as hardware evidence.",
++    "value": [
++      {
++        "command": "verification not yet attached at artifact generation",
++        "outcome": "pending_external_test_run"
++      }
++    ]
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ad9a9bdc10..79ec53fc93 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T19:52:13Z",
+-  "finished_at": "2026-07-07T19:52:13Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-07-07T20:08:08Z",
++  "finished_at": "2026-07-07T20:08:08Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 80371c3fc8..28709abead 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T19:52:13Z",
+-  "finished_at": "2026-07-07T19:52:13Z",
++  "started_at": "2026-07-07T20:08:08Z",
++  "finished_at": "2026-07-07T20:08:08Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index cceea4a386..d2c867125b 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260707",
+-  "started_at": "2026-07-07T19:52:14Z",
+-  "finished_at": "2026-07-07T19:52:14Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-07-07T20:08:09Z",
++  "finished_at": "2026-07-07T20:08:09Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_5374_hardware_continuity_receipts_v489.py b/tests/python/test_experiment_5374_hardware_continuity_receipts_v489.py
+new file mode 100644
+index 0000000000..38ad9375a4
+--- /dev/null
++++ b/tests/python/test_experiment_5374_hardware_continuity_receipts_v489.py
+@@ -0,0 +1,521 @@
++"""Tests for Exp 5374 hardware continuity receipts.
++
++Spec refs: REQ-HW-5374, SCENARIO-HW-5374.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_5374_hardware_continuity_receipts_v489 as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/fpga/spec.md"
++
++
++class RecordingRunner:
++    """SCENARIO-HW-5374 runner with exact non-destructive command receipts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        assert timeout_s > 0.0
++        command = tuple(command)
++        self.commands.append(command)
++        if command not in self.probes or not self.probes[command]:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.probes[command].pop(0)
++
++
++class StepClock:
++    """Deterministic clock for REQ-HW-5374 duration and checksum assertions."""
++
++    def __init__(self) -> None:
++        self.value = 5374.0
++
++    def __call__(self) -> float:
++        self.value += 0.125
++        return self.value
++
++
++def _probe(
++    command: tuple[str, ...],
++    *,
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _workload_stdout(
++    *,
++    input_sha256: str | None = None,
++    output_sha256: str | None = None,
++    wall_time_s: float = 0.0025,
++) -> str:
++    return (
++        json.dumps(
++            {
++                "hostname": "mpfs-disco-kit",
++                "input_sha256": input_sha256 or mod.POLARFIRE_EXPECTED_INPUT_SHA256,
++                "output_sha256": output_sha256 or mod.POLARFIRE_EXPECTED_OUTPUT_SHA256,
++                "python_version": "3.12.12",
++                "uname": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1 riscv64",
++                "wall_time_s": wall_time_s,
++            },
++            sort_keys=True,
++        )
++        + "\n"
++    )
++
++
++def _base_probes(*, openfpga_present: bool = True) -> dict[tuple[str, ...], list[mod.CommandProbe]]:
++    openfpga_path = "/opt/oss-cad-suite/bin/openFPGALoader" if openfpga_present else ""
++    openfpga_version = "openFPGALoader v1.1.1" if openfpga_present else ""
++    return {
++        mod.HOST_DATE_COMMAND: [
++            _probe(
++                mod.HOST_DATE_COMMAND,
++                stdout=(
++                    "host=carnot-host\n"
++                    "date_utc=2026-07-07T14:00:00Z\n"
++                    "date_local=2026-07-07T10:00:00-0400\n"
++                ),
++            )
++        ],
++        mod.HARDWARE_ENV_COMMAND: [
++            _probe(
++                mod.HARDWARE_ENV_COMMAND,
++                stdout=(
++                    "CARNOT_MODE=live\n"
++                    "EXTROPIC_API_KEY=do-not-record\n"
++                    "KONA_API_KEY=also-hidden\n"
++                    "PRIVATE_TOKEN=hidden\n"
++                ),
++            )
++        ],
++        mod.TOOL_VERSION_COMMAND: [
++            _probe(
++                mod.TOOL_VERSION_COMMAND,
++                stdout=(
++                    "ssh_path=/usr/bin/ssh\nssh_version=OpenSSH_10.0p1\n"
++                    f"openFPGALoader_path={openfpga_path}\n"
++                    f"openFPGALoader_version={openfpga_version}\n"
++                    "yosys_path=/opt/oss-cad-suite/bin/yosys\n"
++                    "yosys_version=Yosys 0.64\n"
++                    "nextpnr-himbaechel_path=/opt/oss-cad-suite/bin/nextpnr-himbaechel\n"
++                    "nextpnr-himbaechel_version=nextpnr-himbaechel 0.8\n"
++                    "gmpack_path=/opt/oss-cad-suite/bin/gmpack\n"
++                    "gmpack_version=gmpack 2026.04\n"
++                    "lsusb_path=/usr/bin/lsusb\nlsusb_version=lsusb (usbutils) 018\n"
++                ),
++            )
++        ],
++        mod.GATEMATE_USB_COMMAND: [
++            _probe(mod.GATEMATE_USB_COMMAND, stdout="1209:c0ca DirtyJTAG\n")
++        ],
++        mod.POLARFIRE_USB_COMMAND: [
++            _probe(mod.POLARFIRE_USB_COMMAND, stdout="1514:2008 FlashPro5\n")
++        ],
++        mod.GPU_CONTEXT_COMMAND: [
++            _probe(
++                mod.GPU_CONTEXT_COMMAND,
++                stdout=("NVIDIA GeForce RTX 3090, 24576 MiB\nNVIDIA GeForce RTX 3090, 24576 MiB\n"),
++            )
++        ],
++    }
++
++
++def _runner(
++    *,
++    kv260_exit: int = 255,
++    kv260_stdout: str = "",
++    kv260_stderr: str = "ssh: connect to host kria port 22: No route to host\n",
++    polarfire_status_exit: int = 0,
++    polarfire_status_stdout: str = (
++        "hostname=mpfs-disco-kit\n"
++        "uname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1 riscv64\n"
++        "python=Python 3.12.12\n"
++    ),
++    polarfire_status_stderr: str = "",
++    polarfire_workload_exit: int = 0,
++    polarfire_workload_stdout: str | None = None,
++    gatemate_path_available: bool = False,
++    gatemate_detect_exit: int = 0,
++    gatemate_detect_stdout: str = "Jtag frequency : requested 6.00MHz -> real 6.00MHz\nIDCode : 0x20000001\n",
++    openfpga_present: bool = True,
++) -> RecordingRunner:
++    probes = _base_probes(openfpga_present=openfpga_present)
++    probes[mod.KV260_SSH_TRUE_COMMAND] = [
++        _probe(
++            mod.KV260_SSH_TRUE_COMMAND,
++            exit_code=kv260_exit,
++            stdout=kv260_stdout,
++            stderr=kv260_stderr,
++        )
++    ]
++    probes[mod.POLARFIRE_STATUS_COMMAND] = [
++        _probe(
++            mod.POLARFIRE_STATUS_COMMAND,
++            exit_code=polarfire_status_exit,
++            stdout=polarfire_status_stdout,
++            stderr=polarfire_status_stderr,
++        )
++    ]
++    if polarfire_status_exit == 0:
++        probes[mod.POLARFIRE_WORKLOAD_COMMAND] = [
++            _probe(
++                mod.POLARFIRE_WORKLOAD_COMMAND,
++                exit_code=polarfire_workload_exit,
++                stdout=polarfire_workload_stdout
++                if polarfire_workload_stdout is not None
++                else _workload_stdout(),
++                stderr="" if polarfire_workload_exit == 0 else "workload failed\n",
++            )
++        ]
++    if gatemate_path_available and openfpga_present:
++        probes[mod.GATEMATE_DETECT_COMMAND] = [
++            _probe(
++                mod.GATEMATE_DETECT_COMMAND,
++                exit_code=gatemate_detect_exit,
++                stdout=gatemate_detect_stdout,
++                stderr="" if gatemate_detect_exit == 0 else "dirtyJtag open failed\n",
++            )
++        ]
++    return RecordingRunner(probes)
++
++
++def _value(artifact: dict[str, object], field: str) -> object:
++    wrapped = artifact[field]
++    assert isinstance(wrapped, dict)
++    return wrapped["value"]
++
++
++def _tests_run() -> list[dict[str, object]]:
++    return [
++        {
++            "command": ".venv/bin/pytest tests/python/test_experiment_5374_hardware_continuity_receipts_v489.py -q",
++            "outcome": "passed in test fixture",
++        }
++    ]
++
++
++def test_req_hw_5374_spec_declares_required_receipt_fields() -> None:
++    """REQ-HW-5374: OpenSpec anchors the v489 continuity receipt contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    section = spec[spec.index("### REQ-HW-5374") : spec.index("### SCENARIO-HW-4910")]
++
++    for marker in (
++        "REQ-HW-5374",
++        "SCENARIO-HW-5374",
++        str(mod.RESULT_RELATIVE_PATH),
++        mod.KV260_REQUIRED_COMMAND_FORM,
++        "hardware_speedup_claim",
++        "kv260_checked_via_ssh",
++        "kv260_status",
++        "polarfire_status",
++        "polarfire_workload_hash",
++        "gatemate_status",
++        "commands_run",
++        "no_host_mmcblk_kv260_evidence",
++        "no_destructive_flash",
++        "repeatability_evidence_present",
++        "honest_verdict",
++        "reachable/workload_receipt",
++        "blocked_physical_or_jtag",
++    ):
++        assert marker in section
++
++
++def test_scenario_hw_5374_records_fresh_receipts_without_speedup() -> None:
++    """SCENARIO-HW-5374: fresh board receipts remain continuity-only."""
++
++    runner = _runner()
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert runner.commands == [
++        mod.HOST_DATE_COMMAND,
++        mod.HARDWARE_ENV_COMMAND,
++        mod.TOOL_VERSION_COMMAND,
++        mod.GATEMATE_USB_COMMAND,
++        mod.POLARFIRE_USB_COMMAND,
++        mod.GPU_CONTEXT_COMMAND,
++        mod.KV260_SSH_TRUE_COMMAND,
++        mod.POLARFIRE_STATUS_COMMAND,
++        mod.POLARFIRE_WORKLOAD_COMMAND,
++    ]
++    assert mod.GATEMATE_DETECT_COMMAND not in runner.commands
++    assert _value(artifact, "status") == "complete"
++    assert _value(artifact, "hardware_speedup_claim") is False
++    assert _value(artifact, "kv260_checked_via_ssh") is True
++    assert _value(artifact, "kv260_status") == "unreachable"
++    assert _value(artifact, "polarfire_status") == "reachable/workload_receipt"
++    assert _value(artifact, "polarfire_workload_hash") == mod.POLARFIRE_EXPECTED_OUTPUT_SHA256
++    assert _value(artifact, "gatemate_status") == "blocked_physical_or_jtag"
++    assert _value(artifact, "no_host_mmcblk_kv260_evidence") is True
++    assert _value(artifact, "no_destructive_flash") is True
++    assert _value(artifact, "repeatability_evidence_present") is False
++    assert "hardware_speedup_claim=false" in _value(artifact, "honest_verdict")
++    assert "kv260=unreachable" in _value(artifact, "honest_verdict")
++    assert "polarfire=reachable/workload_receipt" in _value(artifact, "honest_verdict")
++    assert "gatemate=blocked_physical_or_jtag" in _value(artifact, "honest_verdict")
++
++    commands = _value(artifact, "commands_run")
++    assert isinstance(commands, list)
++    assert any(command["command"] == mod.KV260_REQUIRED_COMMAND_FORM for command in commands)
++    assert commands[-1]["kind"] == "polarfire_board_local_workload_receipt"
++    assert "stdout_sha256" in commands[-1]
++    assert "stderr_sha256" in commands[-1]
++    assert len(commands[-1]["stdout_excerpt"]) <= mod.MAX_OUTPUT_EXCERPT_CHARS
++    assert "do-not-record" not in json.dumps(artifact)
++    assert "also-hidden" not in json.dumps(artifact)
++    assert "PRIVATE_TOKEN" not in json.dumps(artifact)
++    assert "/dev/mmcblk" not in json.dumps(artifact).lower()
++    mod.validate_artifact(artifact)
++
++
++def test_polarfire_unreachable_stops_workload_lane_honestly() -> None:
++    """REQ-HW-5374: unreachable PolarFire SSH leaves the workload hash null."""
++
++    runner = _runner(
++        polarfire_status_exit=255,
++        polarfire_status_stdout="",
++        polarfire_status_stderr="ssh: connect to host polarfire port 22: No route to host\n",
++    )
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert mod.POLARFIRE_WORKLOAD_COMMAND not in runner.commands
++    assert _value(artifact, "status") == "complete"
++    assert _value(artifact, "polarfire_status") == "unreachable"
++    assert _value(artifact, "polarfire_workload_hash") is None
++    assert artifact["blocked_reason"]["PolarFire"]["reason"] == "unreachable"
++    assert _value(artifact, "hardware_speedup_claim") is False
++    mod.validate_artifact(artifact)
++
++
++def test_invalid_polarfire_workload_hash_fails_closed() -> None:
++    """REQ-HW-5374: mismatched workload hashes do not authenticate a receipt."""
++
++    runner = _runner(polarfire_workload_stdout=_workload_stdout(output_sha256="0" * 64))
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++
++    assert _value(artifact, "polarfire_status") == "skipped: workload receipt invalid"
++    assert _value(artifact, "polarfire_workload_hash") is None
++    assert "output_sha256 mismatch" in artifact["blocked_reason"]["PolarFire"]["reason"]
++    assert _value(artifact, "hardware_speedup_claim") is False
++    mod.validate_artifact(artifact)
++
++
++def test_gatemate_detect_when_physical_path_available() -> None:
++    """SCENARIO-HW-5374: GateMate detect remains status-only when available."""
++
++    runner = _runner(kv260_exit=0, kv260_stderr="", gatemate_path_available=True)
++    artifact = mod.build_artifact(
++        command_runner=runner,
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        gatemate_physical_path_available=True,
++        tests_run=_tests_run(),
++    )
++
++    assert mod.GATEMATE_DETECT_COMMAND in runner.commands
++    assert _value(artifact, "kv260_status") == "reachable"
++    assert _value(artifact, "gatemate_status") == "detected"
++    assert _value(artifact, "hardware_speedup_claim") is False
++    assert _value(artifact, "no_destructive_flash") is True
++    mod.validate_artifact(artifact)
++
++
++def test_gatemate_detect_failure_and_missing_toolchain_are_honest() -> None:
++    """REQ-HW-5374: GateMate unavailable paths report blockers, not speedups."""
++
++    failed_runner = _runner(
++        gatemate_path_available=True,
++        gatemate_detect_exit=1,
++        gatemate_detect_stdout="",
++    )
++    failed = mod.build_artifact(
++        command_runner=failed_runner,
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        gatemate_physical_path_available=True,
++        tests_run=_tests_run(),
++    )
++    assert _value(failed, "gatemate_status") == "unreachable"
++    assert failed["blocked_reason"]["GateMate"]["reason"] == "detect_failed"
++    mod.validate_artifact(failed)
++
++    missing_tool_runner = _runner(
++        gatemate_path_available=True,
++        openfpga_present=False,
++    )
++    missing_tool = mod.build_artifact(
++        command_runner=missing_tool_runner,
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        gatemate_physical_path_available=True,
++        tests_run=_tests_run(),
++    )
++    assert mod.GATEMATE_DETECT_COMMAND not in missing_tool_runner.commands
++    assert _value(missing_tool, "gatemate_status") == "skipped: openFPGALoader unavailable"
++    mod.validate_artifact(missing_tool)
++
++
++def test_parser_and_status_helpers_cover_non_json_and_skips() -> None:
++    """REQ-HW-5374: helper paths preserve malformed output and skipped boards."""
++
++    excerpt = mod.short_excerpt("x" * (mod.MAX_OUTPUT_EXCERPT_CHARS + 20))
++    assert excerpt.endswith("chars>")
++    assert len(excerpt) <= mod.MAX_OUTPUT_EXCERPT_CHARS
++
++    receipt, error = mod.parse_polarfire_workload_stdout("not json\n")
++    assert receipt is None
++    assert error == "workload stdout is not valid JSON"
++
++    receipt, error = mod.parse_polarfire_workload_stdout(
++        "\n"
++        + json.dumps(
++            {
++                "hostname": "",
++                "input_sha256": "1" * 64,
++                "output_sha256": mod.POLARFIRE_EXPECTED_OUTPUT_SHA256,
++                "python_version": 312,
++                "uname": "Linux mpfs-disco-kit riscv64",
++                "wall_time_s": -1.0,
++            },
++            sort_keys=True,
++        )
++    )
++    assert isinstance(receipt, dict)
++    assert error is not None
++    assert "hostname missing" in error
++    assert "input_sha256 mismatch" in error
++    assert "wall_time_s invalid" in error
++    assert "python_version invalid" in error
++
++    assert mod._status_is_allowed("skipped: operator disabled") is True
++    assert mod._status_is_allowed("") is False
++    assert mod.gatemate_path_available_from_context({"hardware_environment": []}, None) is False
++    assert mod.openfpgaloader_present({"tool_versions": []}) is False
++
++
++def test_validator_rejects_speedup_destructive_and_kv260_host_storage_drift() -> None:
++    """REQ-HW-5374: validator fails closed on speedup and unsafe evidence drift."""
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact["hardware_speedup_claim"]["value"] = True
++    with pytest.raises(AssertionError, match="hardware_speedup_claim must be false"):
++        mod.validate_artifact(artifact)
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact["commands_run"]["value"].append(
++        {
++            "kind": "bad",
++            "command": "openFPGALoader --write flash.bit",
++            "timeout_s": 1.0,
++            "exit_code": 0,
++            "duration_s": 0.001,
++            "outcome": "bad",
++            "stdout_excerpt": "",
++            "stderr_excerpt": "",
++            "stdout_sha256": mod.sha256_text(""),
++            "stderr_sha256": mod.sha256_text(""),
++        }
++    )
++    with pytest.raises(AssertionError, match="destructive command"):
++        mod.validate_artifact(artifact)
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact["commands_run"]["value"][0]["stdout_excerpt"] = "host path /dev/mmcblk0"
++    with pytest.raises(AssertionError, match="host KV260 block-device evidence"):
++        mod.validate_artifact(artifact)
++
++
++def test_run_experiment_writes_stable_result(tmp_path: Path) -> None:
++    """SCENARIO-HW-5374: run_experiment writes the requested v489 JSON artifact."""
++
++    out_path = mod.run_experiment(
++        repo_root=tmp_path,
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++        tests_run=_tests_run(),
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.RESULT_RELATIVE_PATH
++    assert _value(artifact, "experiment_id") == mod.EXPERIMENT_ID
++    assert artifact["spec_refs"] == list(mod.SPEC_REFS)
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert _value(artifact, "hardware_speedup_claim") is False
++    mod.validate_artifact(artifact)
++
++
++def test_default_tests_run_keeps_cli_artifacts_valid() -> None:
++    """REQ-HW-5374: CLI-style artifacts still carry verification provenance."""
++
++    artifact = mod.build_artifact(
++        command_runner=_runner(),
++        clock=StepClock(),
++        run_date="20260707",
++        commit="abc123",
++    )
++
++    tests_run = _value(artifact, "tests_run")
++    assert tests_run == [
++        {
++            "command": "verification not yet attached at artifact generation",
++            "outcome": "pending_external_test_run",
++        }
++    ]
++    mod.validate_artifact(artifact)
+-- 
+2.55.0
+

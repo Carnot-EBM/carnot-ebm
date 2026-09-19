@@ -1,0 +1,56 @@
+From d65e1512e557907820f806be418d18e4cf9286a0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 26 Aug 2026 21:54:00 -0400
+Subject: [PATCH 10059/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 2 +-
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 77781537f6..9433ef6533 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -11,5 +11,5 @@
+  "last_scan_notes": [
+   "pid 689528 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json: out file missing, run unsupervisable this cycle"
+  ],
+- "last_scan_utc": "2026-08-27T01:51:53Z"
++ "last_scan_utc": "2026-08-27T01:53:57Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 383700af20..5a62bbb029 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 58, "phase": "iteration_start", "last_beat": "2026-08-27T01:51:53Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 59, "phase": "iteration_start", "last_beat": "2026-08-27T01:53:56Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3989697e88..d6e6ca5e33 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16599,3 +16599,4 @@ code |
+ | 2026-08-27 01:45 UTC | Bounded-treewidth exact Ising reference | OK | 135 passed, 1 warning in 9.10s |
+ | 2026-08-27 01:47 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
+ | 2026-08-27 01:49 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
++| 2026-08-27 01:51 UTC | Autocorrelation-aware thermodynamic schedule A/B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6657-bounded-treewidth-ising-reference. |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index dc5e0fd66e..d6c22d9861 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1298, "iteration": 58, "phase": "iteration_start", "started_at": "2026-08-27T01:51:53Z"}
+\ No newline at end of file
++{"pid": 1298, "iteration": 59, "phase": "iteration_start", "started_at": "2026-08-27T01:53:56Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

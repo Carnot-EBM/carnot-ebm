@@ -1,0 +1,117 @@
+From be1470b39e947017c70caecddca0853f74c65a51 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 29 Jul 2026 10:52:34 -0400
+Subject: [PATCH 08019/11362] [outer-loop] The induced world models fail in two
+ OPPOSITE ways -- no-op (12/33) and runaway writer (21/33)
+
+The bottleneck note ended by asking what error class the induced engines fall into and
+calling it a cheap CPU-only follow-up. It was cheap enough to do immediately: the counts
+were already recorded per row in exp6012 (`correct_changed_cells`,
+`spurious_changed_cells`, `noop_hallucination_rate`). The 33 rows split cleanly, and the
+split matters because the two modes want OPPOSITE corrections.
+
+MODE A -- the no-op world model (12/33: ar25, ka59, re86, and cd82 on changed frames).
+correct_changed_cells = 0 AND spurious_changed_cells = 0. The engine predicts that nothing
+ever changes. It is the identity engine in all but name, which is precisely why it scores
+respectably on exact-match accuracy -- most cells genuinely do not change -- while scoring
+zero on changed-cell recall. This is the mechanism behind the intermediate exact-accuracy
+values (0.125-0.6) that sat next to ~0.003 cell recall.
+
+MODE B -- the runaway writer (21/33: cn04, dc22, g50t, m0r0, sc25, sk48, wa30). It does
+write, but writes 3x-10x MORE changed cells than reality contains: cn04@1 has 4346 true
+changed cells against 33021 spurious ones, g50t@0 1504 against 14612, sc25@0 453 against
+4687. And noop_hallucination_rate reaches 1.0 on cn04@0 -- on frames where reality did
+nothing, the engine invents a change every single time.
+
+WHY THE SPLIT IS THE POINT. Mode A needs the inducer to predict any dynamics at all; Mode B
+needs it CONSTRAINED from over-writing. A single undifferentiated "make the inducer better"
+intervention is unlikely to move both, which is a plausible reading of why the 27B -> 31B
+migration (a ~6x better generator) banked zero additional levels. Mode B in particular is
+directly addressable by a change-magnitude prior or a sparsity constraint on predicted
+writes, and that is cheap to test; Mode A looks like a failure to extract action semantics.
+
+cd82 is a mixture -- no-op on changed frames, but hallucinating at 0.44-0.55 on no-op
+frames -- and is flagged as such rather than forced into one bucket.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...-admission-is-the-bottleneck-2026-07-29.md | 36 +++++++++++++++++++
+ ops/verifier_gaps.md                          | 14 ++++++++
+ 2 files changed, 50 insertions(+)
+
+diff --git a/docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md b/docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md
+index 2cc8e85d1f..f3cf970c5f 100644
+--- a/docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md
++++ b/docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md
+@@ -102,6 +102,42 @@ case). That weakens point 5 as a statement about *freshly induced* engines speci
+ It does not weaken the chain, because points 3 and 4 are measured on fresh live inductions:
+ 71% of fresh rounds score exactly 0.0, and 12 of 17 attempts had no accepted round.
+ 
++## The error class, characterised (the question this note originally deferred)
++
++The note first ended by asking "what error class is this?" and calling it a cheap CPU-only
++follow-up. It is cheap enough to have done immediately, from the `correct_changed_cells` /
++`spurious_changed_cells` / `noop_hallucination_rate` already recorded per row in exp6012. The
++33 rows split cleanly into two structural failure modes, neither of which is "close but
++imperfect":
++
++**Mode A — the no-op world model (12/33 rows; ar25, ka59, re86, and cd82 on changed frames).**
++`correct_changed_cells = 0` and `spurious_changed_cells = 0`. The engine predicts that nothing
++changes, ever. It is the identity engine in all but name — which is why it scores respectably
++on exact-match accuracy (most cells genuinely do not change) and zero on changed-cell recall.
++
++**Mode B — the runaway writer (21/33 rows; cn04, dc22, g50t, m0r0, sc25, sk48, wa30).** The
++engine does write, but wildly over-writes:
++
++| game | true changed cells | correct | spurious | spurious / true |
++|---|---|---|---|---|
++| cn04@1 | 4346 | 600 | 33021 | **7.6x** |
++| g50t@0 | 1504 | 168 | 14612 | **9.7x** |
++| sc25@0 | 453 | 28 | 4687 | **10.3x** |
++| sk48@0 | 2817 | 515 | 7714 | 2.7x |
++| wa30@1 | 722 | 18 | 2200 | 3.0x |
++
++It invents between 3x and 10x more changed cells than reality contains. And
++`noop_hallucination_rate` reaches **1.0** on cn04@0 — on frames where reality did nothing, the
++engine invents a change every single time. (cd82 is a mixture: no-op on changed frames like
++Mode A, but hallucinating at 0.44-0.55 on no-op frames. It is counted in Mode A on the
++changed-cell criterion and flagged here rather than forced into one bucket.)
++
++This matters for what to try next. The two modes want opposite corrections — Mode A needs the
++inducer to predict *any* dynamics at all, Mode B needs it *constrained* from over-writing — so
++a single undifferentiated "make the inducer better" intervention is unlikely to move both. A
++change-magnitude prior or a sparsity constraint on predicted writes addresses Mode B directly
++and is cheap to test; Mode A looks like a failure to extract the action semantics at all.
++
+ ## The next question worth asking
+ 
+ Not "how do we admit more engines" but **"why does induction produce a world model that is
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 68be3863e1..9da2b24c1d 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -4643,6 +4643,20 @@ dynamics they behave like the identity engine, which the gate correctly rejects.
+ capability is not a more permissive verifier; it is an inducer (or a supervision/representation)
+ that gets *changed* cells right at all.
+ 
++**ERROR CLASS (measured same session, from exp6012's recorded per-row cell counts).** The 33
++rows split into two structural modes that want OPPOSITE corrections, so an undifferentiated
++"make the inducer better" is unlikely to move both:
++- *Mode A, the no-op world model* (12/33; ar25, ka59, re86, cd82-on-changed-frames):
++  `correct_changed_cells = 0` AND `spurious_changed_cells = 0` -- it predicts nothing ever
++  changes. Identity in all but name, which is exactly why exact-match accuracy looks
++  respectable while changed-cell recall is zero.
++- *Mode B, the runaway writer* (21/33; cn04, dc22, g50t, m0r0, sc25, sk48, wa30): it writes
++  3x-10x MORE changed cells than reality contains (cn04@1: 4346 true vs 33021 spurious; g50t@0:
++  1504 vs 14612; sc25@0: 453 vs 4687), and `noop_hallucination_rate` reaches 1.0 -- on frames
++  where reality did nothing it invents a change every time.
++Mode B is directly addressable by a change-magnitude prior or a sparsity constraint on predicted
++writes, and that is cheap to test. Mode A looks like failure to extract action semantics at all.
++
+ **Priority: HIGH, and it reframes the ARC roadmap.** Every admission-side or retention-side
+ proposal is downstream of this and should be deprioritised until changed-cell recall moves off
+ the floor. Cheapest next discriminating step, CPU-only over existing fixtures: on a game where a
+-- 
+2.55.0
+

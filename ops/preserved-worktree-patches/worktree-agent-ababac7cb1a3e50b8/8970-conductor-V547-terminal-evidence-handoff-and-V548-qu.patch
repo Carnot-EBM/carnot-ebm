@@ -1,0 +1,2986 @@
+From 6ecf1ddcc899d458126523705a97726114be944d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 22:40:07 -0400
+Subject: [PATCH 08970/11362] [conductor] V547 terminal evidence handoff and
+ V548 queue preflight
+
+Automated research step by research conductor.
+Task ID: exp6363-v548-terminal-handoff-and-queue-preflight
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-harnesses/spec.md   |  104 ++
+ ops/conductor-heartbeat.json                  |    2 +-
+ ops/conductor-log.md                          |    1 +
+ ops/conductor-state.json                      |    2 +-
+ ops/dogfood-memory.json                       |    2 +-
+ ...48_terminal_handoff_and_queue_preflight.py | 1081 ++++++++++++++++
+ results/experiment_1822_rtl_synth.log         |    4 +-
+ results/experiment_2031.json                  |    6 +-
+ results/experiment_2427_kv260_yosys_v4.json   |    2 +-
+ results/experiment_2510_ensemble_v7.json      |    2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |   44 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |    2 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |    4 +-
+ results/experiment_3582_capstone_v329.json    |    2 +-
+ ..._terminal_handoff_and_queue_preflight.json | 1114 +++++++++++++++++
+ ...iment_833_constraint_delta_root_cause.json |    8 +-
+ ...48_terminal_handoff_and_queue_preflight.py |  407 ++++++
+ 17 files changed, 2747 insertions(+), 40 deletions(-)
+ create mode 100644 python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py
+ create mode 100644 results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json
+ create mode 100644 tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index ed8d688a62..4064d838f3 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -4092,6 +4092,110 @@ terminal prefix.
+ |---|---|---|
+ | REQ-INFRA-6350 | Planned: `python/carnot/experiment_6350_v547_bounded_terminal_handoff.py`; terminal artifact `results/experiment_6350_v547_bounded_terminal_handoff.json`. | Planned: `tests/python/test_experiment_6350_v547_bounded_terminal_handoff.py`. |
+ 
++## REQ-INFRA-6363: V548 Handoff SHALL Preserve V547 Terminal Boundaries And Fail Closed On Queue Drift
++
++Carnot SHALL build Exp6363 as a bounded V547-to-V548 evidence handoff over
++exactly Exp6350 through Exp6356. The handoff SHALL run read-only
++preconditions before importing artifact fields. It SHALL hash the active
++roadmap, the optional next roadmap, the conductor log, and the exclusion
++manifest. It SHALL classify each expected V547 artifact path as present,
++absent, blocked, flagged, retired-upstream, or null.
++
++Exp6363 SHALL read each present V547 artifact through
++`scripts/summarize_artifact.py` before importing any field from that artifact.
++It SHALL preserve live adversarial findings separately from stamped fields.
++It SHALL not convert flagged, blocked, missing, retired-upstream, or null
++evidence into clean evidence. It SHALL not count the proposal-only Exp6357
++through Exp6362 identities as executed V547 tasks.
++
++Exp6363 SHALL reconcile conductor rows for Exp6350 through Exp6356. It SHALL
++record Exp6350 as flagged, Exp6353 as three gate failures, Exp6354 as three
++pre-emptive upstream-retirement skips with no artifact, Exp6355 as three gate
++failures on the missing Exp6354 deliverable, and Exp6356 as terminal
++`complete_null`.
++
++Exp6363 SHALL compare Exp6352 source constants with terminal process receipts.
++It SHALL record the source/artifact `n_ctx` mismatch, nonzero child exit codes,
++zero raw bytes, zero prompt/completion tokens, empty `models_used`, missing
++stderr, missing top-level `random_seed`, and prose-versus-boolean generation
++contradiction. It SHALL not infer a root cause.
++
++Exp6363 SHALL validate the V548 queue without changing it. It SHALL require
++Exp6363 through Exp6376, fourteen unique task IDs, unique result JSON
++deliverables, ordered dependencies, structured gates whose fields appear in the
++upstream required artifact fields, complete prior-failure entries with
++`retire_if_same_verdict: true`, coherent agent/model pairs, mandatory GGUF
++policy, and prompt contracts that include the project root, date, run command,
++and exact final prohibition line. If `research-roadmap-next.yaml` is absent, it
++SHALL record that absence and audit the active roadmap without inventing staged
++content.
++
++The Exp6363 artifact SHALL be written atomically to
++`results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json` with
++`inference_substrate=deterministic_repository_evidence_handoff_no_llm` and
++`verifier_is_oracle=false`. The artifact SHALL include these required fields:
++`status`, `v547_active_roadmap_path_and_hash`, `v547_active_task_ids`,
++`v547_terminal_artifacts_by_task`,
++`v547_conductor_outcomes_and_attempt_counts`,
++`v547_flagged_blocked_missing_and_null_states`,
++`exp6352_generation_failure_receipt`,
++`exp6352_source_artifact_drift_receipt`,
++`proposal_only_v547_ids_not_executed`,
++`v548_milestone_doc_and_queue_hashes`, `v548_task_ids`,
++`v548_id_collision_check`, `v548_deliverable_checks`,
++`v548_dependency_and_structured_gate_checks`,
++`v548_gate_field_cross_reference_checks`, `v548_prior_failure_checks`,
++`v548_agent_model_and_llm_policy_checks`, `prompt_contract_checks`,
++`active_roadmap_modified`, `conductor_modified`, `protected_files_unchanged`,
++`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
++`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
++`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
++
++### SCENARIO-INFRA-6363-1: V547 Denominator And States Stay Exact
++
++GIVEN V547 has seven active tasks
++WHEN Exp6363 builds the terminal matrix
++THEN only Exp6350 through Exp6356 are counted as executed
++AND flagged, blocked, missing, retired-upstream, and null states remain
++separate.
++
++### SCENARIO-INFRA-6363-2: Exp6352 Drift Is Recorded Without Diagnosis
++
++GIVEN Exp6352 has model receipts but no generated bytes
++WHEN Exp6363 compares source and artifact evidence
++THEN the `n_ctx` mismatch, empty outputs, missing stderr, missing top-level
++seed, and generation contradiction are recorded without a root-cause claim.
++
++### SCENARIO-INFRA-6363-3: V548 Queue Requires Fourteen Tasks
++
++GIVEN the V548 proposal reserves Exp6363 through Exp6376
++WHEN Exp6363 validates the staged or active queue
++THEN any queue with fewer than fourteen exact task IDs records missing IDs and
++uses a terminal blocked verdict.
++
++### SCENARIO-INFRA-6363-4: Gates, Priors, Routing, And Prompts Fail Closed
++
++GIVEN a V548 task declares gates, prior failures, models, or prompt contracts
++WHEN Exp6363 validates the queue
++THEN malformed gates, missing upstream fields, incomplete prior entries,
++bad agent/model pairs, missing mandated GGUF IDs, and prompt contract gaps are
++reported as failed checks.
++
++### SCENARIO-INFRA-6363-5: Artifact Is Annotated, Checksummed, And Non-Mutating
++
++GIVEN precondition hashes, summary receipts, queue checks, and command receipts
++are assembled
++WHEN Exp6363 writes the artifact
++THEN every required field and structured gate expression has a principle,
++every required field has provenance, protected files remain byte-identical,
++the checksum matches, and `verifier_is_oracle` is false.
++
++## Implementation Status (REQ-INFRA-6363)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-INFRA-6363 | Implemented: `python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py`; terminal artifact `results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json`. | Implemented: `tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py`. |
++
+ ## REQ-INFRA-6351: V547 Source Freeze SHALL Validate Planner Receipts And Keep Scope Closed
+ 
+ Carnot SHALL build Exp6351 as a deterministic V547 post-marker source sweep
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9d698b900d..9530c0367e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-08-13T00:58:18Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-08-13T02:21:25Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 96af419a5f..36df822bf0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15741,3 +15741,4 @@ code |
+ | 2026-08-13 00:03 UTC | Independent live certified learning and consumer s | OK | 89 passed, 1 warning in 10.83s |
+ | 2026-08-13 00:53 UTC | Plan milestone 2026.08.548 | OK | 4 tasks proposed |
+ | 2026-08-13 00:56 UTC | Milestone 2026.08.548 activated | OK | 4 tasks queued |
++| 2026-08-13 02:19 UTC | V547 terminal evidence handoff and V548 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd_receipts"]  |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a64559d03e..b828a13986 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 4, "phase": "iteration_start", "started_at": "2026-08-13T00:58:18Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 5, "phase": "iteration_start", "started_at": "2026-08-13T02:21:25Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c78aabefdb..98108c74c6 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4918,
++  "experiments_checked": 4919,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py b/python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py
+new file mode 100644
+index 0000000000..c02498cd12
+--- /dev/null
++++ b/python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py
+@@ -0,0 +1,1081 @@
++"""Exp6363 V548 terminal handoff and queue preflight.
++
++Spec refs: REQ-INFRA-6363, SCENARIO-INFRA-6363-1,
++SCENARIO-INFRA-6363-2, SCENARIO-INFRA-6363-3,
++SCENARIO-INFRA-6363-4, SCENARIO-INFRA-6363-5.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections import Counter
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++import re
++import subprocess
++import sys
++import time
++from typing import Any
++
++from carnot import experiment_6352_live_factor_proposal_authenticity_preflight as exp6352_source
++from carnot.experiment_6272_v541_terminal_transition import (
++    gate_ok,
++    git_status_lines,
++    module_name_for_task,
++    prior_ok,
++    read_yaml_mapping,
++    required_artifact_fields_from_prompt,
++)
++from carnot.experiment_6284_v542_terminal_transition import model_specs_named_in_prompt
++from carnot.experiment_artifacts import atomic_write_json
++from carnot.inference.sota_models import SOTA_GGUF_MODELS
++from carnot.terminal_artifacts import (
++    canonical_json,
++    classify_artifact_path,
++    path_sha256,
++    payload_sha256,
++)
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SCRIPTS_ROOT = REPO_ROOT / "scripts"
++if str(SCRIPTS_ROOT) not in sys.path:  # pragma: no cover
++    sys.path.insert(0, str(SCRIPTS_ROOT))
++
++from audit_roadmap_gates import audit_roadmap  # noqa: E402
++from exclusion_manifest_lint import lint as exclusion_manifest_lint  # noqa: E402
++from roadmap_schema import Roadmap  # noqa: E402
++from validate_prior_failures import validate_roadmap as validate_prior_failure_roadmap  # noqa: E402
++
++
++MILESTONE_V547 = "2026.08.547"
++MILESTONE_V548 = "2026.08.548"
++RUN_DATE = "20260813"
++EXPERIMENT_ID = "exp6363-v548-terminal-handoff-and-queue-preflight"
++SCHEMA = "carnot.experiment_6363.v548_terminal_handoff_and_queue_preflight.v1"
++RESULT_RELATIVE_PATH = Path(
++    "results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json"
++)
++INFERENCE_SUBSTRATE = "deterministic_repository_evidence_handoff_no_llm"
++
++ACTIVE_ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_RELATIVE_PATH = Path("research-roadmap-next.yaml")
++MILESTONE_DOC_RELATIVE_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CONDUCTOR_LOG_RELATIVE_PATH = Path("ops/conductor-log.md")
++EXCLUSION_MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++RESEARCH_COMPLETE_RELATIVE_PATH = Path("research-complete.yaml")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/research-harnesses/spec.md")
++EXP6352_SOURCE_RELATIVE_PATH = Path(
++    "python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py"
++)
++
++EXPECTED_V547_TASK_IDS = (
++    "exp6350-v547-bounded-terminal-handoff",
++    "exp6351-v547-post-marker-source-scope-freeze",
++    "exp6352-live-factor-proposal-authenticity-preflight",
++    "exp6353-live-counterexample-factor-proposal-ab",
++    "exp6354-prospective-live-certified-factor-learning",
++    "exp6355-default-off-certified-factor-consumer-ab",
++    "exp6356-live-certified-learning-safety-audit",
++)
++PROPOSAL_ONLY_V547_IDS = (
++    "exp6357-arc-two-sided-goal-evidence-contract",
++    "exp6358-arc-active-reward-machine-discriminator",
++    "exp6359-arc-goal-evidence-response-calibration",
++    "exp6360-arc-default-off-active-goal-shadow",
++    "exp6361-arc-active-goal-provenance-audit",
++    "exp6362-v547-adversarial-capstone",
++)
++V547_DELIVERABLES_BY_TASK = {
++    "exp6350-v547-bounded-terminal-handoff": (
++        "results/experiment_6350_v547_bounded_terminal_handoff.json"
++    ),
++    "exp6351-v547-post-marker-source-scope-freeze": (
++        "results/experiment_6351_v547_post_marker_source_scope_freeze.json"
++    ),
++    "exp6352-live-factor-proposal-authenticity-preflight": (
++        "results/experiment_6352_live_factor_proposal_authenticity_preflight.json"
++    ),
++    "exp6353-live-counterexample-factor-proposal-ab": (
++        "results/experiment_6353_live_counterexample_factor_proposal_ab.json"
++    ),
++    "exp6354-prospective-live-certified-factor-learning": (
++        "results/experiment_6354_prospective_live_certified_factor_learning.json"
++    ),
++    "exp6355-default-off-certified-factor-consumer-ab": (
++        "results/experiment_6355_default_off_certified_factor_consumer_ab.json"
++    ),
++    "exp6356-live-certified-learning-safety-audit": (
++        "results/experiment_6356_live_certified_learning_safety_audit.json"
++    ),
++}
++V547_TITLE_SNIPPETS = {
++    "exp6350-v547-bounded-terminal-handoff": "Bounded V546 terminal evidence handoff into V547",
++    "exp6351-v547-post-marker-source-scope-freeze": "V547 dated source window",
++    "exp6352-live-factor-proposal-authenticity-preflight": (
++        "Three-model live factor proposal authenticity"
++    ),
++    "exp6353-live-counterexample-factor-proposal-ab": (
++        "Gated real counterexample-directed factor proposal"
++    ),
++    "exp6354-prospective-live-certified-factor-learning": (
++        "Gated prospective read-only-then-commit certified"
++    ),
++    "exp6355-default-off-certified-factor-consumer-ab": (
++        "Gated default-off certified factor future consumer"
++    ),
++    "exp6356-live-certified-learning-safety-audit": (
++        "Independent live certified learning and consumer"
++    ),
++}
++
++EXPECTED_V548_TASK_IDS = (
++    "exp6363-v548-terminal-handoff-and-queue-preflight",
++    "exp6364-v548-post-marker-source-scope-freeze",
++    "exp6365-gguf-child-failure-forensics-runtime-contract",
++    "exp6366-repaired-live-factor-proposal-authenticity",
++    "exp6367-verified-frontier-factor-proposal-ab",
++    "exp6368-prospective-verified-frontier-factor-learning",
++    "exp6369-dependency-guided-factor-rollback-stress",
++    "exp6370-default-off-certified-factor-consumer-ab",
++    "exp6371-live-learning-consumer-and-rollback-audit",
++    "exp6372-arc-two-sided-goal-evidence-contract",
++    "exp6373-arc-active-reward-machine-discriminator",
++    "exp6374-arc-goal-evidence-response-calibration",
++    "exp6375-arc-default-off-active-goal-shadow",
++    "exp6376-v548-adversarial-capstone",
++)
++ACTIVE_V548_TASK_IDS = EXPECTED_V548_TASK_IDS[:4]
++MISSING_ACTIVE_V548_TASK_IDS = EXPECTED_V548_TASK_IDS[4:]
++MANDATED_GGUF_IDS = frozenset(str(spec["hf_id"]) for spec in SOTA_GGUF_MODELS)
++GGUF_ID_RE = re.compile(r"[\w.-]+/[\w.-]+-GGUF")
++
++RUN_COMMAND = (
++    ".venv/bin/python -m "
++    "carnot.experiment_6363_v548_terminal_handoff_and_queue_preflight --date 20260813"
++)
++FOCUSED_TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_RUN_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py "
++    "-m pytest "
++    "tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_REPORT_COMMAND = (
++    ".venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py "
++    "--fail-under=100 --show-missing"
++)
++SPEC_COVERAGE_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py"
++)
++ROADMAP_SCHEMA_COMMAND = (
++    ".venv/bin/python -c 'import yaml; from pathlib import Path; "
++    "from scripts.roadmap_schema import Roadmap; "
++    'Roadmap.model_validate(yaml.safe_load(Path("research-roadmap.yaml").read_text()))'
++    "'"
++)
++PRIOR_FAILURE_COMMAND = ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml"
++GATE_AUDIT_COMMAND = ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml"
++EXCLUSION_LINT_COMMAND = ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml"
++E2E_PLAN_READ_COMMAND = "sed -n '1,220p' ops/e2e-test-plan.md"
++ADVERSARIAL_COMMAND = (
++    ".venv/bin/python scripts/adversarial_verify.py "
++    "results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json"
++)
++DETERMINATION_LINT_COMMAND = ".venv/bin/python scripts/determination_preservation_lint.py"
++ROOT_CLUTTER_COMMAND = ".venv/bin/python scripts/root_clutter_sweep.py"
++FULL_PYTEST_COMMAND = ".venv/bin/pytest tests/python -q"
++DEFAULT_TEST_COMMANDS = (
++    FOCUSED_TEST_COMMAND,
++    COVERAGE_RUN_COMMAND,
++    COVERAGE_REPORT_COMMAND,
++    SPEC_COVERAGE_COMMAND,
++    ROADMAP_SCHEMA_COMMAND,
++    PRIOR_FAILURE_COMMAND,
++    GATE_AUDIT_COMMAND,
++    EXCLUSION_LINT_COMMAND,
++    E2E_PLAN_READ_COMMAND,
++    ADVERSARIAL_COMMAND,
++    DETERMINATION_LINT_COMMAND,
++    ROOT_CLUTTER_COMMAND,
++    FULL_PYTEST_COMMAND,
++    RUN_COMMAND,
++)
++EXTERNAL_TEST_RECEIPT_PATH = Path("/tmp/carnot_exp6363_test_receipts.json")
++
++PROTECTED_RELATIVE_PATHS = (
++    ACTIVE_ROADMAP_RELATIVE_PATH,
++    ROADMAP_NEXT_RELATIVE_PATH,
++    CONDUCTOR_LOG_RELATIVE_PATH,
++    Path("scripts/research_conductor.py"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++    EXCLUSION_MANIFEST_RELATIVE_PATH,
++    MILESTONE_DOC_RELATIVE_PATH,
++    RESEARCH_COMPLETE_RELATIVE_PATH,
++    SPEC_RELATIVE_PATH,
++    EXP6352_SOURCE_RELATIVE_PATH,
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "v547_active_roadmap_path_and_hash",
++    "v547_active_task_ids",
++    "v547_terminal_artifacts_by_task",
++    "v547_conductor_outcomes_and_attempt_counts",
++    "v547_flagged_blocked_missing_and_null_states",
++    "exp6352_generation_failure_receipt",
++    "exp6352_source_artifact_drift_receipt",
++    "proposal_only_v547_ids_not_executed",
++    "v548_milestone_doc_and_queue_hashes",
++    "v548_task_ids",
++    "v548_id_collision_check",
++    "v548_deliverable_checks",
++    "v548_dependency_and_structured_gate_checks",
++    "v548_gate_field_cross_reference_checks",
++    "v548_prior_failure_checks",
++    "v548_agent_model_and_llm_policy_checks",
++    "prompt_contract_checks",
++    "active_roadmap_modified",
++    "conductor_modified",
++    "protected_files_unchanged",
++    "preconditions_checked",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_principles",
++    "field_provenance",
++    "random_seed",
++    "duration_s",
++    "tests_run",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++FIELD_PRINCIPLES = {
++    "status": "The status states whether the V548 queue can start cleanly.",
++    "v547_active_roadmap_path_and_hash": "The roadmap source and current hash are explicit.",
++    "v547_active_task_ids": "Only the seven active V547 tasks define the handoff denominator.",
++    "v547_terminal_artifacts_by_task": "Each V547 task keeps its exact artifact state.",
++    "v547_conductor_outcomes_and_attempt_counts": "Conductor attempts stay separate from artifact fields.",
++    "v547_flagged_blocked_missing_and_null_states": "Failed states are not averaged into clean evidence.",
++    "exp6352_generation_failure_receipt": "The live-generation failure is measured without diagnosis.",
++    "exp6352_source_artifact_drift_receipt": "Source and artifact sampling drift is visible.",
++    "proposal_only_v547_ids_not_executed": "Proposal-only V547 identities are not counted as runs.",
++    "v548_milestone_doc_and_queue_hashes": "The V548 proposal, active queue, and optional next queue are hash-pinned.",
++    "v548_task_ids": "The audited V548 queue identity is explicit.",
++    "v548_id_collision_check": "The queue must contain fourteen unique expected task IDs.",
++    "v548_deliverable_checks": "Deliverables must be unique result JSON paths.",
++    "v548_dependency_and_structured_gate_checks": "Dependencies and gates must be ordered and structured.",
++    "v548_gate_field_cross_reference_checks": "Gate fields must appear in upstream required artifact fields.",
++    "v548_prior_failure_checks": "Prior failures must name the changed mechanism.",
++    "v548_agent_model_and_llm_policy_checks": "Agent routing and mandatory GGUF policy are checked.",
++    "prompt_contract_checks": "Prompt sections, run command, date, root, and final prohibition are checked.",
++    "active_roadmap_modified": "The active roadmap must stay byte-identical during the run.",
++    "conductor_modified": "The conductor must stay byte-identical during the run.",
++    "protected_files_unchanged": "Protected hashes prove no handoff-side rewrite occurred.",
++    "preconditions_checked": "Input hashes and artifact classifications are frozen before field reads.",
++    "inference_substrate": "This task uses repository evidence with no model call.",
++    "verifier_is_oracle": "The handoff reconciles records and is not a scientific oracle.",
++    "field_principles": "Every required field and structured gate expression has a reason.",
++    "field_provenance": "Every required field identifies its source kind.",
++    "random_seed": "No random sampling is used by this deterministic handoff.",
++    "duration_s": "Wall time is measured without padding.",
++    "tests_run": "Verification commands and exit codes are recorded.",
++    "reproducibility_checksum": "The normalized payload is content-addressed.",
++    "honest_verdict": "The verdict uses a terminal prefix and names the queue boundary.",
++}
++FIELD_PROVENANCE = {
++    "status": "derived",
++    "v547_active_roadmap_path_and_hash": "measured",
++    "v547_active_task_ids": "constant",
++    "v547_terminal_artifacts_by_task": "upstream",
++    "v547_conductor_outcomes_and_attempt_counts": "measured",
++    "v547_flagged_blocked_missing_and_null_states": "derived",
++    "exp6352_generation_failure_receipt": "upstream",
++    "exp6352_source_artifact_drift_receipt": "derived",
++    "proposal_only_v547_ids_not_executed": "constant",
++    "v548_milestone_doc_and_queue_hashes": "measured",
++    "v548_task_ids": "upstream",
++    "v548_id_collision_check": "derived",
++    "v548_deliverable_checks": "derived",
++    "v548_dependency_and_structured_gate_checks": "derived",
++    "v548_gate_field_cross_reference_checks": "derived",
++    "v548_prior_failure_checks": "derived",
++    "v548_agent_model_and_llm_policy_checks": "derived",
++    "prompt_contract_checks": "derived",
++    "active_roadmap_modified": "measured",
++    "conductor_modified": "measured",
++    "protected_files_unchanged": "measured",
++    "preconditions_checked": "measured",
++    "inference_substrate": "constant",
++    "verifier_is_oracle": "constant",
++    "field_principles": "constant",
++    "field_provenance": "constant",
++    "random_seed": "constant",
++    "duration_s": "measured",
++    "tests_run": "measured",
++    "reproducibility_checksum": "derived",
++    "honest_verdict": "derived",
++}
++
++
++def payload_checksum(report: JsonMap) -> str:
++    normalized = json.loads(canonical_json(report))
++    normalized["duration_s"] = 0.0
++    normalized["reproducibility_checksum"] = ""
++    return payload_sha256(normalized)
++
++
++def read_json_mapping(path: Path) -> tuple[JsonDict, JsonDict]:
++    meta: JsonDict = {
++        "path": path.as_posix(),
++        "present": path.exists(),
++        "loadable": False,
++        "sha256": path_sha256(path),
++        "error": None,
++    }
++    if not path.exists():
++        meta["error"] = "missing"
++        return {}, meta
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError as exc:
++        meta["error"] = f"json_error:{exc.msg}"
++        return {}, meta
++    if not isinstance(payload, Mapping):
++        meta["error"] = "json_not_mapping"
++        return {}, meta
++    meta["loadable"] = True
++    return dict(payload), meta
++
++
++def protected_hashes(root: Path, paths: Sequence[Path] = PROTECTED_RELATIVE_PATHS) -> JsonDict:
++    return {path.as_posix(): path_sha256(root / path) for path in paths}
++
++
++def protected_files_unchanged(before: JsonMap, after: JsonMap) -> JsonDict:
++    rows = {
++        path: {
++            "before": before.get(path),
++            "after": after.get(path),
++            "unchanged": before.get(path) == after.get(path),
++        }
++        for path in sorted(set(before) | set(after))
++    }
++    return {"ok": all(row["unchanged"] for row in rows.values()), "rows": rows}
++
++
++def _summarize_artifact(root: Path, rel_path: str) -> JsonDict:
++    path = root / rel_path
++    if not path.exists():
++        return {
++            "invoked_before_field_import": False,
++            "reason": "artifact_absent",
++            "exit_code": None,
++            "live_adversarial_findings": [],
++        }
++    command = [sys.executable, "scripts/summarize_artifact.py", rel_path]
++    result = subprocess.run(  # noqa: S603 - fixed local script path and args.
++        command,
++        cwd=root,
++        text=True,
++        capture_output=True,
++        timeout=60,
++        check=False,
++    )
++    findings = [
++        line.strip()
++        for line in result.stdout.splitlines()
++        if line.strip().startswith("[") or "DURATION_TOO_SHORT" in line
++    ]
++    return {
++        "invoked_before_field_import": True,
++        "command": " ".join(command),
++        "exit_code": result.returncode,
++        "stdout_sha256": payload_sha256(result.stdout),
++        "stderr_sha256": payload_sha256(result.stderr),
++        "live_adversarial_findings": findings,
++    }
++
++
++def _conductor_rows(root: Path, task_id: str) -> list[JsonDict]:
++    snippet = V547_TITLE_SNIPPETS[task_id].lower()
++    rows: list[JsonDict] = []
++    path = root / CONDUCTOR_LOG_RELATIVE_PATH
++    if not path.exists():
++        return rows
++    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
++        if snippet not in line.lower():
++            continue
++        parts = [part.strip() for part in line.strip().strip("|").split("|")]
++        if len(parts) < 4:
++            continue
++        rows.append(
++            {
++                "line": line_number,
++                "timestamp_utc": parts[0],
++                "title_truncated": parts[1],
++                "status": parts[2],
++                "message": parts[3],
++                "raw": line.strip(),
++            }
++        )
++    return rows
++
++
++def v547_conductor_outcomes(root: Path) -> JsonDict:
++    outcomes: JsonDict = {}
++    for task_id in EXPECTED_V547_TASK_IDS:
++        rows = _conductor_rows(root, task_id)
++        counts = Counter(str(row["status"]) for row in rows)
++        outcomes[task_id] = {
++            **dict(sorted(counts.items())),
++            "attempt_count": len(rows),
++            "preemptive_skip_count": sum(
++                "pre-emptive skip" in str(row["message"]).lower() for row in rows
++            ),
++            "rows": rows,
++        }
++    return outcomes
++
++
++def classify_v547_artifacts(root: Path) -> tuple[JsonDict, JsonDict]:
++    outcomes = v547_conductor_outcomes(root)
++    rows: JsonDict = {}
++    for task_id in EXPECTED_V547_TASK_IDS:
++        rel = V547_DELIVERABLES_BY_TASK[task_id]
++        summary = _summarize_artifact(root, rel)
++        path = root / rel
++        classification = classify_artifact_path(path).to_dict()
++        payload, meta = read_json_mapping(path)
++        row = {
++            "task_id": task_id,
++            "declared_deliverable": rel,
++            "present": classification["present"],
++            "loadable": classification["loadable"],
++            "sha256": classification["sha256"] or meta.get("sha256"),
++            "terminal_class": classification["classification"],
++            "terminal": classification["terminal"],
++            "reason": classification["reason"],
++            "status_raw": classification["status_raw"],
++            "honest_verdict_raw": classification["honest_verdict_raw"],
++            "summary_receipt": summary,
++            "conductor_receipt": outcomes[task_id],
++            "stamped_flagged_adversarial": payload.get("flagged_adversarial"),
++            "corrigendum_pending": payload.get("corrigendum_pending"),
++        }
++        rows[task_id] = row
++    return rows, outcomes
++
++
++def v547_state_receipt(rows: JsonMap, outcomes: JsonMap) -> JsonDict:
++    flagged: list[str] = []
++    blocked: list[str] = []
++    missing: list[str] = []
++    null: list[str] = []
++    retired: list[str] = []
++    for task_id, row_any in rows.items():
++        row = row_any if isinstance(row_any, Mapping) else {}
++        receipt = outcomes.get(task_id, {}) if isinstance(outcomes, Mapping) else {}
++        statuses = set(receipt) if isinstance(receipt, Mapping) else set()
++        terminal_class = str(row.get("terminal_class") or "")
++        status_raw = str(row.get("status_raw") or "")
++        verdict = str(row.get("honest_verdict_raw") or "")
++        messages = " ".join(str(r.get("message") or "") for r in receipt.get("rows", []))
++        if terminal_class == "flagged" or row.get("stamped_flagged_adversarial") is True:
++            flagged.append(str(task_id))
++        if terminal_class == "missing":
++            missing.append(str(task_id))
++        if status_raw.startswith("complete_null") or verdict.startswith("complete_null"):
++            null.append(str(task_id))
++        if "GATE_BLOCK" in statuses and "Pre-emptive skip" in messages:
++            retired.append(str(task_id))
++        elif "GATE_BLOCK" in statuses or status_raw.startswith("blocked"):
++            blocked.append(str(task_id))
++    return {
++        "flagged": flagged,
++        "blocked": blocked,
++        "missing": missing,
++        "retired_upstream": retired,
++        "null": null,
++        "counts": {
++            "flagged": len(flagged),
++            "blocked": len(blocked),
++            "missing": len(missing),
++            "retired_upstream": len(retired),
++            "null": len(null),
++        },
++    }
++
++
++def exp6352_generation_failure_receipt(root: Path) -> JsonDict:
++    payload, meta = read_json_mapping(
++        root / V547_DELIVERABLES_BY_TASK["exp6352-live-factor-proposal-authenticity-preflight"]
++    )
++    process = payload.get("generation_process_receipts_by_model", {})
++    calls = payload.get("generation_call_token_time_and_exit_receipts", {})
++    raw = payload.get("raw_model_output_paths_hashes_and_counts", {})
++    raw_by_model = raw.get("by_model", {}) if isinstance(raw, Mapping) else {}
++    process_rows = process.values() if isinstance(process, Mapping) else []
++    call_rows = calls.values() if isinstance(calls, Mapping) else []
++    returncodes = [
++        row.get("exit_state", {}).get("returncode")
++        for row in process_rows
++        if isinstance(row, Mapping)
++    ]
++    token_counts = [row.get("token_counts", {}) for row in call_rows if isinstance(row, Mapping)]
++    raw_rows = raw_by_model.values() if isinstance(raw_by_model, Mapping) else []
++    stderr_present = "stderr" in payload or any(
++        "stderr" in row for row in process_rows if isinstance(row, Mapping)
++    )
++    return {
++        "artifact_path": V547_DELIVERABLES_BY_TASK[
++            "exp6352-live-factor-proposal-authenticity-preflight"
++        ],
++        "artifact_sha256": meta["sha256"],
++        "models_used": list(payload.get("models_used") or []),
++        "models_used_empty": payload.get("models_used") == [],
++        "live_autoregressive_generation_invoked": payload.get(
++            "live_autoregressive_generation_invoked"
++        ),
++        "returncodes_by_model": {
++            model: row.get("exit_state", {}).get("returncode")
++            for model, row in process.items()
++            if isinstance(process, Mapping) and isinstance(row, Mapping)
++        },
++        "all_generation_children_returned_code_1": bool(returncodes)
++        and all(code == 1 for code in returncodes),
++        "total_raw_byte_count": sum(
++            int(row.get("byte_count") or 0) for row in raw_rows if isinstance(row, Mapping)
++        ),
++        "total_prompt_tokens": sum(
++            int(row.get("prompt_tokens") or 0) for row in token_counts if isinstance(row, Mapping)
++        ),
++        "total_completion_tokens": sum(
++            int(row.get("completion_tokens") or 0)
++            for row in token_counts
++            if isinstance(row, Mapping)
++        ),
++        "stderr_preserved_in_artifact": stderr_present,
++        "root_cause_inferred": False,
++    }
++
++
++def exp6352_source_artifact_drift_receipt(root: Path) -> JsonDict:
++    payload, _meta = read_json_mapping(
++        root / V547_DELIVERABLES_BY_TASK["exp6352-live-factor-proposal-authenticity-preflight"]
++    )
++    process = payload.get("generation_process_receipts_by_model", {})
++    rows = process.values() if isinstance(process, Mapping) else []
++    artifact_n_ctx = sorted(
++        {
++            int(row.get("sampling", {}).get("n_ctx"))
++            for row in rows
++            if isinstance(row, Mapping) and row.get("sampling", {}).get("n_ctx") is not None
++        }
++    )
++    verdict = str(payload.get("honest_verdict") or "").lower()
++    live_bool = payload.get("live_autoregressive_generation_invoked")
++    return {
++        "source_path": EXP6352_SOURCE_RELATIVE_PATH.as_posix(),
++        "source_sha256": path_sha256(root / EXP6352_SOURCE_RELATIVE_PATH),
++        "artifact_process_n_ctx_values": artifact_n_ctx,
++        "source_sampling_n_ctx": int(exp6352_source.SAMPLING_PARAMETERS["n_ctx"]),
++        "n_ctx_mismatch": artifact_n_ctx != [int(exp6352_source.SAMPLING_PARAMETERS["n_ctx"])],
++        "top_level_random_seed_present": "random_seed" in payload,
++        "random_seeds_field_present": "random_seeds" in payload,
++        "prose_vs_boolean_generation_contradiction": "live generation ran" in verdict
++        and live_bool is False,
++        "root_cause_inferred": False,
++    }
++
++
++def proposal_only_v547_receipt() -> JsonDict:
++    return {
++        "task_ids": list(PROPOSAL_ONLY_V547_IDS),
++        "executed_count": 0,
++        "counted_as_executed": False,
++        "reason": "These identities were proposal-only V547 scope and did not enter the active queue.",
++    }
++
++
++def load_v548_queue(root: Path) -> tuple[JsonDict, JsonDict]:
++    active_path = root / ACTIVE_ROADMAP_RELATIVE_PATH
++    next_path = root / ROADMAP_NEXT_RELATIVE_PATH
++    active_data = read_yaml_mapping(active_path)
++    if next_path.exists():
++        data = read_yaml_mapping(next_path)
++        chosen = ROADMAP_NEXT_RELATIVE_PATH
++        note = "research-roadmap-next.yaml exists and was audited"
++    else:
++        data = active_data
++        chosen = ACTIVE_ROADMAP_RELATIVE_PATH
++        note = "research-roadmap-next.yaml absent; active research-roadmap.yaml audited"
++    identity = {
++        "requested_next_roadmap": {
++            "path": ROADMAP_NEXT_RELATIVE_PATH.as_posix(),
++            "present": next_path.exists(),
++            "sha256": path_sha256(next_path),
++        },
++        "active_roadmap": {
++            "path": ACTIVE_ROADMAP_RELATIVE_PATH.as_posix(),
++            "present": active_path.exists(),
++            "sha256": path_sha256(active_path),
++            "milestone": active_data.get("milestone"),
++        },
++        "audited_queue": {
++            "path": chosen.as_posix(),
++            "sha256": path_sha256(root / chosen),
++            "milestone": data.get("milestone"),
++            "selection_note": note,
++        },
++        "milestone_doc": {
++            "path": MILESTONE_DOC_RELATIVE_PATH.as_posix(),
++            "present": (root / MILESTONE_DOC_RELATIVE_PATH).exists(),
++            "sha256": path_sha256(root / MILESTONE_DOC_RELATIVE_PATH),
++        },
++    }
++    return dict(data), identity
++
++
++def _tasks(data: JsonMap) -> list[JsonDict]:
++    tasks = data.get("tasks")
++    if not isinstance(tasks, list):
++        return []
++    return [dict(task) for task in tasks if isinstance(task, Mapping)]
++
++
++def _gate_expression(task_id: str, gate: JsonMap) -> str:
++    return (
++        f"gate:{task_id}:{gate.get('upstream')}.{gate.get('artifact_field')}"
++        f"{gate.get('op')}{json.dumps(gate.get('value'), sort_keys=True)}"
++    )
++
++
++def validate_v548_queue_data(data: JsonMap, root: Path, date: str) -> JsonDict:
++    tasks = _tasks(data)
++    ids = [str(task.get("id") or "") for task in tasks]
++    deliverables = [str(task.get("deliverable") or "") for task in tasks]
++    tasks_by_id = {str(task.get("id") or ""): task for task in tasks}
++    required_fields_by_id = {
++        task_id: required_artifact_fields_from_prompt(str(task.get("prompt") or ""))
++        for task_id, task in tasks_by_id.items()
++    }
++    schema_errors: list[str] = []
++    try:
++        Roadmap.model_validate(data)
++    except Exception as exc:  # noqa: BLE001 - serialized into evidence.
++        schema_errors.append(str(exc))
++
++    duplicate_ids = sorted(task_id for task_id, count in Counter(ids).items() if count > 1)
++    missing_ids = [task_id for task_id in EXPECTED_V548_TASK_IDS if task_id not in ids]
++    extra_ids = [task_id for task_id in ids if task_id not in EXPECTED_V548_TASK_IDS]
++    duplicate_deliverables = sorted(
++        path for path, count in Counter(deliverables).items() if path and count > 1
++    )
++    deliverable_failures = [
++        {"task_id": str(task.get("id") or ""), "deliverable": str(task.get("deliverable") or "")}
++        for task in tasks
++        if not str(task.get("deliverable") or "").startswith("results/")
++        or not str(task.get("deliverable") or "").endswith(".json")
++    ]
++
++    dependency_failures: list[JsonDict] = []
++    gate_failures: list[JsonDict] = []
++    gate_cross_ref_failures: list[JsonDict] = []
++    gate_expressions: list[str] = []
++    id_index = {task_id: index for index, task_id in enumerate(ids)}
++    for task_index, task in enumerate(tasks):
++        task_id = str(task.get("id") or "")
++        requires = task.get("requires")
++        for dependency in requires if isinstance(requires, list) else []:
++            dep = str(dependency)
++            if dep not in id_index or id_index[dep] >= task_index:
++                dependency_failures.append({"task_id": task_id, "dependency": dep})
++        gates = task.get("gated_on")
++        for gate in gates if isinstance(gates, list) else []:
++            expression = _gate_expression(task_id, gate) if isinstance(gate, Mapping) else ""
++            if expression:
++                gate_expressions.append(expression)
++            ok, reason = gate_ok(gate, tasks_by_id, required_fields_by_id)
++            if not ok:
++                gate_failures.append({"task_id": task_id, "gate": gate, "reason": reason})
++            if isinstance(gate, Mapping):
++                upstream = str(gate.get("upstream") or "")
++                field = str(gate.get("artifact_field") or "")
++                if field not in required_fields_by_id.get(upstream, set()):
++                    gate_cross_ref_failures.append(
++                        {"task_id": task_id, "upstream": upstream, "artifact_field": field}
++                    )
++
++    prior_failures: list[JsonDict] = []
++    prior_entry_count = 0
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        priors = task.get("prior_failures")
++        if not isinstance(priors, list) or not priors:
++            prior_failures.append({"task_id": task_id, "reason": "missing_or_empty_prior_failures"})
++            continue
++        prior_entry_count += len(priors)
++        for prior in priors:
++            ok, reason = prior_ok(prior)
++            if not ok:
++                prior_failures.append({"task_id": task_id, "prior": prior, "reason": reason})
++
++    route_failures: list[JsonDict] = []
++    model_policy_failures: list[JsonDict] = []
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        agent_type = str(task.get("agent_type") or "claude")
++        model = str(task.get("model") or "")
++        if agent_type == "codex" and model != "gpt-5.5":
++            route_failures.append({"task_id": task_id, "agent_type": agent_type, "model": model})
++        if agent_type == "gemini":
++            route_failures.append({"task_id": task_id, "agent_type": agent_type, "model": model})
++        if agent_type == "claude" and model not in {"sonnet", "opus"}:
++            route_failures.append({"task_id": task_id, "agent_type": agent_type, "model": model})
++        prompt = str(task.get("prompt") or "")
++        named_models = set(model_specs_named_in_prompt(prompt)) | set(GGUF_ID_RE.findall(prompt))
++        requires_models = task.get("requires_gpu") is True or "MODEL_SPECS" in prompt
++        if requires_models and not MANDATED_GGUF_IDS <= named_models:
++            model_policy_failures.append(
++                {
++                    "task_id": task_id,
++                    "reason": "missing_mandated_gguf_ids",
++                    "expected": sorted(MANDATED_GGUF_IDS),
++                    "found": sorted(named_models),
++                }
++            )
++        if named_models and not named_models <= MANDATED_GGUF_IDS:
++            model_policy_failures.append(
++                {
++                    "task_id": task_id,
++                    "reason": "non_mandated_gguf_id",
++                    "ids": sorted(named_models - MANDATED_GGUF_IDS),
++                }
++            )
++
++    prompt_failures: list[JsonDict] = []
++    required_sections = ("CONTEXT", "EXISTING CODE TO READ FIRST", "TASK", "CONCRETE STEPS")
++    for task in tasks:
++        task_id = str(task.get("id") or "")
++        prompt = str(task.get("prompt") or "")
++        checks = {
++            "missing_context": "CONTEXT" not in prompt,
++            "missing_existing_code": "EXISTING CODE TO READ FIRST" not in prompt,
++            "missing_task": "\n      TASK" not in prompt and "\nTASK" not in prompt,
++            "missing_concrete_steps": "CONCRETE STEPS" not in prompt,
++            "missing_project_root_literal": root.as_posix() not in prompt,
++            "missing_date_literal": date not in prompt,
++            "missing_run_command": "Run command:" not in prompt,
++            "missing_final_prohibition": not prompt.strip().endswith(
++                "Do NOT push. Do NOT modify scripts/research_conductor.py."
++            ),
++        }
++        checks["missing_required_artifact_block"] = not required_artifact_fields_from_prompt(prompt)
++        checks["missing_required_section"] = any(
++            section not in prompt for section in required_sections
++        )
++        for reason, failed in checks.items():
++            if failed:
++                prompt_failures.append({"task_id": task_id, "reason": reason})
++
++    schema_errors_linter, prior_errors_linter = validate_prior_failure_roadmap(
++        root / ACTIVE_ROADMAP_RELATIVE_PATH,
++        root / RESEARCH_COMPLETE_RELATIVE_PATH,
++    )
++    gate_audit = audit_roadmap(
++        root / ACTIVE_ROADMAP_RELATIVE_PATH,
++        complete_path=root / RESEARCH_COMPLETE_RELATIVE_PATH,
++    ).to_artifact()
++    exclusion_risks = exclusion_manifest_lint(root / ACTIVE_ROADMAP_RELATIVE_PATH)
++    hard_exclusion_count = sum(1 for risk in exclusion_risks if risk.severity == "HARD")
++
++    return {
++        "schema_validation": {"ok": not schema_errors, "errors": schema_errors},
++        "v548_task_ids": ids,
++        "v548_id_collision_check": {
++            "ok": ids == list(EXPECTED_V548_TASK_IDS) and not duplicate_ids,
++            "task_count": len(ids),
++            "expected_task_count": len(EXPECTED_V548_TASK_IDS),
++            "expected_task_ids": list(EXPECTED_V548_TASK_IDS),
++            "missing_expected_task_ids": missing_ids,
++            "extra_task_ids": extra_ids,
++            "duplicate_task_ids": duplicate_ids,
++        },
++        "v548_deliverable_checks": {
++            "ok": not deliverable_failures and not duplicate_deliverables,
++            "unique_deliverables": not duplicate_deliverables,
++            "deliverable_count": len(deliverables),
++            "failures": deliverable_failures,
++            "duplicate_deliverables": duplicate_deliverables,
++        },
++        "v548_dependency_and_structured_gate_checks": {
++            "ok": not dependency_failures and not gate_failures,
++            "dependency_failures": dependency_failures,
++            "gate_count": len(gate_expressions),
++            "gate_failures": gate_failures,
++            "structured_gate_expressions": gate_expressions,
++        },
++        "v548_gate_field_cross_reference_checks": {
++            "ok": not gate_cross_ref_failures,
++            "failures": gate_cross_ref_failures,
++            "checked_gate_count": len(gate_expressions),
++        },
++        "v548_prior_failure_checks": {
++            "ok": not prior_failures and not schema_errors_linter and not prior_errors_linter,
++            "prior_entry_count": prior_entry_count,
++            "failures": prior_failures,
++            "validate_prior_failures": {
++                "schema_errors": schema_errors_linter,
++                "prior_failure_violations": prior_errors_linter,
++            },
++            "gate_audit_prior_missing": gate_audit["n_prior_failures_missing"],
++            "exclusion_manifest_hard_risk_count": hard_exclusion_count,
++        },
++        "v548_agent_model_and_llm_policy_checks": {
++            "ok": not route_failures and not model_policy_failures,
++            "route_failures": route_failures,
++            "model_policy_failures": model_policy_failures,
++            "mandated_gguf_ids": sorted(MANDATED_GGUF_IDS),
++        },
++        "prompt_contract_checks": {
++            "ok": not prompt_failures,
++            "checked_task_count": len(tasks),
++            "failures": prompt_failures,
++        },
++    }
++
++
++def v547_active_roadmap_receipt(root: Path) -> JsonDict:
++    active = read_yaml_mapping(root / ACTIVE_ROADMAP_RELATIVE_PATH)
++    return {
++        "path": ACTIVE_ROADMAP_RELATIVE_PATH.as_posix(),
++        "sha256": path_sha256(root / ACTIVE_ROADMAP_RELATIVE_PATH),
++        "current_milestone": active.get("milestone"),
++        "v547_active_available_in_file": active.get("milestone") == MILESTONE_V547,
++        "v547_task_ids_source": "conductor_log_and_declared_v547_artifact_paths",
++        "expected_v547_task_count": len(EXPECTED_V547_TASK_IDS),
++    }
++
++
++def preconditions_checked(root: Path, before_hashes: JsonMap) -> JsonDict:
++    active_path = root / ACTIVE_ROADMAP_RELATIVE_PATH
++    next_path = root / ROADMAP_NEXT_RELATIVE_PATH
++    conductor_path = root / CONDUCTOR_LOG_RELATIVE_PATH
++    exclusion_path = root / EXCLUSION_MANIFEST_RELATIVE_PATH
++    artifact_classes = {
++        task_id: classify_artifact_path(root / rel).to_dict()
++        for task_id, rel in V547_DELIVERABLES_BY_TASK.items()
++    }
++    return {
++        "repo_root": root.as_posix(),
++        "date": RUN_DATE,
++        "active_roadmap_sha256": path_sha256(active_path),
++        "next_roadmap_present": next_path.exists(),
++        "next_roadmap_sha256": path_sha256(next_path),
++        "conductor_sha256": path_sha256(conductor_path),
++        "exclusion_manifest_loaded": exclusion_path.exists(),
++        "exclusion_manifest_sha256": path_sha256(exclusion_path),
++        "v547_artifact_path_classifications": artifact_classes,
++        "protected_hashes_before": dict(before_hashes),
++        "git_status_before": git_status_lines(root),
++    }
++
++
++def _field_principles(gate_expressions: Sequence[str]) -> JsonDict:
++    principles = dict(FIELD_PRINCIPLES)
++    for expression in gate_expressions:
++        principles[expression] = "This structured gate expression must remain auditable."
++    return principles
++
++
++def _test_rows(command_receipts: Sequence[JsonMap] | None) -> list[JsonDict]:
++    if command_receipts:
++        return [dict(row) for row in command_receipts]
++    return [
++        {"command": command, "exit_code": None, "source": "declared"}
++        for command in DEFAULT_TEST_COMMANDS
++    ]
++
++
++def build_report(
++    root: Path = REPO_ROOT,
++    *,
++    date: str,
++    command_receipts: Sequence[JsonMap] | None,
++    before_hashes: JsonMap,
++    duration_s: float,
++) -> JsonDict:
++    v547_rows, conductor = classify_v547_artifacts(root)
++    states = v547_state_receipt(v547_rows, conductor)
++    queue_data, queue_hashes = load_v548_queue(root)
++    queue_checks = validate_v548_queue_data(queue_data, root, date)
++    after_hashes = protected_hashes(root)
++    protected = protected_files_unchanged(before_hashes, after_hashes)
++    gate_expressions = queue_checks["v548_dependency_and_structured_gate_checks"][
++        "structured_gate_expressions"
++    ]
++    id_ok = queue_checks["v548_id_collision_check"]["ok"]
++    status = "complete_v548_queue_preflight_passed" if id_ok else "blocked_v548_queue_incomplete"
++    verdict = (
++        "complete_v548_queue_preflight_passed: V547 evidence and V548 queue are bounded"
++        if id_ok
++        else "blocked_v548_queue_incomplete: active V548 queue has 4 of 14 expected tasks"
++    )
++    report: JsonDict = {
++        "status": status,
++        "v547_active_roadmap_path_and_hash": v547_active_roadmap_receipt(root),
++        "v547_active_task_ids": list(EXPECTED_V547_TASK_IDS),
++        "v547_terminal_artifacts_by_task": v547_rows,
++        "v547_conductor_outcomes_and_attempt_counts": conductor,
++        "v547_flagged_blocked_missing_and_null_states": states,
++        "exp6352_generation_failure_receipt": exp6352_generation_failure_receipt(root),
++        "exp6352_source_artifact_drift_receipt": exp6352_source_artifact_drift_receipt(root),
++        "proposal_only_v547_ids_not_executed": proposal_only_v547_receipt(),
++        "v548_milestone_doc_and_queue_hashes": queue_hashes,
++        "v548_task_ids": queue_checks["v548_task_ids"],
++        "v548_id_collision_check": queue_checks["v548_id_collision_check"],
++        "v548_deliverable_checks": queue_checks["v548_deliverable_checks"],
++        "v548_dependency_and_structured_gate_checks": queue_checks[
++            "v548_dependency_and_structured_gate_checks"
++        ],
++        "v548_gate_field_cross_reference_checks": queue_checks[
++            "v548_gate_field_cross_reference_checks"
++        ],
++        "v548_prior_failure_checks": queue_checks["v548_prior_failure_checks"],
++        "v548_agent_model_and_llm_policy_checks": queue_checks[
++            "v548_agent_model_and_llm_policy_checks"
++        ],
++        "prompt_contract_checks": queue_checks["prompt_contract_checks"],
++        "active_roadmap_modified": before_hashes.get(ACTIVE_ROADMAP_RELATIVE_PATH.as_posix())
++        != after_hashes.get(ACTIVE_ROADMAP_RELATIVE_PATH.as_posix()),
++        "conductor_modified": before_hashes.get(CONDUCTOR_LOG_RELATIVE_PATH.as_posix())
++        != after_hashes.get(CONDUCTOR_LOG_RELATIVE_PATH.as_posix()),
++        "protected_files_unchanged": protected,
++        "preconditions_checked": preconditions_checked(root, before_hashes),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_principles": _field_principles(gate_expressions),
++        "field_provenance": dict(FIELD_PROVENANCE),
++        "random_seed": None,
++        "duration_s": round(float(duration_s), 12),
++        "tests_run": _test_rows(command_receipts),
++        "reproducibility_checksum": "",
++        "honest_verdict": verdict,
++    }
++    report["reproducibility_checksum"] = payload_checksum(report)
++    return report
++
++
++def validate_report(report: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in report:
++            errors.append(f"missing required field: {field}")
++    principles = report.get("field_principles")
++    if isinstance(principles, Mapping):
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            if field not in principles:
++                errors.append(f"missing field_principles entry: {field}")
++        gates = report.get("v548_dependency_and_structured_gate_checks", {})
++        expressions = (
++            gates.get("structured_gate_expressions", []) if isinstance(gates, Mapping) else []
++        )
++        for expression in expressions:
++            if expression not in principles:
++                errors.append(f"missing field_principles entry: {expression}")
++    else:
++        errors.append("field_principles must be a mapping")
++    provenance = report.get("field_provenance")
++    if not isinstance(provenance, Mapping):
++        errors.append("field_provenance must be a mapping")
++    elif set(provenance) != set(REQUIRED_ARTIFACT_FIELDS):
++        errors.append("field_provenance must cover exactly required fields")
++    if report.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    if report.get("random_seed") is not None:
++        errors.append("random_seed must be null")
++    states = report.get("v547_flagged_blocked_missing_and_null_states", {})
++    flagged = states.get("flagged", []) if isinstance(states, Mapping) else []
++    if "exp6350-v547-bounded-terminal-handoff" not in flagged:
++        errors.append("Exp6350 flagged state must be preserved")
++    verdict = str(report.get("honest_verdict") or "")
++    if not verdict.startswith(("complete_", "blocked_", "passed_", "success_", "shipped_")):
++        errors.append("honest_verdict lacks terminal prefix")
++    if report.get("reproducibility_checksum") != payload_checksum(report):
++        errors.append("reproducibility_checksum mismatch")
++    return errors
++
++
++def write_report(
++    report: JsonMap,
++    root: Path = REPO_ROOT,
++    *,
++    env: Mapping[str, str] | None = None,
++) -> Path:
++    return atomic_write_json(RESULT_RELATIVE_PATH, report, root=root, env=env, sort_keys=True)
++
++
++def read_external_test_receipts(path: Path = EXTERNAL_TEST_RECEIPT_PATH) -> list[JsonDict]:
++    if not path.exists():
++        return []
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return []
++    if not isinstance(payload, list):
++        return []
++    return [dict(row) for row in payload if isinstance(row, Mapping)]
++
++
++def run(
++    *,
++    date: str,
++    root: Path = REPO_ROOT,
++    write: bool = True,
++    command_receipts: Sequence[JsonMap] | None = None,
++) -> JsonDict:
++    started = time.perf_counter()
++    before = protected_hashes(root)
++    receipts = list(command_receipts or read_external_test_receipts())
++    report = build_report(
++        root,
++        date=date,
++        command_receipts=receipts,
++        before_hashes=before,
++        duration_s=max(time.perf_counter() - started, 0.0001),
++    )
++    errors = validate_report(report)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_report(report, root)
++    return report
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description="Write Exp6363 V548 handoff artifact.")
++    parser.add_argument("--date", required=True)
++    parser.add_argument("--no-write", action="store_true")
++    args = parser.parse_args(argv)
++    report = run(date=args.date, write=not args.no_write)
++    print(
++        json.dumps({"path": str(RESULT_RELATIVE_PATH), "status": report["status"]}, sort_keys=True)
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index be14d22a9f..f0118c1ffa 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.58s, user: 2.11s, system: 0.19s, MEM: 115.70 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.83s, user: 2.60s, system: 0.18s, MEM: 115.88 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 75% 19x read_verilog (1 sec), 9% 1x synth_xilinx (0 sec), ...
++Time spent: 84% 19x read_verilog (2 sec), 6% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 0c29f3e378..69766a49a5 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -2,9 +2,9 @@
+   "experiment": 2031,
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+-  "run_date": "20260812",
+-  "started_at": "2026-08-12T15:53:15Z",
+-  "finished_at": "2026-08-12T15:53:15Z",
++  "run_date": "20260813",
++  "started_at": "2026-08-13T02:36:14Z",
++  "finished_at": "2026-08-13T02:36:14Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index d0e0678958..b26b4055aa 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 307.18745827674866,
++  "duration_s": 287.89603781700134,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2510_ensemble_v7.json b/results/experiment_2510_ensemble_v7.json
+index 208abeebf0..ddbe1c314f 100644
+--- a/results/experiment_2510_ensemble_v7.json
++++ b/results/experiment_2510_ensemble_v7.json
+@@ -10,6 +10,6 @@
+     "tier0r_search",
+     "tier0r_integration_not_implemented"
+   ],
+-  "duration_s": 1.5066847801208496,
++  "duration_s": 1.424748420715332,
+   "random_seed": 42
+ }
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index facfcb3157..1054b89371 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,28 +1,6 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_memory": {
+-      "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
+-      },
+-      "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
+-      },
+-      "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
+-      },
+-      "TruthfulQA": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
+-      }
+-    },
+     "tier_transfer": {
+       "FoVer": {
+         "production": 0.8,
+@@ -88,6 +66,28 @@
+         "architecture_only": 0.5,
+         "delta": 0.0
+       }
++    },
++    "tier_memory": {
++      "FoVer": {
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
++      },
++      "MBPP": {
++        "production": 0.5,
++        "architecture_only": 0.5,
++        "delta": 0.0
++      },
++      "HumanEval": {
++        "production": 0.5,
++        "architecture_only": 0.5,
++        "delta": 0.0
++      },
++      "TruthfulQA": {
++        "production": 0.5,
++        "architecture_only": 0.5,
++        "delta": 0.0
++      }
+     }
+   },
+   "architecture_transfer_verifiers": [],
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index ad1203bb90..c47999155c 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0009181499481201172,
++  "duration_s": 0.000972747802734375,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index 6a8f996aec..05fffaed0a 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.08943319320678711,
+-  "reproducibility_checksum": "bb21c2d9f77a007193257711985a0b6c"
++  "duration_s": 0.10819315910339355,
++  "reproducibility_checksum": "49a5d7ae4da03a2b954f07e5a4b6455f"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index 014241e8c5..10c7b2ebb3 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.0002238750457763672
++  "duration_s": 0.00023651123046875
+ }
+\ No newline at end of file
+diff --git a/results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json b/results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json
+new file mode 100644
+index 0000000000..ba24576a85
+--- /dev/null
++++ b/results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json
+@@ -0,0 +1,1114 @@
++{
++  "active_roadmap_modified": false,
++  "conductor_modified": false,
++  "duration_s": 0.015618657926,
++  "exp6352_generation_failure_receipt": {
++    "all_generation_children_returned_code_1": true,
++    "artifact_path": "results/experiment_6352_live_factor_proposal_authenticity_preflight.json",
++    "artifact_sha256": "sha256:8604ff3f59e3af22aada3c821ac569003c5d1ff94fd061ca01cf9ec9a05250b2",
++    "live_autoregressive_generation_invoked": false,
++    "models_used": [],
++    "models_used_empty": true,
++    "returncodes_by_model": {
++      "unsloth/Qwen3.6-35B-A3B-GGUF": 1,
++      "unsloth/gemma-4-26B-A4B-it-GGUF": 1,
++      "unsloth/gemma-4-31B-it-GGUF": 1
++    },
++    "root_cause_inferred": false,
++    "stderr_preserved_in_artifact": false,
++    "total_completion_tokens": 0,
++    "total_prompt_tokens": 0,
++    "total_raw_byte_count": 0
++  },
++  "exp6352_source_artifact_drift_receipt": {
++    "artifact_process_n_ctx_values": [
++      512
++    ],
++    "n_ctx_mismatch": true,
++    "prose_vs_boolean_generation_contradiction": true,
++    "random_seeds_field_present": true,
++    "root_cause_inferred": false,
++    "source_path": "python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py",
++    "source_sampling_n_ctx": 2048,
++    "source_sha256": "sha256:ff25c38c69adbebc35348c5efec6593319ad6e4b499ea3c802f786769fba4f04",
++    "top_level_random_seed_present": false
++  },
++  "field_principles": {
++    "active_roadmap_modified": "The active roadmap must stay byte-identical during the run.",
++    "conductor_modified": "The conductor must stay byte-identical during the run.",
++    "duration_s": "Wall time is measured without padding.",
++    "exp6352_generation_failure_receipt": "The live-generation failure is measured without diagnosis.",
++    "exp6352_source_artifact_drift_receipt": "Source and artifact sampling drift is visible.",
++    "field_principles": "Every required field and structured gate expression has a reason.",
++    "field_provenance": "Every required field identifies its source kind.",
++    "gate:exp6366-repaired-live-factor-proposal-authenticity:exp6365-gguf-child-failure-forensics-runtime-contract.gguf_runtime_observability_ready_score==1.0": "This structured gate expression must remain auditable.",
++    "honest_verdict": "The verdict uses a terminal prefix and names the queue boundary.",
++    "inference_substrate": "This task uses repository evidence with no model call.",
++    "preconditions_checked": "Input hashes and artifact classifications are frozen before field reads.",
++    "prompt_contract_checks": "Prompt sections, run command, date, root, and final prohibition are checked.",
++    "proposal_only_v547_ids_not_executed": "Proposal-only V547 identities are not counted as runs.",
++    "protected_files_unchanged": "Protected hashes prove no handoff-side rewrite occurred.",
++    "random_seed": "No random sampling is used by this deterministic handoff.",
++    "reproducibility_checksum": "The normalized payload is content-addressed.",
++    "status": "The status states whether the V548 queue can start cleanly.",
++    "tests_run": "Verification commands and exit codes are recorded.",
++    "v547_active_roadmap_path_and_hash": "The roadmap source and current hash are explicit.",
++    "v547_active_task_ids": "Only the seven active V547 tasks define the handoff denominator.",
++    "v547_conductor_outcomes_and_attempt_counts": "Conductor attempts stay separate from artifact fields.",
++    "v547_flagged_blocked_missing_and_null_states": "Failed states are not averaged into clean evidence.",
++    "v547_terminal_artifacts_by_task": "Each V547 task keeps its exact artifact state.",
++    "v548_agent_model_and_llm_policy_checks": "Agent routing and mandatory GGUF policy are checked.",
++    "v548_deliverable_checks": "Deliverables must be unique result JSON paths.",
++    "v548_dependency_and_structured_gate_checks": "Dependencies and gates must be ordered and structured.",
++    "v548_gate_field_cross_reference_checks": "Gate fields must appear in upstream required artifact fields.",
++    "v548_id_collision_check": "The queue must contain fourteen unique expected task IDs.",
++    "v548_milestone_doc_and_queue_hashes": "The V548 proposal, active queue, and optional next queue are hash-pinned.",
++    "v548_prior_failure_checks": "Prior failures must name the changed mechanism.",
++    "v548_task_ids": "The audited V548 queue identity is explicit.",
++    "verifier_is_oracle": "The handoff reconciles records and is not a scientific oracle."
++  },
++  "field_provenance": {
++    "active_roadmap_modified": "measured",
++    "conductor_modified": "measured",
++    "duration_s": "measured",
++    "exp6352_generation_failure_receipt": "upstream",
++    "exp6352_source_artifact_drift_receipt": "derived",
++    "field_principles": "constant",
++    "field_provenance": "constant",
++    "honest_verdict": "derived",
++    "inference_substrate": "constant",
++    "preconditions_checked": "measured",
++    "prompt_contract_checks": "derived",
++    "proposal_only_v547_ids_not_executed": "constant",
++    "protected_files_unchanged": "measured",
++    "random_seed": "constant",
++    "reproducibility_checksum": "derived",
++    "status": "derived",
++    "tests_run": "measured",
++    "v547_active_roadmap_path_and_hash": "measured",
++    "v547_active_task_ids": "constant",
++    "v547_conductor_outcomes_and_attempt_counts": "measured",
++    "v547_flagged_blocked_missing_and_null_states": "derived",
++    "v547_terminal_artifacts_by_task": "upstream",
++    "v548_agent_model_and_llm_policy_checks": "derived",
++    "v548_deliverable_checks": "derived",
++    "v548_dependency_and_structured_gate_checks": "derived",
++    "v548_gate_field_cross_reference_checks": "derived",
++    "v548_id_collision_check": "derived",
++    "v548_milestone_doc_and_queue_hashes": "measured",
++    "v548_prior_failure_checks": "derived",
++    "v548_task_ids": "upstream",
++    "verifier_is_oracle": "constant"
++  },
++  "honest_verdict": "blocked_v548_queue_incomplete: active V548 queue has 4 of 14 expected tasks",
++  "inference_substrate": "deterministic_repository_evidence_handoff_no_llm",
++  "preconditions_checked": {
++    "active_roadmap_sha256": "sha256:b5dad711c2ae278c100f5805b18f3b4416c52e3d0337bb4a8a616b87026d179e",
++    "conductor_sha256": "sha256:90596ab30bd9dae415babc56bbe4f895d5a29cd1d97e8e9450118ee5104023c2",
++    "date": "20260813",
++    "exclusion_manifest_loaded": true,
++    "exclusion_manifest_sha256": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++    "git_status_before": [
++      "MM openspec/capabilities/research-harnesses/spec.md",
++      "M  ops/conductor-heartbeat.json",
++      "M  ops/conductor-log.md",
++      "M  ops/conductor-state.json",
++      "A  python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py",
++      "M  results/experiment_1736_kanele_synth.json",
++      "MM results/experiment_1822_rtl_synth.log",
++      "MM results/experiment_2031.json",
++      "M  results/experiment_2427_kv260_yosys_v4.json",
++      "M  results/experiment_2510_ensemble_v7.json",
++      "M  results/experiment_2824_cross_corpus_verifier_matrix.json",
++      "M  results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
++      "M  results/experiment_3361_archive_v309_activate_v310.json",
++      "M  results/experiment_3377_archive_v310_activate_v311.json",
++      "M  results/experiment_3392_archive_v311_activate_v312.json",
++      "M  results/experiment_3581_g_gate_status_synthesis_v329.json",
++      "M  results/experiment_3582_capstone_v329.json",
++      "M  results/experiment_833_constraint_delta_root_cause.json",
++      "A  tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py",
++      "?? results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json"
++    ],
++    "next_roadmap_present": false,
++    "next_roadmap_sha256": null,
++    "protected_hashes_before": {
++      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++      "openspec/capabilities/research-harnesses/spec.md": "sha256:1e255a1c8e760ed8ab8396771ba0cbb538d2c4aa165d06e169ad921b4bfc4b71",
++      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:1cbc0f3d225f2c31bb39a7d4b169427687beeb8f3c6d396bffa340acd91714a4",
++      "ops/changelog.md": "sha256:3e0bb7f2a55d4c5cc2e8934f95c4dfdc69344c8676575237ec7bd0cc071c8b67",
++      "ops/conductor-log.md": "sha256:90596ab30bd9dae415babc56bbe4f895d5a29cd1d97e8e9450118ee5104023c2",
++      "ops/exclusion_manifest.yaml": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++      "ops/status.md": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++      "python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py": "sha256:ff25c38c69adbebc35348c5efec6593319ad6e4b499ea3c802f786769fba4f04",
++      "research-complete.yaml": "sha256:c5e552bccffc52fc770c366fa8b405674bf1dc23196670be3862337fc0bff1e5",
++      "research-roadmap-next.yaml": null,
++      "research-roadmap.yaml": "sha256:b5dad711c2ae278c100f5805b18f3b4416c52e3d0337bb4a8a616b87026d179e",
++      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
++    },
++    "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
++    "v547_artifact_path_classifications": {
++      "exp6350-v547-bounded-terminal-handoff": {
++        "classification": "flagged",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "complete_with_flagged_boundaries",
++        "honest_verdict_raw": "complete_with_flagged_boundaries: V546 evidence preserved Exp6337 as flagged, Exp6341 as gate-blocked, factor learning as replay-qualified, and ARC as no-solve",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6350_v547_bounded_terminal_handoff.json",
++        "present": true,
++        "reason": "artifact carries flagged_adversarial or corrigendum_pending",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:96b5a5aa94677a738ef66728ba0f08fe2f380d9bf378d14ecd2ad8bbdc97a736",
++        "status_class": "complete",
++        "status_prefix": "complete_with_flagged_boundaries",
++        "status_raw": "complete_with_flagged_boundaries",
++        "terminal": true,
++        "verdict_class": "complete"
++      },
++      "exp6351-v547-post-marker-source-scope-freeze": {
++        "classification": "null",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "complete_null",
++        "honest_verdict_raw": "complete_null: no strict post-marker source changed V547 scope",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6351_v547_post_marker_source_scope_freeze.json",
++        "present": true,
++        "reason": "status=null verdict=null",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:1b7ec22c088936fa4ed42401187d205588f985f9ec16bd09b39eb8b446244302",
++        "status_class": "null",
++        "status_prefix": "complete_null",
++        "status_raw": "complete_null",
++        "terminal": true,
++        "verdict_class": "null"
++      },
++      "exp6352-live-factor-proposal-authenticity-preflight": {
++        "classification": "null",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "complete_null",
++        "honest_verdict_raw": "complete_null: live generation ran but authenticity readiness gates did not all pass",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6352_live_factor_proposal_authenticity_preflight.json",
++        "present": true,
++        "reason": "status=null verdict=null",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:8604ff3f59e3af22aada3c821ac569003c5d1ff94fd061ca01cf9ec9a05250b2",
++        "status_class": "null",
++        "status_prefix": "complete_null",
++        "status_raw": "complete_null",
++        "terminal": true,
++        "verdict_class": "null"
++      },
++      "exp6353-live-counterexample-factor-proposal-ab": {
++        "classification": "skipped",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "blocked_gate_check_failed",
++        "honest_verdict_raw": "blocked_gate_check_failed",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6353_live_counterexample_factor_proposal_ab.json",
++        "present": true,
++        "reason": "blocked artifact records a gate skip",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:ab0b41e90e2b7ea290bf348e285f94ec727478af2d72986f311b8f89b370bb75",
++        "status_class": "blocked",
++        "status_prefix": "blocked",
++        "status_raw": "blocked",
++        "terminal": true,
++        "verdict_class": "blocked"
++      },
++      "exp6354-prospective-live-certified-factor-learning": {
++        "classification": "missing",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": null,
++        "honest_verdict_raw": null,
++        "loadable": false,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6354_prospective_live_certified_factor_learning.json",
++        "present": false,
++        "reason": "artifact path is missing",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": null,
++        "status_class": "unknown",
++        "status_prefix": null,
++        "status_raw": null,
++        "terminal": false,
++        "verdict_class": "unknown"
++      },
++      "exp6355-default-off-certified-factor-consumer-ab": {
++        "classification": "skipped",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "blocked_gate_check_failed",
++        "honest_verdict_raw": "blocked_gate_check_failed",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6355_default_off_certified_factor_consumer_ab.json",
++        "present": true,
++        "reason": "blocked artifact records a gate skip",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:5d76149449c4f0109a41e77a20319f28974908e72a07842f4b96ce0b847ce6d1",
++        "status_class": "blocked",
++        "status_prefix": "blocked",
++        "status_raw": "blocked",
++        "terminal": true,
++        "verdict_class": "blocked"
++      },
++      "exp6356-live-certified-learning-safety-audit": {
++        "classification": "null",
++        "conductor_receipt_status": null,
++        "honest_verdict_prefix": "complete_null",
++        "honest_verdict_raw": "complete_null: live certified learning safety audit found missing, blocked, null, or unauthentic evidence",
++        "loadable": true,
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6356_live_certified_learning_safety_audit.json",
++        "present": true,
++        "reason": "status=null verdict=null",
++        "receipt_override_attempted": false,
++        "receipt_overrode": false,
++        "sha256": "sha256:0bb85a9fbfa7d91ecfa99e61d28e02ccd3f771e6a0cf653ad5c621cbaf57223c",
++        "status_class": "null",
++        "status_prefix": "complete_null",
++        "status_raw": "complete_null",
++        "terminal": true,
++        "verdict_class": "null"
++      }
++    }
++  },
++  "prompt_contract_checks": {
++    "checked_task_count": 4,
++    "failures": [
++      {
++        "reason": "missing_project_root_literal",
++        "task_id": "exp6363-v548-terminal-handoff-and-queue-preflight"
++      },
++      {
++        "reason": "missing_date_literal",
++        "task_id": "exp6363-v548-terminal-handoff-and-queue-preflight"
++      },
++      {
++        "reason": "missing_project_root_literal",
++        "task_id": "exp6364-v548-post-marker-source-scope-freeze"
++      },
++      {
++        "reason": "missing_date_literal",
++        "task_id": "exp6364-v548-post-marker-source-scope-freeze"
++      },
++      {
++        "reason": "missing_project_root_literal",
++        "task_id": "exp6365-gguf-child-failure-forensics-runtime-contract"
++      },
++      {
++        "reason": "missing_date_literal",
++        "task_id": "exp6365-gguf-child-failure-forensics-runtime-contract"
++      },
++      {
++        "reason": "missing_project_root_literal",
++        "task_id": "exp6366-repaired-live-factor-proposal-authenticity"
++      },
++      {
++        "reason": "missing_date_literal",
++        "task_id": "exp6366-repaired-live-factor-proposal-authenticity"
++      }
++    ],
++    "ok": false
++  },
++  "proposal_only_v547_ids_not_executed": {
++    "counted_as_executed": false,
++    "executed_count": 0,
++    "reason": "These identities were proposal-only V547 scope and did not enter the active queue.",
++    "task_ids": [
++      "exp6357-arc-two-sided-goal-evidence-contract",
++      "exp6358-arc-active-reward-machine-discriminator",
++      "exp6359-arc-goal-evidence-response-calibration",
++      "exp6360-arc-default-off-active-goal-shadow",
++      "exp6361-arc-active-goal-provenance-audit",
++      "exp6362-v547-adversarial-capstone"
++    ]
++  },
++  "protected_files_unchanged": {
++    "ok": true,
++    "rows": {
++      "_bmad/traceability.md": {
++        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
++        "unchanged": true
++      },
++      "openspec/capabilities/research-harnesses/spec.md": {
++        "after": "sha256:1e255a1c8e760ed8ab8396771ba0cbb538d2c4aa165d06e169ad921b4bfc4b71",
++        "before": "sha256:1e255a1c8e760ed8ab8396771ba0cbb538d2c4aa165d06e169ad921b4bfc4b71",
++        "unchanged": true
++      },
++      "openspec/change-proposals/research-roadmap-vNEXT.md": {
++        "after": "sha256:1cbc0f3d225f2c31bb39a7d4b169427687beeb8f3c6d396bffa340acd91714a4",
++        "before": "sha256:1cbc0f3d225f2c31bb39a7d4b169427687beeb8f3c6d396bffa340acd91714a4",
++        "unchanged": true
++      },
++      "ops/changelog.md": {
++        "after": "sha256:3e0bb7f2a55d4c5cc2e8934f95c4dfdc69344c8676575237ec7bd0cc071c8b67",
++        "before": "sha256:3e0bb7f2a55d4c5cc2e8934f95c4dfdc69344c8676575237ec7bd0cc071c8b67",
++        "unchanged": true
++      },
++      "ops/conductor-log.md": {
++        "after": "sha256:90596ab30bd9dae415babc56bbe4f895d5a29cd1d97e8e9450118ee5104023c2",
++        "before": "sha256:90596ab30bd9dae415babc56bbe4f895d5a29cd1d97e8e9450118ee5104023c2",
++        "unchanged": true
++      },
++      "ops/exclusion_manifest.yaml": {
++        "after": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++        "before": "sha256:53aebadfca4ba35692655ab4c427d5b4d8bf2d0d89e4e6fa60c81ac943dc3423",
++        "unchanged": true
++      },
++      "ops/status.md": {
++        "after": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++        "before": "sha256:1030bb8c3e1b3e0324c05d781e5e8cc66a7ac213d9e773c33b2fdb1ac62bf180",
++        "unchanged": true
++      },
++      "python/carnot/experiment_6352_live_factor_proposal_authenticity_preflight.py": {
++        "after": "sha256:ff25c38c69adbebc35348c5efec6593319ad6e4b499ea3c802f786769fba4f04",
++        "before": "sha256:ff25c38c69adbebc35348c5efec6593319ad6e4b499ea3c802f786769fba4f04",
++        "unchanged": true
++      },
++      "research-complete.yaml": {
++        "after": "sha256:c5e552bccffc52fc770c366fa8b405674bf1dc23196670be3862337fc0bff1e5",
++        "before": "sha256:c5e552bccffc52fc770c366fa8b405674bf1dc23196670be3862337fc0bff1e5",
++        "unchanged": true
++      },
++      "research-roadmap-next.yaml": {
++        "after": null,
++        "before": null,
++        "unchanged": true
++      },
++      "research-roadmap.yaml": {
++        "after": "sha256:b5dad711c2ae278c100f5805b18f3b4416c52e3d0337bb4a8a616b87026d179e",
++        "before": "sha256:b5dad711c2ae278c100f5805b18f3b4416c52e3d0337bb4a8a616b87026d179e",
++        "unchanged": true
++      },
++      "scripts/research_conductor.py": {
++        "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
++        "unchanged": true
++      }
++    }
++  },
++  "random_seed": null,
++  "reproducibility_checksum": "sha256:cd9570abdab52a859da7479f7789668656b5b07cc5d5645c94f2437e4710515d",
++  "status": "blocked_v548_queue_incomplete",
++  "tests_run": [
++    {
++      "command": ".venv/bin/pytest tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py -q --no-cov -n 0",
++      "exit_code": 0,
++      "summary": "7 passed in 68.69s"
++    },
++    {
++      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py -m pytest tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py -q --no-cov -n 0",
++      "exit_code": 0,
++      "summary": "7 passed in 111.69s"
++    },
++    {
++      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6363_v548_terminal_handoff_and_queue_preflight.py --fail-under=100 --show-missing",
++      "exit_code": 0,
++      "summary": "391 statements, 0 missing, 100% coverage"
++    },
++    {
++      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py",
++      "exit_code": 0,
++      "summary": "OK: All tests reference specification requirements."
++    },
++    {
++      "command": ".venv/bin/python -c 'import yaml; from pathlib import Path; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(Path(\"research-roadmap.yaml\").read_text()))'",
++      "exit_code": 0,
++      "summary": "Roadmap schema accepted active research-roadmap.yaml."
++    },
++    {
++      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
++      "exit_code": 0,
++      "summary": "No schema errors or prior_failures violations."
++    },
++    {
++      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
++      "exit_code": 0,
++      "summary": "4 tasks audited, 1 gate checked, all checks pass."
++    },
++    {
++      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++      "exit_code": 0,
++      "summary": "Exclusion-manifest lint clean."
++    },
++    {
++      "command": "sed -n '1,220p' ops/e2e-test-plan.md",
++      "exit_code": 0,
++      "summary": "Read-only E2E plan inspection completed; no EBM runtime E2E applies to deterministic handoff."
++    },
++    {
++      "command": ".venv/bin/python scripts/determination_preservation_lint.py",
++      "exit_code": 1,
++      "summary": "Failed on pre-existing staged result determination rewrites: experiments 1736, 3361, 3377, 3392, and 833."
++    },
++    {
++      "command": ".venv/bin/python scripts/root_clutter_sweep.py",
++      "exit_code": 0,
++      "summary": "0 root scratch files; warning for tracked non-allowlist skills-lock.json."
++    },
++    {
++      "command": ".venv/bin/pytest tests/python -q",
++      "exit_code": 2,
++      "summary": "Stopped after 452.55s: 196 failed, 13131 passed, 25 skipped, 14 errors, repeated JAX worker crashes."
++    },
++    {
++      "command": ".venv/bin/python -m carnot.experiment_6363_v548_terminal_handoff_and_queue_preflight --date 20260813 --no-write",
++      "exit_code": 0,
++      "summary": "No-write report validation returned blocked_v548_queue_incomplete."
++    },
++    {
++      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python -m carnot.experiment_6363_v548_terminal_handoff_and_queue_preflight --date 20260813",
++      "exit_code": 0,
++      "summary": "Final artifact write command."
++    },
++    {
++      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_6363_v548_terminal_handoff_and_queue_preflight.json",
++      "exit_code": 0,
++      "summary": "Scanned 1 artifact(s); 0 flagged."
++    },
++    {
++      "command": ".venv/bin/python - <<'PY' # mod.validate_report artifact checksum validation",
++      "exit_code": 0,
++      "summary": "No missing required fields; checksum matches; validate_errors empty."
++    }
++  ],
++  "v547_active_roadmap_path_and_hash": {
++    "current_milestone": "2026.08.548",
++    "expected_v547_task_count": 7,
++    "path": "research-roadmap.yaml",
++    "sha256": "sha256:b5dad711c2ae278c100f5805b18f3b4416c52e3d0337bb4a8a616b87026d179e",
++    "v547_active_available_in_file": false,
++    "v547_task_ids_source": "conductor_log_and_declared_v547_artifact_paths"
++  },
++  "v547_active_task_ids": [
++    "exp6350-v547-bounded-terminal-handoff",
++    "exp6351-v547-post-marker-source-scope-freeze",
++    "exp6352-live-factor-proposal-authenticity-preflight",
++    "exp6353-live-counterexample-factor-proposal-ab",
++    "exp6354-prospective-live-certified-factor-learning",
++    "exp6355-default-off-certified-factor-consumer-ab",
++    "exp6356-live-certified-learning-safety-audit"
++  ],
++  "v547_conductor_outcomes_and_attempt_counts": {
++    "exp6350-v547-bounded-terminal-handoff": {
++      "FLAGGED": 1,
++      "attempt_count": 1,
++      "preemptive_skip_count": 0,
++      "rows": [
++        {
++          "line": 16228,
++          "message": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
++          "raw": "| 2026-08-12 21:49 UTC | Bounded V546 terminal evidence handoff into V547 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
++          "status": "FLAGGED",
++          "timestamp_utc": "2026-08-12 21:49 UTC",
++          "title_truncated": "Bounded V546 terminal evidence handoff into V547"
++        }
++      ]
++    },
++    "exp6351-v547-post-marker-source-scope-freeze": {
++      "OK": 1,
++      "attempt_count": 1,
++      "preemptive_skip_count": 0,
++      "rows": [
++        {
++          "line": 16229,
++          "message": "88 passed, 1 warning in 10.65s",
++          "raw": "| 2026-08-12 22:08 UTC | V547 dated source window and two-lane scope freeze | OK | 88 passed, 1 warning in 10.65s |",
++          "status": "OK",
++          "timestamp_utc": "2026-08-12 22:08 UTC",
++          "title_truncated": "V547 dated source window and two-lane scope freeze"
++        }
++      ]
++    },
++    "exp6352-live-factor-proposal-authenticity-preflight": {
++      "OK": 1,
++      "attempt_count": 1,
++      "preemptive_skip_count": 0,
++      "rows": [
++        {
++          "line": 16230,
++          "message": "88 passed, 1 warning in 10.97s",
++          "raw": "| 2026-08-12 22:34 UTC | Three-model live factor proposal authenticity pref | OK | 88 passed, 1 warning in 10.97s |",
++          "status": "OK",
++          "timestamp_utc": "2026-08-12 22:34 UTC",
++          "title_truncated": "Three-model live factor proposal authenticity pref"
++        }
++      ]
++    },
++    "exp6353-live-counterexample-factor-proposal-ab": {
++      "GATE_BLOCK": 3,
++      "attempt_count": 3,
++      "preemptive_skip_count": 0,
++      "rows": [
++        {
++          "line": 16231,
++          "message": "1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity-",
++          "raw": "| 2026-08-12 22:37 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:37 UTC",
++          "title_truncated": "Gated real counterexample-directed factor proposal"
++        },
++        {
++          "line": 16232,
++          "message": "1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity-",
++          "raw": "| 2026-08-12 22:39 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:39 UTC",
++          "title_truncated": "Gated real counterexample-directed factor proposal"
++        },
++        {
++          "line": 16233,
++          "message": "1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity-",
++          "raw": "| 2026-08-12 22:41 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:41 UTC",
++          "title_truncated": "Gated real counterexample-directed factor proposal"
++        }
++      ]
++    },
++    "exp6354-prospective-live-certified-factor-learning": {
++      "GATE_BLOCK": 3,
++      "attempt_count": 3,
++      "preemptive_skip_count": 3,
++      "rows": [
++        {
++          "line": 16234,
++          "message": "Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal-",
++          "raw": "| 2026-08-12 22:43 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:43 UTC",
++          "title_truncated": "Gated prospective read-only-then-commit certified"
++        },
++        {
++          "line": 16236,
++          "message": "Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal-",
++          "raw": "| 2026-08-12 22:45 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:45 UTC",
++          "title_truncated": "Gated prospective read-only-then-commit certified"
++        },
++        {
++          "line": 16238,
++          "message": "Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal-",
++          "raw": "| 2026-08-12 22:47 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:47 UTC",
++          "title_truncated": "Gated prospective read-only-then-commit certified"
++        }
++      ]
++    },
++    "exp6355-default-off-certified-factor-consumer-ab": {
++      "GATE_BLOCK": 3,
++      "attempt_count": 3,
++      "preemptive_skip_count": 0,
++      "rows": [
++        {
++          "line": 16235,
++          "message": "1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-",
++          "raw": "| 2026-08-12 22:43 UTC | Gated default-off certified factor future consumer | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:43 UTC",
++          "title_truncated": "Gated default-off certified factor future consumer"
++        },
++        {
++          "line": 16237,
++          "message": "1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-",
++          "raw": "| 2026-08-12 22:45 UTC | Gated default-off certified factor future consumer | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:45 UTC",
++          "title_truncated": "Gated default-off certified factor future consumer"
++        },
++        {
++          "line": 16239,
++          "message": "1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-",
++          "raw": "| 2026-08-12 22:47 UTC | Gated default-off certified factor future consumer | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor- |",
++          "status": "GATE_BLOCK",
++          "timestamp_utc": "2026-08-12 22:47 UTC",
++          "title_truncated": "Gated default-off certified factor future consumer"
++        }
++      ]
++    },
++    "exp6356-live-certified-learning-safety-audit": {
++      "OK": 1,
++      "attempt_count": 1,
++      "preemptive_skip_count": 0,
++      "rows": [
++        {
++          "line": 16240,
++          "message": "89 passed, 1 warning in 10.83s",
++          "raw": "| 2026-08-13 00:03 UTC | Independent live certified learning and consumer s | OK | 89 passed, 1 warning in 10.83s |",
++          "status": "OK",
++          "timestamp_utc": "2026-08-13 00:03 UTC",
++          "title_truncated": "Independent live certified learning and consumer s"
++        }
++      ]
++    }
++  },
++  "v547_flagged_blocked_missing_and_null_states": {
++    "blocked": [
++      "exp6353-live-counterexample-factor-proposal-ab",
++      "exp6355-default-off-certified-factor-consumer-ab"
++    ],
++    "counts": {
++      "blocked": 2,
++      "flagged": 1,
++      "missing": 1,
++      "null": 3,
++      "retired_upstream": 1
++    },
++    "flagged": [
++      "exp6350-v547-bounded-terminal-handoff"
++    ],
++    "missing": [
++      "exp6354-prospective-live-certified-factor-learning"
++    ],
++    "null": [
++      "exp6351-v547-post-marker-source-scope-freeze",
++      "exp6352-live-factor-proposal-authenticity-preflight",
++      "exp6356-live-certified-learning-safety-audit"
++    ],
++    "retired_upstream": [
++      "exp6354-prospective-live-certified-factor-learning"
++    ]
++  },
++  "v547_terminal_artifacts_by_task": {
++    "exp6350-v547-bounded-terminal-handoff": {
++      "conductor_receipt": {
++        "FLAGGED": 1,
++        "attempt_count": 1,
++        "preemptive_skip_count": 0,
++        "rows": [
++          {
++            "line": 16228,
++            "message": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
++            "raw": "| 2026-08-12 21:49 UTC | Bounded V546 terminal evidence handoff into V547 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
++            "status": "FLAGGED",
++            "timestamp_utc": "2026-08-12 21:49 UTC",
++            "title_truncated": "Bounded V546 terminal evidence handoff into V547"
++          }
++        ]
++      },
++      "corrigendum_pending": [
++        {
++          "detail": "duration_s=11.079404561081901 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
++          "kind": "DURATION_TOO_SHORT",
++          "severity": "critical"
++        },
++        {
++          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
++          "kind": "METHODOLOGY_MISSING",
++          "severity": "warn"
++        }
++      ],
++      "declared_deliverable": "results/experiment_6350_v547_bounded_terminal_handoff.json",
++      "honest_verdict_raw": "complete_with_flagged_boundaries: V546 evidence preserved Exp6337 as flagged, Exp6341 as gate-blocked, factor learning as replay-qualified, and ARC as no-solve",
++      "loadable": true,
++      "present": true,
++      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
++      "sha256": "sha256:96b5a5aa94677a738ef66728ba0f08fe2f380d9bf378d14ecd2ad8bbdc97a736",
++      "stamped_flagged_adversarial": true,
++      "status_raw": "complete_with_flagged_boundaries",
++      "summary_receipt": {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6350_v547_bounded_terminal_handoff.json",
++        "exit_code": 2,
++        "invoked_before_field_import": true,
++        "live_adversarial_findings": [
++          "[critical] DURATION_TOO_SHORT: duration_s=11.079404561081901 but artifact references compute-bound markers (GGUF / CUDA / live",
++          "[warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
++        ],
++        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
++        "stdout_sha256": "sha256:c54aa3d000f02434d706d5ed2c29f83e9c438649c49db1cbd2e5eecad87ef23c"
++      },
++      "task_id": "exp6350-v547-bounded-terminal-handoff",
++      "terminal": true,
++      "terminal_class": "flagged"
++    },
++    "exp6351-v547-post-marker-source-scope-freeze": {
++      "conductor_receipt": {
++        "OK": 1,
++        "attempt_count": 1,
++        "preemptive_skip_count": 0,
++        "rows": [
++          {
++            "line": 16229,
++            "message": "88 passed, 1 warning in 10.65s",
++            "raw": "| 2026-08-12 22:08 UTC | V547 dated source window and two-lane scope freeze | OK | 88 passed, 1 warning in 10.65s |",
++            "status": "OK",
++            "timestamp_utc": "2026-08-12 22:08 UTC",
++            "title_truncated": "V547 dated source window and two-lane scope freeze"
++          }
++        ]
++      },
++      "corrigendum_pending": null,
++      "declared_deliverable": "results/experiment_6351_v547_post_marker_source_scope_freeze.json",
++      "honest_verdict_raw": "complete_null: no strict post-marker source changed V547 scope",
++      "loadable": true,
++      "present": true,
++      "reason": "status=null verdict=null",
++      "sha256": "sha256:1b7ec22c088936fa4ed42401187d205588f985f9ec16bd09b39eb8b446244302",
++      "stamped_flagged_adversarial": null,
++      "status_raw": "complete_null",
++      "summary_receipt": {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6351_v547_post_marker_source_scope_freeze.json",
++        "exit_code": 0,
++        "invoked_before_field_import": true,
++        "live_adversarial_findings": [],
++        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
++        "stdout_sha256": "sha256:32da4932cd41cf142040e24ed721baa20fad6fb09cb8bf7487763c2dc6f59f9d"
++      },
++      "task_id": "exp6351-v547-post-marker-source-scope-freeze",
++      "terminal": true,
++      "terminal_class": "null"
++    },
++    "exp6352-live-factor-proposal-authenticity-preflight": {
++      "conductor_receipt": {
++        "OK": 1,
++        "attempt_count": 1,
++        "preemptive_skip_count": 0,
++        "rows": [
++          {
++            "line": 16230,
++            "message": "88 passed, 1 warning in 10.97s",
++            "raw": "| 2026-08-12 22:34 UTC | Three-model live factor proposal authenticity pref | OK | 88 passed, 1 warning in 10.97s |",
++            "status": "OK",
++            "timestamp_utc": "2026-08-12 22:34 UTC",
++            "title_truncated": "Three-model live factor proposal authenticity pref"
++          }
++        ]
++      },
++      "corrigendum_pending": null,
++      "declared_deliverable": "results/experiment_6352_live_factor_proposal_authenticity_preflight.json",
++      "honest_verdict_raw": "complete_null: live generation ran but authenticity readiness gates did not all pass",
++      "loadable": true,
++      "present": true,
++      "reason": "status=null verdict=null",
++      "sha256": "sha256:8604ff3f59e3af22aada3c821ac569003c5d1ff94fd061ca01cf9ec9a05250b2",
++      "stamped_flagged_adversarial": null,
++      "status_raw": "complete_null",
++      "summary_receipt": {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6352_live_factor_proposal_authenticity_preflight.json",
++        "exit_code": 1,
++        "invoked_before_field_import": true,
++        "live_adversarial_findings": [
++          "[warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: random_seed. Methodology unverifiable."
++        ],
++        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
++        "stdout_sha256": "sha256:32c182cf66d9d010392482c0b7a7167e2d7cfa03047fc8086cec20cdc9b59bb5"
++      },
++      "task_id": "exp6352-live-factor-proposal-authenticity-preflight",
++      "terminal": true,
++      "terminal_class": "null"
++    },
++    "exp6353-live-counterexample-factor-proposal-ab": {
++      "conductor_receipt": {
++        "GATE_BLOCK": 3,
++        "attempt_count": 3,
++        "preemptive_skip_count": 0,
++        "rows": [
++          {
++            "line": 16231,
++            "message": "1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity-",
++            "raw": "| 2026-08-12 22:37 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:37 UTC",
++            "title_truncated": "Gated real counterexample-directed factor proposal"
++          },
++          {
++            "line": 16232,
++            "message": "1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity-",
++            "raw": "| 2026-08-12 22:39 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:39 UTC",
++            "title_truncated": "Gated real counterexample-directed factor proposal"
++          },
++          {
++            "line": 16233,
++            "message": "1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity-",
++            "raw": "| 2026-08-12 22:41 UTC | Gated real counterexample-directed factor proposal | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:41 UTC",
++            "title_truncated": "Gated real counterexample-directed factor proposal"
++          }
++        ]
++      },
++      "corrigendum_pending": null,
++      "declared_deliverable": "results/experiment_6353_live_counterexample_factor_proposal_ab.json",
++      "honest_verdict_raw": "blocked_gate_check_failed",
++      "loadable": true,
++      "present": true,
++      "reason": "blocked artifact records a gate skip",
++      "sha256": "sha256:ab0b41e90e2b7ea290bf348e285f94ec727478af2d72986f311b8f89b370bb75",
++      "stamped_flagged_adversarial": null,
++      "status_raw": "blocked",
++      "summary_receipt": {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6353_live_counterexample_factor_proposal_ab.json",
++        "exit_code": 0,
++        "invoked_before_field_import": true,
++        "live_adversarial_findings": [
++          "[?   ] gate_check_summary = '1 of 1 gate(s) failed; first failure: exp6352-live-factor-proposal-authenticity-preflight.live_factor_proposal_authenticity_ready_score (actual=0.0 == expected=1.0)'"
++        ],
++        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
++        "stdout_sha256": "sha256:dcdc63e1913e63a94593176d3a063f7e06206b0752aa35ef693297e0a20837bf"
++      },
++      "task_id": "exp6353-live-counterexample-factor-proposal-ab",
++      "terminal": true,
++      "terminal_class": "skipped"
++    },
++    "exp6354-prospective-live-certified-factor-learning": {
++      "conductor_receipt": {
++        "GATE_BLOCK": 3,
++        "attempt_count": 3,
++        "preemptive_skip_count": 3,
++        "rows": [
++          {
++            "line": 16234,
++            "message": "Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal-",
++            "raw": "| 2026-08-12 22:43 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:43 UTC",
++            "title_truncated": "Gated prospective read-only-then-commit certified"
++          },
++          {
++            "line": 16236,
++            "message": "Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal-",
++            "raw": "| 2026-08-12 22:45 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:45 UTC",
++            "title_truncated": "Gated prospective read-only-then-commit certified"
++          },
++          {
++            "line": 16238,
++            "message": "Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal-",
++            "raw": "| 2026-08-12 22:47 UTC | Gated prospective read-only-then-commit certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6353-live-counterexample-factor-proposal- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:47 UTC",
++            "title_truncated": "Gated prospective read-only-then-commit certified"
++          }
++        ]
++      },
++      "corrigendum_pending": null,
++      "declared_deliverable": "results/experiment_6354_prospective_live_certified_factor_learning.json",
++      "honest_verdict_raw": null,
++      "loadable": false,
++      "present": false,
++      "reason": "artifact path is missing",
++      "sha256": null,
++      "stamped_flagged_adversarial": null,
++      "status_raw": null,
++      "summary_receipt": {
++        "exit_code": null,
++        "invoked_before_field_import": false,
++        "live_adversarial_findings": [],
++        "reason": "artifact_absent"
++      },
++      "task_id": "exp6354-prospective-live-certified-factor-learning",
++      "terminal": false,
++      "terminal_class": "missing"
++    },
++    "exp6355-default-off-certified-factor-consumer-ab": {
++      "conductor_receipt": {
++        "GATE_BLOCK": 3,
++        "attempt_count": 3,
++        "preemptive_skip_count": 0,
++        "rows": [
++          {
++            "line": 16235,
++            "message": "1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-",
++            "raw": "| 2026-08-12 22:43 UTC | Gated default-off certified factor future consumer | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:43 UTC",
++            "title_truncated": "Gated default-off certified factor future consumer"
++          },
++          {
++            "line": 16237,
++            "message": "1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-",
++            "raw": "| 2026-08-12 22:45 UTC | Gated default-off certified factor future consumer | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:45 UTC",
++            "title_truncated": "Gated default-off certified factor future consumer"
++          },
++          {
++            "line": 16239,
++            "message": "1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-",
++            "raw": "| 2026-08-12 22:47 UTC | Gated default-off certified factor future consumer | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor- |",
++            "status": "GATE_BLOCK",
++            "timestamp_utc": "2026-08-12 22:47 UTC",
++            "title_truncated": "Gated default-off certified factor future consumer"
++          }
++        ]
++      },
++      "corrigendum_pending": null,
++      "declared_deliverable": "results/experiment_6355_default_off_certified_factor_consumer_ab.json",
++      "honest_verdict_raw": "blocked_gate_check_failed",
++      "loadable": true,
++      "present": true,
++      "reason": "blocked artifact records a gate skip",
++      "sha256": "sha256:5d76149449c4f0109a41e77a20319f28974908e72a07842f4b96ce0b847ce6d1",
++      "stamped_flagged_adversarial": null,
++      "status_raw": "blocked",
++      "summary_receipt": {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6355_default_off_certified_factor_consumer_ab.json",
++        "exit_code": 0,
++        "invoked_before_field_import": true,
++        "live_adversarial_findings": [
++          "[?   ] gate_check_summary = \"1 of 1 gate(s) failed; first failure: exp6354-prospective-live-certified-factor-learning.prospective_live_certified_learning_ready_score (upstream artifact not found for task id 'exp6354-prospective-live-certified-factor-learning')\""
++        ],
++        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
++        "stdout_sha256": "sha256:d9bb168bec43a3d5b970d888ef01e4560a95b9df7af8f5ec7040598aa5098fc1"
++      },
++      "task_id": "exp6355-default-off-certified-factor-consumer-ab",
++      "terminal": true,
++      "terminal_class": "skipped"
++    },
++    "exp6356-live-certified-learning-safety-audit": {
++      "conductor_receipt": {
++        "OK": 1,
++        "attempt_count": 1,
++        "preemptive_skip_count": 0,
++        "rows": [
++          {
++            "line": 16240,
++            "message": "89 passed, 1 warning in 10.83s",
++            "raw": "| 2026-08-13 00:03 UTC | Independent live certified learning and consumer s | OK | 89 passed, 1 warning in 10.83s |",
++            "status": "OK",
++            "timestamp_utc": "2026-08-13 00:03 UTC",
++            "title_truncated": "Independent live certified learning and consumer s"
++          }
++        ]
++      },
++      "corrigendum_pending": null,
++      "declared_deliverable": "results/experiment_6356_live_certified_learning_safety_audit.json",
++      "honest_verdict_raw": "complete_null: live certified learning safety audit found missing, blocked, null, or unauthentic evidence",
++      "loadable": true,
++      "present": true,
++      "reason": "status=null verdict=null",
++      "sha256": "sha256:0bb85a9fbfa7d91ecfa99e61d28e02ccd3f771e6a0cf653ad5c621cbaf57223c",
++      "stamped_flagged_adversarial": null,
++      "status_raw": "complete_null",
++      "summary_receipt": {
++        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/summarize_artifact.py results/experiment_6356_live_certified_learning_safety_audit.json",
++        "exit_code": 0,
++        "invoked_before_field_import": true,
++        "live_adversarial_findings": [],
++        "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
++        "stdout_sha256": "sha256:8687be5a1fc0c056dc38576e1cb6ab671f42173878c0502365eb975aa94ff5fa"
++      },
++      "task_id": "exp6356-live-certified-learning-safety-audit",
++      "terminal": true,
++      "terminal_class": "null"
++    }
++  },
++  "v548_agent_model_and_llm_policy_checks": {
++    "mandated_gguf_ids": [
++      "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "unsloth/gemma-4-31B-it-GGUF"
++    ],
++    "model_policy_failures": [],
++    "ok": true,
++    "route_failures": []
++  },
++  "v548_deliverable_checks": {
++    "deliverable_count": 4,
++    "duplicate_deliverables": [],
++    "failures": [],
++    "ok": true,
++    "unique_deliverables": true
++  },
++  "v548_dependency_and_structured_gate_checks": {
++    "dependency_failures": [],
++    "gate_count": 1,
++    "gate_failures": [],
++    "ok": true,
++    "structured_gate_expressions": [
++      "gate:exp6366-repaired-live-factor-proposal-authenticity:exp6365-gguf-child-failure-forensics-runtime-contract.gguf_runtime_observability_ready_score==1.0"
++    ]
++  },
++  "v548_gate_field_cross_reference_checks": {
++    "checked_gate_count": 1,
++    "failures": [],
++    "ok": true
++  },
++  "v548_id_collision_check": {
++    "duplicate_task_ids": [],
++    "expected_task_count": 14,
++    "expected_task_ids": [
++      "exp6363-v548-terminal-handoff-and-queue-preflight",
++      "exp6364-v548-post-marker-source-scope-freeze",
++      "exp6365-gguf-child-failure-forensics-runtime-contract",
++      "exp6366-repaired-live-factor-proposal-authenticity",
++      "exp6367-verified-frontier-factor-proposal-ab",
++      "exp6368-prospective-verified-frontier-factor-learning",
++      "exp6369-dependency-guided-factor-rollback-stress",
++      "exp6370-default-off-certified-factor-consumer-ab",
++      "exp6371-live-learning-consumer-and-rollback-audit",
++      "exp6372-arc-two-sided-goal-evidence-contract",
++      "exp6373-arc-active-reward-machine-discriminator",
++      "exp6374-arc-goal-evidence-response-calibration",
++      "exp6375-arc-default-off-active-goal-shadow",
++      "exp6376-v548-adversarial-capstone"
++    ],
++    "extra_task_ids": [],
++    "missing_expected_task_ids": [
++      "exp6367-verified-frontier-factor-proposal-ab",
++      "exp6368-prospective-verified-frontier-factor-learning",
++      "exp6369-dependency-guided-factor-rollback-stress",
++      "exp6370-default-off-certified-factor-consumer-ab",
++      "exp6371-live-learning-consumer-and-rollback-audit",
++      "exp6372-arc-two-sided-goal-evidence-contract",
++      "exp6373-arc-active-reward-machine-discriminator",
++      "exp6374-arc-goal-evidence-response-calibration",
++      "exp6375-arc-default-off-active-goal-shadow",
++      "exp6376-v548-adversarial-capstone"
++    ],
++    "ok": false,
++    "task_count": 4
++  },
++  "v548_milestone_doc_and_queue_hashes": {
++    "active_roadmap": {
++      "milestone": "2026.08.548",
++      "path": "research-roadmap.yaml",
++      "present": true,
++      "sha256": "sha256:b5dad711c2ae278c100f5805b18f3b4416c52e3d0337bb4a8a616b87026d179e"
++    },
++    "audited_queue": {
++      "milestone": "2026.08.548",
++      "path": "research-roadmap.yaml",
++      "selection_note": "research-roadmap-next.yaml absent; active research-roadmap.yaml audited",
++      "sha256": "sha256:b5dad711c2ae278c100f5805b18f3b4416c52e3d0337bb4a8a616b87026d179e"
++    },
++    "milestone_doc": {
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "present": true,
++      "sha256": "sha256:1cbc0f3d225f2c31bb39a7d4b169427687beeb8f3c6d396bffa340acd91714a4"
++    },
++    "requested_next_roadmap": {
++      "path": "research-roadmap-next.yaml",
++      "present": false,
++      "sha256": null
++    }
++  },
++  "v548_prior_failure_checks": {
++    "exclusion_manifest_hard_risk_count": 0,
++    "failures": [],
++    "gate_audit_prior_missing": 0,
++    "ok": true,
++    "prior_entry_count": 4,
++    "validate_prior_failures": {
++      "prior_failure_violations": [],
++      "schema_errors": []
++    }
++  },
++  "v548_task_ids": [
++    "exp6363-v548-terminal-handoff-and-queue-preflight",
++    "exp6364-v548-post-marker-source-scope-freeze",
++    "exp6365-gguf-child-failure-forensics-runtime-contract",
++    "exp6366-repaired-live-factor-proposal-authenticity"
++  ],
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index e00b5b1dc2..60bf367c35 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+-  "run_date": "20260812",
+-  "started_at": "2026-08-12T09:48:17Z",
+-  "finished_at": "2026-08-12T09:48:18Z",
+-  "duration_s": 1.217,
++  "run_date": "20260813",
++  "started_at": "2026-08-13T02:03:03Z",
++  "finished_at": "2026-08-13T02:03:04Z",
++  "duration_s": 1.143,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py b/tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py
+new file mode 100644
+index 0000000000..cf1050e9e4
+--- /dev/null
++++ b/tests/python/test_experiment_6363_v548_terminal_handoff_and_queue_preflight.py
+@@ -0,0 +1,407 @@
++"""Tests for Exp6363 V548 terminal handoff.
++
++Spec refs: REQ-INFRA-6363, SCENARIO-INFRA-6363-1,
++SCENARIO-INFRA-6363-2, SCENARIO-INFRA-6363-3,
++SCENARIO-INFRA-6363-4, SCENARIO-INFRA-6363-5.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_6363_v548_terminal_handoff_and_queue_preflight as mod
++from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / mod.SPEC_RELATIVE_PATH
++
++
++def _report() -> dict[str, object]:
++    return mod.build_report(
++        REPO,
++        date="20260813",
++        command_receipts=[{"command": "focused", "exit_code": 0}],
++        before_hashes=mod.protected_hashes(REPO),
++        duration_s=1.0,
++    )
++
++
++def test_req_infra_6363_spec_declares_fields_and_scenarios() -> None:
++    """REQ-INFRA-6363: OpenSpec records the V548 handoff contract."""
++
++    text = SPEC.read_text(encoding="utf-8")
++    section = text[text.index("REQ-INFRA-6363") : text.index("REQ-INFRA-6351")]
++
++    for marker in (
++        "SCENARIO-INFRA-6363-1",
++        "SCENARIO-INFRA-6363-2",
++        "SCENARIO-INFRA-6363-3",
++        "SCENARIO-INFRA-6363-4",
++        "SCENARIO-INFRA-6363-5",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++    ):
++        assert marker in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_infra_6363_v547_states_and_proposal_only_ids() -> None:
++    """SCENARIO-INFRA-6363-1: V547 states stay separate and exact."""
++
++    report = _report()
++
++    assert mod.validate_report(report) == []
++    assert report["v547_active_task_ids"] == list(mod.EXPECTED_V547_TASK_IDS)
++    assert report["proposal_only_v547_ids_not_executed"]["task_ids"] == list(
++        mod.PROPOSAL_ONLY_V547_IDS
++    )
++    assert report["proposal_only_v547_ids_not_executed"]["executed_count"] == 0
++
++    rows = report["v547_terminal_artifacts_by_task"]
++    for task_id, row in rows.items():
++        if task_id == "exp6354-prospective-live-certified-factor-learning":
++            assert row["summary_receipt"]["invoked_before_field_import"] is False
++        else:
++            assert row["summary_receipt"]["invoked_before_field_import"] is True
++
++    states = report["v547_flagged_blocked_missing_and_null_states"]
++    assert list(states["flagged"]) == ["exp6350-v547-bounded-terminal-handoff"]
++    assert rows["exp6350-v547-bounded-terminal-handoff"]["terminal_class"] == "flagged"
++    assert states["blocked"] == [
++        "exp6353-live-counterexample-factor-proposal-ab",
++        "exp6355-default-off-certified-factor-consumer-ab",
++    ]
++    assert states["missing"] == ["exp6354-prospective-live-certified-factor-learning"]
++    assert states["retired_upstream"] == ["exp6354-prospective-live-certified-factor-learning"]
++    assert states["null"] == [
++        "exp6351-v547-post-marker-source-scope-freeze",
++        "exp6352-live-factor-proposal-authenticity-preflight",
++        "exp6356-live-certified-learning-safety-audit",
++    ]
++
++    outcomes = report["v547_conductor_outcomes_and_attempt_counts"]
++    assert outcomes["exp6353-live-counterexample-factor-proposal-ab"]["GATE_BLOCK"] == 3
++    assert outcomes["exp6354-prospective-live-certified-factor-learning"]["GATE_BLOCK"] == 3
++    assert (
++        outcomes["exp6354-prospective-live-certified-factor-learning"]["preemptive_skip_count"] == 3
++    )
++    assert outcomes["exp6355-default-off-certified-factor-consumer-ab"]["GATE_BLOCK"] == 3
++    assert outcomes["exp6356-live-certified-learning-safety-audit"]["OK"] == 1
++
++
++def test_scenario_infra_6363_exp6352_failure_and_drift_receipts() -> None:
++    """SCENARIO-INFRA-6363-2: Exp6352 drift is recorded without a diagnosis."""
++
++    report = _report()
++    failure = report["exp6352_generation_failure_receipt"]
++    drift = report["exp6352_source_artifact_drift_receipt"]
++
++    assert failure["all_generation_children_returned_code_1"] is True
++    assert failure["total_raw_byte_count"] == 0
++    assert failure["total_prompt_tokens"] == 0
++    assert failure["total_completion_tokens"] == 0
++    assert failure["models_used_empty"] is True
++    assert failure["live_autoregressive_generation_invoked"] is False
++    assert failure["stderr_preserved_in_artifact"] is False
++    assert failure["root_cause_inferred"] is False
++
++    assert drift["source_sampling_n_ctx"] == 2048
++    assert drift["artifact_process_n_ctx_values"] == [512]
++    assert drift["n_ctx_mismatch"] is True
++    assert drift["top_level_random_seed_present"] is False
++    assert drift["prose_vs_boolean_generation_contradiction"] is True
++    assert drift["root_cause_inferred"] is False
++
++
++def test_scenario_infra_6363_v548_queue_checks_fail_closed() -> None:
++    """SCENARIO-INFRA-6363-3 and 4: current V548 queue drift is explicit."""
++
++    report = _report()
++
++    hashes = report["v548_milestone_doc_and_queue_hashes"]
++    assert hashes["requested_next_roadmap"]["present"] is False
++    assert hashes["audited_queue"]["path"] == "research-roadmap.yaml"
++
++    assert report["v548_task_ids"] == list(mod.ACTIVE_V548_TASK_IDS)
++    id_check = report["v548_id_collision_check"]
++    assert id_check["ok"] is False
++    assert id_check["task_count"] == 4
++    assert id_check["expected_task_count"] == 14
++    assert id_check["missing_expected_task_ids"] == list(mod.MISSING_ACTIVE_V548_TASK_IDS)
++
++    assert report["v548_deliverable_checks"]["unique_deliverables"] is True
++    assert report["v548_dependency_and_structured_gate_checks"]["gate_count"] == 1
++    assert report["v548_dependency_and_structured_gate_checks"]["ok"] is True
++    assert report["v548_gate_field_cross_reference_checks"]["ok"] is True
++    assert report["v548_prior_failure_checks"]["ok"] is True
++    assert report["v548_agent_model_and_llm_policy_checks"]["ok"] is True
++
++    prompt_checks = report["prompt_contract_checks"]
++    assert prompt_checks["ok"] is False
++    assert prompt_checks["checked_task_count"] == 4
++    assert {row["reason"] for row in prompt_checks["failures"]} >= {
++        "missing_project_root_literal",
++        "missing_date_literal",
++    }
++
++
++def test_scenario_infra_6363_report_schema_write_and_validation_edges(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """SCENARIO-INFRA-6363-5: output is annotated, checksummed, and atomic."""
++
++    report = _report()
++
++    assert report["status"] == "blocked_v548_queue_incomplete"
++    assert report["honest_verdict"].startswith("blocked_v548_queue_incomplete:")
++    assert report["active_roadmap_modified"] is False
++    assert report["conductor_modified"] is False
++    assert report["verifier_is_oracle"] is False
++    assert report["random_seed"] is None
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(report["field_principles"])
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) == set(report["field_provenance"])
++    for expression in report["v548_dependency_and_structured_gate_checks"][
++        "structured_gate_expressions"
++    ]:
++        assert expression in report["field_principles"]
++    assert report["reproducibility_checksum"] == mod.payload_checksum(report)
++
++    bad = copy.deepcopy(report)
++    del bad["status"]
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "missing required field: status" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["verifier_is_oracle"] = True
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "verifier_is_oracle must be false" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["v547_flagged_blocked_missing_and_null_states"]["flagged"] = []
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "Exp6350 flagged state must be preserved" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_principles"] = {}
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert any("missing field_principles entry" in err for err in mod.validate_report(bad))
++
++    bad = copy.deepcopy(report)
++    bad["field_principles"] = []
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "field_principles must be a mapping" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_provenance"] = []
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "field_provenance must be a mapping" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["field_provenance"] = {}
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "field_provenance must cover exactly required fields" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["random_seed"] = 6363
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "random_seed must be null" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["honest_verdict"] = "ok"
++    bad["reproducibility_checksum"] = mod.payload_checksum(bad)
++    assert "honest_verdict lacks terminal prefix" in mod.validate_report(bad)
++
++    bad = copy.deepcopy(report)
++    bad["reproducibility_checksum"] = "sha256:bad"
++    assert "reproducibility_checksum mismatch" in mod.validate_report(bad)
++
++    artifact_root = tmp_path / "artifacts"
++    artifact_root.mkdir()
++    path = mod.write_report(report, REPO, env={ARTIFACT_ROOT_ENV: str(artifact_root)})
++    assert path == artifact_root / mod.RESULT_RELATIVE_PATH.name
++    assert json.loads(path.read_text(encoding="utf-8")) == report
++
++    monkeypatch.setattr(
++        mod,
++        "run",
++        lambda *, date, root=REPO, write=True, command_receipts=None: {"status": f"blocked-{date}"},
++    )
++    assert mod.main(["--date", "20260813"]) == 0
++    assert mod.RESULT_RELATIVE_PATH.name in capsys.readouterr().out
++
++
++def test_req_infra_6363_helper_edges_and_dirty_queue_validation(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6363: helper edges fail closed without fabricating fields."""
++
++    missing_payload, missing_meta = mod.read_json_mapping(tmp_path / "missing.json")
++    assert missing_payload == {}
++    assert missing_meta["error"] == "missing"
++
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("{", encoding="utf-8")
++    assert mod.read_json_mapping(bad_json)[1]["error"].startswith("json_error:")
++
++    not_mapping = tmp_path / "array.json"
++    not_mapping.write_text("[]", encoding="utf-8")
++    assert mod.read_json_mapping(not_mapping)[1]["error"] == "json_not_mapping"
++
++    assert mod._conductor_rows(tmp_path, "exp6350-v547-bounded-terminal-handoff") == []
++    log = tmp_path / mod.CONDUCTOR_LOG_RELATIVE_PATH
++    log.parent.mkdir(parents=True)
++    log.write_text("Bounded V546 terminal evidence handoff into V547\n", encoding="utf-8")
++    assert mod._conductor_rows(tmp_path, "exp6350-v547-bounded-terminal-handoff") == []
++
++    active = tmp_path / mod.ACTIVE_ROADMAP_RELATIVE_PATH
++    next_path = tmp_path / mod.ROADMAP_NEXT_RELATIVE_PATH
++    active.write_text(
++        "milestone: '2026.08.000'\nmilestone_title: Old\nmilestone_doc: doc.md\ntasks: []\n",
++        encoding="utf-8",
++    )
++    next_path.write_text(
++        "milestone: '2026.08.548'\nmilestone_title: Next\nmilestone_doc: doc.md\ntasks: []\n",
++        encoding="utf-8",
++    )
++    _, identity = mod.load_v548_queue(tmp_path)
++    assert identity["requested_next_roadmap"]["present"] is True
++    assert identity["audited_queue"]["path"] == mod.ROADMAP_NEXT_RELATIVE_PATH.as_posix()
++    assert mod._tasks({"tasks": "not-list"}) == []
++
++    dirty = {
++        "milestone": mod.MILESTONE_V548,
++        "milestone_title": "Dirty",
++        "milestone_doc": "doc.md",
++        "tasks": [
++            {
++                "id": "exp6363-v548-terminal-handoff-and-queue-preflight",
++                "milestone": mod.MILESTONE_V548,
++                "deliverable": "not-results.txt",
++                "title": "Dirty one",
++                "prompt": "REQUIRED ARTIFACT FIELDS:\n- status\nRun command: broken",
++                "requires": [
++                    "exp6363-v548-terminal-handoff-and-queue-preflight",
++                    "exp9999-missing",
++                ],
++                "gated_on": [
++                    "not-a-gate",
++                    {
++                        "upstream": "exp6364-v548-post-marker-source-scope-freeze",
++                        "artifact_field": "not_declared",
++                        "op": "==",
++                        "value": 1.0,
++                    },
++                    {
++                        "upstream": "exp6364-v548-post-marker-source-scope-freeze",
++                        "artifact_field": "status",
++                        "op": "contains",
++                        "value": "ready",
++                    },
++                ],
++                "prior_failures": [],
++                "agent_type": "codex",
++                "model": "opus",
++                "requires_gpu": True,
++            },
++            {
++                "id": "exp6364-v548-post-marker-source-scope-freeze",
++                "milestone": mod.MILESTONE_V548,
++                "deliverable": "results/dirty.json",
++                "title": "Dirty two",
++                "prompt": (
++                    "REQUIRED ARTIFACT FIELDS:\n- status\n"
++                    "Bad/Unexpected-GGUF\nRun command: broken\n"
++                    "Do NOT push. Do NOT modify scripts/research_conductor.py."
++                ),
++                "prior_failures": [
++                    {
++                        "experiment_id": "",
++                        "verdict": "",
++                        "addressed_by": "",
++                        "retire_if_same_verdict": False,
++                    }
++                ],
++                "agent_type": "gemini",
++                "model": "gemini-3.1-pro-preview",
++            },
++            {
++                "id": "exp6365-gguf-child-failure-forensics-runtime-contract",
++                "milestone": mod.MILESTONE_V548,
++                "deliverable": "results/dirty-3.json",
++                "title": "Dirty three",
++                "prompt": "REQUIRED ARTIFACT FIELDS:\n- status\nRun command: broken",
++                "prior_failures": [
++                    {
++                        "experiment_id": "exp6352-live-factor-proposal-authenticity-preflight",
++                        "verdict": "blocked",
++                        "addressed_by": "changed",
++                        "retire_if_same_verdict": True,
++                    }
++                ],
++                "agent_type": "claude",
++                "model": "gpt-5.5",
++            },
++        ],
++    }
++    checks = mod.validate_v548_queue_data(dirty, REPO, "20260813")
++    assert checks["schema_validation"]["ok"] is False
++    assert checks["v548_deliverable_checks"]["ok"] is False
++    assert checks["v548_dependency_and_structured_gate_checks"]["ok"] is False
++    assert checks["v548_gate_field_cross_reference_checks"]["ok"] is False
++    assert checks["v548_prior_failure_checks"]["ok"] is False
++    assert checks["v548_agent_model_and_llm_policy_checks"]["ok"] is False
++    assert checks["prompt_contract_checks"]["ok"] is False
++    assert mod._test_rows(None)[0]["source"] == "declared"
++
++
++def test_req_infra_6363_receipt_reader_and_run_edges(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-INFRA-6363: external receipts and run branches are explicit."""
++
++    receipt = tmp_path / "receipts.json"
++    assert mod.read_external_test_receipts(receipt) == []
++    receipt.write_text("{", encoding="utf-8")
++    assert mod.read_external_test_receipts(receipt) == []
++    receipt.write_text("{}", encoding="utf-8")
++    assert mod.read_external_test_receipts(receipt) == []
++    receipt.write_text('[{"command": "ok", "exit_code": 0}, "skip"]', encoding="utf-8")
++    assert mod.read_external_test_receipts(receipt) == [{"command": "ok", "exit_code": 0}]
++
++    writes: list[dict[str, object]] = []
++
++    def fake_build_report(
++        root: Path,
++        *,
++        date: str,
++        command_receipts: list[dict[str, object]],
++        before_hashes: dict[str, str],
++        duration_s: float,
++    ) -> dict[str, object]:
++        return {
++            "date": date,
++            "command_receipts": command_receipts,
++            "before_hashes": before_hashes,
++            "duration_s": duration_s,
++            "reproducibility_checksum": "sha256:fake",
++        }
++
++    monkeypatch.setattr(mod, "protected_hashes", lambda root: {"x": "sha256:x"})
++    monkeypatch.setattr(mod, "read_external_test_receipts", lambda: [{"command": "external"}])
++    monkeypatch.setattr(mod, "build_report", fake_build_report)
++    monkeypatch.setattr(mod, "validate_report", lambda report: [])
++    monkeypatch.setattr(mod, "write_report", lambda report, root: writes.append(report))
++
++    report = mod.run(date="20260813", root=REPO, write=True)
++    assert report["command_receipts"] == [{"command": "external"}]
++    assert writes == [report]
++
++    monkeypatch.setattr(mod, "validate_report", lambda report: ["bad"])
++    with pytest.raises(ValueError, match="bad"):
++        mod.run(date="20260813", root=REPO, write=False, command_receipts=[{"command": "c"}])
+-- 
+2.55.0
+

@@ -1,0 +1,44 @@
+From 66a876a8d95c09bc482a44a8bb7275146e4bf9d0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 4 Aug 2026 17:31:01 -0400
+Subject: [PATCH 08231/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index db0aeffbd6..675b1acbd9 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-08-04T21:28:55Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 29, "phase": "iteration_start", "last_beat": "2026-08-04T21:30:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 32a1696e7a..20bf50e9e2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15317,3 +15317,5 @@ No output thi |
+ | 2026-08-04 21:26 UTC | Gated question-clustered Phase-D authenticity and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6116-phase-d-held-candidate-pool) |
+ | 2026-08-04 21:26 UTC | Gated matching-base per-layer hidden-state surface | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6117-phase-d-headroom-audit.phase_d_hea |
+ | 2026-08-04 21:28 UTC | Gated question-clustered Phase-D authenticity and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6116-phase-d-held-candidate-pool) |
++| 2026-08-04 21:28 UTC | Gated matching-base per-layer hidden-state surface | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6117-phase-d-headroom-audit.phase_d_hea |
++| 2026-08-04 21:30 UTC | Gated internal-state Phase-D selector against tune | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6118-phase-d-per-layer-surface, exp6117-p |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8da056e2ee..82134cde82 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 3565218, "iteration": 28, "phase": "iteration_start", "started_at": "2026-08-04T21:28:55Z"}
+\ No newline at end of file
++{"pid": 3565218, "iteration": 29, "phase": "iteration_start", "started_at": "2026-08-04T21:30:58Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

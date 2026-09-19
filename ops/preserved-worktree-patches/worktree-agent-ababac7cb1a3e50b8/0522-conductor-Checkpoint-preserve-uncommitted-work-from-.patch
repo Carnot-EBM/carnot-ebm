@@ -1,0 +1,43 @@
+From a43800aa0b63ee66b8e2d14ea506c112f850a4a4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 16:55:31 -0400
+Subject: [PATCH 00522/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a6db6049fb..5d1d548cc1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 299981, "iteration": 50, "phase": "iteration_start", "last_beat": "2026-06-04T20:41:32Z"}
+\ No newline at end of file
++{"pid": 299981, "iteration": 51, "phase": "iteration_start", "last_beat": "2026-06-04T20:55:29Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c50999eb1b..a3136d55c5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7784,3 +7784,4 @@ ERROR: {
+ | 2026-06-04 20:13 UTC | Milestone 2026.06.351 activated | OK | 12 tasks queued |
+ | 2026-06-04 20:27 UTC | Latent-Symbol Bridge Task 0 RE-RUN (UNBLOCKED): ca | OK | 88 passed in 5.03s |
+ | 2026-06-04 20:39 UTC | DT-P1 falsification: vanilla TRM vs matched-COMPUT | OK | 85 passed in 4.27s |
++| 2026-06-04 20:53 UTC | DT-P2 falsification: energy-fit to a trained TRM's | OK | 100 passed in 5.95s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e0dafa22df..85c48060be 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 299981, "iteration": 50, "phase": "iteration_start", "started_at": "2026-06-04T20:41:32Z"}
+\ No newline at end of file
++{"pid": 299981, "iteration": 51, "phase": "iteration_start", "started_at": "2026-06-04T20:55:29Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

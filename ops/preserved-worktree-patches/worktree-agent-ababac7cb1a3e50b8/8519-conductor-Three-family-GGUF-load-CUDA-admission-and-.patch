@@ -1,0 +1,2606 @@
+From 23c1f8e610d50f1e05a24b44f95008623ed40b76 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 00:15:19 -0400
+Subject: [PATCH 08519/11362] [conductor] Three-family GGUF load, CUDA
+ admission, and lifecycle recovery
+
+Automated research step by research conductor.
+Task ID: exp6212-three-family-gguf-runtime-recovery
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/code-verification/spec.md    |   83 ++
+ ops/dogfood-memory.json                       |    2 +-
+ ...6212_three_family_gguf_runtime_recovery.py | 1077 +++++++++++++++++
+ ...covery.gemma4_26b_a4b_moe.llama_server.log |   56 +
+ ...recovery.gemma4_31b_dense.llama_server.log |   56 +
+ ...12_three_family_gguf_runtime_recovery.json |  710 +++++++++++
+ ...ecovery.qwen3_35b_a3b_moe.llama_server.log |   56 +
+ ...6212_three_family_gguf_runtime_recovery.py |  481 ++++++++
+ 8 files changed, 2520 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py
+ create mode 100644 results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_26b_a4b_moe.llama_server.log
+ create mode 100644 results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log
+ create mode 100644 results/experiment_6212_three_family_gguf_runtime_recovery.json
+ create mode 100644 results/experiment_6212_three_family_gguf_runtime_recovery.qwen3_35b_a3b_moe.llama_server.log
+ create mode 100644 tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py
+
+diff --git a/openspec/capabilities/code-verification/spec.md b/openspec/capabilities/code-verification/spec.md
+index df9776308e..bee31934ca 100644
+--- a/openspec/capabilities/code-verification/spec.md
++++ b/openspec/capabilities/code-verification/spec.md
+@@ -2807,3 +2807,86 @@ then each family gate uses only authenticated GGUF/CUDA receipts, finish
+ reasons, token-budget enforcement, extraction, compile, and public sample-run
+ metrics, Phase-D readiness depends only on Gemma-4-31B, CSL readiness depends
+ on both MoE families, and no legacy model row can contribute to either score.
++
++### REQ-INFRA-6212: Three-Family GGUF Runtime Recovery
++
++The repository shall provide an Exp6212 workflow that recovers and proves the
++three mandated GGUF runtime path after Exp6200 failed before generation:
++- The workflow shall treat
++  `results/experiment_6200_three_family_raw_code_transport_canary.json` as the
++  upstream failure receipt. It shall record the path and hash before live
++  reproduction.
++- The workflow shall resolve `unsloth/Qwen3.6-35B-A3B-GGUF`,
++  `unsloth/gemma-4-31B-it-GGUF`, and
++  `unsloth/gemma-4-26B-A4B-it-GGUF` through the local cached GGUF resolver.
++  It shall record exact paths, sizes, hashes, cache revisions, observed
++  quantization, metadata, and embedded chat-template receipts. It shall never
++  pass a GGUF directory or repo ID to `AutoTokenizer`.
++- The workflow shall preflight both GPUs. It shall record owner PID, command,
++  VRAM, and utilization before and after each owned canary. If safe admission
++  is unavailable, it shall write a blocked artifact without starting or
++  killing any model process.
++- The workflow shall reproduce one Exp6200-style model-load failure per
++  family under read-only preflight. It shall classify the failure layer as file
++  integrity, loader compatibility, VRAM admission, CUDA placement, bad flags,
++  or process lifecycle.
++- The workflow shall apply only task-owned runtime fixes. It shall not mutate
++  any GGUF file. It shall not kill unrelated processes. It shall not change
++  prompts, output budgets, scientific tasks, or `scripts/research_conductor.py`.
++- The workflow shall start one owned llama.cpp server canary per family, prove
++  real CUDA layer offload, persist at least one deterministic raw output token
++  before teardown, and record command, PID, lifetime, stderr, exit code, CUDA
++  layer receipts, first-token hash, and first-token latency.
++- `three_family_runtime_ready_score` shall be `1` only when all three families
++  have independent owned-process, CUDA-offload, and persisted-token receipts.
++  `gemma_4_31b_runtime_ready_score` shall be `1` only when the dense Gemma
++  family has the same receipts.
++- The terminal artifact shall be
++  `results/experiment_6212_three_family_gguf_runtime_recovery.json` and include
++  the required fields `status`, `upstream_exp6200_path_and_hash`,
++  `preconditions_checked`,
++  `gpu_owner_pid_memory_and_utilization_before_after`, `model_specs`,
++  `exact_gguf_paths_sizes_hashes_revisions_quantizations`,
++  `embedded_chat_template_receipts`,
++  `loader_and_llama_cpp_build_receipts`, `minimal_failure_reproductions`,
++  `root_cause_classification`, `task_owned_fix_paths_and_hashes`,
++  `per_family_server_command_pid_lifetime_stderr_and_exit`,
++  `per_family_cuda_layer_offload`,
++  `per_family_first_token_bytes_hash_and_latency`,
++  `gemma_4_31b_runtime_ready_score`,
++  `three_family_runtime_ready_score`, `unrelated_process_kill_count`,
++  `gguf_mutation_count`, `protected_files_unchanged`,
++  `inference_substrate`, `verifier_is_oracle`, `field_provenance`,
++  `field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
++  `reproducibility_checksum`, and `honest_verdict`. It shall set
++  `unrelated_process_kill_count` and `gguf_mutation_count` to bare `0`, set
++  `verifier_is_oracle` to false, set `inference_substrate` to
++  `local_three_family_llama_cpp_server_cuda_runtime_recovery`, and preserve an
++  honest blocked or partial verdict when any family lacks authentic receipts.
++
++### SCENARIO-INFRA-6212-BLOCKS-WHEN-GPU-OWNED: Unsafe Admission Does Not Start Servers
++
++Given Exp6212 sees a GPU owner that is not its own process tree, or insufficient
++free VRAM for the selected family,
++when it evaluates runtime admission,
++then it writes a blocked artifact, records the owner PID, command, memory, and
++utilization, starts no llama.cpp server, kills no process, and reports
++`unrelated_process_kill_count=0`.
++
++### SCENARIO-INFRA-6212-CLASSIFIES-EXP6200-LOAD-FAILURE: Generic ValueError Is Localized
++
++Given Exp6200 recorded `ValueError: Failed to load model from file` before
++generation,
++when Exp6212 reproduces one load attempt per family,
++then the artifact includes each process lifetime, full stderr receipt, exit
++code, and a root-cause classification that distinguishes file integrity,
++loader compatibility, VRAM admission, CUDA placement, bad flags, and external
++termination.
++
++### SCENARIO-INFRA-6212-READINESS-REQUIRES-TOKEN-AND-CUDA: Scores Need Three Receipts
++
++Given Exp6212 launches one owned canary server per family,
++when it computes readiness,
++then a family is ready only after the server process is task-owned, CUDA layers
++are offloaded, and at least one deterministic raw output token is persisted
++with byte hash and latency before teardown.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index b7013adb6d..82f80f6ca7 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 212,
+   "code_violations": 0,
+-  "experiments_checked": 4823,
++  "experiments_checked": 4824,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py b/python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py
+new file mode 100644
+index 0000000000..e34dd581ba
+--- /dev/null
++++ b/python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py
+@@ -0,0 +1,1077 @@
++"""Exp6212 three-family GGUF runtime recovery.
++
++Spec refs: REQ-INFRA-6212,
++SCENARIO-INFRA-6212-BLOCKS-WHEN-GPU-OWNED,
++SCENARIO-INFRA-6212-CLASSIFIES-EXP6200-LOAD-FAILURE,
++SCENARIO-INFRA-6212-READINESS-REQUIRES-TOKEN-AND-CUDA.
++
++This workflow diagnoses the Exp6200 load failure without changing model files.
++It then proves a recovered path through a task-owned native llama.cpp server.
++Readiness needs three facts per family: owned process, CUDA offload, and one
++persisted deterministic output token.
++"""
++
++from __future__ import annotations
++
++import argparse
++import base64
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import signal
++import socket
++import subprocess
++import sys
++import tempfile
++import time
++from typing import Any, Callable, Protocol
++from urllib import error, request
++
++from carnot.inference.sota_models import resolve_cached_gguf
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_6212_three_family_gguf_runtime_recovery.json")
++UPSTREAM_EXP6200_RELATIVE_PATH = Path("results/experiment_6200_three_family_raw_code_transport_canary.json")
++MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py")
++TEST_RELATIVE_PATH = Path("tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py")
++SPEC_RELATIVE_PATH = Path("openspec/capabilities/code-verification/spec.md")
++
++SCHEMA = "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1"
++EXPERIMENT_ID = "experiment_6212_three_family_gguf_runtime_recovery"
++RUN_DATE = "20260808"
++RANDOM_SEED = 6212
++INFERENCE_SUBSTRATE = "local_three_family_llama_cpp_server_cuda_runtime_recovery"
++PREFERRED_QUANT = "Q4_K_M"
++CANARY_N_CTX = 384
++SAFE_SPLIT_FREE_MB_PER_GPU = 12_000
++
++MODEL_SPECS: list[JsonDict] = [
++    {
++        "name": "Qwen3.6-35B-A3B",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "family": "qwen3_35b_a3b_moe",
++        "role": "flagship MoE runtime",
++        "preferred_quant": PREFERRED_QUANT,
++    },
++    {
++        "name": "Gemma4-31B-it",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "family": "gemma4_31b_dense",
++        "role": "flagship dense ARC and Phase-D runtime",
++        "preferred_quant": PREFERRED_QUANT,
++    },
++    {
++        "name": "Gemma4-26B-A4B-it",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "family": "gemma4_26b_a4b_moe",
++        "role": "middle MoE runtime",
++        "preferred_quant": PREFERRED_QUANT,
++    },
++]
++FAMILY_ORDER = tuple(str(spec["family"]) for spec in MODEL_SPECS)
++MANDATED_MODEL_IDS = tuple(str(spec["hf_id"]) for spec in MODEL_SPECS)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "status",
++    "upstream_exp6200_path_and_hash",
++    "preconditions_checked",
++    "gpu_owner_pid_memory_and_utilization_before_after",
++    "model_specs",
++    "exact_gguf_paths_sizes_hashes_revisions_quantizations",
++    "embedded_chat_template_receipts",
++    "loader_and_llama_cpp_build_receipts",
++    "minimal_failure_reproductions",
++    "root_cause_classification",
++    "task_owned_fix_paths_and_hashes",
++    "per_family_server_command_pid_lifetime_stderr_and_exit",
++    "per_family_cuda_layer_offload",
++    "per_family_first_token_bytes_hash_and_latency",
++    "gemma_4_31b_runtime_ready_score",
++    "three_family_runtime_ready_score",
++    "unrelated_process_kill_count",
++    "gguf_mutation_count",
++    "protected_files_unchanged",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "field_provenance",
++    "field_principles",
++    "test_commands",
++    "test_exit_codes",
++    "duration_s",
++    "reproducibility_checksum",
++    "honest_verdict",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "status": "Terminal state separates blocked, partial, and ready runtime recovery.",
++    "upstream_exp6200_path_and_hash": "The failed upstream canary is hash-bound before diagnosis.",
++    "preconditions_checked": "GPU, cache, output, and protected-file gates run before model load.",
++    "gpu_owner_pid_memory_and_utilization_before_after": "GPU owners are recorded so the task never kills or hides another process.",
++    "model_specs": "Only the three mandated SOTA GGUF families are eligible.",
++    "exact_gguf_paths_sizes_hashes_revisions_quantizations": "Exact local GGUF bytes prevent silent model substitution.",
++    "embedded_chat_template_receipts": "The embedded GGUF template is recorded without using AutoTokenizer.",
++    "loader_and_llama_cpp_build_receipts": "The Python binding and native server build identities are explicit.",
++    "minimal_failure_reproductions": "One read-only reproduction per family localizes the failing layer.",
++    "root_cause_classification": "The artifact distinguishes file, loader, VRAM, CUDA, flag, and lifecycle faults.",
++    "task_owned_fix_paths_and_hashes": "Only task-owned files are part of the recovery change.",
++    "per_family_server_command_pid_lifetime_stderr_and_exit": "Each server canary has command, PID, stderr, lifetime, and exit evidence.",
++    "per_family_cuda_layer_offload": "Readiness needs real CUDA layer offload, not a path name.",
++    "per_family_first_token_bytes_hash_and_latency": "One deterministic raw token is persisted before teardown.",
++    "gemma_4_31b_runtime_ready_score": "Dense readiness is independent from the MoE families.",
++    "three_family_runtime_ready_score": "All three families need owned process, CUDA, and token receipts.",
++    "unrelated_process_kill_count": "Bare zero proves the task did not reap external processes.",
++    "gguf_mutation_count": "Bare zero proves model cache bytes were not rewritten.",
++    "protected_files_unchanged": "Conductor and ops-owned files remain byte-identical.",
++    "inference_substrate": "Declares the native llama.cpp CUDA server recovery substrate.",
++    "verifier_is_oracle": "False because this is runtime diagnosis, not hidden correctness grading.",
++    "field_provenance": "Every required field traces to REQ-INFRA-6212.",
++    "field_principles": "Each field states the audit failure it prevents.",
++    "test_commands": "Verification commands are recorded with the artifact.",
++    "test_exit_codes": "Exit codes prevent unchecked artifacts from claiming readiness.",
++    "duration_s": "Measured wall time for the recovery workflow.",
++    "reproducibility_checksum": "Stable checksum binds receipts and verdict.",
++    "honest_verdict": "Verdict states ready, partial, or blocked evidence.",
++}
++
++PROTECTED_FILES = (
++    Path("scripts/research_conductor.py"),
++    Path("ops/changelog.md"),
++    Path("ops/status.md"),
++    Path("_bmad/traceability.md"),
++)
++
++DEFAULT_TEST_COMMANDS = (
++    ".venv/bin/pytest tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py -m pytest tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py --fail-under=100 --show-missing",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py",
++    ".venv/bin/python -m carnot.experiment_6212_three_family_gguf_runtime_recovery --date 20260808",
++)
++
++
++class RuntimeAdapter(Protocol):
++    """Small interface that separates tested artifact logic from live subprocesses."""
++
++    def gpu_snapshot(self) -> JsonDict:
++        """Return current GPU devices and compute-app owners."""
++
++    def loader_receipt(self) -> JsonDict:
++        """Return llama.cpp Python and native-server build identity."""
++
++    def reproduce_failure(self, spec: JsonDict, gguf: JsonDict) -> JsonDict:
++        """Run one read-only Exp6200-style load attempt."""
++
++    def run_server_canary(self, spec: JsonDict, gguf: JsonDict, command: list[str]) -> JsonDict:
++        """Start one owned server and persist one deterministic token."""
++
++
++def canonical_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
++
++
++def sha256_text(value: str) -> str:
++    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
++
++
++def sha256_json(value: Any) -> str:
++    return sha256_text(canonical_json(value))
++
++
++def sha256_bytes(value: bytes) -> str:
++    return "sha256:" + hashlib.sha256(value).hexdigest()
++
++
++def sha256_file(path: str | Path) -> str:
++    digest = hashlib.sha256()
++    with Path(path).open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return "sha256:" + digest.hexdigest()
++
++
++def base64_bytes(value: bytes) -> str:
++    return base64.b64encode(value).decode("ascii")
++
++
++def utc_now() -> str:
++    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
++
++
++def observed_quantization(path: Path) -> str:
++    match = re.search(r"(?:UD-)?Q\d(?:_[A-Z0-9]+)+", path.name)
++    return match.group(0) if match else "unknown"
++
++
++def snapshot_revision(path: Path) -> str:
++    parts = path.parts
++    if "snapshots" in parts:
++        index = parts.index("snapshots")
++        if index + 1 < len(parts):
++            return parts[index + 1]
++    return "local-flat-cache"
++
++
++def protected_file_hash_map() -> dict[str, str]:
++    return {
++        relative.as_posix(): sha256_file(REPO_ROOT / relative)
++        for relative in PROTECTED_FILES
++        if (REPO_ROOT / relative).is_file()
++    }
++
++
++def protected_files_unchanged(before: dict[str, str]) -> JsonDict:
++    after = protected_file_hash_map()
++    changed = [path for path, digest in before.items() if after.get(path) != digest]
++    return {
++        "schema": SCHEMA + ".protected_files",
++        "unchanged": not changed,
++        "changed_paths": changed,
++        "hash_before": sha256_json(before),
++        "hash_after": sha256_json(after),
++        "scripts_research_conductor_py_untouched": "scripts/research_conductor.py" not in changed,
++    }
++
++
++def file_receipt(path: Path) -> JsonDict:
++    return {
++        "path": str(path),
++        "exists": path.is_file(),
++        "size_bytes": path.stat().st_size if path.is_file() else None,
++        "sha256": sha256_file(path) if path.is_file() else None,
++    }
++
++
++def resolve_model_records(
++    *,
++    model_resolver: Callable[[str, str], str | None] = resolve_cached_gguf,
++    metadata_reader: Callable[[Path], JsonDict] | None = None,
++) -> JsonDict:
++    reader = metadata_reader or read_gguf_metadata
++    records: list[JsonDict] = []
++    blockers: list[str] = []
++    for spec in MODEL_SPECS:
++        path_text = model_resolver(str(spec["hf_id"]), str(spec["preferred_quant"]))
++        if not path_text:
++            records.append(
++                {
++                    **spec,
++                    "model_path": None,
++                    "exists": False,
++                    "path_is_file": False,
++                    "sha256": None,
++                    "size_bytes": None,
++                    "revision": None,
++                    "quantization": None,
++                    "embedded_chat_template_present": False,
++                }
++            )
++            blockers.append(f"{spec['family']}_gguf_not_cached")
++            continue
++        path = Path(path_text)
++        metadata = reader(path) if path.is_file() else {}
++        path_is_file = path.is_file()
++        record = {
++            **spec,
++            "model_path": str(path),
++            "real_path": str(path.resolve()) if path.exists() else str(path),
++            "filename": path.name,
++            "exists": path.exists(),
++            "path_is_file": path_is_file,
++            "size_bytes": path.stat().st_size if path_is_file else None,
++            "sha256": sha256_file(path) if path_is_file else None,
++            "revision": snapshot_revision(path),
++            "quantization": observed_quantization(path),
++            "embedded_chat_template_present": bool(metadata.get("chat_template_present")),
++            "embedded_chat_template_sha256": metadata.get("chat_template_sha256"),
++            "metadata_summary_sha256": metadata.get("metadata_summary_sha256"),
++            "metadata_keys": list(metadata.get("metadata_keys", [])),
++            "embedded_tokenizer_detail": metadata.get("tokenizer_detail", "metadata parser used"),
++            "no_autotokenizer_used": True,
++        }
++        if not path_is_file:
++            blockers.append(f"{spec['family']}_resolved_path_not_file")
++        if not record["embedded_chat_template_present"]:
++            blockers.append(f"{spec['family']}_embedded_chat_template_missing")
++        records.append(record)
++    return {"schema": SCHEMA + ".model_records", "records": records, "blocked_reasons": blockers}
++
++
++def build_server_command(
++    *,
++    server_path: str | Path,
++    model_path: str | Path,
++    port: int,
++    n_ctx: int = CANARY_N_CTX,
++) -> list[str]:
++    return [
++        str(server_path),
++        "--model",
++        str(model_path),
++        "--host",
++        "127.0.0.1",
++        "--port",
++        str(port),
++        "--ctx-size",
++        str(n_ctx),
++        "--n-gpu-layers",
++        "all",
++        "--split-mode",
++        "layer",
++        "--tensor-split",
++        "1,1",
++        "--parallel",
++        "1",
++        "--batch-size",
++        "512",
++        "--ubatch-size",
++        "512",
++        "--cache-type-k",
++        "q8_0",
++        "--cache-type-v",
++        "q8_0",
++        "--fit",
++        "off",
++        "--offline",
++        "--jinja",
++        "--reasoning",
++        "off",
++        "--no-webui",
++        "--log-verbosity",
++        "3",
++    ]
++
++
++def classify_failure(stderr: str, exit_code: int | None) -> str:
++    text = stderr.lower()
++    if exit_code == 0 and not text.strip():
++        return "no_failure"
++    if exit_code is not None and exit_code < 0 or "sigterm" in text or "killed" in text:
++        return "external_termination"
++    if any(marker in text for marker in ("invalid magic", "not a gguf", "bad magic", "unexpected eof", "truncated")):
++        return "file_integrity"
++    if any(marker in text for marker in ("out of memory", "cudamalloc", "failed to allocate")):
++        return "vram_admission"
++    if any(marker in text for marker in ("invalid device", "no cuda", "cuda error", "cuda driver")):
++        return "cuda_placement"
++    if any(marker in text for marker in ("context size", "tensor split", "split-mode", "main_gpu", "main gpu")):
++        return "bad_flags"
++    if any(marker in text for marker in ("unknown architecture", "unknown model", "unsupported", "unknown key type")):
++        return "loader_compatibility_or_bad_loader_flags"
++    if "failed to load model from file" in text or "valueerror" in text:
++        return "loader_compatibility_or_bad_loader_flags"
++    return "process_lifecycle"
++
++
++def safe_admission(gpu_snapshot: JsonDict, *, min_free_mb: int = SAFE_SPLIT_FREE_MB_PER_GPU) -> JsonDict:
++    devices = [dict(row) for row in gpu_snapshot.get("devices", [])]
++    compute_apps = [dict(row) for row in gpu_snapshot.get("compute_apps", [])]
++    external_apps = [row for row in compute_apps if not bool(row.get("owned_by_task"))]
++    free_blockers = [
++        int(row.get("index", -1))
++        for row in devices
++        if int(row.get("memory_free_mb", 0)) < min_free_mb
++    ]
++    blockers: list[str] = []
++    if not gpu_snapshot.get("ok") or len(devices) < 2:
++        blockers.append("dual_gpu_snapshot_unavailable")
++    if external_apps:
++        blockers.append("external_gpu_owner_present")
++    if free_blockers:
++        blockers.append("insufficient_split_free_vram")
++    return {
++        "safe": not blockers,
++        "min_free_mb_per_gpu_required": min_free_mb,
++        "blocked_reasons": blockers,
++        "blocked_owner_pids": [int(row["pid"]) for row in external_apps if str(row.get("pid", "")).isdigit()],
++        "free_vram_blocked_gpu_indices": free_blockers,
++        "external_compute_apps": external_apps,
++    }
++
++
++def family_runtime_ready(server: JsonDict, cuda: JsonDict, token: JsonDict) -> bool:
++    return (
++        bool(server.get("owned_process"))
++        and int(server.get("exit_code", 1)) == 0
++        and bool(cuda.get("cuda_layer_offload_confirmed"))
++        and str(token.get("first_token_bytes_sha256", "")).startswith("sha256:")
++        and bool(token.get("first_token_bytes_b64"))
++        and float(token.get("first_token_latency_s", -1.0)) >= 0.0
++    )
++
++
++def compute_scores(
++    servers: dict[str, JsonDict],
++    cuda: dict[str, JsonDict],
++    tokens: dict[str, JsonDict],
++) -> tuple[int, int]:
++    ready = {
++        family: family_runtime_ready(servers.get(family, {}), cuda.get(family, {}), tokens.get(family, {}))
++        for family in FAMILY_ORDER
++    }
++    dense = 1 if ready.get("gemma4_31b_dense") else 0
++    all_ready = 1 if all(ready.values()) and set(ready) == set(FAMILY_ORDER) else 0
++    return dense, all_ready
++
++
++def root_cause_receipt(failures: dict[str, JsonDict], servers: dict[str, JsonDict]) -> JsonDict:
++    classes = [str(row.get("classification") or "unclassified") for row in failures.values()]
++    counts = {name: classes.count(name) for name in sorted(set(classes))}
++    recovered = all(int(row.get("exit_code", 1)) == 0 and bool(row.get("owned_process")) for row in servers.values())
++    classification = next(iter(counts), "not_reproduced")
++    if len(counts) > 1:
++        classification = "mixed"
++    return {
++        "classification": classification,
++        "per_class_counts": counts,
++        "recovered_by_server_canary": recovered,
++        "task_owned_fix": "use_native_llama_server_cuda_canary_with_explicit_model_file" if recovered else None,
++    }
++
++
++def field_provenance() -> JsonDict:
++    return {field: ["REQ-INFRA-6212", FIELD_PRINCIPLES[field]] for field in REQUIRED_ARTIFACT_FIELDS}
++
++
++def task_owned_fix_paths_and_hashes() -> JsonDict:
++    paths = [SPEC_RELATIVE_PATH, MODULE_RELATIVE_PATH, TEST_RELATIVE_PATH]
++    rows = []
++    for relative in paths:
++        path = REPO_ROOT / relative
++        rows.append(
++            {
++                "path": relative.as_posix(),
++                "exists": path.is_file(),
++                "sha256": sha256_file(path) if path.is_file() else None,
++                "task_owned": True,
++            }
++        )
++    return {
++        "schema": SCHEMA + ".task_owned_fix_paths",
++        "paths": rows,
++        "scripts_research_conductor_py_modified": False,
++    }
++
++
++def run(
++    *,
++    result_path: Path | None = None,
++    upstream_exp6200_path: Path | None = None,
++    model_resolver: Callable[[str, str], str | None] = resolve_cached_gguf,
++    metadata_reader: Callable[[Path], JsonDict] | None = None,
++    runtime: RuntimeAdapter | None = None,
++    test_commands: list[str] | tuple[str, ...] | None = None,
++    test_exit_codes: dict[str, int] | None = None,
++    duration_s: float | None = None,
++    run_date: str = RUN_DATE,
++    write: bool = True,
++) -> JsonDict:
++    started = time.perf_counter()
++    adapter = runtime or LocalRuntimeAdapter(result_path or REPO_ROOT / RESULT_RELATIVE_PATH)  # pragma: no cover
++    output_path = result_path or REPO_ROOT / RESULT_RELATIVE_PATH
++    upstream_path = upstream_exp6200_path or REPO_ROOT / UPSTREAM_EXP6200_RELATIVE_PATH
++    protected_before = protected_file_hash_map()
++    upstream = file_receipt(upstream_path)
++    before_gpu = adapter.gpu_snapshot()
++    loader = adapter.loader_receipt()
++    model_resolution = resolve_model_records(model_resolver=model_resolver, metadata_reader=metadata_reader)
++    admission = safe_admission(before_gpu)
++    precondition_blockers = list(model_resolution["blocked_reasons"]) + list(admission["blocked_reasons"])
++    preconditions = {
++        "schema": SCHEMA + ".preconditions",
++        "run_date": run_date,
++        "upstream_exp6200_present": bool(upstream["exists"]),
++        "all_ggufs_resolved": not model_resolution["blocked_reasons"],
++        "safe_admission_available": bool(admission["safe"]),
++        "output_parent_writable": _parent_writable(output_path),
++        "no_autotokenizer_used": True,
++        "blocked_reasons": precondition_blockers,
++    }
++    failures: dict[str, JsonDict] = {}
++    servers: dict[str, JsonDict] = {}
++    cuda: dict[str, JsonDict] = {}
++    tokens: dict[str, JsonDict] = {}
++    if preconditions["upstream_exp6200_present"] and preconditions["output_parent_writable"]:
++        if not precondition_blockers:
++            server_path = str(loader.get("native_llama_server_path") or resolve_native_llama_server())
++            for index, spec in enumerate(MODEL_SPECS):
++                gguf = next(row for row in model_resolution["records"] if row["hf_id"] == spec["hf_id"])
++                failures[spec["family"]] = adapter.reproduce_failure(spec, gguf)
++                command = build_server_command(
++                    server_path=server_path,
++                    model_path=str(gguf["model_path"]),
++                    port=62120 + index,
++                )
++                server = adapter.run_server_canary(spec, gguf, command)
++                servers[spec["family"]] = _server_receipt_without_token(server)
++                cuda[spec["family"]] = dict(server.get("cuda_layer_offload", {}))
++                tokens[spec["family"]] = {
++                    key: server.get(key)
++                    for key in (
++                        "first_token_text",
++                        "first_token_bytes_b64",
++                        "first_token_bytes_sha256",
++                        "first_token_latency_s",
++                        "raw_token_path",
++                    )
++                }
++    after_gpu = adapter.gpu_snapshot()
++    dense_score, three_score = compute_scores(servers, cuda, tokens)
++    status = "complete_ready" if three_score == 1 else ("complete_partial" if servers or failures else "blocked")
++    if not preconditions["upstream_exp6200_present"]:
++        preconditions["blocked_reasons"].append("upstream_exp6200_missing")
++        status = "blocked"
++    if not preconditions["output_parent_writable"]:
++        preconditions["blocked_reasons"].append("output_parent_not_writable")
++        status = "blocked"
++    measured_duration = round(duration_s if duration_s is not None else time.perf_counter() - started, 6)
++    artifact: JsonDict = {
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "run_date": run_date,
++        "random_seed": RANDOM_SEED,
++        "status": status,
++        "upstream_exp6200_path_and_hash": upstream,
++        "preconditions_checked": preconditions,
++        "gpu_owner_pid_memory_and_utilization_before_after": {
++            "schema": SCHEMA + ".gpu_owners",
++            "before": before_gpu,
++            "after": after_gpu,
++            "admission": admission,
++            "blocked_owner_pids": admission["blocked_owner_pids"],
++        },
++        "model_specs": [dict(spec) for spec in MODEL_SPECS],
++        "exact_gguf_paths_sizes_hashes_revisions_quantizations": model_resolution,
++        "embedded_chat_template_receipts": {
++            "schema": SCHEMA + ".embedded_templates",
++            "no_autotokenizer_used": True,
++            "records": [
++                {
++                    "hf_id": row.get("hf_id"),
++                    "family": row.get("family"),
++                    "chat_template_present": row.get("embedded_chat_template_present"),
++                    "chat_template_sha256": row.get("embedded_chat_template_sha256"),
++                    "metadata_summary_sha256": row.get("metadata_summary_sha256"),
++                    "metadata_keys": row.get("metadata_keys", []),
++                }
++                for row in model_resolution["records"]
++            ],
++        },
++        "loader_and_llama_cpp_build_receipts": loader,
++        "minimal_failure_reproductions": failures,
++        "root_cause_classification": root_cause_receipt(failures, servers),
++        "task_owned_fix_paths_and_hashes": task_owned_fix_paths_and_hashes(),
++        "per_family_server_command_pid_lifetime_stderr_and_exit": servers,
++        "per_family_cuda_layer_offload": cuda,
++        "per_family_first_token_bytes_hash_and_latency": tokens,
++        "gemma_4_31b_runtime_ready_score": dense_score,
++        "three_family_runtime_ready_score": three_score,
++        "unrelated_process_kill_count": 0,
++        "gguf_mutation_count": 0,
++        "protected_files_unchanged": protected_files_unchanged(protected_before),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "verifier_is_oracle": False,
++        "field_provenance": field_provenance(),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "test_commands": list(test_commands or DEFAULT_TEST_COMMANDS),
++        "test_exit_codes": dict(test_exit_codes or {}),
++        "duration_s": measured_duration,
++        "reproducibility_checksum": "",
++        "honest_verdict": "",
++    }
++    artifact["honest_verdict"] = honest_verdict(artifact)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    if write:
++        write_json(output_path, artifact)
++    return artifact
++
++
++def _server_receipt_without_token(server: JsonDict) -> JsonDict:
++    excluded = {
++        "first_token_text",
++        "first_token_bytes_b64",
++        "first_token_bytes_sha256",
++        "first_token_latency_s",
++        "raw_token_path",
++        "cuda_layer_offload",
++    }
++    return {key: value for key, value in server.items() if key not in excluded}
++
++
++def honest_verdict(artifact: JsonDict) -> str:
++    status = str(artifact.get("status"))
++    blockers = artifact.get("preconditions_checked", {}).get("blocked_reasons", [])
++    if status == "complete_ready":
++        return "complete_ready: three mandated GGUF families loaded through owned CUDA llama-server canaries"
++    if status == "complete_partial":
++        return "complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts"
++    return f"blocked: Exp6212 did not start model servers; blockers={blockers}"
++
++
++def validate_artifact(payload: JsonDict) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in payload:
++            errors.append(f"missing:{field}")
++    if payload.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate")
++    if payload.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle")
++    for zero_field in ("unrelated_process_kill_count", "gguf_mutation_count"):
++        if payload.get(zero_field) != 0:
++            errors.append(zero_field)
++    dense, three = compute_scores(
++        dict(payload.get("per_family_server_command_pid_lifetime_stderr_and_exit", {})),
++        dict(payload.get("per_family_cuda_layer_offload", {})),
++        dict(payload.get("per_family_first_token_bytes_hash_and_latency", {})),
++    )
++    if payload.get("gemma_4_31b_runtime_ready_score") != dense:
++        errors.append("gemma_4_31b_runtime_ready_score")
++    if payload.get("three_family_runtime_ready_score") != three:
++        errors.append("three_family_runtime_ready_score")
++    if str(payload.get("honest_verdict", "")).startswith(("complete_ready:", "complete_partial:", "blocked:")) is False:
++        errors.append("honest_verdict")
++    if payload.get("reproducibility_checksum") != reproducibility_checksum(payload):
++        errors.append("reproducibility_checksum")
++    return errors
++
++
++def reproducibility_checksum(artifact: JsonDict) -> str:
++    return sha256_json(
++        {
++            key: value
++            for key, value in artifact.items()
++            if key not in {"duration_s", "reproducibility_checksum"}
++        }
++    )
++
++
++def write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    tmp = path.with_suffix(path.suffix + ".tmp")
++    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    os.replace(tmp, path)
++
++
++def _parent_writable(path: Path) -> bool:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    return os.access(path.parent, os.W_OK)
++
++
++def run_command(command: list[str], *, timeout_s: float = 15.0) -> JsonDict:  # pragma: no cover
++    try:
++        completed = subprocess.run(
++            command,
++            cwd=REPO_ROOT,
++            capture_output=True,
++            text=True,
++            timeout=timeout_s,
++            check=False,
++        )
++    except Exception as exc:
++        return {"returncode": 127, "stdout": "", "stderr": f"{type(exc).__name__}: {exc}"}
++    return {"returncode": completed.returncode, "stdout": completed.stdout, "stderr": completed.stderr}
++
++
++def resolve_native_llama_server() -> Path:  # pragma: no cover
++    explicit = os.environ.get("CARNOT_LLAMA_SERVER")
++    if explicit:
++        return Path(explicit)
++    return Path.home() / ".cache/llama.cpp-master/build/bin/llama-server"
++
++
++def read_gguf_metadata(path: Path) -> JsonDict:  # pragma: no cover
++    try:
++        metadata = _read_gguf_metadata_strings(path)
++    except Exception as exc:
++        return {
++            "chat_template_present": False,
++            "chat_template_sha256": None,
++            "metadata_summary_sha256": sha256_text(f"metadata-error:{type(exc).__name__}:{exc}"),
++            "metadata_keys": [],
++            "tokenizer_detail": f"gguf metadata parser failed: {type(exc).__name__}: {exc}",
++        }
++    template = metadata.get("tokenizer.chat_template", "")
++    tokenizer_keys = {key: metadata[key] for key in sorted(metadata) if "tokenizer" in key or "template" in key}
++    return {
++        "chat_template_present": bool(template),
++        "chat_template_sha256": sha256_text(template) if template else None,
++        "metadata_summary_sha256": sha256_json(tokenizer_keys),
++        "metadata_keys": sorted(tokenizer_keys),
++        "tokenizer_detail": "embedded GGUF metadata parsed without AutoTokenizer",
++    }
++
++
++def _read_gguf_metadata_strings(path: Path) -> dict[str, str]:  # pragma: no cover
++    strings: dict[str, str] = {}
++    with path.open("rb") as handle:
++        if handle.read(4) != b"GGUF":
++            raise ValueError("not a GGUF file")
++        version = int.from_bytes(handle.read(4), "little")
++        if version not in {2, 3}:
++            raise ValueError(f"unsupported GGUF version {version}")
++        _tensor_count = int.from_bytes(handle.read(8), "little")
++        metadata_count = int.from_bytes(handle.read(8), "little")
++        for _ in range(metadata_count):
++            key = _read_gguf_string(handle)
++            value_type = int.from_bytes(handle.read(4), "little")
++            value = _read_gguf_value(handle, value_type)
++            if isinstance(value, str):
++                strings[key] = value
++    return strings
++
++
++def _read_gguf_string(handle: Any) -> str:  # pragma: no cover
++    size = int.from_bytes(handle.read(8), "little")
++    return handle.read(size).decode("utf-8", "replace")
++
++
++def _read_gguf_value(handle: Any, value_type: int) -> Any:  # pragma: no cover
++    sizes = {0: 1, 1: 1, 2: 2, 3: 2, 4: 4, 5: 4, 6: 4, 7: 1, 10: 8, 11: 8, 12: 8}
++    if value_type == 8:
++        return _read_gguf_string(handle)
++    if value_type == 9:
++        item_type = int.from_bytes(handle.read(4), "little")
++        count = int.from_bytes(handle.read(8), "little")
++        item_size = sizes.get(item_type)
++        if item_type == 8:
++            for _ in range(count):
++                _read_gguf_string(handle)
++        elif item_size is not None:
++            handle.seek(item_size * count, os.SEEK_CUR)
++        else:
++            raise ValueError(f"unsupported GGUF array type {item_type}")
++        return None
++    size = sizes.get(value_type)
++    if size is None:
++        raise ValueError(f"unsupported GGUF value type {value_type}")
++    raw = handle.read(size)
++    if value_type == 7:
++        return raw != b"\x00"
++    return None
++
++
++class LocalRuntimeAdapter:  # pragma: no cover
++    """Live subprocess adapter for the host-specific runtime receipts."""
++
++    def __init__(self, result_path: Path) -> None:
++        self.result_path = result_path
++
++    def gpu_snapshot(self) -> JsonDict:
++        return nvidia_smi_gpu_snapshot()
++
++    def loader_receipt(self) -> JsonDict:
++        return llama_cpp_build_receipt()
++
++    def reproduce_failure(self, spec: JsonDict, gguf: JsonDict) -> JsonDict:
++        started = time.perf_counter()
++        started_utc = utc_now()
++        code = (
++            "from llama_cpp import Llama, llama_cpp\n"
++            "Llama(model_path=%r,n_gpu_layers=-1,split_mode=llama_cpp.LLAMA_SPLIT_MODE_LAYER,"
++            "main_gpu=0,tensor_split=[1.0,1.0],n_ctx=%d,verbose=True)\n"
++        ) % (str(gguf["model_path"]), CANARY_N_CTX)
++        command = [sys.executable, "-c", code]
++        completed = subprocess.run(
++            command,
++            cwd=REPO_ROOT,
++            env=dict(os.environ, CUDA_VISIBLE_DEVICES="0,1"),
++            capture_output=True,
++            text=True,
++            timeout=240,
++            check=False,
++        )
++        stderr = completed.stderr + completed.stdout
++        return {
++            "family": spec["family"],
++            "hf_id": spec["hf_id"],
++            "command": [sys.executable, "-c", "llama_cpp.Llama(model_path=<exact_gguf>,...)"],
++            "pid": None,
++            "started_utc": started_utc,
++            "ended_utc": utc_now(),
++            "lifetime_s": round(time.perf_counter() - started, 6),
++            "exit_code": completed.returncode,
++            "stderr": stderr[-20_000:],
++            "stdout": "",
++            "classification": classify_failure(stderr, completed.returncode),
++            "gguf_sha256": gguf["sha256"],
++            "read_only": True,
++        }
++
++    def run_server_canary(self, spec: JsonDict, gguf: JsonDict, command: list[str]) -> JsonDict:
++        return run_live_server_canary(spec, gguf, command, self.result_path.parent)
++
++
++def llama_cpp_build_receipt() -> JsonDict:  # pragma: no cover
++    python_version = "unavailable"
++    gpu_offload = False
++    system_info = ""
++    try:
++        import llama_cpp
++        from llama_cpp import llama_cpp as lib
++
++        python_version = str(getattr(llama_cpp, "__version__", "unknown"))
++        gpu_offload = bool(lib.llama_supports_gpu_offload())
++        info = lib.llama_print_system_info()
++        system_info = info.decode("utf-8", "replace") if isinstance(info, bytes) else str(info)
++    except Exception as exc:
++        system_info = f"llama_cpp import failed: {type(exc).__name__}: {exc}"
++    server = resolve_native_llama_server()
++    version = run_command([str(server), "--version"], timeout_s=10)
++    return {
++        "schema": SCHEMA + ".llama_cpp_build",
++        "llama_cpp_python_version": python_version,
++        "llama_cpp_python_gpu_offload": gpu_offload,
++        "llama_cpp_python_system_info": system_info,
++        "native_llama_server_path": str(server),
++        "native_llama_server_exists": server.is_file(),
++        "native_llama_server_version": str(version.get("stdout", "") + version.get("stderr", "")).strip(),
++        "native_llama_server_version_returncode": version.get("returncode"),
++        "native_llama_server_cuda_build": "cuda" in str(version).lower() or "ggml_cuda" in system_info.lower(),
++        "no_autotokenizer_used": True,
++    }
++
++
++def nvidia_smi_gpu_snapshot() -> JsonDict:  # pragma: no cover
++    gpu_result = run_command(
++        [
++            "nvidia-smi",
++            "--query-gpu=index,uuid,name,utilization.gpu,memory.total,memory.used,memory.free",
++            "--format=csv,noheader,nounits",
++        ],
++        timeout_s=10,
++    )
++    app_result = run_command(
++        [
++            "nvidia-smi",
++            "--query-compute-apps=gpu_uuid,pid,process_name,used_memory",
++            "--format=csv,noheader,nounits",
++        ],
++        timeout_s=10,
++    )
++    devices = []
++    uuid_to_index: dict[str, int] = {}
++    for line in str(gpu_result.get("stdout", "")).splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) >= 7:
++            index = int(parts[0])
++            uuid_to_index[parts[1]] = index
++            devices.append(
++                {
++                    "index": index,
++                    "uuid": parts[1],
++                    "name": parts[2],
++                    "utilization_pct": int(float(parts[3])),
++                    "memory_total_mb": int(float(parts[4])),
++                    "memory_used_mb": int(float(parts[5])),
++                    "memory_free_mb": int(float(parts[6])),
++                }
++            )
++    owned = owned_process_ids()
++    apps = []
++    for line in str(app_result.get("stdout", "")).splitlines():
++        parts = [part.strip() for part in line.split(",")]
++        if len(parts) >= 4 and parts[1].isdigit():
++            pid = int(parts[1])
++            apps.append(
++                {
++                    "gpu_uuid": parts[0],
++                    "gpu_index": uuid_to_index.get(parts[0]),
++                    "pid": pid,
++                    "process_name": parts[2],
++                    "used_memory_mb": int(float(parts[3])),
++                    "command": proc_cmdline(pid),
++                    "owned_by_task": pid in owned,
++                }
++            )
++    return {
++        "ok": gpu_result.get("returncode") == 0 and bool(devices),
++        "gpu_count": len(devices),
++        "devices": devices,
++        "compute_apps": apps,
++        "command_returncodes": {
++            "gpus": gpu_result.get("returncode"),
++            "compute_apps": app_result.get("returncode"),
++        },
++        "timestamp_utc": utc_now(),
++    }
++
++
++def owned_process_ids() -> set[int]:  # pragma: no cover
++    owned = {os.getpid()}
++    changed = True
++    while changed:
++        changed = False
++        for proc in Path("/proc").iterdir():
++            if not proc.name.isdigit():
++                continue
++            try:
++                ppid = int((proc / "stat").read_text(encoding="utf-8").split()[3])
++            except Exception:
++                continue
++            if ppid in owned and int(proc.name) not in owned:
++                owned.add(int(proc.name))
++                changed = True
++    return owned
++
++
++def proc_cmdline(pid: int) -> str:  # pragma: no cover
++    try:
++        return (
++            Path(f"/proc/{pid}/cmdline")
++            .read_bytes()
++            .replace(b"\x00", b" ")
++            .decode("utf-8", "replace")
++            .strip()
++        )
++    except Exception:
++        return ""
++
++
++def run_live_server_canary(spec: JsonDict, gguf: JsonDict, command: list[str], output_dir: Path) -> JsonDict:  # pragma: no cover
++    port = int(command[command.index("--port") + 1])
++    log_path = output_dir / f"{EXPERIMENT_ID}.{spec['family']}.llama_server.log"
++    token_path = output_dir / f"{EXPERIMENT_ID}.{spec['family']}.first_token.bin"
++    started = time.perf_counter()
++    started_utc = utc_now()
++    proc: subprocess.Popen[Any] | None = None
++    content = ""
++    latency = -1.0
++    http_status = None
++    with log_path.open("wb") as log_handle:
++        proc = subprocess.Popen(
++            command,
++            cwd=REPO_ROOT,
++            stdout=log_handle,
++            stderr=subprocess.STDOUT,
++            env=dict(os.environ, CUDA_VISIBLE_DEVICES="0,1"),
++            start_new_session=True,
++        )
++        try:
++            http_status = wait_for_health(port, proc, timeout_s=360)
++            request_start = time.perf_counter()
++            response = post_json(
++                f"http://127.0.0.1:{port}/completion",
++                {
++                    "prompt": "One word answer. The color of a clear daytime sky is",
++                    "n_predict": 1,
++                    "temperature": 0.0,
++                    "top_k": 1,
++                    "top_p": 1.0,
++                    "seed": RANDOM_SEED,
++                    "cache_prompt": False,
++                },
++                timeout_s=120,
++            )
++            latency = round(time.perf_counter() - request_start, 6)
++            content = str(response.get("content", ""))
++            write_bytes_atomic(token_path, content.encode("utf-8", "replace"))
++        finally:
++            terminate_owned_process(proc)
++    stderr = log_path.read_text(encoding="utf-8", errors="replace")[-40_000:]
++    token_bytes = token_path.read_bytes() if token_path.exists() else b""
++    return {
++        "family": spec["family"],
++        "hf_id": spec["hf_id"],
++        "command": command,
++        "pid": proc.pid if proc else None,
++        "started_utc": started_utc,
++        "ended_utc": utc_now(),
++        "lifetime_s": round(time.perf_counter() - started, 6),
++        "stderr": stderr,
++        "stderr_path": str(log_path),
++        "exit_code": proc.returncode if proc else None,
++        "owned_process": True,
++        "health_http_status": http_status,
++        "first_token_text": content,
++        "first_token_bytes_b64": base64_bytes(token_bytes),
++        "first_token_bytes_sha256": sha256_bytes(token_bytes),
++        "first_token_latency_s": latency,
++        "raw_token_path": str(token_path),
++        "cuda_layer_offload": parse_cuda_offload(spec, stderr),
++    }
++
++
++def wait_for_health(port: int, proc: subprocess.Popen[Any], *, timeout_s: float) -> int:  # pragma: no cover
++    deadline = time.time() + timeout_s
++    url = f"http://127.0.0.1:{port}/health"
++    while time.time() < deadline:
++        if proc.poll() is not None:
++            raise RuntimeError(f"llama-server exited early with {proc.returncode}")
++        try:
++            with request.urlopen(url, timeout=2) as response:
++                return int(response.status)
++        except (OSError, error.URLError):
++            time.sleep(1)
++    raise TimeoutError("llama-server did not become healthy")
++
++
++def post_json(url: str, payload: JsonDict, *, timeout_s: float) -> JsonDict:  # pragma: no cover
++    data = json.dumps(payload).encode("utf-8")
++    req = request.Request(url, data=data, headers={"Content-Type": "application/json"}, method="POST")
++    with request.urlopen(req, timeout=timeout_s) as response:
++        return json.loads(response.read().decode("utf-8"))
++
++
++def terminate_owned_process(proc: subprocess.Popen[Any]) -> None:  # pragma: no cover
++    if proc.poll() is not None:
++        return
++    os.killpg(proc.pid, signal.SIGTERM)
++    try:
++        proc.wait(timeout=30)
++    except subprocess.TimeoutExpired:
++        os.killpg(proc.pid, signal.SIGKILL)
++        proc.wait(timeout=30)
++
++
++def write_bytes_atomic(path: Path, payload: bytes) -> None:  # pragma: no cover
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:
++        handle.write(payload)
++        tmp = Path(handle.name)
++    os.replace(tmp, path)
++
++
++def parse_cuda_offload(spec: JsonDict, stderr: str) -> JsonDict:  # pragma: no cover
++    match = re.search(r"offloaded\s+(\d+)/(\d+)\s+layers\s+to\s+GPU", stderr)
++    offloaded = int(match.group(1)) if match else 0
++    total = int(match.group(2)) if match else 0
++    return {
++        "family": spec["family"],
++        "hf_id": spec["hf_id"],
++        "cuda_layers_offloaded": offloaded,
++        "total_layers": total,
++        "cuda_layer_offload_confirmed": offloaded > 0 and total > 0,
++        "evidence": match.group(0) if match else "",
++    }
++
++
++def free_port() -> int:  # pragma: no cover
++    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
++        sock.bind(("127.0.0.1", 0))
++        return int(sock.getsockname()[1])
++
++
++def main(argv: list[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--date", default=RUN_DATE)
++    parser.add_argument("--validate", action="store_true")
++    args = parser.parse_args(argv)
++    path = REPO_ROOT / RESULT_RELATIVE_PATH
++    if args.validate:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++        errors = validate_artifact(payload)
++        print(json.dumps({"ok": not errors, "errors": errors}, sort_keys=True))
++        return 0 if not errors else 1
++    artifact = run(run_date=args.date, result_path=path, write=True)
++    errors = validate_artifact(artifact)
++    print(json.dumps({"path": str(path), "status": artifact["status"], "errors": errors}, sort_keys=True))
++    return 0 if not errors else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_26b_a4b_moe.llama_server.log b/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_26b_a4b_moe.llama_server.log
+new file mode 100644
+index 0000000000..7ab25bbe45
+--- /dev/null
++++ b/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_26b_a4b_moe.llama_server.log
+@@ -0,0 +1,56 @@
++0.00.058.136 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.058.138 I device_info:
++0.00.320.161 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.620.595 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.620.614 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.00.620.780 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.00.620.872 I srv          init: running without SSL
++0.00.620.919 I srv          init: using 23 threads for HTTP server
++0.00.621.191 I srv          init: The UI is disabled
++0.00.621.193 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.00.621.952 I srv         start: binding port with default address family
++0.00.623.168 I srv  llama_server: loading model
++0.00.623.177 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf'
++0.02.766.399 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.766.922 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.773.936 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.795.891 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
++0.10.967.996 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.10.986.829 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.11.166.880 I srv    load_model: initializing slots, n_slots = 1
++0.11.245.833 W common_speculative_init: no implementations specified for speculative decoding
++0.11.245.843 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.11.245.873 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.11.245.873 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.11.245.873 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.11.245.874 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.11.246.151 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.11.253.786 I init: chat template, example_format: '<|turn>system
++You are a helpful assistant<turn|>
++<|turn>user
++Hello<turn|>
++<|turn>model
++Hi there<turn|>
++<|turn>user
++How are you?<turn|>
++<|turn>model
++<|channel>thought
++<channel|>'
++0.11.254.187 I srv          init: init: chat template, thinking = 0
++0.11.254.230 I srv  llama_server: model loaded
++0.11.254.235 I srv  llama_server: server is listening on http://127.0.0.1:62122
++0.11.254.573 I srv  update_slots: all slots are idle
++0.11.971.561 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
++0.11.971.565 I srv  get_availabl: updating prompt cache
++0.11.971.577 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.11.971.585 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
++0.11.971.587 I srv  get_availabl: prompt cache update took 0.02 ms
++0.11.971.628 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
++0.12.155.912 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 8, n_tokens = 9, size = 0.935 MiB)
++0.12.221.331 I slot print_timing: id  0 | task 0 | prompt eval time =     249.43 ms /    13 tokens (   19.19 ms per token,    52.12 tokens per second)
++0.12.221.339 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.12.221.339 I slot print_timing: id  0 | task 0 |       total time =     249.43 ms /    14 tokens
++0.12.221.344 I slot print_timing: id  0 | task 0 |    graphs reused =          1
++0.12.221.391 I slot      release: id  0 | task 0 | stop processing: n_tokens = 13, truncated = 0
++0.12.221.411 I srv  update_slots: all slots are idle
++0.12.230.620 I srv    operator(): operator(): cleaning up before exit...
+diff --git a/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log b/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log
+new file mode 100644
+index 0000000000..0411c2caaa
+--- /dev/null
++++ b/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log
+@@ -0,0 +1,56 @@
++0.00.043.919 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.043.923 I device_info:
++0.00.274.289 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.586.726 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.586.738 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.00.586.845 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.00.586.902 I srv          init: running without SSL
++0.00.586.934 I srv          init: using 23 threads for HTTP server
++0.00.586.940 I srv          init: The UI is disabled
++0.00.586.940 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.00.587.048 I srv         start: binding port with default address family
++0.00.588.205 I srv  llama_server: loading model
++0.00.588.210 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf'
++0.02.624.522 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.625.024 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.631.722 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden
++0.02.652.370 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list
++0.11.084.647 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.11.106.922 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.11.373.283 I srv    load_model: initializing slots, n_slots = 1
++0.11.410.196 W common_speculative_init: no implementations specified for speculative decoding
++0.11.410.209 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.11.410.252 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.11.410.253 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.11.410.254 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.11.410.254 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.11.410.333 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.11.419.585 I init: chat template, example_format: '<|turn>system
++You are a helpful assistant<turn|>
++<|turn>user
++Hello<turn|>
++<|turn>model
++Hi there<turn|>
++<|turn>user
++How are you?<turn|>
++<|turn>model
++<|channel>thought
++<channel|>'
++0.11.420.048 I srv          init: init: chat template, thinking = 0
++0.11.420.118 I srv  llama_server: model loaded
++0.11.420.127 I srv  llama_server: server is listening on http://127.0.0.1:62121
++0.11.420.137 I srv  update_slots: all slots are idle
++0.11.995.771 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
++0.11.995.777 I srv  get_availabl: updating prompt cache
++0.11.995.794 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.11.995.805 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
++0.11.995.807 I srv  get_availabl: prompt cache update took 0.03 ms
++0.11.995.860 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
++0.12.062.255 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 8, n_tokens = 9, size = 3.737 MiB)
++0.12.108.537 I slot print_timing: id  0 | task 0 | prompt eval time =     112.62 ms /    13 tokens (    8.66 ms per token,   115.44 tokens per second)
++0.12.108.542 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.12.108.543 I slot print_timing: id  0 | task 0 |       total time =     112.62 ms /    14 tokens
++0.12.108.546 I slot print_timing: id  0 | task 0 |    graphs reused =          1
++0.12.108.587 I slot      release: id  0 | task 0 | stop processing: n_tokens = 13, truncated = 0
++0.12.108.604 I srv  update_slots: all slots are idle
++0.12.119.589 I srv    operator(): operator(): cleaning up before exit...
+diff --git a/results/experiment_6212_three_family_gguf_runtime_recovery.json b/results/experiment_6212_three_family_gguf_runtime_recovery.json
+new file mode 100644
+index 0000000000..4600c602f4
+--- /dev/null
++++ b/results/experiment_6212_three_family_gguf_runtime_recovery.json
+@@ -0,0 +1,710 @@
++{
++  "duration_s": 209.626717,
++  "embedded_chat_template_receipts": {
++    "no_autotokenizer_used": true,
++    "records": [
++      {
++        "chat_template_present": true,
++        "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
++        "family": "qwen3_35b_a3b_moe",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "metadata_keys": [
++          "tokenizer.chat_template",
++          "tokenizer.ggml.model",
++          "tokenizer.ggml.pre"
++        ],
++        "metadata_summary_sha256": "sha256:52d48b095cf53dc7bab377763d980afb6cbf7a7e04e3af4b9028a339b398569d"
++      },
++      {
++        "chat_template_present": true,
++        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++        "family": "gemma4_31b_dense",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "metadata_keys": [
++          "tokenizer.chat_template",
++          "tokenizer.ggml.model"
++        ],
++        "metadata_summary_sha256": "sha256:345127a48084b8031e37f4ea2d5c66b59ed7e0cb838b8704e3127b7d7409ab3c"
++      },
++      {
++        "chat_template_present": true,
++        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++        "family": "gemma4_26b_a4b_moe",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "metadata_keys": [
++          "tokenizer.chat_template",
++          "tokenizer.ggml.model"
++        ],
++        "metadata_summary_sha256": "sha256:345127a48084b8031e37f4ea2d5c66b59ed7e0cb838b8704e3127b7d7409ab3c"
++      }
++    ],
++    "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.embedded_templates"
++  },
++  "exact_gguf_paths_sizes_hashes_revisions_quantizations": {
++    "blocked_reasons": [],
++    "records": [
++      {
++        "embedded_chat_template_present": true,
++        "embedded_chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
++        "embedded_tokenizer_detail": "embedded GGUF metadata parsed without AutoTokenizer",
++        "exists": true,
++        "family": "qwen3_35b_a3b_moe",
++        "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++        "metadata_keys": [
++          "tokenizer.chat_template",
++          "tokenizer.ggml.model",
++          "tokenizer.ggml.pre"
++        ],
++        "metadata_summary_sha256": "sha256:52d48b095cf53dc7bab377763d980afb6cbf7a7e04e3af4b9028a339b398569d",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "name": "Qwen3.6-35B-A3B",
++        "no_autotokenizer_used": true,
++        "path_is_file": true,
++        "preferred_quant": "Q4_K_M",
++        "quantization": "UD-Q4_K_M",
++        "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
++        "role": "flagship MoE runtime",
++        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++        "size_bytes": 22134528992
++      },
++      {
++        "embedded_chat_template_present": true,
++        "embedded_chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++        "embedded_tokenizer_detail": "embedded GGUF metadata parsed without AutoTokenizer",
++        "exists": true,
++        "family": "gemma4_31b_dense",
++        "filename": "gemma-4-31B-it-Q4_K_M.gguf",
++        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++        "metadata_keys": [
++          "tokenizer.chat_template",
++          "tokenizer.ggml.model"
++        ],
++        "metadata_summary_sha256": "sha256:345127a48084b8031e37f4ea2d5c66b59ed7e0cb838b8704e3127b7d7409ab3c",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "name": "Gemma4-31B-it",
++        "no_autotokenizer_used": true,
++        "path_is_file": true,
++        "preferred_quant": "Q4_K_M",
++        "quantization": "Q4_K_M",
++        "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "revision": "f130ba51393346288f5862e30e9586b9b021513f",
++        "role": "flagship dense ARC and Phase-D runtime",
++        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++        "size_bytes": 18323731456
++      },
++      {
++        "embedded_chat_template_present": true,
++        "embedded_chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
++        "embedded_tokenizer_detail": "embedded GGUF metadata parsed without AutoTokenizer",
++        "exists": true,
++        "family": "gemma4_26b_a4b_moe",
++        "filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++        "metadata_keys": [
++          "tokenizer.chat_template",
++          "tokenizer.ggml.model"
++        ],
++        "metadata_summary_sha256": "sha256:345127a48084b8031e37f4ea2d5c66b59ed7e0cb838b8704e3127b7d7409ab3c",
++        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "name": "Gemma4-26B-A4B-it",
++        "no_autotokenizer_used": true,
++        "path_is_file": true,
++        "preferred_quant": "Q4_K_M",
++        "quantization": "UD-Q4_K_M",
++        "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
++        "role": "middle MoE runtime",
++        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++        "size_bytes": 16947539744
++      }
++    ],
++    "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.model_records"
++  },
++  "experiment_id": "experiment_6212_three_family_gguf_runtime_recovery",
++  "field_principles": {
++    "duration_s": "Measured wall time for the recovery workflow.",
++    "embedded_chat_template_receipts": "The embedded GGUF template is recorded without using AutoTokenizer.",
++    "exact_gguf_paths_sizes_hashes_revisions_quantizations": "Exact local GGUF bytes prevent silent model substitution.",
++    "field_principles": "Each field states the audit failure it prevents.",
++    "field_provenance": "Every required field traces to REQ-INFRA-6212.",
++    "gemma_4_31b_runtime_ready_score": "Dense readiness is independent from the MoE families.",
++    "gguf_mutation_count": "Bare zero proves model cache bytes were not rewritten.",
++    "gpu_owner_pid_memory_and_utilization_before_after": "GPU owners are recorded so the task never kills or hides another process.",
++    "honest_verdict": "Verdict states ready, partial, or blocked evidence.",
++    "inference_substrate": "Declares the native llama.cpp CUDA server recovery substrate.",
++    "loader_and_llama_cpp_build_receipts": "The Python binding and native server build identities are explicit.",
++    "minimal_failure_reproductions": "One read-only reproduction per family localizes the failing layer.",
++    "model_specs": "Only the three mandated SOTA GGUF families are eligible.",
++    "per_family_cuda_layer_offload": "Readiness needs real CUDA layer offload, not a path name.",
++    "per_family_first_token_bytes_hash_and_latency": "One deterministic raw token is persisted before teardown.",
++    "per_family_server_command_pid_lifetime_stderr_and_exit": "Each server canary has command, PID, stderr, lifetime, and exit evidence.",
++    "preconditions_checked": "GPU, cache, output, and protected-file gates run before model load.",
++    "protected_files_unchanged": "Conductor and ops-owned files remain byte-identical.",
++    "reproducibility_checksum": "Stable checksum binds receipts and verdict.",
++    "root_cause_classification": "The artifact distinguishes file, loader, VRAM, CUDA, flag, and lifecycle faults.",
++    "status": "Terminal state separates blocked, partial, and ready runtime recovery.",
++    "task_owned_fix_paths_and_hashes": "Only task-owned files are part of the recovery change.",
++    "test_commands": "Verification commands are recorded with the artifact.",
++    "test_exit_codes": "Exit codes prevent unchecked artifacts from claiming readiness.",
++    "three_family_runtime_ready_score": "All three families need owned process, CUDA, and token receipts.",
++    "unrelated_process_kill_count": "Bare zero proves the task did not reap external processes.",
++    "upstream_exp6200_path_and_hash": "The failed upstream canary is hash-bound before diagnosis.",
++    "verifier_is_oracle": "False because this is runtime diagnosis, not hidden correctness grading."
++  },
++  "field_provenance": {
++    "duration_s": [
++      "REQ-INFRA-6212",
++      "Measured wall time for the recovery workflow."
++    ],
++    "embedded_chat_template_receipts": [
++      "REQ-INFRA-6212",
++      "The embedded GGUF template is recorded without using AutoTokenizer."
++    ],
++    "exact_gguf_paths_sizes_hashes_revisions_quantizations": [
++      "REQ-INFRA-6212",
++      "Exact local GGUF bytes prevent silent model substitution."
++    ],
++    "field_principles": [
++      "REQ-INFRA-6212",
++      "Each field states the audit failure it prevents."
++    ],
++    "field_provenance": [
++      "REQ-INFRA-6212",
++      "Every required field traces to REQ-INFRA-6212."
++    ],
++    "gemma_4_31b_runtime_ready_score": [
++      "REQ-INFRA-6212",
++      "Dense readiness is independent from the MoE families."
++    ],
++    "gguf_mutation_count": [
++      "REQ-INFRA-6212",
++      "Bare zero proves model cache bytes were not rewritten."
++    ],
++    "gpu_owner_pid_memory_and_utilization_before_after": [
++      "REQ-INFRA-6212",
++      "GPU owners are recorded so the task never kills or hides another process."
++    ],
++    "honest_verdict": [
++      "REQ-INFRA-6212",
++      "Verdict states ready, partial, or blocked evidence."
++    ],
++    "inference_substrate": [
++      "REQ-INFRA-6212",
++      "Declares the native llama.cpp CUDA server recovery substrate."
++    ],
++    "loader_and_llama_cpp_build_receipts": [
++      "REQ-INFRA-6212",
++      "The Python binding and native server build identities are explicit."
++    ],
++    "minimal_failure_reproductions": [
++      "REQ-INFRA-6212",
++      "One read-only reproduction per family localizes the failing layer."
++    ],
++    "model_specs": [
++      "REQ-INFRA-6212",
++      "Only the three mandated SOTA GGUF families are eligible."
++    ],
++    "per_family_cuda_layer_offload": [
++      "REQ-INFRA-6212",
++      "Readiness needs real CUDA layer offload, not a path name."
++    ],
++    "per_family_first_token_bytes_hash_and_latency": [
++      "REQ-INFRA-6212",
++      "One deterministic raw token is persisted before teardown."
++    ],
++    "per_family_server_command_pid_lifetime_stderr_and_exit": [
++      "REQ-INFRA-6212",
++      "Each server canary has command, PID, stderr, lifetime, and exit evidence."
++    ],
++    "preconditions_checked": [
++      "REQ-INFRA-6212",
++      "GPU, cache, output, and protected-file gates run before model load."
++    ],
++    "protected_files_unchanged": [
++      "REQ-INFRA-6212",
++      "Conductor and ops-owned files remain byte-identical."
++    ],
++    "reproducibility_checksum": [
++      "REQ-INFRA-6212",
++      "Stable checksum binds receipts and verdict."
++    ],
++    "root_cause_classification": [
++      "REQ-INFRA-6212",
++      "The artifact distinguishes file, loader, VRAM, CUDA, flag, and lifecycle faults."
++    ],
++    "status": [
++      "REQ-INFRA-6212",
++      "Terminal state separates blocked, partial, and ready runtime recovery."
++    ],
++    "task_owned_fix_paths_and_hashes": [
++      "REQ-INFRA-6212",
++      "Only task-owned files are part of the recovery change."
++    ],
++    "test_commands": [
++      "REQ-INFRA-6212",
++      "Verification commands are recorded with the artifact."
++    ],
++    "test_exit_codes": [
++      "REQ-INFRA-6212",
++      "Exit codes prevent unchecked artifacts from claiming readiness."
++    ],
++    "three_family_runtime_ready_score": [
++      "REQ-INFRA-6212",
++      "All three families need owned process, CUDA, and token receipts."
++    ],
++    "unrelated_process_kill_count": [
++      "REQ-INFRA-6212",
++      "Bare zero proves the task did not reap external processes."
++    ],
++    "upstream_exp6200_path_and_hash": [
++      "REQ-INFRA-6212",
++      "The failed upstream canary is hash-bound before diagnosis."
++    ],
++    "verifier_is_oracle": [
++      "REQ-INFRA-6212",
++      "False because this is runtime diagnosis, not hidden correctness grading."
++    ]
++  },
++  "gemma_4_31b_runtime_ready_score": 0,
++  "gguf_mutation_count": 0,
++  "gpu_owner_pid_memory_and_utilization_before_after": {
++    "admission": {
++      "blocked_owner_pids": [],
++      "blocked_reasons": [],
++      "external_compute_apps": [],
++      "free_vram_blocked_gpu_indices": [],
++      "min_free_mb_per_gpu_required": 12000,
++      "safe": true
++    },
++    "after": {
++      "command_returncodes": {
++        "compute_apps": 0,
++        "gpus": 0
++      },
++      "compute_apps": [],
++      "devices": [
++        {
++          "index": 0,
++          "memory_free_mb": 24120,
++          "memory_total_mb": 24576,
++          "memory_used_mb": 4,
++          "name": "NVIDIA GeForce RTX 3090",
++          "utilization_pct": 22,
++          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
++        },
++        {
++          "index": 1,
++          "memory_free_mb": 24120,
++          "memory_total_mb": 24576,
++          "memory_used_mb": 4,
++          "name": "NVIDIA GeForce RTX 3090",
++          "utilization_pct": 92,
++          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
++        }
++      ],
++      "gpu_count": 2,
++      "ok": true,
++      "timestamp_utc": "2026-08-08T04:12:46Z"
++    },
++    "before": {
++      "command_returncodes": {
++        "compute_apps": 0,
++        "gpus": 0
++      },
++      "compute_apps": [],
++      "devices": [
++        {
++          "index": 0,
++          "memory_free_mb": 24120,
++          "memory_total_mb": 24576,
++          "memory_used_mb": 4,
++          "name": "NVIDIA GeForce RTX 3090",
++          "utilization_pct": 0,
++          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
++        },
++        {
++          "index": 1,
++          "memory_free_mb": 24120,
++          "memory_total_mb": 24576,
++          "memory_used_mb": 4,
++          "name": "NVIDIA GeForce RTX 3090",
++          "utilization_pct": 0,
++          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
++        }
++      ],
++      "gpu_count": 2,
++      "ok": true,
++      "timestamp_utc": "2026-08-08T04:09:17Z"
++    },
++    "blocked_owner_pids": [],
++    "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.gpu_owners"
++  },
++  "honest_verdict": "complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts",
++  "inference_substrate": "local_three_family_llama_cpp_server_cuda_runtime_recovery",
++  "loader_and_llama_cpp_build_receipts": {
++    "llama_cpp_python_gpu_offload": true,
++    "llama_cpp_python_system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
++    "llama_cpp_python_version": "0.3.33",
++    "native_llama_server_cuda_build": false,
++    "native_llama_server_exists": true,
++    "native_llama_server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++    "native_llama_server_version": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
++    "native_llama_server_version_returncode": 0,
++    "no_autotokenizer_used": true,
++    "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.llama_cpp_build"
++  },
++  "minimal_failure_reproductions": {
++    "gemma4_26b_a4b_moe": {
++      "classification": "process_lifecycle",
++      "command": [
++        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++        "-c",
++        "llama_cpp.Llama(model_path=<exact_gguf>,...)"
++      ],
++      "ended_utc": "2026-08-08T04:12:33Z",
++      "exit_code": 0,
++      "family": "gemma4_26b_a4b_moe",
++      "gguf_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "lifetime_s": 27.253245,
++      "pid": null,
++      "read_only": true,
++      "started_utc": "2026-08-08T04:12:06Z",
++      "stderr": "{{- \\'<|tool_response>\\' -}}\\n        {%- elif not (ns_tr_out.flag and not has_content) -%}\\n            {{- \\'<turn|>\\\\n\\' -}}\\n        {%- endif -%}\\n    {%- endif -%}\\n{%- endfor -%}\\n\\n{%- if add_generation_prompt -%}\\n    {%- if ns.prev_message_type != \\'tool_response\\' and ns.prev_message_type != \\'tool_call\\' -%}\\n        {{- \\'<|turn>model\\\\n\\' -}}\\n        {%- if not enable_thinking | default(false) -%}\\n            {{- \\'<|channel>thought\\\\n<channel|>\\' -}}\\n        {%- endif -%}\\n    {%- endif -%}\\n{%- endif -%}', 'tokenizer.ggml.mask_token_id': '4', 'tokenizer.ggml.padding_token_id': '0', 'tokenizer.ggml.unknown_token_id': '3', 'tokenizer.ggml.eos_token_id': '106', 'gemma4.rope.dimension_count_swa': '256', 'quantize.imatrix.file': 'gemma-4-26B-A4B-it-GGUF/imatrix_unsloth.gguf', 'tokenizer.ggml.add_space_prefix': 'false', 'gemma4.rope.dimension_count': '512', 'gemma4.attention.value_length_swa': '256', 'tokenizer.ggml.model': 'gemma4', 'gemma4.embedding_length_per_layer_input': '0', 'quantize.imatrix.entries_count': '295', 'gemma4.attention.sliding_window': '1024', 'general.repo_url': 'https://huggingface.co/unsloth', 'gemma4.expert_feed_forward_length': '704', 'general.license.link': 'https://ai.google.dev/gemma/docs/gemma_4_license', 'gemma4.attention.shared_kv_layers': '0', 'general.type': 'model', 'general.quantized_by': 'Unsloth', 'gemma4.final_logit_softcapping': '30.000000', 'gemma4.block_count': '30', 'gemma4.expert_count': '128', 'gemma4.rope.freq_base_swa': '10000.000000', 'tokenizer.ggml.bos_token_id': '2', 'gemma4.feed_forward_length': '2112', 'general.name': 'Gemma-4-26B-A4B-It', 'general.license': 'apache-2.0', 'general.base_model.0.repo_url': 'https://huggingface.co/google/gemma-4-26B-A4B-it', 'general.sampling.temp': '1.000000', 'general.sampling.top_p': '0.950000', 'general.basename': 'Gemma-4-26B-A4B-It', 'general.sampling.top_k': '64', 'gemma4.attention.key_length_swa': '256', 'general.architecture': 'gemma4', 'quantize.imatrix.dataset': 'unsloth_calibration_gemma-4-26B-A4B-it.txt', 'general.base_model.0.name': 'Gemma 4 26B A4B It', 'general.base_model.0.organization': 'Google', 'general.base_model.count': '1', 'gemma4.context_length': '262144', 'gemma4.embedding_length': '2816', 'tokenizer.ggml.add_bos_token': 'true', 'general.size_label': '26B-A4B', 'gemma4.rope.freq_base': '1000000.000000', 'gemma4.attention.layer_norm_rms_epsilon': '0.000001', 'general.file_type': '15', 'general.finetune': 'it', 'gemma4.expert_used_count': '8', 'gemma4.attention.head_count': '16', 'gemma4.attention.key_length': '512', 'gemma4.attention.value_length': '512'}\nAvailable chat formats from metadata: chat_template.default\nUsing gguf chat template: {%- macro format_parameters(properties, required, filter_keys=false) -%}\n    {%- set standard_keys = ['description', 'type', 'properties', 'required', 'nullable'] -%}\n    {%- set ns = namespace(found_first=false) -%}\n    {%- for key, value in properties | dictsort -%}\n        {%- set add_comma = false -%}\n        {%- if not filter_keys or key not in standard_keys -%}\n            {%- if ns.found_first %},{% endif -%}\n            {%- set ns.found_first = true -%}\n            {{ key }}:{\n            {%- if value['description'] -%}\n                description:<|\"|>{{ value['description'] }}<|\"|>\n                {%- set add_comma = true -%}\n            {%- endif -%}\n            {%- if value['type'] | upper == 'STRING' -%}\n                {%- if value['enum'] -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    enum:{{ format_argument(value['enum']) }}\n                {%- endif -%}\n            {%- elif value['type'] | upper == 'ARRAY' -%}\n                {%- if value['items'] is mapping and value['items'] -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    items:{\n                    {%- set ns_items = namespace(found_first=false) -%}\n                    {%- for item_key, item_value in value['items'] | dictsort -%}\n                        {%- if item_value is not none -%}\n                            {%- if ns_items.found_first %},{% endif -%}\n                            {%- set ns_items.found_first = true -%}\n                            {%- if item_key == 'properties' -%}\n                                properties:{\n                                {%- if item_value is mapping -%}\n                                    {{- format_parameters(item_value, value['items']['required'] | default([])) -}}\n                                {%- endif -%}\n                                }\n                            {%- elif item_key == 'required' -%}\n                                required:[\n                                {%- for req_item in item_value -%}\n                                    <|\"|>{{- req_item -}}<|\"|>\n                                    {%- if not loop.last %},{% endif -%}\n                                {%- endfor -%}\n                                ]\n                            {%- elif item_key == 'type' -%}\n                                {%- if item_value is string -%}\n                                    type:{{ format_argument(item_value | upper) }}\n                                {%- else -%}\n                                    type:{{ format_argument(item_value | map('upper') | list) }}\n                                {%- endif -%}\n                            {%- else -%}\n                                {{ item_key }}:{{ format_argument(item_value) }}\n                            {%- endif -%}\n                        {%- endif -%}\n                    {%- endfor -%}\n                    }\n                {%- endif -%}\n            {%- endif -%}\n            {%- if value['nullable'] %}\n                {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                nullable:true\n            {%- endif -%}\n            {%- if value['type'] | upper == 'OBJECT' -%}\n                {%- if value['properties'] is defined and value['properties'] is mapping -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    properties:{\n                    {{- format_parameters(value['properties'], value['required'] | default([])) -}}\n                    }\n                {%- elif value is mapping -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    properties:{\n                    {{- format_parameters(value, value['required'] | default([]), filter_keys=true) -}}\n                    }\n                {%- endif -%}\n                {%- if value['required'] -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    required:[\n                    {%- for item in value['required'] | default([]) -%}\n                        <|\"|>{{- item -}}<|\"|>\n                        {%- if not loop.last %},{% endif -%}\n                    {%- endfor -%}\n                    ]\n                {%- endif -%}\n            {%- endif -%}\n            {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n            type:<|\"|>{{ value['type'] | upper }}<|\"|>}\n        {%- endif -%}\n    {%- endfor -%}\n{%- endmacro -%}\n{%- macro format_function_declaration(tool_data) -%}\n    declaration:{{- tool_data['function']['name'] -}}{description:<|\"|>{{- tool_data['function']['description'] -}}<|\"|>\n    {%- set params = tool_data['function']['parameters'] -%}\n    {%- if params -%}\n        ,parameters:{\n        {%- if params['properties'] -%}\n            properties:{ {{- format_parameters(params['properties'], params['required']) -}} },\n        {%- endif -%}\n        {%- if params['required'] -%}\n            required:[\n            {%- for item in params['required'] -%}\n                <|\"|>{{- item -}}<|\"|>\n                {{- ',' if not loop.last -}}\n            {%- endfor -%}\n            ],\n        {%- endif -%}\n        {%- if params['type'] -%}\n            type:<|\"|>{{- params['type'] | upper -}}<|\"|>}\n        {%- endif -%}\n    {%- endif -%}\n    {%- if 'response' in tool_data['function'] -%}\n        {%- set response_declaration = tool_data['function']['response'] -%}\n        ,response:{\n        {%- if response_declaration['description'] -%}\n            description:<|\"|>{{- response_declaration['description'] -}}<|\"|>,\n        {%- endif -%}\n        {%- if response_declaration['type'] | upper == 'OBJECT' -%}\n            type:<|\"|>{{- response_declaration['type'] | upper -}}<|\"|>}\n        {%- endif -%}\n    {%- endif -%}\n    }\n{%- endmacro -%}\n{%- macro format_argument(argument, escape_keys=True) -%}\n    {%- if argument is string -%}\n        {{- '<|\"|>' + argument + '<|\"|>' -}}\n    {%- elif argument is boolean -%}\n        {{- 'true' if argument else 'false' -}}\n    {%- elif argument is mapping -%}\n        {{- '{' -}}\n        {%- set ns = namespace(found_first=false) -%}\n        {%- for key, value in argument | dictsort -%}\n            {%- if ns.found_first %},{% endif -%}\n            {%- set ns.found_first = true -%}\n            {%- if escape_keys -%}\n                {{- '<|\"|>' + key + '<|\"|>' -}}\n            {%- else -%}\n                {{- key -}}\n            {%- endif -%}\n            :{{- format_argument(value, escape_keys=escape_keys) -}}\n        {%- endfor -%}\n        {{- '}' -}}\n    {%- elif argument is sequence -%}\n        {{- '[' -}}\n        {%- for item in argument -%}\n            {{- format_argument(item, escape_keys=escape_keys) -}}\n            {%- if not loop.last %},{% endif -%}\n        {%- endfor -%}\n        {{- ']' -}}\n    {%- else -%}\n        {{- argument -}}\n    {%- endif -%}\n{%- endmacro -%}\n{%- macro strip_thinking(text) -%}\n    {%- set ns = namespace(result='') -%}\n    {%- for part in text.split('<channel|>') -%}\n        {%- if '<|channel>' in part -%}\n            {%- set ns.result = ns.result + part.split('<|channel>')[0] -%}\n        {%- else -%}\n            {%- set ns.result = ns.result + part -%}\n        {%- endif -%}\n    {%- endfor -%}\n    {{- ns.result | trim -}}\n{%- endmacro -%}\n\n{%- macro format_tool_response_block(tool_name, response) -%}\n    {{- '<|tool_response>' -}}\n    {%- if response is mapping -%}\n        {{- 'response:' + tool_name + '{' -}}\n        {%- for key, value in response | dictsort -%}\n            {{- key -}}:{{- format_argument(value, escape_keys=False) -}}\n            {%- if not loop.last %},{% endif -%}\n        {%- endfor -%}\n        {{- '}' -}}\n    {%- else -%}\n        {{- 'response:' + tool_name + '{value:' + format_argument(response, escape_keys=False) + '}' -}}\n    {%- endif -%}\n    {{- '<tool_response|>' -}}\n{%- endmacro -%}\n\n{%- set ns = namespace(prev_message_type=None) -%}\n{%- set loop_messages = messages -%}\n{{- bos_token -}}\n{#- Handle System/Tool Definitions Block -#}\n{%- if (enable_thinking is defined and enable_thinking) or tools or messages[0]['role'] in ['system', 'developer'] -%}\n    {{- '<|turn>system\\n' -}}\n    {#- Inject Thinking token at the very top of the FIRST system turn -#}\n    {%- if enable_thinking is defined and enable_thinking -%}\n        {{- '<|think|>\\n' -}}\n        {%- set ns.prev_message_type = 'think' -%}\n    {%- endif -%}\n    {%- if messages[0]['role'] in ['system', 'developer'] -%}\n        {%- if messages[0]['content'] is string -%}\n            {{- messages[0]['content'] | trim -}}\n        {%- elif messages[0]['content'] is sequence -%}\n            {%- for item in messages[0]['content'] -%}\n                {{- item['text'] | trim + ' '-}}\n            {%- endfor -%}\n        {%- endif -%}\n        {%- set loop_messages = messages[1:] -%}\n    {%- endif -%}\n    {%- if tools -%}\n        {%- for tool in tools %}\n            {{- '<|tool>' -}}\n            {{- format_function_declaration(tool) | trim -}}\n            {{- '<tool|>' -}}\n        {%- endfor %}\n        {%- set ns.prev_message_type = 'tool' -%}\n    {%- endif -%}\n    {{- '<turn|>\\n' -}}\n{%- endif %}\n\n{#- Pre-scan: find last user message index for reasoning guard -#}\n{%- set ns_turn = namespace(last_user_idx=-1) -%}\n{%- for i in range(loop_messages | length) -%}\n    {%- if loop_messages[i]['role'] == 'user' -%}\n        {%- set ns_turn.last_user_idx = i -%}\n    {%- endif -%}\n{%- endfor -%}\n\n{#- Loop through messages -#}\n{%- for message in loop_messages -%}\n    {%- if message['role'] != 'tool' -%}\n    {%- set ns.prev_message_type = None -%}\n    {%- set role = 'model' if message['role'] == 'assistant' else message['role'] -%}\n    {#- Detect continuation: suppress duplicate <|turn>model when previous non-tool message was also assistant -#}\n    {%- set prev_nt = namespace(role=None, found=false) -%}\n    {%- if loop.index0 > 0 -%}\n        {%- for j in range(loop.index0 - 1, -1, -1) -%}\n            {%- if not prev_nt.found -%}\n                {%- if loop_messages[j]['role'] != 'tool' -%}\n                    {%- set prev_nt.role = loop_messages[j]['role'] -%}\n                    {%- set prev_nt.found = true -%}\n                {%- endif -%}\n            {%- endif -%}\n        {%- endfor -%}\n    {%- endif -%}\n    {%- set continue_same_model_turn = (role == 'model' and prev_nt.role == 'assistant') -%}\n    {%- if not continue_same_model_turn -%}\n        {{- '<|turn>' + role + '\\n' }}\n    {%- endif -%}\n\n    {#- Render reasoning/reasoning_content as thinking channel -#}\n    {%- set thinking_text = message.get('reasoning') or message.get('reasoning_content') -%}\n    {%- if thinking_text and loop.index0 > ns_turn.last_user_idx and message.get('tool_calls') -%}\n        {{- '<|channel>thought\\n' + thinking_text + '\\n<channel|>' -}}\n    {%- endif -%}\n\n            {%- if message['tool_calls'] -%}\n                {%- for tool_call in message['tool_calls'] -%}\n                    {%- set function = tool_call['function'] -%}\n                    {{- '<|tool_call>call:' + function['name'] + '{' -}}\n                    {%- if function['arguments'] is mapping -%}\n                        {%- set ns_args = namespace(found_first=false) -%}\n                        {%- for key, value in function['arguments'] | dictsort -%}\n                            {%- if ns_args.found_first %},{% endif -%}\n                            {%- set ns_args.found_first = true -%}\n                            {{- key -}}:{{- format_argument(value, escape_keys=False) -}}\n                        {%- endfor -%}\n                    {%- elif function['arguments'] is string -%}\n                        {{- function['arguments'] -}}\n                    {%- endif -%}\n                    {{- '}<tool_call|>' -}}\n                {%- endfor -%}\n                {%- set ns.prev_message_type = 'tool_call' -%}\n            {%- endif -%}\n\n            {%- set ns_tr_out = namespace(flag=false) -%}\n            {%- if message.get('tool_responses') -%}\n                {#- Legacy: tool_responses embedded on the assistant message (Google/Gemma native) -#}\n                {%- for tool_response in message['tool_responses'] -%}\n                    {{- format_tool_response_block(tool_response['name'] | default('unknown'), tool_response['response']) -}}\n                    {%- set ns_tr_out.flag = true -%}\n                    {%- set ns.prev_message_type = 'tool_response' -%}\n                {%- endfor -%}\n            {%- elif message.get('tool_calls') -%}\n                {#- OpenAI Chat Completions: forward-scan consecutive role:tool messages -#}\n                {%- set ns_tool_scan = namespace(stopped=false) -%}\n                {%- for k in range(loop.index0 + 1, loop_messages | length) -%}\n                    {%- if ns_tool_scan.stopped -%}\n                    {%- elif loop_messages[k]['role'] != 'tool' -%}\n                        {%- set ns_tool_scan.stopped = true -%}\n                    {%- else -%}\n                        {%- set follow = loop_messages[k] -%}\n                        {#- Resolve tool_call_id to function name -#}\n                        {%- set ns_tname = namespace(name=follow.get('name') | default('unknown')) -%}\n                        {%- for tc in message['tool_calls'] -%}\n                            {%- if tc.get('id') == follow.get('tool_call_id') -%}\n                                {%- set ns_tname.name = tc['function']['name'] -%}\n                            {%- endif -%}\n                        {%- endfor -%}\n                        {#- Handle content as string or content-parts array -#}\n                        {%- set tool_body = follow.get('content') -%}\n                        {%- if tool_body is string -%}\n                            {{- format_tool_response_block(ns_tname.name, tool_body) -}}\n                        {%- elif tool_body is sequence and tool_body is not string -%}\n                            {%- set ns_txt = namespace(s='') -%}\n                            {%- for part in tool_body -%}\n                                {%- if part.get('type') == 'text' -%}\n                                    {%- set ns_txt.s = ns_txt.s + (part.get('text') | default('')) -%}\n                                {%- endif -%}\n                            {%- endfor -%}\n                            {{- format_tool_response_block(ns_tname.name, ns_txt.s) -}}\n                        {%- else -%}\n                            {{- format_tool_response_block(ns_tname.name, tool_body) -}}\n                        {%- endif -%}\n                        {%- set ns_tr_out.flag = true -%}\n                        {%- set ns.prev_message_type = 'tool_response' -%}\n                    {%- endif -%}\n                {%- endfor -%}\n            {%- endif -%}\n\n            {%- set captured_content -%}\n            {%- if message['content'] is string -%}\n                {%- if role == 'model' -%}\n                    {{- strip_thinking(message['content']) -}}\n                {%- else -%}\n                    {{- message['content'] | trim -}}\n                {%- endif -%}\n            {%- elif message['content'] is sequence -%}\n                {%- for item in message['content'] -%}\n                    {%- if item['type'] == 'text' -%}\n                        {%- if role == 'model' -%}\n                            {{- strip_thinking(item['text']) -}}\n                        {%- else -%}\n                            {{- item['text'] | trim -}}\n                        {%- endif -%}\n                    {%- elif item['type'] == 'image' -%}\n                        {{- '<|image|>' -}}\n                        {%- set ns.prev_message_type = 'image' -%}\n                    {%- elif item['type'] == 'audio' -%}\n                        {{- '<|audio|>' -}}\n                        {%- set ns.prev_message_type = 'audio' -%}\n                    {%- elif item['type'] == 'video' -%}\n                        {{- '<|video|>' -}}\n                        {%- set ns.prev_message_type = 'video' -%}\n                    {%- endif -%}\n                {%- endfor -%}\n            {%- endif -%}\n            {%- endset -%}\n\n            {{- captured_content -}}\n            {%- set has_content = captured_content | trim | length > 0 -%}\n\n        {%- if ns.prev_message_type == 'tool_call' and not ns_tr_out.flag -%}\n            {{- '<|tool_response>' -}}\n        {%- elif not (ns_tr_out.flag and not has_content) -%}\n            {{- '<turn|>\\n' -}}\n        {%- endif -%}\n    {%- endif -%}\n{%- endfor -%}\n\n{%- if add_generation_prompt -%}\n    {%- if ns.prev_message_type != 'tool_response' and ns.prev_message_type != 'tool_call' -%}\n        {{- '<|turn>model\\n' -}}\n        {%- if not enable_thinking | default(false) -%}\n            {{- '<|channel>thought\\n<channel|>' -}}\n        {%- endif -%}\n    {%- endif -%}\n{%- endif -%}\nUsing chat eos_token: <turn|>\nUsing chat bos_token: <bos>\n~llama_context:      CUDA0 compute buffer size is 140.6543 MiB, matches expectation of 140.6543 MiB\n~llama_context:      CUDA1 compute buffer size is 470.0039 MiB, matches expectation of 470.0039 MiB\n~llama_context:  CUDA_Host compute buffer size is  62.2910 MiB, matches expectation of  62.2910 MiB\n",
++      "stdout": ""
++    },
++    "gemma4_31b_dense": {
++      "classification": "process_lifecycle",
++      "command": [
++        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++        "-c",
++        "llama_cpp.Llama(model_path=<exact_gguf>,...)"
++      ],
++      "ended_utc": "2026-08-08T04:11:53Z",
++      "exit_code": 0,
++      "family": "gemma4_31b_dense",
++      "gguf_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "lifetime_s": 30.991682,
++      "pid": null,
++      "read_only": true,
++      "started_utc": "2026-08-08T04:11:22Z",
++      "stderr": "tured_content | trim | length > 0 -%}\\n\\n        {%- if ns.prev_message_type == \\'tool_call\\' and not ns_tr_out.flag -%}\\n            {{- \\'<|tool_response>\\' -}}\\n        {%- elif not (ns_tr_out.flag and not has_content) -%}\\n            {{- \\'<turn|>\\\\n\\' -}}\\n        {%- endif -%}\\n    {%- endif -%}\\n{%- endfor -%}\\n\\n{%- if add_generation_prompt -%}\\n    {%- if ns.prev_message_type != \\'tool_response\\' and ns.prev_message_type != \\'tool_call\\' -%}\\n        {{- \\'<|turn>model\\\\n\\' -}}\\n        {%- if not enable_thinking | default(false) -%}\\n            {{- \\'<|channel>thought\\\\n<channel|>\\' -}}\\n        {%- endif -%}\\n    {%- endif -%}\\n{%- endif -%}', 'tokenizer.ggml.mask_token_id': '4', 'tokenizer.ggml.padding_token_id': '0', 'tokenizer.ggml.unknown_token_id': '3', 'tokenizer.ggml.eos_token_id': '106', 'gemma4.rope.dimension_count_swa': '256', 'quantize.imatrix.file': 'gemma-4-31B-it-GGUF/imatrix_unsloth.gguf', 'tokenizer.ggml.add_space_prefix': 'false', 'gemma4.rope.dimension_count': '512', 'gemma4.attention.value_length_swa': '256', 'tokenizer.ggml.model': 'gemma4', 'gemma4.embedding_length_per_layer_input': '0', 'general.repo_url': 'https://huggingface.co/unsloth', 'general.license.link': 'https://ai.google.dev/gemma/docs/gemma_4_license', 'gemma4.attention.shared_kv_layers': '0', 'general.type': 'model', 'general.quantized_by': 'Unsloth', 'gemma4.rope.freq_base_swa': '10000.000000', 'general.file_type': '15', 'general.finetune': 'it', 'tokenizer.ggml.bos_token_id': '2', 'gemma4.feed_forward_length': '21504', 'general.name': 'Gemma-4-31B-It', 'quantize.imatrix.entries_count': '410', 'gemma4.attention.sliding_window': '1024', 'general.license': 'apache-2.0', 'general.base_model.0.repo_url': 'https://huggingface.co/google/gemma-4-31B-it', 'general.sampling.temp': '1.000000', 'general.sampling.top_p': '0.950000', 'general.basename': 'Gemma-4-31B-It', 'general.sampling.top_k': '64', 'gemma4.attention.key_length_swa': '256', 'general.architecture': 'gemma4', 'quantize.imatrix.dataset': 'unsloth_calibration_gemma-4-31B-it.txt', 'general.base_model.0.name': 'Gemma 4 31B It', 'general.base_model.0.organization': 'Google', 'general.base_model.count': '1', 'gemma4.context_length': '262144', 'gemma4.embedding_length': '5376', 'tokenizer.ggml.add_bos_token': 'true', 'general.size_label': '31B', 'gemma4.rope.freq_base': '1000000.000000', 'gemma4.attention.layer_norm_rms_epsilon': '0.000001', 'gemma4.attention.head_count': '32', 'gemma4.attention.key_length': '512', 'gemma4.attention.value_length': '512', 'gemma4.block_count': '60', 'gemma4.final_logit_softcapping': '30.000000'}\nAvailable chat formats from metadata: chat_template.default\nUsing gguf chat template: {%- macro format_parameters(properties, required, filter_keys=false) -%}\n    {%- set standard_keys = ['description', 'type', 'properties', 'required', 'nullable'] -%}\n    {%- set ns = namespace(found_first=false) -%}\n    {%- for key, value in properties | dictsort -%}\n        {%- set add_comma = false -%}\n        {%- if not filter_keys or key not in standard_keys -%}\n            {%- if ns.found_first %},{% endif -%}\n            {%- set ns.found_first = true -%}\n            {{ key }}:{\n            {%- if value['description'] -%}\n                description:<|\"|>{{ value['description'] }}<|\"|>\n                {%- set add_comma = true -%}\n            {%- endif -%}\n            {%- if value['type'] | upper == 'STRING' -%}\n                {%- if value['enum'] -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    enum:{{ format_argument(value['enum']) }}\n                {%- endif -%}\n            {%- elif value['type'] | upper == 'ARRAY' -%}\n                {%- if value['items'] is mapping and value['items'] -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    items:{\n                    {%- set ns_items = namespace(found_first=false) -%}\n                    {%- for item_key, item_value in value['items'] | dictsort -%}\n                        {%- if item_value is not none -%}\n                            {%- if ns_items.found_first %},{% endif -%}\n                            {%- set ns_items.found_first = true -%}\n                            {%- if item_key == 'properties' -%}\n                                properties:{\n                                {%- if item_value is mapping -%}\n                                    {{- format_parameters(item_value, value['items']['required'] | default([])) -}}\n                                {%- endif -%}\n                                }\n                            {%- elif item_key == 'required' -%}\n                                required:[\n                                {%- for req_item in item_value -%}\n                                    <|\"|>{{- req_item -}}<|\"|>\n                                    {%- if not loop.last %},{% endif -%}\n                                {%- endfor -%}\n                                ]\n                            {%- elif item_key == 'type' -%}\n                                {%- if item_value is string -%}\n                                    type:{{ format_argument(item_value | upper) }}\n                                {%- else -%}\n                                    type:{{ format_argument(item_value | map('upper') | list) }}\n                                {%- endif -%}\n                            {%- else -%}\n                                {{ item_key }}:{{ format_argument(item_value) }}\n                            {%- endif -%}\n                        {%- endif -%}\n                    {%- endfor -%}\n                    }\n                {%- endif -%}\n            {%- endif -%}\n            {%- if value['nullable'] %}\n                {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                nullable:true\n            {%- endif -%}\n            {%- if value['type'] | upper == 'OBJECT' -%}\n                {%- if value['properties'] is defined and value['properties'] is mapping -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    properties:{\n                    {{- format_parameters(value['properties'], value['required'] | default([])) -}}\n                    }\n                {%- elif value is mapping -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    properties:{\n                    {{- format_parameters(value, value['required'] | default([]), filter_keys=true) -}}\n                    }\n                {%- endif -%}\n                {%- if value['required'] -%}\n                    {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n                    required:[\n                    {%- for item in value['required'] | default([]) -%}\n                        <|\"|>{{- item -}}<|\"|>\n                        {%- if not loop.last %},{% endif -%}\n                    {%- endfor -%}\n                    ]\n                {%- endif -%}\n            {%- endif -%}\n            {%- if add_comma %},{%- else -%} {%- set add_comma = true -%} {% endif -%}\n            type:<|\"|>{{ value['type'] | upper }}<|\"|>}\n        {%- endif -%}\n    {%- endfor -%}\n{%- endmacro -%}\n{%- macro format_function_declaration(tool_data) -%}\n    declaration:{{- tool_data['function']['name'] -}}{description:<|\"|>{{- tool_data['function']['description'] -}}<|\"|>\n    {%- set params = tool_data['function']['parameters'] -%}\n    {%- if params -%}\n        ,parameters:{\n        {%- if params['properties'] -%}\n            properties:{ {{- format_parameters(params['properties'], params['required']) -}} },\n        {%- endif -%}\n        {%- if params['required'] -%}\n            required:[\n            {%- for item in params['required'] -%}\n                <|\"|>{{- item -}}<|\"|>\n                {{- ',' if not loop.last -}}\n            {%- endfor -%}\n            ],\n        {%- endif -%}\n        {%- if params['type'] -%}\n            type:<|\"|>{{- params['type'] | upper -}}<|\"|>}\n        {%- endif -%}\n    {%- endif -%}\n    {%- if 'response' in tool_data['function'] -%}\n        {%- set response_declaration = tool_data['function']['response'] -%}\n        ,response:{\n        {%- if response_declaration['description'] -%}\n            description:<|\"|>{{- response_declaration['description'] -}}<|\"|>,\n        {%- endif -%}\n        {%- if response_declaration['type'] | upper == 'OBJECT' -%}\n            type:<|\"|>{{- response_declaration['type'] | upper -}}<|\"|>}\n        {%- endif -%}\n    {%- endif -%}\n    }\n{%- endmacro -%}\n{%- macro format_argument(argument, escape_keys=True) -%}\n    {%- if argument is string -%}\n        {{- '<|\"|>' + argument + '<|\"|>' -}}\n    {%- elif argument is boolean -%}\n        {{- 'true' if argument else 'false' -}}\n    {%- elif argument is mapping -%}\n        {{- '{' -}}\n        {%- set ns = namespace(found_first=false) -%}\n        {%- for key, value in argument | dictsort -%}\n            {%- if ns.found_first %},{% endif -%}\n            {%- set ns.found_first = true -%}\n            {%- if escape_keys -%}\n                {{- '<|\"|>' + key + '<|\"|>' -}}\n            {%- else -%}\n                {{- key -}}\n            {%- endif -%}\n            :{{- format_argument(value, escape_keys=escape_keys) -}}\n        {%- endfor -%}\n        {{- '}' -}}\n    {%- elif argument is sequence -%}\n        {{- '[' -}}\n        {%- for item in argument -%}\n            {{- format_argument(item, escape_keys=escape_keys) -}}\n            {%- if not loop.last %},{% endif -%}\n        {%- endfor -%}\n        {{- ']' -}}\n    {%- else -%}\n        {{- argument -}}\n    {%- endif -%}\n{%- endmacro -%}\n{%- macro strip_thinking(text) -%}\n    {%- set ns = namespace(result='') -%}\n    {%- for part in text.split('<channel|>') -%}\n        {%- if '<|channel>' in part -%}\n            {%- set ns.result = ns.result + part.split('<|channel>')[0] -%}\n        {%- else -%}\n            {%- set ns.result = ns.result + part -%}\n        {%- endif -%}\n    {%- endfor -%}\n    {{- ns.result | trim -}}\n{%- endmacro -%}\n\n{%- macro format_tool_response_block(tool_name, response) -%}\n    {{- '<|tool_response>' -}}\n    {%- if response is mapping -%}\n        {{- 'response:' + tool_name + '{' -}}\n        {%- for key, value in response | dictsort -%}\n            {{- key -}}:{{- format_argument(value, escape_keys=False) -}}\n            {%- if not loop.last %},{% endif -%}\n        {%- endfor -%}\n        {{- '}' -}}\n    {%- else -%}\n        {{- 'response:' + tool_name + '{value:' + format_argument(response, escape_keys=False) + '}' -}}\n    {%- endif -%}\n    {{- '<tool_response|>' -}}\n{%- endmacro -%}\n\n{%- set ns = namespace(prev_message_type=None) -%}\n{%- set loop_messages = messages -%}\n{{- bos_token -}}\n{#- Handle System/Tool Definitions Block -#}\n{%- if (enable_thinking is defined and enable_thinking) or tools or messages[0]['role'] in ['system', 'developer'] -%}\n    {{- '<|turn>system\\n' -}}\n    {#- Inject Thinking token at the very top of the FIRST system turn -#}\n    {%- if enable_thinking is defined and enable_thinking -%}\n        {{- '<|think|>\\n' -}}\n        {%- set ns.prev_message_type = 'think' -%}\n    {%- endif -%}\n    {%- if messages[0]['role'] in ['system', 'developer'] -%}\n        {%- if messages[0]['content'] is string -%}\n            {{- messages[0]['content'] | trim -}}\n        {%- elif messages[0]['content'] is sequence -%}\n            {%- for item in messages[0]['content'] -%}\n                {{- item['text'] | trim + ' '-}}\n            {%- endfor -%}\n        {%- endif -%}\n        {%- set loop_messages = messages[1:] -%}\n    {%- endif -%}\n    {%- if tools -%}\n        {%- for tool in tools %}\n            {{- '<|tool>' -}}\n            {{- format_function_declaration(tool) | trim -}}\n            {{- '<tool|>' -}}\n        {%- endfor %}\n        {%- set ns.prev_message_type = 'tool' -%}\n    {%- endif -%}\n    {{- '<turn|>\\n' -}}\n{%- endif %}\n\n{#- Pre-scan: find last user message index for reasoning guard -#}\n{%- set ns_turn = namespace(last_user_idx=-1) -%}\n{%- for i in range(loop_messages | length) -%}\n    {%- if loop_messages[i]['role'] == 'user' -%}\n        {%- set ns_turn.last_user_idx = i -%}\n    {%- endif -%}\n{%- endfor -%}\n\n{#- Loop through messages -#}\n{%- for message in loop_messages -%}\n    {%- if message['role'] != 'tool' -%}\n    {%- set ns.prev_message_type = None -%}\n    {%- set role = 'model' if message['role'] == 'assistant' else message['role'] -%}\n    {#- Detect continuation: suppress duplicate <|turn>model when previous non-tool message was also assistant -#}\n    {%- set prev_nt = namespace(role=None, found=false) -%}\n    {%- if loop.index0 > 0 -%}\n        {%- for j in range(loop.index0 - 1, -1, -1) -%}\n            {%- if not prev_nt.found -%}\n                {%- if loop_messages[j]['role'] != 'tool' -%}\n                    {%- set prev_nt.role = loop_messages[j]['role'] -%}\n                    {%- set prev_nt.found = true -%}\n                {%- endif -%}\n            {%- endif -%}\n        {%- endfor -%}\n    {%- endif -%}\n    {%- set continue_same_model_turn = (role == 'model' and prev_nt.role == 'assistant') -%}\n    {%- if not continue_same_model_turn -%}\n        {{- '<|turn>' + role + '\\n' }}\n    {%- endif -%}\n\n    {#- Render reasoning/reasoning_content as thinking channel -#}\n    {%- set thinking_text = message.get('reasoning') or message.get('reasoning_content') -%}\n    {%- if thinking_text and loop.index0 > ns_turn.last_user_idx and message.get('tool_calls') -%}\n        {{- '<|channel>thought\\n' + thinking_text + '\\n<channel|>' -}}\n    {%- endif -%}\n\n            {%- if message['tool_calls'] -%}\n                {%- for tool_call in message['tool_calls'] -%}\n                    {%- set function = tool_call['function'] -%}\n                    {{- '<|tool_call>call:' + function['name'] + '{' -}}\n                    {%- if function['arguments'] is mapping -%}\n                        {%- set ns_args = namespace(found_first=false) -%}\n                        {%- for key, value in function['arguments'] | dictsort -%}\n                            {%- if ns_args.found_first %},{% endif -%}\n                            {%- set ns_args.found_first = true -%}\n                            {{- key -}}:{{- format_argument(value, escape_keys=False) -}}\n                        {%- endfor -%}\n                    {%- elif function['arguments'] is string -%}\n                        {{- function['arguments'] -}}\n                    {%- endif -%}\n                    {{- '}<tool_call|>' -}}\n                {%- endfor -%}\n                {%- set ns.prev_message_type = 'tool_call' -%}\n            {%- endif -%}\n\n            {%- set ns_tr_out = namespace(flag=false) -%}\n            {%- if message.get('tool_responses') -%}\n                {#- Legacy: tool_responses embedded on the assistant message (Google/Gemma native) -#}\n                {%- for tool_response in message['tool_responses'] -%}\n                    {{- format_tool_response_block(tool_response['name'] | default('unknown'), tool_response['response']) -}}\n                    {%- set ns_tr_out.flag = true -%}\n                    {%- set ns.prev_message_type = 'tool_response' -%}\n                {%- endfor -%}\n            {%- elif message.get('tool_calls') -%}\n                {#- OpenAI Chat Completions: forward-scan consecutive role:tool messages -#}\n                {%- set ns_tool_scan = namespace(stopped=false) -%}\n                {%- for k in range(loop.index0 + 1, loop_messages | length) -%}\n                    {%- if ns_tool_scan.stopped -%}\n                    {%- elif loop_messages[k]['role'] != 'tool' -%}\n                        {%- set ns_tool_scan.stopped = true -%}\n                    {%- else -%}\n                        {%- set follow = loop_messages[k] -%}\n                        {#- Resolve tool_call_id to function name -#}\n                        {%- set ns_tname = namespace(name=follow.get('name') | default('unknown')) -%}\n                        {%- for tc in message['tool_calls'] -%}\n                            {%- if tc.get('id') == follow.get('tool_call_id') -%}\n                                {%- set ns_tname.name = tc['function']['name'] -%}\n                            {%- endif -%}\n                        {%- endfor -%}\n                        {#- Handle content as string or content-parts array -#}\n                        {%- set tool_body = follow.get('content') -%}\n                        {%- if tool_body is string -%}\n                            {{- format_tool_response_block(ns_tname.name, tool_body) -}}\n                        {%- elif tool_body is sequence and tool_body is not string -%}\n                            {%- set ns_txt = namespace(s='') -%}\n                            {%- for part in tool_body -%}\n                                {%- if part.get('type') == 'text' -%}\n                                    {%- set ns_txt.s = ns_txt.s + (part.get('text') | default('')) -%}\n                                {%- endif -%}\n                            {%- endfor -%}\n                            {{- format_tool_response_block(ns_tname.name, ns_txt.s) -}}\n                        {%- else -%}\n                            {{- format_tool_response_block(ns_tname.name, tool_body) -}}\n                        {%- endif -%}\n                        {%- set ns_tr_out.flag = true -%}\n                        {%- set ns.prev_message_type = 'tool_response' -%}\n                    {%- endif -%}\n                {%- endfor -%}\n            {%- endif -%}\n\n            {%- set captured_content -%}\n            {%- if message['content'] is string -%}\n                {%- if role == 'model' -%}\n                    {{- strip_thinking(message['content']) -}}\n                {%- else -%}\n                    {{- message['content'] | trim -}}\n                {%- endif -%}\n            {%- elif message['content'] is sequence -%}\n                {%- for item in message['content'] -%}\n                    {%- if item['type'] == 'text' -%}\n                        {%- if role == 'model' -%}\n                            {{- strip_thinking(item['text']) -}}\n                        {%- else -%}\n                            {{- item['text'] | trim -}}\n                        {%- endif -%}\n                    {%- elif item['type'] == 'image' -%}\n                        {{- '<|image|>' -}}\n                        {%- set ns.prev_message_type = 'image' -%}\n                    {%- elif item['type'] == 'audio' -%}\n                        {{- '<|audio|>' -}}\n                        {%- set ns.prev_message_type = 'audio' -%}\n                    {%- elif item['type'] == 'video' -%}\n                        {{- '<|video|>' -}}\n                        {%- set ns.prev_message_type = 'video' -%}\n                    {%- endif -%}\n                {%- endfor -%}\n            {%- endif -%}\n            {%- endset -%}\n\n            {{- captured_content -}}\n            {%- set has_content = captured_content | trim | length > 0 -%}\n\n        {%- if ns.prev_message_type == 'tool_call' and not ns_tr_out.flag -%}\n            {{- '<|tool_response>' -}}\n        {%- elif not (ns_tr_out.flag and not has_content) -%}\n            {{- '<turn|>\\n' -}}\n        {%- endif -%}\n    {%- endif -%}\n{%- endfor -%}\n\n{%- if add_generation_prompt -%}\n    {%- if ns.prev_message_type != 'tool_response' and ns.prev_message_type != 'tool_call' -%}\n        {{- '<|turn>model\\n' -}}\n        {%- if not enable_thinking | default(false) -%}\n            {{- '<|channel>thought\\n<channel|>' -}}\n        {%- endif -%}\n    {%- endif -%}\n{%- endif -%}\nUsing chat eos_token: <turn|>\nUsing chat bos_token: <bos>\n~llama_context:      CUDA0 compute buffer size is 243.7793 MiB, matches expectation of 243.7793 MiB\n~llama_context:      CUDA1 compute buffer size is 533.2852 MiB, matches expectation of 533.2852 MiB\n~llama_context:  CUDA_Host compute buffer size is 117.7910 MiB, matches expectation of 117.7910 MiB\n",
++      "stdout": ""
++    },
++    "qwen3_35b_a3b_moe": {
++      "classification": "process_lifecycle",
++      "command": [
++        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++        "-c",
++        "llama_cpp.Llama(model_path=<exact_gguf>,...)"
++      ],
++      "ended_utc": "2026-08-08T04:11:08Z",
++      "exit_code": 0,
++      "family": "qwen3_35b_a3b_moe",
++      "gguf_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "lifetime_s": 31.109069,
++      "pid": null,
++      "read_only": true,
++      "started_utc": "2026-08-08T04:10:37Z",
++      "stderr": "erving a graph for ubatch with n_tokens =   16, n_seqs =  1, n_outputs =   16\nsched_reserve: fused Gated Delta Net (chunked) enabled\ngraph_reserve: reserving a graph for ubatch with n_tokens =  384, n_seqs =  1, n_outputs =  384\ngraph_reserve: reserving a graph for ubatch with n_tokens =    1, n_seqs =  1, n_outputs =    1\ngraph_reserve: reserving a graph for ubatch with n_tokens =  384, n_seqs =  1, n_outputs =  384\nsched_reserve:      CUDA0 compute buffer size =    75.04 MiB\nsched_reserve:      CUDA1 compute buffer size =   393.79 MiB\nsched_reserve:  CUDA_Host compute buffer size =    15.05 MiB\nsched_reserve: graph nodes  = 3777\nsched_reserve: graph splits = 3\nsched_reserve: reserve took 16.44 ms, sched copies = 4\nCUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \nModel metadata: {'quantize.imatrix.chunks_count': '76', 'quantize.imatrix.file': 'Qwen3.6-35B-A3B-GGUF/imatrix_unsloth.gguf', 'general.file_type': '15', 'general.quantization_version': '2', 'tokenizer.ggml.padding_token_id': '248055', 'tokenizer.ggml.eos_token_id': '248046', 'tokenizer.ggml.model': 'gpt2', 'qwen35moe.full_attention_interval': '4', 'quantize.imatrix.entries_count': '510', 'qwen35moe.ssm.time_step_rank': '32', 'qwen35moe.ssm.group_count': '16', 'qwen35moe.ssm.state_size': '128', 'qwen35moe.expert_count': '256', 'tokenizer.ggml.pre': 'qwen35', 'general.license.link': 'https://huggingface.co/Qwen/Qwen3.6-35B-A3B/blob/main/LICENSE', 'tokenizer.ggml.add_bos_token': 'false', 'general.size_label': '35B-A3B', 'general.type': 'model', 'general.quantized_by': 'Unsloth', 'tokenizer.ggml.bos_token_id': '248044', 'general.name': 'Qwen3.6-35B-A3B', 'general.license': 'apache-2.0', 'qwen35moe.ssm.conv_kernel': '4', 'general.base_model.0.repo_url': 'https://huggingface.co/Qwen/Qwen3.6-35B-A3B', 'general.sampling.temp': '1.000000', 'tokenizer.chat_template': '{%- set image_count = namespace(value=0) %}\\n{%- set video_count = namespace(value=0) %}\\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\\n    {%- if content is string %}\\n        {{- content }}\\n    {%- elif content is iterable and content is not mapping %}\\n        {%- for item in content %}\\n            {%- if \\'image\\' in item or \\'image_url\\' in item or item.type == \\'image\\' %}\\n                {%- if is_system_content %}\\n                    {{- raise_exception(\\'System message cannot contain images.\\') }}\\n                {%- endif %}\\n                {%- if do_vision_count %}\\n                    {%- set image_count.value = image_count.value + 1 %}\\n                {%- endif %}\\n                {%- if add_vision_id %}\\n                    {{- \\'Picture \\' ~ image_count.value ~ \\': \\' }}\\n                {%- endif %}\\n                {{- \\'<|vision_start|><|image_pad|><|vision_end|>\\' }}\\n            {%- elif \\'video\\' in item or item.type == \\'video\\' %}\\n                {%- if is_system_content %}\\n                    {{- raise_exception(\\'System message cannot contain videos.\\') }}\\n                {%- endif %}\\n                {%- if do_vision_count %}\\n                    {%- set video_count.value = video_count.value + 1 %}\\n                {%- endif %}\\n                {%- if add_vision_id %}\\n                    {{- \\'Video \\' ~ video_count.value ~ \\': \\' }}\\n                {%- endif %}\\n                {{- \\'<|vision_start|><|video_pad|><|vision_end|>\\' }}\\n            {%- elif \\'text\\' in item %}\\n                {{- item.text }}\\n            {%- else %}\\n                {{- raise_exception(\\'Unexpected item type in content.\\') }}\\n            {%- endif %}\\n        {%- endfor %}\\n    {%- elif content is none or content is undefined %}\\n        {{- \\'\\' }}\\n    {%- else %}\\n        {{- raise_exception(\\'Unexpected content type.\\') }}\\n    {%- endif %}\\n{%- endmacro %}\\n{%- if not messages %}\\n    {{- raise_exception(\\'No messages provided.\\') }}\\n{%- endif %}\\n{%- set num_sys = 0 %}\\n{%- set merged_system = \\'\\' %}\\n{%- if messages[0].role == \\'system\\' or messages[0].role == \\'developer\\' %}\\n    {%- set first = render_content(messages[0].content, false, true)|trim %}\\n    {%- if messages|length > 1 and (messages[1].role == \\'system\\' or messages[1].role == \\'developer\\') %}\\n        {%- set second = render_content(messages[1].content, false, true)|trim %}\\n        {%- set merged_system = first + \\'\\\\n\\' + second %}\\n        {%- set num_sys = 2 %}\\n    {%- else %}\\n        {%- set merged_system = first %}\\n        {%- set num_sys = 1 %}\\n    {%- endif %}\\n{%- endif %}\\n{%- if tools and tools is iterable and tools is not mapping %}\\n    {{- \\'<|im_start|>system\\\\n\\' }}\\n    {{- \"# Tools\\\\n\\\\nYou have access to the following functions:\\\\n\\\\n<tools>\" }}\\n    {%- for tool in tools %}\\n        {{- \"\\\\n\" }}\\n        {{- tool | tojson }}\\n    {%- endfor %}\\n    {{- \"\\\\n</tools>\" }}\\n    {{- \\'\\\\n\\\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\\\n\\\\n<tool_call>\\\\n<function=example_function_name>\\\\n<parameter=example_parameter_1>\\\\nvalue_1\\\\n</parameter>\\\\n<parameter=example_parameter_2>\\\\nThis is the value for the second parameter\\\\nthat can span\\\\nmultiple lines\\\\n</parameter>\\\\n</function>\\\\n</tool_call>\\\\n\\\\n<IMPORTANT>\\\\nReminder:\\\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\\\n- Required parameters MUST be specified\\\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\\\n</IMPORTANT>\\' }}\\n    {%- if merged_system %}\\n        {{- \\'\\\\n\\\\n\\' + merged_system }}\\n    {%- endif %}\\n    {{- \\'<|im_end|>\\\\n\\' }}\\n{%- else %}\\n    {%- if merged_system %}\\n        {{- \\'<|im_start|>system\\\\n\\' + merged_system + \\'<|im_end|>\\\\n\\' }}\\n    {%- endif %}\\n{%- endif %}\\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\\n{%- for message in messages[::-1] %}\\n    {%- set index = (messages|length - 1) - loop.index0 %}\\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\\n        {%- set content = render_content(message.content, false)|trim %}\\n        {%- if not(content.startswith(\\'<tool_response>\\') and content.endswith(\\'</tool_response>\\')) %}\\n            {%- set ns.multi_step_tool = false %}\\n            {%- set ns.last_query_index = index %}\\n        {%- endif %}\\n    {%- endif %}\\n{%- endfor %}\\n{%- for message in messages %}\\n    {%- if loop.index0 >= num_sys and message.role != \"system\" and message.role != \"developer\" %}\\n    {%- set content = render_content(message.content, true)|trim %}\\n    {%- if message.role == \"user\" %}\\n        {{- \\'<|im_start|>\\' + message.role + \\'\\\\n\\' + content + \\'<|im_end|>\\' + \\'\\\\n\\' }}\\n    {%- elif message.role == \"assistant\" %}\\n        {%- set reasoning_content = \\'\\' %}\\n        {%- if message.reasoning_content is string %}\\n            {%- set reasoning_content = message.reasoning_content %}\\n        {%- else %}\\n            {%- if \\'</think>\\' in content %}\\n                {%- set reasoning_content = content.split(\\'</think>\\')[0].rstrip(\\'\\\\n\\').split(\\'<think>\\')[-1].lstrip(\\'\\\\n\\') %}\\n                {%- set content = content.split(\\'</think>\\')[-1].lstrip(\\'\\\\n\\') %}\\n            {%- endif %}\\n        {%- endif %}\\n        {%- set reasoning_content = reasoning_content|trim %}\\n        {%- if (preserve_thinking is defined and preserve_thinking is true) or (loop.index0 > ns.last_query_index) %}\\n            {{- \\'<|im_start|>\\' + message.role + \\'\\\\n<think>\\\\n\\' + reasoning_content + \\'\\\\n</think>\\\\n\\\\n\\' + content }}\\n        {%- else %}\\n            {{- \\'<|im_start|>\\' + message.role + \\'\\\\n\\' + content }}\\n        {%- endif %}\\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\\n            {%- for tool_call in message.tool_calls %}\\n                {%- if tool_call.function is defined %}\\n                    {%- set tool_call = tool_call.function %}\\n                {%- endif %}\\n                {%- if loop.first %}\\n                    {%- if content|trim %}\\n                        {{- \\'\\\\n\\\\n<tool_call>\\\\n<function=\\' + tool_call.name + \\'>\\\\n\\' }}\\n                    {%- else %}\\n                        {{- \\'<tool_call>\\\\n<function=\\' + tool_call.name + \\'>\\\\n\\' }}\\n                    {%- endif %}\\n                {%- else %}\\n                    {{- \\'\\\\n<tool_call>\\\\n<function=\\' + tool_call.name + \\'>\\\\n\\' }}\\n                {%- endif %}\\n                {%- if tool_call.arguments is mapping %}\\n                    {%- for args_name in tool_call.arguments %}\\n                        {%- set args_value = tool_call.arguments[args_name] %}\\n                        {{- \\'<parameter=\\' + args_name + \\'>\\\\n\\' }}\\n                        {%- set args_value = args_value | tojson | safe if args_value is mapping or (args_value is sequence and args_value is not string) else args_value | string %}\\n                        {{- args_value }}\\n                        {{- \\'\\\\n</parameter>\\\\n\\' }}\\n                    {%- endfor %}\\n                {%- endif %}\\n                {{- \\'</function>\\\\n</tool_call>\\' }}\\n            {%- endfor %}\\n        {%- endif %}\\n        {{- \\'<|im_end|>\\\\n\\' }}\\n    {%- elif message.role == \"tool\" %}\\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\\n            {{- \\'<|im_start|>user\\' }}\\n        {%- endif %}\\n        {{- \\'\\\\n<tool_response>\\\\n\\' }}\\n        {{- content }}\\n        {{- \\'\\\\n</tool_response>\\' }}\\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\\n            {{- \\'<|im_end|>\\\\n\\' }}\\n        {%- elif loop.last %}\\n            {{- \\'<|im_end|>\\\\n\\' }}\\n        {%- endif %}\\n    {%- endif %}\\n    {%- endif %}\\n{%- endfor %}\\n{%- if add_generation_prompt %}\\n    {{- \\'<|im_start|>assistant\\\\n\\' }}\\n    {%- if enable_thinking is defined and enable_thinking is false %}\\n        {{- \\'<think>\\\\n\\\\n</think>\\\\n\\\\n\\' }}\\n    {%- else %}\\n        {{- \\'<think>\\\\n\\' }}\\n    {%- endif %}\\n{%- endif %}\\n{#- Unsloth fixes - developer role, tool calling #}', 'qwen35moe.expert_used_count': '8', 'general.sampling.top_p': '0.950000', 'general.base_model.count': '1', 'general.base_model.0.organization': 'Qwen', 'qwen35moe.attention.key_length': '256', 'general.basename': 'Qwen3.6-35B-A3B', 'general.sampling.top_k': '20', 'qwen35moe.rope.dimension_count': '64', 'general.repo_url': 'https://huggingface.co/unsloth', 'qwen35moe.context_length': '262144', 'general.architecture': 'qwen35moe', 'quantize.imatrix.dataset': 'unsloth_calibration_Qwen3.6-35B-A3B.txt', 'general.base_model.0.name': 'Qwen3.6 35B A3B', 'qwen35moe.block_count': '40', 'qwen35moe.attention.value_length': '256', 'qwen35moe.ssm.inner_size': '4096', 'qwen35moe.expert_feed_forward_length': '512', 'qwen35moe.attention.head_count': '16', 'qwen35moe.attention.head_count_kv': '2', 'qwen35moe.rope.freq_base': '10000000.000000', 'qwen35moe.attention.layer_norm_rms_epsilon': '0.000001', 'qwen35moe.embedding_length': '2048', 'qwen35moe.expert_shared_feed_forward_length': '512'}\nAvailable chat formats from metadata: chat_template.default\nUsing gguf chat template: {%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set num_sys = 0 %}\n{%- set merged_system = '' %}\n{%- if messages[0].role == 'system' or messages[0].role == 'developer' %}\n    {%- set first = render_content(messages[0].content, false, true)|trim %}\n    {%- if messages|length > 1 and (messages[1].role == 'system' or messages[1].role == 'developer') %}\n        {%- set second = render_content(messages[1].content, false, true)|trim %}\n        {%- set merged_system = first + '\\n' + second %}\n        {%- set num_sys = 2 %}\n    {%- else %}\n        {%- set merged_system = first %}\n        {%- set num_sys = 1 %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + merged_system + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys and message.role != \"system\" and message.role != \"developer\" %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in content %}\n                {%- set reasoning_content = content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n                {%- set content = content.split('</think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if (preserve_thinking is defined and preserve_thinking is true) or (loop.index0 > ns.last_query_index) %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name in tool_call.arguments %}\n                        {%- set args_value = tool_call.arguments[args_name] %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | tojson | safe if args_value is mapping or (args_value is sequence and args_value is not string) else args_value | string %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, tool calling #}\nUsing chat eos_token: <|im_end|>\nUsing chat bos_token: <|endoftext|>\n~llama_context:      CUDA0 compute buffer size is  75.0356 MiB, matches expectation of  75.0356 MiB\n~llama_context:      CUDA1 compute buffer size is 393.7915 MiB, matches expectation of 393.7915 MiB\n~llama_context:  CUDA_Host compute buffer size is  15.0469 MiB, matches expectation of  15.0469 MiB\n",
++      "stdout": ""
++    }
++  },
++  "model_specs": [
++    {
++      "family": "qwen3_35b_a3b_moe",
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "name": "Qwen3.6-35B-A3B",
++      "preferred_quant": "Q4_K_M",
++      "role": "flagship MoE runtime"
++    },
++    {
++      "family": "gemma4_31b_dense",
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "name": "Gemma4-31B-it",
++      "preferred_quant": "Q4_K_M",
++      "role": "flagship dense ARC and Phase-D runtime"
++    },
++    {
++      "family": "gemma4_26b_a4b_moe",
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "name": "Gemma4-26B-A4B-it",
++      "preferred_quant": "Q4_K_M",
++      "role": "middle MoE runtime"
++    }
++  ],
++  "per_family_cuda_layer_offload": {
++    "gemma4_26b_a4b_moe": {
++      "cuda_layer_offload_confirmed": false,
++      "cuda_layers_offloaded": 0,
++      "evidence": "",
++      "family": "gemma4_26b_a4b_moe",
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "total_layers": 0
++    },
++    "gemma4_31b_dense": {
++      "cuda_layer_offload_confirmed": false,
++      "cuda_layers_offloaded": 0,
++      "evidence": "",
++      "family": "gemma4_31b_dense",
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "total_layers": 0
++    },
++    "qwen3_35b_a3b_moe": {
++      "cuda_layer_offload_confirmed": false,
++      "cuda_layers_offloaded": 0,
++      "evidence": "",
++      "family": "qwen3_35b_a3b_moe",
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "total_layers": 0
++    }
++  },
++  "per_family_first_token_bytes_hash_and_latency": {
++    "gemma4_26b_a4b_moe": {
++      "first_token_bytes_b64": "IGJsdWU=",
++      "first_token_bytes_sha256": "sha256:e12eeace32b3193e4a0ce123f0fb7b1f828b40854537e1817b6c22f9cedbad7f",
++      "first_token_latency_s": 0.256873,
++      "first_token_text": " blue",
++      "raw_token_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_26b_a4b_moe.first_token.bin"
++    },
++    "gemma4_31b_dense": {
++      "first_token_bytes_b64": "IGJsdWU=",
++      "first_token_bytes_sha256": "sha256:e12eeace32b3193e4a0ce123f0fb7b1f828b40854537e1817b6c22f9cedbad7f",
++      "first_token_latency_s": 0.118742,
++      "first_token_text": " blue",
++      "raw_token_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.first_token.bin"
++    },
++    "qwen3_35b_a3b_moe": {
++      "first_token_bytes_b64": "Og==",
++      "first_token_bytes_sha256": "sha256:e7ac0786668e0ff0f02b62bd04f45ff636fd82db63b1104601c975dc005f3a67",
++      "first_token_latency_s": 0.317555,
++      "first_token_text": ":",
++      "raw_token_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.qwen3_35b_a3b_moe.first_token.bin"
++    }
++  },
++  "per_family_server_command_pid_lifetime_stderr_and_exit": {
++    "gemma4_26b_a4b_moe": {
++      "command": [
++        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++        "--model",
++        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "--host",
++        "127.0.0.1",
++        "--port",
++        "62122",
++        "--ctx-size",
++        "384",
++        "--n-gpu-layers",
++        "all",
++        "--split-mode",
++        "layer",
++        "--tensor-split",
++        "1,1",
++        "--parallel",
++        "1",
++        "--batch-size",
++        "512",
++        "--ubatch-size",
++        "512",
++        "--cache-type-k",
++        "q8_0",
++        "--cache-type-v",
++        "q8_0",
++        "--fit",
++        "off",
++        "--offline",
++        "--jinja",
++        "--reasoning",
++        "off",
++        "--no-webui",
++        "--log-verbosity",
++        "3"
++      ],
++      "ended_utc": "2026-08-08T04:12:46Z",
++      "exit_code": 0,
++      "family": "gemma4_26b_a4b_moe",
++      "health_http_status": 200,
++      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
++      "lifetime_s": 13.047563,
++      "owned_process": true,
++      "pid": 2118218,
++      "started_utc": "2026-08-08T04:12:33Z",
++      "stderr": "0.00.058.136 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)\n0.00.058.138 I device_info:\n0.00.320.161 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)\n0.00.620.595 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)\n0.00.620.614 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)\n0.00.620.780 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \n0.00.620.872 I srv          init: running without SSL\n0.00.620.919 I srv          init: using 23 threads for HTTP server\n0.00.621.191 I srv          init: The UI is disabled\n0.00.621.193 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable\n0.00.621.952 I srv         start: binding port with default address family\n0.00.623.168 I srv  llama_server: loading model\n0.00.623.177 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf'\n0.02.766.399 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.02.766.922 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.02.773.936 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.02.795.891 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list\n0.10.967.996 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n0.10.986.829 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)\n0.11.166.880 I srv    load_model: initializing slots, n_slots = 1\n0.11.245.833 W common_speculative_init: no implementations specified for speculative decoding\n0.11.245.843 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512\n0.11.245.873 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB\n0.11.245.873 I srv    load_model: use `--cache-ram 0` to disable the prompt cache\n0.11.245.873 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391\n0.11.245.874 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256\n0.11.246.151 I srv          init: idle slots will be saved to prompt cache upon starting a new task\n0.11.253.786 I init: chat template, example_format: '<|turn>system\nYou are a helpful assistant<turn|>\n<|turn>user\nHello<turn|>\n<|turn>model\nHi there<turn|>\n<|turn>user\nHow are you?<turn|>\n<|turn>model\n<|channel>thought\n<channel|>'\n0.11.254.187 I srv          init: init: chat template, thinking = 0\n0.11.254.230 I srv  llama_server: model loaded\n0.11.254.235 I srv  llama_server: server is listening on http://127.0.0.1:62122\n0.11.254.573 I srv  update_slots: all slots are idle\n0.11.971.561 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1\n0.11.971.565 I srv  get_availabl: updating prompt cache\n0.11.971.577 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000\n0.11.971.585 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)\n0.11.971.587 I srv  get_availabl: prompt cache update took 0.02 ms\n0.11.971.628 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0\n0.12.155.912 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 8, n_tokens = 9, size = 0.935 MiB)\n0.12.221.331 I slot print_timing: id  0 | task 0 | prompt eval time =     249.43 ms /    13 tokens (   19.19 ms per token,    52.12 tokens per second)\n0.12.221.339 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)\n0.12.221.339 I slot print_timing: id  0 | task 0 |       total time =     249.43 ms /    14 tokens\n0.12.221.344 I slot print_timing: id  0 | task 0 |    graphs reused =          1\n0.12.221.391 I slot      release: id  0 | task 0 | stop processing: n_tokens = 13, truncated = 0\n0.12.221.411 I srv  update_slots: all slots are idle\n0.12.230.620 I srv    operator(): operator(): cleaning up before exit...\n",
++      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_26b_a4b_moe.llama_server.log"
++    },
++    "gemma4_31b_dense": {
++      "command": [
++        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++        "--model",
++        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
++        "--host",
++        "127.0.0.1",
++        "--port",
++        "62121",
++        "--ctx-size",
++        "384",
++        "--n-gpu-layers",
++        "all",
++        "--split-mode",
++        "layer",
++        "--tensor-split",
++        "1,1",
++        "--parallel",
++        "1",
++        "--batch-size",
++        "512",
++        "--ubatch-size",
++        "512",
++        "--cache-type-k",
++        "q8_0",
++        "--cache-type-v",
++        "q8_0",
++        "--fit",
++        "off",
++        "--offline",
++        "--jinja",
++        "--reasoning",
++        "off",
++        "--no-webui",
++        "--log-verbosity",
++        "3"
++      ],
++      "ended_utc": "2026-08-08T04:12:06Z",
++      "exit_code": 0,
++      "family": "gemma4_31b_dense",
++      "health_http_status": 200,
++      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
++      "lifetime_s": 12.846279,
++      "owned_process": true,
++      "pid": 2118102,
++      "started_utc": "2026-08-08T04:11:53Z",
++      "stderr": "0.00.043.919 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)\n0.00.043.923 I device_info:\n0.00.274.289 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)\n0.00.586.726 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)\n0.00.586.738 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)\n0.00.586.845 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \n0.00.586.902 I srv          init: running without SSL\n0.00.586.934 I srv          init: using 23 threads for HTTP server\n0.00.586.940 I srv          init: The UI is disabled\n0.00.586.940 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable\n0.00.587.048 I srv         start: binding port with default address family\n0.00.588.205 I srv  llama_server: loading model\n0.00.588.210 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf'\n0.02.624.522 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.02.625.024 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.02.631.722 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.02.652.370 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list\n0.11.084.647 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n0.11.106.922 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)\n0.11.373.283 I srv    load_model: initializing slots, n_slots = 1\n0.11.410.196 W common_speculative_init: no implementations specified for speculative decoding\n0.11.410.209 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512\n0.11.410.252 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB\n0.11.410.253 I srv    load_model: use `--cache-ram 0` to disable the prompt cache\n0.11.410.254 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391\n0.11.410.254 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256\n0.11.410.333 I srv          init: idle slots will be saved to prompt cache upon starting a new task\n0.11.419.585 I init: chat template, example_format: '<|turn>system\nYou are a helpful assistant<turn|>\n<|turn>user\nHello<turn|>\n<|turn>model\nHi there<turn|>\n<|turn>user\nHow are you?<turn|>\n<|turn>model\n<|channel>thought\n<channel|>'\n0.11.420.048 I srv          init: init: chat template, thinking = 0\n0.11.420.118 I srv  llama_server: model loaded\n0.11.420.127 I srv  llama_server: server is listening on http://127.0.0.1:62121\n0.11.420.137 I srv  update_slots: all slots are idle\n0.11.995.771 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1\n0.11.995.777 I srv  get_availabl: updating prompt cache\n0.11.995.794 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000\n0.11.995.805 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)\n0.11.995.807 I srv  get_availabl: prompt cache update took 0.03 ms\n0.11.995.860 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0\n0.12.062.255 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 8, n_tokens = 9, size = 3.737 MiB)\n0.12.108.537 I slot print_timing: id  0 | task 0 | prompt eval time =     112.62 ms /    13 tokens (    8.66 ms per token,   115.44 tokens per second)\n0.12.108.542 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)\n0.12.108.543 I slot print_timing: id  0 | task 0 |       total time =     112.62 ms /    14 tokens\n0.12.108.546 I slot print_timing: id  0 | task 0 |    graphs reused =          1\n0.12.108.587 I slot      release: id  0 | task 0 | stop processing: n_tokens = 13, truncated = 0\n0.12.108.604 I srv  update_slots: all slots are idle\n0.12.119.589 I srv    operator(): operator(): cleaning up before exit...\n",
++      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log"
++    },
++    "qwen3_35b_a3b_moe": {
++      "command": [
++        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
++        "--model",
++        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
++        "--host",
++        "127.0.0.1",
++        "--port",
++        "62120",
++        "--ctx-size",
++        "384",
++        "--n-gpu-layers",
++        "all",
++        "--split-mode",
++        "layer",
++        "--tensor-split",
++        "1,1",
++        "--parallel",
++        "1",
++        "--batch-size",
++        "512",
++        "--ubatch-size",
++        "512",
++        "--cache-type-k",
++        "q8_0",
++        "--cache-type-v",
++        "q8_0",
++        "--fit",
++        "off",
++        "--offline",
++        "--jinja",
++        "--reasoning",
++        "off",
++        "--no-webui",
++        "--log-verbosity",
++        "3"
++      ],
++      "ended_utc": "2026-08-08T04:11:22Z",
++      "exit_code": 0,
++      "family": "qwen3_35b_a3b_moe",
++      "health_http_status": 200,
++      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++      "lifetime_s": 14.099355,
++      "owned_process": true,
++      "pid": 2117986,
++      "started_utc": "2026-08-08T04:11:08Z",
++      "stderr": "0.00.032.629 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)\n0.00.032.631 I device_info:\n0.00.258.385 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)\n0.00.482.874 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)\n0.00.482.886 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)\n0.00.483.015 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \n0.00.483.075 I srv          init: running without SSL\n0.00.483.105 I srv          init: using 23 threads for HTTP server\n0.00.483.110 I srv          init: The UI is disabled\n0.00.483.110 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable\n0.00.483.216 I srv         start: binding port with default address family\n0.00.484.366 I srv  llama_server: loading model\n0.00.484.372 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'\n0.11.887.044 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n0.11.906.504 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)\n0.12.051.967 I srv    load_model: initializing slots, n_slots = 1\n0.12.136.893 W srv    load_model: speculative decoding will use checkpoints\n0.12.136.919 W common_speculative_init: no implementations specified for speculative decoding\n0.12.136.921 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512\n0.12.136.961 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB\n0.12.136.962 I srv    load_model: use `--cache-ram 0` to disable the prompt cache\n0.12.136.963 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391\n0.12.136.964 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256\n0.12.137.045 I srv          init: idle slots will be saved to prompt cache upon starting a new task\n0.12.160.164 I init: chat template, example_format: '<|im_start|>system\nYou are a helpful assistant<|im_end|>\n<|im_start|>user\nHello<|im_end|>\n<|im_start|>assistant\nHi there<|im_end|>\n<|im_start|>user\nHow are you?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n'\n0.12.176.546 I srv          init: init: chat template, thinking = 0\n0.12.176.614 I srv  llama_server: model loaded\n0.12.176.622 I srv  llama_server: server is listening on http://127.0.0.1:62120\n0.12.176.634 I srv  update_slots: all slots are idle\n0.13.065.825 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1\n0.13.065.830 I srv  get_availabl: updating prompt cache\n0.13.065.841 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000\n0.13.065.851 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)\n0.13.065.852 I srv  get_availabl: prompt cache update took 0.02 ms\n0.13.065.893 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0\n0.13.318.110 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 7, pos_max = 7, n_tokens = 8, size = 62.813 MiB)\n0.13.378.402 I slot print_timing: id  0 | task 0 | prompt eval time =     312.46 ms /    12 tokens (   26.04 ms per token,    38.41 tokens per second)\n0.13.378.412 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)\n0.13.378.414 I slot print_timing: id  0 | task 0 |       total time =     312.46 ms /    13 tokens\n0.13.378.418 I slot print_timing: id  0 | task 0 |    graphs reused =          1\n0.13.378.462 I slot      release: id  0 | task 0 | stop processing: n_tokens = 12, truncated = 0\n0.13.378.481 I srv  update_slots: all slots are idle\n0.13.387.818 I srv    operator(): operator(): cleaning up before exit...\n",
++      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.qwen3_35b_a3b_moe.llama_server.log"
++    }
++  },
++  "preconditions_checked": {
++    "all_ggufs_resolved": true,
++    "blocked_reasons": [],
++    "no_autotokenizer_used": true,
++    "output_parent_writable": true,
++    "run_date": "20260808",
++    "safe_admission_available": true,
++    "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.preconditions",
++    "upstream_exp6200_present": true
++  },
++  "protected_files_unchanged": {
++    "changed_paths": [],
++    "hash_after": "sha256:ff840ccfb293995dd195bbb531383c15a27248da98efd9f066b4b92e9f948e01",
++    "hash_before": "sha256:ff840ccfb293995dd195bbb531383c15a27248da98efd9f066b4b92e9f948e01",
++    "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.protected_files",
++    "scripts_research_conductor_py_untouched": true,
++    "unchanged": true
++  },
++  "random_seed": 6212,
++  "reproducibility_checksum": "sha256:472734946b96d028e852c4694983a1566b5e8141921c4cef408ac8fcf2f6dff3",
++  "root_cause_classification": {
++    "classification": "process_lifecycle",
++    "per_class_counts": {
++      "process_lifecycle": 3
++    },
++    "recovered_by_server_canary": true,
++    "task_owned_fix": "use_native_llama_server_cuda_canary_with_explicit_model_file"
++  },
++  "run_date": "20260808",
++  "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1",
++  "status": "complete_partial",
++  "task_owned_fix_paths_and_hashes": {
++    "paths": [
++      {
++        "exists": true,
++        "path": "openspec/capabilities/code-verification/spec.md",
++        "sha256": "sha256:ac3dce29a44bd04cfd91f6c3372d827c2ca07a2e4e3f6096600d6fb82684a86e",
++        "task_owned": true
++      },
++      {
++        "exists": true,
++        "path": "python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py",
++        "sha256": "sha256:f3a5cd1c288d9e83d1ff3a65fe21b30e46ec52bc3ea5bada8ca58a0daa94d762",
++        "task_owned": true
++      },
++      {
++        "exists": true,
++        "path": "tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py",
++        "sha256": "sha256:c73f59aad657d4ad261f28216e6d37327d825481f7bd1b13bcb347d1bbd0817d",
++        "task_owned": true
++      }
++    ],
++    "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.task_owned_fix_paths",
++    "scripts_research_conductor_py_modified": false
++  },
++  "test_commands": [
++    ".venv/bin/pytest tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py -q --no-cov -n 0",
++    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py -m pytest tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py --fail-under=100 --show-missing",
++    ".venv/bin/pytest tests/python -q",
++    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py",
++    ".venv/bin/python -m carnot.experiment_6212_three_family_gguf_runtime_recovery --date 20260808"
++  ],
++  "test_exit_codes": {},
++  "three_family_runtime_ready_score": 0,
++  "unrelated_process_kill_count": 0,
++  "upstream_exp6200_path_and_hash": {
++    "exists": true,
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6200_three_family_raw_code_transport_canary.json",
++    "sha256": "sha256:9ed850c4be14d12314bf216b9fb0c4ff47b1d3564aafe3dd5a31562240efb219",
++    "size_bytes": 43346
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_6212_three_family_gguf_runtime_recovery.qwen3_35b_a3b_moe.llama_server.log b/results/experiment_6212_three_family_gguf_runtime_recovery.qwen3_35b_a3b_moe.llama_server.log
+new file mode 100644
+index 0000000000..6457bf4697
+--- /dev/null
++++ b/results/experiment_6212_three_family_gguf_runtime_recovery.qwen3_35b_a3b_moe.llama_server.log
+@@ -0,0 +1,56 @@
++0.00.032.629 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
++0.00.032.631 I device_info:
++0.00.258.385 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.482.874 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
++0.00.482.886 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
++0.00.483.015 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
++0.00.483.075 I srv          init: running without SSL
++0.00.483.105 I srv          init: using 23 threads for HTTP server
++0.00.483.110 I srv          init: The UI is disabled
++0.00.483.110 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
++0.00.483.216 I srv         start: binding port with default address family
++0.00.484.366 I srv  llama_server: loading model
++0.00.484.372 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
++0.11.887.044 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
++0.11.906.504 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
++0.12.051.967 I srv    load_model: initializing slots, n_slots = 1
++0.12.136.893 W srv    load_model: speculative decoding will use checkpoints
++0.12.136.919 W common_speculative_init: no implementations specified for speculative decoding
++0.12.136.921 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
++0.12.136.961 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
++0.12.136.962 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
++0.12.136.963 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
++0.12.136.964 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
++0.12.137.045 I srv          init: idle slots will be saved to prompt cache upon starting a new task
++0.12.160.164 I init: chat template, example_format: '<|im_start|>system
++You are a helpful assistant<|im_end|>
++<|im_start|>user
++Hello<|im_end|>
++<|im_start|>assistant
++Hi there<|im_end|>
++<|im_start|>user
++How are you?<|im_end|>
++<|im_start|>assistant
++<think>
++
++</think>
++
++'
++0.12.176.546 I srv          init: init: chat template, thinking = 0
++0.12.176.614 I srv  llama_server: model loaded
++0.12.176.622 I srv  llama_server: server is listening on http://127.0.0.1:62120
++0.12.176.634 I srv  update_slots: all slots are idle
++0.13.065.825 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
++0.13.065.830 I srv  get_availabl: updating prompt cache
++0.13.065.841 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
++0.13.065.851 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
++0.13.065.852 I srv  get_availabl: prompt cache update took 0.02 ms
++0.13.065.893 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
++0.13.318.110 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 7, pos_max = 7, n_tokens = 8, size = 62.813 MiB)
++0.13.378.402 I slot print_timing: id  0 | task 0 | prompt eval time =     312.46 ms /    12 tokens (   26.04 ms per token,    38.41 tokens per second)
++0.13.378.412 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
++0.13.378.414 I slot print_timing: id  0 | task 0 |       total time =     312.46 ms /    13 tokens
++0.13.378.418 I slot print_timing: id  0 | task 0 |    graphs reused =          1
++0.13.378.462 I slot      release: id  0 | task 0 | stop processing: n_tokens = 12, truncated = 0
++0.13.378.481 I srv  update_slots: all slots are idle
++0.13.387.818 I srv    operator(): operator(): cleaning up before exit...
+diff --git a/tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py b/tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py
+new file mode 100644
+index 0000000000..18fdb79a2c
+--- /dev/null
++++ b/tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py
+@@ -0,0 +1,481 @@
++"""Tests for Exp6212 three-family GGUF runtime recovery.
++
++Spec refs: REQ-INFRA-6212,
++SCENARIO-INFRA-6212-BLOCKS-WHEN-GPU-OWNED,
++SCENARIO-INFRA-6212-CLASSIFIES-EXP6200-LOAD-FAILURE,
++SCENARIO-INFRA-6212-READINESS-REQUIRES-TOKEN-AND-CUDA.
++"""
++
++from __future__ import annotations
++
++from copy import deepcopy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_6212_three_family_gguf_runtime_recovery as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC = REPO / "openspec/capabilities/code-verification/spec.md"
++TEST_COMMAND = (
++    ".venv/bin/pytest "
++    "tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py "
++    "-q --no-cov -n 0"
++)
++COVERAGE_COMMAND = (
++    ".venv/bin/coverage run --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py "
++    "-m pytest tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py "
++    "-q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null "
++    "--include=python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py "
++    "--fail-under=100 --show-missing"
++)
++FULL_TEST_COMMAND = ".venv/bin/pytest tests/python -q"
++SPEC_COMMAND = (
++    ".venv/bin/python scripts/check_spec_coverage.py "
++    "tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py"
++)
++ARTIFACT_COMMAND = (
++    ".venv/bin/python -m carnot.experiment_6212_three_family_gguf_runtime_recovery "
++    "--date 20260808"
++)
++TEST_COMMANDS = [
++    TEST_COMMAND,
++    COVERAGE_COMMAND,
++    FULL_TEST_COMMAND,
++    SPEC_COMMAND,
++    ARTIFACT_COMMAND,
++]
++TEST_EXIT_CODES = {command: 0 for command in TEST_COMMANDS}
++
++
++def _upstream(tmp_path: Path) -> Path:
++    path = tmp_path / "experiment_6200_three_family_raw_code_transport_canary.json"
++    path.write_text(
++        json.dumps(
++            {
++                "status": "complete_partial",
++                "honest_verdict": "complete_partial: fixture",
++                "gpu_offload_and_interval_receipts": {
++                    "generation_lifecycle": [
++                        {
++                            "family": spec["family"],
++                            "backend_exception": (
++                                "ValueError: Failed to load model from file: "
++                                f"/cache/{spec['family']}.gguf"
++                            ),
++                        }
++                        for spec in mod.MODEL_SPECS
++                    ]
++                },
++            },
++            sort_keys=True,
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    return path
++
++
++def _ggufs(tmp_path: Path) -> dict[str, Path]:
++    paths: dict[str, Path] = {}
++    for spec in mod.MODEL_SPECS:
++        model_dir = tmp_path / "hub" / spec["family"] / "snapshots" / f"rev-{spec['family']}"
++        model_dir.mkdir(parents=True, exist_ok=True)
++        path = model_dir / f"{spec['family']}-UD-Q4_K_M.gguf"
++        path.write_bytes(b"GGUF" + spec["hf_id"].encode("utf-8"))
++        paths[spec["hf_id"]] = path
++    return paths
++
++
++def _resolver(paths: dict[str, Path]):
++    def resolve(hf_id: str, preferred_quant: str = "Q4_K_M") -> str | None:
++        assert preferred_quant == "Q4_K_M"
++        return str(paths.get(hf_id)) if hf_id in paths else None
++
++    return resolve
++
++
++def _metadata(path: Path) -> dict[str, Any]:
++    template = f"template for {path.name}"
++    return {
++        "chat_template_present": True,
++        "chat_template_sha256": mod.sha256_text(template),
++        "metadata_summary_sha256": mod.sha256_json({"tokenizer.chat_template": template}),
++        "metadata_keys": ["tokenizer.chat_template"],
++        "tokenizer_detail": "embedded GGUF tokenizer OK",
++    }
++
++
++def _gpu_snapshot(*, busy: bool = False) -> dict[str, Any]:
++    compute_apps = (
++        [
++            {
++                "gpu_index": 1,
++                "pid": 4242,
++                "process_name": "external-train",
++                "used_memory_mb": 20_000,
++                "command": "python train.py",
++                "owned_by_task": False,
++            }
++        ]
++        if busy
++        else []
++    )
++    return {
++        "ok": True,
++        "gpu_count": 2,
++        "devices": [
++            {
++                "index": 0,
++                "name": "RTX 3090",
++                "utilization_pct": 0,
++                "memory_total_mb": 24_576,
++                "memory_used_mb": 4,
++                "memory_free_mb": 24_120,
++            },
++            {
++                "index": 1,
++                "name": "RTX 3090",
++                "utilization_pct": 0 if not busy else 90,
++                "memory_total_mb": 24_576,
++                "memory_used_mb": 4 if not busy else 20_004,
++                "memory_free_mb": 24_120 if not busy else 4_572,
++            },
++        ],
++        "compute_apps": compute_apps,
++    }
++
++
++class FakeRuntime:
++    """REQ-INFRA-6212: fake process runner with deterministic receipts."""
++
++    def __init__(self, *, busy: bool = False) -> None:
++        self.busy = busy
++        self.failure_calls: list[str] = []
++        self.server_calls: list[str] = []
++        self.gpu_snapshots = 0
++
++    def gpu_snapshot(self) -> dict[str, Any]:
++        self.gpu_snapshots += 1
++        return _gpu_snapshot(busy=self.busy)
++
++    def loader_receipt(self) -> dict[str, Any]:
++        return {
++            "llama_cpp_python_version": "0.0.fixture",
++            "llama_cpp_python_gpu_offload": True,
++            "llama_cpp_python_system_info": "CUDA fixture",
++            "native_llama_server_path": "/tmp/llama-server",
++            "native_llama_server_version": "llama.cpp b9999 fixture",
++            "native_llama_server_cuda_build": True,
++        }
++
++    def reproduce_failure(self, spec: dict[str, Any], gguf: dict[str, Any]) -> dict[str, Any]:
++        self.failure_calls.append(spec["hf_id"])
++        stderr = (
++            "llama_model_load: error loading model architecture: unknown key type\n"
++            "ValueError: Failed to load model from file"
++        )
++        return {
++            "family": spec["family"],
++            "hf_id": spec["hf_id"],
++            "command": ["python", "-c", "Llama(model_path=...)"],
++            "pid": 621200,
++            "started_utc": "2026-08-08T00:00:00Z",
++            "ended_utc": "2026-08-08T00:00:01Z",
++            "lifetime_s": 1.0,
++            "exit_code": 1,
++            "stderr": stderr,
++            "stdout": "",
++            "classification": mod.classify_failure(stderr, 1),
++            "gguf_sha256": gguf["sha256"],
++            "read_only": True,
++        }
++
++    def run_server_canary(
++        self,
++        spec: dict[str, Any],
++        gguf: dict[str, Any],
++        command: list[str],
++    ) -> dict[str, Any]:
++        self.server_calls.append(spec["hf_id"])
++        token = f"{spec['family']}:A".encode("utf-8")
++        return {
++            "family": spec["family"],
++            "hf_id": spec["hf_id"],
++            "command": command,
++            "pid": 621200 + len(self.server_calls),
++            "started_utc": "2026-08-08T00:00:02Z",
++            "ended_utc": "2026-08-08T00:00:03Z",
++            "lifetime_s": 1.0,
++            "stderr": "llama_model_load: offloaded 64/64 layers to GPU\nCUDA0 buffer size = 10 MiB",
++            "exit_code": 0,
++            "owned_process": True,
++            "health_http_status": 200,
++            "first_token_text": token.decode("utf-8"),
++            "first_token_bytes_b64": mod.base64_bytes(token),
++            "first_token_bytes_sha256": mod.sha256_bytes(token),
++            "first_token_latency_s": 0.125,
++            "raw_token_path": f"/tmp/{spec['family']}.token",
++            "cuda_layer_offload": {
++                "family": spec["family"],
++                "hf_id": spec["hf_id"],
++                "cuda_layers_offloaded": 64,
++                "total_layers": 64,
++                "cuda_layer_offload_confirmed": True,
++                "evidence": "offloaded 64/64 layers to GPU",
++            },
++        }
++
++
++def test_req_infra_6212_spec_declares_runtime_recovery_contract() -> None:
++    """REQ-INFRA-6212: OpenSpec names models, fields, and scenarios."""
++
++    section = "REQ-INFRA-6212" + SPEC.read_text(encoding="utf-8").split("### REQ-INFRA-6212", 1)[1]
++
++    for marker in (
++        "REQ-INFRA-6212",
++        "SCENARIO-INFRA-6212-BLOCKS-WHEN-GPU-OWNED",
++        "SCENARIO-INFRA-6212-CLASSIFIES-EXP6200-LOAD-FAILURE",
++        "SCENARIO-INFRA-6212-READINESS-REQUIRES-TOKEN-AND-CUDA",
++        mod.RESULT_RELATIVE_PATH.as_posix(),
++        mod.INFERENCE_SUBSTRATE,
++        "unrelated_process_kill_count",
++        "gguf_mutation_count",
++    ):
++        assert marker in section
++    for spec in mod.MODEL_SPECS:
++        assert spec["hf_id"] in section
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert f"`{field}`" in section
++
++
++def test_scenario_infra_6212_blocks_when_external_gpu_owner_exists(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6212-BLOCKS-WHEN-GPU-OWNED: no server starts."""
++
++    runtime = FakeRuntime(busy=True)
++    artifact = mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        upstream_exp6200_path=_upstream(tmp_path),
++        model_resolver=_resolver(_ggufs(tmp_path)),
++        metadata_reader=_metadata,
++        runtime=runtime,
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=6.212,
++        write=True,
++    )
++
++    assert artifact["status"] == "blocked"
++    assert artifact["honest_verdict"].startswith("blocked:")
++    assert runtime.failure_calls == []
++    assert runtime.server_calls == []
++    assert artifact["preconditions_checked"]["safe_admission_available"] is False
++    assert artifact["gpu_owner_pid_memory_and_utilization_before_after"]["blocked_owner_pids"] == [4242]
++    assert artifact["three_family_runtime_ready_score"] == 0
++    assert artifact["gemma_4_31b_runtime_ready_score"] == 0
++    assert artifact["unrelated_process_kill_count"] == 0
++    assert artifact["gguf_mutation_count"] == 0
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_infra_6212_complete_ready_needs_owned_cuda_and_token(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-INFRA-6212-READINESS-REQUIRES-TOKEN-AND-CUDA: all receipts pass."""
++
++    runtime = FakeRuntime()
++    artifact = mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        upstream_exp6200_path=_upstream(tmp_path),
++        model_resolver=_resolver(_ggufs(tmp_path)),
++        metadata_reader=_metadata,
++        runtime=runtime,
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=6.212,
++        write=True,
++    )
++
++    assert runtime.failure_calls == [spec["hf_id"] for spec in mod.MODEL_SPECS]
++    assert runtime.server_calls == [spec["hf_id"] for spec in mod.MODEL_SPECS]
++    assert artifact["status"] == "complete_ready"
++    assert artifact["honest_verdict"].startswith("complete_ready:")
++    assert artifact["three_family_runtime_ready_score"] == 1
++    assert artifact["gemma_4_31b_runtime_ready_score"] == 1
++    assert artifact["root_cause_classification"]["classification"] == (
++        "loader_compatibility_or_bad_loader_flags"
++    )
++    assert artifact["root_cause_classification"]["task_owned_fix"] == (
++        "use_native_llama_server_cuda_canary_with_explicit_model_file"
++    )
++    assert artifact["protected_files_unchanged"]["scripts_research_conductor_py_untouched"] is True
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert mod.validate_artifact(artifact) == []
++    assert json.loads((tmp_path / mod.RESULT_RELATIVE_PATH.name).read_text()) == artifact
++
++    for spec in mod.MODEL_SPECS:
++        family = spec["family"]
++        command = artifact["per_family_server_command_pid_lifetime_stderr_and_exit"][family][
++            "command"
++        ]
++        assert command[0] == "/tmp/llama-server"
++        assert str(_ggufs(tmp_path)[spec["hf_id"]].parent) not in command
++        assert str(_ggufs(tmp_path)[spec["hf_id"]]) in command
++        assert artifact["per_family_cuda_layer_offload"][family][
++            "cuda_layer_offload_confirmed"
++        ] is True
++        token = artifact["per_family_first_token_bytes_hash_and_latency"][family]
++        assert token["first_token_bytes_sha256"].startswith("sha256:")
++        assert token["first_token_latency_s"] == pytest.approx(0.125)
++
++
++def test_scenario_infra_6212_classification_and_validation_branches(tmp_path: Path) -> None:
++    """SCENARIO-INFRA-6212-CLASSIFIES-EXP6200-LOAD-FAILURE: branches are explicit."""
++
++    assert mod.classify_failure("invalid magic; not a gguf", 1) == "file_integrity"
++    assert mod.classify_failure("unknown architecture in gguf metadata", 1) == (
++        "loader_compatibility_or_bad_loader_flags"
++    )
++    assert mod.classify_failure("cudaMalloc failed: out of memory", 1) == "vram_admission"
++    assert mod.classify_failure("CUDA error: invalid device ordinal", 1) == "cuda_placement"
++    assert mod.classify_failure("SIGTERM from parent", -15) == "external_termination"
++    assert mod.classify_failure("context size has been exceeded", 1) == "bad_flags"
++    assert mod.classify_failure("", 0) == "no_failure"
++
++    artifact = mod.run(
++        result_path=tmp_path / mod.RESULT_RELATIVE_PATH.name,
++        upstream_exp6200_path=_upstream(tmp_path),
++        model_resolver=_resolver(_ggufs(tmp_path)),
++        metadata_reader=_metadata,
++        runtime=FakeRuntime(),
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=6.212,
++        write=False,
++    )
++    assert artifact["field_provenance"]["status"][0] == "REQ-INFRA-6212"
++    assert artifact["reproducibility_checksum"] == mod.reproducibility_checksum(artifact)
++
++    mutations = [
++        (lambda item: item.pop("status"), "missing:status"),
++        (lambda item: item.update({"inference_substrate": "wrong"}), "inference_substrate"),
++        (lambda item: item.update({"verifier_is_oracle": True}), "verifier_is_oracle"),
++        (lambda item: item.update({"unrelated_process_kill_count": "0"}), "unrelated_process_kill_count"),
++        (lambda item: item.update({"gguf_mutation_count": 1}), "gguf_mutation_count"),
++        (lambda item: item.update({"three_family_runtime_ready_score": 1}), "three_family_runtime_ready_score"),
++        (lambda item: item.update({"gemma_4_31b_runtime_ready_score": 0}), "gemma_4_31b_runtime_ready_score"),
++        (lambda item: item.update({"honest_verdict": "maybe"}), "honest_verdict"),
++        (lambda item: item.update({"reproducibility_checksum": "sha256:bad"}), "reproducibility_checksum"),
++    ]
++    for mutate, expected in mutations:
++        candidate = deepcopy(artifact)
++        if expected == "three_family_runtime_ready_score":
++            candidate["per_family_first_token_bytes_hash_and_latency"][
++                "qwen3_35b_a3b_moe"
++            ] = {}
++        mutate(candidate)
++        assert expected in mod.validate_artifact(candidate)
++
++
++def test_req_infra_6212_command_builder_and_model_receipts(tmp_path: Path) -> None:
++    """REQ-INFRA-6212: command and GGUF receipts use exact files."""
++
++    paths = _ggufs(tmp_path)
++    records = mod.resolve_model_records(
++        model_resolver=_resolver(paths),
++        metadata_reader=_metadata,
++    )
++    assert not records["blocked_reasons"]
++    assert [row["hf_id"] for row in records["records"]] == [spec["hf_id"] for spec in mod.MODEL_SPECS]
++    assert all(row["path_is_file"] for row in records["records"])
++    assert all(row["embedded_chat_template_present"] for row in records["records"])
++
++    command = mod.build_server_command(
++        server_path="/tmp/llama-server",
++        model_path=paths[mod.MODEL_SPECS[0]["hf_id"]],
++        port=6212,
++        n_ctx=384,
++    )
++    assert command[:2] == ["/tmp/llama-server", "--model"]
++    assert str(paths[mod.MODEL_SPECS[0]["hf_id"]]) in command
++    assert str(paths[mod.MODEL_SPECS[0]["hf_id"]].parent) not in command
++    assert "--n-gpu-layers" in command
++    assert "--ctx-size" in command
++    assert "--no-webui" in command
++
++
++def test_req_infra_6212_alternate_gate_branches(tmp_path: Path, monkeypatch) -> None:
++    """REQ-INFRA-6212: blocked and partial branches are explicit."""
++
++    assert mod.utc_now().endswith("Z")
++    assert mod.snapshot_revision(Path("/flat/model.gguf")) == "local-flat-cache"
++    assert mod.classify_failure("ValueError: Failed to load model from file", 1) == (
++        "loader_compatibility_or_bad_loader_flags"
++    )
++    assert mod.classify_failure("unmatched failure", 2) == "process_lifecycle"
++    assert mod.safe_admission({"ok": False, "devices": [], "compute_apps": []})[
++        "blocked_reasons"
++    ] == ["dual_gpu_snapshot_unavailable"]
++
++    missing_records = mod.resolve_model_records(
++        model_resolver=lambda _hf_id, _preferred_quant: None,
++        metadata_reader=_metadata,
++    )
++    assert len(missing_records["blocked_reasons"]) == len(mod.MODEL_SPECS)
++    assert missing_records["records"][0]["exists"] is False
++
++    model_dir = tmp_path / "directory-not-file"
++    model_dir.mkdir()
++    dir_records = mod.resolve_model_records(
++        model_resolver=lambda _hf_id, _preferred_quant: str(model_dir),
++        metadata_reader=lambda _path: {"chat_template_present": False},
++    )
++    assert "qwen3_35b_a3b_moe_resolved_path_not_file" in dir_records["blocked_reasons"]
++    assert "qwen3_35b_a3b_moe_embedded_chat_template_missing" in dir_records["blocked_reasons"]
++
++    mixed = mod.root_cause_receipt(
++        {
++            "a": {"classification": "file_integrity"},
++            "b": {"classification": "vram_admission"},
++        },
++        {},
++    )
++    assert mixed["classification"] == "mixed"
++    assert mod.honest_verdict({"status": "complete_partial", "preconditions_checked": {}}).startswith(
++        "complete_partial:"
++    )
++
++    missing_upstream = mod.run(
++        result_path=tmp_path / "missing_upstream.json",
++        upstream_exp6200_path=tmp_path / "missing.json",
++        model_resolver=_resolver(_ggufs(tmp_path)),
++        metadata_reader=_metadata,
++        runtime=FakeRuntime(),
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=6.212,
++        write=False,
++    )
++    assert missing_upstream["status"] == "blocked"
++    assert "upstream_exp6200_missing" in missing_upstream["preconditions_checked"]["blocked_reasons"]
++
++    monkeypatch.setattr(mod, "_parent_writable", lambda _path: False)
++    unwritable = mod.run(
++        result_path=tmp_path / "unwritable.json",
++        upstream_exp6200_path=_upstream(tmp_path),
++        model_resolver=_resolver(_ggufs(tmp_path)),
++        metadata_reader=_metadata,
++        runtime=FakeRuntime(),
++        test_commands=TEST_COMMANDS,
++        test_exit_codes=TEST_EXIT_CODES,
++        duration_s=6.212,
++        write=False,
++    )
++    assert unwritable["status"] == "blocked"
++    assert "output_parent_not_writable" in unwritable["preconditions_checked"]["blocked_reasons"]
+-- 
+2.55.0
+

@@ -1,0 +1,1430 @@
+From e1e678db1f3d35410d9ef4684b591fe2fb60f7fc Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 22:48:56 -0400
+Subject: [PATCH 04368/11362] [conductor] PHASE B1 (INFRA slot 1; ADVERSARIAL
+ CHECK) -- VERIFY the A1 object-identity perception probe was GENUINELY
+ exercised on REAL frames (measured_on_real_frames=true, NOT the
+ mechanic-template synthetic-only-pass trap), the shape/motion tracker
+ actually ran (not a no-op), and per-game correspondence beats the
+ color-centroid baseline on the SAME frames.
+
+Automated research step by research conductor.
+Task ID: exp4845-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  63 ++
+ ops/arc_null_silent_bug_audit.md              |  17 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4845_perception_probe_audit.py | 621 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...xperiment_4845_perception_probe_audit.json | 146 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ..._experiment_4845_perception_probe_audit.py | 373 +++++++++++
+ 13 files changed, 1239 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/experiment_4845_perception_probe_audit.py
+ create mode 100644 results/experiment_4845_perception_probe_audit.json
+ create mode 100644 tests/python/test_experiment_4845_perception_probe_audit.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 7392fc044b..96ddd1c7f8 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -10561,3 +10561,66 @@ When `scripts/arc_orphan_solver_lint.py` runs
+ Then the lint passes and the artifact records `live_path_reachable=true` only
+ when the module is importable from the live agent path or consciously
+ allow-listed with a reason.
++
++### REQ-ARC-WMTE-4845: A1 Perception Probe Adversarial Audit
++
++Experiment 4845 SHALL adversarially audit the Exp 4841 object-identity
++perception probe before the .446 A1 result is trusted. The workflow SHALL read
++`results/experiment_4841_object_identity_perception_probe.json` through
++`scripts/summarize_artifact.py`, run `scripts/adversarial_verify.py` on that
++artifact, run the four hostile checks below, and append the audit outcome to
++`ops/arc_null_silent_bug_audit.md`.
++
++The audit SHALL verify all of the following:
++
++- `measured_on_real_frames=true` and every `per_game_correspondence` row used
++  for the decision comes from real `lp85`/`r11l`/`tu93` banked/offline frames,
++  not synthetic alignment cases.
++- The shape/motion tracker materially differs from the color-centroid baseline:
++  per-game shape-minus-baseline deltas are measured and are not all zero.
++- The `tu93` positive control genuinely passed, and any >=2-game recovery
++  claim matches the `per_game_correspondence` rows rather than celebrating over
++  failing numbers.
++- `scripts/arc_orphan_solver_lint.py` passes, `live_path_reachable=true`, and
++  `solve_provenance=development_proxy` rather than `live_agent_self_discovery`.
++
++Experiment 4845 SHALL write
++`results/experiment_4845_perception_probe_audit.json` with
++principle-annotated top-level fields for `honest_verdict`,
++`a1_genuinely_exercised`, and `inference_substrate`. It SHALL also record the
++source artifact path and checksum, summarizer result, adversarial verification
++result, per-game correspondence deltas, the four hostile check payloads,
++preconditions checked, random seed, duration, and a reproducibility checksum.
++A clean audit SHALL use a terminal `complete_` verdict and set
++`a1_genuinely_exercised=true`; a synthetic-only, baseline-degenerate,
++positive-control-failed, mismatched-verdict, unreachable-live-path, or dishonest
++provenance result SHALL be recorded as a non-test with
++`a1_genuinely_exercised=false`.
++
++Required field principles SHALL include:
++
++- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
++- `a1_genuinely_exercised`: principle "the load-bearing check -- measured_on_real_frames AND tracker!=baseline no-op AND positive control real AND verdict matches numbers; else A1 is a non-test (synthetic-only or a silent degenerate-to-baseline)."
++- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
++
++#### SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT
++
++Given the Exp 4841 perception artifact is present
++When Experiment 4845 runs the summarizer, adversarial verifier, real-frame,
++tracker-vs-baseline, positive-control, recovery-claim, live-path, and
++solve-provenance checks
++Then it writes `results/experiment_4845_perception_probe_audit.json`, appends a
++stable section to `ops/arc_null_silent_bug_audit.md`, records
++`inference_substrate=aggregation_from_upstream_artifacts`, and marks
++`a1_genuinely_exercised=true` only when the hostile checks all pass.
++
++#### SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION
++
++Given an Exp 4841-like artifact that is synthetic-only, has shape/motion scores
++equal to the color-centroid baseline on every game, fails the `tu93` positive
++control, claims success with fewer than two recovered games, is unreachable from
++the live path, or declares `solve_provenance=live_agent_self_discovery`
++When Experiment 4845 audits that artifact
++Then the audit records the corresponding failed check, emits a terminal
++`complete_a1_perception_probe_non_test_*` verdict, and sets
++`a1_genuinely_exercised=false`.
+diff --git a/ops/arc_null_silent_bug_audit.md b/ops/arc_null_silent_bug_audit.md
+index 099ab65bdb..57b030ff87 100644
+--- a/ops/arc_null_silent_bug_audit.md
++++ b/ops/arc_null_silent_bug_audit.md
+@@ -176,3 +176,20 @@
+ - Prefixes injected: `1`
+ - Prior changed proposals: `True`
+ - Imitation control held-out split: `True`
++## Experiment 4845 .446 A1 Perception Probe Audit
++
++- Verdict: `complete_a1_perception_probe_audit_genuinely_exercised`
++- a1_genuinely_exercised: `True`
++- Non-test reasons: `-`
++- Inference substrate: `aggregation_from_upstream_artifacts`
++
++| Check | Passed | Detail |
++|---|---:|---|
++| `measured_on_real_frames` | `True` | `{"artifact_measured_on_real_frames": true, "bad_games": []}` |
++| `tracker_changed_vs_baseline` | `True` | `{"deltas": {"lp85": 0.04985, "r11l": 0.192308, "tu93": 0.06639}, "distinct_delta_count": 3, "missing_numeric_games": [], "nonzero_delta_games": ["lp85", "r11l", "tu93"]}` |
++| `positive_control_and_recovery_claim` | `True` | `{"artifact_games_with_recovery": 1, "claimed_recovery_matches_rows": true, "complete_claimed": true, "goal_persistence": 0.5, "goal_track_id": 39, "player_motion": 220.624731, "player_track_id": 9, "positive_control_passed": true, "recovered_count": 1, "recovered_games": ["r11l"], "should_be_success": false, "success_claimed": false, "verdict_matches_numbers": true}` |
++| `live_path_and_provenance` | `True` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": true, "not_live_agent_self_discovery": true, "solve_provenance": "development_proxy"}` |
++| `summarizer_and_adversarial_verify` | `True` | `{"adversarial_flag_count": 0, "adversarial_loaded": true, "summarizer_returncode": 0}` |
++
++- Per-game deltas: `{'lp85': 0.04985, 'r11l': 0.192308, 'tu93': 0.06639}`
++- Source checksum: `sha256:f34b2628f231f7ccd67147963c40e486acd8890a18c26e0182b43dac889bd313`
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a81e6379ce..049ccde4e8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 199,
+   "code_violations": 0,
+-  "experiments_checked": 3852,
++  "experiments_checked": 3853,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4845_perception_probe_audit.py b/python/carnot/experiment_4845_perception_probe_audit.py
+new file mode 100644
+index 0000000000..89d266cd4e
+--- /dev/null
++++ b/python/carnot/experiment_4845_perception_probe_audit.py
+@@ -0,0 +1,621 @@
++"""Experiment 4845: hostile audit of the A1 perception probe.
++
++Spec refs: REQ-ARC-WMTE-4845,
++SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT,
++SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION.
++"""
++
++from __future__ import annotations
++
++from contextlib import redirect_stdout
++import hashlib
++import io
++import json
++from pathlib import Path
++import re
++import subprocess
++import sys
++import time
++from typing import Any, Callable, Mapping
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_4845_perception_probe_audit"
++EXPERIMENT_ID = 4845
++SCHEMA = "carnot.arc.a1_perception_probe_audit_4845.v1"
++SOURCE_ARTIFACT_RELATIVE_PATH = "results/experiment_4841_object_identity_perception_probe.json"
++RESULT_RELATIVE_PATH = "results/experiment_4845_perception_probe_audit.json"
++AUDIT_REPORT_RELATIVE_PATH = "ops/arc_null_silent_bug_audit.md"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++RANDOM_SEED = 4845
++DURATION_FLOOR_S = 0.0001
++TARGET_GAMES = ("lp85", "r11l", "tu93")
++REAL_SOURCE_KINDS = {"banked_replay", "transition_corpus"}
++TERMINAL_PREFIXES = ("success_", "complete_", "blocked_")
++
++SPEC_REFS = [
++    "REQ-ARC-WMTE-4845",
++    "SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT",
++    "SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION",
++]
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {"principle": "terminal prefix; audit complete is complete_/success_."},
++    "a1_genuinely_exercised": {
++        "principle": (
++            "the load-bearing check -- measured_on_real_frames AND tracker!=baseline no-op "
++            "AND positive control real AND verdict matches numbers; else A1 is a non-test "
++            "(synthetic-only or a silent degenerate-to-baseline)."
++        )
++    },
++    "inference_substrate": {"principle": "aggregation_from_upstream_artifacts (0.0001s floor)."},
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "experiment_id",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "source_artifact_path",
++    "source_artifact_checksum",
++    "field_principles",
++    "checks",
++    "non_test_reasons",
++    "per_game_correspondence_deltas",
++    "recovered_games_from_rows",
++    "claimed_recovery_matches_rows",
++    "summarizer_result",
++    "adversarial_result",
++    "live_lint_result",
++    "preconditions_checked",
++    "audit_report_path",
++    "random_seed",
++    "duration_s",
++    "reproducibility_checksum",
++)
++
++JsonDict = dict[str, Any]
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _finite_float(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    if not isinstance(value, int | float):
++        return None
++    number = float(value)
++    if number != number or number in (float("inf"), float("-inf")):
++        return None
++    return number
++
++
++def _bool(value: Any) -> bool:
++    return bool(value) if isinstance(value, bool) else False
++
++
++def _safe_suffix(reasons: list[str]) -> str:
++    if not reasons:
++        return "genuinely_exercised"
++    joined = "_".join(reasons[:3])
++    return re.sub(r"[^a-z0-9_]+", "_", joined.lower()).strip("_") or "failed_checks"
++
++
++def _read_json(path: Path) -> JsonDict:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return payload
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    clean = dict(payload)
++    clean["reproducibility_checksum"] = ""
++    encoded = json.dumps(clean, sort_keys=True, separators=(",", ":"), default=str).encode()
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def file_checksum(path: Path) -> str:
++    digest = hashlib.sha256()
++    digest.update(path.read_bytes())
++    return "sha256:" + digest.hexdigest()
++
++
++def run_summarizer(path: Path) -> JsonDict:
++    from scripts import summarize_artifact
++
++    buffer = io.StringIO()
++    with redirect_stdout(buffer):
++        returncode = summarize_artifact.summarize(path)
++    return {"returncode": int(returncode), "stdout": buffer.getvalue(), "stderr": ""}
++
++
++def run_adversarial_verify(path: Path) -> JsonDict:
++    from scripts import adversarial_verify
++
++    return dict(adversarial_verify.verify_artifact(path))
++
++
++def run_arc_orphan_solver_lint(root: Path) -> JsonDict:
++    command = [sys.executable, str(root / "scripts" / "arc_orphan_solver_lint.py")]
++    proc = subprocess.run(
++        command,
++        cwd=root,
++        capture_output=True,
++        text=True,
++        timeout=60,
++        check=False,
++    )
++    return {
++        "command": " ".join(command),
++        "returncode": int(proc.returncode),
++        "passed": proc.returncode == 0,
++        "stdout_tail": proc.stdout[-2000:],
++        "stderr_tail": proc.stderr[-2000:],
++    }
++
++
++def _real_frame_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    per_game = _mapping(artifact.get("per_game_correspondence"))
++    rows: dict[str, JsonDict] = {}
++    bad_games: list[str] = []
++    for game in TARGET_GAMES:
++        row = _mapping(per_game.get(game))
++        source_kind = row.get("source_kind")
++        n_frames = row.get("n_frames")
++        present = bool(row)
++        real = bool(source_kind in REAL_SOURCE_KINDS)
++        enough_frames = isinstance(n_frames, int) and n_frames >= 2
++        rows[game] = {
++            "present": present,
++            "source_kind": source_kind,
++            "n_frames": n_frames,
++            "real_frame_backed": real,
++            "enough_frames": enough_frames,
++        }
++        if not (present and real and enough_frames):
++            bad_games.append(game)
++
++    passed = bool(artifact.get("measured_on_real_frames") is True and per_game and not bad_games)
++    reasons = [] if passed else ["synthetic_or_missing_real_frames"]
++    return (
++        {
++            "passed": passed,
++            "artifact_measured_on_real_frames": artifact.get("measured_on_real_frames"),
++            "target_rows": rows,
++            "bad_games": bad_games,
++        },
++        reasons,
++    )
++
++
++def _tracker_changed_check(
++    artifact: Mapping[str, Any],
++) -> tuple[JsonDict, list[str], dict[str, float]]:
++    per_game = _mapping(artifact.get("per_game_correspondence"))
++    deltas: dict[str, float] = {}
++    missing_numeric: list[str] = []
++    for game, row_value in per_game.items():
++        row = _mapping(row_value)
++        shape = _finite_float(row.get("shape_motion_score"))
++        baseline = _finite_float(row.get("color_centroid_baseline_score"))
++        if shape is None or baseline is None:
++            missing_numeric.append(str(game))
++            continue
++        deltas[str(game)] = round(shape - baseline, 6)
++
++    nonzero_games = [game for game, delta in deltas.items() if abs(delta) > 1e-9]
++    distinct_delta_count = len(set(deltas.values()))
++    passed = bool(deltas and not missing_numeric and nonzero_games and distinct_delta_count > 1)
++    reasons = [] if passed else ["tracker_degenerate_to_baseline"]
++    return (
++        {
++            "passed": passed,
++            "deltas": deltas,
++            "nonzero_delta_games": nonzero_games,
++            "distinct_delta_count": distinct_delta_count,
++            "missing_numeric_games": missing_numeric,
++        },
++        reasons,
++        deltas,
++    )
++
++
++def _positive_control_and_recovery_check(artifact: Mapping[str, Any]) -> tuple[JsonDict, list[str]]:
++    per_game = _mapping(artifact.get("per_game_correspondence"))
++    positive = _mapping(artifact.get("positive_control_tu93"))
++    player_id = positive.get("player_track_id")
++    goal_id = positive.get("goal_track_id")
++    player_motion = _finite_float(positive.get("player_motion"))
++    goal_persistence = _finite_float(positive.get("goal_persistence"))
++    positive_passed = bool(
++        artifact.get("positive_control_tu93_passed") is True
++        and positive.get("passed") is True
++        and player_id is not None
++        and goal_id is not None
++        and player_id != goal_id
++        and player_motion is not None
++        and player_motion > 0.0
++        and goal_persistence is not None
++        and goal_persistence > 0.0
++    )
++
++    recovered_games = [
++        str(game) for game, row in per_game.items() if _bool(_mapping(row).get("recovered"))
++    ]
++    recovered_count = len(recovered_games)
++    claimed_recovery = artifact.get("games_with_recovery")
++    claim_matches_rows = claimed_recovery == recovered_count
++    success_claimed = str(artifact.get("honest_verdict") or "").startswith("success_")
++    complete_claimed = str(artifact.get("honest_verdict") or "").startswith("complete_")
++    should_be_success = bool(positive_passed and recovered_count >= 2)
++    verdict_matches_numbers = bool(
++        claim_matches_rows
++        and (
++            (success_claimed and should_be_success) or (complete_claimed and not should_be_success)
++        )
++    )
++
++    reasons: list[str] = []
++    if not positive_passed:
++        reasons.append("tu93_positive_control_failed")
++    if not claim_matches_rows:
++        reasons.append("games_with_recovery_mismatch")
++    if success_claimed and recovered_count < 2:
++        reasons.append("success_claim_without_two_recovered_games")
++    elif not verdict_matches_numbers:
++        reasons.append("verdict_does_not_match_recovery_numbers")
++
++    return (
++        {
++            "passed": not reasons,
++            "positive_control_passed": positive_passed,
++            "player_track_id": player_id,
++            "goal_track_id": goal_id,
++            "player_motion": player_motion,
++            "goal_persistence": goal_persistence,
++            "recovered_games": recovered_games,
++            "recovered_count": recovered_count,
++            "artifact_games_with_recovery": claimed_recovery,
++            "claimed_recovery_matches_rows": claim_matches_rows,
++            "success_claimed": success_claimed,
++            "complete_claimed": complete_claimed,
++            "should_be_success": should_be_success,
++            "verdict_matches_numbers": verdict_matches_numbers,
++        },
++        reasons,
++    )
++
++
++def _live_path_and_provenance_check(
++    artifact: Mapping[str, Any],
++    live_lint_result: Mapping[str, Any],
++) -> tuple[JsonDict, list[str]]:
++    lint_passed = bool(live_lint_result.get("passed"))
++    artifact_live = artifact.get("live_path_reachable") is True
++    provenance = artifact.get("solve_provenance")
++    reasons: list[str] = []
++    if not lint_passed or not artifact_live:
++        reasons.append("live_path_unreachable")
++    if provenance != "development_proxy":
++        reasons.append("solve_provenance_not_development_proxy")
++    return (
++        {
++            "passed": not reasons,
++            "arc_orphan_solver_lint_passed": lint_passed,
++            "artifact_live_path_reachable": artifact_live,
++            "solve_provenance": provenance,
++            "not_live_agent_self_discovery": provenance != "live_agent_self_discovery",
++        },
++        reasons,
++    )
++
++
++def _tool_cleanliness_check(
++    summarizer_result: Mapping[str, Any],
++    adversarial_result: Mapping[str, Any],
++) -> tuple[JsonDict, list[str]]:
++    summarizer_clean = summarizer_result.get("returncode") == 0
++    flag_count = adversarial_result.get("flag_count")
++    adversarial_clean = adversarial_result.get("loaded") is not False and flag_count == 0
++    reasons: list[str] = []
++    if not summarizer_clean:
++        reasons.append("summarizer_reported_live_flags")
++    if not adversarial_clean:
++        reasons.append("adversarial_verify_flagged")
++    return (
++        {
++            "passed": not reasons,
++            "summarizer_returncode": summarizer_result.get("returncode"),
++            "adversarial_flag_count": flag_count,
++            "adversarial_loaded": adversarial_result.get("loaded"),
++        },
++        reasons,
++    )
++
++
++def audit_a1_artifact(
++    artifact: Mapping[str, Any],
++    *,
++    summarizer_result: Mapping[str, Any],
++    adversarial_result: Mapping[str, Any],
++    live_lint_result: Mapping[str, Any],
++) -> JsonDict:
++    real_check, real_reasons = _real_frame_check(artifact)
++    tracker_check, tracker_reasons, deltas = _tracker_changed_check(artifact)
++    positive_check, positive_reasons = _positive_control_and_recovery_check(artifact)
++    live_check, live_reasons = _live_path_and_provenance_check(artifact, live_lint_result)
++    tool_check, tool_reasons = _tool_cleanliness_check(summarizer_result, adversarial_result)
++
++    reasons = real_reasons + tracker_reasons + positive_reasons + live_reasons + tool_reasons
++    exercised = not reasons
++    return {
++        "honest_verdict": (
++            "complete_a1_perception_probe_audit_genuinely_exercised"
++            if exercised
++            else f"complete_a1_perception_probe_non_test_{_safe_suffix(reasons)}"
++        ),
++        "a1_genuinely_exercised": exercised,
++        "non_test_reasons": reasons,
++        "checks": {
++            "measured_on_real_frames": real_check,
++            "tracker_changed_vs_baseline": tracker_check,
++            "positive_control_and_recovery_claim": positive_check,
++            "live_path_and_provenance": live_check,
++            "summarizer_and_adversarial_verify": tool_check,
++        },
++        "per_game_correspondence_deltas": deltas,
++        "recovered_games_from_rows": positive_check["recovered_count"],
++        "claimed_recovery_matches_rows": positive_check["claimed_recovery_matches_rows"],
++    }
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:
++    repo = Path(root)
++    source = repo / SOURCE_ARTIFACT_RELATIVE_PATH
++    spec = repo / SPEC_RELATIVE_PATH
++    spec_text = spec.read_text(encoding="utf-8") if spec.exists() else ""
++    return {
++        "ok": source.exists() and "REQ-ARC-WMTE-4845" in spec_text,
++        "source_artifact_present": source.exists(),
++        "spec_has_req_4845": "REQ-ARC-WMTE-4845" in spec_text,
++        "summarizer_script_present": (repo / "scripts/summarize_artifact.py").exists(),
++        "adversarial_verify_script_present": (repo / "scripts/adversarial_verify.py").exists(),
++        "arc_orphan_solver_lint_present": (repo / "scripts/arc_orphan_solver_lint.py").exists(),
++    }
++
++
++def _blocked_artifact(checks: Mapping[str, Any]) -> JsonDict:
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "source_artifact_path": SOURCE_ARTIFACT_RELATIVE_PATH,
++        "source_artifact_checksum": None,
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_verdict": "blocked_missing_exp4841_perception_artifact",
++        "a1_genuinely_exercised": False,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "checks": {},
++        "non_test_reasons": ["missing_exp4841_perception_artifact"],
++        "per_game_correspondence_deltas": {},
++        "recovered_games_from_rows": 0,
++        "claimed_recovery_matches_rows": False,
++        "summarizer_result": {},
++        "adversarial_result": {},
++        "live_lint_result": {},
++        "preconditions_checked": dict(checks),
++        "audit_report_path": AUDIT_REPORT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "duration_s": DURATION_FLOOR_S,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    *,
++    source_path: Path,
++    source_artifact: Mapping[str, Any],
++    audit: Mapping[str, Any],
++    summarizer_result: Mapping[str, Any],
++    adversarial_result: Mapping[str, Any],
++    live_lint_result: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++) -> JsonDict:
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "source_artifact_path": SOURCE_ARTIFACT_RELATIVE_PATH,
++        "source_artifact_checksum": file_checksum(source_path),
++        "source_honest_verdict": source_artifact.get("honest_verdict"),
++        "field_principles": FIELD_PRINCIPLES,
++        "honest_verdict": audit.get("honest_verdict"),
++        "a1_genuinely_exercised": audit.get("a1_genuinely_exercised"),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "checks": dict(_mapping(audit.get("checks"))),
++        "non_test_reasons": list(audit.get("non_test_reasons") or []),
++        "per_game_correspondence_deltas": dict(
++            _mapping(audit.get("per_game_correspondence_deltas"))
++        ),
++        "recovered_games_from_rows": audit.get("recovered_games_from_rows"),
++        "claimed_recovery_matches_rows": audit.get("claimed_recovery_matches_rows"),
++        "summarizer_result": dict(summarizer_result),
++        "adversarial_result": dict(adversarial_result),
++        "live_lint_result": dict(live_lint_result),
++        "preconditions_checked": dict(preconditions_checked),
++        "audit_report_path": AUDIT_REPORT_RELATIVE_PATH,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(DURATION_FLOOR_S, duration_s), 6),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing:{field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_missing_terminal_prefix")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles_mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate_mismatch")
++    if not isinstance(artifact.get("a1_genuinely_exercised"), bool):
++        errors.append("a1_genuinely_exercised_must_be_bool")
++    if not isinstance(artifact.get("checks"), dict):
++        errors.append("checks_must_be_dict")
++    if not isinstance(artifact.get("non_test_reasons"), list):
++        errors.append("non_test_reasons_must_be_list")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed_mismatch")
++    duration = _finite_float(artifact.get("duration_s"))
++    if duration is None or duration < DURATION_FLOOR_S:
++        errors.append("duration_below_aggregation_floor")
++    expected = "sha256:" + payload_checksum(artifact)
++    if artifact.get("reproducibility_checksum") != expected:
++        errors.append("reproducibility_checksum_mismatch")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], *, root: Path | str = REPO_ROOT) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def render_markdown_section(artifact: Mapping[str, Any]) -> str:
++    checks = _mapping(artifact.get("checks"))
++    rows = [
++        "",
++        "## Experiment 4845 .446 A1 Perception Probe Audit",
++        "",
++        f"- Verdict: `{artifact.get('honest_verdict')}`",
++        f"- a1_genuinely_exercised: `{artifact.get('a1_genuinely_exercised')}`",
++        f"- Non-test reasons: `{', '.join(artifact.get('non_test_reasons') or []) or '-'}`",
++        f"- Inference substrate: `{artifact.get('inference_substrate')}`",
++        "",
++        "| Check | Passed | Detail |",
++        "|---|---:|---|",
++    ]
++    for name, check in checks.items():
++        if not isinstance(check, Mapping):
++            continue
++        detail = {
++            key: value
++            for key, value in check.items()
++            if key != "passed" and key not in {"target_rows"}
++        }
++        rows.append(
++            f"| `{name}` | `{check.get('passed')}` | `{json.dumps(detail, sort_keys=True)}` |"
++        )
++    rows.extend(
++        [
++            "",
++            f"- Per-game deltas: `{artifact.get('per_game_correspondence_deltas')}`",
++            f"- Source checksum: `{artifact.get('source_artifact_checksum')}`",
++            "",
++        ]
++    )
++    return "\n".join(rows)
++
++
++def append_markdown_report(
++    artifact: Mapping[str, Any],
++    *,
++    root: Path | str = REPO_ROOT,
++) -> Path:
++    report_path = Path(root) / AUDIT_REPORT_RELATIVE_PATH
++    marker = "## Experiment 4845 .446 A1 Perception Probe Audit"
++    if report_path.exists():
++        current = report_path.read_text(encoding="utf-8")
++        if marker in current:
++            return report_path
++    else:
++        report_path.parent.mkdir(parents=True, exist_ok=True)
++        current = "# ARC Null Silent-Bug Audit\n"
++    report_path.write_text(current.rstrip() + render_markdown_section(artifact), encoding="utf-8")
++    return report_path
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    write: bool = True,
++    now: Callable[[], float] | None = None,
++) -> JsonDict:
++    repo = Path(root)
++    clock = now or time.monotonic
++    start = clock()
++    checks = check_preconditions(repo)
++    if not checks["ok"]:
++        artifact = _blocked_artifact(checks)
++        if write:
++            write_artifact(artifact, root=repo)
++            append_markdown_report(artifact, root=repo)
++        return artifact
++
++    source_path = repo / SOURCE_ARTIFACT_RELATIVE_PATH
++    source_artifact = _read_json(source_path)
++    summarizer_result = run_summarizer(source_path)
++    adversarial_result = run_adversarial_verify(source_path)
++    live_lint_result = run_arc_orphan_solver_lint(repo)
++    audit = audit_a1_artifact(
++        source_artifact,
++        summarizer_result=summarizer_result,
++        adversarial_result=adversarial_result,
++        live_lint_result=live_lint_result,
++    )
++    artifact = build_artifact(
++        source_path=source_path,
++        source_artifact=source_artifact,
++        audit=audit,
++        summarizer_result=summarizer_result,
++        adversarial_result=adversarial_result,
++        live_lint_result=live_lint_result,
++        preconditions_checked=checks,
++        duration_s=clock() - start,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        write_artifact(artifact, root=repo)
++        append_markdown_report(artifact, root=repo)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper.
++    artifact = run()
++    print(
++        json.dumps(
++            {
++                "honest_verdict": artifact["honest_verdict"],
++                "a1_genuinely_exercised": artifact["a1_genuinely_exercised"],
++                "result": RESULT_RELATIVE_PATH,
++            },
++            indent=2,
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index f4ca64b650..2fb5b396f4 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-27T02:32:45.580277Z",
+-  "duration_s": 0.07048821449279785,
++  "run_date": "2026-06-27T02:48:27.751194Z",
++  "duration_s": 0.05101776123046875,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "2a6a4f4ed5c286c7137544ea148feb9919b054162402cbf6489c19ec567e7fc1",
++  "reproducibility_checksum": "2c41041ecd9d5dbe1a4cd299a6f5d1e73013c1844aa02b9bb3320c0c4b11f722",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "bda790b01e03021641c1e43e1fcb211ed3132b6c"
++    "adversarial_verify_version": "3809cd58a918c432a04ac36c0b452458debd3583"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 060f0b9761..3f026f3f3d 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-27T02:32:45.677067Z",
+-  "duration_s": 0.08712291717529297,
++  "run_date": "2026-06-27T02:48:27.845534Z",
++  "duration_s": 0.08492207527160645,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "eed14b056ff7c8987288ad2e55bd61b08723bc57aab07bfcf2fe3180f2b0a6ca",
++  "reproducibility_checksum": "2a007bc8b9985de4a97ab274e332744e3f5015f88f474327c8443df312d1249a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "bda790b01e03021641c1e43e1fcb211ed3132b6c"
++    "adversarial_verify_version": "3809cd58a918c432a04ac36c0b452458debd3583"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 70589e499c..960008f811 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.11334228515625,
++  "efficiency_gains_ms": 2.1452903747558594,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 5002c8fff1..8d979ea846 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.0686922147870064e-05,
++  "duration_s": 5.169701762497425e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4845_perception_probe_audit.json b/results/experiment_4845_perception_probe_audit.json
+new file mode 100644
+index 0000000000..f5de88e742
+--- /dev/null
++++ b/results/experiment_4845_perception_probe_audit.json
+@@ -0,0 +1,146 @@
++{
++  "a1_genuinely_exercised": true,
++  "adversarial_result": {
++    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4841_object_identity_perception_probe.json",
++    "exp_id": "experiment_4841_object_identity_perception_probe",
++    "flag_count": 0,
++    "flags": [],
++    "honest_verdict": "complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding",
++    "loaded": true,
++    "max_severity": -1,
++    "title": ""
++  },
++  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
++  "checks": {
++    "live_path_and_provenance": {
++      "arc_orphan_solver_lint_passed": true,
++      "artifact_live_path_reachable": true,
++      "not_live_agent_self_discovery": true,
++      "passed": true,
++      "solve_provenance": "development_proxy"
++    },
++    "measured_on_real_frames": {
++      "artifact_measured_on_real_frames": true,
++      "bad_games": [],
++      "passed": true,
++      "target_rows": {
++        "lp85": {
++          "enough_frames": true,
++          "n_frames": 53,
++          "present": true,
++          "real_frame_backed": true,
++          "source_kind": "banked_replay"
++        },
++        "r11l": {
++          "enough_frames": true,
++          "n_frames": 5,
++          "present": true,
++          "real_frame_backed": true,
++          "source_kind": "banked_replay"
++        },
++        "tu93": {
++          "enough_frames": true,
++          "n_frames": 94,
++          "present": true,
++          "real_frame_backed": true,
++          "source_kind": "banked_replay"
++        }
++      }
++    },
++    "positive_control_and_recovery_claim": {
++      "artifact_games_with_recovery": 1,
++      "claimed_recovery_matches_rows": true,
++      "complete_claimed": true,
++      "goal_persistence": 0.5,
++      "goal_track_id": 39,
++      "passed": true,
++      "player_motion": 220.624731,
++      "player_track_id": 9,
++      "positive_control_passed": true,
++      "recovered_count": 1,
++      "recovered_games": [
++        "r11l"
++      ],
++      "should_be_success": false,
++      "success_claimed": false,
++      "verdict_matches_numbers": true
++    },
++    "summarizer_and_adversarial_verify": {
++      "adversarial_flag_count": 0,
++      "adversarial_loaded": true,
++      "passed": true,
++      "summarizer_returncode": 0
++    },
++    "tracker_changed_vs_baseline": {
++      "deltas": {
++        "lp85": 0.04985,
++        "r11l": 0.192308,
++        "tu93": 0.06639
++      },
++      "distinct_delta_count": 3,
++      "missing_numeric_games": [],
++      "nonzero_delta_games": [
++        "lp85",
++        "r11l",
++        "tu93"
++      ],
++      "passed": true
++    }
++  },
++  "claimed_recovery_matches_rows": true,
++  "duration_s": 0.524804,
++  "experiment": "experiment_4845_perception_probe_audit",
++  "experiment_id": 4845,
++  "field_principles": {
++    "a1_genuinely_exercised": {
++      "principle": "the load-bearing check -- measured_on_real_frames AND tracker!=baseline no-op AND positive control real AND verdict matches numbers; else A1 is a non-test (synthetic-only or a silent degenerate-to-baseline)."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; audit complete is complete_/success_."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
++    }
++  },
++  "honest_verdict": "complete_a1_perception_probe_audit_genuinely_exercised",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "live_lint_result": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_orphan_solver_lint.py",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (40 modules in the live closure).\n"
++  },
++  "non_test_reasons": [],
++  "per_game_correspondence_deltas": {
++    "lp85": 0.04985,
++    "r11l": 0.192308,
++    "tu93": 0.06639
++  },
++  "preconditions_checked": {
++    "adversarial_verify_script_present": true,
++    "arc_orphan_solver_lint_present": true,
++    "ok": true,
++    "source_artifact_present": true,
++    "spec_has_req_4845": true,
++    "summarizer_script_present": true
++  },
++  "random_seed": 4845,
++  "recovered_games_from_rows": 1,
++  "reproducibility_checksum": "sha256:675c18d76195d5d20dcd63b980596d525a16d7d7db181527c31b6e31d1b16838",
++  "result_path": "results/experiment_4845_perception_probe_audit.json",
++  "schema": "carnot.arc.a1_perception_probe_audit_4845.v1",
++  "source_artifact_checksum": "sha256:f34b2628f231f7ccd67147963c40e486acd8890a18c26e0182b43dac889bd313",
++  "source_artifact_path": "results/experiment_4841_object_identity_perception_probe.json",
++  "source_honest_verdict": "complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding",
++  "spec_refs": [
++    "REQ-ARC-WMTE-4845",
++    "SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT",
++    "SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION"
++  ],
++  "summarizer_result": {
++    "returncode": 0,
++    "stderr": "",
++    "stdout": "==============================================================================\nARTIFACT  experiment_4841_object_identity_perception_probe.json\n------------------------------------------------------------------------------\n  verdict          : complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.264711   substrate: verifier_ensemble_against_cached_candidates\n  duration floor   : verifier_ensemble_against_cached_candidates >=1.0s (verifier_scoring)\n  adversarial flags: none\n"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 31416a2ddd..c8e4d4a637 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T02:32:18Z",
+-  "finished_at": "2026-06-27T02:32:18Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-27T02:48:02Z",
++  "finished_at": "2026-06-27T02:48:02Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ff58f912dd..5a08ef1f77 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T02:32:18Z",
+-  "finished_at": "2026-06-27T02:32:19Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-27T02:48:02Z",
++  "finished_at": "2026-06-27T02:48:02Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 51698e22d0..8942ae906a 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260627",
+-  "started_at": "2026-06-27T02:32:19Z",
+-  "finished_at": "2026-06-27T02:32:19Z",
++  "started_at": "2026-06-27T02:48:02Z",
++  "finished_at": "2026-06-27T02:48:02Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4845_perception_probe_audit.py b/tests/python/test_experiment_4845_perception_probe_audit.py
+new file mode 100644
+index 0000000000..01c73095df
+--- /dev/null
++++ b/tests/python/test_experiment_4845_perception_probe_audit.py
+@@ -0,0 +1,373 @@
++"""Tests for Exp 4845 hostile A1 perception-probe audit.
++
++Spec refs: REQ-ARC-WMTE-4845,
++SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT,
++SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4845_perception_probe_audit as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++
++
++def _good_a1_artifact() -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4841_object_identity_perception_probe",
++        "honest_verdict": "complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding",
++        "measured_on_real_frames": True,
++        "per_game_correspondence": {
++            "lp85": {
++                "shape_motion_score": 0.892323,
++                "color_centroid_baseline_score": 0.842473,
++                "n_frames": 53,
++                "recovered": False,
++                "source_kind": "banked_replay",
++            },
++            "r11l": {
++                "shape_motion_score": 0.596154,
++                "color_centroid_baseline_score": 0.403846,
++                "n_frames": 5,
++                "recovered": True,
++                "source_kind": "banked_replay",
++            },
++            "tu93": {
++                "shape_motion_score": 0.924274,
++                "color_centroid_baseline_score": 0.857884,
++                "n_frames": 94,
++                "recovered": False,
++                "source_kind": "banked_replay",
++            },
++        },
++        "positive_control_tu93_passed": True,
++        "positive_control_tu93": {
++            "passed": True,
++            "player_track_id": 9,
++            "goal_track_id": 39,
++            "player_motion": 220.624731,
++            "goal_persistence": 0.5,
++        },
++        "games_with_recovery": 1,
++        "live_path_reachable": True,
++        "solve_provenance": "development_proxy",
++    }
++
++
++def _clean_auxiliary_results() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
++    return (
++        {"returncode": 0, "stdout": "LIVE re-check: clean", "stderr": ""},
++        {"loaded": True, "flag_count": 0, "flags": []},
++        {"passed": True, "returncode": 0, "stdout_tail": "OK", "stderr_tail": ""},
++    )
++
++
++def test_req_arc_wmte_4845_spec_declares_audit_contract() -> None:
++    """REQ-ARC-WMTE-4845: OpenSpec anchors the hostile audit artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-ARC-WMTE-4845",
++        "SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT",
++        "SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION",
++        mod.RESULT_RELATIVE_PATH,
++        mod.AUDIT_REPORT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++
++
++def test_scenario_arc_wmte_4845_good_artifact_is_genuinely_exercised() -> None:
++    """SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT: real nulls with exercised tracker pass."""
++
++    summary, adversarial, lint = _clean_auxiliary_results()
++    audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++
++    assert audit["a1_genuinely_exercised"] is True
++    assert audit["non_test_reasons"] == []
++    assert audit["checks"]["measured_on_real_frames"]["passed"] is True
++    assert audit["checks"]["tracker_changed_vs_baseline"]["passed"] is True
++    assert audit["checks"]["positive_control_and_recovery_claim"]["passed"] is True
++    assert audit["checks"]["live_path_and_provenance"]["passed"] is True
++    assert audit["per_game_correspondence_deltas"]["r11l"] == pytest.approx(0.192308)
++    assert audit["recovered_games_from_rows"] == 1
++    assert audit["claimed_recovery_matches_rows"] is True
++
++
++def test_scenario_arc_wmte_4845_non_test_variants_fail_closed() -> None:
++    """SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION: hostile checks reject no-op probes."""
++
++    summary, adversarial, lint = _clean_auxiliary_results()
++
++    synthetic = _good_a1_artifact()
++    synthetic["measured_on_real_frames"] = False
++    synthetic["per_game_correspondence"]["lp85"]["source_kind"] = "synthetic_alignment"
++
++    no_op = _good_a1_artifact()
++    for row in no_op["per_game_correspondence"].values():
++        row["shape_motion_score"] = row["color_centroid_baseline_score"]
++        row["recovered"] = False
++    no_op["games_with_recovery"] = 0
++
++    celebratory = _good_a1_artifact()
++    celebratory["honest_verdict"] = "success_object_identity_perception_recovers_goal_grounding"
++
++    dishonest = _good_a1_artifact()
++    dishonest["solve_provenance"] = "live_agent_self_discovery"
++    dishonest["live_path_reachable"] = False
++    bad_lint = {"passed": False, "returncode": 1, "stdout_tail": "", "stderr_tail": "boom"}
++
++    cases = [
++        (synthetic, lint, "synthetic_or_missing_real_frames"),
++        (no_op, lint, "tracker_degenerate_to_baseline"),
++        (celebratory, lint, "success_claim_without_two_recovered_games"),
++        (dishonest, bad_lint, "live_path_unreachable"),
++        (dishonest, lint, "solve_provenance_not_development_proxy"),
++    ]
++
++    for artifact, lint_result, reason in cases:
++        audit = mod.audit_a1_artifact(
++            artifact,
++            summarizer_result=summary,
++            adversarial_result=adversarial,
++            live_lint_result=lint_result,
++        )
++        assert audit["a1_genuinely_exercised"] is False
++        assert reason in audit["non_test_reasons"]
++        assert audit["honest_verdict"].startswith("complete_a1_perception_probe_non_test_")
++
++
++def test_req_arc_wmte_4845_build_schema_and_report_write(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4845: artifact and markdown writes are checksum-stable."""
++
++    source = tmp_path / mod.SOURCE_ARTIFACT_RELATIVE_PATH
++    source.parent.mkdir(parents=True)
++    source.write_text(json.dumps(_good_a1_artifact()), encoding="utf-8")
++    summary, adversarial, lint = _clean_auxiliary_results()
++    audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++
++    artifact = mod.build_artifact(
++        source_path=source,
++        source_artifact=_good_a1_artifact(),
++        audit=audit,
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++        preconditions_checked={"source_artifact_present": True, "spec_has_req_4845": True},
++        duration_s=0.0,
++    )
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["duration_s"] == mod.DURATION_FLOOR_S
++    assert artifact["source_artifact_checksum"] == mod.file_checksum(source)
++
++    result_path = mod.write_artifact(artifact, root=tmp_path)
++    report_path = mod.append_markdown_report(artifact, root=tmp_path)
++    mod.append_markdown_report(artifact, root=tmp_path)
++
++    loaded = json.loads(result_path.read_text(encoding="utf-8"))
++    report_text = report_path.read_text(encoding="utf-8")
++    assert loaded == artifact
++    assert report_text.count("## Experiment 4845 .446 A1 Perception Probe Audit") == 1
++    assert "a1_genuinely_exercised" in report_text
++
++    broken = dict(artifact)
++    broken["a1_genuinely_exercised"] = "yes"
++    broken["reproducibility_checksum"] = "sha256:bad"
++    errors = mod.artifact_schema_errors(broken)
++    assert "a1_genuinely_exercised_must_be_bool" in errors
++    assert "reproducibility_checksum_mismatch" in errors
++
++
++def test_req_arc_wmte_4845_run_checked_in_artifact() -> None:
++    """SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT: checked-in Exp 4841 passes the audit."""
++
++    artifact = mod.run(root=REPO, write=False)
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "complete_a1_perception_probe_audit_genuinely_exercised"
++    assert artifact["a1_genuinely_exercised"] is True
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["checks"]["measured_on_real_frames"]["passed"] is True
++    assert artifact["checks"]["tracker_changed_vs_baseline"]["passed"] is True
++    assert artifact["checks"]["positive_control_and_recovery_claim"]["passed"] is True
++    assert artifact["checks"]["live_path_and_provenance"]["passed"] is True
++    assert artifact["summarizer_result"]["returncode"] == 0
++    assert artifact["adversarial_result"]["flag_count"] == 0
++    assert artifact["live_lint_result"]["passed"] is True
++
++
++def test_scenario_arc_wmte_4845_blocked_preconditions_do_not_fabricate(tmp_path: Path) -> None:
++    """REQ-ARC-WMTE-4845: missing source artifacts produce blocked audit output."""
++
++    artifact = mod.run(root=tmp_path, write=True)
++
++    assert mod.artifact_schema_errors(artifact) == []
++    assert artifact["honest_verdict"] == "blocked_missing_exp4841_perception_artifact"
++    assert artifact["a1_genuinely_exercised"] is False
++    assert artifact["checks"] == {}
++    assert "source_artifact_present" in artifact["preconditions_checked"]
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++    assert (tmp_path / mod.AUDIT_REPORT_RELATIVE_PATH).exists()
++
++
++def test_req_arc_wmte_4845_defensive_branch_coverage(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-ARC-WMTE-4845: malformed inputs fail closed without fabricated trust."""
++
++    assert mod._finite_float(True) is None
++    assert mod._finite_float("0.5") is None
++    assert mod._finite_float(float("nan")) is None
++    assert mod._safe_suffix([]) == "genuinely_exercised"
++
++    not_object = tmp_path / "list.json"
++    not_object.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="must contain a JSON object"):
++        mod._read_json(not_object)
++
++    summary, adversarial, lint = _clean_auxiliary_results()
++    missing_numeric = _good_a1_artifact()
++    missing_numeric["per_game_correspondence"]["lp85"]["shape_motion_score"] = None
++    missing_numeric["per_game_correspondence"]["r11l"]["color_centroid_baseline_score"] = "bad"
++    numeric_audit = mod.audit_a1_artifact(
++        missing_numeric,
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++    assert "tracker_degenerate_to_baseline" in numeric_audit["non_test_reasons"]
++    assert numeric_audit["checks"]["tracker_changed_vs_baseline"]["missing_numeric_games"] == [
++        "lp85",
++        "r11l",
++    ]
++
++    bad_positive = _good_a1_artifact()
++    bad_positive["positive_control_tu93_passed"] = False
++    bad_positive["positive_control_tu93"] = {"passed": False}
++    assert (
++        "tu93_positive_control_failed"
++        in mod.audit_a1_artifact(
++            bad_positive,
++            summarizer_result=summary,
++            adversarial_result=adversarial,
++            live_lint_result=lint,
++        )["non_test_reasons"]
++    )
++
++    mismatch = _good_a1_artifact()
++    mismatch["games_with_recovery"] = 2
++    assert (
++        "games_with_recovery_mismatch"
++        in mod.audit_a1_artifact(
++            mismatch,
++            summarizer_result=summary,
++            adversarial_result=adversarial,
++            live_lint_result=lint,
++        )["non_test_reasons"]
++    )
++
++    underclaim = _good_a1_artifact()
++    underclaim["per_game_correspondence"]["tu93"]["recovered"] = True
++    underclaim["games_with_recovery"] = 2
++    assert (
++        "verdict_does_not_match_recovery_numbers"
++        in mod.audit_a1_artifact(
++            underclaim,
++            summarizer_result=summary,
++            adversarial_result=adversarial,
++            live_lint_result=lint,
++        )["non_test_reasons"]
++    )
++
++    tool_failed = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        summarizer_result={"returncode": 2},
++        adversarial_result={"loaded": True, "flag_count": 1},
++        live_lint_result=lint,
++    )
++    assert "summarizer_reported_live_flags" in tool_failed["non_test_reasons"]
++    assert "adversarial_verify_flagged" in tool_failed["non_test_reasons"]
++
++    source = tmp_path / mod.SOURCE_ARTIFACT_RELATIVE_PATH
++    source.parent.mkdir(parents=True, exist_ok=True)
++    source.write_text(json.dumps(_good_a1_artifact()), encoding="utf-8")
++    audit = mod.audit_a1_artifact(
++        _good_a1_artifact(),
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++    )
++    artifact = mod.build_artifact(
++        source_path=source,
++        source_artifact=_good_a1_artifact(),
++        audit=audit,
++        summarizer_result=summary,
++        adversarial_result=adversarial,
++        live_lint_result=lint,
++        preconditions_checked={"ok": True},
++        duration_s=1.0,
++    )
++    broken = dict(artifact)
++    broken.update(
++        {
++            "honest_verdict": "bad",
++            "field_principles": {},
++            "inference_substrate": "live_llm_inference",
++            "checks": [],
++            "non_test_reasons": "none",
++            "random_seed": 1,
++            "duration_s": 0.0,
++            "reproducibility_checksum": "sha256:bad",
++        }
++    )
++    errors = mod.artifact_schema_errors(broken)
++    for expected in (
++        "honest_verdict_missing_terminal_prefix",
++        "field_principles_mismatch",
++        "inference_substrate_mismatch",
++        "checks_must_be_dict",
++        "non_test_reasons_must_be_list",
++        "random_seed_mismatch",
++        "duration_below_aggregation_floor",
++        "reproducibility_checksum_mismatch",
++    ):
++        assert expected in errors
++    with pytest.raises(ValueError, match="honest_verdict_missing_terminal_prefix"):
++        mod.write_artifact(broken, root=tmp_path)
++
++    report_artifact = dict(artifact)
++    report_artifact["checks"] = dict(artifact["checks"], malformed=[])
++    assert "malformed" not in mod.render_markdown_section(report_artifact)
++
++    monkeypatch.setattr(mod, "check_preconditions", lambda _root: {"ok": True})
++    monkeypatch.setattr(mod, "run_summarizer", lambda _path: summary)
++    monkeypatch.setattr(mod, "run_adversarial_verify", lambda _path: adversarial)
++    monkeypatch.setattr(mod, "run_arc_orphan_solver_lint", lambda _root: lint)
++    written = mod.run(root=tmp_path, write=True, now=iter([1.0, 1.25]).__next__)
++    assert written["duration_s"] == 0.25
++    assert (tmp_path / mod.RESULT_RELATIVE_PATH).exists()
++
++    monkeypatch.setattr(mod, "artifact_schema_errors", lambda _artifact: ["boom"])
++    with pytest.raises(ValueError, match="boom"):
++        mod.run(root=tmp_path, write=False, now=iter([2.0, 2.25]).__next__)
+-- 
+2.55.0
+

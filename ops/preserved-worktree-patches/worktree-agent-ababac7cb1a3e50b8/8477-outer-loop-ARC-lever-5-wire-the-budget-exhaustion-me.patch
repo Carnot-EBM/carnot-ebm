@@ -1,0 +1,651 @@
+From 3253d562a12ea77a1ace9ca8be824b5ff520294b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 17:36:32 -0400
+Subject: [PATCH 08477/11362] [outer-loop] ARC lever #5: wire the
+ budget-exhaustion meter into the live path (REQ-ARC-WMTE-6180-WIRING)
+
+Operator directive 2026-08-07. REQ-ARC-WMTE-6180 built the estimator
+(arc_hud_bar_detector.budget_exhaustion_estimate) and its consumer
+(arc_solver_kit.budget_aware_path_cost_weight), both genuinely tested, but
+left them deliberately unwired -- the Phase Prototype discipline. This is
+that wiring, still DEFAULT OFF pending an A/B.
+
+Wired into StepwiseExplorer, not plan_in_model: the scored path's only
+existing depth-cost term lives in _frontier (raw depth, hardcoded weight
+1.0); plan_in_model has no depth-cost term at all (FIFO BFS / pure
+best-first), so wiring there would mean adding an entire new cost
+dimension rather than substituting an existing one.
+
+Three pieces, all gated behind self.budget_aware_search_enabled (new
+__init__ kwarg + _fd_gate ladder: explicit > CARNOT_ARC_BUDGET_AWARE_SEARCH
+env > the kit's own BUDGET_AWARE_SEARCH_ENABLED, imported top-level, no
+SUBMITTED_* mirror):
+- PRODUCER: _ingest appends every raw frame to self._budget_frames
+  unconditionally (one list.append, negligible); the ESTIMATE computation
+  that consumes it runs only with the flag on and a HUD mask admitted,
+  wrapped defensively (estimator exception -> None, never a crash).
+- CONSUMER: _frontier computes depth_cost via budget_aware_path_cost_weight
+  only when the flag is on, substituting it for the bare depth term across
+  all four frontier key shapes; with the flag off depth_cost IS the literal
+  depth expression, not an argument-shaped no-op -- the substitution itself
+  is gated, not just consulted-value-happens-to-be-None.
+- SUBMITTED_AGENT_CONFIG gains budget_aware_search_enabled/_wired for
+  readiness-gate visibility.
+
+Scope narrowed from the fuller plumbing sketch, disclosed in the spec entry:
+no explicit RESET marker in the frame buffer (_segment_frames's own
+resegmentation rule handles it without one); evidence=None passed to the
+estimator (lets it compute region_hud_evidence itself, a documented
+fallback path) rather than threading through Stage-2's private admission
+certificate. No E3AgentPolicy pass-through kwarg added -- the env rung
+already reaches StepwiseExplorer directly and nothing yet needs
+per-instance injection.
+
+13 new tests covering the flag ladder, producer (buffer fill, gated
+estimate computation, exception safety), and consumer (call-interception on
+the mechanism itself, plus a stale-estimate-must-not-leak byte-identity
+test). Broader regression sweep (139 tests across this file, the
+estimator's own suite, the hazard-pruner precedent, goal-reinduction and
+trajectory-transfer suites) all passing. scripts/arc_orphan_solver_lint.py
+green (69 modules).
+
+Artifact-freshness: 11 artifacts drifted on arc_competition_agent.py, same
+uniform argument as lever #2's round -- flag-gated dead code plus one
+strictly-additive unconditional list append -- + the usual second-order
+metadata-only cascade. artifact-freshness-lint: OK.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      |  76 ++++++-
+ .../carnot/agentic/arc_competition_agent.py   |  22 +-
+ ...rc_gateway_card_ground_truth_20260727.json |   8 +
+ ..._per_level_reset_attribution_20260726.json |   8 +
+ ...6011_world_model_change_gate_four_arm.json |   8 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   8 +
+ ...6013_hidden_state_change_gate_closure.json |   8 +
+ ...p_arc_early_stop_grace_sweep_20260726.json |   8 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   8 +
+ ...arc_gateway_accurate_rescore_20260726.json |  16 ++
+ ...ter_loop_arc_gateway_rescore_20260726.json |   8 +
+ ...rc_generator_concurrency_fix_20260727.json |   8 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   8 +
+ ...arc_reset_charge_attribution_20260726.json |   8 +
+ ...est_arc_budget_aware_search_live_wiring.py | 191 ++++++++++++++++++
+ 15 files changed, 387 insertions(+), 6 deletions(-)
+ create mode 100644 tests/python/test_arc_budget_aware_search_live_wiring.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 84f2959000..c8cb02f77e 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -21904,7 +21904,7 @@ estimate is threaded in.
+ 
+ | REQ | Implementation | Tests |
+ |---|---|---|
+-| REQ-ARC-WMTE-6180 | `python/carnot/agentic/arc_hud_bar_detector.py:budget_exhaustion_estimate` (estimator) + `python/carnot/agentic/arc_solver_kit.py:budget_aware_path_cost_weight` (consumer). Both default-off and unwired from the live `E3AgentPolicy`/`plan_in_model` cascade; wiring is a separate, empirically-validated follow-up REQ per the Phase Prototype discipline. | `tests/python/test_arc_budget_exhaustion_estimate.py`. |
++| REQ-ARC-WMTE-6180 | `python/carnot/agentic/arc_hud_bar_detector.py:budget_exhaustion_estimate` (estimator) + `python/carnot/agentic/arc_solver_kit.py:budget_aware_path_cost_weight` (consumer). ~~Both default-off and unwired from the live `E3AgentPolicy`/`plan_in_model` cascade; wiring is a separate, empirically-validated follow-up REQ per the Phase Prototype discipline.~~ **WIRED 2026-08-07, still default-off** -- see REQ-ARC-WMTE-6180-WIRING immediately below for the actual live-path wiring (`StepwiseExplorer`, not `plan_in_model`; see that REQ for why). | `tests/python/test_arc_budget_exhaustion_estimate.py`. |
+ 
+ ### REQ-ARC-REGISTRY-CACHE-1: mtime-Gated Cache for Repeated `ops/arc_solve_registry.yaml` Parses
+ 
+@@ -22247,3 +22247,77 @@ direct result.
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-TRAJ-TRANSFER-1 | `python/carnot/agentic/arc_solver_kit.py:object_relative_trajectory_transfer`; `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._begin_level_goal_episode`/`_induce_and_plan`. | `tests/python/test_arc_object_relative_trajectory_transfer.py`, `tests/python/test_arc_trajectory_transfer_cascade.py`. |
++
++### REQ-ARC-WMTE-6180-WIRING: Budget-Exhaustion Meter Wired Into `StepwiseExplorer`
++
++**Origin:** 2026-08-07 operator directive (lever #5 of the ARC six-lever push, `ops/known-issues.md`).
++REQ-ARC-WMTE-6180 built the estimator and its consumer, both genuinely tested, but left them
++unwired by design (the Phase Prototype discipline: prototype + empirical validation criteria +
++adversarial check BEFORE scaling into the live cascade). This REQ is that wiring -- still
++DEFAULT OFF, since no A/B evidence yet exists for whether it helps.
++
++**WHY `StepwiseExplorer`, NOT `plan_in_model`.** REQ-ARC-WMTE-6180's own SCOPE note observed the
++scored path's depth-cost analogues are inline in `StepwiseExplorer._frontier` (raw `depth`,
++hardcoded weight 1.0) and that `plan_in_model` (`arc_executable_world_model.py`) has NO depth-cost
++term at all (FIFO BFS / pure best-first by goal energy) -- so wiring into `plan_in_model` would
++mean adding an entirely new cost dimension to a planner that structurally doesn't have one, a much
++larger change. `StepwiseExplorer._frontier` already HAS the cost term this consumer replaces.
++
++**THE WIRING, three pieces.** (1) FLAG: `budget_aware_search: bool | None = None` kwarg on
++`StepwiseExplorer.__init__`, resolved via the file's existing `_fd_gate` ladder (explicit kwarg >
++`CARNOT_ARC_BUDGET_AWARE_SEARCH` env > `arc_solver_kit.BUDGET_AWARE_SEARCH_ENABLED`, imported
++top-level -- no separate `SUBMITTED_*` mirror, avoiding a second source of truth). (2) PRODUCER:
++`_ingest` appends every observed raw frame to a new `self._budget_frames` buffer
++UNCONDITIONALLY (a single list append, negligible next to everything else `_ingest` already does,
++so the buffer is ready the instant the flag is later flipped for an A/B); the ESTIMATE itself
++(`self.actions_remaining_estimate`) is computed from `budget_exhaustion_estimate(self._budget_frames,
++self.hud_mask)` only when the flag is on AND a HUD mask has been admitted, wrapped defensively
++(an estimator exception yields `None`, never a crash on the live path). (3) CONSUMER: `_frontier`
++computes a `depth_cost` term -- `budget_aware_path_cost_weight(depth=depth, plan_length=depth,
++actions_remaining_estimate=self.actions_remaining_estimate)` when the flag is on, else the bare
++`depth` unchanged -- and substitutes it for the first sort-key element (or the depth-cost half of
++the combined `depth + w*value` term in the `use_value` branch) across all four frontier key
++shapes.
++
++**SCOPE NARROWED FROM THE ORIGINAL PLUMBING SKETCH, disclosed not hidden.** Two simplifications
++from the fuller wiring recon originally proposed: (a) the frame buffer does not insert an explicit
++`None` marker at a RESET boundary -- `arc_hud_bar_detector._segment_frames`'s own resegmentation
++rule (a return to the segment-first region value) still finds a level-up boundary without one, per
++that function's own docstring, so this is a scoped-down v1, not a silent gap; (b) `evidence=None`
++is passed to `budget_exhaustion_estimate` (letting it compute `region_hud_evidence` itself) rather
++than threading through the exact Stage-2 admission certificate (`DeferredMaskActivation`'s private
++`_added_region`/`.evidence`) -- the function's own docstring explicitly supports this as a slower
++but fully valid fallback path. `E3AgentPolicy` gained no pass-through kwarg for this flag (unlike
++`hazard_move_pruner`): nothing yet needs per-instance injection, and the env-var rung of the
++ladder already reaches `StepwiseExplorer` directly.
++
++**BYTE-IDENTITY DISCIPLINE.** With the flag off, `depth_cost` is computed as the literal `depth`
++value, not `budget_aware_path_cost_weight(..., actions_remaining_estimate=None)` -- i.e. the
++SUBSTITUTION itself is gated on the flag, not merely on the estimate being `None`, so the flag-off
++sort key is built from the exact pre-existing expression regardless of whatever the estimate
++attribute happens to hold (a stale value from a prior flag flip, for instance). Verified by a test
++that sets a stale non-`None` estimate on a flag-off explorer and confirms plain-BFS ordering is
++unaffected.
++
++**VERIFICATION.** `tests/python/test_arc_budget_aware_search_live_wiring.py` (13 tests): the flag
++ladder (default off, explicit kwarg either direction overriding env, env either direction), the
++producer (buffer fills unconditionally; estimate computed only with flag-on AND an admitted mask;
++an estimator exception degrades to `None` rather than crashing), and the consumer (mechanism
++verified by intercepting the call to `budget_aware_path_cost_weight` -- not by an emergent
++node-selection outcome, since `depth_cost` is monotonic in `depth` and so most of the four key
++shapes never actually reorder nodes at different depths from this alone; the `use_value` branch is
++where a real reordering becomes possible, per the risk note below). Broader regression sweep (139
++tests across this file, the estimator's own tests, the hazard-pruner live-wiring precedent, and the
++goal-reinduction/trajectory-transfer suites) all passing.
++
++**RISK, carried forward from REQ-ARC-WMTE-6180's own consumer docstring and not yet resolved by
++this wiring.** A false-positive exhaustion estimate applies the 50-per-excess-action penalty to a
++plan that would have won, potentially starving the only winning branch until shallower work
++exhausts -- exactly why this ships default off pending an A/B that watches `levels_gained`, not
++just raw action counts.
++
++## Implementation Status (REQ-ARC-WMTE-6180-WIRING)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6180-WIRING | `python/carnot/agentic/arc_competition_agent.py:StepwiseExplorer.__init__`/`_ingest`/`_frontier`. | `tests/python/test_arc_budget_aware_search_live_wiring.py`. |
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 25054123b1..2edd249cd6 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -58,6 +58,14 @@ from carnot.agentic.arc_program_synthesis_filter import (
+ )
+ from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
+ 
++# REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): TOP-LEVEL for the same lint-closure reason as
++# arc_hazard_pruner below -- StepwiseExplorer._frontier is a per-node hot loop, so this also
++# avoids a repeated per-call import lookup that a function-scoped import would carry.
++from carnot.agentic.arc_solver_kit import (
++    BUDGET_AWARE_SEARCH_ENABLED,
++    budget_aware_path_cost_weight,
++)
++
+ # REQ-ARC-WMTE-6071: TOP-LEVEL (not function-local) for the same reason `arc_hazard_pruner` is,
+ # below -- `scripts/arc_orphan_solver_lint.py` computes the live entrypoints' import closure from
+ # module-level imports, and a solver-side component the lint cannot see is exactly the orphan class
+@@ -1612,11 +1620,10 @@ class StepwiseExplorer:
+         self._hazard_antecedent_from_last_grid = 0
+         # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring). The estimator itself
+         # (arc_hud_bar_detector.budget_exhaustion_estimate) and its consumer
+-        # (arc_solver_kit.budget_aware_path_cost_weight) already existed, built and tested, but
+-        # NOTHING on the live path called either -- this wires them in behind the kit's own
+-        # BUDGET_AWARE_SEARCH_ENABLED default (currently False; no A/B evidence yet).
+-        from carnot.agentic.arc_solver_kit import BUDGET_AWARE_SEARCH_ENABLED
+-
++        # (arc_solver_kit.budget_aware_path_cost_weight, imported top-level above) already
++        # existed, built and tested, but NOTHING on the live path called either -- this wires
++        # them in behind the kit's own BUDGET_AWARE_SEARCH_ENABLED default (currently False; no
++        # A/B evidence yet).
+         self.budget_aware_search_enabled = _fd_gate(
+             budget_aware_search,
+             "CARNOT_ARC_BUDGET_AWARE_SEARCH",
+@@ -7309,6 +7316,11 @@ SUBMITTED_AGENT_CONFIG = {
+         SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED
+     ),
+     "object_relative_trajectory_transfer_wired": True,
++    # Single source of truth is the kit constant (arc_solver_kit.BUDGET_AWARE_SEARCH_ENABLED,
++    # imported top-level above) -- no separate SUBMITTED_* mirror, per the two-sources-of-truth
++    # risk every other flag entry here is a mirror to avoid.
++    "budget_aware_search_enabled": BUDGET_AWARE_SEARCH_ENABLED,
++    "budget_aware_search_wired": True,
+     "amortized_first_contact_prior_enabled": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED,
+     "amortized_first_contact_prior_mode": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE,
+     "go_explore_archive_enabled": SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index 2176c8bcc9..3d4799508a 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2726,6 +2726,14 @@
+     "acknowledged_on": "2026-08-07",
+     "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+     "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++    "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++    "acknowledged_on": "2026-08-07",
++    "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+    }
+   ]
+  },
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index ed1fcd447c..0d3d97c59b 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1331,6 +1331,14 @@
+     "acknowledged_on": "2026-08-07",
+     "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+     "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++    "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++    "acknowledged_on": "2026-08-07",
++    "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+    }
+   ]
+  },
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index dec4fa7800..65a3675027 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52724,6 +52724,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 573959d003..d1b244ec02 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -208,6 +208,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index f0c1ac2ada..c2ecfe1a25 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8750,6 +8750,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index 2a256649e0..ed4e34af03 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5401,6 +5401,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index fd162bbfa2..cc7e4fc44b 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3508,6 +3508,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index 5fbd8ba306..a854e2a4c2 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3284,6 +3284,22 @@
+     "acknowledged_on": "2026-08-07",
+     "reason": "Third freshness-acknowledgement cascade this session (lever #2, trajectory transfer). The only change is an appended freshness_acknowledgements entry in its own provenance. No measured or reported value in the file changed.",
+     "evidence": "git diff shows one appended array entry under provenance.freshness_acknowledgements; every pre-existing key, including every reported number, is byte-identical."
++   },
++   {
++    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++    "sha256_was": "c8ee39df42c79d6b2fc556f9b5aa154965df35a86050738b71197d1c63f7fcde",
++    "sha256_now": "009ac12505a74f403554f3da7afae12c952034006edad9bc5b66deffed52dd1c",
++    "acknowledged_on": "2026-08-07",
++    "reason": "Fourth freshness-acknowledgement cascade this session (lever #5, budget-meter wiring). The only change is an appended freshness_acknowledgements entry in its own provenance. No measured or reported value in the file changed.",
++    "evidence": "git diff shows one appended array entry under provenance.freshness_acknowledgements; every pre-existing key, including every reported number, is byte-identical."
++   },
++   {
++    "path": "results/arc_per_level_reset_attribution_20260726.json",
++    "sha256_was": "708e2df6d49fb2f4dfc65263b2a094969416b3410b4022eec83e02e33f607921",
++    "sha256_now": "1bb6049dd11344ab3a1c3c9ff05a8ee2284003a7c4f9463e22191a1150b0f94a",
++    "acknowledged_on": "2026-08-07",
++    "reason": "Fourth freshness-acknowledgement cascade this session (lever #5, budget-meter wiring). The only change is an appended freshness_acknowledgements entry in its own provenance. No measured or reported value in the file changed.",
++    "evidence": "git diff shows one appended array entry under provenance.freshness_acknowledgements; every pre-existing key, including every reported number, is byte-identical."
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index 084e85945d..544529088f 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1134,6 +1134,14 @@
+     "acknowledged_on": "2026-08-07",
+     "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+     "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++   },
++   {
++    "path": "python/carnot/agentic/arc_competition_agent.py",
++    "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++    "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++    "acknowledged_on": "2026-08-07",
++    "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++    "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+    }
+   ]
+  },
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 2cb5cc973c..4da462e808 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1157,6 +1157,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index b8f8fd6f6d..6d9fcd5a3f 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -384,6 +384,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1 (lever #2). Two changes to arc_competition_agent.py: (1) a new cascade stage in E3AgentPolicy._induce_and_plan, gated behind self.trajectory_transfer_enabled (default False, env CARNOT_ARC_TRAJECTORY_TRANSFER unset in every path that produced this artifact) -- with the flag off this branch never executes, dead code by construction. (2) trace-capture in _begin_level_goal_episode DOES run unconditionally on every level-up, but is STRICTLY ADDITIVE: three new instance attributes (_completed_level_trace, _completed_level_first_grid, _completed_level_cell) computed from data already in memory (self.transitions, self.plan) via read-only list comprehensions; no pre-existing attribute, return value, or side effect is altered, and the added computation is a handful of dict-comprehension iterations, not a measurable wall-clock or resource cost.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: the cascade stage is inside `if self.trajectory_transfer_enabled and ...`; the trace-capture writes only three NEW attribute names (grepped: no existing symbol of the same name in the pre-change file) and reads existing values without mutating them. tests/python/test_arc_trajectory_transfer_cascade.py::test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction mechanically pins that flag-off falls through to the LLM tier exactly as before."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index 7614cbac38..400e29b1a0 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16923,6 +16923,14 @@
+         "acknowledged_on": "2026-08-07",
+         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1: appends a new function (object_relative_trajectory_transfer) at the file tail. Purely additive -- git diff shows zero deletions and zero modifications to any pre-existing line -- so no function this artifact's script calls can have changed behavior.",
+         "evidence": "git diff HEAD python/carnot/agentic/arc_solver_kit.py | grep '^-' (excluding the diff header) returns 0 lines."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
++        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
++        "acknowledged_on": "2026-08-07",
++        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
++        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
+       }
+     ]
+   },
+diff --git a/tests/python/test_arc_budget_aware_search_live_wiring.py b/tests/python/test_arc_budget_aware_search_live_wiring.py
+new file mode 100644
+index 0000000000..3bafc937fe
+--- /dev/null
++++ b/tests/python/test_arc_budget_aware_search_live_wiring.py
+@@ -0,0 +1,191 @@
++"""REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): budget-exhaustion-meter wiring into the live path.
++
++The estimator (`arc_hud_bar_detector.budget_exhaustion_estimate`) and its consumer
++(`arc_solver_kit.budget_aware_path_cost_weight`) already existed, built and tested, but nothing
++on the SCORED path called either -- REQ-ARC-WMTE-6180's own implementation-status row explicitly
++declared wiring out of scope, a separate follow-up. This file covers that follow-up:
++
++  1. The flag ladder (explicit kwarg > env override > the kit's own default).
++  2. PRODUCER: `StepwiseExplorer._ingest` accumulates a raw-frame buffer and updates
++     `self.actions_remaining_estimate`, only when the flag is on and a HUD mask is admitted.
++  3. CONSUMER: `StepwiseExplorer._frontier` calls `budget_aware_path_cost_weight` in place of the
++     bare `depth` cost term, ONLY when the flag is on -- verified by intercepting the call, not by
++     an emergent node-selection outcome (depth_cost is monotonic in depth, so most branches never
++     actually reorder nodes at different depths; the mechanism, not a specific reordering, is what
++     this file pins).
++"""
++
++from __future__ import annotations
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_competition_agent as agent
++from carnot.agentic.arc_competition_agent import StepwiseExplorer
++
++
++# --------------------------------------------------------------------------- #
++# (1) flag ladder                                                             #
++# --------------------------------------------------------------------------- #
++def test_flag_defaults_off():
++    assert StepwiseExplorer().budget_aware_search_enabled is False
++
++
++def test_flag_explicit_kwarg_on():
++    assert StepwiseExplorer(budget_aware_search=True).budget_aware_search_enabled is True
++
++
++def test_flag_explicit_kwarg_off_overrides_env(monkeypatch):
++    monkeypatch.setenv("CARNOT_ARC_BUDGET_AWARE_SEARCH", "1")
++    assert StepwiseExplorer(budget_aware_search=False).budget_aware_search_enabled is False
++
++
++def test_flag_env_override_on(monkeypatch):
++    monkeypatch.setenv("CARNOT_ARC_BUDGET_AWARE_SEARCH", "1")
++    assert StepwiseExplorer().budget_aware_search_enabled is True
++
++
++def test_flag_env_override_explicit_off(monkeypatch):
++    monkeypatch.setenv("CARNOT_ARC_BUDGET_AWARE_SEARCH", "0")
++    assert StepwiseExplorer().budget_aware_search_enabled is False
++
++
++def test_buffer_and_estimate_default_empty_before_any_frame():
++    explorer = StepwiseExplorer()
++    assert explorer._budget_frames == []
++    assert explorer.actions_remaining_estimate is None
++
++
++# --------------------------------------------------------------------------- #
++# (2) producer: _ingest accumulates frames + estimate                         #
++# --------------------------------------------------------------------------- #
++def test_ingest_appends_every_frame_regardless_of_flag():
++    """The buffer fill is unconditional (cheap -- a single list append) so it is ready the
++    moment the flag is later flipped; only the ESTIMATE computation is gated."""
++    explorer = StepwiseExplorer()
++    assert explorer.budget_aware_search_enabled is False
++    frame = np.zeros((4, 4), dtype=np.int16)
++    explorer._ingest(frame)
++    assert len(explorer._budget_frames) == 1
++    assert explorer.actions_remaining_estimate is None  # flag off -> never computed
++
++
++def test_ingest_computes_estimate_only_when_flag_on_and_mask_present(monkeypatch):
++    called = {"n": 0}
++
++    def _fake_estimate(grids, mask, **kwargs):
++        called["n"] += 1
++        return {"actions_remaining_estimate": 42.0, "verdict": "estimate"}
++
++    monkeypatch.setattr(agent, "budget_exhaustion_estimate", _fake_estimate)
++
++    explorer = StepwiseExplorer(budget_aware_search=True)
++    frame = np.zeros((4, 4), dtype=np.int16)
++
++    # No mask admitted yet -> estimator must not be called.
++    explorer.hud_mask = None
++    explorer._ingest(frame)
++    assert called["n"] == 0
++    assert explorer.actions_remaining_estimate is None
++
++    # Mask admitted -> estimator is called and the estimate is adopted.
++    explorer.hud_mask = np.ones((4, 4), dtype=bool)
++    explorer._ingest(frame)
++    assert called["n"] == 1
++    assert explorer.actions_remaining_estimate == 42.0
++
++
++def test_ingest_never_calls_estimator_when_flag_off(monkeypatch):
++    called = {"n": 0}
++    monkeypatch.setattr(
++        agent, "budget_exhaustion_estimate", lambda *a, **k: called.update(n=called["n"] + 1) or {}
++    )
++    explorer = StepwiseExplorer()  # flag off (shipped default)
++    explorer.hud_mask = np.ones((4, 4), dtype=bool)
++    explorer._ingest(np.zeros((4, 4), dtype=np.int16))
++    assert called["n"] == 0
++
++
++def test_ingest_estimator_exception_yields_none_not_a_crash(monkeypatch):
++    def _raises(*a, **k):
++        raise RuntimeError("boom")
++
++    monkeypatch.setattr(agent, "budget_exhaustion_estimate", _raises)
++    explorer = StepwiseExplorer(budget_aware_search=True)
++    explorer.hud_mask = np.ones((4, 4), dtype=bool)
++    explorer._ingest(np.zeros((4, 4), dtype=np.int16))  # must not raise
++    assert explorer.actions_remaining_estimate is None
++
++
++# --------------------------------------------------------------------------- #
++# (3) consumer: _frontier's cost-term substitution                            #
++# --------------------------------------------------------------------------- #
++def _one_node_graph() -> dict:
++    return {
++        "n0": {
++            "path": [{"action": 1, "data": None}, {"action": 2, "data": None}],
++            "untested": [{"action": 3, "data": None}],
++            "value": 0.0,
++            "frame": "plain",
++        }
++    }
++
++
++def test_frontier_never_calls_budget_aware_weight_when_flag_off(monkeypatch):
++    called = {"n": 0}
++
++    def _fake_weight(**kwargs):
++        called["n"] += 1
++        return float(kwargs["depth"])
++
++    monkeypatch.setattr(agent, "budget_aware_path_cost_weight", _fake_weight)
++    explorer = StepwiseExplorer()  # flag off
++    explorer.cur = "root"
++    explorer.graph = _one_node_graph()
++    assert explorer._frontier() == "n0"
++    assert called["n"] == 0
++
++
++def test_frontier_calls_budget_aware_weight_with_estimate_when_flag_on(monkeypatch):
++    calls: list[dict] = []
++
++    def _fake_weight(**kwargs):
++        calls.append(dict(kwargs))
++        return float(kwargs["depth"])  # keep ordering behavior simple for this test
++
++    monkeypatch.setattr(agent, "budget_aware_path_cost_weight", _fake_weight)
++    explorer = StepwiseExplorer(budget_aware_search=True)
++    explorer.actions_remaining_estimate = 7.0
++    explorer.cur = "root"
++    explorer.graph = _one_node_graph()
++
++    assert explorer._frontier() == "n0"
++    assert len(calls) == 1
++    assert calls[0]["depth"] == 2  # len(path)
++    assert calls[0]["plan_length"] == 2
++    assert calls[0]["actions_remaining_estimate"] == 7.0
++
++
++def test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set():
++    """Byte-identity discipline: with the flag off, the sort key must be built from the exact
++    same expression as before this lever, even if actions_remaining_estimate happens to hold a
++    stale value (e.g. left over from a flag flip mid-run in a test)."""
++    explorer_off = StepwiseExplorer()
++    explorer_off.actions_remaining_estimate = 1.0  # would matter if consulted; must not be
++    explorer_off.cur = "root"
++    explorer_off.graph = {
++        "shallow": {
++            "path": [{"action": 1, "data": None}],
++            "untested": [{"action": 9, "data": None}],
++            "value": 0.0,
++            "frame": "a",
++        },
++        "deep": {
++            "path": [{"action": 1, "data": None}, {"action": 2, "data": None}],
++            "untested": [{"action": 9, "data": None}],
++            "value": 0.0,
++            "frame": "b",
++        },
++    }
++    # Plain BFS: shallowest wins, regardless of the (unconsulted) estimate.
++    assert explorer_off._frontier() == "shallow"
+-- 
+2.55.0
+

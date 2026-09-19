@@ -1,0 +1,86 @@
+From dc874f237ad1c2ace1fe499e8f3298f3b5ae8298 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 5 Aug 2026 18:07:07 -0400
+Subject: [PATCH 08310/11362] [conductor] Pre-gate block: Gated on Exp6148 and
+ Exp6149 readiness: frozen-Qwen prospective continuous self-learning A/B
+
+2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shifted_family_admission_ready_score (actual=0.0 == expected=1.0)
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...ozen_qwen_continuous_self_learning_ab.json | 33 +++++++++++++++++++
+ 4 files changed, 36 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_6150_frozen_qwen_continuous_self_learning_ab.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b5bdcc091a..2e95d33f64 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-08-05T21:35:50Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 19, "phase": "iteration_start", "last_beat": "2026-08-05T22:07:07Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dc52d8d5a6..131c18f8e8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15373,3 +15373,4 @@ No output thi |
+ | 2026-08-05 20:48 UTC | Gated on Exp6145 readiness: flagship-GGUF chronolo | OK | 100 passed, 1 warning in 14.53s |
+ | 2026-08-05 21:10 UTC | Gated on Exp6146 corpus readiness: TOOD-style task | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-08-05 21:33 UTC | Gated on Exp6147 calibration readiness: one-shot s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-08-05 22:05 UTC | Gated on Exp6145 stream readiness: certified strat | OK | 92 passed, 1 warning in 31.21s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bcaa56cb5c..22f1463509 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 18, "phase": "iteration_start", "started_at": "2026-08-05T21:35:50Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 19, "phase": "iteration_start", "started_at": "2026-08-05T22:07:07Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6150_frozen_qwen_continuous_self_learning_ab.json b/results/experiment_6150_frozen_qwen_continuous_self_learning_ab.json
+new file mode 100644
+index 0000000000..6565e85a92
+--- /dev/null
++++ b/results/experiment_6150_frozen_qwen_continuous_self_learning_ab.json
+@@ -0,0 +1,33 @@
++{
++  "experiment": 6150,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-08-05",
++  "started_at": "2026-08-05T22:07:07.147455+00:00",
++  "finished_at": "2026-08-05T22:07:07.147455+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "Gated on Exp6148 and Exp6149 readiness: frozen-Qwen prospective continuous self-learning A/B",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shifted_family_admission_ready_score (actual=0.0 == expected=1.0)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp6148-shifted-family-admission-held",
++      "artifact_field": "shifted_family_admission_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": 0.0,
++      "passed": false,
++      "reason": "actual=0.0 == expected=1.0"
++    },
++    {
++      "upstream": "exp6149-certified-strategy-schema-fixture",
++      "artifact_field": "certified_strategy_fixture_ready_score",
++      "op": "==",
++      "expected": 1.0,
++      "actual": 0.0,
++      "passed": false,
++      "reason": "actual=0.0 == expected=1.0"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

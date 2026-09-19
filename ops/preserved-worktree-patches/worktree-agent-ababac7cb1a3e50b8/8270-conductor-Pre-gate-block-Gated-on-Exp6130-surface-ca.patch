@@ -1,0 +1,62 @@
+From a340d639be19829e9a83b7523c567c4964f1adc5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 5 Aug 2026 01:33:21 -0400
+Subject: [PATCH 08270/11362] [conductor] Pre-gate block: Gated on Exp6130
+ surface: calibration-only mid-layer selector freeze
+
+1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_layer_surface_ready_score (upstream artifact not found for task id 'exp6130-phase-d-per-layer-surface-v2')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 2 ++
+ ops/conductor-state.json                                      | 2 +-
+ ...xperiment_6131_phase_d_mid_layer_selector_calibration.json | 4 ++--
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index d00aa6cd41..2abab6fcfc 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 56532, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-05T05:31:18Z"}
+\ No newline at end of file
++{"pid": 56532, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-08-05T05:33:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index b1614f9c25..8954e1a9c7 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15342,3 +15342,5 @@ No output thi |
+ | 2026-08-05 05:29 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |
+ | 2026-08-05 05:29 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |
+ | 2026-08-05 05:31 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |
++| 2026-08-05 05:31 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |
++| 2026-08-05 05:33 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5eb7aff82e..7babe939d0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 56532, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-05T05:31:18Z"}
+\ No newline at end of file
++{"pid": 56532, "iteration": 8, "phase": "iteration_start", "started_at": "2026-08-05T05:33:21Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6131_phase_d_mid_layer_selector_calibration.json b/results/experiment_6131_phase_d_mid_layer_selector_calibration.json
+index 7121c24635..5d2674a3df 100644
+--- a/results/experiment_6131_phase_d_mid_layer_selector_calibration.json
++++ b/results/experiment_6131_phase_d_mid_layer_selector_calibration.json
+@@ -2,8 +2,8 @@
+   "experiment": 6131,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-05",
+-  "started_at": "2026-08-05T05:31:18.399435+00:00",
+-  "finished_at": "2026-08-05T05:31:18.399435+00:00",
++  "started_at": "2026-08-05T05:33:21.110855+00:00",
++  "finished_at": "2026-08-05T05:33:21.110855+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Gated on Exp6130 surface: calibration-only mid-layer selector freeze",
+-- 
+2.55.0
+

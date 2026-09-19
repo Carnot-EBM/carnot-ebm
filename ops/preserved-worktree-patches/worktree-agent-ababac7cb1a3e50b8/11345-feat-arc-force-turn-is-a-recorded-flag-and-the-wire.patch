@@ -1,0 +1,152 @@
+From 80462fdc3df4fa6ebe0fc7191df0e723f54f75dd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 5 Sep 2026 20:57:45 -0400
+Subject: [PATCH 11345/11362] feat(arc): force turn is a recorded flag, and the
+ wire grammar is hashed
+
+Trial 1 hardcoded the force-engine turn to 2. The loop's own default is 3, so
+every grammar cell was nudged one turn early and submitted only after the nudge.
+Whether the 27B submits on its own was therefore never measured.
+
+- `--force-turn` carries the value, defaults to DEFAULT_FORCE_ENGINE_TURN
+  imported from the loop rather than retyped, and lands in trial.json.
+- The cell reads the force turn back from the loop's own resolver, because a
+  cell is a subprocess and only the env var is authoritative there.
+- `first_submission_turn` comes from the per-turn tool names, so "unprompted"
+  is read rather than inferred from a nudge counter.
+- Each grammar request's grammar text is hashed on the wire. The loop builds
+  both grammars once from a deep copy, so a mid-session change should be
+  impossible; "should be" is not a measurement, and a grammar that changed
+  under a trial would outrank everything else the trial measures.
+
+Trial 1 reproduces with `--force-turn 2`. It was not a default and is not one.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ...ter_loop_arc_grammar_27b_trial_20260905.py | 71 ++++++++++++++++++-
+ 1 file changed, 69 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py b/scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py
+index 50212cefd5..3ddf8c2fe8 100644
+--- a/scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py
++++ b/scripts/experiments/outer_loop_arc_grammar_27b_trial_20260905.py
+@@ -17,6 +17,13 @@ harness exp6440 documents).
+ RULES HONOURED. GPU placement is read from nvidia-smi joined on UUID, never from the env
+ var. A long-run receipt is armed (REQ-INFRA-6830). `results/**` is never written: the
+ engine store is redirected to the output directory. The server is stopped by PID.
++
++FORCE TURN, AND WHY IT IS A FLAG (added 2026-09-06 for trial 2). Trial 1 hardcoded the
++force-engine turn to 2, one turn earlier than the loop's own default of 3. Every grammar
++cell then submitted only after the nudge, so whether the model submits unprompted was
++never measured. `--force-turn` now carries that value, defaults to the loop's constant,
++and is recorded in trial.json. Trial 1 is reproduced with `--force-turn 2`; it was not a
++default and is not one now.
+ """
+ 
+ from __future__ import annotations
+@@ -43,6 +50,14 @@ def log(msg: str) -> None:
+     print(time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()) + " " + msg, flush=True)
+ 
+ 
++def _loop_default_force_turn() -> int:
++    """The tool loop's own default force turn. Imported so it cannot drift from a copy."""
++    sys.path.insert(0, str(REPO / "python"))
++    from carnot.agentic.arc_induction_tool_loop import DEFAULT_FORCE_ENGINE_TURN
++
++    return int(DEFAULT_FORCE_ENGINE_TURN)
++
++
+ def gpu_table() -> dict[str, int]:
+     """{uuid: index} from nvidia-smi."""
+     out = subprocess.run(
+@@ -136,6 +151,7 @@ def run_cell(args: argparse.Namespace) -> int:
+     import numpy as np
+ 
+     from carnot.agentic import arc_executable_world_model as e3
++    from carnot.agentic import arc_induction_tool_loop as tool_loop_mod
+     from carnot.agentic.arc_actions_to_progress import build_progress_window
+     from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
+     from carnot.agentic.arc_induction_tools import InductionToolSession
+@@ -227,10 +243,55 @@ def run_cell(args: argparse.Namespace) -> int:
+     events: list[dict[str, Any]] = []
+     t0 = time.time()
+     if args.arm == "grammar":
+-        ok, note = induce_with_tool_loop(p, args.game, window, int(cell), tool_event_sink=events)
++        # WIRE-LEVEL GRAMMAR RECORD. The loop builds both grammars once per session from
++        # a deep copy, so a mid-session change should be impossible. "Should be" is not a
++        # measurement, and a grammar that changed under us would outrank everything else
++        # this cell measures, so hash what each request actually carries.
++        wire: list[dict[str, Any]] = []
++        real_post = tool_loop_mod._post_chat
++
++        def recording_post(*a: Any, **kw: Any) -> Any:
++            g = kw.get("grammar")
++            wire.append(
++                {
++                    "turn": kw.get("turn"),
++                    "grammar_sha256": hashlib.sha256(g.encode()).hexdigest() if g else None,
++                    "grammar_bytes": len(g.encode()) if g else 0,
++                    "grammar_root": g.splitlines()[0] if g else None,
++                }
++            )
++            return real_post(*a, **kw)
++
++        tool_loop_mod._post_chat = recording_post
++        try:
++            ok, note = induce_with_tool_loop(
++                p, args.game, window, int(cell), tool_event_sink=events
++            )
++        finally:
++            tool_loop_mod._post_chat = real_post
+         stats = dict(p.last_tool_loop_stats or {})
+         rec["tool_loop_stats"] = stats
+         rec["tool_events"] = events
++        rec["grammar_wire_per_turn"] = wire
++        distinct = sorted({w["grammar_sha256"] for w in wire if w["grammar_sha256"]})
++        rec["grammar_distinct_sha256"] = distinct
++        # THE MEASUREMENT. Which turn did the model first submit an engine on, and was
++        # that before or at the turn the closure compels one? Read from the per-turn tool
++        # names, not from a counter, so "unprompted" is not inferred.
++        per_turn = stats.get("tool_calls_per_turn") or []
++        rec["tool_names_per_turn"] = per_turn
++        first = next(
++            (i for i, names in enumerate(per_turn) if "run_engine_on_transitions" in (names or [])),
++            None,
++        )
++        # Read the force turn from the loop's OWN resolver, not from this script's
++        # argparse default: the cell is a subprocess and only the env var is authoritative.
++        # The nudge fires at the END of turn index force-1, so the compelled request is
++        # turn index `force`. Turn indices are 0-based throughout.
++        force = tool_loop_mod._force_engine_turn()
++        rec["first_submission_turn"] = first
++        rec["force_engine_turn"] = force
++        rec["first_submission_unprompted"] = None if first is None else first < force
+         rec["tokens_decoded"] = stats.get("decode_tokens_total")
+         rec["prompt_tokens_per_turn"] = stats.get("prompt_tokens_per_turn")
+     else:
+@@ -442,7 +503,7 @@ def run_driver(args: argparse.Namespace) -> int:
+                 "CARNOT_ARC_INDUCE_TOOL_LOOP": "1",
+                 "CARNOT_ARC_INDUCE_TOOL_GRAMMAR": "1",
+                 "CARNOT_ARC_INDUCE_TOOL_TURNS": str(args.turns),
+-                "CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN": "2",
++                "CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN": str(args.force_turn),
+             },
+             "control": {
+                 "CARNOT_ARC_INDUCE_THINK": "1",
+@@ -563,6 +624,12 @@ def main() -> int:
+     ap.add_argument("--max-tokens", type=int, default=6144)
+     ap.add_argument("--timeout", type=int, default=600)
+     ap.add_argument("--turns", type=int, default=4)
++    # The turn at which the loop stops asking for a submission and constrains one.
++    # Trial 1 (2026-09-05) passed 2, which fired the nudge one turn earlier than the
++    # loop's own default and left unprompted submission unmeasured. The default here
++    # is imported from the loop, never retyped, so "the loop default" stays true if
++    # that constant moves.
++    ap.add_argument("--force-turn", type=int, default=_loop_default_force_turn())
+     ap.add_argument("--think-budget", type=int, default=2048)
+     ap.add_argument("--seed", type=int, default=7)
+     ap.add_argument("--budget-min", type=float, default=38.0)
+-- 
+2.55.0
+

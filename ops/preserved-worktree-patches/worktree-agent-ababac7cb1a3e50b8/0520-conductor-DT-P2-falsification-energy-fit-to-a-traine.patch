@@ -1,0 +1,1244 @@
+From 611477ffd37f2e53e5448aa36c5923c24e24ff54 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 16:53:25 -0400
+Subject: [PATCH 00520/11362] =?UTF-8?q?[conductor]=20DT-P2=20falsification?=
+ =?UTF-8?q?:=20energy-fit=20to=20a=20trained=20TRM's=20latent=20updates=20?=
+ =?UTF-8?q?=CE=94h=20under=20the=20curl-free=20constraint=20(=CE=94h=20?=
+ =?UTF-8?q?=E2=89=88=20=E2=88=92=E2=88=87E(h))=20=E2=80=94=20confirm=20TRM?=
+ =?UTF-8?q?=20=E2=89=A0=20EBT=20(asymmetric=20vector=20field,=20not=20ener?=
+ =?UTF-8?q?gy=20descent).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3823-trm-not-ebt-curlfree
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/phase3-kona/spec.md     |  18 +
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_3823_trm_not_ebt_curlfree.json |  61 ++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../experiment_3823_trm_not_ebt_curlfree.py   | 563 ++++++++++++++++++
+ ...st_experiment_3823_trm_not_ebt_curlfree.py | 384 ++++++++++++
+ 13 files changed, 1046 insertions(+), 20 deletions(-)
+ create mode 100644 results/experiment_3823_trm_not_ebt_curlfree.json
+ create mode 100644 scripts/experiments/experiment_3823_trm_not_ebt_curlfree.py
+ create mode 100644 tests/python/test_experiment_3823_trm_not_ebt_curlfree.py
+
+diff --git a/openspec/capabilities/phase3-kona/spec.md b/openspec/capabilities/phase3-kona/spec.md
+index b258346637..3bbcf2182d 100644
+--- a/openspec/capabilities/phase3-kona/spec.md
++++ b/openspec/capabilities/phase3-kona/spec.md
+@@ -3072,3 +3072,21 @@ The system shall execute an off-the-shelf Tiny Recursive Model (TRM) and pass it
+ **When** the Latent Symbol Bridge experiment is initiated
+ **Then** the experiment gracefully handles the missing resource by emitting `honest_verdict: "blocked_trm_checkpoint_not_available"` and sets corresponding metrics to 0 or defaults.
+ 
++## TRM Curl-Free Falsification (Exp 3823)
++
++### REQ-3823: TRM Update Field Curl-Free Diagnostic
++The system shall provide an Exp 3823 workflow that tests whether a trained Tiny Recursive Model (TRM) update field is expressible as conservative scalar-energy descent. The workflow SHALL read `results/experiment_3821_latent_symbol_bridge_unblocked.json`, extract `trm_checkpoint_source`, verify that Python can import both `torch` and `numpy`, and verify that the checkpoint source is loadable before attempting any TRM inference. If any precondition fails, the workflow SHALL write `results/experiment_3823_trm_not_ebt_curlfree.json` with `honest_verdict: "blocked_trm_checkpoint_not_available"` and explicit precondition evidence rather than fabricating TRM curl metrics.
++
++When the trained TRM checkpoint is loadable, the workflow SHALL run the update model on at least 50 seeded latent-state instances, collect `(h_t, h_{t+1}-h_t)` pairs across refinement steps, estimate the antisymmetric fraction of the update Jacobian, fit a scalar potential whose negative gradient approximates the observed update field, and run the same scalar-potential fit on a known conservative positive-control field. The terminal artifact SHALL include `jacobian_antisymmetry_fraction`, `scalar_potential_fit_residual`, `positive_control_fit_residual`, `n_states_sampled`, `preconditions_checked`, `inference_substrate`, `random_seed`, `reproducibility_checksum`, and `duration_s`, and every required field SHALL include a methodology `principle` explaining why it exists.
++
++The terminal verdict SHALL be one of `complete: trm_not_ebt_curlfree_falsified_asymmetric_field_bounded_ebt_does_not_cover_trm`, `complete: trm_is_secretly_energy_descent_surprising_residual<X>`, `complete: INCONCLUSIVE_curlfree_positive_control_failed`, or `blocked_trm_checkpoint_not_available`. A non-EBT verdict SHALL require non-negligible Jacobian antisymmetry, a large scalar-potential residual on TRM updates, and a passing positive-control residual; an energy-descent verdict SHALL require a low TRM scalar-potential residual and a passing positive control; an inconclusive verdict SHALL be emitted if the positive control fails.
++
++### SCENARIO-3823: Missing TRM Checkpoint Blocks Curl-Free Claim
++**Given** the Exp 3821 artifact does not provide a local loadable TRM checkpoint source
++**When** the Exp 3823 curl-free diagnostic runs
++**Then** it writes the terminal Exp 3823 JSON with `honest_verdict: "blocked_trm_checkpoint_not_available"`, records `n_states_sampled` as zero, preserves the exact checkpoint-source evidence from Exp 3821, and keeps every required metric principle-bearing instead of claiming a curl or scalar-potential result.
++
++### SCENARIO-3823-POSITIVE-CONTROL: Conservative Field Fit Succeeds
++**Given** a synthetic update field generated by the negative gradient of a scalar quadratic energy
++**When** the Exp 3823 scalar-potential fitting helper is applied
++**Then** the positive-control residual is near zero, proving the diagnostic can recognize conservative fields and that any large TRM residual is not caused by a broken fitter.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 1a34401140..9db424aaa0 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 148,
+   "code_violations": 0,
+-  "experiments_checked": 2924,
++  "experiments_checked": 2925,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 32806153d5..a281b559d4 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T19:01:45.646560Z",
+-  "duration_s": 0.0073206424713134766,
++  "run_date": "2026-06-04T20:51:42.892353Z",
++  "duration_s": 0.009955406188964844,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "cf7588ca19d67919b4c40db13630765dbcbcb8577068242a4554a074f7b9da06",
++  "reproducibility_checksum": "b78d87ff36b93b4d16d940d9aed0cd8e2977ff9f44f48cf3836197cbcbb9135b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "1ec247a13ff9a8fd9ec211438c072c8b57867753"
++    "adversarial_verify_version": "ace5b111d218cfc38dd4fa5768af8c4f851f73df"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 21c08b998c..caed22986c 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T19:01:45.656917Z",
+-  "duration_s": 0.00818777084350586,
++  "run_date": "2026-06-04T20:51:42.904591Z",
++  "duration_s": 0.008888959884643555,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "d25c1e4dec07ba56b16152fd711e48b4bbee57e678d85dd3b8e7601f45ad741c",
++  "reproducibility_checksum": "c438793c6c0170b84a560a5a23d4c062404fc7fb3c8408d35fc27c58131f88f5",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "1ec247a13ff9a8fd9ec211438c072c8b57867753"
++    "adversarial_verify_version": "ace5b111d218cfc38dd4fa5768af8c4f851f73df"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index b92d028126..d6f7c8ea33 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1102428436279297,
++  "efficiency_gains_ms": 2.1135807037353516,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 6bc754f148..f3a37c2043 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.33712339401245117,
++  "duration_s": 0.30451369285583496,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 456aee957b..37bfcc242a 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.159001062158495e-05,
++  "duration_s": 2.563800080679357e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3823_trm_not_ebt_curlfree.json b/results/experiment_3823_trm_not_ebt_curlfree.json
+new file mode 100644
+index 0000000000..f6de43df22
+--- /dev/null
++++ b/results/experiment_3823_trm_not_ebt_curlfree.json
+@@ -0,0 +1,61 @@
++{
++  "duration_s": {
++    "principle": "Standard methodology field; measured wall-clock duration for the precondition and diagnostic run.",
++    "value": 0.9054028987884521
++  },
++  "field_principles": {
++    "duration_s": "Standard methodology field; measured wall-clock duration for the precondition and diagnostic run.",
++    "inference_substrate": "Standard methodology field; names the actual substrate used for deterministic numerical testing.",
++    "jacobian_antisymmetry_fraction": "Fraction of the update Jacobian that is antisymmetric; >0 implies a non-conservative (curl-bearing) field EBT cannot express.",
++    "n_states_sampled": "M>=50 instances so the curl/residual estimates are not single-trajectory artifacts.",
++    "positive_control_fit_residual": "Same fit on a KNOWN conservative field must give ~0 residual -- proves the test detects conservativity and a large TRM residual is real, not a fitter failure.",
++    "preconditions_checked": "Standard methodology field; records torch/numpy and checkpoint-source gates before TRM inference.",
++    "random_seed": "Standard methodology field; deterministic numerical test, real compute over M states.",
++    "reproducibility_checksum": "Standard methodology field; stable checksum catches silent source or configuration drift.",
++    "scalar_potential_fit_residual": "Relative residual of the best -grad(E) fit to TRM's update field; large residual = TRM != energy descent."
++  },
++  "honest_verdict": "blocked_trm_checkpoint_not_available",
++  "inference_substrate": {
++    "principle": "Standard methodology field; names the actual substrate used for deterministic numerical testing.",
++    "value": "none (blocked)"
++  },
++  "jacobian_antisymmetry_fraction": {
++    "principle": "Fraction of the update Jacobian that is antisymmetric; >0 implies a non-conservative (curl-bearing) field EBT cannot express.",
++    "value": null
++  },
++  "n_states_sampled": {
++    "principle": "M>=50 instances so the curl/residual estimates are not single-trajectory artifacts.",
++    "value": 0
++  },
++  "positive_control_fit_residual": {
++    "principle": "Same fit on a KNOWN conservative field must give ~0 residual -- proves the test detects conservativity and a large TRM residual is real, not a fitter failure.",
++    "value": null
++  },
++  "preconditions_checked": {
++    "principle": "Standard methodology field; records torch/numpy and checkpoint-source gates before TRM inference.",
++    "value": {
++      "block_reason": "blocked_trm_checkpoint_not_available",
++      "checkpoint_load_error": "checkpoint source is not a local file path",
++      "numpy_available": true,
++      "source_artifact_available": true,
++      "torch_available": true,
++      "trm_checkpoint_loadable": false,
++      "trm_checkpoint_path": null,
++      "trm_checkpoint_source": "nano-trm tiny-train (0-epoch unparseability probe)"
++    }
++  },
++  "random_seed": {
++    "principle": "Standard methodology field; deterministic numerical test, real compute over M states.",
++    "value": 3823
++  },
++  "reproducibility_checksum": {
++    "principle": "Standard methodology field; stable checksum catches silent source or configuration drift.",
++    "value": "3ac7bd2f3a013d078997cb589f892b002dd79133973e97b029a4eef82ca4a0ae"
++  },
++  "scalar_potential_fit_residual": {
++    "principle": "Relative residual of the best -grad(E) fit to TRM's update field; large residual = TRM != energy descent.",
++    "value": null
++  },
++  "schema": "carnot.trm_curlfree_falsification.v1",
++  "trm_checkpoint_source": "nano-trm tiny-train (0-epoch unparseability probe)"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index c675d04d98..384eda6d3c 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T19:36:56Z",
+-  "finished_at": "2026-06-04T19:36:56Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-04T20:51:34Z",
++  "finished_at": "2026-06-04T20:51:34Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 13dd3b29ef..13736072e8 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T19:36:56Z",
+-  "finished_at": "2026-06-04T19:36:56Z",
++  "started_at": "2026-06-04T20:51:35Z",
++  "finished_at": "2026-06-04T20:51:35Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 6d9826ba35..6bd14051e2 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T19:36:56Z",
+-  "finished_at": "2026-06-04T19:36:56Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-04T20:51:35Z",
++  "finished_at": "2026-06-04T20:51:35Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/experiment_3823_trm_not_ebt_curlfree.py b/scripts/experiments/experiment_3823_trm_not_ebt_curlfree.py
+new file mode 100644
+index 0000000000..356c896e88
+--- /dev/null
++++ b/scripts/experiments/experiment_3823_trm_not_ebt_curlfree.py
+@@ -0,0 +1,563 @@
++"""Build the Exp 3823 TRM curl-free falsification artifact.
++
++Spec refs: REQ-3823, SCENARIO-3823, SCENARIO-3823-POSITIVE-CONTROL.
++
++The experiment asks whether a trained TRM update field can be written as
++negative gradient descent on one scalar energy. A conservative field has a
++symmetric Jacobian, so any persistent antisymmetric Jacobian component is
++direct evidence that the update dynamics are outside ordinary EBT descent.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import importlib
++import json
++import math
++import time
++from pathlib import Path
++from typing import Any, Callable
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SOURCE_ARTIFACT_PATH = REPO_ROOT / "results/experiment_3821_latent_symbol_bridge_unblocked.json"
++OUTPUT_PATH = REPO_ROOT / "results/experiment_3823_trm_not_ebt_curlfree.json"
++SCHEMA = "carnot.trm_curlfree_falsification.v1"
++RANDOM_SEED = 3823
++BLOCKED_VERDICT = "blocked_trm_checkpoint_not_available"
++
++POSITIVE_CONTROL_MAX_RESIDUAL = 1e-4
++LOW_TRM_RESIDUAL = 5e-2
++CURL_PRESENT_MIN = 5e-2
++FIT_FAIL_MIN = 1.5e-1
++
++REQUIRED_PRINCIPLES = {
++    "jacobian_antisymmetry_fraction": (
++        "Fraction of the update Jacobian that is antisymmetric; >0 implies a "
++        "non-conservative (curl-bearing) field EBT cannot express."
++    ),
++    "scalar_potential_fit_residual": (
++        "Relative residual of the best -grad(E) fit to TRM's update field; "
++        "large residual = TRM != energy descent."
++    ),
++    "positive_control_fit_residual": (
++        "Same fit on a KNOWN conservative field must give ~0 residual -- proves "
++        "the test detects conservativity and a large TRM residual is real, not "
++        "a fitter failure."
++    ),
++    "n_states_sampled": (
++        "M>=50 instances so the curl/residual estimates are not single-trajectory artifacts."
++    ),
++    "preconditions_checked": (
++        "Standard methodology field; records torch/numpy and checkpoint-source gates before TRM inference."
++    ),
++    "inference_substrate": (
++        "Standard methodology field; names the actual substrate used for deterministic numerical testing."
++    ),
++    "random_seed": (
++        "Standard methodology field; deterministic numerical test, real compute over M states."
++    ),
++    "reproducibility_checksum": (
++        "Standard methodology field; stable checksum catches silent source or configuration drift."
++    ),
++    "duration_s": (
++        "Standard methodology field; measured wall-clock duration for the precondition and diagnostic run."
++    ),
++}
++
++
++class LinearUpdateCheckpoint:
++    """Minimal torch-loadable update substrate used by tests and future fixtures."""
++
++    def __init__(self, matrix: Any, bias: Any | None = None) -> None:
++        torch = importlib.import_module("torch")
++        self.matrix = torch.as_tensor(matrix, dtype=torch.float64)
++        if self.matrix.ndim != 2 or self.matrix.shape[0] != self.matrix.shape[1]:
++            raise ValueError("update_matrix must be square")
++        self.bias = torch.zeros(self.matrix.shape[0], dtype=torch.float64)
++        if bias is not None:
++            self.bias = torch.as_tensor(bias, dtype=torch.float64)
++        if self.bias.shape != (self.matrix.shape[0],):
++            raise ValueError("update_bias must match update_matrix dimension")
++        self.latent_dim = int(self.matrix.shape[0])
++        self.substrate_label = "linear_update_checkpoint"
++
++    def forward_delta(self, h: Any) -> Any:
++        """Return the discrete-time update delta F(h)."""
++        return h @ self.matrix.T + self.bias
++
++    def __call__(self, h: Any) -> Any:
++        return h + self.forward_delta(h)
++
++
++def principled(field_name: str, value: Any) -> dict[str, Any]:
++    """Wrap a required metric with the method principle the artifact must expose."""
++    return {"value": value, "principle": REQUIRED_PRINCIPLES[field_name]}
++
++
++def field_value(wrapped: Any) -> Any:
++    """Read the value from a principle-bearing artifact field."""
++    if not isinstance(wrapped, dict) or "value" not in wrapped or "principle" not in wrapped:
++        raise TypeError("artifact field is not principle-bearing")
++    return wrapped["value"]
++
++
++def _import_available(module_name: str) -> bool:
++    try:
++        importlib.import_module(module_name)
++    except Exception:
++        return False
++    return True
++
++
++def _read_json(path: Path) -> dict[str, Any]:
++    with path.open("r", encoding="utf-8") as handle:
++        payload = json.load(handle)
++    if not isinstance(payload, dict):
++        raise ValueError("source artifact must be a JSON object")
++    return payload
++
++
++def resolve_checkpoint_path(source: Any, *, base_dir: Path | None = None) -> Path | None:
++    """Resolve a checkpoint source only when it is a local existing file path."""
++    if not isinstance(source, str) or not source.strip():
++        return None
++    source = source.strip()
++    if "://" in source:
++        return None
++
++    candidates = [Path(source).expanduser()]
++    if base_dir is not None:
++        candidates.append((base_dir / source).expanduser())
++    candidates.append((REPO_ROOT / source).expanduser())
++
++    for candidate in candidates:
++        if candidate.is_file():
++            return candidate.resolve()
++    return None
++
++
++def _torch_load(path: Path) -> Any:
++    torch = importlib.import_module("torch")
++    try:
++        return torch.load(path, map_location="cpu", weights_only=False)
++    except TypeError:
++        return torch.load(path, map_location="cpu")
++
++
++def checkpoint_loadable(path: Path | None) -> tuple[bool, str | None]:
++    """Return whether a checkpoint path can be torch-loaded."""
++    if path is None:
++        return False, "checkpoint source is not a local file path"
++    try:
++        _torch_load(path)
++    except Exception as exc:
++        return False, f"{type(exc).__name__}: {exc}"
++    return True, None
++
++
++def run_preconditions_check(
++    source_artifact_path: Path = SOURCE_ARTIFACT_PATH,
++) -> dict[str, Any]:
++    """Check torch/numpy availability and the Exp 3821 checkpoint source."""
++    preconditions: dict[str, Any] = {
++        "torch_available": _import_available("torch"),
++        "numpy_available": _import_available("numpy"),
++        "source_artifact_available": False,
++        "trm_checkpoint_source": None,
++        "trm_checkpoint_path": None,
++        "trm_checkpoint_loadable": False,
++        "checkpoint_load_error": None,
++        "block_reason": BLOCKED_VERDICT,
++    }
++
++    try:
++        source_artifact = _read_json(source_artifact_path)
++    except Exception as exc:
++        preconditions["checkpoint_load_error"] = f"source_artifact_{type(exc).__name__}: {exc}"
++        return preconditions
++
++    preconditions["source_artifact_available"] = True
++    checkpoint_source = source_artifact.get("trm_checkpoint_source")
++    preconditions["trm_checkpoint_source"] = checkpoint_source
++    checkpoint_path = resolve_checkpoint_path(checkpoint_source, base_dir=source_artifact_path.parent)
++    preconditions["trm_checkpoint_path"] = str(checkpoint_path) if checkpoint_path is not None else None
++
++    if not preconditions["torch_available"] or not preconditions["numpy_available"]:
++        preconditions["checkpoint_load_error"] = "torch_or_numpy_unavailable"
++        return preconditions
++
++    loadable, error = checkpoint_loadable(checkpoint_path)
++    preconditions["trm_checkpoint_loadable"] = loadable
++    preconditions["checkpoint_load_error"] = error
++    preconditions["block_reason"] = None if loadable else BLOCKED_VERDICT
++    return preconditions
++
++
++def load_update_model(checkpoint_path: Path) -> Any:
++    """Load a local update model from a supported checkpoint shape."""
++    torch = importlib.import_module("torch")
++    payload = _torch_load(checkpoint_path)
++
++    if isinstance(payload, dict) and "update_matrix" in payload:
++        return LinearUpdateCheckpoint(payload["update_matrix"], payload.get("update_bias"))
++
++    module_type = getattr(torch.nn, "Module")
++    if isinstance(payload, module_type):
++        payload.eval()
++        payload.latent_dim = int(getattr(payload, "latent_dim", getattr(payload, "hidden_size", 0)))
++        payload.substrate_label = "torch_module_checkpoint"
++        if payload.latent_dim <= 0:
++            raise ValueError("torch module checkpoint must expose latent_dim or hidden_size")
++        return payload
++
++    if isinstance(payload, dict) and isinstance(payload.get("model"), module_type):
++        model = payload["model"]
++        model.eval()
++        model.latent_dim = int(getattr(model, "latent_dim", getattr(model, "hidden_size", 0)))
++        model.substrate_label = "torch_module_checkpoint"
++        if model.latent_dim <= 0:
++            raise ValueError("nested torch model must expose latent_dim or hidden_size")
++        return model
++
++    raise ValueError("unsupported TRM checkpoint payload")
++
++
++def make_delta_fn(model: Any) -> Callable[[Any], Any]:
++    """Build a function returning F(h)=h_next-h for a loaded update model."""
++    if hasattr(model, "forward_delta"):
++        return model.forward_delta
++
++    def delta_fn(h: Any) -> Any:
++        output = model(h)
++        if isinstance(output, tuple):
++            output = output[0]
++        if isinstance(output, dict):
++            output = output.get("h_next", output.get("next_state"))
++        if output is None or getattr(output, "shape", None) != h.shape:
++            raise ValueError("model output must be a next latent state with the same shape as input")
++        return output - h
++
++    return delta_fn
++
++
++def sample_update_pairs(
++    model: Any,
++    *,
++    n_instances: int,
++    steps: int,
++    latent_dim: int,
++    random_seed: int,
++) -> tuple[Any, Any]:
++    """Run the update map over seeded states and collect h_t, delta_h_t pairs."""
++    torch = importlib.import_module("torch")
++    if n_instances < 50:
++        n_instances = 50
++    if steps < 1:
++        raise ValueError("steps must be >= 1")
++    generator = torch.Generator().manual_seed(random_seed)
++    h = torch.randn(n_instances, latent_dim, dtype=torch.float64, generator=generator)
++    states = []
++    deltas = []
++    delta_fn = make_delta_fn(model)
++    with torch.no_grad():
++        for _ in range(steps):
++            delta = delta_fn(h)
++            states.append(h.detach().clone())
++            deltas.append(delta.detach().clone())
++            h = h + delta
++    return torch.cat(states, dim=0), torch.cat(deltas, dim=0)
++
++
++def quadratic_conservative_delta(h: Any, energy_matrix: Any) -> Any:
++    """Return -grad E for E(h)=0.5*h^T*A*h with symmetric A."""
++    return -(h @ energy_matrix.T)
++
++
++def sample_quadratic_conservative_field(
++    *,
++    n_instances: int,
++    latent_dim: int,
++    steps: int,
++    random_seed: int,
++) -> tuple[Any, Any]:
++    """Generate h, delta pairs from a known conservative quadratic energy."""
++    torch = importlib.import_module("torch")
++    generator = torch.Generator().manual_seed(random_seed)
++    h = torch.randn(n_instances, latent_dim, dtype=torch.float64, generator=generator)
++    scale = torch.linspace(0.05, 0.35, latent_dim, dtype=torch.float64)
++    energy_matrix = torch.diag(scale)
++    states = []
++    deltas = []
++    for _ in range(steps):
++        delta = quadratic_conservative_delta(h, energy_matrix)
++        states.append(h.detach().clone())
++        deltas.append(delta.detach().clone())
++        h = h + delta
++    return torch.cat(states, dim=0), torch.cat(deltas, dim=0)
++
++
++def _call_delta_single(delta_fn: Callable[[Any], Any], h: Any) -> Any:
++    try:
++        output = delta_fn(h)
++        if getattr(output, "shape", None) == h.shape:
++            return output
++    except Exception:
++        pass
++    output = delta_fn(h.unsqueeze(0)).squeeze(0)
++    if output.shape != h.shape:
++        raise ValueError("delta_fn must return a vector matching h")
++    return output
++
++
++def jacobian_antisymmetry_fraction(
++    delta_fn: Callable[[Any], Any],
++    states: Any,
++    *,
++    max_points: int = 16,
++) -> float:
++    """Estimate ||0.5*(J-J^T)||_F / ||J||_F over sampled states."""
++    torch = importlib.import_module("torch")
++    if states.numel() == 0:
++        return 0.0
++    points = states[:max_points].detach().clone().to(dtype=torch.float64)
++    fractions = []
++    for point in points:
++        h = point.detach().clone().requires_grad_(True)
++
++        def single_fn(z: Any) -> Any:
++            return _call_delta_single(delta_fn, z)
++
++        jacobian = torch.autograd.functional.jacobian(single_fn, h)
++        antisymmetric = 0.5 * (jacobian - jacobian.T)
++        denom = torch.linalg.norm(jacobian).item()
++        if denom <= 1e-12:
++            fractions.append(0.0)
++        else:
++            fractions.append(torch.linalg.norm(antisymmetric).item() / denom)
++    return float(sum(fractions) / len(fractions))
++
++
++def scalar_potential_fit_residual(states: Any, deltas: Any) -> float:
++    """Fit the best quadratic scalar potential and return relative residual.
++
++    The fitted family is E(h)=0.5*h^T*S*h+b^T*h+c with symmetric S. Its
++    negative gradient is the closest affine conservative field in least squares.
++    """
++    torch = importlib.import_module("torch")
++    states = states.detach().clone().to(dtype=torch.float64)
++    deltas = deltas.detach().clone().to(dtype=torch.float64)
++    if states.shape != deltas.shape or states.ndim != 2:
++        raise ValueError("states and deltas must be matching rank-2 tensors")
++
++    n_rows, latent_dim = states.shape
++    parameter_index: dict[tuple[int, int], int] = {}
++    cursor = 0
++    for row in range(latent_dim):
++        for col in range(row, latent_dim):
++            parameter_index[(row, col)] = cursor
++            cursor += 1
++    bias_start = cursor
++    n_parameters = cursor + latent_dim
++
++    design = torch.zeros(n_rows * latent_dim, n_parameters, dtype=torch.float64)
++    target = (-deltas).reshape(-1)
++    for sample_idx in range(n_rows):
++        h = states[sample_idx]
++        for output_dim in range(latent_dim):
++            design_row = sample_idx * latent_dim + output_dim
++            for input_dim in range(latent_dim):
++                key = (output_dim, input_dim) if output_dim <= input_dim else (input_dim, output_dim)
++                design[design_row, parameter_index[key]] += h[input_dim]
++            design[design_row, bias_start + output_dim] = 1.0
++
++    solution = torch.linalg.lstsq(design, target).solution
++    predicted_grad = (design @ solution).reshape(n_rows, latent_dim)
++    residual_norm = torch.linalg.norm(deltas + predicted_grad).item()
++    field_norm = torch.linalg.norm(deltas).item()
++    if field_norm <= 1e-12:
++        return 0.0 if residual_norm <= 1e-12 else math.inf
++    return float(residual_norm / field_norm)
++
++
++def run_positive_control(*, random_seed: int, latent_dim: int) -> float:
++    """Run the scalar-potential fit on a known conservative field."""
++    states, deltas = sample_quadratic_conservative_field(
++        n_instances=64,
++        latent_dim=max(2, min(latent_dim, 8)),
++        steps=3,
++        random_seed=random_seed + 17,
++    )
++    return scalar_potential_fit_residual(states, deltas)
++
++
++def classify_verdict(
++    jacobian_antisymmetry_fraction_value: float,
++    scalar_potential_fit_residual_value: float,
++    *,
++    positive_control_residual: float | None,
++) -> str:
++    """Apply the terminal gate for Exp 3823."""
++    if positive_control_residual is None or positive_control_residual > POSITIVE_CONTROL_MAX_RESIDUAL:
++        return "complete: INCONCLUSIVE_curlfree_positive_control_failed"
++    if scalar_potential_fit_residual_value <= LOW_TRM_RESIDUAL:
++        return (
++            "complete: trm_is_secretly_energy_descent_surprising_residual"
++            f"{scalar_potential_fit_residual_value:.6f}"
++        )
++    if (
++        jacobian_antisymmetry_fraction_value >= CURL_PRESENT_MIN
++        or scalar_potential_fit_residual_value >= FIT_FAIL_MIN
++    ):
++        return "complete: trm_not_ebt_curlfree_falsified_asymmetric_field_bounded_ebt_does_not_cover_trm"
++    return (
++        "complete: trm_is_secretly_energy_descent_surprising_residual"
++        f"{scalar_potential_fit_residual_value:.6f}"
++    )
++
++
++def _checksum(payload: dict[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def blocked_artifact(
++    *,
++    preconditions: dict[str, Any],
++    duration_s: float,
++    random_seed: int,
++) -> dict[str, Any]:
++    """Build the fail-closed artifact when the TRM checkpoint is unavailable."""
++    checksum = _checksum(
++        {
++            "schema": SCHEMA,
++            "source": preconditions.get("trm_checkpoint_source"),
++            "path": preconditions.get("trm_checkpoint_path"),
++            "random_seed": random_seed,
++            "blocked": True,
++        }
++    )
++    return {
++        "schema": SCHEMA,
++        "honest_verdict": BLOCKED_VERDICT,
++        "trm_checkpoint_source": preconditions.get("trm_checkpoint_source"),
++        "jacobian_antisymmetry_fraction": principled("jacobian_antisymmetry_fraction", None),
++        "scalar_potential_fit_residual": principled("scalar_potential_fit_residual", None),
++        "positive_control_fit_residual": principled("positive_control_fit_residual", None),
++        "n_states_sampled": principled("n_states_sampled", 0),
++        "preconditions_checked": principled("preconditions_checked", preconditions),
++        "inference_substrate": principled("inference_substrate", "none (blocked)"),
++        "random_seed": principled("random_seed", random_seed),
++        "reproducibility_checksum": principled("reproducibility_checksum", checksum),
++        "duration_s": principled("duration_s", float(duration_s)),
++        "field_principles": REQUIRED_PRINCIPLES,
++    }
++
++
++def build_artifact(
++    *,
++    source_artifact_path: Path = SOURCE_ARTIFACT_PATH,
++    n_instances: int = 64,
++    steps: int = 4,
++    latent_dim: int | None = None,
++    random_seed: int = RANDOM_SEED,
++) -> dict[str, Any]:
++    """Build the terminal Exp 3823 artifact."""
++    started_at = time.time()
++    preconditions = run_preconditions_check(source_artifact_path)
++    if preconditions.get("block_reason") == BLOCKED_VERDICT:
++        return blocked_artifact(
++            preconditions=preconditions,
++            duration_s=time.time() - started_at,
++            random_seed=random_seed,
++        )
++
++    checkpoint_path = Path(str(preconditions["trm_checkpoint_path"]))
++    try:
++        model = load_update_model(checkpoint_path)
++    except Exception as exc:
++        preconditions["trm_checkpoint_loadable"] = False
++        preconditions["checkpoint_load_error"] = f"{type(exc).__name__}: {exc}"
++        preconditions["block_reason"] = BLOCKED_VERDICT
++        return blocked_artifact(
++            preconditions=preconditions,
++            duration_s=time.time() - started_at,
++            random_seed=random_seed,
++        )
++
++    resolved_latent_dim = int(latent_dim or getattr(model, "latent_dim"))
++    states, deltas = sample_update_pairs(
++        model,
++        n_instances=n_instances,
++        steps=steps,
++        latent_dim=resolved_latent_dim,
++        random_seed=random_seed,
++    )
++    delta_fn = make_delta_fn(model)
++    asymmetry = jacobian_antisymmetry_fraction(delta_fn, states)
++    potential_residual = scalar_potential_fit_residual(states, deltas)
++    positive_control_residual = run_positive_control(
++        random_seed=random_seed,
++        latent_dim=resolved_latent_dim,
++    )
++    verdict = classify_verdict(
++        asymmetry,
++        potential_residual,
++        positive_control_residual=positive_control_residual,
++    )
++    substrate_label = getattr(model, "substrate_label", "torch_checkpoint")
++    duration_s = time.time() - started_at
++    checksum = _checksum(
++        {
++            "schema": SCHEMA,
++            "checkpoint_path": str(checkpoint_path),
++            "n_instances": n_instances,
++            "steps": steps,
++            "latent_dim": resolved_latent_dim,
++            "random_seed": random_seed,
++            "asymmetry": round(asymmetry, 12),
++            "potential_residual": round(potential_residual, 12),
++            "positive_control_residual": round(positive_control_residual, 12),
++        }
++    )
++
++    return {
++        "schema": SCHEMA,
++        "honest_verdict": verdict,
++        "trm_checkpoint_source": preconditions.get("trm_checkpoint_source"),
++        "jacobian_antisymmetry_fraction": principled("jacobian_antisymmetry_fraction", asymmetry),
++        "scalar_potential_fit_residual": principled("scalar_potential_fit_residual", potential_residual),
++        "positive_control_fit_residual": principled(
++            "positive_control_fit_residual", positive_control_residual
++        ),
++        "n_states_sampled": principled("n_states_sampled", int(states.shape[0])),
++        "preconditions_checked": principled("preconditions_checked", preconditions),
++        "inference_substrate": principled(
++            "inference_substrate", f"{substrate_label}:{checkpoint_path}"
++        ),
++        "random_seed": principled("random_seed", random_seed),
++        "reproducibility_checksum": principled("reproducibility_checksum", checksum),
++        "duration_s": principled("duration_s", float(duration_s)),
++        "n_instances": n_instances,
++        "n_refinement_steps": steps,
++        "latent_dim": resolved_latent_dim,
++        "field_principles": REQUIRED_PRINCIPLES,
++    }
++
++
++def write_artifact(artifact: dict[str, Any], output_path: Path = OUTPUT_PATH) -> None:
++    """Persist the artifact as stable JSON."""
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    with output_path.open("w", encoding="utf-8") as handle:
++        json.dump(artifact, handle, indent=2, sort_keys=True)
++        handle.write("\n")
++
++
++def main() -> None:
++    """Entrypoint for the requested experiment command."""
++    artifact = build_artifact()
++    write_artifact(artifact, OUTPUT_PATH)
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_3823_trm_not_ebt_curlfree.py b/tests/python/test_experiment_3823_trm_not_ebt_curlfree.py
+new file mode 100644
+index 0000000000..40ea0c1fa1
+--- /dev/null
++++ b/tests/python/test_experiment_3823_trm_not_ebt_curlfree.py
+@@ -0,0 +1,384 @@
++"""Tests for Exp 3823 TRM curl-free falsification.
++
++Spec refs: REQ-3823, SCENARIO-3823, SCENARIO-3823-POSITIVE-CONTROL.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++import torch
++
++from scripts.experiments import experiment_3823_trm_not_ebt_curlfree as mod
++
++
++def test_spec_declares_req_3823() -> None:
++    """REQ-3823: OpenSpec declares the curl-free diagnostic before implementation."""
++    spec = Path("openspec/capabilities/phase3-kona/spec.md").read_text(encoding="utf-8")
++    assert "REQ-3823" in spec
++    assert "SCENARIO-3823" in spec
++    assert "SCENARIO-3823-POSITIVE-CONTROL" in spec
++
++
++def test_blocked_when_exp3821_source_is_not_loadable_checkpoint(tmp_path: Path) -> None:
++    """SCENARIO-3823: missing loadable TRM checkpoint blocks curl claims."""
++    source_artifact = tmp_path / "experiment_3821.json"
++    source_artifact.write_text(
++        json.dumps({"trm_checkpoint_source": "nano-trm tiny-train (0-epoch probe)"}),
++        encoding="utf-8",
++    )
++
++    artifact = mod.build_artifact(source_artifact_path=source_artifact)
++
++    assert artifact["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert mod.field_value(artifact["n_states_sampled"]) == 0
++    assert mod.field_value(artifact["jacobian_antisymmetry_fraction"]) is None
++    assert mod.field_value(artifact["scalar_potential_fit_residual"]) is None
++    assert mod.field_value(artifact["positive_control_fit_residual"]) is None
++    assert mod.field_value(artifact["preconditions_checked"])["trm_checkpoint_loadable"] is False
++    assert mod.field_value(artifact["preconditions_checked"])["trm_checkpoint_source"] == (
++        "nano-trm tiny-train (0-epoch probe)"
++    )
++
++    for field_name in mod.REQUIRED_PRINCIPLES:
++        assert "principle" in artifact[field_name]
++        assert artifact[field_name]["principle"] == mod.REQUIRED_PRINCIPLES[field_name]
++
++
++def test_positive_control_has_low_curl_and_low_fit_residual() -> None:
++    """SCENARIO-3823-POSITIVE-CONTROL: conservative fields are recognized."""
++    states, deltas = mod.sample_quadratic_conservative_field(
++        n_instances=64,
++        latent_dim=3,
++        steps=2,
++        random_seed=7,
++    )
++
++    residual = mod.scalar_potential_fit_residual(states, deltas)
++    asymmetry = mod.jacobian_antisymmetry_fraction(
++        lambda h: mod.quadratic_conservative_delta(h, torch.eye(3, dtype=h.dtype)),
++        states[:8],
++    )
++
++    assert residual < 1e-6
++    assert asymmetry < 1e-6
++
++
++def test_asymmetric_linear_field_has_large_curl_and_fit_residual() -> None:
++    """REQ-3823: antisymmetric update fields cannot fit scalar-energy descent."""
++    matrix = torch.tensor([[0.0, -1.0], [1.0, 0.0]], dtype=torch.float64)
++    states = torch.randn(80, 2, dtype=torch.float64, generator=torch.Generator().manual_seed(11))
++    deltas = states @ matrix.T
++
++    residual = mod.scalar_potential_fit_residual(states, deltas)
++    asymmetry = mod.jacobian_antisymmetry_fraction(lambda h: h @ matrix.T, states[:10])
++
++    assert residual > 0.95
++    assert asymmetry > 0.95
++    assert mod.classify_verdict(asymmetry, residual, positive_control_residual=1e-9).startswith(
++        "complete: trm_not_ebt_curlfree_falsified"
++    )
++
++
++def test_synthetic_checkpoint_runs_full_nonblocked_path(tmp_path: Path) -> None:
++    """REQ-3823: a loadable checkpoint produces measured curl metrics over M>=50 states."""
++    checkpoint = tmp_path / "trm_linear.pt"
++    torch.save({"update_matrix": [[0.0, -1.0], [1.0, 0.0]], "update_bias": [0.0, 0.0]}, checkpoint)
++    source_artifact = tmp_path / "experiment_3821.json"
++    source_artifact.write_text(json.dumps({"trm_checkpoint_source": str(checkpoint)}), encoding="utf-8")
++
++    artifact = mod.build_artifact(
++        source_artifact_path=source_artifact,
++        n_instances=50,
++        steps=2,
++        latent_dim=2,
++        random_seed=3823,
++    )
++
++    assert artifact["honest_verdict"].startswith("complete: trm_not_ebt_curlfree_falsified")
++    assert mod.field_value(artifact["n_states_sampled"]) >= 50
++    assert mod.field_value(artifact["jacobian_antisymmetry_fraction"]) > 0.95
++    assert mod.field_value(artifact["scalar_potential_fit_residual"]) > 0.95
++    assert mod.field_value(artifact["positive_control_fit_residual"]) < 1e-6
++    assert mod.field_value(artifact["preconditions_checked"])["trm_checkpoint_loadable"] is True
++    assert "linear_update_checkpoint" in mod.field_value(artifact["inference_substrate"])
++
++
++def test_inconclusive_and_secretly_energy_descent_verdicts() -> None:
++    """REQ-3823: verdict gate covers the positive-control failure and low-residual branches."""
++    assert mod.classify_verdict(0.5, 0.8, positive_control_residual=0.2) == (
++        "complete: INCONCLUSIVE_curlfree_positive_control_failed"
++    )
++    assert mod.classify_verdict(0.0, 1e-4, positive_control_residual=1e-9) == (
++        "complete: trm_is_secretly_energy_descent_surprising_residual0.000100"
++    )
++    assert mod.classify_verdict(0.0, 0.10, positive_control_residual=1e-9) == (
++        "complete: trm_is_secretly_energy_descent_surprising_residual0.100000"
++    )
++
++
++def test_write_artifact_persists_json(tmp_path: Path) -> None:
++    """REQ-3823: writer persists the terminal artifact schema."""
++    artifact = mod.blocked_artifact(
++        preconditions={
++            "torch_available": True,
++            "numpy_available": True,
++            "source_artifact_available": True,
++            "trm_checkpoint_source": "missing.pt",
++            "trm_checkpoint_loadable": False,
++            "block_reason": mod.BLOCKED_VERDICT,
++        },
++        duration_s=0.01,
++        random_seed=3823,
++    )
++    output_path = tmp_path / "experiment_3823.json"
++
++    mod.write_artifact(artifact, output_path)
++
++    loaded = json.loads(output_path.read_text(encoding="utf-8"))
++    assert loaded["schema"] == mod.SCHEMA
++    assert loaded["honest_verdict"] == mod.BLOCKED_VERDICT
++
++
++def test_load_source_artifact_rejects_malformed_json(tmp_path: Path) -> None:
++    """REQ-3823: malformed checkpoint evidence stays fail-closed."""
++    malformed = tmp_path / "bad.json"
++    malformed.write_text("{", encoding="utf-8")
++
++    preconditions = mod.run_preconditions_check(malformed)
++
++    assert preconditions["source_artifact_available"] is False
++    assert preconditions["trm_checkpoint_loadable"] is False
++    assert preconditions["block_reason"] == mod.BLOCKED_VERDICT
++
++
++def test_field_value_rejects_unwrapped_metric() -> None:
++    """REQ-3823: principle-bearing fields are enforced by helpers."""
++    with pytest.raises(TypeError):
++        mod.field_value(1.0)
++
++
++def test_linear_checkpoint_validation_and_call() -> None:
++    """REQ-3823: synthetic checkpoint wrapper validates shapes and returns h_next."""
++    with pytest.raises(ValueError, match="square"):
++        mod.LinearUpdateCheckpoint([[1.0, 0.0, 0.0]])
++    with pytest.raises(ValueError, match="bias"):
++        mod.LinearUpdateCheckpoint([[1.0, 0.0], [0.0, 1.0]], bias=[0.0])
++
++    model = mod.LinearUpdateCheckpoint([[0.0, 1.0], [-1.0, 0.0]], bias=[0.5, 0.0])
++    h = torch.tensor([[1.0, 2.0]], dtype=torch.float64)
++    assert torch.allclose(model(h), h + model.forward_delta(h))
++
++
++def test_import_json_and_source_edge_cases(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-3823: precondition helpers fail closed on malformed source inputs."""
++    assert mod._import_available("definitely_missing_module_for_3823") is False
++
++    non_object = tmp_path / "list.json"
++    non_object.write_text("[]", encoding="utf-8")
++    with pytest.raises(ValueError, match="JSON object"):
++        mod._read_json(non_object)
++
++    assert mod.resolve_checkpoint_path(None) is None
++    assert mod.resolve_checkpoint_path("https://example.test/model.pt") is None
++
++    checkpoint = tmp_path / "relative.pt"
++    torch.save({"update_matrix": [[1.0]]}, checkpoint)
++    assert mod.resolve_checkpoint_path("relative.pt", base_dir=tmp_path) == checkpoint.resolve()
++
++    source = tmp_path / "source.json"
++    source.write_text(json.dumps({"trm_checkpoint_source": str(checkpoint)}), encoding="utf-8")
++    monkeypatch.setattr(mod, "_import_available", lambda name: False if name == "numpy" else True)
++    preconditions = mod.run_preconditions_check(source)
++    assert preconditions["checkpoint_load_error"] == "torch_or_numpy_unavailable"
++
++
++def test_torch_load_fallback_and_loadable_error(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-3823: checkpoint loadability records torch-load failures."""
++    checkpoint = tmp_path / "x.pt"
++    checkpoint.write_text("not a torch checkpoint", encoding="utf-8")
++    loadable, error = mod.checkpoint_loadable(checkpoint)
++    assert loadable is False
++    assert "checkpoint" in str(error).lower() or "invalid" in str(error).lower()
++
++    calls = {"count": 0}
++
++    def fake_load(path, map_location=None, weights_only=None):
++        calls["count"] += 1
++        if weights_only is not None:
++            raise TypeError("old torch")
++        return {"ok": True}
++
++    monkeypatch.setattr(torch, "load", fake_load)
++    assert mod._torch_load(checkpoint) == {"ok": True}
++    assert calls["count"] == 2
++
++
++def test_load_update_model_module_nested_and_unsupported(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-3823: supported torch module payloads load; unsupported payloads reject."""
++
++    class TinyNextState(torch.nn.Module):
++        def __init__(self) -> None:
++            super().__init__()
++            self.latent_dim = 2
++
++        def forward(self, h):
++            return h + 1.0
++
++    direct = TinyNextState()
++    monkeypatch.setattr(mod, "_torch_load", lambda path: direct)
++    loaded_direct = mod.load_update_model(tmp_path / "direct.pt")
++    assert loaded_direct.substrate_label == "torch_module_checkpoint"
++
++    nested = TinyNextState()
++    monkeypatch.setattr(mod, "_torch_load", lambda path: {"model": nested})
++    loaded_nested = mod.load_update_model(tmp_path / "nested.pt")
++    assert loaded_nested.substrate_label == "torch_module_checkpoint"
++
++    module_without_dim = torch.nn.Identity()
++    monkeypatch.setattr(mod, "_torch_load", lambda path: module_without_dim)
++    with pytest.raises(ValueError, match="latent_dim"):
++        mod.load_update_model(tmp_path / "bad_direct.pt")
++
++    nested_without_dim = torch.nn.Identity()
++    monkeypatch.setattr(mod, "_torch_load", lambda path: {"model": nested_without_dim})
++    with pytest.raises(ValueError, match="nested"):
++        mod.load_update_model(tmp_path / "bad_nested.pt")
++
++    monkeypatch.setattr(mod, "_torch_load", lambda path: {"not": "a model"})
++    with pytest.raises(ValueError, match="unsupported"):
++        mod.load_update_model(tmp_path / "unsupported.pt")
++
++
++def test_make_delta_fn_handles_next_state_shapes() -> None:
++    """REQ-3823: generic model adapters handle tuple/dict outputs and reject bad shapes."""
++
++    class TupleModel:
++        def __call__(self, h):
++            return (h + 2.0,)
++
++    class DictModel:
++        def __call__(self, h):
++            return {"next_state": h + 3.0}
++
++    class BadModel:
++        def __call__(self, h):
++            return torch.zeros(1, dtype=h.dtype)
++
++    h = torch.zeros(2, dtype=torch.float64)
++    assert torch.allclose(mod.make_delta_fn(TupleModel())(h), torch.full((2,), 2.0, dtype=torch.float64))
++    assert torch.allclose(mod.make_delta_fn(DictModel())(h), torch.full((2,), 3.0, dtype=torch.float64))
++    with pytest.raises(ValueError, match="next latent"):
++        mod.make_delta_fn(BadModel())(h)
++
++
++def test_sample_and_jacobian_edge_cases() -> None:
++    """REQ-3823: numerical helpers handle bounded edge cases."""
++    model = mod.LinearUpdateCheckpoint([[0.0, 0.0], [0.0, 0.0]])
++    states, deltas = mod.sample_update_pairs(
++        model,
++        n_instances=2,
++        steps=1,
++        latent_dim=2,
++        random_seed=1,
++    )
++    assert states.shape[0] == 50
++    assert torch.allclose(deltas, torch.zeros_like(deltas))
++
++    with pytest.raises(ValueError, match="steps"):
++        mod.sample_update_pairs(model, n_instances=50, steps=0, latent_dim=2, random_seed=1)
++
++    assert mod.jacobian_antisymmetry_fraction(lambda h: h, torch.empty(0, 2, dtype=torch.float64)) == 0.0
++    assert mod.jacobian_antisymmetry_fraction(lambda h: torch.zeros_like(h), states[:1]) == 0.0
++
++
++def test_delta_single_fallback_and_shape_error() -> None:
++    """REQ-3823: single-state Jacobian adapter falls back to batched functions."""
++
++    def batched_only(h):
++        if h.ndim == 1:
++            raise RuntimeError("batch required")
++        return h + 1.0
++
++    assert torch.allclose(
++        mod._call_delta_single(batched_only, torch.zeros(2, dtype=torch.float64)),
++        torch.ones(2, dtype=torch.float64),
++    )
++
++    def wrong_shape(h):
++        if h.ndim == 1:
++            raise RuntimeError("batch required")
++        return torch.zeros(1, 1, dtype=h.dtype)
++
++    with pytest.raises(ValueError, match="delta_fn"):
++        mod._call_delta_single(wrong_shape, torch.zeros(2, dtype=torch.float64))
++
++
++def test_scalar_potential_edge_cases() -> None:
++    """REQ-3823: scalar-potential residual handles invalid shapes and zero fields."""
++    with pytest.raises(ValueError, match="rank-2"):
++        mod.scalar_potential_fit_residual(torch.zeros(2), torch.zeros(2))
++
++    states = torch.zeros(4, 2, dtype=torch.float64)
++    deltas = torch.zeros(4, 2, dtype=torch.float64)
++    assert mod.scalar_potential_fit_residual(states, deltas) == 0.0
++
++    one_nonzero = torch.zeros(4, 2, dtype=torch.float64)
++    one_nonzero[0, 0] = 1.0
++    assert mod.scalar_potential_fit_residual(states, one_nonzero) > 0.0
++
++
++def test_build_artifact_blocks_when_second_load_fails(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-3823: a stale loadable precondition still blocks if model loading fails."""
++    checkpoint = tmp_path / "fake.pt"
++    checkpoint.write_text("x", encoding="utf-8")
++    source = tmp_path / "source.json"
++    source.write_text(json.dumps({"trm_checkpoint_source": str(checkpoint)}), encoding="utf-8")
++    monkeypatch.setattr(
++        mod,
++        "run_preconditions_check",
++        lambda path: {
++            "torch_available": True,
++            "numpy_available": True,
++            "source_artifact_available": True,
++            "trm_checkpoint_source": str(checkpoint),
++            "trm_checkpoint_path": str(checkpoint),
++            "trm_checkpoint_loadable": True,
++            "checkpoint_load_error": None,
++            "block_reason": None,
++        },
++    )
++    monkeypatch.setattr(mod, "load_update_model", lambda path: (_ for _ in ()).throw(ValueError("bad")))
++
++    artifact = mod.build_artifact(source_artifact_path=source)
++
++    assert artifact["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert "ValueError" in mod.field_value(artifact["preconditions_checked"])["checkpoint_load_error"]
++
++
++def test_main_uses_default_writer(monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-3823: CLI entrypoint builds and writes one artifact."""
++    calls = {}
++
++    def fake_build_artifact():
++        calls["built"] = True
++        return {"schema": mod.SCHEMA, "honest_verdict": mod.BLOCKED_VERDICT}
++
++    def fake_write_artifact(artifact, output_path):
++        calls["artifact"] = artifact
++        calls["output_path"] = output_path
++
++    monkeypatch.setattr(mod, "build_artifact", fake_build_artifact)
++    monkeypatch.setattr(mod, "write_artifact", fake_write_artifact)
++
++    mod.main()
++
++    assert calls["built"] is True
++    assert calls["artifact"]["schema"] == mod.SCHEMA
++    assert calls["output_path"] == mod.OUTPUT_PATH
+-- 
+2.55.0
+

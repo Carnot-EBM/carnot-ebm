@@ -1,0 +1,1773 @@
+From af922c6db9363508001958aaa7b1f4faf1459b50 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 28 Jun 2026 17:11:03 -0400
+Subject: [PATCH 04718/11362] [conductor] PHASE B1 (RESERVED INFRA 1) --
+ ADVERSARIAL AUDIT of the .455 ARC arms BEFORE the capstone trusts them
+ (placed AFTER A1/A2/D so it can read their artifacts -- the .454 ordering bug
+ where B1 ran before D is fixed): (a) A1/A2 banks (if any) are REAL reproduced
+ levels (reproduction gate genuinely passed, not fabricated, not a duplicate
+ of an already-reproduced level, solve_provenance=live_agent_self_discovery,
+ live-path-reachable), and (b) D's post-6/30 pivot-readiness is HONEST
+ (oracle-distinct DESIGN TARGET declared, the validation gate well-formed, NO
+ moat-proven over-claim, real arXiv citations, no MATM-retired re-proposal).
+ Emits banks_trustworthy + pivot_readiness_trustworthy for the capstone.
+
+Automated research step by research conductor.
+Task ID: exp4941-b1
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4941_bank_and_pivot_audit.py   | 820 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_4941_bank_and_pivot_audit.json | 154 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...st_experiment_4941_bank_and_pivot_audit.py | 588 +++++++++++++
+ 12 files changed, 1586 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_4941_bank_and_pivot_audit.py
+ create mode 100644 results/experiment_4941_bank_and_pivot_audit.json
+ create mode 100644 tests/python/test_experiment_4941_bank_and_pivot_audit.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index c935cfdd68..dea43062ec 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -655,3 +655,7 @@
+ - SCENARIO-CAPSTONE-4939: The artifact `results/experiment_4939_heldout_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `heldout_first_win_rate`, `heldout_first_win_ci`, `games_evaluated`, `source_artifact`, `flag_resolved`, `null_delta_methodology_note`, `positive_control_passed`, `model_specs`, `random_seed`, `inference_substrate`, `solve_provenance`, and `preconditions_checked`; it must also include `heldout_first_win_delta_vs_baseline`, `heldout_variant_attempts`, `duration_s`, `field_principles`, `spec_refs`, `result_path`, `schema`, `source_artifact_path`, `source_artifact_sha256`, `triggering_rule_if_flagged`, and a stable checksum. A clean carry must set `honest_verdict=complete_heldout_first_win_0.04_full25_final_flag_resolved`, `heldout_first_win_rate=0.04`, `games_evaluated=25`, `source_artifact=exp4928`, `flag_resolved=true`, `positive_control_passed=true`, `inference_substrate=live_llm_inference`, and `solve_provenance=development_proxy`.
+ - SCENARIO-CAPSTONE-4939-BLOCKED-PRECONDITION: If the Exp4928 artifact is missing, not full-25, not `flag_resolved=true`, has no positive control, or lacks the required methodology stamps, the workflow must still write `results/experiment_4939_heldout_first_win_readiness.json` with `honest_verdict=blocked_<resource>`, the failed resource recorded in `preconditions_checked`, `heldout_first_win_rate=null`, empty CI, `games_evaluated=0`, `source_artifact=exp4928`, `flag_resolved=false`, and no fabricated final readiness number.
+ - SCENARIO-CAPSTONE-4939-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; the clean countable final go/no-go is complete_heldout_first_win_<rate>_full25_final_flag_resolved.", `heldout_first_win_rate` = "the FINAL full-25 held-out first-win rate -- the 6/30 go/no-go number (0.04 carried/confirmed from exp4928).", `heldout_first_win_ci` = "bootstrap CI of the rate; a CI-lower-0 result is an honest null, not a failure.", `games_evaluated` = "the count of games scored (25 -- the full set, carried/confirmed).", `source_artifact` = "exp4928 if the .454 clean full-25 number is carried (anti-churn provenance), else live_resume.", `flag_resolved` = "true iff the fresh fully-stamped artifact is NOT flagged true_live_recheck=critical (a 0.04==0.04 TAUTOLOGY warn is the honest null, not critical).", `null_delta_methodology_note` = "why the ~0.04-agreement is genuine no-improvement, not a TAUTOLOGY/fabrication (what the live-recheck needs).", `positive_control_passed` = "true -- a non-degenerate positive control distinguishes a real null from a broken harness.", `model_specs` = "Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server -- the methodology stamp whose absence caused the historical flag.", `random_seed` = "determinism plus part of the methodology stamp the live-recheck requires.", `inference_substrate` = "live_llm_inference from the exp4928 full-25 live run, carried as the honest anti-churn substrate for exp4939.", `solve_provenance` = "development_proxy -- a readiness measurement on the variant harness, NOT a registry bank.", and `preconditions_checked` = "records exp4928-ledger/arcade/generator checks; a missing resource emits blocked_."
++- REQ-CAPSTONE-4941: The `.455` bank and pivot-readiness audit SHALL write `results/experiment_4941_bank_and_pivot_audit.json` without editing upstream arms and without modifying `scripts/research_conductor.py`. It SHALL read A1 `results/experiment_4936_levelup_attempt.json`, A2 `results/experiment_4937_levelup_attempt.json`, D `results/experiment_4940_distributional_energy_verifier_executable_spec.json`, `ops/arc_solve_registry.yaml`, any cited standing-loop artifacts, `scripts/adversarial_verify.py`, `scripts/summarize_artifact.py`, and `scripts/arc_orphan_solver_lint.py`. For A1/A2 it SHALL evaluate `reproduction_genuine`, `not_duplicate`, `self_discovery_provenance`, and `live_path_reachable` only for artifacts that claim a bank; honest no-bank rotation dead ends SHALL be recorded as not claimed and SHALL make `banks_trustworthy` vacuously true. For D it SHALL evaluate `oracle_distinct_design` and `honest_readiness`. Missing inputs SHALL be recorded in `preconditions_checked`, produce `honest_verdict=blocked_<artifact>_missing` or `blocked_<resource>`, and still audit any present inputs without fabricating trust.
++- SCENARIO-CAPSTONE-4941: The artifact `results/experiment_4941_bank_and_pivot_audit.json` must emit principle-annotated top-level fields for `honest_verdict`, `banks_trustworthy`, `pivot_readiness_trustworthy`, `checks`, `audit_failure_reasons`, `inference_substrate`, and `preconditions_checked`; it must also include per-bank evidence, pivot readiness evidence, lint evidence, adversarial verifier evidence, `field_principles`, `spec_refs`, `result_path`, `duration_s`, `random_seed`, and a stable checksum. Bank reproduction checks must cross-check claimed banks against their loop artifacts and require an offline reproduction gate whose reached level matches the claim; duplicate checks must fail when the claimed reached level is not strictly above the registry prior level for that game; provenance checks must require `solve_provenance=live_agent_self_discovery` and no offline-ground-truth BFS or calibration inputs; live-path checks must require artifact/loop live-path evidence and a passing `arc_orphan_solver_lint` result. D must pass only when `verifier_is_oracle=false` is the declared design target, `check_circular_moat_overclaim` reports no critical overclaim, no model-identity shortcut or verifier oracle-label re-derivation is allowed, the exact arXiv IDs `2605.18871`, `2504.16828`, and `2502.01989` are cited with real citation metadata, the validation gate requires beats-SC-CI95-excl-0 plus oracle-distinct plus no-model-identity-shortcut, `moat_proven_claimed=false`, and the retired MATM lever is not re-proposed.
++- SCENARIO-CAPSTONE-4941-BLOCKED-PRECONDITION: If A1, A2, D, the registry, required scripts, or the capstone spec are missing, or the registry is not loadable, the workflow must still write `results/experiment_4941_bank_and_pivot_audit.json` with the first specific terminal `blocked_<artifact>_missing` or `blocked_<resource>` verdict, failed resources recorded in `preconditions_checked`, absent inputs listed in `audit_failure_reasons`, present inputs audited, `banks_trustworthy` and `pivot_readiness_trustworthy` emitted as bare booleans, and no fabricated trusted result.
++- SCENARIO-CAPSTONE-4941-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; complete_v455_banks_and_pivot_audited (trusted or with named failures).", `banks_trustworthy` = "AND of the bank checks over CLAIMED banks -- the capstone counts A1/A2 toward reproducible_total_levels ONLY if true (vacuously true if no bank claimed).", `pivot_readiness_trustworthy` = "AND of the pivot-readiness checks -- the capstone states D's readiness ONLY if true (oracle-distinct design + honest gate + no over-claim).", `checks` = "per-check booleans {reproduction_genuine, not_duplicate, self_discovery_provenance, live_path_reachable, oracle_distinct_design, honest_readiness}.", `audit_failure_reasons` = "list of named failures (empty if all trusted) -- the audit reports honestly, no rubber-stamp.", `inference_substrate` = "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor).", and `preconditions_checked` = "records A1/A2/D artifact presence; a missing input is recorded, not fabricated."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a439694b38..7f9eec3045 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 202,
+   "code_violations": 0,
+-  "experiments_checked": 3948,
++  "experiments_checked": 3949,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4941_bank_and_pivot_audit.py b/python/carnot/experiment_4941_bank_and_pivot_audit.py
+new file mode 100644
+index 0000000000..9f85d35c30
+--- /dev/null
++++ b/python/carnot/experiment_4941_bank_and_pivot_audit.py
+@@ -0,0 +1,820 @@
++"""Experiment 4941: adversarial audit for .455 ARC banks and pivot readiness."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import subprocess
++import sys
++import time
++from pathlib import Path
++from typing import Any, Callable, Mapping
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++RepoLoader = Callable[[Path], Mapping[str, Any]]
++LintRunner = Callable[[Path], Mapping[str, Any]]
++Clock = Callable[[], float]
++
++REPO = Path(__file__).resolve().parents[2]
++EXPERIMENT = "experiment_4941_bank_and_pivot_audit"
++EXPERIMENT_ID = 4941
++SCHEMA = "carnot.v455_bank_and_pivot_audit.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4941_bank_and_pivot_audit.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++A1_RELATIVE_PATH = "results/experiment_4936_levelup_attempt.json"
++A2_RELATIVE_PATH = "results/experiment_4937_levelup_attempt.json"
++PIVOT_RELATIVE_PATH = "results/experiment_4940_distributional_energy_verifier_executable_spec.json"
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++RANDOM_SEED = 4941
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-4941",
++    "SCENARIO-CAPSTONE-4941",
++    "SCENARIO-CAPSTONE-4941-BLOCKED-PRECONDITION",
++]
++
++CHECK_KEYS = (
++    "reproduction_genuine",
++    "not_duplicate",
++    "self_discovery_provenance",
++    "live_path_reachable",
++    "oracle_distinct_design",
++    "honest_readiness",
++)
++
++BANK_CHECK_KEYS = CHECK_KEYS[:4]
++PIVOT_CHECK_KEYS = CHECK_KEYS[4:]
++REQUIRED_ARXIV_IDS = {"2605.18871", "2504.16828", "2502.01989"}
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; complete_v455_banks_and_pivot_audited "
++            "(trusted or with named failures)."
++        )
++    },
++    "banks_trustworthy": {
++        "principle": (
++            "AND of the bank checks over CLAIMED banks -- the capstone counts "
++            "A1/A2 toward reproducible_total_levels ONLY if true (vacuously true "
++            "if no bank claimed)."
++        )
++    },
++    "pivot_readiness_trustworthy": {
++        "principle": (
++            "AND of the pivot-readiness checks -- the capstone states D's "
++            "readiness ONLY if true (oracle-distinct design + honest gate + no over-claim)."
++        )
++    },
++    "checks": {
++        "principle": (
++            "per-check booleans {reproduction_genuine, not_duplicate, "
++            "self_discovery_provenance, live_path_reachable, "
++            "oracle_distinct_design, honest_readiness}."
++        )
++    },
++    "audit_failure_reasons": {
++        "principle": (
++            "list of named failures (empty if all trusted) -- the audit reports "
++            "honestly, no rubber-stamp."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor)."
++        )
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records A1/A2/D artifact presence; a missing input is recorded, not fabricated."
++        )
++    },
++}
++
++REQUIRED_FIELDS = (
++    "honest_verdict",
++    "banks_trustworthy",
++    "pivot_readiness_trustworthy",
++    "checks",
++    "audit_failure_reasons",
++    "inference_substrate",
++    "preconditions_checked",
++)
++
++
++def _read_json(path: Path) -> JsonDict:
++    value = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(value, dict):
++        raise ValueError(f"{path} did not contain a JSON object")
++    return value
++
++
++def _load_json_if_present(root: Path, relative: str) -> JsonDict | None:
++    path = root / relative
++    if not path.exists():
++        return None
++    return _read_json(path)
++
++
++def _load_registry(root: Path) -> Mapping[str, Any]:
++    value = yaml.safe_load((root / REGISTRY_RELATIVE_PATH).read_text(encoding="utf-8"))
++    if not isinstance(value, Mapping):
++        raise ValueError("registry did not contain a mapping")
++    return value
++
++
++def _registry_game_row(registry: Mapping[str, Any], game: str) -> Mapping[str, Any]:
++    for row in registry.get("games", []) or []:
++        if isinstance(row, Mapping) and row.get("game") == game:
++            return row
++    return {}
++
++
++def _int_value(value: Any, default: int = 0) -> int:
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _artifact_game(artifact: Mapping[str, Any]) -> str:
++    gate = _mapping(artifact.get("reproduction_gate"))
++    return str(artifact.get("target_game") or artifact.get("game") or gate.get("game") or "")
++
++
++def _claimed_reached_level(artifact: Mapping[str, Any]) -> int:
++    gate = _mapping(artifact.get("reproduction_gate"))
++    update = _mapping(artifact.get("registry_update"))
++    return _int_value(
++        gate.get("claimed_level")
++        or gate.get("reached_level")
++        or update.get("new_game_levels")
++        or artifact.get("reproduced_levels")
++    )
++
++
++def _gate_reached_level(artifact: Mapping[str, Any]) -> int:
++    gate = _mapping(artifact.get("reproduction_gate"))
++    update = _mapping(artifact.get("registry_update"))
++    return _int_value(
++        gate.get("reached_level")
++        or update.get("new_game_levels")
++        or artifact.get("reproduced_levels")
++    )
++
++
++def _loop_reached_level(loop_artifact: Mapping[str, Any] | None) -> int:
++    gate = _mapping((loop_artifact or {}).get("reproduction_gate"))
++    return _int_value(gate.get("reached_level") or (loop_artifact or {}).get("reached_level"))
++
++
++def _loop_reproduced(loop_artifact: Mapping[str, Any] | None) -> bool:
++    gate = _mapping((loop_artifact or {}).get("reproduction_gate"))
++    return bool(
++        loop_artifact is not None
++        and loop_artifact.get("offline_reproduced") is True
++        and gate.get("reproduced") is True
++    )
++
++
++def _has_outer_loop_inputs(value: Any) -> bool:
++    if isinstance(value, Mapping):
++        for key, item in value.items():
++            lowered = str(key).lower()
++            if lowered in {
++                "offline_ground_truth_bfs",
++                "per_game_calibration_inputs",
++                "calibration_inputs",
++                "outer_loop_re",
++            } and item:
++                return True
++            if _has_outer_loop_inputs(item):
++                return True
++    elif isinstance(value, list):
++        return any(_has_outer_loop_inputs(item) for item in value)
++    return False
++
++
++def _live_game_adapter_evidence(game: str, row: Mapping[str, Any]) -> bool:
++    solver_text = str(row.get("solver") or "")
++    if "GameAdapter" in solver_text:
++        return True
++    try:
++        from carnot.agentic import arc_game_adapters
++
++        return arc_game_adapters.get_adapter(game) is not None
++    except Exception:  # pragma: no cover - import-environment fallback
++        return False
++
++
++def _claims_bank(artifact: Mapping[str, Any]) -> bool:
++    verdict = str(artifact.get("honest_verdict") or "")
++    return bool(
++        _int_value(artifact.get("new_levels_banked")) > 0
++        or artifact.get("offline_reproduced") is True
++        or verdict.startswith("success_")
++    )
++
++
++def _registry_prior_level(artifact: Mapping[str, Any], registry: Mapping[str, Any], game: str) -> int:
++    update = _mapping(artifact.get("registry_update"))
++    if "prior_game_levels" in update:
++        return _int_value(update.get("prior_game_levels"))
++    return _int_value(_registry_game_row(registry, game).get("levels_reproduced"))
++
++
++def run_arc_orphan_solver_lint(root: Path) -> JsonDict:
++    command = [sys.executable, "scripts/arc_orphan_solver_lint.py"]
++    completed = subprocess.run(
++        command,
++        cwd=root,
++        text=True,
++        capture_output=True,
++        check=False,
++    )
++    return {
++        "passed": completed.returncode == 0,
++        "returncode": completed.returncode,
++        "command": " ".join(command),
++        "stdout_tail": completed.stdout[-1000:],
++        "stderr_tail": completed.stderr[-1000:],
++    }
++
++
++def audit_bank(
++    *,
++    label: str,
++    artifact: Mapping[str, Any],
++    loop_artifact: Mapping[str, Any] | None,
++    registry: Mapping[str, Any],
++    lint_result: Mapping[str, Any],
++) -> JsonDict:
++    game = _artifact_game(artifact)
++    row = _registry_game_row(registry, game)
++    bank_claimed = _claims_bank(artifact)
++    if not bank_claimed:
++        return {
++            "label": label,
++            "present": True,
++            "bank_claimed": False,
++            "artifact_experiment": artifact.get("experiment"),
++            "game": game,
++            "checks": {key: True for key in BANK_CHECK_KEYS},
++            "failure_reasons": [],
++            "claim_status": "no_bank_claimed_honest_dead_end",
++            "claimed_reached_level": _claimed_reached_level(artifact),
++            "registry_prior_level": _registry_prior_level(artifact, registry, game),
++            "loop_artifact_present": loop_artifact is not None,
++        }
++
++    registry_prior = _registry_prior_level(artifact, registry, game)
++    claimed_level = _claimed_reached_level(artifact)
++    gate_reached = _gate_reached_level(artifact)
++    gate = _mapping(artifact.get("reproduction_gate"))
++    loop_gate = _mapping((loop_artifact or {}).get("reproduction_gate"))
++    loop_level = _loop_reached_level(loop_artifact)
++    expected_loop_path = f"results/arc_loop_solve_{game}.json"
++    loop_path = str(artifact.get("standing_loop_result_path") or "")
++    mode = str((loop_artifact or {}).get("mode") or "")
++
++    reproduction_genuine = bool(
++        game
++        and artifact.get("offline_reproduced") is True
++        and gate.get("reproduced") is True
++        and _loop_reproduced(loop_artifact)
++        and gate.get("game") == game
++        and (loop_artifact or {}).get("game") == game
++        and loop_gate.get("game") == game
++        and claimed_level > 0
++        and gate_reached == claimed_level
++        and loop_level == claimed_level
++    )
++    not_duplicate = bool(claimed_level > registry_prior)
++    provenance = str(artifact.get("solve_provenance") or "")
++    no_outer_loop_inputs = not _has_outer_loop_inputs(artifact)
++    self_discovery_provenance = provenance == "live_agent_self_discovery" and no_outer_loop_inputs
++    live_path_reachable = bool(
++        artifact.get("live_path_reachable") is True
++        and loop_path == expected_loop_path
++        and mode.startswith("standing_arc_loop")
++        and lint_result.get("passed") is True
++        and _live_game_adapter_evidence(game, row)
++    )
++
++    checks = {
++        "reproduction_genuine": reproduction_genuine,
++        "not_duplicate": not_duplicate,
++        "self_discovery_provenance": self_discovery_provenance,
++        "live_path_reachable": live_path_reachable,
++    }
++    reasons: list[str] = []
++    if loop_artifact is None:
++        reasons.append(f"{label}_missing_loop_artifact")
++    if not reproduction_genuine:
++        reasons.append(f"{label}_reproduction_genuine_failed_loop_or_gate_mismatch_{game}")
++    if not not_duplicate:
++        reasons.append(f"{label}_not_duplicate_failed_duplicate_depth_{game}_L{claimed_level}")
++    if not self_discovery_provenance:
++        cause = provenance or "missing"
++        if provenance == "live_agent_self_discovery" and not no_outer_loop_inputs:
++            cause = "declared_outer_loop_input"
++        reasons.append(f"{label}_self_discovery_provenance_failed_{cause}")
++    if not live_path_reachable:
++        reasons.append(f"{label}_live_path_reachable_failed")
++
++    return {
++        "label": label,
++        "present": True,
++        "bank_claimed": True,
++        "artifact_experiment": artifact.get("experiment"),
++        "game": game,
++        "checks": checks,
++        "failure_reasons": reasons,
++        "registry_prior_level": registry_prior,
++        "claimed_reached_level": claimed_level,
++        "artifact_gate_reached_level": gate_reached,
++        "loop_cross_check": {
++            "path": expected_loop_path,
++            "artifact_path": loop_path,
++            "game": (loop_artifact or {}).get("game"),
++            "mode": mode,
++            "offline_reproduced": (loop_artifact or {}).get("offline_reproduced") is True,
++            "gate_reproduced": loop_gate.get("reproduced") is True,
++            "reached_level": loop_level,
++        },
++        "provenance": {
++            "solve_provenance": provenance,
++            "outer_loop_inputs_declared": not no_outer_loop_inputs,
++        },
++        "live_path_evidence": {
++            "artifact_live_path_reachable": artifact.get("live_path_reachable") is True,
++            "standing_loop_path_matches": loop_path == expected_loop_path,
++            "arc_orphan_solver_lint_passed": lint_result.get("passed") is True,
++            "game_adapter_evidence": _live_game_adapter_evidence(game, row),
++        },
++    }
++
++
++def _critical_circular_moat_flags(artifact: Mapping[str, Any]) -> list[JsonDict]:
++    try:
++        repo_text = str(REPO)
++        if repo_text not in sys.path:  # pragma: no cover - direct script execution guard
++            sys.path.insert(0, repo_text)
++        import scripts.adversarial_verify as adversarial_verify
++
++        flags: list[Any] = []
++        adversarial_verify.check_circular_moat_overclaim(dict(artifact), flags)
++        return [
++            flag.to_dict()
++            for flag in flags
++            if getattr(flag, "severity", None) == "critical"
++        ]
++    except Exception as exc:  # pragma: no cover - verifier import/runtime fallback
++        return [{"kind": "CIRCULAR_MOAT_CHECK_ERROR", "severity": "critical", "detail": str(exc)}]
++
++
++def _verifier_design_principle_declared(artifact: Mapping[str, Any]) -> bool:
++    principle = _mapping(_mapping(artifact.get("field_principles")).get("verifier_is_oracle")).get(
++        "principle"
++    )
++    text = str(principle or "").lower()
++    return "design target" in text and "oracle-distinct" in text
++
++
++def _citation_metadata_real(artifact: Mapping[str, Any]) -> bool:
++    citations = _mapping(artifact.get("citations"))
++    for arxiv_id in REQUIRED_ARXIV_IDS:
++        citation = _mapping(citations.get(arxiv_id))
++        if citation.get("http_status") != 200:
++            return False
++        if arxiv_id not in str(citation.get("url") or ""):
++            return False
++        if not str(citation.get("title") or "").strip():
++            return False
++    return True
++
++
++def _validation_gate_precise(artifact: Mapping[str, Any]) -> bool:
++    gate = _mapping(artifact.get("validation_gate"))
++    return bool(
++        gate.get("beats_self_consistency_ci95_excludes_zero_required") is True
++        and gate.get("oracle_distinct_required") is True
++        and gate.get("no_model_identity_shortcut_required") is True
++        and gate.get("verifier_is_oracle_required_value") is False
++        and gate.get("claimed_met") is False
++    )
++
++
++def _contains_matm_reproposal(value: Any) -> bool:
++    if isinstance(value, Mapping):
++        for key, item in value.items():
++            key_text = str(key).lower()
++            if "matm" in key_text and any(word in key_text for word in ("proposed", "retrieval")):
++                return True
++            if "matm" in key_text and _mapping(item).get("proposed") is True:
++                return True
++            if _contains_matm_reproposal(item):
++                return True
++    elif isinstance(value, list):
++        return any(_contains_matm_reproposal(item) for item in value)
++    elif isinstance(value, str):
++        text = value.lower()
++        if "matm" in text and "retired" not in text and any(
++            word in text for word in ("proposed", "re-proposed", "similarity-keyed")
++        ):
++            return True
++    return False
++
++
++def audit_pivot_readiness(artifact: Mapping[str, Any]) -> JsonDict:
++    design = _mapping(artifact.get("design_spec"))
++    verifier_column = _mapping(design.get("decomposed_energy_verifier_column"))
++    circular_flags = _critical_circular_moat_flags(artifact)
++
++    verifier_false = artifact.get("verifier_is_oracle") is False
++    design_target_declared = _verifier_design_principle_declared(artifact)
++    model_identity_forbidden = verifier_column.get("model_identity_features_allowed") is False
++    oracle_labels_forbidden = verifier_column.get("oracle_labels_allowed_in_verifier") is False
++    oracle_distinct_design = bool(
++        verifier_false
++        and design_target_declared
++        and model_identity_forbidden
++        and oracle_labels_forbidden
++        and not circular_flags
++    )
++
++    arxiv_ids_exact = set(artifact.get("arxiv_ids_cited") or []) == REQUIRED_ARXIV_IDS
++    citations_real = _citation_metadata_real(artifact)
++    validation_precise = _validation_gate_precise(artifact)
++    moat_not_claimed = artifact.get("moat_proven_claimed") is False
++    matm_not_reproposed = not _contains_matm_reproposal(artifact)
++    honest_readiness = bool(
++        arxiv_ids_exact
++        and citations_real
++        and validation_precise
++        and moat_not_claimed
++        and matm_not_reproposed
++    )
++
++    reasons: list[str] = []
++    if not verifier_false:
++        reasons.append("D_oracle_distinct_design_failed_verifier_is_oracle_not_false")
++    if not design_target_declared:
++        reasons.append("D_oracle_distinct_design_failed_design_target_not_declared")
++    if not model_identity_forbidden:
++        reasons.append("D_oracle_distinct_design_failed_model_identity_shortcut_allowed")
++    if not oracle_labels_forbidden:
++        reasons.append("D_oracle_distinct_design_failed_oracle_labels_allowed")
++    if circular_flags:
++        reasons.append("D_oracle_distinct_design_failed_circular_moat_overclaim")
++    if not arxiv_ids_exact:
++        reasons.append("D_honest_readiness_failed_arxiv_ids_not_exact")
++    if not citations_real:
++        reasons.append("D_honest_readiness_failed_citation_metadata_not_real")
++    if not validation_precise:
++        reasons.append("D_honest_readiness_failed_validation_gate_not_precise")
++    if not moat_not_claimed:
++        reasons.append("D_honest_readiness_failed_moat_proven_claimed")
++    if not matm_not_reproposed:
++        reasons.append("D_honest_readiness_failed_matm_reproposed")
++
++    return {
++        "present": True,
++        "artifact_experiment": artifact.get("experiment"),
++        "checks": {
++            "oracle_distinct_design": oracle_distinct_design,
++            "honest_readiness": honest_readiness,
++        },
++        "failure_reasons": reasons,
++        "oracle_distinct_design_evidence": {
++            "verifier_is_oracle": artifact.get("verifier_is_oracle"),
++            "design_target_declared": design_target_declared,
++            "model_identity_features_allowed": verifier_column.get(
++                "model_identity_features_allowed"
++            ),
++            "oracle_labels_allowed_in_verifier": verifier_column.get(
++                "oracle_labels_allowed_in_verifier"
++            ),
++            "circular_moat_critical_flags": circular_flags,
++        },
++        "honest_readiness_evidence": {
++            "arxiv_ids_cited": artifact.get("arxiv_ids_cited") or [],
++            "required_arxiv_ids": sorted(REQUIRED_ARXIV_IDS),
++            "citation_metadata_real": citations_real,
++            "validation_gate": dict(_mapping(artifact.get("validation_gate"))),
++            "moat_proven_claimed": artifact.get("moat_proven_claimed"),
++            "matm_reproposed": not matm_not_reproposed,
++        },
++    }
++
++
++def _preconditions(root: Path, registry_loader: RepoLoader | None) -> tuple[JsonDict, Mapping[str, Any] | None]:
++    spec_path = root / "openspec/capabilities/capstone/spec.md"
++    checked: JsonDict = {
++        "a1_artifact_present": (root / A1_RELATIVE_PATH).exists(),
++        "a2_artifact_present": (root / A2_RELATIVE_PATH).exists(),
++        "d_artifact_present": (root / PIVOT_RELATIVE_PATH).exists(),
++        "registry_present": (root / REGISTRY_RELATIVE_PATH).exists(),
++        "adversarial_verify_present": (root / "scripts/adversarial_verify.py").exists(),
++        "summarize_artifact_present": (root / "scripts/summarize_artifact.py").exists(),
++        "arc_orphan_solver_lint_present": (root / "scripts/arc_orphan_solver_lint.py").exists(),
++        "spec_has_req_4941": (
++            "REQ-CAPSTONE-4941" in spec_path.read_text(encoding="utf-8")
++            if spec_path.exists()
++            else False
++        ),
++    }
++    registry: Mapping[str, Any] | None = None
++    if checked["registry_present"]:
++        try:
++            registry = registry_loader(root) if registry_loader is not None else _load_registry(root)
++            checked["registry_loadable"] = True
++        except Exception as exc:
++            checked["registry_loadable"] = False
++            checked["registry_error"] = str(exc)
++    else:
++        checked["registry_loadable"] = False
++    checked["absent_inputs"] = _absent_inputs(checked)
++    return checked, registry
++
++
++def _absent_inputs(checked: Mapping[str, Any]) -> list[str]:
++    labels = {
++        "a1_artifact_present": "experiment_4936_levelup_attempt",
++        "a2_artifact_present": "experiment_4937_levelup_attempt",
++        "d_artifact_present": "experiment_4940_distributional_energy_verifier_executable_spec",
++        "registry_present": "arc_solve_registry",
++        "adversarial_verify_present": "scripts_adversarial_verify",
++        "summarize_artifact_present": "scripts_summarize_artifact",
++        "arc_orphan_solver_lint_present": "scripts_arc_orphan_solver_lint",
++        "spec_has_req_4941": "capstone_spec_req_4941",
++    }
++    return [label for key, label in labels.items() if checked.get(key) is not True]
++
++
++def _blocked_verdict(checked: Mapping[str, Any]) -> str | None:
++    ordered = (
++        ("a1_artifact_present", "blocked_experiment_4936_levelup_attempt_missing"),
++        ("a2_artifact_present", "blocked_experiment_4937_levelup_attempt_missing"),
++        (
++            "d_artifact_present",
++            "blocked_experiment_4940_distributional_energy_verifier_executable_spec_missing",
++        ),
++        ("registry_present", "blocked_arc_solve_registry_missing"),
++        ("registry_loadable", "blocked_arc_solve_registry_unloadable"),
++        ("adversarial_verify_present", "blocked_scripts_adversarial_verify_missing"),
++        ("summarize_artifact_present", "blocked_scripts_summarize_artifact_missing"),
++        ("arc_orphan_solver_lint_present", "blocked_scripts_arc_orphan_solver_lint_missing"),
++        ("spec_has_req_4941", "blocked_capstone_spec_req_4941_missing"),
++    )
++    for key, verdict in ordered:
++        if checked.get(key) is not True:
++            return verdict
++    return None
++
++
++def _missing_bank_evidence(label: str, reason: str) -> JsonDict:
++    return {
++        "label": label,
++        "present": False,
++        "bank_claimed": False,
++        "checks": {key: False for key in BANK_CHECK_KEYS},
++        "failure_reasons": [reason],
++    }
++
++
++def _missing_pivot_evidence(reason: str) -> JsonDict:
++    return {
++        "present": False,
++        "checks": {key: False for key in PIVOT_CHECK_KEYS},
++        "failure_reasons": [reason],
++    }
++
++
++def _aggregate_checks(bank_evidence: Mapping[str, Any], pivot_evidence: Mapping[str, Any]) -> JsonDict:
++    checks: JsonDict = {}
++    bank_values = [value for value in bank_evidence.values() if isinstance(value, Mapping)]
++    claimed = [value for value in bank_values if value.get("bank_claimed") is True]
++    missing_bank = any(value.get("present") is not True for value in bank_values)
++    for key in BANK_CHECK_KEYS:
++        if missing_bank:
++            checks[key] = False
++        elif claimed:
++            checks[key] = all(_mapping(value.get("checks")).get(key) is True for value in claimed)
++        else:
++            checks[key] = True
++    pivot_checks = _mapping(pivot_evidence.get("checks"))
++    for key in PIVOT_CHECK_KEYS:
++        checks[key] = pivot_checks.get(key) is True
++    return checks
++
++
++def _collect_failure_reasons(*evidence_groups: Any) -> list[str]:
++    out: list[str] = []
++    for group in evidence_groups:
++        if isinstance(group, Mapping) and "failure_reasons" in group:
++            values = [group]
++        else:
++            values = group.values() if isinstance(group, Mapping) else [group]
++        for evidence in values:
++            if isinstance(evidence, Mapping):
++                out.extend(str(item) for item in evidence.get("failure_reasons", []) or [])
++    return out
++
++
++def _checksum_payload(artifact: Mapping[str, Any]) -> str:
++    payload = {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"reproducibility_checksum", "schema_errors"}
++    }
++    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
++    return "sha256:" + hashlib.sha256(raw.encode("utf-8")).hexdigest()
++
++
++def _with_checksum_and_schema(artifact: JsonDict) -> JsonDict:
++    artifact = dict(artifact)
++    artifact["reproducibility_checksum"] = _checksum_payload(artifact)
++    artifact["schema_errors"] = artifact_schema_errors(artifact)
++    if artifact["schema_errors"]:
++        artifact["reproducibility_checksum"] = _checksum_payload(artifact)
++    return artifact
++
++
++def _load_loop_for_bank(root: Path, artifact: Mapping[str, Any]) -> JsonDict | None:
++    relative = str(artifact.get("standing_loop_result_path") or "")
++    if not relative:
++        return None
++    return _load_json_if_present(root, relative)
++
++
++def run(
++    *,
++    root: Path = REPO,
++    write: bool = True,
++    registry_loader: RepoLoader | None = None,
++    lint_runner: LintRunner | None = None,
++    now: Clock = time.monotonic,
++) -> JsonDict:
++    root = Path(root)
++    start = now()
++    checked, registry = _preconditions(root, registry_loader)
++    lint = dict((lint_runner or run_arc_orphan_solver_lint)(root)) if checked.get(
++        "arc_orphan_solver_lint_present"
++    ) else {"passed": False, "reason": "missing"}
++
++    bank_evidence: JsonDict = {}
++    if registry is None:
++        bank_evidence["A1"] = _missing_bank_evidence("A1", "registry_unavailable_for_A1")
++        bank_evidence["A2"] = _missing_bank_evidence("A2", "registry_unavailable_for_A2")
++    else:
++        for label, relative in (("A1", A1_RELATIVE_PATH), ("A2", A2_RELATIVE_PATH)):
++            artifact = _load_json_if_present(root, relative)
++            if artifact is None:
++                bank_evidence[label] = _missing_bank_evidence(
++                    label,
++                    f"{label}_missing_{Path(relative).stem}",
++                )
++                continue
++            loop = _load_loop_for_bank(root, artifact)
++            bank_evidence[label] = audit_bank(
++                label=label,
++                artifact=artifact,
++                loop_artifact=loop,
++                registry=registry,
++                lint_result=lint,
++            )
++
++    pivot_artifact = _load_json_if_present(root, PIVOT_RELATIVE_PATH)
++    if pivot_artifact is None:
++        pivot_evidence = _missing_pivot_evidence(
++            "D_missing_experiment_4940_distributional_energy_verifier_executable_spec"
++        )
++    else:
++        pivot_evidence = audit_pivot_readiness(pivot_artifact)
++
++    checks = _aggregate_checks(bank_evidence, pivot_evidence)
++    banks_trustworthy = all(checks[key] is True for key in BANK_CHECK_KEYS)
++    pivot_trustworthy = all(checks[key] is True for key in PIVOT_CHECK_KEYS)
++    failure_reasons = _collect_failure_reasons(bank_evidence, pivot_evidence)
++    failure_reasons.extend(
++        f"missing_precondition_{item}" for item in checked.get("absent_inputs", []) or []
++    )
++    verdict = _blocked_verdict(checked)
++    if verdict is None:
++        verdict = (
++            "complete_v455_banks_and_pivot_audited_trusted"
++            if banks_trustworthy and pivot_trustworthy
++            else "complete_v455_banks_and_pivot_audited_with_named_failures"
++        )
++
++    artifact = _with_checksum_and_schema(
++        {
++            "experiment": EXPERIMENT,
++            "experiment_id": EXPERIMENT_ID,
++            "schema": SCHEMA,
++            "spec_refs": list(SPEC_REFS),
++            "result_path": RESULT_RELATIVE_PATH,
++            "field_principles": dict(FIELD_PRINCIPLES),
++            "honest_verdict": verdict,
++            "banks_trustworthy": banks_trustworthy,
++            "pivot_readiness_trustworthy": pivot_trustworthy,
++            "checks": checks,
++            "audit_failure_reasons": failure_reasons,
++            "inference_substrate": INFERENCE_SUBSTRATE,
++            "preconditions_checked": checked,
++            "bank_evidence": bank_evidence,
++            "pivot_readiness_evidence": pivot_evidence,
++            "lint_evidence": lint,
++            "adversarial_verifier_evidence": {
++                "check_circular_moat_overclaim_used_for_D": pivot_artifact is not None,
++                "adversarial_verify_path": "scripts/adversarial_verify.py",
++                "summarize_artifact_path": "scripts/summarize_artifact.py",
++            },
++            "duration_s": max(1.0, round(now() - start, 6)),
++            "random_seed": RANDOM_SEED,
++        }
++    )
++    if write:
++        write_artifact(artifact, root=root)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    if artifact.get("experiment") != EXPERIMENT:
++        errors.append("experiment mismatch")
++    if artifact.get("experiment_id") != EXPERIMENT_ID:
++        errors.append("experiment_id mismatch")
++    if artifact.get("schema") != SCHEMA:
++        errors.append("schema mismatch")
++    if artifact.get("spec_refs") != SPEC_REFS:
++        errors.append("spec_refs mismatch")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++    if artifact.get("result_path") != RESULT_RELATIVE_PATH:
++        errors.append("result_path mismatch")
++    if type(artifact.get("banks_trustworthy")) is not bool:
++        errors.append("banks_trustworthy must be bare bool")
++    if type(artifact.get("pivot_readiness_trustworthy")) is not bool:
++        errors.append("pivot_readiness_trustworthy must be bare bool")
++    checks = artifact.get("checks")
++    if not isinstance(checks, Mapping) or set(checks) != set(CHECK_KEYS) or not all(
++        type(checks.get(key)) is bool for key in CHECK_KEYS
++    ):
++        errors.append("checks must contain the six required bare booleans")
++    if not isinstance(artifact.get("audit_failure_reasons"), list):
++        errors.append("audit_failure_reasons must be a list")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if not isinstance(artifact.get("preconditions_checked"), Mapping):
++        errors.append("preconditions_checked must be a mapping")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not (verdict.startswith("complete_") or verdict.startswith("blocked_")):
++        errors.append("honest_verdict must use a terminal prefix")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or not checksum.startswith("sha256:") or len(checksum) != 71:
++        errors.append("reproducibility_checksum must be sha256-prefixed")
++    elif checksum != _checksum_payload(artifact):
++        errors.append("reproducibility_checksum mismatch")
++    if artifact.get("schema_errors") not in (None, []):
++        errors.append("schema_errors must be empty")
++    return errors
++
++
++def write_artifact(artifact: Mapping[str, Any], *, root: Path = REPO) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = Path(root) / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def main(argv: list[str] | None = None) -> int:  # pragma: no cover - CLI boundary
++    del argv
++    artifact = run(root=REPO, write=True)
++    print(
++        json.dumps(
++            {
++                "result_path": RESULT_RELATIVE_PATH,
++                "honest_verdict": artifact["honest_verdict"],
++            }
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI boundary
++    raise SystemExit(main(sys.argv[1:]))
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index a661da118c..c0bc72170b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-28T20:14:11.299915Z",
+-  "duration_s": 0.07052969932556152,
++  "run_date": "2026-06-28T21:09:56.590262Z",
++  "duration_s": 0.06966233253479004,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "72625acf2616f723b886f9558bc0c9e726aa732c369fdffee9322495125791a8",
++  "reproducibility_checksum": "8e8ff82e01e8d1faddd0254212fb8c4cca3d02a84e0508f178a2d0b41485c4e2",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "d2edf1e4e981ebf7e7b9d2df6dbdbf70134c5f8e"
++    "adversarial_verify_version": "dd0d2c612d0771281c2dc4656af68922176bb02d"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index d2b8c978d0..bf40bff4ca 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-28T20:14:11.401730Z",
+-  "duration_s": 0.09156417846679688,
++  "run_date": "2026-06-28T21:09:56.683870Z",
++  "duration_s": 0.08371090888977051,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "d185b1c4924f532eeca930beddac9ab3bb458a31831fd018492216701a797979",
++  "reproducibility_checksum": "d4d3b7663e301a62f0a43f9764258f06b8b39df14d1330a4d30bccd98ae9dfd5",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "d2edf1e4e981ebf7e7b9d2df6dbdbf70134c5f8e"
++    "adversarial_verify_version": "dd0d2c612d0771281c2dc4656af68922176bb02d"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 654ed9f1d8..c37cc32b9b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.111196517944336,
++  "efficiency_gains_ms": 2.1469593048095703,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 8d059ef511..fc7ee013d0 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.0896935388445854e-05,
++  "duration_s": 4.28701750934124e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4941_bank_and_pivot_audit.json b/results/experiment_4941_bank_and_pivot_audit.json
+new file mode 100644
+index 0000000000..669189d17f
+--- /dev/null
++++ b/results/experiment_4941_bank_and_pivot_audit.json
+@@ -0,0 +1,154 @@
++{
++  "adversarial_verifier_evidence": {
++    "adversarial_verify_path": "scripts/adversarial_verify.py",
++    "check_circular_moat_overclaim_used_for_D": true,
++    "summarize_artifact_path": "scripts/summarize_artifact.py"
++  },
++  "audit_failure_reasons": [],
++  "bank_evidence": {
++    "A1": {
++      "artifact_experiment": "experiment_4936_levelup_attempt",
++      "bank_claimed": false,
++      "checks": {
++        "live_path_reachable": true,
++        "not_duplicate": true,
++        "reproduction_genuine": true,
++        "self_discovery_provenance": true
++      },
++      "claim_status": "no_bank_claimed_honest_dead_end",
++      "claimed_reached_level": 2,
++      "failure_reasons": [],
++      "game": "lf52",
++      "label": "A1",
++      "loop_artifact_present": true,
++      "present": true,
++      "registry_prior_level": 2
++    },
++    "A2": {
++      "artifact_experiment": "experiment_4937_levelup_attempt",
++      "bank_claimed": false,
++      "checks": {
++        "live_path_reachable": true,
++        "not_duplicate": true,
++        "reproduction_genuine": true,
++        "self_discovery_provenance": true
++      },
++      "claim_status": "no_bank_claimed_honest_dead_end",
++      "claimed_reached_level": 2,
++      "failure_reasons": [],
++      "game": "sb26",
++      "label": "A2",
++      "loop_artifact_present": true,
++      "present": true,
++      "registry_prior_level": 2
++    }
++  },
++  "banks_trustworthy": true,
++  "checks": {
++    "honest_readiness": true,
++    "live_path_reachable": true,
++    "not_duplicate": true,
++    "oracle_distinct_design": true,
++    "reproduction_genuine": true,
++    "self_discovery_provenance": true
++  },
++  "duration_s": 1.147261,
++  "experiment": "experiment_4941_bank_and_pivot_audit",
++  "experiment_id": 4941,
++  "field_principles": {
++    "audit_failure_reasons": {
++      "principle": "list of named failures (empty if all trusted) -- the audit reports honestly, no rubber-stamp."
++    },
++    "banks_trustworthy": {
++      "principle": "AND of the bank checks over CLAIMED banks -- the capstone counts A1/A2 toward reproducible_total_levels ONLY if true (vacuously true if no bank claimed)."
++    },
++    "checks": {
++      "principle": "per-check booleans {reproduction_genuine, not_duplicate, self_discovery_provenance, live_path_reachable, oracle_distinct_design, honest_readiness}."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; complete_v455_banks_and_pivot_audited (trusted or with named failures)."
++    },
++    "inference_substrate": {
++      "principle": "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor)."
++    },
++    "pivot_readiness_trustworthy": {
++      "principle": "AND of the pivot-readiness checks -- the capstone states D's readiness ONLY if true (oracle-distinct design + honest gate + no over-claim)."
++    },
++    "preconditions_checked": {
++      "principle": "records A1/A2/D artifact presence; a missing input is recorded, not fabricated."
++    }
++  },
++  "honest_verdict": "complete_v455_banks_and_pivot_audited_trusted",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "lint_evidence": {
++    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
++    "passed": true,
++    "returncode": 0,
++    "stderr_tail": "",
++    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n"
++  },
++  "pivot_readiness_evidence": {
++    "artifact_experiment": null,
++    "checks": {
++      "honest_readiness": true,
++      "oracle_distinct_design": true
++    },
++    "failure_reasons": [],
++    "honest_readiness_evidence": {
++      "arxiv_ids_cited": [
++        "2605.18871",
++        "2504.16828",
++        "2502.01989"
++      ],
++      "citation_metadata_real": true,
++      "matm_reproposed": false,
++      "moat_proven_claimed": false,
++      "required_arxiv_ids": [
++        "2502.01989",
++        "2504.16828",
++        "2605.18871"
++      ],
++      "validation_gate": {
++        "beats_self_consistency_ci95_excludes_zero_required": true,
++        "claimed_met": false,
++        "domain_self_consistency_not_near_ceiling_required": true,
++        "no_model_identity_shortcut_required": true,
++        "oracle_distinct_required": true,
++        "promotion_note": "not met by Exp4940; this dry-run only proves executable wiring for the post-6/30 experiment",
++        "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero",
++        "verifier_is_oracle_required_value": false
++      }
++    },
++    "oracle_distinct_design_evidence": {
++      "circular_moat_critical_flags": [],
++      "design_target_declared": true,
++      "model_identity_features_allowed": false,
++      "oracle_labels_allowed_in_verifier": false,
++      "verifier_is_oracle": false
++    },
++    "present": true
++  },
++  "pivot_readiness_trustworthy": true,
++  "preconditions_checked": {
++    "a1_artifact_present": true,
++    "a2_artifact_present": true,
++    "absent_inputs": [],
++    "adversarial_verify_present": true,
++    "arc_orphan_solver_lint_present": true,
++    "d_artifact_present": true,
++    "registry_loadable": true,
++    "registry_present": true,
++    "spec_has_req_4941": true,
++    "summarize_artifact_present": true
++  },
++  "random_seed": 4941,
++  "reproducibility_checksum": "sha256:1e96c48f2c4696d190fee98dda655562abd2af6aba97cf002f0957f88d6e839e",
++  "result_path": "results/experiment_4941_bank_and_pivot_audit.json",
++  "schema": "carnot.v455_bank_and_pivot_audit.v1",
++  "schema_errors": [],
++  "spec_refs": [
++    "REQ-CAPSTONE-4941",
++    "SCENARIO-CAPSTONE-4941",
++    "SCENARIO-CAPSTONE-4941-BLOCKED-PRECONDITION"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 9e21c2a9b4..d74614f064 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T20:52:00Z",
+-  "finished_at": "2026-06-28T20:52:00Z",
+-  "duration_s": 0.006,
++  "started_at": "2026-06-28T21:09:28Z",
++  "finished_at": "2026-06-28T21:09:28Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d8d929035b..04c5b2959b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T20:52:00Z",
+-  "finished_at": "2026-06-28T20:52:00Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-28T21:09:28Z",
++  "finished_at": "2026-06-28T21:09:28Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 56171ba520..5eea0aaae7 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260628",
+-  "started_at": "2026-06-28T20:52:00Z",
+-  "finished_at": "2026-06-28T20:52:00Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-28T21:09:28Z",
++  "finished_at": "2026-06-28T21:09:28Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4941_bank_and_pivot_audit.py b/tests/python/test_experiment_4941_bank_and_pivot_audit.py
+new file mode 100644
+index 0000000000..f277704ab0
+--- /dev/null
++++ b/tests/python/test_experiment_4941_bank_and_pivot_audit.py
+@@ -0,0 +1,588 @@
++"""Tests for Exp 4941 .455 bank and pivot-readiness audit.
++
++Spec refs: REQ-CAPSTONE-4941, SCENARIO-CAPSTONE-4941,
++SCENARIO-CAPSTONE-4941-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import yaml
++
++from carnot import experiment_4941_bank_and_pivot_audit as exp4941
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _registry_text(*, lf52: int = 2, sb26: int = 2) -> str:
++    return f"""schema_version: 1
++updated: '2026-06-28'
++reproducible_total_levels: 69
++games:
++- game: lf52
++  reproducibility: reproduced
++  levels_reproduced: {lf52}
++  solver: GameAdapter _lf52 plus scripts/arc_loop_solve.py.
++- game: sb26
++  reproducibility: reproduced
++  levels_reproduced: {sb26}
++  solver: GameAdapter _sb26 plus scripts/arc_loop_solve.py.
++"""
++
++
++def _bank_artifact(
++    *,
++    game: str,
++    exp_id: int,
++    reached: int = 2,
++    prior: int = 2,
++    claimed: bool = False,
++    provenance: str = "live_agent_self_discovery",
++    live_path: bool = True,
++    outer_loop: bool = False,
++) -> dict[str, object]:
++    artifact: dict[str, object] = {
++        "experiment": f"experiment_{exp_id}_levelup_attempt",
++        "honest_verdict": f"complete_{game}_no_new_level_residual_no_grounded_l3_delta",
++        "target_game": game,
++        "solve_provenance": provenance,
++        "offline_reproduced": False,
++        "reproduced_levels": prior,
++        "new_levels_banked": 0,
++        "live_path_reachable": live_path,
++        "standing_loop_result_path": f"results/arc_loop_solve_{game}.json",
++        "standing_loop_ran": False,
++        "reproduction_gate": {},
++        "registry_update": {
++            "target_game": game,
++            "prior_game_levels": prior,
++            "new_game_levels": reached,
++            "banked_levels": 0,
++            "reason": "no_grounded_l3_delta",
++        },
++        "offline_ground_truth_bfs": outer_loop,
++    }
++    if claimed:
++        artifact.update(
++            {
++                "honest_verdict": f"success_{game}_levelup_banked",
++                "offline_reproduced": True,
++                "reproduced_levels": reached,
++                "new_levels_banked": max(1, reached - prior),
++                "standing_loop_ran": True,
++                "reproduction_gate": {
++                    "game": game,
++                    "claimed_level": reached,
++                    "reached_level": reached,
++                    "reproduced": True,
++                    "mode": "offline_reproduction_gate_no_quota",
++                },
++                "registry_update": {
++                    "target_game": game,
++                    "prior_game_levels": prior,
++                    "new_game_levels": reached,
++                    "banked_levels": max(1, reached - prior),
++                    "reason": "banked_offline_reproduced_level",
++                },
++            }
++        )
++    return artifact
++
++
++def _loop_artifact(game: str, *, reached: int = 2, reproduced: bool = True) -> dict[str, object]:
++    return {
++        "game": game,
++        "mode": "standing_arc_loop_offline_no_quota",
++        "reached_level": reached,
++        "offline_reproduced": reproduced,
++        "reproduced_levels": reached if reproduced else 0,
++        "reproduction_gate": {
++            "game": game,
++            "claimed_level": reached,
++            "reached_level": reached,
++            "reproduced": reproduced,
++            "mode": "offline_reproduction_gate_no_quota",
++        },
++    }
++
++
++def _pivot_artifact(**overrides: object) -> dict[str, object]:
++    artifact: dict[str, object] = {
++        "experiment": "experiment_4940_distributional_energy_verifier_executable_spec",
++        "honest_verdict": "success_distributional_energy_verifier_pivot_executable_spec_ready",
++        "verifier_is_oracle": False,
++        "moat_proven_claimed": False,
++        "arxiv_ids_cited": ["2605.18871", "2504.16828", "2502.01989"],
++        "citations": {
++            "2605.18871": {"http_status": 200, "title": "Distributional EBM", "url": "https://arxiv.org/abs/2605.18871"},
++            "2504.16828": {"http_status": 200, "title": "ThinkPRM", "url": "https://arxiv.org/abs/2504.16828"},
++            "2502.01989": {"http_status": 200, "title": "VFScale", "url": "https://arxiv.org/abs/2502.01989"},
++        },
++        "design_spec": {
++            "decomposed_energy_verifier_column": {
++                "model_identity_features_allowed": False,
++                "oracle_labels_allowed_in_verifier": False,
++            },
++            "oracle_column": "cached labels or executable domain oracle used only to score correctness",
++        },
++        "validation_gate": {
++            "beats_self_consistency_ci95_excludes_zero_required": True,
++            "oracle_distinct_required": True,
++            "no_model_identity_shortcut_required": True,
++            "verifier_is_oracle_required_value": False,
++            "claimed_met": False,
++        },
++        "field_principles": {
++            "verifier_is_oracle": {
++                "principle": (
++                    "false -- the DESIGN TARGET is oracle-distinct, not the "
++                    "executable oracle that defines correctness."
++                )
++            }
++        },
++    }
++    artifact.update(overrides)
++    return artifact
++
++
++def _write_inputs(root: Path, *, include_d: bool = True, registry_text: str | None = None) -> None:
++    (root / "results").mkdir()
++    (root / "ops").mkdir()
++    (root / "scripts").mkdir()
++    (root / "openspec" / "capabilities" / "capstone").mkdir(parents=True)
++    (root / "scripts" / "adversarial_verify.py").write_text("", encoding="utf-8")
++    (root / "scripts" / "summarize_artifact.py").write_text("", encoding="utf-8")
++    (root / "scripts" / "arc_orphan_solver_lint.py").write_text("", encoding="utf-8")
++    (root / "openspec" / "capabilities" / "capstone" / "spec.md").write_text(
++        "REQ-CAPSTONE-4941\nSCENARIO-CAPSTONE-4941\n",
++        encoding="utf-8",
++    )
++    (root / exp4941.REGISTRY_RELATIVE_PATH).write_text(
++        registry_text or _registry_text(),
++        encoding="utf-8",
++    )
++    for relative, payload in (
++        (exp4941.A1_RELATIVE_PATH, _bank_artifact(game="lf52", exp_id=4936)),
++        (exp4941.A2_RELATIVE_PATH, _bank_artifact(game="sb26", exp_id=4937)),
++        ("results/arc_loop_solve_lf52.json", _loop_artifact("lf52")),
++        ("results/arc_loop_solve_sb26.json", _loop_artifact("sb26")),
++    ):
++        (root / relative).write_text(json.dumps(payload), encoding="utf-8")
++    if include_d:
++        (root / exp4941.PIVOT_RELATIVE_PATH).write_text(
++            json.dumps(_pivot_artifact()),
++            encoding="utf-8",
++        )
++
++
++def test_req_capstone_4941_spec_declares_audit_contract() -> None:
++    """REQ-CAPSTONE-4941: OpenSpec names every check and required field."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for ref in exp4941.SPEC_REFS:
++        assert ref in spec
++    for check in exp4941.CHECK_KEYS:
++        assert check in spec
++    for field, principle in exp4941.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++    assert exp4941.RESULT_RELATIVE_PATH in spec
++
++
++def test_scenario_capstone_4941_no_bank_claims_are_vacuously_trusted(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4941: honest A1/A2 no-bank dead ends are not failures."""
++
++    _write_inputs(tmp_path)
++
++    artifact = exp4941.run(
++        root=tmp_path,
++        write=True,
++        lint_runner=lambda _root: {"passed": True, "command": "fixture lint"},
++        now=lambda: 10.0,
++    )
++    written = json.loads((tmp_path / exp4941.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert artifact == written
++    assert artifact["honest_verdict"] == "complete_v455_banks_and_pivot_audited_trusted"
++    assert artifact["checks"] == {key: True for key in exp4941.CHECK_KEYS}
++    assert artifact["banks_trustworthy"] is True
++    assert artifact["pivot_readiness_trustworthy"] is True
++    assert artifact["audit_failure_reasons"] == []
++    assert artifact["bank_evidence"]["A1"]["bank_claimed"] is False
++    assert artifact["bank_evidence"]["A2"]["bank_claimed"] is False
++    assert artifact["duration_s"] == 1.0
++    assert exp4941.artifact_schema_errors(artifact) == []
++
++
++def test_req_capstone_4941_claimed_bank_checks_catch_adversarial_patterns() -> None:
++    """REQ-CAPSTONE-4941: claimed banks must be genuine, new, self-discovered, and live-path."""
++
++    registry = yaml.safe_load(_registry_text())
++    clean = exp4941.audit_bank(
++        label="A1",
++        artifact=_bank_artifact(game="lf52", exp_id=4936, reached=3, prior=2, claimed=True),
++        loop_artifact=_loop_artifact("lf52", reached=3),
++        registry=registry,
++        lint_result={"passed": True},
++    )
++    assert clean["bank_claimed"] is True
++    assert clean["checks"] == {key: True for key in exp4941.BANK_CHECK_KEYS}
++    assert clean["failure_reasons"] == []
++
++    bad = exp4941.audit_bank(
++        label="A2",
++        artifact=_bank_artifact(
++            game="sb26",
++            exp_id=4937,
++            reached=2,
++            prior=2,
++            claimed=True,
++            provenance="outer_loop_re",
++            live_path=False,
++            outer_loop=True,
++        ),
++        loop_artifact=_loop_artifact("sb26", reached=1, reproduced=False),
++        registry=registry,
++        lint_result={"passed": False, "returncode": 1},
++    )
++
++    assert bad["checks"] == {
++        "reproduction_genuine": False,
++        "not_duplicate": False,
++        "self_discovery_provenance": False,
++        "live_path_reachable": False,
++    }
++    assert bad["failure_reasons"] == [
++        "A2_reproduction_genuine_failed_loop_or_gate_mismatch_sb26",
++        "A2_not_duplicate_failed_duplicate_depth_sb26_L2",
++        "A2_self_discovery_provenance_failed_outer_loop_re",
++        "A2_live_path_reachable_failed",
++    ]
++
++
++def test_scenario_capstone_4941_pivot_checks_oracle_distinct_and_honest_readiness(monkeypatch) -> None:
++    """SCENARIO-CAPSTONE-4941: D readiness is gated on oracle-distinct design and honest scope."""
++
++    clean = exp4941.audit_pivot_readiness(_pivot_artifact())
++
++    assert clean["checks"] == {"oracle_distinct_design": True, "honest_readiness": True}
++    assert clean["failure_reasons"] == []
++
++    bad = exp4941.audit_pivot_readiness(
++        _pivot_artifact(
++            verifier_is_oracle=True,
++            moat_proven_claimed=True,
++            arxiv_ids_cited=["2605.18871"],
++            citations={"2605.18871": {"http_status": 404, "title": "", "url": "bad"}},
++            design_spec={
++                "decomposed_energy_verifier_column": {
++                    "model_identity_features_allowed": True,
++                    "oracle_labels_allowed_in_verifier": True,
++                },
++                "matm_similarity_retrieval": {"proposed": True},
++            },
++            validation_gate={
++                "beats_self_consistency_ci95_excludes_zero_required": False,
++                "oracle_distinct_required": False,
++                "no_model_identity_shortcut_required": False,
++                "verifier_is_oracle_required_value": True,
++                "claimed_met": True,
++            },
++            field_principles={"verifier_is_oracle": {"principle": "oracle"}},
++        )
++    )
++
++    assert bad["checks"] == {"oracle_distinct_design": False, "honest_readiness": False}
++    assert bad["failure_reasons"] == [
++        "D_oracle_distinct_design_failed_verifier_is_oracle_not_false",
++        "D_oracle_distinct_design_failed_design_target_not_declared",
++        "D_oracle_distinct_design_failed_model_identity_shortcut_allowed",
++        "D_oracle_distinct_design_failed_oracle_labels_allowed",
++        "D_honest_readiness_failed_arxiv_ids_not_exact",
++        "D_honest_readiness_failed_citation_metadata_not_real",
++        "D_honest_readiness_failed_validation_gate_not_precise",
++        "D_honest_readiness_failed_moat_proven_claimed",
++        "D_honest_readiness_failed_matm_reproposed",
++    ]
++
++    monkeypatch.setattr(
++        exp4941,
++        "_critical_circular_moat_flags",
++        lambda _artifact: [{"kind": "CIRCULAR_MOAT_OVERCLAIM", "severity": "critical"}],
++    )
++    circular = exp4941.audit_pivot_readiness(_pivot_artifact())
++    assert circular["checks"]["oracle_distinct_design"] is False
++    assert "D_oracle_distinct_design_failed_circular_moat_overclaim" in circular[
++        "failure_reasons"
++    ]
++
++
++def test_scenario_capstone_4941_missing_d_blocks_but_audits_present_banks(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4941-BLOCKED-PRECONDITION: missing D is recorded."""
++
++    _write_inputs(tmp_path, include_d=False)
++
++    artifact = exp4941.run(
++        root=tmp_path,
++        write=False,
++        lint_runner=lambda _root: {"passed": True},
++        now=lambda: 20.0,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "blocked_experiment_4940_distributional_energy_verifier_executable_spec_missing"
++    )
++    assert artifact["preconditions_checked"]["d_artifact_present"] is False
++    assert artifact["checks"] == {
++        "reproduction_genuine": True,
++        "not_duplicate": True,
++        "self_discovery_provenance": True,
++        "live_path_reachable": True,
++        "oracle_distinct_design": False,
++        "honest_readiness": False,
++    }
++    assert artifact["banks_trustworthy"] is True
++    assert artifact["pivot_readiness_trustworthy"] is False
++    assert "D_missing_experiment_4940_distributional_energy_verifier_executable_spec" in artifact[
++        "audit_failure_reasons"
++    ]
++    assert artifact["pivot_readiness_evidence"]["present"] is False
++    assert exp4941.artifact_schema_errors(artifact) == []
++
++
++def test_req_capstone_4941_schema_and_blocked_registry_paths(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4941: malformed registries and malformed artifacts fail closed."""
++
++    _write_inputs(tmp_path)
++    (tmp_path / exp4941.REGISTRY_RELATIVE_PATH).write_text("not: [valid", encoding="utf-8")
++
++    blocked = exp4941.run(
++        root=tmp_path,
++        write=False,
++        lint_runner=lambda _root: {"passed": True},
++        now=lambda: 30.0,
++    )
++    assert blocked["honest_verdict"] == "blocked_arc_solve_registry_unloadable"
++    assert blocked["preconditions_checked"]["registry_loadable"] is False
++    assert blocked["banks_trustworthy"] is False
++    assert blocked["pivot_readiness_trustworthy"] is True
++
++    valid = exp4941.run(
++        root=tmp_path,
++        write=False,
++        registry_loader=lambda _root: yaml.safe_load(_registry_text()),
++        lint_runner=lambda _root: {"passed": True},
++        now=lambda: 40.0,
++    )
++    bad = dict(valid)
++    bad["banks_trustworthy"] = "yes"
++    bad["pivot_readiness_trustworthy"] = "yes"
++    bad["checks"] = {"reproduction_genuine": True}
++    bad["audit_failure_reasons"] = "none"
++    bad["inference_substrate"] = "bad"
++    bad["field_principles"] = {}
++    bad["preconditions_checked"] = []
++    bad["reproducibility_checksum"] = "bad"
++    bad.pop("honest_verdict")
++
++    errors = exp4941.artifact_schema_errors(bad)
++
++    assert "missing required field honest_verdict" in errors
++    assert "banks_trustworthy must be bare bool" in errors
++    assert "pivot_readiness_trustworthy must be bare bool" in errors
++    assert "checks must contain the six required bare booleans" in errors
++    assert "audit_failure_reasons must be a list" in errors
++    assert "inference_substrate mismatch" in errors
++    assert "field_principles mismatch" in errors
++    assert "preconditions_checked must be a mapping" in errors
++    assert "reproducibility_checksum must be sha256-prefixed" in errors
++
++    with_errors = dict(valid)
++    with_errors["schema_errors"] = ["stale"]
++    assert "schema_errors must be empty" in exp4941.artifact_schema_errors(with_errors)
++
++    mismatch = dict(valid)
++    mismatch["reproducibility_checksum"] = "sha256:" + ("0" * 64)
++    assert "reproducibility_checksum mismatch" in exp4941.artifact_schema_errors(mismatch)
++
++    out = exp4941.write_artifact(valid, root=tmp_path)
++    assert json.loads(out.read_text(encoding="utf-8")) == valid
++    try:
++        exp4941.write_artifact({**valid, "banks_trustworthy": "bad"}, root=tmp_path)
++    except ValueError as exc:
++        assert "banks_trustworthy must be bare bool" in str(exc)
++    else:
++        raise AssertionError("invalid artifact should not be written")
++
++
++def test_req_capstone_4941_defensive_helpers_fail_closed(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4941: defensive helper paths keep malformed evidence untrusted."""
++
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("[]", encoding="utf-8")
++    try:
++        exp4941._read_json(bad_json)
++    except ValueError as exc:
++        assert "did not contain a JSON object" in str(exc)
++    else:
++        raise AssertionError("non-object JSON should fail")
++
++    (tmp_path / "ops").mkdir()
++    (tmp_path / exp4941.REGISTRY_RELATIVE_PATH).write_text("[]", encoding="utf-8")
++    try:
++        exp4941._load_registry(tmp_path)
++    except ValueError as exc:
++        assert "registry did not contain a mapping" in str(exc)
++    else:
++        raise AssertionError("non-mapping registry should fail")
++
++    assert exp4941._registry_game_row({"games": []}, "missing") == {}
++    assert exp4941._int_value("bad", default=7) == 7
++    assert exp4941._claims_bank({"honest_verdict": "success_demo_levelup_banked"}) is True
++    assert exp4941._claims_bank({"offline_reproduced": True, "new_levels_banked": 0}) is True
++    assert exp4941._registry_prior_level({}, yaml.safe_load(_registry_text()), "lf52") == 2
++    assert exp4941._has_outer_loop_inputs({"nested": [{"calibration_inputs": True}]}) is True
++    assert exp4941._live_game_adapter_evidence("lf52", {"solver": "GameAdapter fixture"}) is True
++    assert exp4941._live_game_adapter_evidence("not_a_game", {}) is False
++    assert exp4941._contains_matm_reproposal({"note": "retired MATM null"}) is False
++    assert exp4941._contains_matm_reproposal({"matm": {"proposed": True}}) is True
++    assert exp4941._contains_matm_reproposal({"matm_similarity_retrieval": {"proposed": True}}) is True
++    assert exp4941._contains_matm_reproposal("MATM similarity-keyed retrieval proposed again") is True
++    assert exp4941._citation_metadata_real(
++        _pivot_artifact(
++            citations={
++                "2605.18871": {"http_status": 200, "title": "x", "url": "bad"},
++                "2504.16828": {
++                    "http_status": 200,
++                    "title": "x",
++                    "url": "https://arxiv.org/abs/2504.16828",
++                },
++                "2502.01989": {
++                    "http_status": 200,
++                    "title": "x",
++                    "url": "https://arxiv.org/abs/2502.01989",
++                },
++            }
++        )
++    ) is False
++    assert exp4941._citation_metadata_real(
++        _pivot_artifact(
++            citations={
++                "2605.18871": {
++                    "http_status": 200,
++                    "title": "",
++                    "url": "https://arxiv.org/abs/2605.18871",
++                },
++                "2504.16828": {
++                    "http_status": 200,
++                    "title": "x",
++                    "url": "https://arxiv.org/abs/2504.16828",
++                },
++                "2502.01989": {
++                    "http_status": 200,
++                    "title": "x",
++                    "url": "https://arxiv.org/abs/2502.01989",
++                },
++            }
++        )
++    ) is False
++
++    lint_root = tmp_path / "lint"
++    (lint_root / "scripts").mkdir(parents=True)
++    (lint_root / "scripts" / "arc_orphan_solver_lint.py").write_text(
++        "print('lint ok')\n",
++        encoding="utf-8",
++    )
++    lint = exp4941.run_arc_orphan_solver_lint(lint_root)
++    assert lint["passed"] is True
++    assert "lint ok" in lint["stdout_tail"]
++
++    empty_root = tmp_path / "empty"
++    empty_root.mkdir()
++    checked, registry_none = exp4941._preconditions(empty_root, None)
++    assert registry_none is None
++    assert checked["registry_loadable"] is False
++    assert "arc_solve_registry" in checked["absent_inputs"]
++
++    all_ok = {
++        "a1_artifact_present": True,
++        "a2_artifact_present": True,
++        "d_artifact_present": True,
++        "registry_present": True,
++        "registry_loadable": True,
++        "adversarial_verify_present": True,
++        "summarize_artifact_present": True,
++        "arc_orphan_solver_lint_present": True,
++        "spec_has_req_4941": True,
++    }
++    assert exp4941._blocked_verdict(all_ok) is None
++    for key, expected in (
++        ("a1_artifact_present", "blocked_experiment_4936_levelup_attempt_missing"),
++        ("a2_artifact_present", "blocked_experiment_4937_levelup_attempt_missing"),
++        ("adversarial_verify_present", "blocked_scripts_adversarial_verify_missing"),
++        ("summarize_artifact_present", "blocked_scripts_summarize_artifact_missing"),
++        ("arc_orphan_solver_lint_present", "blocked_scripts_arc_orphan_solver_lint_missing"),
++        ("spec_has_req_4941", "blocked_capstone_spec_req_4941_missing"),
++    ):
++        assert exp4941._blocked_verdict({**all_ok, key: False}) == expected
++
++    missing_bank = exp4941._missing_bank_evidence("A1", "A1_missing")
++    assert missing_bank["failure_reasons"] == ["A1_missing"]
++
++    missing_pivot = exp4941._missing_pivot_evidence("D_missing")
++    assert missing_pivot["checks"] == {"oracle_distinct_design": False, "honest_readiness": False}
++
++    declared_outer = exp4941.audit_bank(
++        label="A1",
++        artifact=_bank_artifact(
++            game="lf52",
++            exp_id=4936,
++            reached=3,
++            prior=2,
++            claimed=True,
++            outer_loop=True,
++        ),
++        loop_artifact=_loop_artifact("lf52", reached=3),
++        registry=yaml.safe_load(_registry_text()),
++        lint_result={"passed": True},
++    )
++    assert "A1_self_discovery_provenance_failed_declared_outer_loop_input" in declared_outer[
++        "failure_reasons"
++    ]
++
++    no_loop = exp4941.audit_bank(
++        label="A1",
++        artifact=_bank_artifact(game="lf52", exp_id=4936, reached=3, prior=2, claimed=True),
++        loop_artifact=None,
++        registry=yaml.safe_load(_registry_text()),
++        lint_result={"passed": True},
++    )
++    assert "A1_missing_loop_artifact" in no_loop["failure_reasons"]
++    assert exp4941._aggregate_checks(
++        {"A1": declared_outer},
++        {"checks": {"oracle_distinct_design": True, "honest_readiness": True}},
++    )["self_discovery_provenance"] is False
++    assert exp4941._load_loop_for_bank(tmp_path, {}) is None
++
++    bad_schema = exp4941._with_checksum_and_schema({"experiment": "wrong"})
++    assert bad_schema["schema_errors"]
++    assert bad_schema["reproducibility_checksum"].startswith("sha256:")
++
++    missing_root = tmp_path / "missing_inputs"
++    missing_root.mkdir()
++    _write_inputs(missing_root)
++    (missing_root / exp4941.A1_RELATIVE_PATH).unlink()
++    missing = exp4941.run(
++        root=missing_root,
++        write=False,
++        lint_runner=lambda _root: {"passed": True},
++        now=lambda: 50.0,
++    )
++    assert missing["bank_evidence"]["A1"]["failure_reasons"] == [
++        "A1_missing_experiment_4936_levelup_attempt"
++    ]
+-- 
+2.55.0
+

@@ -1,0 +1,636 @@
+From 03fc2987cf78b4a7b58f1bbf4026d702af0304cf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 04:41:59 -0400
+Subject: [PATCH 09636/11362] [outer-loop] Widen four guards per QA-layer
+ SILENT_NON_FIRING findings
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Each finding named a real input its guard was supposed to catch and did
+not; each is widened (not rewritten) with the named input as a test.
+
+1. substrate_alias_evidence_lint: ALIAS_RE anchors on the quote PAIR so
+   'local_python_no_llm' single-quoted is caught; a prose apostrophe
+   cannot open a match (negative test).
+2. test_suite_mutation_check: the pre-commit stash window — a
+   stash-hidden path counts as dirty for marker retirement; refusal
+   names it [stash-hidden] and warns against checkout in the window.
+   Reads only; nothing is reverted; freshness bounds the refusal.
+3. operator_curated_docs_lint: --name-status, BOTH sides of R/C, so
+   R100 README.md -> docs/archive/project-intro.md is caught on its
+   protected SOURCE. Module docstring gains its REQ-ARC-WMTE-6042
+   trace (the spec-coverage hook surfaced the pre-existing gap the
+   first time anyone touched the file).
+4. operator_curated_doc_guard: allow_relative derives from the event's
+   dir_fd (-1/None = AT_FDCWD = CWD-relative; a real fd keeps the
+   rmtree protection). Closes os.replace(tmp, 'README.md') with dst
+   dirfd -1, and the unlink shape.
+
+Mutations RED->GREEN x5; 134 tests across the four suites; the rmtree
+false-fire regression stayed green under every mutation.
+PRE_COMMIT_HOME sandboxed in the mutation-check fixture so tests never
+read the operator's live pre-commit cache.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../testing/operator_curated_doc_guard.py     | 35 ++++++--
+ scripts/operator_curated_docs_lint.py         | 39 +++++---
+ scripts/substrate_alias_evidence_lint.py      | 17 +++-
+ scripts/test_suite_mutation_check.py          | 89 ++++++++++++++++++-
+ .../python/test_operator_curated_doc_guard.py | 39 ++++++++
+ .../python/test_operator_curated_docs_lint.py | 60 +++++++++----
+ .../test_substrate_alias_evidence_lint.py     | 23 ++++-
+ .../python/test_test_suite_mutation_check.py  | 78 ++++++++++++++++
+ 8 files changed, 344 insertions(+), 36 deletions(-)
+
+diff --git a/python/carnot/testing/operator_curated_doc_guard.py b/python/carnot/testing/operator_curated_doc_guard.py
+index 3b1cd7ac5c..7cd5b406ba 100644
+--- a/python/carnot/testing/operator_curated_doc_guard.py
++++ b/python/carnot/testing/operator_curated_doc_guard.py
+@@ -267,6 +267,14 @@ def _violation_for(path: object, *, allow_relative: bool) -> str | None:
+     false-fire. It is accepted deliberately: `dir_fd` is used almost exclusively by tree-walking
+     code, whose opens are read-only (and so never reach this function), whereas the CWD-relative
+     write is a bug that has actually happened in this repository.
++
++    2026-08-23 refinement (QA-layer SILENT_NON_FIRING finding): the blanket
++    `allow_relative=False` for `os.*` mutation events was itself narrower than its concept.
++    The audit events CARRY the dir_fd, and -1 (the AT_FDCWD default, measured on this build)
++    means the path is CWD-relative after all — so `os.replace(tmp, "README.md")` with
++    destination dir_fd -1 was walking through. The caller now derives `allow_relative` from
++    the event's own dir_fd: default (-1/None) resolves, a real descriptor does not. The
++    rmtree fd-relative walk keeps its protection because its descriptors are real.
+     """
+     if isinstance(path, bytes):
+         try:
+@@ -352,13 +360,23 @@ def _audit_hook(event: str, args: tuple) -> None:
+     # own events or the guard has an obvious hole: write a temp file, then rename it over the
+     # protected path.
+     #
+-    # allow_relative=False on all of these: they can be fd-relative, and CWD-resolving a bare
+-    # name from `shutil.rmtree`'s fd-relative walk is what made this guard false-fire on eight
+-    # correctly-sandboxed tests. See _violation_for for the full argument.
++    # allow_relative is decided by the dir_fd the audit event CARRIES, not by a blanket False
++    # (QA-layer SILENT_NON_FIRING finding, 2026-08-23: `os.replace(tmp, "README.md")` with
++    # destination dir_fd -1 — the AT_FDCWD default — is a CWD-relative atomic replacement of
++    # a protected doc, and the blanket False walked it straight through). A default dir_fd
++    # (-1, or None defensively) means the path is process-CWD-relative and MUST be resolved;
++    # a real descriptor (>= 0) means fd-relative, where CWD-resolving a bare name is exactly
++    # the rmtree false-fire documented in _violation_for. shutil.* events carry no dir_fd in
++    # their API at all, so their paths are always process-relative.
+     if event in ("os.rename", "os.replace", "shutil.move", "shutil.copyfile", "shutil.copy2"):
+         if len(args) < 2:
+             return
+-        hit = _violation_for(args[1], allow_relative=False)
++        if event.startswith("shutil."):
++            dst_is_cwd_relative = True
++        else:
++            dst_dir_fd = args[3] if len(args) > 3 else -1
++            dst_is_cwd_relative = dst_dir_fd is None or dst_dir_fd == -1
++        hit = _violation_for(args[1], allow_relative=dst_is_cwd_relative)
+         if hit is not None:
+             _record_and_raise(hit, event.rpartition(".")[2] + " onto")
+         return
+@@ -366,7 +384,14 @@ def _audit_hook(event: str, args: tuple) -> None:
+     if event in ("os.remove", "os.unlink", "os.truncate"):
+         if not args:
+             return
+-        hit = _violation_for(args[0], allow_relative=False)
++        if event == "os.truncate":
++            # No dir_fd in its API; the fd variant arrives as an int and is
++            # filtered by _violation_for's isinstance check.
++            is_cwd_relative = True
++        else:
++            dir_fd = args[1] if len(args) > 1 else -1
++            is_cwd_relative = dir_fd is None or dir_fd == -1
++        hit = _violation_for(args[0], allow_relative=is_cwd_relative)
+         if hit is not None:
+             _record_and_raise(hit, event.rpartition(".")[2])
+ 
+diff --git a/scripts/operator_curated_docs_lint.py b/scripts/operator_curated_docs_lint.py
+index ee64934e35..412c77a393 100644
+--- a/scripts/operator_curated_docs_lint.py
++++ b/scripts/operator_curated_docs_lint.py
+@@ -94,15 +94,35 @@ def _is_conductor_commit(subject: str) -> bool:
+     return any(s.startswith(p) for p in CONDUCTOR_SUBJECT_PREFIXES)
+ 
+ 
++def _paths_from_name_status(text: str) -> list[str]:
++    """Every path a --name-status diff touches, BOTH sides of renames/copies.
++
++    The first ship used --name-only, which reports only the DESTINATION of a
++    rename -- so `R100 README.md docs/archive/project-intro.md` moved a
++    protected doc out from under the guard without naming it (QA-layer
++    SILENT_NON_FIRING finding, 2026-08-23). Moving a protected doc away IS an
++    edit to it; the source side must be checked too.
++    """
++    paths: list[str] = []
++    for line in text.splitlines():
++        if not line.strip():
++            continue
++        cells = line.split("\t")
++        # A/M/D entries: status + one path. R###/C### entries: status +
++        # source + destination. Everything after the status cell is a path.
++        paths.extend(c.strip() for c in cells[1:] if c.strip())
++    return paths
++
++
+ def _staged_files() -> list[str]:
+-    """Return the list of paths staged for the pending commit."""
++    """Return every path the pending commit touches (rename sources included)."""
+     result = subprocess.run(
+-        ["git", "diff", "--cached", "--name-only"],
++        ["git", "diff", "--cached", "--name-status"],
+         check=True,
+         capture_output=True,
+         text=True,
+     )
+-    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
++    return _paths_from_name_status(result.stdout)
+ 
+ 
+ def _matches_operator_curated(path: str) -> bool:
+@@ -120,14 +140,12 @@ def main() -> int:
+         # everything: the operator-side intent is to catch the
+         # `[conductor]` + protected-path combination, not to block
+         # malformed invocations.
+-        print("warning: operator_curated_docs_lint called without message path",
+-              file=sys.stderr)
++        print("warning: operator_curated_docs_lint called without message path", file=sys.stderr)
+         return 0
+ 
+     msg_path = Path(sys.argv[1])
+     if not msg_path.exists():
+-        print(f"warning: commit message file {msg_path} not found",
+-              file=sys.stderr)
++        print(f"warning: commit message file {msg_path} not found", file=sys.stderr)
+         return 0
+ 
+     subject = _read_subject(msg_path)
+@@ -143,12 +161,11 @@ def main() -> int:
+         return 0
+ 
+     print("=" * 72, file=sys.stderr)
+-    print("operator_curated_docs_lint: refusing [conductor] commit",
+-          file=sys.stderr)
++    print("operator_curated_docs_lint: refusing [conductor] commit", file=sys.stderr)
+     print("=" * 72, file=sys.stderr)
+     print(file=sys.stderr)
+     print(
+-        "CLAUDE.md \"Public Documentation Discipline\" forbids the",
++        'CLAUDE.md "Public Documentation Discipline" forbids the',
+         file=sys.stderr,
+     )
+     print(
+@@ -156,7 +173,7 @@ def main() -> int:
+         file=sys.stderr,
+     )
+     print(
+-        f"subject (\"{subject[:60]}...\") marks this as a conductor commit,",
++        f'subject ("{subject[:60]}...") marks this as a conductor commit,',
+         file=sys.stderr,
+     )
+     print("but it touches the following protected paths:", file=sys.stderr)
+diff --git a/scripts/substrate_alias_evidence_lint.py b/scripts/substrate_alias_evidence_lint.py
+index 683904495b..d0e503bcac 100644
+--- a/scripts/substrate_alias_evidence_lint.py
++++ b/scripts/substrate_alias_evidence_lint.py
+@@ -50,7 +50,18 @@ TEST_DIR = "tests/python"
+ # The alias shape the gate consults. Deliberately the STRING LITERAL form: a
+ # constant name (LOCAL_COMPACT_..._SUBSTRATE) can be renamed freely, but the
+ # literal is what an artifact's inference_substrate field is compared against.
+-ALIAS_RE = re.compile(r'"([a-z0-9_]*_no_llm)"')
++# EITHER quote style: the first ship matched double quotes only, and ruff
++# format normalises this repo to double quotes -- so a hand-edit written as
++# 'local_python_no_llm' walked straight through (QA-layer SILENT_NON_FIRING
++# finding, 2026-08-23). The backreference anchors on the quote PAIR, so an
++# apostrophe in prose cannot open a match that a later apostrophe closes
++# unless they wrap exactly an alias-shaped token.
++ALIAS_RE = re.compile(r'(["\'])([a-z0-9_]*_no_llm)\1')
++
++
++def find_alias_literals(text: str) -> list[str]:
++    """Alias literals in `text`, either quote style, in order of appearance."""
++    return [m.group(2) for m in ALIAS_RE.finditer(text)]
+ 
+ 
+ class GitUnavailable(RuntimeError):
+@@ -64,12 +75,12 @@ def new_aliases(diff_text: str, head_text: str) -> list[str]:
+     in a real change -- once as a module constant, once inside the tuple -- and
+     because reformatting can re-add a line that was never new.
+     """
+-    already = set(ALIAS_RE.findall(head_text))
++    already = set(find_alias_literals(head_text))
+     added: list[str] = []
+     for line in diff_text.splitlines():
+         if not line.startswith("+") or line.startswith("+++"):
+             continue
+-        for alias in ALIAS_RE.findall(line):
++        for alias in find_alias_literals(line):
+             if alias not in already and alias not in added:
+                 added.append(alias)
+     return added
+diff --git a/scripts/test_suite_mutation_check.py b/scripts/test_suite_mutation_check.py
+index cf3cef6e71..7788a0e9aa 100644
+--- a/scripts/test_suite_mutation_check.py
++++ b/scripts/test_suite_mutation_check.py
+@@ -302,6 +302,60 @@ def dirty_tracked() -> dict[str, str]:
+     return out
+ 
+ 
++def _stash_hidden_paths(max_age_s: float = 15 * 60) -> set[str]:
++    """Repo-relative paths hidden by pre-commit's stash of unstaged changes.
++
++    THE HOLE THIS CLOSES (QA-layer SILENT_NON_FIRING finding, 2026-08-23,
++    reported input: an unresolved unstaged rewrite of
++    output/kanele_synth/post_synth.dcp). pre-commit stashes unstaged changes
++    into a patch file under its cache before running hooks and restores them
++    after. `prune_stale_markers` keys staleness to the WORKING TREE, so during
++    the hook run — the exact moment the gate executes — an unstaged rewrite a
++    marker names looks clean, the marker retires itself, the gate prints OK,
++    and pre-commit then restores the rewrite to a tree with no interlock left.
++    The gate disarmed itself on every commit.
++
++    "Hidden by the stash" is distinguished from "not there" by consulting the
++    NEWEST patch in pre-commit's cache, and only when it is fresh (default 15
++    minutes — hook runs take seconds to a few minutes; patches from restored
++    earlier runs linger in the cache for days and must not count). A path in
++    that patch exists as an unstaged change even though the tree looks clean.
++
++    Fail direction: toward KEEPING a marker (refusing the commit). The
++    residual false-refusal window — a user reverts a marker path and commits
++    within minutes of a run whose newest patch named it, with no new patch
++    created — costs one refusal with remediation text, never a lost rewrite.
++    This function only ever READS the patch; nothing here reverts or restores
++    anything.
++    """
++    home = os.environ.get("PRE_COMMIT_HOME")
++    if not home:
++        xdg = os.environ.get("XDG_CACHE_HOME")
++        base = Path(xdg) if xdg else Path.home() / ".cache"
++        home = str(base / "pre-commit")
++    try:
++        patches = sorted(Path(home).glob("patch*"), key=lambda p: p.stat().st_mtime)
++    except OSError:
++        return set()
++    if not patches:
++        return set()
++    newest = patches[-1]
++    try:
++        if time.time() - newest.stat().st_mtime > max_age_s:
++            return set()
++        text = newest.read_text(encoding="utf-8", errors="replace")
++    except OSError:
++        return set()
++    hidden: set[str] = set()
++    for line in text.splitlines():
++        # Patch files are git diffs; the b-side of the header names the path.
++        if line.startswith("diff --git a/"):
++            b_side = line.split(" b/", 1)
++            if len(b_side) == 2 and b_side[1]:
++                hidden.add(b_side[1])
++    return hidden
++
++
+ def _session_prefix() -> str:
+     """The part of an auto run id shared by every command in one shell session.
+ 
+@@ -780,6 +834,12 @@ def prune_stale_markers() -> list[Path]:
+     remains the signal.
+     """
+     still_dirty = dirty_tracked()
++    # A clean-looking tree is NOT proof the damage is gone while pre-commit
++    # has unstaged changes stashed: the stash hides exactly the unstaged
++    # rewrite the marker names, and the restore happens after the hook. A
++    # stash-hidden path counts as dirty for retirement purposes
++    # (2026-08-23 SILENT_NON_FIRING fix; see _stash_hidden_paths).
++    hidden = _stash_hidden_paths()
+     blocking: list[Path] = []
+     for p in marker_paths():
+         try:
+@@ -790,7 +850,7 @@ def prune_stale_markers() -> list[Path]:
+         if not isinstance(listed, list) or not listed:
+             blocking.append(p)
+             continue
+-        if any(f in still_dirty for f in listed):
++        if any(f in still_dirty or f in hidden for f in listed):
+             blocking.append(p)
+             continue
+         p.unlink(missing_ok=True)
+@@ -1033,9 +1093,36 @@ def cmd_gate() -> int:
+             "  work than test damage. Reverting those is how this guard destroyed authored work\n"
+             "  three times -- check authorship before including them in any git checkout."
+         )
++    hidden = _stash_hidden_paths()
++    stash_hidden = sorted(
++        {
++            f
++            for path in blocking
++            for f in _marker_listed_files(path)
++            if f in hidden and f not in dirty_tracked()
++        }
++    )
++    if stash_hidden:
++        print(
++            "\n  NOTE: these marker paths look clean ONLY because pre-commit has stashed the\n"
++            "  unstaged changes for this hook run; the rewrite is unstaged, not gone, and will\n"
++            "  be restored when the hook finishes. Do NOT git checkout them from inside this\n"
++            "  window -- resolve them after the commit attempt returns:"
++        )
++        for f in stash_hidden:
++            print(f"    [stash-hidden]   {f}")
+     return 1
+ 
+ 
++def _marker_listed_files(path: Path) -> list[str]:
++    """The tracked files a marker names; [] when the marker is unreadable."""
++    try:
++        listed = json.loads(path.read_text()).get("modified_tracked_files", [])
++    except (json.JSONDecodeError, OSError, AttributeError):
++        return []
++    return listed if isinstance(listed, list) else []
++
++
+ def main(argv: list[str] | None = None) -> int:
+     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+     ap.add_argument(
+diff --git a/tests/python/test_operator_curated_doc_guard.py b/tests/python/test_operator_curated_doc_guard.py
+index 66cc679c49..37602a761f 100644
+--- a/tests/python/test_operator_curated_doc_guard.py
++++ b/tests/python/test_operator_curated_doc_guard.py
+@@ -191,3 +191,42 @@ def test_blog_glob_entries_are_matched_inside_the_repo():
+ def test_write_intent_classification(mode, flags, expected):
+     """Both `open` audit-event shapes must be understood, and the unknown case must fail safe."""
+     assert guard._is_write_intent(mode, flags) is expected
++
++
++def test_cwd_relative_atomic_replace_with_default_dirfd_is_refused(monkeypatch, tmp_path):
++    """Named for the QA-layer SILENT_NON_FIRING input (2026-08-23): README.md
++    as the CWD-relative destination of an atomic replacement with destination
++    directory descriptor -1 (the AT_FDCWD default, measured on this build).
++
++    Driven through the hook directly with the real audit-event shape
++    (src, dst, src_dir_fd, dst_dir_fd) rather than a real os.replace: a real
++    call would REWRITE the tracked README the moment this widening regresses,
++    and a test must never be able to mutate the record (CLAUDE.md Test-Run
++    Record Integrity). The absolute-path end-to-end wiring is covered by
++    test_rename_onto_a_protected_path_is_refused above.
++    """
++    staged = tmp_path / "staged.md"
++    staged.write_text("replacement")
++    monkeypatch.chdir(REPO_ROOT)
++    with pytest.raises(guard.OperatorCuratedDocWriteError, match="README.md"):
++        guard._audit_hook("os.replace", (str(staged), "README.md", -1, -1))
++    guard.clear_violations()
++
++
++def test_fd_relative_rename_destination_is_still_excluded(monkeypatch):
++    """The rmtree lesson survives the widening: a bare-name destination with a
++    REAL directory descriptor is fd-relative and must not be CWD-resolved."""
++    monkeypatch.chdir(REPO_ROOT)
++    guard._audit_hook("os.rename", ("a", "README.md", 7, 7))  # must not raise
++    assert guard.recorded_violations() == []
++
++
++def test_cwd_relative_unlink_with_default_dirfd_is_refused(monkeypatch):
++    """Same widening, deletion shape: os.unlink("README.md") with the default
++    dir_fd is CWD-relative; only a real descriptor exempts the bare name."""
++    monkeypatch.chdir(REPO_ROOT)
++    with pytest.raises(guard.OperatorCuratedDocWriteError, match="README.md"):
++        guard._audit_hook("os.unlink", ("README.md", -1))
++    guard.clear_violations()
++    guard._audit_hook("os.unlink", ("README.md", 7))  # fd-relative: excluded
++    assert guard.recorded_violations() == []
+diff --git a/tests/python/test_operator_curated_docs_lint.py b/tests/python/test_operator_curated_docs_lint.py
+index 7cdca22368..33258fc4db 100644
+--- a/tests/python/test_operator_curated_docs_lint.py
++++ b/tests/python/test_operator_curated_docs_lint.py
+@@ -13,6 +13,10 @@ backstop. These tests pin the contract:
+                                                     don't block)
+ 
+ Spec coverage: CLAUDE.md "Public Documentation Discipline".
++Tests trace to REQ-ARC-WMTE-6042 (the commit-time half of the
++operator-curated defense; REQ-ARC-WMTE-6043 is the runtime guard).
++The rename-source-side tests below are the named regression for the
++2026-08-23 QA-layer SILENT_NON_FIRING finding on this lint.
+ """
+ 
+ from __future__ import annotations
+@@ -28,9 +32,7 @@ import pytest
+ def _load():
+     repo_root = Path(__file__).resolve().parents[2]
+     module_path = repo_root / "scripts" / "operator_curated_docs_lint.py"
+-    spec = importlib.util.spec_from_file_location(
+-        "operator_curated_docs_lint", module_path
+-    )
++    spec = importlib.util.spec_from_file_location("operator_curated_docs_lint", module_path)
+     assert spec is not None and spec.loader is not None
+     mod = importlib.util.module_from_spec(spec)
+     sys.modules["operator_curated_docs_lint"] = mod
+@@ -79,9 +81,7 @@ class TestMatchesOperatorCurated:
+         ],
+     )
+     def test_blog_glob_patterns(self, path: str) -> None:
+-        assert _MOD._matches_operator_curated(path), (
+-            f"{path} should match docs/blog/**/*.html glob"
+-        )
++        assert _MOD._matches_operator_curated(path), f"{path} should match docs/blog/**/*.html glob"
+ 
+     @pytest.mark.parametrize(
+         "path",
+@@ -163,9 +163,7 @@ class TestMainIntegration:
+         assert "README.md" in captured.err
+ 
+     def test_blocks_conductor_tutorial_edit(self, tmp_path: Path) -> None:
+-        rc = self._run(
+-            tmp_path, "[conductor] auto-doc-update", ["docs/tutorial.md"]
+-        )
++        rc = self._run(tmp_path, "[conductor] auto-doc-update", ["docs/tutorial.md"])
+         assert rc == 1
+ 
+     def test_blocks_conductor_blog_glob(self, tmp_path: Path) -> None:
+@@ -212,9 +210,7 @@ class TestMainIntegration:
+     def test_fails_open_on_missing_message_file(self, tmp_path: Path) -> None:
+         nonexistent = tmp_path / "does_not_exist.txt"
+         with patch.object(_MOD, "_staged_files", return_value=["README.md"]):
+-            with patch.object(
+-                sys, "argv", ["operator_curated_docs_lint.py", str(nonexistent)]
+-            ):
++            with patch.object(sys, "argv", ["operator_curated_docs_lint.py", str(nonexistent)]):
+                 rc = _MOD.main()
+         assert rc == 0, "missing message file must fail open, not block"
+ 
+@@ -229,8 +225,42 @@ class TestMainIntegration:
+         msg_file = tmp_path / "COMMIT_EDITMSG"
+         msg_file.write_text("# Please enter the commit message\n#\n[conductor] real subject\n")
+         with patch.object(_MOD, "_staged_files", return_value=["README.md"]):
+-            with patch.object(
+-                sys, "argv", ["operator_curated_docs_lint.py", str(msg_file)]
+-            ):
++            with patch.object(sys, "argv", ["operator_curated_docs_lint.py", str(msg_file)]):
+                 rc = _MOD.main()
+         assert rc == 1, "must find subject past comment lines"
++
++
++# -----------------------------------------------------------------------------
++# Rename source side (QA-layer SILENT_NON_FIRING finding, 2026-08-23)
++# -----------------------------------------------------------------------------
++
++
++class TestRenameSourceSide:
++    """A rename moves a protected doc out from under the guard; the guard
++    must read the SOURCE side of an R-status entry, not only the
++    destination."""
++
++    def test_rename_of_readme_source_side_is_caught(self) -> None:
++        """Named for the reported input: the protected source path
++        `README.md` in the staged rename
++        `R100 README.md docs/archive/project-intro.md`."""
++        paths = _MOD._paths_from_name_status("R100\tREADME.md\tdocs/archive/project-intro.md\n")
++        assert "README.md" in paths
++        assert "docs/archive/project-intro.md" in paths
++        assert any(_MOD._matches_operator_curated(p) for p in paths)
++
++    def test_plain_statuses_still_parse(self) -> None:
++        text = "M\tscripts/foo.py\nA\tdocs/new.md\nD\tops/old.md\n"
++        assert _MOD._paths_from_name_status(text) == [
++            "scripts/foo.py",
++            "docs/new.md",
++            "ops/old.md",
++        ]
++
++    def test_conductor_rename_of_readme_is_blocked_end_to_end(self, tmp_path: Path) -> None:
++        msg_file = tmp_path / "COMMIT_EDITMSG"
++        msg_file.write_text("[conductor] tidy docs\n")
++        staged = _MOD._paths_from_name_status("R100\tREADME.md\tdocs/archive/project-intro.md\n")
++        with patch.object(_MOD, "_staged_files", return_value=staged):
++            with patch.object(sys, "argv", ["operator_curated_docs_lint.py", str(msg_file)]):
++                assert _MOD.main() == 1
+diff --git a/tests/python/test_substrate_alias_evidence_lint.py b/tests/python/test_substrate_alias_evidence_lint.py
+index 943e992a7a..5250b792d1 100644
+--- a/tests/python/test_substrate_alias_evidence_lint.py
++++ b/tests/python/test_substrate_alias_evidence_lint.py
+@@ -192,4 +192,25 @@ class TestWiring:
+ 
+     @pytest.mark.parametrize("alias", ["x_no_llm", "deterministic_automaton_no_llm"])
+     def test_alias_regex_matches_the_real_shape(self, alias: str) -> None:
+-        assert lint.ALIAS_RE.findall(f'    "{alias}",') == [alias]
++        assert lint.find_alias_literals(f'    "{alias}",') == [alias]
++
++    def test_single_quoted_local_python_no_llm_alias_is_caught(self) -> None:
++        """Named for the QA-layer SILENT_NON_FIRING input (2026-08-23): the
++        allowlist value `local_python_no_llm` written as the single-quoted
++        literal `'local_python_no_llm'`. ruff format normalises this repo to
++        double quotes, so the double-quote-only first ship passed review
++        while a hand-edit walked straight through."""
++        diff = "+    'local_python_no_llm',"
++        assert lint.new_aliases(diff, head_text="") == ["local_python_no_llm"]
++        # And the same literal already present in HEAD (either style) is not
++        # re-reported as new.
++        assert lint.new_aliases(diff, head_text='"local_python_no_llm"') == []
++
++    def test_prose_apostrophes_do_not_open_a_match(self) -> None:
++        """The quote-pair backreference must not let an apostrophe inside a
++        comment pair with a later apostrophe across prose -- a guard that
++        cries wolf on comments gets bypassed."""
++        line = "+    # the agent's local_python_no_llm note, and the reader's too"
++        assert lint.new_aliases(line, head_text="") == []
++        # Mixed quotes are not a pair either.
++        assert lint.find_alias_literals("\"local_python_no_llm'") == []
+diff --git a/tests/python/test_test_suite_mutation_check.py b/tests/python/test_test_suite_mutation_check.py
+index 675a8403c4..2e326426b5 100644
+--- a/tests/python/test_test_suite_mutation_check.py
++++ b/tests/python/test_test_suite_mutation_check.py
+@@ -85,6 +85,11 @@ def repo(tmp_path, monkeypatch):
+     # without this, concurrent workers would collide on one snapshot name and the ambiguity
+     # refusal would fire inside unrelated tests.
+     monkeypatch.setenv(tsm.RUN_ID_ENV, f"test-{uuid.uuid4().hex[:12]}")
++    # _stash_hidden_paths reads pre-commit's REAL cache by default; on the
++    # operator's box that cache holds fresh patches from live commits, which
++    # would leak nondeterminism into every test here. Point it at an empty
++    # sandbox; the stash-window tests below fill it deliberately.
++    monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
+     return r, art
+ 
+ 
+@@ -1031,3 +1036,76 @@ def test_prune_old_debris_fails_open_when_a_file_cannot_be_removed(tmp_path, mon
+     assert n == 1, "the deletable file is still cleaned up"
+     assert doomed.exists()
+     assert not survivor.exists()
++
++
++# ---------------------------------------------------------------------------
++# The pre-commit stash window (QA-layer SILENT_NON_FIRING finding, 2026-08-23)
++# ---------------------------------------------------------------------------
++
++
++def _arm_marker_and_stash(repo_tuple, tmp_path, monkeypatch, *, patch_age_s=0.0):
++    """Marker names a committed path; the tree is CLEAN for it; a pre-commit
++    patch (the stash) names it. That is the hook-run window exactly."""
++    r, _ = repo_tuple
++    hidden_rel = "output/kanele_synth/post_synth.dcp"
++    target = r / hidden_rel
++    target.parent.mkdir(parents=True)
++    target.write_text("synth checkpoint v1")
++    _git(r, "add", "-A")
++    _git(r, "commit", "-q", "-m", "add synth artifact")
++    tsm.write_pending([hidden_rel], ["pytest", "tests/python"])
++    cache = tmp_path / "pre-commit-cache"
++    cache.mkdir(parents=True, exist_ok=True)
++    patch = cache / "patch1787430000-424242"
++    patch.write_text(
++        f"diff --git a/{hidden_rel} b/{hidden_rel}\n"
++        f"--- a/{hidden_rel}\n"
++        f"+++ b/{hidden_rel}\n"
++        "@@ -1 +1 @@\n"
++        "-synth checkpoint v1\n"
++        "+synth checkpoint REWRITTEN BY A TEST\n"
++    )
++    if patch_age_s:
++        import os as _os
++        import time as _time
++
++        old = _time.time() - patch_age_s
++        _os.utime(patch, (old, old))
++    return hidden_rel
++
++
++def test_unstaged_rewrite_hidden_by_precommit_stash_still_blocks(repo, tmp_path, monkeypatch):
++    """Named for the reported input: an unresolved unstaged test rewrite of
++    output/kanele_synth/post_synth.dcp temporarily hidden while pre-commit
++    runs the gate. The tree looks clean because the stash holds the rewrite;
++    the marker must NOT retire and the gate must refuse."""
++    hidden_rel = _arm_marker_and_stash(repo, tmp_path, monkeypatch)
++    assert hidden_rel not in tsm.dirty_tracked()  # the stash illusion, pinned
++    assert hidden_rel in tsm._stash_hidden_paths()
++    blocking = tsm.prune_stale_markers()
++    assert blocking, "marker must survive the stash window"
++    assert tsm.cmd_gate() == 1
++
++
++def test_stash_hidden_gate_output_warns_against_checkout(repo, tmp_path, monkeypatch, capsys):
++    """The refusal must say the rewrite is stash-hidden, not gone — a git
++    checkout from inside the window is the destroy-authored-work class."""
++    _arm_marker_and_stash(repo, tmp_path, monkeypatch)
++    assert tsm.cmd_gate() == 1
++    out = capsys.readouterr().out
++    assert "stash-hidden" in out
++    assert "output/kanele_synth/post_synth.dcp" in out
++
++
++def test_stale_patch_does_not_wedge_the_gate(repo, tmp_path, monkeypatch):
++    """A patch from a long-finished run must not keep a resolved marker
++    blocking: freshness bounds the fail-closed direction."""
++    _arm_marker_and_stash(repo, tmp_path, monkeypatch, patch_age_s=3600.0)
++    assert tsm._stash_hidden_paths() == set()
++    assert tsm.prune_stale_markers() == []
++    assert tsm.cmd_gate() == 0
++
++
++def test_no_patch_dir_means_no_hidden_paths(repo):
++    """Missing cache dir (fresh machine) is simply 'nothing stashed'."""
++    assert tsm._stash_hidden_paths() == set()
+-- 
+2.55.0
+

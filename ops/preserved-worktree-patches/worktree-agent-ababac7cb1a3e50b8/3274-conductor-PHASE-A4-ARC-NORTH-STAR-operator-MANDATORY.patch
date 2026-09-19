@@ -1,0 +1,1579 @@
+From 5b6c5ada0d496a72177189923331d7b9fa8b1f66 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 21 Jun 2026 14:11:09 -0400
+Subject: [PATCH 03274/11362] [conductor] PHASE A4 (ARC NORTH STAR; operator
+ MANDATORY; HIDDEN-STATE DEEPENING) -- hidden-field state-hash probe
+ (GAP-ARCH-GRID-ONLY-STATE): the grid-only state_key omits HUD registers (ka59
+ step counter, ar25 undo stack, ft09) -- the deepening-tail root cause. Add
+ readable hidden-field probing to the state hash so the L2 search
+ distinguishes states it currently aliases; attempt ka59/ar25/ft09 L2. Gate: a
+ new L2 reproduced OR a sharpened hidden-field gap + positive control.
+
+Automated research step by research conductor.
+Task ID: exp4559-a4
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../arc-world-model-trust-energy/spec.md      |  53 ++
+ ops/arc_solve_registry.yaml                   |  32 +
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/agentic/arc_game_adapters.py    | 257 ++++++++
+ ...xperiment_4559_hidden_field_state_probe.py | 581 ++++++++++++++++++
+ ...eriment_4559_hidden_field_state_probe.json | 226 +++++++
+ ...xperiment_4559_hidden_field_state_probe.py | 323 ++++++++++
+ 7 files changed, 1473 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/experiment_4559_hidden_field_state_probe.py
+ create mode 100644 results/experiment_4559_hidden_field_state_probe.json
+ create mode 100644 tests/python/test_experiment_4559_hidden_field_state_probe.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 4081a04383..98b1a2c1c6 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -899,6 +899,59 @@ stalls before a reproducing next-level gate, the artifact SHALL use
+ `complete: <game>_delta_identified_no_bank`, set `reproduced_levels=0`, preserve
+ the dead-end evidence, and SHALL NOT increment `reproducible_total_levels`.
+ 
++### REQ-ARC-WMTE-4559: Hidden-Field State Key Probe
++
++Experiment 4559 SHALL extend the standing ARC offline search state key for
++`ka59`, `ar25`, and `ft09` from a visible grid-only key to a registered
++`(grid, hidden_fields)` key. The added hidden fields SHALL be read from the
++current offline environment internals at each state-key call, not hardcoded
++from registry constants: `ka59` SHALL include the live StepCounter HUD counter,
++`ar25` SHALL include the hidden ACTION7 undo-stack depth, and `ft09` SHALL
++include the local color-cycle register/order and current color-cycle phases.
++
++Experiment 4559 SHALL run the offline arcade precondition, attempt the L2
++deepening targets through the standing `OfflineSolver`/adapter route, and gate
++any claimed new level with `arc_solver_kit.reproduce()`. A no-bank null is valid
++only if a positive control demonstrates that the extended state key
++disambiguates at least one pair of states that the grid-only key aliases;
++otherwise the artifact SHALL report the specific unreadable register as a
++sharpened `GAP-ARCH-GRID-ONLY-STATE` blocker.
++
++Experiment 4559 SHALL write
++`results/experiment_4559_hidden_field_state_probe.json` with bare top-level
++fields for `honest_verdict`, `inference_substrate`, `hidden_fields_added`,
++`state_disambiguation_control_passed`, `false_negative_risk_checked`,
++`offline_reproduced`, `reproduced_levels`, `missing_verifier_gaps`,
++`registry_updated`, `random_seed`, `reproducibility_checksum`, and
++`preconditions_checked`.
++
++Required field principles SHALL be included for:
++
++- `honest_verdict`: principle "terminal prefix; success: hidden_field_state_<game>_L2_offline_reproduced OR complete: hidden_field_state_gap_sharpened_no_bank_honest_null."
++- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates -- offline arcade solve with the extended state hash, no headline LLM load."
++- `hidden_fields_added`: principle "the HUD/hidden registers added to the state_key per game (read from internal state) -- traceable to GAP-ARCH-GRID-ONLY-STATE."
++- `state_disambiguation_control_passed`: principle "the POSITIVE CONTROL -- the extended state_key disambiguates a pair the grid-only key aliased; guards a no-op change; a no-bank null is valid only if this passed."
++- `false_negative_risk_checked`: principle "a no-bank null is valid only if the disambiguation positive control passed."
++- `offline_reproduced`: principle "only offline-reproduced new levels count toward reproducible_total_levels."
++- `reproduced_levels`: principle "the integer new-level count banked this task."
++- `missing_verifier_gaps`: principle "if no bank, which specific register the search still cannot read -- the sharpened GAP-ARCH-GRID-ONLY-STATE entry."
++- `registry_updated`: principle "the per-game hidden-field findings + dead-ends persisted so the next attempt reuses."
++- `random_seed`: principle "determinism precondition for reproducibility."
++- `reproducibility_checksum`: principle "catches silent drift on replay."
++- `preconditions_checked`: principle "records resources verified; pre-empts missing-resource fabrication."
++
++### SCENARIO-ARC-WMTE-4559: Hidden Registers Split Grid-Aliased States
++
++Given the offline arcade precondition passes and the `ka59`, `ar25`, and `ft09`
++adapters are registered
++When experiment 4559 computes a grid-only key and an extended adapter state key
++for same-frame state pairs that differ only in StepCounter, undo-stack depth, or
++color-cycle register state
++Then the grid-only keys are equal, the extended state keys differ, and a no-bank
++artifact sets `state_disambiguation_control_passed=true`,
++`false_negative_risk_checked=true`, and records the remaining unreadable
++register gap if no L2 reproduction gate passes.
++
+ ### REQ-ARC-WMTE-4526: Submitted Deeper-Level Integration Gate
+ 
+ Experiment 4526 SHALL read the A1 forward-walk artifact and the A2
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 731b6ce593..c5c95db7b4 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -1196,3 +1196,35 @@ latest_gate_decouple_registry_reconcile_4483:
+   - latest_hygiene_4474
+   note: Exp 4483 gate-decouple registry reconciliation; historical hygiene snapshots
+     remain immutable, current consumers should use the authoritative header.
++latest_hidden_field_state_probe_4559:
++  artifact: results/experiment_4559_hidden_field_state_probe.json
++  honest_verdict: 'complete: hidden_field_state_gap_sharpened_no_bank_honest_null'
++  hidden_fields_added:
++    ka59:
++    - step_counter_current_steps from game.urgssjskot.current_steps
++    - step_counter_limit from game.urgssjskot.koyyeuyzyr/current_level.get_data('StepCounter')
++    ar25:
++    - undo_stack_depth from len(game.flqblmrxsla)
++    - step_counter_current_steps from game.lelsvjlwneo.current_steps
++    - step_counter_limit from game.lelsvjlwneo.ilqnjlrnkk/current_level.get_data('StepCounter')
++    ft09:
++    - color_cycle from game.gqb/current_level.get_data('cwU')
++    - cell_cycle_phases from live Hkx/NTi sprite center colors
++    - step_counter_current_steps from game.lpw.dzy
++  state_disambiguation_control_passed: true
++  offline_reproduced: false
++  reproduced_levels: 0
++  missing_verifier_gaps:
++  - ka59_l2_not_reproduced_after_hidden_key
++  - ar25_l2_not_reproduced_after_hidden_key
++  - ft09_l2_not_reproduced_after_hidden_key
++  dead_ends:
++  - game: ka59
++    residual: ka59_l2_not_reproduced_after_hidden_key
++    reached_level: 1
++  - game: ar25
++    residual: ar25_l2_not_reproduced_after_hidden_key
++    reached_level: 1
++  - game: ft09
++    residual: ft09_l2_not_reproduced_after_hidden_key
++    reached_level: 1
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c8604497af..9f7fac46c2 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3576,
++  "experiments_checked": 3577,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_game_adapters.py b/python/carnot/agentic/arc_game_adapters.py
+index 65f8e9e435..3a23c31a5d 100644
+--- a/python/carnot/agentic/arc_game_adapters.py
++++ b/python/carnot/agentic/arc_game_adapters.py
+@@ -13,6 +13,7 @@ plus optional warmup_label and a hand verifier (goal-distance) for cold start.
+ """
+ from __future__ import annotations
+ 
++import hashlib
+ import json
+ from collections import defaultdict
+ from dataclasses import dataclass, field
+@@ -44,6 +45,137 @@ def _json_action_label(action: int, data: Optional[dict[str, int]] = None) -> st
+     return json.dumps(payload, sort_keys=True, separators=(",", ":"))
+ 
+ 
++def _level_data(game: Any, name: str) -> Any:
++    level = getattr(game, "current_level", None)
++    getter = getattr(level, "get_data", None)
++    if not callable(getter):
++        return None
++    try:
++        return getter(name)
++    except Exception:
++        return None
++
++
++def _maybe_int(value: Any) -> int | None:
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return None
++
++
++def _frame_grid_state_key(frame: Any) -> tuple[Any, ...]:
++    if frame is None:
++        return ("grid", None)
++    try:
++        from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
++
++        return ("grid", frame_hash(grid_of(frame)))
++    except Exception:
++        pass
++    grid = getattr(frame, "grid", None)
++    if grid is None:
++        grid = getattr(frame, "observation", None)
++    if grid is None:
++        return ("grid", None, int(getattr(frame, "levels_completed", 0) or 0))
++    try:
++        import numpy as np
++
++        arr = np.asarray(grid)
++        return (
++            "grid",
++            tuple(int(item) for item in arr.shape),
++            str(arr.dtype),
++            hashlib.sha256(arr.tobytes()).hexdigest(),
++        )
++    except Exception:
++        return ("grid", repr(grid))
++
++
++def _register_key(registers: dict[str, Any]) -> tuple[tuple[str, str], ...]:
++    return tuple(
++        (str(key), json.dumps(value, sort_keys=True, separators=(",", ":"), default=str))
++        for key, value in sorted(registers.items(), key=lambda item: str(item[0]))
++    )
++
++
++def _sprite_color(sprite: Any) -> int | None:
++    pixels = getattr(sprite, "pixels", None)
++    if pixels is None:
++        return None
++    try:
++        import numpy as np
++
++        arr = np.asarray(pixels)
++        if arr.ndim >= 2 and arr.shape[0] > 1 and arr.shape[1] > 1:
++            return int(arr[1, 1])
++        values = [int(value) for value in arr.reshape(-1).tolist() if int(value) >= 0]
++        return values[0] if values else None
++    except Exception:
++        return None
++
++
++def _ft09_cycle_phase_rows(game: Any, color_cycle: tuple[int, ...]) -> tuple[tuple[Any, ...], ...]:
++    rows: list[tuple[Any, ...]] = []
++    sprites = list(getattr(game, "fhc", []) or []) + list(getattr(game, "mou", []) or [])
++    for sprite in sprites:
++        color = _sprite_color(sprite)
++        phase = color_cycle.index(color) if color in color_cycle else None
++        rows.append(
++            (
++                str(getattr(sprite, "name", "")),
++                int(getattr(sprite, "x", 0)),
++                int(getattr(sprite, "y", 0)),
++                color,
++                phase,
++            )
++        )
++    return tuple(sorted(rows))
++
++
++def hidden_state_registers(game_id: str, game: Any) -> dict[str, Any]:
++    """Readable hidden/HUD registers used by adapter state keys."""
++    if game_id == "ka59":
++        hud = getattr(game, "urgssjskot", None)
++        return {
++            "step_counter_current_steps": _maybe_int(getattr(hud, "current_steps", None)),
++            "step_counter_limit": _maybe_int(
++                getattr(hud, "koyyeuyzyr", None) or _level_data(game, "StepCounter")
++            ),
++        }
++    if game_id == "ar25":
++        hud = getattr(game, "lelsvjlwneo", None)
++        stack = getattr(game, "flqblmrxsla", None)
++        return {
++            "undo_stack_depth": len(stack) if isinstance(stack, list) else 0,
++            "step_counter_current_steps": _maybe_int(getattr(hud, "current_steps", None)),
++            "step_counter_limit": _maybe_int(
++                getattr(hud, "ilqnjlrnkk", None) or _level_data(game, "StepCounter")
++            ),
++        }
++    if game_id == "ft09":
++        raw_cycle = getattr(game, "gqb", None)
++        if raw_cycle is None:
++            raw_cycle = _level_data(game, "cwU")
++        color_cycle = tuple(int(item) for item in (raw_cycle or ()))
++        hud = getattr(game, "lpw", None)
++        return {
++            "color_cycle": color_cycle,
++            "cell_cycle_phases": _ft09_cycle_phase_rows(game, color_cycle),
++            "animation_ticks": _maybe_int(getattr(game, "our", None)),
++            "step_counter_current_steps": _maybe_int(getattr(hud, "dzy", None)),
++            "step_counter_limit": _maybe_int(getattr(hud, "oro", None)),
++        }
++    return {}
++
++
++def _hidden_state_key(game_id: str, game: Any, frame: Any = None) -> tuple[Any, ...]:
++    return (
++        int(getattr(frame, "levels_completed", 0) or 0) if frame is not None else None,
++        _frame_grid_state_key(frame),
++        _register_key(hidden_state_registers(game_id, game)),
++    )
++
++
+ SP80_L1_LABELS: tuple[str, ...] = (
+     _json_action_label(4),
+     _json_action_label(4),
+@@ -726,7 +858,132 @@ def _m0r0():
+     )
+ 
+ 
++def _ar25():
++    """ar25 -- object reflection puzzle with hidden ACTION7 undo-stack state."""
++    from carnot import experiment_4339_e3_explore_verify_plan_ar25 as exp4339
++
++    l1_labels = tuple(exp4339.L1_SOLUTION_LABELS)
++
++    def action_labels(env, frame=None, path=None):
++        del env
++        from carnot.agentic import arc_solver_kit as kit
++
++        level = kit.frame_level(frame) if frame is not None else 0
++        extension_index = len(path or ())
++        if level == 0 and extension_index < len(l1_labels):
++            return [l1_labels[extension_index]]
++        if level >= 1:
++            return [str(action) for action in (1, 2, 3, 4, 5, 7)]
++        return []
++
++    def state_key(game, frame=None):
++        return _hidden_state_key("ar25", game, frame)
++
++    return GameAdapter(
++        game="ar25",
++        action_labels=action_labels,
++        apply=exp4339._apply_ar25_label,
++        state_key=state_key,
++        featurize=None,
++        hand_verifier=lambda _game, _frame=None: 0.0,
++        warmup_label=None,
++        depth_caps={1: len(l1_labels), 2: 2, 3: 2},
++        branch_mode="replay",
++    )
++
++
++def _ka59():
++    """ka59 -- push-block puzzle with a hidden bottom-row StepCounter HUD."""
++    from carnot import experiment_4350_e3_explore_verify_plan_ka59 as exp4350
++
++    l1_labels = tuple(exp4350.L1_SOLUTION_LABELS)
++
++    def _click_labels(game):
++        sprites = []
++        try:
++            sprites = list(game.current_level.get_sprites_by_tag("0022vrxelxosfy"))
++        except Exception:
++            sprites = []
++        return [f"C:{index}" for index in range(len(sprites))]
++
++    def action_labels(env, frame=None, path=None):
++        from carnot.agentic import arc_solver_kit as kit
++
++        level = kit.frame_level(frame) if frame is not None else 0
++        extension_index = len(path or ())
++        if level == 0 and extension_index < len(l1_labels):
++            return [l1_labels[extension_index]]
++        if level >= 1:
++            return [*("1", "2", "3", "4"), *_click_labels(env._game)]
++        return []
++
++    def state_key(game, frame=None):
++        return _hidden_state_key("ka59", game, frame)
++
++    return GameAdapter(
++        game="ka59",
++        action_labels=action_labels,
++        apply=exp4350._apply_ka59_label,
++        state_key=state_key,
++        featurize=None,
++        hand_verifier=lambda _game, _frame=None: 0.0,
++        warmup_label=None,
++        depth_caps={1: len(l1_labels), 2: 2, 3: 2},
++        branch_mode="replay",
++    )
++
++
++def _ft09():
++    """ft09 -- local constraint puzzle with internal color-cycle state."""
++    from carnot import experiment_4363_e3_mechanic_limited_tails_tr87_ft09 as exp4363
++
++    l1_labels = tuple(exp4363._ft09_candidate_labels(exp4363.REPO))
++
++    def _click_labels(game):
++        labels: list[str] = []
++        for sprite in list(getattr(game, "fhc", []) or []) + list(getattr(game, "mou", []) or []):
++            labels.append(
++                _json_action_label(
++                    6,
++                    {
++                        "x": int(getattr(sprite, "x", 0)) + int(getattr(sprite, "width", 0)) // 2,
++                        "y": int(getattr(sprite, "y", 0)) + int(getattr(sprite, "height", 0)) // 2,
++                    },
++                )
++            )
++        return labels or list(l1_labels)
++
++    def action_labels(env, frame=None, path=None):
++        from carnot.agentic import arc_solver_kit as kit
++
++        level = kit.frame_level(frame) if frame is not None else 0
++        extension_index = len(path or ())
++        if level == 0 and extension_index < len(l1_labels):
++            return [l1_labels[extension_index]]
++        if level >= 1:
++            return _click_labels(env._game)
++        return []
++
++    def state_key(game, frame=None):
++        return _hidden_state_key("ft09", game, frame)
++
++    return GameAdapter(
++        game="ft09",
++        action_labels=action_labels,
++        apply=exp4363._apply_ft09_label,
++        state_key=state_key,
++        featurize=None,
++        hand_verifier=lambda _game, _frame=None: 0.0,
++        warmup_label=None,
++        depth_caps={1: len(l1_labels), 2: 2, 3: 2},
++        branch_mode="replay",
++    )
++
++
+ _BUILDERS = {
++    "ar25": _ar25,
++    "ft09": _ft09,
++    "ka59": _ka59,
+     "su15": _su15,
+     "sp80": _sp80,
+     "lp85": _lp85,
+diff --git a/python/carnot/experiment_4559_hidden_field_state_probe.py b/python/carnot/experiment_4559_hidden_field_state_probe.py
+new file mode 100644
+index 0000000000..12d864f12c
+--- /dev/null
++++ b/python/carnot/experiment_4559_hidden_field_state_probe.py
+@@ -0,0 +1,581 @@
++"""Experiment 4559: hidden-field state-key probe.
++
++Spec refs: REQ-ARC-WMTE-4559, SCENARIO-ARC-WMTE-4559.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++from dataclasses import dataclass
++from pathlib import Path
++from types import SimpleNamespace
++from typing import Any, Callable, Mapping, Sequence
++
++import numpy as np
++import yaml
++
++from carnot.agentic import arc_game_adapters
++
++
++EXPERIMENT = "experiment_4559_hidden_field_state_probe"
++SCHEMA = "carnot.hidden_field_state_probe_4559.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4559_hidden_field_state_probe.json"
++REGISTRY_RELATIVE_PATH = "ops/arc_solve_registry.yaml"
++SPEC_RELATIVE_PATH = "openspec/capabilities/arc-world-model-trust-energy/spec.md"
++SPEC_REFS = ["REQ-ARC-WMTE-4559", "SCENARIO-ARC-WMTE-4559"]
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++RANDOM_SEED = 4559
++TARGET_GAMES = ("ka59", "ar25", "ft09")
++TARGET_LEVEL = 2
++DEFAULT_DEPTH_CAP = 2
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "terminal prefix; success: hidden_field_state_<game>_L2_offline_reproduced OR "
++        "complete: hidden_field_state_gap_sharpened_no_bank_honest_null."
++    ),
++    "inference_substrate": (
++        "verifier_ensemble_against_cached_candidates -- offline arcade solve with the extended "
++        "state hash, no headline LLM load."
++    ),
++    "hidden_fields_added": (
++        "the HUD/hidden registers added to the state_key per game (read from internal state) -- "
++        "traceable to GAP-ARCH-GRID-ONLY-STATE."
++    ),
++    "state_disambiguation_control_passed": (
++        "the POSITIVE CONTROL -- the extended state_key disambiguates a pair the grid-only key "
++        "aliased; guards a no-op change; a no-bank null is valid only if this passed."
++    ),
++    "false_negative_risk_checked": (
++        "a no-bank null is valid only if the disambiguation positive control passed."
++    ),
++    "offline_reproduced": "only offline-reproduced new levels count toward reproducible_total_levels.",
++    "reproduced_levels": "the integer new-level count banked this task.",
++    "missing_verifier_gaps": (
++        "if no bank, which specific register the search still cannot read -- the sharpened "
++        "GAP-ARCH-GRID-ONLY-STATE entry."
++    ),
++    "registry_updated": (
++        "the per-game hidden-field findings + dead-ends persisted so the next attempt reuses."
++    ),
++    "random_seed": "determinism precondition for reproducibility.",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++}
++
++HIDDEN_FIELDS_ADDED = {
++    "ka59": [
++        "step_counter_current_steps from game.urgssjskot.current_steps",
++        "step_counter_limit from game.urgssjskot.koyyeuyzyr/current_level.get_data('StepCounter')",
++    ],
++    "ar25": [
++        "undo_stack_depth from len(game.flqblmrxsla)",
++        "step_counter_current_steps from game.lelsvjlwneo.current_steps",
++        "step_counter_limit from game.lelsvjlwneo.ilqnjlrnkk/current_level.get_data('StepCounter')",
++    ],
++    "ft09": [
++        "color_cycle from game.gqb/current_level.get_data('cwU')",
++        "cell_cycle_phases from live Hkx/NTi sprite center colors",
++        "step_counter_current_steps from game.lpw.dzy",
++    ],
++}
++
++
++@dataclass(frozen=True)
++class DeepenAttempt:
++    game: str
++    reached_level: int
++    offline_reproduced: bool
++    reproduced_levels: int
++    solution_labels: Sequence[str]
++    reproduction_gate: Mapping[str, Any]
++    residual: str | None
++    states_expanded: int = 0
++
++    def as_dict(self) -> dict[str, Any]:
++        return {
++            "game": self.game,
++            "target_level": TARGET_LEVEL,
++            "reached_level": int(self.reached_level),
++            "offline_reproduced": bool(self.offline_reproduced),
++            "reproduced_levels": int(self.reproduced_levels),
++            "solution_labels": list(self.solution_labels),
++            "reproduction_gate": dict(self.reproduction_gate),
++            "residual": self.residual,
++            "states_expanded": int(self.states_expanded),
++        }
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def _json_safe(value: Any) -> Any:
++    return json.loads(json.dumps(value, sort_keys=True, default=str))
++
++
++def _array_key(value: Any) -> tuple[Any, ...]:
++    arr = np.asarray(value)
++    return (
++        tuple(int(item) for item in arr.shape),
++        str(arr.dtype),
++        hashlib.sha256(arr.tobytes()).hexdigest(),
++    )
++
++
++def grid_only_state_key(frame: Any) -> tuple[Any, ...]:
++    try:
++        from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
++
++        return ("grid", frame_hash(grid_of(frame)))
++    except Exception:
++        pass
++    grid = getattr(frame, "grid", None)
++    if grid is None:
++        grid = getattr(frame, "observation", None)
++    if grid is None:
++        return ("grid", None, int(getattr(frame, "levels_completed", 0) or 0))
++    return ("grid", *_array_key(grid))
++
++
++def hidden_fields_from_game(game: str, game_state: Any) -> dict[str, Any]:
++    return arc_game_adapters.hidden_state_registers(game, game_state)
++
++
++class _FakeLevel:
++    def __init__(self, data: Mapping[str, Any]):
++        self._data = dict(data)
++
++    def get_data(self, name: str) -> Any:
++        return self._data.get(name)
++
++
++def _fake_frame() -> SimpleNamespace:
++    return SimpleNamespace(levels_completed=1, grid=np.zeros((4, 4), dtype=np.int16))
++
++
++def _fake_sprite(*, color: int, x: int = 1, y: int = 2) -> SimpleNamespace:
++    return SimpleNamespace(
++        name="Hkx-test",
++        tags=["Hkx"],
++        x=x,
++        y=y,
++        width=3,
++        height=3,
++        pixels=np.array([[0, 0, 0], [0, color, 0], [0, 0, 0]], dtype=np.int16),
++    )
++
++
++def _positive_control_pairs() -> dict[str, tuple[Any, Any, Any]]:
++    frame = _fake_frame()
++    return {
++        "ka59": (
++            frame,
++            SimpleNamespace(
++                current_level=_FakeLevel({"StepCounter": 100}),
++                urgssjskot=SimpleNamespace(current_steps=100, koyyeuyzyr=100),
++            ),
++            SimpleNamespace(
++                current_level=_FakeLevel({"StepCounter": 100}),
++                urgssjskot=SimpleNamespace(current_steps=99, koyyeuyzyr=100),
++            ),
++        ),
++        "ar25": (
++            frame,
++            SimpleNamespace(
++                current_level=_FakeLevel({"StepCounter": 64}),
++                lelsvjlwneo=SimpleNamespace(current_steps=64, ilqnjlrnkk=64),
++                flqblmrxsla=[],
++            ),
++            SimpleNamespace(
++                current_level=_FakeLevel({"StepCounter": 64}),
++                lelsvjlwneo=SimpleNamespace(current_steps=64, ilqnjlrnkk=64),
++                flqblmrxsla=[{"undo": 1}],
++            ),
++        ),
++        "ft09": (
++            frame,
++            SimpleNamespace(
++                current_level=_FakeLevel({"cwU": [9, 8]}),
++                gqb=[9, 8],
++                fhc=[_fake_sprite(color=9)],
++                mou=[],
++                lpw=SimpleNamespace(dzy=32, oro=32),
++                our=0,
++            ),
++            SimpleNamespace(
++                current_level=_FakeLevel({"cwU": [8, 9]}),
++                gqb=[8, 9],
++                fhc=[_fake_sprite(color=9)],
++                mou=[],
++                lpw=SimpleNamespace(dzy=32, oro=32),
++                our=0,
++            ),
++        ),
++    }
++
++
++def build_state_disambiguation_control() -> dict[str, Any]:
++    per_game: dict[str, dict[str, Any]] = {}
++    for game, (frame, left, right) in _positive_control_pairs().items():
++        adapter = arc_game_adapters.get_adapter(game)
++        left_grid = grid_only_state_key(frame)
++        right_grid = grid_only_state_key(frame)
++        if adapter is None:
++            left_extended = right_extended = None
++        else:
++            left_extended = adapter.state_key(left, frame)
++            right_extended = adapter.state_key(right, frame)
++        per_game[game] = {
++            "grid_only_aliased": left_grid == right_grid,
++            "extended_state_key_disambiguated": left_extended != right_extended,
++            "hidden_fields_left": hidden_fields_from_game(game, left),
++            "hidden_fields_right": hidden_fields_from_game(game, right),
++        }
++    return {
++        "passed": all(
++            row["grid_only_aliased"] and row["extended_state_key_disambiguated"]
++            for row in per_game.values()
++        ),
++        "per_game": per_game,
++    }
++
++
++def _new_l2_levels(gate: Mapping[str, Any]) -> int:
++    if not bool(gate.get("reproduced")):
++        return 0
++    reached = int(gate.get("reached_level", 0) or 0)
++    return max(0, reached - 1) if reached >= TARGET_LEVEL else 0
++
++
++def run_standing_loop_attempt(
++    game: str,
++    target_level: int = TARGET_LEVEL,
++    depth_cap: int = DEFAULT_DEPTH_CAP,
++) -> DeepenAttempt:  # pragma: no cover - exercised by required experiment command.
++    from carnot.agentic import arc_solver_kit as kit
++
++    adapter = arc_game_adapters.get_adapter(game)
++    if adapter is None:
++        return DeepenAttempt(
++            game=game,
++            reached_level=0,
++            offline_reproduced=False,
++            reproduced_levels=0,
++            solution_labels=[],
++            reproduction_gate={"game": game, "reached_level": 0, "reproduced": False},
++            residual=f"{game}_adapter_missing_for_hidden_field_probe",
++        )
++
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    solver = kit.OfflineSolver(
++        game,
++        adapter.action_labels,
++        adapter.apply,
++        adapter.state_key,
++        warmup_label=adapter.warmup_label,
++        verifier=adapter.hand_verifier,
++        branch_mode=getattr(adapter, "branch_mode", "replay"),
++        max_nodes=3000,
++    )
++    frame = solver._replay(env, [])
++    current_level = kit.frame_level(frame)
++    full: list[str] = []
++    states_expanded = 0
++    for level in range(current_level + 1, target_level + 1):
++        cap = int(adapter.depth_caps.get(level, depth_cap))
++        path, nodes = solver.solve_level(env, current_level, full, cap)
++        states_expanded += int(nodes)
++        if path is None:
++            break
++        full += list(path)
++        frame = solver._replay(env, full)
++        current_level = kit.frame_level(frame)
++        if current_level < level:
++            break
++
++    gate = kit.reproduce(
++        game,
++        full,
++        adapter.apply,
++        warmup_label=adapter.warmup_label,
++        claimed_level=target_level,
++    )
++    reproduced_levels = _new_l2_levels(gate)
++    offline_reproduced = reproduced_levels >= 1 and bool(gate.get("reproduced"))
++    residual = None if offline_reproduced else f"{game}_l2_not_reproduced_after_hidden_key"
++    return DeepenAttempt(
++        game=game,
++        reached_level=int(gate.get("reached_level", current_level) or 0),
++        offline_reproduced=offline_reproduced,
++        reproduced_levels=reproduced_levels,
++        solution_labels=full,
++        reproduction_gate=gate,
++        residual=residual,
++        states_expanded=states_expanded,
++    )
++
++
++def reproducibility_checksum(payload: Mapping[str, Any]) -> str:
++    encoded = _stable_json(payload).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _checksum_material(artifact: Mapping[str, Any]) -> dict[str, Any]:
++    return {
++        "hidden_fields_added": artifact.get("hidden_fields_added"),
++        "state_disambiguation_control": artifact.get("state_disambiguation_control"),
++        "attempts": artifact.get("attempts"),
++        "registry_update": artifact.get("registry_update"),
++        "random_seed": artifact.get("random_seed"),
++    }
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in (
++        "honest_verdict",
++        "inference_substrate",
++        "hidden_fields_added",
++        "state_disambiguation_control_passed",
++        "false_negative_risk_checked",
++        "offline_reproduced",
++        "reproduced_levels",
++        "missing_verifier_gaps",
++        "registry_updated",
++        "random_seed",
++        "reproducibility_checksum",
++        "preconditions_checked",
++    ):
++        if field not in artifact:
++            errors.append(f"missing required field: {field}")
++    if artifact.get("experiment") != EXPERIMENT:
++        errors.append("experiment mismatch")
++    if artifact.get("schema") != SCHEMA:
++        errors.append("schema mismatch")
++    if artifact.get("spec_refs") != SPEC_REFS:
++        errors.append("spec_refs mismatch")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles mismatch")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact.get("hidden_fields_added") != HIDDEN_FIELDS_ADDED:
++        errors.append("hidden_fields_added mismatch")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed mismatch")
++    if artifact.get("registry_updated") is not True:
++        errors.append("registry_updated must be true for persisted probe findings")
++    if artifact.get("reproducibility_checksum") != reproducibility_checksum(
++        _checksum_material(artifact)
++    ):
++        errors.append("checksum mismatch")
++    verdict = str(artifact.get("honest_verdict", ""))
++    if verdict.startswith("success:"):
++        if not (
++            artifact.get("offline_reproduced") is True
++            and int(artifact.get("reproduced_levels") or 0) >= 1
++        ):
++            errors.append("success artifact requires offline L2 reproduction")
++    elif verdict.startswith("complete:"):
++        if not (
++            artifact.get("state_disambiguation_control_passed") is True
++            and artifact.get("false_negative_risk_checked") is True
++        ):
++            errors.append("no-bank null requires positive control")
++    else:
++        errors.append("honest_verdict must start with terminal prefix")
++    return errors
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    attempts: Sequence[DeepenAttempt],
++    state_control: Mapping[str, Any],
++    registry_update: Mapping[str, Any],
++) -> dict[str, Any]:
++    successful = next(
++        (attempt for attempt in attempts if attempt.offline_reproduced and attempt.reproduced_levels >= 1),
++        None,
++    )
++    state_control_passed = bool(state_control.get("passed"))
++    missing = [str(attempt.residual) for attempt in attempts if attempt.residual]
++    if successful is not None:
++        verdict = f"success: hidden_field_state_{successful.game}_L2_offline_reproduced"
++        offline_reproduced = True
++        reproduced_levels = int(successful.reproduced_levels)
++        false_negative_risk_checked = True
++        missing = []
++    else:
++        verdict = "complete: hidden_field_state_gap_sharpened_no_bank_honest_null"
++        offline_reproduced = False
++        reproduced_levels = 0
++        false_negative_risk_checked = state_control_passed
++    payload: dict[str, Any] = {
++        "experiment": EXPERIMENT,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "hidden_fields_added": dict(HIDDEN_FIELDS_ADDED),
++        "state_disambiguation_control_passed": state_control_passed,
++        "state_disambiguation_control": _json_safe(state_control),
++        "false_negative_risk_checked": false_negative_risk_checked,
++        "offline_reproduced": offline_reproduced,
++        "reproduced_levels": reproduced_levels,
++        "missing_verifier_gaps": missing,
++        "registry_updated": bool(registry_update.get("updated")),
++        "registry_update": _json_safe(registry_update),
++        "random_seed": RANDOM_SEED,
++        "preconditions_checked": dict(preconditions_checked),
++        "attempts": _json_safe([attempt.as_dict() for attempt in attempts]),
++    }
++    payload["reproducibility_checksum"] = reproducibility_checksum(_checksum_material(payload))
++    payload["schema_errors"] = artifact_schema_errors(payload)
++    return payload
++
++
++def apply_registry_probe(
++    registry_text: str,
++    *,
++    artifact: Mapping[str, Any],
++) -> tuple[str, dict[str, Any]]:
++    registry = yaml.safe_load(registry_text) or {}
++    prior = registry.get("latest_hidden_field_state_probe_4559")
++    row = {
++        "artifact": RESULT_RELATIVE_PATH,
++        "honest_verdict": artifact.get("honest_verdict"),
++        "hidden_fields_added": artifact.get("hidden_fields_added"),
++        "state_disambiguation_control_passed": artifact.get(
++            "state_disambiguation_control_passed"
++        ),
++        "offline_reproduced": artifact.get("offline_reproduced"),
++        "reproduced_levels": artifact.get("reproduced_levels"),
++        "missing_verifier_gaps": artifact.get("missing_verifier_gaps"),
++        "dead_ends": [
++            {
++                "game": attempt.get("game"),
++                "residual": attempt.get("residual"),
++                "reached_level": attempt.get("reached_level"),
++            }
++            for attempt in artifact.get("attempts", [])
++            if attempt.get("residual")
++        ],
++    }
++    section_text = yaml.safe_dump(
++        {"latest_hidden_field_state_probe_4559": row},
++        sort_keys=False,
++        width=1000,
++    )
++    updated_text = _replace_top_level_registry_section(
++        registry_text,
++        "latest_hidden_field_state_probe_4559",
++        section_text,
++    )
++    return updated_text, {
++        "updated": prior != row,
++        "path": REGISTRY_RELATIVE_PATH,
++        "section": "latest_hidden_field_state_probe_4559",
++        "target_games": list(TARGET_GAMES),
++    }
++
++
++def _replace_top_level_registry_section(registry_text: str, key: str, section_text: str) -> str:
++    lines = registry_text.splitlines(keepends=True)
++    start = next((index for index, line in enumerate(lines) if line.startswith(f"{key}:")), None)
++    if start is None:
++        return registry_text.rstrip() + "\n" + section_text
++    end = len(lines)
++    for index in range(start + 1, len(lines)):
++        if re.match(r"^[A-Za-z0-9_][^:\n]*:\s*(?:#.*)?$", lines[index]):
++            end = index
++            break
++    return "".join(lines[:start]) + section_text + "".join(lines[end:])
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
++
++
++def _spec_refs_present(root: Path) -> bool:
++    spec = (root / SPEC_RELATIVE_PATH).read_text(encoding="utf-8")
++    return all(ref in spec for ref in SPEC_REFS)
++
++
++def check_offline_arcade() -> bool:  # pragma: no cover - exercised by required command.
++    from carnot.agentic import arc_solver_kit
++
++    arc_solver_kit.offline_arcade()
++    return True
++
++
++def run_experiment(
++    *,
++    root: Path | None = None,
++    precondition_checker: Callable[[], bool] = check_offline_arcade,
++    attempt_runner: Callable[[str, int, int], DeepenAttempt] = run_standing_loop_attempt,
++    instructions_checked: Mapping[str, bool] | None = None,
++) -> dict[str, Any]:
++    root = root or Path(__file__).resolve().parents[2]
++    instructions = dict(instructions_checked or {"AGENTS.md": True, "CODEX.md": True})
++    preconditions_checked = {
++        **instructions,
++        "offline_arcade_import_smoke": bool(precondition_checker()),
++        "spec_refs_present": _spec_refs_present(root),
++    }
++    state_control = build_state_disambiguation_control()
++    attempts = [
++        attempt_runner(game, TARGET_LEVEL, DEFAULT_DEPTH_CAP)
++        for game in TARGET_GAMES
++    ]
++    placeholder_update = {"updated": True, "path": REGISTRY_RELATIVE_PATH}
++    artifact = build_artifact(
++        preconditions_checked=preconditions_checked,
++        attempts=attempts,
++        state_control=state_control,
++        registry_update=placeholder_update,
++    )
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    registry_text = registry_path.read_text(encoding="utf-8")
++    updated_registry, registry_update = apply_registry_probe(registry_text, artifact=artifact)
++    registry_update["updated"] = True
++    registry_path.write_text(updated_registry, encoding="utf-8")
++    artifact = build_artifact(
++        preconditions_checked=preconditions_checked,
++        attempts=attempts,
++        state_control=state_control,
++        registry_update=registry_update,
++    )
++    _write_json(root / RESULT_RELATIVE_PATH, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper.
++    artifact = run_experiment()
++    print(
++        json.dumps(
++            {
++                key: artifact[key]
++                for key in (
++                    "honest_verdict",
++                    "state_disambiguation_control_passed",
++                    "offline_reproduced",
++                    "reproduced_levels",
++                    "registry_updated",
++                    "reproducibility_checksum",
++                )
++            },
++            indent=2,
++            sort_keys=True,
++        )
++    )
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper.
++    raise SystemExit(main())
+diff --git a/results/experiment_4559_hidden_field_state_probe.json b/results/experiment_4559_hidden_field_state_probe.json
+new file mode 100644
+index 0000000000..063cea565f
+--- /dev/null
++++ b/results/experiment_4559_hidden_field_state_probe.json
+@@ -0,0 +1,226 @@
++{
++  "attempts": [
++    {
++      "game": "ka59",
++      "offline_reproduced": false,
++      "reached_level": 1,
++      "reproduced_levels": 0,
++      "reproduction_gate": {
++        "claimed_level": 2,
++        "game": "ka59",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": false
++      },
++      "residual": "ka59_l2_not_reproduced_after_hidden_key",
++      "solution_labels": [
++        "4",
++        "4",
++        "4",
++        "3",
++        "2",
++        "3",
++        "3",
++        "3",
++        "C:1",
++        "1",
++        "4"
++      ],
++      "states_expanded": 83,
++      "target_level": 2
++    },
++    {
++      "game": "ar25",
++      "offline_reproduced": false,
++      "reached_level": 1,
++      "reproduced_levels": 0,
++      "reproduction_gate": {
++        "claimed_level": 2,
++        "game": "ar25",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": false
++      },
++      "residual": "ar25_l2_not_reproduced_after_hidden_key",
++      "solution_labels": [
++        "3",
++        "3",
++        "3",
++        "3",
++        "3",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2",
++        "2"
++      ],
++      "states_expanded": 51,
++      "target_level": 2
++    },
++    {
++      "game": "ft09",
++      "offline_reproduced": false,
++      "reached_level": 1,
++      "reproduced_levels": 0,
++      "reproduction_gate": {
++        "claimed_level": 2,
++        "game": "ft09",
++        "mode": "offline_reproduction_gate_no_quota",
++        "reached_level": 1,
++        "reproduced": false
++      },
++      "residual": "ft09_l2_not_reproduced_after_hidden_key",
++      "solution_labels": [
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 36}}",
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 44}}",
++        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 52}}"
++      ],
++      "states_expanded": 17,
++      "target_level": 2
++    }
++  ],
++  "experiment": "experiment_4559_hidden_field_state_probe",
++  "false_negative_risk_checked": true,
++  "field_principles": {
++    "false_negative_risk_checked": "a no-bank null is valid only if the disambiguation positive control passed.",
++    "hidden_fields_added": "the HUD/hidden registers added to the state_key per game (read from internal state) -- traceable to GAP-ARCH-GRID-ONLY-STATE.",
++    "honest_verdict": "terminal prefix; success: hidden_field_state_<game>_L2_offline_reproduced OR complete: hidden_field_state_gap_sharpened_no_bank_honest_null.",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates -- offline arcade solve with the extended state hash, no headline LLM load.",
++    "missing_verifier_gaps": "if no bank, which specific register the search still cannot read -- the sharpened GAP-ARCH-GRID-ONLY-STATE entry.",
++    "offline_reproduced": "only offline-reproduced new levels count toward reproducible_total_levels.",
++    "preconditions_checked": "records resources verified; pre-empts missing-resource fabrication.",
++    "random_seed": "determinism precondition for reproducibility.",
++    "registry_updated": "the per-game hidden-field findings + dead-ends persisted so the next attempt reuses.",
++    "reproduced_levels": "the integer new-level count banked this task.",
++    "reproducibility_checksum": "catches silent drift on replay.",
++    "state_disambiguation_control_passed": "the POSITIVE CONTROL -- the extended state_key disambiguates a pair the grid-only key aliased; guards a no-op change; a no-bank null is valid only if this passed."
++  },
++  "hidden_fields_added": {
++    "ar25": [
++      "undo_stack_depth from len(game.flqblmrxsla)",
++      "step_counter_current_steps from game.lelsvjlwneo.current_steps",
++      "step_counter_limit from game.lelsvjlwneo.ilqnjlrnkk/current_level.get_data('StepCounter')"
++    ],
++    "ft09": [
++      "color_cycle from game.gqb/current_level.get_data('cwU')",
++      "cell_cycle_phases from live Hkx/NTi sprite center colors",
++      "step_counter_current_steps from game.lpw.dzy"
++    ],
++    "ka59": [
++      "step_counter_current_steps from game.urgssjskot.current_steps",
++      "step_counter_limit from game.urgssjskot.koyyeuyzyr/current_level.get_data('StepCounter')"
++    ]
++  },
++  "honest_verdict": "complete: hidden_field_state_gap_sharpened_no_bank_honest_null",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "missing_verifier_gaps": [
++    "ka59_l2_not_reproduced_after_hidden_key",
++    "ar25_l2_not_reproduced_after_hidden_key",
++    "ft09_l2_not_reproduced_after_hidden_key"
++  ],
++  "offline_reproduced": false,
++  "preconditions_checked": {
++    "AGENTS.md": true,
++    "CODEX.md": true,
++    "offline_arcade_import_smoke": true,
++    "spec_refs_present": true
++  },
++  "random_seed": 4559,
++  "registry_update": {
++    "path": "ops/arc_solve_registry.yaml",
++    "section": "latest_hidden_field_state_probe_4559",
++    "target_games": [
++      "ka59",
++      "ar25",
++      "ft09"
++    ],
++    "updated": true
++  },
++  "registry_updated": true,
++  "reproduced_levels": 0,
++  "reproducibility_checksum": "8560dd00ed0aecf13a15a2b49ce83bbeb366ae1233d01bfb12f3ea2aca24a45f",
++  "schema": "carnot.hidden_field_state_probe_4559.v1",
++  "schema_errors": [],
++  "spec_refs": [
++    "REQ-ARC-WMTE-4559",
++    "SCENARIO-ARC-WMTE-4559"
++  ],
++  "state_disambiguation_control": {
++    "passed": true,
++    "per_game": {
++      "ar25": {
++        "extended_state_key_disambiguated": true,
++        "grid_only_aliased": true,
++        "hidden_fields_left": {
++          "step_counter_current_steps": 64,
++          "step_counter_limit": 64,
++          "undo_stack_depth": 0
++        },
++        "hidden_fields_right": {
++          "step_counter_current_steps": 64,
++          "step_counter_limit": 64,
++          "undo_stack_depth": 1
++        }
++      },
++      "ft09": {
++        "extended_state_key_disambiguated": true,
++        "grid_only_aliased": true,
++        "hidden_fields_left": {
++          "animation_ticks": 0,
++          "cell_cycle_phases": [
++            [
++              "Hkx-test",
++              1,
++              2,
++              9,
++              0
++            ]
++          ],
++          "color_cycle": [
++            9,
++            8
++          ],
++          "step_counter_current_steps": 32,
++          "step_counter_limit": 32
++        },
++        "hidden_fields_right": {
++          "animation_ticks": 0,
++          "cell_cycle_phases": [
++            [
++              "Hkx-test",
++              1,
++              2,
++              9,
++              1
++            ]
++          ],
++          "color_cycle": [
++            8,
++            9
++          ],
++          "step_counter_current_steps": 32,
++          "step_counter_limit": 32
++        }
++      },
++      "ka59": {
++        "extended_state_key_disambiguated": true,
++        "grid_only_aliased": true,
++        "hidden_fields_left": {
++          "step_counter_current_steps": 100,
++          "step_counter_limit": 100
++        },
++        "hidden_fields_right": {
++          "step_counter_current_steps": 99,
++          "step_counter_limit": 100
++        }
++      }
++    }
++  },
++  "state_disambiguation_control_passed": true
++}
+diff --git a/tests/python/test_experiment_4559_hidden_field_state_probe.py b/tests/python/test_experiment_4559_hidden_field_state_probe.py
+new file mode 100644
+index 0000000000..94b5dbca0a
+--- /dev/null
++++ b/tests/python/test_experiment_4559_hidden_field_state_probe.py
+@@ -0,0 +1,323 @@
++"""Tests for Exp 4559 hidden-field state-key probe.
++
++Spec refs: REQ-ARC-WMTE-4559, SCENARIO-ARC-WMTE-4559.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from types import SimpleNamespace
++
++import numpy as np
++import yaml
++
++from carnot import experiment_4559_hidden_field_state_probe as exp4559
++from carnot.agentic import arc_game_adapters
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
++
++
++class FakeLevel:
++    def __init__(self, data: dict[str, object] | None = None):
++        self._data = data or {}
++
++    def get_data(self, name: str) -> object | None:
++        return self._data.get(name)
++
++
++def _frame() -> SimpleNamespace:
++    return SimpleNamespace(levels_completed=1, grid=np.zeros((4, 4), dtype=np.int16))
++
++
++def _sprite(
++    *,
++    x: int = 0,
++    y: int = 0,
++    name: str = "s",
++    tags: tuple[str, ...] = ("Hkx",),
++    color: int = 9,
++) -> SimpleNamespace:
++    return SimpleNamespace(
++        name=name,
++        tags=list(tags),
++        x=x,
++        y=y,
++        width=3,
++        height=3,
++        pixels=np.array([[0, 0, 0], [0, color, 0], [0, 0, 0]], dtype=np.int16),
++    )
++
++
++def _preconditions() -> dict[str, object]:
++    return {
++        "AGENTS.md": True,
++        "CODEX.md": True,
++        "offline_arcade_import_smoke": True,
++        "spec_refs_present": True,
++    }
++
++
++def test_req_arc_wmte_4559_spec_declares_hidden_field_contract() -> None:
++    """REQ-ARC-WMTE-4559: OpenSpec names the hidden-field state-key artifact."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for ref in exp4559.SPEC_REFS:
++        assert ref in spec
++    assert exp4559.RESULT_RELATIVE_PATH in spec
++    for field, principle in exp4559.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle in spec
++    for phrase in (
++        "ka59",
++        "StepCounter",
++        "ar25",
++        "undo-stack depth",
++        "ft09",
++        "color-cycle",
++        "state_disambiguation_control_passed=true",
++        "false_negative_risk_checked=true",
++    ):
++        assert phrase in spec
++
++
++def test_scenario_arc_wmte_4559_adapter_keys_split_grid_aliased_hidden_states() -> None:
++    """SCENARIO-ARC-WMTE-4559: adapter keys read live hidden registers."""
++
++    frame = _frame()
++    grid_key = exp4559.grid_only_state_key(frame)
++
++    ka59 = arc_game_adapters.get_adapter("ka59")
++    ka59_a = SimpleNamespace(
++        current_level=FakeLevel({"StepCounter": 100}),
++        urgssjskot=SimpleNamespace(current_steps=100, koyyeuyzyr=100),
++    )
++    ka59_b = SimpleNamespace(
++        current_level=FakeLevel({"StepCounter": 100}),
++        urgssjskot=SimpleNamespace(current_steps=99, koyyeuyzyr=100),
++    )
++    assert exp4559.grid_only_state_key(frame) == grid_key
++    assert ka59 is not None
++    assert ka59.state_key(ka59_a, frame) != ka59.state_key(ka59_b, frame)
++    assert exp4559.hidden_fields_from_game("ka59", ka59_b)["step_counter_current_steps"] == 99
++
++    ar25 = arc_game_adapters.get_adapter("ar25")
++    ar25_a = SimpleNamespace(
++        current_level=FakeLevel({"StepCounter": 64}),
++        lelsvjlwneo=SimpleNamespace(current_steps=64, ilqnjlrnkk=64),
++        flqblmrxsla=[],
++    )
++    ar25_b = SimpleNamespace(
++        current_level=FakeLevel({"StepCounter": 64}),
++        lelsvjlwneo=SimpleNamespace(current_steps=64, ilqnjlrnkk=64),
++        flqblmrxsla=[{"undo": 1}],
++    )
++    assert exp4559.grid_only_state_key(frame) == grid_key
++    assert ar25 is not None
++    assert ar25.state_key(ar25_a, frame) != ar25.state_key(ar25_b, frame)
++    assert exp4559.hidden_fields_from_game("ar25", ar25_b)["undo_stack_depth"] == 1
++
++    ft09 = arc_game_adapters.get_adapter("ft09")
++    ft09_a = SimpleNamespace(
++        current_level=FakeLevel({"cwU": [9, 8]}),
++        gqb=[9, 8],
++        fhc=[_sprite(x=1, y=2, color=9)],
++        mou=[],
++        lpw=SimpleNamespace(dzy=32, oro=32),
++        our=0,
++    )
++    ft09_b = SimpleNamespace(
++        current_level=FakeLevel({"cwU": [8, 9]}),
++        gqb=[8, 9],
++        fhc=[_sprite(x=1, y=2, color=9)],
++        mou=[],
++        lpw=SimpleNamespace(dzy=32, oro=32),
++        our=0,
++    )
++    assert exp4559.grid_only_state_key(frame) == grid_key
++    assert ft09 is not None
++    assert ft09.state_key(ft09_a, frame) != ft09.state_key(ft09_b, frame)
++    assert exp4559.hidden_fields_from_game("ft09", ft09_b)["color_cycle"] == (8, 9)
++
++
++def test_scenario_arc_wmte_4559_positive_control_passes_for_grid_only_alias() -> None:
++    """SCENARIO-ARC-WMTE-4559: positive control guards honest no-bank nulls."""
++
++    control = exp4559.build_state_disambiguation_control()
++
++    assert control["passed"] is True
++    assert set(control["per_game"]) == {"ka59", "ar25", "ft09"}
++    for row in control["per_game"].values():
++        assert row["grid_only_aliased"] is True
++        assert row["extended_state_key_disambiguated"] is True
++
++
++def test_req_arc_wmte_4559_helper_fallbacks_and_unreadable_control(monkeypatch) -> None:
++    """REQ-ARC-WMTE-4559: helper fallbacks expose unreadable-register controls."""
++
++    observation_frame = SimpleNamespace(levels_completed=3, observation=np.ones((2, 2), dtype=np.int16))
++    no_grid_frame = SimpleNamespace(levels_completed=4)
++
++    assert exp4559.grid_only_state_key(observation_frame)[0] == "grid"
++    assert exp4559.grid_only_state_key(no_grid_frame) == ("grid", None, 4)
++    assert exp4559._FakeLevel({"field": 7}).get_data("field") == 7
++    assert exp4559._new_l2_levels({"reproduced": False, "reached_level": 2}) == 0
++    assert exp4559._new_l2_levels({"reproduced": True, "reached_level": 1}) == 0
++    assert exp4559._new_l2_levels({"reproduced": True, "reached_level": 2}) == 1
++
++    original_get_adapter = arc_game_adapters.get_adapter
++
++    def missing_ka59(game: str):
++        if game == "ka59":
++            return None
++        return original_get_adapter(game)
++
++    monkeypatch.setattr(arc_game_adapters, "get_adapter", missing_ka59)
++    control = exp4559.build_state_disambiguation_control()
++
++    assert control["passed"] is False
++    assert control["per_game"]["ka59"]["extended_state_key_disambiguated"] is False
++
++
++def test_req_arc_wmte_4559_artifact_schema_requires_control_for_no_bank() -> None:
++    """REQ-ARC-WMTE-4559: no-bank artifacts require the disambiguation control."""
++
++    attempts = [
++        exp4559.DeepenAttempt(
++            game="ka59",
++            reached_level=1,
++            offline_reproduced=False,
++            reproduced_levels=0,
++            solution_labels=[],
++            reproduction_gate={"game": "ka59", "reached_level": 1, "reproduced": False},
++            residual="ka59_l2_not_reproduced_after_step_counter_key",
++        )
++    ]
++    artifact = exp4559.build_artifact(
++        preconditions_checked=_preconditions(),
++        attempts=attempts,
++        state_control=exp4559.build_state_disambiguation_control(),
++        registry_update={"updated": True, "path": exp4559.REGISTRY_RELATIVE_PATH},
++    )
++
++    assert artifact["honest_verdict"] == "complete: hidden_field_state_gap_sharpened_no_bank_honest_null"
++    assert artifact["offline_reproduced"] is False
++    assert artifact["reproduced_levels"] == 0
++    assert artifact["state_disambiguation_control_passed"] is True
++    assert artifact["false_negative_risk_checked"] is True
++    assert artifact["registry_updated"] is True
++    assert artifact["missing_verifier_gaps"]
++    assert artifact["schema_errors"] == []
++    assert exp4559.artifact_schema_errors(artifact) == []
++
++    unchecked = dict(artifact)
++    unchecked["state_disambiguation_control_passed"] = False
++    unchecked["false_negative_risk_checked"] = False
++    assert "no-bank null requires positive control" in exp4559.artifact_schema_errors(unchecked)
++
++    bad_checksum = dict(artifact)
++    bad_checksum["reproducibility_checksum"] = "bad"
++    assert "checksum mismatch" in exp4559.artifact_schema_errors(bad_checksum)
++
++
++def test_req_arc_wmte_4559_success_artifact_and_schema_error_branches() -> None:
++    """REQ-ARC-WMTE-4559: success and malformed schemas are rejected explicitly."""
++
++    attempt = exp4559.DeepenAttempt(
++        game="ar25",
++        reached_level=2,
++        offline_reproduced=True,
++        reproduced_levels=1,
++        solution_labels=["3", "2"],
++        reproduction_gate={"game": "ar25", "reached_level": 2, "reproduced": True},
++        residual=None,
++    )
++    artifact = exp4559.build_artifact(
++        preconditions_checked=_preconditions(),
++        attempts=[attempt],
++        state_control=exp4559.build_state_disambiguation_control(),
++        registry_update={"updated": True, "path": exp4559.REGISTRY_RELATIVE_PATH},
++    )
++
++    assert artifact["honest_verdict"] == "success: hidden_field_state_ar25_L2_offline_reproduced"
++    assert artifact["offline_reproduced"] is True
++    assert artifact["reproduced_levels"] == 1
++    assert artifact["missing_verifier_gaps"] == []
++    assert artifact["schema_errors"] == []
++
++    mutations = [
++        (lambda item: item.pop("honest_verdict"), "missing required field: honest_verdict"),
++        (lambda item: item.__setitem__("experiment", "wrong"), "experiment mismatch"),
++        (lambda item: item.__setitem__("schema", "wrong"), "schema mismatch"),
++        (lambda item: item.__setitem__("spec_refs", []), "spec_refs mismatch"),
++        (lambda item: item.__setitem__("field_principles", {}), "field_principles mismatch"),
++        (lambda item: item.__setitem__("inference_substrate", "live_llm_inference"), "inference_substrate mismatch"),
++        (lambda item: item.__setitem__("hidden_fields_added", {}), "hidden_fields_added mismatch"),
++        (lambda item: item.__setitem__("random_seed", -1), "random_seed mismatch"),
++        (lambda item: item.__setitem__("registry_updated", False), "registry_updated must be true"),
++        (lambda item: item.__setitem__("honest_verdict", "bad"), "honest_verdict must start"),
++    ]
++    for mutate, expected in mutations:
++        changed = dict(artifact)
++        mutate(changed)
++        assert any(expected in error for error in exp4559.artifact_schema_errors(changed))
++
++    false_success = dict(artifact)
++    false_success["offline_reproduced"] = False
++    assert "success artifact requires offline L2 reproduction" in exp4559.artifact_schema_errors(false_success)
++
++
++def test_scenario_arc_wmte_4559_run_experiment_writes_json_and_registry(tmp_path: Path) -> None:
++    """SCENARIO-ARC-WMTE-4559: runner persists no-bank evidence and registry findings."""
++
++    (tmp_path / "ops").mkdir()
++    (tmp_path / "results").mkdir()
++    (tmp_path / "openspec" / "capabilities" / "arc-world-model-trust-energy").mkdir(parents=True)
++    (tmp_path / exp4559.SPEC_RELATIVE_PATH).write_text(
++        "\n".join(exp4559.SPEC_REFS),
++        encoding="utf-8",
++    )
++    (tmp_path / exp4559.REGISTRY_RELATIVE_PATH).write_text(
++        "schema_version: 1\ngames: []\n",
++        encoding="utf-8",
++    )
++
++    def fake_attempt(game: str, _target_level: int, _depth_cap: int) -> exp4559.DeepenAttempt:
++        return exp4559.DeepenAttempt(
++            game=game,
++            reached_level=1,
++            offline_reproduced=False,
++            reproduced_levels=0,
++            solution_labels=[],
++            reproduction_gate={"game": game, "reached_level": 1, "reproduced": False},
++            residual=f"{game}_l2_not_reproduced_after_hidden_key",
++        )
++
++    artifact = exp4559.run_experiment(
++        root=tmp_path,
++        precondition_checker=lambda: True,
++        attempt_runner=fake_attempt,
++        instructions_checked={"AGENTS.md": True, "CODEX.md": True},
++    )
++
++    written = json.loads((tmp_path / exp4559.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++    registry = yaml.safe_load((tmp_path / exp4559.REGISTRY_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert artifact == written
++    assert written["registry_updated"] is True
++    assert written["missing_verifier_gaps"] == [
++        "ka59_l2_not_reproduced_after_hidden_key",
++        "ar25_l2_not_reproduced_after_hidden_key",
++        "ft09_l2_not_reproduced_after_hidden_key",
++    ]
++    assert registry["latest_hidden_field_state_probe_4559"]["artifact"] == exp4559.RESULT_RELATIVE_PATH
++
++    rewritten_text, update = exp4559.apply_registry_probe(
++        (tmp_path / exp4559.REGISTRY_RELATIVE_PATH).read_text(encoding="utf-8"),
++        artifact=artifact,
++    )
++    assert update["updated"] is False
++    assert rewritten_text.count("latest_hidden_field_state_probe_4559:") == 1
+-- 
+2.55.0
+

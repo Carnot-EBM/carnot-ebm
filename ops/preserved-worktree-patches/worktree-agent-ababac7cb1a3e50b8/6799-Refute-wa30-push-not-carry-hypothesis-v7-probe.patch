@@ -1,0 +1,71 @@
+From 3847c2740ab983a83dc3d4a9dfd379ea69f5929b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 11 Jul 2026 11:07:48 -0400
+Subject: [PATCH 06799/11362] Refute wa30 push-not-carry hypothesis (v7 probe)
+
+Walking the player directly into an untouched block only produces a
+contact highlight -- no displacement, no push, timer still ticks for
+the blocked move. This closes the third and last follow-up hypothesis
+from v5's route-computation bound (multi-carry and ACTION6/diagonal
+were already refuted in v6). The 80-move optimistic lower bound vs.
+the 64-cell L2 timer is now confirmed under every interaction
+mechanic tested across 7 attempts; only an untested turn-vs-move cost
+split remains as a theoretical way the bound could still be loose.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/arc_solve_registry.yaml                    | 15 +++++++++++++++
+ results/outer_loop_gpt56sol_wa30_probe_v7.json | 14 ++++++++++++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 results/outer_loop_gpt56sol_wa30_probe_v7.json
+
+diff --git a/ops/arc_solve_registry.yaml b/ops/arc_solve_registry.yaml
+index 922731e7d7..3995bc37a7 100644
+--- a/ops/arc_solve_registry.yaml
++++ b/ops/arc_solve_registry.yaml
+@@ -860,6 +860,21 @@ games:
+     unexplored: a push-not-carry interaction, or a genuinely different
+     turn-vs-move cost split (e.g. reorienting costing 0 vs 1 timer cell
+     independent of translating) -- neither tested yet.'
++  - 'v7 (results/outer_loop_gpt56sol_wa30_probe_v7.json): tested the remaining
++    push-not-carry hypothesis directly -- walked the player into an untouched,
++    not-yet-picked-up block''s cell without a prior ACTION5. The block only
++    contact-highlighted (outline color 4 -> 5) in place; neither player nor block
++    entered a new lattice cell, and the timer still ticked (60 -> 59) for the
++    blocked move. REFUTED: wa30 has no push mechanic, only explicit
++    carry-via-ACTION5. Combined with v6, all three follow-up hypotheses
++    (multi-carry, ACTION6/diagonal, push) are now empirically refuted -- the
++    80-move optimistic lower bound vs. the 64-cell L2 timer is confirmed under
++    every interaction mechanic tested. The ONLY remaining untested hypothesis is
++    a turn-vs-move cost split (does reorienting the player without translating
++    cost a separate timer tick from the translate itself, or could a route be
++    restructured to avoid redundant re-orientations the current 80-move Manhattan
++    model implicitly charges for). Absent that, wa30 L2 should be treated as a
++    confirmed dead end for this project''s live-agent mechanics.'
+ - game: s5i5
+   reproducibility: reproduced
+   levels_reproduced: 2
+diff --git a/results/outer_loop_gpt56sol_wa30_probe_v7.json b/results/outer_loop_gpt56sol_wa30_probe_v7.json
+new file mode 100644
+index 0000000000..3fc90fb718
+--- /dev/null
++++ b/results/outer_loop_gpt56sol_wa30_probe_v7.json
+@@ -0,0 +1,14 @@
++{
++  "game": "wa30",
++  "starting_level": 1,
++  "max_level_reached": 1,
++  "total_env_steps_used": 71,
++  "reproduction_verified": false,
++  "action_sequence": [],
++  "push_confirmed": false,
++  "push_chain_confirmed": null,
++  "push_direct_placement_confirmed": null,
++  "revised_min_cost_route_length": null,
++  "narrative": "I replayed the known 33-action level-1 prefix and inspected the returned level-2 rendered frame, then replayed the prefix in a fresh environment for the live push probe. Four ordinary movement actions brought the player to (9,8), directly below the untouched outlined block at (9,7); on the very next ACTION4 movement attempt toward that block, the player remained at (9,8), the block remained at (9,7), and the orange timer decreased from 60 to 59. The block outline changed from color 4 to contact-highlight color 5 in place, but neither the player nor block entered a new lattice cell, so walking into an untouched block does not push it. Push chaining and push-only placement are therefore inapplicable, and the confirmed 80-movement optimistic carry-model bound still exceeds the 64-cell timer; only a turn-versus-move cost split remains genuinely untested.",
++  "solve_provenance": "live_agent_self_discovery"
++}
+-- 
+2.55.0
+

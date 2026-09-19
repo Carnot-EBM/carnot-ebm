@@ -1,0 +1,1035 @@
+From 8dd282bf3884e2b28f3024a1fab75990b70ea1bb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 18:18:43 -0400
+Subject: [PATCH 08544/11362] arc: witness silent
+ candidate-router/frame-change-scorer degradation (Gaps finding 3)
+
+REQ-ARC-WMTE-6230, 2026-08-08 adversarial live-agent review. Both loaders degraded
+to None through bare `except Exception` with no counter, no stderr line, and no
+witness field, even though SUBMITTED_AGENT_CONFIG declares both components
+enabled -- so a row could carry llm_on_row_valid: true while running fully
+UNROUTED or with the action-effect prior silently inert.
+
+Both loaders now populate a per-call diagnostic dict on a thread-local side
+channel (`_component_load_diagnostics`, one slot per thread -- the scored swarm
+runs one thread per game, so a plain module-level dict would let concurrently-
+constructing games' diagnostics cross-contaminate) and print one greppable line
+on every fallback or failure. E3AgentPolicy.__init__ reads its own thread's slot
+immediately after each call; generator_liveness_witness() surfaces both
+diagnostics unconditionally.
+
+Neither loader's return type changed (still bare Any | None). A first attempt
+changed both to return tuple[Any | None, dict]; a repo-wide grep found 10+ other
+callers -- experiments, tests, and the production module
+arc_reactive_verifier_filter.py -- depending on the old bare shape, so that
+attempt was reverted in favour of this side channel.
+
+Tests: tests/python/test_arc_component_load_diagnostics_20260808.py (19 tests),
+including a thread-local isolation class. Regression sweep: the new file plus
+this session's other Gaps-fix test files (57 tests), the competition-agent
+adapter/gateway/liveness-lint/reactive-verifier-filter suites (71 tests), the
+two other generator_liveness_witness-dependent suites (45 tests), and all 47
+test files constructing E3AgentPolicy (424 tests, 5 pre-existing failures
+confirmed via git-stash to reproduce identically against clean HEAD -- 2 already
+filed, 3 newly discovered and filed in this commit) -- all green modulo those
+pre-existing, unrelated failures.
+
+Freshness-lint: 11 artifacts + one second-order cascade (an artifact citing two
+of those 11 by content hash) acknowledged as verified-inert -- new code is
+confined to E3AgentPolicy construction/introspection paths none of those
+artifacts' scripts reach.
+
+Deleted three ops/.test_suite_mutation_runs/*.pending.json markers (gitignored
+local state) armed by the conductor's own concurrent pytest runs of
+test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py /
+test_arc_object_relative_trajectory_transfer.py / test_arc_trajectory_transfer_cascade.py
+(run_ids ppid-2369089/2369596/2360518, all with observed_writes: None). Those
+markers flagged this commit's own files purely on a time-window overlap; per
+CLAUDE.md's Test-Run Record Integrity Discipline this is the sanctioned response
+(explain + delete the marker) rather than a blanket git checkout, since none of
+this commit's changes were caused by running those three unrelated test files.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md      | 174 +++++++++++
+ ops/known-issues.md                           |  34 +++
+ .../carnot/agentic/arc_competition_agent.py   | 135 +++++++-
+ ...rc_gateway_card_ground_truth_20260727.json |   8 +
+ ..._per_level_reset_attribution_20260726.json |   8 +
+ ...6011_world_model_change_gate_four_arm.json |   8 +
+ ...ent_6012_hidden_state_trust_gate_hole.json |   8 +
+ ...6013_hidden_state_change_gate_closure.json |   8 +
+ ...p_arc_early_stop_grace_sweep_20260726.json |   8 +
+ ..._win_llm_on_eval_concurrency_20260727.json |   8 +
+ ...arc_gateway_accurate_rescore_20260726.json |  16 +
+ ...ter_loop_arc_gateway_rescore_20260726.json |   8 +
+ ...rc_generator_concurrency_fix_20260727.json |   8 +
+ ...rc_llm_on_wallclock_envelope_20260726.json |   8 +
+ ...arc_reset_charge_attribution_20260726.json |   8 +
+ ...arc_component_load_diagnostics_20260808.py | 289 ++++++++++++++++++
+ 16 files changed, 727 insertions(+), 9 deletions(-)
+ create mode 100644 tests/python/test_arc_component_load_diagnostics_20260808.py
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index cf2d5baaad..14c48c5aef 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22558,6 +22558,106 @@ direct result.
+ |---|---|---|
+ | REQ-ARC-WMTE-TRAJ-TRANSFER-1 | `python/carnot/agentic/arc_solver_kit.py:object_relative_trajectory_transfer`; `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._begin_level_goal_episode`/`_induce_and_plan`. | `tests/python/test_arc_object_relative_trajectory_transfer.py`, `tests/python/test_arc_trajectory_transfer_cascade.py`. |
+ 
++### REQ-ARC-WMTE-6215: Object-Relative Trajectory Transfer A/B
++
++Experiment 6215 SHALL measure the default-off object-relative trajectory
++transfer stage from REQ-ARC-WMTE-TRAJ-TRANSFER-1. It SHALL compare matched
++disabled and enabled arms through the canonical live agent path
++`make_carnot_agent -> E3AgentPolicy -> _induce_and_plan`. It SHALL measure only
++within-game level-to-level transfer. It SHALL NOT use another game's trace,
++game source, offline BFS, adapters, hidden state, or registry trajectories as a
++live input.
++
++Before any arm runs, the experiment SHALL hash `ops/arc_solve_registry.yaml`,
++verify that the selected public fixtures are already full-game cleared, and
++freeze the game, seed, level-boundary, and minimum transfer-opportunity matrix.
++It SHALL also freeze the primary avoided-induction metric, the quality guard,
++and the safety gate.
++
++The experiment SHALL build each cell from agent-visible prior and current
++opening observations plus the prior level's agent-visible action trace. The
++treatment SHALL match same-game objects and centroid displacement only from
++those observations. It SHALL run the transfer before the expensive LLM
++reinduction tier. The control SHALL keep the transfer flag disabled and SHALL
++otherwise hold the fallback world-model inducer, sampling, observations, and
++action budget fixed.
++
++The fallback inducer for both arms SHALL be the Exp6212-qualified
++`unsloth/gemma-4-31B-it-GGUF` Q4_K_M runtime. The artifact SHALL record the
++model file, hash, quantization, llama.cpp build, CUDA layer receipt, process
++identity, and first-token receipt. Legacy models SHALL contribute zero rows.
++
++The experiment SHALL persist every match, displacement, verifier decision,
++transfer action, fallback call, and process receipt before aggregation. It
++SHALL report treatment fire, verifier accept/reject counts, centroid
++displacement validity, avoided LLM induction calls, actions, score, wall time,
++paired clustered intervals, and per-game harmful regressions. A treatment that
++does not fire on the predeclared opportunity floor SHALL be an instrument
++failure, not a null.
++
++Experiment 6215 SHALL write
++`results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json` with
++bare top-level fields for `status`,
++`registry_precheck_and_hash_before_after`,
++`preregistered_game_seed_level_boundary_matrix`, `model_specs`,
++`canonical_live_entrypoint_receipts`, `matched_arm_configuration`,
++`within_game_only_receipt`, `treatment_fire_and_reason_counts`,
++`verifier_accept_reject_counts`, `centroid_displacement_validity`,
++`avoided_llm_induction_calls`,
++`engine_fidelity_score_actions_and_wall_time_by_arm_game`,
++`paired_clustered_intervals`, `harmful_regression_count_and_games`,
++`aa_control`,
++`prior_game_cross_game_source_bfs_adapter_registry_hidden_state_access_counts`,
++`solve_claimed`, `level_credit_delta`, `registry_update_count`,
++`ab_complete_score`, `trajectory_transfer_promotion_ready_score`,
++`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
++`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
++`duration_s`, `reproducibility_checksum`, and `honest_verdict`.
++
++The fields `solve_claimed` and `verifier_is_oracle` SHALL be false. The fields
++`level_credit_delta`, `registry_update_count`, and each forbidden-access count
++SHALL be bare `0`. The artifact SHALL NOT include `solve_provenance`, because
++no solve is claimed.
++
++#### SCENARIO-ARC-WMTE-6215-REGISTRY-PRECHECK
++
++**Given** the ARC solve registry and the proposed level-boundary matrix
++**When** Experiment 6215 builds its preregistration
++**Then** the registry hash is recorded before arm execution
++**And** selected games are already full-game cleared
++**And** the same registry hash is recorded after aggregation.
++
++#### SCENARIO-ARC-WMTE-6215-WITHIN-GAME-ONLY
++
++**Given** a frozen game, seed, and level boundary
++**When** the disabled and enabled arms run
++**Then** the prior trace and current observation come from the same game cell
++**And** all cross-game, source, BFS, adapter, registry-trajectory, and
++hidden-state access counts are bare `0`.
++
++#### SCENARIO-ARC-WMTE-6215-CANONICAL-LIVE-AGENT
++
++**Given** a transfer opportunity
++**When** the enabled arm reaches level-up reinduction
++**Then** `E3AgentPolicy._induce_and_plan` tries the transfer stage before the
++LLM fallback
++**And** a confident transfer avoids one fallback induction call.
++
++#### SCENARIO-ARC-WMTE-6215-ARTIFACT-GUARDS
++
++**Given** the completed artifact
++**When** it is validated
++**Then** all required fields are present
++**And** solve, credit, registry-update, oracle, and forbidden-access fields are
++false or bare `0`
++**And** `solve_provenance` is absent.
++
++## Implementation Status (REQ-ARC-WMTE-6215)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6215 | `python/carnot/experiment_6215_arc_object_relative_trajectory_transfer_ab.py`. | `tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py`. |
++
+ ### REQ-ARC-WMTE-6180-WIRING: Budget-Exhaustion Meter Wired Into `StepwiseExplorer`
+ 
+ **Origin:** 2026-08-07 operator directive (lever #5 of the ARC six-lever push, `ops/known-issues.md`).
+@@ -23090,3 +23190,77 @@ untouched).
+ | REQ | Implementation | Tests |
+ |---|---|---|
+ | REQ-ARC-WMTE-6229 | `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._should_enter_induction` (`"renewed_stall_reinduction"` branch), `_bounded_reinduction_enabled`/`_REINDUCTION_TRANSITION_THRESHOLD`/`_REINDUCTION_MAX_ATTEMPTS`, `generator_liveness_witness` diagnostic fields. | `tests/python/test_arc_bounded_reinduction_20260808.py`. |
++
++### REQ-ARC-WMTE-6230: Component Load Failures SHALL Be Witnessed, Not Swallowed Silently
++
++**Origin:** 2026-08-08 adversarial review, Gaps finding 3. `_load_submitted_candidate_router`
++and `_load_submitted_frame_change_scorer` degrade to `None` through bare `except Exception`
++fallbacks with no counter, no stderr line, and no witness field, even though
++`SUBMITTED_AGENT_CONFIG` declares both components enabled. A row could therefore carry
++`llm_on_row_valid: true` while the agent runs fully UNROUTED (no candidate router at all) or
++with the action-effect prior silently inert (`action_effect_expansion_prior` is gated on
++`frame_change_scorer is not None`), and nothing in the artifact would show it.
++
++**The fix.** Both loaders now populate a per-call diagnostic dict (`sge_attempted`/
++`sge_loaded`/`sge_error`/`discriminative_loaded`/`discriminative_error`/`loaded` for the
++router; `enabled`/`loaded`/`error` for the scorer) on a **thread-local** side channel
++(`_component_load_diagnostics = threading.local()`), and print one greppable line
++(`"CANDIDATE ROUTER LOAD FALLBACK ..."` / `"CANDIDATE ROUTER LOAD FAILED ..."` /
++`"FRAME-CHANGE SCORER LOAD FAILED ..."`) on every fallback or failure. `E3AgentPolicy.__init__`
++reads its own thread's slot immediately after calling each loader -- same thread, so no lock is
++needed -- and stores the result as `self._candidate_router_load_diagnostics` /
++`self._frame_change_scorer_load_diagnostics`. When a caller supplies a router/scorer directly
++(bypassing the loader), `__init__` records an honest `{"loaded": bool, "caller_supplied": True}`
++instead of stale loader data. `generator_liveness_witness()` surfaces both diagnostics
++unconditionally as `candidate_router_loaded`/`candidate_router_load_diagnostics`/
++`frame_change_scorer_loaded`/`frame_change_scorer_load_diagnostics`, on both the
++`proposer is None` early-return path and the normal path.
++
++**Why a thread-local, not a plain module-level dict.** The scored swarm runs one thread per
++game (`scripts/kaggle/submission_kernel/main.py`). A bare global dict would let two
++concurrently-constructing games' diagnostics interleave, so one game's artifact could report
++the OTHER game's load outcome. `threading.local()` gives each thread its own attribute
++namespace, closing that race by construction rather than by convention.
++
++**Why the loaders' return type is unchanged.** A first attempt at this fix changed both
++loaders to return `tuple[Any | None, dict]` so `__init__` could read diagnostics directly off
++the return value. Before committing, a repo-wide grep found 10+ other callers -- several
++experiments, several tests, and the production module
++`python/carnot/agentic/arc_reactive_verifier_filter.py` -- that all depend on the existing
++bare `Any | None` shape. That attempt was reverted (`git checkout --`) in favour of the
++thread-local side channel implemented here, which adds the diagnostic without changing what
++either function returns to any existing caller.
++
++**Tests.** `tests/python/test_arc_component_load_diagnostics_20260808.py` (19 tests): the
++candidate-router loader's default/SGE-fallback/total-failure paths report the correct
++diagnostic shape and print the correct greppable line (or no line, on the clean default path);
++the frame-change-scorer loader's disabled/loader-returns-None/loader-raises/success paths do
++the same; `E3AgentPolicy.__init__` populates both diagnostics correctly on the default
++loader-driven path AND on the caller-supplied-override path (including an explicit `None`
++override); `generator_liveness_witness()` surfaces both diagnostics correctly on both the
++`proposer is None` early-return path and the normal path, and reflects a degraded router as
++`candidate_router_loaded: False`; both loaders are confirmed to still return a bare object or
++`None`, never a tuple (the regression guard for the reverted first attempt); and a thread-local
++isolation class confirms `_component_load_diagnostics` is a genuine `threading.local()`
++instance and that two threads racing through the candidate-router loader with different
++per-thread outcomes (driven by the `game_id` argument alone, no shared mutable global
++monkeypatched from inside a thread) do not cross-contaminate each other's diagnostic. Plus a
++regression sweep: the full `test_arc_component_load_diagnostics_20260808.py` +
++`test_arc_bounded_reinduction_20260808.py` + `test_arc_kaggle_kernel_gaps_20260808.py` +
++frontier/token-count suites from the earlier Gaps fixes (57 tests), the competition-agent
++adapter/gateway/liveness-lint/reactive-verifier-filter suites (71 tests), and the two other
++`generator_liveness_witness`-dependent suites (`test_arc_gate_diagnostics_mask_witness.py` +
++`test_arc_scored_path_liveness_witness.py`, 45 tests) all still green. A broader sweep of all
++47 test files that construct `E3AgentPolicy` (424 tests) showed 5 pre-existing failures,
++confirmed via `git stash` to reproduce identically against clean HEAD before this change (2 in
++`test_arc_submitted_agent_parity.py` already filed in `ops/known-issues.md`; 3 more --
++`test_experiment_4605_live_integration_scored_agent.py`,
++`test_experiment_4821_structural_energy_s3_generation_lift.py`,
++`test_experiment_5727_arc_generalization_live_oracle_gap_v511.py` -- newly discovered by this
++sweep, unrelated to this change, not yet filed).
++
++## Implementation Status (REQ-ARC-WMTE-6230)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-ARC-WMTE-6230 | `python/carnot/agentic/arc_competition_agent.py:_load_submitted_candidate_router`/`_load_submitted_frame_change_scorer` (`_component_load_diagnostics` thread-local), `E3AgentPolicy.__init__` diagnostic wiring, `generator_liveness_witness` diagnostic fields. | `tests/python/test_arc_component_load_diagnostics_20260808.py`. |
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 812d2d82a4..9cae545b9c 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -108,6 +108,40 @@ individually re-classified with a specific root cause and either fixed or the te
+ updated with a dated correction note (matching this project's own established pattern) explaining
+ why the old assertion no longer holds.
+ 
++**ADDENDUM 2026-08-08 (FOUND DURING REQ-ARC-WMTE-6230's REGRESSION SWEEP — 3 more, pre-existing,
++unrelated, NOT fixed).** The Gaps finding 3 fix (component-load diagnostics) ran a sweep across
++all 47 test files that construct `E3AgentPolicy` (424 tests). 5 failed; 2 are the
++`test_arc_submitted_agent_parity.py` pair already covered above. The other 3 are NEW, confirmed
++via `git stash` (re-running against clean HEAD with this fix's edits stashed out) to reproduce
++identically without any of today's changes present:
++
++4. **`tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py::test_req_arc_wmte_5727_e3_proposer_port_env_override`
++   — same qat root cause as finding 3.** Asserts `proposer.repo_substr == "gemma-4-31B-it"`; gets
++   `"gemma-4-31B-it-qat"`. Almost certainly the same stale-assertion-against-the-2026-07-31-qat-
++   switch as finding 3 above, in a different test file. Scope item (c) above should sweep for
++   this exact assertion pattern repo-wide rather than fixing finding 3 and 4 as two unrelated
++   one-offs.
++5. **`tests/python/test_experiment_4605_live_integration_scored_agent.py::test_req_capstone_4605_submitted_policy_wires_safe_live_stack`
++   — a DIFFERENT root cause.** Injects a stub `CrossGameDiscriminativeCandidateRouter` via
++   `monkeypatch.setattr(comp.arc_discriminative_router, "load_cross_game_discriminative_router",
++   ...)` and asserts `policy.explorer.candidate_router is stub_router`; gets an
++   `OnlineClickTargetRouter` instead. Reads like the live candidate-router loader's SGE/
++   discriminative precedence (`_load_submitted_candidate_router`, see REQ-ARC-WMTE-6230 above)
++   no longer routes through `load_cross_game_discriminative_router` at all on this path — worth
++   checking whether that loader was superseded by the online-click-target router and this test
++   is stale, or whether a real routing regression dropped a call site. Not investigated further.
++6. **`tests/python/test_experiment_4821_structural_energy_s3_generation_lift.py::test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan`
++   — `IndexError: list index out of range` on `captured[-1]`.** The test monkeypatches
++   `plan_in_model` to append its kwargs to `captured` and calls `policy._induce_and_plan()`
++   directly with a hand-built `_FakeProposer`/`_FakeVerifier`/`transitions`/`root_grid`; `plan_in_
++   model` is apparently never called at all (list stays empty), so `_induce_and_plan` exits via
++   some other branch before reaching planning. Not investigated further — worth checking whether
++   a recent change to `_induce_and_plan`'s early-exit conditions (trust gate, stall check, etc.)
++   now trips before this hand-built fixture reaches the plan call.
++
++**Falsifiable gate (addendum).** Same shape as above: ends when all 3 pass again, or each is
++individually re-classified and fixed or corrected with a dated note.
++
+ ### NEW 2026-08-07 (OPERATOR DIRECTIVE — ARC six-lever push; amends the 2026-08-03 one-slot ruling)
+ 
+ The operator, responding to the outer-loop's six-lever ARC strategy synthesis, directed
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 29f0266e46..9cca8b6067 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -24,6 +24,7 @@ from __future__ import annotations
+ 
+ import importlib.util
+ import json
++import threading
+ from pathlib import Path
+ from typing import Any, Mapping, Optional, Sequence
+ 
+@@ -1104,38 +1105,117 @@ def _sge_candidate_router_requested() -> bool:
+     )
+ 
+ 
++# 2026-08-08 adversarial review, Gaps finding 3: both loaders below used to degrade to
++# None through bare `except Exception` with no counter, no stderr line, and no witness
++# field, even though SUBMITTED_AGENT_CONFIG declares both components enabled. A THREAD
++# LOCAL, not a plain module-level dict: the scored swarm runs one thread per game (see
++# scripts/kaggle/submission_kernel/main.py), and a bare global would let two games'
++# construction interleave and read back each other's diagnostics. `__init__` reads its
++# own thread's slot immediately after calling the loader on the SAME thread, so this is
++# race-free without a lock. The loaders' return type is untouched (still `Any | None`)
++# because 10+ other callers -- experiments, tests, and the production
++# arc_reactive_verifier_filter.py -- depend on that bare shape; this is a side channel,
++# not a signature change.
++_component_load_diagnostics = threading.local()
++
++
+ def _load_submitted_candidate_router(game_id: str = "unknown_game") -> Any | None:
+     """Load the live candidate router. Default: the Exp5904/5927 online click wrapper,
+     default-off around the Exp4545 v3 discriminative router. REQ-ARC-FCP-5699-11: when
+     SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED (or CARNOT_ARC_SGE_CANDIDATE_ROUTER=1, for
+     measurement runs), tries the SGE router first, falling through to the discriminative
+     router (never None-ing out the live path) if SGE construction fails for any reason --
+-    default False, so behavior is unchanged unless explicitly opted in."""
+-
++    default False, so behavior is unchanged unless explicitly opted in.
++
++    REQ-ARC-WMTE-6230 (2026-08-08, Gaps finding 3): sets
++    `_component_load_diagnostics.candidate_router` before returning, and prints one
++    greppable line ("CANDIDATE ROUTER LOAD ...") on a fallback or a total failure, so a
++    silent None no longer looks identical to "not requested"."""
++
++    diag: dict[str, Any] = {
++        "sge_attempted": False,
++        "sge_loaded": False,
++        "sge_error": None,
++        "discriminative_loaded": False,
++        "discriminative_error": None,
++        "loaded": False,
++    }
+     if _sge_candidate_router_requested():
++        diag["sge_attempted"] = True
+         try:
+             sge_router = _load_sge_candidate_router(game_id)
+             if sge_router is not None:
++                diag["sge_loaded"] = True
++                diag["loaded"] = True
++                _component_load_diagnostics.candidate_router = diag
+                 return sge_router
+-        except Exception:
+-            pass
++        except Exception as exc:
++            diag["sge_error"] = repr(exc)[:200]
++            print(
++                f"CANDIDATE ROUTER LOAD FALLBACK (game={game_id}): SGE router failed "
++                f"({diag['sge_error']}), trying the discriminative router.",
++                flush=True,
++            )
+     try:
+-        return arc_discriminative_router.load_online_click_target_router(root=REPO)
+-    except Exception:
+-        return None
++        router = arc_discriminative_router.load_online_click_target_router(root=REPO)
++        if router is not None:
++            diag["discriminative_loaded"] = True
++            diag["loaded"] = True
++            _component_load_diagnostics.candidate_router = diag
++            return router
++    except Exception as exc:
++        diag["discriminative_error"] = repr(exc)[:200]
++    print(
++        f"CANDIDATE ROUTER LOAD FAILED (game={game_id}): no router installed, agent runs "
++        f"UNROUTED. sge_error={diag['sge_error']!r} "
++        f"discriminative_error={diag['discriminative_error']!r}",
++        flush=True,
++    )
++    _component_load_diagnostics.candidate_router = diag
++    return None
+ 
+ 
+ def _load_submitted_frame_change_scorer() -> Any | None:
+-    """REQ-ARC-FCP-4629/5373: load the validated live action-effect scorer."""
++    """REQ-ARC-FCP-4629/5373: load the validated live action-effect scorer.
+ 
++    REQ-ARC-WMTE-6230 (2026-08-08, Gaps finding 3): sets
++    `_component_load_diagnostics.frame_change_scorer` before returning, and prints one
++    greppable line ("FRAME-CHANGE SCORER LOAD FAILED ...") whenever the tier is enabled
++    but degrades to None, so the action-effect prior's silent downstream disablement
++    (`action_effect_expansion_prior` gated on `frame_change_scorer is not None`) is no
++    longer unwitnessed."""
++
++    diag: dict[str, Any] = {"enabled": bool(SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED)}
+     if not SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED:
++        diag["loaded"] = False
++        diag["error"] = None
++        _component_load_diagnostics.frame_change_scorer = diag
+         return None
+     try:
+         scorer = load_live_action_effect_scorer(root=REPO)
+         if scorer is None:
++            diag["loaded"] = False
++            diag["error"] = None
++            print(
++                "FRAME-CHANGE SCORER LOAD FAILED: load_live_action_effect_scorer "
++                "returned None -- action-effect prior degrades to inert.",
++                flush=True,
++            )
++            _component_load_diagnostics.frame_change_scorer = diag
+             return None
++        diag["loaded"] = True
++        diag["error"] = None
++        _component_load_diagnostics.frame_change_scorer = diag
+         return GroundTruthValidatedFrameChangeScorer(scorer)
+-    except Exception:
++    except Exception as exc:
++        diag["loaded"] = False
++        diag["error"] = repr(exc)[:200]
++        print(
++            f"FRAME-CHANGE SCORER LOAD FAILED: {diag['error']} -- action-effect prior "
++            "degrades to inert.",
++            flush=True,
++        )
++        _component_load_diagnostics.frame_change_scorer = diag
+         return None
+ 
+ 
+@@ -4883,10 +4963,32 @@ class E3AgentPolicy:
+             min(1.0, float(program_synthesis_filter_trust_threshold)),
+         )
+         initial_program_filter = coerce_program_synthesis_filter(program_synthesis_filter)
++        # REQ-ARC-WMTE-6230 (2026-08-08, Gaps finding 3): read back the loader's own
++        # thread-local diagnostics IMMEDIATELY after calling it, on the same thread that
++        # made the call -- see the thread-local's docstring for why a plain module-level
++        # dict would race under the scored swarm's one-thread-per-game concurrency. The
++        # explicit-override branches (a caller passed a real router/scorer directly, so
++        # the loader never ran) get an honest degenerate diagnostic instead of stale data.
+         if candidate_router is _DEFAULT_CANDIDATE_ROUTER:
+             candidate_router = _load_submitted_candidate_router(game_id=self.short)
++            self._candidate_router_load_diagnostics = dict(
++                getattr(_component_load_diagnostics, "candidate_router", {"loaded": False})
++            )
++        else:
++            self._candidate_router_load_diagnostics = {
++                "loaded": candidate_router is not None,
++                "caller_supplied": True,
++            }
+         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
+             frame_change_scorer = _load_submitted_frame_change_scorer()
++            self._frame_change_scorer_load_diagnostics = dict(
++                getattr(_component_load_diagnostics, "frame_change_scorer", {"loaded": False})
++            )
++        else:
++            self._frame_change_scorer_load_diagnostics = {
++                "loaded": frame_change_scorer is not None,
++                "caller_supplied": True,
++            }
+         if action_prior is None and SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED:
+             action_prior = ColorBlobSaliencePrior()
+         action_prior = coerce_object_history_salience_prior(
+@@ -7414,6 +7516,21 @@ class E3AgentPolicy:
+                 len(self.transitions) - int(self._transitions_at_last_induction_attempt)
+             ),
+             "bounded_reinduction_enabled": bool(_bounded_reinduction_enabled()),
++            # 2026-08-08 adversarial review, Gaps finding 3: the candidate router and the
++            # frame-change scorer used to degrade to None through a bare `except Exception`
++            # with no counter, no stderr line, and no witness field -- so a row could carry
++            # `llm_on_row_valid: true` while running fully UNROUTED or with the
++            # action-effect prior silently inert. Recorded UNCONDITIONALLY (set in
++            # __init__, before either return point below) so a degraded row is visible
++            # without re-running.
++            "candidate_router_loaded": bool(self._candidate_router_load_diagnostics.get("loaded")),
++            "candidate_router_load_diagnostics": dict(self._candidate_router_load_diagnostics),
++            "frame_change_scorer_loaded": bool(
++                self._frame_change_scorer_load_diagnostics.get("loaded")
++            ),
++            "frame_change_scorer_load_diagnostics": dict(
++                self._frame_change_scorer_load_diagnostics
++            ),
+             "induction_attempts_planned": sum(
+                 1 for a in self.induction_attempts if a.get("planned")
+             ),
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index 28168e9816..9761005fc1 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2790,6 +2790,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
+         "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ]
+   },
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index 57990edac2..e382824fb9 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1395,6 +1395,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
+         "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ]
+   },
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index e926a9633c..4fc2abb935 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52836,6 +52836,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08), second-dependency pass: this artifact declares BOTH arc_competition_agent.py and arc_executable_world_model.py as dependencies; this entry covers the arc_competition_agent.py side (the other is acknowledged separately). Same reachability argument as the 6223-6226 acknowledgement passes: bounded re-induction is gated off by default (CARNOT_ARC_BOUNDED_REINDUCTION unset in this artifact's rebuild path), and the always-on liveness-witness diagnostic fields are read-only additions.",
+         "evidence": "See the sibling acknowledgement entry for this same path (different sha256_was/now pair) for the full grep-based reachability evidence; this entry covers the second declared dependency only."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index 3f93fdd904..aa3c432f6c 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -320,6 +320,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08), second-dependency pass: this artifact declares BOTH arc_competition_agent.py and arc_executable_world_model.py as dependencies; this entry covers the arc_competition_agent.py side (the other is acknowledged separately). Same reachability argument as the 6223-6226 acknowledgement passes: bounded re-induction is gated off by default (CARNOT_ARC_BOUNDED_REINDUCTION unset in this artifact's rebuild path), and the always-on liveness-witness diagnostic fields are read-only additions.",
+         "evidence": "See the sibling acknowledgement entry for this same path (different sha256_was/now pair) for the full grep-based reachability evidence; this entry covers the second declared dependency only."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 9409f07aa4..0680381e42 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8862,6 +8862,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08), second-dependency pass: this artifact declares BOTH arc_competition_agent.py and arc_executable_world_model.py as dependencies; this entry covers the arc_competition_agent.py side (the other is acknowledged separately). Same reachability argument as the 6223-6226 acknowledgement passes: bounded re-induction is gated off by default (CARNOT_ARC_BOUNDED_REINDUCTION unset in this artifact's rebuild path), and the always-on liveness-witness diagnostic fields are read-only additions.",
+         "evidence": "See the sibling acknowledgement entry for this same path (different sha256_was/now pair) for the full grep-based reachability evidence; this entry covers the second declared dependency only."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index e81d1dc60e..df2b24808b 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5473,6 +5473,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
+         "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index 868f4c73fd..1a0dd66955 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3620,6 +3620,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08), second-dependency pass: independent drift from the conductor's own concurrent REQ-ARC-WMTE-6213 commits (82d658de95 / 1754910e0f), NOT caused by this fix. Same reachability argument as the first-pass acknowledgement on this path: this artifact's own scripts do not reach _object_delta_perception_block or its call site.",
+         "evidence": "See the sibling acknowledgement entry for this same path (different sha256_was/now pair) for the full grep-based reachability evidence; this entry covers the second declared dependency only."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index bd8e2aea8c..70bcea9da8 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3412,6 +3412,22 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Second-order cascade from REQ-ARC-WMTE-6229 (fix \"Gap 2\" of the 2026-08-08 adversarial-review fix pass). Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change, which changed THEIR OWN file hash -- their own numbers are unchanged (see their own acknowledgement entries), only the bookkeeping grew.",
+         "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
++      },
++      {
++        "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++        "sha256_was": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
++        "sha256_now": "3b2a623651801f36a07fe55f239d2087cfd8460ba8692d5844485f8e6563bccd",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08), second-order cascade: this artifact cites the two paths below by content hash (provenance.rows_sources.cited_artifacts). Acknowledging Gap 3's arc_competition_agent.py drift INSIDE those two artifacts (appending their own freshness_acknowledgements entries) changed their file hashes, which cascades here. Not caused by this commit's source-code change directly -- a provenance side effect of the acknowledgement mechanism itself, same shape as the REQ-ARC-WMTE-6229 cascade earlier this session. The cited artifacts' own NUMBERS are unchanged (only their provenance block grew an acknowledgement entry); this artifact's own rescore numbers are therefore also unaffected.",
++        "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry (see the REQ-ARC-WMTE-6230 acknowledgement pass, same commit) -- no change to any row/score/metric field either file reports."
++      },
++      {
++        "path": "results/arc_per_level_reset_attribution_20260726.json",
++        "sha256_was": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
++        "sha256_now": "62a019d3a6bb41f1b6952292643aa377f23f95ed4965fd4bfb24c856cb21e508",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08), second-order cascade: this artifact cites the two paths below by content hash (provenance.rows_sources.cited_artifacts). Acknowledging Gap 3's arc_competition_agent.py drift INSIDE those two artifacts (appending their own freshness_acknowledgements entries) changed their file hashes, which cascades here. Not caused by this commit's source-code change directly -- a provenance side effect of the acknowledgement mechanism itself, same shape as the REQ-ARC-WMTE-6229 cascade earlier this session. The cited artifacts' own NUMBERS are unchanged (only their provenance block grew an acknowledgement entry); this artifact's own rescore numbers are therefore also unaffected.",
++        "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry (see the REQ-ARC-WMTE-6230 acknowledgement pass, same commit) -- no change to any row/score/metric field either file reports."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index 78b6d859c0..cfe703ab2a 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1198,6 +1198,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
+         "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 99000b7563..1d5f19437f 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1277,6 +1277,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08), second-dependency pass: this artifact declares BOTH arc_competition_agent.py and arc_executable_world_model.py as dependencies; this entry covers the arc_competition_agent.py side (the other is acknowledged separately). Same reachability argument as the 6223-6226 acknowledgement passes: bounded re-induction is gated off by default (CARNOT_ARC_BOUNDED_REINDUCTION unset in this artifact's rebuild path), and the always-on liveness-witness diagnostic fields are read-only additions.",
+         "evidence": "See the sibling acknowledgement entry for this same path (different sha256_was/now pair) for the full grep-based reachability evidence; this entry covers the second declared dependency only."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index b8d5e65d72..7ee03125c4 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -496,6 +496,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08), second-dependency pass: independent drift from the conductor's own concurrent REQ-ARC-WMTE-6213 commits (82d658de95 / 1754910e0f), NOT caused by this fix. Same reachability argument as the first-pass acknowledgement on this path: this artifact's own scripts do not reach _object_delta_perception_block or its call site.",
+         "evidence": "See the sibling acknowledgement entry for this same path (different sha256_was/now pair) for the full grep-based reachability evidence; this entry covers the second declared dependency only."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index bae76a8e60..2984024d89 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16987,6 +16987,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
+         "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
++        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
++        "acknowledged_on": "2026-08-08",
++        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
++        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+       }
+     ]
+   },
+diff --git a/tests/python/test_arc_component_load_diagnostics_20260808.py b/tests/python/test_arc_component_load_diagnostics_20260808.py
+new file mode 100644
+index 0000000000..ebf4b8030c
+--- /dev/null
++++ b/tests/python/test_arc_component_load_diagnostics_20260808.py
+@@ -0,0 +1,289 @@
++"""Spec: REQ-ARC-WMTE-6230.
++
++Regression tests for the silent component-degradation witness gap.
++
++docs/research-notes/live-agent-adversarial-review-2026-08-08.md, "Gaps" section, major
++finding 3:
++
++  "Declared-ON search components (candidate router, frame-change scorer, and therefore the
++  action-effect prior) degrade to None through bare `except Exception` fallbacks with no
++  counter, no stderr line, and no witness field, while SUBMITTED_AGENT_CONFIG declares them
++  enabled ... Fix: record load outcomes (`*_loaded` booleans plus the swallowed repr) in the
++  generator-liveness witness; print one greppable line per fallback."
++
++THE FIX. `_load_submitted_candidate_router` and `_load_submitted_frame_change_scorer` set a
++per-call diagnostic dict on a THREAD-LOCAL side channel (`_component_load_diagnostics`) and
++print one greppable line ("CANDIDATE ROUTER LOAD ..." / "FRAME-CHANGE SCORER LOAD FAILED
++...") on every fallback or failure. `E3AgentPolicy.__init__` reads its own thread's slot
++immediately after calling each loader (same thread, no race) and stores the result on
++`self._candidate_router_load_diagnostics` / `self._frame_change_scorer_load_diagnostics`,
++which `generator_liveness_witness()` then surfaces unconditionally as
++`candidate_router_loaded` / `candidate_router_load_diagnostics` /
++`frame_change_scorer_loaded` / `frame_change_scorer_load_diagnostics`.
++
++A THREAD LOCAL rather than a plain module-level dict, deliberately: the scored swarm runs one
++thread per game (scripts/kaggle/submission_kernel/main.py), and a bare global would let two
++concurrently-constructing games' diagnostics interleave and read back each other's data.
++TestThreadLocalIsolation below is the regression test for that specific failure mode.
++
++BOTH LOADER FUNCTIONS' RETURN TYPE IS UNCHANGED (still `Any | None`, never a tuple). A first
++attempt at this fix changed the return type to `tuple[Any | None, dict]`; a repo-wide grep
++before committing found 10+ other callers -- experiments, tests, and the production module
++`arc_reactive_verifier_filter.py` -- that all depend on the bare object-or-None shape, so
++that attempt was reverted in favour of the side-channel design tested here.
++TestNoSignatureChange is the regression guard for that specific mistake not recurring.
++"""
++
++from __future__ import annotations
++
++import threading
++
++from carnot.agentic import arc_competition_agent as agent
++from carnot.agentic.arc_competition_agent import E3AgentPolicy
++
++
++class TestCandidateRouterDiagnostics:
++    def test_default_path_loads_discriminative_router_and_reports_loaded(self, capsys):
++        agent._component_load_diagnostics.__dict__.clear()
++        router = agent._load_submitted_candidate_router(game_id="zz01")
++        assert router is not None
++        diag = agent._component_load_diagnostics.candidate_router
++        assert diag["loaded"] is True
++        assert diag["discriminative_loaded"] is True
++        assert diag["sge_attempted"] is False
++        captured = capsys.readouterr()
++        assert "CANDIDATE ROUTER LOAD" not in captured.out
++
++    def test_sge_not_requested_by_default(self):
++        assert agent._sge_candidate_router_requested() is False
++
++    def test_sge_failure_falls_through_and_reports_sge_error(self, capsys, monkeypatch):
++        monkeypatch.setattr(agent, "_sge_candidate_router_requested", lambda: True)
++        monkeypatch.setattr(
++            agent,
++            "_load_sge_candidate_router",
++            lambda game_id: (_ for _ in ()).throw(RuntimeError("sge boom")),
++        )
++        agent._component_load_diagnostics.__dict__.clear()
++        router = agent._load_submitted_candidate_router(game_id="zz02")
++        assert router is not None  # falls through to the discriminative router
++        diag = agent._component_load_diagnostics.candidate_router
++        assert diag["sge_attempted"] is True
++        assert "sge boom" in diag["sge_error"]
++        assert diag["discriminative_loaded"] is True
++        assert diag["loaded"] is True
++        captured = capsys.readouterr()
++        assert "CANDIDATE ROUTER LOAD FALLBACK (game=zz02)" in captured.out
++        assert "sge boom" in captured.out
++
++    def test_both_paths_failing_reports_unrouted_and_greppable_line(self, capsys, monkeypatch):
++        monkeypatch.setattr(
++            agent.arc_discriminative_router,
++            "load_online_click_target_router",
++            lambda root=None: (_ for _ in ()).throw(RuntimeError("disc boom")),
++        )
++        agent._component_load_diagnostics.__dict__.clear()
++        router = agent._load_submitted_candidate_router(game_id="zz03")
++        assert router is None
++        diag = agent._component_load_diagnostics.candidate_router
++        assert diag["loaded"] is False
++        assert diag["sge_attempted"] is False
++        assert "disc boom" in diag["discriminative_error"]
++        captured = capsys.readouterr()
++        assert "CANDIDATE ROUTER LOAD FAILED (game=zz03)" in captured.out
++        assert "UNROUTED" in captured.out
++        assert "disc boom" in captured.out
++
++
++class TestFrameChangeScorerDiagnostics:
++    def test_disabled_reports_disabled_no_print(self, capsys, monkeypatch):
++        monkeypatch.setattr(agent, "SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED", False)
++        agent._component_load_diagnostics.__dict__.clear()
++        scorer = agent._load_submitted_frame_change_scorer()
++        assert scorer is None
++        diag = agent._component_load_diagnostics.frame_change_scorer
++        assert diag == {"enabled": False, "loaded": False, "error": None}
++        captured = capsys.readouterr()
++        assert captured.out == ""
++
++    def test_enabled_but_loader_returns_none_reports_failure(self, capsys, monkeypatch):
++        monkeypatch.setattr(agent, "SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED", True)
++        monkeypatch.setattr(agent, "load_live_action_effect_scorer", lambda root=None: None)
++        agent._component_load_diagnostics.__dict__.clear()
++        scorer = agent._load_submitted_frame_change_scorer()
++        assert scorer is None
++        diag = agent._component_load_diagnostics.frame_change_scorer
++        assert diag["enabled"] is True
++        assert diag["loaded"] is False
++        assert diag["error"] is None
++        captured = capsys.readouterr()
++        assert "FRAME-CHANGE SCORER LOAD FAILED" in captured.out
++        assert "inert" in captured.out
++
++    def test_enabled_but_loader_raises_reports_repr(self, capsys, monkeypatch):
++        monkeypatch.setattr(agent, "SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED", True)
++        monkeypatch.setattr(
++            agent,
++            "load_live_action_effect_scorer",
++            lambda root=None: (_ for _ in ()).throw(ValueError("scorer boom")),
++        )
++        agent._component_load_diagnostics.__dict__.clear()
++        scorer = agent._load_submitted_frame_change_scorer()
++        assert scorer is None
++        diag = agent._component_load_diagnostics.frame_change_scorer
++        assert diag["loaded"] is False
++        assert "scorer boom" in diag["error"]
++        captured = capsys.readouterr()
++        assert "FRAME-CHANGE SCORER LOAD FAILED" in captured.out
++        assert "scorer boom" in captured.out
++
++    def test_enabled_and_succeeds_reports_loaded_true(self):
++        agent._component_load_diagnostics.__dict__.clear()
++        scorer = agent._load_submitted_frame_change_scorer()
++        assert scorer is not None
++        diag = agent._component_load_diagnostics.frame_change_scorer
++        assert diag == {"enabled": True, "loaded": True, "error": None}
++
++
++class TestInitWiring:
++    def test_default_path_populates_diagnostics_from_the_loaders(self):
++        p = E3AgentPolicy("lp85", proposer=object(), target_levels=1, value_head=None)
++        assert p._candidate_router_load_diagnostics.get("loaded") is True
++        assert p._frame_change_scorer_load_diagnostics.get("loaded") is True
++
++    def test_caller_supplied_router_skips_the_loader(self):
++        class FakeRouter:
++            pass
++
++        p = E3AgentPolicy(
++            "lp85",
++            proposer=object(),
++            target_levels=1,
++            value_head=None,
++            candidate_router=FakeRouter(),
++        )
++        assert p._candidate_router_load_diagnostics == {"loaded": True, "caller_supplied": True}
++
++    def test_caller_supplied_none_router_records_not_loaded(self):
++        p = E3AgentPolicy(
++            "lp85",
++            proposer=object(),
++            target_levels=1,
++            value_head=None,
++            candidate_router=None,
++        )
++        assert p._candidate_router_load_diagnostics == {
++            "loaded": False,
++            "caller_supplied": True,
++        }
++
++    def test_caller_supplied_frame_change_scorer_skips_the_loader(self):
++        class FakeScorer:
++            pass
++
++        p = E3AgentPolicy(
++            "lp85",
++            proposer=object(),
++            target_levels=1,
++            value_head=None,
++            frame_change_scorer=FakeScorer(),
++        )
++        assert p._frame_change_scorer_load_diagnostics == {
++            "loaded": True,
++            "caller_supplied": True,
++        }
++
++
++class TestWitnessFields:
++    def test_witness_reports_diagnostics_on_the_proposer_none_early_return_path(self):
++        p = E3AgentPolicy("lp85", proposer=None, target_levels=1, value_head=None)
++        w = p.generator_liveness_witness()
++        assert w["candidate_router_loaded"] == p._candidate_router_load_diagnostics.get("loaded")
++        assert w["candidate_router_load_diagnostics"] == p._candidate_router_load_diagnostics
++        assert w["frame_change_scorer_loaded"] == p._frame_change_scorer_load_diagnostics.get(
++            "loaded"
++        )
++        assert w["frame_change_scorer_load_diagnostics"] == p._frame_change_scorer_load_diagnostics
++
++    def test_witness_reports_diagnostics_on_the_proposer_present_path(self):
++        p = E3AgentPolicy("lp85", proposer=object(), target_levels=1, value_head=None)
++        w = p.generator_liveness_witness()
++        assert w["candidate_router_loaded"] == p._candidate_router_load_diagnostics.get("loaded")
++        assert w["frame_change_scorer_loaded"] == (
++            p._frame_change_scorer_load_diagnostics.get("loaded")
++        )
++
++    def test_witness_reflects_a_degraded_router_as_false(self, monkeypatch):
++        monkeypatch.setattr(
++            agent.arc_discriminative_router,
++            "load_online_click_target_router",
++            lambda root=None: (_ for _ in ()).throw(RuntimeError("disc boom")),
++        )
++        p = E3AgentPolicy("lp85", proposer=object(), target_levels=1, value_head=None)
++        w = p.generator_liveness_witness()
++        assert w["candidate_router_loaded"] is False
++        assert "disc boom" in w["candidate_router_load_diagnostics"]["discriminative_error"]
++
++
++class TestNoSignatureChange:
++    def test_candidate_router_loader_still_returns_bare_object_or_none(self):
++        result = agent._load_submitted_candidate_router(game_id="zz04")
++        assert result is None or not isinstance(result, tuple)
++
++    def test_frame_change_scorer_loader_still_returns_bare_object_or_none(self):
++        result = agent._load_submitted_frame_change_scorer()
++        assert result is None or not isinstance(result, tuple)
++
++
++class TestThreadLocalIsolation:
++    def test_component_load_diagnostics_is_a_real_thread_local(self):
++        # The regression this guards: swapping `_component_load_diagnostics` back to a plain
++        # module-level dict (the naive design a future edit might "simplify" to) would still
++        # pass every single-threaded test above while silently reintroducing the exact
++        # cross-game race the review's swarm concurrency (one thread per game) requires this
++        # to avoid. `threading.local()` gives each thread its own attribute namespace; a
++        # plain dict does not.
++        assert isinstance(agent._component_load_diagnostics, threading.local)
++
++    def test_two_threads_calling_the_candidate_router_loader_do_not_cross_contaminate(
++        self, monkeypatch
++    ):
++        # Deterministic, race-free variant: no shared mutable global is monkeypatched from
++        # inside either thread. `_sge_candidate_router_requested` is patched ONCE, before
++        # either thread starts, to a value both threads share safely; the per-thread outcome
++        # is instead driven purely by the `game_id` argument each thread passes, which is
++        # thread-local by construction (a normal Python argument, not shared state).
++        monkeypatch.setattr(agent, "_sge_candidate_router_requested", lambda: True)
++
++        def fake_sge_loader(game_id):
++            if game_id == "thread_b":
++                raise RuntimeError(f"sge boom for {game_id}")
++            return object()
++
++        monkeypatch.setattr(agent, "_load_sge_candidate_router", fake_sge_loader)
++
++        results: dict[str, dict] = {}
++        barrier = threading.Barrier(2)
++
++        def run(game_id: str) -> None:
++            barrier.wait(timeout=5)  # maximize the chance of genuine interleaving
++            agent._load_submitted_candidate_router(game_id=game_id)
++            results[game_id] = dict(agent._component_load_diagnostics.candidate_router)
++
++        ta = threading.Thread(target=run, args=("thread_a",))
++        tb = threading.Thread(target=run, args=("thread_b",))
++        ta.start()
++        tb.start()
++        ta.join(timeout=5)
++        tb.join(timeout=5)
++
++        # thread_a's SGE call succeeds outright; thread_b's SGE call fails and falls through
++        # to the (real, unpatched) discriminative router. If the diagnostic were shared
++        # across threads instead of thread-local, one thread's read could pick up the
++        # other's shape (e.g. thread_a showing a populated sge_error, or thread_b showing
++        # sge_loaded=True) depending on which thread's write landed last.
++        assert results["thread_a"]["sge_loaded"] is True
++        assert results["thread_a"]["sge_error"] is None
++        assert results["thread_b"]["sge_loaded"] is False
++        assert "sge boom for thread_b" in results["thread_b"]["sge_error"]
++        assert results["thread_b"]["discriminative_loaded"] is True
+-- 
+2.55.0
+

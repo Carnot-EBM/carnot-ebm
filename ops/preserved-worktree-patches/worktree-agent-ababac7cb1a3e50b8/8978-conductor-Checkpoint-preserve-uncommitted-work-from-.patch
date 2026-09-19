@@ -1,0 +1,43 @@
+From 18633f96a206898939c5eb0e3611d68a5ac45936 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 23:36:49 -0400
+Subject: [PATCH 08978/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 696fe90117..3c876d27e3 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-08-13T03:10:46Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-08-13T03:36:45Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 948ca4bcd9..b59eecdd60 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15744,3 +15744,4 @@ code |
+ | 2026-08-13 02:19 UTC | V547 terminal evidence handoff and V548 queue pref | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd_receipts"]  |
+ | 2026-08-13 02:40 UTC | V547 terminal evidence handoff and V548 queue pref | OK | cache hit: 88 passed, 1 warning in 77.16s (0:01:17) |
+ | 2026-08-13 03:08 UTC | V548 dated source delta and three-lane scope freez | OK | 87 passed, 1 warning in 8.34s |
++| 2026-08-13 03:34 UTC | Three-model GGUF child failure forensics and obser | OK | 88 passed, 1 warning in 10.31s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a25e63a6a4..1dfba75c05 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1288573, "iteration": 7, "phase": "iteration_start", "started_at": "2026-08-13T03:10:46Z"}
+\ No newline at end of file
++{"pid": 1288573, "iteration": 8, "phase": "iteration_start", "started_at": "2026-08-13T03:36:45Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,455 @@
+From c15dcb972c4f6e63716200ea802ef723b6657dbd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 14 Jul 2026 23:40:32 -0400
+Subject: [PATCH 07173/11362] [outer-loop] fix second live-path performance bug
+ in discriminative router (REQ-CAPSTONE-4556-2)
+
+Second incident of the same submission-prep pre-flight session,
+immediately following the ColorBlobSaliencePrior fix (620bf5f65). After
+fixing+disabling that, the local submission gate improved (1/8 solved,
+up from 0/8, vc33 recovered) but still lost lp85/m0r0/sp80 to the
+verified baseline.
+
+Root-caused again via a live faulthandler stack trace on a real slow
+lp85 run: CrossGameDiscriminativeCandidateRouter.rank() (the live
+discriminative_candidate_router, enabled since before 6/30) calls
+score() once per candidate action, and score() recomputed
+cross_game_features_v3()'s four frame-level feature groups from
+scratch every time -- including _object_relational_features's
+O(components^2) greedy frame-matching loop, a cost this project's own
+6/30 investigation had already identified as "the real per-node cost"
+without recognizing it was being paid redundantly per candidate on top
+of per node. Only the cheap 7-element _action_features(action_id) slice
+actually depends on the per-candidate action.
+
+Unlike the color-blob-salience bug, this flag/code path predates 6/30
+unchanged -- the 6/30 baseline likely just cleared this cost within its
+time budget; today's heavier load and/or candidate counts pushed it
+over. So this is a legitimate general performance fix to a long-
+standing path, not a revert of a recent regression.
+
+Fixed via CrossGameFrameContextV3 (a NamedTuple of the four frame-only
+feature groups) + cross_game_frame_context_v3(), computed once per
+rank() call and threaded through every score() call via an optional
+frame_context kwarg on cross_game_features_v3() (every other existing
+caller unaffected -- defaults to recomputing exactly as before).
+
+Verified: a previously-timing-out lp85 run (budget=8000) now completes
+in 54s with actions=7792 -- an EXACT match to the gate script's own
+CANONICAL_BASELINE_ACTIONS_BY_GAME["lp85"] constant. m0r0/sp80/vc33 all
+complete individually within budget too. A subsequent full 8-game
+parallel gate run still didn't pass cleanly, but load average hit 61.40
+on a 24-core box at that exact moment (vs 5.97 five minutes earlier) --
+consistent with resource contention from 8 parallel CPU-heavy game-evals
+plus the continuously-running conductor, not a remaining code defect.
+The isolated per-game measurements are the cleaner signal.
+---
+ .../arc-human-replay-frame-change/spec.md     |  76 ++++++++++
+ .../agentic/arc_discriminative_router.py      |  39 ++++-
+ python/carnot/agentic/arc_value_learner.py    |  54 ++++++-
+ ...c_discriminative_router_per_frame_cache.py | 135 ++++++++++++++++++
+ 4 files changed, 292 insertions(+), 12 deletions(-)
+ create mode 100644 tests/python/test_arc_discriminative_router_per_frame_cache.py
+
+diff --git a/openspec/capabilities/arc-human-replay-frame-change/spec.md b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+index 60e79ebb53..4a12d16cff 100644
+--- a/openspec/capabilities/arc-human-replay-frame-change/spec.md
++++ b/openspec/capabilities/arc-human-replay-frame-change/spec.md
+@@ -5845,3 +5845,79 @@ Then it is computed ONCE per frame and threaded through to every consultation, n
+ independently inside each per-candidate scoring call -- a redundant per-candidate recomputation
+ of a per-frame quantity turns an O(grid_cells) cost into an O(candidates x grid_cells) one, which
+ at realistic candidate counts on a large grid is indistinguishable from a hang
++
++### REQ-CAPSTONE-4556-2: CrossGameDiscriminativeCandidateRouter Per-Frame Feature Caching
++
++Second incident of the same submission-prep pre-flight session (2026-07-15, immediately
++following `REQ-ARC-FCP-5591-3`). After fixing and disabling `ColorBlobSaliencePrior`, a re-run
++of `scripts/kaggle/arc_local_submission_gate.py --check` improved (1/8 solved, up from 0/8,
++`vc33` recovered) but still lost `lp85`/`m0r0`/`sp80` to the verified baseline.
++
++**Root cause, again found via a live `faulthandler` stack trace on a real slow `lp85` run (not
++guesswork):** the stack bottomed out in `arc_value_learner.py:_component_stats_from_grid`, via
++`arc_discriminative_router.py:score()`/`rank()` -- the SAME anti-pattern as
++`REQ-ARC-FCP-5591-3`, in a different module.
++`CrossGameDiscriminativeCandidateRouter.rank()` (the live `discriminative_candidate_router`,
++`SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] = True`, unchanged since
++before 6/30) calls `score()` once per candidate action, and `score()` calls
++`cross_game_features_v3(frame, previous_frame, action_id, goal_frame)` fresh every time. Of
++that function's four feature groups (`cross_game_features_v2`, `_object_relational_features`,
++`_frame_delta_features`, `_predicate_distance_features`, plus `_action_features`), only the
++last (`_action_features(action_id)`, a cheap 7-element one-hot) actually depends on the
++per-candidate `action_id` -- the other four depend ONLY on `(frame, previous_frame,
++goal_frame)`, identical across every candidate in a single `rank()` call, yet were being fully
++recomputed per candidate. `_object_relational_features` in particular runs an O(components^2)
++greedy frame-matching loop -- a cost this project's own 2026-06-30 investigation
++(`arc_value_learner.py`'s docstring, commit `3c721292d`) had already identified as "the real
++per-node cost" without recognizing it was being paid redundantly per CANDIDATE on top of per
++NODE.
++
++**Why the 6/30 baseline didn't trip this (best available explanation, not fully certain):** the
++flag has been `True` since before 6/30 and the code path is structurally unchanged in this
++window per `git log`, so this is not a NEW regression in the sense of new code -- it is a
++pre-existing O(candidates x components^2) cost that the 6/30 baseline measurement happened to
++clear within its time budget, and that today's heavier system load and/or slightly different
++candidate counts pushed over the local gate's 115s cap. Unlike `REQ-ARC-FCP-5591-3` (a
++genuinely NEW flag flip since 6/30), this fix is a legitimate general performance improvement
++to a long-standing code path, not a revert of a recent regression.
++
++**Fix.** `arc_value_learner.py` gains `CrossGameFrameContextV3` (a `NamedTuple` of the four
++frame-only feature groups) and `cross_game_frame_context_v3(frame, previous_frame, goal_frame)`
++(computes it once). `cross_game_features_v3()` gains an optional keyword-only `frame_context`
++parameter -- when given, skips recomputing the four frame-only groups and splices in the fresh
++per-candidate `_action_features(action_id)`; when omitted, behaves exactly as before (every
++other existing caller -- `arc_world_model_trust_energy.py`, `arc_controllable_novelty.py`, two
++`experiment_47xx_structural_energy_*` scripts -- is unaffected).
++`CrossGameDiscriminativeCandidateRouter.rank()` now computes the `frame_context` once and
++passes it to every `score()` call within that `rank()` invocation.
++
++**Verified.** A real `lp85` run (budget=8000, `CARNOT_ARC_DISABLE_INDUCTION=1`, no induction)
++that was previously timing out at the gate's 115s cap now completes in 54s with
++`actions=7792` -- an EXACT match to `arc_local_submission_gate.py`'s own
++`CANONICAL_BASELINE_ACTIONS_BY_GAME["lp85"]` constant -- and `eff=2.0069`, again matching the
++documented baseline floor. `m0r0`/`sp80`/`vc33` (the other three CORE games) all completed
++individually within budget too (29s/49s/24s), with `vc33` reaching `actions=7777`, close to its
++own `CANONICAL_BASELINE_ACTIONS_BY_GAME` entry (7731). A subsequent FULL 8-game gate run (all
++games in parallel via `ThreadPoolExecutor(max_workers=8)`) still failed to complete cleanly --
++but system load at that exact moment was 61.40 on a 24-core box (vs 5.97 five minutes earlier),
++consistent with resource contention from running 8 CPU-heavy game-evals simultaneously
++alongside the continuously-running research conductor, not a remaining code defect. The
++per-game ISOLATED measurements (each run alone, no self-contention) are the cleaner signal and
++all support the fix. Existing coverage (60 tests across
++`test_experiment_4556_verifier_router_generic_transfer.py`,
++`test_arc_verifier_variant_augmentation.py`, `test_arc_submitted_agent_parity.py`, and the
++`structural_energy_s0/s0prime/s1` + `value_routing_cost_fix_live` + `live_integration_scored_agent`
++suites) all still pass unchanged.
++
++Required field principles: not applicable (this is a performance-only fix; the output feature
++vector is byte-identical between the cached and uncached paths, verified directly).
++
++#### SCENARIO-CAPSTONE-4556-2-PER-FRAME-CONTEXT-NOT-PER-CANDIDATE
++
++Given `cross_game_features_v3`'s output decomposes into a frame-only part (independent of the
++per-candidate action_id) and a cheap action-only part
++When a router scores N candidate actions against the SAME frame in a single ranking call
++Then the frame-only part is computed ONCE and reused across all N candidates -- computing it
++fresh per candidate turns an O(components^2) per-frame cost into an O(candidates x
++components^2) per-call one, which at realistic candidate counts is a severe, hang-adjacent
++slowdown even though the underlying flag/code path predates the incident that surfaced it
+diff --git a/python/carnot/agentic/arc_discriminative_router.py b/python/carnot/agentic/arc_discriminative_router.py
+index 352bf3db7e..08cc7ed367 100644
+--- a/python/carnot/agentic/arc_discriminative_router.py
++++ b/python/carnot/agentic/arc_discriminative_router.py
+@@ -12,9 +12,11 @@ from pathlib import Path
+ from typing import Any
+ 
+ from carnot.agentic.arc_value_learner import (
++    CrossGameFrameContextV3,
+     DiscriminativeVerifier,
+     cross_game_feature_slices_v3,
+     cross_game_features_v3,
++    cross_game_frame_context_v3,
+ )
+ 
+ 
+@@ -60,13 +62,21 @@ class CrossGameDiscriminativeCandidateRouter:
+         self.prune_threshold = prune_threshold
+         self.min_candidates = max(1, int(min_candidates))
+ 
+-    def score(self, frame: Any, action: Any, *, previous_frame: Any | None = None) -> float:
++    def score(
++        self,
++        frame: Any,
++        action: Any,
++        *,
++        previous_frame: Any | None = None,
++        frame_context: CrossGameFrameContextV3 | None = None,
++    ) -> float:
+         try:
+             features = cross_game_features_v3(
+                 frame,
+                 previous_frame=previous_frame,
+                 action_id=_action_id(action),
+                 goal_frame=None,
++                frame_context=frame_context,
+             )
+             return float(self.verifier.proba_features(features))
+         except Exception:
+@@ -79,8 +89,19 @@ class CrossGameDiscriminativeCandidateRouter:
+         *,
+         previous_frame: Any | None = None,
+     ) -> list[Any]:
++        # Computed once per rank() call and reused across every candidate -- see
++        # CrossGameFrameContextV3's docstring for the O(candidates x components^2) incident this
++        # fixes (score() previously recomputed the frame-level features from scratch per
++        # candidate even though only the cheap action_id slice actually varies).
++        frame_context = cross_game_frame_context_v3(frame, previous_frame, goal_frame=None)
+         scored = [
+-            (self.score(frame, action, previous_frame=previous_frame), index, action)
++            (
++                self.score(
++                    frame, action, previous_frame=previous_frame, frame_context=frame_context
++                ),
++                index,
++                action,
++            )
+             for index, action in enumerate(candidates)
+         ]
+         if self.prune_threshold is not None and len(scored) > self.min_candidates:
+@@ -88,7 +109,10 @@ class CrossGameDiscriminativeCandidateRouter:
+             if len(kept) < self.min_candidates:
+                 kept = sorted(scored, key=lambda item: (-item[0], item[1]))[: self.min_candidates]
+             scored = kept
+-        return [action for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))]
++        return [
++            action
++            for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))
++        ]
+ 
+ 
+ class RandomCandidateRouter:
+@@ -112,8 +136,13 @@ class RandomCandidateRouter:
+         return int(hashlib.sha256(payload).hexdigest()[:16], 16) / float(16**16 - 1)
+ 
+     def rank(self, frame: Any, candidates: Sequence[Any], **_: Any) -> list[Any]:
+-        scored = [(self._score(frame, action), index, action) for index, action in enumerate(candidates)]
+-        return [action for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))]
++        scored = [
++            (self._score(frame, action), index, action) for index, action in enumerate(candidates)
++        ]
++        return [
++            action
++            for _score, _index, action in sorted(scored, key=lambda item: (-item[0], item[1]))
++        ]
+ 
+ 
+ class CrossGameDiscriminativeExpansionPriority:
+diff --git a/python/carnot/agentic/arc_value_learner.py b/python/carnot/agentic/arc_value_learner.py
+index 871269fde7..443ab634ab 100644
+--- a/python/carnot/agentic/arc_value_learner.py
++++ b/python/carnot/agentic/arc_value_learner.py
+@@ -20,7 +20,7 @@ from __future__ import annotations
+ from dataclasses import dataclass
+ import json
+ from pathlib import Path
+-from typing import Any, Callable, Mapping, Sequence
++from typing import Any, Callable, Mapping, NamedTuple, Sequence
+ 
+ import numpy as np
+ 
+@@ -436,26 +436,66 @@ def _predicate_distance_features(g: np.ndarray, goal_frame: Any | None) -> list[
+     ]
+ 
+ 
++class CrossGameFrameContextV3(NamedTuple):
++    """The (frame, previous_frame, goal_frame)-only pieces of `cross_game_features_v3` -- every
++    piece except `_action_features(action_id)`. Callers that score MULTIPLE candidate actions
++    against the SAME frame (e.g. `CrossGameDiscriminativeCandidateRouter.rank()`) compute this
++    ONCE via `cross_game_frame_context_v3()` and pass it to `cross_game_features_v3(...,
++    frame_context=...)` for every candidate, instead of paying `_object_relational_features`'s
++    O(components^2) greedy frame-matching loop (see this module's 2026-06-30 docstring note: the
++    real per-node cost here, not the scipy-vs-fallback labeling step) once per candidate. Found
++    2026-07-15 during ARC-AGI-3 submission-prep: this per-candidate recomputation was the
++    dominant remaining cause of a local-submission-gate regression (lp85/m0r0/sp80 losing to the
++    verified baseline) even after fixing the structurally-identical bug in
++    arc_color_blob_salience.py."""
++
++    v2: list[float]
++    object_relational: list[float]
++    frame_delta: list[float]
++    predicate_distance: list[float]
++
++
++def cross_game_frame_context_v3(
++    frame: Any, previous_frame: Any | None, goal_frame: Any | None
++) -> CrossGameFrameContextV3:
++    g = _grid2d(frame)
++    return CrossGameFrameContextV3(
++        v2=cross_game_features_v2(frame),
++        object_relational=_object_relational_features(g, previous_frame),
++        frame_delta=_frame_delta_features(g, frame, previous_frame),
++        predicate_distance=_predicate_distance_features(g, goal_frame),
++    )
++
++
+ def cross_game_features_v3(
+     frame: Any,
+     previous_frame: Any | None = None,
+     action_id: Any | None = None,
+     goal_frame: Any | None = None,
++    *,
++    frame_context: CrossGameFrameContextV3 | None = None,
+ ) -> list[float]:
+     """REQ-LEARN-4476: v2 plus relational, delta, action, and predicate-distance context.
+ 
+     The optional context is used by the offline trainer. With only `frame`, the
+     function still emits a stable vector so existing live loaders degrade to a
+     frame-only v3 view instead of breaking.
++
++    `frame_context`: an optional pre-computed `cross_game_frame_context_v3(frame,
++    previous_frame, goal_frame)` result -- everything in the output EXCEPT the
++    `_action_features(action_id)` slice is independent of `action_id`, so a caller scoring many
++    candidates against the same frame can compute it once (see `CrossGameFrameContextV3`'s
++    docstring for the O(components^2)-per-candidate incident this fixes). When omitted, computed
++    fresh exactly as before (unchanged behavior/output for every other existing caller).
+     """
+-    g = _grid2d(frame)
+-    v2 = cross_game_features_v2(frame)
++    if frame_context is None:
++        frame_context = cross_game_frame_context_v3(frame, previous_frame, goal_frame)
+     return [
+-        *v2,
+-        *_object_relational_features(g, previous_frame),
+-        *_frame_delta_features(g, frame, previous_frame),
++        *frame_context.v2,
++        *frame_context.object_relational,
++        *frame_context.frame_delta,
+         *_action_features(action_id),
+-        *_predicate_distance_features(g, goal_frame),
++        *frame_context.predicate_distance,
+     ]
+ 
+ 
+diff --git a/tests/python/test_arc_discriminative_router_per_frame_cache.py b/tests/python/test_arc_discriminative_router_per_frame_cache.py
+new file mode 100644
+index 0000000000..fe63b4a179
+--- /dev/null
++++ b/tests/python/test_arc_discriminative_router_per_frame_cache.py
+@@ -0,0 +1,135 @@
++"""Regression test for the second submission-prep pre-flight incident (2026-07-15):
++CrossGameDiscriminativeCandidateRouter.rank() called score() once per candidate action, and
++score() independently recomputed cross_game_features_v3()'s expensive frame-level pieces
++(_object_relational_features's O(components^2) greedy frame-matching loop, plus v2/frame-delta/
++predicate-distance features) from scratch every time, even though only the cheap
++_action_features(action_id) slice actually depends on the per-candidate action_id. Structurally
++identical to the arc_color_blob_salience.py incident fixed earlier the same day
++(REQ-ARC-FCP-5591-3) -- same anti-pattern, different module. Found via a live faulthandler
++stack trace on a real slow lp85 run (not guesswork): the hang bottomed out in
++arc_value_learner.py:_component_stats_from_grid via arc_discriminative_router.py:score/rank.
++
++Spec refs: REQ-CAPSTONE-4556-2, SCENARIO-CAPSTONE-4556-2-PER-FRAME-CONTEXT-NOT-PER-CANDIDATE.
++"""
++
++from __future__ import annotations
++
++from unittest.mock import patch
++
++import numpy as np
++
++from carnot.agentic import arc_discriminative_router as router_mod
++from carnot.agentic import arc_value_learner as learner_mod
++from carnot.agentic.arc_discriminative_router import CrossGameDiscriminativeCandidateRouter
++from carnot.agentic.arc_value_learner import cross_game_features_v3, cross_game_frame_context_v3
++
++
++class _Frame:
++    def __init__(self, frame: np.ndarray) -> None:
++        self.frame = frame
++
++
++class _Action:
++    def __init__(self, action_id: int, x: int = 0, y: int = 0) -> None:
++        self.action_id = action_id
++        self.data = {"x": x, "y": y}
++
++
++class _StubVerifier:
++    def proba_features(self, features: list[float]) -> float:
++        return 0.5
++
++
++def _grid_with_components() -> np.ndarray:
++    grid = np.zeros((12, 12), dtype=np.int16)
++    grid[1:3, 1:3] = 4
++    grid[5:8, 5:8] = 7
++    grid[9:11, 9:11] = 2
++    return grid
++
++
++def _candidates(n: int) -> list[_Action]:
++    return [_Action(6, x=i % 12, y=(i // 12) % 12) for i in range(n)]
++
++
++def test_req_capstone_4556_2_cross_game_features_v3_cached_matches_uncached() -> None:
++    """The cache is purely a performance optimization -- passing a pre-computed frame_context
++    must produce the IDENTICAL feature vector as computing everything fresh."""
++
++    frame = _Frame(_grid_with_components())
++    prev = _Frame(_grid_with_components())
++
++    uncached = cross_game_features_v3(frame, previous_frame=prev, action_id=6, goal_frame=None)
++    ctx = cross_game_frame_context_v3(frame, prev, None)
++    cached = cross_game_features_v3(
++        frame, previous_frame=prev, action_id=6, goal_frame=None, frame_context=ctx
++    )
++
++    assert cached == uncached
++
++
++def test_req_capstone_4556_2_frame_context_varies_only_by_frame_not_action() -> None:
++    """Two different action_ids against the SAME frame must produce feature vectors that are
++    identical everywhere EXCEPT the action-conditioned slice -- confirming the frame_context
++    cache genuinely captures the action-independent part."""
++
++    frame = _Frame(_grid_with_components())
++    ctx = cross_game_frame_context_v3(frame, None, None)
++
++    features_a = cross_game_features_v3(frame, action_id=1, frame_context=ctx)
++    features_b = cross_game_features_v3(frame, action_id=6, frame_context=ctx)
++
++    diff_indices = [i for i, (a, b) in enumerate(zip(features_a, features_b)) if a != b]
++    assert diff_indices, "expected the action-conditioned slice to differ"
++    # The action-conditioned slice is a small one-hot-style run (a fixed "is-set" flag plus a
++    # 1-of-6 action-id bit) -- not scattered across the whole feature vector.
++    n_action_features = len(learner_mod._action_features(1))
++    assert max(diff_indices) - min(diff_indices) < n_action_features
++
++
++def test_req_capstone_4556_2_router_rank_computes_frame_context_once_not_per_candidate() -> None:
++    """SCENARIO-CAPSTONE-4556-2: the exact bug -- N candidates must NOT trigger N calls to the
++    expensive component-stats computation; it must be computed once per rank() call."""
++
++    router = CrossGameDiscriminativeCandidateRouter(_StubVerifier())
++    frame = _Frame(_grid_with_components())
++    candidates = _candidates(20)
++
++    with patch.object(
++        learner_mod, "_component_stats_from_grid", wraps=learner_mod._component_stats_from_grid
++    ) as spy:
++        router.rank(frame, candidates)
++
++    # _component_stats_from_grid is called twice per frame_context computation (once for the
++    # current frame via _object_relational_features, once inside _frame_delta_features for both
++    # cur+prev -- with previous_frame=None here, _object_relational_features short-circuits after
++    # one call and _frame_delta_features returns early too since previous_frame is None). The
++    # precise count only matters relative to N: before the fix it scaled with len(candidates);
++    # after the fix it's a small constant independent of candidate count.
++    assert spy.call_count < len(candidates), (
++        f"expected component-stats calls to NOT scale with {len(candidates)} candidates, "
++        f"got {spy.call_count} calls -- the per-candidate cache is not being reused"
++    )
++
++
++def test_req_capstone_4556_2_router_rank_output_unchanged_by_the_fix() -> None:
++    """The fix changes HOW frame-level features are computed (once vs per-candidate), not WHAT
++    rank() returns -- ranked order must match a reference computed via the original (always-
++    recompute) code path."""
++
++    router = CrossGameDiscriminativeCandidateRouter(_StubVerifier())
++    frame = _Frame(_grid_with_components())
++    candidates = _candidates(9)
++
++    fixed_order = [id(a) for a in router.rank(frame, candidates)]
++
++    reference_scored = [
++        (router.score(frame, action, previous_frame=None, frame_context=None), index, action)
++        for index, action in enumerate(candidates)
++    ]
++    reference_order = [
++        id(action)
++        for _score, _index, action in sorted(reference_scored, key=lambda item: (-item[0], item[1]))
++    ]
++
++    assert fixed_order == reference_order
+-- 
+2.55.0
+

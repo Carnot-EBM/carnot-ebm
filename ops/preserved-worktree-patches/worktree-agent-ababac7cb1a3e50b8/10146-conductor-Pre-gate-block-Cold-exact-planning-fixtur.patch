@@ -1,0 +1,75 @@
+From 3a8acc887ddaa52d1485dfe30e2dc4c5d43c0264 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 28 Aug 2026 02:30:38 -0400
+Subject: [PATCH 10146/11362] [conductor] Pre-gate block: Cold exact planning
+ fixture audit
+
+1 of 1 gate(s) failed; first failure: exp6689-exact-planning-fixture.planning_fixture_ready (upstream artifact not found for task id 'exp6689-exact-planning-fixture')
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json                              | 2 +-
+ ops/conductor-heartbeat.json                              | 2 +-
+ ops/conductor-log.md                                      | 2 ++
+ ops/conductor-state.json                                  | 2 +-
+ results/experiment_6690_exact_planning_fixture_audit.json | 4 ++--
+ 5 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 0ecfa44aab..a768259336 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -10,5 +10,5 @@
+   "WRONG_MODEL_LOADED|host|675677": "2026-08-25T18:37:58Z"
+  },
+  "last_scan_notes": [],
+- "last_scan_utc": "2026-08-28T06:28:32Z"
++ "last_scan_utc": "2026-08-28T06:30:37Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3074cf6eb6..2cc4e4dcfe 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 16, "phase": "iteration_start", "last_beat": "2026-08-28T06:28:31Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-28T06:30:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6819892106..92b4c27146 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16670,3 +16670,5 @@ code |
+ | 2026-08-28 06:26 UTC | V583 document-to-manifest parity contract | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: 17,8 @@
+        |
+ | 2026-08-28 06:28 UTC | Generated finite-horizon exact planning fixture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6688-v583-manifest-parity-contract) |
++| 2026-08-28 06:28 UTC | Cold exact planning fixture audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6689-exact-planning-fixture.planning_fi |
++| 2026-08-28 06:30 UTC | Generated finite-horizon exact planning fixture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6688-v583-manifest-parity-contract) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 34e767dc47..aa3c95bfbd 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1398347, "iteration": 16, "phase": "iteration_start", "started_at": "2026-08-28T06:28:31Z"}
+\ No newline at end of file
++{"pid": 1398347, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-28T06:30:37Z"}
+\ No newline at end of file
+diff --git a/results/experiment_6690_exact_planning_fixture_audit.json b/results/experiment_6690_exact_planning_fixture_audit.json
+index 614d57d6d8..d40e329310 100644
+--- a/results/experiment_6690_exact_planning_fixture_audit.json
++++ b/results/experiment_6690_exact_planning_fixture_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 6690,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-08-28",
+-  "started_at": "2026-08-28T06:28:32.467727+00:00",
+-  "finished_at": "2026-08-28T06:28:32.467727+00:00",
++  "started_at": "2026-08-28T06:30:37.794768+00:00",
++  "finished_at": "2026-08-28T06:30:37.794768+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "Cold exact planning fixture audit",
+-- 
+2.55.0
+

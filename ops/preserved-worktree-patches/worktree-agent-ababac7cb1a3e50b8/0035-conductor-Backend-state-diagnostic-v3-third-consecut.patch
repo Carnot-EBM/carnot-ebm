@@ -1,0 +1,1110 @@
+From 86cb69f74b9f5499c37fc2d01f3c3001bef303fd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 19:04:32 -0400
+Subject: [PATCH 00035/11362] =?UTF-8?q?[conductor]=20Backend-state=20diagn?=
+ =?UTF-8?q?ostic=20v3=20=E2=80=94=20third=20consecutive=20probe=20of=20gem?=
+ =?UTF-8?q?ini=20quota/crash=20stability=20(exp3653=20probe1,=20exp3666=20?=
+ =?UTF-8?q?probe2=20both=20OK);=20recommend=20whether=20.338=20may=20flip?=
+ =?UTF-8?q?=20to=20gemini-default;=20.337=20stays=20on=20codex=20(document?=
+ =?UTF-8?q?ation-only)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3679-backend-state-diagnostic-v3
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  59 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ .../backend_state_diagnostic_v3_3679.py       | 297 +++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ ...ment_3679_backend_state_diagnostic_v3.json |  77 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...riment_3679_backend_state_diagnostic_v3.py |  13 +
+ ...riment_3679_backend_state_diagnostic_v3.py | 311 ++++++++++++++++++
+ 23 files changed, 787 insertions(+), 30 deletions(-)
+ create mode 100644 python/carnot/reporting/backend_state_diagnostic_v3_3679.py
+ create mode 100644 results/experiment_3679_backend_state_diagnostic_v3.json
+ create mode 100644 scripts/experiment_3679_backend_state_diagnostic_v3.py
+ create mode 100644 tests/python/test_experiment_3679_backend_state_diagnostic_v3.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index fbb3f66fae..2558a37614 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -15466,6 +15466,65 @@ and environment were not modified, recommends `codex_requires_codex`, and emits
+ |---|---|---|
+ | REQ-REPORT-3666 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v2_3666.py`, `scripts/experiment_3666_backend_state_diagnostic_v2.py`) | Implemented (`tests/python/test_experiment_3666_backend_state_diagnostic_v2.py`) |
+ 
++### REQ-REPORT-3679: Backend State Diagnostic Third Stability Probe
++
++The Exp 3679 workflow shall run the third consecutive Gemini backend
++stability probe after Exp 3653 and Exp 3666 both recorded OK Gemini prompt
++probes following the `.333` Gemini crash/quota wipeout. It shall run at most
++one bounded Gemini CLI version probe, one bounded Gemini prompt probe using
++`gemini-3.1-pro-preview`, and one read-only conductor coercion environment
++probe equivalent to `env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'`. It SHALL
++NOT loop, retry, call the conductor, modify `scripts/research_conductor.py`,
++mutate shell environment variables, edit conductor configuration, or change
++`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
++
++The workflow SHALL read the Exp 3653 recovery probe and Exp 3666 second
++stability probe via `scripts/summarize_artifact.py`, plus `CLAUDE.md`
++Gemini-Default routing rules, and write
++`results/experiment_3679_backend_state_diagnostic_v3.json` with bare top-level
++values for `honest_verdict`, `inference_substrate`, `gemini_cli_version`,
++`gemini_quota_state`, `consecutive_stable_probes`,
++`conductor_coercion_env`, `recommended_routing`,
++`conductor_unmodified_assert`, `random_seed`,
++`reproducibility_checksum`, and `duration_s`, plus `field_principles`
++documenting why each required value exists. The prompt probe output SHALL be
++preserved with stdout, stderr, exit code, and combined output.
++`gemini_quota_state` SHALL be one of `ok`, `quota_exhausted_429`, or
++`crash_js_345500`. The workflow SHALL recommend
++`gemini_default_eligible_for_v338` only when Exp 3653 and Exp 3666 both
++recorded `gemini_quota_state=ok` and the bounded Exp 3679 prompt probe also
++exits successfully with an OK reply; otherwise it SHALL recommend
++`codex_requires_codex` and reset the stable-probe counter.
++
++#### SCENARIO-REPORT-3679: Third Stable Probe Makes V338 Eligible
++
++**Given** Exp 3653 and Exp 3666 both recorded `gemini_quota_state=ok`
++**When** the bounded Exp 3679 Gemini prompt probe exits successfully with an
++OK reply
++**Then** the workflow classifies `gemini_quota_state` as `ok`, records
++`consecutive_stable_probes=3`, preserves raw probe output, asserts the
++conductor and environment were not modified, recommends
++`gemini_default_eligible_for_v338`, and emits
++`complete: backend_diagnosed_gemini_stable_3rd_probe_v338_may_flip_to_gemini_default`.
++
++#### SCENARIO-REPORT-3679-UNSTABLE: Quota Or Crash Keeps Codex Routing
++
++**Given** Exp 3653 and Exp 3666 both recorded `gemini_quota_state=ok`
++**When** the bounded Exp 3679 Gemini prompt probe reports `QUOTA_EXHAUSTED`,
++HTTP `429`, or the Gemini CLI `.js:345500:14` crash frame
++**Then** the workflow classifies `gemini_quota_state` as
++`quota_exhausted_429` or `crash_js_345500`, records that the third stable
++probe did not materialize, preserves raw probe output, asserts the conductor
++and environment were not modified, recommends `codex_requires_codex`, resets
++the stable-probe counter to `0`, and emits
++`complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing`.
++
++## Implementation Status (REQ-REPORT-3679)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3679 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v3_3679.py`, `scripts/experiment_3679_backend_state_diagnostic_v3.py`) | Implemented (`tests/python/test_experiment_3679_backend_state_diagnostic_v3.py`) |
++
+ ### REQ-REPORT-3669: Real Factual Hallucination Corpus Builder
+ 
+ The Exp 3669 workflow shall build a real factual hallucination corpus for the
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 10cf7de3ce..4699b8c886 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2804,
++  "experiments_checked": 2805,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/backend_state_diagnostic_v3_3679.py b/python/carnot/reporting/backend_state_diagnostic_v3_3679.py
+new file mode 100644
+index 0000000000..efb95d253e
+--- /dev/null
++++ b/python/carnot/reporting/backend_state_diagnostic_v3_3679.py
+@@ -0,0 +1,297 @@
++"""Build the Exp 3679 Gemini backend state diagnostic v3 artifact.
++
++Spec refs: REQ-REPORT-3679, SCENARIO-REPORT-3679,
++SCENARIO-REPORT-3679-UNSTABLE.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import shlex
++import subprocess
++import time
++
++EXPERIMENT_ID = "exp3679"
++TASK_ID = "exp3679-backend-state-diagnostic-v3"
++SCHEMA = "carnot.backend_state_diagnostic.v3"
++OUTPUT_REL_PATH = Path("results/experiment_3679_backend_state_diagnostic_v3.json")
++RANDOM_SEED = 3679
++
++GEMINI_VERSION_COMMAND = ("timeout", "30", "gemini", "--version")
++GEMINI_REPLY_COMMAND = (
++    "timeout",
++    "60",
++    "gemini",
++    "-m",
++    "gemini-3.1-pro-preview",
++    "-p",
++    "Reply OK",
++)
++CONDUCTOR_ENV_COMMAND = ("bash", "-lc", "env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'")
++TRACKED_ENV_KEYS = (
++    "AGENT_TYPE",
++    "GEMINI_FORCE_EXPERIMENTS",
++    "CODEX_FORCE_EXPERIMENTS",
++    "AGENT_TYPE_PLANNER",
++    "AGENT_TYPE_RETRO",
++)
++
++STABLE_VERDICT = (
++    "complete: backend_diagnosed_gemini_stable_3rd_probe_v338_may_flip_to_gemini_default"
++)
++UNSTABLE_VERDICT = (
++    "complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing"
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": (
++        "hardware_smoke (principle: a bounded CLI health probe, not live model inference)."
++    ),
++    "gemini_cli_version": (
++        "Records the installed gemini-cli version so a future upgrade is auditable."
++    ),
++    "gemini_quota_state": (
++        "ok / quota_exhausted_429 / crash_js_345500 -- whether gemini is stable on a 3rd consecutive probe."
++    ),
++    "consecutive_stable_probes": (
++        "Counts consecutive milestones gemini probed OK (was 2 at exp3666); 3+ supports a .338 flip."
++    ),
++    "conductor_coercion_env": (
++        "Records AGENT_TYPE + FORCE_EXPERIMENTS active -- explains why per-task agent_type routes as it does."
++    ),
++    "recommended_routing": (
++        "codex_requires_codex (keep) or gemini_default_eligible_for_v338 -- the operator-actionable recommendation."
++    ),
++    "conductor_unmodified_assert": (
++        "Asserts this diagnostic did NOT modify research_conductor.py or env."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++CONTEXT_SOURCE_PATHS = (
++    Path("results/experiment_3653_backend_state_diagnostic.json"),
++    Path("results/experiment_3666_backend_state_diagnostic_v2.json"),
++    Path("scripts/summarize_artifact.py"),
++    Path("CLAUDE.md"),
++)
++
++
++@dataclass(frozen=True)
++class CommandProbe:
++    command: tuple[str, ...]
++    exit_code: int
++    stdout: str
++    stderr: str
++
++    @property
++    def combined_output(self) -> str:
++        return f"{self.stdout}{self.stderr}"
++
++    def as_dict(self) -> dict[str, object]:
++        return {
++            "command": shlex.join(self.command),
++            "exit_code": self.exit_code,
++            "stdout": self.stdout,
++            "stderr": self.stderr,
++            "combined_output": self.combined_output,
++        }
++
++
++CommandRunner = Callable[[tuple[str, ...]], CommandProbe]
++
++
++def run_command(command: tuple[str, ...]) -> CommandProbe:
++    """Run one bounded diagnostic command and capture stdout, stderr, and exit."""
++    completed = subprocess.run(  # noqa: S603
++        list(command),
++        check=False,
++        capture_output=True,
++        text=True,
++    )
++    return CommandProbe(
++        command=command,
++        exit_code=completed.returncode,
++        stdout=completed.stdout,
++        stderr=completed.stderr,
++    )
++
++
++def sha256_payload(payload: dict[str, object]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _file_sha256(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _parse_version(probe: CommandProbe) -> str:
++    lines = [
++        line.strip()
++        for line in probe.combined_output.splitlines()
++        if line.strip()
++    ]
++    return lines[0] if lines else f"unknown_exit_{probe.exit_code}"
++
++
++def _has_ok_reply(probe: CommandProbe) -> bool:
++    return any(line.strip().upper() == "OK" for line in probe.stdout.splitlines())
++
++
++def _classify_quota_state(probe: CommandProbe) -> str:
++    text = probe.combined_output.lower()
++    if "quota_exhausted" in text or "quota exhausted" in text or "429" in text:
++        return "quota_exhausted_429"
++    if probe.exit_code == 0 and _has_ok_reply(probe):
++        return "ok"
++    return "crash_js_345500"
++
++
++def _parse_conductor_env(probe: CommandProbe) -> dict[str, str | None]:
++    raw = probe.combined_output
++    pairs = dict(line.split("=", 1) for line in raw.splitlines() if "=" in line)
++    parsed: dict[str, str | None] = {key: pairs.get(key) for key in TRACKED_ENV_KEYS}
++    parsed["raw"] = raw
++    return parsed
++
++
++def _previous_probe_states(root: Path) -> dict[str, str]:
++    paths = {
++        "exp3653": root / "results" / "experiment_3653_backend_state_diagnostic.json",
++        "exp3666": root / "results" / "experiment_3666_backend_state_diagnostic_v2.json",
++    }
++    states: dict[str, str] = {}
++    for key, path in paths.items():
++        payload = json.loads(path.read_text(encoding="utf-8"))
++        states[key] = str(payload.get("gemini_quota_state", "missing"))
++    return states
++
++
++def _consecutive_stable_probes(
++    previous_states: dict[str, str],
++    current_state: str,
++) -> int:
++    return (
++        3
++        if previous_states == {"exp3653": "ok", "exp3666": "ok"}
++        and current_state == "ok"
++        else 0
++    )
++
++
++def _recommended_routing(quota_state: str, consecutive_stable_probes: int) -> str:
++    return (
++        "gemini_default_eligible_for_v338"
++        if quota_state == "ok" and consecutive_stable_probes >= 3
++        else "codex_requires_codex"
++    )
++
++
++def _verdict(recommended_routing: str) -> str:
++    return (
++        STABLE_VERDICT
++        if recommended_routing == "gemini_default_eligible_for_v338"
++        else UNSTABLE_VERDICT
++    )
++
++
++def _context_source_checksums(root: Path) -> dict[str, str]:
++    checksums: dict[str, str] = {}
++    for rel_path in CONTEXT_SOURCE_PATHS:
++        path = root / rel_path
++        checksums[str(rel_path)] = _file_sha256(path) if path.exists() else "missing"
++    return checksums
++
++
++def build_artifact(
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> dict[str, object]:
++    """Build the Exp 3679 diagnostic from bounded probes and repository context."""
++    started = time.perf_counter()
++    root = Path(repo_root)
++    conductor_path = root / "scripts" / "research_conductor.py"
++    conductor_before = _file_sha256(conductor_path)
++
++    previous_states = _previous_probe_states(root)
++    version_probe = command_runner(GEMINI_VERSION_COMMAND)
++    reply_probe = command_runner(GEMINI_REPLY_COMMAND)
++    env_probe = command_runner(CONDUCTOR_ENV_COMMAND)
++
++    conductor_after = _file_sha256(conductor_path)
++    quota_state = _classify_quota_state(reply_probe)
++    stable_probe_count = _consecutive_stable_probes(previous_states, quota_state)
++    recommended_routing = _recommended_routing(quota_state, stable_probe_count)
++    elapsed = duration_s if duration_s is not None else max(time.perf_counter() - started, 0.0001)
++
++    payload: dict[str, object] = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "honest_verdict": _verdict(recommended_routing),
++        "inference_substrate": "hardware_smoke",
++        "gemini_cli_version": _parse_version(version_probe),
++        "gemini_quota_state": quota_state,
++        "previous_gemini_probe_states": previous_states,
++        "consecutive_stable_probes": stable_probe_count,
++        "conductor_coercion_env": _parse_conductor_env(env_probe),
++        "recommended_routing": recommended_routing,
++        "conductor_unmodified_assert": (
++            "scripts/research_conductor.py sha256 unchanged before/after diagnostic; "
++            "environment was read only and no conductor config writes were performed."
++        ),
++        "research_conductor_unmodified": conductor_before == conductor_after,
++        "research_conductor_sha256_before": conductor_before,
++        "research_conductor_sha256_after": conductor_after,
++        "command_probes": {
++            "gemini_version": version_probe.as_dict(),
++            "gemini_reply": reply_probe.as_dict(),
++            "conductor_env": env_probe.as_dict(),
++        },
++        "context_sources_read": [
++            "scripts/summarize_artifact.py results/experiment_3653_backend_state_diagnostic.json",
++            "scripts/summarize_artifact.py results/experiment_3666_backend_state_diagnostic_v2.json",
++            "CLAUDE.md Gemini-Default for Experiments",
++        ],
++        "context_source_checksums": _context_source_checksums(root),
++        "field_principles": FIELD_PRINCIPLES,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(float(elapsed), 4),
++    }
++    payload["reproducibility_checksum"] = sha256_payload(payload)
++    return payload
++
++
++def write_artifact(repo_root: str | Path, payload: dict[str, object]) -> Path:
++    out_path = Path(repo_root) / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def run_experiment(
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> Path:
++    payload = build_artifact(repo_root, command_runner=command_runner, duration_s=duration_s)
++    return write_artifact(repo_root, payload)
++
++
++def main() -> None:  # pragma: no cover
++    out_path = run_experiment(Path("."))
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++    print(payload["honest_verdict"])
++    print(out_path)
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 6e62c38d74..ea3f0f8d6c 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T22:04:43.917898+00:00",
+-  "finished_at": "2026-06-01T22:04:43.942362+00:00",
++  "started_at": "2026-06-01T23:04:21.683563+00:00",
++  "finished_at": "2026-06-01T23:04:21.707864+00:00",
+   "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index e717108163..4f274a133f 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-01T22:04:44Z",
++  "run_date": "2026-06-01T23:04:21Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index d2da3ab8f8..82f09e839f 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T22:04:45Z",
+-  "finished_at": "2026-06-01T22:04:45Z",
++  "started_at": "2026-06-01T23:04:22Z",
++  "finished_at": "2026-06-01T23:04:23Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index fc3b665e94..3923bd9f01 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-01T22:04:45Z",
++  "run_date": "2026-06-01T23:04:23Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 3ff5f237b1..25c27ccefa 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-01T22:04:45Z",
++  "run_date": "2026-06-01T23:04:23Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 38b673ebf4..ae713d2e45 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-01T22:51:06.242717Z",
+-  "duration_s": 0.010631084442138672,
++  "run_date": "2026-06-01T23:02:40.898550Z",
++  "duration_s": 0.01797199249267578,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "7da5f9c0a56848726f976c14723b14b3c71885358642401b8c7d26bcf8d78dff",
++  "reproducibility_checksum": "43509c6451572c9e613260b2ceb6b678c1b4df53f22924499d6ff6980b61e176",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "a9b0f7608a03076002b1d967dae2f6fe4f0cf359"
++    "adversarial_verify_version": "90e739129b9383a4cc82ae84545bfad371b582c4"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 07ec220503..2927ea4a9a 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-01T22:51:06.255046Z",
+-  "duration_s": 0.00912928581237793,
++  "run_date": "2026-06-01T23:02:40.911589Z",
++  "duration_s": 0.009624242782592773,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "96c9033ea032a52aed9afc50d5fc9430eba55b07b799f7196587039813aca643",
++  "reproducibility_checksum": "de05e9182c67167dacca8c444abf8195caa5e940742e9ba353a812c01cb69630",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "a9b0f7608a03076002b1d967dae2f6fe4f0cf359"
++    "adversarial_verify_version": "90e739129b9383a4cc82ae84545bfad371b582c4"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 0958e96249..55dfa7598f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.140045166015625,
++  "efficiency_gains_ms": 2.107381820678711,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index a6f04e6c21..d3486bcb84 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2593815326690674,
++  "duration_s": 0.2401108741760254,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index c2390c589b..00c9a619c6 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008668899536132812,
++  "duration_s": 0.0008335113525390625,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 30dc2f2556..3f3d70da3e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.8723967261612415e-05,
++  "duration_s": 2.6169000193476677e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 891b886000..11f3750f48 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 6.609479896724224e-07,
++  "duration_s": 4.409812390804291e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 44db3671c8..9e624c13ec 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 3.886222839355469e-05,
++  "duration_s": 4.506111145019531e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index 8f4ea467db..c03ccb5d97 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 17.505184412002563, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 16.44547963142395, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3679_backend_state_diagnostic_v3.json b/results/experiment_3679_backend_state_diagnostic_v3.json
+new file mode 100644
+index 0000000000..a9df419631
+--- /dev/null
++++ b/results/experiment_3679_backend_state_diagnostic_v3.json
+@@ -0,0 +1,77 @@
++{
++  "command_probes": {
++    "conductor_env": {
++      "combined_output": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n",
++      "command": "bash -lc 'env | grep -iE '\"'\"'AGENT_TYPE|FORCE_EXPERIMENTS'\"'\"''",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
++    },
++    "gemini_reply": {
++      "combined_output": "OK\nWarning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\n",
++      "command": "timeout 60 gemini -m gemini-3.1-pro-preview -p 'Reply OK'",
++      "exit_code": 0,
++      "stderr": "Warning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\n",
++      "stdout": "OK\n"
++    },
++    "gemini_version": {
++      "combined_output": "0.44.0\n",
++      "command": "timeout 30 gemini --version",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "0.44.0\n"
++    }
++  },
++  "conductor_coercion_env": {
++    "AGENT_TYPE": "gemini",
++    "AGENT_TYPE_PLANNER": "claude",
++    "AGENT_TYPE_RETRO": "gemini",
++    "CODEX_FORCE_EXPERIMENTS": null,
++    "GEMINI_FORCE_EXPERIMENTS": "1",
++    "raw": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
++  },
++  "conductor_unmodified_assert": "scripts/research_conductor.py sha256 unchanged before/after diagnostic; environment was read only and no conductor config writes were performed.",
++  "consecutive_stable_probes": 3,
++  "context_source_checksums": {
++    "CLAUDE.md": "7ef4cd87213dd3e5e3b2421ba98c22f3f5842d83bfe5fe51d232bdeb782c83e5",
++    "results/experiment_3653_backend_state_diagnostic.json": "ae983c66103ff93d11409eb942de913e5d7e854672bf5828a6a286862e8db2fc",
++    "results/experiment_3666_backend_state_diagnostic_v2.json": "98893e8169b220171b477c03622d4f3e181fc4aefd90d9f3ba0e3df43ad64e6c",
++    "scripts/summarize_artifact.py": "50361c21af9ff91b3de374a133219d57981883bbe39b1bea24a2f60db492a117"
++  },
++  "context_sources_read": [
++    "scripts/summarize_artifact.py results/experiment_3653_backend_state_diagnostic.json",
++    "scripts/summarize_artifact.py results/experiment_3666_backend_state_diagnostic_v2.json",
++    "CLAUDE.md Gemini-Default for Experiments"
++  ],
++  "duration_s": 14.5466,
++  "experiment_id": "exp3679",
++  "field_principles": {
++    "conductor_coercion_env": "Records AGENT_TYPE + FORCE_EXPERIMENTS active -- explains why per-task agent_type routes as it does.",
++    "conductor_unmodified_assert": "Asserts this diagnostic did NOT modify research_conductor.py or env.",
++    "consecutive_stable_probes": "Counts consecutive milestones gemini probed OK (was 2 at exp3666); 3+ supports a .338 flip.",
++    "duration_s": "Plausibility floor.",
++    "gemini_cli_version": "Records the installed gemini-cli version so a future upgrade is auditable.",
++    "gemini_quota_state": "ok / quota_exhausted_429 / crash_js_345500 -- whether gemini is stable on a 3rd consecutive probe.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "hardware_smoke (principle: a bounded CLI health probe, not live model inference).",
++    "random_seed": "Determinism precondition.",
++    "recommended_routing": "codex_requires_codex (keep) or gemini_default_eligible_for_v338 -- the operator-actionable recommendation.",
++    "reproducibility_checksum": "Drift detection."
++  },
++  "gemini_cli_version": "0.44.0",
++  "gemini_quota_state": "ok",
++  "honest_verdict": "complete: backend_diagnosed_gemini_stable_3rd_probe_v338_may_flip_to_gemini_default",
++  "inference_substrate": "hardware_smoke",
++  "previous_gemini_probe_states": {
++    "exp3653": "ok",
++    "exp3666": "ok"
++  },
++  "random_seed": 3679,
++  "recommended_routing": "gemini_default_eligible_for_v338",
++  "reproducibility_checksum": "4d294edd343127eaac7d33d019dcfd5bbda29d2eb885985beec4b399b02db1ea",
++  "research_conductor_sha256_after": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
++  "research_conductor_sha256_before": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
++  "research_conductor_unmodified": true,
++  "schema": "carnot.backend_state_diagnostic.v3",
++  "task_id": "exp3679-backend-state-diagnostic-v3"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 7be1fbc1d1..93e68d774e 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T22:50:58Z",
+-  "finished_at": "2026-06-01T22:50:58Z",
++  "started_at": "2026-06-01T23:02:32Z",
++  "finished_at": "2026-06-01T23:02:32Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index fd62a44cfc..c094874d96 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T22:50:58Z",
+-  "finished_at": "2026-06-01T22:50:58Z",
++  "started_at": "2026-06-01T23:02:32Z",
++  "finished_at": "2026-06-01T23:02:32Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 7cfd744795..63ea281174 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260601",
+-  "started_at": "2026-06-01T22:50:58Z",
+-  "finished_at": "2026-06-01T22:50:58Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-01T23:02:33Z",
++  "finished_at": "2026-06-01T23:02:33Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3679_backend_state_diagnostic_v3.py b/scripts/experiment_3679_backend_state_diagnostic_v3.py
+new file mode 100644
+index 0000000000..24ad705841
+--- /dev/null
++++ b/scripts/experiment_3679_backend_state_diagnostic_v3.py
+@@ -0,0 +1,13 @@
++"""Run Exp 3679 backend state diagnostic v3."""
++
++from pathlib import Path
++import sys
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROJECT_ROOT / "python"))
++
++from carnot.reporting.backend_state_diagnostic_v3_3679 import main
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/python/test_experiment_3679_backend_state_diagnostic_v3.py b/tests/python/test_experiment_3679_backend_state_diagnostic_v3.py
+new file mode 100644
+index 0000000000..acc7382e9c
+--- /dev/null
++++ b/tests/python/test_experiment_3679_backend_state_diagnostic_v3.py
+@@ -0,0 +1,311 @@
++"""Tests for Exp 3679 backend state diagnostic v3.
++
++Spec refs: REQ-REPORT-3679, SCENARIO-REPORT-3679,
++SCENARIO-REPORT-3679-UNSTABLE.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import backend_state_diagnostic_v3_3679 as mod
++
++
++STABLE_VERDICT = (
++    "complete: backend_diagnosed_gemini_stable_3rd_probe_v338_may_flip_to_gemini_default"
++)
++UNSTABLE_VERDICT = (
++    "complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing"
++)
++
++
++def _repo(root: Path) -> Path:
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "scripts" / "research_conductor.py").write_text(
++        "# conductor placeholder for REQ-REPORT-3679 tests\n",
++        encoding="utf-8",
++    )
++    (root / "scripts" / "summarize_artifact.py").write_text(
++        "# summarize placeholder for REQ-REPORT-3679 tests\n",
++        encoding="utf-8",
++    )
++    (root / "results" / "experiment_3653_backend_state_diagnostic.json").write_text(
++        json.dumps(
++            {
++                "honest_verdict": (
++                    "complete: backend_diagnosed_gemini_recovered_operator_may_flip_to_gemini_default"
++                ),
++                "gemini_quota_state": "ok",
++            }
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    (
++        root / "results" / "experiment_3666_backend_state_diagnostic_v2.json"
++    ).write_text(
++        json.dumps(
++            {
++                "honest_verdict": (
++                    "complete: backend_diagnosed_gemini_stable_2nd_probe_v337_may_flip_to_gemini_default"
++                ),
++                "gemini_quota_state": "ok",
++                "consecutive_stable_probes": 2,
++            }
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    (root / "CLAUDE.md").write_text(
++        "## Gemini-Default for Experiments\n"
++        "CODEX_FORCE_EXPERIMENTS=1 coerces gemini to codex.\n",
++        encoding="utf-8",
++    )
++    return root
++
++
++def _runner(reply_probe: mod.CommandProbe) -> mod.CommandRunner:
++    def fake_runner(command: tuple[str, ...]) -> mod.CommandProbe:
++        if command == mod.GEMINI_VERSION_COMMAND:
++            return mod.CommandProbe(command=command, exit_code=0, stdout="0.44.0\n", stderr="")
++        if command == mod.GEMINI_REPLY_COMMAND:
++            return reply_probe
++        if command == mod.CONDUCTOR_ENV_COMMAND:
++            return mod.CommandProbe(
++                command=command,
++                exit_code=0,
++                stdout=(
++                    "AGENT_TYPE=codex\n"
++                    "CODEX_FORCE_EXPERIMENTS=1\n"
++                    "AGENT_TYPE_PLANNER=claude\n"
++                ),
++                stderr="",
++            )
++        raise AssertionError(f"unexpected command: {command!r}")
++
++    return fake_runner
++
++
++def test_req_report_3679_spec_anchor_declares_third_probe() -> None:
++    """REQ-REPORT-3679: OpenSpec declares the third probe before code."""
++    spec = Path("openspec/capabilities/research-reporting/spec.md").read_text(
++        encoding="utf-8"
++    )
++    assert "REQ-REPORT-3679" in spec
++    assert "SCENARIO-REPORT-3679" in spec
++    assert "SCENARIO-REPORT-3679-UNSTABLE" in spec
++    assert "experiment_3679_backend_state_diagnostic_v3.json" in spec
++
++
++@pytest.mark.parametrize(
++    (
++        "case_name",
++        "reply_probe",
++        "expected_state",
++        "expected_consecutive",
++        "expected_routing",
++        "expected_verdict",
++    ),
++    [
++        pytest.param(
++            "gemini_ok",
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=0,
++                stdout="OK\n",
++                stderr="",
++            ),
++            "ok",
++            3,
++            "gemini_default_eligible_for_v338",
++            STABLE_VERDICT,
++            id="gemini_ok",
++        ),
++        pytest.param(
++            "gemini_quota_exhausted",
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=1,
++                stdout="",
++                stderr=(
++                    "TerminalQuotaError: exhausted capacity. "
++                    "reason: 'QUOTA_EXHAUSTED' cause: { code: 429 }\n"
++                ),
++            ),
++            "quota_exhausted_429",
++            0,
++            "codex_requires_codex",
++            UNSTABLE_VERDICT,
++            id="gemini_quota_exhausted",
++        ),
++        pytest.param(
++            "gemini_crash",
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=1,
++                stdout="",
++                stderr=(
++                    "TypeError: Cannot read properties of undefined\n"
++                    "at async GeminiClient.sendMessageStream "
++                    "(file:///usr/lib/node_modules/@google/gemini-cli/bundle/"
++                    "chunk-NBZI34DT.js:345500:14)\n"
++                ),
++            ),
++            "crash_js_345500",
++            0,
++            "codex_requires_codex",
++            UNSTABLE_VERDICT,
++            id="gemini_crash",
++        ),
++    ],
++)
++def test_scenarios_report_3679_parametrize_honest_probe_outcomes(
++    tmp_path: Path,
++    case_name: str,
++    reply_probe: mod.CommandProbe,
++    expected_state: str,
++    expected_consecutive: int,
++    expected_routing: str,
++    expected_verdict: str,
++) -> None:
++    """SCENARIO-REPORT-3679: ok/quota/crash outcomes recommend routing honestly."""
++    root = _repo(tmp_path)
++    artifact = mod.build_artifact(
++        repo_root=root,
++        command_runner=_runner(reply_probe),
++        duration_s=1.5,
++    )
++
++    assert case_name in {"gemini_ok", "gemini_quota_exhausted", "gemini_crash"}
++    assert artifact["honest_verdict"] == expected_verdict
++    assert artifact["inference_substrate"] == "hardware_smoke"
++    assert artifact["gemini_cli_version"] == "0.44.0"
++    assert artifact["gemini_quota_state"] == expected_state
++    assert artifact["consecutive_stable_probes"] == expected_consecutive
++    assert artifact["recommended_routing"] == expected_routing
++    assert artifact["duration_s"] == 1.5
++    assert artifact["random_seed"] == 3679
++    assert artifact["previous_gemini_probe_states"] == {
++        "exp3653": "ok",
++        "exp3666": "ok",
++    }
++    assert artifact["conductor_coercion_env"]["AGENT_TYPE"] == "codex"
++    assert artifact["conductor_coercion_env"]["CODEX_FORCE_EXPERIMENTS"] == "1"
++    assert artifact["conductor_coercion_env"]["GEMINI_FORCE_EXPERIMENTS"] is None
++    assert artifact["research_conductor_unmodified"] is True
++    assert artifact["conductor_unmodified_assert"].startswith("scripts/research_conductor.py")
++    assert artifact["command_probes"]["gemini_reply"]["exit_code"] == reply_probe.exit_code
++    assert artifact["command_probes"]["gemini_reply"]["stdout"] == reply_probe.stdout
++    assert artifact["command_probes"]["gemini_reply"]["combined_output"] == reply_probe.combined_output
++
++    if expected_state == "quota_exhausted_429":
++        assert "QUOTA_EXHAUSTED" in reply_probe.combined_output
++        assert "429" in reply_probe.combined_output
++    if expected_state == "crash_js_345500":
++        assert ".js:345500:14" in reply_probe.combined_output
++
++
++def test_req_report_3679_prior_instability_keeps_codex_routing(tmp_path: Path) -> None:
++    """REQ-REPORT-3679: prior non-OK probes cannot satisfy the third-probe bar."""
++    root = _repo(tmp_path)
++    (root / "results" / "experiment_3666_backend_state_diagnostic_v2.json").write_text(
++        json.dumps(
++            {
++                "honest_verdict": "complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing",
++                "gemini_quota_state": "quota_exhausted_429",
++                "consecutive_stable_probes": 0,
++            }
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++    artifact = mod.build_artifact(
++        repo_root=root,
++        command_runner=_runner(
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=0,
++                stdout="OK\n",
++                stderr="",
++            )
++        ),
++        duration_s=2.0,
++    )
++
++    assert artifact["gemini_quota_state"] == "ok"
++    assert artifact["consecutive_stable_probes"] == 0
++    assert artifact["recommended_routing"] == "codex_requires_codex"
++    assert artifact["honest_verdict"] == UNSTABLE_VERDICT
++
++
++def test_req_report_3679_write_artifact_preserves_conductor_and_checksum(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-3679: writing JSON does not mutate conductor code."""
++    root = _repo(tmp_path)
++    conductor_path = root / "scripts" / "research_conductor.py"
++    before = conductor_path.read_text(encoding="utf-8")
++    reply_probe = mod.CommandProbe(
++        command=mod.GEMINI_REPLY_COMMAND,
++        exit_code=0,
++        stdout="OK\n",
++        stderr="",
++    )
++
++    out_path = mod.run_experiment(
++        repo_root=root,
++        command_runner=_runner(reply_probe),
++        duration_s=2.0,
++    )
++
++    assert out_path == root / mod.OUTPUT_REL_PATH
++    assert conductor_path.read_text(encoding="utf-8") == before
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++    required = {
++        "honest_verdict",
++        "inference_substrate",
++        "gemini_cli_version",
++        "gemini_quota_state",
++        "consecutive_stable_probes",
++        "conductor_coercion_env",
++        "recommended_routing",
++        "conductor_unmodified_assert",
++        "random_seed",
++        "reproducibility_checksum",
++        "duration_s",
++    }
++    assert required.issubset(payload)
++    checksum_payload = dict(payload)
++    checksum_payload.pop("reproducibility_checksum")
++    assert payload["reproducibility_checksum"] == mod.sha256_payload(checksum_payload)
++    for field in required - {"reproducibility_checksum"}:
++        assert field in payload["field_principles"]
++
++
++def test_req_report_3679_run_command_captures_stdout_stderr_and_exit() -> None:
++    """REQ-REPORT-3679: bounded probe helper captures stdout, stderr, and exit."""
++    probe = mod.run_command(
++        (
++            sys.executable,
++            "-c",
++            "import sys; print('OK'); print('note', file=sys.stderr)",
++        )
++    )
++    assert probe.exit_code == 0
++    assert probe.stdout == "OK\n"
++    assert probe.stderr == "note\n"
++    assert probe.combined_output == "OK\nnote\n"
++    assert sys.executable in probe.as_dict()["command"]
++
++
++def test_scenario_report_3679_script_wrapper_exists() -> None:
++    """SCENARIO-REPORT-3679: conductor entrypoint script delegates to the module."""
++    script = Path("scripts/experiment_3679_backend_state_diagnostic_v3.py")
++    text = script.read_text(encoding="utf-8")
++    assert "backend_state_diagnostic_v3_3679" in text
++    assert "main" in text
+-- 
+2.55.0
+

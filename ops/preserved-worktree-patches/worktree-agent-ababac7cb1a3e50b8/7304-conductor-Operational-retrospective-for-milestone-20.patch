@@ -1,0 +1,103 @@
+From dd844b7e11ea944dc3861619a9f7d5695b62fb8d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 19 Jul 2026 20:04:39 -0400
+Subject: [PATCH 07304/11362] [conductor] Operational retrospective for
+ milestone 2026.07.511
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_07_511.json | 57 ++++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 results/operational_retro_2026_07_511.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index a42bd94b2d..7804180c84 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5937,3 +5937,9 @@ The critical path for milestone .250:
+ - theme: synthesis-heavy execution led by reconciliation and Rust parity work
+ - key result: honest operational result -- the compute-bound slowest entries were the 33.3-minute registry-rotated ARC live-agent attempt and the 18.72-minute sealed GGUF CUDA canary; task-conditioned GPU idle is false, while causal phase timing and concurrent-model runner evidence are unavailable
+ - acceptance: no data available this milestone
++
++### Milestone 2026.07.511
++- exp_range: no data available this milestone
++- theme: compute-heavy long-tail execution with incomplete task-correlated telemetry
++- key result: honest operational negative -- the longest compute-bound paths were the generalization gap sweep and cross-area reconciliation, but phase-level causes, task-correlated GPU efficiency, and any concurrent-model runner miss are not established
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 7bef99eb02..827ac16409 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -11605,3 +11605,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-07-19: Gated on Exp5725 ledger readiness: matched known-level ARC live A/B (✅ Complete) — honest_verdict=complete: epistemic_ledger_live_ab_null_no_promotion; results/experiment_5726_arc_epistemic_ledger_live_ab.json
+ - 2026-07-19: First ARC-AGI-3 Generalization-Testing Floor task: fresh live-vs-oracle gap sweep across the fully-cleared 25-game registry (✅ Complete) — honest_verdict=complete: arc_generalization_live_oracle_gap_4_of_183_levels_gap_179; results/experiment_5727_arc_generalization_live_oracle_gap_v511.json
+ - 2026-07-19: Reconcile .511 attested FR-11, Rust backend, ARC epistemic, specification, and operations evidence (⚠️ Blocked) — honest_verdict=blocked: v511 reconciled; answer_channel_ready=false; stream_ready=false; continuous_self_learning_credited=false; rust_samplerbackend_ready=true; rust_python_crossover_null=true; arc_registry_delta=0; arc_solve_credited=false; results/experiment_5728_v511_capstone_reconciliation.json
++- 2026-07-19: Operational retrospective for milestone 2026.07.511 (Complete) -- 11 experiments used 217.1 minutes, including 6 compute-bound tasks. The longest compute-bound entries took 77.78, 47.45, and 22.3 minutes, but phase-level causes are unavailable. The locked task-conditioned GPU-idle indicator is false, and no concurrent multi-model task or runner-selection failure is established. Recommended tooling: phase-level timing receipts, task-correlated GPU telemetry, and model-concurrency-aware runner selection; estimated_time_savings_pct=0 because no measured counterfactual is available; results/operational_retro_2026_07_511.json
+diff --git a/results/operational_retro_2026_07_511.json b/results/operational_retro_2026_07_511.json
+new file mode 100644
+index 0000000000..91e9bd7304
+--- /dev/null
++++ b/results/operational_retro_2026_07_511.json
+@@ -0,0 +1,57 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.07.511",
++  "generated_at": "2026-07-20T00:02:29Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 217.1,
++  "experiments_completed": 11,
++  "compute_bound_experiments_count": 6,
++  "slowest_experiments": [
++    {
++      "experiment": "First ARC-AGI-3 Generalization-Testing Floor task: fresh live-vs-oracle gap swee",
++      "duration_minutes": 77.78,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Reconcile .511 attested FR-11, Rust backend, ARC epistemic, specification, and o",
++      "duration_minutes": 47.45,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Gated on Exp5717 Rust quality: expose one-axis tempering through production Samp",
++      "duration_minutes": 29.88,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Diagnose the .510 GGUF answer-channel failure across the mandated SOTA model fam",
++      "duration_minutes": 22.3,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Qualify an agent-owned ARC epistemic ledger on the submitted live E3AgentPolicy ",
++      "duration_minutes": 22.13,
++      "compute_bound": false
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Across 11 completed experiments, 217.1 minutes of wall time included 6 compute-bound experiments. The slowest compute-bound entries took 77.78, 47.45, and 22.3 minutes; the timing record provides no phase-level causes for those durations.",
++  "bottlenecks_identified": [
++    "The two longest recorded experiments were compute-bound, but the timing record contains no phase-level data to explain their durations.",
++    "Milestone timing required disk-mtime reconstruction after the live git-log path found no commits, limiting stage-level attribution.",
++    "No task-correlated GPU samples or model-concurrency receipts are available, so compute-bound GPU efficiency and runner selection cannot be diagnosed beyond the locked false idle indicator."
++  ],
++  "improvements_suggested": [
++    "Emit per-experiment phase timers for setup, model loading, inference, verification, and reconciliation so the next slow path has a measured cause.",
++    "Record task-correlated GPU utilization with the active task, compute-bound classification, model count, and selected runner in one timing receipt.",
++    "Select DualGPURunner automatically only for declared multi-model parallel work, while retaining the single-GPU path for single-model inference."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add phase-level timing receipts to every experiment artifact.",
++    "Correlate GPU telemetry with active compute-bound task boundaries.",
++    "Add model-concurrency-aware runner selection and record the selection decision."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The available data supports ranking slow experiments but not assigning causal explanations or a nonzero savings estimate. The next retrospective will become actionable if timing, GPU activity, model concurrency, and runner choice are captured in the same task-scoped record."
++}
+-- 
+2.55.0
+

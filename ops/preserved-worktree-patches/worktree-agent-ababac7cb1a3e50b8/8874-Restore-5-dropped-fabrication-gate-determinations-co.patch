@@ -1,0 +1,660 @@
+From 20b2aefaa86f28b9520884a9f5cdb8df0963fbf1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 12 Aug 2026 06:33:08 -0400
+Subject: [PATCH 08874/11362] Restore 5 dropped fabrication-gate
+ determinations; correct a wrong root cause; add win-exemplar replay
+
+RECORD REPAIR FIRST. determination-preservation-lint refused a commit because five
+artifacts had lost `flagged_adversarial: True` plus their corrigendum_note and
+corrigendum_pending records: experiment_1736_kanele_synth, the three
+archive_v309/v310/v311 activations, and experiment_833_constraint_delta_root_cause.
+Dropping that field LIFTS a quarantine, so those artifacts would have been
+re-admitted to headline aggregation. HEAD still held the correct values and the
+stripped versions were already STAGED, so this was one commit from publication.
+
+Repaired per the lint's own instruction -- restore the determination fields
+ALONGSIDE the new numbers -- by copying back only the keys HEAD had and the
+working tree had lost. NOT by `git checkout --`, which would have restored the
+determinations by discarding whatever legitimate re-run numbers those files had
+gained, and which is how this guard has destroyed authored work three times.
+
+The pending test-suite-mutation marker (pytest tests/python -q, ppid-769900) is
+deleted deliberately, as that guard permits once investigated: its own
+attributed_to_run was EMPTY and it flagged all 17 paths as [NOT this run], i.e.
+concurrent activity. The one real rewrite inside its window was the determination
+stripping above, now repaired.
+
+Root cause unchanged: the conductor commits with --no-verify, so neither guard
+runs on its commits. Second guard in two days showing that asymmetry, this time
+with real data loss narrowly avoided rather than mere inconvenience.
+
+CORRECTION. Yesterday I wrote in three places that collect_transitions "discards
+win states by restarting on level-up". WRONG -- it appends the level-up
+transition BEFORE restarting. The real cause, measured: a salience-biased random
+walk essentially never reaches a level-up (0 of 200 steps on dc22, 0 of 200 on
+cn04). The wrong claim is preserved per never-prune and corrected in
+ops/known-issues.md. Acting on it would have produced a two-line change to a
+restart branch that accomplished nothing.
+
+NEW CAPABILITY. replay_win_transition() replays a banked solve from
+results/arc_loop_solve_<game>.json through the game's OWN GameAdapter.apply and
+returns the first level-up transition. Using the adapter's apply matters: label
+dialects differ per game (dc22's ACTION6 rows carry grid/x/y, not data). Verified
+live on dc22, cn04 and ls20.
+
+WHY IT MATTERS. induce_prompt has dedicated slots for win_transition and
+previous_level_complete_grid, and every offline experiment run yesterday passed
+NEITHER because there was no level-up to pass. So every offline induction number
+this project holds, including exp5764's 0.378 pooled held-out, was measured with
+that slot empty. exp6255 measures what filling it does, paired, one induce per
+arm per game.
+
+SCOPE LIMIT, in the code and the artifact: replaying a banked solve is a
+development proxy. A hidden game has no banked solve and no adapter, so the live
+agent cannot get an exemplar this way; on the live path it comes from the agent's
+own play and exists from level 2 onward, never level 1.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ ops/known-issues.md                           |  94 ++++++
+ .../agentic/arc_executable_world_model.py     |  84 ++++++
+ results/experiment_1736_kanele_synth.json     |   4 +-
+ ...iment_3361_archive_v309_activate_v310.json |   4 +-
+ ...iment_3377_archive_v310_activate_v311.json |   4 +-
+ ...iment_3392_archive_v311_activate_v312.json |   4 +-
+ ...iment_833_constraint_delta_root_cause.json |  12 +-
+ ...periment_6255_win_exemplar_induction_ab.py | 274 ++++++++++++++++++
+ 8 files changed, 466 insertions(+), 14 deletions(-)
+ create mode 100644 scripts/experiments/experiment_6255_win_exemplar_induction_ab.py
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 3b6359556c..a88ef9c301 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -17145,3 +17145,97 @@ one MoE game, about 16 minutes of GPU, all `held=None`. Fixed with a `_store_pat
+ that points at the path the proposer actually writes. Caught by reading the per-game rows,
+ not the verdict string; the run would otherwise have reported a plausible-looking
+ zero-comparable-games null.
++
++## 2026-08-12 CORRECTION: "collect_transitions discards win states" was WRONG
++
++I wrote that claim into three places yesterday -- the exp6252 retraction entry, the exp6252
++corrected-result entry, and the spec's REQ-ARC-WMTE-6252 section. It is preserved there per
++never-prune. **It is wrong and must not be acted on.**
++
++**What I claimed.** That `collect_transitions` restarts the episode on level-up and
++therefore throws away the transition showing the win.
++
++**What the code actually does.** It appends FIRST and restarts AFTER:
++
++```python
++trans.append(Transition(g0, int(c.action_id), c.data, g1, l0, l1))
++if _game_over(nf) or l1 > l0:
++    f = _warm(env, warmup)   # restart happens only after the append
++```
++
++So a level-up transition WOULD be recorded, with `level_after > level_before`, if one ever
++occurred. Nothing is discarded.
++
++**The real cause, measured.** A salience-biased RANDOM walk essentially never reaches a
++level-up. Probed directly at 200 steps per game (four times the collection size the
++experiments used): dc22 0 level-ups of 200, cn04 0 level-ups of 200. The win states are not
++being thrown away -- they are never being reached.
++
++**Why the distinction changes the fix completely.** "Stop discarding" would have been a
++two-line change to a restart branch and would have accomplished exactly nothing. The actual
++problem is that random exploration cannot find a win, so a win exemplar has to be SUPPLIED
++from somewhere that already knows one. `ops/arc_solve_registry.yaml` plus
++`arc_solver_kit.reproduce` hold reproducible solves for all 25 public games, so a level-up
++transition can be replayed on demand for offline work.
++
++**What stays true, and it is the part that matters.** `induce_prompt` has dedicated slots
++for `win_transition` and `previous_level_complete_grid` -- it is built to show the model
++what winning looks like -- and every offline experiment run yesterday (exp6248, exp6250,
++exp6251, exp6254) passed NEITHER, because `collect_transitions` produced no level-up to
++pass. So every offline induction number this project holds, including exp5764's 0.378
++held-out, was measured with that slot empty. That is unchanged by this correction and is
++still the lead worth chasing.
++
++**Scope limit, per the ARC Live-Path Reachability Discipline.** Replaying a known solver to
++manufacture a win exemplar is a `development_proxy`, not a live capability: a hidden game
++has no registry entry and no adapter. On the live path the agent captures
++`previous_level_complete_grid` only AFTER it wins a level itself, so the exemplar is
++available from level 2 onward and never for level 1. An offline measurement using a
++replayed win therefore answers "does the exemplar improve induction?" -- it does NOT show
++the live agent can obtain one on a hidden level 1.
++
++**How I got it wrong.** I read the restart branch, saw `l1 > l0` triggering a reset, and
++inferred discard without checking that the append preceded it. The `n_win_grids_observed: 0`
++measurement was real and was consistent with both explanations; I picked one and wrote it up
++as fact instead of testing which. The 200-step probe that settles it takes under a minute.
++
++## 2026-08-12 INCIDENT: five artifacts lost their fabrication-gate determinations again
++
++Caught by `determination-preservation-lint` refusing a commit. This is the
++2026-07-27 / 2026-07-29 incident class recurring, and the guard did its job.
++
++**What was lost.** Five artifacts had `flagged_adversarial: True` silently dropped to
++absent, together with their `corrigendum_note` and `corrigendum_pending` records:
++`experiment_1736_kanele_synth`, `experiment_3361_archive_v309_activate_v310`,
++`experiment_3377_archive_v310_activate_v311`,
++`experiment_3392_archive_v311_activate_v312`, `experiment_833_constraint_delta_root_cause`.
++Dropping that field LIFTS a quarantine -- the fabrication gate keys off it, so the
++artifacts would have been re-admitted to headline aggregation.
++
++**State when caught.** HEAD still held the correct values; the working tree held the
++stripped ones, and they were STAGED (a concurrent `git add -A`). So the damage was one
++commit away from publication and had not yet landed.
++
++**How it was repaired, and why not by reverting.** The lint's own instruction is "re-run
++measurements are fine and expected (fail-forward); restore the determination fields
++ALONGSIDE the new numbers." A blanket `git checkout --` would have restored the
++determinations by throwing away whatever legitimate re-run numbers those files had gained.
++Instead each file was loaded, and only the determination and corrigendum keys that HEAD had
++and the working tree had lost were copied back. Lint clean afterwards. This also respects
++the guard's standing caution that blanket-reverting its reported list is how it destroyed
++authored work three times.
++
++**The mutation marker, and why it was cleared rather than acted on.** A pending marker from
++`pytest tests/python -q` (run_id `ppid-769900`) listed 17 changed paths. Its own
++attribution field was EMPTY (`attributed_to_run: []`) -- the test run observed itself
++writing nothing, and flagged all 17 as `[NOT this run]`, i.e. concurrent activity rather
++than test damage. The one genuinely damaging change inside that window was the determination
++stripping above, which is now repaired. The marker was then deleted deliberately, which the
++guard explicitly permits once the rewrite has been investigated and explained.
++
++**Root cause is unchanged and still open.** The conductor commits with `--no-verify`, so
++neither `determination-preservation-lint` nor `test-suite-mutation-check` runs on its
++commits. Every one of these guards only fires for a committer who is not exempt. Same
++asymmetry recorded for `artifact-freshness-lint` yesterday, now demonstrated on a second
++guard and with real data loss narrowly avoided rather than a mere inconvenience. The
++options listed in that entry apply here with more urgency.
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 9c2b4d8eed..c794031f13 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -870,6 +870,90 @@ def collect_transitions(
+     return trans, cell
+ 
+ 
++def replay_win_transition(game: str, cell: Optional[int] = None):
++    """Replay a BANKED solve to recover one level-up transition, or None.
++
++    WHY THIS EXISTS. `induce_prompt` has dedicated slots for `win_transition` and
++    `previous_level_complete_grid` -- it is built to show the model what winning looks
++    like. `collect_transitions` supplies neither, and the reason is NOT that it discards
++    them (it appends the level-up row before restarting; that earlier diagnosis was wrong
++    and is corrected in ops/known-issues.md 2026-08-12). The reason is that a
++    salience-biased RANDOM walk essentially never reaches a level-up: measured 0 of 200
++    steps on dc22 and 0 of 200 on cn04. So a win exemplar has to come from something that
++    already knows one.
++
++    This replays the banked `solution_labels` from `results/arc_loop_solve_<game>.json`
++    through the game's OWN `GameAdapter.apply`, and returns the first transition where the
++    level counter increments. Using the adapter's apply rather than a local re-implementation
++    matters: label dialects differ per game (dc22's ACTION6 rows carry `grid`/`x`/`y`
++    instead of `data`), and a fourth copy of that logic would drift.
++
++    DEVELOPMENT PROXY ONLY -- read this before using it in any claim. A hidden game has no
++    registry entry, no banked solution and no adapter, so the live agent CANNOT obtain a win
++    exemplar this way. On the live path the exemplar comes from the agent's own play and is
++    therefore available from level 2 onward, never for level 1. An offline measurement built
++    on this answers "does the exemplar improve induction quality?" It does NOT show the live
++    agent can get one on a hidden level 1. See the ARC Live-Path Reachability Discipline.
++
++    Returns None whenever anything is missing or the replay never levels up. Callers treat
++    None as "no exemplar available" and must not substitute a fabricated one.
++    """
++    import json as _json
++
++    from carnot.agentic import arc_game_adapters as _adapters
++    from carnot.agentic import arc_solver_kit as _kit
++    from carnot.agentic.arc_agi3_live_adapter import _levels_completed
++    from carnot.agentic.arc_agi3_world_model import grid_of
++
++    banked = REPO / "results" / f"arc_loop_solve_{game}.json"
++    adapter = _adapters.get_adapter(game)
++    if adapter is None or not banked.exists():
++        return None
++    try:
++        labels = _json.loads(banked.read_text()).get("solution_labels") or []
++    except Exception:
++        return None
++    if not labels:
++        return None
++
++    arc = _kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    f = env.reset()
++    if cell is None:
++        cell = detect_cell(grid_of(f))
++    for label in labels:
++        l0 = _levels_completed(f)
++        g0 = to_logical(grid_of(f), cell)
++        try:
++            nf = adapter.apply(env, label, f)
++        except Exception:
++            return None
++        if nf is None:
++            return None
++        l1 = _levels_completed(nf)
++        if l1 > l0:
++            action, data = _action_and_data_from_label(label)
++            return Transition(g0, action, data, to_logical(grid_of(nf), cell), l0, l1)
++        f = nf
++    return None
++
++
++def _action_and_data_from_label(label: str) -> tuple[int, Any]:
++    """Best-effort (action_id, data) from a banked solution label.
++
++    Only the action id is reliably present across dialects. `data` is returned when the
++    label carries it and None otherwise; a Transition with `data=None` still records the
++    grids and the level change, which is what the win exemplar is for.
++    """
++    import json as _json
++
++    try:
++        step = _json.loads(label)
++        return int(step.get("action", 0)), step.get("data")
++    except Exception:
++        return 0, None
++
++
+ # ---------------------------------------------------------------------------
+ # THE CARNOT VERIFIER — grounds the LLM-induced model against reality
+ # ---------------------------------------------------------------------------
+diff --git a/results/experiment_1736_kanele_synth.json b/results/experiment_1736_kanele_synth.json
+index ed02081464..777f043f29 100644
+--- a/results/experiment_1736_kanele_synth.json
++++ b/results/experiment_1736_kanele_synth.json
+@@ -10,12 +10,12 @@
+   "wns": 1.25,
+   "honest_verdict": "vivado_simulated_success",
+   "flagged_adversarial": true,
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+   "corrigendum_pending": [
+     {
+       "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+       "severity": "critical",
+       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1736_kanele_synth.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+     }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  ]
+ }
+diff --git a/results/experiment_3361_archive_v309_activate_v310.json b/results/experiment_3361_archive_v309_activate_v310.json
+index 51cb6ab184..48aa0933e2 100644
+--- a/results/experiment_3361_archive_v309_activate_v310.json
++++ b/results/experiment_3361_archive_v309_activate_v310.json
+@@ -16,12 +16,12 @@
+   "status": "success",
+   "artifact": "experiment_3361_archive_v309_activate_v310",
+   "flagged_adversarial": true,
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+   "corrigendum_pending": [
+     {
+       "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+       "severity": "critical",
+       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3361_archive_v309_activate_v310.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+     }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  ]
+ }
+diff --git a/results/experiment_3377_archive_v310_activate_v311.json b/results/experiment_3377_archive_v310_activate_v311.json
+index abad281c1b..db26374805 100644
+--- a/results/experiment_3377_archive_v310_activate_v311.json
++++ b/results/experiment_3377_archive_v310_activate_v311.json
+@@ -16,12 +16,12 @@
+   "status": "success",
+   "artifact": "experiment_3377_archive_v310_activate_v311",
+   "flagged_adversarial": true,
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+   "corrigendum_pending": [
+     {
+       "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+       "severity": "critical",
+       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3377_archive_v310_activate_v311.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+     }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  ]
+ }
+diff --git a/results/experiment_3392_archive_v311_activate_v312.json b/results/experiment_3392_archive_v311_activate_v312.json
+index d1c2b2f49e..86ff972482 100644
+--- a/results/experiment_3392_archive_v311_activate_v312.json
++++ b/results/experiment_3392_archive_v311_activate_v312.json
+@@ -16,12 +16,12 @@
+   "status": "success",
+   "artifact": "experiment_3392_archive_v311_activate_v312",
+   "flagged_adversarial": true,
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+   "corrigendum_pending": [
+     {
+       "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+       "severity": "critical",
+       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3392_archive_v311_activate_v312.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+     }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  ]
+ }
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index da54d46271..e00b5b1dc2 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+-  "run_date": "20260811",
+-  "started_at": "2026-08-11T17:44:47Z",
+-  "finished_at": "2026-08-11T17:44:49Z",
+-  "duration_s": 1.286,
++  "run_date": "20260812",
++  "started_at": "2026-08-12T09:48:17Z",
++  "finished_at": "2026-08-12T09:48:18Z",
++  "duration_s": 1.217,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+@@ -84,12 +84,12 @@
+     "verify_results"
+   ],
+   "flagged_adversarial": true,
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+   "corrigendum_pending": [
+     {
+       "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+       "severity": "critical",
+       "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_833_constraint_delta_root_cause.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+     }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  ]
+ }
+diff --git a/scripts/experiments/experiment_6255_win_exemplar_induction_ab.py b/scripts/experiments/experiment_6255_win_exemplar_induction_ab.py
+new file mode 100644
+index 0000000000..e7ed326d20
+--- /dev/null
++++ b/scripts/experiments/experiment_6255_win_exemplar_induction_ab.py
+@@ -0,0 +1,274 @@
++#!/usr/bin/env python3
++"""REQ-ARC-WMTE-6255: does supplying a WIN EXEMPLAR improve induction quality?
++
++THE GAP THIS TESTS. `induce_prompt` has dedicated slots for `win_transition` and
++`previous_level_complete_grid`. It is built to show the model what winning looks like.
++Every offline induction experiment this project has run passed NEITHER, because
++`collect_transitions` produces no level-up to pass -- a salience-biased random walk
++essentially never reaches one (measured 0 of 200 steps on dc22 and on cn04). So every
++offline induction number we hold, including exp5764's 0.378 pooled held-out, was measured
++with that slot empty. Nobody has ever measured what filling it does.
++
++THE DESIGN. One induce call per arm per game, paired, same TRAIN/VALID/HELD split, same
++budget, same generator. The ONLY difference is whether `win_transition` and
++`previous_level_complete_grid` are passed. Metric: held-out `change_fidelity` of the
++induced engine.
++
++WHERE THE EXEMPLAR COMES FROM, AND WHY THAT LIMITS THE CLAIM. `replay_win_transition`
++replays a BANKED solve through the game's own `GameAdapter`. That is a DEVELOPMENT PROXY:
++a hidden game has no banked solve and no adapter, so the live agent cannot get an exemplar
++this way. On the live path the exemplar comes from the agent's own play, so it exists from
++level 2 onward and never for level 1. A positive here therefore means "the prompt slot is
++worth filling when an exemplar exists" -- it does NOT mean the live agent can obtain one on
++a hidden level 1. See the ARC Live-Path Reachability Discipline.
++
++WHAT A NEGATIVE WOULD MEAN, stated before the run. If filling the slot changes nothing,
++that is informative too: it would say the induce prompt's win-exemplar section is inert as
++written, and the slot is not the lever. Either way this is cheap and the question is
++currently unanswered.
++
++ISOLATION. `CARNOT_ARC_E3_DIR` must be a private scratch directory (the exp6247
++shared-store clobber incident).
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++
++if not os.environ.get("CARNOT_ARC_E3_DIR"):
++    raise SystemExit(
++        "set CARNOT_ARC_E3_DIR to a private scratch directory BEFORE launching this script -- "
++        "it must never write to the shared results/arc_e3 store (exp6247 incident)."
++    )
++
++from carnot.agentic import arc_executable_world_model as e3  # noqa: E402
++from carnot.agentic import arc_rex_refinement as rex  # noqa: E402
++
++OUT = REPO / "results" / "experiment_6255_win_exemplar_induction_ab.json"
++CHECKPOINT = Path(
++    os.environ.get("CARNOT_EXP6255_CHECKPOINT", "/tmp/carnot_exp6255_checkpoint.json")
++)
++# Games that have BOTH a banked solve and an adapter, so an exemplar can be replayed.
++ROSTER = ("dc22", "cn04", "ls20", "s5i5")
++N_COLLECT = 60
++N_VALID = 10
++N_HELD = 10
++SEED = 6255
++GGUF_REPO_SUBSTR = "gemma-4-31B-it-qat"
++SERVER_PORT = 8943
++SHARED_MAX_TOKENS = 16384
++INDUCE_TIMEOUT_S = 1500
++GATE_MIN_GAMES_IMPROVED = 3
++
++
++def _frame_hud_mask(game: str):
++    from carnot.agentic import arc_solver_kit as kit
++    from carnot.agentic.arc_competition_agent import _compute_hud_mask_from_frame
++
++    arc = kit.offline_arcade()
++    env = arc.make(game, scorecard_id=arc.open_scorecard())
++    return _compute_hud_mask_from_frame(env.reset())
++
++
++def _logical_hud_mask(game: str, cell: int):
++    frame_mask = _frame_hud_mask(game)
++    return None if frame_mask is None else e3.logical_hud_mask(frame_mask, cell)
++
++
++def _score(source: str, transitions, hud_mask) -> float | None:
++    if not source:
++        return None
++    try:
++        engine = rex.load_engine_from_source(source, tag="score")
++    except Exception:  # noqa: BLE001
++        return 0.0
++    vr = e3.WorldModelVerifier(transitions, hud_mask=hud_mask, hud_mask_enabled=True).score(engine)
++    return round(float(vr.change_fidelity), 4)
++
++
++def _induce_arm(prop, game, train, cell, *, win) -> dict:
++    """One induce call. `win` is the exemplar transition, or None for the control arm."""
++    store = Path(os.environ["CARNOT_ARC_E3_DIR"]) / game / "world_model.py"
++    if store.exists():
++        store.unlink()  # never let the previous arm's engine be read as this arm's output
++    t0 = time.time()
++    kwargs = {}
++    if win is not None:
++        kwargs["win_transition"] = win
++        kwargs["previous_level_complete_grid"] = win.next_grid
++    try:
++        ok, detail = prop.induce(game, list(train), cell, **kwargs)
++    except Exception as exc:  # noqa: BLE001
++        ok, detail = False, repr(exc)[:200]
++    src = store.read_text() if store.exists() else None
++    return {
++        "ok": bool(ok),
++        "detail": str(detail)[:200],
++        "source": src,
++        "wall_s": round(time.time() - t0, 1),
++    }
++
++
++def build_artifact() -> dict:
++    t0 = time.time()
++    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "0,1")
++    os.environ["CARNOT_ARC_GENERATOR_REQUIRE_CUDA"] = "1"
++    from carnot.agentic.arc_executable_world_model import (
++        GeneratorCudaRequiredError,
++        LocalGGUFProposer,
++    )
++
++    prop = LocalGGUFProposer(
++        repo_substr=GGUF_REPO_SUBSTR,
++        port=SERVER_PORT,
++        mtp=False,
++        kv_quant="q8_0",
++        max_tokens=SHARED_MAX_TOKENS,
++        no_think_prefix="",
++        timeout=INDUCE_TIMEOUT_S,
++    )
++    try:
++        if not prop._ensure_server():
++            return {"honest_verdict": "complete_blocked_cuda_server_failed_to_start"}
++    except GeneratorCudaRequiredError as exc:
++        return {"honest_verdict": f"complete_blocked_cuda_unavailable_{exc!r}"[:200]}
++
++    done = json.loads(CHECKPOINT.read_text()) if CHECKPOINT.exists() else {}
++    rows = list(done.get("rows", []))
++    seen = {r["game"] for r in rows}
++
++    for game in ROSTER:
++        if game in seen:
++            continue
++        row: dict = {"game": game}
++        trans, cell = e3.collect_transitions(game, n=N_COLLECT, seed=SEED)
++        train = trans[: -(N_VALID + N_HELD)]
++        held = trans[-N_HELD:]
++        hud_mask = _logical_hud_mask(game, cell)
++
++        win = e3.replay_win_transition(game, cell)
++        row["win_exemplar_available"] = win is not None
++        if win is None:
++            # A missing exemplar makes the pair unmeasurable. Record and skip -- never
++            # substitute a fabricated one, and never score the control against nothing.
++            row["skipped"] = "no banked solve or adapter produced a level-up transition"
++            rows.append(row)
++            done["rows"] = rows
++            CHECKPOINT.write_text(json.dumps(done, indent=2, default=str))
++            print(f"[exp6255] {game}: SKIPPED (no win exemplar)", flush=True)
++            continue
++
++        control = _induce_arm(prop, game, train, cell, win=None)
++        treatment = _induce_arm(prop, game, train, cell, win=win)
++        row["control_held"] = _score(control["source"], held, hud_mask)
++        row["treatment_held"] = _score(treatment["source"], held, hud_mask)
++        row["control_wall_s"] = control["wall_s"]
++        row["treatment_wall_s"] = treatment["wall_s"]
++        row["control_ok"] = control["ok"]
++        row["treatment_ok"] = treatment["ok"]
++        row["win_level"] = f"{win.level_before}->{win.level_after}"
++        if row["control_held"] is not None and row["treatment_held"] is not None:
++            row["delta"] = round(row["treatment_held"] - row["control_held"], 4)
++        rows.append(row)
++        done["rows"] = rows
++        CHECKPOINT.write_text(json.dumps(done, indent=2, default=str))
++        print(
++            f"[exp6255] {game}: control={row['control_held']} treatment={row['treatment_held']} "
++            f"delta={row.get('delta')}",
++            flush=True,
++        )
++
++    comparable = [r for r in rows if r.get("delta") is not None]
++    n = len(comparable)
++    n_improved = sum(1 for r in comparable if r["delta"] > 0)
++    n_worse = sum(1 for r in comparable if r["delta"] < 0)
++    pooled = round(sum(r["delta"] for r in comparable) / n, 4) if n else None
++    gate_met = bool(n and n_improved >= GATE_MIN_GAMES_IMPROVED and pooled and pooled > 0)
++
++    art = {
++        "experiment": "experiment_6255_win_exemplar_induction_ab",
++        "title": "Win-exemplar induction A/B: does filling induce_prompt's win slot help?",
++        "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
++        "roster": list(ROSTER),
++        "per_game_results": rows,
++        "n_games_comparable": n,
++        "n_games_improved": n_improved,
++        "n_games_worse": n_worse,
++        "pooled_mean_delta": pooled,
++        "gate_condition": (
++            f">= {GATE_MIN_GAMES_IMPROVED} of the comparable games improve AND pooled delta > 0"
++        ),
++        "gate_min_games_improved": GATE_MIN_GAMES_IMPROVED,
++        "gate_met": gate_met,
++        "why_this_was_never_measured": (
++            "collect_transitions yields no level-up under a salience-biased random walk "
++            "(0 of 200 steps on dc22 and cn04), so every prior offline induction run passed "
++            "neither win_transition nor previous_level_complete_grid"
++        ),
++        "exemplar_source": "replay_win_transition: banked solve replayed through the game's GameAdapter",
++        "development_proxy_limit": (
++            "a hidden game has no banked solve and no adapter, so the LIVE agent cannot obtain "
++            "an exemplar this way. On the live path it comes from the agent's own play and so "
++            "exists from level 2 onward, never for level 1. A positive here means the prompt "
++            "slot is worth filling WHEN an exemplar exists; it does not show the live agent can "
++            "get one on a hidden level 1."
++        ),
++        "sample_size_note": (
++            "at most 4 games, far below the project's n>=30 bar for a percentage-point claim. "
++            "Directional signal only."
++        ),
++        "solve_provenance": "development_proxy",
++        "arc_solve_claim": False,
++        "verifier_is_oracle": False,
++        "verifier_is_oracle_principle": (
++            "held-out change_fidelity is an oracle-distinct graded dynamics score, not the "
++            "executable win-condition oracle; no level is claimed"
++        ),
++        "inference_substrate": "live_llm_inference",
++        "model_specs": {
++            "generator": "unsloth/gemma-4-31B-it-qat-GGUF",
++            "quant": "UD-Q4_K_XL",
++            "kv_cache_quant": "q8_0",
++            "port": SERVER_PORT,
++        },
++        "random_seed": SEED,
++    }
++    if n == 0:
++        art["honest_verdict"] = "complete_blocked_zero_comparable_games_not_a_lever_result"
++    elif gate_met:
++        art["honest_verdict"] = (
++            f"complete_win_exemplar_gate_met_{n_improved}_of_{n}_improved_pooled_delta_{pooled}"
++        )
++    else:
++        art["honest_verdict"] = (
++            f"complete_win_exemplar_gate_not_met_{n_improved}_improved_{n_worse}_worse_of_{n}_"
++            f"pooled_delta_{pooled}"
++        )
++    art["duration_s"] = round(time.time() - t0, 3)
++    payload = {k: v for k, v in art.items() if k != "duration_s"}
++    art["reproducibility_checksum"] = hashlib.sha256(
++        json.dumps(payload, sort_keys=True, default=str).encode()
++    ).hexdigest()
++    return art
++
++
++def main() -> int:
++    art = build_artifact()
++    OUT.write_text(json.dumps(art, indent=2, default=str) + "\n", encoding="utf-8")
++    print("verdict:", art.get("honest_verdict"))
++    print("wrote", OUT)
++    if art.get("honest_verdict"):
++        CHECKPOINT.unlink(missing_ok=True)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

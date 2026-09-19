@@ -1,0 +1,520 @@
+From 7a7491c968fb0df76498b3889763ce9b2e316a05 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 29 Jul 2026 10:20:51 -0400
+Subject: [PATCH 08015/11362] [outer-loop] The daily-prep cron was silently
+ destroying a never-prune record, including the leaderboard score history
+
+`scripts/kaggle/prep_daily_submission.py` wrote `ops/arc-daily-prep-status.json` with a
+bare `write_text(json.dumps({...six keys}))`. That DELETED the seven submission-trail
+keys the file also carried: `submission_ref` (54768046), `submitted_at`,
+`submission_status_at_check`, `local_gate_result_at_submit`, the v9 provenance note,
+`submitted`, and `prior_submission_scores` -- the actual leaderboard score-by-date
+history {"2026-07-15": 0.12, "2026-06-30": 0.08}.
+
+Three things made this worse than an ordinary bug. The script runs from an unattended
+systemd timer, so nothing surfaced the loss. The conductor's routine `git add -A` would
+have published the deletion as a normal commit. And recovery required knowing to look in
+one specific commit (bc2623761) that nothing pointed to. The file on disk is restored.
+
+A plain {**prior, **fresh} merge would have fixed the deletion while introducing a
+subtler lie: the previous version's `submitted: true` would sit beside a brand-new,
+unsubmitted kernel version and read as though THIS prep had already been submitted. So
+on a version change the submission fields are retired into an append-only
+`submission_history` -- kept, per never-prune -- and cleared from the live record, while
+`prior_submission_scores` stays live because it is cumulative, not per-version.
+
+The logic was unreachable by any test while buried inside a `main()` that shells out to
+Kaggle, so it is extracted to a pure `_merge_prep_status`. The 11 tests are written
+against the actual destroyed record rather than a synthetic happy path, per the
+project's regression-test discipline: that no prior key is EVER dropped without being
+archived, that the score history survives, that a fresh version is not left looking
+already-submitted, that re-prepping the SAME version keeps its own submission fields,
+and that history accumulates across successive version changes rather than overwriting.
+
+Generalised as REQ-HARNESS-6040: any unattended writer of a durable never-prune record
+must merge rather than replace, must retire superseded per-version fields into an
+append-only history instead of deleting them, must keep cumulative fields live, and must
+expose the merge as a pure function so it is testable without the writer's side effects.
+
+Two pre-existing UP017s and a whole-file reformat came along because touching the file
+brought it into ruff's scope for the first time; both are the project's own tooling, and
+the now-dead `timezone` import they left behind is removed.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   |  52 ++++++
+ scripts/kaggle/prep_daily_submission.py       | 166 ++++++++++++++----
+ tests/python/test_prep_daily_status_merge.py  | 133 ++++++++++++++
+ 3 files changed, 318 insertions(+), 33 deletions(-)
+ create mode 100644 tests/python/test_prep_daily_status_merge.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index bf603e611b..036b7ba432 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -290,6 +290,33 @@ Any harness or analyser that reports an ARC efficiency or per-game score SHALL:
+ Phase 3 substrate sampler MUST NOT use Spectral Annealing (Deep Think
+ DT-COMPOSITION 2026-05-08).
+ 
++### REQ-HARNESS-6040: Unattended Writers Of Never-Prune Records Must Merge
++
++Any unattended writer (systemd timer, cron, conductor task) that updates a
++durable never-prune status record MUST merge its fields over the existing
++record rather than replacing the file wholesale.
++
++Origin: on 2026-07-29 the daily-prep timer's bare
++`write_text(json.dumps({...six keys}))` on `ops/arc-daily-prep-status.json`
++deleted the seven submission-trail keys the file also carried, including
++`submission_ref` and `prior_submission_scores` — the leaderboard score-by-date
++history. Because the writer is unattended the loss was silent, and the
++conductor's routine `git add -A` would have published the deletion.
++
++A writer subject to this requirement MUST additionally:
++
++- Retire, never delete, any field that describes a superseded artifact
++  version. Such fields move to an append-only history list so the record stays
++  never-prune-compliant while no longer describing the current version.
++- Keep cumulative fields (histories that are not per-version facts) live rather
++  than retiring them alongside per-version fields.
++- Tolerate a corrupt or unreadable prior record without blocking its primary
++  job.
++
++The merge MUST be implemented as a pure function so it is testable without the
++writer's network side effects, and its tests MUST be written against the
++actual record that was destroyed rather than a synthetic example.
++
+ ## Scenarios
+ 
+ ### SCENARIO-HARNESS-5940-1: A Reset Before A Level-Up Costs Score
+@@ -461,6 +488,30 @@ at most zero by exact node id
+ **Then** HUBO direct evaluation MUST succeed without QUBO reduction at
+ production scale (n≥128).
+ 
++### SCENARIO-HARNESS-6040-1: A New Prep Must Not Destroy The Submission Trail
++
++**Given** `ops/arc-daily-prep-status.json` records `submission_ref` 54768046,
++`submitted_at`, and `prior_submission_scores` for kernel version 9
++**When** the unattended daily-prep timer writes a fresh status for version 10
++**Then** no prior key is dropped without being archived
++**And** `prior_submission_scores` remains live, because it is cumulative rather
++than a per-version fact
++
++### SCENARIO-HARNESS-6040-2: A Fresh Version Must Not Look Already-Submitted
++
++**Given** the prior record carries `submitted: true` for kernel version 9
++**When** a status for version 10 is written
++**Then** the per-version submission fields are moved into an append-only
++`submission_history` entry naming version 9
++**And** they are absent from the live record, so the unsubmitted version 10 is
++not readable as already submitted
++
++### SCENARIO-HARNESS-6040-3: Re-Prepping The Same Version Keeps Its Record
++
++**Given** the prior record describes kernel version 9 and is submitted
++**When** version 9 is re-prepped
++**Then** its own submission fields stay live and no history entry is created
++
+ ### SCENARIO-HARNESS-SAMPLER-2: Future SpecAnn Proposals Rebut Rejection
+ 
+ **Given** a future Phase 3 planning proposal recommends SpecAnn or Spectral
+@@ -490,4 +541,5 @@ applies.
+ | REQ-HARNESS-015 | Implemented (`python/carnot/reporting/prd_gap_agent_failure_table_v494_5439.py`; planned `python/carnot/reporting/prd_gap_agent_failure_table_v495_5452.py`) | Implemented (`results/experiment_5439_prd_gap_agent_failure_table_v494.json`); planned (`results/experiment_5452_prd_gap_agent_failure_table_v495.json`) |
+ | REQ-HARNESS-5920 | Implemented (`python/carnot/experiment_5920_prospective_event_stream_admission.py`) | Implemented (`tests/python/test_experiment_5920_prospective_event_stream_admission.py`) |
+ | REQ-HARNESS-5940 | Implemented (`scripts/arc_gateway_rescore.py`, `scripts/arc_gateway_exact_attribution.py`, `scripts/arc_leaderboard_eval.py` per-level reset instrumentation) | Implemented (`tests/python/test_arc_gateway_rescore.py`, `results/outer_loop_arc_gateway_rescore_20260726.json`) |
++| REQ-HARNESS-6040 | Implemented (`scripts/kaggle/prep_daily_submission.py:_merge_prep_status`) | Implemented (`tests/python/test_prep_daily_status_merge.py`, `ops/arc-daily-prep-status.json`) |
+ | REQ-HARNESS-SAMPLER-NO-SPECANN | Implemented (`_bmad/architecture.md`, `ops/exclusion_manifest.yaml`) | Implemented (`results/experiment_1563_specann_rejection_architecture_record.json`) |
+diff --git a/scripts/kaggle/prep_daily_submission.py b/scripts/kaggle/prep_daily_submission.py
+index 57cabb8d9e..cd3cc3ddcc 100644
+--- a/scripts/kaggle/prep_daily_submission.py
++++ b/scripts/kaggle/prep_daily_submission.py
+@@ -30,7 +30,7 @@ import shutil
+ import subprocess
+ import sys
+ import time
+-from datetime import datetime, timezone
++from datetime import UTC, datetime
+ from pathlib import Path
+ 
+ REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
+@@ -43,6 +43,54 @@ STAGE = Path("/tmp/cac_stage_daily")
+ OPS_FILES = ["arc_solve_registry.yaml", "arc_router_ledger.json"]
+ 
+ 
++# Fields that describe a SUBMISSION rather than a prep. They belong to the kernel version that
++# was submitted, so when a new version is prepped they are retired into history rather than left
++# beside a fresh, unsubmitted prep where they would read as "this one is already submitted".
++_SUBMISSION_FIELDS = (
++    "submitted",
++    "submitted_at",
++    "submission_ref",
++    "submission_status_at_check",
++    "local_gate_result_at_submit",
++)
++
++
++def _merge_prep_status(prior: dict, fresh: dict) -> dict:
++    """Merge a fresh prep record over the durable status file, preserving everything else.
++
++    WHY THIS EXISTS. `ops/arc-daily-prep-status.json` is a never-prune record. Beside the six
++    prep fields this script computes, it carries the submission trail -- `submission_ref`,
++    `submitted_at`, `local_gate_result_at_submit`, and `prior_submission_scores`, which is the
++    actual leaderboard score-by-date history. The original code wrote the file with a bare
++    `write_text(json.dumps({...six keys}))`, which DELETED all of it. Because this script runs
++    from an unattended systemd timer, the destruction was silent, and the next `git add -A`
++    (the conductor's normal path) would have published it. Recovery required knowing to look in
++    one specific commit.
++
++    A plain `{**prior, **fresh}` fixes the deletion but introduces a subtler lie: the previous
++    version's `submitted: true` would sit next to a brand-new, unsubmitted kernel version and
++    read as though THIS prep had been submitted. So on a version change the submission fields
++    are moved into an append-only `submission_history` (kept, per never-prune) and cleared from
++    the live record. `prior_submission_scores` is deliberately NOT retired -- it is a cumulative
++    score history, not a per-version fact.
++    """
++    merged = {**prior, **fresh}
++    changed_version = prior.get("kernel_version") not in (None, fresh.get("kernel_version"))
++    if changed_version and prior.get("submitted"):
++        history = list(merged.get("submission_history") or [])
++        history.append(
++            {
++                k: prior[k]
++                for k in ("kernel_version", "prepped_at", "note", *_SUBMISSION_FIELDS)
++                if k in prior
++            }
++        )
++        merged["submission_history"] = history
++        for key in _SUBMISSION_FIELDS:
++            merged.pop(key, None)
++    return merged
++
++
+ def kaggle(*args: str, check: bool = False) -> subprocess.CompletedProcess:
+     return subprocess.run(["kaggle", *args], capture_output=True, text=True, check=check)
+ 
+@@ -59,8 +107,15 @@ def stage_dataset() -> None:
+         sys.exit(f"ABORT: dataset download failed: {r.stderr[-300:]}")
+     print("[stage] overlaying repo python/carnot (excluding *.so/__pycache__/*.cover) ...")
+     subprocess.run(
+-        ["rsync", "-a", "--exclude=*.so", "--exclude=__pycache__", "--exclude=*.pyc",
+-         f"{REPO / 'python' / 'carnot'}/", f"{STAGE / 'python' / 'carnot'}/"],
++        [
++            "rsync",
++            "-a",
++            "--exclude=*.so",
++            "--exclude=__pycache__",
++            "--exclude=*.pyc",
++            f"{REPO / 'python' / 'carnot'}/",
++            f"{STAGE / 'python' / 'carnot'}/",
++        ],
+         check=True,
+     )
+     for f in OPS_FILES:
+@@ -84,17 +139,23 @@ def stage_dataset() -> None:
+     # string-check MAX_ACTIONS and the .so leak -- neither validates that the agent actually imports
+     # and constructs. Catch the catastrophic-zero case at bundle time, before a scored slot is spent.
+     smoke = subprocess.run(
+-        [sys.executable, "-c",
+-         "import sys; sys.path.insert(0, %r); "
+-         "import carnot.agentic.arc_competition_agent as m; "
+-         "cls = m.make_carnot_agent(type('S', (), {'MAX_ACTIONS': 80})); "
+-         "assert isinstance(cls, type), 'make_carnot_agent did not return a class'; "
+-         "print('agent import+build smoke OK')" % str(STAGE / "python")],
+-        capture_output=True, text=True,
++        [
++            sys.executable,
++            "-c",
++            "import sys; sys.path.insert(0, %r); "
++            "import carnot.agentic.arc_competition_agent as m; "
++            "cls = m.make_carnot_agent(type('S', (), {'MAX_ACTIONS': 80})); "
++            "assert isinstance(cls, type), 'make_carnot_agent did not return a class'; "
++            "print('agent import+build smoke OK')" % str(STAGE / "python"),
++        ],
++        capture_output=True,
++        text=True,
+     )
+     if smoke.returncode != 0:
+-        sys.exit("ABORT: staged agent failed import+build smoke (would be 0 on every eval game):\n"
+-                 f"{smoke.stdout[-400:]}\n{smoke.stderr[-1000:]}")
++        sys.exit(
++            "ABORT: staged agent failed import+build smoke (would be 0 on every eval game):\n"
++            f"{smoke.stdout[-400:]}\n{smoke.stderr[-1000:]}"
++        )
+     print("[stage] agent import+build smoke passed.")
+ 
+     (STAGE / "dataset-metadata.json").write_text(
+@@ -114,12 +175,20 @@ def latest_kernel_version() -> str:
+ 
+ 
+ def prep() -> None:
+-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
++    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%MZ")
+     stage_dataset()
+ 
+     print(f"[prep] re-versioning dataset ({stamp}) ...")
+-    r = kaggle("datasets", "version", "-p", str(STAGE), "-m",
+-               f"daily refresh {stamp}: latest banked solvers", "--dir-mode", "zip")
++    r = kaggle(
++        "datasets",
++        "version",
++        "-p",
++        str(STAGE),
++        "-m",
++        f"daily refresh {stamp}: latest banked solvers",
++        "--dir-mode",
++        "zip",
++    )
+     print(r.stdout[-300:] or r.stderr[-300:])
+     if "error" in (r.stderr or "").lower() and "being created" not in (r.stdout or ""):
+         print("[prep] WARNING: dataset version may have failed; continuing to kernel push")
+@@ -157,23 +226,45 @@ def prep() -> None:
+     # can prep but cannot push-notify or submit (those need an agent / are operator-only), so
+     # it records readiness here; the watchdog surfaces it and the operator approves the submit.
+     status_path = REPO / "ops" / "arc-daily-prep-status.json"
+-    status_path.write_text(json.dumps({
+-        "prepped_at": stamp,
+-        "kernel_version": kver,
+-        "save_run": status,
+-        "parquet_ok": parquet_ok,
+-        "ready_for_operator_submit": ready,
+-        "submit_command": f".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}",
+-    }, indent=2))
++    # MERGE, never replace. This file is a never-prune record: alongside the six prep fields
++    # written here it carries the SUBMISSION history -- `submission_ref`, `submitted_at`,
++    # `local_gate_result_at_submit`, and `prior_submission_scores` (the actual leaderboard
++    # score-by-date trail). A bare `write_text(json.dumps({...6 keys}))` destroyed all of it on
++    # 2026-07-29: the file is written by an unattended systemd timer, so the loss was silent
++    # and would have been published by the next `git add -A`. Recovering it needed a specific
++    # commit (bc2623761) that nobody would have known to look for.
++    prior: dict = {}
++    if status_path.exists():
++        try:
++            prior = json.loads(status_path.read_text())
++        except (json.JSONDecodeError, OSError):
++            prior = {}  # a corrupt/unreadable prior must not block the prep; start fresh
++
++    merged = _merge_prep_status(
++        prior,
++        {
++            "prepped_at": stamp,
++            "kernel_version": kver,
++            "save_run": status,
++            "parquet_ok": parquet_ok,
++            "ready_for_operator_submit": ready,
++            "submit_command": f".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}",
++        },
++    )
++    status_path.write_text(json.dumps(merged, indent=2, sort_keys=True) + "\n")
+ 
+     print("\n=== DAILY PREP RESULT ===")
+     print(f"  dataset: re-versioned ({stamp})")
+-    print(f"  kernel:  v{kver}  save-run={status}  submission.parquet={'OK' if parquet_ok else 'MISSING'}")
++    print(
++        f"  kernel:  v{kver}  save-run={status}  submission.parquet={'OK' if parquet_ok else 'MISSING'}"
++    )
+     print(f"  status file: {status_path}")
+     print(f"  READY FOR OPERATOR-APPROVED SUBMIT: {'YES' if ready else 'NO — investigate above'}")
+     if ready:
+         print("\n  To submit (operator approval), run:")
+-        print(f"    .venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}")
++        print(
++            f"    .venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver {kver}"
++        )
+     sys.exit(0 if ready else 1)
+ 
+ 
+@@ -194,8 +285,10 @@ def submit_only(kver: str, message: str, force: bool = False) -> None:
+         print("[submit] running the local submission gate (refuses on regression)...")
+         rc = subprocess.run([sys.executable, str(gate), "--check"], cwd=str(REPO)).returncode
+         if rc != 0:
+-            sys.exit(f"[submit] BLOCKED by the local gate (exit {rc}) -- the current config is a local "
+-                     f"regression. Fix it (or re-run with --force to override). NOT submitting.")
++            sys.exit(
++                f"[submit] BLOCKED by the local gate (exit {rc}) -- the current config is a local "
++                f"regression. Fix it (or re-run with --force to override). NOT submitting."
++            )
+         print("[submit] gate PASSED -- proceeding to submit.")
+ 
+     from kaggle import api
+@@ -209,18 +302,25 @@ def submit_only(kver: str, message: str, force: bool = False) -> None:
+         kernel_version=str(kver),
+     )
+     print("SUBMITTED:", res)
+-    print("[submit] reminder: on a CONFIRMED leaderboard improvement, refresh the gate baseline with "
+-          "`.venv/bin/python scripts/kaggle/arc_local_submission_gate.py --update-baseline`.")
++    print(
++        "[submit] reminder: on a CONFIRMED leaderboard improvement, refresh the gate baseline with "
++        "`.venv/bin/python scripts/kaggle/arc_local_submission_gate.py --update-baseline`."
++    )
+ 
+ 
+ def main() -> None:
+     ap = argparse.ArgumentParser()
+     ap.add_argument("--dry-run", action="store_true", help="stage + guards only; no Kaggle writes")
+-    ap.add_argument("--submit-only", action="store_true", help="operator-approved submit of latest kernel")
++    ap.add_argument(
++        "--submit-only", action="store_true", help="operator-approved submit of latest kernel"
++    )
+     ap.add_argument("--kver", default=None, help="kernel version to submit (with --submit-only)")
+     ap.add_argument("--message", default=None, help="submission message")
+-    ap.add_argument("--force", action="store_true",
+-                    help="bypass the local submission gate (only when knowingly accepting a regression)")
++    ap.add_argument(
++        "--force",
++        action="store_true",
++        help="bypass the local submission gate (only when knowingly accepting a regression)",
++    )
+     a = ap.parse_args()
+ 
+     if a.dry_run:
+@@ -230,7 +330,7 @@ def main() -> None:
+     if a.submit_only:
+         if not a.kver:
+             sys.exit("--submit-only requires --kver N")
+-        msg = a.message or f"carnot daily {datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
++        msg = a.message or f"carnot daily {datetime.now(UTC).strftime('%Y-%m-%d')}"
+         submit_only(a.kver, msg, force=a.force)
+         return
+     prep()
+diff --git a/tests/python/test_prep_daily_status_merge.py b/tests/python/test_prep_daily_status_merge.py
+new file mode 100644
+index 0000000000..b8198a3348
+--- /dev/null
++++ b/tests/python/test_prep_daily_status_merge.py
+@@ -0,0 +1,133 @@
++"""REQ-HARNESS-6040 regression tests for `_merge_prep_status` — the never-prune fix for the daily-prep status file.
++
++THE INCIDENT (2026-07-29). `scripts/kaggle/prep_daily_submission.py` wrote
++`ops/arc-daily-prep-status.json` with a bare `write_text(json.dumps({...six keys}))`. That
++DELETED the seven submission-trail keys the file also carried, including `submission_ref`
++(54768046), `submitted_at`, and `prior_submission_scores` — the real leaderboard score-by-date
++history `{"2026-07-15": 0.12, "2026-06-30": 0.08}`. The script runs from an unattended systemd
++timer, so the loss was silent, and the conductor's routine `git add -A` would have published it.
++
++These tests are written against that exact record, not a synthetic happy path, per the project's
++"write the regression test for the incident that motivated the check" discipline.
++"""
++
++from __future__ import annotations
++
++import importlib.util
++from pathlib import Path
++
++import pytest
++
++_SPEC = importlib.util.spec_from_file_location(
++    "prep_daily_submission",
++    Path(__file__).resolve().parents[2] / "scripts" / "kaggle" / "prep_daily_submission.py",
++)
++assert _SPEC is not None and _SPEC.loader is not None
++prep = importlib.util.module_from_spec(_SPEC)
++_SPEC.loader.exec_module(prep)
++
++
++# The real destroyed record, as recovered from commit bc2623761.
++INCIDENT_PRIOR = {
++    "kernel_version": 9,
++    "prepped_at": "2026-07-16T18:02:11Z",
++    "save_run": "complete",
++    "parquet_ok": True,
++    "ready_for_operator_submit": True,
++    "submit_command": "…--kver 9",
++    "submitted": True,
++    "submitted_at": "2026-07-16T19:37:35Z",
++    "submission_ref": 54768046,
++    "submission_status_at_check": "complete",
++    "local_gate_result_at_submit": "pass",
++    "note": "v9 provenance note",
++    "prior_submission_scores": {"2026-07-15": 0.12, "2026-06-30": 0.08},
++}
++
++FRESH_V10 = {
++    "prepped_at": "2026-07-29T06:00:00Z",
++    "kernel_version": 10,
++    "save_run": "complete",
++    "parquet_ok": True,
++    "ready_for_operator_submit": True,
++    "submit_command": "…--kver 10",
++}
++
++
++def test_leaderboard_score_history_survives_a_new_prep() -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-1
++    """The key fact the incident destroyed: cumulative scores are NOT per-version."""
++    merged = prep._merge_prep_status(INCIDENT_PRIOR, FRESH_V10)
++    assert merged["prior_submission_scores"] == {"2026-07-15": 0.12, "2026-06-30": 0.08}
++
++
++def test_no_prior_key_is_ever_dropped_without_being_archived() -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-1
++    """Every key present before must still be reachable after — live or in history."""
++    merged = prep._merge_prep_status(INCIDENT_PRIOR, FRESH_V10)
++    archived: set[str] = set()
++    for entry in merged.get("submission_history", []):
++        archived |= set(entry)
++    for key in INCIDENT_PRIOR:
++        assert key in merged or key in archived, f"{key} was destroyed"
++
++
++def test_submission_ref_is_archived_not_deleted_on_version_change() -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-2
++    merged = prep._merge_prep_status(INCIDENT_PRIOR, FRESH_V10)
++    assert merged["submission_history"][0]["submission_ref"] == 54768046
++    assert merged["submission_history"][0]["kernel_version"] == 9
++
++
++def test_a_fresh_version_is_not_left_looking_already_submitted() -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-2
++    """The subtle failure a naive `{**prior, **fresh}` merge would introduce."""
++    merged = prep._merge_prep_status(INCIDENT_PRIOR, FRESH_V10)
++    assert merged["kernel_version"] == 10
++    for key in prep._SUBMISSION_FIELDS:
++        assert key not in merged, f"{key} leaked onto an unsubmitted prep"
++
++
++def test_same_version_reprep_keeps_its_own_submission_fields() -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-3
++    """Re-prepping the SAME version must not retire that version's own submission record."""
++    same = {**FRESH_V10, "kernel_version": 9}
++    merged = prep._merge_prep_status(INCIDENT_PRIOR, same)
++    assert merged["submission_ref"] == 54768046
++    assert "submission_history" not in merged
++
++
++def test_unsubmitted_prior_version_creates_no_history_entry() -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-3
++    prior = {**INCIDENT_PRIOR, "submitted": False}
++    merged = prep._merge_prep_status(prior, FRESH_V10)
++    assert "submission_history" not in merged
++    assert merged["prior_submission_scores"] == INCIDENT_PRIOR["prior_submission_scores"]
++
++
++def test_empty_prior_is_just_the_fresh_record() -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-1
++    assert prep._merge_prep_status({}, FRESH_V10) == FRESH_V10
++
++
++def test_history_accumulates_across_successive_version_changes() -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-2
++    """Append-only: a second retirement must not overwrite the first."""
++    after_v10 = prep._merge_prep_status(INCIDENT_PRIOR, FRESH_V10)
++    submitted_v10 = {**after_v10, "submitted": True, "submission_ref": 55000001}
++    after_v11 = prep._merge_prep_status(submitted_v10, {**FRESH_V10, "kernel_version": 11})
++    refs = [e.get("submission_ref") for e in after_v11["submission_history"]]
++    assert refs == [54768046, 55000001]
++
++
++@pytest.mark.parametrize("bad", [None, 0, ""])
++def test_absent_prior_version_is_not_treated_as_a_change(bad: object) -> None:
++    # REQ-HARNESS-6040 / SCENARIO-HARNESS-6040-3
++    """A prior with no usable version must not spuriously retire a live submission."""
++    prior = {**INCIDENT_PRIOR, "kernel_version": bad}
++    merged = prep._merge_prep_status(prior, FRESH_V10)
++    if bad is None:
++        assert merged["submission_ref"] == 54768046
++    else:
++        # A real-but-different version DOES retire — recorded so the boundary is explicit.
++        assert merged["submission_history"][0]["submission_ref"] == 54768046
+-- 
+2.55.0
+

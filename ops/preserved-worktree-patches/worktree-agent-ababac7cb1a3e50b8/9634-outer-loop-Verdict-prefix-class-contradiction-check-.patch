@@ -1,0 +1,504 @@
+From b54a7aa3e617a07868102d5e88556d0aa4e94194 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 23 Aug 2026 04:36:20 -0400
+Subject: [PATCH 09634/11362] [outer-loop] Verdict prefix/class contradiction
+ check; three ledger dispositions
+
+CORRECTION FIRST. Three times this session I reported the conductor
+"poisoning" valid complete_-prefixed verdicts via substring matches on
+"retired"/"partial"/"blocked" in their descriptive text. That diagnosis was
+wrong. Stripping verdict_class from the affected artifacts makes
+_verdict_is_untrustworthy return trustworthy, which proves the token lists
+never ran. The conductor is enum-first per REQ-CONDUCTOR-VERDICT-2 and was
+behaving exactly as specified every time.
+
+The real defect is narrower and nobody was checking it: four of the nineteen
+artifacts declaring verdict_class open honest_verdict with `complete_` while
+declaring `verdict_class: partial`. The conductor believes the FIELD, so each
+task was classified partial and re-run toward the 3-fail limit -- exp6513's
+task retired permanently that way -- while any reader of the verdict STRING
+saw a success. The record asserted two things and nothing compared them.
+
+REQ-CONDUCTOR-VERDICT-3 adds VERDICT_PREFIX_CLASS_CONTRADICTION, WARN. It
+reads honest_verdict, which REQ-CONDUCTOR-VERDICT-1 otherwise forbids: that
+prohibition was written against MID-STRING tokens that drift because ordinary
+prose contains them, whereas this is anchored at position 0 against the same
+closed 12-prefix set the conductor already uses. WARN not CRITICAL because
+the measurement underneath may be sound and only the label is wrong.
+Deliberately narrow: `blocked_` + partial is NOT flagged, since a blocked run
+genuinely is a kind of partial and exp6528 is that honest shape. Corpus-wide
+it fires on exactly the 4 artifacts that motivated it.
+
+Mutations, each RED then byte-identical GREEN: contradiction unwired; prefix
+anchor loosened to substring; principle-unwrap removed; partial-only guard
+dropped.
+
+A SIBLING CHECK WAS BUILT AND REMOVED THE SAME DAY. verdict_class=positive
+with verifier_is_oracle=True is already CRITICAL, but only when the class is
+DECLARED, so omitting the field walks past it -- which is how exp6478 and
+exp6497 escaped. A check for the undeclared case was written, tested and
+mutation-proved, then measured against the corpus: 221 artifacts, against 4
+for its sibling. Declaring verdict_class is forward-only from 2026-08-21, so
+the historical corpus was being blamed for omitting a field that did not
+exist, and both motivating artifacts carry no date field, so no date gate
+could separate them from the 221. A warn on 221 would drown the 4 real ones,
+and an overreaching gate gets bypassed -- the principle its own docstring
+stated. Removed, with the measurement recorded in the spec rather than
+quietly dropped.
+
+THREE LEDGER ROWS DISPOSITIONED, all ACCEPTED -- every finding was a true
+positive.
+
+- exp6478: `complete_positive: ... exact backend remains the oracle` with
+  verifier_is_oracle=true and a ready_score of exactly 1.0. A verifier that
+  IS the oracle cannot produce a research win. Execution-grounded, not a
+  selection result; not headline- or capstone-eligible.
+- exp6497: same shape, both headline numbers exactly 1.0. Perfect scores from
+  the oracle that defines correctness are a tautology, not a stress-test pass.
+- exp6521: the honest version -- it declares circular_positive, so the
+  circularity already travels with the claim. What is overstated is READINESS:
+  zero unsafe admissions were measured by the same exact-replay verifier that
+  gates acceptance. The audit's ADD_MISSING_CONTROL is right, and is future
+  work.
+
+Artifacts left unedited per never-prune; the judgment lives in the ledger.
+
+MUTATION MARKER deleted deliberately. A concurrent agent's pytest run on
+test_operator_curated_doc_guard.py armed a marker naming
+test_verdict_prefix_class_contradiction.py. That file is mine, new this
+session, and the change it saw was my own removal of a dead test class plus
+ruff formatting -- the marker itself records attributed_to_run: [], i.e. it
+did not observe the test writing the file. This is the documented
+over-reporting case: the tool diffs a shared working tree and cannot tell
+whose write it was.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../capabilities/research-harnesses/spec.md   |  95 +++++++++++
+ ops/audit-findings-ledger.md                  |   6 +-
+ scripts/adversarial_verify.py                 | 112 +++++++++++--
+ ...test_verdict_prefix_class_contradiction.py | 147 ++++++++++++++++++
+ 4 files changed, 345 insertions(+), 15 deletions(-)
+ create mode 100644 tests/python/test_verdict_prefix_class_contradiction.py
+
+diff --git a/openspec/capabilities/research-harnesses/spec.md b/openspec/capabilities/research-harnesses/spec.md
+index ce10681f35..bbd15c1e74 100644
+--- a/openspec/capabilities/research-harnesses/spec.md
++++ b/openspec/capabilities/research-harnesses/spec.md
+@@ -8176,6 +8176,101 @@ return `⚠️ Research Finding`, not `✅ Complete`, even when a
+ |---|---|---|
+ | REQ-CONDUCTOR-VERDICT-2 | Implemented (`scripts/research_conductor.py:_verdict_is_untrustworthy` enum-first branch; `scripts/in_process_doc_reconcile.py:classify_artifact` enum-first mapping) | Implemented (`tests/python/test_verdict_class_enum_first.py`; mutations: conductor enum branch removed -> RED, circular_positive mapped to Complete -> RED) |
+ 
++## REQ-CONDUCTOR-VERDICT-3: A Success-Shaped Verdict String SHALL NOT Declare Itself Partial
++
++Origin incident, 2026-08-23. Four artifacts wrote an `honest_verdict`
++opening with `complete_` while declaring `verdict_class: partial`:
++
++| Artifact | verdict opens with | verdict_class |
++|---|---|---|
++| experiment_6506_v561_evidence_corrigendum | `complete_v561_...` | partial |
++| experiment_6510_v563_independent_exact_root | `complete_v563_...` | partial |
++| experiment_6513_v564_terminal_handoff_contract | `complete_v564_...` | partial |
++| experiment_6526_v564_independent_capstone | `complete_partial_...` | partial |
++
++Four of the nineteen artifacts declaring `verdict_class` at the time.
++
++REQ-CONDUCTOR-VERDICT-2 made the conductor enum-first, so it believed the
++FIELD: each task was classified partial and re-run toward the 3-fail limit.
++`experiment_6513`'s task retired permanently that way. A human or tool
++reading the verdict STRING saw a completed result. The record asserted two
++different things and nothing compared them.
++
++This was misdiagnosed three times during the same session as a substring
++false positive in the conductor's token lists. It was not: stripping
++`verdict_class` from those artifacts makes the classifier return
++trustworthy, proving the token lists never ran. The enum was working
++exactly as specified; the artifacts contradicted themselves.
++
++The rule. When an artifact declares `verdict_class: partial` AND its
++`honest_verdict` begins with a terminal-success prefix, a WARN flag SHALL
++be raised naming both. The author picks one: drop the success prefix, or
++declare the class that matches.
++
++Why this check MAY read `honest_verdict` when REQ-CONDUCTOR-VERDICT-1
++forbids it. That prohibition was written against MID-STRING tokens like
++"marginal" and "retired", which drift because ordinary prose contains
++them. This match is anchored at position 0 against the same closed
++12-member prefix set the conductor already uses. An anchored prefix cannot
++drift into unrelated prose, so the reason behind the prohibition does not
++apply.
++
++WARN, not CRITICAL, on purpose. The measurement underneath may be sound;
++the label is what is wrong. Quarantining the artifact would punish a result
++for a naming mistake, and a gate that overreaches gets bypassed.
++
++Deliberately narrow. Only success-prefix versus `partial`. A `blocked_`
++prefix with `partial` is NOT flagged — a blocked run genuinely is a kind of
++partial, and `experiment_6528` is that honest shape. Further pairs are
++added when a real artifact shows one, not speculatively.
++
++#### SCENARIO-CONDUCTOR-VERDICT-5
++
++Given `verdict_class: partial` and an `honest_verdict` starting with any
++terminal-success prefix, a `VERDICT_PREFIX_CLASS_CONTRADICTION` WARN SHALL
++be raised naming the prefix.
++
++#### SCENARIO-CONDUCTOR-VERDICT-6
++
++Given `verdict_class: partial` and an `honest_verdict` starting with
++`blocked_`, no flag SHALL be raised.
++
++#### SCENARIO-CONDUCTOR-VERDICT-7
++
++Given a terminal-success prefix and any class other than `partial`, no
++contradiction flag SHALL be raised by this check.
++
++#### SCENARIO-CONDUCTOR-VERDICT-8
++
++Given a principle-wrapped `honest_verdict` (`{"value": ..., "principle":
++...}`), the check SHALL read through the wrapper rather than skipping it.
++
++## Implementation Status (REQ-CONDUCTOR-VERDICT-3)
++
++| REQ | Implementation | Tests |
++|---|---|---|
++| REQ-CONDUCTOR-VERDICT-3 | Implemented (`scripts/adversarial_verify.py`: `_check_terminal_prefix_vs_partial_class` + `_TERMINAL_SUCCESS_PREFIXES` + `_verdict_text` unwrap, called from `check_verdict_class_consistency`) | Implemented (`tests/python/test_verdict_prefix_class_contradiction.py`, 37 tests with `test_verdict_class_consistency.py`; 4 mutations each RED then byte-identical GREEN: contradiction unwired, prefix-anchor loosened to substring, principle-unwrap removed, partial-only guard dropped) |
++
++**Scope note, 2026-08-23 — a sibling check was built and removed the same
++day.** `verdict_class: positive` with `verifier_is_oracle: True` is already
++CRITICAL, but only when the class is DECLARED, so omitting the field walked
++past it. A check keyed on (terminal-success prefix + `verifier_is_oracle`)
++for the undeclared case was written, tested, and mutation-proved — then
++measured against the corpus and **removed**: it fired on **221** artifacts
++against 4 for its sibling. Declaring `verdict_class` is forward-only from
++2026-08-21, so the historical corpus is being blamed for omitting a field
++that did not exist, and the two artifacts that motivated the check
++(exp6478, exp6497) carry no date field, so no date gate could separate them
++from the 221. A warn on 221 artifacts would drown the 4 real ones, and an
++overreaching gate gets bypassed.
++
++Recorded rather than quietly dropped, because the reasoning is the reusable
++part: a check that is correct in principle and 55x over-broad in practice is
++not ready, and the measurement that showed it must survive the deletion.
++Prevention for NEW artifacts is the planner emitting `verdict_class`; the
++two historical claims are dispositioned in `ops/audit-findings-ledger.md`;
++`check_circular_moat_overclaim` already covers the headline case.
++
+ ## REQ-CONDUCTOR-DENYHOOK-1: Forbidden Commands SHALL Be Denied At The Harness Layer, With A WARN-Only Prompt Scan Behind Them
+ 
+ Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
+diff --git a/ops/audit-findings-ledger.md b/ops/audit-findings-ledger.md
+index d49a60efa8..1206a077aa 100644
+--- a/ops/audit-findings-ledger.md
++++ b/ops/audit-findings-ledger.md
+@@ -7,6 +7,6 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
+ 
+ | First seen | Audit | Artifact | Verdict | Disposition | Note |
+ |---|---|---|---|---|---|
+-| 2026-08-22 | experiment_claim_audit | experiment_6478_identifiable_held_exact_energy_selection.json | CLAIM_OVERSTATED | OPEN | |
+-| 2026-08-22 | experiment_claim_audit | experiment_6497_factor_pool_support_stress.json | CLAIM_OVERSTATED | OPEN | |
+-| 2026-08-23 | experiment_claim_audit | experiment_6521_transactional_refinement_conflict_memory.json | CLAIM_OVERSTATED | OPEN | |
++| 2026-08-22 | experiment_claim_audit | experiment_6478_identifiable_held_exact_energy_selection.json | CLAIM_OVERSTATED | ACCEPTED | 2026-08-23 outer-loop. Finding is correct. The verdict says it itself: `complete_positive: ... exact backend remains the oracle`, with `verifier_is_oracle: true` and `held_exact_energy_selection_ready_score: 1.0`. A verifier that IS the oracle cannot produce a research win, so this is `execution_grounded`, not a selection result. The measurement stands; the framing does not. NOT headline- or capstone-eligible, and not evidence that energy selection beats a baseline. No verdict_class was declared, which is how it escaped the existing positive-vs-oracle cross-check. A lint for that gap was built and REMOVED the same day: it fired on 221 historical artifacts, because declaring the class is forward-only from 2026-08-21 and this artifact carries no date field to separate it from them. Prevention for NEW artifacts is the planner emitting verdict_class, after which positive + verifier_is_oracle is already CRITICAL. Artifact left unedited per never-prune. |
++| 2026-08-22 | experiment_claim_audit | experiment_6497_factor_pool_support_stress.json | CLAIM_OVERSTATED | ACCEPTED | 2026-08-23 outer-loop. Same shape as exp6478 and same disposition. `complete_positive:` with `verifier_is_oracle: true`, no verdict_class, and both headline numbers at exactly 1.0 (`support_preserved_score`, `support_stress_complete_score`). Perfect scores from the oracle that defines correctness are a tautology, not a stress-test pass. Reads honestly as "the exact evaluator agreed with itself under load"; it is not evidence the pool preserves support against an independent standard. NOT headline-eligible. See the exp6478 note for why no lint was added for this shape. |
++| 2026-08-23 | experiment_claim_audit | experiment_6521_transactional_refinement_conflict_memory.json | CLAIM_OVERSTATED | ACCEPTED | 2026-08-23 outer-loop. Finding is correct and the artifact is the honest version of the same problem: it declares `verdict_class: circular_positive`, so the circularity already travels with the claim and no lint fires. What is overstated is READINESS — `unsafe_admission_count: 0` and `unsafe_use_count: 0` were measured by the exact-replay verifier that also gates acceptance, so no independent oracle could have disagreed. Audit recommendation ADD_MISSING_CONTROL is right and is future work, not a correction to this artifact. Usable as a lifecycle/recovery result; NOT usable as a safety claim until an oracle-distinct control exists. |
+diff --git a/scripts/adversarial_verify.py b/scripts/adversarial_verify.py
+index b13a6e7b41..374000b38c 100644
+--- a/scripts/adversarial_verify.py
++++ b/scripts/adversarial_verify.py
+@@ -2334,12 +2334,12 @@ def _is_web_bibliographic_search_only(d: dict[str, Any]) -> bool:
+     """True when the artifact declares pure web/bibliographic search, no model load.
+     See WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE for the exemplar incidents (exp5718, exp5732)."""
+ 
+-    return _inference_substrate_matches(
+-        d, WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE
+-    ) or _inference_substrate_matches(
+-        d, SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE
+-    ) or _inference_substrate_matches(
+-        d, LOW_CONCURRENCY_PRIMARY_SOURCE_INGESTION_NO_EXPERIMENTAL_LLM_SUBSTRATE
++    return (
++        _inference_substrate_matches(d, WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE)
++        or _inference_substrate_matches(d, SOURCE_RECEIPTS_METHOD_PREREGISTRATION_NO_LLM_SUBSTRATE)
++        or _inference_substrate_matches(
++            d, LOW_CONCURRENCY_PRIMARY_SOURCE_INGESTION_NO_EXPERIMENTAL_LLM_SUBSTRATE
++        )
+     )
+ 
+ 
+@@ -2357,12 +2357,10 @@ def _is_local_sota_gguf_small_n(d: dict[str, Any]) -> bool:
+     not full multi-hundred-token generation). See LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE for
+     the exemplar incidents (exp5262, exp5263)."""
+ 
+-    return _inference_substrate_matches(
+-        d, LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE
+-    ) or _inference_substrate_matches(
+-        d, LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE
+-    ) or _inference_substrate_matches(
+-        d, LOCAL_LLAMA_CPP_THREE_FAMILY_FORMAL_MUTATION_SUBSTRATE
++    return (
++        _inference_substrate_matches(d, LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE)
++        or _inference_substrate_matches(d, LOCAL_LLAMA_CPP_GGUF_ATOMIC_FACTOR_PROPOSALS_SUBSTRATE)
++        or _inference_substrate_matches(d, LOCAL_LLAMA_CPP_THREE_FAMILY_FORMAL_MUTATION_SUBSTRATE)
+     )
+ 
+ 
+@@ -3545,6 +3543,14 @@ def check_verdict_class_consistency(d: dict[str, Any], flags: list[Flag]) -> Non
+     """
+     vc = d.get("verdict_class")
+     if vc is None:
++        # Absent verdict_class still draws no flag here. A sibling check keyed on
++        # (success prefix + verifier_is_oracle) was built and REMOVED on
++        # 2026-08-23: it fired on 221 artifacts, because declaring the class is
++        # forward-only from 2026-08-21 and the historical corpus predates it.
++        # The two artifacts that motivated it (exp6478, exp6497) carry no date
++        # field, so no date gate could separate them from the 221. They are
++        # dispositioned in ops/audit-findings-ledger.md instead, and
++        # check_circular_moat_overclaim already covers the headline case.
+         return
+     if not isinstance(vc, str) or vc not in _VERDICT_CLASSES:
+         flags.append(
+@@ -3593,6 +3599,88 @@ def check_verdict_class_consistency(d: dict[str, Any], flags: list[Flag]) -> Non
+                     ),
+                 )
+             )
++    _check_terminal_prefix_vs_partial_class(d, vc, flags)
++
++
++# The closed prefix set the conductor already trusts as terminal
++# (research_conductor.py:_TERMINAL_VERDICT_PREFIXES). Duplicated rather than
++# imported because adversarial_verify must run without the conductor present.
++_TERMINAL_SUCCESS_PREFIXES = (
++    "complete:",
++    "complete ",
++    "complete_",
++    "success:",
++    "success ",
++    "success_",
++    "passed:",
++    "passed ",
++    "passed_",
++    "shipped:",
++    "shipped ",
++    "shipped_",
++)
++
++
++def _verdict_text(d: dict[str, Any]) -> str | None:
++    """honest_verdict as a string, reading through a principle wrapper."""
++    v = d.get("honest_verdict")
++    v = v.get("value") if isinstance(v, dict) else v
++    return v if isinstance(v, str) else None
++
++
++def _check_terminal_prefix_vs_partial_class(d: dict[str, Any], vc: str, flags: list[Flag]) -> None:
++    """A success-shaped verdict string that declares itself partial (REQ-CONDUCTOR-VERDICT-3).
++
++    Origin, 2026-08-23. Four artifacts wrote a verdict opening with `complete_`
++    while declaring `verdict_class: partial`. The conductor is enum-first, so it
++    believed the field, classified the task partial, and re-ran it to the 3-fail
++    limit -- exp6513's task retired permanently that way. Meanwhile any human or
++    tool reading the verdict STRING saw a completed result. The record said two
++    different things and nothing compared them.
++
++    Measured when this shipped: 4 of the 19 artifacts declaring verdict_class.
++
++    Why this is allowed to look at honest_verdict when the parent check refuses
++    to. The parent's rule -- never substring-match the verdict -- was written
++    against MID-STRING tokens like "marginal" and "retired", which drift because
++    any prose can contain them. This match is anchored at position 0 against a
++    closed 12-member set the conductor already uses for the same purpose. An
++    anchored prefix cannot drift into unrelated prose the way a free substring
++    can, so the reason for the parent's rule does not apply here.
++
++    WARN, not critical, on purpose. The measurement underneath may be perfectly
++    good; what is wrong is the label. Quarantining the artifact would punish the
++    result for a naming mistake, and a gate that overreaches gets bypassed.
++
++    Deliberately narrow: only success-prefix vs `partial`. A `blocked_` prefix
++    with `partial` is NOT flagged -- a blocked run genuinely is a kind of
++    partial, and exp6528 is that honest shape. Speculative pairs are left out
++    until a real artifact shows one.
++    """
++    if vc != "partial":
++        return
++    verdict = _verdict_text(d)
++    if verdict is None:
++        return
++    low = verdict.lower()
++    hit = next((p for p in _TERMINAL_SUCCESS_PREFIXES if low.startswith(p)), None)
++    if hit is None:
++        return
++    flags.append(
++        Flag(
++            kind="VERDICT_PREFIX_CLASS_CONTRADICTION",
++            severity="warn",
++            detail=(
++                f"honest_verdict opens with the terminal-success prefix {hit!r} but "
++                "verdict_class='partial'. The conductor is enum-first, so it believes "
++                "the FIELD: the task is classified partial and re-run toward the 3-fail "
++                "retire limit, while a reader of the verdict string sees a success. "
++                "Pick one. If the run genuinely fell short, drop the success prefix. "
++                "If it completed, declare the class that matches "
++                "(positive / circular_positive / null)."
++            ),
++        )
++    )
+ 
+ 
+ # --- ARC live-agent self-solve discipline (2026-06-22, operator-directed; 2nd recurrence) ------------
+diff --git a/tests/python/test_verdict_prefix_class_contradiction.py b/tests/python/test_verdict_prefix_class_contradiction.py
+new file mode 100644
+index 0000000000..60fa5f329d
+--- /dev/null
++++ b/tests/python/test_verdict_prefix_class_contradiction.py
+@@ -0,0 +1,147 @@
++"""A success-shaped verdict string that declares itself partial.
++
++REQ: REQ-CONDUCTOR-VERDICT-3 (openspec/capabilities/research-harnesses/spec.md).
++SCENARIOs: SCENARIO-CONDUCTOR-VERDICT-5 (success prefix + partial -> WARN),
++-6 (blocked_ prefix + partial -> silent), -7 (success prefix + other class ->
++silent), -8 (principle-wrapped verdict is read through).
++
++Origin, 2026-08-23. Four artifacts opened honest_verdict with `complete_` while
++declaring verdict_class: partial. The conductor is enum-first (REQ-CONDUCTOR-
++VERDICT-2), so it believed the field, classified each task partial, and re-ran
++it toward the 3-fail limit; experiment_6513's task retired permanently that way.
++Anyone reading the verdict STRING saw a success.
++
++The same incident was misdiagnosed three times as a substring false positive in
++the conductor's token lists. Stripping verdict_class from those artifacts makes
++the classifier return trustworthy, which proves the token lists never ran. That
++misdiagnosis is why test_the_real_incident_shape_is_not_a_token_false_positive
++exists below: it pins the mechanism, not just the symptom.
++
++No test writes tracked state.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "scripts"))
++
++import pytest  # noqa: E402
++
++import adversarial_verify as av  # noqa: E402
++
++KIND = "VERDICT_PREFIX_CLASS_CONTRADICTION"
++
++
++def _flags(verdict, verdict_class, **extra):
++    d = {"honest_verdict": verdict, "verdict_class": verdict_class, **extra}
++    out: list = []
++    av.check_verdict_class_consistency(d, out)
++    return out
++
++
++def _kinds(flags):
++    return [f.kind for f in flags]
++
++
++class TestContradictionFires:
++    # The four real artifacts from the origin incident, by their actual verdicts.
++    @pytest.mark.parametrize(
++        "verdict",
++        [
++            "complete_v561_evidence_corrigendum_v562_lineage_lock: ...",
++            "complete_v563_independent_exact_root: immutable Exp6504 rows ...",
++            "complete_v564_terminal_handoff_contract: V563 terminal failures ...",
++            "complete_partial_v564_evidence_graph: row-supported structural ...",
++        ],
++    )
++    def test_origin_incident_artifacts(self, verdict: str) -> None:
++        # SCENARIO-CONDUCTOR-VERDICT-5.
++        assert KIND in _kinds(_flags(verdict, "partial"))
++
++    @pytest.mark.parametrize("prefix", list(av._TERMINAL_SUCCESS_PREFIXES))
++    def test_every_terminal_prefix_is_covered(self, prefix: str) -> None:
++        # A prefix present in the set but unreachable by the check would be a
++        # pattern that exists on paper and does not bite.
++        assert KIND in _kinds(_flags(f"{prefix}whatever happened here", "partial"))
++
++    def test_flag_is_warn_not_critical(self) -> None:
++        # Quarantining an artifact for a labelling mistake would punish a
++        # possibly-sound measurement, and an overreaching gate gets bypassed.
++        flag = next(f for f in _flags("complete_x: y", "partial") if f.kind == KIND)
++        assert flag.severity == "warn"
++
++    def test_detail_names_the_prefix_and_the_class(self) -> None:
++        flag = next(f for f in _flags("success: y", "partial") if f.kind == KIND)
++        assert "success:" in flag.detail and "partial" in flag.detail
++
++    def test_uppercase_verdict_still_matches(self) -> None:
++        assert KIND in _kinds(_flags("COMPLETE_V563_ROOT: X", "partial"))
++
++    def test_principle_wrapped_verdict_is_read_through(self) -> None:
++        # SCENARIO-CONDUCTOR-VERDICT-8. Principle-annotated fields are a
++        # documented convention here, and unhandled wrapping is a known bug
++        # class in this exact layer (QA-Layer Authenticity Discipline, origin
++        # bug #2 -- 176 artifacts silently defeated substrate recognition).
++        wrapped = {"value": "complete_v563_root: x", "principle": "why it matters"}
++        assert KIND in _kinds(_flags(wrapped, "partial"))
++
++
++class TestContradictionStaysSilent:
++    def test_blocked_prefix_with_partial_is_honest(self) -> None:
++        # SCENARIO-CONDUCTOR-VERDICT-6. experiment_6528's real shape: a blocked
++        # run genuinely IS a kind of partial. Flagging it would make the check
++        # cry wolf on the honest case.
++        assert KIND not in _kinds(
++            _flags("blocked_v565_source_model_method_contract: gates failed", "partial")
++        )
++
++    @pytest.mark.parametrize(
++        "cls", ["positive", "circular_positive", "null", "blocked", "disqualified"]
++    )
++    def test_success_prefix_with_non_partial_class(self, cls: str) -> None:
++        # SCENARIO-CONDUCTOR-VERDICT-7.
++        assert KIND not in _kinds(_flags("complete_x: y", cls))
++
++    def test_no_verdict_class_declared(self) -> None:
++        out: list = []
++        av.check_verdict_class_consistency({"honest_verdict": "complete_x: y"}, out)
++        assert KIND not in _kinds(out)
++
++    def test_non_string_verdict_does_not_raise(self) -> None:
++        assert KIND not in _kinds(_flags(None, "partial"))
++        assert KIND not in _kinds(_flags(1234, "partial"))
++
++    def test_prefix_mid_string_is_not_a_match(self) -> None:
++        # The whole reason this check is allowed to look at honest_verdict is
++        # that it anchors at position 0. A mid-string "complete" must NOT fire,
++        # or it becomes the drifting-substring problem REQ-CONDUCTOR-VERDICT-1
++        # refuses to reintroduce.
++        assert KIND not in _kinds(
++            _flags("null_result: the sweep is complete_but_inconclusive", "partial")
++        )
++
++
++class TestMechanism:
++    def test_the_real_incident_shape_is_not_a_token_false_positive(self) -> None:
++        # The incident was misdiagnosed three times as the conductor's token
++        # lists matching "retired"/"partial"/"blocked" inside prose. Pin the
++        # actual mechanism: with verdict_class present the conductor classifies
++        # from the ENUM and never reaches those lists.
++        import research_conductor as rc
++
++        artifact = {
++            "honest_verdict": "complete_v563_independent_exact_root: ... retired V562 ...",
++            "verdict_class": "partial",
++        }
++        with_class, _ = rc._verdict_is_untrustworthy(artifact)
++        without_class, _ = rc._verdict_is_untrustworthy(
++            {k: v for k, v in artifact.items() if k != "verdict_class"}
++        )
++        assert with_class is True, "enum-first should classify this partial"
++        assert without_class is False, (
++            "without the enum the terminal-prefix whitelist clears it -- so the "
++            "token lists were never the cause"
++        )
+-- 
+2.55.0
+

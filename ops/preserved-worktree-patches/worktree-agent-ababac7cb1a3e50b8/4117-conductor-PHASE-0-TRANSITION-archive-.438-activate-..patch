@@ -1,0 +1,1615 @@
+From bff25d9cb1894c36897b14d1bb64b59d20c97a5b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 26 Jun 2026 02:48:16 -0400
+Subject: [PATCH 04117/11362] [conductor] PHASE 0 (TRANSITION) -- archive .438
+ -> activate .439; assert YAML parses + the smart-subset pre-test gate is
+ green; DETECT + RESOLVE any poison pre-test. RECORD the true .438 close-state
+ (incl. the S0 retired-on-leak headline).
+
+Automated research step by research conductor.
+Task ID: exp4770-phase0
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...xperiment_4770_archive_438_activate_439.py | 729 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...eriment_4770_archive_438_activate_439.json | 237 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xperiment_4770_archive_438_activate_439.py | 446 +++++++++++
+ 12 files changed, 1435 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/experiment_4770_archive_438_activate_439.py
+ create mode 100644 results/experiment_4770_archive_438_activate_439.json
+ create mode 100644 tests/python/test_experiment_4770_archive_438_activate_439.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 489acb9c04..d265596919 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -427,3 +427,7 @@
+ - SCENARIO-CAPSTONE-4769: The artifact `results/experiment_4769_capstone_v438.json` must emit principle-annotated top-level fields for `honest_verdict`, `s0_structural_energy_verdict`, `reproducible_total_levels`, `cited_upstream_artifacts`, `flagged_artifacts_skipped`, and `inference_substrate`; it must also emit `levelup_bank`, `self_play_checkpoint`, `heldout_readiness`, `silent_bug_audit`, `submission_package_state`, `hardware_continuity`, `sota_handoff`, `upstream_oracle_declarations`, `preconditions_checked`, `field_principles`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, and `result_path`. The default .438 read must produce a terminal-prefix `honest_verdict`, set `inference_substrate=aggregation_from_upstream_artifacts`, skip stamped flagged Exp4763 and Exp4766 before metric import, derive `s0_structural_energy_verdict.direction=RETIRED` and `s1_queued=false` from a clean Exp4761 `s0_gate_passed=false`, record Exp4762 as a zero-delta level-up bank with oracle declaration honored as not-a-moat, record Exp4764 readiness as a flat held-out first-win null, record Exp4765's S0 reopen warning, carry registry `reproducible_total_levels=65`, and cite upstream sha256 values.
+ - SCENARIO-CAPSTONE-4769-BLOCKED-PRECONDITION: If `scripts/summarize_artifact.py` is missing, `ops/arc_solve_registry.yaml` is missing or not YAML-loadable, the capstone spec lacks `REQ-CAPSTONE-4769`, or any required upstream artifact from Exp4761 through Exp4768 is missing, the workflow must still write `results/experiment_4769_capstone_v438.json` with `honest_verdict=blocked_<resource>`, failed resources in `preconditions_checked`, empty metric imports, empty flagged aggregates except for any present stamped flags, `inference_substrate=aggregation_from_upstream_artifacts`, and a valid reproducibility checksum.
+ - SCENARIO-CAPSTONE-4769-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; capstone_ready=true is success_/complete_."; `s0_structural_energy_verdict` = "the headline -- direction ALIVE (S0 passed, S1 queued) or RETIRED (S0 nulled); the milestone's load-bearing result."; `reproducible_total_levels` = "the monotonic ARC progress metric carried from the registry, not re-counted."; `cited_upstream_artifacts` = "list of {experiment_id, fields_imported, sha256} -- the audit trail proving the capstone synthesizes real measurements."; `flagged_artifacts_skipped` = "records which flagged_adversarial artifacts were excluded -- never aggregate a fabricated number."; `inference_substrate` = "aggregation_from_upstream_artifacts; 0.0001s floor."
++- REQ-CAPSTONE-4770: The .438-to-.439 transition recorder SHALL write `results/experiment_4770_archive_438_activate_439.json` without modifying `scripts/research_conductor.py`, without submitting to the leaderboard, and without fabricating missing resources. It SHALL verify `AGENTS.md` and `CODEX.md` or `OPENCODE.md` were read, attempt the literal `research-roadmap-next.yaml` YAML precondition, verify `arc_solver_kit.offline_arcade()`, accept a missing literal next roadmap only when active `research-roadmap.yaml` already parses as milestone `2026.06.439`, assert the smart-subset pre-test gate is green on any complete path, read `ops/arc_solve_registry.yaml` as authoritative with `reproducible_total_levels=65`, cite `results/experiment_4769_capstone_v438.json`, `results/experiment_4761_structural_energy_s0_core_bet_probe.json`, and the roadmap YAML evidence, and record whether any single-failure poison pre-test was fixed or quarantined. If any blocking precondition fails, it SHALL still write the artifact with `honest_verdict=blocked_<resource>`, failed resources in `preconditions_checked`, and no fabricated `close_state_438` or `v439_pivot`. The complete path SHALL record the true .438 close-state: the S0 structural-energy result is `RETIRED` despite structural LOO AUROC `0.746` because origin-probe AUROC `0.733` failed the leak audit; `reproducible_total_levels` remains `65`; and S0' is queued in .439 A1 as the origin-matched induced-correct versus induced-wrong re-test.
++- SCENARIO-CAPSTONE-4770: The artifact `results/experiment_4770_archive_438_activate_439.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `poison_test_resolved`, and `reproducible_total_levels`; it must also emit `transition`, `preconditions_checked`, `close_state_438`, `v439_pivot`, `cited_upstream_artifacts`, `field_provenance`, `duration_s`, `random_seed`, `reproducibility_checksum`, `schema`, `experiment`, `experiment_id`, `spec_refs`, `result_path`, and `leaderboard_submission`. The complete path must terminal-prefix `honest_verdict` as `complete_438_archived_439_activated_<state>`, set `inference_substrate` to `aggregation_from_upstream_artifacts`, confirm active milestone `2026.06.439`, assert the smart-subset pre-test gate is green, cite upstream artifacts by sha256, record any poison pre-test id and reason or an explicit no-poison-observed note, take `reproducible_total_levels` from the registry rather than re-counting, and never submit to the leaderboard.
++- SCENARIO-CAPSTONE-4770-BLOCKED-PRECONDITION: If neither parseable literal `research-roadmap-next.yaml` nor already-active `.439` is available, `offline_arcade()` fails, the smart-subset pre-test gate is red, the registry is missing or not at `65`, `results/experiment_4769_capstone_v438.json` is missing, `results/experiment_4761_structural_energy_s0_core_bet_probe.json` is missing, or the capstone spec lacks `REQ-CAPSTONE-4770`, the workflow must still write `results/experiment_4770_archive_438_activate_439.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `transition.activation_state=blocked_missing_or_failed_precondition`, and empty `close_state_438` and `v439_pivot`.
++- SCENARIO-CAPSTONE-4770-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; clean transition is complete_438_archived_439_activated_<state>."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream JSON, no LLM; 0.0001s floor."; `poison_test_resolved` = "records whether a poison pre-test was found+fixed -- the cascade-skip guard."; `reproducible_total_levels` = "the authoritative ARC progress metric carried from the registry, not re-counted."; `close_state_438` = "the honest .438 numbers carried forward from the capstone and S0 leak-audit artifact so the record does not drift."; `v439_pivot` = "the .439 headline rationale (S0' origin-matched re-test) recorded so milestone intent is traceable."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 64c00f1169..ab2d6211a2 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 192,
+   "code_violations": 0,
+-  "experiments_checked": 3778,
++  "experiments_checked": 3779,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4770_archive_438_activate_439.py b/python/carnot/experiment_4770_archive_438_activate_439.py
+new file mode 100644
+index 0000000000..43301dbcd5
+--- /dev/null
++++ b/python/carnot/experiment_4770_archive_438_activate_439.py
+@@ -0,0 +1,729 @@
++"""Experiment 4770: archive `.438`, activate `.439`, and record `.438` honestly.
++
++Spec refs: REQ-CAPSTONE-4770, SCENARIO-CAPSTONE-4770,
++SCENARIO-CAPSTONE-4770-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4770-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import json
++from pathlib import Path
++import re
++import sys
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting.archive_v391_activate_v392_4230 import (  # noqa: E402
++    CommandResult,
++    duration_from,
++    file_sha256,
++    is_sha256,
++    payload_checksum,
++    run_smart_subset,
++)
++
++
++JsonDict = dict[str, Any]
++OfflineArcadeChecker = Callable[[], bool]
++SmartSubsetChecker = Callable[[Path], CommandResult]
++
++EXPERIMENT = "experiment_4770_archive_438_activate_439"
++EXPERIMENT_ID = 4770
++SCHEMA = "carnot.archive_activation.v438_to_v439_4770.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4770_archive_438_activate_439.json"
++OUTPUT_REL_PATH = Path(RESULT_RELATIVE_PATH)
++RESEARCH_ROADMAP_REL_PATH = Path("research-roadmap.yaml")
++RESEARCH_ROADMAP_NEXT_REL_PATH = Path("research-roadmap-next.yaml")
++REGISTRY_REL_PATH = Path("ops/arc_solve_registry.yaml")
++CAPSTONE_SPEC_REL_PATH = Path("openspec/capabilities/capstone/spec.md")
++CAPSTONE_REL_PATH = Path("results/experiment_4769_capstone_v438.json")
++S0_REL_PATH = Path("results/experiment_4761_structural_energy_s0_core_bet_probe.json")
++
++ARCHIVED_MILESTONE = "2026.06.438"
++ACTIVATED_MILESTONE = "2026.06.439"
++BASELINE_REPRODUCIBLE_TOTAL_LEVELS = 65
++RANDOM_SEED = 4770
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SPEC_REFS = [
++    "REQ-CAPSTONE-4770",
++    "SCENARIO-CAPSTONE-4770",
++    "SCENARIO-CAPSTONE-4770-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4770-FIELD-PRINCIPLES",
++]
++
++FIELD_PROVENANCE = {
++    "honest_verdict": {
++        "principle": "terminal prefix; clean transition is complete_438_archived_439_activated_<state>."
++    },
++    "inference_substrate": {
++        "principle": "aggregation_from_upstream_artifacts -- reads upstream JSON, no LLM; 0.0001s floor."
++    },
++    "poison_test_resolved": {
++        "principle": "records whether a poison pre-test was found+fixed -- the cascade-skip guard."
++    },
++    "reproducible_total_levels": {
++        "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
++    },
++    "close_state_438": {
++        "principle": (
++            "the honest .438 numbers carried forward from the capstone and S0 leak-audit artifact "
++            "so the record does not drift."
++        )
++    },
++    "v439_pivot": {
++        "principle": (
++            "the .439 headline rationale (S0' origin-matched re-test) recorded so milestone intent "
++            "is traceable."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "spec_refs",
++    "result_path",
++    "honest_verdict",
++    "inference_substrate",
++    "poison_test_resolved",
++    "reproducible_total_levels",
++    "preconditions_checked",
++    "transition",
++    "close_state_438",
++    "v439_pivot",
++    "cited_upstream_artifacts",
++    "field_provenance",
++    "leaderboard_submission",
++    "duration_s",
++    "random_seed",
++    "reproducibility_checksum",
++)
++TERMINAL_PREFIXES = (
++    "complete:",
++    "complete_",
++    "success:",
++    "success_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++)
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _float(value: Any, default: float = 0.0, *, ndigits: int = 12) -> float:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return round(float(value), ndigits)
++    return default
++
++
++def _int(value: Any, default: int = 0) -> int:
++    if isinstance(value, bool):
++        return default
++    if isinstance(value, int | float):
++        return int(value)
++    return default
++
++
++def _read_text(path: Path) -> str | None:
++    try:
++        return path.read_text(encoding="utf-8")
++    except OSError:
++        return None
++
++
++def _yaml_info(path: Path) -> JsonDict:
++    text = _read_text(path)
++    if text is None:
++        return {"path": str(path), "available": False, "parses": False, "milestone": None}
++    try:
++        loaded = yaml.safe_load(text)
++    except yaml.YAMLError as exc:
++        return {
++            "path": str(path),
++            "available": True,
++            "parses": False,
++            "milestone": None,
++            "error": str(exc),
++        }
++    milestone = loaded.get("milestone") if isinstance(loaded, Mapping) else None
++    return {
++        "path": str(path),
++        "available": True,
++        "parses": True,
++        "milestone": str(milestone) if milestone is not None else None,
++    }
++
++
++def _json_object(path: Path) -> JsonDict:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _registry_total_levels(path: Path) -> int | None:
++    text = _read_text(path)
++    if text is None:
++        return None
++    try:
++        loaded = yaml.safe_load(text)
++    except yaml.YAMLError:
++        return None
++    if not isinstance(loaded, Mapping):
++        return None
++    value = loaded.get("reproducible_total_levels")
++    return None if isinstance(value, bool) or not isinstance(value, int | float) else int(value)
++
++
++def _command_check(result: CommandResult | None) -> JsonDict:
++    if result is None:
++        return {
++            "command": [],
++            "exit_code": None,
++            "stdout_tail": "",
++            "stderr_tail": "",
++            "passed": None,
++            "not_run_reason": "blocked_before_smart_subset_gate",
++        }
++    return {
++        "command": result.command,
++        "exit_code": result.exit_code,
++        "stdout_tail": result.stdout[-500:],
++        "stderr_tail": result.stderr[-500:],
++        "passed": result.exit_code == 0,
++    }
++
++
++def _default_offline_arcade_checker() -> bool:  # pragma: no cover - integration smoke wrapper
++    from carnot.agentic import arc_solver_kit as kit
++
++    kit.offline_arcade()
++    return True
++
++
++def _default_smart_subset_checker(root: Path) -> CommandResult:  # pragma: no cover - subprocess wrapper
++    return run_smart_subset(root)
++
++
++def _next_roadmap_ready(next_info: Mapping[str, Any]) -> bool:
++    return (
++        next_info.get("available") is True
++        and next_info.get("parses") is True
++        and next_info.get("milestone") == ACTIVATED_MILESTONE
++    )
++
++
++def _active_439_ready(active_info: Mapping[str, Any]) -> bool:
++    return active_info.get("parses") is True and active_info.get("milestone") == ACTIVATED_MILESTONE
++
++
++def _activate_next_roadmap(root: Path, *, next_info: Mapping[str, Any]) -> tuple[bool, str]:
++    if not _next_roadmap_ready(next_info):
++        return False, ""
++    next_path = root / RESEARCH_ROADMAP_NEXT_REL_PATH
++    active_path = root / RESEARCH_ROADMAP_REL_PATH
++    try:
++        active_path.write_text(next_path.read_text(encoding="utf-8"), encoding="utf-8")
++    except OSError as exc:
++        return False, str(exc)
++    return True, ""
++
++
++def _poison_test_id(text: str) -> str:
++    match = re.search(r"\b(test_[A-Za-z0-9_]+)\b", text)
++    return match.group(1) if match else "unknown_focused_pretest"
++
++
++def _preconditions(
++    root: Path,
++    *,
++    offline_arcade_checker: OfflineArcadeChecker,
++    smart_subset_checker: SmartSubsetChecker,
++) -> JsonDict:
++    next_info = _yaml_info(root / RESEARCH_ROADMAP_NEXT_REL_PATH)
++    active_before = _yaml_info(root / RESEARCH_ROADMAP_REL_PATH)
++
++    try:
++        offline_ok = bool(offline_arcade_checker())
++        offline_error = ""
++    except Exception as exc:
++        offline_ok = False
++        offline_error = str(exc)
++
++    activation_attempted = False
++    activation_error = ""
++    if offline_ok and _next_roadmap_ready(next_info):
++        activation_attempted, activation_error = _activate_next_roadmap(root, next_info=next_info)
++
++    active_info = _yaml_info(root / RESEARCH_ROADMAP_REL_PATH)
++    registry_levels = _registry_total_levels(root / REGISTRY_REL_PATH)
++    spec_text = _read_text(root / CAPSTONE_SPEC_REL_PATH) or ""
++    accepted_missing_next = (
++        not _next_roadmap_ready(next_info)
++        and _active_439_ready(active_info)
++        and next_info.get("available") is False
++    )
++    roadmap_ready = _next_roadmap_ready(next_info) or accepted_missing_next
++    should_run_smart_subset = roadmap_ready and offline_ok and activation_error == ""
++    smart_subset = smart_subset_checker(root) if should_run_smart_subset else None
++
++    return {
++        "agents_md": {"path": "AGENTS.md", "available": (root / "AGENTS.md").exists()},
++        "codex_or_opencode_md": {
++            "path": "CODEX.md|OPENCODE.md",
++            "available": (root / "CODEX.md").exists() or (root / "OPENCODE.md").exists(),
++        },
++        "research_roadmap_next_yaml": {
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "available": next_info["available"],
++            "parses": next_info["parses"],
++            "milestone": next_info["milestone"],
++            "literal_precondition_command": (
++                ".venv/bin/python -c \"import yaml; yaml.safe_load(open("
++                "'research-roadmap-next.yaml')); print('ok')\""
++            ),
++            "literal_precondition_passed": _next_roadmap_ready(next_info),
++            "activation_attempted": activation_attempted,
++            "activation_error": activation_error,
++            "accepted_missing_because_already_active": accepted_missing_next,
++        },
++        "active_research_roadmap_yaml": {
++            "path": str(RESEARCH_ROADMAP_REL_PATH),
++            "available": active_info["available"],
++            "parses": active_info["parses"],
++            "milestone": active_info["milestone"],
++            "milestone_before_activation": active_before["milestone"],
++        },
++        "offline_arcade": {
++            "available": offline_ok,
++            "command": (
++                ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; "
++                "k.offline_arcade()\""
++            ),
++            "error": offline_error,
++        },
++        "smart_subset_pretest_gate": _command_check(smart_subset),
++        "registry": {
++            "path": str(REGISTRY_REL_PATH),
++            "available": registry_levels is not None,
++            "reproducible_total_levels": registry_levels,
++        },
++        "capstone_spec": {
++            "path": str(CAPSTONE_SPEC_REL_PATH),
++            "available": (root / CAPSTONE_SPEC_REL_PATH).exists(),
++            "has_req_4770": "REQ-CAPSTONE-4770" in spec_text,
++        },
++        "capstone_4769": {"path": str(CAPSTONE_REL_PATH), "available": (root / CAPSTONE_REL_PATH).exists()},
++        "s0_4761": {"path": str(S0_REL_PATH), "available": (root / S0_REL_PATH).exists()},
++    }
++
++
++def _first_blocker(preconditions: Mapping[str, Any]) -> str | None:
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    offline = _mapping(preconditions.get("offline_arcade"))
++    smart = _mapping(preconditions.get("smart_subset_pretest_gate"))
++    registry = _mapping(preconditions.get("registry"))
++    capstone_spec = _mapping(preconditions.get("capstone_spec"))
++
++    roadmap_ready = _next_roadmap_ready(next_info) or (
++        next_info.get("accepted_missing_because_already_active") is True and _active_439_ready(active)
++    )
++    if not roadmap_ready:
++        return "research_roadmap_439_unavailable"
++    if offline.get("available") is not True:
++        return "offline_arcade"
++    if smart.get("passed") is not True:
++        return "smart_subset_pretest_gate"
++    if _mapping(preconditions.get("agents_md")).get("available") is not True:
++        return "missing_agents_md"
++    if _mapping(preconditions.get("codex_or_opencode_md")).get("available") is not True:
++        return "missing_codex_or_opencode_md"
++    if capstone_spec.get("has_req_4770") is not True:
++        return "missing_capstone_spec_req_4770"
++    if registry.get("available") is not True:
++        return "arc_solve_registry"
++    if registry.get("reproducible_total_levels") != BASELINE_REPRODUCIBLE_TOTAL_LEVELS:
++        return "arc_solve_registry_total_levels_not_65"
++    for key, reason in (
++        ("capstone_4769", "missing_experiment_4769_capstone_v438"),
++        ("s0_4761", "missing_experiment_4761_structural_energy_s0_core_bet_probe"),
++    ):
++        if _mapping(preconditions.get(key)).get("available") is not True:
++            return reason
++    return None
++
++
++def _transition(preconditions: Mapping[str, Any], *, complete: bool) -> JsonDict:
++    active = _mapping(preconditions.get("active_research_roadmap_yaml"))
++    next_info = _mapping(preconditions.get("research_roadmap_next_yaml"))
++    if not complete:
++        activation_state = "blocked_missing_or_failed_precondition"
++    elif next_info.get("activation_attempted") is True:
++        activation_state = "activated_from_research_roadmap_next"
++    else:
++        activation_state = "already_activated_by_conductor"
++    return {
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": bool(complete and _active_439_ready(active)),
++        "activation_state": activation_state,
++        "archive_state": "archive_noop_or_already_recorded",
++    }
++
++
++def _poison_test_resolution(preconditions: Mapping[str, Any]) -> JsonDict:
++    smart = _mapping(preconditions.get("smart_subset_pretest_gate"))
++    combined_output = f"{smart.get('stdout_tail', '')}\n{smart.get('stderr_tail', '')}"
++    current_passed = smart.get("passed")
++    if current_passed is True:
++        return {
++            "resolved": True,
++            "current_gate_passed": True,
++            "poison_tests": [],
++            "action": "no_poison_observed_current_gate_green",
++        }
++    poison_tests = []
++    if current_passed is False and "1 failed" in combined_output:
++        poison_tests.append(
++            {
++                "id": _poison_test_id(combined_output),
++                "reason": "single-failure smart-subset signature matches a stale honest-verdict expectation",
++                "action": "blocked_for_fix_or_quarantine_before_tail_continues",
++            }
++        )
++    return {
++        "resolved": False,
++        "current_gate_passed": current_passed,
++        "poison_tests": poison_tests,
++        "action": "blocked_before_or_without_green_current_gate",
++    }
++
++
++def _cited_upstream(root: Path) -> list[JsonDict]:
++    return [
++        {
++            "source": "active_research_roadmap_yaml",
++            "path": str(RESEARCH_ROADMAP_REL_PATH),
++            "fields_imported": ["milestone"],
++            "sha256": file_sha256(root / RESEARCH_ROADMAP_REL_PATH),
++        },
++        {
++            "source": "research_roadmap_next_yaml",
++            "path": str(RESEARCH_ROADMAP_NEXT_REL_PATH),
++            "fields_imported": ["milestone"],
++            "sha256": file_sha256(root / RESEARCH_ROADMAP_NEXT_REL_PATH),
++        },
++        {
++            "source": "experiment_4769_capstone_v438",
++            "path": str(CAPSTONE_REL_PATH),
++            "fields_imported": [
++                "honest_verdict",
++                "s0_structural_energy_verdict",
++                "levelup_bank",
++                "flagged_artifacts_skipped",
++                "reproducible_total_levels",
++            ],
++            "sha256": file_sha256(root / CAPSTONE_REL_PATH),
++        },
++        {
++            "source": "experiment_4761_structural_energy_s0_core_bet_probe",
++            "path": str(S0_REL_PATH),
++            "fields_imported": [
++                "honest_verdict",
++                "s0_gate_passed",
++                "retire_energy_guided_direction",
++                "retire_if_same_verdict",
++                "loo_auroc_structural",
++                "origin_probe_auroc",
++                "verifier_is_oracle",
++            ],
++            "sha256": file_sha256(root / S0_REL_PATH),
++        },
++        {
++            "source": "arc_solve_registry",
++            "path": str(REGISTRY_REL_PATH),
++            "fields_imported": ["reproducible_total_levels"],
++            "sha256": file_sha256(root / REGISTRY_REL_PATH),
++        },
++    ]
++
++
++def _close_state_438(
++    capstone: Mapping[str, Any],
++    s0: Mapping[str, Any],
++    registry_total_levels: int,
++) -> JsonDict:
++    capstone_s0 = _mapping(capstone.get("s0_structural_energy_verdict"))
++    direction = str(capstone_s0.get("direction") or "RETIRED")
++    loo = _float(s0.get("loo_auroc_structural", capstone_s0.get("loo_auroc_structural")))
++    origin_probe = _float(s0.get("origin_probe_auroc", capstone_s0.get("origin_probe_auroc")))
++    leak_audit_failed = origin_probe >= 0.6
++    headline = (
++        f"structural LOO {round(loo, 3):.3f} but leak-audit-failed -> retired"
++        if direction == "RETIRED" and leak_audit_failed
++        else f"structural LOO {round(loo, 3):.3f} direction {direction.lower()}"
++    )
++    flagged = capstone.get("flagged_artifacts_skipped")
++    return {
++        "source_capstone_honest_verdict": capstone.get("honest_verdict"),
++        "reproducible_total_levels": registry_total_levels,
++        "capstone_reported_reproducible_total_levels": _int(
++            capstone.get("reproducible_total_levels"), registry_total_levels
++        ),
++        "s0_structural_energy": {
++            "headline": headline,
++            "direction": direction,
++            "s1_queued": capstone_s0.get("s1_queued") is True,
++            "s0_gate_passed": s0.get("s0_gate_passed", capstone_s0.get("s0_gate_passed")) is True,
++            "loo_auroc_structural": loo,
++            "loo_auroc_structural_rounded": round(loo, 3),
++            "origin_probe_auroc": origin_probe,
++            "origin_probe_threshold": 0.6,
++            "leak_audit_failed": leak_audit_failed,
++            "retired_on_leak": direction == "RETIRED" and leak_audit_failed,
++            "retire_energy_guided_direction": s0.get("retire_energy_guided_direction") is True
++            or capstone_s0.get("retire_energy_guided_direction") is True,
++            "retire_if_same_verdict": s0.get("retire_if_same_verdict") is True
++            or capstone_s0.get("retire_if_same_verdict") is True,
++            "verifier_is_oracle": s0.get("verifier_is_oracle") is True,
++            "structural_minus_marginal_delta_ci95": s0.get(
++                "structural_minus_marginal_delta_ci95"
++            ),
++            "n_held_out_games": _int(s0.get("n_held_out_games")),
++            "n_candidate_rows": _int(s0.get("n_candidate_rows")),
++            "upstream_honest_verdict": s0.get("honest_verdict"),
++        },
++        "levelup_bank": _mapping(capstone.get("levelup_bank")),
++        "flagged_artifacts_skipped": flagged if isinstance(flagged, list) else [],
++    }
++
++
++def _v439_pivot() -> JsonDict:
++    return {
++        "headline": "S0' origin-matched structural-energy re-test",
++        "task_id": "exp4771-a1",
++        "origin_matched_retest": True,
++        "positive_class": "induced_correct_prediction",
++        "negative_class": "induced_wrong_prediction",
++        "purpose": "disentangle correctness signal from S0 real-vs-induced origin leak",
++    }
++
++
++def _blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: Mapping[str, Any],
++    poison_test_resolved: Mapping[str, Any],
++    duration_s: float,
++    cited_upstream_artifacts: list[JsonDict],
++) -> JsonDict:
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": f"blocked_{reason}",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "poison_test_resolved": dict(poison_test_resolved),
++        "reproducible_total_levels": None,
++        "preconditions_checked": dict(preconditions_checked),
++        "transition": _transition(preconditions_checked, complete=False),
++        "close_state_438": {},
++        "v439_pivot": {},
++        "cited_upstream_artifacts": cited_upstream_artifacts,
++        "field_provenance": FIELD_PROVENANCE,
++        "leaderboard_submission": False,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    return artifact
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    root_path = Path(root)
++    duration_s = duration_from(started_s, now_s)
++    preconditions = _preconditions(
++        root_path,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    cited = _cited_upstream(root_path)
++    poison = _poison_test_resolution(preconditions)
++    blocker = _first_blocker(preconditions)
++    if blocker is not None:
++        artifact = _blocked_artifact(
++            reason=blocker,
++            preconditions_checked=preconditions,
++            poison_test_resolved=poison,
++            duration_s=duration_s,
++            cited_upstream_artifacts=cited,
++        )
++        validate_artifact(artifact)
++        return artifact
++
++    registry_total_levels = int(_mapping(preconditions["registry"])["reproducible_total_levels"])
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "spec_refs": SPEC_REFS,
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": "complete_438_archived_439_activated_already_active_true_close_state_recorded",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "poison_test_resolved": poison,
++        "reproducible_total_levels": registry_total_levels,
++        "preconditions_checked": preconditions,
++        "transition": _transition(preconditions, complete=True),
++        "close_state_438": _close_state_438(
++            _json_object(root_path / CAPSTONE_REL_PATH),
++            _json_object(root_path / S0_REL_PATH),
++            registry_total_levels,
++        ),
++        "v439_pivot": _v439_pivot(),
++        "cited_upstream_artifacts": cited,
++        "field_provenance": FIELD_PROVENANCE,
++        "leaderboard_submission": False,
++        "duration_s": duration_s,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = "sha256:" + payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
++
++
++def _validate_checksum(artifact: Mapping[str, Any]) -> None:
++    checksum = artifact.get("reproducibility_checksum")
++    _require(
++        isinstance(checksum, str)
++        and checksum.startswith("sha256:")
++        and is_sha256(checksum.removeprefix("sha256:")),
++        "reproducibility_checksum must be sha256-prefixed",
++    )
++    expected = "sha256:" + payload_checksum(artifact)
++    _require(checksum == expected, "reproducibility_checksum does not match payload")
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _require(not missing, f"missing required artifact fields: {missing}")
++
++    verdict = artifact.get("honest_verdict")
++    _require(isinstance(verdict, str), "honest_verdict must be a string")
++    blocked = verdict.startswith("blocked_")
++    if not blocked:
++        _require(verdict.startswith(TERMINAL_PREFIXES), "honest_verdict must be terminal-prefixed")
++        _require(
++            verdict.startswith("complete_438_archived_439_activated_"),
++            "honest_verdict must record the .438/.439 terminal transition",
++        )
++
++    _require(
++        artifact.get("inference_substrate") == INFERENCE_SUBSTRATE,
++        "inference_substrate must be aggregation_from_upstream_artifacts",
++    )
++    _require(artifact.get("leaderboard_submission") is False, "leaderboard_submission must remain false")
++    _require(artifact.get("field_provenance") == FIELD_PROVENANCE, "field_provenance principles drifted")
++
++    close = _mapping(artifact.get("close_state_438"))
++    pivot = _mapping(artifact.get("v439_pivot"))
++    poison = _mapping(artifact.get("poison_test_resolved"))
++    transition = _mapping(artifact.get("transition"))
++    if blocked:
++        _require(close == {} and pivot == {}, "blocked artifacts must not carry fabricated close-state")
++        _validate_checksum(artifact)
++        return
++
++    _require(poison.get("resolved") is True, "poison pre-test resolution must be recorded")
++    _require(transition.get("active_milestone_confirmed") is True, "active .439 milestone must be confirmed")
++    _require(
++        artifact.get("reproducible_total_levels") == BASELINE_REPRODUCIBLE_TOTAL_LEVELS
++        and close.get("reproducible_total_levels") == BASELINE_REPRODUCIBLE_TOTAL_LEVELS,
++        "registry total must be carried from arc_solve_registry",
++    )
++
++    s0 = _mapping(close.get("s0_structural_energy"))
++    _require(
++        s0.get("direction") == "RETIRED"
++        and s0.get("leak_audit_failed") is True
++        and s0.get("retired_on_leak") is True
++        and s0.get("loo_auroc_structural_rounded") == 0.746
++        and s0.get("origin_probe_auroc", 0.0) >= 0.6
++        and s0.get("verifier_is_oracle") is False,
++        "S0 retired-on-leak close-state must be recorded",
++    )
++    _require(
++        pivot.get("task_id") == "exp4771-a1" and pivot.get("origin_matched_retest") is True,
++        "v439 pivot must record S0' origin-matched re-test",
++    )
++    _validate_checksum(artifact)
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    write: bool = True,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    offline_arcade_checker: OfflineArcadeChecker = _default_offline_arcade_checker,
++    smart_subset_checker: SmartSubsetChecker = _default_smart_subset_checker,
++) -> JsonDict:
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        started_s=started_s,
++        now_s=now_s,
++        offline_arcade_checker=offline_arcade_checker,
++        smart_subset_checker=smart_subset_checker,
++    )
++    if write:
++        output_path = root_path / OUTPUT_REL_PATH
++        output_path.parent.mkdir(parents=True, exist_ok=True)
++        output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++if __name__ == "__main__":  # pragma: no cover - script entrypoint
++    result = run()
++    print(
++        json.dumps(
++            {
++                "honest_verdict": result["honest_verdict"],
++                "result_path": result["result_path"],
++            },
++            sort_keys=True,
++        )
++    )
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 2afc29befb..fc1d796da0 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-26T06:28:22.752196Z",
+-  "duration_s": 0.051946401596069336,
++  "run_date": "2026-06-26T06:46:47.084389Z",
++  "duration_s": 0.05133175849914551,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ad96128647d1637e3ef7d05fe397aa417eb39912faf10101054446fe0a822f30",
++  "reproducibility_checksum": "9a13c0cae1b0a8b5244f5d83d504785c5ff9f15cc24ad376cc4e15b4a438483a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "91a49196b583a70da3fecd1b9eb107a86155136d"
++    "adversarial_verify_version": "f3e5dbf68b0efe8b9bad6356614d08b66c5a151d"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 0e9885222f..d1f56b26d6 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-26T06:28:22.837218Z",
+-  "duration_s": 0.07797622680664062,
++  "run_date": "2026-06-26T06:46:47.167793Z",
++  "duration_s": 0.07627534866333008,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "34f8c14694e1fdf20c5206888596edbfbe638a6d8f8bbfa0326e7a8301b0b8b4",
++  "reproducibility_checksum": "b80e79b37a56c849fda5835853d8c4c9d9f3895332eb145faf31bbaf4fb807b9",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "91a49196b583a70da3fecd1b9eb107a86155136d"
++    "adversarial_verify_version": "f3e5dbf68b0efe8b9bad6356614d08b66c5a151d"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index e8f159f3a6..3dfe19340b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.305269241333008,
++  "efficiency_gains_ms": 2.1431446075439453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f73f294103..3e9c6dc386 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 5.20581379532814e-05,
++  "duration_s": 3.147008828818798e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4770_archive_438_activate_439.json b/results/experiment_4770_archive_438_activate_439.json
+new file mode 100644
+index 0000000000..6444cf17a9
+--- /dev/null
++++ b/results/experiment_4770_archive_438_activate_439.json
+@@ -0,0 +1,237 @@
++{
++  "cited_upstream_artifacts": [
++    {
++      "fields_imported": [
++        "milestone"
++      ],
++      "path": "research-roadmap.yaml",
++      "sha256": "49bb1a1625b21477c9cf37c22ece364da36145018b5f6e1212bcf59a30eaeac2",
++      "source": "active_research_roadmap_yaml"
++    },
++    {
++      "fields_imported": [
++        "milestone"
++      ],
++      "path": "research-roadmap-next.yaml",
++      "sha256": null,
++      "source": "research_roadmap_next_yaml"
++    },
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "s0_structural_energy_verdict",
++        "levelup_bank",
++        "flagged_artifacts_skipped",
++        "reproducible_total_levels"
++      ],
++      "path": "results/experiment_4769_capstone_v438.json",
++      "sha256": "ad15a3477b9c1ee73ae0b124196410dcbabe286d6b6a9d7513ba99c0c8ab9ac8",
++      "source": "experiment_4769_capstone_v438"
++    },
++    {
++      "fields_imported": [
++        "honest_verdict",
++        "s0_gate_passed",
++        "retire_energy_guided_direction",
++        "retire_if_same_verdict",
++        "loo_auroc_structural",
++        "origin_probe_auroc",
++        "verifier_is_oracle"
++      ],
++      "path": "results/experiment_4761_structural_energy_s0_core_bet_probe.json",
++      "sha256": "ca3a0a104aee73976fc7561a5e5278214a9e4b6004b5eba0288e079bed465cff",
++      "source": "experiment_4761_structural_energy_s0_core_bet_probe"
++    },
++    {
++      "fields_imported": [
++        "reproducible_total_levels"
++      ],
++      "path": "ops/arc_solve_registry.yaml",
++      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
++      "source": "arc_solve_registry"
++    }
++  ],
++  "close_state_438": {
++    "capstone_reported_reproducible_total_levels": 65,
++    "flagged_artifacts_skipped": [
++      {
++        "experiment_id": 4763,
++        "path": "results/experiment_4763_self_play_verifier_checkpoint.json",
++        "reason": "flagged_adversarial",
++        "sha256": "sha256:3f221ed0c3523500024500bfebafee05270c629ad08ada4f9d31f1e8492f9b82",
++        "source": "SELF_PLAY"
++      },
++      {
++        "experiment_id": 4766,
++        "path": "results/experiment_4766_submission_package_harden.json",
++        "reason": "flagged_adversarial",
++        "sha256": "sha256:f48c0fdbeba4d7b778f0175eaf9e72a72933b2afce120594f71768f583ac3a54",
++        "source": "PACKAGE"
++      }
++    ],
++    "levelup_bank": {
++      "experiment_id": 4762,
++      "moat_claim": false,
++      "new_levels_banked": 0,
++      "registry_updated": false,
++      "reproducible_total_levels_after": 65,
++      "reproducible_total_levels_before": 65,
++      "reproducible_total_levels_delta": 0,
++      "source": "LEVELUP",
++      "target_game": "re86",
++      "verifier_is_oracle": true
++    },
++    "reproducible_total_levels": 65,
++    "s0_structural_energy": {
++      "direction": "RETIRED",
++      "headline": "structural LOO 0.746 but leak-audit-failed -> retired",
++      "leak_audit_failed": true,
++      "loo_auroc_structural": 0.745588188062,
++      "loo_auroc_structural_rounded": 0.746,
++      "n_candidate_rows": 463,
++      "n_held_out_games": 16,
++      "origin_probe_auroc": 0.732792721071,
++      "origin_probe_threshold": 0.6,
++      "retire_energy_guided_direction": true,
++      "retire_if_same_verdict": true,
++      "retired_on_leak": true,
++      "s0_gate_passed": false,
++      "s1_queued": false,
++      "structural_minus_marginal_delta_ci95": [
++        0.17481816435901296,
++        0.39015500191631836
++      ],
++      "upstream_honest_verdict": "complete: structural_energy_s0_retired_loo_0.746_null_or_leaky",
++      "verifier_is_oracle": false
++    },
++    "source_capstone_honest_verdict": "complete: s0_structural_energy_retired_v438_capstone_ready"
++  },
++  "duration_s": 0.0001,
++  "experiment": "experiment_4770_archive_438_activate_439",
++  "experiment_id": 4770,
++  "field_provenance": {
++    "close_state_438": {
++      "principle": "the honest .438 numbers carried forward from the capstone and S0 leak-audit artifact so the record does not drift."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; clean transition is complete_438_archived_439_activated_<state>."
++    },
++    "inference_substrate": {
++      "principle": "aggregation_from_upstream_artifacts -- reads upstream JSON, no LLM; 0.0001s floor."
++    },
++    "poison_test_resolved": {
++      "principle": "records whether a poison pre-test was found+fixed -- the cascade-skip guard."
++    },
++    "reproducible_total_levels": {
++      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
++    },
++    "v439_pivot": {
++      "principle": "the .439 headline rationale (S0' origin-matched re-test) recorded so milestone intent is traceable."
++    }
++  },
++  "honest_verdict": "complete_438_archived_439_activated_already_active_true_close_state_recorded",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "leaderboard_submission": false,
++  "poison_test_resolved": {
++    "action": "no_poison_observed_current_gate_green",
++    "current_gate_passed": true,
++    "poison_tests": [],
++    "resolved": true
++  },
++  "preconditions_checked": {
++    "active_research_roadmap_yaml": {
++      "available": true,
++      "milestone": "2026.06.439",
++      "milestone_before_activation": "2026.06.439",
++      "parses": true,
++      "path": "research-roadmap.yaml"
++    },
++    "agents_md": {
++      "available": true,
++      "path": "AGENTS.md"
++    },
++    "capstone_4769": {
++      "available": true,
++      "path": "results/experiment_4769_capstone_v438.json"
++    },
++    "capstone_spec": {
++      "available": true,
++      "has_req_4770": true,
++      "path": "openspec/capabilities/capstone/spec.md"
++    },
++    "codex_or_opencode_md": {
++      "available": true,
++      "path": "CODEX.md|OPENCODE.md"
++    },
++    "offline_arcade": {
++      "available": true,
++      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
++      "error": ""
++    },
++    "registry": {
++      "available": true,
++      "path": "ops/arc_solve_registry.yaml",
++      "reproducible_total_levels": 65
++    },
++    "research_roadmap_next_yaml": {
++      "accepted_missing_because_already_active": true,
++      "activation_attempted": false,
++      "activation_error": "",
++      "available": false,
++      "literal_precondition_command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('research-roadmap-next.yaml')); print('ok')\"",
++      "literal_precondition_passed": false,
++      "milestone": null,
++      "parses": false,
++      "path": "research-roadmap-next.yaml"
++    },
++    "s0_4761": {
++      "available": true,
++      "path": "results/experiment_4761_structural_energy_s0_core_bet_probe.json"
++    },
++    "smart_subset_pretest_gate": {
++      "command": [
++        ".venv/bin/pytest",
++        "tests/python/test_pipeline_extract.py",
++        "tests/python/test_docs.py",
++        "tests/python/test_experiment_4770_archive_438_activate_439.py",
++        "-q",
++        "--no-header",
++        "-n",
++        "0",
++        "--no-cov",
++        "-o",
++        "addopts="
++      ],
++      "exit_code": 0,
++      "passed": true,
++      "stderr_tail": "",
++      "stdout_tail": "                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 6.69s\n"
++    }
++  },
++  "random_seed": 4770,
++  "reproducibility_checksum": "sha256:68312604c0c0d6023b61de1e53bee82286181252f02f9d2cbdd42805a2abefd4",
++  "reproducible_total_levels": 65,
++  "result_path": "results/experiment_4770_archive_438_activate_439.json",
++  "schema": "carnot.archive_activation.v438_to_v439_4770.v1",
++  "spec_refs": [
++    "REQ-CAPSTONE-4770",
++    "SCENARIO-CAPSTONE-4770",
++    "SCENARIO-CAPSTONE-4770-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4770-FIELD-PRINCIPLES"
++  ],
++  "transition": {
++    "activated_milestone": "2026.06.439",
++    "activation_state": "already_activated_by_conductor",
++    "active_milestone_confirmed": true,
++    "archive_state": "archive_noop_or_already_recorded",
++    "archived_milestone": "2026.06.438"
++  },
++  "v439_pivot": {
++    "headline": "S0' origin-matched structural-energy re-test",
++    "negative_class": "induced_wrong_prediction",
++    "origin_matched_retest": true,
++    "positive_class": "induced_correct_prediction",
++    "purpose": "disentangle correctness signal from S0 real-vs-induced origin leak",
++    "task_id": "exp4771-a1"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 293e1602bc..bb06f5921a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T06:27:55Z",
+-  "finished_at": "2026-06-26T06:27:55Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-26T06:46:18Z",
++  "finished_at": "2026-06-26T06:46:18Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 3639eb1a99..b9bb3429f5 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T06:27:55Z",
+-  "finished_at": "2026-06-26T06:27:55Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-26T06:46:18Z",
++  "finished_at": "2026-06-26T06:46:18Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 12f1c804e7..2a2cb621e7 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260626",
+-  "started_at": "2026-06-26T06:27:55Z",
+-  "finished_at": "2026-06-26T06:27:55Z",
++  "started_at": "2026-06-26T06:46:18Z",
++  "finished_at": "2026-06-26T06:46:18Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4770_archive_438_activate_439.py b/tests/python/test_experiment_4770_archive_438_activate_439.py
+new file mode 100644
+index 0000000000..398ebffcc1
+--- /dev/null
++++ b/tests/python/test_experiment_4770_archive_438_activate_439.py
+@@ -0,0 +1,446 @@
++"""Tests for Exp 4770 `.438` archive / `.439` activation record.
++
++Spec refs: REQ-CAPSTONE-4770, SCENARIO-CAPSTONE-4770,
++SCENARIO-CAPSTONE-4770-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4770-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4770_archive_438_activate_439 as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _green_smart_subset(_root: Path) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=["pytest", "smart-subset"],
++        exit_code=0,
++        stdout="91 passed, 1 warning in 6.12s",
++        stderr="",
++    )
++
++
++def _red_poison_smart_subset(_root: Path) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=["pytest", "smart-subset"],
++        exit_code=1,
++        stdout="1 failed, 91 passed, 1 warning in 6.55s",
++        stderr="test_expected_stale_honest_verdict failed against now-correct honest verdict",
++    )
++
++
++def _s0_4761() -> JsonDict:
++    return {
++        "experiment_id": 4761,
++        "honest_verdict": "complete: structural_energy_s0_retired_loo_0.746_null_or_leaky",
++        "s0_gate_passed": False,
++        "retire_energy_guided_direction": True,
++        "retire_if_same_verdict": True,
++        "loo_auroc_structural": 0.745588188062,
++        "loo_auroc_majority_control": 0.5,
++        "loo_auroc_marginal_control": 0.464578396462,
++        "origin_probe_auroc": 0.732792721071,
++        "structural_minus_marginal_delta_ci95": [
++            0.17481816435901296,
++            0.39015500191631836,
++        ],
++        "n_held_out_games": 16,
++        "n_candidate_rows": 463,
++        "verifier_is_oracle": False,
++    }
++
++
++def _capstone_4769() -> JsonDict:
++    return {
++        "experiment_id": 4769,
++        "honest_verdict": "complete: s0_structural_energy_retired_v438_capstone_ready",
++        "reproducible_total_levels": 65,
++        "s0_structural_energy_verdict": {
++            "direction": "RETIRED",
++            "s1_queued": False,
++            "s0_gate_passed": False,
++            "loo_auroc_structural": 0.745588188062,
++            "origin_probe_auroc": 0.732792721071,
++            "retire_energy_guided_direction": True,
++            "retire_if_same_verdict": True,
++            "reason": "s0_gate_failed_or_null_or_leaky",
++        },
++        "levelup_bank": {
++            "target_game": "re86",
++            "new_levels_banked": 0,
++            "reproducible_total_levels_after": 65,
++            "reproducible_total_levels_delta": 0,
++        },
++        "flagged_artifacts_skipped": [
++            {"experiment_id": 4763, "source": "SELF_PLAY", "reason": "flagged_adversarial"},
++            {"experiment_id": 4766, "source": "PACKAGE", "reason": "flagged_adversarial"},
++        ],
++    }
++
++
++def _write_repo_fixture(
++    root: Path,
++    *,
++    active_milestone: str = "2026.06.439",
++    next_present: bool = False,
++    registry_total: int = 65,
++    capstone_present: bool = True,
++    s0_present: bool = True,
++) -> None:
++    (root / "AGENTS.md").write_text("# test\n", encoding="utf-8")
++    (root / "CODEX.md").write_text("# test\n", encoding="utf-8")
++    (root / "research-roadmap.yaml").write_text(
++        f"milestone: {active_milestone}\n"
++        "tasks:\n"
++        "  - id: exp4770-phase0\n"
++        "    deliverable: results/experiment_4770_archive_438_activate_439.json\n",
++        encoding="utf-8",
++    )
++    if next_present:
++        (root / "research-roadmap-next.yaml").write_text(
++            "milestone: 2026.06.439\n"
++            "tasks:\n"
++            "  - id: exp4770-phase0\n"
++            "    deliverable: results/experiment_4770_archive_438_activate_439.json\n"
++            "  - id: exp4771-a1\n"
++            "    deliverable: results/experiment_4771_structural_energy_s0prime_origin_matched.json\n",
++            encoding="utf-8",
++        )
++    registry = root / "ops" / "arc_solve_registry.yaml"
++    registry.parent.mkdir(parents=True, exist_ok=True)
++    registry.write_text(
++        "schema_version: 1\n"
++        "updated: '2026-06-26'\n"
++        f"reproducible_total_levels: {registry_total}\n",
++        encoding="utf-8",
++    )
++    spec = root / "openspec" / "capabilities" / "capstone" / "spec.md"
++    spec.parent.mkdir(parents=True, exist_ok=True)
++    spec.write_text("REQ-CAPSTONE-4770\n", encoding="utf-8")
++    if capstone_present:
++        _write_json(root / "results" / "experiment_4769_capstone_v438.json", _capstone_4769())
++    if s0_present:
++        _write_json(root / "results" / "experiment_4761_structural_energy_s0_core_bet_probe.json", _s0_4761())
++
++
++def _artifact(root: Path) -> JsonDict:
++    _write_repo_fixture(root)
++    return mod.build_artifact(
++        root,
++        started_s=1.0,
++        now_s=1.25,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++
++def test_req_capstone_4770_spec_anchor_declares_transition_contract() -> None:
++    """REQ-CAPSTONE-4770: OpenSpec declares the transition contract first."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4770" in spec
++    assert "SCENARIO-CAPSTONE-4770" in spec
++    assert "SCENARIO-CAPSTONE-4770-BLOCKED-PRECONDITION" in spec
++    assert "SCENARIO-CAPSTONE-4770-FIELD-PRINCIPLES" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field, provenance in mod.FIELD_PROVENANCE.items():
++        assert field in spec
++        assert provenance["principle"] in spec
++
++
++def test_scenario_capstone_4770_records_true_close_state_when_already_activated(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4770: active `.439` allows a complete record without next YAML."""
++
++    _write_repo_fixture(tmp_path)
++    artifact = mod.run(
++        root=tmp_path,
++        write=True,
++        started_s=2.0,
++        now_s=2.3,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert json.loads((tmp_path / mod.OUTPUT_REL_PATH).read_text(encoding="utf-8")) == artifact
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) == set(artifact)
++    assert artifact["honest_verdict"] == "complete_438_archived_439_activated_already_active_true_close_state_recorded"
++    assert artifact["transition"] == {
++        "archived_milestone": "2026.06.438",
++        "activated_milestone": "2026.06.439",
++        "active_milestone_confirmed": True,
++        "activation_state": "already_activated_by_conductor",
++        "archive_state": "archive_noop_or_already_recorded",
++    }
++    assert artifact["reproducible_total_levels"] == 65
++    next_check = artifact["preconditions_checked"]["research_roadmap_next_yaml"]
++    assert next_check["available"] is False
++    assert next_check["literal_precondition_passed"] is False
++    assert next_check["accepted_missing_because_already_active"] is True
++    assert artifact["preconditions_checked"]["smart_subset_pretest_gate"]["passed"] is True
++
++    assert artifact["poison_test_resolved"] == {
++        "resolved": True,
++        "current_gate_passed": True,
++        "poison_tests": [],
++        "action": "no_poison_observed_current_gate_green",
++    }
++
++    close = artifact["close_state_438"]
++    assert close["source_capstone_honest_verdict"] == "complete: s0_structural_energy_retired_v438_capstone_ready"
++    assert close["reproducible_total_levels"] == 65
++    s0 = close["s0_structural_energy"]
++    assert s0["direction"] == "RETIRED"
++    assert s0["headline"] == "structural LOO 0.746 but leak-audit-failed -> retired"
++    assert s0["loo_auroc_structural"] == 0.745588188062
++    assert s0["loo_auroc_structural_rounded"] == 0.746
++    assert s0["origin_probe_auroc"] == 0.732792721071
++    assert s0["leak_audit_failed"] is True
++    assert s0["retired_on_leak"] is True
++    assert close["levelup_bank"]["new_levels_banked"] == 0
++    assert close["flagged_artifacts_skipped"] == [
++        {"experiment_id": 4763, "source": "SELF_PLAY", "reason": "flagged_adversarial"},
++        {"experiment_id": 4766, "source": "PACKAGE", "reason": "flagged_adversarial"},
++    ]
++    assert artifact["v439_pivot"] == {
++        "headline": "S0' origin-matched structural-energy re-test",
++        "task_id": "exp4771-a1",
++        "origin_matched_retest": True,
++        "positive_class": "induced_correct_prediction",
++        "negative_class": "induced_wrong_prediction",
++        "purpose": "disentangle correctness signal from S0 real-vs-induced origin leak",
++    }
++    assert artifact["leaderboard_submission"] is False
++    assert mod.validate_artifact(artifact) is None
++
++
++def test_scenario_capstone_4770_can_activate_literal_next_roadmap(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4770: present next roadmap is activated onto the active YAML."""
++
++    _write_repo_fixture(tmp_path, active_milestone="2026.06.438", next_present=True)
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=False,
++        started_s=3.0,
++        now_s=3.4,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8").startswith(
++        "milestone: 2026.06.439"
++    )
++    assert artifact["transition"]["activation_state"] == "activated_from_research_roadmap_next"
++    assert artifact["preconditions_checked"]["research_roadmap_next_yaml"]["activation_attempted"] is True
++
++
++def test_scenario_capstone_4770_blockers_and_poison_signature_are_explicit(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4770-BLOCKED-PRECONDITION: blocked paths do not fabricate."""
++
++    _write_repo_fixture(tmp_path, active_milestone="2026.06.438", next_present=False)
++
++    artifact = mod.run(
++        root=tmp_path,
++        write=True,
++        started_s=4.0,
++        now_s=4.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_green_smart_subset,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_research_roadmap_439_unavailable"
++    assert artifact["transition"]["activation_state"] == "blocked_missing_or_failed_precondition"
++    assert artifact["preconditions_checked"]["smart_subset_pretest_gate"]["passed"] is None
++    assert artifact["poison_test_resolved"]["resolved"] is False
++    assert artifact["close_state_438"] == {}
++    assert artifact["v439_pivot"] == {}
++
++    checks = _artifact(tmp_path)["preconditions_checked"]
++    assert mod._first_blocker(checks) is None
++
++    for key, expected in {
++        "agents_md": "missing_agents_md",
++        "codex_or_opencode_md": "missing_codex_or_opencode_md",
++        "capstone_spec": "missing_capstone_spec_req_4770",
++        "registry": "arc_solve_registry",
++        "capstone_4769": "missing_experiment_4769_capstone_v438",
++        "s0_4761": "missing_experiment_4761_structural_energy_s0_core_bet_probe",
++    }.items():
++        bad = copy.deepcopy(checks)
++        bad[key]["available"] = False
++        if key == "capstone_spec":
++            bad[key]["has_req_4770"] = False
++        assert mod._first_blocker(bad) == expected
++
++    offline_bad = copy.deepcopy(checks)
++    offline_bad["offline_arcade"]["available"] = False
++    assert mod._first_blocker(offline_bad) == "offline_arcade"
++
++    registry_bad = copy.deepcopy(checks)
++    registry_bad["registry"]["reproducible_total_levels"] = 64
++    assert mod._first_blocker(registry_bad) == "arc_solve_registry_total_levels_not_65"
++
++    bad_smart = mod.build_artifact(
++        tmp_path,
++        started_s=5.0,
++        now_s=5.1,
++        offline_arcade_checker=lambda: True,
++        smart_subset_checker=_red_poison_smart_subset,
++    )
++    assert bad_smart["honest_verdict"] == "blocked_smart_subset_pretest_gate"
++    assert bad_smart["poison_test_resolved"]["poison_tests"] == [
++        {
++            "id": "test_expected_stale_honest_verdict",
++            "reason": "single-failure smart-subset signature matches a stale honest-verdict expectation",
++            "action": "blocked_for_fix_or_quarantine_before_tail_continues",
++        }
++    ]
++
++
++def test_scenario_capstone_4770_field_principle_validation_fails_closed(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4770-FIELD-PRINCIPLES: schema drift fails loudly."""
++
++    valid = _artifact(tmp_path)
++
++    missing = copy.deepcopy(valid)
++    del missing["honest_verdict"]
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    bad_verdict = copy.deepcopy(valid)
++    bad_verdict["honest_verdict"] = "done"
++    with pytest.raises(ValueError, match="honest_verdict"):
++        mod.validate_artifact(bad_verdict)
++
++    bad_substrate = copy.deepcopy(valid)
++    bad_substrate["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="inference_substrate"):
++        mod.validate_artifact(bad_substrate)
++
++    bad_provenance = copy.deepcopy(valid)
++    bad_provenance["field_provenance"] = {}
++    with pytest.raises(ValueError, match="field_provenance"):
++        mod.validate_artifact(bad_provenance)
++
++    bad_poison = copy.deepcopy(valid)
++    bad_poison["poison_test_resolved"]["resolved"] = False
++    with pytest.raises(ValueError, match="poison"):
++        mod.validate_artifact(bad_poison)
++
++    blocked = mod._blocked_artifact(
++        reason="unit_test",
++        preconditions_checked=valid["preconditions_checked"],
++        poison_test_resolved=valid["poison_test_resolved"],
++        duration_s=0.1,
++        cited_upstream_artifacts=valid["cited_upstream_artifacts"],
++    )
++    blocked["close_state_438"] = {"fabricated": True}
++    blocked["reproducibility_checksum"] = "sha256:" + mod.payload_checksum(blocked)
++    with pytest.raises(ValueError, match="blocked artifacts"):
++        mod.validate_artifact(blocked)
++
++    wrong_total = copy.deepcopy(valid)
++    wrong_total["reproducible_total_levels"] = 64
++    with pytest.raises(ValueError, match="registry total"):
++        mod.validate_artifact(wrong_total)
++
++    wrong_s0_direction = copy.deepcopy(valid)
++    wrong_s0_direction["close_state_438"]["s0_structural_energy"]["direction"] = "ALIVE"
++    with pytest.raises(ValueError, match="S0"):
++        mod.validate_artifact(wrong_s0_direction)
++
++    wrong_leak = copy.deepcopy(valid)
++    wrong_leak["close_state_438"]["s0_structural_energy"]["leak_audit_failed"] = False
++    with pytest.raises(ValueError, match="S0"):
++        mod.validate_artifact(wrong_leak)
++
++    wrong_pivot = copy.deepcopy(valid)
++    wrong_pivot["v439_pivot"]["origin_matched_retest"] = False
++    with pytest.raises(ValueError, match="v439 pivot"):
++        mod.validate_artifact(wrong_pivot)
++
++    bad_checksum_prefix = copy.deepcopy(valid)
++    bad_checksum_prefix["reproducibility_checksum"] = "not-a-checksum"
++    with pytest.raises(ValueError, match="sha256-prefixed"):
++        mod.validate_artifact(bad_checksum_prefix)
++
++    bad_checksum = copy.deepcopy(valid)
++    bad_checksum["reproducibility_checksum"] = "sha256:" + ("0" * 64)
++    with pytest.raises(ValueError, match="does not match"):
++        mod.validate_artifact(bad_checksum)
++
++    assert mod._float(True, 7.0) == 7.0
++    assert mod._float("bad", 9.0) == 9.0
++    assert mod._int(False, 2) == 2
++    assert mod._int("bad", 3) == 3
++    assert mod._registry_total_levels(tmp_path / "missing.yaml") is None
++    assert mod._activate_next_roadmap(tmp_path, next_info={"available": False}) == (False, "")
++    assert mod._json_object(tmp_path / "missing.json") == {}
++
++    bad_yaml = tmp_path / "bad.yaml"
++    bad_yaml.write_text("milestone: [\n", encoding="utf-8")
++    assert mod._yaml_info(bad_yaml)["parses"] is False
++    assert mod._registry_total_levels(bad_yaml) is None
++
++    list_yaml = tmp_path / "list.yaml"
++    list_yaml.write_text("- not-a-map\n", encoding="utf-8")
++    assert mod._yaml_info(list_yaml)["milestone"] is None
++    assert mod._registry_total_levels(list_yaml) is None
++
++    bad_json = tmp_path / "bad.json"
++    bad_json.write_text("[\n", encoding="utf-8")
++    assert mod._json_object(bad_json) == {}
++
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[1]\n", encoding="utf-8")
++    assert mod._json_object(list_json) == {}
++
++    activation_root = tmp_path / "activation_error"
++    activation_root.mkdir()
++    (activation_root / "research-roadmap.yaml").mkdir()
++    (activation_root / "research-roadmap-next.yaml").write_text(
++        "milestone: 2026.06.439\n",
++        encoding="utf-8",
++    )
++    activated, activation_error = mod._activate_next_roadmap(
++        activation_root,
++        next_info={"available": True, "parses": True, "milestone": "2026.06.439"},
++    )
++    assert activated is False
++    assert activation_error
++
++    def _offline_raises() -> bool:
++        raise RuntimeError("offline arcade unavailable")
++
++    offline_artifact = mod.build_artifact(
++        tmp_path,
++        started_s=6.0,
++        now_s=6.1,
++        offline_arcade_checker=_offline_raises,
++        smart_subset_checker=_green_smart_subset,
++    )
++    assert offline_artifact["honest_verdict"] == "blocked_offline_arcade"
++    assert offline_artifact["preconditions_checked"]["offline_arcade"]["error"] == "offline arcade unavailable"
+-- 
+2.55.0
+

@@ -1,0 +1,44 @@
+From 5d0cc312f6c8f5408f42dbd79d2fd6f0cb554f7c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 7 Aug 2026 04:14:06 -0400
+Subject: [PATCH 08406/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 54d4f0227e..cb55199c42 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 68, "phase": "iteration_start", "last_beat": "2026-08-07T07:50:50Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 69, "phase": "iteration_start", "last_beat": "2026-08-07T08:14:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 45a8d2be04..ba5f842474 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -15439,3 +15439,5 @@ Still active  |
+ | 2026-08-07 07:48 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |
+ | 2026-08-07 07:48 UTC | Calibration-only CLUE and latent selector freeze | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification |
+ | 2026-08-07 07:50 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |
++| 2026-08-07 08:12 UTC | Mandatory retention-safe continuous strategy-learn | OK | 87 passed, 1 warning in 10.66s |
++| 2026-08-07 08:14 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cead06ec01..d33b039e16 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 279338, "iteration": 68, "phase": "iteration_start", "started_at": "2026-08-07T07:50:50Z"}
+\ No newline at end of file
++{"pid": 279338, "iteration": 69, "phase": "iteration_start", "started_at": "2026-08-07T08:14:03Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,3334 @@
+From 067c7277531c774a2fa2a69c7b70b316265989d1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 22 Jun 2026 05:43:19 -0400
+Subject: [PATCH 03405/11362] [conductor] PHASE A4 (ARC NORTH STAR; operator
+ item 1) -- DIVERSITY-FLOOR HELD-OUT TRANSFER VALIDATION: does the SHIPPED
+ exploration-diversity floor (CARNOT_ARC_EXPLORE_DIVERSITY=1; 4/11 first-win
+ on the public set) transfer to held-out/variant games (first-win count UP vs
+ diversity-off)? Offline-reproduce any newly- reached win as a bank. Gate:
+ first-win count strictly up on the held-out proxy vs diversity-off + a
+ working control. verifier_is_oracle: false. retire_if_same_verdict.
+
+Automated research step by research conductor.
+Task ID: exp4583-a4
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |    3 +
+ ops/dogfood-memory.json                       |    2 +-
+ ...xperiment_4583_diversity_floor_transfer.py |  836 ++++++++
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...eriment_4583_diversity_floor_transfer.json | 1751 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    6 +-
+ results/experiment_638_tier1_fr11_relay.json  |    6 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...xperiment_4583_diversity_floor_transfer.py |  540 +++++
+ 12 files changed, 3150 insertions(+), 20 deletions(-)
+ create mode 100644 python/carnot/experiment_4583_diversity_floor_transfer.py
+ create mode 100644 results/experiment_4583_diversity_floor_transfer.json
+ create mode 100644 tests/python/test_experiment_4583_diversity_floor_transfer.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index e7ef7cdd5f..dad705f487 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -216,3 +216,6 @@
+ - REQ-CAPSTONE-4582: The feature-router generic-transfer workflow must build an early-play mechanic classifier from the first bounded action probes for a game or variant, using observed keyboard effects, click effects, avatar motion, cell-connection behavior, hidden carry-state signals, and config-toggle signals without calling an LLM. The workflow SHALL learn mechanic-class to approach preferences from self-play positive and negative traces, SHALL extend `arc_solve_learning.recommend_approach()` with the learned route while preserving the existing default approach as a no-regression fallback, SHALL avoid value-head best-first expansion, and SHALL measure the feature router against the same default-route baseline and deterministic random-route positive control on the same manufactured public-game held-out variants through `measure_generic_transfer_over_variants`.
+ - SCENARIO-CAPSTONE-4582: The artifact `results/experiment_4582_feature_router_transfer.json` must emit top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `generic_transfer_rate_with_router`, `generic_transfer_rate_baseline`, `transfer_delta`, `transfer_ci`, `median_actions_to_first_levelup_with_router`, `actions_delta`, `winner_generated`, `random_route_control_passed`, `false_negative_risk_checked`, `solve_rate_preserved`, `chosen_submitted_config`, `missing_verifier_gaps`, `offline_reproduced`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit `null_delta_methodology_note` when `transfer_delta==0.0`. A success recommendation requires transfer strictly above the `0.04` baseline with CI support or strictly fewer solved-variant actions to first level-up while preserving solve rate. A no-value null is valid only when the same-variant random-route positive control passed and false-negative risk was checked.
+ - SCENARIO-CAPSTONE-4582-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: feature_router_generic_transfer_<n>_above_0.04 OR complete: feature_router_no_value_honest_null_transfer_gap_sharpened."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- the router classifies + routes over offline variants, no LLM load (1s floor)."; `verifier_is_oracle` = "MUST be false -- the router selects an approach by a LEARNED early-play signal, oracle-DISTINCT from the executable win-check."; `generic_transfer_rate_with_router` = "the HEADLINE -- held-out variant transfer WITH the feature-router; > 0.04 with CI-excl-baseline is the non-circular live-value evidence."; `generic_transfer_rate_baseline` = "0.04 -- the .420/.421 B1 default-approach baseline, measured the SAME way."; `transfer_delta` = "with_router - baseline, emitted explicitly so a null is annotated."; `transfer_ci` = "bootstrap CI on the transfer delta; a claim above baseline requires the CI to exclude the baseline."; `median_actions_to_first_levelup_with_router` = "ACTION cost WITH routing -- the leaderboard tiebreaker."; `actions_delta` = "baseline_actions - with_router (positive = fewer actions)."; `winner_generated` = "did routing to the right approach GENERATE the winning candidate."; `random_route_control_passed` = "the POSITIVE CONTROL -- the router must beat random-route on the SAME variants."; `false_negative_risk_checked` = "MUST be true with the random-route control run."; `null_delta_methodology_note` = "present when transfer_delta==0.0 -- states the equality is an honest no-value null, not a measurement bug."; `solve_rate_preserved` = "HARD gate -- routing must NOT drop solve-rate."; `chosen_submitted_config` = "enable the feature-router only on a live win; unchanged on null."; `missing_verifier_gaps` = "if no value, the residual generation gap by mechanic class."; `offline_reproduced` = "any newly-solved variant must offline-reproduce to count."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash catches silent router/corpus drift on replay."; `preconditions_checked` = "records resources verified (offline arcade, recommend_approach importable)."
++- REQ-CAPSTONE-4583: The shipped exploration-diversity floor workflow must measure the already wired `CARNOT_ARC_EXPLORE_DIVERSITY` generation-broadening lever on the manufactured held-out variant proxy without adding a model or treating the verifier as an oracle. The workflow SHALL run diversity-on and diversity-off arms on the same variants through `measure_generic_transfer_over_variants` and `VariantEnv`, SHALL report first-win count, solve-rate, and median actions-to-first-levelup for both arms, SHALL treat the diversity-off arm as the matched positive control for false-negative-risk closure, and SHALL count any newly reached diversity-on win as a bank only when the attempt carries offline `arc_solver_kit.reproduce` evidence.
++- SCENARIO-CAPSTONE-4583: The artifact `results/experiment_4583_diversity_floor_transfer.json` must emit top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `firstwin_count_diversity_on`, `firstwin_count_diversity_off`, `firstwin_delta`, `median_actions_to_first_levelup_with_diversity`, `median_actions_to_first_levelup_without_diversity`, `actions_delta`, `solve_rate_with_diversity`, `solve_rate_without_diversity`, `diversity_off_control_passed`, `false_negative_risk_checked`, `offline_reproduced`, `chosen_submitted_config`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit `null_delta_methodology_note` when `firstwin_delta==0`. The success verdict requires `firstwin_delta > 0`, diversity-off completed as the matched control, and every newly reached diversity-on win to be offline reproduced. A no-transfer null is valid only when the diversity-off arm completed and `firstwin_count_diversity_on >= firstwin_count_diversity_off`.
++- SCENARIO-CAPSTONE-4583-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: diversity_floor_transfer_firstwin_up_<n> OR complete: diversity_floor_no_transfer_honest_null_gap_sharpened."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- offline variant exploration, no LLM load (1s floor)."; `verifier_is_oracle` = "MUST be false -- diversity-on-stall is a generation-broadening explorer lever, oracle-DISTINCT from the win-check."; `firstwin_count_diversity_on` = "the HEADLINE -- held-out first-win count WITH the diversity floor."; `firstwin_count_diversity_off` = "the matched diversity-OFF baseline on the SAME variants."; `firstwin_delta` = "on - off (positive = more wins reached = transfer), emitted explicitly so a null (0) is annotated."; `median_actions_to_first_levelup_with_diversity` = "ACTION cost WITH diversity -- the leaderboard tiebreaker."; `diversity_off_control_passed` = "the matched control arm ran and diversity-on first-win >= diversity-off."; `false_negative_risk_checked` = "true with the diversity-off arm run as the matched control."; `null_delta_methodology_note` = "present when firstwin_delta==0 -- states the equality is an honest no-transfer null, not a measurement bug."; `offline_reproduced` = "any newly-reached win must offline-reproduce to count as a bank."; `chosen_submitted_config` = "diversity is already shipped+wired; this confirms whether to keep it ON for the submitted agent (the A6 input)."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "catches silent drift on replay."; `preconditions_checked` = "records resources verified; pre-empts missing-resource fabrication."
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3f100297bb..32a66117f5 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 184,
+   "code_violations": 0,
+-  "experiments_checked": 3600,
++  "experiments_checked": 3601,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4583_diversity_floor_transfer.py b/python/carnot/experiment_4583_diversity_floor_transfer.py
+new file mode 100644
+index 0000000000..41d36b0528
+--- /dev/null
++++ b/python/carnot/experiment_4583_diversity_floor_transfer.py
+@@ -0,0 +1,836 @@
++"""Experiment 4583: shipped exploration-diversity floor transfer.
++
++Spec refs: REQ-CAPSTONE-4583, SCENARIO-CAPSTONE-4583,
++SCENARIO-CAPSTONE-4583-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++from contextlib import contextmanager
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import statistics
++import sys
++import time
++from typing import Any
++
++import yaml
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(PYTHON_ROOT))
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from carnot import experiment_4550_honest_sprint_metric as exp4550
++
++
++JsonDict = dict[str, Any]
++VariantRunner = Callable[[str, Mapping[str, Any], int], Mapping[str, Any]]
++VariantRunnerFactory = Callable[[str], VariantRunner]
++
++RESULT_RELATIVE_PATH = "results/experiment_4583_diversity_floor_transfer.json"
++REGISTRY_RELATIVE_PATH = Path("ops/arc_solve_registry.yaml")
++EXPERIMENT_ID = "experiment_4583_diversity_floor_transfer"
++SCHEMA = "carnot.exp4583.diversity_floor_transfer.v1"
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++RANDOM_SEED = 4583
++DEFAULT_VARIANT_IDS = (1,)
++DEFAULT_BUDGET = 200
++DEFAULT_BOOTSTRAPS = 1000
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "verifier_is_oracle",
++    "firstwin_count_diversity_on",
++    "firstwin_count_diversity_off",
++    "firstwin_delta",
++    "median_actions_to_first_levelup_with_diversity",
++    "median_actions_to_first_levelup_without_diversity",
++    "actions_delta",
++    "solve_rate_with_diversity",
++    "solve_rate_without_diversity",
++    "diversity_off_control_passed",
++    "false_negative_risk_checked",
++    "null_delta_methodology_note",
++    "offline_reproduced",
++    "chosen_submitted_config",
++    "random_seed",
++    "reproducibility_checksum",
++    "preconditions_checked",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: diversity_floor_transfer_firstwin_up_<n> OR "
++            "complete: diversity_floor_no_transfer_honest_null_gap_sharpened."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "verifier_ensemble_against_cached_candidates -- offline variant exploration, "
++            "no LLM load (1s floor)."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": (
++            "MUST be false -- diversity-on-stall is a generation-broadening explorer "
++            "lever, oracle-DISTINCT from the win-check."
++        )
++    },
++    "firstwin_count_diversity_on": {
++        "principle": (
++            "the HEADLINE -- held-out first-win count WITH the diversity floor."
++        )
++    },
++    "firstwin_count_diversity_off": {
++        "principle": "the matched diversity-OFF baseline on the SAME variants."
++    },
++    "firstwin_delta": {
++        "principle": (
++            "on - off (positive = more wins reached = transfer), emitted explicitly "
++            "so a null (0) is annotated."
++        )
++    },
++    "median_actions_to_first_levelup_with_diversity": {
++        "principle": (
++            "ACTION cost WITH diversity -- the leaderboard tiebreaker; diversity must "
++            "not blow up actions while reaching more wins."
++        )
++    },
++    "median_actions_to_first_levelup_without_diversity": {
++        "principle": "matched ACTION cost with the shipped diversity floor disabled."
++    },
++    "actions_delta": {
++        "principle": (
++            "without_diversity - with_diversity; positive means diversity reached the "
++            "first level-up in fewer actions."
++        )
++    },
++    "solve_rate_with_diversity": {
++        "principle": "held-out proxy solve-rate with CARNOT_ARC_EXPLORE_DIVERSITY=1."
++    },
++    "solve_rate_without_diversity": {
++        "principle": "matched held-out proxy solve-rate with CARNOT_ARC_EXPLORE_DIVERSITY=0."
++    },
++    "diversity_off_control_passed": {
++        "principle": (
++            "the matched control arm ran and diversity-on first-win >= diversity-off."
++        )
++    },
++    "false_negative_risk_checked": {
++        "principle": (
++            "true with the diversity-off arm run as the matched control -- a "
++            "no-transfer null is valid only then."
++        )
++    },
++    "null_delta_methodology_note": {
++        "principle": (
++            "present when firstwin_delta==0 -- states the equality is an honest "
++            "no-transfer null, not a measurement bug."
++        )
++    },
++    "offline_reproduced": {
++        "principle": "any newly-reached win must offline-reproduce to count as a bank."
++    },
++    "chosen_submitted_config": {
++        "principle": (
++            "diversity is already shipped+wired; this confirms whether to keep it ON "
++            "for the submitted agent (the A6 input)."
++        )
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {
++        "principle": "catches silent drift on replay."
++    },
++    "preconditions_checked": {
++        "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++}
++
++
++def _as_int(value: Any, default: int = 0) -> int:
++    try:
++        return int(value)
++    except (TypeError, ValueError):
++        return default
++
++
++def _attempt_solved(attempt: Mapping[str, Any]) -> bool:
++    return attempt.get("attempted") is True and attempt.get("solved") is True
++
++
++def _median(values: Sequence[int | float]) -> float | None:
++    if not values:
++        return None
++    return float(statistics.median(float(value) for value in values))
++
++
++def _median_actions(attempts: Sequence[Mapping[str, Any]]) -> float | None:
++    return _median(exp4550.agent_actions_to_first_levelup(attempts))
++
++
++def _first_precondition_miss(preconditions: Mapping[str, Any]) -> str | None:
++    if preconditions.get("offline_arcade") is not True:
++        return "offline_arcade"
++    if preconditions.get("arc_variant_generator_importable") is not True:
++        return "arc_variant_generator_import"
++    if preconditions.get("leaderboard_submission") is True:
++        return "leaderboard_submission"
++    return None
++
++
++def check_preconditions(root: Path | str = REPO_ROOT) -> JsonDict:  # pragma: no cover - live boundary
++    root_path = Path(root)
++    checks: JsonDict = {
++        "offline_arcade": False,
++        "arc_variant_generator_importable": False,
++        "offline_env_public_games": exp4550._public_games(root_path),
++        "leaderboard_submission": False,
++        "required_commands": [
++            '.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; '
++            'k.offline_arcade()"',
++            '.venv/bin/python -c "import carnot.agentic.arc_variant_generator"',
++        ],
++    }
++    try:
++        from carnot.agentic import arc_solver_kit as kit
++
++        kit.offline_arcade()
++        checks["offline_arcade"] = True
++    except Exception as exc:
++        checks["offline_arcade_error"] = f"{type(exc).__name__}: {exc}"
++    try:
++        from carnot.agentic.arc_variant_generator import VariantEnv  # noqa: F401
++
++        checks["arc_variant_generator_importable"] = True
++    except Exception as exc:
++        checks["arc_variant_generator_import_error"] = f"{type(exc).__name__}: {exc}"
++    checks["ok"] = _first_precondition_miss(checks) is None
++    return checks
++
++
++@contextmanager
++def _temporary_diversity(enabled: bool):
++    old_value = os.environ.get("CARNOT_ARC_EXPLORE_DIVERSITY")
++    os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] = "1" if enabled else "0"
++    try:
++        yield
++    finally:
++        if old_value is None:
++            os.environ.pop("CARNOT_ARC_EXPLORE_DIVERSITY", None)
++        else:
++            os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] = old_value
++
++
++def make_variant_runner(mode: str, *, root: Path | str = REPO_ROOT) -> VariantRunner:
++    """Run one manufactured variant with the shipped diversity flag forced on or off."""
++
++    _root_path = Path(root)
++    enabled = mode == "diversity_on"
++
++    def run(game: str, spec: Mapping[str, Any], budget: int) -> JsonDict:
++        with _temporary_diversity(enabled):
++            attempt = dict(exp4550.default_variant_runner(game, spec, budget))
++        attempt["diversity_mode"] = mode
++        attempt["diversity_enabled"] = enabled
++        attempt["diversity_env_var"] = "1" if enabled else "0"
++        return attempt
++
++    return run
++
++
++def default_variant_runner_factory(mode: str) -> VariantRunner:  # pragma: no cover - live boundary
++    return make_variant_runner(mode, root=REPO_ROOT)
++
++
++def _measurement(
++    *,
++    public_games: Sequence[str],
++    variant_ids: Sequence[int],
++    budget: int,
++    runner: VariantRunner,
++    n_bootstrap: int,
++) -> JsonDict:
++    measured = exp4550.measure_generic_transfer_over_variants(
++        public_games=public_games,
++        variant_ids=variant_ids,
++        budget=budget,
++        variant_runner=runner,
++        random_seed=RANDOM_SEED,
++        n_bootstrap=n_bootstrap,
++    )
++    measured["firstwin_count"] = int(measured["variant_solved_count"])
++    measured["solve_rate"] = float(measured["generic_transfer_rate_over_variants"])
++    measured["median_actions_to_first_levelup"] = _median_actions(measured["variant_attempts"])
++    return measured
++
++
++def _solved_by_signature(attempts: Sequence[Mapping[str, Any]]) -> dict[str, Mapping[str, Any]]:
++    return {
++        str(attempt.get("variant_signature")): attempt
++        for attempt in attempts
++        if attempt.get("attempted") is True
++    }
++
++
++def _gate_reproduced(gate: Any) -> bool:
++    if not isinstance(gate, Mapping):
++        return False
++    claimed = max(1, _as_int(gate.get("claimed_level"), 1))
++    reached = _as_int(gate.get("reached_level"), 0)
++    return gate.get("reproduced") is True and reached >= claimed
++
++
++def _newly_reached_reproduction(
++    off_attempts: Sequence[Mapping[str, Any]],
++    on_attempts: Sequence[Mapping[str, Any]],
++) -> tuple[list[str], list[str], list[JsonDict], bool]:
++    off_by_sig = _solved_by_signature(off_attempts)
++    newly_reached: list[str] = []
++    unreproduced: list[str] = []
++    records: list[JsonDict] = []
++    for attempt in on_attempts:
++        signature = str(attempt.get("variant_signature"))
++        if not _attempt_solved(attempt) or _attempt_solved(off_by_sig.get(signature, {})):
++            continue
++        gate = attempt.get("reproduction_gate")
++        reproduced = _gate_reproduced(gate)
++        newly_reached.append(signature)
++        if not reproduced:
++            unreproduced.append(signature)
++        gate_mapping = dict(gate) if isinstance(gate, Mapping) else {}
++        records.append(
++            {
++                "game": str(attempt.get("game") or ""),
++                "variant_signature": signature,
++                "reached_level": _as_int(
++                    gate_mapping.get("reached_level"), _as_int(attempt.get("reached_level"), 0)
++                ),
++                "solution_labels": list(attempt.get("solution_labels") or []),
++                "reproduction_gate": gate_mapping,
++                "reproduced": reproduced,
++            }
++        )
++    return sorted(newly_reached), sorted(unreproduced), records, not unreproduced
++
++
++def _registry_from_text(registry_text: str) -> JsonDict:
++    loaded = yaml.safe_load(registry_text) if registry_text.strip() else {}
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def _registry_game_levels(registry: Mapping[str, Any], game: str) -> int:
++    for row in registry.get("games", []) or []:
++        if isinstance(row, Mapping) and row.get("game") == game:
++            return _as_int(row.get("levels_reproduced"), 0)
++    return 0
++
++
++def _registry_total(registry: Mapping[str, Any]) -> int:
++    return _as_int(registry.get("reproducible_total_levels"), 0)
++
++
++def _game_block_bounds(registry_text: str, game: str) -> tuple[int, int] | None:
++    marker = f"- game: {game}"
++    start = registry_text.find(marker)
++    if start == -1:
++        return None
++    candidates = [
++        index
++        for index in (
++            registry_text.find("\n- game: ", start + len(marker)),
++            registry_text.find("\nreproducible_total_levels:", start + len(marker)),
++        )
++        if index != -1
++    ]
++    end = min(candidates) if candidates else len(registry_text)
++    return start, end
++
++
++def _replace_game_level(registry_text: str, game: str, reached_level: int) -> str:
++    bounds = _game_block_bounds(registry_text, game)
++    if bounds is None:
++        block = (
++            f"- game: {game}\n"
++            "  reproducibility: reproduced\n"
++            f"  levels_reproduced: {int(reached_level)}\n"
++            f"  solver: {RESULT_RELATIVE_PATH}\n"
++        )
++        total_match = re.search(r"(?m)^reproducible_total_levels:\s*\d+\s*$", registry_text)
++        if total_match:
++            insert_at = total_match.start()
++            prefix = registry_text[:insert_at]
++            suffix = registry_text[insert_at:]
++            separator = "" if prefix.endswith("\n") else "\n"
++            return f"{prefix}{separator}{block}{suffix}"
++        separator = "" if registry_text.endswith("\n") else "\n"
++        return f"{registry_text}{separator}{block}"
++
++    start, end = bounds
++    block = registry_text[start:end]
++    if re.search(r"(?m)^  levels_reproduced:\s*\d+\s*$", block):
++        block = re.sub(
++            r"(?m)^(  levels_reproduced:\s*)\d+\s*$",
++            rf"\g<1>{int(reached_level)}",
++            block,
++            count=1,
++        )
++    else:
++        first_newline = block.find("\n")
++        if first_newline == -1:
++            block = f"{block}\n  levels_reproduced: {int(reached_level)}"
++        else:
++            block = (
++                f"{block[: first_newline + 1]}"
++                f"  levels_reproduced: {int(reached_level)}\n"
++                f"{block[first_newline + 1 :]}"
++            )
++    return f"{registry_text[:start]}{block}{registry_text[end:]}"
++
++
++def _bankable_wins(
++    registry: Mapping[str, Any], new_win_records: Sequence[Mapping[str, Any]]
++) -> list[JsonDict]:
++    banks: list[JsonDict] = []
++    for record in new_win_records:
++        if record.get("reproduced") is not True and not _gate_reproduced(
++            record.get("reproduction_gate")
++        ):
++            continue
++        game = str(record.get("game") or "")
++        reached = _as_int(record.get("reached_level"), 0)
++        prior = _registry_game_levels(registry, game)
++        if game and reached > prior:
++            bank = dict(record)
++            bank["prior_level"] = prior
++            bank["banked_levels"] = reached - prior
++            banks.append(bank)
++    return banks
++
++
++def apply_registry_banks(
++    registry_text: str, new_win_records: Sequence[Mapping[str, Any]]
++) -> tuple[str, JsonDict]:
++    registry = _registry_from_text(registry_text)
++    prior_total = _registry_total(registry)
++    banks = _bankable_wins(registry, new_win_records)
++    update: JsonDict = {
++        "updated": False,
++        "path": str(REGISTRY_RELATIVE_PATH),
++        "banked_levels": 0,
++        "prior_total_declared": prior_total,
++        "new_total_declared": prior_total,
++        "banked_wins": [],
++        "reason": "no_new_reproduced_level",
++    }
++    if not banks:
++        return registry_text, update
++
++    updated_text = registry_text
++    total_banked = 0
++    for bank in banks:
++        total_banked += int(bank["banked_levels"])
++        updated_text = _replace_game_level(
++            updated_text, str(bank["game"]), int(bank["reached_level"])
++        )
++    new_total = prior_total + total_banked
++    if re.search(r"(?m)^reproducible_total_levels:\s*\d+\s*$", updated_text):
++        updated_text = re.sub(
++            r"(?m)^(reproducible_total_levels:\s*)\d+\s*$",
++            rf"\g<1>{new_total}",
++            updated_text,
++            count=1,
++        )
++    else:
++        separator = "" if updated_text.endswith("\n") else "\n"
++        updated_text = f"{updated_text}{separator}reproducible_total_levels: {new_total}\n"
++
++    update.update(
++        {
++            "updated": True,
++            "banked_levels": total_banked,
++            "new_total_declared": new_total,
++            "banked_wins": banks,
++            "reason": "banked_offline_reproduced_diversity_win",
++        }
++    )
++    return updated_text, update
++
++
++def _registry_update(
++    root: Path,
++    new_win_records: Sequence[Mapping[str, Any]],
++    *,
++    update_registry: bool,
++) -> JsonDict:
++    if not new_win_records:
++        return {
++            "updated": False,
++            "path": str(REGISTRY_RELATIVE_PATH),
++            "banked_levels": 0,
++            "banked_wins": [],
++            "reason": "no_new_diversity_wins",
++        }
++    if not update_registry:
++        return {
++            "updated": False,
++            "path": str(REGISTRY_RELATIVE_PATH),
++            "banked_levels": 0,
++            "banked_wins": [],
++            "reason": "registry_update_disabled",
++        }
++    registry_path = root / REGISTRY_RELATIVE_PATH
++    if not registry_path.exists():
++        return {
++            "updated": False,
++            "path": str(REGISTRY_RELATIVE_PATH),
++            "banked_levels": 0,
++            "banked_wins": [],
++            "reason": "registry_missing",
++        }
++    registry_text = registry_path.read_text(encoding="utf-8")
++    updated_text, update = apply_registry_banks(registry_text, new_win_records)
++    if update.get("updated") is True:
++        registry_path.write_text(updated_text, encoding="utf-8")
++    return update
++
++
++def _checksum(payload: Mapping[str, Any]) -> str:
++    blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return "sha256:" + hashlib.sha256(blob).hexdigest()
++
++
++def _artifact_checksum_payload(artifact: Mapping[str, Any]) -> JsonDict:
++    return {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "firstwin_count_diversity_on": artifact.get("firstwin_count_diversity_on"),
++        "firstwin_count_diversity_off": artifact.get("firstwin_count_diversity_off"),
++        "firstwin_delta": artifact.get("firstwin_delta"),
++        "median_actions_to_first_levelup_with_diversity": artifact.get(
++            "median_actions_to_first_levelup_with_diversity"
++        ),
++        "actions_delta": artifact.get("actions_delta"),
++        "solve_rate_with_diversity": artifact.get("solve_rate_with_diversity"),
++        "solve_rate_without_diversity": artifact.get("solve_rate_without_diversity"),
++        "diversity_off_control_passed": artifact.get("diversity_off_control_passed"),
++        "offline_reproduced": artifact.get("offline_reproduced"),
++        "newly_reached_wins": artifact.get("newly_reached_wins"),
++        "registry_update": artifact.get("registry_update"),
++        "preconditions_checked": artifact.get("preconditions_checked"),
++        "variant_plan": artifact.get("variant_plan"),
++    }
++
++
++def _blocked_artifact(
++    *,
++    resource: str,
++    preconditions: Mapping[str, Any],
++    public_games: Sequence[str],
++    variant_ids: Sequence[int],
++    budget: int,
++) -> JsonDict:
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": [
++            "REQ-CAPSTONE-4583",
++            "SCENARIO-CAPSTONE-4583",
++            "SCENARIO-CAPSTONE-4583-FIELD-PRINCIPLES",
++        ],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": f"complete: blocked_{resource}",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "verifier_is_oracle": False,
++        "firstwin_count_diversity_on": 0,
++        "firstwin_count_diversity_off": 0,
++        "firstwin_delta": 0,
++        "median_actions_to_first_levelup_with_diversity": None,
++        "median_actions_to_first_levelup_without_diversity": None,
++        "actions_delta": 0.0,
++        "solve_rate_with_diversity": 0.0,
++        "solve_rate_without_diversity": 0.0,
++        "diversity_off_control_passed": False,
++        "false_negative_risk_checked": False,
++        "null_delta_methodology_note": (
++            "blocked before paired diversity measurement; no firstwin delta was fabricated."
++        ),
++        "offline_reproduced": False,
++        "chosen_submitted_config": "leave_diversity_floor_default_off",
++        "newly_reached_wins": [],
++        "unreproduced_new_wins": [],
++        "new_win_reproduction_records": [],
++        "new_levels_banked": 0,
++        "registry_update": {
++            "updated": False,
++            "path": str(REGISTRY_RELATIVE_PATH),
++            "banked_levels": 0,
++            "banked_wins": [],
++            "reason": f"blocked_{resource}",
++        },
++        "preconditions_checked": dict(preconditions),
++        "variant_plan": {
++            "public_games": sorted(str(game) for game in public_games),
++            "public_game_count": len(public_games),
++            "variant_ids": [int(item) for item in variant_ids],
++            "variants_per_game": len(variant_ids),
++            "budget": int(budget),
++            "arms": ["diversity_off", "diversity_on"],
++        },
++        "diversity_off_measurement": {},
++        "diversity_on_measurement": {},
++        "random_seed": RANDOM_SEED,
++    }
++    artifact["reproducibility_checksum"] = _checksum(_artifact_checksum_payload(artifact))
++    return artifact
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    public_games: Sequence[str] | None = None,
++    variant_ids: Sequence[int] = DEFAULT_VARIANT_IDS,
++    budget: int = DEFAULT_BUDGET,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    variant_runner_factory: VariantRunnerFactory = default_variant_runner_factory,
++    n_bootstrap: int = DEFAULT_BOOTSTRAPS,
++    update_registry: bool = False,
++) -> JsonDict:
++    started = time.monotonic()
++    root_path = Path(root)
++    preconditions = dict(preconditions_checked or check_preconditions(root_path))
++    games = list(public_games or preconditions.get("offline_env_public_games") or [])
++    miss = _first_precondition_miss(preconditions)
++    if miss:
++        return _blocked_artifact(
++            resource=miss,
++            preconditions=preconditions,
++            public_games=games,
++            variant_ids=variant_ids,
++            budget=budget,
++        )
++
++    diversity_off = _measurement(
++        public_games=games,
++        variant_ids=variant_ids,
++        budget=budget,
++        runner=variant_runner_factory("diversity_off"),
++        n_bootstrap=n_bootstrap,
++    )
++    diversity_on = _measurement(
++        public_games=games,
++        variant_ids=variant_ids,
++        budget=budget,
++        runner=variant_runner_factory("diversity_on"),
++        n_bootstrap=n_bootstrap,
++    )
++
++    off_count = int(diversity_off["firstwin_count"])
++    on_count = int(diversity_on["firstwin_count"])
++    firstwin_delta = on_count - off_count
++    off_actions = diversity_off["median_actions_to_first_levelup"]
++    on_actions = diversity_on["median_actions_to_first_levelup"]
++    actions_delta = (
++        round(float(off_actions) - float(on_actions), 10)
++        if off_actions is not None and on_actions is not None
++        else 0.0
++    )
++    off_completed = int(diversity_off["variant_attempts_count"]) > 0
++    diversity_off_control_passed = bool(off_completed and on_count >= off_count)
++    false_negative_risk_checked = bool(diversity_off_control_passed)
++    newly_reached, unreproduced, reproduction_records, offline_reproduced = (
++        _newly_reached_reproduction(
++            diversity_off["variant_attempts"], diversity_on["variant_attempts"]
++        )
++    )
++    registry_update = _registry_update(
++        root_path, reproduction_records, update_registry=update_registry
++    )
++    new_levels_banked = int(registry_update.get("banked_levels") or 0)
++
++    if firstwin_delta == 0 and diversity_off_control_passed:
++        null_note = (
++            "firstwin_delta==0 is an honest no-transfer null under the paired "
++            "same-variant diversity-off control, not a measurement bug."
++        )
++    elif firstwin_delta == 0:
++        null_note = (
++            "firstwin_delta==0 but the matched diversity-off control did not pass, "
++            "so false-negative risk remains open."
++        )
++    else:
++        null_note = ""
++
++    if firstwin_delta > 0 and diversity_off_control_passed and offline_reproduced:
++        verdict = f"success: diversity_floor_transfer_firstwin_up_{firstwin_delta}"
++    elif firstwin_delta > 0 and not offline_reproduced:
++        verdict = "complete: diversity_floor_new_win_unreproduced_no_bank"
++    elif firstwin_delta == 0 and diversity_off_control_passed:
++        verdict = "complete: diversity_floor_no_transfer_honest_null_gap_sharpened"
++    elif not diversity_off_control_passed:
++        verdict = "complete: diversity_floor_regression_control_failed_false_negative_risk_open"
++    else:  # pragma: no cover - defensive fallback for future verdict states.
++        verdict = "complete: diversity_floor_no_transfer_control_incomplete"
++
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": [
++            "REQ-CAPSTONE-4583",
++            "SCENARIO-CAPSTONE-4583",
++            "SCENARIO-CAPSTONE-4583-FIELD-PRINCIPLES",
++        ],
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": FIELD_PRINCIPLES,
++        "verifier_is_oracle": False,
++        "firstwin_count_diversity_on": on_count,
++        "firstwin_count_diversity_off": off_count,
++        "firstwin_delta": int(firstwin_delta),
++        "median_actions_to_first_levelup_with_diversity": on_actions,
++        "median_actions_to_first_levelup_without_diversity": off_actions,
++        "actions_delta": float(actions_delta),
++        "solve_rate_with_diversity": float(diversity_on["solve_rate"]),
++        "solve_rate_without_diversity": float(diversity_off["solve_rate"]),
++        "diversity_off_control_passed": diversity_off_control_passed,
++        "false_negative_risk_checked": false_negative_risk_checked,
++        "null_delta_methodology_note": null_note,
++        "offline_reproduced": bool(offline_reproduced),
++        "chosen_submitted_config": (
++            "keep_diversity_floor_on"
++            if verdict.startswith("success:")
++            else "leave_diversity_floor_default_off"
++        ),
++        "newly_reached_wins": newly_reached,
++        "unreproduced_new_wins": unreproduced,
++        "new_win_reproduction_records": reproduction_records,
++        "new_levels_banked": new_levels_banked,
++        "registry_update": registry_update,
++        "preconditions_checked": preconditions,
++        "variant_plan": {
++            "public_games": sorted(str(game) for game in games),
++            "public_game_count": len(games),
++            "variant_ids": [int(item) for item in variant_ids],
++            "variants_per_game": len(variant_ids),
++            "budget": int(budget),
++            "runner": "paired_diversity_on_off_generic_solver_offline_variant_env",
++            "arms": ["diversity_off", "diversity_on"],
++            "value_head_best_first_expansion": False,
++        },
++        "diversity_off_measurement": diversity_off,
++        "diversity_on_measurement": diversity_on,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(time.monotonic() - started, 6),
++    }
++    artifact["reproducibility_checksum"] = _checksum(_artifact_checksum_payload(artifact))
++    return artifact
++
++
++def _type_name(field: str) -> str:
++    return f"{field} must be a bare int"
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    errors = [f"missing {field}" for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate mismatch")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle must be false")
++    for field in (
++        "firstwin_count_diversity_on",
++        "firstwin_count_diversity_off",
++        "firstwin_delta",
++        "random_seed",
++    ):
++        if type(artifact.get(field)) is not int:
++            errors.append(_type_name(field))
++    for field in (
++        "median_actions_to_first_levelup_with_diversity",
++        "median_actions_to_first_levelup_without_diversity",
++    ):
++        value = artifact.get(field)
++        if value is not None and type(value) is not float:
++            errors.append(f"{field} must be float or null")
++    for field in (
++        "actions_delta",
++        "solve_rate_with_diversity",
++        "solve_rate_without_diversity",
++    ):
++        if type(artifact.get(field)) is not float:
++            errors.append(f"{field} must be a bare float")
++    for field in (
++        "diversity_off_control_passed",
++        "false_negative_risk_checked",
++        "offline_reproduced",
++    ):
++        if type(artifact.get(field)) is not bool:
++            errors.append(f"{field} must be a bare bool")
++    if artifact.get("firstwin_delta") == 0 and not artifact.get(
++        "null_delta_methodology_note"
++    ):
++        errors.append("null_delta_methodology_note required for zero firstwin_delta")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles missing")
++    else:
++        for field in REQUIRED_ARTIFACT_FIELDS:
++            if field not in principles:
++                errors.append(f"missing field principle for {field}")
++    return errors
++
++
++def _read_json(path: Path) -> JsonDict:
++    loaded = json.loads(path.read_text(encoding="utf-8"))
++    return loaded if isinstance(loaded, dict) else {}
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    artifact: Mapping[str, Any] | None = None,
++) -> Path:
++    root_path = Path(root)
++    payload = dict(artifact or build_artifact(root_path))
++    errors = validate_artifact(payload)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root_path / RESULT_RELATIVE_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    write: bool = True,
++    update_registry: bool = True,
++) -> JsonDict:
++    artifact = build_artifact(root, update_registry=update_registry)
++    if write:
++        write_artifact(root, artifact=artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - requested command boundary
++    artifact = run(REPO_ROOT, write=True, update_registry=True)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - requested command boundary
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 58ba686272..8545fd51ae 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-22T08:56:56.614140Z",
+-  "duration_s": 0.022672414779663086,
++  "run_date": "2026-06-22T09:41:42.042706Z",
++  "duration_s": 0.02077651023864746,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "11d4a6b2f9482ff41aa69285649f9608d221d73a1404a73bb242026d79c896d1",
++  "reproducibility_checksum": "d53bd5852cfce981400d2458e4eb9f8ad3f9bc55d70df050033357a489a3cefd",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "bba5b904713d9be223dea18b4ae3c737d34b56fc"
++    "adversarial_verify_version": "f725a2b5212f21e69a3cf252c02ef8b4887c4d0e"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 0b6a0722bf..cb85e5cfcb 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-22T08:56:56.648194Z",
+-  "duration_s": 0.027971982955932617,
++  "run_date": "2026-06-22T09:41:42.068388Z",
++  "duration_s": 0.021229267120361328,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "54938cb47079200b0a427caebd20b454c8cffa42b8ee89b50f849dce71f4d7ad",
++  "reproducibility_checksum": "727f91dba16111153108ed8fe6f58d97333056b25bd5c9488261fd43784ff9ea",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "bba5b904713d9be223dea18b4ae3c737d34b56fc"
++    "adversarial_verify_version": "f725a2b5212f21e69a3cf252c02ef8b4887c4d0e"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index b2ea5c3b85..b665a826a2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1088123321533203,
++  "efficiency_gains_ms": 2.1560192108154297,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 9137a8f0f2..d98c2297d2 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.9896036721765995e-05,
++  "duration_s": 3.1449017114937305e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4583_diversity_floor_transfer.json b/results/experiment_4583_diversity_floor_transfer.json
+new file mode 100644
+index 0000000000..1602c0a588
+--- /dev/null
++++ b/results/experiment_4583_diversity_floor_transfer.json
+@@ -0,0 +1,1751 @@
++{
++  "actions_delta": 0.0,
++  "chosen_submitted_config": "leave_diversity_floor_default_off",
++  "diversity_off_control_passed": true,
++  "diversity_off_measurement": {
++    "firstwin_count": 1,
++    "generic_transfer_ci": [
++      0.0,
++      0.12
++    ],
++    "generic_transfer_rate_over_variants": 0.04,
++    "median_actions_to_first_levelup": 20.0,
++    "solve_rate": 0.04,
++    "variant_attempts": [
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "ar25",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ar25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ar25~color01"
++      },
++      {
++        "actions": 189,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "bp35",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "bp35",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "bp35~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "cd82",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cd82",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cd82~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "cn04",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cn04",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cn04~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "dc22",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "dc22",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "dc22~color01"
++      },
++      {
++        "actions": 199,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "ft09",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ft09",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ft09~color01"
++      },
++      {
++        "actions": 197,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "g50t",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "g50t",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "g50t~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "ka59",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ka59",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ka59~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "lf52",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "lf52",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "lf52~color01"
++      },
++      {
++        "actions": 20,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "lp85",
++        "kind": "color",
++        "reached_level": 1,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 1,
++          "game": "lp85",
++          "mode": "offline_reproduction_gate_no_quota",
++          "reached_level": 1,
++          "reproduced": true
++        },
++        "solution_labels": [
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":31}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":34}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":36}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":39}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":41}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
++        ],
++        "solved": true,
++        "variant": 1,
++        "variant_signature": "lp85~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "ls20",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ls20",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ls20~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "m0r0",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "m0r0",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "m0r0~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "r11l",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "r11l",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "r11l~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "re86",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "re86",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "re86~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "s5i5",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "s5i5",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "s5i5~color01"
++      },
++      {
++        "actions": 198,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "sb26",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sb26",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sb26~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "sc25",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sc25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sc25~color01"
++      },
++      {
++        "actions": 197,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "sk48",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sk48",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sk48~color01"
++      },
++      {
++        "actions": 193,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "sp80",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sp80",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sp80~color01"
++      },
++      {
++        "actions": 197,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "su15",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "su15",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "su15~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "tn36",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tn36",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tn36~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "tr87",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tr87",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tr87~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "tu93",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tu93",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tu93~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "vc33",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "vc33",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "vc33~color01"
++      },
++      {
++        "actions": 197,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": false,
++        "diversity_env_var": "0",
++        "diversity_mode": "diversity_off",
++        "game": "wa30",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "wa30",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "wa30~color01"
++      }
++    ],
++    "variant_attempts_count": 25,
++    "variant_solved_count": 1,
++    "variant_specs": [
++      {
++        "game": "ar25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ar25~color01"
++      },
++      {
++        "game": "bp35",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "bp35~color01"
++      },
++      {
++        "game": "cd82",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cd82~color01"
++      },
++      {
++        "game": "cn04",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cn04~color01"
++      },
++      {
++        "game": "dc22",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "dc22~color01"
++      },
++      {
++        "game": "ft09",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ft09~color01"
++      },
++      {
++        "game": "g50t",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "g50t~color01"
++      },
++      {
++        "game": "ka59",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ka59~color01"
++      },
++      {
++        "game": "lf52",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lf52~color01"
++      },
++      {
++        "game": "lp85",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lp85~color01"
++      },
++      {
++        "game": "ls20",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ls20~color01"
++      },
++      {
++        "game": "m0r0",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "m0r0~color01"
++      },
++      {
++        "game": "r11l",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "r11l~color01"
++      },
++      {
++        "game": "re86",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "re86~color01"
++      },
++      {
++        "game": "s5i5",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "s5i5~color01"
++      },
++      {
++        "game": "sb26",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sb26~color01"
++      },
++      {
++        "game": "sc25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sc25~color01"
++      },
++      {
++        "game": "sk48",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sk48~color01"
++      },
++      {
++        "game": "sp80",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sp80~color01"
++      },
++      {
++        "game": "su15",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "su15~color01"
++      },
++      {
++        "game": "tn36",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tn36~color01"
++      },
++      {
++        "game": "tr87",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tr87~color01"
++      },
++      {
++        "game": "tu93",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tu93~color01"
++      },
++      {
++        "game": "vc33",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "vc33~color01"
++      },
++      {
++        "game": "wa30",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "wa30~color01"
++      }
++    ]
++  },
++  "diversity_on_measurement": {
++    "firstwin_count": 1,
++    "generic_transfer_ci": [
++      0.0,
++      0.12
++    ],
++    "generic_transfer_rate_over_variants": 0.04,
++    "median_actions_to_first_levelup": 20.0,
++    "solve_rate": 0.04,
++    "variant_attempts": [
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "ar25",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ar25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ar25~color01"
++      },
++      {
++        "actions": 191,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "bp35",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "bp35",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "bp35~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "cd82",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cd82",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cd82~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "cn04",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "cn04",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "cn04~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "dc22",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "dc22",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "dc22~color01"
++      },
++      {
++        "actions": 199,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "ft09",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ft09",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ft09~color01"
++      },
++      {
++        "actions": 197,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "g50t",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "g50t",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "g50t~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "ka59",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ka59",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ka59~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "lf52",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "lf52",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "lf52~color01"
++      },
++      {
++        "actions": 20,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "lp85",
++        "kind": "color",
++        "reached_level": 1,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 1,
++          "game": "lp85",
++          "mode": "offline_reproduction_gate_no_quota",
++          "reached_level": 1,
++          "reproduced": true
++        },
++        "solution_labels": [
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":31}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":34}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":36}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":39}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":57}}",
++          "{\"action\":6,\"data\":{\"x\":32,\"y\":6}}",
++          "{\"action\":6,\"data\":{\"x\":0,\"y\":41}}",
++          "{\"action\":6,\"data\":{\"x\":4,\"y\":32}}"
++        ],
++        "solved": true,
++        "variant": 1,
++        "variant_signature": "lp85~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "ls20",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "ls20",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "ls20~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "m0r0",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "m0r0",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "m0r0~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "r11l",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "r11l",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "r11l~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "re86",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "re86",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "re86~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "s5i5",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "s5i5",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "s5i5~color01"
++      },
++      {
++        "actions": 198,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "sb26",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sb26",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sb26~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "sc25",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sc25",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sc25~color01"
++      },
++      {
++        "actions": 197,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "sk48",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sk48",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sk48~color01"
++      },
++      {
++        "actions": 193,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "sp80",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "sp80",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "sp80~color01"
++      },
++      {
++        "actions": 197,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "su15",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "su15",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "su15~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "tn36",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tn36",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tn36~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "tr87",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tr87",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tr87~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "tu93",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "tu93",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "tu93~color01"
++      },
++      {
++        "actions": 195,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "vc33",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "vc33",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "vc33~color01"
++      },
++      {
++        "actions": 196,
++        "attempted": true,
++        "blocked_reason": "",
++        "diversity_enabled": true,
++        "diversity_env_var": "1",
++        "diversity_mode": "diversity_on",
++        "game": "wa30",
++        "kind": "color",
++        "reached_level": 0,
++        "reflect": null,
++        "reproduction_gate": {
++          "claimed_level": 0,
++          "game": "wa30",
++          "mode": "offline_reproduction_gate_no_solution",
++          "reached_level": 0,
++          "reproduced": false
++        },
++        "solution_labels": [],
++        "solved": false,
++        "variant": 1,
++        "variant_signature": "wa30~color01"
++      }
++    ],
++    "variant_attempts_count": 25,
++    "variant_solved_count": 1,
++    "variant_specs": [
++      {
++        "game": "ar25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ar25~color01"
++      },
++      {
++        "game": "bp35",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "bp35~color01"
++      },
++      {
++        "game": "cd82",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cd82~color01"
++      },
++      {
++        "game": "cn04",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "cn04~color01"
++      },
++      {
++        "game": "dc22",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "dc22~color01"
++      },
++      {
++        "game": "ft09",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ft09~color01"
++      },
++      {
++        "game": "g50t",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "g50t~color01"
++      },
++      {
++        "game": "ka59",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ka59~color01"
++      },
++      {
++        "game": "lf52",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lf52~color01"
++      },
++      {
++        "game": "lp85",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "lp85~color01"
++      },
++      {
++        "game": "ls20",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "ls20~color01"
++      },
++      {
++        "game": "m0r0",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "m0r0~color01"
++      },
++      {
++        "game": "r11l",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "r11l~color01"
++      },
++      {
++        "game": "re86",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "re86~color01"
++      },
++      {
++        "game": "s5i5",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "s5i5~color01"
++      },
++      {
++        "game": "sb26",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sb26~color01"
++      },
++      {
++        "game": "sc25",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sc25~color01"
++      },
++      {
++        "game": "sk48",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sk48~color01"
++      },
++      {
++        "game": "sp80",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "sp80~color01"
++      },
++      {
++        "game": "su15",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "su15~color01"
++      },
++      {
++        "game": "tn36",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tn36~color01"
++      },
++      {
++        "game": "tr87",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tr87~color01"
++      },
++      {
++        "game": "tu93",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "tu93~color01"
++      },
++      {
++        "game": "vc33",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "vc33~color01"
++      },
++      {
++        "game": "wa30",
++        "kind": "color",
++        "reflect": null,
++        "variant": 1,
++        "variant_signature": "wa30~color01"
++      }
++    ]
++  },
++  "duration_s": 26.420083,
++  "experiment": "experiment_4583_diversity_floor_transfer",
++  "false_negative_risk_checked": true,
++  "field_principles": {
++    "actions_delta": {
++      "principle": "without_diversity - with_diversity; positive means diversity reached the first level-up in fewer actions."
++    },
++    "chosen_submitted_config": {
++      "principle": "diversity is already shipped+wired; this confirms whether to keep it ON for the submitted agent (the A6 input)."
++    },
++    "diversity_off_control_passed": {
++      "principle": "the matched control arm ran and diversity-on first-win >= diversity-off."
++    },
++    "false_negative_risk_checked": {
++      "principle": "true with the diversity-off arm run as the matched control -- a no-transfer null is valid only then."
++    },
++    "firstwin_count_diversity_off": {
++      "principle": "the matched diversity-OFF baseline on the SAME variants."
++    },
++    "firstwin_count_diversity_on": {
++      "principle": "the HEADLINE -- held-out first-win count WITH the diversity floor."
++    },
++    "firstwin_delta": {
++      "principle": "on - off (positive = more wins reached = transfer), emitted explicitly so a null (0) is annotated."
++    },
++    "honest_verdict": {
++      "principle": "terminal prefix; success: diversity_floor_transfer_firstwin_up_<n> OR complete: diversity_floor_no_transfer_honest_null_gap_sharpened."
++    },
++    "inference_substrate": {
++      "principle": "verifier_ensemble_against_cached_candidates -- offline variant exploration, no LLM load (1s floor)."
++    },
++    "median_actions_to_first_levelup_with_diversity": {
++      "principle": "ACTION cost WITH diversity -- the leaderboard tiebreaker; diversity must not blow up actions while reaching more wins."
++    },
++    "median_actions_to_first_levelup_without_diversity": {
++      "principle": "matched ACTION cost with the shipped diversity floor disabled."
++    },
++    "null_delta_methodology_note": {
++      "principle": "present when firstwin_delta==0 -- states the equality is an honest no-transfer null, not a measurement bug."
++    },
++    "offline_reproduced": {
++      "principle": "any newly-reached win must offline-reproduce to count as a bank."
++    },
++    "preconditions_checked": {
++      "principle": "records resources verified; pre-empts missing-resource fabrication."
++    },
++    "random_seed": {
++      "principle": "determinism precondition for reproducibility."
++    },
++    "reproducibility_checksum": {
++      "principle": "catches silent drift on replay."
++    },
++    "solve_rate_with_diversity": {
++      "principle": "held-out proxy solve-rate with CARNOT_ARC_EXPLORE_DIVERSITY=1."
++    },
++    "solve_rate_without_diversity": {
++      "principle": "matched held-out proxy solve-rate with CARNOT_ARC_EXPLORE_DIVERSITY=0."
++    },
++    "verifier_is_oracle": {
++      "principle": "MUST be false -- diversity-on-stall is a generation-broadening explorer lever, oracle-DISTINCT from the win-check."
++    }
++  },
++  "firstwin_count_diversity_off": 1,
++  "firstwin_count_diversity_on": 1,
++  "firstwin_delta": 0,
++  "honest_verdict": "complete: diversity_floor_no_transfer_honest_null_gap_sharpened",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "median_actions_to_first_levelup_with_diversity": 20.0,
++  "median_actions_to_first_levelup_without_diversity": 20.0,
++  "new_levels_banked": 0,
++  "new_win_reproduction_records": [],
++  "newly_reached_wins": [],
++  "null_delta_methodology_note": "firstwin_delta==0 is an honest no-transfer null under the paired same-variant diversity-off control, not a measurement bug.",
++  "offline_reproduced": true,
++  "preconditions_checked": {
++    "arc_variant_generator_importable": true,
++    "leaderboard_submission": false,
++    "offline_arcade": true,
++    "offline_env_public_games": [
++      "ar25",
++      "bp35",
++      "cd82",
++      "cn04",
++      "dc22",
++      "ft09",
++      "g50t",
++      "ka59",
++      "lf52",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "re86",
++      "s5i5",
++      "sb26",
++      "sc25",
++      "sk48",
++      "sp80",
++      "su15",
++      "tn36",
++      "tr87",
++      "tu93",
++      "vc33",
++      "wa30"
++    ],
++    "ok": true,
++    "required_commands": [
++      ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
++      ".venv/bin/python -c \"import carnot.agentic.arc_variant_generator\""
++    ]
++  },
++  "random_seed": 4583,
++  "registry_update": {
++    "banked_levels": 0,
++    "banked_wins": [],
++    "path": "ops/arc_solve_registry.yaml",
++    "reason": "no_new_diversity_wins",
++    "updated": false
++  },
++  "reproducibility_checksum": "sha256:535674b94b43bb54768bcb0b6e1aeef53256c1eaa21777b3ce1449e81ce03c59",
++  "result_path": "results/experiment_4583_diversity_floor_transfer.json",
++  "schema": "carnot.exp4583.diversity_floor_transfer.v1",
++  "solve_rate_with_diversity": 0.04,
++  "solve_rate_without_diversity": 0.04,
++  "spec_refs": [
++    "REQ-CAPSTONE-4583",
++    "SCENARIO-CAPSTONE-4583",
++    "SCENARIO-CAPSTONE-4583-FIELD-PRINCIPLES"
++  ],
++  "unreproduced_new_wins": [],
++  "variant_plan": {
++    "arms": [
++      "diversity_off",
++      "diversity_on"
++    ],
++    "budget": 200,
++    "public_game_count": 25,
++    "public_games": [
++      "ar25",
++      "bp35",
++      "cd82",
++      "cn04",
++      "dc22",
++      "ft09",
++      "g50t",
++      "ka59",
++      "lf52",
++      "lp85",
++      "ls20",
++      "m0r0",
++      "r11l",
++      "re86",
++      "s5i5",
++      "sb26",
++      "sc25",
++      "sk48",
++      "sp80",
++      "su15",
++      "tn36",
++      "tr87",
++      "tu93",
++      "vc33",
++      "wa30"
++    ],
++    "runner": "paired_diversity_on_off_generic_solver_offline_variant_env",
++    "value_head_best_first_expansion": false,
++    "variant_ids": [
++      1
++    ],
++    "variants_per_game": 1
++  },
++  "verifier_is_oracle": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 4d14564133..243c406174 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T08:59:45Z",
+-  "finished_at": "2026-06-22T08:59:45Z",
+-  "duration_s": 0.005,
++  "started_at": "2026-06-22T09:41:31Z",
++  "finished_at": "2026-06-22T09:41:32Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 1250b2f422..1f4b044d61 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T08:59:45Z",
+-  "finished_at": "2026-06-22T08:59:45Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-22T09:41:32Z",
++  "finished_at": "2026-06-22T09:41:32Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index afa85e0c68..8f7b3bf62d 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260622",
+-  "started_at": "2026-06-22T08:59:45Z",
+-  "finished_at": "2026-06-22T08:59:45Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-22T09:41:32Z",
++  "finished_at": "2026-06-22T09:41:32Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/tests/python/test_experiment_4583_diversity_floor_transfer.py b/tests/python/test_experiment_4583_diversity_floor_transfer.py
+new file mode 100644
+index 0000000000..ed62ab78d8
+--- /dev/null
++++ b/tests/python/test_experiment_4583_diversity_floor_transfer.py
+@@ -0,0 +1,540 @@
++"""Tests for Exp 4583 exploration-diversity floor transfer.
++
++Spec refs: REQ-CAPSTONE-4583, SCENARIO-CAPSTONE-4583,
++SCENARIO-CAPSTONE-4583-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import os
++from pathlib import Path
++from typing import Any, Mapping
++
++import pytest
++
++from carnot import experiment_4583_diversity_floor_transfer as mod
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _preconditions(games: tuple[str, ...]) -> dict[str, Any]:
++    return {
++        "ok": True,
++        "offline_arcade": True,
++        "arc_variant_generator_importable": True,
++        "offline_env_public_games": list(games),
++        "leaderboard_submission": False,
++    }
++
++
++def _runner_factory(
++    solved_by_mode: Mapping[str, set[str]],
++    actions_by_mode: Mapping[str, Mapping[str, int]] | None = None,
++    reproduced_by_mode: Mapping[str, set[str]] | None = None,
++):
++    actions_by_mode = actions_by_mode or {}
++    reproduced_by_mode = reproduced_by_mode or solved_by_mode
++
++    def _runner(mode: str):
++        def run(game: str, spec: Mapping[str, Any], _budget: int) -> dict[str, Any]:
++            signature = str(spec["variant_signature"])
++            solved = signature in solved_by_mode.get(mode, set())
++            reproduced = signature in reproduced_by_mode.get(mode, set())
++            reached = 1 if solved else 0
++            gate_level = reached if reproduced else 0
++            actions = int(actions_by_mode.get(mode, {}).get(signature, 8 if solved else 19))
++            return {
++                "game": game,
++                "variant_signature": signature,
++                "variant": int(spec["variant"]),
++                "kind": spec["kind"],
++                "reflect": spec.get("reflect"),
++                "attempted": True,
++                "solved": solved,
++                "winner_generated": solved,
++                "reached_level": reached,
++                "actions": actions,
++                "actions_to_first_levelup": actions if solved else None,
++                "solution_labels": ["ACTION1"] if solved else [],
++                "reproduction_gate": {
++                    "game": game,
++                    "claimed_level": reached,
++                    "reached_level": gate_level,
++                    "reproduced": reproduced,
++                },
++                "blocked_reason": "",
++                "diversity_mode": mode,
++            }
++
++        return run
++
++    return _runner
++
++
++def test_req_capstone_4583_spec_declares_diversity_floor_contract() -> None:
++    """REQ-CAPSTONE-4583: OpenSpec declares the diversity-floor artifact schema."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4583" in spec
++    assert "SCENARIO-CAPSTONE-4583" in spec
++    assert mod.RESULT_RELATIVE_PATH in spec
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_req_capstone_4583_temporary_diversity_forces_and_restores_env(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-4583: diversity arms force CARNOT_ARC_EXPLORE_DIVERSITY deterministically."""
++
++    monkeypatch.setenv("CARNOT_ARC_EXPLORE_DIVERSITY", "operator")
++    with mod._temporary_diversity(True):
++        assert os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] == "1"
++    assert os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] == "operator"
++
++    monkeypatch.delenv("CARNOT_ARC_EXPLORE_DIVERSITY", raising=False)
++    with mod._temporary_diversity(False):
++        assert os.environ["CARNOT_ARC_EXPLORE_DIVERSITY"] == "0"
++    assert "CARNOT_ARC_EXPLORE_DIVERSITY" not in os.environ
++
++
++def test_req_capstone_4583_make_variant_runner_sets_on_off_env(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-4583: the live runner toggles only the shipped diversity flag."""
++
++    seen: list[str | None] = []
++
++    def fake_default_runner(
++        game: str, spec: Mapping[str, Any], budget: int
++    ) -> dict[str, Any]:
++        seen.append(os.environ.get("CARNOT_ARC_EXPLORE_DIVERSITY"))
++        return {
++            "game": game,
++            "variant_signature": spec["variant_signature"],
++            "attempted": True,
++            "solved": False,
++            "actions": budget,
++        }
++
++    monkeypatch.setattr(mod.exp4550, "default_variant_runner", fake_default_runner)
++    spec = {"variant": 1, "kind": "color", "variant_signature": "g1~color01"}
++
++    assert mod.make_variant_runner("diversity_on")("g1", spec, 7)["diversity_enabled"] is True
++    assert mod.make_variant_runner("diversity_off")("g1", spec, 7)["diversity_enabled"] is False
++    assert seen == ["1", "0"]
++
++
++def test_scenario_capstone_4583_success_reports_firstwin_lift_and_actions(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4583: diversity-on beats matched diversity-off variants."""
++
++    games = ("g1", "g2", "g3", "g4")
++    off = {"g1~color01"}
++    on = {"g1~color01", "g2~color01", "g3~color01"}
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=games,
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(games),
++        variant_runner_factory=_runner_factory(
++            {"diversity_off": off, "diversity_on": on},
++            actions_by_mode={
++                "diversity_off": {"g1~color01": 10},
++                "diversity_on": {
++                    "g1~color01": 9,
++                    "g2~color01": 11,
++                    "g3~color01": 13,
++                },
++            },
++        ),
++        update_registry=False,
++    )
++
++    assert artifact["honest_verdict"] == "success: diversity_floor_transfer_firstwin_up_2"
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["verifier_is_oracle"] is False
++    assert artifact["firstwin_count_diversity_off"] == 1
++    assert artifact["firstwin_count_diversity_on"] == 3
++    assert artifact["firstwin_delta"] == 2
++    assert artifact["solve_rate_without_diversity"] == pytest.approx(0.25)
++    assert artifact["solve_rate_with_diversity"] == pytest.approx(0.75)
++    assert artifact["median_actions_to_first_levelup_without_diversity"] == 10.0
++    assert artifact["median_actions_to_first_levelup_with_diversity"] == 11.0
++    assert artifact["actions_delta"] == -1.0
++    assert artifact["diversity_off_control_passed"] is True
++    assert artifact["false_negative_risk_checked"] is True
++    assert artifact["offline_reproduced"] is True
++    assert artifact["newly_reached_wins"] == ["g2~color01", "g3~color01"]
++    assert artifact["chosen_submitted_config"] == "keep_diversity_floor_on"
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_capstone_4583_honest_null_annotates_zero_delta(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4583-FIELD-PRINCIPLES: zero firstwin delta is annotated."""
++
++    games = ("g1", "g2")
++    solved = {"g1~color01"}
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=games,
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(games),
++        variant_runner_factory=_runner_factory(
++            {"diversity_off": solved, "diversity_on": solved},
++            actions_by_mode={
++                "diversity_off": {"g1~color01": 8},
++                "diversity_on": {"g1~color01": 8},
++            },
++        ),
++        update_registry=False,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: diversity_floor_no_transfer_honest_null_gap_sharpened"
++    )
++    assert artifact["firstwin_delta"] == 0
++    assert artifact["actions_delta"] == 0.0
++    assert "honest no-transfer null" in artifact["null_delta_methodology_note"]
++    assert artifact["diversity_off_control_passed"] is True
++    assert artifact["false_negative_risk_checked"] is True
++    assert artifact["chosen_submitted_config"] == "leave_diversity_floor_default_off"
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_capstone_4583_control_failure_keeps_false_negative_risk_open(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4583: diversity-on regression is not a valid null."""
++
++    games = ("g1", "g2")
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=games,
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(games),
++        variant_runner_factory=_runner_factory(
++            {
++                "diversity_off": {"g1~color01", "g2~color01"},
++                "diversity_on": {"g1~color01"},
++            }
++        ),
++        update_registry=False,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: diversity_floor_regression_control_failed_false_negative_risk_open"
++    )
++    assert artifact["firstwin_delta"] == -1
++    assert artifact["diversity_off_control_passed"] is False
++    assert artifact["false_negative_risk_checked"] is False
++    assert artifact["offline_reproduced"] is True
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_capstone_4583_unreproduced_new_win_blocks_success(
++    tmp_path: Path,
++) -> None:
++    """REQ-CAPSTONE-4583: newly reached wins need offline reproduce evidence to count."""
++
++    games = ("g1", "g2")
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=games,
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(games),
++        variant_runner_factory=_runner_factory(
++            {
++                "diversity_off": {"g1~color01"},
++                "diversity_on": {"g1~color01", "g2~color01"},
++            },
++            reproduced_by_mode={
++                "diversity_off": {"g1~color01"},
++                "diversity_on": {"g1~color01"},
++            },
++        ),
++        update_registry=False,
++    )
++
++    assert artifact["firstwin_delta"] == 1
++    assert artifact["offline_reproduced"] is False
++    assert artifact["honest_verdict"] == "complete: diversity_floor_new_win_unreproduced_no_bank"
++    assert "g2~color01" in artifact["unreproduced_new_wins"]
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_capstone_4583_precondition_misses_and_blocked_artifact(
++    tmp_path: Path,
++) -> None:
++    """REQ-CAPSTONE-4583: missing resources produce terminal blocked artifacts."""
++
++    assert mod._first_precondition_miss({"offline_arcade": False}) == "offline_arcade"
++    assert (
++        mod._first_precondition_miss(
++            {"offline_arcade": True, "arc_variant_generator_importable": False}
++        )
++        == "arc_variant_generator_import"
++    )
++    assert (
++        mod._first_precondition_miss(
++            {
++                "offline_arcade": True,
++                "arc_variant_generator_importable": True,
++                "leaderboard_submission": True,
++            }
++        )
++        == "leaderboard_submission"
++    )
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=("g1",),
++        variant_ids=(1,),
++        preconditions_checked={"offline_arcade": False, "arc_variant_generator_importable": True},
++    )
++
++    assert artifact["honest_verdict"] == "complete: blocked_offline_arcade"
++    assert artifact["false_negative_risk_checked"] is False
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_req_capstone_4583_registry_bank_rewrites_only_when_level_is_new() -> None:
++    """REQ-CAPSTONE-4583: reproduced newly reached wins can bump the registry total."""
++
++    registry_text = "\n".join(
++        [
++            "schema_version: 1",
++            "games:",
++            "- game: g1",
++            "  reproducibility: reproduced",
++            "  levels_reproduced: 1",
++            "reproducible_total_levels: 1",
++            "",
++        ]
++    )
++    wins = [
++        {
++            "game": "g1",
++            "variant_signature": "g1~color01",
++            "reached_level": 2,
++            "reproduction_gate": {"reproduced": True, "reached_level": 2, "claimed_level": 2},
++            "solution_labels": ["ACTION1"],
++        }
++    ]
++
++    updated, update = mod.apply_registry_banks(registry_text, wins)
++
++    assert update["updated"] is True
++    assert update["banked_levels"] == 1
++    assert update["new_total_declared"] == 2
++    assert "levels_reproduced: 2" in updated
++    assert "reproducible_total_levels: 2" in updated
++
++    unchanged, no_update = mod.apply_registry_banks(updated, wins)
++    assert no_update["updated"] is False
++    assert no_update["banked_levels"] == 0
++    assert unchanged == updated
++
++
++def test_req_capstone_4583_registry_defensive_branches(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4583: registry banking handles missing rows and disabled evidence."""
++
++    assert mod._as_int("not-int", 7) == 7
++    assert mod._gate_reproduced(None) is False
++    assert mod._registry_game_levels({"games": [{"game": "other"}]}, "g1") == 0
++    assert mod._game_block_bounds("schema_version: 1\n", "g1") is None
++
++    unreproduced = [
++        {
++            "game": "g1",
++            "variant_signature": "g1~color01",
++            "reached_level": 1,
++            "reproduction_gate": {"reproduced": False, "reached_level": 0, "claimed_level": 1},
++        }
++    ]
++    same_text, no_bank = mod.apply_registry_banks("schema_version: 1\n", unreproduced)
++    assert no_bank["updated"] is False
++    assert same_text == "schema_version: 1\n"
++
++    missing_game_text = "schema_version: 1\nreproducible_total_levels: 0\n"
++    inserted, insert_update = mod.apply_registry_banks(
++        missing_game_text,
++        [
++            {
++                "game": "g2",
++                "variant_signature": "g2~color01",
++                "reached_level": 2,
++                "reproduced": True,
++            }
++        ],
++    )
++    assert insert_update["banked_levels"] == 2
++    assert "- game: g2" in inserted
++    assert "reproducible_total_levels: 2" in inserted
++
++    no_total, no_total_update = mod.apply_registry_banks(
++        "schema_version: 1\n",
++        [{"game": "g3", "variant_signature": "g3~color01", "reached_level": 1, "reproduced": True}],
++    )
++    assert no_total_update["new_total_declared"] == 1
++    assert no_total.endswith("reproducible_total_levels: 1\n")
++
++    no_level_block = "\n".join(
++        [
++            "games:",
++            "- game: g4",
++            "  reproducibility: reproduced",
++            "reproducible_total_levels: 0",
++            "",
++        ]
++    )
++    inserted_level, _update = mod.apply_registry_banks(
++        no_level_block,
++        [{"game": "g4", "variant_signature": "g4~color01", "reached_level": 1, "reproduced": True}],
++    )
++    assert "  levels_reproduced: 1" in inserted_level
++    assert mod._replace_game_level("- game: g5", "g5", 3) == "- game: g5\n  levels_reproduced: 3"
++
++    record = {
++        "game": "g6",
++        "variant_signature": "g6~color01",
++        "reached_level": 1,
++        "reproduced": True,
++    }
++    assert mod._registry_update(tmp_path, [record], update_registry=True)["reason"] == "registry_missing"
++    registry_path = tmp_path / mod.REGISTRY_RELATIVE_PATH
++    registry_path.parent.mkdir(parents=True)
++    registry_path.write_text("schema_version: 1\nreproducible_total_levels: 0\n", encoding="utf-8")
++    update = mod._registry_update(tmp_path, [record], update_registry=True)
++    assert update["updated"] is True
++    assert "reproducible_total_levels: 1" in registry_path.read_text(encoding="utf-8")
++
++
++def test_scenario_capstone_4583_zero_delta_without_control_notes_open_risk(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4583: zero delta without an off arm is not a closed null."""
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=(),
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(()),
++        variant_runner_factory=_runner_factory(
++            {"diversity_off": set(), "diversity_on": set()}
++        ),
++        update_registry=False,
++    )
++
++    assert artifact["firstwin_delta"] == 0
++    assert artifact["diversity_off_control_passed"] is False
++    assert "false-negative risk remains open" in artifact["null_delta_methodology_note"]
++    assert mod.validate_artifact(artifact) == []
++
++
++def test_scenario_capstone_4583_validate_artifact_reports_schema_errors(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-CAPSTONE-4583-FIELD-PRINCIPLES: validation rejects bad field shapes."""
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=("g1",),
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(("g1",)),
++        variant_runner_factory=_runner_factory(
++            {"diversity_off": set(), "diversity_on": set()}
++        ),
++        update_registry=False,
++    )
++    bad = dict(artifact)
++    bad.update(
++        {
++            "honest_verdict": "pending",
++            "inference_substrate": "wrong",
++            "verifier_is_oracle": True,
++            "firstwin_count_diversity_on": "0",
++            "firstwin_count_diversity_off": "0",
++            "firstwin_delta": "0",
++            "median_actions_to_first_levelup_with_diversity": "0",
++            "actions_delta": "0",
++            "solve_rate_with_diversity": "0",
++            "diversity_off_control_passed": "false",
++            "false_negative_risk_checked": "false",
++            "offline_reproduced": "false",
++            "null_delta_methodology_note": "",
++            "field_principles": {},
++        }
++    )
++
++    errors = mod.validate_artifact(bad)
++
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "inference_substrate mismatch" in errors
++    assert "verifier_is_oracle must be false" in errors
++    assert "firstwin_count_diversity_on must be a bare int" in errors
++    assert "median_actions_to_first_levelup_with_diversity must be float or null" in errors
++    assert "diversity_off_control_passed must be a bare bool" in errors
++    assert any(error.startswith("missing field principle") for error in errors)
++
++    note_errors = mod.validate_artifact(dict(artifact, null_delta_methodology_note=""))
++    assert "null_delta_methodology_note required for zero firstwin_delta" in note_errors
++    principle_errors = mod.validate_artifact(dict(artifact, field_principles=[]))
++    assert "field_principles missing" in principle_errors
++
++
++def test_scenario_capstone_4583_write_and_run_paths(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-CAPSTONE-4583: write_artifact and run produce the JSON artifact."""
++
++    artifact = mod.build_artifact(
++        root=tmp_path,
++        public_games=("g1",),
++        variant_ids=(1,),
++        budget=32,
++        preconditions_checked=_preconditions(("g1",)),
++        variant_runner_factory=_runner_factory(
++            {"diversity_off": set(), "diversity_on": set()}
++        ),
++        update_registry=False,
++    )
++    path = mod.write_artifact(tmp_path, artifact=artifact)
++    assert path.exists()
++    assert mod._read_json(path)["reproducibility_checksum"] == artifact[
++        "reproducibility_checksum"
++    ]
++
++    with pytest.raises(ValueError):
++        mod.write_artifact(tmp_path, artifact=dict(artifact, honest_verdict="pending"))
++
++    calls: list[tuple[str, Any]] = []
++
++    def fake_build(root: Path | str, **kwargs: Any) -> dict[str, Any]:
++        calls.append(("build", root, kwargs))
++        return artifact
++
++    def fake_write(root: Path | str, *, artifact: Mapping[str, Any] | None = None) -> Path:
++        calls.append(("write", artifact))
++        return tmp_path / "written.json"
++
++    monkeypatch.setattr(mod, "build_artifact", fake_build)
++    monkeypatch.setattr(mod, "write_artifact", fake_write)
++    assert mod.run(tmp_path, write=True, update_registry=False) == artifact
++    assert calls[0][0] == "build"
++    assert calls[1][0] == "write"
++    calls.clear()
++    assert mod.run(tmp_path, write=False, update_registry=False) == artifact
++    assert calls == [("build", tmp_path, {"update_registry": False})]
+-- 
+2.55.0
+

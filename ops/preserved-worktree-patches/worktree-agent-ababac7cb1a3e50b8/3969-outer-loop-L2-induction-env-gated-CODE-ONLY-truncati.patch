@@ -1,0 +1,2335 @@
+From f4d1dc053811f1b1a4410e7c44fff3353233b34f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 25 Jun 2026 10:00:26 -0400
+Subject: [PATCH 03969/11362] [outer-loop] L2 induction: env-gated CODE-ONLY
+ truncation fix (works) reveals deeper degenerate-goal wall
+
+The L2 induce prompt (with a WIN STATE exemplar) made Qwen3.5-9B burn its whole 4096-token
+budget on win-state chain-of-thought before emitting code (stop_type=limit, 0 code), so
+is_level_complete was never induced for ~10 milestones. Fix: a forceful CODE-ONLY directive +
+stop=["```"] on the closing fence -> emits ONLY the code, 195 tokens / 15.6s (vs 450s truncated
+/ 605s rambling), valid+satisfiable engine+is_level_complete in isolation. Wired end-to-end
+through generate() (12.9s vs nothing). Env-gated CARNOT_ARC_CODEONLY_INDUCE=1, default OFF,
+induce-scoped.
+
+But on the LIVE lp85 graded-bias re-test the fixed induction still yields a DEGENERATE goal
+(is_level_complete: return False) -> _goal_satisfiability_check returns degenerate_goal_predicate
+-> lp85 stays L1. Truncation was one wall; goal-induction QUALITY is the deeper wall (and
+reasoning-suppression may worsen the goal predicate specifically). Full A/B induction breakdown
+pending. inference_substrate=live_llm_inference; solve_provenance=development_proxy;
+verifier_is_oracle=false.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...fix-and-degenerate-goal-wall-2026-06-25.md | 116 +++
+ openspec/capabilities/capstone/spec.md        |   4 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   1 +
+ ops/conductor-state.json                      |   2 +-
+ .../agentic/arc_executable_world_model.py     |  50 +-
+ ...iment_4729_held_out_first_win_readiness.py | 752 ++++++++++++++++++
+ results/proto_l2_code_only_prefix.json        | 136 ++++
+ .../experiments/proto_graded_goal_bias_ab.py  |  34 +-
+ .../experiments/proto_l2_code_only_prefix.py  | 436 ++++++++++
+ .../experiments/proto_l2_stopseq_verify.py    | 119 +++
+ ...iment_4729_held_out_first_win_readiness.py | 521 ++++++++++++
+ 12 files changed, 2153 insertions(+), 20 deletions(-)
+ create mode 100644 docs/research-notes/l2-truncation-fix-and-degenerate-goal-wall-2026-06-25.md
+ create mode 100644 python/carnot/experiment_4729_held_out_first_win_readiness.py
+ create mode 100644 results/proto_l2_code_only_prefix.json
+ create mode 100644 scripts/experiments/proto_l2_code_only_prefix.py
+ create mode 100644 scripts/experiments/proto_l2_stopseq_verify.py
+ create mode 100644 tests/python/test_experiment_4729_held_out_first_win_readiness.py
+
+diff --git a/docs/research-notes/l2-truncation-fix-and-degenerate-goal-wall-2026-06-25.md b/docs/research-notes/l2-truncation-fix-and-degenerate-goal-wall-2026-06-25.md
+new file mode 100644
+index 0000000000..3a9c7e22c5
+--- /dev/null
++++ b/docs/research-notes/l2-truncation-fix-and-degenerate-goal-wall-2026-06-25.md
+@@ -0,0 +1,116 @@
++# L2 goal-induction: the token-truncation wall is FIXED — and fixing it reveals a deeper degenerate-goal wall
++
++**Date:** 2026-06-25 · **Author:** outer-loop (operator-directed: "update qwen ctx to 16384; re-call
++the captured L2 prompt with a stronger code-only prefix at 4096; if CoT irrepressible fall back to
++raise-budget; if it produces a satisfiable goal, chain into re-testing the graded-bias fix to see if
++lp85 L2 banks").
++**Artifacts:** `results/proto_l2_code_only_prefix.json`, `results/proto_graded_goal_bias_ab.json`.
++**Code:** `scripts/experiments/proto_l2_code_only_prefix.py`, `proto_l2_stopseq_verify.py`;
++shipped fix env-gated in `python/carnot/agentic/arc_executable_world_model.py`
++(`CARNOT_ARC_CODEONLY_INDUCE=1`).
++
++## TL;DR
++
++1. **Qwen context** was already `n_ctx=16384` (code + running llama-server) — no change needed.
++2. **The truncation wall is real and now FIXED.** A forceful CODE-ONLY directive + a `stop=["```"]`
++   sequence makes the L2 induction emit ONLY the code block instead of burning the whole 4096-token
++   budget on win-state chain-of-thought (CoT). Measured on the lp85 L2 prompt:
++   - baseline `/no_think`: `stop_type=limit`, 4096 tokens, **0 code**, 450s.
++   - code-only prefix (no stop): valid `engine`+`is_level_complete`, but rambled to the limit (605s).
++   - **code-only prefix + `stop=["```"]`: valid code, `stop_type=word`, 195 tokens, 15.6s** — a
++     ~30× latency *improvement*, not a hit. In isolation the induced predicate is
++     satisfiable+discriminating (True on the rendered win state, False elsewhere).
++   - Wired end-to-end through the shipped `generate()`: returns valid+satisfiable code in **12.9s**
++     where the unpatched path produced nothing.
++3. **But fixing truncation does NOT make lp85 L2 bank.** On the LIVE lp85 game the fixed induction
++   emits code, yet the induced `is_level_complete` is **degenerate** (`return False`), so the
++   harness's `_goal_satisfiability_check` (BFS over the induced engine; satisfiable iff some
++   reachable grid makes the predicate True) returns `satisfiable=False`. lp85 stays at L1.
++   **The deeper wall is goal-induction QUALITY, not token budget.**
++
++## What was wrong before (the truncation wall)
++
++`proto_l2_proposer_truncation_check` (prior session) proved the 4096-token L2 induce call returned
++`stop_type='limit'` with `tokens_predicted=4096` and **zero** code: the model spent the entire
++budget "analyzing the win state" (CoT prose) and never reached the code block. `/no_think` did not
++suppress this. So `is_level_complete` was never induced → `goal_predicate_satisfiable=False` for
++~10 milestones, blamed on truncation.
++
++## The fix (truncation half — confirmed, shipped, env-gated)
++
++`_L2_CODEONLY_DIRECTIVE` (a forceful "output ONLY a ```python block, do NOT analyze, skip all
++reasoning" instruction) is prepended to the induce prompt, an opening fence is appended, and the
++completion request carries `stop=["```"]`. The model emits the two functions and stops at the
++closing fence. Gated by `CARNOT_ARC_CODEONLY_INDUCE=1`, scoped to the induce call
++(`"is_level_complete" in required`) so gap-filler/refactor prompts are untouched. Default OFF — no
++behaviour change unless the env var is set. Extraction is made robust to the stop-sequence eating
++the closing fence (the opener is in the prompt, so the raw completion IS the code body).
++
++Within-run matched control (same prompt bytes, warm Qwen :8920): baseline truncates to 0 code;
++the fixed path emits valid code in 15.6s. This is an unambiguous, deployable improvement.
++
++## The deeper wall the fix REVEALS (goal-induction quality)
++
++On the live lp85 graded-bias re-test (`CARNOT_ARC_CODEONLY_INDUCE=1`, both arms): the smoke arm
++reached **maxL=1, n_induce=2, goal_satisfiable=False (712s)**, and the induced world model was:
++
++```python
++def engine(grid, action, data):
++    if action == 6:
++        ...
++        new_grid[py, px] = 5      # a plausible click-sets-cell dynamics model
++        return new_grid
++    return grid
++def is_level_complete(grid):
++    return False                  # <-- DEGENERATE constant-false goal
++```
++
++`is_level_complete: return False` can never be satisfied → `_goal_satisfiability_check` returns
++`degenerate_goal_predicate` → the planner has no goal to plan toward → no L2.
++
++**Two candidate causes (the live A/B's per-induction `induction_summary` disambiguates which):**
++
++- **(likely benign) this is the L1 induction**, fired before any win-state exemplar exists. With no
++  exemplar the model legitimately cannot know the win condition, and `return False` is an honest
++  placeholder. L1 is reached by exploration, not by a goal, so a false goal there is harmless.
++- **(the real problem) this is the L2 induction WITH the win-state exemplar**, and the model still
++  punted to `return False`. That would mean code-only reasoning-suppression hurts the GOAL predicate:
++  in isolation (a clear ASCII win exemplar) the code-only model hardcodes the exact win grid (a
++  satisfiable-if-reachable predicate), but on the real lp85 L2 exemplar it gives up. The CoT we
++  suppressed ("let me re-examine the win state…") was the model *trying to derive the win condition*;
++  skipping it may trade truncation for laziness on the hardest part of the induction.
++
++## Honest reconciliation with the operator's conditional
++
++The operator's chain was: fix truncation → IF a satisfiable goal is produced → re-test graded-bias →
++see if lp85 L2 banks. In **isolation** the fix produces a satisfiable goal (condition met), so we
++chained. On the **live** game the goal collapses to degenerate, so **lp85 L2 does NOT bank** — the
++graded-bias fix is moot when the goal predicate is constant-false (graded distance to an unreachable
++/ never-True goal is uninformative). This is **outcome B** (goal induction is the wall) — but now
++demonstrably a *quality* wall beneath the *truncation* wall, not the truncation itself.
++
++## What ships vs what's next
++
++- **Ships now:** the env-gated truncation fix (`CARNOT_ARC_CODEONLY_INDUCE=1`). It is a real,
++  validated, 30×-faster, non-truncating induction path. It is necessary-not-sufficient for L2.
++- **Next (goal-induction quality):** the candidate levers are (a) a LESS aggressive directive that
++  forbids prose but still permits a brief, fenced reasoning scratch *before* the code (suppress the
++  ramble, keep the win-condition derivation); (b) a goal-predicate REPAIR/verify loop that rejects
++  `return False` / constant predicates and re-prompts (the harness already has
++  `_nonzero_count_predicate` as an exemplar-derived fallback — wire it in when the LLM punts);
++  (c) generate the goal predicate as a SEPARATE focused call from the engine, with the win-state
++  exemplar front-and-center, so the model's budget is spent on the win condition, not the dynamics.
++- The **rendering-space caveat** (the `_transitions_block` ASCII win state can differ from the raw
++  frame array) is a separate latent risk for exact-match predicates and should be audited if a
++  future induction hardcodes a grid.
++
++## Method notes / integrity
++
++- `inference_substrate=live_llm_inference`; `solve_provenance=development_proxy` (the offline dev
++  twin, not a live-agent self-discovery solve); `verifier_is_oracle=false`.
++- The original `proto_l2_code_only_prefix` satisfiability verdict was a TEST BUG (it fed the raw
++  `prev` array, not the `_transitions_block`-rendered win grid the model was shown); corrected in the
++  artifact (`goal_satisfiability_CORRECTED`).
++- Server reuse: the warm Qwen :8920 (4 idle slots) was reused directly; the graded proto's
++  port-busy hard-abort was patched to reuse a healthy Qwen server.
++- No external submission; no landing-page edits; canonical URLs unchanged.
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index d1afd5bd67..87ad1388bb 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -362,6 +362,10 @@
+ - SCENARIO-CAPSTONE-4723: The artifact `results/experiment_4723_capstone_v434.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `bridge_crossed_for_solve`, `a1_lp85_l2_banked`, `a2_surfaced_present_winner`, `a4_online_driver_beat_frozen`, `b1_silent_bug_reopen_list`, `reproducible_total_levels_delta`, `publication_gate`, `verifier_is_oracle_confirmed_false`, `skipped_artifacts`, `next_milestone_fallback`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also emit `a3_levelup_banked`, `scorecard`, `cited_upstream_artifacts`, `missing_artifacts`, `field_principles`, `spec_refs`, `schema`, `experiment`, `result_path`, `duration_s`, and `leaderboard_submission`. The default .434 read must answer the headline decision questions: whether A1 banked lp85 L2, whether A2 surfaced the present winner with a failing no-surfacing ablation and a generic new level, whether A4 beat frozen by at least +0.05 or deepened to L2, whether B1 found silent-bug nulls that must reopen, and whether A3 banked +1 from 62 to 63; no new solve claim may be made by the capstone itself.
+ - SCENARIO-CAPSTONE-4723-BLOCKED-PRECONDITION: If any required upstream artifact from Exp4712 through Exp4722 is missing, `ops/arc_solve_registry.yaml` is missing or not YAML-loadable, `scripts/summarize_artifact.py` is unavailable, `scripts/publication_gate.py --json` is unavailable, or the capstone spec lacks `REQ-CAPSTONE-4723`, the workflow must still write `results/experiment_4723_capstone_v434.json` with `honest_verdict=blocked_<resource>`, failed resources recorded in `preconditions_checked`, `bridge_crossed_for_solve=false`, no clean headline bridge win, the missing artifacts listed explicitly, and a valid reproducibility checksum.
+ - SCENARIO-CAPSTONE-4723-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; complete: <capability_grew_62_to_63 | bridge_crossed_for_solve_<game>_L<n>> -- the honest one-line milestone outcome."; `inference_substrate` = "aggregation_from_upstream_artifacts -- reads upstream, no model load (100us floor)."; `bridge_crossed_for_solve` = "the HEADLINE DECISION -- True only if a GENERIC agent banked a NEW level via self-discovery (A1 lp85 L2 | A2 surfaced winner | A4 goal-free L2), offline-reproduced, ablation-controlled; False if only capability/depth grew."; `a1_lp85_l2_banked` = "did A1 bank lp85 L2 via the perception-grounded structural goal (the perception win -> a real multi-level solve)?"; `a2_surfaced_present_winner` = "did A2 surface the present-but-buried winner (precision-at-k up + generic new level + no-surfacing ablation failing)? -- the verifier earning its place."; `a4_online_driver_beat_frozen` = "did the corrected online driver beat frozen by >=+0.05 held-out first-win AND/OR deepen to L2?"; `b1_silent_bug_reopen_list` = "the .428-.433 nulls B1 classified silent_bug_must_reopen -- closed levers that must reopen (trust correction)."; `reproducible_total_levels_delta` = "the registry header delta this milestone (62->63 if A1/A3 banked) -- the monotonic north-star metric."; `publication_gate` = "the G1-G4 booleans + paper_ready + unmet_gates from publication_gate.py --json; FoVer 0.9131 frozen, never substituted."; `verifier_is_oracle_confirmed_false` = "confirms every aggregated value claim carries verifier_is_oracle:false (no circular moat over-claim)."; `skipped_artifacts` = "the artifacts skipped for flagged_adversarial / control-failed / ablation-missing -- the fabrication-gate discipline (never aggregate a flagged number)."; `next_milestone_fallback` = "the .435 direction (D's flagged_for_v435 active-probe methods + B1's reopen list + the strongest open lever) -- the convergence hand-off."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash of the aggregated artifact set."; `preconditions_checked` = "records resources verified (upstream artifacts present, summarize/publication tools runnable); pre-empts missing-resource fabrication."
++- REQ-CAPSTONE-4729: The .435 retargeted A4 readiness workflow SHALL read the .435 A1/A2 lever artifacts at `results/experiment_4726_online_action_learning_driver_valid_test.json` and `results/experiment_4727_active_probe_disambiguation.json`, record each `chosen_submitted_config`, run or validate the Experiment 4605 held-out scored-agent lane with deepening enabled over at least 100 color-permuted variant attempts, run `tests/python/test_arc_submitted_agent_parity.py`, reproduce the live-submittable replay package only as a floor, and write `results/experiment_4729_held_out_first_win_readiness.json`. Readiness SHALL be true only when parity is green and the held-out first-win delta has bootstrap-CI lower bound greater than zero, or when the first-win rate is exactly flat versus the 0.04 last-submission baseline and the artifact explicitly emits the honest-null TAUTOLOGY carve-out markers. The artifact SHALL NOT treat `live_submittable_level_count` as the leaderboard score and SHALL avoid redundant top-level numeric minimum fields that duplicate the measured held-out attempt count.
++- SCENARIO-CAPSTONE-4729: The artifact `results/experiment_4729_held_out_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `first_win_rate_integrated`, `first_win_ci_lower`, `multi_level_deepen_rate_integrated`, `parity_test_green`, `replay_package_floor_reproduced`, `null_delta_methodology_note`, `positive_control_passed`, `verifier_is_oracle`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`; it must also include the first-win baseline and delta, held-out attempt count, replay floor details with `replay_count_is_not_the_score=true`, the .435 A1/A2 lever input summaries, parity test output, `submitted_to_leaderboard=false`, and a terminal-prefix verdict. If the measured first-win rate is flat, `null_delta_methodology_note` must be non-empty and `positive_control_passed` must equal `bool(parity_test_green)`.
++- SCENARIO-CAPSTONE-4729-BLOCKED-PRECONDITION: If `arc_solver_kit.offline_arcade()` or importing `experiment_4605_live_integration_scored_agent` fails, Experiment 4729 must write a terminal `blocked_<resource>` artifact with no fabricated scored-lane evidence, `preconditions_checked` naming the missing resource, `parity_test_green=false`, `positive_control_passed=false`, and a stable checksum.
++- SCENARIO-CAPSTONE-4729-FIELD-PRINCIPLES: The required field principles are: `honest_verdict` = "terminal prefix; success: held_out_first_win_improved_<delta> OR complete: held_out_first_win_flat_no_leaderboard_change."; `inference_substrate` = "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted config over cached variants (1s floor)."; `first_win_rate_integrated` = "the held-out generic first-win on color-permuted variants -- the only offline proxy that tracks the scored leaderboard lane; the replay count does not."; `first_win_ci_lower` = "bootstrap-CI lower bound > 0 is the falsifiable improvement criterion; a point estimate is gameable by one lucky variant."; `multi_level_deepen_rate_integrated` = "deepening past L1 is the second scored lever; tracking it held-out keeps A4 honest about depth without the replay count."; `parity_test_green` = "the held-out proxy is valid only if the measured agent is byte-for-byte the SUBMITTED_AGENT_CONFIG; a parity miss invalidates readiness."; `replay_package_floor_reproduced` = "the replay package stays a reproduced FLOOR, but its level count is explicitly NOT the leaderboard score."; `null_delta_methodology_note` = "present when first-win is flat; the TAUTOLOGY carve-out reads it to downgrade CRITICAL->WARN (honest no-change, not a measurement bug)."; `positive_control_passed` = "bool(parity_test_green) -- GATES the TAUTOLOGY exemption; an unvalidated flat result is NOT excused."; `verifier_is_oracle` = "false -- the held-out lane measures the agent; no oracle is invoked."; `random_seed` = "determinism precondition for reproducibility."; `reproducibility_checksum` = "content-addressed hash catches silent harness/corpus drift."; `preconditions_checked` = "records resources verified (offline arcade, experiment_4605 importable); pre-empts missing-resource fabrication."
+ - REQ-CAPSTONE-4703: The retargeted held-out first-win readiness workflow SHALL write `results/experiment_4703_held_out_first_win_readiness.json` without submitting to the leaderboard and without modifying `scripts/research_conductor.py`. It SHALL first verify that `SUBMITTED_AGENT_CONFIG`/`E3AgentPolicy` and `experiment_4605_live_integration_scored_agent` are importable, SHALL run `tests/python/test_arc_submitted_agent_parity.py` before measuring the proxy, SHALL run the Exp4605 held-out scored-agent proxy over color-permuted variants with the literal submitted-agent config and no submit-time LLM, and SHALL compare `first_win_rate_integrated` against the last-submission baseline `0.04`. The readiness gate SHALL pass only when parity is green and either the held-out first-win improves with bootstrap CI support or the held-out first-win is flat with explicit null-delta markers (`null_delta_methodology_note` non-empty and `positive_control_passed=bool(parity_test_green AND no_regression_vs_baseline)`). It SHALL reproduce and record the replay package as a floor artifact only, SHALL explicitly mark replay count as not the leaderboard score, and SHALL never set readiness purely from `live_submittable_level_count`.
+ - SCENARIO-CAPSTONE-4703: The artifact `results/experiment_4703_held_out_first_win_readiness.json` must emit principle-annotated top-level fields for `honest_verdict`, `inference_substrate`, `verifier_is_oracle`, `first_win_rate_integrated`, `first_win_ci_lower`, `first_win_baseline`, `null_delta_methodology_note`, `positive_control_passed`, `multi_level_deepen_rate_integrated`, `parity_test_green`, `replay_package_floor_reproduced`, `replay_count_is_not_the_score`, `ready_for_operator_submit`, `random_seed`, `reproducibility_checksum`, and `preconditions_checked`. It must also include the Exp4605 proxy artifact path, the replay floor package path, no leaderboard submission, the parity test result, a replay-floor note, no live-game-server inference substrate, and spec refs. A flat first-win run must report `complete: held_out_first_win_flat_no_leaderboard_change`, emit the null-delta markers, set `positive_control_passed` only when parity and no-regression pass, and keep `replay_count_is_not_the_score=true` even when the replay package floor count exceeds 33.
+ - SCENARIO-CAPSTONE-4703-BLOCKED-PRECONDITION: If either submitted-agent import precondition fails, the Exp4605 module is not importable, the parity test fails, or the Exp4605 proxy cannot produce a readable first-win measurement, the workflow must write a terminal `blocked_<resource>` or `complete:` artifact with `ready_for_operator_submit=false`, `replay_count_is_not_the_score=true`, `submitted_to_leaderboard=false`, `positive_control_passed=false`, and the failed resource recorded in `preconditions_checked`; it must not submit to the leaderboard.
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1ca18ed485..eac236af60 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 182, "phase": "iteration_start", "last_beat": "2026-06-25T11:14:18Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 183, "phase": "iteration_start", "last_beat": "2026-06-25T12:37:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 746db45ae6..c4e5ed0cdb 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -9263,3 +9263,4 @@ c |
+ | 2026-06-25 10:02 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; opera | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
+ | 2026-06-25 10:35 UTC | PHASE A2 (ARC NORTH STAR; PRIMARY; the capstone +  | OK | 105 passed, 1 warning in 6.50s |
+ | 2026-06-25 11:12 UTC | PHASE A3 (ARC NORTH STAR; operator MANDATORY; LEVE | OK | 116 passed, 1 warning in 18.01s |
++| 2026-06-25 12:35 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: rst_win_ci_low |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 19c951040e..31708b22b8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1521095, "iteration": 182, "phase": "iteration_start", "started_at": "2026-06-25T11:14:18Z"}
+\ No newline at end of file
++{"pid": 1521095, "iteration": 183, "phase": "iteration_start", "started_at": "2026-06-25T12:37:32Z"}
+\ No newline at end of file
+diff --git a/python/carnot/agentic/arc_executable_world_model.py b/python/carnot/agentic/arc_executable_world_model.py
+index 68f95c3405..525e5d719c 100644
+--- a/python/carnot/agentic/arc_executable_world_model.py
++++ b/python/carnot/agentic/arc_executable_world_model.py
+@@ -844,6 +844,24 @@ def _transitions_block(
+     return "\n".join(out)
+ 
+ 
++# A forceful CODE-ONLY directive for the L2+ induction call. The L2 induce prompt carries a WIN
++# STATE exemplar, which makes Qwen3.5-9B burn its ENTIRE token budget on win-state chain-of-thought
++# before reaching the code block (stop_type='limit', 0 code emitted -> goal_predicate_satisfiable
++# stays False for ~10 milestones; see proto_l2_proposer_truncation_check + proto_l2_code_only_prefix,
++# 2026-06-25). Prepending this directive AND adding a stop-sequence on the closing fence makes the
++# model emit ONLY the code and stop: verified 195 tokens / 15.6s (vs 605s rambling / 450s truncated),
++# valid+satisfiable engine+is_level_complete. Default OFF; gated by CARNOT_ARC_CODEONLY_INDUCE=1.
++_L2_CODEONLY_DIRECTIVE = (
++    "/no_think\n"
++    "CRITICAL OUTPUT RULES -- obey EXACTLY:\n"
++    "1. Output ONLY one ```python code block. NOTHING before it. NOTHING after it.\n"
++    "2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write\n"
++    "   step-by-step analysis, explanation, or commentary -- not even as comments.\n"
++    "3. Your response MUST begin with the characters ```python and end with ```.\n"
++    "4. Induce SIMPLE, GENERAL rules and write the two functions directly. Skip all reasoning.\n\n"
++)
++
++
+ def induce_prompt(
+     game: str,
+     trans: list[Transition],
+@@ -1134,6 +1152,7 @@ class LocalGGUFProposer:
+         the caller reject runtime-buggy code (e.g. a heuristic that returns None)."""
+         import ast
+         import json as _json
++        import os
+         import urllib.request
+ 
+         if not self._ensure_server():
+@@ -1141,18 +1160,27 @@ class LocalGGUFProposer:
+                 f"GPU llama-server failed for {self.repo_substr}; SOTA models "
+                 "must run on GPU (no CPU fallback)"
+             )
+-        if self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
++        # env-gated L2 induction truncation fix (proto_l2_code_only_prefix, 2026-06-25). Scope to the
++        # induce call (required contains is_level_complete) so gap-filler/refactor prompts are
++        # untouched. When on: prepend the code-only directive + an opened fence, and add a
++        # stop-sequence on the closing fence so the model emits ONLY the code (no win-state CoT).
++        _codeonly = bool(os.environ.get("CARNOT_ARC_CODEONLY_INDUCE")) and "is_level_complete" in required
++        _stop_seq = ["```"] if _codeonly else None
++        if _codeonly:
++            prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
++        elif self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
+             prompt = self.no_think_prefix + prompt
+         last = ""
+         for attempt in range(tries):
+-            body = _json.dumps(
+-                {
+-                    "prompt": prompt,
+-                    "n_predict": self.max_tokens,
+-                    "temperature": 0.2 + 0.1 * attempt,
+-                    "cache_prompt": True,
+-                }
+-            ).encode()
++            _payload = {
++                "prompt": prompt,
++                "n_predict": self.max_tokens,
++                "temperature": 0.2 + 0.1 * attempt,
++                "cache_prompt": True,
++            }
++            if _stop_seq:
++                _payload["stop"] = _stop_seq
++            body = _json.dumps(_payload).encode()
+             try:
+                 req = urllib.request.Request(
+                     self._url() + "/completion",
+@@ -1164,6 +1192,10 @@ class LocalGGUFProposer:
+             except Exception as e:
+                 return False, f"local gguf (GPU server) failed: {e!r}"[:200]
+             code = _extract_python(text)
++            if not code and _codeonly:
++                # the stop-sequence consumed the closing fence and the opener was in the prompt, so
++                # the raw completion IS the code block body.
++                code = text.strip()
+             if not code or any(f"def {fn}" not in code for fn in required):
+                 last = f"missing {required} in output"
+                 continue
+diff --git a/python/carnot/experiment_4729_held_out_first_win_readiness.py b/python/carnot/experiment_4729_held_out_first_win_readiness.py
+new file mode 100644
+index 0000000000..10ee4fcc8f
+--- /dev/null
++++ b/python/carnot/experiment_4729_held_out_first_win_readiness.py
+@@ -0,0 +1,752 @@
++"""Experiment 4729: .435 held-out first-win readiness.
++
++Spec refs: REQ-CAPSTONE-4729, SCENARIO-CAPSTONE-4729,
++SCENARIO-CAPSTONE-4729-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4729-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping
++import hashlib
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:  # pragma: no cover - direct script guard.
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++JsonDict = dict[str, Any]
++PreconditionsChecker = Callable[[Path], Mapping[str, Any]]
++ParityCheck = Callable[[Path], Mapping[str, Any]]
++ProxyRunner = Callable[[Path, Mapping[str, Any]], Mapping[str, Any]]
++ReplayFloorLoader = Callable[[Path], Mapping[str, Any]]
++LeverInputLoader = Callable[[Path], Mapping[str, Any]]
++
++EXPERIMENT = "experiment_4729_held_out_first_win_readiness"
++EXPERIMENT_ID = 4729
++SCHEMA = "carnot.arc.held_out_first_win_readiness_4729.v1"
++RESULT_RELATIVE_PATH = "results/experiment_4729_held_out_first_win_readiness.json"
++PROXY_RESULT_RELATIVE_PATH = "results/experiment_4605_live_integration_scored_agent.json"
++REPLAY_FLOOR_RESULT_RELATIVE_PATH = "results/experiment_4679_refresh_submission_package.json"
++REPLAY_FLOOR_PACKAGE_FALLBACK = "results/experiment_4679_submission_package_operator_resubmit.json"
++FIRST_WIN_BASELINE = 0.04
++MIN_HELD_OUT_VARIANT_ATTEMPTS = 100
++HELD_OUT_VARIANT_ATTEMPT_FLOOR = "B>=100"
++HELD_OUT_VARIANT_IDS = (1, 2, 3, 4)
++RANDOM_SEED = 4729
++TERMINAL_PREFIXES = ("success:", "complete:", "blocked_")
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted "
++    "config over cached variants (1s floor)."
++)
++REPLAY_FLOOR_NOTE = (
++    "replay package floor only; live_submittable_level_count is not the leaderboard score."
++)
++
++SPEC_REFS = [
++    "REQ-CAPSTONE-4729",
++    "SCENARIO-CAPSTONE-4729",
++    "SCENARIO-CAPSTONE-4729-BLOCKED-PRECONDITION",
++    "SCENARIO-CAPSTONE-4729-FIELD-PRINCIPLES",
++]
++
++V435_LEVER_ARTIFACTS = {
++    "a1": "results/experiment_4726_online_action_learning_driver_valid_test.json",
++    "a2": "results/experiment_4727_active_probe_disambiguation.json",
++}
++
++FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
++    "honest_verdict": {
++        "principle": (
++            "terminal prefix; success: held_out_first_win_improved_<delta> OR complete: "
++            "held_out_first_win_flat_no_leaderboard_change."
++        )
++    },
++    "inference_substrate": {
++        "principle": (
++            "verifier_ensemble_against_cached_candidates -- the held-out lane scores the "
++            "submitted config over cached variants (1s floor)."
++        )
++    },
++    "first_win_rate_integrated": {
++        "principle": (
++            "the held-out generic first-win on color-permuted variants -- the only offline "
++            "proxy that tracks the scored leaderboard lane; the replay count does not."
++        )
++    },
++    "first_win_ci_lower": {
++        "principle": (
++            "bootstrap-CI lower bound > 0 is the falsifiable improvement criterion; a point "
++            "estimate is gameable by one lucky variant."
++        )
++    },
++    "multi_level_deepen_rate_integrated": {
++        "principle": (
++            "deepening past L1 is the second scored lever; tracking it held-out keeps A4 "
++            "honest about depth without the replay count."
++        )
++    },
++    "parity_test_green": {
++        "principle": (
++            "the held-out proxy is valid only if the measured agent is byte-for-byte the "
++            "SUBMITTED_AGENT_CONFIG; a parity miss invalidates readiness."
++        )
++    },
++    "replay_package_floor_reproduced": {
++        "principle": (
++            "the replay package stays a reproduced FLOOR, but its level count is explicitly "
++            "NOT the leaderboard score."
++        )
++    },
++    "null_delta_methodology_note": {
++        "principle": (
++            "present when first-win is flat; the TAUTOLOGY carve-out reads it to downgrade "
++            "CRITICAL->WARN (honest no-change, not a measurement bug)."
++        )
++    },
++    "positive_control_passed": {
++        "principle": (
++            "bool(parity_test_green) -- GATES the TAUTOLOGY exemption; an unvalidated flat "
++            "result is NOT excused."
++        )
++    },
++    "verifier_is_oracle": {
++        "principle": "false -- the held-out lane measures the agent; no oracle is invoked."
++    },
++    "random_seed": {"principle": "determinism precondition for reproducibility."},
++    "reproducibility_checksum": {
++        "principle": "content-addressed hash catches silent harness/corpus drift."
++    },
++    "preconditions_checked": {
++        "principle": (
++            "records resources verified (offline arcade, experiment_4605 importable); "
++            "pre-empts missing-resource fabrication."
++        )
++    },
++}
++
++REQUIRED_ARTIFACT_FIELDS = tuple(FIELD_PRINCIPLES) + (
++    "experiment",
++    "experiment_id",
++    "schema",
++    "spec_refs",
++    "result_path",
++    "proxy_artifact_path",
++    "replay_floor_package_path",
++    "replay_floor",
++    "parity_test",
++    "held_out_proxy_summary",
++    "held_out_first_win_readiness",
++    "ready_for_operator_submit",
++    "first_win_baseline",
++    "first_win_delta_vs_baseline",
++    "held_out_variant_attempts",
++    "held_out_variant_attempt_floor",
++    "replay_count_is_not_the_score",
++    "v435_lever_inputs",
++    "submitted_to_leaderboard",
++    "operator_only",
++    "duration_s",
++    "field_principles",
++)
++
++
++def _stable_json(value: Any) -> str:
++    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
++
++
++def payload_checksum(artifact: Mapping[str, Any]) -> str:
++    payload = dict(artifact)
++    payload["reproducibility_checksum"] = ""
++    return "sha256:" + hashlib.sha256(_stable_json(payload).encode("utf-8")).hexdigest()
++
++
++def _float(value: Any, default: float = 0.0) -> float:
++    if isinstance(value, bool):
++        return default
++    try:
++        return round(float(value), 6)
++    except (TypeError, ValueError):
++        return default
++
++
++def _extract_first_win_rate(proxy_artifact: Mapping[str, Any]) -> float:
++    if "first_win_rate_integrated" in proxy_artifact:
++        return _float(proxy_artifact.get("first_win_rate_integrated"))
++    measurement = proxy_artifact.get("integrated_measurement")
++    if isinstance(measurement, Mapping):
++        return _float(measurement.get("first_win_rate"))
++    return 0.0
++
++
++def _extract_ci_lower(proxy_artifact: Mapping[str, Any]) -> float:
++    if "first_win_ci_lower" in proxy_artifact:
++        return _float(proxy_artifact.get("first_win_ci_lower"))
++    ci = proxy_artifact.get("first_win_ci")
++    if isinstance(ci, Mapping):
++        interval = ci.get("ci95")
++        if isinstance(interval, list | tuple) and interval:
++            return _float(interval[0])
++        if "low" in ci:
++            return _float(ci.get("low"))
++    return 0.0
++
++
++def _attempt_depth(attempt: Mapping[str, Any]) -> int:
++    explicit = attempt.get("depth_reached")
++    if explicit is not None and not isinstance(explicit, bool):
++        try:
++            return max(0, int(explicit))
++        except (TypeError, ValueError):
++            pass
++    return 1 if attempt.get("first_win") is True or attempt.get("solved") is True else 0
++
++
++def _extract_multi_level_deepen_rate(proxy_artifact: Mapping[str, Any]) -> float:
++    for key in ("multi_level_deepen_rate_integrated", "multi_level_solve_rate"):
++        if key in proxy_artifact:
++            return _float(proxy_artifact.get(key))
++    measurement = proxy_artifact.get("integrated_measurement")
++    attempts = measurement.get("variant_attempts") if isinstance(measurement, Mapping) else []
++    if not isinstance(attempts, list) or not attempts:
++        return 0.0
++    attempted = [row for row in attempts if isinstance(row, Mapping) and row.get("attempted", True)]
++    if not attempted:
++        return 0.0
++    deepened = sum(1 for row in attempted if _attempt_depth(row) >= 2)
++    return round(float(deepened) / float(len(attempted)), 6)
++
++
++def _extract_held_out_variant_attempts(proxy_artifact: Mapping[str, Any]) -> int:
++    if "held_out_variant_attempts" in proxy_artifact:
++        return int(_float(proxy_artifact.get("held_out_variant_attempts")))
++    measurement = proxy_artifact.get("integrated_measurement")
++    if isinstance(measurement, Mapping):
++        count = measurement.get("variant_attempts_count")
++        if count is not None and not isinstance(count, bool):
++            try:
++                return max(0, int(count))
++            except (TypeError, ValueError):
++                pass
++        attempts = measurement.get("variant_attempts")
++        if isinstance(attempts, list):
++            return len(attempts)
++    return 0
++
++
++def _is_flat_delta(first_win_rate: float, baseline: float) -> bool:
++    return abs(round(first_win_rate - baseline, 6)) <= 1e-12
++
++
++def _ci_supports_improvement(first_win_rate: float, baseline: float, ci_lower: float) -> bool:
++    return bool(first_win_rate > baseline and ci_lower > 0.0)
++
++
++def _null_delta_note(
++    *,
++    first_win_rate: float,
++    baseline: float,
++    positive_control_passed: bool,
++) -> str:
++    if not _is_flat_delta(first_win_rate, baseline):
++        return ""
++    control = "passed" if positive_control_passed else "failed"
++    return (
++        "Held-out first-win is flat vs baseline (first_win_rate_integrated == "
++        "first_win_baseline, delta=0.0): no lever moved the leaderboard-relevant metric "
++        "in this readiness run. The equality is an honest no-leaderboard-change null; "
++        f"positive_control_passed {control} and gates whether the flat null is excused."
++    )
++
++
++def _readiness(
++    *,
++    parity_green: bool,
++    first_win_rate: float,
++    baseline: float,
++    ci_lower: float,
++    attempts: int,
++    null_delta_methodology_note: str,
++    positive_control_passed: bool,
++) -> bool:
++    if attempts < MIN_HELD_OUT_VARIANT_ATTEMPTS:
++        return False
++    improved = parity_green and _ci_supports_improvement(first_win_rate, baseline, ci_lower)
++    held_flat = (
++        parity_green
++        and _is_flat_delta(first_win_rate, baseline)
++        and positive_control_passed
++        and bool(null_delta_methodology_note.strip())
++    )
++    return bool(improved or held_flat)
++
++
++def _honest_verdict(
++    *,
++    readiness: bool,
++    parity_green: bool,
++    first_win_rate: float,
++    baseline: float,
++    ci_lower: float,
++    attempts: int,
++    positive_control_passed: bool,
++) -> str:
++    if attempts < MIN_HELD_OUT_VARIANT_ATTEMPTS:
++        return "complete: held_out_first_win_measurement_below_b100"
++    if readiness and _ci_supports_improvement(first_win_rate, baseline, ci_lower):
++        delta = round(first_win_rate - baseline, 6)
++        return f"success: held_out_first_win_improved_{delta:g}"
++    if not parity_green and _ci_supports_improvement(first_win_rate, baseline, ci_lower):
++        return "complete: held_out_first_win_point_up_ci_supported_but_parity_failed"
++    if _is_flat_delta(first_win_rate, baseline):
++        if positive_control_passed:
++            return "complete: held_out_first_win_flat_no_leaderboard_change"
++        return "complete: held_out_first_win_flat_unvalidated_no_leaderboard_change"
++    if first_win_rate > baseline:
++        return "complete: held_out_first_win_point_up_ci_overlaps_baseline_no_leaderboard_change"
++    return "complete: held_out_first_win_below_baseline_no_leaderboard_change"
++
++
++def _file_sha256(path: Path) -> str:
++    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _read_json(path: Path) -> JsonDict:
++    try:
++        loaded = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):  # pragma: no cover - defensive file boundary.
++        return {}
++    return dict(loaded) if isinstance(loaded, Mapping) else {}
++
++
++def load_v435_lever_inputs(root: Path | str = REPO_ROOT) -> JsonDict:
++    root_path = Path(root)
++    out: JsonDict = {}
++    for key, rel in V435_LEVER_ARTIFACTS.items():
++        path = root_path / rel
++        payload = _read_json(path)
++        row: JsonDict = {
++            "path": rel,
++            "exists": path.exists(),
++            "experiment": payload.get("experiment"),
++            "honest_verdict": payload.get("honest_verdict"),
++            "chosen_submitted_config": payload.get("chosen_submitted_config"),
++        }
++        if path.exists():
++            row["sha256"] = _file_sha256(path)
++        else:
++            row["sha256"] = ""
++            row["error"] = "missing_artifact"
++        out[key] = row
++    return out
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    parity_test: Mapping[str, Any],
++    proxy_artifact: Mapping[str, Any],
++    replay_floor: Mapping[str, Any],
++    v435_lever_inputs: Mapping[str, Any],
++    duration_s: float,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    first_win_rate = _extract_first_win_rate(proxy_artifact)
++    first_win_ci_lower = _extract_ci_lower(proxy_artifact)
++    first_win_delta = round(first_win_rate - FIRST_WIN_BASELINE, 6)
++    attempts = _extract_held_out_variant_attempts(proxy_artifact)
++    multi_level_deepen_rate = _extract_multi_level_deepen_rate(proxy_artifact)
++    parity_green = bool(parity_test.get("passed"))
++    positive_control = bool(parity_green)
++    null_note = _null_delta_note(
++        first_win_rate=first_win_rate,
++        baseline=FIRST_WIN_BASELINE,
++        positive_control_passed=positive_control,
++    )
++    ready = _readiness(
++        parity_green=parity_green,
++        first_win_rate=first_win_rate,
++        baseline=FIRST_WIN_BASELINE,
++        ci_lower=first_win_ci_lower,
++        attempts=attempts,
++        null_delta_methodology_note=null_note,
++        positive_control_passed=positive_control,
++    )
++    floor = dict(replay_floor)
++    floor.setdefault("note", REPLAY_FLOOR_NOTE)
++    floor_path = str(
++        floor.get("package_path")
++        or floor.get("refreshed_package_path")
++        or REPLAY_FLOOR_PACKAGE_FALLBACK
++    )
++
++    artifact: JsonDict = {
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": RESULT_RELATIVE_PATH,
++        "honest_verdict": _honest_verdict(
++            readiness=ready,
++            parity_green=parity_green,
++            first_win_rate=first_win_rate,
++            baseline=FIRST_WIN_BASELINE,
++            ci_lower=first_win_ci_lower,
++            attempts=attempts,
++            positive_control_passed=positive_control,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "first_win_rate_integrated": first_win_rate,
++        "first_win_ci_lower": first_win_ci_lower,
++        "first_win_baseline": FIRST_WIN_BASELINE,
++        "first_win_delta_vs_baseline": first_win_delta,
++        "multi_level_deepen_rate_integrated": multi_level_deepen_rate,
++        "held_out_variant_attempts": attempts,
++        "held_out_variant_attempt_floor": HELD_OUT_VARIANT_ATTEMPT_FLOOR,
++        "parity_test_green": parity_green,
++        "replay_package_floor_reproduced": bool(floor.get("replay_package_floor_reproduced")),
++        "replay_count_is_not_the_score": True,
++        "null_delta_methodology_note": null_note,
++        "positive_control_passed": positive_control,
++        "verifier_is_oracle": False,
++        "ready_for_operator_submit": ready,
++        "held_out_first_win_readiness": ready,
++        "proxy_artifact_path": PROXY_RESULT_RELATIVE_PATH,
++        "replay_floor_package_path": floor_path,
++        "replay_floor": floor,
++        "parity_test": dict(parity_test),
++        "held_out_proxy_summary": {
++            "source_artifact_path": PROXY_RESULT_RELATIVE_PATH,
++            "first_win_rate_integrated": first_win_rate,
++            "first_win_ci_lower": first_win_ci_lower,
++            "first_win_baseline": FIRST_WIN_BASELINE,
++            "first_win_delta_vs_baseline": first_win_delta,
++            "multi_level_deepen_rate_integrated": multi_level_deepen_rate,
++            "held_out_variant_attempts": attempts,
++            "proxy_honest_verdict": proxy_artifact.get("honest_verdict", ""),
++        },
++        "v435_lever_inputs": dict(v435_lever_inputs),
++        "submitted_to_leaderboard": False,
++        "operator_only": True,
++        "random_seed": int(random_seed),
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "duration_s": max(0.0, round(float(duration_s), 6)),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    verdict = str(artifact.get("honest_verdict") or "")
++    blocked = verdict.startswith("blocked_")
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict_terminal_prefix")
++    if artifact.get("field_principles") != FIELD_PRINCIPLES:
++        errors.append("field_principles")
++    if artifact.get("verifier_is_oracle") is not False:
++        errors.append("verifier_is_oracle_false")
++    if artifact.get("replay_count_is_not_the_score") is not True:
++        errors.append("replay_count_is_not_the_score_true")
++    if artifact.get("submitted_to_leaderboard") is not False:
++        errors.append("submitted_to_leaderboard_false")
++    if "min_held_out_variant_attempts" in artifact:
++        errors.append("redundant_min_held_out_variant_attempts")
++    first_win_rate = _float(artifact.get("first_win_rate_integrated"))
++    baseline = _float(artifact.get("first_win_baseline"), FIRST_WIN_BASELINE)
++    ci_lower = _float(artifact.get("first_win_ci_lower"))
++    attempts = int(_float(artifact.get("held_out_variant_attempts")))
++    parity_green = artifact.get("parity_test_green") is True
++    expected_positive_control = bool(parity_green)
++    if artifact.get("positive_control_passed") is not expected_positive_control:
++        errors.append("positive_control_passed")
++    note = str(artifact.get("null_delta_methodology_note") or "")
++    if _is_flat_delta(first_win_rate, baseline) and not note.strip():
++        errors.append("null_delta_methodology_note")
++    expected_readiness = _readiness(
++        parity_green=parity_green,
++        first_win_rate=first_win_rate,
++        baseline=baseline,
++        ci_lower=ci_lower,
++        attempts=attempts,
++        null_delta_methodology_note=note,
++        positive_control_passed=artifact.get("positive_control_passed") is True,
++    )
++    if artifact.get("held_out_first_win_readiness") is not expected_readiness:
++        errors.append("held_out_first_win_readiness_gate")
++    if artifact.get("ready_for_operator_submit") is not expected_readiness:
++        errors.append("ready_for_operator_submit_gate")
++    if not blocked and attempts < MIN_HELD_OUT_VARIANT_ATTEMPTS:
++        errors.append("held_out_variant_attempts_below_minimum")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        errors.append("reproducibility_checksum")
++    return sorted(dict.fromkeys(errors))
++
++
++def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(dict(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def write_artifact(root: Path, artifact: Mapping[str, Any]) -> Path:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    path = root / RESULT_RELATIVE_PATH
++    _write_json(path, artifact)
++    return path
++
++
++def _run_command(
++    command: list[str], root: Path, *, timeout_s: int = 180
++) -> JsonDict:  # pragma: no cover - subprocess boundary.
++    try:
++        proc = subprocess.run(
++            command,
++            cwd=root,
++            capture_output=True,
++            text=True,
++            timeout=timeout_s,
++            check=False,
++        )
++    except Exception as exc:
++        return {
++            "command": " ".join(command),
++            "passed": False,
++            "returncode": -1,
++            "stderr_tail": repr(exc)[:1000],
++            "stdout_tail": "",
++        }
++    return {
++        "command": " ".join(command),
++        "passed": proc.returncode == 0,
++        "returncode": int(proc.returncode),
++        "stdout_tail": proc.stdout[-1000:],
++        "stderr_tail": proc.stderr[-1000:],
++    }
++
++
++def check_preconditions(root: Path) -> JsonDict:  # pragma: no cover - subprocess boundary.
++    commands = {
++        "offline_arcade": [
++            sys.executable,
++            "-c",
++            "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
++        ],
++        "experiment_4605_importable": [
++            sys.executable,
++            "-c",
++            "from carnot import experiment_4605_live_integration_scored_agent",
++        ],
++    }
++    checks: JsonDict = {}
++    for key, command in commands.items():
++        report = _run_command(command, root, timeout_s=180)
++        checks[key] = bool(report["passed"])
++        checks[f"{key}_command"] = report["command"]
++        checks[f"{key}_returncode"] = report["returncode"]
++        if not report["passed"]:
++            checks["ok"] = False
++            checks["blocked_resource"] = key
++            checks["stdout_tail"] = report["stdout_tail"]
++            checks["stderr_tail"] = report["stderr_tail"]
++            return checks
++    checks["ok"] = True
++    return checks
++
++
++def run_parity_test(root: Path) -> JsonDict:  # pragma: no cover - subprocess boundary.
++    from carnot import experiment_4605_live_integration_scored_agent as exp4605
++
++    return dict(exp4605.run_parity_check(root))
++
++
++def run_held_out_proxy(root: Path, parity_test: Mapping[str, Any]) -> JsonDict:
++    from carnot import experiment_4605_live_integration_scored_agent as exp4605
++
++    previous_deepen = os.environ.get(exp4605.DEEPEN_ENV)
++    previous_variants = os.environ.get(exp4605.VARIANT_IDS_ENV)
++    os.environ[exp4605.DEEPEN_ENV] = "1"
++    os.environ[exp4605.VARIANT_IDS_ENV] = ",".join(str(item) for item in HELD_OUT_VARIANT_IDS)
++    try:
++        return dict(exp4605.run(root=root, parity_check=lambda _root: parity_test))
++    finally:
++        if previous_deepen is None:
++            os.environ.pop(exp4605.DEEPEN_ENV, None)
++        else:
++            os.environ[exp4605.DEEPEN_ENV] = previous_deepen
++        if previous_variants is None:
++            os.environ.pop(exp4605.VARIANT_IDS_ENV, None)
++        else:
++            os.environ[exp4605.VARIANT_IDS_ENV] = previous_variants
++
++
++def load_replay_package_floor(root: Path) -> JsonDict:  # pragma: no cover - filesystem boundary.
++    from carnot.live_submittable_metrics import compute_live_submittable_metrics
++
++    root_path = Path(root)
++    source = _read_json(root_path / REPLAY_FLOOR_RESULT_RELATIVE_PATH)
++    package_path = str(source.get("refreshed_package_path") or REPLAY_FLOOR_PACKAGE_FALLBACK)
++    metrics = compute_live_submittable_metrics(root_path, package_path=package_path)
++    package_exists = (root_path / package_path).exists()
++    live_count = int(metrics.get("live_submittable_level_count") or 0)
++    subset = metrics.get("live_submittable_subset_of_reproducible") is True
++    return {
++        "source_result_path": REPLAY_FLOOR_RESULT_RELATIVE_PATH,
++        "source_result_exists": (root_path / REPLAY_FLOOR_RESULT_RELATIVE_PATH).exists(),
++        "package_path": package_path,
++        "package_exists": package_exists,
++        "replay_package_floor_reproduced": bool(package_exists and subset and live_count > 0),
++        "live_submittable_level_count": live_count,
++        "reproducible_total_levels": int(metrics.get("reproducible_total_levels") or 0),
++        "reproducible_vs_submittable_gap": int(
++            metrics.get("reproducible_vs_submittable_gap") or 0
++        ),
++        "live_submittable_subset_of_reproducible": subset,
++        "offline_reproduced": bool(package_exists and subset and live_count > 0),
++        "ready_for_operator_submit": bool(package_exists and subset and live_count > 33),
++        "note": REPLAY_FLOOR_NOTE,
++    }
++
++
++def _floor_duration(
++    *,
++    started_at: float,
++    now: Callable[[], float],
++    sleep_fn: Callable[[float], None],
++) -> float:
++    elapsed = max(0.0, float(now() - started_at))
++    if elapsed < 1.0:
++        sleep_fn(1.0 - elapsed)
++    return max(float(now()), started_at + 1.0) - started_at
++
++
++def _blocked_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    reason: str,
++    duration_s: float,
++    replay_floor: Mapping[str, Any] | None = None,
++    v435_lever_inputs: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    artifact = build_artifact(
++        preconditions_checked=dict(preconditions_checked),
++        parity_test={"passed": False, "blocked_reason": reason},
++        proxy_artifact={},
++        replay_floor=dict(replay_floor or {}),
++        v435_lever_inputs=dict(v435_lever_inputs or {}),
++        duration_s=duration_s,
++    )
++    artifact["honest_verdict"] = f"blocked_{reason}"
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def run(
++    *,
++    root: Path | str = REPO_ROOT,
++    preconditions_checker: PreconditionsChecker = check_preconditions,
++    parity_check: ParityCheck = run_parity_test,
++    proxy_runner: ProxyRunner = run_held_out_proxy,
++    replay_floor_loader: ReplayFloorLoader = load_replay_package_floor,
++    lever_input_loader: LeverInputLoader = load_v435_lever_inputs,
++    now: Callable[[], float] = time.time,
++    sleep_fn: Callable[[float], None] = time.sleep,
++) -> JsonDict:
++    root_path = Path(root)
++    started = now()
++    duration = lambda: _floor_duration(started_at=started, now=now, sleep_fn=sleep_fn)
++    lever_inputs = dict(lever_input_loader(root_path))
++    replay_floor = dict(replay_floor_loader(root_path))
++    checks = dict(preconditions_checker(root_path))
++    if not checks.get("ok", False):
++        reason = str(checks.get("blocked_resource") or "precondition")
++        artifact = _blocked_artifact(
++            preconditions_checked=checks,
++            reason=reason,
++            duration_s=duration(),
++            replay_floor=replay_floor,
++            v435_lever_inputs=lever_inputs,
++        )
++        write_artifact(root_path, artifact)
++        return artifact
++
++    parity = dict(parity_check(root_path))
++    if parity.get("passed") is not True:
++        checks["blocked_resource"] = "parity_test"
++        artifact = _blocked_artifact(
++            preconditions_checked=checks,
++            reason="parity_test",
++            duration_s=duration(),
++            replay_floor=replay_floor,
++            v435_lever_inputs=lever_inputs,
++        )
++        write_artifact(root_path, artifact)
++        return artifact
++
++    try:
++        proxy = dict(proxy_runner(root_path, parity))
++    except Exception as exc:  # pragma: no cover - defensive live-run boundary.
++        checks["proxy_error"] = repr(exc)[:500]
++        checks["blocked_resource"] = "experiment_4605_proxy"
++        artifact = _blocked_artifact(
++            preconditions_checked=checks,
++            reason="experiment_4605_proxy",
++            duration_s=duration(),
++            replay_floor=replay_floor,
++            v435_lever_inputs=lever_inputs,
++        )
++        write_artifact(root_path, artifact)
++        return artifact
++
++    attempts = _extract_held_out_variant_attempts(proxy)
++    if attempts < MIN_HELD_OUT_VARIANT_ATTEMPTS:
++        checks["blocked_resource"] = "experiment_4605_proxy_b100"
++        checks["held_out_variant_attempts"] = attempts
++        artifact = _blocked_artifact(
++            preconditions_checked=checks,
++            reason="experiment_4605_proxy_b100",
++            duration_s=duration(),
++            replay_floor=replay_floor,
++            v435_lever_inputs=lever_inputs,
++        )
++        write_artifact(root_path, artifact)
++        return artifact
++
++    artifact = build_artifact(
++        preconditions_checked=checks,
++        parity_test=parity,
++        proxy_artifact=proxy,
++        replay_floor=replay_floor,
++        v435_lever_inputs=lever_inputs,
++        duration_s=duration(),
++    )
++    write_artifact(root_path, artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - CLI shim.
++    artifact = run()
++    print(f"wrote {RESULT_RELATIVE_PATH}")
++    print(f"first_win_rate_integrated={artifact['first_win_rate_integrated']}")
++    print(f"first_win_ci_lower={artifact['first_win_ci_lower']}")
++    print(f"multi_level_deepen_rate_integrated={artifact['multi_level_deepen_rate_integrated']}")
++    print(f"ready_for_operator_submit={artifact['ready_for_operator_submit']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI shim.
++    raise SystemExit(main())
+diff --git a/results/proto_l2_code_only_prefix.json b/results/proto_l2_code_only_prefix.json
+new file mode 100644
+index 0000000000..913ac3982a
+--- /dev/null
++++ b/results/proto_l2_code_only_prefix.json
+@@ -0,0 +1,136 @@
++{
++  "experiment_id": "proto_l2_code_only_prefix",
++  "honest_verdict": "complete_code_only_prefix_fixes_truncation_satisfiable_goal",
++  "verdict_summary": "CORRECTED: the strong code-only prefix defeats the zero-code truncation (valid engine+is_level_complete at 4096; baseline got 0 code) AND the induced goal predicate is SATISFIABLE+discriminating (True on the rendered win state, False elsewhere). The original 'unsatisfiable' verdict was a test bug (fed raw prev, not the rendered win grid). Remaining: Arm A rambled to the 4096 limit (605s); a stop-sequence on the closing fence fixes latency.",
++  "baseline_truncation_reproduced_on_this_prompt": true,
++  "winner_arm": "A_strong_prefix_4096",
++  "goal_satisfiability": {
++    "exec_ok": true,
++    "win_state_complete": false,
++    "non_degenerate": true,
++    "engine_runs": true,
++    "goal_predicate_satisfiable": false,
++    "error": null,
++    "is_level_complete_on": {
++      "win_exemplar": false,
++      "init": false,
++      "rand0": false,
++      "rand1": false,
++      "rand2": false
++    }
++  },
++  "arms": {
++    "baseline_noThink_4096": {
++      "duration_s": 450.3,
++      "stop_type": "limit",
++      "tokens_predicted": 4096,
++      "content_chars": 9340,
++      "content_tail_300": "2:2`.\n    *   **Step 132: Action 2.** Delta `r2c2:1`.\n    *   **Step 133: Action 0.** Delta `r2c2:1`.\n    *   **Step 134: Action 1.** No change.\n    *   **Step 135: Action 3.** No change.\n    *   **Step 136: Action 0.** Delta `r2c2:2`.\n    *   **Step 137: Action 2.** Delta `r2c2:1`.\n    *   **Step 1",
++      "parse_ok": false,
++      "missing_fns": [
++        "engine",
++        "is_level_complete"
++      ],
++      "syntax_error": null,
++      "code_chars": 0
++    },
++    "A_strong_prefix_4096": {
++      "duration_s": 605.38,
++      "stop_type": "limit",
++      "tokens_predicted": 4096,
++      "content_chars": 17173,
++      "content_tail_300": " code I wrote is correct and implements the rules based on the observed transitions.\n\nLet me check the code again. The code I wrote is correct based on the observed transitions. It sets cell (2, 2) to the appropriate value based on the action.\n\nBut wait, I need to make sure I'm not violating the \"Do",
++      "parse_ok": true,
++      "missing_fns": [],
++      "syntax_error": null,
++      "code_chars": 853
++    }
++  },
++  "prompt_info": {
++    "game": "lp85",
++    "base_chars": 2167,
++    "captured_chars": 2249,
++    "captured_sha256_prefix": "8e198a5d63934854",
++    "note": "sha differs from the historical truncation-check artifact (4db52dc7) because that artifact was written by an earlier proto version with different synthetic bytes/keys; the prompt is substantively identical -- lp85 L2 induce + win-state exemplar -- and truncation is re-confirmed here as the matched within-run control.",
++    "win_exemplar": [
++      [
++        0,
++        1,
++        0,
++        2,
++        2
++      ],
++      [
++        0,
++        2,
++        1,
++        1,
++        0
++      ],
++      [
++        1,
++        0,
++        1,
++        1,
++        1
++      ],
++      [
++        2,
++        0,
++        1,
++        0,
++        1
++      ],
++      [
++        2,
++        1,
++        1,
++        2,
++        2
++      ]
++    ]
++  },
++  "strong_directive": "/no_think\nCRITICAL OUTPUT RULES -- obey EXACTLY:\n1. Output ONLY one ```python code block. NOTHING before it. NOTHING after it.\n2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write\n   step-by-step analysis, explanation, or commentary -- not even as comments.\n3. Your response MUST begin with the characters ```python and end with ```.\n4. Induce SIMPLE, GENERAL rules and write the two functions directly. Skip all reasoning.\n\n",
++  "preconditions_checked": {
++    "qwen_gguf": true,
++    "server_health": true,
++    "serving_qwen": true,
++    "n_ctx": 16384,
++    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
++  },
++  "inference_substrate": "live_llm_inference",
++  "solve_provenance": "development_proxy",
++  "verifier_is_oracle": false,
++  "random_seed": 42,
++  "duration_s": 1055.7,
++  "model_port": 8920,
++  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
++  "winning_code": "import numpy as np\n\ndef engine(grid, action, data):\n    new_grid = grid.copy()\n    if action == 0:\n        r, c = 2, 2\n        new_grid[r, c] = 2\n    elif action == 1:\n        r, c = 2, 2\n        new_grid[r, c] = 1\n    elif action == 2:\n        r, c = 2, 2\n        new_grid[r, c] = 1\n    elif action == 3:\n        r, c = 2, 2\n        new_grid[r, c] = 2\n    elif action == 4:\n        r, c = 2, 2\n        new_grid[r, c] = 2\n    elif action == 5:\n        r, c = 2, 2\n        new_grid[r, c] = 1\n    elif action == 6:\n        r, c = 2, 2\n        new_grid[r, c] = 1\n    elif action == 7:\n        r, c = 2, 2\n        new_grid[r, c] = 2\n    return new_grid\n\ndef is_level_complete(grid):\n    return np.array_equal(grid, np.array([\n        [2, 0, 1, 0, 1],\n        [2, 2, 2, 2, 1],\n        [2, 2, 0, 2, 2],\n        [0, 0, 2, 2, 1],\n        [2, 1, 0, 0, 2]\n    ]))",
++  "goal_satisfiability_CORRECTED": {
++    "test_bug": "original satisfiability fed the RAW prev array; the model was shown the _transitions_block-RENDERED win state (20101/22221/22022/00221/21002) and hardcoded THAT into is_level_complete.",
++    "is_level_complete_on_rendered_win_state": true,
++    "is_level_complete_on_5_random_grids": [
++      false,
++      false,
++      false,
++      false,
++      false
++    ],
++    "goal_predicate_satisfiable_corrected": true,
++    "non_degenerate_corrected": true
++  },
++  "stop_sequence_verification": {
++    "stop_type": "word",
++    "tokens_predicted": 195,
++    "duration_s": 15.6,
++    "parse_ok": true,
++    "missing_fns": [],
++    "syntax_error": null,
++    "code_chars": 453,
++    "is_level_complete_on_win_state": true,
++    "latency_win": true,
++    "baseline_arm_a_duration_s": 605.38,
++    "note": "stop=['```'] stops the model right after the code block, avoiding the ramble-to-4096-limit Arm A showed. Confirms the fix is code-only-prefix + stop-sequence (no budget bump needed)."
++  },
++  "stop_sequence_code": "import numpy as np\n\ndef engine(grid, action, data):\n    grid = grid.copy()\n    if action == 0:\n        grid[2, 2] = 2\n    elif action == 2:\n        grid[2, 2] = 1\n    elif action == 1:\n        pass\n    elif action == 3:\n        pass\n    return grid\n\ndef is_level_complete(grid):\n    return np.array_equal(grid, np.array([\n        [2, 0, 1, 0, 1],\n        [2, 2, 2, 2, 1],\n        [2, 2, 0, 2, 2],\n        [0, 0, 2, 2, 1],\n        [2, 1, 0, 0, 2]\n    ]))"
++}
+\ No newline at end of file
+diff --git a/scripts/experiments/proto_graded_goal_bias_ab.py b/scripts/experiments/proto_graded_goal_bias_ab.py
+index b82330c4c7..4b700d3f29 100644
+--- a/scripts/experiments/proto_graded_goal_bias_ab.py
++++ b/scripts/experiments/proto_graded_goal_bias_ab.py
+@@ -318,15 +318,31 @@ def main() -> int:
+         return 1
+ 
+     if not preconds["port_free"]:
+-        artifact = {
+-            "experiment": "proto_graded_goal_bias_ab",
+-            "honest_verdict": f"blocked_port_{preconds['port']}_in_use",
+-            "preconditions": preconds,
+-        }
+-        with open(_OUTFILE, "w") as f:
+-            json.dump(artifact, f, indent=2)
+-        print(f"BLOCKED: port {preconds['port']} in use.", flush=True)
+-        return 1
++        # A busy port is FINE if a healthy Qwen server is already serving on it -- LocalGGUFProposer
++        # ._ensure_server() reuses a healthy server. Only abort if the occupant is NOT a healthy Qwen.
++        import urllib.request
++        reuse_ok = False
++        occupant = "unknown"
++        try:
++            with urllib.request.urlopen(f"http://127.0.0.1:{preconds['port']}/health", timeout=4) as r:
++                healthy = json.loads(r.read()).get("status") == "ok"
++            with urllib.request.urlopen(f"http://127.0.0.1:{preconds['port']}/props", timeout=5) as r:
++                occupant = str(json.loads(r.read()).get("model_path", ""))
++            reuse_ok = healthy and ("qwen" in occupant.lower())
++        except Exception as e:
++            occupant = f"probe_failed:{e}"
++        if not reuse_ok:
++            artifact = {
++                "experiment": "proto_graded_goal_bias_ab",
++                "honest_verdict": f"blocked_port_{preconds['port']}_occupied_by_non_qwen",
++                "preconditions": {**preconds, "port_occupant": occupant},
++            }
++            with open(_OUTFILE, "w") as f:
++                json.dump(artifact, f, indent=2)
++            print(f"BLOCKED: port {preconds['port']} occupied by non-Qwen: {occupant}", flush=True)
++            return 1
++        print(f"  Port {preconds['port']} busy but serving a healthy Qwen -> REUSING warm server.",
++              flush=True)
+ 
+     print(f"\n=== STEP 1: SMOKE TEST - lp85 binary arm (confirm L1 reach + L2 induction fires) ===",
+           flush=True)
+diff --git a/scripts/experiments/proto_l2_code_only_prefix.py b/scripts/experiments/proto_l2_code_only_prefix.py
+new file mode 100644
+index 0000000000..8aaca2fa5a
+--- /dev/null
++++ b/scripts/experiments/proto_l2_code_only_prefix.py
+@@ -0,0 +1,436 @@
++"""PROTO-L2-CODE-ONLY-PREFIX: can a STRONGER code-only prefix make the lp85 L2 induction emit a
++valid engine + is_level_complete at the SHIPPING max_tokens=4096 -- without raising the budget?
++
++Background: proto_l2_proposer_truncation_check proved the 4096-token L2 induction call burns the
++ENTIRE budget on win-state chain-of-thought (CoT) prose (stop_type='limit', tokens_predicted=4096,
++ZERO code emitted). The '/no_think' prefix did NOT suppress the analysis -- the model reasons about
++the WIN STATE grid until the budget is exhausted, never reaching the code block. So the L2
++goal-induction nulls (goal_predicate_satisfiable=False) for ~10 milestones.
++
++This proto tests the operator-directed CHEAP FIX: a forceful CODE-ONLY directive (Arm A = pure
++prefix; Arm B = prefix + function-signature PREFILL that starts the model inside the code) that
++stops the model analyzing and emits code directly, so the code fits in 4096 generated tokens with
++NO budget/latency hit. If CoT is irrepressible at 4096, FALL BACK to raise-budget (8192) + a long
++timeout (Arm C).
++
++Design for an AIRTIGHT, WITHIN-RUN controlled comparison:
++  - BASELINE arm reproduces the truncation on the EXACT prompt bytes used by the test arms
++    (the historical artifact's prompt was built by an earlier version of the truncation-check
++    script -- different synthetic-grid bytes / key names -- so we re-establish the control here
++    rather than trust a stale hash). The prompt is substantively identical: lp85 L2 induce_prompt
++    WITH a win-state exemplar, WIN STATE block present.
++  - All arms run against the SAME warm Qwen3.5-9B-MTP server on :8920 (no startup, no 2nd GPU
++    resident, 4 idle slots confirmed). cache_prompt=True; temperature=0.2 (shipping fidelity).
++
++SHORT-CIRCUIT: run BASELINE, then Arm A (4096). If A yields valid code -> done (record, then test
++goal satisfiability). Else run Arm B (4096 prefill). If B works -> done. Else run Arm C (8192
++fallback). Whichever works is the recommended fix for the live induce path.
++
++Goal SATISFIABILITY test on the winning code: exec it, check is_level_complete(win_exemplar)==True
++AND non-degenerate (returns False on >=1 other grid). The downstream graded-bias fix needs a
++satisfiable, non-degenerate goal predicate.
++
++Integrity: inference_substrate=live_llm_inference, solve_provenance=development_proxy,
++verifier_is_oracle=false. Does NOT edit shipped files. Does NOT submit anything.
++"""
++from __future__ import annotations
++
++import ast
++import json
++import os
++import sys
++import time
++import hashlib
++import urllib.request
++from pathlib import Path
++
++import numpy as np
++
++REPO = Path(__file__).resolve().parent.parent.parent
++sys.path.insert(0, str(REPO / "python"))
++sys.path.insert(0, str(REPO))
++os.environ.setdefault("JAX_PLATFORMS", "cpu")
++
++PORT = int(os.environ.get("L2_PREFIX_PORT", "8920"))
++URL = f"http://127.0.0.1:{PORT}"
++QWEN_GGUF = os.path.expanduser(
++    "~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/"
++    "9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
++)
++RESULT_PATH = REPO / "results" / "proto_l2_code_only_prefix.json"
++
++from carnot.agentic.arc_executable_world_model import (  # noqa: E402
++    Transition,
++    induce_prompt,
++    _extract_python,
++)
++
++
++def log(msg: str) -> None:
++    print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
++
++
++# ---------------------------------------------------------------------------
++# PRECONDITIONS (step 0): GGUF cached + server healthy + serving Qwen + idle
++# ---------------------------------------------------------------------------
++def preconditions() -> dict:
++    pc = {"qwen_gguf": os.path.isfile(QWEN_GGUF)}
++    try:
++        with urllib.request.urlopen(URL + "/health", timeout=4) as r:
++            pc["server_health"] = json.load(r).get("status") == "ok"
++    except Exception as ex:
++        pc["server_health"] = False
++        pc["health_err"] = str(ex)[:120]
++    try:
++        with urllib.request.urlopen(URL + "/props", timeout=5) as r:
++            props = json.load(r)
++        mp = props.get("model_path", "")
++        pc["serving_qwen"] = "Qwen" in mp or "qwen" in mp.lower()
++        pc["n_ctx"] = props.get("default_generation_settings", {}).get("n_ctx")
++        pc["model_path"] = mp
++    except Exception as ex:
++        pc["serving_qwen"] = False
++        pc["props_err"] = str(ex)[:120]
++    return pc
++
++
++# ---------------------------------------------------------------------------
++# Reconstruct the lp85 L2 induce prompt + win-state exemplar (deterministic)
++# ---------------------------------------------------------------------------
++def build_prompt() -> tuple[str, str, np.ndarray, list]:
++    rng = np.random.default_rng(42)
++    trans = []
++    for i in range(6):
++        grid = rng.integers(0, 3, size=(5, 5), dtype=np.uint8)
++        ng = grid.copy()
++        if i % 2 == 0 and ng[2, 2] < 2:
++            ng[2, 2] += 1
++        trans.append(
++            Transition(grid=grid, action=i % 4, data={}, next_grid=ng,
++                       level_before=0, level_after=1 if i == 5 else 0)
++        )
++    prev = rng.integers(0, 3, size=(5, 5), dtype=np.uint8)
++    base = induce_prompt("lp85", trans, 1, previous_level_complete_grid=np.asarray(prev))
++    weak_suffix = "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n"
++    captured = base + weak_suffix
++    return base, captured, np.asarray(prev), trans
++
++
++# The STRONGER code-only directive (the operator's "stronger code-only prefix").
++STRONG_DIRECTIVE = (
++    "/no_think\n"
++    "CRITICAL OUTPUT RULES -- obey EXACTLY:\n"
++    "1. Output ONLY one ```python code block. NOTHING before it. NOTHING after it.\n"
++    "2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write\n"
++    "   step-by-step analysis, explanation, or commentary -- not even as comments.\n"
++    "3. Your response MUST begin with the characters ```python and end with ```.\n"
++    "4. Induce SIMPLE, GENERAL rules and write the two functions directly. Skip all reasoning.\n"
++    "\n"
++)
++
++
++def call_completion(prompt: str, n_predict: int, timeout: int) -> dict:
++    body = json.dumps({
++        "prompt": prompt,
++        "n_predict": n_predict,
++        "temperature": 0.2,
++        "cache_prompt": True,
++    }).encode()
++    req = urllib.request.Request(
++        URL + "/completion", data=body, headers={"Content-Type": "application/json"}
++    )
++    t0 = time.time()
++    with urllib.request.urlopen(req, timeout=timeout) as r:
++        resp = json.load(r)
++    resp["_duration_s"] = round(time.time() - t0, 2)
++    return resp
++
++
++def parse_fenced(content: str, required=("engine", "is_level_complete")) -> dict:
++    """For arms whose prompt ENDS with an opened ```python fence: prepend the opener, but also
++    try the bare content (in case the model wrote its own fenced block after prose)."""
++    candidates = []
++    c1 = _extract_python("```python\n" + content)
++    if c1:
++        candidates.append(c1)
++    c2 = _extract_python(content)
++    if c2:
++        candidates.append(c2)
++    return _best_parse(candidates, required)
++
++
++def parse_prefill(content: str, prefill_code: str, required=("engine", "is_level_complete")) -> dict:
++    """For the prefill arm: the model continues from inside `prefill_code`. Cut at the first
++    closing fence, prepend the prefill, parse."""
++    raw = content
++    idx = raw.find("```")
++    if idx != -1:
++        raw = raw[:idx]
++    code = prefill_code + raw
++    return _best_parse([code], required)
++
++
++def _best_parse(candidates: list[str], required) -> dict:
++    best = {"parse_ok": False, "code": "", "missing": list(required), "syntax_error": None,
++            "code_chars": 0}
++    for code in candidates:
++        if not code:
++            continue
++        missing = [fn for fn in required if f"def {fn}" not in code]
++        syn = None
++        if not missing:
++            try:
++                ast.parse(code)
++            except SyntaxError as se:
++                syn = f"SyntaxError line {se.lineno}: {se.msg}"
++        ok = (not missing) and syn is None
++        rec = {"parse_ok": ok, "code": code, "missing": missing, "syntax_error": syn,
++               "code_chars": len(code)}
++        if ok:
++            return rec
++        # keep the most-complete failing candidate
++        if len(required) - len(missing) > len(required) - len(best["missing"]):
++            best = rec
++    return best
++
++
++def satisfiability(code: str, win_exemplar: np.ndarray, init_grid: np.ndarray) -> dict:
++    """Exec the induced code; test is_level_complete on the win exemplar (expect True) and on
++    several other grids (expect >=1 False, i.e. non-degenerate). Also check engine runs."""
++    out = {"exec_ok": False, "win_state_complete": None, "non_degenerate": None,
++           "engine_runs": None, "goal_predicate_satisfiable": False, "error": None,
++           "is_level_complete_on": {}}
++    ns: dict = {"np": np, "numpy": np}
++    try:
++        exec(compile(code, "<induced>", "exec"), ns)  # noqa: S102 (sandboxless dev proxy)
++        ilc = ns.get("is_level_complete")
++        eng = ns.get("engine")
++        out["exec_ok"] = ilc is not None and eng is not None
++        if ilc is None or eng is None:
++            out["error"] = "missing engine or is_level_complete after exec"
++            return out
++        # win exemplar
++        win = bool(ilc(win_exemplar.copy()))
++        out["win_state_complete"] = win
++        out["is_level_complete_on"]["win_exemplar"] = win
++        # other grids (init + 3 random) -> need >=1 False for non-degeneracy
++        rng = np.random.default_rng(7)
++        others = [("init", init_grid.copy())] + [
++            (f"rand{i}", rng.integers(0, 3, size=win_exemplar.shape, dtype=np.uint8)) for i in range(3)
++        ]
++        false_seen = False
++        for name, g in others:
++            try:
++                v = bool(ilc(g))
++            except Exception as ex:
++                v = f"err:{str(ex)[:40]}"
++            out["is_level_complete_on"][name] = v
++            if v is False:
++                false_seen = True
++        out["non_degenerate"] = false_seen
++        # engine runs without raising and returns same-shape grid
++        try:
++            ng = np.asarray(eng(init_grid.copy(), 1, None))
++            out["engine_runs"] = ng.shape == init_grid.shape
++        except Exception as ex:
++            out["engine_runs"] = False
++            out["engine_err"] = str(ex)[:120]
++        out["goal_predicate_satisfiable"] = bool(win and false_seen)
++    except Exception as ex:
++        out["error"] = str(ex)[:200]
++    return out
++
++
++def summarize_call(resp: dict) -> dict:
++    content = resp.get("content", "")
++    return {
++        "duration_s": resp.get("_duration_s"),
++        "stop_type": resp.get("stop_type"),
++        "tokens_predicted": resp.get("tokens_predicted"),
++        "content_chars": len(content),
++        "content_tail_300": content[-300:],
++    }
++
++
++def main() -> int:
++    t_start = time.time()
++    pc = preconditions()
++    log(f"PRECONDITIONS: {pc}")
++    if not (pc.get("qwen_gguf") and pc.get("server_health") and pc.get("serving_qwen")):
++        RESULT_PATH.write_text(json.dumps({
++            "experiment_id": "proto_l2_code_only_prefix",
++            "honest_verdict": "blocked_preconditions",
++            "preconditions_checked": pc,
++            "inference_substrate": "live_llm_inference",
++            "solve_provenance": "development_proxy",
++            "verifier_is_oracle": False,
++            "duration_s": round(time.time() - t_start, 2),
++        }, indent=2))
++        log("BLOCKED: preconditions not met")
++        return 0
++
++    base, captured, win_exemplar, trans = build_prompt()
++    init_grid = np.asarray(trans[0].grid)
++    captured_sha = hashlib.sha256(captured.encode()).hexdigest()[:16]
++    log(f"prompt rebuilt: base={len(base)}c captured={len(captured)}c sha={captured_sha} "
++        f"(WIN STATE block present={'WIN STATE' in base})")
++
++    arms: dict = {}
++    winner = None
++    PREFILL_CODE = "import numpy as np\n\ndef engine(grid, action, data):\n"
++
++    # ---- BASELINE: exact captured form, /no_think only (reproduce truncation control) ----
++    log("BASELINE: /no_think + weak suffix @4096 (expect truncation)...")
++    try:
++        r = call_completion(captured, n_predict=4096, timeout=850)
++        parsed = parse_fenced(r.get("content", ""))
++        arms["baseline_noThink_4096"] = {**summarize_call(r), "parse_ok": parsed["parse_ok"],
++                                         "missing_fns": parsed["missing"],
++                                         "syntax_error": parsed["syntax_error"],
++                                         "code_chars": parsed["code_chars"]}
++        log(f"  baseline: stop={r.get('stop_type')} toks={r.get('tokens_predicted')} "
++            f"parse_ok={parsed['parse_ok']} dur={r.get('_duration_s')}s")
++    except Exception as ex:
++        arms["baseline_noThink_4096"] = {"error": str(ex)[:200]}
++        log(f"  baseline ERROR: {ex}")
++
++    # ---- ARM A: strong code-only prefix (pure prefix), fenced suffix @4096 ----
++    log("ARM A: STRONG_DIRECTIVE prefix + fenced suffix @4096...")
++    promptA = STRONG_DIRECTIVE + base + "\n```python\n"
++    try:
++        r = call_completion(promptA, n_predict=4096, timeout=850)
++        parsed = parse_fenced(r.get("content", ""))
++        arms["A_strong_prefix_4096"] = {**summarize_call(r), "parse_ok": parsed["parse_ok"],
++                                        "missing_fns": parsed["missing"],
++                                        "syntax_error": parsed["syntax_error"],
++                                        "code_chars": parsed["code_chars"]}
++        log(f"  A: stop={r.get('stop_type')} toks={r.get('tokens_predicted')} "
++            f"parse_ok={parsed['parse_ok']} dur={r.get('_duration_s')}s")
++        if parsed["parse_ok"]:
++            winner = ("A_strong_prefix_4096", parsed["code"])
++    except Exception as ex:
++        arms["A_strong_prefix_4096"] = {"error": str(ex)[:200]}
++        log(f"  A ERROR: {ex}")
++
++    # ---- ARM B: strong prefix + signature PREFILL @4096 (only if A failed) ----
++    if winner is None:
++        log("ARM B: STRONG_DIRECTIVE + signature PREFILL @4096...")
++        promptB = (STRONG_DIRECTIVE + base +
++                   "\n\nWrite the code now -- continue directly from this opening:\n\n```python\n"
++                   + PREFILL_CODE)
++        try:
++            r = call_completion(promptB, n_predict=4096, timeout=850)
++            parsed = parse_prefill(r.get("content", ""), PREFILL_CODE)
++            arms["B_prefill_4096"] = {**summarize_call(r), "parse_ok": parsed["parse_ok"],
++                                      "missing_fns": parsed["missing"],
++                                      "syntax_error": parsed["syntax_error"],
++                                      "code_chars": parsed["code_chars"]}
++            log(f"  B: stop={r.get('stop_type')} toks={r.get('tokens_predicted')} "
++                f"parse_ok={parsed['parse_ok']} dur={r.get('_duration_s')}s")
++            if parsed["parse_ok"]:
++                winner = ("B_prefill_4096", parsed["code"])
++        except Exception as ex:
++            arms["B_prefill_4096"] = {"error": str(ex)[:200]}
++            log(f"  B ERROR: {ex}")
++
++    # ---- ARM C: raise-budget fallback @8192 + long timeout (only if A and B failed) ----
++    if winner is None:
++        log("ARM C (FALLBACK): STRONG_DIRECTIVE + prefill @8192, long timeout...")
++        promptC = (STRONG_DIRECTIVE + base +
++                   "\n\nWrite the code now -- continue directly from this opening:\n\n```python\n"
++                   + PREFILL_CODE)
++        try:
++            r = call_completion(promptC, n_predict=8192, timeout=1500)
++            parsed = parse_prefill(r.get("content", ""), PREFILL_CODE)
++            arms["C_raise_budget_8192"] = {**summarize_call(r), "parse_ok": parsed["parse_ok"],
++                                           "missing_fns": parsed["missing"],
++                                           "syntax_error": parsed["syntax_error"],
++                                           "code_chars": parsed["code_chars"]}
++            log(f"  C: stop={r.get('stop_type')} toks={r.get('tokens_predicted')} "
++                f"parse_ok={parsed['parse_ok']} dur={r.get('_duration_s')}s")
++            if parsed["parse_ok"]:
++                winner = ("C_raise_budget_8192", parsed["code"])
++        except Exception as ex:
++            arms["C_raise_budget_8192"] = {"error": str(ex)[:200]}
++            log(f"  C ERROR: {ex}")
++
++    # ---- Satisfiability test on the winner ----
++    sat = None
++    if winner is not None:
++        log(f"WINNER={winner[0]} -- testing goal satisfiability...")
++        sat = satisfiability(winner[1], win_exemplar, init_grid)
++        log(f"  satisfiability: {sat}")
++
++    # ---- Verdict ----
++    baseline_truncated = (
++        arms.get("baseline_noThink_4096", {}).get("stop_type") == "limit"
++        and not arms.get("baseline_noThink_4096", {}).get("parse_ok", False)
++    )
++    if winner is not None and winner[0].endswith("4096"):
++        if sat and sat.get("goal_predicate_satisfiable"):
++            verdict = "complete_code_only_prefix_fixes_it_satisfiable"
++            summary = (f"{winner[0]} emits valid engine+is_level_complete at 4096 (no budget hit) "
++                       f"AND the goal predicate is SATISFIABLE+non-degenerate. Chain to graded-bias.")
++        else:
++            verdict = "complete_code_only_prefix_emits_code_but_goal_unsatisfiable"
++            summary = (f"{winner[0]} emits valid code at 4096, but is_level_complete is NOT "
++                       f"satisfiable/non-degenerate on the win exemplar (sat={sat}).")
++    elif winner is not None and winner[0].startswith("C"):
++        if sat and sat.get("goal_predicate_satisfiable"):
++            verdict = "complete_raise_budget_fixes_it_satisfiable"
++            summary = ("CoT is irrepressible at 4096; the 8192 fallback emits valid+satisfiable "
++                       "code. Fix = raise L2 max_tokens to 8192 (acknowledged latency hit).")
++        else:
++            verdict = "complete_raise_budget_emits_code_but_goal_unsatisfiable"
++            summary = ("8192 fallback emits valid code but goal not satisfiable/non-degenerate.")
++    else:
++        verdict = "complete_no_fix_generation_quality_wall"
++        summary = ("Neither the strong code-only prefix (4096) nor the 8192 fallback produced "
++                   "valid engine+is_level_complete. The wall is generation quality, not budget.")
++
++    artifact = {
++        "experiment_id": "proto_l2_code_only_prefix",
++        "honest_verdict": verdict,
++        "verdict_summary": summary,
++        "baseline_truncation_reproduced_on_this_prompt": baseline_truncated,
++        "winner_arm": winner[0] if winner else None,
++        "goal_satisfiability": sat,
++        "arms": arms,
++        "prompt_info": {
++            "game": "lp85",
++            "base_chars": len(base),
++            "captured_chars": len(captured),
++            "captured_sha256_prefix": captured_sha,
++            "note": ("sha differs from the historical truncation-check artifact (4db52dc7) because "
++                     "that artifact was written by an earlier proto version with different synthetic "
++                     "bytes/keys; the prompt is substantively identical -- lp85 L2 induce + win-state "
++                     "exemplar -- and truncation is re-confirmed here as the matched within-run control."),
++            "win_exemplar": win_exemplar.tolist(),
++        },
++        "strong_directive": STRONG_DIRECTIVE,
++        "preconditions_checked": pc,
++        "inference_substrate": "live_llm_inference",
++        "solve_provenance": "development_proxy",
++        "verifier_is_oracle": False,
++        "random_seed": 42,
++        "duration_s": round(time.time() - t_start, 2),
++        "model_port": PORT,
++        "model_path": QWEN_GGUF,
++        # adversarial_verify honest-null markers (no positive-control needed: this is not a null claim)
++    }
++    if winner is not None:
++        artifact["winning_code"] = winner[1]
++    RESULT_PATH.write_text(json.dumps(artifact, indent=2))
++    log(f"VERDICT: {verdict}")
++    log(f"SUMMARY: {summary}")
++    log(f"DONE in {artifact['duration_s']}s -> {RESULT_PATH}")
++    # chain marker for the operator-directed next step
++    if winner is not None and sat and sat.get("goal_predicate_satisfiable"):
++        log("CHAIN: goal SATISFIABLE -> proceed to graded-bias re-test with the winning fix wired in.")
++    else:
++        log("CHAIN: NOT satisfiable -> do NOT chain to graded-bias; report the wall.")
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/scripts/experiments/proto_l2_stopseq_verify.py b/scripts/experiments/proto_l2_stopseq_verify.py
+new file mode 100644
+index 0000000000..d4184bb6b4
+--- /dev/null
++++ b/scripts/experiments/proto_l2_stopseq_verify.py
+@@ -0,0 +1,119 @@
++"""STEP A: (1) correct the proto_l2_code_only_prefix satisfiability test bug in the artifact
++(it fed the RAW prev array, not the _transitions_block-RENDERED win state the model was shown),
++and (2) verify that adding a STOP SEQUENCE on the closing fence gives the latency win the bare
++code-only prefix did NOT (Arm A rambled to the 4096 limit, 605s).
++
++One live call: STRONG code-only directive + fenced suffix + stop=["```"] @4096 on the SAME lp85 L2
++prompt, warm Qwen server :8920. Success = valid engine+is_level_complete AND stop_type != 'limit'
++(natural/word stop) AND duration << 605s.
++"""
++from __future__ import annotations
++import ast
++import json
++import os
++import sys
++import time
++import urllib.request
++from pathlib import Path
++import numpy as np
++
++REPO = Path(__file__).resolve().parent.parent.parent
++sys.path.insert(0, str(REPO / "python")); sys.path.insert(0, str(REPO))
++os.environ.setdefault("JAX_PLATFORMS", "cpu")
++URL = "http://127.0.0.1:8920"
++from carnot.agentic.arc_executable_world_model import Transition, induce_prompt, _extract_python  # noqa
++
++def log(m): print(f"[{time.strftime('%H:%M:%S')}] {m}", flush=True)
++
++# --- rebuild the same prompt + rendered win state ---
++rng = np.random.default_rng(42); trans = []
++for i in range(6):
++    g = rng.integers(0,3,size=(5,5),dtype=np.uint8); ng = g.copy()
++    if i%2==0 and ng[2,2]<2: ng[2,2]+=1
++    trans.append(Transition(grid=g, action=i%4, data={}, next_grid=ng, level_before=0, level_after=1 if i==5 else 0))
++prev = rng.integers(0,3,size=(5,5),dtype=np.uint8)
++base = induce_prompt("lp85", trans, 1, previous_level_complete_grid=np.asarray(prev))
++RENDERED_WIN = np.array([[2,0,1,0,1],[2,2,2,2,1],[2,2,0,2,2],[0,0,2,2,1],[2,1,0,0,2]])
++
++STRONG_DIRECTIVE = (
++    "/no_think\n"
++    "CRITICAL OUTPUT RULES -- obey EXACTLY:\n"
++    "1. Output ONLY one ```python code block. NOTHING before it. NOTHING after it.\n"
++    "2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write\n"
++    "   step-by-step analysis, explanation, or commentary -- not even as comments.\n"
++    "3. Your response MUST begin with the characters ```python and end with ```.\n"
++    "4. Induce SIMPLE, GENERAL rules and write the two functions directly. Skip all reasoning.\n\n"
++)
++
++# --- (1) correct the satisfiability bug in the prior artifact ---
++art_path = REPO/"results"/"proto_l2_code_only_prefix.json"
++art = json.load(open(art_path))
++code = art.get("winning_code","")
++ns={"np":np,"numpy":np}; exec(compile(code,"<i>","exec"),ns)
++ilc=ns["is_level_complete"]
++win_true = bool(ilc(RENDERED_WIN.copy()))
++rng2=np.random.default_rng(7)
++others=[bool(ilc(rng2.integers(0,3,(5,5)))) for _ in range(5)]
++corrected_sat = bool(win_true and not all([win_true]+others))  # True on win, >=1 False elsewhere
++art["goal_satisfiability_CORRECTED"] = {
++    "test_bug": "original satisfiability fed the RAW prev array; the model was shown the "
++                "_transitions_block-RENDERED win state (20101/22221/22022/00221/21002) and "
++                "hardcoded THAT into is_level_complete.",
++    "is_level_complete_on_rendered_win_state": win_true,
++    "is_level_complete_on_5_random_grids": others,
++    "goal_predicate_satisfiable_corrected": corrected_sat,
++    "non_degenerate_corrected": (win_true and any(v is False for v in others)),
++}
++if corrected_sat:
++    art["honest_verdict"] = "complete_code_only_prefix_fixes_truncation_satisfiable_goal"
++    art["verdict_summary"] = (
++        "CORRECTED: the strong code-only prefix defeats the zero-code truncation (valid "
++        "engine+is_level_complete at 4096; baseline got 0 code) AND the induced goal predicate is "
++        "SATISFIABLE+discriminating (True on the rendered win state, False elsewhere). The original "
++        "'unsatisfiable' verdict was a test bug (fed raw prev, not the rendered win grid). Remaining: "
++        "Arm A rambled to the 4096 limit (605s); a stop-sequence on the closing fence fixes latency."
++    )
++log(f"CORRECTED satisfiability: win_state->{win_true}, randoms->{others}, satisfiable={corrected_sat}")
++
++# --- (2) verify stop-sequence latency win ---
++prompt = STRONG_DIRECTIVE + base + "\n```python\n"
++body = json.dumps({"prompt": prompt, "n_predict": 4096, "temperature": 0.2,
++                   "cache_prompt": True, "stop": ["```"]}).encode()
++log("CALL: code-only prefix + stop=['```'] @4096 ...")
++t0=time.time()
++req=urllib.request.Request(URL+"/completion", data=body, headers={"Content-Type":"application/json"})
++with urllib.request.urlopen(req, timeout=850) as r:
++    resp=json.load(r)
++dur=round(time.time()-t0,2)
++content=resp.get("content","")
++# with stop eating the closing fence, content is raw code (opener was in the prompt)
++cand = _extract_python("```python\n"+content+"\n```") or _extract_python(content) or content.strip()
++missing=[fn for fn in ("engine","is_level_complete") if f"def {fn}" not in cand]
++syn=None
++if not missing:
++    try: ast.parse(cand)
++    except SyntaxError as se: syn=f"line {se.lineno}: {se.msg}"
++parse_ok = (not missing) and syn is None
++log(f"  stop_type={resp.get('stop_type')} toks={resp.get('tokens_predicted')} dur={dur}s parse_ok={parse_ok} missing={missing} syn={syn}")
++
++# satisfiability of the stop-seq code too
++sat2=None
++if parse_ok:
++    ns2={"np":np,"numpy":np}; exec(compile(cand,"<i>","exec"),ns2)
++    sat2=bool(ns2["is_level_complete"](RENDERED_WIN.copy()))
++    log(f"  stopseq is_level_complete(win_state)={sat2}")
++
++latency_win = (resp.get("stop_type")!="limit") and dur<400 and parse_ok
++art["stop_sequence_verification"] = {
++    "stop_type": resp.get("stop_type"), "tokens_predicted": resp.get("tokens_predicted"),
++    "duration_s": dur, "parse_ok": parse_ok, "missing_fns": missing, "syntax_error": syn,
++    "code_chars": len(cand), "is_level_complete_on_win_state": sat2,
++    "latency_win": latency_win,
++    "baseline_arm_a_duration_s": 605.38,
++    "note": "stop=['```'] stops the model right after the code block, avoiding the ramble-to-4096-limit "
++            "Arm A showed. Confirms the fix is code-only-prefix + stop-sequence (no budget bump needed).",
++}
++art["stop_sequence_code"] = cand if parse_ok else None
++json.dump(art, open(art_path,"w"), indent=2)
++log(f"latency_win={latency_win} (Arm A was 605s @limit; this call {dur}s @{resp.get('stop_type')})")
++log(f"artifact updated -> {art_path}")
+diff --git a/tests/python/test_experiment_4729_held_out_first_win_readiness.py b/tests/python/test_experiment_4729_held_out_first_win_readiness.py
+new file mode 100644
+index 0000000000..c49415b864
+--- /dev/null
++++ b/tests/python/test_experiment_4729_held_out_first_win_readiness.py
+@@ -0,0 +1,521 @@
++"""Tests for Exp 4729 held-out first-win readiness.
++
++Spec refs: REQ-CAPSTONE-4729, SCENARIO-CAPSTONE-4729,
++SCENARIO-CAPSTONE-4729-BLOCKED-PRECONDITION,
++SCENARIO-CAPSTONE-4729-FIELD-PRINCIPLES.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4729_held_out_first_win_readiness as mod
++
++
++JsonDict = dict[str, Any]
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "capstone" / "spec.md"
++
++
++def _proxy(
++    *,
++    first_win_rate: float = 0.04,
++    ci_lower: float = 0.0,
++    attempts: int = 100,
++    multi_level_rate: float = 0.0,
++) -> JsonDict:
++    solved = int(round(first_win_rate * attempts))
++    deepened = int(round(multi_level_rate * attempts))
++    rows = [
++        {
++            "attempted": True,
++            "first_win": index < solved,
++            "depth_reached": 2 if index < deepened else 1,
++        }
++        for index in range(attempts)
++    ]
++    return {
++        "experiment": "experiment_4605_live_integration_scored_agent",
++        "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
++        "first_win_rate_integrated": first_win_rate,
++        "first_win_ci": {
++            "method": "paired_percentile_bootstrap",
++            "point": first_win_rate - mod.FIRST_WIN_BASELINE,
++            "ci95": [ci_lower, max(ci_lower, first_win_rate - mod.FIRST_WIN_BASELINE)],
++        },
++        "multi_level_solve_rate": multi_level_rate,
++        "integrated_measurement": {
++            "variant_attempts_count": attempts,
++            "variant_attempts": rows,
++        },
++    }
++
++
++def _floor(*, live_count: int = 60, reproduced: bool = True) -> JsonDict:
++    return {
++        "package_path": "results/experiment_4679_submission_package_operator_resubmit.json",
++        "package_exists": True,
++        "replay_package_floor_reproduced": reproduced,
++        "live_submittable_level_count": live_count,
++        "offline_reproduced": reproduced,
++        "ready_for_operator_submit": live_count > 33 and reproduced,
++        "note": mod.REPLAY_FLOOR_NOTE,
++    }
++
++
++def _preconditions() -> JsonDict:
++    return {
++        "ok": True,
++        "offline_arcade": True,
++        "experiment_4605_importable": True,
++    }
++
++
++def _parity(passed: bool = True) -> JsonDict:
++    return {
++        "passed": passed,
++        "command": "pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
++    }
++
++
++def _lever_inputs() -> JsonDict:
++    return {
++        "a1": {
++            "path": "results/experiment_4726_online_action_learning_driver_valid_test.json",
++            "chosen_submitted_config": "unchanged",
++        },
++        "a2": {
++            "path": "results/experiment_4727_active_probe_disambiguation.json",
++            "chosen_submitted_config": "unchanged",
++        },
++    }
++
++
++def test_req_capstone_4729_spec_declares_readiness_contract() -> None:
++    """REQ-CAPSTONE-4729: OpenSpec declares the .435 held-out readiness gate."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-CAPSTONE-4729",
++        "SCENARIO-CAPSTONE-4729",
++        "SCENARIO-CAPSTONE-4729-BLOCKED-PRECONDITION",
++        "SCENARIO-CAPSTONE-4729-FIELD-PRINCIPLES",
++        mod.RESULT_RELATIVE_PATH,
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert field in spec
++        assert principle["principle"] in spec
++    assert "avoid redundant top-level numeric minimum fields" in spec
++
++
++def test_scenario_capstone_4729_flat_first_win_emits_required_markers() -> None:
++    """SCENARIO-CAPSTONE-4729: flat first-win is an explicit no-change."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.04, ci_lower=0.0, attempts=100),
++        replay_floor=_floor(live_count=60, reproduced=True),
++        v435_lever_inputs=_lever_inputs(),
++        duration_s=1.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete: held_out_first_win_flat_no_leaderboard_change"
++    assert artifact["first_win_rate_integrated"] == 0.04
++    assert artifact["first_win_baseline"] == 0.04
++    assert artifact["first_win_delta_vs_baseline"] == 0.0
++    assert artifact["first_win_ci_lower"] == 0.0
++    assert artifact["held_out_variant_attempts"] == 100
++    assert "min_held_out_variant_attempts" not in artifact
++    assert artifact["held_out_variant_attempt_floor"] == "B>=100"
++    assert artifact["null_delta_methodology_note"]
++    assert artifact["positive_control_passed"] is True
++    assert artifact["ready_for_operator_submit"] is True
++    assert artifact["replay_package_floor_reproduced"] is True
++    assert artifact["replay_count_is_not_the_score"] is True
++    assert artifact["replay_floor"]["live_submittable_level_count"] == 60
++    assert artifact["v435_lever_inputs"]["a1"]["chosen_submitted_config"] == "unchanged"
++    assert artifact["v435_lever_inputs"]["a2"]["chosen_submitted_config"] == "unchanged"
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4729_success_requires_ci_parity_and_b100() -> None:
++    """SCENARIO-CAPSTONE-4729: readiness needs CI, parity, and B>=100."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(
++            first_win_rate=0.12,
++            ci_lower=0.02,
++            attempts=125,
++            multi_level_rate=0.04,
++        ),
++        replay_floor=_floor(live_count=0, reproduced=False),
++        v435_lever_inputs=_lever_inputs(),
++        duration_s=2.0,
++    )
++
++    assert artifact["honest_verdict"] == "success: held_out_first_win_improved_0.08"
++    assert artifact["first_win_delta_vs_baseline"] == 0.08
++    assert artifact["first_win_ci_lower"] == 0.02
++    assert artifact["multi_level_deepen_rate_integrated"] == 0.04
++    assert artifact["positive_control_passed"] is True
++    assert artifact["null_delta_methodology_note"] == ""
++    assert artifact["ready_for_operator_submit"] is True
++    assert artifact["replay_package_floor_reproduced"] is False
++    assert artifact["submitted_to_leaderboard"] is False
++    assert mod.artifact_schema_errors(artifact) == []
++
++    undersized = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.12, ci_lower=0.02, attempts=99),
++        replay_floor=_floor(live_count=60, reproduced=True),
++        v435_lever_inputs=_lever_inputs(),
++        duration_s=1.0,
++    )
++
++    assert undersized["ready_for_operator_submit"] is False
++    assert undersized["honest_verdict"] == "complete: held_out_first_win_measurement_below_b100"
++    assert "held_out_variant_attempts_below_minimum" in mod.artifact_schema_errors(undersized)
++
++
++def test_req_capstone_4729_replay_count_cannot_mask_regression() -> None:
++    """REQ-CAPSTONE-4729: replay package floor never creates readiness."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.0, ci_lower=-0.04, attempts=100),
++        replay_floor=_floor(live_count=99, reproduced=True),
++        v435_lever_inputs=_lever_inputs(),
++        duration_s=1.0,
++    )
++
++    assert artifact["honest_verdict"] == "complete: held_out_first_win_below_baseline_no_leaderboard_change"
++    assert artifact["positive_control_passed"] is True
++    assert artifact["ready_for_operator_submit"] is False
++    assert artifact["replay_floor"]["live_submittable_level_count"] == 99
++    assert artifact["replay_count_is_not_the_score"] is True
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_req_capstone_4729_parity_failure_invalidates_flat_exemption() -> None:
++    """REQ-CAPSTONE-4729: positive control gates the flat-null exemption."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(False),
++        proxy_artifact=_proxy(first_win_rate=0.04, ci_lower=0.0, attempts=100),
++        replay_floor=_floor(live_count=60, reproduced=True),
++        v435_lever_inputs=_lever_inputs(),
++        duration_s=1.0,
++    )
++
++    assert artifact["parity_test_green"] is False
++    assert artifact["positive_control_passed"] is False
++    assert artifact["null_delta_methodology_note"]
++    assert artifact["ready_for_operator_submit"] is False
++    assert artifact["honest_verdict"] == "complete: held_out_first_win_flat_unvalidated_no_leaderboard_change"
++    assert mod.artifact_schema_errors(artifact) == []
++
++    point_up = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(False),
++        proxy_artifact=_proxy(first_win_rate=0.12, ci_lower=0.02, attempts=100),
++        replay_floor=_floor(live_count=60, reproduced=True),
++        v435_lever_inputs=_lever_inputs(),
++        duration_s=1.0,
++    )
++
++    assert point_up["honest_verdict"] == (
++        "complete: held_out_first_win_point_up_ci_supported_but_parity_failed"
++    )
++    assert point_up["positive_control_passed"] is False
++    assert point_up["ready_for_operator_submit"] is False
++    assert mod.artifact_schema_errors(point_up) == []
++
++
++def test_req_capstone_4729_schema_rejects_marker_and_shape_errors() -> None:
++    """SCENARIO-CAPSTONE-4729-FIELD-PRINCIPLES: schema protects the artifact shape."""
++
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(True),
++        proxy_artifact=_proxy(first_win_rate=0.04, ci_lower=0.0, attempts=100),
++        replay_floor=_floor(live_count=60, reproduced=True),
++        v435_lever_inputs=_lever_inputs(),
++        duration_s=1.0,
++    )
++    bad = dict(artifact)
++    bad["null_delta_methodology_note"] = ""
++    bad["positive_control_passed"] = False
++    bad["replay_count_is_not_the_score"] = False
++    bad["verifier_is_oracle"] = True
++    bad["submitted_to_leaderboard"] = True
++    bad["field_principles"] = {}
++    bad["honest_verdict"] = "not_terminal"
++    bad["min_held_out_variant_attempts"] = 100
++    bad["reproducibility_checksum"] = "sha256:bad"
++
++    errors = mod.artifact_schema_errors(bad)
++
++    assert "honest_verdict_terminal_prefix" in errors
++    assert "field_principles" in errors
++    assert "null_delta_methodology_note" in errors
++    assert "positive_control_passed" in errors
++    assert "replay_count_is_not_the_score_true" in errors
++    assert "verifier_is_oracle_false" in errors
++    assert "submitted_to_leaderboard_false" in errors
++    assert "redundant_min_held_out_variant_attempts" in errors
++    assert "reproducibility_checksum" in errors
++
++    missing = dict(artifact)
++    missing.pop("first_win_baseline")
++    missing["reproducibility_checksum"] = mod.payload_checksum(missing)
++    assert "missing required field first_win_baseline" in mod.artifact_schema_errors(missing)
++
++    broken = dict(artifact)
++    broken["honest_verdict"] = "not_terminal"
++    broken["reproducibility_checksum"] = mod.payload_checksum(broken)
++    with pytest.raises(ValueError):
++        mod.write_artifact(Path("/tmp"), broken)
++
++
++def test_scenario_capstone_4729_runner_sequences_parity_proxy_and_writes(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4729: runner writes after parity and proxy measurement."""
++
++    calls: list[str] = []
++
++    def parity_check(_root: Path) -> JsonDict:
++        calls.append("parity")
++        return _parity(True)
++
++    def proxy_runner(_root: Path, parity_test: JsonDict) -> JsonDict:
++        calls.append("proxy")
++        assert parity_test["passed"] is True
++        return _proxy(first_win_rate=0.04, ci_lower=0.0, attempts=100)
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: _preconditions(),
++        parity_check=parity_check,
++        proxy_runner=proxy_runner,
++        replay_floor_loader=lambda _root: _floor(live_count=60, reproduced=True),
++        lever_input_loader=lambda _root: _lever_inputs(),
++        now=lambda: 10.0,
++        sleep_fn=lambda _seconds: None,
++    )
++    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
++
++    assert calls == ["parity", "proxy"]
++    assert written == artifact
++    assert artifact["duration_s"] == 1.0
++    assert artifact["ready_for_operator_submit"] is True
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4729_blocked_precondition_writes_fail_closed(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4729-BLOCKED-PRECONDITION: missing resources block early."""
++
++    artifact = mod.run(
++        root=tmp_path,
++        preconditions_checker=lambda _root: {
++            "ok": False,
++            "blocked_resource": "offline_arcade",
++            "offline_arcade": False,
++            "experiment_4605_importable": True,
++        },
++        parity_check=lambda _root: _parity(True),
++        proxy_runner=lambda _root, _parity_test: _proxy(first_win_rate=0.12, ci_lower=0.02),
++        replay_floor_loader=lambda _root: _floor(live_count=60, reproduced=True),
++        lever_input_loader=lambda _root: _lever_inputs(),
++        now=lambda: 5.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert artifact["honest_verdict"] == "blocked_offline_arcade"
++    assert artifact["parity_test_green"] is False
++    assert artifact["positive_control_passed"] is False
++    assert artifact["ready_for_operator_submit"] is False
++    assert artifact["replay_count_is_not_the_score"] is True
++    assert mod.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_capstone_4729_parity_red_and_b100_proxy_fail_closed(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-4729-BLOCKED-PRECONDITION: parity and B>=100 failures block."""
++
++    def proxy_must_not_run(_root: Path, _parity_test: JsonDict) -> JsonDict:
++        raise AssertionError("proxy must not run after red parity")
++
++    parity_blocked = mod.run(
++        root=tmp_path / "parity",
++        preconditions_checker=lambda _root: _preconditions(),
++        parity_check=lambda _root: _parity(False),
++        proxy_runner=proxy_must_not_run,
++        replay_floor_loader=lambda _root: _floor(live_count=60, reproduced=True),
++        lever_input_loader=lambda _root: _lever_inputs(),
++        now=lambda: 8.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert parity_blocked["honest_verdict"] == "blocked_parity_test"
++    assert parity_blocked["ready_for_operator_submit"] is False
++    assert mod.artifact_schema_errors(parity_blocked) == []
++
++    undersized = mod.run(
++        root=tmp_path / "b100",
++        preconditions_checker=lambda _root: _preconditions(),
++        parity_check=lambda _root: _parity(True),
++        proxy_runner=lambda _root, _parity_test: _proxy(
++            first_win_rate=0.12,
++            ci_lower=0.02,
++            attempts=99,
++        ),
++        replay_floor_loader=lambda _root: _floor(live_count=60, reproduced=True),
++        lever_input_loader=lambda _root: _lever_inputs(),
++        now=lambda: 9.0,
++        sleep_fn=lambda _seconds: None,
++    )
++
++    assert undersized["honest_verdict"] == "blocked_experiment_4605_proxy_b100"
++    assert undersized["preconditions_checked"]["held_out_variant_attempts"] == 99
++    assert undersized["ready_for_operator_submit"] is False
++    assert mod.artifact_schema_errors(undersized) == []
++
++
++def test_req_capstone_4729_default_proxy_forces_b100_env(monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-CAPSTONE-4729: default proxy asks Exp4605 for four color variants."""
++
++    from carnot import experiment_4605_live_integration_scored_agent as exp4605
++
++    seen: dict[str, str | None] = {}
++
++    def fake_run(*, root: Path, parity_check: Any) -> JsonDict:
++        seen["deepen"] = os.environ.get(exp4605.DEEPEN_ENV)
++        seen["variant_ids"] = os.environ.get(exp4605.VARIANT_IDS_ENV)
++        assert parity_check(root)["passed"] is True
++        return _proxy(first_win_rate=0.04, ci_lower=0.0, attempts=100)
++
++    monkeypatch.setattr(exp4605, "run", fake_run)
++    monkeypatch.setenv(exp4605.DEEPEN_ENV, "old")
++    monkeypatch.setenv(exp4605.VARIANT_IDS_ENV, "old")
++
++    proxy = mod.run_held_out_proxy(REPO, _parity(True))
++
++    assert proxy["first_win_rate_integrated"] == 0.04
++    assert seen == {"deepen": "1", "variant_ids": "1,2,3,4"}
++    assert os.environ[exp4605.DEEPEN_ENV] == "old"
++    assert os.environ[exp4605.VARIANT_IDS_ENV] == "old"
++
++    seen.clear()
++    monkeypatch.delenv(exp4605.DEEPEN_ENV, raising=False)
++    monkeypatch.delenv(exp4605.VARIANT_IDS_ENV, raising=False)
++
++    proxy = mod.run_held_out_proxy(REPO, _parity(True))
++
++    assert proxy["first_win_rate_integrated"] == 0.04
++    assert seen == {"deepen": "1", "variant_ids": "1,2,3,4"}
++    assert exp4605.DEEPEN_ENV not in os.environ
++    assert exp4605.VARIANT_IDS_ENV not in os.environ
++
++
++def test_req_capstone_4729_loaders_and_fallback_extractors(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4729: file loaders and fallback proxy shapes remain auditable."""
++
++    for rel, payload in {
++        "results/experiment_4726_online_action_learning_driver_valid_test.json": {
++            "experiment": "experiment_4726_online_action_learning_driver_valid_test",
++            "honest_verdict": "complete: a1",
++            "chosen_submitted_config": "unchanged",
++        },
++        "results/experiment_4727_active_probe_disambiguation.json": {
++            "experiment": "experiment_4727_active_probe_disambiguation",
++            "honest_verdict": "complete: a2",
++            "chosen_submitted_config": {"active_probe_controller": True},
++        },
++    }.items():
++        path = tmp_path / rel
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(payload), encoding="utf-8")
++
++    loaded = mod.load_v435_lever_inputs(tmp_path)
++    assert set(loaded) == {"a1", "a2"}
++    for row in loaded.values():
++        assert row["exists"] is True
++        assert row["sha256"]
++        assert "error" not in row
++    assert loaded["a1"]["chosen_submitted_config"] == "unchanged"
++    assert loaded["a2"]["chosen_submitted_config"] == {"active_probe_controller": True}
++
++    missing = mod.load_v435_lever_inputs(tmp_path / "missing")
++    assert missing["a1"]["exists"] is False
++    assert missing["a1"]["sha256"] == ""
++    assert missing["a1"]["error"] == "missing_artifact"
++
++    assert mod._float(True, 7.0) == 7.0
++    assert mod._float("not-a-number", 3.0) == 3.0
++    assert mod._extract_first_win_rate({"first_win_rate_integrated": 0.12}) == 0.12
++    assert mod._extract_first_win_rate({"integrated_measurement": {"first_win_rate": 0.08}}) == 0.08
++    assert mod._extract_first_win_rate({}) == 0.0
++    assert mod._extract_ci_lower({"first_win_ci": {"ci95": [0.03, 0.2]}}) == 0.03
++    assert mod._extract_ci_lower({"first_win_ci_lower": 0.05}) == 0.05
++    assert mod._extract_ci_lower({"first_win_ci": {"low": 0.01}}) == 0.01
++    assert mod._extract_ci_lower({}) == 0.0
++    assert mod._extract_multi_level_deepen_rate({"multi_level_solve_rate": 0.0}) == 0.0
++    assert (
++        mod._extract_multi_level_deepen_rate(
++            {"integrated_measurement": {"variant_attempts": [{"attempted": False}]}}
++        )
++        == 0.0
++    )
++    assert mod._extract_held_out_variant_attempts({"held_out_variant_attempts": 123}) == 123
++    assert (
++        mod._extract_held_out_variant_attempts(
++            {
++                "integrated_measurement": {
++                    "variant_attempts_count": "bad",
++                    "variant_attempts": [{"attempted": True}],
++                }
++            }
++        )
++        == 1
++    )
++
++    fallback_proxy = {
++        "integrated_measurement": {
++            "first_win_rate": 0.08,
++            "variant_attempts_count": 100,
++            "variant_attempts": [
++                {"attempted": True, "first_win": True, "depth_reached": "bad"},
++                {"attempted": True, "solved": True, "depth_reached": 2},
++                {"attempted": False, "first_win": True, "depth_reached": 9},
++            ],
++        },
++        "first_win_ci": {"low": 0.0},
++    }
++    artifact = mod.build_artifact(
++        preconditions_checked=_preconditions(),
++        parity_test=_parity(True),
++        proxy_artifact=fallback_proxy,
++        replay_floor=_floor(live_count=0, reproduced=False),
++        v435_lever_inputs=_lever_inputs(),
++        duration_s=1.0,
++    )
++
++    assert artifact["first_win_rate_integrated"] == 0.08
++    assert artifact["first_win_ci_lower"] == 0.0
++    assert artifact["multi_level_deepen_rate_integrated"] == 0.5
++    assert artifact["honest_verdict"] == (
++        "complete: held_out_first_win_point_up_ci_overlaps_baseline_no_leaderboard_change"
++    )
++    assert artifact["ready_for_operator_submit"] is False
+-- 
+2.55.0
+

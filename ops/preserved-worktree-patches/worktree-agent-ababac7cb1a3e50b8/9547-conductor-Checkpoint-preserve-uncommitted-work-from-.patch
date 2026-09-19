@@ -1,0 +1,59 @@
+From 0aad3e0f0662f66a5f7ea294a07bd1d8f536d794 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 22 Aug 2026 17:39:58 -0400
+Subject: [PATCH 09547/11362] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/.run_sentinel_state.json | 6 ++----
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/ops/.run_sentinel_state.json b/ops/.run_sentinel_state.json
+index 017fd318d7..a823fefcaf 100644
+--- a/ops/.run_sentinel_state.json
++++ b/ops/.run_sentinel_state.json
+@@ -1,7 +1,5 @@
+ {
+  "escalated": {},
+- "last_scan_notes": [
+-  "pid 1550132 /home/ianblenke/.claude/jobs/ad0c053d/tmp/supab3/rows_off.json: out file missing, run unsupervisable this cycle"
+- ],
+- "last_scan_utc": "2026-08-22T20:36:49Z"
++ "last_scan_notes": [],
++ "last_scan_utc": "2026-08-22T21:37:57Z"
+ }
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9a461de4ab..8e25d2dba2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 15, "phase": "sleeping", "last_beat": "2026-08-22T21:16:51Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-08-22T21:39:54Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 72930084b0..9ad5f84534 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -16281,3 +16281,4 @@ code |
+ | 2026-08-22 20:54 UTC | Plan milestone 2026.08.563 | OK | 3 tasks proposed |
+ | 2026-08-22 20:57 UTC | Milestone 2026.08.563 activated | OK | 3 tasks queued |
+ | 2026-08-22 21:15 UTC | Fresh independent V563 exact-evidence root | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6510_v563_in |
++| 2026-08-22 21:37 UTC | Fresh independent V563 exact-evidence root | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6510_v563_in |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index afd5a9fab5..63ad55dd44 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 812923, "iteration": 15, "phase": "sleeping", "started_at": "2026-08-22T21:16:51Z"}
+\ No newline at end of file
++{"pid": 812923, "iteration": 17, "phase": "iteration_start", "started_at": "2026-08-22T21:39:54Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

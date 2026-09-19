@@ -1,0 +1,109 @@
+From 78985e7a9edfa91341df60ea725b4b4c02fe964b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 31 Aug 2026 23:24:50 -0400
+Subject: [PATCH 10581/11362] [conductor] Operational retrospective for
+ milestone 2026.08.597
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  7 +++
+ ops/changelog.md                           | 11 +++++
+ results/operational_retro_2026_08_597.json | 52 ++++++++++++++++++++++
+ 3 files changed, 70 insertions(+)
+ create mode 100644 results/operational_retro_2026_08_597.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index db4624dd9d..5dd88faab7 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -6500,3 +6500,10 @@ The critical path for milestone .250:
+ - theme: minute-rounded fallback timing obscured task phases and accelerator attribution
+ - key result: honest operational negative — the sole compute-bound stream was reported at zero minutes, with no task-window evidence for a GPU efficiency fault or parallel-runner miss
+ - acceptance: no data available this milestone
++
++### Milestone 2026.08.597
++
++- exp_range: no data available this milestone
++- theme: an operational-saturation corpus dominated reconstructed wall time while task-phase accelerator attribution remained unavailable
++- key result: honest operational negative — the longest compute task took 8.75 minutes without a compute-bound GPU-idle finding, but the timing does not explain why or establish parallel-model runner eligibility
++- acceptance: no data available this milestone
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 79d668ae51..0a085e1e82 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -18408,3 +18408,14 @@ launch receipts for runner and concurrency selection. Estimated time savings is
+ - 2026-09-01: Exact operational-obligation saturation fixture (⚠️ Research Finding) — honest_verdict=complete_operational_obligation_saturation_fixture: deterministic source-free fixture ready; no model ran; results/experiment_6832_operational_obligation_saturation_fixture.json
+ - 2026-09-01: Three-family operational-obligation saturation corpus (✅ Complete) — honest_verdict=complete_positive_sota_operational_saturation_corpus; results/experiment_6833_sota_operational_obligation_saturation_corpus.json
+ - 2026-09-01: Cold operational-saturation identifiability audit (⚠️ Research Finding) — honest_verdict=complete_null_operational_field_preservation_not_identified; results/experiment_6834_operational_saturation_identifiability_audit.json
++
++## 2026-09-01 — Milestone 2026.08.597 operational retrospective
++
++Four experiments ran in an 8.8-minute reconstructed window, including two
++compute-bound tasks. Three-family operational-obligation saturation corpus set
++the 8.75-minute critical path, but phase causality and task-scoped accelerator
++attribution are unavailable. The compute-task GPU-idle indicator is false, and
++the evidence does not establish a parallel multi-model launch or a missed
++DualGPURunner selection. Prioritize task-phase telemetry, launch receipts, and
++8-16 question batching; estimated milestone-wide savings remains 0% because no
++timed alternative is attributable to this execution window.
+diff --git a/results/operational_retro_2026_08_597.json b/results/operational_retro_2026_08_597.json
+new file mode 100644
+index 0000000000..9cec8bb8b3
+--- /dev/null
++++ b/results/operational_retro_2026_08_597.json
+@@ -0,0 +1,52 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.08.597",
++  "generated_at": "2026-09-01T03:21:10Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 8.8,
++  "experiments_completed": 4,
++  "compute_bound_experiments_count": 2,
++  "slowest_experiments": [
++    {
++      "experiment": "Three-family operational-obligation saturation corpus",
++      "duration_minutes": 8.75,
++      "compute_bound": true
++    },
++    {
++      "experiment": "Cold operational-saturation identifiability audit",
++      "duration_minutes": 0.02,
++      "compute_bound": false
++    },
++    {
++      "experiment": "Exact operational-obligation saturation fixture",
++      "duration_minutes": 0.01,
++      "compute_bound": false
++    },
++    {
++      "experiment": "V597 evidence-admissibility and execution contract",
++      "duration_minutes": 0.0,
++      "compute_bound": true
++    }
++  ],
++  "gpu_idle_on_compute_bound_tasks": false,
++  "reconstructed_from_disk_mtime": true,
++  "timing_integrity_mismatch": false,
++  "summary": "Four experiments completed in 8.8 minutes, and two were compute-bound. The 8.75-minute Three-family operational-obligation saturation corpus was the measured critical path; the locked indicator records no GPU-idle condition on compute-bound tasks.",
++  "bottlenecks_identified": [
++    "Three-family operational-obligation saturation corpus formed the measured critical path at 8.75 minutes, but the supplied timing has no phase attribution and therefore does not explain why it took longest.",
++    "Disk-mtime reconstruction does not correlate task phases with accelerator samples, so end-to-end GPU efficiency cannot be resolved from the monitor snapshot.",
++    "Loaded-model concurrency and runner identity were not recorded, leaving DualGPURunner eligibility unobservable."
++  ],
++  "improvements_suggested": [
++    "Batch 8-16 compatible questions per forward pass when one model serves multiple prompts.",
++    "Record monotonic task-phase timings and task-correlated GPU samples for each compute-bound experiment.",
++    "Emit a launch receipt containing loaded-model count, runner identity, and device placement; place an independent concurrent model workload on the unused device only when one is ready."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Add monotonic phase clocks and task-correlated GPU samples to compute-bound execution.",
++    "Add configurable 8-16 question batching to the single-model inference path.",
++    "Record model concurrency and runner selection, then schedule independent concurrent model work across available devices when eligible."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "No data available this milestone attributes the longest task to a specific phase or establishes that any compute-bound task loaded two or more models in parallel. A missed DualGPURunner engagement therefore cannot be identified, and the 0% savings estimate reflects the absence of a timed alternative attributable to the milestone window."
++}
+-- 
+2.55.0
+

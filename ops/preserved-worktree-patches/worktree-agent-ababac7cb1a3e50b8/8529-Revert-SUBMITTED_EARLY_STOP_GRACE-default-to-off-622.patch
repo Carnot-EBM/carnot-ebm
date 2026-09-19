@@ -1,0 +1,370 @@
+From 43b456659be33cca32d96a821d73a8685be390bf Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 8 Aug 2026 13:09:50 -0400
+Subject: [PATCH 08529/11362] Revert SUBMITTED_EARLY_STOP_GRACE default to off
+ -- 6220's premise was wrong
+
+REQ-ARC-WMTE-6220 fixed the WIRING (the constant genuinely reaches the
+explorer now) but shipped the pre-existing value of 400, whose 2026-08-07
+"no score cost" justification was never actually verified. Audited
+results/early_stop_sweep_20260726/rows_*.json (null-grace rows only, so
+the recorded gaps were never truncated by any grace cutoff): tu93 reaches
+level 1 at action 334 and level 2 at action 1538 on 3 of 3 tested seeds --
+a fully reproducible 1204-action gap. At the shipped MAX_ACTIONS=2000
+budget, a grace of 400 would stop the agent around action 734, before
+level 2, every single time. cd82 shows the same shape on 1 of 3 seeds
+(1038-action gap). The "post-solve tail is worth 0 either way" premise is
+false for at least these two games.
+
+Reverts SUBMITTED_EARLY_STOP_GRACE to None (off). The wiring fix from the
+prior commit is untouched and stays correct -- E3AgentPolicy still
+forwards whatever value is set to StepwiseExplorer, so a future value
+chosen from real A/B data will actually take effect. Only the shipped
+default is pulled back.
+
+3 tests in test_arc_early_stop_grace_wiring_20260808.py had a redundant
+hardcoded `== 400` alongside the symbolic `== SUBMITTED_EARLY_STOP_GRACE`
+check; removed the stale literal, kept the single-source-of-truth check
+that actually verifies the wiring (which is what the tests are for, not
+pinning a specific numeric value). Re-verified: 5/5 pass.
+
+Adds a correction note to REQ-ARC-WMTE-6220's spec entry. 11 results/*.json
+artifacts get a freshness_acknowledgements entry: this revert returns the
+agent's shipped, observable behavior to bit-for-bit what every historical
+artifact in this corpus was already generated under (the mechanism was
+dead code the entire time), so it makes the code match the historical
+record MORE precisely than the intervening 400-default commit did, not
+less. One second-order cascade resolved the same way.
+
+Next step is an A/B measuring total levels reached (grace on vs off,
+likely also candidate values above 1300) across the full game roster
+before choosing a real default -- not run yet, this commit is the safety
+pullback only.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JntPrUGLNesPcJH1pyfFYw
+---
+ .../arc-world-model-trust-energy/spec.md         |  9 +++++++++
+ python/carnot/agentic/arc_competition_agent.py   | 12 +++++++++++-
+ .../arc_gateway_card_ground_truth_20260727.json  |  8 ++++++++
+ ...arc_per_level_reset_attribution_20260726.json |  8 ++++++++
+ ...nt_6011_world_model_change_gate_four_arm.json |  8 ++++++++
+ ...riment_6012_hidden_state_trust_gate_hole.json |  8 ++++++++
+ ...nt_6013_hidden_state_change_gate_closure.json |  8 ++++++++
+ ...loop_arc_early_stop_grace_sweep_20260726.json |  8 ++++++++
+ ...rst_win_llm_on_eval_concurrency_20260727.json |  8 ++++++++
+ ...op_arc_gateway_accurate_rescore_20260726.json | 16 ++++++++++++++++
+ .../outer_loop_arc_gateway_rescore_20260726.json |  8 ++++++++
+ ...p_arc_generator_concurrency_fix_20260727.json |  8 ++++++++
+ ...p_arc_llm_on_wallclock_envelope_20260726.json |  8 ++++++++
+ ...op_arc_reset_charge_attribution_20260726.json |  8 ++++++++
+ .../test_arc_early_stop_grace_wiring_20260808.py |  3 ---
+ 15 files changed, 124 insertions(+), 4 deletions(-)
+
+diff --git a/openspec/capabilities/arc-world-model-trust-energy/spec.md b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+index 6acabb9a26..96c9e92e5f 100644
+--- a/openspec/capabilities/arc-world-model-trust-energy/spec.md
++++ b/openspec/capabilities/arc-world-model-trust-energy/spec.md
+@@ -22535,6 +22535,15 @@ default reaching the explorer instance attribute; the constructor kwarg genuinel
+ on the `StepwiseExplorer.__init__` call itself, not just the resulting attribute); the explicit
+ override path; and the real scored entrypoint (`make_carnot_agent`) forwarding the config value.
+ 
++**CORRECTION (2026-08-08, same day).** An audit of `results/early_stop_sweep_20260726/rows_*.json`
++found the "no score cost" premise behind the shipped value of 400 was false: `tu93` reaches level 1
++at action 334 and level 2 at action 1538 on 3 of 3 tested seeds, a reproducible 1204-action gap. A
++grace of 400 would stop the agent before level 2, every time, at the shipped `MAX_ACTIONS=2000`
++budget. `cd82` shows the same shape on 1 of 3 seeds. `SUBMITTED_EARLY_STOP_GRACE` is reverted to
++`None` (off) — the wiring this REQ fixed stays correct and tested; only the shipped default value
++is pulled back, pending an A/B measuring total levels reached (grace on vs off) across the full
++game roster.
++
+ ## Implementation Status (REQ-ARC-WMTE-6220)
+ 
+ | REQ | Implementation | Tests |
+diff --git a/python/carnot/agentic/arc_competition_agent.py b/python/carnot/agentic/arc_competition_agent.py
+index 9cbb4c5db1..6e9ba35560 100644
+--- a/python/carnot/agentic/arc_competition_agent.py
++++ b/python/carnot/agentic/arc_competition_agent.py
+@@ -164,7 +164,17 @@ SUBMITTED_TARGET_LEVELS = 8
+ # regardless of this value -- a silent no-op from 2026-08-07 to 2026-08-08. E3AgentPolicy now
+ # accepts `early_stop_grace` and forwards it to StepwiseExplorer (see its __init__ and
+ # SUBMITTED_AGENT_CONFIG["early_stop_grace"]), so this value is genuinely live as of 2026-08-08.
+-SUBMITTED_EARLY_STOP_GRACE: Optional[int] = 400
++#
++# SECOND CORRECTION (2026-08-08, same day, after the wiring fix above). The "no score cost"
++# claim in the first paragraph is FALSE. An audit of results/early_stop_sweep_20260726/rows_*.json
++# (null-grace rows, so the gaps below were never truncated by any grace cutoff) found tu93
++# reaches level 1 at action 334 and level 2 at action 1538 on 3 of 3 tested seeds -- a
++# reproducible 1204-action gap. A grace of 400 would stop the agent around action 734, before
++# level 2, EVERY time, at the shipped MAX_ACTIONS=2000 budget. cd82 shows the same shape on 1 of
++# 3 seeds (1038-action gap). So the value is back to `None` (off) until an A/B measures total
++# levels reached, grace on vs off, across the full roster -- the wiring fix above stays; only
++# the shipped VALUE is reverted.
++SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
+ SUBMITTED_SEARCH_MODE = "depth_first_ride"
+ SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
+ SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
+diff --git a/results/arc_gateway_card_ground_truth_20260727.json b/results/arc_gateway_card_ground_truth_20260727.json
+index 6b6d20654a..292da387ca 100644
+--- a/results/arc_gateway_card_ground_truth_20260727.json
++++ b/results/arc_gateway_card_ground_truth_20260727.json
+@@ -2750,6 +2750,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ]
+   },
+diff --git a/results/arc_per_level_reset_attribution_20260726.json b/results/arc_per_level_reset_attribution_20260726.json
+index b5e537f6a7..a2426e45b0 100644
+--- a/results/arc_per_level_reset_attribution_20260726.json
++++ b/results/arc_per_level_reset_attribution_20260726.json
+@@ -1355,6 +1355,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6011_world_model_change_gate_four_arm.json b/results/experiment_6011_world_model_change_gate_four_arm.json
+index fe399b34d0..77bb6bc301 100644
+--- a/results/experiment_6011_world_model_change_gate_four_arm.json
++++ b/results/experiment_6011_world_model_change_gate_four_arm.json
+@@ -52764,6 +52764,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6012_hidden_state_trust_gate_hole.json b/results/experiment_6012_hidden_state_trust_gate_hole.json
+index cb8a542806..6feb5c186d 100644
+--- a/results/experiment_6012_hidden_state_trust_gate_hole.json
++++ b/results/experiment_6012_hidden_state_trust_gate_hole.json
+@@ -248,6 +248,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ]
+   },
+diff --git a/results/experiment_6013_hidden_state_change_gate_closure.json b/results/experiment_6013_hidden_state_change_gate_closure.json
+index 2fd77ac81b..99e25ba59e 100644
+--- a/results/experiment_6013_hidden_state_change_gate_closure.json
++++ b/results/experiment_6013_hidden_state_change_gate_closure.json
+@@ -8790,6 +8790,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+index c67222e02e..4f4471d304 100644
+--- a/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
++++ b/results/outer_loop_arc_early_stop_grace_sweep_20260726.json
+@@ -5433,6 +5433,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+index b279dd4a22..9bf98669ae 100644
+--- a/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
++++ b/results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json
+@@ -3548,6 +3548,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+index c2b810bbe8..39111bb9c5 100644
+--- a/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_accurate_rescore_20260726.json
+@@ -3332,6 +3332,22 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "Second-order cascade from REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change (verified byte-identical-outcome BFS refactor), which changed THEIR OWN file hash -- their own numbers are unchanged, only the bookkeeping grew.",
+         "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
++      },
++      {
++        "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
++        "sha256_was": "789d008e5d9df07a1def846d4c1bbdcf0362f04922dc21ee168739f8d165d445",
++        "sha256_now": "2ca3ea131791fcdad46c4f6946b794eeacc6ca6d2fac74cf1d53c01c213c5316",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Second-order cascade from the SUBMITTED_EARLY_STOP_GRACE safety revert (400 -> None) same day as REQ-ARC-WMTE-6220. Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change, which changed THEIR OWN file hash -- their own numbers are unchanged, only the bookkeeping grew.",
++        "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
++      },
++      {
++        "path": "results/arc_per_level_reset_attribution_20260726.json",
++        "sha256_was": "d4cef365482547c37eb10ec730dda359142738ccffcd7e659d26864c84f7cd2a",
++        "sha256_now": "609d4a33eb56ade8426af892d0565644ddcf1dcf3d96bd8531df5a785b94f96c",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Second-order cascade from the SUBMITTED_EARLY_STOP_GRACE safety revert (400 -> None) same day as REQ-ARC-WMTE-6220. Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change, which changed THEIR OWN file hash -- their own numbers are unchanged, only the bookkeeping grew.",
++        "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_gateway_rescore_20260726.json b/results/outer_loop_arc_gateway_rescore_20260726.json
+index 953f7ad9e1..19b280e208 100644
+--- a/results/outer_loop_arc_gateway_rescore_20260726.json
++++ b/results/outer_loop_arc_gateway_rescore_20260726.json
+@@ -1158,6 +1158,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ]
+   },
+diff --git a/results/outer_loop_arc_generator_concurrency_fix_20260727.json b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+index 53635efaed..9e25e8d155 100644
+--- a/results/outer_loop_arc_generator_concurrency_fix_20260727.json
++++ b/results/outer_loop_arc_generator_concurrency_fix_20260727.json
+@@ -1197,6 +1197,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+index f871272bbd..6f25c0be94 100644
+--- a/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
++++ b/results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json
+@@ -424,6 +424,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ],
+     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
+diff --git a/results/outer_loop_arc_reset_charge_attribution_20260726.json b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+index 1c619e389c..cedb469b79 100644
+--- a/results/outer_loop_arc_reset_charge_attribution_20260726.json
++++ b/results/outer_loop_arc_reset_charge_attribution_20260726.json
+@@ -16947,6 +16947,14 @@
+         "acknowledged_on": "2026-08-08",
+         "reason": "REQ-ARC-WMTE-6222 (fix3 of the 2026-08-08 adversarial-review fix pass). Replaces StepwiseExplorer's per-node/per-call BFS in _frontier, next_move, and _partial_forward_path with one shared-source BFS cached per (self.cur, _adj_version). This is a caching refactor, not an algorithm change: it was verified -- by the implementer AND independently by the adversarial verifier, who wrote their own diamond-graph test with a genuine same-depth tie -- to produce BYTE-IDENTICAL path/tie-break outcomes to the untouched original _exact_shortest_path on every case checked, including ties and unreachable nodes. No historical artifact's recorded search outcome, action sequence, or game result can differ, because the fix is provably a no-op on WHAT gets computed -- only on how many times the same computation runs.",
+         "evidence": "docs/research-notes/live-agent-adversarial-review-2026-08-08.md fix3 verification section: 'Read _exact_shortest_path (untouched) against the new _forward_paths_from/_cur_forward_paths/_exact_forward_path. Both run identical FIFO-queue BFS ... the only difference is that the old code returns the instant it finds dst while the new code runs BFS to completion. Because neither algorithm ever revisits or overwrites an already-assigned path, the path assigned to any node is fixed at first discovery.' Independently confirmed with an adversarial diamond-graph test (a genuine same-depth tie plus a longer alternate route) -- both implementations agree byte-for-byte, including tie-break order under flipped adjacency-insertion order."
++      },
++      {
++        "path": "python/carnot/agentic/arc_competition_agent.py",
++        "sha256_was": "a70a446c02370b6b8f0b6c806f88e6211ac2144db06eaa5ec310aad480e8fbcc",
++        "sha256_now": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
++        "acknowledged_on": "2026-08-08",
++        "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
++        "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+       }
+     ]
+   },
+diff --git a/tests/python/test_arc_early_stop_grace_wiring_20260808.py b/tests/python/test_arc_early_stop_grace_wiring_20260808.py
+index 12a7d47311..9f07dacdbc 100644
+--- a/tests/python/test_arc_early_stop_grace_wiring_20260808.py
++++ b/tests/python/test_arc_early_stop_grace_wiring_20260808.py
+@@ -46,7 +46,6 @@ def test_submitted_early_stop_grace_pinned_in_agent_config():
+     other field, and this key was simply missing from it."""
+     assert "early_stop_grace" in SUBMITTED_AGENT_CONFIG
+     assert SUBMITTED_AGENT_CONFIG["early_stop_grace"] == SUBMITTED_EARLY_STOP_GRACE
+-    assert SUBMITTED_AGENT_CONFIG["early_stop_grace"] == 400
+ 
+ 
+ def test_e3_agent_policy_default_reaches_explorer_instance_attribute():
+@@ -54,7 +53,6 @@ def test_e3_agent_policy_default_reaches_explorer_instance_attribute():
+     `None` StepwiseExplorer itself still defaults to when nobody threads a value through."""
+     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
+     assert pol.explorer.early_stop_grace == SUBMITTED_EARLY_STOP_GRACE
+-    assert pol.explorer.early_stop_grace == 400
+ 
+ 
+ def test_e3_agent_policy_forwards_early_stop_grace_via_constructor_kwarg(monkeypatch):
+@@ -111,4 +109,3 @@ def test_carnot_agent_scored_entrypoint_passes_submitted_grace_to_e3_policy(monk
+ 
+     assert "early_stop_grace" in captured_kwargs
+     assert captured_kwargs["early_stop_grace"] == SUBMITTED_AGENT_CONFIG["early_stop_grace"]
+-    assert captured_kwargs["early_stop_grace"] == 400
+-- 
+2.55.0
+

@@ -1,0 +1,1349 @@
+From 96dd047dea8aa718a4b891753342f45285918fe5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 2 Jul 2026 09:05:23 -0400
+Subject: [PATCH 05472/11362] [conductor] PHASE E2 infrastructure -- retire the
+ 3x-nulled generation-axis exploration-signal scope into the exclusion
+ manifest
+
+Automated research step by research conductor.
+Task ID: exp5165-generation-axis-retirement-hygiene-v473
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  72 +++
+ ops/dogfood-memory.json                       |   2 +-
+ ops/exclusion_manifest.yaml                   |  24 +
+ ops/known-issues.md                           |   2 +
+ ...generation_axis_retirement_hygiene_v473.py | 545 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...neration_axis_retirement_hygiene_v473.json | 200 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...5165_generation_axis_retirement_hygiene.py | 278 +++++++++
+ 14 files changed, 1140 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/experiment_5165_generation_axis_retirement_hygiene_v473.py
+ create mode 100644 results/experiment_5165_generation_axis_retirement_hygiene_v473.json
+ create mode 100644 tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 4a3105c1b9..813f5696de 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -561,12 +561,84 @@ conductor-like process
+ `runtime_clean_details`, and uses a complete-prefixed verdict that makes the
+ activation gate visibly dirty instead of silently proceeding as clean.
+ 
++### REQ-REPORT-5165: Exp 5165 Generation-Axis Exploration-Signal Retirement Hygiene
++
++The Exp 5165 workflow SHALL retire only the three-times-nulled ARC
++generation-axis exploration-signal scope for first-contact candidate generation
++on unsolved games. It SHALL read
++`results/experiment_4688_controllable_novelty_proposal_policy_live.json`,
++`results/experiment_4689_program_synthesis_action_effect_proposal_filter.json`,
++`results/experiment_5154_energy_fitness_directed_exploration_v472.json`,
++`ops/exclusion_manifest.yaml`, `ops/known-issues.md`, `research-roadmap.yaml`,
++and `scripts/exclusion_manifest_lint.py`. It SHALL write
++`results/experiment_5165_generation_axis_retirement_hygiene_v473.json`, SHALL
++NOT modify `scripts/research_conductor.py`, and SHALL declare
++`inference_substrate="metadata_and_source_audit"`.
++
++The workflow SHALL require `ops/exclusion_manifest.yaml` to contain a
++`retired_extras` entry with id
++`generation_axis_exploration_signal_retired_exp5154_v473`, experiment ids
++`exp4688`, `exp4689`, and `exp5154`, `retired_milestone=2026.07.473`,
++`operator_reopen_required=true`, `retire_if_same_verdict=true`, and
++`blocked_patterns` that are load-bearing through
++`scripts/exclusion_manifest_lint.py`'s `BLOCKED_PATTERN_MATCHED` check.
++
++The workflow SHALL scope the retirement narrowly. It SHALL block future reruns
++that propose another better exploration signal over the search/generation
++process for first-contact candidate generation on an unsolved game. It SHALL
++NOT block the `.473` deepen-wall warm-start/cross-level state-carryover tasks
++`exp5157`, `exp5158`, or `exp5159`, and SHALL NOT retire future
++representation/perception-level first-contact fixes.
++
++The artifact SHALL include top-level fields
++`exclusion_manifest_entry_added`, `entry_id`,
++`false_positive_check_against_this_milestone`, `synthetic_match_check_passed`,
++`known_issues_or_gaps_md_updated`, and `honest_verdict`. It SHOULD also record
++the manifest-entry audit, current-roadmap lint findings, synthetic-match lint
++findings, source-artifact summaries, source inputs read, and tests run.
++
++Required field principles:
++
++- `exclusion_manifest_entry_added`: principle "manifest retirement must be present and schema-compatible"
++- `entry_id`: principle "traceability to the retired_extras entry"
++- `false_positive_check_against_this_milestone`: principle "Must confirm the new entry does not accidentally block this milestone's own deepen-wall tasks -- an over-broad retirement would be a self-inflicted wound."
++- `synthetic_match_check_passed`: principle "Confirms the retirement is load-bearing, not just documentation -- per the 2026-07-01 BLOCKED_PATTERN_MATCHED mechanical-fix precedent."
++- `known_issues_or_gaps_md_updated`: principle "dated retirement note preserves the allocation decision without deleting prior gap history"
++- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_."
++
++#### SCENARIO-REPORT-5165-LINT: Retirement Blocks Matching Future Reruns
++
++**Given** the manifest contains the Exp 5165 retired-extras entry
++**When** a synthetic draft roadmap task proposes a curiosity driven first
++contact exploration signal rerun without `operator_override`
++**Then** `scripts/exclusion_manifest_lint.py` reports
++`BLOCKED_PATTERN_MATCHED` for
++`generation_axis_exploration_signal_retired_exp5154_v473` with HARD severity,
++and the Exp 5165 artifact records `synthetic_match_check_passed=true`.
++
++#### SCENARIO-REPORT-5165-NARROW-SCOPE: Deepen-Wall Tasks Remain Unblocked
++
++**Given** the active `.473` roadmap contains `exp5157`, `exp5158`, and
++`exp5159` deepen-wall warm-start/cross-level carryover tasks
++**When** `scripts/exclusion_manifest_lint.py` scans `research-roadmap.yaml`
++with the Exp 5165 retired-extras entry present
++**Then** no `BLOCKED_PATTERN_MATCHED` risk from
++`generation_axis_exploration_signal_retired_exp5154_v473` is emitted for those
++task ids, and the Exp 5165 artifact records
++`false_positive_check_against_this_milestone=true`.
++
+ ## Implementation Status (REQ-REPORT-5156)
+ 
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-5156 | Planned (`python/carnot/experiment_5156_archive_472_activate_473.py`, `results/experiment_5156_archive_472_activate_473.json`) | Planned (`tests/python/test_experiment_5156_archive_472_activate_473.py`) |
+ 
++## Implementation Status (REQ-REPORT-5165)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-5165 | Planned (`python/carnot/experiment_5165_generation_axis_retirement_hygiene_v473.py`, `results/experiment_5165_generation_axis_retirement_hygiene_v473.json`) | Planned (`tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py`) |
++
+ ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
+ 
+ The Exp 5135 workflow SHALL inspect the `V471-PLANNER-REFERENCES` block in
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3d1b0be28d..5e560190d4 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 207,
+   "code_violations": 0,
+-  "experiments_checked": 4153,
++  "experiments_checked": 4154,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/exclusion_manifest.yaml b/ops/exclusion_manifest.yaml
+index 9ddd6a3b4e..140f6c1b35 100644
+--- a/ops/exclusion_manifest.yaml
++++ b/ops/exclusion_manifest.yaml
+@@ -620,3 +620,27 @@ retired_extras:
+   - fover in-domain pool
+   - in-domain verifier selection versus tuned self-consistency
+   - fover selector adversarial audit
++- id: generation_axis_exploration_signal_retired_exp5154_v473
++  experiment_scope: ARC first-contact candidate-generation exploration-signal tweaks
++    on unsolved games after novelty, program-synthesis filter, and energy-as-fitness
++    QD nulls
++  reason: 'retire_if_same_verdict: Exp 5154 is the third independent null on better
++    exploration signals for first-contact candidate generation after Exp 4688 and
++    Exp 4689. Future reruns need an operator_override citing a genuinely new mechanism;
++    deepen-wall cross-level warm-starts and representation/perception fixes are outside
++    this retired scope.'
++  experiment_ids:
++  - exp4688
++  - exp4689
++  - exp5154
++  retired_milestone: 2026.07.473
++  retired_by_artifact: results/experiment_5154_energy_fitness_directed_exploration_v472.json
++  recorded_by_artifact: results/experiment_5165_generation_axis_retirement_hygiene_v473.json
++  operator_reopen_required: true
++  retire_if_same_verdict: true
++  blocked_patterns:
++  - first-contact candidate-generation rerun
++  - first contact exploration signal rerun
++  - novelty-bonus first-contact rerun
++  - program-synthesis first-contact rerun
++  - energy-as-fitness first-contact rerun
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 905d895258..c92cff6a71 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -26,6 +26,8 @@
+ 
+ > **CORRIGENDUM 2026-07-02 (exp5160 closure):** The Exp 5151 cross-game blocker is resolved as a terminology error: Exp 4243 uses static ARC puzzle ids (`raw_task_id` 8-hex) with no recoverable ARC-AGI-3 `game_id` grouping. The preferred GAP-4 ARC-2 pool is disqualified as a second corpus because it overlaps Exp 4243; the disjoint ARC-GEN fallback (`results/experiment_4291_arcgen_cross_generator_pool.json.gz`) passes the row-level leak audit after filtering 4 overlapping candidate grids. Exp 5160 reports Set-Encoder-vs-vote cross-corpus delta +0.50 with CI95 [0.50, 0.50], `cross_corpus_replication_passed=true`, and updates the DiffusionGemma gate recommendation to UNGATE NOW for a future scaling task. No DiffusionGemma scaling was run here.
+ 
++> **2026-07-02 (RETIREMENT): generation-axis exploration-signal first-contact reruns closed after exp5154.** Exp 4688 (novelty/curiosity bonus), Exp 4689 (program-synthesis action-effect proposal filter), and Exp 5154 (energy-as-fitness QD search) all nulled on the same narrow class: adding a better exploration signal over first-contact candidate generation on an unsolved game did not surface a reproducible winning trajectory. `ops/exclusion_manifest.yaml:generation_axis_exploration_signal_retired_exp5154_v473` now blocks a fourth rerun of that exploration-signal mechanism class unless an explicit `operator_override` cites a genuinely new mechanism. This does **not** retire `.473` deepen-wall warm-start/cross-level carryover work (`exp5157`/`exp5158`/`exp5159`) and does **not** retire future representation/perception-level first-contact fixes.
++
+ 
+ **Origin:** 2026-06-30 operator directive. The ARC-AGI-3 Submission Sprint Forcing Function is RETIRED
+ (deadline date reached + operator explicitly lifted it; CLAUDE.md). The CUDA submission is staged
+diff --git a/python/carnot/experiment_5165_generation_axis_retirement_hygiene_v473.py b/python/carnot/experiment_5165_generation_axis_retirement_hygiene_v473.py
+new file mode 100644
+index 0000000000..f4885b4810
+--- /dev/null
++++ b/python/carnot/experiment_5165_generation_axis_retirement_hygiene_v473.py
+@@ -0,0 +1,545 @@
++"""Exp 5165: retire the nulled generation-axis exploration-signal scope.
++
++Spec refs: REQ-REPORT-5165, SCENARIO-REPORT-5165-LINT,
++SCENARIO-REPORT-5165-NARROW-SCOPE.
++
++This module is a narrow reporting harness. It validates that
++ops/exclusion_manifest.yaml contains the scoped retired_extras entry, proves the
++entry is load-bearing through scripts/exclusion_manifest_lint.py, checks that it
++does not block this milestone's deepen-wall tasks, and writes the required
++artifact.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Mapping, Sequence
++import importlib.util
++import json
++from pathlib import Path
++import sys
++import tempfile
++import time
++from typing import Any
++
++import yaml
++
++from carnot.experiment_5150_archive_471_activate_472 import (
++    CommandResult,
++    _bool,
++    _list,
++    _mapping,
++    file_sha256,
++    payload_checksum,
++    read_json_mapping,
++    run_adversarial_verification,
++    verification_payload,
++    write_json,
++)
++
++
++JsonDict = dict[str, Any]
++JsonMap = Mapping[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_RELATIVE_PATH = Path("results/experiment_5165_generation_axis_retirement_hygiene_v473.json")
++MANIFEST_RELATIVE_PATH = Path("ops/exclusion_manifest.yaml")
++KNOWN_ISSUES_RELATIVE_PATH = Path("ops/known-issues.md")
++ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
++CONDUCTOR_RELATIVE_PATH = Path("scripts/research_conductor.py")
++LINTER_RELATIVE_PATH = Path("scripts/exclusion_manifest_lint.py")
++LINTER_MODULE_PATH = REPO_ROOT / LINTER_RELATIVE_PATH
++
++EXPERIMENT = "experiment_5165_generation_axis_retirement_hygiene_v473"
++EXPERIMENT_ID = "exp5165-generation-axis-retirement-hygiene-v473"
++MILESTONE = "2026.07.473"
++SCHEMA = "carnot.experiment_5165_generation_axis_retirement_hygiene.v1"
++RANDOM_SEED = 5165
++INFERENCE_SUBSTRATE = "metadata_and_source_audit"
++ENTRY_ID = "generation_axis_exploration_signal_retired_exp5154_v473"
++COMPLETE_VERDICT = (
++    "complete: generation_axis_exploration_signal_scope_retired_and_lint_load_bearing"
++)
++INCOMPLETE_VERDICT = "complete: generation_axis_retirement_hygiene_incomplete"
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_")
++KNOWN_ISSUES_NOTE_MARKER = "2026-07-02 (RETIREMENT): generation-axis exploration-signal first-contact reruns closed after exp5154"
++
++SOURCE_RESULT_PATHS: dict[str, Path] = {
++    "exp4688": Path("results/experiment_4688_controllable_novelty_proposal_policy_live.json"),
++    "exp4689": Path("results/experiment_4689_program_synthesis_action_effect_proposal_filter.json"),
++    "exp5154": Path("results/experiment_5154_energy_fitness_directed_exploration_v472.json"),
++}
++
++EXPECTED_EXPERIMENT_IDS = ["exp4688", "exp4689", "exp5154"]
++EXPECTED_BLOCKED_PATTERNS = [
++    "first-contact candidate-generation rerun",
++    "first contact exploration signal rerun",
++    "novelty-bonus first-contact rerun",
++    "program-synthesis first-contact rerun",
++    "energy-as-fitness first-contact rerun",
++]
++SPEC_REFS = [
++    "REQ-REPORT-5165",
++    "SCENARIO-REPORT-5165-LINT",
++    "SCENARIO-REPORT-5165-NARROW-SCOPE",
++]
++DEEPEN_WALL_PREFIXES = ("exp5157", "exp5158", "exp5159")
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "exclusion_manifest_entry_added": "manifest retirement must be present and schema-compatible",
++    "entry_id": "traceability to the retired_extras entry",
++    "false_positive_check_against_this_milestone": (
++        "Must confirm the new entry does not accidentally block this milestone's own "
++        "deepen-wall tasks -- an over-broad retirement would be a self-inflicted wound."
++    ),
++    "synthetic_match_check_passed": (
++        "Confirms the retirement is load-bearing, not just documentation -- per the "
++        "2026-07-01 BLOCKED_PATTERN_MATCHED mechanical-fix precedent."
++    ),
++    "known_issues_or_gaps_md_updated": (
++        "dated retirement note preserves the allocation decision without deleting prior gap history"
++    ),
++    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
++}
++
++REQUIRED_SCHEMA_FIELDS = (
++    "schema",
++    "experiment",
++    "experiment_id",
++    "milestone",
++    "spec_refs",
++    "result_path",
++    "run_date",
++    "field_principles",
++    "inference_substrate",
++    "duration_s",
++    "random_seed",
++    "source_artifacts_read",
++    "source_artifact_summary",
++    "manifest_entry_audit",
++    "current_roadmap_lint",
++    "synthetic_match_lint",
++    "adversarial_verification",
++    "flagged_adversarial",
++    "tests_run",
++    "reproducibility_checksum",
++    *FIELD_PRINCIPLES,
++)
++
++DEFAULT_TESTS_RUN = [
++    ".venv/bin/pytest tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py -q -o addopts=''",
++    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5165_generation_axis_retirement_hygiene_v473.py' -m pytest tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py -q --no-cov -o addopts=''",
++    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5165_generation_axis_retirement_hygiene_v473.py' --fail-under=100",
++    "python scripts/check_spec_coverage.py tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py",
++    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++    ".venv/bin/pytest tests/python -q",
++]
++
++
++def expected_manifest_entry() -> JsonDict:
++    return {
++        "id": ENTRY_ID,
++        "experiment_scope": (
++            "ARC first-contact candidate-generation exploration-signal tweaks on unsolved games "
++            "after novelty, program-synthesis filter, and energy-as-fitness QD nulls"
++        ),
++        "reason": (
++            "retire_if_same_verdict: Exp 5154 is the third independent null on better "
++            "exploration signals for first-contact candidate generation after Exp 4688 "
++            "and Exp 4689. Future reruns need an operator_override citing a genuinely "
++            "new mechanism; deepen-wall cross-level warm-starts and representation/"
++            "perception fixes are outside this retired scope."
++        ),
++        "experiment_ids": list(EXPECTED_EXPERIMENT_IDS),
++        "retired_milestone": MILESTONE,
++        "retired_by_artifact": str(SOURCE_RESULT_PATHS["exp5154"]),
++        "recorded_by_artifact": str(RESULT_RELATIVE_PATH),
++        "operator_reopen_required": True,
++        "retire_if_same_verdict": True,
++        "blocked_patterns": list(EXPECTED_BLOCKED_PATTERNS),
++    }
++
++
++def _load_yaml_mapping(path: Path) -> JsonDict:
++    if not path.exists():
++        return {}
++    loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++    return dict(loaded) if isinstance(loaded, Mapping) else {}
++
++
++def _load_linter_module() -> Any:
++    spec = importlib.util.spec_from_file_location(
++        "_exp5165_exclusion_manifest_lint", LINTER_MODULE_PATH
++    )
++    if spec is None or spec.loader is None:
++        raise RuntimeError(f"cannot load {LINTER_MODULE_PATH}")
++    module = importlib.util.module_from_spec(spec)
++    sys.modules[spec.name] = module
++    spec.loader.exec_module(module)
++    return module
++
++
++def _risk_to_dict(risk: Any) -> JsonDict:
++    return {
++        "task_id": str(getattr(risk, "task_id", "")),
++        "task_title": str(getattr(risk, "task_title", "")),
++        "violation_class": str(getattr(risk, "violation_class", "")),
++        "severity": str(getattr(risk, "severity", "")),
++        "detail": str(getattr(risk, "detail", "")),
++        "retirement_reason": str(getattr(risk, "retirement_reason", "")),
++    }
++
++
++def lint_roadmap(root: Path, roadmap_path: Path) -> list[JsonDict]:
++    module = _load_linter_module()
++    module.PROJECT_ROOT = root
++    return [_risk_to_dict(risk) for risk in module.lint(roadmap_path)]
++
++
++def _find_manifest_entry(root: Path) -> JsonDict:
++    manifest = _load_yaml_mapping(root / MANIFEST_RELATIVE_PATH)
++    for entry in _list(manifest.get("retired_extras")):
++        entry_map = _mapping(entry)
++        if entry_map.get("id") == ENTRY_ID:
++            return dict(entry_map)
++    return {}
++
++
++def _entry_audit(entry: JsonMap) -> JsonDict:
++    expected = expected_manifest_entry()
++    errors: list[str] = []
++    for key in (
++        "id",
++        "experiment_scope",
++        "reason",
++        "experiment_ids",
++        "retired_milestone",
++        "retired_by_artifact",
++        "recorded_by_artifact",
++        "operator_reopen_required",
++        "retire_if_same_verdict",
++        "blocked_patterns",
++    ):
++        if entry.get(key) != expected[key]:
++            errors.append(f"{key}.mismatch")
++    return {
++        "entry_id": str(entry.get("id", "")),
++        "found": bool(entry),
++        "errors": errors,
++        "blocked_patterns": _list(entry.get("blocked_patterns")),
++    }
++
++
++def check_known_issues_or_gaps_doc(root: Path) -> JsonDict:
++    path = root / KNOWN_ISSUES_RELATIVE_PATH
++    text = path.read_text(encoding="utf-8") if path.exists() else ""
++    return {
++        "path": str(KNOWN_ISSUES_RELATIVE_PATH),
++        "exists": path.exists(),
++        "marker": KNOWN_ISSUES_NOTE_MARKER,
++        "updated": KNOWN_ISSUES_NOTE_MARKER in text,
++    }
++
++
++def _entry_blocked_pattern_risks(risks: Sequence[JsonMap]) -> list[JsonDict]:
++    return [
++        dict(risk)
++        for risk in risks
++        if risk.get("violation_class") == "BLOCKED_PATTERN_MATCHED"
++        and ENTRY_ID in str(risk.get("detail", ""))
++    ]
++
++
++def check_current_roadmap_false_positive(root: Path) -> JsonDict:
++    roadmap_path = root / ROADMAP_RELATIVE_PATH
++    risks = lint_roadmap(root, roadmap_path)
++    entry_risks = _entry_blocked_pattern_risks(risks)
++    deepen_ids = [
++        str(task.get("id", ""))
++        for task in _list(_load_yaml_mapping(roadmap_path).get("tasks"))
++        if str(task.get("id", "")).startswith(DEEPEN_WALL_PREFIXES)
++    ]
++    deepen_risks = [
++        risk
++        for risk in entry_risks
++        if str(risk.get("task_id", "")).startswith(DEEPEN_WALL_PREFIXES)
++    ]
++    return {
++        "roadmap_path": str(ROADMAP_RELATIVE_PATH),
++        "all_risks": risks,
++        "entry_blocked_pattern_risks": entry_risks,
++        "entry_blocked_pattern_task_ids": [str(risk.get("task_id", "")) for risk in entry_risks],
++        "deepen_wall_task_ids": deepen_ids,
++        "deepen_wall_entry_risks": deepen_risks,
++        "passed": not entry_risks and len(deepen_ids) == 3,
++    }
++
++
++def _synthetic_roadmap_text() -> str:
++    return yaml.safe_dump(
++        {
++            "milestone": MILESTONE,
++            "tasks": [
++                {
++                    "id": "exp9999-curiosity-driven-first-contact-exploration-signal-rerun",
++                    "title": "curiosity driven first contact exploration signal rerun",
++                    "prompt": (
++                        "Try another better exploration signal over the first-contact "
++                        "candidate-generation process for an unsolved ARC game."
++                    ),
++                    "agent_type": "codex",
++                }
++            ],
++        },
++        sort_keys=False,
++    )
++
++
++def check_synthetic_match(root: Path) -> JsonDict:
++    with tempfile.TemporaryDirectory(prefix="exp5165_lint_") as tmp:
++        roadmap_path = Path(tmp) / "research-roadmap-next.yaml"
++        roadmap_path.write_text(_synthetic_roadmap_text(), encoding="utf-8")
++        risks = lint_roadmap(root, roadmap_path)
++    matched = _entry_blocked_pattern_risks(risks)
++    return {
++        "synthetic_title": "curiosity driven first contact exploration signal rerun",
++        "matched_risks": matched,
++        "all_risks": risks,
++        "passed": any(risk.get("severity") == "HARD" for risk in matched),
++    }
++
++
++def _source_row(root: Path, *, source_id: str, path: Path, kind: str) -> JsonDict:
++    full_path = root / path
++    return {
++        "source_id": source_id,
++        "kind": kind,
++        "path": str(path),
++        "exists": full_path.exists(),
++        "sha256": file_sha256(full_path),
++    }
++
++
++def build_source_artifacts_read(root: Path) -> list[JsonDict]:
++    rows = [
++        _source_row(root, source_id=source_id, path=path, kind="prior_result")
++        for source_id, path in SOURCE_RESULT_PATHS.items()
++    ]
++    rows.extend(
++        [
++            _source_row(
++                root, source_id="exclusion_manifest", path=MANIFEST_RELATIVE_PATH, kind="ops_yaml"
++            ),
++            _source_row(
++                root, source_id="known_issues", path=KNOWN_ISSUES_RELATIVE_PATH, kind="ops_doc"
++            ),
++            _source_row(
++                root, source_id="active_roadmap", path=ROADMAP_RELATIVE_PATH, kind="roadmap_yaml"
++            ),
++            _source_row(
++                root, source_id="exclusion_manifest_lint", path=LINTER_RELATIVE_PATH, kind="script"
++            ),
++        ]
++    )
++    return rows
++
++
++def _source_artifact_summary(root: Path) -> JsonDict:
++    summary: JsonDict = {}
++    for source_id, path in SOURCE_RESULT_PATHS.items():
++        payload, status = read_json_mapping(root / path)
++        payload_map = _mapping(payload)
++        summary[source_id] = {
++            "path": str(path),
++            "loadable": _bool(status.get("loadable")),
++            "honest_verdict": str(payload_map.get("honest_verdict", "")),
++        }
++        if source_id == "exp4688":
++            summary[source_id]["generic_agent_reached_level"] = payload_map.get(
++                "generic_agent_reached_level"
++            )
++            summary[source_id]["offline_reproduced"] = payload_map.get("offline_reproduced")
++        if source_id == "exp4689":
++            summary[source_id]["coverage_delta"] = payload_map.get("coverage_delta")
++            summary[source_id]["candidate_generation_coverage_filter"] = payload_map.get(
++                "candidate_generation_coverage_filter"
++            )
++        if source_id == "exp5154":
++            summary[source_id]["winning_trajectory_surfaced"] = payload_map.get(
++                "winning_trajectory_surfaced"
++            )
++            summary[source_id]["reproducible_levels_delta"] = payload_map.get(
++                "reproducible_levels_delta"
++            )
++    return summary
++
++
++def _honest_verdict(
++    *,
++    entry_ok: bool,
++    current_ok: bool,
++    synthetic_ok: bool,
++    doc_ok: bool,
++) -> str:
++    if entry_ok and current_ok and synthetic_ok and doc_ok:
++        return COMPLETE_VERDICT
++    return INCOMPLETE_VERDICT
++
++
++def build_artifact(
++    *,
++    root: Path = REPO_ROOT,
++    duration_s: float,
++    run_date: str,
++    verification: JsonMap,
++    tests_run: Sequence[Any] = DEFAULT_TESTS_RUN,
++) -> JsonDict:
++    entry = _find_manifest_entry(root)
++    entry_audit = _entry_audit(entry)
++    current_lint = check_current_roadmap_false_positive(root)
++    synthetic_lint = check_synthetic_match(root)
++    doc_check = check_known_issues_or_gaps_doc(root)
++    entry_ok = not _list(entry_audit.get("errors")) and bool(entry_audit.get("found"))
++    current_ok = _bool(current_lint.get("passed"))
++    synthetic_ok = _bool(synthetic_lint.get("passed"))
++    doc_ok = _bool(doc_check.get("updated"))
++    artifact: JsonDict = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT,
++        "experiment_id": EXPERIMENT_ID,
++        "milestone": MILESTONE,
++        "spec_refs": list(SPEC_REFS),
++        "result_path": str(RESULT_RELATIVE_PATH),
++        "run_date": run_date,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(max(duration_s, 0.0001), 6),
++        "random_seed": RANDOM_SEED,
++        "source_artifacts_read": build_source_artifacts_read(root),
++        "source_artifact_summary": _source_artifact_summary(root),
++        "manifest_entry_audit": entry_audit,
++        "current_roadmap_lint": current_lint,
++        "synthetic_match_lint": synthetic_lint,
++        "known_issues_or_gaps_doc": doc_check,
++        "adversarial_verification": dict(verification),
++        "flagged_adversarial": _bool(verification.get("flagged_adversarial")),
++        "tests_run": list(tests_run),
++        "exclusion_manifest_entry_added": entry_ok,
++        "entry_id": ENTRY_ID,
++        "false_positive_check_against_this_milestone": current_ok,
++        "synthetic_match_check_passed": synthetic_ok,
++        "known_issues_or_gaps_md_updated": doc_ok,
++        "honest_verdict": _honest_verdict(
++            entry_ok=entry_ok,
++            current_ok=current_ok,
++            synthetic_ok=synthetic_ok,
++            doc_ok=doc_ok,
++        ),
++        "reproducibility_checksum": "",
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def artifact_schema_errors(artifact: JsonMap) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_SCHEMA_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing.{field}")
++    for field, principle in FIELD_PRINCIPLES.items():
++        if _mapping(artifact.get("field_principles")).get(field) != principle:
++            errors.append(f"field_principle.{field}")
++    checks = [
++        (artifact.get("experiment_id") != EXPERIMENT_ID, "experiment_id.invalid"),
++        (artifact.get("milestone") != MILESTONE, "milestone.invalid"),
++        (artifact.get("entry_id") != ENTRY_ID, "entry_id.invalid"),
++        (artifact.get("inference_substrate") != INFERENCE_SUBSTRATE, "inference_substrate.invalid"),
++        (
++            not str(artifact.get("honest_verdict", "")).startswith(TERMINAL_PREFIXES),
++            "honest_verdict.not_terminal",
++        ),
++        (
++            artifact.get("exclusion_manifest_entry_added") is not True,
++            "exclusion_manifest_entry_added.invalid",
++        ),
++        (
++            artifact.get("false_positive_check_against_this_milestone") is not True,
++            "false_positive_check_against_this_milestone.invalid",
++        ),
++        (
++            artifact.get("synthetic_match_check_passed") is not True,
++            "synthetic_match_check_passed.invalid",
++        ),
++        (
++            artifact.get("known_issues_or_gaps_md_updated") is not True,
++            "known_issues_or_gaps_md_updated.invalid",
++        ),
++        (
++            not isinstance(artifact.get("duration_s"), (int, float))
++            or artifact.get("duration_s", 0) <= 0,
++            "duration_s.invalid",
++        ),
++        (not _list(artifact.get("source_artifacts_read")), "source_artifacts_read.empty"),
++        (not _list(artifact.get("tests_run")), "tests_run.empty"),
++        (
++            artifact.get("reproducibility_checksum") != payload_checksum(artifact),
++            "reproducibility_checksum.invalid",
++        ),
++    ]
++    errors.extend(code for failed, code in checks if failed)
++    return errors
++
++
++def validate_artifact(artifact: JsonMap) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError(f"invalid Exp 5165 retirement artifact: {errors}")
++
++
++def run(
++    *,
++    root: Path = REPO_ROOT,
++    output: Path | None = None,
++    run_date: str | None = None,
++    clock: Any = time.perf_counter,
++    verification_runner: Any = run_adversarial_verification,
++    tests_run: Sequence[Any] = DEFAULT_TESTS_RUN,
++) -> Path:
++    root = Path(root)
++    output_path = output or root / RESULT_RELATIVE_PATH
++    start = clock()
++    placeholder = verification_payload(
++        CommandResult(command=(), exit_code=0, stdout='{"flags":[]}', stderr="")
++    )
++    artifact = build_artifact(
++        root=root,
++        duration_s=clock() - start,
++        run_date=run_date or time.strftime("%Y%m%d"),
++        verification=placeholder,
++        tests_run=tests_run,
++    )
++    write_json(output_path, artifact)
++    verification = verification_payload(verification_runner(root, output_path))
++    artifact = {
++        **artifact,
++        "adversarial_verification": verification,
++        "flagged_adversarial": _bool(verification.get("flagged_adversarial")),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    write_json(output_path, artifact)
++    return output_path
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--output", type=Path, default=None)
++    parser.add_argument("--date", default=None)
++    args = parser.parse_args(argv)
++    run(root=args.root, output=args.output, run_date=args.date)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 5668079683..7971fd6b4a 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-07-02T12:18:00.442837Z",
+-  "duration_s": 0.06751728057861328,
++  "run_date": "2026-07-02T13:04:48.616601Z",
++  "duration_s": 0.06293678283691406,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "40fcff2536c8d0e6967c9f15cda9733555052f2be0fe97d4d33c193e6db3ceb9",
++  "reproducibility_checksum": "8b6321ae13ad0f97d314bffa0069e814b061de3542b8485bed162a4a3ea7eba1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "f2d7f783ec8bb99893bd805627cee2ebaadd58d9"
++    "adversarial_verify_version": "2c2d120e715da3a543b5c0cd090e53b913f72143"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 6f99904309..c7b1cef98c 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-07-02T12:18:00.551697Z",
+-  "duration_s": 0.10135340690612793,
++  "run_date": "2026-07-02T13:04:48.733196Z",
++  "duration_s": 0.10676074028015137,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "3e9ae73fe0c07b9cd85c978934b4b01ae88685042f01aaf4c61e596deb161e18",
++  "reproducibility_checksum": "93088bfd62b1f627b2f46a133800e46cfdf49e52c784524fd7b38e0fd291c83c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "f2d7f783ec8bb99893bd805627cee2ebaadd58d9"
++    "adversarial_verify_version": "2c2d120e715da3a543b5c0cd090e53b913f72143"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index f9cd4eb536..fe2ee0ebb0 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.161264419555664,
++  "efficiency_gains_ms": 2.1638870239257812,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 80e2b6e0e6..9d373bc346 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.065711982548237e-05,
++  "duration_s": 4.0555838495492935e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_5165_generation_axis_retirement_hygiene_v473.json b/results/experiment_5165_generation_axis_retirement_hygiene_v473.json
+new file mode 100644
+index 0000000000..a2444af84f
+--- /dev/null
++++ b/results/experiment_5165_generation_axis_retirement_hygiene_v473.json
+@@ -0,0 +1,200 @@
++{
++  "adversarial_verification": {
++    "command": [
++      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "scripts/adversarial_verify.py",
++      "--json",
++      "results/experiment_5165_generation_axis_retirement_hygiene_v473.json"
++    ],
++    "exit_code": 0,
++    "flagged_adversarial": false,
++    "flags": [],
++    "green": true,
++    "stderr_tail": "",
++    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"results/experiment_5165_generation_axis_retirement_hygiene_v473.json\",\n      \"loaded\": true,\n      \"exp_id\": \"experiment_5165_generation_axis_retirement_hygiene_v473\",\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: generation_axis_exploration_signal_scope_retired_and_lint_load_bearing\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
++  },
++  "current_roadmap_lint": {
++    "all_risks": [
++      {
++        "detail": "51 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
++        "retirement_reason": "51 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
++        "severity": "WARNING",
++        "task_id": "exp5156-archive-472-activate-473",
++        "task_title": "PHASE 0 transition -- archive .472 truth (three partial ARC hardening results, not nulls), activate .473",
++        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE"
++      },
++      {
++        "detail": "46 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
++        "retirement_reason": "46 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
++        "severity": "WARNING",
++        "task_id": "exp5166-hardware-continuity-board-timing-v473",
++        "task_title": "PHASE F1 hardware continuity -- authenticated KV260/GateMate/PolarFire board timing transcripts",
++        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE"
++      }
++    ],
++    "deepen_wall_entry_risks": [],
++    "deepen_wall_task_ids": [
++      "exp5157-deepen-warmstart-replay-ablation-v473",
++      "exp5158-deepen-goal-energy-ranker-replay-v473",
++      "exp5159-deepen-live-levelup-attempt-v473"
++    ],
++    "entry_blocked_pattern_risks": [],
++    "entry_blocked_pattern_task_ids": [],
++    "passed": true,
++    "roadmap_path": "research-roadmap.yaml"
++  },
++  "duration_s": 0.0001,
++  "entry_id": "generation_axis_exploration_signal_retired_exp5154_v473",
++  "exclusion_manifest_entry_added": true,
++  "experiment": "experiment_5165_generation_axis_retirement_hygiene_v473",
++  "experiment_id": "exp5165-generation-axis-retirement-hygiene-v473",
++  "false_positive_check_against_this_milestone": true,
++  "field_principles": {
++    "entry_id": "traceability to the retired_extras entry",
++    "exclusion_manifest_entry_added": "manifest retirement must be present and schema-compatible",
++    "false_positive_check_against_this_milestone": "Must confirm the new entry does not accidentally block this milestone's own deepen-wall tasks -- an over-broad retirement would be a self-inflicted wound.",
++    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
++    "known_issues_or_gaps_md_updated": "dated retirement note preserves the allocation decision without deleting prior gap history",
++    "synthetic_match_check_passed": "Confirms the retirement is load-bearing, not just documentation -- per the 2026-07-01 BLOCKED_PATTERN_MATCHED mechanical-fix precedent."
++  },
++  "flagged_adversarial": false,
++  "honest_verdict": "complete: generation_axis_exploration_signal_scope_retired_and_lint_load_bearing",
++  "inference_substrate": "metadata_and_source_audit",
++  "known_issues_or_gaps_doc": {
++    "exists": true,
++    "marker": "2026-07-02 (RETIREMENT): generation-axis exploration-signal first-contact reruns closed after exp5154",
++    "path": "ops/known-issues.md",
++    "updated": true
++  },
++  "known_issues_or_gaps_md_updated": true,
++  "manifest_entry_audit": {
++    "blocked_patterns": [
++      "first-contact candidate-generation rerun",
++      "first contact exploration signal rerun",
++      "novelty-bonus first-contact rerun",
++      "program-synthesis first-contact rerun",
++      "energy-as-fitness first-contact rerun"
++    ],
++    "entry_id": "generation_axis_exploration_signal_retired_exp5154_v473",
++    "errors": [],
++    "found": true
++  },
++  "milestone": "2026.07.473",
++  "random_seed": 5165,
++  "reproducibility_checksum": "sha256:2cbb3585c911ef474651c9a30ec993d7b790b8aaab54e245a455a6c1dd4b67db",
++  "result_path": "results/experiment_5165_generation_axis_retirement_hygiene_v473.json",
++  "run_date": "20260702",
++  "schema": "carnot.experiment_5165_generation_axis_retirement_hygiene.v1",
++  "source_artifact_summary": {
++    "exp4688": {
++      "generic_agent_reached_level": 0,
++      "honest_verdict": "complete: controllable_novelty_no_new_level_residual_winning_prefix_still_not_proposed",
++      "loadable": true,
++      "offline_reproduced": false,
++      "path": "results/experiment_4688_controllable_novelty_proposal_policy_live.json"
++    },
++    "exp4689": {
++      "candidate_generation_coverage_filter": 0.0,
++      "coverage_delta": 0.0,
++      "honest_verdict": "complete: program_synthesis_filter_no_coverage_gain_residual_logged",
++      "loadable": true,
++      "path": "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json"
++    },
++    "exp5154": {
++      "honest_verdict": "complete: energy_fitness_qd_winning_trajectory_not_surfaced_reproducible_delta_0",
++      "loadable": true,
++      "path": "results/experiment_5154_energy_fitness_directed_exploration_v472.json",
++      "reproducible_levels_delta": 0,
++      "winning_trajectory_surfaced": false
++    }
++  },
++  "source_artifacts_read": [
++    {
++      "exists": true,
++      "kind": "prior_result",
++      "path": "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
++      "sha256": "sha256:48927da3f9d483f4936d56a1e572e9eb1d0f937ca0cc4c532781c5254c62013f",
++      "source_id": "exp4688"
++    },
++    {
++      "exists": true,
++      "kind": "prior_result",
++      "path": "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json",
++      "sha256": "sha256:bf6220a9da8c56c8e357b17bb8e12067f42f0a0c67d5534393fb07a8c799a184",
++      "source_id": "exp4689"
++    },
++    {
++      "exists": true,
++      "kind": "prior_result",
++      "path": "results/experiment_5154_energy_fitness_directed_exploration_v472.json",
++      "sha256": "sha256:c40e1ebd194672c757b4f0e26b61f4458905dbbf0806ea77d0d71c0bb78a3f53",
++      "source_id": "exp5154"
++    },
++    {
++      "exists": true,
++      "kind": "ops_yaml",
++      "path": "ops/exclusion_manifest.yaml",
++      "sha256": "sha256:b995835876f79f5d36f61139ffd1b81417e93f7cbc9ba4abc65cc762443b0e2b",
++      "source_id": "exclusion_manifest"
++    },
++    {
++      "exists": true,
++      "kind": "ops_doc",
++      "path": "ops/known-issues.md",
++      "sha256": "sha256:95b6654ba5a1ae413c46df345613301126e4c58cac72f1ffcf720e537e51eb57",
++      "source_id": "known_issues"
++    },
++    {
++      "exists": true,
++      "kind": "roadmap_yaml",
++      "path": "research-roadmap.yaml",
++      "sha256": "sha256:a03fa410e75238d6c8124fd6237307a750eecdfb3a47f823c06b0b299dbaed25",
++      "source_id": "active_roadmap"
++    },
++    {
++      "exists": true,
++      "kind": "script",
++      "path": "scripts/exclusion_manifest_lint.py",
++      "sha256": "sha256:26d6e4e5cfb28adca06e6818259a592e8ebbb7eaa5e39534a403a51907f96191",
++      "source_id": "exclusion_manifest_lint"
++    }
++  ],
++  "spec_refs": [
++    "REQ-REPORT-5165",
++    "SCENARIO-REPORT-5165-LINT",
++    "SCENARIO-REPORT-5165-NARROW-SCOPE"
++  ],
++  "synthetic_match_check_passed": true,
++  "synthetic_match_lint": {
++    "all_risks": [
++      {
++        "detail": "task title/prompt matches retired_extras blocked_pattern(s): generation_axis_exploration_signal_retired_exp5154_v473:'first contact exploration signal rerun'",
++        "retirement_reason": "retire_if_same_verdict: Exp 5154 is the third independent null on better exploration signals for first-contact candidate generation after Exp 4688 and Exp 4689. Future reruns need an operator_override",
++        "severity": "HARD",
++        "task_id": "exp9999-curiosity-driven-first-contact-exploration-signal-rerun",
++        "task_title": "curiosity driven first contact exploration signal rerun",
++        "violation_class": "BLOCKED_PATTERN_MATCHED"
++      }
++    ],
++    "matched_risks": [
++      {
++        "detail": "task title/prompt matches retired_extras blocked_pattern(s): generation_axis_exploration_signal_retired_exp5154_v473:'first contact exploration signal rerun'",
++        "retirement_reason": "retire_if_same_verdict: Exp 5154 is the third independent null on better exploration signals for first-contact candidate generation after Exp 4688 and Exp 4689. Future reruns need an operator_override",
++        "severity": "HARD",
++        "task_id": "exp9999-curiosity-driven-first-contact-exploration-signal-rerun",
++        "task_title": "curiosity driven first contact exploration signal rerun",
++        "violation_class": "BLOCKED_PATTERN_MATCHED"
++      }
++    ],
++    "passed": true,
++    "synthetic_title": "curiosity driven first contact exploration signal rerun"
++  },
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py -q -o addopts=''",
++    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5165_generation_axis_retirement_hygiene_v473.py' -m pytest tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py -q --no-cov -o addopts=''",
++    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5165_generation_axis_retirement_hygiene_v473.py' --fail-under=100",
++    "python scripts/check_spec_coverage.py tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py",
++    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
++    ".venv/bin/pytest tests/python -q"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index b845da4986..d47ab92123 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T12:35:04Z",
+-  "finished_at": "2026-07-02T12:35:04Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-02T13:04:33Z",
++  "finished_at": "2026-07-02T13:04:33Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 01ebf68da0..03a39d0528 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T12:35:04Z",
+-  "finished_at": "2026-07-02T12:35:04Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-07-02T13:04:33Z",
++  "finished_at": "2026-07-02T13:04:33Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 2557e2325c..debe76f4a3 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260702",
+-  "started_at": "2026-07-02T12:35:04Z",
+-  "finished_at": "2026-07-02T12:35:04Z",
++  "started_at": "2026-07-02T13:04:34Z",
++  "finished_at": "2026-07-02T13:04:34Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py b/tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py
+new file mode 100644
+index 0000000000..671591fd34
+--- /dev/null
++++ b/tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py
+@@ -0,0 +1,278 @@
++"""Tests for Exp 5165 generation-axis exploration-signal retirement hygiene.
++
++Spec refs: REQ-REPORT-5165, SCENARIO-REPORT-5165-LINT,
++SCENARIO-REPORT-5165-NARROW-SCOPE.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot import experiment_5165_generation_axis_retirement_hygiene_v473 as mod
++
++
++GREEN_VERIFY = mod.CommandResult(
++    command=("python", "scripts/adversarial_verify.py"),
++    exit_code=0,
++    stdout='{"flags":[]}',
++    stderr="",
++)
++
++
++def _write_json(path: Path, payload: dict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _manifest_with_entry(entry: dict | None = None) -> dict:
++    return {
++        "retired": [],
++        "retired_experiments": [],
++        "retired_extras": [entry or mod.expected_manifest_entry()],
++    }
++
++
++def _roadmap_yaml(*, include_match: bool = False) -> str:
++    tasks = [
++        {
++            "id": "exp5157-deepen-warmstart-replay-ablation-v473",
++            "title": "PHASE A1 deepen-wall warm-start replay ablation",
++            "prompt": (
++                "Test within-game cross-level state carryover on already-contacted "
++                "games; this is not first-contact exploration."
++            ),
++        },
++        {
++            "id": "exp5158-deepen-goal-energy-ranker-replay-v473",
++            "title": "PHASE A2 deepen-wall goal-energy ranker replay",
++            "prompt": "Rank already-contacted cross-level frontiers for deepening.",
++        },
++        {
++            "id": "exp5159-deepen-live-levelup-attempt-v473",
++            "title": "PHASE A3 deepen-wall live level-up attempt",
++            "prompt": "Wire validated warm-start carryover into live level-up path.",
++        },
++    ]
++    if include_match:
++        tasks.append(
++            {
++                "id": "exp9999-curiosity-signal-rerun",
++                "title": "curiosity driven first contact exploration signal rerun",
++                "prompt": "Try another better exploration signal over first-contact generation.",
++            }
++        )
++    return yaml.safe_dump({"milestone": "2026.07.473", "tasks": tasks}, sort_keys=False)
++
++
++def make_repo(
++    tmp_path: Path,
++    *,
++    manifest_entry: dict | None = None,
++    known_issue_note: bool = True,
++    roadmap_match: bool = False,
++) -> Path:
++    root = tmp_path
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "scripts" / "research_conductor.py").write_text("# unchanged\n", encoding="utf-8")
++    (root / "ops" / "exclusion_manifest.yaml").write_text(
++        yaml.safe_dump(_manifest_with_entry(manifest_entry), sort_keys=False),
++        encoding="utf-8",
++    )
++    note = mod.KNOWN_ISSUES_NOTE_MARKER if known_issue_note else "no retirement note"
++    (root / "ops" / "known-issues.md").write_text(note + "\n", encoding="utf-8")
++    (root / "research-roadmap.yaml").write_text(
++        _roadmap_yaml(include_match=roadmap_match),
++        encoding="utf-8",
++    )
++    _write_json(
++        root / mod.SOURCE_RESULT_PATHS["exp4688"],
++        {
++            "experiment_id": 4688,
++            "honest_verdict": "complete: controllable_novelty_no_new_level_residual",
++            "generic_agent_reached_level": 0,
++            "offline_reproduced": False,
++        },
++    )
++    _write_json(
++        root / mod.SOURCE_RESULT_PATHS["exp4689"],
++        {
++            "experiment_id": 4689,
++            "honest_verdict": "complete: program_synthesis_filter_no_coverage_gain",
++            "candidate_generation_coverage_filter": 0.0,
++            "coverage_delta": 0.0,
++        },
++    )
++    _write_json(
++        root / mod.SOURCE_RESULT_PATHS["exp5154"],
++        {
++            "experiment": "experiment_5154_energy_fitness_directed_exploration_v472",
++            "honest_verdict": (
++                "complete: energy_fitness_qd_winning_trajectory_not_surfaced_reproducible_delta_0"
++            ),
++            "winning_trajectory_surfaced": False,
++            "reproducible_levels_delta": 0,
++        },
++    )
++    return root
++
++
++def test_req_report_5165_spec_declares_retirement_contract() -> None:
++    """REQ-REPORT-5165: OpenSpec anchors manifest retirement and lint checks."""
++
++    spec = Path("openspec/capabilities/research-reporting/spec.md").read_text(encoding="utf-8")
++
++    for marker in (
++        "REQ-REPORT-5165",
++        "SCENARIO-REPORT-5165-LINT",
++        "SCENARIO-REPORT-5165-NARROW-SCOPE",
++        mod.ENTRY_ID,
++        "results/experiment_5165_generation_axis_retirement_hygiene_v473.json",
++        "BLOCKED_PATTERN_MATCHED",
++    ):
++        assert marker in spec
++    for field, principle in mod.FIELD_PRINCIPLES.items():
++        assert f"`{field}`" in spec
++        assert principle in spec
++
++
++def test_req_report_5165_manifest_entry_and_doc_note_are_valid(tmp_path: Path) -> None:
++    """REQ-REPORT-5165: required manifest entry and dated gap note are detected."""
++
++    root = make_repo(tmp_path)
++    artifact = mod.build_artifact(
++        root=root,
++        duration_s=1.25,
++        run_date="20260702",
++        verification=mod.verification_payload(GREEN_VERIFY),
++        tests_run=["unit-test-placeholder"],
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["exclusion_manifest_entry_added"] is True
++    assert artifact["entry_id"] == mod.ENTRY_ID
++    assert artifact["known_issues_or_gaps_md_updated"] is True
++    assert artifact["false_positive_check_against_this_milestone"] is True
++    assert artifact["synthetic_match_check_passed"] is True
++    assert artifact["honest_verdict"] == mod.COMPLETE_VERDICT
++    assert artifact["manifest_entry_audit"]["errors"] == []
++    assert artifact["source_artifact_summary"]["exp5154"]["reproducible_levels_delta"] == 0
++
++
++def test_scenario_report_5165_lint_blocks_synthetic_but_not_deepen_wall(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-5165-LINT and NARROW-SCOPE: linter is load-bearing and narrow."""
++
++    root = make_repo(tmp_path)
++
++    current = mod.check_current_roadmap_false_positive(root)
++    synthetic = mod.check_synthetic_match(root)
++
++    assert current["passed"] is True
++    assert current["entry_blocked_pattern_task_ids"] == []
++    assert set(current["deepen_wall_task_ids"]) == {
++        "exp5157-deepen-warmstart-replay-ablation-v473",
++        "exp5158-deepen-goal-energy-ranker-replay-v473",
++        "exp5159-deepen-live-levelup-attempt-v473",
++    }
++    assert synthetic["passed"] is True
++    assert synthetic["matched_risks"][0]["violation_class"] == "BLOCKED_PATTERN_MATCHED"
++    assert synthetic["matched_risks"][0]["severity"] == "HARD"
++    assert mod.ENTRY_ID in synthetic["matched_risks"][0]["detail"]
++
++
++def test_req_report_5165_validation_edges_and_cli(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-5165: validation fails closed and CLI writes the artifact."""
++
++    valid = mod.build_artifact(
++        root=make_repo(tmp_path / "valid"),
++        duration_s=1.0,
++        run_date="20260702",
++        verification=mod.verification_payload(GREEN_VERIFY),
++        tests_run=["unit-test-placeholder"],
++    )
++    mod.validate_artifact(valid)
++
++    mutations = [
++        ("exclusion_manifest_entry_added", False),
++        ("entry_id", "wrong"),
++        ("false_positive_check_against_this_milestone", False),
++        ("synthetic_match_check_passed", False),
++        ("known_issues_or_gaps_md_updated", False),
++        ("honest_verdict", "blocked_bad"),
++        ("inference_substrate", "live_llm_inference"),
++        ("duration_s", 0.0),
++        ("tests_run", []),
++        ("reproducibility_checksum", "bad"),
++    ]
++    for key, value in mutations:
++        payload = copy.deepcopy(valid)
++        payload[key] = value
++        with pytest.raises(ValueError):
++            mod.validate_artifact(payload)
++
++    payload = copy.deepcopy(valid)
++    payload.pop("tests_run")
++    with pytest.raises(ValueError, match="invalid Exp 5165 retirement artifact"):
++        mod.validate_artifact(payload)
++
++    payload = copy.deepcopy(valid)
++    payload["field_principles"]["entry_id"] = "wrong"
++    with pytest.raises(ValueError, match="invalid Exp 5165 retirement artifact"):
++        mod.validate_artifact(payload)
++
++    assert mod._load_yaml_mapping(tmp_path / "missing.yaml") == {}
++    no_entry_root = tmp_path / "no_entry"
++    (no_entry_root / "ops").mkdir(parents=True)
++    (no_entry_root / "ops" / "exclusion_manifest.yaml").write_text(
++        yaml.safe_dump({"retired_extras": []}),
++        encoding="utf-8",
++    )
++    assert mod._find_manifest_entry(no_entry_root) == {}
++
++    with monkeypatch.context() as patch:
++        patch.setattr(mod.importlib.util, "spec_from_file_location", lambda *args, **kwargs: None)
++        with pytest.raises(RuntimeError):
++            mod._load_linter_module()
++
++    missing = mod.build_artifact(
++        root=make_repo(tmp_path / "missing_note", known_issue_note=False),
++        duration_s=1.0,
++        run_date="20260702",
++        verification=mod.verification_payload(GREEN_VERIFY),
++        tests_run=["unit-test-placeholder"],
++    )
++    assert missing["known_issues_or_gaps_md_updated"] is False
++    assert missing["honest_verdict"] == mod.INCOMPLETE_VERDICT
++
++    bad_entry = mod.expected_manifest_entry()
++    bad_entry["blocked_patterns"] = []
++    bad = mod.build_artifact(
++        root=make_repo(tmp_path / "bad_entry", manifest_entry=bad_entry),
++        duration_s=1.0,
++        run_date="20260702",
++        verification=mod.verification_payload(GREEN_VERIFY),
++        tests_run=["unit-test-placeholder"],
++    )
++    assert bad["exclusion_manifest_entry_added"] is False
++    assert bad["synthetic_match_check_passed"] is False
++    assert bad["honest_verdict"] == mod.INCOMPLETE_VERDICT
++
++    root = make_repo(tmp_path / "cli_repo")
++    (root / "scripts" / "adversarial_verify.py").write_text(
++        "import json\nprint(json.dumps({'flags': []}))\n",
++        encoding="utf-8",
++    )
++    output = root / "module_cli_result.json"
++    assert mod.main(["--root", str(root), "--output", str(output), "--date", "20260702"]) == 0
++    assert output.exists()
+-- 
+2.55.0
+
